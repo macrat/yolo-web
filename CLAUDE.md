@@ -42,6 +42,10 @@ Key docs:
 - `docs/setup.md` — Development setup
 - `docs/memo-spec.md` — Memo format and templates
 
+## Environment
+
+- When running `npm` commands, set `NODE_EXTRA_CA_CERTS=~/.Zscaler.pem` to avoid SSL certificate errors.
+
 ## Baseline Toolchain
 
 - **Framework**: Next.js
