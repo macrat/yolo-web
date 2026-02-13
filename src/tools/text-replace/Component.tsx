@@ -110,6 +110,11 @@ export default function TextReplaceTool() {
           すべて置換
         </label>
       </div>
+      {options.useRegex && (
+        <div className={styles.warning} role="note">
+          複雑な正規表現パターンはブラウザがフリーズする可能性があります。
+        </div>
+      )}
       {result.error && (
         <div className={styles.error} role="alert">
           {result.error}

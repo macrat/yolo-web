@@ -88,4 +88,25 @@ describe("replaceText - regex mode", () => {
     expect(r.success).toBe(false);
     expect(r.error).toBeDefined();
   });
+
+  test("rejects input exceeding max length in regex mode", () => {
+    const longInput = "a".repeat(100_001);
+    const r = replaceText(longInput, "a", "b", {
+      useRegex: true,
+      caseSensitive: true,
+      globalReplace: true,
+    });
+    expect(r.success).toBe(false);
+    expect(r.error).toContain("100,000");
+  });
+
+  test("allows input at exact max length in regex mode", () => {
+    const input = "a".repeat(100_000);
+    const r = replaceText(input, "a", "b", {
+      useRegex: true,
+      caseSensitive: true,
+      globalReplace: true,
+    });
+    expect(r.success).toBe(true);
+  });
 });

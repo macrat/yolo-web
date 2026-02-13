@@ -18,6 +18,7 @@ const DEFAULT_OPTIONS: ReplaceOptions = {
 };
 
 const MAX_INPUT_LENGTH = 100_000;
+const MAX_REGEX_INPUT_LENGTH = 100_000;
 
 export function replaceText(
   input: string,
@@ -35,6 +36,16 @@ export function replaceText(
       output: "",
       count: 0,
       error: `入力テキストが長すぎます（最大${MAX_INPUT_LENGTH.toLocaleString()}文字）`,
+    };
+  }
+
+  // Additional length check for regex mode to mitigate ReDoS attacks
+  if (options.useRegex && input.length > MAX_REGEX_INPUT_LENGTH) {
+    return {
+      success: false,
+      output: "",
+      count: 0,
+      error: `正規表現モードでは入力テキストは最大${MAX_REGEX_INPUT_LENGTH.toLocaleString()}文字までです`,
     };
   }
 
