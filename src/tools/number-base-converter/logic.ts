@@ -48,7 +48,7 @@ function parseBigInt(input: string, base: NumberBase): bigint {
   const isNegative = cleaned.startsWith("-");
   const numPart = isNegative ? cleaned.slice(1) : cleaned;
 
-  let result = 0n;
+  let result = BigInt(0);
   const baseBig = BigInt(base);
 
   for (const ch of numPart) {
@@ -61,14 +61,14 @@ function parseBigInt(input: string, base: NumberBase): bigint {
 
 // Convert BigInt to string in the given base
 function bigIntToString(value: bigint, base: NumberBase): string {
-  if (value === 0n) return "0";
+  if (value === BigInt(0)) return "0";
 
-  const isNegative = value < 0n;
+  const isNegative = value < BigInt(0);
   let abs = isNegative ? -value : value;
   const baseBig = BigInt(base);
   const digits: string[] = [];
 
-  while (abs > 0n) {
+  while (abs > BigInt(0)) {
     const remainder = Number(abs % baseBig);
     digits.push(remainder.toString(base));
     abs = abs / baseBig;
