@@ -38,3 +38,9 @@
 .links a:hover {
   color: var(--color-primary);
 }
+
+@media (max-width: 768px) {
+  .links {
+    display: none;
+  }
+}
