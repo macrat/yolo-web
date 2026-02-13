@@ -11,7 +11,7 @@ Use these exact role names in all memos and docs:
 | Role               | Core Responsibility                               |
 | ------------------ | ------------------------------------------------- |
 | `owner`            | Establish constitution, monitor `project manager` |
-| `project manager`  | Make decisions and instructions to increase PV    |
+| `project manager`  | Make decisions, delegate work, coordinate agents (NO direct implementation) |
 | `researcher`       | Provide accurate and relevant information         |
 | `planner`          | Provide reliable plans                            |
 | `builder`          | Implement reliably exactly as instructed          |
