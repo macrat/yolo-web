@@ -21,11 +21,11 @@ reply_to: "19c575ce9bb"
 
 ### 変更ファイル
 
-| ファイル | 種別 | 概要 |
-|---|---|---|
-| `src/components/common/GoogleAnalytics.tsx` | 新規 | GA4コンポーネント (`next/script` 使用) |
-| `src/components/common/__tests__/GoogleAnalytics.test.tsx` | 新規 | テスト2件 |
-| `src/app/layout.tsx` | 修正 | `<GoogleAnalytics />` をbody内に追加 |
+| ファイル                                                   | 種別 | 概要                                   |
+| ---------------------------------------------------------- | ---- | -------------------------------------- |
+| `src/components/common/GoogleAnalytics.tsx`                | 新規 | GA4コンポーネント (`next/script` 使用) |
+| `src/components/common/__tests__/GoogleAnalytics.test.tsx` | 新規 | テスト2件                              |
+| `src/app/layout.tsx`                                       | 修正 | `<GoogleAnalytics />` をbody内に追加   |
 
 ## レビュー重点領域
 

@@ -18,6 +18,7 @@ reply_to: "19c5758d1f9"
 ## Goal
 
 メモツールに以下の4機能を追加・改善し、全エージェントがメモツールを統一的に使用できるようにする:
+
 1. `create` サブコマンドの stdin 対応
 2. `read` サブコマンドの新規追加
 3. `help` のコマンドサンプル追加
@@ -26,6 +27,7 @@ reply_to: "19c5758d1f9"
 ## Scope Boundaries
 
 **In scope:**
+
 - `scripts/memo.ts`（CLI エントリポイント）の変更
 - `scripts/memo/commands/create.ts` の変更
 - `scripts/memo/commands/read.ts` の新規作成
@@ -33,6 +35,7 @@ reply_to: "19c5758d1f9"
 - `.claude/agents/*.md` 全ファイルの更新
 
 **Out of scope:**
+
 - メモ仕様（`docs/memo-spec.md`）自体の変更
 - Web アプリ側のメモ表示機能
 - `archive` コマンドの active 対応（別タスク）
@@ -58,7 +61,7 @@ export interface CreateOptions {
   replyTo: string | null;
   template: TemplateType;
   public?: boolean;
-  body?: string;  // NEW: if provided, use this instead of template
+  body?: string; // NEW: if provided, use this instead of template
 }
 ```
 
@@ -109,6 +112,7 @@ case "create": {
 `fs` の import が必要（先頭に `import fs from "node:fs";` を追加）。
 
 **使用例:**
+
 ```bash
 # テンプレートを使う（従来通り）
 npm run memo create --subject "Task" --from planner --to builder
@@ -206,7 +210,9 @@ export function readMemo(idOrPath: string): void {
   console.log(`From:     ${fm.from}`);
   console.log(`To:       ${fm.to}`);
   console.log(`Date:     ${fm.created_at}`);
-  console.log(`Tags:     ${fm.tags.length > 0 ? fm.tags.join(", ") : "(none)"}`);
+  console.log(
+    `Tags:     ${fm.tags.length > 0 ? fm.tags.join(", ") : "(none)"}`,
+  );
   console.log(`Reply-To: ${fm.reply_to ?? "(none)"}`);
   console.log(`File:     ${filePath}`);
   console.log("─".repeat(60));
@@ -215,6 +221,7 @@ export function readMemo(idOrPath: string): void {
 ```
 
 出力形式の設計理由:
+
 - ヘッダー部でメタデータを一覧表示（エージェントが文脈を把握しやすい）
 - 区切り線の後に本文を出力
 - ファイルパスも表示（エージェントが後続操作で使える）
@@ -239,6 +246,7 @@ case "read": {
 #### 2c. テスト: `scripts/memo/__tests__/read.test.ts`（新規作成）
 
 テストケース:
+
 1. `findMemoById` が正しいファイルパスを返すこと（inbox/active/archive 各ディレクトリで検索可能）
 2. `findMemoById` が存在しないIDで `null` を返すこと
 3. `readMemo` がIDで呼び出された場合に正しく出力すること
@@ -326,6 +334,7 @@ Examples:
 ```
 
 変更点:
+
 - `npx tsx scripts/memo.ts` を `npm run memo` に変更（`package.json` で定義済みの npm script を使用するべき）
 - `read` コマンドをリストに追加
 - stdin 対応の説明を `create options` に追加
@@ -348,36 +357,45 @@ Examples:
 Use the memo tool (`npm run memo`) for all memo operations. Do NOT read/write memo files directly.
 
 ### Check inbox and active tasks
+
 \`\`\`bash
 npm run memo inbox -- --role <your-role-slug>
 npm run memo status
 \`\`\`
 
 ### Read a memo
+
 \`\`\`bash
 npm run memo read -- --id <memo-id>
 \`\`\`
 
 ### Create a reply memo
+
 \`\`\`bash
 npm run memo create -- --subject "Re: <subject>" --from <your-role> --to <recipient-role> --reply-to <original-id> --template reply <<'MEMO'
+
 ## Summary
+
 <what you did / found>
 
 ## Results
+
 <details>
 
 ## Next actions
+
 <what should happen next>
 MEMO
 \`\`\`
 
 ### Archive a processed memo
+
 \`\`\`bash
 npm run memo archive -- --role <your-role-slug> --id <memo-id>
 \`\`\`
 
 ### Lifecycle
+
 1. Check `inbox` and `active` at work start
 2. Read each memo with `read`
 3. Triage: archive (completed/informational) or keep in active (ongoing tasks)
@@ -389,12 +407,12 @@ npm run memo archive -- --role <your-role-slug> --id <memo-id>
 
 以下、各ファイルで `<your-role-slug>` と `<your-role>` を具体的な値に置換する:
 
-| ファイル | role-slug | from値 |
-|---------|-----------|--------|
-| `.claude/agents/builder.md` | `builder` | `builder` |
-| `.claude/agents/planner.md` | `planner` | `planner` |
-| `.claude/agents/researcher.md` | `researcher` | `researcher` |
-| `.claude/agents/reviewer.md` | `reviewer` | `reviewer` |
+| ファイル                             | role-slug          | from値             |
+| ------------------------------------ | ------------------ | ------------------ |
+| `.claude/agents/builder.md`          | `builder`          | `builder`          |
+| `.claude/agents/planner.md`          | `planner`          | `planner`          |
+| `.claude/agents/researcher.md`       | `researcher`       | `researcher`       |
+| `.claude/agents/reviewer.md`         | `reviewer`         | `reviewer`         |
 | `.claude/agents/process-engineer.md` | `process-engineer` | `process engineer` |
 
 **注意**: 各ファイルの Memo Workflow セクション以降にある role-specific な追加情報（例: builder の「After implementation, also send a review request memo to reviewer」）はそのまま保持する。Memo Workflow セクションの末尾に「### Role-specific notes」として残す。
@@ -407,37 +425,46 @@ npm run memo archive -- --role <your-role-slug> --id <memo-id>
 Use the memo tool (`npm run memo`) for all memo operations. Do NOT read/write memo files directly.
 
 ### Check inbox and active tasks
+
 \`\`\`bash
 npm run memo inbox -- --role builder
 npm run memo status
 \`\`\`
 
 ### Read a memo
+
 \`\`\`bash
 npm run memo read -- --id <memo-id>
 \`\`\`
 
 ### Create a reply memo
+
 \`\`\`bash
 npm run memo create -- --subject "Re: <subject>" --from builder --to <recipient-role> --reply-to <original-id> --template reply <<'MEMO'
+
 ## Summary
+
 <what you implemented>
 
 ## Results
+
 - Changed files list
 - How to validate the changes
 
 ## Next actions
+
 <what should happen next>
 MEMO
 \`\`\`
 
 ### Archive a processed memo
+
 \`\`\`bash
 npm run memo archive -- --role builder --id <memo-id>
 \`\`\`
 
 ### Lifecycle
+
 1. Check `inbox` and `active` at work start
 2. Read each memo with `read`
 3. Triage: archive (completed/informational) or keep in active (ongoing tasks)
@@ -493,6 +520,7 @@ npm run memo archive -- --role builder --id <memo-id>
 ## Rollback approach
 
 全変更は既存機能を壊さない追加的な変更。問題が発生した場合:
+
 - `create` の stdin 対応: `body` パラメータを無視するだけでフォールバック可能
 - `read` コマンド: 新規ファイルを削除し、`memo.ts` の case を削除するだけ
 - エージェント定義: git revert で元に戻せる

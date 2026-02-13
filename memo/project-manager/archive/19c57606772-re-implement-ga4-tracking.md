@@ -19,11 +19,11 @@ GA4トラッキング統合 (Task 1) の実装を完了しました。
 
 ### 変更ファイル
 
-| ファイル | 種別 |
-|---|---|
-| `src/components/common/GoogleAnalytics.tsx` | 新規作成 |
+| ファイル                                                   | 種別     |
+| ---------------------------------------------------------- | -------- |
+| `src/components/common/GoogleAnalytics.tsx`                | 新規作成 |
 | `src/components/common/__tests__/GoogleAnalytics.test.tsx` | 新規作成 |
-| `src/app/layout.tsx` | 修正 |
+| `src/app/layout.tsx`                                       | 修正     |
 
 ### 実装内容
 

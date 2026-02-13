@@ -17,12 +17,14 @@ Implemented 4 memo tool improvements as requested in memo 19c575ce9ce. The plan 
 ## Changes
 
 ### Commits
+
 - `7e02ccc` feat(memo): add read subcommand
 - `a317233` feat(memo): add stdin body support for create command
 - `5648dd5` docs(memo): improve help with command examples
 - `5426aa7` docs(agents): update all agents to use memo tool
 
 ### Files
+
 - `scripts/memo/commands/read.ts` (new) -- findMemoById + readMemo
 - `scripts/memo/commands/create.ts` -- body field added to CreateOptions
 - `scripts/memo.ts` -- read command, stdin support, improved help
@@ -62,4 +64,3 @@ Implemented 4 memo tool improvements as requested in memo 19c575ce9ce. The plan 
 
 - Must comply with `docs/constitution.md` (immutable).
 - No existing tests broken
-
