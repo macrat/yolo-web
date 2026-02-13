@@ -244,8 +244,7 @@ export function toMarkdown(rows: string[][]): string {
     cell.replace(/\|/g, "\\|").replace(/\n/g, " ");
 
   const header = "| " + rows[0].map(escapeCell).join(" | ") + " |";
-  const separator =
-    "| " + rows[0].map(() => "---").join(" | ") + " |";
+  const separator = "| " + rows[0].map(() => "---").join(" | ") + " |";
   const body = rows
     .slice(1)
     .map((row) => {
@@ -442,6 +441,7 @@ export default function CsvConverterTool() {
 ### Component.module.css key classes
 
 base64 pattern を踏襲 + format selector:
+
 - `.container` - flex column, gap 1rem
 - `.formatRow` - display flex, gap 1rem, align center (2 select dropdowns with labels)
 - `.formatSelect` - styled select element
@@ -471,7 +471,10 @@ import {
 describe("parseCsv", () => {
   test("parses simple CSV", () => {
     const rows = parseCsv("a,b,c\n1,2,3");
-    expect(rows).toEqual([["a", "b", "c"], ["1", "2", "3"]]);
+    expect(rows).toEqual([
+      ["a", "b", "c"],
+      ["1", "2", "3"],
+    ]);
   });
 
   test("handles quoted fields", () => {
@@ -487,7 +490,10 @@ describe("parseCsv", () => {
 
   test("handles CRLF line endings", () => {
     const rows = parseCsv("a,b\r\n1,2");
-    expect(rows).toEqual([["a", "b"], ["1", "2"]]);
+    expect(rows).toEqual([
+      ["a", "b"],
+      ["1", "2"],
+    ]);
   });
 
   test("handles empty input", () => {
@@ -500,18 +506,29 @@ describe("parseCsv", () => {
 
   test("handles trailing newline", () => {
     const rows = parseCsv("a,b\n1,2\n");
-    expect(rows).toEqual([["a", "b"], ["1", "2"]]);
+    expect(rows).toEqual([
+      ["a", "b"],
+      ["1", "2"],
+    ]);
   });
 
   test("parses TSV with tab delimiter", () => {
     const rows = parseCsv("a\tb\tc\n1\t2\t3", "\t");
-    expect(rows).toEqual([["a", "b", "c"], ["1", "2", "3"]]);
+    expect(rows).toEqual([
+      ["a", "b", "c"],
+      ["1", "2", "3"],
+    ]);
   });
 });
 
 describe("toCsv", () => {
   test("serializes simple rows", () => {
-    expect(toCsv([["a", "b"], ["1", "2"]])).toBe("a,b\n1,2");
+    expect(
+      toCsv([
+        ["a", "b"],
+        ["1", "2"],
+      ]),
+    ).toBe("a,b\n1,2");
   });
 
   test("quotes fields containing commas", () => {
@@ -529,7 +546,12 @@ describe("toCsv", () => {
 
 describe("toTsv", () => {
   test("serializes with tabs", () => {
-    expect(toTsv([["a", "b"], ["1", "2"]])).toBe("a\tb\n1\t2");
+    expect(
+      toTsv([
+        ["a", "b"],
+        ["1", "2"],
+      ]),
+    ).toBe("a\tb\n1\t2");
   });
 
   test("quotes fields containing tabs", () => {
@@ -540,7 +562,10 @@ describe("toTsv", () => {
 
 describe("toJson", () => {
   test("converts rows to JSON array of objects", () => {
-    const json = toJson([["name", "age"], ["Alice", "30"]]);
+    const json = toJson([
+      ["name", "age"],
+      ["Alice", "30"],
+    ]);
     const parsed = JSON.parse(json);
     expect(parsed).toEqual([{ name: "Alice", age: "30" }]);
   });
@@ -550,7 +575,10 @@ describe("toJson", () => {
   });
 
   test("uses column1, column2 for empty headers", () => {
-    const json = toJson([["", "b"], ["1", "2"]]);
+    const json = toJson([
+      ["", "b"],
+      ["1", "2"],
+    ]);
     const parsed = JSON.parse(json);
     expect(parsed[0]).toHaveProperty("column1");
   });
@@ -558,7 +586,10 @@ describe("toJson", () => {
 
 describe("toMarkdown", () => {
   test("converts rows to markdown table", () => {
-    const md = toMarkdown([["Name", "Age"], ["Alice", "30"]]);
+    const md = toMarkdown([
+      ["Name", "Age"],
+      ["Alice", "30"],
+    ]);
     expect(md).toContain("| Name | Age |");
     expect(md).toContain("| --- | --- |");
     expect(md).toContain("| Alice | 30 |");
@@ -577,7 +608,10 @@ describe("toMarkdown", () => {
 describe("parseJson", () => {
   test("parses JSON array of objects", () => {
     const rows = parseJson('[{"name":"Alice","age":"30"}]');
-    expect(rows).toEqual([["name", "age"], ["Alice", "30"]]);
+    expect(rows).toEqual([
+      ["name", "age"],
+      ["Alice", "30"],
+    ]);
   });
 
   test("throws on non-array JSON", () => {
@@ -593,7 +627,10 @@ describe("parseMarkdown", () => {
   test("parses markdown table", () => {
     const md = "| Name | Age |\n| --- | --- |\n| Alice | 30 |";
     const rows = parseMarkdown(md);
-    expect(rows).toEqual([["Name", "Age"], ["Alice", "30"]]);
+    expect(rows).toEqual([
+      ["Name", "Age"],
+      ["Alice", "30"],
+    ]);
   });
 
   test("throws on invalid table", () => {
@@ -861,12 +898,7 @@ export function formatHex(hex: string): string {
 "use client";
 
 import { useState, useMemo } from "react";
-import {
-  convertBase,
-  formatBinary,
-  formatHex,
-  type NumberBase,
-} from "./logic";
+import { convertBase, formatBinary, formatHex, type NumberBase } from "./logic";
 import styles from "./Component.module.css";
 
 const BASES: { value: NumberBase; label: string; prefix: string }[] = [
@@ -881,10 +913,7 @@ export default function NumberBaseConverterTool() {
   const [fromBase, setFromBase] = useState<NumberBase>(10);
   const [copied, setCopied] = useState("");
 
-  const result = useMemo(
-    () => convertBase(input, fromBase),
-    [input, fromBase],
-  );
+  const result = useMemo(() => convertBase(input, fromBase), [input, fromBase]);
 
   // Layout:
   // 1. Base selector (radio group: BIN / OCT / DEC / HEX) for input base
@@ -901,6 +930,7 @@ export default function NumberBaseConverterTool() {
 ### Component.module.css key classes
 
 color-converter pattern を踏襲:
+
 - `.container` - flex column, gap 1rem
 - `.modeSwitch` / `.modeButton` / `.active` - radio group for base selection (same as base64)
 - `.field` / `.label` / `.input` - text input (same as color-converter)
@@ -968,7 +998,9 @@ describe("convertBase", () => {
     const r = convertBase("18446744073709551615", 10);
     expect(r.success).toBe(true);
     expect(r.hexadecimal).toBe("ffffffffffffffff");
-    expect(r.binary).toBe("1111111111111111111111111111111111111111111111111111111111111111");
+    expect(r.binary).toBe(
+      "1111111111111111111111111111111111111111111111111111111111111111",
+    );
   });
 
   test("returns error for invalid binary input", () => {
@@ -1098,7 +1130,7 @@ export type TextLanguage = "lorem" | "japanese";
 
 export interface GenerateOptions {
   language: TextLanguage;
-  paragraphs: number;     // 1-20
+  paragraphs: number; // 1-20
   sentencesPerParagraph: number; // 1-20
 }
 
@@ -1233,6 +1265,7 @@ export default function DummyTextTool() {
 ### Component.module.css key classes
 
 password-generator / base64 hybrid:
+
 - `.container` - flex column, gap 1rem
 - `.modeSwitch` / `.modeButton` / `.active` - language radio (same as base64)
 - `.optionsRow` - flex row, gap 1rem, wrap
@@ -1506,12 +1539,10 @@ export function toWareki(date: Date): WarekiResult {
   for (const era of ERAS) {
     if (date >= era.startDate) {
       const year =
-        date.getFullYear() - era.startDate.getFullYear() +
-        (date >= new Date(
-          era.startDate.getFullYear(),
-          date.getMonth(),
-          date.getDate(),
-        )
+        date.getFullYear() -
+        era.startDate.getFullYear() +
+        (date >=
+        new Date(era.startDate.getFullYear(), date.getMonth(), date.getDate())
           ? 1
           : 0);
       // Simplified: year = date.getFullYear() - era.startDate.getFullYear() + 1
@@ -1644,6 +1675,7 @@ export default function DateCalculatorTool() {
 ### Component.module.css key classes
 
 unix-timestamp pattern を踏襲:
+
 - `.container` - flex column, gap 1rem
 - `.section` - border, border-radius, padding, flex column
 - `.sectionTitle` - h3 styled
@@ -1927,10 +1959,10 @@ export interface ByteCountResult {
   lineCount: number;
   wordCount: number;
   // Per-character byte breakdown
-  singleByteChars: number;  // 1-byte (ASCII)
-  twoBytechars: number;     // 2-byte
-  threeByteChars: number;   // 3-byte (most CJK)
-  fourByteChars: number;    // 4-byte (emoji, rare CJK)
+  singleByteChars: number; // 1-byte (ASCII)
+  twoBytechars: number; // 2-byte
+  threeByteChars: number; // 3-byte (most CJK)
+  fourByteChars: number; // 4-byte (emoji, rare CJK)
 }
 
 export function countBytes(text: string): number {
@@ -2038,6 +2070,7 @@ export default function ByteCounterTool() {
 ### Component.module.css key classes
 
 char-count pattern を踏襲 + byte breakdown:
+
 - `.container` - flex column, gap 1rem
 - `.label` - font-weight 600
 - `.textarea` - full width, min-height 200px, proportional font
@@ -2274,24 +2307,24 @@ import { meta as byteCounterMeta } from "./byte-counter/meta";
 
 ### New tools' relatedSlugs (defined above in each meta.ts)
 
-| Tool                   | relatedSlugs                                          |
-| ---------------------- | ----------------------------------------------------- |
-| csv-converter          | json-formatter, markdown-preview, text-replace        |
-| number-base-converter  | color-converter, unix-timestamp, csv-converter        |
-| dummy-text             | password-generator, char-count, byte-counter          |
-| date-calculator        | unix-timestamp, number-base-converter, char-count     |
-| byte-counter           | char-count, dummy-text, text-replace                  |
+| Tool                  | relatedSlugs                                      |
+| --------------------- | ------------------------------------------------- |
+| csv-converter         | json-formatter, markdown-preview, text-replace    |
+| number-base-converter | color-converter, unix-timestamp, csv-converter    |
+| dummy-text            | password-generator, char-count, byte-counter      |
+| date-calculator       | unix-timestamp, number-base-converter, char-count |
+| byte-counter          | char-count, dummy-text, text-replace              |
 
 ### Existing tools that should add new relatedSlugs (optional, low priority)
 
-| Existing Tool       | Add to relatedSlugs                        |
-| ------------------- | ------------------------------------------ |
-| json-formatter      | csv-converter                              |
-| markdown-preview    | csv-converter                              |
-| char-count          | byte-counter                               |
-| unix-timestamp      | date-calculator                            |
-| color-converter     | number-base-converter                      |
-| password-generator  | dummy-text                                 |
+| Existing Tool      | Add to relatedSlugs   |
+| ------------------ | --------------------- |
+| json-formatter     | csv-converter         |
+| markdown-preview   | csv-converter         |
+| char-count         | byte-counter          |
+| unix-timestamp     | date-calculator       |
+| color-converter    | number-base-converter |
+| password-generator | dummy-text            |
 
 **Note**: Updating existing tools' relatedSlugs is optional for this batch and can be done as a follow-up.
 
@@ -2305,11 +2338,11 @@ Each tool is entirely self-contained in `src/tools/<slug>/`. The only shared fil
 
 ### Builder Assignment Recommendation
 
-| Builder   | Tools                                       | Rationale                                                    |
-| --------- | ------------------------------------------- | ------------------------------------------------------------ |
-| Builder A | csv-converter, number-base-converter        | Both developer category, complex logic (CSV parser, BigInt)  |
-| Builder B | date-calculator, byte-counter               | date-calculator has complex logic; byte-counter is simpler but related category pairing |
-| Builder C | dummy-text                                  | Simplest tool, generator category, standalone                |
+| Builder   | Tools                                | Rationale                                                                               |
+| --------- | ------------------------------------ | --------------------------------------------------------------------------------------- |
+| Builder A | csv-converter, number-base-converter | Both developer category, complex logic (CSV parser, BigInt)                             |
+| Builder B | date-calculator, byte-counter        | date-calculator has complex logic; byte-counter is simpler but related category pairing |
+| Builder C | dummy-text                           | Simplest tool, generator category, standalone                                           |
 
 ### Why this split
 
@@ -2363,4 +2396,3 @@ No schema migrations, no database changes, no external service dependencies.
 3. Each builder runs tests and build verification
 4. Reviewer checks completed tools
 5. Follow-up task: update existing tools' relatedSlugs
-
