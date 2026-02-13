@@ -5,10 +5,10 @@ export const SITE_NAME = "Yolo-Web";
 
 /** Base URL for the site. Falls back to a placeholder if env var is not set. */
 export const BASE_URL =
-  process.env.NEXT_PUBLIC_BASE_URL || "https://yolo-web.example.com";
+  process.env.NEXT_PUBLIC_BASE_URL || "https://yolo.macr.app";
 
 if (typeof process !== "undefined" && !process.env.NEXT_PUBLIC_BASE_URL) {
   console.warn(
-    "[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolo-web.example.com",
+    "[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolo.macr.app",
   );
 }

@@ -2,9 +2,7 @@ import type { MetadataRoute } from "next";
 import { allToolMetas } from "@/tools/registry";
 import { getAllBlogPosts } from "@/lib/blog";
 import { getAllPublicMemos } from "@/lib/memos";
-
-const BASE_URL =
-  process.env.NEXT_PUBLIC_BASE_URL || "https://yolo-web.example.com";
+import { BASE_URL } from "@/lib/constants";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const toolPages = allToolMetas.map((meta) => ({
@@ -52,6 +50,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.7,
+    },
+    {
+      url: `${BASE_URL}/games`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
+      url: `${BASE_URL}/games/kanji-kanaru`,
+      lastModified: new Date(),
+      changeFrequency: "daily",
+      priority: 0.8,
     },
     {
       url: `${BASE_URL}/about`,
