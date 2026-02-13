@@ -1,5 +1,15 @@
 import Link from "next/link";
 import styles from "./Header.module.css";
+import MobileNav from "./MobileNav";
+
+const NAV_LINKS = [
+  { href: "/", label: "ホーム" },
+  { href: "/tools", label: "ツール" },
+  { href: "/games", label: "ゲーム" },
+  { href: "/blog", label: "ブログ" },
+  { href: "/memos", label: "メモ" },
+  { href: "/about", label: "About" },
+] as const;
 
 export default function Header() {
   return (
@@ -9,25 +19,13 @@ export default function Header() {
           Yolo-Web
         </Link>
         <ul className={styles.links}>
-          <li>
-            <Link href="/">ホーム</Link>
-          </li>
-          <li>
-            <Link href="/tools">ツール</Link>
-          </li>
-          <li>
-            <Link href="/games">ゲーム</Link>
-          </li>
-          <li>
-            <Link href="/blog">ブログ</Link>
-          </li>
-          <li>
-            <Link href="/memos">メモ</Link>
-          </li>
-          <li>
-            <Link href="/about">About</Link>
-          </li>
+          {NAV_LINKS.map((link) => (
+            <li key={link.href}>
+              <Link href={link.href}>{link.label}</Link>
+            </li>
+          ))}
         </ul>
+        <MobileNav links={NAV_LINKS} />
       </nav>
     </header>
   );
