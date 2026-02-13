@@ -2,9 +2,9 @@ import type { KanjiEntry, PuzzleScheduleEntry } from "./types";
 
 /**
  * The epoch date for puzzle numbering.
- * Puzzle #1 is 2026-03-01 (JST).
+ * Puzzle #1 is 2026-02-14 (JST).
  */
-const EPOCH_DATE = "2026-03-01";
+const EPOCH_DATE = "2026-02-14";
 
 /**
  * Format a Date object as "YYYY-MM-DD" in JST (Asia/Tokyo timezone).
