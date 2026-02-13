@@ -171,9 +171,7 @@ export default function ColorConverterTool() {
             </div>
             <div className={styles.resultCard}>
               <div className={styles.resultLabel}>RGB</div>
-              <div className={styles.resultValue}>
-                {formatRgb(result.rgb!)}
-              </div>
+              <div className={styles.resultValue}>{formatRgb(result.rgb!)}</div>
               <button
                 type="button"
                 onClick={() => handleCopy(formatRgb(result.rgb!), "rgb")}
@@ -184,9 +182,7 @@ export default function ColorConverterTool() {
             </div>
             <div className={styles.resultCard}>
               <div className={styles.resultLabel}>HSL</div>
-              <div className={styles.resultValue}>
-                {formatHsl(result.hsl!)}
-              </div>
+              <div className={styles.resultValue}>{formatHsl(result.hsl!)}</div>
               <button
                 type="button"
                 onClick={() => handleCopy(formatHsl(result.hsl!), "hsl")}
