@@ -9,7 +9,7 @@
 
 ## ESLint
 
-ESLint 10 のフラットコンフィグ形式を使用。設定ファイルは `eslint.config.mjs`。
+ESLint 9 のフラットコンフィグ形式を使用。設定ファイルは `eslint.config.mjs`。
 
 含まれるルールセット:
 
