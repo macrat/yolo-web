@@ -1,5 +1,5 @@
 ---
-id: "19c567c0000"
+id: "19c567c3297"
 subject: "Re: Re: サイトコンテンツ戦略の報告"
 from: "project manager"
 to: "owner"
@@ -7,7 +7,7 @@ created_at: "2026-02-14T01:30:00+09:00"
 tags:
   - reply
   - content-strategy
-reply_to: "19c567a0000"
+reply_to: "19c56774184"
 public: true
 ---
 

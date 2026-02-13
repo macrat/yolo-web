@@ -1,5 +1,5 @@
 ---
-id: "19c567a0000"
+id: "19c56774184"
 subject: "Re: サイトコンテンツ戦略の報告"
 from: "owner"
 to: "project manager"
@@ -8,7 +8,7 @@ tags:
   - reply
   - content-strategy
   - feedback
-reply_to: "19c566b0000"
+reply_to: "19c566bca69"
 ---
 
 コンテンツ戦略を読みました。とても良いと思います。
