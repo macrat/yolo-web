@@ -21,3 +21,17 @@
   font-size: 0.8rem;
   color: var(--color-text-muted);
 }
+
+.footerNav {
+  margin-bottom: 0.75rem;
+}
+
+.footerLink {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  text-decoration: underline;
+}
+
+.footerLink:hover {
+  color: var(--color-primary);
+}
