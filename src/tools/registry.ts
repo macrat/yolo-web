@@ -18,6 +18,8 @@ import { meta as markdownPreviewMeta } from "./markdown-preview/meta";
 import { meta as dummyTextMeta } from "./dummy-text/meta";
 import { meta as dateCalculatorMeta } from "./date-calculator/meta";
 import { meta as byteCounterMeta } from "./byte-counter/meta";
+import { meta as csvConverterMeta } from "./csv-converter/meta";
+import { meta as numberBaseConverterMeta } from "./number-base-converter/meta";
 
 const toolEntries: ToolDefinition[] = [
   {
@@ -91,6 +93,14 @@ const toolEntries: ToolDefinition[] = [
   {
     meta: byteCounterMeta,
     componentImport: () => import("./byte-counter/Component"),
+  },
+  {
+    meta: csvConverterMeta,
+    componentImport: () => import("./csv-converter/Component"),
+  },
+  {
+    meta: numberBaseConverterMeta,
+    componentImport: () => import("./number-base-converter/Component"),
   },
 ];
 
