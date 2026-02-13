@@ -42,75 +42,75 @@ const sampleKanji: KanjiEntry[] = [
 ];
 
 const sampleSchedule: PuzzleScheduleEntry[] = [
-  { date: "2026-03-01", kanjiIndex: 0 },
-  { date: "2026-03-02", kanjiIndex: 1 },
-  { date: "2026-03-03", kanjiIndex: 2 },
+  { date: "2026-02-14", kanjiIndex: 0 },
+  { date: "2026-02-15", kanjiIndex: 1 },
+  { date: "2026-02-16", kanjiIndex: 2 },
 ];
 
 describe("formatDateJST", () => {
   test("formats a date in YYYY-MM-DD format", () => {
-    // 2026-03-01 00:00 UTC is 2026-03-01 09:00 JST
-    const date = new Date("2026-03-01T00:00:00Z");
+    // 2026-02-14 00:00 UTC is 2026-02-14 09:00 JST
+    const date = new Date("2026-02-14T00:00:00Z");
     const result = formatDateJST(date);
-    expect(result).toBe("2026-03-01");
+    expect(result).toBe("2026-02-14");
   });
 
   test("handles JST timezone boundary (late UTC = next day in JST)", () => {
-    // 2026-02-28 15:00 UTC = 2026-03-01 00:00 JST
-    const date = new Date("2026-02-28T15:00:00Z");
+    // 2026-02-13 15:00 UTC = 2026-02-14 00:00 JST
+    const date = new Date("2026-02-13T15:00:00Z");
     const result = formatDateJST(date);
-    expect(result).toBe("2026-03-01");
+    expect(result).toBe("2026-02-14");
   });
 
   test("handles JST timezone boundary (early UTC = same day in JST)", () => {
-    // 2026-03-01 14:59 UTC = 2026-03-01 23:59 JST
-    const date = new Date("2026-03-01T14:59:00Z");
+    // 2026-02-14 14:59 UTC = 2026-02-14 23:59 JST
+    const date = new Date("2026-02-14T14:59:00Z");
     const result = formatDateJST(date);
-    expect(result).toBe("2026-03-01");
+    expect(result).toBe("2026-02-14");
   });
 });
 
 describe("getPuzzleNumber", () => {
-  test("returns 1 for epoch date (2026-03-01)", () => {
-    // Use a time well within JST day for 2026-03-01
-    const date = new Date("2026-03-01T03:00:00Z"); // 12:00 JST
+  test("returns 1 for epoch date (2026-02-14)", () => {
+    // Use a time well within JST day for 2026-02-14
+    const date = new Date("2026-02-14T03:00:00Z"); // 12:00 JST
     expect(getPuzzleNumber(date)).toBe(1);
   });
 
   test("returns 2 for the day after epoch", () => {
-    const date = new Date("2026-03-02T03:00:00Z"); // 12:00 JST
+    const date = new Date("2026-02-15T03:00:00Z"); // 12:00 JST
     expect(getPuzzleNumber(date)).toBe(2);
   });
 
   test("returns 0 for the day before epoch", () => {
-    const date = new Date("2026-02-28T03:00:00Z"); // 12:00 JST
+    const date = new Date("2026-02-13T03:00:00Z"); // 12:00 JST
     expect(getPuzzleNumber(date)).toBe(0);
   });
 
   test("returns correct number for a date well after epoch", () => {
-    const date = new Date("2026-03-31T03:00:00Z"); // 12:00 JST
-    // 2026-03-01 to 2026-03-31 = 30 days difference, puzzle #31
+    const date = new Date("2026-03-16T03:00:00Z"); // 12:00 JST
+    // 2026-02-14 to 2026-03-16 = 30 days difference, puzzle #31
     expect(getPuzzleNumber(date)).toBe(31);
   });
 });
 
 describe("getTodaysPuzzle", () => {
   test("returns scheduled kanji for a matching date", () => {
-    const date = new Date("2026-03-01T03:00:00Z");
+    const date = new Date("2026-02-14T03:00:00Z");
     const result = getTodaysPuzzle(sampleKanji, sampleSchedule, date);
     expect(result.kanji.character).toBe("山");
     expect(result.puzzleNumber).toBe(1);
   });
 
   test("returns different kanji for different scheduled dates", () => {
-    const date = new Date("2026-03-02T03:00:00Z");
+    const date = new Date("2026-02-15T03:00:00Z");
     const result = getTodaysPuzzle(sampleKanji, sampleSchedule, date);
     expect(result.kanji.character).toBe("川");
     expect(result.puzzleNumber).toBe(2);
   });
 
   test("falls back to hash when date is not in schedule", () => {
-    const date = new Date("2026-04-01T03:00:00Z");
+    const date = new Date("2026-03-17T03:00:00Z");
     const result = getTodaysPuzzle(sampleKanji, sampleSchedule, date);
     // Should return a valid kanji (from the dataset)
     expect(sampleKanji.map((k) => k.character)).toContain(
