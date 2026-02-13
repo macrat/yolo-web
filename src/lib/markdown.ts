@@ -10,7 +10,7 @@
 import { marked } from "marked";
 
 /** Parse YAML frontmatter from a markdown string. Returns { data, content }. */
-export function parseFrontmatter<T extends Record<string, unknown>>(
+export function parseFrontmatter<T>(
   raw: string,
 ): { data: T; content: string } {
   const normalized = raw.replace(/\r\n/g, "\n");
