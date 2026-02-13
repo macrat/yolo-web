@@ -33,6 +33,7 @@ You are `planner`. Your explicit responsibility is: **Provide reliable plans.**
 ## Memo Format
 
 Follow the format specified in `docs/memo-spec.md`. Planning reply memos must include:
+
 - Goal
 - Step-by-step plan
 - Acceptance criteria

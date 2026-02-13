@@ -19,6 +19,7 @@ Completed a full audit of the current repository state against the bootstrap ins
 #### Files present (non-.git, non-node_modules)
 
 **Root files:**
+
 - `CLAUDE.md` — Present, correct content (roles, memo routing, toolchain summary, git rules)
 - `AGENTS.md` — Present as symlink to `CLAUDE.md` (verified: `AGENTS.md -> CLAUDE.md`)
 
@@ -47,6 +48,7 @@ Completed a full audit of the current repository state against the bootstrap ins
 | `.claude/agents/process-engineer.md` | Yes | Present, correct |
 
 **Settings:**
+
 - `.claude/settings.json` — Present. Permissions for `gh`, `git`, `npm`, `WebFetch`. Denies editing `docs/constitution.md`. Uses `defaultMode: "delegate"` and enables `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS`.
 - `.claude/settings.local.json` — Present. Adds permissions for `python3` and `git commit`.
 
@@ -55,6 +57,7 @@ All 7 role directories with `inbox/` and `archive/` subdirectories are present:
 `owner`, `project-manager`, `researcher`, `planner`, `builder`, `reviewer`, `process-engineer`
 
 **Memos present:**
+
 - `memo/project-manager/archive/19c54f3a6a0-bootstrap-instructions.md` — Archived (processed)
 - `memo/researcher/inbox/19c561b1aa0-audit-repo-discover-ga-mcp.md` — This memo (being processed)
 - `memo/planner/inbox/19c561b1e88-plan-docs-and-baseline-setup.md` — Pending
@@ -66,6 +69,7 @@ All 7 role directories with `inbox/` and `archive/` subdirectories are present:
 ### 2. Gap Analysis — What exists vs. what is required
 
 #### Completed (Section 11 completion criteria):
+
 - [x] Docs pack (Section 6) exists under `docs/` — all 10 required files + optional `index.md` present
 - [x] `CLAUDE.md` exists and is correct
 - [x] `AGENTS.md` exists as a symlink to `CLAUDE.md`
@@ -74,6 +78,7 @@ All 7 role directories with `inbox/` and `archive/` subdirectories are present:
 - [x] Bootstrap memo archived to `memo/project-manager/archive/`
 
 #### Not yet done (expected — awaiting planner/builder cycle):
+
 - [ ] **No `package.json`** — The Next.js project has not been initialized
 - [ ] **No `.mcp.json`** — No MCP server configuration for the project
 - [ ] **No `next.config.*`** — No Next.js configuration
@@ -90,6 +95,7 @@ All 7 role directories with `inbox/` and `archive/` subdirectories are present:
 - [ ] `docs/analytics.md` — Contains placeholder, awaiting this research (see Section 3 below)
 
 #### Issues / Observations:
+
 1. **No `.gitignore`**: The repo currently has no `.gitignore`. When `node_modules/`, `.next/`, etc. are created, they will need to be excluded. The planner should include this in the baseline setup plan.
 2. **Documentation language**: Most docs are in Japanese, which is consistent with the user's language preference. The constitution is in English. This is fine per the user's instructions (think in English, respond in user's language).
 3. **All docs are placeholder-heavy**: This is by design — concrete details are deferred to the planner/builder cycle. No issue here.
@@ -112,11 +118,11 @@ Multiple open-source MCP servers exist for accessing Google Analytics 4 (GA4) da
 
 #### Alternative Options
 
-| Server | Language | Stars | Notes |
-|---|---|---|---|
-| `HosakaKeigo/mcp-server-ga4` | TypeScript | 4 | Node.js-based, supports pnpm, good for TypeScript projects |
-| `eno-graph/mcp-server-google-analytics` | JavaScript | 7 | Node.js-based, has real-time data tool |
-| `gomarble-ai/google-analytics-mcp-server` | Python | 13 | Less documented |
+| Server                                    | Language   | Stars | Notes                                                      |
+| ----------------------------------------- | ---------- | ----- | ---------------------------------------------------------- |
+| `HosakaKeigo/mcp-server-ga4`              | TypeScript | 4     | Node.js-based, supports pnpm, good for TypeScript projects |
+| `eno-graph/mcp-server-google-analytics`   | JavaScript | 7     | Node.js-based, has real-time data tool                     |
+| `gomarble-ai/google-analytics-mcp-server` | Python     | 13    | Less documented                                            |
 
 #### Prerequisites (common to all options)
 
@@ -129,6 +135,7 @@ Multiple open-source MCP servers exist for accessing Google Analytics 4 (GA4) da
 #### Setup Steps for Claude Code (recommended option)
 
 **Step 1: Google Cloud setup**
+
 1. Go to https://console.cloud.google.com/
 2. Create or select a project
 3. Enable the "Google Analytics Data API" in APIs & Services > Library
@@ -138,12 +145,14 @@ Multiple open-source MCP servers exist for accessing Google Analytics 4 (GA4) da
 7. Note the service account email (e.g., `ga4-mcp-server@your-project.iam.gserviceaccount.com`)
 
 **Step 2: GA4 property setup**
+
 1. Go to https://analytics.google.com/
 2. Navigate to Admin > Property access management
 3. Add the service account email with "Viewer" role
 4. Copy the numeric Property ID from Admin > Property details
 
 **Step 3: Install the MCP server**
+
 ```bash
 pip install google-analytics-mcp
 ```
@@ -151,6 +160,7 @@ pip install google-analytics-mcp
 **Step 4: Configure in Claude Code**
 
 Option A — Using `claude mcp add` CLI command:
+
 ```bash
 claude mcp add --transport stdio \
   --env GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account-key.json \
@@ -161,6 +171,7 @@ claude mcp add --transport stdio \
 
 Option B — Using project-scoped `.mcp.json` (recommended for team sharing):
 Create `.mcp.json` at repo root:
+
 ```json
 {
   "mcpServers": {
@@ -175,9 +186,11 @@ Create `.mcp.json` at repo root:
   }
 }
 ```
+
 This uses environment variable expansion so credentials are not committed to the repo.
 
 Option C — Using the TypeScript alternative (`HosakaKeigo/mcp-server-ga4`):
+
 ```bash
 claude mcp add --transport stdio \
   --env GOOGLE_CLIENT_EMAIL=email@example.iam.gserviceaccount.com \
@@ -189,29 +202,31 @@ claude mcp add --transport stdio \
 ```
 
 **Step 5: Verify in Claude Code**
+
 ```
 /mcp
 ```
+
 The `ga4-analytics` server should appear in the list with available tools.
 
 #### Available Tools (recommended server)
 
-| Tool | Description |
-|---|---|
-| `search_schema` | Find dimensions/metrics by keyword |
-| `get_ga4_data` | Retrieve analytics data with built-in safeguards |
-| `list_dimension_categories` | Browse available dimension categories |
-| `list_metric_categories` | Browse available metric categories |
-| `get_dimensions_by_category` | View specific category dimensions |
-| `get_metrics_by_category` | View specific category metrics |
-| `get_property_schema` | Download complete property schema |
+| Tool                         | Description                                      |
+| ---------------------------- | ------------------------------------------------ |
+| `search_schema`              | Find dimensions/metrics by keyword               |
+| `get_ga4_data`               | Retrieve analytics data with built-in safeguards |
+| `list_dimension_categories`  | Browse available dimension categories            |
+| `list_metric_categories`     | Browse available metric categories               |
+| `get_dimensions_by_category` | View specific category dimensions                |
+| `get_metrics_by_category`    | View specific category metrics                   |
+| `get_property_schema`        | Download complete property schema                |
 
 #### Environment Variables Required
 
-| Variable | Description |
-|---|---|
+| Variable                         | Description                                |
+| -------------------------------- | ------------------------------------------ |
 | `GOOGLE_APPLICATION_CREDENTIALS` | Full path to service account JSON key file |
-| `GA4_PROPERTY_ID` | Numeric GA4 Property ID |
+| `GA4_PROPERTY_ID`                | Numeric GA4 Property ID                    |
 
 #### MCP Scope Considerations for Claude Code
 
@@ -224,9 +239,11 @@ For this project, **project scope** with environment variable expansion is recom
 ### 4. Confidence Level & Unknowns
 
 #### Confidence: HIGH (repo audit)
+
 - The repo structure audit is complete and deterministic. All files were inspected.
 
 #### Confidence: HIGH (GA MCP server existence and setup steps)
+
 - Multiple working GA4 MCP servers exist on GitHub with active usage.
 - The setup steps are well-documented by the server authors and confirmed by the Claude Code MCP documentation.
 

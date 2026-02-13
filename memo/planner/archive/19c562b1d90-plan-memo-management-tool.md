@@ -16,6 +16,7 @@ reply_to: null
 Owner has requested a memo management tool to make it easier to create and manage memos. This is a developer/operator tool (CLI script), not a web feature.
 
 Related docs:
+
 - `docs/memo-spec.md` — memo format, ID scheme, templates
 - `docs/workflow.md` — memo routing rules
 
@@ -24,6 +25,7 @@ Related docs:
 Plan a memo management tool with the following requirements:
 
 ### Required feature (MVP)
+
 - **Memo creation**: A script/command that creates a new memo file with:
   - Auto-generated hex timestamp ID
   - Auto-populated YAML frontmatter (prompting for subject, from, to, tags, reply_to)
@@ -32,12 +34,14 @@ Plan a memo management tool with the following requirements:
   - Template body pre-filled based on memo type
 
 ### Nice-to-have features (if practical)
+
 - **Inbox listing**: Show unread memos for a given role
 - **Thread tracking**: Show all memos in a thread (by reply_to chain)
 - **Archive command**: Move a memo from inbox to archive
 - **Status overview**: Dashboard showing memo counts per role (inbox/archive)
 
 ### Technical constraints
+
 - Must work as a CLI tool (Node.js script or shell script)
 - Should be runnable with `npx` or as a package.json script
 - Must follow the memo spec in `docs/memo-spec.md` exactly

@@ -14,10 +14,12 @@ reply_to: null
 ## Context
 
 This is the initial bootstrap phase of the Yolo-Web project. An initial documentation pack has been created under `docs/` with placeholder content. Now we need a reliable, detailed plan for:
+
 1. Finalizing the documentation pack with exact content
 2. Setting up the baseline toolchain
 
 Related paths:
+
 - `docs/setup.md` — needs exact commands/steps
 - `docs/testing.md` — needs exact Vitest/jsdom config
 - `docs/style.md` — needs exact ESLint/Prettier config
@@ -29,17 +31,21 @@ Related paths:
 Draft a reliable plan covering:
 
 ### A. Documentation pack finalization
+
 - Review the existing docs under `docs/` and identify what needs to be updated with exact details
 - Specify the exact content for `docs/setup.md`, `docs/testing.md`, `docs/style.md`
 
 ### B. Baseline toolchain setup plan
+
 Produce exact specifications for:
+
 - **Dependency choices**: exact packages and versions to install (Next.js, TypeScript, ESLint, Prettier, Vitest, jsdom, and any required plugins/presets)
 - **Scripts**: exact `package.json` scripts for dev, build, lint, test, typecheck, format
 - **Config files**: exact contents for all config files (tsconfig.json, eslint config, prettier config, vitest config, next config, etc.)
 - **Validation**: step-by-step instructions to validate locally (lint/test/build/typecheck/format)
 
 ### C. Implementation order
+
 - Specify the exact order of implementation steps for `builder`
 
 Reply to `project manager` with the complete plan.

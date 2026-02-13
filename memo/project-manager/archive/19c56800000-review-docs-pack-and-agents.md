@@ -99,12 +99,12 @@ The documentation pack is in good shape overall but needs targeted fixes before 
 
 All documents were checked against the four Constitution rules:
 
-| Rule | Status | Notes |
-|------|--------|-------|
-| Rule 1: Comply with Japanese law and basic ethical standards | PASS | No content violates law or ethics |
-| Rule 2: Helpful/enjoyable, never harmful | PASS | Docs are purely operational |
-| Rule 3: Notify visitors of AI experiment | PASS | Planner plan includes AI disclaimer in `layout.tsx` metadata and `page.tsx` content. `docs/architecture.md` (line 17) explicitly states this requirement. |
-| Rule 4: Try a variety of things with creative ideas | N/A | Applies to site content, not docs |
+| Rule                                                         | Status | Notes                                                                                                                                                     |
+| ------------------------------------------------------------ | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Rule 1: Comply with Japanese law and basic ethical standards | PASS   | No content violates law or ethics                                                                                                                         |
+| Rule 2: Helpful/enjoyable, never harmful                     | PASS   | Docs are purely operational                                                                                                                               |
+| Rule 3: Notify visitors of AI experiment                     | PASS   | Planner plan includes AI disclaimer in `layout.tsx` metadata and `page.tsx` content. `docs/architecture.md` (line 17) explicitly states this requirement. |
+| Rule 4: Try a variety of things with creative ideas          | N/A    | Applies to site content, not docs                                                                                                                         |
 
 ---
 
@@ -124,6 +124,7 @@ All documents were checked against the four Constitution rules:
 #### D.1 General Observations
 
 All five agent definitions (`researcher.md`, `planner.md`, `builder.md`, `reviewer.md`, `process-engineer.md`) follow a consistent structure:
+
 - Role declaration with core responsibility
 - Rules referencing constitution and CLAUDE.md
 - Operational duties
@@ -169,7 +170,7 @@ The plan is thorough, implementation-ready, and well-structured. All acceptance 
 
 1. **Version verification claim**: The plan claims versions were "verified against npm registry as of 2026-02-13". Since I cannot independently verify npm versions, I trust this claim but note that if any version does not exist at install time, `builder` should escalate per Step 12 instructions.
 
-2. **`docs/setup.md` replacement content (Section C.1)**: There is a formatting issue — the closing triple-backtick for the markdown code block appears to end the code block prematurely on line 414 (`\`\`\``). The `builder` should be careful to use the exact content between the `\`\`\`markdown` and the corresponding closing `\`\`\``. This is a rendering issue in the memo, not a content error.
+2. **`docs/setup.md` replacement content (Section C.1)**: There is a formatting issue — the closing triple-backtick for the markdown code block appears to end the code block prematurely on line 414 (`\`\`\``). The `builder`should be careful to use the exact content between the`\`\`\`markdown`and the corresponding closing`\`\`\``. This is a rendering issue in the memo, not a content error.
 
 3. **Test file placement convention**: The plan places tests in `__tests__/` subdirectories (e.g., `src/app/__tests__/page.test.tsx`), which differs from the current `docs/testing.md` placeholder that says "same directory". The plan's replacement content for `docs/testing.md` (Section C.2) correctly reflects the `__tests__/` convention. This is consistent and correct.
 
@@ -187,14 +188,14 @@ The plan is thorough, implementation-ready, and well-structured. All acceptance 
 
 ## Issue Summary
 
-| # | File/Area | Severity | Action Required By | Description |
-|---|-----------|----------|-------------------|-------------|
-| 1 | `docs/README.md` | Low | builder (or follow-up) | Remove placeholder "(正確なコマンドは...)" after implementation |
-| 2 | `docs/architecture.md` | Low | builder (or follow-up) | Remove placeholder "(正確な依存関係とバージョンは...)" after implementation |
-| 3 | `AGENTS.md` | Medium | project manager | Referenced in memo but does not exist. Create symlink or correct reference. |
-| 4 | `.claude/agents/` | Low | project manager | No agent definitions for `project-manager` and `owner` roles |
-| 5 | Planner plan | Info | builder | ESLint flat config imports may fail — follow Step 12 escalation procedure if so |
-| 6 | Planner plan | Low | project manager | Plan does not update `README.md` or `architecture.md` placeholders |
+| #   | File/Area              | Severity | Action Required By     | Description                                                                     |
+| --- | ---------------------- | -------- | ---------------------- | ------------------------------------------------------------------------------- |
+| 1   | `docs/README.md`       | Low      | builder (or follow-up) | Remove placeholder "(正確なコマンドは...)" after implementation                 |
+| 2   | `docs/architecture.md` | Low      | builder (or follow-up) | Remove placeholder "(正確な依存関係とバージョンは...)" after implementation     |
+| 3   | `AGENTS.md`            | Medium   | project manager        | Referenced in memo but does not exist. Create symlink or correct reference.     |
+| 4   | `.claude/agents/`      | Low      | project manager        | No agent definitions for `project-manager` and `owner` roles                    |
+| 5   | Planner plan           | Info     | builder                | ESLint flat config imports may fail — follow Step 12 escalation procedure if so |
+| 6   | Planner plan           | Low      | project manager        | Plan does not update `README.md` or `architecture.md` placeholders              |
 
 ---
 

@@ -33,6 +33,7 @@ You are `reviewer`. Your explicit responsibility is: **Find all problems.**
 ## Memo Format
 
 Follow the format specified in `docs/memo-spec.md`. Review reply memos must include:
+
 - Review verdict (approved / changes requested / rejected)
 - Specific issues found (with file paths and line numbers where applicable)
 - Constitution compliance check result

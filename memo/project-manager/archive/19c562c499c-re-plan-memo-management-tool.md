@@ -23,6 +23,7 @@ Provide operators and AI agents with a CLI tool that creates and manages memos i
 ## Scope Boundaries
 
 **In scope:**
+
 - CLI tool at `scripts/memo.ts` with subcommands: `create`, `inbox`, `thread`, `archive`, `status`
 - Auto-generated hex timestamp IDs
 - YAML frontmatter generation from CLI flags
@@ -32,6 +33,7 @@ Provide operators and AI agents with a CLI tool that creates and manages memos i
 - Unit tests for core logic
 
 **Out of scope:**
+
 - Interactive prompts (all input via CLI flags for agent compatibility)
 - Web UI for memo management
 - Notification system
@@ -103,16 +105,17 @@ npx tsx scripts/memo.ts create \
 
 **Flags:**
 
-| Flag | Required | Default | Description |
-|------|----------|---------|-------------|
-| `--subject` / `-s` | Yes | — | Memo subject (used in frontmatter and filename) |
-| `--from` / `-f` | Yes | — | Sender role name |
-| `--to` / `-t` | Yes | — | Recipient role name |
-| `--tags` | No | `[]` | Comma-separated tag list |
-| `--reply-to` / `-r` | No | `null` | ID of the memo being replied to |
-| `--template` | No | `"task"` | Template type: `task`, `reply`, `research`, `planning`, `implementation`, `review`, `process` |
+| Flag                | Required | Default  | Description                                                                                   |
+| ------------------- | -------- | -------- | --------------------------------------------------------------------------------------------- |
+| `--subject` / `-s`  | Yes      | —        | Memo subject (used in frontmatter and filename)                                               |
+| `--from` / `-f`     | Yes      | —        | Sender role name                                                                              |
+| `--to` / `-t`       | Yes      | —        | Recipient role name                                                                           |
+| `--tags`            | No       | `[]`     | Comma-separated tag list                                                                      |
+| `--reply-to` / `-r` | No       | `null`   | ID of the memo being replied to                                                               |
+| `--template`        | No       | `"task"` | Template type: `task`, `reply`, `research`, `planning`, `implementation`, `review`, `process` |
 
 **Behavior:**
+
 1. Generate hex timestamp ID via `Date.now().toString(16)`
 2. Build YAML frontmatter from flags
 3. If `--reply-to` is set, auto-prefix subject with `"Re: "` (unless already prefixed), auto-add `"reply"` tag
@@ -122,6 +125,7 @@ npx tsx scripts/memo.ts create \
 7. Print the created file path to stdout
 
 **Output:**
+
 ```
 Created: memo/planner/inbox/19c562c499c-re-plan-memo-management-tool.md
 ```
@@ -137,11 +141,12 @@ npx tsx scripts/memo.ts inbox                    # Lists all roles' inboxes
 
 **Flags:**
 
-| Flag | Required | Default | Description |
-|------|----------|---------|-------------|
-| `--role` | No | all | Role to check inbox for |
+| Flag     | Required | Default | Description             |
+| -------- | -------- | ------- | ----------------------- |
+| `--role` | No       | all     | Role to check inbox for |
 
 **Output:**
+
 ```
 planner (1 memo):
   19c562b1d90  Plan memo management tool for owner  [planning, tooling, memo]
@@ -157,17 +162,19 @@ npx tsx scripts/memo.ts thread --id 19c562b1d90
 
 **Flags:**
 
-| Flag | Required | Default | Description |
-|------|----------|---------|-------------|
-| `--id` | Yes | — | Any memo ID in the thread |
+| Flag   | Required | Default | Description               |
+| ------ | -------- | ------- | ------------------------- |
+| `--id` | Yes      | —       | Any memo ID in the thread |
 
 **Behavior:**
+
 1. Find the memo with the given ID (scan all `memo/` directories)
 2. Follow `reply_to` chain up to the root memo
 3. Find all memos that have `reply_to` pointing to any memo in the chain
 4. Display in chronological order
 
 **Output:**
+
 ```
 Thread: "Plan memo management tool for owner"
   19c562b1d90  project manager -> planner  [inbox]   2026-02-13T19:33:00+09:00
@@ -184,17 +191,19 @@ npx tsx scripts/memo.ts archive --role planner --id 19c562b1d90
 
 **Flags:**
 
-| Flag | Required | Default | Description |
-|------|----------|---------|-------------|
-| `--role` | Yes | — | Role whose inbox to archive from |
-| `--id` | Yes | — | Memo ID to archive |
+| Flag     | Required | Default | Description                      |
+| -------- | -------- | ------- | -------------------------------- |
+| `--role` | Yes      | —       | Role whose inbox to archive from |
+| `--id`   | Yes      | —       | Memo ID to archive               |
 
 **Behavior:**
+
 1. Find file matching `memo/<role-slug>/inbox/<id>-*.md`
 2. Move (rename) to `memo/<role-slug>/archive/<id>-*.md`
 3. Print confirmation
 
 **Output:**
+
 ```
 Archived: memo/planner/inbox/19c562b1d90-plan-memo-management-tool.md -> memo/planner/archive/19c562b1d90-plan-memo-management-tool.md
 ```
@@ -208,6 +217,7 @@ npx tsx scripts/memo.ts status
 ```
 
 **Output:**
+
 ```
 Role                Inbox  Archive
 ──────────────────────────────────
@@ -756,7 +766,9 @@ export function listInbox(role?: RoleSlug): void {
           memo.frontmatter.tags.length > 0
             ? `  [${memo.frontmatter.tags.join(", ")}]`
             : "";
-        console.log(`  ${memo.frontmatter.id}  ${memo.frontmatter.subject}${tags}`);
+        console.log(
+          `  ${memo.frontmatter.id}  ${memo.frontmatter.subject}${tags}`,
+        );
       } catch {
         console.log(`  (parse error: ${file})`);
       }
@@ -890,8 +902,9 @@ import { VALID_ROLES } from "../types.js";
 
 function countMdFiles(dir: string): number {
   if (!fs.existsSync(dir)) return 0;
-  return fs.readdirSync(dir).filter((f) => f.endsWith(".md") && f !== ".gitkeep")
-    .length;
+  return fs
+    .readdirSync(dir)
+    .filter((f) => f.endsWith(".md") && f !== ".gitkeep").length;
 }
 
 export function showStatus(): void {
@@ -1093,6 +1106,7 @@ Create `scripts/memo/types.ts` with exact content from section C.1.
 ### Step 4: Create core modules
 
 Create files in this order (no inter-dependencies within this group except `types.ts`):
+
 1. `scripts/memo/core/id.ts` (C.2)
 2. `scripts/memo/core/paths.ts` (C.3)
 3. `scripts/memo/core/frontmatter.ts` (C.4)
@@ -1102,6 +1116,7 @@ Create files in this order (no inter-dependencies within this group except `type
 ### Step 5: Create commands
 
 Create in order:
+
 1. `scripts/memo/commands/create.ts` (C.7) — MVP
 2. `scripts/memo/commands/inbox.ts` (C.8)
 3. `scripts/memo/commands/archive.ts` (C.9)
@@ -1141,10 +1156,7 @@ test("generateMemoId returns a string that decodes to a recent timestamp", () =>
 
 ```ts
 import { expect, test } from "vitest";
-import {
-  formatTimestamp,
-  serializeFrontmatter,
-} from "../core/frontmatter.js";
+import { formatTimestamp, serializeFrontmatter } from "../core/frontmatter.js";
 import type { MemoFrontmatter } from "../types.js";
 
 test("formatTimestamp returns ISO-8601 with timezone", () => {
@@ -1308,15 +1320,15 @@ npm run memo -- create --subject "Test memo" --from planner --to builder --tags 
 
 ## E. Effort Estimates
 
-| Feature | Effort | Priority |
-|---------|--------|----------|
-| `create` (MVP) | ~1 hour | Must-have |
-| `inbox` | ~20 min | Nice-to-have |
-| `archive` | ~15 min | Nice-to-have |
-| `status` | ~15 min | Nice-to-have |
-| `thread` | ~30 min | Nice-to-have |
-| Unit tests | ~30 min | Must-have |
-| **Total** | **~2.5 hours** | — |
+| Feature        | Effort         | Priority     |
+| -------------- | -------------- | ------------ |
+| `create` (MVP) | ~1 hour        | Must-have    |
+| `inbox`        | ~20 min        | Nice-to-have |
+| `archive`      | ~15 min        | Nice-to-have |
+| `status`       | ~15 min        | Nice-to-have |
+| `thread`       | ~30 min        | Nice-to-have |
+| Unit tests     | ~30 min        | Must-have    |
+| **Total**      | **~2.5 hours** | —            |
 
 Recommendation: Implement all features. The nice-to-have features are small and significantly improve the tool's utility for agents and operators.
 

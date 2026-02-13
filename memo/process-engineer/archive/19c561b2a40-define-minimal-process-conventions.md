@@ -16,6 +16,7 @@ reply_to: null
 This is the initial bootstrap phase of the Yolo-Web project. The memo system and basic workflow have been established per the bootstrap instructions. Now we need to ensure the process is efficient and will scale as the project grows.
 
 Related paths:
+
 - `docs/workflow.md` — current workflow documentation
 - `docs/memo-spec.md` — current memo specification
 - `memo/` — memo directory structure

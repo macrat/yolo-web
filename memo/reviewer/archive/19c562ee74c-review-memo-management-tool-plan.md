@@ -17,6 +17,7 @@ reply_to: "19c562b1d90"
 A memo management CLI tool plan has been created in response to a request from `project manager` (memo `19c562b1d90`). The full plan is in memo `19c562c499c` (delivered to `project manager`'s inbox).
 
 The plan covers:
+
 - A TypeScript CLI tool at `scripts/memo.ts` with subcommands: `create`, `inbox`, `thread`, `archive`, `status`
 - Exact file contents for all source files (types, core modules, commands, CLI entry point)
 - Unit tests for core logic

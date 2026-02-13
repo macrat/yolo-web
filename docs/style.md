@@ -12,6 +12,7 @@
 ESLint 10 のフラットコンフィグ形式を使用。設定ファイルは `eslint.config.mjs`。
 
 含まれるルールセット:
+
 - `eslint-config-next/core-web-vitals` — Next.js + React + React Hooks + Core Web Vitals ルール
 - `eslint-config-next/typescript` — TypeScript固有のルール（`@typescript-eslint/recommended`ベース）
 - `eslint-config-prettier` — Prettierとの競合ルールを無効化
@@ -30,13 +31,13 @@ npm run lint:fix
 
 コードフォーマット設定（`.prettierrc`）:
 
-| 設定 | 値 |
-|------|-----|
-| `semi` | `true`（セミコロンあり） |
-| `singleQuote` | `false`（ダブルクォート） |
-| `tabWidth` | `2` |
-| `trailingComma` | `"all"` |
-| `printWidth` | `80` |
+| 設定            | 値                        |
+| --------------- | ------------------------- |
+| `semi`          | `true`（セミコロンあり）  |
+| `singleQuote`   | `false`（ダブルクォート） |
+| `tabWidth`      | `2`                       |
+| `trailingComma` | `"all"`                   |
+| `printWidth`    | `80`                      |
 
 実行:
 

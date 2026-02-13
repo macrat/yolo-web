@@ -21,6 +21,7 @@ reply_to: null
 This repository is an experiment in operating a large, evolving web project using “vibe coding” only: AI agents plan, execute, review, and iterate with minimal human involvement after the constitution is provided.
 
 The purpose is to:
+
 - Observe AI-only operations over time (coordination patterns, drift, failure modes, recovery behaviors).
 - Learn operational patterns for running complex projects with AI-only execution.
 
@@ -29,6 +30,7 @@ A “dummy goal” (e.g., pageviews) may be used to keep the system generating w
 ## 2) Roles (names to use everywhere) and explicit responsibilities
 
 Use these exact role names in memos and docs:
+
 - `owner`
 - `project manager`
 - `researcher`
@@ -38,53 +40,67 @@ Use these exact role names in memos and docs:
 - `process engineer`
 
 ### 2.1 owner
+
 Responsibility (explicit):
+
 - **Establish the constitution** (`docs/constitution.md`).
 - **Monitor** the work of `project manager`.
 - Provide **instructions** to `project manager` as needed.
 
 ### 2.2 project manager
+
 Responsibility (explicit):
+
 - **Make instructions and decisions to increase PV.**
-Operational duties:
+  Operational duties:
 - Maintain a coherent backlog by delegating tasks via memos.
 - Accept or reject outputs based on `reviewer` findings and constitution compliance.
 - Push to `main` when deciding to ship (CI/CD deploys on push to `main`).
 - Ensure the repository remains operable enough to continue the experiment.
 
 ### 2.3 researcher
+
 Responsibility (explicit):
+
 - **Provide accurate and relevant information.**
-Operational duties:
+  Operational duties:
 - Investigate the repository and (if needed) the internet and return actionable findings with sources/paths.
 - Identify unknowns and risks, but avoid implementing unless explicitly instructed.
 
 ### 2.4 planner
+
 Responsibility (explicit):
+
 - **Provide reliable plans.**
-Operational duties:
+  Operational duties:
 - Convert goals into step-by-step plans with acceptance criteria.
 - Own the “Baseline setup details” (Next.js/TypeScript/ESLint/Vitest/jsdom/Prettier) as a plan, including the exact steps and contents to put into docs/configs. (This kickoff memo intentionally does not contain those command/code specifics.)
 
 ### 2.5 builder
+
 Responsibility (explicit):
+
 - **Implement reliably exactly as instructed.**
-Operational duties:
+  Operational duties:
 - Implement plans/tasks provided via memos.
 - Keep changes scoped to the memo’s acceptance criteria.
 - Produce a clear change summary and request review.
 
 ### 2.6 reviewer
+
 Responsibility (explicit):
+
 - **Find all problems.**
-Operational duties:
+  Operational duties:
 - Review changes for correctness, clarity, maintainability, operational consistency, and constitution compliance.
 - Reply with approval, change requests, or rejection, with concrete, testable feedback.
 
 ### 2.7 process engineer
+
 Responsibility (explicit):
+
 - **Help other agents create states efficiently.**
-Operational duties:
+  Operational duties:
 - Improve workflow mechanics (memo spec, templates, directory structure, conventions).
 - Analyze archived memos and propose process changes that increase throughput and reduce coordination errors.
 
@@ -103,11 +119,13 @@ All memos live under `memo/`, partitioned by recipient role. Directory names rep
 - `memo/process-engineer/inbox/` and `memo/process-engineer/archive/`
 
 Routing rule:
+
 - To send a memo to a role, create a new memo file in that role’s `inbox/` directory.
 
 ### 3.2 Lifecycle rule (read → archive → respond)
 
 For each role:
+
 1. The role reads memos in its own `memo/<role-slug>/inbox/`.
 2. The role processes a memo.
 3. The role moves the processed memo file to `memo/<role-slug>/archive/`.
@@ -123,6 +141,7 @@ For each role:
 ## 4) Memo format (YAML frontmatter + Markdown body)
 
 Every memo file must begin with YAML frontmatter containing at least:
+
 - `id`
 - `subject`
 - `from`
@@ -134,6 +153,7 @@ Every memo file must begin with YAML frontmatter containing at least:
 ## 5) Memo templates (copy/paste)
 
 ### 5.1 Generic task memo
+
 ```md
 ---
 id: "<hex-unix-ms>"
@@ -146,24 +166,30 @@ reply_to: null
 ---
 
 ## Context
+
 <why this exists; link to related memo ids; relevant repo paths>
 
 ## Request
+
 <what to do>
 
 ## Acceptance criteria
+
 - [ ] <objective check>
 - [ ] <objective check>
 
 ## Constraints
+
 - Must comply with `docs/constitution.md` (immutable).
 - <other constraints>
 
 ## Notes
+
 <risks, assumptions, options>
 ```
 
 ### 5.2 Reply memo
+
 ```md
 ---
 id: "<hex-unix-ms>"
@@ -176,24 +202,31 @@ reply_to: "<original id>"
 ---
 
 ## Summary
+
 <what you did / found>
 
 ## Results
+
 <details>
 
 ## Next actions
+
 <what should happen next, if anything>
 ```
 
 ### 5.3 Research memo (from `project manager` to `researcher`)
+
 Must include:
+
 - questions to answer
 - repo paths inspected
 - external sources (if used)
 - confidence + unknowns
 
 ### 5.4 Planning memo (from `project manager` to `planner`)
+
 Must include:
+
 - goal
 - scope boundaries
 - acceptance criteria
@@ -201,20 +234,26 @@ Must include:
 - rollback approach (conceptual)
 
 ### 5.5 Implementation memo (from `project manager` to `builder`)
+
 Must include:
+
 - exact scope
 - expected changed files
 - acceptance criteria
 - “do not change” list (if any)
 
 ### 5.6 Review memo (to `reviewer`)
+
 Must include:
+
 - what changed (commit refs or file list)
 - review focus areas
 - acceptance criteria checklist
 
 ### 5.7 Process improvement memo (to `process engineer`)
+
 Must include:
+
 - observed coordination inefficiency
 - proposed change
 - tradeoffs
@@ -266,14 +305,17 @@ Create these files (names can evolve later; start with this set now):
   - How agents read analytics via MCP (exact method to be discovered and documented by `researcher`)
 
 Optional (recommended):
+
 - `docs/index.md` as a hub linking to all docs.
 
 ## 7) Tool instruction files (Claude Code + Codex)
 
 ### 7.1 `CLAUDE.md` is canonical
+
 Create `CLAUDE.md` at repo root as the single source of operating instructions for tool-assisted sessions.
 
 `CLAUDE.md` must:
+
 - Point to `docs/constitution.md` as immutable policy
 - Summarize roles + responsibilities
 - Describe memo routing rules (directory scheme)
@@ -281,10 +323,13 @@ Create `CLAUDE.md` at repo root as the single source of operating instructions f
 - State the baseline toolchain (Next.js/TypeScript/ESLint/Vitest/jsdom/Prettier) at a high level
 
 ### 7.2 `AGENTS.md` is a symlink to `CLAUDE.md`
+
 Create `AGENTS.md` as a **symbolic link** to `CLAUDE.md` (not a separate document). The content-of-truth is `CLAUDE.md`.
 
 ### 7.3 Claude Code subagents
+
 Create role definitions under `.claude/agents/`:
+
 - `.claude/agents/researcher.md`
 - `.claude/agents/planner.md`
 - `.claude/agents/builder.md`
@@ -292,6 +337,7 @@ Create role definitions under `.claude/agents/`:
 - `.claude/agents/process-engineer.md`
 
 Each subagent definition must:
+
 - Reference `docs/constitution.md`
 - Reference the memo directory scheme and required output format
 - Enforce the role’s explicit responsibility statement (Section 2)
@@ -299,6 +345,7 @@ Each subagent definition must:
 ## 8) Baseline toolchain setup (delegated to planner)
 
 This project uses:
+
 - Next.js
 - TypeScript
 - ESLint
@@ -308,6 +355,7 @@ This project uses:
 This memo intentionally does not specify the exact commands, package lists, or config code.
 
 Instruction:
+
 - `project manager` must request `planner` to produce a “baseline setup plan” that includes:
   - exact dependency choices
   - exact scripts to add to `package.json`
@@ -341,29 +389,35 @@ Document these in `docs/architecture.md`:
 
 Create the following new memos (new files) in recipients’ inbox directories:
 
-1) To `researcher`:
+1. To `researcher`:
+
 - subject: “Audit current repo state + discover GA(MCP) access method”
 - request: inspect repo structure and report what already exists vs required docs/tooling; identify how MCP should access GA in this environment; reply to `project manager`.
 
-2) To `planner`:
+2. To `planner`:
+
 - subject: “Plan the documentation pack + baseline toolchain setup”
 - request: draft a reliable plan for the docs pack (Section 6) and the baseline setup details (Section 8) including exact steps/configs to implement; reply to `project manager`.
 
-3) To `builder`:
+3. To `builder`:
+
 - subject: “Implement docs/configs per planner plan (after review approval)”
 - request: wait for planner plan + reviewer approval; then implement exactly; reply to `reviewer` for review and to `project manager` for status.
 
-4) To `reviewer`:
+4. To `reviewer`:
+
 - subject: “Review planner plan and all subsequent implementation”
 - request: review the plan first; then review implementation; find all problems; send actionable decisions.
 
-5) To `process engineer`:
+5. To `process engineer`:
+
 - subject: “Define minimal process conventions for efficient state creation”
 - request: propose improvements to memo handling and minimal operational conventions; reply to `reviewer` and `project manager`.
 
 ## 11) Completion criteria for this memo
 
 This memo thread is complete when:
+
 - The docs pack in Section 6 exists under `docs/` (initial version).
 - `CLAUDE.md` exists and is correct.
 - `AGENTS.md` exists as a symlink to `CLAUDE.md`.
@@ -371,5 +425,6 @@ This memo thread is complete when:
 - `project manager` has spawned the initial memos in Section 10.
 
 When `project manager` completes the above, `project manager` should:
+
 - Move this memo file from `memo/project-manager/inbox/` to `memo/project-manager/archive/`.
 - Create a new memo to `owner` summarizing what was created, what broke (if anything), and what the next cycle will do.

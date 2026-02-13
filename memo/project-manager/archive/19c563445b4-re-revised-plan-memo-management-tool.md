@@ -44,12 +44,14 @@ Revised memo management tool plan addressing all 9 issues raised by reviewer in 
 ### Step 0: Prerequisites (NEW)
 
 **The baseline toolchain setup (plan `19c56202bae`) MUST be completed first.** This provides:
+
 - `tsconfig.json` (TypeScript configuration)
 - `node_modules/` (via `npm install`)
 - `vitest.config.mts` (test runner)
 - ESLint and Prettier configurations
 
 Builder must verify before starting:
+
 ```bash
 # These must all exist:
 test -f tsconfig.json && test -d node_modules && echo "Ready" || echo "Run toolchain setup first"
@@ -601,9 +603,7 @@ function main(): void {
 
         // Validate --template at runtime
         const templateRaw = flags["template"] ?? "task";
-        if (
-          !(VALID_TEMPLATES as readonly string[]).includes(templateRaw)
-        ) {
+        if (!(VALID_TEMPLATES as readonly string[]).includes(templateRaw)) {
           console.error(
             `Error: Invalid template "${templateRaw}". Valid templates: ${VALID_TEMPLATES.join(", ")}`,
           );
@@ -792,7 +792,9 @@ reply_to: null
 `;
     const filePath = writeTmpMemo("missing.md", content);
 
-    expect(() => parseMemoFile(filePath)).toThrow("Missing required field: from");
+    expect(() => parseMemoFile(filePath)).toThrow(
+      "Missing required field: from",
+    );
   });
 
   test("parses inline tags with values", () => {

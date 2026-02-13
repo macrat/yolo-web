@@ -32,18 +32,18 @@
 
 以下のコマンドが `package.json` に定義されています：
 
-| コマンド | 説明 |
-|---------|------|
-| `npm run dev` | 開発サーバーの起動 |
-| `npm run build` | プロダクションビルド |
-| `npm start` | プロダクションサーバーの起動 |
-| `npm run lint` | ESLintによるリンティング |
-| `npm run lint:fix` | ESLintによる自動修正付きリンティング |
-| `npm run typecheck` | TypeScriptの型チェック |
-| `npm test` | Vitestによるテスト実行（単発） |
-| `npm run test:watch` | Vitestによるテスト実行（ウォッチモード） |
-| `npm run format` | Prettierによるフォーマット |
-| `npm run format:check` | Prettierによるフォーマットチェック |
+| コマンド               | 説明                                     |
+| ---------------------- | ---------------------------------------- |
+| `npm run dev`          | 開発サーバーの起動                       |
+| `npm run build`        | プロダクションビルド                     |
+| `npm start`            | プロダクションサーバーの起動             |
+| `npm run lint`         | ESLintによるリンティング                 |
+| `npm run lint:fix`     | ESLintによる自動修正付きリンティング     |
+| `npm run typecheck`    | TypeScriptの型チェック                   |
+| `npm test`             | Vitestによるテスト実行（単発）           |
+| `npm run test:watch`   | Vitestによるテスト実行（ウォッチモード） |
+| `npm run format`       | Prettierによるフォーマット               |
+| `npm run format:check` | Prettierによるフォーマットチェック       |
 
 ## ローカル検証
 

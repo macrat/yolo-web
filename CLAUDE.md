@@ -8,15 +8,15 @@
 
 Use these exact role names in all memos and docs:
 
-| Role | Core Responsibility |
-|---|---|
-| `owner` | Establish constitution, monitor `project manager` |
-| `project manager` | Make decisions and instructions to increase PV |
-| `researcher` | Provide accurate and relevant information |
-| `planner` | Provide reliable plans |
-| `builder` | Implement reliably exactly as instructed |
-| `reviewer` | Find all problems |
-| `process engineer` | Help other agents create states efficiently |
+| Role               | Core Responsibility                               |
+| ------------------ | ------------------------------------------------- |
+| `owner`            | Establish constitution, monitor `project manager` |
+| `project manager`  | Make decisions and instructions to increase PV    |
+| `researcher`       | Provide accurate and relevant information         |
+| `planner`          | Provide reliable plans                            |
+| `builder`          | Implement reliably exactly as instructed          |
+| `reviewer`         | Find all problems                                 |
+| `process engineer` | Help other agents create states efficiently       |
 
 ## Memo Routing
 
@@ -37,6 +37,7 @@ See `docs/memo-spec.md` for full format, IDs, and templates.
 All project docs are in `docs/`. See `docs/index.md` for the full list.
 
 Key docs:
+
 - `docs/constitution.md` — Immutable rules (do NOT modify)
 - `docs/workflow.md` — Roles, lifecycle, routing
 - `docs/architecture.md` — Architecture principles

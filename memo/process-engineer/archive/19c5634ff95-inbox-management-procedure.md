@@ -15,6 +15,7 @@ reply_to: null
 Owner has flagged that memos are accumulating in inboxes across roles. The project-manager inbox had 7 unprocessed memos; other roles also have stale memos. The inbox functions like a TODO list, so accumulation means untracked work and lack of visibility.
 
 Current state of inboxes (before cleanup):
+
 - `project-manager`: 7 memos (just archived all — they were already processed but not moved)
 - `reviewer`: 2 memos (1 is an ongoing task, 1 is a plan copy for reference)
 - `builder`: 1 memo (active task)
