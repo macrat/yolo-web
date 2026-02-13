@@ -50,6 +50,11 @@ Key docs:
 - **Formatting**: Prettier
 - **Testing**: Vitest + jsdom
 
+## Work Process
+
+- Parallelize work whenever possible. If tasks can proceed concurrently, do so.
+- Commit frequently to create checkpoints for easy rollback if something goes wrong.
+
 ## Git Rule
 
 When committing to git, please set `--author "Claude <noreply@anthropic.com>"` or `--author "Codex <codex@localhost>"`.
