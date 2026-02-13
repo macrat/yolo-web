@@ -1,3 +1,4 @@
+import fs from "node:fs";
 import { createMemo } from "./memo/commands/create.js";
 import { readMemo } from "./memo/commands/read.js";
 import { listInbox } from "./memo/commands/inbox.js";
@@ -100,6 +101,13 @@ function main(): void {
         if (publicRaw === "true") publicValue = true;
         else if (publicRaw === "false") publicValue = false;
 
+        // Read body from stdin if available (pipe or redirect)
+        let body: string | undefined;
+        if (!process.stdin.isTTY) {
+          body = fs.readFileSync(0, "utf-8");
+          if (body.trim() === "") body = undefined; // Empty stdin -> use template
+        }
+
         const filePath = createMemo({
           subject,
           from,
@@ -108,6 +116,7 @@ function main(): void {
           replyTo,
           template,
           public: publicValue,
+          body,
         });
         console.log(`Created: ${filePath}`);
         break;
