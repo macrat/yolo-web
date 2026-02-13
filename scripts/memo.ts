@@ -32,10 +32,11 @@ function parseArgs(args: string[]): {
 }
 
 function printUsage(): void {
-  console.log(`Usage: npx tsx scripts/memo.ts <command> [options]
+  console.log(`Usage: npm run memo <command> [options]
 
 Commands:
   create    Create a new memo
+  read      Read a memo by ID or file path
   inbox     List memos in a role's inbox
   thread    Show all memos in a thread
   archive   Move a memo from inbox to archive
@@ -50,6 +51,10 @@ create options:
   --reply-to, -r   ID of memo being replied to (optional)
   --template       Template type: ${VALID_TEMPLATES.join("|")} (default: task)
   --public         Set public visibility (true/false, optional)
+  (stdin)          Pipe body text via stdin to override template
+
+read options:
+  --id             Memo ID or file path (required)
 
 inbox options:
   --role           Role to check inbox for (optional, shows all if omitted)
@@ -60,6 +65,37 @@ thread options:
 archive options:
   --role           Role whose inbox to archive from (required)
   --id             Memo ID to archive (required)
+
+Examples:
+  # Show all inboxes
+  npm run memo status
+
+  # Check a specific role's inbox
+  npm run memo inbox -- --role planner
+
+  # Read a specific memo
+  npm run memo read -- --id 19c5758d1f9
+
+  # Create a new task memo (with template)
+  npm run memo create -- --subject "Task title" --from planner --to builder --template implementation --tags "impl,feature"
+
+  # Create a memo with body from stdin
+  echo "## Summary" | npm run memo create -- --subject "Re: Task" --from builder --to "project manager" --reply-to abc123 --template reply
+
+  # Create a memo with heredoc body
+  npm run memo create -- --subject "New plan" --from planner --to "project manager" --template planning <<'MEMO'
+  ## Context
+  Background info here.
+
+  ## Goal
+  What to achieve.
+  MEMO
+
+  # View a thread
+  npm run memo thread -- --id 19c5758d1f9
+
+  # Archive a processed memo
+  npm run memo archive -- --role planner --id 19c5758d1f9
 `);
 }
 
