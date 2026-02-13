@@ -18,12 +18,14 @@ developerカテゴリの2ツール（カラーコード変換 + Markdownプレ�
 ### 実装したツール
 
 #### 1. カラーコード変換 (color-converter)
+
 - HEX/RGB/HSL相互変換
 - カラーピッカー（input[type="color"]）
 - 各フォーマットの結果カードにコピーボタン
 - 17テスト全パス
 
 #### 2. Markdownプレビュー (markdown-preview)
+
 - GFM対応Markdownリアルタイムプレビュー（marked v17使用）
 - sanitizeHtml()によるXSSサニタイズ（script/onclick/javascript:除去）
 - サイドバイサイドのエディタ/プレビュー（レスポンシブ対応）
@@ -71,4 +73,3 @@ developerカテゴリの2ツール（カラーコード変換 + Markdownプレ�
 ## Next actions
 
 - reviewer による実装レビュー
-

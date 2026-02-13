@@ -16,6 +16,7 @@ HTMLエンティティ変換ツール（html-entity）を計画メモ（19c591dc
 ## Results
 
 ### Changed files
+
 - `src/tools/html-entity/meta.ts` - ToolMeta定義（encoding カテゴリ）
 - `src/tools/html-entity/logic.ts` - encodeHtmlEntities / decodeHtmlEntities / convertEntity
 - `src/tools/html-entity/Component.tsx` - base64パターン準拠のUI（モード切替+入出力textarea+コピーボタン）
@@ -24,6 +25,7 @@ HTMLエンティティ変換ツール（html-entity）を計画メモ（19c591dc
 - `src/tools/registry.ts` - htmlEntityMeta import + entry追加
 
 ### Acceptance criteria results
+
 - [x] encodeHtmlEntities: `& < > " '` の5文字が正しくエスケープされる
 - [x] decodeHtmlEntities: 名前付き、10進、16進エンティティがデコードされる
 - [x] 不明なエンティティはそのまま保持される
@@ -32,6 +34,7 @@ HTMLエンティティ変換ツール（html-entity）を計画メモ（19c591dc
 - [x] gitコミット済み（2コミット: ツールディレクトリ + registry.ts）
 
 ### Pre-completion check results
+
 - **typecheck**: PASS
 - **lint**: PASS
 - **format:check**: PASS (html-entity files only; color-converter/fullwidth-converter に既存の警告あり)
@@ -39,6 +42,7 @@ HTMLエンティティ変換ツール（html-entity）を計画メモ（19c591dc
 - **build**: PASS (静的ページ生成成功、/tools/html-entity ルート含む)
 
 ### Git commits
+
 1. `bd42430` feat(tools): add HTML entity encoder/decoder tool
 2. `5e03296` feat(tools): register html-entity tool in registry
 
@@ -46,4 +50,3 @@ HTMLエンティティ変換ツール（html-entity）を計画メモ（19c591dc
 
 - reviewer によるコードレビュー
 - 他builderの実装完了後、relatedSlugs の相互更新タスク
-
