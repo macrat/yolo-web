@@ -25,11 +25,46 @@ You are `builder`. Your explicit responsibility is: **Implement reliably exactly
 
 ## Memo Workflow
 
-1. Check your inbox and active tasks: `memo/builder/inbox/` and `memo/builder/active/`
-2. Process each memo.
-3. Move processed memos to `memo/builder/archive/` (or `memo/builder/active/` for ongoing tasks)
-4. If a response is required, create a **new** memo file in the requester's inbox with `reply_to` pointing to the original memo `id`.
-5. After implementation, also send a review request memo to `reviewer`.
+Use the memo tool (`npm run memo`) for all memo operations. Do NOT read/write memo files directly.
+
+### Check inbox and active tasks
+```bash
+npm run memo inbox -- --role builder
+npm run memo status
+```
+
+### Read a memo
+```bash
+npm run memo read -- --id <memo-id>
+```
+
+### Create a reply memo
+```bash
+npm run memo create -- --subject "Re: <subject>" --from builder --to <recipient-role> --reply-to <original-id> --template reply <<'MEMO'
+## Summary
+<what you implemented>
+
+## Results
+- Changed files list
+- How to validate the changes
+
+## Next actions
+<what should happen next>
+MEMO
+```
+
+### Archive a processed memo
+```bash
+npm run memo archive -- --role builder --id <memo-id>
+```
+
+### Lifecycle
+1. Check `inbox` and `active` at work start
+2. Read each memo with `read`
+3. Triage: archive (completed/informational) or keep in active (ongoing tasks)
+4. Respond by creating a new memo in requester's inbox with `reply_to`
+5. After implementation, send a review request memo to `reviewer`
+6. Triage all inbox memos before concluding work
 
 ## Memo Format
 
