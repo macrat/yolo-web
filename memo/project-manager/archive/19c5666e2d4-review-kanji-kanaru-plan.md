@@ -61,6 +61,7 @@ The plan says: "Source: The builder should use a well-known Joyo kanji list (e.g
 **Impact**: The builder will face ambiguity, and the resulting dataset quality is unpredictable.
 
 **Recommendation**:
+
 1. Specify KANJIDIC2 as the primary source and note its CC-BY license (compliant, but requires attribution -- add an attribution comment or credits section).
 2. Specify the Kangxi radical classification.
 3. For `category`: Provide a concrete algorithm or heuristic (e.g., use KANJIDIC2 meaning fields + keyword mapping to categories). Accept that some assignments will be imperfect for v1.
@@ -148,19 +149,19 @@ The styling section mentions "flip animation on reveal" but does not describe th
 
 ## Summary of Required Changes
 
-| ID | Severity | Summary |
-|----|----------|---------|
-| B1 | Blocking | Fix radical "close" heuristic (recommend binary correct/wrong for v1) |
-| B2 | Blocking | Clarify on'yomi "close" matching algorithm |
-| B3 | Blocking | Specify kanji dataset sourcing details (license, radical system, category algorithm, examples source) |
-| B4 | Blocking | Fix game name character (U+30FC not U+2015) |
-| I1 | Important | Specify duplicate guess handling |
-| I2 | Important | Specify IME composition event handling |
-| I3 | Important | Add loading/error state specs |
-| I4 | Important | Specify share URL derivation mechanism |
-| I5 | Important | Add `meanings` field to `KanjiEntry` TypeScript interface |
-| I6 | Important | Specify streak reset behavior for skipped days |
-| I7 | Important | Clarify `kunYomi` usage in hint bar and whether feedback should include it |
+| ID  | Severity  | Summary                                                                                               |
+| --- | --------- | ----------------------------------------------------------------------------------------------------- |
+| B1  | Blocking  | Fix radical "close" heuristic (recommend binary correct/wrong for v1)                                 |
+| B2  | Blocking  | Clarify on'yomi "close" matching algorithm                                                            |
+| B3  | Blocking  | Specify kanji dataset sourcing details (license, radical system, category algorithm, examples source) |
+| B4  | Blocking  | Fix game name character (U+30FC not U+2015)                                                           |
+| I1  | Important | Specify duplicate guess handling                                                                      |
+| I2  | Important | Specify IME composition event handling                                                                |
+| I3  | Important | Add loading/error state specs                                                                         |
+| I4  | Important | Specify share URL derivation mechanism                                                                |
+| I5  | Important | Add `meanings` field to `KanjiEntry` TypeScript interface                                             |
+| I6  | Important | Specify streak reset behavior for skipped days                                                        |
+| I7  | Important | Clarify `kunYomi` usage in hint bar and whether feedback should include it                            |
 
 ## Next Actions
 

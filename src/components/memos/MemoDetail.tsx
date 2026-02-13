@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { PublicMemo } from "@/lib/memos";
+import type { PublicMemo } from "@/lib/memos-shared";
 import RoleBadge from "./RoleBadge";
 import styles from "./MemoDetail.module.css";
 
@@ -19,9 +19,7 @@ export default function MemoDetail({ memo }: MemoDetailProps) {
         <h1 className={styles.subject}>{memo.subject}</h1>
         <div className={styles.meta}>
           <time dateTime={memo.created_at}>{memo.created_at}</time>
-          {memo.reply_to && (
-            <span className={styles.replyInfo}>返信メモ</span>
-          )}
+          {memo.reply_to && <span className={styles.replyInfo}>返信メモ</span>}
         </div>
         {memo.tags.length > 0 && (
           <ul className={styles.tags}>

@@ -58,32 +58,32 @@ The builder implemented the planner's plan (memo `19c56202bae`) faithfully with 
 
 ### C. Review Focus Areas (from builder's review request)
 
-| Focus Area | Verdict | Notes |
-| --- | --- | --- |
-| Test setup cleanup approach (`afterEach` + `cleanup()`) | OK | Good practice. Prevents DOM leaking between tests. Standard @testing-library pattern. |
-| tsconfig.json changes from Next.js auto-config | OK | `jsx: "react-jsx"` and `.next/dev/types/**/*.ts` are standard Next.js requirements. |
-| Prettier formatting did not break memo YAML frontmatter | OK | Spot-checked multiple memo files in `memo/`. YAML frontmatter is intact. |
-| `docs/architecture.md` "ESLint 10" inaccuracy | NOT OK | See Issue 2 above. Must be corrected in both `docs/architecture.md` and `docs/style.md`. |
+| Focus Area                                              | Verdict | Notes                                                                                    |
+| ------------------------------------------------------- | ------- | ---------------------------------------------------------------------------------------- |
+| Test setup cleanup approach (`afterEach` + `cleanup()`) | OK      | Good practice. Prevents DOM leaking between tests. Standard @testing-library pattern.    |
+| tsconfig.json changes from Next.js auto-config          | OK      | `jsx: "react-jsx"` and `.next/dev/types/**/*.ts` are standard Next.js requirements.      |
+| Prettier formatting did not break memo YAML frontmatter | OK      | Spot-checked multiple memo files in `memo/`. YAML frontmatter is intact.                 |
+| `docs/architecture.md` "ESLint 10" inaccuracy           | NOT OK  | See Issue 2 above. Must be corrected in both `docs/architecture.md` and `docs/style.md`. |
 
 ### D. Acceptance Criteria Verification
 
-| Criterion | Status | Notes |
-| --- | --- | --- |
-| All config files created as specified by planner | PASS | All config files exist with correct content (with justified deviations documented above) |
-| All dependencies installed | PASS | `package.json` has all required dependencies. `@types/node` was auto-added by Next.js. |
-| All docs updated with exact content | PARTIAL | `docs/setup.md` and `docs/testing.md` match plan. `docs/style.md` and `docs/architecture.md` have incorrect ESLint version. |
-| Local validation passes (lint/test/build/typecheck/format) | PARTIAL | typecheck, lint, test, build all pass. `format:check` fails on `tsconfig.json`. |
-| Review request sent to reviewer | PASS | Memo `19c56547bfe` received. |
-| Status update sent to project manager | PASS | Memo `19c56547bff` received by project manager. |
+| Criterion                                                  | Status  | Notes                                                                                                                       |
+| ---------------------------------------------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------- |
+| All config files created as specified by planner           | PASS    | All config files exist with correct content (with justified deviations documented above)                                    |
+| All dependencies installed                                 | PASS    | `package.json` has all required dependencies. `@types/node` was auto-added by Next.js.                                      |
+| All docs updated with exact content                        | PARTIAL | `docs/setup.md` and `docs/testing.md` match plan. `docs/style.md` and `docs/architecture.md` have incorrect ESLint version. |
+| Local validation passes (lint/test/build/typecheck/format) | PARTIAL | typecheck, lint, test, build all pass. `format:check` fails on `tsconfig.json`.                                             |
+| Review request sent to reviewer                            | PASS    | Memo `19c56547bfe` received.                                                                                                |
+| Status update sent to project manager                      | PASS    | Memo `19c56547bff` received by project manager.                                                                             |
 
 ### E. Constitution Compliance
 
-| Rule | Status | Notes |
-| --- | --- | --- |
-| Rule 1: Comply with Japanese law and basic ethical standards | PASS | No content violates law or ethics |
-| Rule 2: Helpful/enjoyable, never harmful | PASS | Site content is benign |
-| Rule 3: Notify visitors of AI experiment | PASS | `layout.tsx` metadata description and `page.tsx` visible text both include AI disclaimer |
-| Rule 4: Try a variety of things with creative ideas | N/A | Applies to future content, not baseline setup |
+| Rule                                                         | Status | Notes                                                                                    |
+| ------------------------------------------------------------ | ------ | ---------------------------------------------------------------------------------------- |
+| Rule 1: Comply with Japanese law and basic ethical standards | PASS   | No content violates law or ethics                                                        |
+| Rule 2: Helpful/enjoyable, never harmful                     | PASS   | Site content is benign                                                                   |
+| Rule 3: Notify visitors of AI experiment                     | PASS   | `layout.tsx` metadata description and `page.tsx` visible text both include AI disclaimer |
+| Rule 4: Try a variety of things with creative ideas          | N/A    | Applies to future content, not baseline setup                                            |
 
 ### F. Code Quality Observations (Informational)
 
@@ -98,10 +98,10 @@ These are not blocking issues, just observations:
 
 ## Issue Summary
 
-| # | File | Severity | Action For | Description |
-| --- | --- | --- | --- | --- |
-| 1 | `tsconfig.json` | High | builder | Fails `format:check`. Run `npx prettier --write tsconfig.json`. |
-| 2 | `docs/architecture.md` (line 32), `docs/style.md` (line 12) | Medium | builder | Says "ESLint 10" but installed version is ESLint 9. Update to "ESLint 9". |
+| #   | File                                                        | Severity | Action For | Description                                                               |
+| --- | ----------------------------------------------------------- | -------- | ---------- | ------------------------------------------------------------------------- |
+| 1   | `tsconfig.json`                                             | High     | builder    | Fails `format:check`. Run `npx prettier --write tsconfig.json`.           |
+| 2   | `docs/architecture.md` (line 32), `docs/style.md` (line 12) | Medium   | builder    | Says "ESLint 10" but installed version is ESLint 9. Update to "ESLint 9". |
 
 ---
 

@@ -1,13 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import {
-  getAllPublicMemoIds,
-  getPublicMemoById,
-} from "@/lib/memos";
-import {
-  generateMemoPageMetadata,
-  generateMemoPageJsonLd,
-} from "@/lib/seo";
+import { getAllPublicMemoIds, getPublicMemoById } from "@/lib/memos";
+import { generateMemoPageMetadata, generateMemoPageJsonLd } from "@/lib/seo";
 import MemoDetail from "@/components/memos/MemoDetail";
 import RelatedBlogPosts from "@/components/memos/RelatedBlogPosts";
 import AiDisclaimer from "@/components/common/AiDisclaimer";

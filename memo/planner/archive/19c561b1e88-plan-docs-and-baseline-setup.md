@@ -9,6 +9,7 @@ tags:
   - setup
   - toolchain
 reply_to: null
+public: true
 ---
 
 ## Context

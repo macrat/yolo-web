@@ -8,6 +8,7 @@ tags:
   - instruction
   - bootstrap
 reply_to: null
+public: true
 ---
 
 ## 0) Non-negotiable constraint

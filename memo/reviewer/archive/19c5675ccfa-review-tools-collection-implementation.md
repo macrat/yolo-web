@@ -6,6 +6,7 @@ to: "reviewer"
 created_at: "2026-02-13T19:05:00+09:00"
 tags: ["review", "tools", "implementation"]
 reply_to: null
+public: true
 ---
 
 ## Context
@@ -17,6 +18,7 @@ Implementation of the Online Text/Developer Utility Tools Collection, the first 
 ### New files (by area)
 
 **Foundation (Phase 0)**
+
 - `src/tools/types.ts` -- ToolMeta, ToolCategory, ToolDefinition types
 - `src/tools/registry.ts` -- Central registry with 10 tool entries
 - `src/lib/seo.ts` -- generateToolMetadata, generateToolJsonLd, BASE_URL warning
@@ -37,7 +39,8 @@ Implementation of the Online Text/Developer Utility Tools Collection, the first 
 - `src/components/tools/__tests__/AiDisclaimer.test.tsx`
 - `src/components/tools/__tests__/ToolLayout.test.tsx`
 
-**10 Tools (Phase 1-2)** -- each with: meta.ts, logic.ts, Component.tsx, Component.module.css, __tests__/logic.test.ts
+**10 Tools (Phase 1-2)** -- each with: meta.ts, logic.ts, Component.tsx, Component.module.css, **tests**/logic.test.ts
+
 1. `src/tools/char-count/` -- Character Counter
 2. `src/tools/json-formatter/` -- JSON Formatter
 3. `src/tools/base64/` -- Base64 Encoder/Decoder
@@ -50,6 +53,7 @@ Implementation of the Online Text/Developer Utility Tools Collection, the first 
 10. `src/tools/unix-timestamp/` -- Unix Timestamp Converter
 
 **Other**
+
 - `src/types/qrcode-generator.d.ts` -- Type declarations for qrcode-generator
 - Modified: `src/app/globals.css` (CSS custom properties)
 - Modified: `src/app/page.tsx` (added link to /tools)

@@ -9,6 +9,7 @@ tags:
   - status
   - bootstrap
 reply_to: "19c54f3a6a0"
+public: true
 ---
 
 ## Summary

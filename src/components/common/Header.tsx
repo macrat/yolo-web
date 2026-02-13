@@ -15,6 +15,15 @@ export default function Header() {
           <li>
             <Link href="/tools">ツール</Link>
           </li>
+          <li>
+            <Link href="/games">ゲーム</Link>
+          </li>
+          <li>
+            <Link href="/blog">ブログ</Link>
+          </li>
+          <li>
+            <Link href="/memos">メモ</Link>
+          </li>
         </ul>
       </nav>
     </header>

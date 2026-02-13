@@ -67,6 +67,7 @@ memo/
 - `created_at`（ISO-8601 タイムゾーン付き）
 - `tags`（リスト）
 - `reply_to`（新規スレッドの場合は null）
+- `public`（オプション、boolean）-- `true` の場合、メモはWebサイトのメモアーカイブ (`/memos`) で公開される。省略時またはfalseの場合は非公開。CLIで `--public true` または `--public false` で指定可能。
 
 ## テンプレート
 

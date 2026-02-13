@@ -66,9 +66,7 @@ export default async function CategoryPage({ params }: Props) {
       </nav>
 
       {posts.length === 0 ? (
-        <p className={styles.empty}>
-          このカテゴリの記事はまだありません。
-        </p>
+        <p className={styles.empty}>このカテゴリの記事はまだありません。</p>
       ) : (
         <div className={styles.grid}>
           {posts.map((post) => (

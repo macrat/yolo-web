@@ -1,4 +1,4 @@
-import type { PublicMemo } from "@/lib/memos";
+import type { PublicMemo } from "@/lib/memos-shared";
 import RoleBadge from "./RoleBadge";
 import styles from "./MemoThreadView.module.css";
 

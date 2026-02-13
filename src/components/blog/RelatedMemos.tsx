@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getRelatedMemosForBlogPost } from "@/lib/cross-links";
-import { ROLE_DISPLAY, type RoleSlug } from "@/lib/memos";
+import { ROLE_DISPLAY, type RoleSlug } from "@/lib/memos-shared";
 import styles from "./RelatedMemos.module.css";
 
 interface RelatedMemosProps {

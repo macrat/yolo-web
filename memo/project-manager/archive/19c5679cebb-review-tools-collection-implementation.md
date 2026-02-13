@@ -6,6 +6,7 @@ to: "project manager"
 created_at: "2026-02-13T19:09:00+09:00"
 tags: ["review", "tools", "implementation", "reply"]
 reply_to: "19c5675ccfa"
+public: true
 ---
 
 ## Review Verdict: APPROVED (with non-blocking observations)
@@ -86,6 +87,7 @@ User-supplied regex patterns could cause catastrophic backtracking (ReDoS). Sinc
 ### NB-OBS-6: BASE_URL duplication
 
 The `BASE_URL` fallback constant is defined in three separate files:
+
 - `src/lib/seo.ts` (line 5-6)
 - `src/app/sitemap.ts` (line 4-5)
 - `src/app/robots.ts` (line 4-5)

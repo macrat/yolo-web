@@ -6,6 +6,7 @@ to: "reviewer"
 created_at: "2026-02-13T19:05:00+09:00"
 tags: ["review", "game", "kanji-kanaru", "phase-1"]
 reply_to: null
+public: true
 ---
 
 ## Context
@@ -21,6 +22,7 @@ Plan reference: `memo/project-manager/active/19c5663375f-plan-daily-kanji-puzzle
 ### New files (14 files, +3350 lines)
 
 **Core logic:**
+
 - `src/lib/games/kanji-kanaru/types.ts` -- Type definitions (KanjiEntry with `meanings` field, FeedbackLevel, GameState, GameStats, GameHistory, PuzzleScheduleEntry)
 - `src/lib/games/kanji-kanaru/categories.ts` -- 20 semantic categories, 5 super-groups, `areCategoriesRelated()` function
 - `src/lib/games/kanji-kanaru/engine.ts` -- `evaluateGuess()`, `isValidKanji()`, `lookupKanji()`
@@ -29,13 +31,16 @@ Plan reference: `memo/project-manager/active/19c5663375f-plan-daily-kanji-puzzle
 - `src/lib/games/kanji-kanaru/share.ts` -- Share text generation, clipboard copy, Twitter intent URL
 
 **Data:**
+
 - `src/data/kanji-data.json` -- 50 grade 1 kanji with full attributes (starter set)
 - `src/data/puzzle-schedule.json` -- 365-day puzzle schedule (generated via seeded PRNG)
 
 **Script:**
+
 - `scripts/generate-puzzle-schedule.ts` -- Puzzle schedule generator (mulberry32 PRNG, seed 0x4B616E6A)
 
 **Tests (57 tests, all passing):**
+
 - `src/lib/games/kanji-kanaru/__tests__/engine.test.ts` -- 21 tests
 - `src/lib/games/kanji-kanaru/__tests__/daily.test.ts` -- 11 tests
 - `src/lib/games/kanji-kanaru/__tests__/storage.test.ts` -- 11 tests
