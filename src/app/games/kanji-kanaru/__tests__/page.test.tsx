@@ -16,7 +16,18 @@ test("KanjiKanaruPage renders without crashing", () => {
   expect(screen.getByTestId("game-container")).toBeInTheDocument();
 });
 
-test("KanjiKanaruPage renders a main element", () => {
+test("KanjiKanaruPage renders breadcrumb navigation", () => {
   render(<KanjiKanaruPage />);
-  expect(screen.getByRole("main")).toBeInTheDocument();
+  expect(
+    screen.getByRole("navigation", { name: "パンくずリスト" }),
+  ).toBeInTheDocument();
+  expect(screen.getByRole("link", { name: "ゲーム一覧" })).toHaveAttribute(
+    "href",
+    "/games",
+  );
+});
+
+test("KanjiKanaruPage renders KANJIDIC2 attribution", () => {
+  render(<KanjiKanaruPage />);
+  expect(screen.getByRole("link", { name: "KANJIDIC2" })).toBeInTheDocument();
 });

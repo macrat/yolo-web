@@ -1,21 +1,11 @@
 /* Kanji Kanaru Game Styles - Mobile-first responsive design */
 
-/* CSS Custom Properties for game colors */
+/* CSS Custom Properties for game-specific colors */
 :root {
   --kk-color-correct: #6aaa64;
   --kk-color-close: #c9b458;
   --kk-color-wrong: #787c7e;
   --kk-color-empty: #d3d6da;
-  --kk-color-bg: #ffffff;
-  --kk-color-text: #1a1a1a;
-  --kk-color-text-muted: #6b7280;
-  --kk-color-border: #d3d6da;
-  --kk-color-error: #dc3545;
-  --kk-color-header-bg: #f8f9fa;
-  --kk-color-modal-bg: #ffffff;
-  --kk-color-overlay: rgba(0, 0, 0, 0.5);
-  --kk-color-btn-primary: #2563eb;
-  --kk-color-btn-primary-hover: #1d4ed8;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -24,60 +14,7 @@
     --kk-color-close: #b59f3b;
     --kk-color-wrong: #3a3a3c;
     --kk-color-empty: #3a3a3c;
-    --kk-color-bg: #121213;
-    --kk-color-text: #e5e5e5;
-    --kk-color-text-muted: #9ca3af;
-    --kk-color-border: #3a3a3c;
-    --kk-color-error: #ff6b6b;
-    --kk-color-header-bg: #1a1a1b;
-    --kk-color-modal-bg: #1e1e1f;
-    --kk-color-overlay: rgba(0, 0, 0, 0.7);
-    --kk-color-btn-primary: #3b82f6;
-    --kk-color-btn-primary-hover: #2563eb;
   }
-}
-
-/* ===== Layout ===== */
-.gameLayout {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background-color: var(--kk-color-bg);
-  color: var(--kk-color-text);
-}
-
-.gameMain {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 0 0.5rem;
-  max-width: 600px;
-  margin: 0 auto;
-  width: 100%;
-}
-
-.gameFooter {
-  border-top: 1px solid var(--kk-color-border);
-  background-color: var(--kk-color-header-bg);
-  padding: 1rem;
-  text-align: center;
-}
-
-.footerDisclaimer {
-  font-size: 0.8rem;
-  color: var(--kk-color-text-muted);
-  margin-bottom: 0.25rem;
-}
-
-.footerAttribution {
-  font-size: 0.75rem;
-  color: var(--kk-color-text-muted);
-}
-
-.footerAttribution a {
-  color: var(--kk-color-btn-primary);
-  text-decoration: underline;
 }
 
 /* ===== Header ===== */
@@ -86,7 +23,7 @@
   max-width: 600px;
   margin: 0 auto;
   padding: 0.75rem 0.5rem;
-  border-bottom: 1px solid var(--kk-color-border);
+  border-bottom: 1px solid var(--color-border);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -122,17 +59,17 @@
   padding: 0.35rem;
   border-radius: 4px;
   font-size: 1.1rem;
-  color: var(--kk-color-text);
+  color: var(--color-text);
   line-height: 1;
 }
 
 .iconButton:hover {
-  background-color: var(--kk-color-border);
+  background-color: var(--color-border);
 }
 
 .headerSub {
   font-size: 0.8rem;
-  color: var(--kk-color-text-muted);
+  color: var(--color-text-muted);
 }
 
 /* ===== Hint Bar ===== */
@@ -142,8 +79,8 @@
   padding: 0.5rem 1rem;
   text-align: center;
   font-size: 0.9rem;
-  color: var(--kk-color-text-muted);
-  border-bottom: 1px solid var(--kk-color-border);
+  color: var(--color-text-muted);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .hintLabel {
@@ -181,7 +118,7 @@
   text-align: center;
   font-size: 0.7rem;
   font-weight: 600;
-  color: var(--kk-color-text-muted);
+  color: var(--color-text-muted);
   padding: 0.15rem 0;
 }
 
@@ -189,7 +126,7 @@
   text-align: center;
   font-size: 0.7rem;
   font-weight: 600;
-  color: var(--kk-color-text-muted);
+  color: var(--color-text-muted);
   padding: 0.15rem 0;
 }
 
@@ -208,9 +145,9 @@
   font-size: 1.3rem;
   font-weight: 700;
   min-height: 2.5rem;
-  border: 2px solid var(--kk-color-border);
+  border: 2px solid var(--color-border);
   border-radius: 4px;
-  background-color: var(--kk-color-bg);
+  background-color: var(--color-bg);
 }
 
 .guessKanjiEmpty {
@@ -318,15 +255,15 @@
   font-size: 1.5rem;
   text-align: center;
   padding: 0.5rem;
-  border: 2px solid var(--kk-color-border);
+  border: 2px solid var(--color-border);
   border-radius: 6px;
-  background-color: var(--kk-color-bg);
-  color: var(--kk-color-text);
+  background-color: var(--color-bg);
+  color: var(--color-text);
   outline: none;
 }
 
 .inputField:focus {
-  border-color: var(--kk-color-btn-primary);
+  border-color: var(--color-primary);
 }
 
 .inputField:disabled {
@@ -340,14 +277,14 @@
   font-weight: 600;
   border: none;
   border-radius: 6px;
-  background-color: var(--kk-color-btn-primary);
+  background-color: var(--color-primary);
   color: #ffffff;
   cursor: pointer;
   white-space: nowrap;
 }
 
 .submitButton:hover:not(:disabled) {
-  background-color: var(--kk-color-btn-primary-hover);
+  background-color: var(--color-primary-hover);
 }
 
 .submitButton:disabled {
@@ -357,7 +294,7 @@
 
 .errorMessage {
   font-size: 0.85rem;
-  color: var(--kk-color-error);
+  color: var(--color-error);
   text-align: center;
   min-height: 1.2em;
 }
@@ -369,13 +306,13 @@
   padding: 1.5rem;
   max-width: 90vw;
   width: 400px;
-  background-color: var(--kk-color-modal-bg);
-  color: var(--kk-color-text);
+  background-color: var(--color-bg);
+  color: var(--color-text);
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
 }
 
 .modal::backdrop {
-  background-color: var(--kk-color-overlay);
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .modalTitle {
@@ -390,15 +327,15 @@
   margin: 1rem auto 0;
   padding: 0.5rem 2rem;
   font-size: 0.95rem;
-  border: 1px solid var(--kk-color-border);
+  border: 1px solid var(--color-border);
   border-radius: 6px;
-  background-color: var(--kk-color-bg);
-  color: var(--kk-color-text);
+  background-color: var(--color-bg);
+  color: var(--color-text);
   cursor: pointer;
 }
 
 .modalClose:hover {
-  background-color: var(--kk-color-header-bg);
+  background-color: var(--color-bg-secondary);
 }
 
 /* ===== Result Modal ===== */
@@ -418,21 +355,21 @@
 .resultReadings {
   text-align: center;
   font-size: 0.95rem;
-  color: var(--kk-color-text-muted);
+  color: var(--color-text-muted);
   margin-bottom: 0.25rem;
 }
 
 .resultMeanings {
   text-align: center;
   font-size: 0.9rem;
-  color: var(--kk-color-text-muted);
+  color: var(--color-text-muted);
   margin-bottom: 0.25rem;
 }
 
 .resultExamples {
   text-align: center;
   font-size: 0.9rem;
-  color: var(--kk-color-text-muted);
+  color: var(--color-text-muted);
   margin-bottom: 0.75rem;
 }
 
@@ -485,15 +422,15 @@
   margin: 0.75rem auto 0;
   padding: 0.4rem 1.5rem;
   font-size: 0.85rem;
-  border: 1px solid var(--kk-color-border);
+  border: 1px solid var(--color-border);
   border-radius: 6px;
-  background-color: var(--kk-color-bg);
-  color: var(--kk-color-text);
+  background-color: var(--color-bg);
+  color: var(--color-text);
   cursor: pointer;
 }
 
 .shareButtonStats:hover {
-  background-color: var(--kk-color-header-bg);
+  background-color: var(--color-bg-secondary);
 }
 
 .copiedMessage {
@@ -523,7 +460,7 @@
 
 .statLabel {
   font-size: 0.8rem;
-  color: var(--kk-color-text-muted);
+  color: var(--color-text-muted);
 }
 
 .distributionTitle {
@@ -587,7 +524,7 @@
 
 .attributeList {
   font-size: 0.9rem;
-  color: var(--kk-color-text-muted);
+  color: var(--color-text-muted);
   margin-top: 0.5rem;
 }
 
