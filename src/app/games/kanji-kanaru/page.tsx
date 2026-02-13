@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import GameContainer from "@/components/games/kanji-kanaru/GameContainer";
+import styles from "./page.module.css";
 
 export const metadata: Metadata = {
   title: "漢字カナール - 毎日の漢字パズル | Yolo-Web",
@@ -21,8 +23,32 @@ export const metadata: Metadata = {
 
 export default function KanjiKanaruPage() {
   return (
-    <main>
+    <div className={styles.wrapper}>
+      <nav className={styles.breadcrumb} aria-label="パンくずリスト">
+        <Link href="/games" className={styles.breadcrumbLink}>
+          ゲーム一覧
+        </Link>
+        <span className={styles.breadcrumbSeparator} aria-hidden="true">
+          /
+        </span>
+        <span className={styles.breadcrumbCurrent} aria-current="page">
+          漢字カナール
+        </span>
+      </nav>
       <GameContainer />
-    </main>
+      <footer className={styles.attribution}>
+        <p>
+          漢字データは{" "}
+          <a
+            href="http://www.edrdg.org/wiki/index.php/KANJIDIC_Project"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            KANJIDIC2
+          </a>{" "}
+          (CC BY-SA 4.0) を基に作成しています。
+        </p>
+      </footer>
+    </div>
   );
 }
