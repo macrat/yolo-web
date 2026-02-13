@@ -119,9 +119,9 @@ function normalizeRole(role: string): RoleSlug {
 }
 
 /**
- * Scan all memo/*/archive/ directories for public memos.
+ * Scan all memo/{role}/archive/ directories for public memos.
  * Only archive directories are scanned (C1: never inbox or active).
- * Memos without explicit `public: true` are treated as private (C1).
+ * Memos without explicit public: true are treated as private (C1).
  * Memos matching secret patterns are excluded (C3).
  */
 function scanAllMemos(): RawMemo[] {
