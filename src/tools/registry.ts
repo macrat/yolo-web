@@ -11,6 +11,10 @@ import { meta as qrCodeMeta } from "./qr-code/meta";
 import { meta as regexTesterMeta } from "./regex-tester/meta";
 import { meta as unixTimestampMeta } from "./unix-timestamp/meta";
 import { meta as htmlEntityMeta } from "./html-entity/meta";
+import { meta as fullwidthConverterMeta } from "./fullwidth-converter/meta";
+import { meta as textReplaceMeta } from "./text-replace/meta";
+import { meta as colorConverterMeta } from "./color-converter/meta";
+import { meta as markdownPreviewMeta } from "./markdown-preview/meta";
 
 const toolEntries: ToolDefinition[] = [
   {
@@ -56,6 +60,22 @@ const toolEntries: ToolDefinition[] = [
   {
     meta: htmlEntityMeta,
     componentImport: () => import("./html-entity/Component"),
+  },
+  {
+    meta: fullwidthConverterMeta,
+    componentImport: () => import("./fullwidth-converter/Component"),
+  },
+  {
+    meta: textReplaceMeta,
+    componentImport: () => import("./text-replace/Component"),
+  },
+  {
+    meta: colorConverterMeta,
+    componentImport: () => import("./color-converter/Component"),
+  },
+  {
+    meta: markdownPreviewMeta,
+    componentImport: () => import("./markdown-preview/Component"),
   },
 ];
 
