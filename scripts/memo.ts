@@ -1,4 +1,5 @@
 import { createMemo } from "./memo/commands/create.js";
+import { readMemo } from "./memo/commands/read.js";
 import { listInbox } from "./memo/commands/inbox.js";
 import { showThread } from "./memo/commands/thread.js";
 import { archiveMemo } from "./memo/commands/archive.js";
@@ -109,6 +110,16 @@ function main(): void {
           public: publicValue,
         });
         console.log(`Created: ${filePath}`);
+        break;
+      }
+
+      case "read": {
+        const id = flags["id"];
+        if (!id) {
+          console.error("Error: --id is required (memo ID or file path)");
+          process.exit(1);
+        }
+        readMemo(id);
         break;
       }
 
