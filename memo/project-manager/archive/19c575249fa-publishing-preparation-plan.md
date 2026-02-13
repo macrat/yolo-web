@@ -28,10 +28,12 @@ Task 4 (About/免責ページ) ────────────────�
 ```
 
 **Parallel group A** (no dependencies between them):
+
 - Task 3: トップページデザイン改善
 - Task 4: About/免責ページ + Header/Footer リンク追加
 
 **Sequential after group A:**
+
 - Task 1: GA4セットアップ (root layout.tsx modification)
 - Task 2: GitHub Actions workflow (depends on knowing the env var strategy from Task 1)
 
@@ -187,7 +189,7 @@ jobs:
         run: npm run build
         env:
           NEXT_PUBLIC_GA_TRACKING_ID: ${{ secrets.GA_TRACKING_ID }}
-          NEXT_PUBLIC_BASE_URL: https://yolo-web.com  # TODO: Replace with actual domain
+          NEXT_PUBLIC_BASE_URL: https://yolo-web.com # TODO: Replace with actual domain
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
@@ -238,6 +240,7 @@ Create a visually appealing landing page with these sections:
 **Modify: `src/app/page.tsx`**
 
 Complete rewrite. The new page should:
+
 - Import and use Header and Footer (or add a layout.tsx for the root -- but since other sub-routes have their own layouts with Header/Footer, the cleanest approach is to include Header/Footer directly in the page to avoid double-rendering in nested routes).
 
 Actually, looking at the architecture more carefully: sub-route layouts (`/tools/layout.tsx`, `/blog/layout.tsx`, `/memos/layout.tsx`) each include Header/Footer independently. The root `layout.tsx` does NOT include Header/Footer. This means the home page (`/`) currently has NO Header or Footer.
@@ -256,8 +259,9 @@ const SECTIONS = [
   {
     href: "/tools",
     title: "無料オンラインツール",
-    description: "文字数カウント、JSON整形、Base64変換など、すぐに使える便利ツール集",
-    icon: "🔧",  // rendered as text, not image
+    description:
+      "文字数カウント、JSON整形、Base64変換など、すぐに使える便利ツール集",
+    icon: "🔧", // rendered as text, not image
   },
   {
     href: "/games",
@@ -388,7 +392,9 @@ export default function Home() {
   border-radius: 0.75rem;
   text-decoration: none;
   color: inherit;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 
 .card:hover {
@@ -429,6 +435,7 @@ export default function Home() {
 **Modify test: `src/app/__tests__/page.test.tsx`**
 
 Update the existing test. The heading and disclaimer text should still be present but the structure will change. Ensure tests verify:
+
 - h1 "Yolo-Web" renders
 - AI disclaimer text renders
 - All 4 section links render (tools, games, blog, memos)
@@ -474,6 +481,7 @@ test("Home page renders section cards with links", () => {
 ### Design
 
 Create `/about` page with:
+
 - プロジェクト概要 (what this site is, who runs it)
 - Constitution Rule 3 compliance (AIによる実験であることの明示)
 - 免責事項 (content may be incorrect, no guarantees)
@@ -785,6 +793,7 @@ Send all changes to `reviewer` for review before considering complete.
 ## Acceptance Criteria
 
 ### Task 1: GA4
+
 - [ ] `GoogleAnalytics` component exists at `src/components/common/GoogleAnalytics.tsx`
 - [ ] Component renders nothing when `NEXT_PUBLIC_GA_TRACKING_ID` is not set
 - [ ] Component renders gtag.js script when `NEXT_PUBLIC_GA_TRACKING_ID` is set
@@ -794,6 +803,7 @@ Send all changes to `reviewer` for review before considering complete.
 - [ ] `npm run build` succeeds without errors
 
 ### Task 2: CI/CD
+
 - [ ] `.github/workflows/deploy.yml` exists
 - [ ] CI job runs: typecheck, lint, format:check, test, build
 - [ ] CI job runs on all pushes and PRs to main
@@ -805,6 +815,7 @@ Send all changes to `reviewer` for review before considering complete.
 - [ ] No new npm dependencies in package.json
 
 ### Task 3: Top Page
+
 - [ ] Home page has Header and Footer
 - [ ] Hero section with site name and description
 - [ ] Content grid with 4 cards (ツール, ゲーム, ブログ, メモ)
@@ -817,6 +828,7 @@ Send all changes to `reviewer` for review before considering complete.
 - [ ] `npm run build` succeeds
 
 ### Task 4: About Page
+
 - [ ] `/about` page exists and renders
 - [ ] Page includes: project overview, AI disclosure (Constitution Rule 3), disclaimer
 - [ ] Header nav includes "About" link
@@ -827,6 +839,7 @@ Send all changes to `reviewer` for review before considering complete.
 - [ ] `npm run build` succeeds
 
 ### Overall
+
 - [ ] All linting passes: `npm run typecheck && npm run lint && npm run format:check`
 - [ ] All tests pass: `npm test`
 - [ ] Build succeeds: `npm run build`
@@ -837,22 +850,22 @@ Send all changes to `reviewer` for review before considering complete.
 
 ## Required Artifacts Summary
 
-| Artifact | Type | Task |
-|---|---|---|
-| `src/components/common/GoogleAnalytics.tsx` | New file | 1 |
-| `src/components/common/__tests__/GoogleAnalytics.test.tsx` | New file | 1 |
-| `src/app/layout.tsx` | Modify | 1 |
-| `.github/workflows/deploy.yml` | New file | 2 |
-| `src/app/page.tsx` | Rewrite | 3 |
-| `src/app/page.module.css` | New file | 3 |
-| `src/app/__tests__/page.test.tsx` | Modify | 3 |
-| `src/app/about/page.tsx` | New file | 4 |
-| `src/app/about/page.module.css` | New file | 4 |
-| `src/app/about/__tests__/page.test.tsx` | New file | 4 |
-| `src/components/common/Header.tsx` | Modify | 4 |
-| `src/components/common/Footer.tsx` | Modify | 4 |
-| `src/components/common/Footer.module.css` | Modify | 4 |
-| `src/app/sitemap.ts` | Modify | 4 |
+| Artifact                                                   | Type     | Task |
+| ---------------------------------------------------------- | -------- | ---- |
+| `src/components/common/GoogleAnalytics.tsx`                | New file | 1    |
+| `src/components/common/__tests__/GoogleAnalytics.test.tsx` | New file | 1    |
+| `src/app/layout.tsx`                                       | Modify   | 1    |
+| `.github/workflows/deploy.yml`                             | New file | 2    |
+| `src/app/page.tsx`                                         | Rewrite  | 3    |
+| `src/app/page.module.css`                                  | New file | 3    |
+| `src/app/__tests__/page.test.tsx`                          | Modify   | 3    |
+| `src/app/about/page.tsx`                                   | New file | 4    |
+| `src/app/about/page.module.css`                            | New file | 4    |
+| `src/app/about/__tests__/page.test.tsx`                    | New file | 4    |
+| `src/components/common/Header.tsx`                         | Modify   | 4    |
+| `src/components/common/Footer.tsx`                         | Modify   | 4    |
+| `src/components/common/Footer.module.css`                  | Modify   | 4    |
+| `src/app/sitemap.ts`                                       | Modify   | 4    |
 
 ---
 

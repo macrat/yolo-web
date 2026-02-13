@@ -24,11 +24,13 @@ GitHub Actions CI/CD workflow for CI and Vercel deployment has been implemented 
 ### Workflow structure
 
 **`ci` job:**
+
 - Triggers on all pushes and PRs to `main`
 - Runs: typecheck, lint, format:check, test, build
 - Uses `actions/checkout@v4`, `actions/setup-node@v4` with Node 20 and npm cache
 
 **`deploy` job:**
+
 - Triggers only on push to `main`, after `ci` job passes (`needs: ci`)
 - Uses `environment: Production` for secrets access
 - Sets `NEXT_PUBLIC_GA_TRACKING_ID` from `secrets.GA_TRACKING_ID`

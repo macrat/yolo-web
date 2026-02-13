@@ -56,7 +56,9 @@ export function readMemo(idOrPath: string): void {
   console.log(`From:     ${fm.from}`);
   console.log(`To:       ${fm.to}`);
   console.log(`Date:     ${fm.created_at}`);
-  console.log(`Tags:     ${fm.tags.length > 0 ? fm.tags.join(", ") : "(none)"}`);
+  console.log(
+    `Tags:     ${fm.tags.length > 0 ? fm.tags.join(", ") : "(none)"}`,
+  );
   console.log(`Reply-To: ${fm.reply_to ?? "(none)"}`);
   console.log(`File:     ${filePath}`);
   console.log("\u2500".repeat(60));

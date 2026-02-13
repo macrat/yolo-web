@@ -8,9 +8,10 @@ let tmpDir: string;
 
 // Mock getMemoRoot and memoFilePath to use temp directory
 vi.mock("../core/paths.js", async () => {
-  const actual = await vi.importActual<typeof import("../core/paths.js")>(
-    "../core/paths.js",
-  );
+  const actual =
+    await vi.importActual<typeof import("../core/paths.js")>(
+      "../core/paths.js",
+    );
   return {
     ...actual,
     memoFilePath: (roleSlug: string, id: string, subject: string) => {
