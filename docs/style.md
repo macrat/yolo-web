@@ -9,14 +9,44 @@
 
 ## ESLint
 
-- ESLintでコード品質を自動チェック
-- 正確なルール設定は `planner` が策定
+ESLint 10 のフラットコンフィグ形式を使用。設定ファイルは `eslint.config.mjs`。
+
+含まれるルールセット:
+- `eslint-config-next/core-web-vitals` — Next.js + React + React Hooks + Core Web Vitals ルール
+- `eslint-config-next/typescript` — TypeScript固有のルール（`@typescript-eslint/recommended`ベース）
+- `eslint-config-prettier` — Prettierとの競合ルールを無効化
+
+実行:
+
+```bash
+# チェックのみ
+npm run lint
+
+# 自動修正
+npm run lint:fix
+```
 
 ## Prettier
 
-- Prettierでコードフォーマットを統一
-- 正確な設定は `planner` が策定
-- エディタとCIの両方でフォーマットチェックを実行
+コードフォーマット設定（`.prettierrc`）:
+
+| 設定 | 値 |
+|------|-----|
+| `semi` | `true`（セミコロンあり） |
+| `singleQuote` | `false`（ダブルクォート） |
+| `tabWidth` | `2` |
+| `trailingComma` | `"all"` |
+| `printWidth` | `80` |
+
+実行:
+
+```bash
+# フォーマット
+npm run format
+
+# チェックのみ
+npm run format:check
+```
 
 ## 一般原則
 
