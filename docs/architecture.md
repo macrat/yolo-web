@@ -29,7 +29,7 @@
 
 - **フレームワーク**: Next.js 16 (App Router)
 - **言語**: TypeScript 5.9
-- **リンティング**: ESLint 10 (フラットコンフィグ)
+- **リンティング**: ESLint 9 (フラットコンフィグ)
 - **フォーマッティング**: Prettier 3.8
 - **テスト**: Vitest 4.0 + jsdom 28
 
