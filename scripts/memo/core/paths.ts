@@ -39,6 +39,11 @@ export function inboxDir(roleSlug: RoleSlug): string {
   return path.join(MEMO_ROOT, roleSlug, "inbox");
 }
 
+/** Get the active directory path for a role */
+export function activeDir(roleSlug: RoleSlug): string {
+  return path.join(MEMO_ROOT, roleSlug, "active");
+}
+
 /** Get the archive directory path for a role */
 export function archiveDir(roleSlug: RoleSlug): string {
   return path.join(MEMO_ROOT, roleSlug, "archive");

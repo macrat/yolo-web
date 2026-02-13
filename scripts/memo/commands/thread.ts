@@ -17,7 +17,7 @@ function scanAllMemos(): Memo[] {
     const rolePath = path.join(root, roleDir);
     if (!fs.statSync(rolePath).isDirectory()) continue;
 
-    for (const subDir of ["inbox", "archive"]) {
+    for (const subDir of ["inbox", "active", "archive"]) {
       const dirPath = path.join(rolePath, subDir);
       if (!fs.existsSync(dirPath)) continue;
 
@@ -79,7 +79,11 @@ export function showThread(id: string): void {
   const rootMemo = threadMemos[0];
   console.log(`Thread: "${rootMemo.frontmatter.subject}"`);
   for (const m of threadMemos) {
-    const location = m.filePath.includes("/inbox/") ? "inbox" : "archive";
+    const location = m.filePath.includes("/inbox/")
+      ? "inbox"
+      : m.filePath.includes("/active/")
+        ? "active"
+        : "archive";
     console.log(
       `  ${m.frontmatter.id}  ${m.frontmatter.from} -> ${m.frontmatter.to}  [${location}]  ${m.frontmatter.created_at}`,
     );

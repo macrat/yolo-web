@@ -31,12 +31,13 @@ export function parseMemoFile(filePath: string): Memo {
 }
 
 function extractYamlValue(yaml: string, key: string): string {
-  const regex = new RegExp(`^${key}:\\s*"(.+?)"`, "m");
+  const regex = new RegExp(`^${key}:\\s*"((?:[^"\\\\]|\\\\.)*)"`, "m");
   const match = yaml.match(regex);
   if (!match) {
     throw new Error(`Missing required field: ${key}`);
   }
-  return match[1];
+  // Reverse the escaping: \" -> " and \\ -> \
+  return match[1].replace(/\\"/g, '"').replace(/\\\\/g, "\\");
 }
 
 function extractYamlNullableValue(yaml: string, key: string): string | null {
