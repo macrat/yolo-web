@@ -10,6 +10,7 @@ import { meta as passwordGeneratorMeta } from "./password-generator/meta";
 import { meta as qrCodeMeta } from "./qr-code/meta";
 import { meta as regexTesterMeta } from "./regex-tester/meta";
 import { meta as unixTimestampMeta } from "./unix-timestamp/meta";
+import { meta as htmlEntityMeta } from "./html-entity/meta";
 
 const toolEntries: ToolDefinition[] = [
   {
@@ -51,6 +52,10 @@ const toolEntries: ToolDefinition[] = [
   {
     meta: unixTimestampMeta,
     componentImport: () => import("./unix-timestamp/Component"),
+  },
+  {
+    meta: htmlEntityMeta,
+    componentImport: () => import("./html-entity/Component"),
   },
 ];
 
