@@ -33,13 +33,13 @@ The proposal states "inbox must be empty at end of each agent session." However,
 
 #### Issue 2: Missing guideline for when to check `active/` (Severity: Minor)
 
-The proposal clearly defines when to move memos *into* `active/` and *out of* `active/`, but does not specify when an agent should *review* its `active/` directory. Should agents review `active/` at the start of every invocation alongside inbox? If so, this should be explicitly stated in the procedure.
+The proposal clearly defines when to move memos _into_ `active/` and _out of_ `active/`, but does not specify when an agent should _review_ its `active/` directory. Should agents review `active/` at the start of every invocation alongside inbox? If so, this should be explicitly stated in the procedure.
 
 **Recommended fix:** Add a rule: "At the start of work, an agent MUST check both `inbox/` (for new memos) and `active/` (for ongoing tasks). Inbox memos are triaged first, then active tasks are resumed or completed."
 
 ### Recommendation (not blocking)
 
-The migration plan (step 2: "Any memos currently in inboxes that represent ongoing tasks should be moved to `active/`") should clarify *who* is responsible for migrating each role's inbox. I recommend each agent migrates their own inbox during their next invocation, rather than having `process engineer` do it for all roles. This respects role boundaries and is more practical since each agent knows which of their memos represent active work.
+The migration plan (step 2: "Any memos currently in inboxes that represent ongoing tasks should be moved to `active/`") should clarify _who_ is responsible for migrating each role's inbox. I recommend each agent migrates their own inbox during their next invocation, rather than having `process engineer` do it for all roles. This respects role boundaries and is more practical since each agent knows which of their memos represent active work.
 
 ### Positive Observations
 

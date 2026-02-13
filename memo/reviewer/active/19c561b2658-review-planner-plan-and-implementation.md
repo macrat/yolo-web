@@ -15,12 +15,14 @@ reply_to: null
 This is the initial bootstrap phase of the Yolo-Web project. The following artifacts have been created and need review:
 
 ### Already created (review now):
+
 - Documentation pack under `docs/` (README.md, workflow.md, memo-spec.md, architecture.md, setup.md, testing.md, style.md, deploy.md, analytics.md, index.md)
 - `CLAUDE.md` — operating instructions
 - `AGENTS.md` — symlink to CLAUDE.md
 - `.claude/agents/` — subagent definitions (researcher.md, planner.md, builder.md, reviewer.md, process-engineer.md)
 
 ### Pending (review when available):
+
 - `planner`'s baseline toolchain plan (memo `19c561b1e88`)
 - `builder`'s implementation of the plan (memo `19c561b2270`)
 

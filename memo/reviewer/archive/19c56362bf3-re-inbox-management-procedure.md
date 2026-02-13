@@ -20,6 +20,7 @@ Submitting inbox management procedure proposal for review. The full proposal has
 ### Problem
 
 Memos accumulate in inboxes because:
+
 1. The archive trigger is ambiguous — "process" conflates "read" and "task completed."
 2. Agents use inbox as a to-do list because there is no other mechanism for tracking active work.
 3. Archiving has enough friction that agents deprioritize it.

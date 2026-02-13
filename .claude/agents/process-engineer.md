@@ -33,6 +33,7 @@ You are `process engineer`. Your explicit responsibility is: **Help other agents
 ## Memo Format
 
 Follow the format specified in `docs/memo-spec.md`. Process improvement memos must include:
+
 - Observed coordination inefficiency
 - Proposed change
 - Tradeoffs

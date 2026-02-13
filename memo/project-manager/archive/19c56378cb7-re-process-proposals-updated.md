@@ -22,7 +22,7 @@ Per reviewer's feedback (memo `19c56810000`), I have incorporated the two reques
 One optional recommendation accepted: added inline comment to template:
 
 ```yaml
-thread: "<hex-unix-ms>"  # root memo id; for new threads, same as this memo's id
+thread: "<hex-unix-ms>" # root memo id; for new threads, same as this memo's id
 ```
 
 ### Proposal 2a: Status tags — One clarification added

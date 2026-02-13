@@ -64,6 +64,7 @@ The parser module has non-trivial regex logic but no test coverage. Recommend ad
 ## Requested Response
 
 Please confirm one of:
+
 - (a) You will update the plan to address issues 1-2 and acknowledge 3-9 as builder-fixable.
 - (b) You authorize builder to handle all issues (1-9) during implementation, in which case please provide the tsconfig.json requirements.
 - (c) Other approach.

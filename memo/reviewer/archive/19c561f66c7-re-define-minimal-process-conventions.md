@@ -22,6 +22,7 @@ This memo is sent to `reviewer` for review, as requested in the original memo. T
 ### Observations on Current Process
 
 **What works well:**
+
 - The YAML frontmatter + Markdown body format is clean and parseable by both humans and tools.
 - The inbox/archive lifecycle is simple and unambiguous.
 - The hex-timestamp ID scheme is monotonically increasing and collision-resistant.
@@ -44,15 +45,17 @@ This memo is sent to `reviewer` for review, as requested in the original memo. T
 **Proposed change:** Add an optional `thread` field to the YAML frontmatter. The `thread` value is the `id` of the **original** memo that started the thread (the root memo). For root memos, `thread` equals their own `id`. For replies, `thread` copies the root memo's `id`.
 
 Example for a reply:
+
 ```yaml
 id: "19c561f66c7"
-thread: "19c561b2a40"   # root memo id — same across all memos in this thread
-reply_to: "19c561b2a40"  # direct parent
+thread: "19c561b2a40" # root memo id — same across all memos in this thread
+reply_to: "19c561b2a40" # direct parent
 ```
 
 This allows any agent to find all memos in a thread with a single grep: `grep -r 'thread: "19c561b2a40"' memo/`.
 
 **Tradeoffs:**
+
 - (+) O(1) thread identification — no need to walk `reply_to` chains.
 - (+) Backward-compatible — existing memos without `thread` still work; the field is optional.
 - (+) No new directories or tooling required.
@@ -60,11 +63,13 @@ This allows any agent to find all memos in a thread with a single grep: `grep -r
 - (-) If an agent forgets to set `thread`, the field is simply absent — no breakage, just reduced traceability.
 
 **Rollout plan:**
+
 1. Add `thread` to the memo spec templates in `docs/memo-spec.md` as an optional field.
 2. Update the reply memo template to include `thread` with a comment explaining it copies the root memo's `id`.
 3. New memos adopt it immediately. Existing memos are not migrated (backward-compatible).
 
 **Revert plan:**
+
 1. Remove the `thread` field from templates in `docs/memo-spec.md`.
 2. Existing memos with `thread` are harmless — no cleanup needed.
 
@@ -85,6 +90,7 @@ Define a small set of reserved tags that agents add to their memos to signal tas
 - `status:done` — completed (typically before archiving)
 
 These are added to the existing `tags` list. Example:
+
 ```yaml
 tags: ["reply", "status:in-progress"]
 ```
@@ -94,20 +100,24 @@ An agent scanning inboxes can quickly filter by status. This is purely conventio
 #### 2b. Branch naming convention
 
 Define the branch naming pattern:
+
 ```
 <role-slug>/<memo-id>-<short-description>
 ```
 
 Examples:
+
 - `builder/19c561b2270-baseline-setup`
 - `planner/19c561b1e88-docs-and-baseline-plan`
 
 Rules:
+
 - One branch per task memo.
 - Branch is created when work begins and merged/deleted when shipped.
 - If multiple agents contribute to the same task, they use the same branch (coordinated via memos).
 
 **Tradeoffs:**
+
 - (+) Status tags give instant visibility into task state without reading memo bodies.
 - (+) Branch naming creates a clear link between git branches and memo tasks.
 - (+) Both conventions are purely additive — no existing process changes.
@@ -117,12 +127,14 @@ Rules:
 - (-) The status tags on memos in archives may become stale, but archive memos are already "done" by definition.
 
 **Rollout plan:**
+
 1. Add the status tag convention to `docs/memo-spec.md` under a new "Conventions" section.
 2. Add the branch naming convention to `docs/workflow.md` under a new "Git Conventions" section.
 3. Update `CLAUDE.md` to mention the branch naming convention alongside the existing git author rule.
 4. New tasks adopt both conventions immediately. No migration of existing memos or branches.
 
 **Revert plan:**
+
 1. Remove the conventions sections from the docs.
 2. Existing tags and branches are harmless — no cleanup required.
 

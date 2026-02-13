@@ -23,6 +23,7 @@ Set up a minimal but complete Next.js 16 project with TypeScript, ESLint, Pretti
 ## Scope Boundaries
 
 **In scope:**
+
 - `package.json` with exact dependencies and scripts
 - Config files: `next.config.ts`, `tsconfig.json`, `eslint.config.mjs`, `.prettierrc`, `.prettierignore`, `vitest.config.mts`
 - App Router skeleton: `src/app/layout.tsx`, `src/app/page.tsx`, `src/app/globals.css`
@@ -31,6 +32,7 @@ Set up a minimal but complete Next.js 16 project with TypeScript, ESLint, Pretti
 - `.gitignore` file
 
 **Out of scope:**
+
 - Deployment configuration (Vercel)
 - Google Analytics integration
 - CI/CD pipeline
@@ -42,30 +44,30 @@ Set up a minimal but complete Next.js 16 project with TypeScript, ESLint, Pretti
 
 ### Production Dependencies
 
-| Package | Version |
-|---------|---------|
-| `next` | `16.1.6` |
-| `react` | `19.2.4` |
+| Package     | Version  |
+| ----------- | -------- |
+| `next`      | `16.1.6` |
+| `react`     | `19.2.4` |
 | `react-dom` | `19.2.4` |
 
 ### Dev Dependencies
 
-| Package | Version | Purpose |
-|---------|---------|---------|
-| `typescript` | `5.9.3` | TypeScript compiler |
-| `@types/react` | `19.2.14` | React type definitions |
-| `@types/react-dom` | `19.2.3` | ReactDOM type definitions |
-| `eslint` | `10.0.0` | Linter |
-| `eslint-config-next` | `16.1.6` | Next.js ESLint flat config (includes `@next/eslint-plugin-next`, `eslint-plugin-react`, `eslint-plugin-react-hooks`) |
-| `eslint-config-prettier` | `10.1.8` | Disables ESLint rules that conflict with Prettier |
-| `prettier` | `3.8.1` | Code formatter |
-| `vitest` | `4.0.18` | Test runner |
-| `@vitejs/plugin-react` | `5.1.4` | Vite React plugin for Vitest JSX support |
-| `jsdom` | `28.0.0` | DOM environment for tests |
-| `@testing-library/react` | `16.3.2` | React component testing utilities |
-| `@testing-library/dom` | `10.4.1` | DOM testing utilities (peer of @testing-library/react) |
-| `@testing-library/jest-dom` | `6.9.1` | Custom DOM matchers |
-| `vite-tsconfig-paths` | `6.1.1` | Resolves TS path aliases in Vitest |
+| Package                     | Version   | Purpose                                                                                                              |
+| --------------------------- | --------- | -------------------------------------------------------------------------------------------------------------------- |
+| `typescript`                | `5.9.3`   | TypeScript compiler                                                                                                  |
+| `@types/react`              | `19.2.14` | React type definitions                                                                                               |
+| `@types/react-dom`          | `19.2.3`  | ReactDOM type definitions                                                                                            |
+| `eslint`                    | `10.0.0`  | Linter                                                                                                               |
+| `eslint-config-next`        | `16.1.6`  | Next.js ESLint flat config (includes `@next/eslint-plugin-next`, `eslint-plugin-react`, `eslint-plugin-react-hooks`) |
+| `eslint-config-prettier`    | `10.1.8`  | Disables ESLint rules that conflict with Prettier                                                                    |
+| `prettier`                  | `3.8.1`   | Code formatter                                                                                                       |
+| `vitest`                    | `4.0.18`  | Test runner                                                                                                          |
+| `@vitejs/plugin-react`      | `5.1.4`   | Vite React plugin for Vitest JSX support                                                                             |
+| `jsdom`                     | `28.0.0`  | DOM environment for tests                                                                                            |
+| `@testing-library/react`    | `16.3.2`  | React component testing utilities                                                                                    |
+| `@testing-library/dom`      | `10.4.1`  | DOM testing utilities (peer of @testing-library/react)                                                               |
+| `@testing-library/jest-dom` | `6.9.1`   | Custom DOM matchers                                                                                                  |
+| `vite-tsconfig-paths`       | `6.1.1`   | Resolves TS path aliases in Vitest                                                                                   |
 
 ---
 
@@ -170,12 +172,7 @@ const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
   prettier,
-  globalIgnores([
-    ".next/**",
-    "out/**",
-    "build/**",
-    "next-env.d.ts",
-  ]),
+  globalIgnores([".next/**", "out/**", "build/**", "next-env.d.ts"]),
 ]);
 
 export default eslintConfig;
@@ -320,7 +317,10 @@ body {
 }
 
 body {
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -352,7 +352,7 @@ test("Home page renders AI disclaimer", () => {
 
 ### C.1 Exact content for `docs/setup.md`
 
-```markdown
+````markdown
 # セットアップ
 
 ## 必要なツール
@@ -368,6 +368,7 @@ test("Home page renders AI disclaimer", () => {
    git clone <repository-url>
    cd yolo-web
    ```
+````
 
 2. 依存関係をインストール
 
@@ -387,18 +388,18 @@ test("Home page renders AI disclaimer", () => {
 
 以下のコマンドが `package.json` に定義されています：
 
-| コマンド | 説明 |
-|---------|------|
-| `npm run dev` | 開発サーバーの起動 |
-| `npm run build` | プロダクションビルド |
-| `npm start` | プロダクションサーバーの起動 |
-| `npm run lint` | ESLintによるリンティング |
-| `npm run lint:fix` | ESLintによる自動修正付きリンティング |
-| `npm run typecheck` | TypeScriptの型チェック |
-| `npm test` | Vitestによるテスト実行（単発） |
-| `npm run test:watch` | Vitestによるテスト実行（ウォッチモード） |
-| `npm run format` | Prettierによるフォーマット |
-| `npm run format:check` | Prettierによるフォーマットチェック |
+| コマンド               | 説明                                     |
+| ---------------------- | ---------------------------------------- |
+| `npm run dev`          | 開発サーバーの起動                       |
+| `npm run build`        | プロダクションビルド                     |
+| `npm start`            | プロダクションサーバーの起動             |
+| `npm run lint`         | ESLintによるリンティング                 |
+| `npm run lint:fix`     | ESLintによる自動修正付きリンティング     |
+| `npm run typecheck`    | TypeScriptの型チェック                   |
+| `npm test`             | Vitestによるテスト実行（単発）           |
+| `npm run test:watch`   | Vitestによるテスト実行（ウォッチモード） |
+| `npm run format`       | Prettierによるフォーマット               |
+| `npm run format:check` | Prettierによるフォーマットチェック       |
 
 ## ローカル検証
 
@@ -411,7 +412,8 @@ npm test
 npm run format:check
 npm run build
 ```
-```
+
+````
 
 ### C.2 Exact content for `docs/testing.md`
 
@@ -459,7 +461,7 @@ npm test
 
 # ウォッチモード
 npm run test:watch
-```
+````
 
 ## テストの書き方（例）
 
@@ -475,7 +477,8 @@ test("Home page renders heading", () => {
   ).toBeInTheDocument();
 });
 ```
-```
+
+````
 
 ### C.3 Exact content for `docs/style.md`
 
@@ -506,19 +509,19 @@ npm run lint
 
 # 自動修正
 npm run lint:fix
-```
+````
 
 ## Prettier
 
 コードフォーマット設定（`.prettierrc`）:
 
-| 設定 | 値 |
-|------|-----|
-| `semi` | `true`（セミコロンあり） |
-| `singleQuote` | `false`（ダブルクォート） |
-| `tabWidth` | `2` |
-| `trailingComma` | `"all"` |
-| `printWidth` | `80` |
+| 設定            | 値                        |
+| --------------- | ------------------------- |
+| `semi`          | `true`（セミコロンあり）  |
+| `singleQuote`   | `false`（ダブルクォート） |
+| `tabWidth`      | `2`                       |
+| `trailingComma` | `"all"`                   |
+| `printWidth`    | `80`                      |
 
 実行:
 
@@ -536,7 +539,8 @@ npm run format:check
 - マジックナンバーを避け、名前付き定数を使用する
 - コメントは「なぜ」を説明する（「何を」はコードが説明する）
 - 副作用を最小限に保つ
-```
+
+````
 
 ---
 
@@ -608,7 +612,7 @@ npm run lint         # Must exit 0
 npm test             # Must exit 0, 2 tests pass
 npm run format:check # Must exit 0
 npm run build        # Must exit 0
-```
+````
 
 If any command fails, fix the issue before proceeding to the next. Do not improvise beyond what is specified in this plan; if a fix is unclear, escalate to `project manager`.
 
@@ -645,6 +649,7 @@ If the implementation fails or is rejected by `reviewer`:
 3. **Documentation**: Since docs are tracked in git, the revert will also restore the original placeholder docs.
 
 The rollback is low-risk because:
+
 - No existing application code is being modified (this is a greenfield setup).
 - All changes are additive (new files only, except docs which are replaced).
 - The revert is a single commit operation.

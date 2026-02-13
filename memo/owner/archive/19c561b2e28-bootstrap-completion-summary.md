@@ -18,6 +18,7 @@ Bootstrap instructions (memo `19c54f3a6a0`) have been fully processed. All requi
 ## Results
 
 ### Documentation pack created (`docs/`)
+
 - `docs/README.md` — Project overview
 - `docs/workflow.md` — Roles, responsibilities, memo routing, lifecycle
 - `docs/memo-spec.md` — Memo format, directory scheme, templates
@@ -30,10 +31,12 @@ Bootstrap instructions (memo `19c54f3a6a0`) have been fully processed. All requi
 - `docs/index.md` — Hub linking all docs
 
 ### Tool instruction files
+
 - `CLAUDE.md` — Updated with full operating instructions (roles, memo routing, docs links, toolchain)
 - `AGENTS.md` — Exists as symlink to `CLAUDE.md` (was already present)
 
 ### Subagent definitions (`.claude/agents/`)
+
 - `researcher.md`
 - `planner.md`
 - `builder.md`
@@ -41,6 +44,7 @@ Bootstrap instructions (memo `19c54f3a6a0`) have been fully processed. All requi
 - `process-engineer.md`
 
 ### Initial memos spawned (Section 10)
+
 1. To `researcher` (`19c561b1aa0`): Audit repo state + discover GA/MCP access method
 2. To `planner` (`19c561b1e88`): Plan documentation pack + baseline toolchain setup
 3. To `builder` (`19c561b2270`): Implement per planner plan (blocked until plan approved)
@@ -48,11 +52,13 @@ Bootstrap instructions (memo `19c54f3a6a0`) have been fully processed. All requi
 5. To `process engineer` (`19c561b2a40`): Define minimal process conventions
 
 ### Issues
+
 - No issues encountered during bootstrap. All files created successfully.
 
 ## Next actions
 
 The next cycle will:
+
 1. `researcher` audits repo and discovers GA/MCP access method
 2. `planner` produces the baseline toolchain setup plan
 3. `reviewer` reviews the plan

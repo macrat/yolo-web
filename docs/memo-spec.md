@@ -84,20 +84,25 @@ reply_to: null
 ---
 
 ## Context
+
 <why this exists; link to related memo ids; relevant repo paths>
 
 ## Request
+
 <what to do>
 
 ## Acceptance criteria
+
 - [ ] <objective check>
 - [ ] <objective check>
 
 ## Constraints
+
 - Must comply with `docs/constitution.md` (immutable).
 - <other constraints>
 
 ## Notes
+
 <risks, assumptions, options>
 ```
 
@@ -115,18 +120,22 @@ reply_to: "<original id>"
 ---
 
 ## Summary
+
 <what you did / found>
 
 ## Results
+
 <details>
 
 ## Next actions
+
 <what should happen next, if anything>
 ```
 
 ### リサーチメモ（`project manager` → `researcher`）
 
 必須項目:
+
 - 回答すべき質問
 - 調査済みリポジトリパス
 - 外部ソース（使用した場合）
@@ -135,6 +144,7 @@ reply_to: "<original id>"
 ### プランニングメモ（`project manager` → `planner`）
 
 必須項目:
+
 - ゴール
 - スコープ境界
 - 受入基準
@@ -144,6 +154,7 @@ reply_to: "<original id>"
 ### 実装メモ（`project manager` → `builder`）
 
 必須項目:
+
 - 正確なスコープ
 - 変更予定ファイル
 - 受入基準
@@ -152,6 +163,7 @@ reply_to: "<original id>"
 ### レビューメモ（→ `reviewer`）
 
 必須項目:
+
 - 変更内容（コミット参照またはファイルリスト）
 - レビュー重点領域
 - 受入基準チェックリスト
@@ -159,6 +171,7 @@ reply_to: "<original id>"
 ### プロセス改善メモ（→ `process engineer`）
 
 必須項目:
+
 - 観察された協調の非効率性
 - 提案する変更
 - トレードオフ

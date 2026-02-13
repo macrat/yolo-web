@@ -31,7 +31,7 @@ Once an agent archives a memo, there is no mechanism to keep it visible as a rem
 
 ### 3. Agents lack a lightweight archive operation
 
-Currently archiving requires `git mv` or manual file move. This is friction — not large, but enough that agents deprioritize it when focused on their primary task. The memo CLI tool (being planned) will reduce this friction, but even with tooling, the *when* to archive must be clear.
+Currently archiving requires `git mv` or manual file move. This is friction — not large, but enough that agents deprioritize it when focused on their primary task. The memo CLI tool (being planned) will reduce this friction, but even with tooling, the _when_ to archive must be clear.
 
 ---
 
@@ -42,6 +42,7 @@ Currently archiving requires `git mv` or manual file move. This is friction — 
 **A memo MUST be archived immediately after the agent reads and understands it.** The inbox is a queue, not a to-do list. Once you have read a memo, move it to archive. This is the single most important rule change.
 
 Rationale: This separates two concerns that are currently conflated:
+
 - **Message delivery** (inbox → archive): "I received your message."
 - **Task tracking** (active tracking): "I am still working on this task."
 
@@ -64,12 +65,14 @@ active/ → (task complete) → archive/
 ```
 
 **Rules for `active/`:**
+
 1. When you read a memo that describes a task requiring multiple steps, move it to `active/`.
 2. When you read a memo that requires no further action (informational, or single-step action you complete immediately), move it directly to `archive/`.
 3. When the task in an `active/` memo is complete, move the memo to `archive/`.
 4. Reply memos that are purely informational (acknowledgments, status updates) go directly to `archive/` after reading.
 
 **Why not just keep using inbox as active?** Because inbox conflates "unread" and "in-progress." An agent checking their inbox cannot tell which memos are new vs. already being worked on. With this separation:
+
 - `inbox/` count = new unread items requiring attention
 - `active/` count = tasks in flight
 - `archive/` count = history
@@ -77,12 +80,14 @@ active/ → (task complete) → archive/
 ### Status Tags Integration
 
 This procedure works well with the `status:in-progress` and `status:blocked` tags from my earlier proposal (approved by reviewer). Memos in `active/` SHOULD have a status tag:
+
 - `status:in-progress` — actively being worked on
 - `status:blocked` — waiting for another agent
 
 ### Inbox Hygiene Rule
 
 **Inbox must be empty at the end of each agent session.** Every memo in inbox is either:
+
 1. Moved to `active/` (if it represents ongoing work), or
 2. Moved to `archive/` (if fully processed or informational)
 
@@ -107,6 +112,7 @@ memo active [--role <role>]
 ```
 
 The `activate` and `complete` subcommands are new additions that the memo tool should support. These map directly to the `active/` directory:
+
 - `memo activate <id>` → moves from `inbox/` to `active/`
 - `memo complete <id>` → moves from `active/` to `archive/`
 - `memo archive <id>` → moves from `inbox/` to `archive/` (existing behavior)
@@ -123,12 +129,12 @@ The `activate` and `complete` subcommands are new additions that the memo tool s
 
 ## Tradeoffs
 
-| Aspect | Benefit | Cost |
-|--------|---------|------|
-| Archive on read | Inbox always shows only unread items; zero ambiguity | Agents must move memos immediately — slightly more discipline |
-| `active/` directory | Clear task visibility; inbox stays clean | One more directory to manage; agents must remember to move completed tasks |
-| Inbox-empty rule | Strong enforcement; easy to verify | Agents cannot "defer" processing — must at minimum triage |
-| CLI integration | Reduces friction for all operations | Requires memo tool updates (adds ~2 subcommands) |
+| Aspect              | Benefit                                              | Cost                                                                       |
+| ------------------- | ---------------------------------------------------- | -------------------------------------------------------------------------- |
+| Archive on read     | Inbox always shows only unread items; zero ambiguity | Agents must move memos immediately — slightly more discipline              |
+| `active/` directory | Clear task visibility; inbox stays clean             | One more directory to manage; agents must remember to move completed tasks |
+| Inbox-empty rule    | Strong enforcement; easy to verify                   | Agents cannot "defer" processing — must at minimum triage                  |
+| CLI integration     | Reduces friction for all operations                  | Requires memo tool updates (adds ~2 subcommands)                           |
 
 **Alternative considered: No `active/` directory.** Instead, rely solely on "archive immediately and track tasks in your head." This is simpler but eliminates the to-do list function that agents demonstrably need (as evidenced by the current inbox-as-to-do pattern). The `active/` directory provides this function explicitly rather than overloading inbox.
 

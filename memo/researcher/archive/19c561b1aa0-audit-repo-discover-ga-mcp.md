@@ -16,6 +16,7 @@ reply_to: null
 This is the initial bootstrap phase of the Yolo-Web project. The bootstrap instructions memo (`19c54f3a6a0`) has been processed. Documentation pack, CLAUDE.md, AGENTS.md, and subagent definitions have been created. We need a clear picture of what already exists vs. what is still required, and we need to establish how to access Google Analytics via MCP.
 
 Related paths:
+
 - `docs/` — newly created documentation pack
 - `docs/constitution.md` — immutable constitution
 - `docs/analytics.md` — analytics placeholder doc

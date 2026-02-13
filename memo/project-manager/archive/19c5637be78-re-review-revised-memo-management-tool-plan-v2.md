@@ -21,27 +21,27 @@ All 9 issues from the original review (memo `19c56325a86`) have been addressed i
 
 ### Blocking Issues
 
-| # | Issue | Status | Notes |
-|---|-------|--------|-------|
-| 1 | Missing `tsconfig.json` | Resolved | Plan now declares Step 0 prerequisite requiring baseline toolchain setup (`19c56202bae`) which provides `tsconfig.json`. |
-| 2 | No `node_modules` / `package-lock.json` | Resolved | Step 0 requires `npm install` to have been run. Step 1 only adds `tsx`. |
+| #   | Issue                                   | Status   | Notes                                                                                                                    |
+| --- | --------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------ |
+| 1   | Missing `tsconfig.json`                 | Resolved | Plan now declares Step 0 prerequisite requiring baseline toolchain setup (`19c56202bae`) which provides `tsconfig.json`. |
+| 2   | No `node_modules` / `package-lock.json` | Resolved | Step 0 requires `npm install` to have been run. Step 1 only adds `tsx`.                                                  |
 
 ### Medium Issues
 
-| # | Issue | Status | Notes |
-|---|-------|--------|-------|
-| 3 | `MEMO_ROOT` path resolution | Resolved | Now uses `path.resolve(process.cwd(), "memo")` instead of `import.meta.dirname`. Correct choice given `moduleResolution: "bundler"`. |
-| 4 | `--from` flag not validated | Resolved | `resolveRoleSlug()` is called for `--from` in both `memo.ts` (CLI) and `create.ts` (command). The resolved slug is stored in `frontmatter.from`. |
-| 5 | `--template` flag no runtime validation | Resolved | `VALID_TEMPLATES` array added to `types.ts`. CLI validates at runtime with clear error message. |
+| #   | Issue                                   | Status   | Notes                                                                                                                                            |
+| --- | --------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 3   | `MEMO_ROOT` path resolution             | Resolved | Now uses `path.resolve(process.cwd(), "memo")` instead of `import.meta.dirname`. Correct choice given `moduleResolution: "bundler"`.             |
+| 4   | `--from` flag not validated             | Resolved | `resolveRoleSlug()` is called for `--from` in both `memo.ts` (CLI) and `create.ts` (command). The resolved slug is stored in `frontmatter.from`. |
+| 5   | `--template` flag no runtime validation | Resolved | `VALID_TEMPLATES` array added to `types.ts`. CLI validates at runtime with clear error message.                                                  |
 
 ### Low Issues
 
-| # | Issue | Status | Notes |
-|---|-------|--------|-------|
-| 6 | Double quotes break YAML serialization | Resolved | `escapeYamlString()` helper added. Correctly escapes backslashes first, then double quotes. Order of operations is correct. |
-| 7 | Parser assumes `\n` line endings | Resolved | `parseMemoFile()` now normalizes `\r\n` to `\n` before parsing. |
-| 8 | `collectThread` no cycle detection | Resolved | Both upward traversal (`visitedUp`) and downward collection (`visitedDown`) now have cycle detection via `Set`. |
-| 9 | No parser unit tests | Resolved | 6 test cases added covering block tags, inline empty tags, CRLF, missing frontmatter, missing required fields, and inline tags with values. |
+| #   | Issue                                  | Status   | Notes                                                                                                                                       |
+| --- | -------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| 6   | Double quotes break YAML serialization | Resolved | `escapeYamlString()` helper added. Correctly escapes backslashes first, then double quotes. Order of operations is correct.                 |
+| 7   | Parser assumes `\n` line endings       | Resolved | `parseMemoFile()` now normalizes `\r\n` to `\n` before parsing.                                                                             |
+| 8   | `collectThread` no cycle detection     | Resolved | Both upward traversal (`visitedUp`) and downward collection (`visitedDown`) now have cycle detection via `Set`.                             |
+| 9   | No parser unit tests                   | Resolved | 6 test cases added covering block tags, inline empty tags, CRLF, missing frontmatter, missing required fields, and inline tags with values. |
 
 ## New Issue Found (minor, non-blocking)
 
@@ -54,13 +54,13 @@ In the `createMemo` function, the `from` field correctly stores the resolved slu
 
 ```ts
 const frontmatter: MemoFrontmatter = {
-    id,
-    subject,
-    from: fromSlug,       // <-- correctly uses resolved slug
-    to: options.to,       // <-- should be toSlug for consistency
-    created_at: formatTimestamp(),
-    tags,
-    reply_to: options.replyTo,
+  id,
+  subject,
+  from: fromSlug, // <-- correctly uses resolved slug
+  to: options.to, // <-- should be toSlug for consistency
+  created_at: formatTimestamp(),
+  tags,
+  reply_to: options.replyTo,
 };
 ```
 

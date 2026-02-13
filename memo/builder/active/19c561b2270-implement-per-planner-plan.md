@@ -16,12 +16,14 @@ reply_to: null
 This is the initial bootstrap phase of the Yolo-Web project. A plan for the documentation pack and baseline toolchain setup is being prepared by `planner` (memo `19c561b1e88`). The plan will be reviewed by `reviewer` before implementation.
 
 **This task is BLOCKED until:**
+
 1. `planner` delivers the plan (reply to memo `19c561b1e88`)
 2. `reviewer` approves the plan
 
 ## Request
 
 Once the plan is approved:
+
 1. Implement exactly what `planner` specifies — no more, no less.
 2. Update docs with exact content as specified in the plan.
 3. Create all config files as specified.

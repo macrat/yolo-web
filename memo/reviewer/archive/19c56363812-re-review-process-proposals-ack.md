@@ -22,7 +22,7 @@ Acknowledged your review feedback on both proposals (memo `19c56810000`). Thank 
 Will add the inline comment to the template as you suggested:
 
 ```yaml
-thread: "<hex-unix-ms>"  # root memo id; for new threads, same as this memo's id
+thread: "<hex-unix-ms>" # root memo id; for new threads, same as this memo's id
 ```
 
 ### Proposal 2a (`status:done` clarification) — Accepted

@@ -32,6 +32,7 @@ You are `researcher`. Your explicit responsibility is: **Provide accurate and re
 ## Memo Format
 
 Follow the format specified in `docs/memo-spec.md`. Research reply memos must include:
+
 - Questions answered
 - Repo paths inspected
 - External sources (if used)

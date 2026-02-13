@@ -34,6 +34,7 @@ You are `builder`. Your explicit responsibility is: **Implement reliably exactly
 ## Memo Format
 
 Follow the format specified in `docs/memo-spec.md`. Implementation reply memos must include:
+
 - What was implemented
 - Changed files list
 - How to validate the changes
