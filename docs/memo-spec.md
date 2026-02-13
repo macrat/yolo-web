@@ -1,0 +1,155 @@
+# メモ仕様
+
+## ディレクトリ構成
+
+メモはすべて `memo/` 配下に、受信者ロールごとにパーティション化されます。ディレクトリ名ではスペースをハイフンに置換します。
+
+```
+memo/
+├── owner/
+│   ├── inbox/
+│   └── archive/
+├── project-manager/
+│   ├── inbox/
+│   └── archive/
+├── researcher/
+│   ├── inbox/
+│   └── archive/
+├── planner/
+│   ├── inbox/
+│   └── archive/
+├── builder/
+│   ├── inbox/
+│   └── archive/
+├── reviewer/
+│   ├── inbox/
+│   └── archive/
+└── process-engineer/
+    ├── inbox/
+    └── archive/
+```
+
+## ルーティングルール
+
+- メモを送信するには、対象ロールの `inbox/` ディレクトリに新しいメモファイルを作成する
+
+## ライフサイクルルール（read → archive → respond）
+
+1. ロールは自身の `memo/<role-slug>/inbox/` のメモを読む
+2. ロールはメモを処理する
+3. ロールは処理済みメモファイルを `memo/<role-slug>/archive/` に移動する
+4. 返信が必要な場合、`reply_to` で元メモの `id` を参照する**新しい**メモファイルを依頼者の inbox に作成する
+
+## メモIDとファイル名
+
+- `id` はUNIXタイムスタンプ（ミリ秒）を**16進数**でエンコードしたもの（ゼロパディングなし）
+- ファイル名: `<id>-<kebab-case-subject>.md`
+- `reply_to` は返信先メモの `id`
+
+## メモフォーマット（YAMLフロントマター + Markdownボディ）
+
+すべてのメモファイルは以下のYAMLフロントマターで始まる必要があります：
+
+- `id`
+- `subject`
+- `from`
+- `to`
+- `created_at`（ISO-8601 タイムゾーン付き）
+- `tags`（リスト）
+- `reply_to`（新規スレッドの場合は null）
+
+## テンプレート
+
+### 汎用タスクメモ
+
+```md
+---
+id: "<hex-unix-ms>"
+subject: "<short subject>"
+from: "<role name>"
+to: "<role name>"
+created_at: "YYYY-MM-DDTHH:MM:SS±ZZ:ZZ"
+tags: ["tag1", "tag2"]
+reply_to: null
+---
+
+## Context
+<why this exists; link to related memo ids; relevant repo paths>
+
+## Request
+<what to do>
+
+## Acceptance criteria
+- [ ] <objective check>
+- [ ] <objective check>
+
+## Constraints
+- Must comply with `docs/constitution.md` (immutable).
+- <other constraints>
+
+## Notes
+<risks, assumptions, options>
+```
+
+### 返信メモ
+
+```md
+---
+id: "<hex-unix-ms>"
+subject: "Re: <original subject>"
+from: "<role name>"
+to: "<role name>"
+created_at: "YYYY-MM-DDTHH:MM:SS±ZZ:ZZ"
+tags: ["reply"]
+reply_to: "<original id>"
+---
+
+## Summary
+<what you did / found>
+
+## Results
+<details>
+
+## Next actions
+<what should happen next, if anything>
+```
+
+### リサーチメモ（`project manager` → `researcher`）
+
+必須項目:
+- 回答すべき質問
+- 調査済みリポジトリパス
+- 外部ソース（使用した場合）
+- 確信度 + 未知の事項
+
+### プランニングメモ（`project manager` → `planner`）
+
+必須項目:
+- ゴール
+- スコープ境界
+- 受入基準
+- 必要な成果物（ドキュメント/設定/コード）
+- ロールバックアプローチ（概念的）
+
+### 実装メモ（`project manager` → `builder`）
+
+必須項目:
+- 正確なスコープ
+- 変更予定ファイル
+- 受入基準
+- 「変更禁止」リスト（ある場合）
+
+### レビューメモ（→ `reviewer`）
+
+必須項目:
+- 変更内容（コミット参照またはファイルリスト）
+- レビュー重点領域
+- 受入基準チェックリスト
+
+### プロセス改善メモ（→ `process engineer`）
+
+必須項目:
+- 観察された協調の非効率性
+- 提案する変更
+- トレードオフ
+- プロセス変更のロールアウトとリバート計画
