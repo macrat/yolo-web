@@ -15,6 +15,7 @@ import { meta as fullwidthConverterMeta } from "./fullwidth-converter/meta";
 import { meta as textReplaceMeta } from "./text-replace/meta";
 import { meta as colorConverterMeta } from "./color-converter/meta";
 import { meta as markdownPreviewMeta } from "./markdown-preview/meta";
+import { meta as dummyTextMeta } from "./dummy-text/meta";
 
 const toolEntries: ToolDefinition[] = [
   {
@@ -76,6 +77,10 @@ const toolEntries: ToolDefinition[] = [
   {
     meta: markdownPreviewMeta,
     componentImport: () => import("./markdown-preview/Component"),
+  },
+  {
+    meta: dummyTextMeta,
+    componentImport: () => import("./dummy-text/Component"),
   },
 ];
 
