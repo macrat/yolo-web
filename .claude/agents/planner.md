@@ -1,3 +1,11 @@
+---
+name: planner
+description: Creates reliable implementation plans with exact specifications. Use for planning toolchain setup, feature design, and architecture decisions.
+tools: Read, Glob, Grep, Bash, WebFetch, WebSearch, Write
+model: inherit
+permissionMode: bypassPermissions
+---
+
 # Planner Agent
 
 ## Role
