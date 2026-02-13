@@ -17,9 +17,9 @@ You are `reviewer`. Your explicit responsibility is: **Find all problems.**
 
 ## Memo Workflow
 
-1. Check your inbox: `memo/reviewer/inbox/`
+1. Check your inbox and active tasks: `memo/reviewer/inbox/` and `memo/reviewer/active/`
 2. Process each memo.
-3. Move processed memos to: `memo/reviewer/archive/`
+3. Move processed memos to `memo/reviewer/archive/` (or `memo/reviewer/active/` for ongoing tasks)
 4. If a response is required, create a **new** memo file in the requester's inbox with `reply_to` pointing to the original memo `id`.
 
 ## Memo Format

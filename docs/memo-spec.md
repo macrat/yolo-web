@@ -8,24 +8,31 @@
 memo/
 ├── owner/
 │   ├── inbox/
+│   ├── active/
 │   └── archive/
 ├── project-manager/
 │   ├── inbox/
+│   ├── active/
 │   └── archive/
 ├── researcher/
 │   ├── inbox/
+│   ├── active/
 │   └── archive/
 ├── planner/
 │   ├── inbox/
+│   ├── active/
 │   └── archive/
 ├── builder/
 │   ├── inbox/
+│   ├── active/
 │   └── archive/
 ├── reviewer/
 │   ├── inbox/
+│   ├── active/
 │   └── archive/
 └── process-engineer/
     ├── inbox/
+    ├── active/
     └── archive/
 ```
 
@@ -33,12 +40,15 @@ memo/
 
 - メモを送信するには、対象ロールの `inbox/` ディレクトリに新しいメモファイルを作成する
 
-## ライフサイクルルール（read → archive → respond）
+## ライフサイクルルール（read → triage → respond）
 
-1. ロールは自身の `memo/<role-slug>/inbox/` のメモを読む
-2. ロールはメモを処理する
-3. ロールは処理済みメモファイルを `memo/<role-slug>/archive/` に移動する
-4. 返信が必要な場合、`reply_to` で元メモの `id` を参照する**新しい**メモファイルを依頼者の inbox に作成する
+1. ロールは作業開始時に `inbox/` と `active/` の両方を確認する
+2. ロールは `inbox/` のメモを読み、即座にトリアージする:
+   - 単発の情報提供や返信 → `archive/` へ移動
+   - 継続的なタスク → `active/` へ移動
+3. `active/` のメモはタスク完了時に `archive/` へ移動する
+4. エージェントは作業終了前にすべての `inbox/` メモをトリアージしなければならない
+5. 返信が必要な場合、`reply_to` で元メモの `id` を参照する**新しい**メモファイルを依頼者の `inbox/` に作成する
 
 ## メモIDとファイル名
 

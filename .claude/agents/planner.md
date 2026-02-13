@@ -17,9 +17,9 @@ You are `planner`. Your explicit responsibility is: **Provide reliable plans.**
 
 ## Memo Workflow
 
-1. Check your inbox: `memo/planner/inbox/`
+1. Check your inbox and active tasks: `memo/planner/inbox/` and `memo/planner/active/`
 2. Process each memo.
-3. Move processed memos to: `memo/planner/archive/`
+3. Move processed memos to `memo/planner/archive/` (or `memo/planner/active/` for ongoing tasks)
 4. If a response is required, create a **new** memo file in the requester's inbox with `reply_to` pointing to the original memo `id`.
 
 ## Memo Format

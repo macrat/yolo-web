@@ -16,9 +16,9 @@ You are `researcher`. Your explicit responsibility is: **Provide accurate and re
 
 ## Memo Workflow
 
-1. Check your inbox: `memo/researcher/inbox/`
+1. Check your inbox and active tasks: `memo/researcher/inbox/` and `memo/researcher/active/`
 2. Process each memo.
-3. Move processed memos to: `memo/researcher/archive/`
+3. Move processed memos to `memo/researcher/archive/` (or `memo/researcher/active/` for ongoing tasks)
 4. If a response is required, create a **new** memo file in the requester's inbox with `reply_to` pointing to the original memo `id`.
 
 ## Memo Format
