@@ -1,8 +1,23 @@
 import type { ToolMeta, ToolDefinition } from "./types";
 
-// Tool entries will be added as tools are implemented.
-// Each entry contains metadata and a dynamic import function.
-const toolEntries: ToolDefinition[] = [];
+import { meta as charCountMeta } from "./char-count/meta";
+import { meta as jsonFormatterMeta } from "./json-formatter/meta";
+import { meta as base64Meta } from "./base64/meta";
+
+const toolEntries: ToolDefinition[] = [
+  {
+    meta: charCountMeta,
+    componentImport: () => import("./char-count/Component"),
+  },
+  {
+    meta: jsonFormatterMeta,
+    componentImport: () => import("./json-formatter/Component"),
+  },
+  {
+    meta: base64Meta,
+    componentImport: () => import("./base64/Component"),
+  },
+];
 
 // Indexed by slug for O(1) lookup
 export const toolsBySlug: Map<string, ToolDefinition> = new Map(
