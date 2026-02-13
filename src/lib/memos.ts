@@ -57,50 +57,54 @@ function normalizeRole(role: string): RoleSlug {
 }
 
 /**
- * Scan all memo/{role}/archive/ directories for public memos.
- * Only archive directories are scanned (C1: never inbox or active).
- * Memos without explicit public: true are treated as private (C1).
+ * Scan all memo/{role}/{inbox,active,archive}/ directories for public memos.
+ * All directories are scanned since all memos are public by default
+ * (the source code is already public on GitHub).
+ * Only memos with explicit public: false are excluded.
  * Memos matching secret patterns are excluded (C3).
  */
 function scanAllMemos(): RawMemo[] {
   const memos: RawMemo[] = [];
+  const SUBDIRS = ["inbox", "active", "archive"];
 
   for (const roleSlug of ROLE_SLUGS) {
-    const archiveDir = path.join(MEMO_ROOT, roleSlug, "archive");
-    if (!fs.existsSync(archiveDir)) continue;
+    for (const subdir of SUBDIRS) {
+      const dir = path.join(MEMO_ROOT, roleSlug, subdir);
+      if (!fs.existsSync(dir)) continue;
 
-    const files = fs.readdirSync(archiveDir).filter((f) => f.endsWith(".md"));
+      const files = fs.readdirSync(dir).filter((f) => f.endsWith(".md"));
 
-    for (const file of files) {
-      const filePath = path.join(archiveDir, file);
-      const raw = fs.readFileSync(filePath, "utf-8");
-      const { data, content } = parseFrontmatter<MemoFrontmatter>(raw);
+      for (const file of files) {
+        const filePath = path.join(dir, file);
+        const raw = fs.readFileSync(filePath, "utf-8");
+        const { data, content } = parseFrontmatter<MemoFrontmatter>(raw);
 
-      // C1: Only explicit public: true memos are published
-      if (data.public !== true) continue;
+        // Only exclude memos explicitly marked as non-public
+        if (data.public === false) continue;
 
-      // C3: Secret pattern detection
-      const secretMatch = detectSecrets(content);
-      if (secretMatch) {
-        console.warn(
-          `[memos] Excluding memo ${data.id || file} due to detected secret pattern: ${secretMatch}`,
-        );
-        continue;
+        // C3: Secret pattern detection
+        const secretMatch = detectSecrets(content);
+        if (secretMatch) {
+          console.warn(
+            `[memos] Excluding memo ${data.id || file} due to detected secret pattern: ${secretMatch}`,
+          );
+          continue;
+        }
+
+        memos.push({
+          id: String(data.id || ""),
+          subject: String(data.subject || ""),
+          from: String(data.from || ""),
+          to: String(data.to || ""),
+          created_at: String(data.created_at || ""),
+          tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
+          reply_to:
+            data.reply_to === null || data.reply_to === undefined
+              ? null
+              : String(data.reply_to),
+          contentHtml: markdownToHtml(content),
+        });
       }
-
-      memos.push({
-        id: String(data.id || ""),
-        subject: String(data.subject || ""),
-        from: String(data.from || ""),
-        to: String(data.to || ""),
-        created_at: String(data.created_at || ""),
-        tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
-        reply_to:
-          data.reply_to === null || data.reply_to === undefined
-            ? null
-            : String(data.reply_to),
-        contentHtml: markdownToHtml(content),
-      });
     }
   }
 
