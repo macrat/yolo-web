@@ -54,6 +54,9 @@ Key docs:
 ## Work Process
 
 - Parallelize work whenever possible. If tasks can proceed concurrently, do so.
+- Multiple instances of the same agent role may run concurrently when collision risk is low:
+  - `researcher`, `planner`, `reviewer` are read-only (except memo writing) — safe to run multiple instances.
+  - `builder` instances may run concurrently if their work areas do not overlap.
 - Commit frequently to create checkpoints for easy rollback if something goes wrong.
 
 ## Git Rule
