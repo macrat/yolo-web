@@ -63,11 +63,13 @@ https://yolo-web.example.com/games/kanji-kanaru
 ```
 
 Column order: 部首 | 画数 | 学年 | 音読み | 意味
+
 - 🟩 = Correct (green)
 - 🟨 = Close (yellow)
 - ⬜ = Wrong (white/gray)
 
 Failed attempt:
+
 ```
 漢字カナ―ル #42 X/6
 ⬜⬜🟨⬜⬜
@@ -374,9 +376,15 @@ export interface GameHistory {
 Key functions:
 
 ```typescript
-export function evaluateGuess(guess: KanjiEntry, target: KanjiEntry): GuessFeedback;
+export function evaluateGuess(
+  guess: KanjiEntry,
+  target: KanjiEntry,
+): GuessFeedback;
 export function isValidKanji(char: string, kanjiData: KanjiEntry[]): boolean;
-export function lookupKanji(char: string, kanjiData: KanjiEntry[]): KanjiEntry | undefined;
+export function lookupKanji(
+  char: string,
+  kanjiData: KanjiEntry[],
+): KanjiEntry | undefined;
 ```
 
 **Evaluation logic for each attribute:**
@@ -400,14 +408,20 @@ export const categorySuperGroups: Record<string, SemanticCategory[]> = {
   objects: ["building", "tool"],
 };
 
-export function areCategoriesRelated(a: SemanticCategory, b: SemanticCategory): boolean;
+export function areCategoriesRelated(
+  a: SemanticCategory,
+  b: SemanticCategory,
+): boolean;
 ```
 
 ### `src/lib/games/kanji-kanaru/daily.ts`
 
 ```typescript
 export function getPuzzleNumber(date: Date): number; // Days since epoch date
-export function getTodaysPuzzle(kanjiData: KanjiEntry[], schedule: PuzzleScheduleEntry[]): { kanji: KanjiEntry; puzzleNumber: number };
+export function getTodaysPuzzle(
+  kanjiData: KanjiEntry[],
+  schedule: PuzzleScheduleEntry[],
+): { kanji: KanjiEntry; puzzleNumber: number };
 export function formatDateJST(date: Date): string; // "YYYY-MM-DD" in JST
 ```
 
@@ -440,20 +454,21 @@ export function generateTwitterShareUrl(text: string): string;
 ```typescript
 function feedbackToEmoji(level: FeedbackLevel): string {
   switch (level) {
-    case "correct": return "🟩";
-    case "close": return "🟨";
-    case "wrong": return "⬜";
+    case "correct":
+      return "🟩";
+    case "close":
+      return "🟨";
+    case "wrong":
+      return "⬜";
   }
 }
 
 function generateShareText(state: GameState): string {
-  const result = state.status === "won"
-    ? `${state.guesses.length}/6`
-    : "X/6";
+  const result = state.status === "won" ? `${state.guesses.length}/6` : "X/6";
   const rows = state.guesses.map((g) =>
     [g.radical, g.strokeCount, g.grade, g.onYomi, g.category]
       .map(feedbackToEmoji)
-      .join("")
+      .join(""),
   );
   return `漢字カナ―ル #${state.puzzleNumber} ${result}\n${rows.join("\n")}\nhttps://yolo-web.example.com/games/kanji-kanaru`;
 }
@@ -503,6 +518,7 @@ This is the top-level **client component** (`"use client"`) that:
 ### `src/app/games/kanji-kanaru/opengraph-image.tsx`
 
 Use Next.js `ImageResponse` API to generate a dynamic OG image showing:
+
 - Game title "漢字カナ―ル"
 - Tagline "毎日の漢字パズル"
 - Visual representation of the game grid
@@ -522,9 +538,14 @@ Players type kanji using their device's standard IME (Input Method Editor). The 
 ### Validation
 
 ```typescript
-function isValidGuess(input: string, kanjiData: KanjiEntry[]): { valid: boolean; error?: string } {
-  if (input.length !== 1) return { valid: false, error: "漢字を1文字入力してください" };
-  if (!kanjiData.some((k) => k.character === input)) return { valid: false, error: "常用漢字ではありません" };
+function isValidGuess(
+  input: string,
+  kanjiData: KanjiEntry[],
+): { valid: boolean; error?: string } {
+  if (input.length !== 1)
+    return { valid: false, error: "漢字を1文字入力してください" };
+  if (!kanjiData.some((k) => k.character === input))
+    return { valid: false, error: "常用漢字ではありません" };
   return { valid: true };
 }
 ```
@@ -732,14 +753,14 @@ No additional npm packages are required. All game logic, animations, and UI use 
 
 ## Key Algorithms Summary
 
-| Algorithm | Location | Description |
-|-----------|----------|-------------|
-| Guess evaluation | `engine.ts` | Compares guess kanji to target on 5 attributes, returns FeedbackLevel for each |
-| Daily puzzle selection | `daily.ts` | Maps today's date (JST) to a puzzle index via schedule JSON with hash fallback |
-| Puzzle schedule generation | `scripts/generate-puzzle-schedule.ts` | Seeded PRNG shuffle of 2136 kanji indices, outputs 365 date-index pairs |
-| Share text generation | `share.ts` | Maps GuessFeedback[] to emoji grid string with header and URL |
-| Streak calculation | `storage.ts` | Checks consecutive dates in history, updates current/max streak |
-| Category relatedness | `categories.ts` | Checks if two categories share a super-group |
+| Algorithm                  | Location                              | Description                                                                    |
+| -------------------------- | ------------------------------------- | ------------------------------------------------------------------------------ |
+| Guess evaluation           | `engine.ts`                           | Compares guess kanji to target on 5 attributes, returns FeedbackLevel for each |
+| Daily puzzle selection     | `daily.ts`                            | Maps today's date (JST) to a puzzle index via schedule JSON with hash fallback |
+| Puzzle schedule generation | `scripts/generate-puzzle-schedule.ts` | Seeded PRNG shuffle of 2136 kanji indices, outputs 365 date-index pairs        |
+| Share text generation      | `share.ts`                            | Maps GuessFeedback[] to emoji grid string with header and URL                  |
+| Streak calculation         | `storage.ts`                          | Checks consecutive dates in history, updates current/max streak                |
+| Category relatedness       | `categories.ts`                       | Checks if two categories share a super-group                                   |
 
 ## Acceptance Criteria
 
@@ -774,6 +795,7 @@ No additional npm packages are required. All game logic, animations, and UI use 
 ## Rollback Approach
 
 All game files are isolated under:
+
 - `src/app/games/kanji-kanaru/`
 - `src/components/games/kanji-kanaru/`
 - `src/lib/games/kanji-kanaru/`

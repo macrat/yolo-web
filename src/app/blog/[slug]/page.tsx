@@ -7,10 +7,7 @@ import {
   getBlogPostBySlug,
   CATEGORY_LABELS,
 } from "@/lib/blog";
-import {
-  generateBlogPostMetadata,
-  generateBlogPostJsonLd,
-} from "@/lib/seo";
+import { generateBlogPostMetadata, generateBlogPostJsonLd } from "@/lib/seo";
 import TableOfContents from "@/components/blog/TableOfContents";
 import TagList from "@/components/blog/TagList";
 import RelatedMemos from "@/components/blog/RelatedMemos";
@@ -39,7 +36,8 @@ export default async function BlogPostPage({ params }: Props) {
 
   const allPosts = getAllBlogPosts();
   const currentIndex = allPosts.findIndex((p) => p.slug === slug);
-  const prevPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null;
+  const prevPost =
+    currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null;
   const nextPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null;
 
   const jsonLd = generateBlogPostJsonLd(post);
@@ -62,9 +60,7 @@ export default async function BlogPostPage({ params }: Props) {
             </Link>
             <time dateTime={post.published_at}>{post.published_at}</time>
             {post.updated_at !== post.published_at && (
-              <span className={styles.updated}>
-                (更新: {post.updated_at})
-              </span>
+              <span className={styles.updated}>(更新: {post.updated_at})</span>
             )}
             <span>{post.readingTime}分で読める</span>
           </div>

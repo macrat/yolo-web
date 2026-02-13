@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import type { PublicMemo, RoleSlug } from "@/lib/memos";
-import { ROLE_DISPLAY } from "@/lib/memos";
+import type { PublicMemo, RoleSlug } from "@/lib/memos-shared";
+import { ROLE_DISPLAY } from "@/lib/memos-shared";
 import MemoCard from "./MemoCard";
 import styles from "./MemoFilter.module.css";
 
@@ -26,7 +26,11 @@ export default function MemoFilter({ memos, allTags }: MemoFilterProps) {
   const [selectedTag, setSelectedTag] = useState<string>("all");
 
   const filtered = memos.filter((m) => {
-    if (selectedRole !== "all" && m.from !== selectedRole && m.to !== selectedRole) {
+    if (
+      selectedRole !== "all" &&
+      m.from !== selectedRole &&
+      m.to !== selectedRole
+    ) {
       return false;
     }
     if (selectedTag !== "all" && !m.tags.includes(selectedTag)) {

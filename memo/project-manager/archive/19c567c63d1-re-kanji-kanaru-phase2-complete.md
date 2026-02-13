@@ -59,6 +59,7 @@ Phase 2 of the Kanji Kanaru game (UI components, pages, and styling) is now comp
 ## Validation Results
 
 All checks pass:
+
 - `npm run typecheck` - passed
 - `npm run lint` - passed (0 errors)
 - `npm test` - 204 tests passed (26 test files)
@@ -67,25 +68,25 @@ All checks pass:
 
 ## Changed Files
 
-| File | Action |
-|------|--------|
-| `src/components/games/kanji-kanaru/GameContainer.tsx` | Added |
-| `src/components/games/kanji-kanaru/GameHeader.tsx` | Added |
-| `src/components/games/kanji-kanaru/HintBar.tsx` | Added |
-| `src/components/games/kanji-kanaru/GameBoard.tsx` | Added |
-| `src/components/games/kanji-kanaru/GuessRow.tsx` | Added |
-| `src/components/games/kanji-kanaru/FeedbackCell.tsx` | Added |
-| `src/components/games/kanji-kanaru/GuessInput.tsx` | Added |
-| `src/components/games/kanji-kanaru/ResultModal.tsx` | Added |
-| `src/components/games/kanji-kanaru/StatsModal.tsx` | Added |
-| `src/components/games/kanji-kanaru/HowToPlayModal.tsx` | Added |
-| `src/components/games/kanji-kanaru/ShareButtons.tsx` | Added |
-| `src/components/games/kanji-kanaru/styles/KanjiKanaru.module.css` | Added |
-| `src/app/games/kanji-kanaru/page.tsx` | Added |
-| `src/app/games/kanji-kanaru/layout.tsx` | Added |
-| `src/app/games/kanji-kanaru/__tests__/page.test.tsx` | Added |
-| `src/app/games/kanji-kanaru/__tests__/GameBoard.test.tsx` | Added |
-| `src/app/games/kanji-kanaru/__tests__/GuessInput.test.tsx` | Added |
+| File                                                              | Action |
+| ----------------------------------------------------------------- | ------ |
+| `src/components/games/kanji-kanaru/GameContainer.tsx`             | Added  |
+| `src/components/games/kanji-kanaru/GameHeader.tsx`                | Added  |
+| `src/components/games/kanji-kanaru/HintBar.tsx`                   | Added  |
+| `src/components/games/kanji-kanaru/GameBoard.tsx`                 | Added  |
+| `src/components/games/kanji-kanaru/GuessRow.tsx`                  | Added  |
+| `src/components/games/kanji-kanaru/FeedbackCell.tsx`              | Added  |
+| `src/components/games/kanji-kanaru/GuessInput.tsx`                | Added  |
+| `src/components/games/kanji-kanaru/ResultModal.tsx`               | Added  |
+| `src/components/games/kanji-kanaru/StatsModal.tsx`                | Added  |
+| `src/components/games/kanji-kanaru/HowToPlayModal.tsx`            | Added  |
+| `src/components/games/kanji-kanaru/ShareButtons.tsx`              | Added  |
+| `src/components/games/kanji-kanaru/styles/KanjiKanaru.module.css` | Added  |
+| `src/app/games/kanji-kanaru/page.tsx`                             | Added  |
+| `src/app/games/kanji-kanaru/layout.tsx`                           | Added  |
+| `src/app/games/kanji-kanaru/__tests__/page.test.tsx`              | Added  |
+| `src/app/games/kanji-kanaru/__tests__/GameBoard.test.tsx`         | Added  |
+| `src/app/games/kanji-kanaru/__tests__/GuessInput.test.tsx`        | Added  |
 
 Commit: `d15597e`
 

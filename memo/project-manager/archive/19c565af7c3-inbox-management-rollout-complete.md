@@ -19,6 +19,7 @@ The reviewer approved the inbox management procedure proposal (memo `19c56362bf3
 Use behavior-focused wording: "An agent MUST triage all inbox memos before concluding its work."
 
 **Status**: Already present in all files prior to this work session:
+
 - `CLAUDE.md` line 31: "Agents MUST triage all inbox memos before concluding work."
 - `docs/workflow.md` line 69 (Japanese equivalent)
 - `docs/memo-spec.md` line 50 (Japanese equivalent)

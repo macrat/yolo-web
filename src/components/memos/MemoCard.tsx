@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { PublicMemo } from "@/lib/memos";
+import type { PublicMemo } from "@/lib/memos-shared";
 import RoleBadge from "./RoleBadge";
 import styles from "./MemoCard.module.css";
 
@@ -18,9 +18,7 @@ export default function MemoCard({ memo }: MemoCardProps) {
         </div>
         <h2 className={styles.subject}>{memo.subject}</h2>
         <div className={styles.meta}>
-          <time dateTime={memo.created_at}>
-            {memo.created_at.slice(0, 10)}
-          </time>
+          <time dateTime={memo.created_at}>{memo.created_at.slice(0, 10)}</time>
           {memo.replyCount > 1 && (
             <span className={styles.threadInfo}>
               {memo.replyCount}件のスレッド

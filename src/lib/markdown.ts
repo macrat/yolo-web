@@ -10,9 +10,7 @@
 import { marked } from "marked";
 
 /** Parse YAML frontmatter from a markdown string. Returns { data, content }. */
-export function parseFrontmatter<T>(
-  raw: string,
-): { data: T; content: string } {
+export function parseFrontmatter<T>(raw: string): { data: T; content: string } {
   const normalized = raw.replace(/\r\n/g, "\n");
   const match = normalized.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
   if (!match) {
@@ -45,7 +43,7 @@ function parseYamlBlock(yaml: string): Record<string, unknown> {
     }
 
     const key = keyMatch[1];
-    let value = keyMatch[2].trim();
+    const value = keyMatch[2].trim();
 
     // Inline array: ["a", "b"]
     if (value.startsWith("[")) {
@@ -100,10 +98,7 @@ function parseYamlBlock(yaml: string): Record<string, unknown> {
 function parseYamlScalar(value: string): unknown {
   // Quoted string
   if (value.startsWith('"') && value.endsWith('"')) {
-    return value
-      .slice(1, -1)
-      .replace(/\\"/g, '"')
-      .replace(/\\\\/g, "\\");
+    return value.slice(1, -1).replace(/\\"/g, '"').replace(/\\\\/g, "\\");
   }
   if (value.startsWith("'") && value.endsWith("'")) {
     return value.slice(1, -1);

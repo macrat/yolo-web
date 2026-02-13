@@ -15,6 +15,7 @@ Implement a scalable Online Text/Developer Utility Tools Collection as the first
 ## Scope Boundary
 
 **In scope:**
+
 - Tool template system (shared layout, metadata, registry)
 - 10 specific tools (listed below)
 - `/tools` landing page
@@ -24,6 +25,7 @@ Implement a scalable Online Text/Developer Utility Tools Collection as the first
 - Mobile-responsive CSS (no framework -- plain CSS modules)
 
 **Out of scope:**
+
 - Analytics / monetization
 - AI-powered tool enhancements (later phase)
 - Server-side API routes
@@ -84,6 +86,7 @@ src/
 ### Tool Registry Pattern
 
 The registry is the single source of truth for all tools. It enables:
+
 - Static generation of all tool pages via `generateStaticParams`
 - The landing page listing
 - Related tool lookups
@@ -100,20 +103,20 @@ export type ToolCategory =
 
 export interface ToolMeta {
   slug: string;
-  name: string;                    // Japanese display name
-  nameEn: string;                  // English name (for potential i18n)
-  description: string;             // Japanese, 120-160 chars for meta description
-  shortDescription: string;        // Japanese, ~50 chars for cards
-  keywords: string[];              // Japanese SEO keywords
+  name: string; // Japanese display name
+  nameEn: string; // English name (for potential i18n)
+  description: string; // Japanese, 120-160 chars for meta description
+  shortDescription: string; // Japanese, ~50 chars for cards
+  keywords: string[]; // Japanese SEO keywords
   category: ToolCategory;
-  relatedSlugs: string[];          // slugs of related tools
-  publishedAt: string;             // ISO date
-  structuredDataType?: string;     // JSON-LD @type if applicable (e.g., "WebApplication")
+  relatedSlugs: string[]; // slugs of related tools
+  publishedAt: string; // ISO date
+  structuredDataType?: string; // JSON-LD @type if applicable (e.g., "WebApplication")
 }
 
 export interface ToolDefinition {
   meta: ToolMeta;
-  Component: React.ComponentType;  // Lazy-loaded client component
+  Component: React.ComponentType; // Lazy-loaded client component
 }
 ```
 
@@ -227,7 +230,8 @@ import type { Metadata } from "next";
 import type { ToolMeta } from "@/tools/types";
 
 const SITE_NAME = "Yolo-Web Tools";
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://yolo-web.example.com";
+const BASE_URL =
+  process.env.NEXT_PUBLIC_BASE_URL || "https://yolo-web.example.com";
 
 export function generateToolMetadata(meta: ToolMeta): Metadata {
   return {
@@ -272,6 +276,7 @@ export function generateToolJsonLd(meta: ToolMeta): object {
 ### Shared Components
 
 **ToolLayout** wraps every tool page with:
+
 1. H1 heading (tool name)
 2. Tool description paragraph (SEO text)
 3. The tool component itself (children)
@@ -280,6 +285,7 @@ export function generateToolJsonLd(meta: ToolMeta): object {
 6. AI disclaimer
 
 **AiDisclaimer** is a small banner that satisfies Constitution Rule 3:
+
 ```
 "このツールはAIによる実験的プロジェクトの一部です。結果が不正確な場合があります。"
 ```
@@ -305,7 +311,8 @@ export function generateToolJsonLd(meta: ToolMeta): object {
 import type { MetadataRoute } from "next";
 import { allToolMetas } from "@/tools/registry";
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://yolo-web.example.com";
+const BASE_URL =
+  process.env.NEXT_PUBLIC_BASE_URL || "https://yolo-web.example.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const toolPages = allToolMetas.map((meta) => ({
@@ -346,6 +353,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 ### No Other Dependencies Needed
 
 The other 8 tools can be implemented with browser APIs only:
+
 - Character Counter: `String.length`, `Intl.Segmenter`
 - JSON Formatter: `JSON.parse`, `JSON.stringify`
 - Base64: `btoa`, `atob`, `TextEncoder`/`TextDecoder`
@@ -362,11 +370,13 @@ The other 8 tools can be implemented with browser APIs only:
 ### Phase 0: Foundation (Steps 1-4)
 
 **Step 1: Define types and registry skeleton**
+
 - Create `src/tools/types.ts` with `ToolMeta`, `ToolCategory`, `ToolDefinition`
 - Create `src/tools/registry.ts` with empty entries array and exports
 - Create `src/lib/seo.ts` with `generateToolMetadata` and `generateToolJsonLd`
 
 **Step 2: Create shared components**
+
 - Create `src/components/common/Header.tsx` + CSS module
 - Create `src/components/common/Footer.tsx` + CSS module
 - Create `src/components/tools/AiDisclaimer.tsx` + CSS module
@@ -376,11 +386,13 @@ The other 8 tools can be implemented with browser APIs only:
 - Create `src/components/tools/ToolsGrid.tsx` + CSS module
 
 **Step 3: Create tools layout and landing page**
+
 - Create `src/app/tools/layout.tsx` (uses Header + Footer)
 - Create `src/app/tools/page.tsx` (tools listing, uses ToolsGrid + ToolCard)
 - Extend `globals.css` with CSS custom properties and base styles
 
 **Step 4: Create dynamic route**
+
 - Create `src/app/tools/[slug]/page.tsx` with `generateStaticParams` and `generateMetadata`
 - Create `src/app/sitemap.ts`
 - Create `src/app/robots.ts`
@@ -391,6 +403,7 @@ The other 8 tools can be implemented with browser APIs only:
 ### Phase 1: First 3 Tools (Steps 5-7) -- validates the template
 
 **Step 5: Character Counter (文字数カウント)**
+
 - `src/tools/char-count/meta.ts`
 - `src/tools/char-count/logic.ts` -- pure functions: `countChars`, `countBytes`, `countWords`, `countLines`, `countParagraphs`
 - `src/tools/char-count/Component.tsx` -- "use client", textarea input, live counts display
@@ -399,6 +412,7 @@ The other 8 tools can be implemented with browser APIs only:
 - Register in `src/tools/registry.ts`
 
 Key features:
+
 - Character count (with/without spaces)
 - Byte count (UTF-8)
 - Word count (Japanese: use `Intl.Segmenter`; simple space-split for non-Japanese)
@@ -407,6 +421,7 @@ Key features:
 - Real-time update as user types
 
 **Step 6: JSON Formatter (JSON整形)**
+
 - `src/tools/json-formatter/meta.ts`
 - `src/tools/json-formatter/logic.ts` -- `formatJson`, `validateJson`, `minifyJson`
 - `src/tools/json-formatter/Component.tsx` -- "use client", input textarea, output with syntax highlighting (plain CSS, no library), format/minify/validate buttons, error display
@@ -415,6 +430,7 @@ Key features:
 - Register in registry
 
 Key features:
+
 - Format (pretty-print) with configurable indent (2/4 spaces, tab)
 - Minify
 - Validate with error position reporting
@@ -422,6 +438,7 @@ Key features:
 - Input/output side by side on desktop, stacked on mobile
 
 **Step 7: Base64 Encoder/Decoder (Base64エンコード/デコード)**
+
 - `src/tools/base64/meta.ts`
 - `src/tools/base64/logic.ts` -- `encodeBase64`, `decodeBase64` (handle UTF-8 properly)
 - `src/tools/base64/Component.tsx` -- "use client", encode/decode toggle, input/output textareas
@@ -430,6 +447,7 @@ Key features:
 - Register in registry
 
 Key features:
+
 - Encode text to Base64
 - Decode Base64 to text
 - UTF-8 support (using TextEncoder/TextDecoder)
@@ -441,37 +459,44 @@ Key features:
 ### Phase 2: Remaining 7 Tools (Steps 8-14)
 
 **Step 8: URL Encoder/Decoder (URLエンコード/デコード)**
+
 - Same structure as Base64
 - `encodeURIComponent`/`decodeURIComponent` + full URL encoding option
 - Component-level encoding (query param vs. full URL)
 
 **Step 9: Text Diff (テキスト差分)**
+
 - Install `diff` package: `npm install diff && npm install -D @types/diff`
 - `logic.ts`: wrapper around `diffLines`, `diffWords`, `diffChars`
 - Component: two input textareas, diff display with red/green highlighting
 - Diff modes: line, word, character
 
 **Step 10: Hash Generator (ハッシュ生成)**
+
 - `logic.ts`: use `crypto.subtle.digest` for MD5 (note: not in subtle, need manual or skip MD5), SHA-1, SHA-256, SHA-512
 - Actually: Web Crypto API supports SHA-1, SHA-256, SHA-384, SHA-512 but NOT MD5. For MD5, either skip it or implement a small pure-JS MD5 (public domain implementations exist, ~50 lines). Recommendation: include MD5 via a small inline implementation since it is a commonly searched tool.
 - Component: input text, select hash algorithm, output hash in hex/base64
 
 **Step 11: Password Generator (パスワード生成)**
+
 - `logic.ts`: use `crypto.getRandomValues` for secure randomness
 - Options: length (8-128), uppercase, lowercase, digits, symbols, exclude ambiguous chars
 - Component: sliders/checkboxes for options, generate button, copy button, strength indicator
 
 **Step 12: QR Code Generator (QRコード生成)**
+
 - Install `qrcode-generator`: `npm install qrcode-generator`
 - Note: `qrcode-generator` does not have `@types`. Create a minimal `.d.ts` in `src/types/qrcode-generator.d.ts`.
 - `logic.ts`: wrapper around qrcode-generator
 - Component: text input, QR code display (SVG preferred for quality), download as PNG/SVG
 
 **Step 13: Regex Tester (正規表現テスター)**
+
 - `logic.ts`: safe regex execution with timeout protection (wrap in try/catch, limit match count)
 - Component: regex input with flags (g, i, m, s), test string textarea, matches highlighted in test string, match list, replace functionality
 
 **Step 14: Unix Timestamp Converter (UNIXタイムスタンプ変換)**
+
 - `logic.ts`: timestamp to date, date to timestamp, current timestamp
 - Component: timestamp input, date/time picker, bidirectional conversion, timezone display, "now" button with live clock
 
@@ -480,6 +505,7 @@ Key features:
 ### Phase 3: Polish and Verification (Steps 15-16)
 
 **Step 15: Integration testing and cross-page verification**
+
 - Verify all 10 tool pages render correctly at their URLs
 - Verify `/tools` landing page lists all 10 tools
 - Verify sitemap includes all pages
@@ -487,6 +513,7 @@ Key features:
 - Test mobile responsiveness (check CSS at 320px, 768px, 1024px breakpoints)
 
 **Step 16: SEO content review**
+
 - Verify every tool page has: proper `<title>`, `<meta name="description">`, canonical URL, JSON-LD
 - Verify AI disclaimer is present on every page
 - Verify internal linking (related tools) works on all pages
@@ -494,18 +521,18 @@ Key features:
 
 ## Tool Metadata Details (for all 10 tools)
 
-| # | slug | name | category | relatedSlugs |
-|---|------|------|----------|--------------|
-| 1 | `char-count` | 文字数カウント | text | `json-formatter`, `text-diff` |
-| 2 | `json-formatter` | JSON整形・検証 | developer | `base64`, `url-encode`, `regex-tester` |
-| 3 | `base64` | Base64エンコード・デコード | encoding | `url-encode`, `hash-generator` |
-| 4 | `url-encode` | URLエンコード・デコード | encoding | `base64`, `json-formatter` |
-| 5 | `text-diff` | テキスト差分比較 | text | `char-count`, `json-formatter` |
-| 6 | `hash-generator` | ハッシュ生成 (MD5/SHA) | security | `base64`, `password-generator` |
-| 7 | `password-generator` | パスワード生成 | security | `hash-generator`, `qr-code` |
-| 8 | `qr-code` | QRコード生成 | generator | `password-generator`, `url-encode` |
-| 9 | `regex-tester` | 正規表現テスター | developer | `json-formatter`, `text-diff` |
-| 10 | `unix-timestamp` | UNIXタイムスタンプ変換 | developer | `hash-generator`, `base64` |
+| #   | slug                 | name                       | category  | relatedSlugs                           |
+| --- | -------------------- | -------------------------- | --------- | -------------------------------------- |
+| 1   | `char-count`         | 文字数カウント             | text      | `json-formatter`, `text-diff`          |
+| 2   | `json-formatter`     | JSON整形・検証             | developer | `base64`, `url-encode`, `regex-tester` |
+| 3   | `base64`             | Base64エンコード・デコード | encoding  | `url-encode`, `hash-generator`         |
+| 4   | `url-encode`         | URLエンコード・デコード    | encoding  | `base64`, `json-formatter`             |
+| 5   | `text-diff`          | テキスト差分比較           | text      | `char-count`, `json-formatter`         |
+| 6   | `hash-generator`     | ハッシュ生成 (MD5/SHA)     | security  | `base64`, `password-generator`         |
+| 7   | `password-generator` | パスワード生成             | security  | `hash-generator`, `qr-code`            |
+| 8   | `qr-code`            | QRコード生成               | generator | `password-generator`, `url-encode`     |
+| 9   | `regex-tester`       | 正規表現テスター           | developer | `json-formatter`, `text-diff`          |
+| 10  | `unix-timestamp`     | UNIXタイムスタンプ変換     | developer | `hash-generator`, `base64`             |
 
 ## SEO Metadata Strategy
 
@@ -561,16 +588,19 @@ Key features:
 ## Notes
 
 ### Risks
+
 - **MD5 in Hash Generator**: Web Crypto API does not support MD5. A small inline implementation is needed. Risk: potential correctness issues. Mitigation: use a well-known public domain implementation and test thoroughly.
 - **`Intl.Segmenter` browser support**: Used for Japanese word segmentation in Character Counter. Supported in Chrome 87+, Safari 15.4+, Firefox 125+. For older browsers, fall back to simple character counting. Risk is low as target audience uses modern browsers.
 - **QR Code library type definitions**: `qrcode-generator` lacks `@types` package. Builder must create a minimal `.d.ts` declaration file.
 - **Regex Tester DoS**: Malicious regex patterns can cause catastrophic backtracking. Mitigation: wrap execution in try/catch with a timeout mechanism (e.g., execute in a web worker with a 3-second timeout, or limit input size and match count).
 
 ### Assumptions
+
 - The site will be deployed to a platform that supports Next.js SSG (e.g., Vercel, Cloudflare Pages).
 - `NEXT_PUBLIC_BASE_URL` will be set in the deployment environment. For development, a fallback is used.
 - Japanese is the primary language; English names are stored for potential future i18n but not used in the UI initially.
 
 ### Future Expansion
+
 - After the initial 10 tools, adding a new tool requires only: (1) create the tool directory with meta.ts, logic.ts, Component.tsx; (2) add one entry to registry.ts. The landing page, sitemap, and routing update automatically.
 - Target: 30-50 tools over subsequent phases to approach competitor tool counts.

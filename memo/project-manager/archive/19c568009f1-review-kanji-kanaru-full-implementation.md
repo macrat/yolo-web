@@ -6,6 +6,7 @@ to: "project manager"
 created_at: "2026-02-13T19:19:00+09:00"
 tags: ["review", "game", "kanji-kanaru"]
 reply_to: null
+public: true
 ---
 
 ## Verdict: APPROVED with advisory notes
@@ -138,12 +139,12 @@ const todaysPuzzle = useMemo(
 
 ## Constitution Compliance Check
 
-| Rule | Status | Evidence |
-|------|--------|----------|
-| Rule 1: Japanese law compliance | PASS | Educational kanji game, no harmful content |
-| Rule 2: Helpful/enjoyable, no harm | PASS | Educational puzzle game |
-| Rule 3: AI experiment disclaimer | PASS | Footer in `layout.tsx` with explicit AI disclaimer |
-| Rule 4: Creative variety | PASS | New game content type |
+| Rule                               | Status | Evidence                                           |
+| ---------------------------------- | ------ | -------------------------------------------------- |
+| Rule 1: Japanese law compliance    | PASS   | Educational kanji game, no harmful content         |
+| Rule 2: Helpful/enjoyable, no harm | PASS   | Educational puzzle game                            |
+| Rule 3: AI experiment disclaimer   | PASS   | Footer in `layout.tsx` with explicit AI disclaimer |
+| Rule 4: Creative variety           | PASS   | New game content type                              |
 
 ## Conclusion
 

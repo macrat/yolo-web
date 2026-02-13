@@ -17,14 +17,14 @@ Review of the memo management CLI tool implementation (commit `e9c4e96`). Verdic
 
 ## Validation Results
 
-| Check              | Result |
-| ------------------ | ------ |
-| `npm run typecheck` | Pass   |
-| `npm run lint`      | Pass   |
-| `npm test`          | Pass (21 tests, 6 files) |
-| `npm run format:check` (scripts/) | Pass |
-| Commit author       | Correct (`Claude <noreply@anthropic.com>`) |
-| Commit message      | Correct (`feat(scripts): add memo management CLI tool`) |
+| Check                             | Result                                                  |
+| --------------------------------- | ------------------------------------------------------- |
+| `npm run typecheck`               | Pass                                                    |
+| `npm run lint`                    | Pass                                                    |
+| `npm test`                        | Pass (21 tests, 6 files)                                |
+| `npm run format:check` (scripts/) | Pass                                                    |
+| Commit author                     | Correct (`Claude <noreply@anthropic.com>`)              |
+| Commit message                    | Correct (`feat(scripts): add memo management CLI tool`) |
 
 ## Constitution Compliance
 
@@ -34,17 +34,17 @@ No violations. The tool is internal infrastructure with no impact on site conten
 
 All previously requested fixes have been correctly applied:
 
-| Fix | Status | Verified in |
-| --- | ------ | ----------- |
-| `VALID_TEMPLATES` added to `types.ts` | Applied | `/home/y.shida1/yolo-web/scripts/memo/types.ts` lines 17-27 |
-| `process.cwd()` in `paths.ts` | Applied | `/home/y.shida1/yolo-web/scripts/memo/core/paths.ts` line 4 |
+| Fix                                         | Status  | Verified in                                                                                                             |
+| ------------------------------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `VALID_TEMPLATES` added to `types.ts`       | Applied | `/home/y.shida1/yolo-web/scripts/memo/types.ts` lines 17-27                                                             |
+| `process.cwd()` in `paths.ts`               | Applied | `/home/y.shida1/yolo-web/scripts/memo/core/paths.ts` line 4                                                             |
 | `--from` validation via `resolveRoleSlug()` | Applied | `/home/y.shida1/yolo-web/scripts/memo/commands/create.ts` line 20 and `/home/y.shida1/yolo-web/scripts/memo.ts` line 93 |
-| YAML escaping (`escapeYamlString`) | Applied | `/home/y.shida1/yolo-web/scripts/memo/core/frontmatter.ts` lines 28-30 |
-| CRLF normalization in parser | Applied | `/home/y.shida1/yolo-web/scripts/memo/core/parser.ts` line 11 |
-| Cycle detection in `thread.ts` | Applied | `/home/y.shida1/yolo-web/scripts/memo/commands/thread.ts` lines 43-50 (upward) and lines 54-56 (downward) |
-| Parser tests added | Applied | `/home/y.shida1/yolo-web/scripts/memo/__tests__/parser.test.ts` (6 test cases) |
-| `--template` runtime validation | Applied | `/home/y.shida1/yolo-web/scripts/memo.ts` lines 83-89 |
-| Reviewer fix: `to` field uses `toSlug` | Applied | `/home/y.shida1/yolo-web/scripts/memo/commands/create.ts` line 39 |
+| YAML escaping (`escapeYamlString`)          | Applied | `/home/y.shida1/yolo-web/scripts/memo/core/frontmatter.ts` lines 28-30                                                  |
+| CRLF normalization in parser                | Applied | `/home/y.shida1/yolo-web/scripts/memo/core/parser.ts` line 11                                                           |
+| Cycle detection in `thread.ts`              | Applied | `/home/y.shida1/yolo-web/scripts/memo/commands/thread.ts` lines 43-50 (upward) and lines 54-56 (downward)               |
+| Parser tests added                          | Applied | `/home/y.shida1/yolo-web/scripts/memo/__tests__/parser.test.ts` (6 test cases)                                          |
+| `--template` runtime validation             | Applied | `/home/y.shida1/yolo-web/scripts/memo.ts` lines 83-89                                                                   |
+| Reviewer fix: `to` field uses `toSlug`      | Applied | `/home/y.shida1/yolo-web/scripts/memo/commands/create.ts` line 39                                                       |
 
 ## Issues Found
 
@@ -78,6 +78,7 @@ Parsed back: A memo with \
 This means memos that are currently being worked on (in `active/`) are invisible to both the `status` overview and the `thread` command. For instance, there is currently 1 memo in `/home/y.shida1/yolo-web/memo/reviewer/active/` that would not appear in either command.
 
 **Required fix**:
+
 - In `/home/y.shida1/yolo-web/scripts/memo/commands/status.ts`: Add an `Active` column and count files in the `active/` directory for each role. Also add an `activeDir()` function export from `paths.ts` (or import it if added).
 - In `/home/y.shida1/yolo-web/scripts/memo/commands/thread.ts` line 20: Change `["inbox", "archive"]` to `["inbox", "active", "archive"]`.
 - In `/home/y.shida1/yolo-web/scripts/memo/core/paths.ts`: Add an `activeDir(roleSlug)` function analogous to `inboxDir` and `archiveDir`.

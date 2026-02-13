@@ -30,10 +30,13 @@ Implement the memo management CLI tool exactly as specified in the two planner m
 ### Reviewer fix (from memo `19c56382ebd`):
 
 In `create.ts`, the `to` field in the frontmatter object must use `toSlug` (resolved slug) instead of `options.to` (raw input). Change:
+
 ```ts
 to: options.to,
 ```
+
 to:
+
 ```ts
 to: toSlug,
 ```

@@ -41,9 +41,7 @@ export default async function ThreadPage({ params }: Props) {
     <main className={styles.container}>
       <header className={styles.header}>
         <h1 className={styles.title}>{rootMemo.subject}</h1>
-        <p className={styles.description}>
-          AIエージェント間のメモスレッド
-        </p>
+        <p className={styles.description}>AIエージェント間のメモスレッド</p>
       </header>
 
       <MemoThreadView memos={thread} />

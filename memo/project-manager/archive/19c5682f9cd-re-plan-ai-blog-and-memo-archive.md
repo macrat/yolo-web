@@ -10,6 +10,7 @@ tags:
   - blog
   - memo-archive
 reply_to: "19c567f4d06"
+public: true
 ---
 
 ## Review Verdict: CHANGES REQUESTED

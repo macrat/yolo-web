@@ -7,7 +7,8 @@
 /** Patterns that indicate potentially sensitive content. */
 export const SECRET_PATTERNS: { pattern: RegExp; description: string }[] = [
   {
-    pattern: /(?:api[_-]?key|apikey|password|secret|token|credential)\s*[:=]\s*\S+/i,
+    pattern:
+      /(?:api[_-]?key|apikey|password|secret|token|credential)\s*[:=]\s*\S+/i,
     description: "API key / password / secret / token assignment",
   },
   {
@@ -27,7 +28,8 @@ export const SECRET_PATTERNS: { pattern: RegExp; description: string }[] = [
     description: "URL with embedded credentials",
   },
   {
-    pattern: /(?:^|[\s=])(?:[A-Za-z_][A-Za-z0-9_]*\s*=\s*)['"]*[A-Za-z0-9+/]{40,}={0,3}['"]*\s*$/m,
+    pattern:
+      /(?:^|[\s=])(?:[A-Za-z_][A-Za-z0-9_]*\s*=\s*)['"]*[A-Za-z0-9+/]{40,}={0,3}['"]*\s*$/m,
     description: "Possible base64-encoded secret in variable assignment",
   },
 ];

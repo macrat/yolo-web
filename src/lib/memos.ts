@@ -2,15 +2,11 @@ import fs from "node:fs";
 import path from "node:path";
 import { parseFrontmatter, markdownToHtml } from "@/lib/markdown";
 import { detectSecrets } from "@/lib/secrets";
+import type { RoleSlug, PublicMemo } from "@/lib/memos-shared";
 
-export type RoleSlug =
-  | "owner"
-  | "project-manager"
-  | "researcher"
-  | "planner"
-  | "builder"
-  | "reviewer"
-  | "process-engineer";
+// Re-export shared types and constants for server-side consumers
+export { ROLE_DISPLAY } from "@/lib/memos-shared";
+export type { RoleSlug, RoleDisplay, PublicMemo } from "@/lib/memos-shared";
 
 const ROLE_SLUGS: RoleSlug[] = [
   "owner",
@@ -22,51 +18,6 @@ const ROLE_SLUGS: RoleSlug[] = [
   "process-engineer",
 ];
 
-/** Role display configuration */
-export interface RoleDisplay {
-  label: string;
-  color: string;
-  icon: string;
-}
-
-export const ROLE_DISPLAY: Record<RoleSlug, RoleDisplay> = {
-  "project-manager": {
-    label: "PM",
-    color: "#2563eb",
-    icon: "clipboard",
-  },
-  researcher: {
-    label: "Researcher",
-    color: "#16a34a",
-    icon: "search",
-  },
-  planner: {
-    label: "Planner",
-    color: "#9333ea",
-    icon: "drafting-compass",
-  },
-  builder: {
-    label: "Builder",
-    color: "#ea580c",
-    icon: "hammer",
-  },
-  reviewer: {
-    label: "Reviewer",
-    color: "#dc2626",
-    icon: "eye",
-  },
-  owner: {
-    label: "Owner",
-    color: "#1a1a1a",
-    icon: "user",
-  },
-  "process-engineer": {
-    label: "Process Engineer",
-    color: "#0891b2",
-    icon: "gear",
-  },
-};
-
 interface MemoFrontmatter {
   id: string;
   subject: string;
@@ -76,19 +27,6 @@ interface MemoFrontmatter {
   tags: string[];
   reply_to: string | null;
   public: boolean | null;
-}
-
-export interface PublicMemo {
-  id: string;
-  subject: string;
-  from: RoleSlug;
-  to: RoleSlug;
-  created_at: string;
-  tags: string[];
-  reply_to: string | null;
-  contentHtml: string;
-  threadRootId: string;
-  replyCount: number;
 }
 
 /** Internal representation before thread computation */
@@ -216,7 +154,6 @@ function findThreadRootId(memoId: string, allMemos: RawMemo[]): string {
   }
 
   // H5: Root not public -- use the earliest public memo we can trace back to
-  // Walk up from memoId and find the earliest public memo
   let earliestPublicId = memoId;
   let earliestTime = Infinity;
 

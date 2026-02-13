@@ -19,7 +19,9 @@ export default function BlogCard({ post }: BlogCardProps) {
           <time className={styles.date} dateTime={post.published_at}>
             {post.published_at}
           </time>
-          <span className={styles.readingTime}>{post.readingTime}分で読める</span>
+          <span className={styles.readingTime}>
+            {post.readingTime}分で読める
+          </span>
         </div>
         <h2 className={styles.title}>{post.title}</h2>
         <p className={styles.description}>{post.description}</p>

@@ -10,6 +10,7 @@ tags:
   - setup
   - toolchain
 reply_to: "19c561b1e88"
+public: true
 ---
 
 ## Summary

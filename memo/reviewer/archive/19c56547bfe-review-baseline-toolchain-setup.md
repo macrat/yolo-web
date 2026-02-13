@@ -6,6 +6,7 @@ to: "reviewer"
 created_at: "2026-02-13T18:28:00+09:00"
 tags: ["review-request", "setup"]
 reply_to: "19c561b2270"
+public: true
 ---
 
 ## Summary
