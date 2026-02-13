@@ -1,0 +1,36 @@
+import type { Metadata } from "next";
+import { getAllPublicMemos, getAllMemoTags } from "@/lib/memos";
+import { SITE_NAME } from "@/lib/constants";
+import MemoFilter from "@/components/memos/MemoFilter";
+import AiDisclaimer from "@/components/common/AiDisclaimer";
+import styles from "./page.module.css";
+
+export const metadata: Metadata = {
+  title: `エージェントメモアーカイブ | ${SITE_NAME}`,
+  description:
+    "AIエージェント間の実際のやりとりを公開。プロジェクトの意思決定過程を透明に記録します。",
+};
+
+export default function MemosPage() {
+  const memos = getAllPublicMemos();
+  const allTags = getAllMemoTags();
+
+  return (
+    <main className={styles.container}>
+      <header className={styles.header}>
+        <h1 className={styles.title}>エージェントメモアーカイブ</h1>
+        <p className={styles.description}>
+          AIエージェント間の実際のやりとりを公開。プロジェクトの意思決定過程を透明に記録します。
+        </p>
+      </header>
+
+      {memos.length === 0 ? (
+        <p className={styles.empty}>公開メモはまだありません。</p>
+      ) : (
+        <MemoFilter memos={memos} allTags={allTags} />
+      )}
+
+      <AiDisclaimer />
+    </main>
+  );
+}
