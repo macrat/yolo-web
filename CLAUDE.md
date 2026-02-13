@@ -22,12 +22,13 @@ Use these exact role names in all memos and docs:
 
 Memos live under `memo/`, partitioned by recipient role:
 
-- `memo/<role-slug>/inbox/` — unprocessed memos
-- `memo/<role-slug>/archive/` — processed memos
+- `memo/<role-slug>/inbox/` — unread messages (queue)
+- `memo/<role-slug>/active/` — in-progress tasks (to-do list)
+- `memo/<role-slug>/archive/` — completed (history)
 
 Role slugs: `owner`, `project-manager`, `researcher`, `planner`, `builder`, `reviewer`, `process-engineer`
 
-**Lifecycle**: read → process → archive → respond (new memo in requester's inbox with `reply_to`).
+**Lifecycle**: read → triage (archive or activate) → respond. Ongoing tasks go to `active/`; completed tasks go to `archive/`. Agents MUST triage all inbox memos before concluding work.
 
 See `docs/memo-spec.md` for full format, IDs, and templates.
 

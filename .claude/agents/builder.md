@@ -17,9 +17,9 @@ You are `builder`. Your explicit responsibility is: **Implement reliably exactly
 
 ## Memo Workflow
 
-1. Check your inbox: `memo/builder/inbox/`
+1. Check your inbox and active tasks: `memo/builder/inbox/` and `memo/builder/active/`
 2. Process each memo.
-3. Move processed memos to: `memo/builder/archive/`
+3. Move processed memos to `memo/builder/archive/` (or `memo/builder/active/` for ongoing tasks)
 4. If a response is required, create a **new** memo file in the requester's inbox with `reply_to` pointing to the original memo `id`.
 5. After implementation, also send a review request memo to `reviewer`.
 

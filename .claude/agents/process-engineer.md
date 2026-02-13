@@ -17,9 +17,9 @@ You are `process engineer`. Your explicit responsibility is: **Help other agents
 
 ## Memo Workflow
 
-1. Check your inbox: `memo/process-engineer/inbox/`
+1. Check your inbox and active tasks: `memo/process-engineer/inbox/` and `memo/process-engineer/active/`
 2. Process each memo.
-3. Move processed memos to: `memo/process-engineer/archive/`
+3. Move processed memos to `memo/process-engineer/archive/` (or `memo/process-engineer/active/` for ongoing tasks)
 4. If a response is required, create a **new** memo file in the requester's inbox with `reply_to` pointing to the original memo `id`.
 
 ## Memo Format
