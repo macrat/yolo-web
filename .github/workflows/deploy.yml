@@ -35,10 +35,40 @@ jobs:
       - name: Build
         run: npm run build
 
-  deploy:
-    name: Deploy to Vercel
+  check-deploy:
+    name: Check if deploy is needed
     needs: ci
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    outputs:
+      should_deploy: ${{ steps.check.outputs.should_deploy }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Check for deployable changes
+        id: check
+        run: |
+          # Get files changed in the latest commit
+          CHANGED=$(git diff --name-only HEAD~1 HEAD)
+          echo "Changed files:"
+          echo "$CHANGED"
+
+          # Check if any non-memo file changed
+          DEPLOY_NEEDED=$(echo "$CHANGED" | grep -v '^memo/' | grep -v '^docs/' | grep -v '^CLAUDE.md' | grep -v '^AGENTS.md' | head -1)
+          if [ -n "$DEPLOY_NEEDED" ]; then
+            echo "should_deploy=true" >> "$GITHUB_OUTPUT"
+            echo "Deploy needed: source files changed"
+          else
+            echo "should_deploy=false" >> "$GITHUB_OUTPUT"
+            echo "Deploy skipped: only memo/docs files changed"
+          fi
+
+  deploy:
+    name: Deploy to Vercel
+    needs: check-deploy
+    if: needs.check-deploy.outputs.should_deploy == 'true'
     runs-on: ubuntu-latest
     environment: Production
     steps:
