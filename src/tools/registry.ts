@@ -16,6 +16,8 @@ import { meta as textReplaceMeta } from "./text-replace/meta";
 import { meta as colorConverterMeta } from "./color-converter/meta";
 import { meta as markdownPreviewMeta } from "./markdown-preview/meta";
 import { meta as dummyTextMeta } from "./dummy-text/meta";
+import { meta as dateCalculatorMeta } from "./date-calculator/meta";
+import { meta as byteCounterMeta } from "./byte-counter/meta";
 
 const toolEntries: ToolDefinition[] = [
   {
@@ -81,6 +83,14 @@ const toolEntries: ToolDefinition[] = [
   {
     meta: dummyTextMeta,
     componentImport: () => import("./dummy-text/Component"),
+  },
+  {
+    meta: dateCalculatorMeta,
+    componentImport: () => import("./date-calculator/Component"),
+  },
+  {
+    meta: byteCounterMeta,
+    componentImport: () => import("./byte-counter/Component"),
   },
 ];
 
