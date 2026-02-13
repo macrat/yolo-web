@@ -6,6 +6,7 @@ export interface MemoFrontmatter {
   created_at: string;
   tags: string[];
   reply_to: string | null;
+  public?: boolean;
 }
 
 export interface Memo {

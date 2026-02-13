@@ -13,6 +13,7 @@ export interface CreateOptions {
   tags: string[];
   replyTo: string | null;
   template: TemplateType;
+  public?: boolean;
 }
 
 export function createMemo(options: CreateOptions): string {
@@ -40,6 +41,7 @@ export function createMemo(options: CreateOptions): string {
     created_at: formatTimestamp(),
     tags,
     reply_to: options.replyTo,
+    public: options.public,
   };
 
   const yaml = serializeFrontmatter(frontmatter);

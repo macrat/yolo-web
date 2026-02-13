@@ -47,6 +47,7 @@ create options:
   --tags           Comma-separated tags (optional)
   --reply-to, -r   ID of memo being replied to (optional)
   --template       Template type: ${VALID_TEMPLATES.join("|")} (default: task)
+  --public         Set public visibility (true/false, optional)
 
 inbox options:
   --role           Role to check inbox for (optional, shows all if omitted)
@@ -92,6 +93,12 @@ function main(): void {
         // Validate --from role
         resolveRoleSlug(from);
 
+        // Parse --public flag
+        const publicRaw = flags["public"];
+        let publicValue: boolean | undefined;
+        if (publicRaw === "true") publicValue = true;
+        else if (publicRaw === "false") publicValue = false;
+
         const filePath = createMemo({
           subject,
           from,
@@ -99,6 +106,7 @@ function main(): void {
           tags,
           replyTo,
           template,
+          public: publicValue,
         });
         console.log(`Created: ${filePath}`);
         break;

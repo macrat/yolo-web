@@ -56,6 +56,10 @@ export function serializeFrontmatter(fm: MemoFrontmatter): string {
     lines.push(`reply_to: "${escapeYamlString(fm.reply_to)}"`);
   }
 
+  if (fm.public !== undefined) {
+    lines.push(`public: ${fm.public}`);
+  }
+
   lines.push("---");
   return lines.join("\n");
 }
