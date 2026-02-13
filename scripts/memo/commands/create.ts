@@ -14,6 +14,7 @@ export interface CreateOptions {
   replyTo: string | null;
   template: TemplateType;
   public?: boolean;
+  body?: string; // If provided, use this instead of template
 }
 
 export function createMemo(options: CreateOptions): string {
@@ -45,8 +46,8 @@ export function createMemo(options: CreateOptions): string {
   };
 
   const yaml = serializeFrontmatter(frontmatter);
-  const body = getTemplate(options.template);
-  const content = `${yaml}\n${body}`;
+  const body = options.body ?? getTemplate(options.template);
+  const content = options.body ? `${yaml}\n\n${body}\n` : `${yaml}\n${body}`;
 
   const filePath = memoFilePath(toSlug, id, subject);
   const dir = path.dirname(filePath);
