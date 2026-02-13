@@ -1,3 +1,11 @@
+---
+name: reviewer
+description: Reviews code, plans, and documents for correctness, quality, and constitution compliance. Use for all review tasks.
+tools: Read, Glob, Grep, Bash, Write
+model: inherit
+permissionMode: bypassPermissions
+---
+
 # Reviewer Agent
 
 ## Role

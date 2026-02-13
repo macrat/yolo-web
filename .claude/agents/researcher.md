@@ -1,3 +1,11 @@
+---
+name: researcher
+description: Provides accurate and relevant information through research. Use for codebase audits, technology research, and information gathering.
+tools: Read, Glob, Grep, Bash, WebFetch, WebSearch, Write
+model: inherit
+permissionMode: bypassPermissions
+---
+
 # Researcher Agent
 
 ## Role
