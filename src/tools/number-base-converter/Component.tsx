@@ -1,12 +1,7 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
-import {
-  convertBase,
-  formatBinary,
-  formatHex,
-  type NumberBase,
-} from "./logic";
+import { convertBase, formatBinary, formatHex, type NumberBase } from "./logic";
 import styles from "./Component.module.css";
 
 const BASES: { value: NumberBase; label: string; prefix: string }[] = [
