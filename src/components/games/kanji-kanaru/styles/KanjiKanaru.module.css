@@ -1,0 +1,617 @@
+/* Kanji Kanaru Game Styles - Mobile-first responsive design */
+
+/* CSS Custom Properties for game colors */
+:root {
+  --kk-color-correct: #6aaa64;
+  --kk-color-close: #c9b458;
+  --kk-color-wrong: #787c7e;
+  --kk-color-empty: #d3d6da;
+  --kk-color-bg: #ffffff;
+  --kk-color-text: #1a1a1a;
+  --kk-color-text-muted: #6b7280;
+  --kk-color-border: #d3d6da;
+  --kk-color-error: #dc3545;
+  --kk-color-header-bg: #f8f9fa;
+  --kk-color-modal-bg: #ffffff;
+  --kk-color-overlay: rgba(0, 0, 0, 0.5);
+  --kk-color-btn-primary: #2563eb;
+  --kk-color-btn-primary-hover: #1d4ed8;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --kk-color-correct: #538d4e;
+    --kk-color-close: #b59f3b;
+    --kk-color-wrong: #3a3a3c;
+    --kk-color-empty: #3a3a3c;
+    --kk-color-bg: #121213;
+    --kk-color-text: #e5e5e5;
+    --kk-color-text-muted: #9ca3af;
+    --kk-color-border: #3a3a3c;
+    --kk-color-error: #ff6b6b;
+    --kk-color-header-bg: #1a1a1b;
+    --kk-color-modal-bg: #1e1e1f;
+    --kk-color-overlay: rgba(0, 0, 0, 0.7);
+    --kk-color-btn-primary: #3b82f6;
+    --kk-color-btn-primary-hover: #2563eb;
+  }
+}
+
+/* ===== Layout ===== */
+.gameLayout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--kk-color-bg);
+  color: var(--kk-color-text);
+}
+
+.gameMain {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 0.5rem;
+  max-width: 600px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.gameFooter {
+  border-top: 1px solid var(--kk-color-border);
+  background-color: var(--kk-color-header-bg);
+  padding: 1rem;
+  text-align: center;
+}
+
+.footerDisclaimer {
+  font-size: 0.8rem;
+  color: var(--kk-color-text-muted);
+  margin-bottom: 0.25rem;
+}
+
+.footerAttribution {
+  font-size: 0.75rem;
+  color: var(--kk-color-text-muted);
+}
+
+.footerAttribution a {
+  color: var(--kk-color-btn-primary);
+  text-decoration: underline;
+}
+
+/* ===== Header ===== */
+.header {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0.75rem 0.5rem;
+  border-bottom: 1px solid var(--kk-color-border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.headerTop {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  position: relative;
+}
+
+.title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-align: center;
+}
+
+.headerButtons {
+  position: absolute;
+  right: 0;
+  display: flex;
+  gap: 0.25rem;
+}
+
+.iconButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.35rem;
+  border-radius: 4px;
+  font-size: 1.1rem;
+  color: var(--kk-color-text);
+  line-height: 1;
+}
+
+.iconButton:hover {
+  background-color: var(--kk-color-border);
+}
+
+.headerSub {
+  font-size: 0.8rem;
+  color: var(--kk-color-text-muted);
+}
+
+/* ===== Hint Bar ===== */
+.hintBar {
+  width: 100%;
+  max-width: 600px;
+  padding: 0.5rem 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--kk-color-text-muted);
+  border-bottom: 1px solid var(--kk-color-border);
+}
+
+.hintLabel {
+  font-weight: 600;
+  margin-right: 0.5rem;
+}
+
+.hintValue {
+  margin-right: 1rem;
+}
+
+/* ===== Game Board ===== */
+.boardWrapper {
+  width: 100%;
+  padding: 0.75rem 0;
+  overflow-x: auto;
+}
+
+.board {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  width: 100%;
+  min-width: 300px;
+}
+
+.columnHeaders {
+  display: grid;
+  grid-template-columns: 2.5rem repeat(5, 1fr);
+  gap: 0.25rem;
+  padding: 0 0.25rem;
+}
+
+.columnHeader {
+  text-align: center;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--kk-color-text-muted);
+  padding: 0.15rem 0;
+}
+
+.columnHeaderKanji {
+  text-align: center;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--kk-color-text-muted);
+  padding: 0.15rem 0;
+}
+
+/* ===== Guess Row ===== */
+.guessRow {
+  display: grid;
+  grid-template-columns: 2.5rem repeat(5, 1fr);
+  gap: 0.25rem;
+  padding: 0 0.25rem;
+}
+
+.guessKanji {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  font-weight: 700;
+  min-height: 2.5rem;
+  border: 2px solid var(--kk-color-border);
+  border-radius: 4px;
+  background-color: var(--kk-color-bg);
+}
+
+.guessKanjiEmpty {
+  composes: guessKanji;
+  border-color: var(--kk-color-empty);
+}
+
+/* ===== Feedback Cell ===== */
+.cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #ffffff;
+  text-align: center;
+  padding: 0.15rem;
+  animation: flipIn 0.4s ease-out;
+}
+
+.cellCorrect {
+  composes: cell;
+  background-color: var(--kk-color-correct);
+}
+
+.cellClose {
+  composes: cell;
+  background-color: var(--kk-color-close);
+}
+
+.cellWrong {
+  composes: cell;
+  background-color: var(--kk-color-wrong);
+}
+
+.cellEmpty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.5rem;
+  border-radius: 4px;
+  border: 2px solid var(--kk-color-empty);
+  background-color: transparent;
+}
+
+/* ===== Animations ===== */
+@keyframes flipIn {
+  0% {
+    transform: rotateX(90deg);
+    opacity: 0;
+  }
+  100% {
+    transform: rotateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(-4px);
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateX(4px);
+  }
+}
+
+.shaking {
+  animation: shake 0.4s ease-in-out;
+}
+
+/* ===== Guess Input ===== */
+.inputArea {
+  width: 100%;
+  max-width: 600px;
+  padding: 1rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.inputRow {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  width: 100%;
+  max-width: 300px;
+}
+
+.inputField {
+  flex: 1;
+  font-size: 1.5rem;
+  text-align: center;
+  padding: 0.5rem;
+  border: 2px solid var(--kk-color-border);
+  border-radius: 6px;
+  background-color: var(--kk-color-bg);
+  color: var(--kk-color-text);
+  outline: none;
+}
+
+.inputField:focus {
+  border-color: var(--kk-color-btn-primary);
+}
+
+.inputField:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.submitButton {
+  padding: 0.5rem 1.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  background-color: var(--kk-color-btn-primary);
+  color: #ffffff;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.submitButton:hover:not(:disabled) {
+  background-color: var(--kk-color-btn-primary-hover);
+}
+
+.submitButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.errorMessage {
+  font-size: 0.85rem;
+  color: var(--kk-color-error);
+  text-align: center;
+  min-height: 1.2em;
+}
+
+/* ===== Modal (dialog) ===== */
+.modal {
+  border: none;
+  border-radius: 12px;
+  padding: 1.5rem;
+  max-width: 90vw;
+  width: 400px;
+  background-color: var(--kk-color-modal-bg);
+  color: var(--kk-color-text);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+}
+
+.modal::backdrop {
+  background-color: var(--kk-color-overlay);
+}
+
+.modalTitle {
+  font-size: 1.3rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.modalClose {
+  display: block;
+  margin: 1rem auto 0;
+  padding: 0.5rem 2rem;
+  font-size: 0.95rem;
+  border: 1px solid var(--kk-color-border);
+  border-radius: 6px;
+  background-color: var(--kk-color-bg);
+  color: var(--kk-color-text);
+  cursor: pointer;
+}
+
+.modalClose:hover {
+  background-color: var(--kk-color-header-bg);
+}
+
+/* ===== Result Modal ===== */
+.resultEmoji {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.resultAnswer {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.resultReadings {
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--kk-color-text-muted);
+  margin-bottom: 0.25rem;
+}
+
+.resultMeanings {
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--kk-color-text-muted);
+  margin-bottom: 0.25rem;
+}
+
+.resultExamples {
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--kk-color-text-muted);
+  margin-bottom: 0.75rem;
+}
+
+.resultSummary {
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+/* ===== Share Buttons ===== */
+.shareArea {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 0.75rem;
+}
+
+.shareButton {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #ffffff;
+}
+
+.shareButtonCopy {
+  composes: shareButton;
+  background-color: var(--kk-color-correct);
+}
+
+.shareButtonCopy:hover {
+  opacity: 0.9;
+}
+
+.shareButtonX {
+  composes: shareButton;
+  background-color: #1da1f2;
+}
+
+.shareButtonX:hover {
+  opacity: 0.9;
+}
+
+.shareButtonStats {
+  display: block;
+  margin: 0.75rem auto 0;
+  padding: 0.4rem 1.5rem;
+  font-size: 0.85rem;
+  border: 1px solid var(--kk-color-border);
+  border-radius: 6px;
+  background-color: var(--kk-color-bg);
+  color: var(--kk-color-text);
+  cursor: pointer;
+}
+
+.shareButtonStats:hover {
+  background-color: var(--kk-color-header-bg);
+}
+
+.copiedMessage {
+  font-size: 0.8rem;
+  color: var(--kk-color-correct);
+  text-align: center;
+  margin-top: 0.25rem;
+  min-height: 1.2em;
+}
+
+/* ===== Stats Modal ===== */
+.statsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.statItem {
+  text-align: center;
+}
+
+.statValue {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.statLabel {
+  font-size: 0.8rem;
+  color: var(--kk-color-text-muted);
+}
+
+.distributionTitle {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.distributionRow {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 0.25rem;
+}
+
+.distributionLabel {
+  width: 1rem;
+  text-align: right;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.distributionBar {
+  height: 1.2rem;
+  background-color: var(--kk-color-wrong);
+  border-radius: 2px;
+  min-width: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.distributionBarHighlight {
+  composes: distributionBar;
+  background-color: var(--kk-color-correct);
+}
+
+/* ===== How To Play Modal ===== */
+.howToPlayContent {
+  line-height: 1.7;
+}
+
+.howToPlayContent p {
+  margin-bottom: 0.75rem;
+}
+
+.feedbackLegend {
+  margin: 0.75rem 0;
+  padding: 0;
+  list-style: none;
+}
+
+.feedbackLegend li {
+  margin-bottom: 0.35rem;
+  font-size: 0.95rem;
+}
+
+.attributeList {
+  font-size: 0.9rem;
+  color: var(--kk-color-text-muted);
+  margin-top: 0.5rem;
+}
+
+/* ===== Responsive ===== */
+@media (min-width: 480px) {
+  .cell {
+    min-height: 3rem;
+    font-size: 0.8rem;
+  }
+
+  .guessKanji {
+    min-height: 3rem;
+    font-size: 1.5rem;
+  }
+
+  .cellEmpty {
+    min-height: 3rem;
+  }
+
+  .title {
+    font-size: 1.6rem;
+  }
+
+  .header {
+    padding: 1rem 0.5rem;
+  }
+}
