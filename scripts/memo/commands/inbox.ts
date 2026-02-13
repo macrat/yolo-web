@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import path from "node:path";
 import { parseMemoFile } from "../core/parser.js";
 import { inboxDir } from "../core/paths.js";
 import { VALID_ROLES, type RoleSlug } from "../types.js";
@@ -23,7 +24,7 @@ export function listInbox(role?: RoleSlug): void {
     console.log(`${r} (${files.length} memo${files.length > 1 ? "s" : ""}):`);
     for (const file of files) {
       try {
-        const memo = parseMemoFile(`${dir}/${file}`);
+        const memo = parseMemoFile(path.join(dir, file));
         const tags =
           memo.frontmatter.tags.length > 0
             ? `  [${memo.frontmatter.tags.join(", ")}]`
