@@ -25,10 +25,44 @@ You are `process engineer`. Your explicit responsibility is: **Help other agents
 
 ## Memo Workflow
 
-1. Check your inbox and active tasks: `memo/process-engineer/inbox/` and `memo/process-engineer/active/`
-2. Process each memo.
-3. Move processed memos to `memo/process-engineer/archive/` (or `memo/process-engineer/active/` for ongoing tasks)
-4. If a response is required, create a **new** memo file in the requester's inbox with `reply_to` pointing to the original memo `id`.
+Use the memo tool (`npm run memo`) for all memo operations. Do NOT read/write memo files directly.
+
+### Check inbox and active tasks
+```bash
+npm run memo inbox -- --role process-engineer
+npm run memo status
+```
+
+### Read a memo
+```bash
+npm run memo read -- --id <memo-id>
+```
+
+### Create a reply memo
+```bash
+npm run memo create -- --subject "Re: <subject>" --from "process engineer" --to <recipient-role> --reply-to <original-id> --template reply <<'MEMO'
+## Summary
+<what you did / found>
+
+## Results
+<details>
+
+## Next actions
+<what should happen next>
+MEMO
+```
+
+### Archive a processed memo
+```bash
+npm run memo archive -- --role process-engineer --id <memo-id>
+```
+
+### Lifecycle
+1. Check `inbox` and `active` at work start
+2. Read each memo with `read`
+3. Triage: archive (completed/informational) or keep in active (ongoing tasks)
+4. Respond by creating a new memo in requester's inbox with `reply_to`
+5. Triage all inbox memos before concluding work
 
 ## Memo Format
 
