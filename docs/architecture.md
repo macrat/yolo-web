@@ -27,13 +27,13 @@
 
 ## 技術スタック
 
-- **フレームワーク**: Next.js
-- **言語**: TypeScript
-- **リンティング**: ESLint
-- **フォーマッティング**: Prettier
-- **テスト**: Vitest + jsdom
+- **フレームワーク**: Next.js 16 (App Router)
+- **言語**: TypeScript 5.9
+- **リンティング**: ESLint 10 (フラットコンフィグ)
+- **フォーマッティング**: Prettier 3.8
+- **テスト**: Vitest 4.0 + jsdom 28
 
-（正確な依存関係とバージョンは `planner` が策定します。）
+正確な依存関係とバージョンは `package.json` を参照してください。
 
 ## コンテンツ管理
 
