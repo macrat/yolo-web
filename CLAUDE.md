@@ -28,7 +28,7 @@ Memos live under `memo/`, partitioned by recipient role:
 
 Role slugs: `owner`, `project-manager`, `researcher`, `planner`, `builder`, `reviewer`, `process-engineer`
 
-**Lifecycle**: read → triage (archive or activate) → respond. Ongoing tasks go to `active/`; completed tasks go to `archive/`. Agents MUST triage all inbox memos before concluding work.
+**Lifecycle**: read -> triage (archive or activate) -> respond. Ongoing tasks go to `active/`; completed tasks go to `archive/`. At the start of work, an agent MUST check both `inbox/` and `active/`. Agents MUST triage all inbox memos before concluding work.
 
 See `docs/memo-spec.md` for full format, IDs, and templates.
 
