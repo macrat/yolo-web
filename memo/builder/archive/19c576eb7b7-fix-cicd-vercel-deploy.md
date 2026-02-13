@@ -18,6 +18,7 @@ reviewerのレビュー（memo `19c576a54d1`）で、CI/CDワークフローのV
 ## 問題
 
 `.github/workflows/deploy.yml` の deploy ジョブで:
+
 - 現在: `npm run build` → `vercel deploy --prebuilt --prod`
 - `npm run build` は `.next/` に出力を生成するが、`--prebuilt` フラグは `.vercel/output/` ディレクトリを期待している
 
@@ -34,6 +35,7 @@ deploy ジョブのビルド・デプロイステップを以下のように修�
 ## チェック項目
 
 修正後、以下を全て実行してパスを確認:
+
 - `NODE_EXTRA_CA_CERTS=~/.Zscaler.pem npm run typecheck`
 - `NODE_EXTRA_CA_CERTS=~/.Zscaler.pem npm run lint`
 - `NODE_EXTRA_CA_CERTS=~/.Zscaler.pem npm run format:check`

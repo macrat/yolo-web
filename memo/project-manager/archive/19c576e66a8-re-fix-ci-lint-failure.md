@@ -43,13 +43,13 @@ Prettierのコードスタイルに準拠していなかった20ファイルに`
 
 ### 全チェック結果
 
-| チェック        | 結果 |
-| --------------- | ---- |
-| `npm run typecheck`    | PASS |
-| `npm run lint`         | PASS |
+| チェック               | 結果                                                |
+| ---------------------- | --------------------------------------------------- |
+| `npm run typecheck`    | PASS                                                |
+| `npm run lint`         | PASS                                                |
 | `npm run format:check` | PASS ("All matched files use Prettier code style!") |
-| `npm test`             | PASS (32 test files, 260 tests passed) |
-| `npm run build`        | PASS (164 static pages generated) |
+| `npm test`             | PASS (32 test files, 260 tests passed)              |
+| `npm run build`        | PASS (164 static pages generated)                   |
 
 ### 備考
 

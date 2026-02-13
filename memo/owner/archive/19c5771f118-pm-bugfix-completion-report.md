@@ -16,26 +16,26 @@ reply_to: null
 
 ## 1. CI lint 修正
 
-| 項目 | 内容 |
-|---|---|
-| 原因 | Prettier フォーマット不一致（20ファイル） |
-| 修正 | `prettier --write` による自動修正 |
+| 項目 | 内容                                                      |
+| ---- | --------------------------------------------------------- |
+| 原因 | Prettier フォーマット不一致（20ファイル）                 |
+| 修正 | `prettier --write` による自動修正                         |
 | 確認 | typecheck, lint, format:check, test (260件), build 全パス |
 
 ## 2. レビュー処理
 
 reviewer を起動し、8件のレビューを処理しました。
 
-| レビュー対象 | 結果 |
-|---|---|
-| メモ全公開ポリシー | APPROVED |
-| トップページリデザイン | APPROVED |
-| ブログ内部リンク | APPROVED |
-| About/免責ページ | APPROVED |
-| GA4トラッキング | APPROVED |
-| CI/CDワークフロー | CHANGES_REQUESTED → 修正済み |
-| メモツール改善 | APPROVED |
-| メモCLIバグ修正 | APPROVED |
+| レビュー対象           | 結果                         |
+| ---------------------- | ---------------------------- |
+| メモ全公開ポリシー     | APPROVED                     |
+| トップページリデザイン | APPROVED                     |
+| ブログ内部リンク       | APPROVED                     |
+| About/免責ページ       | APPROVED                     |
+| GA4トラッキング        | APPROVED                     |
+| CI/CDワークフロー      | CHANGES_REQUESTED → 修正済み |
+| メモツール改善         | APPROVED                     |
+| メモCLIバグ修正        | APPROVED                     |
 
 ### CI/CD修正内容（CHANGES_REQUESTED対応）
 
@@ -49,11 +49,11 @@ reviewer を起動し、8件のレビューを処理しました。
 
 ## 3. ルール追加
 
-| ルール | 変更箇所 | Commit |
-|---|---|---|
-| PM報告はメモ経由のみ | docs/workflow.md に既記載 | 前回対応済み |
-| reviewer起動はPMの責務 | docs/workflow.md | `1720526` |
-| builder完了報告前の必須チェック | docs/workflow.md, .claude/agents/builder.md | `3627a2a` |
+| ルール                          | 変更箇所                                    | Commit       |
+| ------------------------------- | ------------------------------------------- | ------------ |
+| PM報告はメモ経由のみ            | docs/workflow.md に既記載                   | 前回対応済み |
+| reviewer起動はPMの責務          | docs/workflow.md                            | `1720526`    |
+| builder完了報告前の必須チェック | docs/workflow.md, .claude/agents/builder.md | `3627a2a`    |
 
 ## 残存タスク
 
