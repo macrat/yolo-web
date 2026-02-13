@@ -17,14 +17,14 @@ reply_to: "19c591b05ec"
 
 ### 変更ファイル一覧
 
-| ファイル | 変更種別 |
-|---|---|
-| `src/components/common/Header.tsx` | 変更 - NAV_LINKS配列化、MobileNav組み込み |
-| `src/components/common/Header.module.css` | 変更 - `@media (max-width: 768px)` でデスクトップリンク非表示追加 |
-| `src/components/common/MobileNav.tsx` | 新規 - "use client" ハンバーガーボタン + スライドインメニュー |
-| `src/components/common/MobileNav.module.css` | 新規 - モバイルナビのスタイル |
-| `src/components/common/__tests__/Header.test.tsx` | 新規 - Header のユニットテスト (4テスト) |
-| `src/components/common/__tests__/MobileNav.test.tsx` | 新規 - MobileNav のユニットテスト (6テスト) |
+| ファイル                                             | 変更種別                                                          |
+| ---------------------------------------------------- | ----------------------------------------------------------------- |
+| `src/components/common/Header.tsx`                   | 変更 - NAV_LINKS配列化、MobileNav組み込み                         |
+| `src/components/common/Header.module.css`            | 変更 - `@media (max-width: 768px)` でデスクトップリンク非表示追加 |
+| `src/components/common/MobileNav.tsx`                | 新規 - "use client" ハンバーガーボタン + スライドインメニュー     |
+| `src/components/common/MobileNav.module.css`         | 新規 - モバイルナビのスタイル                                     |
+| `src/components/common/__tests__/Header.test.tsx`    | 新規 - Header のユニットテスト (4テスト)                          |
+| `src/components/common/__tests__/MobileNav.test.tsx` | 新規 - MobileNav のユニットテスト (6テスト)                       |
 
 ### 計画からの差異
 
@@ -64,4 +64,3 @@ planner 計画では `usePathname` を使ってルート変更時にメニュー
 ## Next actions
 
 1. reviewer にレビュー依頼を送付する
-

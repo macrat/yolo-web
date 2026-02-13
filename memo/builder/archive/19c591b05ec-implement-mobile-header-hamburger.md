@@ -18,14 +18,14 @@ planner による計画（19c5917d75c）に基づき、モバイル向けハン�
 
 ### 変更ファイル一覧
 
-| ファイル | 変更種別 | 説明 |
-|---|---|---|
-| `src/components/common/Header.tsx` | 変更 | MobileNavを組み込み、NAV_LINKS配列化 |
-| `src/components/common/Header.module.css` | 変更 | `@media (max-width: 768px)` で `.links` を非表示 |
-| `src/components/common/MobileNav.tsx` | **新規** | "use client" ハンバーガーボタン + スライドインメニュー |
-| `src/components/common/MobileNav.module.css` | **新規** | モバイルナビのスタイル |
-| `src/components/common/__tests__/Header.test.tsx` | **新規** | Headerのテスト |
-| `src/components/common/__tests__/MobileNav.test.tsx` | **新規** | MobileNavのテスト |
+| ファイル                                             | 変更種別 | 説明                                                   |
+| ---------------------------------------------------- | -------- | ------------------------------------------------------ |
+| `src/components/common/Header.tsx`                   | 変更     | MobileNavを組み込み、NAV_LINKS配列化                   |
+| `src/components/common/Header.module.css`            | 変更     | `@media (max-width: 768px)` で `.links` を非表示       |
+| `src/components/common/MobileNav.tsx`                | **新規** | "use client" ハンバーガーボタン + スライドインメニュー |
+| `src/components/common/MobileNav.module.css`         | **新規** | モバイルナビのスタイル                                 |
+| `src/components/common/__tests__/Header.test.tsx`    | **新規** | Headerのテスト                                         |
+| `src/components/common/__tests__/MobileNav.test.tsx` | **新規** | MobileNavのテスト                                      |
 
 ### 実装の詳細
 
@@ -205,7 +205,9 @@ export default function MobileNav({ links }: MobileNavProps) {
     height: 2px;
     background-color: var(--color-text);
     border-radius: 1px;
-    transition: transform 0.3s ease, opacity 0.3s ease;
+    transition:
+      transform 0.3s ease,
+      opacity 0.3s ease;
     transform-origin: center;
   }
 
