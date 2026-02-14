@@ -57,22 +57,23 @@ export interface WarekiInfo {
 
 interface EraDefinition {
   name: string;
-  startYear: number;
-  endYear: number; // exclusive upper bound
+  startDate: Date; // Inclusive start date of era
 }
 
 const ERAS: EraDefinition[] = [
-  { name: "令和", startYear: 2019, endYear: 9999 },
-  { name: "平成", startYear: 1989, endYear: 2019 },
-  { name: "昭和", startYear: 1926, endYear: 1989 },
-  { name: "大正", startYear: 1912, endYear: 1926 },
-  { name: "明治", startYear: 1868, endYear: 1912 },
+  { name: "令和", startDate: new Date(2019, 4, 1) }, // 2019-05-01
+  { name: "平成", startDate: new Date(1989, 0, 8) }, // 1989-01-08
+  { name: "昭和", startDate: new Date(1926, 11, 25) }, // 1926-12-25
+  { name: "大正", startDate: new Date(1912, 6, 30) }, // 1912-07-30
+  { name: "明治", startDate: new Date(1868, 0, 25) }, // 1868-01-25
 ];
 
-export function toWareki(year: number): WarekiInfo | null {
+export function toWareki(date: Date): WarekiInfo | null {
+  const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
   for (const era of ERAS) {
-    if (year >= era.startYear && year < era.endYear) {
-      const eraYear = year - era.startYear + 1;
+    if (d >= era.startDate) {
+      // Japanese era years follow calendar years, not anniversaries
+      const eraYear = d.getFullYear() - era.startDate.getFullYear() + 1;
       const yearStr = eraYear === 1 ? "元" : String(eraYear);
       return {
         era: era.name,
