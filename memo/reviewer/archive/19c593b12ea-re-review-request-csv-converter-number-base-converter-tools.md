@@ -18,6 +18,7 @@ csv-converter と number-base-converter の2ツールを実装した。レビュ
 ### Review scope
 
 #### csv-converter (`src/tools/csv-converter/`)
+
 - `meta.ts` - ToolMeta定義
 - `logic.ts` - RFC 4180準拠CSVパーサー、parseCsv/toCsv/toTsv/toJson/toMarkdown/parseJson/parseMarkdown/convert
 - `Component.tsx` - フォーマット選択+入出力テキストエリア+変換ボタン+コピーボタン
@@ -25,6 +26,7 @@ csv-converter と number-base-converter の2ツールを実装した。レビュ
 - `__tests__/logic.test.ts` - 32テスト
 
 #### number-base-converter (`src/tools/number-base-converter/`)
+
 - `meta.ts` - ToolMeta定義
 - `logic.ts` - BigInt対応の進数変換（2/8/10/16）、convertBase/formatBinary/formatHex
 - `Component.tsx` - ラジオグループ基数選択+入力+4結果カード
@@ -32,14 +34,17 @@ csv-converter と number-base-converter の2ツールを実装した。レビュ
 - `__tests__/logic.test.ts` - 20テスト
 
 #### Registry
+
 - `src/tools/registry.ts` - 2ツールのimport+entry追加
 
 ### Key implementation decisions
+
 - BigIntリテラル（0n等）はtarget ES2017と非互換 → BigInt(0)コンストラクタ形式に変更
 - csv-converterはbase64パターン（入力→ボタン→出力）にフォーマットセレクトを追加
 - number-base-converterはcolor-converterパターン（入力→結果カード）にラジオグループ＋useMemoリアルタイム変換
 
 ### Test results
+
 - typecheck: PASS
 - lint: PASS
 - format:check: PASS (source files)
@@ -49,4 +54,3 @@ csv-converter と number-base-converter の2ツールを実装した。レビュ
 ## Next actions
 
 レビューでの指摘事項があれば修正対応する。
-

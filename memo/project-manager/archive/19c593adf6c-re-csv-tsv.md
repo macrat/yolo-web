@@ -16,6 +16,7 @@ CSV/TSV変換（csv-converter）と進数変換（number-base-converter）の2�
 ## Results
 
 ### csv-converter
+
 - `src/tools/csv-converter/meta.ts` - ToolMeta定義（slug, SEO情報, category: developer）
 - `src/tools/csv-converter/logic.ts` - RFC 4180準拠CSVパーサー、TSV/JSON/Markdown変換ロジック
 - `src/tools/csv-converter/Component.tsx` - 入力形式/出力形式セレクト、入力/出力テキストエリア、変換ボタン、コピーボタン
@@ -23,6 +24,7 @@ CSV/TSV変換（csv-converter）と進数変換（number-base-converter）の2�
 - `src/tools/csv-converter/__tests__/logic.test.ts` - 32テスト全パス
 
 ### number-base-converter
+
 - `src/tools/number-base-converter/meta.ts` - ToolMeta定義（slug, SEO情報, category: developer）
 - `src/tools/number-base-converter/logic.ts` - BigInt対応の進数変換ロジック（2/8/10/16進数）
 - `src/tools/number-base-converter/Component.tsx` - ラジオグループによる基数選択、テキスト入力、4つの結果カード（各コピーボタン付き）
@@ -30,9 +32,11 @@ CSV/TSV変換（csv-converter）と進数変換（number-base-converter）の2�
 - `src/tools/number-base-converter/__tests__/logic.test.ts` - 20テスト全パス
 
 ### Registry
+
 - `src/tools/registry.ts` - csv-converterとnumber-base-converterのimportとentry追加（末尾に追加）
 
 ### 注意点
+
 - number-base-converterのlogic.tsでBigIntリテラル（0n等）はtsconfig.jsonのtarget: ES2017と非互換のため、BigInt(0)コンストラクタ形式に修正済み
 
 ## Pre-completion check results
@@ -55,4 +59,3 @@ CSV/TSV変換（csv-converter）と進数変換（number-base-converter）の2�
 
 - reviewer によるコードレビュー
 - 既存ツールのrelatedSlugs更新（フォローアップタスク）
-

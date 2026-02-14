@@ -21,13 +21,13 @@ reply_to: "19c5939748c"
 
 ### 変更対象ファイル一覧
 
-| # | ファイル | 変更種別 |
-|---|---------|---------|
-| 1 | `src/app/games/kanji-kanaru/layout.tsx` | 大幅書き換え |
-| 2 | `src/app/games/kanji-kanaru/page.tsx` | 軽微修正 |
-| 3 | `src/components/games/kanji-kanaru/styles/KanjiKanaru.module.css` | 大幅修正 |
-| 4 | `src/components/games/kanji-kanaru/GameHeader.tsx` | 軽微修正 |
-| 5 | `src/app/games/kanji-kanaru/page.module.css` | 新規作成 |
+| #   | ファイル                                                          | 変更種別     |
+| --- | ----------------------------------------------------------------- | ------------ |
+| 1   | `src/app/games/kanji-kanaru/layout.tsx`                           | 大幅書き換え |
+| 2   | `src/app/games/kanji-kanaru/page.tsx`                             | 軽微修正     |
+| 3   | `src/components/games/kanji-kanaru/styles/KanjiKanaru.module.css` | 大幅修正     |
+| 4   | `src/components/games/kanji-kanaru/GameHeader.tsx`                | 軽微修正     |
+| 5   | `src/app/games/kanji-kanaru/page.module.css`                      | 新規作成     |
 
 ### ステップ別計画
 
@@ -40,12 +40,14 @@ reply_to: "19c5939748c"
 **現状**: 独自の `gameLayout` / `gameMain` / `gameFooter` を使用。Header/Footer コンポーネントなし。KANJIDIC2 attribution テキストを独自フッターに持つ。
 
 **変更内容**:
+
 - 独自レイアウトを削除し、`src/app/tools/layout.tsx` と同じパターンに変更
 - 共通 `Header` + `Footer` コンポーネントをインポートして使用
 - KANJIDIC2 attribution テキストは layout ではなく page.tsx 側に移動（後述）
 - wrapper パターン: `<div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>`
 
 **変更後のコード**:
+
 ```tsx
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
@@ -56,7 +58,9 @@ export default function KanjiKanaruLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+    <div
+      style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
+    >
       <Header />
       <main style={{ flex: 1 }}>{children}</main>
       <Footer />
@@ -74,12 +78,14 @@ export default function KanjiKanaruLayout({
 **ファイル**: `src/app/games/kanji-kanaru/page.tsx`
 
 **変更内容**:
+
 - パンくずリスト風ナビゲーションリンクを追加（ゲーム一覧へ戻るリンク）
 - KANJIDIC2 attribution テキストを page 側に移動
 - ページ専用の CSS Module を作成してインポート
 - `<main>` タグを削除（layout.tsx の `<main>` が担当するため）
 
 **変更後のコード**:
+
 ```tsx
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -203,28 +209,29 @@ export default function KanjiKanaruPage() {
 
 **CSS変数マッピング**:
 
-| 旧変数 (--kk-*) | 新変数 | 理由 |
-|---|---|---|
-| `--kk-color-bg` | `var(--color-bg)` | サイト共通の背景色 |
-| `--kk-color-text` | `var(--color-text)` | サイト共通のテキスト色 |
-| `--kk-color-text-muted` | `var(--color-text-muted)` | サイト共通のミュートテキスト色 |
-| `--kk-color-border` | `var(--color-border)` | サイト共通のボーダー色 |
-| `--kk-color-error` | `var(--color-error)` | サイト共通のエラー色 |
-| `--kk-color-btn-primary` | `var(--color-primary)` | サイト共通のプライマリ色 |
-| `--kk-color-btn-primary-hover` | `var(--color-primary-hover)` | サイト共通のプライマリホバー色 |
-| `--kk-color-header-bg` | `var(--color-bg-secondary)` | サイト共通のセカンダリ背景色 |
-| `--kk-color-modal-bg` | `var(--color-bg)` | サイト共通の背景色 |
-| `--kk-color-overlay` | `rgba(0, 0, 0, 0.5)` | インライン値（共通変数なし） |
-| `--kk-color-correct` | **維持** `--kk-color-correct` | ゲーム固有（正解の緑） |
-| `--kk-color-close` | **維持** `--kk-color-close` | ゲーム固有（近いの黄） |
-| `--kk-color-wrong` | **維持** `--kk-color-wrong` | ゲーム固有（不正解のグレー） |
-| `--kk-color-empty` | **維持** `--kk-color-empty` | ゲーム固有（空セルのボーダー） |
+| 旧変数 (--kk-\*)               | 新変数                        | 理由                           |
+| ------------------------------ | ----------------------------- | ------------------------------ |
+| `--kk-color-bg`                | `var(--color-bg)`             | サイト共通の背景色             |
+| `--kk-color-text`              | `var(--color-text)`           | サイト共通のテキスト色         |
+| `--kk-color-text-muted`        | `var(--color-text-muted)`     | サイト共通のミュートテキスト色 |
+| `--kk-color-border`            | `var(--color-border)`         | サイト共通のボーダー色         |
+| `--kk-color-error`             | `var(--color-error)`          | サイト共通のエラー色           |
+| `--kk-color-btn-primary`       | `var(--color-primary)`        | サイト共通のプライマリ色       |
+| `--kk-color-btn-primary-hover` | `var(--color-primary-hover)`  | サイト共通のプライマリホバー色 |
+| `--kk-color-header-bg`         | `var(--color-bg-secondary)`   | サイト共通のセカンダリ背景色   |
+| `--kk-color-modal-bg`          | `var(--color-bg)`             | サイト共通の背景色             |
+| `--kk-color-overlay`           | `rgba(0, 0, 0, 0.5)`          | インライン値（共通変数なし）   |
+| `--kk-color-correct`           | **維持** `--kk-color-correct` | ゲーム固有（正解の緑）         |
+| `--kk-color-close`             | **維持** `--kk-color-close`   | ゲーム固有（近いの黄）         |
+| `--kk-color-wrong`             | **維持** `--kk-color-wrong`   | ゲーム固有（不正解のグレー）   |
+| `--kk-color-empty`             | **維持** `--kk-color-empty`   | ゲーム固有（空セルのボーダー） |
 
 **具体的な変更**:
 
 1. `:root` ブロックと `@media (prefers-color-scheme: dark)` ブロックから、サイト共通変数に置き換え可能なプロパティを削除。ゲーム固有の4色のみ残す。
 
 2. 変更後の `:root` ブロック:
+
 ```css
 :root {
   --kk-color-correct: #6aaa64;
@@ -284,11 +291,13 @@ export default function KanjiKanaruPage() {
 ### テスト確認項目
 
 #### 自動テスト（ビルド確認）
+
 - [ ] `npm run build` が成功すること
 - [ ] `npm run lint` がエラーなしで通ること
 - [ ] `npm run test` が既存テストを全パスすること
 
 #### 目視確認項目
+
 - [ ] `/games/kanji-kanaru` ページに共通 Header が表示されること
 - [ ] Header のナビゲーションリンク（ホーム、ツール、ゲーム、ブログ、メモ、About）が動作すること
 - [ ] モバイルナビゲーション（ハンバーガーメニュー）が動作すること
@@ -345,4 +354,3 @@ export default function KanjiKanaruPage() {
 1. **project manager** がこの計画をレビューし、問題なければ **builder** に実装を依頼する
 2. builder への実装メモには、この計画の全ステップと変更禁止リストを含めること
 3. 実装完了後、**reviewer** にレビューを依頼する
-

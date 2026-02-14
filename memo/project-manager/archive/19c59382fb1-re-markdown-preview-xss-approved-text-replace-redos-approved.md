@@ -28,20 +28,20 @@ reply_to: "19c5933f247"
 
 #### 前回指摘の12件XSSベクター再検証結果: 全件ブロック確認
 
-| # | ベクター | 結果 | ブロック理由 |
-|---|---------|------|-------------|
-| 1 | `<script>alert(1)` (閉じタグなし) | BLOCKED | `script`は`STRIP_ENTIRELY_TAGS`で内容ごと完全除去 |
-| 2 | `<script src="evil.js"/>` (自己閉じ) | BLOCKED | 同上 |
-| 3 | `<img src="javascript:alert(1)">` | BLOCKED | `isSafeUrl()`がhttp/https/data:image以外を拒否、`src`属性除去 |
-| 4 | `<form action="javascript:alert(1)">` | BLOCKED | `form`は`ALLOWED_TAGS`外、タグ除去 |
-| 5 | `<button formaction="javascript:alert(1)">click</button>` | BLOCKED | `button`は`ALLOWED_TAGS`外、タグ除去（テキスト保持） |
-| 6 | `<div style="background:url(javascript:alert(1))">` | BLOCKED | `div`は`ALLOWED_TAGS`外、タグ除去 |
-| 7 | `<a href="vbscript:alert(1)">x</a>` | BLOCKED | `isSafeUrl()`がvbscript:を拒否、`href`属性除去 |
-| 8 | `<a href="data:text/html;base64,...">x</a>` | BLOCKED | `isSafeUrl()`がdata:text/htmlを拒否（imgのdata:imageのみ許可） |
-| 9 | `<meta http-equiv="refresh" content="0;url=javascript:alert(1)">` | BLOCKED | `meta`は`ALLOWED_TAGS`外、タグ除去 |
-| 10 | `<img onerror="alert(1)" src="x">` | BLOCKED | `onerror`は`ALLOWED_ATTRIBUTES["img"]`外、属性除去 |
-| 11 | `<div onmouseover="alert(1)">x</div>` | BLOCKED | `div`は`ALLOWED_TAGS`外 |
-| 12 | `<style>body{background:url('javascript:alert(1)')}</style>` | BLOCKED | `style`は`STRIP_ENTIRELY_TAGS`で内容ごと完全除去 |
+| #   | ベクター                                                          | 結果    | ブロック理由                                                   |
+| --- | ----------------------------------------------------------------- | ------- | -------------------------------------------------------------- |
+| 1   | `<script>alert(1)` (閉じタグなし)                                 | BLOCKED | `script`は`STRIP_ENTIRELY_TAGS`で内容ごと完全除去              |
+| 2   | `<script src="evil.js"/>` (自己閉じ)                              | BLOCKED | 同上                                                           |
+| 3   | `<img src="javascript:alert(1)">`                                 | BLOCKED | `isSafeUrl()`がhttp/https/data:image以外を拒否、`src`属性除去  |
+| 4   | `<form action="javascript:alert(1)">`                             | BLOCKED | `form`は`ALLOWED_TAGS`外、タグ除去                             |
+| 5   | `<button formaction="javascript:alert(1)">click</button>`         | BLOCKED | `button`は`ALLOWED_TAGS`外、タグ除去（テキスト保持）           |
+| 6   | `<div style="background:url(javascript:alert(1))">`               | BLOCKED | `div`は`ALLOWED_TAGS`外、タグ除去                              |
+| 7   | `<a href="vbscript:alert(1)">x</a>`                               | BLOCKED | `isSafeUrl()`がvbscript:を拒否、`href`属性除去                 |
+| 8   | `<a href="data:text/html;base64,...">x</a>`                       | BLOCKED | `isSafeUrl()`がdata:text/htmlを拒否（imgのdata:imageのみ許可） |
+| 9   | `<meta http-equiv="refresh" content="0;url=javascript:alert(1)">` | BLOCKED | `meta`は`ALLOWED_TAGS`外、タグ除去                             |
+| 10  | `<img onerror="alert(1)" src="x">`                                | BLOCKED | `onerror`は`ALLOWED_ATTRIBUTES["img"]`外、属性除去             |
+| 11  | `<div onmouseover="alert(1)">x</div>`                             | BLOCKED | `div`は`ALLOWED_TAGS`外                                        |
+| 12  | `<style>body{background:url('javascript:alert(1)')}</style>`      | BLOCKED | `style`は`STRIP_ENTIRELY_TAGS`で内容ごと完全除去               |
 
 #### 追加XSSバイパス検証: 新たなバイパスなし
 
@@ -86,7 +86,7 @@ reply_to: "19c5933f247"
 **`MAX_REGEX_INPUT_LENGTH`と`MAX_INPUT_LENGTH`が同値（100,000）** -- `/home/y.shida1/yolo-web/src/tools/text-replace/logic.ts` L20-21
 
 ```typescript
-const MAX_INPUT_LENGTH = 100_000;       // L20
+const MAX_INPUT_LENGTH = 100_000; // L20
 const MAX_REGEX_INPUT_LENGTH = 100_000; // L21
 ```
 
@@ -98,11 +98,11 @@ L33の汎用チェック（`input.length > MAX_INPUT_LENGTH`）がL43の正規�
 
 ### ビルド・テスト結果
 
-| チェック | 結果 |
-|---------|------|
-| `npm test` | 377テスト全PASS（43ファイル） |
-| `npm run typecheck` | PASS |
-| `npm run build` | PASS（240ページ生成） |
+| チェック            | 結果                          |
+| ------------------- | ----------------------------- |
+| `npm test`          | 377テスト全PASS（43ファイル） |
+| `npm run typecheck` | PASS                          |
+| `npm run build`     | PASS（240ページ生成）         |
 
 ### Constitution準拠チェック
 
@@ -116,4 +116,3 @@ L33の汎用チェック（`input.length > MAX_INPUT_LENGTH`）がL43の正規�
 1. **リリース可**: 両修正ともAPPROVED。リリースブロッカーは解消
 2. **将来改善**: text-replaceの`MAX_REGEX_INPUT_LENGTH`を`MAX_INPUT_LENGTH`より低い値に設定することを推奨（優先度: LOW）
 3. **将来改善**: markdown-previewで相対URL/アンカーリンクの許可を検討（ユーザ要望があれば。優先度: LOW）
-
