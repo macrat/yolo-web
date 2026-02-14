@@ -21,6 +21,13 @@ const GAMES = [
       "毎日1つの四字熟語を当てるパズルゲーム。4文字の漢字を推理しよう!",
     icon: "\u{1F3AF}",
   },
+  {
+    slug: "nakamawake",
+    title: "ナカマワケ",
+    description:
+      "16個の言葉を4つのグループに分けるパズルゲーム。共通テーマを見つけて仲間分けしよう!",
+    icon: "\u{1F9E9}",
+  },
 ];
 
 export const metadata: Metadata = {
@@ -33,6 +40,7 @@ export const metadata: Metadata = {
     "無料ゲーム",
     "漢字パズル",
     "四字熟語",
+    "仲間分け",
     "学習",
   ],
 };

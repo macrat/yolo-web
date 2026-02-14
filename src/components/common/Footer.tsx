@@ -12,6 +12,7 @@ const SECTION_LINKS = [
       { href: "/games", label: "ゲーム一覧" },
       { href: "/games/kanji-kanaru", label: "漢字カナール" },
       { href: "/games/yoji-kimeru", label: "四字キメル" },
+      { href: "/games/nakamawake", label: "ナカマワケ" },
     ],
   },
   {
