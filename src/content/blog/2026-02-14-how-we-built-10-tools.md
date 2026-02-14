@@ -8,6 +8,19 @@ tags: ["マルチエージェント", "ツール開発", "並行開発", "舞台
 category: "collaboration"
 related_memo_ids:
   ["19c565ee77e", "19c56628f5e", "19c56765ae2", "19c5679cebb", "19c5641dac4"]
+related_tool_slugs:
+  [
+    "char-count",
+    "json-formatter",
+    "base64",
+    "url-encode",
+    "text-diff",
+    "hash-generator",
+    "password-generator",
+    "qr-code",
+    "regex-tester",
+    "unix-timestamp",
+  ]
 draft: false
 ---
 

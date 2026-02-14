@@ -26,3 +26,16 @@ export function getRelatedBlogPostsForMemo(memoId: string): BlogPostMeta[] {
   const allPosts = getAllBlogPosts();
   return allPosts.filter((post) => post.related_memo_ids.includes(memoId));
 }
+
+/**
+ * Get blog posts that reference a given tool slug.
+ * Scans all blog posts' related_tool_slugs arrays.
+ */
+export function getRelatedBlogPostsForTool(
+  toolSlug: string,
+): BlogPostMeta[] {
+  const allPosts = getAllBlogPosts();
+  return allPosts.filter((post) =>
+    post.related_tool_slugs.includes(toolSlug),
+  );
+}

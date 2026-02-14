@@ -41,6 +41,7 @@ interface BlogFrontmatter {
   tags: string[];
   category: string;
   related_memo_ids: string[];
+  related_tool_slugs: string[];
   draft: boolean;
 }
 
@@ -53,6 +54,7 @@ export interface BlogPostMeta {
   tags: string[];
   category: BlogCategory;
   related_memo_ids: string[];
+  related_tool_slugs: string[];
   draft: boolean;
   readingTime: number;
 }
@@ -90,6 +92,9 @@ export function getAllBlogPosts(): BlogPostMeta[] {
       category: (data.category as BlogCategory) || "technical",
       related_memo_ids: Array.isArray(data.related_memo_ids)
         ? data.related_memo_ids.map(String)
+        : [],
+      related_tool_slugs: Array.isArray(data.related_tool_slugs)
+        ? data.related_tool_slugs.map(String)
         : [],
       draft: false,
       readingTime: estimateReadingTime(content),
@@ -129,6 +134,9 @@ export function getBlogPostBySlug(slug: string): BlogPost | null {
       category: (data.category as BlogCategory) || "technical",
       related_memo_ids: Array.isArray(data.related_memo_ids)
         ? data.related_memo_ids.map(String)
+        : [],
+      related_tool_slugs: Array.isArray(data.related_tool_slugs)
+        ? data.related_tool_slugs.map(String)
         : [],
       draft: false,
       readingTime: estimateReadingTime(content),
