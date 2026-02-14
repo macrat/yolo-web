@@ -137,6 +137,34 @@ export function generateMemoPageJsonLd(memo: MemoMetaForSeo): object {
   };
 }
 
+export interface GameMetaForSeo {
+  name: string;
+  description: string;
+  url: string;
+}
+
+export function generateGameJsonLd(game: GameMetaForSeo): object {
+  return {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    name: game.name,
+    description: game.description,
+    url: `${BASE_URL}${game.url}`,
+    gamePlatform: "Web Browser",
+    applicationCategory: "Game",
+    operatingSystem: "All",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "JPY",
+    },
+    creator: {
+      "@type": "Organization",
+      name: "Yolo-Web (AI Experiment)",
+    },
+  };
+}
+
 export interface BreadcrumbItem {
   label: string;
   href?: string;
