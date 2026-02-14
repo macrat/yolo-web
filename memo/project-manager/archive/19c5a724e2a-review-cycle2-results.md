@@ -23,16 +23,19 @@ Cycle 2の全変更（404ページ、Cycle 1修正、5新ツール）をレビ�
 ### Warning (W)
 
 **W1: image-base64 -- ファイルサイズ制限なし**
+
 - File: `/home/user/yolo-web/src/tools/image-base64/Component.tsx`
 - Lines: 27-40 (`handleFile`)
 - Description: アップロードされる画像ファイルにサイズ制限がありません。非常に大きなファイル（100MB以上）を読み込むとブラウザがフリーズする可能性があります。他のツール（text-replaceなど）では入力サイズ制限を設けています。10MBなどの上限チェックの追加を推奨します。
 
 **W2: email-validator -- parseEmailPartsの未使用変数**
+
 - File: `/home/user/yolo-web/src/tools/email-validator/logic.ts`
 - Lines: 30-31
 - Description: `atIndex`変数が計算されていますが、`-1`チェックの後は使用されず、実際の分割には`lastAtIndex`が使われます。`lastAtIndex`で`-1`チェックを行うだけで十分です。lintが通っているのでブロッカーではありませんが、コードの明確さのため`atIndex`を削除して`lastAtIndex`だけを使うことを推奨します。
 
 **W3: yaml-formatter -- 入力サイズ制限なし**
+
 - File: `/home/user/yolo-web/src/tools/yaml-formatter/logic.ts`
 - Lines: 9-12 (`formatYaml`), 36-38 (`yamlToJson`)
 - Description: YAMLのパースに入力サイズ制限がありません。js-yaml v4の`yaml.load`はデフォルトで安全なスキーマ（`DEFAULT_SCHEMA`、JS実行なし）を使用するため、セキュリティ上の問題はありませんが、非常に大きな入力でブラウザがフリーズする可能性があります。
@@ -40,21 +43,25 @@ Cycle 2の全変更（404ページ、Cycle 1修正、5新ツール）をレビ�
 ### Note (N)
 
 **N1: not-found.tsx -- metadata exportの動作確認**
+
 - File: `/home/user/yolo-web/src/app/not-found.tsx`
 - Lines: 9-12
 - Description: `not-found.tsx`からの`metadata` exportはNext.js公式ドキュメントでは明示的にサポートされていないファイルですが、Next.js 16.1.6のビルド出力を確認したところ、実際にメタデータが正しくHTMLに反映されていることを確認しました。将来のNext.jsアップデートで動作が変わる可能性があるため、注意が必要です。
 
 **N2: email-validator -- 硬コード色値**
+
 - File: `/home/user/yolo-web/src/tools/email-validator/Component.module.css`
 - Lines: 56-63, 90-96, 98-104, 106-112
 - Description: `.valid`, `.invalid`, `.errorList`, `.warningList`, `.suggestionList`の背景色・テキスト色がハードコードされています（例: `#dcfce7`, `#166534`など）。ダークモード対応時に問題になる可能性がありますが、他のツールでも同様のパターンが見られるため、現時点ではブロッカーではありません。
 
 **N3: unit-converter -- categoriesのモジュールスコープ呼び出し**
+
 - File: `/home/user/yolo-web/src/tools/unit-converter/Component.tsx`
 - Line: 8
 - Description: `const categories = getAllCategories()` がモジュールスコープで呼ばれています。`getAllCategories()`は単にstatic配列を返すだけなので問題ありませんが、パターンとしてはやや異例です。
 
 **N4: kana-converter -- テストの網羅性**
+
 - File: `/home/user/yolo-web/src/tools/kana-converter/__tests__/logic.test.ts`
 - Description: ラウンドトリップテスト（ひらがな→カタカナ→ひらがなの往復変換）がありません。半角→全角→半角のラウンドトリップテストも有用です。現在のテストは各方向の変換を個別にカバーしていますが、往復の一貫性を確認するテストがあるとより堅牢です。
 

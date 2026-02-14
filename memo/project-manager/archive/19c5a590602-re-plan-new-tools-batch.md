@@ -10,7 +10,7 @@ reply_to: "19c5a570efd"
 
 ## Summary
 
-新ツール5個（yaml-formatter, email-validator, unit-converter, kana-converter, image-base64）の詳細計画を策定した。既存20ツールのパターン（meta.ts / logic.ts / Component.tsx / Component.module.css / __tests__/logic.test.ts）を完全に踏襲する設計。
+新ツール5個（yaml-formatter, email-validator, unit-converter, kana-converter, image-base64）の詳細計画を策定した。既存20ツールのパターン（meta.ts / logic.ts / Component.tsx / Component.module.css / **tests**/logic.test.ts）を完全に踏襲する設計。
 
 ## Results
 
@@ -31,21 +31,23 @@ src/tools/<slug>/
 ```
 
 **registry.ts への登録パターン:**
+
 1. `import { meta as <name>Meta } from "./<slug>/meta";` を追加
 2. `toolEntries` 配列に `{ meta: <name>Meta, componentImport: () => import("./<slug>/Component") }` を追加
 
 **ToolMeta 型** (src/tools/types.ts):
+
 ```ts
 interface ToolMeta {
   slug: string;
-  name: string;           // 日本語表示名
-  nameEn: string;         // 英語名
-  description: string;    // 日本語 120-160文字（meta description用）
+  name: string; // 日本語表示名
+  nameEn: string; // 英語名
+  description: string; // 日本語 120-160文字（meta description用）
   shortDescription: string; // 日本語 ~50文字（カード用）
-  keywords: string[];     // 日本語SEOキーワード
+  keywords: string[]; // 日本語SEOキーワード
   category: ToolCategory; // "text" | "encoding" | "developer" | "security" | "generator"
   relatedSlugs: string[];
-  publishedAt: string;    // ISO date
+  publishedAt: string; // ISO date
   structuredDataType?: string; // JSON-LD @type
 }
 ```
@@ -96,16 +98,16 @@ export const meta: ToolMeta = {
 ```ts
 // エクスポートする関数:
 export function formatYaml(input: string, indentWidth?: number): string;
-  // js-yaml.load() -> js-yaml.dump() で整形。indentWidth デフォルト2。
+// js-yaml.load() -> js-yaml.dump() で整形。indentWidth デフォルト2。
 
 export function validateYaml(input: string): YamlValidationResult;
-  // { valid: boolean; error?: string; line?: number }
+// { valid: boolean; error?: string; line?: number }
 
 export function yamlToJson(input: string, indent?: number): string;
-  // js-yaml.load() -> JSON.stringify(parsed, null, indent)
+// js-yaml.load() -> JSON.stringify(parsed, null, indent)
 
 export function jsonToYaml(input: string, indentWidth?: number): string;
-  // JSON.parse() -> js-yaml.dump(parsed, { indent })
+// JSON.parse() -> js-yaml.dump(parsed, { indent })
 
 export interface YamlValidationResult {
   valid: boolean;
@@ -127,19 +129,19 @@ export interface YamlValidationResult {
 
 #### 1.5 テスト計画 (`__tests__/logic.test.ts`)
 
-| describe | test | 内容 |
-|---|---|---|
-| formatYaml | 基本整形 | 圧縮されたYAMLを整形して期待出力と比較 |
-| formatYaml | インデント4 | indent=4で正しくインデント |
-| formatYaml | 不正YAML | エラーをthrow |
-| validateYaml | 正しいYAML | valid: true |
-| validateYaml | 不正YAML | valid: false, errorあり |
-| validateYaml | 空文字列 | valid: false |
-| yamlToJson | 基本変換 | YAMLオブジェクトをJSON文字列に変換 |
-| yamlToJson | 配列 | YAML配列をJSON配列に変換 |
-| yamlToJson | ネスト構造 | ネストされたYAMLを正しく変換 |
-| jsonToYaml | 基本変換 | JSONオブジェクトをYAML文字列に変換 |
-| jsonToYaml | 不正JSON | エラーをthrow |
+| describe     | test        | 内容                                   |
+| ------------ | ----------- | -------------------------------------- |
+| formatYaml   | 基本整形    | 圧縮されたYAMLを整形して期待出力と比較 |
+| formatYaml   | インデント4 | indent=4で正しくインデント             |
+| formatYaml   | 不正YAML    | エラーをthrow                          |
+| validateYaml | 正しいYAML  | valid: true                            |
+| validateYaml | 不正YAML    | valid: false, errorあり                |
+| validateYaml | 空文字列    | valid: false                           |
+| yamlToJson   | 基本変換    | YAMLオブジェクトをJSON文字列に変換     |
+| yamlToJson   | 配列        | YAML配列をJSON配列に変換               |
+| yamlToJson   | ネスト構造  | ネストされたYAMLを正しく変換           |
+| jsonToYaml   | 基本変換    | JSONオブジェクトをYAML文字列に変換     |
+| jsonToYaml   | 不正JSON    | エラーをthrow                          |
 
 ---
 
@@ -182,20 +184,22 @@ export interface EmailValidationResult {
   valid: boolean;
   localPart: string;
   domain: string;
-  errors: string[];       // 具体的なエラーメッセージ一覧
-  warnings: string[];     // 技術的に有効だが推奨しない使用法
-  suggestions: string[];  // よくあるミスへのサジェスト（例: "gmial.com -> gmail.com?"）
+  errors: string[]; // 具体的なエラーメッセージ一覧
+  warnings: string[]; // 技術的に有効だが推奨しない使用法
+  suggestions: string[]; // よくあるミスへのサジェスト（例: "gmial.com -> gmail.com?"）
 }
 
 export function validateEmail(email: string): EmailValidationResult;
-  // 1. 空文字/空白チェック
-  // 2. @の存在・数チェック
-  // 3. ローカルパートの検証（長さ64以下、許可文字、先頭末尾のドット禁止、連続ドット禁止）
-  // 4. ドメインの検証（長さ253以下、各ラベル63以下、許可文字、ハイフン先頭末尾禁止）
-  // 5. TLDの存在チェック（1文字以上）
-  // 6. よくあるドメインのtypo検出: gmial.com, gamil.com, yaho.co.jp, etc.
+// 1. 空文字/空白チェック
+// 2. @の存在・数チェック
+// 3. ローカルパートの検証（長さ64以下、許可文字、先頭末尾のドット禁止、連続ドット禁止）
+// 4. ドメインの検証（長さ253以下、各ラベル63以下、許可文字、ハイフン先頭末尾禁止）
+// 5. TLDの存在チェック（1文字以上）
+// 6. よくあるドメインのtypo検出: gmial.com, gamil.com, yaho.co.jp, etc.
 
-export function parseEmailParts(email: string): { localPart: string; domain: string } | null;
+export function parseEmailParts(
+  email: string,
+): { localPart: string; domain: string } | null;
 
 // よくあるtypoドメインのマップ（内部定数）
 const COMMON_TYPOS: Record<string, string> = {
@@ -227,23 +231,23 @@ const COMMON_TYPOS: Record<string, string> = {
 
 #### 2.5 テスト計画 (`__tests__/logic.test.ts`)
 
-| describe | test | 内容 |
-|---|---|---|
-| validateEmail | 正しいメールアドレス | user@example.com -> valid: true |
-| validateEmail | サブドメイン | user@sub.example.com -> valid: true |
-| validateEmail | プラスアドレス | user+tag@example.com -> valid: true |
-| validateEmail | @なし | "userexample.com" -> valid: false, errors含む |
-| validateEmail | @複数 | "user@@example.com" -> valid: false |
-| validateEmail | ローカルパート空 | "@example.com" -> valid: false |
-| validateEmail | ドメイン空 | "user@" -> valid: false |
-| validateEmail | ローカルパート先頭ドット | ".user@example.com" -> valid: false |
-| validateEmail | 連続ドット | "user..name@example.com" -> valid: false |
-| validateEmail | ドメインハイフン先頭 | "user@-example.com" -> valid: false |
-| validateEmail | ローカルパート長さ超過 | 65文字ローカルパート -> valid: false |
-| validateEmail | typoサジェスト | "user@gmial.com" -> suggestions に "gmail.com" 含む |
-| validateEmail | 空文字列 | valid: false |
-| parseEmailParts | 正しいパース | "@" で分割 |
-| parseEmailParts | @なし | null を返す |
+| describe        | test                     | 内容                                                |
+| --------------- | ------------------------ | --------------------------------------------------- |
+| validateEmail   | 正しいメールアドレス     | user@example.com -> valid: true                     |
+| validateEmail   | サブドメイン             | user@sub.example.com -> valid: true                 |
+| validateEmail   | プラスアドレス           | user+tag@example.com -> valid: true                 |
+| validateEmail   | @なし                    | "userexample.com" -> valid: false, errors含む       |
+| validateEmail   | @複数                    | "user@@example.com" -> valid: false                 |
+| validateEmail   | ローカルパート空         | "@example.com" -> valid: false                      |
+| validateEmail   | ドメイン空               | "user@" -> valid: false                             |
+| validateEmail   | ローカルパート先頭ドット | ".user@example.com" -> valid: false                 |
+| validateEmail   | 連続ドット               | "user..name@example.com" -> valid: false            |
+| validateEmail   | ドメインハイフン先頭     | "user@-example.com" -> valid: false                 |
+| validateEmail   | ローカルパート長さ超過   | 65文字ローカルパート -> valid: false                |
+| validateEmail   | typoサジェスト           | "user@gmial.com" -> suggestions に "gmail.com" 含む |
+| validateEmail   | 空文字列                 | valid: false                                        |
+| parseEmailParts | 正しいパース             | "@" で分割                                          |
+| parseEmailParts | @なし                    | null を返す                                         |
 
 ---
 
@@ -283,20 +287,25 @@ export const meta: ToolMeta = {
 #### 3.3 logic.ts 設計
 
 ```ts
-export type UnitCategory = "length" | "weight" | "temperature" | "area" | "speed";
+export type UnitCategory =
+  | "length"
+  | "weight"
+  | "temperature"
+  | "area"
+  | "speed";
 
 export interface UnitDefinition {
-  id: string;        // "meter", "foot", "celsius" etc.
-  name: string;      // 日本語表示名: "メートル", "フィート"
-  symbol: string;    // "m", "ft", "°C"
-  toBase: (value: number) => number;   // この単位からbase単位へ変換
+  id: string; // "meter", "foot", "celsius" etc.
+  name: string; // 日本語表示名: "メートル", "フィート"
+  symbol: string; // "m", "ft", "°C"
+  toBase: (value: number) => number; // この単位からbase単位へ変換
   fromBase: (value: number) => number; // base単位からこの単位へ変換
 }
 
 export interface UnitCategoryDefinition {
   id: UnitCategory;
-  name: string;       // 日本語: "長さ", "重さ"
-  baseUnit: string;   // base単位のid
+  name: string; // 日本語: "長さ", "重さ"
+  baseUnit: string; // base単位のid
   units: UnitDefinition[];
 }
 
@@ -304,7 +313,7 @@ export function convert(
   value: number,
   fromUnit: string,
   toUnit: string,
-  category: UnitCategory
+  category: UnitCategory,
 ): number;
 
 export function getAllCategories(): UnitCategoryDefinition[];
@@ -337,24 +346,24 @@ export function getAllCategories(): UnitCategoryDefinition[];
 
 #### 3.5 テスト計画 (`__tests__/logic.test.ts`)
 
-| describe | test | 内容 |
-|---|---|---|
-| convert (length) | m -> km | 1000m = 1km |
-| convert (length) | inch -> cm | 1 inch = 2.54 cm |
-| convert (length) | mile -> km | 1 mile = 1.60934 km (近似) |
-| convert (length) | 尺 -> m | 1尺 = 0.3030... m |
-| convert (weight) | kg -> lb | 1 kg ≈ 2.20462 lb |
-| convert (weight) | g -> oz | 1 oz ≈ 28.3495 g |
-| convert (temperature) | C -> F | 0°C = 32°F, 100°C = 212°F |
-| convert (temperature) | F -> C | 32°F = 0°C |
-| convert (temperature) | C -> K | 0°C = 273.15K |
-| convert (area) | m² -> 坪 | 1坪 ≈ 3.30579 m² |
-| convert (area) | ha -> m² | 1 ha = 10000 m² |
-| convert (speed) | km/h -> m/s | 3.6 km/h = 1 m/s |
-| convert (speed) | mph -> km/h | 1 mph ≈ 1.60934 km/h |
-| convert | ゼロ入力 | 0を変換して0が返る |
-| convert | 負の値 | 温度以外でも正しく変換 |
-| getAllCategories | 全カテゴリ | 5カテゴリが返る |
+| describe              | test        | 内容                       |
+| --------------------- | ----------- | -------------------------- |
+| convert (length)      | m -> km     | 1000m = 1km                |
+| convert (length)      | inch -> cm  | 1 inch = 2.54 cm           |
+| convert (length)      | mile -> km  | 1 mile = 1.60934 km (近似) |
+| convert (length)      | 尺 -> m     | 1尺 = 0.3030... m          |
+| convert (weight)      | kg -> lb    | 1 kg ≈ 2.20462 lb          |
+| convert (weight)      | g -> oz     | 1 oz ≈ 28.3495 g           |
+| convert (temperature) | C -> F      | 0°C = 32°F, 100°C = 212°F  |
+| convert (temperature) | F -> C      | 32°F = 0°C                 |
+| convert (temperature) | C -> K      | 0°C = 273.15K              |
+| convert (area)        | m² -> 坪    | 1坪 ≈ 3.30579 m²           |
+| convert (area)        | ha -> m²    | 1 ha = 10000 m²            |
+| convert (speed)       | km/h -> m/s | 3.6 km/h = 1 m/s           |
+| convert (speed)       | mph -> km/h | 1 mph ≈ 1.60934 km/h       |
+| convert               | ゼロ入力    | 0を変換して0が返る         |
+| convert               | 負の値      | 温度以外でも正しく変換     |
+| getAllCategories      | 全カテゴリ  | 5カテゴリが返る            |
 
 ---
 
@@ -396,8 +405,8 @@ export const meta: ToolMeta = {
 export type KanaConvertMode =
   | "hiragana-to-katakana"
   | "katakana-to-hiragana"
-  | "to-fullwidth-katakana"   // 半角カタカナ -> 全角カタカナ
-  | "to-halfwidth-katakana";  // 全角カタカナ -> 半角カタカナ
+  | "to-fullwidth-katakana" // 半角カタカナ -> 全角カタカナ
+  | "to-halfwidth-katakana"; // 全角カタカナ -> 半角カタカナ
 
 export function convertKana(input: string, mode: KanaConvertMode): string;
 
@@ -420,13 +429,13 @@ export function convertKana(input: string, mode: KanaConvertMode): string;
 
 // 内部ヘルパー:
 function isHiragana(code: number): boolean;
-  // U+3041 - U+3096, U+3099-U+309A
+// U+3041 - U+3096, U+3099-U+309A
 
 function isKatakana(code: number): boolean;
-  // U+30A1 - U+30FA
+// U+30A1 - U+30FA
 
 function isHalfwidthKatakana(code: number): boolean;
-  // U+FF65 - U+FF9F
+// U+FF65 - U+FF9F
 ```
 
 #### 4.4 Component.tsx 概要
@@ -445,23 +454,23 @@ function isHalfwidthKatakana(code: number): boolean;
 
 #### 4.5 テスト計画 (`__tests__/logic.test.ts`)
 
-| describe | test | 内容 |
-|---|---|---|
-| hiragana-to-katakana | 基本変換 | "あいうえお" -> "アイウエオ" |
-| hiragana-to-katakana | 濁音 | "がぎぐげご" -> "ガギグゲゴ" |
-| hiragana-to-katakana | 半濁音 | "ぱぴぷぺぽ" -> "パピプペポ" |
-| hiragana-to-katakana | 小文字 | "ぁぃぅぇぉ" -> "ァィゥェォ" |
-| hiragana-to-katakana | 混在テキスト | "ひらがなとASCII123" -> "ヒラガナトASCII123" (非ひらがなはそのまま) |
-| hiragana-to-katakana | 「ゔ」 | "ゔ" -> "ヴ" |
-| katakana-to-hiragana | 基本変換 | "アイウエオ" -> "あいうえお" |
-| katakana-to-hiragana | 「ヴ」 | "ヴ" -> "ゔ" |
-| katakana-to-hiragana | カタカナ専用文字 | "ヷヸヹヺ" -> そのまま（ひらがなに対応なし） |
-| to-fullwidth-katakana | 基本変換 | "ｱｲｳ" -> "アイウ" |
-| to-fullwidth-katakana | 濁音合成 | "ｶﾞ" -> "ガ" |
-| to-fullwidth-katakana | 半濁音合成 | "ﾊﾟ" -> "パ" |
-| to-halfwidth-katakana | 基本変換 | "アイウ" -> "ｱｲｳ" |
-| to-halfwidth-katakana | 濁音分解 | "ガ" -> "ｶﾞ" |
-| convertKana | 空文字列 | "" -> "" |
+| describe              | test             | 内容                                                                |
+| --------------------- | ---------------- | ------------------------------------------------------------------- |
+| hiragana-to-katakana  | 基本変換         | "あいうえお" -> "アイウエオ"                                        |
+| hiragana-to-katakana  | 濁音             | "がぎぐげご" -> "ガギグゲゴ"                                        |
+| hiragana-to-katakana  | 半濁音           | "ぱぴぷぺぽ" -> "パピプペポ"                                        |
+| hiragana-to-katakana  | 小文字           | "ぁぃぅぇぉ" -> "ァィゥェォ"                                        |
+| hiragana-to-katakana  | 混在テキスト     | "ひらがなとASCII123" -> "ヒラガナトASCII123" (非ひらがなはそのまま) |
+| hiragana-to-katakana  | 「ゔ」           | "ゔ" -> "ヴ"                                                        |
+| katakana-to-hiragana  | 基本変換         | "アイウエオ" -> "あいうえお"                                        |
+| katakana-to-hiragana  | 「ヴ」           | "ヴ" -> "ゔ"                                                        |
+| katakana-to-hiragana  | カタカナ専用文字 | "ヷヸヹヺ" -> そのまま（ひらがなに対応なし）                        |
+| to-fullwidth-katakana | 基本変換         | "ｱｲｳ" -> "アイウ"                                                   |
+| to-fullwidth-katakana | 濁音合成         | "ｶﾞ" -> "ガ"                                                        |
+| to-fullwidth-katakana | 半濁音合成       | "ﾊﾟ" -> "パ"                                                        |
+| to-halfwidth-katakana | 基本変換         | "アイウ" -> "ｱｲｳ"                                                   |
+| to-halfwidth-katakana | 濁音分解         | "ガ" -> "ｶﾞ"                                                        |
+| convertKana           | 空文字列         | "" -> ""                                                            |
 
 ---
 
@@ -501,25 +510,25 @@ export const meta: ToolMeta = {
 
 ```ts
 export interface ImageBase64Result {
-  dataUri: string;      // "data:image/png;base64,..." 完全なData URI
-  base64: string;       // Base64文字列のみ（data: prefix なし）
-  mimeType: string;     // "image/png", "image/jpeg" etc.
+  dataUri: string; // "data:image/png;base64,..." 完全なData URI
+  base64: string; // Base64文字列のみ（data: prefix なし）
+  mimeType: string; // "image/png", "image/jpeg" etc.
   originalSize: number; // 元ファイルのバイト数
-  base64Size: number;   // Base64文字列のバイト数
+  base64Size: number; // Base64文字列のバイト数
 }
 
 export function fileToBase64(file: File): Promise<ImageBase64Result>;
-  // FileReader.readAsDataURL() を使用
-  // Promise でラップ
+// FileReader.readAsDataURL() を使用
+// Promise でラップ
 
 export function isValidBase64Image(input: string): boolean;
-  // Data URI形式チェック: "data:image/..." で始まるか
-  // または純粋なBase64文字列として有効か
+// Data URI形式チェック: "data:image/..." で始まるか
+// または純粋なBase64文字列として有効か
 
 export function parseBase64Image(input: string): ParsedImage | null;
-  // Data URI をパースして mimeType と base64 を抽出
-  // 純粋なBase64文字列の場合はデフォルトで image/png と仮定
-  // 不正な場合は null
+// Data URI をパースして mimeType と base64 を抽出
+// 純粋なBase64文字列の場合はデフォルトで image/png と仮定
+// 不正な場合は null
 
 export interface ParsedImage {
   dataUri: string;
@@ -528,7 +537,7 @@ export interface ParsedImage {
 }
 
 export function formatFileSize(bytes: number): string;
-  // 1024 -> "1.00 KB", 1048576 -> "1.00 MB" etc.
+// 1024 -> "1.00 KB", 1048576 -> "1.00 MB" etc.
 
 // サポートするMIMEタイプ:
 export const SUPPORTED_MIME_TYPES = [
@@ -545,7 +554,7 @@ export const SUPPORTED_MIME_TYPES = [
 - **状態**: `mode` ("encode" | "decode"), `base64Result` (ImageBase64Result | null), `decodeInput` (string), `parsedImage` (ParsedImage | null), `error` (string), `copied` (boolean), `dragActive` (boolean)
 - **UI構成**: 2つのタブ（エンコード / デコード）
   - **エンコードタブ**:
-    - ドラッグ&ドロップエリア + ファイル選択ボタン (input[type=file] accept="image/*")
+    - ドラッグ&ドロップエリア + ファイル選択ボタン (input[type=file] accept="image/\*")
     - 結果表示エリア:
       - 元画像のプレビュー（img tag, max-width制限）
       - ファイル情報（MIMEタイプ、元サイズ、Base64サイズ）
@@ -563,19 +572,19 @@ export const SUPPORTED_MIME_TYPES = [
 
 注意: FileReader APIはブラウザAPI。jsdom環境でのテストには制限がある。`fileToBase64` はブラウザでのみテスト可能。logic.tsのテストは純粋関数に集中する。
 
-| describe | test | 内容 |
-|---|---|---|
-| isValidBase64Image | 正しいData URI | "data:image/png;base64,iVBOR..." -> true |
+| describe           | test                | 内容                                     |
+| ------------------ | ------------------- | ---------------------------------------- |
+| isValidBase64Image | 正しいData URI      | "data:image/png;base64,iVBOR..." -> true |
 | isValidBase64Image | 正しいJPEG Data URI | "data:image/jpeg;base64,/9j/..." -> true |
-| isValidBase64Image | 不正な文字列 | "hello world" -> false |
-| isValidBase64Image | 空文字列 | "" -> false |
-| parseBase64Image | Data URIパース | MIMEタイプとbase64を正しく抽出 |
-| parseBase64Image | image/svg+xml | SVG Data URIを正しくパース |
-| parseBase64Image | 不正入力 | null を返す |
-| formatFileSize | バイト | 500 -> "500 B" |
-| formatFileSize | KB | 1024 -> "1.00 KB" |
-| formatFileSize | MB | 1048576 -> "1.00 MB" |
-| formatFileSize | ゼロ | 0 -> "0 B" |
+| isValidBase64Image | 不正な文字列        | "hello world" -> false                   |
+| isValidBase64Image | 空文字列            | "" -> false                              |
+| parseBase64Image   | Data URIパース      | MIMEタイプとbase64を正しく抽出           |
+| parseBase64Image   | image/svg+xml       | SVG Data URIを正しくパース               |
+| parseBase64Image   | 不正入力            | null を返す                              |
+| formatFileSize     | バイト              | 500 -> "500 B"                           |
+| formatFileSize     | KB                  | 1024 -> "1.00 KB"                        |
+| formatFileSize     | MB                  | 1048576 -> "1.00 MB"                     |
+| formatFileSize     | ゼロ                | 0 -> "0 B"                               |
 
 ---
 
@@ -620,29 +629,29 @@ import { meta as imageBase64Meta } from "./image-base64/meta";
 
 既存ツールの relatedSlugs にも新ツールを追加すると相互リンクが改善される:
 
-| 既存ツール | 追加する relatedSlug |
-|---|---|
-| json-formatter | `"yaml-formatter"` |
-| csv-converter | `"yaml-formatter"` |
-| base64 | `"image-base64"` |
-| url-encode | `"email-validator"` |
-| regex-tester | `"email-validator"` |
-| fullwidth-converter | `"kana-converter"` |
-| char-count | `"kana-converter"` |
-| number-base-converter | `"unit-converter"` |
-| date-calculator | `"unit-converter"` |
+| 既存ツール            | 追加する relatedSlug |
+| --------------------- | -------------------- |
+| json-formatter        | `"yaml-formatter"`   |
+| csv-converter         | `"yaml-formatter"`   |
+| base64                | `"image-base64"`     |
+| url-encode            | `"email-validator"`  |
+| regex-tester          | `"email-validator"`  |
+| fullwidth-converter   | `"kana-converter"`   |
+| char-count            | `"kana-converter"`   |
+| number-base-converter | `"unit-converter"`   |
+| date-calculator       | `"unit-converter"`   |
 
 ---
 
 ### 外部ライブラリ まとめ
 
-| ツール | ライブラリ | 理由 |
-|---|---|---|
-| yaml-formatter | `js-yaml` + `@types/js-yaml` | YAML仕様が複雑、自前実装は非現実的 |
-| email-validator | なし | 正規表現ベース、ブラウザ標準のみ |
-| unit-converter | なし | 定数テーブル + 四則演算 |
-| kana-converter | なし | Unicode演算（+0x60/-0x60）+ マッピングテーブル |
-| image-base64 | なし | FileReader API + Data URL（ブラウザ標準） |
+| ツール          | ライブラリ                   | 理由                                           |
+| --------------- | ---------------------------- | ---------------------------------------------- |
+| yaml-formatter  | `js-yaml` + `@types/js-yaml` | YAML仕様が複雑、自前実装は非現実的             |
+| email-validator | なし                         | 正規表現ベース、ブラウザ標準のみ               |
+| unit-converter  | なし                         | 定数テーブル + 四則演算                        |
+| kana-converter  | なし                         | Unicode演算（+0x60/-0x60）+ マッピングテーブル |
+| image-base64    | なし                         | FileReader API + Data URL（ブラウザ標準）      |
 
 ---
 

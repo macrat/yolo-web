@@ -17,14 +17,17 @@ All 3 reviewer warnings from Cycle 2 have been fixed and committed separately.
 ## Results
 
 ### W1: image-base64 file size limit (commit c692d2f)
+
 - File: `src/tools/image-base64/Component.tsx`
 - Added a 10MB (`10 * 1024 * 1024` bytes) file size check at the top of `handleFile`, before the MIME type check. If exceeded, sets error state with message and returns early.
 
 ### W2: email-validator unused variable (commit 27b6279)
+
 - File: `src/tools/email-validator/logic.ts`
 - Removed `atIndex` variable and its `indexOf("@")` call. Now uses `lastAtIndex` via `lastIndexOf("@")` for both the existence check (`=== -1`) and the string splitting. All 16 existing tests pass unchanged.
 
 ### W3: yaml-formatter input size limit (commit 8714545)
+
 - File: `src/tools/yaml-formatter/logic.ts`
 - Added `MAX_INPUT_LENGTH = 1_000_000` constant and `checkInputSize()` helper.
 - `formatYaml`, `yamlToJson`, `jsonToYaml` throw an error if input exceeds limit.
@@ -33,12 +36,14 @@ All 3 reviewer warnings from Cycle 2 have been fixed and committed separately.
 - Added 4 new tests (one per public function) verifying oversized input handling.
 
 ### Changed files
+
 - `src/tools/image-base64/Component.tsx`
 - `src/tools/email-validator/logic.ts`
 - `src/tools/yaml-formatter/logic.ts`
 - `src/tools/yaml-formatter/__tests__/logic.test.ts`
 
 ### Pre-completion checks
+
 - `npm run typecheck` -- PASS
 - `npm run lint` -- PASS
 - `npm run format:check` -- PASS (changed files all formatted; pre-existing memo warnings unrelated)
