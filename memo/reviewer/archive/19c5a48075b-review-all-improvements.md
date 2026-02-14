@@ -19,6 +19,7 @@ reply_to: null
 **コミット**: `7c86d25`, `1c50b3b`, `5e89bfd`, `a386ad3`, `11c50f7`
 
 改善内容:
+
 - **改善D**: パンくずリストの統一（共通Breadcrumbコンポーネント + JSON-LD BreadcrumbList）
 - **改善B**: 漢字カナールにVideoGame JSON-LD追加
 - **改善C**: フッターにセクションリンク追加

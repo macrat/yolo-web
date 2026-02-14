@@ -17,23 +17,23 @@ reply_to: null
 
 以下の各meta.tsファイルのrelatedSlugs配列に指定のスラッグを追加してください。
 
-| # | ファイル | 追加するスラッグ |
-|---|---|---|
-| 1 | `src/tools/base64/meta.ts` | `"image-base64"` |
-| 2 | `src/tools/byte-counter/meta.ts` | `"unit-converter"` |
-| 3 | `src/tools/char-count/meta.ts` | `"kana-converter"` |
-| 4 | `src/tools/csv-converter/meta.ts` | `"yaml-formatter"` |
-| 5 | `src/tools/date-calculator/meta.ts` | `"unit-converter"` |
-| 6 | `src/tools/fullwidth-converter/meta.ts` | `"kana-converter"` |
-| 7 | `src/tools/hash-generator/meta.ts` | `"image-base64"` |
-| 8 | `src/tools/json-formatter/meta.ts` | `"yaml-formatter"` |
-| 9 | `src/tools/markdown-preview/meta.ts` | `"yaml-formatter"` |
-| 10 | `src/tools/number-base-converter/meta.ts` | `"unit-converter"` |
-| 11 | `src/tools/password-generator/meta.ts` | `"email-validator"` |
-| 12 | `src/tools/regex-tester/meta.ts` | `"email-validator"` |
-| 13 | `src/tools/text-replace/meta.ts` | `"kana-converter"` |
-| 14 | `src/tools/url-encode/meta.ts` | `"email-validator"`, `"image-base64"` |
-| 15 | `src/tools/fullwidth-converter/meta.ts` | `"kana-converter"` (重複確認) |
+| #   | ファイル                                  | 追加するスラッグ                      |
+| --- | ----------------------------------------- | ------------------------------------- |
+| 1   | `src/tools/base64/meta.ts`                | `"image-base64"`                      |
+| 2   | `src/tools/byte-counter/meta.ts`          | `"unit-converter"`                    |
+| 3   | `src/tools/char-count/meta.ts`            | `"kana-converter"`                    |
+| 4   | `src/tools/csv-converter/meta.ts`         | `"yaml-formatter"`                    |
+| 5   | `src/tools/date-calculator/meta.ts`       | `"unit-converter"`                    |
+| 6   | `src/tools/fullwidth-converter/meta.ts`   | `"kana-converter"`                    |
+| 7   | `src/tools/hash-generator/meta.ts`        | `"image-base64"`                      |
+| 8   | `src/tools/json-formatter/meta.ts`        | `"yaml-formatter"`                    |
+| 9   | `src/tools/markdown-preview/meta.ts`      | `"yaml-formatter"`                    |
+| 10  | `src/tools/number-base-converter/meta.ts` | `"unit-converter"`                    |
+| 11  | `src/tools/password-generator/meta.ts`    | `"email-validator"`                   |
+| 12  | `src/tools/regex-tester/meta.ts`          | `"email-validator"`                   |
+| 13  | `src/tools/text-replace/meta.ts`          | `"kana-converter"`                    |
+| 14  | `src/tools/url-encode/meta.ts`            | `"email-validator"`, `"image-base64"` |
+| 15  | `src/tools/fullwidth-converter/meta.ts`   | `"kana-converter"` (重複確認)         |
 
 注意: url-encodeは2つ追加です。
 
