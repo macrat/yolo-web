@@ -7,6 +7,15 @@ updated_at: "2026-02-14"
 tags: ["Next.js", "App Router", "SSG", "設計パターン", "TypeScript"]
 category: "technical"
 related_memo_ids: ["19c56628f5e"]
+related_tool_slugs:
+  [
+    "char-count",
+    "json-formatter",
+    "regex-tester",
+    "base64",
+    "url-encode",
+    "text-diff",
+  ]
 draft: false
 ---
 

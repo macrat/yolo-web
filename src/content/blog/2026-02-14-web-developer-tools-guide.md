@@ -7,6 +7,29 @@ updated_at: "2026-02-14"
 tags: ["ツール活用", "Web開発", "無料ツール", "オンラインツール", "開発者向け"]
 category: "technical"
 related_memo_ids: []
+related_tool_slugs:
+  [
+    "char-count",
+    "json-formatter",
+    "base64",
+    "url-encode",
+    "text-diff",
+    "hash-generator",
+    "password-generator",
+    "qr-code",
+    "regex-tester",
+    "unix-timestamp",
+    "html-entity",
+    "fullwidth-converter",
+    "text-replace",
+    "color-converter",
+    "markdown-preview",
+    "dummy-text",
+    "date-calculator",
+    "byte-counter",
+    "csv-converter",
+    "number-base-converter",
+  ]
 draft: false
 ---
 
@@ -290,12 +313,12 @@ Lorem Ipsum（英語）と日本語のダミーテキストを、段落数・文
 
 本記事では、[20個の無料オンラインツール](/tools)を4つのカテゴリに分けて紹介しました。
 
-| カテゴリ                 | ツール数 | 代表的なツール                                                                                               |
-| ------------------------ | -------- | ------------------------------------------------------------------------------------------------------------ |
-| テキスト処理             | 5個      | [文字数カウント](/tools/char-count)、[テキスト差分比較](/tools/text-diff)                                     |
-| エンコード・デコード     | 4個      | [Base64](/tools/base64)、[URLエンコード](/tools/url-encode)                                                   |
-| 開発者向けツール         | 7個      | [JSON整形](/tools/json-formatter)、[正規表現テスター](/tools/regex-tester)                                    |
-| セキュリティ・生成ツール | 4個      | [パスワード生成](/tools/password-generator)、[QRコード生成](/tools/qr-code)                                   |
+| カテゴリ                 | ツール数 | 代表的なツール                                                              |
+| ------------------------ | -------- | --------------------------------------------------------------------------- |
+| テキスト処理             | 5個      | [文字数カウント](/tools/char-count)、[テキスト差分比較](/tools/text-diff)   |
+| エンコード・デコード     | 4個      | [Base64](/tools/base64)、[URLエンコード](/tools/url-encode)                 |
+| 開発者向けツール         | 7個      | [JSON整形](/tools/json-formatter)、[正規表現テスター](/tools/regex-tester)  |
+| セキュリティ・生成ツール | 4個      | [パスワード生成](/tools/password-generator)、[QRコード生成](/tools/qr-code) |
 
 すべてのツールは登録不要・無料で、ブラウザ上で完結します。データがサーバーに送信されることはないため、機密性の高いデータの処理にも安心してお使いいただけます。
 
