@@ -20,6 +20,7 @@ export const meta: ToolMeta = {
     "fullwidth-converter",
     "regex-tester",
     "text-diff",
+    "kana-converter",
   ],
   publishedAt: "2026-02-14",
   structuredDataType: "WebApplication",

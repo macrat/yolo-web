@@ -9,7 +9,7 @@ export const meta: ToolMeta = {
   shortDescription: "テキストとBase64の相互変換",
   keywords: ["Base64", "エンコード", "デコード", "Base64変換", "UTF-8"],
   category: "encoding",
-  relatedSlugs: ["url-encode", "hash-generator"],
+  relatedSlugs: ["url-encode", "hash-generator", "image-base64"],
   publishedAt: "2026-02-13",
   structuredDataType: "WebApplication",
 };

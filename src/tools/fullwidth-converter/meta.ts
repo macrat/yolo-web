@@ -15,7 +15,7 @@ export const meta: ToolMeta = {
     "全角英数字変換",
   ],
   category: "text",
-  relatedSlugs: ["char-count", "text-replace", "text-diff"],
+  relatedSlugs: ["char-count", "text-replace", "text-diff", "kana-converter"],
   publishedAt: "2026-02-14",
   structuredDataType: "WebApplication",
 };
