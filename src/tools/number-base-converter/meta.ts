@@ -15,7 +15,12 @@ export const meta: ToolMeta = {
     "基数変換 オンライン",
   ],
   category: "developer",
-  relatedSlugs: ["color-converter", "unix-timestamp", "csv-converter"],
+  relatedSlugs: [
+    "color-converter",
+    "unix-timestamp",
+    "csv-converter",
+    "unit-converter",
+  ],
   publishedAt: "2026-02-14",
   structuredDataType: "WebApplication",
 };

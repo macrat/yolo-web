@@ -15,7 +15,12 @@ export const meta: ToolMeta = {
     "日付 加算 減算",
   ],
   category: "developer",
-  relatedSlugs: ["unix-timestamp", "number-base-converter", "char-count"],
+  relatedSlugs: [
+    "unix-timestamp",
+    "number-base-converter",
+    "char-count",
+    "unit-converter",
+  ],
   publishedAt: "2026-02-14",
   structuredDataType: "WebApplication",
 };

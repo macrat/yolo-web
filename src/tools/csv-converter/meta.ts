@@ -15,7 +15,12 @@ export const meta: ToolMeta = {
     "CSV TSV 変換 オンライン",
   ],
   category: "developer",
-  relatedSlugs: ["json-formatter", "markdown-preview", "text-replace"],
+  relatedSlugs: [
+    "json-formatter",
+    "markdown-preview",
+    "text-replace",
+    "yaml-formatter",
+  ],
   publishedAt: "2026-02-14",
   structuredDataType: "WebApplication",
 };

@@ -15,7 +15,12 @@ export const meta: ToolMeta = {
     "Markdownエディタ",
   ],
   category: "developer",
-  relatedSlugs: ["json-formatter", "html-entity", "regex-tester"],
+  relatedSlugs: [
+    "json-formatter",
+    "html-entity",
+    "regex-tester",
+    "yaml-formatter",
+  ],
   publishedAt: "2026-02-14",
   structuredDataType: "WebApplication",
 };
