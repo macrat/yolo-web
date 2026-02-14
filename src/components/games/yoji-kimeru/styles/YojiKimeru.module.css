@@ -1,0 +1,505 @@
+/* Yoji Kimeru Game Styles - Mobile-first responsive design */
+
+/* CSS Custom Properties for game-specific colors */
+:root {
+  --yk-color-correct: #6aaa64;
+  --yk-color-present: #c9b458;
+  --yk-color-absent: #787c7e;
+  --yk-color-empty: #d3d6da;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --yk-color-correct: #538d4e;
+    --yk-color-present: #b59f3b;
+    --yk-color-absent: #3a3a3c;
+    --yk-color-empty: #3a3a3c;
+  }
+}
+
+/* ===== Header ===== */
+.header {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0.75rem 0.5rem;
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.headerTop {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  position: relative;
+}
+
+.title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-align: center;
+}
+
+.headerButtons {
+  position: absolute;
+  right: 0;
+  display: flex;
+  gap: 0.25rem;
+}
+
+.iconButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.35rem;
+  border-radius: 4px;
+  font-size: 1.1rem;
+  color: var(--color-text);
+  line-height: 1;
+}
+
+.iconButton:hover {
+  background-color: var(--color-border);
+}
+
+.headerSub {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+/* ===== Hint Bar ===== */
+.hintBar {
+  width: 100%;
+  max-width: 600px;
+  padding: 0.5rem 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.hintLabel {
+  font-weight: 600;
+  margin-right: 0.5rem;
+}
+
+.hintValue {
+  margin-right: 1rem;
+}
+
+.hintHidden {
+  display: none;
+}
+
+/* ===== Game Board ===== */
+.boardWrapper {
+  width: 100%;
+  padding: 0.75rem 0;
+  display: flex;
+  justify-content: center;
+}
+
+.board {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  width: 100%;
+  max-width: 280px;
+}
+
+/* ===== Guess Row ===== */
+.guessRow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.25rem;
+}
+
+/* ===== Feedback Cell ===== */
+.cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3.5rem;
+  border-radius: 4px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-align: center;
+  padding: 0.15rem;
+  animation: flipIn 0.4s ease-out;
+}
+
+.cellCorrect {
+  composes: cell;
+  background-color: var(--yk-color-correct);
+}
+
+.cellPresent {
+  composes: cell;
+  background-color: var(--yk-color-present);
+}
+
+.cellAbsent {
+  composes: cell;
+  background-color: var(--yk-color-absent);
+}
+
+.cellEmpty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3.5rem;
+  border-radius: 4px;
+  border: 2px solid var(--yk-color-empty);
+  background-color: transparent;
+}
+
+/* ===== Animations ===== */
+@keyframes flipIn {
+  0% {
+    transform: rotateX(90deg);
+    opacity: 0;
+  }
+  100% {
+    transform: rotateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(-4px);
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateX(4px);
+  }
+}
+
+.shaking {
+  animation: shake 0.4s ease-in-out;
+}
+
+/* ===== Guess Input ===== */
+.inputArea {
+  width: 100%;
+  max-width: 600px;
+  padding: 1rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.inputRow {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  width: 100%;
+  max-width: 300px;
+}
+
+.inputField {
+  flex: 1;
+  font-size: 1.5rem;
+  text-align: center;
+  padding: 0.5rem;
+  border: 2px solid var(--color-border);
+  border-radius: 6px;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  outline: none;
+}
+
+.inputField:focus {
+  border-color: var(--color-primary);
+}
+
+.inputField:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.submitButton {
+  padding: 0.5rem 1.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  background-color: var(--color-primary);
+  color: #ffffff;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.submitButton:hover:not(:disabled) {
+  background-color: var(--color-primary-hover);
+}
+
+.submitButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.errorMessage {
+  font-size: 0.85rem;
+  color: var(--color-error);
+  text-align: center;
+  min-height: 1.2em;
+}
+
+/* ===== Modal (dialog) ===== */
+.modal {
+  border: none;
+  border-radius: 12px;
+  padding: 1.5rem;
+  max-width: 90vw;
+  width: 400px;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+}
+
+.modal::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modalTitle {
+  font-size: 1.3rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.modalClose {
+  display: block;
+  margin: 1rem auto 0;
+  padding: 0.5rem 2rem;
+  font-size: 0.95rem;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.modalClose:hover {
+  background-color: var(--color-bg-secondary);
+}
+
+/* ===== Result Modal ===== */
+.resultEmoji {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.resultAnswer {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  letter-spacing: 0.1em;
+}
+
+.resultReading {
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  margin-bottom: 0.25rem;
+}
+
+.resultMeaning {
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  margin-bottom: 0.75rem;
+}
+
+.resultSummary {
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+/* ===== Share Buttons ===== */
+.shareArea {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 0.75rem;
+}
+
+.shareButton {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #ffffff;
+}
+
+.shareButtonCopy {
+  composes: shareButton;
+  background-color: var(--yk-color-correct);
+}
+
+.shareButtonCopy:hover {
+  opacity: 0.9;
+}
+
+.shareButtonX {
+  composes: shareButton;
+  background-color: #1da1f2;
+}
+
+.shareButtonX:hover {
+  opacity: 0.9;
+}
+
+.shareButtonStats {
+  display: block;
+  margin: 0.75rem auto 0;
+  padding: 0.4rem 1.5rem;
+  font-size: 0.85rem;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.shareButtonStats:hover {
+  background-color: var(--color-bg-secondary);
+}
+
+.copiedMessage {
+  font-size: 0.8rem;
+  color: var(--yk-color-correct);
+  text-align: center;
+  margin-top: 0.25rem;
+  min-height: 1.2em;
+}
+
+/* ===== Stats Modal ===== */
+.statsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.statItem {
+  text-align: center;
+}
+
+.statValue {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.statLabel {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.distributionTitle {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.distributionRow {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 0.25rem;
+}
+
+.distributionLabel {
+  width: 1rem;
+  text-align: right;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.distributionBar {
+  height: 1.2rem;
+  background-color: var(--yk-color-absent);
+  border-radius: 2px;
+  min-width: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.distributionBarHighlight {
+  composes: distributionBar;
+  background-color: var(--yk-color-correct);
+}
+
+/* ===== How To Play Modal ===== */
+.howToPlayContent {
+  line-height: 1.7;
+}
+
+.howToPlayContent p {
+  margin-bottom: 0.75rem;
+}
+
+.feedbackLegend {
+  margin: 0.75rem 0;
+  padding: 0;
+  list-style: none;
+}
+
+.feedbackLegend li {
+  margin-bottom: 0.35rem;
+  font-size: 0.95rem;
+}
+
+/* ===== Responsive ===== */
+@media (min-width: 480px) {
+  .cell {
+    min-height: 4rem;
+    font-size: 1.75rem;
+  }
+
+  .cellEmpty {
+    min-height: 4rem;
+  }
+
+  .board {
+    max-width: 320px;
+  }
+
+  .title {
+    font-size: 1.6rem;
+  }
+
+  .header {
+    padding: 1rem 0.5rem;
+  }
+}
