@@ -27,10 +27,8 @@ const COMMON_TYPOS: Record<string, string> = {
 export function parseEmailParts(
   email: string,
 ): { localPart: string; domain: string } | null {
-  const atIndex = email.indexOf("@");
-  if (atIndex === -1) return null;
-  // Use last @ to handle edge cases
   const lastAtIndex = email.lastIndexOf("@");
+  if (lastAtIndex === -1) return null;
   return {
     localPart: email.substring(0, lastAtIndex),
     domain: email.substring(lastAtIndex + 1),
