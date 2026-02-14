@@ -21,7 +21,11 @@ test("KanjiKanaruPage renders breadcrumb navigation", () => {
   expect(
     screen.getByRole("navigation", { name: "パンくずリスト" }),
   ).toBeInTheDocument();
-  expect(screen.getByRole("link", { name: "ゲーム一覧" })).toHaveAttribute(
+  expect(screen.getByRole("link", { name: "ホーム" })).toHaveAttribute(
+    "href",
+    "/",
+  );
+  expect(screen.getByRole("link", { name: "ゲーム" })).toHaveAttribute(
     "href",
     "/games",
   );
