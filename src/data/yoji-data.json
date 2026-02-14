@@ -1,0 +1,709 @@
+[
+  {
+    "yoji": "一期一会",
+    "reading": "いちごいちえ",
+    "meaning": "一生に一度の出会いを大切にすること",
+    "difficulty": 1,
+    "category": "life"
+  },
+  {
+    "yoji": "一日一善",
+    "reading": "いちにちいちぜん",
+    "meaning": "毎日一つの善行をすること",
+    "difficulty": 2,
+    "category": "life"
+  },
+  {
+    "yoji": "人生行路",
+    "reading": "じんせいこうろ",
+    "meaning": "人生の道のり",
+    "difficulty": 2,
+    "category": "life"
+  },
+  {
+    "yoji": "七転八起",
+    "reading": "しちてんはっき",
+    "meaning": "何度失敗しても立ち上がること",
+    "difficulty": 1,
+    "category": "life"
+  },
+  {
+    "yoji": "有為転変",
+    "reading": "ういてんぺん",
+    "meaning": "世の中のすべてが絶えず変化すること",
+    "difficulty": 3,
+    "category": "life"
+  },
+  {
+    "yoji": "生者必滅",
+    "reading": "しょうじゃひつめつ",
+    "meaning": "生きているものは必ず滅びる",
+    "difficulty": 2,
+    "category": "life"
+  },
+  {
+    "yoji": "盛者必衰",
+    "reading": "じょうしゃひっすい",
+    "meaning": "勢いのあるものも必ず衰える",
+    "difficulty": 2,
+    "category": "life"
+  },
+  {
+    "yoji": "諸行無常",
+    "reading": "しょぎょうむじょう",
+    "meaning": "すべてのものは常に変化する",
+    "difficulty": 1,
+    "category": "life"
+  },
+  {
+    "yoji": "自業自得",
+    "reading": "じごうじとく",
+    "meaning": "自分の行いの結果を自分で受けること",
+    "difficulty": 1,
+    "category": "life"
+  },
+  {
+    "yoji": "起死回生",
+    "reading": "きしかいせい",
+    "meaning": "絶望的な状態から立ち直ること",
+    "difficulty": 1,
+    "category": "life"
+  },
+  {
+    "yoji": "一念発起",
+    "reading": "いちねんほっき",
+    "meaning": "決意して立ち上がること",
+    "difficulty": 2,
+    "category": "effort"
+  },
+  {
+    "yoji": "粉骨砕身",
+    "reading": "ふんこつさいしん",
+    "meaning": "全力を尽くして努力すること",
+    "difficulty": 2,
+    "category": "effort"
+  },
+  {
+    "yoji": "不撓不屈",
+    "reading": "ふとうふくつ",
+    "meaning": "どんな困難にも屈しないこと",
+    "difficulty": 2,
+    "category": "effort"
+  },
+  {
+    "yoji": "切磋琢磨",
+    "reading": "せっさたくま",
+    "meaning": "互いに競い合い高め合うこと",
+    "difficulty": 1,
+    "category": "effort"
+  },
+  {
+    "yoji": "初志貫徹",
+    "reading": "しょしかんてつ",
+    "meaning": "最初の志を最後まで貫くこと",
+    "difficulty": 1,
+    "category": "effort"
+  },
+  {
+    "yoji": "奮闘努力",
+    "reading": "ふんとうどりょく",
+    "meaning": "力を奮って努め励むこと",
+    "difficulty": 2,
+    "category": "effort"
+  },
+  {
+    "yoji": "堅忍不抜",
+    "reading": "けんにんふばつ",
+    "meaning": "辛抱強くて動じないこと",
+    "difficulty": 3,
+    "category": "effort"
+  },
+  {
+    "yoji": "精神一到",
+    "reading": "せいしんいっとう",
+    "meaning": "精神を集中すれば何でも成し遂げられる",
+    "difficulty": 2,
+    "category": "effort"
+  },
+  {
+    "yoji": "一意専心",
+    "reading": "いちいせんしん",
+    "meaning": "ひたすら一つのことに集中すること",
+    "difficulty": 2,
+    "category": "effort"
+  },
+  {
+    "yoji": "勇往邁進",
+    "reading": "ゆうおうまいしん",
+    "meaning": "恐れず勇ましく前に進むこと",
+    "difficulty": 2,
+    "category": "effort"
+  },
+  {
+    "yoji": "花鳥風月",
+    "reading": "かちょうふうげつ",
+    "meaning": "自然の美しい風景",
+    "difficulty": 1,
+    "category": "nature"
+  },
+  {
+    "yoji": "山紫水明",
+    "reading": "さんしすいめい",
+    "meaning": "山や水の景色が美しいこと",
+    "difficulty": 2,
+    "category": "nature"
+  },
+  {
+    "yoji": "風光明媚",
+    "reading": "ふうこうめいび",
+    "meaning": "景色が美しいこと",
+    "difficulty": 2,
+    "category": "nature"
+  },
+  {
+    "yoji": "春夏秋冬",
+    "reading": "しゅんかしゅうとう",
+    "meaning": "四季",
+    "difficulty": 1,
+    "category": "nature"
+  },
+  {
+    "yoji": "天変地異",
+    "reading": "てんぺんちい",
+    "meaning": "自然界の大きな異変",
+    "difficulty": 1,
+    "category": "nature"
+  },
+  {
+    "yoji": "晴耕雨読",
+    "reading": "せいこううどく",
+    "meaning": "晴れた日に耕し雨の日に読書する",
+    "difficulty": 2,
+    "category": "nature"
+  },
+  {
+    "yoji": "落花流水",
+    "reading": "らっかりゅうすい",
+    "meaning": "散る花と流れる水、男女の情愛",
+    "difficulty": 2,
+    "category": "nature"
+  },
+  {
+    "yoji": "雲散霧消",
+    "reading": "うんさんむしょう",
+    "meaning": "跡形もなく消えてなくなること",
+    "difficulty": 2,
+    "category": "nature"
+  },
+  {
+    "yoji": "森羅万象",
+    "reading": "しんらばんしょう",
+    "meaning": "宇宙に存在するすべてのもの",
+    "difficulty": 1,
+    "category": "nature"
+  },
+  {
+    "yoji": "明鏡止水",
+    "reading": "めいきょうしすい",
+    "meaning": "静かで澄み切った心",
+    "difficulty": 1,
+    "category": "nature"
+  },
+  {
+    "yoji": "喜怒哀楽",
+    "reading": "きどあいらく",
+    "meaning": "人間の感情",
+    "difficulty": 1,
+    "category": "emotion"
+  },
+  {
+    "yoji": "一喜一憂",
+    "reading": "いっきいちゆう",
+    "meaning": "喜んだり心配したりすること",
+    "difficulty": 1,
+    "category": "emotion"
+  },
+  {
+    "yoji": "意気消沈",
+    "reading": "いきしょうちん",
+    "meaning": "元気がなくなること",
+    "difficulty": 2,
+    "category": "emotion"
+  },
+  {
+    "yoji": "意気揚々",
+    "reading": "いきようよう",
+    "meaning": "得意で元気な様子",
+    "difficulty": 1,
+    "category": "emotion"
+  },
+  {
+    "yoji": "感慨無量",
+    "reading": "かんがいむりょう",
+    "meaning": "感じ入ることが限りないこと",
+    "difficulty": 2,
+    "category": "emotion"
+  },
+  {
+    "yoji": "悲喜交々",
+    "reading": "ひきこもごも",
+    "meaning": "悲しみと喜びが交互にくること",
+    "difficulty": 2,
+    "category": "emotion"
+  },
+  {
+    "yoji": "疑心暗鬼",
+    "reading": "ぎしんあんき",
+    "meaning": "疑う心があると何でも怖くなる",
+    "difficulty": 1,
+    "category": "emotion"
+  },
+  {
+    "yoji": "半信半疑",
+    "reading": "はんしんはんぎ",
+    "meaning": "半分信じ半分疑うこと",
+    "difficulty": 1,
+    "category": "emotion"
+  },
+  {
+    "yoji": "阿鼻叫喚",
+    "reading": "あびきょうかん",
+    "meaning": "非常に苦しんで泣き叫ぶこと",
+    "difficulty": 2,
+    "category": "emotion"
+  },
+  {
+    "yoji": "五里霧中",
+    "reading": "ごりむちゅう",
+    "meaning": "方向がわからない状態",
+    "difficulty": 1,
+    "category": "emotion"
+  },
+  {
+    "yoji": "以心伝心",
+    "reading": "いしんでんしん",
+    "meaning": "言葉なしに心が通じ合うこと",
+    "difficulty": 1,
+    "category": "society"
+  },
+  {
+    "yoji": "一蓮托生",
+    "reading": "いちれんたくしょう",
+    "meaning": "運命を共にすること",
+    "difficulty": 2,
+    "category": "society"
+  },
+  {
+    "yoji": "弱肉強食",
+    "reading": "じゃくにくきょうしょく",
+    "meaning": "弱い者が強い者に滅ぼされること",
+    "difficulty": 1,
+    "category": "society"
+  },
+  {
+    "yoji": "十人十色",
+    "reading": "じゅうにんといろ",
+    "meaning": "人それぞれ好みが違うこと",
+    "difficulty": 1,
+    "category": "society"
+  },
+  {
+    "yoji": "異口同音",
+    "reading": "いくどうおん",
+    "meaning": "多くの人が同じことを言うこと",
+    "difficulty": 2,
+    "category": "society"
+  },
+  {
+    "yoji": "呉越同舟",
+    "reading": "ごえつどうしゅう",
+    "meaning": "敵同士が同じ場所にいること",
+    "difficulty": 2,
+    "category": "society"
+  },
+  {
+    "yoji": "千客万来",
+    "reading": "せんきゃくばんらい",
+    "meaning": "多くの客が絶えず来ること",
+    "difficulty": 2,
+    "category": "society"
+  },
+  {
+    "yoji": "付和雷同",
+    "reading": "ふわらいどう",
+    "meaning": "自分の意見なく他人に同調する",
+    "difficulty": 2,
+    "category": "society"
+  },
+  {
+    "yoji": "馬耳東風",
+    "reading": "ばじとうふう",
+    "meaning": "人の意見を聞き流すこと",
+    "difficulty": 1,
+    "category": "society"
+  },
+  {
+    "yoji": "八方美人",
+    "reading": "はっぽうびじん",
+    "meaning": "誰にでもいい顔をする人",
+    "difficulty": 1,
+    "category": "society"
+  },
+  {
+    "yoji": "博学多才",
+    "reading": "はくがくたさい",
+    "meaning": "学問が広く才能が多いこと",
+    "difficulty": 2,
+    "category": "knowledge"
+  },
+  {
+    "yoji": "温故知新",
+    "reading": "おんこちしん",
+    "meaning": "古いことを学び新しい知識を得ること",
+    "difficulty": 1,
+    "category": "knowledge"
+  },
+  {
+    "yoji": "学問研究",
+    "reading": "がくもんけんきゅう",
+    "meaning": "学問を研究すること",
+    "difficulty": 1,
+    "category": "knowledge"
+  },
+  {
+    "yoji": "読書三到",
+    "reading": "どくしょさんとう",
+    "meaning": "読書に心・目・口の三つが必要",
+    "difficulty": 3,
+    "category": "knowledge"
+  },
+  {
+    "yoji": "不言実行",
+    "reading": "ふげんじっこう",
+    "meaning": "黙って実行すること",
+    "difficulty": 1,
+    "category": "knowledge"
+  },
+  {
+    "yoji": "有言実行",
+    "reading": "ゆうげんじっこう",
+    "meaning": "言ったことを実行すること",
+    "difficulty": 1,
+    "category": "knowledge"
+  },
+  {
+    "yoji": "一目瞭然",
+    "reading": "いちもくりょうぜん",
+    "meaning": "一目見てはっきりわかること",
+    "difficulty": 1,
+    "category": "knowledge"
+  },
+  {
+    "yoji": "理路整然",
+    "reading": "りろせいぜん",
+    "meaning": "論理が整っていること",
+    "difficulty": 2,
+    "category": "knowledge"
+  },
+  {
+    "yoji": "博覧強記",
+    "reading": "はくらんきょうき",
+    "meaning": "広く読んでよく記憶すること",
+    "difficulty": 3,
+    "category": "knowledge"
+  },
+  {
+    "yoji": "古今東西",
+    "reading": "ここんとうざい",
+    "meaning": "昔から今まで、あらゆる場所で",
+    "difficulty": 1,
+    "category": "knowledge"
+  },
+  {
+    "yoji": "百戦錬磨",
+    "reading": "ひゃくせんれんま",
+    "meaning": "多くの経験を積んでいること",
+    "difficulty": 1,
+    "category": "conflict"
+  },
+  {
+    "yoji": "一騎当千",
+    "reading": "いっきとうせん",
+    "meaning": "一人で千人に匹敵する強さ",
+    "difficulty": 1,
+    "category": "conflict"
+  },
+  {
+    "yoji": "四面楚歌",
+    "reading": "しめんそか",
+    "meaning": "周囲が敵ばかりで孤立すること",
+    "difficulty": 1,
+    "category": "conflict"
+  },
+  {
+    "yoji": "戦々恐々",
+    "reading": "せんせんきょうきょう",
+    "meaning": "びくびく恐れること",
+    "difficulty": 2,
+    "category": "conflict"
+  },
+  {
+    "yoji": "針小棒大",
+    "reading": "しんしょうぼうだい",
+    "meaning": "小さなことを大げさに言うこと",
+    "difficulty": 2,
+    "category": "conflict"
+  },
+  {
+    "yoji": "短刀直入",
+    "reading": "たんとうちょくにゅう",
+    "meaning": "すぐに本題に入ること",
+    "difficulty": 1,
+    "category": "conflict"
+  },
+  {
+    "yoji": "危機一髪",
+    "reading": "ききいっぱつ",
+    "meaning": "あと少しで大変なことになるところ",
+    "difficulty": 1,
+    "category": "conflict"
+  },
+  {
+    "yoji": "一触即発",
+    "reading": "いっしょくそくはつ",
+    "meaning": "ちょっとしたことで大事件になりそう",
+    "difficulty": 1,
+    "category": "conflict"
+  },
+  {
+    "yoji": "臨機応変",
+    "reading": "りんきおうへん",
+    "meaning": "その場に応じて適切に対応すること",
+    "difficulty": 1,
+    "category": "conflict"
+  },
+  {
+    "yoji": "優勝劣敗",
+    "reading": "ゆうしょうれっぱい",
+    "meaning": "優れたものが勝ち劣ったものが負ける",
+    "difficulty": 2,
+    "category": "conflict"
+  },
+  {
+    "yoji": "日進月歩",
+    "reading": "にっしんげっぽ",
+    "meaning": "日に日に進歩すること",
+    "difficulty": 1,
+    "category": "change"
+  },
+  {
+    "yoji": "朝令暮改",
+    "reading": "ちょうれいぼかい",
+    "meaning": "命令がすぐに変わること",
+    "difficulty": 2,
+    "category": "change"
+  },
+  {
+    "yoji": "一朝一夕",
+    "reading": "いっちょういっせき",
+    "meaning": "わずかな期間",
+    "difficulty": 1,
+    "category": "change"
+  },
+  {
+    "yoji": "千変万化",
+    "reading": "せんぺんばんか",
+    "meaning": "さまざまに変化すること",
+    "difficulty": 1,
+    "category": "change"
+  },
+  {
+    "yoji": "急転直下",
+    "reading": "きゅうてんちょっか",
+    "meaning": "事態が急に変わること",
+    "difficulty": 1,
+    "category": "change"
+  },
+  {
+    "yoji": "大器晩成",
+    "reading": "たいきばんせい",
+    "meaning": "大人物は遅く完成する",
+    "difficulty": 1,
+    "category": "change"
+  },
+  {
+    "yoji": "前代未聞",
+    "reading": "ぜんだいみもん",
+    "meaning": "今まで聞いたことがないこと",
+    "difficulty": 1,
+    "category": "change"
+  },
+  {
+    "yoji": "空前絶後",
+    "reading": "くうぜんぜつご",
+    "meaning": "前にも後にも例がないこと",
+    "difficulty": 1,
+    "category": "change"
+  },
+  {
+    "yoji": "一刀両断",
+    "reading": "いっとうりょうだん",
+    "meaning": "思い切って決断すること",
+    "difficulty": 1,
+    "category": "change"
+  },
+  {
+    "yoji": "本末転倒",
+    "reading": "ほんまつてんとう",
+    "meaning": "大事なことと些細なことが逆になる",
+    "difficulty": 1,
+    "category": "change"
+  },
+  {
+    "yoji": "紆余曲折",
+    "reading": "うよきょくせつ",
+    "meaning": "事情が複雑に変化すること",
+    "difficulty": 2,
+    "category": "change"
+  },
+  {
+    "yoji": "公明正大",
+    "reading": "こうめいせいだい",
+    "meaning": "公平で正しいこと",
+    "difficulty": 1,
+    "category": "virtue"
+  },
+  {
+    "yoji": "品行方正",
+    "reading": "ひんこうほうせい",
+    "meaning": "行いが正しく上品なこと",
+    "difficulty": 2,
+    "category": "virtue"
+  },
+  {
+    "yoji": "質実剛健",
+    "reading": "しつじつごうけん",
+    "meaning": "飾り気がなく心身ともに強いこと",
+    "difficulty": 2,
+    "category": "virtue"
+  },
+  {
+    "yoji": "清廉潔白",
+    "reading": "せいれんけっぱく",
+    "meaning": "心が清く正しいこと",
+    "difficulty": 2,
+    "category": "virtue"
+  },
+  {
+    "yoji": "正々堂々",
+    "reading": "せいせいどうどう",
+    "meaning": "正しく立派なさま",
+    "difficulty": 1,
+    "category": "virtue"
+  },
+  {
+    "yoji": "言行一致",
+    "reading": "げんこういっち",
+    "meaning": "言葉と行動が一致すること",
+    "difficulty": 1,
+    "category": "virtue"
+  },
+  {
+    "yoji": "誠心誠意",
+    "reading": "せいしんせいい",
+    "meaning": "真心を込めること",
+    "difficulty": 1,
+    "category": "virtue"
+  },
+  {
+    "yoji": "天真爛漫",
+    "reading": "てんしんらんまん",
+    "meaning": "飾り気がなく無邪気なこと",
+    "difficulty": 1,
+    "category": "virtue"
+  },
+  {
+    "yoji": "無私無欲",
+    "reading": "むしむよく",
+    "meaning": "私心や欲がないこと",
+    "difficulty": 2,
+    "category": "virtue"
+  },
+  {
+    "yoji": "仁義礼智",
+    "reading": "じんぎれいち",
+    "meaning": "儒教の四つの徳",
+    "difficulty": 3,
+    "category": "virtue"
+  },
+  {
+    "yoji": "自暴自棄",
+    "reading": "じぼうじき",
+    "meaning": "やけになって自分を粗末にすること",
+    "difficulty": 1,
+    "category": "negative"
+  },
+  {
+    "yoji": "厚顔無恥",
+    "reading": "こうがんむち",
+    "meaning": "恥知らずなこと",
+    "difficulty": 2,
+    "category": "negative"
+  },
+  {
+    "yoji": "傲慢不遜",
+    "reading": "ごうまんふそん",
+    "meaning": "おごり高ぶって人を見下すこと",
+    "difficulty": 2,
+    "category": "negative"
+  },
+  {
+    "yoji": "優柔不断",
+    "reading": "ゆうじゅうふだん",
+    "meaning": "決断力がないこと",
+    "difficulty": 1,
+    "category": "negative"
+  },
+  {
+    "yoji": "支離滅裂",
+    "reading": "しりめつれつ",
+    "meaning": "ばらばらでまとまりがないこと",
+    "difficulty": 1,
+    "category": "negative"
+  },
+  {
+    "yoji": "荒唐無稽",
+    "reading": "こうとうむけい",
+    "meaning": "根拠がなくでたらめなこと",
+    "difficulty": 2,
+    "category": "negative"
+  },
+  {
+    "yoji": "我田引水",
+    "reading": "がでんいんすい",
+    "meaning": "自分の都合のいいように物事を進める",
+    "difficulty": 2,
+    "category": "negative"
+  },
+  {
+    "yoji": "朝三暮四",
+    "reading": "ちょうさんぼし",
+    "meaning": "目先の違いにとらわれること",
+    "difficulty": 2,
+    "category": "negative"
+  },
+  {
+    "yoji": "竜頭蛇尾",
+    "reading": "りゅうとうだび",
+    "meaning": "始めは勢いがあるが終わりが振るわない",
+    "difficulty": 1,
+    "category": "negative"
+  },
+  {
+    "yoji": "猪突猛進",
+    "reading": "ちょとつもうしん",
+    "meaning": "向こう見ずに突き進むこと",
+    "difficulty": 1,
+    "category": "negative"
+  }
+]
