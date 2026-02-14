@@ -1,0 +1,81 @@
+.modal {
+  border: none;
+  border-radius: 12px;
+  padding: 1.5rem;
+  max-width: 90vw;
+  width: 400px;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+}
+
+.modal::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modalTitle {
+  font-size: 1.3rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.content {
+  line-height: 1.7;
+}
+
+.content p {
+  margin-bottom: 0.75rem;
+}
+
+.colorLegend {
+  margin: 0.75rem 0;
+  padding: 0;
+  list-style: none;
+}
+
+.colorLegend li {
+  margin-bottom: 0.35rem;
+  font-size: 0.95rem;
+}
+
+.colorSwatch {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 3px;
+  vertical-align: middle;
+  margin-right: 0.35rem;
+}
+
+.swatchYellow {
+  background: #f9df6d;
+}
+
+.swatchGreen {
+  background: #a0c35a;
+}
+
+.swatchBlue {
+  background: #b0c4ef;
+}
+
+.swatchPurple {
+  background: #ba81c5;
+}
+
+.modalClose {
+  display: block;
+  margin: 1rem auto 0;
+  padding: 0.5rem 2rem;
+  font-size: 0.95rem;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.modalClose:hover {
+  background-color: var(--color-bg-secondary);
+}
