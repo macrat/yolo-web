@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import Breadcrumb from "@/components/common/Breadcrumb";
 import GameContainer from "@/components/games/kanji-kanaru/GameContainer";
 import styles from "./page.module.css";
 
@@ -24,17 +24,13 @@ export const metadata: Metadata = {
 export default function KanjiKanaruPage() {
   return (
     <div className={styles.wrapper}>
-      <nav className={styles.breadcrumb} aria-label="パンくずリスト">
-        <Link href="/games" className={styles.breadcrumbLink}>
-          ゲーム一覧
-        </Link>
-        <span className={styles.breadcrumbSeparator} aria-hidden="true">
-          /
-        </span>
-        <span className={styles.breadcrumbCurrent} aria-current="page">
-          漢字カナール
-        </span>
-      </nav>
+      <Breadcrumb
+        items={[
+          { label: "ホーム", href: "/" },
+          { label: "ゲーム", href: "/games" },
+          { label: "漢字カナール" },
+        ]}
+      />
       <GameContainer />
       <footer className={styles.attribution}>
         <p>
