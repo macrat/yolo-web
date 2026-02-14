@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import Breadcrumb from "@/components/common/Breadcrumb";
+import { generateGameJsonLd } from "@/lib/seo";
 import GameContainer from "@/components/games/kanji-kanaru/GameContainer";
 import styles from "./page.module.css";
 
@@ -21,20 +22,27 @@ export const metadata: Metadata = {
   },
 };
 
+const gameJsonLd = generateGameJsonLd({
+  name: "漢字カナール - 毎日の漢字パズル",
+  description:
+    "毎日1つの漢字を当てるパズルゲーム。6回以内に正解を見つけよう!部首・画数・読みなどのヒントを頼りに推理する、新感覚の漢字クイズです。",
+  url: "/games/kanji-kanaru",
+});
+
 export default function KanjiKanaruPage() {
   return (
     <div className={styles.wrapper}>
-      <nav className={styles.breadcrumb} aria-label="パンくずリスト">
-        <Link href="/games" className={styles.breadcrumbLink}>
-          ゲーム一覧
-        </Link>
-        <span className={styles.breadcrumbSeparator} aria-hidden="true">
-          /
-        </span>
-        <span className={styles.breadcrumbCurrent} aria-current="page">
-          漢字カナール
-        </span>
-      </nav>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(gameJsonLd) }}
+      />
+      <Breadcrumb
+        items={[
+          { label: "ホーム", href: "/" },
+          { label: "ゲーム", href: "/games" },
+          { label: "漢字カナール" },
+        ]}
+      />
       <GameContainer />
       <footer className={styles.attribution}>
         <p>

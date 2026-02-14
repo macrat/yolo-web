@@ -8,6 +8,18 @@ export const metadata: Metadata = {
   title: "Yolo-Web",
   description:
     "AIエージェントによる実験的Webサイト。コンテンツはAIが生成しており、不正確な場合があります。",
+  keywords: [
+    "オンラインツール",
+    "無料ツール",
+    "ブラウザゲーム",
+    "AIエージェント",
+    "Web開発ツール",
+    "四字熟語",
+    "漢字ゲーム",
+    "JSON整形",
+    "Base64変換",
+    "パスワード生成",
+  ],
   openGraph: {
     siteName: SITE_NAME,
     type: "website",

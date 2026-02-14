@@ -15,7 +15,7 @@ export const meta: ToolMeta = {
     "日本語URL",
   ],
   category: "encoding",
-  relatedSlugs: ["base64", "json-formatter"],
+  relatedSlugs: ["base64", "json-formatter", "email-validator", "image-base64"],
   publishedAt: "2026-02-13",
   structuredDataType: "WebApplication",
 };
