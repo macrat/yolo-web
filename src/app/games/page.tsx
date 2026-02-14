@@ -13,6 +13,8 @@ const GAMES = [
     description:
       "毎日1つの漢字を当てるパズルゲーム。部首・画数・読みのヒントで推理しよう!",
     icon: "\u{1F4DA}",
+    accentColor: "#4d8c3f",
+    difficulty: "初級〜中級",
   },
   {
     slug: "yoji-kimeru",
@@ -20,6 +22,8 @@ const GAMES = [
     description:
       "毎日1つの四字熟語を当てるパズルゲーム。4文字の漢字を推理しよう!",
     icon: "\u{1F3AF}",
+    accentColor: "#9a8533",
+    difficulty: "中級〜上級",
   },
   {
     slug: "nakamawake",
@@ -27,8 +31,19 @@ const GAMES = [
     description:
       "16個の言葉を4つのグループに分けるパズルゲーム。共通テーマを見つけて仲間分けしよう!",
     icon: "\u{1F9E9}",
+    accentColor: "#8a5a9a",
+    difficulty: "初級〜上級",
   },
 ];
+
+function getTodayFormatted(): string {
+  const now = new Date();
+  const jst = new Date(now.getTime() + 9 * 60 * 60 * 1000);
+  const year = jst.getUTCFullYear();
+  const month = jst.getUTCMonth() + 1;
+  const day = jst.getUTCDate();
+  return `${year}年${month}月${day}日`;
+}
 
 export const metadata: Metadata = {
   title: `ゲーム一覧 | ${SITE_NAME}`,
@@ -46,23 +61,40 @@ export const metadata: Metadata = {
 };
 
 export default function GamesPage() {
+  const today = getTodayFormatted();
+
   return (
     <div className={styles.wrapper}>
       <Header />
       <main className={styles.main}>
-        <header className={styles.header}>
-          <h1 className={styles.title}>ゲーム一覧</h1>
-          <p className={styles.description}>
-            ブラウザで遊べる無料ゲーム集です。楽しく学べるゲームを提供しています。
-          </p>
-        </header>
+        {/* ヒーローバナー */}
+        <section className={styles.heroBanner}>
+          <h1 className={styles.heroTitle}>毎日3つのパズルに挑戦</h1>
+          <p className={styles.heroDate}>{today}のパズル</p>
+          <p className={styles.heroSubtext}>全ゲームクリアで今日の完全制覇!</p>
+        </section>
+
         <div className={styles.grid} role="list" aria-label="Games list">
           {GAMES.map((game) => (
             <div key={game.slug} role="listitem">
-              <Link href={`/games/${game.slug}`} className={styles.card}>
+              <Link
+                href={`/games/${game.slug}`}
+                className={styles.card}
+                style={
+                  {
+                    "--game-accent": game.accentColor,
+                  } as React.CSSProperties
+                }
+              >
                 <div className={styles.cardIcon}>{game.icon}</div>
                 <h2 className={styles.cardTitle}>{game.title}</h2>
                 <p className={styles.cardDescription}>{game.description}</p>
+                <div className={styles.cardMeta}>
+                  <span className={styles.difficultyBadge}>
+                    {game.difficulty}
+                  </span>
+                  <span className={styles.cardCta}>遊ぶ</span>
+                </div>
               </Link>
             </div>
           ))}
