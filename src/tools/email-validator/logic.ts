@@ -106,15 +106,11 @@ export function validateEmail(email: string): EmailValidationResult {
     // Check for allowed characters (simplified RFC 5321)
     const localPartRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+$/;
     if (localPart !== "" && !localPartRegex.test(localPart)) {
-      errors.push(
-        "ローカルパートに使用できない文字が含まれています",
-      );
+      errors.push("ローカルパートに使用できない文字が含まれています");
     }
     // Warnings for uncommon but valid characters
     if (/[!#$%&'*+/=?^`{|}~]/.test(localPart)) {
-      warnings.push(
-        "ローカルパートに一般的でない特殊文字が含まれています",
-      );
+      warnings.push("ローカルパートに一般的でない特殊文字が含まれています");
     }
   }
 
@@ -160,9 +156,7 @@ export function validateEmail(email: string): EmailValidationResult {
     // Typo suggestion
     const domainLower = domain.toLowerCase();
     if (domainLower in COMMON_TYPOS) {
-      suggestions.push(
-        `もしかして: ${localPart}@${COMMON_TYPOS[domainLower]}`,
-      );
+      suggestions.push(`もしかして: ${localPart}@${COMMON_TYPOS[domainLower]}`);
     }
   }
 

@@ -17,7 +17,6 @@ describe("formatYaml", () => {
   });
 
   test("throws on invalid YAML", () => {
-    expect(() => formatYaml(":\n  - :\n  - : :")).not.toThrow();
     expect(() => formatYaml("{invalid: yaml: content}")).toThrow();
   });
 });

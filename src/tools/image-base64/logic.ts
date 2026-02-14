@@ -67,7 +67,7 @@ export function parseBase64Image(input: string): ParsedImage | null {
 
   // Parse data URI format
   const dataUriMatch = trimmed.match(
-    /^data:(image\/[a-zA-Z0-9.+-]+);base64,(.+)$/s,
+    /^data:(image\/[a-zA-Z0-9.+-]+);base64,([\s\S]+)$/,
   );
   if (dataUriMatch) {
     return {

@@ -3,9 +3,7 @@ import { isValidBase64Image, parseBase64Image, formatFileSize } from "../logic";
 
 describe("isValidBase64Image", () => {
   test("valid PNG Data URI", () => {
-    expect(isValidBase64Image("data:image/png;base64,iVBORw0KGgo=")).toBe(
-      true,
-    );
+    expect(isValidBase64Image("data:image/png;base64,iVBORw0KGgo=")).toBe(true);
   });
 
   test("valid JPEG Data URI", () => {
@@ -31,18 +29,14 @@ describe("isValidBase64Image", () => {
 
 describe("parseBase64Image", () => {
   test("parses PNG Data URI", () => {
-    const result = parseBase64Image(
-      "data:image/png;base64,iVBORw0KGgo=",
-    );
+    const result = parseBase64Image("data:image/png;base64,iVBORw0KGgo=");
     expect(result).not.toBeNull();
     expect(result!.mimeType).toBe("image/png");
     expect(result!.base64).toBe("iVBORw0KGgo=");
   });
 
   test("parses SVG Data URI", () => {
-    const result = parseBase64Image(
-      "data:image/svg+xml;base64,PHN2Zz4=",
-    );
+    const result = parseBase64Image("data:image/svg+xml;base64,PHN2Zz4=");
     expect(result).not.toBeNull();
     expect(result!.mimeType).toBe("image/svg+xml");
   });

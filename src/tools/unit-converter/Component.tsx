@@ -1,11 +1,7 @@
 "use client";
 
 import { useState, useCallback, useMemo } from "react";
-import {
-  convert,
-  getAllCategories,
-  type UnitCategory,
-} from "./logic";
+import { convert, getAllCategories, type UnitCategory } from "./logic";
 import styles from "./Component.module.css";
 
 const categories = getAllCategories();
@@ -45,18 +41,18 @@ export default function UnitConverterTool() {
           return null;
         }
       })
-      .filter(Boolean) as { unit: (typeof currentCategory.units)[0]; value: number }[];
+      .filter(Boolean) as {
+      unit: (typeof currentCategory.units)[0];
+      value: number;
+    }[];
   }, [numericValue, fromUnit, category, currentCategory, isValidInput]);
 
-  const handleCategoryChange = useCallback(
-    (newCategory: UnitCategory) => {
-      setCategory(newCategory);
-      const cat = categories.find((c) => c.id === newCategory)!;
-      setFromUnit(cat.units[0].id);
-      setToUnit(cat.units.length > 1 ? cat.units[1].id : cat.units[0].id);
-    },
-    [],
-  );
+  const handleCategoryChange = useCallback((newCategory: UnitCategory) => {
+    setCategory(newCategory);
+    const cat = categories.find((c) => c.id === newCategory)!;
+    setFromUnit(cat.units[0].id);
+    setToUnit(cat.units.length > 1 ? cat.units[1].id : cat.units[0].id);
+  }, []);
 
   const handleSwap = useCallback(() => {
     setFromUnit(toUnit);

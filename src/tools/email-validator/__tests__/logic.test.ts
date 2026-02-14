@@ -45,34 +45,26 @@ describe("validateEmail", () => {
   test("invalid: local part starts with dot", () => {
     const result = validateEmail(".user@example.com");
     expect(result.valid).toBe(false);
-    expect(
-      result.errors.some((e) => e.includes("先頭にドット")),
-    ).toBe(true);
+    expect(result.errors.some((e) => e.includes("先頭にドット"))).toBe(true);
   });
 
   test("invalid: consecutive dots in local part", () => {
     const result = validateEmail("user..name@example.com");
     expect(result.valid).toBe(false);
-    expect(
-      result.errors.some((e) => e.includes("連続したドット")),
-    ).toBe(true);
+    expect(result.errors.some((e) => e.includes("連続したドット"))).toBe(true);
   });
 
   test("invalid: domain starts with hyphen", () => {
     const result = validateEmail("user@-example.com");
     expect(result.valid).toBe(false);
-    expect(
-      result.errors.some((e) => e.includes("先頭にハイフン")),
-    ).toBe(true);
+    expect(result.errors.some((e) => e.includes("先頭にハイフン"))).toBe(true);
   });
 
   test("invalid: local part exceeds 64 characters", () => {
     const long = "a".repeat(65);
     const result = validateEmail(`${long}@example.com`);
     expect(result.valid).toBe(false);
-    expect(
-      result.errors.some((e) => e.includes("64文字")),
-    ).toBe(true);
+    expect(result.errors.some((e) => e.includes("64文字"))).toBe(true);
   });
 
   test("suggests correction for typo domain", () => {
