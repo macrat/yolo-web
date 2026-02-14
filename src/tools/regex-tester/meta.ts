@@ -15,7 +15,7 @@ export const meta: ToolMeta = {
     "パターンマッチ",
   ],
   category: "developer",
-  relatedSlugs: ["json-formatter", "text-diff"],
+  relatedSlugs: ["json-formatter", "text-diff", "email-validator"],
   publishedAt: "2026-02-13",
   structuredDataType: "WebApplication",
 };

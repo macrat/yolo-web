@@ -9,7 +9,7 @@ export const meta: ToolMeta = {
   shortDescription: "SHA-1/SHA-256/SHA-512のハッシュ値を生成",
   keywords: ["ハッシュ生成", "SHA-256", "SHA-512", "SHA-1", "ハッシュ値計算"],
   category: "security",
-  relatedSlugs: ["base64", "password-generator"],
+  relatedSlugs: ["base64", "password-generator", "image-base64"],
   publishedAt: "2026-02-13",
   structuredDataType: "WebApplication",
 };

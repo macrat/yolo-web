@@ -9,7 +9,7 @@ export const meta: ToolMeta = {
   shortDescription: "テキストの文字数・バイト数・行数をカウント",
   keywords: ["文字数カウント", "文字数", "バイト数", "単語数", "行数カウント"],
   category: "text",
-  relatedSlugs: ["json-formatter", "text-diff"],
+  relatedSlugs: ["json-formatter", "text-diff", "kana-converter"],
   publishedAt: "2026-02-13",
   structuredDataType: "WebApplication",
 };

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getAllPublicMemoIds, getPublicMemoById } from "@/lib/memos";
 import { generateMemoPageMetadata, generateMemoPageJsonLd } from "@/lib/seo";
+import Breadcrumb from "@/components/common/Breadcrumb";
 import MemoDetail from "@/components/memos/MemoDetail";
 import RelatedBlogPosts from "@/components/memos/RelatedBlogPosts";
 import AiDisclaimer from "@/components/common/AiDisclaimer";
@@ -34,6 +35,14 @@ export default async function MemoPage({ params }: Props) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
+      <Breadcrumb
+        items={[
+          { label: "ホーム", href: "/" },
+          { label: "メモ", href: "/memos" },
+          { label: memo.subject },
+        ]}
       />
 
       <MemoDetail memo={memo} />

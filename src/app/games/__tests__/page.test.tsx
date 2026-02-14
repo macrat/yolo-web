@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import GamesPage from "../page";
 
 test("Games page renders heading", () => {
@@ -16,7 +16,8 @@ test("Games page renders games list", () => {
 
 test("Games page renders link to Kanji Kanaru", () => {
   render(<GamesPage />);
-  const link = screen.getByRole("link", { name: /漢字カナール/ });
+  const list = screen.getByRole("list", { name: "Games list" });
+  const link = within(list).getByRole("link", { name: /漢字カナール/ });
   expect(link).toHaveAttribute("href", "/games/kanji-kanaru");
 });
 

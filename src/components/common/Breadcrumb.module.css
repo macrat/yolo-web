@@ -1,0 +1,24 @@
+.breadcrumb {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-bottom: 0.5rem;
+  padding: 0 0.25rem;
+}
+
+.link {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.separator {
+  margin: 0 0.35rem;
+  color: var(--color-text-muted);
+}
+
+.current {
+  color: var(--color-text);
+}

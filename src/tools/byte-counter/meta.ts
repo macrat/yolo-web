@@ -15,7 +15,7 @@ export const meta: ToolMeta = {
     "バイト数計算 オンライン",
   ],
   category: "text",
-  relatedSlugs: ["char-count", "dummy-text", "text-replace"],
+  relatedSlugs: ["char-count", "dummy-text", "text-replace", "unit-converter"],
   publishedAt: "2026-02-14",
   structuredDataType: "WebApplication",
 };
