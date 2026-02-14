@@ -48,7 +48,7 @@ export default function AgeCalculatorTool() {
     const result = calculateAge(birthDate, targetDate);
     setAgeResult(result);
 
-    const wareki = toWareki(birthDate.getFullYear());
+    const wareki = toWareki(birthDate);
     setWarekiInfo(wareki);
 
     setZodiac(getZodiac(birthDate.getFullYear()));

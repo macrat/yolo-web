@@ -32,7 +32,7 @@ test("Home page renders section cards with links", () => {
   expect(toolsLink).toHaveAttribute("href", "/tools");
 
   const gamesLink = screen.getByRole("link", {
-    name: /遊んで学べるブラウザゲーム/,
+    name: /3つのデイリーパズル/,
   });
   expect(gamesLink).toHaveAttribute("href", "/games");
 

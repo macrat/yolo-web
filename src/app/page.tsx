@@ -9,13 +9,13 @@ const SECTIONS = [
     href: "/tools",
     title: "無料オンラインツール",
     description:
-      "文字数カウント、JSON整形、Base64変換など、すぐに使える便利ツール集",
+      "JSON整形、SQL整形、年齢計算、BMI計算、画像リサイズなど30種類の便利ツール",
     icon: "\u{1F527}",
   },
   {
     href: "/games",
     title: "ゲーム",
-    description: "漢字カナールなど、遊んで学べるブラウザゲーム",
+    description: "漢字カナール・四字キメル・ナカマワケの3つのデイリーパズル",
     icon: "\u{1F3AE}",
   },
   {

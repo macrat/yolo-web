@@ -67,81 +67,95 @@ describe("calculateAge", () => {
 });
 
 describe("toWareki", () => {
-  it("converts 2026 to Reiwa 8", () => {
-    const result = toWareki(2026);
+  it("converts 2026-06-01 to Reiwa 8", () => {
+    const result = toWareki(new Date(2026, 5, 1));
     expect(result).not.toBeNull();
     expect(result!.era).toBe("令和");
     expect(result!.year).toBe(8);
     expect(result!.formatted).toBe("令和8年");
   });
 
-  it("converts 2019 to Reiwa 1 (元年)", () => {
-    const result = toWareki(2019);
+  it("converts 2019-05-01 to Reiwa 1 (元年)", () => {
+    const result = toWareki(new Date(2019, 4, 1));
     expect(result).not.toBeNull();
     expect(result!.era).toBe("令和");
     expect(result!.year).toBe(1);
     expect(result!.formatted).toBe("令和元年");
   });
 
-  it("converts 2018 to Heisei 30", () => {
-    const result = toWareki(2018);
+  it("converts 2019-04-30 to Heisei 31 (day before Reiwa)", () => {
+    const result = toWareki(new Date(2019, 3, 30));
+    expect(result).not.toBeNull();
+    expect(result!.era).toBe("平成");
+    expect(result!.year).toBe(31);
+  });
+
+  it("converts 2018-06-01 to Heisei 30", () => {
+    const result = toWareki(new Date(2018, 5, 1));
     expect(result).not.toBeNull();
     expect(result!.era).toBe("平成");
     expect(result!.year).toBe(30);
     expect(result!.formatted).toBe("平成30年");
   });
 
-  it("converts 1989 to Heisei 1 (boundary)", () => {
-    const result = toWareki(1989);
+  it("converts 1989-01-08 to Heisei 1 (boundary)", () => {
+    const result = toWareki(new Date(1989, 0, 8));
     expect(result).not.toBeNull();
     expect(result!.era).toBe("平成");
     expect(result!.year).toBe(1);
   });
 
-  it("converts 1988 to Showa 63", () => {
-    const result = toWareki(1988);
+  it("converts 1989-01-07 to Showa 64 (day before Heisei)", () => {
+    const result = toWareki(new Date(1989, 0, 7));
+    expect(result).not.toBeNull();
+    expect(result!.era).toBe("昭和");
+    expect(result!.year).toBe(64);
+  });
+
+  it("converts 1988-06-01 to Showa 63", () => {
+    const result = toWareki(new Date(1988, 5, 1));
     expect(result).not.toBeNull();
     expect(result!.era).toBe("昭和");
     expect(result!.year).toBe(63);
   });
 
-  it("converts 1926 to Showa 1 (boundary)", () => {
-    const result = toWareki(1926);
+  it("converts 1926-12-25 to Showa 1 (boundary)", () => {
+    const result = toWareki(new Date(1926, 11, 25));
     expect(result).not.toBeNull();
     expect(result!.era).toBe("昭和");
     expect(result!.year).toBe(1);
   });
 
-  it("converts 1925 to Taisho 14", () => {
-    const result = toWareki(1925);
+  it("converts 1925-06-01 to Taisho 14", () => {
+    const result = toWareki(new Date(1925, 5, 1));
     expect(result).not.toBeNull();
     expect(result!.era).toBe("大正");
     expect(result!.year).toBe(14);
   });
 
-  it("converts 1912 to Taisho 1 (boundary)", () => {
-    const result = toWareki(1912);
+  it("converts 1912-07-30 to Taisho 1 (boundary)", () => {
+    const result = toWareki(new Date(1912, 6, 30));
     expect(result).not.toBeNull();
     expect(result!.era).toBe("大正");
     expect(result!.year).toBe(1);
   });
 
-  it("converts 1911 to Meiji 44", () => {
-    const result = toWareki(1911);
+  it("converts 1911-06-01 to Meiji 44", () => {
+    const result = toWareki(new Date(1911, 5, 1));
     expect(result).not.toBeNull();
     expect(result!.era).toBe("明治");
     expect(result!.year).toBe(44);
   });
 
-  it("converts 1868 to Meiji 1 (boundary)", () => {
-    const result = toWareki(1868);
+  it("converts 1868-01-25 to Meiji 1 (boundary)", () => {
+    const result = toWareki(new Date(1868, 0, 25));
     expect(result).not.toBeNull();
     expect(result!.era).toBe("明治");
     expect(result!.year).toBe(1);
   });
 
-  it("returns null for pre-Meiji year", () => {
-    const result = toWareki(1867);
+  it("returns null for pre-Meiji date", () => {
+    const result = toWareki(new Date(1868, 0, 24));
     expect(result).toBeNull();
   });
 });
