@@ -37,15 +37,11 @@ describe("generateShareText", () => {
     };
 
     const text = generateShareText(state);
-    expect(text).toContain(
-      "\u56DB\u5B57\u30AD\u30E1\u30EB #1 2/6",
-    );
+    expect(text).toContain("\u56DB\u5B57\u30AD\u30E1\u30EB #1 2/6");
     // Row 1: all absent (4 white squares)
     expect(text).toContain("\u2B1C\u2B1C\u2B1C\u2B1C");
     // Row 2: all correct (4 green squares)
-    expect(text).toContain(
-      "\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E9}",
-    );
+    expect(text).toContain("\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E9}");
     expect(text).toContain("https://example.com/games/yoji-kimeru");
   });
 
@@ -69,9 +65,7 @@ describe("generateShareText", () => {
     };
 
     const text = generateShareText(state);
-    expect(text).toContain(
-      "\u56DB\u5B57\u30AD\u30E1\u30EB #42 X/6",
-    );
+    expect(text).toContain("\u56DB\u5B57\u30AD\u30E1\u30EB #42 X/6");
     // Each row should be all absent (4 white squares)
     const allAbsentRow = "\u2B1C\u2B1C\u2B1C\u2B1C";
     const lines = text.split("\n");
@@ -97,9 +91,7 @@ describe("generateShareText", () => {
 
     const text = generateShareText(state);
     // correct=green, present=yellow, absent=white, absent=white
-    expect(text).toContain(
-      "\u{1F7E9}\u{1F7E8}\u2B1C\u2B1C",
-    );
+    expect(text).toContain("\u{1F7E9}\u{1F7E8}\u2B1C\u2B1C");
   });
 
   test("includes puzzle number in header", () => {
@@ -117,9 +109,7 @@ describe("generateShareText", () => {
     };
 
     const text = generateShareText(state);
-    expect(text).toContain(
-      "\u56DB\u5B57\u30AD\u30E1\u30EB #15 1/6",
-    );
+    expect(text).toContain("\u56DB\u5B57\u30AD\u30E1\u30EB #15 1/6");
   });
 });
 
@@ -133,8 +123,7 @@ describe("generateTwitterShareUrl", () => {
   });
 
   test("encodes special characters", () => {
-    const text =
-      "\u56DB\u5B57\u30AD\u30E1\u30EB #1 2/6\nhttps://example.com";
+    const text = "\u56DB\u5B57\u30AD\u30E1\u30EB #1 2/6\nhttps://example.com";
     const url = generateTwitterShareUrl(text);
     expect(url).toContain("https://twitter.com/intent/tweet?text=");
     // Should be properly encoded
