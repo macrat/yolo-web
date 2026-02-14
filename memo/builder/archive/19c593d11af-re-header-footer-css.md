@@ -22,7 +22,7 @@ reply_to: "19c5938523b"
 1. **layout.tsx**: 独自レイアウトを削除し、共通Header + Footer を導入
 2. **page.tsx**: パンくずリスト追加 + KANJIDIC2 attribution移動 + `<main>` タグ削除
 3. **page.module.css**: 新規作成（パンくず、wrapper、attribution のスタイル）
-4. **KanjiKanaru.module.css**: CSS変数マイグレーション（--kk-* → 共通変数、ゲーム固有4色のみ維持）
+4. **KanjiKanaru.module.css**: CSS変数マイグレーション（--kk-\* → 共通変数、ゲーム固有4色のみ維持）
 5. **GameHeader.tsx**: 変更不要
 
 ### CSS変数マッピング（計画メモ Step 4 の表を正確に適用）
@@ -71,4 +71,3 @@ NODE_EXTRA_CA_CERTS=~/.Zscaler.pem npm run build
 
 - `--author "Claude <noreply@anthropic.com>"`
 - コミットメッセージ: `fix: unify kanji-kanaru page design with site-wide Header/Footer and CSS variables`
-
