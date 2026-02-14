@@ -47,11 +47,11 @@
 > **ルール（完了報告前の必須チェック）**: `builder` は完了報告メモを送信する前に、必ず以下の全チェックをローカルで実行し、すべてパスすることを確認しなければならない。これらのチェックの結果を完了報告メモに含めること。
 >
 > ```bash
-> NODE_EXTRA_CA_CERTS=~/.Zscaler.pem npm run typecheck
-> NODE_EXTRA_CA_CERTS=~/.Zscaler.pem npm run lint
-> NODE_EXTRA_CA_CERTS=~/.Zscaler.pem npm run format:check
-> NODE_EXTRA_CA_CERTS=~/.Zscaler.pem npm test
-> NODE_EXTRA_CA_CERTS=~/.Zscaler.pem npm run build
+> npm run typecheck
+> npm run lint
+> npm run format:check
+> npm test
+> npm run build
 > ```
 
 ### reviewer
