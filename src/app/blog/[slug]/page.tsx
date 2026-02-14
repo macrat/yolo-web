@@ -8,6 +8,7 @@ import {
   CATEGORY_LABELS,
 } from "@/lib/blog";
 import { generateBlogPostMetadata, generateBlogPostJsonLd } from "@/lib/seo";
+import Breadcrumb from "@/components/common/Breadcrumb";
 import TableOfContents from "@/components/blog/TableOfContents";
 import TagList from "@/components/blog/TagList";
 import RelatedMemos from "@/components/blog/RelatedMemos";
@@ -47,6 +48,14 @@ export default async function BlogPostPage({ params }: Props) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
+      <Breadcrumb
+        items={[
+          { label: "ホーム", href: "/" },
+          { label: "ブログ", href: "/blog" },
+          { label: post.title },
+        ]}
       />
 
       <article className={styles.article}>
