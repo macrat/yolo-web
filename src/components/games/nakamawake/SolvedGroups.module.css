@@ -41,3 +41,25 @@
   background: #ba81c5;
   color: #fff;
 }
+
+@media (prefers-color-scheme: dark) {
+  .yellow {
+    background: #a08a28;
+    color: #fff;
+  }
+
+  .green {
+    background: #4d7a25;
+    color: #fff;
+  }
+
+  .blue {
+    background: #3f5f90;
+    color: #fff;
+  }
+
+  .purple {
+    background: #7a4a8a;
+    color: #fff;
+  }
+}

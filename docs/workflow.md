@@ -87,16 +87,88 @@
 - エージェントは作業終了前にすべての `inbox/` メモをトリアージしなければならない
 - 返信は新しいメモファイルとして作成し、`reply_to` で元メモの `id` を参照
 
+### inbox操作の権限ルール
+
+- 各ロールのinbox/のメモをトリアージ（archive/やactive/への移動）できるのは、そのロール自身のみである
+- 他ロールのinbox/にメモを追加すること（送信）は全ロールに許可される
+- 他ロールのinbox/からメモを移動・削除することは禁止する
+- 他ロールのinbox/にメモが滞留している場合、PMはそのロールにトリアージを依頼するメモを送信すること
+
 ## 標準ライフサイクルパターン
 
 ```
-plan → build → review → ship
+research → plan → review plan → build → review implementation → ship
 ```
 
-1. **Plan**: `project manager` が `planner` に計画を依頼
-2. **Review plan**: `reviewer` が計画をレビュー
-3. **Build**: `builder` が承認された計画に基づき実装
-4. **Review implementation**: `reviewer` が実装をレビュー
-5. **Ship**: `project manager` が承認し `main` にプッシュ
+1. **Research**: `project manager` が `researcher` に調査を依頼
+2. **Plan**: `project manager` が `planner` に計画を依頼（researcherの調査結果を参照）
+3. **Review plan**: `reviewer` が計画をレビュー
+4. **Build**: `builder` が承認された計画に基づき実装
+5. **Review implementation**: `reviewer` が実装をレビュー
+6. **Ship**: `project manager` が承認し `main` にプッシュ
+
+各ステップ間において、前ステップの完了メモの受信が次ステップへ進むためのブロッキング条件となる。前ステップが完了するまで、次ステップを開始してはならない。
 
 各段階でConstitution準拠が確認されます。
+
+## サイクルキックオフ手順
+
+このチェックリストは新しいサイクル（新機能・リデザイン・新コンテンツの追加）を開始する際に使用する。バグ修正やreviewerのnotes対応など軽微な修正には適用しない。
+
+### Pre-flight
+
+- [ ] 前サイクルが完了していることを確認（ship済み、またはキャリーオーバー項目が明示的にバックログに記録されている）
+- [ ] owner/inbox/に未処理の指示がないか確認
+- [ ] 他ロールのinbox/に自分が移動すべきでない滞留メモがないか目視確認（滞留があればそのロールに通知メモを送信）
+
+### Step 1: Owner報告
+
+- [ ] ownerにサイクル開始報告メモを送信（サイクル番号、方向性、前サイクルのサマリ）
+
+### Step 2: Research（並列化可能）
+
+- [ ] researcherに調査依頼メモを送信（researcher/inbox/に作成）
+- [ ] 調査依頼には「回答すべき質問」「調査範囲」「外部ソースの要否」を含める
+- [ ] researcherからの返信を受信し、内容を確認
+
+### Step 3: Plan（並列化可能 -- 独立したテーマごとに並列でplannerに依頼可能）
+
+- [ ] plannerに計画依頼メモを送信（planner/inbox/に作成）
+- [ ] 計画依頼にはresearcherの調査結果memo IDを参照として含める
+- [ ] plannerからの計画書を受信し、内容を確認
+
+### Step 4: Review Plan
+
+- [ ] reviewerに計画レビュー依頼メモを送信（reviewer/inbox/に作成）
+- [ ] reviewerからの承認（APPROVED / APPROVED_WITH_NOTES）を受信
+
+### Step 5: Build（並列化可能 -- 作業領域が重ならない場合）
+
+- [ ] 承認された計画に基づき、builderに実装メモを送信（builder/inbox/に作成）
+- [ ] 実装メモは`docs/memo-spec.md`の「実装メモ」テンプレートに準拠
+- [ ] 承認済み計画のmemo IDを必ず参照
+
+### Step 6: Review Implementation
+
+- [ ] builderの完了報告を受信後、reviewerにレビュー依頼メモを送信
+- [ ] reviewerの承認を受信
+
+### Step 7: Ship
+
+- [ ] mainにマージ・プッシュ
+- [ ] ownerにサイクル完了報告メモを送信
+
+### Prohibitions（常時適用）
+
+- PMがコード・ファイルを直接変更してはならない
+- メモを介さずbuilderに直接指示してはならない（Task tool等の使用禁止）
+- 他ロールのinbox/active/のメモを移動・削除してはならない
+- reviewerの承認なしにbuild phaseに進んではならない
+
+## 軽微な修正の例外規定
+
+バグ修正、reviewerのnotes対応、タイポ修正など軽微な修正は、researchフェーズ・planフェーズ・review planフェーズをスキップし、直接builderに実装メモを送信してよい。ただし以下の条件を満たすこと:
+
+- 変更範囲が明確かつ限定的であること
+- 新機能の追加、リデザイン、新コンテンツの追加ではないこと
+- review implementationフェーズは省略不可
