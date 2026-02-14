@@ -1,0 +1,241 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.tabs {
+  display: flex;
+  gap: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  width: fit-content;
+}
+
+.tab {
+  padding: 0.5rem 1.25rem;
+  border: none;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
+}
+
+.tab:not(:last-child) {
+  border-right: 1px solid var(--color-border);
+}
+
+.tabActive {
+  background-color: var(--color-primary);
+  color: #fff;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+}
+
+.sectionTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.cronInput {
+  flex: 1;
+  min-width: 200px;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.375rem;
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  letter-spacing: 0.05em;
+}
+
+.cronInput:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -1px;
+  border-color: var(--color-primary);
+}
+
+.button {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--color-primary);
+  border-radius: 0.375rem;
+  background-color: var(--color-primary);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s;
+  white-space: nowrap;
+}
+
+.button:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.buttonSecondary {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.375rem;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: border-color 0.15s;
+  white-space: nowrap;
+}
+
+.buttonSecondary:hover {
+  border-color: var(--color-primary);
+}
+
+.fieldGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem;
+}
+
+.fieldLabel {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  margin-bottom: 0.25rem;
+}
+
+.fieldInput {
+  width: 100%;
+  padding: 0.4rem 0.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.375rem;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+}
+
+.fieldInput:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -1px;
+  border-color: var(--color-primary);
+}
+
+.presetRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.presetButton {
+  padding: 0.3rem 0.6rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.25rem;
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: border-color 0.15s;
+  white-space: nowrap;
+}
+
+.presetButton:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.description {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--color-primary);
+  border-radius: 0.5rem;
+  background-color: var(--color-bg-secondary);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.resultTable {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.resultRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  background-color: var(--color-bg-secondary);
+  border-radius: 0.375rem;
+  flex-wrap: wrap;
+}
+
+.resultLabel {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  min-width: 70px;
+}
+
+.resultValue {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--color-text);
+}
+
+.executionList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.executionItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.75rem;
+  background-color: var(--color-bg-secondary);
+  border-radius: 0.375rem;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--color-text);
+}
+
+.error {
+  padding: 0.75rem;
+  border: 1px solid var(--color-error);
+  border-radius: 0.5rem;
+  background-color: var(--color-error-bg);
+  color: var(--color-error);
+  font-size: 0.85rem;
+}
+
+@media (max-width: 640px) {
+  .fieldGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .cronInput {
+    font-size: 0.95rem;
+  }
+}

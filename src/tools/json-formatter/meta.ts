@@ -15,7 +15,13 @@ export const meta: ToolMeta = {
     "JSON圧縮",
   ],
   category: "developer",
-  relatedSlugs: ["base64", "url-encode", "regex-tester", "yaml-formatter"],
+  relatedSlugs: [
+    "base64",
+    "url-encode",
+    "regex-tester",
+    "yaml-formatter",
+    "sql-formatter",
+  ],
   publishedAt: "2026-02-13",
   structuredDataType: "WebApplication",
 };

@@ -20,6 +20,8 @@ export const meta: ToolMeta = {
     "number-base-converter",
     "char-count",
     "unit-converter",
+    "age-calculator",
+    "cron-parser",
   ],
   publishedAt: "2026-02-14",
   structuredDataType: "WebApplication",

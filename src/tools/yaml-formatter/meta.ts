@@ -15,7 +15,12 @@ export const meta: ToolMeta = {
     "YAMLバリデーション",
   ],
   category: "developer",
-  relatedSlugs: ["json-formatter", "csv-converter", "markdown-preview"],
+  relatedSlugs: [
+    "json-formatter",
+    "csv-converter",
+    "markdown-preview",
+    "sql-formatter",
+  ],
   publishedAt: "2026-02-14",
   structuredDataType: "WebApplication",
 };
