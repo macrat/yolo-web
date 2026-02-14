@@ -31,4 +31,14 @@ if [ $LINT_EXIT -ne 0 ]; then
   exit 2
 fi
 
+# Run tests
+TEST_OUTPUT=$(npm test 2>&1)
+TEST_EXIT=$?
+
+if [ $TEST_EXIT -ne 0 ]; then
+  echo "Tests failed. Fix failing tests before committing." >&2
+  echo "$TEST_OUTPUT" >&2
+  exit 2
+fi
+
 exit 0
