@@ -1,6 +1,7 @@
 import type { ToolMeta } from "@/tools/types";
 import Breadcrumb from "@/components/common/Breadcrumb";
 import RelatedTools from "./RelatedTools";
+import RelatedBlogPosts from "./RelatedBlogPosts";
 import AiDisclaimer from "./AiDisclaimer";
 import styles from "./ToolLayout.module.css";
 
@@ -27,6 +28,7 @@ export default function ToolLayout({ meta, children }: ToolLayoutProps) {
         {children}
       </section>
       <RelatedTools currentSlug={meta.slug} relatedSlugs={meta.relatedSlugs} />
+      <RelatedBlogPosts toolSlug={meta.slug} />
       <AiDisclaimer />
     </article>
   );
