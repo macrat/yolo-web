@@ -67,6 +67,28 @@ describe("yamlToJson", () => {
   });
 });
 
+describe("input size limit", () => {
+  const oversizedInput = "a".repeat(1_000_001);
+
+  test("formatYaml throws on input exceeding 1,000,000 characters", () => {
+    expect(() => formatYaml(oversizedInput)).toThrow("入力が大きすぎます");
+  });
+
+  test("yamlToJson throws on input exceeding 1,000,000 characters", () => {
+    expect(() => yamlToJson(oversizedInput)).toThrow("入力が大きすぎます");
+  });
+
+  test("validateYaml returns error on input exceeding 1,000,000 characters", () => {
+    const result = validateYaml(oversizedInput);
+    expect(result.valid).toBe(false);
+    expect(result.error).toContain("入力が大きすぎます");
+  });
+
+  test("jsonToYaml throws on input exceeding 1,000,000 characters", () => {
+    expect(() => jsonToYaml(oversizedInput)).toThrow("入力が大きすぎます");
+  });
+});
+
 describe("jsonToYaml", () => {
   test("converts basic JSON to YAML", () => {
     const input = '{"name": "test", "age": 30}';
