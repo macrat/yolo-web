@@ -25,6 +25,11 @@ import { meta as emailValidatorMeta } from "./email-validator/meta";
 import { meta as unitConverterMeta } from "./unit-converter/meta";
 import { meta as yamlFormatterMeta } from "./yaml-formatter/meta";
 import { meta as imageBase64Meta } from "./image-base64/meta";
+import { meta as ageCalculatorMeta } from "./age-calculator/meta";
+import { meta as bmiCalculatorMeta } from "./bmi-calculator/meta";
+import { meta as sqlFormatterMeta } from "./sql-formatter/meta";
+import { meta as cronParserMeta } from "./cron-parser/meta";
+import { meta as imageResizerMeta } from "./image-resizer/meta";
 
 const toolEntries: ToolDefinition[] = [
   {
@@ -126,6 +131,26 @@ const toolEntries: ToolDefinition[] = [
   {
     meta: imageBase64Meta,
     componentImport: () => import("./image-base64/Component"),
+  },
+  {
+    meta: ageCalculatorMeta,
+    componentImport: () => import("./age-calculator/Component"),
+  },
+  {
+    meta: bmiCalculatorMeta,
+    componentImport: () => import("./bmi-calculator/Component"),
+  },
+  {
+    meta: sqlFormatterMeta,
+    componentImport: () => import("./sql-formatter/Component"),
+  },
+  {
+    meta: cronParserMeta,
+    componentImport: () => import("./cron-parser/Component"),
+  },
+  {
+    meta: imageResizerMeta,
+    componentImport: () => import("./image-resizer/Component"),
   },
 ];
 
