@@ -43,6 +43,25 @@ body {
   line-height: 1.6;
 }
 
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-primary: #60a5fa;
+    --color-primary-hover: #93c5fd;
+    --color-bg: #1a1a2e;
+    --color-bg-secondary: #16213e;
+    --color-text: #e2e2e2;
+    --color-text-muted: #9ca3af;
+    --color-border: #374151;
+    --color-error: #f87171;
+    --color-error-bg: #3b1a1a;
+    --color-success: #4ade80;
+    --color-success-bg: #1a3b2a;
+    --color-warning-bg: #3b2f1a;
+    --color-warning-border: #d97706;
+    --color-warning-text: #fbbf24;
+  }
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;
