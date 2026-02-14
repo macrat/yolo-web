@@ -80,9 +80,7 @@ describe("to-fullwidth-katakana", () => {
   });
 
   test("leaves non-halfwidth characters unchanged", () => {
-    expect(convertKana("ABCアイウ", "to-fullwidth-katakana")).toBe(
-      "ABCアイウ",
-    );
+    expect(convertKana("ABCアイウ", "to-fullwidth-katakana")).toBe("ABCアイウ");
   });
 });
 

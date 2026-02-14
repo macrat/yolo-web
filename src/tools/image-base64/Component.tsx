@@ -147,9 +147,7 @@ export default function ImageBase64Tool() {
             <p className={styles.dropText}>
               クリックまたはドラッグ&ドロップで画像を選択
             </p>
-            <p className={styles.dropSubText}>
-              PNG, JPEG, GIF, WebP, SVG対応
-            </p>
+            <p className={styles.dropSubText}>PNG, JPEG, GIF, WebP, SVG対応</p>
             <input
               ref={fileInputRef}
               type="file"
@@ -205,9 +203,7 @@ export default function ImageBase64Tool() {
                   </label>
                   <button
                     type="button"
-                    onClick={() =>
-                      handleCopy(base64Result.dataUri, "datauri")
-                    }
+                    onClick={() => handleCopy(base64Result.dataUri, "datauri")}
                     className={styles.copyButton}
                   >
                     {copied === "datauri" ? "コピー済み" : "コピー"}

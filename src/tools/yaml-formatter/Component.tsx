@@ -1,12 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import {
-  formatYaml,
-  validateYaml,
-  yamlToJson,
-  jsonToYaml,
-} from "./logic";
+import { formatYaml, validateYaml, yamlToJson, jsonToYaml } from "./logic";
 import styles from "./Component.module.css";
 
 type Mode = "format" | "yaml-to-json" | "json-to-yaml";
