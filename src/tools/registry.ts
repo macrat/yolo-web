@@ -20,6 +20,11 @@ import { meta as dateCalculatorMeta } from "./date-calculator/meta";
 import { meta as byteCounterMeta } from "./byte-counter/meta";
 import { meta as csvConverterMeta } from "./csv-converter/meta";
 import { meta as numberBaseConverterMeta } from "./number-base-converter/meta";
+import { meta as kanaConverterMeta } from "./kana-converter/meta";
+import { meta as emailValidatorMeta } from "./email-validator/meta";
+import { meta as unitConverterMeta } from "./unit-converter/meta";
+import { meta as yamlFormatterMeta } from "./yaml-formatter/meta";
+import { meta as imageBase64Meta } from "./image-base64/meta";
 
 const toolEntries: ToolDefinition[] = [
   {
@@ -101,6 +106,26 @@ const toolEntries: ToolDefinition[] = [
   {
     meta: numberBaseConverterMeta,
     componentImport: () => import("./number-base-converter/Component"),
+  },
+  {
+    meta: kanaConverterMeta,
+    componentImport: () => import("./kana-converter/Component"),
+  },
+  {
+    meta: emailValidatorMeta,
+    componentImport: () => import("./email-validator/Component"),
+  },
+  {
+    meta: unitConverterMeta,
+    componentImport: () => import("./unit-converter/Component"),
+  },
+  {
+    meta: yamlFormatterMeta,
+    componentImport: () => import("./yaml-formatter/Component"),
+  },
+  {
+    meta: imageBase64Meta,
+    componentImport: () => import("./image-base64/Component"),
   },
 ];
 
