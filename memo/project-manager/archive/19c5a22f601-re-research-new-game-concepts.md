@@ -52,6 +52,7 @@ src/data/                         -- <game>-data.json, <game>-schedule.json
 ### コンテンツ戦略との整合性
 
 既存の戦略文書（`src/content/blog/2026-02-13-content-strategy-decision.md`）では：
+
 - ツール集 = SEOによる新規獲得
 - デイリーゲーム = リピート訪問
 - SNSシェア = 拡散
@@ -140,20 +141,20 @@ src/data/                         -- <game>-data.json, <game>-schedule.json
 
 ## 調査済みリポジトリパス
 
-| パス | 内容 |
-|------|------|
-| `src/app/games/kanji-kanaru/page.tsx` | ページ構造、Metadata API、breadcrumb |
-| `src/app/games/kanji-kanaru/layout.tsx` | Header/Footer レイアウトパターン |
-| `src/lib/games/kanji-kanaru/types.ts` | 型定義パターン（KanjiEntry, GameState, GameStats, GameHistory） |
-| `src/lib/games/kanji-kanaru/engine.ts` | ゲームロジック（evaluateGuess, feedbackLevel判定） |
-| `src/lib/games/kanji-kanaru/daily.ts` | デイリーパズル選出（epoch, formatDateJST, hash fallback） |
-| `src/lib/games/kanji-kanaru/storage.ts` | localStorage永続化（stats, history, SSR安全ガード） |
-| `src/lib/games/kanji-kanaru/share.ts` | シェアテキスト生成（絵文字グリッド, clipboard, Twitter Intent） |
-| `src/lib/games/kanji-kanaru/categories.ts` | カテゴリ関連性判定 |
-| `src/components/games/kanji-kanaru/GameContainer.tsx` | トップレベルオーケストレーター |
-| `src/data/kanji-data.json` | 50件の漢字データ |
-| `src/data/puzzle-schedule.json` | 365日分のスケジュール |
-| `src/content/blog/2026-02-13-content-strategy-decision.md` | コンテンツ戦略の意思決定記録 |
+| パス                                                       | 内容                                                            |
+| ---------------------------------------------------------- | --------------------------------------------------------------- |
+| `src/app/games/kanji-kanaru/page.tsx`                      | ページ構造、Metadata API、breadcrumb                            |
+| `src/app/games/kanji-kanaru/layout.tsx`                    | Header/Footer レイアウトパターン                                |
+| `src/lib/games/kanji-kanaru/types.ts`                      | 型定義パターン（KanjiEntry, GameState, GameStats, GameHistory） |
+| `src/lib/games/kanji-kanaru/engine.ts`                     | ゲームロジック（evaluateGuess, feedbackLevel判定）              |
+| `src/lib/games/kanji-kanaru/daily.ts`                      | デイリーパズル選出（epoch, formatDateJST, hash fallback）       |
+| `src/lib/games/kanji-kanaru/storage.ts`                    | localStorage永続化（stats, history, SSR安全ガード）             |
+| `src/lib/games/kanji-kanaru/share.ts`                      | シェアテキスト生成（絵文字グリッド, clipboard, Twitter Intent） |
+| `src/lib/games/kanji-kanaru/categories.ts`                 | カテゴリ関連性判定                                              |
+| `src/components/games/kanji-kanaru/GameContainer.tsx`      | トップレベルオーケストレーター                                  |
+| `src/data/kanji-data.json`                                 | 50件の漢字データ                                                |
+| `src/data/puzzle-schedule.json`                            | 365日分のスケジュール                                           |
+| `src/content/blog/2026-02-13-content-strategy-decision.md` | コンテンツ戦略の意思決定記録                                    |
 
 ## 外部ソース
 

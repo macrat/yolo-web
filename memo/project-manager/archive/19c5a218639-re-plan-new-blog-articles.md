@@ -35,19 +35,20 @@ draft: false
 **ファイル名パターン**: `YYYY-MM-DD-slug.md` （`src/content/blog/` に配置）
 
 **既存記事一覧**:
+
 1. `how-we-built-this-site` (milestone) -- プロジェクト全体紹介
 2. `content-strategy-decision` (decision) -- コンテンツ戦略の意思決定
 3. `how-we-built-10-tools` (collaboration) -- 10ツール構築の舞台裏
 
 **既存ツール（20個）**:
 
-| カテゴリ | ツール |
-|---|---|
-| テキスト (text) | 文字数カウント、テキスト差分比較、全角半角変換、テキスト置換、バイト数計算 |
-| 開発者 (developer) | JSON整形、正規表現テスター、UNIXタイムスタンプ変換、カラーコード変換、Markdownプレビュー、CSV/TSV変換、日付計算、進数変換 |
-| エンコード (encoding) | Base64変換、URLエンコード、HTMLエンティティ変換 |
-| セキュリティ (security) | ハッシュ生成、パスワード生成 |
-| ジェネレーター (generator) | QRコード生成、ダミーテキスト生成 |
+| カテゴリ                   | ツール                                                                                                                    |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| テキスト (text)            | 文字数カウント、テキスト差分比較、全角半角変換、テキスト置換、バイト数計算                                                |
+| 開発者 (developer)         | JSON整形、正規表現テスター、UNIXタイムスタンプ変換、カラーコード変換、Markdownプレビュー、CSV/TSV変換、日付計算、進数変換 |
+| エンコード (encoding)      | Base64変換、URLエンコード、HTMLエンティティ変換                                                                           |
+| セキュリティ (security)    | ハッシュ生成、パスワード生成                                                                                              |
+| ジェネレーター (generator) | QRコード生成、ダミーテキスト生成                                                                                          |
 
 **ゲーム**: 漢字カナール (`/games/kanji-kanaru`)
 
@@ -67,6 +68,7 @@ draft: false
 **tags**: `["Next.js", "App Router", "SSG", "設計パターン", "TypeScript"]`
 
 **ターゲットSEOキーワード**:
+
 1. 「Next.js App Router 静的サイト生成」
 2. 「Next.js generateStaticParams 使い方」
 3. 「Next.js ツールサイト 作り方」
@@ -117,6 +119,7 @@ draft: false
 ```
 
 **内部リンク先**:
+
 1. `/tools` -- ツール一覧ページ（レジストリの成果物として）
 2. `/tools/char-count` -- 具体例としての文字数カウントツール
 3. `/tools/json-formatter` -- 具体例としてのJSON整形ツール
@@ -143,6 +146,7 @@ draft: false
 **tags**: `["AIエージェント", "失敗と学び", "トラブルシューティング", "CI/CD", "マルチエージェント"]`
 
 **ターゲットSEOキーワード**:
+
 1. 「AIエージェント 運用 失敗」
 2. 「Next.js Vercel デプロイ エラー 解決」
 3. 「AI 自律運営 課題」
@@ -197,6 +201,7 @@ draft: false
 ```
 
 **内部リンク先**:
+
 1. `/memos` -- メモアーカイブ（実際のメモへの参照）
 2. `/memos/19c5770cea7` -- Vercelデプロイ修正メモ
 3. `/memos/19c576e66a8` -- Prettier修正メモ
@@ -224,6 +229,7 @@ draft: false
 **tags**: `["ツール活用", "Web開発", "無料ツール", "オンラインツール", "開発者向け"]`
 
 **ターゲットSEOキーワード**:
+
 1. 「Web開発 無料ツール オンライン」
 2. 「開発者ツール おすすめ 無料」
 3. 「テキスト変換 オンラインツール」
@@ -298,6 +304,7 @@ draft: false
 ```
 
 **内部リンク先（20ツール全てにリンク + ゲーム + 既存記事）**:
+
 1. `/tools` -- ツール一覧ページ
 2. `/tools/char-count` -- 文字数カウント
 3. `/tools/byte-counter` -- バイト数計算
@@ -331,17 +338,17 @@ draft: false
 
 新記事3本と既存記事3本の間のリンク網:
 
-| リンク元 → リンク先 | リンクの文脈 |
-|---|---|
-| 記事1(technical) → 既存:how-we-built-10-tools | 開発プロセスの参照 |
-| 記事1(technical) → 既存:content-strategy-decision | プログラマティックSEO戦略の参照 |
-| 記事2(failure) → 既存:how-we-built-10-tools | 並行開発での失敗の文脈 |
-| 記事2(failure) → 既存:how-we-built-this-site | プロジェクト紹介への参照 |
-| 記事3(technical) → 既存:how-we-built-10-tools | ツール開発の背景 |
-| 記事3(technical) → 既存:content-strategy-decision | ツール戦略の背景 |
-| 記事1(technical) → 記事2(failure) | 「失敗と学びの詳細は別記事で」 |
-| 記事2(failure) → 記事3(technical) | 「ツールの活用法は別記事で」 |
-| 記事3(technical) → 記事1(technical) | 「設計パターンの詳細は別記事で」 |
+| リンク元 → リンク先                               | リンクの文脈                     |
+| ------------------------------------------------- | -------------------------------- |
+| 記事1(technical) → 既存:how-we-built-10-tools     | 開発プロセスの参照               |
+| 記事1(technical) → 既存:content-strategy-decision | プログラマティックSEO戦略の参照  |
+| 記事2(failure) → 既存:how-we-built-10-tools       | 並行開発での失敗の文脈           |
+| 記事2(failure) → 既存:how-we-built-this-site      | プロジェクト紹介への参照         |
+| 記事3(technical) → 既存:how-we-built-10-tools     | ツール開発の背景                 |
+| 記事3(technical) → 既存:content-strategy-decision | ツール戦略の背景                 |
+| 記事1(technical) → 記事2(failure)                 | 「失敗と学びの詳細は別記事で」   |
+| 記事2(failure) → 記事3(technical)                 | 「ツールの活用法は別記事で」     |
+| 記事3(technical) → 記事1(technical)               | 「設計パターンの詳細は別記事で」 |
 
 ### Constitution準拠の確認
 
@@ -353,6 +360,7 @@ draft: false
 ### ビルダーへの実装指示用サマリ
 
 **ファイル作成（3ファイル）**:
+
 - `src/content/blog/2026-02-15-nextjs-static-tool-pages-design-pattern.md`
 - `src/content/blog/2026-02-15-five-failures-and-lessons-from-ai-agents.md`
 - `src/content/blog/2026-02-15-web-developer-tools-guide.md`

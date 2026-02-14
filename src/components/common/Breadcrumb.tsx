@@ -1,8 +1,5 @@
 import Link from "next/link";
-import {
-  generateBreadcrumbJsonLd,
-  type BreadcrumbItem,
-} from "@/lib/seo";
+import { generateBreadcrumbJsonLd, type BreadcrumbItem } from "@/lib/seo";
 import styles from "./Breadcrumb.module.css";
 
 interface BreadcrumbProps {
@@ -29,7 +26,10 @@ export default function Breadcrumb({ items }: BreadcrumbProps) {
                 </span>
               )}
               {isLast || !item.href ? (
-                <span className={styles.current} aria-current={isLast ? "page" : undefined}>
+                <span
+                  className={styles.current}
+                  aria-current={isLast ? "page" : undefined}
+                >
                   {item.label}
                 </span>
               ) : (
