@@ -1,0 +1,153 @@
+.modal {
+  border: none;
+  border-radius: 12px;
+  padding: 1.5rem;
+  max-width: 90vw;
+  width: 400px;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+}
+
+.modal::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modalTitle {
+  font-size: 1.3rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.resultEmoji {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.resultSummary {
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.groupsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.group {
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  text-align: center;
+}
+
+.groupName {
+  font-weight: 700;
+  font-size: 0.85rem;
+  margin-bottom: 0.125rem;
+}
+
+.groupWords {
+  font-size: 0.8rem;
+}
+
+.yellow {
+  background: #f9df6d;
+  color: #000;
+}
+
+.green {
+  background: #a0c35a;
+  color: #000;
+}
+
+.blue {
+  background: #b0c4ef;
+  color: #000;
+}
+
+.purple {
+  background: #ba81c5;
+  color: #fff;
+}
+
+.shareArea {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 0.75rem;
+}
+
+.shareButton {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #ffffff;
+}
+
+.shareButtonCopy {
+  composes: shareButton;
+  background-color: #6aaa64;
+}
+
+.shareButtonCopy:hover {
+  opacity: 0.9;
+}
+
+.shareButtonX {
+  composes: shareButton;
+  background-color: #1da1f2;
+}
+
+.shareButtonX:hover {
+  opacity: 0.9;
+}
+
+.copiedMessage {
+  font-size: 0.8rem;
+  color: #6aaa64;
+  text-align: center;
+  margin-top: 0.25rem;
+  min-height: 1.2em;
+}
+
+.statsButton {
+  display: block;
+  margin: 0.75rem auto 0;
+  padding: 0.4rem 1.5rem;
+  font-size: 0.85rem;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.statsButton:hover {
+  background-color: var(--color-bg-secondary);
+}
+
+.modalClose {
+  display: block;
+  margin: 1rem auto 0;
+  padding: 0.5rem 2rem;
+  font-size: 0.95rem;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.modalClose:hover {
+  background-color: var(--color-bg-secondary);
+}

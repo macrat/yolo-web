@@ -20,6 +20,7 @@ export const meta: ToolMeta = {
     "markdown-preview",
     "text-replace",
     "yaml-formatter",
+    "sql-formatter",
   ],
   publishedAt: "2026-02-14",
   structuredDataType: "WebApplication",

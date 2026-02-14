@@ -16,7 +16,12 @@ export const meta: ToolMeta = {
     "速度 変換",
   ],
   category: "generator",
-  relatedSlugs: ["number-base-converter", "date-calculator", "byte-counter"],
+  relatedSlugs: [
+    "number-base-converter",
+    "date-calculator",
+    "byte-counter",
+    "bmi-calculator",
+  ],
   publishedAt: "2026-02-14",
   structuredDataType: "WebApplication",
 };

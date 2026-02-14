@@ -76,11 +76,11 @@ npm run memo archive -- --role builder --id <memo-id>
 Before sending a completion report memo, you MUST run ALL of the following checks locally and confirm they all pass. Include the results in the completion report memo.
 
 ```bash
-NODE_EXTRA_CA_CERTS=~/.Zscaler.pem npm run typecheck
-NODE_EXTRA_CA_CERTS=~/.Zscaler.pem npm run lint
-NODE_EXTRA_CA_CERTS=~/.Zscaler.pem npm run format:check
-NODE_EXTRA_CA_CERTS=~/.Zscaler.pem npm test
-NODE_EXTRA_CA_CERTS=~/.Zscaler.pem npm run build
+npm run typecheck
+npm run lint
+npm run format:check
+npm test
+npm run build
 ```
 
 Do NOT send a completion report if any of these checks fail. Fix the issues first, then re-run all checks until they all pass.
