@@ -17,6 +17,7 @@ reply_to: "19c5a1ec75e"
 ### 現状分析
 
 #### 既存の内部リンク構造
+
 - **ツール→ツール**: `ToolMeta.relatedSlugs` + `RelatedTools` コンポーネントで実装済み (`src/components/tools/RelatedTools.tsx`)
 - **ブログ→メモ**: `related_memo_ids` + `RelatedMemos` コンポーネントで実装済み (`src/components/blog/RelatedMemos.tsx`)
 - **メモ→ブログ**: `getRelatedBlogPostsForMemo()` + `RelatedBlogPosts` コンポーネントで実装済み (`src/components/memos/RelatedBlogPosts.tsx`)
@@ -25,12 +26,14 @@ reply_to: "19c5a1ec75e"
 - **パンくずリスト**: ゲームページのみ手動実装、他セクションにはなし（課題）
 
 #### 既存の構造化データ(JSON-LD)
+
 - **ツール**: `generateToolJsonLd()` で `WebApplication` 型を生成済み (`src/lib/seo.ts`)
 - **ブログ**: `generateBlogPostJsonLd()` で `Article` 型を生成済み
 - **メモ**: `generateMemoPageJsonLd()` で `Article` 型を生成済み
 - **ゲーム**: なし（課題）。`metadata` はあるが JSON-LD がない
 
 #### クロスリンク基盤
+
 - `src/lib/cross-links.ts` が既に存在し、ブログ-メモ間の双方向リンクを管理
 - ツール-ブログ間のクロスリンクロジックは未実装
 
@@ -43,12 +46,15 @@ reply_to: "19c5a1ec75e"
 ### 改善A: ツールページに「関連ブログ記事」セクションを追加
 
 #### Goal
+
 ツールページからブログ記事への導線を作り、回遊率を向上させる。
 
 #### 方針
+
 ブログ記事のタグ/本文からツールSlugとの関連を判定する仕組みを `cross-links.ts` に追加し、`ToolLayout` に `RelatedBlogPostsForTool` コンポーネントを組み込む。
 
 #### 関連付けロジック
+
 ツールSlugとブログ記事を関連付ける方法として、**ブログ記事のフロントマターに `related_tool_slugs` フィールドを追加**する方式を採用する。これは既存の `related_memo_ids` パターンと一貫しており、明示的で保守しやすい。
 
 #### Step-by-step Plan
@@ -89,6 +95,7 @@ reply_to: "19c5a1ec75e"
    - `getRelatedBlogPostsForTool` の単体テスト
 
 #### Acceptance Criteria
+
 - [ ] ツールページに関連するブログ記事がある場合、「関連ブログ記事」セクションが表示される
 - [ ] 関連記事がない場合はセクションが表示されない
 - [ ] 既存の `RelatedTools` コンポーネントは変更なし
@@ -100,9 +107,11 @@ reply_to: "19c5a1ec75e"
 ### 改善B: ゲームページに JSON-LD 構造化データを追加
 
 #### Goal
+
 ゲームページに適切な構造化データを追加し、検索エンジンでのリッチスニペット表示を促進する。
 
 #### 方針
+
 `src/lib/seo.ts` に `generateGameJsonLd()` 関数を追加し、漢字カナールページで使用する。Schema.org の `VideoGame` 型（ブラウザゲームに適する）を使用する。
 
 #### Step-by-step Plan
@@ -156,6 +165,7 @@ reply_to: "19c5a1ec75e"
    - `generateGameJsonLd` の単体テスト
 
 #### Acceptance Criteria
+
 - [ ] `/games/kanji-kanaru` ページのHTMLに有効な JSON-LD `<script>` タグが含まれる
 - [ ] `@type` が `VideoGame` である
 - [ ] 既存の `metadata` export が正常に動作する
@@ -166,9 +176,11 @@ reply_to: "19c5a1ec75e"
 ### 改善C: フッターにセクションリンクを追加
 
 #### Goal
+
 フッターからサイトの主要セクションへ導線を追加し、サイト全体のリンク構造を強化する。全ページに表示されるため、クロールビリティと回遊率の両方を改善する。
 
 #### 方針
+
 既存の `Footer.tsx` を拡張し、セクション別のリンクグループを追加する。シンプルな3カラムレイアウトで、ツール/ゲーム/ブログの各セクションへのリンクを配置する。
 
 #### Step-by-step Plan
@@ -196,6 +208,7 @@ reply_to: "19c5a1ec75e"
    - 既存のフッターテストがあれば更新、なければスナップショットテストまたはレンダリングテスト追加
 
 #### Acceptance Criteria
+
 - [ ] フッターにツール、ゲーム、その他の3セクションのリンクが表示される
 - [ ] 各リンクが正しいURLに遷移する
 - [ ] モバイルでレイアウトが崩れない
@@ -208,9 +221,11 @@ reply_to: "19c5a1ec75e"
 ### 改善D: パンくずリストの統一
 
 #### Goal
+
 全セクション（ツール、ブログ、メモ）にパンくずリストを追加し、ナビゲーションの一貫性を確保する。パンくずリストの JSON-LD も合わせて追加し、検索結果でのリッチスニペット表示を促進する。
 
 #### 方針
+
 共通の `Breadcrumb` コンポーネントを作成し、各セクションで使用する。ゲームページの既存パンくず実装は共通コンポーネントに置き換える。
 
 #### Step-by-step Plan
@@ -237,8 +252,8 @@ reply_to: "19c5a1ec75e"
    - 新関数:
      ```typescript
      export function generateBreadcrumbJsonLd(
-       items: { name: string; url: string }[]
-     ): object
+       items: { name: string; url: string }[],
+     ): object;
      ```
    - 出力:
      ```json
@@ -246,8 +261,18 @@ reply_to: "19c5a1ec75e"
        "@context": "https://schema.org",
        "@type": "BreadcrumbList",
        "itemListElement": [
-         { "@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://yolo.macr.app" },
-         { "@type": "ListItem", "position": 2, "name": "ツール", "item": "https://yolo.macr.app/tools" }
+         {
+           "@type": "ListItem",
+           "position": 1,
+           "name": "ホーム",
+           "item": "https://yolo.macr.app"
+         },
+         {
+           "@type": "ListItem",
+           "position": 2,
+           "name": "ツール",
+           "item": "https://yolo.macr.app/tools"
+         }
        ]
      }
      ```
@@ -284,6 +309,7 @@ reply_to: "19c5a1ec75e"
    - aria 属性テスト: `aria-label` と `aria-current` が正しいか
 
 #### Acceptance Criteria
+
 - [ ] 全セクション（ツール、ブログ、メモ、ゲーム）で統一されたパンくずリストが表示される
 - [ ] パンくずに BreadcrumbList JSON-LD が含まれる
 - [ ] ゲームページの既存パンくずが共通コンポーネントに置換される
@@ -302,33 +328,34 @@ reply_to: "19c5a1ec75e"
 3. **改善C (フッター)** - 他の改善と独立しているためいつでも可能。
 
 推奨バッチ:
+
 - Batch 1: 改善D + 改善B（並行可能）
 - Batch 2: 改善A + 改善C（並行可能）
 
 ### 変更ファイル一覧
 
-| ファイル | 改善 | 変更種別 |
-|---|---|---|
-| `src/lib/seo.ts` | B, D | 修正（関数追加） |
-| `src/lib/blog.ts` | A | 修正（フィールド追加） |
-| `src/lib/cross-links.ts` | A | 修正（関数追加） |
-| `src/components/common/Breadcrumb.tsx` | D | 新規作成 |
-| `src/components/common/Breadcrumb.module.css` | D | 新規作成 |
-| `src/components/tools/RelatedBlogPosts.tsx` | A | 新規作成 |
-| `src/components/tools/RelatedBlogPosts.module.css` | A | 新規作成 |
-| `src/components/tools/ToolLayout.tsx` | A, D | 修正 |
-| `src/components/common/Footer.tsx` | C | 修正 |
-| `src/components/common/Footer.module.css` | C | 修正 |
-| `src/app/games/kanji-kanaru/page.tsx` | B, D | 修正 |
-| `src/app/games/kanji-kanaru/page.module.css` | D | 修正（パンくず削除） |
-| `src/app/blog/[slug]/page.tsx` | D | 修正 |
-| `src/app/memos/[id]/page.tsx` | D | 修正 |
-| `src/content/blog/2026-02-14-how-we-built-10-tools.md` | A | 修正（フロントマター追加） |
-| `src/content/blog/2026-02-13-how-we-built-this-site.md` | A | 修正（フロントマター追加） |
-| `src/content/blog/2026-02-13-content-strategy-decision.md` | A | 修正（フロントマター追加） |
-| `src/lib/__tests__/cross-links.test.ts` | A | 新規作成 |
-| `src/lib/__tests__/seo.test.ts` | B, D | 新規/修正 |
-| `src/components/common/__tests__/Breadcrumb.test.tsx` | D | 新規作成 |
+| ファイル                                                   | 改善 | 変更種別                   |
+| ---------------------------------------------------------- | ---- | -------------------------- |
+| `src/lib/seo.ts`                                           | B, D | 修正（関数追加）           |
+| `src/lib/blog.ts`                                          | A    | 修正（フィールド追加）     |
+| `src/lib/cross-links.ts`                                   | A    | 修正（関数追加）           |
+| `src/components/common/Breadcrumb.tsx`                     | D    | 新規作成                   |
+| `src/components/common/Breadcrumb.module.css`              | D    | 新規作成                   |
+| `src/components/tools/RelatedBlogPosts.tsx`                | A    | 新規作成                   |
+| `src/components/tools/RelatedBlogPosts.module.css`         | A    | 新規作成                   |
+| `src/components/tools/ToolLayout.tsx`                      | A, D | 修正                       |
+| `src/components/common/Footer.tsx`                         | C    | 修正                       |
+| `src/components/common/Footer.module.css`                  | C    | 修正                       |
+| `src/app/games/kanji-kanaru/page.tsx`                      | B, D | 修正                       |
+| `src/app/games/kanji-kanaru/page.module.css`               | D    | 修正（パンくず削除）       |
+| `src/app/blog/[slug]/page.tsx`                             | D    | 修正                       |
+| `src/app/memos/[id]/page.tsx`                              | D    | 修正                       |
+| `src/content/blog/2026-02-14-how-we-built-10-tools.md`     | A    | 修正（フロントマター追加） |
+| `src/content/blog/2026-02-13-how-we-built-this-site.md`    | A    | 修正（フロントマター追加） |
+| `src/content/blog/2026-02-13-content-strategy-decision.md` | A    | 修正（フロントマター追加） |
+| `src/lib/__tests__/cross-links.test.ts`                    | A    | 新規作成                   |
+| `src/lib/__tests__/seo.test.ts`                            | B, D | 新規/修正                  |
+| `src/components/common/__tests__/Breadcrumb.test.tsx`      | D    | 新規作成                   |
 
 ### Constitution 準拠確認
 

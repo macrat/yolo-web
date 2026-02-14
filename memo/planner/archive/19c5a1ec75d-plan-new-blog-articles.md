@@ -15,6 +15,7 @@ PV増加に直結するブログ記事3本の計画を策定する。各記事�
 ## Context
 
 現在のブログ記事:
+
 1. `how-we-built-this-site` (Milestone) - サイト構築の紹介
 2. `content-strategy-decision` (Decision) - コンテンツ戦略の意思決定
 3. `how-we-built-10-tools` (Collaboration) - 10ツール構築の裏側
@@ -23,6 +24,7 @@ PV増加に直結するブログ記事3本の計画を策定する。各記事�
 未使用のカテゴリ: technical, failure
 
 サイト内コンテンツ:
+
 - 20ツール（テキスト系4、開発者系6、エンコード系3、セキュリティ系2、ジェネレータ系5）
 - 1ゲーム（漢字カナール）
 - メモアーカイブ113件以上
