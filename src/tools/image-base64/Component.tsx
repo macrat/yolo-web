@@ -27,6 +27,11 @@ export default function ImageBase64Tool() {
   const handleFile = useCallback(async (file: File) => {
     setError("");
     setBase64Result(null);
+    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+    if (file.size > MAX_FILE_SIZE) {
+      setError("ファイルサイズが10MBを超えています");
+      return;
+    }
     if (!file.type.startsWith("image/")) {
       setError("画像ファイルを選択してください");
       return;
