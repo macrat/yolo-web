@@ -12,10 +12,7 @@ interface HowToPlayModalProps {
  * Modal explaining how to play the game.
  * Uses the native <dialog> element for accessibility.
  */
-export default function HowToPlayModal({
-  open,
-  onClose,
-}: HowToPlayModalProps) {
+export default function HowToPlayModal({ open, onClose }: HowToPlayModalProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {

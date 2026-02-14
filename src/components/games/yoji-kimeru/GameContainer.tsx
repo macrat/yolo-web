@@ -8,11 +8,11 @@ import type {
   YojiEntry,
   YojiPuzzleScheduleEntry,
 } from "@/lib/games/yoji-kimeru/types";
-import { evaluateGuess, isValidYojiInput } from "@/lib/games/yoji-kimeru/engine";
 import {
-  getTodaysPuzzle,
-  formatDateJST,
-} from "@/lib/games/yoji-kimeru/daily";
+  evaluateGuess,
+  isValidYojiInput,
+} from "@/lib/games/yoji-kimeru/engine";
+import { getTodaysPuzzle, formatDateJST } from "@/lib/games/yoji-kimeru/daily";
 import {
   loadStats,
   saveStats,

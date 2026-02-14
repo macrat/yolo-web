@@ -55,10 +55,7 @@ describe("loadStats", () => {
       guessDistribution: [1, 2, 3, 1, 1, 0],
       lastPlayedDate: "2026-03-10",
     };
-    localStorageMock.setItem(
-      "yoji-kimeru-stats",
-      JSON.stringify(storedStats),
-    );
+    localStorageMock.setItem("yoji-kimeru-stats", JSON.stringify(storedStats));
     const stats = loadStats();
     expect(stats).toEqual(storedStats);
   });

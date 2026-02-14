@@ -20,9 +20,7 @@ describe("sitemap", () => {
 
   test("sitemap includes /games/yoji-kimeru with daily frequency", () => {
     const entries = sitemap();
-    const yojiEntry = entries.find((e) =>
-      e.url.includes("/games/yoji-kimeru"),
-    );
+    const yojiEntry = entries.find((e) => e.url.includes("/games/yoji-kimeru"));
     expect(yojiEntry).toBeDefined();
     expect(yojiEntry?.changeFrequency).toBe("daily");
   });

@@ -47,9 +47,7 @@ export default function HintBar({
         難易度 {difficultyLabels[difficulty]}
       </span>
       {showReadingHint && (
-        <span className={styles.hintValue}>
-          読み {reading.charAt(0)}...
-        </span>
+        <span className={styles.hintValue}>読み {reading.charAt(0)}...</span>
       )}
       {showCategoryHint && (
         <span className={styles.hintValue}>
@@ -57,9 +55,7 @@ export default function HintBar({
         </span>
       )}
       {!showReadingHint && (
-        <span className={styles.hintValue}>
-          (3回目で読みヒント)
-        </span>
+        <span className={styles.hintValue}>(3回目で読みヒント)</span>
       )}
     </div>
   );
