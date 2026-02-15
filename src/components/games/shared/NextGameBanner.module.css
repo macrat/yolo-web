@@ -1,0 +1,53 @@
+.container {
+  margin: 12px 0;
+  padding: 12px;
+  border-radius: 8px;
+  background: var(--color-bg-secondary, #f8f9fa);
+}
+
+.progress {
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--color-text, #1a1a1a);
+  margin-bottom: 8px;
+}
+
+.gameList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.gameLink {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+
+.gameLink:hover {
+  opacity: 0.85;
+}
+
+.unplayed {
+  background: var(--color-primary, #2563eb);
+  color: #fff;
+}
+
+.played {
+  background: var(--color-border, #e5e7eb);
+  color: var(--color-text-muted, #6b7280);
+}
+
+.gameTitle {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.gameStatus {
+  font-size: 0.8rem;
+}

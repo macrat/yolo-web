@@ -5,6 +5,7 @@ import type { YojiGameState } from "@/lib/games/yoji-kimeru/types";
 import { generateShareText } from "@/lib/games/yoji-kimeru/share";
 import ShareButtons from "./ShareButtons";
 import CountdownTimer from "@/components/games/shared/CountdownTimer";
+import NextGameBanner from "@/components/games/shared/NextGameBanner";
 import styles from "./styles/YojiKimeru.module.css";
 
 interface ResultModalProps {
@@ -68,6 +69,7 @@ export default function ResultModal({
       </div>
       <ShareButtons shareText={shareText} />
       <CountdownTimer />
+      <NextGameBanner currentGameSlug="yoji-kimeru" />
       <button
         className={styles.shareButtonStats}
         onClick={() => {

@@ -9,6 +9,7 @@ import {
 } from "@/lib/games/nakamawake/share";
 import { useCanWebShare, shareGameResult } from "@/lib/games/shared/webShare";
 import CountdownTimer from "@/components/games/shared/CountdownTimer";
+import NextGameBanner from "@/components/games/shared/NextGameBanner";
 import { getDifficultyColor } from "@/lib/games/nakamawake/engine";
 import styles from "./ResultModal.module.css";
 
@@ -143,6 +144,7 @@ export default function ResultModal({
         </div>
       </div>
       <CountdownTimer />
+      <NextGameBanner currentGameSlug="nakamawake" />
       <button
         className={styles.statsButton}
         onClick={() => {
