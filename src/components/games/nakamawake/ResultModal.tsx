@@ -8,6 +8,7 @@ import {
   generateTwitterShareUrl,
 } from "@/lib/games/nakamawake/share";
 import { useCanWebShare, shareGameResult } from "@/lib/games/shared/webShare";
+import CountdownTimer from "@/components/games/shared/CountdownTimer";
 import { getDifficultyColor } from "@/lib/games/nakamawake/engine";
 import styles from "./ResultModal.module.css";
 
@@ -141,6 +142,7 @@ export default function ResultModal({
           {copied ? "\u30B3\u30D4\u30FC\u3057\u307E\u3057\u305F!" : ""}
         </div>
       </div>
+      <CountdownTimer />
       <button
         className={styles.statsButton}
         onClick={() => {
