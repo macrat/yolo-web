@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
-import AiDisclaimer from "@/components/tools/AiDisclaimer";
+import AiDisclaimer from "@/components/common/AiDisclaimer";
 import { SITE_NAME } from "@/lib/constants";
 import styles from "./page.module.css";
 
