@@ -4,6 +4,8 @@ import { useRef, useEffect, useCallback } from "react";
 import type { GameState } from "@/lib/games/kanji-kanaru/types";
 import { generateShareText } from "@/lib/games/kanji-kanaru/share";
 import ShareButtons from "./ShareButtons";
+import CountdownTimer from "@/components/games/shared/CountdownTimer";
+import NextGameBanner from "@/components/games/shared/NextGameBanner";
 import styles from "./styles/KanjiKanaru.module.css";
 
 interface ResultModalProps {
@@ -78,6 +80,8 @@ export default function ResultModal({
           : "6回以内に正解できませんでした"}
       </div>
       <ShareButtons shareText={shareText} />
+      <CountdownTimer />
+      <NextGameBanner currentGameSlug="kanji-kanaru" />
       <button
         className={styles.shareButtonStats}
         onClick={() => {

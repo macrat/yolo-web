@@ -7,6 +7,9 @@ import {
   copyToClipboard,
   generateTwitterShareUrl,
 } from "@/lib/games/nakamawake/share";
+import { useCanWebShare, shareGameResult } from "@/lib/games/shared/webShare";
+import CountdownTimer from "@/components/games/shared/CountdownTimer";
+import NextGameBanner from "@/components/games/shared/NextGameBanner";
 import { getDifficultyColor } from "@/lib/games/nakamawake/engine";
 import styles from "./ResultModal.module.css";
 
@@ -29,6 +32,7 @@ export default function ResultModal({
 }: Props) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [copied, setCopied] = useState(false);
+  const canWebShare = useCanWebShare();
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -59,6 +63,15 @@ export default function ResultModal({
   const handleShareX = useCallback(() => {
     const url = generateTwitterShareUrl(shareText);
     window.open(url, "_blank", "noopener,noreferrer");
+  }, [shareText]);
+
+  const handleWebShare = useCallback(async () => {
+    const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
+    await shareGameResult({
+      title: "\u30CA\u30AB\u30DE\u30EF\u30B1",
+      text: shareText,
+      url: `${baseUrl}/games/nakamawake`,
+    });
   }, [shareText]);
 
   // Show all 4 groups sorted by difficulty
@@ -99,25 +112,39 @@ export default function ResultModal({
       </div>
       <div>
         <div className={styles.shareArea}>
-          <button
-            className={styles.shareButtonCopy}
-            onClick={handleCopy}
-            type="button"
-          >
-            {"\u7D50\u679C\u3092\u30B3\u30D4\u30FC"}
-          </button>
-          <button
-            className={styles.shareButtonX}
-            onClick={handleShareX}
-            type="button"
-          >
-            X{"\u3067\u30B7\u30A7\u30A2"}
-          </button>
+          {canWebShare ? (
+            <button
+              className={styles.shareButtonCopy}
+              onClick={handleWebShare}
+              type="button"
+            >
+              {"\u30B7\u30A7\u30A2"}
+            </button>
+          ) : (
+            <>
+              <button
+                className={styles.shareButtonCopy}
+                onClick={handleCopy}
+                type="button"
+              >
+                {"\u7D50\u679C\u3092\u30B3\u30D4\u30FC"}
+              </button>
+              <button
+                className={styles.shareButtonX}
+                onClick={handleShareX}
+                type="button"
+              >
+                X{"\u3067\u30B7\u30A7\u30A2"}
+              </button>
+            </>
+          )}
         </div>
         <div className={styles.copiedMessage} role="status" aria-live="polite">
           {copied ? "\u30B3\u30D4\u30FC\u3057\u307E\u3057\u305F!" : ""}
         </div>
       </div>
+      <CountdownTimer />
+      <NextGameBanner currentGameSlug="nakamawake" />
       <button
         className={styles.statsButton}
         onClick={() => {
