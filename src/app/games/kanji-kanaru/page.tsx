@@ -27,6 +27,9 @@ const gameJsonLd = generateGameJsonLd({
   description:
     "毎日1つの漢字を当てるパズルゲーム。6回以内に正解を見つけよう!部首・画数・読みなどのヒントを頼りに推理する、新感覚の漢字クイズです。",
   url: "/games/kanji-kanaru",
+  genre: "Puzzle",
+  inLanguage: "ja",
+  numberOfPlayers: "1",
 });
 
 export default function KanjiKanaruPage() {

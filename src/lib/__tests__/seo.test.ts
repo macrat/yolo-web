@@ -1,5 +1,10 @@
 import { expect, test, describe } from "vitest";
-import { generateGameJsonLd, generateBreadcrumbJsonLd } from "../seo";
+import {
+  generateGameJsonLd,
+  generateBreadcrumbJsonLd,
+  generateWebSiteJsonLd,
+  generateBlogPostJsonLd,
+} from "../seo";
 
 describe("generateGameJsonLd", () => {
   test("returns VideoGame JSON-LD with correct properties", () => {
@@ -37,6 +42,110 @@ describe("generateGameJsonLd", () => {
     }) as Record<string, unknown>;
 
     expect(result.url).toContain("/games/test");
+  });
+
+  test("includes genre, inLanguage, numberOfPlayers when provided", () => {
+    const result = generateGameJsonLd({
+      name: "テストゲーム",
+      description: "テスト",
+      url: "/games/test",
+      genre: "Puzzle",
+      inLanguage: "ja",
+      numberOfPlayers: "1",
+    }) as Record<string, unknown>;
+
+    expect(result.genre).toBe("Puzzle");
+    expect(result.inLanguage).toBe("ja");
+    expect(result.numberOfPlayers).toEqual({
+      "@type": "QuantitativeValue",
+      value: "1",
+    });
+  });
+
+  test("omits genre, inLanguage, numberOfPlayers when not provided", () => {
+    const result = generateGameJsonLd({
+      name: "テストゲーム",
+      description: "テスト",
+      url: "/games/test",
+    }) as Record<string, unknown>;
+
+    expect(result.genre).toBeUndefined();
+    expect(result.inLanguage).toBeUndefined();
+    expect(result.numberOfPlayers).toBeUndefined();
+  });
+});
+
+describe("generateWebSiteJsonLd", () => {
+  test("returns WebSite JSON-LD with correct properties", () => {
+    const result = generateWebSiteJsonLd() as Record<string, unknown>;
+
+    expect(result).toMatchObject({
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      inLanguage: "ja",
+    });
+    expect(result.name).toBeDefined();
+    expect(result.url).toBeDefined();
+    expect(result.description).toBeDefined();
+    expect(result.creator).toMatchObject({
+      "@type": "Organization",
+      name: "Yolo-Web (AI Experiment)",
+    });
+  });
+});
+
+describe("generateBlogPostJsonLd", () => {
+  const baseBlogPost = {
+    title: "テスト記事",
+    slug: "test-article",
+    description: "テスト記事の説明",
+    published_at: "2026-02-15",
+    updated_at: "2026-02-15",
+    tags: ["テスト"],
+  };
+
+  test("returns BlogPosting type instead of Article", () => {
+    const result = generateBlogPostJsonLd(baseBlogPost) as Record<
+      string,
+      unknown
+    >;
+
+    expect(result["@type"]).toBe("BlogPosting");
+    expect(result.inLanguage).toBe("ja");
+  });
+
+  test("includes image when provided", () => {
+    const result = generateBlogPostJsonLd({
+      ...baseBlogPost,
+      image: "https://example.com/image.png",
+    }) as Record<string, unknown>;
+
+    expect(result.image).toBe("https://example.com/image.png");
+  });
+
+  test("omits image when not provided", () => {
+    const result = generateBlogPostJsonLd(baseBlogPost) as Record<
+      string,
+      unknown
+    >;
+
+    expect(result.image).toBeUndefined();
+  });
+
+  test("includes correct author and publisher", () => {
+    const result = generateBlogPostJsonLd(baseBlogPost) as Record<
+      string,
+      unknown
+    >;
+
+    expect(result.author).toMatchObject({
+      "@type": "Organization",
+      name: "Yolo-Web AI Agents",
+    });
+    expect(result.publisher).toMatchObject({
+      "@type": "Organization",
+      name: "Yolo-Web (AI Experiment)",
+    });
   });
 });
 
