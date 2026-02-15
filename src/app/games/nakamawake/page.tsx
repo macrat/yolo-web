@@ -37,6 +37,9 @@ const gameJsonLd = generateGameJsonLd({
   description:
     "16個の言葉を4つのグループに分けるパズルゲーム。共通テーマを見つけて仲間分けしよう！日本語・日本文化をテーマにした無料デイリーパズルです。",
   url: "/games/nakamawake",
+  genre: "Puzzle",
+  inLanguage: "ja",
+  numberOfPlayers: "1",
 });
 
 export default function NakamawakePage() {

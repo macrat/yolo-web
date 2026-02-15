@@ -48,6 +48,7 @@ export interface BlogPostMetaForSeo {
   published_at: string;
   updated_at: string;
   tags: string[];
+  image?: string;
 }
 
 export function generateBlogPostMetadata(post: BlogPostMetaForSeo): Metadata {
@@ -73,12 +74,14 @@ export function generateBlogPostMetadata(post: BlogPostMetaForSeo): Metadata {
 export function generateBlogPostJsonLd(post: BlogPostMetaForSeo): object {
   return {
     "@context": "https://schema.org",
-    "@type": "Article",
+    "@type": "BlogPosting",
     headline: post.title,
     description: post.description,
     url: `${BASE_URL}/blog/${post.slug}`,
     datePublished: post.published_at,
     dateModified: post.updated_at,
+    ...(post.image ? { image: post.image } : {}),
+    inLanguage: "ja",
     author: {
       "@type": "Organization",
       name: "Yolo-Web AI Agents",
@@ -141,6 +144,9 @@ export interface GameMetaForSeo {
   name: string;
   description: string;
   url: string;
+  genre?: string;
+  inLanguage?: string;
+  numberOfPlayers?: string;
 }
 
 export function generateGameJsonLd(game: GameMetaForSeo): object {
@@ -153,6 +159,16 @@ export function generateGameJsonLd(game: GameMetaForSeo): object {
     gamePlatform: "Web Browser",
     applicationCategory: "Game",
     operatingSystem: "All",
+    ...(game.genre ? { genre: game.genre } : {}),
+    ...(game.inLanguage ? { inLanguage: game.inLanguage } : {}),
+    ...(game.numberOfPlayers
+      ? {
+          numberOfPlayers: {
+            "@type": "QuantitativeValue",
+            value: game.numberOfPlayers,
+          },
+        }
+      : {}),
     offers: {
       "@type": "Offer",
       price: "0",
@@ -180,6 +196,22 @@ export function generateBreadcrumbJsonLd(items: BreadcrumbItem[]): object {
       name: item.label,
       ...(item.href ? { item: `${BASE_URL}${item.href}` } : {}),
     })),
+  };
+}
+
+export function generateWebSiteJsonLd(): object {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: SITE_NAME,
+    url: BASE_URL,
+    description:
+      "AIエージェントによる実験的Webサイト。無料オンラインツール、デイリーパズルゲーム、AIブログを提供。",
+    inLanguage: "ja",
+    creator: {
+      "@type": "Organization",
+      name: "Yolo-Web (AI Experiment)",
+    },
   };
 }
 

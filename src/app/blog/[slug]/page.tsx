@@ -7,7 +7,11 @@ import {
   getBlogPostBySlug,
   CATEGORY_LABELS,
 } from "@/lib/blog";
-import { generateBlogPostMetadata, generateBlogPostJsonLd } from "@/lib/seo";
+import {
+  generateBlogPostMetadata,
+  generateBlogPostJsonLd,
+  BASE_URL,
+} from "@/lib/seo";
 import Breadcrumb from "@/components/common/Breadcrumb";
 import TableOfContents from "@/components/blog/TableOfContents";
 import TagList from "@/components/blog/TagList";
@@ -41,7 +45,10 @@ export default async function BlogPostPage({ params }: Props) {
     currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null;
   const nextPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null;
 
-  const jsonLd = generateBlogPostJsonLd(post);
+  const jsonLd = generateBlogPostJsonLd({
+    ...post,
+    image: `${BASE_URL}/opengraph-image`,
+  });
 
   return (
     <main className={styles.container}>
