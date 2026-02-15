@@ -4,6 +4,7 @@ import { useRef, useEffect, useCallback } from "react";
 import type { YojiGameState } from "@/lib/games/yoji-kimeru/types";
 import { generateShareText } from "@/lib/games/yoji-kimeru/share";
 import ShareButtons from "./ShareButtons";
+import CountdownTimer from "@/components/games/shared/CountdownTimer";
 import styles from "./styles/YojiKimeru.module.css";
 
 interface ResultModalProps {
@@ -66,6 +67,7 @@ export default function ResultModal({
           : "6回以内に正解できませんでした"}
       </div>
       <ShareButtons shareText={shareText} />
+      <CountdownTimer />
       <button
         className={styles.shareButtonStats}
         onClick={() => {
