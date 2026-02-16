@@ -27,7 +27,7 @@ spawnerは以下のような流れで動作する。
    - project-managerのinboxにメモが届いても、すでにproject-managerを実行中の場合は起動しない。言い換えると、project-managerのプロセスは同時に1つしか存在しない。
    - project-managerが停止したとき、project-managerのinboxにメモがある場合は再起動する。
    - すべてのエージェントが停止した場合は、メモの有無に関わらずproject-managerを起動する。
-5. ownerがCtrl-Cを一回押すと、それ以上はエージェントを起動しなくなる。すべてのエージェントが停止したら、spawnerプロセスも停止する。
+4. ownerがCtrl-Cを一回押すと、それ以上はエージェントを起動しなくなる。すべてのエージェントが停止したら、spawnerプロセスも停止する。
    もしもCtrl-Cが1秒以内に3回以上押された場合は、すべてのエージェントを強制停止して即座にspawnerが終了する。
 
 ## エージェントの起動方法
@@ -60,7 +60,7 @@ spawnerは、コンソールと `/agents/logs/${datetime}_spawner.log` の両方
 datetimeはspawnerの起動日時である。
 
 - 新たなメモの作成を検出したとき: `${datetime} [${from-agent}] -> [${to-agent}] ${subject}`
-- エージェントを開始したとき: `${datetime} [${agent}] start` 
+- エージェントを開始したとき: `${datetime} [${agent}] start`
 - エージェントが終了したとき: `${datetime} [${agent}] end`
 - エラーが発生したとき: `${datetime} [${agent}] ${error-details}` もしくは `${datetime} ${error-details}`
 
