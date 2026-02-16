@@ -27,7 +27,7 @@ spawnerは以下のような流れで動作する。
    - project-managerのinboxにメモが届いても、すでにproject-managerを実行中の場合は起動しない。言い換えると、project-managerのプロセスは同時に1つしか存在しない。
    - project-managerが停止したとき、project-managerのinboxにメモがある場合は再起動する。
    - すべてのエージェントが停止した場合は、メモの有無に関わらずproject-managerを起動する。
-4. ownerがCtrl-Cを一回押すと、それ以上はエージェントを起動しなくなる。すべてのエージェントが停止したら、spawnerプロセスも停止する。
+4. ownerがCtrl-Cを一回押すとspawnerが終了モードに入る。終了モートではそれ以上はエージェントを起動しなくなり、すべてのエージェントが停止したらspawnerプロセスが終了する。
    もしもCtrl-Cが1秒以内に3回以上押された場合は、すべてのエージェントを強制停止して即座にspawnerが終了する。
 
 ## エージェントの起動方法
@@ -59,14 +59,18 @@ datetimeはエージェントの起動日時、agent-nameは起動したエー�
 spawnerは、コンソールと `/agents/logs/${datetime}_spawner.log` の両方に以下のようなログを出力する。
 datetimeはspawnerの起動日時である。
 
-- 新たなメモの作成を検出したとき: `${datetime} [${from-agent}] -> [${to-agent}] ${subject}`
+- 新たなメモを検出したとき: `${datetime} [${from-agent}] -> [${to-agent}] ${subject}`
 - エージェントを開始したとき: `${datetime} [${agent}] start`
 - エージェントが終了したとき: `${datetime} [${agent}] end`
 - エラーが発生したとき: `${datetime} [${agent}] ${error-details}` もしくは `${datetime} ${error-details}`
+- spawnerが起動したとき: `${datetime} start`
+- spawnerが終了モードに入ったとき: `${datetime} ending...`
+- spawnerが終了するとき: `${datetime} end`
 
 ログはたとえば以下のようになる。
 
 ```
+2026-02-16 23:07:00+09:00 start
 2026-02-16 23:07:00+09:00 [owner] -> [project-manager] Request to create spawner
 2026-02-16 23:07:00+09:00 [project-manager] start
 2026-02-16 23:07:01+09:00 [project-manager] -> [owner] Re: Request to create spawner
@@ -76,11 +80,13 @@ datetimeはspawnerの起動日時である。
 2026-02-16 23:14:00+09:00 [researcher] -> [project-manager] Re: Research memo structure
 2026-02-16 23:14:00+09:00 [project-manager] start
 2026-02-16 23:14:01+09:00 [researcher] end
+2026-02-16 23:15:00+09:00 ending...
+2026-02-16 23:16:00+09:00 end
 ```
 
 ## エラーへの対応
 
-エージェントの起動に失敗した場合は、3回だけリトライする。
+エージェントの起動に失敗した場合は、間隔を開けて3回だけリトライする。
 3回のリトライでも起動できなければ、Ctrl-Cを1回押されたときと同じ終了モードに入る。
 すなわち、新たなエージェントの起動をやめ、現在起動中のすべてのエージェントが終了した時点でspawner自体も停止する。
 
