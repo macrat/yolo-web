@@ -53,6 +53,7 @@ export function createSpawner(options: SpawnerOptions = {}): Spawner {
     onEnding: () => {
       enterEndingMode();
     },
+    onPmExit: handlePmExit,
   });
 
   function handleWatcherEvent(event: WatcherEvent): void {
@@ -67,8 +68,11 @@ export function createSpawner(options: SpawnerOptions = {}): Spawner {
       );
     }
 
-    // Spawn the appropriate agent
-    processManager.spawnAgent(event.role, event.filePath);
+    // Spawn the appropriate agent (NOTE-2: PM gets null, not filePath)
+    processManager.spawnAgent(
+      event.role,
+      event.role === "project-manager" ? null : event.filePath,
+    );
   }
 
   function handleAllStopped(): void {
@@ -81,15 +85,31 @@ export function createSpawner(options: SpawnerOptions = {}): Spawner {
 
     // All agents stopped while RUNNING: start PM
     if (state === "RUNNING") {
-      // Check if PM inbox has memos first
+      // Check if PM inbox has memos first (NOTE-3: cache getMemoInfo)
       const pmMemos = scanInbox("project-manager");
       if (pmMemos.length > 0) {
+        const info = getMemoInfo(pmMemos[0]);
         logger.memo(
-          getMemoInfo(pmMemos[0])?.from ?? "unknown",
+          info?.from ?? "unknown",
           "project-manager",
-          getMemoInfo(pmMemos[0])?.subject ?? "(memo detected)",
+          info?.subject ?? "(memo detected)",
         );
       }
+      processManager.spawnAgent("project-manager", null);
+    }
+  }
+
+  // NOTE-1: PM exited while other agents still running — check inbox and restart
+  function handlePmExit(): void {
+    if (state !== "RUNNING") return;
+    const pmMemos = scanInbox("project-manager");
+    if (pmMemos.length > 0) {
+      const info = getMemoInfo(pmMemos[0]);
+      logger.memo(
+        info?.from ?? "unknown",
+        "project-manager",
+        info?.subject ?? "(pm restart: inbox memo detected)",
+      );
       processManager.spawnAgent("project-manager", null);
     }
   }

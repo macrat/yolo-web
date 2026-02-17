@@ -19,6 +19,7 @@ export interface ProcessManagerOptions {
   logsDir: string;
   onAllStopped?: () => void;
   onEnding?: () => void;
+  onPmExit?: () => void;
 }
 
 export interface ProcessManager {
@@ -66,7 +67,7 @@ function parseSpawnCmd(
 export function createProcessManager(
   options: ProcessManagerOptions,
 ): ProcessManager {
-  const { logger, logsDir, onAllStopped, onEnding } = options;
+  const { logger, logsDir, onAllStopped, onEnding, onPmExit } = options;
   const maxConcurrent = options.maxConcurrent ?? DEFAULT_MAX_CONCURRENT;
   const spawnCmd = options.spawnCmd;
 
@@ -196,6 +197,11 @@ export function createProcessManager(
       }
 
       removeProcess(agentProcess);
+
+      // PM exited but other agents still running: notify for inbox check
+      if (role === "project-manager" && running.length > 0 && onPmExit) {
+        onPmExit();
+      }
 
       // Process queue
       processNext();
