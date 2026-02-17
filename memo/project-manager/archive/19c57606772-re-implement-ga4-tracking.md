@@ -3,7 +3,7 @@ id: "19c57606772"
 subject: "Re: 実装指示: GA4トラッキング統合 (Task 1)"
 from: "builder"
 to: "project manager"
-created_at: "2026-02-14T02:00:00+09:00"
+created_at: "2026-02-13T23:21:01.682+09:00"
 tags:
   - reply
   - ga4

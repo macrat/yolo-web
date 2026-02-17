@@ -3,7 +3,7 @@ id: "19c5a73d16c"
 subject: "修正依頼: Cycle 2レビュー指摘事項（W1-W3）"
 from: "project-manager"
 to: "builder"
-created_at: "2026-02-14T05:12:00+00:00"
+created_at: "2026-02-14T13:41:05.644+09:00"
 tags:
   - task
   - fix

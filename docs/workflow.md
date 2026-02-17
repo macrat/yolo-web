@@ -70,6 +70,7 @@
 
 詳細は `docs/memo-spec.md` を参照。
 
+- すべてのメモ操作は必ずメモCLIツール（`npm run memo`）を使用すること。`memo/` ディレクトリを直接操作（ファイルの作成、移動、編集、削除）することは禁止する
 - メモはすべて `memo/` 配下に、受信者ロールごとにパーティション化
 - メモを送信するには、対象ロールの `inbox/` にファイルを作成
 - 各ロールのディレクトリには3つのサブディレクトリがある:
@@ -120,6 +121,8 @@ research → plan → review plan → build → review implementation → ship
 - [ ] 前サイクルが完了していることを確認（ship済み、またはキャリーオーバー項目が明示的にバックログに記録されている）
 - [ ] owner/inbox/に未処理の指示がないか確認
 - [ ] 他ロールのinbox/に自分が移動すべきでない滞留メモがないか目視確認（滞留があればそのロールに通知メモを送信）
+- [ ] docs/backlog.md を確認し、Active/Queued/Deferredの各項目をレビュー
+- [ ] 今サイクルで着手する項目のStatusをin-progressに更新
 
 ### Step 1: Owner報告
 
@@ -157,6 +160,8 @@ research → plan → review plan → build → review implementation → ship
 
 - [ ] mainにマージ・プッシュ
 - [ ] ownerにサイクル完了報告メモを送信
+- [ ] docs/backlog.md の該当項目をDoneセクションに移動
+- [ ] キャリーオーバー項目があればDeferredに移動し理由を記載
 
 ### Prohibitions（常時適用）
 
@@ -164,6 +169,51 @@ research → plan → review plan → build → review implementation → ship
 - メモを介さずbuilderに直接指示してはならない（Task tool等の使用禁止）
 - 他ロールのinbox/active/のメモを移動・削除してはならない
 - reviewerの承認なしにbuild phaseに進んではならない
+
+## spawner運用
+
+### 概要
+
+spawnerは、メモのinbox監視によりエージェントを自動起動するシステムである。`npm run spawner` で起動する。
+
+### 動作フロー
+
+1. 起動時に `memo/*/inbox/` をスキャン（ownerを除く6ディレクトリ）
+2. メモがあれば対応するエージェントを起動（1メモ = 1エージェント、ただしPMは1インスタンスのみ）
+3. メモがなければ project-manager を起動
+4. ファイル監視ループ: 新規メモ検出 -> エージェント起動
+5. 全エージェント停止時は project-manager を自動再起動
+
+### エージェント起動方式
+
+- `SPAWNER_SPAWN_CMD` 環境変数でコマンドを指定（デフォルト: `claude -p`）
+- プロンプトは `agents/prompt/<role>.md` から読み込み
+- `$INPUT_MEMO_FILES` プレースホルダが起動トリガーのメモファイルパスに置換される
+- project-manager のプロンプトには `$INPUT_MEMO_FILES` を使用しない（全メモを自身でトリアージするため）
+- stdout/stderr は `agents/logs/` に出力（gitignore対象）
+
+### シャットダウン
+
+- Ctrl-C 1回: 終了モード（新規エージェント起動停止、実行中のエージェント終了待ち）
+- Ctrl-C 3回/1秒以内: 全エージェント強制終了して即座に終了
+
+### エラー対応
+
+- エージェント起動失敗時: 指数バックオフ（5秒、15秒、45秒）で3回リトライ
+- 3回失敗で終了モードに移行
+- project-manager が30秒以内に3回クラッシュした場合も終了モードに移行
+
+### 同時プロセス制限
+
+- 全体の同時プロセス上限: デフォルト10（`SPAWNER_MAX_CONCURRENT` で変更可能）
+- 上限超過時はキュー（FIFO順）に入り、プロセス終了時に順次起動
+- project-manager は常に同時1プロセスのみ
+
+### 従来のサブエージェント起動との違い
+
+- `.claude/agents/` のエージェント定義ファイルは `agents/prompt/` に移行済み
+- Claude Codeの対話モード（delegateモード）の設定は `.claude/settings.json` に残るが、サブエージェント定義ファイルが存在しないためdelegate経由の起動は不可
+- エージェントの起動はspawnerが自動的に行うため、PMが手動でサブエージェントを起動する必要はない
 
 ## 軽微な修正の例外規定
 

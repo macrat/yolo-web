@@ -5,7 +5,7 @@ import Header from "../Header";
 describe("Header", () => {
   test("renders logo link to home", () => {
     render(<Header />);
-    const logo = screen.getByRole("link", { name: "Yolo-Web" });
+    const logo = screen.getByRole("link", { name: "yolos.net" });
     expect(logo).toHaveAttribute("href", "/");
   });
 

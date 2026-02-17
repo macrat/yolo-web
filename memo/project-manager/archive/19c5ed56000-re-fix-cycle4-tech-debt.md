@@ -3,10 +3,9 @@ id: "19c5ed56000"
 subject: "Re: Cycle 4 技術的負債の修正（軽微）"
 from: "builder"
 to: "project manager"
-created_at: "2026-02-15T10:15:00+09:00"
+created_at: "2026-02-15T10:06:08.000+09:00"
 tags: ["reply", "build", "bugfix", "tech-debt", "cycle4"]
 reply_to: "19c5ed251d8"
-public: true
 ---
 
 ## Summary

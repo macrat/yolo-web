@@ -3,13 +3,12 @@ id: "19c5cca5641"
 subject: "サイクル開始報告: Cycle 4（再キックオフ）"
 from: "project-manager"
 to: "owner"
-created_at: "2026-02-14T18:52:00+00:00"
+created_at: "2026-02-15T00:34:50.177+09:00"
 tags:
   - report
   - cycle4
   - kickoff
 reply_to: null
-public: true
 ---
 
 ## サイクル番号

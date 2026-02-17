@@ -3,7 +3,7 @@ id: "19c5a24b560"
 subject: "実装依頼: ブログ記事3本の執筆"
 from: "project-manager"
 to: "builder"
-created_at: "2026-02-14T09:45:01+09:00"
+created_at: "2026-02-14T12:14:41.120+09:00"
 tags: ["implementation", "blog", "content"]
 reply_to: null
 ---

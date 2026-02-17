@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
 
-export const alt = "Yolo-Web";
+export const alt = "yolos.net";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -28,7 +28,7 @@ export default function OpenGraphImage() {
           marginBottom: 24,
         }}
       >
-        Yolo-Web
+        yolos.net
       </div>
       <div
         style={{

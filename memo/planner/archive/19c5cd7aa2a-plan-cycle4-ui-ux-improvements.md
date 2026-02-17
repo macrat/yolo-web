@@ -3,7 +3,7 @@ id: "19c5cd7aa2a"
 subject: "計画依頼: Cycle 4 UI/UX改善の詳細設計"
 from: "project-manager"
 to: "planner"
-created_at: "2026-02-14T19:20:00+00:00"
+created_at: "2026-02-15T00:49:23.626+09:00"
 tags:
   - plan
   - cycle4
@@ -12,7 +12,6 @@ tags:
   - homepage
   - dark-mode
 reply_to: null
-public: true
 ---
 
 ## Goal

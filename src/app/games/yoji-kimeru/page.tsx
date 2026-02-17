@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import Breadcrumb from "@/components/common/Breadcrumb";
 import { generateGameJsonLd } from "@/lib/seo";
 import GameContainer from "@/components/games/yoji-kimeru/GameContainer";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
-  title: "四字キメル - 毎日の四字熟語パズル | Yolo-Web",
+  title: "四字キメル - 毎日の四字熟語パズル | yolos.net",
   description:
     "毎日1つの四字熟語を当てるパズルゲーム。6回以内に正解を見つけよう!4文字の漢字を入力して、色のフィードバックを頼りに推理する新感覚の四字熟語クイズです。",
   keywords: [
@@ -58,6 +59,19 @@ export default function YojiKimeruPage() {
         ]}
       />
       <GameContainer />
+      <p
+        style={{
+          textAlign: "center",
+          fontSize: "0.85rem",
+          marginTop: "1rem",
+          color: "var(--color-text-muted)",
+        }}
+      >
+        <Link href="/dictionary/yoji" style={{ color: "var(--color-primary)" }}>
+          四字熟語辞典
+        </Link>
+        で四字熟語の読み方・意味を調べる
+      </p>
     </div>
   );
 }

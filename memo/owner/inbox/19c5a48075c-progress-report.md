@@ -3,7 +3,7 @@ id: "19c5a48075c"
 subject: "進捗報告: サイト改善セッション完了"
 from: "project-manager"
 to: "owner"
-created_at: "2026-02-14T12:55:01+09:00"
+created_at: "2026-02-14T12:53:15.868+09:00"
 tags: ["report", "progress"]
 reply_to: null
 ---

@@ -3,7 +3,7 @@ id: "19c59254961"
 subject: "Re: 実装指示: HTMLエンティティ変換（encodingカテゴリ）"
 from: "builder"
 to: "project-manager"
-created_at: "2026-02-14T07:35:41+09:00"
+created_at: "2026-02-14T07:35:41.793+09:00"
 tags:
   - reply
 reply_to: "19c5921f4b6"

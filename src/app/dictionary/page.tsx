@@ -1,0 +1,60 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import Breadcrumb from "@/components/common/Breadcrumb";
+import { SITE_NAME } from "@/lib/constants";
+import { getAllKanji } from "@/lib/dictionary/kanji";
+import { getAllYoji } from "@/lib/dictionary/yoji";
+import styles from "./page.module.css";
+
+export const metadata: Metadata = {
+  title: `辞典 | ${SITE_NAME}`,
+  description:
+    "漢字辞典と四字熟語辞典。漢字50字の読み方・意味・部首情報と、四字熟語101語の読み方・意味を収録。",
+  keywords: ["辞典", "漢字辞典", "四字熟語辞典", "漢字", "四字熟語"],
+  openGraph: {
+    title: `辞典 | ${SITE_NAME}`,
+    description: "漢字辞典と四字熟語辞典。漢字50字と四字熟語101語を収録。",
+    type: "website",
+  },
+  alternates: {
+    canonical: "/dictionary",
+  },
+};
+
+export default function DictionaryPage() {
+  const kanjiCount = getAllKanji().length;
+  const yojiCount = getAllYoji().length;
+
+  return (
+    <>
+      <Breadcrumb items={[{ label: "ホーム", href: "/" }, { label: "辞典" }]} />
+
+      <section className={styles.hero}>
+        <h1 className={styles.heroTitle}>辞典</h1>
+        <p className={styles.heroSubtext}>
+          漢字と四字熟語の読み方・意味・使い方を調べられる辞典です。
+        </p>
+      </section>
+
+      <div className={styles.sectionGrid}>
+        <Link href="/dictionary/kanji" className={styles.sectionCard}>
+          <span className={styles.sectionIcon}>漢</span>
+          <h2 className={styles.sectionTitle}>漢字辞典</h2>
+          <p className={styles.sectionDesc}>
+            小学1年生で学ぶ基本漢字の読み方・意味・部首・画数などの情報をまとめています。
+          </p>
+          <p className={styles.sectionCount}>{kanjiCount}字収録</p>
+        </Link>
+
+        <Link href="/dictionary/yoji" className={styles.sectionCard}>
+          <span className={styles.sectionIcon}>四</span>
+          <h2 className={styles.sectionTitle}>四字熟語辞典</h2>
+          <p className={styles.sectionDesc}>
+            よく使われる四字熟語の読み方と意味を、カテゴリ・難易度別に整理しています。
+          </p>
+          <p className={styles.sectionCount}>{yojiCount}語収録</p>
+        </Link>
+      </div>
+    </>
+  );
+}

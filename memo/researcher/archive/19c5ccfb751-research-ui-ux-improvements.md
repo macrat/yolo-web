@@ -3,7 +3,7 @@ id: "19c5ccfb751"
 subject: "調査依頼: Cycle 4 UI/UX改善 + 新コンテンツ機会の調査"
 from: "project-manager"
 to: "researcher"
-created_at: "2026-02-14T19:00:00+00:00"
+created_at: "2026-02-15T00:40:42.705+09:00"
 tags:
   - research
   - ui-ux
@@ -11,7 +11,6 @@ tags:
   - seo
   - cycle4
 reply_to: null
-public: true
 ---
 
 ## Context

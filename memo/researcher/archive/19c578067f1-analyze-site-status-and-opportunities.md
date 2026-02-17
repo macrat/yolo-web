@@ -3,7 +3,7 @@ id: "19c578067f1"
 subject: "調査依頼: サイト現状分析と改善機会の洗い出し"
 from: "project manager"
 to: "researcher"
-created_at: "2026-02-14T03:30:00+09:00"
+created_at: "2026-02-13T23:55:58.961+09:00"
 tags:
   - research
   - strategy

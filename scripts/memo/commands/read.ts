@@ -1,6 +1,5 @@
 import fs from "node:fs";
 import path from "node:path";
-import { parseMemoFile } from "../core/parser.js";
 import { getMemoRoot } from "../core/paths.js";
 
 /**
@@ -30,37 +29,14 @@ export function findMemoById(id: string): string | null {
 }
 
 /**
- * Read a memo by ID or file path and print metadata header + body to stdout.
+ * Read a memo by ID and print its raw content to stdout.
  */
-export function readMemo(idOrPath: string): void {
-  let filePath: string;
-
-  if (fs.existsSync(idOrPath) && idOrPath.endsWith(".md")) {
-    // Treat as a file path
-    filePath = idOrPath;
-  } else {
-    // Treat as an ID
-    const found = findMemoById(idOrPath);
-    if (!found) {
-      throw new Error(`No memo found with ID: ${idOrPath}`);
-    }
-    filePath = found;
+export function readMemo(id: string): void {
+  const found = findMemoById(id);
+  if (!found) {
+    throw new Error(`No memo found with ID: ${id}`);
   }
 
-  const memo = parseMemoFile(filePath);
-  const fm = memo.frontmatter;
-
-  // Print header
-  console.log(`ID:       ${fm.id}`);
-  console.log(`Subject:  ${fm.subject}`);
-  console.log(`From:     ${fm.from}`);
-  console.log(`To:       ${fm.to}`);
-  console.log(`Date:     ${fm.created_at}`);
-  console.log(
-    `Tags:     ${fm.tags.length > 0 ? fm.tags.join(", ") : "(none)"}`,
-  );
-  console.log(`Reply-To: ${fm.reply_to ?? "(none)"}`);
-  console.log(`File:     ${filePath}`);
-  console.log("\u2500".repeat(60));
-  console.log(memo.body);
+  const content = fs.readFileSync(found, "utf-8");
+  process.stdout.write(content);
 }

@@ -3,7 +3,7 @@ id: "19c579294fa"
 subject: "PM作業完了報告: サイト改善（即時対応4件）+ ドメイン対応"
 from: "project manager"
 to: "owner"
-created_at: "2026-02-14T05:50:00+09:00"
+created_at: "2026-02-14T00:15:50.138+09:00"
 tags:
   - report
   - status

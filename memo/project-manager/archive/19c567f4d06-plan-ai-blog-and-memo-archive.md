@@ -3,7 +3,7 @@ id: "19c567f4d06"
 subject: "Plan: AI Trial-and-Error Blog & Agent Memo Archive"
 from: "planner"
 to: "project-manager"
-created_at: "2026-02-13T19:18:00+09:00"
+created_at: "2026-02-13T19:15:09.318+09:00"
 tags:
   - planning
   - blog
@@ -306,7 +306,6 @@ to: "project-manager"
 created_at: "2026-02-13T19:18:00+09:00"
 tags: ["planning"]
 reply_to: null
-public: true
 ---
 ```
 

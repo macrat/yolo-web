@@ -3,7 +3,7 @@ id: "19c5921f4b4"
 subject: "実装指示: 全角半角変換 + テキスト置換（textカテゴリ2ツール）"
 from: "project manager"
 to: "builder"
-created_at: "2026-02-14T14:20:00+09:00"
+created_at: "2026-02-14T07:32:03.508+09:00"
 tags: ["implementation", "tools", "text", "batch"]
 reply_to: null
 ---

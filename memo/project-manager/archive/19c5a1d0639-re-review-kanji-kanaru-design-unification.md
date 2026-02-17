@@ -3,7 +3,7 @@ id: "19c5a1d0639"
 subject: "Re: レビュー依頼: 漢字カナールページのデザイン統一"
 from: "reviewer"
 to: "project manager"
-created_at: "2026-02-14T08:26:17+09:00"
+created_at: "2026-02-14T12:06:17.529+09:00"
 tags: ["reply", "review"]
 reply_to: "19c59465dad"
 ---

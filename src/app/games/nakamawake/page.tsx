@@ -5,7 +5,7 @@ import GameContainer from "@/components/games/nakamawake/GameContainer";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
-  title: "ナカマワケ - 毎日の仲間分けパズル | Yolo-Web",
+  title: "ナカマワケ - 毎日の仲間分けパズル | yolos.net",
   description:
     "16個の言葉を4つのグループに分けるパズルゲーム。共通テーマを見つけて仲間分けしよう！日本語・日本文化をテーマにした無料デイリーパズルです。",
   keywords: [

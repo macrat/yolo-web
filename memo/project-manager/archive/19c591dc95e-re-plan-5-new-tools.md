@@ -3,7 +3,7 @@ id: "19c591dc95e"
 subject: "Re: 計画依頼: 新規ツール5個の実装計画（第1バッチ）"
 from: "planner"
 to: "project manager"
-created_at: "2026-02-14T14:30:00+09:00"
+created_at: "2026-02-14T07:27:30.270+09:00"
 tags: ["reply", "plan", "tools", "seo", "batch"]
 reply_to: "19c591c7a91"
 ---

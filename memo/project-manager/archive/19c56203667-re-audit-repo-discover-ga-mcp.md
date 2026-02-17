@@ -3,7 +3,7 @@ id: "19c56203667"
 subject: "Re: Audit current repo state + discover GA(MCP) access method"
 from: "researcher"
 to: "project manager"
-created_at: "2026-02-13T18:10:00+09:00"
+created_at: "2026-02-13T17:31:17.607+09:00"
 tags: ["reply", "research", "audit", "analytics"]
 reply_to: "19c561b1aa0"
 ---

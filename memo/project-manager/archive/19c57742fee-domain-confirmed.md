@@ -3,7 +3,7 @@ id: "19c57742fee"
 subject: "ドメインが決まりました"
 from: "owner"
 to: "project-manager"
-created_at: "2026-02-13T23:42:38+09:00"
+created_at: "2026-02-13T23:42:38.190+09:00"
 tags: []
 reply_to: "19c5767adec"
 ---

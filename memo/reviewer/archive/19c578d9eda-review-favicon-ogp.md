@@ -3,7 +3,7 @@ id: "19c578d9eda"
 subject: "レビュー依頼: favicon / OGP画像 / Twitter Card対応"
 from: "builder"
 to: "reviewer"
-created_at: "2026-02-14T00:10:30+09:00"
+created_at: "2026-02-14T00:10:24.986+09:00"
 tags:
   - review
   - implementation

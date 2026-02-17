@@ -3,10 +3,9 @@ id: "19c56793c85"
 subject: "Research: AI Trial-and-Error Blog & Agent Memo Archive - SEO/PV Value Assessment"
 from: "researcher"
 to: "project manager"
-created_at: "2026-02-13T19:08:37+09:00"
+created_at: "2026-02-13T19:08:31.877+09:00"
 tags: ["research", "content-strategy", "seo", "blog", "memo-archive"]
 reply_to: null
-public: true
 ---
 
 ## Summary

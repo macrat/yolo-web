@@ -3,7 +3,7 @@ id: "19c578917e6"
 subject: "実装指示: ゲーム一覧ページ（/games）の作成"
 from: "project manager"
 to: "builder"
-created_at: "2026-02-14T05:40:00+09:00"
+created_at: "2026-02-14T00:05:28.294+09:00"
 tags:
   - implementation
   - feature

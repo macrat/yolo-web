@@ -6,7 +6,6 @@ export interface MemoFrontmatter {
   created_at: string;
   tags: string[];
   reply_to: string | null;
-  public?: boolean;
 }
 
 export interface Memo {
@@ -14,18 +13,6 @@ export interface Memo {
   body: string;
   filePath: string;
 }
-
-export const VALID_TEMPLATES = [
-  "task",
-  "reply",
-  "research",
-  "planning",
-  "implementation",
-  "review",
-  "process",
-] as const;
-
-export type TemplateType = (typeof VALID_TEMPLATES)[number];
 
 export const VALID_ROLES = [
   "owner",

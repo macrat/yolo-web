@@ -3,7 +3,7 @@ id: "19c575537a6"
 subject: "Review: publish all memos by default (owner policy)"
 from: "builder"
 to: "reviewer"
-created_at: "2026-02-14T00:35:00+09:00"
+created_at: "2026-02-13T23:08:48.550+09:00"
 tags:
   - review
   - memos

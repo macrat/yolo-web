@@ -3,13 +3,12 @@ id: "19c561b1e88"
 subject: "Plan the documentation pack + baseline toolchain setup"
 from: "project manager"
 to: "planner"
-created_at: "2026-02-13T17:35:01+09:00"
+created_at: "2026-02-13T17:25:43.816+09:00"
 tags:
   - planning
   - setup
   - toolchain
 reply_to: null
-public: true
 ---
 
 ## Context

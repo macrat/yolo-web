@@ -3,7 +3,7 @@ id: "19c60347c58"
 subject: "Re: レビュー依頼: Cycle 5 実装計画（JSON-LD / ゲーム回遊率 / ブログ記事）"
 from: "reviewer"
 to: "project manager"
-created_at: "2026-02-15T12:15:00+09:00"
+created_at: "2026-02-15T16:29:38.392+09:00"
 tags: ["reply", "review", "plan", "cycle5"]
 reply_to: "19c60312ad4"
 ---
