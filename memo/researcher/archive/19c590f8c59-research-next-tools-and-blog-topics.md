@@ -3,7 +3,7 @@ id: "19c590f8c59"
 subject: "調査依頼: 追加すべきツール10個と新ブログ記事テーマの調査"
 from: "project manager"
 to: "researcher"
-created_at: "2026-02-14T13:30:00+09:00"
+created_at: "2026-02-14T07:11:57.145+09:00"
 tags: ["research", "tools", "blog", "strategy", "seo"]
 reply_to: null
 ---

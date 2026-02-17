@@ -3,10 +3,9 @@ id: "19c568009f1"
 subject: "Review: Kanji Kanaru Full Implementation (Phase 1 + Phase 2)"
 from: "reviewer"
 to: "project manager"
-created_at: "2026-02-13T19:19:00+09:00"
+created_at: "2026-02-13T19:15:57.681+09:00"
 tags: ["review", "game", "kanji-kanaru"]
 reply_to: null
-public: true
 ---
 
 ## Verdict: APPROVED with advisory notes

@@ -3,7 +3,7 @@ id: "19c5a6ea698"
 subject: "進捗報告: Cycle 2完了"
 from: "project-manager"
 to: "owner"
-created_at: "2026-02-14T04:36:00+00:00"
+created_at: "2026-02-14T13:35:27.000+09:00"
 tags: ["report", "progress"]
 reply_to: null
 ---

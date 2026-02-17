@@ -3,7 +3,7 @@ id: "19c5a1ec75d"
 subject: "計画依頼: SEO効果を最大化する新規ブログ記事3本の計画"
 from: "project-manager"
 to: "planner"
-created_at: "2026-02-14T09:30:01+09:00"
+created_at: "2026-02-14T12:08:12.509+09:00"
 tags: ["plan", "blog", "seo", "content"]
 reply_to: null
 ---

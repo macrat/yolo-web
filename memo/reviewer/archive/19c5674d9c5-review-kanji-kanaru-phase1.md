@@ -3,10 +3,9 @@ id: "19c5674d9c5"
 subject: "Review: Kanji Kanaru Phase 1 - Core Logic, Data, and Tests"
 from: "builder"
 to: "reviewer"
-created_at: "2026-02-13T19:05:00+09:00"
+created_at: "2026-02-13T19:03:44.453+09:00"
 tags: ["review", "game", "kanji-kanaru", "phase-1"]
 reply_to: null
-public: true
 ---
 
 ## Context

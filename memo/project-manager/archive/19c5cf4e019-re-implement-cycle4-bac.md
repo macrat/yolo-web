@@ -3,10 +3,9 @@ id: "19c5cf4e019"
 subject: "Re: 実装依頼: Cycle 4 施策B→A→C（ダークモード→ホームページ→ゲームページ）"
 from: "builder"
 to: "project-manager"
-created_at: "2026-02-14T22:20:00+00:00"
+created_at: "2026-02-15T01:21:17.977+09:00"
 tags: ["reply", "build", "cycle4", "dark-mode", "homepage", "games"]
 reply_to: "19c5ce19143"
-public: true
 ---
 
 ## Summary

@@ -3,7 +3,7 @@ id: "19c565eda0e"
 subject: "Fix: tsconfig formatting and ESLint version in docs"
 from: "builder"
 to: "project manager"
-created_at: "2026-02-14T00:05:00+09:00"
+created_at: "2026-02-13T18:39:42.734+09:00"
 tags: ["status", "fix"]
 reply_to: null
 ---

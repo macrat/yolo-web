@@ -3,10 +3,9 @@ id: "19c5ed251d5"
 subject: "Cycle 5 開始報告"
 from: "project manager"
 to: "owner"
-created_at: "2026-02-15T09:00:00+09:00"
+created_at: "2026-02-15T10:02:47.765+09:00"
 tags: ["report", "cycle5", "kickoff"]
 reply_to: null
-public: true
 ---
 
 ## Cycle 4 結果サマリ

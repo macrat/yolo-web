@@ -6,7 +6,7 @@ import { createMemo } from "../commands/create.js";
 
 let tmpDir: string;
 
-// Mock getMemoRoot and memoFilePath to use temp directory
+// Mock getMemoRoot, memoFilePath, and scanAllMemos to use temp directory
 vi.mock("../core/paths.js", async () => {
   const actual =
     await vi.importActual<typeof import("../core/paths.js")>(
@@ -14,6 +14,7 @@ vi.mock("../core/paths.js", async () => {
     );
   return {
     ...actual,
+    getMemoRoot: () => tmpDir,
     memoFilePath: (roleSlug: string, id: string, subject: string) => {
       const kebab = actual.toKebabCase(subject);
       return path.join(tmpDir, roleSlug, "inbox", `${id}-${kebab}.md`);
@@ -30,84 +31,134 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe("createMemo with body option", () => {
-  test("uses body when provided instead of template", () => {
-    const filePath = createMemo({
+describe("createMemo", () => {
+  test("creates a memo and returns the ID", () => {
+    const id = createMemo({
       subject: "Test with body",
       from: "planner",
       to: "builder",
       tags: [],
       replyTo: null,
-      template: "task",
       body: "## Summary\nCustom body content here.",
+      skipCredentialCheck: true,
     });
 
-    const content = fs.readFileSync(filePath, "utf-8");
+    expect(id).toMatch(/^[0-9a-f]+$/);
 
-    // Should contain frontmatter
+    // Find the created file
+    const inboxDir = path.join(tmpDir, "builder", "inbox");
+    const files = fs.readdirSync(inboxDir);
+    expect(files.length).toBe(1);
+
+    const content = fs.readFileSync(path.join(inboxDir, files[0]), "utf-8");
     expect(content).toContain('subject: "Test with body"');
     expect(content).toContain('from: "planner"');
     expect(content).toContain('to: "builder"');
-
-    // Should contain the custom body, not the template
     expect(content).toContain("## Summary\nCustom body content here.");
-    expect(content).not.toContain("## Context");
-    expect(content).not.toContain("<why this exists");
+    // Should NOT contain public field
+    expect(content).not.toContain("public:");
   });
 
-  test("uses template when body is undefined", () => {
-    const filePath = createMemo({
-      subject: "Test without body",
+  test("created_at has millisecond precision", () => {
+    const id = createMemo({
+      subject: "Timestamp test",
       from: "planner",
       to: "builder",
       tags: [],
       replyTo: null,
-      template: "task",
+      body: "Body content.",
+      skipCredentialCheck: true,
     });
 
-    const content = fs.readFileSync(filePath, "utf-8");
+    const inboxDir = path.join(tmpDir, "builder", "inbox");
+    const files = fs.readdirSync(inboxDir);
+    const content = fs.readFileSync(path.join(inboxDir, files[0]), "utf-8");
 
-    // Should contain the task template content
-    expect(content).toContain("## Context");
-    expect(content).toContain("<why this exists");
+    // Match millisecond precision timestamp
+    const match = content.match(
+      /created_at:\s*"(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}[+-]\d{2}:\d{2})"/,
+    );
+    expect(match).not.toBeNull();
+
+    // Verify ID and created_at are from same timestamp
+    const createdAt = match![1];
+    const ms = new Date(createdAt).getTime();
+    expect(ms.toString(16)).toBe(id);
   });
 
-  test("body content has proper formatting with frontmatter", () => {
-    const filePath = createMemo({
-      subject: "Formatting test",
-      from: "builder",
-      to: "reviewer",
-      tags: ["test"],
-      replyTo: null,
-      template: "reply",
-      body: "## Results\nAll tests pass.",
-    });
-
-    const content = fs.readFileSync(filePath, "utf-8");
-
-    // Should have frontmatter delimiters followed by blank line then body
-    expect(content).toMatch(/---\n\n## Results\nAll tests pass.\n$/);
-  });
-
-  test("body works correctly with reply memos", () => {
-    const filePath = createMemo({
+  test("auto-prefixes Re: and adds reply tag for replies", () => {
+    const id = createMemo({
       subject: "Task done",
       from: "builder",
       to: "planner",
       tags: [],
       replyTo: "abc123",
-      template: "reply",
       body: "## Summary\nImplemented as requested.",
+      skipCredentialCheck: true,
     });
 
-    const content = fs.readFileSync(filePath, "utf-8");
+    const inboxDir = path.join(tmpDir, "planner", "inbox");
+    const files = fs.readdirSync(inboxDir);
+    const content = fs.readFileSync(path.join(inboxDir, files[0]), "utf-8");
 
-    // Should auto-prefix "Re: " and auto-add "reply" tag
     expect(content).toContain('subject: "Re: Task done"');
-    expect(content).toContain("reply");
+    expect(content).toContain("  - reply");
     expect(content).toContain('reply_to: "abc123"');
+    expect(id).toMatch(/^[0-9a-f]+$/);
+  });
 
-    // Should use the provided body
-    expect(content).toContain("## Summary\nImplemented as requested.");
+  test("throws error when body is empty", () => {
+    expect(() =>
+      createMemo({
+        subject: "Empty body",
+        from: "planner",
+        to: "builder",
+        tags: [],
+        replyTo: null,
+        body: "",
+        skipCredentialCheck: true,
+      }),
+    ).toThrow("Body is required and cannot be empty");
+  });
+
+  test("throws error when body is only whitespace", () => {
+    expect(() =>
+      createMemo({
+        subject: "Whitespace body",
+        from: "planner",
+        to: "builder",
+        tags: [],
+        replyTo: null,
+        body: "   \n  \n  ",
+        skipCredentialCheck: true,
+      }),
+    ).toThrow("Body is required and cannot be empty");
+  });
+
+  test("credential check detects suspicious content", () => {
+    expect(() =>
+      createMemo({
+        subject: "Config update",
+        from: "builder",
+        to: "reviewer",
+        tags: [],
+        replyTo: null,
+        body: "Set api_key = sk_live_abc123xyz",
+      }),
+    ).toThrow("Potential credential detected");
+  });
+
+  test("credential check can be skipped", () => {
+    const id = createMemo({
+      subject: "Config update",
+      from: "builder",
+      to: "reviewer",
+      tags: [],
+      replyTo: null,
+      body: "Set api_key = sk_live_abc123xyz",
+      skipCredentialCheck: true,
+    });
+
+    expect(id).toMatch(/^[0-9a-f]+$/);
   });
 });

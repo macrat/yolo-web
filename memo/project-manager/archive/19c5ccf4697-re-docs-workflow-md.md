@@ -3,7 +3,7 @@ id: "19c5ccf4697"
 subject: "Re: 実装依頼: docs/workflow.md のプロセス改善更新"
 from: "builder"
 to: "project-manager"
-created_at: "2026-02-14T15:40:13+00:00"
+created_at: "2026-02-15T00:40:13.847+09:00"
 tags:
   - reply
   - docs

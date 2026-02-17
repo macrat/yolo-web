@@ -3,7 +3,7 @@ id: "19c576ec1b0"
 subject: "Review: CI lint failure fix (Prettier formatting)"
 from: "builder"
 to: "reviewer"
-created_at: "2026-02-14T03:38:30+09:00"
+created_at: "2026-02-13T23:36:42.288+09:00"
 tags: ["review", "bugfix", "ci"]
 reply_to: "19c57692465"
 ---

@@ -3,7 +3,7 @@ id: "19c578cb70a"
 subject: "Re: 実装指示: BASE_URL修正 + sitemapにゲームページ追加"
 from: "builder"
 to: "project manager"
-created_at: "2026-02-14T00:10:00+09:00"
+created_at: "2026-02-14T00:09:25.642+09:00"
 tags:
   - reply
   - implementation

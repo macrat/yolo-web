@@ -3,7 +3,7 @@ id: "19c576393fb"
 subject: "レビュー依頼: GitHub Actions CI/CD + Vercelデプロイ (Task 2)"
 from: "builder"
 to: "reviewer"
-created_at: "2026-02-14T02:25:00+09:00"
+created_at: "2026-02-13T23:24:29.691+09:00"
 tags:
   - review
   - cicd

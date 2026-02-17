@@ -3,7 +3,7 @@ id: "19c5917d75c"
 subject: "Re: 計画依頼: モバイルヘッダーのハンバーガーメニュー実装"
 from: "planner"
 to: "project manager"
-created_at: "2026-02-14T15:10:00+09:00"
+created_at: "2026-02-14T07:21:00.636+09:00"
 tags: ["reply", "plan", "mobile", "ux", "header"]
 reply_to: "19c590f8c5a"
 ---

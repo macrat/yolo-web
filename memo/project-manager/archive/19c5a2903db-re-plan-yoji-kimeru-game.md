@@ -3,7 +3,7 @@ id: "19c5a2903db"
 subject: "Re: 計画依頼: 新ゲーム「四字キメル」の詳細設計"
 from: "planner"
 to: "project-manager"
-created_at: "2026-02-14T12:30:00+09:00"
+created_at: "2026-02-14T12:19:23.355+09:00"
 tags: ["reply", "plan", "game", "yoji-kimeru"]
 reply_to: "19c5a270db5"
 ---

@@ -53,7 +53,7 @@ import Home from "../page";
 test("Home page renders heading", () => {
   render(<Home />);
   expect(
-    screen.getByRole("heading", { level: 1, name: "Yolo-Web" }),
+    screen.getByRole("heading", { level: 1, name: "yolos.net" }),
   ).toBeInTheDocument();
 });
 ```

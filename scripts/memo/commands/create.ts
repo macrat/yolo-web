@@ -2,9 +2,10 @@ import fs from "node:fs";
 import path from "node:path";
 import { generateMemoId } from "../core/id.js";
 import { formatTimestamp, serializeFrontmatter } from "../core/frontmatter.js";
-import { getTemplate } from "../core/templates.js";
 import { resolveRoleSlug, memoFilePath } from "../core/paths.js";
-import type { MemoFrontmatter, TemplateType } from "../types.js";
+import { checkCredentials } from "../core/credential-check.js";
+import { scanAllMemos } from "../core/scanner.js";
+import type { MemoFrontmatter } from "../types.js";
 
 export interface CreateOptions {
   subject: string;
@@ -12,15 +13,35 @@ export interface CreateOptions {
   to: string;
   tags: string[];
   replyTo: string | null;
-  template: TemplateType;
-  public?: boolean;
-  body?: string; // If provided, use this instead of template
+  body: string;
+  skipCredentialCheck?: boolean;
 }
 
+/**
+ * Create a new memo file.
+ * Returns the created memo's ID.
+ */
 export function createMemo(options: CreateOptions): string {
-  const id = generateMemoId();
   const fromSlug = resolveRoleSlug(options.from);
   const toSlug = resolveRoleSlug(options.to);
+
+  // Validate body is not empty
+  if (!options.body || options.body.trim() === "") {
+    throw new Error("Body is required and cannot be empty");
+  }
+
+  // Credential check
+  if (!options.skipCredentialCheck) {
+    const textToCheck = `${options.subject}\n${options.body}`;
+    const result = checkCredentials(textToCheck);
+    if (result.found) {
+      throw new Error(
+        `Warning: Potential credential detected: ${result.description}\n` +
+          `Memo content will be public on GitHub and the website.\n` +
+          `If the content is safe to publish, re-run with --skip-credential-check`,
+      );
+    }
+  }
 
   // Auto-prefix "Re: " for replies
   let subject = options.subject;
@@ -34,20 +55,29 @@ export function createMemo(options: CreateOptions): string {
     tags.unshift("reply");
   }
 
+  // Generate ID and timestamp from same millisecond value
+  let { id, timestamp } = generateMemoId();
+
+  // Check for ID collisions
+  const existingMemos = scanAllMemos();
+  const existingIds = new Set(existingMemos.map((m) => m.frontmatter.id));
+  while (existingIds.has(id)) {
+    timestamp += 1;
+    id = timestamp.toString(16);
+  }
+
   const frontmatter: MemoFrontmatter = {
     id,
     subject,
     from: fromSlug,
     to: toSlug,
-    created_at: formatTimestamp(),
+    created_at: formatTimestamp(timestamp),
     tags,
     reply_to: options.replyTo,
-    public: options.public,
   };
 
   const yaml = serializeFrontmatter(frontmatter);
-  const body = options.body ?? getTemplate(options.template);
-  const content = options.body ? `${yaml}\n\n${body}\n` : `${yaml}\n${body}`;
+  const content = `${yaml}\n\n${options.body}\n`;
 
   const filePath = memoFilePath(toSlug, id, subject);
   const dir = path.dirname(filePath);
@@ -56,5 +86,5 @@ export function createMemo(options: CreateOptions): string {
   fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(filePath, content, "utf-8");
 
-  return filePath;
+  return id;
 }

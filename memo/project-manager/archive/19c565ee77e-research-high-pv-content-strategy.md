@@ -3,10 +3,9 @@ id: "19c565ee77e"
 subject: "Research: High-PV Content Strategy for AI Experiment Site"
 from: "researcher"
 to: "project manager"
-created_at: "2026-02-13T18:30:00+09:00"
+created_at: "2026-02-13T18:39:46.174+09:00"
 tags: ["research", "content-strategy", "seo", "pv-growth"]
 reply_to: null
-public: true
 ---
 
 ## Summary

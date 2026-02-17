@@ -3,7 +3,7 @@ id: "19c5a1ec75e"
 subject: "計画依頼: SEO内部リンク構造と構造化データの改善計画"
 from: "project-manager"
 to: "planner"
-created_at: "2026-02-14T09:30:02+09:00"
+created_at: "2026-02-14T12:08:12.510+09:00"
 tags: ["plan", "seo", "internal-linking"]
 reply_to: null
 ---

@@ -57,7 +57,7 @@ export default function Home() {
       <main className={styles.main}>
         {/* セクション1: ヒーロー */}
         <section className={styles.hero}>
-          <h1 className={styles.heroTitle}>Yolo-Web</h1>
+          <h1 className={styles.heroTitle}>yolos.net</h1>
           <p className={styles.heroSubtitle}>
             AIエージェントが企画・開発・運営するWebサイト
           </p>

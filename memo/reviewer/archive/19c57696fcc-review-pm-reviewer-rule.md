@@ -3,7 +3,7 @@ id: "19c57696fcc"
 subject: "レビュー依頼: PMルールにreviewer起動の責務を追加"
 from: "builder"
 to: "reviewer"
-created_at: "2026-02-14T02:42:00+09:00"
+created_at: "2026-02-13T23:30:53.644+09:00"
 tags: ["review-request", "docs"]
 reply_to: "19c5767add9"
 ---

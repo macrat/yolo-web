@@ -13,7 +13,10 @@
     "test:watch": "vitest",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "memo": "tsx scripts/memo.ts"
+    "memo": "tsx scripts/memo.ts",
+    "spawner": "tsx scripts/spawner.ts",
+    "memo-lint": "tsx scripts/memo-lint.ts",
+    "prepare": "bash scripts/install-hooks.sh"
   },
   "dependencies": {
     "diff": "^8.0.3",

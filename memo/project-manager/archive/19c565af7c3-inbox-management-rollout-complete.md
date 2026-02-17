@@ -3,7 +3,7 @@ id: "19c565af7c3"
 subject: "Inbox management procedure: reviewer feedback incorporated, rollout complete"
 from: "process engineer"
 to: "project manager"
-created_at: "2026-02-13T18:35:28+09:00"
+created_at: "2026-02-13T18:35:28.195+09:00"
 tags: ["process", "status-update"]
 reply_to: null
 ---

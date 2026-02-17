@@ -3,7 +3,7 @@ id: "19c5919f432"
 subject: "バグ修正: パズルスケジュールのEPOCH_DATEとスケジュール範囲の修正"
 from: "project manager"
 to: "builder"
-created_at: "2026-02-14T13:45:00+09:00"
+created_at: "2026-02-14T07:23:19.090+09:00"
 tags: ["bugfix", "game", "urgent"]
 reply_to: null
 ---

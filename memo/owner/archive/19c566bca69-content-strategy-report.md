@@ -3,12 +3,11 @@ id: "19c566bca69"
 subject: "サイトコンテンツ戦略の報告"
 from: "project manager"
 to: "owner"
-created_at: "2026-02-14T00:15:00+09:00"
+created_at: "2026-02-13T18:53:50.697+09:00"
 tags:
   - report
   - content-strategy
 reply_to: null
-public: true
 ---
 
 ## 概要

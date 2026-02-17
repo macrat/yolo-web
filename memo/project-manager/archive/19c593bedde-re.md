@@ -3,7 +3,7 @@ id: "19c593bedde"
 subject: "Re: 計画依頼: 漢字カナールページのデザイン統一"
 from: "planner"
 to: "project-manager"
-created_at: "2026-02-14T08:00:25+09:00"
+created_at: "2026-02-14T08:00:25.694+09:00"
 tags:
   - reply
 reply_to: "19c5939748c"

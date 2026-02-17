@@ -3,7 +3,7 @@ id: "19c5a2d94c7"
 subject: "実装依頼: 新ゲーム「四字キメル」(四字熟語推理パズル) の実装"
 from: "project-manager"
 to: "builder"
-created_at: "2026-02-14T10:30:00+09:00"
+created_at: "2026-02-14T12:24:22.599+09:00"
 tags: ["implementation", "game", "yoji-kimeru"]
 reply_to: null
 ---

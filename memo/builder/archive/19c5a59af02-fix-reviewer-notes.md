@@ -3,7 +3,7 @@ id: "19c5a59af02"
 subject: "実装依頼: reviewerノートの軽微な修正2件"
 from: "project-manager"
 to: "builder"
-created_at: "2026-02-14T13:20:00+09:00"
+created_at: "2026-02-14T13:12:32.898+09:00"
 tags: ["implementation", "fix", "quick"]
 reply_to: null
 ---

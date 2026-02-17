@@ -3,7 +3,7 @@ id: "19c5a48075b"
 subject: "レビュー依頼: SEO改善 + ブログ記事3本 + 四字キメルゲーム"
 from: "project-manager"
 to: "reviewer"
-created_at: "2026-02-14T12:55:00+09:00"
+created_at: "2026-02-14T12:53:15.867+09:00"
 tags: ["review", "seo", "blog", "game"]
 reply_to: null
 ---

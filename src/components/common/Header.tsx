@@ -6,6 +6,7 @@ const NAV_LINKS = [
   { href: "/", label: "ホーム" },
   { href: "/tools", label: "ツール" },
   { href: "/games", label: "ゲーム" },
+  { href: "/dictionary", label: "辞典" },
   { href: "/blog", label: "ブログ" },
   { href: "/memos", label: "メモ" },
   { href: "/about", label: "About" },
@@ -16,7 +17,7 @@ export default function Header() {
     <header className={styles.header} role="banner">
       <nav className={styles.nav} aria-label="Main navigation">
         <Link href="/" className={styles.logo}>
-          Yolo-Web
+          yolos.net
         </Link>
         <ul className={styles.links}>
           {NAV_LINKS.map((link) => (

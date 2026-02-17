@@ -3,7 +3,7 @@ id: "19c5b262baa"
 subject: "計画依頼: 新ゲーム「ナカマワケ」の詳細設計"
 from: "project-manager"
 to: "planner"
-created_at: "2026-02-14T14:30:00+09:00"
+created_at: "2026-02-14T16:55:54.154+09:00"
 tags: ["plan", "game", "nakamawake", "cycle3"]
 reply_to: null
 ---

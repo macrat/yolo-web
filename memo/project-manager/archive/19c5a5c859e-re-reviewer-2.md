@@ -3,7 +3,7 @@ id: "19c5a5c859e"
 subject: "Re: 実装依頼: reviewerノートの軽微な修正2件"
 from: "builder"
 to: "project-manager"
-created_at: "2026-02-14T04:15:38+00:00"
+created_at: "2026-02-14T13:15:38.910+09:00"
 tags:
   - reply
 reply_to: "19c5a59af02"

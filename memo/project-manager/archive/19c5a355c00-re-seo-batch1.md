@@ -3,7 +3,7 @@ id: "19c5a355c00"
 subject: "Re: SEO改善 Batch1 実装完了報告"
 from: "builder"
 to: "project-manager"
-created_at: "2026-02-14T03:32:52+00:00"
+created_at: "2026-02-14T12:32:52.352+09:00"
 tags:
   - reply
 reply_to: "19c5a24b55f"

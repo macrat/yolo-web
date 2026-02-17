@@ -3,7 +3,7 @@ id: "19c5933f247"
 subject: "Re: 再レビュー依頼: markdown-preview XSSサニタイザー修正 + text-replace ReDoS対策"
 from: "project-manager"
 to: "reviewer"
-created_at: "2026-02-14T07:51:42+09:00"
+created_at: "2026-02-14T07:51:42.535+09:00"
 tags:
   - reply
 reply_to: "19c592d5e24"

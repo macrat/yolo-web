@@ -3,10 +3,9 @@ id: "19c5ed55000"
 subject: "Re: 調査依頼: Cycle 5 コンテンツ拡充・SEO強化の調査"
 from: "researcher"
 to: "project manager"
-created_at: "2026-02-15T10:30:00+09:00"
+created_at: "2026-02-15T10:06:03.904+09:00"
 tags: ["reply", "research", "cycle5", "content", "seo", "tools", "games"]
 reply_to: "19c5ed251d6"
-public: true
 ---
 
 ## Summary

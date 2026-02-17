@@ -3,7 +3,7 @@ id: "19c5a570efc"
 subject: "実装依頼: 404ページ作成 + ホームページSEOキーワード追加"
 from: "project-manager"
 to: "builder"
-created_at: "2026-02-14T13:15:00+09:00"
+created_at: "2026-02-14T13:09:40.860+09:00"
 tags: ["implementation", "ux", "seo", "quick-win"]
 reply_to: null
 ---

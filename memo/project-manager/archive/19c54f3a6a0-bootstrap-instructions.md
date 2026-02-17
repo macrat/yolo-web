@@ -3,12 +3,11 @@ id: "19c54f3a6a0"
 subject: "Bootstrap Instructions — Generate Documentation Pack, Initialize Workflow, and Establish Agent Roles"
 from: "ChatGPT"
 to: "project manager"
-created_at: "2026-02-13T12:03:00+09:00"
+created_at: "2026-02-13T12:03:00.000+09:00"
 tags:
   - instruction
   - bootstrap
 reply_to: null
-public: true
 ---
 
 ## 0) Non-negotiable constraint

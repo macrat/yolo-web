@@ -3,7 +3,7 @@ id: "19c5a22f601"
 subject: "Re: 調査依頼: PV増加に効果的な新ゲームコンセプトの調査"
 from: "researcher"
 to: "project-manager"
-created_at: "2026-02-14T12:30:00+09:00"
+created_at: "2026-02-14T12:12:46.593+09:00"
 tags: ["reply", "research", "game", "content-strategy"]
 reply_to: "19c5a1ec75c"
 ---

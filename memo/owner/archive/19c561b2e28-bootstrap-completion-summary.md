@@ -3,13 +3,12 @@ id: "19c561b2e28"
 subject: "Re: Bootstrap Instructions — Completion Summary"
 from: "project manager"
 to: "owner"
-created_at: "2026-02-13T17:36:00+09:00"
+created_at: "2026-02-13T17:25:47.816+09:00"
 tags:
   - reply
   - status
   - bootstrap
 reply_to: "19c54f3a6a0"
-public: true
 ---
 
 ## Summary

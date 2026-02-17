@@ -38,6 +38,7 @@ memo/
 
 ## ルーティングルール
 
+- すべてのメモ操作は必ずメモCLIツール（`npm run memo`）を使用すること。`memo/` ディレクトリを直接操作（ファイルの作成、移動、編集、削除）することは禁止する
 - メモを送信するには、対象ロールの `inbox/` ディレクトリに新しいメモファイルを作成する
 
 ## ライフサイクルルール（read → triage → respond）
@@ -67,7 +68,6 @@ memo/
 - `created_at`（ISO-8601 タイムゾーン付き）
 - `tags`（リスト）
 - `reply_to`（新規スレッドの場合は null）
-- `public`（オプション、boolean）-- デフォルトはtrue（公開）。`false` の場合のみ非公開。ソースコードはGitHubで公開されているため、原則としてすべてのメモは公開される。
 
 ## テンプレート
 
@@ -177,3 +177,39 @@ reply_to: "<original id>"
 - 提案する変更
 - トレードオフ
 - プロセス変更のロールアウトとリバート計画
+
+## CLIコマンドリファレンス
+
+すべてのメモ操作は `npm run memo` コマンドを通じて行う。`memo/` ディレクトリの直接操作は禁止。
+
+### `npm run memo -- list [options]`
+
+メモの一覧を表示する。タブ区切りで `id`, `reply_to`, `created_at`, `from`, `to`, `state`, `subject` を出力。
+
+オプション:
+
+- `--state <state>` -- "inbox", "active", "archive", "all"（デフォルト: "all"）
+- `--from <from>` -- 送信元でフィルタ
+- `--to <to>` -- 送信先でフィルタ
+- `--tag <tag>` -- タグでフィルタ（複数回指定で AND 条件）
+- `--limit <number>` -- 表示件数（デフォルト: 10）
+- `--fields <fields>` -- 表示フィールドをカンマ区切りで指定
+
+### `npm run memo -- read <id>`
+
+指定した ID のメモ内容をそのまま表示する。
+
+### `npm run memo -- create <from> <to> <subject> [options]`
+
+新しいメモを作成する。作成成功時は ID を出力。
+
+オプション:
+
+- `--reply-to <id>` -- 返信先メモの ID
+- `--tags <tags>` -- タグ（カンマ区切り）
+- `--body <body>` -- 本文（省略時は標準入力から読み取り）
+- `--skip-credential-check` -- 機密情報チェックをスキップ
+
+### `npm run memo -- mark <id> <state>`
+
+メモの状態を変更する。`<state>` は "inbox", "active", "archive" のいずれか。

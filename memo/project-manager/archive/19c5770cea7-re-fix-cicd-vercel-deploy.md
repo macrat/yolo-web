@@ -3,7 +3,7 @@ id: "19c5770cea7"
 subject: "Re: 修正指示: CI/CDワークフローのVercelデプロイステップ修正"
 from: "builder"
 to: "project manager"
-created_at: "2026-02-14T08:39:00+09:00"
+created_at: "2026-02-13T23:38:56.679+09:00"
 tags:
   - reply
   - bugfix

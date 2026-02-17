@@ -6,9 +6,27 @@ import { formatTimestamp, serializeFrontmatter } from "../core/frontmatter.js";
 import { parseMemoFile } from "../core/parser.js";
 import type { MemoFrontmatter } from "../types.js";
 
-test("formatTimestamp returns ISO-8601 with timezone", () => {
-  const ts = formatTimestamp(new Date("2026-02-13T19:33:00+09:00"));
-  expect(ts).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}$/);
+test("formatTimestamp returns ISO-8601 with milliseconds and timezone", () => {
+  const ts = formatTimestamp(
+    new Date("2026-02-13T19:33:00.456+09:00").getTime(),
+  );
+  expect(ts).toMatch(
+    /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}[+-]\d{2}:\d{2}$/,
+  );
+});
+
+test("formatTimestamp preserves milliseconds", () => {
+  const date = new Date("2026-02-13T19:33:00.123+09:00");
+  const ts = formatTimestamp(date.getTime());
+  expect(ts).toContain(".123");
+});
+
+test("formatTimestamp uses provided timestamp", () => {
+  const ms = 1739780040123; // known timestamp
+  const ts = formatTimestamp(ms);
+  // The timestamp should produce a valid ISO string that parses back to the same ms
+  const parsed = new Date(ts).getTime();
+  expect(parsed).toBe(ms);
 });
 
 test("serializeFrontmatter produces valid YAML frontmatter", () => {
@@ -17,7 +35,7 @@ test("serializeFrontmatter produces valid YAML frontmatter", () => {
     subject: "Test memo",
     from: "planner",
     to: "builder",
-    created_at: "2026-02-13T19:33:00+09:00",
+    created_at: "2026-02-13T19:33:00.000+09:00",
     tags: ["planning", "test"],
     reply_to: null,
   };
@@ -29,6 +47,8 @@ test("serializeFrontmatter produces valid YAML frontmatter", () => {
   expect(result).toContain("reply_to: null");
   expect(result).toContain("  - planning");
   expect(result).toContain("  - test");
+  // Should not contain public field
+  expect(result).not.toContain("public:");
 });
 
 test("serializeFrontmatter handles reply_to with value", () => {
@@ -37,7 +57,7 @@ test("serializeFrontmatter handles reply_to with value", () => {
     subject: "Re: Test memo",
     from: "planner",
     to: "builder",
-    created_at: "2026-02-13T19:33:00+09:00",
+    created_at: "2026-02-13T19:33:00.000+09:00",
     tags: ["reply"],
     reply_to: "original123",
   };
@@ -52,7 +72,7 @@ test("serializeFrontmatter handles empty tags", () => {
     subject: "Test",
     from: "planner",
     to: "builder",
-    created_at: "2026-02-13T19:33:00+09:00",
+    created_at: "2026-02-13T19:33:00.000+09:00",
     tags: [],
     reply_to: null,
   };
@@ -67,7 +87,7 @@ test("escapeYamlString correctly escapes double quotes and backslashes", () => {
     subject: 'A memo with "quotes" and \\ backslash',
     from: "planner",
     to: "builder",
-    created_at: "2026-02-13T19:33:00+09:00",
+    created_at: "2026-02-13T19:33:00.000+09:00",
     tags: [],
     reply_to: null,
   };
@@ -84,7 +104,7 @@ test("roundtrip: serialize then parse preserves subject with quotes and backslas
     subject: 'A memo with "quotes" inside',
     from: "planner",
     to: "builder",
-    created_at: "2026-02-13T19:33:00+09:00",
+    created_at: "2026-02-13T19:33:00.000+09:00",
     tags: ["test"],
     reply_to: null,
   };

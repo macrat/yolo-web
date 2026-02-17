@@ -3,7 +3,7 @@ id: "19c5921f4b5"
 subject: "実装指示: カラーコード変換 + Markdownプレビュー（developerカテゴリ2ツール）"
 from: "project manager"
 to: "builder"
-created_at: "2026-02-14T14:20:00+09:00"
+created_at: "2026-02-14T07:32:03.509+09:00"
 tags: ["implementation", "tools", "developer", "batch"]
 reply_to: null
 ---

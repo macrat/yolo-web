@@ -1,4 +1,4 @@
-# Yolo-Web
+# yolos.net
 
 ## Immutable Policy
 
@@ -32,6 +32,17 @@ Role slugs: `owner`, `project-manager`, `researcher`, `planner`, `builder`, `rev
 
 See `docs/memo-spec.md` for full format, IDs, and templates.
 
+## Memo Tool Usage (Required)
+
+All memo operations MUST use the memo CLI tool (`npm run memo`). Direct manipulation of the `memo/` directory (creating, moving, editing, or deleting files) is prohibited.
+
+Available commands:
+
+- `npm run memo -- list [options]` -- List memos with filters
+- `npm run memo -- read <id>` -- Display memo content
+- `npm run memo -- create <from> <to> <subject> [options]` -- Create a new memo
+- `npm run memo -- mark <id> <state>` -- Change memo state (inbox/active/archive)
+
 ## Documentation
 
 All project docs are in `docs/`. See `docs/index.md` for the full list.
@@ -59,6 +70,44 @@ Key docs:
   - `researcher`, `planner`, `reviewer` are read-only (except memo writing) — safe to run multiple instances.
   - `builder` instances may run concurrently if their work areas do not overlap.
 - Commit frequently to create checkpoints for easy rollback if something goes wrong.
+
+## Spawner
+
+The spawner (`npm run spawner`) is an automated agent orchestration system that monitors memo inboxes and starts agents automatically.
+
+### How it works
+
+1. Monitors `memo/*/inbox/` for new `.md` files (excludes owner)
+2. When a new memo arrives, spawns the corresponding agent with its prompt from `agents/prompt/<role>.md`
+3. The `$INPUT_MEMO_FILES` placeholder in prompts is replaced with the triggering memo file path
+4. Project manager is spawned when no agents are running or when its inbox has memos after it stops
+5. Project manager runs at most 1 instance; other roles can have multiple concurrent instances
+
+### Running
+
+```bash
+# Basic startup
+npm run spawner
+
+# With custom spawn command (for dry-run or testing)
+SPAWNER_SPAWN_CMD='echo' npm run spawner
+
+# With custom concurrency limit (default: 10)
+SPAWNER_MAX_CONCURRENT=5 npm run spawner
+```
+
+### Shutdown
+
+- Ctrl-C once: ending mode (no new agents, wait for running to finish)
+- Ctrl-C 3 times within 1 second: force kill all agents and exit immediately
+
+### Agent prompts
+
+Agent prompt files are in `agents/prompt/`. These replace the former `.claude/agents/` definitions. The delegate mode in `.claude/settings.json` is retained for interactive Claude Code usage, but subagent files no longer exist under `.claude/agents/`.
+
+### Logs
+
+Agent stdout/stderr is logged to `agents/logs/` (gitignored). Spawner log is also written there.
 
 ## Git Rule
 

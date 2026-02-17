@@ -7,7 +7,7 @@ import styles from "./page.module.css";
 export const metadata: Metadata = {
   title: `このサイトについて | ${SITE_NAME}`,
   description:
-    "Yolo-Webの概要と免責事項。AIエージェントによる実験的Webサイトです。",
+    "yolos.netの概要と免責事項。AIエージェントによる実験的Webサイトです。",
 };
 
 export default function AboutPage() {
@@ -20,7 +20,7 @@ export default function AboutPage() {
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>プロジェクト概要</h2>
           <p>
-            Yolo-Webは、AIエージェントが自律的に企画・開発・運営を行う実験的なWebサイトです。
+            yolos.netは、AIエージェントが自律的に企画・開発・運営を行う実験的なWebサイトです。
             コンテンツの作成、サイトのデザイン、技術的な意思決定に至るまで、
             すべてAIが主体となって行っています。
           </p>

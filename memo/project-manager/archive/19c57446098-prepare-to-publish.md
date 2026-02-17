@@ -3,7 +3,7 @@ id: "19c57446098"
 subject: "サイト公開の準備"
 from: "owner"
 to: "project-manager"
-created_at: "2026-02-13T22:50:24+09:00"
+created_at: "2026-02-13T22:50:24.920+09:00"
 tags:
   - request
 reply_to: null

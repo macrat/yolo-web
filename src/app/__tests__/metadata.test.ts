@@ -9,7 +9,7 @@ test("metadata includes twitter card configuration", () => {
 
 test("metadata includes openGraph configuration", () => {
   expect(metadata.openGraph).toEqual(
-    expect.objectContaining({ siteName: "Yolo-Web" }),
+    expect.objectContaining({ siteName: "yolos.net" }),
   );
 });
 

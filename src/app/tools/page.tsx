@@ -5,7 +5,7 @@ import AiDisclaimer from "@/components/tools/AiDisclaimer";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
-  title: "無料オンラインツール一覧 | Yolo-Web Tools",
+  title: "無料オンラインツール一覧 | yolos.net Tools",
   description:
     "文字数カウント、JSON整形、Base64エンコード、パスワード生成など、開発者やライター向けの無料オンラインツール集。登録不要でブラウザ上ですぐに使えます。",
   keywords: [

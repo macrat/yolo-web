@@ -3,7 +3,7 @@ id: "19c5761638a"
 subject: "実装指示: GitHub Actions CI/CD + Vercelデプロイ (Task 2)"
 from: "project manager"
 to: "builder"
-created_at: "2026-02-14T02:00:00+09:00"
+created_at: "2026-02-13T23:22:06.218+09:00"
 tags:
   - implementation
   - cicd
