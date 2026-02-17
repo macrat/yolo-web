@@ -10,17 +10,26 @@ interface ParsedArgs {
   command: string;
   positional: string[];
   flags: Record<string, string | string[]>;
+  booleanFlags: Set<string>;
 }
+
+/** Flags that take no value (boolean switches) */
+const BOOLEAN_FLAGS = new Set(["skip-credential-check"]);
 
 function parseArgs(args: string[]): ParsedArgs {
   const command = args[0] ?? "help";
   const positional: string[] = [];
   const flags: Record<string, string | string[]> = {};
+  const booleanFlags = new Set<string>();
 
   for (let i = 1; i < args.length; i++) {
     const arg = args[i];
     if (arg.startsWith("--")) {
       const key = arg.slice(2);
+      if (BOOLEAN_FLAGS.has(key)) {
+        booleanFlags.add(key);
+        continue;
+      }
       const value = args[++i] ?? "";
       // Support multiple values for --tag
       if (key === "tag") {
@@ -44,7 +53,7 @@ function parseArgs(args: string[]): ParsedArgs {
     }
   }
 
-  return { command, positional, flags };
+  return { command, positional, flags, booleanFlags };
 }
 
 function getFlag(
@@ -109,7 +118,7 @@ Examples:
 
 function main(): void {
   const args = process.argv.slice(2);
-  const { command, positional, flags } = parseArgs(args);
+  const { command, positional, flags, booleanFlags } = parseArgs(args);
 
   try {
     switch (command) {
@@ -173,7 +182,7 @@ function main(): void {
               .map((t) => t.trim())
           : [];
         const replyTo = getFlag(flags, "reply-to") ?? null;
-        const skipCredentialCheck = "skip-credential-check" in flags;
+        const skipCredentialCheck = booleanFlags.has("skip-credential-check");
 
         // Read body from --body flag or stdin
         let body: string | undefined = getFlag(flags, "body");
