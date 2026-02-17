@@ -4,6 +4,8 @@ import {
   generateBreadcrumbJsonLd,
   generateWebSiteJsonLd,
   generateBlogPostJsonLd,
+  generateColorPageMetadata,
+  generateColorJsonLd,
 } from "../seo";
 
 describe("generateGameJsonLd", () => {
@@ -172,5 +174,39 @@ describe("generateBreadcrumbJsonLd", () => {
     expect(items[2].name).toBe("テスト");
     // Last item has no href, so no "item" property
     expect(items[2].item).toBeUndefined();
+  });
+});
+
+describe("generateColorPageMetadata", () => {
+  test("includes canonical URL and expected title", () => {
+    const result = generateColorPageMetadata({
+      slug: "nadeshiko",
+      name: "撫子",
+      romaji: "nadeshiko",
+      hex: "#dc9fb4",
+      category: "red",
+    });
+
+    expect(result.title).toContain("撫子");
+    expect(result.alternates?.canonical).toContain("/colors/nadeshiko");
+  });
+});
+
+describe("generateColorJsonLd", () => {
+  test("returns DefinedTerm JSON-LD for color", () => {
+    const result = generateColorJsonLd({
+      slug: "nadeshiko",
+      name: "撫子",
+      romaji: "nadeshiko",
+      hex: "#dc9fb4",
+      category: "red",
+    }) as Record<string, unknown>;
+
+    expect(result["@type"]).toBe("DefinedTerm");
+    expect(result.url).toContain("/colors/nadeshiko");
+    expect(result.inDefinedTermSet).toMatchObject({
+      "@type": "DefinedTermSet",
+      name: "日本の伝統色辞典",
+    });
   });
 });
