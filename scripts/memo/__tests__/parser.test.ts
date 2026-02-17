@@ -136,4 +136,26 @@ reply_to: null
 
     expect(memo.frontmatter.tags).toEqual(["tag1", "tag2", "tag3"]);
   });
+
+  test("silently ignores unknown fields like public", () => {
+    const content = `---
+id: "legacy1"
+subject: "Legacy memo"
+from: "owner"
+to: "planner"
+created_at: "2026-02-13T20:00:00+09:00"
+tags: []
+reply_to: null
+public: true
+---
+
+## Body
+`;
+    const filePath = writeTmpMemo("legacy.md", content);
+    const memo = parseMemoFile(filePath);
+
+    expect(memo.frontmatter.id).toBe("legacy1");
+    // public field should not be in the result
+    expect("public" in memo.frontmatter).toBe(false);
+  });
 });

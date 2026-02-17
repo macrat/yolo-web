@@ -100,77 +100,34 @@ describe("findMemoById", () => {
   });
 
   test("returns null when memo root does not exist", () => {
-    // tmpDir exists but has no role directories
     const result = findMemoById("abc123");
     expect(result).toBeNull();
   });
 });
 
 describe("readMemo", () => {
-  test("reads a memo by ID and prints to stdout", () => {
+  test("reads a memo by ID and outputs raw content", () => {
     createMemoFile("builder", "inbox", "abc123", "test-memo", SAMPLE_MEMO);
 
-    const logSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+    const writeSpy = vi
+      .spyOn(process.stdout, "write")
+      .mockImplementation(() => true);
 
     readMemo("abc123");
 
-    const output = logSpy.mock.calls.map((c) => c[0]).join("\n");
-    expect(output).toContain("ID:       abc123");
-    expect(output).toContain("Subject:  Test memo");
-    expect(output).toContain("From:     planner");
-    expect(output).toContain("To:       builder");
-    expect(output).toContain("Tags:     planning, test");
-    expect(output).toContain("Reply-To: (none)");
+    const output = writeSpy.mock.calls.map((c) => String(c[0])).join("");
+    // Should output raw file content
+    expect(output).toContain('id: "abc123"');
+    expect(output).toContain('subject: "Test memo"');
     expect(output).toContain("## Body content");
-  });
-
-  test("reads a memo by file path", () => {
-    const filePath = createMemoFile(
-      "builder",
-      "inbox",
-      "abc123",
-      "test-memo",
-      SAMPLE_MEMO,
-    );
-
-    const logSpy = vi.spyOn(console, "log").mockImplementation(() => {});
-
-    readMemo(filePath);
-
-    const output = logSpy.mock.calls.map((c) => c[0]).join("\n");
-    expect(output).toContain("ID:       abc123");
-    expect(output).toContain("Subject:  Test memo");
-    expect(output).toContain(`File:     ${filePath}`);
+    expect(output).toContain("Some text here.");
+    // Should NOT have formatted header
+    expect(output).not.toContain("ID:       abc123");
   });
 
   test("throws error for non-existent ID", () => {
     expect(() => readMemo("nonexistent")).toThrow(
       "No memo found with ID: nonexistent",
     );
-  });
-
-  test("shows (none) for empty tags", () => {
-    const memoContent = `---
-id: "notags1"
-subject: "No tags"
-from: "reviewer"
-to: "planner"
-created_at: "2026-02-13T20:00:00+09:00"
-tags: []
-reply_to: "abc123"
----
-
-## Summary
-Done.
-`;
-    createMemoFile("planner", "inbox", "notags1", "no-tags", memoContent);
-
-    const logSpy = vi.spyOn(console, "log").mockImplementation(() => {});
-
-    readMemo("notags1");
-
-    const output = logSpy.mock.calls.map((c) => c[0]).join("\n");
-    expect(output).toContain("Tags:     (none)");
-    expect(output).toContain("Reply-To: abc123");
   });
 });
