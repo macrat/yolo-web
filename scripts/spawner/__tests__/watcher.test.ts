@@ -80,22 +80,8 @@ describe("watcher", () => {
 
   describe("scanAllInboxes", () => {
     it("returns only roles with memos", () => {
-      writeMemo(
-        "builder",
-        "inbox",
-        "test.md",
-        "pm",
-        "builder",
-        "Test",
-      );
-      writeMemo(
-        "planner",
-        "inbox",
-        "test.md",
-        "pm",
-        "planner",
-        "Test",
-      );
+      writeMemo("builder", "inbox", "test.md", "pm", "builder", "Test");
+      writeMemo("planner", "inbox", "test.md", "pm", "planner", "Test");
 
       const result = scanAllInboxes();
       expect(result.size).toBe(2);
@@ -109,7 +95,7 @@ describe("watcher", () => {
       const ownerInbox = path.join(tmpDir, "memo", "owner", "inbox");
       fs.writeFileSync(
         path.join(ownerInbox, "test.md"),
-        "---\nid: \"t\"\nsubject: \"t\"\nfrom: \"pm\"\nto: \"owner\"\ncreated_at: \"2026-01-01T00:00:00+09:00\"\ntags: []\nreply_to: null\n---\n",
+        '---\nid: "t"\nsubject: "t"\nfrom: "pm"\nto: "owner"\ncreated_at: "2026-01-01T00:00:00+09:00"\ntags: []\nreply_to: null\n---\n',
       );
 
       const result = scanAllInboxes();
@@ -122,22 +108,8 @@ describe("watcher", () => {
 
   describe("countActiveMemos", () => {
     it("counts .md files in active directory", () => {
-      writeMemo(
-        "builder",
-        "active",
-        "task1.md",
-        "pm",
-        "builder",
-        "Task 1",
-      );
-      writeMemo(
-        "builder",
-        "active",
-        "task2.md",
-        "pm",
-        "builder",
-        "Task 2",
-      );
+      writeMemo("builder", "active", "task1.md", "pm", "builder", "Task 1");
+      writeMemo("builder", "active", "task2.md", "pm", "builder", "Task 2");
 
       expect(countActiveMemos("builder")).toBe(2);
     });
@@ -171,13 +143,7 @@ describe("watcher", () => {
     });
 
     it("returns null for file without frontmatter", () => {
-      const filePath = path.join(
-        tmpDir,
-        "memo",
-        "builder",
-        "inbox",
-        "bad.md",
-      );
+      const filePath = path.join(tmpDir, "memo", "builder", "inbox", "bad.md");
       fs.writeFileSync(filePath, "Just some text without frontmatter");
 
       const info = getMemoInfo(filePath);
@@ -200,14 +166,7 @@ describe("watcher", () => {
       watcher.start();
 
       // Write a new memo file
-      writeMemo(
-        "builder",
-        "inbox",
-        "new-task.md",
-        "pm",
-        "builder",
-        "New Task",
-      );
+      writeMemo("builder", "inbox", "new-task.md", "pm", "builder", "New Task");
 
       // Wait for debounce + fs.watch event propagation
       await new Promise((resolve) => setTimeout(resolve, 500));

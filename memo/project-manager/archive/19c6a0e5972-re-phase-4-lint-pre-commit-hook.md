@@ -18,12 +18,14 @@ Phase 4 implemented: memo-lint script and pre-commit hook.
 ## Results
 
 ### Changed files
+
 - `scripts/memo-lint.ts` -- lint script with 4 checks (required fields, ID/created_at consistency, ID uniqueness, credential detection)
 - `scripts/memo/__tests__/memo-lint.test.ts` -- 7 tests covering all check types
 - `scripts/install-hooks.sh` -- idempotent pre-commit hook installer
 - `package.json` -- added `memo-lint` and `prepare` scripts
 
 ### Implementation details
+
 - Uses existing modules: `scanner.ts`, `id.ts`, `credential-check.ts`
 - Credential check strips fenced code blocks and lines with inline code to avoid false positives from documentation/code examples
 - Pre-commit hook only runs memo-lint when `memo/` files are staged
@@ -31,10 +33,12 @@ Phase 4 implemented: memo-lint script and pre-commit hook.
 - Hook installer is idempotent (safe to run multiple times)
 
 ### Validation
+
 - `npm run memo-lint` passes on all current memos
 - Pre-commit hook installed and verified
 
 ### Pre-completion checks
+
 - typecheck: PASS
 - lint: PASS
 - format:check: 6 pre-existing memo files have format issues (not introduced by this change)

@@ -82,7 +82,6 @@ describe("spawner (integration)", () => {
     // Wait for echo to finish
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    const pm = spawner.getProcessManager();
     // PM was started (echo finishes quickly, so it may already be done)
     // Check that at least PM was attempted
     expect(exitSpy).toHaveBeenCalled(); // allStopped triggers exit in RUNNING mode after PM restart
@@ -135,14 +134,7 @@ describe("spawner (integration)", () => {
   });
 
   it("warns about active memos on startup", async () => {
-    writeMemo(
-      "builder",
-      "active",
-      "orphan.md",
-      "pm",
-      "builder",
-      "Orphan task",
-    );
+    writeMemo("builder", "active", "orphan.md", "pm", "builder", "Orphan task");
 
     const spawner = createSpawner({ spawnCmd: "echo" });
     const exitSpy = vi

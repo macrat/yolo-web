@@ -35,7 +35,9 @@ describe("createLogger", () => {
     expect(stdoutSpy).toHaveBeenCalled();
     const output = stdoutSpy.mock.calls[0][0] as string;
     expect(output).toContain("start");
-    expect(output).toMatch(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2} start\n$/);
+    expect(output).toMatch(
+      /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2} start\n$/,
+    );
 
     // Check file was written
     const files = fs.readdirSync(tmpDir);

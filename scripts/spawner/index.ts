@@ -128,9 +128,7 @@ export function createSpawner(options: SpawnerOptions = {}): Spawner {
     for (const role of MONITORED_ROLES) {
       const activeCount = countActiveMemos(role);
       if (activeCount > 0) {
-        logger.log(
-          `WARNING: ${role} has ${activeCount} memo(s) in active/`,
-        );
+        logger.log(`WARNING: ${role} has ${activeCount} memo(s) in active/`);
       }
     }
 
