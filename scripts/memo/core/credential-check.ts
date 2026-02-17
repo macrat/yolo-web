@@ -1,11 +1,10 @@
 /**
- * Secret pattern detection for memo content sanitization.
- * Memos matching any of these patterns are excluded from public display
- * and a warning is emitted at build time.
+ * Credential pattern detection for memo content.
+ * Checks memo text for potential secrets before creation.
+ * Patterns copied from src/lib/secrets.ts (cannot import due to path alias).
  */
 
-/** Patterns that indicate potentially sensitive content. */
-export const SECRET_PATTERNS: { pattern: RegExp; description: string }[] = [
+const CREDENTIAL_PATTERNS: { pattern: RegExp; description: string }[] = [
   {
     pattern:
       /(?:api[_-]?key|apikey|password|secret|token|credential)\s*[:=]\s*\S+/i,
@@ -35,14 +34,17 @@ export const SECRET_PATTERNS: { pattern: RegExp; description: string }[] = [
 ];
 
 /**
- * Check if text contains any secret patterns.
- * Returns the first matching pattern description, or null if no match.
+ * Check if text contains potential credential patterns.
+ * Returns an object indicating whether a match was found and, if so, its description.
  */
-export function detectSecrets(text: string): string | null {
-  for (const { pattern, description } of SECRET_PATTERNS) {
+export function checkCredentials(text: string): {
+  found: boolean;
+  description: string | null;
+} {
+  for (const { pattern, description } of CREDENTIAL_PATTERNS) {
     if (pattern.test(text)) {
-      return description;
+      return { found: true, description };
     }
   }
-  return null;
+  return { found: false, description: null };
 }

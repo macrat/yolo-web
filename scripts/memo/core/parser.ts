@@ -5,6 +5,7 @@ import type { Memo, MemoFrontmatter } from "../types.js";
  * Parse a memo file into its frontmatter and body.
  * Uses simple string parsing (no YAML library dependency).
  * Normalizes \r\n to \n before parsing.
+ * Unknown frontmatter fields (e.g. legacy "public") are silently ignored.
  *
  * NOTE: Similar frontmatter parsing exists in src/lib/markdown.ts (web app).
  * Changes to memo frontmatter format must be reflected in both locations.
@@ -28,7 +29,6 @@ export function parseMemoFile(filePath: string): Memo {
     created_at: extractYamlValue(yamlBlock, "created_at"),
     tags: extractYamlList(yamlBlock, "tags"),
     reply_to: extractYamlNullableValue(yamlBlock, "reply_to"),
-    public: extractYamlOptionalBoolean(yamlBlock, "public"),
   };
 
   return { frontmatter: fm, body, filePath };
@@ -48,16 +48,6 @@ function extractYamlNullableValue(yaml: string, key: string): string | null {
   const nullRegex = new RegExp(`^${key}:\\s*null`, "m");
   if (nullRegex.test(yaml)) return null;
   return extractYamlValue(yaml, key);
-}
-
-function extractYamlOptionalBoolean(
-  yaml: string,
-  key: string,
-): boolean | undefined {
-  const regex = new RegExp(`^${key}:\\s*(true|false)`, "m");
-  const match = yaml.match(regex);
-  if (!match) return undefined;
-  return match[1] === "true";
 }
 
 function extractYamlList(yaml: string, key: string): string[] {
