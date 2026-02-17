@@ -121,6 +121,14 @@ research → plan → review plan → build → review implementation → ship
 - [ ] 前サイクルが完了していることを確認（ship済み、またはキャリーオーバー項目が明示的にバックログに記録されている）
 - [ ] owner/inbox/に未処理の指示がないか確認
 - [ ] 他ロールのinbox/に自分が移動すべきでない滞留メモがないか目視確認（滞留があればそのロールに通知メモを送信）
+- [ ] CodeQLアラートを確認: `gh api --method GET '/repos/macrat/yolo-web/code-scanning/alerts?state=open'`
+  - Critical/High → 即座にバックログ Active に追加し優先対応
+  - Medium → バックログ Queued に追加
+  - Low → バックログ Deferred に追加
+- [ ] Dependabot PRを確認: `gh pr list --author 'app/dependabot'`
+  - パッチ更新（CI通過済み）→ reviewer確認後マージ
+  - マイナー更新 → reviewer がCHANGELOG確認後マージ
+  - メジャー更新 → 通常のbuild→reviewフローで対応
 - [ ] docs/backlog.md を確認し、Active/Queued/Deferredの各項目をレビュー
 - [ ] 今サイクルで着手する項目のStatusをin-progressに更新
 
