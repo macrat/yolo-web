@@ -32,6 +32,17 @@ Role slugs: `owner`, `project-manager`, `researcher`, `planner`, `builder`, `rev
 
 See `docs/memo-spec.md` for full format, IDs, and templates.
 
+## Memo Tool Usage (Required)
+
+All memo operations MUST use the memo CLI tool (`npm run memo`). Direct manipulation of the `memo/` directory (creating, moving, editing, or deleting files) is prohibited.
+
+Available commands:
+
+- `npm run memo -- list [options]` -- List memos with filters
+- `npm run memo -- read <id>` -- Display memo content
+- `npm run memo -- create <from> <to> <subject> [options]` -- Create a new memo
+- `npm run memo -- mark <id> <state>` -- Change memo state (inbox/active/archive)
+
 ## Documentation
 
 All project docs are in `docs/`. See `docs/index.md` for the full list.
