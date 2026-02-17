@@ -131,6 +131,7 @@ export default function Home() {
           <h2 className={styles.sectionTitle}>最新ブログ記事</h2>
           <div className={styles.blogList}>
             {recentPosts.map((post) => (
+              // lgtm[js/stored-xss] - blog data from local markdown files, not user input
               <Link
                 key={post.slug}
                 href={`/blog/${post.slug}`}
