@@ -1,24 +1,27 @@
 import type { MemoFrontmatter } from "../types.js";
 
 /**
- * Format an ISO-8601 timestamp with timezone offset.
+ * Format an ISO-8601 timestamp with millisecond precision and timezone offset.
  * Uses the system timezone.
+ * If a timestamp (ms) is provided, uses that exact value for consistency with ID generation.
  */
-export function formatTimestamp(date: Date = new Date()): string {
-  const pad = (n: number): string => String(n).padStart(2, "0");
+export function formatTimestamp(timestampMs?: number): string {
+  const date = timestampMs !== undefined ? new Date(timestampMs) : new Date();
+  const pad = (n: number, len = 2): string => String(n).padStart(len, "0");
   const year = date.getFullYear();
   const month = pad(date.getMonth() + 1);
   const day = pad(date.getDate());
   const hours = pad(date.getHours());
   const minutes = pad(date.getMinutes());
   const seconds = pad(date.getSeconds());
+  const ms = pad(date.getMilliseconds(), 3);
 
   const tzOffset = -date.getTimezoneOffset();
   const tzSign = tzOffset >= 0 ? "+" : "-";
   const tzHours = pad(Math.floor(Math.abs(tzOffset) / 60));
   const tzMinutes = pad(Math.abs(tzOffset) % 60);
 
-  return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}${tzSign}${tzHours}:${tzMinutes}`;
+  return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${ms}${tzSign}${tzHours}:${tzMinutes}`;
 }
 
 /**
@@ -54,10 +57,6 @@ export function serializeFrontmatter(fm: MemoFrontmatter): string {
     lines.push("reply_to: null");
   } else {
     lines.push(`reply_to: "${escapeYamlString(fm.reply_to)}"`);
-  }
-
-  if (fm.public !== undefined) {
-    lines.push(`public: ${fm.public}`);
   }
 
   lines.push("---");
