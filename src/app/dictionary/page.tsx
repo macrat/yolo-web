@@ -4,16 +4,26 @@ import Breadcrumb from "@/components/common/Breadcrumb";
 import { SITE_NAME } from "@/lib/constants";
 import { getAllKanji } from "@/lib/dictionary/kanji";
 import { getAllYoji } from "@/lib/dictionary/yoji";
+import { getAllColors } from "@/lib/dictionary/colors";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
   title: `辞典 | ${SITE_NAME}`,
   description:
-    "漢字辞典と四字熟語辞典。漢字50字の読み方・意味・部首情報と、四字熟語101語の読み方・意味を収録。",
-  keywords: ["辞典", "漢字辞典", "四字熟語辞典", "漢字", "四字熟語"],
+    "漢字・四字熟語・伝統色を調べられる辞典。漢字50字、四字熟語101語、伝統色250色の情報を収録。",
+  keywords: [
+    "辞典",
+    "漢字辞典",
+    "四字熟語辞典",
+    "伝統色辞典",
+    "漢字",
+    "四字熟語",
+    "伝統色",
+  ],
   openGraph: {
     title: `辞典 | ${SITE_NAME}`,
-    description: "漢字辞典と四字熟語辞典。漢字50字と四字熟語101語を収録。",
+    description:
+      "漢字・四字熟語・伝統色をまとめた辞典。漢字50字、四字熟語101語、伝統色250色を収録。",
     type: "website",
   },
   alternates: {
@@ -24,6 +34,7 @@ export const metadata: Metadata = {
 export default function DictionaryPage() {
   const kanjiCount = getAllKanji().length;
   const yojiCount = getAllYoji().length;
+  const colorCount = getAllColors().length;
 
   return (
     <>
@@ -53,6 +64,15 @@ export default function DictionaryPage() {
             よく使われる四字熟語の読み方と意味を、カテゴリ・難易度別に整理しています。
           </p>
           <p className={styles.sectionCount}>{yojiCount}語収録</p>
+        </Link>
+
+        <Link href="/colors" className={styles.sectionCard}>
+          <span className={styles.sectionIcon}>色</span>
+          <h2 className={styles.sectionTitle}>伝統色辞典</h2>
+          <p className={styles.sectionDesc}>
+            日本の伝統色の由来とカラーデータを一覧で確認できます。
+          </p>
+          <p className={styles.sectionCount}>{colorCount}色収録</p>
         </Link>
       </div>
     </>
