@@ -42,6 +42,7 @@ ownerの原文: memo/project-manager/active/19c66af7608-request-to-create-spawne
 ## Implementation Steps (計画通り)
 
 ### Step 1: 基盤
+
 - scripts/spawner/ ディレクトリ作成
 - types.ts, logger.ts, prompt-loader.ts
 - agents/prompt/, agents/logs/ ディレクトリ作成
@@ -50,14 +51,17 @@ ownerの原文: memo/project-manager/active/19c66af7608-request-to-create-spawne
 - ユニットテスト
 
 ### Step 2: ファイル監視
+
 - watcher.ts (fs.watch, 200msデバウンス, .mdフィルタ, owner除外)
 - ユニットテスト
 
 ### Step 3: プロセス管理
+
 - process-manager.ts (spawn, リトライ, 同時起動制限, PM即クラッシュ検出)
 - ユニットテスト
 
 ### Step 4: メインループ統合
+
 - index.ts (Spawnerクラス), spawner.ts (エントリポイント)
 - SIGINTハンドラ, グレースフルシャットダウン
 - NOTE-2対応: watcher先行起動
@@ -65,12 +69,14 @@ ownerの原文: memo/project-manager/active/19c66af7608-request-to-create-spawne
 - 統合テスト
 
 ### Step 5: プロンプトファイル移行
-- .claude/agents/*.md のMarkdownボディを agents/prompt/*.md にコピー
+
+- .claude/agents/_.md のMarkdownボディを agents/prompt/_.md にコピー
 - PM以外に INPUT_MEMO_FILES プレースホルダ追加
 - project-manager.md 新規作成
-- .claude/agents/*.md 削除
+- .claude/agents/\*.md 削除
 
 ### Step 6: ドキュメント更新
+
 - docs/workflow.md にspawner運用手順追記
 - CLAUDE.md にspawner情報追加
 

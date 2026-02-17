@@ -47,21 +47,24 @@ agents/
 ### 設計判断と根拠
 
 **1. fs.watch vs chokidar**
+
 - fs.watchを採用。理由: Node.js v25環境でrecursiveオプションがLinuxでサポート済み、監視対象が6ディレクトリと限定的、外部依存を増やさない
 - デバウンス処理（200ms）を実装し、同一ファイルへの重複イベントを抑制
 - .mdファイルのみをフィルタリング
 
 **2. プロセス起動方式**
+
 - child_process.spawnを使用、shell: falseで直接exec（SEC-1対応）
 - SPAWNER_SPAWN_CMD環境変数が設定されている場合はそのコマンドを使用、未設定時は `claude` コマンドをデフォルトとする
 - プロンプトは `-p` 引数として渡す（ファイルの内容を文字列として展開）
 - stdio: pipeでstdout/stderrをログファイルにリダイレクト
 
 **3. プロセス管理のデータ構造**
+
 ```typescript
 interface AgentProcess {
   role: string;
-  memoFile: string | null;  // project-managerの場合はnull
+  memoFile: string | null; // project-managerの場合はnull
   process: ChildProcess;
   startedAt: Date;
   retryCount: number;
@@ -74,56 +77,70 @@ interface AgentProcess {
 ### Reviewerの指摘事項への対応
 
 **ISSUE-1: project-masterはproject-managerのtypo**
+
 - ownerに確認済み前提で、すべてproject-managerとして実装する
 
 **ISSUE-2: $INPUT_MEMO_FILESの割り当てルール**
+
 - inboxのメモをファイル名順（=作成日時順）にソートし、先着で1メモ1プロセスに割り当てる
 - project-managerには$INPUT_MEMO_FILESを使用しない（仕様通り）
 
 **ISSUE-3: リトライ間隔**
+
 - 指数バックオフ: 5秒、15秒、45秒の3回
 - 3回失敗で終了モードに移行
 
 **ISSUE-4: datetimeフォーマット**
+
 - ログファイル名: `YYYYMMDD-HHmmss` 形式（例: 20260217-143000_spawner.log）
 - ログ本文: ISO-8601形式（例: 2026-02-17 14:30:00+09:00）
 
 **ISSUE-5: レースコンディション（メモがactive/に移動済み）**
+
 - spawnerはトリガーとなったメモファイルのパスを記録するが、起動時にファイル存在チェックを行わない
 - エージェント自身がトリアージの一環として処理する設計
 
 **EDGE-1: 大量プロセス同時起動**
+
 - 全体の同時プロセス上限をデフォルト10とする（環境変数SPAWNER_MAX_CONCURRENTで変更可能）
 - 上限に達した場合はキューに入れ、プロセス終了時に順次起動
 
 **EDGE-2: エージェントクラッシュ時のメモ処理状態**
+
 - エージェントが非ゼロexitコードで終了した場合、ログに警告を出力: `${datetime} [${agent}] end (exit=${code}) WARNING: agent exited abnormally`
 - inboxに残ったメモの再検出は行わない（spawnerの再起動で対応）
 - active/に残った孤立メモは、起動時にactive/のメモ数を検出して警告ログを出力する（EDGE-4対応を兼ねる）
 
 **EDGE-3: ディスク容量不足**
+
 - ログ書き込み失敗時はstderrにフォールバック
 - ファイルシステム監視のエラーは終了モードに移行
 
 **EDGE-4: 起動時のactive/メモ**
+
 - spawner起動時にactive/にメモがある場合、警告ログを出力
 - 自動処理はしない（エージェントのトリアージ権限に抵触するため）
 
 **EDGE-5: project-managerの即クラッシュループ**
+
 - project-managerが30秒以内に終了した場合、リトライカウントに加算
 - リトライカウントが3に達したら終了モードに移行
 - クールダウン: リトライ間もISSUE-3と同じ指数バックオフを適用
 
 **SUGGEST-1: ヘルスチェック**
+
 - 初期実装ではスコープ外。将来課題として記録
 
 **SUGGEST-2: ログローテーション**
+
 - 初期実装ではスコープ外。spawner起動ごとにファイルが分かれる設計で十分
 
 **SUGGEST-3: exit codeログ**
+
 - 採用。`${datetime} [${agent}] end (exit=${code})` 形式
 
 **SUGGEST-4: Ctrl-C 2回目の扱い**
+
 - 2回目は終了モード継続（1回目と同じ）。3回目が1秒以内なら強制終了
 
 ### CLIインターフェース
@@ -138,6 +155,7 @@ SPAWNER_MAX_CONCURRENT=5 npm run spawner
 ```
 
 package.jsonに追加:
+
 ```json
 "spawner": "tsx scripts/spawner.ts"
 ```
@@ -188,6 +206,7 @@ package.jsonに追加:
 6. 上記のユニットテストを作成
 
 **受入基準**:
+
 - types.tsにすべての型定義が含まれる
 - logger.tsがコンソールとファイルの両方に出力できる
 - prompt-loader.tsが$INPUT_MEMO_FILESを正しく置換できる
@@ -206,6 +225,7 @@ package.jsonに追加:
 2. ユニットテスト + 統合テスト
 
 **受入基準**:
+
 - 新規.mdファイルの検出が正しく動作する
 - デバウンスにより重複イベントが抑制される
 - ownerディレクトリが監視対象外である
@@ -228,6 +248,7 @@ package.jsonに追加:
 2. ユニットテスト（child_processのモック使用）
 
 **受入基準**:
+
 - エージェントが正しく起動・終了検知される
 - project-managerの同時起動数が1に制限される
 - リトライが指数バックオフで実行される
@@ -251,6 +272,7 @@ package.jsonに追加:
 3. 統合テスト
 
 **受入基準**:
+
 - spawnerが起動し、inboxのメモを検出してエージェントを起動する
 - SIGINT 1回で終了モードに入る
 - SIGINT 3回/1秒で強制終了する
@@ -271,6 +293,7 @@ package.jsonに追加:
 4. `.claude/agents/*.md` を削除
 
 **受入基準**:
+
 - 全6ロールのプロンプトファイルが `agents/prompt/` に存在する
 - PM以外の5ファイルに$INPUT_MEMO_FILESプレースホルダが含まれる
 - PMのプロンプトに$INPUT_MEMO_FILESが含まれない
@@ -290,6 +313,7 @@ package.jsonに追加:
    - ただしサブエージェント定義ファイルが削除されるため、delegate経由の起動は不可になる旨を記載
 
 **受入基準**:
+
 - workflow.mdにspawner運用手順が記載されている
 - CLAUDE.mdにspawner情報が追加されている
 - ドキュメントの記述がspawnerの実際の動作と一致している
@@ -298,13 +322,13 @@ package.jsonに追加:
 
 ### ユニットテスト（Vitest）
 
-| テスト対象 | テスト内容 |
-|---|---|
-| logger.ts | コンソール出力、ファイル出力、フォーマット検証、書き込み失敗時のstderrフォールバック |
-| prompt-loader.ts | $INPUT_MEMO_FILES置換、ファイル読み込み、PM用（置換なし） |
-| watcher.ts | ファイル検出イベント、デバウンス、.mdフィルタ、ownerディレクトリ除外 |
+| テスト対象         | テスト内容                                                                                  |
+| ------------------ | ------------------------------------------------------------------------------------------- |
+| logger.ts          | コンソール出力、ファイル出力、フォーマット検証、書き込み失敗時のstderrフォールバック        |
+| prompt-loader.ts   | $INPUT_MEMO_FILES置換、ファイル読み込み、PM用（置換なし）                                   |
+| watcher.ts         | ファイル検出イベント、デバウンス、.mdフィルタ、ownerディレクトリ除外                        |
 | process-manager.ts | 起動・終了検知、リトライ（指数バックオフ）、同時起動数制限、exit code記録、即クラッシュ検出 |
-| SIGINT処理 | 1回で終了モード、3回/1秒で強制終了、タイムスタンプ判定ロジック |
+| SIGINT処理         | 1回で終了モード、3回/1秒で強制終了、タイムスタンプ判定ロジック                              |
 
 ### 統合テスト
 
@@ -321,18 +345,22 @@ package.jsonに追加:
 ## Rollout Strategy
 
 ### Phase 1: 基本実装（Step 1-4）
+
 - spawnerのコア機能を実装
 - モックコマンドでのテスト確認
 
 ### Phase 2: プロンプト移行（Step 5）
+
 - エージェントプロンプトの移行
 - 移行後もClaude Codeの対話モードは維持
 
 ### Phase 3: ドキュメント更新（Step 6）
+
 - ワークフロー・ドキュメントの更新
 - 運用手順の整備
 
 ### Phase 4: 実運用テスト
+
 - SPAWNER_SPAWN_CMDにechoコマンドを設定してドライラン
 - 問題なければ実際のclaude -pコマンドで運用開始
 
@@ -344,12 +372,13 @@ package.jsonに追加:
 
 ## Builder分担案
 
-| Builder | 担当Step | 理由 |
-|---|---|---|
-| Builder A | Step 1, 2, 4 | コア機能の一貫した実装（watcher -> 統合） |
+| Builder   | 担当Step     | 理由                                         |
+| --------- | ------------ | -------------------------------------------- |
+| Builder A | Step 1, 2, 4 | コア機能の一貫した実装（watcher -> 統合）    |
 | Builder B | Step 3, 5, 6 | プロセス管理 + プロンプト移行 + ドキュメント |
 
 **依存関係**:
+
 - Step 2, 3 は Step 1 完了後に並行開始可能
 - Step 4 は Step 2, 3 の両方の完了が必要
 - Step 5 は Step 1 完了後いつでも開始可能（Step 4と並行可）

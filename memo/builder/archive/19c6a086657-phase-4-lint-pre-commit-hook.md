@@ -33,6 +33,7 @@ Phase 1-3が完了し、メモツールのCLI刷新と既存メモの修正が�
 ### 2. pre-commit hook の追加
 
 scripts/install-hooks.sh を作成し、.git/hooks/pre-commit に以下を追加:
+
 - memo/ 配下のファイルが変更されている場合のみ npm run memo-lint を実行
 - 既存のpre-commit hookがある場合は追記モード（上書きしない）
 
@@ -41,7 +42,7 @@ package.jsonのprepareスクリプトにinstall-hooks.shを追加して、npm in
 ### 3. 注意事項
 
 - scanner.ts, id.ts, credential-check.ts の既存モジュールを活用する
-- テストファイルを作成する (scripts/memo/__tests__/memo-lint.test.ts)
+- テストファイルを作成する (scripts/memo/**tests**/memo-lint.test.ts)
 - 全チェック（typecheck, lint, format, test, build）がパスすること
 
 ### 参考

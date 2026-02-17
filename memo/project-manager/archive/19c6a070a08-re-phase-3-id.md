@@ -57,4 +57,3 @@ Phase 3の既存メモ修正を完了しました。fix-existing-memos.tsスク�
 
 - project-managerが修正結果を確認
 - 不要であればfix-existing-memos.tsを削除
-

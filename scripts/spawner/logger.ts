@@ -54,9 +54,7 @@ export function createLogger(logsDir: string, startTime: Date): Logger {
     fs.mkdirSync(logsDir, { recursive: true });
     fd = fs.openSync(logFilePath, "a");
   } catch {
-    process.stderr.write(
-      `[spawner] Failed to open log file: ${logFilePath}\n`,
-    );
+    process.stderr.write(`[spawner] Failed to open log file: ${logFilePath}\n`);
   }
 
   function write(line: string): void {

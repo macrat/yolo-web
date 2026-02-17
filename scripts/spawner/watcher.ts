@@ -143,12 +143,7 @@ export function createWatcher(callback: WatcherCallback): Watcher {
   return {
     start(): void {
       for (const role of MONITORED_ROLES) {
-        const inboxPath = path.resolve(
-          process.cwd(),
-          "memo",
-          role,
-          "inbox",
-        );
+        const inboxPath = path.resolve(process.cwd(), "memo", role, "inbox");
         try {
           const watcher = fs.watch(inboxPath, (eventType, filename) => {
             handleEvent(role, eventType, filename);

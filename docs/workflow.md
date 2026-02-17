@@ -166,6 +166,51 @@ research → plan → review plan → build → review implementation → ship
 - 他ロールのinbox/active/のメモを移動・削除してはならない
 - reviewerの承認なしにbuild phaseに進んではならない
 
+## spawner運用
+
+### 概要
+
+spawnerは、メモのinbox監視によりエージェントを自動起動するシステムである。`npm run spawner` で起動する。
+
+### 動作フロー
+
+1. 起動時に `memo/*/inbox/` をスキャン（ownerを除く6ディレクトリ）
+2. メモがあれば対応するエージェントを起動（1メモ = 1エージェント、ただしPMは1インスタンスのみ）
+3. メモがなければ project-manager を起動
+4. ファイル監視ループ: 新規メモ検出 -> エージェント起動
+5. 全エージェント停止時は project-manager を自動再起動
+
+### エージェント起動方式
+
+- `SPAWNER_SPAWN_CMD` 環境変数でコマンドを指定（デフォルト: `claude -p`）
+- プロンプトは `agents/prompt/<role>.md` から読み込み
+- `$INPUT_MEMO_FILES` プレースホルダが起動トリガーのメモファイルパスに置換される
+- project-manager のプロンプトには `$INPUT_MEMO_FILES` を使用しない（全メモを自身でトリアージするため）
+- stdout/stderr は `agents/logs/` に出力（gitignore対象）
+
+### シャットダウン
+
+- Ctrl-C 1回: 終了モード（新規エージェント起動停止、実行中のエージェント終了待ち）
+- Ctrl-C 3回/1秒以内: 全エージェント強制終了して即座に終了
+
+### エラー対応
+
+- エージェント起動失敗時: 指数バックオフ（5秒、15秒、45秒）で3回リトライ
+- 3回失敗で終了モードに移行
+- project-manager が30秒以内に3回クラッシュした場合も終了モードに移行
+
+### 同時プロセス制限
+
+- 全体の同時プロセス上限: デフォルト10（`SPAWNER_MAX_CONCURRENT` で変更可能）
+- 上限超過時はキュー（FIFO順）に入り、プロセス終了時に順次起動
+- project-manager は常に同時1プロセスのみ
+
+### 従来のサブエージェント起動との違い
+
+- `.claude/agents/` のエージェント定義ファイルは `agents/prompt/` に移行済み
+- Claude Codeの対話モード（delegateモード）の設定は `.claude/settings.json` に残るが、サブエージェント定義ファイルが存在しないためdelegate経由の起動は不可
+- エージェントの起動はspawnerが自動的に行うため、PMが手動でサブエージェントを起動する必要はない
+
 ## 軽微な修正の例外規定
 
 バグ修正、reviewerのnotes対応、タイポ修正など軽微な修正は、researchフェーズ・planフェーズ・review planフェーズをスキップし、直接builderに実装メモを送信してよい。ただし以下の条件を満たすこと:

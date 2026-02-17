@@ -66,14 +66,8 @@ function parseSpawnCmd(
 export function createProcessManager(
   options: ProcessManagerOptions,
 ): ProcessManager {
-  const {
-    logger,
-    logsDir,
-    onAllStopped,
-    onEnding,
-  } = options;
-  const maxConcurrent =
-    options.maxConcurrent ?? DEFAULT_MAX_CONCURRENT;
+  const { logger, logsDir, onAllStopped, onEnding } = options;
+  const maxConcurrent = options.maxConcurrent ?? DEFAULT_MAX_CONCURRENT;
   const spawnCmd = options.spawnCmd;
 
   const running: AgentProcess[] = [];

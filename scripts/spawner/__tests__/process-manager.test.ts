@@ -143,9 +143,7 @@ describe("process-manager", () => {
 
     // The reviewer should have been dequeued and finished too (echo is fast)
     expect(pm.getQueue()).toHaveLength(0);
-    expect(
-      logger.lines.some((l) => l.includes("[reviewer] start")),
-    ).toBe(true);
+    expect(logger.lines.some((l) => l.includes("[reviewer] start"))).toBe(true);
   });
 
   it("maintains FIFO order in queue (NOTE-3)", async () => {
@@ -202,8 +200,7 @@ describe("process-manager", () => {
 
     expect(
       logger.lines.some(
-        (l) =>
-          l.includes("[builder] end (exit=1)") && l.includes("WARNING"),
+        (l) => l.includes("[builder] end (exit=1)") && l.includes("WARNING"),
       ),
     ).toBe(true);
   });
