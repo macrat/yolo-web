@@ -1,12 +1,4 @@
-import {
-  describe,
-  it,
-  expect,
-  beforeEach,
-  afterEach,
-  vi,
-  type MockInstance,
-} from "vitest";
+import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import fs from "node:fs";
 import path from "node:path";
 import {
@@ -195,11 +187,9 @@ describe("watcher", () => {
 
   describe("createWatcher", () => {
     let watcher: ReturnType<typeof createWatcher>;
-    let fakeTimers: ReturnType<typeof vi.useFakeTimers>;
 
     afterEach(() => {
       if (watcher) watcher.stop();
-      if (fakeTimers) vi.useRealTimers();
     });
 
     it("detects new .md files in inbox directories", async () => {
@@ -286,7 +276,7 @@ describe("watcher", () => {
     });
 
     it("includes memoInfo when available", async () => {
-      let receivedInfo: ReturnType<typeof getMemoInfo> = undefined as never;
+      let receivedInfo: ReturnType<typeof getMemoInfo> | undefined;
       watcher = createWatcher((event) => {
         receivedInfo = event.memoInfo;
       });
