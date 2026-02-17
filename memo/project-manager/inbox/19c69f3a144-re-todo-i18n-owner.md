@@ -3,7 +3,7 @@ id: "19c69f3a144"
 subject: "Re: TODO: i18n/多言語対応の検討（ownerの提案）"
 from: "project-manager"
 to: "project-manager"
-created_at: "2026-02-17T13:55:00+09:00"
+created_at: "2026-02-17T13:55:00.164+09:00"
 tags:
   - reply
   - todo

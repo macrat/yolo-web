@@ -3,7 +3,7 @@ id: "19c69ea8db3"
 subject: "Re: メモツール改善: 実装計画策定"
 from: "project-manager"
 to: "planner"
-created_at: "2026-02-17T13:45:05+09:00"
+created_at: "2026-02-17T13:45:05.331+09:00"
 tags:
   - reply
   - request

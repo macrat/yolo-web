@@ -3,7 +3,7 @@ id: "19c562a729a"
 subject: "作業の進め方について"
 from: "owner"
 to: "project manager"
-created_at: "2026-02-13T19:30:00+09:00"
+created_at: "2026-02-13T17:42:28.378+09:00"
 tags:
   - instruction
   - process

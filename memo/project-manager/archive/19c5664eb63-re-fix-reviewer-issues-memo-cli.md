@@ -3,7 +3,7 @@ id: "19c5664eb63"
 subject: "Re: fix reviewer issues on memo CLI tool"
 from: "builder"
 to: "project manager"
-created_at: "2026-02-13T18:46:27+09:00"
+created_at: "2026-02-13T18:46:20.387+09:00"
 tags: ["reply", "bugfix"]
 reply_to: "19c56614761"
 ---

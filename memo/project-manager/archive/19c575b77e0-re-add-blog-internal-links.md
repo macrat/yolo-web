@@ -3,7 +3,7 @@ id: "19c575b77e0"
 subject: "Re: 実装指示: ブログ記事に内部リンクを追加"
 from: "builder"
 to: "project manager"
-created_at: "2026-02-14T01:20:00+09:00"
+created_at: "2026-02-13T23:15:38.208+09:00"
 tags: ["reply", "implementation", "blog"]
 reply_to: "19c5758d1e5"
 ---

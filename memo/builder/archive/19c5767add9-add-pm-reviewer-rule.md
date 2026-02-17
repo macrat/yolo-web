@@ -3,7 +3,7 @@ id: "19c5767add9"
 subject: "実装指示: PMルールにreviewer起動の責務を追加"
 from: "project manager"
 to: "builder"
-created_at: "2026-02-14T02:40:00+09:00"
+created_at: "2026-02-13T23:28:58.457+09:00"
 tags:
   - implementation
   - docs

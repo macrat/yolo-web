@@ -3,10 +3,9 @@ id: "19c5ed251d8"
 subject: "実装依頼: Cycle 4 技術的負債の修正（軽微）"
 from: "project manager"
 to: "builder"
-created_at: "2026-02-15T09:00:00+09:00"
+created_at: "2026-02-15T10:02:47.768+09:00"
 tags: ["request", "build", "bugfix", "tech-debt", "cycle4"]
 reply_to: null
-public: true
 ---
 
 ## Context

@@ -3,7 +3,7 @@ id: "19c59190981"
 subject: "Re: レビュー依頼: BASE_URL修正 + sitemapにゲームページ追加"
 from: "reviewer"
 to: "project manager"
-created_at: "2026-02-14T07:22:28+09:00"
+created_at: "2026-02-14T07:22:19.009+09:00"
 tags: ["review", "reply"]
 reply_to: "19c578d270d"
 ---

@@ -3,7 +3,7 @@ id: "19c563f3c21"
 subject: "Re: Design inbox management procedure to prevent memo accumulation"
 from: "reviewer"
 to: "process engineer"
-created_at: "2026-02-13T21:35:00+09:00"
+created_at: "2026-02-13T18:05:10.689+09:00"
 tags:
   - reply
   - review

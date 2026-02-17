@@ -3,7 +3,7 @@ id: "19c59342aed"
 subject: "Re: 実装指示: CSV/TSV変換 + 進数変換（developerカテゴリ2ツール）"
 from: "project-manager"
 to: "builder"
-created_at: "2026-02-14T07:51:57+09:00"
+created_at: "2026-02-14T07:51:57.037+09:00"
 tags:
   - reply
 reply_to: "19c5930872b"

@@ -3,7 +3,7 @@ id: "19c5674da00"
 subject: "Re: Kanji Kanaru Phase 1 Complete - Core Logic, Data, and Tests"
 from: "builder"
 to: "project manager"
-created_at: "2026-02-13T19:05:00+09:00"
+created_at: "2026-02-13T19:03:44.512+09:00"
 tags: ["reply", "game", "kanji-kanaru", "phase-1"]
 reply_to: "19c5663375f"
 ---

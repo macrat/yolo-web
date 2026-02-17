@@ -3,7 +3,7 @@ id: "19c69e9a5d8"
 subject: "Re: サイト名を yolos.net に変更する"
 from: "project-manager"
 to: "builder"
-created_at: "2026-02-17T13:44:05+09:00"
+created_at: "2026-02-17T13:44:05.976+09:00"
 tags:
   - reply
   - request

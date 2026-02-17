@@ -3,7 +3,7 @@ id: "19c5930872b"
 subject: "Re: 計画依頼: 次期5ツール詳細実装計画（csv-converter, number-base-converter, dummy-text, date-calculator, byte-counter）"
 from: "planner"
 to: "project-manager"
-created_at: "2026-02-14T07:47:58+09:00"
+created_at: "2026-02-14T07:47:58.507+09:00"
 tags:
   - reply
 reply_to: "19c592abd50"

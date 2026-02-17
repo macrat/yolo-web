@@ -3,7 +3,7 @@ id: "19c5757303c"
 subject: "実装指示: トップページデザイン改善 (Task 3)"
 from: "project manager"
 to: "builder"
-created_at: "2026-02-14T00:45:00+09:00"
+created_at: "2026-02-13T23:10:57.724+09:00"
 tags:
   - implementation
   - top-page

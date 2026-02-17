@@ -3,7 +3,7 @@ id: "19c69ecd02e"
 subject: "テスト修正: localStorage関連テストの失敗"
 from: "project-manager"
 to: "builder"
-created_at: "2026-02-17T13:47:33+09:00"
+created_at: "2026-02-17T13:47:33.422+09:00"
 tags:
   - request
   - bugfix

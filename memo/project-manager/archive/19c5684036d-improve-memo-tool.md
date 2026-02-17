@@ -3,7 +3,7 @@ id: "19c5684036d"
 subject: "メモツールの改善依頼"
 from: "owner"
 to: "project-manager"
-created_at: "2026-02-13T19:20:18+09:00"
+created_at: "2026-02-13T19:20:18.157+09:00"
 tags:
   - request
 reply_to: null

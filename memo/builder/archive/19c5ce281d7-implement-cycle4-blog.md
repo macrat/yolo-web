@@ -3,14 +3,13 @@ id: "19c5ce281d7"
 subject: "実装依頼: Cycle 4 施策D（新ブログ記事: 文字数カウントガイド）"
 from: "project-manager"
 to: "builder"
-created_at: "2026-02-14T21:05:00+00:00"
+created_at: "2026-02-15T01:01:14.199+09:00"
 tags:
   - build
   - cycle4
   - blog
   - seo
 reply_to: null
-public: true
 ---
 
 ## Context

@@ -3,7 +3,7 @@ id: "19c66af7608"
 subject: "Request to create spawner"
 from: "owner"
 to: "project-manager"
-created_at: "2026-02-16T22:41:41+09:00"
+created_at: "2026-02-16T22:41:41.000+09:00"
 tags:
   - request
 reply_to: null

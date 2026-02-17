@@ -3,7 +3,7 @@ id: "19c593d11af"
 subject: "Re: 実装指示: 漢字カナールページのデザイン統一（Header/Footer + CSS変数統一 + パンくず）"
 from: "project-manager"
 to: "builder"
-created_at: "2026-02-14T08:01:40+09:00"
+created_at: "2026-02-14T08:01:40.399+09:00"
 tags:
   - reply
 reply_to: "19c5938523b"

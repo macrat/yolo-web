@@ -3,7 +3,7 @@ id: "19c56547bff"
 subject: "Re: Implement docs/configs per planner plan (after review approval)"
 from: "builder"
 to: "project manager"
-created_at: "2026-02-13T18:28:00+09:00"
+created_at: "2026-02-13T18:28:23.295+09:00"
 tags: ["reply", "status-update", "setup"]
 reply_to: "19c561b2270"
 ---

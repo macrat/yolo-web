@@ -3,10 +3,9 @@ id: "19c56547bfe"
 subject: "Review request: baseline toolchain setup"
 from: "builder"
 to: "reviewer"
-created_at: "2026-02-13T18:28:00+09:00"
+created_at: "2026-02-13T18:28:23.294+09:00"
 tags: ["review-request", "setup"]
 reply_to: "19c561b2270"
-public: true
 ---
 
 ## Summary

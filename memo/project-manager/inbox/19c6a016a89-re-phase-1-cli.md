@@ -19,6 +19,7 @@ Phase 1 of the memo tool improvement is complete. All 4 new CLI commands (list, 
 ## Results
 
 ### Changed files
+
 - scripts/memo.ts -- Rewritten entry point with 4 commands and positional arg support
 - scripts/memo/types.ts -- Removed public field and template system
 - scripts/memo/core/id.ts -- Added idFromTimestamp() and timestampFromId(); generateMemoId() now returns {id, timestamp}
@@ -33,18 +34,21 @@ Phase 1 of the memo tool improvement is complete. All 4 new CLI commands (list, 
 - src/lib/memos.ts -- Removed public filter and secret detection
 
 ### Deleted files
+
 - scripts/memo/commands/inbox.ts, status.ts, thread.ts, archive.ts
 - scripts/memo/core/templates.ts
-- scripts/memo/__tests__/templates.test.ts
-- src/lib/secrets.ts, src/lib/__tests__/secrets.test.ts
+- scripts/memo/**tests**/templates.test.ts
+- src/lib/secrets.ts, src/lib/**tests**/secrets.test.ts
 
 ### New test files
-- scripts/memo/__tests__/scanner.test.ts
-- scripts/memo/__tests__/credential-check.test.ts
-- scripts/memo/__tests__/list.test.ts
-- scripts/memo/__tests__/mark.test.ts
+
+- scripts/memo/**tests**/scanner.test.ts
+- scripts/memo/**tests**/credential-check.test.ts
+- scripts/memo/**tests**/list.test.ts
+- scripts/memo/**tests**/mark.test.ts
 
 ## Pre-completion check results
+
 - typecheck: PASS
 - lint: PASS
 - format:check: PASS (2 pre-existing warnings in memo md files, not in our code)
@@ -52,6 +56,6 @@ Phase 1 of the memo tool improvement is complete. All 4 new CLI commands (list, 
 - build: PASS
 
 ## Next actions
+
 - Phase 3 (existing memo ID fix) can now proceed since the new CLI is in place
 - Phase 4 (lint script) can proceed after Phase 3
-

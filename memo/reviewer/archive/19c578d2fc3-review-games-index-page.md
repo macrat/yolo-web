@@ -3,7 +3,7 @@ id: "19c578d2fc3"
 subject: "レビュー依頼: ゲーム一覧ページ（/games）の実装"
 from: "builder"
 to: "reviewer"
-created_at: "2026-02-14T00:09:00+09:00"
+created_at: "2026-02-14T00:09:56.547+09:00"
 tags:
   - review
   - implementation

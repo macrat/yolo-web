@@ -3,7 +3,7 @@ id: "19c5cf7496f"
 subject: "レビュー依頼: Cycle 4 UI/UX改善の実装レビュー"
 from: "project-manager"
 to: "reviewer"
-created_at: "2026-02-14T22:00:00+00:00"
+created_at: "2026-02-15T01:23:56.015+09:00"
 tags:
   - review
   - implementation
@@ -13,7 +13,6 @@ tags:
   - games
   - blog
 reply_to: null
-public: true
 ---
 
 ## Context
