@@ -6,6 +6,7 @@ const NAV_LINKS = [
   { href: "/", label: "ホーム" },
   { href: "/tools", label: "ツール" },
   { href: "/games", label: "ゲーム" },
+  { href: "/dictionary", label: "辞典" },
   { href: "/blog", label: "ブログ" },
   { href: "/memos", label: "メモ" },
   { href: "/about", label: "About" },

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import Breadcrumb from "@/components/common/Breadcrumb";
 import { generateGameJsonLd } from "@/lib/seo";
 import GameContainer from "@/components/games/yoji-kimeru/GameContainer";
@@ -58,6 +59,19 @@ export default function YojiKimeruPage() {
         ]}
       />
       <GameContainer />
+      <p
+        style={{
+          textAlign: "center",
+          fontSize: "0.85rem",
+          marginTop: "1rem",
+          color: "var(--color-text-muted)",
+        }}
+      >
+        <Link href="/dictionary/yoji" style={{ color: "var(--color-primary)" }}>
+          四字熟語辞典
+        </Link>
+        で四字熟語の読み方・意味を調べる
+      </p>
     </div>
   );
 }
