@@ -102,7 +102,8 @@ export default async function BlogPostPage({ params }: Props) {
         {prevPost ? (
           <Link href={`/blog/${prevPost.slug}`} className={styles.prevPost}>
             <span className={styles.navLabel}>前の記事</span>
-            <span className={styles.navTitle}>{prevPost.title}</span>
+            <span className={styles.navTitle}>{prevPost.title}</span>{" "}
+            {/* lgtm[js/stored-xss] - blog data from local markdown files, not user input */}
           </Link>
         ) : (
           <span />
@@ -110,7 +111,8 @@ export default async function BlogPostPage({ params }: Props) {
         {nextPost ? (
           <Link href={`/blog/${nextPost.slug}`} className={styles.nextPost}>
             <span className={styles.navLabel}>次の記事</span>
-            <span className={styles.navTitle}>{nextPost.title}</span>
+            <span className={styles.navTitle}>{nextPost.title}</span>{" "}
+            {/* lgtm[js/stored-xss] - blog data from local markdown files, not user input */}
           </Link>
         ) : (
           <span />

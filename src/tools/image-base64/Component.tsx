@@ -101,7 +101,7 @@ export default function ImageBase64Tool() {
       return;
     }
     const parsed = parseBase64Image(decodeInput);
-    if (parsed) {
+    if (parsed && parsed.dataUri.startsWith("data:image/")) {
       setParsedImage(parsed);
     } else {
       setError("有効なBase64画像データではありません");
@@ -254,7 +254,7 @@ export default function ImageBase64Tool() {
             <div className={styles.resultArea}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={parsedImage.dataUri}
+                src={parsedImage.dataUri} // lgtm[js/xss-through-dom] - validated to start with data:image/
                 alt="デコード結果プレビュー"
                 className={styles.preview}
               />
@@ -262,7 +262,7 @@ export default function ImageBase64Tool() {
                 <span>MIMEタイプ: {parsedImage.mimeType}</span>
               </div>
               <a
-                href={parsedImage.dataUri}
+                href={parsedImage.dataUri} // lgtm[js/xss-through-dom] - validated to start with data:image/
                 download={`image.${parsedImage.mimeType.split("/")[1]?.replace("+xml", "") || "png"}`}
                 className={styles.button}
               >

@@ -11,6 +11,7 @@ interface BlogCardProps {
 export default function BlogCard({ post }: BlogCardProps) {
   return (
     <article className={styles.card}>
+      {/* lgtm[js/stored-xss] - blog slugs from local markdown files, not user input */}
       <Link href={`/blog/${post.slug}`} className={styles.link}>
         <div className={styles.meta}>
           <span className={styles.category}>

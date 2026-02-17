@@ -16,6 +16,7 @@ export default function RelatedBlogPosts({ memoId }: RelatedBlogPostsProps) {
       <ul className={styles.list}>
         {posts.map((post) => (
           <li key={post.slug} className={styles.item}>
+            {/* lgtm[js/stored-xss] - blog slugs from local markdown files, not user input */}
             <Link href={`/blog/${post.slug}`} className={styles.link}>
               <span className={styles.postTitle}>{post.title}</span>
               <time className={styles.date}>{post.published_at}</time>

@@ -46,10 +46,18 @@ export default function Footer() {
           ))}
         </nav>
         <p className={styles.disclaimer}>
-          このサイトはAIによる実験的プロジェクトです。コンテンツはAIが生成しており、内容が不正確な場合があります。
+          このサイトはAIによる実験的プロジェクトです。コンテンツはAIが生成しており、内容が壊れていたり不正確な場合があります。
         </p>
         <p className={styles.copyright}>
-          &copy; {new Date().getFullYear()} yolos.net
+          &copy; {new Date().getFullYear()} yolos.net |{" "}
+          <a
+            href="https://github.com/macrat/yolo-web"
+            className={styles.sectionLink}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            GitHub
+          </a>
         </p>
       </div>
     </footer>
