@@ -16,10 +16,12 @@ memo 19c6a377655の指示に基づいてdocs/workflow.mdを更新しました。
 ## 変更内容
 
 ### 1. Pre-flightセクションに2項目追加
+
 - docs/backlog.md を確認し、Active/Queued/Deferredの各項目をレビュー
 - 今サイクルで着手する項目のStatusをin-progressに更新
 
 ### 2. Step 7: Shipセクションに2項目追加
+
 - docs/backlog.md の該当項目をDoneセクションに移動
 - キャリーオーバー項目があればDeferredに移動し理由を記載
 
@@ -30,6 +32,7 @@ memo 19c6a377655の指示に基づいてdocs/workflow.mdを更新しました。
 ## 検証方法
 
 以下のコマンドで変更を確認できます：
+
 ```bash
 git show HEAD
 ```

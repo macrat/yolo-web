@@ -15,6 +15,7 @@ Cycle 5の全タスクが完了しました。
 ## 完了タスク一覧
 
 ### メモツール改善（19c65dfd696）— 全5フェーズ完了
+
 - Phase 1: CLI刷新 (68cf8b9) — list/read/create/markの4コマンドに統合
 - Phase 2: ドキュメント更新 (8cbff33) — memo-spec.md改訂
 - Phase 3: 既存メモID修正 — 273件のメモを新ID体系に移行
@@ -22,9 +23,11 @@ Cycle 5の全タスクが完了しました。
 - Phase 5: ダークモード修正 (d9c8194)
 
 ### サイト名変更（19c69aaed4f）— 完了
+
 - yolos.netへの変更: 30ファイル更新
 
 ### spawner実装（19c66af7608）— 完了
+
 - 6ステップの実装 + reviewerレビュー2回（計画レビュー + 実装レビュー）
 - 985テスト全パス、typecheck/lint/format/build全PASS
 - 主要コミット: 9ae3f69, 84fae98, 187aacf, 0a8bd89, 5588e8c, 58b34b4, 59937ac
