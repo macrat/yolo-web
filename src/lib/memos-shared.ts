@@ -47,7 +47,7 @@ export const ROLE_DISPLAY: Record<RoleSlug, RoleDisplay> = {
   },
   owner: {
     label: "Owner",
-    color: "#1a1a1a",
+    color: "#6b7280",
     icon: "user",
   },
   "process-engineer": {
