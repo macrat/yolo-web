@@ -64,4 +64,10 @@ describe("getAllColorSlugs", () => {
   test("returns 250 slugs", () => {
     expect(getAllColorSlugs()).toHaveLength(250);
   });
+
+  test("all slugs are unique", () => {
+    const slugs = getAllColorSlugs();
+    const unique = new Set(slugs);
+    expect(unique.size).toBe(slugs.length);
+  });
 });
