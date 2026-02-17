@@ -3,6 +3,8 @@ import { allToolMetas } from "@/tools/registry";
 import { getAllBlogPosts } from "@/lib/blog";
 import { getAllPublicMemos } from "@/lib/memos";
 import { BASE_URL } from "@/lib/constants";
+import { getAllKanjiChars, getKanjiCategories } from "@/lib/dictionary/kanji";
+import { getAllYojiIds, getYojiCategories } from "@/lib/dictionary/yoji";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const toolPages = allToolMetas.map((meta) => ({
@@ -81,6 +83,49 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.6,
     },
+    // Dictionary pages
+    {
+      url: `${BASE_URL}/dictionary`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
+      url: `${BASE_URL}/dictionary/kanji`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    {
+      url: `${BASE_URL}/dictionary/yoji`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    ...getAllKanjiChars().map((char) => ({
+      url: `${BASE_URL}/dictionary/kanji/${encodeURIComponent(char)}`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    })),
+    ...getKanjiCategories().map((cat) => ({
+      url: `${BASE_URL}/dictionary/kanji/category/${cat}`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    })),
+    ...getAllYojiIds().map((yoji) => ({
+      url: `${BASE_URL}/dictionary/yoji/${encodeURIComponent(yoji)}`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    })),
+    ...getYojiCategories().map((cat) => ({
+      url: `${BASE_URL}/dictionary/yoji/category/${cat}`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    })),
     ...toolPages,
     ...blogPosts,
     ...memoPages,

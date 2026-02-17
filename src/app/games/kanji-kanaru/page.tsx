@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import Breadcrumb from "@/components/common/Breadcrumb";
 import { generateGameJsonLd } from "@/lib/seo";
 import GameContainer from "@/components/games/kanji-kanaru/GameContainer";
@@ -58,6 +59,10 @@ export default function KanjiKanaruPage() {
             KANJIDIC2
           </a>{" "}
           (CC BY-SA 4.0) を基に作成しています。
+        </p>
+        <p>
+          <Link href="/dictionary/kanji">漢字辞典</Link>
+          で漢字の読み方・意味を調べる
         </p>
       </footer>
     </div>
