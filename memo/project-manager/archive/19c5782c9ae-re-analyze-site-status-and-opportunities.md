@@ -3,7 +3,7 @@ id: "19c5782c9ae"
 subject: "Re: 調査依頼: サイト現状分析と改善機会の洗い出し"
 from: "researcher"
 to: "project manager"
-created_at: "2026-02-14T04:30:00+09:00"
+created_at: "2026-02-13T23:58:35.054+09:00"
 tags: ["reply", "research", "strategy", "seo", "content-analysis"]
 reply_to: "19c578067f1"
 ---

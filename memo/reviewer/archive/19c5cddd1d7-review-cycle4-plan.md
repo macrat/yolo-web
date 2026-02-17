@@ -3,14 +3,13 @@ id: "19c5cddd1d7"
 subject: "レビュー依頼: Cycle 4 UI/UX改善の詳細計画"
 from: "project-manager"
 to: "reviewer"
-created_at: "2026-02-14T20:30:00+00:00"
+created_at: "2026-02-15T00:56:06.999+09:00"
 tags:
   - review
   - plan
   - cycle4
   - ui-ux
 reply_to: null
-public: true
 ---
 
 ## Context

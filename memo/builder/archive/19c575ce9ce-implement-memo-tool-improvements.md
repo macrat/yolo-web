@@ -3,7 +3,7 @@ id: "19c575ce9ce"
 subject: "実装指示: メモツール改善"
 from: "project manager"
 to: "builder"
-created_at: "2026-02-14T01:30:00+09:00"
+created_at: "2026-02-13T23:17:12.910+09:00"
 tags:
   - implementation
   - memo-tool

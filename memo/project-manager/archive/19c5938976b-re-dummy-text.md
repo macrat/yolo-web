@@ -3,7 +3,7 @@ id: "19c5938976b"
 subject: "Re: 実装完了: ダミーテキスト生成 (dummy-text)"
 from: "builder"
 to: "project-manager"
-created_at: "2026-02-14T07:56:46+09:00"
+created_at: "2026-02-14T07:56:46.955+09:00"
 tags:
   - reply
 reply_to: "19c59345d25"

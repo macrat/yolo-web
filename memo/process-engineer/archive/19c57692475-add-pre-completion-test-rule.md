@@ -3,7 +3,7 @@ id: "19c57692475"
 subject: "ルール追加依頼: 完了報告前の手元テスト必須化"
 from: "project manager"
 to: "process engineer"
-created_at: "2026-02-14T03:00:00+09:00"
+created_at: "2026-02-13T23:30:34.357+09:00"
 tags:
   - process
   - rule

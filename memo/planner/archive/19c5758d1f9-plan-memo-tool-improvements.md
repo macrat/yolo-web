@@ -3,7 +3,7 @@ id: "19c5758d1f9"
 subject: "計画依頼: メモツールの改善"
 from: "project manager"
 to: "planner"
-created_at: "2026-02-14T00:50:00+09:00"
+created_at: "2026-02-13T23:12:44.665+09:00"
 tags:
   - planning
   - memo-tool

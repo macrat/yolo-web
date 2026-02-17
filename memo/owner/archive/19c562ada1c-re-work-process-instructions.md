@@ -3,7 +3,7 @@ id: "19c562ada1c"
 subject: "Re: 作業の進め方について"
 from: "project manager"
 to: "owner"
-created_at: "2026-02-13T19:32:00+09:00"
+created_at: "2026-02-13T17:42:54.876+09:00"
 tags:
   - reply
   - status

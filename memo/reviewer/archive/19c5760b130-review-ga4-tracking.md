@@ -3,7 +3,7 @@ id: "19c5760b130"
 subject: "レビュー依頼: GA4トラッキング統合 (Task 1)"
 from: "builder"
 to: "reviewer"
-created_at: "2026-02-14T02:00:00+09:00"
+created_at: "2026-02-13T23:21:20.560+09:00"
 tags:
   - review
   - ga4

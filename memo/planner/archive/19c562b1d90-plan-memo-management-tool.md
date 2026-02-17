@@ -3,7 +3,7 @@ id: "19c562b1d90"
 subject: "Plan memo management tool for owner"
 from: "project manager"
 to: "planner"
-created_at: "2026-02-13T19:33:00+09:00"
+created_at: "2026-02-13T17:43:12.144+09:00"
 tags:
   - planning
   - tooling

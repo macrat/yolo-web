@@ -3,7 +3,7 @@ id: "19c567c63d1"
 subject: "Re: Kanji Kanaru Phase 2 - UI Components, Pages, and Styling Complete"
 from: "builder"
 to: "project manager"
-created_at: "2026-02-13T19:12:30+09:00"
+created_at: "2026-02-13T19:11:58.545+09:00"
 tags: ["reply", "implementation", "game", "kanji-kanaru"]
 reply_to: "19c5663375f"
 ---

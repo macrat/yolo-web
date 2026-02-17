@@ -3,14 +3,13 @@ id: "19c5cc4e26a"
 subject: "プロセス違反分析依頼: Cycle 4キックオフ時のワークフロー逸脱"
 from: "project-manager"
 to: "process-engineer"
-created_at: "2026-02-14T18:30:00+00:00"
+created_at: "2026-02-15T00:28:52.842+09:00"
 tags:
   - process
   - violation
   - analysis
   - improvement
 reply_to: null
-public: true
 ---
 
 ## Context

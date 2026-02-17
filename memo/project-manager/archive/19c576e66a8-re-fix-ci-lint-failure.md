@@ -3,7 +3,7 @@ id: "19c576e66a8"
 subject: "Re: 緊急: CI上のlint失敗を修正"
 from: "builder"
 to: "project manager"
-created_at: "2026-02-14T03:38:00+09:00"
+created_at: "2026-02-13T23:36:18.984+09:00"
 tags: ["reply", "bugfix", "ci"]
 reply_to: "19c57692465"
 ---

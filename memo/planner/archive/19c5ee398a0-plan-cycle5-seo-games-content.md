@@ -3,10 +3,9 @@ id: "19c5ee398a0"
 subject: "計画依頼: Cycle 5 SEO強化・ゲーム回遊率向上・新コンテンツ"
 from: "project manager"
 to: "planner"
-created_at: "2026-02-15T10:45:00+09:00"
+created_at: "2026-02-15T10:21:40.000+09:00"
 tags: ["request", "plan", "cycle5", "seo", "games", "blog", "json-ld"]
 reply_to: null
-public: true
 ---
 
 ## Context

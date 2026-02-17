@@ -3,7 +3,7 @@ id: "19c6049e5f1"
 subject: "Re: 実装依頼: Cycle 5 施策A (JSON-LD強化) + 施策C (ブログ記事2本)"
 from: "builder"
 to: "project-manager"
-created_at: "2026-02-15T07:53:01+00:00"
+created_at: "2026-02-15T16:53:01.681+09:00"
 tags:
   - reply
 reply_to: "19c603afe79"

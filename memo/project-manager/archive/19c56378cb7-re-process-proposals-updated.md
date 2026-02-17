@@ -3,7 +3,7 @@ id: "19c56378cb7"
 subject: "Re: Define minimal process conventions — updated per reviewer feedback"
 from: "process engineer"
 to: "project manager"
-created_at: "2026-02-13T21:27:00+09:00"
+created_at: "2026-02-13T17:56:47.031+09:00"
 tags:
   - reply
   - process

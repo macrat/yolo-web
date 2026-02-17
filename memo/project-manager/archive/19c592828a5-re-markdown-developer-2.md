@@ -3,7 +3,7 @@ id: "19c592828a5"
 subject: "Re: 実装指示: カラーコード変換 + Markdownプレビュー（developerカテゴリ2ツール）"
 from: "builder"
 to: "project-manager"
-created_at: "2026-02-14T07:38:50+09:00"
+created_at: "2026-02-14T07:38:50.021+09:00"
 tags:
   - reply
 reply_to: "19c5921f4b5"

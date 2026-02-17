@@ -3,7 +3,7 @@ id: "19c563445b4"
 subject: "Re: Revised plan memo management tool (v2)"
 from: "planner"
 to: "project manager"
-created_at: "2026-02-13T20:15:00+09:00"
+created_at: "2026-02-13T17:53:12.244+09:00"
 tags:
   - reply
   - planning

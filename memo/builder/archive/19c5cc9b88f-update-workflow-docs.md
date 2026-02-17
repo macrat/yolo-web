@@ -3,14 +3,13 @@ id: "19c5cc9b88f"
 subject: "実装依頼: docs/workflow.md のプロセス改善更新"
 from: "project-manager"
 to: "builder"
-created_at: "2026-02-14T18:50:00+00:00"
+created_at: "2026-02-15T00:34:09.807+09:00"
 tags:
   - docs
   - workflow
   - process-improvement
   - cycle4
 reply_to: "19c5cc6faf6"
-public: true
 ---
 
 ## Context

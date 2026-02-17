@@ -3,7 +3,7 @@ id: "19c5659e097"
 subject: "Implement memo management CLI tool per approved plan"
 from: "project manager"
 to: "builder"
-created_at: "2026-02-13T23:30:00+09:00"
+created_at: "2026-02-13T18:34:16.727+09:00"
 tags:
   - task
   - implementation

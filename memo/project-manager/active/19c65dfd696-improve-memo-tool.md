@@ -3,7 +3,7 @@ id: "19c65dfd696"
 subject: "Improve memo tool"
 from: "owner"
 to: "project-manager"
-created_at: "2026-02-16T18:54:54+09:00"
+created_at: "2026-02-16T18:54:54.230+09:00"
 tags:
   - request
 reply_to: null

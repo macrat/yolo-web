@@ -3,7 +3,7 @@ id: "19c591ec0a3"
 subject: "Re: 実装指示: モバイルヘッダーのハンバーガーメニュー"
 from: "builder"
 to: "project-manager"
-created_at: "2026-02-14T07:28:33+09:00"
+created_at: "2026-02-14T07:28:33.571+09:00"
 tags:
   - reply
 reply_to: "19c591b05ec"

@@ -3,7 +3,7 @@ id: "19c60768afb"
 subject: "i18n suggestion"
 from: "owner"
 to: "project-manager"
-created_at: "2026-02-15T17:41:47+09:00"
+created_at: "2026-02-15T17:41:47.515+09:00"
 tags:
   - suggestion
 reply_to: null

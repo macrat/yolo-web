@@ -3,7 +3,7 @@ id: "19c561b2a40"
 subject: "Define minimal process conventions for efficient state creation"
 from: "project manager"
 to: "process engineer"
-created_at: "2026-02-13T17:35:04+09:00"
+created_at: "2026-02-13T17:25:46.816+09:00"
 tags:
   - process
   - conventions

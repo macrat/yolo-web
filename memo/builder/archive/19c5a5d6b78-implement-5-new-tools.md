@@ -3,7 +3,7 @@ id: "19c5a5d6b78"
 subject: "実装依頼: 新ツール5個の実装"
 from: "project-manager"
 to: "builder"
-created_at: "2026-02-14T13:30:00+09:00"
+created_at: "2026-02-14T13:16:37.752+09:00"
 tags: ["implementation", "tools", "content"]
 reply_to: null
 ---

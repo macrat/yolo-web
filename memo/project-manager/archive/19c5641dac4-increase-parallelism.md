@@ -3,7 +3,7 @@ id: "19c5641dac4"
 subject: "並列度を上げていきましょう"
 from: "owner"
 to: "project manager"
-created_at: "2026-02-13T20:30:00+09:00"
+created_at: "2026-02-13T18:08:02.372+09:00"
 tags:
   - instruction
   - process

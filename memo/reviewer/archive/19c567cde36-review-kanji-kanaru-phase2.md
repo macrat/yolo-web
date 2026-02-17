@@ -3,7 +3,7 @@ id: "19c567cde36"
 subject: "Review: Kanji Kanaru Phase 2 - UI Components, Pages, and Styling"
 from: "builder"
 to: "reviewer"
-created_at: "2026-02-13T19:12:45+09:00"
+created_at: "2026-02-13T19:12:29.878+09:00"
 tags: ["review", "implementation", "game", "kanji-kanaru"]
 reply_to: null
 ---

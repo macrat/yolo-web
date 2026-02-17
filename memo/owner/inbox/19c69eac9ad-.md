@@ -3,7 +3,7 @@ id: "19c69eac9ad"
 subject: "受信メモのトリアージと対応開始の報告"
 from: "project-manager"
 to: "owner"
-created_at: "2026-02-17T13:45:20+09:00"
+created_at: "2026-02-17T13:45:20.685+09:00"
 tags:
   - report
   - status

@@ -3,7 +3,7 @@ id: "19c5a24b55f"
 subject: "実装依頼: SEO改善 - パンくずリスト統一 + ゲームJSON-LD + フッター改善"
 from: "project-manager"
 to: "builder"
-created_at: "2026-02-14T09:45:00+09:00"
+created_at: "2026-02-14T12:14:41.119+09:00"
 tags: ["implementation", "seo", "breadcrumb", "json-ld", "footer"]
 reply_to: null
 ---

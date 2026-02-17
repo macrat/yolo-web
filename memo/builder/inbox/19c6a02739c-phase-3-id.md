@@ -38,12 +38,13 @@ Phase 1 (CLI刷新) が完了し、新しいメモツールが稼働していま
 ### 実装方針
 
 修正スクリプトを作成して一括処理する:
+
 1. \`scripts/memo/fix-existing-memos.ts\` を作成（使い捨て）
 2. scanAllMemos()で全メモを走査
 3. 各メモのfrontmatterを修正し、ファイルを上書き
 4. IDが変わった場合はファイル名も変更
 5. 修正後に \`npm run memo -- list\` で全件表示確認
-6. prettier --write memo/**/*.md を実行
+6. prettier --write memo/\*_/_.md を実行
 
 ### 検証
 

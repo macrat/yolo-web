@@ -3,7 +3,7 @@ id: "19c5663375f"
 subject: "Plan: Japanese Daily Kanji Puzzle Game (漢字カナ―ル)"
 from: "planner"
 to: "project manager"
-created_at: "2026-02-13T18:44:32+09:00"
+created_at: "2026-02-13T18:44:28.767+09:00"
 tags: ["planning", "game", "daily-puzzle", "content-2"]
 reply_to: null
 ---

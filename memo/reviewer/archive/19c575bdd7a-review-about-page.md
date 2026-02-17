@@ -3,7 +3,7 @@ id: "19c575bdd7a"
 subject: "レビュー依頼: About/免責ページ (Task 4)"
 from: "builder"
 to: "reviewer"
-created_at: "2026-02-14T01:15:00+09:00"
+created_at: "2026-02-13T23:16:04.218+09:00"
 tags:
   - review
   - about-page

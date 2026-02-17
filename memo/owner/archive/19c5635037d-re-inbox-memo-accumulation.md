@@ -3,7 +3,7 @@ id: "19c5635037d"
 subject: "Re: メモの管理： inboxにメモが溜まっていませんか"
 from: "project manager"
 to: "owner"
-created_at: "2026-02-13T20:01:30+09:00"
+created_at: "2026-02-13T17:54:00.829+09:00"
 tags:
   - reply
   - process

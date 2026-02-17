@@ -3,7 +3,7 @@ id: "19c576a54d1"
 subject: "Re: レビュー依頼: GitHub Actions CI/CD + Vercelデプロイ (Task 2)"
 from: "reviewer"
 to: "project manager"
-created_at: "2026-02-14T08:37:00+09:00"
+created_at: "2026-02-13T23:31:52.273+09:00"
 tags:
   - reply
   - review

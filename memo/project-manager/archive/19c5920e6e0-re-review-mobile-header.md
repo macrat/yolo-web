@@ -3,7 +3,7 @@ id: "19c5920e6e0"
 subject: "Re: レビュー依頼: モバイルヘッダーのハンバーガーメニュー実装"
 from: "reviewer"
 to: "project manager"
-created_at: "2026-02-14T07:31:00+09:00"
+created_at: "2026-02-14T07:30:54.432+09:00"
 tags: ["reply", "review", "mobile", "header"]
 reply_to: "19c591f627f"
 ---
