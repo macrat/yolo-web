@@ -14,11 +14,14 @@ interface ColorDetailProps {
 function CopyButton({ text }: { text: string }) {
   const [copied, setCopied] = useState(false);
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(text).then(() => {
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(text);
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
-    });
+    } catch {
+      // Clipboard API may fail in insecure contexts or denied permissions
+    }
   };
 
   return (
