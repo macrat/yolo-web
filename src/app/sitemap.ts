@@ -5,6 +5,7 @@ import { getAllPublicMemos } from "@/lib/memos";
 import { BASE_URL } from "@/lib/constants";
 import { getAllKanjiChars, getKanjiCategories } from "@/lib/dictionary/kanji";
 import { getAllYojiIds, getYojiCategories } from "@/lib/dictionary/yoji";
+import { getAllColorSlugs, getColorCategories } from "@/lib/dictionary/colors";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const toolPages = allToolMetas.map((meta) => ({
@@ -122,6 +123,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })),
     ...getYojiCategories().map((cat) => ({
       url: `${BASE_URL}/dictionary/yoji/category/${cat}`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    })),
+    {
+      url: `${BASE_URL}/colors`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    ...getAllColorSlugs().map((slug) => ({
+      url: `${BASE_URL}/colors/${slug}`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    })),
+    ...getColorCategories().map((cat) => ({
+      url: `${BASE_URL}/colors/category/${cat}`,
       lastModified: new Date(),
       changeFrequency: "monthly" as const,
       priority: 0.6,
