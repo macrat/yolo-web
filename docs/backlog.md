@@ -2,9 +2,7 @@
 
 ## Active (進行中)
 
-| ID    | Title              | Priority | Status      | Assigned Role | Origin Memo | Cycle | Notes  |
-| ----- | ------------------ | -------- | ----------- | ------------- | ----------- | ----- | ------ |
-| B-010 | コンテンツサイクル | P1       | in-progress | researcher    | -           | 6     | 調査中 |
+(なし)
 
 ## Queued (未着手)
 
@@ -30,3 +28,4 @@
 | B-006 | spawner実装                              | 5               | 19c66af7608 | 985テスト、59937ac |
 | B-008 | バックログworkflow.md統合                | 6               | 19c69faf92c | 2490cf0            |
 | B-012 | spawnerキュー優先順位定義                | 5               | 19c6a0e3367 | FIFO実装済み       |
+| B-010 | コンテンツサイクル6: 辞典+ブログ         | 6               | -           | 186新規ページ      |
