@@ -47,13 +47,19 @@ function parseArgs(args: string[]): ParsedArgs {
   return { command, positional, flags };
 }
 
-function getFlag(flags: Record<string, string | string[]>, key: string): string | undefined {
+function getFlag(
+  flags: Record<string, string | string[]>,
+  key: string,
+): string | undefined {
   const val = flags[key];
   if (Array.isArray(val)) return val[0];
   return val;
 }
 
-function getFlagArray(flags: Record<string, string | string[]>, key: string): string[] {
+function getFlagArray(
+  flags: Record<string, string | string[]>,
+  key: string,
+): string[] {
   const val = flags[key];
   if (Array.isArray(val)) return val;
   if (typeof val === "string") return [val];
@@ -115,7 +121,9 @@ function main(): void {
         const limitStr = getFlag(flags, "limit");
         const limit = limitStr ? parseInt(limitStr, 10) : 10;
         const fieldsStr = getFlag(flags, "fields");
-        const fields = fieldsStr ? fieldsStr.split(",").map((f) => f.trim()) : undefined;
+        const fields = fieldsStr
+          ? fieldsStr.split(",").map((f) => f.trim())
+          : undefined;
 
         // Resolve role slugs if provided
         const resolvedFrom = from ? resolveRoleSlug(from) : undefined;
@@ -135,7 +143,9 @@ function main(): void {
       case "read": {
         const id = positional[0];
         if (!id) {
-          console.error("Error: memo ID is required. Usage: npm run memo -- read <id>");
+          console.error(
+            "Error: memo ID is required. Usage: npm run memo -- read <id>",
+          );
           process.exit(1);
         }
         readMemo(id);
@@ -158,7 +168,9 @@ function main(): void {
         resolveRoleSlug(to);
 
         const tags = getFlag(flags, "tags")
-          ? getFlag(flags, "tags")!.split(",").map((t) => t.trim())
+          ? getFlag(flags, "tags")!
+              .split(",")
+              .map((t) => t.trim())
           : [];
         const replyTo = getFlag(flags, "reply-to") ?? null;
         const skipCredentialCheck = "skip-credential-check" in flags;
@@ -170,7 +182,9 @@ function main(): void {
         }
 
         if (!body || body.trim() === "") {
-          console.error("Error: body is required. Provide --body or pipe via stdin.");
+          console.error(
+            "Error: body is required. Provide --body or pipe via stdin.",
+          );
           process.exit(1);
         }
 
