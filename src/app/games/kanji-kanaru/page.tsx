@@ -5,7 +5,7 @@ import GameContainer from "@/components/games/kanji-kanaru/GameContainer";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
-  title: "漢字カナール - 毎日の漢字パズル | Yolo-Web",
+  title: "漢字カナール - 毎日の漢字パズル | yolos.net",
   description:
     "毎日1つの漢字を当てるパズルゲーム。6回以内に正解を見つけよう!部首・画数・読みなどのヒントを頼りに推理する、新感覚の漢字クイズです。",
   openGraph: {
