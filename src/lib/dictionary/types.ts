@@ -92,3 +92,32 @@ export const YOJI_DIFFICULTY_LABELS: Record<YojiDifficulty, string> = {
   2: "中級",
   3: "上級",
 };
+
+export interface ColorEntry {
+  slug: string;
+  name: string;
+  romaji: string;
+  hex: string;
+  rgb: [number, number, number];
+  hsl: [number, number, number];
+  category: ColorCategory;
+}
+
+export type ColorCategory =
+  | "red"
+  | "orange"
+  | "yellow"
+  | "green"
+  | "blue"
+  | "purple"
+  | "achromatic";
+
+export const COLOR_CATEGORY_LABELS: Record<ColorCategory, string> = {
+  red: "赤系",
+  orange: "橙系",
+  yellow: "黄系",
+  green: "緑系",
+  blue: "青系",
+  purple: "紫系",
+  achromatic: "無彩色",
+};

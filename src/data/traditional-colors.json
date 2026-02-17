@@ -1,0 +1,2252 @@
+[
+  {
+    "slug": "toki",
+    "name": "鴇",
+    "romaji": "toki",
+    "hex": "#eea9a9",
+    "rgb": [238, 169, 169],
+    "hsl": [0, 67, 80],
+    "category": "red"
+  },
+  {
+    "slug": "shinsyu",
+    "name": "真朱",
+    "romaji": "shinsyu",
+    "hex": "#ab3b3a",
+    "rgb": [171, 59, 58],
+    "hsl": [1, 49, 45],
+    "category": "red"
+  },
+  {
+    "slug": "cyohsyun",
+    "name": "長春",
+    "romaji": "cyohsyun",
+    "hex": "#bf6766",
+    "rgb": [191, 103, 102],
+    "hsl": [1, 41, 57],
+    "category": "red"
+  },
+  {
+    "slug": "jinzamomi",
+    "name": "甚三紅",
+    "romaji": "jinzamomi",
+    "hex": "#eb7a77",
+    "rgb": [235, 122, 119],
+    "hsl": [2, 74, 69],
+    "category": "red"
+  },
+  {
+    "slug": "ginsyu",
+    "name": "銀朱",
+    "romaji": "ginsyu",
+    "hex": "#c73e3a",
+    "rgb": [199, 62, 58],
+    "hsl": [2, 56, 50],
+    "category": "red"
+  },
+  {
+    "slug": "suohkoh",
+    "name": "蘇芳香",
+    "romaji": "suohkoh",
+    "hex": "#a96360",
+    "rgb": [169, 99, 96],
+    "hsl": [2, 30, 52],
+    "category": "red"
+  },
+  {
+    "slug": "azuki",
+    "name": "小豆",
+    "romaji": "azuki",
+    "hex": "#954a45",
+    "rgb": [149, 74, 69],
+    "hsl": [4, 37, 43],
+    "category": "red"
+  },
+  {
+    "slug": "kuriume",
+    "name": "栗梅",
+    "romaji": "kuriume",
+    "hex": "#904840",
+    "rgb": [144, 72, 64],
+    "hsl": [6, 38, 41],
+    "category": "red"
+  },
+  {
+    "slug": "kokiake",
+    "name": "深緋",
+    "romaji": "kokiake",
+    "hex": "#86473f",
+    "rgb": [134, 71, 63],
+    "hsl": [7, 36, 39],
+    "category": "red"
+  },
+  {
+    "slug": "benikaba",
+    "name": "紅樺",
+    "romaji": "benikaba",
+    "hex": "#b54434",
+    "rgb": [181, 68, 52],
+    "hsl": [7, 55, 46],
+    "category": "red"
+  },
+  {
+    "slug": "syojyohi",
+    "name": "猩猩緋",
+    "romaji": "syojyohi",
+    "hex": "#e83015",
+    "rgb": [232, 48, 21],
+    "hsl": [8, 83, 50],
+    "category": "red"
+  },
+  {
+    "slug": "benitobi",
+    "name": "紅鳶",
+    "romaji": "benitobi",
+    "hex": "#994639",
+    "rgb": [153, 70, 57],
+    "hsl": [8, 46, 41],
+    "category": "red"
+  },
+  {
+    "slug": "sangosyu",
+    "name": "珊瑚朱",
+    "romaji": "sangosyu",
+    "hex": "#f17c67",
+    "rgb": [241, 124, 103],
+    "hsl": [9, 83, 67],
+    "category": "red"
+  },
+  {
+    "slug": "akebono",
+    "name": "曙",
+    "romaji": "akebono",
+    "hex": "#f19483",
+    "rgb": [241, 148, 131],
+    "hsl": [9, 80, 73],
+    "category": "red"
+  },
+  {
+    "slug": "shikancha",
+    "name": "芝翫茶",
+    "romaji": "shikancha",
+    "hex": "#b55d4c",
+    "rgb": [181, 93, 76],
+    "hsl": [10, 42, 50],
+    "category": "red"
+  },
+  {
+    "slug": "ake",
+    "name": "緋",
+    "romaji": "ake",
+    "hex": "#cc543a",
+    "rgb": [204, 84, 58],
+    "hsl": [11, 59, 51],
+    "category": "red"
+  },
+  {
+    "slug": "mizugaki",
+    "name": "水がき",
+    "romaji": "mizugaki",
+    "hex": "#b9887d",
+    "rgb": [185, 136, 125],
+    "hsl": [11, 30, 61],
+    "category": "red"
+  },
+  {
+    "slug": "ebicha",
+    "name": "海老茶",
+    "romaji": "ebicha",
+    "hex": "#734338",
+    "rgb": [115, 67, 56],
+    "hsl": [11, 35, 34],
+    "category": "red"
+  },
+  {
+    "slug": "benihi",
+    "name": "紅緋",
+    "romaji": "benihi",
+    "hex": "#f75c2f",
+    "rgb": [247, 92, 47],
+    "hsl": [13, 93, 58],
+    "category": "red"
+  },
+  {
+    "slug": "hiwada",
+    "name": "檜皮",
+    "romaji": "hiwada",
+    "hex": "#854836",
+    "rgb": [133, 72, 54],
+    "hsl": [14, 42, 37],
+    "category": "red"
+  },
+  {
+    "slug": "benihiwada",
+    "name": "紅檜皮",
+    "romaji": "benihiwada",
+    "hex": "#884c3a",
+    "rgb": [136, 76, 58],
+    "hsl": [14, 40, 38],
+    "category": "red"
+  },
+  {
+    "slug": "terigaki",
+    "name": "照柿",
+    "romaji": "terigaki",
+    "hex": "#c46243",
+    "rgb": [196, 98, 67],
+    "hsl": [14, 52, 52],
+    "category": "red"
+  },
+  {
+    "slug": "kakishibu",
+    "name": "柿渋",
+    "romaji": "kakishibu",
+    "hex": "#a35e47",
+    "rgb": [163, 94, 71],
+    "hsl": [15, 39, 46],
+    "category": "orange"
+  },
+  {
+    "slug": "tokigaracha",
+    "name": "ときがら茶",
+    "romaji": "tokigaracha",
+    "hex": "#db8e71",
+    "rgb": [219, 142, 113],
+    "hsl": [16, 60, 65],
+    "category": "orange"
+  },
+  {
+    "slug": "bengara",
+    "name": "弁柄",
+    "romaji": "bengara",
+    "hex": "#9a5034",
+    "rgb": [154, 80, 52],
+    "hsl": [16, 50, 40],
+    "category": "orange"
+  },
+  {
+    "slug": "karacha",
+    "name": "唐茶",
+    "romaji": "karacha",
+    "hex": "#b47157",
+    "rgb": [180, 113, 87],
+    "hsl": [17, 38, 52],
+    "category": "orange"
+  },
+  {
+    "slug": "sohi",
+    "name": "纁",
+    "romaji": "sohi",
+    "hex": "#ed784a",
+    "rgb": [237, 120, 74],
+    "hsl": [17, 82, 61],
+    "category": "orange"
+  },
+  {
+    "slug": "araisyu",
+    "name": "洗朱",
+    "romaji": "araisyu",
+    "hex": "#fb966e",
+    "rgb": [251, 150, 110],
+    "hsl": [17, 95, 71],
+    "category": "orange"
+  },
+  {
+    "slug": "momoshiocha",
+    "name": "百塩茶",
+    "romaji": "momoshiocha",
+    "hex": "#724938",
+    "rgb": [114, 73, 56],
+    "hsl": [18, 34, 33],
+    "category": "orange"
+  },
+  {
+    "slug": "kabacha",
+    "name": "樺茶",
+    "romaji": "kabacha",
+    "hex": "#b35c37",
+    "rgb": [179, 92, 55],
+    "hsl": [18, 53, 46],
+    "category": "orange"
+  },
+  {
+    "slug": "akakoh",
+    "name": "赤香",
+    "romaji": "akakoh",
+    "hex": "#e3916e",
+    "rgb": [227, 145, 110],
+    "hsl": [18, 68, 66],
+    "category": "orange"
+  },
+  {
+    "slug": "edocha",
+    "name": "江戸茶",
+    "romaji": "edocha",
+    "hex": "#af5f3c",
+    "rgb": [175, 95, 60],
+    "hsl": [18, 49, 46],
+    "category": "orange"
+  },
+  {
+    "slug": "ensyucha",
+    "name": "遠州茶",
+    "romaji": "ensyucha",
+    "hex": "#ca7853",
+    "rgb": [202, 120, 83],
+    "hsl": [19, 53, 56],
+    "category": "orange"
+  },
+  {
+    "slug": "ohni",
+    "name": "黄丹",
+    "romaji": "ohni",
+    "hex": "#f05e1c",
+    "rgb": [240, 94, 28],
+    "hsl": [19, 88, 53],
+    "category": "orange"
+  },
+  {
+    "slug": "haizakura",
+    "name": "灰桜",
+    "romaji": "haizakura",
+    "hex": "#d7c4bb",
+    "rgb": [215, 196, 187],
+    "hsl": [19, 26, 79],
+    "category": "orange"
+  },
+  {
+    "slug": "sodenkaracha",
+    "name": "宗伝唐茶",
+    "romaji": "sodenkaracha",
+    "hex": "#a0674b",
+    "rgb": [160, 103, 75],
+    "hsl": [20, 36, 46],
+    "category": "orange"
+  },
+  {
+    "slug": "shishi",
+    "name": "宍",
+    "romaji": "shishi",
+    "hex": "#f0a986",
+    "rgb": [240, 169, 134],
+    "hsl": [20, 78, 73],
+    "category": "orange"
+  },
+  {
+    "slug": "kaba",
+    "name": "樺",
+    "romaji": "kaba",
+    "hex": "#c1693c",
+    "rgb": [193, 105, 60],
+    "hsl": [20, 53, 50],
+    "category": "orange"
+  },
+  {
+    "slug": "kokikuchinashi",
+    "name": "深支子",
+    "romaji": "kokikuchinashi",
+    "hex": "#fb9966",
+    "rgb": [251, 153, 102],
+    "hsl": [21, 95, 69],
+    "category": "orange"
+  },
+  {
+    "slug": "tobi",
+    "name": "鳶",
+    "romaji": "tobi",
+    "hex": "#724832",
+    "rgb": [114, 72, 50],
+    "hsl": [21, 39, 32],
+    "category": "orange"
+  },
+  {
+    "slug": "suzumecha",
+    "name": "雀茶",
+    "romaji": "suzumecha",
+    "hex": "#8f5a3c",
+    "rgb": [143, 90, 60],
+    "hsl": [22, 41, 40],
+    "category": "orange"
+  },
+  {
+    "slug": "kurikawacha",
+    "name": "栗皮茶",
+    "romaji": "kurikawacha",
+    "hex": "#6a4028",
+    "rgb": [106, 64, 40],
+    "hsl": [22, 45, 29],
+    "category": "orange"
+  },
+  {
+    "slug": "araigaki",
+    "name": "洗柿",
+    "romaji": "araigaki",
+    "hex": "#e79460",
+    "rgb": [231, 148, 96],
+    "hsl": [23, 74, 64],
+    "category": "orange"
+  },
+  {
+    "slug": "taisya",
+    "name": "代赭",
+    "romaji": "taisya",
+    "hex": "#a36336",
+    "rgb": [163, 99, 54],
+    "hsl": [25, 50, 43],
+    "category": "orange"
+  },
+  {
+    "slug": "kogecha",
+    "name": "焦茶",
+    "romaji": "kogecha",
+    "hex": "#563f2e",
+    "rgb": [86, 63, 46],
+    "hsl": [26, 30, 26],
+    "category": "orange"
+  },
+  {
+    "slug": "akashirotsurubami",
+    "name": "赤白橡",
+    "romaji": "akashirotsurubami",
+    "hex": "#e1a679",
+    "rgb": [225, 166, 121],
+    "hsl": [26, 63, 68],
+    "category": "orange"
+  },
+  {
+    "slug": "sharegaki",
+    "name": "洒落柿",
+    "romaji": "sharegaki",
+    "hex": "#ffba84",
+    "rgb": [255, 186, 132],
+    "hsl": [26, 100, 76],
+    "category": "orange"
+  },
+  {
+    "slug": "akakuchiba",
+    "name": "赤朽葉",
+    "romaji": "akakuchiba",
+    "hex": "#c78550",
+    "rgb": [199, 133, 80],
+    "hsl": [27, 52, 55],
+    "category": "orange"
+  },
+  {
+    "slug": "umezome",
+    "name": "梅染",
+    "romaji": "umezome",
+    "hex": "#e9a368",
+    "rgb": [233, 163, 104],
+    "hsl": [27, 75, 66],
+    "category": "orange"
+  },
+  {
+    "slug": "kanzo",
+    "name": "萱草",
+    "romaji": "kanzo",
+    "hex": "#fc9f4d",
+    "rgb": [252, 159, 77],
+    "hsl": [28, 97, 65],
+    "category": "orange"
+  },
+  {
+    "slug": "usugaki",
+    "name": "薄柿",
+    "romaji": "usugaki",
+    "hex": "#ecb88a",
+    "rgb": [236, 184, 138],
+    "hsl": [28, 72, 73],
+    "category": "orange"
+  },
+  {
+    "slug": "biwacha",
+    "name": "枇杷茶",
+    "romaji": "biwacha",
+    "hex": "#b17844",
+    "rgb": [177, 120, 68],
+    "hsl": [29, 44, 48],
+    "category": "orange"
+  },
+  {
+    "slug": "kohrozen",
+    "name": "黄櫨染",
+    "romaji": "kohrozen",
+    "hex": "#7d532c",
+    "rgb": [125, 83, 44],
+    "hsl": [29, 48, 33],
+    "category": "orange"
+  },
+  {
+    "slug": "tonocha",
+    "name": "礪茶",
+    "romaji": "tonocha",
+    "hex": "#985f2a",
+    "rgb": [152, 95, 42],
+    "hsl": [29, 57, 38],
+    "category": "orange"
+  },
+  {
+    "slug": "kohaku",
+    "name": "琥珀",
+    "romaji": "kohaku",
+    "hex": "#ca7a2c",
+    "rgb": [202, 122, 44],
+    "hsl": [30, 64, 48],
+    "category": "orange"
+  },
+  {
+    "slug": "sencha",
+    "name": "煎茶",
+    "romaji": "sencha",
+    "hex": "#855b32",
+    "rgb": [133, 91, 50],
+    "hsl": [30, 45, 36],
+    "category": "orange"
+  },
+  {
+    "slug": "beniukon",
+    "name": "紅鬱金",
+    "romaji": "beniukon",
+    "hex": "#e98b2a",
+    "rgb": [233, 139, 42],
+    "hsl": [30, 81, 54],
+    "category": "orange"
+  },
+  {
+    "slug": "chojicha",
+    "name": "丁子茶",
+    "romaji": "chojicha",
+    "hex": "#96632e",
+    "rgb": [150, 99, 46],
+    "hsl": [31, 53, 38],
+    "category": "orange"
+  },
+  {
+    "slug": "fushizome",
+    "name": "柴染",
+    "romaji": "fushizome",
+    "hex": "#967249",
+    "rgb": [150, 114, 73],
+    "hsl": [32, 35, 44],
+    "category": "orange"
+  },
+  {
+    "slug": "chojizome",
+    "name": "丁子染",
+    "romaji": "chojizome",
+    "hex": "#b07736",
+    "rgb": [176, 119, 54],
+    "hsl": [32, 53, 45],
+    "category": "orange"
+  },
+  {
+    "slug": "kuchiba",
+    "name": "朽葉",
+    "romaji": "kuchiba",
+    "hex": "#e2943b",
+    "rgb": [226, 148, 59],
+    "hsl": [32, 74, 56],
+    "category": "orange"
+  },
+  {
+    "slug": "kincha",
+    "name": "金茶",
+    "romaji": "kincha",
+    "hex": "#c7802d",
+    "rgb": [199, 128, 45],
+    "hsl": [32, 63, 48],
+    "category": "orange"
+  },
+  {
+    "slug": "kyara",
+    "name": "伽羅",
+    "romaji": "kyara",
+    "hex": "#78552b",
+    "rgb": [120, 85, 43],
+    "hsl": [33, 47, 32],
+    "category": "orange"
+  },
+  {
+    "slug": "usukoh",
+    "name": "薄香",
+    "romaji": "usukoh",
+    "hex": "#ebb471",
+    "rgb": [235, 180, 113],
+    "hsl": [33, 75, 68],
+    "category": "orange"
+  },
+  {
+    "slug": "shiracha",
+    "name": "白茶",
+    "romaji": "shiracha",
+    "hex": "#bc9f77",
+    "rgb": [188, 159, 119],
+    "hsl": [35, 34, 60],
+    "category": "orange"
+  },
+  {
+    "slug": "ohdo",
+    "name": "黄土",
+    "romaji": "ohdo",
+    "hex": "#b68e55",
+    "rgb": [182, 142, 85],
+    "hsl": [35, 40, 52],
+    "category": "orange"
+  },
+  {
+    "slug": "tonoko",
+    "name": "砥粉",
+    "romaji": "tonoko",
+    "hex": "#d7b98e",
+    "rgb": [215, 185, 142],
+    "hsl": [35, 48, 70],
+    "category": "orange"
+  },
+  {
+    "slug": "susutake",
+    "name": "煤竹",
+    "romaji": "susutake",
+    "hex": "#6e552f",
+    "rgb": [110, 85, 47],
+    "hsl": [36, 40, 31],
+    "category": "orange"
+  },
+  {
+    "slug": "kobicha",
+    "name": "媚茶",
+    "romaji": "kobicha",
+    "hex": "#876633",
+    "rgb": [135, 102, 51],
+    "hsl": [36, 45, 36],
+    "category": "orange"
+  },
+  {
+    "slug": "ginsusutake",
+    "name": "銀煤竹",
+    "romaji": "ginsusutake",
+    "hex": "#82663a",
+    "rgb": [130, 102, 58],
+    "hsl": [37, 38, 37],
+    "category": "orange"
+  },
+  {
+    "slug": "kitsune",
+    "name": "狐",
+    "romaji": "kitsune",
+    "hex": "#9b6e23",
+    "rgb": [155, 110, 35],
+    "hsl": [38, 63, 37],
+    "category": "orange"
+  },
+  {
+    "slug": "shirotsurubami",
+    "name": "白橡",
+    "romaji": "shirotsurubami",
+    "hex": "#dcb879",
+    "rgb": [220, 184, 121],
+    "hsl": [38, 59, 67],
+    "category": "orange"
+  },
+  {
+    "slug": "kigaracha",
+    "name": "黄唐茶",
+    "romaji": "kigaracha",
+    "hex": "#c18a26",
+    "rgb": [193, 138, 38],
+    "hsl": [39, 67, 45],
+    "category": "orange"
+  },
+  {
+    "slug": "yamabuki",
+    "name": "山吹",
+    "romaji": "yamabuki",
+    "hex": "#ffb11b",
+    "rgb": [255, 177, 27],
+    "hsl": [39, 100, 55],
+    "category": "orange"
+  },
+  {
+    "slug": "yamabukicha",
+    "name": "山吹茶",
+    "romaji": "yamabukicha",
+    "hex": "#d19826",
+    "rgb": [209, 152, 38],
+    "hsl": [40, 69, 48],
+    "category": "orange"
+  },
+  {
+    "slug": "torinoko",
+    "name": "鳥の子",
+    "romaji": "torinoko",
+    "hex": "#dac9a6",
+    "rgb": [218, 201, 166],
+    "hsl": [40, 41, 75],
+    "category": "orange"
+  },
+  {
+    "slug": "kuwacha",
+    "name": "桑茶",
+    "romaji": "kuwacha",
+    "hex": "#c99833",
+    "rgb": [201, 152, 51],
+    "hsl": [40, 60, 49],
+    "category": "orange"
+  },
+  {
+    "slug": "tamago",
+    "name": "玉子",
+    "romaji": "tamago",
+    "hex": "#f9bf45",
+    "rgb": [249, 191, 69],
+    "hsl": [41, 94, 62],
+    "category": "orange"
+  },
+  {
+    "slug": "usuki",
+    "name": "浅黄",
+    "romaji": "usuki",
+    "hex": "#fad689",
+    "rgb": [250, 214, 137],
+    "hsl": [41, 92, 76],
+    "category": "orange"
+  },
+  {
+    "slug": "hajizome",
+    "name": "櫨染",
+    "romaji": "hajizome",
+    "hex": "#dda52d",
+    "rgb": [221, 165, 45],
+    "hsl": [41, 72, 52],
+    "category": "orange"
+  },
+  {
+    "slug": "tamamorokoshi",
+    "name": "玉蜀黍",
+    "romaji": "tamamorokoshi",
+    "hex": "#e8b647",
+    "rgb": [232, 182, 71],
+    "hsl": [41, 78, 59],
+    "category": "orange"
+  },
+  {
+    "slug": "namakabe",
+    "name": "生壁",
+    "romaji": "namakabe",
+    "hex": "#7d6c46",
+    "rgb": [125, 108, 70],
+    "hsl": [41, 28, 38],
+    "category": "orange"
+  },
+  {
+    "slug": "kikuchiba",
+    "name": "黄朽葉",
+    "romaji": "kikuchiba",
+    "hex": "#d9ab42",
+    "rgb": [217, 171, 66],
+    "hsl": [42, 67, 55],
+    "category": "orange"
+  },
+  {
+    "slug": "kuchinashi",
+    "name": "梔子",
+    "romaji": "kuchinashi",
+    "hex": "#f6c555",
+    "rgb": [246, 197, 85],
+    "hsl": [42, 90, 65],
+    "category": "orange"
+  },
+  {
+    "slug": "kitsurubami",
+    "name": "黄橡",
+    "romaji": "kitsurubami",
+    "hex": "#ba9132",
+    "rgb": [186, 145, 50],
+    "hsl": [42, 58, 46],
+    "category": "orange"
+  },
+  {
+    "slug": "rikyushiracha",
+    "name": "利休白茶",
+    "romaji": "rikyushiracha",
+    "hex": "#b4a582",
+    "rgb": [180, 165, 130],
+    "hsl": [42, 25, 61],
+    "category": "orange"
+  },
+  {
+    "slug": "hanaba",
+    "name": "花葉",
+    "romaji": "hanaba",
+    "hex": "#f7c242",
+    "rgb": [247, 194, 66],
+    "hsl": [42, 92, 61],
+    "category": "orange"
+  },
+  {
+    "slug": "karashi",
+    "name": "芥子",
+    "romaji": "karashi",
+    "hex": "#caad5f",
+    "rgb": [202, 173, 95],
+    "hsl": [44, 50, 58],
+    "category": "orange"
+  },
+  {
+    "slug": "ukon",
+    "name": "鬱金",
+    "romaji": "ukon",
+    "hex": "#efbb24",
+    "rgb": [239, 187, 36],
+    "hsl": [45, 86, 54],
+    "category": "yellow"
+  },
+  {
+    "slug": "higosusutake",
+    "name": "肥後煤竹",
+    "romaji": "higosusutake",
+    "hex": "#8d742a",
+    "rgb": [141, 116, 42],
+    "hsl": [45, 54, 36],
+    "category": "yellow"
+  },
+  {
+    "slug": "rokohcha",
+    "name": "路考茶",
+    "romaji": "rokohcha",
+    "hex": "#74673e",
+    "rgb": [116, 103, 62],
+    "hsl": [46, 30, 35],
+    "category": "yellow"
+  },
+  {
+    "slug": "tohoh",
+    "name": "籐黄",
+    "romaji": "tohoh",
+    "hex": "#ffc408",
+    "rgb": [255, 196, 8],
+    "hsl": [46, 100, 52],
+    "category": "yellow"
+  },
+  {
+    "slug": "nataneyu",
+    "name": "菜種油",
+    "romaji": "nataneyu",
+    "hex": "#a28c37",
+    "rgb": [162, 140, 55],
+    "hsl": [48, 49, 43],
+    "category": "yellow"
+  },
+  {
+    "slug": "kariyasu",
+    "name": "刈安",
+    "romaji": "kariyasu",
+    "hex": "#e9cd4c",
+    "rgb": [233, 205, 76],
+    "hsl": [49, 78, 61],
+    "category": "yellow"
+  },
+  {
+    "slug": "nanohana",
+    "name": "菜の花",
+    "romaji": "nanohana",
+    "hex": "#f7d94c",
+    "rgb": [247, 217, 76],
+    "hsl": [49, 91, 63],
+    "category": "yellow"
+  },
+  {
+    "slug": "kimirucha",
+    "name": "黄海松茶",
+    "romaji": "kimirucha",
+    "hex": "#867835",
+    "rgb": [134, 120, 53],
+    "hsl": [50, 43, 37],
+    "category": "yellow"
+  },
+  {
+    "slug": "mirucha",
+    "name": "海松茶",
+    "romaji": "mirucha",
+    "hex": "#62592c",
+    "rgb": [98, 89, 44],
+    "hsl": [50, 38, 28],
+    "category": "yellow"
+  },
+  {
+    "slug": "uguisucha",
+    "name": "鶯茶",
+    "romaji": "uguisucha",
+    "hex": "#6c6024",
+    "rgb": [108, 96, 36],
+    "hsl": [50, 50, 28],
+    "category": "yellow"
+  },
+  {
+    "slug": "mushikuri",
+    "name": "蒸栗",
+    "romaji": "mushikuri",
+    "hex": "#d9cd90",
+    "rgb": [217, 205, 144],
+    "hsl": [50, 49, 71],
+    "category": "yellow"
+  },
+  {
+    "slug": "kihada",
+    "name": "黄蘗",
+    "romaji": "kihada",
+    "hex": "#fbe251",
+    "rgb": [251, 226, 81],
+    "hsl": [51, 96, 65],
+    "category": "yellow"
+  },
+  {
+    "slug": "aokuchiba",
+    "name": "青朽葉",
+    "romaji": "aokuchiba",
+    "hex": "#ada142",
+    "rgb": [173, 161, 66],
+    "hsl": [53, 45, 47],
+    "category": "yellow"
+  },
+  {
+    "slug": "ominaeshi",
+    "name": "女郎花",
+    "romaji": "ominaeshi",
+    "hex": "#ddd23b",
+    "rgb": [221, 210, 59],
+    "hsl": [56, 70, 55],
+    "category": "yellow"
+  },
+  {
+    "slug": "hiwacha",
+    "name": "鶸茶",
+    "romaji": "hiwacha",
+    "hex": "#a5a051",
+    "rgb": [165, 160, 81],
+    "hsl": [56, 34, 48],
+    "category": "yellow"
+  },
+  {
+    "slug": "uguisu",
+    "name": "鶯",
+    "romaji": "uguisu",
+    "hex": "#6c6a2d",
+    "rgb": [108, 106, 45],
+    "hsl": [58, 41, 30],
+    "category": "yellow"
+  },
+  {
+    "slug": "rikancha",
+    "name": "璃寛茶",
+    "romaji": "rikancha",
+    "hex": "#616138",
+    "rgb": [97, 97, 56],
+    "hsl": [60, 27, 30],
+    "category": "yellow"
+  },
+  {
+    "slug": "hiwa",
+    "name": "鶸",
+    "romaji": "hiwa",
+    "hex": "#bec23f",
+    "rgb": [190, 194, 63],
+    "hsl": [62, 52, 50],
+    "category": "yellow"
+  },
+  {
+    "slug": "yanagicha",
+    "name": "柳茶",
+    "romaji": "yanagicha",
+    "hex": "#939650",
+    "rgb": [147, 150, 80],
+    "hsl": [63, 30, 45],
+    "category": "yellow"
+  },
+  {
+    "slug": "kikujin",
+    "name": "麹塵",
+    "romaji": "kikujin",
+    "hex": "#b1b479",
+    "rgb": [177, 180, 121],
+    "hsl": [63, 28, 59],
+    "category": "yellow"
+  },
+  {
+    "slug": "koke",
+    "name": "苔",
+    "romaji": "koke",
+    "hex": "#838a2d",
+    "rgb": [131, 138, 45],
+    "hsl": [65, 51, 36],
+    "category": "yellow"
+  },
+  {
+    "slug": "aikobicha",
+    "name": "藍媚茶",
+    "romaji": "aikobicha",
+    "hex": "#4b4e2a",
+    "rgb": [75, 78, 42],
+    "hsl": [65, 30, 24],
+    "category": "yellow"
+  },
+  {
+    "slug": "miru",
+    "name": "海松",
+    "romaji": "miru",
+    "hex": "#5b622e",
+    "rgb": [91, 98, 46],
+    "hsl": [68, 36, 28],
+    "category": "yellow"
+  },
+  {
+    "slug": "hiwamoegi",
+    "name": "鶸萌黄",
+    "romaji": "hiwamoegi",
+    "hex": "#90b44b",
+    "rgb": [144, 180, 75],
+    "hsl": [81, 41, 50],
+    "category": "green"
+  },
+  {
+    "slug": "moegi",
+    "name": "萌黄",
+    "romaji": "moegi",
+    "hex": "#7ba23f",
+    "rgb": [123, 162, 63],
+    "hsl": [84, 44, 44],
+    "category": "green"
+  },
+  {
+    "slug": "yanagizome",
+    "name": "柳染",
+    "romaji": "yanagizome",
+    "hex": "#91ad70",
+    "rgb": [145, 173, 112],
+    "hsl": [88, 27, 56],
+    "category": "green"
+  },
+  {
+    "slug": "urayanagi",
+    "name": "裏柳",
+    "romaji": "urayanagi",
+    "hex": "#b5caa0",
+    "rgb": [181, 202, 160],
+    "hsl": [90, 28, 71],
+    "category": "green"
+  },
+  {
+    "slug": "matsuba",
+    "name": "松葉",
+    "romaji": "matsuba",
+    "hex": "#42602d",
+    "rgb": [66, 96, 45],
+    "hsl": [95, 36, 28],
+    "category": "green"
+  },
+  {
+    "slug": "aoni",
+    "name": "青丹",
+    "romaji": "aoni",
+    "hex": "#516e41",
+    "rgb": [81, 110, 65],
+    "hsl": [99, 26, 34],
+    "category": "green"
+  },
+  {
+    "slug": "nae",
+    "name": "苗",
+    "romaji": "nae",
+    "hex": "#86c166",
+    "rgb": [134, 193, 102],
+    "hsl": [99, 42, 58],
+    "category": "green"
+  },
+  {
+    "slug": "tokiwa",
+    "name": "常磐",
+    "romaji": "tokiwa",
+    "hex": "#1b813e",
+    "rgb": [27, 129, 62],
+    "hsl": [141, 65, 31],
+    "category": "green"
+  },
+  {
+    "slug": "byakuroku",
+    "name": "白緑",
+    "romaji": "byakuroku",
+    "hex": "#a8d8b9",
+    "rgb": [168, 216, 185],
+    "hsl": [141, 38, 75],
+    "category": "green"
+  },
+  {
+    "slug": "wakatake",
+    "name": "若竹",
+    "romaji": "wakatake",
+    "hex": "#5dac81",
+    "rgb": [93, 172, 129],
+    "hsl": [147, 32, 52],
+    "category": "green"
+  },
+  {
+    "slug": "tokusa",
+    "name": "木賊",
+    "romaji": "tokusa",
+    "hex": "#2d6d4b",
+    "rgb": [45, 109, 75],
+    "hsl": [148, 42, 30],
+    "category": "green"
+  },
+  {
+    "slug": "midori",
+    "name": "緑",
+    "romaji": "midori",
+    "hex": "#227d51",
+    "rgb": [34, 125, 81],
+    "hsl": [151, 57, 31],
+    "category": "green"
+  },
+  {
+    "slug": "rokusyoh",
+    "name": "緑青",
+    "romaji": "rokusyoh",
+    "hex": "#24936e",
+    "rgb": [36, 147, 110],
+    "hsl": [160, 61, 36],
+    "category": "green"
+  },
+  {
+    "slug": "veludo",
+    "name": "ビロード",
+    "romaji": "veludo",
+    "hex": "#096148",
+    "rgb": [9, 97, 72],
+    "hsl": [163, 83, 21],
+    "category": "green"
+  },
+  {
+    "slug": "mushiao",
+    "name": "虫襖",
+    "romaji": "mushiao",
+    "hex": "#20604f",
+    "rgb": [32, 96, 79],
+    "hsl": [164, 50, 25],
+    "category": "green"
+  },
+  {
+    "slug": "tetsu",
+    "name": "鉄",
+    "romaji": "tetsu",
+    "hex": "#26453d",
+    "rgb": [38, 69, 61],
+    "hsl": [165, 29, 21],
+    "category": "blue"
+  },
+  {
+    "slug": "aotake",
+    "name": "青竹",
+    "romaji": "aotake",
+    "hex": "#00896c",
+    "rgb": [0, 137, 108],
+    "hsl": [167, 100, 27],
+    "category": "blue"
+  },
+  {
+    "slug": "aomidori",
+    "name": "青緑",
+    "romaji": "aomidori",
+    "hex": "#00aa90",
+    "rgb": [0, 170, 144],
+    "hsl": [171, 100, 33],
+    "category": "blue"
+  },
+  {
+    "slug": "korainando",
+    "name": "高麗納戸",
+    "romaji": "korainando",
+    "hex": "#305a56",
+    "rgb": [48, 90, 86],
+    "hsl": [174, 30, 27],
+    "category": "blue"
+  },
+  {
+    "slug": "seiji",
+    "name": "青磁",
+    "romaji": "seiji",
+    "hex": "#69b0ac",
+    "rgb": [105, 176, 172],
+    "hsl": [177, 31, 55],
+    "category": "blue"
+  },
+  {
+    "slug": "mizuasagi",
+    "name": "水浅葱",
+    "romaji": "mizuasagi",
+    "hex": "#66bab7",
+    "rgb": [102, 186, 183],
+    "hsl": [178, 38, 56],
+    "category": "blue"
+  },
+  {
+    "slug": "seiheki",
+    "name": "青碧",
+    "romaji": "seiheki",
+    "hex": "#268785",
+    "rgb": [38, 135, 133],
+    "hsl": [179, 56, 34],
+    "category": "blue"
+  },
+  {
+    "slug": "byakugun",
+    "name": "白群",
+    "romaji": "byakugun",
+    "hex": "#78c2c4",
+    "rgb": [120, 194, 196],
+    "hsl": [182, 39, 62],
+    "category": "blue"
+  },
+  {
+    "slug": "omeshicha",
+    "name": "御召茶",
+    "romaji": "omeshicha",
+    "hex": "#376b6d",
+    "rgb": [55, 107, 109],
+    "hsl": [182, 33, 32],
+    "category": "blue"
+  },
+  {
+    "slug": "kamenozoki",
+    "name": "瓶覗",
+    "romaji": "kamenozoki",
+    "hex": "#a5dee4",
+    "rgb": [165, 222, 228],
+    "hsl": [186, 54, 77],
+    "category": "blue"
+  },
+  {
+    "slug": "tetsuonando",
+    "name": "鉄御納戸",
+    "romaji": "tetsuonando",
+    "hex": "#255359",
+    "rgb": [37, 83, 89],
+    "hsl": [187, 41, 25],
+    "category": "blue"
+  },
+  {
+    "slug": "ai",
+    "name": "藍",
+    "romaji": "ai",
+    "hex": "#0d5661",
+    "rgb": [13, 86, 97],
+    "hsl": [188, 76, 22],
+    "category": "blue"
+  },
+  {
+    "slug": "asagi",
+    "name": "浅葱",
+    "romaji": "asagi",
+    "hex": "#33a6b8",
+    "rgb": [51, 166, 184],
+    "hsl": [188, 57, 46],
+    "category": "blue"
+  },
+  {
+    "slug": "mizu",
+    "name": "水",
+    "romaji": "mizu",
+    "hex": "#81c7d4",
+    "rgb": [129, 199, 212],
+    "hsl": [189, 49, 67],
+    "category": "blue"
+  },
+  {
+    "slug": "shinbashi",
+    "name": "新橋",
+    "romaji": "shinbashi",
+    "hex": "#0089a7",
+    "rgb": [0, 137, 167],
+    "hsl": [191, 100, 33],
+    "category": "blue"
+  },
+  {
+    "slug": "sabionando",
+    "name": "錆御納戸",
+    "romaji": "sabionando",
+    "hex": "#336774",
+    "rgb": [51, 103, 116],
+    "hsl": [192, 39, 33],
+    "category": "blue"
+  },
+  {
+    "slug": "hanaasagi",
+    "name": "花浅葱",
+    "romaji": "hanaasagi",
+    "hex": "#1e88a8",
+    "rgb": [30, 136, 168],
+    "hsl": [194, 70, 39],
+    "category": "blue"
+  },
+  {
+    "slug": "hanada",
+    "name": "縹",
+    "romaji": "hanada",
+    "hex": "#006284",
+    "rgb": [0, 98, 132],
+    "hsl": [195, 100, 26],
+    "category": "blue"
+  },
+  {
+    "slug": "omeshionando",
+    "name": "御召御納戸",
+    "romaji": "omeshionando",
+    "hex": "#2e5c6e",
+    "rgb": [46, 92, 110],
+    "hsl": [197, 41, 31],
+    "category": "blue"
+  },
+  {
+    "slug": "noshimehana",
+    "name": "熨斗目花",
+    "romaji": "noshimehana",
+    "hex": "#2b5f75",
+    "rgb": [43, 95, 117],
+    "hsl": [198, 46, 31],
+    "category": "blue"
+  },
+  {
+    "slug": "tsuyukusa",
+    "name": "露草",
+    "romaji": "tsuyukusa",
+    "hex": "#2ea9df",
+    "rgb": [46, 169, 223],
+    "hsl": [198, 73, 53],
+    "category": "blue"
+  },
+  {
+    "slug": "sora",
+    "name": "空",
+    "romaji": "sora",
+    "hex": "#58b2dc",
+    "rgb": [88, 178, 220],
+    "hsl": [199, 65, 60],
+    "category": "blue"
+  },
+  {
+    "slug": "chigusa",
+    "name": "千草",
+    "romaji": "chigusa",
+    "hex": "#3a8fb7",
+    "rgb": [58, 143, 183],
+    "hsl": [199, 52, 47],
+    "category": "blue"
+  },
+  {
+    "slug": "gunjyo",
+    "name": "群青",
+    "romaji": "gunjyo",
+    "hex": "#51a8dd",
+    "rgb": [81, 168, 221],
+    "hsl": [203, 67, 59],
+    "category": "blue"
+  },
+  {
+    "slug": "wasurenagusa",
+    "name": "勿忘草",
+    "romaji": "wasurenagusa",
+    "hex": "#7db9de",
+    "rgb": [125, 185, 222],
+    "hsl": [203, 60, 68],
+    "category": "blue"
+  },
+  {
+    "slug": "ruri",
+    "name": "瑠璃",
+    "romaji": "ruri",
+    "hex": "#005caf",
+    "rgb": [0, 92, 175],
+    "hsl": [208, 100, 34],
+    "category": "blue"
+  },
+  {
+    "slug": "rurikon",
+    "name": "瑠璃紺",
+    "romaji": "rurikon",
+    "hex": "#0b346e",
+    "rgb": [11, 52, 110],
+    "hsl": [215, 82, 24],
+    "category": "blue"
+  },
+  {
+    "slug": "konjyo",
+    "name": "紺青",
+    "romaji": "konjyo",
+    "hex": "#113285",
+    "rgb": [17, 50, 133],
+    "hsl": [223, 77, 29],
+    "category": "blue"
+  },
+  {
+    "slug": "benimidori",
+    "name": "紅碧",
+    "romaji": "benimidori",
+    "hex": "#7b90d2",
+    "rgb": [123, 144, 210],
+    "hsl": [226, 49, 65],
+    "category": "blue"
+  },
+  {
+    "slug": "benikakehana",
+    "name": "紅掛花",
+    "romaji": "benikakehana",
+    "hex": "#4e4f97",
+    "rgb": [78, 79, 151],
+    "hsl": [239, 32, 45],
+    "category": "blue"
+  },
+  {
+    "slug": "konkikyo",
+    "name": "紺桔梗",
+    "romaji": "konkikyo",
+    "hex": "#211e55",
+    "rgb": [33, 30, 85],
+    "hsl": [243, 48, 23],
+    "category": "blue"
+  },
+  {
+    "slug": "fuji",
+    "name": "藤",
+    "romaji": "fuji",
+    "hex": "#8b81c3",
+    "rgb": [139, 129, 195],
+    "hsl": [249, 35, 64],
+    "category": "blue"
+  },
+  {
+    "slug": "ouchi",
+    "name": "楝",
+    "romaji": "ouchi",
+    "hex": "#9b90c2",
+    "rgb": [155, 144, 194],
+    "hsl": [253, 29, 66],
+    "category": "blue"
+  },
+  {
+    "slug": "fujimurasaki",
+    "name": "藤紫",
+    "romaji": "fujimurasaki",
+    "hex": "#8a6bbe",
+    "rgb": [138, 107, 190],
+    "hsl": [262, 39, 58],
+    "category": "purple"
+  },
+  {
+    "slug": "kikyo",
+    "name": "桔梗",
+    "romaji": "kikyo",
+    "hex": "#6a4c9c",
+    "rgb": [106, 76, 156],
+    "hsl": [262, 34, 45],
+    "category": "purple"
+  },
+  {
+    "slug": "shion",
+    "name": "紫苑",
+    "romaji": "shion",
+    "hex": "#8f77b5",
+    "rgb": [143, 119, 181],
+    "hsl": [263, 30, 59],
+    "category": "purple"
+  },
+  {
+    "slug": "usu",
+    "name": "薄",
+    "romaji": "usu",
+    "hex": "#b28fce",
+    "rgb": [178, 143, 206],
+    "hsl": [273, 39, 68],
+    "category": "purple"
+  },
+  {
+    "slug": "hashita",
+    "name": "半",
+    "romaji": "hashita",
+    "hex": "#986db2",
+    "rgb": [152, 109, 178],
+    "hsl": [277, 31, 56],
+    "category": "purple"
+  },
+  {
+    "slug": "kokimurasaki",
+    "name": "深紫",
+    "romaji": "kokimurasaki",
+    "hex": "#4a225d",
+    "rgb": [74, 34, 93],
+    "hsl": [281, 46, 25],
+    "category": "purple"
+  },
+  {
+    "slug": "sumire",
+    "name": "菫",
+    "romaji": "sumire",
+    "hex": "#66327c",
+    "rgb": [102, 50, 124],
+    "hsl": [282, 43, 34],
+    "category": "purple"
+  },
+  {
+    "slug": "edomurasaki",
+    "name": "江戸紫",
+    "romaji": "edomurasaki",
+    "hex": "#77428d",
+    "rgb": [119, 66, 141],
+    "hsl": [282, 36, 41],
+    "category": "purple"
+  },
+  {
+    "slug": "ayame",
+    "name": "菖蒲",
+    "romaji": "ayame",
+    "hex": "#6f3381",
+    "rgb": [111, 51, 129],
+    "hsl": [286, 43, 35],
+    "category": "purple"
+  },
+  {
+    "slug": "murasaki",
+    "name": "紫",
+    "romaji": "murasaki",
+    "hex": "#592c63",
+    "rgb": [89, 44, 99],
+    "hsl": [289, 38, 28],
+    "category": "purple"
+  },
+  {
+    "slug": "benifuji",
+    "name": "紅藤",
+    "romaji": "benifuji",
+    "hex": "#b481bb",
+    "rgb": [180, 129, 187],
+    "hsl": [293, 30, 62],
+    "category": "purple"
+  },
+  {
+    "slug": "kakitsubata",
+    "name": "杜若",
+    "romaji": "kakitsubata",
+    "hex": "#622954",
+    "rgb": [98, 41, 84],
+    "hsl": [315, 41, 27],
+    "category": "purple"
+  },
+  {
+    "slug": "ebizome",
+    "name": "蒲葡",
+    "romaji": "ebizome",
+    "hex": "#6d2e5b",
+    "rgb": [109, 46, 91],
+    "hsl": [317, 41, 30],
+    "category": "purple"
+  },
+  {
+    "slug": "botan",
+    "name": "牡丹",
+    "romaji": "botan",
+    "hex": "#c1328e",
+    "rgb": [193, 50, 142],
+    "hsl": [321, 59, 48],
+    "category": "purple"
+  },
+  {
+    "slug": "umemurasaki",
+    "name": "梅紫",
+    "romaji": "umemurasaki",
+    "hex": "#a8497a",
+    "rgb": [168, 73, 122],
+    "hsl": [329, 39, 47],
+    "category": "purple"
+  },
+  {
+    "slug": "tsutsuji",
+    "name": "躑躅",
+    "romaji": "tsutsuji",
+    "hex": "#e03c8a",
+    "rgb": [224, 60, 138],
+    "hsl": [331, 73, 56],
+    "category": "purple"
+  },
+  {
+    "slug": "nasukon",
+    "name": "茄子紺",
+    "romaji": "nasukon",
+    "hex": "#572a3f",
+    "rgb": [87, 42, 63],
+    "hsl": [332, 35, 25],
+    "category": "purple"
+  },
+  {
+    "slug": "nadeshiko",
+    "name": "撫子",
+    "romaji": "nadeshiko",
+    "hex": "#dc9fb4",
+    "rgb": [220, 159, 180],
+    "hsl": [339, 47, 74],
+    "category": "purple"
+  },
+  {
+    "slug": "karakurenai",
+    "name": "韓紅花",
+    "romaji": "karakurenai",
+    "hex": "#d0104c",
+    "rgb": [208, 16, 76],
+    "hsl": [341, 86, 44],
+    "category": "purple"
+  },
+  {
+    "slug": "kohbai",
+    "name": "紅梅",
+    "romaji": "kohbai",
+    "hex": "#e16b8c",
+    "rgb": [225, 107, 140],
+    "hsl": [343, 66, 65],
+    "category": "purple"
+  },
+  {
+    "slug": "kurenai",
+    "name": "紅",
+    "romaji": "kurenai",
+    "hex": "#cb1b45",
+    "rgb": [203, 27, 69],
+    "hsl": [346, 77, 45],
+    "category": "red"
+  },
+  {
+    "slug": "suoh",
+    "name": "蘇芳",
+    "romaji": "suoh",
+    "hex": "#8e354a",
+    "rgb": [142, 53, 74],
+    "hsl": [346, 46, 38],
+    "category": "red"
+  },
+  {
+    "slug": "nakabeni",
+    "name": "中紅",
+    "romaji": "nakabeni",
+    "hex": "#db4d6d",
+    "rgb": [219, 77, 109],
+    "hsl": [346, 66, 58],
+    "category": "red"
+  },
+  {
+    "slug": "nisemurasaki",
+    "name": "似紫",
+    "romaji": "nisemurasaki",
+    "hex": "#562e37",
+    "rgb": [86, 46, 55],
+    "hsl": [346, 30, 26],
+    "category": "red"
+  },
+  {
+    "slug": "momo",
+    "name": "桃",
+    "romaji": "momo",
+    "hex": "#f596aa",
+    "rgb": [245, 150, 170],
+    "hsl": [347, 83, 77],
+    "category": "red"
+  },
+  {
+    "slug": "usubeni",
+    "name": "薄紅",
+    "romaji": "usubeni",
+    "hex": "#e87a90",
+    "rgb": [232, 122, 144],
+    "hsl": [348, 71, 69],
+    "category": "red"
+  },
+  {
+    "slug": "murasakitobi",
+    "name": "紫鳶",
+    "romaji": "murasakitobi",
+    "hex": "#60373e",
+    "rgb": [96, 55, 62],
+    "hsl": [350, 27, 30],
+    "category": "red"
+  },
+  {
+    "slug": "imayoh",
+    "name": "今様",
+    "romaji": "imayoh",
+    "hex": "#d05a6e",
+    "rgb": [208, 90, 110],
+    "hsl": [350, 56, 58],
+    "category": "red"
+  },
+  {
+    "slug": "ichigo",
+    "name": "苺",
+    "romaji": "ichigo",
+    "hex": "#b5495b",
+    "rgb": [181, 73, 91],
+    "hsl": [350, 43, 50],
+    "category": "red"
+  },
+  {
+    "slug": "kuwazome",
+    "name": "桑染",
+    "romaji": "kuwazome",
+    "hex": "#64363c",
+    "rgb": [100, 54, 60],
+    "hsl": [352, 30, 30],
+    "category": "red"
+  },
+  {
+    "slug": "enji",
+    "name": "燕脂",
+    "romaji": "enji",
+    "hex": "#9f353a",
+    "rgb": [159, 53, 58],
+    "hsl": [357, 50, 42],
+    "category": "red"
+  },
+  {
+    "slug": "akabeni",
+    "name": "赤紅",
+    "romaji": "akabeni",
+    "hex": "#cb4042",
+    "rgb": [203, 64, 66],
+    "hsl": [359, 57, 52],
+    "category": "red"
+  },
+  {
+    "slug": "entan",
+    "name": "鉛丹",
+    "romaji": "entan",
+    "hex": "#d75455",
+    "rgb": [215, 84, 85],
+    "hsl": [360, 62, 59],
+    "category": "red"
+  },
+  {
+    "slug": "ikkonzome",
+    "name": "一斥染",
+    "romaji": "ikkonzome",
+    "hex": "#f4a7b9",
+    "rgb": [244, 167, 185],
+    "hsl": [346, 78, 81],
+    "category": "red"
+  },
+  {
+    "slug": "taikoh",
+    "name": "退紅",
+    "romaji": "taikoh",
+    "hex": "#f8c3cd",
+    "rgb": [248, 195, 205],
+    "hsl": [349, 79, 87],
+    "category": "red"
+  },
+  {
+    "slug": "sakura",
+    "name": "桜",
+    "romaji": "sakura",
+    "hex": "#fedfe1",
+    "rgb": [254, 223, 225],
+    "hsl": [356, 94, 94],
+    "category": "red"
+  },
+  {
+    "slug": "shironeri",
+    "name": "白練",
+    "romaji": "shironeri",
+    "hex": "#fcfaf2",
+    "rgb": [252, 250, 242],
+    "hsl": [48, 63, 97],
+    "category": "yellow"
+  },
+  {
+    "slug": "gofun",
+    "name": "胡粉",
+    "romaji": "gofun",
+    "hex": "#fffffb",
+    "rgb": [255, 255, 251],
+    "hsl": [60, 100, 99],
+    "category": "yellow"
+  },
+  {
+    "slug": "namari",
+    "name": "鉛",
+    "romaji": "namari",
+    "hex": "#787878",
+    "rgb": [120, 120, 120],
+    "hsl": [0, 0, 47],
+    "category": "achromatic"
+  },
+  {
+    "slug": "hai",
+    "name": "灰",
+    "romaji": "hai",
+    "hex": "#828282",
+    "rgb": [130, 130, 130],
+    "hsl": [0, 0, 51],
+    "category": "achromatic"
+  },
+  {
+    "slug": "keshizumi",
+    "name": "消炭",
+    "romaji": "keshizumi",
+    "hex": "#434343",
+    "rgb": [67, 67, 67],
+    "hsl": [0, 0, 26],
+    "category": "achromatic"
+  },
+  {
+    "slug": "nibi",
+    "name": "鈍",
+    "romaji": "nibi",
+    "hex": "#656765",
+    "rgb": [101, 103, 101],
+    "hsl": [120, 1, 40],
+    "category": "achromatic"
+  },
+  {
+    "slug": "sunezumi",
+    "name": "素鼠",
+    "romaji": "sunezumi",
+    "hex": "#787d7b",
+    "rgb": [120, 125, 123],
+    "hsl": [156, 2, 48],
+    "category": "achromatic"
+  },
+  {
+    "slug": "aonibi",
+    "name": "青鈍",
+    "romaji": "aonibi",
+    "hex": "#535953",
+    "rgb": [83, 89, 83],
+    "hsl": [120, 3, 34],
+    "category": "achromatic"
+  },
+  {
+    "slug": "aisumicha",
+    "name": "藍墨茶",
+    "romaji": "aisumicha",
+    "hex": "#373c38",
+    "rgb": [55, 60, 56],
+    "hsl": [132, 4, 23],
+    "category": "achromatic"
+  },
+  {
+    "slug": "shironezumi",
+    "name": "白鼠",
+    "romaji": "shironezumi",
+    "hex": "#bdc0ba",
+    "rgb": [189, 192, 186],
+    "hsl": [90, 5, 74],
+    "category": "green"
+  },
+  {
+    "slug": "dobunezumi",
+    "name": "溝鼠",
+    "romaji": "dobunezumi",
+    "hex": "#4f4f48",
+    "rgb": [79, 79, 72],
+    "hsl": [60, 5, 30],
+    "category": "yellow"
+  },
+  {
+    "slug": "rikyunezumi",
+    "name": "利休鼠",
+    "romaji": "rikyunezumi",
+    "hex": "#707c74",
+    "rgb": [112, 124, 116],
+    "hsl": [140, 5, 46],
+    "category": "green"
+  },
+  {
+    "slug": "fujisusutake",
+    "name": "藤煤竹",
+    "romaji": "fujisusutake",
+    "hex": "#574c57",
+    "rgb": [87, 76, 87],
+    "hsl": [300, 7, 32],
+    "category": "purple"
+  },
+  {
+    "slug": "ginnezumi",
+    "name": "銀鼠",
+    "romaji": "ginnezumi",
+    "hex": "#91989f",
+    "rgb": [145, 152, 159],
+    "hsl": [210, 7, 60],
+    "category": "blue"
+  },
+  {
+    "slug": "hatobanezumi",
+    "name": "鳩羽鼠",
+    "romaji": "hatobanezumi",
+    "hex": "#72636e",
+    "rgb": [114, 99, 110],
+    "hsl": [316, 7, 42],
+    "category": "purple"
+  },
+  {
+    "slug": "yanaginezumi",
+    "name": "柳鼠",
+    "romaji": "yanaginezumi",
+    "hex": "#808f7c",
+    "rgb": [128, 143, 124],
+    "hsl": [107, 8, 52],
+    "category": "green"
+  },
+  {
+    "slug": "iwaicha",
+    "name": "岩井茶",
+    "romaji": "iwaicha",
+    "hex": "#646a58",
+    "rgb": [100, 106, 88],
+    "hsl": [80, 9, 38],
+    "category": "green"
+  },
+  {
+    "slug": "oitake",
+    "name": "老竹",
+    "romaji": "oitake",
+    "hex": "#6a8372",
+    "rgb": [106, 131, 114],
+    "hsl": [139, 11, 46],
+    "category": "green"
+  },
+  {
+    "slug": "aku",
+    "name": "灰汁",
+    "romaji": "aku",
+    "hex": "#877f6c",
+    "rgb": [135, 127, 108],
+    "hsl": [42, 11, 48],
+    "category": "orange"
+  },
+  {
+    "slug": "onandocha",
+    "name": "御納戸茶",
+    "romaji": "onandocha",
+    "hex": "#465d4c",
+    "rgb": [70, 93, 76],
+    "hsl": [136, 14, 32],
+    "category": "green"
+  },
+  {
+    "slug": "ainezumi",
+    "name": "藍鼠",
+    "romaji": "ainezumi",
+    "hex": "#566c73",
+    "rgb": [86, 108, 115],
+    "hsl": [194, 14, 39],
+    "category": "blue"
+  },
+  {
+    "slug": "benikeshinezumi",
+    "name": "紅消鼠",
+    "romaji": "benikeshinezumi",
+    "hex": "#52433d",
+    "rgb": [82, 67, 61],
+    "hsl": [17, 15, 28],
+    "category": "orange"
+  },
+  {
+    "slug": "fukagawanezumi",
+    "name": "深川鼠",
+    "romaji": "fukagawanezumi",
+    "hex": "#77969a",
+    "rgb": [119, 150, 154],
+    "hsl": [187, 15, 54],
+    "category": "blue"
+  },
+  {
+    "slug": "baikocha",
+    "name": "梅幸茶",
+    "romaji": "baikocha",
+    "hex": "#89916b",
+    "rgb": [137, 145, 107],
+    "hsl": [73, 15, 49],
+    "category": "green"
+  },
+  {
+    "slug": "sabiseiji",
+    "name": "錆青磁",
+    "romaji": "sabiseiji",
+    "hex": "#86a697",
+    "rgb": [134, 166, 151],
+    "hsl": [152, 15, 59],
+    "category": "green"
+  },
+  {
+    "slug": "kurumi",
+    "name": "胡桃",
+    "romaji": "kurumi",
+    "hex": "#947a6d",
+    "rgb": [148, 122, 109],
+    "hsl": [20, 15, 50],
+    "category": "orange"
+  },
+  {
+    "slug": "umenezumi",
+    "name": "梅鼠",
+    "romaji": "umenezumi",
+    "hex": "#9e7a7a",
+    "rgb": [158, 122, 122],
+    "hsl": [0, 16, 55],
+    "category": "red"
+  },
+  {
+    "slug": "shikon",
+    "name": "紫紺",
+    "romaji": "shikon",
+    "hex": "#3c2f41",
+    "rgb": [60, 47, 65],
+    "hsl": [283, 16, 22],
+    "category": "purple"
+  },
+  {
+    "slug": "sakuranezumi",
+    "name": "桜鼠",
+    "romaji": "sakuranezumi",
+    "hex": "#b19693",
+    "rgb": [177, 150, 147],
+    "hsl": [6, 16, 64],
+    "category": "red"
+  },
+  {
+    "slug": "sensaicha",
+    "name": "千歳茶",
+    "romaji": "sensaicha",
+    "hex": "#4d5139",
+    "rgb": [77, 81, 57],
+    "hsl": [70, 17, 27],
+    "category": "green"
+  },
+  {
+    "slug": "sabitetsuonando",
+    "name": "錆鉄御納戸",
+    "romaji": "sabitetsuonando",
+    "hex": "#405b55",
+    "rgb": [64, 91, 85],
+    "hsl": [167, 17, 30],
+    "category": "blue"
+  },
+  {
+    "slug": "tonocha2",
+    "name": "沈香茶",
+    "romaji": "tonocha2",
+    "hex": "#4f726c",
+    "rgb": [79, 114, 108],
+    "hsl": [170, 18, 38],
+    "category": "blue"
+  },
+  {
+    "slug": "yanagisusutake",
+    "name": "柳煤竹",
+    "romaji": "yanagisusutake",
+    "hex": "#4a593d",
+    "rgb": [74, 89, 61],
+    "hsl": [92, 19, 29],
+    "category": "green"
+  },
+  {
+    "slug": "kurobeni",
+    "name": "黒紅",
+    "romaji": "kurobeni",
+    "hex": "#3f2b36",
+    "rgb": [63, 43, 54],
+    "hsl": [327, 19, 21],
+    "category": "purple"
+  },
+  {
+    "slug": "usuao",
+    "name": "薄青",
+    "romaji": "usuao",
+    "hex": "#91b493",
+    "rgb": [145, 180, 147],
+    "hsl": [123, 19, 64],
+    "category": "green"
+  },
+  {
+    "slug": "messhi",
+    "name": "滅紫",
+    "romaji": "messhi",
+    "hex": "#533d5b",
+    "rgb": [83, 61, 91],
+    "hsl": [284, 20, 30],
+    "category": "purple"
+  },
+  {
+    "slug": "futaai",
+    "name": "二藍",
+    "romaji": "futaai",
+    "hex": "#70649a",
+    "rgb": [112, 100, 154],
+    "hsl": [253, 21, 50],
+    "category": "blue"
+  },
+  {
+    "slug": "budohnezumi",
+    "name": "葡萄鼠",
+    "romaji": "budohnezumi",
+    "hex": "#5e3d50",
+    "rgb": [94, 61, 80],
+    "hsl": [325, 21, 30],
+    "category": "purple"
+  },
+  {
+    "slug": "kurotobi",
+    "name": "黒鳶",
+    "romaji": "kurotobi",
+    "hex": "#554236",
+    "rgb": [85, 66, 54],
+    "hsl": [23, 22, 27],
+    "category": "orange"
+  },
+  {
+    "slug": "masuhana",
+    "name": "舛花",
+    "romaji": "masuhana",
+    "hex": "#577c8a",
+    "rgb": [87, 124, 138],
+    "hsl": [196, 23, 44],
+    "category": "blue"
+  },
+  {
+    "slug": "chitosemidori",
+    "name": "千歳緑",
+    "romaji": "chitosemidori",
+    "hex": "#36563c",
+    "rgb": [54, 86, 60],
+    "hsl": [131, 23, 27],
+    "category": "green"
+  },
+  {
+    "slug": "fujinezumi",
+    "name": "藤鼠",
+    "romaji": "fujinezumi",
+    "hex": "#6e75a4",
+    "rgb": [110, 117, 164],
+    "hsl": [232, 23, 54],
+    "category": "blue"
+  },
+  {
+    "slug": "rikyucha",
+    "name": "利休茶",
+    "romaji": "rikyucha",
+    "hex": "#897d55",
+    "rgb": [137, 125, 85],
+    "hsl": [46, 23, 44],
+    "category": "yellow"
+  },
+  {
+    "slug": "sabiasagi",
+    "name": "錆浅葱",
+    "romaji": "sabiasagi",
+    "hex": "#6699a1",
+    "rgb": [102, 153, 161],
+    "hsl": [188, 24, 52],
+    "category": "blue"
+  },
+  {
+    "slug": "kuro",
+    "name": "黒",
+    "romaji": "kuro",
+    "hex": "#080808",
+    "rgb": [8, 8, 8],
+    "hsl": [0, 0, 3],
+    "category": "achromatic"
+  },
+  {
+    "slug": "ro",
+    "name": "呂",
+    "romaji": "ro",
+    "hex": "#0c0c0c",
+    "rgb": [12, 12, 12],
+    "hsl": [0, 0, 5],
+    "category": "achromatic"
+  },
+  {
+    "slug": "kurotsurubami",
+    "name": "黒橡",
+    "romaji": "kurotsurubami",
+    "hex": "#0b1013",
+    "rgb": [11, 16, 19],
+    "hsl": [202, 27, 6],
+    "category": "blue"
+  },
+  {
+    "slug": "kachi",
+    "name": "褐",
+    "romaji": "kachi",
+    "hex": "#08192d",
+    "rgb": [8, 25, 45],
+    "hsl": [212, 70, 10],
+    "category": "blue"
+  },
+  {
+    "slug": "sumi",
+    "name": "墨",
+    "romaji": "sumi",
+    "hex": "#1c1c1c",
+    "rgb": [28, 28, 28],
+    "hsl": [0, 0, 11],
+    "category": "achromatic"
+  },
+  {
+    "slug": "kon",
+    "name": "紺",
+    "romaji": "kon",
+    "hex": "#0f2540",
+    "rgb": [15, 37, 64],
+    "hsl": [213, 62, 15],
+    "category": "blue"
+  },
+  {
+    "slug": "onando",
+    "name": "御納戸",
+    "romaji": "onando",
+    "hex": "#0c4842",
+    "rgb": [12, 72, 66],
+    "hsl": [174, 71, 16],
+    "category": "blue"
+  },
+  {
+    "slug": "aimirucha",
+    "name": "藍海松茶",
+    "romaji": "aimirucha",
+    "hex": "#0f4c3a",
+    "rgb": [15, 76, 58],
+    "hsl": [162, 67, 18],
+    "category": "green"
+  },
+  {
+    "slug": "kenpohzome",
+    "name": "憲法染",
+    "romaji": "kenpohzome",
+    "hex": "#43341b",
+    "rgb": [67, 52, 27],
+    "hsl": [37, 43, 18],
+    "category": "orange"
+  },
+  {
+    "slug": "binrojizome",
+    "name": "檳榔子染",
+    "romaji": "binrojizome",
+    "hex": "#3a3226",
+    "rgb": [58, 50, 38],
+    "hsl": [36, 21, 19],
+    "category": "orange"
+  },
+  {
+    "slug": "tetsukon",
+    "name": "鉄紺",
+    "romaji": "tetsukon",
+    "hex": "#261e47",
+    "rgb": [38, 30, 71],
+    "hsl": [252, 41, 20],
+    "category": "blue"
+  }
+]
