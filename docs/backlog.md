@@ -2,16 +2,17 @@
 
 ## Active (進行中)
 
-| ID    | Title                        | Priority | Status      | Assigned Role | Origin Memo | Cycle | Notes                                   |
-| ----- | ---------------------------- | -------- | ----------- | ------------- | ----------- | ----- | --------------------------------------- |
-| B-005 | メモツール改善 Phase 4: lint | P0       | in-progress | builder       | 19c65dfd696 | 5     | Phase 3完了。pre-commit hook + lint追加 |
+| ID    | Title       | Priority | Status      | Assigned Role | Origin Memo | Cycle | Notes                                        |
+| ----- | ----------- | -------- | ----------- | ------------- | ----------- | ----- | -------------------------------------------- |
+| B-006 | spawner実装 | P0       | in-progress | -             | 19c66af7608 | 5-6   | plan完了・review APPROVED。builder委任準備中 |
 
 ## Queued (未着手)
 
-| ID    | Title                     | Priority | Status | Assigned Role | Origin Memo | Target Cycle | Notes                                       |
-| ----- | ------------------------- | -------- | ------ | ------------- | ----------- | ------------ | ------------------------------------------- |
-| B-006 | spawner実装               | P0       | queued | -             | 19c66af7608 | 5-6          | research/review完了。planner→build→reviewへ |
-| B-008 | バックログworkflow.md統合 | P1       | queued | -             | 19c69faf92c | -            | spawner完了後に実施                         |
+| ID    | Title                     | Priority | Status | Assigned Role | Origin Memo | Target Cycle | Notes                        |
+| ----- | ------------------------- | -------- | ------ | ------------- | ----------- | ------------ | ---------------------------- |
+| B-008 | バックログworkflow.md統合 | P1       | queued | -             | 19c69faf92c | -            | spawner完了後に実施          |
+| B-011 | spawnerタイムアウト機能   | P2       | queued | -             | 19c6a0e3367 | -            | NOTE-4: ハング対策。将来課題 |
+| B-012 | spawnerキュー優先順位定義 | P2       | queued | -             | 19c6a0e3367 | -            | NOTE-5: FIFO明記。将来課題   |
 
 ## Deferred (延期)
 
@@ -28,4 +29,5 @@
 | B-002 | メモツール改善 Phase 2: ドキュメント更新 | 5               | 19c65dfd696 | 8cbff33          |
 | B-003 | メモツール改善 Phase 5: ダークモード修正 | 5               | 19c65dfd696 | d9c8194          |
 | B-004 | メモツール改善 Phase 3: 既存メモID修正   | 5               | 19c65dfd696 | 273件修正完了    |
+| B-005 | メモツール改善 Phase 4: lint             | 5               | 19c65dfd696 | 939テスト        |
 | B-007 | サイト名変更 (yolos.net)                 | 5               | 19c69aaed4f | 30ファイル更新   |
