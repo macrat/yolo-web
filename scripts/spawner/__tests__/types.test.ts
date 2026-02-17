@@ -33,7 +33,7 @@ describe("types constants", () => {
     expect(DEFAULT_MAX_CONCURRENT).toBe(10);
   });
 
-  it("defines debounce at 200ms", () => {
-    expect(DEBOUNCE_MS).toBe(200);
+  it("defines debounce at 500ms", () => {
+    expect(DEBOUNCE_MS).toBe(500);
   });
 });

@@ -51,4 +51,4 @@ export const PM_CRASH_THRESHOLD_MS = 30000;
 export const DEFAULT_MAX_CONCURRENT = 10;
 
 /** Debounce interval for file watcher in milliseconds */
-export const DEBOUNCE_MS = 200;
+export const DEBOUNCE_MS = 500;

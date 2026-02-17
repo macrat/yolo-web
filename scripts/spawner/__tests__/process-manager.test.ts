@@ -260,3 +260,74 @@ describe("process-manager", () => {
     expect(logger.lines.some((l) => l.includes("[builder] start"))).toBe(true);
   });
 });
+
+describe("process-manager duplicate memo dedup", () => {
+  const originalCwd = process.cwd();
+  let tmpDir: string;
+  let logsDir: string;
+
+  beforeEach(() => {
+    tmpDir = fs.mkdtempSync("/tmp/spawner-pm-dedup-test-");
+    logsDir = path.join(tmpDir, "agents", "logs");
+    const promptDir = path.join(tmpDir, "agents", "prompt");
+    fs.mkdirSync(promptDir, { recursive: true });
+    fs.mkdirSync(logsDir, { recursive: true });
+
+    for (const role of [
+      "project-manager",
+      "builder",
+      "reviewer",
+      "researcher",
+      "planner",
+      "process-engineer",
+    ]) {
+      fs.writeFileSync(
+        path.join(promptDir, `${role}.md`),
+        `# ${role}\n\nYou are ${role}.\n\nCheck: $INPUT_MEMO_FILES\n`,
+      );
+    }
+
+    process.chdir(tmpDir);
+  });
+
+  afterEach(() => {
+    process.chdir(originalCwd);
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  });
+
+  it("rejects duplicate spawnAgent call for same memoFile", () => {
+    const logger = createMockLogger();
+    const pm = createProcessManager({
+      logger,
+      logsDir,
+      spawnCmd: "node -e setTimeout(()=>{},60000)",
+    });
+
+    const result1 = pm.spawnAgent("builder", "memo/builder/inbox/test.md");
+    expect(result1).toBe(true);
+
+    const result2 = pm.spawnAgent("builder", "memo/builder/inbox/test.md");
+    expect(result2).toBe(false);
+    expect(logger.lines.some((l) => l.includes("skip duplicate"))).toBe(true);
+
+    pm.killAll();
+  });
+
+  it("allows spawnAgent for different memoFiles", () => {
+    const logger = createMockLogger();
+    const pm = createProcessManager({
+      logger,
+      logsDir,
+      spawnCmd: "node -e setTimeout(()=>{},60000)",
+    });
+
+    const result1 = pm.spawnAgent("builder", "memo/builder/inbox/a.md");
+    expect(result1).toBe(true);
+
+    const result2 = pm.spawnAgent("builder", "memo/builder/inbox/b.md");
+    expect(result2).toBe(true);
+
+    expect(pm.runningCount()).toBe(2);
+    pm.killAll();
+  });
+});

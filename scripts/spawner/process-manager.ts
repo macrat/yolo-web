@@ -73,6 +73,7 @@ export function createProcessManager(
 
   const running: AgentProcess[] = [];
   const queue: QueuedSpawn[] = [];
+  const processedFiles = new Set<string>();
   let pmRetryCount = 0;
 
   function runningCount(): number {
@@ -260,6 +261,14 @@ export function createProcessManager(
         return false;
       }
 
+      // Non-PM: skip duplicate memo file (same file triggered multiple times)
+      if (role !== "project-manager" && memoFile) {
+        if (processedFiles.has(memoFile)) {
+          logger.agent(role, `skip duplicate: ${path.basename(memoFile)}`);
+          return false;
+        }
+        processedFiles.add(memoFile);
+      }
       // Check concurrency limit
       if (runningCount() >= maxConcurrent) {
         queue.push({ role, memoFile });

@@ -169,7 +169,7 @@ describe("watcher", () => {
       writeMemo("builder", "inbox", "new-task.md", "pm", "builder", "New Task");
 
       // Wait for debounce + fs.watch event propagation
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       expect(events.length).toBeGreaterThanOrEqual(1);
       expect(events[0].role).toBe("builder");
@@ -189,7 +189,7 @@ describe("watcher", () => {
         "text",
       );
 
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       expect(events).toHaveLength(0);
     });
@@ -215,7 +215,7 @@ describe("watcher", () => {
       fs.writeFileSync(memoPath, content + "update1");
       fs.writeFileSync(memoPath, content + "update2");
 
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // Should only get 1 event due to debounce
       expect(events.length).toBe(1);
@@ -250,7 +250,7 @@ describe("watcher", () => {
         "Review my code",
       );
 
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       expect(receivedInfo).not.toBeNull();
       expect(receivedInfo!.from).toBe("builder");
