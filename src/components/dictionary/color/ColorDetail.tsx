@@ -34,10 +34,21 @@ function CopyButton({ text }: { text: string }) {
 
 export default function ColorDetail({ color }: ColorDetailProps) {
   const categoryLabel = COLOR_CATEGORY_LABELS[color.category];
-  const relatedColors = getColorsByCategory(color.category)
-    .filter((c) => c.slug !== color.slug)
-    .sort(() => Math.random() - 0.5)
-    .slice(0, 6);
+
+  // Shuffle colors once on mount to avoid impure function calls during render
+  const [relatedColors] = useState(() => {
+    const colors = getColorsByCategory(color.category).filter(
+      (c) => c.slug !== color.slug,
+    );
+
+    // Fisher-Yates shuffle
+    for (let i = colors.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [colors[i], colors[j]] = [colors[j], colors[i]];
+    }
+
+    return colors.slice(0, 6);
+  });
 
   const rgbText = `rgb(${color.rgb.join(", ")})`;
   const hslText = `hsl(${color.hsl[0]}, ${color.hsl[1]}%, ${color.hsl[2]}%)`;
