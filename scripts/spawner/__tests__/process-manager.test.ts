@@ -85,7 +85,7 @@ describe("process-manager", () => {
     const pm = createProcessManager({
       logger,
       logsDir,
-      spawnCmd: "sleep 10",
+      spawnCmd: "node -e setTimeout(()=>{},60000)",
     });
 
     const result1 = pm.spawnAgent("project-manager", null);
@@ -103,7 +103,7 @@ describe("process-manager", () => {
     const pm = createProcessManager({
       logger,
       logsDir,
-      spawnCmd: "sleep 10",
+      spawnCmd: "node -e setTimeout(()=>{},60000)",
       maxConcurrent: 2,
     });
 
@@ -232,7 +232,7 @@ describe("process-manager", () => {
     const pm = createProcessManager({
       logger,
       logsDir,
-      spawnCmd: "sleep 60",
+      spawnCmd: "node -e setTimeout(()=>{},60000)",
     });
 
     pm.spawnAgent("builder", "memo1.md");
