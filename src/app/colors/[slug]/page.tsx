@@ -1,0 +1,63 @@
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import Breadcrumb from "@/components/common/Breadcrumb";
+import ColorDetail from "@/components/dictionary/color/ColorDetail";
+import {
+  generateColorPageMetadata,
+  generateColorJsonLd,
+  generateBreadcrumbJsonLd,
+} from "@/lib/seo";
+import { getColorBySlug, getAllColorSlugs } from "@/lib/dictionary/colors";
+
+export function generateStaticParams() {
+  return getAllColorSlugs().map((slug) => ({ slug }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const color = getColorBySlug(slug);
+  if (!color) return {};
+  return generateColorPageMetadata(color);
+}
+
+export default async function ColorDetailPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const color = getColorBySlug(slug);
+  if (!color) notFound();
+
+  const jsonLd = generateColorJsonLd(color);
+  const breadcrumbJsonLd = generateBreadcrumbJsonLd([
+    { label: "ホーム", href: "/" },
+    { label: "伝統色", href: "/colors" },
+    { label: color.name },
+  ]);
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <Breadcrumb
+        items={[
+          { label: "ホーム", href: "/" },
+          { label: "伝統色", href: "/colors" },
+          { label: color.name },
+        ]}
+      />
+      <ColorDetail color={color} />
+    </>
+  );
+}
