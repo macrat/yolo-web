@@ -121,6 +121,8 @@ research → plan → review plan → build → review implementation → ship
 - [ ] 前サイクルが完了していることを確認（ship済み、またはキャリーオーバー項目が明示的にバックログに記録されている）
 - [ ] owner/inbox/に未処理の指示がないか確認
 - [ ] 他ロールのinbox/に自分が移動すべきでない滞留メモがないか目視確認（滞留があればそのロールに通知メモを送信）
+- [ ] docs/backlog.md を確認し、Active/Queued/Deferredの各項目をレビュー
+- [ ] 今サイクルで着手する項目のStatusをin-progressに更新
 
 ### Step 1: Owner報告
 
@@ -158,6 +160,8 @@ research → plan → review plan → build → review implementation → ship
 
 - [ ] mainにマージ・プッシュ
 - [ ] ownerにサイクル完了報告メモを送信
+- [ ] docs/backlog.md の該当項目をDoneセクションに移動
+- [ ] キャリーオーバー項目があればDeferredに移動し理由を記載
 
 ### Prohibitions（常時適用）
 
