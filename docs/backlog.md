@@ -2,10 +2,8 @@
 
 ## Active (進行中)
 
-| ID    | Title                                               | Priority | Status | Assigned Role | Origin Memo | Target Cycle | Notes                       |
-| ----- | --------------------------------------------------- | -------- | ------ | ------------- | ----------- | ------------ | --------------------------- |
-| B-015 | AIカラーパレットジェネレーター + 伝統色リファレンス | P2       | active | builder       | 19c566bca69 | 8            | Phase 1（伝統色辞典）実装中 |
-| B-029 | spawner重複起動バグ修正                             | P1       | active | builder       | 19c6b094a8e | 8            | processedFiles dedup追加    |
+| ID  | Title | Priority | Status | Assigned Role | Origin Memo | Target Cycle | Notes |
+| --- | ----- | -------- | ------ | ------------- | ----------- | ------------ | ----- |
 
 ## Queued (未着手)
 
@@ -14,7 +12,6 @@
 | B-009 | 多言語対応 (i18n)                               | P2       | queued | -             | 19c60768afb | -            | 条件充足。技術調査から         |
 | B-011 | spawnerタイムアウト機能                         | P2       | queued | -             | 19c6a0e3367 | -            | NOTE-4: ハング対策。将来課題   |
 | B-016 | チートシート/リファレンスページ（Git, regex等） | P2       | queued | -             | 19c565ee77e | -            | 提案済み、未着手               |
-| B-030 | memo CLI権限チェック（--asオプション追加）      | P2       | queued | -             | 19c6b133d03 | -            | PE提案、PM承認。B-029後に実施  |
 | B-017 | ユーザートグル式ダークモード（next-themes）     | P3       | queued | -             | 19c5ed251d5 | -            | CSS-only実装済み、トグル未実装 |
 | B-018 | サイト内検索機能                                | P3       | queued | -             | 19c5a48075c | -            | 複数回言及                     |
 | B-019 | ブログRSSフィード                               | P3       | queued | -             | 19c567f4d06 | -            | 明示的に延期                   |
@@ -48,3 +45,6 @@
 | B-014 | セキュリティ管理（Dependabot + CodeQL監視 + 既存アラート対応） | 7               | 19c6ac5475a | 9af7719, レビュー承認済み |
 | B-027 | AiDisclaimer文言修正（「壊れている」追加）                     | 7               | 19c5682f9cd | B-013の一部として実装済み |
 | B-028 | docs/workflow.md セキュリティ監視プロセス追加                  | 7               | 19c6ac5475a | 9af7719, レビュー承認済み |
+| B-029 | spawner重複起動バグ修正                                        | 8               | 19c6b094a8e | レビュー承認済み          |
+| B-015 | AIカラーパレットジェネレーター + 伝統色リファレンス            | 8               | 19c566bca69 | Phase 1完了、レビュー承認 |
+| B-030 | memo mark YOLO_AGENT環境変数チェック                           | 8               | 19c6b186d29 | 5cc9d5a, レビュー承認済み |
