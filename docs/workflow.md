@@ -12,7 +12,7 @@
 ### project manager
 
 - **責任**: PVを増加させるための指示と意思決定
-- バックログの維持、タスクのメモによる委任
+- バックログの維持（`docs/backlog.md` の直接編集が許可されている）、タスクのメモによる委任
 - `reviewer`の結果とConstitution準拠に基づく成果物の受理/拒否
 - `main`へのプッシュによるリリース判断
 - リポジトリが実験を継続できる状態の維持
@@ -168,12 +168,12 @@ research → plan → review plan → build → review implementation → ship
 
 - [ ] mainにマージ・プッシュ
 - [ ] ownerにサイクル完了報告メモを送信
-- [ ] docs/backlog.md の該当項目をDoneセクションに移動
+- [ ] docs/backlog.md の該当項目をDoneセクションに移動（PMが直接編集）
 - [ ] キャリーオーバー項目があればDeferredに移動し理由を記載
 
 ### Prohibitions（常時適用）
 
-- PMがコード・ファイルを直接変更してはならない
+- PMがコード・ファイルを直接変更してはならない（ただし `docs/backlog.md` の編集は例外とする）
 - メモを介さずbuilderに直接指示してはならない（Task tool等の使用禁止）
 - 他ロールのinbox/active/のメモを移動・削除してはならない
 - reviewerの承認なしにbuild phaseに進んではならない

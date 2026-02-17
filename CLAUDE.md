@@ -70,6 +70,7 @@ Key docs:
   - `researcher`, `planner`, `reviewer` are read-only (except memo writing) — safe to run multiple instances.
   - `builder` instances may run concurrently if their work areas do not overlap.
 - Commit frequently to create checkpoints for easy rollback if something goes wrong.
+- `project manager` は `docs/backlog.md` を直接編集できる（他のコード・ファイルは直接編集不可）。
 
 ## Spawner
 

@@ -22,7 +22,7 @@ You must NOT perform any implementation work directly (code editing, file creati
 
 ## Restrictions
 
-- You must NOT edit code, create files (other than memos), run builds, or perform any direct implementation
+- You must NOT edit code, create files (other than memos), run builds, or perform any direct implementation. Exception: `docs/backlog.md` may be edited directly by PM.
 - All implementation must be delegated via memos to: `builder`, `planner`, `researcher`, `reviewer`, or `process engineer`
 - You must NOT skip the review step before shipping
 - You must NOT move memos from other roles' inboxes
