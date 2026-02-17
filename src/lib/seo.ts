@@ -309,4 +309,69 @@ export function generateYojiJsonLd(yoji: YojiMetaForSeo): object {
   };
 }
 
+// -- Color Dictionary SEO helpers --
+
+export interface ColorMetaForSeo {
+  slug: string;
+  name: string;
+  romaji: string;
+  hex: string;
+  category: string;
+}
+
+export function generateColorPageMetadata(color: ColorMetaForSeo): Metadata {
+  return {
+    title: `${color.name}（${color.romaji}）${color.hex} - 日本の伝統色 | ${SITE_NAME}`,
+    description: `日本の伝統色「${color.name}」（${color.romaji}）。カラーコード: ${color.hex}。RGB・HSL値、関連する伝統色を紹介。`,
+    keywords: [color.name, color.romaji, "伝統色", "日本の色", color.hex],
+    openGraph: {
+      title: `${color.name}（${color.romaji}）${color.hex} - 日本の伝統色`,
+      description: `日本の伝統色「${color.name}」（${color.romaji}）。カラーコード: ${color.hex}。`,
+      type: "website",
+      url: `${BASE_URL}/colors/${color.slug}`,
+      siteName: SITE_NAME,
+    },
+    alternates: {
+      canonical: `${BASE_URL}/colors/${color.slug}`,
+    },
+  };
+}
+
+export function generateColorJsonLd(color: ColorMetaForSeo): object {
+  return {
+    "@context": "https://schema.org",
+    "@type": "DefinedTerm",
+    name: color.name,
+    description: `${color.romaji}: ${color.hex}`,
+    url: `${BASE_URL}/colors/${color.slug}`,
+    inDefinedTermSet: {
+      "@type": "DefinedTermSet",
+      name: "日本の伝統色辞典",
+      url: `${BASE_URL}/colors`,
+    },
+    inLanguage: "ja",
+  };
+}
+
+export function generateColorCategoryMetadata(
+  category: string,
+  label: string,
+): Metadata {
+  return {
+    title: `${label}の伝統色一覧 - 日本の伝統色 | ${SITE_NAME}`,
+    description: `日本の伝統色「${label}」カテゴリの色一覧。カラーコード・RGB・HSL値を確認できます。`,
+    keywords: [label, "伝統色", "日本の色", "カラーコード"],
+    openGraph: {
+      title: `${label}の伝統色一覧 - 日本の伝統色`,
+      description: `日本の伝統色「${label}」カテゴリの色一覧。`,
+      type: "website",
+      url: `${BASE_URL}/colors/category/${category}`,
+      siteName: SITE_NAME,
+    },
+    alternates: {
+      canonical: `${BASE_URL}/colors/category/${category}`,
+    },
+  };
+}
+
 export { BASE_URL, SITE_NAME };
