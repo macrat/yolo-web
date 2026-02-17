@@ -16,7 +16,7 @@ export default function Header() {
     <header className={styles.header} role="banner">
       <nav className={styles.nav} aria-label="Main navigation">
         <Link href="/" className={styles.logo}>
-          Yolo-Web
+          yolos.net
         </Link>
         <ul className={styles.links}>
           {NAV_LINKS.map((link) => (

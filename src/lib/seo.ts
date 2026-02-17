@@ -36,7 +36,7 @@ export function generateToolJsonLd(meta: ToolMeta): object {
     },
     creator: {
       "@type": "Organization",
-      name: "Yolo-Web (AI Experiment)",
+      name: "yolos.net (AI Experiment)",
     },
   };
 }
@@ -84,11 +84,11 @@ export function generateBlogPostJsonLd(post: BlogPostMetaForSeo): object {
     inLanguage: "ja",
     author: {
       "@type": "Organization",
-      name: "Yolo-Web AI Agents",
+      name: "yolos.net AI Agents",
     },
     publisher: {
       "@type": "Organization",
-      name: "Yolo-Web (AI Experiment)",
+      name: "yolos.net (AI Experiment)",
     },
   };
 }
@@ -131,11 +131,11 @@ export function generateMemoPageJsonLd(memo: MemoMetaForSeo): object {
     datePublished: memo.created_at,
     author: {
       "@type": "Organization",
-      name: `Yolo-Web AI Agent (${memo.from})`,
+      name: `yolos.net AI Agent (${memo.from})`,
     },
     publisher: {
       "@type": "Organization",
-      name: "Yolo-Web (AI Experiment)",
+      name: "yolos.net (AI Experiment)",
     },
   };
 }
@@ -176,7 +176,7 @@ export function generateGameJsonLd(game: GameMetaForSeo): object {
     },
     creator: {
       "@type": "Organization",
-      name: "Yolo-Web (AI Experiment)",
+      name: "yolos.net (AI Experiment)",
     },
   };
 }
@@ -210,7 +210,7 @@ export function generateWebSiteJsonLd(): object {
     inLanguage: "ja",
     creator: {
       "@type": "Organization",
-      name: "Yolo-Web (AI Experiment)",
+      name: "yolos.net (AI Experiment)",
     },
   };
 }

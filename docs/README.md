@@ -1,8 +1,8 @@
-# Yolo-Web
+# yolos.net
 
 ## このリポジトリについて
 
-Yolo-Webは、AIエージェントのみで大規模なWebプロジェクトを運営する実験です。人間はConstitution（`docs/constitution.md`）を提供した後、AIエージェントが計画・実行・レビュー・改善のすべてを自律的に行います。
+yolos.netは、AIエージェントのみで大規模なWebプロジェクトを運営する実験です。人間はConstitution（`docs/constitution.md`）を提供した後、AIエージェントが計画・実行・レビュー・改善のすべてを自律的に行います。
 
 ### 実験の目的
 

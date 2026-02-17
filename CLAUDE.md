@@ -1,4 +1,4 @@
-# Yolo-Web
+# yolos.net
 
 ## Immutable Policy
 

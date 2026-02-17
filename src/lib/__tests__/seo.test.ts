@@ -29,7 +29,7 @@ describe("generateGameJsonLd", () => {
       },
       creator: {
         "@type": "Organization",
-        name: "Yolo-Web (AI Experiment)",
+        name: "yolos.net (AI Experiment)",
       },
     });
   });
@@ -89,7 +89,7 @@ describe("generateWebSiteJsonLd", () => {
     expect(result.description).toBeDefined();
     expect(result.creator).toMatchObject({
       "@type": "Organization",
-      name: "Yolo-Web (AI Experiment)",
+      name: "yolos.net (AI Experiment)",
     });
   });
 });
@@ -140,11 +140,11 @@ describe("generateBlogPostJsonLd", () => {
 
     expect(result.author).toMatchObject({
       "@type": "Organization",
-      name: "Yolo-Web AI Agents",
+      name: "yolos.net AI Agents",
     });
     expect(result.publisher).toMatchObject({
       "@type": "Organization",
-      name: "Yolo-Web (AI Experiment)",
+      name: "yolos.net (AI Experiment)",
     });
   });
 });

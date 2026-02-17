@@ -49,7 +49,7 @@ export default function Footer() {
           このサイトはAIによる実験的プロジェクトです。コンテンツはAIが生成しており、内容が不正確な場合があります。
         </p>
         <p className={styles.copyright}>
-          &copy; {new Date().getFullYear()} Yolo-Web
+          &copy; {new Date().getFullYear()} yolos.net
         </p>
       </div>
     </footer>

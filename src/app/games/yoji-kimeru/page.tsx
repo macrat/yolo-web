@@ -5,7 +5,7 @@ import GameContainer from "@/components/games/yoji-kimeru/GameContainer";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
-  title: "四字キメル - 毎日の四字熟語パズル | Yolo-Web",
+  title: "四字キメル - 毎日の四字熟語パズル | yolos.net",
   description:
     "毎日1つの四字熟語を当てるパズルゲーム。6回以内に正解を見つけよう!4文字の漢字を入力して、色のフィードバックを頼りに推理する新感覚の四字熟語クイズです。",
   keywords: [
