@@ -243,6 +243,46 @@ describe("process-manager", () => {
     expect(pm.runningCount()).toBe(0);
   });
 
+  it("sets YOLO_AGENT env var for builder role", async () => {
+    const logger = createMockLogger();
+    const pm = createProcessManager({
+      logger,
+      logsDir,
+      spawnCmd: "sh -c printenv",
+      onAllStopped: vi.fn(),
+    });
+
+    pm.spawnAgent("builder", "memo/builder/inbox/test.md");
+
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    const logFile = fs.readdirSync(logsDir).find((f) => f.includes("builder"));
+    expect(logFile).toBeDefined();
+    const logContent = fs.readFileSync(path.join(logsDir, logFile!), "utf-8");
+    expect(logContent).toContain("YOLO_AGENT=builder");
+  });
+
+  it("sets YOLO_AGENT env var for project-manager role", async () => {
+    const logger = createMockLogger();
+    const pm = createProcessManager({
+      logger,
+      logsDir,
+      spawnCmd: "sh -c printenv",
+      onAllStopped: vi.fn(),
+    });
+
+    pm.spawnAgent("project-manager", null);
+
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    const logFile = fs
+      .readdirSync(logsDir)
+      .find((f) => f.includes("project-manager"));
+    expect(logFile).toBeDefined();
+    const logContent = fs.readFileSync(path.join(logsDir, logFile!), "utf-8");
+    expect(logContent).toContain("YOLO_AGENT=project-manager");
+  });
+
   it("parses SPAWNER_SPAWN_CMD with multiple args", async () => {
     const logger = createMockLogger();
     // Use "echo -n" to verify args parsing

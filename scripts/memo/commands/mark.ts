@@ -22,6 +22,13 @@ export function markMemo(id: string, newState: MemoState): void {
     throw new Error(`No memo found with ID: ${id}`);
   }
 
+  const yoloAgent = process.env.YOLO_AGENT;
+  if (yoloAgent && memo.frontmatter.to !== yoloAgent) {
+    throw new Error(
+      `Permission denied: agent "${yoloAgent}" cannot mark memo addressed to "${memo.frontmatter.to}"`,
+    );
+  }
+
   const oldState = memo.state;
 
   if (oldState === newState) {

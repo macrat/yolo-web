@@ -111,6 +111,59 @@ describe("markMemo", () => {
     );
   });
 
+  test("YOLO_AGENT matching memo.to allows mark", () => {
+    process.env.YOLO_AGENT = "builder";
+    createMemoFile("builder", "inbox", "id-ya1");
+
+    markMemo("id-ya1", "active");
+
+    const newPath = path.join(tmpDir, "builder", "active", "id-ya1-test-memo.md");
+    expect(fs.existsSync(newPath)).toBe(true);
+    delete process.env.YOLO_AGENT;
+  });
+
+  test("YOLO_AGENT mismatching memo.to throws Permission denied", () => {
+    process.env.YOLO_AGENT = "reviewer";
+    createMemoFile("builder", "inbox", "id-ya2");
+
+    expect(() => markMemo("id-ya2", "active")).toThrow(
+      'Permission denied: agent "reviewer" cannot mark memo addressed to "builder"',
+    );
+    delete process.env.YOLO_AGENT;
+  });
+
+  test("YOLO_AGENT unset allows mark on any memo", () => {
+    delete process.env.YOLO_AGENT;
+    createMemoFile("builder", "inbox", "id-ya3");
+
+    markMemo("id-ya3", "active");
+
+    const newPath = path.join(tmpDir, "builder", "active", "id-ya3-test-memo.md");
+    expect(fs.existsSync(newPath)).toBe(true);
+  });
+
+  test("YOLO_AGENT empty string allows mark on any memo", () => {
+    process.env.YOLO_AGENT = "";
+    createMemoFile("builder", "inbox", "id-ya4");
+
+    markMemo("id-ya4", "active");
+
+    const newPath = path.join(tmpDir, "builder", "active", "id-ya4-test-memo.md");
+    expect(fs.existsSync(newPath)).toBe(true);
+    delete process.env.YOLO_AGENT;
+  });
+
+  test("YOLO_AGENT mismatch checked before same-state short-circuit", () => {
+    process.env.YOLO_AGENT = "reviewer";
+    createMemoFile("builder", "inbox", "id-ya5");
+
+    // Even though moving inbox->inbox would be a no-op, permission check comes first
+    expect(() => markMemo("id-ya5", "inbox")).toThrow(
+      'Permission denied: agent "reviewer" cannot mark memo addressed to "builder"',
+    );
+    delete process.env.YOLO_AGENT;
+  });
+
   test("creates destination directory if it does not exist", () => {
     // Create memo in inbox, but archive dir doesn't exist
     createMemoFile("builder", "inbox", "id6");

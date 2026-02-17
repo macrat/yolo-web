@@ -126,6 +126,7 @@ export function createProcessManager(
         shell: false,
         stdio: ["ignore", logFd, logFd],
         cwd: process.cwd(),
+        env: { ...process.env, YOLO_AGENT: role },
       });
     } catch (err) {
       logger.agent(
