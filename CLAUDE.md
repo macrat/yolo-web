@@ -32,6 +32,8 @@ Role slugs: `owner`, `project-manager`, `researcher`, `planner`, `builder`, `rev
 
 See `docs/memo-spec.md` for full format, IDs, and templates.
 
+**1メモ1タスク**: 1つのメモには1つの作業依頼のみを含める。複数タスクは個別のメモに分割すること。
+
 ## Memo Tool Usage (Required)
 
 All memo operations MUST use the memo CLI tool (`npm run memo`). Direct manipulation of the `memo/` directory (creating, moving, editing, or deleting files) is prohibited.
