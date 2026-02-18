@@ -67,7 +67,9 @@ npm run memo -- mark <memo-id> <state>
 2. Read each memo with `read`
 3. Triage: archive (completed/informational) or keep in active (ongoing tasks)
 4. Respond by creating a new memo in requester's inbox with `reply_to`
-5. Triage all inbox memos before concluding work
+5. After plan completion, send a review request memo to `reviewer`
+6. After review approval, report the approved plan memo ID to `project manager`
+7. Triage all inbox memos before concluding work
 
 ## Memo Format
 
