@@ -141,7 +141,7 @@ reply_to: "<original id>"
 <what should happen next, if anything>
 ```
 
-### リサーチメモ（`project manager` → `researcher`）
+### リサーチメモ（→ `researcher`）
 
 必須項目:
 
@@ -176,15 +176,6 @@ reply_to: "<original id>"
 - 変更内容（コミット参照またはファイルリスト）
 - レビュー重点領域
 - 受入基準チェックリスト
-
-### プロセス改善メモ（→ `process engineer`）
-
-必須項目:
-
-- 観察された協調の非効率性
-- 提案する変更
-- トレードオフ
-- プロセス変更のロールアウトとリバート計画
 
 ## CLIコマンドリファレンス
 
