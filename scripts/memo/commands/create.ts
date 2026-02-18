@@ -43,12 +43,6 @@ export function createMemo(options: CreateOptions): string {
     }
   }
 
-  // Auto-prefix "Re: " for replies
-  let subject = options.subject;
-  if (options.replyTo && !subject.startsWith("Re: ")) {
-    subject = `Re: ${subject}`;
-  }
-
   // Auto-add "reply" tag for replies
   const tags = [...options.tags];
   if (options.replyTo && !tags.includes("reply")) {
