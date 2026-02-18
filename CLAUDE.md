@@ -72,44 +72,6 @@ Key docs:
 - Commit frequently to create checkpoints for easy rollback if something goes wrong.
 - `project manager` は `docs/backlog.md` を直接編集できる（他のコード・ファイルは直接編集不可）。
 
-## Spawner
-
-The spawner (`npm run spawner`) is an automated agent orchestration system that monitors memo inboxes and starts agents automatically.
-
-### How it works
-
-1. Monitors `memo/*/inbox/` for new `.md` files (excludes owner)
-2. When a new memo arrives, spawns the corresponding agent with its prompt from `agents/prompt/<role>.md`
-3. The `$INPUT_MEMO_FILES` placeholder in prompts is replaced with the triggering memo file path
-4. Project manager is spawned when no agents are running or when its inbox has memos after it stops
-5. Project manager runs at most 1 instance; other roles can have multiple concurrent instances
-
-### Running
-
-```bash
-# Basic startup
-npm run spawner
-
-# With custom spawn command (for dry-run or testing)
-SPAWNER_SPAWN_CMD='echo' npm run spawner
-
-# With custom concurrency limit (default: 10)
-SPAWNER_MAX_CONCURRENT=5 npm run spawner
-```
-
-### Shutdown
-
-- Ctrl-C once: ending mode (no new agents, wait for running to finish)
-- Ctrl-C 3 times within 1 second: force kill all agents and exit immediately
-
-### Agent prompts
-
-Agent prompt files are in `agents/prompt/`. These replace the former `.claude/agents/` definitions. The delegate mode in `.claude/settings.json` is retained for interactive Claude Code usage, but subagent files no longer exist under `.claude/agents/`.
-
-### Logs
-
-Agent stdout/stderr is logged to `agents/logs/` (gitignored). Spawner log is also written there.
-
 ## Git Rule
 
 When committing to git, please set `--author "Claude <noreply@anthropic.com>"` or `--author "Codex <codex@localhost>"`.
