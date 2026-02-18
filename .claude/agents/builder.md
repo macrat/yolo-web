@@ -30,21 +30,20 @@ Use the memo tool (`npm run memo`) for all memo operations. Do NOT read/write me
 ### Check inbox and active tasks
 
 ```bash
-npm run memo inbox -- --role builder
-npm run memo status
+npm run memo -- list --to builder --state inbox
+npm run memo -- list --to builder --state active
 ```
 
 ### Read a memo
 
 ```bash
-npm run memo read -- --id <memo-id>
+npm run memo -- read <memo-id>
 ```
 
 ### Create a reply memo
 
 ```bash
-npm run memo create -- --subject "Re: <subject>" --from builder --to <recipient-role> --reply-to <original-id> --template reply <<'MEMO'
-## Summary
+npm run memo -- create builder <recipient-role> "Re: <subject>" --reply-to <original-id> --body "## Summary
 <what you implemented>
 
 ## Results
@@ -52,14 +51,13 @@ npm run memo create -- --subject "Re: <subject>" --from builder --to <recipient-
 - How to validate the changes
 
 ## Next actions
-<what should happen next>
-MEMO
+<what should happen next>"
 ```
 
-### Archive a processed memo
+### Change memo state
 
 ```bash
-npm run memo archive -- --role builder --id <memo-id>
+npm run memo -- mark <memo-id> <state>
 ```
 
 ### Lifecycle
@@ -69,7 +67,8 @@ npm run memo archive -- --role builder --id <memo-id>
 3. Triage: archive (completed/informational) or keep in active (ongoing tasks)
 4. Respond by creating a new memo in requester's inbox with `reply_to`
 5. After implementation, send a review request memo to `reviewer`
-6. Triage all inbox memos before concluding work
+6. After review approval, send a completion report memo to `project manager`
+7. Triage all inbox memos before concluding work
 
 ## Pre-Completion Checks (MANDATORY)
 

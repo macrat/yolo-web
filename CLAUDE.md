@@ -8,15 +8,14 @@
 
 Use these exact role names in all memos and docs:
 
-| Role               | Core Responsibility                                                         |
-| ------------------ | --------------------------------------------------------------------------- |
-| `owner`            | Establish constitution, monitor `project manager`                           |
-| `project manager`  | Make decisions, delegate work, coordinate agents (NO direct implementation) |
-| `researcher`       | Provide accurate and relevant information                                   |
-| `planner`          | Provide reliable plans                                                      |
-| `builder`          | Implement reliably exactly as instructed                                    |
-| `reviewer`         | Find all problems                                                           |
-| `process engineer` | Help other agents create states efficiently                                 |
+| Role              | Core Responsibility                                                         |
+| ----------------- | --------------------------------------------------------------------------- |
+| `owner`           | Establish constitution, monitor `project manager`                           |
+| `project manager` | Make decisions, delegate work, coordinate agents (NO direct implementation) |
+| `researcher`      | Provide accurate and relevant information                                   |
+| `planner`         | Provide reliable plans                                                      |
+| `builder`         | Implement reliably exactly as instructed                                    |
+| `reviewer`        | Find all problems                                                           |
 
 ## Memo Routing
 
@@ -26,7 +25,7 @@ Memos live under `memo/`, partitioned by recipient role:
 - `memo/<role-slug>/active/` — in-progress tasks (to-do list)
 - `memo/<role-slug>/archive/` — completed (history)
 
-Role slugs: `owner`, `project-manager`, `researcher`, `planner`, `builder`, `reviewer`, `process-engineer`
+Role slugs: `owner`, `project-manager`, `researcher`, `planner`, `builder`, `reviewer`
 
 **Lifecycle**: read -> triage (archive or activate) -> respond. Ongoing tasks go to `active/`; completed tasks go to `archive/`. At the start of work, an agent MUST check both `inbox/` and `active/`. Agents MUST triage all inbox memos before concluding work.
 

@@ -30,7 +30,7 @@ memo/
 │   ├── inbox/
 │   ├── active/
 │   └── archive/
-└── process-engineer/
+└── process-engineer/  (廃止・アーカイブのみ)
     ├── inbox/
     ├── active/
     └── archive/

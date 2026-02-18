@@ -201,8 +201,8 @@ research → plan → review plan → build → review implementation → ship
 
 ### Step 4: Review Plan
 
-- [ ] reviewerに計画レビュー依頼メモを送信（reviewer/inbox/に作成）
-- [ ] reviewerからの承認（APPROVED / APPROVED_WITH_NOTES）を受信
+- [ ] plannerが直接reviewerにレビュー依頼メモを送信し、承認されるまで修正を繰り返す
+- [ ] plannerからのレビュー承認報告メモを受信
 
 ### Step 5: Build（並列化可能 -- 作業領域が重ならない場合）
 
@@ -213,8 +213,8 @@ research → plan → review plan → build → review implementation → ship
 
 ### Step 6: Review Implementation
 
-- [ ] builderの完了報告を受信後、reviewerにレビュー依頼メモを送信
-- [ ] reviewerの承認を受信
+- [ ] builderが直接reviewerにレビュー依頼メモを送信し、承認されるまで修正を繰り返す
+- [ ] builderからの完了報告メモを受信
 
 ### Step 7: Ship
 
