@@ -2,8 +2,10 @@
 
 ## Active (進行中)
 
-| ID  | Title | Priority | Status | Assigned Role | Origin Memo | Target Cycle | Notes |
-| --- | ----- | -------- | ------ | ------------- | ----------- | ------------ | ----- |
+| ID    | Title                                                     | Priority | Status | Assigned Role | Origin Memo | Target Cycle | Notes                   |
+| ----- | --------------------------------------------------------- | -------- | ------ | ------------- | ----------- | ------------ | ----------------------- |
+| B-031 | ブログ記事作成（サイト名変更・色辞典・ツール群拡充）3記事 | P1       | active | builder       | 19c6fa3137f | 9            | 研究完了、builder委任中 |
+| B-032 | workflow.md ブログ記事作成プロセス追加                    | P1       | active | builder       | 19c6fa3137f | 9            | builder委任中           |
 
 ## Queued (未着手)
 

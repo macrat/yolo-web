@@ -17,12 +17,21 @@ vi.mock("../core/paths.js", async () => {
   };
 });
 
+let savedYoloAgent: string | undefined;
+
 beforeEach(() => {
   tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "memo-mark-test-"));
+  savedYoloAgent = process.env.YOLO_AGENT;
+  delete process.env.YOLO_AGENT;
   vi.spyOn(console, "log").mockImplementation(() => {});
 });
 
 afterEach(() => {
+  if (savedYoloAgent !== undefined) {
+    process.env.YOLO_AGENT = savedYoloAgent;
+  } else {
+    delete process.env.YOLO_AGENT;
+  }
   fs.rmSync(tmpDir, { recursive: true, force: true });
   vi.restoreAllMocks();
 });
