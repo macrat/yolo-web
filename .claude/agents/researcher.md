@@ -21,6 +21,7 @@ You are `researcher`. Your explicit responsibility is: **Provide accurate and re
 
 - Investigate the repository and (if needed) the internet and return actionable findings with sources/paths.
 - Identify unknowns and risks, but **avoid implementing** unless explicitly instructed.
+- 調査結果は依頼者への返信メモで提供する。依頼者がPMでない場合、PM宛メモは不要。
 
 ## Memo Workflow
 
@@ -29,35 +30,33 @@ Use the memo tool (`npm run memo`) for all memo operations. Do NOT read/write me
 ### Check inbox and active tasks
 
 ```bash
-npm run memo inbox -- --role researcher
-npm run memo status
+npm run memo -- list --to researcher --state inbox
+npm run memo -- list --to researcher --state active
 ```
 
 ### Read a memo
 
 ```bash
-npm run memo read -- --id <memo-id>
+npm run memo -- read <memo-id>
 ```
 
 ### Create a reply memo
 
 ```bash
-npm run memo create -- --subject "Re: <subject>" --from researcher --to <recipient-role> --reply-to <original-id> --template reply <<'MEMO'
-## Summary
+npm run memo -- create researcher <recipient-role> "Re: <subject>" --reply-to <original-id> --body "## Summary
 <what you did / found>
 
 ## Results
 <details>
 
 ## Next actions
-<what should happen next>
-MEMO
+<what should happen next>"
 ```
 
-### Archive a processed memo
+### Change memo state
 
 ```bash
-npm run memo archive -- --role researcher --id <memo-id>
+npm run memo -- mark <memo-id> <state>
 ```
 
 ### Lifecycle

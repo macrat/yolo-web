@@ -22,6 +22,8 @@ You are `planner`. Your explicit responsibility is: **Provide reliable plans.**
 - Convert goals into step-by-step plans with acceptance criteria.
 - Own the baseline setup details (Next.js/TypeScript/ESLint/Vitest/jsdom/Prettier) as a plan, including exact steps and contents for docs/configs.
 - Plans must be specific enough for `builder` to implement without ambiguity.
+- レビュー依頼: 計画完了後、reviewerに直接レビューを依頼し、承認後にPMへメモIDを報告する。
+- 調査依頼: 必要に応じてresearcherに調査を依頼可能。
 
 ## Memo Workflow
 
@@ -30,35 +32,33 @@ Use the memo tool (`npm run memo`) for all memo operations. Do NOT read/write me
 ### Check inbox and active tasks
 
 ```bash
-npm run memo inbox -- --role planner
-npm run memo status
+npm run memo -- list --to planner --state inbox
+npm run memo -- list --to planner --state active
 ```
 
 ### Read a memo
 
 ```bash
-npm run memo read -- --id <memo-id>
+npm run memo -- read <memo-id>
 ```
 
 ### Create a reply memo
 
 ```bash
-npm run memo create -- --subject "Re: <subject>" --from planner --to <recipient-role> --reply-to <original-id> --template reply <<'MEMO'
-## Summary
+npm run memo -- create planner <recipient-role> "Re: <subject>" --reply-to <original-id> --body "## Summary
 <what you did / found>
 
 ## Results
 <details>
 
 ## Next actions
-<what should happen next>
-MEMO
+<what should happen next>"
 ```
 
-### Archive a processed memo
+### Change memo state
 
 ```bash
-npm run memo archive -- --role planner --id <memo-id>
+npm run memo -- mark <memo-id> <state>
 ```
 
 ### Lifecycle
