@@ -62,7 +62,7 @@ export function createMemo(options: CreateOptions): string {
 
   const frontmatter: MemoFrontmatter = {
     id,
-    subject,
+    subject: options.subject,
     from: fromSlug,
     to: toSlug,
     created_at: formatTimestamp(timestamp),
@@ -73,7 +73,7 @@ export function createMemo(options: CreateOptions): string {
   const yaml = serializeFrontmatter(frontmatter);
   const content = `${yaml}\n\n${options.body}\n`;
 
-  const filePath = memoFilePath(toSlug, id, subject);
+  const filePath = memoFilePath(toSlug, id, options.subject);
   const dir = path.dirname(filePath);
 
   // Ensure directory exists

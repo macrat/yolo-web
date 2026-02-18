@@ -86,7 +86,7 @@ describe("createMemo", () => {
     expect(ms.toString(16)).toBe(id);
   });
 
-  test("auto-prefixes Re: and adds reply tag for replies", () => {
+  test("adds reply tag for replies without Re: prefix", () => {
     const id = createMemo({
       subject: "Task done",
       from: "builder",
@@ -101,7 +101,8 @@ describe("createMemo", () => {
     const files = fs.readdirSync(inboxDir);
     const content = fs.readFileSync(path.join(inboxDir, files[0]), "utf-8");
 
-    expect(content).toContain('subject: "Re: Task done"');
+    expect(content).toContain('subject: "Task done"');
+    expect(content).not.toContain("Re:");
     expect(content).toContain("  - reply");
     expect(content).toContain('reply_to: "abc123"');
     expect(id).toMatch(/^[0-9a-f]+$/);
