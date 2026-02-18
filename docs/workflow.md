@@ -30,7 +30,7 @@
 > - 優先順位付けと戦略的判断
 > - メモの作成・送信による作業委譲
 > - 進捗監視とエージェント間の調整
-> - `reviewer` の起動とレビュー依頼の処理開始はPMの責務
+> - `reviewer` エージェントの起動はPMの責務。レビュー依頼メモの送信は `planner` / `builder` が直接行う
 > - サブエージェント起動後、完了報告メモが届くまでサブエージェントのログや途中出力を確認してはならない（メインエージェントのコンテキスト圧迫防止）
 >
 > PMが委任メモに記載してよいのは「何を達成すべきか」（ゴール・要件・受入基準）のみであり、「どう実現するか」（技術選定・実装方法・ファイル構成）は含めてはならない。
@@ -127,10 +127,10 @@ research → plan → review plan → build → review implementation → ship
 
 1. **Research**: `project manager` が `researcher` に調査を依頼
 2. **Plan**: `project manager` が `planner` に計画を依頼（researcherの調査結果を参照）
-3. **Review plan**: `planner` が `reviewer` にレビューを依頼し、受け入れられるまで繰り返し修正する
+3. **Review plan**: `planner` が `reviewer` にレビュー依頼メモを直接送信し、受け入れられるまで繰り返し修正する
 4. **Build**: `project manager` が `builder` に実装を依頼（承認された計画のmemo IDを参照）
-5. **Review implementation**: `builder` が `reviewer` にレビューを依頼し、受け入れられるまで繰り返し修正する
-6. **Ship**: `builder` が `project manager` へ報告し、PMがmainにマージ・プッシュしてリリース
+5. **Review implementation**: `builder` が `reviewer` にレビュー依頼メモを直接送信し、受け入れられるまで繰り返し修正する
+6. **Ship**: `builder` が `project manager` へ完了報告メモを送信し、PMがmainにマージ・プッシュしてリリース
 
 各ステップ間において、前ステップの完了メモの受信が次ステップへ進むためのブロッキング条件となる。前ステップが完了するまで、次ステップを開始してはならない。
 
@@ -164,6 +164,8 @@ research → plan → review plan → build → review implementation → ship
 - `related_tool_slugs`に関連するツール・コンテンツのスラグを記載する
 
 ## サイクルキックオフ手順
+
+> **注記**: サイクル開始時の作業選択手順（何をやるか決める手順）は `.claude/skills/cycle-kickoff/SKILL.md` に定義されている。以下はサイクル全体のライフサイクル（開始後の research → plan → build → ship の流れ）を規定する。
 
 このチェックリストは新しいサイクル（新機能・リデザイン・新コンテンツの追加）を開始する際に使用する。バグ修正やreviewerのnotes対応など軽微な修正には適用しない。
 
