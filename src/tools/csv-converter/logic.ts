@@ -139,10 +139,12 @@ export function toJson(rows: string[][]): string {
 export function toMarkdown(rows: string[][]): string {
   if (rows.length === 0) return "";
 
-  // Escape pipe characters and normalize line breaks in cells.
-  // lgtm[js/incomplete-sanitization] - pipe and newline/CR are fully replaced with /g flag; only characters needing escaping in Markdown table cells.
+  // Escape backslashes first, then pipe characters, and normalize line breaks in cells.
   const escapeCell = (cell: string): string =>
-    cell.replace(/\|/g, "\\|").replace(/\r?\n|\r/g, " ");
+    cell
+      .replace(/\\/g, "\\\\")
+      .replace(/\|/g, "\\|")
+      .replace(/\r?\n|\r/g, " ");
 
   const header = "| " + rows[0].map(escapeCell).join(" | ") + " |";
   const separator = "| " + rows[0].map(() => "---").join(" | ") + " |";

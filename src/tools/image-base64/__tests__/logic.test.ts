@@ -35,10 +35,9 @@ describe("parseBase64Image", () => {
     expect(result!.base64).toBe("iVBORw0KGgo=");
   });
 
-  test("parses SVG Data URI", () => {
+  test("rejects SVG Data URI to prevent XSS", () => {
     const result = parseBase64Image("data:image/svg+xml;base64,PHN2Zz4=");
-    expect(result).not.toBeNull();
-    expect(result!.mimeType).toBe("image/svg+xml");
+    expect(result).toBeNull();
   });
 
   test("parses pure base64 as PNG", () => {

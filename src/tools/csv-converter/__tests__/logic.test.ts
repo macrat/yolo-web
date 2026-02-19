@@ -142,6 +142,12 @@ describe("toMarkdown", () => {
     expect(md).toContain("a\\|b");
   });
 
+  test("escapes backslashes before pipes", () => {
+    const md = toMarkdown([["a\\b"], ["c\\|d"]]);
+    expect(md).toContain("a\\\\b");
+    expect(md).toContain("c\\\\\\|d");
+  });
+
   test("handles empty rows", () => {
     expect(toMarkdown([])).toBe("");
   });
