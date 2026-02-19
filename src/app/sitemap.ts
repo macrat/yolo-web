@@ -6,6 +6,7 @@ import { BASE_URL } from "@/lib/constants";
 import { getAllKanjiChars, getKanjiCategories } from "@/lib/dictionary/kanji";
 import { getAllYojiIds, getYojiCategories } from "@/lib/dictionary/yoji";
 import { getAllColorSlugs, getColorCategories } from "@/lib/dictionary/colors";
+import { getAllQuizSlugs, getResultIdsForQuiz } from "@/lib/quiz/registry";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const toolPages = allToolMetas.map((meta) => ({
@@ -145,6 +146,27 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly" as const,
       priority: 0.6,
     })),
+    // Quiz pages
+    {
+      url: `${BASE_URL}/quiz`,
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.9,
+    },
+    ...getAllQuizSlugs().map((slug) => ({
+      url: `${BASE_URL}/quiz/${slug}`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    })),
+    ...getAllQuizSlugs().flatMap((slug) =>
+      getResultIdsForQuiz(slug).map((resultId) => ({
+        url: `${BASE_URL}/quiz/${slug}/result/${resultId}`,
+        lastModified: new Date(),
+        changeFrequency: "monthly" as const,
+        priority: 0.6,
+      })),
+    ),
     ...toolPages,
     ...blogPosts,
     ...memoPages,
