@@ -5,7 +5,7 @@ export const meta: ToolMeta = {
   name: "画像Base64変換",
   nameEn: "Image Base64 Converter",
   description:
-    "画像Base64変換ツール。画像ファイルをBase64文字列に変換、またはBase64文字列から画像をプレビュー表示。PNG・JPEG・GIF・WebP・SVGに対応。登録不要・無料で使えるオンラインツールです。",
+    "画像Base64変換ツール。画像ファイルをBase64文字列に変換、またはBase64文字列から画像をプレビュー表示。PNG・JPEG・GIF・WebPに対応。登録不要・無料で使えるオンラインツールです。",
   shortDescription: "画像ファイルとBase64文字列を相互変換",
   keywords: [
     "画像 Base64 変換",
