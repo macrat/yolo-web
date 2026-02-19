@@ -10,11 +10,11 @@ import styles from "./page.module.css";
 export const metadata: Metadata = {
   title: `漢字辞典 | ${SITE_NAME}`,
   description:
-    "小学1年生で学ぶ基本漢字50字の読み方・意味・部首・画数を収録した漢字辞典です。",
+    "小学1年生で学ぶ漢字80字の読み方・意味・部首・画数を収録した漢字辞典です。",
   keywords: ["漢字辞典", "漢字", "読み方", "小学1年生", "基本漢字"],
   openGraph: {
     title: `漢字辞典 | ${SITE_NAME}`,
-    description: "基本漢字50字の読み方・意味・部首・画数を収録。",
+    description: "漢字80字の読み方・意味・部首・画数を収録。",
     type: "website",
   },
   alternates: {

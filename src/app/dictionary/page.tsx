@@ -10,7 +10,7 @@ import styles from "./page.module.css";
 export const metadata: Metadata = {
   title: `辞典 | ${SITE_NAME}`,
   description:
-    "漢字・四字熟語・伝統色を調べられる辞典。漢字50字、四字熟語101語、伝統色250色の情報を収録。",
+    "漢字・四字熟語・伝統色を調べられる辞典。漢字80字、四字熟語101語、伝統色250色の情報を収録。",
   keywords: [
     "辞典",
     "漢字辞典",
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: `辞典 | ${SITE_NAME}`,
     description:
-      "漢字・四字熟語・伝統色をまとめた辞典。漢字50字、四字熟語101語、伝統色250色を収録。",
+      "漢字・四字熟語・伝統色をまとめた辞典。漢字80字、四字熟語101語、伝統色250色を収録。",
     type: "website",
   },
   alternates: {
