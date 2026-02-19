@@ -70,9 +70,14 @@ export function parseBase64Image(input: string): ParsedImage | null {
     /^data:(image\/[a-zA-Z0-9.+-]+);base64,([\s\S]+)$/,
   );
   if (dataUriMatch) {
+    const mimeType = dataUriMatch[1];
+    // Reject SVG to prevent script execution via embedded <script> tags
+    if (mimeType === "image/svg+xml") {
+      return null;
+    }
     return {
       dataUri: trimmed,
-      mimeType: dataUriMatch[1],
+      mimeType,
       base64: dataUriMatch[2],
     };
   }
