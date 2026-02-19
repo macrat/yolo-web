@@ -3,6 +3,7 @@ import { formatDate } from "@/lib/date";
 import AiDisclaimer from "@/components/common/AiDisclaimer";
 import { getAllBlogPosts } from "@/lib/blog";
 import { allToolMetas } from "@/tools/registry";
+import { allQuizMetas } from "@/lib/quiz/registry";
 import styles from "./page.module.css";
 
 const FEATURED_TOOL_SLUGS = [
@@ -41,6 +42,7 @@ const DAILY_GAMES = [
 const STAT_BADGES = [
   { label: "30+ ツール", icon: "\u{1F527}" },
   { label: "3 デイリーパズル", icon: "\u{1F3AE}" },
+  { label: "クイズ・診断", icon: "\u{1F9E0}" },
   { label: "AI運営ブログ", icon: "\u{1F4DD}" },
 ] as const;
 
@@ -99,7 +101,41 @@ export default function Home() {
         </div>
       </section>
 
-      {/* セクション3: 人気ツール */}
+      {/* セクション3: クイズ・診断 */}
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>クイズ・診断</h2>
+        <p className={styles.sectionDescription}>
+          知識テストや性格診断であなたの実力や個性を発見しよう
+        </p>
+        <div className={styles.quizGrid}>
+          {allQuizMetas.map((quiz) => (
+            <Link
+              key={quiz.slug}
+              href={`/quiz/${quiz.slug}`}
+              className={styles.quizCard}
+              style={
+                {
+                  "--quiz-accent": quiz.accentColor,
+                } as React.CSSProperties
+              }
+            >
+              <span className={styles.quizCardIcon}>{quiz.icon}</span>
+              <h3 className={styles.quizCardTitle}>{quiz.title}</h3>
+              <p className={styles.quizCardDescription}>
+                {quiz.shortDescription}
+              </p>
+              <span className={styles.quizCardCta}>挑戦する</span>
+            </Link>
+          ))}
+        </div>
+        <div className={styles.seeAll}>
+          <Link href="/quiz" className={styles.seeAllLink}>
+            全クイズを見る
+          </Link>
+        </div>
+      </section>
+
+      {/* セクション4: 人気ツール */}
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>人気ツール</h2>
         <div className={styles.toolsGrid}>
