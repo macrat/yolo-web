@@ -138,6 +138,8 @@ research → plan → review plan → build → review implementation → ship
 
 ### ブログ記事の作成基準
 
+> **注記**: builderがブログ記事を作成する際の詳細手順（フロントマター形式、AI免責事項、命名規則など）は `.claude/skills/blog-article-writing/SKILL.md` にSkillとして定義されている。
+
 以下のいずれかに該当する変更を行った場合、そのサイクルのbuildフェーズでブログ記事の作成を含めること:
 
 1. **新サービスの追加**: 今までは扱っていなかった種類のコンテンツを追加したとき

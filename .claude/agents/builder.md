@@ -84,6 +84,17 @@ npm run build
 
 Do NOT send a completion report if any of these checks fail. Fix the issues first, then re-run all checks until they all pass.
 
+## Blog Article Check (MANDATORY)
+
+実装メモの受入基準にブログ記事の作成が含まれている場合、または実装内容がdocs/workflow.mdの「ブログ記事の作成基準」（新サービスの追加、コンテンツの大幅追加、サイトの重要な変更、重大な失敗や学び）のいずれかに該当する場合は、必ず blog-article-writing Skill の手順に従ってブログ記事を作成すること。
+
+判定チェックリスト（以下のいずれかに該当すればブログ記事が必要）:
+
+- [ ] 新サービスの追加（今までは扱っていなかった種類のコンテンツ）
+- [ ] コンテンツの大幅追加（ツール群の一括追加、辞書データの大量追加など）
+- [ ] サイトの重要な変更（サイト名変更、ドメイン変更、デザインの大幅な刷新など）
+- [ ] 重大な失敗や学び
+
 ## Memo Format
 
 Follow the format specified in `docs/memo-spec.md`. Implementation reply memos must include:
