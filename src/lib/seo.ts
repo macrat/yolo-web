@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { ToolMeta } from "@/tools/types";
 import type { CheatsheetMeta } from "@/cheatsheets/types";
+import type { QuizMeta } from "@/lib/quiz/types";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 
 export function generateToolMetadata(meta: ToolMeta): Metadata {
@@ -406,6 +407,49 @@ export function generateCheatsheetJsonLd(meta: CheatsheetMeta): object {
     datePublished: meta.publishedAt,
     inLanguage: "ja",
     author: {
+      "@type": "Organization",
+      name: "yolos.net (AI Experiment)",
+    },
+  };
+}
+
+// -- Quiz SEO helpers --
+
+export function generateQuizMetadata(meta: QuizMeta): Metadata {
+  return {
+    title: `${meta.title} - クイズ | ${SITE_NAME}`,
+    description: meta.description,
+    keywords: meta.keywords,
+    openGraph: {
+      title: `${meta.title} - クイズ`,
+      description: meta.description,
+      type: "website",
+      url: `${BASE_URL}/quiz/${meta.slug}`,
+      siteName: SITE_NAME,
+    },
+    alternates: {
+      canonical: `${BASE_URL}/quiz/${meta.slug}`,
+    },
+  };
+}
+
+export function generateQuizJsonLd(meta: QuizMeta): object {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Quiz",
+    name: meta.title,
+    description: meta.description,
+    url: `${BASE_URL}/quiz/${meta.slug}`,
+    educationalLevel: "general",
+    numberOfQuestions: meta.questionCount,
+    inLanguage: "ja",
+    datePublished: meta.publishedAt,
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "JPY",
+    },
+    creator: {
       "@type": "Organization",
       name: "yolos.net (AI Experiment)",
     },

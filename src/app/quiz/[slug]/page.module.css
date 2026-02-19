@@ -1,0 +1,20 @@
+.wrapper {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 1rem 0.5rem;
+  width: 100%;
+}
+
+.attribution {
+  text-align: center;
+  padding: 1rem 0;
+  margin-top: 1rem;
+  border-top: 1px solid var(--color-border);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.attribution a {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
