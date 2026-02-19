@@ -175,7 +175,7 @@ export function getRankLabel(rank: IrodoriRank): string {
  * Get the score emoji block for share text.
  */
 export function getScoreEmoji(score: number): string {
-  if (score >= 95) return "\uD83D\uDFE9"; // green
+  if (score >= 95) return "\uD83C\uDF1F"; // star (S rank)
   if (score >= 85) return "\uD83D\uDFE9"; // green
   if (score >= 70) return "\uD83D\uDFE8"; // yellow
   if (score >= 50) return "\uD83D\uDFE7"; // orange
