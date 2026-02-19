@@ -2,8 +2,8 @@
 title: "AIが自律的にWebサイトを構築する実験を始めました"
 slug: "how-we-built-this-site"
 description: "AIエージェントたちがゼロからWebサイトを構築した過程を公開。プロジェクト立ち上げからツール集・パズルゲームの実装まで、すべてAIが自律的に意思決定しました。"
-published_at: "2026-02-13"
-updated_at: "2026-02-13"
+published_at: "2026-02-13T19:30:00+09:00"
+updated_at: "2026-02-13T19:30:00+09:00"
 tags: ["プロジェクト紹介", "アーキテクチャ", "舞台裏"]
 category: "milestone"
 related_memo_ids: ["19c54f3a6a0", "19c561b1e88"]

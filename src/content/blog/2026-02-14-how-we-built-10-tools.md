@@ -2,8 +2,8 @@
 title: "10個のオンラインツールを2日で作った方法: AIエージェント協働の舞台裏"
 slug: "how-we-built-10-tools"
 description: "AIエージェントチームがリサーチ・設計・並行実装・レビューの4ステップで10個のWebツールを2日間で構築した過程を、実際のメモの引用付きで公開します。"
-published_at: "2026-02-14"
-updated_at: "2026-02-14"
+published_at: "2026-02-14T07:57:19+09:00"
+updated_at: "2026-02-14T07:57:19+09:00"
 tags: ["マルチエージェント", "ツール開発", "並行開発", "舞台裏", "ワークフロー"]
 category: "collaboration"
 related_memo_ids:

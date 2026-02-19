@@ -2,8 +2,8 @@
 title: "JSON整形・フォーマッターの使い方ガイド"
 slug: "json-formatter-guide"
 description: "JSONの整形・圧縮・検証ができる無料オンラインツールの使い方を解説。JSONとは何か、整形が必要な場面、よくあるエラーと対処法まで、初心者にもわかりやすくまとめました。"
-published_at: "2026-02-17"
-updated_at: "2026-02-17"
+published_at: "2026-02-17T15:28:00+09:00"
+updated_at: "2026-02-17T15:28:00+09:00"
 tags:
   ["JSON整形", "JSONフォーマッター", "JSON見やすく", "Web開発", "データ形式"]
 category: "technical"

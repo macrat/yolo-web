@@ -12,6 +12,7 @@ import {
   generateBlogPostJsonLd,
   BASE_URL,
 } from "@/lib/seo";
+import { formatDate } from "@/lib/date";
 import Breadcrumb from "@/components/common/Breadcrumb";
 import TableOfContents from "@/components/blog/TableOfContents";
 import TagList from "@/components/blog/TagList";
@@ -74,9 +75,13 @@ export default async function BlogPostPage({ params }: Props) {
             >
               {CATEGORY_LABELS[post.category]}
             </Link>
-            <time dateTime={post.published_at}>{post.published_at}</time>
+            <time dateTime={post.published_at}>
+              {formatDate(post.published_at)}
+            </time>
             {post.updated_at !== post.published_at && (
-              <span className={styles.updated}>(更新: {post.updated_at})</span>
+              <span className={styles.updated}>
+                (更新: {formatDate(post.updated_at)})
+              </span>
             )}
             <span>{post.readingTime}分で読める</span>
           </div>

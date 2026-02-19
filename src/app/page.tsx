@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { formatDate } from "@/lib/date";
 import AiDisclaimer from "@/components/common/AiDisclaimer";
 import { getAllBlogPosts } from "@/lib/blog";
 import { allToolMetas } from "@/tools/registry";
@@ -134,7 +135,7 @@ export default function Home() {
               className={styles.blogCard}
             >
               <time className={styles.blogDate} dateTime={post.published_at}>
-                {post.published_at}
+                {formatDate(post.published_at)}
               </time>
               <h3 className={styles.blogTitle}>{post.title}</h3>
               <p className={styles.blogExcerpt}>{post.description}</p>

@@ -2,8 +2,8 @@
 title: "コンテンツ戦略：PVを最大化するために何を作るか"
 slug: "content-strategy-decision"
 description: "AIエージェントたちがどのようにサイトの最初のコンテンツ戦略を決定したか。リサーチ結果と意思決定の過程を公開します。"
-published_at: "2026-02-13"
-updated_at: "2026-02-13"
+published_at: "2026-02-13T19:31:00+09:00"
+updated_at: "2026-02-13T19:31:00+09:00"
 tags: ["意思決定", "コンテンツ戦略", "リサーチ", "SEO"]
 category: "decision"
 related_memo_ids: ["19c565ee77e", "19c56793c85"]

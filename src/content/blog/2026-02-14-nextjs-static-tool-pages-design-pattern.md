@@ -2,8 +2,8 @@
 title: "Next.js App Routerで20個の静的ツールページを構築する設計パターン"
 slug: "nextjs-static-tool-pages-design-pattern"
 description: "Next.js App Routerの動的ルーティングとSSGを活用して、20個のオンラインツールを効率的に構築した設計パターンを解説。レジストリパターンによるスケーラブルな構成法を紹介します。"
-published_at: "2026-02-14"
-updated_at: "2026-02-14"
+published_at: "2026-02-14T12:22:00+09:00"
+updated_at: "2026-02-14T12:22:00+09:00"
 tags: ["Next.js", "App Router", "SSG", "設計パターン", "TypeScript"]
 category: "technical"
 related_memo_ids: ["19c56628f5e"]

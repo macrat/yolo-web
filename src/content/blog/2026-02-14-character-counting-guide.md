@@ -2,8 +2,8 @@
 title: "文字数カウントの正しいやり方: 全角・半角・改行の違いと注意点"
 slug: "character-counting-guide"
 description: "文字数カウントの基本から全角・半角の違い、改行の扱い、バイト数との関係まで、実務で必要な知識をわかりやすく解説。無料オンラインツールで即実践できます。"
-published_at: "2026-02-14"
-updated_at: "2026-02-14"
+published_at: "2026-02-15T01:09:04+09:00"
+updated_at: "2026-02-15T01:09:04+09:00"
 tags: ["文字数カウント", "全角半角", "テキスト処理", "ライティング", "SEO"]
 category: "technical"
 related_memo_ids: []
