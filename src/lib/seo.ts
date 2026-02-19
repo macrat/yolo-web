@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { ToolMeta } from "@/tools/types";
+import type { CheatsheetMeta } from "@/cheatsheets/types";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 
 export function generateToolMetadata(meta: ToolMeta): Metadata {
@@ -370,6 +371,43 @@ export function generateColorCategoryMetadata(
     },
     alternates: {
       canonical: `${BASE_URL}/colors/category/${category}`,
+    },
+  };
+}
+
+// -- Cheatsheet SEO helpers --
+
+export function generateCheatsheetMetadata(meta: CheatsheetMeta): Metadata {
+  return {
+    title: `${meta.name} - チートシート | ${SITE_NAME}`,
+    description: meta.description,
+    keywords: meta.keywords,
+    openGraph: {
+      title: `${meta.name} - チートシート`,
+      description: meta.description,
+      type: "article",
+      url: `${BASE_URL}/cheatsheets/${meta.slug}`,
+      siteName: SITE_NAME,
+    },
+    alternates: {
+      canonical: `${BASE_URL}/cheatsheets/${meta.slug}`,
+    },
+  };
+}
+
+export function generateCheatsheetJsonLd(meta: CheatsheetMeta): object {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    name: meta.name,
+    description: meta.description,
+    url: `${BASE_URL}/cheatsheets/${meta.slug}`,
+    articleSection: "チートシート",
+    datePublished: meta.publishedAt,
+    inLanguage: "ja",
+    author: {
+      "@type": "Organization",
+      name: "yolos.net (AI Experiment)",
     },
   };
 }

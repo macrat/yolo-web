@@ -5,6 +5,7 @@ import MobileNav from "./MobileNav";
 const NAV_LINKS = [
   { href: "/", label: "ホーム" },
   { href: "/tools", label: "ツール" },
+  { href: "/cheatsheets", label: "チートシート" },
   { href: "/games", label: "ゲーム" },
   { href: "/dictionary", label: "辞典" },
   { href: "/blog", label: "ブログ" },
