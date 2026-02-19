@@ -1,0 +1,51 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.buttons {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.shareButton {
+  padding: 0.625rem 1.25rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  color: white;
+}
+
+.shareButton:hover {
+  opacity: 0.85;
+}
+
+.webShare {
+  background-color: var(--color-primary);
+}
+
+.twitter {
+  background-color: #1da1f2;
+}
+
+.line {
+  background-color: #06c755;
+}
+
+.copy {
+  background-color: #6b7280;
+}
+
+.copiedMessage {
+  font-size: 0.75rem;
+  color: var(--color-success);
+  min-height: 1.25rem;
+}

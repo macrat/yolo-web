@@ -1,0 +1,69 @@
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 1rem 0.5rem;
+  width: 100%;
+}
+
+.intro {
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.introIcon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.introTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.introDescription {
+  font-size: 1rem;
+  color: var(--color-text-muted);
+  line-height: 1.7;
+  margin-bottom: 0.5rem;
+}
+
+.introMeta {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  margin-bottom: 1.5rem;
+}
+
+.startButton {
+  display: inline-block;
+  padding: 0.875rem 2.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: white;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.startButton:hover {
+  opacity: 0.9;
+}
+
+.relatedLinks {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.relatedLink {
+  font-size: 0.875rem;
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.relatedLink:hover {
+  text-decoration: underline;
+}
