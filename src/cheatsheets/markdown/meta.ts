@@ -26,6 +26,9 @@ export const meta: CheatsheetMeta = {
     { id: "code", title: "コード" },
     { id: "tables", title: "テーブル" },
     { id: "blockquotes", title: "引用" },
+    { id: "horizontal-rules", title: "水平線" },
+    { id: "html-embed", title: "HTMLの埋め込み" },
+    { id: "gfm-extensions", title: "GitHub Flavored Markdown拡張" },
   ],
   publishedAt: "2026-02-19",
 };

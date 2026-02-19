@@ -1,0 +1,95 @@
+.cheatsheet {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.cheatsheet section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.cheatsheet h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--color-text);
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--color-border);
+  margin-bottom: 0.25rem;
+}
+
+.cheatsheet h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-top: 0.5rem;
+}
+
+.cheatsheet p {
+  color: var(--color-text-muted);
+  line-height: 1.7;
+}
+
+.cheatsheet code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  background-color: var(--color-bg-secondary);
+  padding: 0.15em 0.4em;
+  border-radius: 0.25rem;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.table th,
+.table td {
+  border: 1px solid var(--color-border);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+.table th {
+  background-color: var(--color-bg-secondary);
+  font-weight: 600;
+}
+
+.table td code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background-color: var(--color-bg-secondary);
+  padding: 0.1em 0.3em;
+  border-radius: 0.2rem;
+}
+
+.tip {
+  background-color: var(--color-bg-secondary);
+  border-left: 3px solid var(--color-primary);
+  padding: 0.75rem 1rem;
+  border-radius: 0 0.25rem 0.25rem 0;
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .cheatsheet h2 {
+    font-size: 1.2rem;
+  }
+
+  .cheatsheet h3 {
+    font-size: 1rem;
+  }
+
+  .table {
+    font-size: 0.8rem;
+  }
+
+  .table th,
+  .table td {
+    padding: 0.35rem 0.5rem;
+  }
+}
