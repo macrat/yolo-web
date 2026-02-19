@@ -16,6 +16,7 @@ describe("NextGameBanner", () => {
 
     expect(screen.getByText("四字キメル")).toBeInTheDocument();
     expect(screen.getByText("ナカマワケ")).toBeInTheDocument();
+    expect(screen.getByText("イロドリ")).toBeInTheDocument();
     // Current game should not appear as a link
     expect(screen.queryByText("漢字カナール")).not.toBeInTheDocument();
   });
@@ -31,7 +32,7 @@ describe("NextGameBanner", () => {
 
     render(<NextGameBanner currentGameSlug="kanji-kanaru" />);
 
-    expect(screen.getByText("今日のパズル 1/3 クリア")).toBeInTheDocument();
+    expect(screen.getByText("今日のパズル 1/4 クリア")).toBeInTheDocument();
   });
 
   test("shows unplayed status for games not played today", () => {
@@ -41,7 +42,7 @@ describe("NextGameBanner", () => {
     render(<NextGameBanner currentGameSlug="kanji-kanaru" />);
 
     const unplayedElements = screen.getAllByText("未プレイ");
-    expect(unplayedElements).toHaveLength(2);
+    expect(unplayedElements).toHaveLength(3);
   });
 
   test("shows played status for games played today", () => {
@@ -72,6 +73,10 @@ describe("NextGameBanner", () => {
     );
     window.localStorage.setItem(
       "nakamawake-stats",
+      JSON.stringify({ lastPlayedDate: "2026-02-15" }),
+    );
+    window.localStorage.setItem(
+      "irodori-stats",
       JSON.stringify({ lastPlayedDate: "2026-02-15" }),
     );
 

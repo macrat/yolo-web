@@ -1,0 +1,73 @@
+.progressBar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+}
+
+.progressDots {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.progressDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--color-border);
+  transition: background-color 0.2s;
+}
+
+.progressDotCompleted {
+  background: #6aaa64;
+}
+
+.progressDotCurrent {
+  background: var(--color-primary);
+  box-shadow: 0 0 4px var(--color-primary);
+}
+
+.progressText {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.submitArea {
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0;
+}
+
+.submitButton {
+  padding: 0.75rem 2.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background: var(--color-primary);
+  color: #ffffff;
+  transition:
+    opacity 0.2s,
+    transform 0.1s;
+}
+
+.submitButton:hover {
+  opacity: 0.9;
+}
+
+.submitButton:active {
+  transform: scale(0.97);
+}
+
+.submitButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.nextButton {
+  composes: submitButton;
+  background: #6aaa64;
+}

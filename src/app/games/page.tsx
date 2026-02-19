@@ -32,6 +32,15 @@ const GAMES = [
     accentColor: "#8a5a9a",
     difficulty: "初級〜上級",
   },
+  {
+    slug: "irodori",
+    title: "イロドリ",
+    description:
+      "毎日5つの色を作って色彩感覚を鍛えよう! ターゲットカラーにどれだけ近づけるかチャレンジ!",
+    icon: "\u{1F3A8}",
+    accentColor: "#e91e63",
+    difficulty: "初級〜上級",
+  },
 ];
 
 function getTodayFormatted(): string {
@@ -65,7 +74,7 @@ export default function GamesPage() {
     <div className={styles.main}>
       {/* ヒーローバナー */}
       <section className={styles.heroBanner}>
-        <h1 className={styles.heroTitle}>毎日3つのパズルに挑戦</h1>
+        <h1 className={styles.heroTitle}>毎日4つのパズルに挑戦</h1>
         <p className={styles.heroDate}>{today}のパズル</p>
         <p className={styles.heroSubtext}>全ゲームクリアで今日の完全制覇!</p>
       </section>

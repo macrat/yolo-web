@@ -5,7 +5,7 @@ import GamesPage from "../page";
 test("Games page renders hero banner with challenge heading", () => {
   render(<GamesPage />);
   expect(
-    screen.getByRole("heading", { level: 1, name: /毎日3つのパズルに挑戦/ }),
+    screen.getByRole("heading", { level: 1, name: /毎日4つのパズルに挑戦/ }),
   ).toBeInTheDocument();
 });
 
@@ -30,7 +30,7 @@ test("Games page renders difficulty badges", () => {
   render(<GamesPage />);
   expect(screen.getByText("初級〜中級")).toBeInTheDocument();
   expect(screen.getByText("中級〜上級")).toBeInTheDocument();
-  expect(screen.getByText("初級〜上級")).toBeInTheDocument();
+  expect(screen.getAllByText("初級〜上級")).toHaveLength(2);
 });
 
 test("Games page renders AI disclaimer", () => {
