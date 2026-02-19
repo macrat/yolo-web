@@ -40,3 +40,16 @@ export function readMemo(id: string): void {
   const content = fs.readFileSync(found, "utf-8");
   process.stdout.write(content);
 }
+
+/**
+ * Read multiple memos by IDs and print their raw content to stdout.
+ * Memos are separated by a blank line.
+ */
+export function readMemos(ids: string[]): void {
+  for (let i = 0; i < ids.length; i++) {
+    if (i > 0) {
+      process.stdout.write("\n");
+    }
+    readMemo(ids[i]);
+  }
+}

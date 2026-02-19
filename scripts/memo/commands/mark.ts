@@ -1,6 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
 import { scanAllMemos, type MemoState } from "../core/scanner.js";
+import { getMemoRoot } from "../core/paths.js";
+import { isAgentMode } from "../types.js";
 
 const VALID_STATES: MemoState[] = ["inbox", "active", "archive"];
 
@@ -22,10 +24,12 @@ export function markMemo(id: string, newState: MemoState): void {
     throw new Error(`No memo found with ID: ${id}`);
   }
 
-  const yoloAgent = process.env.YOLO_AGENT;
-  if (yoloAgent && memo.frontmatter.to !== yoloAgent) {
+  // Agent mode: prohibit operating on owner's directory
+  const memoRoot = getMemoRoot();
+  const rel = path.relative(memoRoot, memo.filePath);
+  if (isAgentMode() && rel.startsWith("owner" + path.sep)) {
     throw new Error(
-      `Permission denied: agent "${yoloAgent}" cannot mark memo addressed to "${memo.frontmatter.to}"`,
+      "It is prohibited to operate memos in owner's directory.",
     );
   }
 

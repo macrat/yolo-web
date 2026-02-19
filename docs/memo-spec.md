@@ -64,18 +64,20 @@ memo/
 
 メモの一覧を表示する。タブ区切りで `id`, `reply_to`, `created_at`, `from`, `to`, `state`, `subject` を出力。
 
+エージェントモード（`CLAUDECODE` 環境変数が定義されている場合）では、デフォルトで自分宛のメモのみ表示される。オーナーモードではすべてのメモが表示される。
+
 オプション:
 
-- `--state <state>` -- "inbox", "active", "archive", "all"（デフォルト: "all"）
-- `--from <from>` -- 送信元でフィルタ
+- `--state <state>` -- "inbox", "active", "archive", "all"（デフォルト: "all"）。カンマ区切りで複数指定可（例: `--state inbox,active`）
+- `--from <from>` -- 送信元でフィルタ。`all` を指定すると全送信元を対象とする
 - `--to <to>` -- 送信先でフィルタ
 - `--tag <tag>` -- タグでフィルタ（複数回指定で AND 条件）
 - `--limit <number>` -- 表示件数（デフォルト: 10）
 - `--fields <fields>` -- 表示フィールドをカンマ区切りで指定
 
-### `npm run memo -- read <id>`
+### `npm run memo -- read <id>...`
 
-指定した ID のメモ内容をそのまま表示する。
+指定した ID のメモ内容をそのまま表示する。複数の ID をスペース区切りで指定でき、順番に出力される。
 
 ### `npm run memo -- create <from> <to> <subject> [options]`
 
@@ -88,6 +90,12 @@ memo/
 - `--body <body>` -- 本文（省略時は標準入力から読み取り）
 - `--skip-credential-check` -- 機密情報チェックをスキップ
 
-### `npm run memo -- mark <id> <state>`
+### `npm run memo -- mark <state> <id>...`
 
-メモの状態を変更する。`<state>` は "inbox", "active", "archive" のいずれか。
+メモの状態を変更する。`<state>` は "inbox", "active", "archive" のいずれか。複数の ID をスペース区切りで指定でき、一括で状態変更できる。
+
+エージェントモード（`CLAUDECODE` 環境変数が定義されている場合）では、`memo/owner/` ディレクトリのメモの状態変更が禁止される。
+
+## 環境変数
+
+- `CLAUDECODE` -- この環境変数が定義されている場合、エージェントモードとして動作する。エージェントモードでは `list` のデフォルト表示や `mark` の権限制御が変わる。
