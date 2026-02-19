@@ -1,0 +1,58 @@
+.finalResult {
+  text-align: center;
+}
+
+.rankEmoji {
+  font-size: 2rem;
+  margin-bottom: 0.25rem;
+}
+
+.scoreHeading {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.rankLabel {
+  font-size: 1rem;
+  color: var(--color-text-muted);
+  margin-bottom: 1rem;
+}
+
+.roundsSummary {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.roundItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.roundPatches {
+  display: flex;
+  gap: 2px;
+}
+
+.miniPatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  border: 1px solid var(--color-border);
+}
+
+.roundScore {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.roundLabel {
+  font-size: 0.65rem;
+  color: var(--color-text-muted);
+}

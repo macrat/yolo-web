@@ -29,6 +29,12 @@ export const ALL_GAMES: GameInfo[] = [
     path: "/games/nakamawake",
     statsKey: "nakamawake-stats",
   },
+  {
+    slug: "irodori",
+    title: "イロドリ",
+    path: "/games/irodori",
+    statsKey: "irodori-stats",
+  },
 ];
 
 /**
