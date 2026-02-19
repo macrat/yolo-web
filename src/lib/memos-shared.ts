@@ -10,7 +10,8 @@ export type RoleSlug =
   | "planner"
   | "builder"
   | "reviewer"
-  | "process-engineer";
+  | "process-engineer"
+  | "agent";
 
 /** Role display configuration */
 export interface RoleDisplay {
@@ -55,13 +56,18 @@ export const ROLE_DISPLAY: Record<RoleSlug, RoleDisplay> = {
     color: "#0891b2",
     icon: "gear",
   },
+  agent: {
+    label: "Agent",
+    color: "#8b5cf6",
+    icon: "bot",
+  },
 };
 
 export interface PublicMemo {
   id: string;
   subject: string;
-  from: RoleSlug;
-  to: RoleSlug;
+  from: string;
+  to: string;
   created_at: string;
   tags: string[];
   reply_to: string | null;
