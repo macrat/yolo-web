@@ -19,12 +19,14 @@ export const meta: CheatsheetMeta = {
   relatedToolSlugs: [],
   relatedCheatsheetSlugs: ["regex", "markdown"],
   sections: [
+    { id: "setup", title: "初期設定" },
     { id: "basics", title: "基本操作" },
     { id: "branching", title: "ブランチ操作" },
     { id: "remote", title: "リモート操作" },
-    { id: "history", title: "履歴・差分" },
-    { id: "undo", title: "取り消し・リセット" },
-    { id: "stash", title: "スタッシュ" },
+    { id: "undo", title: "取り消し・修正" },
+    { id: "tag", title: "タグ" },
+    { id: "advanced", title: "高度な操作" },
+    { id: "aliases", title: "よく使うエイリアス設定例" },
   ],
   publishedAt: "2026-02-19",
 };
