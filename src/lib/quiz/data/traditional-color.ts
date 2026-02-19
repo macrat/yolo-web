@@ -10,7 +10,7 @@ const traditionalColorQuiz: QuizDefinition = {
     type: "personality",
     questionCount: 8,
     icon: "\u{1F3A8}",
-    accentColor: "#165E83",
+    accentColor: "#0d5661",
     keywords: [
       "伝統色",
       "日本の色",
@@ -22,7 +22,7 @@ const traditionalColorQuiz: QuizDefinition = {
     publishedAt: "2026-02-19",
     relatedLinks: [
       { label: "日本の伝統色一覧", href: "/colors" },
-      { label: "伝統色辞典", href: "/dictionary" },
+      { label: "伝統色辞典", href: "/colors" },
     ],
   },
   questions: [
@@ -241,7 +241,7 @@ const traditionalColorQuiz: QuizDefinition = {
       title: "藍色(あいいろ)",
       description:
         "知的で深みのあるあなたは、藍色のように奥深い魅力を持っています。探究心が強く、物事の本質を見抜く力があります。静かな知性で周りの人を導く存在です。",
-      color: "#165E83",
+      color: "#0d5661",
       icon: "\u{1F30A}",
       recommendation: "藍色の詳しい解説を見る",
       recommendationLink: "/colors/ai",
@@ -251,7 +251,7 @@ const traditionalColorQuiz: QuizDefinition = {
       title: "朱色(しゅいろ)",
       description:
         "情熱的でエネルギッシュなあなたは、朱色のように力強い輝きを放っています。行動力があり、周りの人にも元気を与える太陽のような存在です。",
-      color: "#BA2636",
+      color: "#ab3b3a",
       icon: "\u{1F525}",
       recommendation: "朱色の詳しい解説を見る",
       recommendationLink: "/colors",
@@ -271,7 +271,7 @@ const traditionalColorQuiz: QuizDefinition = {
       title: "藤色(ふじいろ)",
       description:
         "繊細で優雅なあなたは、藤色のように美しく上品な雰囲気を持っています。感受性が豊かで、芸術的なセンスに恵まれた人です。",
-      color: "#BAA8CF",
+      color: "#8b81c3",
       icon: "\u{1F33A}",
       recommendation: "藤色の詳しい解説を見る",
       recommendationLink: "/colors/fuji",
@@ -281,7 +281,7 @@ const traditionalColorQuiz: QuizDefinition = {
       title: "山吹色(やまぶきいろ)",
       description:
         "明るく社交的なあなたは、山吹色のように温かい輝きで周りを照らします。コミュニケーション上手で、人を笑顔にする天性の才能があります。",
-      color: "#F8B500",
+      color: "#ffb11b",
       icon: "\u{2728}",
       recommendation: "山吹色の詳しい解説を見る",
       recommendationLink: "/colors/yamabuki",
@@ -291,7 +291,7 @@ const traditionalColorQuiz: QuizDefinition = {
       title: "紺色(こんいろ)",
       description:
         "落ち着きのあるあなたは、紺色のように深い信頼感を与えます。責任感が強く、周りの人から頼られるしっかり者です。",
-      color: "#1B294B",
+      color: "#0f2540",
       icon: "\u{1F319}",
       recommendation: "紺色の詳しい解説を見る",
       recommendationLink: "/colors/kon",
@@ -301,7 +301,7 @@ const traditionalColorQuiz: QuizDefinition = {
       title: "桜色(さくらいろ)",
       description:
         "温かく包容力のあるあなたは、桜色のように優しい安らぎを与えます。思いやりがあり、誰からも愛される人柄の持ち主です。",
-      color: "#FEEEED",
+      color: "#fedfe1",
       icon: "\u{1F338}",
       recommendation: "桜色の詳しい解説を見る",
       recommendationLink: "/colors/sakura",
