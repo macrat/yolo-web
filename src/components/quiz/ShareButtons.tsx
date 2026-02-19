@@ -38,7 +38,7 @@ export default function ShareButtons({
   const handleLine = useCallback(() => {
     const text = encodeURIComponent(`${shareText}\n${shareUrl}`);
     window.open(
-      `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(shareUrl)}&text=${text}`,
+      `https://line.me/R/share?text=${text}`,
       "_blank",
       "noopener,noreferrer",
     );

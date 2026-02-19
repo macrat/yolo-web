@@ -137,15 +137,15 @@ const kanjiLevelQuiz: QuizDefinition = {
     },
     {
       id: "q10",
-      text: "「鍼灸」の読みは?",
+      text: "「蒟蒻」の読みは?",
       choices: [
-        { id: "q10-a", text: "しんきゅう", isCorrect: true },
-        { id: "q10-b", text: "はりきゅう" },
-        { id: "q10-c", text: "ちんきゅう" },
-        { id: "q10-d", text: "てんきゅう" },
+        { id: "q10-a", text: "こんにゃく", isCorrect: true },
+        { id: "q10-b", text: "くずきり" },
+        { id: "q10-c", text: "しらたき" },
+        { id: "q10-d", text: "ところてん" },
       ],
       explanation:
-        "「鍼灸」は「しんきゅう」と読みます。「鍼」は針治療、「灸」はお灸を意味し、東洋医学の代表的な治療法です。",
+        "「蒟蒻」は「こんにゃく」と読みます。「蒟」も「蒻」も植物に関する漢字で、サトイモ科の植物から作られるおなじみの食材です。",
     },
   ],
   results: [
