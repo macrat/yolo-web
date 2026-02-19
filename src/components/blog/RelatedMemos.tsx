@@ -54,7 +54,10 @@ export default function RelatedMemos({ memoIds }: RelatedMemosProps) {
                   {toDisplay.label}
                 </span>
                 <span className={styles.subject}>{memo.subject}</span>
-                <time className={styles.date}>
+                <time
+                  className={styles.date}
+                  dateTime={memo.created_at.slice(0, 10)}
+                >
                   {memo.created_at.slice(0, 10)}
                 </time>
               </Link>
