@@ -31,6 +31,12 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
   },
+  alternates: {
+    types: {
+      "application/rss+xml": "/feed",
+      "application/atom+xml": "/feed/atom",
+    },
+  },
 };
 
 export default function RootLayout({

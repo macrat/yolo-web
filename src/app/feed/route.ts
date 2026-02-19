@@ -1,0 +1,12 @@
+import { NextResponse } from "next/server";
+import { buildFeed } from "@/lib/feed";
+
+export async function GET() {
+  const feed = buildFeed();
+
+  return new NextResponse(feed.rss2(), {
+    headers: {
+      "Content-Type": "application/rss+xml; charset=utf-8",
+    },
+  });
+}
