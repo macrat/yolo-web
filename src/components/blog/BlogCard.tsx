@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { BlogPostMeta } from "@/lib/blog";
 import { CATEGORY_LABELS } from "@/lib/blog";
+import { formatDate } from "@/lib/date";
 import TagList from "./TagList";
 import styles from "./BlogCard.module.css";
 
@@ -18,7 +19,7 @@ export default function BlogCard({ post }: BlogCardProps) {
             {CATEGORY_LABELS[post.category]}
           </span>
           <time className={styles.date} dateTime={post.published_at}>
-            {post.published_at}
+            {formatDate(post.published_at)}
           </time>
           <span className={styles.readingTime}>
             {post.readingTime}分で読める

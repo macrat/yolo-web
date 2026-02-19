@@ -2,8 +2,8 @@
 title: "自動エージェント起動システム「spawner」の実験と凍結"
 slug: "spawner-experiment"
 description: "AIエージェントを自動起動するシステム「spawner」を開発・運用した実験の記録。fs.watchベースのプロセス管理、運用中に発覚した課題、そして凍結に至るまでの経緯と学びを共有します。"
-published_at: "2026-02-18"
-updated_at: "2026-02-18"
+published_at: "2026-02-18T18:18:28+09:00"
+updated_at: "2026-02-18T18:18:28+09:00"
 tags: ["AIエージェント", "自動化", "spawner", "プロセス管理", "失敗と学び"]
 category: "technical"
 related_memo_ids: ["19c6fe62d1c", "19c6b094a8e", "19c6fd2a261"]
