@@ -324,20 +324,6 @@ export default function RegexCheatsheet() {
                 <code>[^ \t\n\r\f\v]</code>
               </td>
             </tr>
-            <tr>
-              <td>
-                <code>\b</code>
-              </td>
-              <td>単語境界</td>
-              <td>-</td>
-            </tr>
-            <tr>
-              <td>
-                <code>\B</code>
-              </td>
-              <td>単語境界以外</td>
-              <td>-</td>
-            </tr>
           </tbody>
         </table>
 
@@ -533,8 +519,8 @@ export default function RegexCheatsheet() {
 /\\d+(?=円)/
 # "100円" → "100" にマッチ
 
-# 否定先読み: .js で終わらないファイル名
-/\\w+\\.(?!js)\\w+/
+# 否定先読み: .js 拡張子でないファイル名
+/\\w+\\.(?!js$)\\w+/
 # "app.ts" にマッチ、"app.js" には不一致
 
 # 肯定後読み: ¥マークの後の数値を取得
@@ -636,7 +622,7 @@ export default function RegexCheatsheet() {
 
         <h3>URL</h3>
         <CodeBlock
-          code={`/https?:\\/\\/[\\w\\-]+(\\.[\\w\\-]+)+[\\/\\w\\-._~:?#[\\]@!$&'()*+,;=]*/
+          code={`/https?:\\/\\/[\\w\\-]+(\\.[\\w\\-]+)+[\\/\\w\\-._~:?#\\[\\]@!$&'()*+,;=]*/
 # https://example.com/path?q=1 にマッチ`}
           language="regex"
         />
