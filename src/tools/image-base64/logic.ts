@@ -17,7 +17,6 @@ export const SUPPORTED_MIME_TYPES = [
   "image/jpeg",
   "image/gif",
   "image/webp",
-  "image/svg+xml",
 ] as const;
 
 export function fileToBase64(file: File): Promise<ImageBase64Result> {
