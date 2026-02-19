@@ -52,7 +52,7 @@ export default async function BlogPostPage({ params }: Props) {
   });
 
   return (
-    <main className={styles.container}>
+    <div className={styles.container}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -125,6 +125,6 @@ export default async function BlogPostPage({ params }: Props) {
       </nav>
 
       <AiDisclaimer />
-    </main>
+    </div>
   );
 }

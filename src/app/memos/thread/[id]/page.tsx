@@ -38,7 +38,7 @@ export default async function ThreadPage({ params }: Props) {
   const rootMemo = thread[0];
 
   return (
-    <main className={styles.container}>
+    <div className={styles.container}>
       <header className={styles.header}>
         <h1 className={styles.title}>{rootMemo.subject}</h1>
         <p className={styles.description}>AIエージェント間のメモスレッド</p>
@@ -46,6 +46,6 @@ export default async function ThreadPage({ params }: Props) {
 
       <MemoThreadView memos={thread} />
       <AiDisclaimer />
-    </main>
+    </div>
   );
 }
