@@ -2,20 +2,13 @@ import fs from "node:fs";
 import path from "node:path";
 import { parseFrontmatter, markdownToHtml } from "@/lib/markdown";
 import type { RoleSlug, PublicMemo } from "@/lib/memos-shared";
+import { ROLE_DISPLAY } from "@/lib/memos-shared";
 
 // Re-export shared types and constants for server-side consumers
 export { ROLE_DISPLAY } from "@/lib/memos-shared";
 export type { RoleSlug, RoleDisplay, PublicMemo } from "@/lib/memos-shared";
 
-const ROLE_SLUGS: RoleSlug[] = [
-  "owner",
-  "project-manager",
-  "researcher",
-  "planner",
-  "builder",
-  "reviewer",
-  "process-engineer",
-];
+const KNOWN_ROLE_SLUGS: RoleSlug[] = Object.keys(ROLE_DISPLAY) as RoleSlug[];
 
 interface MemoFrontmatter {
   id: string;
@@ -41,17 +34,17 @@ interface RawMemo {
 
 const MEMO_ROOT = path.join(process.cwd(), "memo");
 
-/** Normalize a role string to a valid RoleSlug, or return as-is if valid. */
-function normalizeRole(role: string): RoleSlug {
-  const slug = role.toLowerCase().replace(/\s+/g, "-") as RoleSlug;
-  if (ROLE_SLUGS.includes(slug)) return slug;
+/** Normalize a role string to a known RoleSlug if possible, otherwise return as-is. */
+function normalizeRole(role: string): string {
+  const slug = role.toLowerCase().replace(/\s+/g, "-");
+  if (KNOWN_ROLE_SLUGS.includes(slug as RoleSlug)) return slug;
   // Fallback: try common variations
   const map: Record<string, RoleSlug> = {
     "project manager": "project-manager",
     "process engineer": "process-engineer",
     chatgpt: "owner", // Bootstrap memo sender
   };
-  return map[role.toLowerCase()] || ("owner" as RoleSlug);
+  return map[role.toLowerCase()] || role;
 }
 
 /**
@@ -62,9 +55,16 @@ function scanAllMemos(): RawMemo[] {
   const memos: RawMemo[] = [];
   const SUBDIRS = ["inbox", "active", "archive"];
 
-  for (const roleSlug of ROLE_SLUGS) {
+  // Dynamically discover partitions under memo/ directory
+  if (!fs.existsSync(MEMO_ROOT)) return memos;
+  const partitions = fs.readdirSync(MEMO_ROOT).filter((entry) => {
+    const entryPath = path.join(MEMO_ROOT, entry);
+    return fs.statSync(entryPath).isDirectory();
+  });
+
+  for (const partition of partitions) {
     for (const subdir of SUBDIRS) {
-      const dir = path.join(MEMO_ROOT, roleSlug, subdir);
+      const dir = path.join(MEMO_ROOT, partition, subdir);
       if (!fs.existsSync(dir)) continue;
 
       const files = fs.readdirSync(dir).filter((f) => f.endsWith(".md"));
@@ -216,6 +216,17 @@ export function getMemoThread(id: string): PublicMemo[] {
   );
 
   return threadMemos;
+}
+
+/** Get all unique roles across memos. */
+export function getAllMemoRoles(): string[] {
+  const memos = getAllPublicMemos();
+  const roleSet = new Set<string>();
+  for (const memo of memos) {
+    roleSet.add(memo.from);
+    roleSet.add(memo.to);
+  }
+  return Array.from(roleSet).sort();
 }
 
 /** Get all unique tags across memos. */

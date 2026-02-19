@@ -9,19 +9,20 @@ import styles from "./MemoFilter.module.css";
 interface MemoFilterProps {
   memos: PublicMemo[];
   allTags: string[];
+  allRoles: string[];
 }
 
-const ALL_ROLES: RoleSlug[] = [
-  "owner",
-  "project-manager",
-  "researcher",
-  "planner",
-  "builder",
-  "reviewer",
-  "process-engineer",
-];
+function getRoleLabel(role: string): string {
+  const knownDisplay = ROLE_DISPLAY[role as RoleSlug];
+  if (knownDisplay) return knownDisplay.label;
+  return role.charAt(0).toUpperCase() + role.slice(1);
+}
 
-export default function MemoFilter({ memos, allTags }: MemoFilterProps) {
+export default function MemoFilter({
+  memos,
+  allTags,
+  allRoles,
+}: MemoFilterProps) {
   const [selectedRole, setSelectedRole] = useState<string>("all");
   const [selectedTag, setSelectedTag] = useState<string>("all");
 
@@ -53,9 +54,9 @@ export default function MemoFilter({ memos, allTags }: MemoFilterProps) {
             onChange={(e) => setSelectedRole(e.target.value)}
           >
             <option value="all">すべて</option>
-            {ALL_ROLES.map((role) => (
+            {allRoles.map((role) => (
               <option key={role} value={role}>
-                {ROLE_DISPLAY[role].label}
+                {getRoleLabel(role)}
               </option>
             ))}
           </select>

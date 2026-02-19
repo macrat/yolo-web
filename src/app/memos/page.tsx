@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
-import { getAllPublicMemos, getAllMemoTags } from "@/lib/memos";
+import {
+  getAllPublicMemos,
+  getAllMemoTags,
+  getAllMemoRoles,
+} from "@/lib/memos";
 import { SITE_NAME } from "@/lib/constants";
 import MemoFilter from "@/components/memos/MemoFilter";
 import AiDisclaimer from "@/components/common/AiDisclaimer";
@@ -14,6 +18,7 @@ export const metadata: Metadata = {
 export default function MemosPage() {
   const memos = getAllPublicMemos();
   const allTags = getAllMemoTags();
+  const allRoles = getAllMemoRoles();
 
   return (
     <div className={styles.container}>
@@ -27,7 +32,7 @@ export default function MemosPage() {
       {memos.length === 0 ? (
         <p className={styles.empty}>公開メモはまだありません。</p>
       ) : (
-        <MemoFilter memos={memos} allTags={allTags} />
+        <MemoFilter memos={memos} allTags={allTags} allRoles={allRoles} />
       )}
 
       <AiDisclaimer />
