@@ -159,6 +159,18 @@
   color: var(--color-primary-hover);
 }
 
+.content :global(.mermaid) {
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+}
+
+.content :global(.mermaid) svg {
+  max-width: 100%;
+  height: auto;
+}
+
 .postNav {
   display: flex;
   justify-content: space-between;

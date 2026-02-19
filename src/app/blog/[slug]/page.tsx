@@ -17,6 +17,7 @@ import Breadcrumb from "@/components/common/Breadcrumb";
 import TableOfContents from "@/components/blog/TableOfContents";
 import TagList from "@/components/blog/TagList";
 import RelatedMemos from "@/components/blog/RelatedMemos";
+import MermaidRenderer from "@/components/blog/MermaidRenderer";
 import AiDisclaimer from "@/components/common/AiDisclaimer";
 import styles from "./page.module.css";
 
@@ -100,6 +101,7 @@ export default async function BlogPostPage({ params }: Props) {
           />
         </div>
 
+        <MermaidRenderer />
         <RelatedMemos memoIds={post.related_memo_ids} />
       </article>
 

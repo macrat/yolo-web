@@ -7,7 +7,29 @@
  * while scripts/memo/core/parser.ts parses it for the CLI memo management tool.
  */
 
-import { marked } from "marked";
+import { marked, type MarkedExtension } from "marked";
+
+/**
+ * Custom marked extension to convert mermaid code blocks into
+ * `<div class="mermaid">` elements for client-side rendering.
+ */
+const mermaidExtension: MarkedExtension = {
+  renderer: {
+    code({ text, lang }: { text: string; lang?: string }) {
+      if (lang === "mermaid") {
+        const escaped = text
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+        return `<div class="mermaid">${escaped}</div>\n`;
+      }
+      return false; // fallback to default renderer
+    },
+  },
+};
+
+marked.use(mermaidExtension);
 
 /** Parse YAML frontmatter from a markdown string. Returns { data, content }. */
 export function parseFrontmatter<T>(raw: string): { data: T; content: string } {

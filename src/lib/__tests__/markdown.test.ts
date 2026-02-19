@@ -151,6 +151,32 @@ describe("markdownToHtml", () => {
     const html = markdownToHtml("use `const` keyword");
     expect(html).toContain("<code>const</code>");
   });
+
+  test("converts mermaid code blocks to div with mermaid class", () => {
+    const md = "```mermaid\ngraph TD;\n  A-->B;\n```";
+    const html = markdownToHtml(md);
+    expect(html).toContain('<div class="mermaid">');
+    expect(html).toContain("graph TD;");
+    expect(html).toContain("A--&gt;B;");
+    expect(html).not.toContain("<pre>");
+    expect(html).not.toContain("<code");
+  });
+
+  test("does not affect non-mermaid code blocks", () => {
+    const md = "```javascript\nconst x = 1;\n```";
+    const html = markdownToHtml(md);
+    expect(html).toContain("<pre>");
+    expect(html).toContain("<code");
+    expect(html).not.toContain("mermaid");
+  });
+
+  test("escapes HTML in mermaid blocks", () => {
+    const md =
+      '```mermaid\ngraph TD;\n  A["<script>alert(1)</script>"]-->B;\n```';
+    const html = markdownToHtml(md);
+    expect(html).toContain("&lt;script&gt;");
+    expect(html).not.toContain("<script>");
+  });
 });
 
 describe("extractHeadings", () => {
