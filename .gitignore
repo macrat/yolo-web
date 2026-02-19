@@ -24,6 +24,3 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
-# spawner agent logs (may contain sensitive data)
-/agents/logs/
