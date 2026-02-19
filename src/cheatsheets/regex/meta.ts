@@ -19,12 +19,14 @@ export const meta: CheatsheetMeta = {
   relatedToolSlugs: ["regex-tester"],
   relatedCheatsheetSlugs: ["git", "markdown"],
   sections: [
-    { id: "metacharacters", title: "メタ文字" },
+    { id: "metacharacters", title: "基本メタ文字" },
     { id: "quantifiers", title: "量指定子" },
+    { id: "character-classes", title: "文字クラス" },
     { id: "anchors", title: "アンカー" },
-    { id: "groups", title: "グループ・キャプチャ" },
-    { id: "lookaround", title: "先読み・後読み" },
+    { id: "groups", title: "グループとキャプチャ" },
+    { id: "lookaround", title: "先読みと後読み" },
     { id: "flags", title: "フラグ" },
+    { id: "common-patterns", title: "よく使うパターン例" },
   ],
   publishedAt: "2026-02-19",
 };
