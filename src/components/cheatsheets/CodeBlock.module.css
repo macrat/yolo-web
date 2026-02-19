@@ -1,0 +1,52 @@
+.container {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.language {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  padding: 0.25rem 0.5rem;
+  background-color: var(--color-bg-secondary, #f0f0f0);
+  border-radius: 0.25rem 0.25rem 0 0;
+  border: 1px solid var(--color-border);
+  border-bottom: none;
+}
+
+.pre {
+  background-color: var(--color-bg-secondary, #f8f9fa);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  overflow-x: auto;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.language + .pre {
+  border-top-left-radius: 0;
+}
+
+.copyButton {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.25rem;
+  background-color: var(--color-bg);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    color 0.15s;
+}
+
+.copyButton:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
