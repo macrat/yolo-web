@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Header from "@/components/common/Header";
-import Footer from "@/components/common/Footer";
 import AiDisclaimer from "@/components/common/AiDisclaimer";
 import { SITE_NAME } from "@/lib/constants";
 import styles from "./page.module.css";
@@ -64,44 +62,40 @@ export default function GamesPage() {
   const today = getTodayFormatted();
 
   return (
-    <div className={styles.wrapper}>
-      <Header />
-      <main className={styles.main}>
-        {/* ヒーローバナー */}
-        <section className={styles.heroBanner}>
-          <h1 className={styles.heroTitle}>毎日3つのパズルに挑戦</h1>
-          <p className={styles.heroDate}>{today}のパズル</p>
-          <p className={styles.heroSubtext}>全ゲームクリアで今日の完全制覇!</p>
-        </section>
+    <div className={styles.main}>
+      {/* ヒーローバナー */}
+      <section className={styles.heroBanner}>
+        <h1 className={styles.heroTitle}>毎日3つのパズルに挑戦</h1>
+        <p className={styles.heroDate}>{today}のパズル</p>
+        <p className={styles.heroSubtext}>全ゲームクリアで今日の完全制覇!</p>
+      </section>
 
-        <div className={styles.grid} role="list" aria-label="Games list">
-          {GAMES.map((game) => (
-            <div key={game.slug} role="listitem">
-              <Link
-                href={`/games/${game.slug}`}
-                className={styles.card}
-                style={
-                  {
-                    "--game-accent": game.accentColor,
-                  } as React.CSSProperties
-                }
-              >
-                <div className={styles.cardIcon}>{game.icon}</div>
-                <h2 className={styles.cardTitle}>{game.title}</h2>
-                <p className={styles.cardDescription}>{game.description}</p>
-                <div className={styles.cardMeta}>
-                  <span className={styles.difficultyBadge}>
-                    {game.difficulty}
-                  </span>
-                  <span className={styles.cardCta}>遊ぶ</span>
-                </div>
-              </Link>
-            </div>
-          ))}
-        </div>
-        <AiDisclaimer />
-      </main>
-      <Footer />
+      <div className={styles.grid} role="list" aria-label="Games list">
+        {GAMES.map((game) => (
+          <div key={game.slug} role="listitem">
+            <Link
+              href={`/games/${game.slug}`}
+              className={styles.card}
+              style={
+                {
+                  "--game-accent": game.accentColor,
+                } as React.CSSProperties
+              }
+            >
+              <div className={styles.cardIcon}>{game.icon}</div>
+              <h2 className={styles.cardTitle}>{game.title}</h2>
+              <p className={styles.cardDescription}>{game.description}</p>
+              <div className={styles.cardMeta}>
+                <span className={styles.difficultyBadge}>
+                  {game.difficulty}
+                </span>
+                <span className={styles.cardCta}>遊ぶ</span>
+              </div>
+            </Link>
+          </div>
+        ))}
+      </div>
+      <AiDisclaimer />
     </div>
   );
 }

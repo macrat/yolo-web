@@ -3,18 +3,26 @@ import * as fs from "fs";
 import * as path from "path";
 
 /**
- * Ensures every section directory under src/app/ that contains route pages
- * has a layout.tsx providing Header/Footer, either directly or via
- * a parent section layout.
- *
- * Sections that embed Header/Footer inline in their page.tsx (e.g. about)
- * are also accepted, but layout.tsx is the preferred pattern.
+ * Header/Footer are provided by the root layout (src/app/layout.tsx).
+ * This test verifies that section layouts do NOT duplicate Header/Footer,
+ * and that the root layout properly includes them.
  */
-describe("section layout coverage", () => {
+describe("root layout provides Header/Footer", () => {
   const appDir = path.resolve(__dirname, "..");
 
-  // Get all immediate subdirectories of src/app/ that contain page.tsx
-  // (i.e., they are route sections), excluding special directories
+  test("root layout.tsx imports Header and Footer", () => {
+    const content = fs.readFileSync(path.join(appDir, "layout.tsx"), "utf-8");
+    expect(content).toContain(
+      'import Header from "@/components/common/Header"',
+    );
+    expect(content).toContain(
+      'import Footer from "@/components/common/Footer"',
+    );
+    expect(content).toContain("<Header");
+    expect(content).toContain("<Footer");
+  });
+
+  // Get all immediate subdirectories of src/app/ that contain layout.tsx
   const EXCLUDED = ["__tests__"];
 
   const sectionDirs = fs
@@ -23,49 +31,17 @@ describe("section layout coverage", () => {
     .map((d) => d.name);
 
   for (const section of sectionDirs) {
-    const sectionPath = path.join(appDir, section);
-    const hasPageTsx = fs.existsSync(path.join(sectionPath, "page.tsx"));
-    const hasSubPages =
-      fs.existsSync(sectionPath) &&
-      fs.readdirSync(sectionPath).some((sub) => {
-        const subPath = path.join(sectionPath, sub);
-        return (
-          fs.statSync(subPath).isDirectory() &&
-          fs.existsSync(path.join(subPath, "page.tsx"))
-        );
-      });
+    const layoutPath = path.join(appDir, section, "layout.tsx");
+    if (!fs.existsSync(layoutPath)) continue;
 
-    if (!hasPageTsx && !hasSubPages) continue;
-
-    test(`${section}/ has Header/Footer via layout.tsx or inline in page.tsx`, () => {
-      const layoutPath = path.join(sectionPath, "layout.tsx");
-      const pagePath = path.join(sectionPath, "page.tsx");
-      const hasLayout = fs.existsSync(layoutPath);
-      let hasInlineHeader = false;
-
-      if (!hasLayout && fs.existsSync(pagePath)) {
-        const pageContent = fs.readFileSync(pagePath, "utf-8");
-        hasInlineHeader =
-          pageContent.includes("Header") && pageContent.includes("Footer");
-      }
-
-      expect(
-        hasLayout || hasInlineHeader,
-        `Section "${section}" must have a layout.tsx with Header/Footer, ` +
-          `or include Header/Footer inline in page.tsx. ` +
-          `Create src/app/${section}/layout.tsx following the pattern in src/app/tools/layout.tsx.`,
-      ).toBe(true);
+    test(`${section}/layout.tsx does not import Header or Footer`, () => {
+      const content = fs.readFileSync(layoutPath, "utf-8");
+      expect(content).not.toContain(
+        'import Header from "@/components/common/Header"',
+      );
+      expect(content).not.toContain(
+        'import Footer from "@/components/common/Footer"',
+      );
     });
-
-    if (fs.existsSync(path.join(sectionPath, "layout.tsx"))) {
-      test(`${section}/layout.tsx imports Header and Footer`, () => {
-        const content = fs.readFileSync(
-          path.join(sectionPath, "layout.tsx"),
-          "utf-8",
-        );
-        expect(content).toContain("Header");
-        expect(content).toContain("Footer");
-      });
-    }
   }
 });

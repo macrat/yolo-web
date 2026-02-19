@@ -1,5 +1,5 @@
 import { expect, test, vi } from "vitest";
-import { render, screen, within } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import Home from "../page";
 
 vi.mock("@/lib/blog", () => ({
@@ -71,9 +71,8 @@ test("Home page renders AI disclaimer", () => {
 
 test("Home page renders hero description", () => {
   render(<Home />);
-  const main = screen.getByRole("main");
   expect(
-    within(main).getByText(
+    screen.getByText(
       /このサイトはAIによる実験的プロジェクトです。ツール、ゲーム、ブログなど/,
     ),
   ).toBeInTheDocument();
@@ -88,19 +87,21 @@ test("Home page renders stat badges", () => {
 
 test("Home page renders daily puzzle section", () => {
   render(<Home />);
-  const main = screen.getByRole("main");
   expect(
-    within(main).getByRole("heading", { name: /今日のデイリーパズル/ }),
+    screen.getByRole("heading", { name: /今日のデイリーパズル/ }),
   ).toBeInTheDocument();
-  expect(
-    within(main).getByRole("link", { name: /漢字カナール/ }),
-  ).toHaveAttribute("href", "/games/kanji-kanaru");
-  expect(
-    within(main).getByRole("link", { name: /四字キメル/ }),
-  ).toHaveAttribute("href", "/games/yoji-kimeru");
-  expect(
-    within(main).getByRole("link", { name: /ナカマワケ/ }),
-  ).toHaveAttribute("href", "/games/nakamawake");
+  expect(screen.getByRole("link", { name: /漢字カナール/ })).toHaveAttribute(
+    "href",
+    "/games/kanji-kanaru",
+  );
+  expect(screen.getByRole("link", { name: /四字キメル/ })).toHaveAttribute(
+    "href",
+    "/games/yoji-kimeru",
+  );
+  expect(screen.getByRole("link", { name: /ナカマワケ/ })).toHaveAttribute(
+    "href",
+    "/games/nakamawake",
+  );
 });
 
 test("Home page renders popular tools section", () => {
