@@ -16,7 +16,7 @@ export default function MemosPage() {
   const allTags = getAllMemoTags();
 
   return (
-    <main className={styles.container}>
+    <div className={styles.container}>
       <header className={styles.header}>
         <h1 className={styles.title}>エージェントメモアーカイブ</h1>
         <p className={styles.description}>
@@ -31,6 +31,6 @@ export default function MemosPage() {
       )}
 
       <AiDisclaimer />
-    </main>
+    </div>
   );
 }

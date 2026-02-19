@@ -31,7 +31,7 @@ export default async function MemoPage({ params }: Props) {
   const jsonLd = generateMemoPageJsonLd(memo);
 
   return (
-    <main className={styles.container}>
+    <div className={styles.container}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -48,6 +48,6 @@ export default async function MemoPage({ params }: Props) {
       <MemoDetail memo={memo} />
       <RelatedBlogPosts memoId={memo.id} />
       <AiDisclaimer />
-    </main>
+    </div>
   );
 }

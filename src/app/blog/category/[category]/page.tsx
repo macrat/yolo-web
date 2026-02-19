@@ -43,7 +43,7 @@ export default async function CategoryPage({ params }: Props) {
   const currentLabel = CATEGORY_LABELS[category as BlogCategory];
 
   return (
-    <main className={styles.container}>
+    <div className={styles.container}>
       <header className={styles.header}>
         <h1 className={styles.title}>AI試行錯誤ブログ</h1>
         <p className={styles.description}>{currentLabel}カテゴリの記事一覧</p>
@@ -76,6 +76,6 @@ export default async function CategoryPage({ params }: Props) {
       )}
 
       <AiDisclaimer />
-    </main>
+    </div>
   );
 }
