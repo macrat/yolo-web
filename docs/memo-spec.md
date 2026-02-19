@@ -2,7 +2,8 @@
 
 ## ディレクトリ構成
 
-メモはすべて `memo/` 配下に、受信者ロールごとにパーティション化されます。ディレクトリ名ではスペースをハイフンに置換します。
+メモはすべて `memo/` 配下に、受信者ごとにパーティション化されます。
+ownerは人間ユーザー、agentはLLMエージェントを指します。各受信者の下には、メモの状態に応じて `inbox/`, `active/`, `archive/` の3つのサブディレクトリがあります。
 
 ```
 memo/
@@ -10,27 +11,7 @@ memo/
 │   ├── inbox/
 │   ├── active/
 │   └── archive/
-├── project-manager/
-│   ├── inbox/
-│   ├── active/
-│   └── archive/
-├── researcher/
-│   ├── inbox/
-│   ├── active/
-│   └── archive/
-├── planner/
-│   ├── inbox/
-│   ├── active/
-│   └── archive/
-├── builder/
-│   ├── inbox/
-│   ├── active/
-│   └── archive/
-├── reviewer/
-│   ├── inbox/
-│   ├── active/
-│   └── archive/
-└── process-engineer/  (廃止・アーカイブのみ)
+└── agent/
     ├── inbox/
     ├── active/
     └── archive/
@@ -39,7 +20,7 @@ memo/
 ## ルーティングルール
 
 - すべてのメモ操作は必ずメモCLIツール（`npm run memo`）を使用すること。`memo/` ディレクトリを直接操作（ファイルの作成、移動、編集、削除）することは禁止する
-- メモを送信するには、対象ロールの `inbox/` ディレクトリに新しいメモファイルを作成する
+- メモを送信するには、 `npm run memo -- create` を使用して、送信先の `inbox/` に新しいメモファイルを作成する
 
 ## メモの粒度ルール
 
@@ -47,12 +28,10 @@ memo/
 
 **背景**: LLMエージェントはコンテキスト量の増加に伴い出力品質が劣化する。本プロジェクトではエージェントを小さな単位で起動し、メモによるやりとりに限定することで高品質なコンテキストを実現している。1つのメモに複数タスクを含めると、この設計意図が損なわれる。
 
-**適用範囲**: タスク依頼メモ（`project manager` → 各ロール）に適用する。情報提供の返信メモや、1つのタスクに関する複数の受入基準の列挙はこの制約の対象外である。
-
 ## ライフサイクルルール（read → triage → respond）
 
-1. ロールは作業開始時に `inbox/` と `active/` の両方を確認する
-2. ロールは `inbox/` のメモを読み、即座にトリアージする:
+1. 作業開始時に `inbox/` と `active/` の両方を確認する
+2. `inbox/` のメモを読み、即座にトリアージする:
    - 単発の情報提供や返信 → `archive/` へ移動
    - 継続的なタスク → `active/` へ移動
 3. `active/` のメモはタスク完了時に `archive/` へ移動する
@@ -76,106 +55,6 @@ memo/
 - `created_at`（ISO-8601 タイムゾーン付き）
 - `tags`（リスト）
 - `reply_to`（新規スレッドの場合は null）
-
-## テンプレート
-
-### 汎用タスクメモ
-
-```md
----
-id: "<hex-unix-ms>"
-subject: "<short subject>"
-from: "<role name>"
-to: "<role name>"
-created_at: "YYYY-MM-DDTHH:MM:SS±ZZ:ZZ"
-tags: ["tag1", "tag2"]
-reply_to: null
----
-
-## Context
-
-<why this exists; link to related memo ids; relevant repo paths>
-
-## Request
-
-<what to do>
-
-## Acceptance criteria
-
-- [ ] <objective check>
-- [ ] <objective check>
-
-## Constraints
-
-- Must comply with `docs/constitution.md` (immutable).
-- <other constraints>
-
-## Notes
-
-<risks, assumptions, options>
-```
-
-### 返信メモ
-
-```md
----
-id: "<hex-unix-ms>"
-subject: "Re: <original subject>"
-from: "<role name>"
-to: "<role name>"
-created_at: "YYYY-MM-DDTHH:MM:SS±ZZ:ZZ"
-tags: ["reply"]
-reply_to: "<original id>"
----
-
-## Summary
-
-<what you did / found>
-
-## Results
-
-<details>
-
-## Next actions
-
-<what should happen next, if anything>
-```
-
-### リサーチメモ（→ `researcher`）
-
-必須項目:
-
-- 回答すべき質問
-- 調査済みリポジトリパス
-- 外部ソース（使用した場合）
-- 確信度 + 未知の事項
-
-### プランニングメモ（`project manager` → `planner`）
-
-必須項目:
-
-- ゴール
-- スコープ境界
-- 受入基準
-- 必要な成果物（ドキュメント/設定/コード）
-- ロールバックアプローチ（概念的）
-
-### 実装メモ（`project manager` → `builder`）
-
-必須項目:
-
-- 正確なスコープ
-- 変更予定ファイル
-- 受入基準
-- 「変更禁止」リスト（ある場合）
-
-### レビューメモ（→ `reviewer`）
-
-必須項目:
-
-- 変更内容（コミット参照またはファイルリスト）
-- レビュー重点領域
-- 受入基準チェックリスト
 
 ## CLIコマンドリファレンス
 
