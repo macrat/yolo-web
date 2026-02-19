@@ -2,7 +2,7 @@ import { expect, test, describe, beforeEach, afterEach, vi } from "vitest";
 import fs from "node:fs";
 import path from "node:path";
 import os from "node:os";
-import { findMemoById, readMemo } from "../commands/read.js";
+import { findMemoById, readMemo, readMemos } from "../commands/read.js";
 
 let tmpDir: string;
 
@@ -42,6 +42,22 @@ reply_to: null
 ## Body content
 
 Some text here.
+`;
+
+const SAMPLE_MEMO_2 = `---
+id: "def456"
+subject: "Second memo"
+from: "builder"
+to: "planner"
+created_at: "2026-02-14T19:33:00+09:00"
+tags:
+  - report
+reply_to: "abc123"
+---
+
+## Second body
+
+More text here.
 `;
 
 function createMemoFile(
@@ -127,6 +143,50 @@ describe("readMemo", () => {
 
   test("throws error for non-existent ID", () => {
     expect(() => readMemo("nonexistent")).toThrow(
+      "No memo found with ID: nonexistent",
+    );
+  });
+});
+
+describe("readMemos", () => {
+  test("reads multiple memos separated by blank line", () => {
+    createMemoFile("builder", "inbox", "abc123", "test-memo", SAMPLE_MEMO);
+    createMemoFile("planner", "inbox", "def456", "second-memo", SAMPLE_MEMO_2);
+
+    const writeSpy = vi
+      .spyOn(process.stdout, "write")
+      .mockImplementation(() => true);
+
+    readMemos(["abc123", "def456"]);
+
+    const output = writeSpy.mock.calls.map((c) => String(c[0])).join("");
+    expect(output).toContain('id: "abc123"');
+    expect(output).toContain('id: "def456"');
+    expect(output).toContain("## Body content");
+    expect(output).toContain("## Second body");
+  });
+
+  test("reads a single memo without extra blank line", () => {
+    createMemoFile("builder", "inbox", "abc123", "test-memo", SAMPLE_MEMO);
+
+    const writeSpy = vi
+      .spyOn(process.stdout, "write")
+      .mockImplementation(() => true);
+
+    readMemos(["abc123"]);
+
+    const output = writeSpy.mock.calls.map((c) => String(c[0])).join("");
+    expect(output).toContain('id: "abc123"');
+    // Should not start with a blank line
+    expect(output.startsWith("\n")).toBe(false);
+  });
+
+  test("throws error if any ID is not found", () => {
+    createMemoFile("builder", "inbox", "abc123", "test-memo", SAMPLE_MEMO);
+
+    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+
+    expect(() => readMemos(["abc123", "nonexistent"])).toThrow(
       "No memo found with ID: nonexistent",
     );
   });

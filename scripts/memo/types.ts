@@ -14,27 +14,35 @@ export interface Memo {
   filePath: string;
 }
 
-export const VALID_ROLES = [
-  "owner",
-  "project-manager",
-  "researcher",
-  "planner",
-  "builder",
-  "reviewer",
-  "process-engineer",
-] as const;
+/**
+ * Normalize a role string for use as a directory name.
+ * - Lowercases
+ * - Replaces spaces with hyphens
+ * - Only allows a-z and hyphens
+ * - No leading or trailing hyphens
+ * - Throws on invalid input
+ */
+export function normalizeRole(role: string): string {
+  const normalized = role.toLowerCase().replace(/ /g, "-");
+  if (!/^[a-z]([a-z-]*[a-z])?$/.test(normalized)) {
+    throw new Error(
+      `Invalid role: "${role}". Must contain only letters and hyphens, and must not start or end with a hyphen.`,
+    );
+  }
+  return normalized;
+}
 
-export type RoleSlug = (typeof VALID_ROLES)[number];
+/**
+ * Determine the partition directory for a given "to" value.
+ * "owner" goes to the "owner" partition; everything else goes to "agent".
+ */
+export function toPartition(to: string): "owner" | "agent" {
+  return to === "owner" ? "owner" : "agent";
+}
 
-/** Map display names to directory slugs */
-export const ROLE_SLUG_MAP: Record<string, RoleSlug> = {
-  owner: "owner",
-  "project manager": "project-manager",
-  "project-manager": "project-manager",
-  researcher: "researcher",
-  planner: "planner",
-  builder: "builder",
-  reviewer: "reviewer",
-  "process engineer": "process-engineer",
-  "process-engineer": "process-engineer",
-};
+/**
+ * Check if the current process is running inside Claude Code.
+ */
+export function isAgentMode(): boolean {
+  return process.env.CLAUDECODE !== undefined;
+}

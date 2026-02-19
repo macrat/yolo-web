@@ -1,9 +1,9 @@
 import fs from "node:fs";
 import { createMemo } from "./memo/commands/create.js";
-import { readMemo } from "./memo/commands/read.js";
+import { readMemos } from "./memo/commands/read.js";
 import { listMemos } from "./memo/commands/list.js";
 import { markMemo } from "./memo/commands/mark.js";
-import { resolveRoleSlug } from "./memo/core/paths.js";
+import { normalizeRole } from "./memo/types.js";
 import type { MemoState } from "./memo/core/scanner.js";
 
 interface ParsedArgs {
@@ -86,15 +86,15 @@ Commands:
   help      Show this help message
 
 list options:
-  --state <state>    Filter by state: inbox, active, archive, all (default: all)
-  --from <role>      Filter by sender role
+  --state <state>    Filter by state: inbox, active, archive, all (comma-separated, default: all)
+  --from <role>      Filter by sender role (use "all" to skip filtering)
   --to <role>        Filter by recipient role
   --tag <tag>        Filter by tag (repeatable, AND logic)
   --limit <number>   Max results (default: 10)
   --fields <fields>  Comma-separated fields (default: id,reply_to,created_at,from,to,state,subject)
 
 read:
-  npm run memo -- read <id>
+  npm run memo -- read <id>...
 
 create:
   npm run memo -- create <from> <to> <subject> [options]
@@ -104,15 +104,18 @@ create:
   --skip-credential-check      Skip credential pattern check
 
 mark:
-  npm run memo -- mark <id> <state>
+  npm run memo -- mark <state> <id>...
 
 Examples:
   npm run memo -- list
   npm run memo -- list --state inbox --to planner
+  npm run memo -- list --state inbox,active
   npm run memo -- list --tag request --tag implementation
   npm run memo -- read 19c5758d1f9
+  npm run memo -- read 19c5758d1f9 19c5758d200
   npm run memo -- create builder "project manager" "Task done" --body "## Summary" --tags "report,completion"
-  npm run memo -- mark 19c5758d1f9 archive
+  npm run memo -- mark archive 19c5758d1f9
+  npm run memo -- mark archive 19c5758d1f9 19c5758d200
 `);
 }
 
@@ -123,7 +126,15 @@ function main(): void {
   try {
     switch (command) {
       case "list": {
-        const state = (getFlag(flags, "state") ?? "all") as MemoState | "all";
+        const stateStr = getFlag(flags, "state") ?? "all";
+        let state: MemoState | MemoState[] | "all";
+        if (stateStr === "all") {
+          state = "all";
+        } else if (stateStr.includes(",")) {
+          state = stateStr.split(",").map((s) => s.trim()) as MemoState[];
+        } else {
+          state = stateStr as MemoState;
+        }
         const from = getFlag(flags, "from");
         const to = getFlag(flags, "to");
         const tags = getFlagArray(flags, "tag");
@@ -134,14 +145,10 @@ function main(): void {
           ? fieldsStr.split(",").map((f) => f.trim())
           : undefined;
 
-        // Resolve role slugs if provided
-        const resolvedFrom = from ? resolveRoleSlug(from) : undefined;
-        const resolvedTo = to ? resolveRoleSlug(to) : undefined;
-
         listMemos({
           state,
-          from: resolvedFrom,
-          to: resolvedTo,
+          from: from ?? undefined,
+          to: to ?? undefined,
           tags,
           limit,
           fields,
@@ -150,14 +157,14 @@ function main(): void {
       }
 
       case "read": {
-        const id = positional[0];
-        if (!id) {
+        const ids = positional;
+        if (ids.length === 0) {
           console.error(
-            "Error: memo ID is required. Usage: npm run memo -- read <id>",
+            "Error: at least one memo ID is required. Usage: npm run memo -- read <id>...",
           );
           process.exit(1);
         }
-        readMemo(id);
+        readMemos(ids);
         break;
       }
 
@@ -173,8 +180,8 @@ function main(): void {
         }
 
         // Validate roles
-        resolveRoleSlug(from);
-        resolveRoleSlug(to);
+        normalizeRole(from);
+        normalizeRole(to);
 
         const tags = getFlag(flags, "tags")
           ? getFlag(flags, "tags")!
@@ -211,15 +218,17 @@ function main(): void {
       }
 
       case "mark": {
-        const id = positional[0];
-        const newState = positional[1] as MemoState;
-        if (!id || !newState) {
+        const newState = positional[0] as MemoState;
+        const ids = positional.slice(1);
+        if (!newState || ids.length === 0) {
           console.error(
-            "Error: <id> and <state> are required. Usage: npm run memo -- mark <id> <state>",
+            "Error: <state> and at least one <id> are required. Usage: npm run memo -- mark <state> <id>...",
           );
           process.exit(1);
         }
-        markMemo(id, newState);
+        for (const id of ids) {
+          markMemo(id, newState);
+        }
         break;
       }
 

@@ -2,9 +2,10 @@ import fs from "node:fs";
 import path from "node:path";
 import { generateMemoId } from "../core/id.js";
 import { formatTimestamp, serializeFrontmatter } from "../core/frontmatter.js";
-import { resolveRoleSlug, memoFilePath } from "../core/paths.js";
+import { memoFilePath } from "../core/paths.js";
 import { checkCredentials } from "../core/credential-check.js";
 import { scanAllMemos } from "../core/scanner.js";
+import { normalizeRole, toPartition } from "../types.js";
 import type { MemoFrontmatter } from "../types.js";
 
 export interface CreateOptions {
@@ -22,8 +23,8 @@ export interface CreateOptions {
  * Returns the created memo's ID.
  */
 export function createMemo(options: CreateOptions): string {
-  const fromSlug = resolveRoleSlug(options.from);
-  const toSlug = resolveRoleSlug(options.to);
+  const normalizedFrom = normalizeRole(options.from);
+  const normalizedTo = normalizeRole(options.to);
 
   // Validate body is not empty
   if (!options.body || options.body.trim() === "") {
@@ -63,8 +64,8 @@ export function createMemo(options: CreateOptions): string {
   const frontmatter: MemoFrontmatter = {
     id,
     subject: options.subject,
-    from: fromSlug,
-    to: toSlug,
+    from: normalizedFrom,
+    to: normalizedTo,
     created_at: formatTimestamp(timestamp),
     tags,
     reply_to: options.replyTo,
@@ -73,7 +74,8 @@ export function createMemo(options: CreateOptions): string {
   const yaml = serializeFrontmatter(frontmatter);
   const content = `${yaml}\n\n${options.body}\n`;
 
-  const filePath = memoFilePath(toSlug, id, options.subject);
+  const partition = toPartition(normalizedTo);
+  const filePath = memoFilePath(partition, id, options.subject);
   const dir = path.dirname(filePath);
 
   // Ensure directory exists

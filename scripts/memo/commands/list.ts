@@ -1,4 +1,7 @@
 import { scanAllMemos, type MemoState } from "../core/scanner.js";
+import { getMemoRoot } from "../core/paths.js";
+import { isAgentMode } from "../types.js";
+import path from "node:path";
 
 const DEFAULT_FIELDS = [
   "id",
@@ -13,7 +16,7 @@ const DEFAULT_FIELDS = [
 const NULL_REPLY_TO = "-----------";
 
 export interface ListOptions {
-  state?: MemoState | "all";
+  state?: MemoState | MemoState[] | "all";
   from?: string;
   to?: string;
   tags?: string[];
@@ -39,17 +42,43 @@ export function listMemos(options: ListOptions = {}): void {
 
   // Filter by state
   if (state !== "all") {
-    memos = memos.filter((m) => m.state === state);
+    if (Array.isArray(state)) {
+      const stateSet = new Set<string>(state);
+      memos = memos.filter((m) => stateSet.has(m.state));
+    } else {
+      memos = memos.filter((m) => m.state === state);
+    }
   }
 
-  // Filter by from
-  if (from) {
+  // Filter by from (skip if "all")
+  if (from && from !== "all") {
     memos = memos.filter((m) => m.frontmatter.from === from);
   }
 
-  // Filter by to
-  if (to) {
-    memos = memos.filter((m) => m.frontmatter.to === to);
+  // Filter by to / partition based on agent mode
+  const memoRoot = getMemoRoot();
+  const isInPartition = (filePath: string, partition: string): boolean => {
+    const rel = path.relative(memoRoot, filePath);
+    return rel.startsWith(partition + path.sep);
+  };
+
+  if (isAgentMode()) {
+    if (to === "all") {
+      // No filtering
+    } else if (to === "owner") {
+      memos = memos.filter((m) => isInPartition(m.filePath, "owner"));
+    } else if (to) {
+      // Filter by frontmatter.to matching the specified value
+      memos = memos.filter((m) => m.frontmatter.to === to);
+    } else {
+      // Default: only show memos in memo/agent/
+      memos = memos.filter((m) => isInPartition(m.filePath, "agent"));
+    }
+  } else {
+    // Owner mode: default is all, but filter if --to is specified
+    if (to && to !== "all") {
+      memos = memos.filter((m) => m.frontmatter.to === to);
+    }
   }
 
   // Filter by tags (AND condition)

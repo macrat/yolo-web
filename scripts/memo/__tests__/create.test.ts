@@ -15,9 +15,9 @@ vi.mock("../core/paths.js", async () => {
   return {
     ...actual,
     getMemoRoot: () => tmpDir,
-    memoFilePath: (roleSlug: string, id: string, subject: string) => {
+    memoFilePath: (partition: string, id: string, subject: string) => {
       const kebab = actual.toKebabCase(subject);
-      return path.join(tmpDir, roleSlug, "inbox", `${id}-${kebab}.md`);
+      return path.join(tmpDir, partition, "inbox", `${id}-${kebab}.md`);
     },
   };
 });
@@ -32,7 +32,7 @@ afterEach(() => {
 });
 
 describe("createMemo", () => {
-  test("creates a memo and returns the ID", () => {
+  test("creates a memo in agent partition for non-owner to", () => {
     const id = createMemo({
       subject: "Test with body",
       from: "planner",
@@ -45,8 +45,8 @@ describe("createMemo", () => {
 
     expect(id).toMatch(/^[0-9a-f]+$/);
 
-    // Find the created file
-    const inboxDir = path.join(tmpDir, "builder", "inbox");
+    // Should be created in agent partition (since to != "owner")
+    const inboxDir = path.join(tmpDir, "agent", "inbox");
     const files = fs.readdirSync(inboxDir);
     expect(files.length).toBe(1);
 
@@ -57,6 +57,28 @@ describe("createMemo", () => {
     expect(content).toContain("## Summary\nCustom body content here.");
     // Should NOT contain public field
     expect(content).not.toContain("public:");
+  });
+
+  test("creates a memo in owner partition when to is owner", () => {
+    const id = createMemo({
+      subject: "Report to owner",
+      from: "builder",
+      to: "owner",
+      tags: [],
+      replyTo: null,
+      body: "## Summary\nReport content.",
+      skipCredentialCheck: true,
+    });
+
+    expect(id).toMatch(/^[0-9a-f]+$/);
+
+    // Should be created in owner partition
+    const inboxDir = path.join(tmpDir, "owner", "inbox");
+    const files = fs.readdirSync(inboxDir);
+    expect(files.length).toBe(1);
+
+    const content = fs.readFileSync(path.join(inboxDir, files[0]), "utf-8");
+    expect(content).toContain('to: "owner"');
   });
 
   test("created_at has millisecond precision", () => {
@@ -70,7 +92,7 @@ describe("createMemo", () => {
       skipCredentialCheck: true,
     });
 
-    const inboxDir = path.join(tmpDir, "builder", "inbox");
+    const inboxDir = path.join(tmpDir, "agent", "inbox");
     const files = fs.readdirSync(inboxDir);
     const content = fs.readFileSync(path.join(inboxDir, files[0]), "utf-8");
 
@@ -97,7 +119,7 @@ describe("createMemo", () => {
       skipCredentialCheck: true,
     });
 
-    const inboxDir = path.join(tmpDir, "planner", "inbox");
+    const inboxDir = path.join(tmpDir, "agent", "inbox");
     const files = fs.readdirSync(inboxDir);
     const content = fs.readFileSync(path.join(inboxDir, files[0]), "utf-8");
 
@@ -160,6 +182,26 @@ describe("createMemo", () => {
       skipCredentialCheck: true,
     });
 
+    expect(id).toMatch(/^[0-9a-f]+$/);
+  });
+
+  test("normalizes role names", () => {
+    const id = createMemo({
+      subject: "Normalized roles",
+      from: "Project Manager",
+      to: "Builder",
+      tags: [],
+      replyTo: null,
+      body: "## Summary\nTest normalized roles.",
+      skipCredentialCheck: true,
+    });
+
+    const inboxDir = path.join(tmpDir, "agent", "inbox");
+    const files = fs.readdirSync(inboxDir);
+    const content = fs.readFileSync(path.join(inboxDir, files[0]), "utf-8");
+
+    expect(content).toContain('from: "project-manager"');
+    expect(content).toContain('to: "builder"');
     expect(id).toMatch(/^[0-9a-f]+$/);
   });
 });

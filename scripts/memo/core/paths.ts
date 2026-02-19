@@ -1,21 +1,6 @@
 import path from "node:path";
-import { ROLE_SLUG_MAP, type RoleSlug } from "../types.js";
 
 const MEMO_ROOT = path.resolve(process.cwd(), "memo");
-
-/**
- * Resolve a role display name (e.g. "project manager") to its directory slug.
- * Throws if the role is unknown.
- */
-export function resolveRoleSlug(role: string): RoleSlug {
-  const slug = ROLE_SLUG_MAP[role.toLowerCase().trim()];
-  if (!slug) {
-    throw new Error(
-      `Unknown role: "${role}". Valid roles: ${Object.keys(ROLE_SLUG_MAP).join(", ")}`,
-    );
-  }
-  return slug;
-}
 
 /**
  * Convert a subject string to kebab-case for use in filenames.
@@ -34,29 +19,29 @@ export function toKebabCase(subject: string): string {
     .slice(0, 60);
 }
 
-/** Get the inbox directory path for a role */
-export function inboxDir(roleSlug: RoleSlug): string {
-  return path.join(MEMO_ROOT, roleSlug, "inbox");
+/** Get the inbox directory path for a partition */
+export function inboxDir(partition: string): string {
+  return path.join(MEMO_ROOT, partition, "inbox");
 }
 
-/** Get the active directory path for a role */
-export function activeDir(roleSlug: RoleSlug): string {
-  return path.join(MEMO_ROOT, roleSlug, "active");
+/** Get the active directory path for a partition */
+export function activeDir(partition: string): string {
+  return path.join(MEMO_ROOT, partition, "active");
 }
 
-/** Get the archive directory path for a role */
-export function archiveDir(roleSlug: RoleSlug): string {
-  return path.join(MEMO_ROOT, roleSlug, "archive");
+/** Get the archive directory path for a partition */
+export function archiveDir(partition: string): string {
+  return path.join(MEMO_ROOT, partition, "archive");
 }
 
 /** Build the full file path for a new memo */
 export function memoFilePath(
-  roleSlug: RoleSlug,
+  partition: string,
   id: string,
   subject: string,
 ): string {
   const kebab = toKebabCase(subject);
-  return path.join(inboxDir(roleSlug), `${id}-${kebab}.md`);
+  return path.join(inboxDir(partition), `${id}-${kebab}.md`);
 }
 
 /** Get the memo root directory */

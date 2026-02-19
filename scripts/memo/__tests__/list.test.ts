@@ -17,12 +17,21 @@ vi.mock("../core/paths.js", async () => {
   };
 });
 
+let savedClaudeCode: string | undefined;
+
 beforeEach(() => {
   tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "memo-list-test-"));
+  savedClaudeCode = process.env.CLAUDECODE;
+  delete process.env.CLAUDECODE;
   vi.spyOn(console, "log").mockImplementation(() => {});
 });
 
 afterEach(() => {
+  if (savedClaudeCode !== undefined) {
+    process.env.CLAUDECODE = savedClaudeCode;
+  } else {
+    delete process.env.CLAUDECODE;
+  }
   fs.rmSync(tmpDir, { recursive: true, force: true });
   vi.restoreAllMocks();
 });
@@ -34,6 +43,7 @@ function createMemoFile(
   opts: {
     subject?: string;
     from?: string;
+    to?: string;
     tags?: string[];
     createdAt?: string;
     replyTo?: string | null;
@@ -42,6 +52,7 @@ function createMemoFile(
   const {
     subject = "Test memo",
     from = "planner",
+    to = roleSlug,
     tags = [],
     createdAt = "2026-02-13T19:33:00.000+09:00",
     replyTo = null,
@@ -60,7 +71,7 @@ function createMemoFile(
 id: "${id}"
 subject: "${subject}"
 from: "${from}"
-to: "${roleSlug}"
+to: "${to}"
 created_at: "${createdAt}"
 ${tagLines}
 ${replyLine}
@@ -110,6 +121,24 @@ describe("listMemos", () => {
     expect((logSpy.mock.calls[1][0] as string).split("\t")[0]).toBe("id1");
   });
 
+  test("filters by multiple states (array)", () => {
+    createMemoFile("builder", "inbox", "id1");
+    createMemoFile("builder", "active", "id2");
+    createMemoFile("builder", "archive", "id3");
+
+    listMemos({ state: ["inbox", "active"] });
+    const logSpy = vi.mocked(console.log);
+    // Header + 2 memos (inbox + active)
+    expect(logSpy.mock.calls.length).toBe(3);
+    const ids = [
+      (logSpy.mock.calls[1][0] as string).split("\t")[0],
+      (logSpy.mock.calls[2][0] as string).split("\t")[0],
+    ];
+    expect(ids).toContain("id1");
+    expect(ids).toContain("id2");
+    expect(ids).not.toContain("id3");
+  });
+
   test("filters by from", () => {
     createMemoFile("builder", "inbox", "id1", { from: "planner" });
     createMemoFile("builder", "inbox", "id2", { from: "reviewer" });
@@ -118,6 +147,16 @@ describe("listMemos", () => {
     const logSpy = vi.mocked(console.log);
     expect(logSpy.mock.calls.length).toBe(2); // header + 1 row
     expect((logSpy.mock.calls[1][0] as string).split("\t")[0]).toBe("id1");
+  });
+
+  test("from=all skips from filtering", () => {
+    createMemoFile("builder", "inbox", "id1", { from: "planner" });
+    createMemoFile("builder", "inbox", "id2", { from: "reviewer" });
+
+    listMemos({ from: "all" });
+    const logSpy = vi.mocked(console.log);
+    // Header + 2 rows (both from values)
+    expect(logSpy.mock.calls.length).toBe(3);
   });
 
   test("filters by to", () => {
@@ -195,5 +234,72 @@ describe("listMemos", () => {
     // id2 should come first (more recent)
     expect((logSpy.mock.calls[1][0] as string).split("\t")[0]).toBe("id2");
     expect((logSpy.mock.calls[2][0] as string).split("\t")[0]).toBe("id1");
+  });
+
+  describe("agent mode (CLAUDECODE set)", () => {
+    beforeEach(() => {
+      process.env.CLAUDECODE = "1";
+    });
+
+    test("defaults to showing only memo/agent/ memos", () => {
+      createMemoFile("agent", "inbox", "id1");
+      createMemoFile("owner", "inbox", "id2");
+
+      listMemos();
+      const logSpy = vi.mocked(console.log);
+      // Header + 1 row (only agent)
+      expect(logSpy.mock.calls.length).toBe(2);
+      expect((logSpy.mock.calls[1][0] as string).split("\t")[0]).toBe("id1");
+    });
+
+    test("--to owner shows only memo/owner/ memos", () => {
+      createMemoFile("agent", "inbox", "id1");
+      createMemoFile("owner", "inbox", "id2");
+
+      listMemos({ to: "owner" });
+      const logSpy = vi.mocked(console.log);
+      expect(logSpy.mock.calls.length).toBe(2);
+      expect((logSpy.mock.calls[1][0] as string).split("\t")[0]).toBe("id2");
+    });
+
+    test("--to all shows all memos", () => {
+      createMemoFile("agent", "inbox", "id1");
+      createMemoFile("owner", "inbox", "id2");
+
+      listMemos({ to: "all" });
+      const logSpy = vi.mocked(console.log);
+      expect(logSpy.mock.calls.length).toBe(3); // Header + 2 rows
+    });
+
+    test("--to specific value filters by frontmatter.to", () => {
+      createMemoFile("agent", "inbox", "id1", { to: "builder" });
+      createMemoFile("agent", "inbox", "id2", { to: "planner" });
+
+      listMemos({ to: "builder" });
+      const logSpy = vi.mocked(console.log);
+      expect(logSpy.mock.calls.length).toBe(2);
+      expect((logSpy.mock.calls[1][0] as string).split("\t")[0]).toBe("id1");
+    });
+  });
+
+  describe("owner mode (CLAUDECODE not set)", () => {
+    test("defaults to showing all memos", () => {
+      createMemoFile("agent", "inbox", "id1");
+      createMemoFile("owner", "inbox", "id2");
+
+      listMemos();
+      const logSpy = vi.mocked(console.log);
+      expect(logSpy.mock.calls.length).toBe(3); // Header + 2 rows
+    });
+
+    test("--to filters by frontmatter.to", () => {
+      createMemoFile("agent", "inbox", "id1", { to: "agent" });
+      createMemoFile("owner", "inbox", "id2", { to: "owner" });
+
+      listMemos({ to: "agent" });
+      const logSpy = vi.mocked(console.log);
+      expect(logSpy.mock.calls.length).toBe(2);
+      expect((logSpy.mock.calls[1][0] as string).split("\t")[0]).toBe("id1");
+    });
   });
 });

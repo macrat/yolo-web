@@ -17,33 +17,39 @@ vi.mock("../core/paths.js", async () => {
   };
 });
 
-let savedYoloAgent: string | undefined;
+let savedClaudeCode: string | undefined;
 
 beforeEach(() => {
   tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "memo-mark-test-"));
-  savedYoloAgent = process.env.YOLO_AGENT;
-  delete process.env.YOLO_AGENT;
+  savedClaudeCode = process.env.CLAUDECODE;
+  delete process.env.CLAUDECODE;
   vi.spyOn(console, "log").mockImplementation(() => {});
 });
 
 afterEach(() => {
-  if (savedYoloAgent !== undefined) {
-    process.env.YOLO_AGENT = savedYoloAgent;
+  if (savedClaudeCode !== undefined) {
+    process.env.CLAUDECODE = savedClaudeCode;
   } else {
-    delete process.env.YOLO_AGENT;
+    delete process.env.CLAUDECODE;
   }
   fs.rmSync(tmpDir, { recursive: true, force: true });
   vi.restoreAllMocks();
 });
 
-function createMemoFile(roleSlug: string, state: string, id: string): string {
-  const dir = path.join(tmpDir, roleSlug, state);
+function createMemoFile(
+  partition: string,
+  state: string,
+  id: string,
+  opts: { to?: string } = {},
+): string {
+  const { to = partition === "owner" ? "owner" : "agent" } = opts;
+  const dir = path.join(tmpDir, partition, state);
   fs.mkdirSync(dir, { recursive: true });
   const content = `---
 id: "${id}"
 subject: "Test memo"
 from: "planner"
-to: "${roleSlug}"
+to: "${to}"
 created_at: "2026-02-13T19:33:00.000+09:00"
 tags: []
 reply_to: null
@@ -58,12 +64,12 @@ reply_to: null
 
 describe("markMemo", () => {
   test("moves memo from inbox to active", () => {
-    const oldPath = createMemoFile("builder", "inbox", "id1");
+    const oldPath = createMemoFile("agent", "inbox", "id1");
 
     markMemo("id1", "active");
 
     expect(fs.existsSync(oldPath)).toBe(false);
-    const newPath = path.join(tmpDir, "builder", "active", "id1-test-memo.md");
+    const newPath = path.join(tmpDir, "agent", "active", "id1-test-memo.md");
     expect(fs.existsSync(newPath)).toBe(true);
 
     const logSpy = vi.mocked(console.log);
@@ -71,11 +77,11 @@ describe("markMemo", () => {
   });
 
   test("moves memo from inbox to archive", () => {
-    createMemoFile("planner", "inbox", "id2");
+    createMemoFile("agent", "inbox", "id2");
 
     markMemo("id2", "archive");
 
-    const newPath = path.join(tmpDir, "planner", "archive", "id2-test-memo.md");
+    const newPath = path.join(tmpDir, "agent", "archive", "id2-test-memo.md");
     expect(fs.existsSync(newPath)).toBe(true);
 
     const logSpy = vi.mocked(console.log);
@@ -83,11 +89,11 @@ describe("markMemo", () => {
   });
 
   test("moves memo from active to inbox", () => {
-    createMemoFile("builder", "active", "id3");
+    createMemoFile("agent", "active", "id3");
 
     markMemo("id3", "inbox");
 
-    const newPath = path.join(tmpDir, "builder", "inbox", "id3-test-memo.md");
+    const newPath = path.join(tmpDir, "agent", "inbox", "id3-test-memo.md");
     expect(fs.existsSync(newPath)).toBe(true);
 
     const logSpy = vi.mocked(console.log);
@@ -95,7 +101,7 @@ describe("markMemo", () => {
   });
 
   test("same state does nothing and prints status", () => {
-    const filePath = createMemoFile("builder", "inbox", "id4");
+    const filePath = createMemoFile("agent", "inbox", "id4");
 
     markMemo("id4", "inbox");
 
@@ -113,72 +119,19 @@ describe("markMemo", () => {
   });
 
   test("throws error for invalid state", () => {
-    createMemoFile("builder", "inbox", "id5");
+    createMemoFile("agent", "inbox", "id5");
 
     expect(() => markMemo("id5", "invalid" as never)).toThrow(
       'Invalid state: "invalid"',
     );
   });
 
-  test("YOLO_AGENT matching memo.to allows mark", () => {
-    process.env.YOLO_AGENT = "builder";
-    createMemoFile("builder", "inbox", "id-ya1");
-
-    markMemo("id-ya1", "active");
-
-    const newPath = path.join(tmpDir, "builder", "active", "id-ya1-test-memo.md");
-    expect(fs.existsSync(newPath)).toBe(true);
-    delete process.env.YOLO_AGENT;
-  });
-
-  test("YOLO_AGENT mismatching memo.to throws Permission denied", () => {
-    process.env.YOLO_AGENT = "reviewer";
-    createMemoFile("builder", "inbox", "id-ya2");
-
-    expect(() => markMemo("id-ya2", "active")).toThrow(
-      'Permission denied: agent "reviewer" cannot mark memo addressed to "builder"',
-    );
-    delete process.env.YOLO_AGENT;
-  });
-
-  test("YOLO_AGENT unset allows mark on any memo", () => {
-    delete process.env.YOLO_AGENT;
-    createMemoFile("builder", "inbox", "id-ya3");
-
-    markMemo("id-ya3", "active");
-
-    const newPath = path.join(tmpDir, "builder", "active", "id-ya3-test-memo.md");
-    expect(fs.existsSync(newPath)).toBe(true);
-  });
-
-  test("YOLO_AGENT empty string allows mark on any memo", () => {
-    process.env.YOLO_AGENT = "";
-    createMemoFile("builder", "inbox", "id-ya4");
-
-    markMemo("id-ya4", "active");
-
-    const newPath = path.join(tmpDir, "builder", "active", "id-ya4-test-memo.md");
-    expect(fs.existsSync(newPath)).toBe(true);
-    delete process.env.YOLO_AGENT;
-  });
-
-  test("YOLO_AGENT mismatch checked before same-state short-circuit", () => {
-    process.env.YOLO_AGENT = "reviewer";
-    createMemoFile("builder", "inbox", "id-ya5");
-
-    // Even though moving inbox->inbox would be a no-op, permission check comes first
-    expect(() => markMemo("id-ya5", "inbox")).toThrow(
-      'Permission denied: agent "reviewer" cannot mark memo addressed to "builder"',
-    );
-    delete process.env.YOLO_AGENT;
-  });
-
   test("creates destination directory if it does not exist", () => {
     // Create memo in inbox, but archive dir doesn't exist
-    createMemoFile("builder", "inbox", "id6");
+    createMemoFile("agent", "inbox", "id6");
 
     // Ensure archive dir doesn't exist
-    const archiveDir = path.join(tmpDir, "builder", "archive");
+    const archiveDir = path.join(tmpDir, "agent", "archive");
     expect(fs.existsSync(archiveDir)).toBe(false);
 
     markMemo("id6", "archive");
@@ -186,5 +139,71 @@ describe("markMemo", () => {
     // Should have created the directory and moved the file
     const newPath = path.join(archiveDir, "id6-test-memo.md");
     expect(fs.existsSync(newPath)).toBe(true);
+  });
+
+  describe("agent mode (CLAUDECODE set)", () => {
+    beforeEach(() => {
+      process.env.CLAUDECODE = "1";
+    });
+
+    test("allows marking memos in agent directory", () => {
+      createMemoFile("agent", "inbox", "id-agent1");
+
+      markMemo("id-agent1", "active");
+
+      const newPath = path.join(
+        tmpDir,
+        "agent",
+        "active",
+        "id-agent1-test-memo.md",
+      );
+      expect(fs.existsSync(newPath)).toBe(true);
+    });
+
+    test("prohibits marking memos in owner directory", () => {
+      createMemoFile("owner", "inbox", "id-owner1");
+
+      expect(() => markMemo("id-owner1", "active")).toThrow(
+        "It is prohibited to operate memos in owner's directory.",
+      );
+    });
+
+    test("prohibition applies even for same-state mark", () => {
+      createMemoFile("owner", "inbox", "id-owner2");
+
+      expect(() => markMemo("id-owner2", "inbox")).toThrow(
+        "It is prohibited to operate memos in owner's directory.",
+      );
+    });
+  });
+
+  describe("owner mode (CLAUDECODE not set)", () => {
+    test("allows marking memos in agent directory", () => {
+      createMemoFile("agent", "inbox", "id-own1");
+
+      markMemo("id-own1", "active");
+
+      const newPath = path.join(
+        tmpDir,
+        "agent",
+        "active",
+        "id-own1-test-memo.md",
+      );
+      expect(fs.existsSync(newPath)).toBe(true);
+    });
+
+    test("allows marking memos in owner directory", () => {
+      createMemoFile("owner", "inbox", "id-own2");
+
+      markMemo("id-own2", "active");
+
+      const newPath = path.join(
+        tmpDir,
+        "owner",
+        "active",
+        "id-own2-test-memo.md",
+      );
+      expect(fs.existsSync(newPath)).toBe(true);
+    });
   });
 });
