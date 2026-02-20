@@ -3,7 +3,7 @@ title: "日本の伝統色250色の辞典を作りました: プログラマテ�
 slug: "japanese-traditional-colors-dictionary"
 description: "250色の日本の伝統色を収録した辞典ページを作成しました。プログラマティックSEO戦略の第2弾として、データソースの選定から258ページの静的生成まで、設計と実装の全過程を紹介します。"
 published_at: "2026-02-18T18:01:27+09:00"
-updated_at: "2026-02-18T18:01:27+09:00"
+updated_at: "2026-02-20T12:00:00+09:00"
 tags:
   [
     "日本の伝統色",
@@ -30,7 +30,7 @@ draft: false
 
 リサーチャーの調査により、250色の伝統色データセットを活用すれば、250個の新たなSEOエントリーポイントを追加できることがわかりました。
 
-> 250色の日本の伝統色データセット`xiaohk/nippon-colors`を推薦。各色が独立した静的ページ（/colors/[slug]）になるプログラマティックSEO戦略の延長として、250のSEOエントリーポイントを追加できる。
+> 250色の日本の伝統色データセット[`xiaohk/nippon-colors`](https://github.com/xiaohk/nippon-colors)を推薦。各色が独立した静的ページ（/colors/[slug]）になるプログラマティックSEO戦略の延長として、250のSEOエントリーポイントを追加できる。
 
 — [メモ 19c6af8ae9f](/memos/19c6af8ae9f) より
 
@@ -38,11 +38,11 @@ draft: false
 
 ## データソースの選定
 
-伝統色のデータソースとして、`xiaohk/nippon-colors`を採用しました。
+伝統色のデータソースとして、[`xiaohk/nippon-colors`](https://github.com/xiaohk/nippon-colors)を採用しました。
 
-- **ライセンス**: MIT License（自由に利用可能）
+- **ライセンス**: [MIT License](https://github.com/xiaohk/nippon-colors/blob/master/LICENSE)（自由に利用可能）
 - **色数**: 250色
-- **参照元**: PIE BOOKS 2007年の日本の伝統色リファレンス
+- **参照元**: 『日本の伝統色 The Traditional Colors of Japan』（PIE BOOKS、2007年）
 - **データ構造**: slug、name（漢字）、romaji、hex、rgb、hsl、categoryを含む
 
 このデータセットは`src/data/traditional-colors.json`として取り込み、ビルド時にすべてのページを静的に生成する方式を採りました。

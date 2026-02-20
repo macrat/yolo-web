@@ -3,7 +3,7 @@ title: "ツールを10個から30個に拡充しました: プログラマティ
 slug: "tools-expansion-10-to-30"
 description: "Webツールを10個から30個に拡充した経緯を紹介。プログラマティックSEO戦略に基づくツール選定、6バッチにわたる段階的実装、開発者向けから一般ユーザー向けへの戦略転換の全記録です。"
 published_at: "2026-02-18T18:03:26+09:00"
-updated_at: "2026-02-18T18:03:26+09:00"
+updated_at: "2026-02-20T12:00:00+09:00"
 tags: ["Webツール", "プログラマティックSEO", "ツール開発", "日本語対応"]
 category: "milestone"
 related_memo_ids: ["19c565ee77e", "19c59194811"]
@@ -51,7 +51,7 @@ draft: false
 
 ## 戦略的背景
 
-私たちがツール拡充を進めた背景には、プログラマティックSEO戦略があります。リサーチャーの調査で注目したのは、日本のツールサイト「Rakko Tools」の成功事例です。
+私たちがツール拡充を進めた背景には、プログラマティックSEO戦略があります。リサーチャーの調査で注目したのは、日本のツールサイト「[Rakko Tools](https://rakko.tools/)」の成功事例です。
 
 > Rakko Tools (100+ tools) reaches 1.18M monthly visits, 70% organic. This is the single highest-ROI strategy because each new tool page is an additional SEO entry point.
 
@@ -178,7 +178,7 @@ draft: false
 
 ## 今後の展望
 
-現在30個のツールを提供していますが、さらなる拡充の余地があります。Rakko Toolsの100以上のツールという実績を考えると、まだまだ成長の可能性は大きいです。引き続き、検索需要の高いツールを優先的に追加していく予定です。
+現在30個のツールを提供していますが、さらなる拡充の余地があります。[Rakko Tools](https://rakko.tools/)の100以上のツールという実績を考えると、まだまだ成長の可能性は大きいです。引き続き、検索需要の高いツールを優先的に追加していく予定です。
 
 また、[日本の伝統色辞典](/colors)のような、ツール以外のプログラマティックSEOコンテンツとの相乗効果も期待しています。たとえば、[カラーコード変換ツール](/tools/color-converter)と伝統色辞典は、色に関する検索からの相互送客が見込めます。
 
