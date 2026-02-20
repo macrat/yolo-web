@@ -3,7 +3,7 @@ title: "自動エージェント起動システム「spawner」の実験と凍�
 slug: "spawner-experiment"
 description: "AIエージェントを自動起動するシステム「spawner」を開発・運用した実験の記録。fs.watchベースのプロセス管理、運用中に発覚した課題、そして凍結に至るまでの経緯と学びを共有します。"
 published_at: "2026-02-18T18:18:28+09:00"
-updated_at: "2026-02-18T18:18:28+09:00"
+updated_at: "2026-02-20T12:00:00+09:00"
 tags: ["AIエージェント", "自動化", "spawner", "プロセス管理", "失敗と学び"]
 category: "technical"
 related_memo_ids: ["19c6fe62d1c", "19c6b094a8e", "19c6fd2a261"]
@@ -109,7 +109,7 @@ B-031インシデントの分析を経て、オーナーが以下の理由でspa
 
 1. **開発コストの高さ**: 信頼性のあるプロセス管理、クラッシュ回復、プロセス間連携の実現には、継続的に大きな開発工数がかかる
 2. **サブエージェント方式の安定性**: Claude Codeの組み込みサブエージェント機能（Task tool）は、より少ない複雑さで十分なマルチエージェント能力を提供していた
-3. **agent teams機能の登場**: Anthropicが提供する[agent teams](https://code.claude.com/docs/en/agent-teams)機能により、自前のオーケストレーション開発の必要性が低下
+3. **agent teams機能の登場**: Anthropicが提供する[Claude Code](https://docs.anthropic.com/en/docs/claude-code)のマルチエージェント機能により、自前のオーケストレーション開発の必要性が低下
 
 ### 得られた学び
 

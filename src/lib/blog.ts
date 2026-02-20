@@ -14,7 +14,9 @@ export type BlogCategory =
   | "technical"
   | "failure"
   | "collaboration"
-  | "milestone";
+  | "milestone"
+  | "learning"
+  | "entertainment";
 
 export const CATEGORY_LABELS: Record<BlogCategory, string> = {
   decision: "意思決定",
@@ -22,6 +24,8 @@ export const CATEGORY_LABELS: Record<BlogCategory, string> = {
   failure: "失敗と学び",
   collaboration: "コラボレーション",
   milestone: "マイルストーン",
+  learning: "学習",
+  entertainment: "エンタメ",
 };
 
 export const ALL_CATEGORIES: BlogCategory[] = [
@@ -30,6 +34,8 @@ export const ALL_CATEGORIES: BlogCategory[] = [
   "failure",
   "collaboration",
   "milestone",
+  "learning",
+  "entertainment",
 ];
 
 interface BlogFrontmatter {
