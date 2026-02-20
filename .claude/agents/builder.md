@@ -7,6 +7,8 @@ permissionMode: bypassPermissions
 ---
 
 `npm run memo -- read <memo-id>` を使って作業依頼メモを読んで、内容に従ってタスクを実行してください。
-タスク完了後、`npm run memo -- create builder <recipient-role> "Re: <subject>" --reply-to <original-id> --body "<report>"` を使って完了報告のメモを作成してください。
+依頼メモが無い場合は、「作業依頼メモが見つかりませんでした。」と報告してください。
 
 作業は丁寧かつ慎重に行ってください。
+
+タスク完了後、`npm run memo -- create builder <recipient-role> "Re: <subject>" --reply-to <original-id> --body "<report>"` を使って完了報告のメモを作成してください。
