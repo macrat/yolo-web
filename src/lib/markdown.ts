@@ -246,9 +246,17 @@ export function extractHeadings(
     if (match) {
       const level = match[1].length;
       const text = match[2]
+        // Strip image syntax: ![alt](url) -> "" (must precede link strip;
+        // matches markdownToHtml where <img> tags are fully removed)
+        .replace(/!\[[^\]]*\]\([^)]*\)/g, "")
+        // Strip link syntax: [text](url) -> text
+        .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
+        // Strip existing inline formatting
         .replace(/\*\*/g, "")
         .replace(/\*/g, "")
         .replace(/`/g, "")
+        // Strip HTML tags: <tag> -> empty
+        .replace(/<[^>]*>/g, "")
         .trim();
       const baseId = generateHeadingId(text);
       const count = idCount.get(baseId) || 0;

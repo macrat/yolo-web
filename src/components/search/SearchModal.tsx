@@ -106,6 +106,12 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
   const activeDescendant =
     activeIndex >= 0 ? getResultOptionId(activeIndex) : undefined;
 
+  // Determine whether the listbox is actually visible in SearchResults.
+  // The listbox renders only when there is a non-empty query, results exist,
+  // and no error has occurred.
+  const isListboxVisible =
+    query.trim() !== "" && results.length > 0 && error === null;
+
   if (!isOpen) return null;
 
   return (
@@ -121,11 +127,13 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
         role="dialog"
         aria-modal="true"
         aria-label="サイト内検索"
+        id="search-modal-dialog"
       >
         <SearchInput
           value={query}
           onChange={handleQueryChange}
           isLoading={isLoading}
+          isListboxVisible={isListboxVisible}
           activeDescendant={activeDescendant}
         />
         <SearchResults

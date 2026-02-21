@@ -258,6 +258,15 @@ describe("SearchModal keyboard navigation", () => {
     );
   });
 
+  test("search results contain <mark> elements for matched text", async () => {
+    await setupWithResults();
+
+    // Verify that search results are displayed with highlight marks
+    const listbox = screen.getByRole("listbox");
+    const marks = listbox.querySelectorAll("mark");
+    expect(marks.length).toBeGreaterThan(0);
+  });
+
   test("keyboard navigation does nothing when there are no results", async () => {
     vi.useFakeTimers();
     const onClose = vi.fn();
@@ -287,5 +296,69 @@ describe("SearchModal keyboard navigation", () => {
     // onClose should not be called (no result to select)
     expect(onClose).not.toHaveBeenCalled();
     expect(mockPush).not.toHaveBeenCalled();
+  });
+});
+
+describe("SearchModal aria-expanded and id", () => {
+  test("dialog element has id='search-modal-dialog'", () => {
+    render(<SearchModal isOpen={true} onClose={vi.fn()} />);
+    const dialog = screen.getByRole("dialog");
+    expect(dialog).toHaveAttribute("id", "search-modal-dialog");
+  });
+
+  test("combobox aria-expanded is false when no query is entered (hint displayed)", () => {
+    render(<SearchModal isOpen={true} onClose={vi.fn()} />);
+    const combobox = screen.getByRole("combobox", { name: "サイト内検索" });
+    expect(combobox).toHaveAttribute("aria-expanded", "false");
+  });
+
+  test("combobox aria-expanded is true when search results are present", async () => {
+    vi.useFakeTimers();
+    render(<SearchModal isOpen={true} onClose={vi.fn()} />);
+
+    // Wait for loadIndex (async fetch) to resolve
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(0);
+    });
+
+    // Type a query that matches the mock data
+    const input = screen.getByRole("combobox", { name: "サイト内検索" });
+    fireEvent.change(input, { target: { value: "漢字" } });
+
+    // Advance debounce timer to trigger search
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(200);
+    });
+
+    vi.useRealTimers();
+
+    // Verify listbox is shown and combobox reports expanded
+    expect(screen.getByRole("listbox")).toBeInTheDocument();
+    expect(input).toHaveAttribute("aria-expanded", "true");
+  });
+
+  test("combobox aria-expanded is false when search results are empty", async () => {
+    vi.useFakeTimers();
+    render(<SearchModal isOpen={true} onClose={vi.fn()} />);
+
+    // Wait for loadIndex (async fetch) to resolve
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(0);
+    });
+
+    // Type a query that won't match anything
+    const input = screen.getByRole("combobox", { name: "サイト内検索" });
+    fireEvent.change(input, { target: { value: "zzzznonexistent" } });
+
+    // Advance debounce timer to trigger search
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(200);
+    });
+
+    vi.useRealTimers();
+
+    // Verify no listbox is shown and combobox reports not expanded
+    expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
+    expect(input).toHaveAttribute("aria-expanded", "false");
   });
 });

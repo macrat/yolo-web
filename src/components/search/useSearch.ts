@@ -1,7 +1,11 @@
 "use client";
 
 import { useState, useRef, useCallback, useEffect } from "react";
-import Fuse, { type IFuseOptions, type FuseResult } from "fuse.js";
+import Fuse, {
+  type IFuseOptions,
+  type FuseResult,
+  type FuseResultMatch,
+} from "fuse.js";
 import type { SearchDocument, ContentType } from "@/lib/search/types";
 import {
   CONTENT_TYPE_LABELS,
@@ -9,9 +13,12 @@ import {
   MAX_ITEMS_PER_GROUP,
 } from "@/lib/search/types";
 
+export type { FuseResultMatch } from "fuse.js";
+
 export type SearchResultItem = {
   document: SearchDocument;
   score: number;
+  matches: ReadonlyArray<FuseResultMatch>;
 };
 
 export type SearchResultGroup = {
@@ -41,6 +48,7 @@ const FUSE_OPTIONS: IFuseOptions<SearchDocument> = {
   ],
   threshold: 0.3,
   includeScore: true,
+  includeMatches: true,
   minMatchCharLength: 1,
 };
 
@@ -59,6 +67,7 @@ function groupResults(
       items.push({
         document: result.item,
         score: result.score ?? 1,
+        matches: result.matches ?? [],
       });
     }
   }
