@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "permissions": {
-    "allow": ["Bash", "WebFetch", "WebSearch"],
+    "allow": ["Bash", "WebFetch", "WebSearch", "Edit(/docs/backlog.md)"],
     "deny": [
       "Edit(/docs/constitution.md)",
       "Task(Explore)",
@@ -17,12 +17,7 @@
           {
             "type": "command",
             "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/pre-commit-check.sh"
-          }
-        ]
-      },
-      {
-        "matcher": "Bash",
-        "hooks": [
+          },
           {
             "type": "command",
             "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/pre-push-check.sh"
@@ -31,7 +26,6 @@
       }
     ]
   },
-  "defaultMode": "acceptEdits",
   "env": {
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
   }
