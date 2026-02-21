@@ -8,13 +8,11 @@
   --yk-color-empty: #d3d6da;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --yk-color-correct: #538d4e;
-    --yk-color-present: #b59f3b;
-    --yk-color-absent: #3a3a3c;
-    --yk-color-empty: #3a3a3c;
-  }
+:global(:root.dark) {
+  --yk-color-correct: #538d4e;
+  --yk-color-present: #b59f3b;
+  --yk-color-absent: #3a3a3c;
+  --yk-color-empty: #3a3a3c;
 }
 
 /* ===== Header ===== */

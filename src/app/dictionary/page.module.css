@@ -74,10 +74,8 @@
   padding-top: 0.75rem;
 }
 
-@media (prefers-color-scheme: dark) {
-  .sectionCard:hover {
-    box-shadow: 0 4px 16px rgba(255, 255, 255, 0.05);
-  }
+:global(:root.dark) .sectionCard:hover {
+  box-shadow: 0 4px 16px rgba(255, 255, 255, 0.05);
 }
 
 @media (max-width: 640px) {

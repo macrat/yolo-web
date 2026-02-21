@@ -8,13 +8,11 @@
   --kk-color-empty: #d3d6da;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --kk-color-correct: #538d4e;
-    --kk-color-close: #b59f3b;
-    --kk-color-wrong: #3a3a3c;
-    --kk-color-empty: #3a3a3c;
-  }
+:global(:root.dark) {
+  --kk-color-correct: #538d4e;
+  --kk-color-close: #b59f3b;
+  --kk-color-wrong: #3a3a3c;
+  --kk-color-empty: #3a3a3c;
 }
 
 /* ===== Header ===== */

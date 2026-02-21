@@ -1,6 +1,7 @@
 import Link from "next/link";
 import styles from "./Header.module.css";
 import MobileNav from "./MobileNav";
+import ThemeToggle from "./ThemeToggle";
 
 const NAV_LINKS = [
   { href: "/", label: "ホーム" },
@@ -28,7 +29,10 @@ export default function Header() {
             </li>
           ))}
         </ul>
-        <MobileNav links={NAV_LINKS} />
+        <div className={styles.actions}>
+          <ThemeToggle />
+          <MobileNav links={NAV_LINKS} />
+        </div>
       </nav>
     </header>
   );

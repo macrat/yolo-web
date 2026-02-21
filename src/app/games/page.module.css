@@ -111,18 +111,16 @@
 }
 
 /* ===== Dark mode ===== */
-@media (prefers-color-scheme: dark) {
-  .heroBanner {
-    background: linear-gradient(
-      135deg,
-      var(--color-bg-secondary),
-      var(--color-bg)
-    );
-  }
+:global(:root.dark) .heroBanner {
+  background: linear-gradient(
+    135deg,
+    var(--color-bg-secondary),
+    var(--color-bg)
+  );
+}
 
-  .card:hover {
-    box-shadow: 0 4px 16px rgba(255, 255, 255, 0.05);
-  }
+:global(:root.dark) .card:hover {
+  box-shadow: 0 4px 16px rgba(255, 255, 255, 0.05);
 }
 
 /* ===== Responsive ===== */

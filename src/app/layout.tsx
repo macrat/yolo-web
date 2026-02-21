@@ -3,6 +3,7 @@ import "./globals.css";
 import GoogleAnalytics from "@/components/common/GoogleAnalytics";
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
+import ThemeProvider from "@/components/common/ThemeProvider";
 import { generateWebSiteJsonLd } from "@/lib/seo";
 import { BASE_URL, SITE_NAME } from "@/lib/constants";
 
@@ -46,7 +47,7 @@ export default function RootLayout({
 }>) {
   const websiteJsonLd = generateWebSiteJsonLd();
   return (
-    <html lang="ja">
+    <html lang="ja" suppressHydrationWarning>
       <body
         style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
       >
@@ -54,10 +55,12 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
         />
-        <GoogleAnalytics />
-        <Header />
-        <main style={{ flex: 1 }}>{children}</main>
-        <Footer />
+        <ThemeProvider>
+          <GoogleAnalytics />
+          <Header />
+          <main style={{ flex: 1 }}>{children}</main>
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );

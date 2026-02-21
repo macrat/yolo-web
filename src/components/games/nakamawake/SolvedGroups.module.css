@@ -42,24 +42,22 @@
   color: #fff;
 }
 
-@media (prefers-color-scheme: dark) {
-  .yellow {
-    background: #a08a28;
-    color: #fff;
-  }
+:global(:root.dark) .yellow {
+  background: #a08a28;
+  color: #fff;
+}
 
-  .green {
-    background: #4d7a25;
-    color: #fff;
-  }
+:global(:root.dark) .green {
+  background: #4d7a25;
+  color: #fff;
+}
 
-  .blue {
-    background: #3f5f90;
-    color: #fff;
-  }
+:global(:root.dark) .blue {
+  background: #3f5f90;
+  color: #fff;
+}
 
-  .purple {
-    background: #7a4a8a;
-    color: #fff;
-  }
+:global(:root.dark) .purple {
+  background: #7a4a8a;
+  color: #fff;
 }
