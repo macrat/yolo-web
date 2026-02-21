@@ -1,0 +1,45 @@
+---
+id: 18
+description: Claude Code Hook pre-push-check の作成（サイクル17再発防止策）
+started_at: 2026-02-21T13:00:00+09:00
+completed_at: null
+---
+
+# サイクル-18
+
+ownerからの指示（メモ 19c7e13d377）に基づき、デプロイ前のCI失敗を防止するためのClaude Code Hook `pre-push-check` を作成します。サイクル17で「環境起因」として例外扱いされたテスト・ビルド失敗の再発を防止する仕組みです。
+
+## 実施する作業
+
+- [ ] B-060: Claude Code Hook `pre-push-check` の作成
+  - `git push` コマンドを検知して lint, format:check, test, build を実行
+  - 1つでも失敗したら「Fix all issues and push again」を表示してエラー終了
+  - 既存の pre-commit-check.sh のパターンを踏襲
+  - `.claude/settings.json` に hook 設定を追加
+  - git hooks への追加は不要（ownerの指示）
+
+## レビュー結果
+
+{作業完了後に記載}
+
+## キャリーオーバー
+
+{作業完了後に記載}
+
+## 補足事項
+
+{作業完了後に記載}
+
+## サイクル終了時のチェックリスト
+
+- [ ] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
+- [ ] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
+- [ ] `npm run memo -- list --state inbox,active` を実行して、未処理のメモがない。
+- [ ] すべての変更がレビューされ、残存する指摘事項が無くなっている。
+- [ ] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
+- [ ] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
+- [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
+- [ ] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
+
+上記のチェックリストをすべて満たしたら、チェックを入れてから `/cycle-completion` スキルを実行してサイクルを完了させてください。
+なお、「環境起因」「今回の変更と無関係」「既知の問題」「次回対応」などの **例外は一切認めません** 。必ずすべての項目を完全に満してください。
