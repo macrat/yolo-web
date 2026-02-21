@@ -1,5 +1,6 @@
 import type { CheatsheetMeta } from "@/cheatsheets/types";
 import Breadcrumb from "@/components/common/Breadcrumb";
+import ShareButtons from "@/components/common/ShareButtons";
 import TableOfContents from "./TableOfContents";
 import RelatedCheatsheets from "./RelatedCheatsheets";
 import styles from "./CheatsheetLayout.module.css";
@@ -35,6 +36,18 @@ export default function CheatsheetLayout({
       <TableOfContents sections={meta.sections} />
       <section className={styles.content} aria-label="Cheatsheet">
         {children}
+      </section>
+      <section className={styles.shareSection}>
+        <h2 className={styles.shareSectionTitle}>
+          {
+            "\u3053\u306E\u30C1\u30FC\u30C8\u30B7\u30FC\u30C8\u3092\u30B7\u30A7\u30A2"
+          }
+        </h2>
+        <ShareButtons
+          url={`/cheatsheets/${meta.slug}`}
+          title={meta.name}
+          sns={["x", "line", "hatena", "copy"]}
+        />
       </section>
       {relatedTools.length > 0 && (
         <nav className={styles.relatedTools} aria-label="Related tools">

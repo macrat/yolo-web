@@ -29,7 +29,9 @@ export default function ShareButtons({ shareText }: ShareButtonsProps) {
   }, [shareText]);
 
   const handleShareX = useCallback(() => {
-    const url = generateTwitterShareUrl(shareText);
+    const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
+    const pageUrl = `${baseUrl}/games/kanji-kanaru`;
+    const url = generateTwitterShareUrl(shareText, pageUrl);
     window.open(url, "_blank", "noopener,noreferrer");
   }, [shareText]);
 

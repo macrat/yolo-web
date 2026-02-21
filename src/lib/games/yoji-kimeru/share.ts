@@ -80,8 +80,23 @@ function fallbackCopy(text: string): boolean {
 
 /**
  * Generate a Twitter/X share URL with pre-filled text.
+ * Separates the page URL into the `url` parameter so that
+ * Twitter/X can generate a proper card preview.
  */
-export function generateTwitterShareUrl(text: string): string {
-  const encoded = encodeURIComponent(text);
-  return `https://twitter.com/intent/tweet?text=${encoded}`;
+export function generateTwitterShareUrl(
+  text: string,
+  pageUrl?: string,
+): string {
+  if (pageUrl) {
+    const textWithoutUrl = text.replace(
+      new RegExp(`\\n?${escapeRegExp(pageUrl)}$`),
+      "",
+    );
+    return `https://twitter.com/intent/tweet?text=${encodeURIComponent(textWithoutUrl)}&url=${encodeURIComponent(pageUrl)}`;
+  }
+  return `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+}
+
+function escapeRegExp(str: string): string {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
