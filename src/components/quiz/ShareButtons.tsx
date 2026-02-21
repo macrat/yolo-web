@@ -27,9 +27,10 @@ export default function ShareButtons({
   }, [quizTitle, shareText, shareUrl]);
 
   const handleTwitter = useCallback(() => {
-    const text = encodeURIComponent(`${shareText}\n${shareUrl}`);
+    const text = encodeURIComponent(shareText);
+    const url = encodeURIComponent(shareUrl);
     window.open(
-      `https://twitter.com/intent/tweet?text=${text}`,
+      `https://twitter.com/intent/tweet?text=${text}&url=${url}`,
       "_blank",
       "noopener,noreferrer",
     );

@@ -114,7 +114,7 @@ describe("generateShareText", () => {
 });
 
 describe("generateTwitterShareUrl", () => {
-  test("generates correct Twitter intent URL", () => {
+  test("generates correct Twitter intent URL without pageUrl", () => {
     const text = "Test share text";
     const url = generateTwitterShareUrl(text);
     expect(url).toBe(
@@ -122,7 +122,19 @@ describe("generateTwitterShareUrl", () => {
     );
   });
 
-  test("encodes special characters", () => {
+  test("separates text and url when pageUrl is provided", () => {
+    const pageUrl = "https://example.com/games/yoji-kimeru";
+    const text = `\u56DB\u5B57\u30AD\u30E1\u30EB #1 2/6\n\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E9}\n${pageUrl}`;
+    const url = generateTwitterShareUrl(text, pageUrl);
+    // text param should not contain the page URL
+    expect(url).toContain(
+      `text=${encodeURIComponent("\u56DB\u5B57\u30AD\u30E1\u30EB #1 2/6\n\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E9}")}`,
+    );
+    // url param should contain the page URL
+    expect(url).toContain(`&url=${encodeURIComponent(pageUrl)}`);
+  });
+
+  test("encodes special characters without pageUrl", () => {
     const text = "\u56DB\u5B57\u30AD\u30E1\u30EB #1 2/6\nhttps://example.com";
     const url = generateTwitterShareUrl(text);
     expect(url).toContain("https://twitter.com/intent/tweet?text=");

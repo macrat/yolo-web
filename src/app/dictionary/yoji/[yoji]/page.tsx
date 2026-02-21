@@ -1,8 +1,10 @@
 import { notFound } from "next/navigation";
 import Breadcrumb from "@/components/common/Breadcrumb";
+import ShareButtons from "@/components/common/ShareButtons";
 import YojiDetail from "@/components/dictionary/yoji/YojiDetail";
 import { generateYojiPageMetadata, generateYojiJsonLd } from "@/lib/seo";
 import { getYojiByYoji, getAllYojiIds } from "@/lib/dictionary/yoji";
+import styles from "./page.module.css";
 
 export function generateStaticParams() {
   return getAllYojiIds().map((yoji) => ({ yoji }));
@@ -47,6 +49,13 @@ export default async function YojiDetailPage({
         ]}
       />
       <YojiDetail yoji={yoji} />
+      <section className={styles.shareSection}>
+        <ShareButtons
+          url={`/dictionary/yoji/${encodeURIComponent(yoji.yoji)}`}
+          title={`\u300C${yoji.yoji}\u300D\u306E\u610F\u5473\u30FB\u8AAD\u307F\u65B9`}
+          sns={["x", "line", "copy"]}
+        />
+      </section>
     </>
   );
 }

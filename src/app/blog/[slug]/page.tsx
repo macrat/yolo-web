@@ -14,6 +14,7 @@ import {
 } from "@/lib/seo";
 import { formatDate } from "@/lib/date";
 import Breadcrumb from "@/components/common/Breadcrumb";
+import ShareButtons from "@/components/common/ShareButtons";
 import TableOfContents from "@/components/blog/TableOfContents";
 import TagList from "@/components/blog/TagList";
 import RelatedMemos from "@/components/blog/RelatedMemos";
@@ -102,6 +103,17 @@ export default async function BlogPostPage({ params }: Props) {
 
         <MermaidRenderer />
         <RelatedMemos memoIds={post.related_memo_ids} />
+
+        <section className={styles.shareSection}>
+          <h2 className={styles.shareSectionTitle}>
+            {"\u3053\u306E\u8A18\u4E8B\u3092\u30B7\u30A7\u30A2"}
+          </h2>
+          <ShareButtons
+            url={`/blog/${post.slug}`}
+            title={post.title}
+            sns={["x", "line", "hatena", "copy"]}
+          />
+        </section>
       </article>
 
       <nav className={styles.postNav} aria-label="Post navigation">

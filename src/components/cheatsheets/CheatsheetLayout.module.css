@@ -25,6 +25,20 @@
   margin-bottom: 1rem;
 }
 
+.shareSection {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.shareSectionTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 0.75rem;
+  color: var(--color-text-muted);
+}
+
 .relatedTools {
   margin-top: 2rem;
   padding-top: 1.5rem;

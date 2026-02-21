@@ -71,8 +71,20 @@ describe("generateShareText", () => {
 });
 
 describe("generateTwitterShareUrl", () => {
-  test("generates valid URL with encoded text", () => {
+  test("generates valid URL with encoded text without pageUrl", () => {
     const url = generateTwitterShareUrl("Hello World");
     expect(url).toBe("https://twitter.com/intent/tweet?text=Hello%20World");
+  });
+
+  test("separates text and url when pageUrl is provided", () => {
+    const pageUrl = "https://example.com/games/irodori";
+    const text = `\u30A4\u30ED\u30C9\u30EA #1 \u30B9\u30B3\u30A2: 87/100\n\u{1F7E9}\u{1F7E9}\u{1F7E8}\n${pageUrl}`;
+    const url = generateTwitterShareUrl(text, pageUrl);
+    // text param should not contain the page URL
+    expect(url).toContain(
+      `text=${encodeURIComponent("\u30A4\u30ED\u30C9\u30EA #1 \u30B9\u30B3\u30A2: 87/100\n\u{1F7E9}\u{1F7E9}\u{1F7E8}")}`,
+    );
+    // url param should contain the page URL
+    expect(url).toContain(`&url=${encodeURIComponent(pageUrl)}`);
   });
 });
