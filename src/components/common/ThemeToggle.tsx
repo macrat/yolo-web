@@ -1,7 +1,7 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import styles from "./ThemeToggle.module.css";
 
 const THEME_CYCLE = ["system", "light", "dark"] as const;
@@ -85,13 +85,15 @@ function SystemIcon() {
   );
 }
 
+const emptySubscribe = () => () => {};
+
 export default function ThemeToggle() {
   const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false,
+  );
 
   const cycleTheme = () => {
     const currentIndex = THEME_CYCLE.indexOf(
