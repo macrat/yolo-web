@@ -47,6 +47,7 @@ ownerからのフィードバック（メモ 19c7b668b3c）に基づき、i18n�
 
 - B-059: docs/design/directory-restructure-i18n.md の全文をメモ 19c7dc901a9 としてアーカイブし、docs/design/ ディレクトリを削除。B-056をDeferred（延期）に移動。
 - B-017: next-themes導入によりCSS-onlyダークモードからユーザー制御可能なテーマ切り替えに移行。system/light/darkの3モード対応。既存の `@media (prefers-color-scheme: dark)` を全てクラスベース（`:root.dark`）に変換。MermaidRendererのテーマ連動再レンダリング、FOUC防止（suppressHydrationWarning + disableTransitionOnChange）、アクセシビリティ（aria-label, focus-visible）に対応。
+- CI修正: ThemeToggle.tsx の useEffect+setState パターンが ESLint react-hooks/set-state-in-effect ルール違反のためCI失敗。useSyncExternalStore パターンに置換して修正。
 - 環境起因の既知問題: text-diffテスト1件（diffモジュール欠落）、build時のBus error。いずれも今回の変更とは無関係。
 
 ## サイクル終了時のチェックリスト
