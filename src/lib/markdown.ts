@@ -7,7 +7,7 @@
  * while scripts/memo/core/parser.ts parses it for the CLI memo management tool.
  */
 
-import { marked, type MarkedExtension } from "marked";
+import { Marked, type MarkedExtension, type Tokens } from "marked";
 
 /**
  * Custom marked extension to convert mermaid code blocks into
@@ -29,7 +29,67 @@ const mermaidExtension: MarkedExtension = {
   },
 };
 
-marked.use(mermaidExtension);
+/**
+ * Generate a URL-friendly heading ID from text.
+ * Shared between extractHeadings() and the heading renderer to ensure
+ * IDs are always consistent.
+ */
+export function generateHeadingId(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}\s-]/gu, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+/**
+ * Create a heading renderer extension that assigns id attributes
+ * using the same logic as extractHeadings().
+ *
+ * A closure-based counter tracks duplicate IDs per parse call.
+ * The returned resetCounter function MUST be called before each
+ * marked.parse() invocation to reset state.
+ */
+function createHeadingExtension(): {
+  extension: MarkedExtension;
+  resetCounter: () => void;
+} {
+  let idCount = new Map<string, number>();
+
+  const resetCounter = () => {
+    idCount = new Map<string, number>();
+  };
+
+  const extension: MarkedExtension = {
+    renderer: {
+      heading({ tokens, depth }: Tokens.Heading) {
+        // Use the built-in parser to render inline tokens to HTML.
+        // This preserves marked's default HTML escaping behavior.
+        const inner = this.parser.parseInline(tokens);
+        // Extract plain text for ID generation (strip HTML tags)
+        const plainText = inner.replace(/<[^>]*>/g, "");
+        const baseId = generateHeadingId(plainText);
+        const count = idCount.get(baseId) || 0;
+        idCount.set(baseId, count + 1);
+        const id = count === 0 ? baseId : `${baseId}-${count}`;
+        return `<h${depth} id="${id}">${inner}</h${depth}>\n`;
+      },
+    },
+  };
+
+  return { extension, resetCounter };
+}
+
+const { extension: headingExtension, resetCounter: resetHeadingCounter } =
+  createHeadingExtension();
+
+/**
+ * Module-level Marked instance with mermaid and heading extensions.
+ * Using a dedicated instance avoids polluting the global marked state
+ * and keeps extensions isolated.
+ */
+const markedInstance = new Marked(mermaidExtension, headingExtension);
 
 /** Parse YAML frontmatter from a markdown string. Returns { data, content }. */
 export function parseFrontmatter<T>(raw: string): { data: T; content: string } {
@@ -149,7 +209,10 @@ function parseYamlScalar(value: string): unknown {
  * Configured for GFM (GitHub Flavored Markdown) support.
  */
 export function markdownToHtml(md: string): string {
-  const result = marked.parse(md, {
+  // Reset the heading ID counter before each parse call so that
+  // duplicate-ID suffixes start fresh for every document.
+  resetHeadingCounter();
+  const result = markedInstance.parse(md, {
     gfm: true,
     breaks: false,
   });
@@ -169,6 +232,7 @@ export function extractHeadings(
 ): { level: number; text: string; id: string }[] {
   const headings: { level: number; text: string; id: string }[] = [];
   const lines = md.split("\n");
+  const idCount = new Map<string, number>();
 
   let inCodeBlock = false;
   for (const line of lines) {
@@ -186,12 +250,10 @@ export function extractHeadings(
         .replace(/\*/g, "")
         .replace(/`/g, "")
         .trim();
-      const id = text
-        .toLowerCase()
-        .replace(/[^\p{L}\p{N}\s-]/gu, "")
-        .replace(/\s+/g, "-")
-        .replace(/-+/g, "-")
-        .replace(/^-|-$/g, "");
+      const baseId = generateHeadingId(text);
+      const count = idCount.get(baseId) || 0;
+      idCount.set(baseId, count + 1);
+      const id = count === 0 ? baseId : `${baseId}-${count}`;
       headings.push({ level, text, id });
     }
   }

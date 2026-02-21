@@ -30,11 +30,27 @@ export default function HowToPlayModal({ open, onClose }: Props) {
     onClose();
   }, [onClose]);
 
+  const handleBackdropClick = useCallback(
+    (e: React.MouseEvent<HTMLDialogElement>) => {
+      const rect = e.currentTarget.getBoundingClientRect();
+      if (
+        e.clientX < rect.left ||
+        e.clientX > rect.right ||
+        e.clientY < rect.top ||
+        e.clientY > rect.bottom
+      ) {
+        onClose();
+      }
+    },
+    [onClose],
+  );
+
   return (
     <dialog
       ref={dialogRef}
       className={styles.modal}
       onClose={handleClose}
+      onClick={handleBackdropClick}
       aria-labelledby="nakamawake-howtoplay-title"
     >
       <h2 id="nakamawake-howtoplay-title" className={styles.modalTitle}>

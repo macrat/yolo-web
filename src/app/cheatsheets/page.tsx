@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { allCheatsheetMetas } from "@/cheatsheets/registry";
 import CheatsheetGrid from "@/components/cheatsheets/CheatsheetGrid";
-import AiDisclaimer from "@/components/tools/AiDisclaimer";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
@@ -28,7 +27,6 @@ export default function CheatsheetsPage() {
         </p>
       </header>
       <CheatsheetGrid cheatsheets={allCheatsheetMetas} />
-      <AiDisclaimer />
     </div>
   );
 }

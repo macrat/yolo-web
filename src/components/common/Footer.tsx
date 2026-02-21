@@ -4,7 +4,10 @@ import styles from "./Footer.module.css";
 const SECTION_LINKS = [
   {
     heading: "ツール",
-    links: [{ href: "/tools", label: "ツール一覧" }],
+    links: [
+      { href: "/tools", label: "ツール一覧" },
+      { href: "/cheatsheets", label: "チートシート" },
+    ],
   },
   {
     heading: "ゲーム",
@@ -13,6 +16,15 @@ const SECTION_LINKS = [
       { href: "/games/kanji-kanaru", label: "漢字カナール" },
       { href: "/games/yoji-kimeru", label: "四字キメル" },
       { href: "/games/nakamawake", label: "ナカマワケ" },
+      { href: "/games/irodori", label: "イロドリ" },
+    ],
+  },
+  {
+    heading: "コンテンツ",
+    links: [
+      { href: "/quiz", label: "クイズ・診断" },
+      { href: "/colors", label: "日本の伝統色" },
+      { href: "/dictionary", label: "辞書" },
     ],
   },
   {

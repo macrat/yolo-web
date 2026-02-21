@@ -7,7 +7,6 @@ import {
 } from "@/lib/memos";
 import { SITE_NAME } from "@/lib/constants";
 import MemoThreadView from "@/components/memos/MemoThreadView";
-import AiDisclaimer from "@/components/common/AiDisclaimer";
 import styles from "./page.module.css";
 
 interface Props {
@@ -45,7 +44,6 @@ export default async function ThreadPage({ params }: Props) {
       </header>
 
       <MemoThreadView memos={thread} />
-      <AiDisclaimer />
     </div>
   );
 }

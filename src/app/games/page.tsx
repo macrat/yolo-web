@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import AiDisclaimer from "@/components/common/AiDisclaimer";
 import { SITE_NAME } from "@/lib/constants";
 import styles from "./page.module.css";
 
@@ -104,7 +103,6 @@ export default function GamesPage() {
           </div>
         ))}
       </div>
-      <AiDisclaimer />
     </div>
   );
 }

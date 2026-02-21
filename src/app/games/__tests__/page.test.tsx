@@ -33,13 +33,6 @@ test("Games page renders difficulty badges", () => {
   expect(screen.getAllByText("初級〜上級")).toHaveLength(2);
 });
 
-test("Games page renders AI disclaimer", () => {
-  render(<GamesPage />);
-  expect(
-    screen.getByRole("note", { name: "AI disclaimer" }),
-  ).toBeInTheDocument();
-});
-
 test("Games page renders all-clear encouragement text", () => {
   render(<GamesPage />);
   expect(

@@ -1,10 +1,28 @@
 import Link from "next/link";
 import { getRelatedMemosForBlogPost } from "@/lib/cross-links";
-import { ROLE_DISPLAY, type RoleSlug } from "@/lib/memos-shared";
+import {
+  ROLE_DISPLAY,
+  type RoleSlug,
+  type RoleDisplay,
+} from "@/lib/memos-shared";
 import styles from "./RelatedMemos.module.css";
 
 interface RelatedMemosProps {
   memoIds: string[];
+}
+
+function capitalize(s: string): string {
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+function getRoleDisplay(role: string): RoleDisplay {
+  return (
+    ROLE_DISPLAY[role as RoleSlug] ?? {
+      label: capitalize(role),
+      color: "#6b7280",
+      icon: "user",
+    }
+  );
 }
 
 export default function RelatedMemos({ memoIds }: RelatedMemosProps) {
@@ -32,10 +50,8 @@ export default function RelatedMemos({ memoIds }: RelatedMemosProps) {
             );
           }
 
-          const fromDisplay =
-            ROLE_DISPLAY[memo.from as RoleSlug] || ROLE_DISPLAY.owner;
-          const toDisplay =
-            ROLE_DISPLAY[memo.to as RoleSlug] || ROLE_DISPLAY.owner;
+          const fromDisplay = getRoleDisplay(memo.from);
+          const toDisplay = getRoleDisplay(memo.to);
 
           return (
             <li key={memo.id} className={styles.item}>

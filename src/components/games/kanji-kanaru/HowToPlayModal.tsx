@@ -30,14 +30,30 @@ export default function HowToPlayModal({ open, onClose }: HowToPlayModalProps) {
     onClose();
   }, [onClose]);
 
+  const handleBackdropClick = useCallback(
+    (e: React.MouseEvent<HTMLDialogElement>) => {
+      const rect = e.currentTarget.getBoundingClientRect();
+      if (
+        e.clientX < rect.left ||
+        e.clientX > rect.right ||
+        e.clientY < rect.top ||
+        e.clientY > rect.bottom
+      ) {
+        onClose();
+      }
+    },
+    [onClose],
+  );
+
   return (
     <dialog
       ref={dialogRef}
       className={styles.modal}
       onClose={handleClose}
-      aria-labelledby="howtoplay-title"
+      onClick={handleBackdropClick}
+      aria-labelledby="kanji-kanaru-howtoplay-title"
     >
-      <h2 id="howtoplay-title" className={styles.modalTitle}>
+      <h2 id="kanji-kanaru-howtoplay-title" className={styles.modalTitle}>
         遊び方
       </h2>
       <div className={styles.howToPlayContent}>

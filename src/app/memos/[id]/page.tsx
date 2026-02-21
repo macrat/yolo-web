@@ -5,7 +5,6 @@ import { generateMemoPageMetadata, generateMemoPageJsonLd } from "@/lib/seo";
 import Breadcrumb from "@/components/common/Breadcrumb";
 import MemoDetail from "@/components/memos/MemoDetail";
 import RelatedBlogPosts from "@/components/memos/RelatedBlogPosts";
-import AiDisclaimer from "@/components/common/AiDisclaimer";
 import styles from "./page.module.css";
 
 interface Props {
@@ -47,7 +46,6 @@ export default async function MemoPage({ params }: Props) {
 
       <MemoDetail memo={memo} />
       <RelatedBlogPosts memoId={memo.id} />
-      <AiDisclaimer />
     </div>
   );
 }

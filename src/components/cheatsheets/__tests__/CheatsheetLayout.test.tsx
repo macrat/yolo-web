@@ -28,17 +28,6 @@ test("CheatsheetLayout renders breadcrumb", () => {
   ).toBeInTheDocument();
 });
 
-test("CheatsheetLayout renders AiDisclaimer", () => {
-  render(
-    <CheatsheetLayout meta={mockMeta}>
-      <div>Content</div>
-    </CheatsheetLayout>,
-  );
-  expect(
-    screen.getByText(/AIによる実験的プロジェクトの一部です/),
-  ).toBeInTheDocument();
-});
-
 test("CheatsheetLayout renders children", () => {
   render(
     <CheatsheetLayout meta={mockMeta}>

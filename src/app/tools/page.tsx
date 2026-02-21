@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { allToolMetas } from "@/tools/registry";
 import ToolsGrid from "@/components/tools/ToolsGrid";
-import AiDisclaimer from "@/components/tools/AiDisclaimer";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
@@ -27,7 +26,6 @@ export default function ToolsPage() {
         </p>
       </header>
       <ToolsGrid tools={allToolMetas} />
-      <AiDisclaimer />
     </div>
   );
 }

@@ -39,6 +39,21 @@ export default function StatsModal({
     onClose();
   }, [onClose]);
 
+  const handleBackdropClick = useCallback(
+    (e: React.MouseEvent<HTMLDialogElement>) => {
+      const rect = e.currentTarget.getBoundingClientRect();
+      if (
+        e.clientX < rect.left ||
+        e.clientX > rect.right ||
+        e.clientY < rect.top ||
+        e.clientY > rect.bottom
+      ) {
+        onClose();
+      }
+    },
+    [onClose],
+  );
+
   const winRate =
     stats.gamesPlayed > 0
       ? Math.round((stats.gamesWon / stats.gamesPlayed) * 100)
@@ -51,9 +66,10 @@ export default function StatsModal({
       ref={dialogRef}
       className={styles.modal}
       onClose={handleClose}
-      aria-labelledby="stats-title"
+      onClick={handleBackdropClick}
+      aria-labelledby="yoji-kimeru-stats-title"
     >
-      <h2 id="stats-title" className={styles.modalTitle}>
+      <h2 id="yoji-kimeru-stats-title" className={styles.modalTitle}>
         統計
       </h2>
       <div className={styles.statsGrid}>
