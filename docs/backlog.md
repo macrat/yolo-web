@@ -2,7 +2,9 @@
 
 ## Active (進行中)
 
-(なし)
+| ID    | Title                        | Priority | Status | Assigned Role | Origin Memo | Target Cycle | Notes |
+| ----- | ---------------------------- | -------- | ------ | ------------- | ----------- | ------------ | ----- |
+| B-061 | Cloudflare Pagesデプロイ対応 | P1       | active | builder       | -           | 21           | -     |
 
 ## Queued (未着手)
 
