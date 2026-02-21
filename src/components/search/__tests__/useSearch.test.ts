@@ -105,6 +105,14 @@ describe("useSearch", () => {
         item.document.keywords.includes("漢字"),
     );
     expect(hasKanjiResult).toBe(true);
+
+    // Every result item should have a matches array
+    for (const item of allItems) {
+      expect(Array.isArray(item.matches)).toBe(true);
+    }
+    // At least one item should have non-empty matches
+    const hasMatches = allItems.some((item) => item.matches.length > 0);
+    expect(hasMatches).toBe(true);
   });
 
   test("results are grouped by content type", async () => {

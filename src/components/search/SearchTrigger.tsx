@@ -64,6 +64,35 @@ export default function SearchTrigger() {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, []);
 
+  // Sync browser history with modal open/close state so that the
+  // mobile back button closes the modal instead of navigating away.
+  useEffect(() => {
+    if (!isOpen) return;
+
+    // Push a dummy history entry when the modal opens
+    window.history.pushState({ searchModalOpen: true }, "");
+
+    // Track whether the modal was closed via the browser back button
+    let closedByPopState = false;
+
+    const handlePopState = () => {
+      closedByPopState = true;
+      setIsOpen(false);
+    };
+
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+      // If the modal was closed by means other than the back button
+      // (ESC, overlay click, Cmd+K toggle, search result selection),
+      // remove the dummy history entry we pushed earlier.
+      if (!closedByPopState) {
+        window.history.back();
+      }
+    };
+  }, [isOpen]);
+
   const shortcutLabel = isMac ? "\u2318K" : "Ctrl+K";
 
   return (
@@ -73,6 +102,8 @@ export default function SearchTrigger() {
         onClick={openModal}
         type="button"
         aria-label={`サイト内検索 (${shortcutLabel})`}
+        aria-expanded={isOpen}
+        aria-controls="search-modal-dialog"
         title="サイト内検索"
       >
         <SearchIcon />

@@ -2,7 +2,9 @@
 
 import { useEffect, useRef } from "react";
 import Link from "next/link";
+import type { RangeTuple, FuseResultMatch } from "fuse.js";
 import type { SearchResultGroup } from "./useSearch";
+import { HighlightedText } from "./highlightMatches";
 import styles from "./SearchResults.module.css";
 
 export type FlatItem = {
@@ -37,6 +39,15 @@ export function flattenItems(groups: SearchResultGroup[]): FlatItem[] {
 /** Generate a stable ID for a search result option */
 export function getResultOptionId(index: number): string {
   return `search-result-option-${index}`;
+}
+
+/** Extract match indices for a specific field key from Fuse.js match results */
+function getMatchIndices(
+  matches: ReadonlyArray<FuseResultMatch>,
+  key: string,
+): ReadonlyArray<RangeTuple> {
+  const match = matches.find((m) => m.key === key);
+  return match?.indices ?? [];
 }
 
 export default function SearchResults({
@@ -117,9 +128,19 @@ export default function SearchResults({
                 id={getResultOptionId(currentFlatIndex)}
                 data-result-index={currentFlatIndex}
               >
-                <span className={styles.itemTitle}>{item.document.title}</span>
+                <span className={styles.itemTitle}>
+                  <HighlightedText
+                    text={item.document.title}
+                    indices={getMatchIndices(item.matches, "title")}
+                    className={styles.highlight}
+                  />
+                </span>
                 <span className={styles.itemDescription}>
-                  {item.document.description}
+                  <HighlightedText
+                    text={item.document.description}
+                    indices={getMatchIndices(item.matches, "description")}
+                    className={styles.highlight}
+                  />
                 </span>
                 <span className={styles.itemUrl}>{item.document.url}</span>
               </Link>

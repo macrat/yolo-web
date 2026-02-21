@@ -298,6 +298,39 @@ describe("extractHeadings", () => {
       "どう解決したか-1",
     ]);
   });
+
+  test("strips inline link syntax from heading text", () => {
+    const md = "### [文字数カウント](/tools/char-count)";
+    const headings = extractHeadings(md);
+    expect(headings[0].text).toBe("文字数カウント");
+    expect(headings[0].id).toBe("文字数カウント");
+  });
+
+  test("strips numbered inline link syntax from heading text", () => {
+    const md = "### 1. [文字数カウント](/tools/char-count)";
+    const headings = extractHeadings(md);
+    expect(headings[0].text).toBe("1. 文字数カウント");
+  });
+
+  test("strips image syntax from heading text", () => {
+    const md = "## ![アイコン](icon.png) セクション";
+    const headings = extractHeadings(md);
+    // Image syntax is fully removed (not preserving alt text) to match
+    // markdownToHtml behavior where <img> tags are completely stripped
+    expect(headings[0].text).toBe("セクション");
+  });
+
+  test("strips HTML tags from heading text", () => {
+    const md = "## テスト<br>改行";
+    const headings = extractHeadings(md);
+    expect(headings[0].text).toBe("テスト改行");
+  });
+
+  test("strips nested formatting in links", () => {
+    const md = "## [**太字リンク**](url)";
+    const headings = extractHeadings(md);
+    expect(headings[0].text).toBe("太字リンク");
+  });
 });
 
 describe("markdownToHtml and extractHeadings ID consistency", () => {
@@ -344,6 +377,34 @@ describe("markdownToHtml and extractHeadings ID consistency", () => {
       "本題",
       "はじめに-1",
     ]);
+  });
+
+  test("link heading IDs match between markdownToHtml and extractHeadings", () => {
+    const md =
+      "### 1. [文字数カウント](/tools/char-count)\n\nテキスト\n\n### 2. [バイト数計算](/tools/byte-counter)";
+    const headings = extractHeadings(md);
+    const html = markdownToHtml(md);
+    for (const heading of headings) {
+      expect(html).toContain(`id="${heading.id}"`);
+    }
+  });
+
+  test("image heading IDs match between markdownToHtml and extractHeadings", () => {
+    const md = "## ![アイコン](icon.png) セクション";
+    const headings = extractHeadings(md);
+    const html = markdownToHtml(md);
+    for (const heading of headings) {
+      expect(html).toContain(`id="${heading.id}"`);
+    }
+  });
+
+  test("HTML tag heading IDs match between markdownToHtml and extractHeadings", () => {
+    const md = "## テスト<br>改行";
+    const headings = extractHeadings(md);
+    const html = markdownToHtml(md);
+    for (const heading of headings) {
+      expect(html).toContain(`id="${heading.id}"`);
+    }
   });
 });
 

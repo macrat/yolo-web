@@ -5,11 +5,15 @@ type SearchInputProps = {
   value: string;
   onChange: (value: string) => void;
   isLoading: boolean;
+  isListboxVisible: boolean;
   activeDescendant?: string;
 };
 
 const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
-  function SearchInput({ value, onChange, isLoading, activeDescendant }, ref) {
+  function SearchInput(
+    { value, onChange, isLoading, isListboxVisible, activeDescendant },
+    ref,
+  ) {
     return (
       <div className={styles.wrapper}>
         <svg
@@ -40,7 +44,7 @@ const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
           autoFocus
           autoComplete="off"
           role="combobox"
-          aria-expanded={true}
+          aria-expanded={isListboxVisible}
           aria-autocomplete="list"
         />
         {isLoading && (
