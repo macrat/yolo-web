@@ -1,0 +1,318 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Main tabs: table / mistakes */
+.mainTabs {
+  display: flex;
+  gap: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  width: fit-content;
+}
+
+.mainTab {
+  padding: 0.5rem 1.25rem;
+  border: none;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
+}
+
+.mainTab:not(:last-child) {
+  border-right: 1px solid var(--color-border);
+}
+
+.activeMainTab {
+  background-color: var(--color-primary);
+  color: #fff;
+}
+
+/* Search and filter bar */
+.searchBar {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.searchInput {
+  flex: 1;
+  min-width: 200px;
+  padding: 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  font-size: 0.95rem;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+}
+
+.searchInput:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -1px;
+  border-color: var(--color-primary);
+}
+
+/* Filter buttons (category tabs) */
+.filterButtons {
+  display: flex;
+  gap: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 0.375rem;
+  overflow: hidden;
+}
+
+.filterButton {
+  padding: 0.4rem 0.85rem;
+  border: none;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
+}
+
+.filterButton:not(:last-child) {
+  border-right: 1px solid var(--color-border);
+}
+
+.activeFilter {
+  background-color: var(--color-primary);
+  color: #fff;
+}
+
+.resultCount {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+/* Table */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.th {
+  font-size: 0.85rem;
+  font-weight: 600;
+  background-color: var(--color-bg-secondary);
+  border-bottom: 2px solid var(--color-border);
+  padding: 0.6rem 0.75rem;
+  text-align: left;
+  color: var(--color-text);
+}
+
+.tableRow {
+  border-bottom: 1px solid var(--color-border);
+  cursor: pointer;
+  transition: background-color 0.1s;
+}
+
+.tableRow:hover {
+  background-color: var(--color-bg-secondary);
+}
+
+.td {
+  padding: 0.6rem 0.75rem;
+  font-size: 0.9rem;
+  color: var(--color-text);
+  vertical-align: top;
+}
+
+.casualCell {
+  font-weight: 600;
+}
+
+/* Example panel (accordion) */
+.examplePanel {
+  padding: 0.75rem 1rem;
+  background-color: var(--color-bg-secondary);
+  border-radius: 0.375rem;
+}
+
+.examplePanelRow {
+  background-color: var(--color-bg-secondary);
+}
+
+.examplePanelRow td {
+  padding: 0 0.75rem 0.75rem;
+}
+
+.exampleItem {
+  margin-bottom: 0.5rem;
+}
+
+.exampleItem:last-child {
+  margin-bottom: 0;
+}
+
+.exampleContext {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  margin-bottom: 0.25rem;
+}
+
+.exampleLine {
+  font-size: 0.85rem;
+  color: var(--color-text);
+  line-height: 1.5;
+}
+
+.exampleLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  margin-right: 0.4rem;
+}
+
+.noteText {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  font-style: italic;
+  margin-top: 0.5rem;
+}
+
+/* Mistakes tab */
+.mistakeSection {
+  margin-bottom: 1.5rem;
+}
+
+.mistakeSectionTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0 0 0.75rem;
+}
+
+.mistakeCard {
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+  background-color: var(--color-bg);
+}
+
+.wrongText {
+  color: var(--color-danger, #dc3545);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.correctText {
+  color: var(--color-success, #28a745);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.mistakeLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  margin-right: 0.4rem;
+}
+
+.explanationText {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-top: 0.4rem;
+  line-height: 1.5;
+}
+
+/* Mobile card view for table */
+.mobileCards {
+  display: none;
+}
+
+.mobileCard {
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+  background-color: var(--color-bg);
+  cursor: pointer;
+  transition: background-color 0.1s;
+}
+
+.mobileCard:hover {
+  background-color: var(--color-bg-secondary);
+}
+
+.mobileCardTitle {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--color-text);
+  margin-bottom: 0.4rem;
+}
+
+.mobileCardRow {
+  display: flex;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--color-text);
+  line-height: 1.5;
+}
+
+.mobileCardLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  min-width: 3.5rem;
+  flex-shrink: 0;
+}
+
+.noResults {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  text-align: center;
+  padding: 2rem 0;
+}
+
+@media (max-width: 768px) {
+  .mainTabs {
+    width: 100%;
+  }
+
+  .mainTab {
+    flex: 1;
+    text-align: center;
+    font-size: 0.8rem;
+    padding: 0.5rem 0.5rem;
+  }
+
+  .searchBar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .searchInput {
+    min-width: unset;
+  }
+
+  .filterButtons {
+    width: 100%;
+  }
+
+  .filterButton {
+    flex: 1;
+    text-align: center;
+  }
+
+  /* Hide desktop table, show mobile cards */
+  .desktopTable {
+    display: none;
+  }
+
+  .mobileCards {
+    display: block;
+  }
+}
