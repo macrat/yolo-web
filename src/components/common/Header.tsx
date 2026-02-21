@@ -1,6 +1,7 @@
 import Link from "next/link";
 import styles from "./Header.module.css";
 import MobileNav from "./MobileNav";
+import SearchTrigger from "../search/SearchTrigger";
 import ThemeToggle from "./ThemeToggle";
 
 const NAV_LINKS = [
@@ -30,6 +31,7 @@ export default function Header() {
           ))}
         </ul>
         <div className={styles.actions}>
+          <SearchTrigger />
           <ThemeToggle />
           <MobileNav links={NAV_LINKS} />
         </div>
