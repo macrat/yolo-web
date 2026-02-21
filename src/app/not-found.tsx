@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import AiDisclaimer from "@/components/common/AiDisclaimer";
 import { SITE_NAME } from "@/lib/constants";
 import styles from "./not-found.module.css";
 
@@ -59,8 +58,6 @@ export default function NotFound() {
           ))}
         </div>
       </section>
-
-      <AiDisclaimer />
     </div>
   );
 }

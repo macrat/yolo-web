@@ -9,7 +9,6 @@ import {
 } from "@/lib/blog";
 import { SITE_NAME } from "@/lib/constants";
 import BlogCard from "@/components/blog/BlogCard";
-import AiDisclaimer from "@/components/common/AiDisclaimer";
 import styles from "../../page.module.css";
 
 interface Props {
@@ -74,8 +73,6 @@ export default async function CategoryPage({ params }: Props) {
           ))}
         </div>
       )}
-
-      <AiDisclaimer />
     </div>
   );
 }

@@ -42,6 +42,21 @@ export default function ResultModal({
     onClose();
   }, [onClose]);
 
+  const handleBackdropClick = useCallback(
+    (e: React.MouseEvent<HTMLDialogElement>) => {
+      const rect = e.currentTarget.getBoundingClientRect();
+      if (
+        e.clientX < rect.left ||
+        e.clientX > rect.right ||
+        e.clientY < rect.top ||
+        e.clientY > rect.bottom
+      ) {
+        onClose();
+      }
+    },
+    [onClose],
+  );
+
   const { targetYoji, guesses, status } = gameState;
   const isWon = status === "won";
   const shareText = generateShareText(gameState);
@@ -51,12 +66,13 @@ export default function ResultModal({
       ref={dialogRef}
       className={styles.modal}
       onClose={handleClose}
-      aria-labelledby="result-title"
+      onClick={handleBackdropClick}
+      aria-labelledby="yoji-kimeru-result-title"
     >
       <div className={styles.resultEmoji}>
         {isWon ? "\u{1F389}" : "\u{1F614}"}
       </div>
-      <h2 id="result-title" className={styles.modalTitle}>
+      <h2 id="yoji-kimeru-result-title" className={styles.modalTitle}>
         {isWon ? "正解!" : "残念..."}
       </h2>
       <div className={styles.resultAnswer}>{targetYoji.yoji}</div>

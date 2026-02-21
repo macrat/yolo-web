@@ -1,5 +1,3 @@
-import AiDisclaimer from "@/components/common/AiDisclaimer";
-
 export default function DictionaryLayout({
   children,
 }: {
@@ -15,7 +13,6 @@ export default function DictionaryLayout({
       }}
     >
       {children}
-      <AiDisclaimer />
     </div>
   );
 }

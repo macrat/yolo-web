@@ -3,7 +3,6 @@ import Link from "next/link";
 import { getAllBlogPosts, ALL_CATEGORIES, CATEGORY_LABELS } from "@/lib/blog";
 import { SITE_NAME } from "@/lib/constants";
 import BlogCard from "@/components/blog/BlogCard";
-import AiDisclaimer from "@/components/common/AiDisclaimer";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
@@ -48,8 +47,6 @@ export default function BlogPage() {
           ))}
         </div>
       )}
-
-      <AiDisclaimer />
     </div>
   );
 }

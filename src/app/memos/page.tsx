@@ -6,7 +6,6 @@ import {
 } from "@/lib/memos";
 import { SITE_NAME } from "@/lib/constants";
 import MemoFilter from "@/components/memos/MemoFilter";
-import AiDisclaimer from "@/components/common/AiDisclaimer";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
@@ -34,8 +33,6 @@ export default function MemosPage() {
       ) : (
         <MemoFilter memos={memos} allTags={allTags} allRoles={allRoles} />
       )}
-
-      <AiDisclaimer />
     </div>
   );
 }

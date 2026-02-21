@@ -51,6 +51,21 @@ export default function ResultModal({
     onClose();
   }, [onClose]);
 
+  const handleBackdropClick = useCallback(
+    (e: React.MouseEvent<HTMLDialogElement>) => {
+      const rect = e.currentTarget.getBoundingClientRect();
+      if (
+        e.clientX < rect.left ||
+        e.clientX > rect.right ||
+        e.clientY < rect.top ||
+        e.clientY > rect.bottom
+      ) {
+        onClose();
+      }
+    },
+    [onClose],
+  );
+
   const shareText = generateShareText(gameState);
 
   const handleCopy = useCallback(async () => {
@@ -87,6 +102,7 @@ export default function ResultModal({
       ref={dialogRef}
       className={styles.modal}
       onClose={handleClose}
+      onClick={handleBackdropClick}
       aria-labelledby="irodori-result-title"
     >
       <h2 id="irodori-result-title" className={styles.modalTitle}>

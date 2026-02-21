@@ -35,14 +35,16 @@ interface RawMemo {
 const MEMO_ROOT = path.join(process.cwd(), "memo");
 
 /** Normalize a role string to a known RoleSlug if possible, otherwise return as-is. */
-function normalizeRole(role: string): string {
+export function normalizeRole(role: string): string {
   const slug = role.toLowerCase().replace(/\s+/g, "-");
   if (KNOWN_ROLE_SLUGS.includes(slug as RoleSlug)) return slug;
-  // Fallback: try common variations
+  // Fallback: try common variations and abbreviations
   const map: Record<string, RoleSlug> = {
     "project manager": "project-manager",
     "process engineer": "process-engineer",
     chatgpt: "owner", // Bootstrap memo sender
+    pm: "project-manager",
+    "agent-lead": "agent",
   };
   return map[role.toLowerCase()] || role;
 }

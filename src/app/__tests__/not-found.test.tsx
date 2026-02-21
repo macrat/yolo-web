@@ -33,10 +33,3 @@ test("404 page has links to main sections", () => {
   });
   expect(blogLink).toHaveAttribute("href", "/blog");
 });
-
-test("404 page has AI disclaimer", () => {
-  render(<NotFound />);
-  expect(
-    screen.getByRole("note", { name: "AI disclaimer" }),
-  ).toBeInTheDocument();
-});

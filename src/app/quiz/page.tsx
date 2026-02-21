@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Breadcrumb from "@/components/common/Breadcrumb";
-import AiDisclaimer from "@/components/common/AiDisclaimer";
 import { allQuizMetas } from "@/lib/quiz/registry";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import styles from "./page.module.css";
@@ -74,8 +73,6 @@ export default function QuizListPage() {
           </div>
         ))}
       </div>
-
-      <AiDisclaimer />
     </div>
   );
 }

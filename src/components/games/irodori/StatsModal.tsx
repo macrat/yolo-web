@@ -45,6 +45,21 @@ export default function StatsModal({ open, onClose, stats }: Props) {
     onClose();
   }, [onClose]);
 
+  const handleBackdropClick = useCallback(
+    (e: React.MouseEvent<HTMLDialogElement>) => {
+      const rect = e.currentTarget.getBoundingClientRect();
+      if (
+        e.clientX < rect.left ||
+        e.clientX > rect.right ||
+        e.clientY < rect.top ||
+        e.clientY > rect.bottom
+      ) {
+        onClose();
+      }
+    },
+    [onClose],
+  );
+
   const maxDistribution = Math.max(...stats.scoreDistribution, 1);
 
   return (
@@ -52,6 +67,7 @@ export default function StatsModal({ open, onClose, stats }: Props) {
       ref={dialogRef}
       className={styles.modal}
       onClose={handleClose}
+      onClick={handleBackdropClick}
       aria-labelledby="irodori-stats-title"
     >
       <h2 id="irodori-stats-title" className={styles.modalTitle}>

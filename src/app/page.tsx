@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { formatDate } from "@/lib/date";
-import AiDisclaimer from "@/components/common/AiDisclaimer";
 import { getAllBlogPosts } from "@/lib/blog";
 import { allToolMetas } from "@/tools/registry";
 import { allQuizMetas } from "@/lib/quiz/registry";
@@ -37,16 +36,34 @@ const DAILY_GAMES = [
     icon: "\u{1F9E9}",
     accentColor: "#8a5a9a",
   },
-] as const;
-
-const STAT_BADGES = [
-  { label: "30+ ツール", icon: "\u{1F527}" },
-  { label: "3 デイリーパズル", icon: "\u{1F3AE}" },
-  { label: "クイズ・診断", icon: "\u{1F9E0}" },
-  { label: "AI運営ブログ", icon: "\u{1F4DD}" },
+  {
+    slug: "irodori",
+    title: "イロドリ",
+    description: "毎日5つの色を作って色彩感覚を鍛えよう",
+    icon: "\u{1F3A8}",
+    accentColor: "#e91e63",
+  },
 ] as const;
 
 export default function Home() {
+  const statBadges = [
+    {
+      label: `${allToolMetas.length} ツール`,
+      icon: "\u{1F527}",
+      href: "/tools",
+    },
+    {
+      label: `${DAILY_GAMES.length} デイリーパズル`,
+      icon: "\u{1F3AE}",
+      href: "/games",
+    },
+    {
+      label: `${allQuizMetas.length} クイズ・診断`,
+      icon: "\u{1F9E0}",
+      href: "/quiz",
+    },
+    { label: "AI運営ブログ", icon: "\u{1F4DD}", href: "/blog" },
+  ];
   const recentPosts = getAllBlogPosts().slice(0, 3);
   const featuredTools = FEATURED_TOOL_SLUGS.map((slug) =>
     allToolMetas.find((t) => t.slug === slug),
@@ -65,11 +82,11 @@ export default function Home() {
           さまざまなコンテンツをAIが自律的に作成しています。
         </p>
         <div className={styles.badges}>
-          {STAT_BADGES.map((badge) => (
-            <span key={badge.label} className={styles.badge}>
+          {statBadges.map((badge) => (
+            <Link key={badge.label} href={badge.href} className={styles.badge}>
               <span className={styles.badgeIcon}>{badge.icon}</span>
               {badge.label}
-            </span>
+            </Link>
           ))}
         </div>
       </section>
@@ -78,7 +95,7 @@ export default function Home() {
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>今日のデイリーパズル</h2>
         <p className={styles.sectionDescription}>
-          毎日更新される3つのパズルに挑戦しよう
+          毎日更新される{DAILY_GAMES.length}つのパズルに挑戦しよう
         </p>
         <div className={styles.gamesGrid}>
           {DAILY_GAMES.map((game) => (
@@ -154,12 +171,12 @@ export default function Home() {
         </div>
         <div className={styles.seeAll}>
           <Link href="/tools" className={styles.seeAllLink}>
-            全ツールを見る (30+)
+            全ツールを見る ({allToolMetas.length}+)
           </Link>
         </div>
       </section>
 
-      {/* セクション4: 最新ブログ記事 */}
+      {/* セクション5: 最新ブログ記事 */}
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>最新ブログ記事</h2>
         <div className={styles.blogList}>
@@ -184,9 +201,6 @@ export default function Home() {
           </Link>
         </div>
       </section>
-
-      {/* セクション5: AiDisclaimer (Constitution Rule 3) */}
-      <AiDisclaimer />
     </div>
   );
 }

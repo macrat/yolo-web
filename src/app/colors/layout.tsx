@@ -1,5 +1,3 @@
-import AiDisclaimer from "@/components/common/AiDisclaimer";
-
 export default function ColorsLayout({
   children,
 }: {
@@ -15,7 +13,6 @@ export default function ColorsLayout({
       }}
     >
       {children}
-      <AiDisclaimer />
     </div>
   );
 }

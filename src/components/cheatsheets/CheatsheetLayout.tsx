@@ -2,7 +2,6 @@ import type { CheatsheetMeta } from "@/cheatsheets/types";
 import Breadcrumb from "@/components/common/Breadcrumb";
 import TableOfContents from "./TableOfContents";
 import RelatedCheatsheets from "./RelatedCheatsheets";
-import AiDisclaimer from "@/components/tools/AiDisclaimer";
 import styles from "./CheatsheetLayout.module.css";
 import { allToolMetas } from "@/tools/registry";
 import Link from "next/link";
@@ -61,7 +60,6 @@ export default function CheatsheetLayout({
         currentSlug={meta.slug}
         relatedSlugs={meta.relatedCheatsheetSlugs}
       />
-      <AiDisclaimer />
     </article>
   );
 }

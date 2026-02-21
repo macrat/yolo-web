@@ -52,6 +52,16 @@
   font-size: 0.85rem;
   font-weight: 500;
   color: var(--color-text);
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.badge:hover {
+  border-color: var(--color-primary);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1);
 }
 
 .badgeIcon {
@@ -78,10 +88,10 @@
   margin-bottom: 1.5rem;
 }
 
-/* ===== Game cards (3 columns) ===== */
+/* ===== Game cards ===== */
 .gamesGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 1rem;
 }
 
@@ -303,6 +313,10 @@
 }
 
 /* ===== Dark mode ===== */
+:global(:root.dark) .badge:hover {
+  box-shadow: 0 2px 8px rgba(96, 165, 250, 0.15);
+}
+
 :global(:root.dark) .toolCard:hover,
 :global(:root.dark) .blogCard:hover {
   box-shadow: 0 2px 12px rgba(96, 165, 250, 0.15);

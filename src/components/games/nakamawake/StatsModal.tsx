@@ -33,6 +33,21 @@ export default function StatsModal({ open, onClose, stats }: Props) {
     onClose();
   }, [onClose]);
 
+  const handleBackdropClick = useCallback(
+    (e: React.MouseEvent<HTMLDialogElement>) => {
+      const rect = e.currentTarget.getBoundingClientRect();
+      if (
+        e.clientX < rect.left ||
+        e.clientX > rect.right ||
+        e.clientY < rect.top ||
+        e.clientY > rect.bottom
+      ) {
+        onClose();
+      }
+    },
+    [onClose],
+  );
+
   const winRate =
     stats.gamesPlayed > 0
       ? Math.round((stats.gamesWon / stats.gamesPlayed) * 100)
@@ -53,6 +68,7 @@ export default function StatsModal({ open, onClose, stats }: Props) {
       ref={dialogRef}
       className={styles.modal}
       onClose={handleClose}
+      onClick={handleBackdropClick}
       aria-labelledby="nakamawake-stats-title"
     >
       <h2 id="nakamawake-stats-title" className={styles.modalTitle}>

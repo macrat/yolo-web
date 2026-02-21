@@ -35,17 +35,6 @@ test("ToolLayout renders children", () => {
   expect(screen.getByText("Tool content here")).toBeInTheDocument();
 });
 
-test("ToolLayout renders AI disclaimer", () => {
-  render(
-    <ToolLayout meta={mockMeta}>
-      <div>Content</div>
-    </ToolLayout>,
-  );
-  expect(
-    screen.getByText(/AIによる実験的プロジェクトの一部です/),
-  ).toBeInTheDocument();
-});
-
 test("ToolLayout renders description", () => {
   render(
     <ToolLayout meta={mockMeta}>

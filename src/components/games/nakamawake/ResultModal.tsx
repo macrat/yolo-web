@@ -49,6 +49,21 @@ export default function ResultModal({
     onClose();
   }, [onClose]);
 
+  const handleBackdropClick = useCallback(
+    (e: React.MouseEvent<HTMLDialogElement>) => {
+      const rect = e.currentTarget.getBoundingClientRect();
+      if (
+        e.clientX < rect.left ||
+        e.clientX > rect.right ||
+        e.clientY < rect.top ||
+        e.clientY > rect.bottom
+      ) {
+        onClose();
+      }
+    },
+    [onClose],
+  );
+
   const isWon = gameState.status === "won";
   const shareText = generateShareText(gameState);
 
@@ -84,6 +99,7 @@ export default function ResultModal({
       ref={dialogRef}
       className={styles.modal}
       onClose={handleClose}
+      onClick={handleBackdropClick}
       aria-labelledby="nakamawake-result-title"
     >
       <div className={styles.resultEmoji}>

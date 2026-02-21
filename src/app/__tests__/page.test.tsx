@@ -55,17 +55,29 @@ vi.mock("@/tools/registry", () => ({
   ],
 }));
 
+vi.mock("@/lib/quiz/registry", () => ({
+  allQuizMetas: [
+    {
+      slug: "kanji-level",
+      title: "漢字レベル診断",
+      shortDescription: "テスト用",
+      icon: "\u{1F4DA}",
+      accentColor: "#4d8c3f",
+    },
+    {
+      slug: "traditional-color",
+      title: "伝統色クイズ",
+      shortDescription: "テスト用",
+      icon: "\u{1F3A8}",
+      accentColor: "#e91e63",
+    },
+  ],
+}));
+
 test("Home page renders heading", () => {
   render(<Home />);
   expect(
     screen.getByRole("heading", { level: 1, name: "yolos.net" }),
-  ).toBeInTheDocument();
-});
-
-test("Home page renders AI disclaimer", () => {
-  render(<Home />);
-  expect(
-    screen.getByRole("note", { name: "AI disclaimer" }),
   ).toBeInTheDocument();
 });
 
@@ -78,18 +90,39 @@ test("Home page renders hero description", () => {
   ).toBeInTheDocument();
 });
 
-test("Home page renders stat badges", () => {
+test("Home page renders stat badges with dynamic counts", () => {
   render(<Home />);
-  expect(screen.getByText(/30\+ ツール/)).toBeInTheDocument();
-  expect(screen.getByText(/3 デイリーパズル/)).toBeInTheDocument();
+  expect(screen.getByText(/6 ツール/)).toBeInTheDocument();
+  expect(screen.getByText(/4 デイリーパズル/)).toBeInTheDocument();
+  expect(screen.getByText(/2 クイズ・診断/)).toBeInTheDocument();
   expect(screen.getByText(/AI運営ブログ/)).toBeInTheDocument();
 });
 
-test("Home page renders daily puzzle section", () => {
+test("Home page renders stat badges as links", () => {
+  render(<Home />);
+  expect(screen.getByRole("link", { name: /6 ツール/ })).toHaveAttribute(
+    "href",
+    "/tools",
+  );
+  expect(
+    screen.getByRole("link", { name: /4 デイリーパズル/ }),
+  ).toHaveAttribute("href", "/games");
+  expect(screen.getByRole("link", { name: /2 クイズ・診断/ })).toHaveAttribute(
+    "href",
+    "/quiz",
+  );
+  expect(screen.getByRole("link", { name: /AI運営ブログ/ })).toHaveAttribute(
+    "href",
+    "/blog",
+  );
+});
+
+test("Home page renders daily puzzle section with all games", () => {
   render(<Home />);
   expect(
     screen.getByRole("heading", { name: /今日のデイリーパズル/ }),
   ).toBeInTheDocument();
+  expect(screen.getByText(/4つのパズルに挑戦しよう/)).toBeInTheDocument();
   expect(screen.getByRole("link", { name: /漢字カナール/ })).toHaveAttribute(
     "href",
     "/games/kanji-kanaru",
@@ -102,9 +135,13 @@ test("Home page renders daily puzzle section", () => {
     "href",
     "/games/nakamawake",
   );
+  expect(screen.getByRole("link", { name: /イロドリ/ })).toHaveAttribute(
+    "href",
+    "/games/irodori",
+  );
 });
 
-test("Home page renders popular tools section", () => {
+test("Home page renders popular tools section with dynamic count", () => {
   render(<Home />);
   expect(
     screen.getByRole("heading", { name: /人気ツール/ }),
@@ -113,6 +150,7 @@ test("Home page renders popular tools section", () => {
     "href",
     "/tools",
   );
+  expect(screen.getByText(/全ツールを見る \(6\+\)/)).toBeInTheDocument();
 });
 
 test("Home page renders latest blog section", () => {

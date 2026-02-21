@@ -18,7 +18,6 @@ import TableOfContents from "@/components/blog/TableOfContents";
 import TagList from "@/components/blog/TagList";
 import RelatedMemos from "@/components/blog/RelatedMemos";
 import MermaidRenderer from "@/components/blog/MermaidRenderer";
-import AiDisclaimer from "@/components/common/AiDisclaimer";
 import styles from "./page.module.css";
 
 interface Props {
@@ -125,8 +124,6 @@ export default async function BlogPostPage({ params }: Props) {
           <span />
         )}
       </nav>
-
-      <AiDisclaimer />
     </div>
   );
 }

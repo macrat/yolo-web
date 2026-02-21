@@ -4,6 +4,7 @@ import {
   markdownToHtml,
   extractHeadings,
   estimateReadingTime,
+  generateHeadingId,
 } from "@/lib/markdown";
 
 describe("parseFrontmatter", () => {
@@ -177,6 +178,62 @@ describe("markdownToHtml", () => {
     expect(html).toContain("&lt;script&gt;");
     expect(html).not.toContain("<script>");
   });
+
+  test("assigns id attributes to headings", () => {
+    const html = markdownToHtml("## Hello World\n\n### Sub Section");
+    expect(html).toContain('<h2 id="hello-world">Hello World</h2>');
+    expect(html).toContain('<h3 id="sub-section">Sub Section</h3>');
+  });
+
+  test("assigns id attributes to Japanese headings", () => {
+    const html = markdownToHtml("## はじめに\n\n### 概要");
+    expect(html).toContain('id="はじめに"');
+    expect(html).toContain('id="概要"');
+  });
+
+  test("assigns suffixed ids to duplicate headings", () => {
+    const md = "## Section\n\nText.\n\n## Section\n\nText.\n\n## Section";
+    const html = markdownToHtml(md);
+    expect(html).toContain('<h2 id="section">Section</h2>');
+    expect(html).toContain('<h2 id="section-1">Section</h2>');
+    expect(html).toContain('<h2 id="section-2">Section</h2>');
+  });
+
+  test("resets heading id counter between parse calls", () => {
+    const md = "## Same";
+    const html1 = markdownToHtml(md);
+    const html2 = markdownToHtml(md);
+    // Both should get the same id (no suffix) because the counter resets
+    expect(html1).toContain('id="same"');
+    expect(html2).toContain('id="same"');
+  });
+});
+
+describe("generateHeadingId", () => {
+  test("converts text to lowercase slug", () => {
+    expect(generateHeadingId("Hello World")).toBe("hello-world");
+  });
+
+  test("preserves Japanese characters", () => {
+    expect(generateHeadingId("はじめに")).toBe("はじめに");
+  });
+
+  test("removes special characters", () => {
+    expect(generateHeadingId("Hello! World?")).toBe("hello-world");
+  });
+
+  test("collapses multiple spaces into a single dash", () => {
+    expect(generateHeadingId("a   b")).toBe("a-b");
+  });
+
+  test("collapses spaces around dashes", () => {
+    // "a - - b" -> spaces become dashes -> "a-----b" -> collapse -> "a-b"
+    expect(generateHeadingId("a - - b")).toBe("a-b");
+  });
+
+  test("trims leading and trailing dashes", () => {
+    expect(generateHeadingId("!hello!")).toBe("hello");
+  });
 });
 
 describe("extractHeadings", () => {
@@ -215,6 +272,78 @@ describe("extractHeadings", () => {
     const headings = extractHeadings(md);
     expect(headings[0].text).toBe("はじめに");
     expect(headings[0].id).toBe("はじめに");
+  });
+
+  test("assigns suffixed ids to duplicate headings", () => {
+    const md =
+      "## 何が起きたか\n\nText.\n\n## 何が起きたか\n\nText.\n\n## 何が起きたか";
+    const headings = extractHeadings(md);
+    expect(headings).toHaveLength(3);
+    expect(headings[0].id).toBe("何が起きたか");
+    expect(headings[1].id).toBe("何が起きたか-1");
+    expect(headings[2].id).toBe("何が起きたか-2");
+  });
+
+  test("assigns unique ids to duplicate headings (all unique keys)", () => {
+    const md =
+      "## 何が起きたか\n\n## どう解決したか\n\n## 何が起きたか\n\n## どう解決したか";
+    const headings = extractHeadings(md);
+    const ids = headings.map((h) => h.id);
+    // All IDs should be unique
+    expect(new Set(ids).size).toBe(ids.length);
+    expect(ids).toEqual([
+      "何が起きたか",
+      "どう解決したか",
+      "何が起きたか-1",
+      "どう解決したか-1",
+    ]);
+  });
+});
+
+describe("markdownToHtml and extractHeadings ID consistency", () => {
+  test("heading IDs match between markdownToHtml and extractHeadings", () => {
+    const md =
+      "## Introduction\n\nText.\n\n### Details\n\nMore text.\n\n## Conclusion";
+    const headings = extractHeadings(md);
+    const html = markdownToHtml(md);
+
+    for (const heading of headings) {
+      expect(html).toContain(`id="${heading.id}"`);
+    }
+  });
+
+  test("duplicate heading IDs match between markdownToHtml and extractHeadings", () => {
+    const md =
+      "## Section\n\nText.\n\n### Sub\n\nText.\n\n## Section\n\nText.\n\n### Sub";
+    const headings = extractHeadings(md);
+    const html = markdownToHtml(md);
+
+    for (const heading of headings) {
+      expect(html).toContain(`id="${heading.id}"`);
+    }
+    // Verify specific IDs
+    expect(headings.map((h) => h.id)).toEqual([
+      "section",
+      "sub",
+      "section-1",
+      "sub-1",
+    ]);
+  });
+
+  test("Japanese duplicate heading IDs match", () => {
+    const md =
+      "## はじめに\n\nText.\n\n## 本題\n\nText.\n\n## はじめに\n\nText.";
+    const headings = extractHeadings(md);
+    const html = markdownToHtml(md);
+
+    for (const heading of headings) {
+      expect(html).toContain(`id="${heading.id}"`);
+    }
+    expect(headings.map((h) => h.id)).toEqual([
+      "はじめに",
+      "本題",
+      "はじめに-1",
+    ]);
   });
 });
 
