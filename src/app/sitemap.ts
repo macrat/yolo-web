@@ -8,6 +8,8 @@ import { getAllYojiIds, getYojiCategories } from "@/lib/dictionary/yoji";
 import { getAllColorSlugs, getColorCategories } from "@/lib/dictionary/colors";
 import { getAllQuizSlugs, getResultIdsForQuiz } from "@/lib/quiz/registry";
 
+export const dynamic = "force-static";
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const toolPages = allToolMetas.map((meta) => ({
     url: `${BASE_URL}/tools/${meta.slug}`,
