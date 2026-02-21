@@ -54,6 +54,6 @@ npm run memo -- mark [active|archive] [memo]...
 
 ここまでできたら、一度 `git commit` して、開始時点の状態を記録してください。
 
-### 7. 作業の開始
+### 7. 作業計画の立案
 
-`/cycle-execution` スキルを実行して、作業に着手してください。
+`/cycle-planning` スキルを実行して、作業計画を立ててください。
