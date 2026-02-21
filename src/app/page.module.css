@@ -303,16 +303,14 @@
 }
 
 /* ===== Dark mode ===== */
-@media (prefers-color-scheme: dark) {
-  .toolCard:hover,
-  .blogCard:hover {
-    box-shadow: 0 2px 12px rgba(96, 165, 250, 0.15);
-  }
+:global(:root.dark) .toolCard:hover,
+:global(:root.dark) .blogCard:hover {
+  box-shadow: 0 2px 12px rgba(96, 165, 250, 0.15);
+}
 
-  .gameCard:hover,
-  .quizCard:hover {
-    box-shadow: 0 4px 16px rgba(255, 255, 255, 0.05);
-  }
+:global(:root.dark) .gameCard:hover,
+:global(:root.dark) .quizCard:hover {
+  box-shadow: 0 4px 16px rgba(255, 255, 255, 0.05);
 }
 
 /* ===== Responsive ===== */

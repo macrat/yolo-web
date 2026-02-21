@@ -61,8 +61,6 @@
   color: var(--color-text-muted);
 }
 
-@media (prefers-color-scheme: dark) {
-  .card:hover {
-    box-shadow: 0 4px 16px rgba(255, 255, 255, 0.05);
-  }
+:global(:root.dark) .card:hover {
+  box-shadow: 0 4px 16px rgba(255, 255, 255, 0.05);
 }

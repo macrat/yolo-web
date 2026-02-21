@@ -13,8 +13,6 @@
   background: var(--color-bg-secondary);
 }
 
-@media (prefers-color-scheme: dark) {
-  .feedback {
-    background: var(--color-border);
-  }
+:global(:root.dark) .feedback {
+  background: var(--color-border);
 }
