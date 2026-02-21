@@ -2,7 +2,9 @@
 
 ## Active (進行中)
 
-(なし)
+| ID    | Title                                   | Priority | Status | Assigned Role | Origin Memo | Target Cycle | Notes                           |
+| ----- | --------------------------------------- | -------- | ------ | ------------- | ----------- | ------------ | ------------------------------- |
+| B-060 | Claude Code Hook: pre-push-check の作成 | P1       | active | builder       | 19c7e13d377 | 18           | owner指示、サイクル17再発防止策 |
 
 ## Queued (未着手)
 
