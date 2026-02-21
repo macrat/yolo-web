@@ -30,6 +30,8 @@ import { meta as bmiCalculatorMeta } from "./bmi-calculator/meta";
 import { meta as sqlFormatterMeta } from "./sql-formatter/meta";
 import { meta as cronParserMeta } from "./cron-parser/meta";
 import { meta as imageResizerMeta } from "./image-resizer/meta";
+import { meta as businessEmailMeta } from "./business-email/meta";
+import { meta as keigoReferenceMeta } from "./keigo-reference/meta";
 
 const toolEntries: ToolDefinition[] = [
   {
@@ -151,6 +153,14 @@ const toolEntries: ToolDefinition[] = [
   {
     meta: imageResizerMeta,
     componentImport: () => import("./image-resizer/Component"),
+  },
+  {
+    meta: businessEmailMeta,
+    componentImport: () => import("./business-email/Component"),
+  },
+  {
+    meta: keigoReferenceMeta,
+    componentImport: () => import("./keigo-reference/Component"),
   },
 ];
 
