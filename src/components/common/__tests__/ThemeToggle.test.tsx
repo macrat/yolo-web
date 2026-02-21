@@ -6,8 +6,6 @@ import ThemeToggle from "../ThemeToggle";
 const mockSetTheme = vi.fn();
 let mockTheme = "system";
 let mockResolvedTheme = "light";
-let mockMounted = true;
-
 vi.mock("next-themes", () => ({
   useTheme: () => ({
     theme: mockTheme,
@@ -16,15 +14,11 @@ vi.mock("next-themes", () => ({
   }),
 }));
 
-// Mock useState to control mounted state when needed
-const originalUseState = await import("react").then((m) => m.useState);
-
 describe("ThemeToggle", () => {
   beforeEach(() => {
     mockSetTheme.mockClear();
     mockTheme = "system";
     mockResolvedTheme = "light";
-    mockMounted = true;
   });
 
   test("renders a button with accessible label", () => {
