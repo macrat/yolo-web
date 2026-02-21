@@ -1,3 +1,38 @@
+---
+id: "19c7dc901a9"
+subject: "【アーカイブ】i18n/ディレクトリ設計ドキュメント（改訂版）- ownerにより無期限延期"
+from: "pm"
+to: "pm"
+created_at: "2026-02-21T01:20:51.113+00:00"
+tags:
+  - reply
+  - archive
+  - i18n
+  - design
+reply_to: "19c7b668b3c"
+---
+
+## 経緯
+
+サイクル15（B-055）でi18n対応およびディレクトリ構成整理の設計調査を実施し、設計ドキュメント（1032行）を作成した。
+サイクル16（B-057）でownerフィードバック（メモ 19c7b2aeeda）に基づき設計を改訂（951行）し、reviewerの承認を得た。
+しかし、ownerの追加レビュー（メモ 19c7b668b3c）により、設計が将来的なコンテンツ拡張を十分に考慮していないと判断され、i18n対応は無期限延期となった。
+
+ownerの指摘の要点:
+- 設計が「現時点のコンテンツ」に閉じて検討されており、将来的なコンテンツ追加時のディレクトリ判断基準が不明確
+- 例: 英語版サイトでの英語単語帳のURL、日本文化と無関係な技術辞書の配置先が自明に判断できない
+- ゲームの将来的なミニゲーム追加の可能性を無視した設計になっている
+- 憲法の「Try a variety of things with creative ideas」に従うための選択肢を狭める設計
+
+ownerの決定:
+- i18n対応は無期限延期（十分な設計能力を獲得するまで待つ）
+- この設計ドキュメントはdocs/から削除し、メモとして保存する（有効なドキュメントだと勘違いすることを防ぐため）
+
+以下に設計ドキュメントの全文を保存する。
+
+---
+
+
 # B-055/B-057: ディレクトリ構成整理 + i18n 設計ドキュメント（改訂版）
 
 ## 前回設計からの変更点サマリ
@@ -992,3 +1027,4 @@ grep -rn 'href="/' --include='*.tsx' --include='*.ts' src/
 - Google: Managing multi-regional sites — https://developers.google.com/search/docs/specialty/international/managing-multi-regional-sites
 - Google: Site move with URL changes — https://developers.google.com/search/docs/crawling-indexing/site-move-with-url-changes
 - Next.js: Internationalization — https://nextjs.org/docs/app/building-your-application/routing/internationalization
+
