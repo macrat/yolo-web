@@ -2,12 +2,8 @@
 
 ## Active (進行中)
 
-| ID    | Title                                      | Priority | Status | Assigned Role | Origin Memo | Target Cycle | Notes                                                                                                   |
-| ----- | ------------------------------------------ | -------- | ------ | ------------- | ----------- | ------------ | ------------------------------------------------------------------------------------------------------- |
-| B-073 | 検索結果のマッチ部分ハイライト             | P3       | active | -             | 19c7f106704 | 23           | Fuse.jsのmatches情報を使って検索結果のマッチ部分を視覚的にハイライトする（cycle-20キャリーオーバー）    |
-| B-074 | モバイル戻るボタンで検索モーダル閉じ       | P3       | active | -             | 19c7f106704 | 23           | history APIを使ってモバイルの戻るボタンで検索モーダルを閉じられるようにする（cycle-20キャリーオーバー） |
-| B-072 | 検索モーダルのaria-expanded動的切り替え    | P4       | active | -             | 19c7f106704 | 23           | 検索トリガーボタンのaria-expanded属性を開閉状態に連動させる（cycle-20キャリーオーバー）                 |
-| B-077 | extractHeadingsのインラインリンク記法strip | P3       | active | -             | 19c7fa1c6ef | 23           | 目次生成のextractHeadingsでMarkdownインラインリンク記法をstrip処理する改善（cycle-21キャリーオーバー）  |
+| ID  | Title | Priority | Status | Assigned Role | Origin Memo | Target Cycle | Notes |
+| --- | ----- | -------- | ------ | ------------- | ----------- | ------------ | ----- |
 
 ## Queued (未着手)
 
@@ -36,6 +32,10 @@
 
 | ID    | Title                                          | Completed Cycle | Origin Memo | Notes                                                                            |
 | ----- | ---------------------------------------------- | --------------- | ----------- | -------------------------------------------------------------------------------- |
+| B-073 | 検索結果のマッチ部分ハイライト                 | 23              | 19c7f106704 | Fuse.jsのmatches情報でハイライト表示、HighlightedTextコンポーネント新規作成      |
+| B-074 | モバイル戻るボタンで検索モーダル閉じ           | 23              | 19c7f106704 | history API pushState/popStateで戻るボタン対応、全クローズパス対応               |
+| B-072 | 検索モーダルのaria-expanded動的切り替え        | 23              | 19c7f106704 | SearchTrigger/SearchInputのaria-expanded動的連動、WAI-ARIA準拠                   |
+| B-077 | extractHeadingsのインラインリンク記法strip     | 23              | 19c7fa1c6ef | リンク・画像・HTMLタグstrip正規表現追加、markdownToHtmlとのID一貫性確保          |
 | B-067 | SNSベストプラクティス調査・適用                | 22              | 19c7f32cd25 | 日本SNS動向、シェアボタンUI/UX、OGP仕様、Intent URL仕様を調査                    |
 | B-065 | シェアボタンの全コンテンツ設置                 | 22              | 19c7f32cd25 | 共通コンポーネント作成、6コンテンツタイプに設置、X intent URL修正、テスト9件追加 |
 | B-066 | OGP画像・情報の全ページ最適化                  | 22              | 19c7f32cd25 | 共通ヘルパー作成、16ファイル追加、日本語フォント対応、テスト10件追加             |
