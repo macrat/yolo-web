@@ -1,0 +1,4 @@
+# Cloudflare Pages redirects
+# Feed backward compatibility (old URLs redirect to new canonical paths)
+/feed /rss 301
+/feed/atom /atom 301

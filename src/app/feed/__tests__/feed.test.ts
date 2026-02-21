@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
 import { buildFeed } from "@/lib/feed";
-import { GET as getRss } from "../route";
-import { GET as getAtom } from "../atom/route";
+import { GET as getRss } from "../../rss/route";
+import { GET as getAtom } from "../../atom/route";
 
 describe("buildFeed", () => {
   test("rss2() returns valid RSS 2.0 XML", () => {
@@ -34,14 +34,14 @@ describe("buildFeed", () => {
 });
 
 describe("RSS route handler", () => {
-  test("GET returns response with application/rss+xml content type", async () => {
+  test("GET /rss returns response with application/rss+xml content type", async () => {
     const response = await getRss();
     expect(response.headers.get("Content-Type")).toBe(
       "application/rss+xml; charset=utf-8",
     );
   });
 
-  test("GET returns valid XML body", async () => {
+  test("GET /rss returns valid XML body", async () => {
     const response = await getRss();
     const body = await response.text();
     expect(body).toContain("<rss");
@@ -49,14 +49,14 @@ describe("RSS route handler", () => {
 });
 
 describe("Atom route handler", () => {
-  test("GET returns response with application/atom+xml content type", async () => {
+  test("GET /atom returns response with application/atom+xml content type", async () => {
     const response = await getAtom();
     expect(response.headers.get("Content-Type")).toBe(
       "application/atom+xml; charset=utf-8",
     );
   });
 
-  test("GET returns valid XML body", async () => {
+  test("GET /atom returns valid XML body", async () => {
     const response = await getAtom();
     const body = await response.text();
     expect(body).toContain("<feed");

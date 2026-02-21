@@ -18,7 +18,6 @@ export default async function OpenGraphImage({ params }: Props) {
   const quiz = quizBySlug.get(slug);
 
   const title = quiz?.meta.title ?? "クイズ";
-  const icon = quiz?.meta.icon ?? "?";
   const accentColor = quiz?.meta.accentColor ?? "#2563eb";
   const description = quiz?.meta.shortDescription ?? "";
 
@@ -35,14 +34,6 @@ export default async function OpenGraphImage({ params }: Props) {
         color: "white",
       }}
     >
-      <div
-        style={{
-          fontSize: 100,
-          marginBottom: 24,
-        }}
-      >
-        {icon}
-      </div>
       <div
         style={{
           fontSize: 60,

@@ -21,12 +21,12 @@ test("metadata includes RSS feed in alternates", () => {
   const types = (metadata.alternates as { types?: Record<string, string> })
     ?.types;
   expect(types).toBeDefined();
-  expect(types?.["application/rss+xml"]).toBe("/feed");
+  expect(types?.["application/rss+xml"]).toBe("/rss");
 });
 
 test("metadata includes Atom feed in alternates", () => {
   const types = (metadata.alternates as { types?: Record<string, string> })
     ?.types;
   expect(types).toBeDefined();
-  expect(types?.["application/atom+xml"]).toBe("/feed/atom");
+  expect(types?.["application/atom+xml"]).toBe("/atom");
 });

@@ -34,8 +34,8 @@ export const metadata: Metadata = {
   },
   alternates: {
     types: {
-      "application/rss+xml": "/feed",
-      "application/atom+xml": "/feed/atom",
+      "application/rss+xml": "/rss",
+      "application/atom+xml": "/atom",
     },
   },
 };

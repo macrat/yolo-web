@@ -30,7 +30,6 @@ export default async function OpenGraphImage({ params }: Props) {
 
   const quizTitle = quiz?.meta.title ?? "クイズ";
   const resultTitle = result?.title ?? "結果";
-  const resultIcon = result?.icon ?? "";
   const accentColor = quiz?.meta.accentColor ?? "#2563eb";
 
   return new ImageResponse(
@@ -55,16 +54,6 @@ export default async function OpenGraphImage({ params }: Props) {
       >
         {quizTitle}
       </div>
-      {resultIcon && (
-        <div
-          style={{
-            fontSize: 80,
-            marginBottom: 16,
-          }}
-        >
-          {resultIcon}
-        </div>
-      )}
       <div
         style={{
           fontSize: 64,
