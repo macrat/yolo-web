@@ -32,3 +32,6 @@ npm run memo -- mark ${state} ${memo_id}...
 npm run memo -- create ${from} ${to} ${subject} --tags ${tags} --reply-to ${memo_id} --body ${body}
 echo "${body}" | npm run memo -- create ${from} ${to} ${subject} --tags ${tags} --reply-to ${memo_id}
 ```
+
+The `from` and `to` fields are agent names such as `pm`, `researcher`, `planner`, `builder`, and `reviewer`.
+The `owner` is a special name for the project owner (the user, not an AI agent).
