@@ -1,46 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { SITE_NAME } from "@/lib/constants";
+import { allGameMetas } from "@/lib/games/registry";
 import styles from "./page.module.css";
-
-const GAMES = [
-  {
-    slug: "kanji-kanaru",
-    title: "漢字カナール",
-    description:
-      "毎日1つの漢字を当てるパズルゲーム。部首・画数・読みのヒントで推理しよう!",
-    icon: "\u{1F4DA}",
-    accentColor: "#4d8c3f",
-    difficulty: "初級〜中級",
-  },
-  {
-    slug: "yoji-kimeru",
-    title: "四字キメル",
-    description:
-      "毎日1つの四字熟語を当てるパズルゲーム。4文字の漢字を推理しよう!",
-    icon: "\u{1F3AF}",
-    accentColor: "#9a8533",
-    difficulty: "中級〜上級",
-  },
-  {
-    slug: "nakamawake",
-    title: "ナカマワケ",
-    description:
-      "16個の言葉を4つのグループに分けるパズルゲーム。共通テーマを見つけて仲間分けしよう!",
-    icon: "\u{1F9E9}",
-    accentColor: "#8a5a9a",
-    difficulty: "初級〜上級",
-  },
-  {
-    slug: "irodori",
-    title: "イロドリ",
-    description:
-      "毎日5つの色を作って色彩感覚を鍛えよう! ターゲットカラーにどれだけ近づけるかチャレンジ!",
-    icon: "\u{1F3A8}",
-    accentColor: "#e91e63",
-    difficulty: "初級〜上級",
-  },
-];
 
 function getTodayFormatted(): string {
   const now = new Date();
@@ -79,7 +41,7 @@ export default function GamesPage() {
       </section>
 
       <div className={styles.grid} role="list" aria-label="Games list">
-        {GAMES.map((game) => (
+        {allGameMetas.map((game) => (
           <div key={game.slug} role="listitem">
             <Link
               href={`/games/${game.slug}`}

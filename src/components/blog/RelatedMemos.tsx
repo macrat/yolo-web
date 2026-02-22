@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getRelatedMemosForBlogPost } from "@/lib/cross-links";
 import {
   ROLE_DISPLAY,
+  capitalize,
   type RoleSlug,
   type RoleDisplay,
 } from "@/lib/memos-shared";
@@ -9,10 +10,6 @@ import styles from "./RelatedMemos.module.css";
 
 interface RelatedMemosProps {
   memoIds: string[];
-}
-
-function capitalize(s: string): string {
-  return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
 function getRoleDisplay(role: string): RoleDisplay {

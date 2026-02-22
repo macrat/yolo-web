@@ -1,6 +1,9 @@
 import type { IrodoriGameState } from "./types";
 import { calculateTotalScore, getRank, getScoreEmoji } from "./engine";
 
+// Re-export shared utilities for backward compatibility
+export { copyToClipboard, generateTwitterShareUrl } from "../shared/share";
+
 /**
  * Generate the share text for a completed game.
  *
@@ -20,69 +23,6 @@ export function generateShareText(state: IrodoriGameState): string {
   const url = `${baseUrl}/games/irodori`;
 
   return `\u30A4\u30ED\u30C9\u30EA #${state.puzzleNumber} \u30B9\u30B3\u30A2: ${totalScore}/100 (${rank}\u30E9\u30F3\u30AF)\n${emojiRow}\n${url}`;
-}
-
-/**
- * Copy text to the clipboard using the Clipboard API.
- */
-export async function copyToClipboard(text: string): Promise<boolean> {
-  if (
-    typeof navigator !== "undefined" &&
-    navigator.clipboard &&
-    typeof navigator.clipboard.writeText === "function"
-  ) {
-    try {
-      await navigator.clipboard.writeText(text);
-      return true;
-    } catch {
-      return fallbackCopy(text);
-    }
-  }
-  return fallbackCopy(text);
-}
-
-/**
- * Fallback clipboard copy using a hidden textarea.
- */
-function fallbackCopy(text: string): boolean {
-  if (typeof document === "undefined") return false;
-  try {
-    const textarea = document.createElement("textarea");
-    textarea.value = text;
-    textarea.style.position = "fixed";
-    textarea.style.left = "-9999px";
-    textarea.style.top = "-9999px";
-    document.body.appendChild(textarea);
-    textarea.select();
-    const success = document.execCommand("copy");
-    document.body.removeChild(textarea);
-    return success;
-  } catch {
-    return false;
-  }
-}
-
-/**
- * Generate a Twitter/X share URL with pre-filled text.
- * Separates the page URL into the `url` parameter so that
- * Twitter/X can generate a proper card preview.
- */
-export function generateTwitterShareUrl(
-  text: string,
-  pageUrl?: string,
-): string {
-  if (pageUrl) {
-    const textWithoutUrl = text.replace(
-      new RegExp(`\\n?${escapeRegExp(pageUrl)}$`),
-      "",
-    );
-    return `https://twitter.com/intent/tweet?text=${encodeURIComponent(textWithoutUrl)}&url=${encodeURIComponent(pageUrl)}`;
-  }
-  return `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
-}
-
-function escapeRegExp(str: string): string {
-  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 /**

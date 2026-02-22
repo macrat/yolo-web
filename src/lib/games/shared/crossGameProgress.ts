@@ -3,6 +3,10 @@
  * Reads each game's localStorage stats to determine today's play status.
  */
 
+import type { GameMeta } from "../types";
+import { allGameMetas, getGamePath } from "../registry";
+
+/** Game info with derived path, used by progress tracking and NextGameBanner */
 export interface GameInfo {
   slug: string;
   title: string;
@@ -10,32 +14,15 @@ export interface GameInfo {
   statsKey: string;
 }
 
-export const ALL_GAMES: GameInfo[] = [
-  {
-    slug: "kanji-kanaru",
-    title: "漢字カナール",
-    path: "/games/kanji-kanaru",
-    statsKey: "kanji-kanaru-stats",
-  },
-  {
-    slug: "yoji-kimeru",
-    title: "四字キメル",
-    path: "/games/yoji-kimeru",
-    statsKey: "yoji-kimeru-stats",
-  },
-  {
-    slug: "nakamawake",
-    title: "ナカマワケ",
-    path: "/games/nakamawake",
-    statsKey: "nakamawake-stats",
-  },
-  {
-    slug: "irodori",
-    title: "イロドリ",
-    path: "/games/irodori",
-    statsKey: "irodori-stats",
-  },
-];
+/** All games as GameInfo (derived from registry) */
+export const ALL_GAMES: GameInfo[] = allGameMetas.map(
+  (meta: GameMeta): GameInfo => ({
+    slug: meta.slug,
+    title: meta.title,
+    path: getGamePath(meta.slug),
+    statsKey: meta.statsKey,
+  }),
+);
 
 /**
  * Get today's date string in JST (YYYY-MM-DD).

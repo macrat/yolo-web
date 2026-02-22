@@ -4,19 +4,40 @@ import { useState, useCallback } from "react";
 import {
   copyToClipboard,
   generateTwitterShareUrl,
-} from "@/lib/games/yoji-kimeru/share";
+} from "@/lib/games/shared/share";
 import { useCanWebShare, shareGameResult } from "@/lib/games/shared/webShare";
-import styles from "./styles/YojiKimeru.module.css";
+import styles from "./GameShareButtons.module.css";
 
-interface ShareButtonsProps {
+/**
+ * Props for the GameShareButtons component.
+ */
+interface GameShareButtonsProps {
+  /** The text content to share (result text with emoji grid). */
   shareText: string;
+  /** Display name of the game (used as Web Share API title). */
+  gameTitle: string;
+  /** URL slug for the game (e.g. "irodori", "kanji-kanaru"). */
+  gameSlug: string;
+  /** Optional callback for a "save image" button (irodori only). */
+  onSaveImage?: () => void;
 }
 
 /**
- * Copy result and Share on X buttons for sharing game results.
- * Uses Web Share API on supported devices, falls back to copy + X share.
+ * Shared share buttons component for all game result modals.
+ *
+ * Displays either a single "share" button (Web Share API) or
+ * "copy result" + "share on X" buttons, plus an optional "save image" button.
+ * Shows a brief "copied!" feedback message after copying.
+ *
+ * Replaces the duplicated share button implementations across
+ * irodori/nakamawake (inline) and kanji-kanaru/yoji-kimeru (ShareButtons.tsx).
  */
-export default function ShareButtons({ shareText }: ShareButtonsProps) {
+export default function GameShareButtons({
+  shareText,
+  gameTitle,
+  gameSlug,
+  onSaveImage,
+}: GameShareButtonsProps) {
   const [copied, setCopied] = useState(false);
   const canWebShare = useCanWebShare();
 
@@ -30,19 +51,19 @@ export default function ShareButtons({ shareText }: ShareButtonsProps) {
 
   const handleShareX = useCallback(() => {
     const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
-    const pageUrl = `${baseUrl}/games/yoji-kimeru`;
+    const pageUrl = `${baseUrl}/games/${gameSlug}`;
     const url = generateTwitterShareUrl(shareText, pageUrl);
     window.open(url, "_blank", "noopener,noreferrer");
-  }, [shareText]);
+  }, [shareText, gameSlug]);
 
   const handleWebShare = useCallback(async () => {
     const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
     await shareGameResult({
-      title: "四字キメル",
+      title: gameTitle,
       text: shareText,
-      url: `${baseUrl}/games/yoji-kimeru`,
+      url: `${baseUrl}/games/${gameSlug}`,
     });
-  }, [shareText]);
+  }, [shareText, gameTitle, gameSlug]);
 
   return (
     <div>
@@ -53,7 +74,7 @@ export default function ShareButtons({ shareText }: ShareButtonsProps) {
             onClick={handleWebShare}
             type="button"
           >
-            シェア
+            {"\u30B7\u30A7\u30A2"}
           </button>
         ) : (
           <>
@@ -62,20 +83,29 @@ export default function ShareButtons({ shareText }: ShareButtonsProps) {
               onClick={handleCopy}
               type="button"
             >
-              結果をコピー
+              {"\u7D50\u679C\u3092\u30B3\u30D4\u30FC"}
             </button>
             <button
               className={styles.shareButtonX}
               onClick={handleShareX}
               type="button"
             >
-              Xでシェア
+              X{"\u3067\u30B7\u30A7\u30A2"}
             </button>
           </>
         )}
+        {onSaveImage && (
+          <button
+            className={styles.shareButtonImage}
+            onClick={onSaveImage}
+            type="button"
+          >
+            {"\u753B\u50CF\u3092\u4FDD\u5B58"}
+          </button>
+        )}
       </div>
       <div className={styles.copiedMessage} role="status" aria-live="polite">
-        {copied ? "コピーしました!" : ""}
+        {copied ? "\u30B3\u30D4\u30FC\u3057\u307E\u3057\u305F!" : ""}
       </div>
     </div>
   );

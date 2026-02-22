@@ -7,6 +7,7 @@ import { getAllKanjiChars, getKanjiCategories } from "@/lib/dictionary/kanji";
 import { getAllYojiIds, getYojiCategories } from "@/lib/dictionary/yoji";
 import { getAllColorSlugs, getColorCategories } from "@/lib/dictionary/colors";
 import { getAllQuizSlugs, getResultIdsForQuiz } from "@/lib/quiz/registry";
+import { allGameMetas, getGamePath } from "@/lib/games/registry";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const toolPages = allToolMetas.map((meta) => ({
@@ -61,24 +62,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.9,
     },
-    {
-      url: `${BASE_URL}/games/kanji-kanaru`,
+    ...allGameMetas.map((game) => ({
+      url: `${BASE_URL}${getGamePath(game.slug)}`,
       lastModified: new Date(),
-      changeFrequency: "daily",
-      priority: 0.8,
-    },
-    {
-      url: `${BASE_URL}/games/yoji-kimeru`,
-      lastModified: new Date(),
-      changeFrequency: "daily",
-      priority: 0.8,
-    },
-    {
-      url: `${BASE_URL}/games/nakamawake`,
-      lastModified: new Date(),
-      changeFrequency: "daily",
-      priority: 0.8,
-    },
+      changeFrequency: game.sitemap.changeFrequency,
+      priority: game.sitemap.priority,
+    })),
     {
       url: `${BASE_URL}/about`,
       lastModified: new Date(),

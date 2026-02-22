@@ -3,6 +3,7 @@ import { formatDate } from "@/lib/date";
 import { getAllBlogPosts } from "@/lib/blog";
 import { allToolMetas } from "@/tools/registry";
 import { allQuizMetas } from "@/lib/quiz/registry";
+import { allGameMetas } from "@/lib/games/registry";
 import styles from "./page.module.css";
 
 const FEATURED_TOOL_SLUGS = [
@@ -14,37 +15,6 @@ const FEATURED_TOOL_SLUGS = [
   "image-resizer",
 ] as const;
 
-const DAILY_GAMES = [
-  {
-    slug: "kanji-kanaru",
-    title: "漢字カナール",
-    description: "毎日1つの漢字を推理するパズル",
-    icon: "\u{1F4DA}",
-    accentColor: "#4d8c3f",
-  },
-  {
-    slug: "yoji-kimeru",
-    title: "四字キメル",
-    description: "毎日1つの四字熟語を当てるパズル",
-    icon: "\u{1F3AF}",
-    accentColor: "#9a8533",
-  },
-  {
-    slug: "nakamawake",
-    title: "ナカマワケ",
-    description: "16個の言葉を4グループに分けるパズル",
-    icon: "\u{1F9E9}",
-    accentColor: "#8a5a9a",
-  },
-  {
-    slug: "irodori",
-    title: "イロドリ",
-    description: "毎日5つの色を作って色彩感覚を鍛えよう",
-    icon: "\u{1F3A8}",
-    accentColor: "#e91e63",
-  },
-] as const;
-
 export default function Home() {
   const statBadges = [
     {
@@ -53,7 +23,7 @@ export default function Home() {
       href: "/tools",
     },
     {
-      label: `${DAILY_GAMES.length} デイリーパズル`,
+      label: `${allGameMetas.length} デイリーパズル`,
       icon: "\u{1F3AE}",
       href: "/games",
     },
@@ -95,10 +65,10 @@ export default function Home() {
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>今日のデイリーパズル</h2>
         <p className={styles.sectionDescription}>
-          毎日更新される{DAILY_GAMES.length}つのパズルに挑戦しよう
+          毎日更新される{allGameMetas.length}つのパズルに挑戦しよう
         </p>
         <div className={styles.gamesGrid}>
-          {DAILY_GAMES.map((game) => (
+          {allGameMetas.map((game) => (
             <Link
               key={game.slug}
               href={`/games/${game.slug}`}
@@ -111,7 +81,9 @@ export default function Home() {
             >
               <span className={styles.gameCardIcon}>{game.icon}</span>
               <h3 className={styles.gameCardTitle}>{game.title}</h3>
-              <p className={styles.gameCardDescription}>{game.description}</p>
+              <p className={styles.gameCardDescription}>
+                {game.shortDescription}
+              </p>
               <span className={styles.gameCardCta}>挑戦する</span>
             </Link>
           ))}

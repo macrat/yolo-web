@@ -7,51 +7,8 @@ import { getAllYoji } from "@/lib/dictionary/yoji";
 import { getAllColors } from "@/lib/dictionary/colors";
 import { getAllBlogPosts } from "@/lib/blog";
 import { allQuizMetas } from "@/lib/quiz/registry";
+import { allGameMetas } from "@/lib/games/registry";
 import type { SearchDocument } from "./types";
-
-/**
- * Game data for search index.
- * TODO: ゲームもレジストリパターンに移行する (see games/page.tsx GAMES)
- * 現在はゲーム数が少なく(4件)変更頻度も低いため、ここに直接定義している。
- * ゲームページの GAMES 定数と同期が必要。
- */
-const GAMES_FOR_SEARCH = [
-  {
-    slug: "kanji-kanaru",
-    title: "漢字カナール",
-    description:
-      "毎日1つの漢字を当てるパズルゲーム。部首・画数・読みのヒントで推理しよう!",
-    difficulty: "初級〜中級",
-    keywords: ["漢字", "パズル", "デイリー", "推理"],
-  },
-  {
-    slug: "yoji-kimeru",
-    title: "四字キメル",
-    description:
-      "毎日1つの四字熟語を当てるパズルゲーム。4文字の漢字を推理しよう!",
-    difficulty: "中級〜上級",
-    keywords: ["四字熟語", "パズル", "デイリー", "漢字"],
-  },
-  {
-    slug: "nakamawake",
-    title: "ナカマワケ",
-    description:
-      "16個の言葉を4つのグループに分けるパズルゲーム。共通テーマを見つけて仲間分けしよう!",
-    difficulty: "初級〜上級",
-    keywords: ["仲間分け", "グループ", "パズル", "言葉"],
-  },
-  {
-    slug: "irodori",
-    title: "イロドリ",
-    description:
-      "毎日5つの色を作って色彩感覚を鍛えよう! ターゲットカラーにどれだけ近づけるかチャレンジ!",
-    difficulty: "初級〜上級",
-    keywords: ["色", "カラー", "色彩", "デイリー"],
-  },
-] as const;
-
-/** Known game slugs for test validation */
-export const GAME_SLUGS = GAMES_FOR_SEARCH.map((g) => g.slug);
 
 /** Build the complete search index from all content types */
 export function buildSearchIndex(): SearchDocument[] {
@@ -71,13 +28,13 @@ export function buildSearchIndex(): SearchDocument[] {
   }
 
   // Games
-  for (const game of GAMES_FOR_SEARCH) {
+  for (const game of allGameMetas) {
     documents.push({
       id: `game:${game.slug}`,
       type: "game",
       title: game.title,
       description: game.description,
-      keywords: game.keywords.slice(),
+      keywords: [...game.keywords],
       url: `/games/${game.slug}`,
       extra: game.difficulty,
     });

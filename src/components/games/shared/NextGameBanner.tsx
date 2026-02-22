@@ -4,9 +4,9 @@ import { useSyncExternalStore } from "react";
 import Link from "next/link";
 import {
   getAllGameStatus,
-  ALL_GAMES,
   type GamePlayStatus,
 } from "@/lib/games/shared/crossGameProgress";
+import { allGameMetas } from "@/lib/games/registry";
 import styles from "./NextGameBanner.module.css";
 
 interface NextGameBannerProps {
@@ -63,7 +63,7 @@ export default function NextGameBanner({
 
   const otherGames = statuses.filter((s) => s.game.slug !== currentGameSlug);
   const playedCount = statuses.filter((s) => s.playedToday).length;
-  const totalCount = ALL_GAMES.length;
+  const totalCount = allGameMetas.length;
   const allComplete = playedCount === totalCount;
 
   return (

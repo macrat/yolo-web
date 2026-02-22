@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
-import { buildSearchIndex, GAME_SLUGS } from "../build-index";
+import { buildSearchIndex } from "../build-index";
+import { getAllGameSlugs } from "@/lib/games/registry";
 import type { ContentType } from "../types";
 
 describe("buildSearchIndex", () => {
@@ -74,13 +75,13 @@ describe("buildSearchIndex", () => {
   });
 
   test("game slugs match known game page slugs", () => {
-    // Validates that GAMES_FOR_SEARCH is in sync with actual game pages
+    // Validates that search index is in sync with the game registry
     const gameDocsInIndex = index.filter((doc) => doc.type === "game");
     const gameSlugsInIndex = gameDocsInIndex.map((doc) =>
       doc.id.replace("game:", ""),
     );
 
-    expect(gameSlugsInIndex.sort()).toEqual([...GAME_SLUGS].sort());
+    expect(gameSlugsInIndex.sort()).toEqual([...getAllGameSlugs()].sort());
 
     // All game slugs should be valid URL-safe strings
     for (const slug of gameSlugsInIndex) {

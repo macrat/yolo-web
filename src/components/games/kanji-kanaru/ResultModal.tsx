@@ -1,9 +1,10 @@
 "use client";
 
-import { useRef, useEffect, useCallback } from "react";
+import { useCallback } from "react";
 import type { GameState } from "@/lib/games/kanji-kanaru/types";
 import { generateShareText } from "@/lib/games/kanji-kanaru/share";
-import ShareButtons from "./ShareButtons";
+import GameDialog from "@/components/games/shared/GameDialog";
+import GameShareButtons from "@/components/games/shared/GameShareButtons";
 import CountdownTimer from "@/components/games/shared/CountdownTimer";
 import NextGameBanner from "@/components/games/shared/NextGameBanner";
 import styles from "./styles/KanjiKanaru.module.css";
@@ -17,7 +18,7 @@ interface ResultModalProps {
 
 /**
  * Modal showing the game result (win or loss) with answer details and share buttons.
- * Uses the native <dialog> element.
+ * Uses the shared GameDialog component.
  */
 export default function ResultModal({
   open,
@@ -25,92 +26,65 @@ export default function ResultModal({
   gameState,
   onStatsClick,
 }: ResultModalProps) {
-  const dialogRef = useRef<HTMLDialogElement>(null);
-
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    if (!dialog) return;
-
-    if (open && !dialog.open) {
-      dialog.showModal();
-    } else if (!open && dialog.open) {
-      dialog.close();
-    }
-  }, [open]);
-
-  const handleClose = useCallback(() => {
-    onClose();
-  }, [onClose]);
-
-  const handleBackdropClick = useCallback(
-    (e: React.MouseEvent<HTMLDialogElement>) => {
-      const rect = e.currentTarget.getBoundingClientRect();
-      if (
-        e.clientX < rect.left ||
-        e.clientX > rect.right ||
-        e.clientY < rect.top ||
-        e.clientY > rect.bottom
-      ) {
-        onClose();
-      }
-    },
-    [onClose],
-  );
-
   const { targetKanji, guesses, status } = gameState;
   const isWon = status === "won";
   const shareText = generateShareText(gameState);
 
-  const onReadings = targetKanji.onYomi.join("、");
-  const kunReadings = targetKanji.kunYomi.join("、");
+  const onReadings = targetKanji.onYomi.join("\u3001");
+  const kunReadings = targetKanji.kunYomi.join("\u3001");
   const meanings = targetKanji.meanings.join(", ");
-  const examples = targetKanji.examples.join("、");
+  const examples = targetKanji.examples.join("\u3001");
+
+  const handleStatsClick = useCallback(() => {
+    onClose();
+    onStatsClick();
+  }, [onClose, onStatsClick]);
 
   return (
-    <dialog
-      ref={dialogRef}
-      className={styles.modal}
-      onClose={handleClose}
-      onClick={handleBackdropClick}
-      aria-labelledby="kanji-kanaru-result-title"
+    <GameDialog
+      open={open}
+      onClose={onClose}
+      titleId="kanji-kanaru-result-title"
+      title={isWon ? "\u6B63\u89E3!" : "\u6B8B\u5FF5..."}
+      headerContent={
+        <div className={styles.resultEmoji}>
+          {isWon ? "\u{1F389}" : "\u{1F614}"}
+        </div>
+      }
+      footer={
+        <button
+          className={styles.statsButton}
+          onClick={handleStatsClick}
+          type="button"
+        >
+          {"\u7D71\u8A08\u3092\u898B\u308B"}
+        </button>
+      }
     >
-      <div className={styles.resultEmoji}>
-        {isWon ? "\u{1F389}" : "\u{1F614}"}
-      </div>
-      <h2 id="kanji-kanaru-result-title" className={styles.modalTitle}>
-        {isWon ? "正解!" : "残念..."}
-      </h2>
       <div className={styles.resultAnswer}>{targetKanji.character}</div>
       <div className={styles.resultReadings}>
-        {onReadings && <>音: {onReadings}</>}
+        {onReadings && <>\u97F3: {onReadings}</>}
         {onReadings && kunReadings && " / "}
-        {kunReadings && <>訓: {kunReadings}</>}
+        {kunReadings && <>\u8A13: {kunReadings}</>}
       </div>
       {meanings && (
-        <div className={styles.resultMeanings}>意味: {meanings}</div>
+        <div className={styles.resultMeanings}>\u610F\u5473: {meanings}</div>
       )}
-      {examples && <div className={styles.resultExamples}>例: {examples}</div>}
+      {examples && (
+        <div className={styles.resultExamples}>\u4F8B: {examples}</div>
+      )}
       <div className={styles.resultSummary}>
         {isWon
-          ? `${guesses.length}/6 で正解しました!`
-          : "6回以内に正解できませんでした"}
+          ? `${guesses.length}/6 \u3067\u6B63\u89E3\u3057\u307E\u3057\u305F!`
+          : "6\u56DE\u4EE5\u5185\u306B\u6B63\u89E3\u3067\u304D\u307E\u305B\u3093\u3067\u3057\u305F"}
       </div>
-      <ShareButtons shareText={shareText} />
+      <GameShareButtons
+        shareText={shareText}
+        gameTitle={"\u6F22\u5B57\u30AB\u30CA\u30FC\u30EB"}
+        gameSlug="kanji-kanaru"
+      />
       <CountdownTimer />
       <NextGameBanner currentGameSlug="kanji-kanaru" />
-      <button
-        className={styles.shareButtonStats}
-        onClick={() => {
-          handleClose();
-          onStatsClick();
-        }}
-        type="button"
-      >
-        統計を見る
-      </button>
-      <button className={styles.modalClose} onClick={handleClose} type="button">
-        閉じる
-      </button>
-    </dialog>
+    </GameDialog>
   );
 }
