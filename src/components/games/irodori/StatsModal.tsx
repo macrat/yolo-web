@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef, useEffect, useCallback } from "react";
 import type { IrodoriGameStats } from "@/lib/games/irodori/types";
+import GameDialog from "@/components/games/shared/GameDialog";
 import styles from "./StatsModal.module.css";
 
 interface Props {
@@ -28,51 +28,15 @@ const SCORE_LABELS = [
  * streaks, and score distribution histogram.
  */
 export default function StatsModal({ open, onClose, stats }: Props) {
-  const dialogRef = useRef<HTMLDialogElement>(null);
-
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    if (!dialog) return;
-
-    if (open && !dialog.open) {
-      dialog.showModal();
-    } else if (!open && dialog.open) {
-      dialog.close();
-    }
-  }, [open]);
-
-  const handleClose = useCallback(() => {
-    onClose();
-  }, [onClose]);
-
-  const handleBackdropClick = useCallback(
-    (e: React.MouseEvent<HTMLDialogElement>) => {
-      const rect = e.currentTarget.getBoundingClientRect();
-      if (
-        e.clientX < rect.left ||
-        e.clientX > rect.right ||
-        e.clientY < rect.top ||
-        e.clientY > rect.bottom
-      ) {
-        onClose();
-      }
-    },
-    [onClose],
-  );
-
   const maxDistribution = Math.max(...stats.scoreDistribution, 1);
 
   return (
-    <dialog
-      ref={dialogRef}
-      className={styles.modal}
-      onClose={handleClose}
-      onClick={handleBackdropClick}
-      aria-labelledby="irodori-stats-title"
+    <GameDialog
+      open={open}
+      onClose={onClose}
+      titleId="irodori-stats-title"
+      title={"\u7D71\u8A08"}
     >
-      <h2 id="irodori-stats-title" className={styles.modalTitle}>
-        {"\u7D71\u8A08"}
-      </h2>
       <div className={styles.statsGrid}>
         <div className={styles.statItem}>
           <div className={styles.statValue}>{stats.gamesPlayed}</div>
@@ -121,9 +85,6 @@ export default function StatsModal({ open, onClose, stats }: Props) {
           </div>
         );
       })}
-      <button className={styles.modalClose} onClick={handleClose} type="button">
-        {"\u9589\u3058\u308B"}
-      </button>
-    </dialog>
+    </GameDialog>
   );
 }

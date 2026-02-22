@@ -1,8 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import type { PublicMemo, RoleSlug } from "@/lib/memos-shared";
-import { ROLE_DISPLAY } from "@/lib/memos-shared";
+import {
+  ROLE_DISPLAY,
+  capitalize,
+  type PublicMemo,
+  type RoleSlug,
+} from "@/lib/memos-shared";
 import MemoCard from "./MemoCard";
 import styles from "./MemoFilter.module.css";
 
@@ -15,7 +19,7 @@ interface MemoFilterProps {
 function getRoleLabel(role: string): string {
   const knownDisplay = ROLE_DISPLAY[role as RoleSlug];
   if (knownDisplay) return knownDisplay.label;
-  return role.charAt(0).toUpperCase() + role.slice(1);
+  return capitalize(role);
 }
 
 export default function MemoFilter({

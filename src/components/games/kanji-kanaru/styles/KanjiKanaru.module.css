@@ -297,45 +297,6 @@
   min-height: 1.2em;
 }
 
-/* ===== Modal (dialog) ===== */
-.modal {
-  border: none;
-  border-radius: 12px;
-  padding: 1.5rem;
-  max-width: 90vw;
-  width: 400px;
-  background-color: var(--color-bg);
-  color: var(--color-text);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
-}
-
-.modal::backdrop {
-  background-color: rgba(0, 0, 0, 0.5);
-}
-
-.modalTitle {
-  font-size: 1.3rem;
-  font-weight: 700;
-  text-align: center;
-  margin-bottom: 1rem;
-}
-
-.modalClose {
-  display: block;
-  margin: 1rem auto 0;
-  padding: 0.5rem 2rem;
-  font-size: 0.95rem;
-  border: 1px solid var(--color-border);
-  border-radius: 6px;
-  background-color: var(--color-bg);
-  color: var(--color-text);
-  cursor: pointer;
-}
-
-.modalClose:hover {
-  background-color: var(--color-bg-secondary);
-}
-
 /* ===== Result Modal ===== */
 .resultEmoji {
   text-align: center;
@@ -378,44 +339,8 @@
   margin-bottom: 1rem;
 }
 
-/* ===== Share Buttons ===== */
-.shareArea {
-  display: flex;
-  gap: 0.5rem;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-top: 0.75rem;
-}
-
-.shareButton {
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
-  font-weight: 600;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  color: #ffffff;
-}
-
-.shareButtonCopy {
-  composes: shareButton;
-  background-color: var(--kk-color-correct);
-}
-
-.shareButtonCopy:hover {
-  opacity: 0.9;
-}
-
-.shareButtonX {
-  composes: shareButton;
-  background-color: #1da1f2;
-}
-
-.shareButtonX:hover {
-  opacity: 0.9;
-}
-
-.shareButtonStats {
+/* ===== Stats Button (Result Modal) ===== */
+.statsButton {
   display: block;
   margin: 0.75rem auto 0;
   padding: 0.4rem 1.5rem;
@@ -427,16 +352,8 @@
   cursor: pointer;
 }
 
-.shareButtonStats:hover {
+.statsButton:hover {
   background-color: var(--color-bg-secondary);
-}
-
-.copiedMessage {
-  font-size: 0.8rem;
-  color: var(--kk-color-correct);
-  text-align: center;
-  margin-top: 0.25rem;
-  min-height: 1.2em;
 }
 
 /* ===== Stats Modal ===== */

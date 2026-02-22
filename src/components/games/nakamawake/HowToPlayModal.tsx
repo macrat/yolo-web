@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useCallback } from "react";
+import GameDialog from "@/components/games/shared/GameDialog";
 import styles from "./HowToPlayModal.module.css";
 
 interface Props {
@@ -10,52 +10,16 @@ interface Props {
 
 /**
  * Modal explaining how to play the game.
- * Uses the native <dialog> element for accessibility.
+ * Uses the shared GameDialog component for consistent dialog behavior.
  */
 export default function HowToPlayModal({ open, onClose }: Props) {
-  const dialogRef = useRef<HTMLDialogElement>(null);
-
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    if (!dialog) return;
-
-    if (open && !dialog.open) {
-      dialog.showModal();
-    } else if (!open && dialog.open) {
-      dialog.close();
-    }
-  }, [open]);
-
-  const handleClose = useCallback(() => {
-    onClose();
-  }, [onClose]);
-
-  const handleBackdropClick = useCallback(
-    (e: React.MouseEvent<HTMLDialogElement>) => {
-      const rect = e.currentTarget.getBoundingClientRect();
-      if (
-        e.clientX < rect.left ||
-        e.clientX > rect.right ||
-        e.clientY < rect.top ||
-        e.clientY > rect.bottom
-      ) {
-        onClose();
-      }
-    },
-    [onClose],
-  );
-
   return (
-    <dialog
-      ref={dialogRef}
-      className={styles.modal}
-      onClose={handleClose}
-      onClick={handleBackdropClick}
-      aria-labelledby="nakamawake-howtoplay-title"
+    <GameDialog
+      open={open}
+      onClose={onClose}
+      titleId="nakamawake-howtoplay-title"
+      title={"\u30CA\u30AB\u30DE\u30EF\u30B1\u306E\u904A\u3073\u65B9"}
     >
-      <h2 id="nakamawake-howtoplay-title" className={styles.modalTitle}>
-        {"\u30CA\u30AB\u30DE\u30EF\u30B1\u306E\u904A\u3073\u65B9"}
-      </h2>
       <div className={styles.content}>
         <p>
           16
@@ -109,9 +73,6 @@ export default function HowToPlayModal({ open, onClose }: Props) {
           }
         </p>
       </div>
-      <button className={styles.modalClose} onClick={handleClose} type="button">
-        {"\u9589\u3058\u308B"}
-      </button>
-    </dialog>
+    </GameDialog>
   );
 }

@@ -1,0 +1,52 @@
+.shareArea {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 0.75rem;
+}
+
+.shareButton {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #ffffff;
+}
+
+.shareButtonCopy {
+  composes: shareButton;
+  background-color: #6aaa64;
+}
+
+.shareButtonCopy:hover {
+  opacity: 0.9;
+}
+
+.shareButtonX {
+  composes: shareButton;
+  background-color: #1da1f2;
+}
+
+.shareButtonX:hover {
+  opacity: 0.9;
+}
+
+.shareButtonImage {
+  composes: shareButton;
+  background-color: #8a5a9a;
+}
+
+.shareButtonImage:hover {
+  opacity: 0.9;
+}
+
+.copiedMessage {
+  font-size: 0.8rem;
+  color: #6aaa64;
+  text-align: center;
+  margin-top: 0.25rem;
+  min-height: 1.2em;
+}

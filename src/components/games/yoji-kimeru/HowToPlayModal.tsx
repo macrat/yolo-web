@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useCallback } from "react";
+import GameDialog from "@/components/games/shared/GameDialog";
 import styles from "./styles/YojiKimeru.module.css";
 
 interface HowToPlayModalProps {
@@ -10,52 +10,16 @@ interface HowToPlayModalProps {
 
 /**
  * Modal explaining how to play the game.
- * Uses the native <dialog> element for accessibility.
+ * Uses the shared GameDialog component for consistent dialog behavior.
  */
 export default function HowToPlayModal({ open, onClose }: HowToPlayModalProps) {
-  const dialogRef = useRef<HTMLDialogElement>(null);
-
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    if (!dialog) return;
-
-    if (open && !dialog.open) {
-      dialog.showModal();
-    } else if (!open && dialog.open) {
-      dialog.close();
-    }
-  }, [open]);
-
-  const handleClose = useCallback(() => {
-    onClose();
-  }, [onClose]);
-
-  const handleBackdropClick = useCallback(
-    (e: React.MouseEvent<HTMLDialogElement>) => {
-      const rect = e.currentTarget.getBoundingClientRect();
-      if (
-        e.clientX < rect.left ||
-        e.clientX > rect.right ||
-        e.clientY < rect.top ||
-        e.clientY > rect.bottom
-      ) {
-        onClose();
-      }
-    },
-    [onClose],
-  );
-
   return (
-    <dialog
-      ref={dialogRef}
-      className={styles.modal}
-      onClose={handleClose}
-      onClick={handleBackdropClick}
-      aria-labelledby="yoji-kimeru-howtoplay-title"
+    <GameDialog
+      open={open}
+      onClose={onClose}
+      titleId="yoji-kimeru-howtoplay-title"
+      title="遊び方"
     >
-      <h2 id="yoji-kimeru-howtoplay-title" className={styles.modalTitle}>
-        遊び方
-      </h2>
       <div className={styles.howToPlayContent}>
         <p>
           毎日1つの四字熟語を当てるゲームです。6回以内に正解を見つけましょう。
@@ -72,9 +36,6 @@ export default function HowToPlayModal({ open, onClose }: HowToPlayModalProps) {
           ヒントとして難易度が最初から表示されます。3回目の推測後に読みの最初の文字が、5回目の推測後にカテゴリが表示されます。
         </p>
       </div>
-      <button className={styles.modalClose} onClick={handleClose} type="button">
-        閉じる
-      </button>
-    </dialog>
+    </GameDialog>
   );
 }

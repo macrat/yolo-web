@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { allGameMetas, getGamePath } from "@/lib/games/registry";
 import styles from "./Footer.module.css";
 
 const SECTION_LINKS = [
@@ -13,10 +14,10 @@ const SECTION_LINKS = [
     heading: "ゲーム",
     links: [
       { href: "/games", label: "ゲーム一覧" },
-      { href: "/games/kanji-kanaru", label: "漢字カナール" },
-      { href: "/games/yoji-kimeru", label: "四字キメル" },
-      { href: "/games/nakamawake", label: "ナカマワケ" },
-      { href: "/games/irodori", label: "イロドリ" },
+      ...allGameMetas.map((game) => ({
+        href: getGamePath(game.slug),
+        label: game.title,
+      })),
     ],
   },
   {

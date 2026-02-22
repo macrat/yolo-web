@@ -63,6 +63,11 @@ export const ROLE_DISPLAY: Record<RoleSlug, RoleDisplay> = {
   },
 };
 
+/** Capitalize the first character of a string (used as fallback for unknown role names). */
+export function capitalize(s: string): string {
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
 export interface PublicMemo {
   id: string;
   subject: string;

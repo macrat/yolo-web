@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef, useEffect, useCallback } from "react";
 import type { YojiGameStats } from "@/lib/games/yoji-kimeru/types";
+import GameDialog from "@/components/games/shared/GameDialog";
 import styles from "./styles/YojiKimeru.module.css";
 
 interface StatsModalProps {
@@ -14,7 +14,7 @@ interface StatsModalProps {
 /**
  * Modal showing game statistics: games played, win rate, streaks,
  * and guess distribution histogram.
- * Uses the native <dialog> element.
+ * Uses the shared GameDialog component.
  */
 export default function StatsModal({
   open,
@@ -22,38 +22,6 @@ export default function StatsModal({
   stats,
   lastGuessCount,
 }: StatsModalProps) {
-  const dialogRef = useRef<HTMLDialogElement>(null);
-
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    if (!dialog) return;
-
-    if (open && !dialog.open) {
-      dialog.showModal();
-    } else if (!open && dialog.open) {
-      dialog.close();
-    }
-  }, [open]);
-
-  const handleClose = useCallback(() => {
-    onClose();
-  }, [onClose]);
-
-  const handleBackdropClick = useCallback(
-    (e: React.MouseEvent<HTMLDialogElement>) => {
-      const rect = e.currentTarget.getBoundingClientRect();
-      if (
-        e.clientX < rect.left ||
-        e.clientX > rect.right ||
-        e.clientY < rect.top ||
-        e.clientY > rect.bottom
-      ) {
-        onClose();
-      }
-    },
-    [onClose],
-  );
-
   const winRate =
     stats.gamesPlayed > 0
       ? Math.round((stats.gamesWon / stats.gamesPlayed) * 100)
@@ -62,35 +30,37 @@ export default function StatsModal({
   const maxDistribution = Math.max(...stats.guessDistribution, 1);
 
   return (
-    <dialog
-      ref={dialogRef}
-      className={styles.modal}
-      onClose={handleClose}
-      onClick={handleBackdropClick}
-      aria-labelledby="yoji-kimeru-stats-title"
+    <GameDialog
+      open={open}
+      onClose={onClose}
+      titleId="yoji-kimeru-stats-title"
+      title={"\u7D71\u8A08"}
     >
-      <h2 id="yoji-kimeru-stats-title" className={styles.modalTitle}>
-        統計
-      </h2>
       <div className={styles.statsGrid}>
         <div className={styles.statItem}>
           <div className={styles.statValue}>{stats.gamesPlayed}</div>
-          <div className={styles.statLabel}>プレイ回数</div>
+          <div className={styles.statLabel}>
+            {"\u30D7\u30EC\u30A4\u56DE\u6570"}
+          </div>
         </div>
         <div className={styles.statItem}>
           <div className={styles.statValue}>{winRate}%</div>
-          <div className={styles.statLabel}>勝率</div>
+          <div className={styles.statLabel}>{"\u52DD\u7387"}</div>
         </div>
         <div className={styles.statItem}>
           <div className={styles.statValue}>{stats.currentStreak}</div>
-          <div className={styles.statLabel}>現在の連勝</div>
+          <div className={styles.statLabel}>
+            {"\u73FE\u5728\u306E\u9023\u52DD"}
+          </div>
         </div>
         <div className={styles.statItem}>
           <div className={styles.statValue}>{stats.maxStreak}</div>
-          <div className={styles.statLabel}>最長連勝</div>
+          <div className={styles.statLabel}>{"\u6700\u9577\u9023\u52DD"}</div>
         </div>
       </div>
-      <div className={styles.distributionTitle}>推測回数の分布:</div>
+      <div className={styles.distributionTitle}>
+        {"\u63A8\u6E2C\u56DE\u6570\u306E\u5206\u5E03:"}
+      </div>
       {stats.guessDistribution.map((count, i) => {
         const barWidth = Math.max(
           (count / maxDistribution) * 100,
@@ -114,9 +84,6 @@ export default function StatsModal({
           </div>
         );
       })}
-      <button className={styles.modalClose} onClick={handleClose} type="button">
-        閉じる
-      </button>
-    </dialog>
+    </GameDialog>
   );
 }
