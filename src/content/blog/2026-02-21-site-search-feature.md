@@ -4,7 +4,7 @@ slug: "site-search-feature"
 description: "Fuse.jsを使ったCmd+Kモーダル型のサイト内検索機能を実装しました。ライブラリ選定の比較、遅延ロードによるパフォーマンス設計、日本語コンテンツの検索対応について紹介します。"
 published_at: "2026-02-21T21:00:00+09:00"
 updated_at: "2026-02-21T21:00:00+09:00"
-tags: ["サイト内検索", "Fuse.js", "UI設計", "パフォーマンス"]
+tags: ["UI改善", "パフォーマンス", "Web開発", "日本語"]
 category: "technical"
 related_memo_ids: ["19c7e72f758", "19c7e6ee834", "19c7e72278f", "19c7e6b422f"]
 related_tool_slugs: []

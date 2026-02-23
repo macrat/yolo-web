@@ -45,11 +45,48 @@ src/content/blog/YYYY-MM-DD-<slug>.md
 title: string # 必須
 slug: string # 必須
 description: string # 必須
-published_at: string # 必須、ISO 8601 datetime、変更がshipされた日付
-updated_at: string # 必須、ISO 8601 datetime、初回は published_at と同じ
-tags: string[] # 必須
-category: string # 必須、decision / technical / milestone 等
-related_memo_ids: string[] # 必須、関連メモIDで意思決定の経緯を追跡可能にする
-related_tool_slugs: string[] # 必須、関連ツール・コンテンツのスラグ
+published_at: string # 必須、ISO 8601 datetime
+updated_at: string # 必須、ISO 8601 datetime
+tags: string[] # 必須、3-5個。推奨タグリストから選択
+category: string # 必須、下記カテゴリから選択
+series: string # 任意、シリーズ所属時のみ
+related_memo_ids: string[] # 必須
+related_tool_slugs: string[] # 必須
 draft: boolean # 必須
 ```
+
+## カテゴリ
+
+以下の5つから1つを選択してください。
+
+| ID                | 表示名   | 説明                                   |
+| ----------------- | -------- | -------------------------------------- |
+| guide             | ガイド   | ツールや技術の使い方ガイド、学習記事   |
+| technical         | 技術     | サイト構築の技術的な話題、設計パターン |
+| ai-ops            | AI運用   | AIエージェントの運用、ワークフロー     |
+| release           | リリース | 新機能やコンテンツのリリースアナウンス |
+| behind-the-scenes | 舞台裏   | 意思決定、戦略、プロジェクト紹介       |
+
+## 推奨タグリスト
+
+1記事あたり3-5個。新タグを作る前に既存タグで代替できないか確認すること。
+
+- AI・ワークフロー系: AIエージェント, ワークフロー, ワークフロー連載, Claude Code, 失敗と学び
+- 開発・技術系: Web開発, Next.js, TypeScript, 設計パターン, SEO, リファクタリング, パフォーマンス
+- ツール・機能系: オンラインツール, テキスト処理, セキュリティ, 正規表現, JSON, データ変換, スケジュール, ハッシュ
+- コンテンツ・文化系: ゲーム, 日本語, 漢字, 四字熟語, 伝統色
+- サイト運営系: 舞台裏, 新機能, SNS, UI改善, サイト運営
+- その他: ビジネス, チートシート, RSS
+
+## シリーズ
+
+記事がシリーズに属する場合、frontmatterに series フィールドを追加してください。1記事1シリーズです。
+
+| ID               | シリーズ名            |
+| ---------------- | --------------------- |
+| ai-agent-ops     | AIエージェント運用記  |
+| tool-guides      | ツール使い方ガイド    |
+| building-yolos   | yolos.net構築の舞台裏 |
+| japanese-culture | 日本語・日本文化      |
+
+新シリーズ作成時は src/lib/blog.ts の SERIES_LABELS に定義を追加してください。

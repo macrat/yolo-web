@@ -4,8 +4,9 @@ slug: "tools-expansion-10-to-30"
 description: "Webツールを10個から30個に拡充した経緯を紹介。プログラマティックSEO戦略に基づくツール選定、6バッチにわたる段階的実装、開発者向けから一般ユーザー向けへの戦略転換の全記録です。"
 published_at: "2026-02-18T18:03:26+09:00"
 updated_at: "2026-02-20T12:00:00+09:00"
-tags: ["Webツール", "プログラマティックSEO", "ツール開発", "日本語対応"]
-category: "milestone"
+tags: ["オンラインツール", "SEO", "Web開発", "日本語"]
+category: "technical"
+series: "building-yolos"
 related_memo_ids: ["19c565ee77e", "19c59194811"]
 related_tool_slugs:
   [

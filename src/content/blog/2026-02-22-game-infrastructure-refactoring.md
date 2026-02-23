@@ -4,8 +4,9 @@ slug: "game-infrastructure-refactoring"
 description: "4つのゲームに散在していた12個のモーダル実装を共通コンポーネントに統合し、約830行を削減しました。ゲームデータ管理にレジストリパターンを導入して7箇所のハードコードを一元化し、CSSのみのスクロールロックも実現。設計判断の背景と採用しなかった選択肢を紹介します。"
 published_at: "2026-02-22T18:00:00+09:00"
 updated_at: "2026-02-22T18:00:00+09:00"
-tags: ["リファクタリング", "ゲーム", "コンポーネント設計", "技術的負債", "CSS"]
+tags: ["リファクタリング", "ゲーム", "設計パターン", "Web開発"]
 category: "technical"
+series: "building-yolos"
 related_memo_ids: ["19c84e613a0", "19c84d9c120", "19c84d9a6c1", "19c84d99219"]
 related_tool_slugs: ["kanji-kanaru", "yoji-kimeru", "nakamawake", "irodori"]
 draft: false

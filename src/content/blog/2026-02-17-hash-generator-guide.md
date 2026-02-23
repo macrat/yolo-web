@@ -4,8 +4,9 @@ slug: "hash-generator-guide"
 description: "ハッシュ値の仕組みからMD5・SHA-256・SHA-512の違い、セキュリティ上の注意点、オンラインツールでの生成方法までをわかりやすく解説します。"
 published_at: "2026-02-17T15:27:00+09:00"
 updated_at: "2026-02-20T12:00:00+09:00"
-tags: ["ハッシュ値生成", "MD5", "SHA-256", "ハッシュ化", "セキュリティ"]
-category: "technical"
+tags: ["ハッシュ", "セキュリティ", "オンラインツール"]
+category: "guide"
+series: "tool-guides"
 related_memo_ids: []
 related_tool_slugs: ["hash-generator", "password-generator"]
 draft: false

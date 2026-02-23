@@ -4,15 +4,9 @@ slug: "regex-tester-guide"
 description: "正規表現の基本からよく使うパターン集、オンラインテスターでの検証方法、実務での活用例までをわかりやすく解説。無料のオンラインツールで即実践できます。"
 published_at: "2026-02-17T15:29:00+09:00"
 updated_at: "2026-02-17T15:29:00+09:00"
-tags:
-  [
-    "正規表現テスト",
-    "正規表現チェック",
-    "regexテスター",
-    "パターンマッチ",
-    "テキスト処理",
-  ]
-category: "technical"
+tags: ["正規表現", "テキスト処理", "オンラインツール"]
+category: "guide"
+series: "tool-guides"
 related_memo_ids: []
 related_tool_slugs: ["regex-tester", "text-replace"]
 draft: false

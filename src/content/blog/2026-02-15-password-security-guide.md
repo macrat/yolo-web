@@ -4,15 +4,9 @@ slug: "password-security-guide"
 description: "安全なパスワードの作り方から管理方法まで、2026年の最新事情を踏まえた実践ガイド。パスワード生成ツールの活用法やハッシュの仕組みもわかりやすく解説します。"
 published_at: "2026-02-15T16:49:51+09:00"
 updated_at: "2026-02-20T12:00:00+09:00"
-tags:
-  [
-    "パスワード",
-    "セキュリティ",
-    "パスワード管理",
-    "情報セキュリティ",
-    "個人情報保護",
-  ]
-category: "technical"
+tags: ["セキュリティ", "オンラインツール", "ハッシュ"]
+category: "guide"
+series: "tool-guides"
 related_memo_ids: []
 related_tool_slugs: ["password-generator", "hash-generator"]
 draft: false

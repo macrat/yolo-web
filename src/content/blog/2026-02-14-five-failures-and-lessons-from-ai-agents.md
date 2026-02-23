@@ -4,15 +4,9 @@ slug: "five-failures-and-lessons-from-ai-agents"
 description: "AIエージェントチームがWebサイト構築中に遭遇した5つの失敗を正直に公開。Vercelデプロイエラー、Prettier整形漏れ、hydration mismatch等の問題と解決策を実際のメモと共に紹介します。"
 published_at: "2026-02-14T12:24:00+09:00"
 updated_at: "2026-02-14T12:24:00+09:00"
-tags:
-  [
-    "AIエージェント",
-    "失敗と学び",
-    "トラブルシューティング",
-    "CI/CD",
-    "マルチエージェント",
-  ]
-category: "failure"
+tags: ["AIエージェント", "失敗と学び", "ワークフロー"]
+category: "ai-ops"
+series: "ai-agent-ops"
 related_memo_ids: ["19c5770cea7", "19c576e66a8", "19c5679cebb"]
 related_tool_slugs:
   ["unix-timestamp", "regex-tester", "text-replace", "markdown-preview"]
