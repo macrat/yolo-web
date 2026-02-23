@@ -1,8 +1,15 @@
 import type { QuizDefinition, QuizMeta } from "./types";
 import kanjiLevelQuiz from "./data/kanji-level";
 import traditionalColorQuiz from "./data/traditional-color";
+import yojiLevelQuiz from "./data/yoji-level";
+import yojiPersonalityQuiz from "./data/yoji-personality";
 
-const quizEntries: QuizDefinition[] = [kanjiLevelQuiz, traditionalColorQuiz];
+const quizEntries: QuizDefinition[] = [
+  kanjiLevelQuiz,
+  traditionalColorQuiz,
+  yojiLevelQuiz,
+  yojiPersonalityQuiz,
+];
 
 /** Map of slug -> QuizDefinition for O(1) lookup */
 export const quizBySlug: Map<string, QuizDefinition> = new Map(

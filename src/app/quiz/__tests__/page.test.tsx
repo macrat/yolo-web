@@ -12,17 +12,21 @@ describe("QuizListPage", () => {
 
   it("renders quiz cards for each registered quiz", () => {
     render(<QuizListPage />);
-    // Both kanji-level and traditional-color quizzes should be displayed
+    // All registered quizzes should be displayed
     expect(screen.getByText("漢字力診断")).toBeInTheDocument();
     expect(
       screen.getByText("あなたを日本の伝統色に例えると?"),
     ).toBeInTheDocument();
+    expect(screen.getByText("四字熟語力診断")).toBeInTheDocument();
+    expect(screen.getByText("あなたを四字熟語に例えると?")).toBeInTheDocument();
   });
 
   it("renders type badges", () => {
     render(<QuizListPage />);
-    expect(screen.getByText("知識テスト")).toBeInTheDocument();
-    expect(screen.getByText("性格診断")).toBeInTheDocument();
+    const knowledgeBadges = screen.getAllByText("知識テスト");
+    const personalityBadges = screen.getAllByText("性格診断");
+    expect(knowledgeBadges.length).toBe(2);
+    expect(personalityBadges.length).toBe(2);
   });
 
   it("renders links to individual quiz pages", () => {
