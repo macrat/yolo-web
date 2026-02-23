@@ -4,9 +4,9 @@ slug: "cron-parser-guide"
 description: "cron式の書き方を基礎から解説。各フィールドの意味、よく使うパターン、オンラインツールでの検証方法まで、スケジュール設定に必要な知識をわかりやすくまとめました。"
 published_at: "2026-02-17T15:26:00+09:00"
 updated_at: "2026-02-17T15:26:00+09:00"
-tags:
-  ["cron書き方", "crontab設定", "cron式解説", "スケジュール", "サーバー管理"]
-category: "technical"
+tags: ["スケジュール", "オンラインツール", "Web開発"]
+category: "guide"
+series: "tool-guides"
 related_memo_ids: []
 related_tool_slugs: ["cron-parser"]
 draft: false

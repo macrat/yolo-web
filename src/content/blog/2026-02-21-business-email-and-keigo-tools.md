@@ -4,8 +4,8 @@ slug: "business-email-and-keigo-tools"
 description: "テンプレートを選んでフォームに入力するだけでビジネスメールを作成できるツールと、60以上の動詞の敬語変換を検索・フィルターできる早見表を公開しました。開発の経緯と設計判断を紹介します。"
 published_at: "2026-02-21T18:00:00+09:00"
 updated_at: "2026-02-21T18:00:00+09:00"
-tags: ["新ツール", "ビジネスメール", "敬語", "テンプレート", "日本語"]
-category: "milestone"
+tags: ["ビジネス", "オンラインツール", "新機能", "日本語"]
+category: "release"
 related_memo_ids: ["19c7e316373", "19c7e35e4e8", "19c7e39d9eb"]
 related_tool_slugs: ["business-email", "keigo-reference"]
 draft: false

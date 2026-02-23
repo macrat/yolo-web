@@ -10,33 +10,35 @@ import {
 const BLOG_DIR = path.join(process.cwd(), "src/content/blog");
 
 export type BlogCategory =
-  | "decision"
+  | "guide"
   | "technical"
-  | "failure"
-  | "collaboration"
-  | "milestone"
-  | "learning"
-  | "entertainment";
+  | "ai-ops"
+  | "release"
+  | "behind-the-scenes";
 
 export const CATEGORY_LABELS: Record<BlogCategory, string> = {
-  decision: "意思決定",
+  guide: "ガイド",
   technical: "技術",
-  failure: "失敗と学び",
-  collaboration: "コラボレーション",
-  milestone: "マイルストーン",
-  learning: "学習",
-  entertainment: "エンタメ",
+  "ai-ops": "AI運用",
+  release: "リリース",
+  "behind-the-scenes": "舞台裏",
 };
 
 export const ALL_CATEGORIES: BlogCategory[] = [
-  "decision",
+  "guide",
   "technical",
-  "failure",
-  "collaboration",
-  "milestone",
-  "learning",
-  "entertainment",
+  "ai-ops",
+  "release",
+  "behind-the-scenes",
 ];
+
+/** Series ID to display name mapping. */
+export const SERIES_LABELS: Record<string, string> = {
+  "ai-agent-ops": "AIエージェント運用記",
+  "tool-guides": "ツール使い方ガイド",
+  "building-yolos": "yolos.net構築の舞台裏",
+  "japanese-culture": "日本語・日本文化",
+};
 
 interface BlogFrontmatter {
   title: string;
@@ -46,6 +48,7 @@ interface BlogFrontmatter {
   updated_at: string;
   tags: string[];
   category: string;
+  series?: string;
   related_memo_ids: string[];
   related_tool_slugs: string[];
   draft: boolean;
@@ -59,6 +62,7 @@ export interface BlogPostMeta {
   updated_at: string;
   tags: string[];
   category: BlogCategory;
+  series?: string;
   related_memo_ids: string[];
   related_tool_slugs: string[];
   draft: boolean;
@@ -88,7 +92,7 @@ export function getAllBlogPosts(): BlogPostMeta[] {
 
     if (data.draft === true) continue;
 
-    posts.push({
+    const meta: BlogPostMeta = {
       title: String(data.title || ""),
       slug: String(data.slug || file.replace(/\.md$/, "")),
       description: String(data.description || ""),
@@ -104,7 +108,13 @@ export function getAllBlogPosts(): BlogPostMeta[] {
         : [],
       draft: false,
       readingTime: estimateReadingTime(content),
-    });
+    };
+
+    if (data.series) {
+      meta.series = String(data.series);
+    }
+
+    posts.push(meta);
   }
 
   posts.sort(
@@ -130,7 +140,7 @@ export function getBlogPostBySlug(slug: string): BlogPost | null {
     if (postSlug !== slug) continue;
     if (data.draft === true) continue;
 
-    return {
+    const post: BlogPost = {
       title: String(data.title || ""),
       slug: postSlug,
       description: String(data.description || ""),
@@ -149,6 +159,12 @@ export function getBlogPostBySlug(slug: string): BlogPost | null {
       contentHtml: markdownToHtml(content),
       headings: extractHeadings(content),
     };
+
+    if (data.series) {
+      post.series = String(data.series);
+    }
+
+    return post;
   }
 
   return null;

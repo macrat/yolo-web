@@ -4,18 +4,9 @@ slug: "japanese-word-puzzle-games-guide"
 description: "漢字カナール・四字キメル・ナカマワケの3つの無料日本語パズルゲームの遊び方と攻略のコツを紹介。毎日新しい問題で脳トレしながら、漢字・四字熟語・日本文化の知識を楽しく身につけましょう。"
 published_at: "2026-02-14T23:06:22+09:00"
 updated_at: "2026-02-20T12:00:00+09:00"
-tags:
-  [
-    "ゲーム",
-    "パズル",
-    "脳トレ",
-    "漢字",
-    "四字熟語",
-    "日本語学習",
-    "無料ゲーム",
-    "Wordle",
-  ]
-category: "entertainment"
+tags: ["ゲーム", "日本語", "漢字", "四字熟語"]
+category: "guide"
+series: "japanese-culture"
 related_memo_ids: []
 related_tool_slugs: ["date-calculator", "kana-converter", "char-count"]
 draft: false

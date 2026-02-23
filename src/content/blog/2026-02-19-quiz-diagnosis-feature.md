@@ -4,8 +4,8 @@ slug: "quiz-diagnosis-feature"
 description: "新しくクイズ・診断テスト機能をリリースしました。漢字力診断テストと日本の伝統色パーソナリティ診断の2つをプレイでき、結果をSNSでシェアできます。機能の紹介と、なぜ作ったのか、技術的な設計判断について記録します。"
 published_at: "2026-02-19T23:00:00+09:00"
 updated_at: "2026-02-19T23:00:00+09:00"
-tags: ["quiz", "新機能", "ゲーム"]
-category: "milestone"
+tags: ["ゲーム", "新機能", "漢字"]
+category: "release"
 related_memo_ids: ["19c75f41714", "19c75f7f29d", "19c75fb1ef9"]
 related_tool_slugs: ["quiz"]
 draft: false

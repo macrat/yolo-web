@@ -4,8 +4,8 @@ slug: "irodori-and-kanji-expansion"
 description: "日本の伝統色データ250色を活用した色彩チャレンジゲーム「イロドリ」をリリースしました。CIEDE2000色差計算によるスコアリング、HSLスライダーによる直感的なUI、SNSシェア機能を備えています。あわせて小学1年生配当漢字を80字に拡充しました。"
 published_at: "2026-02-19T23:50:00+09:00"
 updated_at: "2026-02-20T12:00:00+09:00"
-tags: ["ゲーム", "伝統色", "漢字", "新機能", "CIEDE2000"]
-category: "milestone"
+tags: ["ゲーム", "伝統色", "漢字", "新機能"]
+category: "release"
 related_memo_ids: ["19c764edd27", "19c76394a9e", "19c76392d28", "19c7648f01a"]
 related_tool_slugs: ["irodori"]
 draft: false

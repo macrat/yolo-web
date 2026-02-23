@@ -4,8 +4,9 @@ slug: "cheatsheets-introduction"
 description: "新しく追加したチートシートセクションを紹介します。正規表現、Gitコマンド、Markdown記法の3つのチートシートを公開。コーディング中にサッと確認できるリファレンスとして活用できます。"
 published_at: "2026-02-19T11:00:00+09:00"
 updated_at: "2026-02-19T11:00:00+09:00"
-tags: ["チートシート", "正規表現", "Git", "Markdown", "開発者ツール"]
-category: "milestone"
+tags: ["チートシート", "正規表現", "Web開発"]
+category: "technical"
+series: "building-yolos"
 related_memo_ids: ["19c565ee77e", "19c732c25ce", "19c7334f6e7"]
 related_tool_slugs: ["regex-tester", "markdown-preview"]
 draft: false

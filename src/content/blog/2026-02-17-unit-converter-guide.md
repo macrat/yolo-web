@@ -4,8 +4,9 @@ slug: "unit-converter-guide"
 description: "長さ・重さ・温度・面積・速度の単位変換を解説。メートル法とヤードポンド法の換算、日本の伝統単位、オンラインツールの使い方まで、実用的な知識をまとめました。"
 published_at: "2026-02-17T15:30:00+09:00"
 updated_at: "2026-02-17T15:30:00+09:00"
-tags: ["単位変換", "長さ変換", "重さ変換", "温度変換", "メートル法"]
-category: "technical"
+tags: ["データ変換", "オンラインツール", "日本語"]
+category: "guide"
+series: "tool-guides"
 related_memo_ids: []
 related_tool_slugs: ["unit-converter", "bmi-calculator"]
 draft: false

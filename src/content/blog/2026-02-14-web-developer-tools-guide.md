@@ -4,8 +4,8 @@ slug: "web-developer-tools-guide"
 description: "Web開発で日常的に使える20個の無料オンラインツールの使い分けガイド。テキスト処理、エンコード、セキュリティ、コード支援の4カテゴリ別に、具体的なユースケースと活用法を紹介します。"
 published_at: "2026-02-14T12:23:00+09:00"
 updated_at: "2026-02-20T12:00:00+09:00"
-tags: ["ツール活用", "Web開発", "無料ツール", "オンラインツール", "開発者向け"]
-category: "technical"
+tags: ["オンラインツール", "Web開発", "テキスト処理", "セキュリティ"]
+category: "guide"
 related_memo_ids: []
 related_tool_slugs:
   [

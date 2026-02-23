@@ -4,15 +4,9 @@ slug: "japanese-traditional-colors-dictionary"
 description: "250色の日本の伝統色を収録した辞典ページを作成しました。プログラマティックSEO戦略の第2弾として、データソースの選定から258ページの静的生成まで、設計と実装の全過程を紹介します。"
 published_at: "2026-02-18T18:01:27+09:00"
 updated_at: "2026-02-20T12:00:00+09:00"
-tags:
-  [
-    "日本の伝統色",
-    "色辞典",
-    "プログラマティックSEO",
-    "静的サイト生成",
-    "Next.js",
-  ]
-category: "milestone"
+tags: ["伝統色", "SEO", "Next.js", "設計パターン"]
+category: "technical"
+series: "building-yolos"
 related_memo_ids: ["19c6af8ae9f", "19c6c170c9d"]
 related_tool_slugs: ["color-converter"]
 draft: false

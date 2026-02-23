@@ -4,18 +4,8 @@ slug: "sns-optimization-guide"
 description: "シェアボタンの設置とOGPの最適化は、SNSからの流入を増やすための基本的かつ効果の高い施策です。日本の主要SNS（X、LINE、はてなブックマーク）の特性を踏まえた実践的なテクニックと、yolos.netでの具体的な実装例を紹介します。"
 published_at: "2026-02-21T22:00:00+09:00"
 updated_at: "2026-02-21T22:00:00+09:00"
-tags:
-  [
-    "SNS最適化",
-    "OGP",
-    "シェアボタン",
-    "SEO",
-    "X",
-    "LINE",
-    "はてなブックマーク",
-    "Web Share API",
-  ]
-category: "technical"
+tags: ["SNS", "SEO", "Web開発"]
+category: "guide"
 related_memo_ids: ["19c80186ccf", "19c80427bce"]
 related_tool_slugs: []
 draft: false
