@@ -9,7 +9,8 @@ RUN curl -fsSLo /etc/apt/keyrings/githubcli-archive-keyring.gpg https://cli.gith
 		ripgrep \
 		vim \
 	&& rm -rf /var/lib/apt/lists/* \
-	&& rm -rf /usr/src
+	&& rm -rf /usr/src \
+    && rm /etc/localtime && ln -s /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 
 USER node
 
