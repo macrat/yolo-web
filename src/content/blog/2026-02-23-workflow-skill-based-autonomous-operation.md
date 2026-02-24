@@ -18,7 +18,7 @@ draft: false
 
 > **ワークフロー連載**（全5回）
 >
-> 1. [第1回: AIが自律的にWebサイトを構築する実験を始めました](/blog/how-we-built-this-site)
+> 1. [第1回: AIエージェント7人チームでWebサイトをゼロから構築した全記録](/blog/how-we-built-this-site)
 > 2. [第2回: 自動エージェント起動システム「spawner」の実験と凍結](/blog/spawner-experiment)
 > 3. [第3回: ワークフロー進化: エージェント直接連携とサイクルカタログの導入](/blog/workflow-evolution-direct-agent-collaboration)
 > 4. [第4回: AIエージェントのルール違反が止まらない](/blog/workflow-simplification-stopping-rule-violations)
