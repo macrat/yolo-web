@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { testRegex, replaceWithRegex } from "./logic";
+import { useState } from "react";
+import { useRegexWorker } from "./useRegexWorker";
 import styles from "./Component.module.css";
 
 const FLAG_OPTIONS = [
@@ -18,15 +18,13 @@ export default function RegexTesterTool() {
   const [replacement, setReplacement] = useState("");
   const [showReplace, setShowReplace] = useState(false);
 
-  const result = useMemo(
-    () => testRegex(pattern, flags, testString),
-    [pattern, flags, testString],
-  );
-
-  const replaceResult = useMemo(() => {
-    if (!showReplace) return null;
-    return replaceWithRegex(pattern, flags, testString, replacement);
-  }, [showReplace, pattern, flags, testString, replacement]);
+  const { matchResult, replaceResult, isProcessing } = useRegexWorker({
+    pattern,
+    flags,
+    testString,
+    replacement,
+    showReplace,
+  });
 
   const toggleFlag = (flag: string) => {
     setFlags((prev) =>
@@ -80,41 +78,50 @@ export default function RegexTesterTool() {
           spellCheck={false}
         />
       </div>
-      {result.error && (
+      {isProcessing && (
+        <div className={styles.processing} role="status">
+          <span className={styles.spinner} aria-hidden="true" />
+          処理中...
+        </div>
+      )}
+      {!isProcessing && matchResult?.error && (
         <div className={styles.error} role="alert">
-          {result.error}
+          {matchResult.error}
         </div>
       )}
-      {result.success && result.matches.length > 0 && (
-        <div className={styles.matchInfo} role="status">
-          <h3 className={styles.matchHeading}>
-            マッチ結果: {result.matches.length}件
-          </h3>
-          <div className={styles.matchList}>
-            {result.matches.slice(0, 50).map((m, i) => (
-              <div key={i} className={styles.matchItem}>
-                <span className={styles.matchIndex}>#{i + 1}</span>
-                <code className={styles.matchText}>{m.match}</code>
-                <span className={styles.matchPos}>位置: {m.index}</span>
-                {m.groups.length > 0 && (
-                  <span className={styles.matchGroups}>
-                    グループ:{" "}
-                    {m.groups.map((g, gi) => `$${gi + 1}="${g}"`).join(", ")}
-                  </span>
-                )}
-              </div>
-            ))}
-            {result.matches.length > 50 && (
-              <p className={styles.truncated}>
-                ...他 {result.matches.length - 50} 件のマッチ
-              </p>
-            )}
+      {!isProcessing &&
+        matchResult?.success &&
+        matchResult.matches.length > 0 && (
+          <div className={styles.matchInfo} role="status">
+            <h3 className={styles.matchHeading}>
+              マッチ結果: {matchResult.matches.length}件
+            </h3>
+            <div className={styles.matchList}>
+              {matchResult.matches.slice(0, 50).map((m, i) => (
+                <div key={i} className={styles.matchItem}>
+                  <span className={styles.matchIndex}>#{i + 1}</span>
+                  <code className={styles.matchText}>{m.match}</code>
+                  <span className={styles.matchPos}>位置: {m.index}</span>
+                  {m.groups.length > 0 && (
+                    <span className={styles.matchGroups}>
+                      グループ:{" "}
+                      {m.groups.map((g, gi) => `$${gi + 1}="${g}"`).join(", ")}
+                    </span>
+                  )}
+                </div>
+              ))}
+              {matchResult.matches.length > 50 && (
+                <p className={styles.truncated}>
+                  ...他 {matchResult.matches.length - 50} 件のマッチ
+                </p>
+              )}
+            </div>
           </div>
-        </div>
-      )}
-      {result.success &&
+        )}
+      {!isProcessing &&
+        matchResult?.success &&
         pattern &&
-        result.matches.length === 0 &&
+        matchResult.matches.length === 0 &&
         testString && <p className={styles.noMatch}>マッチなし</p>}
       <div className={styles.replaceSection}>
         <button
@@ -140,7 +147,7 @@ export default function RegexTesterTool() {
                 spellCheck={false}
               />
             </div>
-            {replaceResult?.success && (
+            {!isProcessing && replaceResult?.success && (
               <div className={styles.field}>
                 <span className={styles.label}>置換結果</span>
                 <pre className={styles.replaceOutput}>
@@ -148,7 +155,7 @@ export default function RegexTesterTool() {
                 </pre>
               </div>
             )}
-            {replaceResult?.error && (
+            {!isProcessing && replaceResult?.error && (
               <div className={styles.error} role="alert">
                 {replaceResult.error}
               </div>
