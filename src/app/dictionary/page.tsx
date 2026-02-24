@@ -10,7 +10,7 @@ import styles from "./page.module.css";
 export const metadata: Metadata = {
   title: `辞典 | ${SITE_NAME}`,
   description:
-    "漢字・四字熟語・伝統色を調べられる辞典。漢字80字、四字熟語101語、伝統色250色の情報を収録。",
+    "漢字・四字熟語・日本の伝統色を楽しく学べるオンライン辞典。読み方・意味を丁寧にまとめています。漢字80字、四字熟語101語、伝統色250色を収録。",
   keywords: [
     "辞典",
     "漢字辞典",
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: `辞典 | ${SITE_NAME}`,
     description:
-      "漢字・四字熟語・伝統色をまとめた辞典。漢字80字、四字熟語101語、伝統色250色を収録。",
+      "漢字・四字熟語・日本の伝統色を楽しく学べるオンライン辞典。漢字80字、四字熟語101語、伝統色250色を収録。",
     type: "website",
   },
   alternates: {
@@ -43,7 +43,7 @@ export default function DictionaryPage() {
       <section className={styles.hero}>
         <h1 className={styles.heroTitle}>辞典</h1>
         <p className={styles.heroSubtext}>
-          漢字と四字熟語の読み方・意味・使い方を調べられる辞典です。
+          漢字・四字熟語・日本の伝統色を楽しく調べて学べる辞典です。気になる言葉や色をクリックして、読み方・意味・使い方を見てみましょう。
         </p>
       </section>
 
@@ -70,7 +70,7 @@ export default function DictionaryPage() {
           <span className={styles.sectionIcon}>色</span>
           <h2 className={styles.sectionTitle}>伝統色辞典</h2>
           <p className={styles.sectionDesc}>
-            日本の伝統色の由来とカラーデータを一覧で確認できます。
+            日本の伝統色の名前とカラーデータを一覧で確認できます。
           </p>
           <p className={styles.sectionCount}>{colorCount}色収録</p>
         </Link>

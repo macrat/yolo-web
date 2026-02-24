@@ -10,11 +10,12 @@ import styles from "./page.module.css";
 export const metadata: Metadata = {
   title: `漢字辞典 | ${SITE_NAME}`,
   description:
-    "小学1年生で学ぶ漢字80字の読み方・意味・部首・画数を収録した漢字辞典です。",
+    "小学1年生で学ぶ基本漢字80字の読み方・意味・部首・画数を丁寧にまとめたオンライン漢字辞典。各漢字の使用例もあわせて確認できます。",
   keywords: ["漢字辞典", "漢字", "読み方", "小学1年生", "基本漢字"],
   openGraph: {
     title: `漢字辞典 | ${SITE_NAME}`,
-    description: "漢字80字の読み方・意味・部首・画数を収録。",
+    description:
+      "小学1年生で学ぶ基本漢字80字の読み方・意味・部首・画数を丁寧にまとめたオンライン漢字辞典。",
     type: "website",
   },
   alternates: {
@@ -41,7 +42,7 @@ export default function KanjiIndexPage() {
       <h1 className={styles.title}>漢字辞典</h1>
       <p className={styles.description}>
         小学1年生で学ぶ基本漢字{allKanji.length}
-        字を収録しています。漢字をクリックして詳細を見ることができます。
+        字の読み方・意味・部首・画数を丁寧にまとめました。漢字をクリックすると、使用例や関連する漢字も確認できます。
       </p>
       <CategoryNav
         categories={categories}
