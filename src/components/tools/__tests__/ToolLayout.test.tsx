@@ -43,3 +43,29 @@ test("ToolLayout renders description", () => {
   );
   expect(screen.getByText("テストツールの説明です。")).toBeInTheDocument();
 });
+
+test("ToolLayout renders privacy note text", () => {
+  render(
+    <ToolLayout meta={mockMeta}>
+      <div>Content</div>
+    </ToolLayout>,
+  );
+  expect(
+    screen.getByText(
+      "このツールはブラウザ上で動作します。入力データがサーバーに送信されることはありません。",
+    ),
+  ).toBeInTheDocument();
+});
+
+test("ToolLayout privacy note has role='note'", () => {
+  render(
+    <ToolLayout meta={mockMeta}>
+      <div>Content</div>
+    </ToolLayout>,
+  );
+  const note = screen.getByRole("note");
+  expect(note).toBeInTheDocument();
+  expect(note).toHaveTextContent(
+    "このツールはブラウザ上で動作します。入力データがサーバーに送信されることはありません。",
+  );
+});

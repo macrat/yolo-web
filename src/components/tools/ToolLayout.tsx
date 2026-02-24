@@ -27,6 +27,11 @@ export default function ToolLayout({ meta, children }: ToolLayoutProps) {
       <section className={styles.content} aria-label="Tool">
         {children}
       </section>
+      <p className={styles.privacyNote} role="note">
+        {
+          "\u3053\u306E\u30C4\u30FC\u30EB\u306F\u30D6\u30E9\u30A6\u30B6\u4E0A\u3067\u52D5\u4F5C\u3057\u307E\u3059\u3002\u5165\u529B\u30C7\u30FC\u30BF\u304C\u30B5\u30FC\u30D0\u30FC\u306B\u9001\u4FE1\u3055\u308C\u308B\u3053\u3068\u306F\u3042\u308A\u307E\u305B\u3093\u3002"
+        }
+      </p>
       <section className={styles.shareSection}>
         <h2 className={styles.shareSectionTitle}>
           {

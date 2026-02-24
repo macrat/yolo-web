@@ -10,6 +10,22 @@ export interface RegexResult {
   error?: string;
 }
 
+/** Worker に送信するリクエストメッセージの型 */
+export interface RegexWorkerRequest {
+  type: "match" | "replace";
+  pattern: string;
+  flags: string;
+  testString: string;
+  replacement?: string;
+}
+
+/** Worker から受信するレスポンスメッセージの型 */
+export interface RegexWorkerResponse {
+  type: "match" | "replace";
+  matchResult?: RegexResult;
+  replaceResult?: { success: boolean; output: string; error?: string };
+}
+
 const MAX_INPUT_LENGTH = 10_000;
 const MAX_MATCHES = 1_000;
 
