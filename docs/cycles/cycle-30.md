@@ -2,7 +2,7 @@
 id: 30
 description: ツールガイド連載ブログ3本のリライト、正規表現テスターReDoS対策、ツール入力欄プライバシー注記表示
 started_at: "2026-02-24T18:27:01+0900"
-completed_at: null
+completed_at: "2026-02-24T19:21:03+0900"
 ---
 
 # サイクル-30
@@ -11,17 +11,29 @@ completed_at: null
 
 ## 実施する作業
 
-- [ ] B-094: ブログ記事品質向上（ツールガイド連載 3/7本: character-counting, password-security, json-formatter）
-- [ ] B-101: 正規表現テスターのReDoS対策（Web Worker + タイムアウト機構）
-- [ ] B-102: ツール入力欄のプライバシー注記表示（ToolLayout共通）
+- [x] B-094: ブログ記事品質向上（ツールガイド連載 3/7本: character-counting, password-security, json-formatter）
+- [x] B-101: 正規表現テスターのReDoS対策（Web Worker + タイムアウト機構）
+- [x] B-102: ツール入力欄のプライバシー注記表示（ToolLayout共通）
 
 ## レビュー結果
 
-（作業完了後に記載）
+### ブログ3記事 (B-094)
+
+- 1回目レビュー: 3記事とも修正要求（連載ナビ不統一、Instagramハッシュタグ制限の古い情報、NIST SP 800-63-4公開年の誤り）
+- 修正後2回目レビュー: 全3記事Approve
+
+### 技術実装 (B-101, B-102)
+
+- 1回目レビュー: 両方Approve（B-101に軽微な非ブロッカー指摘2件あり）
+
+### 計画レビュー
+
+- 1回目: B-094-3とB-101に修正要求（json-formatter related_tool_slugs整合性、Turbopackバンドラー前提の誤り）
+- 修正後2回目: 両方Approve
 
 ## キャリーオーバー
 
-（サイクル完了時に記載）
+- なし（全タスク完了）
 
 ## 補足事項
 
@@ -30,14 +42,14 @@ completed_at: null
 
 ## サイクル終了時のチェックリスト
 
-- [ ] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
-- [ ] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
-- [ ] `npm run memo -- list --state inbox,active` を実行して、未処理のメモがない。
-- [ ] すべての変更がレビューされ、残存する指摘事項が無くなっている。
-- [ ] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
-- [ ] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
-- [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
-- [ ] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
+- [x] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
+- [x] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
+- [x] `npm run memo -- list --state inbox,active` を実行して、未処理のメモがない。
+- [x] すべての変更がレビューされ、残存する指摘事項が無くなっている。
+- [x] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
+- [x] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
+- [x] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
+- [x] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
 
 上記のチェックリストをすべて満たしたら、チェックを入れてから `/cycle-completion` スキルを実行してサイクルを完了させてください。
 なお、「環境起因」「今回の変更と無関係」「既知の問題」「次回対応」などの **例外は一切認めません** 。必ずすべての項目を完全に満してください。
