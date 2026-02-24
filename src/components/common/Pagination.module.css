@@ -1,0 +1,90 @@
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  margin-top: 2rem;
+  padding: 1rem 0;
+}
+
+/* Shared styles for page links and buttons */
+.pageLink,
+.pageButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.25rem;
+  height: 2.25rem;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  line-height: 1;
+  color: var(--color-text);
+  background: var(--color-bg);
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    border-color 0.15s;
+}
+
+.pageLink:hover,
+.pageButton:hover {
+  background-color: var(--color-bg-secondary);
+  border-color: var(--color-primary);
+}
+
+/* Active/current page */
+.active {
+  background-color: var(--color-primary);
+  color: #fff;
+  border-color: var(--color-primary);
+  pointer-events: none;
+}
+
+/* Disabled state for prev/next at boundaries */
+.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+  cursor: default;
+}
+
+/* Ellipsis separator */
+.ellipsis {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.25rem;
+  height: 2.25rem;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  user-select: none;
+}
+
+/* Mobile-only page indicator (e.g., "3 / 10") */
+.mobileIndicator {
+  display: none;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  padding: 0 0.5rem;
+}
+
+/* Desktop page number list */
+.pageNumbers {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* Responsive: on mobile, hide page numbers and show indicator */
+@media (max-width: 768px) {
+  .pageNumbers {
+    display: none;
+  }
+
+  .mobileIndicator {
+    display: inline-flex;
+    align-items: center;
+  }
+}

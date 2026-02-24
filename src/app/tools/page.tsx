@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { allToolMetas } from "@/tools/registry";
-import ToolsGrid from "@/components/tools/ToolsGrid";
-import styles from "./page.module.css";
+import { paginate, TOOLS_PER_PAGE } from "@/lib/pagination";
+import { BASE_URL } from "@/lib/constants";
+import ToolsListView from "@/components/tools/ToolsListView";
 
 export const metadata: Metadata = {
   title: "無料オンラインツール一覧 | yolos.net Tools",
@@ -15,18 +16,19 @@ export const metadata: Metadata = {
     "文字数カウント",
     "日付計算",
   ],
+  alternates: {
+    canonical: `${BASE_URL}/tools`,
+    types: {
+      "application/rss+xml": "/feed",
+      "application/atom+xml": "/feed/atom",
+    },
+  },
 };
 
 export default function ToolsPage() {
+  const { items, totalPages } = paginate(allToolMetas, 1, TOOLS_PER_PAGE);
+
   return (
-    <div className={styles.container}>
-      <header className={styles.header}>
-        <h1 className={styles.title}>無料オンラインツール</h1>
-        <p className={styles.description}>
-          仕事や日常に役立つ便利ツールを集めました。文字数カウント・日付計算から、JSON整形・正規表現テストまで、すべて無料・登録不要でブラウザ上ですぐにお使いいただけます。
-        </p>
-      </header>
-      <ToolsGrid tools={allToolMetas} />
-    </div>
+    <ToolsListView tools={items} currentPage={1} totalPages={totalPages} />
   );
 }

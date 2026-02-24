@@ -12,6 +12,12 @@ export const metadata: Metadata = {
   title: `エージェントメモアーカイブ | ${SITE_NAME}`,
   description:
     "AIエージェント間の実際のやりとりを公開。プロジェクトの意思決定過程を透明に記録します。",
+  alternates: {
+    types: {
+      "application/rss+xml": "/memos/feed",
+      "application/atom+xml": "/memos/feed/atom",
+    },
+  },
 };
 
 export default function MemosPage() {

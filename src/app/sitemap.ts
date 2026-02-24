@@ -1,13 +1,39 @@
 import type { MetadataRoute } from "next";
 import { allToolMetas } from "@/tools/registry";
-import { getAllBlogPosts } from "@/lib/blog";
+import { getAllBlogPosts, ALL_CATEGORIES } from "@/lib/blog";
 import { getAllPublicMemos } from "@/lib/memos";
 import { BASE_URL } from "@/lib/constants";
+import { BLOG_POSTS_PER_PAGE, TOOLS_PER_PAGE } from "@/lib/pagination";
 import { getAllKanjiChars, getKanjiCategories } from "@/lib/dictionary/kanji";
 import { getAllYojiIds, getYojiCategories } from "@/lib/dictionary/yoji";
 import { getAllColorSlugs, getColorCategories } from "@/lib/dictionary/colors";
 import { getAllQuizSlugs, getResultIdsForQuiz } from "@/lib/quiz/registry";
 import { allGameMetas, getGamePath } from "@/lib/games/registry";
+
+/**
+ * Generate sitemap entries for pagination pages (page 2 and above).
+ * Page 1 is the canonical URL (e.g., /blog) and is listed separately.
+ */
+function generatePaginationEntries(
+  basePath: string,
+  totalItems: number,
+  perPage: number,
+  priority: number,
+): MetadataRoute.Sitemap {
+  const totalPages = Math.ceil(totalItems / perPage);
+  const entries: MetadataRoute.Sitemap = [];
+
+  for (let page = 2; page <= totalPages; page++) {
+    entries.push({
+      url: `${BASE_URL}${basePath}/page/${page}`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority,
+    });
+  }
+
+  return entries;
+}
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const toolPages = allToolMetas.map((meta) => ({
@@ -17,12 +43,41 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  const blogPosts = getAllBlogPosts().map((post) => ({
+  const allPosts = getAllBlogPosts();
+
+  const blogPosts = allPosts.map((post) => ({
     url: `${BASE_URL}/blog/${post.slug}`,
     lastModified: new Date(post.updated_at || post.published_at),
     changeFrequency: "monthly" as const,
     priority: 0.7,
   }));
+
+  // Pagination pages for blog list (page 2+)
+  const blogPaginationPages = generatePaginationEntries(
+    "/blog",
+    allPosts.length,
+    BLOG_POSTS_PER_PAGE,
+    0.7,
+  );
+
+  // Pagination pages for each blog category (page 2+)
+  const blogCategoryPaginationPages = ALL_CATEGORIES.flatMap((category) => {
+    const categoryPosts = allPosts.filter((p) => p.category === category);
+    return generatePaginationEntries(
+      `/blog/category/${category}`,
+      categoryPosts.length,
+      BLOG_POSTS_PER_PAGE,
+      0.6,
+    );
+  });
+
+  // Pagination pages for tools list (page 2+)
+  const toolsPaginationPages = generatePaginationEntries(
+    "/tools",
+    allToolMetas.length,
+    TOOLS_PER_PAGE,
+    0.7,
+  );
 
   const memoPages = getAllPublicMemos().map((memo) => ({
     url: `${BASE_URL}/memos/${memo.id}`,
@@ -157,7 +212,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
       })),
     ),
     ...toolPages,
+    ...toolsPaginationPages,
     ...blogPosts,
+    ...blogPaginationPages,
+    ...blogCategoryPaginationPages,
     ...memoPages,
   ];
 }
