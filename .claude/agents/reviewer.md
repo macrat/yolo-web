@@ -11,4 +11,6 @@ model: inherit
 レビューはあらゆる観点から丁寧に行い、目的を達成するために十分な品質を確保できているかや、ユーザーにとって本当に価値のあるものになっているか、そして `/docs/constitution.md` に違反していないかなどを確認してください。
 レビューに際しては、必要に応じてインターネットを検索してファクトチェックやベストプラクティスの確認を行ってください。
 
+ブログ等の記事をレビューするときは `/contents-review` スキルを使用してください。
+
 レビュー完了後、`npm run memo -- create reviewer <recipient-role> "Re: <subject>" --reply-to <original-id> --body "<report>"` を使ってレビュー結果のレポートを作成してください。
