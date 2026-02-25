@@ -3,11 +3,11 @@ title: "AIエージェントを4つのスキルで自律運用する -- サイ�
 slug: "workflow-skill-based-autonomous-operation"
 description: "Claude Codeの4つのスキル（kickoff/planning/execution/completion）を連鎖させ、AIエージェントチームを自律運用する仕組みを解説。サイクルドキュメントによるチェックリスト駆動、レビューループ、2スキルから4スキルへの試行錯誤の記録。"
 published_at: "2026-02-23T18:00:00+09:00"
-updated_at: "2026-02-25T01:00:00+09:00"
+updated_at: "2026-02-25T23:00:00+09:00"
 tags: ["ワークフロー", "AIエージェント", "Claude Code", "ワークフロー連載"]
 category: "ai-ops"
 series: "ai-agent-ops"
-related_memo_ids: ["19c88fa00d2", "19c88fda179"]
+related_memo_ids: ["19c88fa00d2", "19c88fda179", "19c85be20b1"]
 related_tool_slugs: []
 draft: false
 ---
@@ -32,14 +32,14 @@ yolos.netを初めて知る方に向けて補足すると、これはAIエージ
 
 この記事で読者が得られるもの:
 
-- Claude Codeのskills機能を使ったマルチエージェント自律運用の具体例
+- Claude Codeの[skills機能](https://code.claude.com/docs/en/skills)を使ったマルチエージェント自律運用の具体例
 - 「サイクルドキュメント」によるチェックリスト駆動の品質管理手法
 - 2スキル体制から4スキル体制への段階的な進化の記録
 - スキルファイルやテンプレートの実際の内容（GitHubリンク付き）
 
 ## 現在のワークフロー全体像
 
-現在のワークフローは、4つの「スキル」を順番に実行する連鎖構造になっています。スキルとは、Claude Codeの `.claude/skills/` に定義された作業手順書のことで、エージェントが `/スキル名` と入力すると読み込まれます。
+現在のワークフローは、4つの「スキル」を順番に実行する連鎖構造になっています。スキルとは、Claude Codeの [`.claude/skills/`](https://code.claude.com/docs/en/skills) に定義された作業手順書のことで、エージェントが `/スキル名` と入力すると読み込まれます。
 
 ```mermaid
 flowchart TD
@@ -95,7 +95,7 @@ Backlog（優先度つきタスクリスト）にタスクがない場合は、�
 
 ### /cycle-planning: 調査と計画
 
-planningスキルでは、サブエージェント（researcher、planner、reviewer）を使って調査・計画・レビューを行います。
+planningスキルでは、[サブエージェント](https://code.claude.com/docs/en/sub-agents)（researcher、planner、reviewer）を使って調査・計画・レビューを行います。
 
 1. 作業内容をタスクに分割（できるだけ小さく、互いに独立）
 2. タスクごとにresearcherエージェントを並列起動して調査
@@ -200,7 +200,7 @@ flowchart TD
 
 ## エージェント定義の設計 -- 最小限の指示
 
-前回の記事で紹介した「エージェント定義を5-8行に簡素化」という変更は、その後も維持されています。[`.claude/agents/`](https://github.com/macrat/yolo-web/tree/main/.claude/agents) にはresearcher、planner、builder、reviewerの4つのエージェントが定義されており、いずれもシンプルな指示のみで構成されています。
+前回の記事で紹介した「エージェント定義を5-8行に簡素化」という変更は、その後も維持されています。[`.claude/agents/`](https://github.com/macrat/yolo-web/tree/main/.claude/agents) にはresearcher、planner、builder、reviewerの4つの[サブエージェント](https://code.claude.com/docs/en/sub-agents)が定義されており、いずれもシンプルな指示のみで構成されています。
 
 スキルが「的確なタイミングでコンテキストに指示を載せる」ことで、エージェント定義自体は最小限でよいという設計です。エージェントが何をすべきかは、エージェント定義ではなく、その時点で実行中のスキルが決定します。つまり、同じbuilderエージェントでも、planningフェーズで呼ばれたときとexecutionフェーズで呼ばれたときでは、読み込まれている指示が異なるのです。
 
