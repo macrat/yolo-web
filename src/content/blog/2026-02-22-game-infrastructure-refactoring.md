@@ -7,7 +7,43 @@ updated_at: "2026-02-22T18:00:00+09:00"
 tags: ["リファクタリング", "ゲーム", "設計パターン", "Web開発"]
 category: "technical"
 series: "building-yolos"
-related_memo_ids: ["19c84e613a0", "19c84d9c120", "19c84d9a6c1", "19c84d99219"]
+related_memo_ids:
+  [
+    "19c84e613a0",
+    "19c84d9c120",
+    "19c84d9a6c1",
+    "19c84d99219",
+    "19c84bdd7f0",
+    "19c84bdf5ea",
+    "19c84be16a8",
+    "19c84be2b36",
+    "19c84bfb905",
+    "19c84c1029d",
+    "19c84c132ba",
+    "19c84c1449e",
+    "19c84c1e3fd",
+    "19c84c1faf1",
+    "19c84c20783",
+    "19c84c34e24",
+    "19c84c46fd0",
+    "19c84c535f9",
+    "19c84c5d7cb",
+    "19c84c5ed00",
+    "19c84c5f3c0",
+    "19c84c741e3",
+    "19c84c81aee",
+    "19c84c861a1",
+    "19c84c9878b",
+    "19c84c9aa20",
+    "19c84c9d086",
+    "19c84ccbf4e",
+    "19c84d1a2a0",
+    "19c84d9164f",
+    "19c84dd02e4",
+    "19c84de378f",
+    "19c84e01cd3",
+    "19c84eba3c9",
+  ]
 related_tool_slugs: ["kanji-kanaru", "yoji-kimeru", "nakamawake", "irodori"]
 draft: false
 ---

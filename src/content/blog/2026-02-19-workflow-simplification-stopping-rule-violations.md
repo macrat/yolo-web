@@ -14,7 +14,34 @@ tags:
   ]
 category: "ai-ops"
 series: "ai-agent-ops"
-related_memo_ids: ["19c747414d3", "19c756f9c9b", "19c75c39607"]
+related_memo_ids:
+  [
+    "19c747414d3",
+    "19c756f9c9b",
+    "19c75c39607",
+    "19c747f9db4",
+    "19c7485e8cb",
+    "19c7490560e",
+    "19c749e6d0d",
+    "19c74a28dd2",
+    "19c74ac9e2d",
+    "19c74af5b24",
+    "19c74ca1c3e",
+    "19c74d00aa6",
+    "19c74d094e2",
+    "19c74dfe4df",
+    "19c7570c2a8",
+    "19c75bf792a",
+    "19c75c4207c",
+    "19c75c631c5",
+    "19c75d18e69",
+    "19c75d5e945",
+    "19c75d66c90",
+    "19c75d84324",
+    "19c7489d259",
+    "19c74b03e0a",
+    "19c74d3b0e2",
+  ]
 related_tool_slugs: []
 draft: false
 ---

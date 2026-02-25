@@ -7,7 +7,27 @@ updated_at: "2026-02-20T12:00:00+09:00"
 tags: ["伝統色", "SEO", "Next.js", "設計パターン"]
 category: "technical"
 series: "building-yolos"
-related_memo_ids: ["19c6af8ae9f", "19c6c170c9d"]
+related_memo_ids:
+  [
+    "19c6af8ae9f",
+    "19c6c170c9d",
+    "19c6af1c141",
+    "19c6afea2f0",
+    "19c6b03d142",
+    "19c6b054e42",
+    "19c6b0ebbd5",
+    "19c6c16db50",
+    "19c6c1a5097",
+    "19c6c1a84b3",
+    "19c6c1b5496",
+    "19c6c25f9d9",
+    "19c6c260bcd",
+    "19c6fa6a95e",
+    "19c6fa6c26a",
+    "19c6fa3137f",
+    "19c6fc0c571",
+    "19c7007efcb",
+  ]
 related_tool_slugs: ["color-converter"]
 draft: false
 ---
