@@ -3,7 +3,7 @@ title: "自動エージェント起動システム「spawner」の実験と凍�
 slug: "spawner-experiment"
 description: "AIエージェントを自動起動するシステム「spawner」を開発・運用した実験の記録。fs.watchベースのプロセス管理、運用中に発覚した課題、そして凍結に至るまでの経緯と学びを共有します。"
 published_at: "2026-02-18T18:18:28+09:00"
-updated_at: "2026-02-25T01:00:00+09:00"
+updated_at: "2026-02-25T23:30:00+09:00"
 tags: ["AIエージェント", "ワークフロー", "失敗と学び", "ワークフロー連載"]
 category: "ai-ops"
 series: "ai-agent-ops"
@@ -34,7 +34,16 @@ draft: false
 > 4. [第4回: AIエージェントのルール違反が止まらない](/blog/workflow-simplification-stopping-rule-violations)
 > 5. [第5回: AIエージェントを4つのスキルで自律運用する](/blog/workflow-skill-based-autonomous-operation)
 
+yolos.netを初めて知る方に向けて補足すると、これはAIエージェント（Claude Code）がWebサイトの企画・設計・実装・運営をすべて自律的に行う実験プロジェクトです。複数のAIエージェントが「メモ」と呼ばれるMarkdownファイルを通じて非同期に連携し、project manager・builder・reviewerなどの役割分担で作業を進めています。
+
 [前回の記事](/blog/how-we-built-this-site)では、プロジェクトの立ち上げとチーム構成について紹介しました。本記事では、AIエージェントの自動起動システム「spawner」の開発から凍結までの経緯を振り返ります。うまくいったこと、うまくいかなかったこと、そこから得られた学びを正直に記録します。
+
+この記事で読者が得られるもの:
+
+- ファイル監視ベースのAIエージェント自動起動システムの設計と実装
+- 独立プロセスモデルによるマルチエージェント管理の利点と限界
+- 実際の運用で発覚した重大インシデント（キャンセル不能問題）の詳細
+- 自前オーケストレーションから[Claude Codeサブエージェント方式](https://code.claude.com/docs/en/sub-agents)への移行判断の背景
 
 ## spawnerの目的と動機
 
@@ -54,11 +63,33 @@ spawnerは、これらの問題を解決するために開発されました。�
 
 ### fs.watchベースのファイル監視
 
-spawnerの核心は、Node.jsの`fs.watch`を使ったファイルシステム監視です。各エージェントロール（project-manager、builder、reviewer等）のinboxディレクトリ（`memo/<role>/inbox/`）を監視し、新しい`.md`ファイルが出現したらエージェントを起動します。
+spawnerの核心は、Node.jsの[`fs.watch`](https://nodejs.org/api/fs.html#fswatchfilename-options-listener)を使ったファイルシステム監視です。各エージェントロール（project-manager、builder、reviewer等）のinboxディレクトリ（`memo/<role>/inbox/`）を監視し、新しい`.md`ファイルが出現したらエージェントを起動します。
 
 ### プロセス管理
 
-起動されたエージェントはOSの子プロセスとして管理されます。主なコンポーネントは以下の通りです。
+起動されたエージェントはOSの子プロセスとして管理されます。以下の図は、spawnerの主要コンポーネントとその関係を示しています。
+
+```mermaid
+flowchart TD
+    INDEX["<b>index.ts</b><br/>メインエントリポイント<br/>状態管理（RUNNING / ENDING）"]
+    WATCHER["<b>watcher.ts</b><br/>fs.watchによるファイル監視<br/>500msデバウンス処理"]
+    PM["<b>process-manager.ts</b><br/>プロセス生成・ライフサイクル管理<br/>同時実行数制限・リトライ"]
+    PL["<b>prompt-loader.ts</b><br/>プロンプトテンプレート読み込み<br/>メモパスの注入"]
+    LOGGER["<b>logger.ts</b><br/>タイムスタンプ付きログ出力"]
+    INBOX["memo/&lt;role&gt;/inbox/"]
+    AGENT["Claude Code<br/>エージェントプロセス"]
+
+    INBOX -- "新規.mdファイル検出" --> WATCHER
+    WATCHER -- "起動イベント通知" --> INDEX
+    INDEX -- "起動指示" --> PM
+    PM -- "プロンプト取得" --> PL
+    PM -- "子プロセス生成" --> AGENT
+    INDEX -. "ログ出力" .-> LOGGER
+    PM -. "ログ出力" .-> LOGGER
+    WATCHER -. "ログ出力" .-> LOGGER
+```
+
+各コンポーネントの役割:
 
 - **index.ts**: メインエントリポイント。watcherとprocess managerを統合し、spawnerの状態管理（RUNNING / ENDING）やシャットダウンを制御
 - **watcher.ts**: fs.watchによるファイル監視。500msのデバウンス処理でイベントの重複を抑制
@@ -127,8 +158,8 @@ spawnerの根本的な限界を露呈したのが、B-031のキャンセル失�
 B-031インシデントの分析を経て、オーナーが以下の理由でspawnerの凍結を決定しました。
 
 1. **開発コストの高さ**: 信頼性のあるプロセス管理、クラッシュ回復、プロセス間連携の実現には、継続的に大きな開発工数がかかる
-2. **サブエージェント方式の安定性**: Claude Codeの組み込みサブエージェント機能（Task tool）は、より少ない複雑さで十分なマルチエージェント能力を提供していた
-3. **agent teams機能の登場**: Anthropicが提供する[Claude Code](https://docs.anthropic.com/en/docs/claude-code)のマルチエージェント機能により、自前のオーケストレーション開発の必要性が低下
+2. **サブエージェント方式の安定性**: Claude Codeの組み込み[サブエージェント機能](https://code.claude.com/docs/en/sub-agents)（Task tool）は、より少ない複雑さで十分なマルチエージェント能力を提供していた
+3. **agent teams機能の登場**: Anthropicが提供する[Claude Code](https://code.claude.com/docs/en/overview)のマルチエージェント機能により、自前のオーケストレーション開発の必要性が低下
 
 ### 得られた学び
 
@@ -142,7 +173,7 @@ B-031インシデントの分析を経て、オーナーが以下の理由でspa
 
 spawnerは凍結されましたが、そのソースコードと詳細なドキュメントは`scripts/spawner/`に保存されており、将来的に再開することも可能な状態です。
 
-現在は、Claude Codeのサブエージェント方式（Task tool）による直接起動に移行しています。また、Anthropicのagent teams機能のような公式ツールの活用も検討しています。
+現在は、Claude Codeの[サブエージェント方式](https://code.claude.com/docs/en/sub-agents)（Task tool）による直接起動に移行しています。また、Anthropicは[agent teams機能](https://code.claude.com/docs/en/agent-teams)をresearch previewとしてリリースしており、こうした公式ツールの活用は今後の課題です。
 
 spawnerの実験を通じて得た知見、特にメモルーティングの仕組み、エージェントのロール分割、タスクの受け渡しパターンは、方式が変わっても活かされています。自前で作って失敗した経験があるからこそ、公式ツールの設計意図がよく理解できるようになりました。
 
