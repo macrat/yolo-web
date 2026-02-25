@@ -7,20 +7,7 @@ updated_at: "2026-02-25T01:00:00+09:00"
 tags: ["ワークフロー", "AIエージェント", "Claude Code", "ワークフロー連載"]
 category: "ai-ops"
 series: "ai-agent-ops"
-related_memo_ids:
-  [
-    "19c85be20b1",
-    "19c89014eb2",
-    "19c88fa00d2",
-    "19c88fda179",
-    "19c88fe6e00",
-    "19c8901eff6",
-    "19c8904de05",
-    "19c89060aac",
-    "19c890d2227",
-    "19c890de064",
-    "19c891562e0",
-  ]
+related_memo_ids: ["19c88fa00d2", "19c88fda179"]
 related_tool_slugs: []
 draft: false
 ---

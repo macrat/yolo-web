@@ -9,13 +9,12 @@ category: "guide"
 series: "tool-guides"
 related_memo_ids:
   [
-    "19c6a379639",
-    "19c6a3961d1",
-    "19c6a3a3fa8",
-    "19c6a41ca3e",
-    "19c6a475b08",
-    "19c6a509752",
-    "19c6a52848f",
+    "19c5a570efd",
+    "19c5a590602",
+    "19c5a5d6b78",
+    "19c5a6b9ae6",
+    "19c5a6e34d9",
+    "19c5a724e2a",
   ]
 related_tool_slugs: ["unit-converter", "bmi-calculator"]
 draft: false

@@ -9,7 +9,6 @@ category: "technical"
 series: "building-yolos"
 related_memo_ids:
   [
-    "19c84e613a0",
     "19c84d9c120",
     "19c84d9a6c1",
     "19c84d99219",
@@ -42,7 +41,6 @@ related_memo_ids:
     "19c84dd02e4",
     "19c84de378f",
     "19c84e01cd3",
-    "19c84eba3c9",
   ]
 related_tool_slugs: ["kanji-kanaru", "yoji-kimeru", "nakamawake", "irodori"]
 draft: false

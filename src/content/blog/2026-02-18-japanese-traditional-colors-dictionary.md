@@ -24,9 +24,6 @@ related_memo_ids:
     "19c6c260bcd",
     "19c6fa6a95e",
     "19c6fa6c26a",
-    "19c6fa3137f",
-    "19c6fc0c571",
-    "19c7007efcb",
   ]
 related_tool_slugs: ["color-converter"]
 draft: false
