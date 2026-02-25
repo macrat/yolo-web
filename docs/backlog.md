@@ -2,10 +2,8 @@
 
 ## Active (進行中)
 
-| ID    | Title                                           | Priority | Status | Assigned Role | Origin Memo | Target Cycle | Notes                                                                                     |
-| ----- | ----------------------------------------------- | -------- | ------ | ------------- | ----------- | ------------ | ----------------------------------------------------------------------------------------- |
-| B-118 | pre-commit hookによるlint・型チェックの自動実行 | P1       | active | -             | 19c9385e4fd | 34           | pre-commit hookでeslintとTypeScriptの型チェックを実行。ownerの直接指示                    |
-| B-094 | ブログ記事品質向上（ツールガイド連載 残4本）    | P2       | active | -             | 19c8e142237 | 34           | regex-tester, cron-parser, hash-generator, unit-converter。cycle-30で3本実施済み、残り4本 |
+| ID  | Title | Priority | Status | Assigned Role | Origin Memo | Target Cycle | Notes |
+| --- | ----- | -------- | ------ | ------------- | ----------- | ------------ | ----- |
 
 ## Queued (未着手)
 
@@ -50,16 +48,16 @@
 
 以下は直近5サイクル分の完了タスクです。6サイクルより前のタスクは削除してください。
 
-| ID    | Title                                                | Completed Cycle | Origin Memo | Notes                                                                                                                                                                                           |
-| ----- | ---------------------------------------------------- | --------------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| B-115 | 過去ブログ記事の虚偽記載・related_memo_ids完全性監査 | 33              | 19c9246b42d | 全34記事監査。虚偽2件修正、related_memo_ids全33記事修正（新ルール適用: 記事内容関連メモのみ）。R2レビュー全グループApprove                                                                      |
-| B-116 | ブログ記事修正（rss-feed-and-pagination）            | 32              | 19c9246b42d | ownerの指摘に基づく6問題修正。未確認事実削除、RSS目的をSEOに修正、選択肢虚偽削除、related_memo_ids 1→37件、backlog整合。レビューApprove                                                         |
-| B-117 | ブログ記事の虚偽記載調査と再発防止策の策定           | 32              | 19c9246b42d | 根本原因調査（pm/builder/reviewer3段階の事実検証不足）。contents-review/SKILL.md、cycle-execution/SKILL.md、blog-writing.mdの3ファイル改善。レビューApprove                                     |
-| B-106 | 連載記事の表現修正（ワークフロー改善連載）           | 31              | 19c9001b54f | 全5ファイルから「全5回」「完結」表現を除去。修正A-E全適用。レビューApprove                                                                                                                      |
-| B-107 | メモのRSSフィード追加                                | 31              | 19c9001b54f | RSS 2.0/Atom 1.0の2エンドポイント追加。過去7日分+上限100件。テスト16件。レビューApprove                                                                                                         |
-| B-108 | ブログ・メモ・ツール一覧のページング追加             | 31              | 19c9001b54f | 共通Paginationコンポーネント(link/buttonモード)、ブログ12件/メモ50件(CSR)/ツール24件ページ、サイトマップ対応、301リダイレクト。テスト43件。レビューApprove                                      |
-| B-094 | ブログ記事品質向上（ツールガイド連載 3/7本）         | 30              | 19c8e142237 | character-counting、password-security、json-formatterの3記事全面リライト。連載ナビ統一、事実誤認修正。全記事Approve                                                                             |
-| B-101 | 正規表現テスターのReDoS対策                          | 30              | 19c7f135782 | Inline Worker(Blob URL)方式でmatch/replace処理を非同期化。デバウンス300ms、タイムアウト500ms。1456テスト全パス。レビューApprove                                                                 |
-| B-102 | ツール入力欄のプライバシー注記表示                   | 30              | 19c7f135782 | ToolLayout共通で「ブラウザ上で動作、サーバー送信なし」の注記を全32ツールに表示。role="note"付与、テスト追加。レビューApprove                                                                    |
-| B-068 | ChatGPTアドバイスの確認・対応検討                    | 29              | 19c7f135782 | 30以上の提案から4件の新規backlog項目（B-099〜B-102）を追加、B-090/B-092のNotes更新。レビューApprove                                                                                             |
-| B-093 | ブログ記事品質向上（初期・基盤記事 3本）             | 29              | 19c8e142237 | 3記事の全面リライト。how-we-built-this-site(2,000→5,900字)、how-we-built-10-tools(重複7箇所解消)、content-strategy-decision(免責事項・評価表・不採用理由追加)。連載ナビ5記事統一。全記事Approve |
+| ID    | Title                                                | Completed Cycle | Origin Memo | Notes                                                                                                                                                       |
+| ----- | ---------------------------------------------------- | --------------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| B-118 | pre-commit hookによるlint・型チェックの自動実行      | 34              | 19c9385e4fd | install-hooks.sh v3。eslint(ステージファイルのみ)+tsc --noEmit(全体)+memo-lint exit 1追加。core.quotePath=false反映、-z/-0パターン採用。レビューApprove     |
+| B-094 | ブログ記事品質向上（ツールガイド連載 残4本）         | 34              | 19c8e142237 | regex-tester, cron-parser, hash-generator, unit-converterの4記事全面リライト。連載ナビ統一、外部リンク追加、ReDoS対策言及等。全4記事レビューApprove         |
+| B-115 | 過去ブログ記事の虚偽記載・related_memo_ids完全性監査 | 33              | 19c9246b42d | 全34記事監査。虚偽2件修正、related_memo_ids全33記事修正（新ルール適用: 記事内容関連メモのみ）。R2レビュー全グループApprove                                  |
+| B-116 | ブログ記事修正（rss-feed-and-pagination）            | 32              | 19c9246b42d | ownerの指摘に基づく6問題修正。未確認事実削除、RSS目的をSEOに修正、選択肢虚偽削除、related_memo_ids 1→37件、backlog整合。レビューApprove                     |
+| B-117 | ブログ記事の虚偽記載調査と再発防止策の策定           | 32              | 19c9246b42d | 根本原因調査（pm/builder/reviewer3段階の事実検証不足）。contents-review/SKILL.md、cycle-execution/SKILL.md、blog-writing.mdの3ファイル改善。レビューApprove |
+| B-106 | 連載記事の表現修正（ワークフロー改善連載）           | 31              | 19c9001b54f | 全5ファイルから「全5回」「完結」表現を除去。修正A-E全適用。レビューApprove                                                                                  |
+| B-107 | メモのRSSフィード追加                                | 31              | 19c9001b54f | RSS 2.0/Atom 1.0の2エンドポイント追加。過去7日分+上限100件。テスト16件。レビューApprove                                                                     |
+| B-108 | ブログ・メモ・ツール一覧のページング追加             | 31              | 19c9001b54f | 共通Paginationコンポーネント(link/buttonモード)、ブログ12件/メモ50件(CSR)/ツール24件ページ、サイトマップ対応、301リダイレクト。テスト43件。レビューApprove  |
+| B-094 | ブログ記事品質向上（ツールガイド連載 3/7本）         | 30              | 19c8e142237 | character-counting、password-security、json-formatterの3記事全面リライト。連載ナビ統一、事実誤認修正。全記事Approve                                         |
+| B-101 | 正規表現テスターのReDoS対策                          | 30              | 19c7f135782 | Inline Worker(Blob URL)方式でmatch/replace処理を非同期化。デバウンス300ms、タイムアウト500ms。1456テスト全パス。レビューApprove                             |
+| B-102 | ツール入力欄のプライバシー注記表示                   | 30              | 19c7f135782 | ToolLayout共通で「ブラウザ上で動作、サーバー送信なし」の注記を全32ツールに表示。role="note"付与、テスト追加。レビューApprove                                |
