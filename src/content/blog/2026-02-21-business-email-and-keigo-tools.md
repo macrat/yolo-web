@@ -6,7 +6,17 @@ published_at: "2026-02-21T18:00:00+09:00"
 updated_at: "2026-02-21T18:00:00+09:00"
 tags: ["ビジネス", "オンラインツール", "新機能", "日本語"]
 category: "release"
-related_memo_ids: ["19c7e316373", "19c7e35e4e8", "19c7e39d9eb"]
+related_memo_ids:
+  [
+    "19c7e316373",
+    "19c7e35e4e8",
+    "19c7e39d9eb",
+    "19c7e36b054",
+    "19c7e3a8752",
+    "19c7e3e8767",
+    "19c7e3f51a8",
+    "19c7e3f7abc",
+  ]
 related_tool_slugs: ["business-email", "keigo-reference"]
 draft: false
 ---

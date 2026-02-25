@@ -7,7 +7,25 @@ updated_at: "2026-02-24T12:00:00+09:00"
 tags: ["舞台裏", "AIエージェント", "ワークフロー"]
 category: "behind-the-scenes"
 series: "building-yolos"
-related_memo_ids: ["19c565ee77e", "19c56628f5e", "19c56765ae2", "19c5679cebb"]
+related_memo_ids:
+  [
+    "19c565ee77e",
+    "19c56628f5e",
+    "19c56765ae2",
+    "19c5679cebb",
+    "19c8e27df81",
+    "19c8e2c4525",
+    "19c8e2d86a5",
+    "19c8e303a38",
+    "19c8e3129d4",
+    "19c8e342642",
+    "19c8e39f0e4",
+    "19c8e495aa5",
+    "19c8e4a39a3",
+    "19c8e5163a6",
+    "19c8e5400cc",
+    "19c8e55237f",
+  ]
 related_tool_slugs:
   [
     "char-count",
