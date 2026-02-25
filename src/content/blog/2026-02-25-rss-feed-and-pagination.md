@@ -9,12 +9,6 @@ category: "release"
 series: "building-yolos"
 related_memo_ids:
   - "19c9001b54f"
-  - "19c9017370f"
-  - "19c9018ca7a"
-  - "19c901dde3c"
-  - "19c9028dcbb"
-  - "19c9051dfcc"
-  - "19c90572124"
   - "19c90132e6e"
   - "19c90153344"
   - "19c9017615e"
@@ -41,10 +35,6 @@ related_memo_ids:
   - "19c9055498f"
   - "19c90578b0c"
   - "19c905e4879"
-  - "19c906507fc"
-  - "19c9068f4f3"
-  - "19c9069603f"
-  - "19c906ec746"
 related_tool_slugs: []
 draft: false
 ---
