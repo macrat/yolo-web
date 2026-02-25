@@ -5,6 +5,7 @@ import {
   getAllBlogPosts,
   getAllBlogSlugs,
   getBlogPostBySlug,
+  getSeriesPosts,
   CATEGORY_LABELS,
 } from "@/lib/blog";
 import {
@@ -18,6 +19,7 @@ import ShareButtons from "@/components/common/ShareButtons";
 import TableOfContents from "@/components/blog/TableOfContents";
 import TagList from "@/components/blog/TagList";
 import RelatedMemos from "@/components/blog/RelatedMemos";
+import SeriesNav from "@/components/blog/SeriesNav";
 import MermaidRenderer from "@/components/blog/MermaidRenderer";
 import styles from "./page.module.css";
 
@@ -89,6 +91,14 @@ export default async function BlogPostPage({ params }: Props) {
           <h1 className={styles.title}>{post.title}</h1>
           <TagList tags={post.tags} />
         </header>
+
+        {post.series && (
+          <SeriesNav
+            seriesId={post.series}
+            currentSlug={post.slug}
+            seriesPosts={getSeriesPosts(post.series)}
+          />
+        )}
 
         <div className={styles.layout}>
           <aside className={styles.sidebar}>

@@ -1,0 +1,134 @@
+.seriesNav {
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+/* --- details/summary --- */
+
+.details {
+  margin-bottom: 0;
+}
+
+.summary {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  list-style: revert;
+  color: var(--color-text);
+}
+
+.summary::-webkit-details-marker {
+  color: var(--color-text-muted);
+}
+
+.seriesLabel {
+  font-weight: 700;
+}
+
+.position {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+/* --- article list --- */
+
+.list {
+  margin-top: 0.75rem;
+  padding-left: 1.5rem;
+  font-size: 0.85rem;
+  line-height: 1.7;
+}
+
+.listItem {
+  margin-bottom: 0.2rem;
+}
+
+.currentItem {
+  margin-bottom: 0.2rem;
+  font-weight: 700;
+}
+
+.link {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.currentLink {
+  color: var(--color-text);
+}
+
+.currentBadge {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin-left: 0.35rem;
+  font-weight: 400;
+}
+
+/* --- prev/next quick navigation --- */
+
+.quickNav {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.prevLink,
+.nextLink {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: var(--color-text);
+  max-width: 48%;
+}
+
+.nextLink {
+  text-align: right;
+  margin-left: auto;
+}
+
+.quickNavLabel {
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+  margin-bottom: 0.15rem;
+}
+
+.quickNavTitle {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.quickNavTitle:hover {
+  text-decoration: underline;
+}
+
+/* --- responsive --- */
+
+@media (max-width: 768px) {
+  .quickNav {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .prevLink,
+  .nextLink {
+    max-width: 100%;
+  }
+
+  .nextLink {
+    text-align: left;
+    margin-left: 0;
+  }
+}

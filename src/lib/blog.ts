@@ -182,6 +182,27 @@ export function getAllBlogTags(): string[] {
   return Array.from(tagSet).sort();
 }
 
+/**
+ * Get all published posts belonging to a given series, sorted by
+ * published_at ascending (oldest first) with slug as secondary sort
+ * for deterministic ordering when dates are identical.
+ */
+export function getSeriesPosts(seriesId: string): BlogPostMeta[] {
+  const all = getAllBlogPosts();
+  const filtered = all.filter((p) => p.series === seriesId);
+
+  // Sort ascending by published_at, then by slug for deterministic order
+  // when multiple posts share the same date (e.g. tool-guides on 2026-02-17).
+  filtered.sort((a, b) => {
+    const timeDiff =
+      new Date(a.published_at).getTime() - new Date(b.published_at).getTime();
+    if (timeDiff !== 0) return timeDiff;
+    return a.slug.localeCompare(b.slug);
+  });
+
+  return filtered;
+}
+
 /** Get all slugs for generateStaticParams. */
 export function getAllBlogSlugs(): string[] {
   return getAllBlogPosts().map((p) => p.slug);
