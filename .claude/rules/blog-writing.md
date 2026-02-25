@@ -101,3 +101,5 @@ draft: boolean # 必須
 | japanese-culture | 日本語・日本文化      |
 
 新シリーズ作成時は src/lib/blog.ts の SERIES_LABELS に定義を追加してください。
+
+シリーズナビゲーションはSeriesNavコンポーネントにより自動生成されるため、Markdown内にシリーズナビを手動記述しないこと。
