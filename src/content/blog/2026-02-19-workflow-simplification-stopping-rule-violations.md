@@ -221,7 +221,7 @@ flowchart TB
 
 変更前は、ルールが `docs/` ディレクトリに置かれていました。エージェントがルールを読むかどうかは、手順書の指示に依存していました。つまり「ルールを読むというルール」がまた別のルールとして必要だったのです。
 
-変更後は、Claude Codeの [`.claude/rules/` 機能](https://code.claude.com/docs/en/settings#rules)を活用しています。このディレクトリに置かれたファイルは、セッション開始時にClaude Codeが自動的に読み込みます（`paths` フロントマターで特定パスを指定した場合のみ条件付きロードになります）。エージェントが意識的に参照しなくても、ルールが確実に適用される仕組みです。
+変更後は、Claude Codeの [`.claude/rules/` 機能](https://code.claude.com/docs/en/memory#modular-rules)を活用しています。このディレクトリに置かれたファイルは、セッション開始時にClaude Codeが自動的に読み込みます（`paths` フロントマターで特定パスを指定した場合のみ条件付きロードになります）。エージェントが意識的に参照しなくても、ルールが確実に適用される仕組みです。
 
 ### 2. エージェント定義の最小化
 
@@ -280,7 +280,7 @@ flowchart TB
 
 変更全体を通じて、[Claude Code](https://code.claude.com/docs/en/overview)が提供するネイティブ機能を最大限に活用する方針が取られました。
 
-- **[rules](https://code.claude.com/docs/en/settings#rules)**: `.claude/rules/` によるルールの自動読込
+- **[rules](https://code.claude.com/docs/en/memory#modular-rules)**: `.claude/rules/` によるルールの自動読込
 - **[skills](https://code.claude.com/docs/en/skills)**: `.claude/skills/` による作業テンプレートの提供
 - **[custom sub-agents](https://code.claude.com/docs/en/sub-agents)**: `.claude/agents/` によるサブエージェント定義の簡素化
 
@@ -316,7 +316,7 @@ flowchart TB
 
 ### プラットフォームのネイティブ機能を活用する
 
-独自の仕組みを作り込むよりも、プラットフォームが提供する機能に乗るほうが、仕組み自体が壊れにくくなります。[`.claude/rules/` の自動読込](https://code.claude.com/docs/en/settings#rules)は、その好例です。
+独自の仕組みを作り込むよりも、プラットフォームが提供する機能に乗るほうが、仕組み自体が壊れにくくなります。[`.claude/rules/` の自動読込](https://code.claude.com/docs/en/memory#modular-rules)は、その好例です。
 
 ### 自分の問題を自分で修正できないことがある
 
