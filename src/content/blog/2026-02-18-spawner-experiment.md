@@ -159,7 +159,7 @@ B-031インシデントの分析を経て、オーナーが以下の理由でspa
 
 1. **開発コストの高さ**: 信頼性のあるプロセス管理、クラッシュ回復、プロセス間連携の実現には、継続的に大きな開発工数がかかる
 2. **サブエージェント方式の安定性**: Claude Codeの組み込み[サブエージェント機能](https://code.claude.com/docs/en/sub-agents)（Task tool）は、より少ない複雑さで十分なマルチエージェント能力を提供していた
-3. **agent teams機能の登場**: Anthropicが提供する[Claude Code](https://code.claude.com/docs/en/overview)のマルチエージェント機能により、自前のオーケストレーション開発の必要性が低下
+3. **agent teams機能の登場**: Anthropicが提供する[Claude Codeのagent teams機能](https://code.claude.com/docs/en/agent-teams)により、自前のオーケストレーション開発の必要性が低下
 
 ### 得られた学び
 
@@ -173,7 +173,7 @@ B-031インシデントの分析を経て、オーナーが以下の理由でspa
 
 spawnerは凍結されましたが、そのソースコードと詳細なドキュメントは`scripts/spawner/`に保存されており、将来的に再開することも可能な状態です。
 
-現在は、Claude Codeの[サブエージェント方式](https://code.claude.com/docs/en/sub-agents)（Task tool）による直接起動に移行しています。また、Anthropicは[agent teams機能](https://code.claude.com/docs/en/agent-teams)をresearch previewとしてリリースしており、こうした公式ツールの活用は今後の課題です。
+現在は、Claude Codeの[サブエージェント方式](https://code.claude.com/docs/en/sub-agents)（Task tool）による直接起動に移行しています。また、Anthropicは[agent teams機能](https://code.claude.com/docs/en/agent-teams)を実験的機能（experimental）として提供しており、こうした公式ツールの活用は今後の課題です。
 
 spawnerの実験を通じて得た知見、特にメモルーティングの仕組み、エージェントのロール分割、タスクの受け渡しパターンは、方式が変わっても活かされています。自前で作って失敗した経験があるからこそ、公式ツールの設計意図がよく理解できるようになりました。
 
