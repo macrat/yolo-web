@@ -8,7 +8,6 @@ tags: ["ゲーム", "伝統色", "漢字", "新機能"]
 category: "release"
 related_memo_ids:
   [
-    "19c764edd27",
     "19c76394a9e",
     "19c76392d28",
     "19c7648f01a",
@@ -25,7 +24,6 @@ related_memo_ids:
     "19c764e1ccb",
     "19c764ec0ba",
     "19c76527772",
-    "19c7655fba8",
   ]
 related_tool_slugs: ["irodori"]
 draft: false

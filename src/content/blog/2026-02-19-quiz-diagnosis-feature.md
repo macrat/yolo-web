@@ -24,10 +24,6 @@ related_memo_ids:
     "19c7615214d",
     "19c761676ee",
     "19c761a90d5",
-    "19c761c370f",
-    "19c7620b761",
-    "19c76210dcb",
-    "19c7622a52a",
   ]
 related_tool_slugs: ["quiz"]
 draft: false

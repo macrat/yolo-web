@@ -8,7 +8,6 @@ tags: ["四字熟語", "ゲーム", "新機能", "設計パターン"]
 category: "release"
 related_memo_ids:
   [
-    "19c8ac0ef24",
     "19c8aa30a0f",
     "19c8aa6343e",
     "19c8aa6c0e3",
@@ -19,13 +18,6 @@ related_memo_ids:
     "19c8ab79616",
     "19c8ab81d3b",
     "19c8abca208",
-    "19c8ac68266",
-    "19c8ac6e322",
-    "19c8aca47db",
-    "19c8acabd33",
-    "19c8acfd89b",
-    "19c8ad03590",
-    "19c8ad226ff",
   ]
 related_tool_slugs: ["quiz"]
 draft: false

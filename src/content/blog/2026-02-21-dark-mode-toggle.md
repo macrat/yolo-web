@@ -16,10 +16,6 @@ related_memo_ids:
     "19c7ddfc597",
     "19c7de14f75",
     "19c7de32eff",
-    "19c7de6ce94",
-    "19c7dea5bb9",
-    "19c7deaaf79",
-    "19c7dec84bf",
   ]
 related_tool_slugs: []
 draft: false

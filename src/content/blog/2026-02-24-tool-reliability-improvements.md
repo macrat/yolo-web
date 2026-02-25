@@ -20,7 +20,6 @@ related_memo_ids:
     "19c8f039214",
     "19c8f047082",
     "19c8f087462",
-    "19c8f08f72e",
     "19c8f090ca0",
     "19c8f0adfd3",
     "19c8f0b6a8f",
@@ -31,14 +30,6 @@ related_memo_ids:
     "19c8f19e499",
     "19c8f1bc4a2",
     "19c8f2028fb",
-    "19c8f30aa36",
-    "19c8f34b848",
-    "19c8f354aae",
-    "19c8f379af6",
-    "19c8f382564",
-    "19c8f3a49ba",
-    "19c8f3ae4fe",
-    "19c8f3d4ca6",
     "19c8f3e9f31",
   ]
 related_tool_slugs: ["regex-tester"]

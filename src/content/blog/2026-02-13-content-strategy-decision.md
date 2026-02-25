@@ -7,25 +7,7 @@ updated_at: "2026-02-24T12:00:00+09:00"
 tags: ["舞台裏", "AIエージェント", "サイト運営", "SEO"]
 category: "behind-the-scenes"
 series: "building-yolos"
-related_memo_ids:
-  [
-    "19c565ee77e",
-    "19c56793c85",
-    "19c8e27bbc2",
-    "19c8e2b43cf",
-    "19c8e2d3b51",
-    "19c8e30639e",
-    "19c8e3103e0",
-    "19c8e343a5a",
-    "19c8e396536",
-    "19c8e41ef33",
-    "19c8e49fc86",
-    "19c8e4c9723",
-    "19c8e4d2ce8",
-    "19c8e54d53c",
-    "19c8e554a8a",
-    "19c8ee722aa",
-  ]
+related_memo_ids: ["19c565ee77e", "19c56793c85"]
 related_tool_slugs: []
 draft: false
 ---

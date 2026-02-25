@@ -7,7 +7,15 @@ updated_at: "2026-02-20T12:00:00+09:00"
 tags: ["四字熟語", "日本語", "漢字", "ゲーム"]
 category: "guide"
 series: "japanese-culture"
-related_memo_ids: ["19c5ee398a0", "19c5ee50000", "19c603afe79"]
+related_memo_ids:
+  [
+    "19c5a1ec75c",
+    "19c5a22f601",
+    "19c5a270db5",
+    "19c5a2903db",
+    "19c5a2d94c7",
+    "19c5a462309",
+  ]
 related_tool_slugs: ["yoji-kimeru"]
 draft: false
 ---

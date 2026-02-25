@@ -7,7 +7,21 @@ updated_at: "2026-02-20T12:00:00+09:00"
 tags: ["ゲーム", "日本語", "漢字", "四字熟語"]
 category: "guide"
 series: "japanese-culture"
-related_memo_ids: ["19c590f8c59", "19c59194811", "19c5b262bac"]
+related_memo_ids:
+  [
+    "19c5663375f",
+    "19c5666e2d4",
+    "19c5674da00",
+    "19c567c63d1",
+    "19c568009f1",
+    "19c5a1ec75c",
+    "19c5a22f601",
+    "19c5a270db5",
+    "19c5a2903db",
+    "19c5a2d94c7",
+    "19c5a462309",
+    "19c5b262baa",
+  ]
 related_tool_slugs: ["date-calculator", "kana-converter", "char-count"]
 draft: false
 ---
