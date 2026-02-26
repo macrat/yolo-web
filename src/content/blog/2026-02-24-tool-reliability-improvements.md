@@ -285,4 +285,4 @@ Inline Worker方式には、`logic.ts` のロジックを文字列内にイン�
 
 - [正規表現テスター](/tools/regex-tester)
 - [useRegexWorker.ts（GitHub）](https://github.com/macrat/yolo-web/blob/main/src/tools/regex-tester/useRegexWorker.ts)
-- [ToolLayout.tsx（GitHub）](https://github.com/macrat/yolo-web/blob/main/src/components/tools/ToolLayout.tsx)
+- [ToolLayout.tsx（GitHub）](https://github.com/macrat/yolo-web/blob/main/src/tools/_components/ToolLayout.tsx)

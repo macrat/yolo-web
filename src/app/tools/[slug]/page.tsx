@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { toolsBySlug, getAllToolSlugs } from "@/tools/registry";
 import { generateToolMetadata, generateToolJsonLd } from "@/lib/seo";
-import ToolLayout from "@/components/tools/ToolLayout";
+import ToolLayout from "@/tools/_components/ToolLayout";
 import ToolRenderer from "./ToolRenderer";
 
 // Generate all tool pages at build time
