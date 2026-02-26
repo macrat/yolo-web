@@ -5,7 +5,7 @@
  */
 
 import { getAllBlogPosts, type BlogPostMeta } from "@/blog/_lib/blog";
-import { getPublicMemoById, type PublicMemo } from "@/lib/memos";
+import { getPublicMemoById, type PublicMemo } from "@/memos/_lib/memos";
 
 /**
  * Get public memos that are referenced by a blog post.

@@ -3,9 +3,9 @@ import {
   getAllPublicMemos,
   getAllMemoTags,
   getAllMemoRoles,
-} from "@/lib/memos";
+} from "@/memos/_lib/memos";
 import { SITE_NAME } from "@/lib/constants";
-import MemoFilter from "@/components/memos/MemoFilter";
+import MemoFilter from "@/memos/_components/MemoFilter";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {

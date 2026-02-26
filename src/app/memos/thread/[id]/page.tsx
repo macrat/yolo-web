@@ -4,9 +4,9 @@ import {
   getAllThreadRootIds,
   getMemoThread,
   getPublicMemoById,
-} from "@/lib/memos";
+} from "@/memos/_lib/memos";
 import { SITE_NAME } from "@/lib/constants";
-import MemoThreadView from "@/components/memos/MemoThreadView";
+import MemoThreadView from "@/memos/_components/MemoThreadView";
 import styles from "./page.module.css";
 
 interface Props {

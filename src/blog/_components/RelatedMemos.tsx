@@ -5,7 +5,7 @@ import {
   capitalize,
   type RoleSlug,
   type RoleDisplay,
-} from "@/lib/memos-shared";
+} from "@/memos/_lib/memos-shared";
 import styles from "./RelatedMemos.module.css";
 
 interface RelatedMemosProps {

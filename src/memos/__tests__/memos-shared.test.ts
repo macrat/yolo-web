@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { capitalize } from "@/lib/memos-shared";
+import { capitalize } from "@/memos/_lib/memos-shared";
 
 describe("capitalize", () => {
   it("先頭文字を大文字にする", () => {
