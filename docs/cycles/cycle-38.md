@@ -14,17 +14,39 @@ completed_at: null
 
 ## 実施する作業
 
-- [ ] B-125: ブログ記事修正（nextjs-directory-architecture）ownerフィードバック第2弾
-  - [ ] Critical: 「レビューサイクルの重要性」セクションでowner介入の事実を正しく記載
-  - [ ] Minor: 時系列の混同（リファクタリング前後の話が混在）を修正
-- [ ] B-096（第1弾）: ブログ記事品質向上（3本選定・実施）
-  - [ ] 対象記事の選定と品質向上計画の策定
-  - [ ] 各記事の品質向上実施
-  - [ ] レビューとフィードバック反映
+- [ ] B-125: ブログ記事修正（nextjs-directory-architecture）ownerフィードバック第2弾（計画: 19c9953becb）
+  - [ ] Critical: ステップ9-10間にowner介入ステップを追加、464行目の虚偽記述を全面書き換え
+  - [ ] Minor: 345行目の時系列混在を解消（リファクタリング前の状態のみ記述）
+  - [ ] Minor: 279行目のセクション名「実装で遭遇したアンチパターン」を修正
+  - [ ] updated_atの更新
+- [ ] B-096: nextjs-static記事の品質向上（計画: 19c99555933）
+  - [ ] 「この記事で分かること」リストの追加
+  - [ ] 外部リンク5件の追加（Next.js公式ドキュメント）※Lazy LoadingはApp Router版URLを使用
+  - [ ] ツール数の注記追加（20個→32個以上に拡充の旨）
+  - [ ] related_memo_idsの拡充
+  - [ ] updated_atの更新
+- [ ] B-096: cheatsheets記事の品質向上（計画: 19c99552cc1）
+  - [ ] 「この記事で分かること」リストの追加
+  - [ ] 外部リンク4件の追加（MDN、Pro Git、CommonMark、GFM Spec）
+  - [ ] 各チートシートに具体的なコード例1つずつ追加
+  - [ ] 「はてなブックマークとの親和性」に推測である旨を明記
+  - [ ] updated_atの更新
+- [ ] B-096: japanese-word-puzzle記事の品質向上（計画: 19c9954cf27）
+  - [ ] 「この記事で分かること」リストの追加
+  - [ ] タイトル・本文のゲーム数を3→4に更新（イロドリ追加）
+  - [ ] イロドリの紹介セクション新規追加
+  - [ ] 外部リンクの追加（漢字検定、JLPT等）
+  - [ ] 末尾のツール紹介をクイズ・診断への導線に差し替え
+  - [ ] updated_atの更新
 
 ## レビュー結果
 
-（作業完了後に記載）
+### 計画レビュー（レビューメモ: 19c9958bafe）
+
+- B-125: Approve（軽微な補足1件）
+- nextjs-static: Minor指摘1件（Lazy LoadingのURL修正: Pages Router版→App Router版）→ 実施時に反映
+- cheatsheets: Approve
+- japanese-word-puzzle: Approve
 
 ## キャリーオーバー
 
