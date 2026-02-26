@@ -1,13 +1,16 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Breadcrumb from "@/components/common/Breadcrumb";
-import CategoryNav from "@/components/dictionary/CategoryNav";
-import DictionaryCard from "@/components/dictionary/DictionaryCard";
-import DictionaryGrid from "@/components/dictionary/DictionaryGrid";
+import CategoryNav from "@/dictionary/_components/CategoryNav";
+import DictionaryCard from "@/dictionary/_components/DictionaryCard";
+import DictionaryGrid from "@/dictionary/_components/DictionaryGrid";
 import { SITE_NAME } from "@/lib/constants";
-import { getKanjiByCategory, getKanjiCategories } from "@/lib/dictionary/kanji";
-import type { KanjiCategory } from "@/lib/dictionary/types";
-import { KANJI_CATEGORY_LABELS } from "@/lib/dictionary/types";
+import {
+  getKanjiByCategory,
+  getKanjiCategories,
+} from "@/dictionary/_lib/kanji";
+import type { KanjiCategory } from "@/dictionary/_lib/types";
+import { KANJI_CATEGORY_LABELS } from "@/dictionary/_lib/types";
 import styles from "./page.module.css";
 
 /** Descriptive text for single-entry categories to avoid thin content */

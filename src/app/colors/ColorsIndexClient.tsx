@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import type { ColorEntry } from "@/lib/dictionary/types";
-import { COLOR_CATEGORY_LABELS } from "@/lib/dictionary/types";
-import ColorCard from "@/components/dictionary/color/ColorCard";
-import DictionaryGrid from "@/components/dictionary/DictionaryGrid";
-import SearchBox from "@/components/dictionary/SearchBox";
+import type { ColorEntry } from "@/dictionary/_lib/types";
+import { COLOR_CATEGORY_LABELS } from "@/dictionary/_lib/types";
+import ColorCard from "@/dictionary/_components/color/ColorCard";
+import DictionaryGrid from "@/dictionary/_components/DictionaryGrid";
+import SearchBox from "@/dictionary/_components/SearchBox";
 
 interface ColorsIndexClientProps {
   allColors: ColorEntry[];

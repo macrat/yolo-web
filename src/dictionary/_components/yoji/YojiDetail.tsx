@@ -1,11 +1,11 @@
 import Link from "next/link";
-import type { YojiEntry } from "@/lib/dictionary/types";
+import type { YojiEntry } from "@/dictionary/_lib/types";
 import {
   YOJI_CATEGORY_LABELS,
   YOJI_DIFFICULTY_LABELS,
-} from "@/lib/dictionary/types";
-import { getYojiByCategory } from "@/lib/dictionary/yoji";
-import { getAllKanjiChars } from "@/lib/dictionary/kanji";
+} from "@/dictionary/_lib/types";
+import { getYojiByCategory } from "@/dictionary/_lib/yoji";
+import { getAllKanjiChars } from "@/dictionary/_lib/kanji";
 import styles from "./YojiDetail.module.css";
 
 interface YojiDetailProps {

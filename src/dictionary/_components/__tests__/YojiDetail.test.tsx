@@ -1,7 +1,7 @@
 import { expect, test } from "vitest";
 import { render, screen } from "@testing-library/react";
 import YojiDetail from "../yoji/YojiDetail";
-import type { YojiEntry } from "@/lib/dictionary/types";
+import type { YojiEntry } from "@/dictionary/_lib/types";
 
 const mockYoji: YojiEntry = {
   yoji: "一期一会",

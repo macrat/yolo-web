@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Breadcrumb from "@/components/common/Breadcrumb";
 import { SITE_NAME } from "@/lib/constants";
-import { getAllKanji } from "@/lib/dictionary/kanji";
-import { getAllYoji } from "@/lib/dictionary/yoji";
-import { getAllColors } from "@/lib/dictionary/colors";
+import { getAllKanji } from "@/dictionary/_lib/kanji";
+import { getAllYoji } from "@/dictionary/_lib/yoji";
+import { getAllColors } from "@/dictionary/_lib/colors";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {

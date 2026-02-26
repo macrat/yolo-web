@@ -1,16 +1,16 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Breadcrumb from "@/components/common/Breadcrumb";
-import CategoryNav from "@/components/dictionary/CategoryNav";
-import DictionaryCard from "@/components/dictionary/DictionaryCard";
-import DictionaryGrid from "@/components/dictionary/DictionaryGrid";
+import CategoryNav from "@/dictionary/_components/CategoryNav";
+import DictionaryCard from "@/dictionary/_components/DictionaryCard";
+import DictionaryGrid from "@/dictionary/_components/DictionaryGrid";
 import { SITE_NAME } from "@/lib/constants";
-import { getYojiByCategory, getYojiCategories } from "@/lib/dictionary/yoji";
-import type { YojiCategory } from "@/lib/dictionary/types";
+import { getYojiByCategory, getYojiCategories } from "@/dictionary/_lib/yoji";
+import type { YojiCategory } from "@/dictionary/_lib/types";
 import {
   YOJI_CATEGORY_LABELS,
   YOJI_DIFFICULTY_LABELS,
-} from "@/lib/dictionary/types";
+} from "@/dictionary/_lib/types";
 import styles from "./page.module.css";
 
 export function generateStaticParams() {

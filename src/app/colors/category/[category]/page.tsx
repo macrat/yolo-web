@@ -1,14 +1,14 @@
 import { notFound } from "next/navigation";
 import Breadcrumb from "@/components/common/Breadcrumb";
-import CategoryNav from "@/components/dictionary/CategoryNav";
-import ColorCard from "@/components/dictionary/color/ColorCard";
-import DictionaryGrid from "@/components/dictionary/DictionaryGrid";
+import CategoryNav from "@/dictionary/_components/CategoryNav";
+import ColorCard from "@/dictionary/_components/color/ColorCard";
+import DictionaryGrid from "@/dictionary/_components/DictionaryGrid";
 import {
   getColorsByCategory,
   getColorCategories,
-} from "@/lib/dictionary/colors";
-import type { ColorCategory } from "@/lib/dictionary/types";
-import { COLOR_CATEGORY_LABELS } from "@/lib/dictionary/types";
+} from "@/dictionary/_lib/colors";
+import type { ColorCategory } from "@/dictionary/_lib/types";
+import { COLOR_CATEGORY_LABELS } from "@/dictionary/_lib/types";
 import {
   generateColorCategoryMetadata,
   generateBreadcrumbJsonLd,

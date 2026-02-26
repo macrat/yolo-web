@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import Breadcrumb from "@/components/common/Breadcrumb";
-import CategoryNav from "@/components/dictionary/CategoryNav";
+import CategoryNav from "@/dictionary/_components/CategoryNav";
 import { SITE_NAME } from "@/lib/constants";
-import { getAllYoji, getYojiCategories } from "@/lib/dictionary/yoji";
-import { YOJI_CATEGORY_LABELS } from "@/lib/dictionary/types";
+import { getAllYoji, getYojiCategories } from "@/dictionary/_lib/yoji";
+import { YOJI_CATEGORY_LABELS } from "@/dictionary/_lib/types";
 import YojiIndexClient from "./YojiIndexClient";
 import styles from "./page.module.css";
 

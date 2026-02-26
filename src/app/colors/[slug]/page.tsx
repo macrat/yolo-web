@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Breadcrumb from "@/components/common/Breadcrumb";
 import ShareButtons from "@/components/common/ShareButtons";
-import ColorDetail from "@/components/dictionary/color/ColorDetail";
+import ColorDetail from "@/dictionary/_components/color/ColorDetail";
 import {
   generateColorPageMetadata,
   generateColorJsonLd,
   generateBreadcrumbJsonLd,
 } from "@/lib/seo";
-import { getColorBySlug, getAllColorSlugs } from "@/lib/dictionary/colors";
+import { getColorBySlug, getAllColorSlugs } from "@/dictionary/_lib/colors";
 import styles from "./page.module.css";
 
 export function generateStaticParams() {

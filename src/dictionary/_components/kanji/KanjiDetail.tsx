@@ -1,7 +1,7 @@
 import Link from "next/link";
-import type { KanjiEntry } from "@/lib/dictionary/types";
-import { KANJI_CATEGORY_LABELS } from "@/lib/dictionary/types";
-import { getKanjiByCategory } from "@/lib/dictionary/kanji";
+import type { KanjiEntry } from "@/dictionary/_lib/types";
+import { KANJI_CATEGORY_LABELS } from "@/dictionary/_lib/types";
+import { getKanjiByCategory } from "@/dictionary/_lib/kanji";
 import styles from "./KanjiDetail.module.css";
 
 interface KanjiDetailProps {

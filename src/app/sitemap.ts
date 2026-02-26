@@ -4,9 +4,9 @@ import { getAllBlogPosts, ALL_CATEGORIES } from "@/lib/blog";
 import { getAllPublicMemos } from "@/lib/memos";
 import { BASE_URL } from "@/lib/constants";
 import { BLOG_POSTS_PER_PAGE, TOOLS_PER_PAGE } from "@/lib/pagination";
-import { getAllKanjiChars, getKanjiCategories } from "@/lib/dictionary/kanji";
-import { getAllYojiIds, getYojiCategories } from "@/lib/dictionary/yoji";
-import { getAllColorSlugs, getColorCategories } from "@/lib/dictionary/colors";
+import { getAllKanjiChars, getKanjiCategories } from "@/dictionary/_lib/kanji";
+import { getAllYojiIds, getYojiCategories } from "@/dictionary/_lib/yoji";
+import { getAllColorSlugs, getColorCategories } from "@/dictionary/_lib/colors";
 import { getAllQuizSlugs, getResultIdsForQuiz } from "@/quiz/registry";
 import { allGameMetas, getGamePath } from "@/games/registry";
 
