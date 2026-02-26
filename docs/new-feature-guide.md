@@ -203,8 +203,11 @@ export const meta: ToolMeta = {
 `src/tools/registry.ts` の定義配列に新しいツールのエントリを追加する。
 
 ```typescript
+import { meta as newToolMeta } from "./{tool-slug}/meta";
+
+// registry.ts の定義配列に追加:
 {
-  meta: require("./{tool-slug}/meta").meta,
+  meta: newToolMeta,
   componentImport: () => import("./{tool-slug}/Component"),
 }
 ```

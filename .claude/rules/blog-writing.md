@@ -1,6 +1,6 @@
 ---
 paths:
-  - src/content/blog/**/*.md
+  - src/blog/content/**/*.md
 ---
 
 # ブログ記事作成ガイド
@@ -42,7 +42,7 @@ paths:
 ファイル名は以下の形式で命名してください。
 
 ```
-src/content/blog/YYYY-MM-DD-<slug>.md
+src/blog/content/YYYY-MM-DD-<slug>.md
 ```
 
 ブログ記事には、以下の形式のfrontmatterを含めてください。
