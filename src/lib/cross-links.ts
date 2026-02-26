@@ -4,7 +4,7 @@
  * cross-reference logic here.
  */
 
-import { getAllBlogPosts, type BlogPostMeta } from "@/lib/blog";
+import { getAllBlogPosts, type BlogPostMeta } from "@/blog/_lib/blog";
 import { getPublicMemoById, type PublicMemo } from "@/lib/memos";
 
 /**

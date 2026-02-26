@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getAllBlogPosts } from "@/lib/blog";
+import { getAllBlogPosts } from "@/blog/_lib/blog";
 import { paginate, BLOG_POSTS_PER_PAGE } from "@/lib/pagination";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
-import BlogListView from "@/components/blog/BlogListView";
+import BlogListView from "@/blog/_components/BlogListView";
 
 interface Props {
   params: Promise<{ page: string }>;

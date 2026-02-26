@@ -1,7 +1,7 @@
 import { describe, test, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
-import SeriesNav from "@/components/blog/SeriesNav";
-import type { BlogPostMeta } from "@/lib/blog";
+import SeriesNav from "@/blog/_components/SeriesNav";
+import type { BlogPostMeta } from "@/blog/_lib/blog";
 
 /** Helper to create a minimal BlogPostMeta for testing. */
 function makeMeta(

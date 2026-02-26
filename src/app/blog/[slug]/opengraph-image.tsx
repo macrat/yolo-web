@@ -3,7 +3,7 @@ import {
   getBlogPostBySlug,
   CATEGORY_LABELS,
   type BlogCategory,
-} from "@/lib/blog";
+} from "@/blog/_lib/blog";
 import {
   createOgpImageResponse,
   ogpSize,

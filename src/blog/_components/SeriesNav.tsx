@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { SERIES_LABELS, type BlogPostMeta } from "@/lib/blog";
+import { SERIES_LABELS, type BlogPostMeta } from "@/blog/_lib/blog";
 import styles from "./SeriesNav.module.css";
 
 interface SeriesNavProps {

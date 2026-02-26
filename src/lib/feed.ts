@@ -1,5 +1,5 @@
 import { Feed } from "feed";
-import { getAllBlogPosts } from "@/lib/blog";
+import { getAllBlogPosts } from "@/blog/_lib/blog";
 import { BASE_URL, SITE_NAME } from "@/lib/constants";
 
 /** Maximum number of posts to include in the feed. */
