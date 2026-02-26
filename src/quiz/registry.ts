@@ -1,11 +1,13 @@
 import type { QuizDefinition, QuizMeta } from "./types";
 import kanjiLevelQuiz from "./data/kanji-level";
+import kotowazaLevelQuiz from "./data/kotowaza-level";
 import traditionalColorQuiz from "./data/traditional-color";
 import yojiLevelQuiz from "./data/yoji-level";
 import yojiPersonalityQuiz from "./data/yoji-personality";
 
 const quizEntries: QuizDefinition[] = [
   kanjiLevelQuiz,
+  kotowazaLevelQuiz,
   traditionalColorQuiz,
   yojiLevelQuiz,
   yojiPersonalityQuiz,
