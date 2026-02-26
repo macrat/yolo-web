@@ -90,8 +90,8 @@ describe("AiDisclaimer is not used anywhere", () => {
     const componentPaths = [
       path.join(srcDir, "components/common/AiDisclaimer.tsx"),
       path.join(srcDir, "components/common/AiDisclaimer.module.css"),
-      path.join(srcDir, "components/tools/AiDisclaimer.tsx"),
-      path.join(srcDir, "components/tools/AiDisclaimer.module.css"),
+      path.join(srcDir, "tools/_components/AiDisclaimer.tsx"),
+      path.join(srcDir, "tools/_components/AiDisclaimer.module.css"),
     ];
     for (const p of componentPaths) {
       expect(

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { allToolMetas } from "@/tools/registry";
 import { paginate, TOOLS_PER_PAGE } from "@/lib/pagination";
 import { BASE_URL } from "@/lib/constants";
-import ToolsListView from "@/components/tools/ToolsListView";
+import ToolsListView from "@/tools/_components/ToolsListView";
 
 /** Prevent fallback rendering for undefined page numbers (returns 404) */
 export const dynamicParams = false;

@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { toolsBySlug } from "@/tools/registry";
-import ToolErrorBoundary from "@/components/tools/ErrorBoundary";
+import ToolErrorBoundary from "@/tools/_components/ErrorBoundary";
 
 // Pre-build all dynamic components at module level (outside any render)
 // to satisfy the react-hooks/static-components ESLint rule.

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { allToolMetas } from "@/tools/registry";
 import { paginate, TOOLS_PER_PAGE } from "@/lib/pagination";
 import { BASE_URL } from "@/lib/constants";
-import ToolsListView from "@/components/tools/ToolsListView";
+import ToolsListView from "@/tools/_components/ToolsListView";
 
 export const metadata: Metadata = {
   title: "無料オンラインツール一覧 | yolos.net Tools",
