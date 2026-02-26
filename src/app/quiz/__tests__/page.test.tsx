@@ -14,6 +14,7 @@ describe("QuizListPage", () => {
     render(<QuizListPage />);
     // All registered quizzes should be displayed
     expect(screen.getByText("漢字力診断")).toBeInTheDocument();
+    expect(screen.getByText("ことわざ・慣用句力診断")).toBeInTheDocument();
     expect(
       screen.getByText("あなたを日本の伝統色に例えると?"),
     ).toBeInTheDocument();
@@ -25,7 +26,7 @@ describe("QuizListPage", () => {
     render(<QuizListPage />);
     const knowledgeBadges = screen.getAllByText("知識テスト");
     const personalityBadges = screen.getAllByText("性格診断");
-    expect(knowledgeBadges.length).toBe(2);
+    expect(knowledgeBadges.length).toBe(3);
     expect(personalityBadges.length).toBe(2);
   });
 
