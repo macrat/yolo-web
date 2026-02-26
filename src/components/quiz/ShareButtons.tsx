@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { useCanWebShare, shareGameResult } from "@/lib/games/shared/webShare";
+import { useCanWebShare, shareGameResult } from "@/lib/webShare";
 import styles from "./ShareButtons.module.css";
 
 type ShareButtonsProps = {
