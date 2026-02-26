@@ -1,5 +1,5 @@
 import { describe, expect, test, vi, beforeEach, afterEach } from "vitest";
-import type { PublicMemo } from "@/lib/memos-shared";
+import type { PublicMemo } from "@/memos/_lib/memos-shared";
 
 /**
  * Create a mock memo for testing.
@@ -22,12 +22,12 @@ function createMockMemo(overrides: Partial<PublicMemo> = {}): PublicMemo {
 }
 
 // Mock the memos module so we can control which memos are returned
-vi.mock("@/lib/memos", () => ({
+vi.mock("@/memos/_lib/memos", () => ({
   getAllPublicMemos: vi.fn(),
 }));
 
 // Import after mocking so the mock is in place
-import { getAllPublicMemos } from "@/lib/memos";
+import { getAllPublicMemos } from "@/memos/_lib/memos";
 import { buildMemoFeed } from "@/lib/feed-memos";
 import { GET as getRss } from "../route";
 import { GET as getAtom } from "../atom/route";

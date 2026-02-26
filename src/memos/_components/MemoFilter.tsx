@@ -6,7 +6,7 @@ import {
   capitalize,
   type PublicMemo,
   type RoleSlug,
-} from "@/lib/memos-shared";
+} from "@/memos/_lib/memos-shared";
 import { paginate, MEMOS_PER_PAGE } from "@/lib/pagination";
 import Pagination from "@/components/common/Pagination";
 import MemoCard from "./MemoCard";

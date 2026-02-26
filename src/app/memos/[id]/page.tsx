@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getAllPublicMemoIds, getPublicMemoById } from "@/lib/memos";
+import { getAllPublicMemoIds, getPublicMemoById } from "@/memos/_lib/memos";
 import { generateMemoPageMetadata, generateMemoPageJsonLd } from "@/lib/seo";
 import Breadcrumb from "@/components/common/Breadcrumb";
-import MemoDetail from "@/components/memos/MemoDetail";
-import RelatedBlogPosts from "@/components/memos/RelatedBlogPosts";
+import MemoDetail from "@/memos/_components/MemoDetail";
+import RelatedBlogPosts from "@/memos/_components/RelatedBlogPosts";
 import styles from "./page.module.css";
 
 interface Props {

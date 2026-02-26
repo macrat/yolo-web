@@ -1,4 +1,8 @@
-import { ROLE_DISPLAY, capitalize, type RoleSlug } from "@/lib/memos-shared";
+import {
+  ROLE_DISPLAY,
+  capitalize,
+  type RoleSlug,
+} from "@/memos/_lib/memos-shared";
 import styles from "./RoleBadge.module.css";
 
 interface RoleBadgeProps {

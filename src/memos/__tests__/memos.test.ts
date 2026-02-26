@@ -1,5 +1,5 @@
 import { describe, test, expect } from "vitest";
-import { normalizeRole } from "@/lib/memos";
+import { normalizeRole } from "@/memos/_lib/memos";
 
 describe("normalizeRole", () => {
   test("returns known role slugs as-is", () => {

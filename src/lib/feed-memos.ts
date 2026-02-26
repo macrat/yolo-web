@@ -1,7 +1,7 @@
 import { Feed } from "feed";
-import { getAllPublicMemos } from "@/lib/memos";
-import { ROLE_DISPLAY, capitalize } from "@/lib/memos-shared";
-import type { RoleSlug } from "@/lib/memos-shared";
+import { getAllPublicMemos } from "@/memos/_lib/memos";
+import { ROLE_DISPLAY, capitalize } from "@/memos/_lib/memos-shared";
+import type { RoleSlug } from "@/memos/_lib/memos-shared";
 import { BASE_URL, SITE_NAME } from "@/lib/constants";
 
 /** Include memos from the past N days only. */

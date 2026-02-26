@@ -1,12 +1,16 @@
 import fs from "node:fs";
 import path from "node:path";
 import { parseFrontmatter, markdownToHtml } from "@/lib/markdown";
-import type { RoleSlug, PublicMemo } from "@/lib/memos-shared";
-import { ROLE_DISPLAY } from "@/lib/memos-shared";
+import type { RoleSlug, PublicMemo } from "@/memos/_lib/memos-shared";
+import { ROLE_DISPLAY } from "@/memos/_lib/memos-shared";
 
 // Re-export shared types and constants for server-side consumers
-export { ROLE_DISPLAY } from "@/lib/memos-shared";
-export type { RoleSlug, RoleDisplay, PublicMemo } from "@/lib/memos-shared";
+export { ROLE_DISPLAY } from "@/memos/_lib/memos-shared";
+export type {
+  RoleSlug,
+  RoleDisplay,
+  PublicMemo,
+} from "@/memos/_lib/memos-shared";
 
 const KNOWN_ROLE_SLUGS: RoleSlug[] = Object.keys(ROLE_DISPLAY) as RoleSlug[];
 
