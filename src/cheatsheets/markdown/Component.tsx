@@ -1,4 +1,4 @@
-import CodeBlock from "@/components/cheatsheets/CodeBlock";
+import CodeBlock from "@/cheatsheets/_components/CodeBlock";
 import styles from "./Component.module.css";
 
 export default function MarkdownCheatsheet() {

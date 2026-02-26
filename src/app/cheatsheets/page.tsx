@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { allCheatsheetMetas } from "@/cheatsheets/registry";
-import CheatsheetGrid from "@/components/cheatsheets/CheatsheetGrid";
+import CheatsheetGrid from "@/cheatsheets/_components/CheatsheetGrid";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
