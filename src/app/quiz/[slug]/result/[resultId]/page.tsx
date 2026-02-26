@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Breadcrumb from "@/components/common/Breadcrumb";
-import ShareButtons from "@/components/quiz/ShareButtons";
+import ShareButtons from "@/quiz/_components/ShareButtons";
 import {
   quizBySlug,
   getAllQuizSlugs,
   getResultIdsForQuiz,
-} from "@/lib/quiz/registry";
+} from "@/quiz/registry";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import styles from "./page.module.css";
 

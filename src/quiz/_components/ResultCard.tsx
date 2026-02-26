@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import type { QuizResult, QuizType } from "@/lib/quiz/types";
+import type { QuizResult, QuizType } from "@/quiz/types";
 import ShareButtons from "./ShareButtons";
 import styles from "./ResultCard.module.css";
 

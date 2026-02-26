@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Breadcrumb from "@/components/common/Breadcrumb";
-import QuizContainer from "@/components/quiz/QuizContainer";
-import { quizBySlug, getAllQuizSlugs } from "@/lib/quiz/registry";
+import QuizContainer from "@/quiz/_components/QuizContainer";
+import { quizBySlug, getAllQuizSlugs } from "@/quiz/registry";
 import { generateQuizMetadata, generateQuizJsonLd } from "@/lib/seo";
 import styles from "./page.module.css";
 

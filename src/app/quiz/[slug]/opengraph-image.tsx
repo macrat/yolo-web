@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { quizBySlug, getAllQuizSlugs } from "@/lib/quiz/registry";
+import { quizBySlug, getAllQuizSlugs } from "@/quiz/registry";
 
 export const alt = "クイズ";
 export const size = { width: 1200, height: 630 };
