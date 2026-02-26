@@ -1,5 +1,5 @@
 import { describe, test, expect } from "vitest";
-import { getSeriesPosts, getAllBlogPosts } from "@/lib/blog";
+import { getSeriesPosts, getAllBlogPosts } from "@/blog/_lib/blog";
 
 describe("getSeriesPosts", () => {
   test("returns posts for an existing series", () => {

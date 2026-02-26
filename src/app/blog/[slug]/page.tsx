@@ -7,7 +7,7 @@ import {
   getBlogPostBySlug,
   getSeriesPosts,
   CATEGORY_LABELS,
-} from "@/lib/blog";
+} from "@/blog/_lib/blog";
 import {
   generateBlogPostMetadata,
   generateBlogPostJsonLd,
@@ -16,11 +16,11 @@ import {
 import { formatDate } from "@/lib/date";
 import Breadcrumb from "@/components/common/Breadcrumb";
 import ShareButtons from "@/components/common/ShareButtons";
-import TableOfContents from "@/components/blog/TableOfContents";
-import TagList from "@/components/blog/TagList";
-import RelatedMemos from "@/components/blog/RelatedMemos";
-import SeriesNav from "@/components/blog/SeriesNav";
-import MermaidRenderer from "@/components/blog/MermaidRenderer";
+import TableOfContents from "@/blog/_components/TableOfContents";
+import TagList from "@/blog/_components/TagList";
+import RelatedMemos from "@/blog/_components/RelatedMemos";
+import SeriesNav from "@/blog/_components/SeriesNav";
+import MermaidRenderer from "@/blog/_components/MermaidRenderer";
 import styles from "./page.module.css";
 
 interface Props {

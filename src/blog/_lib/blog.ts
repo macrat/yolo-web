@@ -7,7 +7,7 @@ import {
   estimateReadingTime,
 } from "@/lib/markdown";
 
-const BLOG_DIR = path.join(process.cwd(), "src/content/blog");
+const BLOG_DIR = path.join(process.cwd(), "src/blog/content");
 
 export type BlogCategory =
   | "guide"
@@ -76,7 +76,7 @@ export interface BlogPost extends BlogPostMeta {
 
 /**
  * List all published blog posts, sorted by published_at descending.
- * Reads from src/content/blog/*.md at build time.
+ * Reads from src/blog/content/*.md at build time.
  * Excludes posts where draft: true.
  */
 export function getAllBlogPosts(): BlogPostMeta[] {

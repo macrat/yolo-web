@@ -1,6 +1,6 @@
 import Link from "next/link";
-import type { BlogPostMeta } from "@/lib/blog";
-import { CATEGORY_LABELS } from "@/lib/blog";
+import type { BlogPostMeta } from "@/blog/_lib/blog";
+import { CATEGORY_LABELS } from "@/blog/_lib/blog";
 import { formatDate } from "@/lib/date";
 import TagList from "./TagList";
 import styles from "./BlogCard.module.css";

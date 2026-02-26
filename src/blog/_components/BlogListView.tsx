@@ -1,9 +1,9 @@
 import Link from "next/link";
-import type { BlogPostMeta, BlogCategory } from "@/lib/blog";
-import { ALL_CATEGORIES, CATEGORY_LABELS } from "@/lib/blog";
-import BlogCard from "@/components/blog/BlogCard";
+import type { BlogPostMeta, BlogCategory } from "@/blog/_lib/blog";
+import { ALL_CATEGORIES, CATEGORY_LABELS } from "@/blog/_lib/blog";
+import BlogCard from "@/blog/_components/BlogCard";
 import Pagination from "@/components/common/Pagination";
-import styles from "@/app/blog/page.module.css";
+import styles from "./BlogListView.module.css";
 
 interface BlogListViewProps {
   /** Blog posts for the current page (already sliced) */

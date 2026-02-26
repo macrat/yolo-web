@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { allToolMetas } from "@/tools/registry";
-import { getAllBlogPosts, ALL_CATEGORIES } from "@/lib/blog";
+import { getAllBlogPosts, ALL_CATEGORIES } from "@/blog/_lib/blog";
 import { getAllPublicMemos } from "@/lib/memos";
 import { BASE_URL } from "@/lib/constants";
 import { BLOG_POSTS_PER_PAGE, TOOLS_PER_PAGE } from "@/lib/pagination";

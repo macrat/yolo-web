@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { getAllBlogPosts } from "@/lib/blog";
+import { getAllBlogPosts } from "@/blog/_lib/blog";
 import { paginate, BLOG_POSTS_PER_PAGE } from "@/lib/pagination";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
-import BlogListView from "@/components/blog/BlogListView";
+import BlogListView from "@/blog/_components/BlogListView";
 
 export const metadata: Metadata = {
   title: `AI試行錯誤ブログ | ${SITE_NAME}`,
