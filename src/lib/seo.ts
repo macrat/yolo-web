@@ -1,4 +1,8 @@
 import type { Metadata } from "next";
+// AP-5: 以下3つのフィーチャー型への依存は型のみ（import type）であり意図的。
+// seo.ts はサイト全体のSEO一貫性を維持するため、各フィーチャーのメタデータ型を
+// 参照してメタデータ生成関数を提供している。各フィーチャーにSEO関数を分散させると
+// サイト全体のSEO一貫性が損なわれるリスクがあるため、共有層に集約している。
 import type { ToolMeta } from "@/tools/types";
 import type { CheatsheetMeta } from "@/cheatsheets/types";
 import type { QuizMeta } from "@/quiz/types";
