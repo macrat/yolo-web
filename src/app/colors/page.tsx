@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import Breadcrumb from "@/components/common/Breadcrumb";
-import CategoryNav from "@/components/dictionary/CategoryNav";
+import CategoryNav from "@/dictionary/_components/CategoryNav";
 import { SITE_NAME } from "@/lib/constants";
-import { getAllColors, getColorCategories } from "@/lib/dictionary/colors";
-import { COLOR_CATEGORY_LABELS } from "@/lib/dictionary/types";
+import { getAllColors, getColorCategories } from "@/dictionary/_lib/colors";
+import { COLOR_CATEGORY_LABELS } from "@/dictionary/_lib/types";
 import { generateBreadcrumbJsonLd } from "@/lib/seo";
 import ColorsIndexClient from "./ColorsIndexClient";
 import styles from "./page.module.css";

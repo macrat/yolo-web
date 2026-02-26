@@ -1,14 +1,14 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import type { YojiEntry } from "@/lib/dictionary/types";
+import type { YojiEntry } from "@/dictionary/_lib/types";
 import {
   YOJI_CATEGORY_LABELS,
   YOJI_DIFFICULTY_LABELS,
-} from "@/lib/dictionary/types";
-import DictionaryCard from "@/components/dictionary/DictionaryCard";
-import DictionaryGrid from "@/components/dictionary/DictionaryGrid";
-import SearchBox from "@/components/dictionary/SearchBox";
+} from "@/dictionary/_lib/types";
+import DictionaryCard from "@/dictionary/_components/DictionaryCard";
+import DictionaryGrid from "@/dictionary/_components/DictionaryGrid";
+import SearchBox from "@/dictionary/_components/SearchBox";
 
 interface YojiIndexClientProps {
   allYoji: YojiEntry[];

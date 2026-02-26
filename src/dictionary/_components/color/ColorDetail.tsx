@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import type { ColorEntry } from "@/lib/dictionary/types";
-import { COLOR_CATEGORY_LABELS } from "@/lib/dictionary/types";
-import { getColorsByCategory } from "@/lib/dictionary/colors";
+import type { ColorEntry } from "@/dictionary/_lib/types";
+import { COLOR_CATEGORY_LABELS } from "@/dictionary/_lib/types";
+import { getColorsByCategory } from "@/dictionary/_lib/colors";
 import styles from "./ColorDetail.module.css";
 
 interface ColorDetailProps {

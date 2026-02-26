@@ -2,9 +2,9 @@
 
 import { allToolMetas } from "@/tools/registry";
 import { allCheatsheetMetas } from "@/cheatsheets/registry";
-import { getAllKanji } from "@/lib/dictionary/kanji";
-import { getAllYoji } from "@/lib/dictionary/yoji";
-import { getAllColors } from "@/lib/dictionary/colors";
+import { getAllKanji } from "@/dictionary/_lib/kanji";
+import { getAllYoji } from "@/dictionary/_lib/yoji";
+import { getAllColors } from "@/dictionary/_lib/colors";
 import { getAllBlogPosts } from "@/lib/blog";
 import { allQuizMetas } from "@/quiz/registry";
 import { allGameMetas } from "@/games/registry";

@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import type { KanjiEntry } from "@/lib/dictionary/types";
-import { KANJI_CATEGORY_LABELS } from "@/lib/dictionary/types";
-import DictionaryCard from "@/components/dictionary/DictionaryCard";
-import DictionaryGrid from "@/components/dictionary/DictionaryGrid";
-import SearchBox from "@/components/dictionary/SearchBox";
+import type { KanjiEntry } from "@/dictionary/_lib/types";
+import { KANJI_CATEGORY_LABELS } from "@/dictionary/_lib/types";
+import DictionaryCard from "@/dictionary/_components/DictionaryCard";
+import DictionaryGrid from "@/dictionary/_components/DictionaryGrid";
+import SearchBox from "@/dictionary/_components/SearchBox";
 
 interface KanjiIndexClientProps {
   allKanji: KanjiEntry[];

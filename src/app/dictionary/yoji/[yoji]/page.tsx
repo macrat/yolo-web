@@ -1,9 +1,9 @@
 import { notFound } from "next/navigation";
 import Breadcrumb from "@/components/common/Breadcrumb";
 import ShareButtons from "@/components/common/ShareButtons";
-import YojiDetail from "@/components/dictionary/yoji/YojiDetail";
+import YojiDetail from "@/dictionary/_components/yoji/YojiDetail";
 import { generateYojiPageMetadata, generateYojiJsonLd } from "@/lib/seo";
-import { getYojiByYoji, getAllYojiIds } from "@/lib/dictionary/yoji";
+import { getYojiByYoji, getAllYojiIds } from "@/dictionary/_lib/yoji";
 import styles from "./page.module.css";
 
 export function generateStaticParams() {

@@ -1,9 +1,9 @@
 import { notFound } from "next/navigation";
 import Breadcrumb from "@/components/common/Breadcrumb";
 import ShareButtons from "@/components/common/ShareButtons";
-import KanjiDetail from "@/components/dictionary/kanji/KanjiDetail";
+import KanjiDetail from "@/dictionary/_components/kanji/KanjiDetail";
 import { generateKanjiPageMetadata, generateKanjiJsonLd } from "@/lib/seo";
-import { getKanjiByChar, getAllKanjiChars } from "@/lib/dictionary/kanji";
+import { getKanjiByChar, getAllKanjiChars } from "@/dictionary/_lib/kanji";
 import styles from "./page.module.css";
 
 export function generateStaticParams() {

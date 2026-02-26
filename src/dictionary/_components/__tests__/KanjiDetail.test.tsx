@@ -1,7 +1,7 @@
 import { expect, test } from "vitest";
 import { render, screen } from "@testing-library/react";
 import KanjiDetail from "../kanji/KanjiDetail";
-import type { KanjiEntry } from "@/lib/dictionary/types";
+import type { KanjiEntry } from "@/dictionary/_lib/types";
 
 const mockKanji: KanjiEntry = {
   character: "山",

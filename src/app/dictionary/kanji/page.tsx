@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import Breadcrumb from "@/components/common/Breadcrumb";
-import CategoryNav from "@/components/dictionary/CategoryNav";
+import CategoryNav from "@/dictionary/_components/CategoryNav";
 import { SITE_NAME } from "@/lib/constants";
-import { getAllKanji, getKanjiCategories } from "@/lib/dictionary/kanji";
-import { KANJI_CATEGORY_LABELS } from "@/lib/dictionary/types";
+import { getAllKanji, getKanjiCategories } from "@/dictionary/_lib/kanji";
+import { KANJI_CATEGORY_LABELS } from "@/dictionary/_lib/types";
 import KanjiIndexClient from "./KanjiIndexClient";
 import styles from "./page.module.css";
 
