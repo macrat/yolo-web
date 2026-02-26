@@ -4,7 +4,7 @@ import GameShareButtons from "../GameShareButtons";
 
 // Mock the web share hook
 const mockUseCanWebShare = vi.fn(() => false);
-vi.mock("@/lib/games/shared/webShare", () => ({
+vi.mock("@/lib/webShare", () => ({
   useCanWebShare: () => mockUseCanWebShare(),
   shareGameResult: vi.fn().mockResolvedValue(true),
 }));

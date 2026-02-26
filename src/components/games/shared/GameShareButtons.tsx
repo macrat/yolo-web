@@ -5,7 +5,7 @@ import {
   copyToClipboard,
   generateTwitterShareUrl,
 } from "@/lib/games/shared/share";
-import { useCanWebShare, shareGameResult } from "@/lib/games/shared/webShare";
+import { useCanWebShare, shareGameResult } from "@/lib/webShare";
 import styles from "./GameShareButtons.module.css";
 
 /**
