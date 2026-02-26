@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Breadcrumb from "@/components/common/Breadcrumb";
 import { generateGameJsonLd } from "@/lib/seo";
-import GameContainer from "@/components/games/yoji-kimeru/GameContainer";
+import GameContainer from "@/games/yoji-kimeru/_components/GameContainer";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {

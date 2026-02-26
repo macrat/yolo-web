@@ -1,44 +1,41 @@
 import Link from "next/link";
-import { allGameMetas, getGamePath } from "@/lib/games/registry";
 import styles from "./Footer.module.css";
 
-const SECTION_LINKS = [
-  {
-    heading: "ツール",
-    links: [
-      { href: "/tools", label: "ツール一覧" },
-      { href: "/cheatsheets", label: "チートシート" },
-    ],
-  },
-  {
-    heading: "ゲーム",
-    links: [
-      { href: "/games", label: "ゲーム一覧" },
-      ...allGameMetas.map((game) => ({
-        href: getGamePath(game.slug),
-        label: game.title,
-      })),
-    ],
-  },
-  {
-    heading: "コンテンツ",
-    links: [
-      { href: "/quiz", label: "クイズ・診断" },
-      { href: "/colors", label: "日本の伝統色" },
-      { href: "/dictionary", label: "辞書" },
-    ],
-  },
-  {
-    heading: "その他",
-    links: [
-      { href: "/blog", label: "ブログ" },
-      { href: "/memos", label: "メモ" },
-      { href: "/about", label: "このサイトについて" },
-    ],
-  },
-];
+interface FooterProps {
+  gameLinks?: { href: string; label: string }[];
+}
 
-export default function Footer() {
+export default function Footer({ gameLinks }: FooterProps) {
+  const SECTION_LINKS = [
+    {
+      heading: "ツール",
+      links: [
+        { href: "/tools", label: "ツール一覧" },
+        { href: "/cheatsheets", label: "チートシート" },
+      ],
+    },
+    {
+      heading: "ゲーム",
+      links: [{ href: "/games", label: "ゲーム一覧" }, ...(gameLinks ?? [])],
+    },
+    {
+      heading: "コンテンツ",
+      links: [
+        { href: "/quiz", label: "クイズ・診断" },
+        { href: "/colors", label: "日本の伝統色" },
+        { href: "/dictionary", label: "辞書" },
+      ],
+    },
+    {
+      heading: "その他",
+      links: [
+        { href: "/blog", label: "ブログ" },
+        { href: "/memos", label: "メモ" },
+        { href: "/about", label: "このサイトについて" },
+      ],
+    },
+  ];
+
   return (
     <footer className={styles.footer} role="contentinfo">
       <div className={styles.inner}>

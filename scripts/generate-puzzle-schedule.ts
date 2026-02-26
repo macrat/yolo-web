@@ -77,7 +77,7 @@ function main(): void {
   // Write output
   const outputPath = path.resolve(
     __dirname,
-    "../src/data/puzzle-schedule.json",
+    "../src/games/kanji-kanaru/data/puzzle-schedule.json",
   );
   fs.writeFileSync(outputPath, JSON.stringify(schedule, null, 2) + "\n");
 

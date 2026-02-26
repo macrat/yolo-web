@@ -8,7 +8,7 @@ import { getAllKanjiChars, getKanjiCategories } from "@/lib/dictionary/kanji";
 import { getAllYojiIds, getYojiCategories } from "@/lib/dictionary/yoji";
 import { getAllColorSlugs, getColorCategories } from "@/lib/dictionary/colors";
 import { getAllQuizSlugs, getResultIdsForQuiz } from "@/lib/quiz/registry";
-import { allGameMetas, getGamePath } from "@/lib/games/registry";
+import { allGameMetas, getGamePath } from "@/games/registry";
 
 /**
  * Generate sitemap entries for pagination pages (page 2 and above).

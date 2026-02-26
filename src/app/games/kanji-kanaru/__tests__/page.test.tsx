@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react";
 import KanjiKanaruPage from "../page";
 
 // Mock the GameContainer since it relies on client-side APIs
-vi.mock("@/components/games/kanji-kanaru/GameContainer", () => ({
+vi.mock("@/games/kanji-kanaru/_components/GameContainer", () => ({
   default: () => <div data-testid="game-container">GameContainer</div>,
 }));
 

@@ -7,7 +7,7 @@ import { getAllYoji } from "@/lib/dictionary/yoji";
 import { getAllColors } from "@/lib/dictionary/colors";
 import { getAllBlogPosts } from "@/lib/blog";
 import { allQuizMetas } from "@/lib/quiz/registry";
-import { allGameMetas } from "@/lib/games/registry";
+import { allGameMetas } from "@/games/registry";
 import type { SearchDocument } from "./types";
 
 /** Build the complete search index from all content types */

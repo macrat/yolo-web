@@ -6,6 +6,7 @@ import Footer from "@/components/common/Footer";
 import ThemeProvider from "@/components/common/ThemeProvider";
 import { generateWebSiteJsonLd } from "@/lib/seo";
 import { BASE_URL, SITE_NAME } from "@/lib/constants";
+import { allGameMetas, getGamePath } from "@/games/registry";
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
@@ -46,6 +47,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const websiteJsonLd = generateWebSiteJsonLd();
+  const gameLinks = allGameMetas.map((game) => ({
+    href: getGamePath(game.slug),
+    label: game.title,
+  }));
   return (
     <html lang="ja" suppressHydrationWarning>
       <body
@@ -59,7 +64,7 @@ export default function RootLayout({
           <GoogleAnalytics />
           <Header />
           <main style={{ flex: 1 }}>{children}</main>
-          <Footer />
+          <Footer gameLinks={gameLinks} />
         </ThemeProvider>
       </body>
     </html>

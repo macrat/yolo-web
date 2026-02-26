@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { buildSearchIndex } from "../build-index";
-import { getAllGameSlugs } from "@/lib/games/registry";
+import { getAllGameSlugs } from "@/games/registry";
 import type { ContentType } from "../types";
 
 describe("buildSearchIndex", () => {
