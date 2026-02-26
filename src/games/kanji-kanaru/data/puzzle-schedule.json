@@ -1,827 +1,767 @@
 [
   {
-    "date": "2026-02-14",
-    "kanjiIndex": 25
-  },
-  {
-    "date": "2026-02-15",
-    "kanjiIndex": 8
-  },
-  {
-    "date": "2026-02-16",
-    "kanjiIndex": 7
-  },
-  {
-    "date": "2026-02-17",
-    "kanjiIndex": 22
-  },
-  {
-    "date": "2026-02-18",
-    "kanjiIndex": 37
-  },
-  {
-    "date": "2026-02-19",
-    "kanjiIndex": 2
-  },
-  {
-    "date": "2026-02-20",
-    "kanjiIndex": 44
-  },
-  {
-    "date": "2026-02-21",
-    "kanjiIndex": 11
-  },
-  {
-    "date": "2026-02-22",
-    "kanjiIndex": 37
-  },
-  {
-    "date": "2026-02-23",
-    "kanjiIndex": 49
-  },
-  {
-    "date": "2026-02-24",
-    "kanjiIndex": 35
-  },
-  {
-    "date": "2026-02-25",
-    "kanjiIndex": 49
-  },
-  {
-    "date": "2026-02-26",
-    "kanjiIndex": 14
-  },
-  {
-    "date": "2026-02-27",
-    "kanjiIndex": 36
-  },
-  {
-    "date": "2026-02-28",
-    "kanjiIndex": 9
-  },
-  {
     "date": "2026-03-01",
-    "kanjiIndex": 14
+    "kanjiIndex": 60
   },
   {
     "date": "2026-03-02",
-    "kanjiIndex": 45
+    "kanjiIndex": 65
   },
   {
     "date": "2026-03-03",
-    "kanjiIndex": 42
+    "kanjiIndex": 12
   },
   {
     "date": "2026-03-04",
-    "kanjiIndex": 38
+    "kanjiIndex": 58
   },
   {
     "date": "2026-03-05",
-    "kanjiIndex": 5
+    "kanjiIndex": 52
   },
   {
     "date": "2026-03-06",
-    "kanjiIndex": 18
+    "kanjiIndex": 39
   },
   {
     "date": "2026-03-07",
-    "kanjiIndex": 5
+    "kanjiIndex": 24
   },
   {
     "date": "2026-03-08",
-    "kanjiIndex": 25
+    "kanjiIndex": 30
   },
   {
     "date": "2026-03-09",
-    "kanjiIndex": 44
+    "kanjiIndex": 43
   },
   {
     "date": "2026-03-10",
-    "kanjiIndex": 32
+    "kanjiIndex": 44
   },
   {
     "date": "2026-03-11",
-    "kanjiIndex": 15
+    "kanjiIndex": 75
   },
   {
     "date": "2026-03-12",
-    "kanjiIndex": 32
+    "kanjiIndex": 48
   },
   {
     "date": "2026-03-13",
-    "kanjiIndex": 46
+    "kanjiIndex": 17
   },
   {
     "date": "2026-03-14",
-    "kanjiIndex": 6
+    "kanjiIndex": 54
   },
   {
     "date": "2026-03-15",
-    "kanjiIndex": 2
+    "kanjiIndex": 72
   },
   {
     "date": "2026-03-16",
-    "kanjiIndex": 3
+    "kanjiIndex": 79
   },
   {
     "date": "2026-03-17",
-    "kanjiIndex": 32
+    "kanjiIndex": 78
   },
   {
     "date": "2026-03-18",
-    "kanjiIndex": 34
+    "kanjiIndex": 13
   },
   {
     "date": "2026-03-19",
-    "kanjiIndex": 18
+    "kanjiIndex": 37
   },
   {
     "date": "2026-03-20",
-    "kanjiIndex": 38
+    "kanjiIndex": 2
   },
   {
     "date": "2026-03-21",
-    "kanjiIndex": 8
+    "kanjiIndex": 23
   },
   {
     "date": "2026-03-22",
-    "kanjiIndex": 19
+    "kanjiIndex": 28
   },
   {
     "date": "2026-03-23",
-    "kanjiIndex": 21
+    "kanjiIndex": 11
   },
   {
     "date": "2026-03-24",
-    "kanjiIndex": 49
+    "kanjiIndex": 1
   },
   {
     "date": "2026-03-25",
-    "kanjiIndex": 44
+    "kanjiIndex": 26
   },
   {
     "date": "2026-03-26",
-    "kanjiIndex": 9
+    "kanjiIndex": 67
   },
   {
     "date": "2026-03-27",
-    "kanjiIndex": 19
+    "kanjiIndex": 29
   },
   {
     "date": "2026-03-28",
-    "kanjiIndex": 44
+    "kanjiIndex": 41
   },
   {
     "date": "2026-03-29",
-    "kanjiIndex": 12
+    "kanjiIndex": 42
   },
   {
     "date": "2026-03-30",
-    "kanjiIndex": 26
+    "kanjiIndex": 27
   },
   {
     "date": "2026-03-31",
-    "kanjiIndex": 9
+    "kanjiIndex": 3
   },
   {
     "date": "2026-04-01",
-    "kanjiIndex": 30
-  },
-  {
-    "date": "2026-04-02",
-    "kanjiIndex": 38
-  },
-  {
-    "date": "2026-04-03",
-    "kanjiIndex": 21
-  },
-  {
-    "date": "2026-04-04",
-    "kanjiIndex": 27
-  },
-  {
-    "date": "2026-04-05",
-    "kanjiIndex": 1
-  },
-  {
-    "date": "2026-04-06",
-    "kanjiIndex": 27
-  },
-  {
-    "date": "2026-04-07",
-    "kanjiIndex": 33
-  },
-  {
-    "date": "2026-04-08",
-    "kanjiIndex": 38
-  },
-  {
-    "date": "2026-04-09",
-    "kanjiIndex": 45
-  },
-  {
-    "date": "2026-04-10",
-    "kanjiIndex": 19
-  },
-  {
-    "date": "2026-04-11",
-    "kanjiIndex": 37
-  },
-  {
-    "date": "2026-04-12",
-    "kanjiIndex": 8
-  },
-  {
-    "date": "2026-04-13",
-    "kanjiIndex": 33
-  },
-  {
-    "date": "2026-04-14",
-    "kanjiIndex": 31
-  },
-  {
-    "date": "2026-04-15",
-    "kanjiIndex": 12
-  },
-  {
-    "date": "2026-04-16",
-    "kanjiIndex": 47
-  },
-  {
-    "date": "2026-04-17",
-    "kanjiIndex": 10
-  },
-  {
-    "date": "2026-04-18",
-    "kanjiIndex": 42
-  },
-  {
-    "date": "2026-04-19",
-    "kanjiIndex": 30
-  },
-  {
-    "date": "2026-04-20",
-    "kanjiIndex": 43
-  },
-  {
-    "date": "2026-04-21",
-    "kanjiIndex": 21
-  },
-  {
-    "date": "2026-04-22",
-    "kanjiIndex": 30
-  },
-  {
-    "date": "2026-04-23",
-    "kanjiIndex": 11
-  },
-  {
-    "date": "2026-04-24",
-    "kanjiIndex": 0
-  },
-  {
-    "date": "2026-04-25",
-    "kanjiIndex": 11
-  },
-  {
-    "date": "2026-04-26",
-    "kanjiIndex": 24
-  },
-  {
-    "date": "2026-04-27",
-    "kanjiIndex": 10
-  },
-  {
-    "date": "2026-04-28",
-    "kanjiIndex": 19
-  },
-  {
-    "date": "2026-04-29",
-    "kanjiIndex": 49
-  },
-  {
-    "date": "2026-04-30",
-    "kanjiIndex": 20
-  },
-  {
-    "date": "2026-05-01",
-    "kanjiIndex": 22
-  },
-  {
-    "date": "2026-05-02",
-    "kanjiIndex": 19
-  },
-  {
-    "date": "2026-05-03",
-    "kanjiIndex": 38
-  },
-  {
-    "date": "2026-05-04",
-    "kanjiIndex": 31
-  },
-  {
-    "date": "2026-05-05",
-    "kanjiIndex": 19
-  },
-  {
-    "date": "2026-05-06",
-    "kanjiIndex": 33
-  },
-  {
-    "date": "2026-05-07",
-    "kanjiIndex": 40
-  },
-  {
-    "date": "2026-05-08",
-    "kanjiIndex": 15
-  },
-  {
-    "date": "2026-05-09",
-    "kanjiIndex": 12
-  },
-  {
-    "date": "2026-05-10",
-    "kanjiIndex": 3
-  },
-  {
-    "date": "2026-05-11",
-    "kanjiIndex": 15
-  },
-  {
-    "date": "2026-05-12",
-    "kanjiIndex": 48
-  },
-  {
-    "date": "2026-05-13",
-    "kanjiIndex": 42
-  },
-  {
-    "date": "2026-05-14",
-    "kanjiIndex": 24
-  },
-  {
-    "date": "2026-05-15",
-    "kanjiIndex": 43
-  },
-  {
-    "date": "2026-05-16",
-    "kanjiIndex": 4
-  },
-  {
-    "date": "2026-05-17",
-    "kanjiIndex": 7
-  },
-  {
-    "date": "2026-05-18",
-    "kanjiIndex": 32
-  },
-  {
-    "date": "2026-05-19",
-    "kanjiIndex": 47
-  },
-  {
-    "date": "2026-05-20",
-    "kanjiIndex": 29
-  },
-  {
-    "date": "2026-05-21",
-    "kanjiIndex": 16
-  },
-  {
-    "date": "2026-05-22",
-    "kanjiIndex": 38
-  },
-  {
-    "date": "2026-05-23",
-    "kanjiIndex": 28
-  },
-  {
-    "date": "2026-05-24",
-    "kanjiIndex": 48
-  },
-  {
-    "date": "2026-05-25",
-    "kanjiIndex": 34
-  },
-  {
-    "date": "2026-05-26",
-    "kanjiIndex": 41
-  },
-  {
-    "date": "2026-05-27",
-    "kanjiIndex": 19
-  },
-  {
-    "date": "2026-05-28",
-    "kanjiIndex": 31
-  },
-  {
-    "date": "2026-05-29",
-    "kanjiIndex": 3
-  },
-  {
-    "date": "2026-05-30",
-    "kanjiIndex": 26
-  },
-  {
-    "date": "2026-05-31",
-    "kanjiIndex": 40
-  },
-  {
-    "date": "2026-06-01",
-    "kanjiIndex": 1
-  },
-  {
-    "date": "2026-06-02",
-    "kanjiIndex": 14
-  },
-  {
-    "date": "2026-06-03",
-    "kanjiIndex": 36
-  },
-  {
-    "date": "2026-06-04",
-    "kanjiIndex": 47
-  },
-  {
-    "date": "2026-06-05",
-    "kanjiIndex": 25
-  },
-  {
-    "date": "2026-06-06",
-    "kanjiIndex": 9
-  },
-  {
-    "date": "2026-06-07",
-    "kanjiIndex": 20
-  },
-  {
-    "date": "2026-06-08",
-    "kanjiIndex": 5
-  },
-  {
-    "date": "2026-06-09",
-    "kanjiIndex": 10
-  },
-  {
-    "date": "2026-06-10",
-    "kanjiIndex": 23
-  },
-  {
-    "date": "2026-06-11",
-    "kanjiIndex": 37
-  },
-  {
-    "date": "2026-06-12",
-    "kanjiIndex": 41
-  },
-  {
-    "date": "2026-06-13",
-    "kanjiIndex": 43
-  },
-  {
-    "date": "2026-06-14",
-    "kanjiIndex": 23
-  },
-  {
-    "date": "2026-06-15",
-    "kanjiIndex": 42
-  },
-  {
-    "date": "2026-06-16",
-    "kanjiIndex": 44
-  },
-  {
-    "date": "2026-06-17",
-    "kanjiIndex": 7
-  },
-  {
-    "date": "2026-06-18",
-    "kanjiIndex": 42
-  },
-  {
-    "date": "2026-06-19",
-    "kanjiIndex": 2
-  },
-  {
-    "date": "2026-06-20",
-    "kanjiIndex": 25
-  },
-  {
-    "date": "2026-06-21",
-    "kanjiIndex": 4
-  },
-  {
-    "date": "2026-06-22",
-    "kanjiIndex": 0
-  },
-  {
-    "date": "2026-06-23",
-    "kanjiIndex": 45
-  },
-  {
-    "date": "2026-06-24",
-    "kanjiIndex": 47
-  },
-  {
-    "date": "2026-06-25",
-    "kanjiIndex": 20
-  },
-  {
-    "date": "2026-06-26",
-    "kanjiIndex": 31
-  },
-  {
-    "date": "2026-06-27",
-    "kanjiIndex": 30
-  },
-  {
-    "date": "2026-06-28",
-    "kanjiIndex": 6
-  },
-  {
-    "date": "2026-06-29",
     "kanjiIndex": 18
   },
   {
-    "date": "2026-06-30",
-    "kanjiIndex": 4
-  },
-  {
-    "date": "2026-07-01",
-    "kanjiIndex": 33
-  },
-  {
-    "date": "2026-07-02",
-    "kanjiIndex": 45
-  },
-  {
-    "date": "2026-07-03",
-    "kanjiIndex": 26
-  },
-  {
-    "date": "2026-07-04",
-    "kanjiIndex": 47
-  },
-  {
-    "date": "2026-07-05",
-    "kanjiIndex": 3
-  },
-  {
-    "date": "2026-07-06",
-    "kanjiIndex": 7
-  },
-  {
-    "date": "2026-07-07",
-    "kanjiIndex": 30
-  },
-  {
-    "date": "2026-07-08",
-    "kanjiIndex": 14
-  },
-  {
-    "date": "2026-07-09",
-    "kanjiIndex": 16
-  },
-  {
-    "date": "2026-07-10",
-    "kanjiIndex": 46
-  },
-  {
-    "date": "2026-07-11",
-    "kanjiIndex": 25
-  },
-  {
-    "date": "2026-07-12",
-    "kanjiIndex": 22
-  },
-  {
-    "date": "2026-07-13",
-    "kanjiIndex": 0
-  },
-  {
-    "date": "2026-07-14",
-    "kanjiIndex": 3
-  },
-  {
-    "date": "2026-07-15",
-    "kanjiIndex": 34
-  },
-  {
-    "date": "2026-07-16",
-    "kanjiIndex": 23
-  },
-  {
-    "date": "2026-07-17",
-    "kanjiIndex": 40
-  },
-  {
-    "date": "2026-07-18",
-    "kanjiIndex": 23
-  },
-  {
-    "date": "2026-07-19",
-    "kanjiIndex": 3
-  },
-  {
-    "date": "2026-07-20",
-    "kanjiIndex": 49
-  },
-  {
-    "date": "2026-07-21",
-    "kanjiIndex": 48
-  },
-  {
-    "date": "2026-07-22",
-    "kanjiIndex": 12
-  },
-  {
-    "date": "2026-07-23",
-    "kanjiIndex": 28
-  },
-  {
-    "date": "2026-07-24",
-    "kanjiIndex": 5
-  },
-  {
-    "date": "2026-07-25",
-    "kanjiIndex": 4
-  },
-  {
-    "date": "2026-07-26",
-    "kanjiIndex": 11
-  },
-  {
-    "date": "2026-07-27",
-    "kanjiIndex": 24
-  },
-  {
-    "date": "2026-07-28",
-    "kanjiIndex": 2
-  },
-  {
-    "date": "2026-07-29",
-    "kanjiIndex": 44
-  },
-  {
-    "date": "2026-07-30",
-    "kanjiIndex": 35
-  },
-  {
-    "date": "2026-07-31",
-    "kanjiIndex": 7
-  },
-  {
-    "date": "2026-08-01",
-    "kanjiIndex": 3
-  },
-  {
-    "date": "2026-08-02",
-    "kanjiIndex": 40
-  },
-  {
-    "date": "2026-08-03",
-    "kanjiIndex": 8
-  },
-  {
-    "date": "2026-08-04",
-    "kanjiIndex": 6
-  },
-  {
-    "date": "2026-08-05",
-    "kanjiIndex": 14
-  },
-  {
-    "date": "2026-08-06",
-    "kanjiIndex": 10
-  },
-  {
-    "date": "2026-08-07",
-    "kanjiIndex": 25
-  },
-  {
-    "date": "2026-08-08",
-    "kanjiIndex": 28
-  },
-  {
-    "date": "2026-08-09",
-    "kanjiIndex": 6
-  },
-  {
-    "date": "2026-08-10",
-    "kanjiIndex": 43
-  },
-  {
-    "date": "2026-08-11",
-    "kanjiIndex": 47
-  },
-  {
-    "date": "2026-08-12",
-    "kanjiIndex": 16
-  },
-  {
-    "date": "2026-08-13",
-    "kanjiIndex": 9
-  },
-  {
-    "date": "2026-08-14",
-    "kanjiIndex": 36
-  },
-  {
-    "date": "2026-08-15",
-    "kanjiIndex": 20
-  },
-  {
-    "date": "2026-08-16",
-    "kanjiIndex": 27
-  },
-  {
-    "date": "2026-08-17",
-    "kanjiIndex": 41
-  },
-  {
-    "date": "2026-08-18",
-    "kanjiIndex": 38
-  },
-  {
-    "date": "2026-08-19",
-    "kanjiIndex": 5
-  },
-  {
-    "date": "2026-08-20",
-    "kanjiIndex": 15
-  },
-  {
-    "date": "2026-08-21",
-    "kanjiIndex": 24
-  },
-  {
-    "date": "2026-08-22",
-    "kanjiIndex": 8
-  },
-  {
-    "date": "2026-08-23",
-    "kanjiIndex": 27
-  },
-  {
-    "date": "2026-08-24",
-    "kanjiIndex": 14
-  },
-  {
-    "date": "2026-08-25",
-    "kanjiIndex": 23
-  },
-  {
-    "date": "2026-08-26",
-    "kanjiIndex": 10
-  },
-  {
-    "date": "2026-08-27",
-    "kanjiIndex": 34
-  },
-  {
-    "date": "2026-08-28",
-    "kanjiIndex": 44
-  },
-  {
-    "date": "2026-08-29",
-    "kanjiIndex": 27
-  },
-  {
-    "date": "2026-08-30",
-    "kanjiIndex": 14
-  },
-  {
-    "date": "2026-08-31",
-    "kanjiIndex": 32
-  },
-  {
-    "date": "2026-09-01",
-    "kanjiIndex": 29
-  },
-  {
-    "date": "2026-09-02",
+    "date": "2026-04-02",
     "kanjiIndex": 19
   },
   {
-    "date": "2026-09-03",
-    "kanjiIndex": 42
+    "date": "2026-04-03",
+    "kanjiIndex": 16
   },
   {
-    "date": "2026-09-04",
+    "date": "2026-04-04",
+    "kanjiIndex": 56
+  },
+  {
+    "date": "2026-04-05",
+    "kanjiIndex": 8
+  },
+  {
+    "date": "2026-04-06",
+    "kanjiIndex": 55
+  },
+  {
+    "date": "2026-04-07",
+    "kanjiIndex": 76
+  },
+  {
+    "date": "2026-04-08",
+    "kanjiIndex": 51
+  },
+  {
+    "date": "2026-04-09",
+    "kanjiIndex": 15
+  },
+  {
+    "date": "2026-04-10",
+    "kanjiIndex": 50
+  },
+  {
+    "date": "2026-04-11",
+    "kanjiIndex": 34
+  },
+  {
+    "date": "2026-04-12",
+    "kanjiIndex": 62
+  },
+  {
+    "date": "2026-04-13",
+    "kanjiIndex": 20
+  },
+  {
+    "date": "2026-04-14",
+    "kanjiIndex": 77
+  },
+  {
+    "date": "2026-04-15",
+    "kanjiIndex": 61
+  },
+  {
+    "date": "2026-04-16",
+    "kanjiIndex": 6
+  },
+  {
+    "date": "2026-04-17",
+    "kanjiIndex": 49
+  },
+  {
+    "date": "2026-04-18",
+    "kanjiIndex": 25
+  },
+  {
+    "date": "2026-04-19",
+    "kanjiIndex": 70
+  },
+  {
+    "date": "2026-04-20",
+    "kanjiIndex": 4
+  },
+  {
+    "date": "2026-04-21",
+    "kanjiIndex": 53
+  },
+  {
+    "date": "2026-04-22",
+    "kanjiIndex": 33
+  },
+  {
+    "date": "2026-04-23",
+    "kanjiIndex": 36
+  },
+  {
+    "date": "2026-04-24",
+    "kanjiIndex": 10
+  },
+  {
+    "date": "2026-04-25",
+    "kanjiIndex": 68
+  },
+  {
+    "date": "2026-04-26",
+    "kanjiIndex": 38
+  },
+  {
+    "date": "2026-04-27",
+    "kanjiIndex": 46
+  },
+  {
+    "date": "2026-04-28",
+    "kanjiIndex": 63
+  },
+  {
+    "date": "2026-04-29",
+    "kanjiIndex": 14
+  },
+  {
+    "date": "2026-04-30",
+    "kanjiIndex": 5
+  },
+  {
+    "date": "2026-05-01",
+    "kanjiIndex": 7
+  },
+  {
+    "date": "2026-05-02",
+    "kanjiIndex": 9
+  },
+  {
+    "date": "2026-05-03",
+    "kanjiIndex": 66
+  },
+  {
+    "date": "2026-05-04",
+    "kanjiIndex": 22
+  },
+  {
+    "date": "2026-05-05",
+    "kanjiIndex": 21
+  },
+  {
+    "date": "2026-05-06",
+    "kanjiIndex": 40
+  },
+  {
+    "date": "2026-05-07",
+    "kanjiIndex": 0
+  },
+  {
+    "date": "2026-05-08",
+    "kanjiIndex": 64
+  },
+  {
+    "date": "2026-05-09",
+    "kanjiIndex": 57
+  },
+  {
+    "date": "2026-05-10",
+    "kanjiIndex": 45
+  },
+  {
+    "date": "2026-05-11",
+    "kanjiIndex": 59
+  },
+  {
+    "date": "2026-05-12",
+    "kanjiIndex": 32
+  },
+  {
+    "date": "2026-05-13",
+    "kanjiIndex": 47
+  },
+  {
+    "date": "2026-05-14",
+    "kanjiIndex": 71
+  },
+  {
+    "date": "2026-05-15",
+    "kanjiIndex": 74
+  },
+  {
+    "date": "2026-05-16",
     "kanjiIndex": 35
   },
   {
-    "date": "2026-09-05",
-    "kanjiIndex": 23
+    "date": "2026-05-17",
+    "kanjiIndex": 69
   },
   {
-    "date": "2026-09-06",
+    "date": "2026-05-18",
+    "kanjiIndex": 73
+  },
+  {
+    "date": "2026-05-19",
+    "kanjiIndex": 31
+  },
+  {
+    "date": "2026-05-20",
+    "kanjiIndex": 60
+  },
+  {
+    "date": "2026-05-21",
+    "kanjiIndex": 65
+  },
+  {
+    "date": "2026-05-22",
+    "kanjiIndex": 12
+  },
+  {
+    "date": "2026-05-23",
+    "kanjiIndex": 58
+  },
+  {
+    "date": "2026-05-24",
+    "kanjiIndex": 52
+  },
+  {
+    "date": "2026-05-25",
+    "kanjiIndex": 39
+  },
+  {
+    "date": "2026-05-26",
+    "kanjiIndex": 24
+  },
+  {
+    "date": "2026-05-27",
+    "kanjiIndex": 30
+  },
+  {
+    "date": "2026-05-28",
+    "kanjiIndex": 43
+  },
+  {
+    "date": "2026-05-29",
+    "kanjiIndex": 44
+  },
+  {
+    "date": "2026-05-30",
+    "kanjiIndex": 75
+  },
+  {
+    "date": "2026-05-31",
+    "kanjiIndex": 48
+  },
+  {
+    "date": "2026-06-01",
+    "kanjiIndex": 17
+  },
+  {
+    "date": "2026-06-02",
+    "kanjiIndex": 54
+  },
+  {
+    "date": "2026-06-03",
+    "kanjiIndex": 72
+  },
+  {
+    "date": "2026-06-04",
+    "kanjiIndex": 79
+  },
+  {
+    "date": "2026-06-05",
+    "kanjiIndex": 78
+  },
+  {
+    "date": "2026-06-06",
+    "kanjiIndex": 13
+  },
+  {
+    "date": "2026-06-07",
+    "kanjiIndex": 37
+  },
+  {
+    "date": "2026-06-08",
     "kanjiIndex": 2
   },
   {
-    "date": "2026-09-07",
+    "date": "2026-06-09",
+    "kanjiIndex": 23
+  },
+  {
+    "date": "2026-06-10",
+    "kanjiIndex": 28
+  },
+  {
+    "date": "2026-06-11",
+    "kanjiIndex": 11
+  },
+  {
+    "date": "2026-06-12",
+    "kanjiIndex": 1
+  },
+  {
+    "date": "2026-06-13",
+    "kanjiIndex": 26
+  },
+  {
+    "date": "2026-06-14",
+    "kanjiIndex": 67
+  },
+  {
+    "date": "2026-06-15",
+    "kanjiIndex": 29
+  },
+  {
+    "date": "2026-06-16",
+    "kanjiIndex": 41
+  },
+  {
+    "date": "2026-06-17",
+    "kanjiIndex": 42
+  },
+  {
+    "date": "2026-06-18",
+    "kanjiIndex": 27
+  },
+  {
+    "date": "2026-06-19",
+    "kanjiIndex": 3
+  },
+  {
+    "date": "2026-06-20",
+    "kanjiIndex": 18
+  },
+  {
+    "date": "2026-06-21",
+    "kanjiIndex": 19
+  },
+  {
+    "date": "2026-06-22",
+    "kanjiIndex": 16
+  },
+  {
+    "date": "2026-06-23",
+    "kanjiIndex": 56
+  },
+  {
+    "date": "2026-06-24",
+    "kanjiIndex": 8
+  },
+  {
+    "date": "2026-06-25",
+    "kanjiIndex": 55
+  },
+  {
+    "date": "2026-06-26",
+    "kanjiIndex": 76
+  },
+  {
+    "date": "2026-06-27",
+    "kanjiIndex": 51
+  },
+  {
+    "date": "2026-06-28",
+    "kanjiIndex": 15
+  },
+  {
+    "date": "2026-06-29",
+    "kanjiIndex": 50
+  },
+  {
+    "date": "2026-06-30",
+    "kanjiIndex": 34
+  },
+  {
+    "date": "2026-07-01",
+    "kanjiIndex": 62
+  },
+  {
+    "date": "2026-07-02",
+    "kanjiIndex": 20
+  },
+  {
+    "date": "2026-07-03",
+    "kanjiIndex": 77
+  },
+  {
+    "date": "2026-07-04",
+    "kanjiIndex": 61
+  },
+  {
+    "date": "2026-07-05",
+    "kanjiIndex": 6
+  },
+  {
+    "date": "2026-07-06",
+    "kanjiIndex": 49
+  },
+  {
+    "date": "2026-07-07",
     "kanjiIndex": 25
+  },
+  {
+    "date": "2026-07-08",
+    "kanjiIndex": 70
+  },
+  {
+    "date": "2026-07-09",
+    "kanjiIndex": 4
+  },
+  {
+    "date": "2026-07-10",
+    "kanjiIndex": 53
+  },
+  {
+    "date": "2026-07-11",
+    "kanjiIndex": 33
+  },
+  {
+    "date": "2026-07-12",
+    "kanjiIndex": 36
+  },
+  {
+    "date": "2026-07-13",
+    "kanjiIndex": 10
+  },
+  {
+    "date": "2026-07-14",
+    "kanjiIndex": 68
+  },
+  {
+    "date": "2026-07-15",
+    "kanjiIndex": 38
+  },
+  {
+    "date": "2026-07-16",
+    "kanjiIndex": 46
+  },
+  {
+    "date": "2026-07-17",
+    "kanjiIndex": 63
+  },
+  {
+    "date": "2026-07-18",
+    "kanjiIndex": 14
+  },
+  {
+    "date": "2026-07-19",
+    "kanjiIndex": 5
+  },
+  {
+    "date": "2026-07-20",
+    "kanjiIndex": 7
+  },
+  {
+    "date": "2026-07-21",
+    "kanjiIndex": 9
+  },
+  {
+    "date": "2026-07-22",
+    "kanjiIndex": 66
+  },
+  {
+    "date": "2026-07-23",
+    "kanjiIndex": 22
+  },
+  {
+    "date": "2026-07-24",
+    "kanjiIndex": 21
+  },
+  {
+    "date": "2026-07-25",
+    "kanjiIndex": 40
+  },
+  {
+    "date": "2026-07-26",
+    "kanjiIndex": 0
+  },
+  {
+    "date": "2026-07-27",
+    "kanjiIndex": 64
+  },
+  {
+    "date": "2026-07-28",
+    "kanjiIndex": 57
+  },
+  {
+    "date": "2026-07-29",
+    "kanjiIndex": 45
+  },
+  {
+    "date": "2026-07-30",
+    "kanjiIndex": 59
+  },
+  {
+    "date": "2026-07-31",
+    "kanjiIndex": 32
+  },
+  {
+    "date": "2026-08-01",
+    "kanjiIndex": 47
+  },
+  {
+    "date": "2026-08-02",
+    "kanjiIndex": 71
+  },
+  {
+    "date": "2026-08-03",
+    "kanjiIndex": 74
+  },
+  {
+    "date": "2026-08-04",
+    "kanjiIndex": 35
+  },
+  {
+    "date": "2026-08-05",
+    "kanjiIndex": 69
+  },
+  {
+    "date": "2026-08-06",
+    "kanjiIndex": 73
+  },
+  {
+    "date": "2026-08-07",
+    "kanjiIndex": 31
+  },
+  {
+    "date": "2026-08-08",
+    "kanjiIndex": 60
+  },
+  {
+    "date": "2026-08-09",
+    "kanjiIndex": 65
+  },
+  {
+    "date": "2026-08-10",
+    "kanjiIndex": 12
+  },
+  {
+    "date": "2026-08-11",
+    "kanjiIndex": 58
+  },
+  {
+    "date": "2026-08-12",
+    "kanjiIndex": 52
+  },
+  {
+    "date": "2026-08-13",
+    "kanjiIndex": 39
+  },
+  {
+    "date": "2026-08-14",
+    "kanjiIndex": 24
+  },
+  {
+    "date": "2026-08-15",
+    "kanjiIndex": 30
+  },
+  {
+    "date": "2026-08-16",
+    "kanjiIndex": 43
+  },
+  {
+    "date": "2026-08-17",
+    "kanjiIndex": 44
+  },
+  {
+    "date": "2026-08-18",
+    "kanjiIndex": 75
+  },
+  {
+    "date": "2026-08-19",
+    "kanjiIndex": 48
+  },
+  {
+    "date": "2026-08-20",
+    "kanjiIndex": 17
+  },
+  {
+    "date": "2026-08-21",
+    "kanjiIndex": 54
+  },
+  {
+    "date": "2026-08-22",
+    "kanjiIndex": 72
+  },
+  {
+    "date": "2026-08-23",
+    "kanjiIndex": 79
+  },
+  {
+    "date": "2026-08-24",
+    "kanjiIndex": 78
+  },
+  {
+    "date": "2026-08-25",
+    "kanjiIndex": 13
+  },
+  {
+    "date": "2026-08-26",
+    "kanjiIndex": 37
+  },
+  {
+    "date": "2026-08-27",
+    "kanjiIndex": 2
+  },
+  {
+    "date": "2026-08-28",
+    "kanjiIndex": 23
+  },
+  {
+    "date": "2026-08-29",
+    "kanjiIndex": 28
+  },
+  {
+    "date": "2026-08-30",
+    "kanjiIndex": 11
+  },
+  {
+    "date": "2026-08-31",
+    "kanjiIndex": 1
+  },
+  {
+    "date": "2026-09-01",
+    "kanjiIndex": 26
+  },
+  {
+    "date": "2026-09-02",
+    "kanjiIndex": 67
+  },
+  {
+    "date": "2026-09-03",
+    "kanjiIndex": 29
+  },
+  {
+    "date": "2026-09-04",
+    "kanjiIndex": 41
+  },
+  {
+    "date": "2026-09-05",
+    "kanjiIndex": 42
+  },
+  {
+    "date": "2026-09-06",
+    "kanjiIndex": 27
+  },
+  {
+    "date": "2026-09-07",
+    "kanjiIndex": 3
   },
   {
     "date": "2026-09-08",
@@ -829,103 +769,103 @@
   },
   {
     "date": "2026-09-09",
-    "kanjiIndex": 27
-  },
-  {
-    "date": "2026-09-10",
-    "kanjiIndex": 30
-  },
-  {
-    "date": "2026-09-11",
-    "kanjiIndex": 46
-  },
-  {
-    "date": "2026-09-12",
-    "kanjiIndex": 29
-  },
-  {
-    "date": "2026-09-13",
-    "kanjiIndex": 38
-  },
-  {
-    "date": "2026-09-14",
-    "kanjiIndex": 16
-  },
-  {
-    "date": "2026-09-15",
-    "kanjiIndex": 8
-  },
-  {
-    "date": "2026-09-16",
-    "kanjiIndex": 1
-  },
-  {
-    "date": "2026-09-17",
     "kanjiIndex": 19
   },
   {
-    "date": "2026-09-18",
-    "kanjiIndex": 0
+    "date": "2026-09-10",
+    "kanjiIndex": 16
   },
   {
-    "date": "2026-09-19",
-    "kanjiIndex": 43
+    "date": "2026-09-11",
+    "kanjiIndex": 56
   },
   {
-    "date": "2026-09-20",
-    "kanjiIndex": 5
+    "date": "2026-09-12",
+    "kanjiIndex": 8
   },
   {
-    "date": "2026-09-21",
-    "kanjiIndex": 32
+    "date": "2026-09-13",
+    "kanjiIndex": 55
   },
   {
-    "date": "2026-09-22",
-    "kanjiIndex": 22
+    "date": "2026-09-14",
+    "kanjiIndex": 76
   },
   {
-    "date": "2026-09-23",
-    "kanjiIndex": 38
+    "date": "2026-09-15",
+    "kanjiIndex": 51
   },
   {
-    "date": "2026-09-24",
-    "kanjiIndex": 47
-  },
-  {
-    "date": "2026-09-25",
-    "kanjiIndex": 17
-  },
-  {
-    "date": "2026-09-26",
-    "kanjiIndex": 10
-  },
-  {
-    "date": "2026-09-27",
-    "kanjiIndex": 11
-  },
-  {
-    "date": "2026-09-28",
-    "kanjiIndex": 49
-  },
-  {
-    "date": "2026-09-29",
-    "kanjiIndex": 7
-  },
-  {
-    "date": "2026-09-30",
-    "kanjiIndex": 42
-  },
-  {
-    "date": "2026-10-01",
-    "kanjiIndex": 14
-  },
-  {
-    "date": "2026-10-02",
+    "date": "2026-09-16",
     "kanjiIndex": 15
   },
   {
+    "date": "2026-09-17",
+    "kanjiIndex": 50
+  },
+  {
+    "date": "2026-09-18",
+    "kanjiIndex": 34
+  },
+  {
+    "date": "2026-09-19",
+    "kanjiIndex": 62
+  },
+  {
+    "date": "2026-09-20",
+    "kanjiIndex": 20
+  },
+  {
+    "date": "2026-09-21",
+    "kanjiIndex": 77
+  },
+  {
+    "date": "2026-09-22",
+    "kanjiIndex": 61
+  },
+  {
+    "date": "2026-09-23",
+    "kanjiIndex": 6
+  },
+  {
+    "date": "2026-09-24",
+    "kanjiIndex": 49
+  },
+  {
+    "date": "2026-09-25",
+    "kanjiIndex": 25
+  },
+  {
+    "date": "2026-09-26",
+    "kanjiIndex": 70
+  },
+  {
+    "date": "2026-09-27",
+    "kanjiIndex": 4
+  },
+  {
+    "date": "2026-09-28",
+    "kanjiIndex": 53
+  },
+  {
+    "date": "2026-09-29",
+    "kanjiIndex": 33
+  },
+  {
+    "date": "2026-09-30",
+    "kanjiIndex": 36
+  },
+  {
+    "date": "2026-10-01",
+    "kanjiIndex": 10
+  },
+  {
+    "date": "2026-10-02",
+    "kanjiIndex": 68
+  },
+  {
     "date": "2026-10-03",
-    "kanjiIndex": 31
+    "kanjiIndex": 38
   },
   {
     "date": "2026-10-04",
@@ -933,171 +873,171 @@
   },
   {
     "date": "2026-10-05",
-    "kanjiIndex": 26
+    "kanjiIndex": 63
   },
   {
     "date": "2026-10-06",
-    "kanjiIndex": 11
+    "kanjiIndex": 14
   },
   {
     "date": "2026-10-07",
-    "kanjiIndex": 22
+    "kanjiIndex": 5
   },
   {
     "date": "2026-10-08",
-    "kanjiIndex": 28
-  },
-  {
-    "date": "2026-10-09",
-    "kanjiIndex": 36
-  },
-  {
-    "date": "2026-10-10",
-    "kanjiIndex": 37
-  },
-  {
-    "date": "2026-10-11",
-    "kanjiIndex": 35
-  },
-  {
-    "date": "2026-10-12",
-    "kanjiIndex": 9
-  },
-  {
-    "date": "2026-10-13",
-    "kanjiIndex": 17
-  },
-  {
-    "date": "2026-10-14",
-    "kanjiIndex": 43
-  },
-  {
-    "date": "2026-10-15",
-    "kanjiIndex": 12
-  },
-  {
-    "date": "2026-10-16",
     "kanjiIndex": 7
   },
   {
+    "date": "2026-10-09",
+    "kanjiIndex": 9
+  },
+  {
+    "date": "2026-10-10",
+    "kanjiIndex": 66
+  },
+  {
+    "date": "2026-10-11",
+    "kanjiIndex": 22
+  },
+  {
+    "date": "2026-10-12",
+    "kanjiIndex": 21
+  },
+  {
+    "date": "2026-10-13",
+    "kanjiIndex": 40
+  },
+  {
+    "date": "2026-10-14",
+    "kanjiIndex": 0
+  },
+  {
+    "date": "2026-10-15",
+    "kanjiIndex": 64
+  },
+  {
+    "date": "2026-10-16",
+    "kanjiIndex": 57
+  },
+  {
     "date": "2026-10-17",
-    "kanjiIndex": 39
+    "kanjiIndex": 45
   },
   {
     "date": "2026-10-18",
-    "kanjiIndex": 26
+    "kanjiIndex": 59
   },
   {
     "date": "2026-10-19",
-    "kanjiIndex": 25
+    "kanjiIndex": 32
   },
   {
     "date": "2026-10-20",
-    "kanjiIndex": 44
+    "kanjiIndex": 47
   },
   {
     "date": "2026-10-21",
-    "kanjiIndex": 28
+    "kanjiIndex": 71
   },
   {
     "date": "2026-10-22",
-    "kanjiIndex": 23
+    "kanjiIndex": 74
   },
   {
     "date": "2026-10-23",
-    "kanjiIndex": 49
+    "kanjiIndex": 35
   },
   {
     "date": "2026-10-24",
-    "kanjiIndex": 9
+    "kanjiIndex": 69
   },
   {
     "date": "2026-10-25",
-    "kanjiIndex": 24
+    "kanjiIndex": 73
   },
   {
     "date": "2026-10-26",
-    "kanjiIndex": 15
-  },
-  {
-    "date": "2026-10-27",
-    "kanjiIndex": 42
-  },
-  {
-    "date": "2026-10-28",
-    "kanjiIndex": 13
-  },
-  {
-    "date": "2026-10-29",
-    "kanjiIndex": 29
-  },
-  {
-    "date": "2026-10-30",
-    "kanjiIndex": 18
-  },
-  {
-    "date": "2026-10-31",
-    "kanjiIndex": 22
-  },
-  {
-    "date": "2026-11-01",
-    "kanjiIndex": 23
-  },
-  {
-    "date": "2026-11-02",
-    "kanjiIndex": 9
-  },
-  {
-    "date": "2026-11-03",
     "kanjiIndex": 31
   },
   {
-    "date": "2026-11-04",
-    "kanjiIndex": 48
+    "date": "2026-10-27",
+    "kanjiIndex": 60
   },
   {
-    "date": "2026-11-05",
-    "kanjiIndex": 39
+    "date": "2026-10-28",
+    "kanjiIndex": 65
   },
   {
-    "date": "2026-11-06",
-    "kanjiIndex": 43
-  },
-  {
-    "date": "2026-11-07",
+    "date": "2026-10-29",
     "kanjiIndex": 12
   },
   {
-    "date": "2026-11-08",
-    "kanjiIndex": 10
+    "date": "2026-10-30",
+    "kanjiIndex": 58
   },
   {
-    "date": "2026-11-09",
-    "kanjiIndex": 34
+    "date": "2026-10-31",
+    "kanjiIndex": 52
   },
   {
-    "date": "2026-11-10",
-    "kanjiIndex": 25
+    "date": "2026-11-01",
+    "kanjiIndex": 39
   },
   {
-    "date": "2026-11-11",
+    "date": "2026-11-02",
+    "kanjiIndex": 24
+  },
+  {
+    "date": "2026-11-03",
+    "kanjiIndex": 30
+  },
+  {
+    "date": "2026-11-04",
+    "kanjiIndex": 43
+  },
+  {
+    "date": "2026-11-05",
     "kanjiIndex": 44
   },
   {
+    "date": "2026-11-06",
+    "kanjiIndex": 75
+  },
+  {
+    "date": "2026-11-07",
+    "kanjiIndex": 48
+  },
+  {
+    "date": "2026-11-08",
+    "kanjiIndex": 17
+  },
+  {
+    "date": "2026-11-09",
+    "kanjiIndex": 54
+  },
+  {
+    "date": "2026-11-10",
+    "kanjiIndex": 72
+  },
+  {
+    "date": "2026-11-11",
+    "kanjiIndex": 79
+  },
+  {
     "date": "2026-11-12",
-    "kanjiIndex": 9
+    "kanjiIndex": 78
   },
   {
     "date": "2026-11-13",
-    "kanjiIndex": 36
+    "kanjiIndex": 13
   },
   {
     "date": "2026-11-14",
-    "kanjiIndex": 22
+    "kanjiIndex": 37
   },
   {
     "date": "2026-11-15",
-    "kanjiIndex": 29
+    "kanjiIndex": 2
   },
   {
     "date": "2026-11-16",
@@ -1105,31 +1045,31 @@
   },
   {
     "date": "2026-11-17",
-    "kanjiIndex": 46
+    "kanjiIndex": 28
   },
   {
     "date": "2026-11-18",
-    "kanjiIndex": 26
+    "kanjiIndex": 11
   },
   {
     "date": "2026-11-19",
-    "kanjiIndex": 4
+    "kanjiIndex": 1
   },
   {
     "date": "2026-11-20",
-    "kanjiIndex": 36
+    "kanjiIndex": 26
   },
   {
     "date": "2026-11-21",
-    "kanjiIndex": 18
+    "kanjiIndex": 67
   },
   {
     "date": "2026-11-22",
-    "kanjiIndex": 30
+    "kanjiIndex": 29
   },
   {
     "date": "2026-11-23",
-    "kanjiIndex": 32
+    "kanjiIndex": 41
   },
   {
     "date": "2026-11-24",
@@ -1137,386 +1077,386 @@
   },
   {
     "date": "2026-11-25",
-    "kanjiIndex": 30
+    "kanjiIndex": 27
   },
   {
     "date": "2026-11-26",
-    "kanjiIndex": 46
-  },
-  {
-    "date": "2026-11-27",
-    "kanjiIndex": 4
-  },
-  {
-    "date": "2026-11-28",
-    "kanjiIndex": 28
-  },
-  {
-    "date": "2026-11-29",
-    "kanjiIndex": 43
-  },
-  {
-    "date": "2026-11-30",
-    "kanjiIndex": 39
-  },
-  {
-    "date": "2026-12-01",
-    "kanjiIndex": 4
-  },
-  {
-    "date": "2026-12-02",
-    "kanjiIndex": 19
-  },
-  {
-    "date": "2026-12-03",
-    "kanjiIndex": 9
-  },
-  {
-    "date": "2026-12-04",
-    "kanjiIndex": 23
-  },
-  {
-    "date": "2026-12-05",
-    "kanjiIndex": 27
-  },
-  {
-    "date": "2026-12-06",
-    "kanjiIndex": 25
-  },
-  {
-    "date": "2026-12-07",
-    "kanjiIndex": 35
-  },
-  {
-    "date": "2026-12-08",
-    "kanjiIndex": 19
-  },
-  {
-    "date": "2026-12-09",
-    "kanjiIndex": 6
-  },
-  {
-    "date": "2026-12-10",
-    "kanjiIndex": 32
-  },
-  {
-    "date": "2026-12-11",
-    "kanjiIndex": 17
-  },
-  {
-    "date": "2026-12-12",
-    "kanjiIndex": 23
-  },
-  {
-    "date": "2026-12-13",
-    "kanjiIndex": 17
-  },
-  {
-    "date": "2026-12-14",
-    "kanjiIndex": 38
-  },
-  {
-    "date": "2026-12-15",
-    "kanjiIndex": 48
-  },
-  {
-    "date": "2026-12-16",
-    "kanjiIndex": 25
-  },
-  {
-    "date": "2026-12-17",
-    "kanjiIndex": 44
-  },
-  {
-    "date": "2026-12-18",
-    "kanjiIndex": 1
-  },
-  {
-    "date": "2026-12-19",
-    "kanjiIndex": 21
-  },
-  {
-    "date": "2026-12-20",
-    "kanjiIndex": 19
-  },
-  {
-    "date": "2026-12-21",
-    "kanjiIndex": 6
-  },
-  {
-    "date": "2026-12-22",
-    "kanjiIndex": 0
-  },
-  {
-    "date": "2026-12-23",
-    "kanjiIndex": 16
-  },
-  {
-    "date": "2026-12-24",
-    "kanjiIndex": 49
-  },
-  {
-    "date": "2026-12-25",
-    "kanjiIndex": 23
-  },
-  {
-    "date": "2026-12-26",
-    "kanjiIndex": 38
-  },
-  {
-    "date": "2026-12-27",
-    "kanjiIndex": 37
-  },
-  {
-    "date": "2026-12-28",
-    "kanjiIndex": 8
-  },
-  {
-    "date": "2026-12-29",
-    "kanjiIndex": 27
-  },
-  {
-    "date": "2026-12-30",
-    "kanjiIndex": 42
-  },
-  {
-    "date": "2026-12-31",
-    "kanjiIndex": 45
-  },
-  {
-    "date": "2027-01-01",
-    "kanjiIndex": 16
-  },
-  {
-    "date": "2027-01-02",
-    "kanjiIndex": 14
-  },
-  {
-    "date": "2027-01-03",
-    "kanjiIndex": 49
-  },
-  {
-    "date": "2027-01-04",
-    "kanjiIndex": 34
-  },
-  {
-    "date": "2027-01-05",
-    "kanjiIndex": 20
-  },
-  {
-    "date": "2027-01-06",
-    "kanjiIndex": 26
-  },
-  {
-    "date": "2027-01-07",
-    "kanjiIndex": 4
-  },
-  {
-    "date": "2027-01-08",
-    "kanjiIndex": 8
-  },
-  {
-    "date": "2027-01-09",
-    "kanjiIndex": 7
-  },
-  {
-    "date": "2027-01-10",
-    "kanjiIndex": 20
-  },
-  {
-    "date": "2027-01-11",
-    "kanjiIndex": 37
-  },
-  {
-    "date": "2027-01-12",
-    "kanjiIndex": 14
-  },
-  {
-    "date": "2027-01-13",
-    "kanjiIndex": 26
-  },
-  {
-    "date": "2027-01-14",
-    "kanjiIndex": 45
-  },
-  {
-    "date": "2027-01-15",
-    "kanjiIndex": 25
-  },
-  {
-    "date": "2027-01-16",
-    "kanjiIndex": 12
-  },
-  {
-    "date": "2027-01-17",
-    "kanjiIndex": 14
-  },
-  {
-    "date": "2027-01-18",
-    "kanjiIndex": 37
-  },
-  {
-    "date": "2027-01-19",
-    "kanjiIndex": 1
-  },
-  {
-    "date": "2027-01-20",
-    "kanjiIndex": 27
-  },
-  {
-    "date": "2027-01-21",
-    "kanjiIndex": 22
-  },
-  {
-    "date": "2027-01-22",
-    "kanjiIndex": 4
-  },
-  {
-    "date": "2027-01-23",
     "kanjiIndex": 3
   },
   {
-    "date": "2027-01-24",
-    "kanjiIndex": 26
+    "date": "2026-11-27",
+    "kanjiIndex": 18
   },
   {
-    "date": "2027-01-25",
-    "kanjiIndex": 35
+    "date": "2026-11-28",
+    "kanjiIndex": 19
   },
   {
-    "date": "2027-01-26",
-    "kanjiIndex": 47
-  },
-  {
-    "date": "2027-01-27",
-    "kanjiIndex": 44
-  },
-  {
-    "date": "2027-01-28",
-    "kanjiIndex": 33
-  },
-  {
-    "date": "2027-01-29",
-    "kanjiIndex": 39
-  },
-  {
-    "date": "2027-01-30",
-    "kanjiIndex": 4
-  },
-  {
-    "date": "2027-01-31",
-    "kanjiIndex": 37
-  },
-  {
-    "date": "2027-02-01",
-    "kanjiIndex": 26
-  },
-  {
-    "date": "2027-02-02",
-    "kanjiIndex": 9
-  },
-  {
-    "date": "2027-02-03",
-    "kanjiIndex": 15
-  },
-  {
-    "date": "2027-02-04",
-    "kanjiIndex": 1
-  },
-  {
-    "date": "2027-02-05",
-    "kanjiIndex": 20
-  },
-  {
-    "date": "2027-02-06",
-    "kanjiIndex": 47
-  },
-  {
-    "date": "2027-02-07",
-    "kanjiIndex": 26
-  },
-  {
-    "date": "2027-02-08",
-    "kanjiIndex": 49
-  },
-  {
-    "date": "2027-02-09",
-    "kanjiIndex": 41
-  },
-  {
-    "date": "2027-02-10",
-    "kanjiIndex": 27
-  },
-  {
-    "date": "2027-02-11",
-    "kanjiIndex": 49
-  },
-  {
-    "date": "2027-02-12",
-    "kanjiIndex": 6
-  },
-  {
-    "date": "2027-02-13",
-    "kanjiIndex": 32
-  },
-  {
-    "date": "2027-02-14",
-    "kanjiIndex": 28
-  },
-  {
-    "date": "2027-02-15",
-    "kanjiIndex": 39
-  },
-  {
-    "date": "2027-02-16",
-    "kanjiIndex": 8
-  },
-  {
-    "date": "2027-02-17",
-    "kanjiIndex": 22
-  },
-  {
-    "date": "2027-02-18",
-    "kanjiIndex": 4
-  },
-  {
-    "date": "2027-02-19",
-    "kanjiIndex": 30
-  },
-  {
-    "date": "2027-02-20",
-    "kanjiIndex": 47
-  },
-  {
-    "date": "2027-02-21",
-    "kanjiIndex": 34
-  },
-  {
-    "date": "2027-02-22",
-    "kanjiIndex": 12
-  },
-  {
-    "date": "2027-02-23",
-    "kanjiIndex": 20
-  },
-  {
-    "date": "2027-02-24",
-    "kanjiIndex": 29
-  },
-  {
-    "date": "2027-02-25",
-    "kanjiIndex": 49
-  },
-  {
-    "date": "2027-02-26",
-    "kanjiIndex": 5
-  },
-  {
-    "date": "2027-02-27",
+    "date": "2026-11-29",
     "kanjiIndex": 16
   },
   {
-    "date": "2027-02-28",
+    "date": "2026-11-30",
+    "kanjiIndex": 56
+  },
+  {
+    "date": "2026-12-01",
+    "kanjiIndex": 8
+  },
+  {
+    "date": "2026-12-02",
+    "kanjiIndex": 55
+  },
+  {
+    "date": "2026-12-03",
+    "kanjiIndex": 76
+  },
+  {
+    "date": "2026-12-04",
+    "kanjiIndex": 51
+  },
+  {
+    "date": "2026-12-05",
+    "kanjiIndex": 15
+  },
+  {
+    "date": "2026-12-06",
+    "kanjiIndex": 50
+  },
+  {
+    "date": "2026-12-07",
+    "kanjiIndex": 34
+  },
+  {
+    "date": "2026-12-08",
+    "kanjiIndex": 62
+  },
+  {
+    "date": "2026-12-09",
+    "kanjiIndex": 20
+  },
+  {
+    "date": "2026-12-10",
+    "kanjiIndex": 77
+  },
+  {
+    "date": "2026-12-11",
+    "kanjiIndex": 61
+  },
+  {
+    "date": "2026-12-12",
+    "kanjiIndex": 6
+  },
+  {
+    "date": "2026-12-13",
+    "kanjiIndex": 49
+  },
+  {
+    "date": "2026-12-14",
+    "kanjiIndex": 25
+  },
+  {
+    "date": "2026-12-15",
+    "kanjiIndex": 70
+  },
+  {
+    "date": "2026-12-16",
+    "kanjiIndex": 4
+  },
+  {
+    "date": "2026-12-17",
+    "kanjiIndex": 53
+  },
+  {
+    "date": "2026-12-18",
+    "kanjiIndex": 33
+  },
+  {
+    "date": "2026-12-19",
+    "kanjiIndex": 36
+  },
+  {
+    "date": "2026-12-20",
+    "kanjiIndex": 10
+  },
+  {
+    "date": "2026-12-21",
+    "kanjiIndex": 68
+  },
+  {
+    "date": "2026-12-22",
+    "kanjiIndex": 38
+  },
+  {
+    "date": "2026-12-23",
+    "kanjiIndex": 46
+  },
+  {
+    "date": "2026-12-24",
+    "kanjiIndex": 63
+  },
+  {
+    "date": "2026-12-25",
+    "kanjiIndex": 14
+  },
+  {
+    "date": "2026-12-26",
+    "kanjiIndex": 5
+  },
+  {
+    "date": "2026-12-27",
+    "kanjiIndex": 7
+  },
+  {
+    "date": "2026-12-28",
+    "kanjiIndex": 9
+  },
+  {
+    "date": "2026-12-29",
+    "kanjiIndex": 66
+  },
+  {
+    "date": "2026-12-30",
+    "kanjiIndex": 22
+  },
+  {
+    "date": "2026-12-31",
+    "kanjiIndex": 21
+  },
+  {
+    "date": "2027-01-01",
+    "kanjiIndex": 40
+  },
+  {
+    "date": "2027-01-02",
+    "kanjiIndex": 0
+  },
+  {
+    "date": "2027-01-03",
+    "kanjiIndex": 64
+  },
+  {
+    "date": "2027-01-04",
+    "kanjiIndex": 57
+  },
+  {
+    "date": "2027-01-05",
+    "kanjiIndex": 45
+  },
+  {
+    "date": "2027-01-06",
+    "kanjiIndex": 59
+  },
+  {
+    "date": "2027-01-07",
+    "kanjiIndex": 32
+  },
+  {
+    "date": "2027-01-08",
+    "kanjiIndex": 47
+  },
+  {
+    "date": "2027-01-09",
+    "kanjiIndex": 71
+  },
+  {
+    "date": "2027-01-10",
+    "kanjiIndex": 74
+  },
+  {
+    "date": "2027-01-11",
+    "kanjiIndex": 35
+  },
+  {
+    "date": "2027-01-12",
+    "kanjiIndex": 69
+  },
+  {
+    "date": "2027-01-13",
+    "kanjiIndex": 73
+  },
+  {
+    "date": "2027-01-14",
+    "kanjiIndex": 31
+  },
+  {
+    "date": "2027-01-15",
+    "kanjiIndex": 60
+  },
+  {
+    "date": "2027-01-16",
+    "kanjiIndex": 65
+  },
+  {
+    "date": "2027-01-17",
+    "kanjiIndex": 12
+  },
+  {
+    "date": "2027-01-18",
+    "kanjiIndex": 58
+  },
+  {
+    "date": "2027-01-19",
+    "kanjiIndex": 52
+  },
+  {
+    "date": "2027-01-20",
+    "kanjiIndex": 39
+  },
+  {
+    "date": "2027-01-21",
+    "kanjiIndex": 24
+  },
+  {
+    "date": "2027-01-22",
+    "kanjiIndex": 30
+  },
+  {
+    "date": "2027-01-23",
+    "kanjiIndex": 43
+  },
+  {
+    "date": "2027-01-24",
+    "kanjiIndex": 44
+  },
+  {
+    "date": "2027-01-25",
+    "kanjiIndex": 75
+  },
+  {
+    "date": "2027-01-26",
+    "kanjiIndex": 48
+  },
+  {
+    "date": "2027-01-27",
     "kanjiIndex": 17
+  },
+  {
+    "date": "2027-01-28",
+    "kanjiIndex": 54
+  },
+  {
+    "date": "2027-01-29",
+    "kanjiIndex": 72
+  },
+  {
+    "date": "2027-01-30",
+    "kanjiIndex": 79
+  },
+  {
+    "date": "2027-01-31",
+    "kanjiIndex": 78
+  },
+  {
+    "date": "2027-02-01",
+    "kanjiIndex": 13
+  },
+  {
+    "date": "2027-02-02",
+    "kanjiIndex": 37
+  },
+  {
+    "date": "2027-02-03",
+    "kanjiIndex": 2
+  },
+  {
+    "date": "2027-02-04",
+    "kanjiIndex": 23
+  },
+  {
+    "date": "2027-02-05",
+    "kanjiIndex": 28
+  },
+  {
+    "date": "2027-02-06",
+    "kanjiIndex": 11
+  },
+  {
+    "date": "2027-02-07",
+    "kanjiIndex": 1
+  },
+  {
+    "date": "2027-02-08",
+    "kanjiIndex": 26
+  },
+  {
+    "date": "2027-02-09",
+    "kanjiIndex": 67
+  },
+  {
+    "date": "2027-02-10",
+    "kanjiIndex": 29
+  },
+  {
+    "date": "2027-02-11",
+    "kanjiIndex": 41
+  },
+  {
+    "date": "2027-02-12",
+    "kanjiIndex": 42
+  },
+  {
+    "date": "2027-02-13",
+    "kanjiIndex": 27
+  },
+  {
+    "date": "2027-02-14",
+    "kanjiIndex": 3
+  },
+  {
+    "date": "2027-02-15",
+    "kanjiIndex": 18
+  },
+  {
+    "date": "2027-02-16",
+    "kanjiIndex": 19
+  },
+  {
+    "date": "2027-02-17",
+    "kanjiIndex": 16
+  },
+  {
+    "date": "2027-02-18",
+    "kanjiIndex": 56
+  },
+  {
+    "date": "2027-02-19",
+    "kanjiIndex": 8
+  },
+  {
+    "date": "2027-02-20",
+    "kanjiIndex": 55
+  },
+  {
+    "date": "2027-02-21",
+    "kanjiIndex": 76
+  },
+  {
+    "date": "2027-02-22",
+    "kanjiIndex": 51
+  },
+  {
+    "date": "2027-02-23",
+    "kanjiIndex": 15
+  },
+  {
+    "date": "2027-02-24",
+    "kanjiIndex": 50
+  },
+  {
+    "date": "2027-02-25",
+    "kanjiIndex": 34
+  },
+  {
+    "date": "2027-02-26",
+    "kanjiIndex": 62
+  },
+  {
+    "date": "2027-02-27",
+    "kanjiIndex": 20
+  },
+  {
+    "date": "2027-02-28",
+    "kanjiIndex": 77
   }
 ]
