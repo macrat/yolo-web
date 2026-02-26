@@ -1,6 +1,6 @@
 import { expect, test, describe, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
-import GuessInput from "@/components/games/kanji-kanaru/GuessInput";
+import GuessInput from "@/games/kanji-kanaru/_components/GuessInput";
 
 describe("GuessInput", () => {
   test("renders input field and submit button", () => {

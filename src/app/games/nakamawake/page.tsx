@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Breadcrumb from "@/components/common/Breadcrumb";
 import { generateGameJsonLd } from "@/lib/seo";
-import GameContainer from "@/components/games/nakamawake/GameContainer";
+import GameContainer from "@/games/nakamawake/_components/GameContainer";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
