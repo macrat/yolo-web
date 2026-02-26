@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import type { QuizQuestion, QuizType } from "@/lib/quiz/types";
-import { isCorrectChoice } from "@/lib/quiz/scoring";
+import type { QuizQuestion, QuizType } from "@/quiz/types";
+import { isCorrectChoice } from "@/quiz/scoring";
 import styles from "./QuestionCard.module.css";
 
 type QuestionCardProps = {

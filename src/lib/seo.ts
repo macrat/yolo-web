@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import type { ToolMeta } from "@/tools/types";
 import type { CheatsheetMeta } from "@/cheatsheets/types";
-import type { QuizMeta } from "@/lib/quiz/types";
+import type { QuizMeta } from "@/quiz/types";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 
 export function generateToolMetadata(meta: ToolMeta): Metadata {

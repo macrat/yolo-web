@@ -3,7 +3,7 @@ import {
   quizBySlug,
   getAllQuizSlugs,
   getResultIdsForQuiz,
-} from "@/lib/quiz/registry";
+} from "@/quiz/registry";
 
 export const alt = "クイズ結果";
 export const size = { width: 1200, height: 630 };

@@ -2,8 +2,8 @@
 
 import { useState, useCallback } from "react";
 import Link from "next/link";
-import type { QuizDefinition, QuizAnswer, QuizPhase } from "@/lib/quiz/types";
-import { determineResult, calculateKnowledgeScore } from "@/lib/quiz/scoring";
+import type { QuizDefinition, QuizAnswer, QuizPhase } from "@/quiz/types";
+import { determineResult, calculateKnowledgeScore } from "@/quiz/scoring";
 import ProgressBar from "./ProgressBar";
 import QuestionCard from "./QuestionCard";
 import ResultCard from "./ResultCard";

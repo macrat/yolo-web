@@ -2,7 +2,7 @@ import Link from "next/link";
 import { formatDate } from "@/lib/date";
 import { getAllBlogPosts } from "@/lib/blog";
 import { allToolMetas } from "@/tools/registry";
-import { allQuizMetas } from "@/lib/quiz/registry";
+import { allQuizMetas } from "@/quiz/registry";
 import { allGameMetas } from "@/games/registry";
 import styles from "./page.module.css";
 

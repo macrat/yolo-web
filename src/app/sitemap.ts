@@ -7,7 +7,7 @@ import { BLOG_POSTS_PER_PAGE, TOOLS_PER_PAGE } from "@/lib/pagination";
 import { getAllKanjiChars, getKanjiCategories } from "@/lib/dictionary/kanji";
 import { getAllYojiIds, getYojiCategories } from "@/lib/dictionary/yoji";
 import { getAllColorSlugs, getColorCategories } from "@/lib/dictionary/colors";
-import { getAllQuizSlugs, getResultIdsForQuiz } from "@/lib/quiz/registry";
+import { getAllQuizSlugs, getResultIdsForQuiz } from "@/quiz/registry";
 import { allGameMetas, getGamePath } from "@/games/registry";
 
 /**
