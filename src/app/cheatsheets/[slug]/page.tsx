@@ -7,7 +7,7 @@ import {
   generateCheatsheetMetadata,
   generateCheatsheetJsonLd,
 } from "@/lib/seo";
-import CheatsheetLayout from "@/components/cheatsheets/CheatsheetLayout";
+import CheatsheetLayout from "@/cheatsheets/_components/CheatsheetLayout";
 import CheatsheetRenderer from "./CheatsheetRenderer";
 
 export function generateStaticParams() {

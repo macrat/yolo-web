@@ -1,4 +1,4 @@
-import CodeBlock from "@/components/cheatsheets/CodeBlock";
+import CodeBlock from "@/cheatsheets/_components/CodeBlock";
 
 export default function RegexCheatsheet() {
   return (
