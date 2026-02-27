@@ -1,5 +1,28 @@
 /** Type definitions for dictionary data */
 
+import type { TrustLevel } from "@/lib/trust-levels";
+
+/** 辞典種別ごとのメタデータ（品質要素を含む） */
+export interface DictionaryMeta {
+  /** 辞典識別子（例: "kanji", "yoji", "colors"） */
+  slug: string;
+  /** 辞典の表示名（例: "漢字辞典"） */
+  name: string;
+  /** コンテンツの信頼レベル */
+  trustLevel: TrustLevel;
+  /** 一行価値テキスト（40字以内推奨） */
+  valueProposition?: string;
+  /**
+   * FAQ: Q&A形式の配列
+   * 将来B-024でJSON-LD（FAQPage schema）化を前提とした構造。
+   * answerはプレーンテキストのみ。
+   */
+  faq?: Array<{
+    question: string;
+    answer: string;
+  }>;
+}
+
 export interface KanjiEntry {
   character: string;
   radical: string;

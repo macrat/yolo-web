@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Breadcrumb from "@/components/common/Breadcrumb";
-import TrustLevelBadge from "@/components/common/TrustLevelBadge";
 import { generateGameJsonLd } from "@/lib/seo";
 import { gameBySlug } from "@/games/registry";
+import GameLayout from "@/games/_components/GameLayout";
 import GameContainer from "@/games/kanji-kanaru/_components/GameContainer";
-import styles from "./page.module.css";
 
 export const metadata: Metadata = {
   title: "漢字カナール - 毎日の漢字パズル | yolos.net",
@@ -39,37 +37,35 @@ const gameMeta = gameBySlug.get("kanji-kanaru")!;
 
 export default function KanjiKanaruPage() {
   return (
-    <div className={styles.wrapper}>
+    <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(gameJsonLd) }}
       />
-      <Breadcrumb
-        items={[
-          { label: "ホーム", href: "/" },
-          { label: "ゲーム", href: "/games" },
-          { label: "漢字カナール" },
-        ]}
-      />
-      <TrustLevelBadge level={gameMeta.trustLevel} note={gameMeta.trustNote} />
-      <GameContainer />
-      <footer className={styles.attribution}>
-        <p>
-          漢字データは{" "}
-          <a
-            href="http://www.edrdg.org/wiki/index.php/KANJIDIC_Project"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            KANJIDIC2
-          </a>{" "}
-          (CC BY-SA 4.0) を基に作成しています。
-        </p>
-        <p>
-          <Link href="/dictionary/kanji">漢字辞典</Link>
-          で漢字の読み方・意味を調べる
-        </p>
-      </footer>
-    </div>
+      <GameLayout
+        meta={gameMeta}
+        attribution={
+          <>
+            <p>
+              漢字データは{" "}
+              <a
+                href="http://www.edrdg.org/wiki/index.php/KANJIDIC_Project"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                KANJIDIC2
+              </a>{" "}
+              (CC BY-SA 4.0) を基に作成しています。
+            </p>
+            <p>
+              <Link href="/dictionary/kanji">漢字辞典</Link>
+              で漢字の読み方・意味を調べる
+            </p>
+          </>
+        }
+      >
+        <GameContainer />
+      </GameLayout>
+    </>
   );
 }

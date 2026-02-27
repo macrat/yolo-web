@@ -1,11 +1,9 @@
 import { notFound } from "next/navigation";
-import Breadcrumb from "@/components/common/Breadcrumb";
-import TrustLevelBadge from "@/components/common/TrustLevelBadge";
-import ShareButtons from "@/components/common/ShareButtons";
+import DictionaryDetailLayout from "@/dictionary/_components/DictionaryDetailLayout";
+import { YOJI_DICTIONARY_META } from "@/dictionary/_lib/dictionary-meta";
 import YojiDetail from "@/dictionary/_components/yoji/YojiDetail";
 import { generateYojiPageMetadata, generateYojiJsonLd } from "@/lib/seo";
 import { getYojiByYoji, getAllYojiIds } from "@/dictionary/_lib/yoji";
-import styles from "./page.module.css";
 
 export function generateStaticParams() {
   return getAllYojiIds().map((yoji) => ({ yoji }));
@@ -36,28 +34,19 @@ export default async function YojiDetailPage({
   const jsonLd = generateYojiJsonLd(yoji);
 
   return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      <Breadcrumb
-        items={[
-          { label: "ホーム", href: "/" },
-          { label: "辞典", href: "/dictionary" },
-          { label: "四字熟語辞典", href: "/dictionary/yoji" },
-          { label: yoji.yoji },
-        ]}
-      />
-      <TrustLevelBadge level="curated" />
+    <DictionaryDetailLayout
+      meta={YOJI_DICTIONARY_META}
+      breadcrumbItems={[
+        { label: "ホーム", href: "/" },
+        { label: "辞典", href: "/dictionary" },
+        { label: "四字熟語辞典", href: "/dictionary/yoji" },
+        { label: yoji.yoji },
+      ]}
+      jsonLd={jsonLd}
+      shareUrl={`/dictionary/yoji/${encodeURIComponent(yoji.yoji)}`}
+      shareTitle={`「${yoji.yoji}」の意味・読み方`}
+    >
       <YojiDetail yoji={yoji} />
-      <section className={styles.shareSection}>
-        <ShareButtons
-          url={`/dictionary/yoji/${encodeURIComponent(yoji.yoji)}`}
-          title={`\u300C${yoji.yoji}\u300D\u306E\u610F\u5473\u30FB\u8AAD\u307F\u65B9`}
-          sns={["x", "line", "copy"]}
-        />
-      </section>
-    </>
+    </DictionaryDetailLayout>
   );
 }

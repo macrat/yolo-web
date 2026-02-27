@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
-import Breadcrumb from "@/components/common/Breadcrumb";
-import TrustLevelBadge from "@/components/common/TrustLevelBadge";
 import { generateGameJsonLd } from "@/lib/seo";
 import { gameBySlug } from "@/games/registry";
+import GameLayout from "@/games/_components/GameLayout";
 import GameContainer from "@/games/nakamawake/_components/GameContainer";
-import styles from "./page.module.css";
 
 export const metadata: Metadata = {
   title: "ナカマワケ - 毎日の仲間分けパズル | yolos.net",
@@ -48,20 +46,14 @@ const gameMeta = gameBySlug.get("nakamawake")!;
 
 export default function NakamawakePage() {
   return (
-    <div className={styles.wrapper}>
+    <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(gameJsonLd) }}
       />
-      <Breadcrumb
-        items={[
-          { label: "ホーム", href: "/" },
-          { label: "ゲーム", href: "/games" },
-          { label: "ナカマワケ" },
-        ]}
-      />
-      <TrustLevelBadge level={gameMeta.trustLevel} note={gameMeta.trustNote} />
-      <GameContainer />
-    </div>
+      <GameLayout meta={gameMeta}>
+        <GameContainer />
+      </GameLayout>
+    </>
   );
 }

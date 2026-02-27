@@ -1,16 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Breadcrumb from "@/components/common/Breadcrumb";
-import TrustLevelBadge from "@/components/common/TrustLevelBadge";
-import ShareButtons from "@/components/common/ShareButtons";
+import DictionaryDetailLayout from "@/dictionary/_components/DictionaryDetailLayout";
+import { COLOR_DICTIONARY_META } from "@/dictionary/_lib/dictionary-meta";
 import ColorDetail from "@/dictionary/_components/color/ColorDetail";
-import {
-  generateColorPageMetadata,
-  generateColorJsonLd,
-  generateBreadcrumbJsonLd,
-} from "@/lib/seo";
+import { generateColorPageMetadata, generateColorJsonLd } from "@/lib/seo";
 import { getColorBySlug, getAllColorSlugs } from "@/dictionary/_lib/colors";
-import styles from "./page.module.css";
 
 export function generateStaticParams() {
   return getAllColorSlugs().map((slug) => ({ slug }));
@@ -36,39 +30,23 @@ export default async function ColorDetailPage({
   const color = getColorBySlug(slug);
   if (!color) notFound();
 
+  // 辞典固有の JSON-LD のみ渡す。
+  // breadcrumb JSON-LD は Breadcrumb コンポーネントが自動出力するため手動呼び出し不要。
   const jsonLd = generateColorJsonLd(color);
-  const breadcrumbJsonLd = generateBreadcrumbJsonLd([
-    { label: "ホーム", href: "/" },
-    { label: "伝統色", href: "/colors" },
-    { label: color.name },
-  ]);
 
   return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
-      />
-      <Breadcrumb
-        items={[
-          { label: "ホーム", href: "/" },
-          { label: "伝統色", href: "/colors" },
-          { label: color.name },
-        ]}
-      />
-      <TrustLevelBadge level="curated" />
+    <DictionaryDetailLayout
+      meta={COLOR_DICTIONARY_META}
+      breadcrumbItems={[
+        { label: "ホーム", href: "/" },
+        { label: "伝統色", href: "/colors" },
+        { label: color.name },
+      ]}
+      jsonLd={jsonLd}
+      shareUrl={`/colors/${color.slug}`}
+      shareTitle={`${color.name}（${color.romaji}）`}
+    >
       <ColorDetail color={color} />
-      <section className={styles.shareSection}>
-        <ShareButtons
-          url={`/colors/${color.slug}`}
-          title={`${color.name}\uFF08${color.romaji}\uFF09`}
-          sns={["x", "line", "copy"]}
-        />
-      </section>
-    </>
+    </DictionaryDetailLayout>
   );
 }

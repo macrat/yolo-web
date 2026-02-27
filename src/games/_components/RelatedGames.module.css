@@ -1,0 +1,51 @@
+.related {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.heading {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: var(--color-text);
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  list-style: none;
+}
+
+.link {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  text-decoration: none;
+  transition: border-color 0.15s;
+  min-width: 200px;
+}
+
+.link:hover {
+  border-color: var(--color-primary);
+}
+
+.icon {
+  font-size: 1.25rem;
+  margin-bottom: 0.125rem;
+}
+
+.name {
+  font-weight: 600;
+  color: var(--color-primary);
+  font-size: 0.95rem;
+}
+
+.description {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}

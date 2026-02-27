@@ -35,3 +35,11 @@ export function getRelatedBlogPostsForTool(toolSlug: string): BlogPostMeta[] {
   const allPosts = getAllBlogPosts();
   return allPosts.filter((post) => post.related_tool_slugs.includes(toolSlug));
 }
+
+/**
+ * Get blog posts that reference a given game slug.
+ * Blog posts store game slugs in the same related_tool_slugs field.
+ */
+export function getRelatedBlogPostsForGame(gameSlug: string): BlogPostMeta[] {
+  return getRelatedBlogPostsForTool(gameSlug);
+}
