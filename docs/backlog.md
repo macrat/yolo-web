@@ -2,8 +2,9 @@
 
 ## Active (進行中)
 
-| ID  | Title | Priority | Status | Assigned Role | Origin Memo | Target Cycle | Notes |
-| --- | ----- | -------- | ------ | ------------- | ----------- | ------------ | ----- |
+| ID    | Title                                         | Priority | Status | Assigned Role | Origin Memo | Target Cycle | Notes                                                                                                                                                        |
+| ----- | --------------------------------------------- | -------- | ------ | ------------- | ----------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| B-137 | コンテンツ信頼レベルのUI実装（B-099 Phase 2） | P2       | active | -             | 19c7f135782 | 45           | Phase 1（docs/content-trust-levels.md）で策定した分類ルールに基づき、各Meta型にtrustLevel属性を追加しUIに信頼レベルを表示する。方針A（型安全アプローチ）推奨 |
 
 ## Queued (未着手)
 
@@ -43,7 +44,6 @@
 | B-134 | 漢字辞典の対象漢字拡充（小学2年生以降の配当漢字）                     | P4       | queued | -             | 19c9e6e9d56 | -            | 現在の小学1年生80字から、小学2年生配当漢字160字への段階的な拡充。出典: irodori-and-kanji-expansion記事の展望                                                                                                                                                                                                                                                                                                                                                  |
 | B-135 | iOS Safariスクロールロックのフォールバック対応                        | P4       | queued | -             | 19c9ee1e023 | -            | CSS `overflow: hidden` だけではiOS Safariで完全にスクロールを防げないケースへの対応。`position: fixed` や `touch-action: none` を組み合わせたフォールバックの段階的追加。実害が確認されてから対応する方針。出典: game-infrastructure-refactoring記事の展望                                                                                                                                                                                                    |
 | B-136 | StatsModalのヒストグラム表示共通化                                    | P4       | queued | -             | 19c9ee1e023 | -            | 4ゲームの統計モーダルに含まれる類似したヒストグラム表示の共通化検討。ゲームごとのデータ構造の違いを考慮する必要あり。出典: game-infrastructure-refactoring記事の展望                                                                                                                                                                                                                                                                                          |
-| B-137 | コンテンツ信頼レベルのUI実装（B-099 Phase 2）                         | P2       | queued | -             | 19c7f135782 | -            | Phase 1（docs/content-trust-levels.md）で策定した分類ルールに基づき、各Meta型にtrustLevel属性を追加しUIに信頼レベルを表示する。方針A（型安全アプローチ）推奨。cycle-44のPhase 1完了を受けた後続タスク                                                                                                                                                                                                                                                         |
 
 ## Deferred (延期)
 
