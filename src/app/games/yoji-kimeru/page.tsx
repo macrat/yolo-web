@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Breadcrumb from "@/components/common/Breadcrumb";
-import TrustLevelBadge from "@/components/common/TrustLevelBadge";
 import { generateGameJsonLd } from "@/lib/seo";
 import { gameBySlug } from "@/games/registry";
+import GameLayout from "@/games/_components/GameLayout";
 import GameContainer from "@/games/yoji-kimeru/_components/GameContainer";
-import styles from "./page.module.css";
 
 export const metadata: Metadata = {
   title: "四字キメル - 毎日の四字熟語パズル | yolos.net",
@@ -50,33 +48,22 @@ const gameMeta = gameBySlug.get("yoji-kimeru")!;
 
 export default function YojiKimeruPage() {
   return (
-    <div className={styles.wrapper}>
+    <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(gameJsonLd) }}
       />
-      <Breadcrumb
-        items={[
-          { label: "ホーム", href: "/" },
-          { label: "ゲーム", href: "/games" },
-          { label: "四字キメル" },
-        ]}
-      />
-      <TrustLevelBadge level={gameMeta.trustLevel} note={gameMeta.trustNote} />
-      <GameContainer />
-      <p
-        style={{
-          textAlign: "center",
-          fontSize: "0.85rem",
-          marginTop: "1rem",
-          color: "var(--color-text-muted)",
-        }}
+      <GameLayout
+        meta={gameMeta}
+        attribution={
+          <p>
+            <Link href="/dictionary/yoji">四字熟語辞典</Link>
+            で四字熟語の読み方・意味を調べる
+          </p>
+        }
       >
-        <Link href="/dictionary/yoji" style={{ color: "var(--color-primary)" }}>
-          四字熟語辞典
-        </Link>
-        で四字熟語の読み方・意味を調べる
-      </p>
-    </div>
+        <GameContainer />
+      </GameLayout>
+    </>
   );
 }

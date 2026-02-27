@@ -1,0 +1,22 @@
+/*
+ * DictionaryDetailLayout CSS
+ *
+ * Note: maxWidth/margin/padding are NOT set here because the parent
+ * route layouts (dictionary/layout.tsx, colors/layout.tsx) already
+ * provide these via inline styles. Adding them here would cause duplication.
+ */
+
+.valueProposition {
+  margin-top: 0.75rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-text);
+  line-height: 1.6;
+}
+
+.shareSection {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border);
+}

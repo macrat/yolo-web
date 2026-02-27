@@ -1,47 +1,42 @@
 import type { Metadata } from "next";
-import Breadcrumb from "@/components/common/Breadcrumb";
-import TrustLevelBadge from "@/components/common/TrustLevelBadge";
 import { generateGameJsonLd } from "@/lib/seo";
 import { gameBySlug } from "@/games/registry";
+import GameLayout from "@/games/_components/GameLayout";
 import GameContainer from "@/games/irodori/_components/GameContainer";
-import styles from "./page.module.css";
 
 export const metadata: Metadata = {
-  title:
-    "\u30A4\u30ED\u30C9\u30EA - \u6BCE\u65E5\u306E\u8272\u5F69\u30C1\u30E3\u30EC\u30F3\u30B8 | yolos.net",
+  title: "イロドリ - 毎日の色彩チャレンジ | yolos.net",
   description:
-    "\u30BF\u30FC\u30B2\u30C3\u30C8\u30AB\u30E9\u30FC\u306B\u3069\u308C\u3060\u3051\u8FD1\u3044\u8272\u3092\u4F5C\u308C\u308B\u304B\u30C1\u30E3\u30EC\u30F3\u30B8! HSL\u30B9\u30E9\u30A4\u30C0\u30FC\u3067\u8272\u3092\u6DF7\u305C\u3066\u3001\u3042\u306A\u305F\u306E\u8272\u5F69\u611F\u899A\u3092\u8A66\u305D\u3046\u3002\u65E5\u672C\u306E\u4F1D\u7D71\u8272\u3082\u767B\u5834\u3059\u308B\u7121\u6599\u30C7\u30A4\u30EA\u30FC\u30B2\u30FC\u30E0\u3002",
+    "ターゲットカラーにどれだけ近い色を作れるかチャレンジ! HSLスライダーで色を混ぜて、あなたの色彩感覚を試そう。日本の伝統色も登場する無料デイリーゲーム。",
   keywords: [
-    "\u8272\u5F69\u611F\u899A\u30C6\u30B9\u30C8",
-    "\u30AB\u30E9\u30FCIQ",
-    "\u8272\u899A\u30C6\u30B9\u30C8 \u7121\u6599",
+    "色彩感覚テスト",
+    "カラーIQ",
+    "色覚テスト 無料",
     "color sense test",
-    "\u8272\u5F53\u3066\u30B2\u30FC\u30E0",
-    "\u8272\u5F69\u30C1\u30E3\u30EC\u30F3\u30B8",
-    "\u30C7\u30A4\u30EA\u30FC\u30B2\u30FC\u30E0",
-    "\u30A4\u30ED\u30C9\u30EA",
-    "\u4F1D\u7D71\u8272",
+    "色当てゲーム",
+    "色彩チャレンジ",
+    "デイリーゲーム",
+    "イロドリ",
+    "伝統色",
   ],
   openGraph: {
-    title:
-      "\u30A4\u30ED\u30C9\u30EA - \u6BCE\u65E5\u306E\u8272\u5F69\u30C1\u30E3\u30EC\u30F3\u30B8",
+    title: "イロドリ - 毎日の色彩チャレンジ",
     description:
-      "\u30BF\u30FC\u30B2\u30C3\u30C8\u30AB\u30E9\u30FC\u306B\u3069\u308C\u3060\u3051\u8FD1\u3044\u8272\u3092\u4F5C\u308C\u308B\u304B\u30C1\u30E3\u30EC\u30F3\u30B8! HSL\u30B9\u30E9\u30A4\u30C0\u30FC\u3067\u8272\u5F69\u611F\u899A\u3092\u8A66\u305D\u3046\u3002",
+      "ターゲットカラーにどれだけ近い色を作れるかチャレンジ! HSLスライダーで色彩感覚を試そう。",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title:
-      "\u30A4\u30ED\u30C9\u30EA - \u6BCE\u65E5\u306E\u8272\u5F69\u30C1\u30E3\u30EC\u30F3\u30B8",
+    title: "イロドリ - 毎日の色彩チャレンジ",
     description:
-      "\u30BF\u30FC\u30B2\u30C3\u30C8\u30AB\u30E9\u30FC\u306B\u3069\u308C\u3060\u3051\u8FD1\u3044\u8272\u3092\u4F5C\u308C\u308B\u304B\u30C1\u30E3\u30EC\u30F3\u30B8! HSL\u30B9\u30E9\u30A4\u30C0\u30FC\u3067\u8272\u5F69\u611F\u899A\u3092\u8A66\u305D\u3046\u3002",
+      "ターゲットカラーにどれだけ近い色を作れるかチャレンジ! HSLスライダーで色彩感覚を試そう。",
   },
 };
 
 const gameJsonLd = generateGameJsonLd({
-  name: "\u30A4\u30ED\u30C9\u30EA - \u6BCE\u65E5\u306E\u8272\u5F69\u30C1\u30E3\u30EC\u30F3\u30B8",
+  name: "イロドリ - 毎日の色彩チャレンジ",
   description:
-    "\u30BF\u30FC\u30B2\u30C3\u30C8\u30AB\u30E9\u30FC\u306B\u3069\u308C\u3060\u3051\u8FD1\u3044\u8272\u3092\u4F5C\u308C\u308B\u304B\u30C1\u30E3\u30EC\u30F3\u30B8! HSL\u30B9\u30E9\u30A4\u30C0\u30FC\u3067\u8272\u3092\u6DF7\u305C\u3066\u3001\u3042\u306A\u305F\u306E\u8272\u5F69\u611F\u899A\u3092\u8A66\u305D\u3046\u3002\u65E5\u672C\u306E\u4F1D\u7D71\u8272\u3082\u767B\u5834\u3059\u308B\u7121\u6599\u30C7\u30A4\u30EA\u30FC\u30B2\u30FC\u30E0\u3002",
+    "ターゲットカラーにどれだけ近い色を作れるかチャレンジ! HSLスライダーで色を混ぜて、あなたの色彩感覚を試そう。日本の伝統色も登場する無料デイリーゲーム。",
   url: "/games/irodori",
   genre: "Puzzle",
   inLanguage: "ja",
@@ -52,20 +47,14 @@ const gameMeta = gameBySlug.get("irodori")!;
 
 export default function IrodoriPage() {
   return (
-    <div className={styles.wrapper}>
+    <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(gameJsonLd) }}
       />
-      <Breadcrumb
-        items={[
-          { label: "\u30DB\u30FC\u30E0", href: "/" },
-          { label: "\u30B2\u30FC\u30E0", href: "/games" },
-          { label: "\u30A4\u30ED\u30C9\u30EA" },
-        ]}
-      />
-      <TrustLevelBadge level={gameMeta.trustLevel} note={gameMeta.trustNote} />
-      <GameContainer />
-    </div>
+      <GameLayout meta={gameMeta}>
+        <GameContainer />
+      </GameLayout>
+    </>
   );
 }
