@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Breadcrumb from "@/components/common/Breadcrumb";
+import TrustLevelBadge from "@/components/common/TrustLevelBadge";
 import QuizContainer from "@/quiz/_components/QuizContainer";
 import { quizBySlug, getAllQuizSlugs } from "@/quiz/registry";
 import { generateQuizMetadata, generateQuizJsonLd } from "@/lib/seo";
@@ -40,6 +41,10 @@ export default async function QuizPage({ params }: Props) {
           { label: "クイズ", href: "/quiz" },
           { label: quiz.meta.title },
         ]}
+      />
+      <TrustLevelBadge
+        level={quiz.meta.trustLevel}
+        note={quiz.meta.trustNote}
       />
       <QuizContainer quiz={quiz} />
     </div>

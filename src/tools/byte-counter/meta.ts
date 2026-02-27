@@ -18,4 +18,5 @@ export const meta: ToolMeta = {
   relatedSlugs: ["char-count", "dummy-text", "text-replace", "unit-converter"],
   publishedAt: "2026-02-14",
   structuredDataType: "WebApplication",
+  trustLevel: "verified",
 };

@@ -1,3 +1,5 @@
+import type { TrustLevel } from "@/lib/trust-levels";
+
 export type CheatsheetCategory = "developer" | "writing" | "devops";
 
 export interface CheatsheetSection {
@@ -17,6 +19,8 @@ export interface CheatsheetMeta {
   relatedCheatsheetSlugs: string[];
   sections: CheatsheetSection[];
   publishedAt: string;
+  /** Content trust level */
+  trustLevel: TrustLevel;
 }
 
 export interface CheatsheetDefinition {

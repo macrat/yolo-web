@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Breadcrumb from "@/components/common/Breadcrumb";
+import TrustLevelBadge from "@/components/common/TrustLevelBadge";
 import ShareButtons from "@/components/common/ShareButtons";
 import KanjiDetail from "@/dictionary/_components/kanji/KanjiDetail";
 import { generateKanjiPageMetadata, generateKanjiJsonLd } from "@/lib/seo";
@@ -48,6 +49,7 @@ export default async function KanjiDetailPage({
           { label: kanji.character },
         ]}
       />
+      <TrustLevelBadge level="curated" />
       <KanjiDetail kanji={kanji} />
       <section className={styles.shareSection}>
         <ShareButtons

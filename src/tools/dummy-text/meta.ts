@@ -18,4 +18,5 @@ export const meta: ToolMeta = {
   relatedSlugs: ["password-generator", "char-count", "byte-counter"],
   publishedAt: "2026-02-14",
   structuredDataType: "WebApplication",
+  trustLevel: "verified",
 };

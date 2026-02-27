@@ -12,4 +12,5 @@ export const meta: ToolMeta = {
   relatedSlugs: ["json-formatter", "text-diff", "kana-converter"],
   publishedAt: "2026-02-13",
   structuredDataType: "WebApplication",
+  trustLevel: "verified",
 };

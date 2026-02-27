@@ -13,6 +13,7 @@ const mockMeta: ToolMeta = {
   category: "developer",
   relatedSlugs: [],
   publishedAt: "2026-02-13",
+  trustLevel: "verified",
 };
 
 test("ToolLayout renders tool name as heading", () => {

@@ -24,4 +24,5 @@ export const meta: ToolMeta = {
   ],
   publishedAt: "2026-02-13",
   structuredDataType: "WebApplication",
+  trustLevel: "verified",
 };

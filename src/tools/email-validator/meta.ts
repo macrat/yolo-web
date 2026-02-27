@@ -18,4 +18,5 @@ export const meta: ToolMeta = {
   relatedSlugs: ["regex-tester", "url-encode", "password-generator"],
   publishedAt: "2026-02-14",
   structuredDataType: "WebApplication",
+  trustLevel: "verified",
 };

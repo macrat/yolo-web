@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Breadcrumb from "@/components/common/Breadcrumb";
+import TrustLevelBadge from "@/components/common/TrustLevelBadge";
 import ShareButtons from "@/components/common/ShareButtons";
 import ColorDetail from "@/dictionary/_components/color/ColorDetail";
 import {
@@ -59,6 +60,7 @@ export default async function ColorDetailPage({
           { label: color.name },
         ]}
       />
+      <TrustLevelBadge level="curated" />
       <ColorDetail color={color} />
       <section className={styles.shareSection}>
         <ShareButtons

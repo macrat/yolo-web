@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Breadcrumb from "@/components/common/Breadcrumb";
+import TrustLevelBadge from "@/components/common/TrustLevelBadge";
 import { generateGameJsonLd } from "@/lib/seo";
+import { gameBySlug } from "@/games/registry";
 import GameContainer from "@/games/nakamawake/_components/GameContainer";
 import styles from "./page.module.css";
 
@@ -42,6 +44,8 @@ const gameJsonLd = generateGameJsonLd({
   numberOfPlayers: "1",
 });
 
+const gameMeta = gameBySlug.get("nakamawake")!;
+
 export default function NakamawakePage() {
   return (
     <div className={styles.wrapper}>
@@ -56,6 +60,7 @@ export default function NakamawakePage() {
           { label: "ナカマワケ" },
         ]}
       />
+      <TrustLevelBadge level={gameMeta.trustLevel} note={gameMeta.trustNote} />
       <GameContainer />
     </div>
   );

@@ -18,4 +18,5 @@ export const meta: ToolMeta = {
   relatedSlugs: ["image-base64", "base64", "qr-code"],
   publishedAt: "2026-02-14",
   structuredDataType: "WebApplication",
+  trustLevel: "verified",
 };

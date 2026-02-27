@@ -24,6 +24,9 @@ const traditionalColorQuiz: QuizDefinition = {
       { label: "日本の伝統色一覧", href: "/colors" },
       { label: "伝統色辞典", href: "/colors" },
     ],
+    trustLevel: "generated",
+    trustNote:
+      "スコア計算は正確です。質問と結果はAIが創作しました。楽しみとしてお楽しみください。",
   },
   questions: [
     {

@@ -1,6 +1,7 @@
 import type { ToolMeta } from "@/tools/types";
 import Breadcrumb from "@/components/common/Breadcrumb";
 import ShareButtons from "@/components/common/ShareButtons";
+import TrustLevelBadge from "@/components/common/TrustLevelBadge";
 import RelatedTools from "./RelatedTools";
 import RelatedBlogPosts from "./RelatedBlogPosts";
 import styles from "./ToolLayout.module.css";
@@ -22,6 +23,7 @@ export default function ToolLayout({ meta, children }: ToolLayoutProps) {
       />
       <header className={styles.header}>
         <h1 className={styles.title}>{meta.name}</h1>
+        <TrustLevelBadge level={meta.trustLevel} />
         <p className={styles.description}>{meta.description}</p>
       </header>
       <section className={styles.content} aria-label="Tool">

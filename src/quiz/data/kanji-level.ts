@@ -25,6 +25,9 @@ const kanjiLevelQuiz: QuizDefinition = {
       { label: "漢字辞典で学ぶ", href: "/dictionary/kanji" },
       { label: "漢字カナール", href: "/games/kanji-kanaru" },
     ],
+    trustLevel: "curated",
+    trustNote:
+      "スコア計算は正確です。問題と正解はAIが辞書を参照して作成しています。解説文はAIの見解であり、誤りを含む可能性があります。",
   },
   questions: [
     {

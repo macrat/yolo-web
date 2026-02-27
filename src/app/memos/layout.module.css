@@ -1,0 +1,13 @@
+/* バッジをメモページの上部に表示するためのコンテナ。
+   子ページ（page.tsx, [id]/page.tsx）のコンテナ幅・水平パディングと揃える */
+.badgeContainer {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 1.5rem 1rem 0;
+}
+
+@media (max-width: 768px) {
+  .badgeContainer {
+    padding: 1rem 0.75rem 0;
+  }
+}

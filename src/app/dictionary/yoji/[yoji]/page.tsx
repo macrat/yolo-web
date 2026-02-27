@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Breadcrumb from "@/components/common/Breadcrumb";
+import TrustLevelBadge from "@/components/common/TrustLevelBadge";
 import ShareButtons from "@/components/common/ShareButtons";
 import YojiDetail from "@/dictionary/_components/yoji/YojiDetail";
 import { generateYojiPageMetadata, generateYojiJsonLd } from "@/lib/seo";
@@ -48,6 +49,7 @@ export default async function YojiDetailPage({
           { label: yoji.yoji },
         ]}
       />
+      <TrustLevelBadge level="curated" />
       <YojiDetail yoji={yoji} />
       <section className={styles.shareSection}>
         <ShareButtons

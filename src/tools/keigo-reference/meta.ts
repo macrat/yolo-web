@@ -19,4 +19,5 @@ export const meta: ToolMeta = {
   relatedSlugs: ["business-email", "kana-converter", "char-count"],
   publishedAt: "2026-02-21",
   structuredDataType: "WebApplication",
+  trustLevel: "curated",
 };

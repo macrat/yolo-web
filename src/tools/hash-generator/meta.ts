@@ -12,4 +12,5 @@ export const meta: ToolMeta = {
   relatedSlugs: ["base64", "password-generator", "image-base64"],
   publishedAt: "2026-02-13",
   structuredDataType: "WebApplication",
+  trustLevel: "verified",
 };

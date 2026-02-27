@@ -18,4 +18,5 @@ export const meta: ToolMeta = {
   relatedSlugs: ["unix-timestamp", "date-calculator", "regex-tester"],
   publishedAt: "2026-02-14",
   structuredDataType: "WebApplication",
+  trustLevel: "verified",
 };

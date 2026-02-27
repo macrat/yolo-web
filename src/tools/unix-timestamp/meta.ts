@@ -18,4 +18,5 @@ export const meta: ToolMeta = {
   relatedSlugs: ["hash-generator", "base64", "cron-parser", "age-calculator"],
   publishedAt: "2026-02-13",
   structuredDataType: "WebApplication",
+  trustLevel: "verified",
 };

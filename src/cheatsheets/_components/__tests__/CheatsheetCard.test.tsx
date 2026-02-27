@@ -15,6 +15,7 @@ const mockMeta: CheatsheetMeta = {
   relatedCheatsheetSlugs: [],
   sections: [{ id: "s1", title: "セクション1" }],
   publishedAt: "2026-02-19",
+  trustLevel: "curated",
 };
 
 test("CheatsheetCard renders correct link", () => {

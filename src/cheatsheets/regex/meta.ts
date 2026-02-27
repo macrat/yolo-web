@@ -29,4 +29,5 @@ export const meta: CheatsheetMeta = {
     { id: "common-patterns", title: "よく使うパターン例" },
   ],
   publishedAt: "2026-02-19",
+  trustLevel: "curated",
 };
