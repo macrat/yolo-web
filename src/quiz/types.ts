@@ -1,3 +1,5 @@
+import type { TrustLevel } from "@/lib/trust-levels";
+
 /** Quiz type: knowledge test or personality diagnosis */
 export type QuizType = "knowledge" | "personality";
 
@@ -39,7 +41,7 @@ export type QuizResult = {
 };
 
 /** Quiz metadata used in the registry */
-export type QuizMeta = {
+export interface QuizMeta {
   slug: string;
   title: string;
   description: string;
@@ -51,7 +53,11 @@ export type QuizMeta = {
   keywords: string[];
   publishedAt: string;
   relatedLinks?: Array<{ label: string; href: string }>;
-};
+  /** Content trust level */
+  trustLevel: TrustLevel;
+  /** Optional supplementary note about trust level details */
+  trustNote?: string;
+}
 
 /** Complete quiz definition including questions and results */
 export type QuizDefinition = {

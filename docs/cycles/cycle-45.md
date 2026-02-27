@@ -11,21 +11,26 @@ completed_at: null
 
 ## 実施する作業
 
-- [ ] 共通型定義の作成（src/lib/trust-levels.ts）
-- [ ] 各Meta型へのtrustLevel属性追加（ToolMeta, GameMeta, QuizMeta, CheatsheetMeta, BlogFrontmatter等）
-- [ ] 各コンテンツの定義ファイルにtrustLevelの値を設定
-- [ ] 信頼レベルバッジUIコンポーネントの作成
-- [ ] 各ページレイアウトへのバッジ組み込み（ツール、ゲーム、クイズ、チートシート、ブログ、辞典、静的ページ、メモアーカイブ）
-- [ ] 混在ケースの補足注記表示対応
-- [ ] レビュー・修正
+- [x] 共通型定義の作成（src/lib/trust-levels.ts）
+- [x] 各Meta型へのtrustLevel属性追加（ToolMeta, GameMeta, QuizMeta, CheatsheetMeta, BlogPostMeta）
+- [x] 各コンテンツの定義ファイルにtrustLevelの値を設定
+- [x] 信頼レベルバッジUIコンポーネントの作成（TrustLevelBadge）
+- [x] 各ページレイアウトへのバッジ組み込み（ツール、ゲーム、クイズ、チートシート、ブログ、辞典、伝統色、Aboutページ、メモアーカイブ）
+- [x] 混在ケースの補足注記表示対応（ゲームのtrustNote、クイズのtrustNote）
+- [x] レビュー・修正
 
 ## レビュー結果
 
-（作業完了後に記載）
+レビュー1回で承認（APPROVE）。軽微な改善提案2点あり（非ブロッカー）:
+
+1. 辞典ページでDICTIONARY_TRUST_LEVELS定数を参照せずハードコードしている点（値は正しいため機能上問題なし）
+2. STATIC_PAGE_TRUST_LEVELSのインデックスアクセスの型安全性（noUncheckedIndexedAccess有効化時のリスク、現状は問題なし）
+
+関連メモ: 19c9ff453ec
 
 ## キャリーオーバー
 
-（作業完了後に記載）
+なし
 
 ## 補足事項
 

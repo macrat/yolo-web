@@ -18,4 +18,5 @@ export const meta: ToolMeta = {
   relatedSlugs: ["json-formatter", "yaml-formatter", "csv-converter"],
   publishedAt: "2026-02-14",
   structuredDataType: "WebApplication",
+  trustLevel: "verified",
 };

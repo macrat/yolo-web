@@ -18,4 +18,5 @@ export const meta: ToolMeta = {
   relatedSlugs: ["char-count", "text-replace", "text-diff", "kana-converter"],
   publishedAt: "2026-02-14",
   structuredDataType: "WebApplication",
+  trustLevel: "verified",
 };

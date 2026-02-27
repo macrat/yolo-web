@@ -18,4 +18,5 @@ export const meta: ToolMeta = {
   relatedSlugs: ["fullwidth-converter", "char-count", "text-replace"],
   publishedAt: "2026-02-14",
   structuredDataType: "WebApplication",
+  trustLevel: "verified",
 };

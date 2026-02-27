@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { SITE_NAME } from "@/lib/constants";
+import TrustLevelBadge from "@/components/common/TrustLevelBadge";
+import { STATIC_PAGE_TRUST_LEVELS } from "@/lib/trust-levels";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
@@ -12,6 +14,7 @@ export default function AboutPage() {
   return (
     <div className={styles.main}>
       <h1 className={styles.title}>このサイトについて</h1>
+      <TrustLevelBadge level={STATIC_PAGE_TRUST_LEVELS["/about"]} />
 
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>プロジェクト概要</h2>

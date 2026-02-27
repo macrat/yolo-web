@@ -25,6 +25,9 @@ const yojiLevelQuiz: QuizDefinition = {
       { label: "四字熟語辞典で学ぶ", href: "/dictionary/yoji" },
       { label: "四字キメルで遊ぶ", href: "/games/yoji-kimeru" },
     ],
+    trustLevel: "curated",
+    trustNote:
+      "スコア計算は正確です。問題と正解はAIが辞書を参照して作成しています。解説文はAIの見解であり、誤りを含む可能性があります。",
   },
   questions: [
     {

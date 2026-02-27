@@ -14,6 +14,8 @@ const gameEntries: GameMeta[] = [
     statsKey: "kanji-kanaru-stats",
     ogpSubtitle: "毎日の漢字パズル",
     sitemap: { changeFrequency: "daily", priority: 0.8 },
+    trustLevel: "curated",
+    trustNote: "ゲームの正解判定は正確です。パズルデータはAIが作成しています。",
   },
   {
     slug: "yoji-kimeru",
@@ -28,6 +30,8 @@ const gameEntries: GameMeta[] = [
     statsKey: "yoji-kimeru-stats",
     ogpSubtitle: "毎日の四字熟語パズル",
     sitemap: { changeFrequency: "daily", priority: 0.8 },
+    trustLevel: "curated",
+    trustNote: "ゲームの正解判定は正確です。パズルデータはAIが作成しています。",
   },
   {
     slug: "nakamawake",
@@ -42,6 +46,8 @@ const gameEntries: GameMeta[] = [
     statsKey: "nakamawake-stats",
     ogpSubtitle: "毎日の仲間分けパズル",
     sitemap: { changeFrequency: "daily", priority: 0.8 },
+    trustLevel: "curated",
+    trustNote: "ゲームの正解判定は正確です。パズルデータはAIが作成しています。",
   },
   {
     slug: "irodori",
@@ -56,6 +62,7 @@ const gameEntries: GameMeta[] = [
     statsKey: "irodori-stats",
     ogpSubtitle: "毎日の色彩チャレンジ",
     sitemap: { changeFrequency: "daily", priority: 0.8 },
+    trustLevel: "verified",
   },
 ];
 

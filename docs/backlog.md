@@ -2,9 +2,8 @@
 
 ## Active (進行中)
 
-| ID    | Title                                         | Priority | Status | Assigned Role | Origin Memo | Target Cycle | Notes                                                                                                                                                        |
-| ----- | --------------------------------------------- | -------- | ------ | ------------- | ----------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| B-137 | コンテンツ信頼レベルのUI実装（B-099 Phase 2） | P2       | active | -             | 19c7f135782 | 45           | Phase 1（docs/content-trust-levels.md）で策定した分類ルールに基づき、各Meta型にtrustLevel属性を追加しUIに信頼レベルを表示する。方針A（型安全アプローチ）推奨 |
+| ID  | Title | Priority | Status | Assigned Role | Origin Memo | Target Cycle | Notes |
+| --- | ----- | -------- | ------ | ------------- | ----------- | ------------ | ----- |
 
 ## Queued (未着手)
 
@@ -59,8 +58,8 @@
 
 | ID    | Title                                           | Completed Cycle | Origin Memo | Notes                                                                                                                                                                  |
 | ----- | ----------------------------------------------- | --------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| B-137 | コンテンツ信頼レベルのUI実装（B-099 Phase 2）   | 45              | 19c7f135782 | 各Meta型にtrustLevel属性追加、TrustLevelBadgeコンポーネント作成、全ページへのバッジ統合。レビュー1回で承認                                                             |
 | B-099 | コンテンツ信頼レベル分類ルール策定（Phase 1）   | 44              | 19c7f135782 | verified/curated/generatedの3段階分類ルール策定。全コンテンツ分類マッピング完了。Phase 2（UI実装）はB-137として別途backlog登録                                         |
 | B-097 | ブログ記事品質向上（リリース・その他 最終2本）  | 43              | 19c8e142237 | game-infra-refactoring, yoji-quiz-themes。外部リンク計10件追加、AI免責表示統一、導線強化、展望更新、backlog B-135/B-136追加。全2記事レビューApprove。B-097シリーズ完了 |
 | B-097 | ブログ記事品質向上（リリース・その他 第4弾3本） | 42              | 19c8e142237 | irodori-kanji, quiz-diagnosis, business-email-keigo。外部リンク計10件追加、AI免責表示統一、導線強化、展望追加。全3記事レビューApprove                                  |
 | B-097 | ブログ記事品質向上（リリース・その他 第3弾3本） | 41              | 19c8e142237 | dark-mode-toggle, site-search-feature, sns-optimization-guide。外部リンク計12件追加、AI免責表示統一、導線強化。全3記事レビューApprove                                  |
-| B-097 | ブログ記事品質向上（リリース・その他 第1弾3本） | 40              | 19c8e142237 | web-developer-tools, site-rename, rss-feed。品質向上+Turbopack prebuildインデックス導入。全レビューApprove                                                             |

@@ -31,4 +31,5 @@ export const meta: CheatsheetMeta = {
     { id: "gfm-extensions", title: "GitHub Flavored Markdown拡張" },
   ],
   publishedAt: "2026-02-19",
+  trustLevel: "curated",
 };

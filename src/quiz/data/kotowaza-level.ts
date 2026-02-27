@@ -26,6 +26,9 @@ const kotowazaLevelQuiz: QuizDefinition = {
       { label: "漢字力診断に挑戦", href: "/quiz/kanji-level" },
       { label: "四字熟語力診断に挑戦", href: "/quiz/yoji-level" },
     ],
+    trustLevel: "curated",
+    trustNote:
+      "スコア計算は正確です。問題と正解はAIが辞書を参照して作成しています。解説文はAIの見解であり、誤りを含む可能性があります。",
   },
   questions: [
     {

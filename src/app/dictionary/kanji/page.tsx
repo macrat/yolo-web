@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Breadcrumb from "@/components/common/Breadcrumb";
+import TrustLevelBadge from "@/components/common/TrustLevelBadge";
 import CategoryNav from "@/dictionary/_components/CategoryNav";
 import { SITE_NAME } from "@/lib/constants";
 import { getAllKanji, getKanjiCategories } from "@/dictionary/_lib/kanji";
@@ -39,6 +40,7 @@ export default function KanjiIndexPage() {
           { label: "漢字辞典" },
         ]}
       />
+      <TrustLevelBadge level="curated" />
       <h1 className={styles.title}>漢字辞典</h1>
       <p className={styles.description}>
         小学1年生で学ぶ基本漢字{allKanji.length}

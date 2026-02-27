@@ -15,6 +15,12 @@
   --color-warning-text: #92400e;
   --font-mono: "Menlo", "Consolas", "Liberation Mono", "Courier New", monospace;
   --max-width: 960px;
+  --color-trust-verified: #059669;
+  --color-trust-verified-bg: #ecfdf5;
+  --color-trust-curated: #0284c7;
+  --color-trust-curated-bg: #e0f2fe;
+  --color-trust-generated: #6b7280;
+  --color-trust-generated-bg: #f3f4f6;
 }
 
 *,
@@ -67,6 +73,12 @@ body {
   --color-warning-bg: #3b2f1a;
   --color-warning-border: #d97706;
   --color-warning-text: #fbbf24;
+  --color-trust-verified: #34d399;
+  --color-trust-verified-bg: #064e3b;
+  --color-trust-curated: #38bdf8;
+  --color-trust-curated-bg: #0c4a6e;
+  --color-trust-generated: #9ca3af;
+  --color-trust-generated-bg: #1f2937;
 }
 
 .visually-hidden {

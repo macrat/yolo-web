@@ -12,4 +12,5 @@ export const meta: ToolMeta = {
   relatedSlugs: ["char-count", "json-formatter"],
   publishedAt: "2026-02-13",
   structuredDataType: "WebApplication",
+  trustLevel: "verified",
 };

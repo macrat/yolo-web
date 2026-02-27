@@ -18,4 +18,5 @@ export const meta: ToolMeta = {
   relatedSlugs: ["url-encode", "base64", "markdown-preview"],
   publishedAt: "2026-02-14",
   structuredDataType: "WebApplication",
+  trustLevel: "verified",
 };

@@ -29,4 +29,5 @@ export const meta: CheatsheetMeta = {
     { id: "aliases", title: "よく使うエイリアス設定例" },
   ],
   publishedAt: "2026-02-19",
+  trustLevel: "curated",
 };

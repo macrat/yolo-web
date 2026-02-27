@@ -1,3 +1,5 @@
+import type { TrustLevel } from "@/lib/trust-levels";
+
 export type ToolCategory =
   | "text"
   | "encoding"
@@ -16,6 +18,7 @@ export interface ToolMeta {
   relatedSlugs: string[]; // slugs of related tools
   publishedAt: string; // ISO date
   structuredDataType?: string; // JSON-LD @type (e.g., "WebApplication")
+  trustLevel: TrustLevel;
 }
 
 export interface ToolDefinition {

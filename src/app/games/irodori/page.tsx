@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Breadcrumb from "@/components/common/Breadcrumb";
+import TrustLevelBadge from "@/components/common/TrustLevelBadge";
 import { generateGameJsonLd } from "@/lib/seo";
+import { gameBySlug } from "@/games/registry";
 import GameContainer from "@/games/irodori/_components/GameContainer";
 import styles from "./page.module.css";
 
@@ -46,6 +48,8 @@ const gameJsonLd = generateGameJsonLd({
   numberOfPlayers: "1",
 });
 
+const gameMeta = gameBySlug.get("irodori")!;
+
 export default function IrodoriPage() {
   return (
     <div className={styles.wrapper}>
@@ -60,6 +64,7 @@ export default function IrodoriPage() {
           { label: "\u30A4\u30ED\u30C9\u30EA" },
         ]}
       />
+      <TrustLevelBadge level={gameMeta.trustLevel} note={gameMeta.trustNote} />
       <GameContainer />
     </div>
   );

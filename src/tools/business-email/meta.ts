@@ -19,4 +19,5 @@ export const meta: ToolMeta = {
   relatedSlugs: ["keigo-reference", "char-count", "text-replace"],
   publishedAt: "2026-02-21",
   structuredDataType: "WebApplication",
+  trustLevel: "curated",
 };

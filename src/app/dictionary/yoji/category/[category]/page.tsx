@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Breadcrumb from "@/components/common/Breadcrumb";
+import TrustLevelBadge from "@/components/common/TrustLevelBadge";
 import CategoryNav from "@/dictionary/_components/CategoryNav";
 import DictionaryCard from "@/dictionary/_components/DictionaryCard";
 import DictionaryGrid from "@/dictionary/_components/DictionaryGrid";
@@ -61,6 +62,7 @@ export default async function YojiCategoryPage({
           { label: `${categoryLabel}の四字熟語` },
         ]}
       />
+      <TrustLevelBadge level="curated" />
       <h1 className={styles.title}>{categoryLabel}の四字熟語</h1>
       <p className={styles.count}>{yojiList.length}語収録</p>
 

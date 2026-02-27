@@ -18,4 +18,5 @@ export const meta: ToolMeta = {
   relatedSlugs: ["json-formatter", "regex-tester", "markdown-preview"],
   publishedAt: "2026-02-14",
   structuredDataType: "WebApplication",
+  trustLevel: "verified",
 };

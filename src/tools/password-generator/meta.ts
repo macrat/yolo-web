@@ -18,4 +18,5 @@ export const meta: ToolMeta = {
   relatedSlugs: ["hash-generator", "qr-code", "email-validator"],
   publishedAt: "2026-02-13",
   structuredDataType: "WebApplication",
+  trustLevel: "verified",
 };
