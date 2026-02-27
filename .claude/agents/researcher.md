@@ -1,8 +1,8 @@
 ---
 name: researcher
-description: Provides accurate and relevant information through research. Use for codebase audits, technology research, and information gathering.
+description: Provides accurate and relevant information through research. Use for codebase audits, technology research, and information gathering. To ensure the highest quality results, launch one agent per topic.
 tools: Read, Glob, Grep, Bash, WebFetch, WebSearch
-model: inherit
+model: sonnet
 permissionMode: bypassPermissions
 ---
 
