@@ -11,17 +11,51 @@ completed_at: null
 
 ## 実施する作業
 
-- [ ] irodori-kanji 記事の品質向上
-- [ ] quiz-diagnosis 記事の品質向上
-- [ ] business-email-keigo 記事の品質向上
+- [x] irodori-kanji 記事の品質向上（計画: 19c9e6e9d56）
+  - [x] AI免責表示を新標準形に更新
+  - [x] 「この記事で分かること」リスト追加（h2見出し形式、5項目）
+  - [x] 一人称「私たち」を4箇所追加
+  - [x] 外部リンク5件追加（色差Wikipedia、Lab色空間Wikipedia、HSL MDN、Canvas API MDN、学年別漢字配当表Wikipedia）
+  - [x] サイト内導線5件追加（デイリーゲームガイド、伝統色辞典記事、ゲーム基盤記事、ゲーム一覧、クイズ一覧）
+  - [x] frontmatter series: building-yolos 追加
+  - [x] 「今後の展望」セクション追加（3項目）
+  - [x] backlog B-134（漢字辞典の対象漢字拡充）追加
+  - [x] 内部用語「サイクル14」「irodori-schedule.json」削除
+  - [x] updated_at更新
+- [x] quiz-diagnosis 記事の品質向上（計画: 19c9e6dd1b0）
+  - [x] AI免責表示を新標準形に更新
+  - [x] 「この記事で分かること」リスト追加（h2見出し形式、5項目）
+  - [x] 一人称「私たち」を4箇所追加
+  - [x] 外部リンク3件追加（OGP公式、Next.js OGP画像生成、TypeScript公式）
+  - [x] サイト内導線3件追加（ゲーム基盤記事、四字熟語クイズ、ことわざクイズ）-- 後続クイズ導線は「まとめ」に配置（レビューフィードバック反映）
+  - [x] frontmatter series: building-yolos 追加、tags「設計パターン」追加（計4個）
+  - [x] updated_at更新
+- [x] business-email-keigo 記事の品質向上（計画: 19c9e6dd607）
+  - [x] AI免責表示を新標準形に更新
+  - [x] 「この記事で分かること」リスト追加（h2見出し形式、5項目）
+  - [x] 一人称「私たち」を3箇所追加（計4箇所）
+  - [x] 外部リンク2件追加（形態素解析Wikipedia、kuromoji.js GitHub）
+  - [x] サイト内導線2件追加（/tools、tools-expansion記事）
+  - [x] frontmatter series: building-yolos 追加（レビューフィードバック反映）
+  - [x] updated_at更新
 
 ## レビュー結果
 
-（作業後に記載）
+### 計画レビュー（レビューメモ: 19c9ec51560）
+
+- irodori-kanji: 条件付き承認（AI免責表示の統一、内部ファイル名削除）
+- quiz-diagnosis: 条件付き承認（AI免責表示の統一、E-2導線配置を「まとめ」に変更）
+- business-email: 条件付き承認（AI免責表示の統一、series追加）
+
+### 成果物レビュー（レビューメモ: 19c9ed0d9c3）
+
+- irodori-kanji: 承認
+- quiz-diagnosis: 承認
+- business-email: 承認
 
 ## キャリーオーバー
 
-（サイクル完了時に記載）
+なし
 
 ## 補足事項
 
