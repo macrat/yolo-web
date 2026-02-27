@@ -37,6 +37,8 @@ export function markMemo(id: string, newState: MemoState): void {
 
   if (oldState === newState) {
     console.log(`${id}: ${oldState} -> ${newState}`);
+    process.stdout.write("\n");
+    process.stdout.write(fs.readFileSync(memo.filePath, "utf-8"));
     return;
   }
 
@@ -53,4 +55,6 @@ export function markMemo(id: string, newState: MemoState): void {
   fs.renameSync(memo.filePath, newFilePath);
 
   console.log(`${id}: ${oldState} -> ${newState}`);
+  process.stdout.write("\n");
+  process.stdout.write(fs.readFileSync(newFilePath, "utf-8"));
 }
