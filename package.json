@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "prebuild": "tsx scripts/build-memo-index.ts",
+    "predev": "tsx scripts/build-memo-index.ts",
+    "pretest": "tsx scripts/build-memo-index.ts",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

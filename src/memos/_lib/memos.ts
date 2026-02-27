@@ -1,6 +1,19 @@
+/**
+ * Memo data access layer for the Next.js application.
+ *
+ * Instead of scanning the filesystem at build time (which caused Turbopack
+ * to trace 12,000+ files and emit broad-pattern warnings), this module reads
+ * a pre-built JSON index at .generated/memo-index.json.
+ *
+ * The index is created by scripts/build-memo-index.ts and executed
+ * automatically via npm lifecycle hooks (prebuild / predev / pretest).
+ *
+ * The JSON stores raw from/to role strings; normalizeRole() is applied here
+ * at runtime so that the normalization logic stays in one place.
+ */
+
 import fs from "node:fs";
 import path from "node:path";
-import { parseFrontmatter, markdownToHtml } from "@/lib/markdown";
 import type { RoleSlug, PublicMemo } from "@/memos/_lib/memos-shared";
 import { ROLE_DISPLAY } from "@/memos/_lib/memos-shared";
 
@@ -14,18 +27,12 @@ export type {
 
 const KNOWN_ROLE_SLUGS: RoleSlug[] = Object.keys(ROLE_DISPLAY) as RoleSlug[];
 
-interface MemoFrontmatter {
-  id: string;
-  subject: string;
-  from: string;
-  to: string;
-  created_at: string;
-  tags: string[];
-  reply_to: string | null;
-}
+// ---------------------------------------------------------------------------
+// JSON index types
+// ---------------------------------------------------------------------------
 
-/** Internal representation before thread computation */
-interface RawMemo {
+/** Shape of each entry in .generated/memo-index.json (raw, before normalizeRole) */
+interface MemoIndexEntry {
   id: string;
   subject: string;
   from: string;
@@ -34,9 +41,40 @@ interface RawMemo {
   tags: string[];
   reply_to: string | null;
   contentHtml: string;
+  threadRootId: string;
+  replyCount: number;
 }
 
-const MEMO_ROOT = path.join(process.cwd(), "memo");
+interface MemoIndex {
+  memos: MemoIndexEntry[];
+  generatedAt: string;
+}
+
+// ---------------------------------------------------------------------------
+// Index loading  -- static path literal so Turbopack traces only one file
+// ---------------------------------------------------------------------------
+
+/**
+ * Read the pre-built memo index.
+ *
+ * Uses fs.readFileSync with a fully static path (process.cwd() + literal
+ * string) so that Turbopack can resolve it to a single file without
+ * pattern expansion.  The result is cached for the lifetime of the process
+ * (one build or one dev-server boot).
+ */
+let _cachedIndex: MemoIndex | null = null;
+function loadIndex(): MemoIndex {
+  if (_cachedIndex !== null) return _cachedIndex;
+
+  const indexPath = path.join(process.cwd(), ".generated", "memo-index.json");
+  const raw = fs.readFileSync(indexPath, "utf-8");
+  _cachedIndex = JSON.parse(raw) as MemoIndex;
+  return _cachedIndex;
+}
+
+// ---------------------------------------------------------------------------
+// normalizeRole  -- pure function, no fs dependency
+// ---------------------------------------------------------------------------
 
 /** Normalize a role string to a known RoleSlug if possible, otherwise return as-is. */
 export function normalizeRole(role: string): string {
@@ -53,148 +91,38 @@ export function normalizeRole(role: string): string {
   return map[role.toLowerCase()] || role;
 }
 
-/**
- * Scan all memo/{role}/{inbox,active,archive}/ directories for memos.
- * All memos are included (public filter and secret detection removed).
- */
-function scanAllMemos(): RawMemo[] {
-  const memos: RawMemo[] = [];
-  const SUBDIRS = ["inbox", "active", "archive"];
+// ---------------------------------------------------------------------------
+// Cached public memos (with normalizeRole applied)
+// ---------------------------------------------------------------------------
 
-  // Dynamically discover partitions under memo/ directory
-  if (!fs.existsSync(MEMO_ROOT)) return memos;
-  const partitions = fs.readdirSync(MEMO_ROOT).filter((entry) => {
-    const entryPath = path.join(MEMO_ROOT, entry);
-    return fs.statSync(entryPath).isDirectory();
-  });
+let _cachedPublicMemos: PublicMemo[] | null = null;
+function getPublicMemosFromIndex(): PublicMemo[] {
+  if (_cachedPublicMemos !== null) return _cachedPublicMemos;
 
-  for (const partition of partitions) {
-    for (const subdir of SUBDIRS) {
-      const dir = path.join(MEMO_ROOT, partition, subdir);
-      if (!fs.existsSync(dir)) continue;
+  const index = loadIndex();
+  _cachedPublicMemos = index.memos.map((m) => ({
+    id: m.id,
+    subject: m.subject,
+    from: normalizeRole(m.from),
+    to: normalizeRole(m.to),
+    created_at: m.created_at,
+    tags: m.tags,
+    reply_to: m.reply_to,
+    contentHtml: m.contentHtml,
+    threadRootId: m.threadRootId,
+    replyCount: m.replyCount,
+  }));
 
-      const files = fs.readdirSync(dir).filter((f) => f.endsWith(".md"));
-
-      for (const file of files) {
-        const filePath = path.join(dir, file);
-        const raw = fs.readFileSync(filePath, "utf-8");
-        const { data, content } = parseFrontmatter<MemoFrontmatter>(raw);
-
-        memos.push({
-          id: String(data.id || ""),
-          subject: String(data.subject || ""),
-          from: String(data.from || ""),
-          to: String(data.to || ""),
-          created_at: String(data.created_at || ""),
-          tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
-          reply_to:
-            data.reply_to === null || data.reply_to === undefined
-              ? null
-              : String(data.reply_to),
-          contentHtml: markdownToHtml(content),
-        });
-      }
-    }
-  }
-
-  // Sort by created_at descending
-  memos.sort(
-    (a, b) =>
-      new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
-  );
-
-  return memos;
+  return _cachedPublicMemos;
 }
 
-// Cache the scan results for the build
-let _cachedMemos: RawMemo[] | null = null;
-function getCachedMemos(): RawMemo[] {
-  if (_cachedMemos === null) {
-    _cachedMemos = scanAllMemos();
-  }
-  return _cachedMemos;
-}
-
-/**
- * Find the thread root ID for a given memo.
- * If the root memo is not found, use the earliest memo in the chain.
- * If reply_to references a non-existent memo, treat current memo as root.
- */
-function findThreadRootId(memoId: string, allMemos: RawMemo[]): string {
-  const memoMap = new Map<string, RawMemo>();
-  for (const m of allMemos) {
-    memoMap.set(m.id, m);
-  }
-
-  // Walk up the reply chain
-  let currentId = memoId;
-  const visited = new Set<string>();
-
-  while (true) {
-    if (visited.has(currentId)) break; // Cycle protection
-    visited.add(currentId);
-
-    const memo = memoMap.get(currentId);
-    if (!memo) break; // Non-existent memo: stop here
-    if (!memo.reply_to) break; // Found root
-
-    currentId = memo.reply_to;
-  }
-
-  // Check if the root is in our set
-  if (memoMap.has(currentId)) {
-    return currentId;
-  }
-
-  // Root not found -- use the earliest memo we can trace back to
-  let earliestId = memoId;
-  let earliestTime = Infinity;
-
-  for (const visitedId of visited) {
-    if (memoMap.has(visitedId)) {
-      const m = memoMap.get(visitedId)!;
-      const time = new Date(m.created_at).getTime();
-      if (time < earliestTime) {
-        earliestTime = time;
-        earliestId = visitedId;
-      }
-    }
-  }
-
-  return earliestId;
-}
+// ---------------------------------------------------------------------------
+// Public API  -- same signatures as before
+// ---------------------------------------------------------------------------
 
 /** Get all memos with thread information. */
 export function getAllPublicMemos(): PublicMemo[] {
-  const rawMemos = getCachedMemos();
-
-  // Build thread root map and reply counts
-  const threadRootMap = new Map<string, string>();
-  for (const m of rawMemos) {
-    threadRootMap.set(m.id, findThreadRootId(m.id, rawMemos));
-  }
-
-  // Count replies per thread root
-  const replyCountMap = new Map<string, number>();
-  for (const [, rootId] of threadRootMap) {
-    replyCountMap.set(rootId, (replyCountMap.get(rootId) || 0) + 1);
-  }
-
-  return rawMemos.map((m) => {
-    const threadRootId = threadRootMap.get(m.id) || m.id;
-    return {
-      id: m.id,
-      subject: m.subject,
-      from: normalizeRole(m.from),
-      to: normalizeRole(m.to),
-      created_at: m.created_at,
-      tags: m.tags,
-      reply_to: m.reply_to,
-      contentHtml: m.contentHtml,
-      threadRootId,
-      replyCount: replyCountMap.get(threadRootId) || 1,
-    };
-  });
+  return getPublicMemosFromIndex();
 }
 
 /** Get a single memo by ID. */

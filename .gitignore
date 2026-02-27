@@ -24,6 +24,9 @@ yarn-error.log*
 # env files
 .env*.local
 
+# generated build artifacts
+.generated/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

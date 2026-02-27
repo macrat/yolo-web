@@ -2,9 +2,8 @@
 
 ## Active (進行中)
 
-| ID    | Title                                           | Priority | Status | Assigned Role | Origin Memo | Target Cycle | Notes                                                                              |
-| ----- | ----------------------------------------------- | -------- | ------ | ------------- | ----------- | ------------ | ---------------------------------------------------------------------------------- |
-| B-097 | ブログ記事品質向上（リリース・その他 第1弾3本） | P2       | active | builder       | 19c8e142237 | 40           | web-developer-tools, site-rename, rss-feed。11本中3本目まで。残8本は次サイクル以降 |
+| ID  | Title | Priority | Status | Assigned Role | Origin Memo | Target Cycle | Notes |
+| --- | ----- | -------- | ------ | ------------- | ----------- | ------------ | ----- |
 
 ## Queued (未着手)
 
@@ -35,6 +34,7 @@
 | B-123 | フィーチャーディレクトリのfeatures/集約（将来検討）                   | P4       | queued | -             | -           | -            | src/直下のフィーチャーディレクトリ数が20を超えた段階で、features/配下への集約（パターンB）を検討する。現時点では約7個なので対応不要。出典: nextjs-directory-architecture記事の今後の展望                                                                                                                                                                                                                                                                      |
 | B-120 | ブログ一覧ページへのシリーズフィルタ追加                              | P3       | queued | -             | -           | -            | ブログ一覧ページでシリーズごとに記事をフィルタリングできる機能を追加する。出典: series-navigation-ui記事の今後の展望                                                                                                                                                                                                                                                                                                                                          |
 | B-121 | パンくずリストへのシリーズ情報追加                                    | P4       | queued | -             | -           | -            | ブログ記事のパンくずリストにシリーズ名を表示し、シリーズ内の位置づけをより明確にする。出典: series-navigation-ui記事の今後の展望                                                                                                                                                                                                                                                                                                                              |
+| B-126 | Markdownのadmonition/directive記法（:::note等）対応                   | P3       | queued | -             | -           | -            | ブログやツール説明でnote/warning/tip等の追記ボックスを使えるようにする。remark-directiveプラグインの導入を検討。cycle-40でweb-developer-tools記事の追記ボックスに必要性が判明                                                                                                                                                                                                                                                                                 |
 
 ## Deferred (延期)
 
@@ -57,6 +57,7 @@
 | B-089 | ことわざ・慣用句クイズの追加                                            | 37              | 19c8acabd33 | 全10問（ことわざ8+慣用句2）、5段階結果、解説付き。レジストリパターンで3ファイル変更のみ。131テスト1543パス。レビューCritical1件（漢字誤り）修正後Approve                                       |
 | B-119 | プロジェクトのディレクトリ構造全面リファクタリング                      | 36              | 19c9385e4fd | 6パターン比較→ハイブリッド型選定→9フェーズ段階的移行。230ファイル移動、AP修正5件、131テスト1535パス、2572ページビルド成功。ADR・新フィーチャーガイド・ブログ記事作成。全レビューApprove        |
 | B-098 | ブログシリーズナビゲーションUIの実装                                    | 35              | 19c8e142237 | SeriesNavコンポーネント（details/summary折りたたみ式）。getSeriesPosts関数、20テスト、14記事手動ナビ削除、blog-writing.md更新。全タスクApprove                                                 |
+| B-097 | ブログ記事品質向上（リリース・その他 第1弾3本）                         | 40              | 19c8e142237 | web-developer-tools, site-rename, rss-feed。品質向上+Turbopack prebuildインデックス導入。全レビューApprove                                                                                     |
 | B-095 | ブログ記事品質向上（AI運用記連載 5本）                                  | 35              | 19c8e142237 | five-failures, spawner, workflow-evolution, workflow-simplification, workflow-skill-based。「分かること」リスト追加、外部リンク追加、Mermaid図追加、ターゲットユーザー文脈説明。全5記事Approve |
 | B-118 | pre-commit hookによるlint・型チェックの自動実行                         | 34              | 19c9385e4fd | install-hooks.sh v3。eslint(ステージファイルのみ)+tsc --noEmit(全体)+memo-lint exit 1追加。core.quotePath=false反映、-z/-0パターン採用。レビューApprove                                        |
 | B-094 | ブログ記事品質向上（ツールガイド連載 残4本）                            | 34              | 19c8e142237 | regex-tester, cron-parser, hash-generator, unit-converterの4記事全面リライト。連載ナビ統一、外部リンク追加、ReDoS対策言及等。全4記事レビューApprove                                            |
