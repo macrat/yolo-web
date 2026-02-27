@@ -24,6 +24,7 @@ beforeEach(() => {
   savedClaudeCode = process.env.CLAUDECODE;
   delete process.env.CLAUDECODE;
   vi.spyOn(console, "log").mockImplementation(() => {});
+  vi.spyOn(process.stdout, "write").mockImplementation(() => true);
 });
 
 afterEach(() => {
@@ -74,6 +75,11 @@ describe("markMemo", () => {
 
     const logSpy = vi.mocked(console.log);
     expect(logSpy.mock.calls[0][0]).toBe("id1: inbox -> active");
+
+    const writeSpy = vi.mocked(process.stdout.write);
+    const output = writeSpy.mock.calls.map((c) => c[0]).join("");
+    expect(output).toContain('id: "id1"');
+    expect(output).toContain("## Body");
   });
 
   test("moves memo from inbox to archive", () => {
@@ -86,6 +92,11 @@ describe("markMemo", () => {
 
     const logSpy = vi.mocked(console.log);
     expect(logSpy.mock.calls[0][0]).toBe("id2: inbox -> archive");
+
+    const writeSpy = vi.mocked(process.stdout.write);
+    const output = writeSpy.mock.calls.map((c) => c[0]).join("");
+    expect(output).toContain('id: "id2"');
+    expect(output).toContain("## Body");
   });
 
   test("moves memo from active to inbox", () => {
@@ -98,6 +109,11 @@ describe("markMemo", () => {
 
     const logSpy = vi.mocked(console.log);
     expect(logSpy.mock.calls[0][0]).toBe("id3: active -> inbox");
+
+    const writeSpy = vi.mocked(process.stdout.write);
+    const output = writeSpy.mock.calls.map((c) => c[0]).join("");
+    expect(output).toContain('id: "id3"');
+    expect(output).toContain("## Body");
   });
 
   test("same state does nothing and prints status", () => {
@@ -110,6 +126,11 @@ describe("markMemo", () => {
 
     const logSpy = vi.mocked(console.log);
     expect(logSpy.mock.calls[0][0]).toBe("id4: inbox -> inbox");
+
+    const writeSpy = vi.mocked(process.stdout.write);
+    const output = writeSpy.mock.calls.map((c) => c[0]).join("");
+    expect(output).toContain('id: "id4"');
+    expect(output).toContain("## Body");
   });
 
   test("throws error for non-existent ID", () => {
@@ -139,6 +160,11 @@ describe("markMemo", () => {
     // Should have created the directory and moved the file
     const newPath = path.join(archiveDir, "id6-test-memo.md");
     expect(fs.existsSync(newPath)).toBe(true);
+
+    const writeSpy = vi.mocked(process.stdout.write);
+    const output = writeSpy.mock.calls.map((c) => c[0]).join("");
+    expect(output).toContain('id: "id6"');
+    expect(output).toContain("## Body");
   });
 
   describe("agent mode (CLAUDECODE set)", () => {
@@ -158,6 +184,11 @@ describe("markMemo", () => {
         "id-agent1-test-memo.md",
       );
       expect(fs.existsSync(newPath)).toBe(true);
+
+      const writeSpy = vi.mocked(process.stdout.write);
+      const output = writeSpy.mock.calls.map((c) => c[0]).join("");
+      expect(output).toContain('id: "id-agent1"');
+      expect(output).toContain("## Body");
     });
 
     test("prohibits marking memos in owner directory", () => {
@@ -190,6 +221,11 @@ describe("markMemo", () => {
         "id-own1-test-memo.md",
       );
       expect(fs.existsSync(newPath)).toBe(true);
+
+      const writeSpy = vi.mocked(process.stdout.write);
+      const output = writeSpy.mock.calls.map((c) => c[0]).join("");
+      expect(output).toContain('id: "id-own1"');
+      expect(output).toContain("## Body");
     });
 
     test("allows marking memos in owner directory", () => {
@@ -204,6 +240,11 @@ describe("markMemo", () => {
         "id-own2-test-memo.md",
       );
       expect(fs.existsSync(newPath)).toBe(true);
+
+      const writeSpy = vi.mocked(process.stdout.write);
+      const output = writeSpy.mock.calls.map((c) => c[0]).join("");
+      expect(output).toContain('id: "id-own2"');
+      expect(output).toContain("## Body");
     });
   });
 });

@@ -1,5 +1,6 @@
 import type { CheatsheetMeta } from "@/cheatsheets/types";
 import Breadcrumb from "@/components/common/Breadcrumb";
+import FaqSection from "@/components/common/FaqSection";
 import ShareButtons from "@/components/common/ShareButtons";
 import TrustLevelBadge from "@/components/common/TrustLevelBadge";
 import TableOfContents from "./TableOfContents";
@@ -34,11 +35,42 @@ export default function CheatsheetLayout({
         <h1 className={styles.title}>{meta.name}</h1>
         <TrustLevelBadge level={meta.trustLevel} />
         <p className={styles.description}>{meta.description}</p>
+        {meta.valueProposition && (
+          <p className={styles.valueProposition}>{meta.valueProposition}</p>
+        )}
       </header>
       <TableOfContents sections={meta.sections} />
       <section className={styles.content} aria-label="Cheatsheet">
         {children}
       </section>
+      {meta.usageExample && (
+        <div className={styles.usageExample}>
+          <p className={styles.usageExampleHeading}>こんなときに使えます</p>
+          <div className={styles.usageExampleContent}>
+            <div className={styles.usageExampleBox}>
+              <span className={styles.usageExampleLabel}>シーン</span>
+              <span className={styles.usageExampleText}>
+                {meta.usageExample.input}
+              </span>
+            </div>
+            <span className={styles.usageExampleArrow} aria-hidden="true">
+              {"\u2192"}
+            </span>
+            <div className={styles.usageExampleBox}>
+              <span className={styles.usageExampleLabel}>得られる情報</span>
+              <span className={styles.usageExampleText}>
+                {meta.usageExample.output}
+              </span>
+            </div>
+          </div>
+          {meta.usageExample.description && (
+            <p className={styles.usageExampleDescription}>
+              {meta.usageExample.description}
+            </p>
+          )}
+        </div>
+      )}
+      <FaqSection faq={meta.faq} />
       <section className={styles.shareSection}>
         <h2 className={styles.shareSectionTitle}>
           {
