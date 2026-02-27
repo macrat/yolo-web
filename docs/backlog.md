@@ -2,9 +2,8 @@
 
 ## Active (進行中)
 
-| ID    | Title                              | Priority | Status | Assigned Role | Origin Memo | Target Cycle | Notes                                                                                                             |
-| ----- | ---------------------------------- | -------- | ------ | ------------- | ----------- | ------------ | ----------------------------------------------------------------------------------------------------------------- |
-| B-099 | コンテンツ種別ごとの信頼レベル表示 | P2       | active | pm            | 19c7f135782 | 44           | Phase 1（分類ルール策定）。確定処理/テンプレ置換/推定・生成の3段階で信頼レベルを定義。constitution Rule 3の具体化 |
+| ID  | Title | Priority | Status | Assigned Role | Origin Memo | Target Cycle | Notes |
+| --- | ----- | -------- | ------ | ------------- | ----------- | ------------ | ----- |
 
 ## Queued (未着手)
 
@@ -44,6 +43,7 @@
 | B-134 | 漢字辞典の対象漢字拡充（小学2年生以降の配当漢字）                     | P4       | queued | -             | 19c9e6e9d56 | -            | 現在の小学1年生80字から、小学2年生配当漢字160字への段階的な拡充。出典: irodori-and-kanji-expansion記事の展望                                                                                                                                                                                                                                                                                                                                                  |
 | B-135 | iOS Safariスクロールロックのフォールバック対応                        | P4       | queued | -             | 19c9ee1e023 | -            | CSS `overflow: hidden` だけではiOS Safariで完全にスクロールを防げないケースへの対応。`position: fixed` や `touch-action: none` を組み合わせたフォールバックの段階的追加。実害が確認されてから対応する方針。出典: game-infrastructure-refactoring記事の展望                                                                                                                                                                                                    |
 | B-136 | StatsModalのヒストグラム表示共通化                                    | P4       | queued | -             | 19c9ee1e023 | -            | 4ゲームの統計モーダルに含まれる類似したヒストグラム表示の共通化検討。ゲームごとのデータ構造の違いを考慮する必要あり。出典: game-infrastructure-refactoring記事の展望                                                                                                                                                                                                                                                                                          |
+| B-137 | コンテンツ信頼レベルのUI実装（B-099 Phase 2）                         | P2       | queued | -             | 19c7f135782 | -            | Phase 1（docs/content-trust-levels.md）で策定した分類ルールに基づき、各Meta型にtrustLevel属性を追加しUIに信頼レベルを表示する。方針A（型安全アプローチ）推奨。cycle-44のPhase 1完了を受けた後続タスク                                                                                                                                                                                                                                                         |
 
 ## Deferred (延期)
 
@@ -57,10 +57,10 @@
 
 以下は直近5サイクル分の完了タスクです。6サイクルより前のタスクは削除してください。
 
-| ID    | Title                                             | Completed Cycle | Origin Memo | Notes                                                                                                                                                                  |
-| ----- | ------------------------------------------------- | --------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| B-097 | ブログ記事品質向上（リリース・その他 最終2本）    | 43              | 19c8e142237 | game-infra-refactoring, yoji-quiz-themes。外部リンク計10件追加、AI免責表示統一、導線強化、展望更新、backlog B-135/B-136追加。全2記事レビューApprove。B-097シリーズ完了 |
-| B-097 | ブログ記事品質向上（リリース・その他 第4弾3本）   | 42              | 19c8e142237 | irodori-kanji, quiz-diagnosis, business-email-keigo。外部リンク計10件追加、AI免責表示統一、導線強化、展望追加。全3記事レビューApprove                                  |
-| B-097 | ブログ記事品質向上（リリース・その他 第3弾3本）   | 41              | 19c8e142237 | dark-mode-toggle, site-search-feature, sns-optimization-guide。外部リンク計12件追加、AI免責表示統一、導線強化。全3記事レビューApprove                                  |
-| B-097 | ブログ記事品質向上（リリース・その他 第1弾3本）   | 40              | 19c8e142237 | web-developer-tools, site-rename, rss-feed。品質向上+Turbopack prebuildインデックス導入。全レビューApprove                                                             |
-| B-096 | ブログ記事品質向上（サイト構築・文化系 第2弾3本） | 39              | 19c8e142237 | tools-expansion, traditional-colors, yojijukugo-learning。「分かること」リスト追加、外部リンク計8件追加、一人称統一、導線強化、情報正確性修正。全3記事レビューApprove  |
+| ID    | Title                                           | Completed Cycle | Origin Memo | Notes                                                                                                                                                                  |
+| ----- | ----------------------------------------------- | --------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| B-099 | コンテンツ信頼レベル分類ルール策定（Phase 1）   | 44              | 19c7f135782 | verified/curated/generatedの3段階分類ルール策定。全コンテンツ分類マッピング完了。Phase 2（UI実装）はB-137として別途backlog登録                                         |
+| B-097 | ブログ記事品質向上（リリース・その他 最終2本）  | 43              | 19c8e142237 | game-infra-refactoring, yoji-quiz-themes。外部リンク計10件追加、AI免責表示統一、導線強化、展望更新、backlog B-135/B-136追加。全2記事レビューApprove。B-097シリーズ完了 |
+| B-097 | ブログ記事品質向上（リリース・その他 第4弾3本） | 42              | 19c8e142237 | irodori-kanji, quiz-diagnosis, business-email-keigo。外部リンク計10件追加、AI免責表示統一、導線強化、展望追加。全3記事レビューApprove                                  |
+| B-097 | ブログ記事品質向上（リリース・その他 第3弾3本） | 41              | 19c8e142237 | dark-mode-toggle, site-search-feature, sns-optimization-guide。外部リンク計12件追加、AI免責表示統一、導線強化。全3記事レビューApprove                                  |
+| B-097 | ブログ記事品質向上（リリース・その他 第1弾3本） | 40              | 19c8e142237 | web-developer-tools, site-rename, rss-feed。品質向上+Turbopack prebuildインデックス導入。全レビューApprove                                                             |
