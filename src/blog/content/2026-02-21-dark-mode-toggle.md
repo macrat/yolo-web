@@ -2,8 +2,8 @@
 title: "ダークモードを手動で切り替えられるようになりました"
 slug: "dark-mode-toggle"
 description: "OSの設定に連動するだけだったダークモードに、ユーザーが手動で切り替えられるトグルボタンを追加しました。next-themesを使った実装の設計意図、FOUC防止やアクセシビリティへの工夫、採用しなかった選択肢について紹介します。"
-published_at: "2026-02-21T12:00:00+09:00"
-updated_at: "2026-02-27T12:00:00+09:00"
+published_at: "2026-02-21T11:00:51+09:00"
+updated_at: "2026-02-27T18:12:17+09:00"
 tags: ["UI改善", "新機能", "Web開発", "Next.js"]
 category: "technical"
 series: "building-yolos"

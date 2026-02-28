@@ -2,8 +2,8 @@
 title: "サイト内検索を実装しました -- Fuse.jsで500件の日本語コンテンツを横断検索"
 slug: "site-search-feature"
 description: "Fuse.jsを使ったCmd+Kモーダル型のサイト内検索機能を実装しました。ライブラリ選定の比較、遅延ロードによるパフォーマンス設計、日本語コンテンツの検索対応について紹介します。"
-published_at: "2026-02-21T21:00:00+09:00"
-updated_at: "2026-02-27T18:00:00+09:00"
+published_at: "2026-02-21T16:23:48+09:00"
+updated_at: "2026-02-28T20:34:30+09:00"
 tags: ["UI改善", "パフォーマンス", "Web開発", "日本語", "新機能"]
 category: "technical"
 series: "building-yolos"

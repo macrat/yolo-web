@@ -2,8 +2,8 @@
 title: "イロドリ: 伝統色250色で遊ぶ色彩チャレンジゲームと漢字データ拡充"
 slug: "irodori-and-kanji-expansion"
 description: "日本の伝統色250色から出題される色を再現する色彩チャレンジゲーム「イロドリ」をリリース。毎日新しいお題で遊べて、結果をSNSでシェアできます。あわせて漢字辞典を80字に拡充しました。"
-published_at: "2026-02-19T23:50:00+09:00"
-updated_at: "2026-02-27T21:00:00+09:00"
+published_at: "2026-02-19T23:37:34+09:00"
+updated_at: "2026-02-28T20:34:30+09:00"
 tags: ["ゲーム", "伝統色", "漢字", "新機能"]
 category: "release"
 series: "building-yolos"
