@@ -19,4 +19,28 @@ export const meta: ToolMeta = {
   publishedAt: "2026-02-14",
   structuredDataType: "WebApplication",
   trustLevel: "verified",
+  valueProposition:
+    "HTML特殊文字を貼り付けるだけでエスケープ・アンエスケープできる",
+  usageExample: {
+    input: '<div class="main">Hello & World</div>',
+    output: "&lt;div class=&quot;main&quot;&gt;Hello &amp; World&lt;/div&gt;",
+    description: "HTMLタグを含むテキストをエスケープする例",
+  },
+  faq: [
+    {
+      question: "どの文字がエスケープ対象ですか？",
+      answer:
+        "エスケープ対象はHTMLで特別な意味を持つ5文字です。&は&amp;、<は&lt;、>は&gt;、\"は&quot;、'は&#39;に変換されます。",
+    },
+    {
+      question: "デコード時に数値文字参照にも対応していますか？",
+      answer:
+        "はい。&#60;のような10進数参照と&#x3C;のような16進数参照の両方に対応しています。また&amp;や&copy;などの名前付きエンティティも主要なものをサポートしています。",
+    },
+    {
+      question: "XSS対策としてこのツールは使えますか？",
+      answer:
+        "このツールはHTMLエンティティの変換確認用です。実際のXSS対策にはサーバーサイドでのサニタイズ処理やフレームワークの自動エスケープ機能を利用してください。",
+    },
+  ],
 };

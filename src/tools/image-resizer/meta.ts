@@ -19,4 +19,27 @@ export const meta: ToolMeta = {
   publishedAt: "2026-02-14",
   structuredDataType: "WebApplication",
   trustLevel: "verified",
+  valueProposition: "画像をドロップするだけでリサイズ・形式変換ができる",
+  usageExample: {
+    input: "1920x1080のPNG画像 / 幅800px指定",
+    output: "800x450のPNG画像（アスペクト比維持）",
+    description: "フルHD画像を幅800pxにリサイズする例",
+  },
+  faq: [
+    {
+      question: "対応している画像形式と最大ファイルサイズは？",
+      answer:
+        "入力はPNG、JPEG、GIF、WebPに対応しており、最大20MBまでのファイルを処理できます。出力形式はPNG、JPEG、WebPから選択できます。",
+    },
+    {
+      question: "アスペクト比を維持したままリサイズできますか？",
+      answer:
+        "はい。アスペクト比ロック機能があり、幅または高さの一方を指定するともう一方が自動計算されます。ロックを解除すれば自由な比率でリサイズすることも可能です。",
+    },
+    {
+      question: "画像データはサーバーに送信されますか？",
+      answer:
+        "いいえ。すべての処理はブラウザ内で完結しており、画像データがサーバーに送信されることはありません。プライバシーを気にせず安心して利用できます。",
+    },
+  ],
 };

@@ -19,4 +19,27 @@ export const meta: ToolMeta = {
   publishedAt: "2026-02-14",
   structuredDataType: "WebApplication",
   trustLevel: "verified",
+  valueProposition: "カラーコードを入力するだけでHEX・RGB・HSLを一括変換できる",
+  usageExample: {
+    input: "#3498db",
+    output: "HEX: #3498db / RGB: rgb(52, 152, 219) / HSL: hsl(204, 70%, 53%)",
+    description: "HEXカラーコードからRGB・HSLに変換する例",
+  },
+  faq: [
+    {
+      question: "3桁の短縮HEXコードにも対応していますか？",
+      answer:
+        "はい。#RGBの3桁形式と#RRGGBBの6桁形式の両方に対応しています。3桁形式は自動的に6桁に展開して変換されます。",
+    },
+    {
+      question: "カラーピッカーから色を選んで変換できますか？",
+      answer:
+        "はい。テキスト入力のほかにカラーピッカーも用意しています。カラーピッカーで色を選ぶと、自動的にHEX・RGB・HSLの各値が表示されます。",
+    },
+    {
+      question: "RGBとHSLの値の範囲はどのくらいですか？",
+      answer:
+        "RGBは各チャンネルが0から255の整数値です。HSLはH（色相）が0から360度、S（彩度）とL（明度）がそれぞれ0から100%の範囲です。",
+    },
+  ],
 };

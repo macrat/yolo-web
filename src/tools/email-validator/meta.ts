@@ -19,4 +19,28 @@ export const meta: ToolMeta = {
   publishedAt: "2026-02-14",
   structuredDataType: "WebApplication",
   trustLevel: "verified",
+  valueProposition:
+    "メールアドレスを入力するだけで形式チェックとエラー検出ができる",
+  usageExample: {
+    input: "user@gmial.com",
+    output: "有効 / 候補: user@gmail.com",
+    description: "ドメインのタイプミスを検出して正しい候補を提案する例",
+  },
+  faq: [
+    {
+      question: "実際にメールが届くかどうかも確認できますか？",
+      answer:
+        "いいえ、このツールはメールアドレスの形式（構文）チェックのみ行います。メールサーバーへの到達確認や受信可否の検証は行いません。形式が正しくても実在しないアドレスの場合があります。",
+    },
+    {
+      question: "どのようなエラーを検出できますか？",
+      answer:
+        "ローカルパートやドメインの長さ超過、先頭・末尾のドット、連続ドット、使用不可文字、TLDの欠落など、RFC準拠のチェックを行います。また、gmailやyahooなどのよくあるドメインのタイプミスも検出します。",
+    },
+    {
+      question: "日本語のメールアドレスには対応していますか？",
+      answer:
+        "いいえ、国際化メールアドレス（日本語ドメインや日本語ローカルパート）には対応していません。ASCII文字で構成された標準的なメールアドレスの検証に対応しています。",
+    },
+  ],
 };

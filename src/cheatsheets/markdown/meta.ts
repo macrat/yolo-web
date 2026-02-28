@@ -32,4 +32,32 @@ export const meta: CheatsheetMeta = {
   ],
   publishedAt: "2026-02-19",
   trustLevel: "curated",
+  valueProposition:
+    "Markdown記法を構文と実例で網羅。書き方に迷ったらすぐ引ける",
+  usageExample: {
+    input: "Markdownで表やコードブロックを書きたいとき",
+    output:
+      "構文例とレンダリング結果を並べて確認でき、すぐに正しい書き方がわかる",
+    description:
+      "見出し・リスト・テーブル・コードブロックなど基本から応用まで網羅",
+  },
+  faq: [
+    {
+      question:
+        "このチートシートはGitHub Flavored Markdown（GFM）にも対応していますか？",
+      answer:
+        "はい。標準のMarkdown構文に加え、タスクリスト、絵文字ショートコード、脚注、アラート記法などGitHub Flavored Markdownの拡張もカバーしています。",
+    },
+    {
+      question:
+        "テーブルのセルを中央揃えや右寄せにするにはどうすればいいですか？",
+      answer:
+        "テーブルの区切り行でコロンの位置を変えることで配置を指定できます。左寄せは :---、中央揃えは :---:、右寄せは ---: と書きます。詳しくはテーブルのセクションを参照してください。",
+    },
+    {
+      question: "Markdownファイル内でHTMLタグを使うことはできますか？",
+      answer:
+        "はい。Markdownでは直接HTMLタグを記述できます。画像サイズの指定、テキストの色変更、折りたたみ（details要素）など、Markdown標準では表現できないレイアウトに活用できます。",
+    },
+  ],
 };
