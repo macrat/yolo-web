@@ -32,6 +32,7 @@ import { meta as cronParserMeta } from "./cron-parser/meta";
 import { meta as imageResizerMeta } from "./image-resizer/meta";
 import { meta as businessEmailMeta } from "./business-email/meta";
 import { meta as keigoReferenceMeta } from "./keigo-reference/meta";
+import { meta as traditionalColorPaletteMeta } from "./traditional-color-palette/meta";
 
 const toolEntries: ToolDefinition[] = [
   {
@@ -161,6 +162,10 @@ const toolEntries: ToolDefinition[] = [
   {
     meta: keigoReferenceMeta,
     componentImport: () => import("./keigo-reference/Component"),
+  },
+  {
+    meta: traditionalColorPaletteMeta,
+    componentImport: () => import("./traditional-color-palette/Component"),
   },
 ];
 
