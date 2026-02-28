@@ -38,7 +38,31 @@ const nextConfig: NextConfig = {
       },
     ];
 
-    return [...oldCategoryRedirects, ...paginationRedirects];
+    // Redirect old /colors URLs to /dictionary/colors (308 permanent)
+    // Migrated in cycle-50 (B-122): colors is now under the dictionary section
+    const colorsRedirects = [
+      {
+        source: "/colors",
+        destination: "/dictionary/colors",
+        permanent: true,
+      },
+      {
+        source: "/colors/category/:category",
+        destination: "/dictionary/colors/category/:category",
+        permanent: true,
+      },
+      {
+        source: "/colors/:slug",
+        destination: "/dictionary/colors/:slug",
+        permanent: true,
+      },
+    ];
+
+    return [
+      ...oldCategoryRedirects,
+      ...paginationRedirects,
+      ...colorsRedirects,
+    ];
   },
 };
 

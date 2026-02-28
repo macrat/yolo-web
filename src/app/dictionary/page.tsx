@@ -66,7 +66,7 @@ export default function DictionaryPage() {
           <p className={styles.sectionCount}>{yojiCount}語収録</p>
         </Link>
 
-        <Link href="/colors" className={styles.sectionCard}>
+        <Link href="/dictionary/colors" className={styles.sectionCard}>
           <span className={styles.sectionIcon}>色</span>
           <h2 className={styles.sectionTitle}>伝統色辞典</h2>
           <p className={styles.sectionDesc}>

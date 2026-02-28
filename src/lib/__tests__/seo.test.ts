@@ -188,7 +188,9 @@ describe("generateColorPageMetadata", () => {
     });
 
     expect(result.title).toContain("撫子");
-    expect(result.alternates?.canonical).toContain("/colors/nadeshiko");
+    expect(result.alternates?.canonical).toContain(
+      "/dictionary/colors/nadeshiko",
+    );
   });
 });
 
@@ -203,7 +205,7 @@ describe("generateColorJsonLd", () => {
     }) as Record<string, unknown>;
 
     expect(result["@type"]).toBe("DefinedTerm");
-    expect(result.url).toContain("/colors/nadeshiko");
+    expect(result.url).toContain("/dictionary/colors/nadeshiko");
     expect(result.inDefinedTermSet).toMatchObject({
       "@type": "DefinedTermSet",
       name: "日本の伝統色辞典",

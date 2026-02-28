@@ -18,7 +18,7 @@ export default function ColorCard({
 }: ColorCardProps) {
   return (
     <Link
-      href={`/colors/${slug}`}
+      href={`/dictionary/colors/${slug}`}
       className={styles.card}
       data-testid="color-card"
     >

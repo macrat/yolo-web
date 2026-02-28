@@ -43,7 +43,7 @@ export const STATIC_PAGE_TRUST_LEVELS: Record<string, TrustLevel> = {
 export const DICTIONARY_TRUST_LEVELS: Record<string, TrustLevel> = {
   "/dictionary/kanji": "curated",
   "/dictionary/yoji": "curated",
-  "/colors": "curated",
+  "/dictionary/colors": "curated",
 };
 
 /** メモアーカイブの信頼レベル */

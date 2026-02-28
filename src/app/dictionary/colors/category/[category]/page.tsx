@@ -50,7 +50,8 @@ export default async function ColorCategoryPage({
 
   const breadcrumbJsonLd = generateBreadcrumbJsonLd([
     { label: "ホーム", href: "/" },
-    { label: "伝統色", href: "/colors" },
+    { label: "辞典", href: "/dictionary" },
+    { label: "伝統色辞典", href: "/dictionary/colors" },
     { label: `${categoryLabel}の伝統色` },
   ]);
 
@@ -63,7 +64,8 @@ export default async function ColorCategoryPage({
       <Breadcrumb
         items={[
           { label: "ホーム", href: "/" },
-          { label: "伝統色", href: "/colors" },
+          { label: "辞典", href: "/dictionary" },
+          { label: "伝統色辞典", href: "/dictionary/colors" },
           { label: `${categoryLabel}の伝統色` },
         ]}
       />
@@ -73,10 +75,10 @@ export default async function ColorCategoryPage({
 
       <CategoryNav
         categories={allCategories}
-        basePath="/colors/category"
+        basePath="/dictionary/colors/category"
         activeCategory={category}
         allLabel="すべて"
-        allHref="/colors"
+        allHref="/dictionary/colors"
       />
 
       <DictionaryGrid wide>

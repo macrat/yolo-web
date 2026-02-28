@@ -7,12 +7,10 @@ import ThemeToggle from "./ThemeToggle";
 const NAV_LINKS = [
   { href: "/", label: "ホーム" },
   { href: "/tools", label: "ツール" },
-  { href: "/cheatsheets", label: "チートシート" },
   { href: "/games", label: "ゲーム" },
   { href: "/quiz", label: "クイズ" },
   { href: "/dictionary", label: "辞典" },
   { href: "/blog", label: "ブログ" },
-  { href: "/memos", label: "メモ" },
   { href: "/about", label: "About" },
 ] as const;
 

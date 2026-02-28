@@ -21,8 +21,8 @@ const traditionalColorQuiz: QuizDefinition = {
     ],
     publishedAt: "2026-02-19",
     relatedLinks: [
-      { label: "日本の伝統色一覧", href: "/colors" },
-      { label: "伝統色辞典", href: "/colors" },
+      { label: "日本の伝統色一覧", href: "/dictionary/colors" },
+      { label: "伝統色辞典", href: "/dictionary/colors" },
     ],
     trustLevel: "generated",
     trustNote:
@@ -247,7 +247,7 @@ const traditionalColorQuiz: QuizDefinition = {
       color: "#0d5661",
       icon: "\u{1F30A}",
       recommendation: "藍色の詳しい解説を見る",
-      recommendationLink: "/colors/ai",
+      recommendationLink: "/dictionary/colors/ai",
     },
     {
       id: "shu",
@@ -257,7 +257,7 @@ const traditionalColorQuiz: QuizDefinition = {
       color: "#ab3b3a",
       icon: "\u{1F525}",
       recommendation: "朱色の詳しい解説を見る",
-      recommendationLink: "/colors",
+      recommendationLink: "/dictionary/colors",
     },
     {
       id: "wakakusa",
@@ -267,7 +267,7 @@ const traditionalColorQuiz: QuizDefinition = {
       color: "#C3D825",
       icon: "\u{1F331}",
       recommendation: "日本の伝統色を探索する",
-      recommendationLink: "/colors",
+      recommendationLink: "/dictionary/colors",
     },
     {
       id: "fuji",
@@ -277,7 +277,7 @@ const traditionalColorQuiz: QuizDefinition = {
       color: "#8b81c3",
       icon: "\u{1F33A}",
       recommendation: "藤色の詳しい解説を見る",
-      recommendationLink: "/colors/fuji",
+      recommendationLink: "/dictionary/colors/fuji",
     },
     {
       id: "yamabuki",
@@ -287,7 +287,7 @@ const traditionalColorQuiz: QuizDefinition = {
       color: "#ffb11b",
       icon: "\u{2728}",
       recommendation: "山吹色の詳しい解説を見る",
-      recommendationLink: "/colors/yamabuki",
+      recommendationLink: "/dictionary/colors/yamabuki",
     },
     {
       id: "kon",
@@ -297,7 +297,7 @@ const traditionalColorQuiz: QuizDefinition = {
       color: "#0f2540",
       icon: "\u{1F319}",
       recommendation: "紺色の詳しい解説を見る",
-      recommendationLink: "/colors/kon",
+      recommendationLink: "/dictionary/colors/kon",
     },
     {
       id: "sakura",
@@ -307,7 +307,7 @@ const traditionalColorQuiz: QuizDefinition = {
       color: "#fedfe1",
       icon: "\u{1F338}",
       recommendation: "桜色の詳しい解説を見る",
-      recommendationLink: "/colors/sakura",
+      recommendationLink: "/dictionary/colors/sakura",
     },
     {
       id: "hisui",
@@ -317,7 +317,7 @@ const traditionalColorQuiz: QuizDefinition = {
       color: "#38B48B",
       icon: "\u{1F48E}",
       recommendation: "日本の伝統色を探索する",
-      recommendationLink: "/colors",
+      recommendationLink: "/dictionary/colors",
     },
   ],
 };

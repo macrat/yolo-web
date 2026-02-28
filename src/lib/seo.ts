@@ -334,11 +334,11 @@ export function generateColorPageMetadata(color: ColorMetaForSeo): Metadata {
       title: `${color.name}（${color.romaji}）${color.hex} - 日本の伝統色`,
       description: `日本の伝統色「${color.name}」（${color.romaji}）。カラーコード: ${color.hex}。`,
       type: "website",
-      url: `${BASE_URL}/colors/${color.slug}`,
+      url: `${BASE_URL}/dictionary/colors/${color.slug}`,
       siteName: SITE_NAME,
     },
     alternates: {
-      canonical: `${BASE_URL}/colors/${color.slug}`,
+      canonical: `${BASE_URL}/dictionary/colors/${color.slug}`,
     },
   };
 }
@@ -349,11 +349,11 @@ export function generateColorJsonLd(color: ColorMetaForSeo): object {
     "@type": "DefinedTerm",
     name: color.name,
     description: `${color.romaji}: ${color.hex}`,
-    url: `${BASE_URL}/colors/${color.slug}`,
+    url: `${BASE_URL}/dictionary/colors/${color.slug}`,
     inDefinedTermSet: {
       "@type": "DefinedTermSet",
       name: "日本の伝統色辞典",
-      url: `${BASE_URL}/colors`,
+      url: `${BASE_URL}/dictionary/colors`,
     },
     inLanguage: "ja",
   };
@@ -371,11 +371,11 @@ export function generateColorCategoryMetadata(
       title: `${label}の伝統色一覧 - 日本の伝統色`,
       description: `日本の伝統色「${label}」カテゴリの色一覧。`,
       type: "website",
-      url: `${BASE_URL}/colors/category/${category}`,
+      url: `${BASE_URL}/dictionary/colors/category/${category}`,
       siteName: SITE_NAME,
     },
     alternates: {
-      canonical: `${BASE_URL}/colors/category/${category}`,
+      canonical: `${BASE_URL}/dictionary/colors/category/${category}`,
     },
   };
 }

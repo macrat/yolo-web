@@ -9,6 +9,7 @@ import { getAllYojiIds, getYojiCategories } from "@/dictionary/_lib/yoji";
 import { getAllColorSlugs, getColorCategories } from "@/dictionary/_lib/colors";
 import { getAllQuizSlugs, getResultIdsForQuiz } from "@/quiz/registry";
 import { allGameMetas, getGamePath } from "@/games/registry";
+import { getAllCheatsheetSlugs } from "@/cheatsheets/registry";
 
 /**
  * Generate sitemap entries for pagination pages (page 2 and above).
@@ -173,19 +174,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.6,
     })),
     {
-      url: `${BASE_URL}/colors`,
+      url: `${BASE_URL}/dictionary/colors`,
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.8,
     },
     ...getAllColorSlugs().map((slug) => ({
-      url: `${BASE_URL}/colors/${slug}`,
+      url: `${BASE_URL}/dictionary/colors/${slug}`,
       lastModified: new Date(),
       changeFrequency: "monthly" as const,
       priority: 0.7,
     })),
     ...getColorCategories().map((cat) => ({
-      url: `${BASE_URL}/colors/category/${cat}`,
+      url: `${BASE_URL}/dictionary/colors/category/${cat}`,
       lastModified: new Date(),
       changeFrequency: "monthly" as const,
       priority: 0.6,
@@ -211,6 +212,26 @@ export default function sitemap(): MetadataRoute.Sitemap {
         priority: 0.6,
       })),
     ),
+    // Cheatsheet pages
+    {
+      url: `${BASE_URL}/cheatsheets`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    ...getAllCheatsheetSlugs().map((slug) => ({
+      url: `${BASE_URL}/cheatsheets/${slug}`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    })),
+    // Blog category pages (page 1)
+    ...ALL_CATEGORIES.map((category) => ({
+      url: `${BASE_URL}/blog/category/${category}`,
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.6,
+    })),
     ...toolPages,
     ...toolsPaginationPages,
     ...blogPosts,

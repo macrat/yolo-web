@@ -100,7 +100,7 @@ export default function ColorDetail({ color }: ColorDetailProps) {
       <section className={styles.section}>
         <h2>カテゴリ</h2>
         <Link
-          href={`/colors/category/${color.category}`}
+          href={`/dictionary/colors/category/${color.category}`}
           className={styles.categoryLink}
         >
           {categoryLabel}
@@ -121,7 +121,7 @@ export default function ColorDetail({ color }: ColorDetailProps) {
             {relatedColors.map((c) => (
               <Link
                 key={c.slug}
-                href={`/colors/${c.slug}`}
+                href={`/dictionary/colors/${c.slug}`}
                 className={styles.relatedLink}
               >
                 <span

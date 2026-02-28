@@ -39,11 +39,12 @@ export default async function ColorDetailPage({
       meta={COLOR_DICTIONARY_META}
       breadcrumbItems={[
         { label: "ホーム", href: "/" },
-        { label: "伝統色", href: "/colors" },
+        { label: "辞典", href: "/dictionary" },
+        { label: "伝統色辞典", href: "/dictionary/colors" },
         { label: color.name },
       ]}
       jsonLd={jsonLd}
-      shareUrl={`/colors/${color.slug}`}
+      shareUrl={`/dictionary/colors/${color.slug}`}
       shareTitle={`${color.name}（${color.romaji}）`}
     >
       <ColorDetail color={color} />

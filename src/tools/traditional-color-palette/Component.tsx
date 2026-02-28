@@ -102,7 +102,7 @@ export default function TraditionalColorPaletteTool() {
         />
         <div className={styles.paletteColorName}>
           <Link
-            href={`/colors/${color.slug}`}
+            href={`/dictionary/colors/${color.slug}`}
             className={styles.paletteColorNameLink}
           >
             {color.name}

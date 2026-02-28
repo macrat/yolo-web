@@ -43,12 +43,10 @@ describe("Header", () => {
     const expectedLinks = [
       { name: "ホーム", href: "/" },
       { name: "ツール", href: "/tools" },
-      { name: "チートシート", href: "/cheatsheets" },
       { name: "ゲーム", href: "/games" },
       { name: "クイズ", href: "/quiz" },
       { name: "辞典", href: "/dictionary" },
       { name: "ブログ", href: "/blog" },
-      { name: "メモ", href: "/memos" },
       { name: "About", href: "/about" },
     ];
     for (const { name, href } of expectedLinks) {
