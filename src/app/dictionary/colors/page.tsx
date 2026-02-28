@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Breadcrumb from "@/components/common/Breadcrumb";
 import TrustLevelBadge from "@/components/common/TrustLevelBadge";
 import CategoryNav from "@/dictionary/_components/CategoryNav";
-import { SITE_NAME } from "@/lib/constants";
+import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { getAllColors, getColorCategories } from "@/dictionary/_lib/colors";
 import { COLOR_CATEGORY_LABELS } from "@/dictionary/_lib/types";
 import { generateBreadcrumbJsonLd } from "@/lib/seo";
@@ -18,9 +18,10 @@ export const metadata: Metadata = {
     title: `日本の伝統色 - 250色一覧 | ${SITE_NAME}`,
     description: "日本の伝統色250色の一覧。カラーコードをカテゴリ別に検索。",
     type: "website",
+    url: `${BASE_URL}/dictionary/colors`,
   },
   alternates: {
-    canonical: "/colors",
+    canonical: `${BASE_URL}/dictionary/colors`,
   },
 };
 
@@ -33,7 +34,8 @@ export default function ColorsIndexPage() {
 
   const breadcrumbJsonLd = generateBreadcrumbJsonLd([
     { label: "ホーム", href: "/" },
-    { label: "伝統色" },
+    { label: "辞典", href: "/dictionary" },
+    { label: "伝統色辞典" },
   ]);
 
   return (
@@ -43,7 +45,11 @@ export default function ColorsIndexPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <Breadcrumb
-        items={[{ label: "ホーム", href: "/" }, { label: "伝統色" }]}
+        items={[
+          { label: "ホーム", href: "/" },
+          { label: "辞典", href: "/dictionary" },
+          { label: "伝統色辞典" },
+        ]}
       />
       <TrustLevelBadge level="curated" />
       <section className={styles.hero}>
@@ -55,9 +61,9 @@ export default function ColorsIndexPage() {
       </section>
       <CategoryNav
         categories={categories}
-        basePath="/colors/category"
+        basePath="/dictionary/colors/category"
         allLabel="すべて"
-        allHref="/colors"
+        allHref="/dictionary/colors"
       />
       <ColorsIndexClient allColors={allColors} />
     </>

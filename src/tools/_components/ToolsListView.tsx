@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { ToolMeta } from "@/tools/types";
 import ToolsGrid from "./ToolsGrid";
 import Pagination from "@/components/common/Pagination";
@@ -40,6 +41,12 @@ export default function ToolsListView({
         totalPages={totalPages}
         basePath="/tools"
       />
+      {/* ヘッダーナビからチートシートを除外した分の導線を補完 */}
+      <div className={styles.cheatsheetBanner}>
+        <Link href="/cheatsheets" className={styles.cheatsheetLink}>
+          正規表現・Git・Markdownなどのチートシートもチェック →
+        </Link>
+      </div>
     </div>
   );
 }

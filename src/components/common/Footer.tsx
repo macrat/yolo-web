@@ -19,17 +19,18 @@ export default function Footer({ gameLinks }: FooterProps) {
       links: [{ href: "/games", label: "ゲーム一覧" }, ...(gameLinks ?? [])],
     },
     {
-      heading: "コンテンツ",
+      heading: "辞典",
       links: [
-        { href: "/quiz", label: "クイズ・診断" },
-        { href: "/colors", label: "日本の伝統色" },
-        { href: "/dictionary", label: "辞書" },
+        { href: "/dictionary/kanji", label: "漢字辞典" },
+        { href: "/dictionary/yoji", label: "四字熟語辞典" },
+        { href: "/dictionary/colors", label: "伝統色辞典" },
       ],
     },
     {
       heading: "その他",
       links: [
         { href: "/blog", label: "ブログ" },
+        { href: "/quiz", label: "クイズ・診断" },
         { href: "/memos", label: "メモ" },
         { href: "/about", label: "このサイトについて" },
       ],

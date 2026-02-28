@@ -51,7 +51,7 @@ describe("DICTIONARY_TRUST_LEVELS", () => {
   test("includes expected paths", () => {
     expect(DICTIONARY_TRUST_LEVELS["/dictionary/kanji"]).toBe("curated");
     expect(DICTIONARY_TRUST_LEVELS["/dictionary/yoji"]).toBe("curated");
-    expect(DICTIONARY_TRUST_LEVELS["/colors"]).toBe("curated");
+    expect(DICTIONARY_TRUST_LEVELS["/dictionary/colors"]).toBe("curated");
   });
 });
 

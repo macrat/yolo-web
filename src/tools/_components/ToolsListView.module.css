@@ -21,6 +21,25 @@
   line-height: 1.6;
 }
 
+/* チートシートへの控えめな導線 */
+.cheatsheetBanner {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border);
+  text-align: center;
+}
+
+.cheatsheetLink {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.cheatsheetLink:hover {
+  color: var(--color-primary);
+}
+
 @media (max-width: 768px) {
   .container {
     padding: 1.5rem 0.75rem;
