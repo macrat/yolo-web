@@ -2,8 +2,9 @@
 
 ## Active (進行中)
 
-| ID  | Title | Priority | Status | Assigned Role | Origin Memo | Target Cycle | Notes |
-| --- | ----- | -------- | ------ | ------------- | ----------- | ------------ | ----- |
+| ID    | Title                                          | Priority | Status | Assigned Role | Origin Memo | Target Cycle | Notes                                                                                                                                       |
+| ----- | ---------------------------------------------- | -------- | ------ | ------------- | ----------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| B-140 | 全ツール・全チートシートへの品質データ埋め込み | P3       | active | -             | -           | 48           | B-100で作成した品質要件の仕組みを活用し、残りの全ツール（30件）・全チートシート（1件）にvalueProposition・usageExample・faqデータを追加する |
 
 ## Queued (未着手)
 
@@ -41,7 +42,6 @@
 | B-134 | 漢字辞典の対象漢字拡充（小学2年生以降の配当漢字）                     | P4       | queued | -             | 19c9e6e9d56 | -            | 現在の小学1年生80字から、小学2年生配当漢字160字への段階的な拡充。出典: irodori-and-kanji-expansion記事の展望                                                                                                                                                                                                                                                                                                                                                  |
 | B-135 | iOS Safariスクロールロックのフォールバック対応                        | P4       | queued | -             | 19c9ee1e023 | -            | CSS `overflow: hidden` だけではiOS Safariで完全にスクロールを防げないケースへの対応。`position: fixed` や `touch-action: none` を組み合わせたフォールバックの段階的追加。実害が確認されてから対応する方針。出典: game-infrastructure-refactoring記事の展望                                                                                                                                                                                                    |
 | B-136 | StatsModalのヒストグラム表示共通化                                    | P4       | queued | -             | 19c9ee1e023 | -            | 4ゲームの統計モーダルに含まれる類似したヒストグラム表示の共通化検討。ゲームごとのデータ構造の違いを考慮する必要あり。出典: game-infrastructure-refactoring記事の展望                                                                                                                                                                                                                                                                                          |
-| B-140 | 全ツール・全チートシートへの品質データ埋め込み                        | P3       | queued | -             | -           | -            | B-100で作成した品質要件の仕組みを活用し、残りの全ツール（30件）・全チートシート（1件）にvalueProposition・usageExample・faqデータを追加する                                                                                                                                                                                                                                                                                                                   |
 
 ## Deferred (延期)
 
