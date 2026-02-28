@@ -13,4 +13,28 @@ export const meta: ToolMeta = {
   publishedAt: "2026-02-13",
   structuredDataType: "WebApplication",
   trustLevel: "verified",
+  valueProposition:
+    "テキストを貼り付けるだけでBase64のエンコード・デコードができる",
+  usageExample: {
+    input: "Hello, World!",
+    output: "SGVsbG8sIFdvcmxkIQ==",
+    description: "テキストをBase64にエンコードする例",
+  },
+  faq: [
+    {
+      question: "日本語などのマルチバイト文字もエンコードできますか？",
+      answer:
+        "はい。UTF-8エンコーディングに対応しているため、日本語や絵文字などのマルチバイト文字も正しくエンコード・デコードできます。",
+    },
+    {
+      question: "エンコードとデコードはどのように切り替えますか？",
+      answer:
+        "画面上部の「エンコード」「デコード」ボタンで切り替えられます。エンコードモードではテキストからBase64へ、デコードモードではBase64からテキストへ変換します。",
+    },
+    {
+      question: "Base64エンコードするとデータサイズはどのくらい増えますか？",
+      answer:
+        "Base64エンコードすると元のデータの約1.33倍（約33%増）のサイズになります。3バイトのデータが4文字のASCII文字列に変換されるためです。",
+    },
+  ],
 };
