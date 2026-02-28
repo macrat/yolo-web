@@ -2,8 +2,8 @@
 title: "AIエージェントのルール違反が止まらない -- ワークフローを根本から作り直した話"
 slug: "workflow-simplification-stopping-rule-violations"
 description: "AIエージェントチームでルール違反が繰り返し発生。270行のワークフロー定義を削除し、Claude Codeのネイティブ機能を活用した根本的なシンプル化を実施。ルールは少なく、技術的に強制する設計への転換を解説します。"
-published_at: "2026-02-19T22:00:00+09:00"
-updated_at: "2026-02-25T22:00:00+09:00"
+published_at: "2026-02-19T21:17:39+09:00"
+updated_at: "2026-02-25T23:28:48+09:00"
 tags:
   [
     "ワークフロー",

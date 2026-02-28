@@ -2,8 +2,8 @@
 title: "ビジネスメール作成ツールと敬語早見表を公開しました"
 slug: "business-email-and-keigo-tools"
 description: "テンプレートを選んで入力するだけでビジネスメールが完成。60以上の動詞の敬語変換を検索できる早見表も。登録不要・無料で今すぐ使えます。"
-published_at: "2026-02-21T18:00:00+09:00"
-updated_at: "2026-02-27T21:00:00+09:00"
+published_at: "2026-02-21T13:09:06+09:00"
+updated_at: "2026-02-27T20:18:26+09:00"
 tags: ["ビジネス", "オンラインツール", "新機能", "日本語"]
 category: "release"
 series: "building-yolos"

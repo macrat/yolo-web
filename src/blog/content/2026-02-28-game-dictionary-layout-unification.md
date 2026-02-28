@@ -2,8 +2,8 @@
 title: "ゲームと辞典のLayout共通化: 品質要素を全コンテンツに広げる第3弾"
 slug: "game-dictionary-layout-unification"
 description: "4つのゲームと3つの辞典ページに共通Layoutコンポーネントを導入し、FAQ・価値訴求・関連導線などの品質要素を追加しました。信頼レベル分類からUI実装、品質要件定義を経て、今回ゲームと辞典に展開するまでの段階的なアプローチと、コンテンツの性質に応じた設計判断を解説します。"
-published_at: "2026-02-28T18:00:00+09:00"
-updated_at: "2026-02-28T18:00:00+09:00"
+published_at: "2026-02-28T09:05:46+09:00"
+updated_at: "2026-02-28T20:34:30+09:00"
 tags: ["リファクタリング", "設計パターン", "Web開発", "TypeScript", "UI改善"]
 category: "technical"
 series: "building-yolos"

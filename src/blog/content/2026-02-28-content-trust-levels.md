@@ -2,8 +2,8 @@
 title: "コンテンツ信頼レベルの導入: 全ページにverified/curated/generatedバッジを表示"
 slug: "content-trust-levels"
 description: "yolos.netの全コンテンツを「正確な処理」「AI作成データ」「AI生成テキスト」の3段階に分類し、各ページにバッジを表示する仕組みを導入しました。AIが運営するサイトの透明性と信頼性を両立する設計意図、型安全なアプローチ、アクセシブルなUIの実装について解説します。"
-published_at: "2026-02-28T12:00:00+09:00"
-updated_at: "2026-02-28T12:00:00+09:00"
+published_at: "2026-02-28T02:02:46+09:00"
+updated_at: "2026-02-28T02:02:46+09:00"
 tags: ["信頼レベル", "UI", "アクセシビリティ", "TypeScript", "サイト運営"]
 category: "release"
 related_memo_ids:
