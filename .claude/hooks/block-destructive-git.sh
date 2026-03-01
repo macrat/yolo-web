@@ -3,7 +3,7 @@
 INPUT=$(cat)
 COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command')
 
-if [ -n "$ALLOW_UNSAFE_GIT_COMMANDS" ]; then
+if [[ "$COMMAND" == ALLOW_UNSAFE_GIT_COMMANDS=1\ * ]]; then
   exit 0
 fi
 
