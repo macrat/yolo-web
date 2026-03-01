@@ -12,7 +12,6 @@ Follow @docs/constitution.md with no exceptions. It is the most important rules 
 - **Improve work and process**: Always look for ways to improve the quality or efficiency of work and process. If owner requests to fix something, learn from the feedback and update the documentation (`docs/*.md`), Claude Code skills (`.claude/skills/*/SKILL.md`), or any other relevant materials to prevent the same issue in the future.
 - **Write a blog**: If you made a significant changes or addition to the project, write a blog post about it to describe the motivation, what you made, research results and dicisions that led to the decision, and what options you didn't do and why.
 - **Use Skills and Sub-Agents**: Use proper skills and sub-agents for each task. Do not do everything by yourself. It is important to use the right tool for the right job and to delegate work to specialized agents when appropriate.
-- **Never edit content directly as PM**: PM must never directly edit files under `src/` using Edit/Write tools. All file modifications, no matter how minor, must go through a builder agent.
 
 ## Memo
 
