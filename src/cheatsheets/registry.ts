@@ -3,6 +3,8 @@ import type { CheatsheetMeta, CheatsheetDefinition } from "./types";
 import { meta as regexMeta } from "./regex/meta";
 import { meta as gitMeta } from "./git/meta";
 import { meta as markdownMeta } from "./markdown/meta";
+import { meta as httpStatusCodesMeta } from "./http-status-codes/meta";
+import { meta as cronMeta } from "./cron/meta";
 
 const cheatsheetEntries: CheatsheetDefinition[] = [
   {
@@ -16,6 +18,14 @@ const cheatsheetEntries: CheatsheetDefinition[] = [
   {
     meta: markdownMeta,
     componentImport: () => import("./markdown/Component"),
+  },
+  {
+    meta: httpStatusCodesMeta,
+    componentImport: () => import("./http-status-codes/Component"),
+  },
+  {
+    meta: cronMeta,
+    componentImport: () => import("./cron/Component"),
   },
 ];
 
