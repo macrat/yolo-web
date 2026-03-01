@@ -11,16 +11,22 @@ completed_at: null
 
 ## 実施する作業
 
-- [ ] B-148: SEOメタデータ改善（sitemap lastModified・OGP/canonical）
-- [ ] B-149: JSON-LD script-breakout対策
+- [x] B-148: SEOメタデータ改善（sitemap lastModified・OGP/canonical）
+  - [x] #14: robots.tsフォールバックURL修正
+  - [x] #18: sitemap lastModified修正（GameMeta/DictionaryMetaにpublishedAt追加、全エントリ修正）
+  - [x] #20: 全33ルートにopenGraph.url/canonical/twitter追加（seo.tsファクトリ9関数twitter追加含む）
+  - [x] #21: SEOテスト71件追加（seo.test.ts拡充+seo-coverage.test.ts新規作成）
+- [x] B-149: JSON-LD script-breakout対策
+  - [x] safeJsonLdStringify関数追加、全14ファイルのJSON-LD埋め込み修正、テスト5件追加
 
 ## レビュー結果
 
-（作業完了後に記載）
+- 実装レビュー1回目（19caa12a368）: Approve（軽微指摘1件: JSDocコメント追加→対応済み）
+- 最終レビュー（19caa23cab0）: Approve（指摘事項なし）
 
 ## キャリーオーバー
 
-- なし（作業完了後に更新）
+- なし
 
 ## 補足事項
 
