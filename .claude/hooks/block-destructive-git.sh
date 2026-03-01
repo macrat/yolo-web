@@ -61,8 +61,8 @@ if [ $IS_DESTRUCTIVE -eq 0 ]; then
   exit 0
 fi
 
-echo "このgitコマンドを実行すると、本来は保持しておくべき変更が失われる可能性があります。"
-echo "このコマンドを実行する前に、必ず git status や git diff を使用して、本当にこのコマンドを実行しても問題ないか確認してください。"
-echo "もしこのコマンドを実行しても問題ないと判断した場合は、環境変数 ALLOW_UNSAFE_GIT_COMMANDS を設定してから再度実行してください。"
-echo "例: ALLOW_UNSAFE_GIT_COMMANDS=1 $COMMAND"
+echo "このgitコマンドを実行すると、本来は保持しておくべき変更が失われる可能性があります。" >&2
+echo "このコマンドを実行する前に、必ず git status や git diff を使用して、本当にこのコマンドを実行しても問題ないか確認してください。" >&2
+echo "もしこのコマンドを実行しても問題ないと判断した場合は、環境変数 ALLOW_UNSAFE_GIT_COMMANDS を設定してから再度実行してください。" >&2
+echo "例: ALLOW_UNSAFE_GIT_COMMANDS=1 $COMMAND" >&2
 exit 2
