@@ -2,10 +2,8 @@
 
 ## Active (進行中)
 
-| ID    | Title                                                    | Priority | Status | Assigned Role | Origin Memo | Target Cycle | Notes                                                                                                                                                                         |
-| ----- | -------------------------------------------------------- | -------- | ------ | ------------- | ----------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| B-148 | SEOメタデータ改善（sitemap lastModified・OGP/canonical） | P2       | active | -             | 19ca986e8c2 | 57           | owner優先。sitemap lastModifiedがnew Date()固定(#18)、OGP/canonical大量欠落(#20: memos og:image欠落1857件等)。robotsフォールバック不一致(#14)、SEOヘッダ網羅テスト(#21)も含む |
-| B-149 | JSON-LD script-breakout対策                              | P2       | active | -             | 19ca986ea98 | 57           | セキュリティ。JSON.stringifyの生埋め込みで&lt;/script&gt;を無害化していない(#27)。memos/[id], Breadcrumb, DictionaryDetailLayoutが対象。共通化し\u003cエスケープ推奨          |
+| ID  | Title | Priority | Status | Assigned Role | Origin Memo | Target Cycle | Notes |
+| --- | ----- | -------- | ------ | ------------- | ----------- | ------------ | ----- |
 
 ## Queued (未着手)
 
@@ -63,11 +61,13 @@
 
 以下は直近5サイクル分の完了タスクです。6サイクルより前のタスクは削除してください。
 
-| ID    | Title                                                      | Completed Cycle | Origin Memo | Notes                                                                                                                                                                              |
-| ----- | ---------------------------------------------------------- | --------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| B-147 | ゲーム途中離脱バグ修正（カナール・キメル・イロドリ）       | 56              | 19ca986e14e | カナール・キメル: status型に"playing"追加、マイグレーション追加。イロドリ: 型拡張+毎ラウンド保存+途中再開。テスト17件追加。計画レビュー1回（CA）、実装レビュー1回（Approve）で承認 |
-| B-145 | 過去ブログ記事へのadmonition記法適用調査・書き換え         | 54              | -           | 18記事34箇所にadmonition適用（NOTE x16, TIP x7, WARNING x9, IMPORTANT x1, CAUTION x1）。レビュー2回（CA→Approve）で承認                                                            |
-| B-144 | memoツールの入力バリデーション改善                         | 53              | 19ca840de86 | resolveBody()切り出し、--body -サポート、10文字未満バリデーション追加。テスト14件追加。レビュー1回（Approve）で承認                                                                |
-| B-126 | Markdownのadmonition記法対応（GFM Alert via marked-alert） | 53              | -           | marked-alertパッケージ導入、5種のadmonitionスタイル（ダークモード対応）、blog-writing.md新規作成。テスト7件追加。レビュー1回（Approve）で承認                                      |
-| B-143 | サイクル51事故の調査と再発防止策の実装                     | 52              | 19ca4e1367b | 破壊的gitコマンドブロックhook、中間コミット戦略、並列builderファイル境界ルール、PM直接編集禁止を実装。ownerによる最終修正あり                                                      |
-| B-086 | Tier 2チートシート追加（HTTPステータスコード・Cron式）     | 55              | 19c85be20b1 | cycle-55で4テーマ中2テーマ（HTTPステータスコード・Cron式）を実施。ブログ記事も作成。残り2テーマ（HTMLタグ・SQL）はB-146として登録済み                                              |
+| ID    | Title                                                      | Completed Cycle | Origin Memo | Notes                                                                                                                                                                                       |
+| ----- | ---------------------------------------------------------- | --------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| B-148 | SEOメタデータ改善（sitemap lastModified・OGP/canonical）   | 57              | 19ca986e8c2 | #14 robots修正、#18 sitemap lastModified全修正（GameMeta/DictionaryMetaにpublishedAt追加）、#20 全33ルートOGP/canonical/twitter追加、#21 SEOテスト71件追加。レビュー2回（CA→Approve）で承認 |
+| B-149 | JSON-LD script-breakout対策                                | 57              | 19ca986ea98 | safeJsonLdStringify関数追加、全14ファイルのJSON-LD埋め込み修正、テスト5件追加。レビュー2回（CA→Approve）で承認                                                                              |
+| B-147 | ゲーム途中離脱バグ修正（カナール・キメル・イロドリ）       | 56              | 19ca986e14e | カナール・キメル: status型に"playing"追加、マイグレーション追加。イロドリ: 型拡張+毎ラウンド保存+途中再開。テスト17件追加。計画レビュー1回（CA）、実装レビュー1回（Approve）で承認          |
+| B-145 | 過去ブログ記事へのadmonition記法適用調査・書き換え         | 54              | -           | 18記事34箇所にadmonition適用（NOTE x16, TIP x7, WARNING x9, IMPORTANT x1, CAUTION x1）。レビュー2回（CA→Approve）で承認                                                                     |
+| B-144 | memoツールの入力バリデーション改善                         | 53              | 19ca840de86 | resolveBody()切り出し、--body -サポート、10文字未満バリデーション追加。テスト14件追加。レビュー1回（Approve）で承認                                                                         |
+| B-126 | Markdownのadmonition記法対応（GFM Alert via marked-alert） | 53              | -           | marked-alertパッケージ導入、5種のadmonitionスタイル（ダークモード対応）、blog-writing.md新規作成。テスト7件追加。レビュー1回（Approve）で承認                                               |
+| B-143 | サイクル51事故の調査と再発防止策の実装                     | 52              | 19ca4e1367b | 破壊的gitコマンドブロックhook、中間コミット戦略、並列builderファイル境界ルール、PM直接編集禁止を実装。ownerによる最終修正あり                                                               |
+| B-086 | Tier 2チートシート追加（HTTPステータスコード・Cron式）     | 55              | 19c85be20b1 | cycle-55で4テーマ中2テーマ（HTTPステータスコード・Cron式）を実施。ブログ記事も作成。残り2テーマ（HTMLタグ・SQL）はB-146として登録済み                                                       |
