@@ -8,6 +8,8 @@
  */
 
 import { Marked, type MarkedExtension, type Tokens } from "marked";
+// GFM Alert構文（> [!NOTE]等）をadmonitionのHTMLに変換するため追加
+import markedAlert from "marked-alert";
 
 /**
  * Custom marked extension to convert mermaid code blocks into
@@ -85,11 +87,16 @@ const { extension: headingExtension, resetCounter: resetHeadingCounter } =
   createHeadingExtension();
 
 /**
- * Module-level Marked instance with mermaid and heading extensions.
+ * Module-level Marked instance with mermaid, heading, and alert extensions.
  * Using a dedicated instance avoids polluting the global marked state
  * and keeps extensions isolated.
+ * markedAlert() is included to support GFM Alert syntax (> [!NOTE], > [!WARNING], etc.).
  */
-const markedInstance = new Marked(mermaidExtension, headingExtension);
+const markedInstance = new Marked(
+  mermaidExtension,
+  headingExtension,
+  markedAlert(),
+);
 
 /** Parse YAML frontmatter from a markdown string. Returns { data, content }. */
 export function parseFrontmatter<T>(raw: string): { data: T; content: string } {

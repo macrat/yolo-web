@@ -100,7 +100,7 @@ create:
   npm run memo -- create <from> <to> <subject> [options]
   --reply-to <id>              Reply-to memo ID
   --tags <tags>                Comma-separated tags
-  --body <body>                Memo body (reads stdin if omitted)
+  --body -                     Read body from stdin (use "-" to read from stdin explicitly)
   --skip-credential-check      Skip credential pattern check
 
 mark:
@@ -113,10 +113,68 @@ Examples:
   npm run memo -- list --tag request --tag implementation
   npm run memo -- read 19c5758d1f9
   npm run memo -- read 19c5758d1f9 19c5758d200
-  npm run memo -- create builder "project manager" "Task done" --body "## Summary" --tags "report,completion"
+  echo "## Summary" | npm run memo -- create builder reviewer "Task done" --tags "report,completion"
   npm run memo -- mark archive 19c5758d1f9
   npm run memo -- mark archive 19c5758d1f9 19c5758d200
 `);
+}
+
+/**
+ * Resolves the memo body from flags and stdin.
+ *
+ * Priority:
+ * 1. `--body -` → read from stdin explicitly (Unix convention)
+ * 2. `--body <value>` → use the value directly
+ * 3. No `--body` flag and stdin is not a TTY → read from stdin (pipe)
+ *
+ * After resolving, validates that the body (after trimming) is at least 10 characters.
+ * Exits with code 1 if validation fails.
+ */
+export function resolveBody(
+  bodyFlag: string | undefined,
+  isTTY: boolean,
+  readStdin: () => string,
+): string {
+  let body: string | undefined;
+
+  if (bodyFlag === "-") {
+    // --body - means read from stdin explicitly
+    body = readStdin();
+  } else if (bodyFlag !== undefined) {
+    // --body <value> means use the value directly
+    body = bodyFlag;
+  } else if (!isTTY) {
+    // No --body flag, but stdin is a pipe
+    body = readStdin();
+  }
+
+  if (!body || body.trim().length === 0) {
+    console.error(
+      "Error: body is required. Provide --body - or pipe via stdin.",
+    );
+    console.error(
+      'Usage: echo "memo body..." | npm run memo -- create <from> <to> <subject>',
+    );
+    console.error(
+      "  or:  npm run memo -- create <from> <to> <subject> --body - (reads from stdin)",
+    );
+    process.exit(1);
+  }
+
+  if (body.trim().length < 10) {
+    console.error(
+      `Error: Memo body is too short (${body.trim().length} characters). At least 10 characters required.`,
+    );
+    console.error(
+      'Usage: echo "memo body..." | npm run memo -- create <from> <to> <subject>',
+    );
+    console.error(
+      "  or:  npm run memo -- create <from> <to> <subject> --body - (reads from stdin)",
+    );
+    process.exit(1);
+  }
+
+  return body;
 }
 
 function main(): void {
@@ -192,17 +250,10 @@ function main(): void {
         const skipCredentialCheck = booleanFlags.has("skip-credential-check");
 
         // Read body from --body flag or stdin
-        let body: string | undefined = getFlag(flags, "body");
-        if (body === undefined && !process.stdin.isTTY) {
-          body = fs.readFileSync(0, "utf-8");
-        }
-
-        if (!body || body.trim() === "") {
-          console.error(
-            "Error: body is required. Provide --body or pipe via stdin.",
-          );
-          process.exit(1);
-        }
+        const bodyFlag = getFlag(flags, "body");
+        const body = resolveBody(bodyFlag, process.stdin.isTTY === true, () =>
+          fs.readFileSync(0, "utf-8"),
+        );
 
         const id = createMemo({
           subject,
