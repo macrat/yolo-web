@@ -4,15 +4,19 @@
     "allow": [
       "Bash",
       "Edit(/docs/backlog.md)",
-      "Edit(/docs/cycle/*.md)",
+      "Edit(/docs/cycles/cycle-*.md)",
       "WebFetch",
-      "WebSearch"
+      "WebSearch",
+      "Write(/docs/cycles/cycle-*.md)"
     ],
     "deny": [
+      "Agent(Explore)",
+      "Agent(Plan)",
+      "Agent(general-purpose)",
       "Edit(/docs/constitution.md)",
-      "Task(Explore)",
-      "Task(Plan)",
-      "Task(general-purpose)"
+      "Edit(/src/*)",
+      "Write(/docs/constitution.md)",
+      "Write(/src/*)"
     ]
   },
   "hooks": {
@@ -27,6 +31,10 @@
           {
             "type": "command",
             "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/pre-push-check.sh"
+          },
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/block-destructive-git.sh"
           }
         ]
       }
