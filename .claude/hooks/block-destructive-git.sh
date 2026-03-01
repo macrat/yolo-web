@@ -3,6 +3,10 @@
 INPUT=$(cat)
 COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command')
 
+if [ -z "$ALLOW_UNSAFE_GIT_COMMANDS" ]; then
+  exit 0
+fi
+
 # Only intercept git commands
 if ! echo "$COMMAND" | grep -q "git "; then
   exit 0
@@ -57,20 +61,8 @@ if [ $IS_DESTRUCTIVE -eq 0 ]; then
   exit 0
 fi
 
-# Check for uncommitted changes
-CWD=$(echo "$INPUT" | jq -r '.cwd')
-cd "$CWD" || exit 0
-
-STATUS_OUTPUT=$(git status --porcelain 2>/dev/null)
-CHANGE_COUNT=$(echo "$STATUS_OUTPUT" | grep -c ".")
-
-if [ -z "$STATUS_OUTPUT" ]; then
-  # No uncommitted changes, allow the destructive command
-  exit 0
-fi
-
-# There are uncommitted changes - block the destructive command
-echo "BLOCKED: uncommittedの変更が${CHANGE_COUNT}件あります。破壊的なgitコマンドを実行する前に、変更をcommitまたはstashしてください。" >&2
-echo "変更のあるファイル:" >&2
-echo "$STATUS_OUTPUT" >&2
+echo "このgitコマンドを実行すると、本来は保持しておくべき変更が失われる可能性があります。"
+echo "このコマンドを実行する前に、必ず git status や git diff を使用して、本当にこのコマンドを実行しても問題ないか確認してください。"
+echo "もしこのコマンドを実行しても問題ないと判断した場合は、環境変数 ALLOW_UNSAFE_GIT_COMMANDS を設定してから再度実行してください。"
+echo "例: ALLOW_UNSAFE_GIT_COMMANDS=1 $COMMAND"
 exit 2
