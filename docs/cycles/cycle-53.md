@@ -16,10 +16,11 @@ completed_at: null
   - [ ] 与えられた入力が10文字未満の場合は使い方を説明して異常終了するようにする
   - [ ] テストの追加
   - [ ] レビュー
-- [ ] B-126: Markdownのadmonition/directive記法（:::note等）対応
-  - [ ] remark-directiveプラグインの調査と導入
-  - [ ] admonition用のスタイリング実装
-  - [ ] 既存のMarkdown処理パイプラインへの統合
+- [ ] B-126: Markdownのadmonition記法対応（GFM Alert構文 via marked-alert）
+  - [ ] marked-alertパッケージの導入とmarkdown.tsへの統合
+  - [ ] admonition用のCSSスタイリング実装（ライト・ダーク両対応）
+  - [ ] テストの追加
+  - [ ] docs/blog-writing.mdの作成（admonition記法の説明含む）
   - [ ] レビュー
 
 ## レビュー結果
