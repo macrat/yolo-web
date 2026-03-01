@@ -13,7 +13,8 @@ const gameEntries: GameMeta[] = [
     keywords: ["漢字", "パズル", "デイリー", "推理"],
     statsKey: "kanji-kanaru-stats",
     ogpSubtitle: "毎日の漢字パズル",
-    sitemap: { changeFrequency: "daily", priority: 0.8 },
+    publishedAt: "2026-02-13",
+    sitemap: { changeFrequency: "monthly", priority: 0.8 },
     trustLevel: "curated",
     trustNote: "ゲームの正解判定は正確です。パズルデータはAIが作成しています。",
     valueProposition:
@@ -53,7 +54,8 @@ const gameEntries: GameMeta[] = [
     keywords: ["四字熟語", "パズル", "デイリー", "漢字"],
     statsKey: "yoji-kimeru-stats",
     ogpSubtitle: "毎日の四字熟語パズル",
-    sitemap: { changeFrequency: "daily", priority: 0.8 },
+    publishedAt: "2026-02-14",
+    sitemap: { changeFrequency: "monthly", priority: 0.8 },
     trustLevel: "curated",
     trustNote: "ゲームの正解判定は正確です。パズルデータはAIが作成しています。",
     valueProposition:
@@ -94,7 +96,8 @@ const gameEntries: GameMeta[] = [
     keywords: ["仲間分け", "グループ", "パズル", "言葉"],
     statsKey: "nakamawake-stats",
     ogpSubtitle: "毎日の仲間分けパズル",
-    sitemap: { changeFrequency: "daily", priority: 0.8 },
+    publishedAt: "2026-02-14",
+    sitemap: { changeFrequency: "monthly", priority: 0.8 },
     trustLevel: "curated",
     trustNote: "ゲームの正解判定は正確です。パズルデータはAIが作成しています。",
     valueProposition:
@@ -136,7 +139,8 @@ const gameEntries: GameMeta[] = [
     keywords: ["色", "カラー", "色彩", "デイリー"],
     statsKey: "irodori-stats",
     ogpSubtitle: "毎日の色彩チャレンジ",
-    sitemap: { changeFrequency: "daily", priority: 0.8 },
+    publishedAt: "2026-02-19",
+    sitemap: { changeFrequency: "monthly", priority: 0.8 },
     trustLevel: "verified",
     valueProposition:
       "毎日5つのターゲットカラーを再現。HSLスライダーで色彩感覚に挑戦",

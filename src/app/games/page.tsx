@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { SITE_NAME } from "@/lib/constants";
+import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { allGameMetas } from "@/games/registry";
 import styles from "./page.module.css";
 
@@ -26,6 +26,23 @@ export const metadata: Metadata = {
     "仲間分け",
     "学習",
   ],
+  openGraph: {
+    title: `ゲーム一覧 | ${SITE_NAME}`,
+    description:
+      "ブラウザで遊べる無料ゲーム集。漢字パズル、四字熟語パズルなど、楽しく学べるゲームを提供しています。",
+    type: "website",
+    url: `${BASE_URL}/games`,
+    siteName: SITE_NAME,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `ゲーム一覧 | ${SITE_NAME}`,
+    description:
+      "ブラウザで遊べる無料ゲーム集。漢字パズル、四字熟語パズルなど、楽しく学べるゲームを提供しています。",
+  },
+  alternates: {
+    canonical: `${BASE_URL}/games`,
+  },
 };
 
 export default function GamesPage() {

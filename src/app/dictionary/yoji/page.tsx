@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Breadcrumb from "@/components/common/Breadcrumb";
 import TrustLevelBadge from "@/components/common/TrustLevelBadge";
 import CategoryNav from "@/dictionary/_components/CategoryNav";
-import { SITE_NAME } from "@/lib/constants";
+import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { getAllYoji, getYojiCategories } from "@/dictionary/_lib/yoji";
 import { YOJI_CATEGORY_LABELS } from "@/dictionary/_lib/types";
 import YojiIndexClient from "./YojiIndexClient";
@@ -17,9 +17,16 @@ export const metadata: Metadata = {
     title: `四字熟語辞典 | ${SITE_NAME}`,
     description: "四字熟語101語の読み方・意味を収録。",
     type: "website",
+    url: `${BASE_URL}/dictionary/yoji`,
+    siteName: SITE_NAME,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `四字熟語辞典 | ${SITE_NAME}`,
+    description: "四字熟語101語の読み方・意味を収録。",
   },
   alternates: {
-    canonical: "/dictionary/yoji",
+    canonical: `${BASE_URL}/dictionary/yoji`,
   },
 };
 

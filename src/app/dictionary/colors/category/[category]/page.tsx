@@ -13,6 +13,7 @@ import { COLOR_CATEGORY_LABELS } from "@/dictionary/_lib/types";
 import {
   generateColorCategoryMetadata,
   generateBreadcrumbJsonLd,
+  safeJsonLdStringify,
 } from "@/lib/seo";
 import styles from "./page.module.css";
 
@@ -59,7 +60,9 @@ export default async function ColorCategoryPage({
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        dangerouslySetInnerHTML={{
+          __html: safeJsonLdStringify(breadcrumbJsonLd),
+        }}
       />
       <Breadcrumb
         items={[

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { generateGameJsonLd } from "@/lib/seo";
+import { generateGameJsonLd, safeJsonLdStringify } from "@/lib/seo";
+import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { gameBySlug } from "@/games/registry";
 import GameLayout from "@/games/_components/GameLayout";
 import GameContainer from "@/games/nakamawake/_components/GameContainer";
@@ -23,12 +24,17 @@ export const metadata: Metadata = {
     description:
       "16個の言葉を4つのグループに分けるパズルゲーム。共通テーマを見つけて仲間分けしよう！",
     type: "website",
+    url: `${BASE_URL}/games/nakamawake`,
+    siteName: SITE_NAME,
   },
   twitter: {
     card: "summary_large_image",
     title: "ナカマワケ - 毎日の仲間分けパズル",
     description:
       "16個の言葉を4つのグループに分けるパズルゲーム。共通テーマを見つけて仲間分けしよう！",
+  },
+  alternates: {
+    canonical: `${BASE_URL}/games/nakamawake`,
   },
 };
 
@@ -49,7 +55,7 @@ export default function NakamawakePage() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(gameJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLdStringify(gameJsonLd) }}
       />
       <GameLayout meta={gameMeta}>
         <GameContainer />

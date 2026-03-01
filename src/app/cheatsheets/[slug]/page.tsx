@@ -6,6 +6,7 @@ import {
 import {
   generateCheatsheetMetadata,
   generateCheatsheetJsonLd,
+  safeJsonLdStringify,
 } from "@/lib/seo";
 import CheatsheetLayout from "@/cheatsheets/_components/CheatsheetLayout";
 import CheatsheetRenderer from "./CheatsheetRenderer";
@@ -39,7 +40,9 @@ export default async function CheatsheetPage({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(generateCheatsheetJsonLd(cheatsheet.meta)),
+          __html: safeJsonLdStringify(
+            generateCheatsheetJsonLd(cheatsheet.meta),
+          ),
         }}
       />
       <CheatsheetRenderer slug={slug} />

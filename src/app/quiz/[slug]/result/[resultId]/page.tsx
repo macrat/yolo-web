@@ -45,6 +45,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       url: `${BASE_URL}/quiz/${slug}/result/${resultId}`,
       siteName: SITE_NAME,
     },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
     alternates: {
       canonical: `${BASE_URL}/quiz/${slug}/result/${resultId}`,
     },

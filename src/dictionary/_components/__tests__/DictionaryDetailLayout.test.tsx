@@ -6,6 +6,7 @@ import type { DictionaryMeta } from "@/dictionary/_lib/types";
 const mockMeta: DictionaryMeta = {
   slug: "test-dict",
   name: "テスト辞典",
+  publishedAt: "2026-02-19",
   trustLevel: "curated",
   valueProposition: "テスト用の一行価値テキスト",
   faq: [
@@ -92,6 +93,7 @@ test("DictionaryDetailLayout does not render FaqSection when faq is undefined", 
   const metaWithoutFaq: DictionaryMeta = {
     slug: "no-faq",
     name: "FAQなし辞典",
+    publishedAt: "2026-02-19",
     trustLevel: "curated",
   };
   render(
@@ -127,6 +129,7 @@ test("DictionaryDetailLayout does not render valueProposition when undefined", (
   const metaWithoutVp: DictionaryMeta = {
     slug: "no-vp",
     name: "VP無し辞典",
+    publishedAt: "2026-02-19",
     trustLevel: "curated",
   };
   render(

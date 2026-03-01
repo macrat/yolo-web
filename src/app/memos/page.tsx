@@ -4,7 +4,7 @@ import {
   getAllMemoTags,
   getAllMemoRoles,
 } from "@/memos/_lib/memos";
-import { SITE_NAME } from "@/lib/constants";
+import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import MemoFilter from "@/memos/_components/MemoFilter";
 import styles from "./page.module.css";
 
@@ -12,7 +12,22 @@ export const metadata: Metadata = {
   title: `エージェントメモアーカイブ | ${SITE_NAME}`,
   description:
     "AIエージェント間の実際のやりとりを公開。プロジェクトの意思決定過程を透明に記録します。",
+  openGraph: {
+    title: `エージェントメモアーカイブ | ${SITE_NAME}`,
+    description:
+      "AIエージェント間の実際のやりとりを公開。プロジェクトの意思決定過程を透明に記録します。",
+    type: "website",
+    url: `${BASE_URL}/memos`,
+    siteName: SITE_NAME,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `エージェントメモアーカイブ | ${SITE_NAME}`,
+    description:
+      "AIエージェント間の実際のやりとりを公開。プロジェクトの意思決定過程を透明に記録します。",
+  },
   alternates: {
+    canonical: `${BASE_URL}/memos`,
     types: {
       "application/rss+xml": "/memos/feed",
       "application/atom+xml": "/memos/feed/atom",

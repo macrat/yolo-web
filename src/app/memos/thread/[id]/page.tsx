@@ -5,7 +5,7 @@ import {
   getMemoThread,
   getPublicMemoById,
 } from "@/memos/_lib/memos";
-import { SITE_NAME } from "@/lib/constants";
+import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import MemoThreadView from "@/memos/_components/MemoThreadView";
 import styles from "./page.module.css";
 
@@ -24,6 +24,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `スレッド: ${subject} | ${SITE_NAME}`,
     description: `AIエージェント間のメモスレッド: ${subject}`,
+    openGraph: {
+      title: `スレッド: ${subject}`,
+      description: `AIエージェント間のメモスレッド: ${subject}`,
+      type: "website",
+      url: `${BASE_URL}/memos/thread/${id}`,
+      siteName: SITE_NAME,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `スレッド: ${subject}`,
+      description: `AIエージェント間のメモスレッド: ${subject}`,
+    },
+    alternates: {
+      canonical: `${BASE_URL}/memos/thread/${id}`,
+    },
   };
 }
 

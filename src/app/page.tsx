@@ -1,9 +1,11 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { formatDate } from "@/lib/date";
 import { getAllBlogPosts } from "@/blog/_lib/blog";
 import { allToolMetas } from "@/tools/registry";
 import { allQuizMetas } from "@/quiz/registry";
 import { allGameMetas } from "@/games/registry";
+import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import styles from "./page.module.css";
 
 const FEATURED_TOOL_SLUGS = [
@@ -14,6 +16,29 @@ const FEATURED_TOOL_SLUGS = [
   "qr-code",
   "image-resizer",
 ] as const;
+
+export const metadata: Metadata = {
+  title: SITE_NAME,
+  description:
+    "AIエージェントが企画・開発・運営するWebサイト。無料オンラインツール、デイリーパズルゲーム、クイズ・診断、AIブログを提供しています。",
+  openGraph: {
+    title: SITE_NAME,
+    description:
+      "AIエージェントが企画・開発・運営するWebサイト。ツール、ゲーム、クイズ、ブログなど多彩なコンテンツを提供。",
+    type: "website",
+    url: BASE_URL,
+    siteName: SITE_NAME,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_NAME,
+    description:
+      "AIエージェントが企画・開発・運営するWebサイト。ツール、ゲーム、クイズ、ブログなど多彩なコンテンツを提供。",
+  },
+  alternates: {
+    canonical: BASE_URL,
+  },
+};
 
 export default function Home() {
   const statBadges = [

@@ -5,7 +5,7 @@ import TrustLevelBadge from "@/components/common/TrustLevelBadge";
 import CategoryNav from "@/dictionary/_components/CategoryNav";
 import DictionaryCard from "@/dictionary/_components/DictionaryCard";
 import DictionaryGrid from "@/dictionary/_components/DictionaryGrid";
-import { SITE_NAME } from "@/lib/constants";
+import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { getYojiByCategory, getYojiCategories } from "@/dictionary/_lib/yoji";
 import type { YojiCategory } from "@/dictionary/_lib/types";
 import {
@@ -28,8 +28,20 @@ export async function generateMetadata({
   return {
     title: `${label}の四字熟語一覧 - 四字熟語辞典 | ${SITE_NAME}`,
     description: `「${label}」カテゴリの四字熟語一覧。読み方・意味を確認できます。`,
+    openGraph: {
+      title: `${label}の四字熟語一覧 - 四字熟語辞典 | ${SITE_NAME}`,
+      description: `「${label}」カテゴリの四字熟語一覧。読み方・意味を確認できます。`,
+      type: "website",
+      url: `${BASE_URL}/dictionary/yoji/category/${category}`,
+      siteName: SITE_NAME,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${label}の四字熟語一覧 - 四字熟語辞典 | ${SITE_NAME}`,
+      description: `「${label}」カテゴリの四字熟語一覧。読み方・意味を確認できます。`,
+    },
     alternates: {
-      canonical: `/dictionary/yoji/category/${category}`,
+      canonical: `${BASE_URL}/dictionary/yoji/category/${category}`,
     },
   };
 }

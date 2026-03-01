@@ -11,6 +11,7 @@ import {
 import {
   generateBlogPostMetadata,
   generateBlogPostJsonLd,
+  safeJsonLdStringify,
   BASE_URL,
 } from "@/lib/seo";
 import { formatDate } from "@/lib/date";
@@ -59,7 +60,7 @@ export default async function BlogPostPage({ params }: Props) {
     <div className={styles.container}>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLdStringify(jsonLd) }}
       />
 
       <Breadcrumb

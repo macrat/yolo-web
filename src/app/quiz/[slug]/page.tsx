@@ -4,7 +4,11 @@ import Breadcrumb from "@/components/common/Breadcrumb";
 import TrustLevelBadge from "@/components/common/TrustLevelBadge";
 import QuizContainer from "@/quiz/_components/QuizContainer";
 import { quizBySlug, getAllQuizSlugs } from "@/quiz/registry";
-import { generateQuizMetadata, generateQuizJsonLd } from "@/lib/seo";
+import {
+  generateQuizMetadata,
+  generateQuizJsonLd,
+  safeJsonLdStringify,
+} from "@/lib/seo";
 import styles from "./page.module.css";
 
 type Props = {
@@ -33,7 +37,7 @@ export default async function QuizPage({ params }: Props) {
     <div className={styles.wrapper}>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLdStringify(jsonLd) }}
       />
       <Breadcrumb
         items={[

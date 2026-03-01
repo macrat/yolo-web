@@ -43,6 +43,19 @@ describe("generateCheatsheetMetadata", () => {
     const result = generateCheatsheetMetadata(mockMeta);
     expect(result.alternates?.canonical).toContain("/cheatsheets/regex");
   });
+
+  test("og:urlが存在しcanonicalと一致する", () => {
+    const result = generateCheatsheetMetadata(mockMeta);
+    const og = result.openGraph as Record<string, unknown> | undefined;
+    expect(og?.url).toBeDefined();
+    expect(og?.url).toBe(result.alternates?.canonical);
+  });
+
+  test("og:siteNameがyolos.netである", () => {
+    const result = generateCheatsheetMetadata(mockMeta);
+    const og = result.openGraph as Record<string, unknown> | undefined;
+    expect(og?.siteName).toBe("yolos.net");
+  });
 });
 
 describe("generateCheatsheetJsonLd", () => {

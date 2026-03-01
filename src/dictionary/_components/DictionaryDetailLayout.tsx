@@ -1,3 +1,4 @@
+import { safeJsonLdStringify } from "@/lib/seo";
 import type { BreadcrumbItem } from "@/lib/seo";
 import type { DictionaryMeta } from "@/dictionary/_lib/types";
 import Breadcrumb from "@/components/common/Breadcrumb";
@@ -48,13 +49,13 @@ export default function DictionaryDetailLayout({
           <script
             key={i}
             type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(ld) }}
+            dangerouslySetInnerHTML={{ __html: safeJsonLdStringify(ld) }}
           />
         ))
       ) : (
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{ __html: safeJsonLdStringify(jsonLd) }}
         />
       )}
 

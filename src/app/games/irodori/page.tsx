@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { generateGameJsonLd } from "@/lib/seo";
+import { generateGameJsonLd, safeJsonLdStringify } from "@/lib/seo";
+import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { gameBySlug } from "@/games/registry";
 import GameLayout from "@/games/_components/GameLayout";
 import GameContainer from "@/games/irodori/_components/GameContainer";
@@ -24,12 +25,17 @@ export const metadata: Metadata = {
     description:
       "ターゲットカラーにどれだけ近い色を作れるかチャレンジ! HSLスライダーで色彩感覚を試そう。",
     type: "website",
+    url: `${BASE_URL}/games/irodori`,
+    siteName: SITE_NAME,
   },
   twitter: {
     card: "summary_large_image",
     title: "イロドリ - 毎日の色彩チャレンジ",
     description:
       "ターゲットカラーにどれだけ近い色を作れるかチャレンジ! HSLスライダーで色彩感覚を試そう。",
+  },
+  alternates: {
+    canonical: `${BASE_URL}/games/irodori`,
   },
 };
 
@@ -50,7 +56,7 @@ export default function IrodoriPage() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(gameJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLdStringify(gameJsonLd) }}
       />
       <GameLayout meta={gameMeta}>
         <GameContainer />

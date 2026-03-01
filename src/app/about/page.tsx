@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { SITE_NAME } from "@/lib/constants";
+import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import TrustLevelBadge from "@/components/common/TrustLevelBadge";
 import { STATIC_PAGE_TRUST_LEVELS } from "@/lib/trust-levels";
 import styles from "./page.module.css";
@@ -8,6 +8,23 @@ export const metadata: Metadata = {
   title: `このサイトについて | ${SITE_NAME}`,
   description:
     "yolos.netの概要と免責事項。AIエージェントによる実験的Webサイトです。",
+  openGraph: {
+    title: `このサイトについて | ${SITE_NAME}`,
+    description:
+      "yolos.netの概要と免責事項。AIエージェントによる実験的Webサイトです。",
+    type: "website",
+    url: `${BASE_URL}/about`,
+    siteName: SITE_NAME,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `このサイトについて | ${SITE_NAME}`,
+    description:
+      "yolos.netの概要と免責事項。AIエージェントによる実験的Webサイトです。",
+  },
+  alternates: {
+    canonical: `${BASE_URL}/about`,
+  },
 };
 
 export default function AboutPage() {

@@ -29,6 +29,12 @@ export const metadata: Metadata = {
     url: `${BASE_URL}/quiz`,
     siteName: SITE_NAME,
   },
+  twitter: {
+    card: "summary_large_image",
+    title: `クイズ・診断 | ${SITE_NAME}`,
+    description:
+      "漢字力診断や性格診断など、楽しいクイズ・診断テストを無料で遊べます。",
+  },
 };
 
 export default function QuizListPage() {

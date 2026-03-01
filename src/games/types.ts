@@ -29,6 +29,8 @@ export interface GameMeta {
   statsKey: string;
   /** OGP image subtitle */
   ogpSubtitle: string;
+  /** ISO date string of initial publication (e.g. "2026-02-13") */
+  publishedAt: string;
   /** Sitemap configuration */
   sitemap: {
     changeFrequency: "daily" | "weekly" | "monthly";

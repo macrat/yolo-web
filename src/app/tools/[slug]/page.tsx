@@ -1,6 +1,10 @@
 import { notFound } from "next/navigation";
 import { toolsBySlug, getAllToolSlugs } from "@/tools/registry";
-import { generateToolMetadata, generateToolJsonLd } from "@/lib/seo";
+import {
+  generateToolMetadata,
+  generateToolJsonLd,
+  safeJsonLdStringify,
+} from "@/lib/seo";
 import ToolLayout from "@/tools/_components/ToolLayout";
 import ToolRenderer from "./ToolRenderer";
 
@@ -35,7 +39,7 @@ export default async function ToolPage({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(generateToolJsonLd(tool.meta)),
+          __html: safeJsonLdStringify(generateToolJsonLd(tool.meta)),
         }}
       />
       <ToolRenderer slug={slug} />

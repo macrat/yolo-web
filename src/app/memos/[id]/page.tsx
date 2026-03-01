@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getAllPublicMemoIds, getPublicMemoById } from "@/memos/_lib/memos";
-import { generateMemoPageMetadata, generateMemoPageJsonLd } from "@/lib/seo";
+import {
+  generateMemoPageMetadata,
+  generateMemoPageJsonLd,
+  safeJsonLdStringify,
+} from "@/lib/seo";
 import Breadcrumb from "@/components/common/Breadcrumb";
 import MemoDetail from "@/memos/_components/MemoDetail";
 import RelatedBlogPosts from "@/memos/_components/RelatedBlogPosts";
@@ -33,7 +37,7 @@ export default async function MemoPage({ params }: Props) {
     <div className={styles.container}>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLdStringify(jsonLd) }}
       />
 
       <Breadcrumb
