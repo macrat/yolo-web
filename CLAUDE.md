@@ -29,7 +29,6 @@ You can manage memos using `npm run memo` command:
 npm run memo -- list --state inbox
 npm run memo -- read ${memo_id}...
 npm run memo -- mark ${state} ${memo_id}...
-npm run memo -- create ${from} ${to} ${subject} --tags ${tags} --reply-to ${memo_id} --body ${body}
 echo "${body}" | npm run memo -- create ${from} ${to} ${subject} --tags ${tags} --reply-to ${memo_id}
 ```
 

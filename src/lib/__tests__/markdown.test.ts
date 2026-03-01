@@ -207,8 +207,58 @@ describe("markdownToHtml", () => {
     expect(html1).toContain('id="same"');
     expect(html2).toContain('id="same"');
   });
-});
 
+  test("converts GFM Alert [!NOTE] to note admonition", () => {
+    const md = "> [!NOTE]\n> これはノートです。";
+    const html = markdownToHtml(md);
+    expect(html).toContain("markdown-alert-note");
+    expect(html).toContain("これはノートです。");
+    expect(html).not.toContain("<blockquote>");
+  });
+
+  test("converts GFM Alert [!TIP] to tip admonition", () => {
+    const md = "> [!TIP]\n> これはヒントです。";
+    const html = markdownToHtml(md);
+    expect(html).toContain("markdown-alert-tip");
+    expect(html).toContain("これはヒントです。");
+  });
+
+  test("converts GFM Alert [!IMPORTANT] to important admonition", () => {
+    const md = "> [!IMPORTANT]\n> これは重要事項です。";
+    const html = markdownToHtml(md);
+    expect(html).toContain("markdown-alert-important");
+    expect(html).toContain("これは重要事項です。");
+  });
+
+  test("converts GFM Alert [!WARNING] to warning admonition", () => {
+    const md = "> [!WARNING]\n> これは警告です。";
+    const html = markdownToHtml(md);
+    expect(html).toContain("markdown-alert-warning");
+    expect(html).toContain("これは警告です。");
+  });
+
+  test("converts GFM Alert [!CAUTION] to caution admonition", () => {
+    const md = "> [!CAUTION]\n> これは注意です。";
+    const html = markdownToHtml(md);
+    expect(html).toContain("markdown-alert-caution");
+    expect(html).toContain("これは注意です。");
+  });
+
+  test("does not convert regular blockquote to admonition", () => {
+    const md = "> これは通常の引用です。";
+    const html = markdownToHtml(md);
+    expect(html).toContain("<blockquote>");
+    expect(html).not.toContain("markdown-alert");
+    expect(html).toContain("これは通常の引用です。");
+  });
+
+  test("includes markdown-alert-title in admonition output", () => {
+    const md = "> [!NOTE]\n> ノートの内容。";
+    const html = markdownToHtml(md);
+    expect(html).toContain("markdown-alert-title");
+    expect(html).toContain("ノートの内容。");
+  });
+});
 describe("generateHeadingId", () => {
   test("converts text to lowercase slug", () => {
     expect(generateHeadingId("Hello World")).toBe("hello-world");
