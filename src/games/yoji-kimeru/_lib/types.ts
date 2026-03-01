@@ -46,10 +46,13 @@ export interface YojiGameStats {
 export interface YojiGameHistory {
   [date: string]: {
     guesses: string[]; // 各推測の4文字文字列
-    status: "won" | "lost";
+    status: "won" | "lost" | "playing";
     guessCount: number;
   };
 }
+
+/** Maximum number of guesses allowed per game. */
+export const MAX_GUESSES = 6;
 
 export interface YojiPuzzleScheduleEntry {
   date: string;

@@ -1,4 +1,5 @@
 import type { YojiGameStats, YojiGameHistory } from "./types";
+import { MAX_GUESSES } from "./types";
 
 const STATS_KEY = "yoji-kimeru-stats";
 const HISTORY_KEY = "yoji-kimeru-history";
@@ -89,10 +90,22 @@ export function saveHistory(history: YojiGameHistory): void {
 /**
  * Load today's game record from history.
  * Returns null if no game was played today.
+ *
+ * Includes migration for old data: if status is "lost" but guessCount < MAX_GUESSES,
+ * the game was actually in progress (old code saved "lost" as a placeholder).
+ * In that case, status is corrected to "playing".
  */
 export function loadTodayGame(date: string): YojiGameHistory[string] | null {
   const history = loadHistory();
-  return history[date] ?? null;
+  const entry = history[date] ?? null;
+  if (!entry) return null;
+
+  // Migrate old data: "lost" with fewer guesses than MAX_GUESSES was a placeholder
+  if (entry.status === "lost" && entry.guessCount < MAX_GUESSES) {
+    return { ...entry, status: "playing" };
+  }
+
+  return entry;
 }
 
 /**

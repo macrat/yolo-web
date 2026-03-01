@@ -1,4 +1,5 @@
 import type { IrodoriGameStats, IrodoriGameHistory } from "./types";
+import { ROUNDS_PER_GAME } from "./daily";
 
 const STATS_KEY = "irodori-stats";
 const HISTORY_KEY = "irodori-history";
@@ -61,6 +62,8 @@ export function saveStats(stats: IrodoriGameStats): void {
 
 /**
  * Load game history from localStorage.
+ * Note: Returns raw data without migration. Entries may lack `currentRound` / `status`
+ * fields (old format). Use loadTodayGame() for migrated data.
  */
 export function loadHistory(): IrodoriGameHistory {
   if (!isStorageAvailable()) return {};
@@ -87,10 +90,23 @@ export function saveHistory(history: IrodoriGameHistory): void {
 
 /**
  * Load today's game record from history.
+ * Applies migration for old format data that lacks `currentRound` and `status` fields.
  */
 export function loadTodayGame(date: string): IrodoriGameHistory[string] | null {
   const history = loadHistory();
-  return history[date] ?? null;
+  const entry = history[date];
+  if (!entry) return null;
+
+  // Migrate old format: add currentRound and status if missing
+  const migrated = { ...entry };
+  if (migrated.currentRound === undefined) {
+    migrated.currentRound = ROUNDS_PER_GAME;
+  }
+  if (migrated.status === undefined) {
+    migrated.status = "completed";
+  }
+
+  return migrated;
 }
 
 /**

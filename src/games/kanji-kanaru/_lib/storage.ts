@@ -1,4 +1,5 @@
 import type { GameStats, GameHistory } from "./types";
+import { MAX_GUESSES } from "./types";
 
 const STATS_KEY = "kanji-kanaru-stats";
 const HISTORY_KEY = "kanji-kanaru-history";
@@ -89,10 +90,22 @@ export function saveHistory(history: GameHistory): void {
 /**
  * Load today's game record from history.
  * Returns null if no game was played today.
+ *
+ * Applies migration for old data: if status is "lost" but guessCount < MAX_GUESSES,
+ * the game was actually in progress (old code used "lost" as a placeholder for
+ * in-progress saves). In that case, status is corrected to "playing".
  */
 export function loadTodayGame(date: string): GameHistory[string] | null {
   const history = loadHistory();
-  return history[date] ?? null;
+  const entry = history[date];
+  if (!entry) return null;
+
+  // Migrate old data: "lost" with fewer guesses than max was actually in progress
+  if (entry.status === "lost" && entry.guessCount < MAX_GUESSES) {
+    return { ...entry, status: "playing" };
+  }
+
+  return entry;
 }
 
 /**

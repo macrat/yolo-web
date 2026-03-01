@@ -143,6 +143,75 @@ describe("loadTodayGame", () => {
       guessCount: 2,
     });
   });
+
+  test("returns playing data as-is when status is playing", () => {
+    const history: GameHistory = {
+      "2026-03-01": {
+        guesses: ["川", "山", "日"],
+        status: "playing",
+        guessCount: 3,
+      },
+    };
+    localStorageMock.setItem("kanji-kanaru-history", JSON.stringify(history));
+    const game = loadTodayGame("2026-03-01");
+    expect(game).toEqual({
+      guesses: ["川", "山", "日"],
+      status: "playing",
+      guessCount: 3,
+    });
+  });
+
+  test("migrates old lost data with guessCount < 6 to playing", () => {
+    // Old format used "lost" as a placeholder for in-progress games
+    const history: GameHistory = {
+      "2026-03-01": {
+        guesses: ["川", "山"],
+        status: "lost",
+        guessCount: 2,
+      },
+    };
+    localStorageMock.setItem("kanji-kanaru-history", JSON.stringify(history));
+    const game = loadTodayGame("2026-03-01");
+    expect(game).toEqual({
+      guesses: ["川", "山"],
+      status: "playing",
+      guessCount: 2,
+    });
+  });
+
+  test("keeps lost status when guessCount >= 6 (real loss)", () => {
+    const history: GameHistory = {
+      "2026-03-01": {
+        guesses: ["川", "山", "日", "月", "火", "水"],
+        status: "lost",
+        guessCount: 6,
+      },
+    };
+    localStorageMock.setItem("kanji-kanaru-history", JSON.stringify(history));
+    const game = loadTodayGame("2026-03-01");
+    expect(game).toEqual({
+      guesses: ["川", "山", "日", "月", "火", "水"],
+      status: "lost",
+      guessCount: 6,
+    });
+  });
+
+  test("keeps won status unchanged", () => {
+    const history: GameHistory = {
+      "2026-03-01": {
+        guesses: ["川", "山"],
+        status: "won",
+        guessCount: 2,
+      },
+    };
+    localStorageMock.setItem("kanji-kanaru-history", JSON.stringify(history));
+    const game = loadTodayGame("2026-03-01");
+    expect(game).toEqual({
+      guesses: ["川", "山"],
+      status: "won",
+      guessCount: 2,
+    });
+  });
 });
 
 describe("saveTodayGame", () => {
@@ -175,5 +244,19 @@ describe("saveTodayGame", () => {
     expect(Object.keys(history)).toHaveLength(2);
     expect(history["2026-03-01"]).toBeDefined();
     expect(history["2026-03-02"]).toBeDefined();
+  });
+
+  test("saves a game record with playing status", () => {
+    saveTodayGame("2026-03-01", {
+      guesses: ["川", "山"],
+      status: "playing",
+      guessCount: 2,
+    });
+    const history = loadHistory();
+    expect(history["2026-03-01"]).toEqual({
+      guesses: ["川", "山"],
+      status: "playing",
+      guessCount: 2,
+    });
   });
 });

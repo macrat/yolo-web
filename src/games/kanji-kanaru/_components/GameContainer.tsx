@@ -8,6 +8,7 @@ import type {
   KanjiEntry,
   PuzzleScheduleEntry,
 } from "@/games/kanji-kanaru/_lib/types";
+import { MAX_GUESSES } from "@/games/kanji-kanaru/_lib/types";
 import { evaluateGuess, lookupKanji } from "@/games/kanji-kanaru/_lib/engine";
 import {
   getTodaysPuzzle,
@@ -30,7 +31,6 @@ import ResultModal from "./ResultModal";
 import StatsModal from "./StatsModal";
 import HowToPlayModal from "./HowToPlayModal";
 
-const MAX_GUESSES = 6;
 const FIRST_VISIT_KEY = "kanji-kanaru-first-visit";
 
 /**
@@ -172,12 +172,11 @@ export default function GameContainer() {
       // Persist game to localStorage
       const guessChars = newGuesses.map((g) => g.guess);
       if (newStatus === "playing") {
-        // Save in-progress game (store as won so we can detect partial state on reload)
-        // Actually, for in-progress, we just save the guesses. On reload we rebuild.
+        // Save in-progress game
         const history = loadHistory();
         history[todayStr] = {
           guesses: guessChars,
-          status: "lost", // Placeholder; overwritten on completion
+          status: "playing",
           guessCount: guessChars.length,
         };
         saveHistory(history);
