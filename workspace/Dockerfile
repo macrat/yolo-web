@@ -6,6 +6,7 @@ RUN curl -fsSLo /etc/apt/keyrings/githubcli-archive-keyring.gpg https://cli.gith
 	&& apt-get update \
 	&& apt-get install -y \
 		gh \
+		jq \
 		ripgrep \
 		vim \
 	&& rm -rf /var/lib/apt/lists/* \
