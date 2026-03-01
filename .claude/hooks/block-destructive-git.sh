@@ -3,9 +3,6 @@
 INPUT=$(cat)
 COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command')
 
-# Allow bypass with ALLOW_DESTRUCTIVE=1
-if [ "$ALLOW_DESTRUCTIVE" = "1" ]; then exit 0; fi
-
 # Only intercept git commands
 if ! echo "$COMMAND" | grep -q "git "; then
   exit 0
@@ -73,13 +70,7 @@ if [ -z "$STATUS_OUTPUT" ]; then
 fi
 
 # There are uncommitted changes - block the destructive command
-echo "BLOCKED: コミットされていない変更が ${CHANGE_COUNT} 件あります。" >&2
-echo "" >&2
+echo "BLOCKED: uncommittedの変更が${CHANGE_COUNT}件あります。破壊的なgitコマンドを実行する前に、変更をcommitまたはstashしてください。" >&2
 echo "変更のあるファイル:" >&2
 echo "$STATUS_OUTPUT" >&2
-echo "" >&2
-echo "git status と git diff で変更内容を確認してください。" >&2
-echo "変更を commit または stash してから再実行してください。" >&2
-echo "" >&2
-echo "意図的に実行する場合は ALLOW_DESTRUCTIVE=1 を設定して実行できます。" >&2
 exit 2
