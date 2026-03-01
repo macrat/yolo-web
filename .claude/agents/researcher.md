@@ -3,7 +3,6 @@ name: researcher
 description: Provides accurate and relevant information through research. Use for codebase audits, technology research, and information gathering. To ensure the highest quality results, launch one agent per topic.
 tools: Read, Glob, Grep, Bash, WebFetch, WebSearch
 model: sonnet
-permissionMode: bypassPermissions
 ---
 
 `npm run memo -- read <memo-id>` を使って作業依頼メモを読んで、内容に従って調査を実施してください。

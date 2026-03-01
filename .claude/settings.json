@@ -1,5 +1,5 @@
 {
-  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "$schema": "https://json-schema.org/claude-code-settings.json",
   "permissions": {
     "allow": [
       "Bash",
@@ -10,9 +10,10 @@
     ],
     "deny": [
       "Edit(/docs/constitution.md)",
-      "Task(Explore)",
-      "Task(Plan)",
-      "Task(general-purpose)"
+      "Write(/docs/constitution.md)",
+      "Agent(Explore)",
+      "Agent(Plan)",
+      "Agent(general-purpose)"
     ]
   },
   "hooks": {
@@ -31,6 +32,19 @@
           {
             "type": "command",
             "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/block-destructive-git.sh"
+          },
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/protect-constitution-bash.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/protect-constitution.sh"
           }
         ]
       }
