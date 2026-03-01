@@ -8,6 +8,8 @@ export interface DictionaryMeta {
   slug: string;
   /** 辞典の表示名（例: "漢字辞典"） */
   name: string;
+  /** ISO date string of last data update (e.g. "2026-02-19") */
+  publishedAt: string;
   /** コンテンツの信頼レベル */
   trustLevel: TrustLevel;
   /** 一行価値テキスト（40字以内推奨） */

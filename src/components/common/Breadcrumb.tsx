@@ -1,5 +1,9 @@
 import Link from "next/link";
-import { generateBreadcrumbJsonLd, type BreadcrumbItem } from "@/lib/seo";
+import {
+  generateBreadcrumbJsonLd,
+  safeJsonLdStringify,
+  type BreadcrumbItem,
+} from "@/lib/seo";
 import styles from "./Breadcrumb.module.css";
 
 interface BreadcrumbProps {
@@ -13,7 +17,7 @@ export default function Breadcrumb({ items }: BreadcrumbProps) {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLdStringify(jsonLd) }}
       />
       <nav className={styles.breadcrumb} aria-label="パンくずリスト">
         {items.map((item, index) => {

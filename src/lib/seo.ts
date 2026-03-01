@@ -20,6 +20,11 @@ export function generateToolMetadata(meta: ToolMeta): Metadata {
       url: `${BASE_URL}/tools/${meta.slug}`,
       siteName: SITE_NAME,
     },
+    twitter: {
+      card: "summary_large_image",
+      title: `${meta.name} - tools`,
+      description: meta.description,
+    },
     alternates: {
       canonical: `${BASE_URL}/tools/${meta.slug}`,
     },
@@ -71,6 +76,11 @@ export function generateBlogPostMetadata(post: BlogPostMetaForSeo): Metadata {
       publishedTime: post.published_at,
       modifiedTime: post.updated_at,
     },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.description,
+    },
     alternates: {
       canonical: `${BASE_URL}/blog/${post.slug}`,
     },
@@ -120,6 +130,11 @@ export function generateMemoPageMetadata(memo: MemoMetaForSeo): Metadata {
       url: `${BASE_URL}/memos/${memo.id}`,
       siteName: SITE_NAME,
       publishedTime: memo.created_at,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: memo.subject,
+      description: `AIエージェント間のメモ: ${memo.from} -> ${memo.to}`,
     },
     alternates: {
       canonical: `${BASE_URL}/memos/${memo.id}`,
@@ -252,6 +267,11 @@ export function generateKanjiPageMetadata(kanji: KanjiMetaForSeo): Metadata {
       url: `${BASE_URL}/dictionary/kanji/${encodeURIComponent(kanji.character)}`,
       siteName: SITE_NAME,
     },
+    twitter: {
+      card: "summary_large_image",
+      title: `「${kanji.character}」の漢字情報 - 漢字辞典`,
+      description: `漢字「${kanji.character}」の読み方・意味・使い方。読み: ${readingText}。`,
+    },
     alternates: {
       canonical: `${BASE_URL}/dictionary/kanji/${encodeURIComponent(kanji.character)}`,
     },
@@ -292,6 +312,11 @@ export function generateYojiPageMetadata(yoji: YojiMetaForSeo): Metadata {
       type: "website",
       url: `${BASE_URL}/dictionary/yoji/${encodeURIComponent(yoji.yoji)}`,
       siteName: SITE_NAME,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `「${yoji.yoji}」の意味・読み方 - 四字熟語辞典`,
+      description: `四字熟語「${yoji.yoji}」（${yoji.reading}）: ${yoji.meaning}`,
     },
     alternates: {
       canonical: `${BASE_URL}/dictionary/yoji/${encodeURIComponent(yoji.yoji)}`,
@@ -337,6 +362,11 @@ export function generateColorPageMetadata(color: ColorMetaForSeo): Metadata {
       url: `${BASE_URL}/dictionary/colors/${color.slug}`,
       siteName: SITE_NAME,
     },
+    twitter: {
+      card: "summary_large_image",
+      title: `${color.name}（${color.romaji}）${color.hex} - 日本の伝統色`,
+      description: `日本の伝統色「${color.name}」（${color.romaji}）。カラーコード: ${color.hex}。`,
+    },
     alternates: {
       canonical: `${BASE_URL}/dictionary/colors/${color.slug}`,
     },
@@ -374,6 +404,11 @@ export function generateColorCategoryMetadata(
       url: `${BASE_URL}/dictionary/colors/category/${category}`,
       siteName: SITE_NAME,
     },
+    twitter: {
+      card: "summary_large_image",
+      title: `${label}の伝統色一覧 - 日本の伝統色`,
+      description: `日本の伝統色「${label}」カテゴリの色一覧。`,
+    },
     alternates: {
       canonical: `${BASE_URL}/dictionary/colors/category/${category}`,
     },
@@ -393,6 +428,11 @@ export function generateCheatsheetMetadata(meta: CheatsheetMeta): Metadata {
       type: "article",
       url: `${BASE_URL}/cheatsheets/${meta.slug}`,
       siteName: SITE_NAME,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${meta.name} - チートシート`,
+      description: meta.description,
     },
     alternates: {
       canonical: `${BASE_URL}/cheatsheets/${meta.slug}`,
@@ -431,6 +471,11 @@ export function generateQuizMetadata(meta: QuizMeta): Metadata {
       url: `${BASE_URL}/quiz/${meta.slug}`,
       siteName: SITE_NAME,
     },
+    twitter: {
+      card: "summary_large_image",
+      title: `${meta.title} - クイズ`,
+      description: meta.description,
+    },
     alternates: {
       canonical: `${BASE_URL}/quiz/${meta.slug}`,
     },
@@ -458,6 +503,19 @@ export function generateQuizJsonLd(meta: QuizMeta): object {
       name: "yolos.net (AI Experiment)",
     },
   };
+}
+
+/**
+ * JSON-LDオブジェクトをscript-breakout対策付きでJSON文字列に変換する。
+ *
+ * HTML内の <script type="application/ld+json"> に埋め込む際に、
+ * `</script>` による script-breakout 攻撃を防ぐため、
+ * `<` を Unicode エスケープ `\u003c` に置換する。
+ *
+ * @see https://nextjs.org/docs/app/guides/json-ld
+ */
+export function safeJsonLdStringify(data: object): string {
+  return JSON.stringify(data).replace(/</g, "\\u003c");
 }
 
 export { BASE_URL, SITE_NAME };

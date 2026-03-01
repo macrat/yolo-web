@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { generateGameJsonLd } from "@/lib/seo";
+import { generateGameJsonLd, safeJsonLdStringify } from "@/lib/seo";
+import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { gameBySlug } from "@/games/registry";
 import GameLayout from "@/games/_components/GameLayout";
 import GameContainer from "@/games/yoji-kimeru/_components/GameContainer";
@@ -25,12 +26,17 @@ export const metadata: Metadata = {
     description:
       "毎日1つの四字熟語を当てるパズルゲーム。色のフィードバックで推理しよう!",
     type: "website",
+    url: `${BASE_URL}/games/yoji-kimeru`,
+    siteName: SITE_NAME,
   },
   twitter: {
     card: "summary_large_image",
     title: "四字キメル - 毎日の四字熟語パズル",
     description:
       "毎日1つの四字熟語を当てるパズルゲーム。色のフィードバックで推理しよう!",
+  },
+  alternates: {
+    canonical: `${BASE_URL}/games/yoji-kimeru`,
   },
 };
 
@@ -51,7 +57,7 @@ export default function YojiKimeruPage() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(gameJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLdStringify(gameJsonLd) }}
       />
       <GameLayout
         meta={gameMeta}

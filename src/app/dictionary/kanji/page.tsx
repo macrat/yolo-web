@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Breadcrumb from "@/components/common/Breadcrumb";
 import TrustLevelBadge from "@/components/common/TrustLevelBadge";
 import CategoryNav from "@/dictionary/_components/CategoryNav";
-import { SITE_NAME } from "@/lib/constants";
+import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { getAllKanji, getKanjiCategories } from "@/dictionary/_lib/kanji";
 import { KANJI_CATEGORY_LABELS } from "@/dictionary/_lib/types";
 import KanjiIndexClient from "./KanjiIndexClient";
@@ -18,9 +18,17 @@ export const metadata: Metadata = {
     description:
       "小学1年生で学ぶ基本漢字80字の読み方・意味・部首・画数を丁寧にまとめたオンライン漢字辞典。",
     type: "website",
+    url: `${BASE_URL}/dictionary/kanji`,
+    siteName: SITE_NAME,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `漢字辞典 | ${SITE_NAME}`,
+    description:
+      "小学1年生で学ぶ基本漢字80字の読み方・意味・部首・画数を丁寧にまとめたオンライン漢字辞典。",
   },
   alternates: {
-    canonical: "/dictionary/kanji",
+    canonical: `${BASE_URL}/dictionary/kanji`,
   },
 };
 

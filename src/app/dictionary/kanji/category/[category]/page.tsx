@@ -5,7 +5,7 @@ import TrustLevelBadge from "@/components/common/TrustLevelBadge";
 import CategoryNav from "@/dictionary/_components/CategoryNav";
 import DictionaryCard from "@/dictionary/_components/DictionaryCard";
 import DictionaryGrid from "@/dictionary/_components/DictionaryGrid";
-import { SITE_NAME } from "@/lib/constants";
+import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import {
   getKanjiByCategory,
   getKanjiCategories,
@@ -42,8 +42,20 @@ export async function generateMetadata({
   return {
     title: `${label}の漢字一覧 - 漢字辞典 | ${SITE_NAME}`,
     description: `「${label}」カテゴリの漢字一覧。読み方・意味・部首情報を確認できます。`,
+    openGraph: {
+      title: `${label}の漢字一覧 - 漢字辞典 | ${SITE_NAME}`,
+      description: `「${label}」カテゴリの漢字一覧。読み方・意味・部首情報を確認できます。`,
+      type: "website",
+      url: `${BASE_URL}/dictionary/kanji/category/${category}`,
+      siteName: SITE_NAME,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${label}の漢字一覧 - 漢字辞典 | ${SITE_NAME}`,
+      description: `「${label}」カテゴリの漢字一覧。読み方・意味・部首情報を確認できます。`,
+    },
     alternates: {
-      canonical: `/dictionary/kanji/category/${category}`,
+      canonical: `${BASE_URL}/dictionary/kanji/category/${category}`,
     },
   };
 }

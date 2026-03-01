@@ -4,7 +4,7 @@ import GoogleAnalytics from "@/components/common/GoogleAnalytics";
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
 import ThemeProvider from "@/components/common/ThemeProvider";
-import { generateWebSiteJsonLd } from "@/lib/seo";
+import { generateWebSiteJsonLd, safeJsonLdStringify } from "@/lib/seo";
 import { BASE_URL, SITE_NAME } from "@/lib/constants";
 import { allGameMetas, getGamePath } from "@/games/registry";
 
@@ -58,7 +58,9 @@ export default function RootLayout({
       >
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+          dangerouslySetInnerHTML={{
+            __html: safeJsonLdStringify(websiteJsonLd),
+          }}
         />
         <ThemeProvider>
           <GoogleAnalytics />

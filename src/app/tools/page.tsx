@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { allToolMetas } from "@/tools/registry";
 import { paginate, TOOLS_PER_PAGE } from "@/lib/pagination";
-import { BASE_URL } from "@/lib/constants";
+import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import ToolsListView from "@/tools/_components/ToolsListView";
 
 export const metadata: Metadata = {
@@ -16,6 +16,20 @@ export const metadata: Metadata = {
     "文字数カウント",
     "日付計算",
   ],
+  openGraph: {
+    title: "無料オンラインツール一覧 | yolos.net Tools",
+    description:
+      "文字数カウント、日付計算、パスワード生成などの便利ツールから、JSON整形・正規表現テストなどの開発者向けツールまで、32個を無料で提供。登録不要でブラウザ上ですぐに使えます。",
+    type: "website",
+    url: `${BASE_URL}/tools`,
+    siteName: SITE_NAME,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "無料オンラインツール一覧 | yolos.net Tools",
+    description:
+      "文字数カウント、日付計算、パスワード生成などの便利ツールから、JSON整形・正規表現テストなどの開発者向けツールまで、32個を無料で提供。登録不要でブラウザ上ですぐに使えます。",
+  },
   alternates: {
     canonical: `${BASE_URL}/tools`,
     types: {

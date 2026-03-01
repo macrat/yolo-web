@@ -1,5 +1,8 @@
 import { describe, test, expect } from "vitest";
 import sitemap from "../sitemap";
+import { allGameMetas } from "@/games/registry";
+import { allQuizMetas } from "@/quiz/registry";
+import { allCheatsheetMetas } from "@/cheatsheets/registry";
 
 describe("sitemap", () => {
   test("sitemap includes /games", () => {
@@ -10,18 +13,86 @@ describe("sitemap", () => {
     );
   });
 
-  test("sitemap includes /games/kanji-kanaru with daily frequency", () => {
+  test("sitemap includes /games/kanji-kanaru with monthly frequency", () => {
     const entries = sitemap();
     const kanjiEntry = entries.find((e) =>
       e.url.includes("/games/kanji-kanaru"),
     );
-    expect(kanjiEntry?.changeFrequency).toBe("daily");
+    expect(kanjiEntry?.changeFrequency).toBe("monthly");
   });
 
-  test("sitemap includes /games/yoji-kimeru with daily frequency", () => {
+  test("sitemap includes /games/yoji-kimeru with monthly frequency", () => {
     const entries = sitemap();
     const yojiEntry = entries.find((e) => e.url.includes("/games/yoji-kimeru"));
     expect(yojiEntry).toBeDefined();
-    expect(yojiEntry?.changeFrequency).toBe("daily");
+    expect(yojiEntry?.changeFrequency).toBe("monthly");
+  });
+
+  test("no entry uses current build time as lastModified", () => {
+    const before = Date.now();
+    const entries = sitemap();
+    // All lastModified values should be well before the test execution time
+    // (fixed dates in the past, not new Date() at build time)
+    for (const entry of entries) {
+      if (entry.lastModified instanceof Date) {
+        expect(entry.lastModified.getTime()).toBeLessThan(before);
+      }
+    }
+  });
+
+  test("blog post lastModified reflects actual post date", () => {
+    const entries = sitemap();
+    const blogEntries = entries.filter(
+      (e) =>
+        typeof e.url === "string" &&
+        e.url.includes("/blog/") &&
+        !e.url.includes("/category/") &&
+        !e.url.includes("/page/"),
+    );
+    // Blog entries should exist and have lastModified in the past
+    expect(blogEntries.length).toBeGreaterThan(0);
+    const now = Date.now();
+    for (const entry of blogEntries) {
+      if (entry.lastModified instanceof Date) {
+        expect(entry.lastModified.getTime()).toBeLessThan(now);
+      }
+    }
+  });
+
+  test("quiz page lastModified matches each quiz publishedAt", () => {
+    const entries = sitemap();
+    for (const meta of allQuizMetas) {
+      const quizEntry = entries.find(
+        (e) =>
+          typeof e.url === "string" && e.url.endsWith(`/quiz/${meta.slug}`),
+      );
+      expect(quizEntry).toBeDefined();
+      expect(quizEntry?.lastModified).toEqual(new Date(meta.publishedAt));
+    }
+  });
+
+  test("cheatsheet page lastModified matches each cheatsheet publishedAt", () => {
+    const entries = sitemap();
+    for (const meta of allCheatsheetMetas) {
+      const csEntry = entries.find(
+        (e) =>
+          typeof e.url === "string" &&
+          e.url.endsWith(`/cheatsheets/${meta.slug}`),
+      );
+      expect(csEntry).toBeDefined();
+      expect(csEntry?.lastModified).toEqual(new Date(meta.publishedAt));
+    }
+  });
+
+  test("game page lastModified matches each game publishedAt", () => {
+    const entries = sitemap();
+    for (const game of allGameMetas) {
+      const gameEntry = entries.find(
+        (e) =>
+          typeof e.url === "string" && e.url.endsWith(`/games/${game.slug}`),
+      );
+      expect(gameEntry).toBeDefined();
+      expect(gameEntry?.lastModified).toEqual(new Date(game.publishedAt));
+    }
   });
 });

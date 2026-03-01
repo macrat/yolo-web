@@ -26,6 +26,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${label} - AI試行錯誤ブログ | ${SITE_NAME}`,
     description: `AI試行錯誤ブログの「${label}」カテゴリの記事一覧。`,
+    openGraph: {
+      title: `${label} - AI試行錯誤ブログ | ${SITE_NAME}`,
+      description: `AI試行錯誤ブログの「${label}」カテゴリの記事一覧。`,
+      type: "website",
+      url: `${BASE_URL}/blog/category/${category}`,
+      siteName: SITE_NAME,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${label} - AI試行錯誤ブログ | ${SITE_NAME}`,
+      description: `AI試行錯誤ブログの「${label}」カテゴリの記事一覧。`,
+    },
     alternates: {
       canonical: `${BASE_URL}/blog/category/${category}`,
       types: {

@@ -5,7 +5,7 @@ import CategoryNav from "@/dictionary/_components/CategoryNav";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { getAllColors, getColorCategories } from "@/dictionary/_lib/colors";
 import { COLOR_CATEGORY_LABELS } from "@/dictionary/_lib/types";
-import { generateBreadcrumbJsonLd } from "@/lib/seo";
+import { generateBreadcrumbJsonLd, safeJsonLdStringify } from "@/lib/seo";
 import ColorsIndexClient from "./ColorsIndexClient";
 import styles from "./page.module.css";
 
@@ -19,6 +19,12 @@ export const metadata: Metadata = {
     description: "日本の伝統色250色の一覧。カラーコードをカテゴリ別に検索。",
     type: "website",
     url: `${BASE_URL}/dictionary/colors`,
+    siteName: SITE_NAME,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `日本の伝統色 - 250色一覧 | ${SITE_NAME}`,
+    description: "日本の伝統色250色の一覧。カラーコードをカテゴリ別に検索。",
   },
   alternates: {
     canonical: `${BASE_URL}/dictionary/colors`,
@@ -42,7 +48,9 @@ export default function ColorsIndexPage() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        dangerouslySetInnerHTML={{
+          __html: safeJsonLdStringify(breadcrumbJsonLd),
+        }}
       />
       <Breadcrumb
         items={[

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Breadcrumb from "@/components/common/Breadcrumb";
-import { SITE_NAME } from "@/lib/constants";
+import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { getAllKanji } from "@/dictionary/_lib/kanji";
 import { getAllYoji } from "@/dictionary/_lib/yoji";
 import { getAllColors } from "@/dictionary/_lib/colors";
@@ -25,9 +25,17 @@ export const metadata: Metadata = {
     description:
       "漢字・四字熟語・日本の伝統色を楽しく学べるオンライン辞典。漢字80字、四字熟語101語、伝統色250色を収録。",
     type: "website",
+    url: `${BASE_URL}/dictionary`,
+    siteName: SITE_NAME,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `辞典 | ${SITE_NAME}`,
+    description:
+      "漢字・四字熟語・日本の伝統色を楽しく学べるオンライン辞典。漢字80字、四字熟語101語、伝統色250色を収録。",
   },
   alternates: {
-    canonical: "/dictionary",
+    canonical: `${BASE_URL}/dictionary`,
   },
 };
 

@@ -8,6 +8,20 @@ export const metadata: Metadata = {
   title: `AI試行錯誤ブログ | ${SITE_NAME}`,
   description:
     "AIエージェントたちがサイトを運営する過程を公開。意思決定、技術的挑戦、失敗と学びを記録します。",
+  openGraph: {
+    title: `AI試行錯誤ブログ | ${SITE_NAME}`,
+    description:
+      "AIエージェントたちがサイトを運営する過程を公開。意思決定、技術的挑戦、失敗と学びを記録します。",
+    type: "website",
+    url: `${BASE_URL}/blog`,
+    siteName: SITE_NAME,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `AI試行錯誤ブログ | ${SITE_NAME}`,
+    description:
+      "AIエージェントたちがサイトを運営する過程を公開。意思決定、技術的挑戦、失敗と学びを記録します。",
+  },
   alternates: {
     canonical: `${BASE_URL}/blog`,
     types: {
