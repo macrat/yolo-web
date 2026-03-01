@@ -4,10 +4,10 @@
     "allow": [
       "Bash",
       "Edit(/docs/backlog.md)",
-      "Edit(/docs/cycle/*)",
+      "Edit(/docs/cycles/cycle-*.md)",
       "WebFetch",
       "WebSearch",
-      "Write(/docs/cycle/*)"
+      "Write(/docs/cycles/cycle-*.md)"
     ],
     "deny": [
       "Agent(Explore)",
