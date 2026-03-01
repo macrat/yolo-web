@@ -143,6 +143,75 @@ describe("loadTodayGame", () => {
       guessCount: 2,
     });
   });
+
+  test("returns playing data as-is when status is playing", () => {
+    const history: YojiGameHistory = {
+      "2026-03-01": {
+        guesses: ["花鳥風月", "一期一会"],
+        status: "playing",
+        guessCount: 2,
+      },
+    };
+    localStorageMock.setItem("yoji-kimeru-history", JSON.stringify(history));
+    const game = loadTodayGame("2026-03-01");
+    expect(game).not.toBeNull();
+    expect(game!.status).toBe("playing");
+    expect(game!.guessCount).toBe(2);
+  });
+
+  test("migrates old lost data to playing when guessCount < MAX_GUESSES", () => {
+    // Old format: status was "lost" as a placeholder during in-progress games
+    const history: YojiGameHistory = {
+      "2026-03-01": {
+        guesses: ["花鳥風月", "一期一会", "切磋琢磨"],
+        status: "lost",
+        guessCount: 3,
+      },
+    };
+    localStorageMock.setItem("yoji-kimeru-history", JSON.stringify(history));
+    const game = loadTodayGame("2026-03-01");
+    expect(game).not.toBeNull();
+    expect(game!.status).toBe("playing");
+    expect(game!.guessCount).toBe(3);
+    expect(game!.guesses).toEqual(["花鳥風月", "一期一会", "切磋琢磨"]);
+  });
+
+  test("keeps lost status when guessCount >= MAX_GUESSES (real loss)", () => {
+    const history: YojiGameHistory = {
+      "2026-03-01": {
+        guesses: [
+          "花鳥風月",
+          "一期一会",
+          "切磋琢磨",
+          "四面楚歌",
+          "臥薪嘗胆",
+          "温故知新",
+        ],
+        status: "lost",
+        guessCount: 6,
+      },
+    };
+    localStorageMock.setItem("yoji-kimeru-history", JSON.stringify(history));
+    const game = loadTodayGame("2026-03-01");
+    expect(game).not.toBeNull();
+    expect(game!.status).toBe("lost");
+    expect(game!.guessCount).toBe(6);
+  });
+
+  test("keeps won status unchanged", () => {
+    const history: YojiGameHistory = {
+      "2026-03-01": {
+        guesses: ["花鳥風月", "一期一会"],
+        status: "won",
+        guessCount: 2,
+      },
+    };
+    localStorageMock.setItem("yoji-kimeru-history", JSON.stringify(history));
+    const game = loadTodayGame("2026-03-01");
+    expect(game).not.toBeNull();
+    expect(game!.status).toBe("won");
+    expect(game!.guessCount).toBe(2);
+  });
 });
 
 describe("saveTodayGame", () => {
@@ -175,5 +244,19 @@ describe("saveTodayGame", () => {
     expect(Object.keys(history)).toHaveLength(2);
     expect(history["2026-03-01"]).toBeDefined();
     expect(history["2026-03-02"]).toBeDefined();
+  });
+
+  test("saves a game record with playing status", () => {
+    saveTodayGame("2026-03-01", {
+      guesses: ["花鳥風月", "一期一会"],
+      status: "playing",
+      guessCount: 2,
+    });
+    const history = loadHistory();
+    expect(history["2026-03-01"]).toEqual({
+      guesses: ["花鳥風月", "一期一会"],
+      status: "playing",
+      guessCount: 2,
+    });
   });
 });

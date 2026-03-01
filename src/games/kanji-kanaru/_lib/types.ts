@@ -64,7 +64,7 @@ export interface GameStats {
 export interface GameHistory {
   [date: string]: {
     guesses: string[];
-    status: "won" | "lost";
+    status: "won" | "lost" | "playing";
     guessCount: number;
   };
 }
@@ -73,3 +73,6 @@ export interface PuzzleScheduleEntry {
   date: string;
   kanjiIndex: number;
 }
+
+/** Maximum number of guesses allowed per game. */
+export const MAX_GUESSES = 6;

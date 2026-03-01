@@ -8,6 +8,7 @@ import type {
   YojiEntry,
   YojiPuzzleScheduleEntry,
 } from "@/games/yoji-kimeru/_lib/types";
+import { MAX_GUESSES } from "@/games/yoji-kimeru/_lib/types";
 import {
   evaluateGuess,
   isValidYojiInput,
@@ -30,7 +31,6 @@ import ResultModal from "./ResultModal";
 import StatsModal from "./StatsModal";
 import HowToPlayModal from "./HowToPlayModal";
 
-const MAX_GUESSES = 6;
 const FIRST_VISIT_KEY = "yoji-kimeru-first-visit";
 
 /**
@@ -167,7 +167,7 @@ export default function GameContainer() {
         const history = loadHistory();
         history[todayStr] = {
           guesses: guessStrs,
-          status: "lost", // Placeholder; overwritten on completion
+          status: "playing",
           guessCount: guessStrs.length,
         };
         saveHistory(history);

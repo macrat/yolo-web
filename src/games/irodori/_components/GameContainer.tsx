@@ -69,11 +69,19 @@ export default function GameContainer() {
     [todayStr],
   );
 
+  // Determine the initial round index for slider values.
+  // Reads from localStorage once to determine if we are resuming a game.
+  const initialRoundIdx = useMemo(() => {
+    const saved = loadTodayGame(todayStr);
+    if (saved?.status === "playing" && saved.currentRound != null) {
+      return saved.currentRound;
+    }
+    return 0;
+  }, [todayStr]);
+
   const [gameState, setGameState] = useState<IrodoriGameState>(() => {
-    // Try to restore from localStorage
     const saved = loadTodayGame(todayStr);
     if (saved) {
-      // Rebuild completed state from saved history
       const rounds: IrodoriRound[] = todaysPuzzle.colors.map((color, i) => ({
         target: color,
         answer: null, // We don't store answers in history
@@ -81,16 +89,29 @@ export default function GameContainer() {
         score: saved.scores[i] ?? null,
       }));
 
+      if (saved.status === "completed") {
+        return {
+          puzzleDate: todayStr,
+          puzzleNumber: todaysPuzzle.puzzleNumber,
+          rounds,
+          currentRound: ROUNDS_PER_GAME,
+          status: "completed",
+          initialSliderValues,
+        };
+      }
+
+      // status === "playing": resume from saved round
       return {
         puzzleDate: todayStr,
         puzzleNumber: todaysPuzzle.puzzleNumber,
         rounds,
-        currentRound: ROUNDS_PER_GAME,
-        status: "completed",
+        currentRound: saved.currentRound,
+        status: "playing",
         initialSliderValues,
       };
     }
 
+    // New game
     const rounds: IrodoriRound[] = todaysPuzzle.colors.map((color) => ({
       target: color,
       answer: null,
@@ -110,14 +131,19 @@ export default function GameContainer() {
 
   const [stats, setStats] = useState<IrodoriGameStats>(() => loadStats());
 
-  // Current slider values
+  // Current slider values - restore to the correct round's initial values on resume
   const [sliderH, setSliderH] = useState(
-    () => initialSliderValues[0]?.h ?? 180,
+    () => initialSliderValues[initialRoundIdx]?.h ?? 180,
   );
-  const [sliderS, setSliderS] = useState(() => initialSliderValues[0]?.s ?? 50);
-  const [sliderL, setSliderL] = useState(() => initialSliderValues[0]?.l ?? 50);
+  const [sliderS, setSliderS] = useState(
+    () => initialSliderValues[initialRoundIdx]?.s ?? 50,
+  );
+  const [sliderL, setSliderL] = useState(
+    () => initialSliderValues[initialRoundIdx]?.l ?? 50,
+  );
 
   // Phase: "play" or "result" (showing round result before next round)
+  // When resuming a playing game, we start in "play" phase (status !== "completed")
   const [phase, setPhase] = useState<"play" | "result">(() =>
     gameState.status === "completed" ? "result" : "play",
   );
@@ -189,34 +215,52 @@ export default function GameContainer() {
     setGameState(newState);
     setPhase("result");
 
-    if (isLastRound) {
-      // Save to history and update stats
-      const scores = updatedRounds.map((r) => r.score ?? 0);
-      const totalScore = calculateTotalScore(scores);
+    // Save progress after every round (not just the last)
+    const nextRound = isLastRound
+      ? ROUNDS_PER_GAME
+      : gameState.currentRound + 1;
+    const scores = updatedRounds.map((r) => r.score);
+    const totalScore = isLastRound
+      ? calculateTotalScore(scores.map((s) => s ?? 0))
+      : null;
 
-      saveTodayGame(todayStr, {
-        scores,
-        totalScore,
-      });
+    saveTodayGame(todayStr, {
+      scores,
+      totalScore,
+      currentRound: nextRound,
+      status: isLastRound ? "completed" : "playing",
+    });
+
+    if (isLastRound) {
+      // Update stats only on game completion
+      const finalScores = scores.map((s) => s ?? 0);
+      const finalTotalScore = calculateTotalScore(finalScores);
 
       const updatedStats = { ...stats };
       updatedStats.gamesPlayed += 1;
 
       // Update average score
       const totalGamesScore =
-        updatedStats.averageScore * (updatedStats.gamesPlayed - 1) + totalScore;
+        updatedStats.averageScore * (updatedStats.gamesPlayed - 1) +
+        finalTotalScore;
       updatedStats.averageScore = totalGamesScore / updatedStats.gamesPlayed;
 
-      updatedStats.bestScore = Math.max(updatedStats.bestScore, totalScore);
+      updatedStats.bestScore = Math.max(
+        updatedStats.bestScore,
+        finalTotalScore,
+      );
 
-      // Update streak
+      // Update streak - only count completed games
       const yesterday = new Date();
       yesterday.setDate(yesterday.getDate() - 1);
       const yesterdayStr = formatDateJST(yesterday);
       const history = loadHistory();
       const yesterdayGame = history[yesterdayStr];
 
-      if (stats.lastPlayedDate === yesterdayStr && yesterdayGame) {
+      if (
+        stats.lastPlayedDate === yesterdayStr &&
+        yesterdayGame?.status === "completed"
+      ) {
         updatedStats.currentStreak = stats.currentStreak + 1;
       } else {
         updatedStats.currentStreak = 1;
@@ -228,7 +272,7 @@ export default function GameContainer() {
       updatedStats.lastPlayedDate = todayStr;
 
       // Update score distribution
-      const bucket = Math.min(Math.floor(totalScore / 10), 9);
+      const bucket = Math.min(Math.floor(finalTotalScore / 10), 9);
       updatedStats.scoreDistribution[bucket] += 1;
 
       setStats(updatedStats);

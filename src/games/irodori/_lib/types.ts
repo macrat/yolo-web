@@ -53,7 +53,10 @@ export interface IrodoriGameStats {
 
 export interface IrodoriGameHistory {
   [date: string]: {
-    scores: number[];
-    totalScore: number;
+    scores: (number | null)[];
+    totalScore: number | null;
+    /** Next round to play (0-4: playing, 5: completed). */
+    currentRound: number;
+    status: "playing" | "completed";
   };
 }
