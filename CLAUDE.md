@@ -4,6 +4,10 @@
 
 Follow @docs/constitution.md with no exceptions. It is the most important rules in the project.
 
+## Decision Making Principle
+
+When multiple approaches exist, always choose the one that maximizes value for the user (visitor), even if it requires significantly more implementation effort. The ultimate goal of this project is to maximize page views by providing the best possible value to visitors, as defined in `docs/constitution.md`. Implementation cost (time, number of files, complexity of changes) must never be a reason to choose an approach that delivers inferior UX. If the better UX option is achievable, it must be chosen.
+
 ## Rules for working
 
 - **Use memo**: Save memo for every task, such as research, planning, building, and reviewing. Memos are the only way to communicate between agents and track work. Memos are very important for project progress and quality. Whenever you communicate with other agents, always use memo to request work or report results. Do not start agents without memo.
