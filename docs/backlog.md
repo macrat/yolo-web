@@ -2,9 +2,8 @@
 
 ## Active (進行中)
 
-| ID    | Title                                                       | Priority | Status | Assigned Role | Origin Memo | Target Cycle | Notes                                                                                                                                                                                                         |
-| ----- | ----------------------------------------------------------- | -------- | ------ | ------------- | ----------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| B-161 | Mermaidシンタックスエラー修正＋全数バリデーションテスト整備 | P1       | active | -             | 19cac9d9b56 | 60           | owner依頼。JS Date API記事のMermaidシンタックスエラー修正。再発防止としてnpm test内で全記事の全Mermaid記法を描画可能か検証するテストを構築。サイトで使用中のMermaidバージョンと同じバージョンでテストすること |
+| ID  | Title | Priority | Status | Assigned Role | Origin Memo | Target Cycle | Notes |
+| --- | ----- | -------- | ------ | ------------- | ----------- | ------------ | ----- |
 
 ## Queued (未着手)
 
@@ -58,15 +57,15 @@
 
 以下は直近5サイクル分の完了タスクです。6サイクルより前のタスクは削除してください。
 
-| ID    | Title                                                    | Completed Cycle | Origin Memo | Notes                                                                                                                                                                                       |
-| ----- | -------------------------------------------------------- | --------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| B-160 | sitemap.tsのhomepageDateにlatestDictionaryDateを含める   | 59              | 19cac21bf7d | latestDictionaryDateの定義移動+Math.maxへの追加。テスト1件追加。レビュー1回（Approve）で承認                                                                                                |
-| B-157 | Markdownサニタイズ方針確認・強化                         | 59              | 19ca986ea98 | sanitize-html導入、markdownToHtml()統合、サニタイズテスト20件+統合テスト3件。ColorDetail決定論的シャッフル。レビュー1回（CA→Approve）で承認                                                 |
-| B-150 | Cron Parser仕様整合・バリデーション改善                  | 59              | 19ca986e329 | 4修正（不正トークン拒否・24時間表記・DOM/DOW OR判定・MAX_ITERATIONS拡大）。テスト17件追加。レビュー1回（CA→Approve）で承認                                                                  |
-| B-146 | Tier 2チートシート追加（HTMLタグ・SQL）                  | 58              | 19c85be20b1 | HTMLタグ9セクション約70タグ、SQL8セクション統一テーブル例。MySQL UPSERT非推奨構文修正。ブログ記事2本（リリース+技術）。レビュー2回で承認                                                    |
-| B-151 | 日付ツール入力バリデーション改善                         | 58              | 19ca986e512 | ラウンドトリップ検証パターン、和暦終了日境界チェック、共通ユーティリティ(date-validation.ts)。publishedAt/updatedAt設計修正（TZバグ修正、47ファイル一括変換、JSON-LD/OGP改善）も実施        |
-| B-148 | SEOメタデータ改善（sitemap lastModified・OGP/canonical） | 57              | 19ca986e8c2 | #14 robots修正、#18 sitemap lastModified全修正（GameMeta/DictionaryMetaにpublishedAt追加）、#20 全33ルートOGP/canonical/twitter追加、#21 SEOテスト71件追加。レビュー2回（CA→Approve）で承認 |
-| B-149 | JSON-LD script-breakout対策                              | 57              | 19ca986ea98 | safeJsonLdStringify関数追加、全14ファイルのJSON-LD埋め込み修正、テスト5件追加。レビュー2回（CA→Approve）で承認                                                                              |
-| B-147 | ゲーム途中離脱バグ修正（カナール・キメル・イロドリ）     | 56              | 19ca986e14e | カナール・キメル: status型に"playing"追加、マイグレーション追加。イロドリ: 型拡張+毎ラウンド保存+途中再開。テスト17件追加。計画レビュー1回（CA）、実装レビュー1回（Approve）で承認          |
-| B-145 | 過去ブログ記事へのadmonition記法適用調査・書き換え       | 54              | -           | 18記事34箇所にadmonition適用（NOTE x16, TIP x7, WARNING x9, IMPORTANT x1, CAUTION x1）。レビュー2回（CA→Approve）で承認                                                                     |
-| B-086 | Tier 2チートシート追加（HTTPステータスコード・Cron式）   | 55              | 19c85be20b1 | cycle-55で4テーマ中2テーマ（HTTPステータスコード・Cron式）を実施。ブログ記事も作成。残り2テーマ（HTMLタグ・SQL）はB-146として登録済み                                                       |
+| ID    | Title                                                       | Completed Cycle | Origin Memo | Notes                                                                                                                                                                                       |
+| ----- | ----------------------------------------------------------- | --------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| B-161 | Mermaidシンタックスエラー修正＋全数バリデーションテスト整備 | 60              | 19cac9d9b56 | ganttタスク名のコロン誤解釈修正。mermaid.render()+getBBox mockによる全数バリデーションテスト（7記事16ブロック）。レビュー1回（Approve）で承認                                               |
+| B-160 | sitemap.tsのhomepageDateにlatestDictionaryDateを含める      | 59              | 19cac21bf7d | latestDictionaryDateの定義移動+Math.maxへの追加。テスト1件追加。レビュー1回（Approve）で承認                                                                                                |
+| B-157 | Markdownサニタイズ方針確認・強化                            | 59              | 19ca986ea98 | sanitize-html導入、markdownToHtml()統合、サニタイズテスト20件+統合テスト3件。ColorDetail決定論的シャッフル。レビュー1回（CA→Approve）で承認                                                 |
+| B-150 | Cron Parser仕様整合・バリデーション改善                     | 59              | 19ca986e329 | 4修正（不正トークン拒否・24時間表記・DOM/DOW OR判定・MAX_ITERATIONS拡大）。テスト17件追加。レビュー1回（CA→Approve）で承認                                                                  |
+| B-146 | Tier 2チートシート追加（HTMLタグ・SQL）                     | 58              | 19c85be20b1 | HTMLタグ9セクション約70タグ、SQL8セクション統一テーブル例。MySQL UPSERT非推奨構文修正。ブログ記事2本（リリース+技術）。レビュー2回で承認                                                    |
+| B-151 | 日付ツール入力バリデーション改善                            | 58              | 19ca986e512 | ラウンドトリップ検証パターン、和暦終了日境界チェック、共通ユーティリティ(date-validation.ts)。publishedAt/updatedAt設計修正（TZバグ修正、47ファイル一括変換、JSON-LD/OGP改善）も実施        |
+| B-148 | SEOメタデータ改善（sitemap lastModified・OGP/canonical）    | 57              | 19ca986e8c2 | #14 robots修正、#18 sitemap lastModified全修正（GameMeta/DictionaryMetaにpublishedAt追加）、#20 全33ルートOGP/canonical/twitter追加、#21 SEOテスト71件追加。レビュー2回（CA→Approve）で承認 |
+| B-149 | JSON-LD script-breakout対策                                 | 57              | 19ca986ea98 | safeJsonLdStringify関数追加、全14ファイルのJSON-LD埋め込み修正、テスト5件追加。レビュー2回（CA→Approve）で承認                                                                              |
+| B-147 | ゲーム途中離脱バグ修正（カナール・キメル・イロドリ）        | 56              | 19ca986e14e | カナール・キメル: status型に"playing"追加、マイグレーション追加。イロドリ: 型拡張+毎ラウンド保存+途中再開。テスト17件追加。計画レビュー1回（CA）、実装レビュー1回（Approve）で承認          |
+| B-086 | Tier 2チートシート追加（HTTPステータスコード・Cron式）      | 55              | 19c85be20b1 | cycle-55で4テーマ中2テーマ（HTTPステータスコード・Cron式）を実施。ブログ記事も作成。残り2テーマ（HTMLタグ・SQL）はB-146として登録済み                                                       |

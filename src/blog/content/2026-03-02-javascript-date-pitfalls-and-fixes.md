@@ -3,7 +3,7 @@ title: "JavaScriptのDate APIに潜む2つの落とし穴: 自動補正とタイ
 slug: "javascript-date-pitfalls-and-fixes"
 description: "JavaScriptのDate APIによる日付自動補正（2月31日が3月3日になる問題）とYYYY-MM-DD形式のUTC解釈問題を解説。ラウンドトリップ検証パターンとISO 8601+タイムゾーン形式による根本対策を、実際のバグ事例とコードで紹介します。"
 published_at: "2026-03-02T11:30:17+09:00"
-updated_at: "2026-03-02T11:30:17+09:00"
+updated_at: "2026-03-02T17:23:10+09:00"
 tags: ["Web開発", "TypeScript", "SEO"]
 category: "technical"
 series: "building-yolos"
@@ -225,7 +225,7 @@ JSTの午前0時から午前9時の間、UTC日付はまだ「前日」です。
 
 ```mermaid
 gantt
-    title JST 00:00 -- 09:00 のタイムゾーンギャップ
+    title JST 0時〜9時のタイムゾーンギャップ
     dateFormat HH:mm
     axisFormat %H:%M
     section UTC
@@ -234,7 +234,7 @@ gantt
     section JST
     JST 3月2日     :b1, 00:00, 24:00
     section 問題の時間帯
-    JST 00:00 - 09:00（テスト失敗）:crit, c1, 00:00, 09:00
+    JST 0時〜9時（テスト失敗） :crit, c1, 00:00, 09:00
 ```
 
 > [!WARNING]
