@@ -9,6 +9,7 @@ RUN curl -fsSLo /etc/apt/keyrings/githubcli-archive-keyring.gpg https://cli.gith
 		jq \
 		ripgrep \
 		vim \
+	&& npx -y playwright install-deps \
 	&& rm -rf /var/lib/apt/lists/* \
 	&& rm -rf /usr/src \
     && rm /etc/localtime && ln -s /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
@@ -19,7 +20,8 @@ RUN echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc \
 	&& . ~/.bashrc \
 	&& curl -fsSL https://claude.ai/install.sh | bash \
 	&& git config --global user.name "Claude" \
-	&& git config --global user.email "noreply@anthropic.com"
+	&& git config --global user.email "noreply@anthropic.com" \
+	&& npx -y playwright install
 
 USER root
 
