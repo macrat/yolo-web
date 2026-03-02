@@ -2,7 +2,7 @@
 id: 62
 description: ブログ記事（nextjs-static-page-split-for-tools）の全面書き直し＋旧記事への追記
 started_at: "2026-03-02T23:29:14+0900"
-completed_at: null
+completed_at: "2026-03-03T00:35:23+0900"
 ---
 
 # サイクル-62
@@ -11,35 +11,42 @@ completed_at: null
 
 ## 実施する作業
 
-- [ ] B-164: ブログ記事の全面書き直し（nextjs-static-page-split-for-tools）
-  - ownerの指摘事項の調査・分析
-  - 記事の取り下げ判断（slugと内容の不一致を含む）
-  - 新記事の執筆（問題の明確な分離、一般的な表現、正確な事実、読者視点の構成）
-  - 旧記事（nextjs-static-tool-pages-design-pattern）への追記
-  - レビュー・修正
+- [x] B-164: ブログ記事の全面書き直し（nextjs-static-page-split-for-tools）
+  - ownerの12の指摘事項（メモ 19caeeb7085）の調査・分析
+  - 現記事をdraft化（slugと内容の不一致のため取り下げ）
+  - 新記事「nextjs-dynamic-import-pitfalls-and-true-code-splitting」を執筆
+    - 問題A（ローディングフラッシュ）と問題B（コード分割の失敗）を明確に分離
+    - 3つのアプローチ（個別ページ分割・静的インポートマップ・サーバーコンポーネント直接インポート）の比較表付き
+    - 一般化された表現（インタラクティブなページ/静的コンテンツのページ）で内部知識不要の記述
+  - 旧記事（nextjs-static-tool-pages-design-pattern）にIMPORTANTアラートで追記
+  - backlog B-163の出典情報を更新
 
 ## レビュー結果
 
-（作業完了後に記載）
+- 計画レビュー: Conditional Approve（メモ 19caf06f481）→ 5件の軽微指摘を執筆時に反映
+- 実装レビュー1回目: Conditional Approve（メモ 19caf14199a）→ 3件の軽微指摘（published_at、コメント、比較表）
+- 実装レビュー2回目（修正後再レビュー）: Conditional Approve（メモ 19caf1b7086）→ 1件の軽微指摘（コメント重複）
+- 実装レビュー3回目（最終レビュー）: Approve（メモ 19caf1ec227）
 
 ## キャリーオーバー
 
-（サイクル完了時に記載）
+なし
 
 ## 補足事項
 
-（サイクル完了時に記載）
+- **記事の取り下げ判断**: ownerの指摘により、現記事のslug（nextjs-static-page-split-for-tools）が記事の核テーマ（next/dynamicの2つの落とし穴）と一致しないこと、記事の骨格を変更する必要があること、大幅な書き直しを既存のpublished_atで公開すると誤解を与えることから、現記事をdraft化し新記事を新slugで作成した。
+- **ownerの12の指摘への対応**: 問題の混同解消、チートシートの深刻さの説明、期待と結果の乖離、3アプローチの比較、「プロジェクトの原則に基づき」への修正、一般化表現、レジストリパターンセクション削除、内部構造非依存の記述、CIの誤記修正、展望セクション削除、「ファイル数が増える」誤記削除、旧記事への追記 — 全12項目を対応。
 
 ## サイクル終了時のチェックリスト
 
-- [ ] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
-- [ ] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
-- [ ] `npm run memo -- list --state inbox,active` を実行して、未処理のメモがない。
-- [ ] すべての変更がレビューされ、残存する指摘事項が無くなっている。
-- [ ] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
-- [ ] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
-- [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
-- [ ] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
+- [x] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
+- [x] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
+- [x] `npm run memo -- list --state inbox,active` を実行して、未処理のメモがない。
+- [x] すべての変更がレビューされ、残存する指摘事項が無くなっている。
+- [x] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
+- [x] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
+- [x] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
+- [x] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
 
 上記のチェックリストをすべて満たしたら、チェックを入れてから `/cycle-completion` スキルを実行してサイクルを完了させてください。
 なお、「環境起因」「今回の変更と無関係」「既知の問題」「次回対応」などの **例外は一切認めません** 。必ずすべての項目を完全に満してください。

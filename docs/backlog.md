@@ -2,9 +2,8 @@
 
 ## Active (進行中)
 
-| ID    | Title                                                          | Priority | Status | Assigned Role | Origin Memo | Target Cycle | Notes                                                                                                                     |
-| ----- | -------------------------------------------------------------- | -------- | ------ | ------------- | ----------- | ------------ | ------------------------------------------------------------------------------------------------------------------------- |
-| B-164 | ブログ記事の全面書き直し（nextjs-static-page-split-for-tools） | P1       | active | pm            | 19caeeb7085 | 62           | ownerから多数の品質指摘。問題の混同、説明不足、事実誤認、内部情報混在等。取り下げて新記事作成も視野。旧記事への追記も必要 |
+| ID  | Title | Priority | Status | Assigned Role | Origin Memo | Target Cycle | Notes |
+| --- | ----- | -------- | ------ | ------------- | ----------- | ------------ | ----- |
 
 ## Queued (未着手)
 
@@ -58,16 +57,16 @@
 
 以下は直近5サイクル分の完了タスクです。6サイクルより前のタスクは削除してください。
 
-| ID    | Title                                                       | Completed Cycle | Origin Memo | Notes                                                                                                                                                                                       |
-| ----- | ----------------------------------------------------------- | --------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| B-162 | リポジトリのゴミファイル削除＋不要コード調査・整理          | 61              | 19cade5195c | test-output.txt削除、.gitignore更新、不要devDependencies削除、未使用エクスポート整理（関数・型・re-export）。レビュー1回（Approve）で承認                                                   |
-| B-159 | ツールとチートシートのダイナミックインポート廃止・静的化    | 61              | 19ca9cbc197 | 個別ページ分割（40ページ x page.tsx+OGP+twitter=120ファイル新規作成）。ローディングフラッシュ完全解消、真のコード分割実現。網羅性テスト42件追加。レビュー各タスクApprove                    |
-| B-161 | Mermaidシンタックスエラー修正＋全数バリデーションテスト整備 | 60              | 19cac9d9b56 | ganttタスク名のコロン誤解釈修正。mermaid.render()+getBBox mockによる全数バリデーションテスト（7記事16ブロック）。レビュー1回（Approve）で承認                                               |
-| B-160 | sitemap.tsのhomepageDateにlatestDictionaryDateを含める      | 59              | 19cac21bf7d | latestDictionaryDateの定義移動+Math.maxへの追加。テスト1件追加。レビュー1回（Approve）で承認                                                                                                |
-| B-157 | Markdownサニタイズ方針確認・強化                            | 59              | 19ca986ea98 | sanitize-html導入、markdownToHtml()統合、サニタイズテスト20件+統合テスト3件。ColorDetail決定論的シャッフル。レビュー1回（CA→Approve）で承認                                                 |
-| B-150 | Cron Parser仕様整合・バリデーション改善                     | 59              | 19ca986e329 | 4修正（不正トークン拒否・24時間表記・DOM/DOW OR判定・MAX_ITERATIONS拡大）。テスト17件追加。レビュー1回（CA→Approve）で承認                                                                  |
-| B-146 | Tier 2チートシート追加（HTMLタグ・SQL）                     | 58              | 19c85be20b1 | HTMLタグ9セクション約70タグ、SQL8セクション統一テーブル例。MySQL UPSERT非推奨構文修正。ブログ記事2本（リリース+技術）。レビュー2回で承認                                                    |
-| B-151 | 日付ツール入力バリデーション改善                            | 58              | 19ca986e512 | ラウンドトリップ検証パターン、和暦終了日境界チェック、共通ユーティリティ(date-validation.ts)。publishedAt/updatedAt設計修正（TZバグ修正、47ファイル一括変換、JSON-LD/OGP改善）も実施        |
-| B-148 | SEOメタデータ改善（sitemap lastModified・OGP/canonical）    | 57              | 19ca986e8c2 | #14 robots修正、#18 sitemap lastModified全修正（GameMeta/DictionaryMetaにpublishedAt追加）、#20 全33ルートOGP/canonical/twitter追加、#21 SEOテスト71件追加。レビュー2回（CA→Approve）で承認 |
-| B-149 | JSON-LD script-breakout対策                                 | 57              | 19ca986ea98 | safeJsonLdStringify関数追加、全14ファイルのJSON-LD埋め込み修正、テスト5件追加。レビュー2回（CA→Approve）で承認                                                                              |
-| B-147 | ゲーム途中離脱バグ修正（カナール・キメル・イロドリ）        | 56              | 19ca986e14e | カナール・キメル: status型に"playing"追加、マイグレーション追加。イロドリ: 型拡張+毎ラウンド保存+途中再開。テスト17件追加。計画レビュー1回（CA）、実装レビュー1回（Approve）で承認          |
+| ID    | Title                                                          | Completed Cycle | Origin Memo | Notes                                                                                                                                                                                       |
+| ----- | -------------------------------------------------------------- | --------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| B-164 | ブログ記事の全面書き直し（nextjs-static-page-split-for-tools） | 62              | 19caeeb7085 | 現記事draft化→新記事(nextjs-dynamic-import-pitfalls-and-true-code-splitting)作成。ownerの12指摘全対応。旧記事にIMPORTANT追記。レビュー3回（CA→CA→Approve）                                  |
+| B-162 | リポジトリのゴミファイル削除＋不要コード調査・整理             | 61              | 19cade5195c | test-output.txt削除、.gitignore更新、不要devDependencies削除、未使用エクスポート整理（関数・型・re-export）。レビュー1回（Approve）で承認                                                   |
+| B-159 | ツールとチートシートのダイナミックインポート廃止・静的化       | 61              | 19ca9cbc197 | 個別ページ分割（40ページ x page.tsx+OGP+twitter=120ファイル新規作成）。ローディングフラッシュ完全解消、真のコード分割実現。網羅性テスト42件追加。レビュー各タスクApprove                    |
+| B-161 | Mermaidシンタックスエラー修正＋全数バリデーションテスト整備    | 60              | 19cac9d9b56 | ganttタスク名のコロン誤解釈修正。mermaid.render()+getBBox mockによる全数バリデーションテスト（7記事16ブロック）。レビュー1回（Approve）で承認                                               |
+| B-160 | sitemap.tsのhomepageDateにlatestDictionaryDateを含める         | 59              | 19cac21bf7d | latestDictionaryDateの定義移動+Math.maxへの追加。テスト1件追加。レビュー1回（Approve）で承認                                                                                                |
+| B-157 | Markdownサニタイズ方針確認・強化                               | 59              | 19ca986ea98 | sanitize-html導入、markdownToHtml()統合、サニタイズテスト20件+統合テスト3件。ColorDetail決定論的シャッフル。レビュー1回（CA→Approve）で承認                                                 |
+| B-150 | Cron Parser仕様整合・バリデーション改善                        | 59              | 19ca986e329 | 4修正（不正トークン拒否・24時間表記・DOM/DOW OR判定・MAX_ITERATIONS拡大）。テスト17件追加。レビュー1回（CA→Approve）で承認                                                                  |
+| B-146 | Tier 2チートシート追加（HTMLタグ・SQL）                        | 58              | 19c85be20b1 | HTMLタグ9セクション約70タグ、SQL8セクション統一テーブル例。MySQL UPSERT非推奨構文修正。ブログ記事2本（リリース+技術）。レビュー2回で承認                                                    |
+| B-151 | 日付ツール入力バリデーション改善                               | 58              | 19ca986e512 | ラウンドトリップ検証パターン、和暦終了日境界チェック、共通ユーティリティ(date-validation.ts)。publishedAt/updatedAt設計修正（TZバグ修正、47ファイル一括変換、JSON-LD/OGP改善）も実施        |
+| B-148 | SEOメタデータ改善（sitemap lastModified・OGP/canonical）       | 57              | 19ca986e8c2 | #14 robots修正、#18 sitemap lastModified全修正（GameMeta/DictionaryMetaにpublishedAt追加）、#20 全33ルートOGP/canonical/twitter追加、#21 SEOテスト71件追加。レビュー2回（CA→Approve）で承認 |
+| B-149 | JSON-LD script-breakout対策                                    | 57              | 19ca986ea98 | safeJsonLdStringify関数追加、全14ファイルのJSON-LD埋め込み修正、テスト5件追加。レビュー2回（CA→Approve）で承認                                                                              |
