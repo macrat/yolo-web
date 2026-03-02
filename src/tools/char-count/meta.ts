@@ -10,7 +10,8 @@ export const meta: ToolMeta = {
   keywords: ["文字数カウント", "文字数", "バイト数", "単語数", "行数カウント"],
   category: "text",
   relatedSlugs: ["json-formatter", "text-diff", "kana-converter"],
-  publishedAt: "2026-02-13",
+  publishedAt: "2026-02-13T18:57:05+09:00",
+  updatedAt: "2026-02-28T08:10:50+09:00",
   structuredDataType: "WebApplication",
   trustLevel: "verified",
   valueProposition:

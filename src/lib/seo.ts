@@ -40,6 +40,8 @@ export function generateToolJsonLd(meta: ToolMeta): object {
     url: `${BASE_URL}/tools/${meta.slug}`,
     applicationCategory: "UtilityApplication",
     operatingSystem: "All",
+    datePublished: meta.publishedAt,
+    dateModified: meta.updatedAt || meta.publishedAt,
     offers: {
       "@type": "Offer",
       price: "0",
@@ -168,6 +170,8 @@ export interface GameMetaForSeo {
   genre?: string;
   inLanguage?: string;
   numberOfPlayers?: string;
+  publishedAt?: string;
+  updatedAt?: string;
 }
 
 export function generateGameJsonLd(game: GameMetaForSeo): object {
@@ -189,6 +193,10 @@ export function generateGameJsonLd(game: GameMetaForSeo): object {
             value: game.numberOfPlayers,
           },
         }
+      : {}),
+    ...(game.publishedAt ? { datePublished: game.publishedAt } : {}),
+    ...(game.publishedAt || game.updatedAt
+      ? { dateModified: game.updatedAt || game.publishedAt }
       : {}),
     offers: {
       "@type": "Offer",
@@ -428,6 +436,8 @@ export function generateCheatsheetMetadata(meta: CheatsheetMeta): Metadata {
       type: "article",
       url: `${BASE_URL}/cheatsheets/${meta.slug}`,
       siteName: SITE_NAME,
+      publishedTime: meta.publishedAt,
+      modifiedTime: meta.updatedAt || meta.publishedAt,
     },
     twitter: {
       card: "summary_large_image",
@@ -449,6 +459,7 @@ export function generateCheatsheetJsonLd(meta: CheatsheetMeta): object {
     url: `${BASE_URL}/cheatsheets/${meta.slug}`,
     articleSection: "チートシート",
     datePublished: meta.publishedAt,
+    dateModified: meta.updatedAt || meta.publishedAt,
     inLanguage: "ja",
     author: {
       "@type": "Organization",
@@ -493,6 +504,7 @@ export function generateQuizJsonLd(meta: QuizMeta): object {
     numberOfQuestions: meta.questionCount,
     inLanguage: "ja",
     datePublished: meta.publishedAt,
+    dateModified: meta.updatedAt || meta.publishedAt,
     offers: {
       "@type": "Offer",
       price: "0",

@@ -16,7 +16,8 @@ export const meta: ToolMeta = {
   ],
   category: "text",
   relatedSlugs: ["fullwidth-converter", "char-count", "text-replace"],
-  publishedAt: "2026-02-14",
+  publishedAt: "2026-02-14T13:21:07+09:00",
+  updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
   trustLevel: "verified",
   valueProposition:

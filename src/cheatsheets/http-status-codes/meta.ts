@@ -27,7 +27,7 @@ export const meta: CheatsheetMeta = {
     { id: "5xx", title: "5xx サーバーエラー" },
     { id: "api-tips", title: "APIデザインでの使い分け" },
   ],
-  publishedAt: "2026-03-01",
+  publishedAt: "2026-03-01T21:38:13+09:00",
   trustLevel: "curated",
   valueProposition:
     "全HTTPステータスコードの意味と使い所を日本語でまとめて参照",

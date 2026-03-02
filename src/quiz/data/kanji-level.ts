@@ -20,7 +20,7 @@ const kanjiLevelQuiz: QuizDefinition = {
       "漢字力",
       "テスト",
     ],
-    publishedAt: "2026-02-19",
+    publishedAt: "2026-02-19T22:10:50+09:00",
     relatedLinks: [
       { label: "漢字辞典で学ぶ", href: "/dictionary/kanji" },
       { label: "漢字カナール", href: "/games/kanji-kanaru" },

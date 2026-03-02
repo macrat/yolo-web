@@ -30,7 +30,8 @@ export const meta: CheatsheetMeta = {
     { id: "html-embed", title: "HTMLの埋め込み" },
     { id: "gfm-extensions", title: "GitHub Flavored Markdown拡張" },
   ],
-  publishedAt: "2026-02-19",
+  publishedAt: "2026-02-19T09:26:58+09:00",
+  updatedAt: "2026-02-28T13:00:40+09:00",
   trustLevel: "curated",
   valueProposition:
     "Markdown記法を構文と実例で網羅。書き方に迷ったらすぐ引ける",

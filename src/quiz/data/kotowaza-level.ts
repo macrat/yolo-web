@@ -21,7 +21,7 @@ const kotowazaLevelQuiz: QuizDefinition = {
       "意味",
       "日本語",
     ],
-    publishedAt: "2026-02-26",
+    publishedAt: "2026-02-26T15:39:19+09:00",
     relatedLinks: [
       { label: "漢字力診断に挑戦", href: "/quiz/kanji-level" },
       { label: "四字熟語力診断に挑戦", href: "/quiz/yoji-level" },

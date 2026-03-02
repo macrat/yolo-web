@@ -18,7 +18,10 @@ export interface CheatsheetMeta {
   relatedToolSlugs: string[];
   relatedCheatsheetSlugs: string[];
   sections: CheatsheetSection[];
+  /** ISO 8601 date-time with timezone (e.g. '2026-02-19T09:25:57+09:00') */
   publishedAt: string;
+  /** ISO 8601 date-time with timezone. Set when main content is updated. */
+  updatedAt?: string;
   /** Content trust level */
   trustLevel: TrustLevel;
 

@@ -16,7 +16,10 @@ export interface ToolMeta {
   keywords: string[]; // Japanese SEO keywords
   category: ToolCategory;
   relatedSlugs: string[]; // slugs of related tools
-  publishedAt: string; // ISO date
+  /** ISO 8601 date-time with timezone (e.g. '2026-02-19T09:25:57+09:00') */
+  publishedAt: string;
+  /** ISO 8601 date-time with timezone. Set when main content is updated. */
+  updatedAt?: string;
   structuredDataType?: string; // JSON-LD @type (e.g., "WebApplication")
   trustLevel: TrustLevel;
 

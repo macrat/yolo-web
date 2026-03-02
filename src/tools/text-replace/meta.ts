@@ -22,7 +22,8 @@ export const meta: ToolMeta = {
     "text-diff",
     "kana-converter",
   ],
-  publishedAt: "2026-02-14",
+  publishedAt: "2026-02-14T07:35:49+09:00",
+  updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
   trustLevel: "verified",
   valueProposition:

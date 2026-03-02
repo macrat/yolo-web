@@ -10,7 +10,8 @@ export const meta: ToolMeta = {
   keywords: ["Base64", "エンコード", "デコード", "Base64変換", "UTF-8"],
   category: "encoding",
   relatedSlugs: ["url-encode", "hash-generator", "image-base64"],
-  publishedAt: "2026-02-13",
+  publishedAt: "2026-02-13T18:57:05+09:00",
+  updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
   trustLevel: "verified",
   valueProposition:

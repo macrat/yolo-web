@@ -7,6 +7,7 @@ import {
   generateColorPageMetadata,
   generateColorJsonLd,
   generateToolMetadata,
+  generateToolJsonLd,
   generateBlogPostMetadata,
   generateMemoPageMetadata,
   generateKanjiPageMetadata,
@@ -14,6 +15,7 @@ import {
   generateColorCategoryMetadata,
   generateCheatsheetMetadata,
   generateQuizMetadata,
+  generateQuizJsonLd,
   safeJsonLdStringify,
 } from "../seo";
 
@@ -84,6 +86,42 @@ describe("generateGameJsonLd", () => {
     expect(result.inLanguage).toBeUndefined();
     expect(result.numberOfPlayers).toBeUndefined();
   });
+
+  test("includes datePublished and dateModified when publishedAt is provided", () => {
+    const result = generateGameJsonLd({
+      name: "テストゲーム",
+      description: "テスト",
+      url: "/games/test",
+      publishedAt: "2026-02-13T19:11:53+09:00",
+    }) as Record<string, unknown>;
+
+    expect(result.datePublished).toBe("2026-02-13T19:11:53+09:00");
+    expect(result.dateModified).toBe("2026-02-13T19:11:53+09:00");
+  });
+
+  test("dateModified uses updatedAt when provided", () => {
+    const result = generateGameJsonLd({
+      name: "テストゲーム",
+      description: "テスト",
+      url: "/games/test",
+      publishedAt: "2026-02-13T19:11:53+09:00",
+      updatedAt: "2026-03-01T23:14:37+09:00",
+    }) as Record<string, unknown>;
+
+    expect(result.datePublished).toBe("2026-02-13T19:11:53+09:00");
+    expect(result.dateModified).toBe("2026-03-01T23:14:37+09:00");
+  });
+
+  test("omits datePublished and dateModified when publishedAt is not provided", () => {
+    const result = generateGameJsonLd({
+      name: "テストゲーム",
+      description: "テスト",
+      url: "/games/test",
+    }) as Record<string, unknown>;
+
+    expect(result.datePublished).toBeUndefined();
+    expect(result.dateModified).toBeUndefined();
+  });
 });
 
 describe("generateWebSiteJsonLd", () => {
@@ -110,8 +148,8 @@ describe("generateBlogPostJsonLd", () => {
     title: "テスト記事",
     slug: "test-article",
     description: "テスト記事の説明",
-    published_at: "2026-02-15",
-    updated_at: "2026-02-15",
+    published_at: "2026-02-15T10:00:00+09:00",
+    updated_at: "2026-02-15T10:00:00+09:00",
     tags: ["テスト"],
   };
 
@@ -276,7 +314,7 @@ describe("generateToolMetadata", () => {
     keywords: ["JSON"],
     category: "developer" as const,
     relatedSlugs: [],
-    publishedAt: "2026-01-01",
+    publishedAt: "2026-01-01T00:00:00+09:00",
     trustLevel: "verified" as const,
   };
 
@@ -318,13 +356,51 @@ describe("generateToolMetadata", () => {
   });
 });
 
+describe("generateToolJsonLd", () => {
+  const toolData = {
+    slug: "json-formatter",
+    name: "JSON整形",
+    nameEn: "JSON Formatter",
+    description: "JSONを整形・検証するツールです。",
+    shortDescription: "JSON整形",
+    keywords: ["JSON"],
+    category: "developer" as const,
+    relatedSlugs: [],
+    publishedAt: "2026-01-01T00:00:00+09:00",
+    trustLevel: "verified" as const,
+  };
+
+  test("datePublishedがpublishedAtと一致する", () => {
+    const result = generateToolJsonLd(toolData) as Record<string, unknown>;
+    expect(result.datePublished).toBe("2026-01-01T00:00:00+09:00");
+  });
+
+  test("dateModifiedがpublishedAtにフォールバックする（updatedAtなし）", () => {
+    const result = generateToolJsonLd(toolData) as Record<string, unknown>;
+    expect(result.dateModified).toBe("2026-01-01T00:00:00+09:00");
+  });
+
+  test("dateModifiedがupdatedAtを使用する（updatedAtあり）", () => {
+    const toolWithUpdate = {
+      ...toolData,
+      updatedAt: "2026-02-15T12:00:00+09:00",
+    };
+    const result = generateToolJsonLd(toolWithUpdate) as Record<
+      string,
+      unknown
+    >;
+    expect(result.datePublished).toBe("2026-01-01T00:00:00+09:00");
+    expect(result.dateModified).toBe("2026-02-15T12:00:00+09:00");
+  });
+});
+
 describe("generateBlogPostMetadata", () => {
   const blogData = {
     title: "テスト記事",
     slug: "test-article",
     description: "テスト記事の説明です。",
-    published_at: "2026-02-15",
-    updated_at: "2026-02-16",
+    published_at: "2026-02-15T10:00:00+09:00",
+    updated_at: "2026-02-16T10:00:00+09:00",
     tags: ["テスト"],
   };
 
@@ -370,6 +446,18 @@ describe("generateBlogPostMetadata", () => {
     const result = generateBlogPostMetadata(blogData);
     const og = result.openGraph as Record<string, unknown> | undefined;
     expect(og?.type).toBe("article");
+  });
+
+  test("OGP publishedTimeが含まれる", () => {
+    const result = generateBlogPostMetadata(blogData);
+    const og = result.openGraph as Record<string, unknown> | undefined;
+    expect(og?.publishedTime).toBe("2026-02-15T10:00:00+09:00");
+  });
+
+  test("OGP modifiedTimeが含まれる", () => {
+    const result = generateBlogPostMetadata(blogData);
+    const og = result.openGraph as Record<string, unknown> | undefined;
+    expect(og?.modifiedTime).toBe("2026-02-16T10:00:00+09:00");
   });
 });
 
@@ -419,6 +507,12 @@ describe("generateMemoPageMetadata", () => {
     const result = generateMemoPageMetadata(memoData);
     const og = result.openGraph as Record<string, unknown> | undefined;
     expect(og?.siteName).toBe("yolos.net");
+  });
+
+  test("OGP publishedTimeが含まれる", () => {
+    const result = generateMemoPageMetadata(memoData);
+    const og = result.openGraph as Record<string, unknown> | undefined;
+    expect(og?.publishedTime).toBe("2026-02-15T10:00:00+09:00");
   });
 });
 
@@ -568,7 +662,7 @@ describe("generateQuizMetadata", () => {
     icon: "漢",
     accentColor: "#ff0000",
     keywords: ["漢字", "クイズ"],
-    publishedAt: "2026-02-01",
+    publishedAt: "2026-02-01T00:00:00+09:00",
     trustLevel: "curated" as const,
   };
 
@@ -611,6 +705,45 @@ describe("generateQuizMetadata", () => {
   });
 });
 
+describe("generateQuizJsonLd", () => {
+  const quizData = {
+    slug: "kanji-quiz",
+    title: "漢字力診断",
+    description: "漢字力を診断します。",
+    shortDescription: "漢字力テスト",
+    type: "knowledge" as const,
+    questionCount: 10,
+    icon: "漢",
+    accentColor: "#ff0000",
+    keywords: ["漢字", "クイズ"],
+    publishedAt: "2026-02-01T00:00:00+09:00",
+    trustLevel: "curated" as const,
+  };
+
+  test("datePublishedがpublishedAtと一致する", () => {
+    const result = generateQuizJsonLd(quizData) as Record<string, unknown>;
+    expect(result.datePublished).toBe("2026-02-01T00:00:00+09:00");
+  });
+
+  test("dateModifiedがpublishedAtにフォールバックする（updatedAtなし）", () => {
+    const result = generateQuizJsonLd(quizData) as Record<string, unknown>;
+    expect(result.dateModified).toBe("2026-02-01T00:00:00+09:00");
+  });
+
+  test("dateModifiedがupdatedAtを使用する（updatedAtあり）", () => {
+    const quizWithUpdate = {
+      ...quizData,
+      updatedAt: "2026-02-20T15:00:00+09:00",
+    };
+    const result = generateQuizJsonLd(quizWithUpdate) as Record<
+      string,
+      unknown
+    >;
+    expect(result.datePublished).toBe("2026-02-01T00:00:00+09:00");
+    expect(result.dateModified).toBe("2026-02-20T15:00:00+09:00");
+  });
+});
+
 describe("factory functions include twitter metadata", () => {
   test("generateToolMetadata includes twitter", () => {
     const result = generateToolMetadata({
@@ -622,7 +755,7 @@ describe("factory functions include twitter metadata", () => {
       keywords: ["テスト"],
       category: "text",
       relatedSlugs: [],
-      publishedAt: "2026-02-15",
+      publishedAt: "2026-02-15T10:00:00+09:00",
       trustLevel: "generated",
     });
 
@@ -638,8 +771,8 @@ describe("factory functions include twitter metadata", () => {
       title: "テスト記事",
       slug: "test-article",
       description: "テスト記事の説明",
-      published_at: "2026-02-15",
-      updated_at: "2026-02-15",
+      published_at: "2026-02-15T10:00:00+09:00",
+      updated_at: "2026-02-15T10:00:00+09:00",
       tags: ["テスト"],
     });
 
@@ -656,7 +789,7 @@ describe("factory functions include twitter metadata", () => {
       subject: "テストメモ",
       from: "pm",
       to: "builder",
-      created_at: "2026-02-15",
+      created_at: "2026-02-15T10:00:00+09:00",
       tags: ["テスト"],
     });
 
@@ -720,7 +853,7 @@ describe("factory functions include twitter metadata", () => {
       relatedToolSlugs: [],
       relatedCheatsheetSlugs: [],
       sections: [],
-      publishedAt: "2026-02-15",
+      publishedAt: "2026-02-15T10:00:00+09:00",
       trustLevel: "generated",
     });
 
@@ -740,7 +873,7 @@ describe("factory functions include twitter metadata", () => {
       keywords: ["テスト"],
       questionCount: 10,
       type: "knowledge",
-      publishedAt: "2026-02-15",
+      publishedAt: "2026-02-15T10:00:00+09:00",
       icon: "Q",
       accentColor: "#000",
       trustLevel: "generated",

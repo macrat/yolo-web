@@ -51,7 +51,10 @@ export interface QuizMeta {
   icon: string;
   accentColor: string;
   keywords: string[];
+  /** ISO 8601 date-time with timezone (e.g. '2026-02-19T09:25:57+09:00') */
   publishedAt: string;
+  /** ISO 8601 date-time with timezone. Set when main content is updated. */
+  updatedAt?: string;
   relatedLinks?: Array<{ label: string; href: string }>;
   /** Content trust level */
   trustLevel: TrustLevel;

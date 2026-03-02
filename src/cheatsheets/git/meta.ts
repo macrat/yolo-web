@@ -28,7 +28,8 @@ export const meta: CheatsheetMeta = {
     { id: "advanced", title: "高度な操作" },
     { id: "aliases", title: "よく使うエイリアス設定例" },
   ],
-  publishedAt: "2026-02-19",
+  publishedAt: "2026-02-19T09:25:57+09:00",
+  updatedAt: "2026-02-28T08:10:50+09:00",
   trustLevel: "curated",
   valueProposition:
     "よく使うGitコマンドを用途別に整理。コマンドをすぐ見つけられる",

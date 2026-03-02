@@ -32,7 +32,7 @@ const yojiPersonalityQuiz: QuizDefinition = {
       "診断",
       "四字熟語診断",
     ],
-    publishedAt: "2026-02-23",
+    publishedAt: "2026-02-23T22:42:57+09:00",
     relatedLinks: [
       { label: "四字熟語辞典で詳しく見る", href: "/dictionary/yoji" },
       { label: "四字キメルで遊ぶ", href: "/games/yoji-kimeru" },

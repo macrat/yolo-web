@@ -16,7 +16,8 @@ export const meta: ToolMeta = {
   ],
   category: "encoding",
   relatedSlugs: ["url-encode", "base64", "markdown-preview"],
-  publishedAt: "2026-02-14",
+  publishedAt: "2026-02-14T07:34:27+09:00",
+  updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
   trustLevel: "verified",
   valueProposition:
