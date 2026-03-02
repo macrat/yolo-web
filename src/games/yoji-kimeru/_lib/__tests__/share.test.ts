@@ -1,5 +1,6 @@
 import { describe, test, expect, vi, beforeEach } from "vitest";
-import { generateShareText, generateTwitterShareUrl } from "../share";
+import { generateShareText } from "../share";
+import { generateTwitterShareUrl } from "../../../shared/_lib/share";
 import type { YojiGameState, YojiEntry } from "../types";
 
 const targetYoji: YojiEntry = {

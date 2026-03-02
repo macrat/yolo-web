@@ -1,11 +1,5 @@
 import type { FeedbackLevel, GameState } from "./types";
 
-// Re-export shared utilities for backward compatibility
-export {
-  copyToClipboard,
-  generateTwitterShareUrl,
-} from "../../shared/_lib/share";
-
 /**
  * Map a FeedbackLevel to its emoji representation.
  */

@@ -200,7 +200,7 @@ export const meta: ToolMeta = {
 
 ### 4-3. registry.ts にツールを登録
 
-`src/tools/registry.ts` の定義配列に新しいツールのエントリを追加する。
+`src/tools/registry.ts` の定義配列に新しいツールの meta を追加する。
 
 ```typescript
 import { meta as newToolMeta } from "./{tool-slug}/meta";
@@ -208,13 +208,87 @@ import { meta as newToolMeta } from "./{tool-slug}/meta";
 // registry.ts の定義配列に追加:
 {
   meta: newToolMeta,
-  componentImport: () => import("./{tool-slug}/Component"),
 }
 ```
 
-### 4-4. ルーティング
+### 4-4. 個別ページファイルを作成
 
-ツールのルーティングは動的ルート（`src/app/tools/[slug]/`）で自動的に処理されるため、個別のルーティングファイル作成は不要。
+各ツールに3つのページファイルを作成する。既存ツールの `src/app/tools/char-count/page.tsx` を参照実装として利用すること。
+
+#### page.tsx
+
+```typescript
+// src/app/tools/{tool-slug}/page.tsx
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { toolsBySlug } from "@/tools/registry";
+import {
+  generateToolMetadata,
+  generateToolJsonLd,
+  safeJsonLdStringify,
+} from "@/lib/seo";
+import ToolLayout from "@/tools/_components/ToolLayout";
+import ToolErrorBoundary from "@/tools/_components/ErrorBoundary";
+import ToolSlugComponent from "@/tools/{tool-slug}/Component";
+
+const SLUG = "{tool-slug}";
+const tool = toolsBySlug.get(SLUG);
+
+export const metadata: Metadata = tool ? generateToolMetadata(tool.meta) : {};
+
+export default function ToolSlugPage() {
+  if (!tool) notFound();
+
+  return (
+    <ToolLayout meta={tool.meta}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: safeJsonLdStringify(generateToolJsonLd(tool.meta)),
+        }}
+      />
+      <ToolErrorBoundary>
+        <ToolSlugComponent />
+      </ToolErrorBoundary>
+    </ToolLayout>
+  );
+}
+```
+
+#### opengraph-image.tsx
+
+```typescript
+// src/app/tools/{tool-slug}/opengraph-image.tsx
+import { toolsBySlug } from "@/tools/registry";
+import {
+  createOgpImageResponse,
+  ogpSize,
+  ogpContentType,
+} from "@/lib/ogp-image";
+
+export const alt = "yolos.net tool";
+export const size = ogpSize;
+export const contentType = ogpContentType;
+
+export default async function OpenGraphImage() {
+  const tool = toolsBySlug.get("{tool-slug}");
+  const title = tool?.meta.name ?? "Tool";
+  const subtitle = tool?.meta.shortDescription ?? "";
+  return createOgpImageResponse({
+    title,
+    subtitle,
+    accentColor: "#0891b2",
+    icon: "\u{1F6E0}\u{FE0F}",
+  });
+}
+```
+
+#### twitter-image.tsx
+
+```typescript
+// src/app/tools/{tool-slug}/twitter-image.tsx
+export { default, alt, size, contentType } from "./opengraph-image";
+```
 
 ### 4-5. 検証
 
@@ -226,9 +300,147 @@ npm run lint
 npm run format:check
 ```
 
+> **注意**: 網羅性テスト（`src/app/tools/__tests__/page-coverage.test.ts`）が、レジストリに登録された全スラッグに対応する page.tsx, opengraph-image.tsx, twitter-image.tsx の存在を自動検証する。ページファイルの作成を忘れるとテストが失敗する。
+
 ---
 
-## 5. Markdownコンテンツの配置ルール
+## 5. 新しいチートシート追加の手順
+
+### 5-1. ディレクトリ作成
+
+```
+src/cheatsheets/{slug}/
+  Component.tsx            # メインのUIコンポーネント
+  meta.ts                  # チートシートのメタデータ
+```
+
+### 5-2. meta.ts にメタデータを定義
+
+```typescript
+// src/cheatsheets/{slug}/meta.ts
+import type { CheatsheetMeta } from "../types";
+
+export const meta: CheatsheetMeta = {
+  slug: "slug",
+  name: "チートシート名（日本語）",
+  nameEn: "Cheatsheet Name",
+  description: "120-160文字程度のメタディスクリプション（日本語）",
+  shortDescription: "~50文字のカード用短い説明",
+  keywords: ["キーワード1", "キーワード2"],
+  category: "programming",
+  sections: ["セクション1", "セクション2"],
+  relatedCheatsheetSlugs: [],
+  relatedToolSlugs: [],
+  publishedAt: "2026-01-01",
+};
+```
+
+### 5-3. registry.ts にチートシートを登録
+
+`src/cheatsheets/registry.ts` の定義配列に新しいチートシートの meta を追加する。
+
+```typescript
+import { meta as newSlugMeta } from "./{slug}/meta";
+
+// registry.ts の定義配列に追加:
+{ meta: newSlugMeta },
+```
+
+### 5-4. 個別ページファイルを作成
+
+各チートシートに3つのページファイルを作成する。既存チートシートの `src/app/cheatsheets/regex/page.tsx` を参照実装として利用すること。
+
+#### page.tsx
+
+```typescript
+// src/app/cheatsheets/{slug}/page.tsx
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { cheatsheetsBySlug } from "@/cheatsheets/registry";
+import {
+  generateCheatsheetMetadata,
+  generateCheatsheetJsonLd,
+  safeJsonLdStringify,
+} from "@/lib/seo";
+import CheatsheetLayout from "@/cheatsheets/_components/CheatsheetLayout";
+import SlugComponent from "@/cheatsheets/{slug}/Component";
+
+const SLUG = "{slug}";
+const cheatsheet = cheatsheetsBySlug.get(SLUG);
+
+export const metadata: Metadata = cheatsheet
+  ? generateCheatsheetMetadata(cheatsheet.meta)
+  : {};
+
+export default function SlugCheatsheetPage() {
+  if (!cheatsheet) notFound();
+
+  return (
+    <CheatsheetLayout meta={cheatsheet.meta}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: safeJsonLdStringify(
+            generateCheatsheetJsonLd(cheatsheet.meta),
+          ),
+        }}
+      />
+      <SlugComponent />
+    </CheatsheetLayout>
+  );
+}
+```
+
+#### opengraph-image.tsx
+
+```typescript
+// src/app/cheatsheets/{slug}/opengraph-image.tsx
+import { cheatsheetsBySlug } from "@/cheatsheets/registry";
+import {
+  createOgpImageResponse,
+  ogpSize,
+  ogpContentType,
+} from "@/lib/ogp-image";
+
+export const alt = "yolos.net cheatsheet";
+export const size = ogpSize;
+export const contentType = ogpContentType;
+
+export default async function OpenGraphImage() {
+  const cheatsheet = cheatsheetsBySlug.get("{slug}");
+  const title = cheatsheet?.meta.name ?? "Cheatsheet";
+  const subtitle = cheatsheet?.meta.shortDescription ?? "";
+  return createOgpImageResponse({
+    title,
+    subtitle,
+    accentColor: "#7c3aed",
+    icon: "\u{1F4CB}",
+  });
+}
+```
+
+#### twitter-image.tsx
+
+```typescript
+// src/app/cheatsheets/{slug}/twitter-image.tsx
+export { default, alt, size, contentType } from "./opengraph-image";
+```
+
+### 5-5. 検証
+
+```bash
+npm run typecheck
+npm run test
+npm run build
+npm run lint
+npm run format:check
+```
+
+> **注意**: 網羅性テスト（`src/app/cheatsheets/__tests__/page-coverage.test.ts`）が、レジストリに登録された全スラッグに対応する page.tsx, opengraph-image.tsx, twitter-image.tsx の存在を自動検証する。ページファイルの作成を忘れるとテストが失敗する。
+
+---
+
+## 6. Markdownコンテンツの配置ルール
 
 ### 基本ルール
 
@@ -256,7 +468,7 @@ src/{new-feature}/content/   # 新フィーチャーのMarkdownファイル
 
 ---
 
-## 6. 共有コンポーネントの追加
+## 7. 共有コンポーネントの追加
 
 2つ以上のフィーチャーから使われるUIコンポーネントは `src/components/common/` に配置する。
 

@@ -1,5 +1,6 @@
 import { describe, test, expect, vi, beforeEach } from "vitest";
-import { generateShareText, generateTwitterShareUrl } from "../share";
+import { generateShareText } from "../share";
+import { generateTwitterShareUrl } from "../../../shared/_lib/share";
 import type { NakamawakeGameState, NakamawakePuzzle } from "../types";
 
 const samplePuzzle: NakamawakePuzzle = {

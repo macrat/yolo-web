@@ -12,8 +12,8 @@ import {
   generateBlogPostMetadata,
   generateBlogPostJsonLd,
   safeJsonLdStringify,
-  BASE_URL,
 } from "@/lib/seo";
+import { BASE_URL } from "@/lib/constants";
 import { formatDate } from "@/lib/date";
 import Breadcrumb from "@/components/common/Breadcrumb";
 import TrustLevelBadge from "@/components/common/TrustLevelBadge";

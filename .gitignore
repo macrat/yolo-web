@@ -27,6 +27,12 @@ yarn-error.log*
 # generated build artifacts
 .generated/
 
+# test output
+test-output.txt
+
+# playwright MCP logs
+.playwright-mcp/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

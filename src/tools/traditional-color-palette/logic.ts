@@ -37,7 +37,7 @@ export interface HarmonyResult {
 // --- 定数 ---
 
 /** 調和タイプごとの色相オフセット（基準色からの角度差） */
-export const HARMONY_OFFSETS: Record<HarmonyType, number[]> = {
+const HARMONY_OFFSETS: Record<HarmonyType, number[]> = {
   complementary: [180],
   analogous: [-30, 30],
   triadic: [120, 240],

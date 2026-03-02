@@ -1,11 +1,5 @@
 import type { CharFeedback, YojiGameState } from "./types";
 
-// Re-export shared utilities for backward compatibility
-export {
-  copyToClipboard,
-  generateTwitterShareUrl,
-} from "../../shared/_lib/share";
-
 /**
  * Map a CharFeedback to its emoji representation.
  */

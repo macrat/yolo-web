@@ -1,12 +1,6 @@
 import type { IrodoriGameState } from "./types";
 import { calculateTotalScore, getRank, getScoreEmoji } from "./engine";
 
-// Re-export shared utilities for backward compatibility
-export {
-  copyToClipboard,
-  generateTwitterShareUrl,
-} from "../../shared/_lib/share";
-
 /**
  * Generate the share text for a completed game.
  *

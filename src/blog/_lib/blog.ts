@@ -175,18 +175,6 @@ export function getBlogPostBySlug(slug: string): BlogPost | null {
   return null;
 }
 
-/** Get all unique tags across published posts. */
-export function getAllBlogTags(): string[] {
-  const posts = getAllBlogPosts();
-  const tagSet = new Set<string>();
-  for (const post of posts) {
-    for (const tag of post.tags) {
-      tagSet.add(tag);
-    }
-  }
-  return Array.from(tagSet).sort();
-}
-
 /**
  * Get all published posts belonging to a given series, sorted by
  * published_at ascending (oldest first) with slug as secondary sort

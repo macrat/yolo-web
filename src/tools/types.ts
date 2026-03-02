@@ -51,5 +51,4 @@ export interface ToolMeta {
 
 export interface ToolDefinition {
   meta: ToolMeta;
-  componentImport: () => Promise<{ default: React.ComponentType }>;
 }

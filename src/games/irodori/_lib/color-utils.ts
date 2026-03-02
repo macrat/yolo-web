@@ -69,11 +69,7 @@ function srgbToLinear(c: number): number {
 /**
  * Convert RGB (0-255) to CIE XYZ (D65 illuminant).
  */
-export function rgbToXyz(
-  r: number,
-  g: number,
-  b: number,
-): [number, number, number] {
+function rgbToXyz(r: number, g: number, b: number): [number, number, number] {
   const rl = srgbToLinear(r);
   const gl = srgbToLinear(g);
   const bl = srgbToLinear(b);
@@ -89,11 +85,7 @@ export function rgbToXyz(
 /**
  * Convert CIE XYZ to CIE L*a*b* (D65 illuminant).
  */
-export function xyzToLab(
-  x: number,
-  y: number,
-  z: number,
-): [number, number, number] {
+function xyzToLab(x: number, y: number, z: number): [number, number, number] {
   // D65 reference white point
   const xn = 95.047;
   const yn = 100.0;

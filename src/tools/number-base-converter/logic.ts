@@ -16,7 +16,7 @@ const BASE_LABELS: Record<NumberBase, string> = {
   16: "16進数 (Hexadecimal)",
 };
 
-export function getBaseLabel(base: NumberBase): string {
+function getBaseLabel(base: NumberBase): string {
   return BASE_LABELS[base];
 }
 

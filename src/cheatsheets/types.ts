@@ -54,5 +54,4 @@ export interface CheatsheetMeta {
 
 export interface CheatsheetDefinition {
   meta: CheatsheetMeta;
-  componentImport: () => Promise<{ default: React.ComponentType }>;
 }
