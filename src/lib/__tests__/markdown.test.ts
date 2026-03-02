@@ -258,7 +258,39 @@ describe("markdownToHtml", () => {
     expect(html).toContain("markdown-alert-title");
     expect(html).toContain("ノートの内容。");
   });
+
+  test("sanitizes script tags from markdown output", () => {
+    // Markdown with inline HTML containing a script tag
+    const md = "Hello <script>alert(1)</script> world";
+    const html = markdownToHtml(md);
+    expect(html).not.toContain("<script>");
+    expect(html).not.toContain("alert(1)");
+    expect(html).toContain("Hello");
+    expect(html).toContain("world");
+  });
+
+  test("sanitizes javascript: links from markdown output", () => {
+    const md = '<a href="javascript:alert(1)">click me</a>';
+    const html = markdownToHtml(md);
+    expect(html).not.toContain("javascript:");
+    expect(html).toContain("click me");
+  });
+
+  test("converts GFM task list and preserves checkbox attributes", () => {
+    const md = "- [x] done\n- [ ] todo";
+    const html = markdownToHtml(md);
+    // Should contain input checkboxes with type, checked, and disabled attributes
+    expect(html).toContain("<input");
+    expect(html).toContain('type="checkbox"');
+    // The checked item should have the checked attribute
+    expect(html).toMatch(/checked/);
+    // Both items should have the disabled attribute
+    expect(html).toMatch(/disabled/);
+    expect(html).toContain("done");
+    expect(html).toContain("todo");
+  });
 });
+
 describe("generateHeadingId", () => {
   test("converts text to lowercase slug", () => {
     expect(generateHeadingId("Hello World")).toBe("hello-world");

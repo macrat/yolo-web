@@ -3,6 +3,7 @@ import sitemap from "../sitemap";
 import { allGameMetas } from "@/games/registry";
 import { allQuizMetas } from "@/quiz/registry";
 import { allCheatsheetMetas } from "@/cheatsheets/registry";
+import { BASE_URL } from "@/lib/constants";
 
 describe("sitemap", () => {
   test("sitemap includes /games", () => {
@@ -99,6 +100,37 @@ describe("sitemap", () => {
       expect(gameEntry?.lastModified).toEqual(
         new Date(game.updatedAt || game.publishedAt),
       );
+    }
+  });
+
+  test("homepage lastModified is >= all content type list page lastModified dates", () => {
+    const entries = sitemap();
+
+    // Find the homepage entry (URL is exactly BASE_URL)
+    const homepageEntry = entries.find((e) => e.url === BASE_URL);
+    expect(homepageEntry).toBeDefined();
+    expect(homepageEntry?.lastModified).toBeInstanceOf(Date);
+    const homepageTime = (homepageEntry!.lastModified as Date).getTime();
+
+    // All content type list pages whose lastModified should be reflected in homepage
+    const contentListPaths = [
+      "/blog",
+      "/tools",
+      "/games",
+      "/memos",
+      "/quiz",
+      "/cheatsheets",
+      "/dictionary",
+    ];
+
+    for (const path of contentListPaths) {
+      const listEntry = entries.find((e) => e.url === `${BASE_URL}${path}`);
+      expect(listEntry).toBeDefined();
+      if (listEntry?.lastModified instanceof Date) {
+        expect(homepageTime).toBeGreaterThanOrEqual(
+          listEntry.lastModified.getTime(),
+        );
+      }
     }
   });
 });

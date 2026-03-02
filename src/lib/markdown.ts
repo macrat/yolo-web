@@ -10,6 +10,8 @@
 import { Marked, type MarkedExtension, type Tokens } from "marked";
 // GFM Alert構文（> [!NOTE]等）をadmonitionのHTMLに変換するため追加
 import markedAlert from "marked-alert";
+// XSS防止のためmarked出力をホワイトリスト方式でサニタイズ
+import { sanitize } from "@/lib/sanitize";
 
 /**
  * Custom marked extension to convert mermaid code blocks into
@@ -227,7 +229,8 @@ export function markdownToHtml(md: string): string {
   if (typeof result !== "string") {
     throw new Error("Unexpected async result from marked.parse");
   }
-  return result;
+  // Sanitize to strip dangerous tags/attributes (XSS prevention)
+  return sanitize(result);
 }
 
 /**

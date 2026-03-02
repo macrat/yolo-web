@@ -129,6 +129,66 @@ describe("parseCron", () => {
     expect(result.minute.values).toEqual([0]);
     expect(result.hour.values).toEqual([9]);
   });
+
+  // Fix 1: Invalid token rejection tests
+  it("returns invalid for '1a' (trailing non-numeric)", () => {
+    const result = parseCron("1a * * * *");
+    expect(result.valid).toBe(false);
+  });
+
+  it("returns invalid for '1.5' (decimal)", () => {
+    const result = parseCron("1.5 * * * *");
+    expect(result.valid).toBe(false);
+  });
+
+  it("returns invalid for '1e2' (scientific notation)", () => {
+    const result = parseCron("1e2 * * * *");
+    expect(result.valid).toBe(false);
+  });
+
+  it("returns invalid for '+1' (leading plus)", () => {
+    const result = parseCron("+1 * * * *");
+    expect(result.valid).toBe(false);
+  });
+
+  // Fix 2: 24-hour format tests
+  it("uses 24-hour format for PM hours (no '午後13時')", () => {
+    const result = parseCron("0 13 * * *");
+    expect(result.valid).toBe(true);
+    expect(result.description).not.toContain("午後13時");
+    expect(result.description).toContain("13時0分");
+  });
+
+  it("uses 24-hour format for midnight (0時0分)", () => {
+    const result = parseCron("0 0 * * *");
+    expect(result.valid).toBe(true);
+    expect(result.description).toContain("0時0分");
+  });
+
+  it("uses 24-hour format for late night (23時30分)", () => {
+    const result = parseCron("30 23 * * *");
+    expect(result.valid).toBe(true);
+    expect(result.description).toContain("23時30分");
+  });
+
+  it("uses 24-hour format for morning (9時0分)", () => {
+    const result = parseCron("0 9 * * *");
+    expect(result.valid).toBe(true);
+    expect(result.description).toContain("9時0分");
+  });
+
+  // Fix 3: DOM/DOW OR description tests
+  it("describes DOM/DOW OR condition with '毎月...、または毎週...'", () => {
+    const result = parseCron("0 0 1 * 1");
+    expect(result.valid).toBe(true);
+    expect(result.description).toContain("毎月1日、または毎週月曜");
+  });
+
+  it("describes DOM/DOW OR condition for step wildcard", () => {
+    const result = parseCron("0 0 */2 * 1");
+    expect(result.valid).toBe(true);
+    expect(result.description).toContain("または");
+  });
 });
 
 describe("getNextExecutions", () => {
@@ -176,6 +236,83 @@ describe("getNextExecutions", () => {
     const results = getNextExecutions("0 * * * *", 5, from);
     for (let i = 1; i < results.length; i++) {
       expect(results[i].getTime()).toBeGreaterThan(results[i - 1].getTime());
+    }
+  });
+
+  // Fix 3: DOM/DOW OR logic tests
+  it("applies OR logic when both DOM and DOW are specified (0 0 1 * 1)", () => {
+    const from = new Date(2026, 0, 1, 0, 0, 0);
+    const results = getNextExecutions("0 0 1 * 1", 10, from);
+    expect(results.length).toBe(10);
+    // Results should include both 1st of month AND Mondays
+    const hasFirstOfMonth = results.some((d) => d.getDate() === 1);
+    const hasMonday = results.some((d) => d.getDay() === 1);
+    expect(hasFirstOfMonth).toBe(true);
+    expect(hasMonday).toBe(true);
+  });
+
+  it("applies OR logic when both DOM=15 and DOW=5 (0 0 15 * 5)", () => {
+    const from = new Date(2026, 0, 1, 0, 0, 0);
+    const results = getNextExecutions("0 0 15 * 5", 10, from);
+    expect(results.length).toBe(10);
+    const has15th = results.some((d) => d.getDate() === 15);
+    const hasFriday = results.some((d) => d.getDay() === 5);
+    expect(has15th).toBe(true);
+    expect(hasFriday).toBe(true);
+  });
+
+  it("keeps AND logic when only DOM is specified (DOW=*)", () => {
+    const from = new Date(2026, 0, 1, 0, 0, 0);
+    const results = getNextExecutions("0 0 1 * *", 5, from);
+    expect(results.length).toBe(5);
+    for (const d of results) {
+      expect(d.getDate()).toBe(1);
+    }
+  });
+
+  it("keeps AND logic when only DOW is specified (DOM=*)", () => {
+    const from = new Date(2026, 0, 1, 0, 0, 0);
+    const results = getNextExecutions("0 0 * * 1", 5, from);
+    expect(results.length).toBe(5);
+    for (const d of results) {
+      expect(d.getDay()).toBe(1);
+    }
+  });
+
+  it("applies OR logic with step wildcard */2 for DOM (0 0 */2 * 1)", () => {
+    const from = new Date(2026, 0, 1, 0, 0, 0);
+    const results = getNextExecutions("0 0 */2 * 1", 10, from);
+    expect(results.length).toBe(10);
+    // */2 produces odd days (1,3,5,...,31) since dayOfMonth range starts at 1
+    // Results should include both odd-day dates AND Mondays
+    const hasOddDay = results.some(
+      (d) => d.getDate() % 2 === 1 && d.getDay() !== 1,
+    );
+    const hasMonday = results.some((d) => d.getDay() === 1);
+    expect(hasOddDay).toBe(true);
+    expect(hasMonday).toBe(true);
+  });
+
+  // Fix 4: Multi-year search window tests
+  it("returns 3 results for yearly execution (0 0 1 1 *)", () => {
+    const from = new Date(2026, 0, 1, 0, 0, 0);
+    const results = getNextExecutions("0 0 1 1 *", 3, from);
+    expect(results).toHaveLength(3);
+    // All should be January 1st
+    for (const d of results) {
+      expect(d.getMonth()).toBe(0); // January
+      expect(d.getDate()).toBe(1);
+    }
+  });
+
+  it("returns 2 results for leap year execution (0 0 29 2 *)", () => {
+    const from = new Date(2026, 0, 1, 0, 0, 0);
+    const results = getNextExecutions("0 0 29 2 *", 2, from);
+    expect(results).toHaveLength(2);
+    // All should be Feb 29th
+    for (const d of results) {
+      expect(d.getMonth()).toBe(1); // February
+      expect(d.getDate()).toBe(29);
     }
   });
 });
