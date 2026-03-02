@@ -6,17 +6,14 @@
       "Edit(/docs/backlog.md)",
       "Edit(/docs/cycles/cycle-*.md)",
       "WebFetch",
-      "WebSearch",
-      "Write(/docs/cycles/cycle-*.md)"
+      "WebSearch"
     ],
     "deny": [
       "Agent(Explore)",
       "Agent(Plan)",
       "Agent(general-purpose)",
       "Edit(/docs/constitution.md)",
-      "Edit(/src/*)",
-      "Write(/docs/constitution.md)",
-      "Write(/src/*)"
+      "Edit(/src/**)"
     ]
   },
   "hooks": {
