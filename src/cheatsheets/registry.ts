@@ -9,34 +9,13 @@ import { meta as htmlTagsMeta } from "./html-tags/meta";
 import { meta as sqlMeta } from "./sql/meta";
 
 const cheatsheetEntries: CheatsheetDefinition[] = [
-  {
-    meta: regexMeta,
-    componentImport: () => import("./regex/Component"),
-  },
-  {
-    meta: gitMeta,
-    componentImport: () => import("./git/Component"),
-  },
-  {
-    meta: markdownMeta,
-    componentImport: () => import("./markdown/Component"),
-  },
-  {
-    meta: httpStatusCodesMeta,
-    componentImport: () => import("./http-status-codes/Component"),
-  },
-  {
-    meta: cronMeta,
-    componentImport: () => import("./cron/Component"),
-  },
-  {
-    meta: htmlTagsMeta,
-    componentImport: () => import("./html-tags/Component"),
-  },
-  {
-    meta: sqlMeta,
-    componentImport: () => import("./sql/Component"),
-  },
+  { meta: regexMeta },
+  { meta: gitMeta },
+  { meta: markdownMeta },
+  { meta: httpStatusCodesMeta },
+  { meta: cronMeta },
+  { meta: htmlTagsMeta },
+  { meta: sqlMeta },
 ];
 
 export const cheatsheetsBySlug: Map<string, CheatsheetDefinition> = new Map(

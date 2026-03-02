@@ -1,12 +1,6 @@
 import type { NakamawakeGameState } from "./types";
 import { getDifficultyEmoji } from "./engine";
 
-// Re-export shared utilities for backward compatibility
-export {
-  copyToClipboard,
-  generateTwitterShareUrl,
-} from "../../shared/_lib/share";
-
 /**
  * Generate the share text for a completed game.
  *

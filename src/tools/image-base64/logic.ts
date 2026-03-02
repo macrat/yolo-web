@@ -12,7 +12,8 @@ export interface ParsedImage {
   base64: string;
 }
 
-export const SUPPORTED_MIME_TYPES = [
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- kept for future Component use
+const SUPPORTED_MIME_TYPES = [
   "image/png",
   "image/jpeg",
   "image/gif",

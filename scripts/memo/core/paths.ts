@@ -25,12 +25,14 @@ export function inboxDir(partition: string): string {
 }
 
 /** Get the active directory path for a partition */
-export function activeDir(partition: string): string {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- kept for future memo CLI improvements
+function activeDir(partition: string): string {
   return path.join(MEMO_ROOT, partition, "active");
 }
 
 /** Get the archive directory path for a partition */
-export function archiveDir(partition: string): string {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- kept for future memo CLI improvements
+function archiveDir(partition: string): string {
   return path.join(MEMO_ROOT, partition, "archive");
 }
 

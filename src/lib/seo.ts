@@ -54,7 +54,7 @@ export function generateToolJsonLd(meta: ToolMeta): object {
   };
 }
 
-export interface BlogPostMetaForSeo {
+interface BlogPostMetaForSeo {
   title: string;
   slug: string;
   description: string;
@@ -111,7 +111,7 @@ export function generateBlogPostJsonLd(post: BlogPostMetaForSeo): object {
   };
 }
 
-export interface MemoMetaForSeo {
+interface MemoMetaForSeo {
   id: string;
   subject: string;
   from: string;
@@ -163,7 +163,7 @@ export function generateMemoPageJsonLd(memo: MemoMetaForSeo): object {
   };
 }
 
-export interface GameMetaForSeo {
+interface GameMetaForSeo {
   name: string;
   description: string;
   url: string;
@@ -246,7 +246,7 @@ export function generateWebSiteJsonLd(): object {
 
 // -- Dictionary SEO helpers --
 
-export interface KanjiMetaForSeo {
+interface KanjiMetaForSeo {
   character: string;
   meanings: string[];
   onYomi: string[];
@@ -302,7 +302,7 @@ export function generateKanjiJsonLd(kanji: KanjiMetaForSeo): object {
   };
 }
 
-export interface YojiMetaForSeo {
+interface YojiMetaForSeo {
   yoji: string;
   reading: string;
   meaning: string;
@@ -350,7 +350,7 @@ export function generateYojiJsonLd(yoji: YojiMetaForSeo): object {
 
 // -- Color Dictionary SEO helpers --
 
-export interface ColorMetaForSeo {
+interface ColorMetaForSeo {
   slug: string;
   name: string;
   romaji: string;
@@ -529,5 +529,3 @@ export function generateQuizJsonLd(meta: QuizMeta): object {
 export function safeJsonLdStringify(data: object): string {
   return JSON.stringify(data).replace(/</g, "\\u003c");
 }
-
-export { BASE_URL, SITE_NAME };

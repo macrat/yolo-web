@@ -2,10 +2,8 @@
 
 ## Active (進行中)
 
-| ID    | Title                                                    | Priority | Status | Assigned Role | Origin Memo | Target Cycle | Notes                                                                                                                                 |
-| ----- | -------------------------------------------------------- | -------- | ------ | ------------- | ----------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
-| B-162 | リポジトリのゴミファイル削除＋不要コード調査・整理       | P2       | active | -             | 19cade5195c | 61           | owner依頼。test-output.txt削除、不要ファイル・unusedコードの調査・整理                                                                |
-| B-159 | ツールとチートシートのダイナミックインポート廃止・静的化 | P2       | active | -             | 19ca9cbc197 | 61           | owner依頼。ツール・チートシートの個別ページで動的読み込みしているコンテンツを静的に取り込む。根本的なアーキテクチャ変更も選択肢に含む |
+| ID  | Title | Priority | Status | Assigned Role | Origin Memo | Target Cycle | Notes |
+| --- | ----- | -------- | ------ | ------------- | ----------- | ------------ | ----- |
 
 ## Queued (未着手)
 
@@ -45,6 +43,7 @@
 | B-155 | QRコード入力上限・UIブロッキング対策                       | P4       | queued | -             | 19ca986ee55 | -            | 入力長チェックなしでメインスレッド同期実行(#28)。上限定義とWorker化検討                                                                                                                                                                                                                                                                                                                                                                                       |
 | B-156 | memos一覧初期ペイロード最適化                              | P3       | queued | -             | 19ca986ea98 | -            | 全件クライアント投入でHTML約15MB/RSC約11MB(#4)。ページング導入検討                                                                                                                                                                                                                                                                                                                                                                                            |
 | B-158 | 開発体験改善（警告ログノイズ制御）                         | P4       | queued | -             | 19ca986f028 | -            | NEXT_PUBLIC_BASE_URL未設定時の警告ログ過多(#19)。one-shot化・開発時限定化・本番抑制の方針検討。robots不一致(#14)はB-148に含む                                                                                                                                                                                                                                                                                                                                 |
+| B-163 | ツール・チートシート追加用スキャフォールドスクリプト       | P4       | queued | -             | -           | -            | ツール追加時にpage.tsx、opengraph-image.tsx、twitter-image.tsxを自動生成するスクリプト（npm run new-tool -- slug-name）。出典: nextjs-static-page-split-for-tools記事の展望                                                                                                                                                                                                                                                                                   |
 
 ## Deferred (延期)
 
@@ -60,6 +59,8 @@
 
 | ID    | Title                                                       | Completed Cycle | Origin Memo | Notes                                                                                                                                                                                       |
 | ----- | ----------------------------------------------------------- | --------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| B-162 | リポジトリのゴミファイル削除＋不要コード調査・整理          | 61              | 19cade5195c | test-output.txt削除、.gitignore更新、不要devDependencies削除、未使用エクスポート整理（関数・型・re-export）。レビュー1回（Approve）で承認                                                   |
+| B-159 | ツールとチートシートのダイナミックインポート廃止・静的化    | 61              | 19ca9cbc197 | 個別ページ分割（40ページ x page.tsx+OGP+twitter=120ファイル新規作成）。ローディングフラッシュ完全解消、真のコード分割実現。網羅性テスト42件追加。レビュー各タスクApprove                    |
 | B-161 | Mermaidシンタックスエラー修正＋全数バリデーションテスト整備 | 60              | 19cac9d9b56 | ganttタスク名のコロン誤解釈修正。mermaid.render()+getBBox mockによる全数バリデーションテスト（7記事16ブロック）。レビュー1回（Approve）で承認                                               |
 | B-160 | sitemap.tsのhomepageDateにlatestDictionaryDateを含める      | 59              | 19cac21bf7d | latestDictionaryDateの定義移動+Math.maxへの追加。テスト1件追加。レビュー1回（Approve）で承認                                                                                                |
 | B-157 | Markdownサニタイズ方針確認・強化                            | 59              | 19ca986ea98 | sanitize-html導入、markdownToHtml()統合、サニタイズテスト20件+統合テスト3件。ColorDetail決定論的シャッフル。レビュー1回（CA→Approve）で承認                                                 |
@@ -69,4 +70,3 @@
 | B-148 | SEOメタデータ改善（sitemap lastModified・OGP/canonical）    | 57              | 19ca986e8c2 | #14 robots修正、#18 sitemap lastModified全修正（GameMeta/DictionaryMetaにpublishedAt追加）、#20 全33ルートOGP/canonical/twitter追加、#21 SEOテスト71件追加。レビュー2回（CA→Approve）で承認 |
 | B-149 | JSON-LD script-breakout対策                                 | 57              | 19ca986ea98 | safeJsonLdStringify関数追加、全14ファイルのJSON-LD埋め込み修正、テスト5件追加。レビュー2回（CA→Approve）で承認                                                                              |
 | B-147 | ゲーム途中離脱バグ修正（カナール・キメル・イロドリ）        | 56              | 19ca986e14e | カナール・キメル: status型に"playing"追加、マイグレーション追加。イロドリ: 型拡張+毎ラウンド保存+途中再開。テスト17件追加。計画レビュー1回（CA）、実装レビュー1回（Approve）で承認          |
-| B-086 | Tier 2チートシート追加（HTTPステータスコード・Cron式）      | 55              | 19c85be20b1 | cycle-55で4テーマ中2テーマ（HTTPステータスコード・Cron式）を実施。ブログ記事も作成。残り2テーマ（HTMLタグ・SQL）はB-146として登録済み                                                       |

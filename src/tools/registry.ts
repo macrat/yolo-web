@@ -37,135 +37,102 @@ import { meta as traditionalColorPaletteMeta } from "./traditional-color-palette
 const toolEntries: ToolDefinition[] = [
   {
     meta: charCountMeta,
-    componentImport: () => import("./char-count/Component"),
   },
   {
     meta: jsonFormatterMeta,
-    componentImport: () => import("./json-formatter/Component"),
   },
   {
     meta: base64Meta,
-    componentImport: () => import("./base64/Component"),
   },
   {
     meta: urlEncodeMeta,
-    componentImport: () => import("./url-encode/Component"),
   },
   {
     meta: textDiffMeta,
-    componentImport: () => import("./text-diff/Component"),
   },
   {
     meta: hashGeneratorMeta,
-    componentImport: () => import("./hash-generator/Component"),
   },
   {
     meta: passwordGeneratorMeta,
-    componentImport: () => import("./password-generator/Component"),
   },
   {
     meta: qrCodeMeta,
-    componentImport: () => import("./qr-code/Component"),
   },
   {
     meta: regexTesterMeta,
-    componentImport: () => import("./regex-tester/Component"),
   },
   {
     meta: unixTimestampMeta,
-    componentImport: () => import("./unix-timestamp/Component"),
   },
   {
     meta: htmlEntityMeta,
-    componentImport: () => import("./html-entity/Component"),
   },
   {
     meta: fullwidthConverterMeta,
-    componentImport: () => import("./fullwidth-converter/Component"),
   },
   {
     meta: textReplaceMeta,
-    componentImport: () => import("./text-replace/Component"),
   },
   {
     meta: colorConverterMeta,
-    componentImport: () => import("./color-converter/Component"),
   },
   {
     meta: markdownPreviewMeta,
-    componentImport: () => import("./markdown-preview/Component"),
   },
   {
     meta: dummyTextMeta,
-    componentImport: () => import("./dummy-text/Component"),
   },
   {
     meta: dateCalculatorMeta,
-    componentImport: () => import("./date-calculator/Component"),
   },
   {
     meta: byteCounterMeta,
-    componentImport: () => import("./byte-counter/Component"),
   },
   {
     meta: csvConverterMeta,
-    componentImport: () => import("./csv-converter/Component"),
   },
   {
     meta: numberBaseConverterMeta,
-    componentImport: () => import("./number-base-converter/Component"),
   },
   {
     meta: kanaConverterMeta,
-    componentImport: () => import("./kana-converter/Component"),
   },
   {
     meta: emailValidatorMeta,
-    componentImport: () => import("./email-validator/Component"),
   },
   {
     meta: unitConverterMeta,
-    componentImport: () => import("./unit-converter/Component"),
   },
   {
     meta: yamlFormatterMeta,
-    componentImport: () => import("./yaml-formatter/Component"),
   },
   {
     meta: imageBase64Meta,
-    componentImport: () => import("./image-base64/Component"),
   },
   {
     meta: ageCalculatorMeta,
-    componentImport: () => import("./age-calculator/Component"),
   },
   {
     meta: bmiCalculatorMeta,
-    componentImport: () => import("./bmi-calculator/Component"),
   },
   {
     meta: sqlFormatterMeta,
-    componentImport: () => import("./sql-formatter/Component"),
   },
   {
     meta: cronParserMeta,
-    componentImport: () => import("./cron-parser/Component"),
   },
   {
     meta: imageResizerMeta,
-    componentImport: () => import("./image-resizer/Component"),
   },
   {
     meta: businessEmailMeta,
-    componentImport: () => import("./business-email/Component"),
   },
   {
     meta: keigoReferenceMeta,
-    componentImport: () => import("./keigo-reference/Component"),
   },
   {
     meta: traditionalColorPaletteMeta,
-    componentImport: () => import("./traditional-color-palette/Component"),
   },
 ];
 
@@ -177,7 +144,7 @@ export const toolsBySlug: Map<string, ToolDefinition> = new Map(
 // All tool metadata (no component code loaded)
 export const allToolMetas: ToolMeta[] = toolEntries.map((e) => e.meta);
 
-// Get slugs for generateStaticParams
+// Get all tool slugs
 export function getAllToolSlugs(): string[] {
   return toolEntries.map((e) => e.meta.slug);
 }

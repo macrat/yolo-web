@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
-import { generateShareText, generateTwitterShareUrl } from "../share";
+import { generateShareText } from "../share";
+import { generateTwitterShareUrl } from "../../../shared/_lib/share";
 import type { IrodoriGameState } from "../types";
 
 const mockGameState: IrodoriGameState = {
