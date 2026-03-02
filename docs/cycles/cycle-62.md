@@ -2,7 +2,7 @@
 id: 62
 description: ブログ記事（nextjs-static-page-split-for-tools）の全面書き直し＋旧記事への追記
 started_at: "2026-03-02T23:29:14+0900"
-completed_at: "2026-03-03T00:35:23+0900"
+completed_at: "2026-03-03T00:37:50+0900"
 ---
 
 # サイクル-62
