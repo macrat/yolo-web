@@ -1,0 +1,304 @@
+
+> yolo-web@0.1.0 pretest
+> tsx scripts/build-memo-index.ts
+
+[build-memo-index] Scanning memo files...
+[build-memo-index] Found 2079 memos
+[build-memo-index] Wrote /mnt/data/yolo-web/.generated/memo-index.json (12127.3 KB) in 1730ms
+
+> yolo-web@0.1.0 test
+> vitest run
+
+
+[1m[46m RUN [49m[22m [36mv4.0.18 [39m[90m/mnt/data/yolo-web[39m
+
+[90mstderr[2m | src/app/__tests__/sitemap.test.ts
+[22m[39m[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+
+ [32m✓[39m src/app/__tests__/sitemap.test.ts [2m([22m[2m8 tests[22m[2m)[22m[33m 306[2mms[22m[39m
+ [32m✓[39m scripts/spawner/__tests__/watcher.test.ts [2m([22m[2m14 tests[22m[2m)[22m[33m 4047[2mms[22m[39m
+       [33m[2m✓[22m[39m detects new .md files in inbox directories [33m 1004[2mms[22m[39m
+       [33m[2m✓[22m[39m filters out non-.md files [33m 1005[2mms[22m[39m
+       [33m[2m✓[22m[39m debounces duplicate events for the same file [33m 1005[2mms[22m[39m
+       [33m[2m✓[22m[39m includes memoInfo when available [33m 1003[2mms[22m[39m
+ [32m✓[39m scripts/spawner/__tests__/spawner.test.ts [2m([22m[2m8 tests[22m[2m)[22m[33m 5766[2mms[22m[39m
+     [33m[2m✓[22m[39m starts PM when no inbox memos exist [33m 1014[2mms[22m[39m
+     [33m[2m✓[22m[39m starts agents for inbox memos [33m 1009[2mms[22m[39m
+     [33m[2m✓[22m[39m enters ending mode and force kills [33m 509[2mms[22m[39m
+     [33m[2m✓[22m[39m warns about active memos on startup [33m 508[2mms[22m[39m
+     [33m[2m✓[22m[39m queue processes when concurrency limit is reached [33m 712[2mms[22m[39m
+     [33m[2m✓[22m[39m processes queue in FIFO order when processes finish [33m 2010[2mms[22m[39m
+ [32m✓[39m scripts/spawner/__tests__/process-manager.test.ts [2m([22m[2m13 tests[22m[2m)[22m[33m 6097[2mms[22m[39m
+     [33m[2m✓[22m[39m spawns a process with SPAWNER_SPAWN_CMD=echo [33m 513[2mms[22m[39m
+     [33m[2m✓[22m[39m dequeues and spawns when a process exits (NOTE-3) [33m 506[2mms[22m[39m
+     [33m[2m✓[22m[39m maintains FIFO order in queue (NOTE-3) [33m 2009[2mms[22m[39m
+     [33m[2m✓[22m[39m logs exit code for abnormal exits [33m 505[2mms[22m[39m
+     [33m[2m✓[22m[39m logs exit=0 without WARNING for normal exits [33m 507[2mms[22m[39m
+     [33m[2m✓[22m[39m killAll sends SIGKILL to all processes [33m 508[2mms[22m[39m
+     [33m[2m✓[22m[39m sets YOLO_AGENT env var for builder role [33m 506[2mms[22m[39m
+     [33m[2m✓[22m[39m sets YOLO_AGENT env var for project-manager role [33m 505[2mms[22m[39m
+     [33m[2m✓[22m[39m parses SPAWNER_SPAWN_CMD with multiple args [33m 505[2mms[22m[39m
+[90mstderr[2m | src/app/__tests__/page.test.tsx
+[22m[39m[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+
+[90mstderr[2m | src/app/__tests__/seo-coverage.test.ts
+[22m[39m[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+
+ [32m✓[39m src/components/search/__tests__/SearchModal.test.tsx [2m([22m[2m20 tests[22m[2m)[22m[33m 1214[2mms[22m[39m
+ [32m✓[39m src/app/__tests__/page.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[33m 2041[2mms[22m[39m
+   [33m[2m✓[22m[39m Home page renders heading [33m 371[2mms[22m[39m
+   [33m[2m✓[22m[39m Home page renders stat badges as links [33m 510[2mms[22m[39m
+   [33m[2m✓[22m[39m Home page renders daily puzzle section with all games [33m 433[2mms[22m[39m
+   [33m[2m✓[22m[39m Home page renders popular tools section with dynamic count [33m 349[2mms[22m[39m
+   [33m[2m✓[22m[39m Home page renders latest blog section [33m 323[2mms[22m[39m
+ [32m✓[39m src/app/__tests__/seo-coverage.test.ts [2m([22m[2m24 tests[22m[2m)[22m[33m 1912[2mms[22m[39m
+     [33m[2m✓[22m[39m '/games/kanji-kanaru': SEO必須項目が存在する [33m 421[2mms[22m[39m
+[90mstderr[2m | src/app/games/kanji-kanaru/__tests__/page.test.tsx
+[22m[39m[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+
+[90mstderr[2m | src/games/_components/__tests__/GameLayout.test.tsx
+[22m[39m[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+
+ [32m✓[39m src/app/games/kanji-kanaru/__tests__/page.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 928[2mms[22m[39m
+   [33m[2m✓[22m[39m KanjiKanaruPage renders breadcrumb navigation [33m 533[2mms[22m[39m
+ [32m✓[39m src/components/common/__tests__/Pagination.test.tsx [2m([22m[2m18 tests[22m[2m)[22m[33m 1012[2mms[22m[39m
+ [32m✓[39m src/games/_components/__tests__/GameLayout.test.tsx [2m([22m[2m16 tests[22m[2m)[22m[33m 919[2mms[22m[39m
+   [33m[2m✓[22m[39m GameLayout renders breadcrumb with game title [33m 330[2mms[22m[39m
+[90mstderr[2m | src/app/quiz/__tests__/page.test.tsx
+[22m[39m[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+
+ [32m✓[39m src/components/common/__tests__/ShareButtons.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 692[2mms[22m[39m
+     [33m[2m✓[22m[39m renders all 4 buttons by default [33m 340[2mms[22m[39m
+ [32m✓[39m src/components/search/__tests__/SearchTrigger.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 672[2mms[22m[39m
+ [32m✓[39m src/app/quiz/__tests__/page.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 707[2mms[22m[39m
+     [33m[2m✓[22m[39m renders the page heading [33m 319[2mms[22m[39m
+     [33m[2m✓[22m[39m renders links to individual quiz pages [33m 332[2mms[22m[39m
+[90mstderr[2m | src/app/games/__tests__/page.test.tsx
+[22m[39m[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+
+[90mstderr[2m | src/app/games/yoji-kimeru/__tests__/page.test.tsx
+[22m[39m[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+
+ [32m✓[39m src/app/games/__tests__/page.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 631[2mms[22m[39m
+ [32m✓[39m src/components/common/__tests__/Header.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 689[2mms[22m[39m
+     [33m[2m✓[22m[39m renders logo link to home [33m 414[2mms[22m[39m
+ [32m✓[39m src/app/games/yoji-kimeru/__tests__/page.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[33m 659[2mms[22m[39m
+   [33m[2m✓[22m[39m YojiKimeruPage renders breadcrumb navigation [33m 527[2mms[22m[39m
+ [32m✓[39m src/app/games/kanji-kanaru/__tests__/GuessInput.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[33m 525[2mms[22m[39m
+Not implemented: navigation to another Document
+ [32m✓[39m src/components/common/__tests__/MobileNav.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 622[2mms[22m[39m
+     [33m[2m✓[22m[39m renders hamburger button with correct initial aria-label [33m 312[2mms[22m[39m
+ [32m✓[39m src/components/common/__tests__/Footer.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 568[2mms[22m[39m
+ [32m✓[39m src/games/yoji-kimeru/_components/__tests__/GameBoard.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 572[2mms[22m[39m
+     [33m[2m✓[22m[39m renders empty board with correct number of rows [33m 342[2mms[22m[39m
+ [32m✓[39m src/components/common/__tests__/ThemeToggle.test.tsx [2m([22m[2m11 tests[22m[2m)[22m[33m 516[2mms[22m[39m
+ [32m✓[39m src/dictionary/_components/__tests__/YojiDetail.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 554[2mms[22m[39m
+   [33m[2m✓[22m[39m renders game cross-link [33m 426[2mms[22m[39m
+[90mstderr[2m | src/dictionary/_components/__tests__/DictionaryDetailLayout.test.tsx
+[22m[39m[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+
+[90mstderr[2m | src/app/__tests__/not-found.test.tsx
+[22m[39m[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+
+ [32m✓[39m src/dictionary/_components/__tests__/DictionaryDetailLayout.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 449[2mms[22m[39m
+ [32m✓[39m src/app/games/kanji-kanaru/__tests__/GameBoard.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 447[2mms[22m[39m
+     [33m[2m✓[22m[39m renders empty board with correct number of rows [33m 324[2mms[22m[39m
+ [32m✓[39m src/app/__tests__/not-found.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[33m 502[2mms[22m[39m
+   [33m[2m✓[22m[39m 404 page renders heading [33m 321[2mms[22m[39m
+[90mstderr[2m | src/cheatsheets/_components/__tests__/CheatsheetLayout.test.tsx
+[22m[39m[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+
+[90mstderr[2m | src/tools/_components/__tests__/ToolLayout.test.tsx
+[22m[39m[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+
+ [32m✓[39m src/dictionary/_components/__tests__/KanjiDetail.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 425[2mms[22m[39m
+   [33m[2m✓[22m[39m renders game cross-link [33m 324[2mms[22m[39m
+ [32m✓[39m src/cheatsheets/_components/__tests__/CheatsheetLayout.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 413[2mms[22m[39m
+   [33m[2m✓[22m[39m CheatsheetLayout renders breadcrumb [33m 336[2mms[22m[39m
+ [32m✓[39m src/tools/_components/__tests__/ToolLayout.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 498[2mms[22m[39m
+   [33m[2m✓[22m[39m ToolLayout renders tool name as heading [33m 347[2mms[22m[39m
+[90mstderr[2m | src/components/common/__tests__/Breadcrumb.test.tsx
+[22m[39m[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+
+ [32m✓[39m src/cheatsheets/_components/__tests__/TableOfContents.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 359[2mms[22m[39m
+ [32m✓[39m src/blog/_components/__tests__/SeriesNav.test.tsx [2m([22m[2m14 tests[22m[2m)[22m[33m 395[2mms[22m[39m
+ [32m✓[39m src/components/common/__tests__/Breadcrumb.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 399[2mms[22m[39m
+[90mstderr[2m | src/app/about/__tests__/page.test.tsx
+[22m[39m[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+
+ [32m✓[39m src/app/about/__tests__/page.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 401[2mms[22m[39m
+ [32m✓[39m src/components/common/__tests__/FaqSection.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 324[2mms[22m[39m
+ [32m✓[39m src/cheatsheets/_components/__tests__/CodeBlock.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 311[2mms[22m[39m
+[90mstderr[2m | src/app/feed/__tests__/feed.test.ts
+[22m[39m[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+
+ [32m✓[39m src/tools/markdown-preview/__tests__/logic.test.ts [2m([22m[2m37 tests[22m[2m)[22m[32m 209[2mms[22m[39m
+ [32m✓[39m src/cheatsheets/_components/__tests__/CheatsheetCard.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 290[2mms[22m[39m
+ [32m✓[39m src/app/feed/__tests__/feed.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 166[2mms[22m[39m
+ [32m✓[39m src/tools/qr-code/__tests__/logic.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 111[2mms[22m[39m
+ [32m✓[39m src/blog/__tests__/blog-series.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 159[2mms[22m[39m
+ [32m✓[39m src/games/shared/_components/__tests__/NextGameBanner.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 121[2mms[22m[39m
+ [32m✓[39m src/games/shared/_components/__tests__/GameDialog.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[32m 92[2mms[22m[39m
+ [32m✓[39m src/games/shared/_components/__tests__/GameShareButtons.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[32m 98[2mms[22m[39m
+ [32m✓[39m src/components/common/__tests__/TrustLevelBadge.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[32m 84[2mms[22m[39m
+ [32m✓[39m scripts/memo/__tests__/memo-lint.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 85[2mms[22m[39m
+ [32m✓[39m src/dictionary/_lib/__tests__/colors.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 69[2mms[22m[39m
+ [32m✓[39m src/lib/__tests__/markdown.test.ts [2m([22m[2m57 tests[22m[2m)[22m[32m 70[2mms[22m[39m
+ [32m✓[39m src/components/search/__tests__/highlightMatches.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[32m 72[2mms[22m[39m
+ [32m✓[39m src/components/search/__tests__/useSearch.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 64[2mms[22m[39m
+ [32m✓[39m src/lib/search/__tests__/build-index.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 71[2mms[22m[39m
+ [32m✓[39m src/dictionary/_components/__tests__/DictionaryCard.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 73[2mms[22m[39m
+ [32m✓[39m src/components/common/__tests__/GoogleAnalytics.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 55[2mms[22m[39m
+ [32m✓[39m src/games/shared/_components/__tests__/CountdownTimer.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 57[2mms[22m[39m
+ [32m✓[39m src/dictionary/_lib/__tests__/kanji.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 62[2mms[22m[39m
+ [32m✓[39m src/tools/yaml-formatter/__tests__/logic.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 44[2mms[22m[39m
+[90mstderr[2m | src/lib/__tests__/seo.test.ts
+[22m[39m[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+
+ [32m✓[39m src/lib/__tests__/seo.test.ts [2m([22m[2m71 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+ [32m✓[39m src/lib/__tests__/ogp-image.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[32m 38[2mms[22m[39m
+ [32m✓[39m src/tools/keigo-reference/__tests__/logic.test.ts [2m([22m[2m24 tests[22m[2m)[22m[32m 29[2mms[22m[39m
+ [32m✓[39m src/tools/cron-parser/__tests__/logic.test.ts [2m([22m[2m48 tests[22m[2m)[22m[32m 30[2mms[22m[39m
+ [32m✓[39m src/games/irodori/_lib/__tests__/daily.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 32[2mms[22m[39m
+ [32m✓[39m src/tools/csv-converter/__tests__/logic.test.ts [2m([22m[2m33 tests[22m[2m)[22m[32m 36[2mms[22m[39m
+ [32m✓[39m src/games/yoji-kimeru/_lib/__tests__/daily.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 32[2mms[22m[39m
+ [32m✓[39m src/tools/text-replace/__tests__/logic.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 29[2mms[22m[39m
+ [32m✓[39m src/games/shared/_lib/__tests__/crossGameProgress.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 32[2mms[22m[39m
+ [32m✓[39m scripts/memo/__tests__/list.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 41[2mms[22m[39m
+ [32m✓[39m src/games/nakamawake/_lib/__tests__/daily.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 33[2mms[22m[39m
+ [32m✓[39m src/tools/regex-tester/__tests__/logic.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 30[2mms[22m[39m
+ [32m✓[39m scripts/memo/__tests__/mark.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+ [32m✓[39m src/tools/unix-timestamp/__tests__/logic.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 29[2mms[22m[39m
+ [32m✓[39m src/tools/char-count/__tests__/logic.test.ts [2m([22m[2m24 tests[22m[2m)[22m[32m 24[2mms[22m[39m
+[90mstderr[2m | src/app/memos/feed/__tests__/memo-feed.test.ts
+[22m[39m[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+
+ [32m✓[39m src/app/memos/feed/__tests__/memo-feed.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 31[2mms[22m[39m
+ [32m✓[39m src/games/kanji-kanaru/_lib/__tests__/daily.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 29[2mms[22m[39m
+ [32m✓[39m src/lib/__tests__/pagination.test.ts [2m([22m[2m25 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+ [32m✓[39m src/dictionary/_lib/__tests__/yoji.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 31[2mms[22m[39m
+ [32m✓[39m src/games/shared/_components/__tests__/useDialog.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 30[2mms[22m[39m
+ [32m✓[39m src/lib/__tests__/date.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+ [32m✓[39m src/quiz/__tests__/registry.test.ts [2m([22m[2m44 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+ [32m✓[39m src/tools/business-email/__tests__/logic.test.ts [2m([22m[2m24 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+ [32m✓[39m src/app/__tests__/section-layouts.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 25[2mms[22m[39m
+ [32m✓[39m src/tools/age-calculator/__tests__/logic.test.ts [2m([22m[2m50 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32m✓[39m scripts/memo/__tests__/scanner.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32m✓[39m src/tools/traditional-color-palette/__tests__/logic.test.ts [2m([22m[2m43 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+ [32m✓[39m scripts/memo/__tests__/create.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+[90mstdout[2m | scripts/memo/__tests__/memo-cli.test.ts
+[22m[39mUsage: npm run memo -- <command> [options]
+
+Commands:
+  list      List memos with optional filters
+  read      Read a memo by ID
+  create    Create a new memo
+  mark      Change memo state (inbox/active/archive)
+  help      Show this help message
+
+list options:
+  --state <state>    Filter by state: inbox, active, archive, all (comma-separated, default: all)
+  --from <role>      Filter by sender role (use "all" to skip filtering)
+  --to <role>        Filter by recipient role
+  --tag <tag>        Filter by tag (repeatable, AND logic)
+  --limit <number>   Max results (default: 10)
+  --fields <fields>  Comma-separated fields (default: id,reply_to,created_at,from,to,state,subject)
+
+read:
+  npm run memo -- read <id>...
+
+create:
+  npm run memo -- create <from> <to> <subject> [options]
+  --reply-to <id>              Reply-to memo ID
+  --tags <tags>                Comma-separated tags
+  --body -                     Read body from stdin (use "-" to read from stdin explicitly)
+  --skip-credential-check      Skip credential pattern check
+
+mark:
+  npm run memo -- mark <state> <id>...
+
+Examples:
+  npm run memo -- list
+  npm run memo -- list --state inbox --to planner
+  npm run memo -- list --state inbox,active
+  npm run memo -- list --tag request --tag implementation
+  npm run memo -- read 19c5758d1f9
+  npm run memo -- read 19c5758d1f9 19c5758d200
+  echo "## Summary" | npm run memo -- create builder reviewer "Task done" --tags "report,completion"
+  npm run memo -- mark archive 19c5758d1f9
+  npm run memo -- mark archive 19c5758d1f9 19c5758d200
+
+
+ [32m✓[39m scripts/memo/__tests__/memo-cli.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m src/tools/image-base64/__tests__/logic.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m scripts/memo/__tests__/read.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+ [32m✓[39m src/games/yoji-kimeru/_lib/__tests__/storage.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m src/games/shared/_lib/__tests__/share.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+ [32m✓[39m src/games/nakamawake/_lib/__tests__/engine.test.ts [2m([22m[2m26 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m src/tools/date-calculator/__tests__/logic.test.ts [2m([22m[2m40 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+ [32m✓[39m src/tools/byte-counter/__tests__/logic.test.ts [2m([22m[2m29 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m src/tools/password-generator/__tests__/logic.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m src/tools/color-converter/__tests__/logic.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m scripts/memo/__tests__/parser.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m src/tools/sql-formatter/__tests__/logic.test.ts [2m([22m[2m23 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m src/games/kanji-kanaru/_lib/__tests__/storage.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m src/tools/image-resizer/__tests__/logic.test.ts [2m([22m[2m26 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m src/games/irodori/_lib/__tests__/color-utils.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m src/games/irodori/_lib/__tests__/engine.test.ts [2m([22m[2m21 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m src/tools/fullwidth-converter/__tests__/logic.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m src/games/irodori/_lib/__tests__/storage.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m src/tools/hash-generator/__tests__/logic.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+ [32m✓[39m src/tools/html-entity/__tests__/logic.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m src/tools/email-validator/__tests__/logic.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m src/dictionary/_lib/__tests__/staticParams.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m src/games/__tests__/registry.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32m✓[39m src/games/kanji-kanaru/_lib/__tests__/categories.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m scripts/spawner/__tests__/types.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m scripts/spawner/__tests__/logger.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m scripts/memo/__tests__/frontmatter.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m src/tools/number-base-converter/__tests__/logic.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m src/tools/base64/__tests__/logic.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m src/tools/bmi-calculator/__tests__/logic.test.ts [2m([22m[2m27 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m src/lib/__tests__/date-validation.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m src/tools/unit-converter/__tests__/logic.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m src/games/nakamawake/_lib/__tests__/storage.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m src/quiz/__tests__/scoring.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m scripts/spawner/__tests__/prompt-loader.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m src/tools/text-diff/__tests__/logic.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m src/games/kanji-kanaru/_lib/__tests__/engine.test.ts [2m([22m[2m21 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m scripts/memo/__tests__/paths.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m src/lib/__tests__/trust-levels.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m scripts/memo/__tests__/credential-check.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m src/tools/dummy-text/__tests__/logic.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m src/tools/kana-converter/__tests__/logic.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m src/tools/json-formatter/__tests__/logic.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+[90mstderr[2m | src/lib/__tests__/seo-cheatsheet.test.ts
+[22m[39m[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+
+ [32m✓[39m src/lib/__tests__/seo-cheatsheet.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m src/games/yoji-kimeru/_lib/__tests__/engine.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m src/lib/__tests__/webShare.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m src/cheatsheets/__tests__/registry.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m src/memos/__tests__/memos.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m src/games/nakamawake/_lib/__tests__/share.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m src/games/yoji-kimeru/_lib/__tests__/share.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m src/games/kanji-kanaru/_lib/__tests__/share.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m src/games/irodori/_lib/__tests__/share.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m src/memos/__tests__/memos-shared.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+[90mstderr[2m | src/app/__tests__/metadata.test.ts
+[22m[39m[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+
+ [32m✓[39m src/app/__tests__/metadata.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m src/tools/url-encode/__tests__/logic.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+[90mstderr[2m | src/lib/__tests__/constants.test.ts
+[22m[39m[constants] NEXT_PUBLIC_BASE_URL is not set. Using fallback: https://yolos.net
+
+ [32m✓[39m src/lib/__tests__/constants.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m scripts/memo/__tests__/id.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m src/app/__tests__/globals-css-dialog.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 3[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m140 passed[39m[22m[90m (140)[39m
+[2m      Tests [22m [1m[32m1795 passed[39m[22m[90m (1795)[39m
+[2m   Start at [22m 09:00:55
+[2m   Duration [22m 62.33s[2m (transform 4.81s, setup 21.28s, import 7.29s, tests 39.99s, environment 94.63s)[22m
+
