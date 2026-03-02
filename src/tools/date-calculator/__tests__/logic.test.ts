@@ -166,6 +166,79 @@ describe("fromWareki", () => {
     const result = fromWareki("不明", 1, 1, 1);
     expect(result.success).toBe(false);
   });
+
+  // --- endDate boundary tests ---
+
+  test("accepts Heisei 31 Apr 30 (last day of Heisei)", () => {
+    const result = fromWareki("平成", 31, 4, 30);
+    expect(result.success).toBe(true);
+    expect(result.date?.getFullYear()).toBe(2019);
+    expect(result.date?.getMonth()).toBe(3);
+    expect(result.date?.getDate()).toBe(30);
+  });
+
+  test("rejects Heisei 31 May 1 (first day of Reiwa = outside Heisei)", () => {
+    const result = fromWareki("平成", 31, 5, 1);
+    expect(result.success).toBe(false);
+    expect(result.error).toContain("平成");
+    expect(result.error).toContain("範囲外");
+  });
+
+  test("rejects Heisei 40 Jan 1 (clearly outside Heisei)", () => {
+    const result = fromWareki("平成", 40, 1, 1);
+    expect(result.success).toBe(false);
+    expect(result.error).toContain("平成");
+    expect(result.error).toContain("範囲外");
+  });
+
+  test("accepts Showa 64 Jan 7 (last day of Showa)", () => {
+    const result = fromWareki("昭和", 64, 1, 7);
+    expect(result.success).toBe(true);
+    expect(result.date?.getFullYear()).toBe(1989);
+    expect(result.date?.getMonth()).toBe(0);
+    expect(result.date?.getDate()).toBe(7);
+  });
+
+  test("rejects Showa 64 Jan 8 (first day of Heisei = outside Showa)", () => {
+    const result = fromWareki("昭和", 64, 1, 8);
+    expect(result.success).toBe(false);
+    expect(result.error).toContain("昭和");
+    expect(result.error).toContain("範囲外");
+  });
+
+  test("accepts Taisho 15 Dec 24 (last day of Taisho)", () => {
+    const result = fromWareki("大正", 15, 12, 24);
+    expect(result.success).toBe(true);
+    expect(result.date?.getFullYear()).toBe(1926);
+    expect(result.date?.getMonth()).toBe(11);
+    expect(result.date?.getDate()).toBe(24);
+  });
+
+  test("rejects Taisho 15 Dec 25 (first day of Showa = outside Taisho)", () => {
+    const result = fromWareki("大正", 15, 12, 25);
+    expect(result.success).toBe(false);
+    expect(result.error).toContain("大正");
+    expect(result.error).toContain("範囲外");
+  });
+
+  test("accepts Reiwa dates without restriction", () => {
+    const result = fromWareki("令和", 100, 1, 1);
+    expect(result.success).toBe(true);
+  });
+
+  // --- date validation tests (round-trip check in fromWareki) ---
+
+  test("rejects invalid date: Reiwa 8 Feb 31", () => {
+    const result = fromWareki("令和", 8, 2, 31);
+    expect(result.success).toBe(false);
+    expect(result.error).toContain("無効な日付");
+  });
+
+  test("rejects invalid date: Reiwa 8 Apr 31", () => {
+    const result = fromWareki("令和", 8, 4, 31);
+    expect(result.success).toBe(false);
+    expect(result.error).toContain("無効な日付");
+  });
 });
 
 describe("formatDate", () => {
@@ -187,6 +260,14 @@ describe("parseDate", () => {
 
   test("returns null for invalid date", () => {
     expect(parseDate("invalid")).toBeNull();
+  });
+
+  test("returns null for Feb 31 (auto-correction prevention)", () => {
+    expect(parseDate("2026-02-31")).toBeNull();
+  });
+
+  test("returns null for Feb 29 in non-leap year", () => {
+    expect(parseDate("2026-02-29")).toBeNull();
   });
 });
 

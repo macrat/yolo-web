@@ -1,0 +1,1285 @@
+import CodeBlock from "@/cheatsheets/_components/CodeBlock";
+
+export default function HtmlTagsCheatsheet() {
+  return (
+    <div>
+      <section>
+        <h2 id="basic-structure">基本構造</h2>
+        <p>
+          HTMLドキュメントの骨格を形成するタグ群です。すべてのHTMLページに必要な基本要素を定義します。
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>タグ</th>
+              <th>説明</th>
+              <th>備考・使い所</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <code>{"<!DOCTYPE html>"}</code>
+              </td>
+              <td>HTML5文書であることを宣言する</td>
+              <td>すべてのHTMLファイルの先頭に必須</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<html>"}</code>
+              </td>
+              <td>HTML文書のルート要素</td>
+              <td>lang属性で言語を指定（例: lang=&quot;ja&quot;）</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<head>"}</code>
+              </td>
+              <td>メタ情報・外部リソースの読み込みを格納する</td>
+              <td>ブラウザに表示されない情報を記述</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<body>"}</code>
+              </td>
+              <td>ページに表示されるすべてのコンテンツを格納する</td>
+              <td>1つの文書に1つだけ使用</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<title>"}</code>
+              </td>
+              <td>ページのタイトルを設定する</td>
+              <td>ブラウザのタブやブックマーク、検索結果に表示される</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<link>"}</code>
+              </td>
+              <td>外部リソース（CSS、アイコンなど）を読み込む</td>
+              <td>rel属性で関係を指定（stylesheet, icon, canonical等）</td>
+            </tr>
+          </tbody>
+        </table>
+        <CodeBlock
+          language="html"
+          code={`<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ページタイトル</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- コンテンツ -->
+</body>
+</html>`}
+        />
+      </section>
+
+      <section>
+        <h2 id="sectioning">セクション・ページ構造</h2>
+        <p>
+          HTML5で導入されたセマンティック要素を中心に、ページの論理的な構造を定義するタグ群です。適切に使うことでSEOとアクセシビリティが向上します。
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>タグ</th>
+              <th>説明</th>
+              <th>備考・使い所</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <code>{"<header>"}</code>
+              </td>
+              <td>ページやセクションの導入部分</td>
+              <td>ページ全体のヘッダーにもarticle内にも使える</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<nav>"}</code>
+              </td>
+              <td>ナビゲーションリンクのまとまり</td>
+              <td>
+                主要なナビゲーションに使用。すべてのリンク群に使う必要はない
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<main>"}</code>
+              </td>
+              <td>ページの主要コンテンツ</td>
+              <td>1ページに1つだけ使用。サイドバーやヘッダーは含めない</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<article>"}</code>
+              </td>
+              <td>独立して意味をなすコンテンツ</td>
+              <td>ブログ記事、ニュース記事、コメントなど</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<section>"}</code>
+              </td>
+              <td>ページ内の意味的なまとまり（章・節）</td>
+              <td>通常は見出し（h2〜h6）を伴う。汎用コンテナにはdivを使う</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<aside>"}</code>
+              </td>
+              <td>本文と間接的に関連する補足コンテンツ</td>
+              <td>サイドバー、関連リンク、広告枠など</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<footer>"}</code>
+              </td>
+              <td>ページやセクションのフッター</td>
+              <td>著作権表示、連絡先、関連リンクなど。article内にも使える</td>
+            </tr>
+            <tr>
+              <td>
+                <code>
+                  {"<h1>"}〜{"<h6>"}
+                </code>
+              </td>
+              <td>見出しレベル1〜6</td>
+              <td>h1はページに1つ。h2以降で階層構造を作る</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<hgroup>"}</code>
+              </td>
+              <td>見出しとサブタイトルのグループ化</td>
+              <td>見出しとp要素をまとめてグループ化する</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<address>"}</code>
+              </td>
+              <td>連絡先情報</td>
+              <td>
+                著者やサイト運営者の連絡先。物理的な住所だけでなくメールやSNSも含む
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<search>"}</code>
+              </td>
+              <td>検索機能を含むセクション</td>
+              <td>
+                検索フォームを囲む要素。主要ブラウザで対応済み（Chrome 118+,
+                Firefox 118+, Safari 17+）
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <CodeBlock
+          language="html"
+          code={`<header>
+  <nav>
+    <a href="/">ホーム</a>
+    <a href="/about">概要</a>
+  </nav>
+</header>
+<main>
+  <article>
+    <h1>記事タイトル</h1>
+    <section>
+      <h2>セクション見出し</h2>
+      <p>本文...</p>
+    </section>
+  </article>
+  <aside>
+    <h2>関連記事</h2>
+    <ul>...</ul>
+  </aside>
+</main>
+<footer>
+  <p>© 2026 サイト名</p>
+</footer>`}
+        />
+      </section>
+
+      <section>
+        <h2 id="text-content">テキストコンテンツ</h2>
+        <p>
+          ブロックレベルのテキスト関連タグです。段落、リスト、引用など、コンテンツの構造を表現します。
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>タグ</th>
+              <th>説明</th>
+              <th>備考・使い所</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <code>{"<p>"}</code>
+              </td>
+              <td>段落</td>
+              <td>テキストの基本的なまとまり</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<blockquote>"}</code>
+              </td>
+              <td>ブロックレベルの引用</td>
+              <td>cite属性で引用元URLを指定できる</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<pre>"}</code>
+              </td>
+              <td>整形済みテキスト</td>
+              <td>
+                空白・改行がそのまま表示される。codeと組み合わせてコード表示に使う
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<ul>"}</code>
+              </td>
+              <td>順序なしリスト</td>
+              <td>項目の順序に意味がない場合に使用</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<ol>"}</code>
+              </td>
+              <td>順序付きリスト</td>
+              <td>手順やランキングなど順序に意味がある場合に使用</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<li>"}</code>
+              </td>
+              <td>リストの各項目</td>
+              <td>ul, ol, menuの子要素として使用</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<dl>"}</code>
+              </td>
+              <td>説明リスト（定義リスト）</td>
+              <td>用語と説明のペアを表す。FAQ、メタデータ一覧などに最適</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<dt>"}</code>
+              </td>
+              <td>説明リストの用語</td>
+              <td>dlの子要素。1つのdtに複数のddを対応させることも可能</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<dd>"}</code>
+              </td>
+              <td>説明リストの説明文</td>
+              <td>dtに対応する説明・定義・値</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<figure>"}</code>
+              </td>
+              <td>自己完結するコンテンツ（図・画像・コード例など）</td>
+              <td>画像だけでなくコードブロックやグラフにも使える</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<figcaption>"}</code>
+              </td>
+              <td>figureのキャプション</td>
+              <td>figureの最初または最後の子要素として配置</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<hr>"}</code>
+              </td>
+              <td>テーマの区切り</td>
+              <td>話題の転換を示す。単なる装飾線にはCSSを使う</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<div>"}</code>
+              </td>
+              <td>汎用ブロックコンテナ</td>
+              <td>セマンティクスを持たない。スタイリング目的のみで使う</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2 id="inline-text">インラインテキスト</h2>
+        <p>
+          テキスト内で使用するインライン要素です。意味付け、装飾、リンクなどを表現します。
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>タグ</th>
+              <th>説明</th>
+              <th>備考・使い所</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <code>{"<a>"}</code>
+              </td>
+              <td>ハイパーリンク</td>
+              <td>
+                href属性でリンク先を指定。target=&quot;_blank&quot;で新しいタブで開く
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<strong>"}</code>
+              </td>
+              <td>重要な内容（強い重要性）</td>
+              <td>スクリーンリーダーが強調して読み上げる。SEOにも影響する</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<em>"}</code>
+              </td>
+              <td>強調（アクセントの変化）</td>
+              <td>文の意味を変える強調に使う。斜体だけが目的ならCSSを使う</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<span>"}</code>
+              </td>
+              <td>汎用インラインコンテナ</td>
+              <td>セマンティクスを持たない。CSSでのスタイリング用</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<code>"}</code>
+              </td>
+              <td>インラインのコード</td>
+              <td>変数名、関数名、コマンドなどの短いコード表記</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<abbr>"}</code>
+              </td>
+              <td>略語・頭字語</td>
+              <td>
+                title属性で正式名称を表示（例: HTML → HyperText Markup
+                Language）
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<time>"}</code>
+              </td>
+              <td>日付・時刻</td>
+              <td>
+                datetime属性で機械可読な形式を指定（例:
+                datetime=&quot;2026-03-02&quot;）
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<mark>"}</code>
+              </td>
+              <td>ハイライト（マーカー）</td>
+              <td>検索結果のハイライトや注目箇所の強調に使用</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<sup>"}</code>
+              </td>
+              <td>上付き文字</td>
+              <td>累乗（x²）、脚注番号など</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<sub>"}</code>
+              </td>
+              <td>下付き文字</td>
+              <td>化学式（H₂O）、数学の添え字など</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<br>"}</code>
+              </td>
+              <td>改行</td>
+              <td>住所や詩など、改行自体に意味がある場合のみ使用</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<cite>"}</code>
+              </td>
+              <td>作品のタイトル</td>
+              <td>書籍名、映画名、論文名などの参照</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<q>"}</code>
+              </td>
+              <td>インラインの引用</td>
+              <td>短い引用に使用。ブラウザが自動で引用符を付加する</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<kbd>"}</code>
+              </td>
+              <td>キーボード入力</td>
+              <td>キーボードのキーやショートカットの表記（例: Ctrl+C）</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<var>"}</code>
+              </td>
+              <td>変数</td>
+              <td>数式やプログラムの変数名の表記</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<wbr>"}</code>
+              </td>
+              <td>改行可能位置</td>
+              <td>長いURLや単語の折り返し位置を指定</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<s>"}</code>
+              </td>
+              <td>もはや正確でない・関連しない内容</td>
+              <td>古い価格の取り消し線など。削除を示すにはdelを使う</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2 id="table">テーブル</h2>
+        <p>
+          データの表を構造化するタグ群です。アクセシビリティのため、正しい構造でマークアップすることが重要です。レイアウト目的でのtable使用は避けてください。
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>タグ</th>
+              <th>説明</th>
+              <th>備考・使い所</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <code>{"<table>"}</code>
+              </td>
+              <td>テーブルのルート要素</td>
+              <td>データの表に使用。レイアウト目的では使わない</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<thead>"}</code>
+              </td>
+              <td>テーブルのヘッダー行グループ</td>
+              <td>列の見出しを含む行をグループ化</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<tbody>"}</code>
+              </td>
+              <td>テーブルの本体行グループ</td>
+              <td>
+                データ行をグループ化。複数のtbodyを使って行をセクション分けも可能
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<tfoot>"}</code>
+              </td>
+              <td>テーブルのフッター行グループ</td>
+              <td>合計行や要約行に使用</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<tr>"}</code>
+              </td>
+              <td>テーブルの行</td>
+              <td>thead, tbody, tfootの子要素</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<th>"}</code>
+              </td>
+              <td>テーブルの見出しセル</td>
+              <td>scope属性でcol/rowを指定するとアクセシビリティが向上</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<td>"}</code>
+              </td>
+              <td>テーブルのデータセル</td>
+              <td>colspan/rowspanでセルの結合が可能</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<caption>"}</code>
+              </td>
+              <td>テーブルのキャプション（タイトル）</td>
+              <td>テーブルの目的を説明する。tableの最初の子要素として配置</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<colgroup>"}</code>
+              </td>
+              <td>列のグループ定義</td>
+              <td>col要素と組み合わせて列単位のスタイル適用に使用</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<col>"}</code>
+              </td>
+              <td>列のプロパティ定義</td>
+              <td>span属性で複数列をまとめて定義可能</td>
+            </tr>
+          </tbody>
+        </table>
+        <CodeBlock
+          language="html"
+          code={`<table>
+  <caption>商品一覧</caption>
+  <thead>
+    <tr>
+      <th scope="col">商品名</th>
+      <th scope="col">価格</th>
+      <th scope="col">在庫</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>商品A</td>
+      <td>1,000円</td>
+      <td>あり</td>
+    </tr>
+    <tr>
+      <td>商品B</td>
+      <td>2,500円</td>
+      <td>なし</td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td>合計</td>
+      <td colspan="2">2商品</td>
+    </tr>
+  </tfoot>
+</table>`}
+        />
+      </section>
+
+      <section>
+        <h2 id="form">フォーム</h2>
+        <p>
+          ユーザー入力を受け取るフォーム関連タグです。アクセシビリティのため、label要素との紐付けが重要です。
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>タグ</th>
+              <th>説明</th>
+              <th>備考・使い所</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <code>{"<form>"}</code>
+              </td>
+              <td>フォームのコンテナ</td>
+              <td>action属性で送信先、method属性でHTTPメソッドを指定</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<input>"}</code>
+              </td>
+              <td>各種入力フィールド</td>
+              <td>type属性で種類を切り替え（下記参照）</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<button>"}</code>
+              </td>
+              <td>ボタン</td>
+              <td>
+                type=&quot;submit&quot;（送信）、&quot;button&quot;（汎用）、&quot;reset&quot;（リセット）
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<select>"}</code>
+              </td>
+              <td>ドロップダウン選択</td>
+              <td>multiple属性で複数選択可能</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<option>"}</code>
+              </td>
+              <td>selectの選択肢</td>
+              <td>value属性で送信される値を指定</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<optgroup>"}</code>
+              </td>
+              <td>selectの選択肢グループ</td>
+              <td>label属性でグループ名を表示</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<textarea>"}</code>
+              </td>
+              <td>複数行テキスト入力</td>
+              <td>rows/cols属性またはCSSでサイズを指定</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<label>"}</code>
+              </td>
+              <td>入力フィールドのラベル</td>
+              <td>for属性でinputのidと紐付け。アクセシビリティに必須</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<fieldset>"}</code>
+              </td>
+              <td>フォーム要素のグループ化</td>
+              <td>関連する入力項目をまとめる。legendと併用</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<legend>"}</code>
+              </td>
+              <td>fieldsetのキャプション</td>
+              <td>グループの説明テキスト。fieldsetの最初の子要素</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<datalist>"}</code>
+              </td>
+              <td>入力候補のリスト</td>
+              <td>inputのlist属性と紐付けてオートコンプリートを実現</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<output>"}</code>
+              </td>
+              <td>計算結果や操作結果の表示</td>
+              <td>for属性で関連する入力要素を指定</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<progress>"}</code>
+              </td>
+              <td>進捗バー</td>
+              <td>value/max属性で進捗を表示。ファイルアップロードの進捗など</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<meter>"}</code>
+              </td>
+              <td>既知の範囲内の測定値</td>
+              <td>
+                min/max/low/high/optimum属性で範囲を定義。ディスク使用量など
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>inputのtype属性一覧</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>type</th>
+              <th>説明</th>
+              <th>備考</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <code>text</code>
+              </td>
+              <td>1行テキスト入力</td>
+              <td>デフォルト値</td>
+            </tr>
+            <tr>
+              <td>
+                <code>email</code>
+              </td>
+              <td>メールアドレス入力</td>
+              <td>ブラウザが形式を自動検証</td>
+            </tr>
+            <tr>
+              <td>
+                <code>password</code>
+              </td>
+              <td>パスワード入力</td>
+              <td>入力値がマスクされる</td>
+            </tr>
+            <tr>
+              <td>
+                <code>number</code>
+              </td>
+              <td>数値入力</td>
+              <td>min/max/step属性で制約可能</td>
+            </tr>
+            <tr>
+              <td>
+                <code>date</code>
+              </td>
+              <td>日付選択</td>
+              <td>ブラウザのカレンダーUIが表示される</td>
+            </tr>
+            <tr>
+              <td>
+                <code>checkbox</code>
+              </td>
+              <td>チェックボックス</td>
+              <td>複数選択に使用</td>
+            </tr>
+            <tr>
+              <td>
+                <code>radio</code>
+              </td>
+              <td>ラジオボタン</td>
+              <td>name属性が同じもの同士で排他選択</td>
+            </tr>
+            <tr>
+              <td>
+                <code>file</code>
+              </td>
+              <td>ファイル選択</td>
+              <td>accept属性でファイル種類を制限可能</td>
+            </tr>
+            <tr>
+              <td>
+                <code>search</code>
+              </td>
+              <td>検索テキスト入力</td>
+              <td>クリアボタンが表示されるブラウザもある</td>
+            </tr>
+            <tr>
+              <td>
+                <code>url</code>
+              </td>
+              <td>URL入力</td>
+              <td>ブラウザが形式を自動検証</td>
+            </tr>
+            <tr>
+              <td>
+                <code>tel</code>
+              </td>
+              <td>電話番号入力</td>
+              <td>モバイルで数字キーパッドが表示される</td>
+            </tr>
+            <tr>
+              <td>
+                <code>range</code>
+              </td>
+              <td>スライダー</td>
+              <td>min/max/step属性で範囲を指定</td>
+            </tr>
+            <tr>
+              <td>
+                <code>hidden</code>
+              </td>
+              <td>非表示の入力</td>
+              <td>ユーザーに見えない値の送信に使用</td>
+            </tr>
+          </tbody>
+        </table>
+        <CodeBlock
+          language="html"
+          code={`<form action="/submit" method="post">
+  <fieldset>
+    <legend>ユーザー情報</legend>
+    <label for="name">名前</label>
+    <input type="text" id="name" name="name" required>
+    <label for="email">メールアドレス</label>
+    <input type="email" id="email" name="email" required>
+  </fieldset>
+  <fieldset>
+    <legend>お問い合わせ内容</legend>
+    <label for="message">メッセージ</label>
+    <textarea id="message" name="message" rows="5"></textarea>
+  </fieldset>
+  <button type="submit">送信</button>
+</form>`}
+        />
+      </section>
+
+      <section>
+        <h2 id="media">画像・メディア</h2>
+        <p>
+          画像、動画、音声などのメディアコンテンツを埋め込むタグ群です。アクセシビリティのため、alt属性やtrack要素の設定が重要です。
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>タグ</th>
+              <th>説明</th>
+              <th>備考・使い所</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <code>{"<img>"}</code>
+              </td>
+              <td>画像の埋め込み</td>
+              <td>
+                alt属性は必須（アクセシビリティ・SEO）。loading=&quot;lazy&quot;で遅延読み込み
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<picture>"}</code>
+              </td>
+              <td>レスポンシブ画像のコンテナ</td>
+              <td>
+                source要素と組み合わせて画面サイズや形式に応じた画像を提供
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<source>"}</code>
+              </td>
+              <td>メディアリソースの指定</td>
+              <td>
+                picture, video, audioの子要素。media属性やtype属性で条件分岐
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<video>"}</code>
+              </td>
+              <td>動画の埋め込み</td>
+              <td>
+                controls属性で再生コントロールを表示。poster属性でサムネイル指定
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<audio>"}</code>
+              </td>
+              <td>音声の埋め込み</td>
+              <td>controls属性で再生コントロールを表示</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<track>"}</code>
+              </td>
+              <td>メディアのテキストトラック（字幕など）</td>
+              <td>video/audioの子要素。kind属性でsubtitles/captions等を指定</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<iframe>"}</code>
+              </td>
+              <td>外部コンテンツの埋め込み</td>
+              <td>
+                sandbox属性やallow属性でセキュリティ制御。YouTube埋め込み等に使用
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<canvas>"}</code>
+              </td>
+              <td>JavaScriptで描画するための領域</td>
+              <td>
+                グラフ、ゲーム、画像加工などに使用。2D/WebGLコンテキストを取得して描画
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<svg>"}</code>
+              </td>
+              <td>SVGベクター画像のインライン埋め込み</td>
+              <td>アイコン、ロゴなど拡大しても劣化しないグラフィックに使用</td>
+            </tr>
+          </tbody>
+        </table>
+        <CodeBlock
+          language="html"
+          code={`<!-- レスポンシブ画像 -->
+<picture>
+  <source srcset="image.webp" type="image/webp">
+  <source srcset="image.jpg" type="image/jpeg">
+  <img src="image.jpg" alt="説明テキスト" loading="lazy">
+</picture>
+
+<!-- 動画 -->
+<video controls poster="thumbnail.jpg">
+  <source src="video.mp4" type="video/mp4">
+  <track kind="subtitles" src="subs_ja.vtt" srclang="ja" label="日本語字幕">
+  お使いのブラウザは動画タグに対応していません。
+</video>`}
+        />
+      </section>
+
+      <section>
+        <h2 id="meta-seo">メタ情報・SEO</h2>
+        <p>
+          検索エンジン最適化（SEO）やSNSシェアに重要なメタ情報タグです。head要素内に記述します。
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>タグ・属性</th>
+              <th>説明</th>
+              <th>備考・使い所</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <code>{'<meta charset="UTF-8">'}</code>
+              </td>
+              <td>文字エンコーディングの指定</td>
+              <td>UTF-8が標準。head要素の先頭付近に配置</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{'<meta name="viewport">'}</code>
+              </td>
+              <td>ビューポートの設定</td>
+              <td>
+                モバイル対応に必須。width=device-width, initial-scale=1.0が基本
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>{'<meta name="description">'}</code>
+              </td>
+              <td>ページの説明文</td>
+              <td>検索結果のスニペットに表示される。120〜160文字が目安</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{'<meta property="og:title">'}</code>
+              </td>
+              <td>OGPタイトル</td>
+              <td>SNSシェア時に表示されるタイトル</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{'<meta property="og:description">'}</code>
+              </td>
+              <td>OGP説明文</td>
+              <td>SNSシェア時に表示される説明</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{'<meta property="og:image">'}</code>
+              </td>
+              <td>OGP画像</td>
+              <td>SNSシェア時のサムネイル。1200x630px推奨</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{'<meta property="og:url">'}</code>
+              </td>
+              <td>OGPのURL</td>
+              <td>シェアされるページの正規URL</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{'<link rel="canonical">'}</code>
+              </td>
+              <td>正規URLの指定</td>
+              <td>重複コンテンツ防止。検索エンジンに正しいURLを通知</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{'<link rel="icon">'}</code>
+              </td>
+              <td>ファビコンの指定</td>
+              <td>ブラウザのタブやブックマークに表示されるアイコン</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<base>"}</code>
+              </td>
+              <td>相対URLのベースURLを設定</td>
+              <td>ページ内のすべての相対URLの基準となる。使用は慎重に</td>
+            </tr>
+          </tbody>
+        </table>
+        <CodeBlock
+          language="html"
+          code={`<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ページタイトル | サイト名</title>
+  <meta name="description" content="ページの説明文をここに記述。120〜160文字が目安。">
+
+  <!-- OGP（Open Graph Protocol） -->
+  <meta property="og:title" content="ページタイトル">
+  <meta property="og:description" content="SNSシェア時の説明文">
+  <meta property="og:image" content="https://example.com/ogp.jpg">
+  <meta property="og:url" content="https://example.com/page">
+  <meta property="og:type" content="article">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- 正規URL -->
+  <link rel="canonical" href="https://example.com/page">
+  <link rel="icon" href="/favicon.ico">
+</head>`}
+        />
+      </section>
+
+      <section>
+        <h2 id="semantic-guide">セマンティクス使い分けガイド</h2>
+        <p>
+          混同しやすいHTMLタグの使い分けを比較表形式でまとめます。迷ったときの判断基準として活用してください。
+        </p>
+
+        <h3>div vs section vs article</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>タグ</th>
+              <th>意味</th>
+              <th>使う場面</th>
+              <th>見出しの有無</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <code>{"<div>"}</code>
+              </td>
+              <td>意味なし（汎用コンテナ）</td>
+              <td>CSSスタイリングやJSのフック用</td>
+              <td>不要</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<section>"}</code>
+              </td>
+              <td>ページ内の意味的なまとまり</td>
+              <td>章・節など、テーマで区切られたコンテンツ</td>
+              <td>通常あり</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<article>"}</code>
+              </td>
+              <td>独立して意味をなすコンテンツ</td>
+              <td>ブログ記事、ニュース、コメント</td>
+              <td>通常あり</td>
+            </tr>
+          </tbody>
+        </table>
+        <CodeBlock
+          language="html"
+          code={`<!-- div: スタイリング目的のラッパー -->
+<div class="container">
+  <div class="grid">...</div>
+</div>
+
+<!-- section: ページ内の章立て -->
+<section>
+  <h2>第1章 はじめに</h2>
+  <p>...</p>
+</section>
+
+<!-- article: 独立したコンテンツ -->
+<article>
+  <h2>ブログ記事タイトル</h2>
+  <p>この記事は単体で意味をなします。</p>
+</article>`}
+        />
+        <p>
+          判断に迷ったら：そのコンテンツだけを別ページに切り出しても意味が通じるならarticle、テーマで区切りたいならsection、どちらでもなければdivを使います。
+        </p>
+
+        <h3>strong / b と em / i</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>タグ</th>
+              <th>種類</th>
+              <th>意味</th>
+              <th>使う場面</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <code>{"<strong>"}</code>
+              </td>
+              <td>セマンティック</td>
+              <td>重要性が高い内容</td>
+              <td>警告文、重要な注意事項</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<b>"}</code>
+              </td>
+              <td>プレゼンテーション</td>
+              <td>見た目の太字（意味的強調なし）</td>
+              <td>キーワードのスタイリング</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<em>"}</code>
+              </td>
+              <td>セマンティック</td>
+              <td>意味を変える強調（アクセント）</td>
+              <td>
+                「<em>この</em>ファイルを削除」のような文意の変化
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<i>"}</code>
+              </td>
+              <td>プレゼンテーション</td>
+              <td>見た目の斜体（意味的強調なし）</td>
+              <td>学名、外国語のフレーズ、技術用語</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          判断に迷ったら：スクリーンリーダーに「ここは重要」と伝えたいならstrong/em、見た目だけ変えたいならb/iを使います。
+        </p>
+
+        <h3>ul vs ol vs dl</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>タグ</th>
+              <th>用途</th>
+              <th>使う場面</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <code>{"<ul>"}</code>
+              </td>
+              <td>順序なしリスト</td>
+              <td>材料一覧、ナビゲーションメニュー、箇条書き</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<ol>"}</code>
+              </td>
+              <td>順序付きリスト</td>
+              <td>手順書、ランキング、ステップバイステップの説明</td>
+            </tr>
+            <tr>
+              <td>
+                <code>{"<dl>"}</code>
+              </td>
+              <td>説明リスト（用語と定義のペア）</td>
+              <td>FAQ、用語集、メタデータ（著者: 太郎）</td>
+            </tr>
+          </tbody>
+        </table>
+        <CodeBlock
+          language="html"
+          code={`<!-- ul: 順序に意味がないリスト -->
+<ul>
+  <li>HTML</li>
+  <li>CSS</li>
+  <li>JavaScript</li>
+</ul>
+
+<!-- ol: 順序に意味があるリスト -->
+<ol>
+  <li>要件定義</li>
+  <li>設計</li>
+  <li>実装</li>
+</ol>
+
+<!-- dl: 用語と説明のペア -->
+<dl>
+  <dt>HTML</dt>
+  <dd>Webページの構造を記述するマークアップ言語</dd>
+  <dt>CSS</dt>
+  <dd>Webページのスタイルを定義するスタイルシート言語</dd>
+</dl>`}
+        />
+        <p>
+          判断に迷ったら：項目を入れ替えても意味が変わらないならul、順番が重要ならol、「何が：どういう意味」のペアならdlを使います。
+        </p>
+
+        <h3>header / footer の使い分け</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>配置場所</th>
+              <th>header の役割</th>
+              <th>footer の役割</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>ページ全体</td>
+              <td>サイトロゴ、グローバルナビゲーション</td>
+              <td>著作権表示、サイトマップリンク</td>
+            </tr>
+            <tr>
+              <td>article / section 内</td>
+              <td>記事タイトル、投稿日、著者名</td>
+              <td>タグ一覧、シェアボタン、関連記事リンク</td>
+            </tr>
+          </tbody>
+        </table>
+        <CodeBlock
+          language="html"
+          code={`<!-- ページレベルとセクションレベルの両方で使える -->
+<body>
+  <header>
+    <!-- ページ全体のヘッダー -->
+    <nav>...</nav>
+  </header>
+  <main>
+    <article>
+      <header>
+        <!-- 記事のヘッダー -->
+        <h1>記事タイトル</h1>
+        <time datetime="2026-03-02">2026年3月2日</time>
+      </header>
+      <p>本文...</p>
+      <footer>
+        <!-- 記事のフッター -->
+        <p>カテゴリ: Web開発</p>
+      </footer>
+    </article>
+  </main>
+  <footer>
+    <!-- ページ全体のフッター -->
+    <p>© 2026 サイト名</p>
+  </footer>
+</body>`}
+        />
+        <p>
+          判断に迷ったら：header/footerは「何に対する」導入・末尾かを考えます。bodyの直下ならページ全体、articleの中なら記事に対するものです。
+        </p>
+      </section>
+    </div>
+  );
+}

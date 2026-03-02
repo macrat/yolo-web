@@ -49,6 +49,6 @@ describe("cheatsheet registry", () => {
   });
 
   test("getAllCheatsheetSlugs returns correct count", () => {
-    expect(getAllCheatsheetSlugs().length).toBe(5);
+    expect(getAllCheatsheetSlugs().length).toBe(7);
   });
 });

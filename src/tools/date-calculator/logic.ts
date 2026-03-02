@@ -1,3 +1,8 @@
+import { parseDate, formatDate } from "@/lib/date-validation";
+
+// --- Date formatting helpers (re-export from shared utility) ---
+export { parseDate, formatDate };
+
 // --- Date Difference ---
 
 export interface DateDiffResult {
@@ -64,14 +69,41 @@ interface EraDefinition {
   name: string;
   nameKanji: string;
   startDate: Date;
+  /** 元号の終了日（inclusive）。null は現在進行中の元号を意味する */
+  endDate: Date | null;
 }
 
 const ERAS: EraDefinition[] = [
-  { name: "Reiwa", nameKanji: "令和", startDate: new Date(2019, 4, 1) },
-  { name: "Heisei", nameKanji: "平成", startDate: new Date(1989, 0, 8) },
-  { name: "Showa", nameKanji: "昭和", startDate: new Date(1926, 11, 25) },
-  { name: "Taisho", nameKanji: "大正", startDate: new Date(1912, 6, 30) },
-  { name: "Meiji", nameKanji: "明治", startDate: new Date(1868, 0, 25) },
+  {
+    name: "Reiwa",
+    nameKanji: "令和",
+    startDate: new Date(2019, 4, 1),
+    endDate: null,
+  },
+  {
+    name: "Heisei",
+    nameKanji: "平成",
+    startDate: new Date(1989, 0, 8),
+    endDate: new Date(2019, 3, 30),
+  },
+  {
+    name: "Showa",
+    nameKanji: "昭和",
+    startDate: new Date(1926, 11, 25),
+    endDate: new Date(1989, 0, 7),
+  },
+  {
+    name: "Taisho",
+    nameKanji: "大正",
+    startDate: new Date(1912, 6, 30),
+    endDate: new Date(1926, 11, 24),
+  },
+  {
+    name: "Meiji",
+    nameKanji: "明治",
+    startDate: new Date(1868, 0, 25),
+    endDate: new Date(1912, 6, 29),
+  },
 ];
 
 export interface WarekiResult {
@@ -123,7 +155,13 @@ export function fromWareki(
     return { success: false, error: "無効な日付です" };
   }
 
-  // Verify the date is within the era
+  // ラウンドトリップ検証: 月・日がオーバーフロー補正されていないか確認する
+  // 例: 2月31日 -> 3月3日 のような自動補正を検出して拒否する
+  if (date.getMonth() !== month - 1 || date.getDate() !== day) {
+    return { success: false, error: "無効な日付です" };
+  }
+
+  // Verify the date is within the era (start boundary)
   if (date < era.startDate) {
     return {
       success: false,
@@ -131,21 +169,15 @@ export function fromWareki(
     };
   }
 
+  // Verify the date is within the era (end boundary)
+  if (era.endDate !== null && date > era.endDate) {
+    return {
+      success: false,
+      error: `${eraKanji}${eraYear}年${month}月${day}日は${eraKanji}の範囲外です`,
+    };
+  }
+
   return { success: true, date };
-}
-
-// --- Date formatting helpers ---
-
-export function formatDate(date: Date): string {
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, "0");
-  const d = String(date.getDate()).padStart(2, "0");
-  return `${y}-${m}-${d}`;
-}
-
-export function parseDate(dateStr: string): Date | null {
-  const date = new Date(dateStr + "T00:00:00");
-  return isNaN(date.getTime()) ? null : date;
 }
 
 // --- Day of week ---
