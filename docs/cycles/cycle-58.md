@@ -2,7 +2,7 @@
 id: 58
 description: Tier 2チートシート追加（HTMLタグ・SQL）、日付ツール入力バリデーション改善、publishedAt/updatedAt設計修正
 started_at: "2026-03-02T08:05:19+0900"
-completed_at: null
+completed_at: "2026-03-02T11:58:56+0900"
 ---
 
 # サイクル-58
@@ -20,26 +20,45 @@ completed_at: null
 
 ## レビュー結果
 
-（作業完了後に記載）
+### B-146: HTMLタグ・SQLチートシート
+
+- 実装レビュー: 1件指摘（SQL UPSERTの非推奨VALUES()関数）→ 修正後Approve
+- ブログレビュー: 6件指摘（description長すぎ、一人称未使用、内部用語露出等）→ 修正後Approve
+
+### B-151: 日付ツールバリデーション改善
+
+- 実装レビュー: Approve（指摘なし）
+
+### publishedAt/updatedAt設計修正
+
+- 調査レビュー: ファクトチェック2件（ツール33個サンプリング + 非ツール19件全件）→ 全件正確
+- 実装計画レビュー: Approve（2件指摘: GameMetaForSeo optional化推奨、homepageDate既存バグ→B-160として登録）
+- 実装レビュー: Approve（全8観点で問題なし）
+
+### ブログ記事
+
+- チートシート記事: 6件指摘→修正後Approve
+- JavaScript Date記事: 3件指摘→修正後Approve
 
 ## キャリーオーバー
 
-（サイクル完了時に記載）
+- B-160: sitemap.tsのhomepageDateにlatestDictionaryDateを含める（既存バグ、backlog.mdに登録済み）
 
 ## 補足事項
 
-（サイクル完了時に記載）
+- publishedAt/updatedAt設計修正は当初のサイクル計画にはなかったが、B-146のpublishedAtハック修正をきっかけにownerから根本修正の指示を受けて実施。結果として全47コンテンツのSEOメタデータ品質が向上した
+- git logから各コンテンツの正確な初回公開日時・最終更新日時を調査し、publishedAt/updatedAtに反映。一括「00:00:00」ではなく実際の時刻を設定した
 
 ## サイクル終了時のチェックリスト
 
-- [ ] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
-- [ ] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
-- [ ] `npm run memo -- list --state inbox,active` を実行して、未処理のメモがない。
-- [ ] すべての変更がレビューされ、残存する指摘事項が無くなっている。
-- [ ] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
-- [ ] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
-- [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
-- [ ] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
+- [x] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
+- [x] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
+- [x] `npm run memo -- list --state inbox,active` を実行して、未処理のメモがない。
+- [x] すべての変更がレビューされ、残存する指摘事項が無くなっている。
+- [x] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
+- [x] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
+- [x] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
+- [x] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
 
 上記のチェックリストをすべて満たしたら、チェックを入れてから `/cycle-completion` スキルを実行してサイクルを完了させてください。
 なお、「環境起因」「今回の変更と無関係」「既知の問題」「次回対応」などの **例外は一切認めません** 。必ずすべての項目を完全に満してください。
