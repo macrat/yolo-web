@@ -1,3 +1,8 @@
+import { parseDate, formatDate } from "@/lib/date-validation";
+
+// --- Date formatting helpers (re-export from shared utility) ---
+export { parseDate, formatDate };
+
 // --- Age Calculation ---
 
 export interface AgeResult {
@@ -159,18 +164,4 @@ export function getConstellation(month: number, day: number): string {
     }
   }
   return "";
-}
-
-// --- Date formatting helpers ---
-
-export function formatDate(date: Date): string {
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, "0");
-  const d = String(date.getDate()).padStart(2, "0");
-  return `${y}-${m}-${d}`;
-}
-
-export function parseDate(dateStr: string): Date | null {
-  const date = new Date(dateStr + "T00:00:00");
-  return isNaN(date.getTime()) ? null : date;
 }

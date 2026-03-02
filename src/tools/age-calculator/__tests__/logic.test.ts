@@ -293,4 +293,12 @@ describe("parseDate", () => {
     expect(parsed!.getMonth()).toBe(5);
     expect(parsed!.getDate()).toBe(15);
   });
+
+  it("returns null for Feb 31 (auto-correction prevention)", () => {
+    expect(parseDate("2026-02-31")).toBeNull();
+  });
+
+  it("returns null for Feb 29 in non-leap year", () => {
+    expect(parseDate("2026-02-29")).toBeNull();
+  });
 });

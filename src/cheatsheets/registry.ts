@@ -5,6 +5,8 @@ import { meta as gitMeta } from "./git/meta";
 import { meta as markdownMeta } from "./markdown/meta";
 import { meta as httpStatusCodesMeta } from "./http-status-codes/meta";
 import { meta as cronMeta } from "./cron/meta";
+import { meta as htmlTagsMeta } from "./html-tags/meta";
+import { meta as sqlMeta } from "./sql/meta";
 
 const cheatsheetEntries: CheatsheetDefinition[] = [
   {
@@ -26,6 +28,14 @@ const cheatsheetEntries: CheatsheetDefinition[] = [
   {
     meta: cronMeta,
     componentImport: () => import("./cron/Component"),
+  },
+  {
+    meta: htmlTagsMeta,
+    componentImport: () => import("./html-tags/Component"),
+  },
+  {
+    meta: sqlMeta,
+    componentImport: () => import("./sql/Component"),
   },
 ];
 
