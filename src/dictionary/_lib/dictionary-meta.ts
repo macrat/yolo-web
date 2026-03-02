@@ -2,7 +2,8 @@ import type { DictionaryMeta } from "./types";
 
 export const KANJI_DICTIONARY_META: DictionaryMeta = {
   slug: "kanji",
-  publishedAt: "2026-02-19",
+  publishedAt: "2026-02-17T15:26:02+09:00",
+  updatedAt: "2026-02-24T13:50:51+09:00",
   name: "漢字辞典",
   trustLevel: "curated",
   valueProposition: "小学校で習う漢字の読み・画数・用例をすぐに確認できる",
@@ -27,7 +28,8 @@ export const KANJI_DICTIONARY_META: DictionaryMeta = {
 
 export const YOJI_DICTIONARY_META: DictionaryMeta = {
   slug: "yoji",
-  publishedAt: "2026-02-14",
+  publishedAt: "2026-02-17T15:26:02+09:00",
+  updatedAt: "2026-02-21T22:10:47+09:00",
   name: "四字熟語辞典",
   trustLevel: "curated",
   valueProposition: "四字熟語の読み方と意味を難易度別にすぐ調べられる",
@@ -52,7 +54,8 @@ export const YOJI_DICTIONARY_META: DictionaryMeta = {
 
 export const COLOR_DICTIONARY_META: DictionaryMeta = {
   slug: "colors",
-  publishedAt: "2026-02-17",
+  publishedAt: "2026-02-17T19:25:27+09:00",
+  updatedAt: "2026-02-21T22:10:47+09:00",
   name: "伝統色辞典",
   trustLevel: "curated",
   valueProposition: "日本の伝統色250色のカラーコードと色見本をすぐ確認できる",

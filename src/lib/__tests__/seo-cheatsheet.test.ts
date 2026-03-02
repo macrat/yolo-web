@@ -13,7 +13,7 @@ const mockMeta: CheatsheetMeta = {
   relatedToolSlugs: ["regex-tester"],
   relatedCheatsheetSlugs: ["git"],
   sections: [{ id: "basics", title: "基本" }],
-  publishedAt: "2026-02-19",
+  publishedAt: "2026-02-19T09:27:40+09:00",
   trustLevel: "curated",
 };
 
@@ -56,6 +56,28 @@ describe("generateCheatsheetMetadata", () => {
     const og = result.openGraph as Record<string, unknown> | undefined;
     expect(og?.siteName).toBe("yolos.net");
   });
+
+  test("OGP publishedTimeが含まれる", () => {
+    const result = generateCheatsheetMetadata(mockMeta);
+    const og = result.openGraph as Record<string, unknown> | undefined;
+    expect(og?.publishedTime).toBe("2026-02-19T09:27:40+09:00");
+  });
+
+  test("OGP modifiedTimeが含まれる（updatedAtがない場合はpublishedAt）", () => {
+    const result = generateCheatsheetMetadata(mockMeta);
+    const og = result.openGraph as Record<string, unknown> | undefined;
+    expect(og?.modifiedTime).toBe("2026-02-19T09:27:40+09:00");
+  });
+
+  test("OGP modifiedTimeがupdatedAtを使う（updatedAtがある場合）", () => {
+    const metaWithUpdated: CheatsheetMeta = {
+      ...mockMeta,
+      updatedAt: "2026-02-28T08:10:50+09:00",
+    };
+    const result = generateCheatsheetMetadata(metaWithUpdated);
+    const og = result.openGraph as Record<string, unknown> | undefined;
+    expect(og?.modifiedTime).toBe("2026-02-28T08:10:50+09:00");
+  });
 });
 
 describe("generateCheatsheetJsonLd", () => {
@@ -73,7 +95,27 @@ describe("generateCheatsheetJsonLd", () => {
       string,
       unknown
     >;
-    expect(result.datePublished).toBe("2026-02-19");
+    expect(result.datePublished).toBe("2026-02-19T09:27:40+09:00");
+  });
+
+  test("includes dateModified (fallback to publishedAt when no updatedAt)", () => {
+    const result = generateCheatsheetJsonLd(mockMeta) as Record<
+      string,
+      unknown
+    >;
+    expect(result.dateModified).toBe("2026-02-19T09:27:40+09:00");
+  });
+
+  test("includes dateModified with updatedAt when provided", () => {
+    const metaWithUpdated: CheatsheetMeta = {
+      ...mockMeta,
+      updatedAt: "2026-02-28T08:10:50+09:00",
+    };
+    const result = generateCheatsheetJsonLd(metaWithUpdated) as Record<
+      string,
+      unknown
+    >;
+    expect(result.dateModified).toBe("2026-02-28T08:10:50+09:00");
   });
 
   test("includes inLanguage", () => {

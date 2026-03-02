@@ -29,8 +29,10 @@ export interface GameMeta {
   statsKey: string;
   /** OGP image subtitle */
   ogpSubtitle: string;
-  /** ISO date string of initial publication (e.g. "2026-02-13") */
+  /** ISO 8601 date-time with timezone (e.g. '2026-02-19T09:25:57+09:00') */
   publishedAt: string;
+  /** ISO 8601 date-time with timezone. Set when main content is updated. */
+  updatedAt?: string;
   /** Sitemap configuration */
   sitemap: {
     changeFrequency: "daily" | "weekly" | "monthly";

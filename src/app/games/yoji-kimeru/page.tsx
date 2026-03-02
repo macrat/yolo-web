@@ -40,6 +40,8 @@ export const metadata: Metadata = {
   },
 };
 
+const gameMeta = gameBySlug.get("yoji-kimeru")!;
+
 const gameJsonLd = generateGameJsonLd({
   name: "四字キメル - 毎日の四字熟語パズル",
   description:
@@ -48,9 +50,9 @@ const gameJsonLd = generateGameJsonLd({
   genre: "Puzzle",
   inLanguage: "ja",
   numberOfPlayers: "1",
+  publishedAt: gameMeta.publishedAt,
+  updatedAt: gameMeta.updatedAt,
 });
-
-const gameMeta = gameBySlug.get("yoji-kimeru")!;
 
 export default function YojiKimeruPage() {
   return (

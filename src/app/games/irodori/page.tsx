@@ -39,6 +39,8 @@ export const metadata: Metadata = {
   },
 };
 
+const gameMeta = gameBySlug.get("irodori")!;
+
 const gameJsonLd = generateGameJsonLd({
   name: "イロドリ - 毎日の色彩チャレンジ",
   description:
@@ -47,9 +49,9 @@ const gameJsonLd = generateGameJsonLd({
   genre: "Puzzle",
   inLanguage: "ja",
   numberOfPlayers: "1",
+  publishedAt: gameMeta.publishedAt,
+  updatedAt: gameMeta.updatedAt,
 });
-
-const gameMeta = gameBySlug.get("irodori")!;
 
 export default function IrodoriPage() {
   return (

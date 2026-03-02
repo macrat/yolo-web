@@ -22,7 +22,8 @@ export const meta: ToolMeta = {
     "byte-counter",
     "bmi-calculator",
   ],
-  publishedAt: "2026-02-14",
+  publishedAt: "2026-02-14T13:24:06+09:00",
+  updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
   trustLevel: "verified",
   valueProposition:

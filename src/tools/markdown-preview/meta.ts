@@ -21,7 +21,8 @@ export const meta: ToolMeta = {
     "regex-tester",
     "yaml-formatter",
   ],
-  publishedAt: "2026-02-14",
+  publishedAt: "2026-02-14T07:36:09+09:00",
+  updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
   trustLevel: "verified",
   valueProposition:

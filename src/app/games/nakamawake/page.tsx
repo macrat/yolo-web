@@ -38,6 +38,8 @@ export const metadata: Metadata = {
   },
 };
 
+const gameMeta = gameBySlug.get("nakamawake")!;
+
 const gameJsonLd = generateGameJsonLd({
   name: "ナカマワケ - 毎日の仲間分けパズル",
   description:
@@ -46,9 +48,9 @@ const gameJsonLd = generateGameJsonLd({
   genre: "Puzzle",
   inLanguage: "ja",
   numberOfPlayers: "1",
+  publishedAt: gameMeta.publishedAt,
+  updatedAt: gameMeta.updatedAt,
 });
-
-const gameMeta = gameBySlug.get("nakamawake")!;
 
 export default function NakamawakePage() {
   return (

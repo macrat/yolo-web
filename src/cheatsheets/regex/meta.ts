@@ -28,7 +28,8 @@ export const meta: CheatsheetMeta = {
     { id: "flags", title: "フラグ" },
     { id: "common-patterns", title: "よく使うパターン例" },
   ],
-  publishedAt: "2026-02-19",
+  publishedAt: "2026-02-19T09:27:40+09:00",
+  updatedAt: "2026-02-28T08:10:50+09:00",
   trustLevel: "curated",
   valueProposition: "正規表現パターンをすぐ引き出せる。実例付きで意味がわかる",
   usageExample: {

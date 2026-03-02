@@ -19,7 +19,7 @@ const traditionalColorQuiz: QuizDefinition = {
       "和色",
       "パーソナリティ",
     ],
-    publishedAt: "2026-02-19",
+    publishedAt: "2026-02-19T22:21:08+09:00",
     relatedLinks: [
       { label: "日本の伝統色一覧", href: "/dictionary/colors" },
       { label: "伝統色辞典", href: "/dictionary/colors" },

@@ -26,7 +26,7 @@ export const meta: CheatsheetMeta = {
     { id: "examples", title: "実用例" },
     { id: "platforms", title: "プラットフォーム別の注意点" },
   ],
-  publishedAt: "2026-03-01",
+  publishedAt: "2026-03-01T21:38:13+09:00",
   trustLevel: "curated",
   valueProposition: "Cron式の構文と実用パターンをすぐ引ける",
   usageExample: {

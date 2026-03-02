@@ -59,7 +59,7 @@ describe("sitemap", () => {
     }
   });
 
-  test("quiz page lastModified matches each quiz publishedAt", () => {
+  test("quiz page lastModified matches each quiz updatedAt or publishedAt", () => {
     const entries = sitemap();
     for (const meta of allQuizMetas) {
       const quizEntry = entries.find(
@@ -67,11 +67,13 @@ describe("sitemap", () => {
           typeof e.url === "string" && e.url.endsWith(`/quiz/${meta.slug}`),
       );
       expect(quizEntry).toBeDefined();
-      expect(quizEntry?.lastModified).toEqual(new Date(meta.publishedAt));
+      expect(quizEntry?.lastModified).toEqual(
+        new Date(meta.updatedAt || meta.publishedAt),
+      );
     }
   });
 
-  test("cheatsheet page lastModified matches each cheatsheet publishedAt", () => {
+  test("cheatsheet page lastModified matches each cheatsheet updatedAt or publishedAt", () => {
     const entries = sitemap();
     for (const meta of allCheatsheetMetas) {
       const csEntry = entries.find(
@@ -80,11 +82,13 @@ describe("sitemap", () => {
           e.url.endsWith(`/cheatsheets/${meta.slug}`),
       );
       expect(csEntry).toBeDefined();
-      expect(csEntry?.lastModified).toEqual(new Date(meta.publishedAt));
+      expect(csEntry?.lastModified).toEqual(
+        new Date(meta.updatedAt || meta.publishedAt),
+      );
     }
   });
 
-  test("game page lastModified matches each game publishedAt", () => {
+  test("game page lastModified matches each game updatedAt or publishedAt", () => {
     const entries = sitemap();
     for (const game of allGameMetas) {
       const gameEntry = entries.find(
@@ -92,7 +96,9 @@ describe("sitemap", () => {
           typeof e.url === "string" && e.url.endsWith(`/games/${game.slug}`),
       );
       expect(gameEntry).toBeDefined();
-      expect(gameEntry?.lastModified).toEqual(new Date(game.publishedAt));
+      expect(gameEntry?.lastModified).toEqual(
+        new Date(game.updatedAt || game.publishedAt),
+      );
     }
   });
 });

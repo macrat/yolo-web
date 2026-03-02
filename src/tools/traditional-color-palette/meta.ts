@@ -15,7 +15,7 @@ export const meta: ToolMeta = {
   ],
   category: "generator",
   relatedSlugs: ["color-converter"],
-  publishedAt: "2026-02-28",
+  publishedAt: "2026-02-28T14:03:07+09:00",
   structuredDataType: "WebApplication",
   trustLevel: "verified",
   valueProposition:
