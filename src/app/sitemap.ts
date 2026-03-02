@@ -125,18 +125,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
         )
       : new Date("2026-02-13T00:00:00+09:00");
 
-  // Homepage uses the most recent date across all content
-  const homepageDate = new Date(
-    Math.max(
-      latestBlogDate.getTime(),
-      latestToolDate.getTime(),
-      latestGameDate.getTime(),
-      latestMemoDate.getTime(),
-      latestQuizDate.getTime(),
-      latestCheatsheetDate.getTime(),
-    ),
-  );
-
   // Latest dictionary date (most recent among 3 dictionaries)
   const latestDictionaryDate = new Date(
     Math.max(
@@ -149,6 +137,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
       new Date(
         COLOR_DICTIONARY_META.updatedAt || COLOR_DICTIONARY_META.publishedAt,
       ).getTime(),
+    ),
+  );
+
+  // Homepage uses the most recent date across all content
+  const homepageDate = new Date(
+    Math.max(
+      latestBlogDate.getTime(),
+      latestToolDate.getTime(),
+      latestGameDate.getTime(),
+      latestMemoDate.getTime(),
+      latestQuizDate.getTime(),
+      latestCheatsheetDate.getTime(),
+      latestDictionaryDate.getTime(),
     ),
   );
 

@@ -38,15 +38,31 @@ function CopyButton({ text }: { text: string }) {
 export default function ColorDetail({ color }: ColorDetailProps) {
   const categoryLabel = COLOR_CATEGORY_LABELS[color.category];
 
-  // Shuffle colors once on mount to avoid impure function calls during render
+  // Use a deterministic shuffle seeded by the color slug to avoid
+  // SSR/CSR hydration mismatch. Math.random() would produce different
+  // results on server vs client, causing React hydration warnings.
   const [relatedColors] = useState(() => {
     const colors = getColorsByCategory(color.category).filter(
       (c) => c.slug !== color.slug,
     );
 
-    // Fisher-Yates shuffle
+    // Simple deterministic hash from slug for seeding the shuffle.
+    // This ensures the same color page always shows the same related colors
+    // in the same order, which is fine for the "related colors" use case.
+    let seed = 0;
+    for (let i = 0; i < color.slug.length; i++) {
+      seed = (seed * 31 + color.slug.charCodeAt(i)) | 0;
+    }
+
+    // Seeded pseudo-random number generator (linear congruential generator)
+    const seededRandom = (): number => {
+      seed = (seed * 1664525 + 1013904223) | 0;
+      return (seed >>> 0) / 0x100000000;
+    };
+
+    // Fisher-Yates shuffle with seeded random
     for (let i = colors.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
+      const j = Math.floor(seededRandom() * (i + 1));
       [colors[i], colors[j]] = [colors[j], colors[i]];
     }
 

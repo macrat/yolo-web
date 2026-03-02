@@ -17,13 +17,13 @@ export const meta: ToolMeta = {
   category: "developer",
   relatedSlugs: ["unix-timestamp", "date-calculator", "regex-tester"],
   publishedAt: "2026-02-14T22:39:14+09:00",
-  updatedAt: "2026-02-28T13:00:40+09:00",
+  updatedAt: "2026-03-02T12:00:00+09:00",
   structuredDataType: "WebApplication",
   trustLevel: "verified",
   valueProposition: "Cron式を入力するだけで日本語の説明と次回実行予定がわかる",
   usageExample: {
     input: "30 9 * * 1-5",
-    output: "平日 午前9時30分に実行（次回: 2026/03/02 09:30）",
+    output: "月曜から金曜 9時30分 に実行（次回: 2026/03/02 09:30）",
     description: "平日の朝9時半に実行するCron式を解析する例",
   },
   faq: [

@@ -94,6 +94,8 @@ function parseFieldValues(field: string, range: FieldRange): number[] | null {
           values.add(i === 7 && range.max === 7 ? 0 : i);
         }
       } else {
+        // Strict numeric validation: reject tokens like "1a", "1.5", "1e2", "+1"
+        if (!/^\d+$/.test(part)) return null;
         const num = parseInt(part, 10);
         if (isNaN(num) || num < range.min || num > range.max) return null;
         values.add(num === 7 && range.max === 7 ? 0 : num);
@@ -234,14 +236,23 @@ function buildFullDescription(
     parts.push(month.description);
   }
 
-  // Day of month
-  if (dayOfMonth.raw !== "*") {
-    parts.push(dayOfMonth.description);
-  }
-
-  // Day of week
-  if (dayOfWeek.raw !== "*") {
-    parts.push(dayOfWeek.description);
+  // Day of month / Day of week (OR logic when both are restricted)
+  const bothDayFieldsRestricted =
+    dayOfMonth.raw !== "*" && dayOfWeek.raw !== "*";
+  if (bothDayFieldsRestricted) {
+    // Build OR description: "毎月{DOM}、または毎週{DOW}の"
+    const domPrefix = month.raw === "*" ? "毎月" : "";
+    const dowPrefix = "毎週";
+    parts.push(
+      `${domPrefix}${dayOfMonth.description}、または${dowPrefix}${dayOfWeek.description}の`,
+    );
+  } else {
+    if (dayOfMonth.raw !== "*") {
+      parts.push(dayOfMonth.description);
+    }
+    if (dayOfWeek.raw !== "*") {
+      parts.push(dayOfWeek.description);
+    }
   }
 
   // Time description
@@ -256,13 +267,11 @@ function buildFullDescription(
       parts.push(`毎時${minute.description}`);
     }
   } else {
-    // Specific hour and minute
+    // Specific hour and minute (24-hour format)
     const minuteVal = parseInt(minute.raw, 10);
     const hourVal = parseInt(hour.raw, 10);
     if (!isNaN(minuteVal) && !isNaN(hourVal)) {
-      const period = hourVal < 12 ? "午前" : "午後";
-      const displayHour = hourVal === 0 ? 0 : hourVal;
-      parts.push(`${period}${displayHour}時${minuteVal}分`);
+      parts.push(`${hourVal}時${minuteVal}分`);
     } else {
       parts.push(`${hour.description}の${minute.description}`);
     }
@@ -401,7 +410,9 @@ export function getNextExecutions(
   start.setMinutes(start.getMinutes() + 1);
 
   const current = new Date(start);
-  const MAX_ITERATIONS = 366 * 24 * 60; // ~1 year of minutes
+  // Scale search window by count to handle yearly/leap-year cron expressions
+  // Use 4-year base to cover leap year gaps (Feb 29 occurs every 4 years)
+  const MAX_ITERATIONS = count * 4 * 366 * 24 * 60;
   let iterations = 0;
 
   while (results.length < count && iterations < MAX_ITERATIONS) {
@@ -413,13 +424,20 @@ export function getNextExecutions(
     const mon = current.getMonth() + 1;
     const dow = current.getDay(); // 0=Sunday
 
-    if (
-      parsed.minute.values.includes(m) &&
-      parsed.hour.values.includes(h) &&
-      parsed.dayOfMonth.values.includes(dom) &&
-      parsed.month.values.includes(mon) &&
-      parsed.dayOfWeek.values.includes(dow)
-    ) {
+    const minuteMatch = parsed.minute.values.includes(m);
+    const hourMatch = parsed.hour.values.includes(h);
+    const domMatch = parsed.dayOfMonth.values.includes(dom);
+    const monMatch = parsed.month.values.includes(mon);
+    const dowMatch = parsed.dayOfWeek.values.includes(dow);
+
+    // DOM/DOW OR logic: when both are restricted (non-"*"), use OR per Vixie cron spec
+    const bothRestricted =
+      parsed.dayOfMonth.raw !== "*" && parsed.dayOfWeek.raw !== "*";
+    const dayMatch = bothRestricted
+      ? domMatch || dowMatch
+      : domMatch && dowMatch;
+
+    if (minuteMatch && hourMatch && dayMatch && monMatch) {
       results.push(new Date(current));
     }
 
