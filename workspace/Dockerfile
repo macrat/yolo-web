@@ -21,7 +21,7 @@ RUN echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc \
 	&& curl -fsSL https://claude.ai/install.sh | bash \
 	&& git config --global user.name "Claude" \
 	&& git config --global user.email "noreply@anthropic.com" \
-	&& npx -y playwright install
+	&& npx -y playwright install chromium
 
 USER root
 

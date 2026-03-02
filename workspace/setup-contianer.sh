@@ -11,7 +11,6 @@ docker run -it --rm -v "yolos:/mnt/data" yolos /home/node/.local/bin/claude auth
 
 echo ----- 4. install plugins -----
 docker run --rm -v "yolos:/mnt/data" yolos /home/node/.local/bin/claude plugin update
-docker run --rm -v "yolos:/mnt/data" yolos /home/node/.local/bin/claude plugin install playwright@claude-plugins-official
 docker run --rm -v "yolos:/mnt/data" yolos /home/node/.local/bin/claude plugin install typescript-official@claude-plugins-official
 
 echo ----- done -----
