@@ -2,11 +2,8 @@
 
 ## Active (進行中)
 
-| ID    | Title                                                  | Priority | Status | Assigned Role | Origin Memo | Target Cycle | Notes                                                                                                                                 |
-| ----- | ------------------------------------------------------ | -------- | ------ | ------------- | ----------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
-| B-160 | sitemap.tsのhomepageDateにlatestDictionaryDateを含める | P3       | active | -             | 19cac21bf7d | 59           | 辞典コンテンツが最新更新されてもホームページのlastModifiedに反映されない既存バグ                                                      |
-| B-157 | Markdownサニタイズ方針確認・強化                       | P3       | active | -             | 19ca986ea98 | 59           | dangerouslySetInnerHTML利用箇所のXSSリスク確認(#17)。marked拡張の許可タグ制御が不十分な可能性。ColorDetail SSR/CSR不整合(#26)も関連   |
-| B-150 | Cron Parser仕様整合・バリデーション改善                | P3       | active | -             | 19ca986e329 | 59           | DOM/DOW AND判定が標準(OR)と不整合(#3)、不正トークン1a受理(#23)、午後13時表示(#24)、1年以上先取りこぼし(#22)。対象cron方言の明示が前提 |
+| ID  | Title | Priority | Status | Assigned Role | Origin Memo | Target Cycle | Notes |
+| --- | ----- | -------- | ------ | ------------- | ----------- | ------------ | ----- |
 
 ## Queued (未着手)
 
@@ -62,6 +59,9 @@
 
 | ID    | Title                                                    | Completed Cycle | Origin Memo | Notes                                                                                                                                                                                       |
 | ----- | -------------------------------------------------------- | --------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| B-160 | sitemap.tsのhomepageDateにlatestDictionaryDateを含める   | 59              | 19cac21bf7d | latestDictionaryDateの定義移動+Math.maxへの追加。テスト1件追加。レビュー1回（Approve）で承認                                                                                                |
+| B-157 | Markdownサニタイズ方針確認・強化                         | 59              | 19ca986ea98 | sanitize-html導入、markdownToHtml()統合、サニタイズテスト20件+統合テスト3件。ColorDetail決定論的シャッフル。レビュー1回（CA→Approve）で承認                                                 |
+| B-150 | Cron Parser仕様整合・バリデーション改善                  | 59              | 19ca986e329 | 4修正（不正トークン拒否・24時間表記・DOM/DOW OR判定・MAX_ITERATIONS拡大）。テスト17件追加。レビュー1回（CA→Approve）で承認                                                                  |
 | B-146 | Tier 2チートシート追加（HTMLタグ・SQL）                  | 58              | 19c85be20b1 | HTMLタグ9セクション約70タグ、SQL8セクション統一テーブル例。MySQL UPSERT非推奨構文修正。ブログ記事2本（リリース+技術）。レビュー2回で承認                                                    |
 | B-151 | 日付ツール入力バリデーション改善                         | 58              | 19ca986e512 | ラウンドトリップ検証パターン、和暦終了日境界チェック、共通ユーティリティ(date-validation.ts)。publishedAt/updatedAt設計修正（TZバグ修正、47ファイル一括変換、JSON-LD/OGP改善）も実施        |
 | B-148 | SEOメタデータ改善（sitemap lastModified・OGP/canonical） | 57              | 19ca986e8c2 | #14 robots修正、#18 sitemap lastModified全修正（GameMeta/DictionaryMetaにpublishedAt追加）、#20 全33ルートOGP/canonical/twitter追加、#21 SEOテスト71件追加。レビュー2回（CA→Approve）で承認 |
