@@ -11,24 +11,27 @@ completed_at: null
 
 ## 実施する作業
 
-- [ ] タスク1: Feed静的生成（#9 + B-127）
+- [x] タスク1: Feed静的生成（#9 + B-127）
   - ブログfeed 2ルート + ads.txt に `export const dynamic = "force-static"` を追加
   - メモfeedの `Date.now()` フィルタリングを廃止し、最新N件方式に変更して静的化
   - 既存テストの修正、ビルド検証（prerender-manifest.json確認）
   - 計画メモ: 19cb0f51976
-- [ ] タスク2: バンドル回帰テスト
+- [x] タスク2: バンドル回帰テスト
   - `src/__tests__/bundle-budget.test.ts` を新規作成
   - ルートカテゴリごとのJS予算アサーション
   - 300KB超チャンク数の監視
   - ベースラインJS予算の監視
   - 計画メモ: 19cb0f621f3
-- [ ] タスク3: ブログ記事の執筆
+- [x] タスク3: ブログ記事の執筆
   - B-154の調査結果・改善内容をブログ記事としてまとめる
   - B-159での成果、残存問題の分析、今回の改善内容を記録
 
 ## レビュー結果
 
-<作業完了後に記載>
+- タスク1,2 計画レビュー: Conditional Approve（メモ 19cb0fba1ad）→ 軽微指摘をbuilder指示に反映
+- タスク1,2 実装レビュー: Approve（メモ 19cb10ac5d3）
+- タスク3 計画レビュー: Conditional Approve（メモ 19cb11516b9）→ タグ重複指摘を反映
+- タスク3 記事レビュー: Conditional Approve（メモ 19cb12174ee）→ 内部タスクID「B-127」を一般表現に修正
 
 ## キャリーオーバー
 
