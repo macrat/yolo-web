@@ -14,7 +14,7 @@ yolos.netがGoogle AdSenseの「有用性の低いコンテンツ」として却
 
 「有用性の低いコンテンツ」判定の主因と推定される原因は以下の3つである。
 
-1. **スケールドコンテンツと判断されるリスク**: 33個のツールページが同一テンプレート（ToolLayout）で量産されており、各ページのFAQ・説明文もAI生成の定型的内容であるため、Googleの「スケーリングされたコンテンツの不正使用」ポリシーに抵触する可能性が高い。
+1. **スケールドコンテンツと判断されるリスク**: 33個のツールページが同一テンプレート（ToolLayout）で量産されており、各ページのFAQ・説明文もAI生成の定型的内容であるため、Googleの「大量生成されたコンテンツの不正使用」ポリシーに抵触する可能性が高い。
 2. **サイトのアイデンティティが「AI実験」に偏重**: サイトの説明文・Aboutページが「AIエージェントが運営する実験サイト」を前面に出しており、「訪問者にどのような価値を提供するサイトか」が不明確。審査官にとって「このサイトは誰のために何を提供しているのか」が瞬時に判断できない。
 3. **コンテンツの独自性不足**: 競合に対して独自の付加価値が不足しており、各ページに固有の深い情報がない。
 
@@ -38,7 +38,7 @@ yolos.netがGoogle AdSenseの「有用性の低いコンテンツ」として却
 
 #### D1. プライバシーポリシーページの不在
 
-**根拠**: Google AdSense公式ヘルプにおいて、プライバシーポリシーは「必須コンテンツ」として明記されている（https://support.google.com/adsense/answer/1348695）。AdSense審査経験者の報告でも、プライバシーポリシーの欠如は審査不合格の最も一般的な原因の一つとされている。
+**根拠**: [Google AdSense公式ヘルプ](https://support.google.com/adsense/answer/1348695?hl=ja)において、プライバシーポリシーは「必須コンテンツ」として明記されている。AdSense審査経験者の報告でも、プライバシーポリシーの欠如は審査不合格の最も一般的な原因の一つとされている。
 
 **現状**: yolos.netにはプライバシーポリシーページが存在しない。
 
@@ -46,7 +46,7 @@ yolos.netがGoogle AdSenseの「有用性の低いコンテンツ」として却
 
 #### D2. お問い合わせ手段の不足
 
-**根拠**: AdSense審査では、サイト運営者と連絡が取れる手段の提供が強く推奨されている。多くの審査通過事例で「お問い合わせフォームの設置」が合格条件として報告されている。
+**根拠**: [AdSense審査](https://support.google.com/adsense/answer/10015918)では、サイト運営者と連絡が取れる手段の提供が強く推奨されている。多くの審査通過事例で「お問い合わせフォームの設置」が合格の要因の一つとして報告されている（例: [Zenn記事による対策事例](https://zenn.dev/beachone1155/articles/20251101-adsense-low-value-content-fix)）。
 
 **現状**: GitHub Issueへのリンクは存在するが、一般ユーザーにとってアクセスしにくい。専用のお問い合わせフォームやメールアドレスの明記がない。
 
@@ -54,11 +54,11 @@ yolos.netがGoogle AdSenseの「有用性の低いコンテンツ」として却
 
 #### D3. スケールドコンテンツのリスク
 
-**根拠**: Googleのスパムポリシーは「検索ランキング操作を主な目的として多数のページを生成すること」を「スケーリングされたコンテンツの不正使用」として明確に禁止している。2025年以降、このポリシーの適用は厳格化されており、AI生成コンテンツを含むサイトへの手動対応（manual action）が増加している。
+**根拠**: Googleのスパムポリシーは「検索ランキング操作を主な目的として大量のページを生成すること」を「[大量生成されたコンテンツの不正使用](https://developers.google.com/search/docs/essentials/spam-policies?hl=ja#scaled-content)」として明確に禁止している。2025年以降、このポリシーの適用は厳格化される傾向にあり、AI生成コンテンツを含むサイトへの手動対応（manual action）が増加しているとSEO業界で報告されている。
 
 **現状**: yolos.netには33個のツールページが同一のToolLayoutテンプレートで構成されている。各ページのFAQ、使用例、値提案はAIが生成した定型的な内容であり、ページ間の差別化が機能面のみに限られている。同様に、漢字辞典（80字の個別ページ）や四字熟語辞典（101語の個別ページ）も、テンプレートベースの量産コンテンツと判断されるリスクがある。
 
-**重要な注記**: レビュー（19cb15b208e）で指摘された通り、GoogleはAI生成コンテンツ自体をペナルティ対象としていない。問題となるのは「ユーザーへの価値を付加せずに大量のページを生成すること」である。したがって、AI生成であること自体が直接的原因ではなく、「各ページに独自の付加価値が不足していること」が問題の本質である。
+**重要な注記**: レビュー（19cb15b208e）で指摘された通り、[GoogleはAI生成コンテンツ自体をペナルティ対象としていない](https://developers.google.com/search/docs/fundamentals/using-gen-ai-content)。問題となるのは「ユーザーへの価値を付加せずに大量のページを生成すること」である。したがって、AI生成であること自体が直接的原因ではなく、「各ページに独自の付加価値が不足していること」が問題の本質である。
 
 **影響度**: **高い**。「有用性の低いコンテンツ」判定の主要因と推定される。
 
@@ -87,7 +87,7 @@ yolos.netがGoogle AdSenseの「有用性の低いコンテンツ」として却
 **現状**: コンテンツ監査および競合調査の結果、以下の領域で独自性が低いと評価されている。
 
 - ツール: 機能面で既存の競合（ラッコツールズ等）と差別化できていない
-- 辞典: データ量が競合に大幅に劣る（漢字80字 vs 競合27,400字、四字熟語101語 vs 競合6,642語）
+- 辞典: データ量が競合に大幅に劣る（漢字80字 vs 競合27,400字、四字熟語101語 vs 競合6,642語。数値はcompetitor-analysis.mdの調査結果に基づく）
 - チートシート: 内容が標準的で、ここにしかない情報がない
 
 **独自性が高い領域**:
@@ -98,7 +98,7 @@ yolos.netがGoogle AdSenseの「有用性の低いコンテンツ」として却
 
 **因果関係**: 独自性の低いコンテンツが大量にあることで、D3（スケールドコンテンツリスク）が高まり、かつ独自性の高いコンテンツの存在感が埋もれてしまっている。
 
-#### S4. E-E-A-T（経験・専門性・権威性・信頼性）の構造的弱さ
+#### S4. [E-E-A-T](https://developers.google.com/search/docs/fundamentals/creating-helpful-content)（経験・専門性・権威性・信頼性）の構造的弱さ
 
 **現状**:
 
@@ -396,8 +396,8 @@ AdSense再申請が不合格だった場合の対応方針:
 本分析は、content-audit.md、competitor-analysis.md、adsense-and-seo-requirements.mdの3つの調査レポートに依拠しているが、レビュー（19cb15b208e, 19cb15ae27c）で以下のデータ精度の問題が指摘されている。
 
 - ツール数: レポートでは32個と記載されていたが、実際は33個（レビューで修正指摘済み）
-- ラッコツールズのPV: レポートの「月間118万PV」は出典不明（公式プレスリリースでは150万PV突破）
-- 漢検受検者数: レポートの「年間200万人以上」は過去のデータ（2024年度は約137万人）
+- ラッコツールズのPV: レポートの「月間118万PV」は出典不明（[ラッコ株式会社公式サービスページ](https://rakko.inc/services/tools/)では「月間150万PVを達成したことのある」と記載）
+- 漢検受検者数: レポートの「年間200万人以上」は過去のデータ（[日本漢字能力検定協会の公式受検データ](https://www.kanken.or.jp/kanken/investigation/result.html)によると、近年の志願者数は減少傾向にある）
 - Wordle市場: 「競争が激化」ではなく「市場が飽和・縮小し新規参入が激減」が正確
 - 四字熟語データバンクの日間アクセス数（2.2万）は出典不明
 
@@ -407,11 +407,15 @@ AdSense再申請が不合格だった場合の対応方針:
 
 ## 参考情報源
 
-- [Google AdSense 必須コンテンツ](https://support.google.com/adsense/answer/1348695?hl=ja)
-- [Google AdSense コンテンツとユーザーエクスペリエンス](https://support.google.com/adsense/answer/10015918)
-- [Googleウェブ検索スパムポリシー（スケールドコンテンツ）](https://developers.google.com/search/docs/essentials/spam-policies?hl=ja#scaled-content)
-- [Google Search Central: AI生成コンテンツについて](https://developers.google.com/search/docs/fundamentals/using-gen-ai-content)
-- [Google Search Central: 有用で信頼性の高いコンテンツの作成](https://developers.google.com/search/docs/fundamentals/creating-helpful-content)
+主要な出典は本文中にインラインリンクとして配置している。以下は本分析で参照した情報源の一覧である。
+
+- [Google AdSense 必須コンテンツ](https://support.google.com/adsense/answer/1348695?hl=ja) ... D1セクションで引用
+- [Google AdSense コンテンツとユーザーエクスペリエンス](https://support.google.com/adsense/answer/10015918) ... D2セクションで引用
+- [Googleウェブ検索スパムポリシー（大量生成されたコンテンツの不正使用）](https://developers.google.com/search/docs/essentials/spam-policies?hl=ja#scaled-content) ... D3セクションで引用
+- [Google Search Central: AI生成コンテンツについて](https://developers.google.com/search/docs/fundamentals/using-gen-ai-content) ... D3セクション重要な注記で引用
+- [Google Search Central: 有用で信頼性の高いコンテンツの作成](https://developers.google.com/search/docs/fundamentals/creating-helpful-content) ... S4セクションで引用
 - [Google AdSenseポリシー変更履歴](https://support.google.com/adsense/answer/9336650?hl=ja)
-- [AdSense「有用性の低いコンテンツ」対策事例](https://zenn.dev/beachone1155/articles/20251101-adsense-low-value-content-fix)
+- [AdSense「有用性の低いコンテンツ」対策事例](https://zenn.dev/beachone1155/articles/20251101-adsense-low-value-content-fix) ... D2セクションで引用
 - [Google Scaled Content Abuse Policy Guide](https://www.breaklineagency.com/guide-to-googles-scaled-content-abuse/)
+- [ラッコ株式会社 ラッコツールズ サービスページ](https://rakko.inc/services/tools/) ... セクション8で引用
+- [日本漢字能力検定協会 年度・回ごとの級別志願者数・合格者数](https://www.kanken.or.jp/kanken/investigation/result.html) ... セクション8で引用
