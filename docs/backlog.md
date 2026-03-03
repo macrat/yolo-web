@@ -2,8 +2,9 @@
 
 ## Active (進行中)
 
-| ID  | Title | Priority | Status | Assigned Role | Origin Memo | Target Cycle | Notes |
-| --- | ----- | -------- | ------ | ------------- | ----------- | ------------ | ----- |
+| ID    | Title                                          | Priority | Status | Assigned Role | Origin Memo | Target Cycle | Notes                                                                                      |
+| ----- | ---------------------------------------------- | -------- | ------ | ------------- | ----------- | ------------ | ------------------------------------------------------------------------------------------ |
+| B-165 | サイト全面価値向上プロジェクト（フェーズ1〜5） | P0       | active | pm            | 19cb1464579 | 64〜         | 作業計画書: docs/site-value-improvement-plan.md。AdSense「有用性の低いコンテンツ」却下対応 |
 
 ## Queued (未着手)
 
