@@ -4,9 +4,6 @@ import { ROLE_DISPLAY, capitalize } from "@/memos/_lib/memos-shared";
 import type { RoleSlug } from "@/memos/_lib/memos-shared";
 import { BASE_URL, SITE_NAME } from "@/lib/constants";
 
-/** Include memos from the past N days only. */
-const MEMO_FEED_DAYS = 7;
-
 /** Maximum number of memo items to include in the feed. */
 const MAX_MEMO_FEED_ITEMS = 100;
 
@@ -28,20 +25,16 @@ function stripHtml(html: string): string {
 }
 
 /**
- * Build a Feed instance containing recent memos (past MEMO_FEED_DAYS days,
- * up to MAX_MEMO_FEED_ITEMS items).
+ * Build a Feed instance containing the most recent memos
+ * (up to MAX_MEMO_FEED_ITEMS items).
  * The returned Feed can output RSS 2.0 (.rss2()) or Atom 1.0 (.atom1()).
  */
 export function buildMemoFeed(): Feed {
+  // getAllPublicMemos() returns memos sorted by created_at in descending order
+  // (newest first), as guaranteed by build-memo-index.ts. Therefore
+  // .slice(0, N) correctly yields the N most recent memos.
   const allMemos = getAllPublicMemos();
-
-  // Filter to memos within the past MEMO_FEED_DAYS days
-  const cutoffDate = new Date(
-    Date.now() - MEMO_FEED_DAYS * 24 * 60 * 60 * 1000,
-  );
-  const recentMemos = allMemos
-    .filter((memo) => new Date(memo.created_at) >= cutoffDate)
-    .slice(0, MAX_MEMO_FEED_ITEMS);
+  const recentMemos = allMemos.slice(0, MAX_MEMO_FEED_ITEMS);
 
   const siteUrl = BASE_URL;
   const memosUrl = `${siteUrl}/memos`;

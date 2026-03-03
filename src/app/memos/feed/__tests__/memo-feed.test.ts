@@ -3,7 +3,6 @@ import type { PublicMemo } from "@/memos/_lib/memos-shared";
 
 /**
  * Create a mock memo for testing.
- * By default, the memo date is set to "now" so it falls within the 7-day window.
  */
 function createMockMemo(overrides: Partial<PublicMemo> = {}): PublicMemo {
   return {
@@ -88,9 +87,9 @@ describe("buildMemoFeed", () => {
     expect(atom).toContain("[Reviewer -> PM] Second memo");
   });
 
-  test("old memos (older than 7 days) are excluded from feed", () => {
-    const eightDaysAgo = new Date(
-      Date.now() - 8 * 24 * 60 * 60 * 1000,
+  test("memos are included regardless of age", () => {
+    const thirtyDaysAgo = new Date(
+      Date.now() - 30 * 24 * 60 * 60 * 1000,
     ).toISOString();
 
     mockedGetAllPublicMemos.mockReturnValue([
@@ -101,16 +100,17 @@ describe("buildMemoFeed", () => {
       }),
       createMockMemo({
         id: "old-memo",
-        subject: "Old memo from 8 days ago",
-        created_at: eightDaysAgo,
+        subject: "Old memo from 30 days ago",
+        created_at: thirtyDaysAgo,
       }),
     ]);
 
     const feed = buildMemoFeed();
     const rss = feed.rss2();
 
+    // Both memos should be included regardless of their age
     expect(rss).toContain("Recent");
-    expect(rss).not.toContain("Old memo from 8 days ago");
+    expect(rss).toContain("Old memo from 30 days ago");
   });
 
   test("empty feed is returned when no memos exist", () => {
@@ -126,7 +126,7 @@ describe("buildMemoFeed", () => {
   });
 
   test("feed respects MAX_MEMO_FEED_ITEMS limit of 100", () => {
-    // Create 120 recent memos
+    // Create 120 memos (sorted newest-first, as getAllPublicMemos guarantees)
     const memos = Array.from({ length: 120 }, (_, i) =>
       createMockMemo({
         id: `memo-${i}`,
@@ -140,7 +140,7 @@ describe("buildMemoFeed", () => {
     const rss = feed.rss2();
     const itemCount = (rss.match(/<item>/g) || []).length;
 
-    expect(itemCount).toBeLessThanOrEqual(100);
+    expect(itemCount).toBe(100);
   });
 
   test("feed contains correct links to memo pages", () => {
