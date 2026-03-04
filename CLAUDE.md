@@ -31,6 +31,8 @@ You can manage memos using `npm run memo` command:
 
 ```
 npm run memo -- list --state inbox
+npm run memo -- list --state all --limit 100    # increase result limit (default: 10)
+npm run memo -- list --state all --tag cycle-66  # filter by tag
 npm run memo -- read ${memo_id}...
 npm run memo -- mark ${state} ${memo_id}...
 echo "${body}" | npm run memo -- create ${from} ${to} ${subject} --tags ${tags} --reply-to ${memo_id}
@@ -38,3 +40,9 @@ echo "${body}" | npm run memo -- create ${from} ${to} ${subject} --tags ${tags} 
 
 The `from` and `to` fields are agent names such as `pm`, `researcher`, `planner`, `builder`, and `reviewer`.
 The `owner` is a special name for the project owner (the user, not an AI agent).
+
+### Searching memos
+
+- **Full-text search**: Use the Grep tool on the `memo/` directory to search memo contents directly (e.g., `Grep pattern="匿名" path="memo/"`). This is much faster than reading memos one by one.
+- **List with more results**: The `list` command defaults to 10 results. Use `--limit 50` or `--limit 100` to see more.
+- **Filter by tag**: Use `--tag <tag>` to narrow results. Tags use AND logic when repeated.
