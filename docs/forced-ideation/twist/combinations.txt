@@ -1,10 +1,3 @@
----
-archived_at: "2026-03-05"
-archived_from: "docs/forced-ideation/twist/combinations.txt"
-archived_reason: "v4コンセプト確定に伴い、コンセプト策定プロセスの中間成果物をアーカイブ。"
-created_cycle: 66
-archived_cycle: 66
----
 [189] (ゲーム×ひねり) 数独 に 絵文字/イラストテーマに差し替え（動物/食べ物/伝統文様等）
 [6] (ジャンル×ひねり) おみくじ を やたら厳しいキャラ
 [269] (辞書×ひねり) 方言 の 全部ネコで説明する

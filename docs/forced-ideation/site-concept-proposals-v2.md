@@ -1,11 +1,3 @@
----
-archived_at: "2026-03-05"
-archived_from: "docs/forced-ideation/site-concept-proposals-v2.md"
-archived_reason: "v4コンセプト確定に伴い、コンセプト策定プロセスの中間成果物をアーカイブ。"
-created_cycle: 66
-archived_cycle: 66
----
-
 # サイトコンセプト案 v2（バイアス排除版）
 
 作成日: 2026-03-04

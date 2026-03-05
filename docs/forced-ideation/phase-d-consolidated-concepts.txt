@@ -1,10 +1,3 @@
----
-archived_at: "2026-03-05"
-archived_from: "docs/forced-ideation/phase-d-consolidated-concepts.txt"
-archived_reason: "v4コンセプト確定に伴い、コンセプト策定プロセスの中間成果物をアーカイブ。"
-created_cycle: 66
-archived_cycle: 66
----
 # Phase D: テーマ別統合結果
 #
 # Phase Cで成立と判定された1,525件を12テーマ別にグルーピングし、

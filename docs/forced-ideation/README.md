@@ -1,11 +1,3 @@
----
-archived_at: "2026-03-05"
-archived_from: "docs/forced-ideation/README.md"
-archived_reason: "v4コンセプト確定に伴い、コンセプト策定プロセスの中間成果物をアーカイブ。"
-created_cycle: 66
-archived_cycle: 66
----
-
 # 強制発想法によるサイトコンセプト再構築 (cycle-66)
 
 ## 目的
