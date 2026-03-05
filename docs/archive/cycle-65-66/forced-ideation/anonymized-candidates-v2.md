@@ -1,3 +1,11 @@
+---
+archived_at: "2026-03-05"
+archived_from: "docs/forced-ideation/anonymized-candidates-v2.md"
+archived_reason: "v4コンセプト確定に伴い、コンセプト策定プロセスの中間成果物をアーカイブ。"
+created_cycle: 66
+archived_cycle: 66
+---
+
 # サイトコンテンツ候補一覧 v2
 
 47件のコンテンツ候補を匿名化し、ランダム順に配置したもの。後続の比較分析における入力データとして使用する。

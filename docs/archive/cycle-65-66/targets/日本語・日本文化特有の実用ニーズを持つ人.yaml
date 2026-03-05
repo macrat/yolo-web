@@ -1,3 +1,10 @@
+---
+archived_at: "2026-03-05"
+archived_from: "docs/targets/日本語・日本文化特有の実用ニーズを持つ人.yaml"
+archived_reason: "v4ではツール全削除。実用ツールのターゲットは不要。"
+created_cycle: 65
+archived_cycle: 66
+---
 name: 日本語・日本文化特有の実用ニーズを持つ人
 knows:
   - 日本語の基本的な読み書き

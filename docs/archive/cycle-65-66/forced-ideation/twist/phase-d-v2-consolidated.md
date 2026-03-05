@@ -1,3 +1,11 @@
+---
+archived_at: "2026-03-05"
+archived_from: "docs/forced-ideation/twist/phase-d-v2-consolidated.md"
+archived_reason: "v4コンセプト確定に伴い、コンセプト策定プロセスの中間成果物をアーカイブ。"
+created_cycle: 66
+archived_cycle: 66
+---
+
 # ひねり強制発想法 Phase D v2: テーマ軸・機能軸の二面統合
 
 273件の成立アイデアを「テーマ軸（機能横断）」と「機能軸（従来型改良版）」の2つのレンズで再統合した結果。

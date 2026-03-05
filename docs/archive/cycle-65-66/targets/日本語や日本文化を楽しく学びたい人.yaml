@@ -1,3 +1,10 @@
+---
+archived_at: "2026-03-05"
+archived_from: "docs/targets/日本語や日本文化を楽しく学びたい人.yaml"
+archived_reason: "v4ではターゲットが2つに変更。このターゲットは定義されていない。"
+created_cycle: 65
+archived_cycle: 66
+---
 name: 日本語や日本文化を楽しく学びたい人
 knows:
   - 日本語の基本的な読み書き
