@@ -1,3 +1,10 @@
+---
+archived_at: "2026-03-05"
+archived_from: "docs/forced-ideation/twist/phase-c-viable-ideas.txt"
+archived_reason: "v4コンセプト確定に伴い、コンセプト策定プロセスの中間成果物をアーカイブ。"
+created_cycle: 66
+archived_cycle: 66
+---
 # ひねり強制発想法 Haiku評価通過: 273件
 # ジャンル×ひねり: 100件, ゲーム×ひねり: 118件, 辞書×ひねり: 55件
 

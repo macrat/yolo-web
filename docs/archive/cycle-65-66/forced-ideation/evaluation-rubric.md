@@ -1,3 +1,11 @@
+---
+archived_at: "2026-03-05"
+archived_from: "docs/forced-ideation/evaluation-rubric.md"
+archived_reason: "cycle-66コンセプト策定プロセスで使用した中間成果物。策定完了に伴いアーカイブ。"
+created_cycle: 66
+archived_cycle: 66
+---
+
 # コンテンツ候補 評価ルーブリック
 
 cycle-66 コンテンツ候補の厳密評価に使用する判定基準。

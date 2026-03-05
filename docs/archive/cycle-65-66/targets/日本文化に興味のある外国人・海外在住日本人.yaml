@@ -1,3 +1,10 @@
+---
+archived_at: "2026-03-05"
+archived_from: "docs/targets/日本文化に興味のある外国人・海外在住日本人.yaml"
+archived_reason: "v4では日本語のみ運営。多言語対応は将来検討事項。"
+created_cycle: 65
+archived_cycle: 66
+---
 name: 日本文化に興味のある外国人・海外在住日本人
 knows:
   - 日本文化（アニメ・食・伝統芸術等）への基本的な関心

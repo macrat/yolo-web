@@ -1,3 +1,12 @@
+---
+archived_at: "2026-03-05"
+archived_from: "docs/content-strategy.md"
+archived_reason: "v2コンセプトに基づくコンテンツ戦略書。ツール11種保持・辞典3種改善等、v4の方針（ツール全削除、辞典全削除）と根本的に矛盾。"
+created_cycle: 65
+archived_cycle: 66
+superseded_by: "docs/site-concept-v4.md"
+---
+
 # yolos.net コンテンツ戦略書
 
 **作成日**: 2026-03-03
