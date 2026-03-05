@@ -1,11 +1,3 @@
----
-archived_at: "2026-03-05"
-archived_from: "docs/forced-ideation/anonymized-candidates.md"
-archived_reason: "v4コンセプト確定に伴い、コンセプト策定プロセスの中間成果物をアーカイブ。"
-created_cycle: 66
-archived_cycle: 66
----
-
 # Phase F 入力データ: 匿名化されたコンテンツ候補一覧
 
 Phase Eの市場調査で31件のAランク候補として選出されたものに、既存コンテンツ9件を加えた計40件を、P01〜P40に匿名化リナンバリングし、ランダムシャッフルしたもの。

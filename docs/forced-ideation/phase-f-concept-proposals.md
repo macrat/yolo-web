@@ -1,11 +1,3 @@
----
-archived_at: "2026-03-05"
-archived_from: "docs/forced-ideation/phase-f-concept-proposals.md"
-archived_reason: "v4コンセプト確定に伴い、コンセプト策定プロセスの中間成果物をアーカイブ。"
-created_cycle: 66
-archived_cycle: 66
----
-
 # Phase F: サイトコンセプト案（最終確定版）
 
 > 出典: メモ 19cb7caa36d (planner -> pm, 2026-03-04)
