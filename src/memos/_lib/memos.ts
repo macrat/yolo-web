@@ -14,11 +14,15 @@
 
 import fs from "node:fs";
 import path from "node:path";
-import type { RoleSlug, PublicMemo } from "@/memos/_lib/memos-shared";
+import type {
+  RoleSlug,
+  PublicMemo,
+  PublicMemoSummary,
+} from "@/memos/_lib/memos-shared";
 import { ROLE_DISPLAY } from "@/memos/_lib/memos-shared";
 
-// Re-export PublicMemo type for server-side consumers (e.g. cross-links.ts)
-export type { PublicMemo } from "@/memos/_lib/memos-shared";
+// Re-export PublicMemo and PublicMemoSummary types for server-side consumers
+export type { PublicMemo, PublicMemoSummary } from "@/memos/_lib/memos-shared";
 
 const KNOWN_ROLE_SLUGS: RoleSlug[] = Object.keys(ROLE_DISPLAY) as RoleSlug[];
 
@@ -118,6 +122,22 @@ function getPublicMemosFromIndex(): PublicMemo[] {
 /** Get all memos with thread information. */
 export function getAllPublicMemos(): PublicMemo[] {
   return getPublicMemosFromIndex();
+}
+
+/** Get all memos without contentHtml (for list pages to reduce payload size). */
+export function getAllPublicMemoSummaries(): PublicMemoSummary[] {
+  const memos = getPublicMemosFromIndex();
+  return memos.map((m) => ({
+    id: m.id,
+    subject: m.subject,
+    from: m.from,
+    to: m.to,
+    created_at: m.created_at,
+    tags: m.tags,
+    reply_to: m.reply_to,
+    threadRootId: m.threadRootId,
+    replyCount: m.replyCount,
+  }));
 }
 
 /** Get a single memo by ID. */

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import {
-  getAllPublicMemos,
+  getAllPublicMemoSummaries,
   getAllMemoTags,
   getAllMemoRoles,
 } from "@/memos/_lib/memos";
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
 };
 
 export default function MemosPage() {
-  const memos = getAllPublicMemos();
+  const memos = getAllPublicMemoSummaries();
   const allTags = getAllMemoTags();
   const allRoles = getAllMemoRoles();
 

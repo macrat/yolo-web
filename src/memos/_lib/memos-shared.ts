@@ -80,3 +80,6 @@ export interface PublicMemo {
   threadRootId: string;
   replyCount: number;
 }
+
+/** Lightweight memo type without contentHtml, used for list pages to reduce payload size. */
+export type PublicMemoSummary = Omit<PublicMemo, "contentHtml">;

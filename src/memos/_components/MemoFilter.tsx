@@ -4,7 +4,7 @@ import { useState, useMemo } from "react";
 import {
   ROLE_DISPLAY,
   capitalize,
-  type PublicMemo,
+  type PublicMemoSummary,
   type RoleSlug,
 } from "@/memos/_lib/memos-shared";
 import { paginate, MEMOS_PER_PAGE } from "@/lib/pagination";
@@ -13,7 +13,7 @@ import MemoCard from "./MemoCard";
 import styles from "./MemoFilter.module.css";
 
 interface MemoFilterProps {
-  memos: PublicMemo[];
+  memos: PublicMemoSummary[];
   allTags: string[];
   allRoles: string[];
 }
