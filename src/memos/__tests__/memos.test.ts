@@ -1,5 +1,5 @@
 import { describe, test, expect } from "vitest";
-import { normalizeRole } from "@/memos/_lib/memos";
+import { normalizeRole, getAllPublicMemoSummaries } from "@/memos/_lib/memos";
 
 describe("normalizeRole", () => {
   test("returns known role slugs as-is", () => {
@@ -50,5 +50,36 @@ describe("normalizeRole", () => {
   test("handles case-insensitive known role slugs", () => {
     expect(normalizeRole("Builder")).toBe("builder");
     expect(normalizeRole("RESEARCHER")).toBe("researcher");
+  });
+});
+
+describe("getAllPublicMemoSummaries", () => {
+  test("returns memos without contentHtml property", () => {
+    const summaries = getAllPublicMemoSummaries();
+
+    // Should return an array
+    expect(Array.isArray(summaries)).toBe(true);
+
+    // Every summary should NOT have contentHtml
+    for (const summary of summaries) {
+      expect(summary).not.toHaveProperty("contentHtml");
+    }
+  });
+
+  test("each summary contains required fields", () => {
+    const summaries = getAllPublicMemoSummaries();
+
+    if (summaries.length === 0) return; // Skip if no memos in test index
+
+    const first = summaries[0];
+    expect(first).toHaveProperty("id");
+    expect(first).toHaveProperty("subject");
+    expect(first).toHaveProperty("from");
+    expect(first).toHaveProperty("to");
+    expect(first).toHaveProperty("created_at");
+    expect(first).toHaveProperty("tags");
+    expect(first).toHaveProperty("reply_to");
+    expect(first).toHaveProperty("threadRootId");
+    expect(first).toHaveProperty("replyCount");
   });
 });

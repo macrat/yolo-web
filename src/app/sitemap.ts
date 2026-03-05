@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { allToolMetas } from "@/tools/registry";
 import { getAllBlogPosts, ALL_CATEGORIES } from "@/blog/_lib/blog";
-import { getAllPublicMemos } from "@/memos/_lib/memos";
+import { getAllPublicMemoSummaries } from "@/memos/_lib/memos";
 import { BASE_URL } from "@/lib/constants";
 import { BLOG_POSTS_PER_PAGE, TOOLS_PER_PAGE } from "@/lib/pagination";
 import { getAllKanjiChars, getKanjiCategories } from "@/dictionary/_lib/kanji";
@@ -93,7 +93,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       : new Date("2026-02-13T00:00:00+09:00");
 
   // Latest memo date
-  const allMemos = getAllPublicMemos();
+  const allMemos = getAllPublicMemoSummaries();
   const latestMemoDate =
     allMemos.length > 0
       ? new Date(
