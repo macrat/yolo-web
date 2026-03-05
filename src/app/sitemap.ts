@@ -1,7 +1,6 @@
 import type { MetadataRoute } from "next";
 import { allToolMetas } from "@/tools/registry";
 import { getAllBlogPosts, ALL_CATEGORIES } from "@/blog/_lib/blog";
-import { getAllPublicMemoSummaries } from "@/memos/_lib/memos";
 import { BASE_URL } from "@/lib/constants";
 import { BLOG_POSTS_PER_PAGE, TOOLS_PER_PAGE } from "@/lib/pagination";
 import { getAllKanjiChars, getKanjiCategories } from "@/dictionary/_lib/kanji";
@@ -92,15 +91,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
         )
       : new Date("2026-02-13T00:00:00+09:00");
 
-  // Latest memo date
-  const allMemos = getAllPublicMemoSummaries();
-  const latestMemoDate =
-    allMemos.length > 0
-      ? new Date(
-          Math.max(...allMemos.map((m) => new Date(m.created_at).getTime())),
-        )
-      : new Date("2026-02-13T00:00:00+09:00");
-
   // Latest quiz date
   const latestQuizDate =
     allQuizMetas.length > 0
@@ -146,7 +136,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       latestBlogDate.getTime(),
       latestToolDate.getTime(),
       latestGameDate.getTime(),
-      latestMemoDate.getTime(),
       latestQuizDate.getTime(),
       latestCheatsheetDate.getTime(),
       latestDictionaryDate.getTime(),
@@ -187,13 +176,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     latestToolDate,
   );
 
-  const memoPages = allMemos.map((memo) => ({
-    url: `${BASE_URL}/memos/${memo.id}`,
-    lastModified: new Date(memo.created_at),
-    changeFrequency: "yearly" as const,
-    priority: 0.5,
-  }));
-
   return [
     {
       url: BASE_URL,
@@ -212,12 +194,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: latestBlogDate,
       changeFrequency: "weekly",
       priority: 0.9,
-    },
-    {
-      url: `${BASE_URL}/memos`,
-      lastModified: latestMemoDate,
-      changeFrequency: "weekly",
-      priority: 0.7,
     },
     {
       url: `${BASE_URL}/games`,
@@ -371,6 +347,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...blogPosts,
     ...blogPaginationPages,
     ...blogCategoryPaginationPages,
-    ...memoPages,
   ];
 }

@@ -141,6 +141,7 @@ export function generateMemoPageMetadata(memo: MemoMetaForSeo): Metadata {
     alternates: {
       canonical: `${BASE_URL}/memos/${memo.id}`,
     },
+    robots: { index: false, follow: true },
   };
 }
 

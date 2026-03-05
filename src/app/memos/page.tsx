@@ -33,6 +33,7 @@ export const metadata: Metadata = {
       "application/atom+xml": "/memos/feed/atom",
     },
   },
+  robots: { index: false, follow: true },
 };
 
 export default function MemosPage() {

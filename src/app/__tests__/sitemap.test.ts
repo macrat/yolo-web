@@ -117,7 +117,6 @@ describe("sitemap", () => {
       "/blog",
       "/tools",
       "/games",
-      "/memos",
       "/quiz",
       "/cheatsheets",
       "/dictionary",

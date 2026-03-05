@@ -39,6 +39,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     alternates: {
       canonical: `${BASE_URL}/memos/thread/${id}`,
     },
+    robots: { index: false, follow: true },
   };
 }
 
