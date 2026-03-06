@@ -89,6 +89,17 @@ describe("sitemap", () => {
     }
   });
 
+  test("sitemap does not include quiz result pages", () => {
+    const entries = sitemap();
+    const resultEntries = entries.filter(
+      (e) =>
+        typeof e.url === "string" &&
+        e.url.includes("/quiz/") &&
+        e.url.includes("/result/"),
+    );
+    expect(resultEntries).toHaveLength(0);
+  });
+
   test("game page lastModified matches each game updatedAt or publishedAt", () => {
     const entries = sitemap();
     for (const game of allGameMetas) {
