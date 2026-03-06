@@ -11,7 +11,7 @@ import {
   YOJI_DICTIONARY_META,
   COLOR_DICTIONARY_META,
 } from "@/dictionary/_lib/dictionary-meta";
-import { allQuizMetas, getResultIdsForQuiz } from "@/quiz/registry";
+import { allQuizMetas } from "@/quiz/registry";
 import { allGameMetas, getGamePath } from "@/games/registry";
 import { allCheatsheetMetas } from "@/cheatsheets/registry";
 
@@ -305,14 +305,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly" as const,
       priority: 0.8,
     })),
-    ...allQuizMetas.flatMap((meta) =>
-      getResultIdsForQuiz(meta.slug).map((resultId) => ({
-        url: `${BASE_URL}/quiz/${meta.slug}/result/${resultId}`,
-        lastModified: new Date(meta.updatedAt || meta.publishedAt),
-        changeFrequency: "monthly" as const,
-        priority: 0.6,
-      })),
-    ),
+
     // Cheatsheet pages
     {
       url: `${BASE_URL}/cheatsheets`,
