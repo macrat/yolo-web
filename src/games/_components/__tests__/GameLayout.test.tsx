@@ -17,6 +17,13 @@ const mockMeta: GameMeta = {
   publishedAt: "2026-02-13",
   sitemap: { changeFrequency: "daily", priority: 0.8 },
   trustLevel: "verified",
+  seo: {
+    title: "テストゲーム",
+    description: "テスト用のゲームの説明です。",
+    keywords: ["テスト", "ゲーム"],
+    ogTitle: "テストゲーム",
+    ogDescription: "テスト用ゲーム",
+  },
 };
 
 const mockMetaFull: GameMeta = {

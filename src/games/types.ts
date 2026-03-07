@@ -4,9 +4,6 @@ import type { TrustLevel } from "@/lib/trust-levels";
  * Game metadata interface.
  * Single source of truth for all game-related metadata.
  *
- * Note: longDescription (page.tsx meta description) and seoKeywords
- * are kept in each game's page.tsx to align with Next.js metadata pattern.
- * They may be integrated here in the future if needed.
  */
 export interface GameMeta {
   /** URL slug (e.g. "kanji-kanaru") */
@@ -42,6 +39,20 @@ export interface GameMeta {
   trustLevel: TrustLevel;
   /** Optional supplementary note about trust level details */
   trustNote?: string;
+
+  /** SEO metadata for game detail page */
+  seo: {
+    /** page metadata title (without site suffix) */
+    title: string;
+    /** page meta description / JSON-LD description */
+    description: string;
+    /** meta keywords */
+    keywords: string[];
+    /** Open Graph / Twitter title */
+    ogTitle: string;
+    /** Open Graph / Twitter description */
+    ogDescription: string;
+  };
 
   /** 一行価値テキスト: 「誰が・何を・どう解決するか」（40字以内推奨） */
   valueProposition?: string;

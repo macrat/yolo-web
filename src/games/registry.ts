@@ -18,6 +18,24 @@ const gameEntries: GameMeta[] = [
     sitemap: { changeFrequency: "monthly", priority: 0.8 },
     trustLevel: "curated",
     trustNote: "ゲームの正解判定は正確です。パズルデータはAIが作成しています。",
+    seo: {
+      title: "漢字カナール - 毎日の漢字パズル",
+      description:
+        "毎日1つの漢字を当てるパズルゲーム。6回以内に正解を見つけよう!部首・画数・読みなどのヒントを頼りに推理する、新感覚の漢字クイズです。",
+      keywords: [
+        "漢字",
+        "パズル",
+        "クイズ",
+        "Wordle",
+        "日本語",
+        "ゲーム",
+        "デイリーゲーム",
+        "漢字カナール",
+      ],
+      ogTitle: "漢字カナール - 毎日の漢字パズル",
+      ogDescription:
+        "毎日1つの漢字を当てるパズルゲーム。部首・画数・読みのヒントで推理しよう!",
+    },
     valueProposition:
       "毎日1つの漢字を推理。部首・画数・読みのヒントで正解を導く",
     usageExample: {
@@ -60,6 +78,25 @@ const gameEntries: GameMeta[] = [
     sitemap: { changeFrequency: "monthly", priority: 0.8 },
     trustLevel: "curated",
     trustNote: "ゲームの正解判定は正確です。パズルデータはAIが作成しています。",
+    seo: {
+      title: "四字キメル - 毎日の四字熟語パズル",
+      description:
+        "毎日1つの四字熟語を当てるパズルゲーム。6回以内に正解を見つけよう!4文字の漢字を入力して、色のフィードバックを頼りに推理する新感覚の四字熟語クイズです。",
+      keywords: [
+        "四字熟語",
+        "パズル",
+        "クイズ",
+        "Wordle",
+        "漢字",
+        "日本語",
+        "ゲーム",
+        "デイリーゲーム",
+        "四字キメル",
+      ],
+      ogTitle: "四字キメル - 毎日の四字熟語パズル",
+      ogDescription:
+        "毎日1つの四字熟語を当てるパズルゲーム。色のフィードバックで推理しよう!",
+    },
     valueProposition:
       "毎日1つの四字熟語を当てる。4文字の漢字を推理する新感覚パズル",
     usageExample: {
@@ -103,6 +140,24 @@ const gameEntries: GameMeta[] = [
     sitemap: { changeFrequency: "monthly", priority: 0.8 },
     trustLevel: "curated",
     trustNote: "ゲームの正解判定は正確です。パズルデータはAIが作成しています。",
+    seo: {
+      title: "ナカマワケ - 毎日の仲間分けパズル",
+      description:
+        "16個の言葉を4つのグループに分けるパズルゲーム。共通テーマを見つけて仲間分けしよう！日本語・日本文化をテーマにした無料デイリーパズルです。",
+      keywords: [
+        "仲間分け",
+        "グループ分け パズル",
+        "Connections 日本語",
+        "脳トレ 無料",
+        "言葉 パズル",
+        "日本語 クイズ",
+        "デイリーゲーム",
+        "ナカマワケ",
+      ],
+      ogTitle: "ナカマワケ - 毎日の仲間分けパズル",
+      ogDescription:
+        "16個の言葉を4つのグループに分けるパズルゲーム。共通テーマを見つけて仲間分けしよう！",
+    },
     valueProposition:
       "16個の言葉を4グループに仲間分け。共通テーマを見抜く推理パズル",
     usageExample: {
@@ -146,6 +201,25 @@ const gameEntries: GameMeta[] = [
     updatedAt: "2026-03-01T23:14:37+09:00",
     sitemap: { changeFrequency: "monthly", priority: 0.8 },
     trustLevel: "verified",
+    seo: {
+      title: "イロドリ - 毎日の色彩チャレンジ",
+      description:
+        "ターゲットカラーにどれだけ近い色を作れるかチャレンジ! HSLスライダーで色を混ぜて、あなたの色彩感覚を試そう。日本の伝統色も登場する無料デイリーゲーム。",
+      keywords: [
+        "色彩感覚テスト",
+        "カラーIQ",
+        "色覚テスト 無料",
+        "color sense test",
+        "色当てゲーム",
+        "色彩チャレンジ",
+        "デイリーゲーム",
+        "イロドリ",
+        "伝統色",
+      ],
+      ogTitle: "イロドリ - 毎日の色彩チャレンジ",
+      ogDescription:
+        "ターゲットカラーにどれだけ近い色を作れるかチャレンジ! HSLスライダーで色彩感覚を試そう。",
+    },
     valueProposition:
       "毎日5つのターゲットカラーを再現。HSLスライダーで色彩感覚に挑戦",
     usageExample: {

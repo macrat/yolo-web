@@ -8,12 +8,27 @@
 import { describe, test, expect } from "vitest";
 import type { Metadata } from "next";
 import { SITE_NAME } from "@/lib/constants";
+import { allGameMetas, getGamePath } from "@/games/registry";
 
 /**
  * 共通SEOメタデータアサーション関数。
  * canonical URL、og:url、og:title、og:description、og:siteNameの
  * 存在と一貫性を検証する。
  */
+
+const gameSeoExpectations: Record<
+  string,
+  {
+    title: string;
+    description: string;
+    keywords: string[];
+    ogTitle: string;
+    ogDescription: string;
+  }
+> = Object.fromEntries(
+  allGameMetas.map((gameMeta) => [getGamePath(gameMeta.slug), gameMeta.seo]),
+);
+
 function assertSeoMetadata(
   meta: Metadata,
   expectedPath: string,
@@ -50,6 +65,30 @@ function assertSeoMetadata(
   expect(og?.siteName, `${label}: og:siteNameが${SITE_NAME}であること`).toBe(
     SITE_NAME,
   );
+}
+
+function assertGameSeoMetadata(meta: Metadata, path: string): void {
+  const expectedSeo = gameSeoExpectations[path];
+  if (!expectedSeo) return;
+
+  expect(meta.title, `${path}: titleがregistry由来であること`).toBe(
+    `${expectedSeo.title} | ${SITE_NAME}`,
+  );
+  expect(meta.description, `${path}: descriptionがregistry由来であること`).toBe(
+    expectedSeo.description,
+  );
+  expect(meta.keywords, `${path}: keywordsがregistry由来であること`).toEqual(
+    expectedSeo.keywords,
+  );
+
+  const og = meta.openGraph as Record<string, unknown> | undefined;
+  expect(og?.title, `${path}: og:titleがregistry由来であること`).toBe(
+    expectedSeo.ogTitle,
+  );
+  expect(
+    og?.description,
+    `${path}: og:descriptionがregistry由来であること`,
+  ).toBe(expectedSeo.ogDescription);
 }
 
 // -- 静的metadataページのテスト --
@@ -152,6 +191,7 @@ describe("静的metadataページのSEO検証", () => {
       const meta = await importMeta();
       expect(meta, `${path}: metadataがexportされていること`).toBeDefined();
       assertSeoMetadata(meta, path === "/" ? "/" : path, path);
+      assertGameSeoMetadata(meta, path);
     },
   );
 });
