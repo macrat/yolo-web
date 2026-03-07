@@ -1,6 +1,8 @@
 import { expect, test, describe } from "vitest";
 import {
   generateGameJsonLd,
+  generateGameMetadata,
+  generateGameJsonLdFromMeta,
   generateBreadcrumbJsonLd,
   generateWebSiteJsonLd,
   generateBlogPostJsonLd,
@@ -121,6 +123,59 @@ describe("generateGameJsonLd", () => {
 
     expect(result.datePublished).toBeUndefined();
     expect(result.dateModified).toBeUndefined();
+  });
+});
+
+describe("generateGameMetadata / generateGameJsonLdFromMeta", () => {
+  const gameMeta = {
+    slug: "kanji-kanaru",
+    title: "漢字カナール",
+    shortDescription: "毎日1つの漢字を推理するパズル",
+    description: "毎日1つの漢字を当てるパズルゲーム。",
+    icon: "📚",
+    accentColor: "#4d8c3f",
+    difficulty: "初級〜中級",
+    keywords: ["漢字", "パズル"],
+    statsKey: "kanji-kanaru-stats",
+    ogpSubtitle: "毎日の漢字パズル",
+    publishedAt: "2026-02-13T19:11:53+09:00",
+    updatedAt: "2026-03-01T23:14:37+09:00",
+    sitemap: { changeFrequency: "monthly" as const, priority: 0.8 },
+    trustLevel: "curated" as const,
+    seo: {
+      title: "漢字カナール - 毎日の漢字パズル",
+      description:
+        "毎日1つの漢字を当てるパズルゲーム。6回以内に正解を見つけよう!",
+      keywords: ["漢字", "パズル", "デイリーゲーム"],
+      ogTitle: "漢字カナール - 毎日の漢字パズル",
+      ogDescription: "毎日1つの漢字を当てるパズルゲーム。",
+    },
+  };
+
+  test("generateGameMetadata builds metadata from game.seo", () => {
+    const result = generateGameMetadata(gameMeta);
+
+    expect(result.title).toBe("漢字カナール - 毎日の漢字パズル | yolos.net");
+    expect(result.description).toBe(gameMeta.seo.description);
+    expect(result.keywords).toEqual(gameMeta.seo.keywords);
+    expect(result.openGraph).toMatchObject({
+      title: gameMeta.seo.ogTitle,
+      description: gameMeta.seo.ogDescription,
+      url: "https://yolos.net/games/kanji-kanaru",
+    });
+  });
+
+  test("generateGameJsonLdFromMeta builds JSON-LD from game.seo", () => {
+    const result = generateGameJsonLdFromMeta(gameMeta) as Record<
+      string,
+      unknown
+    >;
+
+    expect(result.name).toBe(gameMeta.seo.ogTitle);
+    expect(result.description).toBe(gameMeta.seo.description);
+    expect(result.url).toBe("https://yolos.net/games/kanji-kanaru");
+    expect(result.datePublished).toBe(gameMeta.publishedAt);
+    expect(result.dateModified).toBe(gameMeta.updatedAt);
   });
 });
 
@@ -745,6 +800,37 @@ describe("generateQuizJsonLd", () => {
 });
 
 describe("factory functions include twitter metadata", () => {
+  test("generateGameMetadata includes twitter", () => {
+    const result = generateGameMetadata({
+      slug: "test-game",
+      title: "テストゲーム",
+      shortDescription: "短い説明",
+      description: "説明",
+      icon: "🎮",
+      accentColor: "#000000",
+      difficulty: "初級",
+      keywords: ["テスト"],
+      statsKey: "test-game-stats",
+      ogpSubtitle: "テスト",
+      publishedAt: "2026-02-15T10:00:00+09:00",
+      sitemap: { changeFrequency: "monthly", priority: 0.8 },
+      trustLevel: "generated",
+      seo: {
+        title: "テストゲーム - 毎日のテスト",
+        description: "テスト説明",
+        keywords: ["テスト"],
+        ogTitle: "テストゲーム - 毎日のテスト",
+        ogDescription: "テスト説明OG",
+      },
+    });
+
+    expect(result.twitter).toMatchObject({
+      card: "summary_large_image",
+      title: "テストゲーム - 毎日のテスト",
+      description: "テスト説明OG",
+    });
+  });
+
   test("generateToolMetadata includes twitter", () => {
     const result = generateToolMetadata({
       slug: "test-tool",

@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 import type { ToolMeta } from "@/tools/types";
 import type { CheatsheetMeta } from "@/cheatsheets/types";
 import type { QuizMeta } from "@/quiz/types";
+import type { GameMeta } from "@/games/types";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 
 export function generateToolMetadata(meta: ToolMeta): Metadata {
@@ -164,6 +165,41 @@ export function generateMemoPageJsonLd(memo: MemoMetaForSeo): object {
   };
 }
 
+export function generateGameMetadata(meta: GameMeta): Metadata {
+  return {
+    title: `${meta.seo.title} | ${SITE_NAME}`,
+    description: meta.seo.description,
+    keywords: meta.seo.keywords,
+    openGraph: {
+      title: meta.seo.ogTitle,
+      description: meta.seo.ogDescription,
+      type: "website",
+      url: `${BASE_URL}/games/${meta.slug}`,
+      siteName: SITE_NAME,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: meta.seo.ogTitle,
+      description: meta.seo.ogDescription,
+    },
+    alternates: {
+      canonical: `${BASE_URL}/games/${meta.slug}`,
+    },
+  };
+}
+
+export function generateGameJsonLdFromMeta(meta: GameMeta): object {
+  return generateGameJsonLd({
+    name: meta.seo.ogTitle,
+    description: meta.seo.description,
+    url: `/games/${meta.slug}`,
+    genre: "Puzzle",
+    inLanguage: "ja",
+    numberOfPlayers: "1",
+    publishedAt: meta.publishedAt,
+    updatedAt: meta.updatedAt,
+  });
+}
 interface GameMetaForSeo {
   name: string;
   description: string;
