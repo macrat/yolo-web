@@ -17,9 +17,23 @@ describe("dateDiff", () => {
     expect(result.totalDays).toBe(0);
   });
 
+  test("same calendar date with different local times still returns 0 totalDays", () => {
+    const d1 = new Date(2024, 2, 10, 0, 30);
+    const d2 = new Date(2024, 2, 10, 23, 30);
+    const result = dateDiff(d1, d2);
+    expect(result.totalDays).toBe(0);
+  });
+
   test("one day difference", () => {
     const d1 = new Date(2026, 0, 1);
     const d2 = new Date(2026, 0, 2);
+    const result = dateDiff(d1, d2);
+    expect(result.totalDays).toBe(1);
+  });
+
+  test("one calendar day across DST boundary keeps totalDays stable", () => {
+    const d1 = new Date("2024-03-10T00:00:00-08:00");
+    const d2 = new Date("2024-03-11T00:00:00-07:00");
     const result = dateDiff(d1, d2);
     expect(result.totalDays).toBe(1);
   });
@@ -37,6 +51,13 @@ describe("dateDiff", () => {
     const d2 = new Date(2024, 11, 31);
     const result = dateDiff(d1, d2);
     expect(result.totalDays).toBe(365); // 2024 is leap year: 366 days total, but Jan 1 to Dec 31 = 365
+  });
+
+  test("handles leap day boundary", () => {
+    const d1 = new Date(2024, 1, 28);
+    const d2 = new Date(2024, 2, 1);
+    const result = dateDiff(d1, d2);
+    expect(result.totalDays).toBe(2);
   });
 
   test("order independent (absolute difference)", () => {

@@ -19,6 +19,13 @@ describe("calculateAge", () => {
     expect(result.totalMonths).toBe(0);
   });
 
+  it("same calendar date with different local times still returns 0 totalDays", () => {
+    const birth = new Date(2024, 2, 10, 0, 30);
+    const target = new Date(2024, 2, 10, 23, 30);
+    const result = calculateAge(birth, target);
+    expect(result.totalDays).toBe(0);
+  });
+
   it("calculates exactly 1 year", () => {
     const birth = new Date(2000, 0, 1);
     const target = new Date(2001, 0, 1);
@@ -30,12 +37,26 @@ describe("calculateAge", () => {
     expect(result.totalMonths).toBe(12);
   });
 
+  it("one calendar day across DST boundary keeps totalDays stable", () => {
+    const birth = new Date("2024-03-10T00:00:00-08:00");
+    const target = new Date("2024-03-11T00:00:00-07:00");
+    const result = calculateAge(birth, target);
+    expect(result.totalDays).toBe(1);
+  });
+
   it("handles leap year birthday (Feb 29)", () => {
     const birth = new Date(2000, 1, 29);
     const target = new Date(2001, 1, 28);
     const result = calculateAge(birth, target);
     expect(result.years).toBe(0);
     expect(result.months).toBe(11);
+  });
+
+  it("handles leap day boundary for totalDays", () => {
+    const birth = new Date(2024, 1, 28);
+    const target = new Date(2024, 2, 1);
+    const result = calculateAge(birth, target);
+    expect(result.totalDays).toBe(2);
   });
 
   it("handles leap year birthday to next leap year", () => {
@@ -63,6 +84,13 @@ describe("calculateAge", () => {
     const result = calculateAge(birth, target);
     expect(result.years).toBe(1);
     expect(result.totalDays).toBe(365);
+  });
+
+  it("keeps one day difference stable", () => {
+    const birth = new Date(2026, 0, 1);
+    const target = new Date(2026, 0, 2);
+    const result = calculateAge(birth, target);
+    expect(result.totalDays).toBe(1);
   });
 });
 
