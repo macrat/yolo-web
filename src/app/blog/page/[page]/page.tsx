@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
 import { getAllBlogPosts } from "@/blog/_lib/blog";
 import { paginate, BLOG_POSTS_PER_PAGE } from "@/lib/pagination";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
@@ -65,22 +64,14 @@ export default async function BlogPaginatedPage({ params }: Props) {
   const { page } = await params;
   const pageNum = Number(page);
 
-  // Safety check: page must be a valid integer >= 2
-  if (!Number.isInteger(pageNum) || pageNum < 2) {
-    notFound();
-  }
-
+  // dynamicParams=false + generateStaticParams(2..totalPages) means only valid page params
+  // are routed here in production builds. Others are rejected by Next.js as 404 before render.
   const allPosts = getAllBlogPosts();
   const { items, totalPages } = paginate(
     allPosts,
     pageNum,
     BLOG_POSTS_PER_PAGE,
   );
-
-  // If the requested page exceeds the total, 404
-  if (pageNum > totalPages) {
-    notFound();
-  }
 
   return (
     <BlogListView
