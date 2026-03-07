@@ -37,6 +37,8 @@ export const TRUST_LEVEL_META: Record<TrustLevel, TrustLevelMetaEntry> = {
 export const STATIC_PAGE_TRUST_LEVELS: Record<string, TrustLevel> = {
   "/": "generated",
   "/about": "generated",
+  "/privacy": "generated",
+  "/achievements": "generated",
 };
 
 /** 辞典セクションの信頼レベル設定マップ */

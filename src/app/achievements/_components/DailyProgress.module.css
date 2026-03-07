@@ -1,0 +1,78 @@
+.section {
+  margin-bottom: 2rem;
+}
+
+.heading {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--color-border);
+  font-size: 0.875rem;
+  transition: background-color 0.15s ease;
+}
+
+.used {
+  background-color: var(--color-success-bg);
+  border-color: var(--color-success);
+}
+
+.unused {
+  background-color: var(--color-bg-secondary);
+}
+
+.indicator {
+  flex-shrink: 0;
+  font-weight: 700;
+  font-size: 0.875rem;
+  line-height: 1;
+}
+
+.used .indicator {
+  color: var(--color-success);
+}
+
+.unused .indicator {
+  color: var(--color-text-muted);
+}
+
+.name {
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.message {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  text-align: center;
+  padding: 0.5rem;
+}
+
+.complete {
+  color: var(--color-success);
+  font-weight: 600;
+}
+
+@media (max-width: 480px) {
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+}

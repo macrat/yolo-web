@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import TrustLevelBadge from "@/components/common/TrustLevelBadge";
@@ -77,6 +78,19 @@ export default function AboutPage() {
         <p>
           本サイトに掲載されている情報を利用する際は、
           ご自身の判断と責任において行ってください。
+        </p>
+      </section>
+
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>実績システム</h2>
+        <p>
+          サイト内のゲームやクイズを利用すると、実績バッジを獲得できます。
+          連続利用日数や累計利用回数に応じて様々なバッジが解除されます。
+          獲得した実績は
+          <Link href="/achievements" className={styles.link}>
+            実績ダッシュボード
+          </Link>
+          で確認できます。
         </p>
       </section>
 

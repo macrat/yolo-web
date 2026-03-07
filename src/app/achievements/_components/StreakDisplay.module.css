@@ -1,0 +1,80 @@
+.section {
+  margin-bottom: 2rem;
+}
+
+.heading {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.streakRow {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem 1.25rem;
+  background-color: var(--color-bg-secondary);
+  border-radius: 0.75rem;
+  border: 1px solid var(--color-border);
+}
+
+.streakItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.streakIcon {
+  color: #ef4444;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.longestIcon {
+  color: #f59e0b;
+}
+
+.streakDetail {
+  display: flex;
+  flex-direction: column;
+}
+
+.streakLabel {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+
+.streakValue {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--color-text);
+  line-height: 1.2;
+}
+
+.streakUnit {
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-left: 0.125rem;
+}
+
+.divider {
+  width: 1px;
+  height: 2.5rem;
+  background-color: var(--color-border);
+  flex-shrink: 0;
+}
+
+@media (max-width: 480px) {
+  .streakRow {
+    gap: 1rem;
+    padding: 0.875rem 1rem;
+  }
+
+  .streakValue {
+    font-size: 1.25rem;
+  }
+}

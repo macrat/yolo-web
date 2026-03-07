@@ -3,6 +3,7 @@ import styles from "./Header.module.css";
 import MobileNav from "./MobileNav";
 import SearchTrigger from "../search/SearchTrigger";
 import ThemeToggle from "./ThemeToggle";
+import StreakBadge from "@/lib/achievements/StreakBadge";
 
 const NAV_LINKS = [
   { href: "/", label: "ホーム" },
@@ -29,6 +30,7 @@ export default function Header() {
           ))}
         </ul>
         <div className={styles.actions}>
+          <StreakBadge />
           <SearchTrigger />
           <ThemeToggle />
           <MobileNav links={NAV_LINKS} />
