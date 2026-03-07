@@ -1,4 +1,5 @@
 import { parseDate, formatDate } from "@/lib/date-validation";
+import { diffUtcCalendarDays } from "@/tools/_lib/utc-day-serial";
 
 // --- Date formatting helpers (re-export from shared utility) ---
 export { parseDate, formatDate };
@@ -17,10 +18,7 @@ export function dateDiff(date1: Date, date2: Date): DateDiffResult {
   const d1 = new Date(date1.getFullYear(), date1.getMonth(), date1.getDate());
   const d2 = new Date(date2.getFullYear(), date2.getMonth(), date2.getDate());
 
-  const msPerDay = 1000 * 60 * 60 * 24;
-  const totalDays = Math.round(
-    Math.abs(d2.getTime() - d1.getTime()) / msPerDay,
-  );
+  const totalDays = diffUtcCalendarDays(d1, d2);
 
   const weeks = Math.floor(totalDays / 7);
 

@@ -1,4 +1,5 @@
 import { parseDate, formatDate } from "@/lib/date-validation";
+import { diffUtcCalendarDays } from "@/tools/_lib/utc-day-serial";
 
 // --- Date formatting helpers (re-export from shared utility) ---
 export { parseDate, formatDate };
@@ -25,10 +26,7 @@ export function calculateAge(birthDate: Date, targetDate: Date): AgeResult {
     targetDate.getDate(),
   );
 
-  const msPerDay = 1000 * 60 * 60 * 24;
-  const totalDays = Math.round(
-    Math.abs(target.getTime() - birth.getTime()) / msPerDay,
-  );
+  const totalDays = diffUtcCalendarDays(birth, target);
 
   const [earlier, later] = birth <= target ? [birth, target] : [target, birth];
 
