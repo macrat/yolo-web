@@ -1,0 +1,1 @@
+export const ABOUT_LAST_MODIFIED = "2026-02-28T00:00:00+09:00";

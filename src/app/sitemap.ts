@@ -2,7 +2,6 @@ import type { MetadataRoute } from "next";
 import { allToolMetas } from "@/tools/registry";
 import { getAllBlogPosts, ALL_CATEGORIES } from "@/blog/_lib/blog";
 import { BASE_URL } from "@/lib/constants";
-import { BLOG_POSTS_PER_PAGE, TOOLS_PER_PAGE } from "@/lib/pagination";
 import { getAllKanjiChars, getKanjiCategories } from "@/dictionary/_lib/kanji";
 import { getAllYojiIds, getYojiCategories } from "@/dictionary/_lib/yoji";
 import { getAllColorSlugs, getColorCategories } from "@/dictionary/_lib/colors";
@@ -14,166 +13,102 @@ import {
 import { allQuizMetas } from "@/quiz/registry";
 import { allGameMetas, getGamePath } from "@/games/registry";
 import { allCheatsheetMetas } from "@/cheatsheets/registry";
+import { ABOUT_LAST_MODIFIED } from "./about/meta";
 
-/**
- * Generate sitemap entries for pagination pages (page 2 and above).
- * Page 1 is the canonical URL (e.g., /blog) and is listed separately.
- */
-function generatePaginationEntries(
-  basePath: string,
-  totalItems: number,
-  perPage: number,
-  priority: number,
-  lastModified: Date,
-): MetadataRoute.Sitemap {
-  const totalPages = Math.ceil(totalItems / perPage);
-  const entries: MetadataRoute.Sitemap = [];
+type ContentMeta = {
+  publishedAt: string;
+  updatedAt?: string;
+};
 
-  for (let page = 2; page <= totalPages; page++) {
-    entries.push({
-      url: `${BASE_URL}${basePath}/page/${page}`,
-      lastModified,
-      changeFrequency: "weekly",
-      priority,
-    });
+function parseRequiredDate(value: string, context: string): Date {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    throw new Error(`[sitemap] Invalid date in ${context}: ${value}`);
+  }
+  return date;
+}
+
+function getLastModifiedDate(meta: ContentMeta, context: string): Date {
+  const dateValue = meta.updatedAt || meta.publishedAt;
+  if (!dateValue) {
+    throw new Error(`[sitemap] Missing updatedAt/publishedAt in ${context}`);
+  }
+  return parseRequiredDate(dateValue, context);
+}
+
+function getLatestDate<T>(
+  items: T[],
+  getDate: (item: T, index: number) => Date,
+  context: string,
+): Date {
+  if (items.length === 0) {
+    throw new Error(`[sitemap] No items found for ${context}`);
   }
 
-  return entries;
+  return new Date(
+    Math.max(...items.map((item, index) => getDate(item, index).getTime())),
+  );
 }
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const toolPages = allToolMetas.map((meta) => ({
-    url: `${BASE_URL}/tools/${meta.slug}`,
-    lastModified: new Date(meta.updatedAt || meta.publishedAt),
-    changeFrequency: "monthly" as const,
-    priority: 0.8,
-  }));
-
   const allPosts = getAllBlogPosts();
 
-  const blogPosts = allPosts.map((post) => ({
-    url: `${BASE_URL}/blog/${post.slug}`,
-    lastModified: new Date(post.updated_at || post.published_at),
-    changeFrequency: "monthly" as const,
-    priority: 0.7,
-  }));
-
-  // Static page fixed date
-  const ABOUT_LAST_UPDATED = new Date("2026-02-28T00:00:00+09:00");
-
-  // Latest blog date
-  const latestBlogDate =
-    allPosts.length > 0
-      ? new Date(allPosts[0].updated_at || allPosts[0].published_at)
-      : new Date("2026-02-13T00:00:00+09:00");
-
-  // Latest tool date
-  const latestToolDate =
-    allToolMetas.length > 0
-      ? new Date(
-          Math.max(
-            ...allToolMetas.map((m) =>
-              new Date(m.updatedAt || m.publishedAt).getTime(),
-            ),
-          ),
-        )
-      : new Date("2026-02-13T00:00:00+09:00");
-
-  // Latest game date
-  const latestGameDate =
-    allGameMetas.length > 0
-      ? new Date(
-          Math.max(
-            ...allGameMetas.map((g) =>
-              new Date(g.updatedAt || g.publishedAt).getTime(),
-            ),
-          ),
-        )
-      : new Date("2026-02-13T00:00:00+09:00");
-
-  // Latest quiz date
-  const latestQuizDate =
-    allQuizMetas.length > 0
-      ? new Date(
-          Math.max(
-            ...allQuizMetas.map((q) =>
-              new Date(q.updatedAt || q.publishedAt).getTime(),
-            ),
-          ),
-        )
-      : new Date("2026-02-13T00:00:00+09:00");
-
-  // Latest cheatsheet date
-  const latestCheatsheetDate =
-    allCheatsheetMetas.length > 0
-      ? new Date(
-          Math.max(
-            ...allCheatsheetMetas.map((c) =>
-              new Date(c.updatedAt || c.publishedAt).getTime(),
-            ),
-          ),
-        )
-      : new Date("2026-02-13T00:00:00+09:00");
-
-  // Latest dictionary date (most recent among 3 dictionaries)
-  const latestDictionaryDate = new Date(
-    Math.max(
-      new Date(
-        KANJI_DICTIONARY_META.updatedAt || KANJI_DICTIONARY_META.publishedAt,
-      ).getTime(),
-      new Date(
-        YOJI_DICTIONARY_META.updatedAt || YOJI_DICTIONARY_META.publishedAt,
-      ).getTime(),
-      new Date(
-        COLOR_DICTIONARY_META.updatedAt || COLOR_DICTIONARY_META.publishedAt,
-      ).getTime(),
-    ),
+  const latestBlogDate = getLatestDate(
+    allPosts,
+    (post, index) =>
+      parseRequiredDate(
+        post.updated_at || post.published_at,
+        `blog posts[${index}] (${post.slug})`,
+      ),
+    "blog posts",
+  );
+  const latestToolDate = getLatestDate(
+    allToolMetas,
+    (meta, index) =>
+      getLastModifiedDate(meta, `tools[${index}] (${meta.slug})`),
+    "tool metas",
+  );
+  const latestGameDate = getLatestDate(
+    allGameMetas,
+    (meta, index) =>
+      getLastModifiedDate(meta, `games[${index}] (${meta.slug})`),
+    "game metas",
+  );
+  const latestQuizDate = getLatestDate(
+    allQuizMetas,
+    (meta, index) => getLastModifiedDate(meta, `quiz[${index}] (${meta.slug})`),
+    "quiz metas",
+  );
+  const latestCheatsheetDate = getLatestDate(
+    allCheatsheetMetas,
+    (meta, index) =>
+      getLastModifiedDate(meta, `cheatsheets[${index}] (${meta.slug})`),
+    "cheatsheet metas",
   );
 
-  // Homepage uses the most recent date across all content
-  const homepageDate = new Date(
-    Math.max(
-      latestBlogDate.getTime(),
-      latestToolDate.getTime(),
-      latestGameDate.getTime(),
-      latestQuizDate.getTime(),
-      latestCheatsheetDate.getTime(),
-      latestDictionaryDate.getTime(),
-    ),
+  const latestDictionaryDate = getLatestDate(
+    [KANJI_DICTIONARY_META, YOJI_DICTIONARY_META, COLOR_DICTIONARY_META],
+    (meta, index) => getLastModifiedDate(meta, `dictionary metas[${index}]`),
+    "dictionary metas",
   );
 
-  // Pagination pages for blog list (page 2+)
-  const blogPaginationPages = generatePaginationEntries(
-    "/blog",
-    allPosts.length,
-    BLOG_POSTS_PER_PAGE,
-    0.7,
-    latestBlogDate,
+  const aboutLastModified = parseRequiredDate(
+    ABOUT_LAST_MODIFIED,
+    "about/meta.ts",
   );
 
-  // Pagination pages for each blog category (page 2+)
-  const blogCategoryPaginationPages = ALL_CATEGORIES.flatMap((category) => {
-    const categoryPosts = allPosts.filter((p) => p.category === category);
-    const categoryLastMod =
-      categoryPosts.length > 0
-        ? new Date(categoryPosts[0].updated_at || categoryPosts[0].published_at)
-        : latestBlogDate;
-    return generatePaginationEntries(
-      `/blog/category/${category}`,
-      categoryPosts.length,
-      BLOG_POSTS_PER_PAGE,
-      0.6,
-      categoryLastMod,
-    );
-  });
-
-  // Pagination pages for tools list (page 2+)
-  const toolsPaginationPages = generatePaginationEntries(
-    "/tools",
-    allToolMetas.length,
-    TOOLS_PER_PAGE,
-    0.7,
-    latestToolDate,
+  const homepageDate = getLatestDate(
+    [
+      latestBlogDate,
+      latestToolDate,
+      latestGameDate,
+      latestQuizDate,
+      latestCheatsheetDate,
+      latestDictionaryDate,
+      aboutLastModified,
+    ],
+    (date) => date,
+    "homepage source dates",
   );
 
   return [
@@ -201,19 +136,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.9,
     },
-    ...allGameMetas.map((game) => ({
+    ...allGameMetas.map((game, index) => ({
       url: `${BASE_URL}${getGamePath(game.slug)}`,
-      lastModified: new Date(game.updatedAt || game.publishedAt),
+      lastModified: getLastModifiedDate(game, `games[${index}] (${game.slug})`),
       changeFrequency: game.sitemap.changeFrequency,
       priority: game.sitemap.priority,
     })),
     {
       url: `${BASE_URL}/about`,
-      lastModified: ABOUT_LAST_UPDATED,
+      lastModified: aboutLastModified,
       changeFrequency: "monthly",
       priority: 0.6,
     },
-    // Dictionary pages
     {
       url: `${BASE_URL}/dictionary`,
       lastModified: latestDictionaryDate,
@@ -222,123 +156,147 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: `${BASE_URL}/dictionary/kanji`,
-      lastModified: new Date(
-        KANJI_DICTIONARY_META.updatedAt || KANJI_DICTIONARY_META.publishedAt,
+      lastModified: getLastModifiedDate(
+        KANJI_DICTIONARY_META,
+        "dictionary meta (kanji)",
       ),
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
       url: `${BASE_URL}/dictionary/yoji`,
-      lastModified: new Date(
-        YOJI_DICTIONARY_META.updatedAt || YOJI_DICTIONARY_META.publishedAt,
+      lastModified: getLastModifiedDate(
+        YOJI_DICTIONARY_META,
+        "dictionary meta (yoji)",
       ),
       changeFrequency: "monthly",
       priority: 0.8,
     },
     ...getAllKanjiChars().map((char) => ({
       url: `${BASE_URL}/dictionary/kanji/${encodeURIComponent(char)}`,
-      lastModified: new Date(
-        KANJI_DICTIONARY_META.updatedAt || KANJI_DICTIONARY_META.publishedAt,
+      lastModified: getLastModifiedDate(
+        KANJI_DICTIONARY_META,
+        "dictionary meta (kanji)",
       ),
       changeFrequency: "monthly" as const,
       priority: 0.7,
     })),
     ...getKanjiCategories().map((cat) => ({
       url: `${BASE_URL}/dictionary/kanji/category/${cat}`,
-      lastModified: new Date(
-        KANJI_DICTIONARY_META.updatedAt || KANJI_DICTIONARY_META.publishedAt,
+      lastModified: getLastModifiedDate(
+        KANJI_DICTIONARY_META,
+        "dictionary meta (kanji)",
       ),
       changeFrequency: "monthly" as const,
       priority: 0.6,
     })),
     ...getAllYojiIds().map((yoji) => ({
       url: `${BASE_URL}/dictionary/yoji/${encodeURIComponent(yoji)}`,
-      lastModified: new Date(
-        YOJI_DICTIONARY_META.updatedAt || YOJI_DICTIONARY_META.publishedAt,
+      lastModified: getLastModifiedDate(
+        YOJI_DICTIONARY_META,
+        "dictionary meta (yoji)",
       ),
       changeFrequency: "monthly" as const,
       priority: 0.7,
     })),
     ...getYojiCategories().map((cat) => ({
       url: `${BASE_URL}/dictionary/yoji/category/${cat}`,
-      lastModified: new Date(
-        YOJI_DICTIONARY_META.updatedAt || YOJI_DICTIONARY_META.publishedAt,
+      lastModified: getLastModifiedDate(
+        YOJI_DICTIONARY_META,
+        "dictionary meta (yoji)",
       ),
       changeFrequency: "monthly" as const,
       priority: 0.6,
     })),
     {
       url: `${BASE_URL}/dictionary/colors`,
-      lastModified: new Date(
-        COLOR_DICTIONARY_META.updatedAt || COLOR_DICTIONARY_META.publishedAt,
+      lastModified: getLastModifiedDate(
+        COLOR_DICTIONARY_META,
+        "dictionary meta (colors)",
       ),
       changeFrequency: "monthly",
       priority: 0.8,
     },
     ...getAllColorSlugs().map((slug) => ({
       url: `${BASE_URL}/dictionary/colors/${slug}`,
-      lastModified: new Date(
-        COLOR_DICTIONARY_META.updatedAt || COLOR_DICTIONARY_META.publishedAt,
+      lastModified: getLastModifiedDate(
+        COLOR_DICTIONARY_META,
+        "dictionary meta (colors)",
       ),
       changeFrequency: "monthly" as const,
       priority: 0.7,
     })),
     ...getColorCategories().map((cat) => ({
       url: `${BASE_URL}/dictionary/colors/category/${cat}`,
-      lastModified: new Date(
-        COLOR_DICTIONARY_META.updatedAt || COLOR_DICTIONARY_META.publishedAt,
+      lastModified: getLastModifiedDate(
+        COLOR_DICTIONARY_META,
+        "dictionary meta (colors)",
       ),
       changeFrequency: "monthly" as const,
       priority: 0.6,
     })),
-    // Quiz pages
     {
       url: `${BASE_URL}/quiz`,
       lastModified: latestQuizDate,
       changeFrequency: "monthly" as const,
       priority: 0.9,
     },
-    ...allQuizMetas.map((meta) => ({
+    ...allQuizMetas.map((meta, index) => ({
       url: `${BASE_URL}/quiz/${meta.slug}`,
-      lastModified: new Date(meta.updatedAt || meta.publishedAt),
+      lastModified: getLastModifiedDate(meta, `quiz[${index}] (${meta.slug})`),
       changeFrequency: "monthly" as const,
       priority: 0.8,
     })),
-
-    // Cheatsheet pages
     {
       url: `${BASE_URL}/cheatsheets`,
       lastModified: latestCheatsheetDate,
       changeFrequency: "monthly",
       priority: 0.8,
     },
-    ...allCheatsheetMetas.map((meta) => ({
+    ...allCheatsheetMetas.map((meta, index) => ({
       url: `${BASE_URL}/cheatsheets/${meta.slug}`,
-      lastModified: new Date(meta.updatedAt || meta.publishedAt),
+      lastModified: getLastModifiedDate(
+        meta,
+        `cheatsheets[${index}] (${meta.slug})`,
+      ),
       changeFrequency: "monthly" as const,
       priority: 0.7,
     })),
-    // Blog category pages (page 1)
     ...ALL_CATEGORIES.map((category) => {
-      const categoryPosts = allPosts.filter((p) => p.category === category);
-      const lastMod =
-        categoryPosts.length > 0
-          ? new Date(
-              categoryPosts[0].updated_at || categoryPosts[0].published_at,
-            )
-          : latestBlogDate;
+      const categoryPosts = allPosts.filter(
+        (post) => post.category === category,
+      );
+      const lastModified = getLatestDate(
+        categoryPosts,
+        (post, index) =>
+          parseRequiredDate(
+            post.updated_at || post.published_at,
+            `blog category ${category}[${index}] (${post.slug})`,
+          ),
+        `blog category ${category}`,
+      );
+
       return {
         url: `${BASE_URL}/blog/category/${category}`,
-        lastModified: lastMod,
+        lastModified,
         changeFrequency: "weekly" as const,
         priority: 0.6,
       };
     }),
-    ...toolPages,
-    ...toolsPaginationPages,
-    ...blogPosts,
-    ...blogPaginationPages,
-    ...blogCategoryPaginationPages,
+    ...allToolMetas.map((meta, index) => ({
+      url: `${BASE_URL}/tools/${meta.slug}`,
+      lastModified: getLastModifiedDate(meta, `tools[${index}] (${meta.slug})`),
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    })),
+    ...allPosts.map((post, index) => ({
+      url: `${BASE_URL}/blog/${post.slug}`,
+      lastModified: parseRequiredDate(
+        post.updated_at || post.published_at,
+        `blog posts[${index}] (${post.slug})`,
+      ),
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    })),
   ];
 }

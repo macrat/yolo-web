@@ -3,6 +3,7 @@ import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import TrustLevelBadge from "@/components/common/TrustLevelBadge";
 import { STATIC_PAGE_TRUST_LEVELS } from "@/lib/trust-levels";
 import styles from "./page.module.css";
+import { ABOUT_LAST_MODIFIED } from "./meta";
 
 export const metadata: Metadata = {
   title: `このサイトについて | ${SITE_NAME}`,
@@ -24,6 +25,9 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: `${BASE_URL}/about`,
+  },
+  other: {
+    "last-modified": ABOUT_LAST_MODIFIED,
   },
 };
 
