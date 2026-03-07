@@ -1,4 +1,5 @@
 import { Feed } from "feed";
+import sanitizeHtml from "sanitize-html";
 import { getAllPublicMemos } from "@/memos/_lib/memos";
 import { ROLE_DISPLAY, capitalize } from "@/memos/_lib/memos-shared";
 import type { RoleSlug } from "@/memos/_lib/memos-shared";
@@ -18,16 +19,41 @@ function getRoleLabel(role: string): string {
 }
 
 /**
- * Strip HTML tags from a string to produce plain text.
+ * Strip HTML from memo content and normalize it for feed descriptions.
+ *
+ * Unlike a regex-based strip, this removes script/style blocks, decodes HTML
+ * entities, and normalizes repeated whitespace into single spaces.
  */
 function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "").trim();
+  const withoutHtml = sanitizeHtml(html, {
+    allowedTags: [],
+    allowedAttributes: {},
+  });
+
+  return withoutHtml.replace(/\s+/g, " ").trim();
+}
+
+/**
+ * Truncate a string to the given number of Unicode code points.
+ * This avoids splitting surrogate pairs (for example, emoji) mid-character.
+ */
+function truncateByCodePoints(value: string, maxCodePoints: number): string {
+  const chars = Array.from(value);
+  if (chars.length <= maxCodePoints) {
+    return value;
+  }
+
+  return `${chars.slice(0, maxCodePoints).join("")}...`;
 }
 
 /**
  * Build a Feed instance containing the most recent memos
  * (up to MAX_MEMO_FEED_ITEMS items).
  * The returned Feed can output RSS 2.0 (.rss2()) or Atom 1.0 (.atom1()).
+ *
+ * Note: Unlike blog feed `buildFeed()` (src/lib/feed.ts), memo feed
+ * descriptions are derived from `contentHtml` by sanitizing and truncating
+ * content to keep entries concise and safe.
  */
 export function buildMemoFeed(): Feed {
   // getAllPublicMemos() returns memos sorted by created_at in descending order
@@ -62,10 +88,9 @@ export function buildMemoFeed(): Feed {
     const toLabel = getRoleLabel(memo.to);
     const title = `[${fromLabel} -> ${toLabel}] ${memo.subject}`;
 
-    // Plain text description: first 200 characters of content with HTML stripped
+    // Plain text description: first 200 Unicode code points from sanitized content
     const plainText = stripHtml(memo.contentHtml);
-    const description =
-      plainText.length > 200 ? `${plainText.slice(0, 200)}...` : plainText;
+    const description = truncateByCodePoints(plainText, 200);
 
     feed.addItem({
       title,
