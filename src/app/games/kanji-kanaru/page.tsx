@@ -1,47 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { generateGameJsonLd, safeJsonLdStringify } from "@/lib/seo";
-import { SITE_NAME, BASE_URL } from "@/lib/constants";
+import { safeJsonLdStringify } from "@/lib/seo";
 import { gameBySlug } from "@/games/registry";
+import { buildGameJsonLd, buildGamePageMetadata } from "@/games/seo";
 import GameLayout from "@/games/_components/GameLayout";
 import GameContainer from "@/games/kanji-kanaru/_components/GameContainer";
 
-export const metadata: Metadata = {
-  title: "漢字カナール - 毎日の漢字パズル | yolos.net",
-  description:
-    "毎日1つの漢字を当てるパズルゲーム。6回以内に正解を見つけよう!部首・画数・読みなどのヒントを頼りに推理する、新感覚の漢字クイズです。",
-  openGraph: {
-    title: "漢字カナール - 毎日の漢字パズル",
-    description:
-      "毎日1つの漢字を当てるパズルゲーム。部首・画数・読みのヒントで推理しよう!",
-    type: "website",
-    url: `${BASE_URL}/games/kanji-kanaru`,
-    siteName: SITE_NAME,
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "漢字カナール - 毎日の漢字パズル",
-    description:
-      "毎日1つの漢字を当てるパズルゲーム。部首・画数・読みのヒントで推理しよう!",
-  },
-  alternates: {
-    canonical: `${BASE_URL}/games/kanji-kanaru`,
-  },
-};
-
 const gameMeta = gameBySlug.get("kanji-kanaru")!;
 
-const gameJsonLd = generateGameJsonLd({
-  name: "漢字カナール - 毎日の漢字パズル",
-  description:
-    "毎日1つの漢字を当てるパズルゲーム。6回以内に正解を見つけよう!部首・画数・読みなどのヒントを頼りに推理する、新感覚の漢字クイズです。",
-  url: "/games/kanji-kanaru",
-  genre: "Puzzle",
-  inLanguage: "ja",
-  numberOfPlayers: "1",
-  publishedAt: gameMeta.publishedAt,
-  updatedAt: gameMeta.updatedAt,
-});
+export const metadata: Metadata = buildGamePageMetadata(gameMeta);
+
+const gameJsonLd = buildGameJsonLd(gameMeta);
 
 export default function KanjiKanaruPage() {
   return (
