@@ -36,3 +36,4 @@ test-output.txt
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+/public/search-index.json

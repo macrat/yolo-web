@@ -75,7 +75,7 @@ describe("useSearch", () => {
       await result.current.loadIndex();
     });
 
-    expect(fetch).toHaveBeenCalledWith("/api/search-index");
+    expect(fetch).toHaveBeenCalledWith("/search-index.json");
     expect(result.current.isLoading).toBe(false);
     expect(result.current.error).toBeNull();
   });

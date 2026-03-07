@@ -104,7 +104,7 @@ export function useSearch(): UseSearchReturn {
     setError(null);
 
     try {
-      const response = await fetch("/api/search-index");
+      const response = await fetch("/search-index.json");
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`);
       }

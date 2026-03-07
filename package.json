@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "prebuild": "tsx scripts/build-memo-index.ts",
-    "predev": "tsx scripts/build-memo-index.ts",
-    "pretest": "tsx scripts/build-memo-index.ts",
+    "prebuild": "npm run generate:static-assets",
+    "predev": "npm run generate:static-assets",
+    "pretest": "npm run generate:static-assets",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -20,7 +20,8 @@
     "memo": "tsx scripts/memo.ts",
     "spawner": "tsx scripts/spawner.ts",
     "memo-lint": "tsx scripts/memo-lint.ts",
-    "prepare": "bash scripts/install-hooks.sh"
+    "prepare": "bash scripts/install-hooks.sh",
+    "generate:static-assets": "tsx scripts/build-memo-index.ts && tsx scripts/build-search-index.ts"
   },
   "dependencies": {
     "diff": "^8.0.3",
