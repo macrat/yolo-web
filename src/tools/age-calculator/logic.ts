@@ -1,5 +1,5 @@
 import { parseDate, formatDate } from "@/lib/date-validation";
-import { diffUtcCalendarDays } from "@/lib/utc-day-serial";
+import { diffUtcCalendarDays } from "@/tools/_lib/utc-day-serial";
 
 // --- Date formatting helpers (re-export from shared utility) ---
 export { parseDate, formatDate };
