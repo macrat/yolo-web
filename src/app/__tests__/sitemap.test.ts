@@ -4,6 +4,8 @@ import { allGameMetas } from "@/games/registry";
 import { allQuizMetas } from "@/quiz/registry";
 import { allCheatsheetMetas } from "@/cheatsheets/registry";
 import { BASE_URL } from "@/lib/constants";
+import { getAllBlogPosts } from "@/blog/_lib/blog";
+import { ABOUT_LAST_MODIFIED } from "@/app/about/meta";
 
 describe("sitemap", () => {
   test("sitemap includes /games", () => {
@@ -39,6 +41,32 @@ describe("sitemap", () => {
         expect(entry.lastModified.getTime()).toBeLessThan(before);
       }
     }
+  });
+
+  test("/about lastModified uses about page meta definition", () => {
+    const entries = sitemap();
+    const aboutEntry = entries.find((e) => e.url === `${BASE_URL}/about`);
+
+    expect(aboutEntry).toBeDefined();
+    expect(aboutEntry?.lastModified).toEqual(new Date(ABOUT_LAST_MODIFIED));
+  });
+
+  test("/blog lastModified is the latest blog post date", () => {
+    const entries = sitemap();
+    const blogListEntry = entries.find((e) => e.url === `${BASE_URL}/blog`);
+    expect(blogListEntry).toBeDefined();
+    expect(blogListEntry?.lastModified).toBeInstanceOf(Date);
+
+    const allPosts = getAllBlogPosts();
+    const expectedLatestTime = Math.max(
+      ...allPosts.map((post) =>
+        new Date(post.updated_at || post.published_at).getTime(),
+      ),
+    );
+
+    expect((blogListEntry!.lastModified as Date).getTime()).toBe(
+      expectedLatestTime,
+    );
   });
 
   test("blog post lastModified reflects actual post date", () => {
@@ -98,6 +126,18 @@ describe("sitemap", () => {
         e.url.includes("/result/"),
     );
     expect(resultEntries).toHaveLength(0);
+  });
+
+  test("sitemap does not include paginated list pages", () => {
+    const entries = sitemap();
+    const paginatedListPathPattern =
+      /^https?:\/\/[^/]+\/(tools\/page\/\d+|blog\/page\/\d+|blog\/category\/[^/]+\/page\/\d+)$/;
+
+    const paginatedListEntries = entries.filter(
+      (e) => typeof e.url === "string" && paginatedListPathPattern.test(e.url),
+    );
+
+    expect(paginatedListEntries).toHaveLength(0);
   });
 
   test("game page lastModified matches each game updatedAt or publishedAt", () => {
