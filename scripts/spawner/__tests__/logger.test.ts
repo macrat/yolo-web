@@ -83,8 +83,12 @@ describe("createLogger", () => {
     const stderrSpy = vi
       .spyOn(process.stderr, "write")
       .mockReturnValue(true as never);
-    // Use an invalid path to trigger file open failure
-    const logger = createLogger("/nonexistent/path/logs", new Date());
+
+    const filePath = `${tmpDir}/not-a-directory`;
+    fs.writeFileSync(filePath, "x");
+
+    // Creating a child under a file path forces mkdirSync/openSync failure deterministically.
+    const logger = createLogger(`${filePath}/logs`, new Date());
     logger.close();
 
     expect(stderrSpy).toHaveBeenCalled();
