@@ -14,6 +14,16 @@ vi.mock("next/navigation", () => ({
   }),
 }));
 
+// Mock useAchievements for StreakBadge (renders inside Header)
+vi.mock("@/lib/achievements/useAchievements", () => ({
+  useAchievements: () => ({
+    store: null,
+    recordPlay: vi.fn(),
+    newlyUnlocked: [],
+    dismissNotifications: vi.fn(),
+  }),
+}));
+
 beforeEach(() => {
   vi.stubGlobal(
     "fetch",

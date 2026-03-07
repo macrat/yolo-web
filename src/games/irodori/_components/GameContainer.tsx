@@ -1,5 +1,6 @@
 "use client";
 
+import { useAchievements } from "@/lib/achievements/useAchievements";
 import { useState, useCallback, useEffect, useMemo, useRef } from "react";
 import type {
   IrodoriGameState,
@@ -44,6 +45,7 @@ const FIRST_VISIT_KEY = "irodori-first-visit";
  * Top-level client component for the Irodori color challenge game.
  */
 export default function GameContainer() {
+  const { recordPlay } = useAchievements();
   const traditionalColors = traditionalColorsJson as TraditionalColor[];
   const schedule = scheduleJson as IrodoriScheduleEntry[];
 
@@ -177,6 +179,26 @@ export default function GameContainer() {
     }
     prevStatusRef.current = gameState.status;
   }, [gameState.status]);
+
+  // Record play for achievement system when game is completed.
+  // Uses its own prevStatusForRecordRef to avoid sharing prevStatusRef with
+  // the modal useEffect above (React runs useEffects in declaration order,
+  // so a shared ref would already be updated before this effect runs).
+  // hasRecordedPlayRef prevents re-firing on page reload, where
+  // localStorage restores status as "completed" on mount.
+  const prevStatusForRecordRef = useRef(gameState.status);
+  const hasRecordedPlayRef = useRef(false);
+  useEffect(() => {
+    if (
+      !hasRecordedPlayRef.current &&
+      prevStatusForRecordRef.current === "playing" &&
+      gameState.status === "completed"
+    ) {
+      recordPlay("irodori");
+      hasRecordedPlayRef.current = true;
+    }
+    prevStatusForRecordRef.current = gameState.status;
+  }, [gameState.status, recordPlay]);
 
   /**
    * Submit the current slider values as the answer for the current round.

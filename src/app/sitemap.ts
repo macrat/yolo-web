@@ -14,6 +14,8 @@ import { allQuizMetas } from "@/quiz/registry";
 import { allGameMetas, getGamePath } from "@/games/registry";
 import { allCheatsheetMetas } from "@/cheatsheets/registry";
 import { ABOUT_LAST_MODIFIED } from "./about/meta";
+import { ACHIEVEMENTS_LAST_MODIFIED } from "./achievements/meta";
+import { PRIVACY_LAST_MODIFIED } from "./privacy/meta";
 
 type ContentMeta = {
   publishedAt: string;
@@ -97,6 +99,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "about/meta.ts",
   );
 
+  const privacyLastModified = parseRequiredDate(
+    PRIVACY_LAST_MODIFIED,
+    "privacy/meta.ts",
+  );
+
+  const achievementsLastModified = parseRequiredDate(
+    ACHIEVEMENTS_LAST_MODIFIED,
+    "achievements/meta.ts",
+  );
+
   const homepageDate = getLatestDate(
     [
       latestBlogDate,
@@ -106,6 +118,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
       latestCheatsheetDate,
       latestDictionaryDate,
       aboutLastModified,
+      achievementsLastModified,
+      privacyLastModified,
     ],
     (date) => date,
     "homepage source dates",
@@ -147,6 +161,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: aboutLastModified,
       changeFrequency: "monthly",
       priority: 0.6,
+    },
+    {
+      url: `${BASE_URL}/achievements`,
+      lastModified: achievementsLastModified,
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
+    {
+      url: `${BASE_URL}/privacy`,
+      lastModified: privacyLastModified,
+      changeFrequency: "monthly",
+      priority: 0.4,
     },
     {
       url: `${BASE_URL}/dictionary`,

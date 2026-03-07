@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect, useMemo, useRef } from "react";
+import { useAchievements } from "@/lib/achievements/useAchievements";
 import type {
   NakamawakeGameState,
   NakamawakeGameStats,
@@ -42,6 +43,8 @@ const FIRST_VISIT_KEY = "nakamawake-first-visit";
  * handles win/loss, and persists state to localStorage.
  */
 export default function GameContainer() {
+  const { recordPlay } = useAchievements();
+
   const puzzleData = puzzleDataJson as NakamawakePuzzle[];
   const schedule = scheduleJson as NakamawakeScheduleEntry[];
 
@@ -133,6 +136,26 @@ export default function GameContainer() {
     }
     prevStatusRef.current = gameState.status;
   }, [gameState.status]);
+
+  // Record play for achievement system when game ends (won or lost).
+  // Uses its own prevStatusForRecordRef to avoid sharing prevStatusRef with
+  // the modal useEffect above (React runs useEffects in declaration order,
+  // so a shared ref would already be updated before this effect runs).
+  // hasRecordedPlayRef prevents re-firing on page reload, where
+  // localStorage restores status as "won"/"lost" on mount.
+  const prevStatusForRecordRef = useRef(gameState.status);
+  const hasRecordedPlayRef = useRef(false);
+  useEffect(() => {
+    if (
+      !hasRecordedPlayRef.current &&
+      prevStatusForRecordRef.current === "playing" &&
+      (gameState.status === "won" || gameState.status === "lost")
+    ) {
+      recordPlay("nakamawake");
+      hasRecordedPlayRef.current = true;
+    }
+    prevStatusForRecordRef.current = gameState.status;
+  }, [gameState.status, recordPlay]);
 
   /**
    * Toggle word selection (max 4).

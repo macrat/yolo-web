@@ -45,3 +45,10 @@ test("Footer renders navigation links", () => {
     screen.getByRole("link", { name: "このサイトについて" }),
   ).toHaveAttribute("href", "/about");
 });
+
+test("Footer renders privacy policy link", () => {
+  render(<Footer />);
+  expect(
+    screen.getByRole("link", { name: "プライバシーポリシー" }),
+  ).toHaveAttribute("href", "/privacy");
+});

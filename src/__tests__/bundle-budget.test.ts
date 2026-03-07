@@ -75,7 +75,12 @@ const BUDGETS = {
  * cause a test failure for being uncategorised. They must still stay within
  * the uncategorisedMax budget.
  */
-const UNCATEGORISED_WHITELIST: ReadonlySet<string> = new Set(["/", "/about"]);
+const UNCATEGORISED_WHITELIST: ReadonlySet<string> = new Set([
+  "/",
+  "/about",
+  "/privacy",
+  "/achievements",
+]);
 
 // ---------------------------------------------------------------------------
 // Helper: format bytes as a human-readable string

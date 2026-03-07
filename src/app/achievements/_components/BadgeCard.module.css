@@ -1,0 +1,79 @@
+.card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg);
+  position: relative;
+  transition: box-shadow 0.15s ease;
+}
+
+.unlocked {
+  border-left: 3px solid var(--color-border);
+}
+
+.locked {
+  opacity: 0.55;
+}
+
+/* Rank-specific accent colors for unlocked badges */
+.unlocked.bronze {
+  border-left-color: #cd7f32;
+}
+
+.unlocked.silver {
+  border-left-color: #a8a9ad;
+}
+
+.unlocked.gold {
+  border-left-color: #ffd700;
+}
+
+.iconArea {
+  flex-shrink: 0;
+  font-size: 1.5rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.name {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.description {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+.rankLabel {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  margin-top: 0.125rem;
+}
+
+.date {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  font-size: 0.6875rem;
+  color: var(--color-text-muted);
+}

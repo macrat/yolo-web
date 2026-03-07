@@ -5,6 +5,7 @@ import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
 import ThemeProvider from "@/components/common/ThemeProvider";
 import { generateWebSiteJsonLd, safeJsonLdStringify } from "@/lib/seo";
+import AchievementProvider from "@/lib/achievements/AchievementProvider";
 import { BASE_URL, SITE_NAME } from "@/lib/constants";
 import { allGameMetas, getGamePath } from "@/games/registry";
 
@@ -63,10 +64,12 @@ export default function RootLayout({
           }}
         />
         <ThemeProvider>
-          <GoogleAnalytics />
-          <Header />
-          <main style={{ flex: 1 }}>{children}</main>
-          <Footer gameLinks={gameLinks} />
+          <AchievementProvider>
+            <GoogleAnalytics />
+            <Header />
+            <main style={{ flex: 1 }}>{children}</main>
+            <Footer gameLinks={gameLinks} />
+          </AchievementProvider>
         </ThemeProvider>
       </body>
     </html>

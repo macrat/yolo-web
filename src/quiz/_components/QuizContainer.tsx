@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { useAchievements } from "@/lib/achievements/useAchievements";
 import Link from "next/link";
 import type { QuizDefinition, QuizAnswer, QuizPhase } from "@/quiz/types";
 import { determineResult, calculateKnowledgeScore } from "@/quiz/scoring";
@@ -18,6 +19,8 @@ type QuizContainerProps = {
  * intro -> playing -> result.
  */
 export default function QuizContainer({ quiz }: QuizContainerProps) {
+  const { recordPlay } = useAchievements();
+
   const [phase, setPhase] = useState<QuizPhase>("intro");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<QuizAnswer[]>([]);
@@ -42,22 +45,26 @@ export default function QuizContainer({ quiz }: QuizContainerProps) {
       if (quiz.meta.type === "personality") {
         if (currentIndex + 1 >= quiz.questions.length) {
           setPhase("result");
+          // Record play for achievement system (quiz-{slug} content ID)
+          recordPlay("quiz-" + quiz.meta.slug);
         } else {
           setCurrentIndex((prev) => prev + 1);
         }
       }
     },
-    [answers, currentIndex, quiz],
+    [answers, currentIndex, quiz, recordPlay],
   );
 
   const handleNext = useCallback(() => {
     // knowledge type: advance to next question or show result
     if (currentIndex + 1 >= quiz.questions.length) {
       setPhase("result");
+      // Record play for achievement system (quiz-{slug} content ID)
+      recordPlay("quiz-" + quiz.meta.slug);
     } else {
       setCurrentIndex((prev) => prev + 1);
     }
-  }, [currentIndex, quiz.questions.length]);
+  }, [currentIndex, quiz.questions.length, quiz.meta.slug, recordPlay]);
 
   const handleRetry = useCallback(() => {
     setPhase("intro");
