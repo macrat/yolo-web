@@ -1,58 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { generateGameJsonLd, safeJsonLdStringify } from "@/lib/seo";
-import { SITE_NAME, BASE_URL } from "@/lib/constants";
+import { safeJsonLdStringify } from "@/lib/seo";
 import { gameBySlug } from "@/games/registry";
+import { buildGameJsonLd, buildGamePageMetadata } from "@/games/seo";
 import GameLayout from "@/games/_components/GameLayout";
 import GameContainer from "@/games/yoji-kimeru/_components/GameContainer";
 
-export const metadata: Metadata = {
-  title: "四字キメル - 毎日の四字熟語パズル | yolos.net",
-  description:
-    "毎日1つの四字熟語を当てるパズルゲーム。6回以内に正解を見つけよう!4文字の漢字を入力して、色のフィードバックを頼りに推理する新感覚の四字熟語クイズです。",
-  keywords: [
-    "四字熟語",
-    "パズル",
-    "クイズ",
-    "Wordle",
-    "漢字",
-    "日本語",
-    "ゲーム",
-    "デイリーゲーム",
-    "四字キメル",
-  ],
-  openGraph: {
-    title: "四字キメル - 毎日の四字熟語パズル",
-    description:
-      "毎日1つの四字熟語を当てるパズルゲーム。色のフィードバックで推理しよう!",
-    type: "website",
-    url: `${BASE_URL}/games/yoji-kimeru`,
-    siteName: SITE_NAME,
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "四字キメル - 毎日の四字熟語パズル",
-    description:
-      "毎日1つの四字熟語を当てるパズルゲーム。色のフィードバックで推理しよう!",
-  },
-  alternates: {
-    canonical: `${BASE_URL}/games/yoji-kimeru`,
-  },
-};
-
 const gameMeta = gameBySlug.get("yoji-kimeru")!;
 
-const gameJsonLd = generateGameJsonLd({
-  name: "四字キメル - 毎日の四字熟語パズル",
-  description:
-    "毎日1つの四字熟語を当てるパズルゲーム。6回以内に正解を見つけよう!4文字の漢字を入力して、色のフィードバックを頼りに推理する新感覚の四字熟語クイズです。",
-  url: "/games/yoji-kimeru",
-  genre: "Puzzle",
-  inLanguage: "ja",
-  numberOfPlayers: "1",
-  publishedAt: gameMeta.publishedAt,
-  updatedAt: gameMeta.updatedAt,
-});
+export const metadata: Metadata = buildGamePageMetadata(gameMeta);
+
+const gameJsonLd = buildGameJsonLd(gameMeta);
 
 export default function YojiKimeruPage() {
   return (

@@ -56,6 +56,16 @@ describe("allGameMetas", () => {
     }
   });
 
+  test("seo metadata is populated", () => {
+    for (const meta of allGameMetas) {
+      expect(meta.seo.title).toBeTruthy();
+      expect(meta.seo.description).toBeTruthy();
+      expect(meta.seo.ogTitle).toBeTruthy();
+      expect(meta.seo.ogDescription).toBeTruthy();
+      expect(meta.seo.keywords.length).toBeGreaterThan(0);
+    }
+  });
+
   test("sitemap has valid changeFrequency and priority", () => {
     const validFrequencies = ["daily", "weekly", "monthly"];
     for (const meta of allGameMetas) {
