@@ -61,6 +61,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function ToolsPagePaginated({ params }: Props) {
   const { page } = await params;
   const pageNum = Number(page);
+
+  // dynamicParams=false + generateStaticParams(2..totalPages) means only valid page
+  // params are routed here in production builds.
   const { items, totalPages, currentPage } = paginate(
     allToolMetas,
     pageNum,

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
 import {
   getAllBlogPosts,
   ALL_CATEGORIES,
@@ -75,15 +74,8 @@ export default async function CategoryPaginatedPage({ params }: Props) {
   const { category, page } = await params;
   const pageNum = Number(page);
 
-  if (!ALL_CATEGORIES.includes(category as BlogCategory)) {
-    notFound();
-  }
-
-  // Safety check: page must be a valid integer >= 2
-  if (!Number.isInteger(pageNum) || pageNum < 2) {
-    notFound();
-  }
-
+  // dynamicParams=false + generateStaticParams(category x 2..totalPages) means only
+  // valid category/page pairs are routed here in production builds.
   const allPosts = getAllBlogPosts();
   const categoryPosts = allPosts.filter((p) => p.category === category);
   const { items, totalPages } = paginate(
@@ -91,11 +83,6 @@ export default async function CategoryPaginatedPage({ params }: Props) {
     pageNum,
     BLOG_POSTS_PER_PAGE,
   );
-
-  // If the requested page exceeds the total, 404
-  if (pageNum > totalPages) {
-    notFound();
-  }
 
   return (
     <BlogListView
