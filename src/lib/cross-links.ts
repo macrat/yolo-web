@@ -7,10 +7,49 @@
 import { getAllBlogPosts, type BlogPostMeta } from "@/blog/_lib/blog";
 import { getPublicMemoById, type PublicMemo } from "@/memos/_lib/memos";
 
+interface BlogReferenceIndex {
+  memoToPosts: Map<string, BlogPostMeta[]>;
+  toolToPosts: Map<string, BlogPostMeta[]>;
+}
+
+function addToReverseIndex(
+  index: Map<string, BlogPostMeta[]>,
+  key: string,
+  post: BlogPostMeta,
+): void {
+  const posts = index.get(key);
+  if (posts) {
+    posts.push(post);
+    return;
+  }
+  index.set(key, [post]);
+}
+
+/**
+ * Build reverse indexes from blog metadata once, then reuse for all lookup APIs.
+ */
+function buildBlogReferenceIndex(posts: BlogPostMeta[]): BlogReferenceIndex {
+  const memoToPosts = new Map<string, BlogPostMeta[]>();
+  const toolToPosts = new Map<string, BlogPostMeta[]>();
+
+  for (const post of posts) {
+    for (const memoId of post.related_memo_ids) {
+      addToReverseIndex(memoToPosts, memoId, post);
+    }
+    for (const toolSlug of post.related_tool_slugs) {
+      addToReverseIndex(toolToPosts, toolSlug, post);
+    }
+  }
+
+  return { memoToPosts, toolToPosts };
+}
+
+const blogReferenceIndex = buildBlogReferenceIndex(getAllBlogPosts());
+
 /**
  * Get public memos that are referenced by a blog post.
- * M11: Non-public or non-existent memos are excluded (returned as null
- * in the array, allowing the component to render "(非公開)" text).
+ * M11: For non-public or non-existent memo IDs, returns `null` at that index
+ * so callers can render placeholders like "(非公開)" while preserving order.
  */
 export function getRelatedMemosForBlogPost(
   memoIds: string[],
@@ -20,20 +59,18 @@ export function getRelatedMemosForBlogPost(
 
 /**
  * Get blog posts that reference a given memo ID.
- * Scans all blog posts' related_memo_ids arrays.
+ * Returns an empty array when there is no matching reference.
  */
 export function getRelatedBlogPostsForMemo(memoId: string): BlogPostMeta[] {
-  const allPosts = getAllBlogPosts();
-  return allPosts.filter((post) => post.related_memo_ids.includes(memoId));
+  return blogReferenceIndex.memoToPosts.get(memoId) ?? [];
 }
 
 /**
  * Get blog posts that reference a given tool slug.
- * Scans all blog posts' related_tool_slugs arrays.
+ * Returns an empty array when there is no matching reference.
  */
 export function getRelatedBlogPostsForTool(toolSlug: string): BlogPostMeta[] {
-  const allPosts = getAllBlogPosts();
-  return allPosts.filter((post) => post.related_tool_slugs.includes(toolSlug));
+  return blogReferenceIndex.toolToPosts.get(toolSlug) ?? [];
 }
 
 /**
