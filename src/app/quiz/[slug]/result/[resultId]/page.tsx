@@ -9,10 +9,16 @@ import {
   getResultIdsForQuiz,
 } from "@/quiz/registry";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
+import {
+  getCompatibility,
+  isValidMusicTypeId,
+} from "@/quiz/data/music-personality";
+import CompatibilityDisplay from "./CompatibilityDisplay";
 import styles from "./page.module.css";
 
 type Props = {
   params: Promise<{ slug: string; resultId: string }>;
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
 };
 
 export async function generateStaticParams() {
@@ -25,19 +31,68 @@ export async function generateStaticParams() {
   return params;
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+/**
+ * Extract the "with" query parameter for compatibility display.
+ * Returns a valid type ID or undefined.
+ */
+function extractWithParam(
+  resolvedSearchParams:
+    | Record<string, string | string[] | undefined>
+    | undefined,
+  slug: string,
+  resultId: string,
+): string | undefined {
+  if (!resolvedSearchParams) return undefined;
+  const withParam =
+    typeof resolvedSearchParams.with === "string"
+      ? resolvedSearchParams.with
+      : undefined;
+  const isMusicPersonality = slug === "music-personality";
+  if (
+    isMusicPersonality &&
+    withParam &&
+    isValidMusicTypeId(withParam) &&
+    isValidMusicTypeId(resultId)
+  ) {
+    return withParam;
+  }
+  return undefined;
+}
+
+export async function generateMetadata({
+  params,
+  searchParams,
+}: Props): Promise<Metadata> {
   const { slug, resultId } = await params;
   const quiz = quizBySlug.get(slug);
   if (!quiz) return {};
   const result = quiz.results.find((r) => r.id === resultId);
   if (!result) return {};
 
-  const title = `${quiz.meta.title}の結果: ${result.title}`;
-  const description = result.description;
+  const resolvedSearchParams = searchParams ? await searchParams : undefined;
+  const compatFriendTypeId = extractWithParam(
+    resolvedSearchParams,
+    slug,
+    resultId,
+  );
+
+  let title: string;
+  let description: string;
+
+  if (compatFriendTypeId) {
+    const friendResult = quiz.results.find((r) => r.id === compatFriendTypeId);
+    const compat = getCompatibility(resultId, compatFriendTypeId);
+    title = `${result.title} x ${friendResult?.title ?? ""} - ${compat?.label ?? "相性結果"}`;
+    description = compat?.description ?? result.description;
+  } else {
+    title = `${quiz.meta.title}の結果: ${result.title}`;
+    description = result.description;
+  }
 
   return {
     title: `${title} | ${SITE_NAME}`,
     description,
+    /* Compatibility result pages and individual result pages are noindex */
     robots: { index: false, follow: true },
     openGraph: {
       title,
@@ -57,13 +112,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function QuizResultPage({ params }: Props) {
+export default async function QuizResultPage({ params, searchParams }: Props) {
   const { slug, resultId } = await params;
   const quiz = quizBySlug.get(slug);
   if (!quiz) notFound();
 
   const result = quiz.results.find((r) => r.id === resultId);
   if (!result) notFound();
+
+  const resolvedSearchParams = searchParams ? await searchParams : undefined;
+  const compatFriendTypeId = extractWithParam(
+    resolvedSearchParams,
+    slug,
+    resultId,
+  );
 
   const shareText = `${quiz.meta.title}の結果は「${result.title}」でした! #yolosnet`;
   const shareUrl = `${BASE_URL}/quiz/${slug}/result/${resultId}`;
@@ -97,6 +159,13 @@ export default async function QuizResultPage({ params }: Props) {
             quizTitle={quiz.meta.title}
           />
         </div>
+        {compatFriendTypeId && (
+          <CompatibilityDisplay
+            myResultId={resultId}
+            friendTypeId={compatFriendTypeId}
+            quizSlug={slug}
+          />
+        )}
       </div>
     </div>
   );
