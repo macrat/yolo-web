@@ -1,6 +1,6 @@
 "use client";
 
-import type { CompatibilityEntry } from "@/quiz/data/music-personality";
+import type { CompatibilityEntry } from "@/quiz/types";
 import ShareButtons from "./ShareButtons";
 import styles from "./CompatibilitySection.module.css";
 
@@ -39,7 +39,8 @@ export default function CompatibilitySection({
       ? `${window.location.origin}/quiz/${quizSlug}/result/${myType.id}?with=${friendType.id}`
       : `/quiz/${quizSlug}/result/${myType.id}?with=${friendType.id}`;
 
-  const shareText = `私は「${myType.title}」、友達は「${friendType.title}」。音楽相性は「${compatibility.label}」でした! #音楽性格診断 #yolosnet`;
+  const hashtag = quizTitle.replace(/\s/g, "");
+  const shareText = `私は「${myType.title}」、友達は「${friendType.title}」。相性は「${compatibility.label}」でした! #${hashtag} #yolosnet`;
 
   return (
     <div className={styles.section}>

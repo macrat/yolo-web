@@ -2,27 +2,27 @@
 
 import {
   getCompatibility,
-  isValidMusicTypeId,
-} from "@/quiz/data/music-personality";
-import musicPersonalityQuiz from "@/quiz/data/music-personality";
+  isValidCharacterTypeId,
+} from "@/quiz/data/character-fortune";
+import characterFortuneQuiz from "@/quiz/data/character-fortune";
 import CompatibilitySection from "./CompatibilitySection";
 import InviteFriendButton from "./InviteFriendButton";
 
-interface MusicPersonalityResultExtraProps {
+interface CharacterFortuneResultExtraProps {
   resultId: string;
   referrerTypeId?: string;
 }
 
 /**
- * Returns a render function for extra content below the music personality
+ * Returns a render function for extra content below the character fortune
  * quiz result card. Used by QuizContainer's renderResultExtra prop.
  */
-export function renderMusicPersonalityExtra(
+export function renderCharacterFortuneExtra(
   referrerTypeId?: string,
 ): (resultId: string, refTypeId?: string) => React.ReactNode {
   function ResultExtraRenderer(resultId: string): React.ReactNode {
     return (
-      <MusicPersonalityResultExtra
+      <CharacterFortuneResultExtra
         resultId={resultId}
         referrerTypeId={referrerTypeId}
       />
@@ -31,17 +31,17 @@ export function renderMusicPersonalityExtra(
   return ResultExtraRenderer;
 }
 
-function MusicPersonalityResultExtra({
+function CharacterFortuneResultExtra({
   resultId,
   referrerTypeId,
-}: MusicPersonalityResultExtraProps) {
-  const quiz = musicPersonalityQuiz;
+}: CharacterFortuneResultExtraProps) {
+  const quiz = characterFortuneQuiz;
   const myResult = quiz.results.find((r) => r.id === resultId);
 
   if (!myResult) return null;
 
   // If we have a valid referrer type, show compatibility
-  if (referrerTypeId && isValidMusicTypeId(referrerTypeId)) {
+  if (referrerTypeId && isValidCharacterTypeId(referrerTypeId)) {
     const friendResult = quiz.results.find((r) => r.id === referrerTypeId);
     const compatibility = getCompatibility(resultId, referrerTypeId);
 
@@ -66,7 +66,7 @@ function MusicPersonalityResultExtra({
           <InviteFriendButton
             quizSlug={quiz.meta.slug}
             resultTypeId={resultId}
-            inviteText="音楽性格診断で相性を調べよう!"
+            inviteText="キャラ占いで相性を調べよう!"
           />
         </>
       );
@@ -78,7 +78,7 @@ function MusicPersonalityResultExtra({
     <InviteFriendButton
       quizSlug={quiz.meta.slug}
       resultTypeId={resultId}
-      inviteText="音楽性格診断で相性を調べよう!"
+      inviteText="キャラ占いで相性を調べよう!"
     />
   );
 }

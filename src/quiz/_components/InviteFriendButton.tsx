@@ -8,6 +8,8 @@ interface InviteFriendButtonProps {
   quizSlug: string;
   /** The user's result type ID, used as the ref parameter */
   resultTypeId: string;
+  /** Invite text shown when sharing */
+  inviteText: string;
 }
 
 /**
@@ -17,6 +19,7 @@ interface InviteFriendButtonProps {
 export default function InviteFriendButton({
   quizSlug,
   resultTypeId,
+  inviteText,
 }: InviteFriendButtonProps) {
   const [copied, setCopied] = useState(false);
 
@@ -26,7 +29,7 @@ export default function InviteFriendButton({
         ? `${window.location.origin}/quiz/${quizSlug}?ref=${resultTypeId}`
         : `/quiz/${quizSlug}?ref=${resultTypeId}`;
 
-    const text = "音楽性格診断で相性を調べよう!";
+    const text = inviteText;
 
     if (typeof navigator !== "undefined" && navigator.share) {
       try {
@@ -44,7 +47,7 @@ export default function InviteFriendButton({
     } catch {
       // Silently fail
     }
-  }, [quizSlug, resultTypeId]);
+  }, [quizSlug, resultTypeId, inviteText]);
 
   return (
     <div className={styles.wrapper}>

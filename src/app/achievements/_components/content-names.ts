@@ -16,6 +16,11 @@ export const CONTENT_DISPLAY_NAMES: Record<string, string> = {
   "quiz-yoji-level": "四字熟語レベル診断",
   "quiz-kanji-level": "漢字レベル診断",
   "quiz-kotowaza-level": "ことわざレベル診断",
+  "quiz-impossible-advice": "達成困難アドバイス診断",
+  "quiz-contrarian-fortune": "逆張り運勢診断",
+  "quiz-unexpected-compatibility": "斜め上の相性診断",
+  "quiz-music-personality": "音楽性格診断",
+  "quiz-character-fortune": "守護キャラ占い",
 };
 
 /** Get display name for a content ID, falling back to the ID itself */

@@ -9,8 +9,6 @@ import {
   generateQuizJsonLd,
   safeJsonLdStringify,
 } from "@/lib/seo";
-import { isValidMusicTypeId } from "@/quiz/data/music-personality";
-import { renderMusicPersonalityExtra } from "@/quiz/_components/MusicPersonalityResultExtra";
 import styles from "./page.module.css";
 
 type Props = {
@@ -43,12 +41,8 @@ export default async function QuizPage({ params, searchParams }: Props) {
       ? resolvedSearchParams.ref
       : undefined;
 
-  // Only pass valid referrer type IDs for quizzes that support compatibility
-  const isMusicPersonality = slug === "music-personality";
-  const referrerTypeId =
-    isMusicPersonality && refParam && isValidMusicTypeId(refParam)
-      ? refParam
-      : undefined;
+  // Referrer type validation is handled client-side by ResultExtraLoader
+  // to avoid statically importing heavy quiz data modules into the page bundle
 
   return (
     <div className={styles.wrapper}>
@@ -67,15 +61,7 @@ export default async function QuizPage({ params, searchParams }: Props) {
         level={quiz.meta.trustLevel}
         note={quiz.meta.trustNote}
       />
-      <QuizContainer
-        quiz={quiz}
-        referrerTypeId={referrerTypeId}
-        renderResultExtra={
-          isMusicPersonality
-            ? renderMusicPersonalityExtra(referrerTypeId)
-            : undefined
-        }
-      />
+      <QuizContainer quiz={quiz} referrerTypeId={refParam} />
     </div>
   );
 }
