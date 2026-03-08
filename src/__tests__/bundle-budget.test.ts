@@ -61,6 +61,7 @@ const BUDGETS = {
     "/blog": 20 * 1024, // 20 KB
     "/quiz": 20 * 1024, // 20 KB
     "/memos": 15 * 1024, // 15 KB
+    "/fortune": 30 * 1024, // 30 KB
   } as Record<string, number>,
 
   /**

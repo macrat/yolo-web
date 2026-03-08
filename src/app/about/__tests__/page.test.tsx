@@ -11,12 +11,16 @@ test("About page renders heading", () => {
 
 test("About page renders AI disclaimer section", () => {
   render(<AboutPage />);
-  expect(screen.getByText(/AIエージェントによって生成/)).toBeInTheDocument();
+  expect(
+    screen.getByText(/AIエージェントが自律的に企画・開発・運営/),
+  ).toBeInTheDocument();
 });
 
 test("About page renders disclaimer section", () => {
   render(<AboutPage />);
-  expect(screen.getByText(/一切の保証をいたしません/)).toBeInTheDocument();
+  expect(
+    screen.getByText(/正確性、完全性、有用性に関する保証はいたしません/),
+  ).toBeInTheDocument();
 });
 
 test("About page renders GitHub link", () => {
