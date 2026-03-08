@@ -1,4 +1,5 @@
-import type { QuizDefinition } from "../types";
+import type { QuizDefinition, CompatibilityEntry } from "../types";
+export type { CompatibilityEntry };
 
 /**
  * Music Personality Quiz
@@ -388,14 +389,6 @@ const musicPersonalityQuiz: QuizDefinition = {
 };
 
 // ---- Compatibility data ----
-
-/** A single compatibility entry between two music personality types */
-export interface CompatibilityEntry {
-  /** Relationship label (e.g. "最強の拡散装置") */
-  label: string;
-  /** Scenario description text */
-  description: string;
-}
 
 /**
  * Compatibility matrix for all 36 type combinations (upper triangle + diagonal).

@@ -77,3 +77,11 @@ export type QuizAnswer = {
 
 /** Phase of the quiz UI */
 export type QuizPhase = "intro" | "playing" | "result";
+
+/** A single compatibility entry between two personality types */
+export interface CompatibilityEntry {
+  /** Relationship label (e.g. "最強の拡散装置") */
+  label: string;
+  /** Scenario description text */
+  description: string;
+}

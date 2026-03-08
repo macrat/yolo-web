@@ -11,8 +11,8 @@ function makeStore(
 }
 
 describe("ALL_CONTENT_IDS", () => {
-  it("contains 14 content IDs (4 games + 9 quizzes + 1 fortune)", () => {
-    expect(ALL_CONTENT_IDS).toHaveLength(14);
+  it("contains 15 content IDs (4 games + 10 quizzes + 1 fortune)", () => {
+    expect(ALL_CONTENT_IDS).toHaveLength(15);
   });
 
   it("contains all game slugs", () => {
@@ -29,6 +29,7 @@ describe("ALL_CONTENT_IDS", () => {
     expect(ALL_CONTENT_IDS).toContain("quiz-kanji-level");
     expect(ALL_CONTENT_IDS).toContain("quiz-kotowaza-level");
     expect(ALL_CONTENT_IDS).toContain("quiz-contrarian-fortune");
+    expect(ALL_CONTENT_IDS).toContain("quiz-character-fortune");
   });
 
   it("contains fortune content ID", () => {
