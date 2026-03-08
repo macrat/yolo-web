@@ -18,7 +18,7 @@ const GAME_IDS = [
   "yoji-kimeru",
 ] as const;
 
-/** Quiz content IDs (8 quizzes, prefixed with "quiz-") */
+/** Quiz content IDs (9 quizzes, prefixed with "quiz-") */
 const QUIZ_IDS = [
   "quiz-traditional-color",
   "quiz-yoji-personality",
@@ -28,6 +28,7 @@ const QUIZ_IDS = [
   "quiz-impossible-advice",
   "quiz-contrarian-fortune",
   "quiz-unexpected-compatibility",
+  "quiz-music-personality",
 ] as const;
 
 /** Fortune content IDs (daily fortune) */

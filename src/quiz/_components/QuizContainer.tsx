@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react";
 import { useAchievements } from "@/lib/achievements/useAchievements";
 import Link from "next/link";
+import type { ReactNode } from "react";
 import type { QuizDefinition, QuizAnswer, QuizPhase } from "@/quiz/types";
 import { determineResult, calculateKnowledgeScore } from "@/quiz/scoring";
 import ProgressBar from "./ProgressBar";
@@ -12,13 +13,25 @@ import styles from "./QuizContainer.module.css";
 
 type QuizContainerProps = {
   quiz: QuizDefinition;
+  /** Optional referrer type ID from URL search params (for compatibility) */
+  referrerTypeId?: string;
+  /**
+   * Optional render function for extra content below the result card.
+   * Receives the determined result ID and the referrer type ID.
+   * Used by quizzes with compatibility features.
+   */
+  renderResultExtra?: (resultId: string, referrerTypeId?: string) => ReactNode;
 };
 
 /**
  * Client-side quiz container that manages the entire quiz lifecycle:
  * intro -> playing -> result.
  */
-export default function QuizContainer({ quiz }: QuizContainerProps) {
+export default function QuizContainer({
+  quiz,
+  referrerTypeId,
+  renderResultExtra,
+}: QuizContainerProps) {
   const { recordPlay } = useAchievements();
 
   const [phase, setPhase] = useState<QuizPhase>("intro");
@@ -150,6 +163,7 @@ export default function QuizContainer({ quiz }: QuizContainerProps) {
         }
         onRetry={handleRetry}
       />
+      {renderResultExtra?.(result.id, referrerTypeId)}
     </div>
   );
 }

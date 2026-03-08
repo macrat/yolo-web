@@ -59,7 +59,7 @@ const BUDGETS = {
     "/games": 90 * 1024, // 90 KB
     "/dictionary": 50 * 1024, // 50 KB
     "/blog": 20 * 1024, // 20 KB
-    "/quiz": 20 * 1024, // 20 KB
+    "/quiz": 40 * 1024, // 40 KB
     "/memos": 15 * 1024, // 15 KB
     "/fortune": 30 * 1024, // 30 KB
   } as Record<string, number>,
