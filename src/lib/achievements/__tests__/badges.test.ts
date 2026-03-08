@@ -28,7 +28,7 @@ describe("ALL_CONTENT_IDS", () => {
     expect(ALL_CONTENT_IDS).toContain("quiz-yoji-level");
     expect(ALL_CONTENT_IDS).toContain("quiz-kanji-level");
     expect(ALL_CONTENT_IDS).toContain("quiz-kotowaza-level");
-    expect(ALL_CONTENT_IDS).toContain("quiz-q43-contrarian-fortune");
+    expect(ALL_CONTENT_IDS).toContain("quiz-contrarian-fortune");
   });
 
   it("contains fortune content ID", () => {

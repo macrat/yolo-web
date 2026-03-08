@@ -14,7 +14,7 @@ import type { QuizDefinition } from "../types";
  */
 const impossibleAdviceQuiz: QuizDefinition = {
   meta: {
-    slug: "q43-impossible-advice",
+    slug: "impossible-advice",
     title: "達成困難アドバイス診断",
     description:
       "7つの質問であなたの悩みの種類を診断し、正しいけれど実行不可能なアドバイスをお届けします。笑って読み流してください。",
@@ -35,11 +35,11 @@ const impossibleAdviceQuiz: QuizDefinition = {
     relatedLinks: [
       {
         label: "逆張り運勢診断を受ける",
-        href: "/quiz/q43-contrarian-fortune",
+        href: "/quiz/contrarian-fortune",
       },
       {
         label: "斜め上の相性診断を受ける",
-        href: "/quiz/q43-unexpected-compatibility",
+        href: "/quiz/unexpected-compatibility",
       },
     ],
     trustLevel: "generated",

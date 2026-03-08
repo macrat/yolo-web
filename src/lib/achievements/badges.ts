@@ -25,9 +25,9 @@ const QUIZ_IDS = [
   "quiz-yoji-level",
   "quiz-kanji-level",
   "quiz-kotowaza-level",
-  "quiz-q43-impossible-advice",
-  "quiz-q43-contrarian-fortune",
-  "quiz-q43-unexpected-compatibility",
+  "quiz-impossible-advice",
+  "quiz-contrarian-fortune",
+  "quiz-unexpected-compatibility",
 ] as const;
 
 /** Fortune content IDs (daily fortune) */

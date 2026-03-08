@@ -19,9 +19,9 @@ import type { QuizDefinition } from "../types";
  *   cloudspecific   (特定の形の雲)     - primary in: q1-d, q3-d, q6-d, q8-c
  *   404page         (404 Not Found)    - primary in: q3-c, q5-c, q8-b, q8-d
  */
-const q43UnexpectedCompatibilityQuiz: QuizDefinition = {
+const unexpectedCompatibilityQuiz: QuizDefinition = {
   meta: {
-    slug: "q43-unexpected-compatibility",
+    slug: "unexpected-compatibility",
     title: "斜め上の相性診断",
     description:
       "8つの質問に答えると、あなたと最も相性が良い「意外な存在」が判明します。人間ではない何かがあなたを待っています。",
@@ -43,11 +43,11 @@ const q43UnexpectedCompatibilityQuiz: QuizDefinition = {
     relatedLinks: [
       {
         label: "逆張り運勢診断を受ける",
-        href: "/quiz/q43-contrarian-fortune",
+        href: "/quiz/contrarian-fortune",
       },
       {
         label: "達成困難アドバイス診断を受ける",
-        href: "/quiz/q43-impossible-advice",
+        href: "/quiz/impossible-advice",
       },
     ],
     trustLevel: "generated",
@@ -332,4 +332,4 @@ const q43UnexpectedCompatibilityQuiz: QuizDefinition = {
   ],
 };
 
-export default q43UnexpectedCompatibilityQuiz;
+export default unexpectedCompatibilityQuiz;
