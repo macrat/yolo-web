@@ -4,6 +4,9 @@ import kotowazaLevelQuiz from "./data/kotowaza-level";
 import traditionalColorQuiz from "./data/traditional-color";
 import yojiLevelQuiz from "./data/yoji-level";
 import yojiPersonalityQuiz from "./data/yoji-personality";
+import impossibleAdviceQuiz from "./data/q43-impossible-advice";
+import q43ContrarianFortuneQuiz from "./data/q43-contrarian-fortune";
+import q43UnexpectedCompatibilityQuiz from "./data/q43-unexpected-compatibility";
 
 const quizEntries: QuizDefinition[] = [
   kanjiLevelQuiz,
@@ -11,6 +14,9 @@ const quizEntries: QuizDefinition[] = [
   traditionalColorQuiz,
   yojiLevelQuiz,
   yojiPersonalityQuiz,
+  impossibleAdviceQuiz,
+  q43ContrarianFortuneQuiz,
+  q43UnexpectedCompatibilityQuiz,
 ];
 
 /** Map of slug -> QuizDefinition for O(1) lookup */

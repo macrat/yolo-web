@@ -52,6 +52,29 @@ export default function QuizListPage() {
       </section>
 
       <div className={styles.grid} role="list" aria-label="Quiz list">
+        {/* 日替わり占い - 看板コンテンツとして最上部に配置 */}
+        <div role="listitem">
+          <Link
+            href="/fortune/daily"
+            className={styles.card}
+            style={
+              {
+                "--quiz-accent": "#e67e22",
+              } as React.CSSProperties
+            }
+          >
+            <div className={styles.cardIcon}>{"🔮"}</div>
+            <h2 className={styles.cardTitle}>今日のユーモア運勢</h2>
+            <p className={styles.cardDescription}>
+              毎日変わる、あなただけのユーモア運勢。60種類のユニークな運勢からあなたの今日の運命を占います。
+            </p>
+            <div className={styles.cardMeta}>
+              <span className={styles.typeBadge}>占い</span>
+              <span className={styles.questionCount}>日替わり</span>
+              <span className={styles.cardCta}>占う</span>
+            </div>
+          </Link>
+        </div>
         {allQuizMetas.map((quiz) => (
           <div key={quiz.slug} role="listitem">
             <Link

@@ -11,8 +11,8 @@ function makeStore(
 }
 
 describe("ALL_CONTENT_IDS", () => {
-  it("contains 9 content IDs (4 games + 5 quizzes)", () => {
-    expect(ALL_CONTENT_IDS).toHaveLength(9);
+  it("contains 13 content IDs (4 games + 8 quizzes + 1 fortune)", () => {
+    expect(ALL_CONTENT_IDS).toHaveLength(13);
   });
 
   it("contains all game slugs", () => {
@@ -28,6 +28,11 @@ describe("ALL_CONTENT_IDS", () => {
     expect(ALL_CONTENT_IDS).toContain("quiz-yoji-level");
     expect(ALL_CONTENT_IDS).toContain("quiz-kanji-level");
     expect(ALL_CONTENT_IDS).toContain("quiz-kotowaza-level");
+    expect(ALL_CONTENT_IDS).toContain("quiz-q43-contrarian-fortune");
+  });
+
+  it("contains fortune content ID", () => {
+    expect(ALL_CONTENT_IDS).toContain("fortune-daily");
   });
 });
 
@@ -101,7 +106,7 @@ describe("badge condition checks", () => {
       const store = makeStore({
         totalStats: {
           totalDaysPlayed: 1,
-          totalContentUsed: 9,
+          totalContentUsed: 13,
           perContent: Object.fromEntries(
             ALL_CONTENT_IDS.map((id) => [
               id,
@@ -245,7 +250,23 @@ describe("badge condition checks", () => {
       expect(quizFirst.check(store)).toBe(false);
     });
 
-    it("quiz-all requires all 5 quizzes used", () => {
+    it("quiz-first does not trigger on fortune plays", () => {
+      const store = makeStore({
+        totalStats: {
+          totalDaysPlayed: 1,
+          totalContentUsed: 1,
+          perContent: {
+            "fortune-daily": {
+              count: 1,
+              firstPlayedAt: "2026-03-07T00:00:00Z",
+            },
+          },
+        },
+      });
+      expect(quizFirst.check(store)).toBe(false);
+    });
+
+    it("quiz-all requires all 8 quizzes used", () => {
       const quizIds = ALL_CONTENT_IDS.filter((id) => id.startsWith("quiz-"));
       const store = makeStore({
         totalStats: {

@@ -111,7 +111,9 @@ test("Achievements page renders daily progress", () => {
     screen.getByRole("heading", { level: 2, name: /今日の進捗/ }),
   ).toBeInTheDocument();
   // Should show remaining count message
-  expect(screen.getByText(/あと6つで今日の全コンプリート/)).toBeInTheDocument();
+  expect(
+    screen.getByText(/あと10つで今日の全コンプリート/),
+  ).toBeInTheDocument();
 });
 
 test("Achievements page renders badge list", () => {

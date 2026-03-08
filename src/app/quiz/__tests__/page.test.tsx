@@ -27,7 +27,7 @@ describe("QuizListPage", () => {
     const knowledgeBadges = screen.getAllByText("知識テスト");
     const personalityBadges = screen.getAllByText("性格診断");
     expect(knowledgeBadges.length).toBe(3);
-    expect(personalityBadges.length).toBe(2);
+    expect(personalityBadges.length).toBe(5);
   });
 
   it("renders links to individual quiz pages", () => {
