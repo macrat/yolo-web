@@ -19,9 +19,9 @@ import type { QuizDefinition } from "../types";
  *   inversefortune     (逆張りの星の下に)   - primary in: q2-d, q4-c, q5-c, q7-a
  *   mundaneoracle      (日常の神託者)       - primary in: q4-a, q6-d, q7-b, q8-d
  */
-const q43ContrarianFortuneQuiz: QuizDefinition = {
+const contrarianFortuneQuiz: QuizDefinition = {
   meta: {
-    slug: "q43-contrarian-fortune",
+    slug: "contrarian-fortune",
     title: "逆張り運勢診断",
     description:
       "一般的な占いが「こうです」と肯定するところを「でも実は逆です」と裏切る、斜め上の運勢診断。8つの質問に答えて、あなただけの逆張り運勢タイプを発見しましょう。",
@@ -43,11 +43,11 @@ const q43ContrarianFortuneQuiz: QuizDefinition = {
     relatedLinks: [
       {
         label: "達成困難アドバイス診断を受ける",
-        href: "/quiz/q43-impossible-advice",
+        href: "/quiz/impossible-advice",
       },
       {
         label: "斜め上の相性診断を受ける",
-        href: "/quiz/q43-unexpected-compatibility",
+        href: "/quiz/unexpected-compatibility",
       },
     ],
     trustLevel: "generated",
@@ -332,4 +332,4 @@ const q43ContrarianFortuneQuiz: QuizDefinition = {
   ],
 };
 
-export default q43ContrarianFortuneQuiz;
+export default contrarianFortuneQuiz;
