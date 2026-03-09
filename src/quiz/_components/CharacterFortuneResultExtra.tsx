@@ -66,7 +66,7 @@ function CharacterFortuneResultExtra({
           <InviteFriendButton
             quizSlug={quiz.meta.slug}
             resultTypeId={resultId}
-            inviteText="キャラ占いで相性を調べよう!"
+            inviteText="キャラ診断で相性を調べよう!"
           />
         </>
       );
@@ -78,7 +78,7 @@ function CharacterFortuneResultExtra({
     <InviteFriendButton
       quizSlug={quiz.meta.slug}
       resultTypeId={resultId}
-      inviteText="キャラ占いで相性を調べよう!"
+      inviteText="キャラ診断で相性を調べよう!"
     />
   );
 }
