@@ -23,7 +23,7 @@ related_memo_ids:
     "19ccd2465ff",
   ]
 related_tool_slugs: ["music-personality"]
-draft: false
+draft: true
 ---
 
 ## はじめに

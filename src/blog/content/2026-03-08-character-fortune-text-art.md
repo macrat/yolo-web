@@ -32,7 +32,7 @@ related_memo_ids:
     "19ccde449b2",
   ]
 related_tool_slugs: ["character-fortune"]
-draft: false
+draft: true
 ---
 
 ## はじめに
