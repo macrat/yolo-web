@@ -1,12 +1,14 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import type { QuizAnswer } from "@/quiz/types";
 
 /**
  * Lazy-loaded wrappers for quiz-specific result extra components.
  * Using next/dynamic ensures these heavy data modules (music-personality,
- * character-fortune, animal-personality) are code-split into separate chunks
- * and only loaded when the corresponding quiz result is shown.
+ * character-fortune, animal-personality, science-thinking) are code-split
+ * into separate chunks and only loaded when the corresponding quiz result
+ * is shown.
  */
 
 const MusicPersonalityResultExtra = dynamic(
@@ -64,10 +66,35 @@ const AnimalPersonalityResultExtra = dynamic(
   { ssr: false },
 );
 
+const ScienceThinkingResultExtra = dynamic(
+  () =>
+    import("./ScienceThinkingResultExtra").then((mod) => {
+      function Wrapper({
+        resultId,
+        referrerTypeId,
+        answers,
+      }: {
+        resultId: string;
+        referrerTypeId?: string;
+        answers?: QuizAnswer[];
+      }) {
+        const renderFn = mod.renderScienceThinkingExtra(
+          referrerTypeId,
+          answers,
+        );
+        return <>{renderFn(resultId)}</>;
+      }
+      return { default: Wrapper };
+    }),
+  { ssr: false },
+);
+
 interface ResultExtraLoaderProps {
   slug: string;
   resultId: string;
   referrerTypeId?: string;
+  /** Optional answers array, needed by quizzes that compute per-user scores (e.g. science-thinking) */
+  answers?: QuizAnswer[];
 }
 
 /**
@@ -78,6 +105,7 @@ export default function ResultExtraLoader({
   slug,
   resultId,
   referrerTypeId,
+  answers,
 }: ResultExtraLoaderProps) {
   if (slug === "music-personality") {
     return (
@@ -100,6 +128,15 @@ export default function ResultExtraLoader({
       <AnimalPersonalityResultExtra
         resultId={resultId}
         referrerTypeId={referrerTypeId}
+      />
+    );
+  }
+  if (slug === "science-thinking") {
+    return (
+      <ScienceThinkingResultExtra
+        resultId={resultId}
+        referrerTypeId={referrerTypeId}
+        answers={answers}
       />
     );
   }
