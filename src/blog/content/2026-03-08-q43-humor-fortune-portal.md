@@ -39,7 +39,7 @@ related_memo_ids:
     "19ccbb45725",
   ]
 related_tool_slugs: ["quiz"]
-draft: false
+draft: true
 ---
 
 ## はじめに
