@@ -9,6 +9,7 @@ import contrarianFortuneQuiz from "./data/contrarian-fortune";
 import unexpectedCompatibilityQuiz from "./data/unexpected-compatibility";
 import musicPersonalityQuiz from "./data/music-personality";
 import characterFortuneQuiz from "./data/character-fortune";
+import animalPersonalityQuiz from "./data/animal-personality";
 
 const quizEntries: QuizDefinition[] = [
   kanjiLevelQuiz,
@@ -21,6 +22,7 @@ const quizEntries: QuizDefinition[] = [
   unexpectedCompatibilityQuiz,
   musicPersonalityQuiz,
   characterFortuneQuiz,
+  animalPersonalityQuiz,
 ];
 
 /** Map of slug -> QuizDefinition for O(1) lookup */

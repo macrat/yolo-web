@@ -21,6 +21,7 @@ export const CONTENT_DISPLAY_NAMES: Record<string, string> = {
   "quiz-unexpected-compatibility": "斜め上の相性診断",
   "quiz-music-personality": "音楽性格診断",
   "quiz-character-fortune": "守護キャラ診断",
+  "quiz-animal-personality": "日本にしかいない動物で性格診断",
 };
 
 /** Get display name for a content ID, falling back to the ID itself */
