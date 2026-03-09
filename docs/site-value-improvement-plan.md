@@ -157,7 +157,7 @@ Google AdSenseの審査で「有用性の低いコンテンツ」として却下
 
 ## 5. 現在のステータス
 
-### 最終更新: cycle-74 完了時（2026-03-09）
+### 最終更新: cycle-76 完了時（2026-03-09）
 
 **現在のフェーズ**: フェーズ3（コンテンツの充実）進行中
 
@@ -195,6 +195,14 @@ Google AdSenseの審査で「有用性の低いコンテンツ」として却下
   - content-names.ts技術的負債解消（既存4クイズの未登録を修正）
   - 実績システム拡張: キャラ占いをバッジ対象に追加（全15コンテンツ対応）
   - ブログ記事: キャラ占い制作裏話・テキスト芸の技術（A評価）
+- cycle-75: ブログ品質改善
+  - Ownerフィードバックに基づき直近4ブログ記事をdraft化（公開停止）
+  - blog-writing.mdにチェック項目5件追加
+- cycle-76: コンテンツカテゴリ定義整理、git安全フック強化
+  - docs/content-categories.md作成: 4カテゴリ定義（診断・占い・おみくじ・知識テスト）、品質基準、判別フローチャート
+  - character-fortune を「占い」→「診断」に再分類（タイトル・説明文・関連ファイル修正）
+  - B-181方針決定: サイトに正規の「占い」コンテンツは存在しない、既存診断の拡充より新コンテンツ制作が優先
+  - block-destructive-git.sh全面改修（2段階サニタイズ設計、バイパス廃止）
 
 **フェーズ順序変更（cycle-71）**: Ownerの指示により、「先に充実→後で削除」の順序に変更。削除を先にするとコンテンツ空白期間が生じるため。旧フェーズ3-A（削除）は新フェーズ4に移動。旧フェーズ4（新規制作）は新フェーズ3-Cに統合。
 
@@ -202,14 +210,16 @@ Google AdSenseの審査で「有用性の低いコンテンツ」として却下
 
 ## 6. 後続タスク実施者への申し送り事項
 
-### cycle-74 → cycle-75 への申し送り
+### cycle-76 → cycle-77 への申し送り
 
-- **必ず確認すべきこと**: docs/site-concept.md と docs/evaluation-rubric.md を熟読すること
+- **必ず確認すべきこと**: docs/site-concept.md、docs/evaluation-rubric.md、docs/content-categories.md を熟読すること
 - **次にやること**: フェーズ3-C残り（新規コンテンツ制作: site-concept.mdセクション4のPhase 2の3種 Q08動物診断、Q14理系診断、Q21日本文化診断）、フェーズ3-D（既存コンテンツ強化）。削除はフェーズ4で実施する
 - **完了済み**:
   - フェーズ3-A: 全完了（プライバシーポリシー、お問い合わせ→GitHub Issues代替、Aboutページ改善）
   - フェーズ3-B: 実績システム完了（コアライブラリ、Provider、トースト、ストリーク表示、ゲーム+クイズ統合、ダッシュボード）
   - フェーズ3-C Phase 1完了: ユーモア占い3種+日替わり占い（cycle-72）、音楽性格診断+友達相性判定（cycle-73）、キャラ占い+友達相性判定（cycle-74）
+  - cycle-75: 4ブログ記事のdraft化、blog-writing.md改善
+  - cycle-76: docs/content-categories.md作成、character-fortune再分類（占い→診断）、B-181方針決定、block-destructive-git.sh全面改修
 - **注意点**:
   - 技術制約は docs/coding-rules.md を直接参照すること（自分で要約すると誤りが混入する。事故報告: メモ 19cb68e8af2）
   - コンテンツ削除時は410 Goneを使用すること（根拠: メモ 19cb66139f3）
@@ -223,7 +233,10 @@ Google AdSenseの審査で「有用性の低いコンテンツ」として却下
   - B-170（/achievementsのTrustLevel）はcycle-74で解消済み
   - B-171（動的インポート化）はcycle-74でResultExtraLoaderとして解消済み
   - B-172（InviteFriendButtonのシェアテキスト汎用化）はcycle-74でinviteTextプロップスとして解消済み
-- **参考メモ**: 19cb64bbec8（ownerフィードバック）、19cbca41ebd（site-concept.md A評価レビュー）、19cbd1f47d2（ターゲット再定義A評価）、19cb1464579（owner初期指示）、19cc9430717（cycle-71完了報告）、19ccbf940de（cycle-72完了報告）
+  - docs/content-categories.md で4カテゴリ（診断・占い・おみくじ・知識テスト）を定義済み。新規コンテンツ追加時はこのカテゴリ定義に従うこと
+  - 「占い」カテゴリの品質基準は未策定（該当コンテンツ追加時に策定する方針）
+  - displayCategoryフィールドの追加は、実際に占いコンテンツを作成するタイミングで実施する
+- **参考メモ**: 19cb64bbec8（ownerフィードバック）、19cbca41ebd（site-concept.md A評価レビュー）、19cbd1f47d2（ターゲット再定義A評価）、19cb1464579（owner初期指示）、19cc9430717（cycle-71完了報告）、19ccbf940de（cycle-72完了報告）、19cd09a8e4e（cycle-76完了報告）
 
 ## 7. このファイルの扱い方のルール
 
