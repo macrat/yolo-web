@@ -5,8 +5,8 @@ import dynamic from "next/dynamic";
 /**
  * Lazy-loaded wrappers for quiz-specific result extra components.
  * Using next/dynamic ensures these heavy data modules (music-personality,
- * character-fortune) are code-split into separate chunks and only loaded
- * when the corresponding quiz result is shown.
+ * character-fortune, animal-personality) are code-split into separate chunks
+ * and only loaded when the corresponding quiz result is shown.
  */
 
 const MusicPersonalityResultExtra = dynamic(
@@ -46,6 +46,24 @@ const CharacterFortuneResultExtra = dynamic(
   { ssr: false },
 );
 
+const AnimalPersonalityResultExtra = dynamic(
+  () =>
+    import("./AnimalPersonalityResultExtra").then((mod) => {
+      function Wrapper({
+        resultId,
+        referrerTypeId,
+      }: {
+        resultId: string;
+        referrerTypeId?: string;
+      }) {
+        const renderFn = mod.renderAnimalPersonalityExtra(referrerTypeId);
+        return <>{renderFn(resultId)}</>;
+      }
+      return { default: Wrapper };
+    }),
+  { ssr: false },
+);
+
 interface ResultExtraLoaderProps {
   slug: string;
   resultId: string;
@@ -72,6 +90,14 @@ export default function ResultExtraLoader({
   if (slug === "character-fortune") {
     return (
       <CharacterFortuneResultExtra
+        resultId={resultId}
+        referrerTypeId={referrerTypeId}
+      />
+    );
+  }
+  if (slug === "animal-personality") {
+    return (
+      <AnimalPersonalityResultExtra
         resultId={resultId}
         referrerTypeId={referrerTypeId}
       />
