@@ -20,7 +20,7 @@ export const CONTENT_DISPLAY_NAMES: Record<string, string> = {
   "quiz-contrarian-fortune": "逆張り運勢診断",
   "quiz-unexpected-compatibility": "斜め上の相性診断",
   "quiz-music-personality": "音楽性格診断",
-  "quiz-character-fortune": "守護キャラ占い",
+  "quiz-character-fortune": "守護キャラ診断",
 };
 
 /** Get display name for a content ID, falling back to the ID itself */

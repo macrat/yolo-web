@@ -2,7 +2,7 @@ import type { QuizDefinition, CompatibilityEntry } from "../types";
 export type { CompatibilityEntry };
 
 /**
- * Character Fortune Quiz (あなたの守護キャラ占い)
+ * Character Fortune Quiz (あなたの守護キャラ診断)
  *
  * 6 personality archetypes determined by 8 situational questions:
  *   commander  - Passionate leader who ignites at deadlines
@@ -28,11 +28,11 @@ export type { CompatibilityEntry };
 const characterFortuneQuiz: QuizDefinition = {
   meta: {
     slug: "character-fortune",
-    title: "あなたの守護キャラ占い",
+    title: "あなたの守護キャラ診断",
     description:
-      "8つの質問に答えて、あなたの中に眠る守護キャラクターを発見しましょう。突然タイムスリップしたり、宇宙人と遭遇したり、ちょっと変わったシチュエーションからあなたの本質を占います。友達との相性診断もできます!",
+      "8つの質問に答えて、あなたの中に眠る守護キャラクターを発見しましょう。突然タイムスリップしたり、宇宙人と遭遇したり、ちょっと変わったシチュエーションからあなたの本質を診断します。友達との相性診断もできます!",
     shortDescription:
-      "ユニークなシチュエーションから守護キャラを占う。相性診断も!",
+      "ユニークなシチュエーションから守護キャラを診断する。相性診断も!",
     type: "personality",
     questionCount: 8,
     icon: "\u{1F52E}",
@@ -59,7 +59,7 @@ const characterFortuneQuiz: QuizDefinition = {
     ],
     trustLevel: "generated",
     trustNote:
-      "スコア計算は正確です。キャラクターと占い結果はAIが創作したエンターテインメントです。",
+      "スコア計算は正確です。キャラクターと診断結果はAIが創作したエンターテインメントです。",
   },
   questions: [
     {
