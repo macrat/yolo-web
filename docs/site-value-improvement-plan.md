@@ -212,31 +212,15 @@ Google AdSenseの審査で「有用性の低いコンテンツ」として却下
 
 ### cycle-76 → cycle-77 への申し送り
 
-- **必ず確認すべきこと**: docs/site-concept.md、docs/evaluation-rubric.md、docs/content-categories.md を熟読すること
-- **次にやること**: フェーズ3-C残り（新規コンテンツ制作: site-concept.mdセクション4のPhase 2の3種 Q08動物診断、Q14理系診断、Q21日本文化診断）、フェーズ3-D（既存コンテンツ強化）。削除はフェーズ4で実施する
-- **完了済み**:
-  - フェーズ3-A: 全完了（プライバシーポリシー、お問い合わせ→GitHub Issues代替、Aboutページ改善）
-  - フェーズ3-B: 実績システム完了（コアライブラリ、Provider、トースト、ストリーク表示、ゲーム+クイズ統合、ダッシュボード）
-  - フェーズ3-C Phase 1完了: ユーモア占い3種+日替わり占い（cycle-72）、音楽性格診断+友達相性判定（cycle-73）、キャラ占い+友達相性判定（cycle-74）
-  - cycle-75: 4ブログ記事のdraft化、blog-writing.md改善
-  - cycle-76: docs/content-categories.md作成、character-fortune再分類（占い→診断）、B-181方針決定、block-destructive-git.sh全面改修
-- **注意点**:
-  - 技術制約は docs/coding-rules.md を直接参照すること（自分で要約すると誤りが混入する。事故報告: メモ 19cb68e8af2）
-  - コンテンツ削除時は410 Goneを使用すること（根拠: メモ 19cb66139f3）
-  - ターゲットユーザーはニーズベースで定義済み（docs/targets/）。年齢層やSNS行動で限定しない
-  - 削除を先にせず、コンテンツを充実させてから削除する（Owner指示、cycle-71）
-  - メモの「実装済み」記述を信頼せず、builder依頼前にファイルの実在を確認すること（事故報告: メモ 19cc8c03740）
-  - 外部リソース依存タスクはbuilder起動前にOwnerへ確認メモを送ること（事故報告: メモ 19cc883b9e8）
-  - 新規診断コンテンツ追加時はbadges.tsのコンテンツID配列・content-names.ts・テストも更新すること（全15コンテンツ対応中）
-  - 診断スラグにq43-やq01-等の計画番号プレフィックスを使わないこと（Owner指示、cycle-73で修正済み）
-  - 相性機能を持つクイズの追加方法: (1) quiz/data/{slug}.tsに相性マトリクス+getCompatibility+isValidTypeId定義、(2) quiz/\_components/{Name}ResultExtra.tsxを作成（CompatibilitySection+InviteFriendButtonを再利用、inviteTextとquizTitleをprops経由で渡す）、(3) quiz/\_components/ResultExtraLoader.tsxに動的インポートを追加
-  - B-170（/achievementsのTrustLevel）はcycle-74で解消済み
-  - B-171（動的インポート化）はcycle-74でResultExtraLoaderとして解消済み
-  - B-172（InviteFriendButtonのシェアテキスト汎用化）はcycle-74でinviteTextプロップスとして解消済み
-  - docs/content-categories.md で4カテゴリ（診断・占い・おみくじ・知識テスト）を定義済み。新規コンテンツ追加時はこのカテゴリ定義に従うこと
-  - 「占い」カテゴリの品質基準は未策定（該当コンテンツ追加時に策定する方針）
-  - displayCategoryフィールドの追加は、実際に占いコンテンツを作成するタイミングで実施する
-- **参考メモ**: 19cb64bbec8（ownerフィードバック）、19cbca41ebd（site-concept.md A評価レビュー）、19cbd1f47d2（ターゲット再定義A評価）、19cb1464579（owner初期指示）、19cc9430717（cycle-71完了報告）、19ccbf940de（cycle-72完了報告）、19cd09a8e4e（cycle-76完了報告）
+- **必ず確認すべきこと**: docs/site-concept.md、docs/evaluation-rubric.md、docs/content-categories.md
+- **次にやること**: フェーズ3-C残り（site-concept.mdセクション4のPhase 2: Q08動物診断、Q14理系診断、Q21日本文化診断）、フェーズ3-D（既存コンテンツ強化）
+- **新規診断追加時の注意**:
+  - docs/content-categories.md のカテゴリ定義に従うこと
+  - 「占い」カテゴリの品質基準は未策定（該当コンテンツ追加時に策定）。displayCategoryフィールドも同時に追加する
+  - badges.tsのコンテンツID配列・content-names.ts・テストも更新すること
+  - 診断スラグに計画番号プレフィックス（q43-等）を使わないこと
+  - 相性機能の追加方法: (1) quiz/data/{slug}.tsに相性マトリクス+getCompatibility+isValidTypeId定義、(2) quiz/\_components/{Name}ResultExtra.tsxを作成（CompatibilitySection+InviteFriendButtonを再利用）、(3) ResultExtraLoader.tsxに動的インポートを追加
+- **コンテンツ削除**: 削除はフェーズ4で実施。削除時は410 Goneを使用すること
 
 ## 7. このファイルの扱い方のルール
 
