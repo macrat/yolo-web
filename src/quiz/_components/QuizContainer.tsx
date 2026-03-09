@@ -5,6 +5,7 @@ import { useAchievements } from "@/lib/achievements/useAchievements";
 import Link from "next/link";
 import type { QuizDefinition, QuizAnswer, QuizPhase } from "@/quiz/types";
 import { determineResult, calculateKnowledgeScore } from "@/quiz/scoring";
+import { determineScienceThinkingResult } from "@/quiz/data/science-thinking";
 import ProgressBar from "./ProgressBar";
 import QuestionCard from "./QuestionCard";
 import ResultCard from "./ResultCard";
@@ -137,7 +138,10 @@ export default function QuizContainer({
   }
 
   // result phase
-  const result = determineResult(quiz, answers);
+  const result =
+    quiz.meta.slug === "science-thinking"
+      ? determineScienceThinkingResult(quiz.questions, answers, quiz.results)
+      : determineResult(quiz, answers);
   const score =
     quiz.meta.type === "knowledge"
       ? calculateKnowledgeScore(quiz.questions, answers)
@@ -160,6 +164,7 @@ export default function QuizContainer({
         slug={quiz.meta.slug}
         resultId={result.id}
         referrerTypeId={referrerTypeId}
+        answers={answers}
       />
     </div>
   );
