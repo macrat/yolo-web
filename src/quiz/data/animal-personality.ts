@@ -51,6 +51,7 @@ const animalPersonalityQuiz: QuizDefinition = {
       "動物性格",
       "相性診断",
       "日本固有種",
+      "日本にしかいない動物",
     ],
     publishedAt: "2026-03-09T15:00:00+09:00",
     relatedLinks: [
