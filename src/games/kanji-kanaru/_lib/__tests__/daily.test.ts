@@ -12,7 +12,6 @@ const sampleKanji: KanjiEntry[] = [
     onYomi: ["\u30B5\u30F3"],
     kunYomi: ["\u3084\u307E"],
     meanings: ["mountain"],
-    category: 6,
     examples: ["\u5C71\u8108"],
   },
   {
@@ -24,7 +23,6 @@ const sampleKanji: KanjiEntry[] = [
     onYomi: ["\u30BB\u30F3"],
     kunYomi: ["\u304B\u308F"],
     meanings: ["river"],
-    category: 6,
     examples: ["\u6CB3\u5DDD"],
   },
   {
@@ -36,7 +34,6 @@ const sampleKanji: KanjiEntry[] = [
     onYomi: ["\u30CB\u30C1"],
     kunYomi: ["\u3072"],
     meanings: ["day"],
-    category: 8,
     examples: ["\u65E5\u672C"],
   },
 ];

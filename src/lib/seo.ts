@@ -252,7 +252,6 @@ interface KanjiMetaForSeo {
   meanings: string[];
   onYomi: string[];
   kunYomi: string[];
-  category: string | number;
 }
 
 export function generateKanjiPageMetadata(kanji: KanjiMetaForSeo): Metadata {

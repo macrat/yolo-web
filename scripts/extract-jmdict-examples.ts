@@ -41,7 +41,6 @@ interface KanjiBaseEntry {
   onYomi: string[];
   kunYomi: string[];
   meanings: string[];
-  category: number;
   examples: string[];
 }
 

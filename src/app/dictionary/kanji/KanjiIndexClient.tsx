@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from "react";
 import type { KanjiEntry } from "@/dictionary/_lib/types";
-import { KANJI_CATEGORY_LABELS } from "@/dictionary/_lib/types";
+import { KANJI_GRADE_LABELS } from "@/dictionary/_lib/types";
 import DictionaryCard from "@/dictionary/_components/DictionaryCard";
 import DictionaryGrid from "@/dictionary/_components/DictionaryGrid";
 import SearchBox from "@/dictionary/_components/SearchBox";
@@ -38,9 +38,7 @@ export default function KanjiIndexClient({ allKanji }: KanjiIndexClientProps) {
   return (
     <>
       <SearchBox
-        placeholder={
-          "\u6F22\u5B57\u30FB\u8AAD\u307F\u30FB\u610F\u5473\u3067\u691C\u7D22..."
-        }
+        placeholder={"漢字・読み・意味で検索..."}
         onSearch={handleSearch}
       />
       <DictionaryGrid>
@@ -51,7 +49,7 @@ export default function KanjiIndexClient({ allKanji }: KanjiIndexClientProps) {
               character={k.character}
               readings={[...k.onYomi, ...k.kunYomi]}
               meanings={k.meanings}
-              category={KANJI_CATEGORY_LABELS[k.category]}
+              category={KANJI_GRADE_LABELS[k.grade]}
             />
           </div>
         ))}
@@ -64,9 +62,7 @@ export default function KanjiIndexClient({ allKanji }: KanjiIndexClientProps) {
             marginTop: "2rem",
           }}
         >
-          {
-            "\u8A72\u5F53\u3059\u308B\u6F22\u5B57\u304C\u898B\u3064\u304B\u308A\u307E\u305B\u3093\u3067\u3057\u305F\u3002"
-          }
+          {"該当する漢字が見つかりませんでした。"}
         </p>
       )}
     </>

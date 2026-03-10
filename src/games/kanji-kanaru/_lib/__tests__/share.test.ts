@@ -12,7 +12,6 @@ const targetKanji: KanjiEntry = {
   onYomi: ["\u30B5\u30F3"],
   kunYomi: ["\u3084\u307E"],
   meanings: ["mountain"],
-  category: 6,
   examples: ["\u5C71\u8108"],
 };
 

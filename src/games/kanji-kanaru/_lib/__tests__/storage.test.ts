@@ -8,7 +8,7 @@ import {
   loadTodayGame,
   saveTodayGame,
 } from "../storage";
-import type { GameStats, GameHistory } from "../types";
+import type { GameStats, GameHistory, GuessFeedback } from "../types";
 
 // Mock localStorage
 const localStorageMock = (() => {
@@ -233,12 +233,23 @@ describe("saveHistory", () => {
 });
 
 describe("loadTodayGame", () => {
+  const mockFeedback: GuessFeedback = {
+    guess: "\u5DDD",
+    radical: "wrong",
+    strokeCount: "correct",
+    grade: "correct",
+    gradeDirection: "equal",
+    onYomi: "wrong",
+    category: "close",
+    kunYomiCount: "correct",
+  };
+
   test("returns null when no game exists for the date", () => {
     const game = loadTodayGame("2026-03-01", "beginner");
     expect(game).toBeNull();
   });
 
-  test("returns game record when it exists", () => {
+  test("returns null for old format without feedbacks", () => {
     const history: GameHistory = {
       "2026-03-01": {
         guesses: ["\u5DDD", "\u5C71"],
@@ -251,19 +262,16 @@ describe("loadTodayGame", () => {
       JSON.stringify(history),
     );
     const game = loadTodayGame("2026-03-01", "intermediate");
-    expect(game).toEqual({
-      guesses: ["\u5DDD", "\u5C71"],
-      status: "won",
-      guessCount: 2,
-    });
+    expect(game).toBeNull();
   });
 
-  test("returns playing data as-is when status is playing", () => {
+  test("returns null when feedbacks array is empty", () => {
     const history: GameHistory = {
       "2026-03-01": {
-        guesses: ["\u5DDD", "\u5C71", "\u65E5"],
+        guesses: ["\u5DDD"],
+        feedbacks: [],
         status: "playing",
-        guessCount: 3,
+        guessCount: 1,
       },
     };
     localStorageMock.setItem(
@@ -271,19 +279,16 @@ describe("loadTodayGame", () => {
       JSON.stringify(history),
     );
     const game = loadTodayGame("2026-03-01", "beginner");
-    expect(game).toEqual({
-      guesses: ["\u5DDD", "\u5C71", "\u65E5"],
-      status: "playing",
-      guessCount: 3,
-    });
+    expect(game).toBeNull();
   });
 
-  test("migrates old lost data with guessCount < 6 to playing", () => {
+  test("returns game record when feedbacks are present", () => {
     const history: GameHistory = {
       "2026-03-01": {
-        guesses: ["\u5DDD", "\u5C71"],
-        status: "lost",
-        guessCount: 2,
+        guesses: ["\u5DDD"],
+        feedbacks: [mockFeedback],
+        status: "playing",
+        guessCount: 1,
       },
     };
     localStorageMock.setItem(
@@ -291,17 +296,35 @@ describe("loadTodayGame", () => {
       JSON.stringify(history),
     );
     const game = loadTodayGame("2026-03-01", "beginner");
-    expect(game).toEqual({
-      guesses: ["\u5DDD", "\u5C71"],
-      status: "playing",
-      guessCount: 2,
-    });
+    expect(game).not.toBeNull();
+    expect(game!.feedbacks).toEqual([mockFeedback]);
+    expect(game!.status).toBe("playing");
   });
 
-  test("keeps lost status when guessCount >= 6 (real loss)", () => {
+  test("returns won game with feedbacks intact", () => {
     const history: GameHistory = {
       "2026-03-01": {
-        guesses: ["\u5DDD", "\u5C71", "\u65E5", "\u6708", "\u706B", "\u6C34"],
+        guesses: ["\u5DDD"],
+        feedbacks: [mockFeedback],
+        status: "won",
+        guessCount: 1,
+      },
+    };
+    localStorageMock.setItem(
+      "kanji-kanaru-history-beginner",
+      JSON.stringify(history),
+    );
+    const game = loadTodayGame("2026-03-01", "beginner");
+    expect(game).not.toBeNull();
+    expect(game!.status).toBe("won");
+  });
+
+  test("returns lost game with feedbacks intact", () => {
+    const feedbacks = Array.from({ length: 6 }, () => mockFeedback);
+    const history: GameHistory = {
+      "2026-03-01": {
+        guesses: Array.from({ length: 6 }, () => "\u5DDD"),
+        feedbacks,
         status: "lost",
         guessCount: 6,
       },
@@ -311,31 +334,9 @@ describe("loadTodayGame", () => {
       JSON.stringify(history),
     );
     const game = loadTodayGame("2026-03-01", "beginner");
-    expect(game).toEqual({
-      guesses: ["\u5DDD", "\u5C71", "\u65E5", "\u6708", "\u706B", "\u6C34"],
-      status: "lost",
-      guessCount: 6,
-    });
-  });
-
-  test("keeps won status unchanged", () => {
-    const history: GameHistory = {
-      "2026-03-01": {
-        guesses: ["\u5DDD", "\u5C71"],
-        status: "won",
-        guessCount: 2,
-      },
-    };
-    localStorageMock.setItem(
-      "kanji-kanaru-history-beginner",
-      JSON.stringify(history),
-    );
-    const game = loadTodayGame("2026-03-01", "beginner");
-    expect(game).toEqual({
-      guesses: ["\u5DDD", "\u5C71"],
-      status: "won",
-      guessCount: 2,
-    });
+    expect(game).not.toBeNull();
+    expect(game!.status).toBe("lost");
+    expect(game!.feedbacks).toHaveLength(6);
   });
 });
 
