@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { useAchievements } from "@/lib/achievements/useAchievements";
+import { trackContentStart, trackContentEnd } from "@/lib/analytics";
 import Link from "next/link";
 import type { QuizDefinition, QuizAnswer, QuizPhase } from "@/quiz/types";
 import { determineResult, calculateKnowledgeScore } from "@/quiz/scoring";
@@ -32,11 +33,15 @@ export default function QuizContainer({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<QuizAnswer[]>([]);
 
+  const contentType = quiz.meta.type === "personality" ? "diagnosis" : "quiz";
+  const contentId = "quiz-" + quiz.meta.slug;
+
   const handleStart = useCallback(() => {
     setPhase("playing");
     setCurrentIndex(0);
     setAnswers([]);
-  }, []);
+    trackContentStart(contentId, contentType);
+  }, [contentId, contentType]);
 
   const handleAnswer = useCallback(
     (choiceId: string) => {
@@ -54,12 +59,13 @@ export default function QuizContainer({
           setPhase("result");
           // Record play for achievement system (quiz-{slug} content ID)
           recordPlay("quiz-" + quiz.meta.slug);
+          trackContentEnd(contentId, contentType, true);
         } else {
           setCurrentIndex((prev) => prev + 1);
         }
       }
     },
-    [answers, currentIndex, quiz, recordPlay],
+    [answers, currentIndex, quiz, recordPlay, contentId, contentType],
   );
 
   const handleNext = useCallback(() => {
@@ -68,10 +74,18 @@ export default function QuizContainer({
       setPhase("result");
       // Record play for achievement system (quiz-{slug} content ID)
       recordPlay("quiz-" + quiz.meta.slug);
+      trackContentEnd(contentId, contentType, true);
     } else {
       setCurrentIndex((prev) => prev + 1);
     }
-  }, [currentIndex, quiz.questions.length, quiz.meta.slug, recordPlay]);
+  }, [
+    currentIndex,
+    quiz.questions.length,
+    quiz.meta.slug,
+    recordPlay,
+    contentId,
+    contentType,
+  ]);
 
   const handleRetry = useCallback(() => {
     setPhase("intro");

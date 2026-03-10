@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect, useMemo, useRef } from "react";
 import { useAchievements } from "@/lib/achievements/useAchievements";
+import { trackContentEnd } from "@/lib/analytics";
 import type {
   NakamawakeGameState,
   NakamawakeGameStats,
@@ -152,6 +153,7 @@ export default function GameContainer() {
       (gameState.status === "won" || gameState.status === "lost")
     ) {
       recordPlay("nakamawake");
+      trackContentEnd("nakamawake", "game", gameState.status === "won");
       hasRecordedPlayRef.current = true;
     }
     prevStatusForRecordRef.current = gameState.status;

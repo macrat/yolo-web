@@ -7,6 +7,7 @@ import Fuse, {
   type FuseResultMatch,
 } from "fuse.js";
 import type { SearchDocument, ContentType } from "@/lib/search/types";
+import { trackSearch } from "@/lib/analytics";
 import {
   CONTENT_TYPE_LABELS,
   CONTENT_TYPE_ORDER,
@@ -127,6 +128,7 @@ export function useSearch(): UseSearchReturn {
     }
     const fuseResults = fuseRef.current.search(q.trim());
     setResults(groupResults(fuseResults));
+    trackSearch(q);
   }, []);
 
   const setQuery = useCallback(

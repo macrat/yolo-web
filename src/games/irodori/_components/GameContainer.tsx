@@ -1,6 +1,7 @@
 "use client";
 
 import { useAchievements } from "@/lib/achievements/useAchievements";
+import { trackContentEnd } from "@/lib/analytics";
 import { useState, useCallback, useEffect, useMemo, useRef } from "react";
 import type {
   IrodoriGameState,
@@ -195,6 +196,7 @@ export default function GameContainer() {
       gameState.status === "completed"
     ) {
       recordPlay("irodori");
+      trackContentEnd("irodori", "game", true);
       hasRecordedPlayRef.current = true;
     }
     prevStatusForRecordRef.current = gameState.status;
