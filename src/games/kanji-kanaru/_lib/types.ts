@@ -40,7 +40,7 @@ export interface GuessFeedback {
 export interface GameState {
   puzzleDate: string; // "YYYY-MM-DD"
   puzzleNumber: number;
-  targetKanji: KanjiEntry;
+  targetKanji: KanjiEntry | null;
   guesses: GuessFeedback[];
   status: "playing" | "won" | "lost";
 }
@@ -57,6 +57,7 @@ export interface GameStats {
 export interface GameHistory {
   [date: string]: {
     guesses: string[];
+    feedbacks?: GuessFeedback[];
     status: "won" | "lost" | "playing";
     guessCount: number;
   };
@@ -69,3 +70,34 @@ export interface PuzzleScheduleEntry {
 
 /** Maximum number of guesses allowed per game. */
 export const MAX_GUESSES = 6;
+
+/** Request body for POST /api/kanji-kanaru/evaluate */
+export interface EvaluateRequest {
+  guess: string;
+  puzzleDate: string;
+  difficulty: Difficulty;
+  guessNumber: number;
+}
+
+/** Response from POST /api/kanji-kanaru/evaluate */
+export interface EvaluateResponse {
+  feedback: GuessFeedback;
+  isCorrect: boolean;
+  targetKanji?: {
+    character: string;
+    onYomi: string[];
+    kunYomi: string[];
+    meanings: string[];
+    examples: string[];
+  };
+}
+
+/** Response from GET /api/kanji-kanaru/hints */
+export interface HintsResponse {
+  puzzleNumber: number;
+  hints: {
+    strokeCount: number;
+    onYomiCount: number;
+    kunYomiCount: number;
+  };
+}

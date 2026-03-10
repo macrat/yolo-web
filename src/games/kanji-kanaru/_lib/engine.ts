@@ -1,5 +1,5 @@
 import type { KanjiEntry, GuessFeedback, FeedbackLevel } from "./types";
-import { areCategoriesRelated } from "./categories";
+import { evaluateSimilarity } from "./embeddings-server";
 
 /**
  * Evaluate a guess against the target kanji and return feedback for each attribute.
@@ -10,7 +10,7 @@ import { areCategoriesRelated } from "./categories";
  * - strokeCount: correct / close (within +/-2) / wrong
  * - grade: correct / close (within +/-1) / wrong
  * - gradeDirection: "up" if target grade > guess grade, "down" if less, "equal" if same
- * - category: correct / close (same super-group) / wrong
+ * - category: correct / close / wrong (based on embedding cosine similarity)
  * - kunYomiCount: correct / close (within +/-1) / wrong
  */
 export function evaluateGuess(
@@ -24,7 +24,7 @@ export function evaluateGuess(
     grade: evaluateGrade(guess.grade, target.grade),
     gradeDirection: evaluateGradeDirection(guess.grade, target.grade),
     onYomi: evaluateOnYomi(guess.onYomi, target.onYomi),
-    category: evaluateCategory(guess.category, target.category),
+    category: evaluateCategory(guess.character, target.character),
     kunYomiCount: evaluateKunYomiCount(
       guess.kunYomi.length,
       target.kunYomi.length,
@@ -90,15 +90,14 @@ function evaluateOnYomi(
 }
 
 /**
- * Category feedback: correct if exact match, close if in the same super-group, otherwise wrong.
+ * Category (semantic similarity) feedback using embedding cosine similarity.
+ * Delegates to evaluateSimilarity which uses 384-dim int8 embeddings.
  */
 function evaluateCategory(
-  guessCategory: KanjiEntry["category"],
-  targetCategory: KanjiEntry["category"],
+  guessChar: string,
+  targetChar: string,
 ): FeedbackLevel {
-  if (guessCategory === targetCategory) return "correct";
-  if (areCategoriesRelated(guessCategory, targetCategory)) return "close";
-  return "wrong";
+  return evaluateSimilarity(guessChar, targetChar);
 }
 
 /**

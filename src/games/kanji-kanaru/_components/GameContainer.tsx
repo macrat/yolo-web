@@ -8,17 +8,11 @@ import type {
   GameStats,
   GuessFeedback,
   KanjiEntry,
-  PuzzleScheduleEntry,
+  EvaluateResponse,
+  HintsResponse,
 } from "@/games/kanji-kanaru/_lib/types";
-import {
-  DIFFICULTY_GRADE_MAX,
-  MAX_GUESSES,
-} from "@/games/kanji-kanaru/_lib/types";
-import { evaluateGuess, lookupKanji } from "@/games/kanji-kanaru/_lib/engine";
-import {
-  getTodaysPuzzle,
-  formatDateJST,
-} from "@/games/kanji-kanaru/_lib/daily";
+import { MAX_GUESSES } from "@/games/kanji-kanaru/_lib/types";
+import { formatDateJST } from "@/games/kanji-kanaru/_lib/daily";
 import {
   migrateToV2,
   loadStats,
@@ -27,10 +21,7 @@ import {
   saveHistory,
   loadTodayGame,
 } from "@/games/kanji-kanaru/_lib/storage";
-import kanjiDataJson from "@/data/kanji-data.json";
-import beginnerScheduleJson from "@/games/kanji-kanaru/data/puzzle-schedule-beginner.json";
-import intermediateScheduleJson from "@/games/kanji-kanaru/data/puzzle-schedule-intermediate.json";
-import advancedScheduleJson from "@/games/kanji-kanaru/data/puzzle-schedule-advanced.json";
+import { JOYO_KANJI_SET } from "@/games/kanji-kanaru/data/joyo-kanji-set";
 import GameHeader from "./GameHeader";
 import HintBar from "./HintBar";
 import GameBoard from "./GameBoard";
@@ -41,27 +32,6 @@ import HowToPlayModal from "./HowToPlayModal";
 
 const FIRST_VISIT_KEY = "kanji-kanaru-first-visit";
 const DIFFICULTY_KEY = "kanji-kanaru-difficulty";
-
-/** All 2,136 kanji for lookup (any difficulty can guess any kanji). */
-const allKanjiData = kanjiDataJson as KanjiEntry[];
-
-/** Puzzle schedules by difficulty. */
-const schedulesByDifficulty: Record<Difficulty, PuzzleScheduleEntry[]> = {
-  beginner: beginnerScheduleJson as PuzzleScheduleEntry[],
-  intermediate: intermediateScheduleJson as PuzzleScheduleEntry[],
-  advanced: advancedScheduleJson as PuzzleScheduleEntry[],
-};
-
-/**
- * Filter kanji data by difficulty (grade constraint).
- */
-function filterByDifficulty(
-  data: KanjiEntry[],
-  difficulty: Difficulty,
-): KanjiEntry[] {
-  const maxGrade = DIFFICULTY_GRADE_MAX[difficulty];
-  return data.filter((k) => k.grade <= maxGrade);
-}
 
 /**
  * Load the saved difficulty from localStorage, defaulting to intermediate.
@@ -96,51 +66,78 @@ function saveDifficulty(difficulty: Difficulty): void {
 }
 
 /**
- * Build the initial game state for a given difficulty and date.
+ * Fetch hints (puzzle number + hint data) from the server API.
  */
-function buildGameState(difficulty: Difficulty, todayStr: string): GameState {
-  const pool = filterByDifficulty(allKanjiData, difficulty);
-  const schedule = schedulesByDifficulty[difficulty];
-  const todaysPuzzle = getTodaysPuzzle(pool, schedule);
+async function fetchHints(
+  date: string,
+  difficulty: Difficulty,
+): Promise<HintsResponse> {
+  const res = await fetch(
+    `/api/kanji-kanaru/hints?date=${encodeURIComponent(date)}&difficulty=${encodeURIComponent(difficulty)}`,
+  );
+  if (!res.ok) {
+    throw new Error(`Hints API error: ${res.status}`);
+  }
+  return (await res.json()) as HintsResponse;
+}
 
-  // Try to restore from localStorage
-  const saved = loadTodayGame(todayStr, difficulty);
-  if (saved) {
-    const guesses: GuessFeedback[] = [];
-    for (const guessChar of saved.guesses) {
-      // Lookup against all kanji (any kanji can be guessed)
-      const guessEntry = lookupKanji(guessChar, allKanjiData);
-      if (guessEntry) {
-        guesses.push(evaluateGuess(guessEntry, todaysPuzzle.kanji));
-      }
+/**
+ * Submit a guess to the server evaluation API.
+ */
+async function fetchEvaluate(
+  guess: string,
+  puzzleDate: string,
+  difficulty: Difficulty,
+  guessNumber: number,
+): Promise<EvaluateResponse> {
+  const res = await fetch("/api/kanji-kanaru/evaluate", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ guess, puzzleDate, difficulty, guessNumber }),
+  });
+  if (!res.ok) {
+    const errorBody = await res.json().catch(() => ({}));
+    throw new Error(
+      (errorBody as { error?: string }).error ??
+        `Evaluate API error: ${res.status}`,
+    );
+  }
+  return (await res.json()) as EvaluateResponse;
+}
+
+/**
+ * Re-evaluate saved guesses via the API (fallback for old saves without feedbacks).
+ * Calls the evaluate endpoint for each guess sequentially to reconstruct feedback.
+ */
+async function reEvaluateGuesses(
+  guesses: string[],
+  puzzleDate: string,
+  difficulty: Difficulty,
+): Promise<{ feedbacks: GuessFeedback[]; targetKanji: KanjiEntry | null }> {
+  const feedbacks: GuessFeedback[] = [];
+  let targetKanji: KanjiEntry | null = null;
+
+  for (let i = 0; i < guesses.length; i++) {
+    const response = await fetchEvaluate(
+      guesses[i],
+      puzzleDate,
+      difficulty,
+      i + 1,
+    );
+    feedbacks.push(response.feedback);
+    if (response.targetKanji) {
+      targetKanji = response.targetKanji as KanjiEntry;
     }
-    return {
-      puzzleDate: todayStr,
-      puzzleNumber: todaysPuzzle.puzzleNumber,
-      targetKanji: todaysPuzzle.kanji,
-      guesses,
-      status:
-        saved.status === "won"
-          ? "won"
-          : saved.status === "lost"
-            ? "lost"
-            : "playing",
-    };
   }
 
-  return {
-    puzzleDate: todayStr,
-    puzzleNumber: todaysPuzzle.puzzleNumber,
-    targetKanji: todaysPuzzle.kanji,
-    guesses: [],
-    status: "playing",
-  };
+  return { feedbacks, targetKanji };
 }
 
 /**
  * Top-level client component that orchestrates the entire game state.
- * Loads kanji data, determines today's puzzle, manages guesses,
- * handles win/loss, and persists state to localStorage.
+ * Fetches hints from the server API, manages guesses via the evaluate API,
+ * and persists state to localStorage. The target kanji is never exposed
+ * to the client until the game ends.
  */
 export default function GameContainer() {
   const { recordPlay } = useAchievements();
@@ -164,10 +161,20 @@ export default function GameContainer() {
   }, []);
 
   const [difficulty, setDifficulty] = useState<Difficulty>(loadDifficulty);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
-  const [gameState, setGameState] = useState<GameState>(() =>
-    buildGameState(difficulty, todayStr),
-  );
+  // Hints data from API (separate from gameState to avoid needing targetKanji)
+  const [hintsData, setHintsData] = useState<HintsResponse | null>(null);
+
+  const [gameState, setGameState] = useState<GameState>({
+    puzzleDate: todayStr,
+    puzzleNumber: 0,
+    targetKanji: null,
+    guesses: [],
+    status: "playing",
+  });
 
   const [stats, setStats] = useState<GameStats>(() => loadStats(difficulty));
   const [showResult, setShowResult] = useState(false);
@@ -188,18 +195,118 @@ export default function GameContainer() {
   });
 
   /**
-   * Handle difficulty change: save preference and reset game state for new difficulty.
+   * Initialize the game: fetch hints from API and restore saved state.
+   */
+  const initializeGame = useCallback(
+    async (diff: Difficulty) => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const hints = await fetchHints(todayStr, diff);
+        setHintsData(hints);
+
+        // Try to restore from localStorage
+        const saved = loadTodayGame(todayStr, diff);
+        if (saved) {
+          // Check if feedbacks are saved (new format)
+          if (saved.feedbacks && saved.feedbacks.length > 0) {
+            // Determine if the game is over and we need targetKanji
+            let targetKanji: KanjiEntry | null = null;
+            if (saved.status === "won" || saved.status === "lost") {
+              // Re-evaluate the last guess to get targetKanji from API
+              const lastResponse = await fetchEvaluate(
+                saved.guesses[saved.guesses.length - 1],
+                todayStr,
+                diff,
+                saved.guesses.length,
+              );
+              if (lastResponse.targetKanji) {
+                targetKanji = lastResponse.targetKanji as KanjiEntry;
+              }
+            }
+
+            setGameState({
+              puzzleDate: todayStr,
+              puzzleNumber: hints.puzzleNumber,
+              targetKanji,
+              guesses: saved.feedbacks,
+              status:
+                saved.status === "won"
+                  ? "won"
+                  : saved.status === "lost"
+                    ? "lost"
+                    : "playing",
+            });
+          } else {
+            // Old format: no feedbacks saved, re-evaluate via API
+            const { feedbacks, targetKanji } = await reEvaluateGuesses(
+              saved.guesses,
+              todayStr,
+              diff,
+            );
+
+            setGameState({
+              puzzleDate: todayStr,
+              puzzleNumber: hints.puzzleNumber,
+              targetKanji,
+              guesses: feedbacks,
+              status:
+                saved.status === "won"
+                  ? "won"
+                  : saved.status === "lost"
+                    ? "lost"
+                    : "playing",
+            });
+
+            // Save feedbacks for future loads (upgrade old format)
+            const history = loadHistory(diff);
+            history[todayStr] = {
+              ...saved,
+              feedbacks,
+            };
+            saveHistory(history, diff);
+          }
+        } else {
+          // Fresh game
+          setGameState({
+            puzzleDate: todayStr,
+            puzzleNumber: hints.puzzleNumber,
+            targetKanji: null,
+            guesses: [],
+            status: "playing",
+          });
+        }
+      } catch (err) {
+        setError(
+          err instanceof Error
+            ? err.message
+            : "\u30B2\u30FC\u30E0\u306E\u521D\u671F\u5316\u306B\u5931\u6557\u3057\u307E\u3057\u305F",
+        );
+      } finally {
+        setLoading(false);
+      }
+    },
+    [todayStr],
+  );
+
+  // Initialize on mount and when difficulty changes
+  useEffect(() => {
+    void initializeGame(difficulty);
+  }, [difficulty, initializeGame]);
+
+  /**
+   * Handle difficulty change: save preference and re-initialize.
    */
   const handleDifficultyChange = useCallback(
     (newDifficulty: Difficulty) => {
       if (newDifficulty === difficulty) return;
       saveDifficulty(newDifficulty);
       setDifficulty(newDifficulty);
-      setGameState(buildGameState(newDifficulty, todayStr));
       setStats(loadStats(newDifficulty));
       setShowResult(false);
     },
-    [difficulty, todayStr],
+    [difficulty],
   );
 
   // Track the previous game status to detect transitions to won/lost
@@ -232,19 +339,20 @@ export default function GameContainer() {
   /**
    * Handle a guess submission.
    * Returns an error message string if invalid, or null on success.
+   * Now async: validates locally, then calls the server evaluate API.
    */
   const handleGuess = useCallback(
-    (input: string): string | null => {
+    async (input: string): Promise<string | null> => {
       if (gameState.status !== "playing") return null;
+      if (submitting) return null;
 
       // Validate: single character
-      if (input.length !== 1) {
+      if ([...input].length !== 1) {
         return "\u6F22\u5B57\u30921\u6587\u5B57\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044";
       }
 
-      // Validate: is in dataset (lookup against ALL kanji, not just the pool)
-      const guessEntry = lookupKanji(input, allKanjiData);
-      if (!guessEntry) {
+      // Validate: is a joyo kanji (lightweight client-side check)
+      if (!JOYO_KANJI_SET.has(input)) {
         return "\u5E38\u7528\u6F22\u5B57\u3067\u306F\u3042\u308A\u307E\u305B\u3093";
       }
 
@@ -253,91 +361,151 @@ export default function GameContainer() {
         return "\u3053\u306E\u6F22\u5B57\u306F\u3059\u3067\u306B\u5165\u529B\u3057\u307E\u3057\u305F";
       }
 
-      // Evaluate the guess
-      const feedback = evaluateGuess(guessEntry, gameState.targetKanji);
-      const newGuesses = [...gameState.guesses, feedback];
+      setSubmitting(true);
+      try {
+        const guessNumber = gameState.guesses.length + 1;
+        const response = await fetchEvaluate(
+          input,
+          todayStr,
+          difficulty,
+          guessNumber,
+        );
 
-      // Determine new status
-      const isCorrect = input === gameState.targetKanji.character;
-      const isLastGuess = newGuesses.length >= MAX_GUESSES;
-      let newStatus: GameState["status"] = "playing";
-      if (isCorrect) {
-        newStatus = "won";
-      } else if (isLastGuess) {
-        newStatus = "lost";
-      }
+        const newGuesses = [...gameState.guesses, response.feedback];
 
-      const newState: GameState = {
-        ...gameState,
-        guesses: newGuesses,
-        status: newStatus,
-      };
-      setGameState(newState);
+        // Determine new status from API response
+        const isLastGuess = guessNumber >= MAX_GUESSES;
+        let newStatus: GameState["status"] = "playing";
+        if (response.isCorrect) {
+          newStatus = "won";
+        } else if (isLastGuess) {
+          newStatus = "lost";
+        }
 
-      // Persist game to localStorage
-      const guessChars = newGuesses.map((g) => g.guess);
-      if (newStatus === "playing") {
-        const history = loadHistory(difficulty);
-        history[todayStr] = {
-          guesses: guessChars,
-          status: "playing",
-          guessCount: guessChars.length,
+        // Get targetKanji from API response (only on game end)
+        const targetKanji = response.targetKanji
+          ? (response.targetKanji as KanjiEntry)
+          : gameState.targetKanji;
+
+        const newState: GameState = {
+          ...gameState,
+          guesses: newGuesses,
+          status: newStatus,
+          targetKanji,
         };
-        saveHistory(history, difficulty);
-      }
+        setGameState(newState);
 
-      // Update stats and history on game end
-      if (newStatus !== "playing") {
+        // Persist game to localStorage (including feedbacks)
+        const guessChars = newGuesses.map((g) => g.guess);
         const history = loadHistory(difficulty);
         history[todayStr] = {
           guesses: guessChars,
+          feedbacks: newGuesses,
           status: newStatus,
           guessCount: guessChars.length,
         };
         saveHistory(history, difficulty);
 
-        const updatedStats = { ...stats };
-        updatedStats.gamesPlayed += 1;
-        if (newStatus === "won") {
-          updatedStats.gamesWon += 1;
-          updatedStats.guessDistribution[newGuesses.length - 1] += 1;
-        }
-
-        // Update streaks
-        if (newStatus === "won") {
-          const yesterday = new Date();
-          yesterday.setDate(yesterday.getDate() - 1);
-          const yesterdayStr = formatDateJST(yesterday);
-          const yesterdayGame = history[yesterdayStr];
-
-          if (
-            stats.lastPlayedDate === yesterdayStr &&
-            yesterdayGame?.status === "won"
-          ) {
-            updatedStats.currentStreak = stats.currentStreak + 1;
-          } else {
-            updatedStats.currentStreak = 1;
+        // Update stats on game end
+        if (newStatus !== "playing") {
+          const updatedStats = { ...stats };
+          updatedStats.gamesPlayed += 1;
+          if (newStatus === "won") {
+            updatedStats.gamesWon += 1;
+            updatedStats.guessDistribution[newGuesses.length - 1] += 1;
           }
-          updatedStats.maxStreak = Math.max(
-            updatedStats.maxStreak,
-            updatedStats.currentStreak,
-          );
-        } else {
-          updatedStats.currentStreak = 0;
+
+          // Update streaks
+          if (newStatus === "won") {
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            const yesterdayStr = formatDateJST(yesterday);
+            const yesterdayGame = history[yesterdayStr];
+
+            if (
+              stats.lastPlayedDate === yesterdayStr &&
+              yesterdayGame?.status === "won"
+            ) {
+              updatedStats.currentStreak = stats.currentStreak + 1;
+            } else {
+              updatedStats.currentStreak = 1;
+            }
+            updatedStats.maxStreak = Math.max(
+              updatedStats.maxStreak,
+              updatedStats.currentStreak,
+            );
+          } else {
+            updatedStats.currentStreak = 0;
+          }
+          updatedStats.lastPlayedDate = todayStr;
+
+          setStats(updatedStats);
+          saveStats(updatedStats, difficulty);
         }
-        updatedStats.lastPlayedDate = todayStr;
 
-        setStats(updatedStats);
-        saveStats(updatedStats, difficulty);
+        return null;
+      } catch (err) {
+        return err instanceof Error
+          ? err.message
+          : "\u30A8\u30E9\u30FC\u304C\u767A\u751F\u3057\u307E\u3057\u305F\u3002\u3082\u3046\u4E00\u5EA6\u304A\u8A66\u3057\u304F\u3060\u3055\u3044\u3002";
+      } finally {
+        setSubmitting(false);
       }
-
-      return null;
     },
-    [gameState, difficulty, todayStr, stats],
+    [gameState, difficulty, todayStr, stats, submitting],
   );
 
   const lastGuessCount =
     gameState.status === "won" ? gameState.guesses.length : undefined;
+
+  // Loading state
+  if (loading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "200px",
+          color: "var(--text-secondary, #888)",
+        }}
+      >
+        {"\u8AAD\u307F\u8FBC\u307F\u4E2D..."}
+      </div>
+    );
+  }
+
+  // Error state with retry
+  if (error) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "1rem",
+          minHeight: "200px",
+          justifyContent: "center",
+          color: "var(--text-secondary, #888)",
+        }}
+      >
+        <p>{error}</p>
+        <button
+          onClick={() => void initializeGame(difficulty)}
+          type="button"
+          style={{
+            padding: "0.5rem 1rem",
+            borderRadius: "0.5rem",
+            border: "1px solid var(--border-color, #ccc)",
+            background: "var(--bg-secondary, #f5f5f5)",
+            cursor: "pointer",
+          }}
+        >
+          {"\u518D\u8A66\u884C"}
+        </button>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -350,14 +518,15 @@ export default function GameContainer() {
         onStatsClick={() => setShowStats(true)}
       />
       <HintBar
-        strokeCount={gameState.targetKanji.strokeCount}
-        readingCount={gameState.targetKanji.onYomi.length}
-        kunYomiCount={gameState.targetKanji.kunYomi.length}
+        strokeCount={hintsData?.hints.strokeCount ?? 0}
+        readingCount={hintsData?.hints.onYomiCount ?? 0}
+        kunYomiCount={hintsData?.hints.kunYomiCount ?? 0}
       />
       <GameBoard guesses={gameState.guesses} maxGuesses={MAX_GUESSES} />
       <GuessInput
         onSubmit={handleGuess}
-        disabled={gameState.status !== "playing"}
+        disabled={gameState.status !== "playing" || submitting}
+        submitting={submitting}
       />
       <HowToPlayModal
         open={showHowToPlay}

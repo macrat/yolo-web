@@ -32,10 +32,10 @@ export default function ResultModal({
   const isWon = status === "won";
   const shareText = generateShareText(gameState, difficulty);
 
-  const onReadings = targetKanji.onYomi.join("\u3001");
-  const kunReadings = targetKanji.kunYomi.join("\u3001");
-  const meanings = targetKanji.meanings.join(", ");
-  const examples = targetKanji.examples.join("\u3001");
+  const onReadings = targetKanji?.onYomi.join("\u3001") ?? "";
+  const kunReadings = targetKanji?.kunYomi.join("\u3001") ?? "";
+  const meanings = targetKanji?.meanings.join(", ") ?? "";
+  const examples = targetKanji?.examples.join("\u3001") ?? "";
 
   const handleStatsClick = useCallback(() => {
     onClose();
@@ -63,7 +63,7 @@ export default function ResultModal({
         </button>
       }
     >
-      <div className={styles.resultAnswer}>{targetKanji.character}</div>
+      <div className={styles.resultAnswer}>{targetKanji?.character ?? ""}</div>
       <div className={styles.resultReadings}>
         {onReadings && (
           <>
