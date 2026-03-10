@@ -11,8 +11,8 @@ function makeStore(
 }
 
 describe("ALL_CONTENT_IDS", () => {
-  it("contains 17 content IDs (4 games + 12 quizzes + 1 fortune)", () => {
-    expect(ALL_CONTENT_IDS).toHaveLength(17);
+  it("contains 18 content IDs (4 games + 13 quizzes + 1 fortune)", () => {
+    expect(ALL_CONTENT_IDS).toHaveLength(18);
   });
 
   it("contains all game slugs", () => {
