@@ -204,3 +204,50 @@ export function getAllThreadRootIds(): string[] {
   }
   return Array.from(rootIds);
 }
+
+/** Options for server-side filtering and pagination of memo summaries. */
+export interface FilteredMemoOptions {
+  role?: string;
+  tag?: string;
+  page: number;
+  perPage: number;
+}
+
+/** Result of server-side filtered and paginated memo summaries. */
+export interface FilteredMemoResult {
+  items: PublicMemoSummary[];
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
+}
+
+/**
+ * Filter and paginate memo summaries on the server side.
+ *
+ * This avoids sending all memo summaries to the client; only the
+ * requested page (typically 50 items) is included in the response.
+ */
+export function getFilteredMemoSummaries(
+  opts: FilteredMemoOptions,
+): FilteredMemoResult {
+  let memos = getAllPublicMemoSummaries();
+
+  if (opts.role && opts.role !== "all") {
+    memos = memos.filter((m) => m.from === opts.role || m.to === opts.role);
+  }
+  if (opts.tag && opts.tag !== "all") {
+    memos = memos.filter((m) => m.tags.includes(opts.tag!));
+  }
+
+  const totalItems = memos.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / opts.perPage));
+  const currentPage = Math.max(1, Math.min(opts.page, totalPages));
+  const start = (currentPage - 1) * opts.perPage;
+
+  return {
+    items: memos.slice(start, start + opts.perPage),
+    totalItems,
+    totalPages,
+    currentPage,
+  };
+}

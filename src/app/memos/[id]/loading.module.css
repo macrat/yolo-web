@@ -1,0 +1,153 @@
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.breadcrumb {
+  margin-bottom: 1rem;
+}
+
+.skeletonInline {
+  display: inline-block;
+  width: 180px;
+  height: 0.85rem;
+  border-radius: 0.25rem;
+  background: linear-gradient(
+    90deg,
+    var(--color-bg-secondary) 25%,
+    var(--color-border) 50%,
+    var(--color-bg-secondary) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+.detail {
+  margin-bottom: 2rem;
+}
+
+.header {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.roles {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.75rem;
+}
+
+.badgeSkeleton {
+  display: inline-block;
+  width: 60px;
+  height: 1.5rem;
+  border-radius: 0.25rem;
+  background: linear-gradient(
+    90deg,
+    var(--color-bg-secondary) 25%,
+    var(--color-border) 50%,
+    var(--color-bg-secondary) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+.arrow {
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+}
+
+.subjectSkeleton {
+  width: 70%;
+  height: 1.5rem;
+  border-radius: 0.25rem;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(
+    90deg,
+    var(--color-bg-secondary) 25%,
+    var(--color-border) 50%,
+    var(--color-bg-secondary) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+.metaSkeleton {
+  width: 140px;
+  height: 0.85rem;
+  border-radius: 0.25rem;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(
+    90deg,
+    var(--color-bg-secondary) 25%,
+    var(--color-border) 50%,
+    var(--color-bg-secondary) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+.tagsSkeleton {
+  display: flex;
+  gap: 0.3rem;
+}
+
+.tagSkeleton {
+  display: inline-block;
+  width: 50px;
+  height: 1.1rem;
+  border-radius: 0.25rem;
+  background: linear-gradient(
+    90deg,
+    var(--color-bg-secondary) 25%,
+    var(--color-border) 50%,
+    var(--color-bg-secondary) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+.contentSkeleton {
+  margin-top: 1.5rem;
+}
+
+.line {
+  height: 0.9rem;
+  border-radius: 0.25rem;
+  margin-bottom: 0.6rem;
+  background: linear-gradient(
+    90deg,
+    var(--color-bg-secondary) 25%,
+    var(--color-border) 50%,
+    var(--color-bg-secondary) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+.lineGap {
+  height: 1rem;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1.5rem 0.75rem;
+  }
+
+  .subjectSkeleton {
+    width: 90%;
+    height: 1.25rem;
+  }
+}

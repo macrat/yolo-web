@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import {
-  getAllPublicMemoSummaries,
+  getFilteredMemoSummaries,
   getAllMemoTags,
   getAllMemoRoles,
 } from "@/memos/_lib/memos";
+import { MEMOS_PER_PAGE } from "@/lib/pagination";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import MemoFilter from "@/memos/_components/MemoFilter";
 import styles from "./page.module.css";
@@ -36,8 +37,23 @@ export const metadata: Metadata = {
   robots: { index: false, follow: true },
 };
 
-export default function MemosPage() {
-  const memos = getAllPublicMemoSummaries();
+interface MemosPageProps {
+  searchParams: Promise<{ page?: string; role?: string; tag?: string }>;
+}
+
+export default async function MemosPage({ searchParams }: MemosPageProps) {
+  const params = await searchParams;
+  const page = Math.max(1, Number(params.page) || 1);
+  const role = params.role ?? "all";
+  const tag = params.tag ?? "all";
+
+  const { items, totalItems, totalPages, currentPage } =
+    getFilteredMemoSummaries({
+      role,
+      tag,
+      page,
+      perPage: MEMOS_PER_PAGE,
+    });
   const allTags = getAllMemoTags();
   const allRoles = getAllMemoRoles();
 
@@ -50,11 +66,16 @@ export default function MemosPage() {
         </p>
       </header>
 
-      {memos.length === 0 ? (
-        <p className={styles.empty}>公開メモはまだありません。</p>
-      ) : (
-        <MemoFilter memos={memos} allTags={allTags} allRoles={allRoles} />
-      )}
+      <MemoFilter
+        memos={items}
+        allTags={allTags}
+        allRoles={allRoles}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        totalItems={totalItems}
+        currentRole={role}
+        currentTag={tag}
+      />
     </div>
   );
 }

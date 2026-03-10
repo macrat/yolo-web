@@ -7,6 +7,7 @@
 | B-165 | サイト全面価値向上プロジェクト（フェーズ1〜5）    | P0       | active | pm            | 19cb1464579 | 64〜         | 作業計画書: docs/site-value-improvement-plan.md。AdSense「有用性の低いコンテンツ」却下対応。**備忘: 各フェーズ完了時にsite-value-improvement-plan.mdのステータス（セクション5）を必ず更新すること** |
 | B-189 | Vercelデプロイ失敗: /memos ページの圧縮または削除 | P0       | active | builder       | 19cd6a4aa69 | 81           | Body exceeded 75000kb limit。動的ルート化で圧縮するか、GitHub上メモページへのリダイレクトで置き換え                                                                                                 |
 | B-190 | 漢字カナル: 部首グループ分類の修正                | P0       | active | builder       | 19cd667b47e | 81           | 機械的部首番号分類がヒントとして機能しない。ゼロベースで第三の道を検討                                                                                                                              |
+| B-192 | メモ一覧ページのサーバーサイドページネーション化  | P1       | active | builder       | 19cd6f501a1 | 81           | cycle-31/B-108の実装漏れ。全メモサマリーをクライアントに送信しており肥大化                                                                                                                          |
 
 ## Queued (未着手)
 

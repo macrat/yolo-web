@@ -101,6 +101,16 @@ describe("Pagination (link mode)", () => {
     ).find((el) => el.textContent === "3 / 10");
     expect(mobileIndicator).toBeTruthy();
   });
+
+  test("uses buildUrl when provided instead of basePath", () => {
+    const buildUrl = (page: number) => `/memos?page=${page}`;
+    render(<Pagination currentPage={1} totalPages={3} buildUrl={buildUrl} />);
+    const page2 = screen.getByRole("link", { name: "ページ2" });
+    expect(page2).toHaveAttribute("href", "/memos?page=2");
+
+    const next = screen.getByRole("link", { name: "次のページ" });
+    expect(next).toHaveAttribute("href", "/memos?page=2");
+  });
 });
 
 describe("Pagination (button mode)", () => {
