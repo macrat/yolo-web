@@ -22,6 +22,7 @@ import type { AchievementStore } from "./types";
 import { loadStore } from "./storage";
 import { recordPlay as engineRecordPlay } from "./engine";
 import AchievementToast from "./AchievementToast";
+import { trackAchievementUnlock } from "@/lib/analytics";
 
 /** Shape of the achievement context value */
 export interface AchievementContextValue {
@@ -101,6 +102,9 @@ export default function AchievementProvider({
     if (result) {
       updateExternalStore(result.store);
       if (result.newlyUnlocked.length > 0) {
+        for (const badgeId of result.newlyUnlocked) {
+          trackAchievementUnlock(badgeId);
+        }
         setNewlyUnlocked((prev) => [...prev, ...result.newlyUnlocked]);
       }
     }

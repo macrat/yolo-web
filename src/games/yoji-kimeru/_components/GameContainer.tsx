@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect, useMemo, useRef } from "react";
 import { useAchievements } from "@/lib/achievements/useAchievements";
+import { trackContentEnd } from "@/lib/analytics";
 import type {
   YojiGameState,
   YojiGameStats,
@@ -139,6 +140,7 @@ export default function GameContainer() {
       (gameState.status === "won" || gameState.status === "lost")
     ) {
       recordPlay("yoji-kimeru");
+      trackContentEnd("yoji-kimeru", "game", gameState.status === "won");
       hasRecordedPlayRef.current = true;
     }
     prevStatusForRecordRef.current = gameState.status;
