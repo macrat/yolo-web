@@ -70,6 +70,39 @@
   color: var(--color-text-muted);
 }
 
+/* ===== Difficulty Selector ===== */
+.difficultySelector {
+  display: flex;
+  gap: 0.25rem;
+  margin-top: 0.25rem;
+}
+
+.difficultyButton {
+  padding: 0.2rem 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  background-color: var(--color-bg);
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.difficultyButton:hover {
+  background-color: var(--color-bg-secondary);
+}
+
+.difficultyButtonActive {
+  composes: difficultyButton;
+  background-color: var(--color-primary);
+  color: #ffffff;
+  border-color: var(--color-primary);
+}
+
+.difficultyButtonActive:hover {
+  background-color: var(--color-primary-hover);
+}
+
 /* ===== Hint Bar ===== */
 .hintBar {
   width: 100%;
@@ -102,12 +135,13 @@
   flex-direction: column;
   gap: 0.35rem;
   width: 100%;
-  min-width: 300px;
+  min-width: 340px;
 }
 
+/* 7 columns: kanji + 6 feedback attributes (radical, stroke, grade, onYomi, category, kunYomiCount) */
 .columnHeaders {
   display: grid;
-  grid-template-columns: 2.5rem repeat(5, 1fr);
+  grid-template-columns: 2.5rem repeat(6, 1fr);
   gap: 0.25rem;
   padding: 0 0.25rem;
 }
@@ -131,7 +165,7 @@
 /* ===== Guess Row ===== */
 .guessRow {
   display: grid;
-  grid-template-columns: 2.5rem repeat(5, 1fr);
+  grid-template-columns: 2.5rem repeat(6, 1fr);
   gap: 0.25rem;
   padding: 0 0.25rem;
 }
@@ -160,7 +194,7 @@
   justify-content: center;
   min-height: 2.5rem;
   border-radius: 4px;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 600;
   color: #ffffff;
   text-align: center;
@@ -441,6 +475,15 @@
   font-size: 0.9rem;
   color: var(--color-text-muted);
   margin-top: 0.5rem;
+}
+
+.licenseAttribution {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border);
+  font-size: 0.75rem;
+  line-height: 1.6;
+  color: var(--color-text-muted);
 }
 
 /* ===== Responsive ===== */

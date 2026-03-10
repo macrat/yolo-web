@@ -20,13 +20,19 @@ export function getKanjiByCategory(category: KanjiCategory): KanjiEntry[] {
   return allKanji.filter((k) => k.category === category);
 }
 
-/** Returns all unique kanji categories that have entries */
-export function getKanjiCategories(): KanjiCategory[] {
-  const categories = new Set<KanjiCategory>();
+/**
+ * Returns all unique kanji categories that have entries.
+ * Categories are returned as string representations of their numeric IDs
+ * for URL compatibility (e.g., "1", "2", ..., "20").
+ */
+export function getKanjiCategories(): string[] {
+  const categories = new Set<number>();
   for (const k of allKanji) {
     categories.add(k.category);
   }
-  return Array.from(categories).sort();
+  return Array.from(categories)
+    .sort((a, b) => a - b)
+    .map(String);
 }
 
 /** Returns all kanji characters as an array of strings */

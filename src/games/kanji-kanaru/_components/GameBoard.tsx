@@ -9,7 +9,15 @@ interface GameBoardProps {
   maxGuesses: number;
 }
 
-const COLUMN_HEADERS = ["", "部首", "画数", "学年", "音読み", "意味"];
+const COLUMN_HEADERS = [
+  "",
+  "\u90E8\u9996",
+  "\u753B\u6570",
+  "\u5B66\u5E74",
+  "\u97F3\u8AAD\u307F",
+  "\u610F\u5473",
+  "\u8A13\u8AAD\u307F",
+];
 
 /**
  * The main game grid showing up to maxGuesses rows of feedback.
@@ -23,7 +31,11 @@ export default function GameBoard({ guesses, maxGuesses }: GameBoardProps) {
 
   return (
     <div className={styles.boardWrapper}>
-      <div className={styles.board} role="grid" aria-label="推測結果">
+      <div
+        className={styles.board}
+        role="grid"
+        aria-label="\u63A8\u6E2C\u7D50\u679C"
+      >
         <div className={styles.columnHeaders} role="row">
           {COLUMN_HEADERS.map((header, i) => (
             <div

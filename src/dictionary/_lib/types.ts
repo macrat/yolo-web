@@ -48,24 +48,8 @@ export interface YojiEntry {
   category: YojiCategory;
 }
 
-export type KanjiCategory =
-  | "abstract"
-  | "action"
-  | "animal"
-  | "body"
-  | "building"
-  | "direction"
-  | "earth"
-  | "fire"
-  | "language"
-  | "nature"
-  | "number"
-  | "person"
-  | "plant"
-  | "time"
-  | "tool"
-  | "water"
-  | "weather";
+/** Radical group ID (1-20), matching the game's RadicalGroup type. */
+export type KanjiCategory = number;
 
 export type YojiCategory =
   | "change"
@@ -81,24 +65,28 @@ export type YojiCategory =
 
 export type YojiDifficulty = 1 | 2 | 3;
 
+/** Japanese labels for radical group categories (1-20). */
 export const KANJI_CATEGORY_LABELS: Record<KanjiCategory, string> = {
-  abstract: "抽象",
-  action: "動作",
-  animal: "動物",
-  body: "身体",
-  building: "建物",
-  direction: "方向",
-  earth: "大地",
-  fire: "火",
-  language: "言語",
-  nature: "自然",
-  number: "数字",
-  person: "人",
-  plant: "植物",
-  time: "時間",
-  tool: "道具",
-  water: "水",
-  weather: "天気",
+  1: "基本図形",
+  2: "人と体上部",
+  3: "刃物と力",
+  4: "口と囲い",
+  5: "天文と時間",
+  6: "山と川",
+  7: "動作基本",
+  8: "打撃と文",
+  9: "木と欠",
+  10: "爪と父",
+  11: "瓜と生",
+  12: "目と矢",
+  13: "米と糸",
+  14: "筆と肉",
+  15: "草と虫",
+  16: "見と言",
+  17: "足と身",
+  18: "金と門",
+  19: "面と革",
+  20: "魚と鳥",
 };
 
 export const YOJI_CATEGORY_LABELS: Record<YojiCategory, string> = {

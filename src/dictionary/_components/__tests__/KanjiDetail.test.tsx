@@ -12,7 +12,7 @@ const mockKanji: KanjiEntry = {
   onYomi: ["サン", "セン"],
   kunYomi: ["やま"],
   meanings: ["mountain"],
-  category: "nature",
+  category: 1,
   examples: ["山脈", "火山", "登山"],
 };
 

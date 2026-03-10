@@ -3,19 +3,24 @@
 import { useState, useCallback, useEffect, useMemo, useRef } from "react";
 import { useAchievements } from "@/lib/achievements/useAchievements";
 import type {
+  Difficulty,
   GameState,
   GameStats,
   GuessFeedback,
   KanjiEntry,
   PuzzleScheduleEntry,
 } from "@/games/kanji-kanaru/_lib/types";
-import { MAX_GUESSES } from "@/games/kanji-kanaru/_lib/types";
+import {
+  DIFFICULTY_GRADE_MAX,
+  MAX_GUESSES,
+} from "@/games/kanji-kanaru/_lib/types";
 import { evaluateGuess, lookupKanji } from "@/games/kanji-kanaru/_lib/engine";
 import {
   getTodaysPuzzle,
   formatDateJST,
 } from "@/games/kanji-kanaru/_lib/daily";
 import {
+  migrateToV2,
   loadStats,
   saveStats,
   loadHistory,
@@ -23,7 +28,9 @@ import {
   loadTodayGame,
 } from "@/games/kanji-kanaru/_lib/storage";
 import kanjiDataJson from "@/data/kanji-data.json";
-import puzzleScheduleJson from "@/games/kanji-kanaru/data/puzzle-schedule.json";
+import beginnerScheduleJson from "@/games/kanji-kanaru/data/puzzle-schedule-beginner.json";
+import intermediateScheduleJson from "@/games/kanji-kanaru/data/puzzle-schedule-intermediate.json";
+import advancedScheduleJson from "@/games/kanji-kanaru/data/puzzle-schedule-advanced.json";
 import GameHeader from "./GameHeader";
 import HintBar from "./HintBar";
 import GameBoard from "./GameBoard";
@@ -33,6 +40,102 @@ import StatsModal from "./StatsModal";
 import HowToPlayModal from "./HowToPlayModal";
 
 const FIRST_VISIT_KEY = "kanji-kanaru-first-visit";
+const DIFFICULTY_KEY = "kanji-kanaru-difficulty";
+
+/** All 2,136 kanji for lookup (any difficulty can guess any kanji). */
+const allKanjiData = kanjiDataJson as KanjiEntry[];
+
+/** Puzzle schedules by difficulty. */
+const schedulesByDifficulty: Record<Difficulty, PuzzleScheduleEntry[]> = {
+  beginner: beginnerScheduleJson as PuzzleScheduleEntry[],
+  intermediate: intermediateScheduleJson as PuzzleScheduleEntry[],
+  advanced: advancedScheduleJson as PuzzleScheduleEntry[],
+};
+
+/**
+ * Filter kanji data by difficulty (grade constraint).
+ */
+function filterByDifficulty(
+  data: KanjiEntry[],
+  difficulty: Difficulty,
+): KanjiEntry[] {
+  const maxGrade = DIFFICULTY_GRADE_MAX[difficulty];
+  return data.filter((k) => k.grade <= maxGrade);
+}
+
+/**
+ * Load the saved difficulty from localStorage, defaulting to intermediate.
+ */
+function loadDifficulty(): Difficulty {
+  if (typeof window === "undefined") return "intermediate";
+  try {
+    const saved = window.localStorage.getItem(DIFFICULTY_KEY);
+    if (
+      saved === "beginner" ||
+      saved === "intermediate" ||
+      saved === "advanced"
+    ) {
+      return saved;
+    }
+  } catch {
+    // Silently fail
+  }
+  return "intermediate";
+}
+
+/**
+ * Save difficulty choice to localStorage.
+ */
+function saveDifficulty(difficulty: Difficulty): void {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(DIFFICULTY_KEY, difficulty);
+  } catch {
+    // Silently fail
+  }
+}
+
+/**
+ * Build the initial game state for a given difficulty and date.
+ */
+function buildGameState(difficulty: Difficulty, todayStr: string): GameState {
+  const pool = filterByDifficulty(allKanjiData, difficulty);
+  const schedule = schedulesByDifficulty[difficulty];
+  const todaysPuzzle = getTodaysPuzzle(pool, schedule);
+
+  // Try to restore from localStorage
+  const saved = loadTodayGame(todayStr, difficulty);
+  if (saved) {
+    const guesses: GuessFeedback[] = [];
+    for (const guessChar of saved.guesses) {
+      // Lookup against all kanji (any kanji can be guessed)
+      const guessEntry = lookupKanji(guessChar, allKanjiData);
+      if (guessEntry) {
+        guesses.push(evaluateGuess(guessEntry, todaysPuzzle.kanji));
+      }
+    }
+    return {
+      puzzleDate: todayStr,
+      puzzleNumber: todaysPuzzle.puzzleNumber,
+      targetKanji: todaysPuzzle.kanji,
+      guesses,
+      status:
+        saved.status === "won"
+          ? "won"
+          : saved.status === "lost"
+            ? "lost"
+            : "playing",
+    };
+  }
+
+  return {
+    puzzleDate: todayStr,
+    puzzleNumber: todaysPuzzle.puzzleNumber,
+    targetKanji: todaysPuzzle.kanji,
+    guesses: [],
+    status: "playing",
+  };
+}
 
 /**
  * Top-level client component that orchestrates the entire game state.
@@ -42,13 +145,10 @@ const FIRST_VISIT_KEY = "kanji-kanaru-first-visit";
 export default function GameContainer() {
   const { recordPlay } = useAchievements();
 
-  const kanjiData = kanjiDataJson as KanjiEntry[];
-  const puzzleSchedule = puzzleScheduleJson as PuzzleScheduleEntry[];
-
-  const todaysPuzzle = useMemo(
-    () => getTodaysPuzzle(kanjiData, puzzleSchedule),
-    [kanjiData, puzzleSchedule],
-  );
+  // Run migration once on mount
+  useEffect(() => {
+    migrateToV2();
+  }, []);
 
   const todayStr = useMemo(() => formatDateJST(new Date()), []);
 
@@ -63,41 +163,13 @@ export default function GameContainer() {
     return formatter.format(new Date());
   }, []);
 
-  const [gameState, setGameState] = useState<GameState>(() => {
-    // Try to restore today's game from localStorage
-    const saved = loadTodayGame(todayStr);
-    if (saved) {
-      // Rebuild GuessFeedback[] from saved guess characters
-      const guesses: GuessFeedback[] = [];
-      for (const guessChar of saved.guesses) {
-        const guessEntry = lookupKanji(guessChar, kanjiData);
-        if (guessEntry) {
-          guesses.push(evaluateGuess(guessEntry, todaysPuzzle.kanji));
-        }
-      }
-      return {
-        puzzleDate: todayStr,
-        puzzleNumber: todaysPuzzle.puzzleNumber,
-        targetKanji: todaysPuzzle.kanji,
-        guesses,
-        status:
-          saved.status === "won"
-            ? "won"
-            : saved.status === "lost"
-              ? "lost"
-              : "playing",
-      };
-    }
-    return {
-      puzzleDate: todayStr,
-      puzzleNumber: todaysPuzzle.puzzleNumber,
-      targetKanji: todaysPuzzle.kanji,
-      guesses: [],
-      status: "playing",
-    };
-  });
+  const [difficulty, setDifficulty] = useState<Difficulty>(loadDifficulty);
 
-  const [stats, setStats] = useState<GameStats>(() => loadStats());
+  const [gameState, setGameState] = useState<GameState>(() =>
+    buildGameState(difficulty, todayStr),
+  );
+
+  const [stats, setStats] = useState<GameStats>(() => loadStats(difficulty));
   const [showResult, setShowResult] = useState(false);
   const [showStats, setShowStats] = useState(false);
   const [showHowToPlay, setShowHowToPlay] = useState(() => {
@@ -115,6 +187,21 @@ export default function GameContainer() {
     return false;
   });
 
+  /**
+   * Handle difficulty change: save preference and reset game state for new difficulty.
+   */
+  const handleDifficultyChange = useCallback(
+    (newDifficulty: Difficulty) => {
+      if (newDifficulty === difficulty) return;
+      saveDifficulty(newDifficulty);
+      setDifficulty(newDifficulty);
+      setGameState(buildGameState(newDifficulty, todayStr));
+      setStats(loadStats(newDifficulty));
+      setShowResult(false);
+    },
+    [difficulty, todayStr],
+  );
+
   // Track the previous game status to detect transitions to won/lost
   const prevStatusRef = useRef(gameState.status);
   useEffect(() => {
@@ -128,11 +215,6 @@ export default function GameContainer() {
   }, [gameState.status]);
 
   // Record play for achievement system when game ends (won or lost).
-  // Uses its own prevStatusForRecordRef to avoid sharing prevStatusRef with
-  // the modal useEffect above (React runs useEffects in declaration order,
-  // so a shared ref would already be updated before this effect runs).
-  // hasRecordedPlayRef prevents re-firing on page reload, where
-  // localStorage restores status as "won"/"lost" on mount.
   const prevStatusForRecordRef = useRef(gameState.status);
   const hasRecordedPlayRef = useRef(false);
   useEffect(() => {
@@ -157,18 +239,18 @@ export default function GameContainer() {
 
       // Validate: single character
       if (input.length !== 1) {
-        return "漢字を1文字入力してください";
+        return "\u6F22\u5B57\u30921\u6587\u5B57\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044";
       }
 
-      // Validate: is in dataset
-      const guessEntry = lookupKanji(input, kanjiData);
+      // Validate: is in dataset (lookup against ALL kanji, not just the pool)
+      const guessEntry = lookupKanji(input, allKanjiData);
       if (!guessEntry) {
-        return "常用漢字ではありません";
+        return "\u5E38\u7528\u6F22\u5B57\u3067\u306F\u3042\u308A\u307E\u305B\u3093";
       }
 
       // Validate: not a duplicate
       if (gameState.guesses.some((g) => g.guess === input)) {
-        return "この漢字はすでに入力しました";
+        return "\u3053\u306E\u6F22\u5B57\u306F\u3059\u3067\u306B\u5165\u529B\u3057\u307E\u3057\u305F";
       }
 
       // Evaluate the guess
@@ -195,25 +277,24 @@ export default function GameContainer() {
       // Persist game to localStorage
       const guessChars = newGuesses.map((g) => g.guess);
       if (newStatus === "playing") {
-        // Save in-progress game
-        const history = loadHistory();
+        const history = loadHistory(difficulty);
         history[todayStr] = {
           guesses: guessChars,
           status: "playing",
           guessCount: guessChars.length,
         };
-        saveHistory(history);
+        saveHistory(history, difficulty);
       }
 
       // Update stats and history on game end
       if (newStatus !== "playing") {
-        const history = loadHistory();
+        const history = loadHistory(difficulty);
         history[todayStr] = {
           guesses: guessChars,
           status: newStatus,
           guessCount: guessChars.length,
         };
-        saveHistory(history);
+        saveHistory(history, difficulty);
 
         const updatedStats = { ...stats };
         updatedStats.gamesPlayed += 1;
@@ -224,7 +305,6 @@ export default function GameContainer() {
 
         // Update streaks
         if (newStatus === "won") {
-          // Check if previous day was also played and won
           const yesterday = new Date();
           yesterday.setDate(yesterday.getDate() - 1);
           const yesterdayStr = formatDateJST(yesterday);
@@ -248,12 +328,12 @@ export default function GameContainer() {
         updatedStats.lastPlayedDate = todayStr;
 
         setStats(updatedStats);
-        saveStats(updatedStats);
+        saveStats(updatedStats, difficulty);
       }
 
       return null;
     },
-    [gameState, kanjiData, todayStr, stats],
+    [gameState, difficulty, todayStr, stats],
   );
 
   const lastGuessCount =
@@ -264,12 +344,15 @@ export default function GameContainer() {
       <GameHeader
         puzzleNumber={gameState.puzzleNumber}
         dateString={dateDisplayString}
+        difficulty={difficulty}
+        onDifficultyChange={handleDifficultyChange}
         onHelpClick={() => setShowHowToPlay(true)}
         onStatsClick={() => setShowStats(true)}
       />
       <HintBar
         strokeCount={gameState.targetKanji.strokeCount}
         readingCount={gameState.targetKanji.onYomi.length}
+        kunYomiCount={gameState.targetKanji.kunYomi.length}
       />
       <GameBoard guesses={gameState.guesses} maxGuesses={MAX_GUESSES} />
       <GuessInput
@@ -284,6 +367,7 @@ export default function GameContainer() {
         open={showResult}
         onClose={() => setShowResult(false)}
         gameState={gameState}
+        difficulty={difficulty}
         onStatsClick={() => {
           setShowResult(false);
           setShowStats(true);

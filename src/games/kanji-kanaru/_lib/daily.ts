@@ -51,6 +51,10 @@ function simpleHash(str: string): number {
  *
  * First checks the pre-generated schedule. If no entry is found for today's
  * date (e.g., schedule has expired), falls back to a deterministic hash.
+ *
+ * The kanjiData parameter should be the filtered pool for the selected difficulty.
+ * The schedule should be the difficulty-specific schedule whose kanjiIndex values
+ * refer to positions within that filtered pool.
  */
 export function getTodaysPuzzle(
   kanjiData: KanjiEntry[],

@@ -38,7 +38,9 @@ export default function KanjiIndexClient({ allKanji }: KanjiIndexClientProps) {
   return (
     <>
       <SearchBox
-        placeholder="漢字・読み・意味で検索..."
+        placeholder={
+          "\u6F22\u5B57\u30FB\u8AAD\u307F\u30FB\u610F\u5473\u3067\u691C\u7D22..."
+        }
         onSearch={handleSearch}
       />
       <DictionaryGrid>
@@ -62,7 +64,9 @@ export default function KanjiIndexClient({ allKanji }: KanjiIndexClientProps) {
             marginTop: "2rem",
           }}
         >
-          該当する漢字が見つかりませんでした。
+          {
+            "\u8A72\u5F53\u3059\u308B\u6F22\u5B57\u304C\u898B\u3064\u304B\u308A\u307E\u305B\u3093\u3067\u3057\u305F\u3002"
+          }
         </p>
       )}
     </>

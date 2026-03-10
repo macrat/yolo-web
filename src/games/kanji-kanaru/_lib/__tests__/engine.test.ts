@@ -1,58 +1,63 @@
 import { describe, test, expect } from "vitest";
-import { evaluateGuess, isValidKanji, lookupKanji } from "../engine";
+import {
+  evaluateGuess,
+  evaluateKunYomiCount,
+  isValidKanji,
+  lookupKanji,
+} from "../engine";
 import type { KanjiEntry } from "../types";
 
-// Test fixtures
+// Test fixtures using RadicalGroup (numeric) categories
 const target: KanjiEntry = {
-  character: "山",
-  radical: "山",
+  character: "\u5C71",
+  radical: "\u5C71",
   radicalGroup: 46,
   strokeCount: 3,
   grade: 1,
-  onYomi: ["サン", "セン"],
-  kunYomi: ["やま"],
+  onYomi: ["\u30B5\u30F3", "\u30BB\u30F3"],
+  kunYomi: ["\u3084\u307E"],
   meanings: ["mountain"],
-  category: "nature",
-  examples: ["山脈", "火山", "登山"],
+  category: 6,
+  examples: ["\u5C71\u8108", "\u706B\u5C71", "\u767B\u5C71"],
 };
 
 const exactMatch: KanjiEntry = {
-  character: "山",
-  radical: "山",
+  character: "\u5C71",
+  radical: "\u5C71",
   radicalGroup: 46,
   strokeCount: 3,
   grade: 1,
-  onYomi: ["サン", "セン"],
-  kunYomi: ["やま"],
+  onYomi: ["\u30B5\u30F3", "\u30BB\u30F3"],
+  kunYomi: ["\u3084\u307E"],
   meanings: ["mountain"],
-  category: "nature",
-  examples: ["山脈", "火山", "登山"],
+  category: 6,
+  examples: ["\u5C71\u8108", "\u706B\u5C71", "\u767B\u5C71"],
 };
 
 const partialMatch: KanjiEntry = {
-  character: "川",
-  radical: "川",
+  character: "\u5DDD",
+  radical: "\u5DDD",
   radicalGroup: 47,
   strokeCount: 3,
   grade: 1,
-  onYomi: ["セン"],
-  kunYomi: ["かわ"],
+  onYomi: ["\u30BB\u30F3"],
+  kunYomi: ["\u304B\u308F"],
   meanings: ["river"],
-  category: "water",
-  examples: ["河川", "川岸", "小川"],
+  category: 6,
+  examples: ["\u6CB3\u5DDD", "\u5DDD\u5CB8", "\u5C0F\u5DDD"],
 };
 
 const noMatch: KanjiEntry = {
-  character: "学",
-  radical: "子",
+  character: "\u5B66",
+  radical: "\u5B50",
   radicalGroup: 39,
   strokeCount: 8,
   grade: 1,
-  onYomi: ["ガク"],
-  kunYomi: ["まなぶ"],
+  onYomi: ["\u30AC\u30AF"],
+  kunYomi: ["\u307E\u306A\u3076"],
   meanings: ["learn", "study"],
-  category: "language",
-  examples: ["学校", "大学", "学生"],
+  category: 16,
+  examples: ["\u5B66\u6821", "\u5927\u5B66", "\u5B66\u751F"],
 };
 
 const kanjiData: KanjiEntry[] = [target, partialMatch, noMatch];
@@ -60,23 +65,23 @@ const kanjiData: KanjiEntry[] = [target, partialMatch, noMatch];
 describe("evaluateGuess", () => {
   test("returns all correct for exact match", () => {
     const feedback = evaluateGuess(exactMatch, target);
-    expect(feedback.guess).toBe("山");
+    expect(feedback.guess).toBe("\u5C71");
     expect(feedback.radical).toBe("correct");
     expect(feedback.strokeCount).toBe("correct");
     expect(feedback.grade).toBe("correct");
+    expect(feedback.gradeDirection).toBe("equal");
     expect(feedback.onYomi).toBe("correct");
     expect(feedback.category).toBe("correct");
+    expect(feedback.kunYomiCount).toBe("correct");
   });
 
   test("radical is binary: wrong when different", () => {
     const feedback = evaluateGuess(partialMatch, target);
-    // 川 (radical 川, group 47) vs 山 (radical 山, group 46) -> wrong (binary only)
     expect(feedback.radical).toBe("wrong");
   });
 
   test("strokeCount is correct when equal", () => {
     const feedback = evaluateGuess(partialMatch, target);
-    // Both have 3 strokes
     expect(feedback.strokeCount).toBe("correct");
   });
 
@@ -87,19 +92,16 @@ describe("evaluateGuess", () => {
       strokeCount: 5,
     };
     const feedback = evaluateGuess(guess, target);
-    // 5 vs 3 = diff of 2 -> close
     expect(feedback.strokeCount).toBe("close");
   });
 
   test("strokeCount is wrong when diff > 2", () => {
     const feedback = evaluateGuess(noMatch, target);
-    // 8 vs 3 = diff of 5 -> wrong
     expect(feedback.strokeCount).toBe("wrong");
   });
 
   test("grade is correct when equal", () => {
     const feedback = evaluateGuess(partialMatch, target);
-    // Both grade 1
     expect(feedback.grade).toBe("correct");
   });
 
@@ -110,7 +112,6 @@ describe("evaluateGuess", () => {
       grade: 2,
     };
     const feedback = evaluateGuess(guess, target);
-    // 2 vs 1 = diff of 1 -> close
     expect(feedback.grade).toBe("close");
   });
 
@@ -121,19 +122,43 @@ describe("evaluateGuess", () => {
       grade: 5,
     };
     const feedback = evaluateGuess(guess, target);
-    // 5 vs 1 = diff of 4 -> wrong
     expect(feedback.grade).toBe("wrong");
+  });
+
+  test("gradeDirection is up when target grade is higher", () => {
+    const guess: KanjiEntry = {
+      ...target,
+      character: "X",
+      grade: 1,
+    };
+    const higherTarget: KanjiEntry = { ...target, grade: 3 };
+    const feedback = evaluateGuess(guess, higherTarget);
+    expect(feedback.gradeDirection).toBe("up");
+  });
+
+  test("gradeDirection is down when target grade is lower", () => {
+    const guess: KanjiEntry = {
+      ...target,
+      character: "X",
+      grade: 5,
+    };
+    const lowerTarget: KanjiEntry = { ...target, grade: 2 };
+    const feedback = evaluateGuess(guess, lowerTarget);
+    expect(feedback.gradeDirection).toBe("down");
+  });
+
+  test("gradeDirection is equal when grades match", () => {
+    const feedback = evaluateGuess(partialMatch, target);
+    expect(feedback.gradeDirection).toBe("equal");
   });
 
   test("onYomi is correct when sharing at least one reading", () => {
     const feedback = evaluateGuess(partialMatch, target);
-    // 川 has ["セン"], 山 has ["サン", "セン"] -> shares "セン" -> correct
     expect(feedback.onYomi).toBe("correct");
   });
 
   test("onYomi is wrong when no readings match", () => {
     const feedback = evaluateGuess(noMatch, target);
-    // 学 has ["ガク"], 山 has ["サン", "セン"] -> no match -> wrong
     expect(feedback.onYomi).toBe("wrong");
   });
 
@@ -148,31 +173,76 @@ describe("evaluateGuess", () => {
     expect(feedback.onYomi).toBe("wrong");
   });
 
-  test("category is correct when same category", () => {
+  test("category is correct when same radical group", () => {
     const feedback = evaluateGuess(exactMatch, target);
     expect(feedback.category).toBe("correct");
   });
 
-  test("category is close when in same super-group", () => {
+  test("category is correct for same radical group (partialMatch has same category 6)", () => {
     const feedback = evaluateGuess(partialMatch, target);
-    // "water" and "nature" are both in "elements" super-group -> close
-    expect(feedback.category).toBe("close");
+    // Both have category 6
+    expect(feedback.category).toBe("correct");
   });
 
-  test("category is wrong when unrelated", () => {
+  test("category is wrong when unrelated radical groups", () => {
     const feedback = evaluateGuess(noMatch, target);
-    // "language" is in "human", "nature" is in "elements" -> wrong
+    // category 16 vs 6 -> different super-groups -> wrong
     expect(feedback.category).toBe("wrong");
+  });
+
+  test("kunYomiCount is correct when counts match", () => {
+    const feedback = evaluateGuess(partialMatch, target);
+    // Both have 1 kunYomi
+    expect(feedback.kunYomiCount).toBe("correct");
+  });
+
+  test("kunYomiCount is close when difference is 1", () => {
+    const guess: KanjiEntry = {
+      ...target,
+      character: "X",
+      kunYomi: ["\u3042", "\u3044"],
+    };
+    const feedback = evaluateGuess(guess, target);
+    // 2 vs 1 = diff of 1 -> close
+    expect(feedback.kunYomiCount).toBe("close");
+  });
+
+  test("kunYomiCount is wrong when difference > 1", () => {
+    const guess: KanjiEntry = {
+      ...target,
+      character: "X",
+      kunYomi: ["\u3042", "\u3044", "\u3046", "\u3048"],
+    };
+    const feedback = evaluateGuess(guess, target);
+    // 4 vs 1 = diff of 3 -> wrong
+    expect(feedback.kunYomiCount).toBe("wrong");
+  });
+});
+
+describe("evaluateKunYomiCount", () => {
+  test("returns correct when counts match", () => {
+    expect(evaluateKunYomiCount(2, 2)).toBe("correct");
+    expect(evaluateKunYomiCount(0, 0)).toBe("correct");
+  });
+
+  test("returns close when difference is 1", () => {
+    expect(evaluateKunYomiCount(1, 2)).toBe("close");
+    expect(evaluateKunYomiCount(3, 2)).toBe("close");
+  });
+
+  test("returns wrong when difference > 1", () => {
+    expect(evaluateKunYomiCount(0, 3)).toBe("wrong");
+    expect(evaluateKunYomiCount(5, 1)).toBe("wrong");
   });
 });
 
 describe("isValidKanji", () => {
   test("returns true for a character in the dataset", () => {
-    expect(isValidKanji("山", kanjiData)).toBe(true);
+    expect(isValidKanji("\u5C71", kanjiData)).toBe(true);
   });
 
   test("returns false for a character not in the dataset", () => {
-    expect(isValidKanji("猫", kanjiData)).toBe(false);
+    expect(isValidKanji("\u732B", kanjiData)).toBe(false);
   });
 
   test("returns false for empty string", () => {
@@ -186,14 +256,14 @@ describe("isValidKanji", () => {
 
 describe("lookupKanji", () => {
   test("returns entry for existing character", () => {
-    const entry = lookupKanji("山", kanjiData);
+    const entry = lookupKanji("\u5C71", kanjiData);
     expect(entry).toBeDefined();
-    expect(entry?.character).toBe("山");
+    expect(entry?.character).toBe("\u5C71");
     expect(entry?.strokeCount).toBe(3);
   });
 
   test("returns undefined for non-existent character", () => {
-    expect(lookupKanji("猫", kanjiData)).toBeUndefined();
+    expect(lookupKanji("\u732B", kanjiData)).toBeUndefined();
   });
 
   test("returns undefined for empty string", () => {

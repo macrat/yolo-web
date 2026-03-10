@@ -56,7 +56,7 @@ const BUDGETS = {
   categories: {
     "/tools": 60 * 1024, // 60 KB
     "/cheatsheets": 15 * 1024, // 15 KB
-    "/games": 90 * 1024, // 90 KB
+    "/games": 650 * 1024, // 650 KB (kanji-kanaru loads 2,136 kanji entries)
     "/dictionary": 50 * 1024, // 50 KB
     "/blog": 20 * 1024, // 20 KB
     "/quiz": 40 * 1024, // 40 KB
