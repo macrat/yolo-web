@@ -1,21 +1,28 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useCallback } from "react";
+import { useRouter } from "next/navigation";
 import {
   ROLE_DISPLAY,
   capitalize,
   type PublicMemoSummary,
   type RoleSlug,
 } from "@/memos/_lib/memos-shared";
-import { paginate, MEMOS_PER_PAGE } from "@/lib/pagination";
+import { MEMOS_PER_PAGE } from "@/lib/pagination";
 import Pagination from "@/components/common/Pagination";
 import MemoCard from "./MemoCard";
 import styles from "./MemoFilter.module.css";
 
 interface MemoFilterProps {
+  /** Pre-filtered and paginated memos for the current page (server-provided). */
   memos: PublicMemoSummary[];
   allTags: string[];
   allRoles: string[];
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
+  currentRole: string;
+  currentTag: string;
 }
 
 function getRoleLabel(role: string): string {
@@ -46,48 +53,57 @@ function formatRangeText(
   return `${totalItems}件中 ${start}-${end}件を表示`;
 }
 
+/**
+ * Build the URL for /memos with the given search parameters.
+ * Only includes non-default values to keep URLs clean.
+ */
+function buildMemosUrl(params: {
+  page?: number;
+  role?: string;
+  tag?: string;
+}): string {
+  const searchParams = new URLSearchParams();
+  if (params.role && params.role !== "all") {
+    searchParams.set("role", params.role);
+  }
+  if (params.tag && params.tag !== "all") {
+    searchParams.set("tag", params.tag);
+  }
+  if (params.page && params.page > 1) {
+    searchParams.set("page", String(params.page));
+  }
+  const qs = searchParams.toString();
+  return qs ? `/memos?${qs}` : "/memos";
+}
+
 export default function MemoFilter({
   memos,
   allTags,
   allRoles,
+  currentPage,
+  totalPages,
+  totalItems,
+  currentRole,
+  currentTag,
 }: MemoFilterProps) {
-  const [selectedRole, setSelectedRole] = useState<string>("all");
-  const [selectedTag, setSelectedTag] = useState<string>("all");
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const router = useRouter();
 
-  const filtered = useMemo(
-    () =>
-      memos.filter((m) => {
-        if (
-          selectedRole !== "all" &&
-          m.from !== selectedRole &&
-          m.to !== selectedRole
-        ) {
-          return false;
-        }
-        if (selectedTag !== "all" && !m.tags.includes(selectedTag)) {
-          return false;
-        }
-        return true;
-      }),
-    [memos, selectedRole, selectedTag],
-  );
-
-  const paginationResult = useMemo(
-    () => paginate(filtered, currentPage, MEMOS_PER_PAGE),
-    [filtered, currentPage],
-  );
-
-  /** Reset page to 1 when a filter changes */
+  /** Navigate to /memos with updated filters, always resetting to page 1. */
   function handleRoleChange(value: string): void {
-    setSelectedRole(value);
-    setCurrentPage(1);
+    router.push(buildMemosUrl({ role: value, tag: currentTag, page: 1 }));
   }
 
   function handleTagChange(value: string): void {
-    setSelectedTag(value);
-    setCurrentPage(1);
+    router.push(buildMemosUrl({ role: currentRole, tag: value, page: 1 }));
   }
+
+  /** Build a URL for the Pagination component's link mode. */
+  const buildPageUrl = useCallback(
+    (page: number): string => {
+      return buildMemosUrl({ role: currentRole, tag: currentTag, page });
+    },
+    [currentRole, currentTag],
+  );
 
   return (
     <div>
@@ -99,7 +115,7 @@ export default function MemoFilter({
           <select
             id="role-filter"
             className={styles.select}
-            value={selectedRole}
+            value={currentRole}
             onChange={(e) => handleRoleChange(e.target.value)}
           >
             <option value="all">すべて</option>
@@ -118,7 +134,7 @@ export default function MemoFilter({
           <select
             id="tag-filter"
             className={styles.select}
-            value={selectedTag}
+            value={currentTag}
             onChange={(e) => handleTagChange(e.target.value)}
           >
             <option value="all">すべて</option>
@@ -131,29 +147,23 @@ export default function MemoFilter({
         </div>
 
         <span className={styles.count}>
-          {formatRangeText(
-            paginationResult.totalItems,
-            paginationResult.currentPage,
-            MEMOS_PER_PAGE,
-          )}
+          {formatRangeText(totalItems, currentPage, MEMOS_PER_PAGE)}
         </span>
       </div>
 
       <div className={styles.list}>
-        {paginationResult.items.length === 0 ? (
+        {memos.length === 0 ? (
           <p className={styles.empty}>該当するメモがありません。</p>
         ) : (
-          paginationResult.items.map((memo) => (
-            <MemoCard key={memo.id} memo={memo} />
-          ))
+          memos.map((memo) => <MemoCard key={memo.id} memo={memo} />)
         )}
       </div>
 
       <Pagination
-        mode="button"
-        currentPage={paginationResult.currentPage}
-        totalPages={paginationResult.totalPages}
-        onPageChange={setCurrentPage}
+        mode="link"
+        currentPage={currentPage}
+        totalPages={totalPages}
+        buildUrl={buildPageUrl}
       />
     </div>
   );
