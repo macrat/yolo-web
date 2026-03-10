@@ -1,7 +1,8 @@
 /**
  * Puzzle Schedule Generator for Kanji Kanaru
  *
- * Generates a JSON file mapping dates to kanji indices for 365 days.
+ * Generates three JSON files for each difficulty level (beginner, intermediate, advanced).
+ * Each file maps dates to kanji indices within the filtered pool for that difficulty.
  * Uses a seeded PRNG (mulberry32) to ensure deterministic, reproducible output.
  *
  * Usage: npx tsx scripts/generate-puzzle-schedule.ts
@@ -12,6 +13,35 @@ import * as path from "path";
 
 // Seed: 0x4B616E6A69 = "Kanji" in ASCII hex
 const SEED = 0x4b616e6a;
+
+interface KanjiEntry {
+  grade: number;
+  [key: string]: unknown;
+}
+
+interface DifficultyConfig {
+  name: string;
+  maxGrade: number;
+  outputFile: string;
+}
+
+const DIFFICULTIES: DifficultyConfig[] = [
+  {
+    name: "beginner",
+    maxGrade: 2,
+    outputFile: "puzzle-schedule-beginner.json",
+  },
+  {
+    name: "intermediate",
+    maxGrade: 6,
+    outputFile: "puzzle-schedule-intermediate.json",
+  },
+  {
+    name: "advanced",
+    maxGrade: 7,
+    outputFile: "puzzle-schedule-advanced.json",
+  },
+];
 
 /**
  * Mulberry32 seeded PRNG.
@@ -49,39 +79,49 @@ function addDays(dateStr: string, days: number): string {
 }
 
 function main(): void {
-  // Load kanji data to determine dataset size
+  // Load kanji data to determine dataset and filter by grade
   const kanjiDataPath = path.resolve(__dirname, "../src/data/kanji-data.json");
   const kanjiDataRaw = fs.readFileSync(kanjiDataPath, "utf-8");
-  const kanjiData = JSON.parse(kanjiDataRaw) as unknown[];
-  const datasetSize = kanjiData.length;
+  const kanjiData = JSON.parse(kanjiDataRaw) as KanjiEntry[];
 
-  console.log(`Dataset size: ${datasetSize} kanji`);
+  console.log(`Total dataset size: ${kanjiData.length} kanji`);
 
-  // Generate shuffled indices
-  const rng = mulberry32(SEED);
-  const indices = Array.from({ length: datasetSize }, (_, i) => i);
-  const shuffled = seededShuffle(indices, rng);
-
-  // Generate 365 days of puzzles starting from 2026-03-01
   const startDate = "2026-03-01";
-  const numDays = 365;
+  const numDays = 730; // 2 years
 
-  const schedule: { date: string; kanjiIndex: number }[] = [];
-  for (let i = 0; i < numDays; i++) {
-    const date = addDays(startDate, i);
-    // Cycle through the shuffled indices if the dataset is smaller than 365
-    const kanjiIndex = shuffled[i % shuffled.length];
-    schedule.push({ date, kanjiIndex });
+  const outputDir = path.resolve(__dirname, "../src/games/kanji-kanaru/data");
+
+  for (const config of DIFFICULTIES) {
+    // Filter indices by grade for this difficulty
+    const filteredIndices: number[] = [];
+    for (let i = 0; i < kanjiData.length; i++) {
+      if (kanjiData[i].grade <= config.maxGrade) {
+        filteredIndices.push(i);
+      }
+    }
+
+    const poolSize = filteredIndices.length;
+    console.log(
+      `${config.name}: ${poolSize} kanji (grade <= ${config.maxGrade})`,
+    );
+
+    // Generate shuffled pool-local indices
+    const rng = mulberry32(SEED);
+    const poolLocalIndices = Array.from({ length: poolSize }, (_, i) => i);
+    const shuffled = seededShuffle(poolLocalIndices, rng);
+
+    // Generate schedule: kanjiIndex is the pool-local index
+    const schedule: { date: string; kanjiIndex: number }[] = [];
+    for (let i = 0; i < numDays; i++) {
+      const date = addDays(startDate, i);
+      const kanjiIndex = shuffled[i % shuffled.length];
+      schedule.push({ date, kanjiIndex });
+    }
+
+    const outputPath = path.join(outputDir, config.outputFile);
+    fs.writeFileSync(outputPath, JSON.stringify(schedule, null, 2) + "\n");
+    console.log(`  Generated ${schedule.length} entries: ${outputPath}`);
   }
-
-  // Write output
-  const outputPath = path.resolve(
-    __dirname,
-    "../src/games/kanji-kanaru/data/puzzle-schedule.json",
-  );
-  fs.writeFileSync(outputPath, JSON.stringify(schedule, null, 2) + "\n");
-
-  console.log(`Generated ${schedule.length} puzzle entries: ${outputPath}`);
 }
 
 main();

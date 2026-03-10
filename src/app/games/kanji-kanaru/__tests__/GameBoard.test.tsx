@@ -17,56 +17,63 @@ describe("GameBoard", () => {
   test("renders column headers", () => {
     render(<GameBoard guesses={[]} maxGuesses={6} />);
     const headers = screen.getAllByRole("columnheader");
-    // 6 columns: empty + 部首 + 画数 + 学年 + 音読み + 意味
-    expect(headers).toHaveLength(6);
-    expect(headers[1]).toHaveTextContent("部首");
-    expect(headers[2]).toHaveTextContent("画数");
-    expect(headers[3]).toHaveTextContent("学年");
-    expect(headers[4]).toHaveTextContent("音読み");
-    expect(headers[5]).toHaveTextContent("意味");
+    // 7 columns: empty + 部首 + 画数 + 学年 + 音読み + 意味 + 訓読み
+    expect(headers).toHaveLength(7);
+    expect(headers[1]).toHaveTextContent("\u90E8\u9996");
+    expect(headers[2]).toHaveTextContent("\u753B\u6570");
+    expect(headers[3]).toHaveTextContent("\u5B66\u5E74");
+    expect(headers[4]).toHaveTextContent("\u97F3\u8AAD\u307F");
+    expect(headers[5]).toHaveTextContent("\u610F\u5473");
+    expect(headers[6]).toHaveTextContent("\u8A13\u8AAD\u307F");
   });
 
   test("renders filled row with feedback", () => {
     const guesses: GuessFeedback[] = [
       {
-        guess: "山",
+        guess: "\u5C71",
         radical: "correct",
         strokeCount: "close",
         grade: "wrong",
+        gradeDirection: "up",
         onYomi: "correct",
         category: "close",
+        kunYomiCount: "correct",
       },
     ];
 
     render(<GameBoard guesses={guesses} maxGuesses={6} />);
 
     // The guessed kanji should appear in the grid
-    expect(screen.getByText("山")).toBeInTheDocument();
+    expect(screen.getByText("\u5C71")).toBeInTheDocument();
   });
 
   test("renders multiple filled rows", () => {
     const guesses: GuessFeedback[] = [
       {
-        guess: "山",
+        guess: "\u5C71",
         radical: "correct",
         strokeCount: "correct",
         grade: "correct",
+        gradeDirection: "equal",
         onYomi: "correct",
         category: "correct",
+        kunYomiCount: "correct",
       },
       {
-        guess: "川",
+        guess: "\u5DDD",
         radical: "wrong",
         strokeCount: "close",
         grade: "close",
+        gradeDirection: "down",
         onYomi: "wrong",
         category: "wrong",
+        kunYomiCount: "wrong",
       },
     ];
 
     render(<GameBoard guesses={guesses} maxGuesses={6} />);
 
-    expect(screen.getByText("山")).toBeInTheDocument();
-    expect(screen.getByText("川")).toBeInTheDocument();
+    expect(screen.getByText("\u5C71")).toBeInTheDocument();
+    expect(screen.getByText("\u5DDD")).toBeInTheDocument();
   });
 });

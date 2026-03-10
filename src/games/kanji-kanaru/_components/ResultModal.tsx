@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
-import type { GameState } from "@/games/kanji-kanaru/_lib/types";
+import type { Difficulty, GameState } from "@/games/kanji-kanaru/_lib/types";
 import { generateShareText } from "@/games/kanji-kanaru/_lib/share";
 import GameDialog from "@/games/shared/_components/GameDialog";
 import GameShareButtons from "@/games/shared/_components/GameShareButtons";
@@ -13,6 +13,7 @@ interface ResultModalProps {
   open: boolean;
   onClose: () => void;
   gameState: GameState;
+  difficulty: Difficulty;
   onStatsClick: () => void;
 }
 
@@ -24,11 +25,12 @@ export default function ResultModal({
   open,
   onClose,
   gameState,
+  difficulty,
   onStatsClick,
 }: ResultModalProps) {
   const { targetKanji, guesses, status } = gameState;
   const isWon = status === "won";
-  const shareText = generateShareText(gameState);
+  const shareText = generateShareText(gameState, difficulty);
 
   const onReadings = targetKanji.onYomi.join("\u3001");
   const kunReadings = targetKanji.kunYomi.join("\u3001");
@@ -63,15 +65,27 @@ export default function ResultModal({
     >
       <div className={styles.resultAnswer}>{targetKanji.character}</div>
       <div className={styles.resultReadings}>
-        {onReadings && <>\u97F3: {onReadings}</>}
+        {onReadings && (
+          <>
+            {"\u97F3"}: {onReadings}
+          </>
+        )}
         {onReadings && kunReadings && " / "}
-        {kunReadings && <>\u8A13: {kunReadings}</>}
+        {kunReadings && (
+          <>
+            {"\u8A13"}: {kunReadings}
+          </>
+        )}
       </div>
       {meanings && (
-        <div className={styles.resultMeanings}>\u610F\u5473: {meanings}</div>
+        <div className={styles.resultMeanings}>
+          {"\u610F\u5473"}: {meanings}
+        </div>
       )}
       {examples && (
-        <div className={styles.resultExamples}>\u4F8B: {examples}</div>
+        <div className={styles.resultExamples}>
+          {"\u4F8B"}: {examples}
+        </div>
       )}
       <div className={styles.resultSummary}>
         {isWon

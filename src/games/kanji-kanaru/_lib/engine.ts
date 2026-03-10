@@ -9,7 +9,9 @@ import { areCategoriesRelated } from "./categories";
  * - onYomi: binary correct/wrong only ("correct" = shares at least one complete reading)
  * - strokeCount: correct / close (within +/-2) / wrong
  * - grade: correct / close (within +/-1) / wrong
+ * - gradeDirection: "up" if target grade > guess grade, "down" if less, "equal" if same
  * - category: correct / close (same super-group) / wrong
+ * - kunYomiCount: correct / close (within +/-1) / wrong
  */
 export function evaluateGuess(
   guess: KanjiEntry,
@@ -20,8 +22,13 @@ export function evaluateGuess(
     radical: evaluateRadical(guess, target),
     strokeCount: evaluateStrokeCount(guess.strokeCount, target.strokeCount),
     grade: evaluateGrade(guess.grade, target.grade),
+    gradeDirection: evaluateGradeDirection(guess.grade, target.grade),
     onYomi: evaluateOnYomi(guess.onYomi, target.onYomi),
     category: evaluateCategory(guess.category, target.category),
+    kunYomiCount: evaluateKunYomiCount(
+      guess.kunYomi.length,
+      target.kunYomi.length,
+    ),
   };
 }
 
@@ -55,6 +62,18 @@ function evaluateGrade(guessGrade: number, targetGrade: number): FeedbackLevel {
 }
 
 /**
+ * Grade direction: indicates whether the target grade is higher, lower, or equal.
+ * "up" = target is higher grade (harder), "down" = target is lower grade (easier).
+ */
+function evaluateGradeDirection(
+  guessGrade: number,
+  targetGrade: number,
+): "up" | "down" | "equal" {
+  if (guessGrade === targetGrade) return "equal";
+  return targetGrade > guessGrade ? "up" : "down";
+}
+
+/**
  * On'yomi feedback: binary correct/wrong only.
  * "correct" = the guess and target share at least one complete on'yomi reading.
  */
@@ -79,6 +98,19 @@ function evaluateCategory(
 ): FeedbackLevel {
   if (guessCategory === targetCategory) return "correct";
   if (areCategoriesRelated(guessCategory, targetCategory)) return "close";
+  return "wrong";
+}
+
+/**
+ * Kun'yomi count feedback: correct if exact, close if within +/-1, otherwise wrong.
+ * Compares the number of kun'yomi readings between guess and target.
+ */
+export function evaluateKunYomiCount(
+  guessCount: number,
+  targetCount: number,
+): FeedbackLevel {
+  if (guessCount === targetCount) return "correct";
+  if (Math.abs(guessCount - targetCount) <= 1) return "close";
   return "wrong";
 }
 

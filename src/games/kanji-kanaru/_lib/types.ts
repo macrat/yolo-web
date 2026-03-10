@@ -3,35 +3,26 @@ export interface KanjiEntry {
   radical: string;
   radicalGroup: number;
   strokeCount: number;
-  grade: number; // 1-6, 7=secondary, 8=jinmeiyo
+  grade: number; // 1-6, 7=secondary
   onYomi: string[];
   kunYomi: string[];
   meanings: string[];
-  category: SemanticCategory;
+  category: RadicalGroup;
   examples: string[];
 }
 
-export type SemanticCategory =
-  | "nature"
-  | "body"
-  | "action"
-  | "emotion"
-  | "number"
-  | "time"
-  | "direction"
-  | "building"
-  | "tool"
-  | "animal"
-  | "plant"
-  | "weather"
-  | "water"
-  | "fire"
-  | "earth"
-  | "person"
-  | "society"
-  | "language"
-  | "abstract"
-  | "measurement";
+/** Radical group ID (1-20), used for category-based feedback. */
+export type RadicalGroup = number;
+
+/** Difficulty level for the game. */
+export type Difficulty = "beginner" | "intermediate" | "advanced";
+
+/** Maximum grade included for each difficulty level. */
+export const DIFFICULTY_GRADE_MAX: Record<Difficulty, number> = {
+  beginner: 2,
+  intermediate: 6,
+  advanced: 7,
+};
 
 export type FeedbackLevel = "correct" | "close" | "wrong";
 
@@ -40,8 +31,10 @@ export interface GuessFeedback {
   radical: FeedbackLevel;
   strokeCount: FeedbackLevel;
   grade: FeedbackLevel;
+  gradeDirection: "up" | "down" | "equal";
   onYomi: FeedbackLevel;
   category: FeedbackLevel;
+  kunYomiCount: FeedbackLevel;
 }
 
 export interface GameState {

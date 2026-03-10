@@ -9,23 +9,28 @@ import KanjiIndexClient from "./KanjiIndexClient";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
-  title: `漢字辞典 | ${SITE_NAME}`,
+  title: `\u6F22\u5B57\u8F9E\u5178 | ${SITE_NAME}`,
   description:
-    "小学1年生で学ぶ基本漢字80字の読み方・意味・部首・画数を丁寧にまとめたオンライン漢字辞典。各漢字の使用例もあわせて確認できます。",
-  keywords: ["漢字辞典", "漢字", "読み方", "小学1年生", "基本漢字"],
+    "\u5E38\u7528\u6F22\u5B572,136\u5B57\u306E\u8AAD\u307F\u65B9\u30FB\u610F\u5473\u30FB\u90E8\u9996\u30FB\u753B\u6570\u3092\u4E01\u5BE7\u306B\u307E\u3068\u3081\u305F\u30AA\u30F3\u30E9\u30A4\u30F3\u6F22\u5B57\u8F9E\u5178\u3002\u5404\u6F22\u5B57\u306E\u4F7F\u7528\u4F8B\u3082\u3042\u308F\u305B\u3066\u78BA\u8A8D\u3067\u304D\u307E\u3059\u3002",
+  keywords: [
+    "\u6F22\u5B57\u8F9E\u5178",
+    "\u6F22\u5B57",
+    "\u8AAD\u307F\u65B9",
+    "\u5E38\u7528\u6F22\u5B57",
+  ],
   openGraph: {
-    title: `漢字辞典 | ${SITE_NAME}`,
+    title: `\u6F22\u5B57\u8F9E\u5178 | ${SITE_NAME}`,
     description:
-      "小学1年生で学ぶ基本漢字80字の読み方・意味・部首・画数を丁寧にまとめたオンライン漢字辞典。",
+      "\u5E38\u7528\u6F22\u5B572,136\u5B57\u306E\u8AAD\u307F\u65B9\u30FB\u610F\u5473\u30FB\u90E8\u9996\u30FB\u753B\u6570\u3092\u4E01\u5BE7\u306B\u307E\u3068\u3081\u305F\u30AA\u30F3\u30E9\u30A4\u30F3\u6F22\u5B57\u8F9E\u5178\u3002",
     type: "website",
     url: `${BASE_URL}/dictionary/kanji`,
     siteName: SITE_NAME,
   },
   twitter: {
     card: "summary_large_image",
-    title: `漢字辞典 | ${SITE_NAME}`,
+    title: `\u6F22\u5B57\u8F9E\u5178 | ${SITE_NAME}`,
     description:
-      "小学1年生で学ぶ基本漢字80字の読み方・意味・部首・画数を丁寧にまとめたオンライン漢字辞典。",
+      "\u5E38\u7528\u6F22\u5B572,136\u5B57\u306E\u8AAD\u307F\u65B9\u30FB\u610F\u5473\u30FB\u90E8\u9996\u30FB\u753B\u6570\u3092\u4E01\u5BE7\u306B\u307E\u3068\u3081\u305F\u30AA\u30F3\u30E9\u30A4\u30F3\u6F22\u5B57\u8F9E\u5178\u3002",
   },
   alternates: {
     canonical: `${BASE_URL}/dictionary/kanji`,
@@ -36,28 +41,31 @@ export default function KanjiIndexPage() {
   const allKanji = getAllKanji();
   const categories = getKanjiCategories().map((c) => ({
     slug: c,
-    label: KANJI_CATEGORY_LABELS[c],
+    label: KANJI_CATEGORY_LABELS[Number(c)],
   }));
 
   return (
     <>
       <Breadcrumb
         items={[
-          { label: "ホーム", href: "/" },
-          { label: "辞典", href: "/dictionary" },
-          { label: "漢字辞典" },
+          { label: "\u30DB\u30FC\u30E0", href: "/" },
+          { label: "\u8F9E\u5178", href: "/dictionary" },
+          { label: "\u6F22\u5B57\u8F9E\u5178" },
         ]}
       />
       <TrustLevelBadge level="curated" />
-      <h1 className={styles.title}>漢字辞典</h1>
+      <h1 className={styles.title}>{"\u6F22\u5B57\u8F9E\u5178"}</h1>
       <p className={styles.description}>
-        小学1年生で学ぶ基本漢字{allKanji.length}
-        字の読み方・意味・部首・画数を丁寧にまとめました。漢字をクリックすると、使用例や関連する漢字も確認できます。
+        {"\u5E38\u7528\u6F22\u5B57"}
+        {allKanji.length}
+        {
+          "\u5B57\u306E\u8AAD\u307F\u65B9\u30FB\u610F\u5473\u30FB\u90E8\u9996\u30FB\u753B\u6570\u3092\u4E01\u5BE7\u306B\u307E\u3068\u3081\u307E\u3057\u305F\u3002\u6F22\u5B57\u3092\u30AF\u30EA\u30C3\u30AF\u3059\u308B\u3068\u3001\u4F7F\u7528\u4F8B\u3084\u95A2\u9023\u3059\u308B\u6F22\u5B57\u3082\u78BA\u8A8D\u3067\u304D\u307E\u3059\u3002"
+        }
       </p>
       <CategoryNav
         categories={categories}
         basePath="/dictionary/kanji/category"
-        allLabel="すべて"
+        allLabel={"\u3059\u3079\u3066"}
         allHref="/dictionary/kanji"
       />
       <KanjiIndexClient allKanji={allKanji} />

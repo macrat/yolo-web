@@ -3,16 +3,16 @@ import { getAllKanjiChars, getKanjiCategories } from "../kanji";
 import { getAllYojiIds, getYojiCategories } from "../yoji";
 
 describe("generateStaticParams counts", () => {
-  test("kanji detail pages: 80 params", () => {
+  test("kanji detail pages: 2136 params", () => {
     const chars = getAllKanjiChars();
-    expect(chars).toHaveLength(80);
+    expect(chars).toHaveLength(2136);
     // All chars should be unique
-    expect(new Set(chars).size).toBe(80);
+    expect(new Set(chars).size).toBe(2136);
   });
 
-  test("kanji category pages: 17 params", () => {
+  test("kanji category pages: 20 params", () => {
     const categories = getKanjiCategories();
-    expect(categories).toHaveLength(17);
+    expect(categories).toHaveLength(20);
   });
 
   test("yoji detail pages: 101 params", () => {
