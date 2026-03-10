@@ -36,7 +36,6 @@ export interface KanjiEntry {
   onYomi: string[];
   kunYomi: string[];
   meanings: string[];
-  category: KanjiCategory;
   examples: string[];
 }
 
@@ -47,9 +46,6 @@ export interface YojiEntry {
   difficulty: YojiDifficulty;
   category: YojiCategory;
 }
-
-/** Radical group ID (1-20), matching the game's RadicalGroup type. */
-export type KanjiCategory = number;
 
 export type YojiCategory =
   | "change"
@@ -65,28 +61,15 @@ export type YojiCategory =
 
 export type YojiDifficulty = 1 | 2 | 3;
 
-/** Japanese labels for radical group categories (1-20). */
-export const KANJI_CATEGORY_LABELS: Record<KanjiCategory, string> = {
-  1: "基本図形",
-  2: "人と体上部",
-  3: "刃物と力",
-  4: "口と囲い",
-  5: "天文と時間",
-  6: "山と川",
-  7: "動作基本",
-  8: "打撃と文",
-  9: "木と欠",
-  10: "爪と父",
-  11: "瓜と生",
-  12: "目と矢",
-  13: "米と糸",
-  14: "筆と肉",
-  15: "草と虫",
-  16: "見と言",
-  17: "足と身",
-  18: "金と門",
-  19: "面と革",
-  20: "魚と鳥",
+/** Japanese labels for kanji grades. */
+export const KANJI_GRADE_LABELS: Record<number, string> = {
+  1: "小学1年",
+  2: "小学2年",
+  3: "小学3年",
+  4: "小学4年",
+  5: "小学5年",
+  6: "小学6年",
+  7: "中学以降",
 };
 
 export const YOJI_CATEGORY_LABELS: Record<YojiCategory, string> = {

@@ -7,12 +7,8 @@ export interface KanjiEntry {
   onYomi: string[];
   kunYomi: string[];
   meanings: string[];
-  category: RadicalGroup;
   examples: string[];
 }
-
-/** Radical group ID (1-20), used for category-based feedback. */
-export type RadicalGroup = number;
 
 /** Difficulty level for the game. */
 export type Difficulty = "beginner" | "intermediate" | "advanced";

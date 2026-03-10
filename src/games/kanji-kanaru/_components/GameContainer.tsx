@@ -6,7 +6,6 @@ import type {
   Difficulty,
   GameState,
   GameStats,
-  GuessFeedback,
   KanjiEntry,
   EvaluateResponse,
   HintsResponse,
@@ -106,34 +105,6 @@ async function fetchEvaluate(
 }
 
 /**
- * Re-evaluate saved guesses via the API (fallback for old saves without feedbacks).
- * Calls the evaluate endpoint for each guess sequentially to reconstruct feedback.
- */
-async function reEvaluateGuesses(
-  guesses: string[],
-  puzzleDate: string,
-  difficulty: Difficulty,
-): Promise<{ feedbacks: GuessFeedback[]; targetKanji: KanjiEntry | null }> {
-  const feedbacks: GuessFeedback[] = [];
-  let targetKanji: KanjiEntry | null = null;
-
-  for (let i = 0; i < guesses.length; i++) {
-    const response = await fetchEvaluate(
-      guesses[i],
-      puzzleDate,
-      difficulty,
-      i + 1,
-    );
-    feedbacks.push(response.feedback);
-    if (response.targetKanji) {
-      targetKanji = response.targetKanji as KanjiEntry;
-    }
-  }
-
-  return { feedbacks, targetKanji };
-}
-
-/**
  * Top-level client component that orchestrates the entire game state.
  * Fetches hints from the server API, manages guesses via the evaluate API,
  * and persists state to localStorage. The target kanji is never exposed
@@ -209,64 +180,29 @@ export default function GameContainer() {
         // Try to restore from localStorage
         const saved = loadTodayGame(todayStr, diff);
         if (saved) {
-          // Check if feedbacks are saved (new format)
-          if (saved.feedbacks && saved.feedbacks.length > 0) {
-            // Determine if the game is over and we need targetKanji
-            let targetKanji: KanjiEntry | null = null;
-            if (saved.status === "won" || saved.status === "lost") {
-              // Re-evaluate the last guess to get targetKanji from API
-              const lastResponse = await fetchEvaluate(
-                saved.guesses[saved.guesses.length - 1],
-                todayStr,
-                diff,
-                saved.guesses.length,
-              );
-              if (lastResponse.targetKanji) {
-                targetKanji = lastResponse.targetKanji as KanjiEntry;
-              }
-            }
-
-            setGameState({
-              puzzleDate: todayStr,
-              puzzleNumber: hints.puzzleNumber,
-              targetKanji,
-              guesses: saved.feedbacks,
-              status:
-                saved.status === "won"
-                  ? "won"
-                  : saved.status === "lost"
-                    ? "lost"
-                    : "playing",
-            });
-          } else {
-            // Old format: no feedbacks saved, re-evaluate via API
-            const { feedbacks, targetKanji } = await reEvaluateGuesses(
-              saved.guesses,
+          // Restore from saved feedbacks (loadTodayGame already discards
+          // old saves without feedbacks, so saved.feedbacks is guaranteed)
+          let targetKanji: KanjiEntry | null = null;
+          if (saved.status === "won" || saved.status === "lost") {
+            // Re-evaluate the last guess to get targetKanji from API
+            const lastResponse = await fetchEvaluate(
+              saved.guesses[saved.guesses.length - 1],
               todayStr,
               diff,
+              saved.guesses.length,
             );
-
-            setGameState({
-              puzzleDate: todayStr,
-              puzzleNumber: hints.puzzleNumber,
-              targetKanji,
-              guesses: feedbacks,
-              status:
-                saved.status === "won"
-                  ? "won"
-                  : saved.status === "lost"
-                    ? "lost"
-                    : "playing",
-            });
-
-            // Save feedbacks for future loads (upgrade old format)
-            const history = loadHistory(diff);
-            history[todayStr] = {
-              ...saved,
-              feedbacks,
-            };
-            saveHistory(history, diff);
+            if (lastResponse.targetKanji) {
+              targetKanji = lastResponse.targetKanji as KanjiEntry;
+            }
           }
+
+          setGameState({
+            puzzleDate: todayStr,
+            puzzleNumber: hints.puzzleNumber,
+            targetKanji,
+            guesses: saved.feedbacks!,
+            status: saved.status,
+          });
         } else {
           // Fresh game
           setGameState({

@@ -12,7 +12,6 @@ const mockKanji: KanjiEntry = {
   onYomi: ["サン", "セン"],
   kunYomi: ["やま"],
   meanings: ["mountain"],
-  category: 1,
   examples: ["山脈", "火山", "登山"],
 };
 
@@ -32,7 +31,7 @@ test("renders readings", () => {
 test("renders basic info", () => {
   render(<KanjiDetail kanji={mockKanji} />);
   expect(screen.getByText("3画")).toBeInTheDocument();
-  expect(screen.getByText("1年生")).toBeInTheDocument();
+  expect(screen.getByText("小学1年")).toBeInTheDocument();
 });
 
 test("renders examples", () => {

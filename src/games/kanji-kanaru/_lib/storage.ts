@@ -1,5 +1,4 @@
 import type { GameStats, GameHistory, Difficulty } from "./types";
-import { MAX_GUESSES } from "./types";
 
 /** Legacy keys (pre-difficulty era). */
 const LEGACY_STATS_KEY = "kanji-kanaru-stats";
@@ -136,7 +135,6 @@ export function saveStats(stats: GameStats, difficulty: Difficulty): void {
 /**
  * Load game history from localStorage for a given difficulty.
  * Returns empty object if no data is stored.
- * Backward compatible: entries without feedbacks field are loaded normally.
  */
 export function loadHistory(difficulty: Difficulty): GameHistory {
   if (!isStorageAvailable()) return {};
@@ -170,14 +168,10 @@ export function saveHistory(
 
 /**
  * Load today's game record from history for a given difficulty.
- * Returns null if no game was played today.
- *
- * Applies migration for old data: if status is "lost" but guessCount < MAX_GUESSES,
- * the game was actually in progress (old code used "lost" as a placeholder for
- * in-progress saves). In that case, status is corrected to "playing".
- *
- * The returned entry may or may not have a feedbacks field. If feedbacks is
- * undefined, the caller should fall back to re-evaluating via the API.
+ * Returns null if no game was played today or if the saved data lacks
+ * feedbacks (pre-B-190 format). Old saves without feedbacks cannot be
+ * restored without re-evaluation, so they are discarded to keep the
+ * code simple.
  */
 export function loadTodayGame(
   date: string,
@@ -187,9 +181,10 @@ export function loadTodayGame(
   const entry = history[date];
   if (!entry) return null;
 
-  // Migrate old data: "lost" with fewer guesses than max was actually in progress
-  if (entry.status === "lost" && entry.guessCount < MAX_GUESSES) {
-    return { ...entry, status: "playing" };
+  // Discard old saves that lack feedbacks (pre-B-190 format).
+  // These cannot be restored without server-side re-evaluation.
+  if (!entry.feedbacks || entry.feedbacks.length === 0) {
+    return null;
   }
 
   return entry;

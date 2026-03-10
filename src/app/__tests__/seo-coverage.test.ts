@@ -285,21 +285,57 @@ describe("動的metadataページのSEO検証", () => {
     assertSeoMetadata(meta, "/tools/page/2", "/tools/page/[page]");
   });
 
-  test("/dictionary/kanji/category/[category]: SEO必須項目が存在する", async () => {
-    const { getKanjiCategories } = await import("@/dictionary/_lib/kanji");
-    const categories = getKanjiCategories();
-    if (categories.length === 0) return;
-    const category = categories[0];
+  test("/dictionary/kanji/grade/[grade]: SEO必須項目が存在する", async () => {
+    const { getKanjiGrades } = await import("@/dictionary/_lib/kanji");
+    const grades = getKanjiGrades();
+    if (grades.length === 0) return;
+    const grade = grades[0];
 
     const { generateMetadata } =
-      await import("@/app/dictionary/kanji/category/[category]/page");
+      await import("@/app/dictionary/kanji/grade/[grade]/page");
     const meta = await generateMetadata({
-      params: Promise.resolve({ category }),
+      params: Promise.resolve({ grade }),
     });
     assertSeoMetadata(
       meta,
-      `/dictionary/kanji/category/${category}`,
-      "/dictionary/kanji/category/[category]",
+      `/dictionary/kanji/grade/${grade}`,
+      "/dictionary/kanji/grade/[grade]",
+    );
+  });
+
+  test("/dictionary/kanji/radical/[radical]: SEO必須項目が存在する", async () => {
+    const { getKanjiRadicals } = await import("@/dictionary/_lib/kanji");
+    const radicals = getKanjiRadicals();
+    if (radicals.length === 0) return;
+    const radical = encodeURIComponent(radicals[0]);
+
+    const { generateMetadata } =
+      await import("@/app/dictionary/kanji/radical/[radical]/page");
+    const meta = await generateMetadata({
+      params: Promise.resolve({ radical }),
+    });
+    assertSeoMetadata(
+      meta,
+      `/dictionary/kanji/radical/${radical}`,
+      "/dictionary/kanji/radical/[radical]",
+    );
+  });
+
+  test("/dictionary/kanji/stroke/[count]: SEO必須項目が存在する", async () => {
+    const { getKanjiStrokeCounts } = await import("@/dictionary/_lib/kanji");
+    const counts = getKanjiStrokeCounts();
+    if (counts.length === 0) return;
+    const count = String(counts[0]);
+
+    const { generateMetadata } =
+      await import("@/app/dictionary/kanji/stroke/[count]/page");
+    const meta = await generateMetadata({
+      params: Promise.resolve({ count }),
+    });
+    assertSeoMetadata(
+      meta,
+      `/dictionary/kanji/stroke/${count}`,
+      "/dictionary/kanji/stroke/[count]",
     );
   });
 

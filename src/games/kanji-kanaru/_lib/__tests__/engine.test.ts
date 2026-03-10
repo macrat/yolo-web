@@ -7,7 +7,7 @@ import {
 } from "../engine";
 import type { KanjiEntry } from "../types";
 
-// Test fixtures using RadicalGroup (numeric) categories
+// Test fixtures for kanji game evaluation
 const target: KanjiEntry = {
   character: "\u5C71",
   radical: "\u5C71",
@@ -17,7 +17,6 @@ const target: KanjiEntry = {
   onYomi: ["\u30B5\u30F3", "\u30BB\u30F3"],
   kunYomi: ["\u3084\u307E"],
   meanings: ["mountain"],
-  category: 6,
   examples: ["\u5C71\u8108", "\u706B\u5C71", "\u767B\u5C71"],
 };
 
@@ -30,7 +29,6 @@ const exactMatch: KanjiEntry = {
   onYomi: ["\u30B5\u30F3", "\u30BB\u30F3"],
   kunYomi: ["\u3084\u307E"],
   meanings: ["mountain"],
-  category: 6,
   examples: ["\u5C71\u8108", "\u706B\u5C71", "\u767B\u5C71"],
 };
 
@@ -43,7 +41,6 @@ const partialMatch: KanjiEntry = {
   onYomi: ["\u30BB\u30F3"],
   kunYomi: ["\u304B\u308F"],
   meanings: ["river"],
-  category: 6,
   examples: ["\u6CB3\u5DDD", "\u5DDD\u5CB8", "\u5C0F\u5DDD"],
 };
 
@@ -56,7 +53,6 @@ const noMatch: KanjiEntry = {
   onYomi: ["\u30AC\u30AF"],
   kunYomi: ["\u307E\u306A\u3076"],
   meanings: ["learn", "study"],
-  category: 16,
   examples: ["\u5B66\u6821", "\u5927\u5B66", "\u5B66\u751F"],
 };
 

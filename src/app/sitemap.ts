@@ -2,7 +2,12 @@ import type { MetadataRoute } from "next";
 import { allToolMetas } from "@/tools/registry";
 import { getAllBlogPosts, ALL_CATEGORIES } from "@/blog/_lib/blog";
 import { BASE_URL } from "@/lib/constants";
-import { getAllKanjiChars, getKanjiCategories } from "@/dictionary/_lib/kanji";
+import {
+  getAllKanjiChars,
+  getKanjiGrades,
+  getKanjiRadicals,
+  getKanjiStrokeCounts,
+} from "@/dictionary/_lib/kanji";
 import { getAllYojiIds, getYojiCategories } from "@/dictionary/_lib/yoji";
 import { getAllColorSlugs, getColorCategories } from "@/dictionary/_lib/colors";
 import {
@@ -207,8 +212,26 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly" as const,
       priority: 0.7,
     })),
-    ...getKanjiCategories().map((cat) => ({
-      url: `${BASE_URL}/dictionary/kanji/category/${cat}`,
+    ...getKanjiGrades().map((grade) => ({
+      url: `${BASE_URL}/dictionary/kanji/grade/${grade}`,
+      lastModified: getLastModifiedDate(
+        KANJI_DICTIONARY_META,
+        "dictionary meta (kanji)",
+      ),
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    })),
+    ...getKanjiRadicals().map((radical) => ({
+      url: `${BASE_URL}/dictionary/kanji/radical/${encodeURIComponent(radical)}`,
+      lastModified: getLastModifiedDate(
+        KANJI_DICTIONARY_META,
+        "dictionary meta (kanji)",
+      ),
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    })),
+    ...getKanjiStrokeCounts().map((count) => ({
+      url: `${BASE_URL}/dictionary/kanji/stroke/${count}`,
       lastModified: getLastModifiedDate(
         KANJI_DICTIONARY_META,
         "dictionary meta (kanji)",

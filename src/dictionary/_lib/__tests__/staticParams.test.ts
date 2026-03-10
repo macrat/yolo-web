@@ -1,5 +1,10 @@
 import { describe, expect, test } from "vitest";
-import { getAllKanjiChars, getKanjiCategories } from "../kanji";
+import {
+  getAllKanjiChars,
+  getKanjiGrades,
+  getKanjiRadicals,
+  getKanjiStrokeCounts,
+} from "../kanji";
 import { getAllYojiIds, getYojiCategories } from "../yoji";
 
 describe("generateStaticParams counts", () => {
@@ -10,9 +15,19 @@ describe("generateStaticParams counts", () => {
     expect(new Set(chars).size).toBe(2136);
   });
 
-  test("kanji category pages: 20 params", () => {
-    const categories = getKanjiCategories();
-    expect(categories).toHaveLength(20);
+  test("kanji grade pages: 7 params", () => {
+    const grades = getKanjiGrades();
+    expect(grades).toHaveLength(7);
+  });
+
+  test("kanji radical pages: non-empty params", () => {
+    const radicals = getKanjiRadicals();
+    expect(radicals.length).toBeGreaterThan(0);
+  });
+
+  test("kanji stroke pages: non-empty params", () => {
+    const counts = getKanjiStrokeCounts();
+    expect(counts.length).toBeGreaterThan(0);
   });
 
   test("yoji detail pages: 101 params", () => {

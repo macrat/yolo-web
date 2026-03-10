@@ -63,7 +63,7 @@ export function buildSearchIndex(): SearchDocument[] {
       description: kanji.meanings.join("\u3001"),
       keywords: [...kanji.onYomi, ...kanji.kunYomi],
       url: `/dictionary/kanji/${kanji.character}`,
-      category: String(kanji.category),
+      category: String(kanji.grade),
       extra: kanji.examples.join(" "),
     });
   }

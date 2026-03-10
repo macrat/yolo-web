@@ -522,7 +522,6 @@ describe("generateKanjiPageMetadata", () => {
     meanings: ["やま", "mountain"],
     onYomi: ["サン"],
     kunYomi: ["やま"],
-    category: "nature",
   };
 
   test("titleに漢字とサイト名を含む", () => {
@@ -806,7 +805,6 @@ describe("factory functions include twitter metadata", () => {
       meanings: ["山"],
       onYomi: ["サン"],
       kunYomi: ["やま"],
-      category: "nature",
     });
 
     expect(result.twitter).toMatchObject({

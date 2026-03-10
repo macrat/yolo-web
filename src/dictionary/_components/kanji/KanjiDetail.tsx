@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { KanjiEntry } from "@/dictionary/_lib/types";
-import { KANJI_CATEGORY_LABELS } from "@/dictionary/_lib/types";
-import { getKanjiByCategory } from "@/dictionary/_lib/kanji";
+import { KANJI_GRADE_LABELS } from "@/dictionary/_lib/types";
+import { getKanjiByRadical } from "@/dictionary/_lib/kanji";
 import styles from "./KanjiDetail.module.css";
 
 interface KanjiDetailProps {
@@ -9,10 +9,9 @@ interface KanjiDetailProps {
 }
 
 export default function KanjiDetail({ kanji }: KanjiDetailProps) {
-  const relatedKanji = getKanjiByCategory(kanji.category).filter(
+  const relatedKanji = getKanjiByRadical(kanji.radical).filter(
     (k) => k.character !== kanji.character,
   );
-  const categoryLabel = KANJI_CATEGORY_LABELS[kanji.category];
 
   return (
     <article className={styles.detail} data-testid="kanji-detail">
@@ -48,24 +47,29 @@ export default function KanjiDetail({ kanji }: KanjiDetailProps) {
         <h2>{"\u57FA\u672C\u60C5\u5831"}</h2>
         <div className={styles.infoGrid}>
           <span className={styles.infoLabel}>{"\u90E8\u9996"}</span>
-          <span>{kanji.radical}</span>
+          <span>
+            <Link
+              href={`/dictionary/kanji/radical/${encodeURIComponent(kanji.radical)}`}
+            >
+              {kanji.radical}
+            </Link>
+          </span>
           <span className={styles.infoLabel}>{"\u90E8\u9996\u756A\u53F7"}</span>
           <span>{kanji.radicalGroup}</span>
           <span className={styles.infoLabel}>{"\u753B\u6570"}</span>
           <span>
-            {kanji.strokeCount}
-            {"\u753B"}
+            <Link href={`/dictionary/kanji/stroke/${kanji.strokeCount}`}>
+              {kanji.strokeCount}
+              {"\u753B"}
+            </Link>
           </span>
           <span className={styles.infoLabel}>{"\u5B66\u5E74"}</span>
           <span>
-            {kanji.grade <= 6
-              ? `${kanji.grade}\u5E74\u751F`
-              : "\u4E2D\u5B66\u4EE5\u964D"}
-          </span>
-          <span className={styles.infoLabel}>{"\u30AB\u30C6\u30B4\u30EA"}</span>
-          <span>
-            <Link href={`/dictionary/kanji/category/${kanji.category}`}>
-              {categoryLabel}
+            <Link href={`/dictionary/kanji/grade/${kanji.grade}`}>
+              {KANJI_GRADE_LABELS[kanji.grade] ??
+                (kanji.grade <= 6
+                  ? `${kanji.grade}\u5E74\u751F`
+                  : "\u4E2D\u5B66\u4EE5\u964D")}
             </Link>
           </span>
         </div>
@@ -87,8 +91,8 @@ export default function KanjiDetail({ kanji }: KanjiDetailProps) {
       {relatedKanji.length > 0 && (
         <section className={styles.section}>
           <h2>
-            {"\u540C\u3058\u30AB\u30C6\u30B4\u30EA\u306E\u6F22\u5B57\uFF08"}
-            {categoryLabel}
+            {"\u540C\u3058\u90E8\u9996\u306E\u6F22\u5B57\uFF08"}
+            {kanji.radical}
             {"\uFF09"}
           </h2>
           <div className={styles.relatedList}>
