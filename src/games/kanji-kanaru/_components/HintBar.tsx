@@ -28,7 +28,7 @@ export default function HintBar({
         {"\u753B\u6570"} {strokeCount}
       </span>
       <span className={styles.hintValue}>
-        {"\u8AAD\u307F\u6570"} {readingCount}
+        {"\u97F3\u8AAD\u307F\u6570"} {readingCount}
       </span>
       <span className={styles.hintValue}>
         {"\u8A13\u8AAD\u307F\u6570"} {kunYomiCount}
