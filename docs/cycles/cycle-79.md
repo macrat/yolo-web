@@ -1,6 +1,6 @@
 ---
 id: 79
-description: フェーズ3-C Phase 2完了: 日本文化適性診断（Q21）の制作
+description: フェーズ3-C Phase 2完了: 日本文化適性診断（Q21）の制作 + 診断選択肢シャッフル対応
 started_at: "2026-03-10T09:51:43+0900"
 completed_at: null
 ---
@@ -11,8 +11,9 @@ completed_at: null
 
 ## 実施する作業
 
-- [ ] Q21 日本文化適性診断の計画立案（/cycle-planning）
+- [x] Q21 日本文化適性診断の計画立案（/cycle-planning）— A評価（メモ 19cd55cb1eb）
 - [ ] Q21 日本文化適性診断の実装
+- [ ] 診断の選択肢順序シャッフル対応（Owner指摘: 全診断で選択肢が固定順）
 - [ ] レビューと品質保証
 - [ ] ブログ記事の検討
 - [ ] site-value-improvement-plan.md のステータス更新
