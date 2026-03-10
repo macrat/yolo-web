@@ -136,6 +136,7 @@ export function saveStats(stats: GameStats, difficulty: Difficulty): void {
 /**
  * Load game history from localStorage for a given difficulty.
  * Returns empty object if no data is stored.
+ * Backward compatible: entries without feedbacks field are loaded normally.
  */
 export function loadHistory(difficulty: Difficulty): GameHistory {
   if (!isStorageAvailable()) return {};
@@ -150,6 +151,7 @@ export function loadHistory(difficulty: Difficulty): GameHistory {
 
 /**
  * Save game history to localStorage for a given difficulty.
+ * Includes feedbacks array when available, enabling restore without API calls.
  */
 export function saveHistory(
   history: GameHistory,
@@ -173,6 +175,9 @@ export function saveHistory(
  * Applies migration for old data: if status is "lost" but guessCount < MAX_GUESSES,
  * the game was actually in progress (old code used "lost" as a placeholder for
  * in-progress saves). In that case, status is corrected to "playing".
+ *
+ * The returned entry may or may not have a feedbacks field. If feedbacks is
+ * undefined, the caller should fall back to re-evaluating via the API.
  */
 export function loadTodayGame(
   date: string,
