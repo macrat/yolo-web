@@ -6,42 +6,40 @@ import type { RadicalGroup } from "./types";
  * the category feedback is "close" (yellow).
  */
 export const categorySuperGroups: Record<string, RadicalGroup[]> = {
-  basicHuman: [1, 2, 3],
-  mouthAstro: [4, 5],
-  terrainAction: [6, 7],
-  cultureNature: [8, 9],
-  lifeCreature: [10, 11],
-  senseMaterial: [12, 13],
-  bodyMovement: [14, 15],
-  langEconomy: [16, 17],
-  metalWeather: [18, 19],
-  bioOther: [20],
+  // A: 人体系 — 人の体・心・動作に関わるグループ
+  human: [1, 2, 3, 4, 5, 6],
+  // B: 自然系 — 自然界の要素・生物に関わるグループ
+  nature: [7, 8, 9, 10, 11, 12],
+  // C: 文明系 — 人間が作り出した道具・制度に関わるグループ
+  civilization: [13, 14, 15, 16, 17, 18, 19],
+  // D: 抽象系 — 抽象的・記号的な部首のグループ
+  abstract: [20],
 };
 
 /**
  * Display names for each radical group (Japanese).
  */
 export const radicalGroupNames: Record<RadicalGroup, string> = {
-  1: "基本図形",
-  2: "人と体上部",
-  3: "刃物と力",
-  4: "口と囲い",
-  5: "天文と時間",
-  6: "山と川",
-  7: "動作基本",
-  8: "打撃と文",
-  9: "木と欠",
-  10: "爪と父",
-  11: "瓜と生",
-  12: "目と矢",
-  13: "米と糸",
-  14: "筆と肉",
-  15: "草と虫",
-  16: "見と言",
-  17: "足と身",
-  18: "金と門",
-  19: "面と革",
-  20: "魚と鳥",
+  1: "人・家族",
+  2: "体・器官",
+  3: "手・力・動作",
+  4: "心・感情",
+  5: "口・言語",
+  6: "足・移動",
+  7: "水・液体",
+  8: "火・光",
+  9: "木・植物",
+  10: "土・山・地形",
+  11: "天・気象",
+  12: "動物",
+  13: "建物・場所",
+  14: "布・衣服",
+  15: "刀・武器",
+  16: "金・素材",
+  17: "食・飲",
+  18: "乗り物・道具",
+  19: "社会・制度",
+  20: "抽象・記号",
 };
 
 /**
