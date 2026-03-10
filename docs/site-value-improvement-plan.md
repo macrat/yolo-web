@@ -152,25 +152,27 @@ Google AdSenseの審査で「有用性の低いコンテンツ」として却下
 
 ## 5. 現在のステータス
 
-### 最終更新: cycle-78 完了時（2026-03-09）
+### 最終更新: cycle-79 完了時（2026-03-10）
 
 **現在のフェーズ**: フェーズ3（コンテンツの充実）進行中
 
 - フェーズ1〜2: 全完了。成果物はセクション4の各フェーズを参照
 - フェーズ3-A（基盤整備）: 全完了
-- フェーズ3-B（実績システム）: 全完了（全17コンテンツ対応）
-- フェーズ3-C（新規コンテンツ制作）: Phase 1完了（6種）、Phase 2進行中: Q08動物性格診断（cycle-77）、Q14理系思考タイプ診断（cycle-78）完了。残り: Q21日本文化診断
+- フェーズ3-B（実績システム）: 全完了（全18コンテンツ対応）
+- フェーズ3-C（新規コンテンツ制作）: Phase 1完了（6種）、Phase 2完了（Q08動物性格診断、Q14理系思考タイプ診断、Q21日本文化適性診断）
 - フェーズ3-D（既存コンテンツ強化）: 未着手
 - コンテンツカテゴリ定義: docs/content-categories.md 策定済み
+- 診断選択肢シャッフル: 全診断・知識テストで選択肢の表示順序をランダム化（cycle-79）
 
-**次にやること**: フェーズ3-C Phase 2残り（Q21日本文化診断）、フェーズ3-D（既存コンテンツ強化）
+**次にやること**: フェーズ3-D（既存コンテンツ強化）
 
 ## 6. 後続タスク実施者への申し送り事項
 
-### cycle-78 → cycle-79 への申し送り
+### cycle-79 → cycle-80 への申し送り
 
 - **必ず確認すべきこと**: docs/site-concept.md、docs/evaluation-rubric.md、docs/content-categories.md
-- **次にやること**: フェーズ3-C残り（Q21日本文化診断）、フェーズ3-D（既存コンテンツ強化）
+- **次にやること**: フェーズ3-D（既存コンテンツ強化）
+- **フェーズ3-C完了**: Phase 1（6種）+ Phase 2（3種）= 新規診断9種の制作が完了
 - **新規診断追加時の注意**:
   - docs/content-categories.md のカテゴリ定義に従うこと
   - 「占い」カテゴリの品質基準は未策定（該当コンテンツ追加時に策定）。displayCategoryフィールドも同時に追加する
@@ -179,6 +181,7 @@ Google AdSenseの審査で「有用性の低いコンテンツ」として却下
   - 相性機能の追加方法: (1) quiz/data/{slug}.tsに相性マトリクス+getCompatibility+isValidTypeId定義、(2) quiz/\_components/{Name}ResultExtra.tsxを作成（CompatibilitySection+InviteFriendButtonを再利用）、(3) ResultExtraLoader.tsxに動的インポートを追加
   - **レーダーチャート**: RadarChart.tsxは汎用コンポーネント。多軸スコア可視化が必要な場合に再利用可能
   - **answersのResultExtraLoader渡し**: QuizContainer→ResultExtraLoader→ResultExtraにanswersを渡す仕組みが追加済み（optional prop）。スコア計算が必要なResultExtraで利用可能
+- **選択肢シャッフル**: QuestionCard.tsxでFisher-Yatesシャッフルを実装済み。全診断・知識テストで選択肢の表示順序がランダム化される
 - **コンテンツ削除**: 削除はフェーズ4で実施。削除時は410 Goneを使用すること
 
 ## 7. このファイルの扱い方のルール
