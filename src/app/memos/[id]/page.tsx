@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getAllPublicMemoIds, getPublicMemoById } from "@/memos/_lib/memos";
+import { getPublicMemoById } from "@/memos/_lib/memos";
 import {
   generateMemoPageMetadata,
   generateMemoPageJsonLd,
@@ -15,9 +15,15 @@ interface Props {
   params: Promise<{ id: string }>;
 }
 
+// Return empty array to skip build-time static generation for memo pages.
+// Memos are generated on-demand at request time to avoid exceeding Vercel's
+// 75MB build output limit (4,868+ memo pages were causing deployment failure).
 export function generateStaticParams() {
-  return getAllPublicMemoIds().map((id) => ({ id }));
+  return [];
 }
+
+// Memos are immutable once created, so permanent caching is appropriate.
+export const revalidate = false;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;

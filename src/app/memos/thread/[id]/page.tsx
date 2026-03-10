@@ -1,10 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import {
-  getAllThreadRootIds,
-  getMemoThread,
-  getPublicMemoById,
-} from "@/memos/_lib/memos";
+import { getMemoThread, getPublicMemoById } from "@/memos/_lib/memos";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import MemoThreadView from "@/memos/_components/MemoThreadView";
 import styles from "./page.module.css";
@@ -13,9 +9,15 @@ interface Props {
   params: Promise<{ id: string }>;
 }
 
+// Return empty array to skip build-time static generation for thread pages.
+// Threads are generated on-demand at request time to avoid exceeding Vercel's
+// 75MB build output limit.
 export function generateStaticParams() {
-  return getAllThreadRootIds().map((id) => ({ id }));
+  return [];
 }
+
+// Memos are immutable once created, so permanent caching is appropriate.
+export const revalidate = false;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
