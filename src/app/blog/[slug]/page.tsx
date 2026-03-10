@@ -125,6 +125,8 @@ export default async function BlogPostPage({ params }: Props) {
             url={`/blog/${post.slug}`}
             title={post.title}
             sns={["x", "line", "hatena", "copy"]}
+            contentType="blog"
+            contentId={post.slug}
           />
         </section>
       </article>

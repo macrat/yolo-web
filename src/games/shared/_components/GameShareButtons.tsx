@@ -6,6 +6,7 @@ import {
   generateTwitterShareUrl,
 } from "@/games/shared/_lib/share";
 import { useCanWebShare, shareGameResult } from "@/lib/webShare";
+import { trackShare } from "@/lib/analytics";
 import styles from "./GameShareButtons.module.css";
 
 /**
@@ -20,6 +21,8 @@ interface GameShareButtonsProps {
   gameSlug: string;
   /** Optional callback for a "save image" button (irodori only). */
   onSaveImage?: () => void;
+  /** Content type for GA4 share event tracking (defaults to "game"). */
+  contentType?: string;
 }
 
 /**
@@ -37,6 +40,7 @@ export default function GameShareButtons({
   gameTitle,
   gameSlug,
   onSaveImage,
+  contentType = "game",
 }: GameShareButtonsProps) {
   const [copied, setCopied] = useState(false);
   const canWebShare = useCanWebShare();
@@ -47,14 +51,16 @@ export default function GameShareButtons({
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
-  }, [shareText]);
+    trackShare("clipboard", contentType, gameSlug);
+  }, [shareText, contentType, gameSlug]);
 
   const handleShareX = useCallback(() => {
     const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
     const pageUrl = `${baseUrl}/games/${gameSlug}`;
     const url = generateTwitterShareUrl(shareText, pageUrl);
     window.open(url, "_blank", "noopener,noreferrer");
-  }, [shareText, gameSlug]);
+    trackShare("twitter", contentType, gameSlug);
+  }, [shareText, gameSlug, contentType]);
 
   const handleWebShare = useCallback(async () => {
     const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
@@ -63,7 +69,8 @@ export default function GameShareButtons({
       text: shareText,
       url: `${baseUrl}/games/${gameSlug}`,
     });
-  }, [shareText, gameTitle, gameSlug]);
+    trackShare("web_share", contentType, gameSlug);
+  }, [shareText, gameTitle, gameSlug, contentType]);
 
   return (
     <div>

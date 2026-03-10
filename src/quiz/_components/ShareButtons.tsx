@@ -2,18 +2,25 @@
 
 import { useState, useCallback } from "react";
 import { useCanWebShare, shareGameResult } from "@/lib/webShare";
+import { trackShare } from "@/lib/analytics";
 import styles from "./ShareButtons.module.css";
 
-type ShareButtonsProps = {
+interface ShareButtonsProps {
   shareText: string;
   shareUrl: string;
   quizTitle: string;
-};
+  /** Content type for GA4 share event tracking (e.g. "quiz", "diagnosis"). */
+  contentType?: string;
+  /** Content identifier for GA4 share event tracking. */
+  contentId?: string;
+}
 
 export default function ShareButtons({
   shareText,
   shareUrl,
   quizTitle,
+  contentType,
+  contentId,
 }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false);
   const canWebShare = useCanWebShare();
@@ -24,7 +31,10 @@ export default function ShareButtons({
       text: shareText,
       url: shareUrl,
     });
-  }, [quizTitle, shareText, shareUrl]);
+    if (contentType && contentId) {
+      trackShare("web_share", contentType, contentId);
+    }
+  }, [quizTitle, shareText, shareUrl, contentType, contentId]);
 
   const handleTwitter = useCallback(() => {
     const text = encodeURIComponent(shareText);
@@ -34,7 +44,10 @@ export default function ShareButtons({
       "_blank",
       "noopener,noreferrer",
     );
-  }, [shareText, shareUrl]);
+    if (contentType && contentId) {
+      trackShare("twitter", contentType, contentId);
+    }
+  }, [shareText, shareUrl, contentType, contentId]);
 
   const handleLine = useCallback(() => {
     const text = encodeURIComponent(`${shareText}\n${shareUrl}`);
@@ -43,17 +56,23 @@ export default function ShareButtons({
       "_blank",
       "noopener,noreferrer",
     );
-  }, [shareText, shareUrl]);
+    if (contentType && contentId) {
+      trackShare("line", contentType, contentId);
+    }
+  }, [shareText, shareUrl, contentType, contentId]);
 
   const handleCopy = useCallback(async () => {
     try {
       await navigator.clipboard.writeText(`${shareText}\n${shareUrl}`);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
+      if (contentType && contentId) {
+        trackShare("clipboard", contentType, contentId);
+      }
     } catch {
       // Silently fail
     }
-  }, [shareText, shareUrl]);
+  }, [shareText, shareUrl, contentType, contentId]);
 
   return (
     <div className={styles.wrapper}>

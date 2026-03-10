@@ -81,6 +81,8 @@ export default function CheatsheetLayout({
           url={`/cheatsheets/${meta.slug}`}
           title={meta.name}
           sns={["x", "line", "hatena", "copy"]}
+          contentType="cheatsheet"
+          contentId={meta.slug}
         />
       </section>
       {relatedTools.length > 0 && (

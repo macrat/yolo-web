@@ -66,6 +66,8 @@ export default function CompatibilitySection({
         shareText={shareText}
         shareUrl={shareUrl}
         quizTitle={quizTitle}
+        contentType="diagnosis"
+        contentId={`quiz-${quizSlug}`}
       />
     </div>
   );

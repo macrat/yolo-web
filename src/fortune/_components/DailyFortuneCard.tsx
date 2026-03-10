@@ -102,6 +102,8 @@ export default function DailyFortuneCard() {
         shareText={shareText}
         shareUrl={shareUrl}
         quizTitle="今日のユーモア運勢"
+        contentType="fortune"
+        contentId="fortune-daily"
       />
 
       <p className={styles.comeback}>明日も来てね! 毎日運勢が変わります</p>

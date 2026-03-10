@@ -57,6 +57,8 @@ export default function ResultCard({
         shareText={shareText}
         shareUrl={shareUrl}
         quizTitle={quizTitle}
+        contentType={quizType === "personality" ? "diagnosis" : "quiz"}
+        contentId={`quiz-${quizSlug}`}
       />
       <button type="button" className={styles.retryButton} onClick={onRetry}>
         もう一度挑戦する

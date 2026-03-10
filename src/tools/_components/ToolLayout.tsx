@@ -76,6 +76,8 @@ export default function ToolLayout({ meta, children }: ToolLayoutProps) {
           url={`/tools/${meta.slug}`}
           title={meta.name}
           sns={["x", "line", "hatena", "copy"]}
+          contentType="tool"
+          contentId={meta.slug}
         />
       </section>
       <RelatedTools currentSlug={meta.slug} relatedSlugs={meta.relatedSlugs} />
