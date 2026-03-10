@@ -83,6 +83,8 @@ export default function GameLayout({
           url={`/games/${meta.slug}`}
           title={meta.title}
           sns={["x", "line", "hatena", "copy"]}
+          contentType="game"
+          contentId={meta.slug}
         />
       </section>
       <RelatedGames

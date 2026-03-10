@@ -1,15 +1,20 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { trackShare } from "@/lib/analytics";
 import styles from "./ShareButtons.module.css";
 
 type SnsType = "x" | "line" | "hatena" | "copy";
 
-type ShareButtonsProps = {
+interface ShareButtonsProps {
   url: string;
   title: string;
   sns?: SnsType[];
-};
+  /** Content type for GA4 share event tracking (e.g. "tool", "blog"). */
+  contentType?: string;
+  /** Content identifier for GA4 share event tracking. */
+  contentId?: string;
+}
 
 const DEFAULT_SNS: SnsType[] = ["x", "line", "hatena", "copy"];
 
@@ -21,6 +26,8 @@ export default function ShareButtons({
   url,
   title,
   sns = DEFAULT_SNS,
+  contentType,
+  contentId,
 }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false);
 
@@ -33,19 +40,28 @@ export default function ShareButtons({
     const fullUrl = getFullUrl();
     const intentUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(fullUrl)}`;
     window.open(intentUrl, "_blank", "noopener,noreferrer");
-  }, [title, getFullUrl]);
+    if (contentType && contentId) {
+      trackShare("twitter", contentType, contentId);
+    }
+  }, [title, getFullUrl, contentType, contentId]);
 
   const handleShareLine = useCallback(() => {
     const fullUrl = getFullUrl();
     const lineUrl = `https://line.me/R/share?text=${encodeURIComponent(title + "\n" + fullUrl)}`;
     window.open(lineUrl, "_blank", "noopener,noreferrer");
-  }, [title, getFullUrl]);
+    if (contentType && contentId) {
+      trackShare("line", contentType, contentId);
+    }
+  }, [title, getFullUrl, contentType, contentId]);
 
   const handleShareHatena = useCallback(() => {
     const fullUrl = getFullUrl();
     const hatenaUrl = `https://b.hatena.ne.jp/entry/panel/?url=${encodeURIComponent(fullUrl)}&btitle=${encodeURIComponent(title)}`;
     window.open(hatenaUrl, "_blank", "noopener,noreferrer");
-  }, [title, getFullUrl]);
+    if (contentType && contentId) {
+      trackShare("hatena", contentType, contentId);
+    }
+  }, [title, getFullUrl, contentType, contentId]);
 
   const handleCopy = useCallback(async () => {
     const fullUrl = getFullUrl();
@@ -53,10 +69,13 @@ export default function ShareButtons({
       await navigator.clipboard.writeText(title + "\n" + fullUrl);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
+      if (contentType && contentId) {
+        trackShare("clipboard", contentType, contentId);
+      }
     } catch {
       // Silently fail
     }
-  }, [title, getFullUrl]);
+  }, [title, getFullUrl, contentType, contentId]);
 
   return (
     <div className={styles.wrapper}>

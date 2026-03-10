@@ -157,6 +157,10 @@ export default async function QuizResultPage({ params, searchParams }: Props) {
             shareText={shareText}
             shareUrl={shareUrl}
             quizTitle={quiz.meta.title}
+            contentType={
+              quiz.meta.type === "personality" ? "diagnosis" : "quiz"
+            }
+            contentId={`quiz-${slug}`}
           />
         </div>
         {compatFriendTypeId && (

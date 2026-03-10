@@ -78,6 +78,8 @@ export default function DictionaryDetailLayout({
           url={shareUrl}
           title={shareTitle}
           sns={["x", "line", "copy"]}
+          contentType="dictionary"
+          contentId={shareUrl}
         />
       </section>
     </article>
