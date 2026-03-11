@@ -2,6 +2,10 @@
 
 import { useCallback } from "react";
 import type { Difficulty, YojiGameState } from "@/games/yoji-kimeru/_lib/types";
+import {
+  categoryLabels,
+  originLabels,
+} from "@/games/yoji-kimeru/_lib/constants";
 import { generateShareText } from "@/games/yoji-kimeru/_lib/share";
 import GameDialog from "@/games/shared/_components/GameDialog";
 import GameShareButtons from "@/games/shared/_components/GameShareButtons";
@@ -42,7 +46,7 @@ export default function ResultModal({
       open={open}
       onClose={onClose}
       titleId="yoji-kimeru-result-title"
-      title={isWon ? "\u6B63\u89E3!" : "\u6B8B\u5FF5..."}
+      title={isWon ? "正解!" : "残念..."}
       headerContent={
         <div className={styles.resultEmoji}>
           {isWon ? "\u{1F389}" : "\u{1F614}"}
@@ -54,21 +58,26 @@ export default function ResultModal({
           onClick={handleStatsClick}
           type="button"
         >
-          {"\u7D71\u8A08\u3092\u898B\u308B"}
+          統計を見る
         </button>
       }
     >
       <div className={styles.resultAnswer}>{targetYoji.yoji}</div>
       <div className={styles.resultReading}>{targetYoji.reading}</div>
       <div className={styles.resultMeaning}>{targetYoji.meaning}</div>
+      <div className={styles.resultMeta}>
+        <span>{originLabels[targetYoji.origin]}</span>
+        <span className={styles.resultMetaSeparator}>|</span>
+        <span>{categoryLabels[targetYoji.category]}</span>
+      </div>
       <div className={styles.resultSummary}>
         {isWon
-          ? `${guesses.length}/6 \u3067\u6B63\u89E3\u3057\u307E\u3057\u305F!`
-          : "6\u56DE\u4EE5\u5185\u306B\u6B63\u89E3\u3067\u304D\u307E\u305B\u3093\u3067\u3057\u305F"}
+          ? `${guesses.length}/6 で正解しました!`
+          : "6回以内に正解できませんでした"}
       </div>
       <GameShareButtons
         shareText={shareText}
-        gameTitle={"\u56DB\u5B57\u30AD\u30E1\u30EB"}
+        gameTitle="四字キメル"
         gameSlug="yoji-kimeru"
       />
       <CountdownTimer />
