@@ -1,11 +1,30 @@
+/** 出典区分: 四字熟語の由来を分類する */
+export type YojiOrigin =
+  | "漢籍"
+  | "仏典"
+  | "日本語由来"
+  | "故事"
+  | "その他"
+  | "不明";
+
+/** 構造パターン: 四字熟語の内部構造を分類する */
+export type YojiStructure =
+  | "対義"
+  | "類義"
+  | "因果"
+  | "修飾"
+  | "並列"
+  | "その他"
+  | "不明";
+
 export interface YojiEntry {
   yoji: string; // 四字熟語 (例: "一期一会")
   reading: string; // 読み (例: "いちごいちえ")
   meaning: string; // 意味 (例: "一生に一度の出会いを大切にすること")
   difficulty: number; // 難易度 1-3 (1=基本, 2=中級, 3=上級)
   category: YojiCategory; // 意味カテゴリ
-  origin?: string; // 出典 (例: "仏典")
-  structure?: string; // 構造 (例: "並列")
+  origin: YojiOrigin; // 出典区分
+  structure: YojiStructure; // 構造パターン
 }
 
 export type YojiCategory =
