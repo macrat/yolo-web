@@ -401,7 +401,8 @@ export default function GameContainer() {
   if (loading) {
     return (
       <div className={styles.loading}>
-        {"\u8AAD\u307F\u8FBC\u307F\u4E2D..."}
+        <div className={styles.spinner} aria-hidden="true" />
+        <span>{"\u8AAD\u307F\u8FBC\u307F\u4E2D..."}</span>
       </div>
     );
   }
@@ -410,7 +411,7 @@ export default function GameContainer() {
   if (error) {
     return (
       <div className={styles.error}>
-        <p>{error}</p>
+        <p className={styles.errorMessage}>{error}</p>
         <button
           onClick={() => void initializeGame(difficulty)}
           type="button"
