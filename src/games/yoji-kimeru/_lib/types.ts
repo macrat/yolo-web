@@ -17,6 +17,7 @@ export type YojiStructure =
   | "因果"
   | "修飾"
   | "並列"
+  | "主述"
   | "その他"
   | "不明";
 
