@@ -116,4 +116,8 @@ describe("isValidYojiInput", () => {
   test("returns false for input containing katakana", () => {
     expect(isValidYojiInput("一期ア会")).toBe(false);
   });
+
+  test("returns true for input containing 々 (ideographic iteration mark)", () => {
+    expect(isValidYojiInput("正々堂々")).toBe(true);
+  });
 });
