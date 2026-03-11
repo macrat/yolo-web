@@ -1,43 +1,37 @@
 "use client";
 
-import type { YojiCategory } from "@/games/yoji-kimeru/_lib/types";
+import type { YojiCategory, YojiOrigin } from "@/games/yoji-kimeru/_lib/types";
+import {
+  categoryLabels,
+  originLabels,
+  difficultyLabels,
+} from "@/games/yoji-kimeru/_lib/constants";
 import styles from "./styles/YojiKimeru.module.css";
 
 interface HintBarProps {
   guessCount: number;
   reading: string;
   category: YojiCategory;
+  origin: YojiOrigin;
   difficulty: number;
 }
 
-const categoryLabels: Record<YojiCategory, string> = {
-  life: "人生・生き方",
-  effort: "努力・根性",
-  nature: "自然・風景",
-  emotion: "感情・心理",
-  society: "社会・人間関係",
-  knowledge: "知識・学問",
-  conflict: "対立・戦い",
-  change: "変化・転換",
-  virtue: "道徳・美徳",
-  negative: "否定的・戒め",
-};
-
-const difficultyLabels = ["", "★", "★★", "★★★"];
-
 /**
- * Displays hints that progressively reveal information:
- * - Difficulty is always shown
+ * Displays hints that progressively reveal information in 4 stages:
+ * - Always: difficulty + reading character count
  * - After guess 3: first character of reading
+ * - After guess 4: origin (中国古典由来 / 日本で成立 / 出典不明)
  * - After guess 5: category
  */
 export default function HintBar({
   guessCount,
   reading,
   category,
+  origin,
   difficulty,
 }: HintBarProps) {
   const showReadingHint = guessCount >= 3;
+  const showOriginHint = guessCount >= 4;
   const showCategoryHint = guessCount >= 5;
 
   return (
@@ -46,8 +40,12 @@ export default function HintBar({
       <span className={styles.hintValue}>
         難易度 {difficultyLabels[difficulty]}
       </span>
+      <span className={styles.hintValue}>読み {reading.length}文字</span>
       {showReadingHint && (
         <span className={styles.hintValue}>読み {reading.charAt(0)}...</span>
+      )}
+      {showOriginHint && (
+        <span className={styles.hintValue}>出典 {originLabels[origin]}</span>
       )}
       {showCategoryHint && (
         <span className={styles.hintValue}>
