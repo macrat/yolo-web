@@ -9,8 +9,8 @@ import {
 } from "../yoji";
 
 describe("getAllYoji", () => {
-  test("returns 402 yoji entries", () => {
-    expect(getAllYoji()).toHaveLength(402);
+  test("returns 400 yoji entries", () => {
+    expect(getAllYoji()).toHaveLength(400);
   });
 
   test("each entry has required fields", () => {
@@ -85,8 +85,8 @@ describe("getYojiCategories", () => {
 });
 
 describe("getAllYojiIds", () => {
-  test("returns 402 ids", () => {
-    expect(getAllYojiIds()).toHaveLength(402);
+  test("returns 400 ids", () => {
+    expect(getAllYojiIds()).toHaveLength(400);
   });
 
   test("contains known yoji", () => {

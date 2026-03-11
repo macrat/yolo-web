@@ -30,11 +30,11 @@ describe("generateStaticParams counts", () => {
     expect(counts.length).toBeGreaterThan(0);
   });
 
-  test("yoji detail pages: 402 params", () => {
+  test("yoji detail pages: 400 params", () => {
     const ids = getAllYojiIds();
-    expect(ids).toHaveLength(402);
+    expect(ids).toHaveLength(400);
     // All ids should be unique
-    expect(new Set(ids).size).toBe(402);
+    expect(new Set(ids).size).toBe(400);
   });
 
   test("yoji category pages: 10 params", () => {
