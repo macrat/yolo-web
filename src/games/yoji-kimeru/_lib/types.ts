@@ -2,24 +2,10 @@
 export type Difficulty = "beginner" | "intermediate" | "advanced";
 
 /** 出典区分: 四字熟語の由来を分類する */
-export type YojiOrigin =
-  | "漢籍"
-  | "仏典"
-  | "日本語由来"
-  | "故事"
-  | "その他"
-  | "不明";
+export type YojiOrigin = "中国" | "日本" | "不明";
 
 /** 構造パターン: 四字熟語の内部構造を分類する */
-export type YojiStructure =
-  | "対義"
-  | "類義"
-  | "因果"
-  | "修飾"
-  | "並列"
-  | "主述"
-  | "その他"
-  | "不明";
+export type YojiStructure = "対句" | "組合せ" | "因果" | "不明";
 
 export interface YojiEntry {
   yoji: string; // 四字熟語 (例: "一期一会")
