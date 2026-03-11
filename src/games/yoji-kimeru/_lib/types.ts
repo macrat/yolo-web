@@ -11,7 +11,7 @@ export interface YojiEntry {
   yoji: string; // 四字熟語 (例: "一期一会")
   reading: string; // 読み (例: "いちごいちえ")
   meaning: string; // 意味 (例: "一生に一度の出会いを大切にすること")
-  difficulty: number; // 難易度 1-3 (1=基本, 2=中級, 3=上級)
+  difficulty: 1 | 2 | 3; // 難易度 1-3 (1=基本, 2=中級, 3=上級)
   category: YojiCategory; // 意味カテゴリ
   origin: YojiOrigin; // 出典区分
   structure: YojiStructure; // 構造パターン

@@ -21,5 +21,9 @@ export const originLabels: Record<YojiOrigin, string> = {
   不明: "出典不明",
 };
 
-/** 難易度の星表示ラベル（index=difficultyの値） */
-export const difficultyLabels = ["", "★", "★★", "★★★"];
+/** 難易度の星表示ラベル（difficulty値 1-3 に対応） */
+export const difficultyLabels: Record<1 | 2 | 3, string> = {
+  1: "★",
+  2: "★★",
+  3: "★★★",
+};
