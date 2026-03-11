@@ -400,6 +400,7 @@ export default function GameContainer() {
         guessCount={gameState.guesses.length}
         reading={gameState.targetYoji.reading}
         category={gameState.targetYoji.category}
+        origin={gameState.targetYoji.origin}
         difficulty={gameState.targetYoji.difficulty}
       />
       <GameBoard guesses={gameState.guesses} maxGuesses={MAX_GUESSES} />
