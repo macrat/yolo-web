@@ -15,7 +15,7 @@
     "meaning": "毎日一つの善行をすること",
     "difficulty": 1,
     "category": "life",
-    "origin": "仏典",
+    "origin": "日本語由来",
     "structure": "並列",
     "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E6%97%A5%E4%B8%80%E5%96%84-433500"
   },
@@ -115,7 +115,7 @@
     "meaning": "全力を尽くして努力すること",
     "difficulty": 2,
     "category": "effort",
-    "origin": "漢籍",
+    "origin": "仏典",
     "structure": "類義",
     "sourceUrl": "https://kotobank.jp/word/%E7%B2%89%E9%AA%A8%E7%A0%95%E8%BA%AB-623170"
   },
@@ -254,7 +254,7 @@
     "reading": "せいこううどく",
     "meaning": "晴れた日に耕し雨の日に読書する",
     "difficulty": 2,
-    "category": "nature",
+    "category": "life",
     "origin": "日本語由来",
     "structure": "対義",
     "sourceUrl": "https://kotobank.jp/word/%E6%99%B4%E8%80%95%E9%9B%A8%E8%AA%AD-545018"
@@ -302,7 +302,7 @@
   {
     "yoji": "喜怒哀楽",
     "reading": "きどあいらく",
-    "meaning": "人間の感情",
+    "meaning": "喜び・怒り・悲しみ・楽しみ。人間のさまざまな感情",
     "difficulty": 1,
     "category": "emotion",
     "origin": "漢籍",
@@ -394,7 +394,7 @@
     "reading": "ごりむちゅう",
     "meaning": "物事の手がかりがつかめず、方針や見通しが全く立たないこと",
     "difficulty": 1,
-    "category": "emotion",
+    "category": "knowledge",
     "origin": "故事",
     "structure": "修飾",
     "sourceUrl": "https://kotobank.jp/word/%E4%BA%94%E9%87%8C%E9%9C%A7%E4%B8%AD-505210"
@@ -545,7 +545,7 @@
     "meaning": "黙って実行すること",
     "difficulty": 1,
     "category": "virtue",
-    "origin": "漢籍",
+    "origin": "日本語由来",
     "structure": "修飾",
     "sourceUrl": "https://kotobank.jp/word/%E4%B8%8D%E8%A8%80%E5%AE%9F%E8%A1%8C-617752"
   },
@@ -644,7 +644,7 @@
     "reading": "しんしょうぼうだい",
     "meaning": "小さなことを大げさに言うこと",
     "difficulty": 2,
-    "category": "conflict",
+    "category": "negative",
     "origin": "不明",
     "structure": "対義",
     "sourceUrl": "https://kotobank.jp/word/%E9%87%9D%E5%B0%8F%E6%A3%92%E5%A4%A7-537871"
@@ -766,7 +766,7 @@
     "difficulty": 1,
     "category": "change",
     "origin": "漢籍",
-    "structure": "類義",
+    "structure": "対義",
     "sourceUrl": "https://kotobank.jp/word/%E7%A9%BA%E5%89%8D%E7%B5%B6%E5%BE%8C-482466"
   },
   {
@@ -774,7 +774,7 @@
     "reading": "いっとうりょうだん",
     "meaning": "思い切って決断すること",
     "difficulty": 1,
-    "category": "change",
+    "category": "effort",
     "origin": "漢籍",
     "structure": "修飾",
     "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E5%88%80%E4%B8%A1%E6%96%AD-434488"
@@ -995,13 +995,13 @@
     "meaning": "向こう見ずに突き進むこと",
     "difficulty": 1,
     "category": "negative",
-    "origin": "日本語由来",
+    "origin": "漢籍",
     "structure": "類義",
     "sourceUrl": "https://kotobank.jp/word/%E7%8C%AA%E7%AA%81%E7%8C%9B%E9%80%B2-569556"
   },
   {
     "yoji": "安心立命",
-    "reading": "あんしんりつめい",
+    "reading": "あんじんりゅうめい",
     "meaning": "天命を知り心を安らかにすること",
     "difficulty": 2,
     "category": "life",
@@ -1155,7 +1155,7 @@
     "meaning": "人生の変化が激しいこと",
     "difficulty": 1,
     "category": "life",
-    "origin": "日本語由来",
+    "origin": "漢籍",
     "structure": "修飾",
     "sourceUrl": "https://kotobank.jp/word/%E6%B3%A2%E7%80%BE%E4%B8%87%E4%B8%88-605179"
   },
@@ -1555,7 +1555,7 @@
     "meaning": "非常に苦心すること",
     "difficulty": 2,
     "category": "effort",
-    "origin": "不明",
+    "origin": "漢籍",
     "structure": "類義",
     "sourceUrl": "https://kotobank.jp/word/%E8%8B%A6%E5%BF%83%E6%83%A8%E6%86%BA-483486"
   },
@@ -1576,7 +1576,7 @@
     "difficulty": 3,
     "category": "effort",
     "origin": "故事",
-    "structure": "修飾",
+    "structure": "因果",
     "sourceUrl": "https://kotobank.jp/word/%E6%84%9A%E5%85%AC%E5%B1%B1%E3%82%92%E7%A7%BB%E3%81%99-482966"
   },
   {
@@ -1622,7 +1622,7 @@
   {
     "yoji": "風林火山",
     "reading": "ふうりんかざん",
-    "meaning": "戦いにおける四つの心構え",
+    "meaning": "軍の行動のたとえ。速きこと風の如く、静かなること林の如く、侵略すること火の如く、動かざること山の如し",
     "difficulty": 1,
     "category": "conflict",
     "origin": "漢籍",
@@ -1732,7 +1732,7 @@
   {
     "yoji": "百花繚乱",
     "reading": "ひゃっかりょうらん",
-    "meaning": "さまざまな花が美しく咲き乱れること",
+    "meaning": "多くの花が咲き乱れること。転じて、優れた人物や業績が多く現れること",
     "difficulty": 2,
     "category": "nature",
     "origin": "漢籍",
