@@ -1195,7 +1195,7 @@
     "meaning": "一度に大きな利益を得ること",
     "difficulty": 1,
     "category": "life",
-    "origin": "日本語由来",
+    "origin": "漢籍",
     "structure": "修飾",
     "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E6%94%AB%E5%8D%83%E9%87%91-433944"
   },
@@ -1225,7 +1225,7 @@
     "meaning": "病気もなく健康であること",
     "difficulty": 1,
     "category": "life",
-    "origin": "日本語由来",
+    "origin": "仏典",
     "structure": "並列",
     "sourceUrl": "https://kotobank.jp/word/%E7%84%A1%E7%97%85%E6%81%AF%E7%81%BD-642244"
   },
@@ -1312,7 +1312,7 @@
   {
     "yoji": "先憂後楽",
     "reading": "せんゆうこうらく",
-    "meaning": "先に苦労し後で楽しむこと",
+    "meaning": "人民に先んじて国を憂い、人民が楽しんだ後に楽しむこと。転じて、先に苦労して後で楽しむこと",
     "difficulty": 2,
     "category": "life",
     "origin": "漢籍",
@@ -1372,7 +1372,7 @@
   {
     "yoji": "春風駘蕩",
     "reading": "しゅんぷうたいとう",
-    "meaning": "春風がのどかに吹くこと",
+    "meaning": "春風がのどかに吹くさま。また、性格が温和でのんびりしていること",
     "difficulty": 3,
     "category": "life",
     "origin": "漢籍",
@@ -1571,7 +1571,7 @@
   },
   {
     "yoji": "愚公移山",
-    "reading": "ぐこういさん",
+    "reading": "ぐこういざん",
     "meaning": "根気よく努力し続ければ必ず達成できること",
     "difficulty": 3,
     "category": "effort",
@@ -1600,14 +1600,14 @@
     "sourceUrl": "https://kotobank.jp/word/%E6%98%BC%E5%A4%9C%E5%85%BC%E8%A1%8C-567892"
   },
   {
-    "yoji": "忍辱負重",
-    "reading": "にんじょくふじゅう",
-    "meaning": "屈辱に耐え重い責任を担うこと",
+    "yoji": "不惜身命",
+    "reading": "ふしゃくしんみょう",
+    "meaning": "身も命も惜しまないこと。仏道修行のために全てを捧げること",
     "difficulty": 3,
     "category": "effort",
-    "origin": "漢籍",
-    "structure": "並列",
-    "sourceUrl": "https://kotobank.jp/zhjaword/%E5%BF%8D%E8%BE%B1%E8%B4%9F%E9%87%8D"
+    "origin": "仏典",
+    "structure": "修飾",
+    "sourceUrl": "https://yoji.jitenon.jp/yojie/1954"
   },
   {
     "yoji": "一心一意",
@@ -1617,14 +1617,14 @@
     "category": "effort",
     "origin": "漢籍",
     "structure": "類義",
-    "sourceUrl": "https://kotobank.jp/zhjaword/%E4%B8%80%E5%BF%83%E4%B8%80%E6%84%8F"
+    "sourceUrl": "https://yoji.jitenon.jp/yojie/2131"
   },
   {
     "yoji": "風林火山",
     "reading": "ふうりんかざん",
     "meaning": "戦いにおける四つの心構え",
     "difficulty": 1,
-    "category": "effort",
+    "category": "conflict",
     "origin": "漢籍",
     "structure": "並列",
     "sourceUrl": "https://kotobank.jp/word/%E9%A2%A8%E6%9E%97%E7%81%AB%E5%B1%B1-616084"
@@ -1694,7 +1694,7 @@
     "reading": "さんこうすいちょう",
     "meaning": "人の功績が長く伝わること",
     "difficulty": 3,
-    "category": "nature",
+    "category": "virtue",
     "origin": "漢籍",
     "structure": "並列",
     "sourceUrl": "https://kotobank.jp/word/%E5%B1%B1%E9%AB%98%E6%B0%B4%E9%95%B7-513368"
@@ -1744,7 +1744,7 @@
     "reading": "せいかりょうげん",
     "meaning": "小さな火が燃え広がり野原を焼き尽くすように勢いが広がること",
     "difficulty": 3,
-    "category": "nature",
+    "category": "change",
     "origin": "漢籍",
     "structure": "修飾",
     "sourceUrl": "https://dictionary.goo.ne.jp/word/%E6%98%9F%E7%81%AB%E7%87%8E%E5%8E%9F/"
