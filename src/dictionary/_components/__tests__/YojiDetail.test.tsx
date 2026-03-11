@@ -9,6 +9,10 @@ const mockYoji: YojiEntry = {
   meaning: "一生に一度の出会いを大切にすること",
   difficulty: 1,
   category: "life",
+  origin: "日本",
+  structure: "組合せ",
+  sourceUrl:
+    "https://kotobank.jp/word/%E4%B8%80%E6%9C%9F%E4%B8%80%E4%BC%9A-433299",
 };
 
 test("renders yoji prominently", () => {

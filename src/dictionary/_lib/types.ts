@@ -45,6 +45,9 @@ export interface YojiEntry {
   meaning: string;
   difficulty: YojiDifficulty;
   category: YojiCategory;
+  origin: YojiOrigin;
+  structure: YojiStructure;
+  sourceUrl: string;
 }
 
 export type YojiCategory =
@@ -58,6 +61,10 @@ export type YojiCategory =
   | "negative"
   | "society"
   | "virtue";
+
+export type YojiOrigin = "日本" | "中国" | "不明";
+
+export type YojiStructure = "対句" | "組合せ" | "因果";
 
 export type YojiDifficulty = 1 | 2 | 3;
 
