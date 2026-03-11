@@ -5,7 +5,7 @@
     "meaning": "一生に一度の出会いを大切にすること",
     "difficulty": 1,
     "category": "life",
-    "origin": "仏典",
+    "origin": "日本語由来",
     "structure": "並列"
   },
   {
@@ -230,7 +230,7 @@
     "meaning": "晴れた日に耕し雨の日に読書する",
     "difficulty": 2,
     "category": "nature",
-    "origin": "漢籍",
+    "origin": "日本語由来",
     "structure": "対義"
   },
   {
@@ -293,7 +293,7 @@
     "meaning": "元気がなくなること",
     "difficulty": 2,
     "category": "emotion",
-    "origin": "日本語由来",
+    "origin": "漢籍",
     "structure": "修飾"
   },
   {
@@ -317,10 +317,10 @@
   {
     "yoji": "悲喜交々",
     "reading": "ひきこもごも",
-    "meaning": "悲しみと喜びが交互にくること",
+    "meaning": "一人の人が悲しみと喜びを交互に経験すること",
     "difficulty": 2,
     "category": "emotion",
-    "origin": "漢籍",
+    "origin": "不明",
     "structure": "対義"
   },
   {
@@ -468,13 +468,13 @@
     "structure": "対義"
   },
   {
-    "yoji": "学問研究",
-    "reading": "がくもんけんきゅう",
-    "meaning": "学問を研究すること",
+    "yoji": "一知半解",
+    "reading": "いっちはんかい",
+    "meaning": "少しだけ知って十分に理解していないこと",
     "difficulty": 1,
     "category": "knowledge",
-    "origin": "日本語由来",
-    "structure": "類義"
+    "origin": "漢籍",
+    "structure": "並列"
   },
   {
     "yoji": "読書三到",
@@ -491,7 +491,7 @@
     "meaning": "黙って実行すること",
     "difficulty": 1,
     "category": "knowledge",
-    "origin": "日本語由来",
+    "origin": "不明",
     "structure": "修飾"
   },
   {
@@ -537,7 +537,7 @@
     "difficulty": 1,
     "category": "knowledge",
     "origin": "漢籍",
-    "structure": "対義"
+    "structure": "並列"
   },
   {
     "yoji": "百戦錬磨",
@@ -599,7 +599,7 @@
     "meaning": "ちょっとしたことで大事件になりそう",
     "difficulty": 1,
     "category": "conflict",
-    "origin": "日本語由来",
+    "origin": "漢籍",
     "structure": "因果"
   },
   {
@@ -617,7 +617,7 @@
     "meaning": "優れたものが勝ち劣ったものが負ける",
     "difficulty": 2,
     "category": "conflict",
-    "origin": "漢籍",
+    "origin": "日本語由来",
     "structure": "対義"
   },
   {
@@ -662,7 +662,7 @@
     "meaning": "事態が急に変わること",
     "difficulty": 1,
     "category": "change",
-    "origin": "日本語由来",
+    "origin": "不明",
     "structure": "修飾"
   },
   {
@@ -896,7 +896,7 @@
     "meaning": "向こう見ずに突き進むこと",
     "difficulty": 1,
     "category": "negative",
-    "origin": "日本語由来",
+    "origin": "漢籍",
     "structure": "類義"
   },
   {
@@ -905,7 +905,7 @@
     "meaning": "天命を知り心を安らかにすること",
     "difficulty": 2,
     "category": "life",
-    "origin": "漢籍",
+    "origin": "仏典",
     "structure": "並列"
   },
   {
@@ -1004,7 +1004,7 @@
     "meaning": "あらゆる年齢・性別の人々",
     "difficulty": 1,
     "category": "life",
-    "origin": "日本語由来",
+    "origin": "漢籍",
     "structure": "並列"
   },
   {
@@ -1058,7 +1058,7 @@
     "meaning": "他人に頼らず自分の力で歩むこと",
     "difficulty": 2,
     "category": "life",
-    "origin": "日本語由来",
+    "origin": "不明",
     "structure": "類義"
   },
   {
@@ -1085,7 +1085,7 @@
     "meaning": "自由自在に振る舞うこと",
     "difficulty": 1,
     "category": "life",
-    "origin": "漢籍",
+    "origin": "日本語由来",
     "structure": "修飾"
   },
   {
@@ -1253,7 +1253,7 @@
   {
     "yoji": "臥薪嘗胆",
     "reading": "がしんしょうたん",
-    "meaning": "仇を討つため苦労に耐えること",
+    "meaning": "目的のために苦難に耐えて努力すること",
     "difficulty": 2,
     "category": "effort",
     "origin": "故事",
@@ -1264,7 +1264,7 @@
     "reading": "しちてんばっとう",
     "meaning": "激しく苦しみもだえること",
     "difficulty": 1,
-    "category": "effort",
+    "category": "life",
     "origin": "日本語由来",
     "structure": "並列"
   },
@@ -1400,7 +1400,7 @@
     "meaning": "非常に苦心すること",
     "difficulty": 2,
     "category": "effort",
-    "origin": "漢籍",
+    "origin": "不明",
     "structure": "類義"
   },
   {
@@ -1431,8 +1431,8 @@
     "structure": "類義"
   },
   {
-    "yoji": "日夜兼行",
-    "reading": "にちやけんこう",
+    "yoji": "昼夜兼行",
+    "reading": "ちゅうやけんこう",
     "meaning": "昼も夜も休まず進むこと",
     "difficulty": 3,
     "category": "effort",
@@ -1462,7 +1462,7 @@
     "reading": "ふうりんかざん",
     "meaning": "戦いにおける四つの心構え",
     "difficulty": 1,
-    "category": "nature",
+    "category": "effort",
     "origin": "漢籍",
     "structure": "並列"
   },
@@ -1566,9 +1566,9 @@
     "structure": "修飾"
   },
   {
-    "yoji": "満天星斗",
-    "reading": "まんてんせいと",
-    "meaning": "空一面に星が輝いていること",
+    "yoji": "星火燎原",
+    "reading": "せいかりょうげん",
+    "meaning": "小さな火が燃え広がり野原を焼き尽くすように勢いが広がること",
     "difficulty": 3,
     "category": "nature",
     "origin": "漢籍",
@@ -1589,7 +1589,7 @@
     "meaning": "天下全体、世界中",
     "difficulty": 3,
     "category": "nature",
-    "origin": "仏典",
+    "origin": "不明",
     "structure": "並列"
   },
   {
@@ -1607,7 +1607,7 @@
     "meaning": "冬に寒い日と暖かい日が繰り返すこと",
     "difficulty": 1,
     "category": "nature",
-    "origin": "漢籍",
+    "origin": "不明",
     "structure": "対義"
   },
   {
@@ -1716,7 +1716,7 @@
     "difficulty": 2,
     "category": "emotion",
     "origin": "日本語由来",
-    "structure": "類義"
+    "structure": "並列"
   },
   {
     "yoji": "戦々慄々",
@@ -1769,7 +1769,7 @@
     "meaning": "恥ずかしさや恐ろしさで冷や汗をかくこと",
     "difficulty": 3,
     "category": "emotion",
-    "origin": "漢籍",
+    "origin": "不明",
     "structure": "修飾"
   },
   {
@@ -1788,7 +1788,7 @@
     "difficulty": 1,
     "category": "emotion",
     "origin": "日本語由来",
-    "structure": "修飾"
+    "structure": "並列"
   },
   {
     "yoji": "沈着冷静",
@@ -1832,7 +1832,7 @@
     "meaning": "顔いっぱいに喜びが溢れること",
     "difficulty": 2,
     "category": "emotion",
-    "origin": "漢籍",
+    "origin": "不明",
     "structure": "修飾"
   },
   {
@@ -1863,12 +1863,12 @@
     "structure": "修飾"
   },
   {
-    "yoji": "恐怖戦慄",
-    "reading": "きょうふせんりつ",
-    "meaning": "非常に恐れおののくこと",
+    "yoji": "慷慨悲憤",
+    "reading": "こうがいひふん",
+    "meaning": "世の不正を激しく嘆き怒ること",
     "difficulty": 2,
     "category": "emotion",
-    "origin": "日本語由来",
+    "origin": "漢籍",
     "structure": "類義"
   },
   {
@@ -1904,7 +1904,7 @@
     "meaning": "訪れる人がなく寂れていること",
     "difficulty": 3,
     "category": "society",
-    "origin": "故事",
+    "origin": "漢籍",
     "structure": "修飾"
   },
   {
@@ -1913,7 +1913,7 @@
     "meaning": "多くの英雄が各地に勢力を持つこと",
     "difficulty": 2,
     "category": "society",
-    "origin": "漢籍",
+    "origin": "不明",
     "structure": "修飾"
   },
   {
@@ -2003,7 +2003,7 @@
     "meaning": "事件や困難が多いこと",
     "difficulty": 2,
     "category": "society",
-    "origin": "漢籍",
+    "origin": "不明",
     "structure": "類義"
   },
   {
@@ -2066,7 +2066,7 @@
     "meaning": "さまざまに異なること",
     "difficulty": 1,
     "category": "society",
-    "origin": "漢籍",
+    "origin": "仏典",
     "structure": "類義"
   },
   {
@@ -2120,7 +2120,7 @@
     "meaning": "上の意向が下に伝わること",
     "difficulty": 2,
     "category": "society",
-    "origin": "漢籍",
+    "origin": "日本語由来",
     "structure": "修飾"
   },
   {
@@ -2214,13 +2214,13 @@
     "structure": "修飾"
   },
   {
-    "yoji": "多聞博識",
-    "reading": "たもんはくしき",
-    "meaning": "広く聞き多くを知っていること",
+    "yoji": "博引旁証",
+    "reading": "はくいんぼうしょう",
+    "meaning": "広く引用し多方面から証拠を示すこと",
     "difficulty": 3,
     "category": "knowledge",
     "origin": "漢籍",
-    "structure": "類義"
+    "structure": "並列"
   },
   {
     "yoji": "三省吾身",
@@ -2232,13 +2232,13 @@
     "structure": "修飾"
   },
   {
-    "yoji": "見聞広大",
-    "reading": "けんぶんこうだい",
-    "meaning": "見たり聞いたりした経験が広いこと",
+    "yoji": "勧善懲悪",
+    "reading": "かんぜんちょうあく",
+    "meaning": "善を勧め悪を懲らしめること",
     "difficulty": 2,
     "category": "knowledge",
     "origin": "漢籍",
-    "structure": "修飾"
+    "structure": "対義"
   },
   {
     "yoji": "読書百遍",
@@ -2354,7 +2354,7 @@
     "meaning": "疑問がすっかり解けること",
     "difficulty": 2,
     "category": "knowledge",
-    "origin": "漢籍",
+    "origin": "不明",
     "structure": "修飾"
   },
   {
@@ -2368,7 +2368,7 @@
   },
   {
     "yoji": "教学相長",
-    "reading": "きょうがくそうちょう",
+    "reading": "きょうがくあいちょうず",
     "meaning": "教えることと学ぶことは互いに成長させる",
     "difficulty": 3,
     "category": "knowledge",
@@ -2403,8 +2403,8 @@
     "structure": "修飾"
   },
   {
-    "yoji": "耳目聡明",
-    "reading": "じもくそうめい",
+    "yoji": "耳聡目明",
+    "reading": "じそうもくめい",
     "meaning": "見聞きする力が鋭いこと",
     "difficulty": 3,
     "category": "knowledge",
@@ -2452,7 +2452,7 @@
     "reading": "きそうてんがい",
     "meaning": "思いもよらない奇抜なこと",
     "difficulty": 1,
-    "category": "conflict",
+    "category": "knowledge",
     "origin": "日本語由来",
     "structure": "修飾"
   },
@@ -2461,7 +2461,7 @@
     "reading": "かんぜんむけつ",
     "meaning": "欠点が全くないこと",
     "difficulty": 1,
-    "category": "conflict",
+    "category": "virtue",
     "origin": "日本語由来",
     "structure": "類義"
   },
@@ -2470,7 +2470,7 @@
     "reading": "てんいむほう",
     "meaning": "自然で飾り気がないこと",
     "difficulty": 2,
-    "category": "conflict",
+    "category": "virtue",
     "origin": "故事",
     "structure": "修飾"
   },
@@ -2552,7 +2552,7 @@
     "meaning": "一度敗れた者が勢いを盛り返すこと",
     "difficulty": 3,
     "category": "conflict",
-    "origin": "漢籍",
+    "origin": "故事",
     "structure": "修飾"
   },
   {
@@ -2624,7 +2624,7 @@
     "meaning": "遠回しでなく直接本題に入ること",
     "difficulty": 1,
     "category": "conflict",
-    "origin": "漢籍",
+    "origin": "仏典",
     "structure": "修飾"
   },
   {
@@ -2745,7 +2745,7 @@
     "structure": "修飾"
   },
   {
-    "yoji": "晴天霹靂",
+    "yoji": "青天霹靂",
     "reading": "せいてんへきれき",
     "meaning": "突然の出来事に驚くこと",
     "difficulty": 2,
@@ -3012,7 +3012,7 @@
     "difficulty": 2,
     "category": "virtue",
     "origin": "漢籍",
-    "structure": "修飾"
+    "structure": "不明"
   },
   {
     "yoji": "礼義廉恥",
@@ -3038,7 +3038,7 @@
     "meaning": "忍び耐え広い心で受け入れること",
     "difficulty": 2,
     "category": "virtue",
-    "origin": "日本語由来",
+    "origin": "不明",
     "structure": "並列"
   },
   {
@@ -3083,7 +3083,7 @@
     "meaning": "才能と美貌を兼ね備えること",
     "difficulty": 2,
     "category": "virtue",
-    "origin": "漢籍",
+    "origin": "日本語由来",
     "structure": "修飾"
   },
   {
@@ -3092,7 +3092,7 @@
     "meaning": "顔かたちが整って美しいこと",
     "difficulty": 2,
     "category": "virtue",
-    "origin": "漢籍",
+    "origin": "日本語由来",
     "structure": "修飾"
   },
   {
@@ -3101,7 +3101,7 @@
     "meaning": "最初から最後まで一貫していること",
     "difficulty": 2,
     "category": "virtue",
-    "origin": "漢籍",
+    "origin": "日本語由来",
     "structure": "修飾"
   },
   {
@@ -3123,7 +3123,7 @@
     "structure": "類義"
   },
   {
-    "yoji": "自由闘達",
+    "yoji": "自由闊達",
     "reading": "じゆうかったつ",
     "meaning": "のびのびとして度量が広いこと",
     "difficulty": 2,
@@ -3344,7 +3344,7 @@
     "meaning": "何もしないで手立てがないこと",
     "difficulty": 2,
     "category": "negative",
-    "origin": "漢籍",
+    "origin": "不明",
     "structure": "類義"
   },
   {
@@ -3366,7 +3366,7 @@
     "structure": "類義"
   },
   {
-    "yoji": "唯唯諾々",
+    "yoji": "唯々諾々",
     "reading": "いいだくだく",
     "meaning": "何でもはいはいと従うこと",
     "difficulty": 3,
@@ -3389,7 +3389,7 @@
     "meaning": "自分の言動で自分を苦しめること",
     "difficulty": 2,
     "category": "negative",
-    "origin": "漢籍",
+    "origin": "日本語由来",
     "structure": "並列"
   },
   {
@@ -3497,7 +3497,7 @@
     "meaning": "物が散らかっていること",
     "difficulty": 2,
     "category": "negative",
-    "origin": "漢籍",
+    "origin": "日本語由来",
     "structure": "修飾"
   },
   {
@@ -3523,7 +3523,7 @@
     "reading": "しんしほしゃ",
     "meaning": "密接な関係にあること",
     "difficulty": 3,
-    "category": "negative",
+    "category": "society",
     "origin": "故事",
     "structure": "並列"
   },
@@ -3582,17 +3582,17 @@
     "structure": "並列"
   },
   {
-    "yoji": "酒酔飯飽",
-    "reading": "しゅすいはんぽう",
-    "meaning": "酒に酔い食事に飽きること",
+    "yoji": "飽食暖衣",
+    "reading": "ほうしょくだんい",
+    "meaning": "食べ物に飽き暖かい衣服を着ること。贅沢な暮らしのたとえ",
     "difficulty": 3,
     "category": "negative",
     "origin": "漢籍",
     "structure": "並列"
   },
   {
-    "yoji": "栄華栄耀",
-    "reading": "えいがえいよう",
+    "yoji": "栄耀栄華",
+    "reading": "えいようえいが",
     "meaning": "贅沢に暮らすこと",
     "difficulty": 3,
     "category": "life",
@@ -3605,7 +3605,7 @@
     "meaning": "やかましく騒ぎ立てること",
     "difficulty": 3,
     "category": "society",
-    "origin": "漢籍",
+    "origin": "不明",
     "structure": "類義"
   },
   {
