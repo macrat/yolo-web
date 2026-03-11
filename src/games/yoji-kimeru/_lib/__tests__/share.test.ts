@@ -11,6 +11,7 @@ const targetYoji: YojiEntry = {
   category: "life",
   origin: "仏典",
   structure: "並列",
+  sourceUrl: "",
 };
 
 beforeEach(() => {
