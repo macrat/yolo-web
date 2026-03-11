@@ -1,20 +1,27 @@
 "use client";
 
+import type { Difficulty } from "@/games/yoji-kimeru/_lib/types";
+import DifficultySelector from "./DifficultySelector";
 import styles from "./styles/YojiKimeru.module.css";
 
 interface GameHeaderProps {
   puzzleNumber: number;
   dateString: string;
+  difficulty: Difficulty;
+  onDifficultyChange: (difficulty: Difficulty) => void;
   onHelpClick: () => void;
   onStatsClick: () => void;
 }
 
 /**
- * Game header showing the title, puzzle number, date, and icon buttons.
+ * Game header showing the title, puzzle number, date, difficulty selector,
+ * and icon buttons.
  */
 export default function GameHeader({
   puzzleNumber,
   dateString,
+  difficulty,
+  onDifficultyChange,
   onHelpClick,
   onStatsClick,
 }: GameHeaderProps) {
@@ -41,6 +48,10 @@ export default function GameHeader({
           </button>
         </div>
       </div>
+      <DifficultySelector
+        difficulty={difficulty}
+        onChange={onDifficultyChange}
+      />
       <div className={styles.headerSub}>
         #{puzzleNumber} - {dateString}
       </div>

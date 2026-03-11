@@ -1,4 +1,4 @@
-import type { YojiEntry, YojiPuzzleScheduleEntry } from "./types";
+import type { Difficulty, YojiEntry, YojiPuzzleScheduleEntry } from "./types";
 
 /**
  * The epoch date for puzzle numbering.
@@ -47,27 +47,52 @@ function simpleHash(str: string): number {
 }
 
 /**
- * Get today's puzzle yoji and puzzle number.
+ * Filter yoji data by difficulty level.
+ * - beginner: difficulty 1 only
+ * - intermediate: difficulty 1 and 2
+ * - advanced: all difficulties (1, 2, and 3)
+ */
+export function filterByDifficulty(
+  yojiData: YojiEntry[],
+  difficulty: Difficulty,
+): YojiEntry[] {
+  switch (difficulty) {
+    case "beginner":
+      return yojiData.filter((y) => y.difficulty === 1);
+    case "intermediate":
+      return yojiData.filter((y) => y.difficulty <= 2);
+    case "advanced":
+      return yojiData;
+  }
+}
+
+/**
+ * Get today's puzzle yoji and puzzle number for a given difficulty.
  *
  * First checks the pre-generated schedule. If no entry is found for today's
- * date (e.g., schedule has expired), falls back to a deterministic hash.
+ * date (e.g., schedule has expired), falls back to a deterministic hash
+ * within the difficulty-filtered pool.
  */
 export function getTodaysPuzzle(
   yojiData: YojiEntry[],
   schedule: YojiPuzzleScheduleEntry[],
+  difficulty: Difficulty,
   now?: Date,
 ): { yoji: YojiEntry; puzzleNumber: number } {
   const date = now ?? new Date();
   const todayStr = formatDateJST(date);
   const puzzleNumber = getPuzzleNumber(date);
 
+  // Filter data by difficulty for both schedule lookup and fallback
+  const filteredData = filterByDifficulty(yojiData, difficulty);
+
   const entry = schedule.find((p) => p.date === todayStr);
-  if (entry && entry.yojiIndex < yojiData.length) {
-    return { yoji: yojiData[entry.yojiIndex], puzzleNumber };
+  if (entry && entry.yojiIndex < filteredData.length) {
+    return { yoji: filteredData[entry.yojiIndex], puzzleNumber };
   }
 
   // Fallback: deterministic hash of date string
   const hash = simpleHash(todayStr);
-  const index = hash % yojiData.length;
-  return { yoji: yojiData[index], puzzleNumber };
+  const index = hash % filteredData.length;
+  return { yoji: filteredData[index], puzzleNumber };
 }

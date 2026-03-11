@@ -14,14 +14,13 @@ const targetYoji: YojiEntry = {
 };
 
 beforeEach(() => {
-  // Mock window.location.origin
   vi.stubGlobal("window", {
     location: { origin: "https://example.com" },
   });
 });
 
 describe("generateShareText", () => {
-  test("generates correct text for a won game", () => {
+  test("generates correct text for a won game with difficulty", () => {
     const state: YojiGameState = {
       puzzleDate: "2026-03-01",
       puzzleNumber: 1,
@@ -39,11 +38,11 @@ describe("generateShareText", () => {
       status: "won",
     };
 
-    const text = generateShareText(state);
-    expect(text).toContain("\u56DB\u5B57\u30AD\u30E1\u30EB #1 2/6");
-    // Row 1: all absent (4 white squares)
+    const text = generateShareText(state, "intermediate");
+    expect(text).toContain(
+      "\u56DB\u5B57\u30AD\u30E1\u30EB #1 (\u4E2D\u7D1A) 2/6",
+    );
     expect(text).toContain("\u2B1C\u2B1C\u2B1C\u2B1C");
-    // Row 2: all correct (4 green squares)
     expect(text).toContain("\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E9}");
     expect(text).toContain("https://example.com/games/yoji-kimeru");
   });
@@ -67,15 +66,33 @@ describe("generateShareText", () => {
       status: "lost",
     };
 
-    const text = generateShareText(state);
-    expect(text).toContain("\u56DB\u5B57\u30AD\u30E1\u30EB #42 X/6");
-    // Each row should be all absent (4 white squares)
+    const text = generateShareText(state, "advanced");
+    expect(text).toContain(
+      "\u56DB\u5B57\u30AD\u30E1\u30EB #42 (\u4E0A\u7D1A) X/6",
+    );
     const allAbsentRow = "\u2B1C\u2B1C\u2B1C\u2B1C";
     const lines = text.split("\n");
-    // Lines 1-6 (after header) should all be the absent row
     for (let i = 1; i <= 6; i++) {
       expect(lines[i]).toBe(allAbsentRow);
     }
+  });
+
+  test("includes difficulty label for beginner", () => {
+    const state: YojiGameState = {
+      puzzleDate: "2026-03-01",
+      puzzleNumber: 5,
+      targetYoji,
+      guesses: [
+        {
+          guess: "一期一会",
+          charFeedbacks: ["correct", "correct", "correct", "correct"],
+        },
+      ],
+      status: "won",
+    };
+
+    const text = generateShareText(state, "beginner");
+    expect(text).toContain("(\u521D\u7D1A)");
   });
 
   test("emoji mapping is correct", () => {
@@ -92,8 +109,7 @@ describe("generateShareText", () => {
       status: "playing",
     };
 
-    const text = generateShareText(state);
-    // correct=green, present=yellow, absent=white, absent=white
+    const text = generateShareText(state, "intermediate");
     expect(text).toContain("\u{1F7E9}\u{1F7E8}\u2B1C\u2B1C");
   });
 
@@ -111,8 +127,10 @@ describe("generateShareText", () => {
       status: "won",
     };
 
-    const text = generateShareText(state);
-    expect(text).toContain("\u56DB\u5B57\u30AD\u30E1\u30EB #15 1/6");
+    const text = generateShareText(state, "intermediate");
+    expect(text).toContain(
+      "\u56DB\u5B57\u30AD\u30E1\u30EB #15 (\u4E2D\u7D1A) 1/6",
+    );
   });
 });
 
@@ -127,13 +145,11 @@ describe("generateTwitterShareUrl", () => {
 
   test("separates text and url when pageUrl is provided", () => {
     const pageUrl = "https://example.com/games/yoji-kimeru";
-    const text = `\u56DB\u5B57\u30AD\u30E1\u30EB #1 2/6\n\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E9}\n${pageUrl}`;
+    const text = `\u56DB\u5B57\u30AD\u30E1\u30EB #1 (\u4E2D\u7D1A) 2/6\n\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E9}\n${pageUrl}`;
     const url = generateTwitterShareUrl(text, pageUrl);
-    // text param should not contain the page URL
     expect(url).toContain(
-      `text=${encodeURIComponent("\u56DB\u5B57\u30AD\u30E1\u30EB #1 2/6\n\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E9}")}`,
+      `text=${encodeURIComponent("\u56DB\u5B57\u30AD\u30E1\u30EB #1 (\u4E2D\u7D1A) 2/6\n\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E9}")}`,
     );
-    // url param should contain the page URL
     expect(url).toContain(`&url=${encodeURIComponent(pageUrl)}`);
   });
 
@@ -141,7 +157,6 @@ describe("generateTwitterShareUrl", () => {
     const text = "\u56DB\u5B57\u30AD\u30E1\u30EB #1 2/6\nhttps://example.com";
     const url = generateTwitterShareUrl(text);
     expect(url).toContain("https://twitter.com/intent/tweet?text=");
-    // Should be properly encoded
     expect(url).toContain(encodeURIComponent(text));
   });
 });

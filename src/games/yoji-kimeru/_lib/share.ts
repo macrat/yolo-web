@@ -1,4 +1,11 @@
-import type { CharFeedback, YojiGameState } from "./types";
+import type { CharFeedback, Difficulty, YojiGameState } from "./types";
+
+/** Map difficulty to a Japanese label for share text. */
+const DIFFICULTY_LABELS: Record<Difficulty, string> = {
+  beginner: "初級",
+  intermediate: "中級",
+  advanced: "上級",
+};
 
 /**
  * Map a CharFeedback to its emoji representation.
@@ -18,14 +25,18 @@ function charFeedbackToEmoji(fb: CharFeedback): string {
  * Generate the share text for a completed game.
  *
  * Format:
- *   四字キメル #42 3/6
+ *   四字キメル #42 (中級) 3/6
  *   🟩⬜🟨🟩
  *   🟩🟩🟨🟩
  *   🟩🟩🟩🟩
  *   https://.../games/yoji-kimeru
  */
-export function generateShareText(state: YojiGameState): string {
+export function generateShareText(
+  state: YojiGameState,
+  difficulty: Difficulty,
+): string {
   const result = state.status === "won" ? `${state.guesses.length}/6` : "X/6";
+  const diffLabel = DIFFICULTY_LABELS[difficulty];
 
   const rows = state.guesses.map((g) =>
     g.charFeedbacks.map(charFeedbackToEmoji).join(""),
@@ -34,5 +45,5 @@ export function generateShareText(state: YojiGameState): string {
   const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
   const url = `${baseUrl}/games/yoji-kimeru`;
 
-  return `\u56DB\u5B57\u30AD\u30E1\u30EB #${state.puzzleNumber} ${result}\n${rows.join("\n")}\n${url}`;
+  return `\u56DB\u5B57\u30AD\u30E1\u30EB #${state.puzzleNumber} (${diffLabel}) ${result}\n${rows.join("\n")}\n${url}`;
 }

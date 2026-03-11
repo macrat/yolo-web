@@ -32,6 +32,17 @@ export default function HowToPlayModal({ open, onClose }: HowToPlayModalProps) {
           <li>{"\u{1F7E8}"} 黄 = 別の位置に存在</li>
           <li>{"\u2B1C"} 灰 = 含まれない</li>
         </ul>
+        <p className={styles.howToPlaySection}>
+          <strong>難易度について</strong>
+        </p>
+        <ul className={styles.feedbackLegend}>
+          <li>初級: 日常でよく使われる四字熟語</li>
+          <li>中級: ニュースや書籍で見かける四字熟語</li>
+          <li>上級: 専門的・文語的な四字熟語を含む全問題</li>
+        </ul>
+        <p>
+          初級は問題数が限られるため、同じ問題が再出題されることがあります。
+        </p>
         <p>
           ヒントとして難易度が最初から表示されます。3回目の推測後に読みの最初の文字が、5回目の推測後にカテゴリが表示されます。
         </p>

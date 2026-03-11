@@ -4,6 +4,7 @@ import { useState, useCallback, useEffect, useMemo, useRef } from "react";
 import { useAchievements } from "@/lib/achievements/useAchievements";
 import { trackContentEnd } from "@/lib/analytics";
 import type {
+  Difficulty,
   YojiGameState,
   YojiGameStats,
   YojiGuessFeedback,
@@ -17,6 +18,7 @@ import {
 } from "@/games/yoji-kimeru/_lib/engine";
 import { getTodaysPuzzle, formatDateJST } from "@/games/yoji-kimeru/_lib/daily";
 import {
+  migrateToV2,
   loadStats,
   saveStats,
   loadHistory,
@@ -24,7 +26,6 @@ import {
   loadTodayGame,
 } from "@/games/yoji-kimeru/_lib/storage";
 import yojiDataJson from "@/data/yoji-data.json";
-import yojiScheduleJson from "@/games/yoji-kimeru/data/yoji-schedule.json";
 import GameHeader from "./GameHeader";
 import HintBar from "./HintBar";
 import GameBoard from "./GameBoard";
@@ -34,22 +35,116 @@ import StatsModal from "./StatsModal";
 import HowToPlayModal from "./HowToPlayModal";
 
 const FIRST_VISIT_KEY = "yoji-kimeru-first-visit";
+const DIFFICULTY_KEY = "yoji-kimeru-difficulty";
+
+/**
+ * Dynamically load the puzzle schedule for a given difficulty.
+ * Only the selected difficulty's schedule is loaded to minimize bundle size.
+ */
+async function loadSchedule(
+  difficulty: Difficulty,
+): Promise<YojiPuzzleScheduleEntry[]> {
+  switch (difficulty) {
+    case "beginner": {
+      const mod =
+        await import("@/games/yoji-kimeru/data/yoji-schedule-beginner.json");
+      return mod.default as YojiPuzzleScheduleEntry[];
+    }
+    case "intermediate": {
+      const mod =
+        await import("@/games/yoji-kimeru/data/yoji-schedule-intermediate.json");
+      return mod.default as YojiPuzzleScheduleEntry[];
+    }
+    case "advanced": {
+      const mod =
+        await import("@/games/yoji-kimeru/data/yoji-schedule-advanced.json");
+      return mod.default as YojiPuzzleScheduleEntry[];
+    }
+  }
+}
+
+/**
+ * Load the saved difficulty from localStorage, defaulting to intermediate.
+ */
+function loadDifficulty(): Difficulty {
+  if (typeof window === "undefined") return "intermediate";
+  try {
+    const saved = window.localStorage.getItem(DIFFICULTY_KEY);
+    if (
+      saved === "beginner" ||
+      saved === "intermediate" ||
+      saved === "advanced"
+    ) {
+      return saved;
+    }
+  } catch {
+    // Silently fail
+  }
+  return "intermediate";
+}
+
+/**
+ * Save difficulty choice to localStorage.
+ */
+function saveDifficulty(difficulty: Difficulty): void {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(DIFFICULTY_KEY, difficulty);
+  } catch {
+    // Silently fail
+  }
+}
+
+/**
+ * Initialize a game state from a puzzle and optionally saved data.
+ */
+function initGameState(
+  todayStr: string,
+  puzzle: { yoji: YojiEntry; puzzleNumber: number },
+  difficulty: Difficulty,
+): YojiGameState {
+  const saved = loadTodayGame(todayStr, difficulty);
+  if (saved) {
+    const guesses: YojiGuessFeedback[] = [];
+    for (const guessStr of saved.guesses) {
+      guesses.push(evaluateGuess(guessStr, puzzle.yoji.yoji));
+    }
+    return {
+      puzzleDate: todayStr,
+      puzzleNumber: puzzle.puzzleNumber,
+      targetYoji: puzzle.yoji,
+      guesses,
+      status:
+        saved.status === "won"
+          ? "won"
+          : saved.status === "lost"
+            ? "lost"
+            : "playing",
+    };
+  }
+  return {
+    puzzleDate: todayStr,
+    puzzleNumber: puzzle.puzzleNumber,
+    targetYoji: puzzle.yoji,
+    guesses: [],
+    status: "playing",
+  };
+}
 
 /**
  * Top-level client component that orchestrates the entire game state.
- * Loads yoji data, determines today's puzzle, manages guesses,
- * handles win/loss, and persists state to localStorage.
+ * Loads yoji data, determines today's puzzle based on difficulty,
+ * manages guesses, handles win/loss, and persists state to localStorage.
  */
 export default function GameContainer() {
   const { recordPlay } = useAchievements();
 
-  const yojiData = yojiDataJson as YojiEntry[];
-  const puzzleSchedule = yojiScheduleJson as YojiPuzzleScheduleEntry[];
+  // Run migration once on mount to preserve existing players' data
+  useEffect(() => {
+    migrateToV2();
+  }, []);
 
-  const todaysPuzzle = useMemo(
-    () => getTodaysPuzzle(yojiData, puzzleSchedule),
-    [yojiData, puzzleSchedule],
-  );
+  const yojiData = yojiDataJson as YojiEntry[];
 
   const todayStr = useMemo(() => formatDateJST(new Date()), []);
 
@@ -64,38 +159,20 @@ export default function GameContainer() {
     return formatter.format(new Date());
   }, []);
 
-  const [gameState, setGameState] = useState<YojiGameState>(() => {
-    // Try to restore today's game from localStorage
-    const saved = loadTodayGame(todayStr);
-    if (saved) {
-      // Rebuild YojiGuessFeedback[] from saved guess strings
-      const guesses: YojiGuessFeedback[] = [];
-      for (const guessStr of saved.guesses) {
-        guesses.push(evaluateGuess(guessStr, todaysPuzzle.yoji.yoji));
-      }
-      return {
-        puzzleDate: todayStr,
-        puzzleNumber: todaysPuzzle.puzzleNumber,
-        targetYoji: todaysPuzzle.yoji,
-        guesses,
-        status:
-          saved.status === "won"
-            ? "won"
-            : saved.status === "lost"
-              ? "lost"
-              : "playing",
-      };
-    }
-    return {
-      puzzleDate: todayStr,
-      puzzleNumber: todaysPuzzle.puzzleNumber,
-      targetYoji: todaysPuzzle.yoji,
-      guesses: [],
-      status: "playing",
-    };
+  const [difficulty, setDifficulty] = useState<Difficulty>(loadDifficulty);
+  const [loading, setLoading] = useState(true);
+
+  const [gameState, setGameState] = useState<YojiGameState>({
+    puzzleDate: todayStr,
+    puzzleNumber: 0,
+    targetYoji: yojiData[0],
+    guesses: [],
+    status: "playing",
   });
 
-  const [stats, setStats] = useState<YojiGameStats>(() => loadStats());
+  const [stats, setStats] = useState<YojiGameStats>(() =>
+    loadStats(difficulty),
+  );
   const [showResult, setShowResult] = useState(false);
   const [showStats, setShowStats] = useState(false);
   const [showHowToPlay, setShowHowToPlay] = useState(() => {
@@ -113,6 +190,43 @@ export default function GameContainer() {
     return false;
   });
 
+  /**
+   * Load schedule and initialize game for a given difficulty.
+   */
+  const initializeGame = useCallback(
+    async (diff: Difficulty) => {
+      setLoading(true);
+      try {
+        const schedule = await loadSchedule(diff);
+        const puzzle = getTodaysPuzzle(yojiData, schedule, diff);
+        const state = initGameState(todayStr, puzzle, diff);
+        setGameState(state);
+        setStats(loadStats(diff));
+        setShowResult(false);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [yojiData, todayStr],
+  );
+
+  // Initialize on mount and when difficulty changes
+  useEffect(() => {
+    void initializeGame(difficulty);
+  }, [difficulty, initializeGame]);
+
+  /**
+   * Handle difficulty change: save preference and trigger re-initialization.
+   */
+  const handleDifficultyChange = useCallback(
+    (newDifficulty: Difficulty) => {
+      if (newDifficulty === difficulty) return;
+      saveDifficulty(newDifficulty);
+      setDifficulty(newDifficulty);
+    },
+    [difficulty],
+  );
+
   // Track the previous game status to detect transitions to won/lost
   const prevStatusRef = useRef(gameState.status);
   useEffect(() => {
@@ -126,11 +240,6 @@ export default function GameContainer() {
   }, [gameState.status]);
 
   // Record play for achievement system when game ends (won or lost).
-  // Uses its own prevStatusForRecordRef to avoid sharing prevStatusRef with
-  // the modal useEffect above (React runs useEffects in declaration order,
-  // so a shared ref would already be updated before this effect runs).
-  // hasRecordedPlayRef prevents re-firing on page reload, where
-  // localStorage restores status as "won"/"lost" on mount.
   const prevStatusForRecordRef = useRef(gameState.status);
   const hasRecordedPlayRef = useRef(false);
   useEffect(() => {
@@ -156,12 +265,12 @@ export default function GameContainer() {
 
       // Validate: exactly 4 kanji characters
       if (!isValidYojiInput(input)) {
-        return "漢字4文字を入力してください";
+        return "\u6F22\u5B574\u6587\u5B57\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044";
       }
 
       // Validate: not a duplicate
       if (gameState.guesses.some((g) => g.guess === input)) {
-        return "この組み合わせはすでに入力しました";
+        return "\u3053\u306E\u7D44\u307F\u5408\u308F\u305B\u306F\u3059\u3067\u306B\u5165\u529B\u3057\u307E\u3057\u305F";
       }
 
       // Evaluate the guess
@@ -189,24 +298,24 @@ export default function GameContainer() {
       const guessStrs = newGuesses.map((g) => g.guess);
       if (newStatus === "playing") {
         // Save in-progress game
-        const history = loadHistory();
+        const history = loadHistory(difficulty);
         history[todayStr] = {
           guesses: guessStrs,
           status: "playing",
           guessCount: guessStrs.length,
         };
-        saveHistory(history);
+        saveHistory(history, difficulty);
       }
 
       // Update stats and history on game end
       if (newStatus !== "playing") {
-        const history = loadHistory();
+        const history = loadHistory(difficulty);
         history[todayStr] = {
           guesses: guessStrs,
           status: newStatus,
           guessCount: guessStrs.length,
         };
-        saveHistory(history);
+        saveHistory(history, difficulty);
 
         const updatedStats = { ...stats };
         updatedStats.gamesPlayed += 1;
@@ -241,22 +350,49 @@ export default function GameContainer() {
         updatedStats.lastPlayedDate = todayStr;
 
         setStats(updatedStats);
-        saveStats(updatedStats);
+        saveStats(updatedStats, difficulty);
       }
 
       return null;
     },
-    [gameState, todayStr, stats],
+    [gameState, difficulty, todayStr, stats],
   );
 
   const lastGuessCount =
     gameState.status === "won" ? gameState.guesses.length : undefined;
+
+  // Show loading state while schedule is being loaded
+  if (loading) {
+    return (
+      <>
+        <GameHeader
+          puzzleNumber={0}
+          dateString={dateDisplayString}
+          difficulty={difficulty}
+          onDifficultyChange={handleDifficultyChange}
+          onHelpClick={() => setShowHowToPlay(true)}
+          onStatsClick={() => setShowStats(true)}
+        />
+        <div
+          style={{
+            textAlign: "center",
+            padding: "2rem",
+            color: "var(--color-text-muted)",
+          }}
+        >
+          読み込み中...
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
       <GameHeader
         puzzleNumber={gameState.puzzleNumber}
         dateString={dateDisplayString}
+        difficulty={difficulty}
+        onDifficultyChange={handleDifficultyChange}
         onHelpClick={() => setShowHowToPlay(true)}
         onStatsClick={() => setShowStats(true)}
       />
@@ -279,6 +415,7 @@ export default function GameContainer() {
         open={showResult}
         onClose={() => setShowResult(false)}
         gameState={gameState}
+        difficulty={difficulty}
         onStatsClick={() => {
           setShowResult(false);
           setShowStats(true);

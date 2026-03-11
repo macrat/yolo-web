@@ -1,3 +1,6 @@
+/** 難易度レベル: ゲームの難易度選択に使用 */
+export type Difficulty = "beginner" | "intermediate" | "advanced";
+
 /** 出典区分: 四字熟語の由来を分類する */
 export type YojiOrigin =
   | "漢籍"
