@@ -16,6 +16,7 @@ const sampleYoji: YojiEntry[] = [
     category: "life",
     origin: "仏典",
     structure: "並列",
+    sourceUrl: "",
   },
   {
     yoji: "花鳥風月",
@@ -25,6 +26,7 @@ const sampleYoji: YojiEntry[] = [
     category: "nature",
     origin: "日本語由来",
     structure: "並列",
+    sourceUrl: "",
   },
   {
     yoji: "切磋琢磨",
@@ -34,6 +36,7 @@ const sampleYoji: YojiEntry[] = [
     category: "effort",
     origin: "漢籍",
     structure: "類義",
+    sourceUrl: "",
   },
   {
     yoji: "韋編三絶",
@@ -43,6 +46,7 @@ const sampleYoji: YojiEntry[] = [
     category: "knowledge",
     origin: "漢籍",
     structure: "修飾",
+    sourceUrl: "",
   },
 ];
 

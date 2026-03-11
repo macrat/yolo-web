@@ -28,6 +28,7 @@ export interface YojiEntry {
   category: YojiCategory; // 意味カテゴリ
   origin: YojiOrigin; // 出典区分
   structure: YojiStructure; // 構造パターン
+  sourceUrl: string; // 出典辞書URL（検証・説明充実用）
 }
 
 export type YojiCategory =
