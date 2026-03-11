@@ -43,9 +43,15 @@ export default function HowToPlayModal({ open, onClose }: HowToPlayModalProps) {
         <p>
           初級は問題数が限られるため、同じ問題が再出題されることがあります。
         </p>
-        <p>
-          ヒントとして難易度が最初から表示されます。3回目の推測後に読みの最初の文字が、5回目の推測後にカテゴリが表示されます。
+        <p className={styles.howToPlaySection}>
+          <strong>ヒントについて</strong>
         </p>
+        <ul className={styles.feedbackLegend}>
+          <li>難易度と読みの文字数が最初から表示されます</li>
+          <li>3回目の推測後に読みの最初の文字が表示されます</li>
+          <li>4回目の推測後に出典（中国/日本）が表示されます</li>
+          <li>5回目の推測後にカテゴリが表示されます</li>
+        </ul>
       </div>
     </GameDialog>
   );
