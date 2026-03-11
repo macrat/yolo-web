@@ -66,6 +66,10 @@ export default function GameContainer() {
     return formatter.format(new Date());
   }, []);
 
+  // Track whether client-side shuffle has completed to prevent
+  // showing the deterministic sort order before shuffle.
+  const [isReady, setIsReady] = useState(false);
+
   const [gameState, setGameState] = useState<NakamawakeGameState>(() => {
     // Try to restore today's game from localStorage
     const saved = loadTodayGame(todayStr);
@@ -90,7 +94,8 @@ export default function GameContainer() {
         mistakes: saved.mistakes,
         status: saved.status,
         selectedWords: [],
-        remainingWords: shuffleArray(remainingWords),
+        // Use sorted order for SSR/CSR consistency; shuffle happens in useEffect
+        remainingWords: remainingWords.sort(),
         guessHistory: [],
       };
     }
@@ -103,10 +108,25 @@ export default function GameContainer() {
       mistakes: 0,
       status: "playing",
       selectedWords: [],
-      remainingWords: shuffleArray(getAllWords(todaysPuzzle.puzzle)),
+      // Use sorted order for SSR/CSR consistency; shuffle happens in useEffect
+      remainingWords: getAllWords(todaysPuzzle.puzzle).sort(),
       guessHistory: [],
     };
   });
+
+  // Shuffle remaining words on client side only to prevent hydration mismatch.
+  // This one-time initialization is intentionally done in useEffect because
+  // remainingWords is mutable state that changes during gameplay (words are
+  // removed on correct guesses, reordered by shuffle button), so it must
+  // live in React state rather than a derived computation.
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- One-time client-side initialization of shuffled word order
+    setGameState((prev) => ({
+      ...prev,
+      remainingWords: shuffleArray(prev.remainingWords),
+    }));
+    setIsReady(true);
+  }, []);
 
   const [stats, setStats] = useState<NakamawakeGameStats>(() => loadStats());
   const [showResult, setShowResult] = useState(false);
@@ -213,7 +233,7 @@ export default function GameContainer() {
         remainingWords: newRemainingWords,
         selectedWords: [],
         guessHistory: newGuessHistory,
-        status: newStatus as "playing" | "won" | "lost",
+        status: newStatus,
       };
       setGameState(newState);
       setFeedbackMessage("\u6B63\u89E3!");
@@ -223,7 +243,7 @@ export default function GameContainer() {
       saveTodayGame(todayStr, {
         solvedGroups: newSolvedGroups.map((g) => g.difficulty),
         mistakes: gameState.mistakes,
-        status: newStatus as "won" | "lost",
+        status: newStatus,
       });
 
       // Update stats on win
@@ -276,7 +296,7 @@ export default function GameContainer() {
         mistakes: newMistakes,
         selectedWords: [],
         guessHistory: newGuessHistory,
-        status: newStatus as "playing" | "won" | "lost",
+        status: newStatus,
       };
       setGameState(newState);
 
@@ -287,14 +307,16 @@ export default function GameContainer() {
       }
       setTimeout(() => setFeedbackMessage(""), 2000);
 
-      // Save on loss
-      if (newStatus === "lost") {
-        saveTodayGame(todayStr, {
-          solvedGroups: gameState.solvedGroups.map((g) => g.difficulty),
-          mistakes: newMistakes,
-          status: "lost",
-        });
+      // Persist game state on every mistake (including playing state)
+      // so that progress survives page reload
+      saveTodayGame(todayStr, {
+        solvedGroups: gameState.solvedGroups.map((g) => g.difficulty),
+        mistakes: newMistakes,
+        status: newStatus,
+      });
 
+      // Update stats on loss
+      if (newStatus === "lost") {
         const updatedStats = { ...stats };
         updatedStats.gamesPlayed += 1;
         updatedStats.mistakeDistribution[newMistakes] += 1;
@@ -337,12 +359,14 @@ export default function GameContainer() {
         onStatsClick={() => setShowStats(true)}
       />
       <SolvedGroups groups={gameState.solvedGroups} />
-      <WordGrid
-        words={gameState.remainingWords}
-        selectedWords={gameState.selectedWords}
-        onWordToggle={handleWordToggle}
-        disabled={gameState.status !== "playing"}
-      />
+      <div style={{ visibility: isReady ? "visible" : "hidden" }}>
+        <WordGrid
+          words={gameState.remainingWords}
+          selectedWords={gameState.selectedWords}
+          onWordToggle={handleWordToggle}
+          disabled={gameState.status !== "playing"}
+        />
+      </div>
       <div className={styles.mistakeIndicator}>
         {"\u25CF".repeat(gameState.mistakes)}
         {"\u25CB".repeat(MAX_MISTAKES - gameState.mistakes)} {"\u30DF\u30B9"}{" "}

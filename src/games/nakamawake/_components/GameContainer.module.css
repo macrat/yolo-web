@@ -16,3 +16,33 @@
 :global(:root.dark) .feedback {
   background: var(--color-border);
 }
+
+/* Warning state when only 1 mistake remains before game over */
+.mistakeDanger {
+  color: var(--color-danger, #dc2626);
+  font-weight: 600;
+  animation: mistakePulse 1.5s ease-in-out infinite;
+}
+
+@keyframes mistakePulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* Screen-reader only text for accessibility */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}

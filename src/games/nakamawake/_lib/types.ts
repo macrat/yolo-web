@@ -40,6 +40,6 @@ export interface NakamawakeGameHistory {
   [date: string]: {
     solvedGroups: number[]; // difficulty levels in order solved
     mistakes: number;
-    status: "won" | "lost";
+    status: "won" | "lost" | "playing";
   };
 }

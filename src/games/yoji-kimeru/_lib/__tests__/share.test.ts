@@ -9,6 +9,8 @@ const targetYoji: YojiEntry = {
   meaning: "一生に一度の出会いを大切にすること",
   difficulty: 1,
   category: "life",
+  origin: "仏典",
+  structure: "並列",
 };
 
 beforeEach(() => {
