@@ -367,10 +367,16 @@ export default function GameContainer() {
           disabled={gameState.status !== "playing"}
         />
       </div>
-      <div className={styles.mistakeIndicator}>
+      <div
+        className={`${styles.mistakeIndicator}${gameState.mistakes === MAX_MISTAKES - 1 ? ` ${styles.mistakeDanger}` : ""}`}
+        aria-live="polite"
+      >
         {"\u25CF".repeat(gameState.mistakes)}
         {"\u25CB".repeat(MAX_MISTAKES - gameState.mistakes)} {"\u30DF\u30B9"}{" "}
         {gameState.mistakes}/{MAX_MISTAKES}
+        {gameState.mistakes === MAX_MISTAKES - 1 && (
+          <span className={styles.srOnly}>あと1回ミスでゲームオーバーです</span>
+        )}
       </div>
       {feedbackMessage && (
         <div className={styles.feedback}>{feedbackMessage}</div>
