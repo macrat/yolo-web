@@ -64,12 +64,15 @@ export function evaluateGuess(
 export function isValidYojiInput(input: string): boolean {
   const chars = [...input];
   if (chars.length !== 4) return false;
-  // Accept CJK Unified Ideographs (U+4E00 to U+9FFF) and
-  // CJK Extension A (U+3400 to U+4DBF)
+  // Accept CJK Unified Ideographs (U+4E00 to U+9FFF),
+  // CJK Extension A (U+3400 to U+4DBF), and
+  // 々 Ideographic Iteration Mark (U+3005)
   return chars.every((ch) => {
     const code = ch.codePointAt(0) ?? 0;
     return (
-      (code >= 0x4e00 && code <= 0x9fff) || (code >= 0x3400 && code <= 0x4dbf)
+      (code >= 0x4e00 && code <= 0x9fff) ||
+      (code >= 0x3400 && code <= 0x4dbf) ||
+      code === 0x3005
     );
   });
 }
