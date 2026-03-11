@@ -9,6 +9,8 @@ const sampleYoji: YojiEntry[] = [
     meaning: "一生に一度の出会いを大切にすること",
     difficulty: 1,
     category: "life",
+    origin: "仏典",
+    structure: "並列",
   },
   {
     yoji: "花鳥風月",
@@ -16,6 +18,8 @@ const sampleYoji: YojiEntry[] = [
     meaning: "自然の美しい風景",
     difficulty: 1,
     category: "nature",
+    origin: "日本語由来",
+    structure: "並列",
   },
   {
     yoji: "切磋琢磨",
@@ -23,6 +27,8 @@ const sampleYoji: YojiEntry[] = [
     meaning: "互いに競い合い高め合うこと",
     difficulty: 1,
     category: "effort",
+    origin: "漢籍",
+    structure: "類義",
   },
 ];
 

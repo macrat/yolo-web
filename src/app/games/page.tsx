@@ -2,16 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { allGameMetas } from "@/games/registry";
+import TodayDate from "./TodayDate";
 import styles from "./page.module.css";
-
-function getTodayFormatted(): string {
-  const now = new Date();
-  const jst = new Date(now.getTime() + 9 * 60 * 60 * 1000);
-  const year = jst.getUTCFullYear();
-  const month = jst.getUTCMonth() + 1;
-  const day = jst.getUTCDate();
-  return `${year}年${month}月${day}日`;
-}
 
 export const metadata: Metadata = {
   title: `ゲーム一覧 | ${SITE_NAME}`,
@@ -46,14 +38,12 @@ export const metadata: Metadata = {
 };
 
 export default function GamesPage() {
-  const today = getTodayFormatted();
-
   return (
     <div className={styles.main}>
       {/* ヒーローバナー */}
       <section className={styles.heroBanner}>
         <h1 className={styles.heroTitle}>毎日4つのパズルに挑戦</h1>
-        <p className={styles.heroDate}>{today}のパズル</p>
+        <TodayDate className={styles.heroDate} />
         <p className={styles.heroSubtext}>全ゲームクリアで今日の完全制覇!</p>
       </section>
 

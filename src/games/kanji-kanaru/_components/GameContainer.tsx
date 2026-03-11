@@ -29,6 +29,7 @@ import GuessInput from "./GuessInput";
 import ResultModal from "./ResultModal";
 import StatsModal from "./StatsModal";
 import HowToPlayModal from "./HowToPlayModal";
+import styles from "./GameContainer.module.css";
 
 const FIRST_VISIT_KEY = "kanji-kanaru-first-visit";
 const DIFFICULTY_KEY = "kanji-kanaru-difficulty";
@@ -399,15 +400,7 @@ export default function GameContainer() {
   // Loading state
   if (loading) {
     return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          minHeight: "200px",
-          color: "var(--text-secondary, #888)",
-        }}
-      >
+      <div className={styles.loading}>
         {"\u8AAD\u307F\u8FBC\u307F\u4E2D..."}
       </div>
     );
@@ -416,28 +409,12 @@ export default function GameContainer() {
   // Error state with retry
   if (error) {
     return (
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: "1rem",
-          minHeight: "200px",
-          justifyContent: "center",
-          color: "var(--text-secondary, #888)",
-        }}
-      >
+      <div className={styles.error}>
         <p>{error}</p>
         <button
           onClick={() => void initializeGame(difficulty)}
           type="button"
-          style={{
-            padding: "0.5rem 1rem",
-            borderRadius: "0.5rem",
-            border: "1px solid var(--border-color, #ccc)",
-            background: "var(--bg-secondary, #f5f5f5)",
-            cursor: "pointer",
-          }}
+          className={styles.retryButton}
         >
           {"\u518D\u8A66\u884C"}
         </button>
