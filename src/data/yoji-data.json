@@ -2070,14 +2070,14 @@
     "sourceUrl": "https://kotobank.jp/word/%E6%9C%89%E9%A0%82%E5%A4%A9%E5%A4%96-210871"
   },
   {
-    "yoji": "痛哭流涕",
-    "reading": "つうこくりゅうてい",
-    "meaning": "激しく泣き悲しむこと",
+    "yoji": "悲歌慷慨",
+    "reading": "ひかこうがい",
+    "meaning": "悲壮な思いで世の中の不正や乱れを嘆くこと",
     "difficulty": 3,
     "category": "emotion",
     "origin": "漢籍",
     "structure": "並列",
-    "sourceUrl": "https://yoji.jitenon.jp/yojit/2748"
+    "sourceUrl": "https://yoji.jitenon.jp/yojie/2356"
   },
   {
     "yoji": "自画自賛",
@@ -2172,7 +2172,7 @@
   {
     "yoji": "唯我独尊",
     "reading": "ゆいがどくそん",
-    "meaning": "自分だけが優れているとうぬぼれること",
+    "meaning": "自分だけが優れているとうぬぼれること。本来は、この世で自分という存在は唯一無二の尊い存在であるという仏教の教え",
     "difficulty": 2,
     "category": "society",
     "origin": "仏典",
@@ -2275,8 +2275,8 @@
     "meaning": "自分だけの判断で勝手に行動すること",
     "difficulty": 2,
     "category": "society",
-    "origin": "日本語由来",
-    "structure": "並列",
+    "origin": "漢籍",
+    "structure": "類義",
     "sourceUrl": "https://kotobank.jp/word/%E7%8B%AC%E6%96%AD%E5%B0%82%E8%A1%8C-582739"
   },
   {
@@ -2376,7 +2376,7 @@
     "difficulty": 1,
     "category": "society",
     "origin": "仏典",
-    "structure": "修飾",
+    "structure": "類義",
     "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E5%BF%83%E5%90%8C%E4%BD%93-434261"
   },
   {
@@ -2385,7 +2385,7 @@
     "meaning": "訪問者が多くにぎわうこと",
     "difficulty": 3,
     "category": "society",
-    "origin": "故事",
+    "origin": "漢籍",
     "structure": "修飾",
     "sourceUrl": "https://idiom-encyclopedia.com/monnzennseisi/"
   },
@@ -2484,7 +2484,7 @@
     "reading": "かんぜんちょうあく",
     "meaning": "善を勧め悪を懲らしめること",
     "difficulty": 2,
-    "category": "knowledge",
+    "category": "virtue",
     "origin": "漢籍",
     "structure": "対義",
     "sourceUrl": "https://kotobank.jp/word/%E5%8B%A7%E5%96%84%E6%87%B2%E6%82%AA-470592"
@@ -2505,7 +2505,7 @@
     "meaning": "才知がきらきらと輝いていること",
     "difficulty": 2,
     "category": "knowledge",
-    "origin": "漢籍",
+    "origin": "日本語由来",
     "structure": "修飾",
     "sourceUrl": "https://kotobank.jp/word/%E6%89%8D%E6%B0%97%E7%85%A5%E7%99%BA-507307"
   },
@@ -2515,7 +2515,7 @@
     "meaning": "学問と武芸の両方に優れること",
     "difficulty": 1,
     "category": "knowledge",
-    "origin": "日本語由来",
+    "origin": "漢籍",
     "structure": "並列",
     "sourceUrl": "https://kotobank.jp/word/%E6%96%87%E6%AD%A6%E4%B8%A1%E9%81%93-623528"
   },
@@ -2804,7 +2804,7 @@
     "reading": "ちょくじょうけいこう",
     "meaning": "感情のまま行動すること",
     "difficulty": 3,
-    "category": "conflict",
+    "category": "emotion",
     "origin": "漢籍",
     "structure": "並列",
     "sourceUrl": "https://kotobank.jp/word/%E7%9B%B4%E6%83%85%E5%BE%84%E8%A1%8C-569292"
@@ -2874,7 +2874,7 @@
     "reading": "がいじゅうないごう",
     "meaning": "外見は柔らかいが内面は強いこと",
     "difficulty": 2,
-    "category": "conflict",
+    "category": "virtue",
     "origin": "漢籍",
     "structure": "対義",
     "sourceUrl": "https://kotobank.jp/word/%E5%A4%96%E6%9F%94%E5%86%85%E5%89%9B-457540"
@@ -2952,7 +2952,7 @@
   {
     "yoji": "権謀術数",
     "reading": "けんぼうじゅっすう",
-    "meaning": "巧みなたくらみ",
+    "meaning": "人を欺くために用いる巧みな策略",
     "difficulty": 3,
     "category": "conflict",
     "origin": "漢籍",
@@ -3005,7 +3005,7 @@
     "meaning": "古いものが新しいものに入れ替わること",
     "difficulty": 1,
     "category": "change",
-    "origin": "漢籍",
+    "origin": "日本語由来",
     "structure": "並列",
     "sourceUrl": "https://kotobank.jp/word/%E6%96%B0%E9%99%B3%E4%BB%A3%E8%AC%9D-538453"
   },
@@ -3086,7 +3086,7 @@
     "difficulty": 2,
     "category": "change",
     "origin": "漢籍",
-    "structure": "修飾",
+    "structure": "並列",
     "sourceUrl": "https://yoji.jitenon.jp/yojil/5877"
   },
   {
@@ -3114,7 +3114,7 @@
     "reading": "きしょうてんけつ",
     "meaning": "文章や物事の構成",
     "difficulty": 1,
-    "category": "change",
+    "category": "knowledge",
     "origin": "漢籍",
     "structure": "並列",
     "sourceUrl": "https://www.weblio.jp/content/%E8%B5%B7%E6%89%BF%E8%BB%A2%E7%B5%90"
@@ -3134,7 +3134,7 @@
     "reading": "とうほんせいそう",
     "meaning": "あちこち忙しく走り回ること",
     "difficulty": 1,
-    "category": "change",
+    "category": "effort",
     "origin": "漢籍",
     "structure": "対義",
     "sourceUrl": "https://www.weblio.jp/content/%E6%9D%B1%E5%A5%94%E8%A5%BF%E8%B5%B0"
@@ -3234,7 +3234,7 @@
     "reading": "りんじゅうしょうねん",
     "meaning": "死を前にしても平静を保つこと",
     "difficulty": 3,
-    "category": "change",
+    "category": "virtue",
     "origin": "仏典",
     "structure": "修飾",
     "sourceUrl": "https://yoji.jitenon.jp/yojih/3674"
@@ -3296,7 +3296,7 @@
     "difficulty": 3,
     "category": "virtue",
     "origin": "漢籍",
-    "structure": "並列",
+    "structure": "因果",
     "sourceUrl": "https://kotobank.jp/word/%E5%85%8B%E5%B7%B1%E5%BE%A9%E7%A4%BC-502442"
   },
   {
@@ -3415,7 +3415,7 @@
     "meaning": "威厳があって堂々としていること",
     "difficulty": 1,
     "category": "virtue",
-    "origin": "不明",
+    "origin": "日本語由来",
     "structure": "修飾",
     "sourceUrl": "https://kotobank.jp/word/%E5%A8%81%E9%A2%A8%E5%A0%82%E5%A0%82-435599"
   },
@@ -3434,7 +3434,7 @@
     "reading": "ようしたんれい",
     "meaning": "顔かたちが整って美しいこと",
     "difficulty": 2,
-    "category": "virtue",
+    "category": "society",
     "origin": "日本語由来",
     "structure": "修飾",
     "sourceUrl": "https://kotobank.jp/word/%E5%AE%B9%E5%A7%BF%E7%AB%AF%E9%BA%97-2237001"
@@ -3484,7 +3484,7 @@
     "reading": "むいしぜん",
     "meaning": "人為を加えず自然のままにすること",
     "difficulty": 2,
-    "category": "virtue",
+    "category": "life",
     "origin": "漢籍",
     "structure": "並列",
     "sourceUrl": "https://kotobank.jp/word/%E7%84%A1%E7%82%BA%E8%87%AA%E7%84%B6-640764"
@@ -3516,7 +3516,7 @@
     "difficulty": 3,
     "category": "virtue",
     "origin": "漢籍",
-    "structure": "修飾",
+    "structure": "並列",
     "sourceUrl": "https://idiom-encyclopedia.com/chuukouryouzenn/"
   },
   {
@@ -3765,7 +3765,7 @@
     "meaning": "自分の言動で自分を苦しめること",
     "difficulty": 2,
     "category": "negative",
-    "origin": "仏典",
+    "origin": "不明",
     "structure": "並列",
     "sourceUrl": "https://kotobank.jp/word/%E8%87%AA%E7%B8%84%E8%87%AA%E7%B8%9B-519455"
   },
@@ -3806,7 +3806,7 @@
     "difficulty": 1,
     "category": "negative",
     "origin": "日本語由来",
-    "structure": "修飾",
+    "structure": "並列",
     "sourceUrl": "https://kotobank.jp/word/%E4%BA%8C%E6%9D%9F%E4%B8%89%E6%96%87-591958"
   },
   {
