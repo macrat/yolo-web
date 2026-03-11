@@ -22,6 +22,8 @@ describe("getAllYoji", () => {
       expect(y.difficulty).toBeGreaterThanOrEqual(1);
       expect(y.difficulty).toBeLessThanOrEqual(3);
       expect(y.category).toBeTruthy();
+      expect(y.sourceUrl).toBeTruthy();
+      expect(y.sourceUrl).toMatch(/^https?:\/\//);
     }
   });
 });
