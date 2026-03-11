@@ -1,5 +1,6 @@
 import { describe, test, expect, beforeEach, vi } from "vitest";
 import {
+  migrateToV2,
   loadStats,
   saveStats,
   loadHistory,
@@ -35,9 +36,67 @@ beforeEach(() => {
   vi.stubGlobal("localStorage", localStorageMock);
 });
 
+describe("migrateToV2", () => {
+  test("migrates legacy stats to intermediate difficulty", () => {
+    const legacyStats: YojiGameStats = {
+      gamesPlayed: 5,
+      gamesWon: 3,
+      currentStreak: 2,
+      maxStreak: 3,
+      guessDistribution: [0, 1, 1, 1, 0, 0],
+      lastPlayedDate: "2026-03-10",
+    };
+    localStorageMock.setItem("yoji-kimeru-stats", JSON.stringify(legacyStats));
+    localStorageMock.setItem(
+      "yoji-kimeru-history",
+      JSON.stringify({
+        "2026-03-10": { guesses: ["一期一会"], status: "won", guessCount: 1 },
+      }),
+    );
+
+    migrateToV2();
+
+    // Stats should be copied to intermediate key
+    const intermediateStats = localStorageMock.getItem(
+      "yoji-kimeru-stats-intermediate",
+    );
+    expect(intermediateStats).toBe(JSON.stringify(legacyStats));
+
+    // History should be moved to intermediate key and legacy removed
+    const intermediateHistory = localStorageMock.getItem(
+      "yoji-kimeru-history-intermediate",
+    );
+    expect(intermediateHistory).not.toBeNull();
+    expect(localStorageMock.getItem("yoji-kimeru-history")).toBeNull();
+
+    // Migration flag should be set
+    expect(localStorageMock.getItem("yoji-kimeru-migrated-v2")).toBe("1");
+  });
+
+  test("does not run twice", () => {
+    localStorageMock.setItem("yoji-kimeru-migrated-v2", "1");
+    localStorageMock.setItem(
+      "yoji-kimeru-stats",
+      JSON.stringify({ gamesPlayed: 1 }),
+    );
+
+    migrateToV2();
+
+    // Should not create intermediate key since migration already ran
+    expect(
+      localStorageMock.getItem("yoji-kimeru-stats-intermediate"),
+    ).toBeNull();
+  });
+
+  test("handles missing legacy data gracefully", () => {
+    migrateToV2();
+    expect(localStorageMock.getItem("yoji-kimeru-migrated-v2")).toBe("1");
+  });
+});
+
 describe("loadStats", () => {
   test("returns default stats when no data is stored", () => {
-    const stats = loadStats();
+    const stats = loadStats("intermediate");
     expect(stats.gamesPlayed).toBe(0);
     expect(stats.gamesWon).toBe(0);
     expect(stats.currentStreak).toBe(0);
@@ -46,7 +105,7 @@ describe("loadStats", () => {
     expect(stats.lastPlayedDate).toBeNull();
   });
 
-  test("returns stored stats when data exists", () => {
+  test("returns stored stats for specified difficulty", () => {
     const storedStats: YojiGameStats = {
       gamesPlayed: 10,
       gamesWon: 8,
@@ -55,20 +114,54 @@ describe("loadStats", () => {
       guessDistribution: [1, 2, 3, 1, 1, 0],
       lastPlayedDate: "2026-03-10",
     };
-    localStorageMock.setItem("yoji-kimeru-stats", JSON.stringify(storedStats));
-    const stats = loadStats();
+    localStorageMock.setItem(
+      "yoji-kimeru-stats-beginner",
+      JSON.stringify(storedStats),
+    );
+    const stats = loadStats("beginner");
     expect(stats).toEqual(storedStats);
   });
 
   test("returns default stats on parse error", () => {
-    localStorageMock.setItem("yoji-kimeru-stats", "invalid json");
-    const stats = loadStats();
+    localStorageMock.setItem("yoji-kimeru-stats-intermediate", "invalid json");
+    const stats = loadStats("intermediate");
     expect(stats.gamesPlayed).toBe(0);
+  });
+
+  test("different difficulties have separate stats", () => {
+    const beginnerStats: YojiGameStats = {
+      gamesPlayed: 5,
+      gamesWon: 4,
+      currentStreak: 2,
+      maxStreak: 3,
+      guessDistribution: [0, 1, 2, 1, 0, 0],
+      lastPlayedDate: "2026-03-05",
+    };
+    const advancedStats: YojiGameStats = {
+      gamesPlayed: 3,
+      gamesWon: 1,
+      currentStreak: 0,
+      maxStreak: 1,
+      guessDistribution: [0, 0, 0, 0, 1, 0],
+      lastPlayedDate: "2026-03-07",
+    };
+    localStorageMock.setItem(
+      "yoji-kimeru-stats-beginner",
+      JSON.stringify(beginnerStats),
+    );
+    localStorageMock.setItem(
+      "yoji-kimeru-stats-advanced",
+      JSON.stringify(advancedStats),
+    );
+
+    expect(loadStats("beginner")).toEqual(beginnerStats);
+    expect(loadStats("advanced")).toEqual(advancedStats);
+    expect(loadStats("intermediate").gamesPlayed).toBe(0);
   });
 });
 
 describe("saveStats", () => {
-  test("stores stats in localStorage", () => {
+  test("stores stats with difficulty key", () => {
     const stats: YojiGameStats = {
       gamesPlayed: 5,
       gamesWon: 4,
@@ -77,19 +170,34 @@ describe("saveStats", () => {
       guessDistribution: [0, 1, 2, 1, 0, 0],
       lastPlayedDate: "2026-03-05",
     };
-    saveStats(stats);
-    const raw = localStorageMock.getItem("yoji-kimeru-stats");
+    saveStats(stats, "beginner");
+    const raw = localStorageMock.getItem("yoji-kimeru-stats-beginner");
     expect(raw).toBe(JSON.stringify(stats));
+  });
+
+  test("updates cross-game tracking key", () => {
+    const stats: YojiGameStats = {
+      gamesPlayed: 1,
+      gamesWon: 1,
+      currentStreak: 1,
+      maxStreak: 1,
+      guessDistribution: [1, 0, 0, 0, 0, 0],
+      lastPlayedDate: "2026-03-10",
+    };
+    saveStats(stats, "intermediate");
+    const crossGame = localStorageMock.getItem("yoji-kimeru-stats");
+    expect(crossGame).not.toBeNull();
+    expect(JSON.parse(crossGame!).lastPlayedDate).toBe("2026-03-10");
   });
 });
 
 describe("loadHistory", () => {
   test("returns empty object when no data is stored", () => {
-    const history = loadHistory();
+    const history = loadHistory("intermediate");
     expect(history).toEqual({});
   });
 
-  test("returns stored history when data exists", () => {
+  test("returns stored history for specified difficulty", () => {
     const storedHistory: YojiGameHistory = {
       "2026-03-01": {
         guesses: ["花鳥風月", "一期一会"],
@@ -98,16 +206,16 @@ describe("loadHistory", () => {
       },
     };
     localStorageMock.setItem(
-      "yoji-kimeru-history",
+      "yoji-kimeru-history-intermediate",
       JSON.stringify(storedHistory),
     );
-    const history = loadHistory();
+    const history = loadHistory("intermediate");
     expect(history).toEqual(storedHistory);
   });
 });
 
 describe("saveHistory", () => {
-  test("stores history in localStorage", () => {
+  test("stores history with difficulty key", () => {
     const history: YojiGameHistory = {
       "2026-03-01": {
         guesses: ["一期一会"],
@@ -115,15 +223,15 @@ describe("saveHistory", () => {
         guessCount: 1,
       },
     };
-    saveHistory(history);
-    const raw = localStorageMock.getItem("yoji-kimeru-history");
+    saveHistory(history, "beginner");
+    const raw = localStorageMock.getItem("yoji-kimeru-history-beginner");
     expect(raw).toBe(JSON.stringify(history));
   });
 });
 
 describe("loadTodayGame", () => {
   test("returns null when no game exists for the date", () => {
-    const game = loadTodayGame("2026-03-01");
+    const game = loadTodayGame("2026-03-01", "intermediate");
     expect(game).toBeNull();
   });
 
@@ -135,8 +243,11 @@ describe("loadTodayGame", () => {
         guessCount: 2,
       },
     };
-    localStorageMock.setItem("yoji-kimeru-history", JSON.stringify(history));
-    const game = loadTodayGame("2026-03-01");
+    localStorageMock.setItem(
+      "yoji-kimeru-history-intermediate",
+      JSON.stringify(history),
+    );
+    const game = loadTodayGame("2026-03-01", "intermediate");
     expect(game).toEqual({
       guesses: ["花鳥風月", "一期一会"],
       status: "won",
@@ -152,15 +263,17 @@ describe("loadTodayGame", () => {
         guessCount: 2,
       },
     };
-    localStorageMock.setItem("yoji-kimeru-history", JSON.stringify(history));
-    const game = loadTodayGame("2026-03-01");
+    localStorageMock.setItem(
+      "yoji-kimeru-history-beginner",
+      JSON.stringify(history),
+    );
+    const game = loadTodayGame("2026-03-01", "beginner");
     expect(game).not.toBeNull();
     expect(game!.status).toBe("playing");
     expect(game!.guessCount).toBe(2);
   });
 
   test("migrates old lost data to playing when guessCount < MAX_GUESSES", () => {
-    // Old format: status was "lost" as a placeholder during in-progress games
     const history: YojiGameHistory = {
       "2026-03-01": {
         guesses: ["花鳥風月", "一期一会", "切磋琢磨"],
@@ -168,8 +281,11 @@ describe("loadTodayGame", () => {
         guessCount: 3,
       },
     };
-    localStorageMock.setItem("yoji-kimeru-history", JSON.stringify(history));
-    const game = loadTodayGame("2026-03-01");
+    localStorageMock.setItem(
+      "yoji-kimeru-history-intermediate",
+      JSON.stringify(history),
+    );
+    const game = loadTodayGame("2026-03-01", "intermediate");
     expect(game).not.toBeNull();
     expect(game!.status).toBe("playing");
     expect(game!.guessCount).toBe(3);
@@ -191,8 +307,11 @@ describe("loadTodayGame", () => {
         guessCount: 6,
       },
     };
-    localStorageMock.setItem("yoji-kimeru-history", JSON.stringify(history));
-    const game = loadTodayGame("2026-03-01");
+    localStorageMock.setItem(
+      "yoji-kimeru-history-advanced",
+      JSON.stringify(history),
+    );
+    const game = loadTodayGame("2026-03-01", "advanced");
     expect(game).not.toBeNull();
     expect(game!.status).toBe("lost");
     expect(game!.guessCount).toBe(6);
@@ -206,8 +325,11 @@ describe("loadTodayGame", () => {
         guessCount: 2,
       },
     };
-    localStorageMock.setItem("yoji-kimeru-history", JSON.stringify(history));
-    const game = loadTodayGame("2026-03-01");
+    localStorageMock.setItem(
+      "yoji-kimeru-history-intermediate",
+      JSON.stringify(history),
+    );
+    const game = loadTodayGame("2026-03-01", "intermediate");
     expect(game).not.toBeNull();
     expect(game!.status).toBe("won");
     expect(game!.guessCount).toBe(2);
@@ -215,13 +337,17 @@ describe("loadTodayGame", () => {
 });
 
 describe("saveTodayGame", () => {
-  test("saves a new game record", () => {
-    saveTodayGame("2026-03-01", {
-      guesses: ["一期一会"],
-      status: "won",
-      guessCount: 1,
-    });
-    const history = loadHistory();
+  test("saves a new game record with difficulty", () => {
+    saveTodayGame(
+      "2026-03-01",
+      {
+        guesses: ["一期一会"],
+        status: "won",
+        guessCount: 1,
+      },
+      "beginner",
+    );
+    const history = loadHistory("beginner");
     expect(history["2026-03-01"]).toEqual({
       guesses: ["一期一会"],
       status: "won",
@@ -229,34 +355,54 @@ describe("saveTodayGame", () => {
     });
   });
 
-  test("preserves existing game records", () => {
-    saveTodayGame("2026-03-01", {
-      guesses: ["一期一会"],
-      status: "won",
-      guessCount: 1,
-    });
-    saveTodayGame("2026-03-02", {
-      guesses: ["花鳥風月", "切磋琢磨"],
-      status: "won",
-      guessCount: 2,
-    });
-    const history = loadHistory();
+  test("preserves existing game records within same difficulty", () => {
+    saveTodayGame(
+      "2026-03-01",
+      {
+        guesses: ["一期一会"],
+        status: "won",
+        guessCount: 1,
+      },
+      "intermediate",
+    );
+    saveTodayGame(
+      "2026-03-02",
+      {
+        guesses: ["花鳥風月", "切磋琢磨"],
+        status: "won",
+        guessCount: 2,
+      },
+      "intermediate",
+    );
+    const history = loadHistory("intermediate");
     expect(Object.keys(history)).toHaveLength(2);
     expect(history["2026-03-01"]).toBeDefined();
     expect(history["2026-03-02"]).toBeDefined();
   });
 
-  test("saves a game record with playing status", () => {
-    saveTodayGame("2026-03-01", {
-      guesses: ["花鳥風月", "一期一会"],
-      status: "playing",
-      guessCount: 2,
-    });
-    const history = loadHistory();
-    expect(history["2026-03-01"]).toEqual({
-      guesses: ["花鳥風月", "一期一会"],
-      status: "playing",
-      guessCount: 2,
-    });
+  test("different difficulties maintain separate histories", () => {
+    saveTodayGame(
+      "2026-03-01",
+      {
+        guesses: ["一期一会"],
+        status: "won",
+        guessCount: 1,
+      },
+      "beginner",
+    );
+    saveTodayGame(
+      "2026-03-01",
+      {
+        guesses: ["花鳥風月", "切磋琢磨"],
+        status: "won",
+        guessCount: 2,
+      },
+      "advanced",
+    );
+
+    const beginnerHistory = loadHistory("beginner");
+    const advancedHistory = loadHistory("advanced");
+    expect(beginnerHistory["2026-03-01"]!.guessCount).toBe(1);
+    expect(advancedHistory["2026-03-01"]!.guessCount).toBe(2);
   });
 });

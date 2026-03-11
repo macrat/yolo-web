@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
-import type { YojiGameState } from "@/games/yoji-kimeru/_lib/types";
+import type { Difficulty, YojiGameState } from "@/games/yoji-kimeru/_lib/types";
 import { generateShareText } from "@/games/yoji-kimeru/_lib/share";
 import GameDialog from "@/games/shared/_components/GameDialog";
 import GameShareButtons from "@/games/shared/_components/GameShareButtons";
@@ -13,6 +13,7 @@ interface ResultModalProps {
   open: boolean;
   onClose: () => void;
   gameState: YojiGameState;
+  difficulty: Difficulty;
   onStatsClick: () => void;
 }
 
@@ -24,11 +25,12 @@ export default function ResultModal({
   open,
   onClose,
   gameState,
+  difficulty,
   onStatsClick,
 }: ResultModalProps) {
   const { targetYoji, guesses, status } = gameState;
   const isWon = status === "won";
-  const shareText = generateShareText(gameState);
+  const shareText = generateShareText(gameState, difficulty);
 
   const handleStatsClick = useCallback(() => {
     onClose();
