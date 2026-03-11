@@ -46,7 +46,7 @@
     "difficulty": 3,
     "category": "life",
     "origin": "仏典",
-    "structure": "並列",
+    "structure": "修飾",
     "sourceUrl": "https://kotobank.jp/word/%E6%9C%89%E7%82%BA%E8%BB%A2%E5%A4%89-438282"
   },
   {
@@ -76,7 +76,7 @@
     "difficulty": 1,
     "category": "life",
     "origin": "仏典",
-    "structure": "並列",
+    "structure": "修飾",
     "sourceUrl": "https://kotobank.jp/word/%E8%AB%B8%E8%A1%8C%E7%84%A1%E5%B8%B8-80081"
   },
   {
@@ -294,7 +294,7 @@
     "reading": "めいきょうしすい",
     "meaning": "静かで澄み切った心",
     "difficulty": 1,
-    "category": "nature",
+    "category": "virtue",
     "origin": "漢籍",
     "structure": "並列",
     "sourceUrl": "https://kotobank.jp/word/%E6%98%8E%E9%8F%A1%E6%AD%A2%E6%B0%B4-642922"
@@ -426,7 +426,7 @@
     "difficulty": 1,
     "category": "society",
     "origin": "漢籍",
-    "structure": "対義",
+    "structure": "因果",
     "sourceUrl": "https://kotobank.jp/word/%E5%BC%B1%E8%82%89%E5%BC%B7%E9%A3%9F-524928"
   },
   {
@@ -523,7 +523,7 @@
     "yoji": "一知半解",
     "reading": "いっちはんかい",
     "meaning": "少しだけ知って十分に理解していないこと",
-    "difficulty": 1,
+    "difficulty": 2,
     "category": "knowledge",
     "origin": "漢籍",
     "structure": "並列",
@@ -605,7 +605,7 @@
     "meaning": "多くの経験を積んでいること",
     "difficulty": 1,
     "category": "conflict",
-    "origin": "不明",
+    "origin": "日本語由来",
     "structure": "修飾",
     "sourceUrl": "https://kotobank.jp/word/%E7%99%BE%E6%88%A6%E9%8C%AC%E7%A3%A8-612717"
   },
@@ -674,7 +674,7 @@
     "reading": "りんきおうへん",
     "meaning": "その場に応じて適切に対応すること",
     "difficulty": 1,
-    "category": "conflict",
+    "category": "life",
     "origin": "漢籍",
     "structure": "修飾",
     "sourceUrl": "https://kotobank.jp/word/%E8%87%A8%E6%A9%9F%E5%BF%9C%E5%A4%89-659935"
@@ -755,7 +755,7 @@
     "meaning": "今まで聞いたことがないこと",
     "difficulty": 1,
     "category": "change",
-    "origin": "漢籍",
+    "origin": "不明",
     "structure": "修飾",
     "sourceUrl": "https://kotobank.jp/word/%E5%89%8D%E4%BB%A3%E6%9C%AA%E8%81%9E-550562"
   },
@@ -995,13 +995,13 @@
     "meaning": "向こう見ずに突き進むこと",
     "difficulty": 1,
     "category": "negative",
-    "origin": "漢籍",
+    "origin": "不明",
     "structure": "類義",
     "sourceUrl": "https://kotobank.jp/word/%E7%8C%AA%E7%AA%81%E7%8C%9B%E9%80%B2-569556"
   },
   {
     "yoji": "安心立命",
-    "reading": "あんじんりゅうめい",
+    "reading": "あんしんりつめい",
     "meaning": "天命を知り心を安らかにすること",
     "difficulty": 2,
     "category": "life",
@@ -1165,7 +1165,7 @@
     "meaning": "社会的に高い地位につくこと",
     "difficulty": 1,
     "category": "life",
-    "origin": "漢籍",
+    "origin": "仏典",
     "structure": "並列",
     "sourceUrl": "https://kotobank.jp/word/%E7%AB%8B%E8%BA%AB%E5%87%BA%E4%B8%96-148972"
   },
@@ -1555,7 +1555,7 @@
     "meaning": "非常に苦心すること",
     "difficulty": 2,
     "category": "effort",
-    "origin": "漢籍",
+    "origin": "不明",
     "structure": "類義",
     "sourceUrl": "https://kotobank.jp/word/%E8%8B%A6%E5%BF%83%E6%83%A8%E6%86%BA-483486"
   },
@@ -1576,7 +1576,7 @@
     "difficulty": 3,
     "category": "effort",
     "origin": "故事",
-    "structure": "因果",
+    "structure": "修飾",
     "sourceUrl": "https://kotobank.jp/word/%E6%84%9A%E5%85%AC%E5%B1%B1%E3%82%92%E7%A7%BB%E3%81%99-482966"
   },
   {
@@ -1584,7 +1584,7 @@
     "reading": "てっとうてつび",
     "meaning": "最初から最後まで一貫していること",
     "difficulty": 2,
-    "category": "effort",
+    "category": "virtue",
     "origin": "漢籍",
     "structure": "類義",
     "sourceUrl": "https://kotobank.jp/word/%E5%BE%B9%E9%A0%AD%E5%BE%B9%E5%B0%BE-576289"
@@ -2015,7 +2015,7 @@
     "meaning": "得意そうな様子が顔いっぱいに表れること",
     "difficulty": 1,
     "category": "emotion",
-    "origin": "日本語由来",
+    "origin": "漢籍",
     "structure": "修飾",
     "sourceUrl": "https://kotobank.jp/word/%E5%BE%97%E6%84%8F%E6%BA%80%E9%9D%A2-582438"
   },
@@ -2125,14 +2125,14 @@
     "meaning": "多くの英雄が各地に勢力を持つこと",
     "difficulty": 2,
     "category": "society",
-    "origin": "日本語由来",
+    "origin": "漢籍",
     "structure": "修飾",
     "sourceUrl": "https://kotobank.jp/word/%E7%BE%A4%E9%9B%84%E5%89%B2%E6%8B%A0-487932"
   },
   {
     "yoji": "信賞必罰",
     "reading": "しんしょうひつばつ",
-    "meaning": "功績には必ず賞を罪には必ず罰を与えること",
+    "meaning": "功績には必ず賞を、罪には必ず罰を与えること",
     "difficulty": 2,
     "category": "society",
     "origin": "漢籍",
@@ -2284,7 +2284,7 @@
     "reading": "あいえんきえん",
     "meaning": "人の縁は不思議であること",
     "difficulty": 2,
-    "category": "society",
+    "category": "life",
     "origin": "仏典",
     "structure": "並列",
     "sourceUrl": "https://kotobank.jp/word/%E5%90%88%E7%B8%81%E5%A5%87%E7%B8%81-421102"
@@ -2375,7 +2375,7 @@
     "meaning": "心を一つにして一体となること",
     "difficulty": 1,
     "category": "society",
-    "origin": "仏典",
+    "origin": "不明",
     "structure": "類義",
     "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E5%BF%83%E5%90%8C%E4%BD%93-434261"
   },
@@ -2426,7 +2426,7 @@
     "difficulty": 2,
     "category": "knowledge",
     "origin": "漢籍",
-    "structure": "修飾",
+    "structure": "並列",
     "sourceUrl": "https://kotobank.jp/word/%E7%9F%A5%E8%A1%8C%E5%90%88%E4%B8%80-96061"
   },
   {
@@ -2472,7 +2472,7 @@
   {
     "yoji": "三省吾身",
     "reading": "さんせいごしん",
-    "meaning": "一日に三度わが身を反省すること",
+    "meaning": "何度もわが身を反省すること",
     "difficulty": 3,
     "category": "knowledge",
     "origin": "漢籍",
@@ -2556,7 +2556,7 @@
     "difficulty": 2,
     "category": "knowledge",
     "origin": "その他",
-    "structure": "修飾",
+    "structure": "並列",
     "sourceUrl": "https://kotobank.jp/word/%E4%BA%8C%E5%BE%8B%E8%83%8C%E5%8F%8D-110704"
   },
   {
@@ -2631,7 +2631,7 @@
   },
   {
     "yoji": "教学相長",
-    "reading": "きょうがくあいちょうず",
+    "reading": "きょうがくあいちょう",
     "meaning": "教えることと学ぶことは互いに成長させる",
     "difficulty": 3,
     "category": "knowledge",
@@ -2845,7 +2845,7 @@
     "meaning": "一度にまとめて捕らえること",
     "difficulty": 1,
     "category": "conflict",
-    "origin": "漢籍",
+    "origin": "故事",
     "structure": "修飾",
     "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E7%B6%B2%E6%89%93%E5%B0%BD-433731"
   },
@@ -2934,7 +2934,7 @@
     "reading": "めいよばんかい",
     "meaning": "失った名誉を取り戻すこと",
     "difficulty": 1,
-    "category": "conflict",
+    "category": "effort",
     "origin": "日本語由来",
     "structure": "修飾",
     "sourceUrl": "https://kotobank.jp/word/%E5%90%8D%E8%AA%89%E6%8C%BD%E5%9B%9E-395601"
@@ -3005,7 +3005,7 @@
     "meaning": "古いものが新しいものに入れ替わること",
     "difficulty": 1,
     "category": "change",
-    "origin": "日本語由来",
+    "origin": "漢籍",
     "structure": "並列",
     "sourceUrl": "https://kotobank.jp/word/%E6%96%B0%E9%99%B3%E4%BB%A3%E8%AC%9D-538453"
   },
@@ -3025,7 +3025,7 @@
     "meaning": "見違えるほど新しくなること",
     "difficulty": 2,
     "category": "change",
-    "origin": "漢籍",
+    "origin": "不明",
     "structure": "修飾",
     "sourceUrl": "https://kotobank.jp/word/%E9%9D%A2%E7%9B%AE%E4%B8%80%E6%96%B0-396968"
   },
@@ -3085,8 +3085,8 @@
     "meaning": "災いを転じて福とすること",
     "difficulty": 2,
     "category": "change",
-    "origin": "漢籍",
-    "structure": "並列",
+    "origin": "故事",
+    "structure": "因果",
     "sourceUrl": "https://yoji.jitenon.jp/yojil/5877"
   },
   {
@@ -3475,7 +3475,7 @@
     "meaning": "のびのびとして度量が広いこと",
     "difficulty": 2,
     "category": "virtue",
-    "origin": "日本語由来",
+    "origin": "漢籍",
     "structure": "類義",
     "sourceUrl": "https://kotobank.jp/word/%E8%87%AA%E7%94%B1%E9%97%8A%E9%81%94-2048479"
   },
@@ -3675,7 +3675,7 @@
     "meaning": "力の強いものにへつらう主義",
     "difficulty": 3,
     "category": "negative",
-    "origin": "漢籍",
+    "origin": "日本語由来",
     "structure": "修飾",
     "sourceUrl": "https://kotobank.jp/word/%E4%BA%8B%E5%A4%A7%E4%B8%BB%E7%BE%A9-520334"
   },
@@ -3774,7 +3774,7 @@
     "reading": "ぎょくせきこんこう",
     "meaning": "良いものと悪いものが混ざっていること",
     "difficulty": 2,
-    "category": "negative",
+    "category": "life",
     "origin": "漢籍",
     "structure": "並列",
     "sourceUrl": "https://idiom-encyclopedia.com/gyokuseki/"
@@ -3905,7 +3905,7 @@
     "meaning": "古い慣例を固く守ること",
     "difficulty": 3,
     "category": "negative",
-    "origin": "故事",
+    "origin": "漢籍",
     "structure": "修飾",
     "sourceUrl": "https://idiom-encyclopedia.com/bokushuseiki/"
   },
