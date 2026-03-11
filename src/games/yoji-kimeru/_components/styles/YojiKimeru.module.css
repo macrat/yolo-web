@@ -123,10 +123,6 @@
   margin-right: 1rem;
 }
 
-.hintHidden {
-  display: none;
-}
-
 /* ===== Game Board ===== */
 .boardWrapper {
   width: 100%;
@@ -454,4 +450,17 @@
   .header {
     padding: 1rem 0.5rem;
   }
+}
+
+/* ===== Result Meta (origin & category) ===== */
+.resultMeta {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  margin-bottom: 0.75rem;
+}
+
+.resultMetaSeparator {
+  margin: 0 0.5rem;
+  opacity: 0.4;
 }

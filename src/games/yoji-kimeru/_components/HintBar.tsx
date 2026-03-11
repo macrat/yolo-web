@@ -13,7 +13,7 @@ interface HintBarProps {
   reading: string;
   category: YojiCategory;
   origin: YojiOrigin;
-  difficulty: number;
+  difficulty: 1 | 2 | 3;
 }
 
 /**
@@ -38,7 +38,10 @@ export default function HintBar({
     <div className={styles.hintBar} role="status" aria-label="ヒント">
       <span className={styles.hintLabel}>ヒント:</span>
       <span className={styles.hintValue}>
-        難易度 {difficultyLabels[difficulty]}
+        難易度{" "}
+        <span aria-label={`難易度${difficulty}`}>
+          {difficultyLabels[difficulty]}
+        </span>
       </span>
       <span className={styles.hintValue}>読み {reading.length}文字</span>
       {showReadingHint && (
@@ -54,6 +57,12 @@ export default function HintBar({
       )}
       {!showReadingHint && (
         <span className={styles.hintValue}>(3回目で読みヒント)</span>
+      )}
+      {showReadingHint && !showOriginHint && (
+        <span className={styles.hintValue}>(4回目で出典ヒント)</span>
+      )}
+      {showOriginHint && !showCategoryHint && (
+        <span className={styles.hintValue}>(5回目でカテゴリヒント)</span>
       )}
     </div>
   );
