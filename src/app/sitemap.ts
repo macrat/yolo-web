@@ -2,13 +2,6 @@ import type { MetadataRoute } from "next";
 import { allToolMetas } from "@/tools/registry";
 import { getAllBlogPosts, ALL_CATEGORIES } from "@/blog/_lib/blog";
 import { BASE_URL } from "@/lib/constants";
-import {
-  getAllKanjiChars,
-  getKanjiGrades,
-  getKanjiRadicals,
-  getKanjiStrokeCounts,
-} from "@/dictionary/_lib/kanji";
-import { getAllYojiIds, getYojiCategories } from "@/dictionary/_lib/yoji";
 import { getAllColorSlugs, getColorCategories } from "@/dictionary/_lib/colors";
 import {
   KANJI_DICTIONARY_META,
@@ -185,6 +178,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.9,
     },
+    // 漢字辞典と四字熟語辞典の詳細ページは独自性が低いのでSEO上の効果はあまり期待できない。
+    // クロールバジェットを他のページに集中させるためにsitemap.xmlには掲載しない。
     {
       url: `${BASE_URL}/dictionary/kanji`,
       lastModified: getLastModifiedDate(
@@ -203,60 +198,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.8,
     },
-    ...getAllKanjiChars().map((char) => ({
-      url: `${BASE_URL}/dictionary/kanji/${encodeURIComponent(char)}`,
-      lastModified: getLastModifiedDate(
-        KANJI_DICTIONARY_META,
-        "dictionary meta (kanji)",
-      ),
-      changeFrequency: "monthly" as const,
-      priority: 0.7,
-    })),
-    ...getKanjiGrades().map((grade) => ({
-      url: `${BASE_URL}/dictionary/kanji/grade/${grade}`,
-      lastModified: getLastModifiedDate(
-        KANJI_DICTIONARY_META,
-        "dictionary meta (kanji)",
-      ),
-      changeFrequency: "monthly" as const,
-      priority: 0.6,
-    })),
-    ...getKanjiRadicals().map((radical) => ({
-      url: `${BASE_URL}/dictionary/kanji/radical/${encodeURIComponent(radical)}`,
-      lastModified: getLastModifiedDate(
-        KANJI_DICTIONARY_META,
-        "dictionary meta (kanji)",
-      ),
-      changeFrequency: "monthly" as const,
-      priority: 0.6,
-    })),
-    ...getKanjiStrokeCounts().map((count) => ({
-      url: `${BASE_URL}/dictionary/kanji/stroke/${count}`,
-      lastModified: getLastModifiedDate(
-        KANJI_DICTIONARY_META,
-        "dictionary meta (kanji)",
-      ),
-      changeFrequency: "monthly" as const,
-      priority: 0.6,
-    })),
-    ...getAllYojiIds().map((yoji) => ({
-      url: `${BASE_URL}/dictionary/yoji/${encodeURIComponent(yoji)}`,
-      lastModified: getLastModifiedDate(
-        YOJI_DICTIONARY_META,
-        "dictionary meta (yoji)",
-      ),
-      changeFrequency: "monthly" as const,
-      priority: 0.7,
-    })),
-    ...getYojiCategories().map((cat) => ({
-      url: `${BASE_URL}/dictionary/yoji/category/${cat}`,
-      lastModified: getLastModifiedDate(
-        YOJI_DICTIONARY_META,
-        "dictionary meta (yoji)",
-      ),
-      changeFrequency: "monthly" as const,
-      priority: 0.6,
-    })),
     {
       url: `${BASE_URL}/dictionary/colors`,
       lastModified: getLastModifiedDate(
