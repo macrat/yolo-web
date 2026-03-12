@@ -307,7 +307,7 @@ describe("動的metadataページのSEO検証", () => {
     const { getKanjiRadicals } = await import("@/dictionary/_lib/kanji");
     const radicals = getKanjiRadicals();
     if (radicals.length === 0) return;
-    const radical = encodeURIComponent(radicals[0]);
+    const radical = radicals[0];
 
     const { generateMetadata } =
       await import("@/app/dictionary/kanji/radical/[radical]/page");
@@ -316,7 +316,7 @@ describe("動的metadataページのSEO検証", () => {
     });
     assertSeoMetadata(
       meta,
-      `/dictionary/kanji/radical/${radical}`,
+      `/dictionary/kanji/radical/${encodeURIComponent(radical)}`,
       "/dictionary/kanji/radical/[radical]",
     );
   });

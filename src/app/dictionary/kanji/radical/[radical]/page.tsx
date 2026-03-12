@@ -11,7 +11,7 @@ import { KANJI_GRADE_LABELS } from "@/dictionary/_lib/types";
 
 export function generateStaticParams() {
   return getKanjiRadicals().map((r) => ({
-    radical: encodeURIComponent(r),
+    radical: r,
   }));
 }
 
