@@ -128,6 +128,29 @@ describe("sitemap", () => {
     expect(resultEntries).toHaveLength(0);
   });
 
+  test("sitemap does not include kanji detail pages", () => {
+    const entries = sitemap();
+    const kanjiDetailEntries = entries.filter(
+      (e) => typeof e.url === "string" && /\/dictionary\/kanji\/.+/.test(e.url),
+    );
+    expect(kanjiDetailEntries).toHaveLength(0);
+  });
+
+  test("sitemap does not include yoji detail pages", () => {
+    const entries = sitemap();
+    const yojiDetailEntries = entries.filter(
+      (e) => typeof e.url === "string" && /\/dictionary\/yoji\/.+/.test(e.url),
+    );
+    expect(yojiDetailEntries).toHaveLength(0);
+  });
+
+  test("sitemap includes kanji and yoji list pages", () => {
+    const entries = sitemap();
+    const urls = entries.map((e) => e.url);
+    expect(urls).toContain(`${BASE_URL}/dictionary/kanji`);
+    expect(urls).toContain(`${BASE_URL}/dictionary/yoji`);
+  });
+
   test("sitemap does not include paginated list pages", () => {
     const entries = sitemap();
     const paginatedListPathPattern =
