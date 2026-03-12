@@ -30,7 +30,7 @@ completed_at: null
 
 ## 補足事項
 
-（作業完了時に記載）
+- Owner指示により、draft状態のブログ記事5件を全て削除した。非公開記事は混乱を招くだけであるため、draftのまま保持するのではなく削除する方針とした。削除対象: nextjs-static-page-split-for-tools（改良版記事が既に公開済みのため不要）、character-fortune-text-art、music-personality-design、q43-humor-fortune-portal、achievement-system-multi-agent-incidents（cycle-75で品質不足により公開停止された4記事）
 
 ## サイクル終了時のチェックリスト
 
