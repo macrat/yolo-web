@@ -122,8 +122,45 @@ Google AdSenseの審査で「有用性の低いコンテンツ」として却下
 
 #### 3-D: 既存コンテンツの強化
 
-- [ ] 3-7. 既存ゲーム4種の品質向上
-- [ ] 3-8. ブログ記事の修正（対象と方針は site-concept.md「ブログ記事の判定」参照）
+3-7. 既存ゲーム4種の品質向上:
+
+- [x] B-185: 漢字カナル — 常用漢字2,136字への拡張（cycle-80）
+- [x] B-186: 四字熟語きめる — データ量拡充と差別化強化（cycle-83）
+- [x] B-187: 既存ゲーム4種のUI/UX改善（cycle-83）
+- [ ] B-152: ゲーム関連その他改善（ナカマワケ状態管理・一覧日付固定化）
+- [ ] B-193: ゲーム・クイズのサーバーサイドAPI横展開検討
+
+3-8. ブログ記事29件の修正（修正方針の詳細はブログ再検討メモ 19cbc84fade, 19cbc851c88, 19cbc85c7b7 を参照）:
+
+- [ ] character-counting-guide（文字数カウントガイド）
+- [ ] web-developer-tools-guide（Web開発者ツールガイド）
+- [ ] password-security-guide（パスワードセキュリティガイド）
+- [ ] cron-parser-guide（cron式の書き方ガイド）
+- [ ] hash-generator-guide（ハッシュ生成ガイド）
+- [ ] json-formatter-guide（JSON整形ガイド）
+- [ ] regex-tester-guide（正規表現テスターガイド）
+- [ ] yojijukugo-learning-guide（四字熟語学習ガイド）
+- [ ] unit-converter-guide（単位変換ガイド）
+- [ ] tools-expansion-10-to-30（ツール10→30拡張記事）
+- [ ] cheatsheets-introduction（チートシート導入記事）
+- [ ] rss-feed（RSSフィード告知）
+- [x] business-email-and-keigo-tools（敬語・メールツール）— cycle-84で修正完了
+- [ ] yoji-quiz-themes（四字熟語クイズテーマ追加告知）
+- [ ] kotowaza-quiz（ことわざ・慣用句力診断リリース告知）
+- [x] series-navigation-ui（シリーズナビゲーションUI）— cycle-84で修正完了
+- [ ] game-dictionary-layout-unification（ゲーム・辞典レイアウト統一）
+- [ ] http-status-code-guide-for-rest-api（HTTPステータスコードガイド）
+- [ ] html-sql-cheatsheets（HTML/SQLチートシートリリース告知）
+- ~~nextjs-static-page-split-for-tools（Next.js静的ページ分割）~~ — 改良版記事が公開済みのため削除（cycle-84）
+- [ ] ai-agent-site-strategy-formulation（AIエージェントによるサイト戦略策定）— 全面書き直し
+- [ ] irodori-and-kanji-expansion（漢字辞典・いろどり拡張記事）
+- [ ] dark-mode-toggle（ダークモード実装記事）
+- [ ] nextjs-directory-architecture（Next.jsディレクトリ構成記事）
+- [ ] tool-reliability-improvements（ツール信頼性改善記事）
+- [ ] site-search-feature（サイト内検索機能記事）
+- [ ] game-infrastructure-refactoring（ゲーム基盤リファクタリング記事）
+- [ ] nextjs-dynamic-import-pitfalls-and-true-code-splitting（Next.js動的インポート記事）
+- [ ] kanji-kanaru-2136-expansion（漢字カナル2136字拡張記事）
 
 ### フェーズ4: コンテンツの整理とサイト再構成
 
@@ -152,7 +189,7 @@ Google AdSenseの審査で「有用性の低いコンテンツ」として却下
 
 ## 5. 現在のステータス
 
-### 最終更新: cycle-80 実装完了時（2026-03-10）
+### 最終更新: cycle-84 完了時（2026-03-12）
 
 **現在のフェーズ**: フェーズ3（コンテンツの充実）進行中
 
@@ -160,29 +197,21 @@ Google AdSenseの審査で「有用性の低いコンテンツ」として却下
 - フェーズ3-A（基盤整備）: 全完了
 - フェーズ3-B（実績システム）: 全完了（全18コンテンツ対応）
 - フェーズ3-C（新規コンテンツ制作）: Phase 1完了（6種）、Phase 2完了（Q08動物性格診断、Q14理系思考タイプ診断、Q21日本文化適性診断）
-- フェーズ3-D（既存コンテンツ強化）: B-185漢字カナル2,136字拡張完了（cycle-80）
+- フェーズ3-D（既存コンテンツ強化）: B-185漢字カナル2,136字拡張完了（cycle-80）、B-186四字熟語きめる完了（cycle-83）、B-187 UI/UX改善完了（cycle-83）、B-188ブログ修正2件完了（cycle-84、残27件）
 - コンテンツカテゴリ定義: docs/content-categories.md 策定済み
 - 診断選択肢シャッフル: 全診断・知識テストで選択肢の表示順序をランダム化（cycle-79）
+- draft記事管理: draft状態での保持は誤って再公開するリスクがあるため、非公開にする場合は削除する運用とした（cycle-84で事故未遂を受けて決定）
 
-**次にやること**: フェーズ3-Dの残り（B-186 四字熟語きめる、B-187 UI/UX改善、B-188 ブログ修正）
+**次にやること**: フェーズ3-Dの残り（B-188 ブログ修正残27件）、フェーズ3-Cの残り
 
 ## 6. 後続タスク実施者への申し送り事項
 
-### cycle-80 → cycle-81 への申し送り
+### cycle-84 → cycle-85 への申し送り
 
 - **必ず確認すべきこと**: docs/site-concept.md、docs/evaluation-rubric.md、docs/content-categories.md
-- **次にやること**: フェーズ3-Dの残り（B-186 四字熟語きめる、B-187 UI/UX改善、B-188 ブログ修正）
-- **漢字カナル拡張完了**: 80字→2,136字常用漢字、3難易度（初級/中級/上級）、7属性フィードバック、KANJIDIC2/JMdictベース
-- **フェーズ3-C完了**: Phase 1（6種）+ Phase 2（3種）= 新規診断9種の制作が完了
-- **新規診断追加時の注意**:
-  - docs/content-categories.md のカテゴリ定義に従うこと
-  - 「占い」カテゴリの品質基準は未策定（該当コンテンツ追加時に策定）。displayCategoryフィールドも同時に追加する
-  - badges.tsのコンテンツID配列・content-names.ts・テストも更新すること
-  - 診断スラグに計画番号プレフィックス（q43-等）を使わないこと
-  - 相性機能の追加方法: (1) quiz/data/{slug}.tsに相性マトリクス+getCompatibility+isValidTypeId定義、(2) quiz/\_components/{Name}ResultExtra.tsxを作成（CompatibilitySection+InviteFriendButtonを再利用）、(3) ResultExtraLoader.tsxに動的インポートを追加
-  - **レーダーチャート**: RadarChart.tsxは汎用コンポーネント。多軸スコア可視化が必要な場合に再利用可能
-  - **answersのResultExtraLoader渡し**: QuizContainer→ResultExtraLoader→ResultExtraにanswersを渡す仕組みが追加済み（optional prop）。スコア計算が必要なResultExtraで利用可能
-- **選択肢シャッフル**: QuestionCard.tsxでFisher-Yatesシャッフルを実装済み。全診断・知識テストで選択肢の表示順序がランダム化される
+- **次にやること**: B-188ブログ修正の残り27件（1サイクル3記事上限）、フェーズ3-Cの残り
+- **ブログ記事修正の注意**: レビューは記事1つにつき1エージェントで、読者目線で徹底的に実施すること（Owner指示）
+- **draft記事の運用**: draft状態での保持は誤って再公開するリスクがあるため、非公開にする場合は削除する（cycle-84で事故未遂を受けて決定）
 - **コンテンツ削除**: 削除はフェーズ4で実施。削除時は410 Goneを使用すること
 
 ## 7. このファイルの扱い方のルール
