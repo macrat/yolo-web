@@ -42,3 +42,34 @@ describe("generateStaticParams counts", () => {
     expect(categories).toHaveLength(10);
   });
 });
+
+/**
+ * generateStaticParams の二重エンコード防止テスト。
+ * Next.js の generateStaticParams はデコード済みの生文字列を返す必要がある。
+ * encodeURIComponent を誤って適用すると `%` を含む値になり、
+ * Next.js 内部でさらにエンコードされて 404 になるバグを引き起こす。
+ */
+describe("generateStaticParams: 二重エンコード防止", () => {
+  test("getKanjiRadicals() の各値に % が含まれないこと", () => {
+    const radicals = getKanjiRadicals();
+    for (const radical of radicals) {
+      expect(radical, `部首 "${radical}" にエンコード文字が混入`).not.toContain(
+        "%",
+      );
+    }
+  });
+
+  test("getAllKanjiChars() の各値に % が含まれないこと", () => {
+    const chars = getAllKanjiChars();
+    for (const char of chars) {
+      expect(char, `漢字 "${char}" にエンコード文字が混入`).not.toContain("%");
+    }
+  });
+
+  test("getAllYojiIds() の各値に % が含まれないこと", () => {
+    const ids = getAllYojiIds();
+    for (const id of ids) {
+      expect(id, `四字熟語 "${id}" にエンコード文字が混入`).not.toContain("%");
+    }
+  });
+});

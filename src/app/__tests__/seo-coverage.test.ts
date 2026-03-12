@@ -379,4 +379,120 @@ describe("動的metadataページのSEO検証", () => {
       "/quiz/[slug]/result/[resultId]",
     );
   });
+
+  // -- 追加: 未カバー動的ページ7件のSEOテスト --
+
+  test("/blog/[slug]: SEO必須項目が存在する", async () => {
+    const { getAllBlogSlugs } = await import("@/blog/_lib/blog");
+    const slugs = getAllBlogSlugs();
+    if (slugs.length === 0) return; // データがなければスキップ
+    const slug = slugs[0];
+
+    const { generateMetadata } = await import("@/app/blog/[slug]/page");
+    const meta = await generateMetadata({
+      params: Promise.resolve({ slug }),
+    });
+    assertSeoMetadata(meta, `/blog/${slug}`, "/blog/[slug]");
+  });
+
+  test("/memos/[id]: SEO必須項目が存在する", async () => {
+    const { getAllPublicMemoIds } = await import("@/memos/_lib/memos");
+    const ids = getAllPublicMemoIds();
+    if (ids.length === 0) return; // データがなければスキップ
+    const id = ids[0];
+
+    const { generateMetadata } = await import("@/app/memos/[id]/page");
+    const meta = await generateMetadata({
+      params: Promise.resolve({ id }),
+    });
+    assertSeoMetadata(meta, `/memos/${id}`, "/memos/[id]");
+  });
+
+  test("/quiz/[slug]: SEO必須項目が存在する", async () => {
+    const { getAllQuizSlugs } = await import("@/quiz/registry");
+    const slugs = getAllQuizSlugs();
+    if (slugs.length === 0) return; // データがなければスキップ
+    const slug = slugs[0];
+
+    const { generateMetadata } = await import("@/app/quiz/[slug]/page");
+    const meta = await generateMetadata({
+      params: Promise.resolve({ slug }),
+      searchParams: Promise.resolve({}),
+    });
+    assertSeoMetadata(meta, `/quiz/${slug}`, "/quiz/[slug]");
+  });
+
+  test("/dictionary/colors/[slug]: SEO必須項目が存在する", async () => {
+    const { getAllColorSlugs } = await import("@/dictionary/_lib/colors");
+    const slugs = getAllColorSlugs();
+    if (slugs.length === 0) return; // データがなければスキップ
+    const slug = slugs[0];
+
+    const { generateMetadata } =
+      await import("@/app/dictionary/colors/[slug]/page");
+    const meta = await generateMetadata({
+      params: Promise.resolve({ slug }),
+    });
+    assertSeoMetadata(
+      meta,
+      `/dictionary/colors/${slug}`,
+      "/dictionary/colors/[slug]",
+    );
+  });
+
+  test("/dictionary/colors/category/[category]: SEO必須項目が存在する", async () => {
+    const { getColorCategories } = await import("@/dictionary/_lib/colors");
+    const categories = getColorCategories();
+    if (categories.length === 0) return; // データがなければスキップ
+    const category = categories[0];
+
+    const { generateMetadata } =
+      await import("@/app/dictionary/colors/category/[category]/page");
+    const meta = await generateMetadata({
+      params: Promise.resolve({ category }),
+    });
+    assertSeoMetadata(
+      meta,
+      `/dictionary/colors/category/${category}`,
+      "/dictionary/colors/category/[category]",
+    );
+  });
+
+  test("/dictionary/kanji/[char]: SEO必須項目が存在する", async () => {
+    const { getAllKanjiChars } = await import("@/dictionary/_lib/kanji");
+    const chars = getAllKanjiChars();
+    if (chars.length === 0) return; // データがなければスキップ
+    const char = chars[0];
+
+    const { generateMetadata } =
+      await import("@/app/dictionary/kanji/[char]/page");
+    const meta = await generateMetadata({
+      params: Promise.resolve({ char }),
+    });
+    // canonical URLはencodeURIComponent済みの文字を含む
+    assertSeoMetadata(
+      meta,
+      `/dictionary/kanji/${encodeURIComponent(char)}`,
+      "/dictionary/kanji/[char]",
+    );
+  });
+
+  test("/dictionary/yoji/[yoji]: SEO必須項目が存在する", async () => {
+    const { getAllYojiIds } = await import("@/dictionary/_lib/yoji");
+    const ids = getAllYojiIds();
+    if (ids.length === 0) return; // データがなければスキップ
+    const yoji = ids[0];
+
+    const { generateMetadata } =
+      await import("@/app/dictionary/yoji/[yoji]/page");
+    const meta = await generateMetadata({
+      params: Promise.resolve({ yoji }),
+    });
+    // canonical URLはencodeURIComponent済みの文字を含む
+    assertSeoMetadata(
+      meta,
+      `/dictionary/yoji/${encodeURIComponent(yoji)}`,
+      "/dictionary/yoji/[yoji]",
+    );
+  });
 });
