@@ -31,7 +31,6 @@ completed_at: null
 
 - [ ] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
 - [ ] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
-- [ ] `npm run memo -- list --state inbox,active` を実行して、未処理のメモがない。
 - [ ] すべての変更がレビューされ、残存する指摘事項が無くなっている。
 - [ ] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
 - [ ] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
