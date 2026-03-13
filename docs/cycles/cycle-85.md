@@ -1,6 +1,6 @@
 ---
 id: 85
-description: ブログ記事修正3件（B-188継続）
+description: ブログ記事修正3件（B-188継続）— irodori-and-kanji-expansion, dark-mode-toggle, site-search-feature
 started_at: "2026-03-13T08:59:41+0900"
 completed_at: null
 ---
@@ -9,9 +9,36 @@ completed_at: null
 
 このサイクルでは、フェーズ3-D B-188のブログ記事修正を継続する（1サイクル3記事上限）。
 
+当初はツールガイド記事3件（character-counting-guide, cron-parser-guide, hash-generator-guide）を選定したが、調査の結果ツールがまだ削除されておらず主要な修正が実施不可であることが判明。ツール削除に依存しない以下の3記事に変更した（経緯メモ: 19ce488d79b）。
+
 ## 実施する作業
 
-- [ ] B-188: ブログ記事修正（3記事）— 対象記事は計画時に選定
+### 記事1: irodori-and-kanji-expansion
+
+- [ ] フロントマター修正（trust_level追加、updated_at更新）
+- [ ] 漢字データ拡充セクション末尾にAdmonitionで「その後常用漢字2,136字まで拡充済み」と追記
+- [ ] 「今後の展望」の漢字拡充項目にAdmonitionで実現済みである旨を追記
+- [ ] 計画メモ: 19ce48f4f02、レビューメモ: 19ce4914920
+
+### 記事2: dark-mode-toggle
+
+- [ ] フロントマター修正（trust_level追加、updated_atフォーマット修正）
+- [ ] CSSメディアクエリ移行セクションの記述を時点の明示で明確化（1ファイルのみの乖離のためA案で対応）
+- [ ] 計画メモ: 19ce48f0a4f、レビューメモ: 19ce490fa92
+
+### 記事3: site-search-feature
+
+- [ ] タイトルから「500件」を除外
+- [ ] Route Handler / force-static の誤記をprebuildスクリプト方式に修正（事実の誤り）
+- [ ] 本文中の「500件」は当時の記述として残し、追記で現在規模を補足
+- [ ] 「今後の改善」から実装済みのテキストハイライトを削除
+- [ ] ファジー検索セクションの追記（冒頭の約束の回収）
+- [ ] updated_at更新
+- [ ] 計画メモ: 19ce48f34a5、レビューメモ: 19ce490df78
+
+### その他
+
+- [ ] backlog B-134のステータスを実装済みに更新（queued→Done）
 
 ## レビュー結果
 
@@ -23,7 +50,8 @@ completed_at: null
 
 ## 補足事項
 
-なし
+- ツールガイド記事7件（character-counting, web-developer-tools, password-security, cron-parser, hash-generator, json-formatter, regex-tester）の本格修正はPhase 4でのツール削除後に実施する
+- Owner指示: 記事の記述は公開日時点のサイト状況を尊重し、追記で補足する。修正の目的は読者への価値提供向上
 
 ## サイクル終了時のチェックリスト
 
