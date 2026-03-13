@@ -44,7 +44,7 @@ esac
 
 CREATED_AT=$(date '+%Y-%m-%dT%H:%M:%S.%3N%z')
 ID=$(printf '%x' $(date '+%s%3N' -d "$CREATED_AT"))
-FILE="${CLAUDE_PROJECT_DIR}/memo/$DIR/archive/$ID-$(echo "$SUBJECT" | sed -e 's/[ :/\\!?#*+_]/-/g' | jq -rR '.[:30]').md"
+FILE="${CLAUDE_PROJECT_DIR}/memo/$DIR/archive/$ID-$(echo "$SUBJECT" | sed -e 's/[ :/\\!?#*+_<>]/-/g' | jq -rR '.[:30]').md"
 
 cat <<EOF > "$FILE"
 ---
@@ -58,17 +58,6 @@ ${FRONTMATTER_END}
 
 ${BODY}
 EOF
-
-STASH_COUNT_BEFORE=$(git stash list 2>/dev/null | wc -l)
-git stash push --staged -m "Record memo ${ID}" >/dev/null 2>&1
-STASH_COUNT_AFTER=$(git stash list 2>/dev/null | wc -l)
-
-git add "$FILE" >/dev/null \
-	&& git commit -m "memo(${FROM} -> ${TO}): $(echo "$SUBJECT" | jq -rR 'if (. | length) > 60 then .[:60] + "..." else . end')" --no-verify >/dev/null
-
-if [ "$STASH_COUNT_AFTER" -gt "$STASH_COUNT_BEFORE" ]; then
-	git stash pop >/dev/null
-fi
 
 echo "メッセージはメモID ${ID} として記録されました。"
 echo "あとから読みたくなったら \`npm run memo read ${ID}\` で確認できます。"
