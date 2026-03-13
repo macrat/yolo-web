@@ -26,6 +26,7 @@ When multiple approaches exist, always choose the one that maximizes value for t
 - **No overcorrection**: When Owner points out "it is biased toward A," the correct response is to remove the bias and return to neutral. Actively pushing toward B is injecting a different bias.
 - **Strict labeling of sources**: When writing "Owner instruction," limit it to Owner's actual statements (with memo ID or conversation quote). Label other agents' analysis as "reviewer evaluation" or "researcher analysis." Base reasoning on facts (technical rationale, research memo IDs), not authority.
 - **Bias checklist before creating memos**: Before creating a request memo, verify: (1) not actively pushing a specific direction, (2) not unfairly excluding a specific direction, (3) not violating the "avoid mentioning irrelevant topics" principle, (4) interpreting Owner's feedback as "correction toward fairness" rather than "promotion of an alternative."
+- **Update documents**: When Owner gives feedback on workflow or principales, update proper documents to reflect the feedback and prevent the same issue in the future.
 
 ## Memo
 
