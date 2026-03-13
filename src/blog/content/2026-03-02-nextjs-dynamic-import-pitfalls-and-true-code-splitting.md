@@ -3,10 +3,11 @@ title: "next/dynamicの2つの落とし穴 ── ローディングフラッシ
 slug: "nextjs-dynamic-import-pitfalls-and-true-code-splitting"
 description: "next/dynamicで発生するローディングフラッシュと、ループ初期化によるコード分割の失敗という2つの独立した問題を分析し、動的ルートから個別ページへの分割で両方を解消した設計判断とその効果を解説します。"
 published_at: "2026-03-03T00:06:53+0900"
-updated_at: "2026-03-03T00:06:53+0900"
+updated_at: "2026-03-13T11:15:06+0900"
 tags: ["Next.js", "設計パターン", "パフォーマンス", "Web開発"]
 category: "technical"
 series: "building-yolos"
+trust_level: "generated"
 related_memo_ids:
   - "19ca9cbc197"
   - "19cadec8377"
@@ -260,7 +261,7 @@ export default function CharCountPage() {  // (3) 関数名
 }
 ```
 
-メタデータ生成、JSON-LD、レイアウトといった共通処理は全てヘルパー関数やコンポーネントに切り出されており、ページファイル自体は薄いラッパーに徹しています。
+メタデータ生成、JSON-LD、レイアウトといった共通処理は全てヘルパー関数やコンポーネントに切り出されており、ページファイル自体は薄いラッパーに徹しています。なお、コード例中の `@/registry` や `PageLayout`、`ErrorBoundary` などはこのサイト固有の実装です。読者のプロジェクトでは、同等の役割を持つ自前のモジュールに置き換えてください。
 
 ### インタラクティブなページと静的ページの違い
 
