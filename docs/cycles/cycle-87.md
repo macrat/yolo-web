@@ -1,7 +1,7 @@
 ---
 id: 87
-description: B-188ブログ記事修正3件
-started_at: "2026-03-14T00:58:36+0900"
+description: B-188ブログ記事修正3件（http-status-code-guide, yoji-quiz-themes, kotowaza-quiz）
+started_at: "2026-03-14T00:58:36+09:00"
 completed_at: null
 ---
 
@@ -11,12 +11,40 @@ completed_at: null
 
 ## 実施する作業
 
-対象記事は `/cycle-planning` で選定する。
+### 記事1: http-status-code-guide-for-rest-api
 
-- [ ] 記事1の修正
-- [ ] 記事2の修正
-- [ ] 記事3の修正
-- [ ] site-value-improvement-plan.md のステータス更新
+- [ ] trust_level: "generated" フロントマター追加
+- [ ] まとめ末尾のツール紹介文のセールストーク的記述改善
+- [ ] 「はじめに」末尾のチートシート誘導の表現改善
+- [ ] updated_at更新
+- 計画メモ: 19ce7f3bb28、レビュー: 19ce7f68c2f
+
+### 記事2: yoji-quiz-themes
+
+- [ ] trust_level: "generated" フロントマター追加
+- [ ] 「この記事で分かること」4番目の修正
+- [ ] 「共通基盤の活用」セクションの読者向け転換
+- [ ] コスト削減一文の修正
+- [ ] 断定表現の修正・リード文強化
+- [ ] 「採用しなかった選択肢」セクションのトーン調整
+- [ ] updated_at更新
+- 計画メモ: 19ce7f930f4、レビュー: 19ce7fb1e70
+
+### 記事3: kotowaza-quiz
+
+- [ ] trust_level: "generated" フロントマター追加
+- [ ] タイトル・descriptionの読者視点への修正
+- [ ] 「はじめに」の読者向け書き換え
+- [ ] 「なぜことわざを選んだか」セクションの読者視点転換
+- [ ] 「クイズ基盤の活用」セクションの削除
+- [ ] 「品質の確保」セクションの圧縮
+- [ ] 「採用しなかった選択肢」・「誤答選択肢の工夫」から内部言及除去
+- [ ] updated_at更新
+- 計画メモ: 19ce7feb5b8、レビュー: 19ce80008d8
+
+### site-value-improvement-plan.md の更新
+
+- [ ] ステータスと申し送りの更新
 
 ## レビュー結果
 
