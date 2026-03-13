@@ -5,7 +5,7 @@
 | ID    | Title                                          | Priority | Status | Assigned Role | Origin Memo | Target Cycle | Notes                                                                                                                                                                                               |
 | ----- | ---------------------------------------------- | -------- | ------ | ------------- | ----------- | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | B-165 | サイト全面価値向上プロジェクト（フェーズ1〜5） | P0       | active | pm            | 19cb1464579 | 64〜         | 作業計画書: docs/site-value-improvement-plan.md。AdSense「有用性の低いコンテンツ」却下対応。**備忘: 各フェーズ完了時にsite-value-improvement-plan.mdのステータス（セクション5）を必ず更新すること** |
-| B-188 | ブログ記事の修正（残27件）                     | P2       | active | pm            | -           | 85〜         | site-concept.mdのフェーズ3-D。cycle-84で2件修正完了（business-email-and-keigo-tools, series-navigation-ui）。残27件。**1サイクルにつき3記事上限（Owner指示）**                                      |
+| B-188 | ブログ記事の修正（残24件）                     | P2       | active | pm            | -           | 86〜         | site-concept.mdのフェーズ3-D。cycle-85で3件修正完了（irodori-and-kanji-expansion, dark-mode-toggle, site-search-feature）。残24件。**1サイクルにつき3記事上限（Owner指示）**                        |
 
 ## Queued (未着手)
 
