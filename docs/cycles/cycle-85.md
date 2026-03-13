@@ -17,7 +17,6 @@ completed_at: null
 
 - [ ] フロントマター修正（trust_level追加、updated_at更新）
 - [ ] 漢字データ拡充セクション末尾にAdmonitionで「その後常用漢字2,136字まで拡充済み」と追記
-- [ ] 「今後の展望」の漢字拡充項目にAdmonitionで実現済みである旨を追記
 - [ ] 計画メモ: 19ce48f4f02、レビューメモ: 19ce4914920
 
 ### 記事2: dark-mode-toggle
@@ -29,7 +28,6 @@ completed_at: null
 ### 記事3: site-search-feature
 
 - [ ] Route Handler / force-static、「500件」等の記述は公開日時点の状況として正確（git log確認済み: 19ce49662ae）。当時の状況は変更せず、必要に応じて追記で現在の状況を補足
-- [ ] 「今後の改善」から実装済みのテキストハイライトを削除
 - [ ] ファジー検索セクションの追記（冒頭の約束の回収）
 - [ ] updated_at更新
 - [ ] 計画メモ: 19ce48f34a5、レビューメモ: 19ce490df78、追加調査メモ: 19ce49662ae
