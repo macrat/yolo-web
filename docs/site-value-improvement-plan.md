@@ -158,15 +158,15 @@ Google AdSenseの審査で「有用性の低いコンテンツ」として却下
 - [ ] http-status-code-guide-for-rest-api（HTTPステータスコードガイド）
 - [ ] html-sql-cheatsheets（HTML/SQLチートシートリリース告知）
 - ~~nextjs-static-page-split-for-tools（Next.js静的ページ分割）~~ — 改良版記事が公開済みのため削除（cycle-84）
-- [ ] ai-agent-site-strategy-formulation（AIエージェントによるサイト戦略策定）— 全面書き直し
+- [x] ai-agent-site-strategy-formulation（AIエージェントによるサイト戦略策定）— cycle-66で削除・3部作に置換
 - [x] irodori-and-kanji-expansion（漢字辞典・いろどり拡張記事）— cycle-85で修正完了
 - [x] dark-mode-toggle（ダークモード実装記事）— cycle-85で修正完了
-- [ ] nextjs-directory-architecture（Next.jsディレクトリ構成記事）
+- [x] nextjs-directory-architecture（Next.jsディレクトリ構成記事）— cycle-86で修正完了
 - [ ] tool-reliability-improvements（ツール信頼性改善記事）
 - [x] site-search-feature（サイト内検索機能記事）— cycle-85で修正完了
-- [ ] game-infrastructure-refactoring（ゲーム基盤リファクタリング記事）
-- [ ] nextjs-dynamic-import-pitfalls-and-true-code-splitting（Next.js動的インポート記事）
-- [ ] kanji-kanaru-2136-expansion（漢字カナル2136字拡張記事）
+- [x] game-infrastructure-refactoring（ゲーム基盤リファクタリング記事）— cycle-86で修正完了
+- [x] nextjs-dynamic-import-pitfalls-and-true-code-splitting（Next.js動的インポート記事）— cycle-86で修正完了
+- [ ] kanji-kanaru-2136-expansion（漢字カナル2136字拡張記事）— 記事ファイル未作成（新規執筆が必要）
 
 ### フェーズ4: コンテンツの整理とサイト再構成
 
@@ -195,7 +195,7 @@ Google AdSenseの審査で「有用性の低いコンテンツ」として却下
 
 ## 5. 現在のステータス
 
-### 最終更新: cycle-85 完了時（2026-03-13）
+### 最終更新: cycle-86 完了時（2026-03-13）
 
 **現在のフェーズ**: フェーズ3（コンテンツの充実）進行中
 
@@ -203,18 +203,19 @@ Google AdSenseの審査で「有用性の低いコンテンツ」として却下
 - フェーズ3-A（基盤整備）: 全完了
 - フェーズ3-B（実績システム）: 全完了（全18コンテンツ対応）
 - フェーズ3-C（新規コンテンツ制作）: Phase 1完了（6種）、Phase 2完了（Q08動物性格診断、Q14理系思考タイプ診断、Q21日本文化適性診断）
-- フェーズ3-D（既存コンテンツ強化）: B-185漢字カナル2,136字拡張完了（cycle-80）、B-186四字熟語きめる完了（cycle-83）、B-187 UI/UX改善完了（cycle-83）、B-188ブログ修正5件完了（cycle-84で2件、cycle-85で3件、残24件）
+- フェーズ3-D（既存コンテンツ強化）: B-185漢字カナル2,136字拡張完了（cycle-80）、B-186四字熟語きめる完了（cycle-83）、B-187 UI/UX改善完了（cycle-83）、B-188ブログ修正8件完了（cycle-84で2件、cycle-85で3件、cycle-86で3件、残21件。ただしai-agent-site-strategyはcycle-66で削除・置換済みのため実質修正対象は20件）
 - コンテンツカテゴリ定義: docs/content-categories.md 策定済み
 - 診断選択肢シャッフル: 全診断・知識テストで選択肢の表示順序をランダム化（cycle-79）
 - draft記事管理: draft状態での保持は誤って再公開するリスクがあるため、非公開にする場合は削除する運用とした（cycle-84で事故未遂を受けて決定）
 
-**次にやること**: フェーズ3-Dの残り（B-188 ブログ修正残24件）、フェーズ3-Cの残り
+**次にやること**: フェーズ3-Dの残り（B-188 ブログ修正残20件）、フェーズ3-Cの残り
 
 ## 6. 後続タスク実施者への申し送り事項
 
-### cycle-85 → cycle-86 への申し送り
+### cycle-86 → cycle-87 への申し送り
 
-- **次にやること**: B-188ブログ修正の残り24件（1サイクル3記事上限）、フェーズ3-Cの残り
+- **次にやること**: B-188ブログ修正の残り20件（1サイクル3記事上限）、フェーズ3-Cの残り。ツール削除に依存する記事群が多く残っている点に注意
+- **kanji-kanaru-2136-expansion**: 記事ファイルが存在しない（新規執筆の可能性あり）
 - **ブログ記事修正の原則**: セクション4の3-8に記載の3原則（当時の状況を尊重、目的は読者への価値提供、展望セクションはそのまま維持）を遵守すること
 - **レビューの注意**: 記事1つにつき1エージェントで、読者目線で徹底的に実施すること（Owner指示）
 
