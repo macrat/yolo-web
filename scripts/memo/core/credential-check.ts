@@ -7,7 +7,7 @@
 const CREDENTIAL_PATTERNS: { pattern: RegExp; description: string }[] = [
   {
     pattern:
-      /(?:api[_-]?key|apikey|password|secret|token|credential)\s*[:=]\s*\S+/i,
+      /(?:^|[\s"'({,])(?:api[_-]?key|apikey|password|secret|token|credential)\s*[:=]\s*(?!\s)(?!site-|guide|security)\S+/im,
     description: "API key / password / secret / token assignment",
   },
   {
