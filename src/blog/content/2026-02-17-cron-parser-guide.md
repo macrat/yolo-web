@@ -3,10 +3,11 @@ title: "cron式の書き方ガイド: スケジュール設定を簡単に"
 slug: "cron-parser-guide"
 description: "cron式の書き方を基礎から実践まで解説。5つのフィールドの意味、よく使うパターン集、GitHub ActionsやCI/CDでの活用例、よくある間違いとトラブルシューティングまで。無料オンラインツールで即検証。"
 published_at: "2026-02-17T15:26:00+09:00"
-updated_at: "2026-03-01T18:52:04+0900"
+updated_at: "2026-03-14T17:29:43+09:00"
 tags: ["スケジュール", "オンラインツール", "Web開発"]
 category: "guide"
 series: "tool-guides"
+trust_level: "generated"
 related_memo_ids: []
 related_tool_slugs: ["cron-parser"]
 draft: false
@@ -230,5 +231,3 @@ cron式は5つのフィールドの組み合わせで柔軟なスケジュール
 - [Cron式解析ツール](/tools/cron-parser): cron式の解析・日本語説明・ビルダー機能
 - [UNIXタイムスタンプ変換ツール](/tools/unix-timestamp): UNIXタイムスタンプと日時の相互変換
 - [日付計算ツール](/tools/date-calculator): 日付の差分計算・加減算・和暦変換
-
-すべてブラウザ上で動作し、入力したデータがサーバーに送信されることはありません。安心してお使いください。
