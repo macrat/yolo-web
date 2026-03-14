@@ -3,13 +3,13 @@ title: "cron式の書き方ガイド: 環境別の違いと限界を徹底解説
 slug: "cron-parser-guide"
 description: "cron式の基本から、Linux・GitHub Actions・AWS EventBridge・Google Cloud Scheduler・Kubernetes CronJobの環境別互換性比較、cron式の限界と回避策、systemd timerとの使い分けまで体系的に解説します。"
 published_at: "2026-02-17T15:26:00+09:00"
-updated_at: "2026-03-14T19:05:00+09:00"
+updated_at: "2026-03-14T19:19:35+09:00"
 tags: ["スケジュール", "Web開発"]
 category: "guide"
 series: null
 trust_level: "generated"
 related_memo_ids: []
-related_tool_slugs: []
+related_tool_slugs: ["cron-parser"]
 draft: false
 ---
 
@@ -27,48 +27,23 @@ draft: false
 
 ## cronの基礎
 
-### cron式の構造
-
-cronはUnix/Linux系OSで標準的に使われるジョブスケジューラです。現在広く使われている形式はPaul Vixieが開発したVixie cronに基づいています。詳細は[crontab(5)のマニュアル](https://man7.org/linux/man-pages/man5/crontab.5.html)を参照してください。
-
-cron式は5つのフィールドをスペースで区切って記述します。
+cron式は5つのフィールドをスペースで区切って記述します（[crontab(5)](https://man7.org/linux/man-pages/man5/crontab.5.html) 参照）。
 
 ```
-分 時 日 月 曜日
+分(0–59) 時(0–23) 日(1–31) 月(1–12) 曜日(0–7, 0と7が日曜)
 ```
 
-| フィールド | 範囲 | 説明                         |
-| ---------- | ---- | ---------------------------- |
-| 分         | 0–59 | 実行する分                   |
-| 時         | 0–23 | 実行する時（24時間表記）     |
-| 日         | 1–31 | 実行する日                   |
-| 月         | 1–12 | 実行する月                   |
-| 曜日       | 0–7  | 実行する曜日（0と7は日曜日） |
+特殊文字: `*`（すべて）、`,`（列挙: `1,15`）、`-`（範囲: `1-5`）、`/`（ステップ: `*/5`）
 
-### 特殊文字
+よく使うパターン（検証には [crontab.guru](https://crontab.guru/) が便利）:
 
-| 文字 | 意味     | 例     | 説明                   |
-| ---- | -------- | ------ | ---------------------- |
-| `*`  | すべて   | `*`    | すべての値             |
-| `,`  | 列挙     | `1,15` | 1と15                  |
-| `-`  | 範囲     | `1-5`  | 1から5まで             |
-| `/`  | ステップ | `*/5`  | 5ごと（0, 5, 10, ...） |
-
-## よく使うパターン集
-
-cron式の検証には [crontab.guru](https://crontab.guru/) が便利です。
-
-| cron式              | 意味                       |
-| ------------------- | -------------------------- |
-| `0 3 * * *`         | 毎日 午前3時               |
-| `0 9 * * *`         | 毎日 午前9時               |
-| `0 9 * * 1-5`       | 平日 午前9時               |
-| `*/5 * * * *`       | 5分ごと                    |
-| `*/10 9-18 * * 1-5` | 平日 9〜18時 10分ごと      |
-| `0 0 1 * *`         | 毎月1日 0時0分             |
-| `0 * * * *`         | 毎時0分                    |
-| `0 9 * * 1`         | 毎週月曜日 午前9時         |
-| `0,30 9-17 * * 1-5` | 平日 9〜17時 毎時0分と30分 |
+| cron式              | 意味                     |
+| ------------------- | ------------------------ |
+| `0 3 * * *`         | 毎日 午前3時             |
+| `0 9 * * 1-5`       | 平日 午前9時             |
+| `*/5 * * * *`       | 5分ごと                  |
+| `0 0 1 * *`         | 毎月1日 0時0分           |
+| `0,30 9-17 * * 1-5` | 平日 9〜17時 毎時0・30分 |
 
 ## 環境別cron式の互換性マトリクス
 
@@ -104,16 +79,7 @@ cron式の検証には [crontab.guru](https://crontab.guru/) が便利です。
 - Linux crontab: 「毎月15日、または毎週月曜日」のどちらかで実行（OR条件）
 - AWS EventBridge: `?`を使って片方を無効化しなければエラーになる。`cron(0 9 15 * ? *)` のように書く
 
-**例2: AWS EventBridgeの書き方の違い**
-
-EventBridge（SchedulerもRulesも）は6フィールド形式で、日と曜日のどちらかに必ず `?` を指定します。EventBridge Schedulerはタイムゾーン設定が可能ですが、EventBridge RulesはUTC固定です。
-
-```
-# 毎日 UTC 0:00（= JST 9:00）に実行（EventBridge Rulesの場合）
-cron(0 0 * * ? *)
-```
-
-**例3: GitHub ActionsはUTC固定**
+**例2: GitHub ActionsはUTC固定**
 
 GitHub ActionsのscheduleトリガーはUTCベースです。日本時間（JST = UTC+9）で午前9時に実行したい場合は、UTC午前0時を指定します。
 
@@ -197,33 +163,23 @@ cronはカレンダーの日付・曜日ベースで動作するため、「N週
 
 ## systemd timerとの比較
 
-Amazon Linux 2023では cronie がデフォルト非搭載となっており、systemd timerが推奨代替として位置づけられています（詳細は[AWS公式ドキュメント](https://docs.aws.amazon.com/linux/al2023/ug/cron.html)を参照）。
+Amazon Linux 2023では cronie がデフォルト非搭載となっており、systemd timerが推奨代替として位置づけられています（[AWS公式ドキュメント](https://docs.aws.amazon.com/linux/al2023/ug/cron.html)）。
 
-| 比較軸           | cron                                 | systemd timer                                 |
-| ---------------- | ------------------------------------ | --------------------------------------------- |
-| 構文             | cron式（5フィールド）                | `OnCalendar=` 構文（例: `*:0/5` = 5分ごと）   |
-| 最小粒度         | 1分                                  | 1秒（`OnCalendar=*:*:0/30` で30秒ごとなど）   |
-| ログ管理         | `/var/log/syslog` や `/var/log/cron` | `journalctl -u <timer名>` で確認              |
-| ミスファイア処理 | スキップ（停止中の実行は失われる）   | `Persistent=true` で再起動後に遅延実行        |
-| 設定場所         | crontabファイル                      | `.timer` ファイルと `.service` ファイルのペア |
+| 比較軸           | cron                  | systemd timer                               |
+| ---------------- | --------------------- | ------------------------------------------- |
+| 構文             | cron式（5フィールド） | `OnCalendar=` 構文（`*:0/5` = 5分ごと）     |
+| 最小粒度         | 1分                   | 1秒（`OnCalendar=*:*:0/30` で30秒ごとなど） |
+| ログ管理         | `/var/log/syslog` 等  | `journalctl -u <timer名>` で確認            |
+| ミスファイア処理 | スキップ              | `Persistent=true` で再起動後に遅延実行      |
+| 設定場所         | crontabファイル       | `.timer` + `.service` ファイルのペア        |
 
-**選択の目安**: 既存のcrontab資産がある環境や、クロスプラットフォームでの互換性を重視する場合はcron。Amazon Linux 2023など新規構築でsystemdが標準の環境ではsystemd timerが第一候補になります。systemd timerのOnCalendar構文の詳細は[systemd.timer公式ドキュメント](https://www.freedesktop.org/software/systemd/man/latest/systemd.timer.html)を参照してください。
+**選択の目安**: 既存のcrontab資産や移植性を重視する場合はcron。Amazon Linux 2023など新規構築でsystemdが標準の環境ではsystemd timerが第一候補です（[systemd.timer公式ドキュメント](https://www.freedesktop.org/software/systemd/man/latest/systemd.timer.html)）。
 
 ## よくある間違いとトラブルシューティング
 
 ### 曜日の数値の混乱
 
 cron式では0と7がどちらも日曜日、1が月曜日、6が土曜日です。プログラミング言語によっては日曜日を1として扱う場合もあるため、混乱しやすいポイントです。[crontab.guru](https://crontab.guru/) で曜日の解釈を確認できます。
-
-### 日と曜日の同時指定
-
-> [!WARNING]
-> 日フィールドと曜日フィールドの両方を `*` 以外で指定した場合、環境によって動作が異なります。
->
-> - **Vixie cron（多くのLinuxディストリビューション）**: 日**または**曜日のどちらかが一致すれば実行（OR条件）
-> - **AWS EventBridge**: 日か曜日のどちらか一方に必ず `?` を指定しなければエラーになる
->
-> 予期しない動作を避けるため、日と曜日の同時指定はできるだけ避けるか、意図した動作を使用環境のドキュメントで確認してから設定してください。
 
 ### タイムゾーンの罠
 
@@ -258,14 +214,3 @@ cron式は5フィールドの組み合わせでスケジュールを表現しま
 - **秒単位・隔週**: 標準cron式では表現できない。systemd timerやスクリプト内の判定で対応する
 
 本番環境への設定前に、各サービスの公式ドキュメントで仕様を確認することを強く推奨します。cron式の構文確認には [crontab.guru](https://crontab.guru/) が役立ちます。
-
-各環境の公式ドキュメント:
-
-- [Linux crontab(5)](https://man7.org/linux/man-pages/man5/crontab.5.html)
-- [GitHub Actions schedule](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#schedule)
-- [AWS EventBridge Scheduler](https://docs.aws.amazon.com/scheduler/latest/UserGuide/schedule-types.html)
-- [AWS EventBridge Rules](https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-cron-expressions.html)
-- [Google Cloud Scheduler](https://cloud.google.com/scheduler/docs/configuring/cron-job-schedules)
-- [Kubernetes CronJob](https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/)
-- [Amazon Linux 2023 cron](https://docs.aws.amazon.com/linux/al2023/ug/cron.html)
-- [systemd timer](https://www.freedesktop.org/software/systemd/man/latest/systemd.timer.html)
