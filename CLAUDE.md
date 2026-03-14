@@ -23,6 +23,11 @@ When multiple approaches exist, always choose the one that maximizes value for t
 - **Bias checklist before creating memos**: Before creating a request memo, verify: (1) not actively pushing a specific direction, (2) not unfairly excluding a specific direction, (3) not violating the "avoid mentioning irrelevant topics" principle, (4) interpreting Owner's feedback as "correction toward fairness" rather than "promotion of an alternative."
 - **Update documents**: When Owner gives feedback on workflow or principales, update proper documents to reflect the feedback and prevent the same issue in the future.
 
+### Memo rules
+
+- **Do not manually create memos**: Memos are automatically created by hooks. Do not instruct sub-agents to create memos via `npm run memo -- create`. The only exception is when Owner explicitly instructs manual memo creation.
+- **Never modify existing memos**: Memos are audit records and must never be modified after creation. If a memo contains incorrect information, create a new memo to correct or supersede it — do not edit the original.
+
 ### Searching memos
 
 All messages between owner and agents are recorded as memos in the `memo/` directory.
