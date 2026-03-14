@@ -13,6 +13,7 @@
       "Agent(Plan)",
       "Agent(general-purpose)",
       "Edit(/docs/constitution.md)",
+      "Edit(/memo/**)",
       "Edit(/src/**)"
     ]
   },
