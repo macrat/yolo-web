@@ -30,3 +30,5 @@ You can search memos to find past discussions and decisions.
 
 - `memo/owner/archive/*.md`: Memos to owner. When PM (main agent) sends message to owner, it is recorded here.
 - `memo/agent/archive/*.md`: Memos to agents. When PM starts subagents or a subagent replies to PM, the message is recorded here.
+
+DO NOT edit the memos. They are the record for audit as well as the record of past discussions and decisions.
