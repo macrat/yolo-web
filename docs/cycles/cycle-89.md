@@ -1,17 +1,18 @@
 ---
 id: 89
-description: B-188ブログ記事修正3件
+description: B-188ブログ記事3件削除 + 410 Gone middleware実装
 started_at: "2026-03-14T19:54:23+09:00"
 completed_at: null
 ---
 
 # サイクル-89
 
-このサイクルでは、フェーズ3-D B-188のブログ記事修正を継続する（1サイクル3記事上限）。
+このサイクルでは、site-concept.mdで削除と判断された3件のブログ記事を削除し、削除済み記事全体に410 Goneを返すmiddlewareを実装する。
 
 ## 実施する作業
 
-- [ ] B-188: ブログ記事修正3件（対象記事は計画フェーズで選定）
+- [ ] タスク0: middleware.tsの新規作成（410 Gone対応）— 削除済みブログ記事18スラッグに410を返す
+- [ ] タスク1: ブログ記事3件の削除（unit-converter-guide, rss-feed, html-sql-cheatsheets）とドキュメント更新
 
 ## レビュー結果
 
