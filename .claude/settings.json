@@ -12,9 +12,7 @@
       "Agent(Explore)",
       "Agent(Plan)",
       "Agent(general-purpose)",
-      "Edit(/docs/constitution.md)",
-      "Edit(/memo/**)",
-      "Edit(/src/**)"
+      "Edit(/docs/constitution.md)"
     ]
   },
   "hooks": {
