@@ -149,13 +149,13 @@ Google AdSenseの審査で「有用性の低いコンテンツ」として却下
 - [x] yojijukugo-learning-guide（四字熟語学習ガイド）— cycle-91で修正完了
 - ~~unit-converter-guide（単位変換ガイド）~~ — 修正ではなく削除と判断（大手サービスに対し付加価値がなく差別化困難）
 - [x] tools-expansion-10-to-30（ツール10→30拡張記事）— cycle-91で修正完了
-- [ ] cheatsheets-introduction（チートシート導入記事）
+- [x] cheatsheets-introduction（チートシート導入記事）— cycle-92で修正完了
 - ~~rss-feed（RSSフィード告知）~~ — 修正ではなく削除と判断（独自性なし・別記事rss-feed-and-paginationでカバー済み）
 - [x] business-email-and-keigo-tools（敬語・メールツール）— cycle-84で修正完了
 - [x] yoji-quiz-themes（四字熟語クイズテーマ追加告知）— cycle-87で修正完了
 - [x] kotowaza-quiz（ことわざ・慣用句力診断リリース告知）— cycle-87で修正完了
 - [x] series-navigation-ui（シリーズナビゲーションUI）— cycle-84で修正完了
-- [ ] game-dictionary-layout-unification（ゲーム・辞典レイアウト統一）
+- [x] game-dictionary-layout-unification（ゲーム・辞典レイアウト統一）— cycle-92で修正完了
 - [x] http-status-code-guide-for-rest-api（HTTPステータスコードガイド）— cycle-87で修正完了
 - ~~html-sql-cheatsheets（HTML/SQLチートシートリリース告知）~~ — 修正ではなく削除と判断（リンク先チートシート削除予定で記事として不成立）
 - ~~nextjs-static-page-split-for-tools（Next.js静的ページ分割）~~ — 改良版記事が公開済みのため削除（cycle-84）
@@ -163,7 +163,7 @@ Google AdSenseの審査で「有用性の低いコンテンツ」として却下
 - [x] irodori-and-kanji-expansion（漢字辞典・いろどり拡張記事）— cycle-85で修正完了
 - [x] dark-mode-toggle（ダークモード実装記事）— cycle-85で修正完了
 - [x] nextjs-directory-architecture（Next.jsディレクトリ構成記事）— cycle-86で修正完了
-- [ ] tool-reliability-improvements（ツール信頼性改善記事）
+- [x] tool-reliability-improvements（ツール信頼性改善記事）— cycle-92で修正完了
 - [x] site-search-feature（サイト内検索機能記事）— cycle-85で修正完了
 - [x] game-infrastructure-refactoring（ゲーム基盤リファクタリング記事）— cycle-86で修正完了
 - [x] nextjs-dynamic-import-pitfalls-and-true-code-splitting（Next.js動的インポート記事）— cycle-86で修正完了
@@ -196,7 +196,7 @@ Google AdSenseの審査で「有用性の低いコンテンツ」として却下
 
 ## 5. 現在のステータス
 
-### 最終更新: cycle-91 完了時（2026-03-15）
+### 最終更新: cycle-92 完了時（2026-03-15）
 
 **現在のフェーズ**: フェーズ3（コンテンツの充実）進行中
 
@@ -204,20 +204,19 @@ Google AdSenseの審査で「有用性の低いコンテンツ」として却下
 - フェーズ3-A（基盤整備）: 全完了
 - フェーズ3-B（実績システム）: 全完了（全18コンテンツ対応）
 - フェーズ3-C（新規コンテンツ制作）: Phase 1完了（6種）、Phase 2完了（Q08動物性格診断、Q14理系思考タイプ診断、Q21日本文化適性診断）
-- フェーズ3-D（既存コンテンツ強化）: B-185漢字カナル2,136字拡張完了（cycle-80）、B-186四字熟語きめる完了（cycle-83）、B-187 UI/UX改善完了（cycle-83）、B-188ブログ修正18件完了（cycle-91でregex-tester-guide・yojijukugo-learning-guide・tools-expansion-10-to-30修正完了。残3件）
+- フェーズ3-D（既存コンテンツ強化）: B-185漢字カナル2,136字拡張完了（cycle-80）、B-186四字熟語きめる完了（cycle-83）、B-187 UI/UX改善完了（cycle-83）、B-188ブログ修正全29件完了（修正18件・削除8件・執筆不要3件、cycle-92で最終3件修正完了）
 - コンテンツカテゴリ定義: docs/content-categories.md 策定済み
 - 診断選択肢シャッフル: 全診断・知識テストで選択肢の表示順序をランダム化（cycle-79）
 - draft記事管理: draft状態での保持は誤って再公開するリスクがあるため、非公開にする場合は削除する運用とした（cycle-84で事故未遂を受けて決定）
 
-**次にやること**: フェーズ3-Dの残り（B-188 ブログ修正残3件）、フェーズ3-Cの残り
+**次にやること**: フェーズ3-Cの残り、フェーズ4（コンテンツの整理とサイト再構成）
 
 ## 6. 後続タスク実施者への申し送り事項
 
-### cycle-91 → cycle-92 への申し送り
+### cycle-92 → cycle-93 への申し送り
 
-- **次にやること**: B-188ブログ修正の残り3件（cheatsheets-introduction、game-dictionary-layout-unification、tool-reliability-improvements）、フェーズ3-Cの残り
-- **ブログ記事修正の原則**: セクション4の3-8に記載の4原則（当時の状況を尊重、目的は読者への価値提供、展望セクションはそのまま維持、追記には日付と経緯を明記）を遵守すること
-- **レビューの注意**: 記事1つにつき1エージェントで、読者目線で徹底的に実施すること（Owner指示）
+- **次にやること**: フェーズ3-Cの残り（新規コンテンツ制作）、またはフェーズ4（コンテンツの整理とサイト再構成）への移行
+- **B-188完了**: ブログ記事修正が全29件完了。フェーズ3-Dのブログ修正タスクは終了
 
 ## 7. このファイルの扱い方のルール
 
