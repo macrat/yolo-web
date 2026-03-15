@@ -196,6 +196,5 @@ draft: false
 
 - [Next.js App Routerで20個の静的ツールページを構築する設計パターン](/blog/nextjs-static-tool-pages-design-pattern) — ツールページの技術的な設計を解説
 - [ビジネスメール作成ツールと敬語早見表を公開しました](/blog/business-email-and-keigo-tools) — 30個以降に追加された最新ツール
-- [Web開発者のための無料オンラインツール活用ガイド](/blog/web-developer-tools-guide) — 開発者向けツールの使い分け
 
 ぜひ[ツール一覧ページ](/tools)から各ツールを試してみてください。

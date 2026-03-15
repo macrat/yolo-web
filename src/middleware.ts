@@ -21,6 +21,7 @@ export const DELETED_BLOG_SLUGS: readonly string[] = [
   "unit-converter-guide", // cycle-89で削除
   "rss-feed", // cycle-89で削除
   "html-sql-cheatsheets", // cycle-89で削除
+  "web-developer-tools-guide", // cycle-90で削除
   "quality-improvement-and-restructure-design", // cycle-15で短期間公開後削除
   "site-name-yolos-net", // 短期間公開後削除
   "tools-expansion-27", // 短期間公開後削除

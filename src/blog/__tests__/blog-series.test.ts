@@ -52,10 +52,10 @@ describe("getSeriesPosts", () => {
 
   test("uses slug as secondary sort when published_at timestamps are identical", () => {
     // Verify the secondary sort logic by checking the overall series ordering.
-    // tool-guides posts on 2026-02-17 have distinct timestamps (minute-level),
-    // so primary sort by time already determines order. We verify the sort is
-    // deterministic by checking the full list is in ascending published_at order.
-    const posts = getSeriesPosts("tool-guides");
+    // building-yolos has many posts with distinct timestamps, so primary sort
+    // by time already determines order. We verify the sort is deterministic by
+    // checking the full list is in ascending published_at order.
+    const posts = getSeriesPosts("building-yolos");
     expect(posts.length).toBeGreaterThanOrEqual(2);
 
     for (let i = 1; i < posts.length; i++) {
