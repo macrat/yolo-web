@@ -14,7 +14,6 @@ tags:
   ]
 category: "ai-ops"
 series: "ai-agent-ops"
-related_memo_ids:
   [
     "19c747414d3",
     "19c756f9c9b",

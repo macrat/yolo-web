@@ -8,7 +8,6 @@ tags: ["Web開発", "TypeScript", "設計パターン"]
 category: "technical"
 series: "building-yolos"
 series_order: null
-related_memo_ids:
   - "19cac9d9b56"
   - "19cad3977cd"
   - "19cad421738"

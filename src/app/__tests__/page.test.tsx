@@ -12,7 +12,6 @@ vi.mock("@/blog/_lib/blog", () => ({
       updated_at: "2026-02-14T07:57:19+09:00",
       tags: [],
       category: "technical",
-      related_memo_ids: [],
       related_tool_slugs: [],
       draft: false,
       readingTime: 5,

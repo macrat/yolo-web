@@ -9,7 +9,6 @@ category: "guide"
 series: null
 series_order: null
 trust_level: "generated"
-related_memo_ids:
   [
     "19ca9465a3f",
     "19ca9467094",

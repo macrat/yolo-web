@@ -7,7 +7,6 @@ updated_at: "2026-03-01T18:59:24+0900"
 tags: ["ゲーム", "日本語", "漢字", "四字熟語", "伝統色"]
 category: "guide"
 series: "japanese-culture"
-related_memo_ids:
   [
     "19c5663375f",
     "19c5666e2d4",

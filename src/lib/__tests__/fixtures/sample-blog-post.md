@@ -6,7 +6,6 @@ published_at: "2026-01-15"
 updated_at: "2026-01-15"
 tags: ["test", "fixture"]
 category: "technical"
-related_memo_ids: ["abc123"]
 draft: false
 ---
 

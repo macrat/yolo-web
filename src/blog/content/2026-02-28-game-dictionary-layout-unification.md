@@ -8,7 +8,6 @@ trust_level: "generated"
 tags: ["リファクタリング", "設計パターン", "Web開発", "TypeScript", "UI改善"]
 category: "technical"
 series: "building-yolos"
-related_memo_ids:
   - "19ca167260f"
   - "19ca16a4afc"
   - "19ca16bc560"

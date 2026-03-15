@@ -7,7 +7,6 @@ updated_at: "2026-02-28T20:34:30+09:00"
 tags: ["ゲーム", "新機能", "漢字", "設計パターン"]
 category: "release"
 series: "building-yolos"
-related_memo_ids:
   [
     "19c75f41714",
     "19c75f7f29d",

@@ -1,14 +1,12 @@
 /**
- * Cross-linking utility between blog posts and memos.
- * M10: Keeps blog.ts and memos.ts independent by centralizing
+ * Cross-linking utility between blog posts and tools/games.
+ * M10: Keeps blog.ts independent by centralizing
  * cross-reference logic here.
  */
 
 import { getAllBlogPosts, type BlogPostMeta } from "@/blog/_lib/blog";
-import { getPublicMemoById, type PublicMemo } from "@/memos/_lib/memos";
 
 interface BlogReferenceIndex {
-  memoToPosts: Map<string, BlogPostMeta[]>;
   toolToPosts: Map<string, BlogPostMeta[]>;
 }
 
@@ -29,41 +27,18 @@ function addToReverseIndex(
  * Build reverse indexes from blog metadata once, then reuse for all lookup APIs.
  */
 function buildBlogReferenceIndex(posts: BlogPostMeta[]): BlogReferenceIndex {
-  const memoToPosts = new Map<string, BlogPostMeta[]>();
   const toolToPosts = new Map<string, BlogPostMeta[]>();
 
   for (const post of posts) {
-    for (const memoId of post.related_memo_ids) {
-      addToReverseIndex(memoToPosts, memoId, post);
-    }
     for (const toolSlug of post.related_tool_slugs) {
       addToReverseIndex(toolToPosts, toolSlug, post);
     }
   }
 
-  return { memoToPosts, toolToPosts };
+  return { toolToPosts };
 }
 
 const blogReferenceIndex = buildBlogReferenceIndex(getAllBlogPosts());
-
-/**
- * Get public memos that are referenced by a blog post.
- * M11: For non-public or non-existent memo IDs, returns `null` at that index
- * so callers can render placeholders like "(非公開)" while preserving order.
- */
-export function getRelatedMemosForBlogPost(
-  memoIds: string[],
-): (PublicMemo | null)[] {
-  return memoIds.map((id) => getPublicMemoById(id));
-}
-
-/**
- * Get blog posts that reference a given memo ID.
- * Returns an empty array when there is no matching reference.
- */
-export function getRelatedBlogPostsForMemo(memoId: string): BlogPostMeta[] {
-  return blogReferenceIndex.memoToPosts.get(memoId) ?? [];
-}
 
 /**
  * Get blog posts that reference a given tool slug.

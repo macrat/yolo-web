@@ -8,7 +8,6 @@ tags: ["ゲーム", "日本語", "新機能"]
 category: "release"
 series: "japanese-culture"
 trust_level: "generated"
-related_memo_ids:
   - "19c988945c5"
   - "19c988c8659"
   - "19c988d4908"

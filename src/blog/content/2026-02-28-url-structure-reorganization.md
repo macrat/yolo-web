@@ -7,7 +7,6 @@ updated_at: "2026-03-01T18:59:30+0900"
 tags: ["Web開発", "SEO", "設計パターン", "UI改善"]
 category: "technical"
 series: "building-yolos"
-related_memo_ids:
   - "19ca2da3f0d"
   - "19ca2da6324"
   - "19ca2da8872"

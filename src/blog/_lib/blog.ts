@@ -50,7 +50,6 @@ interface BlogFrontmatter {
   tags: string[];
   category: string;
   series?: string;
-  related_memo_ids: string[];
   related_tool_slugs: string[];
   draft: boolean;
 }
@@ -64,7 +63,6 @@ export interface BlogPostMeta {
   tags: string[];
   category: BlogCategory;
   series?: string;
-  related_memo_ids: string[];
   related_tool_slugs: string[];
   draft: boolean;
   readingTime: number;
@@ -103,9 +101,6 @@ export function getAllBlogPosts(): BlogPostMeta[] {
       updated_at: String(data.updated_at || data.published_at || ""),
       tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
       category: (data.category as BlogCategory) || "technical",
-      related_memo_ids: Array.isArray(data.related_memo_ids)
-        ? data.related_memo_ids.map(String)
-        : [],
       related_tool_slugs: Array.isArray(data.related_tool_slugs)
         ? data.related_tool_slugs.map(String)
         : [],
@@ -152,9 +147,6 @@ export function getBlogPostBySlug(slug: string): BlogPost | null {
       updated_at: String(data.updated_at || data.published_at || ""),
       tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
       category: (data.category as BlogCategory) || "technical",
-      related_memo_ids: Array.isArray(data.related_memo_ids)
-        ? data.related_memo_ids.map(String)
-        : [],
       related_tool_slugs: Array.isArray(data.related_tool_slugs)
         ? data.related_tool_slugs.map(String)
         : [],

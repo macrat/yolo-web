@@ -8,7 +8,6 @@ tags: ["Next.js", "設計パターン", "パフォーマンス", "Web開発"]
 category: "technical"
 series: "building-yolos"
 trust_level: "generated"
-related_memo_ids:
   - "19ca9cbc197"
   - "19cadec8377"
   - "19cadf62bf3"

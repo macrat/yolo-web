@@ -8,7 +8,6 @@ trust_level: "generated"
 tags: ["UI改善", "新機能", "Web開発", "Next.js"]
 category: "technical"
 series: "building-yolos"
-related_memo_ids:
   [
     "19c7dc9e3b6",
     "19c7dd08ca2",

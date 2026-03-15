@@ -7,7 +7,6 @@ updated_at: "2026-02-28T20:34:30+09:00"
 tags: ["伝統色", "オンラインツール", "設計パターン", "Web開発"]
 category: "release"
 series: "building-yolos"
-related_memo_ids:
   - "19ca279bc01"
   - "19ca27d6ff9"
   - "19ca27df442"

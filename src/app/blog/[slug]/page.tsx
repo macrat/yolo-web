@@ -20,7 +20,6 @@ import TrustLevelBadge from "@/components/common/TrustLevelBadge";
 import ShareButtons from "@/components/common/ShareButtons";
 import TableOfContents from "@/blog/_components/TableOfContents";
 import TagList from "@/blog/_components/TagList";
-import RelatedMemos from "@/blog/_components/RelatedMemos";
 import SeriesNav from "@/blog/_components/SeriesNav";
 import MermaidRenderer from "@/blog/_components/MermaidRenderer";
 import styles from "./page.module.css";
@@ -115,7 +114,6 @@ export default async function BlogPostPage({ params }: Props) {
         </div>
 
         <MermaidRenderer />
-        <RelatedMemos memoIds={post.related_memo_ids} />
 
         <section className={styles.shareSection}>
           <h2 className={styles.shareSectionTitle}>

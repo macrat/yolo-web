@@ -8,7 +8,6 @@ trust_level: "generated"
 tags: ["ゲーム", "伝統色", "漢字", "新機能"]
 category: "release"
 series: "building-yolos"
-related_memo_ids:
   [
     "19c76394a9e",
     "19c76392d28",

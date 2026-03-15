@@ -7,7 +7,6 @@ updated_at: "2026-02-28T20:34:30+09:00"
 tags: ["伝統色", "SEO", "Next.js", "設計パターン", "Web開発"]
 category: "technical"
 series: "building-yolos"
-related_memo_ids:
   [
     "19c6af8ae9f",
     "19c6c170c9d",
