@@ -11,22 +11,37 @@ completed_at: null
 
 ## 実施する作業
 
-- [ ] タスク1: regex-tester-guide（正規表現テスターガイド）の修正
-- [ ] タスク2: yojijukugo-learning-guide（四字熟語学習ガイド）の修正
-- [ ] タスク3: tools-expansion-10-to-30（ツール10→30拡張記事）の修正
+- [x] タスク1: regex-tester-guide（正規表現テスターガイド）の修正
+- [x] タスク2: yojijukugo-learning-guide（四字熟語学習ガイド）の修正
+- [x] タスク3: tools-expansion-10-to-30（ツール10→30拡張記事）の修正
 
 ## レビュー結果
 
-（作業完了後に記載）
+タスク1（regex-tester-guide）:
+
+- 1回目: uフラグがツールUIに存在しない不整合の1件指摘
+- 2回目: 指摘なし、承認
+
+タスク2（yojijukugo-learning-guide）:
+
+- 1回目: Admonitionコラムが冗長（1030字→計画は300-500字）かつまとめセクションと内容重複の1件指摘
+- 2回目: 指摘なし、承認
+
+タスク3（tools-expansion-10-to-30）:
+
+- 1回目: 指摘なし、承認
+- Ownerフィードバック: 追記部分に具体的な日付と時系列を明記すべき → 対応済み
+- 2回目（日付追記後）: 指摘なし、承認
 
 ## キャリーオーバー
 
-（サイクル完了後に記載）
+- Ownerフィードバック「追記には日付と経緯を明記する」を修正原則に追加（site-value-improvement-plan.md更新済み）
 
 ## 補足事項
 
 - site-value-improvement-plan.mdのcharacter-counting-guideとjson-formatter-guideのチェック漏れをサイクル開始時に修正
 - 修正の3原則を遵守: 当時の状況を尊重、目的は読者への価値提供、展望セクションはそのまま維持
+- Ownerフィードバック（cycle-91）: 「今だから分かる情報」を追記する際は、追記日・時系列・結論に至った経緯を明記すること。修正原則に第4原則として追加済み
 
 ## サイクル終了時のチェックリスト
 
