@@ -3,17 +3,12 @@ import {
   paginate,
   generatePageNumbers,
   BLOG_POSTS_PER_PAGE,
-  MEMOS_PER_PAGE,
   TOOLS_PER_PAGE,
 } from "@/lib/pagination";
 
 describe("pagination constants", () => {
   test("BLOG_POSTS_PER_PAGE is 12", () => {
     expect(BLOG_POSTS_PER_PAGE).toBe(12);
-  });
-
-  test("MEMOS_PER_PAGE is 50", () => {
-    expect(MEMOS_PER_PAGE).toBe(50);
   });
 
   test("TOOLS_PER_PAGE is 24", () => {

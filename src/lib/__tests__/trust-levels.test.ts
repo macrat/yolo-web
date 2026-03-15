@@ -3,8 +3,6 @@ import {
   TRUST_LEVEL_META,
   STATIC_PAGE_TRUST_LEVELS,
   DICTIONARY_TRUST_LEVELS,
-  MEMO_TRUST_LEVEL,
-  MEMO_TRUST_NOTE,
 } from "@/lib/trust-levels";
 
 const ALL_LEVELS = ["verified", "curated", "generated"] as const;
@@ -52,16 +50,5 @@ describe("DICTIONARY_TRUST_LEVELS", () => {
     expect(DICTIONARY_TRUST_LEVELS["/dictionary/kanji"]).toBe("curated");
     expect(DICTIONARY_TRUST_LEVELS["/dictionary/yoji"]).toBe("curated");
     expect(DICTIONARY_TRUST_LEVELS["/dictionary/colors"]).toBe("curated");
-  });
-});
-
-describe("MEMO constants", () => {
-  test("MEMO_TRUST_LEVEL is generated", () => {
-    expect(MEMO_TRUST_LEVEL).toBe("generated");
-  });
-
-  test("MEMO_TRUST_NOTE is a non-empty string", () => {
-    expect(typeof MEMO_TRUST_NOTE).toBe("string");
-    expect(MEMO_TRUST_NOTE.length).toBeGreaterThan(0);
   });
 });

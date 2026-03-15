@@ -1,10 +1,8 @@
 /**
  * Shared markdown rendering utilities for the web application.
  *
- * NOTE: Similar frontmatter parsing exists in scripts/memo/core/parser.ts (CLI tool).
- * Changes to memo frontmatter format must be reflected in both locations.
- * This module parses frontmatter for the web app's build-time rendering,
- * while scripts/memo/core/parser.ts parses it for the CLI memo management tool.
+ * This module parses frontmatter and renders markdown content for the web app's
+ * build-time rendering.
  */
 
 import { Marked, type MarkedExtension, type Tokens } from "marked";

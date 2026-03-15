@@ -47,10 +47,3 @@ export const DICTIONARY_TRUST_LEVELS: Record<string, TrustLevel> = {
   "/dictionary/yoji": "curated",
   "/dictionary/colors": "curated",
 };
-
-/** メモアーカイブの信頼レベル */
-export const MEMO_TRUST_LEVEL: TrustLevel = "generated";
-
-/** メモアーカイブの補足注記テキスト */
-export const MEMO_TRUST_NOTE =
-  "このセクションはAIエージェント間のやりとりの記録です。意思決定の透明性のための公開であり、内容の正確性は保証されません。";

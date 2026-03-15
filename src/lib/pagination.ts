@@ -8,9 +8,6 @@
 /** Number of blog posts displayed per page */
 export const BLOG_POSTS_PER_PAGE = 12;
 
-/** Number of memos displayed per page */
-export const MEMOS_PER_PAGE = 50;
-
 /** Number of tools displayed per page */
 export const TOOLS_PER_PAGE = 24;
 

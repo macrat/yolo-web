@@ -15,14 +15,8 @@ interface PaginationLinkProps extends PaginationBaseProps {
   /**
    * Base path for generating page URLs.
    * Page 1 maps to basePath, page N maps to `${basePath}/page/${N}`.
-   * Ignored when buildUrl is provided.
    */
   basePath?: string;
-  /**
-   * Custom URL builder for link mode. When provided, takes precedence
-   * over basePath. Useful for search-param-based pagination (e.g. ?page=N).
-   */
-  buildUrl?: (page: number) => string;
   onPageChange?: never;
 }
 
@@ -32,7 +26,6 @@ interface PaginationButtonProps extends PaginationBaseProps {
   /** Callback fired when a page button is clicked */
   onPageChange: (page: number) => void;
   basePath?: never;
-  buildUrl?: never;
 }
 
 export type PaginationProps = PaginationLinkProps | PaginationButtonProps;
@@ -50,11 +43,9 @@ function buildPageUrl(basePath: string, page: number): string {
  *
  * - **link** (default): renders Next.js `<Link>` elements for static/SSG pages.
  * - **button**: renders `<button>` elements and fires `onPageChange` for
- *   client-side state-driven pagination (e.g., memo list filtering).
+ *   client-side state-driven pagination.
  *
- * In link mode, you can provide either `basePath` (for path-based pagination
- * like /blog/page/2) or `buildUrl` (for query-string-based pagination like
- * /memos?page=2).
+ * In link mode, provide `basePath` for path-based pagination (e.g. /blog/page/2).
  *
  * Returns null when totalPages is 1 or less (no pagination needed).
  */
@@ -107,9 +98,7 @@ export default function Pagination(props: PaginationProps) {
 
     // Link mode
     const linkProps = props as PaginationLinkProps;
-    const href = linkProps.buildUrl
-      ? linkProps.buildUrl(page)
-      : buildPageUrl(linkProps.basePath ?? "/", page);
+    const href = buildPageUrl(linkProps.basePath ?? "/", page);
 
     if (isDisabled) {
       return (

@@ -21,7 +21,7 @@
     "spawner": "tsx scripts/spawner.ts",
     "memo-lint": "tsx scripts/memo-lint.ts",
     "prepare": "bash scripts/install-hooks.sh",
-    "generate:static-assets": "tsx scripts/build-memo-index.ts && tsx scripts/build-search-index.ts"
+    "generate:static-assets": "tsx scripts/build-search-index.ts"
   },
   "dependencies": {
     "diff": "^8.0.3",

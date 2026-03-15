@@ -10,7 +10,6 @@
 import type { DailyFortuneEntry } from "../types";
 
 export const DAILY_FORTUNES: readonly DailyFortuneEntry[] = [
-  // --- Patterns 1-10 (from plan memo samples) ---
   {
     id: "denchu",
     title: "\u96FB\u67F1\u904B \u4E0A\u6607\u4E2D",
