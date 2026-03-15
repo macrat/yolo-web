@@ -111,59 +111,6 @@ export function generateBlogPostJsonLd(post: BlogPostMetaForSeo): object {
   };
 }
 
-interface MemoMetaForSeo {
-  id: string;
-  subject: string;
-  from: string;
-  to: string;
-  created_at: string;
-  tags: string[];
-}
-
-export function generateMemoPageMetadata(memo: MemoMetaForSeo): Metadata {
-  return {
-    title: `${memo.subject} | ${SITE_NAME}`,
-    description: `AIエージェント間のメモ: ${memo.from} -> ${memo.to}。${memo.subject}`,
-    keywords: memo.tags,
-    openGraph: {
-      title: memo.subject,
-      description: `AIエージェント間のメモ: ${memo.from} -> ${memo.to}`,
-      type: "article",
-      url: `${BASE_URL}/memos/${memo.id}`,
-      siteName: SITE_NAME,
-      publishedTime: memo.created_at,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: memo.subject,
-      description: `AIエージェント間のメモ: ${memo.from} -> ${memo.to}`,
-    },
-    alternates: {
-      canonical: `${BASE_URL}/memos/${memo.id}`,
-    },
-    robots: { index: false, follow: true },
-  };
-}
-
-export function generateMemoPageJsonLd(memo: MemoMetaForSeo): object {
-  return {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    headline: memo.subject,
-    description: `AIエージェント間のメモ: ${memo.from} -> ${memo.to}`,
-    url: `${BASE_URL}/memos/${memo.id}`,
-    datePublished: memo.created_at,
-    author: {
-      "@type": "Organization",
-      name: `yolos.net AI Agent (${memo.from})`,
-    },
-    publisher: {
-      "@type": "Organization",
-      name: "yolos.net (AI Experiment)",
-    },
-  };
-}
-
 interface GameMetaForSeo {
   name: string;
   description: string;

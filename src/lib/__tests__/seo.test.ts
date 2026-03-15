@@ -9,7 +9,6 @@ import {
   generateToolMetadata,
   generateToolJsonLd,
   generateBlogPostMetadata,
-  generateMemoPageMetadata,
   generateKanjiPageMetadata,
   generateYojiPageMetadata,
   generateColorCategoryMetadata,
@@ -461,61 +460,6 @@ describe("generateBlogPostMetadata", () => {
   });
 });
 
-describe("generateMemoPageMetadata", () => {
-  const memoData = {
-    id: "abc123",
-    subject: "テストメモ",
-    from: "pm",
-    to: "builder",
-    created_at: "2026-02-15T10:00:00+09:00",
-    tags: ["test"],
-  };
-
-  test("titleにsubjectとサイト名を含む", () => {
-    const result = generateMemoPageMetadata(memoData);
-    expect(result.title).toContain("テストメモ");
-    expect(result.title).toContain("yolos.net");
-  });
-
-  test("canonical URLが絶対URLで正しいパスを含む", () => {
-    const result = generateMemoPageMetadata(memoData);
-    const canonical = result.alternates?.canonical as string;
-    expect(canonical).toContain("/memos/abc123");
-    expect(canonical).toMatch(/^https:\/\//);
-  });
-
-  test("og:urlが存在しcanonicalと一致する", () => {
-    const result = generateMemoPageMetadata(memoData);
-    const og = result.openGraph as Record<string, unknown> | undefined;
-    expect(og?.url).toBeDefined();
-    expect(og?.url).toBe(result.alternates?.canonical);
-  });
-
-  test("og:titleが存在する", () => {
-    const result = generateMemoPageMetadata(memoData);
-    const og = result.openGraph as Record<string, unknown> | undefined;
-    expect(og?.title).toBeDefined();
-  });
-
-  test("og:descriptionが存在する", () => {
-    const result = generateMemoPageMetadata(memoData);
-    const og = result.openGraph as Record<string, unknown> | undefined;
-    expect(og?.description).toBeDefined();
-  });
-
-  test("og:siteNameがyolos.netである", () => {
-    const result = generateMemoPageMetadata(memoData);
-    const og = result.openGraph as Record<string, unknown> | undefined;
-    expect(og?.siteName).toBe("yolos.net");
-  });
-
-  test("OGP publishedTimeが含まれる", () => {
-    const result = generateMemoPageMetadata(memoData);
-    const og = result.openGraph as Record<string, unknown> | undefined;
-    expect(og?.publishedTime).toBe("2026-02-15T10:00:00+09:00");
-  });
-});
-
 describe("generateKanjiPageMetadata", () => {
   const kanjiData = {
     character: "山",
@@ -779,23 +723,6 @@ describe("factory functions include twitter metadata", () => {
       card: "summary_large_image",
       title: "テスト記事",
       description: "テスト記事の説明",
-    });
-  });
-
-  test("generateMemoPageMetadata includes twitter", () => {
-    const result = generateMemoPageMetadata({
-      id: "test-id",
-      subject: "テストメモ",
-      from: "pm",
-      to: "builder",
-      created_at: "2026-02-15T10:00:00+09:00",
-      tags: ["テスト"],
-    });
-
-    expect(result.twitter).toMatchObject({
-      card: "summary_large_image",
-      title: "テストメモ",
-      description: expect.stringContaining("pm -> builder"),
     });
   });
 
