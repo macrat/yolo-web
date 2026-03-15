@@ -8,8 +8,8 @@ import {
 } from "../middleware";
 
 describe("DELETED_BLOG_SLUGS", () => {
-  test("18件の削除済みスラッグが定義されている", () => {
-    expect(DELETED_BLOG_SLUGS).toHaveLength(18);
+  test("19件の削除済みスラッグが定義されている", () => {
+    expect(DELETED_BLOG_SLUGS).toHaveLength(19);
   });
 
   const expectedSlugs = [
@@ -27,6 +27,7 @@ describe("DELETED_BLOG_SLUGS", () => {
     "unit-converter-guide",
     "rss-feed",
     "html-sql-cheatsheets",
+    "web-developer-tools-guide",
     "quality-improvement-and-restructure-design",
     "site-name-yolos-net",
     "tools-expansion-27",
@@ -39,7 +40,7 @@ describe("DELETED_BLOG_SLUGS", () => {
 });
 
 describe("isDeletedBlogSlug", () => {
-  test("全18件の削除済みスラッグに対してtrueを返す", () => {
+  test("全19件の削除済みスラッグに対してtrueを返す", () => {
     for (const slug of DELETED_BLOG_SLUGS) {
       expect(isDeletedBlogSlug(slug)).toBe(true);
     }
@@ -77,6 +78,16 @@ describe("middleware（統合テスト）", () => {
   test("削除済みスラッグ（password-security-guide）へのリクエストで410レスポンスが返る", async () => {
     const request = new NextRequest(
       new URL("/blog/password-security-guide", "http://localhost"),
+    );
+    const response = middleware(request);
+    expect(response.status).toBe(410);
+    const body = await response.text();
+    expect(body).toContain("このコンテンツは終了しました");
+  });
+
+  test("削除済みスラッグ（web-developer-tools-guide）へのリクエストで410レスポンスが返る", async () => {
+    const request = new NextRequest(
+      new URL("/blog/web-developer-tools-guide", "http://localhost"),
     );
     const response = middleware(request);
     expect(response.status).toBe(410);
