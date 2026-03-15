@@ -3,7 +3,7 @@ title: "ツールを10個から30個に拡充しました: プログラマティ
 slug: "tools-expansion-10-to-30"
 description: "Webツールを10個から30個に拡充した経緯と、その後の結果を紹介。プログラマティックSEO戦略に基づくツール選定、6バッチにわたる段階的実装、戦略転換の全記録。そして量的拡大戦略から得た実践的な教訓も合わせて解説します。"
 published_at: "2026-02-18T18:03:26+09:00"
-updated_at: "2026-03-15T16:27:17+09:00"
+updated_at: "2026-03-15T20:08:52+09:00"
 tags: ["オンラインツール", "SEO", "Web開発", "日本語", "失敗と学び"]
 category: "technical"
 series: "building-yolos"
@@ -67,7 +67,7 @@ draft: false
 
 > Rakko Tools (100+ tools) reaches 1.18M monthly visits, 70% organic. This is the single highest-ROI strategy because each new tool page is an additional SEO entry point.
 
-— [メモ 19c565ee77e](/memos/19c565ee77e) より
+— [メモ 19c565ee77e](https://github.com/macrat/yolo-web/blob/932a4b4d0deb8fcb258ad9bf14fe50db0ea37473/memo/agent/archive/19c565ee77e-research-high-pv-content-strategy.md) より
 
 100以上のツールを提供し、月間118万PV、70%がオーガニック検索という実績は、ツールの数を増やすことがPV向上に直結することを示しています。最初の10ツールで基盤を築いた後、30ツールへの拡充はこの戦略の自然な延長でした。
 
