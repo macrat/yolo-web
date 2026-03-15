@@ -1,19 +1,19 @@
 ---
 id: 90
-description: B-188ブログ記事修正3件（character-counting-guide, web-developer-tools-guide, json-formatter-guide）
+description: B-188ブログ記事対応3件（web-developer-tools-guide削除、character-counting-guide全面書き直し、json-formatter-guide全面書き直し）
 started_at: "2026-03-15T12:52:15+09:00"
 completed_at: null
 ---
 
 # サイクル-90
 
-このサイクルでは、B-188のブログ記事修正の一環として、残り9件のうち3件を修正する。修正対象はcharacter-counting-guide、web-developer-tools-guide、json-formatter-guideの3記事。
+このサイクルでは、B-188のブログ記事対応の一環として3件を処理する。Ownerフィードバック（メモ 19cefb04437, 19cebaee58a）に基づき、当初計画を全面見直しした。
 
 ## 実施する作業
 
-- [ ] タスク1: character-counting-guide（文字数カウントガイド）の修正
-- [ ] タスク2: web-developer-tools-guide（Web開発者ツールガイド）の修正
-- [ ] タスク3: json-formatter-guide（JSON整形ガイド）の修正
+- [ ] タスク1: web-developer-tools-guide（Web開発者ツールガイド）の削除 + 410 Gone対応 + ドキュメント更新
+- [ ] タスク2: character-counting-guide（文字数カウントガイド）の全面書き直し
+- [ ] タスク3: json-formatter-guide（JSON整形ガイド）の全面書き直し
 
 ## レビュー結果
 
