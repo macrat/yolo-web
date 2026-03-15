@@ -146,11 +146,6 @@ const staticPages: Array<{
       import("@/app/blog/page").then((m) => m.metadata as Metadata),
   },
   {
-    path: "/memos",
-    importMeta: () =>
-      import("@/app/memos/page").then((m) => m.metadata as Metadata),
-  },
-  {
     path: "/quiz",
     importMeta: () =>
       import("@/app/quiz/page").then((m) => m.metadata as Metadata),
@@ -199,18 +194,6 @@ describe("静的metadataページのSEO検証", () => {
 // -- 動的generateMetadataページのテスト --
 
 describe("動的metadataページのSEO検証", () => {
-  test("/memos/thread/[id]: SEO必須項目が存在する", async () => {
-    const { getAllThreadRootIds } = await import("@/memos/_lib/memos");
-    const { generateMetadata } = await import("@/app/memos/thread/[id]/page");
-    const threadIds = getAllThreadRootIds();
-    if (threadIds.length === 0) return; // データがなければスキップ
-    const id = threadIds[0];
-    const meta = await generateMetadata({
-      params: Promise.resolve({ id }),
-    });
-    assertSeoMetadata(meta, `/memos/thread/${id}`, "/memos/thread/[id]");
-  });
-
   test("/blog/page/[page]: SEO必須項目が存在する", async () => {
     const { getAllBlogPosts } = await import("@/blog/_lib/blog");
     const { paginate, BLOG_POSTS_PER_PAGE } = await import("@/lib/pagination");
@@ -393,19 +376,6 @@ describe("動的metadataページのSEO検証", () => {
       params: Promise.resolve({ slug }),
     });
     assertSeoMetadata(meta, `/blog/${slug}`, "/blog/[slug]");
-  });
-
-  test("/memos/[id]: SEO必須項目が存在する", async () => {
-    const { getAllPublicMemoIds } = await import("@/memos/_lib/memos");
-    const ids = getAllPublicMemoIds();
-    if (ids.length === 0) return; // データがなければスキップ
-    const id = ids[0];
-
-    const { generateMetadata } = await import("@/app/memos/[id]/page");
-    const meta = await generateMetadata({
-      params: Promise.resolve({ id }),
-    });
-    assertSeoMetadata(meta, `/memos/${id}`, "/memos/[id]");
   });
 
   test("/quiz/[slug]: SEO必須項目が存在する", async () => {
