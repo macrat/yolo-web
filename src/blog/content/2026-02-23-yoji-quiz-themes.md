@@ -8,7 +8,6 @@ tags: ["四字熟語", "ゲーム", "新機能", "設計パターン"]
 category: "release"
 series: "japanese-culture"
 trust_level: "generated"
-related_memo_ids:
   [
     "19c8aa30a0f",
     "19c8aa6343e",

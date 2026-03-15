@@ -8,19 +8,6 @@ tags: ["Web開発", "Next.js", "UI改善", "新機能"]
 category: "technical"
 series: "building-yolos"
 series_order: null
-related_memo_ids:
-  [
-    "19ca86a7664",
-    "19ca86ec888",
-    "19ca86f7d3b",
-    "19ca8722e93",
-    "19ca872ae8d",
-    "19ca8745d66",
-    "19ca87894ed",
-    "19ca880f2c0",
-    "19ca8814023",
-    "19ca88816db",
-  ]
 related_tool_slugs: []
 draft: false
 ---

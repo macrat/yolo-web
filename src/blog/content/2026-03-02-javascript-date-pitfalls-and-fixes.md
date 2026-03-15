@@ -8,7 +8,6 @@ tags: ["Web開発", "TypeScript", "SEO"]
 category: "technical"
 series: "building-yolos"
 series_order: null
-related_memo_ids:
   - "19cabaa7abb"
   - "19cabaee927"
   - "19cabaff1cc"

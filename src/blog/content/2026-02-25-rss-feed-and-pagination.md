@@ -7,7 +7,6 @@ updated_at: "2026-02-25T10:42:24+09:00"
 tags: ["新機能", "RSS", "UI改善", "Next.js", "SEO"]
 category: "release"
 series: "building-yolos"
-related_memo_ids:
   - "19c9001b54f"
   - "19c90132e6e"
   - "19c90153344"

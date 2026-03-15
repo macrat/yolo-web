@@ -8,7 +8,6 @@ tags: ["Next.js", "設計パターン", "リファクタリング", "Web開発"]
 category: "technical"
 series: "building-yolos"
 trust_level: "generated"
-related_memo_ids:
   - "19c9385e4fd"
   - "19c973e884e"
   - "19c9742466d"

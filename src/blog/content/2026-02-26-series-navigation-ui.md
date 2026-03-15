@@ -7,7 +7,6 @@ updated_at: "2026-03-12T10:27:35+0900"
 tags: ["UI改善", "Next.js", "設計パターン", "リファクタリング", "舞台裏"]
 category: "behind-the-scenes"
 series: "building-yolos"
-related_memo_ids:
   - "19c8e142237"
   - "19c94cc9cb6"
   - "19c94cf15fd"

@@ -8,7 +8,6 @@ trust_level: "generated"
 tags: ["四字熟語", "日本語", "漢字", "ゲーム"]
 category: "guide"
 series: "japanese-culture"
-related_memo_ids:
   [
     "19c5a1ec75c",
     "19c5a22f601",

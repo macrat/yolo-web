@@ -13,7 +13,6 @@ function makeMeta(
     updated_at: "2026-01-01",
     tags: [],
     category: "technical",
-    related_memo_ids: [],
     related_tool_slugs: [],
     draft: false,
     readingTime: 5,

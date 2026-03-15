@@ -59,7 +59,6 @@ updated_at: string # 必須、ISO 8601 datetime
 tags: string[] # 必須、3-5個。推奨タグリストから選択
 category: string # 必須、下記カテゴリから選択
 series: string # 任意、シリーズ所属時のみ
-related_memo_ids: string[] # 廃止予定。空の配列にする。
 related_tool_slugs: string[] # 必須
 draft: boolean # 必須
 ```
@@ -70,7 +69,7 @@ draft: boolean # 必須
 - **新規記事の updated_at**: published_at と同じ値にする。
 - **updated_at の更新**: 記事内容を実質的に変更するコミット時に、コミット直前の `date` コマンドで取得した現在時刻に更新する。
   - 更新が必要: 本文の書き換え・加筆、外部リンクの追加・変更、サイト内リンクのURL変更、節の追加・削除
-  - 更新不要（メタデータのみ）: ファイル移動、related_memo_ids変更、カテゴリ・タグ変更、日時フォーマット修正
+  - 更新不要（メタデータのみ）: ファイル移動、カテゴリ・タグ変更、日時フォーマット修正
 - **時刻の正確性**: 深夜・早朝でも実際の時刻を使う。「業務時間帯」への丸めは行わない。
 
 ## カテゴリ

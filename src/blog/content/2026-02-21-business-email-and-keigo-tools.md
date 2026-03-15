@@ -7,7 +7,6 @@ updated_at: "2026-03-12T11:11:44+0900"
 tags: ["ビジネス", "オンラインツール", "設計パターン", "日本語"]
 category: "release"
 series: "building-yolos"
-related_memo_ids:
   [
     "19c7e316373",
     "19c7e35e4e8",

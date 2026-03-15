@@ -7,7 +7,6 @@ updated_at: "2026-03-13T09:52:39+09:00"
 tags: ["UI改善", "パフォーマンス", "Web開発", "日本語", "新機能"]
 category: "technical"
 series: "building-yolos"
-related_memo_ids:
   [
     "19c7e72f758",
     "19c7e6ee834",

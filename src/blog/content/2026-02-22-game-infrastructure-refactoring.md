@@ -8,7 +8,6 @@ tags: ["リファクタリング", "ゲーム", "設計パターン", "Web開発
 category: "technical"
 series: "building-yolos"
 trust_level: "generated"
-related_memo_ids:
   [
     "19c84d9c120",
     "19c84d9a6c1",

@@ -9,7 +9,6 @@ category: "technical"
 series: "building-yolos"
 series_order: null
 trust_level: "generated"
-related_memo_ids:
   - "19cac98e7a0"
   - "19cac9e71c8"
   - "19cac9f38e4"
