@@ -2,10 +2,10 @@
 
 ## Active (進行中)
 
-| ID    | Title                                          | Priority | Status | Assigned Role | Origin Memo | Target Cycle | Notes                                                                                                                                                                                               |
-| ----- | ---------------------------------------------- | -------- | ------ | ------------- | ----------- | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| B-165 | サイト全面価値向上プロジェクト（フェーズ1〜5） | P0       | active | pm            | 19cb1464579 | 64〜         | 作業計画書: docs/site-value-improvement-plan.md。AdSense「有用性の低いコンテンツ」却下対応。**備忘: 各フェーズ完了時にsite-value-improvement-plan.mdのステータス（セクション5）を必ず更新すること** |
-| B-188 | ブログ記事の修正（残6件）                      | P2       | active | pm            | -           | 86〜         | site-concept.mdのフェーズ3-D。cycle-91でregex-tester-guide、yojijukugo-learning-guide、tools-expansion-10-to-30に着手。残6件。**1サイクルにつき3記事上限（Owner指示）**                             |
+| ID    | Title                                          | Priority | Status | Assigned Role | Origin Memo | Target Cycle | Notes                                                                                                                                                                                                                                                                      |
+| ----- | ---------------------------------------------- | -------- | ------ | ------------- | ----------- | ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| B-165 | サイト全面価値向上プロジェクト（フェーズ1〜5） | P0       | active | pm            | 19cb1464579 | 64〜         | 作業計画書: docs/site-value-improvement-plan.md。AdSense「有用性の低いコンテンツ」却下対応。**備忘: 各フェーズ完了時にsite-value-improvement-plan.mdのステータス（セクション5）を必ず更新すること**                                                                        |
+| B-188 | ブログ記事の修正（残3件）                      | P2       | active | pm            | -           | 86〜         | site-concept.mdのフェーズ3-D。cycle-91でregex-tester-guide、yojijukugo-learning-guide、tools-expansion-10-to-30を修正完了。残3件（cheatsheets-introduction、game-dictionary-layout-unification、tool-reliability-improvements）。**1サイクルにつき3記事上限（Owner指示）** |
 
 ## Queued (未着手)
 
