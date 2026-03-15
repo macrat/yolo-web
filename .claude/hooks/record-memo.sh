@@ -58,7 +58,3 @@ ${FRONTMATTER_END}
 
 ${BODY}
 EOF
-
-echo "メッセージはメモID ${ID} として記録されました。"
-echo "あとから読みたくなったら \`npm run memo read ${ID}\` で確認できます。"
-echo "サブエージェントにこのメモを見せたいときは、上記のコマンドを伝えてください。"
