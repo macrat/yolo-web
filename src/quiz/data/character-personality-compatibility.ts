@@ -1,13 +1,18 @@
 import type { CompatibilityEntry } from "../types";
+import { sharedArchetypeCompatibility } from "./character-personality-compat-shared";
+import { differentArchetypeCompatibility } from "./character-personality-compat-different";
 
 /**
  * Compatibility matrix for all 300 type combinations of the character personality quiz.
  * Keys are sorted pairs joined with "--" (e.g. "academic-artist--blazing-canvas").
  *
  * Batch 1 (task-6): Self-pairs — 24 entries (same character × same character).
- * Theme: "似た者同士あるある" — amplified strengths and resonating quirks, depicted with humor.
+ * Batch 2 (task-7): Shared-archetype pairs — 124 entries (at least one shared archetype).
+ * Batch 3 (task-8): Different-archetype pairs — 152 entries (no shared archetype).
+ *
+ * Theme for Batch 1: "似た者同士あるある" — amplified strengths and resonating quirks, depicted with humor.
  */
-export const compatibilityMatrix: Record<string, CompatibilityEntry> = {
+const selfPairCompatibility: Record<string, CompatibilityEntry> = {
   // ─── Batch 1: Self-pairs (24 entries) ────────────────────────────────────
 
   // #1 blazing-strategist × blazing-strategist
@@ -225,4 +230,16 @@ export const compatibilityMatrix: Record<string, CompatibilityEntry> = {
     description:
       "普段は後方でお互いの顔色を確認し合っている。いざという時、0秒で二人が同時に前に出る。終わった後まず「あなた大丈夫?」と互いに確認して、自分の心拍数を落ち着かせるのは最後の最後。",
   },
+};
+
+/**
+ * Merged compatibility matrix containing all 300 entries:
+ *   - 24 self-pairs
+ *   - 124 shared-archetype pairs
+ *   - 152 completely-different-archetype pairs
+ */
+export const compatibilityMatrix: Record<string, CompatibilityEntry> = {
+  ...selfPairCompatibility,
+  ...sharedArchetypeCompatibility,
+  ...differentArchetypeCompatibility,
 };
