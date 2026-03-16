@@ -112,7 +112,7 @@ test("Achievements page renders daily progress", () => {
   ).toBeInTheDocument();
   // Should show remaining count message
   expect(
-    screen.getByText(/あと16つで今日の全コンプリート/),
+    screen.getByText(/あと17つで今日の全コンプリート/),
   ).toBeInTheDocument();
 });
 

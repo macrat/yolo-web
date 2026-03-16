@@ -12,6 +12,7 @@ import characterFortuneQuiz from "./data/character-fortune";
 import animalPersonalityQuiz from "./data/animal-personality";
 import scienceThinkingQuiz from "./data/science-thinking";
 import japaneseCultureQuiz from "./data/japanese-culture";
+import characterPersonalityQuiz from "./data/character-personality";
 
 const quizEntries: QuizDefinition[] = [
   kanjiLevelQuiz,
@@ -27,6 +28,7 @@ const quizEntries: QuizDefinition[] = [
   animalPersonalityQuiz,
   scienceThinkingQuiz,
   japaneseCultureQuiz,
+  characterPersonalityQuiz,
 ];
 
 /** Map of slug -> QuizDefinition for O(1) lookup */
