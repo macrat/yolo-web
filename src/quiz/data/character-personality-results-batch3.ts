@@ -16,15 +16,7 @@
  *   artist     = #7c3aed
  */
 
-interface CharacterResult {
-  id: string;
-  title: string;
-  description: string;
-  color: string;
-  icon: string;
-}
-
-export const resultsBatch3: CharacterResult[] = [
+export const resultsBatch3 = [
   {
     // #21 — artist × artist (同型強化: 純粋アーティスト)
     // artist語り口を基調。感性・内省・「言葉にできない」感覚が二重強化。
