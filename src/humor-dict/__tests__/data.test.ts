@@ -113,6 +113,32 @@ describe("relatedSlugs coverage", () => {
   });
 });
 
+describe("relatedSlugs distribution", () => {
+  test("each slug is referenced 2 to 5 times by other entries", () => {
+    const entries = getAllEntries();
+    const refCount: Record<string, number> = {};
+    for (const entry of entries) {
+      refCount[entry.slug] = 0;
+    }
+    for (const entry of entries) {
+      for (const related of entry.relatedSlugs) {
+        refCount[related] = (refCount[related] ?? 0) + 1;
+      }
+    }
+    for (const entry of entries) {
+      const count = refCount[entry.slug];
+      expect(
+        count,
+        `slug "${entry.slug}" is referenced ${count} time(s) — expected 2-5`,
+      ).toBeGreaterThanOrEqual(2);
+      expect(
+        count,
+        `slug "${entry.slug}" is referenced ${count} time(s) — expected 2-5`,
+      ).toBeLessThanOrEqual(5);
+    }
+  });
+});
+
 describe("entry content quality", () => {
   test("definition is 50-150 characters", () => {
     for (const entry of getAllEntries()) {
