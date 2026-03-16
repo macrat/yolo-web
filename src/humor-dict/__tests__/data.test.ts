@@ -70,3 +70,44 @@ describe("getAllSlugs", () => {
     expect(slugs).toEqual(entrySlugs);
   });
 });
+
+describe("entry count", () => {
+  test("has at least 10 entries", () => {
+    expect(getAllEntries().length).toBeGreaterThanOrEqual(10);
+  });
+});
+
+describe("entry content quality", () => {
+  test("definition is 50-150 characters", () => {
+    for (const entry of getAllEntries()) {
+      expect(entry.definition.length).toBeGreaterThanOrEqual(50);
+      expect(entry.definition.length).toBeLessThanOrEqual(150);
+    }
+  });
+
+  test("explanation is 150-350 characters", () => {
+    for (const entry of getAllEntries()) {
+      expect(entry.explanation.length).toBeGreaterThanOrEqual(150);
+      expect(entry.explanation.length).toBeLessThanOrEqual(350);
+    }
+  });
+
+  test("example is 50-150 characters", () => {
+    for (const entry of getAllEntries()) {
+      expect(entry.example.length).toBeGreaterThanOrEqual(50);
+      expect(entry.example.length).toBeLessThanOrEqual(150);
+    }
+  });
+
+  test("each entry has at least one relatedSlug", () => {
+    for (const entry of getAllEntries()) {
+      expect(entry.relatedSlugs.length).toBeGreaterThanOrEqual(1);
+    }
+  });
+
+  test("slug contains only lowercase alphanumeric and hyphens", () => {
+    for (const entry of getAllEntries()) {
+      expect(entry.slug).toMatch(/^[a-z0-9-]+$/);
+    }
+  });
+});
