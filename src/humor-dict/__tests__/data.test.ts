@@ -75,6 +75,42 @@ describe("entry count", () => {
   test("has at least 20 entries", () => {
     expect(getAllEntries().length).toBeGreaterThanOrEqual(20);
   });
+
+  test("has exactly 30 entries", () => {
+    expect(getAllEntries().length).toBe(30);
+  });
+});
+
+describe("relatedSlugs coverage", () => {
+  test("each relatedSlug in any entry must refer to an existing slug", () => {
+    const allSlugs = new Set(getAllEntries().map((e) => e.slug));
+    for (const entry of getAllEntries()) {
+      for (const related of entry.relatedSlugs) {
+        expect(allSlugs.has(related)).toBe(true);
+      }
+    }
+  });
+
+  test("each entry is referenced by at least one other entry's relatedSlugs", () => {
+    const entries = getAllEntries();
+    const allSlugs = entries.map((e) => e.slug);
+    const referenced = new Set<string>();
+    for (const entry of entries) {
+      for (const related of entry.relatedSlugs) {
+        referenced.add(related);
+      }
+    }
+    for (const slug of allSlugs) {
+      expect(referenced.has(slug)).toBe(true);
+    }
+  });
+
+  test("each entry has 2 to 3 relatedSlugs", () => {
+    for (const entry of getAllEntries()) {
+      expect(entry.relatedSlugs.length).toBeGreaterThanOrEqual(2);
+      expect(entry.relatedSlugs.length).toBeLessThanOrEqual(3);
+    }
+  });
 });
 
 describe("entry content quality", () => {
