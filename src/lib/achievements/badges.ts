@@ -18,7 +18,7 @@ const GAME_IDS = [
   "yoji-kimeru",
 ] as const;
 
-/** Quiz content IDs (13 quizzes, prefixed with "quiz-") */
+/** Quiz content IDs (14 quizzes, prefixed with "quiz-") */
 const QUIZ_IDS = [
   "quiz-traditional-color",
   "quiz-yoji-personality",
@@ -33,6 +33,7 @@ const QUIZ_IDS = [
   "quiz-animal-personality",
   "quiz-science-thinking",
   "quiz-japanese-culture",
+  "quiz-character-personality",
 ] as const;
 
 /** Fortune content IDs (daily fortune) */
@@ -41,7 +42,7 @@ const FORTUNE_IDS = ["fortune-daily"] as const;
 /** Humor dictionary content IDs (the whole dictionary counts as one content) */
 const HUMOR_DICT_IDS = ["humor-dictionary"] as const;
 
-/** All content IDs tracked by the achievement system (19 total) */
+/** All content IDs tracked by the achievement system (20 total) */
 export const ALL_CONTENT_IDS: readonly string[] = [
   ...GAME_IDS,
   ...QUIZ_IDS,
