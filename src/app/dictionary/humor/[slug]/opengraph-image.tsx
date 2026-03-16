@@ -58,6 +58,7 @@ export default async function OpenGraphImage({ params }: Props) {
       {/* 辞書カード風の装飾ライン */}
       <div
         style={{
+          display: "flex",
           position: "absolute",
           top: 0,
           left: 0,
@@ -70,6 +71,7 @@ export default async function OpenGraphImage({ params }: Props) {
       {/* ラベル */}
       <div
         style={{
+          display: "flex",
           fontSize: 20,
           color: "#f59e0b",
           fontWeight: 700,
@@ -92,6 +94,7 @@ export default async function OpenGraphImage({ params }: Props) {
       >
         <div
           style={{
+            display: "flex",
             fontSize: 88,
             fontWeight: 700,
             lineHeight: 1.1,
@@ -103,6 +106,7 @@ export default async function OpenGraphImage({ params }: Props) {
         {reading && (
           <div
             style={{
+              display: "flex",
               fontSize: 32,
               color: "#94a3b8",
               fontWeight: 400,
@@ -126,6 +130,7 @@ export default async function OpenGraphImage({ params }: Props) {
       >
         <div
           style={{
+            display: "flex",
             width: 4,
             minHeight: 48,
             backgroundColor: "#f59e0b",
@@ -136,6 +141,7 @@ export default async function OpenGraphImage({ params }: Props) {
         />
         <div
           style={{
+            display: "flex",
             fontSize: 30,
             lineHeight: 1.7,
             color: "#cbd5e1",
@@ -149,6 +155,7 @@ export default async function OpenGraphImage({ params }: Props) {
       {/* サイト名 */}
       <div
         style={{
+          display: "flex",
           position: "absolute",
           bottom: 48,
           right: 72,
