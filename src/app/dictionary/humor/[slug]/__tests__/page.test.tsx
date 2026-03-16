@@ -69,6 +69,10 @@ vi.mock("@/components/common/TrustLevelBadge", () => ({
   default: () => <div>TrustLevelBadge</div>,
 }));
 
+vi.mock("@/humor-dict/_components/RecordPlay", () => ({
+  default: () => null,
+}));
+
 describe("HumorDictEntryPage", () => {
   async function renderPage(slug: string) {
     const { default: Page } = await import("../page");
@@ -93,10 +97,12 @@ describe("HumorDictEntryPage", () => {
     );
   });
 
-  test("passes contentType='humor-dict' to ShareButtons", async () => {
+  test("passes contentType='humor-dictionary' to ShareButtons", async () => {
     await renderPage("morning");
     const shareButtons = screen.getByTestId("share-buttons");
-    expect(shareButtons.getAttribute("data-content-type")).toBe("humor-dict");
+    expect(shareButtons.getAttribute("data-content-type")).toBe(
+      "humor-dictionary",
+    );
   });
 
   test("passes contentId=slug to ShareButtons", async () => {
