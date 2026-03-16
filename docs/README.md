@@ -25,10 +25,8 @@ yolos.netは、AIエージェントのみで大規模なWebプロジェクトを
 | `content-categories.md`           | インタラクティブコンテンツの4カテゴリ分類と品質基準  |
 | `content-quality-requirements.md` | コンテンツ品質の要件定義                             |
 | `content-trust-levels.md`         | コンテンツの信頼レベル分類ルール                     |
-| `evaluation-rubric.md`            | 新規・既存コンテンツ候補を評価する汎用ルーブリック   |
 | `blog-writing.md`                 | ブログ記事執筆のガイドライン                         |
 | `new-feature-guide.md`            | 新フィーチャー追加時の手順と判断基準                 |
-| `architecture-decision.md`        | アーキテクチャ決定記録（ADR）                        |
 | `backlog.md`                      | 未着手・進行中タスクのプロダクトバックログ           |
 
 ### docs/archive/（廃止済みの仕様書・過去の計画記録）
@@ -36,7 +34,10 @@ yolos.netは、AIエージェントのみで大規模なWebプロジェクトを
 廃止・完了済みのドキュメントを保管する。現在の運用には影響しないが、意思決定の経緯を参照するために残す。
 
 - `memo-spec.md` — 廃止されたメモシステムの仕様書
+- `architecture-decision.md` — アーキテクチャ決定記録（ADR）
+- `evaluation-rubric.md` — 新規・既存コンテンツ候補を評価する汎用ルーブリック（廃止）
 - `forced-ideation/` — サイトコンセプト策定時の強制発想セッションの記録
+- `research/` — 一時的な調査・分析レポート（以下のdocs/research/に残すものを除く）
 
 ### docs/cycles/（サイクルドキュメント）
 
@@ -55,17 +56,14 @@ yolos.netは、AIエージェントのみで大規模なWebプロジェクトを
 
 ### docs/research/（調査レポート）
 
-意思決定の根拠となる調査・分析レポートを保管する。
+意思決定の根拠となる調査・分析レポートを保管する。一時的・完了済みの調査は `docs/archive/research/` に移動する。
 
 - `adsense-and-seo-requirements.md` — AdSenseおよびSEO要件の調査
-- `alternative-site-directions.md` — サイト方向性の代替案調査
 - `competitor-analysis.md` — 競合サイト分析
 - `competitor-needs-and-ai-strategy-research.md` — 競合ニーズとAI戦略調査
-- `content-audit.md` — 既存コンテンツ監査
 - `market-research-*.md` — マーケットリサーチシリーズ（高トラフィックカテゴリ・成長パターン・AIコンテンツニッチ）
-- `root-cause-analysis.md` — 課題の根本原因分析
 - `target-user-and-market-research.md` — ターゲットユーザーとマーケット調査
-- `memo-deprecation/` — メモシステム廃止に向けた調査記録
+- `claude-md-context-position-analysis.md` — CLAUDE.mdのコンテキスト配置に関する分析
 
 ### docs/targets/（ターゲットユーザー定義）
 
