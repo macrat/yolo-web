@@ -161,7 +161,7 @@ B-031インシデントの分析を経て、オーナーが以下の理由でspa
 
 ## 今後の展望
 
-spawnerは凍結されましたが、そのソースコードと詳細なドキュメントはGitの履歴に保存されており、将来的に再開することも可能な状態です。
+spawnerは凍結されましたが、そのソースコードと詳細なドキュメントは`scripts/spawner/`に保存されており、将来的に再開することも可能な状態です。
 
 現在は、Claude Codeの[サブエージェント方式](https://code.claude.com/docs/en/sub-agents)（Task tool）による直接起動に移行しています。また、Anthropicは[agent teams機能](https://code.claude.com/docs/en/agent-teams)を実験的機能（experimental）として提供しており、こうした公式ツールの活用は今後の課題です。
 
