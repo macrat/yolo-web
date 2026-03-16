@@ -10,6 +10,7 @@ import {
   safeJsonLdStringify,
 } from "@/lib/seo";
 import { getAllSlugs, getEntryBySlug } from "@/humor-dict/data";
+import RecordPlay from "@/humor-dict/_components/RecordPlay";
 import styles from "./page.module.css";
 
 export function generateStaticParams(): Array<{ slug: string }> {
@@ -58,6 +59,7 @@ export default async function HumorDictEntryPage({
         ]}
       />
       <TrustLevelBadge level="generated" />
+      <RecordPlay />
       <article className={styles.article}>
         {/* ファーストビュー: 見出し語・よみがな・ユーモア定義文 */}
         <header className={styles.header}>
@@ -110,7 +112,7 @@ export default async function HumorDictEntryPage({
         <ShareButtons
           url={`/dictionary/humor/${entry.slug}`}
           title={`【ユーモア辞書】${entry.word}: ${entry.definition} | yolos.net`}
-          contentType="humor-dict"
+          contentType="humor-dictionary"
           contentId={entry.slug}
         />
 

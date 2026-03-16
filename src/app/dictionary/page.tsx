@@ -11,12 +11,13 @@ import styles from "./page.module.css";
 export const metadata: Metadata = {
   title: `辞典 | ${SITE_NAME}`,
   description:
-    "漢字・四字熟語・日本の伝統色を楽しく学べるオンライン辞典。読み方・意味を丁寧にまとめています。漢字80字、四字熟語101語、伝統色250色を収録。",
+    "漢字・四字熟語・日本の伝統色・ユーモア辞典を楽しめるオンライン辞典。漢字80字、四字熟語101語、伝統色250色、ユーモア定義30語を収録。",
   keywords: [
     "辞典",
     "漢字辞典",
     "四字熟語辞典",
     "伝統色辞典",
+    "ユーモア辞典",
     "漢字",
     "四字熟語",
     "伝統色",
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: `辞典 | ${SITE_NAME}`,
     description:
-      "漢字・四字熟語・日本の伝統色を楽しく学べるオンライン辞典。漢字80字、四字熟語101語、伝統色250色を収録。",
+      "漢字・四字熟語・日本の伝統色・ユーモア辞典を楽しめるオンライン辞典。漢字80字、四字熟語101語、伝統色250色、ユーモア定義30語を収録。",
     type: "website",
     url: `${BASE_URL}/dictionary`,
     siteName: SITE_NAME,
@@ -33,7 +34,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: `辞典 | ${SITE_NAME}`,
     description:
-      "漢字・四字熟語・日本の伝統色を楽しく学べるオンライン辞典。漢字80字、四字熟語101語、伝統色250色を収録。",
+      "漢字・四字熟語・日本の伝統色・ユーモア辞典を楽しめるオンライン辞典。漢字80字、四字熟語101語、伝統色250色、ユーモア定義30語を収録。",
   },
   alternates: {
     canonical: `${BASE_URL}/dictionary`,
