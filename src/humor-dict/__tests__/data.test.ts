@@ -72,8 +72,8 @@ describe("getAllSlugs", () => {
 });
 
 describe("entry count", () => {
-  test("has at least 10 entries", () => {
-    expect(getAllEntries().length).toBeGreaterThanOrEqual(10);
+  test("has at least 20 entries", () => {
+    expect(getAllEntries().length).toBeGreaterThanOrEqual(20);
   });
 });
 
