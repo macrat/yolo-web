@@ -177,6 +177,11 @@ const staticPages: Array<{
         (m) => m.metadata as Metadata,
       ),
   },
+  {
+    path: "/dictionary/humor",
+    importMeta: () =>
+      import("@/app/dictionary/humor/page").then((m) => m.metadata as Metadata),
+  },
 ];
 
 describe("静的metadataページのSEO検証", () => {
@@ -463,6 +468,24 @@ describe("動的metadataページのSEO検証", () => {
       meta,
       `/dictionary/yoji/${encodeURIComponent(yoji)}`,
       "/dictionary/yoji/[yoji]",
+    );
+  });
+
+  test("/dictionary/humor/[slug]: SEO必須項目が存在する", async () => {
+    const { getAllSlugs } = await import("@/humor-dict/data");
+    const slugs = getAllSlugs();
+    if (slugs.length === 0) return; // データがなければスキップ
+    const slug = slugs[0];
+
+    const { generateMetadata } =
+      await import("@/app/dictionary/humor/[slug]/page");
+    const meta = await generateMetadata({
+      params: Promise.resolve({ slug }),
+    });
+    assertSeoMetadata(
+      meta,
+      `/dictionary/humor/${slug}`,
+      "/dictionary/humor/[slug]",
     );
   });
 });

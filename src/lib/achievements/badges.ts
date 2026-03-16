@@ -38,11 +38,15 @@ const QUIZ_IDS = [
 /** Fortune content IDs (daily fortune) */
 const FORTUNE_IDS = ["fortune-daily"] as const;
 
-/** All content IDs tracked by the achievement system (18 total) */
+/** Humor dictionary content IDs (the whole dictionary counts as one content) */
+const HUMOR_DICT_IDS = ["humor-dictionary"] as const;
+
+/** All content IDs tracked by the achievement system (19 total) */
 export const ALL_CONTENT_IDS: readonly string[] = [
   ...GAME_IDS,
   ...QUIZ_IDS,
   ...FORTUNE_IDS,
+  ...HUMOR_DICT_IDS,
 ];
 
 /** Number of quiz content types */

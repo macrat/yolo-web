@@ -11,8 +11,8 @@ function makeStore(
 }
 
 describe("ALL_CONTENT_IDS", () => {
-  it("contains 18 content IDs (4 games + 13 quizzes + 1 fortune)", () => {
-    expect(ALL_CONTENT_IDS).toHaveLength(18);
+  it("contains 19 content IDs (4 games + 13 quizzes + 1 fortune + 1 humor-dict)", () => {
+    expect(ALL_CONTENT_IDS).toHaveLength(19);
   });
 
   it("contains all game slugs", () => {
@@ -34,6 +34,10 @@ describe("ALL_CONTENT_IDS", () => {
 
   it("contains fortune content ID", () => {
     expect(ALL_CONTENT_IDS).toContain("fortune-daily");
+  });
+
+  it("contains humor-dictionary content ID", () => {
+    expect(ALL_CONTENT_IDS).toContain("humor-dictionary");
   });
 });
 
