@@ -464,6 +464,91 @@ export function generateQuizJsonLd(meta: QuizMeta): object {
   };
 }
 
+// -- Humor Dictionary SEO helpers --
+
+interface HumorDictEntryForSeo {
+  slug: string;
+  word: string;
+  reading: string;
+  definition: string;
+}
+
+/**
+ * ユーモア辞典の一覧ページ用メタデータを生成する。
+ */
+export function generateHumorDictMetadata(): Metadata {
+  return {
+    title: `ユーモア辞典 | ${SITE_NAME}`,
+    description:
+      "日常のあらゆる言葉をユーモラスに再定義した辞典。クスッと笑える新解釈で、言葉の別の側面を楽しもう。",
+    keywords: ["ユーモア辞典", "ユーモア", "定義", "言葉", "面白い"],
+    openGraph: {
+      title: "ユーモア辞典",
+      description:
+        "日常のあらゆる言葉をユーモラスに再定義した辞典。クスッと笑える新解釈で、言葉の別の側面を楽しもう。",
+      type: "website",
+      url: `${BASE_URL}/dictionary/humor`,
+      siteName: SITE_NAME,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "ユーモア辞典",
+      description:
+        "日常のあらゆる言葉をユーモラスに再定義した辞典。クスッと笑える新解釈で、言葉の別の側面を楽しもう。",
+    },
+    alternates: {
+      canonical: `${BASE_URL}/dictionary/humor`,
+    },
+  };
+}
+
+/**
+ * ユーモア辞典の個別エントリページ用メタデータを生成する。
+ */
+export function generateHumorDictEntryMetadata(
+  entry: HumorDictEntryForSeo,
+): Metadata {
+  return {
+    title: `「${entry.word}」のユーモア定義 - ユーモア辞典 | ${SITE_NAME}`,
+    description: `${entry.reading}: ${entry.definition}`,
+    keywords: [entry.word, entry.reading, "ユーモア辞典", "ユーモア定義"],
+    openGraph: {
+      title: `「${entry.word}」のユーモア定義 - ユーモア辞典`,
+      description: `${entry.reading}: ${entry.definition}`,
+      type: "website",
+      url: `${BASE_URL}/dictionary/humor/${entry.slug}`,
+      siteName: SITE_NAME,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `「${entry.word}」のユーモア定義 - ユーモア辞典`,
+      description: `${entry.reading}: ${entry.definition}`,
+    },
+    alternates: {
+      canonical: `${BASE_URL}/dictionary/humor/${entry.slug}`,
+    },
+  };
+}
+
+/**
+ * ユーモア辞典の個別エントリページ用JSON-LDを生成する。
+ */
+export function generateHumorDictJsonLd(entry: HumorDictEntryForSeo): object {
+  return {
+    "@context": "https://schema.org",
+    "@type": "DefinedTerm",
+    name: entry.word,
+    description: `${entry.reading}: ${entry.definition}`,
+    url: `${BASE_URL}/dictionary/humor/${entry.slug}`,
+    inDefinedTermSet: {
+      "@type": "DefinedTermSet",
+      name: "ユーモア辞典",
+      url: `${BASE_URL}/dictionary/humor`,
+    },
+    inLanguage: "ja",
+  };
+}
+
 /**
  * JSON-LDオブジェクトをscript-breakout対策付きでJSON文字列に変換する。
  *

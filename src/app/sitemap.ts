@@ -8,6 +8,8 @@ import {
   YOJI_DICTIONARY_META,
   COLOR_DICTIONARY_META,
 } from "@/dictionary/_lib/dictionary-meta";
+import { getAllSlugs as getAllHumorSlugs } from "@/humor-dict/data";
+import { humorDictMeta } from "@/humor-dict/meta";
 import { allQuizMetas } from "@/quiz/registry";
 import { allGameMetas, getGamePath } from "@/games/registry";
 import { allCheatsheetMetas } from "@/cheatsheets/registry";
@@ -87,7 +89,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
   );
 
   const latestDictionaryDate = getLatestDate(
-    [KANJI_DICTIONARY_META, YOJI_DICTIONARY_META, COLOR_DICTIONARY_META],
+    [
+      KANJI_DICTIONARY_META,
+      YOJI_DICTIONARY_META,
+      COLOR_DICTIONARY_META,
+      humorDictMeta,
+    ],
     (meta, index) => getLastModifiedDate(meta, `dictionary metas[${index}]`),
     "dictionary metas",
   );
@@ -224,6 +231,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
       ),
       changeFrequency: "monthly" as const,
       priority: 0.6,
+    })),
+    {
+      url: `${BASE_URL}/dictionary/humor`,
+      lastModified: getLastModifiedDate(
+        humorDictMeta,
+        "dictionary meta (humor)",
+      ),
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    },
+    ...getAllHumorSlugs().map((slug) => ({
+      url: `${BASE_URL}/dictionary/humor/${slug}`,
+      lastModified: getLastModifiedDate(
+        humorDictMeta,
+        "dictionary meta (humor)",
+      ),
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
     })),
     {
       url: `${BASE_URL}/quiz`,
