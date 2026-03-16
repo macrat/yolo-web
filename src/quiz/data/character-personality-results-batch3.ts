@@ -1,0 +1,75 @@
+/**
+ * Character Personality Quiz — Results Batch 3 (#21–#24)
+ *
+ * Characters:
+ *   #21 ultimate-artist    (artist × artist)
+ *   #22 data-fortress      (guardian × professor)
+ *   #23 vibe-rebel         (artist × trickster)
+ *   #24 guardian-charger   (guardian × commander)
+ *
+ * Color blending reference (Q25 archetype colors):
+ *   commander  = #e11d48
+ *   professor  = #2563eb
+ *   dreamer    = #d946ef
+ *   trickster  = #f59e0b
+ *   guardian   = #059669
+ *   artist     = #7c3aed
+ */
+
+interface CharacterResult {
+  id: string;
+  title: string;
+  description: string;
+  color: string;
+  icon: string;
+}
+
+export const resultsBatch3: CharacterResult[] = [
+  {
+    // #21 — artist × artist (同型強化: 純粋アーティスト)
+    // artist語り口を基調。感性・内省・「言葉にできない」感覚が二重強化。
+    // color: artist純粋 → #7c3aed そのまま
+    id: "ultimate-artist",
+    title: "「うーん、なんか違う」を1000回繰り返す美の追求者",
+    description:
+      "ねぇ、また「なんか違う」って言ってるでしょ。わかるよ、だってあなたの感性のアンテナ、ほかの人の10倍は立ってるもんね。世の中のちょっとしたノイズが気になって、色が微妙にくすんで見えて、角度が0.5度ずれてるだけで落ち着かない。周りから見たら完成してるのに「まだ違う」って止まれないの、一番自分がよくわかってるよね。でも「言葉にできない」って言い続けながら、あなたが作り出すものは全部ちゃんと語ってるんだよ。完成しないことも、あなたの作品の一部だから。",
+    color: "#7c3aed",
+    icon: "🎨",
+  },
+  {
+    // #22 — guardian × professor (論理的守護者)
+    // guardian語り口を基調（不安げ・丁寧）、professorの論理性をブレンド。
+    // 「気のせいかも」で済ませられない、データで安心を得る性格。
+    // color: guardian=#059669とprofessor=#2563eb の中間 → #1a7a8f（青緑）
+    id: "data-fortress",
+    title: "心配の原因を全部データで証明してから対策する論理的守護者",
+    description:
+      "「気のせいかな」って流せないんだよね、あなた。気になったら根拠を調べないと、どうにも落ち着かなくて。でもそれって弱さじゃないんだよ。不安を数値に変換できたとき、ようやく「大丈夫かな?」が「大丈夫」に変わる。守り方が論理的すぎて「そこまでしなくていい」ってよく言われるかもしれないけど...たぶん気にしてるよね、あなたのことだから。気にしなくていいよ。あなたが調べ続けるおかげで、気づかないうちに何度も誰かが救われてるから。",
+    color: "#1a7a8f",
+    icon: "📊",
+  },
+  {
+    // #23 — artist × trickster (野生の芸術家)
+    // artist語り口を基調（感性・柔らか）、tricksterの「っしょ」「逆張り」をブレンド。
+    // 「計算して逆張り」(#14)との差別化: 本能で動いたら結果的に異端になっていた。
+    // color: artist=#7c3aedとtrickster=#f59e0b の中間 → #b96c4a（テラコッタ系）
+    id: "vibe-rebel",
+    title: "直感で走ったら3歩目で全員置き去りにしていた野生の芸術家",
+    description:
+      "逆張りしてるわけじゃないんだよね、あなた。ただ感性の方向に素直に走ってたら、気づいたら周りに誰もいなかった、みたいな感じでしょ。「なんでそっちに行くの?」って言われても「なんとなく?」としか答えられないし、そもそも説明するのがちょっと面倒くさい。でも刺さった時の快感、知ってるじゃん。あの「あ、届いた」って瞬間のために動いてる。共感されすぎるとなぜか少し寂しくなるあの感覚も、あなたが本物っていう証拠っしょ。",
+    color: "#b96c4a",
+    icon: "⚡",
+  },
+  {
+    // #24 — guardian × commander (前に出る守護者)
+    // guardian語り口を基調（重い責任感・不安）、commanderの行動力をブレンド。
+    // 「前進が目的」(#4)との差別化: 守るために必要な時だけ前に出る。
+    // color: guardian=#059669とcommander=#e11d48 の中間 → #6b7e58（深緑がかったオリーブ）
+    id: "guardian-charger",
+    title: "「後ろが心配だから自分が盾になる」と前に出る守護者",
+    description:
+      "本当は前に出たいわけじゃないんだよね。後ろにいて、みんなが安全かどうかを見守っていたい。でも「後ろを守るために、前に誰かが立たないといけない」ってなったとき、気づいたら自分が動いてる。怖くないわけじゃないのに、後ろが心配だからって理由だけで盾になれるの、すごいことだよ。責任感の重さを誰にも言えないまま「大丈夫、いける」って言い張る。疲れてても絶対に言わないでしょ。あなたのおかげで安心できる人がいるって、ちゃんと知っておいてね。",
+    color: "#6b7e58",
+    icon: "🛡️",
+  },
+];
