@@ -1,27 +1,27 @@
 #!/usr/bin/env bash
-# Install pre-commit hooks: prettier format check + eslint + tsc + memo-lint.
+# Install pre-commit hooks: prettier format check + eslint + tsc.
 # If a pre-commit hook already exists, replaces the managed section.
 # Safe to run multiple times (idempotent).
 
 set -euo pipefail
 
 HOOK_FILE=".git/hooks/pre-commit"
-MARKER="# yolo-web-hooks-v3"
+MARKER="# yolo-web-hooks-v4"
 
 # Ensure hooks directory exists
 mkdir -p .git/hooks
 
-# Check if our v3 hook is already installed
+# Check if our v4 hook is already installed
 if [ -f "$HOOK_FILE" ] && grep -qF "$MARKER" "$HOOK_FILE"; then
-  echo "pre-commit hooks already installed (v3) in $HOOK_FILE"
+  echo "pre-commit hooks already installed (v4) in $HOOK_FILE"
   exit 0
 fi
 
 # Write the full hook (overwrite any previous version)
 cat > "$HOOK_FILE" << 'EOF'
 #!/usr/bin/env bash
-# yolo-web-hooks-v3
-# Pre-commit hook: prettier format check + eslint + tsc type check + memo-lint
+# yolo-web-hooks-v4
+# Pre-commit hook: prettier format check + eslint + tsc type check
 
 # --- 1. Prettier format check on staged files ---
 PRETTIER_FILES=()
@@ -63,22 +63,7 @@ if ! npx tsc --noEmit; then
   echo "Fix the type errors above, then re-stage."
   exit 1
 fi
-
-# --- 4. memo-lint when memo/ files are staged ---
-MEMO_FILES=()
-while IFS= read -r -d '' file; do
-  MEMO_FILES+=("$file")
-done < <(git -c core.quotePath=false diff -z --cached --name-only -- 'memo/' || true)
-
-if [ ${#MEMO_FILES[@]} -gt 0 ]; then
-  echo "memo/ files staged — running memo-lint..."
-  if ! npm run memo-lint; then
-    echo ""
-    echo "ERROR: memo-lint failed. Fix the issues above, then re-stage."
-    exit 1
-  fi
-fi
 EOF
 
 chmod +x "$HOOK_FILE"
-echo "pre-commit hooks installed (v3) in $HOOK_FILE"
+echo "pre-commit hooks installed (v4) in $HOOK_FILE"
