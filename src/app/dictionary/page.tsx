@@ -5,6 +5,7 @@ import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { getAllKanji } from "@/dictionary/_lib/kanji";
 import { getAllYoji } from "@/dictionary/_lib/yoji";
 import { getAllColors } from "@/dictionary/_lib/colors";
+import { getAllEntries as getAllHumorEntries } from "@/humor-dict/data";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
@@ -43,6 +44,7 @@ export default function DictionaryPage() {
   const kanjiCount = getAllKanji().length;
   const yojiCount = getAllYoji().length;
   const colorCount = getAllColors().length;
+  const humorCount = getAllHumorEntries().length;
 
   return (
     <>
@@ -81,6 +83,15 @@ export default function DictionaryPage() {
             日本の伝統色の名前とカラーデータを一覧で確認できます。
           </p>
           <p className={styles.sectionCount}>{colorCount}色収録</p>
+        </Link>
+
+        <Link href="/dictionary/humor" className={styles.sectionCard}>
+          <span className={styles.sectionIcon}>笑</span>
+          <h2 className={styles.sectionTitle}>ユーモア辞典</h2>
+          <p className={styles.sectionDesc}>
+            日常のあらゆる言葉をユーモラスに再定義。クスッと笑える新解釈で、言葉の別の側面を楽しもう。
+          </p>
+          <p className={styles.sectionCount}>{humorCount}語収録</p>
         </Link>
       </div>
     </>

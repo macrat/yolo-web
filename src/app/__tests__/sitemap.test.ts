@@ -151,6 +151,22 @@ describe("sitemap", () => {
     expect(urls).toContain(`${BASE_URL}/dictionary/yoji`);
   });
 
+  test("sitemap includes humor dictionary list page", () => {
+    const entries = sitemap();
+    const urls = entries.map((e) => e.url);
+    expect(urls).toContain(`${BASE_URL}/dictionary/humor`);
+  });
+
+  test("sitemap includes humor dictionary entry pages", () => {
+    const entries = sitemap();
+    const urls = entries.map((e) => e.url);
+    // 少なくとも1つのエントリページが含まれることを確認
+    const humorEntries = urls.filter((url) =>
+      url.startsWith(`${BASE_URL}/dictionary/humor/`),
+    );
+    expect(humorEntries.length).toBeGreaterThan(0);
+  });
+
   test("sitemap does not include paginated list pages", () => {
     const entries = sitemap();
     const paginatedListPathPattern =

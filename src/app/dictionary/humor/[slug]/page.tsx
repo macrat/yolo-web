@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Breadcrumb from "@/components/common/Breadcrumb";
+import ShareButtons from "@/components/common/ShareButtons";
 import TrustLevelBadge from "@/components/common/TrustLevelBadge";
 import {
   generateHumorDictEntryMetadata,
@@ -104,6 +105,14 @@ export default async function HumorDictEntryPage({
             </ul>
           </section>
         )}
+
+        {/* SNSシェアボタン */}
+        <ShareButtons
+          url={`/dictionary/humor/${entry.slug}`}
+          title={`【ユーモア辞書】${entry.word}: ${entry.definition} | yolos.net`}
+          contentType="humor-dict"
+          contentId={entry.slug}
+        />
 
         {/* 一覧へ戻るリンク */}
         <div className={styles.backLink}>
