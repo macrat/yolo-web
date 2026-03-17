@@ -3,8 +3,8 @@
 import {
   getCompatibility,
   isValidMusicTypeId,
-} from "@/quiz/data/music-personality";
-import musicPersonalityQuiz from "@/quiz/data/music-personality";
+} from "@/play/quiz/data/music-personality";
+import musicPersonalityQuiz from "@/play/quiz/data/music-personality";
 import CompatibilitySection from "./CompatibilitySection";
 import InviteFriendButton from "./InviteFriendButton";
 

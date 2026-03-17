@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 // サイト全体のSEO一貫性が損なわれるリスクがあるため、共有層に集約している。
 import type { ToolMeta } from "@/tools/types";
 import type { CheatsheetMeta } from "@/cheatsheets/types";
-import type { QuizMeta } from "@/quiz/types";
+import type { QuizMeta } from "@/play/quiz/types";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 
 export function generateToolMetadata(meta: ToolMeta): Metadata {

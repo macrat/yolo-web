@@ -1,7 +1,7 @@
 import type { GameMeta } from "@/play/games/types";
 import { allGameMetas } from "@/play/games/registry";
-import type { QuizMeta } from "@/quiz/types";
-import { allQuizMetas } from "@/quiz/registry";
+import type { QuizMeta } from "@/play/quiz/types";
+import { allQuizMetas } from "@/play/quiz/registry";
 import type { PlayContentMeta } from "./types";
 
 /**

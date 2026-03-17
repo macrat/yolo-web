@@ -6,7 +6,7 @@ import { getAllKanji } from "@/dictionary/_lib/kanji";
 import { getAllYoji } from "@/dictionary/_lib/yoji";
 import { getAllColors } from "@/dictionary/_lib/colors";
 import { getAllBlogPosts } from "@/blog/_lib/blog";
-import { allQuizMetas } from "@/quiz/registry";
+import { allQuizMetas } from "@/play/quiz/registry";
 import { allGameMetas } from "@/play/games/registry";
 import type { SearchDocument } from "./types";
 

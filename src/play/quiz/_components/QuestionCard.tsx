@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useCallback, useMemo } from "react";
-import type { QuizChoice, QuizQuestion, QuizType } from "@/quiz/types";
-import { isCorrectChoice } from "@/quiz/scoring";
+import type { QuizChoice, QuizQuestion, QuizType } from "@/play/quiz/types";
+import { isCorrectChoice } from "@/play/quiz/scoring";
 import styles from "./QuestionCard.module.css";
 
 /** Fisher-Yates shuffle: returns a new array with elements in random order */

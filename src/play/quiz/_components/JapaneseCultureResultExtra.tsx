@@ -2,27 +2,27 @@
 
 import {
   getCompatibility,
-  isValidCharacterTypeId,
-} from "@/quiz/data/character-fortune";
-import characterFortuneQuiz from "@/quiz/data/character-fortune";
+  isValidCultureTypeId,
+} from "@/play/quiz/data/japanese-culture";
+import japaneseCultureQuiz from "@/play/quiz/data/japanese-culture";
 import CompatibilitySection from "./CompatibilitySection";
 import InviteFriendButton from "./InviteFriendButton";
 
-interface CharacterFortuneResultExtraProps {
+interface JapaneseCultureResultExtraProps {
   resultId: string;
   referrerTypeId?: string;
 }
 
 /**
- * Returns a render function for extra content below the character fortune
+ * Returns a render function for extra content below the Japanese culture
  * quiz result card. Used by QuizContainer's renderResultExtra prop.
  */
-export function renderCharacterFortuneExtra(
+export function renderJapaneseCultureExtra(
   referrerTypeId?: string,
 ): (resultId: string, refTypeId?: string) => React.ReactNode {
   function ResultExtraRenderer(resultId: string): React.ReactNode {
     return (
-      <CharacterFortuneResultExtra
+      <JapaneseCultureResultExtra
         resultId={resultId}
         referrerTypeId={referrerTypeId}
       />
@@ -31,17 +31,17 @@ export function renderCharacterFortuneExtra(
   return ResultExtraRenderer;
 }
 
-function CharacterFortuneResultExtra({
+function JapaneseCultureResultExtra({
   resultId,
   referrerTypeId,
-}: CharacterFortuneResultExtraProps) {
-  const quiz = characterFortuneQuiz;
+}: JapaneseCultureResultExtraProps) {
+  const quiz = japaneseCultureQuiz;
   const myResult = quiz.results.find((r) => r.id === resultId);
 
   if (!myResult) return null;
 
   // If we have a valid referrer type, show compatibility
-  if (referrerTypeId && isValidCharacterTypeId(referrerTypeId)) {
+  if (referrerTypeId && isValidCultureTypeId(referrerTypeId)) {
     const friendResult = quiz.results.find((r) => r.id === referrerTypeId);
     const compatibility = getCompatibility(resultId, referrerTypeId);
 
@@ -66,7 +66,7 @@ function CharacterFortuneResultExtra({
           <InviteFriendButton
             quizSlug={quiz.meta.slug}
             resultTypeId={resultId}
-            inviteText="キャラ診断で相性を調べよう!"
+            inviteText="日本文化適性診断で相性を調べよう!"
           />
         </>
       );
@@ -78,7 +78,7 @@ function CharacterFortuneResultExtra({
     <InviteFriendButton
       quizSlug={quiz.meta.slug}
       resultTypeId={resultId}
-      inviteText="キャラ診断で相性を調べよう!"
+      inviteText="日本文化適性診断で相性を調べよう!"
     />
   );
 }

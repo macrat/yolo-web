@@ -2,8 +2,8 @@
 
 import musicPersonalityQuiz, {
   getCompatibility,
-} from "@/quiz/data/music-personality";
-import CompatibilitySection from "@/quiz/_components/CompatibilitySection";
+} from "@/play/quiz/data/music-personality";
+import CompatibilitySection from "@/play/quiz/_components/CompatibilitySection";
 
 interface CompatibilityDisplayProps {
   myResultId: string;

@@ -1,7 +1,7 @@
 import { describe, test, expect } from "vitest";
 import sitemap from "../sitemap";
 import { allGameMetas } from "@/play/games/registry";
-import { allQuizMetas } from "@/quiz/registry";
+import { allQuizMetas } from "@/play/quiz/registry";
 import { allCheatsheetMetas } from "@/cheatsheets/registry";
 import { BASE_URL } from "@/lib/constants";
 import { getAllBlogPosts } from "@/blog/_lib/blog";

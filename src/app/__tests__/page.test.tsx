@@ -55,7 +55,7 @@ vi.mock("@/tools/registry", () => ({
   ],
 }));
 
-vi.mock("@/quiz/registry", () => ({
+vi.mock("@/play/quiz/registry", () => ({
   allQuizMetas: [
     {
       slug: "kanji-level",

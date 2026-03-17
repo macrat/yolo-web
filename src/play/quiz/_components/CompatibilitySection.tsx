@@ -1,6 +1,6 @@
 "use client";
 
-import type { CompatibilityEntry } from "@/quiz/types";
+import type { CompatibilityEntry } from "@/play/quiz/types";
 import ShareButtons from "./ShareButtons";
 import styles from "./CompatibilitySection.module.css";
 
