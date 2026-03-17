@@ -3,9 +3,9 @@
 import { useState, useEffect, useRef } from "react";
 import { useAchievements } from "@/lib/achievements/useAchievements";
 import { getTodayJst } from "@/lib/achievements/date";
-import { getUserSeed, selectFortune } from "@/fortune/logic";
-import ShareButtons from "@/quiz/_components/ShareButtons";
-import type { DailyFortuneEntry } from "@/fortune/types";
+import { getUserSeed, selectFortune } from "@/play/fortune/logic";
+import ShareButtons from "@/play/quiz/_components/ShareButtons";
+import type { DailyFortuneEntry } from "@/play/fortune/types";
 import styles from "./DailyFortuneCard.module.css";
 
 /** Render star rating with filled and empty stars */
