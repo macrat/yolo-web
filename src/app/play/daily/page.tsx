@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: PAGE_TITLE,
     description: PAGE_DESCRIPTION,
-    url: `${BASE_URL}/fortune/daily`,
+    url: `${BASE_URL}/play/daily`,
     siteName: SITE_NAME,
     type: "website",
   },
@@ -23,9 +23,10 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: PAGE_TITLE,
     description: PAGE_DESCRIPTION,
+    images: [`${BASE_URL}/play/daily/opengraph-image`],
   },
   alternates: {
-    canonical: `${BASE_URL}/fortune/daily`,
+    canonical: `${BASE_URL}/play/daily`,
   },
 };
 
@@ -33,7 +34,11 @@ export default function DailyFortunePage() {
   return (
     <div className={styles.wrapper}>
       <Breadcrumb
-        items={[{ label: "ホーム", href: "/" }, { label: PAGE_TITLE }]}
+        items={[
+          { label: "ホーム", href: "/" },
+          { label: "遊ぶ", href: "/play" },
+          { label: PAGE_TITLE },
+        ]}
       />
       <TrustLevelBadge level="generated" />
       <DailyFortuneCard />
