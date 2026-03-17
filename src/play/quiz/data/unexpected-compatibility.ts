@@ -44,11 +44,11 @@ const unexpectedCompatibilityQuiz: QuizDefinition = {
     relatedLinks: [
       {
         label: "逆張り運勢診断を受ける",
-        href: "/quiz/contrarian-fortune",
+        href: "/play/contrarian-fortune",
       },
       {
         label: "達成困難アドバイス診断を受ける",
-        href: "/quiz/impossible-advice",
+        href: "/play/impossible-advice",
       },
     ],
     trustLevel: "generated",

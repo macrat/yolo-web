@@ -36,8 +36,8 @@ export default function CompatibilitySection({
 }: CompatibilitySectionProps) {
   const shareUrl =
     typeof window !== "undefined"
-      ? `${window.location.origin}/quiz/${quizSlug}/result/${myType.id}?with=${friendType.id}`
-      : `/quiz/${quizSlug}/result/${myType.id}?with=${friendType.id}`;
+      ? `${window.location.origin}/play/${quizSlug}/result/${myType.id}?with=${friendType.id}`
+      : `/play/${quizSlug}/result/${myType.id}?with=${friendType.id}`;
 
   const hashtag = quizTitle.replace(/\s/g, "");
   const shareText = `私は「${myType.title}」、友達は「${friendType.title}」。相性は「${compatibility.label}」でした! #${hashtag} #yolosnet`;

@@ -54,7 +54,6 @@ describe("Header", () => {
       { name: "ホーム", href: "/" },
       { name: "ツール", href: "/tools" },
       { name: "遊ぶ", href: "/play" },
-      { name: "クイズ", href: "/quiz" },
       { name: "辞典", href: "/dictionary" },
       { name: "ブログ", href: "/blog" },
       { name: "About", href: "/about" },
@@ -67,6 +66,12 @@ describe("Header", () => {
       );
       expect(hasCorrectHref).toBe(true);
     }
+  });
+
+  test("does not render クイズ navigation link", () => {
+    render(<Header />);
+    const quizLinks = screen.queryAllByRole("link", { name: "クイズ" });
+    expect(quizLinks.length).toBe(0);
   });
 
   test("renders hamburger button", () => {

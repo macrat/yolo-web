@@ -74,8 +74,8 @@ export default function DailyFortuneCard() {
 
   const shareUrl =
     typeof window !== "undefined"
-      ? `${window.location.origin}/fortune/daily`
-      : "/fortune/daily";
+      ? `${window.location.origin}/play/daily`
+      : "/play/daily";
   const shareText = `今日のユーモア運勢は「${fortune.title}」(${fortune.rating}/5) でした! #yolosnet`;
 
   return (

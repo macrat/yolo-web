@@ -26,8 +26,8 @@ export default function InviteFriendButton({
   const handleInvite = useCallback(async () => {
     const url =
       typeof window !== "undefined"
-        ? `${window.location.origin}/quiz/${quizSlug}?ref=${resultTypeId}`
-        : `/quiz/${quizSlug}?ref=${resultTypeId}`;
+        ? `${window.location.origin}/play/${quizSlug}?ref=${resultTypeId}`
+        : `/play/${quizSlug}?ref=${resultTypeId}`;
 
     const text = inviteText;
 

@@ -31,12 +31,28 @@
   color: var(--color-text-muted);
 }
 
+/* ===== Category section ===== */
+.categorySection {
+  margin-bottom: 2.5rem;
+}
+
+.categoryHeading {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--color-border);
+}
+
 /* ===== Grid ===== */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1rem;
-  margin-bottom: 2rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 /* ===== Card ===== */
@@ -83,8 +99,14 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  gap: 0.5rem;
   margin-top: auto;
   padding-top: 0.75rem;
+}
+
+.cardQuestionCount {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
 }
 
 .cardCta {
@@ -94,46 +116,6 @@
   background-color: var(--play-accent);
   color: #ffffff;
   border-radius: 999px;
-}
-
-/* ===== Quiz promo section ===== */
-.quizPromo {
-  border: 1px solid var(--color-border);
-  border-radius: 0.75rem;
-  padding: 1.25rem 1.5rem;
-  background-color: var(--color-bg-secondary);
-}
-
-.quizPromoContent {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.quizPromoText {
-  font-size: 0.95rem;
-  color: var(--color-text-muted);
-}
-
-.quizPromoLink {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--color-primary);
-  text-decoration: none;
-  padding: 0.4rem 1rem;
-  border: 1px solid var(--color-primary);
-  border-radius: 999px;
-  transition:
-    background-color 0.2s,
-    color 0.2s;
-  white-space: nowrap;
-}
-
-.quizPromoLink:hover {
-  background-color: var(--color-primary);
-  color: #ffffff;
 }
 
 /* ===== Dark mode ===== */
@@ -157,11 +139,6 @@
 
   .heroTitle {
     font-size: 1.4rem;
-  }
-
-  .quizPromoContent {
-    flex-direction: column;
-    align-items: flex-start;
   }
 }
 

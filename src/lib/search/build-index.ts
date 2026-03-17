@@ -117,7 +117,7 @@ export function buildSearchIndex(): SearchDocument[] {
       title: quiz.title,
       description: quiz.shortDescription,
       keywords: quiz.keywords,
-      url: `/quiz/${quiz.slug}`,
+      url: `/play/${quiz.slug}`,
       category: quiz.type,
     });
   }

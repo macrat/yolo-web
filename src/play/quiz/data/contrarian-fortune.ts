@@ -44,11 +44,11 @@ const contrarianFortuneQuiz: QuizDefinition = {
     relatedLinks: [
       {
         label: "達成困難アドバイス診断を受ける",
-        href: "/quiz/impossible-advice",
+        href: "/play/impossible-advice",
       },
       {
         label: "斜め上の相性診断を受ける",
-        href: "/quiz/unexpected-compatibility",
+        href: "/play/unexpected-compatibility",
       },
     ],
     trustLevel: "generated",

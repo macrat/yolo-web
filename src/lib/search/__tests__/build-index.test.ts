@@ -68,7 +68,7 @@ describe("buildSearchIndex", () => {
           expect(doc.url).toMatch(/^\/blog\//);
           break;
         case "quiz":
-          expect(doc.url).toMatch(/^\/quiz\//);
+          expect(doc.url).toMatch(/^\/play\//);
           break;
       }
     }

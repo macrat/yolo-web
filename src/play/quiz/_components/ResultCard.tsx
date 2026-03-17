@@ -28,8 +28,8 @@ export default function ResultCard({
 }: ResultCardProps) {
   const shareUrl =
     typeof window !== "undefined"
-      ? `${window.location.origin}/quiz/${quizSlug}/result/${result.id}`
-      : `/quiz/${quizSlug}/result/${result.id}`;
+      ? `${window.location.origin}/play/${quizSlug}/result/${result.id}`
+      : `/play/${quizSlug}/result/${result.id}`;
 
   const shareText = `${quizTitle}の結果は「${result.title}」でした! #yolosnet`;
 

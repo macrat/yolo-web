@@ -30,7 +30,6 @@ export default function Footer({ gameLinks }: FooterProps) {
       heading: "その他",
       links: [
         { href: "/blog", label: "ブログ" },
-        { href: "/quiz", label: "クイズ・診断" },
         { href: "/achievements", label: "実績" },
         { href: "/about", label: "このサイトについて" },
         { href: "/privacy", label: "プライバシーポリシー" },

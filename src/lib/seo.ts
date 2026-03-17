@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
-// AP-5: 以下3つのフィーチャー型への依存は型のみ（import type）であり意図的。
+// AP-5: 以下2つのフィーチャー型への依存は型のみ（import type）であり意図的。
 // seo.ts はサイト全体のSEO一貫性を維持するため、各フィーチャーのメタデータ型を
 // 参照してメタデータ生成関数を提供している。各フィーチャーにSEO関数を分散させると
 // サイト全体のSEO一貫性が損なわれるリスクがあるため、共有層に集約している。
 import type { ToolMeta } from "@/tools/types";
 import type { CheatsheetMeta } from "@/cheatsheets/types";
-import type { QuizMeta } from "@/play/quiz/types";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 
 export function generateToolMetadata(meta: ToolMeta): Metadata {
@@ -409,55 +408,6 @@ export function generateCheatsheetJsonLd(meta: CheatsheetMeta): object {
     dateModified: meta.updatedAt || meta.publishedAt,
     inLanguage: "ja",
     author: {
-      "@type": "Organization",
-      name: "yolos.net (AI Experiment)",
-    },
-  };
-}
-
-// -- Quiz SEO helpers --
-
-export function generateQuizMetadata(meta: QuizMeta): Metadata {
-  return {
-    title: `${meta.title} - クイズ | ${SITE_NAME}`,
-    description: meta.description,
-    keywords: meta.keywords,
-    openGraph: {
-      title: `${meta.title} - クイズ`,
-      description: meta.description,
-      type: "website",
-      url: `${BASE_URL}/quiz/${meta.slug}`,
-      siteName: SITE_NAME,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: `${meta.title} - クイズ`,
-      description: meta.description,
-    },
-    alternates: {
-      canonical: `${BASE_URL}/quiz/${meta.slug}`,
-    },
-  };
-}
-
-export function generateQuizJsonLd(meta: QuizMeta): object {
-  return {
-    "@context": "https://schema.org",
-    "@type": "Quiz",
-    name: meta.title,
-    description: meta.description,
-    url: `${BASE_URL}/quiz/${meta.slug}`,
-    educationalLevel: "general",
-    numberOfQuestions: meta.questionCount,
-    inLanguage: "ja",
-    datePublished: meta.publishedAt,
-    dateModified: meta.updatedAt || meta.publishedAt,
-    offers: {
-      "@type": "Offer",
-      price: "0",
-      priceCurrency: "JPY",
-    },
-    creator: {
       "@type": "Organization",
       name: "yolos.net (AI Experiment)",
     },

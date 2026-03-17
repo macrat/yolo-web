@@ -33,10 +33,6 @@ test("Footer renders navigation links", () => {
     "href",
     "/play",
   );
-  expect(screen.getByRole("link", { name: "クイズ・診断" })).toHaveAttribute(
-    "href",
-    "/quiz",
-  );
   expect(screen.getByRole("link", { name: "ブログ" })).toHaveAttribute(
     "href",
     "/blog",
@@ -51,4 +47,9 @@ test("Footer renders privacy policy link", () => {
   expect(
     screen.getByRole("link", { name: "プライバシーポリシー" }),
   ).toHaveAttribute("href", "/privacy");
+});
+
+test("Footer does not render クイズ・診断 link", () => {
+  render(<Footer />);
+  expect(screen.queryByRole("link", { name: "クイズ・診断" })).toBeNull();
 });

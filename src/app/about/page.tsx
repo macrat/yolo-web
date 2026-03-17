@@ -59,7 +59,7 @@ export default function AboutPage() {
             <p>
               質問に答えて、自分の意外な一面を発見。面白い結果はSNSで友達とシェアして盛り上がれます。
             </p>
-            <Link href="/quiz" className={styles.contentCardLink}>
+            <Link href="/play" className={styles.contentCardLink}>
               占い・診断を見る
             </Link>
           </div>

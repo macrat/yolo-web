@@ -238,17 +238,17 @@ const scienceThinkingQuiz: QuizDefinition = {
     relatedLinks: [
       {
         label: "\u97F3\u697D\u6027\u683C\u8A3A\u65AD\u3092\u53D7\u3051\u308B",
-        href: "/quiz/music-personality",
+        href: "/play/music-personality",
       },
       {
         label:
           "\u65E5\u672C\u306B\u3057\u304B\u3044\u306A\u3044\u52D5\u7269\u3067\u6027\u683C\u8A3A\u65AD",
-        href: "/quiz/animal-personality",
+        href: "/play/animal-personality",
       },
       {
         label:
           "\u5B88\u8B77\u30AD\u30E3\u30E9\u8A3A\u65AD\u3092\u53D7\u3051\u308B",
-        href: "/quiz/character-fortune",
+        href: "/play/character-fortune",
       },
     ],
     trustLevel: "generated",

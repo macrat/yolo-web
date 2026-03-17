@@ -16,6 +16,7 @@ import { allCheatsheetMetas } from "@/cheatsheets/registry";
 import { ABOUT_LAST_MODIFIED } from "./about/meta";
 import { ACHIEVEMENTS_LAST_MODIFIED } from "./achievements/meta";
 import { PRIVACY_LAST_MODIFIED } from "./privacy/meta";
+import { DAILY_FORTUNE_LAST_MODIFIED } from "./play/daily/meta";
 
 type ContentMeta = {
   publishedAt: string;
@@ -81,6 +82,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
     (meta, index) => getLastModifiedDate(meta, `quiz[${index}] (${meta.slug})`),
     "quiz metas",
   );
+  const fortuneDate = parseRequiredDate(
+    DAILY_FORTUNE_LAST_MODIFIED,
+    "play/daily/meta.ts",
+  );
+  // /play 一覧ページはゲーム・クイズ・Fortuneの全コンテンツの最新日時を使用する
+  const latestPlayDate = getLatestDate(
+    [latestGameDate, latestQuizDate, fortuneDate],
+    (date) => date,
+    "play content dates",
+  );
   const latestCheatsheetDate = getLatestDate(
     allCheatsheetMetas,
     (meta, index) =>
@@ -120,6 +131,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       latestToolDate,
       latestGameDate,
       latestQuizDate,
+      fortuneDate,
       latestCheatsheetDate,
       latestDictionaryDate,
       aboutLastModified,
@@ -151,7 +163,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: `${BASE_URL}/play`,
-      lastModified: latestGameDate,
+      lastModified: latestPlayDate,
       changeFrequency: "weekly",
       priority: 0.9,
     },
@@ -250,18 +262,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly" as const,
       priority: 0.7,
     })),
-    {
-      url: `${BASE_URL}/quiz`,
-      lastModified: latestQuizDate,
-      changeFrequency: "monthly" as const,
-      priority: 0.9,
-    },
+    // /quiz エントリは /play に統合済み。/play/:slug としてサイトマップに掲載する。
     ...allQuizMetas.map((meta, index) => ({
-      url: `${BASE_URL}/quiz/${meta.slug}`,
+      url: `${BASE_URL}/play/${meta.slug}`,
       lastModified: getLastModifiedDate(meta, `quiz[${index}] (${meta.slug})`),
       changeFrequency: "monthly" as const,
       priority: 0.8,
     })),
+    {
+      url: `${BASE_URL}/play/daily`,
+      lastModified: fortuneDate,
+      changeFrequency: "daily" as const,
+      priority: 0.8,
+    },
     {
       url: `${BASE_URL}/cheatsheets`,
       lastModified: latestCheatsheetDate,

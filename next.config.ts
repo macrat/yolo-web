@@ -53,6 +53,36 @@ const nextConfig: NextConfig = {
       },
     ];
 
+    // Redirect old /quiz URLs to /play (301 permanent)
+    // Migrated in cycle-102 (B-206): quiz and fortune sections are now under /play
+    const quizRedirects = [
+      {
+        source: "/quiz",
+        destination: "/play",
+        permanent: true,
+      },
+      {
+        source: "/quiz/:slug",
+        destination: "/play/:slug",
+        permanent: true,
+      },
+      {
+        source: "/quiz/:slug/result/:path*",
+        destination: "/play/:slug/result/:path*",
+        permanent: true,
+      },
+    ];
+
+    // Redirect old /fortune URLs to /play (301 permanent)
+    // Migrated in cycle-102 (B-206): fortune section is now under /play
+    const fortuneRedirects = [
+      {
+        source: "/fortune/daily",
+        destination: "/play/daily",
+        permanent: true,
+      },
+    ];
+
     // Redirect old /colors URLs to /dictionary/colors (308 permanent)
     // Migrated in cycle-50 (B-122): colors is now under the dictionary section
     const colorsRedirects = [
@@ -77,6 +107,8 @@ const nextConfig: NextConfig = {
       ...oldCategoryRedirects,
       ...paginationRedirects,
       ...gamesRedirects,
+      ...quizRedirects,
+      ...fortuneRedirects,
       ...colorsRedirects,
     ];
   },
