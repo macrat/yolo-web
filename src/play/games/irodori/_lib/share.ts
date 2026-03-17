@@ -7,7 +7,7 @@ import { calculateTotalScore, getRank, getScoreEmoji } from "./engine";
  * Format:
  *   イロドリ #42 スコア: 87/100 (Aランク)
  *   🟩🟩🟨🟧🟥
- *   https://.../games/irodori
+ *   https://.../play/irodori
  */
 export function generateShareText(state: IrodoriGameState): string {
   const scores = state.rounds.map((r) => r.score ?? 0);
