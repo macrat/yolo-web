@@ -139,9 +139,9 @@ const staticPages: Array<{
       import("@/app/blog/page").then((m) => m.metadata as Metadata),
   },
   {
-    path: "/quiz",
+    path: "/play",
     importMeta: () =>
-      import("@/app/quiz/page").then((m) => m.metadata as Metadata),
+      import("@/app/play/page").then((m) => m.metadata as Metadata),
   },
   {
     path: "/cheatsheets",
@@ -338,7 +338,7 @@ describe("動的metadataページのSEO検証", () => {
     );
   });
 
-  test("/quiz/[slug]/result/[resultId]: SEO必須項目が存在する", async () => {
+  test("/play/[slug]/result/[resultId]: SEO必須項目が存在する", async () => {
     const { getAllQuizSlugs, getResultIdsForQuiz } =
       await import("@/play/quiz/registry");
     const slugs = getAllQuizSlugs();
@@ -350,14 +350,14 @@ describe("動的metadataページのSEO検証", () => {
     const resultId = resultIds[0];
 
     const { generateMetadata } =
-      await import("@/app/quiz/[slug]/result/[resultId]/page");
+      await import("@/app/play/[slug]/result/[resultId]/page");
     const meta = await generateMetadata({
       params: Promise.resolve({ slug, resultId }),
     });
     assertSeoMetadata(
       meta,
-      `/quiz/${slug}/result/${resultId}`,
-      "/quiz/[slug]/result/[resultId]",
+      `/play/${slug}/result/${resultId}`,
+      "/play/[slug]/result/[resultId]",
     );
   });
 
@@ -376,18 +376,18 @@ describe("動的metadataページのSEO検証", () => {
     assertSeoMetadata(meta, `/blog/${slug}`, "/blog/[slug]");
   });
 
-  test("/quiz/[slug]: SEO必須項目が存在する", async () => {
+  test("/play/[slug]: SEO必須項目が存在する", async () => {
     const { getAllQuizSlugs } = await import("@/play/quiz/registry");
     const slugs = getAllQuizSlugs();
     if (slugs.length === 0) return; // データがなければスキップ
     const slug = slugs[0];
 
-    const { generateMetadata } = await import("@/app/quiz/[slug]/page");
+    const { generateMetadata } = await import("@/app/play/[slug]/page");
     const meta = await generateMetadata({
       params: Promise.resolve({ slug }),
       searchParams: Promise.resolve({}),
     });
-    assertSeoMetadata(meta, `/quiz/${slug}`, "/quiz/[slug]");
+    assertSeoMetadata(meta, `/play/${slug}`, "/play/[slug]");
   });
 
   test("/dictionary/colors/[slug]: SEO必須項目が存在する", async () => {

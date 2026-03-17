@@ -98,7 +98,7 @@ export async function generateMetadata({
       title,
       description,
       type: "website",
-      url: `${BASE_URL}/quiz/${slug}/result/${resultId}`,
+      url: `${BASE_URL}/play/${slug}/result/${resultId}`,
       siteName: SITE_NAME,
     },
     twitter: {
@@ -107,12 +107,15 @@ export async function generateMetadata({
       description,
     },
     alternates: {
-      canonical: `${BASE_URL}/quiz/${slug}/result/${resultId}`,
+      canonical: `${BASE_URL}/play/${slug}/result/${resultId}`,
     },
   };
 }
 
-export default async function QuizResultPage({ params, searchParams }: Props) {
+export default async function PlayQuizResultPage({
+  params,
+  searchParams,
+}: Props) {
   const { slug, resultId } = await params;
   const quiz = quizBySlug.get(slug);
   if (!quiz) notFound();
@@ -128,15 +131,15 @@ export default async function QuizResultPage({ params, searchParams }: Props) {
   );
 
   const shareText = `${quiz.meta.title}の結果は「${result.title}」でした! #yolosnet`;
-  const shareUrl = `${BASE_URL}/quiz/${slug}/result/${resultId}`;
+  const shareUrl = `${BASE_URL}/play/${slug}/result/${resultId}`;
 
   return (
     <div className={styles.wrapper}>
       <Breadcrumb
         items={[
           { label: "ホーム", href: "/" },
-          { label: "クイズ", href: "/quiz" },
-          { label: quiz.meta.title, href: `/quiz/${slug}` },
+          { label: "遊ぶ", href: "/play" },
+          { label: quiz.meta.title, href: `/play/${slug}` },
           { label: "結果" },
         ]}
       />
@@ -146,7 +149,7 @@ export default async function QuizResultPage({ params, searchParams }: Props) {
         <p className={styles.quizName}>{quiz.meta.title}の結果</p>
         <p className={styles.description}>{result.description}</p>
         <Link
-          href={`/quiz/${slug}`}
+          href={`/play/${slug}`}
           className={styles.tryButton}
           style={{ backgroundColor: quiz.meta.accentColor }}
         >

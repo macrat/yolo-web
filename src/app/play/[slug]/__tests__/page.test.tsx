@@ -1,0 +1,64 @@
+import { describe, it, expect } from "vitest";
+import { getAllQuizSlugs } from "@/play/quiz/registry";
+import { generateStaticParams, generateMetadata } from "../page";
+
+describe("play/[slug]/page", () => {
+  describe("generateStaticParams", () => {
+    it("returns all 14 quiz slugs", async () => {
+      const params = await generateStaticParams();
+      expect(params.length).toBe(14);
+    });
+
+    it("returns only quiz slugs (no game slugs)", async () => {
+      const params = await generateStaticParams();
+      const slugs = params.map((p) => p.slug);
+      // All returned slugs must be valid quiz slugs
+      const quizSlugs = getAllQuizSlugs();
+      for (const slug of slugs) {
+        expect(quizSlugs).toContain(slug);
+      }
+    });
+
+    it("does not include game slugs", async () => {
+      const params = await generateStaticParams();
+      const slugs = params.map((p) => p.slug);
+      // Game slugs are handled by static routes
+      expect(slugs).not.toContain("irodori");
+      expect(slugs).not.toContain("kanji-kanaru");
+      expect(slugs).not.toContain("nakamawake");
+      expect(slugs).not.toContain("yoji-kimeru");
+    });
+  });
+
+  describe("generateMetadata", () => {
+    it("returns metadata for a valid quiz slug", async () => {
+      const metadata = await generateMetadata({
+        params: Promise.resolve({ slug: "kanji-level" }),
+        searchParams: Promise.resolve({}),
+      });
+      expect(metadata).toBeDefined();
+      expect(metadata.title).toContain("漢字力診断");
+    });
+
+    it("returns empty object for unknown slug", async () => {
+      const metadata = await generateMetadata({
+        params: Promise.resolve({ slug: "nonexistent-slug" }),
+        searchParams: Promise.resolve({}),
+      });
+      expect(metadata).toEqual({});
+    });
+
+    it("uses /play/ canonical URL (not /quiz/)", async () => {
+      const metadata = await generateMetadata({
+        params: Promise.resolve({ slug: "kanji-level" }),
+        searchParams: Promise.resolve({}),
+      });
+      const canonical =
+        typeof metadata.alternates?.canonical === "string"
+          ? metadata.alternates.canonical
+          : undefined;
+      expect(canonical).toContain("/play/");
+      expect(canonical).not.toContain("/quiz/");
+    });
+  });
+});
