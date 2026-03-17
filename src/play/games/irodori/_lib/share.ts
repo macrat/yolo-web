@@ -17,7 +17,7 @@ export function generateShareText(state: IrodoriGameState): string {
   const emojiRow = scores.map((s) => getScoreEmoji(s)).join("");
 
   const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
-  const url = `${baseUrl}/games/irodori`;
+  const url = `${baseUrl}/play/irodori`;
 
   return `\u30A4\u30ED\u30C9\u30EA #${state.puzzleNumber} \u30B9\u30B3\u30A2: ${totalScore}/100 (${rank}\u30E9\u30F3\u30AF)\n${emojiRow}\n${url}`;
 }
@@ -117,7 +117,7 @@ export function generateResultImage(state: IrodoriGameState): string | null {
   ctx.fillStyle = "#888888";
   ctx.font = "14px sans-serif";
   ctx.textAlign = "center";
-  ctx.fillText("yolos.net/games/irodori", width / 2, height - 20);
+  ctx.fillText("yolos.net/play/irodori", width / 2, height - 20);
 
   try {
     return canvas.toDataURL("image/png");

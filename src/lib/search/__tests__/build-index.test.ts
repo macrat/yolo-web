@@ -50,7 +50,7 @@ describe("buildSearchIndex", () => {
           expect(doc.url).toMatch(/^\/tools\//);
           break;
         case "game":
-          expect(doc.url).toMatch(/^\/games\//);
+          expect(doc.url).toMatch(/^\/play\//);
           break;
         case "cheatsheet":
           expect(doc.url).toMatch(/^\/cheatsheets\//);

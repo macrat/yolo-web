@@ -25,7 +25,7 @@ export default function RelatedGames({
       <ul className={styles.list}>
         {relatedGames.map((game) => (
           <li key={game.slug}>
-            <Link href={`/games/${game.slug}`} className={styles.link}>
+            <Link href={`/play/${game.slug}`} className={styles.link}>
               <span className={styles.icon} aria-hidden="true">
                 {game.icon}
               </span>

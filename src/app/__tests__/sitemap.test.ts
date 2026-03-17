@@ -8,12 +8,16 @@ import { getAllBlogPosts } from "@/blog/_lib/blog";
 import { ABOUT_LAST_MODIFIED } from "@/app/about/meta";
 
 describe("sitemap", () => {
-  test("sitemap includes /games", () => {
+  test("sitemap includes /play list page", () => {
     const entries = sitemap();
     const urls = entries.map((e) => e.url);
-    expect(urls).toEqual(
-      expect.arrayContaining([expect.stringContaining("/games")]),
-    );
+    expect(urls).toContain(`${BASE_URL}/play`);
+  });
+
+  test("sitemap does not include /games list page", () => {
+    const entries = sitemap();
+    const urls = entries.map((e) => e.url);
+    expect(urls).not.toContain(`${BASE_URL}/games`);
   });
 
   test("sitemap includes /play/kanji-kanaru with monthly frequency", () => {
@@ -206,7 +210,7 @@ describe("sitemap", () => {
     const contentListPaths = [
       "/blog",
       "/tools",
-      "/games",
+      "/play",
       "/quiz",
       "/cheatsheets",
       "/dictionary",

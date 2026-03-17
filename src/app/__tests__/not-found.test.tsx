@@ -26,7 +26,7 @@ test("404 page has links to main sections", () => {
   const gamesLink = screen.getByRole("link", {
     name: /遊んで学べるブラウザゲーム/,
   });
-  expect(gamesLink).toHaveAttribute("href", "/games");
+  expect(gamesLink).toHaveAttribute("href", "/play");
 
   const blogLink = screen.getByRole("link", {
     name: /試行錯誤ブログ/,

@@ -31,7 +31,7 @@ export default function GameLayout({
       <Breadcrumb
         items={[
           { label: "ホーム", href: "/" },
-          { label: "ゲーム", href: "/games" },
+          { label: "遊ぶ", href: "/play" },
           { label: meta.title },
         ]}
       />
@@ -80,7 +80,7 @@ export default function GameLayout({
           このゲームが楽しかったらシェア
         </h2>
         <ShareButtons
-          url={`/games/${meta.slug}`}
+          url={`/play/${meta.slug}`}
           title={meta.title}
           sns={["x", "line", "hatena", "copy"]}
           contentType="game"

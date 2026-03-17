@@ -25,8 +25,8 @@ test("YojiKimeruPage renders breadcrumb navigation", () => {
     "href",
     "/",
   );
-  expect(screen.getByRole("link", { name: "ゲーム" })).toHaveAttribute(
+  expect(screen.getByRole("link", { name: "遊ぶ" })).toHaveAttribute(
     "href",
-    "/games",
+    "/play",
   );
 });

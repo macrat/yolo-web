@@ -111,7 +111,7 @@ export default function KanjiDetail({ kanji }: KanjiDetailProps) {
 
       <section className={styles.section}>
         <h2>{"\u95A2\u9023\u30B2\u30FC\u30E0"}</h2>
-        <Link href="/games/kanji-kanaru" className={styles.crossLink}>
+        <Link href="/play/kanji-kanaru" className={styles.crossLink}>
           {
             "\u6F22\u5B57\u30AB\u30CA\u30FC\u30EB - \u6BCE\u65E5\u306E\u6F22\u5B57\u30D1\u30BA\u30EB\u3067\u904A\u3076"
           }

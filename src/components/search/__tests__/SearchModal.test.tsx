@@ -35,7 +35,7 @@ const mockDocuments = [
     title: "漢字カナール",
     description: "漢字を当てるパズルゲーム",
     keywords: ["漢字", "パズル"],
-    url: "/games/kanji-kanaru",
+    url: "/play/kanji-kanaru",
     extra: "初級〜中級",
   },
   {

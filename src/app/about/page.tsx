@@ -68,7 +68,7 @@ export default function AboutPage() {
             <p>
               色彩・漢字・連想ゲームなど、毎日遊べるゲームがそろっています。
             </p>
-            <Link href="/games" className={styles.contentCardLink}>
+            <Link href="/play" className={styles.contentCardLink}>
               ゲームを見る
             </Link>
           </div>

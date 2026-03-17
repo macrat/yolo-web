@@ -47,5 +47,5 @@ test("renders game cross-link", () => {
     screen.getByRole("link", {
       name: "漢字カナール - 毎日の漢字パズルで遊ぶ",
     }),
-  ).toHaveAttribute("href", "/games/kanji-kanaru");
+  ).toHaveAttribute("href", "/play/kanji-kanaru");
 });

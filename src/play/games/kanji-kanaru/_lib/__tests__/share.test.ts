@@ -64,7 +64,7 @@ describe("generateShareText", () => {
     expect(text).toContain(
       "\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E9}",
     );
-    expect(text).toContain("https://example.com/games/kanji-kanaru");
+    expect(text).toContain("https://example.com/play/kanji-kanaru");
   });
 
   test("generates correct text for a lost game", () => {

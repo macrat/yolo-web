@@ -26,4 +26,24 @@ describe("next.config redirects", () => {
       ]),
     );
   });
+
+  test("/games redirects to /play (301 permanent)", async () => {
+    const redirects = await nextConfig.redirects?.();
+    expect(redirects).toBeDefined();
+
+    expect(redirects).toEqual(
+      expect.arrayContaining([
+        {
+          source: "/games",
+          destination: "/play",
+          permanent: true,
+        },
+        {
+          source: "/games/:slug",
+          destination: "/play/:slug",
+          permanent: true,
+        },
+      ]),
+    );
+  });
 });

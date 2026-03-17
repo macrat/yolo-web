@@ -29,9 +29,9 @@ test("Footer renders navigation links", () => {
     "href",
     "/cheatsheets",
   );
-  expect(screen.getByRole("link", { name: "ゲーム一覧" })).toHaveAttribute(
+  expect(screen.getByRole("link", { name: "遊ぶ一覧" })).toHaveAttribute(
     "href",
-    "/games",
+    "/play",
   );
   expect(screen.getByRole("link", { name: "クイズ・診断" })).toHaveAttribute(
     "href",

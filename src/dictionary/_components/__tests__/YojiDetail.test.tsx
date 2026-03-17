@@ -48,7 +48,7 @@ test("renders game cross-link", () => {
     screen.getByRole("link", {
       name: "四字キメル - 毎日の四字熟語パズルで遊ぶ",
     }),
-  ).toHaveAttribute("href", "/games/yoji-kimeru");
+  ).toHaveAttribute("href", "/play/yoji-kimeru");
 });
 
 test("renders constituent kanji section", () => {

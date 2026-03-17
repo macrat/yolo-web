@@ -23,7 +23,7 @@ describe("generateGameJsonLd", () => {
     const result = generateGameJsonLd({
       name: "漢字カナール",
       description: "毎日の漢字パズル",
-      url: "/games/kanji-kanaru",
+      url: "/play/kanji-kanaru",
     });
 
     expect(result).toMatchObject({
@@ -50,17 +50,17 @@ describe("generateGameJsonLd", () => {
     const result = generateGameJsonLd({
       name: "Test Game",
       description: "A test game",
-      url: "/games/test",
+      url: "/play/test",
     }) as Record<string, unknown>;
 
-    expect(result.url).toContain("/games/test");
+    expect(result.url).toContain("/play/test");
   });
 
   test("includes genre, inLanguage, numberOfPlayers when provided", () => {
     const result = generateGameJsonLd({
       name: "テストゲーム",
       description: "テスト",
-      url: "/games/test",
+      url: "/play/test",
       genre: "Puzzle",
       inLanguage: "ja",
       numberOfPlayers: "1",
@@ -78,7 +78,7 @@ describe("generateGameJsonLd", () => {
     const result = generateGameJsonLd({
       name: "テストゲーム",
       description: "テスト",
-      url: "/games/test",
+      url: "/play/test",
     }) as Record<string, unknown>;
 
     expect(result.genre).toBeUndefined();
@@ -90,7 +90,7 @@ describe("generateGameJsonLd", () => {
     const result = generateGameJsonLd({
       name: "テストゲーム",
       description: "テスト",
-      url: "/games/test",
+      url: "/play/test",
       publishedAt: "2026-02-13T19:11:53+09:00",
     }) as Record<string, unknown>;
 
@@ -102,7 +102,7 @@ describe("generateGameJsonLd", () => {
     const result = generateGameJsonLd({
       name: "テストゲーム",
       description: "テスト",
-      url: "/games/test",
+      url: "/play/test",
       publishedAt: "2026-02-13T19:11:53+09:00",
       updatedAt: "2026-03-01T23:14:37+09:00",
     }) as Record<string, unknown>;
@@ -115,7 +115,7 @@ describe("generateGameJsonLd", () => {
     const result = generateGameJsonLd({
       name: "テストゲーム",
       description: "テスト",
-      url: "/games/test",
+      url: "/play/test",
     }) as Record<string, unknown>;
 
     expect(result.datePublished).toBeUndefined();

@@ -23,7 +23,7 @@ const kanjiLevelQuiz: QuizDefinition = {
     publishedAt: "2026-02-19T22:10:50+09:00",
     relatedLinks: [
       { label: "漢字辞典で学ぶ", href: "/dictionary/kanji" },
-      { label: "漢字カナール", href: "/games/kanji-kanaru" },
+      { label: "漢字カナール", href: "/play/kanji-kanaru" },
     ],
     trustLevel: "curated",
     trustNote:
@@ -180,7 +180,7 @@ const kanjiLevelQuiz: QuizDefinition = {
       icon: "📖",
       minScore: 5,
       recommendation: "漢字カナールで毎日の漢字トレーニング",
-      recommendationLink: "/games/kanji-kanaru",
+      recommendationLink: "/play/kanji-kanaru",
     },
     {
       id: "advanced",
@@ -190,7 +190,7 @@ const kanjiLevelQuiz: QuizDefinition = {
       icon: "🎓",
       minScore: 7,
       recommendation: "漢字カナールであなたの実力を試そう",
-      recommendationLink: "/games/kanji-kanaru",
+      recommendationLink: "/play/kanji-kanaru",
     },
     {
       id: "master",

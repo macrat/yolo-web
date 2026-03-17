@@ -43,7 +43,7 @@ export function generateShareText(
   );
 
   const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
-  const url = `${baseUrl}/games/yoji-kimeru`;
+  const url = `${baseUrl}/play/yoji-kimeru`;
 
   return `\u56DB\u5B57\u30AD\u30E1\u30EB #${state.puzzleNumber} (${diffLabel}) ${result}\n${rows.join("\n")}\n${url}`;
 }
