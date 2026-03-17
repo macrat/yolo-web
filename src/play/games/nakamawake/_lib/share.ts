@@ -10,7 +10,7 @@ import { getDifficultyEmoji } from "./engine";
  *   🟩🟩🟩🟩
  *   🟦🟦🟦🟦
  *   🟪🟪🟪🟪
- *   https://.../games/nakamawake
+ *   https://.../play/nakamawake
  */
 export function generateShareText(state: NakamawakeGameState): string {
   const result =

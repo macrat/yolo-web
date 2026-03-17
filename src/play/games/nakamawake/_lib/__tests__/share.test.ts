@@ -331,7 +331,7 @@ describe("generateTwitterShareUrl", () => {
   });
 
   test("separates text and url when pageUrl is provided", () => {
-    const pageUrl = "https://example.com/games/nakamawake";
+    const pageUrl = "https://example.com/play/nakamawake";
     const text = `\u30CA\u30AB\u30DE\u30EF\u30B1 #1 \u30D1\u30FC\u30D5\u30A7\u30AF\u30C8!\n\u{1F7E8}\u{1F7E8}\u{1F7E8}\u{1F7E8}\n${pageUrl}`;
     const url = generateTwitterShareUrl(text, pageUrl);
     // text param should not contain the page URL

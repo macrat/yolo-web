@@ -29,7 +29,7 @@ function charFeedbackToEmoji(fb: CharFeedback): string {
  *   🟩⬜🟨🟩
  *   🟩🟩🟨🟩
  *   🟩🟩🟩🟩
- *   https://.../games/yoji-kimeru
+ *   https://.../play/yoji-kimeru
  */
 export function generateShareText(
   state: YojiGameState,

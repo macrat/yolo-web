@@ -145,7 +145,7 @@ describe("generateTwitterShareUrl", () => {
   });
 
   test("separates text and url when pageUrl is provided", () => {
-    const pageUrl = "https://example.com/games/yoji-kimeru";
+    const pageUrl = "https://example.com/play/yoji-kimeru";
     const text = `\u56DB\u5B57\u30AD\u30E1\u30EB #1 (\u4E2D\u7D1A) 2/6\n\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E9}\n${pageUrl}`;
     const url = generateTwitterShareUrl(text, pageUrl);
     expect(url).toContain(
