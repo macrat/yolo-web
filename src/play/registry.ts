@@ -1,5 +1,5 @@
-import type { GameMeta } from "@/games/types";
-import { allGameMetas } from "@/games/registry";
+import type { GameMeta } from "@/play/games/types";
+import { allGameMetas } from "@/play/games/registry";
 import type { PlayContentMeta } from "./types";
 
 /**

@@ -7,7 +7,7 @@ import ThemeProvider from "@/components/common/ThemeProvider";
 import { generateWebSiteJsonLd, safeJsonLdStringify } from "@/lib/seo";
 import AchievementProvider from "@/lib/achievements/AchievementProvider";
 import { BASE_URL, SITE_NAME } from "@/lib/constants";
-import { allGameMetas, getGamePath } from "@/games/registry";
+import { allGameMetas, getGamePath } from "@/play/games/registry";
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),

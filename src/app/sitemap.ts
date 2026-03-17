@@ -11,7 +11,7 @@ import {
 import { getAllSlugs as getAllHumorSlugs } from "@/humor-dict/data";
 import { humorDictMeta } from "@/humor-dict/meta";
 import { allQuizMetas } from "@/quiz/registry";
-import { allGameMetas, getGamePath } from "@/games/registry";
+import { allGameMetas, getGamePath } from "@/play/games/registry";
 import { allCheatsheetMetas } from "@/cheatsheets/registry";
 import { ABOUT_LAST_MODIFIED } from "./about/meta";
 import { ACHIEVEMENTS_LAST_MODIFIED } from "./achievements/meta";

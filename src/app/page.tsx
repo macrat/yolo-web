@@ -4,7 +4,7 @@ import { formatDate } from "@/lib/date";
 import { getAllBlogPosts } from "@/blog/_lib/blog";
 import { allToolMetas } from "@/tools/registry";
 import { allQuizMetas } from "@/quiz/registry";
-import { allGameMetas } from "@/games/registry";
+import { allGameMetas } from "@/play/games/registry";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import styles from "./page.module.css";
 

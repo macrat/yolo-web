@@ -1,7 +1,7 @@
 import { expect, test, describe } from "vitest";
 import { render, screen } from "@testing-library/react";
-import GameBoard from "@/games/kanji-kanaru/_components/GameBoard";
-import type { GuessFeedback } from "@/games/kanji-kanaru/_lib/types";
+import GameBoard from "@/play/games/kanji-kanaru/_components/GameBoard";
+import type { GuessFeedback } from "@/play/games/kanji-kanaru/_lib/types";
 
 describe("GameBoard", () => {
   test("renders empty board with correct number of rows", () => {

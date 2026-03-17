@@ -11,13 +11,13 @@ import type {
   KanjiEntry,
   Difficulty,
   PuzzleScheduleEntry,
-} from "@/games/kanji-kanaru/_lib/types";
-import { DIFFICULTY_GRADE_MAX } from "@/games/kanji-kanaru/_lib/types";
-import { getTodaysPuzzle } from "@/games/kanji-kanaru/_lib/daily";
+} from "@/play/games/kanji-kanaru/_lib/types";
+import { DIFFICULTY_GRADE_MAX } from "@/play/games/kanji-kanaru/_lib/types";
+import { getTodaysPuzzle } from "@/play/games/kanji-kanaru/_lib/daily";
 import kanjiDataJson from "@/data/kanji-data.json";
-import beginnerSchedule from "@/games/kanji-kanaru/data/puzzle-schedule-beginner.json";
-import intermediateSchedule from "@/games/kanji-kanaru/data/puzzle-schedule-intermediate.json";
-import advancedSchedule from "@/games/kanji-kanaru/data/puzzle-schedule-advanced.json";
+import beginnerSchedule from "@/play/games/kanji-kanaru/data/puzzle-schedule-beginner.json";
+import intermediateSchedule from "@/play/games/kanji-kanaru/data/puzzle-schedule-intermediate.json";
+import advancedSchedule from "@/play/games/kanji-kanaru/data/puzzle-schedule-advanced.json";
 
 /** All 2,136 kanji entries. */
 const allKanjiData = kanjiDataJson as KanjiEntry[];

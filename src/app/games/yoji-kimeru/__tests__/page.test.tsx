@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react";
 import YojiKimeruPage from "../page";
 
 // Mock the GameContainer since it relies on client-side APIs
-vi.mock("@/games/yoji-kimeru/_components/GameContainer", () => ({
+vi.mock("@/play/games/yoji-kimeru/_components/GameContainer", () => ({
   default: () => <div data-testid="game-container">GameContainer</div>,
 }));
 
