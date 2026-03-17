@@ -1,13 +1,13 @@
 "use client";
 
-import type { QuizAnswer } from "@/quiz/types";
+import type { QuizAnswer } from "@/play/quiz/types";
 import {
   getAxisScores,
   getMaxAxisScores,
   AXIS_IDS,
   type AxisId,
-} from "@/quiz/data/science-thinking";
-import scienceThinkingQuiz from "@/quiz/data/science-thinking";
+} from "@/play/quiz/data/science-thinking";
+import scienceThinkingQuiz from "@/play/quiz/data/science-thinking";
 import RadarChart from "./RadarChart";
 import InviteFriendButton from "./InviteFriendButton";
 import styles from "./ScienceThinkingResultExtra.module.css";

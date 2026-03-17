@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Breadcrumb from "@/components/common/Breadcrumb";
 import TrustLevelBadge from "@/components/common/TrustLevelBadge";
-import QuizContainer from "@/quiz/_components/QuizContainer";
-import { quizBySlug, getAllQuizSlugs } from "@/quiz/registry";
+import QuizContainer from "@/play/quiz/_components/QuizContainer";
+import { quizBySlug, getAllQuizSlugs } from "@/play/quiz/registry";
 import {
   generateQuizMetadata,
   generateQuizJsonLd,

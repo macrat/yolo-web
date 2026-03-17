@@ -2,27 +2,27 @@
 
 import {
   getCompatibility,
-  isValidAnimalTypeId,
-} from "@/quiz/data/animal-personality";
-import animalPersonalityQuiz from "@/quiz/data/animal-personality";
+  isValidCharacterTypeId,
+} from "@/play/quiz/data/character-fortune";
+import characterFortuneQuiz from "@/play/quiz/data/character-fortune";
 import CompatibilitySection from "./CompatibilitySection";
 import InviteFriendButton from "./InviteFriendButton";
 
-interface AnimalPersonalityResultExtraProps {
+interface CharacterFortuneResultExtraProps {
   resultId: string;
   referrerTypeId?: string;
 }
 
 /**
- * Returns a render function for extra content below the animal personality
+ * Returns a render function for extra content below the character fortune
  * quiz result card. Used by QuizContainer's renderResultExtra prop.
  */
-export function renderAnimalPersonalityExtra(
+export function renderCharacterFortuneExtra(
   referrerTypeId?: string,
 ): (resultId: string, refTypeId?: string) => React.ReactNode {
   function ResultExtraRenderer(resultId: string): React.ReactNode {
     return (
-      <AnimalPersonalityResultExtra
+      <CharacterFortuneResultExtra
         resultId={resultId}
         referrerTypeId={referrerTypeId}
       />
@@ -31,17 +31,17 @@ export function renderAnimalPersonalityExtra(
   return ResultExtraRenderer;
 }
 
-function AnimalPersonalityResultExtra({
+function CharacterFortuneResultExtra({
   resultId,
   referrerTypeId,
-}: AnimalPersonalityResultExtraProps) {
-  const quiz = animalPersonalityQuiz;
+}: CharacterFortuneResultExtraProps) {
+  const quiz = characterFortuneQuiz;
   const myResult = quiz.results.find((r) => r.id === resultId);
 
   if (!myResult) return null;
 
   // If we have a valid referrer type, show compatibility
-  if (referrerTypeId && isValidAnimalTypeId(referrerTypeId)) {
+  if (referrerTypeId && isValidCharacterTypeId(referrerTypeId)) {
     const friendResult = quiz.results.find((r) => r.id === referrerTypeId);
     const compatibility = getCompatibility(resultId, referrerTypeId);
 
@@ -66,7 +66,7 @@ function AnimalPersonalityResultExtra({
           <InviteFriendButton
             quizSlug={quiz.meta.slug}
             resultTypeId={resultId}
-            inviteText="日本の固有種診断で相性を調べよう!"
+            inviteText="キャラ診断で相性を調べよう!"
           />
         </>
       );
@@ -78,7 +78,7 @@ function AnimalPersonalityResultExtra({
     <InviteFriendButton
       quizSlug={quiz.meta.slug}
       resultTypeId={resultId}
-      inviteText="日本の固有種診断で相性を調べよう!"
+      inviteText="キャラ診断で相性を調べよう!"
     />
   );
 }

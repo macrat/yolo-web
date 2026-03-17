@@ -2,17 +2,17 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Breadcrumb from "@/components/common/Breadcrumb";
-import ShareButtons from "@/quiz/_components/ShareButtons";
+import ShareButtons from "@/play/quiz/_components/ShareButtons";
 import {
   quizBySlug,
   getAllQuizSlugs,
   getResultIdsForQuiz,
-} from "@/quiz/registry";
+} from "@/play/quiz/registry";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import {
   getCompatibility,
   isValidMusicTypeId,
-} from "@/quiz/data/music-personality";
+} from "@/play/quiz/data/music-personality";
 import CompatibilityDisplay from "./CompatibilityDisplay";
 import styles from "./page.module.css";
 

@@ -9,7 +9,7 @@ import {
   getAllPlaySlugs,
 } from "../registry";
 import { allGameMetas } from "@/play/games/registry";
-import { allQuizMetas } from "@/quiz/registry";
+import { allQuizMetas } from "@/play/quiz/registry";
 
 const EXPECTED_GAME_SLUGS = [
   "kanji-kanaru",

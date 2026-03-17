@@ -340,7 +340,7 @@ describe("動的metadataページのSEO検証", () => {
 
   test("/quiz/[slug]/result/[resultId]: SEO必須項目が存在する", async () => {
     const { getAllQuizSlugs, getResultIdsForQuiz } =
-      await import("@/quiz/registry");
+      await import("@/play/quiz/registry");
     const slugs = getAllQuizSlugs();
     if (slugs.length === 0) return;
 
@@ -377,7 +377,7 @@ describe("動的metadataページのSEO検証", () => {
   });
 
   test("/quiz/[slug]: SEO必須項目が存在する", async () => {
-    const { getAllQuizSlugs } = await import("@/quiz/registry");
+    const { getAllQuizSlugs } = await import("@/play/quiz/registry");
     const slugs = getAllQuizSlugs();
     if (slugs.length === 0) return; // データがなければスキップ
     const slug = slugs[0];

@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import type { QuizAnswer } from "@/quiz/types";
+import type { QuizAnswer } from "@/play/quiz/types";
 
 /**
  * Lazy-loaded wrappers for quiz-specific result extra components.
