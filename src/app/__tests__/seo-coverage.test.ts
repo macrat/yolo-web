@@ -107,33 +107,26 @@ const staticPages: Array<{
       import("@/app/about/page").then((m) => m.metadata as Metadata),
   },
   {
-    path: "/games",
-    importMeta: () =>
-      import("@/app/games/page").then((m) => m.metadata as Metadata),
-  },
-  {
     path: "/play/kanji-kanaru",
     importMeta: () =>
-      import("@/app/games/kanji-kanaru/page").then(
+      import("@/app/play/kanji-kanaru/page").then(
         (m) => m.metadata as Metadata,
       ),
   },
   {
     path: "/play/irodori",
     importMeta: () =>
-      import("@/app/games/irodori/page").then((m) => m.metadata as Metadata),
+      import("@/app/play/irodori/page").then((m) => m.metadata as Metadata),
   },
   {
     path: "/play/nakamawake",
     importMeta: () =>
-      import("@/app/games/nakamawake/page").then((m) => m.metadata as Metadata),
+      import("@/app/play/nakamawake/page").then((m) => m.metadata as Metadata),
   },
   {
     path: "/play/yoji-kimeru",
     importMeta: () =>
-      import("@/app/games/yoji-kimeru/page").then(
-        (m) => m.metadata as Metadata,
-      ),
+      import("@/app/play/yoji-kimeru/page").then((m) => m.metadata as Metadata),
   },
   {
     path: "/tools",
