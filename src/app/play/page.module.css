@@ -8,27 +8,112 @@
 /* ===== Hero banner ===== */
 .heroBanner {
   text-align: center;
-  padding: 2rem 1rem;
+  padding: 3rem 1rem;
   margin-bottom: 1.5rem;
-  background: linear-gradient(
-    135deg,
-    var(--color-bg-secondary),
-    var(--color-bg)
-  );
+  /* カラフルなグラデーション（紫→青→シアン系） */
+  background: linear-gradient(135deg, #6c3bea 0%, #4466dd 40%, #1bb5c8 100%);
   border-radius: 0.75rem;
-  border: 1px solid var(--color-border);
+  border: none;
+  /* 装飾絵文字の配置基準 */
+  position: relative;
+  overflow: hidden;
+}
+
+/* 装飾絵文字の共通スタイル（背景に散らして半透明に） */
+.heroDeco1,
+.heroDeco2,
+.heroDeco3,
+.heroDeco4 {
+  position: absolute;
+  font-size: 3rem;
+  opacity: 0.15;
+  pointer-events: none;
+  user-select: none;
+}
+
+.heroDeco1 {
+  top: 10%;
+  left: 5%;
+  transform: rotate(-15deg);
+}
+
+.heroDeco2 {
+  top: 15%;
+  right: 8%;
+  transform: rotate(10deg);
+}
+
+.heroDeco3 {
+  bottom: 10%;
+  left: 8%;
+  transform: rotate(5deg);
+}
+
+.heroDeco4 {
+  bottom: 15%;
+  right: 5%;
+  transform: rotate(-10deg);
 }
 
 .heroTitle {
-  font-size: 1.75rem;
+  font-size: 2.25rem;
   font-weight: 700;
-  color: var(--color-text);
+  /* 白文字でグラデーション背景との対比を確保 */
+  color: #ffffff;
   margin-bottom: 0.5rem;
+  position: relative;
+  z-index: 1;
 }
 
 .heroSubtext {
   font-size: 0.95rem;
+  /* 白の半透明でサブテキストを柔らかく表示 */
+  color: rgba(255, 255, 255, 0.85);
+  position: relative;
+  z-index: 1;
+}
+
+/* ===== Category navigation tabs ===== */
+/* ヒーロー直下に配置するカテゴリアンカーリンクタブ */
+.categoryNav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+  /* モバイルでは横スクロール可能にするため overflow-x: auto を許容する */
+  overflow-x: auto;
+  /* スクロールバーを非表示にしつつスクロール可能にする */
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 0.25rem;
+}
+
+.categoryNav::-webkit-scrollbar {
+  display: none;
+}
+
+/* カテゴリタブの各リンクスタイル */
+.categoryNavTab {
+  display: inline-block;
+  padding: 0.35rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
   color: var(--color-text-muted);
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background-color 0.15s,
+    color 0.15s,
+    border-color 0.15s;
+}
+
+.categoryNavTab:hover {
+  background-color: var(--color-border);
+  color: var(--color-text);
 }
 
 /* ===== Category section ===== */
@@ -59,8 +144,12 @@
 .card {
   display: flex;
   flex-direction: column;
+  /* カード上部にaccentColorの太いカラー帯を追加して視覚的な差別化を図る */
+  border-top: 5px solid var(--play-accent);
   padding: 1.5rem;
-  border: 2px solid var(--color-border);
+  border-left: 1px solid var(--color-border);
+  border-right: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
   border-radius: 0.75rem;
   text-decoration: none;
   color: inherit;
@@ -71,21 +160,56 @@
 }
 
 .card:hover {
-  border-color: var(--play-accent);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   transform: translateY(-2px);
 }
 
+/* アイコンをaccentColorの薄い背景円でラップ */
+.cardIconWrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* accentColorの10%透明度の背景円 */
+  background-color: color-mix(in srgb, var(--play-accent) 10%, transparent);
+  border-radius: 50%;
+  width: 4rem;
+  height: 4rem;
+  margin-bottom: 0.75rem;
+}
+
 .cardIcon {
-  font-size: 2rem;
+  font-size: 3rem;
+  line-height: 1;
+}
+
+/* タイトルとデイリーバッジを横並びに配置するラッパー */
+.cardTitleRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
   margin-bottom: 0.5rem;
 }
 
 .cardTitle {
   font-size: 1.1rem;
   font-weight: 700;
-  margin-bottom: 0.5rem;
   color: var(--color-text);
+  /* ラッパー移行後はmargin-bottomをcardTitleRowで管理する */
+  margin-bottom: 0;
+}
+
+/* ===== Daily badge ===== */
+/* 毎日更新コンテンツにのみ表示するオレンジ系のピル型バッジ */
+.dailyBadge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  background-color: #f97316;
+  color: #ffffff;
+  border-radius: 999px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .cardDescription {
@@ -114,17 +238,15 @@
   font-weight: 600;
   padding: 0.3rem 0.9rem;
   background-color: var(--play-accent);
-  color: #ffffff;
+  /* WCAG AA基準を満たすテキスト色をJSで計算したCSS変数で適用。フォールバックは#ffffff */
+  color: var(--play-cta-text, #ffffff);
   border-radius: 999px;
 }
 
 /* ===== Dark mode ===== */
 :global(:root.dark) .heroBanner {
-  background: linear-gradient(
-    135deg,
-    var(--color-bg-secondary),
-    var(--color-bg)
-  );
+  /* ダークモード時は暗めのグラデーション */
+  background: linear-gradient(135deg, #3d1e8f 0%, #1e3a8a 40%, #0e6b7a 100%);
 }
 
 :global(:root.dark) .card:hover {
@@ -138,12 +260,47 @@
   }
 
   .heroTitle {
-    font-size: 1.4rem;
+    font-size: 1.75rem;
   }
 }
 
 @media (max-width: 640px) {
+  /* モバイルでは横スクロール可能に（タブが折り返されず1行で流れる） */
+  .categoryNav {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+  }
+
+  /* モバイルでも2カラムを維持する */
   .grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  /* モバイル向けカードのコンパクト化 */
+  .card {
+    padding: 1rem 0.75rem;
+  }
+
+  /* モバイルではdescriptionを非表示にして省スペース化 */
+  .cardDescription {
+    display: none;
+  }
+
+  /* モバイルではアイコンサイズを縮小 */
+  .cardIconWrapper {
+    width: 3rem;
+    height: 3rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .cardIcon {
+    font-size: 2.5rem;
+  }
+
+  /* モバイルではCTAボタンを小さく */
+  .cardCta {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.6rem;
   }
 }
