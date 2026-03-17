@@ -125,10 +125,16 @@
 | music-personality        | 音楽性格診断                    | 診断       |
 | traditional-color        | あなたを日本の伝統色に例えると? | 診断       |
 | yoji-personality         | あなたを四字熟語に例えると?     | 診断       |
-| impossible-advice        | 達成困難アドバイス診断          | 診断       |
-| contrarian-fortune       | 逆張り運勢診断                  | 診断       |
-| unexpected-compatibility | 斜め上の相性診断                | 診断       |
+| impossible-advice        | 達成困難アドバイス診断          | 占い       |
+| contrarian-fortune       | 逆張り運勢診断                  | 占い       |
+| unexpected-compatibility | 斜め上の相性診断                | 占い       |
+| animal-personality       | 動物性格診断                    | 診断       |
+| science-thinking         | 理系思考スタイル多次元診断      | 診断       |
+| japanese-culture         | 日本文化適性診断                | 診断       |
+| character-personality    | キャラクター性格診断            | 診断       |
 | kanji-level              | 漢字力診断                      | 知識テスト |
 | kotowaza-level           | ことわざ・慣用句力診断          | 知識テスト |
 | yoji-level               | 四字熟語力診断                  | 知識テスト |
 | daily-fortunes           | 毎日の運勢                      | おみくじ   |
+
+※ contrarian-fortune, impossible-advice, unexpected-compatibility はフローチャート上は「診断」に該当するが、Q43ユーモア占いの構成コンテンツとしてユーザー視点での分類を優先し「占い」に分類している。
