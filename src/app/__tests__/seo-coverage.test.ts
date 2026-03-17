@@ -8,7 +8,7 @@
 import { describe, test, expect } from "vitest";
 import type { Metadata } from "next";
 import { SITE_NAME } from "@/lib/constants";
-import { allGameMetas, getGamePath } from "@/games/registry";
+import { allGameMetas, getGamePath } from "@/play/games/registry";
 
 /**
  * 共通SEOメタデータアサーション関数。
@@ -112,24 +112,24 @@ const staticPages: Array<{
       import("@/app/games/page").then((m) => m.metadata as Metadata),
   },
   {
-    path: "/games/kanji-kanaru",
+    path: "/play/kanji-kanaru",
     importMeta: () =>
       import("@/app/games/kanji-kanaru/page").then(
         (m) => m.metadata as Metadata,
       ),
   },
   {
-    path: "/games/irodori",
+    path: "/play/irodori",
     importMeta: () =>
       import("@/app/games/irodori/page").then((m) => m.metadata as Metadata),
   },
   {
-    path: "/games/nakamawake",
+    path: "/play/nakamawake",
     importMeta: () =>
       import("@/app/games/nakamawake/page").then((m) => m.metadata as Metadata),
   },
   {
-    path: "/games/yoji-kimeru",
+    path: "/play/yoji-kimeru",
     importMeta: () =>
       import("@/app/games/yoji-kimeru/page").then(
         (m) => m.metadata as Metadata,

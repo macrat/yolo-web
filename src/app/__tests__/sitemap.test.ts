@@ -1,6 +1,6 @@
 import { describe, test, expect } from "vitest";
 import sitemap from "../sitemap";
-import { allGameMetas } from "@/games/registry";
+import { allGameMetas } from "@/play/games/registry";
 import { allQuizMetas } from "@/quiz/registry";
 import { allCheatsheetMetas } from "@/cheatsheets/registry";
 import { BASE_URL } from "@/lib/constants";
@@ -16,17 +16,17 @@ describe("sitemap", () => {
     );
   });
 
-  test("sitemap includes /games/kanji-kanaru with monthly frequency", () => {
+  test("sitemap includes /play/kanji-kanaru with monthly frequency", () => {
     const entries = sitemap();
     const kanjiEntry = entries.find((e) =>
-      e.url.includes("/games/kanji-kanaru"),
+      e.url.includes("/play/kanji-kanaru"),
     );
     expect(kanjiEntry?.changeFrequency).toBe("monthly");
   });
 
-  test("sitemap includes /games/yoji-kimeru with monthly frequency", () => {
+  test("sitemap includes /play/yoji-kimeru with monthly frequency", () => {
     const entries = sitemap();
-    const yojiEntry = entries.find((e) => e.url.includes("/games/yoji-kimeru"));
+    const yojiEntry = entries.find((e) => e.url.includes("/play/yoji-kimeru"));
     expect(yojiEntry).toBeDefined();
     expect(yojiEntry?.changeFrequency).toBe("monthly");
   });
@@ -184,7 +184,7 @@ describe("sitemap", () => {
     for (const game of allGameMetas) {
       const gameEntry = entries.find(
         (e) =>
-          typeof e.url === "string" && e.url.endsWith(`/games/${game.slug}`),
+          typeof e.url === "string" && e.url.endsWith(`/play/${game.slug}`),
       );
       expect(gameEntry).toBeDefined();
       expect(gameEntry?.lastModified).toEqual(

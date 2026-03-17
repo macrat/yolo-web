@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { safeJsonLdStringify } from "@/lib/seo";
-import { gameBySlug } from "@/games/registry";
-import { buildGameJsonLd, buildGamePageMetadata } from "@/games/seo";
-import GameLayout from "@/games/_components/GameLayout";
-import GameContainer from "@/games/nakamawake/_components/GameContainer";
+import { gameBySlug } from "@/play/games/registry";
+import { buildGameJsonLd, buildGamePageMetadata } from "@/play/games/seo";
+import GameLayout from "@/play/games/_components/GameLayout";
+import GameContainer from "@/play/games/nakamawake/_components/GameContainer";
 
 const gameMeta = gameBySlug.get("nakamawake")!;
 

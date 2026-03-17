@@ -7,4 +7,4 @@
  * "YYYY-MM-DD" format, so sharing the implementation is preferred.
  */
 
-export { getTodayJst } from "@/games/shared/_lib/crossGameProgress";
+export { getTodayJst } from "@/play/games/shared/_lib/crossGameProgress";

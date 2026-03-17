@@ -3,7 +3,7 @@ import {
   ogpSize,
   ogpContentType,
 } from "@/lib/ogp-image";
-import { gameBySlug } from "@/games/registry";
+import { gameBySlug } from "@/play/games/registry";
 
 const meta = gameBySlug.get("nakamawake")!;
 

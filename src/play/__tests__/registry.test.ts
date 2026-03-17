@@ -6,7 +6,7 @@ import {
   getPlayContentsByCategory,
   getAllPlaySlugs,
 } from "../registry";
-import { allGameMetas } from "@/games/registry";
+import { allGameMetas } from "@/play/games/registry";
 
 const EXPECTED_GAME_SLUGS = [
   "kanji-kanaru",

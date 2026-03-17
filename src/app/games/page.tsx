@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
-import { allGameMetas } from "@/games/registry";
+import { allGameMetas } from "@/play/games/registry";
 import TodayDate from "./TodayDate";
 import styles from "./page.module.css";
 
