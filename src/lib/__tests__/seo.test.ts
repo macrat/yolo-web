@@ -13,8 +13,6 @@ import {
   generateYojiPageMetadata,
   generateColorCategoryMetadata,
   generateCheatsheetMetadata,
-  generateQuizMetadata,
-  generateQuizJsonLd,
   safeJsonLdStringify,
 } from "../seo";
 
@@ -594,101 +592,6 @@ describe("generateColorCategoryMetadata", () => {
   });
 });
 
-describe("generateQuizMetadata", () => {
-  const quizData = {
-    slug: "kanji-quiz",
-    title: "漢字力診断",
-    description: "漢字力を診断します。",
-    shortDescription: "漢字力テスト",
-    type: "knowledge" as const,
-    category: "knowledge" as const,
-    questionCount: 10,
-    icon: "漢",
-    accentColor: "#ff0000",
-    keywords: ["漢字", "クイズ"],
-    publishedAt: "2026-02-01T00:00:00+09:00",
-    trustLevel: "curated" as const,
-  };
-
-  test("titleにクイズタイトルとサイト名を含む", () => {
-    const result = generateQuizMetadata(quizData);
-    expect(result.title).toContain("漢字力診断");
-    expect(result.title).toContain("yolos.net");
-  });
-
-  test("canonical URLが絶対URLで正しいパスを含む", () => {
-    const result = generateQuizMetadata(quizData);
-    const canonical = result.alternates?.canonical as string;
-    expect(canonical).toContain("/quiz/kanji-quiz");
-    expect(canonical).toMatch(/^https:\/\//);
-  });
-
-  test("og:urlが存在しcanonicalと一致する", () => {
-    const result = generateQuizMetadata(quizData);
-    const og = result.openGraph as Record<string, unknown> | undefined;
-    expect(og?.url).toBeDefined();
-    expect(og?.url).toBe(result.alternates?.canonical);
-  });
-
-  test("og:titleが存在する", () => {
-    const result = generateQuizMetadata(quizData);
-    const og = result.openGraph as Record<string, unknown> | undefined;
-    expect(og?.title).toBeDefined();
-  });
-
-  test("og:descriptionが存在する", () => {
-    const result = generateQuizMetadata(quizData);
-    const og = result.openGraph as Record<string, unknown> | undefined;
-    expect(og?.description).toBeDefined();
-  });
-
-  test("og:siteNameがyolos.netである", () => {
-    const result = generateQuizMetadata(quizData);
-    const og = result.openGraph as Record<string, unknown> | undefined;
-    expect(og?.siteName).toBe("yolos.net");
-  });
-});
-
-describe("generateQuizJsonLd", () => {
-  const quizData = {
-    slug: "kanji-quiz",
-    title: "漢字力診断",
-    description: "漢字力を診断します。",
-    shortDescription: "漢字力テスト",
-    type: "knowledge" as const,
-    category: "knowledge" as const,
-    questionCount: 10,
-    icon: "漢",
-    accentColor: "#ff0000",
-    keywords: ["漢字", "クイズ"],
-    publishedAt: "2026-02-01T00:00:00+09:00",
-    trustLevel: "curated" as const,
-  };
-
-  test("datePublishedがpublishedAtと一致する", () => {
-    const result = generateQuizJsonLd(quizData) as Record<string, unknown>;
-    expect(result.datePublished).toBe("2026-02-01T00:00:00+09:00");
-  });
-
-  test("dateModifiedがpublishedAtにフォールバックする（updatedAtなし）", () => {
-    const result = generateQuizJsonLd(quizData) as Record<string, unknown>;
-    expect(result.dateModified).toBe("2026-02-01T00:00:00+09:00");
-  });
-
-  test("dateModifiedがupdatedAtを使用する（updatedAtあり）", () => {
-    const quizWithUpdate = {
-      ...quizData,
-      updatedAt: "2026-02-20T15:00:00+09:00",
-    };
-    const result = generateQuizJsonLd(quizWithUpdate) as Record<
-      string,
-      unknown
-    >;
-    expect(result.datePublished).toBe("2026-02-01T00:00:00+09:00");
-    expect(result.dateModified).toBe("2026-02-20T15:00:00+09:00");
-  });
-});
-
 describe("factory functions include twitter metadata", () => {
   test("generateToolMetadata includes twitter", () => {
     const result = generateToolMetadata({
@@ -787,29 +690,6 @@ describe("factory functions include twitter metadata", () => {
     expect(result.twitter).toMatchObject({
       card: "summary_large_image",
       title: "テストチートシート - チートシート",
-      description: "テストの説明",
-    });
-  });
-
-  test("generateQuizMetadata includes twitter", () => {
-    const result = generateQuizMetadata({
-      slug: "test-quiz",
-      title: "テストクイズ",
-      description: "テストの説明",
-      shortDescription: "短い説明",
-      keywords: ["テスト"],
-      questionCount: 10,
-      type: "knowledge",
-      category: "knowledge" as const,
-      publishedAt: "2026-02-15T10:00:00+09:00",
-      icon: "Q",
-      accentColor: "#000",
-      trustLevel: "generated",
-    });
-
-    expect(result.twitter).toMatchObject({
-      card: "summary_large_image",
-      title: "テストクイズ - クイズ",
       description: "テストの説明",
     });
   });

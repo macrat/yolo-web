@@ -51,11 +51,11 @@ const characterFortuneQuiz: QuizDefinition = {
     relatedLinks: [
       {
         label: "音楽性格診断を受ける",
-        href: "/quiz/music-personality",
+        href: "/play/music-personality",
       },
       {
         label: "逆張り運勢診断を受ける",
-        href: "/quiz/contrarian-fortune",
+        href: "/play/contrarian-fortune",
       },
     ],
     trustLevel: "generated",

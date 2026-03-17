@@ -5,6 +5,7 @@ import { getAllBlogPosts } from "@/blog/_lib/blog";
 import { allToolMetas } from "@/tools/registry";
 import { allQuizMetas } from "@/play/quiz/registry";
 import { allGameMetas } from "@/play/games/registry";
+import { allPlayContents } from "@/play/registry";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import styles from "./page.module.css";
 
@@ -48,14 +49,9 @@ export default function Home() {
       href: "/tools",
     },
     {
-      label: `${allGameMetas.length} デイリーパズル`,
+      label: `${allPlayContents.length} 遊ぶ`,
       icon: "\u{1F3AE}",
       href: "/play",
-    },
-    {
-      label: `${allQuizMetas.length} クイズ・診断`,
-      icon: "\u{1F9E0}",
-      href: "/quiz",
     },
     { label: "AI運営ブログ", icon: "\u{1F4DD}", href: "/blog" },
   ];
@@ -125,7 +121,7 @@ export default function Home() {
           {allQuizMetas.map((quiz) => (
             <Link
               key={quiz.slug}
-              href={`/quiz/${quiz.slug}`}
+              href={`/play/${quiz.slug}`}
               className={styles.quizCard}
               style={
                 {
@@ -143,7 +139,7 @@ export default function Home() {
           ))}
         </div>
         <div className={styles.seeAll}>
-          <Link href="/quiz" className={styles.seeAllLink}>
+          <Link href="/play" className={styles.seeAllLink}>
             全クイズを見る
           </Link>
         </div>

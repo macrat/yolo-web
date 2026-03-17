@@ -74,6 +74,11 @@ vi.mock("@/play/quiz/registry", () => ({
   ],
 }));
 
+vi.mock("@/play/registry", () => ({
+  // 4 games + 2 quizzes + 1 fortune = 7 total (mocked values)
+  allPlayContents: new Array(7).fill(null),
+}));
+
 test("Home page renders heading", () => {
   render(<Home />);
   expect(
@@ -93,8 +98,8 @@ test("Home page renders hero description", () => {
 test("Home page renders stat badges with dynamic counts", () => {
   render(<Home />);
   expect(screen.getByText(/6 ツール/)).toBeInTheDocument();
-  expect(screen.getByText(/4 デイリーパズル/)).toBeInTheDocument();
-  expect(screen.getByText(/2 クイズ・診断/)).toBeInTheDocument();
+  // allPlayContents は 7件（mock）。ゲーム・クイズ・Fortuneを統合した「遊ぶ」バッジ
+  expect(screen.getByText(/7 遊ぶ/)).toBeInTheDocument();
   expect(screen.getByText(/AI運営ブログ/)).toBeInTheDocument();
 });
 
@@ -104,12 +109,10 @@ test("Home page renders stat badges as links", () => {
     "href",
     "/tools",
   );
-  expect(
-    screen.getByRole("link", { name: /4 デイリーパズル/ }),
-  ).toHaveAttribute("href", "/play");
-  expect(screen.getByRole("link", { name: /2 クイズ・診断/ })).toHaveAttribute(
+  // クイズ・診断バッジを削除し、「遊ぶ」バッジに統合
+  expect(screen.getByRole("link", { name: /7 遊ぶ/ })).toHaveAttribute(
     "href",
-    "/quiz",
+    "/play",
   );
   expect(screen.getByRole("link", { name: /AI運営ブログ/ })).toHaveAttribute(
     "href",

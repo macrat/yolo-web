@@ -61,11 +61,11 @@ const characterPersonalityQuiz: QuizDefinition = {
     relatedLinks: [
       {
         label: "守護キャラ診断を受ける",
-        href: "/quiz/character-fortune",
+        href: "/play/character-fortune",
       },
       {
         label: "音楽性格診断を受ける",
-        href: "/quiz/music-personality",
+        href: "/play/music-personality",
       },
     ],
     trustLevel: "generated",

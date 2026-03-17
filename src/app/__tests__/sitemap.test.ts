@@ -97,13 +97,33 @@ describe("sitemap", () => {
     for (const meta of allQuizMetas) {
       const quizEntry = entries.find(
         (e) =>
-          typeof e.url === "string" && e.url.endsWith(`/quiz/${meta.slug}`),
+          typeof e.url === "string" && e.url.endsWith(`/play/${meta.slug}`),
       );
       expect(quizEntry).toBeDefined();
       expect(quizEntry?.lastModified).toEqual(
         new Date(meta.updatedAt || meta.publishedAt),
       );
     }
+  });
+
+  test("sitemap does not include /quiz list page", () => {
+    const entries = sitemap();
+    const urls = entries.map((e) => e.url);
+    expect(urls).not.toContain(`${BASE_URL}/quiz`);
+  });
+
+  test("sitemap does not include /quiz/:slug entries", () => {
+    const entries = sitemap();
+    const quizEntries = entries.filter(
+      (e) => typeof e.url === "string" && e.url.includes(`${BASE_URL}/quiz/`),
+    );
+    expect(quizEntries).toHaveLength(0);
+  });
+
+  test("sitemap includes /play/daily entry", () => {
+    const entries = sitemap();
+    const urls = entries.map((e) => e.url);
+    expect(urls).toContain(`${BASE_URL}/play/daily`);
   });
 
   test("cheatsheet page lastModified matches each cheatsheet updatedAt or publishedAt", () => {
@@ -126,7 +146,7 @@ describe("sitemap", () => {
     const resultEntries = entries.filter(
       (e) =>
         typeof e.url === "string" &&
-        e.url.includes("/quiz/") &&
+        e.url.includes("/play/") &&
         e.url.includes("/result/"),
     );
     expect(resultEntries).toHaveLength(0);
@@ -211,7 +231,6 @@ describe("sitemap", () => {
       "/blog",
       "/tools",
       "/play",
-      "/quiz",
       "/cheatsheets",
       "/dictionary",
     ];

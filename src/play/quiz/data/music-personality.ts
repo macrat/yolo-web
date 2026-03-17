@@ -48,11 +48,11 @@ const musicPersonalityQuiz: QuizDefinition = {
     relatedLinks: [
       {
         label: "逆張り運勢診断を受ける",
-        href: "/quiz/contrarian-fortune",
+        href: "/play/contrarian-fortune",
       },
       {
         label: "斜め上の相性診断を受ける",
-        href: "/quiz/unexpected-compatibility",
+        href: "/play/unexpected-compatibility",
       },
     ],
     trustLevel: "generated",

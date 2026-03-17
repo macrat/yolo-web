@@ -56,7 +56,7 @@ const japaneseCultureQuiz: QuizDefinition = {
     relatedLinks: [
       {
         label: "日本にしかいない動物で性格診断を受ける",
-        href: "/quiz/animal-personality",
+        href: "/play/animal-personality",
       },
     ],
     trustLevel: "generated",

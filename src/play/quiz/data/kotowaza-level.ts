@@ -24,8 +24,8 @@ const kotowazaLevelQuiz: QuizDefinition = {
     ],
     publishedAt: "2026-02-26T15:39:19+09:00",
     relatedLinks: [
-      { label: "漢字力診断に挑戦", href: "/quiz/kanji-level" },
-      { label: "四字熟語力診断に挑戦", href: "/quiz/yoji-level" },
+      { label: "漢字力診断に挑戦", href: "/play/kanji-level" },
+      { label: "四字熟語力診断に挑戦", href: "/play/yoji-level" },
     ],
     trustLevel: "curated",
     trustNote:
@@ -172,7 +172,7 @@ const kotowazaLevelQuiz: QuizDefinition = {
       icon: "\u{1F331}",
       minScore: 0,
       recommendation: "漢字力診断にも挑戦してみよう",
-      recommendationLink: "/quiz/kanji-level",
+      recommendationLink: "/play/kanji-level",
     },
     {
       id: "learner",
@@ -182,7 +182,7 @@ const kotowazaLevelQuiz: QuizDefinition = {
       icon: "\u{1F4DD}",
       minScore: 3,
       recommendation: "四字熟語力診断で語彙力をさらに試そう",
-      recommendationLink: "/quiz/yoji-level",
+      recommendationLink: "/play/yoji-level",
     },
     {
       id: "intermediate",
@@ -192,7 +192,7 @@ const kotowazaLevelQuiz: QuizDefinition = {
       icon: "\u{1F4D6}",
       minScore: 5,
       recommendation: "漢字力診断であなたの漢字力も確認しよう",
-      recommendationLink: "/quiz/kanji-level",
+      recommendationLink: "/play/kanji-level",
     },
     {
       id: "advanced",
@@ -202,7 +202,7 @@ const kotowazaLevelQuiz: QuizDefinition = {
       icon: "\u{1F393}",
       minScore: 7,
       recommendation: "四字熟語力診断にも挑戦しよう",
-      recommendationLink: "/quiz/yoji-level",
+      recommendationLink: "/play/yoji-level",
     },
     {
       id: "master",
@@ -212,7 +212,7 @@ const kotowazaLevelQuiz: QuizDefinition = {
       icon: "\u{1F451}",
       minScore: 9,
       recommendation: "漢字力診断で漢字力も確認しよう",
-      recommendationLink: "/quiz/kanji-level",
+      recommendationLink: "/play/kanji-level",
     },
   ],
 };

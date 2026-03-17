@@ -1,19 +1,22 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
-import { allPlayContents } from "@/play/registry";
-import { getPlayPath } from "@/play/paths";
+import { getPlayContentsByCategory } from "@/play/registry";
+import type { PlayContentMeta } from "@/play/types";
+import { getPlayPath, getDailyFortunePath } from "@/play/paths";
+import { allQuizMetas } from "@/play/quiz/registry";
 import Breadcrumb from "@/components/common/Breadcrumb";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
   title: `遊ぶ | ${SITE_NAME}`,
   description:
-    "ゲーム、クイズ、診断などインタラクティブなコンテンツの入口。ブラウザで無料で遊べるパズルや知識テストが揃っています。",
+    "占い・性格診断・知識テスト・ゲームなど全19種のインタラクティブコンテンツが揃う入口。今日の運勢、性格診断、漢字クイズ、パズルゲームをブラウザで無料で楽しめます。",
   keywords: [
     "ゲーム",
     "クイズ",
     "診断",
+    "占い",
     "パズル",
     "ブラウザゲーム",
     "無料",
@@ -22,7 +25,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: `遊ぶ | ${SITE_NAME}`,
     description:
-      "ゲーム、クイズ、診断などインタラクティブなコンテンツの入口。ブラウザで無料で遊べます。",
+      "占い・性格診断・知識テスト・ゲームなど全19種のコンテンツがブラウザで無料で楽しめます。",
     type: "website",
     url: `${BASE_URL}/play`,
     siteName: SITE_NAME,
@@ -31,12 +34,39 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: `遊ぶ | ${SITE_NAME}`,
     description:
-      "ゲーム、クイズ、診断などインタラクティブなコンテンツの入口。ブラウザで無料で遊べます。",
+      "占い・性格診断・知識テスト・ゲームなど全19種のコンテンツがブラウザで無料で楽しめます。",
   },
   alternates: {
     canonical: `${BASE_URL}/play`,
   },
 };
+
+/** カテゴリの表示順序と日本語ラベルの定義 */
+const CATEGORY_DISPLAY_ORDER: Array<{
+  category: PlayContentMeta["category"];
+  label: string;
+}> = [
+  { category: "fortune", label: "占い" },
+  { category: "personality", label: "性格診断" },
+  { category: "knowledge", label: "知識テスト" },
+  { category: "game", label: "ゲーム" },
+];
+
+/** slug → questionCount のルックアップマップ（クイズの問数表示用） */
+const quizQuestionCountBySlug: Map<string, number> = new Map(
+  allQuizMetas.map((q) => [q.slug, q.questionCount]),
+);
+
+/**
+ * コンテンツのリンク先パスを返す。
+ * Fortune（daily）は getDailyFortunePath() を使用し、それ以外は getPlayPath(slug) を使用する。
+ */
+function getContentPath(content: PlayContentMeta): string {
+  if (content.contentType === "fortune") {
+    return getDailyFortunePath();
+  }
+  return getPlayPath(content.slug);
+}
 
 export default function PlayPage() {
   return (
@@ -47,47 +77,56 @@ export default function PlayPage() {
       <section className={styles.heroBanner}>
         <h1 className={styles.heroTitle}>遊ぶ</h1>
         <p className={styles.heroSubtext}>
-          パズル・クイズ・診断など、楽しいコンテンツで遊ぼう
+          占い・診断・クイズ・ゲームなど、楽しいコンテンツで遊ぼう
         </p>
       </section>
 
-      {/* ゲーム一覧 */}
-      <div className={styles.grid} role="list" aria-label="Play contents list">
-        {allPlayContents.map((content) => (
-          <div key={content.slug} role="listitem">
-            <Link
-              href={getPlayPath(content.slug)}
-              className={styles.card}
-              style={
-                {
-                  "--play-accent": content.accentColor,
-                } as React.CSSProperties
-              }
+      {/* カテゴリ別セクション一覧 */}
+      {CATEGORY_DISPLAY_ORDER.map(({ category, label }) => {
+        const contents = getPlayContentsByCategory(category);
+        if (contents.length === 0) return null;
+        return (
+          <section key={category} className={styles.categorySection}>
+            <h2 className={styles.categoryHeading}>{label}</h2>
+            <ul
+              className={styles.grid}
+              role="list"
+              aria-label={`${label} category contents`}
             >
-              <div className={styles.cardIcon}>{content.icon}</div>
-              <h2 className={styles.cardTitle}>{content.title}</h2>
-              <p className={styles.cardDescription}>
-                {content.shortDescription}
-              </p>
-              <div className={styles.cardMeta}>
-                <span className={styles.cardCta}>遊ぶ</span>
-              </div>
-            </Link>
-          </div>
-        ))}
-      </div>
-
-      {/* クイズ・診断への誘導セクション */}
-      <section className={styles.quizPromo}>
-        <div className={styles.quizPromoContent}>
-          <p className={styles.quizPromoText}>
-            知識テストや性格診断も揃っています
-          </p>
-          <Link href="/quiz" className={styles.quizPromoLink}>
-            クイズ・診断へ →
-          </Link>
-        </div>
-      </section>
+              {contents.map((content) => {
+                const questionCount = quizQuestionCountBySlug.get(content.slug);
+                return (
+                  <li key={content.slug}>
+                    <Link
+                      href={getContentPath(content)}
+                      className={styles.card}
+                      style={
+                        {
+                          "--play-accent": content.accentColor,
+                        } as React.CSSProperties
+                      }
+                    >
+                      <div className={styles.cardIcon}>{content.icon}</div>
+                      <h3 className={styles.cardTitle}>{content.title}</h3>
+                      <p className={styles.cardDescription}>
+                        {content.shortDescription}
+                      </p>
+                      <div className={styles.cardMeta}>
+                        {questionCount !== undefined && (
+                          <span className={styles.cardQuestionCount}>
+                            {questionCount}問
+                          </span>
+                        )}
+                        <span className={styles.cardCta}>遊ぶ</span>
+                      </div>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </section>
+        );
+      })}
     </div>
   );
 }
