@@ -29,6 +29,7 @@ const musicPersonalityQuiz: QuizDefinition = {
       "音楽の聴き方、選び方、楽しみ方から、あなたの音楽性格タイプを診断します。全10問の質問に答えて、8つのタイプからあなたにぴったりの音楽性格を見つけましょう。友達との相性診断もできます!",
     shortDescription: "音楽の聴き方であなたの性格タイプを診断。友達との相性も!",
     type: "personality",
+    category: "personality",
     questionCount: 10,
     icon: "\u{1F3B5}",
     accentColor: "#8b5cf6",

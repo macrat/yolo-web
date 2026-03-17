@@ -8,6 +8,7 @@ const kotowazaLevelQuiz: QuizDefinition = {
       "ことわざや慣用句の意味から正しい表現を当てるクイズです。全10問であなたのことわざ力を診断します。有名なことわざから意外と知らない慣用句まで幅広く出題!",
     shortDescription: "ことわざ・慣用句10問であなたの語彙力を測定",
     type: "knowledge",
+    category: "knowledge",
     questionCount: 10,
     icon: "諺",
     accentColor: "#d97706",

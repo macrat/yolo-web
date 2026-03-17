@@ -44,6 +44,7 @@ const characterPersonalityQuiz: QuizDefinition = {
     shortDescription:
       "日常の行動パターン12問から、あなたに似たキャラクターを24タイプの中から診断!",
     type: "personality",
+    category: "personality",
     questionCount: 12,
     icon: "\u{1F3AD}",
     accentColor: "#7c3aed",

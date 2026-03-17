@@ -34,6 +34,7 @@ const characterFortuneQuiz: QuizDefinition = {
     shortDescription:
       "ユニークなシチュエーションから守護キャラを診断する。相性診断も!",
     type: "personality",
+    category: "personality",
     questionCount: 8,
     icon: "\u{1F52E}",
     accentColor: "#8b5cf6",

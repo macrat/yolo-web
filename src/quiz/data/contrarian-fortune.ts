@@ -27,6 +27,7 @@ const contrarianFortuneQuiz: QuizDefinition = {
       "一般的な占いが「こうです」と肯定するところを「でも実は逆です」と裏切る、斜め上の運勢診断。8つの質問に答えて、あなただけの逆張り運勢タイプを発見しましょう。",
     shortDescription: "占いの常識を裏切る、あなたの逆張り運勢タイプを診断",
     type: "personality",
+    category: "personality",
     questionCount: 8,
     icon: "\u{1F504}",
     accentColor: "#f59e0b",

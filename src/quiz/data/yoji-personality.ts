@@ -21,6 +21,7 @@ const yojiPersonalityQuiz: QuizDefinition = {
       "8つの質問に答えて、あなたの性格にぴったりの四字熟語を見つけましょう。努力家?自由人?リーダー?あなたの本質を四字熟語が教えてくれます。",
     shortDescription: "性格診断であなたにぴったりの四字熟語を発見",
     type: "personality",
+    category: "personality",
     questionCount: 8,
     icon: "\u{1F52E}",
     accentColor: "#b91c1c",
