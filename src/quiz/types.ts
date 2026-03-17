@@ -47,6 +47,8 @@ export interface QuizMeta {
   description: string;
   shortDescription: string;
   type: QuizType;
+  /** PlayContentMeta のカテゴリへの変換に使用する明示的フィールド。"knowledge" | "personality" に限定（クイズに fortune は存在しない） */
+  category: "knowledge" | "personality";
   questionCount: number;
   icon: string;
   accentColor: string;

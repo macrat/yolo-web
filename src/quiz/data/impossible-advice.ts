@@ -20,6 +20,7 @@ const impossibleAdviceQuiz: QuizDefinition = {
       "7つの質問であなたの悩みの種類を診断し、正しいけれど実行不可能なアドバイスをお届けします。笑って読み流してください。",
     shortDescription: "あなたに最適な達成困難アドバイスを診断",
     type: "personality",
+    category: "personality",
     questionCount: 7,
     icon: "\u{1F4A1}",
     accentColor: "#7c3aed",

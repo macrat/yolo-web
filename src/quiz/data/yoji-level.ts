@@ -8,6 +8,7 @@ const yojiLevelQuiz: QuizDefinition = {
       "四字熟語の意味から正しい熟語を当てるクイズです。全10問であなたの四字熟語力を診断します。日常で使える四字熟語から難読なものまで幅広く出題!",
     shortDescription: "四字熟語10問であなたの語彙力を測定",
     type: "knowledge",
+    category: "knowledge",
     questionCount: 10,
     icon: "四",
     accentColor: "#7c3aed",

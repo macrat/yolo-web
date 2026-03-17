@@ -41,6 +41,7 @@ const animalPersonalityQuiz: QuizDefinition = {
       "日本にしかいない動物であなたの性格を診断! イリオモテヤマネコ、アマミノクロウサギ、ニホンモモンガなど、日本にしかいない動物12タイプの中から、あなたにぴったりの動物を見つけます。全10問の質問に答えるだけ。友達との相性診断もできます!",
     shortDescription: "日本にしかいない動物12タイプであなたの性格を診断!",
     type: "personality",
+    category: "personality",
     questionCount: 10,
     icon: "\u{1F43E}",
     accentColor: "#16a34a",

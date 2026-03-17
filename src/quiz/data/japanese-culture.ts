@@ -35,6 +35,7 @@ const japaneseCultureQuiz: QuizDefinition = {
       "あなたにぴったりの日本文化を診断! 茶道、書道、武道、華道、落語、俳句、陶芸の7タイプの中から、あなたの性格や行動パターンに最も合う日本文化を見つけます。全18問の質問に答えるだけ。友達との相性診断もできます!",
     shortDescription: "7つの日本文化からあなたが極めるべき道を診断!",
     type: "personality",
+    category: "personality",
     questionCount: 18,
     icon: "\u{1F3EF}",
     accentColor: "#b91c1c",

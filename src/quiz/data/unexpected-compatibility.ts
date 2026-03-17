@@ -27,6 +27,7 @@ const unexpectedCompatibilityQuiz: QuizDefinition = {
       "8つの質問に答えると、あなたと最も相性が良い「意外な存在」が判明します。人間ではない何かがあなたを待っています。",
     shortDescription: "あなたと相性抜群の意外な存在を診断",
     type: "personality",
+    category: "personality",
     questionCount: 8,
     icon: "\u{1F48E}",
     accentColor: "#0891b2",

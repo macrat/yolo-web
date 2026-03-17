@@ -17,11 +17,11 @@ describe("PlayPage", () => {
     ).toBeInTheDocument();
   });
 
-  it("renders all 4 game cards", () => {
+  it("renders all 19 content cards (4 games + 14 quizzes + 1 fortune)", () => {
     render(<PlayPage />);
     const list = screen.getByRole("list", { name: "Play contents list" });
     const links = within(list).getAllByRole("link");
-    expect(links.length).toBe(4);
+    expect(links.length).toBe(19);
   });
 
   it("renders links with /play/ path", () => {

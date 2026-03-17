@@ -221,6 +221,7 @@ const scienceThinkingQuiz: QuizDefinition = {
     shortDescription:
       "5\u3064\u306E\u601D\u8003\u8EF8\u3067\u3042\u306A\u305F\u306E\u7406\u7CFB\u8133\u306E\u5F62\u3092\u53EF\u8996\u5316\uFF01\u516810\u30BF\u30A4\u30D7\u306E\u79D1\u5B66\u8005\u304B\u3089\u8A3A\u65AD",
     type: "personality",
+    category: "personality",
     questionCount: 20,
     icon: "\uD83E\uDDEA",
     accentColor: "#6366f1",

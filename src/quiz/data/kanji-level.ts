@@ -8,6 +8,7 @@ const kanjiLevelQuiz: QuizDefinition = {
       "難読漢字の読みを当てるクイズです。全10問であなたの漢字力を診断します。日常では見かけにくい漢字から、知っていると自慢できる漢字まで幅広く出題!",
     shortDescription: "難読漢字10問であなたの漢字力を測定",
     type: "knowledge",
+    category: "knowledge",
     questionCount: 10,
     icon: "漢",
     accentColor: "#2563eb",
