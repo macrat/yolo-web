@@ -86,7 +86,7 @@ export default function YojiDetail({ yoji }: YojiDetailProps) {
 
       <section className={styles.section}>
         <h2>関連ゲーム</h2>
-        <Link href="/games/yoji-kimeru" className={styles.crossLink}>
+        <Link href="/play/yoji-kimeru" className={styles.crossLink}>
           四字キメル - 毎日の四字熟語パズルで遊ぶ
         </Link>
       </section>

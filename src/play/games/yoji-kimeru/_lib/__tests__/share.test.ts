@@ -45,7 +45,7 @@ describe("generateShareText", () => {
     );
     expect(text).toContain("\u2B1C\u2B1C\u2B1C\u2B1C");
     expect(text).toContain("\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E9}");
-    expect(text).toContain("https://example.com/games/yoji-kimeru");
+    expect(text).toContain("https://example.com/play/yoji-kimeru");
   });
 
   test("generates correct text for a lost game", () => {

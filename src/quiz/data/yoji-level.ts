@@ -23,7 +23,7 @@ const yojiLevelQuiz: QuizDefinition = {
     publishedAt: "2026-02-23T22:42:57+09:00",
     relatedLinks: [
       { label: "四字熟語辞典で学ぶ", href: "/dictionary/yoji" },
-      { label: "四字キメルで遊ぶ", href: "/games/yoji-kimeru" },
+      { label: "四字キメルで遊ぶ", href: "/play/yoji-kimeru" },
     ],
     trustLevel: "curated",
     trustNote:
@@ -180,7 +180,7 @@ const yojiLevelQuiz: QuizDefinition = {
       icon: "\u{1F4DD}",
       minScore: 3,
       recommendation: "四字キメルで遊びながら覚えよう",
-      recommendationLink: "/games/yoji-kimeru",
+      recommendationLink: "/play/yoji-kimeru",
     },
     {
       id: "intermediate",
@@ -200,7 +200,7 @@ const yojiLevelQuiz: QuizDefinition = {
       icon: "\u{1F393}",
       minScore: 7,
       recommendation: "四字キメルで実力を試そう",
-      recommendationLink: "/games/yoji-kimeru",
+      recommendationLink: "/play/yoji-kimeru",
     },
     {
       id: "master",

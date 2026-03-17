@@ -150,7 +150,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
-      url: `${BASE_URL}/games`,
+      url: `${BASE_URL}/play`,
       lastModified: latestGameDate,
       changeFrequency: "weekly",
       priority: 0.9,

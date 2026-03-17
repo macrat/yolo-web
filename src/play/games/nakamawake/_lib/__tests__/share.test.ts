@@ -113,7 +113,7 @@ describe("generateShareText", () => {
     expect(text).toContain("\u{1F7E6}\u{1F7E6}\u{1F7E6}\u{1F7E6}");
     // Row 4: difficulty 4 (purple)
     expect(text).toContain("\u{1F7EA}\u{1F7EA}\u{1F7EA}\u{1F7EA}");
-    expect(text).toContain("https://example.com/games/nakamawake");
+    expect(text).toContain("https://example.com/play/nakamawake");
   });
 
   test("generates correct text for a won game with mistakes", () => {

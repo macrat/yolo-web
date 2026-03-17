@@ -48,7 +48,7 @@ export function generateShareText(
   );
 
   const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
-  const url = `${baseUrl}/games/kanji-kanaru`;
+  const url = `${baseUrl}/play/kanji-kanaru`;
 
   return `\u6F22\u5B57\u30AB\u30CA\u30FC\u30EB #${state.puzzleNumber} (${diffLabel}) ${result}\n${rows.join("\n")}\n${url}`;
 }

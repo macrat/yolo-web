@@ -61,7 +61,7 @@ describe("generateShareText", () => {
 
   test("includes URL path", () => {
     const text = generateShareText(mockGameState);
-    expect(text).toContain("/games/irodori");
+    expect(text).toContain("/play/irodori");
   });
 
   test("includes emoji row", () => {

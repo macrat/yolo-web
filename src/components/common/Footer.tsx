@@ -15,8 +15,8 @@ export default function Footer({ gameLinks }: FooterProps) {
       ],
     },
     {
-      heading: "ゲーム",
-      links: [{ href: "/games", label: "ゲーム一覧" }, ...(gameLinks ?? [])],
+      heading: "遊ぶ",
+      links: [{ href: "/play", label: "遊ぶ一覧" }, ...(gameLinks ?? [])],
     },
     {
       heading: "辞典",

@@ -35,7 +35,7 @@ export function buildSearchIndex(): SearchDocument[] {
       title: game.title,
       description: game.description,
       keywords: [...game.keywords],
-      url: `/games/${game.slug}`,
+      url: `/play/${game.slug}`,
       extra: game.difficulty,
     });
   }

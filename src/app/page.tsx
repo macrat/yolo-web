@@ -50,7 +50,7 @@ export default function Home() {
     {
       label: `${allGameMetas.length} デイリーパズル`,
       icon: "\u{1F3AE}",
-      href: "/games",
+      href: "/play",
     },
     {
       label: `${allQuizMetas.length} クイズ・診断`,
@@ -96,7 +96,7 @@ export default function Home() {
           {allGameMetas.map((game) => (
             <Link
               key={game.slug}
-              href={`/games/${game.slug}`}
+              href={`/play/${game.slug}`}
               className={styles.gameCard}
               style={
                 {

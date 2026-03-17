@@ -38,6 +38,21 @@ const nextConfig: NextConfig = {
       },
     ];
 
+    // Redirect old /games URLs to /play (301 permanent)
+    // Migrated in cycle-100 (B-201): games section is now under /play
+    const gamesRedirects = [
+      {
+        source: "/games",
+        destination: "/play",
+        permanent: true,
+      },
+      {
+        source: "/games/:slug",
+        destination: "/play/:slug",
+        permanent: true,
+      },
+    ];
+
     // Redirect old /colors URLs to /dictionary/colors (308 permanent)
     // Migrated in cycle-50 (B-122): colors is now under the dictionary section
     const colorsRedirects = [
@@ -61,6 +76,7 @@ const nextConfig: NextConfig = {
     return [
       ...oldCategoryRedirects,
       ...paginationRedirects,
+      ...gamesRedirects,
       ...colorsRedirects,
     ];
   },

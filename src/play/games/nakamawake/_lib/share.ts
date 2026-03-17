@@ -33,7 +33,7 @@ export function generateShareText(state: NakamawakeGameState): string {
     .filter(Boolean);
 
   const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
-  const url = `${baseUrl}/games/nakamawake`;
+  const url = `${baseUrl}/play/nakamawake`;
 
   return `\u30CA\u30AB\u30DE\u30EF\u30B1 #${state.puzzleNumber} ${result}\n${rows.join("\n")}\n${url}`;
 }

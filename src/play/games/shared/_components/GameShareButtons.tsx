@@ -56,7 +56,7 @@ export default function GameShareButtons({
 
   const handleShareX = useCallback(() => {
     const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
-    const pageUrl = `${baseUrl}/games/${gameSlug}`;
+    const pageUrl = `${baseUrl}/play/${gameSlug}`;
     const url = generateTwitterShareUrl(shareText, pageUrl);
     window.open(url, "_blank", "noopener,noreferrer");
     trackShare("twitter", contentType, gameSlug);
@@ -67,7 +67,7 @@ export default function GameShareButtons({
     await shareGameResult({
       title: gameTitle,
       text: shareText,
-      url: `${baseUrl}/games/${gameSlug}`,
+      url: `${baseUrl}/play/${gameSlug}`,
     });
     trackShare("web_share", contentType, gameSlug);
   }, [shareText, gameTitle, gameSlug, contentType]);

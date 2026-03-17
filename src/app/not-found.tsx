@@ -22,8 +22,8 @@ const LINKS = [
     icon: "\u{1F527}",
   },
   {
-    href: "/games",
-    title: "ゲーム",
+    href: "/play",
+    title: "遊ぶ",
     description: "遊んで学べるブラウザゲーム",
     icon: "\u{1F3AE}",
   },

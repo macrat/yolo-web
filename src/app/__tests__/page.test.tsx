@@ -106,7 +106,7 @@ test("Home page renders stat badges as links", () => {
   );
   expect(
     screen.getByRole("link", { name: /4 デイリーパズル/ }),
-  ).toHaveAttribute("href", "/games");
+  ).toHaveAttribute("href", "/play");
   expect(screen.getByRole("link", { name: /2 クイズ・診断/ })).toHaveAttribute(
     "href",
     "/quiz",
@@ -125,19 +125,19 @@ test("Home page renders daily puzzle section with all games", () => {
   expect(screen.getByText(/4つのパズルに挑戦しよう/)).toBeInTheDocument();
   expect(screen.getByRole("link", { name: /漢字カナール/ })).toHaveAttribute(
     "href",
-    "/games/kanji-kanaru",
+    "/play/kanji-kanaru",
   );
   expect(screen.getByRole("link", { name: /四字キメル/ })).toHaveAttribute(
     "href",
-    "/games/yoji-kimeru",
+    "/play/yoji-kimeru",
   );
   expect(screen.getByRole("link", { name: /ナカマワケ/ })).toHaveAttribute(
     "href",
-    "/games/nakamawake",
+    "/play/nakamawake",
   );
   expect(screen.getByRole("link", { name: /イロドリ/ })).toHaveAttribute(
     "href",
-    "/games/irodori",
+    "/play/irodori",
   );
 });
 
