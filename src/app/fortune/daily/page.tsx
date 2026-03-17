@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Breadcrumb from "@/components/common/Breadcrumb";
 import TrustLevelBadge from "@/components/common/TrustLevelBadge";
-import DailyFortuneCard from "@/fortune/_components/DailyFortuneCard";
+import DailyFortuneCard from "@/play/fortune/_components/DailyFortuneCard";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import styles from "./page.module.css";
 
