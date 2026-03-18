@@ -275,4 +275,28 @@ describe("PlayPage", () => {
     // stickyクラスが付与されていることを確認（CSSモジュールクラス名は変換されるためdata属性で確認）
     expect(categoryNav).toHaveAttribute("data-sticky", "true");
   });
+
+  // ===== レビュー指摘修正 =====
+
+  // S-1: 「まずはここから」セクションのaria-label
+  it("featured section has aria-label for accessibility", () => {
+    render(<PlayPage />);
+    const featuredSection = screen.getByTestId("featured-section");
+    // <section> 自体が aria-label または aria-labelledby を持つこと
+    const ariaLabel = featuredSection.getAttribute("aria-label");
+    const ariaLabelledby = featuredSection.getAttribute("aria-labelledby");
+    expect(ariaLabel || ariaLabelledby).toBeTruthy();
+  });
+
+  // S-2: heroSubtext の「全N種」が動的に生成されること
+  it("renders dynamic content count in hero subtext", () => {
+    render(<PlayPage />);
+    // 「全19種」のような動的テキストが存在すること（数値はallPlayContents.lengthに基づく）
+    const heroSubtext = document.querySelector("[data-testid='hero-subtext']");
+    expect(heroSubtext).toBeInTheDocument();
+    expect(heroSubtext?.textContent).toMatch(/全\d+種/);
+  });
+
+  // S-2: metadata の description が動的であることはサーバーサイドのためここではスキップ
+  // （metadataはNext.jsのサーバー処理のためレンダーテストでは検証不可）
 });
