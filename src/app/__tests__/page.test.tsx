@@ -1,5 +1,7 @@
 import { expect, test, vi } from "vitest";
 import { render, screen, within } from "@testing-library/react";
+import { readFileSync } from "fs";
+import { resolve } from "path";
 import Home, { metadata } from "../page";
 
 // FortunePreview is a Client Component using localStorage-based fortune logic.
@@ -242,12 +244,17 @@ test("Hero has AI transparency notice (Rule 3)", () => {
   expect(screen.getByText(/AI.*運営|AIが.*運営/)).toBeInTheDocument();
 });
 
-test("Hero stat badge shows play content count and links to /play", () => {
+test("Hero stat badge shows play content count as static text (not a link)", () => {
   render(<Home />);
   // allPlayContents.length = 7 (mocked)
-  // 「7種の占い・診断・ゲーム」のようなバッジが /play へリンクしている
-  const badge = screen.getByRole("link", { name: /7.*占い|占い.*7|7.*種/ });
-  expect(badge).toHaveAttribute("href", "/play");
+  // 「7種の占い・診断・ゲーム」バッジは静的span（リンクなし）として表示
+  const badge = screen.getByText(/7.*種の占い|7.*占い.*ゲーム/);
+  expect(badge).toBeInTheDocument();
+  // バッジ自体はリンクではなくspan
+  const badgeLink = screen.queryByRole("link", {
+    name: /7.*占い|占い.*7|7.*種/,
+  });
+  expect(badgeLink).not.toBeInTheDocument();
 });
 
 test("Hero badges include 毎日更新 and 完全無料", () => {
@@ -521,6 +528,60 @@ test("'まずはここから' section uses featuredGrid3 class for 3-column layo
   expect(gridList).toBeInTheDocument();
   // CSS Modules ではクラス名がハッシュ化されるが、jsdom では直接確認可能
   expect(gridList?.className).toMatch(/featuredGrid3/);
+});
+
+// ===== 7-6: タップターゲット拡大（CSS検証） =====
+
+const pageCssContent = readFileSync(
+  resolve(__dirname, "../page.module.css"),
+  "utf-8",
+);
+
+test("7-6: seeAllLink padding is at least 0.6rem vertical to ensure 44px tap target", () => {
+  // .seeAllLink の縦padding が 0.6rem 以上であること（高さ44px確保のため）
+  // "padding: 0.6rem 1.5rem" のような記述を確認
+  expect(pageCssContent).toMatch(
+    /\.seeAllLink\s*\{[^}]*padding:\s*0\.[6-9]rem/,
+  );
+});
+
+test("7-6: mobile featuredCardCta has increased padding and font-size", () => {
+  // モバイルの .featuredCardCta が padding: 0.3rem 0.75rem、font-size: 0.75rem 以上を持つこと
+  // @media (max-width: 640px) 内の .featuredCardCta を確認
+  // font-size が 0.75rem（改善後） になっていること
+  expect(pageCssContent).toMatch(
+    /max-width:\s*640px[\s\S]*?\.featuredCardCta[\s\S]*?font-size:\s*0\.7[5-9]rem/,
+  );
+});
+
+// ===== 7-5: ブログセクションに説明テキスト追加 =====
+
+test("7-5: Blog section has a sectionDescription paragraph", () => {
+  const { container } = render(<Home />);
+  const blogHeading = container.querySelector("#home-blog-heading");
+  const blogSection = blogHeading?.closest("section");
+  expect(blogSection).toBeInTheDocument();
+  // sectionDescriptionクラスを持つpタグがブログセクション内に存在すること
+  const desc = (blogSection as HTMLElement).querySelector(
+    "[class*='sectionDescription']",
+  );
+  expect(desc).toBeInTheDocument();
+  expect(desc?.textContent).toBeTruthy();
+});
+
+// ===== 7-4: 毎日更新バッジの絶対配置（featuredCardTitleRow の外に移動） =====
+
+test("7-4: dailyBadge is a direct child of featuredCard, not inside featuredCardTitleRow", () => {
+  const { container } = render(<Home />);
+  // 毎日更新バッジが featuredCardTitleRow の中ではなく、カード直下の子要素にあること
+  const titleRows = container.querySelectorAll(
+    "[class*='featuredCardTitleRow']",
+  );
+  titleRows.forEach((row) => {
+    const badgesInRow = row.querySelectorAll("[class*='dailyBadge']");
+    // タイトル行の中にdailyBadgeが存在しないこと
+    expect(badgesInRow).toHaveLength(0);
+  });
 });
 
 // ===== M-2: 診断セクション専用グリッドクラス（3列表示） =====
