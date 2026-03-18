@@ -206,7 +206,10 @@ export default function PlayPage() {
                   <div className={styles.cardIcon}>{content.icon}</div>
                 </div>
                 <div className={styles.cardTitleRow}>
-                  <h3 className={styles.cardTitle}>{content.title}</h3>
+                  {/* shortTitle が設定されている場合はカード表示ではそちらを優先使用 */}
+                  <h3 className={styles.cardTitle}>
+                    {content.shortTitle ?? content.title}
+                  </h3>
                   {DAILY_UPDATE_SLUGS.has(content.slug) && (
                     <span className={styles.dailyBadge}>毎日更新</span>
                   )}

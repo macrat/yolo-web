@@ -4,6 +4,8 @@ const traditionalColorQuiz: QuizDefinition = {
   meta: {
     slug: "traditional-color",
     title: "あなたを日本の伝統色に例えると?",
+    // タイトルが16文字と長いためカード表示用の短縮タイトルを設定
+    shortTitle: "日本の伝統色診断",
     description:
       "8つの質問に答えて、あなたの性格にぴったりの日本の伝統色を見つけましょう。藍色、朱色、若草色など、美しい和の色があなたを待っています。",
     shortDescription: "性格診断であなたにぴったりの伝統色を発見",

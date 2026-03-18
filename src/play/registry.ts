@@ -39,6 +39,7 @@ export function quizMetaToPlayContentMeta(quizMeta: QuizMeta): PlayContentMeta {
   return {
     slug: quizMeta.slug,
     title: quizMeta.title,
+    shortTitle: quizMeta.shortTitle,
     description: quizMeta.description,
     shortDescription: quizMeta.shortDescription,
     icon: quizMeta.icon,
@@ -150,13 +151,14 @@ export function getFeaturedContents(): PlayContentMeta[] {
  * 選定基準:
  * - fortune カテゴリは FortunePreview セクションで表示済みのため除外
  * - "animal-personality" と "kanji-level" は「まずはここから」で表示済みのため除外
- * - personality から4件・knowledge から2件を厳選
+ * - 4列グリッド（featuredGrid）で整列させるために4件に統一
+ * - 除外理由:
+ *   - "character-personality": 互換性診断の特殊処理が重く、トップ導線には不向き
+ *   - "science-thinking": 20問と問数が多くトップページのエントリーには不向き
  */
 export const DIAGNOSIS_SLUGS: ReadonlyArray<string> = [
   "music-personality", // personality: 音楽性格診断
   "yoji-personality", // personality: 四字熟語で性格診断
-  "character-personality", // personality: キャラクター性格診断
-  "science-thinking", // personality: サイエンス思考診断
   "kotowaza-level", // knowledge: ことわざレベル診断
   "yoji-level", // knowledge: 四字熟語レベル診断
 ];

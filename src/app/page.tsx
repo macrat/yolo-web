@@ -140,7 +140,10 @@ export default function Home() {
                   <div className={styles.featuredCardIcon}>{content.icon}</div>
                 </div>
                 <div className={styles.featuredCardTitleRow}>
-                  <h3 className={styles.featuredCardTitle}>{content.title}</h3>
+                  {/* shortTitle が設定されている場合はカード表示ではそちらを優先使用 */}
+                  <h3 className={styles.featuredCardTitle}>
+                    {content.shortTitle ?? content.title}
+                  </h3>
                 </div>
                 <p className={styles.featuredCardDescription}>
                   {content.shortDescription}
@@ -167,7 +170,7 @@ export default function Home() {
       {/* セクション3: 今日のユーモア運勢プレビュー — /play/daily への導線 */}
       <FortunePreview />
 
-      {/* セクション4: もっと診断してみよう（厳選6件） — fortune/featured を除いた診断コンテンツ */}
+      {/* セクション4: もっと診断してみよう（厳選4件） — fortune/featured を除いた診断コンテンツ */}
       <section
         className={styles.featuredSection}
         data-testid="home-diagnosis-section"
@@ -180,7 +183,7 @@ export default function Home() {
           性格診断・知識テストで自分の新たな一面を発見しよう
         </p>
         <ul
-          className={styles.diagnosisGrid}
+          className={styles.featuredGrid}
           role="list"
           aria-label="診断コンテンツ一覧"
         >
@@ -202,7 +205,10 @@ export default function Home() {
                   <div className={styles.featuredCardIcon}>{content.icon}</div>
                 </div>
                 <div className={styles.featuredCardTitleRow}>
-                  <h3 className={styles.featuredCardTitle}>{content.title}</h3>
+                  {/* shortTitle が設定されている場合はカード表示ではそちらを優先使用 */}
+                  <h3 className={styles.featuredCardTitle}>
+                    {content.shortTitle ?? content.title}
+                  </h3>
                 </div>
                 <p className={styles.featuredCardDescription}>
                   {content.shortDescription}
@@ -263,7 +269,10 @@ export default function Home() {
                   <div className={styles.featuredCardIcon}>{game.icon}</div>
                 </div>
                 <div className={styles.featuredCardTitleRow}>
-                  <h3 className={styles.featuredCardTitle}>{game.title}</h3>
+                  {/* shortTitle が設定されている場合はカード表示ではそちらを優先使用 */}
+                  <h3 className={styles.featuredCardTitle}>
+                    {game.shortTitle ?? game.title}
+                  </h3>
                 </div>
                 <p className={styles.featuredCardDescription}>
                   {game.shortDescription}

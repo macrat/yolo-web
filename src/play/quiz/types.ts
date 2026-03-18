@@ -44,6 +44,11 @@ export type QuizResult = {
 export interface QuizMeta {
   slug: string;
   title: string;
+  /**
+   * カード表示用の短縮タイトル（全角15文字超のタイトルで使用）。
+   * 未設定の場合は title をそのまま使用する。
+   */
+  shortTitle?: string;
   description: string;
   shortDescription: string;
   type: QuizType;
