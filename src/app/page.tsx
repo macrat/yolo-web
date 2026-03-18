@@ -6,6 +6,7 @@ import { allQuizMetas } from "@/play/quiz/registry";
 import { allGameMetas } from "@/play/games/registry";
 import { allPlayContents } from "@/play/registry";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
+import FortunePreview from "./_components/FortunePreview";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
@@ -60,7 +61,7 @@ export default function Home() {
 
         <h1 className={styles.heroTitle}>yolos.net</h1>
         <p className={styles.heroSubtitle}>
-          笑える占い・診断で、あなたの意外な一面を発見しよう
+          笑えて、シェアせずにいられない占い・診断があなたを待っている
         </p>
 
         {/* AI運営の透明性（constitution.md Rule 3） */}
@@ -70,7 +71,7 @@ export default function Home() {
 
         {/* メインCTA */}
         <Link href="/play" className={styles.heroCta}>
-          今すぐ遊ぶ
+          占い・診断を試す
         </Link>
 
         {/* 統計・特徴バッジ群 */}
@@ -88,6 +89,9 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      {/* セクション1.5: 今日のユーモア運勢プレビュー — /play/daily への導線 */}
+      <FortunePreview />
 
       {/* セクション2: 今日のデイリーパズル */}
       <section className={styles.section}>

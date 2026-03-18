@@ -2,6 +2,24 @@ import { expect, test, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import Home from "../page";
 
+// FortunePreview is a Client Component using localStorage-based fortune logic.
+// Mock the logic module to keep tests deterministic and SSR-independent.
+vi.mock("@/play/fortune/logic", () => ({
+  getUserSeed: () => 42,
+  selectFortune: () => ({
+    id: "mock-fortune",
+    title: "テストの運勢",
+    description: "テスト用の運勢説明",
+    luckyItem: "テストアイテム",
+    luckyAction: "テストアクション",
+    rating: 4.0,
+  }),
+}));
+
+vi.mock("@/lib/achievements/date", () => ({
+  getTodayJst: () => "2026-03-18",
+}));
+
 vi.mock("@/blog/_lib/blog", () => ({
   getAllBlogPosts: () => [
     {
@@ -53,7 +71,7 @@ test("Home page renders heading", () => {
 
 test("Hero has a main CTA button linking to /play", () => {
   render(<Home />);
-  const cta = screen.getByRole("link", { name: /今すぐ遊ぶ/ });
+  const cta = screen.getByRole("link", { name: /占い・診断を試す/ });
   expect(cta).toBeInTheDocument();
   expect(cta).toHaveAttribute("href", "/play");
 });
@@ -126,6 +144,17 @@ test("Home page renders quiz section", () => {
   expect(
     screen.getByRole("heading", { name: /クイズ・診断/ }),
   ).toBeInTheDocument();
+});
+
+test("Home page renders FortunePreview section with heading and CTA link", () => {
+  render(<Home />);
+  // 運勢プレビューセクションの見出しが存在する
+  expect(
+    screen.getByRole("heading", { name: /今日のユーモア運勢/ }),
+  ).toBeInTheDocument();
+  // /play/daily へのリンクが存在する
+  const link = screen.getByRole("link", { name: /今日の運勢を見る/ });
+  expect(link).toHaveAttribute("href", "/play/daily");
 });
 
 test("Home page renders latest blog section", () => {
