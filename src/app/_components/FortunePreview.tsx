@@ -27,8 +27,11 @@ function StarRatingTeaser({ rating }: { rating: number }) {
   return (
     <span className={styles.stars} aria-label={`${rating} / 5`}>
       {"★".repeat(fullStars)}
-      {hasHalf && "☆"}
-      {"☆".repeat(Math.max(0, emptyStars))}
+      {/* half star と empty stars はグレーで表示して filled star と区別する */}
+      <span className={styles.emptyStar}>
+        {hasHalf && "☆"}
+        {"☆".repeat(Math.max(0, emptyStars))}
+      </span>
       <span className={styles.ratingNumber}>({rating})</span>
     </span>
   );
