@@ -57,7 +57,7 @@ vi.mock("@/play/quiz/registry", () => ({
   ],
 }));
 
-const { MOCK_FEATURED_CONTENTS } = vi.hoisted(() => {
+const { MOCK_FEATURED_CONTENTS, MOCK_GAME_CONTENTS } = vi.hoisted(() => {
   const MOCK_FEATURED_CONTENTS = [
     {
       slug: "daily",
@@ -96,8 +96,104 @@ const { MOCK_FEATURED_CONTENTS } = vi.hoisted(() => {
       category: "game",
     },
   ];
-  return { MOCK_FEATURED_CONTENTS };
+  const MOCK_GAME_CONTENTS = [
+    {
+      slug: "kanji-kanaru",
+      title: "漢字カナール",
+      shortDescription: "毎日1つの漢字を推理するパズル",
+      icon: "\u{1F4DA}",
+      accentColor: "#3d7a2f",
+      contentType: "game",
+      category: "game",
+    },
+    {
+      slug: "yoji-kimeru",
+      title: "四字キメル",
+      shortDescription: "毎日1つの四字熟語を当てるパズル",
+      icon: "\u{1F3AF}",
+      accentColor: "#9a8533",
+      contentType: "game",
+      category: "game",
+    },
+    {
+      slug: "nakamawake",
+      title: "ナカマワケ",
+      shortDescription: "16個の言葉を4グループに分けるパズル",
+      icon: "\u{1F9E9}",
+      accentColor: "#8a5a9a",
+      contentType: "game",
+      category: "game",
+    },
+    {
+      slug: "irodori",
+      title: "イロドリ",
+      shortDescription: "色合わせパズル",
+      icon: "\u{1F3A8}",
+      accentColor: "#e91e63",
+      contentType: "game",
+      category: "game",
+    },
+  ];
+  return { MOCK_FEATURED_CONTENTS, MOCK_GAME_CONTENTS };
 });
+
+/** 「もっと診断してみよう」セクションに表示される厳選6件のモック */
+const MOCK_DIAGNOSIS_CONTENTS = [
+  {
+    slug: "music-personality",
+    title: "音楽性格診断",
+    shortDescription: "音楽の好みから性格を分析",
+    icon: "\u{1F3B5}",
+    accentColor: "#8b5cf6",
+    contentType: "quiz",
+    category: "personality",
+  },
+  {
+    slug: "yoji-personality",
+    title: "四字熟語で性格診断",
+    shortDescription: "四字熟語で性格を診断",
+    icon: "\u{1F4DC}",
+    accentColor: "#d97706",
+    contentType: "quiz",
+    category: "personality",
+  },
+  {
+    slug: "character-personality",
+    title: "キャラクター性格診断",
+    shortDescription: "あなたはどのキャラ？",
+    icon: "\u{1F9E1}",
+    accentColor: "#ec4899",
+    contentType: "quiz",
+    category: "personality",
+  },
+  {
+    slug: "science-thinking",
+    title: "サイエンス思考診断",
+    shortDescription: "あなたの思考スタイルを診断",
+    icon: "\u{1F9EA}",
+    accentColor: "#0ea5e9",
+    contentType: "quiz",
+    category: "personality",
+  },
+  {
+    slug: "kotowaza-level",
+    title: "ことわざレベル診断",
+    shortDescription: "ことわざの知識を試そう",
+    icon: "\u{1F4D6}",
+    accentColor: "#16a34a",
+    contentType: "quiz",
+    category: "knowledge",
+  },
+  {
+    slug: "yoji-level",
+    title: "四字熟語レベル診断",
+    shortDescription: "四字熟語の知識を試そう",
+    icon: "\u{1F3AF}",
+    accentColor: "#b45309",
+    contentType: "quiz",
+    category: "knowledge",
+  },
+];
 
 vi.mock("@/play/registry", () => ({
   // 4 games + 2 quizzes + 1 fortune = 7 total (mocked values)
@@ -112,6 +208,18 @@ vi.mock("@/play/registry", () => ({
   ]),
   getFeaturedContents: () => MOCK_FEATURED_CONTENTS,
   quizQuestionCountBySlug: new Map([["kanji-level", 10]]),
+  DIAGNOSIS_SLUGS: [
+    "music-personality",
+    "yoji-personality",
+    "character-personality",
+    "science-thinking",
+    "kotowaza-level",
+    "yoji-level",
+  ],
+  getDiagnosisContents: () => MOCK_DIAGNOSIS_CONTENTS,
+  /** game カテゴリのみ返すシンプルなモック */
+  getPlayContentsByCategory: (category: string) =>
+    category === "game" ? MOCK_GAME_CONTENTS : [],
 }));
 
 test("Home page renders heading", () => {
@@ -167,6 +275,64 @@ test("allToolMetas is NOT imported (no ツール badge in hero)", () => {
   expect(toolBadge).not.toBeInTheDocument();
 });
 
+// ===== 「もっと診断してみよう」セクション（タスク4: 厳選6件） =====
+
+test("Home page renders 'もっと診断してみよう' section (replaces old クイズ・診断)", () => {
+  render(<Home />);
+  expect(
+    screen.getByRole("heading", { name: /もっと診断してみよう/ }),
+  ).toBeInTheDocument();
+});
+
+test("'もっと診断してみよう' section does NOT render old クイズ・診断 heading", () => {
+  render(<Home />);
+  // 旧「クイズ・診断」見出しは削除されている
+  expect(
+    screen.queryByRole("heading", { name: /^クイズ・診断$/ }),
+  ).not.toBeInTheDocument();
+});
+
+test("'もっと診断してみよう' section renders 6 diagnosis cards", () => {
+  const { container } = render(<Home />);
+  const diagSection = container.querySelector(
+    "[data-testid='home-diagnosis-section']",
+  );
+  expect(diagSection).toBeInTheDocument();
+  const links = within(diagSection as HTMLElement).getAllByRole("link");
+  // 6枚のカード + 「もっと見る」リンク = 7件
+  expect(links).toHaveLength(7);
+});
+
+test("'もっと診断してみよう' section has 'もっと見る' link to /play", () => {
+  const { container } = render(<Home />);
+  const diagSection = container.querySelector(
+    "[data-testid='home-diagnosis-section']",
+  );
+  expect(diagSection).toBeInTheDocument();
+  const seeAllLink = within(diagSection as HTMLElement).getByRole("link", {
+    name: /もっと見る/,
+  });
+  expect(seeAllLink).toHaveAttribute("href", "/play");
+});
+
+test("'もっと診断してみよう' section does NOT include fortune category contents", () => {
+  const { container } = render(<Home />);
+  const diagSection = container.querySelector(
+    "[data-testid='home-diagnosis-section']",
+  );
+  expect(diagSection).toBeInTheDocument();
+  // fortune カテゴリ（daily slug）はこのセクションに表示しない
+  const links = within(diagSection as HTMLElement).getAllByRole("link");
+  const contentLinks = links.filter(
+    (link: HTMLElement) => !link.textContent?.includes("もっと見る"),
+  );
+  contentLinks.forEach((link: HTMLElement) => {
+    expect(link.getAttribute("href")).not.toBe("/play/daily");
+  });
+});
+
+// ===== デイリーパズルセクション: featuredCard デザインへの統一 =====
+
 test("Home page renders daily puzzle section with all games", () => {
   render(<Home />);
   expect(
@@ -192,13 +358,6 @@ test("Home page renders daily puzzle section with all games", () => {
   irodoriLinks.forEach((link) => {
     expect(link).toHaveAttribute("href", "/play/irodori");
   });
-});
-
-test("Home page renders quiz section", () => {
-  render(<Home />);
-  expect(
-    screen.getByRole("heading", { name: /クイズ・診断/ }),
-  ).toBeInTheDocument();
 });
 
 test("Home page renders FortunePreview section with heading and CTA link", () => {
