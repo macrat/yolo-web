@@ -301,4 +301,23 @@ describe("PlayPage", () => {
 
   // S-2: metadata の description が動的であることはサーバーサイドのためここではスキップ
   // （metadataはNext.jsのサーバー処理のためレンダーテストでは検証不可）
+
+  // ===== レビュー12人目指摘修正 =====
+
+  // M-1: カテゴリ別セクションで shortTitle を優先表示すること
+  it("category section cards use shortTitle when available", () => {
+    render(<PlayPage />);
+    // /play/registry でquizMetaのshortTitleが設定されているコンテンツのカード
+    // "japanese-culture" の shortTitle が "日本文化適性診断" であることを確認
+    // shortTitleが設定されているコンテンツのタイトルがカードに表示されること
+    const categoryLists = screen.getAllByRole("list", { name: /カテゴリ/ });
+    const allLinks = categoryLists.flatMap((list) =>
+      within(list).getAllByRole("link"),
+    );
+    // shortTitle "日本文化適性診断" が表示されていること（full title "あなたが極めるべき日本文化診断" ではなく）
+    const hasShortTitle = allLinks.some((link) =>
+      link.textContent?.includes("日本文化適性診断"),
+    );
+    expect(hasShortTitle).toBe(true);
+  });
 });

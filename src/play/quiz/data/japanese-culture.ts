@@ -31,6 +31,7 @@ const japaneseCultureQuiz: QuizDefinition = {
   meta: {
     slug: "japanese-culture",
     title: "あなたが極めるべき日本文化診断",
+    shortTitle: "日本文化適性診断",
     description:
       "あなたにぴったりの日本文化を診断! 茶道、書道、武道、華道、落語、俳句、陶芸の7タイプの中から、あなたの性格や行動パターンに最も合う日本文化を見つけます。全18問の質問に答えるだけ。友達との相性診断もできます!",
     shortDescription: "7つの日本文化からあなたが極めるべき道を診断!",

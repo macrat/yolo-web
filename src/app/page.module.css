@@ -1,7 +1,7 @@
 .main {
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0 1rem 2rem;
   width: 100%;
 }
 
@@ -377,6 +377,15 @@
   color: #ffffff;
 }
 
+/* キーボードナビゲーション時のフォーカスリング: 一貫したアクセシビリティを確保 */
+.featuredCard:focus-visible,
+.seeAllLink:focus-visible,
+.blogCard:focus-visible,
+.heroCta:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
 /* ===== Dark mode ===== */
 /* ダークモード時はヒーローを暗めのグラデーションに */
 :global(:root.dark) .hero {
@@ -436,9 +445,9 @@
     gap: 0.75rem;
   }
 
-  /* モバイルでは「まずはここから」（3件）を1列に変更してカードを読みやすく */
+  /* モバイルでは「まずはここから」（3件）を2列に変更（3件目は1つだけの行） */
   .featuredGrid3 {
-    grid-template-columns: repeat(1, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 0.75rem;
   }
 

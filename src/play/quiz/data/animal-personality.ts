@@ -37,6 +37,7 @@ const animalPersonalityQuiz: QuizDefinition = {
   meta: {
     slug: "animal-personality",
     title: "日本にしかいない動物で性格診断",
+    shortTitle: "動物性格診断",
     description:
       "日本にしかいない動物であなたの性格を診断! イリオモテヤマネコ、アマミノクロウサギ、ニホンモモンガなど、日本にしかいない動物12タイプの中から、あなたにぴったりの動物を見つけます。全10問の質問に答えるだけ。友達との相性診断もできます!",
     shortDescription: "日本にしかいない動物12タイプであなたの性格を診断!",

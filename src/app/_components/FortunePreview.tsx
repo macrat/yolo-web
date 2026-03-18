@@ -59,10 +59,12 @@ export default function FortunePreview() {
   const [state] = useState(computeFortune);
 
   return (
-    <section className={styles.section}>
+    <section className={styles.section} aria-labelledby="home-fortune-heading">
       {/* セクションヘッダー */}
       <div className={styles.header}>
-        <h2 className={styles.title}>今日のユーモア運勢</h2>
+        <h2 id="home-fortune-heading" className={styles.title}>
+          今日のユーモア運勢
+        </h2>
         {/* 毎日更新バッジ */}
         <span className={styles.dailyBadge}>毎日更新</span>
       </div>

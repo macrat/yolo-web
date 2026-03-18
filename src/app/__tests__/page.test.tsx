@@ -298,18 +298,19 @@ test("'もっと診断してみよう' section renders 6 diagnosis cards", () =>
   );
   expect(diagSection).toBeInTheDocument();
   const links = within(diagSection as HTMLElement).getAllByRole("link");
-  // 6枚のカード + 「もっと見る」リンク = 7件
+  // 6枚のカード + 「すべての診断を見る」リンク = 7件
   expect(links).toHaveLength(7);
 });
 
-test("'もっと診断してみよう' section has 'もっと見る' link to /play", () => {
+test("'もっと診断してみよう' section has 'すべての診断を見る' link to /play", () => {
+  // S-F: リンク文言を「もっと見る」から「すべての診断を見る」に変更（曖昧さ解消）
   const { container } = render(<Home />);
   const diagSection = container.querySelector(
     "[data-testid='home-diagnosis-section']",
   );
   expect(diagSection).toBeInTheDocument();
   const seeAllLink = within(diagSection as HTMLElement).getByRole("link", {
-    name: /もっと見る/,
+    name: /すべての診断を見る/,
   });
   expect(seeAllLink).toHaveAttribute("href", "/play");
 });
@@ -323,7 +324,7 @@ test("'もっと診断してみよう' section does NOT include fortune category
   // fortune カテゴリ（daily slug）はこのセクションに表示しない
   const links = within(diagSection as HTMLElement).getAllByRole("link");
   const contentLinks = links.filter(
-    (link: HTMLElement) => !link.textContent?.includes("もっと見る"),
+    (link: HTMLElement) => !link.textContent?.includes("すべての診断を見る"),
   );
   contentLinks.forEach((link: HTMLElement) => {
     expect(link.getAttribute("href")).not.toBe("/play/daily");
@@ -334,8 +335,9 @@ test("'もっと診断してみよう' section does NOT include fortune category
 
 test("Home page renders daily puzzle section with all games", () => {
   render(<Home />);
+  // S-G: 「今日のデイリーパズル」→「デイリーパズル」に変更（「今日の」と「デイリー」の意味重複解消）
   expect(
-    screen.getByRole("heading", { name: /今日のデイリーパズル/ }),
+    screen.getByRole("heading", { name: /デイリーパズル/ }),
   ).toBeInTheDocument();
   expect(screen.getByText(/4つのパズルに挑戦しよう/)).toBeInTheDocument();
   expect(screen.getByRole("link", { name: /漢字カナール/ })).toHaveAttribute(
@@ -374,8 +376,9 @@ test("Home page renders FortunePreview section with heading and CTA link", () =>
 
 test("Home page renders latest blog section", () => {
   render(<Home />);
+  // S-H: 「最新ブログ記事」→「開発の舞台裏」に変更（他セクションとのトーン統一）
   expect(
-    screen.getByRole("heading", { name: /最新ブログ記事/ }),
+    screen.getByRole("heading", { name: /開発の舞台裏/ }),
   ).toBeInTheDocument();
   expect(screen.getByText("テスト記事1")).toBeInTheDocument();
   expect(screen.getByRole("link", { name: /もっと読む/ })).toHaveAttribute(
