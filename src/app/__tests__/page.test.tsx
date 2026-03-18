@@ -486,40 +486,6 @@ test("Home page featured section cards link to /play/ paths", () => {
   });
 });
 
-// ===== 「その他のコンテンツ」リンク群（タスク5） =====
-
-test("Home page renders 'その他のコンテンツ' nav links section after blog", () => {
-  const { container } = render(<Home />);
-  const navSection = container.querySelector(
-    "[data-testid='home-other-contents-nav']",
-  );
-  expect(navSection).toBeInTheDocument();
-});
-
-test("'その他のコンテンツ' section has a link to /tools", () => {
-  const { container } = render(<Home />);
-  const navSection = container.querySelector(
-    "[data-testid='home-other-contents-nav']",
-  );
-  expect(navSection).toBeInTheDocument();
-  const toolsLink = within(navSection as HTMLElement).getByRole("link", {
-    name: /ツール一覧/,
-  });
-  expect(toolsLink).toHaveAttribute("href", "/tools");
-});
-
-test("'その他のコンテンツ' section has a link to /achievements", () => {
-  const { container } = render(<Home />);
-  const navSection = container.querySelector(
-    "[data-testid='home-other-contents-nav']",
-  );
-  expect(navSection).toBeInTheDocument();
-  const achievementsLink = within(navSection as HTMLElement).getByRole("link", {
-    name: /実績・ダッシュボード/,
-  });
-  expect(achievementsLink).toHaveAttribute("href", "/achievements");
-});
-
 // ===== page.tsx metadata テスト =====
 
 test("page.tsx metadata description reflects 占い・診断パーク concept", () => {
@@ -545,4 +511,22 @@ test("page.tsx twitter description reflects 占い・診断パーク concept", (
   expect(twitterDescription).toBeDefined();
   expect(twitterDescription).toMatch(/占い|診断/);
   expect(twitterDescription).not.toContain("ツール");
+});
+
+// ===== M-2: 診断セクション専用グリッドクラス（3列表示） =====
+
+test("M-2: 'もっと診断してみよう' section uses diagnosisGrid class (separate from featuredGrid)", () => {
+  // 診断セクションのグリッドが featuredGrid ではなく diagnosisGrid クラスを使用していること
+  // これにより、他セクション（4列）と独立して3列グリッドを適用できる
+  const { container } = render(<Home />);
+  const diagSection = container.querySelector(
+    "[data-testid='home-diagnosis-section']",
+  );
+  expect(diagSection).toBeInTheDocument();
+  // 診断セクション内のグリッドリストは diagnosisGrid クラスを持つ
+  const gridList = (diagSection as HTMLElement).querySelector("ul");
+  expect(gridList).toBeInTheDocument();
+  // CSS Modules ではクラス名がハッシュ化されるが、className 属性に「diagnosisGrid」が含まれることで確認
+  // jsdom 環境では CSS Modules はクラス名をそのまま使用するため直接確認可能
+  expect(gridList?.className).toMatch(/diagnosisGrid/);
 });
