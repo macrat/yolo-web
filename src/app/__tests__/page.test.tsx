@@ -57,60 +57,52 @@ vi.mock("@/play/quiz/registry", () => ({
   ],
 }));
 
+const { MOCK_FEATURED_CONTENTS } = vi.hoisted(() => {
+  const MOCK_FEATURED_CONTENTS = [
+    {
+      slug: "daily",
+      title: "今日のユーモア運勢",
+      shortDescription: "AIが毎日生成するユーモラスな運勢",
+      icon: "\u{1F52E}",
+      accentColor: "#7c3aed",
+      contentType: "fortune",
+      category: "fortune",
+    },
+    {
+      slug: "animal-personality",
+      title: "アニマル性格診断",
+      shortDescription: "あなたはどの動物タイプ？",
+      icon: "\u{1F98A}",
+      accentColor: "#d97706",
+      contentType: "quiz",
+      category: "personality",
+    },
+    {
+      slug: "kanji-level",
+      title: "漢字レベル診断",
+      shortDescription: "あなたの漢字力は何級？",
+      icon: "\u{1F4DA}",
+      accentColor: "#4d8c3f",
+      contentType: "quiz",
+      category: "knowledge",
+    },
+    {
+      slug: "irodori",
+      title: "イロドリ",
+      shortDescription: "色合わせパズル",
+      icon: "\u{1F3A8}",
+      accentColor: "#e91e63",
+      contentType: "game",
+      category: "game",
+    },
+  ];
+  return { MOCK_FEATURED_CONTENTS };
+});
+
 vi.mock("@/play/registry", () => ({
   // 4 games + 2 quizzes + 1 fortune = 7 total (mocked values)
   allPlayContents: new Array(7).fill(null),
-  playContentBySlug: new Map([
-    [
-      "daily",
-      {
-        slug: "daily",
-        title: "今日のユーモア運勢",
-        shortDescription: "AIが毎日生成するユーモラスな運勢",
-        icon: "\u{1F52E}",
-        accentColor: "#7c3aed",
-        contentType: "fortune",
-        category: "fortune",
-      },
-    ],
-    [
-      "animal-personality",
-      {
-        slug: "animal-personality",
-        title: "アニマル性格診断",
-        shortDescription: "あなたはどの動物タイプ？",
-        icon: "\u{1F98A}",
-        accentColor: "#d97706",
-        contentType: "quiz",
-        category: "personality",
-      },
-    ],
-    [
-      "kanji-level",
-      {
-        slug: "kanji-level",
-        title: "漢字レベル診断",
-        shortDescription: "あなたの漢字力は何級？",
-        icon: "\u{1F4DA}",
-        accentColor: "#4d8c3f",
-        contentType: "quiz",
-        category: "knowledge",
-      },
-    ],
-    [
-      "irodori",
-      {
-        slug: "irodori",
-        title: "イロドリ",
-        shortDescription: "色合わせパズル",
-        icon: "\u{1F3A8}",
-        accentColor: "#e91e63",
-        contentType: "game",
-        category: "game",
-      },
-    ],
-  ]),
-  FEATURED_SLUGS: ["daily", "animal-personality", "kanji-level", "irodori"],
+  playContentBySlug: new Map(MOCK_FEATURED_CONTENTS.map((c) => [c.slug, c])),
   DAILY_UPDATE_SLUGS: new Set([
     "daily",
     "kanji-kanaru",
@@ -118,6 +110,8 @@ vi.mock("@/play/registry", () => ({
     "nakamawake",
     "irodori",
   ]),
+  getFeaturedContents: () => MOCK_FEATURED_CONTENTS,
+  quizQuestionCountBySlug: new Map([["kanji-level", 10]]),
 }));
 
 test("Home page renders heading", () => {
@@ -247,10 +241,22 @@ test("Home page renders 4 featured cards in 'まずはここから' section", ()
     "[data-testid='home-featured-section']",
   );
   expect(featuredSection).toBeInTheDocument();
-  const links = featuredSection?.querySelectorAll("a");
+  const links = within(featuredSection as HTMLElement).getAllByRole("link");
   // 4枚のカード + 「全コンテンツを見る」リンク = 5件
-  // ただし「全コンテンツを見る」はセクション下部に別途配置
-  expect(links).toBeDefined();
+  expect(links).toHaveLength(5);
+  // 各カードのタイトルが表示されていること
+  expect(
+    within(featuredSection as HTMLElement).getByText("今日のユーモア運勢"),
+  ).toBeInTheDocument();
+  expect(
+    within(featuredSection as HTMLElement).getByText("アニマル性格診断"),
+  ).toBeInTheDocument();
+  expect(
+    within(featuredSection as HTMLElement).getByText("漢字レベル診断"),
+  ).toBeInTheDocument();
+  expect(
+    within(featuredSection as HTMLElement).getByText("イロドリ"),
+  ).toBeInTheDocument();
 });
 
 test("Home page 'まずはここから' section has '全コンテンツを見る' link to /play", () => {

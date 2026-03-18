@@ -2,16 +2,15 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { formatDate } from "@/lib/date";
 import { getAllBlogPosts } from "@/blog/_lib/blog";
-import { allQuizMetas } from "@/play/quiz/registry";
 import { allGameMetas } from "@/play/games/registry";
+import { allQuizMetas } from "@/play/quiz/registry";
 import {
   allPlayContents,
-  playContentBySlug,
-  FEATURED_SLUGS,
   DAILY_UPDATE_SLUGS,
+  getFeaturedContents,
+  quizQuestionCountBySlug,
 } from "@/play/registry";
-import type { PlayContentMeta } from "@/play/types";
-import { getPlayPath, getDailyFortunePath } from "@/play/paths";
+import { getContentPath } from "@/play/paths";
 import { getContrastTextColor } from "@/play/color-utils";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import FortunePreview from "./_components/FortunePreview";
@@ -45,33 +44,6 @@ const HERO_BADGES = [
   { label: "毎日更新", icon: "\u{1F504}", href: null },
   { label: "完全無料", icon: "\u{1F4B0}", href: null },
 ] as const;
-
-/** slug → questionCount のルックアップマップ（クイズの問数表示用） */
-const quizQuestionCountBySlug: Map<string, number> = new Map(
-  allQuizMetas.map((q) => [q.slug, q.questionCount]),
-);
-
-/**
- * コンテンツのリンク先パスを返す。
- * Fortune（daily）は getDailyFortunePath() を使用し、それ以外は getPlayPath(slug) を使用する。
- */
-function getContentPath(content: PlayContentMeta): string {
-  if (content.contentType === "fortune") {
-    return getDailyFortunePath();
-  }
-  return getPlayPath(content.slug);
-}
-
-/**
- * 「まずはここから」セクション用の固定コンテンツ配列を返す。
- * FEATURED_SLUGS に対応するコンテンツをレジストリから取得する。
- */
-function getFeaturedContents(): PlayContentMeta[] {
-  return FEATURED_SLUGS.flatMap((slug) => {
-    const content = playContentBySlug.get(slug);
-    return content ? [content] : [];
-  });
-}
 
 export default function Home() {
   const recentPosts = getAllBlogPosts().slice(0, 3);
@@ -125,9 +97,6 @@ export default function Home() {
           ))}
         </div>
       </section>
-
-      {/* セクション1.5: 今日のユーモア運勢プレビュー — /play/daily への導線 */}
-      <FortunePreview />
 
       {/* セクション2: まずはここから — 各カテゴリ代表コンテンツ4件を初回訪問者向けに表示 */}
       <section
@@ -190,6 +159,9 @@ export default function Home() {
           </Link>
         </div>
       </section>
+
+      {/* セクション2.5: 今日のユーモア運勢プレビュー — /play/daily への導線 */}
+      <FortunePreview />
 
       {/* セクション3: 今日のデイリーパズル */}
       <section className={styles.section}>
