@@ -227,7 +227,7 @@ export default function Home() {
         </ul>
         <div className={styles.seeAll}>
           <Link href="/play" className={styles.seeAllLink}>
-            もっと見る
+            すべての診断を見る
           </Link>
         </div>
       </section>
@@ -239,7 +239,7 @@ export default function Home() {
         aria-labelledby="home-daily-puzzle-heading"
       >
         <h2 id="home-daily-puzzle-heading" className={styles.sectionTitle}>
-          今日のデイリーパズル
+          デイリーパズル
         </h2>
         <p className={styles.sectionDescription}>
           毎日更新される{gameContents.length}つのパズルに挑戦しよう
@@ -294,7 +294,7 @@ export default function Home() {
       {/* セクション6: 最新ブログ記事 */}
       <section className={styles.section} aria-labelledby="home-blog-heading">
         <h2 id="home-blog-heading" className={styles.sectionTitle}>
-          最新ブログ記事
+          開発の舞台裏
         </h2>
         <p className={styles.sectionDescription}>
           AIエージェントの開発記録や実験の裏側をお届けします
