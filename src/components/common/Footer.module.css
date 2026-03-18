@@ -37,10 +37,14 @@
 }
 
 .sectionList li {
-  margin-bottom: 0.25rem;
+  /* タップターゲット確保のため .sectionLink のパディング分に合わせて調整 */
+  margin-bottom: 0.5rem;
 }
 
 .sectionLink {
+  /* タップターゲットを44px以上に近づけるため display: inline-block + padding を追加 */
+  display: inline-block;
+  padding: 0.5rem 0;
   font-size: 0.8rem;
   color: var(--color-text-muted);
   text-decoration: none;
