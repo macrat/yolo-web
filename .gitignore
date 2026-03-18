@@ -24,19 +24,17 @@ yarn-error.log*
 # env files
 .env*.local
 
+# working files
+!tmp/.gitkeep
+tmp/*
+
 # generated build artifacts
 .generated/
-
-# test output
-test-output.txt
+/public/search-index.json
 
 # playwright MCP logs
 .playwright-mcp/
 
-# scripts temp files
-/scripts/tmp/
-
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-/public/search-index.json

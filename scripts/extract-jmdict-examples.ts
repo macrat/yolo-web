@@ -57,7 +57,7 @@ function isValidLength(word: string): boolean {
 
 function main(): void {
   // Load kanji base data
-  const basePath = path.resolve(__dirname, "tmp/kanji-base.json");
+  const basePath = path.resolve(__dirname, "../tmp/kanji-base.json");
   if (!fs.existsSync(basePath)) {
     console.error(
       `kanji-base.json not found. Run generate-kanji-data.ts first.`,
@@ -75,7 +75,7 @@ function main(): void {
   // Load JMdict
   const jmdictPath = path.resolve(
     __dirname,
-    "tmp/jmdict-eng-common-3.6.2.json",
+    "../tmp/jmdict-eng-common-3.6.2.json",
   );
   if (!fs.existsSync(jmdictPath)) {
     console.error(
