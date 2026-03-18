@@ -270,7 +270,7 @@ interface KanjiBaseEntry {
 }
 
 function main(): void {
-  const inputPath = path.resolve(__dirname, "tmp/kanjidic2-en-3.6.2.json");
+  const inputPath = path.resolve(__dirname, "../tmp/kanjidic2-en-3.6.2.json");
   if (!fs.existsSync(inputPath)) {
     console.error(
       `KANJIDIC2 file not found: ${inputPath}\nDownload it from https://github.com/scriptin/jmdict-simplified/releases`,
@@ -363,7 +363,7 @@ function main(): void {
   });
 
   // Write intermediate output
-  const outputPath = path.resolve(__dirname, "tmp/kanji-base.json");
+  const outputPath = path.resolve(__dirname, "../tmp/kanji-base.json");
   fs.writeFileSync(outputPath, JSON.stringify(result, null, 2) + "\n");
 
   // Print statistics
