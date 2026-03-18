@@ -224,7 +224,7 @@ const scienceThinkingQuiz: QuizDefinition = {
     category: "personality",
     questionCount: 20,
     icon: "\uD83E\uDDEA",
-    accentColor: "#6366f1",
+    accentColor: "#4f46e5",
     keywords: [
       "\u7406\u7CFB\u8133 \u8A3A\u65AD",
       "\u7406\u7CFB \u601D\u8003\u30BF\u30A4\u30D7",

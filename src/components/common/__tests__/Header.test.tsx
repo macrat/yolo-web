@@ -44,7 +44,7 @@ describe("Header", () => {
   test("renders navigation with correct aria-label", () => {
     render(<Header />);
     expect(
-      screen.getByRole("navigation", { name: "Main navigation" }),
+      screen.getByRole("navigation", { name: "メインナビゲーション" }),
     ).toBeInTheDocument();
   });
 

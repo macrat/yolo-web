@@ -17,7 +17,7 @@ const NAV_LINKS = [
 export default function Header() {
   return (
     <header className={styles.header} role="banner">
-      <nav className={styles.nav} aria-label="Main navigation">
+      <nav className={styles.nav} aria-label="メインナビゲーション">
         <Link href="/" className={styles.logo}>
           yolos.net
         </Link>
