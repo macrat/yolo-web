@@ -37,7 +37,7 @@ const characterFortuneQuiz: QuizDefinition = {
     category: "personality",
     questionCount: 8,
     icon: "\u{1F52E}",
-    accentColor: "#8b5cf6",
+    accentColor: "#7c3aed",
     keywords: [
       "キャラ占い",
       "性格診断",

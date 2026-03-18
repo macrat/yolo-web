@@ -7,7 +7,6 @@ import ThemeProvider from "@/components/common/ThemeProvider";
 import { generateWebSiteJsonLd, safeJsonLdStringify } from "@/lib/seo";
 import AchievementProvider from "@/lib/achievements/AchievementProvider";
 import { BASE_URL, SITE_NAME } from "@/lib/constants";
-import { allGameMetas, getGamePath } from "@/play/games/registry";
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
@@ -48,10 +47,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const websiteJsonLd = generateWebSiteJsonLd();
-  const gameLinks = allGameMetas.map((game) => ({
-    href: getGamePath(game.slug),
-    label: game.title,
-  }));
+  // カテゴリアンカーリンクで /play 一覧ページの各セクションに直接誘導する
+  const playLinks = [
+    { href: "/play#fortune", label: "占い" },
+    { href: "/play#personality", label: "性格診断" },
+    { href: "/play#knowledge", label: "知識テスト" },
+    { href: "/play#game", label: "ゲーム" },
+  ];
   return (
     <html lang="ja" suppressHydrationWarning>
       <body
@@ -68,7 +70,7 @@ export default function RootLayout({
             <GoogleAnalytics />
             <Header />
             <main style={{ flex: 1 }}>{children}</main>
-            <Footer gameLinks={gameLinks} />
+            <Footer playLinks={playLinks} />
           </AchievementProvider>
         </ThemeProvider>
       </body>

@@ -9,7 +9,7 @@ const gameEntries: GameMeta[] = [
     description:
       "毎日1つの漢字を当てるパズルゲーム。部首・画数・読みのヒントで推理しよう!",
     icon: "\u{1F4DA}",
-    accentColor: "#4d8c3f",
+    accentColor: "#3d7a2f",
     difficulty: "初級〜中級",
     keywords: ["漢字", "パズル", "デイリー", "推理"],
     statsKey: "kanji-kanaru-stats",
@@ -193,7 +193,7 @@ const gameEntries: GameMeta[] = [
     description:
       "毎日5つの色を作って色彩感覚を鍛えよう! ターゲットカラーにどれだけ近づけるかチャレンジ!",
     icon: "\u{1F3A8}",
-    accentColor: "#e91e63",
+    accentColor: "#c2185b",
     difficulty: "初級〜上級",
     keywords: ["色", "カラー", "色彩", "デイリー"],
     statsKey: "irodori-stats",

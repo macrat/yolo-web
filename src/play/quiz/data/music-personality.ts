@@ -32,7 +32,7 @@ const musicPersonalityQuiz: QuizDefinition = {
     category: "personality",
     questionCount: 10,
     icon: "\u{1F3B5}",
-    accentColor: "#8b5cf6",
+    accentColor: "#7c3aed",
     keywords: [
       "音楽",
       "性格診断",

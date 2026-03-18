@@ -1,11 +1,21 @@
 import Link from "next/link";
 import styles from "./Footer.module.css";
 
+/** 「遊ぶ」セクションのデフォルトカテゴリアンカーリンク */
+const DEFAULT_PLAY_LINKS = [
+  { href: "/play#fortune", label: "占い" },
+  { href: "/play#personality", label: "性格診断" },
+  { href: "/play#knowledge", label: "知識テスト" },
+  { href: "/play#game", label: "ゲーム" },
+];
+
 interface FooterProps {
-  gameLinks?: { href: string; label: string }[];
+  playLinks?: { href: string; label: string }[];
 }
 
-export default function Footer({ gameLinks }: FooterProps) {
+export default function Footer({
+  playLinks = DEFAULT_PLAY_LINKS,
+}: FooterProps) {
   const SECTION_LINKS = [
     {
       heading: "ツール",
@@ -16,7 +26,7 @@ export default function Footer({ gameLinks }: FooterProps) {
     },
     {
       heading: "遊ぶ",
-      links: [{ href: "/play", label: "遊ぶ一覧" }, ...(gameLinks ?? [])],
+      links: [{ href: "/play", label: "遊ぶ一覧" }, ...playLinks],
     },
     {
       heading: "辞典",
@@ -40,7 +50,7 @@ export default function Footer({ gameLinks }: FooterProps) {
   return (
     <footer className={styles.footer} role="contentinfo">
       <div className={styles.inner}>
-        <nav className={styles.sectionNav} aria-label="Footer navigation">
+        <nav className={styles.sectionNav} aria-label="フッターナビゲーション">
           {SECTION_LINKS.map((section) => (
             <div key={section.heading} className={styles.sectionGroup}>
               <h3 className={styles.sectionHeading}>{section.heading}</h3>
