@@ -13,29 +13,8 @@ import Link from "next/link";
 import { getUserSeed, selectFortune } from "@/play/fortune/logic";
 import { getTodayJst } from "@/lib/achievements/date";
 import type { DailyFortuneEntry } from "@/play/fortune/types";
+import StarRating from "@/play/fortune/_components/StarRating";
 import styles from "./FortunePreview.module.css";
-
-/** 半星と判定する小数部の最小閾値（DailyFortuneCard の StarRating と同じ基準） */
-const HALF_STAR_THRESHOLD = 0.3;
-
-/** 星評価のティーザー表示 (filled/empty stars) */
-function StarRatingTeaser({ rating }: { rating: number }) {
-  const fullStars = Math.floor(rating);
-  const hasHalf = rating - fullStars >= HALF_STAR_THRESHOLD;
-  const emptyStars = 5 - fullStars - (hasHalf ? 1 : 0);
-
-  return (
-    <span className={styles.stars} aria-label={`${rating} / 5`}>
-      {"★".repeat(fullStars)}
-      {/* half star と empty stars はグレーで表示して filled star と区別する */}
-      <span className={styles.emptyStar}>
-        {hasHalf && "☆"}
-        {"☆".repeat(Math.max(0, emptyStars))}
-      </span>
-      <span className={styles.ratingNumber}>({rating})</span>
-    </span>
-  );
-}
 
 /**
  * クライアント側でのみ運勢を計算する。
@@ -82,7 +61,7 @@ export default function FortunePreview() {
         ) : (
           <>
             <p className={styles.fortuneTitle}>{state.fortune.title}</p>
-            <StarRatingTeaser rating={state.fortune.rating} />
+            <StarRating rating={state.fortune.rating} variant="purple" />
           </>
         )}
 

@@ -6,23 +6,8 @@ import { getTodayJst } from "@/lib/achievements/date";
 import { getUserSeed, selectFortune } from "@/play/fortune/logic";
 import ShareButtons from "@/play/quiz/_components/ShareButtons";
 import type { DailyFortuneEntry } from "@/play/fortune/types";
+import StarRating from "./StarRating";
 import styles from "./DailyFortuneCard.module.css";
-
-/** Render star rating with filled and empty stars */
-function StarRating({ rating }: { rating: number }) {
-  const fullStars = Math.floor(rating);
-  const hasHalf = rating - fullStars >= 0.3;
-  const emptyStars = 5 - fullStars - (hasHalf ? 1 : 0);
-
-  return (
-    <span className={styles.stars} aria-label={`${rating} / 5`}>
-      {"★".repeat(fullStars)}
-      {hasHalf && "☆"}
-      {"☆".repeat(Math.max(0, emptyStars))}
-      <span className={styles.ratingNumber}>({rating})</span>
-    </span>
-  );
-}
 
 /** Format "YYYY-MM-DD" to a readable Japanese date */
 function formatDate(dateStr: string): string {

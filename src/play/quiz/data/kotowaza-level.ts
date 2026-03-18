@@ -4,6 +4,7 @@ const kotowazaLevelQuiz: QuizDefinition = {
   meta: {
     slug: "kotowaza-level",
     title: "ことわざ・慣用句力診断",
+    shortTitle: "ことわざ力診断",
     description:
       "ことわざや慣用句の意味から正しい表現を当てるクイズです。全10問であなたのことわざ力を診断します。有名なことわざから意外と知らない慣用句まで幅広く出題!",
     shortDescription: "ことわざ・慣用句10問であなたの語彙力を測定",

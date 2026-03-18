@@ -19,7 +19,7 @@ export default function Footer({
   const SECTION_LINKS = [
     {
       heading: "遊ぶ",
-      links: [{ href: "/play", label: "遊ぶ一覧" }, ...playLinks],
+      links: [{ href: "/play", label: "コンテンツ一覧" }, ...playLinks],
     },
     {
       heading: "ツール",
@@ -31,9 +31,11 @@ export default function Footer({
     {
       heading: "辞典",
       links: [
+        { href: "/dictionary", label: "辞典一覧" },
         { href: "/dictionary/kanji", label: "漢字辞典" },
         { href: "/dictionary/yoji", label: "四字熟語辞典" },
         { href: "/dictionary/colors", label: "伝統色辞典" },
+        { href: "/dictionary/humor", label: "ユーモア辞典" },
       ],
     },
     {

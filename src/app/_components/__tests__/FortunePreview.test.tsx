@@ -109,6 +109,14 @@ describe("FortunePreview.module.css", () => {
     expect(sectionBlock).not.toBeNull();
     expect(sectionBlock![1]).toMatch(/padding\s*:\s*2\.5rem\s+0\s+1\.5rem/);
   });
+
+  it(".card has min-height to prevent CLS during SSR-to-client transition", () => {
+    // SSR 時のローディング状態とクライアントマウント後の表示状態で
+    // カード高さが変わることによる CLS を防ぐため、min-height が必要
+    const cardBlock = cssContent.match(/\.card\s*\{([^}]*)\}/);
+    expect(cardBlock).not.toBeNull();
+    expect(cardBlock![1]).toMatch(/min-height\s*:/);
+  });
 });
 
 describe("StarRatingTeaser empty star markup", () => {

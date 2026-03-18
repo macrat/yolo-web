@@ -42,6 +42,14 @@
   align-items: center;
   text-align: center;
   padding: 1.75rem 1.5rem;
+  /*
+   * CLS 対策: SSR ローディング状態 (絵文字+ローディングテキスト+CTA) と
+   * クライアントマウント後の表示状態 (絵文字+タイトル+StarRating+CTA) で
+   * カード高さが変わらないよう min-height を設定する。
+   * 表示状態の推定高さ: padding(56px) + deco(40px) + title(30px) + star(29px)
+   *   + CTA(45px) + gap×3(36px) ≈ 236px → 余裕を持ち 14.5rem (232px) を指定。
+   */
+  min-height: 14.5rem;
   /* カード上部にアクセントカラーの太いカラー帯 (playページ .card と統一) */
   border-top: 5px solid #7c3aed;
   border-left: 1px solid var(--color-border);
