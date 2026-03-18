@@ -143,3 +143,32 @@ export function getFeaturedContents(): PlayContentMeta[] {
     return content ? [content] : [];
   });
 }
+
+/**
+ * 「もっと診断してみよう」セクションに表示する厳選コンテンツのスラグ一覧。
+ *
+ * 選定基準:
+ * - fortune カテゴリは FortunePreview セクションで表示済みのため除外
+ * - "animal-personality" と "kanji-level" は「まずはここから」で表示済みのため除外
+ * - personality から4件・knowledge から2件を厳選
+ */
+export const DIAGNOSIS_SLUGS: ReadonlyArray<string> = [
+  "music-personality", // personality: 音楽性格診断
+  "yoji-personality", // personality: 四字熟語で性格診断
+  "character-personality", // personality: キャラクター性格診断
+  "science-thinking", // personality: サイエンス思考診断
+  "kotowaza-level", // knowledge: ことわざレベル診断
+  "yoji-level", // knowledge: 四字熟語レベル診断
+];
+
+/**
+ * 「もっと診断してみよう」セクション用の厳選コンテンツ配列を返す。
+ * DIAGNOSIS_SLUGS に対応するコンテンツをレジストリから取得する。
+ * トップページから参照される関数。
+ */
+export function getDiagnosisContents(): PlayContentMeta[] {
+  return DIAGNOSIS_SLUGS.flatMap((slug) => {
+    const content = playContentBySlug.get(slug);
+    return content ? [content] : [];
+  });
+}

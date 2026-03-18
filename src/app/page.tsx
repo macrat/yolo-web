@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { formatDate } from "@/lib/date";
 import { getAllBlogPosts } from "@/blog/_lib/blog";
-import { allGameMetas } from "@/play/games/registry";
-import { allQuizMetas } from "@/play/quiz/registry";
 import {
   allPlayContents,
   DAILY_UPDATE_SLUGS,
   getFeaturedContents,
+  getDiagnosisContents,
   quizQuestionCountBySlug,
+  getPlayContentsByCategory,
 } from "@/play/registry";
 import { getContentPath } from "@/play/paths";
 import { getContrastTextColor } from "@/play/color-utils";
@@ -48,6 +48,10 @@ const HERO_BADGES = [
 export default function Home() {
   const recentPosts = getAllBlogPosts().slice(0, 3);
   const featuredContents = getFeaturedContents();
+  /** デイリーパズルセクション: game カテゴリの全コンテンツ */
+  const gameContents = getPlayContentsByCategory("game");
+  /** 「もっと診断してみよう」セクション: 厳選6件 */
+  const diagnosisContents = getDiagnosisContents();
 
   return (
     <div className={styles.main}>
@@ -163,70 +167,110 @@ export default function Home() {
       {/* セクション2.5: 今日のユーモア運勢プレビュー — /play/daily への導線 */}
       <FortunePreview />
 
-      {/* セクション3: 今日のデイリーパズル */}
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>今日のデイリーパズル</h2>
+      {/* セクション4: 占い・診断（厳選6件） — fortune/featured を除いた診断コンテンツ */}
+      <section
+        className={styles.featuredSection}
+        data-testid="home-diagnosis-section"
+        aria-labelledby="home-diagnosis-heading"
+      >
+        <h2 id="home-diagnosis-heading" className={styles.sectionTitle}>
+          もっと診断してみよう
+        </h2>
         <p className={styles.sectionDescription}>
-          毎日更新される{allGameMetas.length}つのパズルに挑戦しよう
+          性格診断・知識テストで自分の新たな一面を発見しよう
         </p>
-        <div className={styles.gamesGrid}>
-          {allGameMetas.map((game) => (
-            <Link
-              key={game.slug}
-              href={`/play/${game.slug}`}
-              className={styles.gameCard}
-              style={
-                {
-                  "--game-accent": game.accentColor,
-                } as React.CSSProperties
-              }
-            >
-              <span className={styles.gameCardIcon}>{game.icon}</span>
-              <h3 className={styles.gameCardTitle}>{game.title}</h3>
-              <p className={styles.gameCardDescription}>
-                {game.shortDescription}
-              </p>
-              <span className={styles.gameCardCta}>挑戦する</span>
-            </Link>
+        <ul
+          className={styles.featuredGrid}
+          role="list"
+          aria-label="診断コンテンツ一覧"
+        >
+          {diagnosisContents.map((content) => (
+            <li key={content.slug}>
+              <Link
+                href={getContentPath(content)}
+                className={styles.featuredCard}
+                style={
+                  {
+                    "--play-accent": content.accentColor,
+                    "--play-cta-text": getContrastTextColor(
+                      content.accentColor,
+                    ),
+                  } as React.CSSProperties
+                }
+              >
+                <div className={styles.featuredCardIconWrapper}>
+                  <div className={styles.featuredCardIcon}>{content.icon}</div>
+                </div>
+                <div className={styles.featuredCardTitleRow}>
+                  <h3 className={styles.featuredCardTitle}>{content.title}</h3>
+                </div>
+                <p className={styles.featuredCardDescription}>
+                  {content.shortDescription}
+                </p>
+                <div className={styles.featuredCardMeta}>
+                  {quizQuestionCountBySlug.get(content.slug) !== undefined && (
+                    <span className={styles.featuredCardQuestionCount}>
+                      {quizQuestionCountBySlug.get(content.slug)}問
+                    </span>
+                  )}
+                  <span className={styles.featuredCardCta}>診断する</span>
+                </div>
+              </Link>
+            </li>
           ))}
-        </div>
-      </section>
-
-      {/* セクション4: クイズ・診断 */}
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>クイズ・診断</h2>
-        <p className={styles.sectionDescription}>
-          知識テストや性格診断であなたの実力や個性を発見しよう
-        </p>
-        <div className={styles.quizGrid}>
-          {allQuizMetas.map((quiz) => (
-            <Link
-              key={quiz.slug}
-              href={`/play/${quiz.slug}`}
-              className={styles.quizCard}
-              style={
-                {
-                  "--quiz-accent": quiz.accentColor,
-                } as React.CSSProperties
-              }
-            >
-              <span className={styles.quizCardIcon}>{quiz.icon}</span>
-              <h3 className={styles.quizCardTitle}>{quiz.title}</h3>
-              <p className={styles.quizCardDescription}>
-                {quiz.shortDescription}
-              </p>
-              <span className={styles.quizCardCta}>挑戦する</span>
-            </Link>
-          ))}
-        </div>
+        </ul>
         <div className={styles.seeAll}>
           <Link href="/play" className={styles.seeAllLink}>
-            全クイズを見る
+            もっと見る
           </Link>
         </div>
       </section>
 
-      {/* セクション5: 最新ブログ記事 */}
+      {/* セクション5: 今日のデイリーパズル */}
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>今日のデイリーパズル</h2>
+        <p className={styles.sectionDescription}>
+          毎日更新される{gameContents.length}つのパズルに挑戦しよう
+        </p>
+        <ul
+          className={styles.featuredGrid}
+          role="list"
+          aria-label="デイリーパズル一覧"
+        >
+          {gameContents.map((game) => (
+            <li key={game.slug}>
+              <Link
+                href={getContentPath(game)}
+                className={styles.featuredCard}
+                style={
+                  {
+                    "--play-accent": game.accentColor,
+                    "--play-cta-text": getContrastTextColor(game.accentColor),
+                  } as React.CSSProperties
+                }
+              >
+                <div className={styles.featuredCardIconWrapper}>
+                  <div className={styles.featuredCardIcon}>{game.icon}</div>
+                </div>
+                <div className={styles.featuredCardTitleRow}>
+                  <h3 className={styles.featuredCardTitle}>{game.title}</h3>
+                  {DAILY_UPDATE_SLUGS.has(game.slug) && (
+                    <span className={styles.dailyBadge}>毎日更新</span>
+                  )}
+                </div>
+                <p className={styles.featuredCardDescription}>
+                  {game.shortDescription}
+                </p>
+                <div className={styles.featuredCardMeta}>
+                  <span className={styles.featuredCardCta}>挑戦する</span>
+                </div>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* セクション6: 最新ブログ記事 */}
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>最新ブログ記事</h2>
         <div className={styles.blogList}>
