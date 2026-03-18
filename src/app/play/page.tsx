@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
-import { getPlayContentsByCategory, playContentBySlug } from "@/play/registry";
+import {
+  getPlayContentsByCategory,
+  playContentBySlug,
+  allPlayContents,
+} from "@/play/registry";
 import type { PlayContentMeta } from "@/play/types";
 import { getPlayPath, getDailyFortunePath } from "@/play/paths";
 import { getContrastTextColor } from "@/play/color-utils";
@@ -9,10 +13,15 @@ import { allQuizMetas } from "@/play/quiz/registry";
 import Breadcrumb from "@/components/common/Breadcrumb";
 import styles from "./page.module.css";
 
+/** ISR: 24時間ごとにページを再生成し、「今日のピックアップ」の日替わりローテーションを機能させる */
+export const revalidate = 86400;
+
+/** コンテンツ総数（metadataと本文で共通使用するため定数化） */
+const PLAY_CONTENT_COUNT = allPlayContents.length;
+
 export const metadata: Metadata = {
   title: `遊ぶ | ${SITE_NAME}`,
-  description:
-    "占い・性格診断・知識テスト・ゲームなど全19種のインタラクティブコンテンツが揃う入口。今日の運勢、性格診断、漢字クイズ、パズルゲームをブラウザで無料で楽しめます。",
+  description: `占い・性格診断・知識テスト・ゲームなど全${PLAY_CONTENT_COUNT}種のインタラクティブコンテンツが揃う入口。今日の運勢、性格診断、漢字クイズ、パズルゲームをブラウザで無料で楽しめます。`,
   keywords: [
     "ゲーム",
     "クイズ",
@@ -25,8 +34,7 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: `遊ぶ | ${SITE_NAME}`,
-    description:
-      "占い・性格診断・知識テスト・ゲームなど全19種のコンテンツがブラウザで無料で楽しめます。",
+    description: `占い・性格診断・知識テスト・ゲームなど全${PLAY_CONTENT_COUNT}種のコンテンツがブラウザで無料で楽しめます。`,
     type: "website",
     url: `${BASE_URL}/play`,
     siteName: SITE_NAME,
@@ -34,8 +42,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: `遊ぶ | ${SITE_NAME}`,
-    description:
-      "占い・性格診断・知識テスト・ゲームなど全19種のコンテンツがブラウザで無料で楽しめます。",
+    description: `占い・性格診断・知識テスト・ゲームなど全${PLAY_CONTENT_COUNT}種のコンテンツがブラウザで無料で楽しめます。`,
   },
   alternates: {
     canonical: `${BASE_URL}/play`,
@@ -164,8 +171,8 @@ export default function PlayPage() {
           🎨
         </span>
         <h1 className={styles.heroTitle}>遊ぶ</h1>
-        <p className={styles.heroSubtext}>
-          全19種のコンテンツがブラウザで無料で楽しめる
+        <p className={styles.heroSubtext} data-testid="hero-subtext">
+          全{PLAY_CONTENT_COUNT}種のコンテンツがブラウザで無料で楽しめる
         </p>
 
         {/* 今日のピックアップ: dayOfYearベースで日替わりデイリーコンテンツを1つフィーチャー */}
@@ -216,8 +223,11 @@ export default function PlayPage() {
       <section
         className={styles.featuredSection}
         data-testid="featured-section"
+        aria-labelledby="featured-heading"
       >
-        <h2 className={styles.featuredHeading}>まずはここから</h2>
+        <h2 id="featured-heading" className={styles.featuredHeading}>
+          まずはここから
+        </h2>
         <ul
           className={styles.featuredGrid}
           role="list"
