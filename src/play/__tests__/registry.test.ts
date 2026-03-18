@@ -245,12 +245,12 @@ describe("FEATURED_SLUGS (共有定数)", () => {
     expect(FEATURED_SLUGS).toBeDefined();
   });
 
-  test("contains exactly 4 slugs (各カテゴリ1件ずつ)", () => {
-    expect(FEATURED_SLUGS).toHaveLength(4);
+  test("contains exactly 3 slugs (占いカテゴリは FortunePreview で表示するため除外)", () => {
+    expect(FEATURED_SLUGS).toHaveLength(3);
   });
 
-  test("includes 'daily' (占いカテゴリ代表)", () => {
-    expect(FEATURED_SLUGS).toContain("daily");
+  test("does NOT include 'daily' (占いカテゴリは FortunePreview セクションで表示するため除外)", () => {
+    expect(FEATURED_SLUGS).not.toContain("daily");
   });
 
   test("includes 'animal-personality' (性格診断カテゴリ代表)", () => {

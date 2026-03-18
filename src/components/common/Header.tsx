@@ -7,8 +7,8 @@ import StreakBadge from "@/lib/achievements/StreakBadge";
 
 const NAV_LINKS = [
   { href: "/", label: "ホーム" },
-  { href: "/tools", label: "ツール" },
   { href: "/play", label: "遊ぶ" },
+  { href: "/tools", label: "ツール" },
   { href: "/dictionary", label: "辞典" },
   { href: "/blog", label: "ブログ" },
   { href: "/about", label: "About" },

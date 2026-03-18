@@ -68,6 +68,26 @@ describe("Header", () => {
     }
   });
 
+  test("renders navigation links in correct order: ホーム / 遊ぶ / ツール / 辞典 / ブログ / About", () => {
+    render(<Header />);
+    // デスクトップ用 ul 内のリンク順序を検証する
+    const navList = screen
+      .getByRole("navigation", { name: "メインナビゲーション" })
+      .querySelector("ul");
+    expect(navList).not.toBeNull();
+    const items = Array.from(navList!.querySelectorAll("li a")).map(
+      (a) => a.textContent,
+    );
+    expect(items).toEqual([
+      "ホーム",
+      "遊ぶ",
+      "ツール",
+      "辞典",
+      "ブログ",
+      "About",
+    ]);
+  });
+
   test("does not render クイズ navigation link", () => {
     render(<Header />);
     const quizLinks = screen.queryAllByRole("link", { name: "クイズ" });
