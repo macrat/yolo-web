@@ -88,4 +88,38 @@ describe("FortunePreview.module.css", () => {
     expect(focusVisibleBlock).not.toBeNull();
     expect(focusVisibleBlock![1]).toMatch(/outline\s*:/);
   });
+
+  it(".emptyStar class exists in CSS", () => {
+    // empty star を filled star と色で区別するための専用クラスが必要
+    expect(cssContent).toMatch(/\.emptyStar\s*\{/);
+  });
+
+  it(".emptyStar has color property set to gray tone", () => {
+    // empty star はグレー系の色 (#d1d5db) を使用する
+    const emptyStarBlock = cssContent.match(/\.emptyStar\s*\{([^}]*)\}/);
+    expect(emptyStarBlock).not.toBeNull();
+    expect(emptyStarBlock![1]).toMatch(/color\s*:/);
+    // グレー系の色コード (#d1d5db) が含まれていること
+    expect(emptyStarBlock![1]).toMatch(/#d1d5db/i);
+  });
+
+  it(".section has padding 2.5rem 0 1.5rem (aligned with other sections)", () => {
+    // 他セクションとパディングを統一するため 2.5rem 0 1.5rem を使用する
+    const sectionBlock = cssContent.match(/\.section\s*\{([^}]*)\}/);
+    expect(sectionBlock).not.toBeNull();
+    expect(sectionBlock![1]).toMatch(/padding\s*:\s*2\.5rem\s+0\s+1\.5rem/);
+  });
+});
+
+describe("StarRatingTeaser empty star markup", () => {
+  it("renders empty stars wrapped in span with emptyStar class", () => {
+    render(<FortunePreview />);
+    // rating=3.5 のとき: filled=3★, half=1☆, empty=1☆
+    // empty stars は .emptyStar クラスの span で囲まれていること
+    const starsContainer = screen.getByLabelText("3.5 / 5");
+    const emptyStarSpan = starsContainer.querySelector('[class*="emptyStar"]');
+    expect(emptyStarSpan).not.toBeNull();
+    // empty star の文字が含まれていること
+    expect(emptyStarSpan!.textContent).toMatch(/☆/);
+  });
 });

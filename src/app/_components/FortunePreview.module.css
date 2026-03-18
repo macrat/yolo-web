@@ -2,7 +2,7 @@
 /* /play ページのカードデザイン (accentColor #7c3aed) と統一した紫系グラデーション */
 
 .section {
-  padding: 2rem 0 1.5rem;
+  padding: 2.5rem 0 1.5rem;
   border-top: 1px solid var(--color-border);
 }
 
@@ -128,7 +128,17 @@
   margin-top: 0.25rem;
 }
 
+/* empty star: filled star (#7c3aed) と色で区別するためのグレー */
+.emptyStar {
+  color: #d1d5db;
+}
+
 /* ===== Dark mode ===== */
 :global(:root.dark) .card:hover {
   box-shadow: 0 4px 16px rgba(255, 255, 255, 0.05);
+}
+
+/* ダークモードでは empty star を明るめのグレーに変更して視認性を確保 */
+:global(:root.dark) .emptyStar {
+  color: #6b7280;
 }
