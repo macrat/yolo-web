@@ -276,7 +276,7 @@ export default function Home() {
         </ul>
         <div className={styles.seeAll}>
           <Link href="/play" className={styles.seeAllLink}>
-            /play でもっと遊ぶ
+            もっと遊ぶ
           </Link>
         </div>
       </section>
