@@ -1,5 +1,6 @@
 import Link from "next/link";
 import styles from "./Header.module.css";
+import NavLinks from "./NavLinks";
 import MobileNav from "./MobileNav";
 import SearchTrigger from "../search/SearchTrigger";
 import ThemeToggle from "./ThemeToggle";
@@ -11,7 +12,7 @@ const NAV_LINKS = [
   { href: "/tools", label: "ツール" },
   { href: "/dictionary", label: "辞典" },
   { href: "/blog", label: "ブログ" },
-  { href: "/about", label: "About" },
+  { href: "/about", label: "サイト紹介" },
 ] as const;
 
 export default function Header() {
@@ -21,13 +22,7 @@ export default function Header() {
         <Link href="/" className={styles.logo}>
           yolos.net
         </Link>
-        <ul className={styles.links}>
-          {NAV_LINKS.map((link) => (
-            <li key={link.href}>
-              <Link href={link.href}>{link.label}</Link>
-            </li>
-          ))}
-        </ul>
+        <NavLinks links={NAV_LINKS} />
         <div className={styles.actions}>
           <StreakBadge />
           <SearchTrigger />

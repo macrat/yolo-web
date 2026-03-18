@@ -13,6 +13,10 @@
 }
 
 .logo {
+  display: inline-flex;
+  align-items: center;
+  /* WCAG 2.5.5: タップターゲット最小44px */
+  min-height: 44px;
   font-size: 1.25rem;
   font-weight: 700;
   color: var(--color-primary);
@@ -21,6 +25,13 @@
 
 .logo:hover {
   opacity: 0.8;
+}
+
+/* キーボードナビゲーション時のみフォーカスリングを表示（マウス操作では非表示） */
+.logo:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 .links {
@@ -37,6 +48,19 @@
 
 .links a:hover {
   color: var(--color-primary);
+}
+
+/* 現在のページに対応するナビリンクのアクティブ状態 */
+.active {
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+/* キーボードナビゲーション時のみフォーカスリングを表示（マウス操作では非表示） */
+.links a:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 .actions {

@@ -1,8 +1,10 @@
 import { expect, test, describe, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
+import { readFileSync } from "fs";
+import { resolve } from "path";
 import Header from "../Header";
 
-// Mock next/navigation for SearchModal (rendered via SearchTrigger)
+// Mock next/navigation for SearchModal (rendered via SearchTrigger) and NavLinks / MobileNav (usePathname)
 vi.mock("next/navigation", () => ({
   useRouter: () => ({
     push: vi.fn(),
@@ -12,6 +14,7 @@ vi.mock("next/navigation", () => ({
     forward: vi.fn(),
     refresh: vi.fn(),
   }),
+  usePathname: () => "/",
 }));
 
 // Mock useAchievements for StreakBadge (renders inside Header)
@@ -56,7 +59,7 @@ describe("Header", () => {
       { name: "遊ぶ", href: "/play" },
       { name: "辞典", href: "/dictionary" },
       { name: "ブログ", href: "/blog" },
-      { name: "About", href: "/about" },
+      { name: "サイト紹介", href: "/about" },
     ];
     for (const { name, href } of expectedLinks) {
       // getAllByRole because both desktop and mobile links exist
@@ -68,7 +71,7 @@ describe("Header", () => {
     }
   });
 
-  test("renders navigation links in correct order: ホーム / 遊ぶ / ツール / 辞典 / ブログ / About", () => {
+  test("renders navigation links in correct order: ホーム / 遊ぶ / ツール / 辞典 / ブログ / サイト紹介", () => {
     render(<Header />);
     // デスクトップ用 ul 内のリンク順序を検証する
     const navList = screen
@@ -84,7 +87,7 @@ describe("Header", () => {
       "ツール",
       "辞典",
       "ブログ",
-      "About",
+      "サイト紹介",
     ]);
   });
 
@@ -99,5 +102,14 @@ describe("Header", () => {
     expect(
       screen.getByRole("button", { name: "メニューを開く" }),
     ).toBeInTheDocument();
+  });
+
+  // WCAG タップターゲット44px保証
+  test(".logo has min-height: 44px for WCAG tap target", () => {
+    const cssPath = resolve(__dirname, "../Header.module.css");
+    const css = readFileSync(cssPath, "utf-8");
+    // .logo ブロック内に min-height: 44px が含まれているかを検証
+    const logoBlock = css.match(/\.logo\s*\{[^}]+\}/)?.[0] ?? "";
+    expect(logoBlock).toContain("min-height: 44px");
   });
 });

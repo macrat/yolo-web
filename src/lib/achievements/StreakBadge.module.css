@@ -1,6 +1,9 @@
 .badge {
   display: flex;
   align-items: center;
+  /* WCAG 2.5.5: タップターゲット最小44px */
+  min-height: 44px;
+  min-width: 44px;
   gap: 0.2rem;
   padding: 0.25rem 0.5rem;
   border-radius: 1rem;

@@ -17,6 +17,7 @@ const yojiPersonalityQuiz: QuizDefinition = {
   meta: {
     slug: "yoji-personality",
     title: "あなたを四字熟語に例えると?",
+    shortTitle: "四字熟語で性格診断",
     description:
       "8つの質問に答えて、あなたの性格にぴったりの四字熟語を見つけましょう。努力家?自由人?リーダー?あなたの本質を四字熟語が教えてくれます。",
     shortDescription: "性格診断であなたにぴったりの四字熟語を発見",

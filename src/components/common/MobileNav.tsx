@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import styles from "./MobileNav.module.css";
 
 interface NavLink {
@@ -13,8 +14,19 @@ interface MobileNavProps {
   links: readonly NavLink[];
 }
 
+/**
+ * ホームは完全一致、その他は前方一致でアクティブ状態を判定する。
+ */
+function isActive(pathname: string, href: string): boolean {
+  if (href === "/") {
+    return pathname === "/";
+  }
+  return pathname.startsWith(href);
+}
+
 export default function MobileNav({ links }: MobileNavProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === "Escape") {
@@ -69,7 +81,7 @@ export default function MobileNav({ links }: MobileNavProps) {
           <li key={link.href} role="none">
             <Link
               href={link.href}
-              className={styles.menuLink}
+              className={`${styles.menuLink}${isActive(pathname, link.href) ? ` ${styles.activeLink}` : ""}`}
               role="menuitem"
               onClick={() => setIsOpen(false)}
             >

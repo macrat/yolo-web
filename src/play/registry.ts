@@ -90,15 +90,15 @@ export const DAILY_UPDATE_SLUGS: ReadonlySet<string> = new Set([
 
 /**
  * 「まずはここから」セクションに表示する固定コンテンツのスラグ一覧。
- * 各カテゴリから代表的な1コンテンツを選出（性格診断/知識テスト/ゲーム）。
- * 占いカテゴリは FortunePreview セクションで表示するため除外し、3件とする。
+ * 占いカテゴリはFortunePreviewで表示、ゲームカテゴリはデイリーパズルセクションで表示するため、
+ * 性格診断・知識テストカテゴリから代表作を選出。3件とする。
  * 初回訪問者が迷わず体験できる導線として機能する。
  * /play ページとトップページの両方から参照される共有定数。
  */
 export const FEATURED_SLUGS: ReadonlyArray<string> = [
   "animal-personality", // 性格診断: アニマル性格診断
   "kanji-level", // 知識テスト: 漢字レベル診断
-  "irodori", // ゲーム: いろどり
+  "character-personality", // 性格診断: キャラクター性格診断
 ];
 
 /** 全 PlayContentMeta の配列（ゲーム4種 + クイズ14種 + Fortune 1種 = 19種、表示順を保持） */

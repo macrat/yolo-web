@@ -1,5 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
+import { readFileSync } from "fs";
+import { resolve } from "path";
 import StreakBadge from "../StreakBadge";
 import type { AchievementStore } from "../types";
 import { createDefaultStore } from "../storage";
@@ -80,5 +82,20 @@ describe("StreakBadge", () => {
     mockStore.current = makeStoreWithStreak(365);
     render(<StreakBadge />);
     expect(screen.getByText("365")).toBeInTheDocument();
+  });
+
+  // WCAG タップターゲット44px保証
+  it(".badge has min-height: 44px for WCAG tap target", () => {
+    const cssPath = resolve(__dirname, "../StreakBadge.module.css");
+    const css = readFileSync(cssPath, "utf-8");
+    const badgeBlock = css.match(/\.badge\s*\{[^}]+\}/)?.[0] ?? "";
+    expect(badgeBlock).toContain("min-height: 44px");
+  });
+
+  it(".badge has min-width: 44px for WCAG tap target", () => {
+    const cssPath = resolve(__dirname, "../StreakBadge.module.css");
+    const css = readFileSync(cssPath, "utf-8");
+    const badgeBlock = css.match(/\.badge\s*\{[^}]+\}/)?.[0] ?? "";
+    expect(badgeBlock).toContain("min-width: 44px");
   });
 });

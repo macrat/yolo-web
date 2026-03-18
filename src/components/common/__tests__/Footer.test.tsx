@@ -38,7 +38,7 @@ test("Footer renders navigation links", () => {
     "href",
     "/cheatsheets",
   );
-  expect(screen.getByRole("link", { name: "遊ぶ一覧" })).toHaveAttribute(
+  expect(screen.getByRole("link", { name: "コンテンツ一覧" })).toHaveAttribute(
     "href",
     "/play",
   );
@@ -94,12 +94,53 @@ test("Footer does not render クイズ・診断 link", () => {
   expect(screen.queryByRole("link", { name: "クイズ・診断" })).toBeNull();
 });
 
+test("Footer renders 辞典一覧 link at /dictionary", () => {
+  render(<Footer />);
+  expect(screen.getByRole("link", { name: "辞典一覧" })).toHaveAttribute(
+    "href",
+    "/dictionary",
+  );
+});
+
+test("Footer renders ユーモア辞典 link at /dictionary/humor", () => {
+  render(<Footer />);
+  expect(screen.getByRole("link", { name: "ユーモア辞典" })).toHaveAttribute(
+    "href",
+    "/dictionary/humor",
+  );
+});
+
+test("Footer renders 辞典一覧 as first link in 辞典 section", () => {
+  render(<Footer />);
+  const nav = screen.getByRole("navigation", {
+    name: "フッターナビゲーション",
+  });
+  const dictionarySection = Array.from(nav.querySelectorAll("div")).find(
+    (div) => div.querySelector("h3")?.textContent === "辞典",
+  );
+  const links = dictionarySection?.querySelectorAll("a");
+  expect(links?.[0]).toHaveAttribute("href", "/dictionary");
+});
+
+test("Footer renders ユーモア辞典 as last link in 辞典 section", () => {
+  render(<Footer />);
+  const nav = screen.getByRole("navigation", {
+    name: "フッターナビゲーション",
+  });
+  const dictionarySection = Array.from(nav.querySelectorAll("div")).find(
+    (div) => div.querySelector("h3")?.textContent === "辞典",
+  );
+  const links = dictionarySection?.querySelectorAll("a");
+  const lastLink = links?.[links.length - 1];
+  expect(lastLink).toHaveAttribute("href", "/dictionary/humor");
+});
+
 // ===== CSS品質: タップターゲット・アクセシビリティ =====
 
-test("Footer CSS: sectionLink padding is 0.75rem 0 for 44px tap target", () => {
-  // タップターゲット44px以上確保のためpaddingを0.65rem→0.75remに拡大
+test("Footer CSS: sectionList li has min-height 44px for tap target (WCAG C42)", () => {
+  // W3C WCAG C42手法: liにタップターゲットの高さを担わせる
   expect(footerCssContent).toMatch(
-    /\.sectionLink\s*\{[^}]*padding:\s*0\.75rem\s+0/,
+    /\.sectionList\s+li\s*\{[^}]*min-height:\s*44px/,
   );
 });
 
