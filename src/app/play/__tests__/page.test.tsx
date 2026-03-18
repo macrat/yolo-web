@@ -102,17 +102,18 @@ describe("PlayPage", () => {
   it("renders '毎日更新' badge on daily content cards", () => {
     render(<PlayPage />);
     const badges = screen.getAllByText("毎日更新");
-    // 対象スラグ: daily, kanji-kanaru, yoji-kimeru, nakamawake, irodori の5件
-    expect(badges.length).toBe(5);
+    // 対象スラグ: daily, kanji-kanaru, yoji-kimeru, nakamawake, irodori の5種
+    // 「まずはここから」に daily と irodori も表示されるため合計7件（5種 + 重複2件）
+    expect(badges.length).toBe(7);
   });
 
   it("does not render '毎日更新' badge on non-daily content cards", () => {
     render(<PlayPage />);
-    // 非デイリーカードのうち1枚（性格診断系）にバッジがないことを確認
+    // カテゴリセクションのリストに限定して確認
     const allLinks = screen
       .getAllByRole("list", { name: /カテゴリ/ })
       .flatMap((list) => within(list).getAllByRole("link"));
-    // バッジありのカード数は5件のみ
+    // カテゴリセクション内のバッジありのカード数は5件のみ
     const cardsWithBadge = allLinks.filter((link) =>
       within(link).queryByText("毎日更新"),
     );
@@ -180,5 +181,98 @@ describe("PlayPage", () => {
     expect(document.getElementById("personality")).toBeInTheDocument();
     expect(document.getElementById("knowledge")).toBeInTheDocument();
     expect(document.getElementById("game")).toBeInTheDocument();
+  });
+
+  // ===== タスク12: /play一覧ページUX改善 =====
+
+  // A.1: 「今日のピックアップ」セクション
+  it("renders 'today's pickup' section in hero area", () => {
+    render(<PlayPage />);
+    const pickupSection = screen.getByTestId("pickup-section");
+    expect(pickupSection).toBeInTheDocument();
+  });
+
+  it("renders pickup section with a title", () => {
+    render(<PlayPage />);
+    const pickupSection = screen.getByTestId("pickup-section");
+    // ピックアップされたコンテンツのタイトルが存在すること
+    const heading = within(pickupSection).getByRole("heading");
+    expect(heading).toBeInTheDocument();
+  });
+
+  it("renders pickup section with a CTA link to /play/", () => {
+    render(<PlayPage />);
+    const pickupSection = screen.getByTestId("pickup-section");
+    const ctaLink = within(pickupSection).getByRole("link");
+    expect(ctaLink.getAttribute("href")).toMatch(/^\/play\//);
+  });
+
+  it("renders pickup section label text", () => {
+    render(<PlayPage />);
+    expect(screen.getByText("今日のピックアップ")).toBeInTheDocument();
+  });
+
+  // B.3: 「まずはここから」セクション
+  it("renders 'start here' featured section before category sections", () => {
+    render(<PlayPage />);
+    const featuredSection = screen.getByTestId("featured-section");
+    expect(featuredSection).toBeInTheDocument();
+  });
+
+  it("renders 'まずはここから' heading in featured section", () => {
+    render(<PlayPage />);
+    const featuredSection = screen.getByTestId("featured-section");
+    expect(
+      within(featuredSection).getByRole("heading", { name: "まずはここから" }),
+    ).toBeInTheDocument();
+  });
+
+  it("renders exactly 4 featured cards in the featured section", () => {
+    render(<PlayPage />);
+    const featuredSection = screen.getByTestId("featured-section");
+    const featuredLinks = within(featuredSection).getAllByRole("link");
+    expect(featuredLinks.length).toBe(4);
+  });
+
+  it("featured section cards link to /play/ paths", () => {
+    render(<PlayPage />);
+    const featuredSection = screen.getByTestId("featured-section");
+    const featuredLinks = within(featuredSection).getAllByRole("link");
+    featuredLinks.forEach((link) => {
+      expect(link.getAttribute("href")).toMatch(/^\/play\//);
+    });
+  });
+
+  it("featured section appears before category sections in the DOM", () => {
+    render(<PlayPage />);
+    const featuredSection = screen.getByTestId("featured-section");
+    const fortuneSection = document.getElementById("fortune");
+    expect(featuredSection).toBeInTheDocument();
+    expect(fortuneSection).toBeInTheDocument();
+    // document order: featuredSection は fortune セクションより前に出現すること
+    const allSections = document.querySelectorAll(
+      "[data-testid='featured-section'], #fortune",
+    );
+    expect(allSections[0]).toBe(featuredSection);
+  });
+
+  // C.4: カードのグラデーション背景
+  it("renders cards with gradient background data attribute", () => {
+    render(<PlayPage />);
+    // グラデーション背景を持つカードが存在すること（data-testid で確認）
+    const gradientCards = document.querySelectorAll(
+      "[data-testid='card-with-gradient']",
+    );
+    expect(gradientCards.length).toBeGreaterThan(0);
+  });
+
+  // D.7: カテゴリナビのsticky化
+  it("category nav has sticky class for scroll tracking", () => {
+    render(<PlayPage />);
+    const categoryNav = screen.getByRole("navigation", {
+      name: "カテゴリナビゲーション",
+    });
+    // stickyクラスが付与されていることを確認（CSSモジュールクラス名は変換されるためdata属性で確認）
+    expect(categoryNav).toHaveAttribute("data-sticky", "true");
   });
 });
