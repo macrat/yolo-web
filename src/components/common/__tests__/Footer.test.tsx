@@ -1,6 +1,13 @@
 import { expect, test } from "vitest";
 import { render, screen } from "@testing-library/react";
+import { readFileSync } from "fs";
+import { resolve } from "path";
 import Footer from "../Footer";
+
+const footerCssContent = readFileSync(
+  resolve(__dirname, "../Footer.module.css"),
+  "utf-8",
+);
 
 test("Footer renders disclaimer text about AI experiment", () => {
   render(<Footer />);
@@ -85,4 +92,20 @@ test("Footer renders privacy policy link", () => {
 test("Footer does not render クイズ・診断 link", () => {
   render(<Footer />);
   expect(screen.queryByRole("link", { name: "クイズ・診断" })).toBeNull();
+});
+
+// ===== CSS品質: タップターゲット・アクセシビリティ =====
+
+test("Footer CSS: sectionLink padding is 0.75rem 0 for 44px tap target", () => {
+  // タップターゲット44px以上確保のためpaddingを0.65rem→0.75remに拡大
+  expect(footerCssContent).toMatch(
+    /\.sectionLink\s*\{[^}]*padding:\s*0\.75rem\s+0/,
+  );
+});
+
+test("Footer CSS: sectionLink has focus-visible outline for keyboard accessibility", () => {
+  // キーボードナビゲーション時のフォーカスリングが定義されていること
+  expect(footerCssContent).toMatch(
+    /\.sectionLink:focus-visible\s*\{[^}]*outline:\s*2px\s+solid\s+var\(--color-primary\)/,
+  );
 });
