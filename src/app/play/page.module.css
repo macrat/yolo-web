@@ -8,7 +8,7 @@
 /* ===== Hero banner ===== */
 .heroBanner {
   text-align: center;
-  padding: 3rem 1rem;
+  padding: 3rem 1rem 2rem;
   margin-bottom: 1.5rem;
   /* カラフルなグラデーション（紫→青→シアン系） */
   background: linear-gradient(135deg, #6c3bea 0%, #4466dd 40%, #1bb5c8 100%);
@@ -26,7 +26,8 @@
 .heroDeco4 {
   position: absolute;
   font-size: 3rem;
-  opacity: 0.15;
+  /* 0.15→0.25に引き上げて存在感を増す */
+  opacity: 0.25;
   pointer-events: none;
   user-select: none;
 }
@@ -71,10 +72,85 @@
   color: rgba(255, 255, 255, 0.85);
   position: relative;
   z-index: 1;
+  margin-bottom: 1.5rem;
+}
+
+/* ===== Pickup area (hero内「今日のピックアップ」) ===== */
+/* ヒーロー内にデイリーコンテンツを1件大きくフィーチャーする */
+.pickupArea {
+  position: relative;
+  z-index: 1;
+  margin-top: 0.5rem;
+}
+
+.pickupLabel {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 0.5rem;
+}
+
+.pickupCard {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 1rem;
+  padding: 1.25rem 2rem;
+  text-decoration: none;
+  color: #ffffff;
+  transition:
+    background-color 0.2s,
+    transform 0.2s;
+  max-width: 360px;
+  width: 100%;
+}
+
+.pickupCard:hover {
+  background-color: rgba(255, 255, 255, 0.22);
+  transform: translateY(-2px);
+}
+
+.pickupIcon {
+  font-size: 3rem;
+  line-height: 1;
+}
+
+.pickupTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-align: center;
+  margin: 0;
+}
+
+.pickupDescription {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.85);
+  text-align: center;
+  margin: 0;
+}
+
+.pickupCta {
+  display: inline-block;
+  margin-top: 0.25rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 0.4rem 1.25rem;
+  background-color: #ffffff;
+  /* アクセントカラーでCTAテキスト色を設定。フォールバックは濃い紫 */
+  color: var(--play-accent, #4c1d95);
+  border-radius: 999px;
 }
 
 /* ===== Category navigation tabs ===== */
 /* ヒーロー直下に配置するカテゴリアンカーリンクタブ */
+/* sticky化でスクロール時も画面上部に固定される */
 .categoryNav {
   display: flex;
   flex-wrap: wrap;
@@ -87,6 +163,14 @@
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
   padding-bottom: 0.25rem;
+  /* NN/Group推奨: スクロール量が多いページではstickyカテゴリバーが有効 */
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: var(--color-bg-primary);
+  /* stickyになった際の下線ボーダーで区切りを明確にする */
+  border-bottom: 1px solid var(--color-border);
+  padding-top: 0.5rem;
 }
 
 .categoryNav::-webkit-scrollbar {
@@ -116,9 +200,44 @@
   color: var(--color-text);
 }
 
+/* ===== Featured section（まずはここから） ===== */
+/* 各カテゴリの代表コンテンツを4枚横並びで表示する導線セクション */
+.featuredSection {
+  margin-bottom: 2.5rem;
+}
+
+.featuredHeading {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--color-border);
+}
+
+/* デスクトップ4列、モバイル2列のグリッド */
+.featuredGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
 /* ===== Category section ===== */
 .categorySection {
   margin-bottom: 2.5rem;
+  /* 交互背景色用CSS変数を定義（デフォルトは透明） */
+  --section-bg-alt: transparent;
+  background-color: var(--section-bg-alt);
+  /* 背景色を広げるためのネガティブマージン補正 */
+  padding: 1rem 0;
+}
+
+/* 偶数セクションにライトモードの薄い背景色を適用して回遊性を高める */
+.categorySection[data-section-alt="true"] {
+  --section-bg-alt: rgba(0, 0, 0, 0.02);
 }
 
 .categoryHeading {
@@ -153,15 +272,28 @@
   border-radius: 0.75rem;
   text-decoration: none;
   color: inherit;
+  /* C.4: アクセントカラーの薄いグラデーション背景でカードごとの色合いを差別化 */
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--play-accent) 8%, transparent) 0%,
+    transparent 40%
+  );
   transition:
     border-color 0.2s,
     box-shadow 0.2s,
-    transform 0.2s;
+    transform 0.2s,
+    background 0.2s;
 }
 
+/* C.5: ホバー時にグラデーション背景を若干濃くしてアクセントカラーを強調 */
 .card:hover {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   transform: translateY(-2px);
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--play-accent) 14%, transparent) 0%,
+    transparent 50%
+  );
 }
 
 /* アイコンをaccentColorの薄い背景円でラップ */
@@ -253,6 +385,11 @@
   box-shadow: 0 4px 16px rgba(255, 255, 255, 0.05);
 }
 
+/* ダークモードの偶数セクション背景色 */
+:global(:root.dark) .categorySection[data-section-alt="true"] {
+  --section-bg-alt: rgba(255, 255, 255, 0.03);
+}
+
 /* ===== Responsive ===== */
 @media (max-width: 768px) {
   .main {
@@ -261,6 +398,11 @@
 
   .heroTitle {
     font-size: 1.75rem;
+  }
+
+  /* タブレットでは2カラム */
+  .featuredGrid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -273,6 +415,12 @@
 
   /* モバイルでも2カラムを維持する */
   .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  /* おすすめグリッドもモバイルで2カラム */
+  .featuredGrid {
     grid-template-columns: repeat(2, 1fr);
     gap: 0.75rem;
   }
@@ -302,5 +450,19 @@
   .cardCta {
     font-size: 0.7rem;
     padding: 0.2rem 0.6rem;
+  }
+
+  /* D.6: モバイルのカードタイトルは最大2行でクランプ */
+  .cardTitle {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* ピックアップカードをモバイルでは横幅いっぱいに */
+  .pickupCard {
+    max-width: 100%;
+    padding: 1rem 1.25rem;
   }
 }
