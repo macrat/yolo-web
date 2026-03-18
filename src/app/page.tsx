@@ -2,30 +2,20 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { formatDate } from "@/lib/date";
 import { getAllBlogPosts } from "@/blog/_lib/blog";
-import { allToolMetas } from "@/tools/registry";
 import { allQuizMetas } from "@/play/quiz/registry";
 import { allGameMetas } from "@/play/games/registry";
 import { allPlayContents } from "@/play/registry";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import styles from "./page.module.css";
 
-const FEATURED_TOOL_SLUGS = [
-  "char-count",
-  "json-formatter",
-  "password-generator",
-  "age-calculator",
-  "qr-code",
-  "image-resizer",
-] as const;
-
 export const metadata: Metadata = {
   title: SITE_NAME,
   description:
-    "AIエージェントが企画・開発・運営するWebサイト。無料オンラインツール、デイリーパズルゲーム、クイズ・診断、AIブログを提供しています。",
+    "占い・性格診断・クイズ・パズルゲームなど多彩なインタラクティブコンテンツが揃う占い・診断パーク。AIが毎日更新する運勢・診断を無料でお楽しみいただけます。",
   openGraph: {
     title: SITE_NAME,
     description:
-      "AIエージェントが企画・開発・運営するWebサイト。ツール、ゲーム、クイズ、ブログなど多彩なコンテンツを提供。",
+      "占い・性格診断・クイズ・パズルゲームなど多彩なインタラクティブコンテンツが揃う占い・診断パーク。",
     type: "website",
     url: BASE_URL,
     siteName: SITE_NAME,
@@ -34,50 +24,67 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: SITE_NAME,
     description:
-      "AIエージェントが企画・開発・運営するWebサイト。ツール、ゲーム、クイズ、ブログなど多彩なコンテンツを提供。",
+      "占い・性格診断・クイズ・パズルゲームなど多彩なインタラクティブコンテンツが揃う占い・診断パーク。",
   },
   alternates: {
     canonical: BASE_URL,
   },
 };
 
+/** ヒーローセクションのバッジ定義 */
+const HERO_BADGES = [
+  { label: "毎日更新", icon: "\u{1F504}", href: null },
+  { label: "完全無料", icon: "\u{1F4B0}", href: null },
+] as const;
+
 export default function Home() {
-  const statBadges = [
-    {
-      label: `${allToolMetas.length} ツール`,
-      icon: "\u{1F527}",
-      href: "/tools",
-    },
-    {
-      label: `${allPlayContents.length} 遊ぶ`,
-      icon: "\u{1F3AE}",
-      href: "/play",
-    },
-    { label: "AI運営ブログ", icon: "\u{1F4DD}", href: "/blog" },
-  ];
   const recentPosts = getAllBlogPosts().slice(0, 3);
-  const featuredTools = FEATURED_TOOL_SLUGS.map((slug) =>
-    allToolMetas.find((t) => t.slug === slug),
-  ).filter((t): t is NonNullable<typeof t> => Boolean(t));
 
   return (
     <div className={styles.main}>
-      {/* セクション1: ヒーロー */}
+      {/* セクション1: ヒーロー — 占い・診断パークのコンセプトを前面に出す */}
       <section className={styles.hero}>
+        {/* 装飾的な背景絵文字（占い・診断テーマ） */}
+        <span className={styles.heroDeco1} aria-hidden="true">
+          🔮
+        </span>
+        <span className={styles.heroDeco2} aria-hidden="true">
+          🃏
+        </span>
+        <span className={styles.heroDeco3} aria-hidden="true">
+          ✨
+        </span>
+        <span className={styles.heroDeco4} aria-hidden="true">
+          🎴
+        </span>
+
         <h1 className={styles.heroTitle}>yolos.net</h1>
         <p className={styles.heroSubtitle}>
-          AIエージェントが企画・開発・運営するWebサイト
+          笑える占い・診断で、あなたの意外な一面を発見しよう
         </p>
-        <p className={styles.heroDescription}>
-          このサイトはAIによる実験的プロジェクトです。ツール、ゲーム、ブログなど、
-          さまざまなコンテンツをAIが自律的に作成しています。
+
+        {/* AI運営の透明性（constitution.md Rule 3） */}
+        <p className={styles.heroAiNotice}>
+          AIが企画・運営する占い・診断の実験サイトです
         </p>
+
+        {/* メインCTA */}
+        <Link href="/play" className={styles.heroCta}>
+          今すぐ遊ぶ
+        </Link>
+
+        {/* 統計・特徴バッジ群 */}
         <div className={styles.badges}>
-          {statBadges.map((badge) => (
-            <Link key={badge.label} href={badge.href} className={styles.badge}>
+          {/* コンテンツ総数バッジ（/play へのリンク） */}
+          <Link href="/play" className={styles.badge}>
+            <span className={styles.badgeIcon}>🎮</span>
+            {allPlayContents.length}種の占い・診断・ゲーム
+          </Link>
+          {HERO_BADGES.map((badge) => (
+            <span key={badge.label} className={styles.badgeStatic}>
               <span className={styles.badgeIcon}>{badge.icon}</span>
               {badge.label}
-            </Link>
+            </span>
           ))}
         </div>
       </section>
@@ -145,31 +152,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* セクション4: 人気ツール */}
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>人気ツール</h2>
-        <div className={styles.toolsGrid}>
-          {featuredTools.map((tool) => (
-            <Link
-              key={tool.slug}
-              href={`/tools/${tool.slug}`}
-              className={styles.toolCard}
-            >
-              <h3 className={styles.toolCardTitle}>{tool.name}</h3>
-              <p className={styles.toolCardDescription}>
-                {tool.shortDescription}
-              </p>
-            </Link>
-          ))}
-        </div>
-        <div className={styles.seeAll}>
-          <Link href="/tools" className={styles.seeAllLink}>
-            全ツールを見る ({allToolMetas.length}+)
-          </Link>
-        </div>
-      </section>
-
-      {/* セクション5: 最新ブログ記事 */}
+      {/* セクション4: 最新ブログ記事 */}
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>最新ブログ記事</h2>
         <div className={styles.blogList}>

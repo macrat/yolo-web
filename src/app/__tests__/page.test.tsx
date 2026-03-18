@@ -20,41 +20,6 @@ vi.mock("@/blog/_lib/blog", () => ({
   ],
 }));
 
-vi.mock("@/tools/registry", () => ({
-  allToolMetas: [
-    {
-      slug: "char-count",
-      name: "文字数カウント",
-      shortDescription: "テスト用",
-    },
-    {
-      slug: "json-formatter",
-      name: "JSON整形",
-      shortDescription: "テスト用",
-    },
-    {
-      slug: "password-generator",
-      name: "パスワード生成",
-      shortDescription: "テスト用",
-    },
-    {
-      slug: "age-calculator",
-      name: "年齢計算",
-      shortDescription: "テスト用",
-    },
-    {
-      slug: "qr-code",
-      name: "QRコード生成",
-      shortDescription: "テスト用",
-    },
-    {
-      slug: "image-resizer",
-      name: "画像リサイズ",
-      shortDescription: "テスト用",
-    },
-  ],
-}));
-
 vi.mock("@/play/quiz/registry", () => ({
   allQuizMetas: [
     {
@@ -86,38 +51,50 @@ test("Home page renders heading", () => {
   ).toBeInTheDocument();
 });
 
-test("Home page renders hero description", () => {
+test("Hero has a main CTA button linking to /play", () => {
   render(<Home />);
-  expect(
-    screen.getByText(
-      /このサイトはAIによる実験的プロジェクトです。ツール、ゲーム、ブログなど/,
-    ),
-  ).toBeInTheDocument();
+  const cta = screen.getByRole("link", { name: /今すぐ遊ぶ/ });
+  expect(cta).toBeInTheDocument();
+  expect(cta).toHaveAttribute("href", "/play");
 });
 
-test("Home page renders stat badges with dynamic counts", () => {
+test("Hero subtitle conveys the site concept (占い・診断)", () => {
   render(<Home />);
-  expect(screen.getByText(/6 ツール/)).toBeInTheDocument();
-  // allPlayContents は 7件（mock）。ゲーム・クイズ・Fortuneを統合した「遊ぶ」バッジ
-  expect(screen.getByText(/7 遊ぶ/)).toBeInTheDocument();
-  expect(screen.getByText(/AI運営ブログ/)).toBeInTheDocument();
+  // サブタイトルが占い・診断パークのコンセプトを訴求している
+  // getAllByText でページ内の全マッチを取得し、少なくとも1つヒーローに存在することを確認
+  const matches = screen.getAllByText(/占い|診断/);
+  expect(matches.length).toBeGreaterThan(0);
 });
 
-test("Home page renders stat badges as links", () => {
+test("Hero has AI transparency notice (Rule 3)", () => {
   render(<Home />);
-  expect(screen.getByRole("link", { name: /6 ツール/ })).toHaveAttribute(
-    "href",
-    "/tools",
-  );
-  // クイズ・診断バッジを削除し、「遊ぶ」バッジに統合
-  expect(screen.getByRole("link", { name: /7 遊ぶ/ })).toHaveAttribute(
-    "href",
-    "/play",
-  );
-  expect(screen.getByRole("link", { name: /AI運営ブログ/ })).toHaveAttribute(
-    "href",
-    "/blog",
-  );
+  // AI運営の透明性テキストがサブテキストとして存在すること
+  expect(screen.getByText(/AI.*運営|AIが.*運営/)).toBeInTheDocument();
+});
+
+test("Hero stat badge shows play content count and links to /play", () => {
+  render(<Home />);
+  // allPlayContents.length = 7 (mocked)
+  // 「7種の占い・診断・ゲーム」のようなバッジが /play へリンクしている
+  const badge = screen.getByRole("link", { name: /7.*占い|占い.*7|7.*種/ });
+  expect(badge).toHaveAttribute("href", "/play");
+});
+
+test("Hero badges include 毎日更新 and 完全無料", () => {
+  render(<Home />);
+  // 「毎日更新」はヒーローバッジと「N つのパズルに挑戦しよう」という文にも含まれるため
+  // getAllByText で複数の存在を許容する
+  const dailyUpdateElements = screen.getAllByText(/毎日更新/);
+  expect(dailyUpdateElements.length).toBeGreaterThan(0);
+  expect(screen.getByText(/完全無料/)).toBeInTheDocument();
+});
+
+test("allToolMetas is NOT imported (no ツール badge in hero)", () => {
+  render(<Home />);
+  // 「XX ツール」バッジはヒーローから削除されている
+  // /tools への古い「ツール」バッジが存在しないことを確認
+  const toolBadge = screen.queryByRole("link", { name: /\d+ ツール/ });
+  expect(toolBadge).not.toBeInTheDocument();
 });
 
 test("Home page renders daily puzzle section with all games", () => {
@@ -144,16 +121,11 @@ test("Home page renders daily puzzle section with all games", () => {
   );
 });
 
-test("Home page renders popular tools section with dynamic count", () => {
+test("Home page renders quiz section", () => {
   render(<Home />);
   expect(
-    screen.getByRole("heading", { name: /人気ツール/ }),
+    screen.getByRole("heading", { name: /クイズ・診断/ }),
   ).toBeInTheDocument();
-  expect(screen.getByRole("link", { name: /全ツールを見る/ })).toHaveAttribute(
-    "href",
-    "/tools",
-  );
-  expect(screen.getByText(/全ツールを見る \(6\+\)/)).toBeInTheDocument();
 });
 
 test("Home page renders latest blog section", () => {

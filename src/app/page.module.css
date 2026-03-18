@@ -5,63 +5,158 @@
   width: 100%;
 }
 
+/* ===== Hero ===== */
+/* /play ページのヒーローバナーと視覚的に統一したグラデーション背景 */
 .hero {
   text-align: center;
-  padding: 3rem 0 2rem;
+  padding: 3rem 1.5rem 2.5rem;
+  margin-bottom: 0.5rem;
+  /* 占い・診断テーマ: 紫→青→シアン系グラデーション */
+  background: linear-gradient(135deg, #6c3bea 0%, #4466dd 40%, #1bb5c8 100%);
+  border-radius: 0.75rem;
+  /* 装飾絵文字の配置基準 */
+  position: relative;
+  overflow: hidden;
+}
+
+/* 装飾絵文字の共通スタイル（背景に散らして半透明に） */
+.heroDeco1,
+.heroDeco2,
+.heroDeco3,
+.heroDeco4 {
+  position: absolute;
+  font-size: 3rem;
+  opacity: 0.25;
+  pointer-events: none;
+  user-select: none;
+}
+
+.heroDeco1 {
+  top: 10%;
+  left: 5%;
+  transform: rotate(-15deg);
+}
+
+.heroDeco2 {
+  top: 15%;
+  right: 8%;
+  transform: rotate(10deg);
+}
+
+.heroDeco3 {
+  bottom: 10%;
+  left: 8%;
+  transform: rotate(5deg);
+}
+
+.heroDeco4 {
+  bottom: 15%;
+  right: 5%;
+  transform: rotate(-10deg);
 }
 
 .heroTitle {
   font-size: 2.5rem;
   font-weight: 800;
-  color: var(--color-primary);
+  /* 白文字でグラデーション背景との対比を確保 */
+  color: #ffffff;
   margin-bottom: 0.5rem;
+  position: relative;
+  z-index: 1;
 }
 
 .heroSubtitle {
   font-size: 1.25rem;
-  color: var(--color-text);
-  margin-bottom: 1rem;
-  font-weight: 500;
+  /* 白の半透明でサブタイトルを柔らかく表示 */
+  color: rgba(255, 255, 255, 0.95);
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+  position: relative;
+  z-index: 1;
 }
 
-.heroDescription {
+/* AI運営透明性テキスト（constitution.md Rule 3 準拠） */
+.heroAiNotice {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* メインCTAボタン */
+.heroCta {
+  display: inline-block;
+  padding: 0.75rem 2rem;
   font-size: 1rem;
-  color: var(--color-text-muted);
-  max-width: 600px;
-  margin: 0 auto;
-  line-height: 1.8;
+  font-weight: 700;
+  color: #4c1d95;
+  background-color: #ffffff;
+  border-radius: 999px;
+  text-decoration: none;
+  position: relative;
+  z-index: 1;
+  transition:
+    background-color 0.2s,
+    transform 0.2s,
+    box-shadow 0.2s;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  margin-bottom: 1.5rem;
+}
+
+.heroCta:hover {
+  background-color: #f5f3ff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
 /* ===== Badges ===== */
+/* グラデーション背景の上に白ベースのバッジを配置 */
 .badges {
   display: flex;
   justify-content: center;
-  gap: 1rem;
-  margin-top: 1.5rem;
+  gap: 0.75rem;
   flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
 }
 
+/* リンク付きバッジ（クリック可能） */
 .badge {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
   padding: 0.4rem 0.9rem;
-  background-color: var(--color-bg-secondary);
-  border: 1px solid var(--color-border);
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: 999px;
   font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--color-text);
+  font-weight: 600;
+  color: #ffffff;
   text-decoration: none;
-  cursor: pointer;
+  backdrop-filter: blur(4px);
   transition:
-    border-color 0.2s,
-    box-shadow 0.2s;
+    background-color 0.2s,
+    border-color 0.2s;
 }
 
 .badge:hover {
-  border-color: var(--color-primary);
-  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1);
+  background-color: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+/* 静的バッジ（リンクなし） */
+.badgeStatic {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.9rem;
+  background-color: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .badgeIcon {
@@ -204,43 +299,6 @@
   border-radius: 999px;
 }
 
-/* ===== Tool cards (3x2) ===== */
-.toolsGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-}
-
-.toolCard {
-  display: block;
-  padding: 1.25rem;
-  border: 1px solid var(--color-border);
-  border-radius: 0.75rem;
-  text-decoration: none;
-  color: inherit;
-  transition:
-    border-color 0.2s,
-    box-shadow 0.2s;
-}
-
-.toolCard:hover {
-  border-color: var(--color-primary);
-  box-shadow: 0 2px 12px rgba(37, 99, 235, 0.1);
-}
-
-.toolCardTitle {
-  font-size: 1rem;
-  font-weight: 600;
-  margin-bottom: 0.3rem;
-  color: var(--color-text);
-}
-
-.toolCardDescription {
-  font-size: 0.85rem;
-  color: var(--color-text-muted);
-  line-height: 1.5;
-}
-
 /* ===== Blog cards ===== */
 .blogList {
   display: flex;
@@ -313,11 +371,11 @@
 }
 
 /* ===== Dark mode ===== */
-:global(:root.dark) .badge:hover {
-  box-shadow: 0 2px 8px rgba(96, 165, 250, 0.15);
+/* ダークモード時はヒーローを暗めのグラデーションに */
+:global(:root.dark) .hero {
+  background: linear-gradient(135deg, #3d1e8f 0%, #1e3a8a 40%, #0e6b7a 100%);
 }
 
-:global(:root.dark) .toolCard:hover,
 :global(:root.dark) .blogCard:hover {
   box-shadow: 0 2px 12px rgba(96, 165, 250, 0.15);
 }
@@ -338,11 +396,6 @@
     grid-template-columns: 1fr;
     gap: 0.75rem;
   }
-
-  .toolsGrid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.75rem;
-  }
 }
 
 @media (max-width: 640px) {
@@ -350,13 +403,24 @@
     font-size: 2rem;
   }
 
-  .toolsGrid {
-    grid-template-columns: 1fr;
+  .heroSubtitle {
+    font-size: 1.1rem;
+  }
+
+  .heroCta {
+    padding: 0.65rem 1.75rem;
+    font-size: 0.95rem;
   }
 
   .badges {
-    flex-direction: column;
-    align-items: center;
     gap: 0.5rem;
+  }
+
+  .heroDeco1,
+  .heroDeco2,
+  .heroDeco3,
+  .heroDeco4 {
+    font-size: 2rem;
+    opacity: 0.15;
   }
 }
