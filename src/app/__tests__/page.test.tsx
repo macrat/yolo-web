@@ -587,6 +587,34 @@ test("7-4: dailyBadge is a direct child of featuredCard, not inside featuredCard
   });
 });
 
+// ===== ヒーロー視覚的階層: h1縮小・サブタイトル拡大（CSS検証） =====
+
+test("hero: heroTitle font-size is 1.75rem on desktop (visually de-emphasized)", () => {
+  // サイト名h1はナビゲーション目的のため控えめに（2.5rem→1.75rem）
+  expect(pageCssContent).toMatch(/\.heroTitle\s*\{[^}]*font-size:\s*1\.75rem/);
+});
+
+test("hero: heroSubtitle font-size is 1.5rem on desktop (visually emphasized)", () => {
+  // コンセプトを伝えるサブタイトルを最も目立つ要素に（1.25rem→1.5rem）
+  expect(pageCssContent).toMatch(
+    /\.heroSubtitle\s*\{[^}]*font-size:\s*1\.5rem/,
+  );
+});
+
+test("hero: mobile heroTitle font-size is 1.5rem (max-width 640px)", () => {
+  // モバイルでのh1縮小（2rem→1.5rem）
+  expect(pageCssContent).toMatch(
+    /max-width:\s*640px[\s\S]*?\.heroTitle[\s\S]*?font-size:\s*1\.5rem/,
+  );
+});
+
+test("hero: mobile heroSubtitle font-size is 1.2rem (max-width 640px)", () => {
+  // モバイルでのサブタイトル拡大（1.1rem→1.2rem）
+  expect(pageCssContent).toMatch(
+    /max-width:\s*640px[\s\S]*?\.heroSubtitle[\s\S]*?font-size:\s*1\.2rem/,
+  );
+});
+
 // ===== M-2: 診断セクションのグリッドリストが存在すること =====
 
 test("M-2: 'もっと診断してみよう' section has a grid list for diagnosis contents", () => {

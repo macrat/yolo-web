@@ -57,7 +57,8 @@
 }
 
 .heroTitle {
-  font-size: 2.5rem;
+  /* サイト名はナビゲーション目的のため控えめなサイズに（来訪者には無意味なため） */
+  font-size: 1.75rem;
   font-weight: 800;
   /* 白文字でグラデーション背景との対比を確保 */
   color: #ffffff;
@@ -67,7 +68,8 @@
 }
 
 .heroSubtitle {
-  font-size: 1.25rem;
+  /* サイトのコンセプトを伝える最も重要な要素として最大サイズに */
+  font-size: 1.5rem;
   /* 白の半透明でサブタイトルを柔らかく表示 */
   color: rgba(255, 255, 255, 0.95);
   margin-bottom: 0.75rem;
@@ -414,12 +416,13 @@
 }
 
 @media (max-width: 640px) {
+  /* モバイルでもデスクトップと同様の視覚階層: h1控えめ・サブタイトル強調 */
   .heroTitle {
-    font-size: 2rem;
+    font-size: 1.5rem;
   }
 
   .heroSubtitle {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
   }
 
   .heroCta {
