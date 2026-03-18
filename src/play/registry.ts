@@ -123,3 +123,23 @@ export function getPlayContentsByCategory(
 export function getAllPlaySlugs(): string[] {
   return allPlayContents.map((c) => c.slug);
 }
+
+/**
+ * slug → questionCount のルックアップマップ（クイズの問数表示用）。
+ * /play ページとトップページの両方から参照される共有マップ。
+ */
+export const quizQuestionCountBySlug: Map<string, number> = new Map(
+  allQuizMetas.map((q) => [q.slug, q.questionCount]),
+);
+
+/**
+ * 「まずはここから」セクション用の固定コンテンツ配列を返す。
+ * FEATURED_SLUGS に対応するコンテンツをレジストリから取得する。
+ * /play ページとトップページの両方から参照される共有関数。
+ */
+export function getFeaturedContents(): PlayContentMeta[] {
+  return FEATURED_SLUGS.flatMap((slug) => {
+    const content = playContentBySlug.get(slug);
+    return content ? [content] : [];
+  });
+}

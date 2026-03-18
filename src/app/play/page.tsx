@@ -5,13 +5,13 @@ import {
   getPlayContentsByCategory,
   playContentBySlug,
   allPlayContents,
-  FEATURED_SLUGS,
   DAILY_UPDATE_SLUGS,
+  getFeaturedContents,
+  quizQuestionCountBySlug,
 } from "@/play/registry";
 import type { PlayContentMeta } from "@/play/types";
-import { getPlayPath, getDailyFortunePath } from "@/play/paths";
+import { getContentPath } from "@/play/paths";
 import { getContrastTextColor } from "@/play/color-utils";
-import { allQuizMetas } from "@/play/quiz/registry";
 import Breadcrumb from "@/components/common/Breadcrumb";
 import styles from "./page.module.css";
 
@@ -75,22 +75,6 @@ const DAILY_PICKUP_SLUGS: ReadonlyArray<string> = [
   "irodori",
 ];
 
-/** slug → questionCount のルックアップマップ（クイズの問数表示用） */
-const quizQuestionCountBySlug: Map<string, number> = new Map(
-  allQuizMetas.map((q) => [q.slug, q.questionCount]),
-);
-
-/**
- * コンテンツのリンク先パスを返す。
- * Fortune（daily）は getDailyFortunePath() を使用し、それ以外は getPlayPath(slug) を使用する。
- */
-function getContentPath(content: PlayContentMeta): string {
-  if (content.contentType === "fortune") {
-    return getDailyFortunePath();
-  }
-  return getPlayPath(content.slug);
-}
-
 /**
  * 今日の年初からの経過日数を返す（1〜366）。
  * サーバーサイドでビルド時に確定される静的な値として使用する。
@@ -112,17 +96,6 @@ function getTodaysPickupContent(): PlayContentMeta | null {
   const index = dayOfYear % DAILY_PICKUP_SLUGS.length;
   const slug = DAILY_PICKUP_SLUGS[index];
   return playContentBySlug.get(slug) ?? null;
-}
-
-/**
- * 「まずはここから」セクション用の固定コンテンツ配列を返す。
- * FEATURED_SLUGS に対応するコンテンツをレジストリから取得する。
- */
-function getFeaturedContents(): PlayContentMeta[] {
-  return FEATURED_SLUGS.flatMap((slug) => {
-    const content = playContentBySlug.get(slug);
-    return content ? [content] : [];
-  });
 }
 
 export default function PlayPage() {
