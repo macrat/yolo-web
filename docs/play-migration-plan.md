@@ -191,18 +191,18 @@ function generatePlayJsonLd(meta: PlayContentMeta): object;
 
 #### 受け入れ基準チェックリスト
 
-- [ ] `src/play/types.ts`, `registry.ts`, `paths.ts`, `seo.ts` が存在する
-- [ ] `/play/[game-slug]` で全4ゲームにアクセスできる
-- [ ] `/games/*` → `/play/*` のリダイレクトが動作する
-- [ ] `/play` 一覧ページが表示される（ゲーム4種 + クイズ誘導）
-- [ ] ヘッダーに「遊ぶ」が表示され、「ゲーム」は削除されている
-- [ ] `/quiz/*` が従来通り動作する
-- [ ] `/fortune/daily` が従来通り動作する
-- [ ] OGP画像がデフォルト層で正しく生成される
-- [ ] ゲーム関連の内部リンクがすべて `/play/` に更新されている
-- [ ] GameMeta が PlayContentMeta に統合されている
-- [ ] ゲーム個別 twitter-image.tsx 4件が削除されている
-- [ ] `npm run lint && npm run format:check && npm run test && npm run build` 成功
+- [x] `src/play/types.ts`, `registry.ts`, `paths.ts`, `seo.ts` が存在する（cycle-101で確認）
+- [x] `/play/[game-slug]` で全4ゲームにアクセスできる（cycle-101で確認）
+- [x] `/games/*` → `/play/*` のリダイレクトが動作する（cycle-101で確認）
+- [x] `/play` 一覧ページが表示される（cycle-101で確認、cycle-102で19種に拡張）
+- [x] ヘッダーに「遊ぶ」が表示され、「ゲーム」は削除されている（cycle-101で確認）
+- [x] `/quiz/*` が従来通り動作する → フェーズ2で `/play/*` に移行済み（cycle-102）
+- [x] `/fortune/daily` が従来通り動作する → フェーズ2で `/play/daily` に移行済み（cycle-102）
+- [x] OGP画像がデフォルト層で正しく生成される（cycle-101で確認）
+- [x] ゲーム関連の内部リンクがすべて `/play/` に更新されている（cycle-101で確認）
+- [x] GameMeta が PlayContentMeta に統合されている（cycle-101で確認）
+- [x] ゲーム個別 twitter-image.tsx 4件が削除されている（cycle-101で確認）
+- [x] `npm run lint && npm run format:check && npm run test && npm run build` 成功（cycle-102で確認）
 
 ---
 
@@ -313,23 +313,23 @@ function generatePlayJsonLd(meta: PlayContentMeta): object;
 
 #### 受け入れ基準チェックリスト
 
-- [ ] QuizMeta に category フィールドが追加され、全14種に設定されている
-- [ ] QuizMeta が PlayContentMeta に統合されている
-- [ ] `src/play/quiz/` にクイズモジュールが移動している
-- [ ] `src/play/fortune/` に Fortune モジュールが移動している
-- [ ] `/play/[slug]` で全14種のクイズ・診断にアクセスできる
-- [ ] `/play/[slug]/result/[resultId]` で結果ページにアクセスできる
-- [ ] `/play/daily` で日替わり占いにアクセスできる
-- [ ] `/quiz/*` → `/play/*` のリダイレクトが動作する
-- [ ] `/fortune/daily` → `/play/daily` のリダイレクトが動作する
-- [ ] OGP画像が `createOgpImageResponse` に統一されている
-- [ ] twitter:image が全ページに設定されている
-- [ ] /play 一覧ページに占い/性格診断/知識テスト/ゲームの4セクションがある
-- [ ] ヘッダーから「クイズ」が除去されている
-- [ ] 旧ディレクトリ `src/app/quiz/`, `src/app/games/`, `src/app/fortune/` が削除されている
-- [ ] 全リダイレクト（/quiz/_, /games/_, /fortune/daily）が正しく動作する
-- [ ] site-value-improvement-plan.md のステータスが更新されている
-- [ ] `npm run lint && npm run format:check && npm run test && npm run build` 成功
+- [x] QuizMeta に category フィールドが追加され、全14種に設定されている（タスク1で確認）
+- [x] QuizMeta が PlayContentMeta に統合されている（タスク1で確認）
+- [x] `src/play/quiz/` にクイズモジュールが移動している（タスク2で確認）
+- [x] `src/play/fortune/` に Fortune モジュールが移動している（タスク3で確認）
+- [x] `/play/[slug]` で全14種のクイズ・診断にアクセスできる（タスク4で確認）
+- [x] `/play/[slug]/result/[resultId]` で結果ページにアクセスできる（タスク4で確認）
+- [x] `/play/daily` で日替わり占いにアクセスできる（タスク5で確認）
+- [x] `/quiz/*` → `/play/*` のリダイレクトが動作する（タスク8で確認）
+- [x] `/fortune/daily` → `/play/daily` のリダイレクトが動作する（タスク8で確認）
+- [x] OGP画像が `createOgpImageResponse` に統一されている（タスク4-5で確認。result OGPは計画通り個別維持）
+- [x] twitter:image が全ページに設定されている（generatePlayMetadata + daily/page.tsxで確認）
+- [x] /play 一覧ページに占い/性格診断/知識テスト/ゲームの4セクションがある（タスク7+12で確認）
+- [x] ヘッダーから「クイズ」が除去されている（タスク7で確認）
+- [x] 旧ディレクトリ `src/app/quiz/`, `src/app/games/`, `src/app/fortune/` が削除されている（タスク4-5で確認）
+- [x] 全リダイレクト（/quiz/_, /games/_, /fortune/daily）が正しく動作する（タスク8で確認）
+- [x] site-value-improvement-plan.md のステータスが更新されている（サイクル完了時に更新）
+- [x] `npm run lint && npm run format:check && npm run test && npm run build` 成功（タスク13で確認）
 
 ## 4. 移行対象ファイル一覧
 
