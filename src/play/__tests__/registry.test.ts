@@ -9,6 +9,8 @@ import {
   getAllPlaySlugs,
   FEATURED_SLUGS,
   DAILY_UPDATE_SLUGS,
+  DIAGNOSIS_SLUGS,
+  getDiagnosisContents,
 } from "../registry";
 import { allGameMetas } from "@/play/games/registry";
 import { allQuizMetas } from "@/play/quiz/registry";
@@ -268,6 +270,90 @@ describe("FEATURED_SLUGS (共有定数)", () => {
   test("each slug exists in playContentBySlug", () => {
     for (const slug of FEATURED_SLUGS) {
       expect(playContentBySlug.has(slug)).toBe(true);
+    }
+  });
+});
+
+describe("quizMetaToPlayContentMeta - shortTitle フィールド (7-10)", () => {
+  test("maps shortTitle from QuizMeta when present", () => {
+    const quizMetaWithShortTitle = {
+      ...allQuizMetas[0],
+      shortTitle: "短縮タイトル",
+    };
+    const playMeta = quizMetaToPlayContentMeta(quizMetaWithShortTitle);
+    expect(playMeta.shortTitle).toBe("短縮タイトル");
+  });
+
+  test("shortTitle is undefined when not set in QuizMeta", () => {
+    const quizMetaWithoutShortTitle = { ...allQuizMetas[0] };
+    delete (quizMetaWithoutShortTitle as { shortTitle?: string }).shortTitle;
+    const playMeta = quizMetaToPlayContentMeta(quizMetaWithoutShortTitle);
+    expect(playMeta.shortTitle).toBeUndefined();
+  });
+
+  test("science-thinking has shortTitle set in its data", () => {
+    const scienceThinkingContent = playContentBySlug.get("science-thinking");
+    expect(scienceThinkingContent).toBeDefined();
+    expect(scienceThinkingContent?.shortTitle).toBe("理系思考タイプ診断");
+  });
+
+  test("traditional-color has shortTitle set in its data", () => {
+    const traditionalColorContent = playContentBySlug.get("traditional-color");
+    expect(traditionalColorContent).toBeDefined();
+    expect(traditionalColorContent?.shortTitle).toBe("日本の伝統色診断");
+  });
+});
+
+describe("DIAGNOSIS_SLUGS (7-8: 診断セクション4件統一)", () => {
+  test("is exported from registry", () => {
+    expect(DIAGNOSIS_SLUGS).toBeDefined();
+  });
+
+  test("contains exactly 4 slugs (4件×4列に統一)", () => {
+    expect(DIAGNOSIS_SLUGS).toHaveLength(4);
+  });
+
+  test("contains 'music-personality'", () => {
+    expect(DIAGNOSIS_SLUGS).toContain("music-personality");
+  });
+
+  test("contains 'yoji-personality'", () => {
+    expect(DIAGNOSIS_SLUGS).toContain("yoji-personality");
+  });
+
+  test("contains 'kotowaza-level'", () => {
+    expect(DIAGNOSIS_SLUGS).toContain("kotowaza-level");
+  });
+
+  test("contains 'yoji-level'", () => {
+    expect(DIAGNOSIS_SLUGS).toContain("yoji-level");
+  });
+
+  test("does NOT contain 'character-personality' (ゲームよりcharacter-personalityはキャラクター多く処理重いため除外)", () => {
+    expect(DIAGNOSIS_SLUGS).not.toContain("character-personality");
+  });
+
+  test("does NOT contain 'science-thinking' (20問と問数が多くトップページには不向きなため除外)", () => {
+    expect(DIAGNOSIS_SLUGS).not.toContain("science-thinking");
+  });
+
+  test("each slug exists in playContentBySlug", () => {
+    for (const slug of DIAGNOSIS_SLUGS) {
+      expect(playContentBySlug.has(slug)).toBe(true);
+    }
+  });
+});
+
+describe("getDiagnosisContents (7-8: 診断セクション4件統一)", () => {
+  test("returns exactly 4 contents", () => {
+    const contents = getDiagnosisContents();
+    expect(contents).toHaveLength(4);
+  });
+
+  test("all returned contents exist in playContentBySlug", () => {
+    const contents = getDiagnosisContents();
+    for (const content of contents) {
+      expect(playContentBySlug.has(content.slug)).toBe(true);
     }
   });
 });

@@ -584,20 +584,19 @@ test("7-4: dailyBadge is a direct child of featuredCard, not inside featuredCard
   });
 });
 
-// ===== M-2: 診断セクション専用グリッドクラス（3列表示） =====
+// ===== M-2: 診断セクションのグリッドリストが存在すること =====
 
-test("M-2: 'もっと診断してみよう' section uses diagnosisGrid class (separate from featuredGrid)", () => {
-  // 診断セクションのグリッドが featuredGrid ではなく diagnosisGrid クラスを使用していること
-  // これにより、他セクション（4列）と独立して3列グリッドを適用できる
+test("M-2: 'もっと診断してみよう' section has a grid list for diagnosis contents", () => {
+  // 診断セクション内に診断コンテンツのグリッドリストが存在すること
+  // featuredGrid クラスを使用して他セクションと統一されたデザインを適用
   const { container } = render(<Home />);
   const diagSection = container.querySelector(
     "[data-testid='home-diagnosis-section']",
   );
   expect(diagSection).toBeInTheDocument();
-  // 診断セクション内のグリッドリストは diagnosisGrid クラスを持つ
+  // 診断セクション内のグリッドリストが存在すること
   const gridList = (diagSection as HTMLElement).querySelector("ul");
   expect(gridList).toBeInTheDocument();
-  // CSS Modules ではクラス名がハッシュ化されるが、className 属性に「diagnosisGrid」が含まれることで確認
-  // jsdom 環境では CSS Modules はクラス名をそのまま使用するため直接確認可能
-  expect(gridList?.className).toMatch(/diagnosisGrid/);
+  // featuredGrid クラスが使用されていること
+  expect(gridList?.className).toMatch(/featuredGrid/);
 });

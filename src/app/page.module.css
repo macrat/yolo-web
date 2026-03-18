@@ -167,16 +167,6 @@
   margin: 0;
 }
 
-/* 診断セクション専用グリッド: 6件を3列×2行で整列させる（4列だと最終行が不揃いになるため） */
-.diagnosisGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
 /* /play ページのカードデザインと統一: border-top accent + グラデーション背景 */
 /* position: relative は毎日更新バッジの絶対配置の基準として必要 */
 .featuredCard {
@@ -412,11 +402,6 @@
   .featuredGrid3 {
     grid-template-columns: repeat(3, 1fr);
   }
-
-  /* 診断グリッドもタブレットでは2カラムに縮小 */
-  .diagnosisGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
 }
 
 @media (max-width: 640px) {
@@ -454,12 +439,6 @@
   /* モバイルでは「まずはここから」（3件）を1列に変更してカードを読みやすく */
   .featuredGrid3 {
     grid-template-columns: repeat(1, 1fr);
-    gap: 0.75rem;
-  }
-
-  /* モバイルでも2カラムを維持する */
-  .diagnosisGrid {
-    grid-template-columns: repeat(2, 1fr);
     gap: 0.75rem;
   }
 

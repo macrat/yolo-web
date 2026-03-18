@@ -13,6 +13,11 @@ export interface PlayContentMeta {
   slug: string;
   /** コンテンツのタイトル */
   title: string;
+  /**
+   * カード表示用の短縮タイトル（全角15文字超のタイトルで使用）。
+   * 未設定の場合は title をそのまま使用する。
+   */
+  shortTitle?: string;
   /** 一覧・検索インデックス用の長めの説明（~60文字） */
   description: string;
   /** カード表示用の短い説明（~30文字） */
