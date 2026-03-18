@@ -385,6 +385,45 @@ test("Home page renders latest blog section", () => {
   );
 });
 
+// ===== S-1: デイリーパズルセクション回遊リンク =====
+
+test("Daily puzzle section has a navigation link to /play", () => {
+  const { container } = render(<Home />);
+  const section = container.querySelector(
+    "[data-testid='home-daily-puzzle-section']",
+  );
+  expect(section).toBeInTheDocument();
+  const playLink = within(section as HTMLElement).getByRole("link", {
+    name: /\/play|もっと遊ぶ|すべてのゲーム|全ゲームを見る/,
+  });
+  expect(playLink).toHaveAttribute("href", "/play");
+});
+
+// ===== S-2: aria-labelledby の一貫性 =====
+
+test("Daily puzzle section has aria-labelledby pointing to its h2", () => {
+  const { container } = render(<Home />);
+  const section = container.querySelector(
+    "[data-testid='home-daily-puzzle-section']",
+  );
+  expect(section).toBeInTheDocument();
+  const labelId = (section as HTMLElement).getAttribute("aria-labelledby");
+  expect(labelId).toBeTruthy();
+  const heading = container.querySelector(`#${labelId}`);
+  expect(heading).toBeInTheDocument();
+  expect(heading?.tagName).toBe("H2");
+});
+
+test("Blog section has aria-labelledby pointing to its h2", () => {
+  const { container } = render(<Home />);
+  // ブログセクションは data-testid がないので aria-labelledby で特定
+  const heading = container.querySelector("#home-blog-heading");
+  expect(heading).toBeInTheDocument();
+  expect(heading?.tagName).toBe("H2");
+  const section = heading?.closest("section");
+  expect(section?.getAttribute("aria-labelledby")).toBe("home-blog-heading");
+});
+
 // ===== 「まずはここから」セクション =====
 
 test("Home page renders 'まずはここから' section", () => {

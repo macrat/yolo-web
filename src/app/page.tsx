@@ -164,10 +164,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* セクション2.5: 今日のユーモア運勢プレビュー — /play/daily への導線 */}
+      {/* セクション3: 今日のユーモア運勢プレビュー — /play/daily への導線 */}
       <FortunePreview />
 
-      {/* セクション4: 占い・診断（厳選6件） — fortune/featured を除いた診断コンテンツ */}
+      {/* セクション4: もっと診断してみよう（厳選6件） — fortune/featured を除いた診断コンテンツ */}
       <section
         className={styles.featuredSection}
         data-testid="home-diagnosis-section"
@@ -227,8 +227,14 @@ export default function Home() {
       </section>
 
       {/* セクション5: 今日のデイリーパズル */}
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>今日のデイリーパズル</h2>
+      <section
+        className={styles.section}
+        data-testid="home-daily-puzzle-section"
+        aria-labelledby="home-daily-puzzle-heading"
+      >
+        <h2 id="home-daily-puzzle-heading" className={styles.sectionTitle}>
+          今日のデイリーパズル
+        </h2>
         <p className={styles.sectionDescription}>
           毎日更新される{gameContents.length}つのパズルに挑戦しよう
         </p>
@@ -268,11 +274,18 @@ export default function Home() {
             </li>
           ))}
         </ul>
+        <div className={styles.seeAll}>
+          <Link href="/play" className={styles.seeAllLink}>
+            /play でもっと遊ぶ
+          </Link>
+        </div>
       </section>
 
       {/* セクション6: 最新ブログ記事 */}
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>最新ブログ記事</h2>
+      <section className={styles.section} aria-labelledby="home-blog-heading">
+        <h2 id="home-blog-heading" className={styles.sectionTitle}>
+          最新ブログ記事
+        </h2>
         <div className={styles.blogList}>
           {recentPosts.map((post) => (
             // lgtm[js/stored-xss] - blog data from local markdown files, not user input
