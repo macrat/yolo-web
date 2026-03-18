@@ -238,6 +238,250 @@ B-202（フェーズ4-2: トップページの再設計）を実施する。/pla
 
 ---
 
+#### タスク7: UI/UXデザイン品質の徹底レビューと修正
+
+5つの独立レビューで発見された指摘を、ユーザー価値への影響度に基づいてフィルタリングし修正する。全10サブタスクに分割し、各サブタスクを1つのbuilderに割り当てる。
+
+**依存関係**: サブタスク7-1 → 7-2（FEATURED_SLUGS変更がグリッド列数に影響）。それ以降の7-3〜7-10は互いに独立だが、同一ファイルを編集するサブタスクは順次実行が安全。
+
+**同一ファイル編集の整理**:
+
+- `src/app/page.module.css`: 7-2, 7-4, 7-5, 7-6, 7-8 が編集 → 順次実行
+- `src/app/page.tsx`: 7-1の結果影響, 7-3, 7-4, 7-5, 7-8, 7-10 が編集
+- `src/app/_components/FortunePreview.module.css`: 7-9 が編集
+- `src/app/_components/FortunePreview.tsx`: 7-9 が編集
+- `src/components/common/Header.tsx`: 7-7 が単独編集
+- `src/components/common/Footer.tsx`: 7-7 が単独編集
+
+**推奨実行順序**: 7-1 → 7-2 → 7-7（Header/Footer単独で並列可）→ 7-3 → 7-4 → 7-5 → 7-6 → 7-8 → 7-9 → 7-10
+
+---
+
+##### サブタスク7-1: 「まずはここから」からdailyを除外し重複表示を解消（指摘B）
+
+**問題**: FEATURED_SLUGSに"daily"が含まれており、「まずはここから」セクションの最初のカードとFortunePreviewセクションで同じ「今日のユーモア運勢」が連続2回表示される。
+
+**何をするか**: `src/play/registry.ts` の FEATURED_SLUGS から "daily" を除外し、3件（"animal-personality", "kanji-level", "irodori"）にする。FortunePreviewが「占い」カテゴリの代表としてトップページに存在するため、「まずはここから」では占い以外の3カテゴリの代表を見せる方がコンテンツの多様性を最大化できる。
+
+**作業内容**:
+
+1. `src/play/registry.ts` の FEATURED_SLUGS から "daily" を除外し3件にする
+2. FEATURED_SLUGS のJSDocコメントを更新（占いカテゴリはFortunePreviewで表示するため除外した旨を記載）
+3. /play ページの「まずはここから」セクションにも影響するため、表示を確認
+
+**完了条件**:
+
+- FEATURED_SLUGSに"daily"が含まれていない
+- トップページで「今日のユーモア運勢」が1回のみ（FortunePreviewセクションのみ）表示される
+- /play ページの「まずはここから」が正しく3件表示される
+- lint, format:check, build が成功する
+
+---
+
+##### サブタスク7-2: 「まずはここから」とデイリーパズルのグリッド列数調整（7-1の結果対応）
+
+**問題**: 7-1でFEATURED_SLUGSが3件になるため、現在の4列グリッド（.featuredGrid）では1つ空きスペースが生じる。一方、デイリーパズルセクション（4件）も同じ.featuredGridクラスを使用しており、こちらは4列を維持する必要がある。
+
+**何をするか**: 「まずはここから」用に3列グリッドを適用し、デイリーパズルセクション用に4列グリッドを維持する。
+
+**作業内容**:
+
+1. `src/app/page.module.css` に `.threeColGrid`（3列グリッド）を新設するか、既存の `.featuredGrid` を3列に変更してデイリーパズル用に `.fourColGrid` を新設する
+2. `src/app/page.tsx` でそれぞれのセクションに適切なグリッドクラスを適用
+3. モバイル（768px以下、640px以下）のレスポンシブも調整（3列グリッドは768px以下で2列、640px以下も2列）
+
+**完了条件**:
+
+- 「まずはここから」がデスクトップで3列均等表示される
+- デイリーパズルセクションがデスクトップで4列を維持
+- モバイルで適切にレスポンシブ表示される
+- lint, format:check, build が成功する
+
+---
+
+##### サブタスク7-3: ヒーローバッジの見た目/挙動一致（指摘A）
+
+**問題**: 3つのバッジ（「N種の占い・診断・ゲーム」「毎日更新」「完全無料」）が視覚的にほぼ同じデザインだが、最初のバッジだけがLink。メインCTA「占い・診断を試す」が既に /play へのリンクとして機能しているため、バッジのリンクは冗長。
+
+**何をするか**: 全バッジを静的（badgeStatic）に統一し、ユーザーの混乱を解消する。
+
+**作業内容**:
+
+1. `src/app/page.tsx` のバッジ部分で、コンテンツ総数バッジを Link から span に変更し、badgeStatic クラスを適用
+2. `src/app/page.module.css` の .badge および .badge:hover を削除（使用箇所がなくなるため）
+3. HERO_BADGES 定数にコンテンツ総数バッジを統合するか、別途span要素として記述する
+
+**完了条件**:
+
+- 全バッジが同一デザイン（badgeStatic）で統一されている
+- クリック可能なバッジが存在しない
+- 未使用CSS（.badge, .badge:hover）が削除されている
+- lint, format:check, build が成功する
+
+---
+
+##### サブタスク7-4: モバイルでの「毎日更新」バッジ配置安定化（指摘C）
+
+**問題**: .featuredCardTitleRow が flex-wrap: wrap であるため、タイトルが長いカードでは「毎日更新」バッジが次の行に押し出され、カード間でバッジ位置がバラバラになる。
+
+**何をするか**: バッジをタイトル行から分離し、タイトル長に依存しない固定位置に配置する。
+
+**作業内容**:
+
+1. `src/app/page.tsx` で dailyBadge を featuredCardTitleRow から取り出し、featuredCardIconWrapper の隣（アイコン行の右上）など安定した位置に配置する
+2. `src/app/page.module.css` でバッジの新しい配置に対応するスタイルを追加
+3. FortunePreviewの「毎日更新」バッジは独自の .header 内に配置されておりこの問題の影響を受けないため変更不要
+
+**完了条件**:
+
+- モバイル（640px以下）で全カードの「毎日更新」バッジが同じ位置に表示される
+- タイトルの長さに関係なくバッジ位置が安定している
+- デスクトップでも自然な見た目を維持
+- lint, format:check, build が成功する
+
+---
+
+##### サブタスク7-5: ブログセクションの余白修正（指摘D）
+
+**問題**: 他のセクションは「見出し→説明テキスト→カード」の構成だが、ブログセクションだけ説明テキストがなく、見出し直後にカードが来るため余白が不揃い。
+
+**何をするか**: ブログセクションに sectionDescription を追加して他セクションとレイアウトを揃える。
+
+**作業内容**:
+
+1. `src/app/page.tsx` のブログセクションの h2 の下に sectionDescription を追加（例: 「AIの裏側やコンテンツの制作秘話をお届けします」）
+2. 説明テキストの内容は、ブログの実際の記事内容に合った来訪者向けの一文とする
+
+**完了条件**:
+
+- ブログセクションに説明テキストが表示される
+- 見出しとカードの間の余白が他セクションと揃っている
+- lint, format:check, build が成功する
+
+---
+
+##### サブタスク7-6: セクション末尾リンクとカード内CTAのタップターゲット拡大（指摘E, F）
+
+**問題**:
+
+- .seeAllLink の高さが41pxでWCAG推奨の44pxを下回る
+- モバイルの .featuredCardCta が小さすぎる（高さ約24px）。カード全体がリンクなので機能的問題は限定的だが、視覚的に「押せるボタン」として表示されているため押しやすいサイズが望ましい
+
+**何をするか**: paddingを微増してタップターゲットを44px以上に確保する。
+
+**作業内容**:
+
+1. `src/app/page.module.css` の .seeAllLink の padding を 0.5rem 1.5rem から 0.6rem 1.5rem 程度に微増し、高さ44px以上を確保
+2. モバイル（640px以下）の .featuredCardCta の padding を 0.2rem 0.6rem から 0.3rem 0.75rem に、font-size を 0.7rem から 0.75rem に微増
+
+**完了条件**:
+
+- .seeAllLink のタップターゲットが44px以上
+- モバイルの .featuredCardCta が視覚的に押しやすいサイズになっている
+- デスクトップの見た目に悪影響がない
+- lint, format:check, build が成功する
+
+---
+
+##### サブタスク7-7: ヘッダーナビとフッターのセクション順序調整（指摘G, H）
+
+**問題**:
+
+- ヘッダーナビで「遊ぶ」がツール・辞典より後にあり、サイトの主軸コンテンツが目立たない
+- フッターでも「ツール」が「遊ぶ」より先に配置されている
+
+**何をするか**: サイトの主軸である「遊ぶ」をナビゲーションで優先的に配置する。
+
+**作業内容**:
+
+1. `src/components/common/Header.tsx` の NAV_LINKS の順序を変更: ホーム / 遊ぶ / ツール / 辞典 / ブログ / About
+2. `src/components/common/Footer.tsx` の SECTION_LINKS の順序を変更: 遊ぶ / ツール / 辞典 / その他
+
+**完了条件**:
+
+- ヘッダーナビで「遊ぶ」が「ツール」より前に表示される
+- フッターで「遊ぶ」が最初のセクションに表示される
+- モバイルナビ（MobileNav）にもNAV_LINKSが渡されるため順序変更が自動反映される
+- lint, format:check, build が成功する
+
+---
+
+##### サブタスク7-8: 診断セクションのグリッド列数を4列に統一（指摘I）
+
+**問題**: 診断セクションが3列（.diagnosisGrid）、デイリーパズルが4列で視覚的リズムが崩れる。
+
+**何をするか**: DIAGNOSIS_SLUGSを6件から4件に減らし、4列グリッドで1行に収める。
+
+**作業内容**:
+
+1. `src/play/registry.ts` の DIAGNOSIS_SLUGS を6件から4件に削減（例: "music-personality", "yoji-personality", "kotowaza-level", "yoji-level"。"character-personality" と "science-thinking" を除外。除外理由をコメントに記載）
+2. `src/app/page.tsx` で診断セクションのグリッドクラスを .diagnosisGrid からデイリーパズルと同じ4列グリッドクラスに変更
+3. `src/app/page.module.css` の .diagnosisGrid を削除（不要になるため）
+4. モバイルのレスポンシブ（.diagnosisGrid に対するメディアクエリ）も削除
+
+**完了条件**:
+
+- 診断セクションがデスクトップで4列x1行で均等表示される
+- .diagnosisGrid の未使用CSSとメディアクエリが削除されている
+- モバイルで適切にレスポンシブ表示される
+- lint, format:check, build が成功する
+
+---
+
+##### サブタスク7-9: 星評価のfilled/empty区別とFortunePreviewのpadding修正（指摘J, L）
+
+**問題**:
+
+- FortunePreviewの星評価でfilled star と empty star が同色（#7c3aed）で区別困難
+- FortunePreviewセクションの上paddingが2remで他セクション（2.5rem）と0.5rem異なる
+
+**何をするか**:
+
+- empty star をグレー系に変更して区別可能にする
+- FortunePreviewのpaddingを他セクションと揃える
+
+**作業内容**:
+
+1. `src/app/_components/FortunePreview.tsx` の StarRatingTeaser で empty star 部分を span で囲み、専用CSSクラスを適用
+2. `src/app/_components/FortunePreview.module.css` に .emptyStars クラスを追加（色: #d1d5db 等のグレー系。ダークモードでは明るめのグレー）
+3. FortunePreview.module.css の .section の padding を 2rem 0 1.5rem から 2.5rem 0 1.5rem に変更
+
+**完了条件**:
+
+- filled star が紫色、empty star がグレー系で明確に区別できる
+- FortunePreviewセクションの上paddingが他セクションと揃っている（2.5rem）
+- ダークモードでも empty star が視認可能
+- lint, format:check, build が成功する
+
+---
+
+##### サブタスク7-10: モバイルでのタイトルline-clamp対策（指摘K）
+
+**問題**: 「理系思考タイプ診断 — あなたはアインシュタイン型？チューリング型？」がモバイルの2行line-clampで途中切れし意味不明になる。
+
+**何をするか**: PlayContentMeta に shortTitle フィールドを追加し、カード表示時にshortTitleがあればそちらを優先表示する。
+
+**作業内容**:
+
+1. `src/play/types.ts` の PlayContentMeta インターフェースに shortTitle?: string を追加
+2. `src/play/quiz/data/science-thinking.ts` の meta に shortTitle: "理系思考タイプ診断" を追加
+3. 他のコンテンツでもtitleが長いもの（目安: 全角15文字超）を確認し、必要に応じて shortTitle を追加
+4. `src/app/page.tsx` のカード表示部分で content.shortTitle ?? content.title を使用
+5. `/play` ページのカード表示でも同様に shortTitle を優先表示するよう修正
+
+**完了条件**:
+
+- モバイル（640px以下）で全カードのタイトルが意味の通る形で表示される
+- shortTitle がない場合は従来通り title が表示される（後方互換）
+- PlayContentMeta 型に shortTitle が追加されている
+- lint, format:check, test, build が成功する
+
+---
+
+#### 対応しない指摘と理由
+
+**指摘M（トップと/playの「まずはここから」重複）**: /play ページの問題でありトップページ修正のスコープ外。キャリーオーバーに記録する。ただし7-1でFEATURED_SLUGSを変更するため、/play ページでの表示確認は7-1の完了条件に含める。
+
 ### 検討した他の選択肢と判断理由
 
 #### 1. ヒーローからAI運営テキストを完全削除する vs サブテキストとして維持する
