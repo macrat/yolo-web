@@ -308,6 +308,20 @@ export default function Home() {
           </Link>
         </div>
       </section>
+
+      {/* セクション7: その他のコンテンツへの導線 — ツールセクション削除後もトップページから回遊できるよう控えめなリンクを配置 */}
+      <nav
+        className={styles.otherContentsNav}
+        data-testid="home-other-contents-nav"
+        aria-label="その他のコンテンツ"
+      >
+        <Link href="/tools" className={styles.otherContentsLink}>
+          ツール一覧
+        </Link>
+        <Link href="/achievements" className={styles.otherContentsLink}>
+          実績・ダッシュボード
+        </Link>
+      </nav>
     </div>
   );
 }

@@ -485,3 +485,37 @@ test("Home page featured section cards link to /play/ paths", () => {
     expect(link.getAttribute("href")).toMatch(/^\/play\//);
   });
 });
+
+// ===== 「その他のコンテンツ」リンク群（タスク5） =====
+
+test("Home page renders 'その他のコンテンツ' nav links section after blog", () => {
+  const { container } = render(<Home />);
+  const navSection = container.querySelector(
+    "[data-testid='home-other-contents-nav']",
+  );
+  expect(navSection).toBeInTheDocument();
+});
+
+test("'その他のコンテンツ' section has a link to /tools", () => {
+  const { container } = render(<Home />);
+  const navSection = container.querySelector(
+    "[data-testid='home-other-contents-nav']",
+  );
+  expect(navSection).toBeInTheDocument();
+  const toolsLink = within(navSection as HTMLElement).getByRole("link", {
+    name: /ツール一覧/,
+  });
+  expect(toolsLink).toHaveAttribute("href", "/tools");
+});
+
+test("'その他のコンテンツ' section has a link to /achievements", () => {
+  const { container } = render(<Home />);
+  const navSection = container.querySelector(
+    "[data-testid='home-other-contents-nav']",
+  );
+  expect(navSection).toBeInTheDocument();
+  const achievementsLink = within(navSection as HTMLElement).getByRole("link", {
+    name: /実績・ダッシュボード/,
+  });
+  expect(achievementsLink).toHaveAttribute("href", "/achievements");
+});

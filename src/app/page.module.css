@@ -382,6 +382,30 @@
   color: #ffffff;
 }
 
+/* ===== その他のコンテンツ導線ナビ ===== */
+/* ブログセクション下に配置する控えめなテキストリンク群。
+   ツールセクション削除後もトップページからの導線を維持する。 */
+.otherContentsNav {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  padding: 1.25rem 0 2rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.otherContentsLink {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.otherContentsLink:hover {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
 /* ===== Dark mode ===== */
 /* ダークモード時はヒーローを暗めのグラデーションに */
 :global(:root.dark) .hero {
