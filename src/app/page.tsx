@@ -86,13 +86,12 @@ export default function Home() {
           占い・診断を試す
         </Link>
 
-        {/* 統計・特徴バッジ群 */}
+        {/* 統計・特徴バッジ群（すべて静的span: クリック可能なCTAは上のheroCta） */}
         <div className={styles.badges}>
-          {/* コンテンツ総数バッジ（/play へのリンク） */}
-          <Link href="/play" className={styles.badge}>
+          <span className={styles.badgeStatic}>
             <span className={styles.badgeIcon}>🎮</span>
             {allPlayContents.length}種の占い・診断・ゲーム
-          </Link>
+          </span>
           {HERO_BADGES.map((badge) => (
             <span key={badge.label} className={styles.badgeStatic}>
               <span className={styles.badgeIcon}>{badge.icon}</span>
@@ -133,14 +132,15 @@ export default function Home() {
                   } as React.CSSProperties
                 }
               >
+                {/* 毎日更新バッジ: タイトル行から分離してカード右上に絶対配置 */}
+                {DAILY_UPDATE_SLUGS.has(content.slug) && (
+                  <span className={styles.dailyBadge}>毎日更新</span>
+                )}
                 <div className={styles.featuredCardIconWrapper}>
                   <div className={styles.featuredCardIcon}>{content.icon}</div>
                 </div>
                 <div className={styles.featuredCardTitleRow}>
                   <h3 className={styles.featuredCardTitle}>{content.title}</h3>
-                  {DAILY_UPDATE_SLUGS.has(content.slug) && (
-                    <span className={styles.dailyBadge}>毎日更新</span>
-                  )}
                 </div>
                 <p className={styles.featuredCardDescription}>
                   {content.shortDescription}
@@ -255,14 +255,15 @@ export default function Home() {
                   } as React.CSSProperties
                 }
               >
+                {/* 毎日更新バッジ: タイトル行から分離してカード右上に絶対配置 */}
+                {DAILY_UPDATE_SLUGS.has(game.slug) && (
+                  <span className={styles.dailyBadge}>毎日更新</span>
+                )}
                 <div className={styles.featuredCardIconWrapper}>
                   <div className={styles.featuredCardIcon}>{game.icon}</div>
                 </div>
                 <div className={styles.featuredCardTitleRow}>
                   <h3 className={styles.featuredCardTitle}>{game.title}</h3>
-                  {DAILY_UPDATE_SLUGS.has(game.slug) && (
-                    <span className={styles.dailyBadge}>毎日更新</span>
-                  )}
                 </div>
                 <p className={styles.featuredCardDescription}>
                   {game.shortDescription}
@@ -286,6 +287,9 @@ export default function Home() {
         <h2 id="home-blog-heading" className={styles.sectionTitle}>
           最新ブログ記事
         </h2>
+        <p className={styles.sectionDescription}>
+          AIエージェントの開発記録や実験の裏側をお届けします
+        </p>
         <div className={styles.blogList}>
           {recentPosts.map((post) => (
             // lgtm[js/stored-xss] - blog data from local markdown files, not user input

@@ -122,31 +122,7 @@
   z-index: 1;
 }
 
-/* リンク付きバッジ（クリック可能） */
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.4rem 0.9rem;
-  background-color: rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 999px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #ffffff;
-  text-decoration: none;
-  backdrop-filter: blur(4px);
-  transition:
-    background-color 0.2s,
-    border-color 0.2s;
-}
-
-.badge:hover {
-  background-color: rgba(255, 255, 255, 0.3);
-  border-color: rgba(255, 255, 255, 0.6);
-}
-
-/* 静的バッジ（リンクなし） */
+/* 静的バッジ（リンクなし: ヒーローバッジは全件静的span） */
 .badgeStatic {
   display: inline-flex;
   align-items: center;
@@ -202,9 +178,11 @@
 }
 
 /* /play ページのカードデザインと統一: border-top accent + グラデーション背景 */
+/* position: relative は毎日更新バッジの絶対配置の基準として必要 */
 .featuredCard {
   display: flex;
   flex-direction: column;
+  position: relative;
   border-top: 5px solid var(--play-accent);
   padding: 1.5rem;
   border-left: 1px solid var(--color-border);
@@ -272,7 +250,11 @@
 }
 
 /* 毎日更新コンテンツにのみ表示するオレンジ系のピル型バッジ */
+/* カード右上に固定配置することでタイトル長によらず位置を安定させる */
 .dailyBadge {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
   font-size: 0.7rem;
   font-weight: 600;
   padding: 2px 8px;
@@ -280,7 +262,6 @@
   color: #ffffff;
   border-radius: 999px;
   white-space: nowrap;
-  flex-shrink: 0;
 }
 
 .featuredCardDescription {
@@ -386,9 +367,10 @@
   margin-top: 1.25rem;
 }
 
+/* padding縦を0.6remに増やして高さ44px以上のタップターゲットを確保 */
 .seeAllLink {
   display: inline-block;
-  padding: 0.5rem 1.5rem;
+  padding: 0.6rem 1.5rem;
   font-size: 0.9rem;
   font-weight: 600;
   color: var(--color-primary);
@@ -502,10 +484,10 @@
     font-size: 2rem;
   }
 
-  /* モバイルではCTAボタンを小さく */
+  /* モバイルのCTAボタン: padding・font-sizeを微増してタップしやすくする */
   .featuredCardCta {
-    font-size: 0.7rem;
-    padding: 0.2rem 0.6rem;
+    font-size: 0.75rem;
+    padding: 0.3rem 0.75rem;
   }
 
   /* モバイルのカードタイトルは最大2行でクランプ */
