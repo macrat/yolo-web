@@ -63,13 +63,13 @@ describe("getContrastTextColor", () => {
  *
  * accentColor一覧（registry.tsおよび各データファイルより）:
  * ゲーム4種:
- *   kanji-kanaru: #4d8c3f, yoji-kimeru: #9a8533, nakamawake: #8a5a9a, irodori: #e91e63
+ *   kanji-kanaru: #3d7a2f, yoji-kimeru: #9a8533, nakamawake: #8a5a9a, irodori: #c2185b
  * クイズ14種:
  *   kanji-level: #2563eb, kotowaza-level: #d97706, yoji-level: #7c3aed,
  *   traditional-color: #0d5661, yoji-personality: #b91c1c, impossible-advice: #7c3aed,
  *   contrarian-fortune: #f59e0b, unexpected-compatibility: #0891b2,
- *   music-personality: #8b5cf6, character-fortune: #8b5cf6,
- *   animal-personality: #16a34a, science-thinking: #6366f1,
+ *   music-personality: #7c3aed, character-fortune: #7c3aed,
+ *   animal-personality: #16a34a, science-thinking: #4f46e5,
  *   japanese-culture: #b91c1c, character-personality: #7c3aed
  * Fortune 1種:
  *   daily: #7c3aed
