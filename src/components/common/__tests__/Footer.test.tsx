@@ -44,6 +44,17 @@ test("Footer renders navigation links", () => {
   ).toHaveAttribute("href", "/about");
 });
 
+test("Footer renders SECTION_LINKS in correct order: 遊ぶ / ツール / 辞典 / その他", () => {
+  render(<Footer />);
+  const nav = screen.getByRole("navigation", {
+    name: "フッターナビゲーション",
+  });
+  const headings = Array.from(nav.querySelectorAll("h3")).map(
+    (h) => h.textContent,
+  );
+  expect(headings).toEqual(["遊ぶ", "ツール", "辞典", "その他"]);
+});
+
 test("Footer renders play category anchor links in 遊ぶ section", () => {
   render(<Footer />);
   expect(screen.getByRole("link", { name: "占い" })).toHaveAttribute(

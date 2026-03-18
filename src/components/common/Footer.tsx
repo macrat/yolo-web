@@ -18,15 +18,15 @@ export default function Footer({
 }: FooterProps) {
   const SECTION_LINKS = [
     {
+      heading: "遊ぶ",
+      links: [{ href: "/play", label: "遊ぶ一覧" }, ...playLinks],
+    },
+    {
       heading: "ツール",
       links: [
         { href: "/tools", label: "ツール一覧" },
         { href: "/cheatsheets", label: "チートシート" },
       ],
-    },
-    {
-      heading: "遊ぶ",
-      links: [{ href: "/play", label: "遊ぶ一覧" }, ...playLinks],
     },
     {
       heading: "辞典",

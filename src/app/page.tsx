@@ -102,7 +102,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* セクション2: まずはここから — 各カテゴリ代表コンテンツ4件を初回訪問者向けに表示 */}
+      {/* セクション2: まずはここから — 各カテゴリ代表コンテンツ3件を初回訪問者向けに表示（占いカテゴリは FortunePreview で展開） */}
       <section
         className={styles.featuredSection}
         data-testid="home-featured-section"
@@ -115,7 +115,7 @@ export default function Home() {
           占い・診断・クイズ・ゲームの代表作を体験しよう
         </p>
         <ul
-          className={styles.featuredGrid}
+          className={styles.featuredGrid3}
           role="list"
           aria-label="おすすめコンテンツ"
         >

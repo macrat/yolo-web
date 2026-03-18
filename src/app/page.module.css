@@ -171,10 +171,20 @@
   border-top: 1px solid var(--color-border);
 }
 
-/* デスクトップ4列、モバイル2列のグリッド */
+/* デスクトップ4列、モバイル2列のグリッド（デイリーパズルセクション用: 4件） */
 .featuredGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* 「まずはここから」専用グリッド: 3件を3列1行で整列させる（占いカテゴリ除外後の3件構成） */
+.featuredGrid3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
   list-style: none;
   padding: 0;
@@ -416,6 +426,11 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
+  /* 「まずはここから」（3件）はタブレットでも3列を維持してバランスよく表示 */
+  .featuredGrid3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
   /* 診断グリッドもタブレットでは2カラムに縮小 */
   .diagnosisGrid {
     grid-template-columns: repeat(2, 1fr);
@@ -451,6 +466,12 @@
   /* モバイルでも2カラムを維持する */
   .featuredGrid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  /* モバイルでは「まずはここから」（3件）を1列に変更してカードを読みやすく */
+  .featuredGrid3 {
+    grid-template-columns: repeat(1, 1fr);
     gap: 0.75rem;
   }
 

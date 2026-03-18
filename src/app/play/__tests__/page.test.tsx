@@ -103,8 +103,9 @@ describe("PlayPage", () => {
     render(<PlayPage />);
     const badges = screen.getAllByText("毎日更新");
     // 対象スラグ: daily, kanji-kanaru, yoji-kimeru, nakamawake, irodori の5種
-    // 「まずはここから」に daily と irodori も表示されるため合計7件（5種 + 重複2件）
-    expect(badges.length).toBe(7);
+    // 「まずはここから」に irodori も表示されるため合計6件（5種 + 重複1件）
+    // ※ daily は「まずはここから」から除外（FortunePreview セクションで表示）
+    expect(badges.length).toBe(6);
   });
 
   it("does not render '毎日更新' badge on non-daily content cards", () => {
@@ -227,11 +228,12 @@ describe("PlayPage", () => {
     ).toBeInTheDocument();
   });
 
-  it("renders exactly 4 featured cards in the featured section", () => {
+  it("renders exactly 3 featured cards in the featured section", () => {
+    // 占いカテゴリは FortunePreview セクションで表示するため除外し、3件に変更
     render(<PlayPage />);
     const featuredSection = screen.getByTestId("featured-section");
     const featuredLinks = within(featuredSection).getAllByRole("link");
-    expect(featuredLinks.length).toBe(4);
+    expect(featuredLinks.length).toBe(3);
   });
 
   it("featured section cards link to /play/ paths", () => {

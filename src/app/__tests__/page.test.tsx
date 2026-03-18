@@ -58,16 +58,8 @@ vi.mock("@/play/quiz/registry", () => ({
 }));
 
 const { MOCK_FEATURED_CONTENTS, MOCK_GAME_CONTENTS } = vi.hoisted(() => {
+  // "daily" は FortunePreview セクションで表示するため除外（3件）
   const MOCK_FEATURED_CONTENTS = [
-    {
-      slug: "daily",
-      title: "今日のユーモア運勢",
-      shortDescription: "AIが毎日生成するユーモラスな運勢",
-      icon: "\u{1F52E}",
-      accentColor: "#7c3aed",
-      contentType: "fortune",
-      category: "fortune",
-    },
     {
       slug: "animal-personality",
       title: "アニマル性格診断",
@@ -433,19 +425,17 @@ test("Home page renders 'まずはここから' section", () => {
   ).toBeInTheDocument();
 });
 
-test("Home page renders 4 featured cards in 'まずはここから' section", () => {
+test("Home page renders 3 featured cards in 'まずはここから' section", () => {
   const { container } = render(<Home />);
   const featuredSection = container.querySelector(
     "[data-testid='home-featured-section']",
   );
   expect(featuredSection).toBeInTheDocument();
   const links = within(featuredSection as HTMLElement).getAllByRole("link");
-  // 4枚のカード + 「全コンテンツを見る」リンク = 5件
-  expect(links).toHaveLength(5);
+  // 3枚のカード + 「全コンテンツを見る」リンク = 4件
+  // （占いカテゴリは FortunePreview セクションで表示するため除外）
+  expect(links).toHaveLength(4);
   // 各カードのタイトルが表示されていること
-  expect(
-    within(featuredSection as HTMLElement).getByText("今日のユーモア運勢"),
-  ).toBeInTheDocument();
   expect(
     within(featuredSection as HTMLElement).getByText("アニマル性格診断"),
   ).toBeInTheDocument();
@@ -455,6 +445,10 @@ test("Home page renders 4 featured cards in 'まずはここから' section", ()
   expect(
     within(featuredSection as HTMLElement).getByText("イロドリ"),
   ).toBeInTheDocument();
+  // "daily"（今日のユーモア運勢）は FortunePreview で表示するためここには出ない
+  expect(
+    within(featuredSection as HTMLElement).queryByText("今日のユーモア運勢"),
+  ).not.toBeInTheDocument();
 });
 
 test("Home page 'まずはここから' section has '全コンテンツを見る' link to /play", () => {
@@ -511,6 +505,22 @@ test("page.tsx twitter description reflects 占い・診断パーク concept", (
   expect(twitterDescription).toBeDefined();
   expect(twitterDescription).toMatch(/占い|診断/);
   expect(twitterDescription).not.toContain("ツール");
+});
+
+// ===== 「まずはここから」3列グリッドクラス =====
+
+test("'まずはここから' section uses featuredGrid3 class for 3-column layout", () => {
+  // 「まずはここから」が3件になったため、featuredGrid3 クラスで3列グリッドを適用する
+  // デイリーパズルセクション（4件）は featuredGrid クラス（4列）を維持する
+  const { container } = render(<Home />);
+  const featuredSection = container.querySelector(
+    "[data-testid='home-featured-section']",
+  );
+  expect(featuredSection).toBeInTheDocument();
+  const gridList = (featuredSection as HTMLElement).querySelector("ul");
+  expect(gridList).toBeInTheDocument();
+  // CSS Modules ではクラス名がハッシュ化されるが、jsdom では直接確認可能
+  expect(gridList?.className).toMatch(/featuredGrid3/);
 });
 
 // ===== M-2: 診断セクション専用グリッドクラス（3列表示） =====
