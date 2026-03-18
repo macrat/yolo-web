@@ -7,6 +7,8 @@ import {
   playContentBySlug,
   getPlayContentsByCategory,
   getAllPlaySlugs,
+  FEATURED_SLUGS,
+  DAILY_UPDATE_SLUGS,
 } from "../registry";
 import { allGameMetas } from "@/play/games/registry";
 import { allQuizMetas } from "@/play/quiz/registry";
@@ -235,5 +237,67 @@ describe("getAllPlaySlugs", () => {
     for (const slug of EXPECTED_GAME_SLUGS) {
       expect(slugs).toContain(slug);
     }
+  });
+});
+
+describe("FEATURED_SLUGS (共有定数)", () => {
+  test("is exported from registry", () => {
+    expect(FEATURED_SLUGS).toBeDefined();
+  });
+
+  test("contains exactly 4 slugs (各カテゴリ1件ずつ)", () => {
+    expect(FEATURED_SLUGS).toHaveLength(4);
+  });
+
+  test("includes 'daily' (占いカテゴリ代表)", () => {
+    expect(FEATURED_SLUGS).toContain("daily");
+  });
+
+  test("includes 'animal-personality' (性格診断カテゴリ代表)", () => {
+    expect(FEATURED_SLUGS).toContain("animal-personality");
+  });
+
+  test("includes 'kanji-level' (知識テストカテゴリ代表)", () => {
+    expect(FEATURED_SLUGS).toContain("kanji-level");
+  });
+
+  test("includes 'irodori' (ゲームカテゴリ代表)", () => {
+    expect(FEATURED_SLUGS).toContain("irodori");
+  });
+
+  test("each slug exists in playContentBySlug", () => {
+    for (const slug of FEATURED_SLUGS) {
+      expect(playContentBySlug.has(slug)).toBe(true);
+    }
+  });
+});
+
+describe("DAILY_UPDATE_SLUGS (共有定数)", () => {
+  test("is exported from registry", () => {
+    expect(DAILY_UPDATE_SLUGS).toBeDefined();
+  });
+
+  test("contains 'daily'", () => {
+    expect(DAILY_UPDATE_SLUGS.has("daily")).toBe(true);
+  });
+
+  test("contains 'kanji-kanaru'", () => {
+    expect(DAILY_UPDATE_SLUGS.has("kanji-kanaru")).toBe(true);
+  });
+
+  test("contains 'yoji-kimeru'", () => {
+    expect(DAILY_UPDATE_SLUGS.has("yoji-kimeru")).toBe(true);
+  });
+
+  test("contains 'nakamawake'", () => {
+    expect(DAILY_UPDATE_SLUGS.has("nakamawake")).toBe(true);
+  });
+
+  test("contains 'irodori'", () => {
+    expect(DAILY_UPDATE_SLUGS.has("irodori")).toBe(true);
+  });
+
+  test("is a Set", () => {
+    expect(DAILY_UPDATE_SLUGS).toBeInstanceOf(Set);
   });
 });

@@ -163,6 +163,134 @@
   font-size: 1rem;
 }
 
+/* ===== Featured section（まずはここから） ===== */
+/* トップページの初回訪問者向け代表コンテンツ4件セクション */
+.featuredSection {
+  padding: 2.5rem 0 1.5rem;
+  border-top: 1px solid var(--color-border);
+}
+
+/* デスクトップ4列、モバイル2列のグリッド */
+.featuredGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* /play ページのカードデザインと統一: border-top accent + グラデーション背景 */
+.featuredCard {
+  display: flex;
+  flex-direction: column;
+  border-top: 5px solid var(--play-accent);
+  padding: 1.5rem;
+  border-left: 1px solid var(--color-border);
+  border-right: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  text-decoration: none;
+  color: inherit;
+  /* アクセントカラーの薄いグラデーション背景でカードごとの色合いを差別化 */
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--play-accent) 8%, transparent) 0%,
+    transparent 40%
+  );
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s,
+    transform 0.2s,
+    background 0.2s;
+}
+
+.featuredCard:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--play-accent) 14%, transparent) 0%,
+    transparent 50%
+  );
+}
+
+/* アイコンをaccentColorの薄い背景円でラップ */
+.featuredCardIconWrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: color-mix(in srgb, var(--play-accent) 10%, transparent);
+  border-radius: 50%;
+  width: 4rem;
+  height: 4rem;
+  margin-bottom: 0.75rem;
+}
+
+.featuredCardIcon {
+  font-size: 3rem;
+  line-height: 1;
+}
+
+/* タイトルとデイリーバッジを横並びに配置するラッパー */
+.featuredCardTitleRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.featuredCardTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 0;
+}
+
+/* 毎日更新コンテンツにのみ表示するオレンジ系のピル型バッジ */
+.dailyBadge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  background-color: #f97316;
+  color: #ffffff;
+  border-radius: 999px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.featuredCardDescription {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  flex-grow: 1;
+}
+
+.featuredCardMeta {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: auto;
+  padding-top: 0.75rem;
+}
+
+.featuredCardQuestionCount {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.featuredCardCta {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.3rem 0.9rem;
+  background-color: var(--play-accent);
+  /* WCAG AA基準を満たすテキスト色をJSで計算したCSS変数で適用。フォールバックは#ffffff */
+  color: var(--play-cta-text, #ffffff);
+  border-radius: 999px;
+}
+
 /* ===== Section ===== */
 .section {
   padding: 2.5rem 0 1.5rem;
@@ -385,6 +513,10 @@
   box-shadow: 0 4px 16px rgba(255, 255, 255, 0.05);
 }
 
+:global(:root.dark) .featuredCard:hover {
+  box-shadow: 0 4px 16px rgba(255, 255, 255, 0.05);
+}
+
 /* ===== Responsive ===== */
 @media (max-width: 768px) {
   .gamesGrid {
@@ -395,6 +527,11 @@
   .quizGrid {
     grid-template-columns: 1fr;
     gap: 0.75rem;
+  }
+
+  /* タブレットでは2カラム */
+  .featuredGrid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -422,5 +559,46 @@
   .heroDeco4 {
     font-size: 2rem;
     opacity: 0.15;
+  }
+
+  /* モバイルでも2カラムを維持する */
+  .featuredGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  /* モバイル向けカードのコンパクト化 */
+  .featuredCard {
+    padding: 1rem 0.75rem;
+  }
+
+  /* モバイルではdescriptionを非表示にして省スペース化 */
+  .featuredCardDescription {
+    display: none;
+  }
+
+  /* モバイルではアイコンサイズを縮小 */
+  .featuredCardIconWrapper {
+    width: 3rem;
+    height: 3rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .featuredCardIcon {
+    font-size: 2.5rem;
+  }
+
+  /* モバイルではCTAボタンを小さく */
+  .featuredCardCta {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.6rem;
+  }
+
+  /* モバイルのカードタイトルは最大2行でクランプ */
+  .featuredCardTitle {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 }
