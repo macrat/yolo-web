@@ -302,15 +302,15 @@ test("'もっと診断してみよう' section renders 6 diagnosis cards", () =>
   expect(links).toHaveLength(7);
 });
 
-test("'もっと診断してみよう' section has 'すべての診断を見る' link to /play", () => {
-  // S-F: リンク文言を「もっと見る」から「すべての診断を見る」に変更（曖昧さ解消）
+test("'もっと診断してみよう' section has 'すべての診断・テストを見る' link to /play", () => {
+  // 修正5: リンク先を /play#personality から /play に変更し、文言も「すべての診断・テストを見る」に更新
   const { container } = render(<Home />);
   const diagSection = container.querySelector(
     "[data-testid='home-diagnosis-section']",
   );
   expect(diagSection).toBeInTheDocument();
   const seeAllLink = within(diagSection as HTMLElement).getByRole("link", {
-    name: /すべての診断を見る/,
+    name: /すべての診断・テストを見る/,
   });
   expect(seeAllLink).toHaveAttribute("href", "/play");
 });
@@ -339,7 +339,10 @@ test("Home page renders daily puzzle section with all games", () => {
   expect(
     screen.getByRole("heading", { name: /デイリーパズル/ }),
   ).toBeInTheDocument();
-  expect(screen.getByText(/4つのパズルに挑戦しよう/)).toBeInTheDocument();
+  // 修正8: デイリーパズル説明文の語尾を変更「あなたを待っています」
+  expect(
+    screen.getByText(/4つのパズルがあなたを待っています/),
+  ).toBeInTheDocument();
   expect(screen.getByRole("link", { name: /漢字カナール/ })).toHaveAttribute(
     "href",
     "/play/kanji-kanaru",
@@ -615,6 +618,38 @@ test("hero: mobile heroSubtitle font-size is 1.2rem (max-width 640px)", () => {
   );
 });
 
+// ===== 修正6: 診断セクション「すべての診断を見る」リンク先 =====
+// 修正前: /play → 修正後: /play#personality
+// 既存テスト "7 has 'すべての診断を見る' link to /play" は /play#personality に更新済み
+
+// ===== 修正1: モバイルで「まずはここから」3件目カードの全幅表示（CSS検証） =====
+
+test("修正1: featuredGrid3 last child has grid-column: 1 / -1 in 640px breakpoint", () => {
+  // 640px以下で3件目カードが全幅になること
+  expect(pageCssContent).toMatch(
+    /max-width:\s*640px[\s\S]*?\.featuredGrid3\s*>\s*li:last-child\s*\{[^}]*grid-column:\s*1\s*\/\s*-1/,
+  );
+});
+
+// ===== 修正7: モバイルヒーローのpadding縮小（CSS検証） =====
+
+test("修正7: mobile hero padding is reduced (smaller than desktop 3rem)", () => {
+  // 640px以下で .hero のpaddingが縮小されていること
+  // 例: "2rem 1.5rem 1.5rem" のような記述
+  expect(pageCssContent).toMatch(
+    /max-width:\s*640px[\s\S]*?\.hero\s*\{[^}]*padding:[^}]*1\.[0-9]rem/,
+  );
+});
+
+// ===== 修正9: 320px以下でセクションタイトルのfont-size縮小（CSS検証） =====
+
+test("修正9: sectionTitle font-size is reduced at 320px", () => {
+  // 320px以下で .sectionTitle が 1.25rem になること
+  expect(pageCssContent).toMatch(
+    /max-width:\s*320px[\s\S]*?\.sectionTitle\s*\{[^}]*font-size:\s*1\.25rem/,
+  );
+});
+
 // ===== M-2: 診断セクションのグリッドリストが存在すること =====
 
 test("M-2: 'もっと診断してみよう' section has a grid list for diagnosis contents", () => {
@@ -630,4 +665,67 @@ test("M-2: 'もっと診断してみよう' section has a grid list for diagnosi
   expect(gridList).toBeInTheDocument();
   // featuredGrid クラスが使用されていること
   expect(gridList?.className).toMatch(/featuredGrid/);
+});
+
+// ===== 修正1: ヒーローサブタイトルに「笑える」を含むこと =====
+
+test("修正1: heroSubtitle contains 笑える to convey humor concept", () => {
+  render(<Home />);
+  // サブタイトルが「笑える」を含み25文字以内であること
+  const subtitle = screen.getByText(/笑える/);
+  expect(subtitle).toBeInTheDocument();
+});
+
+// ===== 修正4: knowledgeカテゴリのCTAは「挑戦する」=====
+
+test("修正4: knowledge category cards show '挑戦する' CTA instead of '診断する'", () => {
+  const { container } = render(<Home />);
+  const diagSection = container.querySelector(
+    "[data-testid='home-diagnosis-section']",
+  );
+  expect(diagSection).toBeInTheDocument();
+  // knowledge カテゴリ（kotowaza-level, yoji-level）のカードには「挑戦する」が表示される
+  const ctaButtons = within(diagSection as HTMLElement).getAllByText(
+    /挑戦する/,
+  );
+  expect(ctaButtons.length).toBeGreaterThanOrEqual(1);
+});
+
+test("修正4: personality category cards show '診断する' CTA", () => {
+  const { container } = render(<Home />);
+  const diagSection = container.querySelector(
+    "[data-testid='home-diagnosis-section']",
+  );
+  expect(diagSection).toBeInTheDocument();
+  // personality カテゴリのカードには「診断する」が表示される
+  const ctaButtons = within(diagSection as HTMLElement).getAllByText(
+    /診断する/,
+  );
+  expect(ctaButtons.length).toBeGreaterThanOrEqual(1);
+});
+
+// ===== 修正8: セクション説明文の語尾バリエーション =====
+
+test("修正8: diagnosis section description ends with 見つけてみませんか", () => {
+  render(<Home />);
+  expect(
+    screen.getByText(/自分の新たな一面を見つけてみませんか/),
+  ).toBeInTheDocument();
+});
+
+// ===== CSS: ブログカードhoverにtranslateYが追加されていること =====
+
+test("修正6: blogCard:hover has translateY in CSS", () => {
+  expect(pageCssContent).toMatch(
+    /\.blogCard:hover\s*\{[^}]*transform:\s*translateY/,
+  );
+});
+
+// ===== CSS: featuredCardIconWrapper の font-size が 2.25rem 以下であること =====
+
+test("修正7: featuredCardIcon font-size is 2.25rem or less to fit icon wrapper", () => {
+  // テキスト系アイコン（漢字）が背景円からはみ出さないよう font-size を抑制
+  expect(pageCssContent).toMatch(
+    /\.featuredCardIconWrapper\s*\{[^}]*font-size:\s*2\.25rem/,
+  );
 });
