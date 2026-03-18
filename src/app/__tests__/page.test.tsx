@@ -1,6 +1,6 @@
 import { expect, test, vi } from "vitest";
 import { render, screen, within } from "@testing-library/react";
-import Home from "../page";
+import Home, { metadata } from "../page";
 
 // FortunePreview is a Client Component using localStorage-based fortune logic.
 // Mock the logic module to keep tests deterministic and SSR-independent.
@@ -518,4 +518,31 @@ test("'その他のコンテンツ' section has a link to /achievements", () => 
     name: /実績・ダッシュボード/,
   });
   expect(achievementsLink).toHaveAttribute("href", "/achievements");
+});
+
+// ===== page.tsx metadata テスト =====
+
+test("page.tsx metadata description reflects 占い・診断パーク concept", () => {
+  const description = metadata.description as string;
+  expect(description).toBeDefined();
+  // 占い・診断パークのコンセプトを反映した文言が含まれていること
+  expect(description).toMatch(/占い|診断/);
+  // 「ツール」への言及がないこと
+  expect(description).not.toContain("ツール");
+});
+
+test("page.tsx OGP description reflects 占い・診断パーク concept", () => {
+  const og = metadata.openGraph as Record<string, unknown> | undefined;
+  const ogDescription = og?.description as string | undefined;
+  expect(ogDescription).toBeDefined();
+  expect(ogDescription).toMatch(/占い|診断/);
+  expect(ogDescription).not.toContain("ツール");
+});
+
+test("page.tsx twitter description reflects 占い・診断パーク concept", () => {
+  const twitter = metadata.twitter as Record<string, unknown> | undefined;
+  const twitterDescription = twitter?.description as string | undefined;
+  expect(twitterDescription).toBeDefined();
+  expect(twitterDescription).toMatch(/占い|診断/);
+  expect(twitterDescription).not.toContain("ツール");
 });

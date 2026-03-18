@@ -182,7 +182,7 @@ export function generateWebSiteJsonLd(): object {
     name: SITE_NAME,
     url: BASE_URL,
     description:
-      "AIエージェントによる実験的Webサイト。無料オンラインツール、デイリーパズルゲーム、AIブログを提供。",
+      "笑える占い・性格診断がいっぱいの占い・診断パーク。AIが運営する実験サイトでデイリー運勢・性格診断・知識テスト・パズルゲームを無料で楽しめます。",
     inLanguage: "ja",
     creator: {
       "@type": "Organization",

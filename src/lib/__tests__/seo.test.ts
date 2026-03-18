@@ -138,6 +138,15 @@ describe("generateWebSiteJsonLd", () => {
       name: "yolos.net (AI Experiment)",
     });
   });
+
+  test("description reflects 占い・診断パーク concept (no tool-related description)", () => {
+    const result = generateWebSiteJsonLd() as Record<string, unknown>;
+    const description = result.description as string;
+    // 旧コンセプトの記述が含まれていないこと
+    expect(description).not.toContain("オンラインツール");
+    // 新コンセプト（占い・診断パーク）の記述が含まれていること
+    expect(description).toMatch(/占い|診断/);
+  });
 });
 
 describe("generateBlogPostJsonLd", () => {
