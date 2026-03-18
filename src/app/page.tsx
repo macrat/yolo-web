@@ -4,7 +4,15 @@ import { formatDate } from "@/lib/date";
 import { getAllBlogPosts } from "@/blog/_lib/blog";
 import { allQuizMetas } from "@/play/quiz/registry";
 import { allGameMetas } from "@/play/games/registry";
-import { allPlayContents } from "@/play/registry";
+import {
+  allPlayContents,
+  playContentBySlug,
+  FEATURED_SLUGS,
+  DAILY_UPDATE_SLUGS,
+} from "@/play/registry";
+import type { PlayContentMeta } from "@/play/types";
+import { getPlayPath, getDailyFortunePath } from "@/play/paths";
+import { getContrastTextColor } from "@/play/color-utils";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import FortunePreview from "./_components/FortunePreview";
 import styles from "./page.module.css";
@@ -38,8 +46,36 @@ const HERO_BADGES = [
   { label: "完全無料", icon: "\u{1F4B0}", href: null },
 ] as const;
 
+/** slug → questionCount のルックアップマップ（クイズの問数表示用） */
+const quizQuestionCountBySlug: Map<string, number> = new Map(
+  allQuizMetas.map((q) => [q.slug, q.questionCount]),
+);
+
+/**
+ * コンテンツのリンク先パスを返す。
+ * Fortune（daily）は getDailyFortunePath() を使用し、それ以外は getPlayPath(slug) を使用する。
+ */
+function getContentPath(content: PlayContentMeta): string {
+  if (content.contentType === "fortune") {
+    return getDailyFortunePath();
+  }
+  return getPlayPath(content.slug);
+}
+
+/**
+ * 「まずはここから」セクション用の固定コンテンツ配列を返す。
+ * FEATURED_SLUGS に対応するコンテンツをレジストリから取得する。
+ */
+function getFeaturedContents(): PlayContentMeta[] {
+  return FEATURED_SLUGS.flatMap((slug) => {
+    const content = playContentBySlug.get(slug);
+    return content ? [content] : [];
+  });
+}
+
 export default function Home() {
   const recentPosts = getAllBlogPosts().slice(0, 3);
+  const featuredContents = getFeaturedContents();
 
   return (
     <div className={styles.main}>
@@ -93,7 +129,69 @@ export default function Home() {
       {/* セクション1.5: 今日のユーモア運勢プレビュー — /play/daily への導線 */}
       <FortunePreview />
 
-      {/* セクション2: 今日のデイリーパズル */}
+      {/* セクション2: まずはここから — 各カテゴリ代表コンテンツ4件を初回訪問者向けに表示 */}
+      <section
+        className={styles.featuredSection}
+        data-testid="home-featured-section"
+        aria-labelledby="home-featured-heading"
+      >
+        <h2 id="home-featured-heading" className={styles.sectionTitle}>
+          まずはここから
+        </h2>
+        <p className={styles.sectionDescription}>
+          占い・診断・クイズ・ゲームの代表作を体験しよう
+        </p>
+        <ul
+          className={styles.featuredGrid}
+          role="list"
+          aria-label="おすすめコンテンツ"
+        >
+          {featuredContents.map((content) => (
+            <li key={content.slug}>
+              <Link
+                href={getContentPath(content)}
+                className={styles.featuredCard}
+                style={
+                  {
+                    "--play-accent": content.accentColor,
+                    "--play-cta-text": getContrastTextColor(
+                      content.accentColor,
+                    ),
+                  } as React.CSSProperties
+                }
+              >
+                <div className={styles.featuredCardIconWrapper}>
+                  <div className={styles.featuredCardIcon}>{content.icon}</div>
+                </div>
+                <div className={styles.featuredCardTitleRow}>
+                  <h3 className={styles.featuredCardTitle}>{content.title}</h3>
+                  {DAILY_UPDATE_SLUGS.has(content.slug) && (
+                    <span className={styles.dailyBadge}>毎日更新</span>
+                  )}
+                </div>
+                <p className={styles.featuredCardDescription}>
+                  {content.shortDescription}
+                </p>
+                <div className={styles.featuredCardMeta}>
+                  {quizQuestionCountBySlug.get(content.slug) !== undefined && (
+                    <span className={styles.featuredCardQuestionCount}>
+                      {quizQuestionCountBySlug.get(content.slug)}問
+                    </span>
+                  )}
+                  <span className={styles.featuredCardCta}>遊ぶ</span>
+                </div>
+              </Link>
+            </li>
+          ))}
+        </ul>
+        <div className={styles.seeAll}>
+          <Link href="/play" className={styles.seeAllLink}>
+            全コンテンツを見る
+          </Link>
+        </div>
+      </section>
+
+      {/* セクション3: 今日のデイリーパズル */}
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>今日のデイリーパズル</h2>
         <p className={styles.sectionDescription}>
@@ -122,7 +220,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* セクション3: クイズ・診断 */}
+      {/* セクション4: クイズ・診断 */}
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>クイズ・診断</h2>
         <p className={styles.sectionDescription}>
@@ -156,7 +254,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* セクション4: 最新ブログ記事 */}
+      {/* セクション5: 最新ブログ記事 */}
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>最新ブログ記事</h2>
         <div className={styles.blogList}>

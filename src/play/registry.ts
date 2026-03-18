@@ -74,6 +74,32 @@ export const fortunePlayContentMeta: PlayContentMeta = {
   category: "fortune",
 };
 
+/**
+ * 毎日新しい問題/結果が生成されるデイリー更新コンテンツのslug一覧。
+ * これらのカードには「毎日更新」バッジを表示してリピート訪問を促す。
+ * /play ページとトップページの両方から参照される共有定数。
+ */
+export const DAILY_UPDATE_SLUGS: ReadonlySet<string> = new Set([
+  "daily",
+  "kanji-kanaru",
+  "yoji-kimeru",
+  "nakamawake",
+  "irodori",
+]);
+
+/**
+ * 「まずはここから」セクションに表示する固定コンテンツのスラグ一覧。
+ * 各カテゴリから代表的な1コンテンツを選出（占い/性格診断/知識テスト/ゲーム）。
+ * 初回訪問者が迷わず体験できる導線として機能する。
+ * /play ページとトップページの両方から参照される共有定数。
+ */
+export const FEATURED_SLUGS: ReadonlyArray<string> = [
+  "daily", // 占い: 今日のユーモア運勢
+  "animal-personality", // 性格診断: アニマル性格診断
+  "kanji-level", // 知識テスト: 漢字レベル診断
+  "irodori", // ゲーム: いろどり
+];
+
 /** 全 PlayContentMeta の配列（ゲーム4種 + クイズ14種 + Fortune 1種 = 19種、表示順を保持） */
 export const allPlayContents: PlayContentMeta[] = [
   ...allGameMetas.map(gameMetaToPlayContentMeta),

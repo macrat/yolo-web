@@ -5,6 +5,8 @@ import {
   getPlayContentsByCategory,
   playContentBySlug,
   allPlayContents,
+  FEATURED_SLUGS,
+  DAILY_UPDATE_SLUGS,
 } from "@/play/registry";
 import type { PlayContentMeta } from "@/play/types";
 import { getPlayPath, getDailyFortunePath } from "@/play/paths";
@@ -61,18 +63,6 @@ const CATEGORY_DISPLAY_ORDER: Array<{
 ];
 
 /**
- * 毎日新しい問題/結果が生成されるデイリー更新コンテンツのslug一覧。
- * これらのカードには「毎日更新」バッジを表示してリピート訪問を促す。
- */
-const DAILY_UPDATE_SLUGS: ReadonlySet<string> = new Set([
-  "daily",
-  "kanji-kanaru",
-  "yoji-kimeru",
-  "nakamawake",
-  "irodori",
-]);
-
-/**
  * 「今日のピックアップ」のローテーション対象スラグ一覧。
  * dayOfYear % size でデイリー系コンテンツから1つを決定論的に選出する。
  * 毎日異なるコンテンツが選ばれ、リピーター向けの「今日も来る理由」を演出する。
@@ -83,18 +73,6 @@ const DAILY_PICKUP_SLUGS: ReadonlyArray<string> = [
   "yoji-kimeru",
   "nakamawake",
   "irodori",
-];
-
-/**
- * 「まずはここから」セクションに表示する固定コンテンツのスラグ一覧。
- * 各カテゴリから代表的な1コンテンツを選出（占い/性格診断/知識テスト/ゲーム）。
- * 初回訪問者が迷わず体験できる導線として機能する。
- */
-const FEATURED_SLUGS: ReadonlyArray<string> = [
-  "daily", // 占い: 今日のユーモア運勢
-  "animal-personality", // 性格診断: アニマル性格診断
-  "kanji-level", // 知識テスト: 漢字レベル診断
-  "irodori", // ゲーム: いろどり
 ];
 
 /** slug → questionCount のルックアップマップ（クイズの問数表示用） */

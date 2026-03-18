@@ -1,5 +1,5 @@
 import { expect, test, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import Home from "../page";
 
 // FortunePreview is a Client Component using localStorage-based fortune logic.
@@ -60,6 +60,64 @@ vi.mock("@/play/quiz/registry", () => ({
 vi.mock("@/play/registry", () => ({
   // 4 games + 2 quizzes + 1 fortune = 7 total (mocked values)
   allPlayContents: new Array(7).fill(null),
+  playContentBySlug: new Map([
+    [
+      "daily",
+      {
+        slug: "daily",
+        title: "今日のユーモア運勢",
+        shortDescription: "AIが毎日生成するユーモラスな運勢",
+        icon: "\u{1F52E}",
+        accentColor: "#7c3aed",
+        contentType: "fortune",
+        category: "fortune",
+      },
+    ],
+    [
+      "animal-personality",
+      {
+        slug: "animal-personality",
+        title: "アニマル性格診断",
+        shortDescription: "あなたはどの動物タイプ？",
+        icon: "\u{1F98A}",
+        accentColor: "#d97706",
+        contentType: "quiz",
+        category: "personality",
+      },
+    ],
+    [
+      "kanji-level",
+      {
+        slug: "kanji-level",
+        title: "漢字レベル診断",
+        shortDescription: "あなたの漢字力は何級？",
+        icon: "\u{1F4DA}",
+        accentColor: "#4d8c3f",
+        contentType: "quiz",
+        category: "knowledge",
+      },
+    ],
+    [
+      "irodori",
+      {
+        slug: "irodori",
+        title: "イロドリ",
+        shortDescription: "色合わせパズル",
+        icon: "\u{1F3A8}",
+        accentColor: "#e91e63",
+        contentType: "game",
+        category: "game",
+      },
+    ],
+  ]),
+  FEATURED_SLUGS: ["daily", "animal-personality", "kanji-level", "irodori"],
+  DAILY_UPDATE_SLUGS: new Set([
+    "daily",
+    "kanji-kanaru",
+    "yoji-kimeru",
+    "nakamawake",
+    "irodori",
+  ]),
 }));
 
 test("Home page renders heading", () => {
@@ -133,10 +191,13 @@ test("Home page renders daily puzzle section with all games", () => {
     "href",
     "/play/nakamawake",
   );
-  expect(screen.getByRole("link", { name: /イロドリ/ })).toHaveAttribute(
-    "href",
-    "/play/irodori",
-  );
+  // イロドリは「まずはここから」にも表示されるため getAllByRole を使用
+  const irodoriLinks = screen.getAllByRole("link", { name: /イロドリ/ });
+  expect(irodoriLinks.length).toBeGreaterThanOrEqual(1);
+  // すべてのイロドリリンクが /play/irodori に向いていること
+  irodoriLinks.forEach((link) => {
+    expect(link).toHaveAttribute("href", "/play/irodori");
+  });
 });
 
 test("Home page renders quiz section", () => {
@@ -148,11 +209,13 @@ test("Home page renders quiz section", () => {
 
 test("Home page renders FortunePreview section with heading and CTA link", () => {
   render(<Home />);
-  // 運勢プレビューセクションの見出しが存在する
-  expect(
-    screen.getByRole("heading", { name: /今日のユーモア運勢/ }),
-  ).toBeInTheDocument();
-  // /play/daily へのリンクが存在する
+  // 「今日のユーモア運勢」見出しは「まずはここから」カードと FortunePreview の両方に存在するため
+  // getAllByRole で複数存在を許容する
+  const fortuneHeadings = screen.getAllByRole("heading", {
+    name: /今日のユーモア運勢/,
+  });
+  expect(fortuneHeadings.length).toBeGreaterThanOrEqual(1);
+  // /play/daily へのリンクが存在する（「今日の運勢を見る」CTAリンクで特定）
   const link = screen.getByRole("link", { name: /今日の運勢を見る/ });
   expect(link).toHaveAttribute("href", "/play/daily");
 });
@@ -167,4 +230,54 @@ test("Home page renders latest blog section", () => {
     "href",
     "/blog",
   );
+});
+
+// ===== 「まずはここから」セクション =====
+
+test("Home page renders 'まずはここから' section", () => {
+  render(<Home />);
+  expect(
+    screen.getByRole("heading", { name: "まずはここから" }),
+  ).toBeInTheDocument();
+});
+
+test("Home page renders 4 featured cards in 'まずはここから' section", () => {
+  const { container } = render(<Home />);
+  const featuredSection = container.querySelector(
+    "[data-testid='home-featured-section']",
+  );
+  expect(featuredSection).toBeInTheDocument();
+  const links = featuredSection?.querySelectorAll("a");
+  // 4枚のカード + 「全コンテンツを見る」リンク = 5件
+  // ただし「全コンテンツを見る」はセクション下部に別途配置
+  expect(links).toBeDefined();
+});
+
+test("Home page 'まずはここから' section has '全コンテンツを見る' link to /play", () => {
+  render(<Home />);
+  const featuredSection = document.querySelector(
+    "[data-testid='home-featured-section']",
+  );
+  expect(featuredSection).toBeInTheDocument();
+  const seeAllLink = within(featuredSection as HTMLElement).getByRole("link", {
+    name: /全コンテンツを見る/,
+  });
+  expect(seeAllLink).toHaveAttribute("href", "/play");
+});
+
+test("Home page featured section cards link to /play/ paths", () => {
+  render(<Home />);
+  const featuredSection = document.querySelector(
+    "[data-testid='home-featured-section']",
+  );
+  expect(featuredSection).toBeInTheDocument();
+  // カードリンク（「全コンテンツを見る」を除く）がすべて /play/ 配下
+  const cardLinks = within(featuredSection as HTMLElement).getAllByRole("link");
+  const contentLinks = cardLinks.filter(
+    (link: HTMLElement) => !link.textContent?.includes("全コンテンツを見る"),
+  );
+  expect(contentLinks.length).toBeGreaterThan(0);
+  contentLinks.forEach((link: HTMLElement) => {
+    expect(link.getAttribute("href")).toMatch(/^\/play\//);
+  });
 });
