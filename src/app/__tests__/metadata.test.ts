@@ -7,6 +7,21 @@ test("metadata includes twitter card configuration", () => {
   );
 });
 
+test("layout.tsx keywords reflect 占い・診断パーク concept (no tool-related keywords)", () => {
+  const keywords = metadata.keywords as string[];
+  expect(keywords).toBeDefined();
+  // 旧コンセプトのキーワードが含まれていないこと
+  expect(keywords).not.toContain("JSON整形");
+  expect(keywords).not.toContain("Base64変換");
+  expect(keywords).not.toContain("パスワード生成");
+  expect(keywords).not.toContain("オンラインツール");
+  expect(keywords).not.toContain("Web開発ツール");
+  // 新コンセプトのキーワードが含まれていること
+  expect(keywords).toContain("占い");
+  expect(keywords).toContain("性格診断");
+  expect(keywords).toContain("無料診断");
+});
+
 test("metadata includes openGraph configuration", () => {
   expect(metadata.openGraph).toEqual(
     expect.objectContaining({ siteName: "yolos.net" }),
