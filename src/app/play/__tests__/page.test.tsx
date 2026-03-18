@@ -103,9 +103,9 @@ describe("PlayPage", () => {
     render(<PlayPage />);
     const badges = screen.getAllByText("毎日更新");
     // 対象スラグ: daily, kanji-kanaru, yoji-kimeru, nakamawake, irodori の5種
-    // 「まずはここから」に character-personality が入りirodoriは重複しないため合計5件
+    // 「まずはここから」に irodori も表示されるため合計6件（5種 + 重複1件）
     // ※ daily は「まずはここから」から除外（FortunePreview セクションで表示）
-    expect(badges.length).toBe(5);
+    expect(badges.length).toBe(6);
   });
 
   it("does not render '毎日更新' badge on non-daily content cards", () => {

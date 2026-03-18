@@ -79,10 +79,9 @@
 }
 
 /* AI運営透明性テキスト（constitution.md Rule 3 準拠） */
-/* color: #fff に変更 — グラデーション中央付近でコントラスト比4.5:1を確保するため */
 .heroAiNotice {
   font-size: 0.85rem;
-  color: #fff;
+  color: rgba(255, 255, 255, 0.7);
   margin-bottom: 1.5rem;
   position: relative;
   z-index: 1;
@@ -131,12 +130,12 @@
   align-items: center;
   gap: 0.4rem;
   padding: 0.4rem 0.9rem;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(255, 255, 255, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 999px;
   font-size: 0.85rem;
   font-weight: 500;
-  color: #fff;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .badgeIcon {
@@ -172,11 +171,9 @@
 
 /* /play ページのカードデザインと統一: border-top accent + グラデーション背景 */
 /* position: relative は毎日更新バッジの絶対配置の基準として必要 */
-/* height: 100% — CSS Grid の li は行内同高になるが a タグが伸びずカード下端が不揃いになるため */
 .featuredCard {
   display: flex;
   flex-direction: column;
-  height: 100%;
   position: relative;
   border-top: 5px solid var(--play-accent);
   padding: 1.5rem;
@@ -219,8 +216,6 @@
   width: 4rem;
   height: 4rem;
   margin-bottom: 0.75rem;
-  /* テキスト系アイコン（漢字1〜2文字）が背景円からはみ出さないよう font-size を制限 */
-  font-size: 2.25rem;
   /* 絵文字アイコンが背景円からはみ出さないように制限 */
   overflow: hidden;
 }
@@ -328,14 +323,12 @@
   color: inherit;
   transition:
     border-color 0.2s,
-    box-shadow 0.2s,
-    transform 0.2s;
+    box-shadow 0.2s;
 }
 
 .blogCard:hover {
   border-color: var(--color-primary);
   box-shadow: 0 2px 12px rgba(37, 99, 235, 0.1);
-  transform: translateY(-2px);
 }
 
 .blogDate {
@@ -423,11 +416,6 @@
 }
 
 @media (max-width: 640px) {
-  /* モバイルではヒーローのpaddingを縮小してカードがファーストビューに見えるように */
-  .hero {
-    padding: 2rem 1.5rem 1.5rem;
-  }
-
   /* モバイルでもデスクトップと同様の視覚階層: h1控えめ・サブタイトル強調 */
   .heroTitle {
     font-size: 1.5rem;
@@ -460,15 +448,10 @@
     gap: 0.75rem;
   }
 
-  /* モバイルでは「まずはここから」（3件）を2列に変更（3件目は全幅で表示） */
+  /* モバイルでは「まずはここから」（3件）を2列に変更（3件目は1つだけの行） */
   .featuredGrid3 {
     grid-template-columns: repeat(2, 1fr);
     gap: 0.75rem;
-  }
-
-  /* 3件目カードを全幅にしてレイアウトを整える */
-  .featuredGrid3 > li:last-child {
-    grid-column: 1 / -1;
   }
 
   /* モバイル向けカードのコンパクト化 */
@@ -507,13 +490,9 @@
   }
 }
 
-/* 320px以下の極小画面ではカードタイトルおよびセクションタイトルをさらに縮小して折り返しを抑制 */
+/* 320px以下の極小画面ではカードタイトルをさらに縮小して折り返しを抑制 */
 @media (max-width: 320px) {
   .featuredCardTitle {
     font-size: 0.8rem;
-  }
-
-  .sectionTitle {
-    font-size: 1.25rem;
   }
 }

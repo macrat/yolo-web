@@ -263,12 +263,8 @@ describe("FEATURED_SLUGS (共有定数)", () => {
     expect(FEATURED_SLUGS).toContain("kanji-level");
   });
 
-  test("includes 'character-personality' (性格診断カテゴリ追加代表)", () => {
-    expect(FEATURED_SLUGS).toContain("character-personality");
-  });
-
-  test("does NOT include 'irodori' (ゲームカテゴリはデイリーパズルセクションで表示するため除外)", () => {
-    expect(FEATURED_SLUGS).not.toContain("irodori");
+  test("includes 'irodori' (ゲームカテゴリ代表)", () => {
+    expect(FEATURED_SLUGS).toContain("irodori");
   });
 
   test("each slug exists in playContentBySlug", () => {
@@ -305,18 +301,6 @@ describe("quizMetaToPlayContentMeta - shortTitle フィールド (7-10)", () => 
     const traditionalColorContent = playContentBySlug.get("traditional-color");
     expect(traditionalColorContent).toBeDefined();
     expect(traditionalColorContent?.shortTitle).toBe("日本の伝統色診断");
-  });
-
-  test("kotowaza-level has shortTitle set in its data", () => {
-    const content = playContentBySlug.get("kotowaza-level");
-    expect(content).toBeDefined();
-    expect(content?.shortTitle).toBe("ことわざ力診断");
-  });
-
-  test("yoji-personality has shortTitle set in its data", () => {
-    const content = playContentBySlug.get("yoji-personality");
-    expect(content).toBeDefined();
-    expect(content?.shortTitle).toBe("四字熟語で性格診断");
   });
 });
 

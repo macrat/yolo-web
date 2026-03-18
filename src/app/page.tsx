@@ -73,12 +73,12 @@ export default function Home() {
 
         <h1 className={styles.heroTitle}>yolos.net</h1>
         <p className={styles.heroSubtitle}>
-          笑える占い・診断で、あなたの意外な一面を発見しよう
+          笑えて、シェアせずにいられない占い・診断があなたを待っている
         </p>
 
         {/* AI運営の透明性（constitution.md Rule 3） */}
         <p className={styles.heroAiNotice}>
-          AIが企画・運営する実験的なサイトです
+          AIが企画・運営する占い・診断の実験サイトです
         </p>
 
         {/* メインCTA */}
@@ -111,7 +111,7 @@ export default function Home() {
           まずはここから
         </h2>
         <p className={styles.sectionDescription}>
-          人気の占い・診断・ゲームをピックアップしました
+          占い・診断・クイズ・ゲームの代表作を体験しよう
         </p>
         <ul
           className={styles.featuredGrid3}
@@ -180,7 +180,7 @@ export default function Home() {
           もっと診断してみよう
         </h2>
         <p className={styles.sectionDescription}>
-          性格診断・知識テストで自分の新たな一面を見つけてみませんか？
+          性格診断・知識テストで自分の新たな一面を発見しよう
         </p>
         <ul
           className={styles.featuredGrid}
@@ -219,9 +219,7 @@ export default function Home() {
                       {quizQuestionCountBySlug.get(content.slug)}問
                     </span>
                   )}
-                  <span className={styles.featuredCardCta}>
-                    {content.category === "knowledge" ? "挑戦する" : "診断する"}
-                  </span>
+                  <span className={styles.featuredCardCta}>診断する</span>
                 </div>
               </Link>
             </li>
@@ -229,7 +227,7 @@ export default function Home() {
         </ul>
         <div className={styles.seeAll}>
           <Link href="/play" className={styles.seeAllLink}>
-            すべての診断・テストを見る
+            すべての診断を見る
           </Link>
         </div>
       </section>
@@ -244,7 +242,7 @@ export default function Home() {
           デイリーパズル
         </h2>
         <p className={styles.sectionDescription}>
-          毎日更新される{gameContents.length}つのパズルがあなたを待っています
+          毎日更新される{gameContents.length}つのパズルに挑戦しよう
         </p>
         <ul
           className={styles.featuredGrid}
@@ -263,7 +261,10 @@ export default function Home() {
                   } as React.CSSProperties
                 }
               >
-                {/* デイリーパズルセクションではセクション名が既にデイリーを示すためバッジ非表示 */}
+                {/* 毎日更新バッジ: タイトル行から分離してカード右上に絶対配置 */}
+                {DAILY_UPDATE_SLUGS.has(game.slug) && (
+                  <span className={styles.dailyBadge}>毎日更新</span>
+                )}
                 <div className={styles.featuredCardIconWrapper}>
                   <div className={styles.featuredCardIcon}>{game.icon}</div>
                 </div>
