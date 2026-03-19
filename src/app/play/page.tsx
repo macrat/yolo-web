@@ -12,6 +12,7 @@ import {
 import type { PlayContentMeta } from "@/play/types";
 import { getContentPath } from "@/play/paths";
 import { getContrastTextColor } from "@/play/color-utils";
+import { getDayOfYearJst } from "@/lib/date";
 import Breadcrumb from "@/components/common/Breadcrumb";
 import styles from "./page.module.css";
 
@@ -76,23 +77,14 @@ const DAILY_PICKUP_SLUGS: ReadonlyArray<string> = [
 ];
 
 /**
- * 今日の年初からの経過日数を返す（1〜366）。
- * サーバーサイドでビルド時に確定される静的な値として使用する。
- * ピックアップコンテンツの決定論的な日替わり選出に使用する。
- */
-function getDayOfYear(): number {
-  const now = new Date();
-  const startOfYear = new Date(now.getFullYear(), 0, 0);
-  return Math.floor((now.getTime() - startOfYear.getTime()) / 86400000);
-}
-
-/**
  * 今日のピックアップコンテンツを選出する。
- * dayOfYear % DAILY_PICKUP_SLUGS.length で決定論的にインデックスを計算し、
- * 毎日異なるコンテンツを返す。
+ * JSTベースの年初からの経過日数（getDayOfYearJst）を使って決定論的にインデックスを計算し、
+ * サーバーのシステムタイムゾーンに依存せず、毎日異なるコンテンツを返す。
  */
 function getTodaysPickupContent(): PlayContentMeta | null {
-  const dayOfYear = getDayOfYear();
+  // JSTベースで日付を計算することで、UTC環境のサーバーでも
+  // 日本時間の日付に基づく正しいピックアップコンテンツが選出される
+  const dayOfYear = getDayOfYearJst();
   const index = dayOfYear % DAILY_PICKUP_SLUGS.length;
   const slug = DAILY_PICKUP_SLUGS[index];
   return playContentBySlug.get(slug) ?? null;
@@ -126,7 +118,7 @@ export default function PlayPage() {
           全{PLAY_CONTENT_COUNT}種のコンテンツがブラウザで無料で楽しめる
         </p>
 
-        {/* 今日のピックアップ: dayOfYearベースで日替わりデイリーコンテンツを1つフィーチャー */}
+        {/* 今日のピックアップ: JSTベースのdayOfYearで日替わりデイリーコンテンツを1つフィーチャー */}
         {pickupContent && (
           <div className={styles.pickupArea} data-testid="pickup-section">
             <p className={styles.pickupLabel}>今日のピックアップ</p>
