@@ -5,7 +5,8 @@ description: |
   ベストプラクティスの情報、マーケットの動向、競合サイトの調査などが必要なときは必ずこのエージェントを使うこと。
   最大限の効果を得るために、1つの話題につき1人のサブエージェントをアサインすること。複雑な調査をするときは複数のサブエージェントに分担させる。
   また、code-researcherによるコードベースの調査も効果的に併用すること。
-tools: Read, Write(/docs/research/*.md), Glob, Grep, Bash, WebFetch, WebSearch
+tools: Read, Write(/tmp/**), Write(/docs/research/**), Glob, Grep, Bash, WebFetch, WebSearch
+permissionMode: dontAsk
 model: sonnet
 ---
 

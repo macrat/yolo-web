@@ -5,7 +5,8 @@ description: |
   src配下を編集するときは必ず使用すること。
   このエージェントを使うときは、事前にplannerに計画を立てさせること。
   1つのタスクにつき1人のbuilderをアサインすること。複雑なタスクをするときは複数のbuilderに分担させること。
-tools: Read, Edit, Write, Bash, Glob, Grep
+tools: Read, Write, Bash, Glob, Grep
+permissionMode: acceptEdits
 model: sonnet
 ---
 
