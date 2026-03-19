@@ -27,6 +27,7 @@ interface ResultModalProps {
 /**
  * Modal showing the game result (win or loss) with answer details and share buttons.
  * Uses the shared GameDialog component.
+ * Guards against targetYoji being null (it is null during gameplay, only set on game end).
  */
 export default function ResultModal({
   open,
@@ -36,13 +37,18 @@ export default function ResultModal({
   onStatsClick,
 }: ResultModalProps) {
   const { targetYoji, guesses, status } = gameState;
-  const isWon = status === "won";
-  const shareText = generateShareText(gameState, difficulty);
 
+  // Hooks must be called unconditionally before any early return
   const handleStatsClick = useCallback(() => {
     onClose();
     onStatsClick();
   }, [onClose, onStatsClick]);
+
+  // Guard: targetYoji is null during gameplay. If somehow null here, don't render.
+  if (!targetYoji) return null;
+
+  const isWon = status === "won";
+  const shareText = generateShareText(gameState, difficulty);
 
   return (
     <GameDialog

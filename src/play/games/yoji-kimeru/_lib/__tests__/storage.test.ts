@@ -8,7 +8,11 @@ import {
   loadTodayGame,
   saveTodayGame,
 } from "../storage";
-import type { YojiGameStats, YojiGameHistory } from "../types";
+import type {
+  YojiGameStats,
+  YojiGameHistory,
+  YojiGuessFeedback,
+} from "../types";
 
 // Mock localStorage
 const localStorageMock = (() => {
@@ -229,13 +233,26 @@ describe("saveHistory", () => {
   });
 });
 
+// Feedbacks fixture for tests that require API-based save format
+const sampleFeedbacks: YojiGuessFeedback[] = [
+  {
+    guess: "花鳥風月",
+    charFeedbacks: ["absent", "absent", "absent", "absent"],
+  },
+  {
+    guess: "一期一会",
+    charFeedbacks: ["correct", "correct", "correct", "correct"],
+  },
+];
+
 describe("loadTodayGame", () => {
   test("returns null when no game exists for the date", () => {
     const game = loadTodayGame("2026-03-01", "intermediate");
     expect(game).toBeNull();
   });
 
-  test("returns game record when it exists", () => {
+  // API化以前の保存データ（feedbacksなし）はnullを返すべき
+  test("returns null for old data without feedbacks (pre-API format)", () => {
     const history: YojiGameHistory = {
       "2026-03-01": {
         guesses: ["花鳥風月", "一期一会"],
@@ -248,19 +265,43 @@ describe("loadTodayGame", () => {
       JSON.stringify(history),
     );
     const game = loadTodayGame("2026-03-01", "intermediate");
-    expect(game).toEqual({
-      guesses: ["花鳥風月", "一期一会"],
-      status: "won",
-      guessCount: 2,
-    });
+    // feedbacksがない古い保存データはnullを返す（再初期化が必要）
+    expect(game).toBeNull();
   });
 
-  test("returns playing data as-is when status is playing", () => {
+  test("returns game record when feedbacks are present (API format)", () => {
     const history: YojiGameHistory = {
       "2026-03-01": {
         guesses: ["花鳥風月", "一期一会"],
-        status: "playing",
+        feedbacks: sampleFeedbacks,
+        status: "won",
         guessCount: 2,
+      },
+    };
+    localStorageMock.setItem(
+      "yoji-kimeru-history-intermediate",
+      JSON.stringify(history),
+    );
+    const game = loadTodayGame("2026-03-01", "intermediate");
+    expect(game).not.toBeNull();
+    expect(game!.status).toBe("won");
+    expect(game!.feedbacks).toEqual(sampleFeedbacks);
+    expect(game!.guessCount).toBe(2);
+  });
+
+  test("returns playing data as-is when status is playing with feedbacks", () => {
+    const playingFeedbacks: YojiGuessFeedback[] = [
+      {
+        guess: "花鳥風月",
+        charFeedbacks: ["absent", "absent", "absent", "absent"],
+      },
+    ];
+    const history: YojiGameHistory = {
+      "2026-03-01": {
+        guesses: ["花鳥風月"],
+        feedbacks: playingFeedbacks,
+        status: "playing",
+        guessCount: 1,
       },
     };
     localStorageMock.setItem(
@@ -270,13 +311,46 @@ describe("loadTodayGame", () => {
     const game = loadTodayGame("2026-03-01", "beginner");
     expect(game).not.toBeNull();
     expect(game!.status).toBe("playing");
-    expect(game!.guessCount).toBe(2);
+    expect(game!.guessCount).toBe(1);
+    expect(game!.feedbacks).toEqual(playingFeedbacks);
   });
 
-  test("migrates old lost data to playing when guessCount < MAX_GUESSES", () => {
+  test("returns null for old lost data without feedbacks (pre-API format)", () => {
     const history: YojiGameHistory = {
       "2026-03-01": {
         guesses: ["花鳥風月", "一期一会", "切磋琢磨"],
+        status: "lost",
+        guessCount: 3,
+      },
+    };
+    localStorageMock.setItem(
+      "yoji-kimeru-history-intermediate",
+      JSON.stringify(history),
+    );
+    // feedbacksがないので古いデータとしてnullを返す
+    const game = loadTodayGame("2026-03-01", "intermediate");
+    expect(game).toBeNull();
+  });
+
+  test("migrates old lost data to playing when guessCount < MAX_GUESSES (with feedbacks)", () => {
+    const partialFeedbacks: YojiGuessFeedback[] = [
+      {
+        guess: "花鳥風月",
+        charFeedbacks: ["absent", "absent", "absent", "absent"],
+      },
+      {
+        guess: "一期一会",
+        charFeedbacks: ["absent", "absent", "absent", "absent"],
+      },
+      {
+        guess: "切磋琢磨",
+        charFeedbacks: ["absent", "absent", "absent", "absent"],
+      },
+    ];
+    const history: YojiGameHistory = {
+      "2026-03-01": {
+        guesses: ["花鳥風月", "一期一会", "切磋琢磨"],
+        feedbacks: partialFeedbacks,
         status: "lost",
         guessCount: 3,
       },
@@ -292,7 +366,26 @@ describe("loadTodayGame", () => {
     expect(game!.guesses).toEqual(["花鳥風月", "一期一会", "切磋琢磨"]);
   });
 
-  test("keeps lost status when guessCount >= MAX_GUESSES (real loss)", () => {
+  test("keeps lost status when guessCount >= MAX_GUESSES (real loss, with feedbacks)", () => {
+    const lostFeedbacks: YojiGuessFeedback[] = Array.from(
+      { length: 6 },
+      (_, i) => ({
+        guess: [
+          "花鳥風月",
+          "一期一会",
+          "切磋琢磨",
+          "四面楚歌",
+          "臥薪嘗胆",
+          "温故知新",
+        ][i]!,
+        charFeedbacks: ["absent", "absent", "absent", "absent"] as [
+          "absent",
+          "absent",
+          "absent",
+          "absent",
+        ],
+      }),
+    );
     const history: YojiGameHistory = {
       "2026-03-01": {
         guesses: [
@@ -303,6 +396,7 @@ describe("loadTodayGame", () => {
           "臥薪嘗胆",
           "温故知新",
         ],
+        feedbacks: lostFeedbacks,
         status: "lost",
         guessCount: 6,
       },
@@ -317,10 +411,11 @@ describe("loadTodayGame", () => {
     expect(game!.guessCount).toBe(6);
   });
 
-  test("keeps won status unchanged", () => {
+  test("keeps won status unchanged (with feedbacks)", () => {
     const history: YojiGameHistory = {
       "2026-03-01": {
         guesses: ["花鳥風月", "一期一会"],
+        feedbacks: sampleFeedbacks,
         status: "won",
         guessCount: 2,
       },
@@ -353,6 +448,27 @@ describe("saveTodayGame", () => {
       status: "won",
       guessCount: 1,
     });
+  });
+
+  test("saves game record with feedbacks", () => {
+    const feedbacks: YojiGuessFeedback[] = [
+      {
+        guess: "一期一会",
+        charFeedbacks: ["correct", "correct", "correct", "correct"],
+      },
+    ];
+    saveTodayGame(
+      "2026-03-01",
+      {
+        guesses: ["一期一会"],
+        feedbacks,
+        status: "won",
+        guessCount: 1,
+      },
+      "beginner",
+    );
+    const history = loadHistory("beginner");
+    expect(history["2026-03-01"]!.feedbacks).toEqual(feedbacks);
   });
 
   test("preserves existing game records within same difficulty", () => {

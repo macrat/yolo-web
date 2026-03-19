@@ -1,0 +1,60 @@
+/* Loading state: centered with spinner animation */
+.loading {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 200px;
+  color: var(--color-text-muted, #888);
+  font-size: 0.95rem;
+}
+
+/* Animated spinner shown before the loading text */
+.spinner {
+  width: 2rem;
+  height: 2rem;
+  border: 3px solid var(--color-border, #ddd);
+  border-top-color: var(--color-text-muted, #888);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Error state: centered column with clear error styling */
+.error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  min-height: 200px;
+  justify-content: center;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.errorMessage {
+  color: var(--color-error, #d32f2f);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.retryButton {
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--color-border, #ccc);
+  background: var(--color-bg-secondary, #f5f5f5);
+  color: var(--color-text, inherit);
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.retryButton:hover {
+  background: var(--color-border, #ddd);
+}
