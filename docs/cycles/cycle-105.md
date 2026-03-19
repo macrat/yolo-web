@@ -47,9 +47,9 @@ IEEE 754浮動小数点演算により、`rating - Math.floor(rating)` の結果
    - 対象: `/mnt/data/yolo-web/src/play/fortune/_components/__tests__/StarRating.test.tsx`
    - 既存テスト（30行目の `rating={3.3}` テスト）が修正後に正しくパスすることを確認
    - 浮動小数点境界値のテストケースを追加:
-     - `rating=2.3`: 半星が表示されること（今回のバグの直接的な再現ケース）
-     - `rating=4.3`: 半星が表示されること（別の `.3` 値での確認）
-     - `rating=1.29`: 半星が表示されないこと（閾値未満の境界確認）
+     - `rating=2.3`: 半星が表示されること（浮動小数点演算で閾値を下回るバグの再現ケース）
+     - `rating=4.3`: 半星が表示されること（浮動小数点演算で閾値を下回るバグの再現ケース）
+     - `rating=1.29`: 半星が表示されないこと（閾値未満の値が正しく半星なしと判定されることの確認。浮動小数点問題とは無関係の通常境界テスト）
    - 追加テストにはバグの原因と意図をコメントで明記する
 
 3. **動作確認**
@@ -111,6 +111,7 @@ IEEE 754浮動小数点演算により、`rating - Math.floor(rating)` の結果
 注意点:
 
 - 既存のQuizMetaを使っている箇所（registry.ts、page.tsx等）に影響がないことを確認する（optionalフィールドなので破壊的変更にはならない）
+- FaqSectionコンポーネントが受け取る `FaqEntry` 型（`@/lib/seo`）と構造的に互換であることを確認済み。TypeScriptの構造的型付けにより型エラーは発生しない
 
 ##### ステップ2: 14個のクイズすべてにFAQデータを作成
 
@@ -131,8 +132,7 @@ FAQの内容方針:
 
 作業の進め方:
 
-- 14個のクイズを1つずつ個別のサブエージェントに委任する（品質・トレーサビリティの確保のため）
-- ただし、効率のため同一カテゴリのクイズは並行して処理してよい
+- knowledge型3個を1サブエージェント、personality型11個を3-4サブエージェント（各3-4個担当）に委任する
 - knowledge型（3種: kanji-level, kotowaza-level, yoji-level）とpersonality型（11種）で分けて進める
 
 14個のクイズ一覧:
@@ -194,12 +194,13 @@ FAQの内容方針:
 
 - page.tsxはサーバーコンポーネントであり、FaqSectionもサーバーコンポーネント、ShareButtonsは"use client"コンポーネントだが、サーバーコンポーネントから呼び出す分には問題ない
 - wrapperのmax-width: 600pxはそのまま維持する（GameLayoutと同じ幅）
+- `generatePlayJsonLd` はFAQPage schemaを出力しないため、FaqSection内のFAQPage JSON-LDと重複しない
 
 ##### ステップ4: テストの追加・更新
 
 対象:
 
-- クイズページ（page.tsx）のレンダリングテスト（新規作成または既存テストへの追加）
+- クイズページ（page.tsx）のレンダリングテスト: `src/app/play/[slug]/__tests__/page.test.tsx` が既に存在するため、既存テストへの追加として行う
 
 テスト内容:
 
@@ -230,9 +231,12 @@ FAQの内容方針:
 2. **ShareButtonsの見出しテキストについて**
    - 選択肢A: 「このクイズが楽しかったらシェア」
    - 選択肢B: 「この診断が楽しかったらシェア」（採用）
-   - 判断理由: 14種中11種がpersonality型（診断）であり、ユーザーの多くは「診断」として認識している。knowledge型にも「診断」という表現は不自然ではない（漢字力「診断」等）。ただし、実装時にquiz.meta.typeに応じて「このクイズ」「この診断」を切り替える方式も検討に値する
+   - 判断理由: 14種中11種がpersonality型（診断）であり、ユーザーの多くは「診断」として認識している。knowledge型にも「診断」という表現は不自然ではない（漢字力「診断」等）。14種すべてのタイトルに「診断」を含むため、type別の切り替えは不要と判断した
 
-3. **FAQデータの管理方法について**
+3. **ShareButtonsのcontentTypeについて**
+   - ShareButtonsのcontentTypeは `"quiz"` で統一する。GA4分析でknowledge/personality別のシェア率を比較する場合はcontentIdからクイズ種別を逆引きできるため、contentTypeを細分化する必要はない
+
+4. **FAQデータの管理方法について**
    - 選択肢A: 各クイズのデータファイル内にインラインで定義（採用）
    - 選択肢B: 別ファイル（faq.tsなど）に全クイズのFAQを集約
    - 判断理由: GameMetaのパターンに倣い、各コンテンツのメタデータとFAQを同じ場所で管理する方が、コンテンツの追加・更新時に見落としが少ない
@@ -260,6 +264,7 @@ FAQの内容方針:
 - [ ] コンポーネントの配置順序がGameLayoutと一貫している
 - [ ] テストが追加され、すべてパスしている
 - [ ] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する
+- [ ] 代表的なクイズページ（knowledge型1種、personality型1種）でスクリーンショットを撮り、FaqSectionとShareButtonsの表示を目視確認する
 
 ## レビュー結果
 
