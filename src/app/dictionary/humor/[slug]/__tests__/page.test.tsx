@@ -73,6 +73,15 @@ vi.mock("@/humor-dict/_components/RecordPlay", () => ({
   default: () => null,
 }));
 
+// Mock EntryRatingButton
+vi.mock("@/humor-dict/_components/EntryRatingButton", () => ({
+  default: ({ slug }: { slug: string }) => (
+    <div data-testid="entry-rating-button" data-slug={slug}>
+      EntryRatingButton
+    </div>
+  ),
+}));
+
 describe("HumorDictEntryPage", () => {
   async function renderPage(slug: string) {
     const { default: Page } = await import("../page");
@@ -117,6 +126,24 @@ describe("HumorDictEntryPage", () => {
     const title = shareButtons.getAttribute("data-title") ?? "";
     expect(title).toContain("朝");
     expect(title).toContain("yolos.net");
+  });
+
+  test("renders EntryRatingButton with correct slug", async () => {
+    await renderPage("morning");
+    const ratingButton = screen.getByTestId("entry-rating-button");
+    expect(ratingButton).toBeDefined();
+    expect(ratingButton.getAttribute("data-slug")).toBe("morning");
+  });
+
+  test("EntryRatingButton appears before ShareButtons in DOM order", async () => {
+    await renderPage("morning");
+    const ratingButton = screen.getByTestId("entry-rating-button");
+    const shareButtons = screen.getByTestId("share-buttons");
+    // compareDocumentPosition: DOCUMENT_POSITION_FOLLOWING = 4 means ratingButton comes before shareButtons
+    expect(
+      ratingButton.compareDocumentPosition(shareButtons) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
   });
 
   test("throws notFound for unknown slug", async () => {

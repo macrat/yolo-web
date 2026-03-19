@@ -1,0 +1,101 @@
+.wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem 0;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  /*
+   * amber-950 (#451a03) on amber-300 (#fbbf24) achieves ~10:1 contrast ratio,
+   * well above WCAG AA requirement of 4.5:1.
+   */
+  color: #451a03;
+  min-height: 44px;
+  min-width: 44px;
+  background-color: #fbbf24;
+}
+
+/* Only apply hover opacity to non-rated buttons to avoid confusing feedback */
+.button:not(.rated):hover {
+  opacity: 0.85;
+}
+
+/* Rated state: lighter amber to signal the action was recorded */
+.rated {
+  background-color: #fde68a;
+  /*
+   * amber-950 (#451a03) on amber-200 (#fde68a) achieves ~12:1 contrast ratio,
+   * well above WCAG AA requirement of 4.5:1.
+   */
+  color: #451a03;
+  cursor: default;
+}
+
+.emoji {
+  font-size: 1.25rem;
+  /* Prevent layout shift when animation triggers */
+  display: inline-block;
+}
+
+/*
+ * The pop animation is intentionally absent by default.
+ * It is only applied when the user has not requested reduced motion,
+ * keeping the experience accessible.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .animating {
+    animation: reactionPop 300ms ease-out forwards;
+  }
+}
+
+@keyframes reactionPop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.4);
+  }
+  65% {
+    transform: scale(0.9);
+  }
+  85% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Dark mode: keep sufficient contrast against a dark background */
+@media (prefers-color-scheme: dark) {
+  .button {
+    background-color: #b45309;
+    /* White text has sufficient contrast against dark amber background */
+    color: white;
+  }
+
+  .rated {
+    background-color: #92400e;
+    color: white;
+  }
+}
+
+:global([data-theme="dark"]) .button {
+  background-color: #b45309;
+  color: white;
+}
+
+:global([data-theme="dark"]) .rated {
+  background-color: #92400e;
+  color: white;
+}

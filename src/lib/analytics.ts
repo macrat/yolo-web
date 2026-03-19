@@ -78,3 +78,8 @@ export function trackShare(
     item_id: itemId,
   });
 }
+
+/** Send a content_rating event when a user rates content as interesting/funny. */
+export function trackContentRating(): void {
+  sendGaEvent("content_rating");
+}
