@@ -41,5 +41,8 @@ export interface NakamawakeGameHistory {
     solvedGroups: number[]; // difficulty levels in order solved
     mistakes: number;
     status: "won" | "lost" | "playing";
+    // Optional for backward compatibility with existing localStorage data
+    // that was saved before guessHistory persistence was implemented
+    guessHistory?: { words: string[]; correct: boolean }[];
   };
 }

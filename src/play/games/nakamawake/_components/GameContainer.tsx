@@ -99,7 +99,9 @@ export default function GameContainer() {
         selectedWords: [],
         // Use sorted order for SSR/CSR consistency; shuffle happens in useEffect
         remainingWords: remainingWords.sort(),
-        guessHistory: [],
+        // Restore guessHistory from saved data; fall back to [] for legacy records
+        // that predate guessHistory persistence
+        guessHistory: saved.guessHistory ?? [],
       };
     }
 
@@ -134,19 +136,28 @@ export default function GameContainer() {
   const [stats, setStats] = useState<NakamawakeGameStats>(() => loadStats());
   const [showResult, setShowResult] = useState(false);
   const [showStats, setShowStats] = useState(false);
-  const [showHowToPlay, setShowHowToPlay] = useState(() => {
-    if (typeof window === "undefined") return false;
+  // Initialize to false for SSR/CSR consistency.
+  // Lazy initializer that reads localStorage would return true on first client
+  // visit but false during SSR (window undefined), causing a hydration mismatch.
+  // First-visit detection is deferred to useEffect so both environments start
+  // with the same false value.
+  const [showHowToPlay, setShowHowToPlay] = useState(false);
+
+  // Detect first visit on the client after hydration to avoid SSR/CSR mismatch.
+  // localStorage write must precede setState to prevent React StrictMode from
+  // double-showing the modal when the effect is re-invoked in development.
+  useEffect(() => {
     try {
       const visited = window.localStorage.getItem(FIRST_VISIT_KEY);
       if (!visited) {
         window.localStorage.setItem(FIRST_VISIT_KEY, "1");
-        return true;
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- One-time client-side initialization after hydration
+        setShowHowToPlay(true);
       }
     } catch {
       // Silently fail if localStorage unavailable
     }
-    return false;
-  });
+  }, []);
 
   const [feedbackMessage, setFeedbackMessage] = useState("");
 
@@ -242,11 +253,12 @@ export default function GameContainer() {
       setFeedbackMessage("\u6B63\u89E3!");
       setTimeout(() => setFeedbackMessage(""), 1500);
 
-      // Save progress
+      // Save progress including guessHistory so share text survives page reload
       saveTodayGame(todayStr, {
         solvedGroups: newSolvedGroups.map((g) => g.difficulty),
         mistakes: gameState.mistakes,
         status: newStatus,
+        guessHistory: newGuessHistory,
       });
 
       // Update stats on win
@@ -311,11 +323,13 @@ export default function GameContainer() {
       setTimeout(() => setFeedbackMessage(""), 2000);
 
       // Persist game state on every mistake (including playing state)
-      // so that progress survives page reload
+      // so that progress survives page reload. Include guessHistory so
+      // share text is correct after reload.
       saveTodayGame(todayStr, {
         solvedGroups: gameState.solvedGroups.map((g) => g.difficulty),
         mistakes: newMistakes,
         status: newStatus,
+        guessHistory: newGuessHistory,
       });
 
       // Update stats on loss
