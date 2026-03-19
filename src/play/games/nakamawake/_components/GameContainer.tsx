@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect, useMemo, useRef } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useAchievements } from "@/lib/achievements/useAchievements";
 import { trackContentEnd } from "@/lib/analytics";
 import type {
@@ -8,7 +8,6 @@ import type {
   NakamawakeGameStats,
   NakamawakeGroup,
   NakamawakePuzzle,
-  NakamawakeScheduleEntry,
 } from "@/play/games/nakamawake/_lib/types";
 import {
   checkGuess,
@@ -16,10 +15,7 @@ import {
   shuffleArray,
   getAllWords,
 } from "@/play/games/nakamawake/_lib/engine";
-import {
-  getTodaysPuzzle,
-  formatDateJST,
-} from "@/play/games/nakamawake/_lib/daily";
+import { formatDateJST } from "@/play/games/nakamawake/_lib/daily";
 import {
   loadStats,
   saveStats,
@@ -27,8 +23,6 @@ import {
   loadTodayGame,
   saveTodayGame,
 } from "@/play/games/nakamawake/_lib/storage";
-import puzzleDataJson from "@/play/games/nakamawake/data/nakamawake-data.json";
-import scheduleJson from "@/play/games/nakamawake/data/nakamawake-schedule.json";
 import GameHeader from "./GameHeader";
 import WordGrid from "./WordGrid";
 import SolvedGroups from "./SolvedGroups";
@@ -41,33 +35,27 @@ import styles from "./GameContainer.module.css";
 const MAX_MISTAKES = 4;
 const FIRST_VISIT_KEY = "nakamawake-first-visit";
 
+interface GameContainerProps {
+  puzzle: NakamawakePuzzle;
+  puzzleNumber: number;
+  /** Today's date in JST as "YYYY-MM-DD", generated server-side. */
+  todayStr: string;
+  /** Today's date formatted in Japanese, e.g. "2026年3月19日", generated server-side. */
+  dateDisplayString: string;
+}
+
 /**
  * Top-level client component that orchestrates the entire Nakamawake game state.
- * Loads puzzle data, determines today's puzzle, manages selections and guesses,
- * handles win/loss, and persists state to localStorage.
+ * Receives today's puzzle data as props from the Server Component (page.tsx),
+ * manages selections and guesses, handles win/loss, and persists state to localStorage.
  */
-export default function GameContainer() {
+export default function GameContainer({
+  puzzle,
+  puzzleNumber,
+  todayStr,
+  dateDisplayString,
+}: GameContainerProps) {
   const { recordPlay } = useAchievements();
-
-  const puzzleData = puzzleDataJson as NakamawakePuzzle[];
-  const schedule = scheduleJson as NakamawakeScheduleEntry[];
-
-  const todaysPuzzle = useMemo(
-    () => getTodaysPuzzle(puzzleData, schedule),
-    [puzzleData, schedule],
-  );
-
-  const todayStr = useMemo(() => formatDateJST(new Date()), []);
-
-  const dateDisplayString = useMemo(() => {
-    const formatter = new Intl.DateTimeFormat("ja-JP", {
-      timeZone: "Asia/Tokyo",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-    return formatter.format(new Date());
-  }, []);
 
   // Track whether client-side shuffle has completed to prevent
   // showing the deterministic sort order before shuffle.
@@ -80,19 +68,17 @@ export default function GameContainer() {
       // Rebuild state from saved history
       const solvedGroups: NakamawakeGroup[] = [];
       for (const diff of saved.solvedGroups) {
-        const group = todaysPuzzle.puzzle.groups.find(
-          (g) => g.difficulty === diff,
-        );
+        const group = puzzle.groups.find((g) => g.difficulty === diff);
         if (group) solvedGroups.push(group);
       }
       const solvedWords = new Set(solvedGroups.flatMap((g) => g.words));
-      const allWords = getAllWords(todaysPuzzle.puzzle);
+      const allWords = getAllWords(puzzle);
       const remainingWords = allWords.filter((w) => !solvedWords.has(w));
 
       return {
         puzzleDate: todayStr,
-        puzzleNumber: todaysPuzzle.puzzleNumber,
-        puzzle: todaysPuzzle.puzzle,
+        puzzleNumber,
+        puzzle,
         solvedGroups,
         mistakes: saved.mistakes,
         status: saved.status,
@@ -107,14 +93,14 @@ export default function GameContainer() {
 
     return {
       puzzleDate: todayStr,
-      puzzleNumber: todaysPuzzle.puzzleNumber,
-      puzzle: todaysPuzzle.puzzle,
+      puzzleNumber,
+      puzzle,
       solvedGroups: [],
       mistakes: 0,
       status: "playing",
       selectedWords: [],
       // Use sorted order for SSR/CSR consistency; shuffle happens in useEffect
-      remainingWords: getAllWords(todaysPuzzle.puzzle).sort(),
+      remainingWords: getAllWords(puzzle).sort(),
       guessHistory: [],
     };
   });
