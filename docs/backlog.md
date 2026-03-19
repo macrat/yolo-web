@@ -5,7 +5,6 @@
 | ID    | Title                                          | Priority | Target Cycle | Notes                                                                                                                                                                                               |
 | ----- | ---------------------------------------------- | -------- | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | B-165 | サイト全面価値向上プロジェクト（フェーズ1〜5） | P0       | 64〜         | 作業計画書: docs/site-value-improvement-plan.md。AdSense「有用性の低いコンテンツ」却下対応。**備忘: 各フェーズ完了時にsite-value-improvement-plan.mdのステータス（セクション5）を必ず更新すること** |
-| B-215 | yoji-kimeruのサーバーサイドAPI化               | P2       | 110          | B-193検討結果に基づく。kanji-kanaruと同様のAPI方式に移行。GET /api/yoji-kimeru/puzzle + POST /api/yoji-kimeru/evaluate。詳細: docs/research/2026-03-19-game-data-download-optimization.md           |
 
 ## Queued (すぐに着手できる)
 
@@ -59,10 +58,10 @@
 
 | ID    | Title                                                      | Completed Cycle | Notes                                                                                                                                                             |
 | ----- | ---------------------------------------------------------- | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| B-215 | yoji-kimeruのサーバーサイドAPI化                           | 110             | GET /api/yoji-kimeru/puzzle + POST /api/yoji-kimeru/evaluate新設。クライアントバンドル約25KB(gzip)削減、アンチチート設計実現                                      |
 | B-217 | ユーモア辞書への「おもしろかった」評価ボタン実装           | 109             | EntryRatingButton.tsx新設、rating-storage.ts新設、analytics.tsにtrackContentRating追加。WCAG AA準拠のコントラスト比、prefers-reduced-motion対応、ダークモード対応 |
 | B-214 | nakamawake/irodoriのServer Componentデータ選択化           | 108             | Server Componentで当日データを選択しpropsで渡す方式に変更。クライアントバンドル合計約72KB raw（約20KB gzip）削減                                                  |
 | B-193 | ゲーム・クイズのサーバーサイドAPI横展開検討                | 107             | 4コンテンツ（yoji-kimeru, nakamawake, irodori, character-personality）の不要データダウンロード削減を検討。実装計画策定済み。実装用バックログ: B-214, B-215, B-216 |
 | B-200 | コンテンツ評価ボタンの実現性検討                           | 107             | ユーモア辞書への「おもしろかった」ボタンの実現性確認・実装方針策定。実装用バックログ: B-217                                                                       |
 | B-152 | ゲーム関連その他改善（ナカマワケ状態管理・一覧日付固定化） | 106             | guessHistory永続化(#11+#15)、showHowToPlay SSR/CSR不整合修正(#26)、getDayOfYear JST固定化(#29)。B-165フェーズ3-D残タスク完了                                      |
 | B-212 | クイズ/診断ページへのFaqSection・ShareButtons追加          | 105             | QuizMetaにfaqフィールド追加、14クイズにFAQデータ作成、FaqSection・ShareButtons統合                                                                                |
-| B-210 | StarRating半星表示の浮動小数点問題修正                     | 105             | Math.roundで浮動小数点誤差を除去してから閾値と比較する方式に修正                                                                                                  |
