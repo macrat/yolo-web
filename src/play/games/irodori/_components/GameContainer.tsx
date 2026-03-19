@@ -4,14 +4,12 @@ import { useAchievements } from "@/lib/achievements/useAchievements";
 import { trackContentEnd } from "@/lib/analytics";
 import { useState, useCallback, useEffect, useMemo, useRef } from "react";
 import type {
+  IrodoriColor,
   IrodoriGameState,
   IrodoriGameStats,
   IrodoriRound,
-  IrodoriScheduleEntry,
 } from "@/play/games/irodori/_lib/types";
-import type { TraditionalColor } from "@/play/games/irodori/_lib/daily";
 import {
-  getTodaysPuzzle,
   formatDateJST,
   getInitialSliderValues,
   ROUNDS_PER_GAME,
@@ -28,8 +26,6 @@ import {
   loadTodayGame,
   saveTodayGame,
 } from "@/play/games/irodori/_lib/storage";
-import traditionalColorsJson from "@/data/traditional-colors.json";
-import scheduleJson from "@/play/games/irodori/data/irodori-schedule.json";
 import GameHeader from "./GameHeader";
 import ProgressBar from "./ProgressBar";
 import ColorTarget from "./ColorTarget";
@@ -42,30 +38,27 @@ import styles from "./GameContainer.module.css";
 
 const FIRST_VISIT_KEY = "irodori-first-visit";
 
+interface GameContainerProps {
+  colors: IrodoriColor[];
+  puzzleNumber: number;
+  /** Today's date string in "YYYY-MM-DD" format (JST), generated server-side. */
+  todayStr: string;
+  /** Human-readable date string for display (e.g. "2026年3月19日"), generated server-side. */
+  dateDisplayString: string;
+}
+
 /**
  * Top-level client component for the Irodori color challenge game.
+ * Receives today's puzzle data from the Server Component (page.tsx) via props,
+ * so only the current day's colors are included in the RSC payload.
  */
-export default function GameContainer() {
+export default function GameContainer({
+  colors,
+  puzzleNumber,
+  todayStr,
+  dateDisplayString,
+}: GameContainerProps) {
   const { recordPlay } = useAchievements();
-  const traditionalColors = traditionalColorsJson as TraditionalColor[];
-  const schedule = scheduleJson as IrodoriScheduleEntry[];
-
-  const todaysPuzzle = useMemo(
-    () => getTodaysPuzzle(traditionalColors, schedule),
-    [traditionalColors, schedule],
-  );
-
-  const todayStr = useMemo(() => formatDateJST(new Date()), []);
-
-  const dateDisplayString = useMemo(() => {
-    const formatter = new Intl.DateTimeFormat("ja-JP", {
-      timeZone: "Asia/Tokyo",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-    return formatter.format(new Date());
-  }, []);
 
   const initialSliderValues = useMemo(
     () => getInitialSliderValues(todayStr, ROUNDS_PER_GAME),
@@ -85,7 +78,7 @@ export default function GameContainer() {
   const [gameState, setGameState] = useState<IrodoriGameState>(() => {
     const saved = loadTodayGame(todayStr);
     if (saved) {
-      const rounds: IrodoriRound[] = todaysPuzzle.colors.map((color, i) => ({
+      const rounds: IrodoriRound[] = colors.map((color, i) => ({
         target: color,
         answer: null, // We don't store answers in history
         deltaE: null,
@@ -95,7 +88,7 @@ export default function GameContainer() {
       if (saved.status === "completed") {
         return {
           puzzleDate: todayStr,
-          puzzleNumber: todaysPuzzle.puzzleNumber,
+          puzzleNumber,
           rounds,
           currentRound: ROUNDS_PER_GAME,
           status: "completed",
@@ -106,7 +99,7 @@ export default function GameContainer() {
       // status === "playing": resume from saved round
       return {
         puzzleDate: todayStr,
-        puzzleNumber: todaysPuzzle.puzzleNumber,
+        puzzleNumber,
         rounds,
         currentRound: saved.currentRound,
         status: "playing",
@@ -115,7 +108,7 @@ export default function GameContainer() {
     }
 
     // New game
-    const rounds: IrodoriRound[] = todaysPuzzle.colors.map((color) => ({
+    const rounds: IrodoriRound[] = colors.map((color) => ({
       target: color,
       answer: null,
       deltaE: null,
@@ -124,7 +117,7 @@ export default function GameContainer() {
 
     return {
       puzzleDate: todayStr,
-      puzzleNumber: todaysPuzzle.puzzleNumber,
+      puzzleNumber,
       rounds,
       currentRound: 0,
       status: "playing",
