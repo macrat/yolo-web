@@ -40,7 +40,7 @@ export interface ToolMeta {
 
   /**
    * FAQ: Q&A形式の配列
-   * 将来B-024でJSON-LD（FAQPage schema）化を前提とした構造。
+   * B-024で実装済みのFAQPage JSON-LDのデータソースである。
    * answerはプレーンテキストのみ（HTML・特殊記法不可）。
    */
   faq?: Array<{

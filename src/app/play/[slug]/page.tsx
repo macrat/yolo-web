@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Breadcrumb from "@/components/common/Breadcrumb";
 import TrustLevelBadge from "@/components/common/TrustLevelBadge";
 import QuizContainer from "@/play/quiz/_components/QuizContainer";
+import RelatedQuizzes from "@/play/quiz/_components/RelatedQuizzes";
 import { quizBySlug, getAllQuizSlugs } from "@/play/quiz/registry";
 import { generatePlayMetadata, generatePlayJsonLd } from "@/play/seo";
 import { safeJsonLdStringify } from "@/lib/seo";
@@ -68,6 +69,7 @@ export default async function PlayQuizPage({ params, searchParams }: Props) {
         note={quiz.meta.trustNote}
       />
       <QuizContainer quiz={quiz} referrerTypeId={refParam} />
+      {meta && <RelatedQuizzes currentSlug={slug} category={meta.category} />}
     </div>
   );
 }

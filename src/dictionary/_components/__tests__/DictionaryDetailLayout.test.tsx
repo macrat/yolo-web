@@ -179,8 +179,8 @@ test("DictionaryDetailLayout outputs single JSON-LD script tag for object", () =
   const scripts = container.querySelectorAll(
     'script[type="application/ld+json"]',
   );
-  // 1 for the jsonLd prop + 1 from Breadcrumb component = 2 total
-  expect(scripts.length).toBe(2);
+  // 1 for the jsonLd prop + 1 from Breadcrumb component + 1 from FaqSection (FAQPage JSON-LD) = 3 total
+  expect(scripts.length).toBe(3);
   // The first script should contain the DefinedTerm JSON-LD
   expect(scripts[0].textContent).toContain("DefinedTerm");
 });
@@ -204,8 +204,8 @@ test("DictionaryDetailLayout outputs multiple JSON-LD script tags for array", ()
   const scripts = container.querySelectorAll(
     'script[type="application/ld+json"]',
   );
-  // 2 for the jsonLd array + 1 from Breadcrumb component = 3 total
-  expect(scripts.length).toBe(3);
+  // 2 for the jsonLd array + 1 from Breadcrumb component + 1 from FaqSection (FAQPage JSON-LD) = 4 total
+  expect(scripts.length).toBe(4);
   expect(scripts[0].textContent).toContain("DefinedTerm");
   expect(scripts[1].textContent).toContain("WebPage");
 });
