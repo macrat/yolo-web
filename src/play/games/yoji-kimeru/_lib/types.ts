@@ -41,7 +41,7 @@ export interface YojiGuessFeedback {
 export interface YojiGameState {
   puzzleDate: string; // "YYYY-MM-DD"
   puzzleNumber: number;
-  targetYoji: YojiEntry;
+  targetYoji: YojiEntry | null; // ゲーム中はnull、終了時のみセット
   guesses: YojiGuessFeedback[];
   status: "playing" | "won" | "lost";
 }
@@ -58,6 +58,7 @@ export interface YojiGameStats {
 export interface YojiGameHistory {
   [date: string]: {
     guesses: string[]; // 各推測の4文字文字列
+    feedbacks?: YojiGuessFeedback[];
     status: "won" | "lost" | "playing";
     guessCount: number;
   };
@@ -69,4 +70,20 @@ export const MAX_GUESSES = 6;
 export interface YojiPuzzleScheduleEntry {
   date: string;
   yojiIndex: number;
+}
+
+/** Response from GET /api/yoji-kimeru/puzzle */
+export interface PuzzleResponse {
+  puzzleNumber: number;
+  reading: string;
+  category: YojiCategory;
+  origin: YojiOrigin;
+  difficulty: 1 | 2 | 3;
+}
+
+/** Response from POST /api/yoji-kimeru/evaluate */
+export interface EvaluateResponse {
+  feedback: YojiGuessFeedback;
+  isCorrect: boolean;
+  targetYoji?: YojiEntry; // ゲーム終了時のみ含まれる
 }

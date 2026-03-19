@@ -148,6 +148,7 @@ export function loadHistory(difficulty: Difficulty): YojiGameHistory {
 
 /**
  * Save game history to localStorage for a given difficulty.
+ * Includes feedbacks array when available, enabling restore without API calls.
  */
 export function saveHistory(
   history: YojiGameHistory,
@@ -166,19 +167,28 @@ export function saveHistory(
 
 /**
  * Load today's game record from history for a given difficulty.
- * Returns null if no game was played today.
+ * Returns null if no game was played today or if the saved data lacks
+ * feedbacks (pre-API format). Old saves without feedbacks cannot be
+ * restored without re-evaluation, so they are discarded to keep the
+ * code simple and consistent with kanji-kanaru's approach.
  *
- * Includes migration for old data: if status is "lost" but guessCount < MAX_GUESSES,
- * the game was actually in progress (old code saved "lost" as a placeholder).
- * In that case, status is corrected to "playing".
+ * For data with feedbacks: applies lost->playing migration when
+ * guessCount < MAX_GUESSES (old code saved "lost" as a placeholder
+ * for in-progress games).
  */
 export function loadTodayGame(
   date: string,
   difficulty: Difficulty,
 ): YojiGameHistory[string] | null {
   const history = loadHistory(difficulty);
-  const entry = history[date] ?? null;
+  const entry = history[date];
   if (!entry) return null;
+
+  // Discard old saves that lack feedbacks (pre-API format).
+  // These cannot be restored without server-side re-evaluation.
+  if (!entry.feedbacks || entry.feedbacks.length === 0) {
+    return null;
+  }
 
   // Migrate old data: "lost" with fewer guesses than MAX_GUESSES was a placeholder
   if (entry.status === "lost" && entry.guessCount < MAX_GUESSES) {
