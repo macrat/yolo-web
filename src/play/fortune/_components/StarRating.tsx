@@ -35,7 +35,10 @@ export default function StarRating({
   variant = "gold",
 }: StarRatingProps) {
   const fullStars = Math.floor(rating);
-  const hasHalf = rating - fullStars >= HALF_STAR_THRESHOLD;
+  // 浮動小数点誤差を回避するため小数第1位で丸めてから閾値と比較する
+  // 例: 2.3 - 2 = 0.29999999999999982 (誤差) → Math.round(...*10)/10 = 0.3 (正しい値)
+  const hasHalf =
+    Math.round((rating - fullStars) * 10) / 10 >= HALF_STAR_THRESHOLD;
   const emptyStars = 5 - fullStars - (hasHalf ? 1 : 0);
 
   return (

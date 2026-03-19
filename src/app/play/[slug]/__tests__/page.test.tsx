@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { getAllQuizSlugs } from "@/play/quiz/registry";
+import { quizBySlug } from "@/play/quiz/registry";
 import { generateStaticParams, generateMetadata } from "../page";
 
 describe("play/[slug]/page", () => {
@@ -27,6 +28,25 @@ describe("play/[slug]/page", () => {
       expect(slugs).not.toContain("kanji-kanaru");
       expect(slugs).not.toContain("nakamawake");
       expect(slugs).not.toContain("yoji-kimeru");
+    });
+  });
+
+  describe("FaqSection and ShareButtons integration", () => {
+    it("quiz data has faq field for FaqSection to render", () => {
+      // FaqSection relies on quiz.meta.faq. Verify at least one quiz has faq data.
+      const quiz = quizBySlug.get("kanji-level");
+      expect(quiz).toBeDefined();
+      expect(quiz!.meta.faq).toBeDefined();
+      expect(quiz!.meta.faq!.length).toBeGreaterThan(0);
+    });
+
+    it("FaqSection and ShareButtons are importable from expected paths", async () => {
+      // Verify the components exist and are importable (used by page.tsx)
+      const faqModule = await import("@/components/common/FaqSection");
+      expect(faqModule.default).toBeDefined();
+
+      const shareModule = await import("@/components/common/ShareButtons");
+      expect(shareModule.default).toBeDefined();
     });
   });
 

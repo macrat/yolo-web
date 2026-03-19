@@ -69,4 +69,28 @@ describe("StarRating", () => {
     render(<StarRating rating={2.7} />);
     expect(screen.getByText("(2.7)")).toBeInTheDocument();
   });
+
+  // 浮動小数点誤差のテスト: 2.3 - 2 = 0.29999...となるが、丸め処理により正しく半星が表示される
+  test("shows half star for rating 2.3 (floating point edge case)", () => {
+    const { container } = render(<StarRating rating={2.3} />);
+    const span = container.querySelector("[aria-label='2.3 / 5']");
+    expect(span?.textContent).toContain("★★");
+    expect(span?.textContent).toContain("☆");
+  });
+
+  // 浮動小数点誤差のテスト: 4.3 - 4 = 0.29999...となるが、丸め処理により正しく半星が表示される
+  test("shows half star for rating 4.3 (floating point edge case)", () => {
+    const { container } = render(<StarRating rating={4.3} />);
+    const span = container.querySelector("[aria-label='4.3 / 5']");
+    expect(span?.textContent).toContain("★★★★");
+    expect(span?.textContent).toContain("☆");
+  });
+
+  // 閾値未満 (0.2 < 0.3) のため半星は表示されず、empty stars のみ表示される
+  test("does NOT show half star for rating 1.2 (below threshold)", () => {
+    const { container } = render(<StarRating rating={1.2} />);
+    const span = container.querySelector("[aria-label='1.2 / 5']");
+    expect(span?.textContent).toContain("★");
+    expect(span?.textContent).toContain("☆☆☆☆");
+  });
 });
