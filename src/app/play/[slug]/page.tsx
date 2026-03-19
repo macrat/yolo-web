@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Breadcrumb from "@/components/common/Breadcrumb";
+import FaqSection from "@/components/common/FaqSection";
+import ShareButtons from "@/components/common/ShareButtons";
 import TrustLevelBadge from "@/components/common/TrustLevelBadge";
 import QuizContainer from "@/play/quiz/_components/QuizContainer";
 import RelatedQuizzes from "@/play/quiz/_components/RelatedQuizzes";
@@ -69,6 +71,19 @@ export default async function PlayQuizPage({ params, searchParams }: Props) {
         note={quiz.meta.trustNote}
       />
       <QuizContainer quiz={quiz} referrerTypeId={refParam} />
+      <FaqSection faq={quiz.meta.faq} />
+      <section className={styles.shareSection}>
+        <h2 className={styles.shareSectionTitle}>
+          この診断が楽しかったらシェア
+        </h2>
+        <ShareButtons
+          url={"/play/" + slug}
+          title={quiz.meta.title}
+          sns={["x", "line", "hatena", "copy"]}
+          contentType="quiz"
+          contentId={slug}
+        />
+      </section>
       {meta && <RelatedQuizzes currentSlug={slug} category={meta.category} />}
     </div>
   );

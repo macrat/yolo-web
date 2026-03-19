@@ -67,6 +67,16 @@ export interface QuizMeta {
   trustLevel: TrustLevel;
   /** Optional supplementary note about trust level details */
   trustNote?: string;
+
+  /**
+   * FAQ: Q&A形式の配列
+   * B-024で実装済みのFAQPage JSON-LDのデータソースである。
+   * answerはプレーンテキストのみ（HTML・特殊記法不可）。
+   */
+  faq?: Array<{
+    question: string;
+    answer: string;
+  }>;
 }
 
 /** Complete quiz definition including questions and results */
