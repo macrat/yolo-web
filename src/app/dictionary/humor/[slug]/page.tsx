@@ -11,6 +11,7 @@ import {
 } from "@/lib/seo";
 import { getAllSlugs, getEntryBySlug } from "@/humor-dict/data";
 import RecordPlay from "@/humor-dict/_components/RecordPlay";
+import EntryRatingButton from "@/humor-dict/_components/EntryRatingButton";
 import styles from "./page.module.css";
 
 export function generateStaticParams(): Array<{ slug: string }> {
@@ -107,6 +108,9 @@ export default async function HumorDictEntryPage({
             </ul>
           </section>
         )}
+
+        {/* 評価ボタン */}
+        <EntryRatingButton slug={entry.slug} />
 
         {/* SNSシェアボタン */}
         <ShareButtons
