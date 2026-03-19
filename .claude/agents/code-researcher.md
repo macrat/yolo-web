@@ -5,7 +5,8 @@ description: |
   コードについての理解やデータの集計など、過去のサイクルやgit logの調査などが必要なときは必ずこのエージェントを使うこと。
   最大限の効果を得るために、1つの話題につき1人のサブエージェントをアサインすること。複雑な調査をするときは複数のサブエージェントに分担させる。
   また、web-researcherによるベストプラクティスの調査も効果的に併用すること。
-tools: Read, Glob, Grep, Bash, WebFetch, WebSearch
+tools: Read, Write(/tmp/**), Write(/docs/research/**), Glob, Grep, Bash, WebFetch, WebSearch
+permissionMode: dontAsk
 model: sonnet
 ---
 

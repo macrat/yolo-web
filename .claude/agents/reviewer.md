@@ -4,7 +4,8 @@ description: |
   plannerが立てた計画やbuilderが実施した作業のレビューを担当するエージェント。
   すべての作業は必ずこのエージェントのレビューを受ける必要がある。
   レビューの品質を高めるために、1つのタスクにつき1人のreviewerをアサインすること。複雑なタスクをレビューするときは複数のreviewerに分担させること。
-tools: Read, Glob, Grep, Bash, WebFetch, WebSearch
+tools: Read, Write(/tmp/**), Write(/docs/cycles/**), Glob, Grep, Bash, WebFetch, WebSearch
+permissionMode: dontAsk
 model: opus
 ---
 
