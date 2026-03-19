@@ -1,3 +1,7 @@
+/* NOTE: このファイルは RelatedGames.module.css と同一のスタイル定義です。
+ * 将来的には共通のモジュールに統合することを検討してください。
+ * see: src/play/games/_components/RelatedGames.module.css
+ */
 .related {
   margin-top: 2rem;
   padding-top: 1.5rem;

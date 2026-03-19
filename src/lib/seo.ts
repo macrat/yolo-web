@@ -511,3 +511,31 @@ export function generateHumorDictJsonLd(entry: HumorDictEntryForSeo): object {
 export function safeJsonLdStringify(data: object): string {
   return JSON.stringify(data).replace(/</g, "\\u003c");
 }
+
+// -- FAQ SEO helpers --
+
+export interface FaqEntry {
+  question: string;
+  answer: string;
+}
+
+/**
+ * FAQPage JSON-LDオブジェクトを生成する。
+ *
+ * B-024で実装。FaqSectionコンポーネント経由で全FAQページに自動付与される。
+ * Schema.org FAQPage型に準拠し、各エントリをQuestion/Answer型にマッピングする。
+ */
+export function generateFaqPageJsonLd(faq: FaqEntry[]): object {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faq.map((entry) => ({
+      "@type": "Question",
+      name: entry.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: entry.answer,
+      },
+    })),
+  };
+}

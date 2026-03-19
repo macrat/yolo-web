@@ -13,6 +13,7 @@ import {
   generateYojiPageMetadata,
   generateColorCategoryMetadata,
   generateCheatsheetMetadata,
+  generateFaqPageJsonLd,
   safeJsonLdStringify,
 } from "../seo";
 
@@ -731,5 +732,66 @@ describe("safeJsonLdStringify", () => {
 
   test("空オブジェクトを正しく処理する", () => {
     expect(safeJsonLdStringify({})).toBe("{}");
+  });
+});
+
+describe("generateFaqPageJsonLd", () => {
+  const sampleFaq = [
+    {
+      question: "ひらがな1文字は何バイト？",
+      answer: "UTF-8では3バイトです。ASCII文字は1バイト、絵文字は4バイトです。",
+    },
+    {
+      question: "改行コードは文字数に含まれる？",
+      answer:
+        "はい。改行コードも1文字としてカウントされます。行数は改行の数に基づいて計算しています。",
+    },
+  ];
+
+  test("@typeがFAQPageである", () => {
+    const result = generateFaqPageJsonLd(sampleFaq) as Record<string, unknown>;
+    expect(result["@context"]).toBe("https://schema.org");
+    expect(result["@type"]).toBe("FAQPage");
+  });
+
+  test("mainEntityがQuestion配列である", () => {
+    const result = generateFaqPageJsonLd(sampleFaq) as Record<string, unknown>;
+    const entities = result.mainEntity as Array<Record<string, unknown>>;
+    expect(entities).toHaveLength(2);
+    expect(entities[0]["@type"]).toBe("Question");
+    expect(entities[1]["@type"]).toBe("Question");
+  });
+
+  test("各QuestionにnameとacceptedAnswerが含まれる", () => {
+    const result = generateFaqPageJsonLd(sampleFaq) as Record<string, unknown>;
+    const entities = result.mainEntity as Array<Record<string, unknown>>;
+
+    expect(entities[0].name).toBe("ひらがな1文字は何バイト？");
+    const answer0 = entities[0].acceptedAnswer as Record<string, unknown>;
+    expect(answer0["@type"]).toBe("Answer");
+    expect(answer0.text).toBe(
+      "UTF-8では3バイトです。ASCII文字は1バイト、絵文字は4バイトです。",
+    );
+
+    expect(entities[1].name).toBe("改行コードは文字数に含まれる？");
+    const answer1 = entities[1].acceptedAnswer as Record<string, unknown>;
+    expect(answer1["@type"]).toBe("Answer");
+    expect(answer1.text).toBe(
+      "はい。改行コードも1文字としてカウントされます。行数は改行の数に基づいて計算しています。",
+    );
+  });
+
+  test("FAQ項目が1件でも正しくJSON-LDを生成する", () => {
+    const singleFaq = [{ question: "質問1", answer: "回答1" }];
+    const result = generateFaqPageJsonLd(singleFaq) as Record<string, unknown>;
+    const entities = result.mainEntity as Array<Record<string, unknown>>;
+    expect(entities).toHaveLength(1);
+    expect(entities[0].name).toBe("質問1");
+  });
+
+  test("空配列でも正しくJSON-LDを生成する", () => {
+    const result = generateFaqPageJsonLd([]) as Record<string, unknown>;
+    const entities = result.mainEntity as Array<Record<string, unknown>>;
+    expect(entities).toHaveLength(0);
   });
 });

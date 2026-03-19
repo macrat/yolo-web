@@ -52,7 +52,7 @@ export default async function BlogPostPage({ params }: Props) {
 
   const jsonLd = generateBlogPostJsonLd({
     ...post,
-    image: `${BASE_URL}/opengraph-image`,
+    image: `${BASE_URL}/blog/${slug}/opengraph-image`,
   });
 
   return (

@@ -196,6 +196,6 @@ DictionaryMeta型の `slug` フィールドは `string` 型として定義して
 
 ソースコードは[GitHubリポジトリ](https://github.com/macrat/yolo-web)で公開しています。
 
-- [GameLayout.tsx（GitHub）](https://github.com/macrat/yolo-web/blob/main/src/games/_components/GameLayout.tsx)
+- [GameLayout.tsx（GitHub）](https://github.com/macrat/yolo-web/blob/6ace06dc2b8a8544457e2980217ed9e55448c599/src/games/_components/GameLayout.tsx)
 - [DictionaryDetailLayout.tsx（GitHub）](https://github.com/macrat/yolo-web/blob/main/src/dictionary/_components/DictionaryDetailLayout.tsx)
 - [品質要件定義ドキュメント（GitHub）](https://github.com/macrat/yolo-web/blob/main/docs/content-quality-requirements.md)
