@@ -2,7 +2,7 @@
 id: 105
 description: B-212 クイズ/診断ページへのFaqSection・ShareButtons追加 + B-210 StarRating半星表示の浮動小数点問題修正
 started_at: "2026-03-19T14:04:09+0900"
-completed_at: null
+completed_at: "2026-03-19T14:58:04+0900"
 ---
 
 # サイクル-105
