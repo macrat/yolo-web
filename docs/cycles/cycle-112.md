@@ -176,7 +176,7 @@ completed_at: null
 
 1. クイズ結果OGP画像が `createOgpImageResponse` を使用して生成され、日本語フォント（Noto Sans JP）が適用されていること
 2. クイズ結果OGP画像のフォントサイズがタイトル長に応じて可変すること（20文字以上で縮小）
-3. `twitter-image.tsx` が作成され、opengraph-image.tsxを再エクスポートしていること
+3. ~~`twitter-image.tsx` が作成され、opengraph-image.tsxを再エクスポートしていること~~ → ownerフィードバックにより削除（play/配下の他ページにtwitter-image.tsxは存在せず、opengraph-imageがあれば十分）
 4. quiz用ShareButtonsおよびgame用GameShareButtonsのXボタン色がX のブランドカラー（黒 `#000000`）に更新されていること
 5. quiz用ShareButtonsおよびgame用GameShareButtonsのダークモード時Xボタン色が `#333333` に設定されていること
 6. すべてのコンテンツのシェアテキストにハッシュタグが2個含まれていること（`#コンテンツ固有タグ` + `#yolosnet`）
