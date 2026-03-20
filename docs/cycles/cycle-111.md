@@ -2,7 +2,7 @@
 id: 111
 description: B-216 character-personalityクイズの相性データAPI化
 started_at: "2026-03-20T08:19:42+0900"
-completed_at: null
+completed_at: "2026-03-20T09:43:54+0900"
 ---
 
 # サイクル-111
@@ -11,7 +11,7 @@ B-193（ゲーム・クイズのサーバーサイドAPI横展開）の最後の
 
 ## 実施する作業
 
-- [ ] B-216: character-personalityクイズの相性データAPI化
+- [x] B-216: character-personalityクイズの相性データAPI化
 
 ## 作業計画
 
@@ -108,13 +108,9 @@ APIが実際に必要な箇所と不要な箇所を明確に区別する:
 
 現在 `CompatibilityDisplay.tsx` は `music-personality` のデータをハードコードしている。slug に応じて適切なクイズデータと相性関数を使い分ける必要がある。
 
-- **character-personality の場合**: page.tsx（サーバーコンポーネント）で `character-personality.ts` の `getCompatibility` を直接呼び出し、解決済みの相性データを CompatibilityDisplay に props として渡す。**APIは使わない**。サーバーサイドで完結するためローディング表示不要で即時表示でき、UXが優れる。
-- **music-personality の場合**: 従来どおり `music-personality.ts` のデータを直接使用（既存動作を維持）
-- CompatibilityDisplay の props を拡張し、オプショナルな `compatibility` / `myType` / `friendType` データを受け取れるようにする
-- 分岐ロジック: propsで `compatibility` / `myType` / `friendType` が渡されていればそれを使い、渡されていなければ既存のmusic-personality方式（コンポーネント内でクイズ定義から取得）にフォールバックする
-  - character-personality: page.tsx から解決済みデータが props で渡される → そのまま表示
-  - music-personality: 既存どおりコンポーネント内でクイズ定義から取得（propsなし）
-- 将来的にmusic-personalityもサーバーサイド解決方式に移行する際は別サイクルで対応する
+- page.tsx（サーバーコンポーネント）で全slugの相性データをサーバーサイドで解決し、CompatibilityDisplay に required props として渡す
+- CompatibilityDisplay の props をすべて required にし、純粋な表示コンポーネントに簡素化（ownerのフィードバックにより実装時に方針変更）
+- music-personality も character-personality もpage.tsxでサーバーサイド解決する統一方式に変更
 
 **変更ファイル**:
 
@@ -213,23 +209,42 @@ APIが実際に必要な箇所と不要な箇所を明確に区別する:
 - **指摘1（推奨）**: inviteTextが既存のCharacterFortuneResultExtra（「キャラ診断で相性を調べよう!」）と重複していた → 「似たキャラ診断で相性を調べよう!」のようなクイズ特定文言に変更
 - **指摘2（推奨）**: CompatibilityDisplayの分岐ロジックが不明確だった → propsの有無による分岐を明記（propsがあればそれを使い、なければ既存方式にフォールバック）
 
+### レビュー3回目（実装レビュー1回目）
+
+指摘3件（必須1件、推奨2件）。すべて対応。
+
+- **指摘1（必須/バグ）**: CompatibilityDisplay.tsx で quizTitle に quizSlug を渡していた → ownerのフィードバックに合わせてpropsを全てrequiredに変更し、page.tsxで全slugのデータをサーバーサイド解決する方式に統一
+- **指摘2（推奨）**: ローディング中にnullを返していた → 「相性データを読み込み中...」テキストを表示
+- **指摘3（推奨）**: extractWithParamテストがインライン再実装 → extractWithParam.tsとして別ファイルに切り出し
+
+### レビュー4回目（実装レビュー2回目）
+
+指摘0件。承認。
+
+### レビュー5回目（最終品質レビュー）
+
+軽微な指摘1件（修正任意）。承認。
+
+- **軽微**: CharacterPersonalityResultExtraテストでencodeURIComponentの検証がない（現実のtypeIdにはエンコード必要な文字が含まれないため実害なし）
+
 ## キャリーオーバー
 
-- <このサイクルで完了できなかった作業や、次のサイクルに持ち越す必要のある作業があれば、ここと /docs/backlog.md の両方に記載する。例えば、「XXXの機能にバグを見つけたが、本サイクルのスコープ外なので次回以降のサイクルで修正する予定。backlog.mdにも記載済み。」など。>
+- なし
 
 ## 補足事項
 
-<追加で補足しておくべきことがあれば記載する。とくに無い場合は「なし」と記載する。>
+- ownerのフィードバックにより、計画段階のResultExtraLoader遅延ロード方式からAPI方式に変更。さらに実装段階でCompatibilityDisplayのpropsをオプショナルからrequiredに変更し、全slugのデータをpage.tsxでサーバーサイド解決する統一方式に改善した
+- B-193シリーズ（ゲーム・クイズのサーバーサイドAPI横展開）の全4タスク（B-214, B-215, B-216 + 検討タスクB-193本体）がこのサイクルで完了
 
 ## サイクル終了時のチェックリスト
 
-- [ ] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
-- [ ] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
-- [ ] すべての変更がレビューされ、残存する指摘事項が無くなっている。
-- [ ] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
-- [ ] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
-- [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
-- [ ] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
+- [x] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
+- [x] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
+- [x] すべての変更がレビューされ、残存する指摘事項が無くなっている。
+- [x] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
+- [x] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
+- [x] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
+- [x] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
 
 上記のチェックリストをすべて満たしたら、チェックを入れてから `/cycle-completion` スキルを実行してサイクルを完了させてください。
 なお、「環境起因」「今回の変更と無関係」「既知の問題」「次回対応」などの **例外は一切認めません** 。必ずすべての項目を完全に満してください。

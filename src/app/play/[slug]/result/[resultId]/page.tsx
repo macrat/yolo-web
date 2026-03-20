@@ -9,11 +9,13 @@ import {
   getResultIdsForQuiz,
 } from "@/play/quiz/registry";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
+import { getCompatibility } from "@/play/quiz/data/music-personality";
 import {
-  getCompatibility,
-  isValidMusicTypeId,
-} from "@/play/quiz/data/music-personality";
+  getCompatibility as getCharacterCompatibility,
+  default as characterPersonalityQuiz,
+} from "@/play/quiz/data/character-personality";
 import CompatibilityDisplay from "./CompatibilityDisplay";
+import { extractWithParam } from "./extractWithParam";
 import styles from "./page.module.css";
 
 type Props = {
@@ -29,34 +31,6 @@ export async function generateStaticParams() {
     }
   }
   return params;
-}
-
-/**
- * Extract the "with" query parameter for compatibility display.
- * Returns a valid type ID or undefined.
- */
-function extractWithParam(
-  resolvedSearchParams:
-    | Record<string, string | string[] | undefined>
-    | undefined,
-  slug: string,
-  resultId: string,
-): string | undefined {
-  if (!resolvedSearchParams) return undefined;
-  const withParam =
-    typeof resolvedSearchParams.with === "string"
-      ? resolvedSearchParams.with
-      : undefined;
-  const isMusicPersonality = slug === "music-personality";
-  if (
-    isMusicPersonality &&
-    withParam &&
-    isValidMusicTypeId(withParam) &&
-    isValidMusicTypeId(resultId)
-  ) {
-    return withParam;
-  }
-  return undefined;
 }
 
 export async function generateMetadata({
@@ -81,7 +55,11 @@ export async function generateMetadata({
 
   if (compatFriendTypeId) {
     const friendResult = quiz.results.find((r) => r.id === compatFriendTypeId);
-    const compat = getCompatibility(resultId, compatFriendTypeId);
+    // Fetch compatibility data via the correct function based on quiz slug
+    const compat =
+      slug === "character-personality"
+        ? getCharacterCompatibility(resultId, compatFriendTypeId)
+        : getCompatibility(resultId, compatFriendTypeId);
     title = `${result.title} x ${friendResult?.title ?? ""} - ${compat?.label ?? "相性結果"}`;
     description = compat?.description ?? result.description;
   } else {
@@ -130,6 +108,48 @@ export default async function PlayQuizResultPage({
     resultId,
   );
 
+  // Resolve compatibility data server-side for all quiz slugs.
+  // This keeps CompatibilityDisplay as a simple display component with required props.
+  let compatData:
+    | {
+        compatibility: { label: string; description: string };
+        myType: { id: string; title: string; icon?: string };
+        friendType: { id: string; title: string; icon?: string };
+      }
+    | undefined;
+
+  if (compatFriendTypeId) {
+    const getCompatFn =
+      slug === "character-personality"
+        ? getCharacterCompatibility
+        : getCompatibility;
+    const quizResults =
+      slug === "character-personality"
+        ? characterPersonalityQuiz.results
+        : quiz.results;
+    const myResult2 = quizResults.find((r) => r.id === resultId);
+    const friendResult2 = quizResults.find((r) => r.id === compatFriendTypeId);
+    const compat = getCompatFn(resultId, compatFriendTypeId);
+    if (myResult2 && friendResult2 && compat) {
+      compatData = {
+        compatibility: {
+          label: compat.label,
+          description: compat.description,
+        },
+        myType: {
+          id: myResult2.id,
+          title: myResult2.title,
+          icon: myResult2.icon,
+        },
+        friendType: {
+          id: friendResult2.id,
+          title: friendResult2.title,
+          icon: friendResult2.icon,
+        },
+      };
+    }
+  }
+
   const shareText = `${quiz.meta.title}の結果は「${result.title}」でした! #yolosnet`;
   const shareUrl = `${BASE_URL}/play/${slug}/result/${resultId}`;
 
@@ -166,11 +186,13 @@ export default async function PlayQuizResultPage({
             contentId={`quiz-${slug}`}
           />
         </div>
-        {compatFriendTypeId && (
+        {compatData && (
           <CompatibilityDisplay
-            myResultId={resultId}
-            friendTypeId={compatFriendTypeId}
             quizSlug={slug}
+            quizTitle={quiz.meta.title}
+            compatibility={compatData.compatibility}
+            myType={compatData.myType}
+            friendType={compatData.friendType}
           />
         )}
       </div>

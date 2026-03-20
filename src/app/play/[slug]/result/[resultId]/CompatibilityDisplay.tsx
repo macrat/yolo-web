@@ -1,46 +1,34 @@
 "use client";
 
-import musicPersonalityQuiz, {
-  getCompatibility,
-} from "@/play/quiz/data/music-personality";
 import CompatibilitySection from "@/play/quiz/_components/CompatibilitySection";
 
 interface CompatibilityDisplayProps {
-  myResultId: string;
-  friendTypeId: string;
   quizSlug: string;
+  quizTitle: string;
+  compatibility: { label: string; description: string };
+  myType: { id: string; title: string; icon?: string };
+  friendType: { id: string; title: string; icon?: string };
 }
 
 /**
  * Client component that renders the compatibility section
  * on the static result page when ?with= parameter is present.
+ *
+ * All data is resolved server-side in page.tsx and passed as required props.
  */
 export default function CompatibilityDisplay({
-  myResultId,
-  friendTypeId,
   quizSlug,
+  quizTitle,
+  compatibility,
+  myType,
+  friendType,
 }: CompatibilityDisplayProps) {
-  const quiz = musicPersonalityQuiz;
-  const myResult = quiz.results.find((r) => r.id === myResultId);
-  const friendResult = quiz.results.find((r) => r.id === friendTypeId);
-  const compatibility = getCompatibility(myResultId, friendTypeId);
-
-  if (!myResult || !friendResult || !compatibility) return null;
-
   return (
     <CompatibilitySection
-      myType={{
-        id: myResult.id,
-        title: myResult.title,
-        icon: myResult.icon,
-      }}
-      friendType={{
-        id: friendResult.id,
-        title: friendResult.title,
-        icon: friendResult.icon,
-      }}
+      myType={myType}
+      friendType={friendType}
       compatibility={compatibility}
-      quizTitle={quiz.meta.title}
+      quizTitle={quizTitle}
       quizSlug={quizSlug}
     />
   );
