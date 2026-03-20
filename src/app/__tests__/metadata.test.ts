@@ -60,3 +60,12 @@ test("layout.tsx passes no playLinks prop to Footer (uses Footer default)", () =
   // <Footer playLinks={...}> の形式でpropが渡されていないことを確認する
   expect(layoutSource).not.toMatch(/<Footer\s[^>]*playLinks=/);
 });
+
+test("metadata includes robots with max-image-preview:large", () => {
+  // 検索エンジンが大きな画像プレビューを表示できるよう robots に max-image-preview:large を設定する
+  const robots = metadata.robots as Record<string, unknown> | undefined;
+  expect(robots).toBeDefined();
+  expect(robots?.["index"]).toBe(true);
+  expect(robots?.["follow"]).toBe(true);
+  expect(robots?.["max-image-preview"]).toBe("large");
+});

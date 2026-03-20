@@ -25,6 +25,11 @@ export const metadata: Metadata = {
     "四字熟語",
     "漢字ゲーム",
   ],
+  robots: {
+    index: true,
+    follow: true,
+    "max-image-preview": "large",
+  },
   openGraph: {
     siteName: SITE_NAME,
     type: "website",
