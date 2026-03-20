@@ -33,7 +33,7 @@
 }
 
 .twitter {
-  background-color: #1da1f2;
+  background-color: #000000;
 }
 
 .line {
@@ -48,4 +48,14 @@
   font-size: 0.75rem;
   color: var(--color-success);
   min-height: 1.25rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .twitter {
+    background-color: #333333;
+  }
+}
+
+:global([data-theme="dark"]) .twitter {
+  background-color: #333333;
 }

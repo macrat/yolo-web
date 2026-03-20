@@ -45,6 +45,7 @@ describe("generateShareText", () => {
     );
     expect(text).toContain("\u2B1C\u2B1C\u2B1C\u2B1C");
     expect(text).toContain("\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E9}");
+    expect(text).toContain("#\u56DB\u5B57\u30AD\u30E1\u30EB #yolosnet");
     expect(text).toContain("https://example.com/play/yoji-kimeru");
   });
 
@@ -76,6 +77,7 @@ describe("generateShareText", () => {
     for (let i = 1; i <= 6; i++) {
       expect(lines[i]).toBe(allAbsentRow);
     }
+    expect(text).toContain("#\u56DB\u5B57\u30AD\u30E1\u30EB #yolosnet");
   });
 
   test("includes difficulty label for beginner", () => {

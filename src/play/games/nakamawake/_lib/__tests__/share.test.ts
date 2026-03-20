@@ -113,6 +113,7 @@ describe("generateShareText", () => {
     expect(text).toContain("\u{1F7E6}\u{1F7E6}\u{1F7E6}\u{1F7E6}");
     // Row 4: difficulty 4 (purple)
     expect(text).toContain("\u{1F7EA}\u{1F7EA}\u{1F7EA}\u{1F7EA}");
+    expect(text).toContain("#\u30CA\u30AB\u30DE\u30EF\u30B1 #yolosnet");
     expect(text).toContain("https://example.com/play/nakamawake");
   });
 
@@ -253,6 +254,7 @@ describe("generateShareText", () => {
     expect(text).toContain("\u30CA\u30AB\u30DE\u30EF\u30B1 #10 X");
     // Only 1 correct row (fruits, difficulty 1)
     expect(text).toContain("\u{1F7E8}\u{1F7E8}\u{1F7E8}\u{1F7E8}");
+    expect(text).toContain("#\u30CA\u30AB\u30DE\u30EF\u30B1 #yolosnet");
   });
 
   test("includes puzzle number in header", () => {

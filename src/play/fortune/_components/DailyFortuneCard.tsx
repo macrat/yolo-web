@@ -61,7 +61,7 @@ export default function DailyFortuneCard() {
     typeof window !== "undefined"
       ? `${window.location.origin}/play/daily`
       : "/play/daily";
-  const shareText = `今日のユーモア運勢は「${fortune.title}」(${fortune.rating}/5) でした! #yolosnet`;
+  const shareText = `今日のユーモア運勢は「${fortune.title}」(${fortune.rating}/5) でした! #ユーモア運勢 #yolosnet`;
 
   return (
     <div className={styles.card}>

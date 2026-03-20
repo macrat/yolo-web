@@ -27,7 +27,7 @@
 
 .shareButtonX {
   composes: shareButton;
-  background-color: #1da1f2;
+  background-color: #000000;
 }
 
 .shareButtonX:hover {
@@ -49,4 +49,14 @@
   text-align: center;
   margin-top: 0.25rem;
   min-height: 1.2em;
+}
+
+@media (prefers-color-scheme: dark) {
+  .shareButtonX {
+    background-color: #333333;
+  }
+}
+
+:global([data-theme="dark"]) .shareButtonX {
+  background-color: #333333;
 }

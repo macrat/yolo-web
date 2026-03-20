@@ -29,6 +29,7 @@ function charFeedbackToEmoji(fb: CharFeedback): string {
  *   🟩⬜🟨🟩
  *   🟩🟩🟨🟩
  *   🟩🟩🟩🟩
+ *   #四字キメル #yolosnet
  *   https://.../play/yoji-kimeru
  */
 export function generateShareText(
@@ -45,5 +46,5 @@ export function generateShareText(
   const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
   const url = `${baseUrl}/play/yoji-kimeru`;
 
-  return `\u56DB\u5B57\u30AD\u30E1\u30EB #${state.puzzleNumber} (${diffLabel}) ${result}\n${rows.join("\n")}\n${url}`;
+  return `\u56DB\u5B57\u30AD\u30E1\u30EB #${state.puzzleNumber} (${diffLabel}) ${result}\n${rows.join("\n")}\n#\u56DB\u5B57\u30AD\u30E1\u30EB #yolosnet\n${url}`;
 }

@@ -150,7 +150,7 @@ export default async function PlayQuizResultPage({
     }
   }
 
-  const shareText = `${quiz.meta.title}の結果は「${result.title}」でした! #yolosnet`;
+  const shareText = `${quiz.meta.title}の結果は「${result.title}」でした! #${quiz.meta.title.replace(/\s/g, "")} #yolosnet`;
   const shareUrl = `${BASE_URL}/play/${slug}/result/${resultId}`;
 
   return (

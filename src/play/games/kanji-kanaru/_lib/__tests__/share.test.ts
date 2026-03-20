@@ -64,6 +64,7 @@ describe("generateShareText", () => {
     expect(text).toContain(
       "\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E9}\u{1F7E9}",
     );
+    expect(text).toContain("#\u6F22\u5B57\u30AB\u30CA\u30FC\u30EB #yolosnet");
     expect(text).toContain("https://example.com/play/kanji-kanaru");
   });
 
@@ -97,6 +98,7 @@ describe("generateShareText", () => {
     for (let i = 1; i <= 6; i++) {
       expect(lines[i]).toBe(allWrongRow);
     }
+    expect(text).toContain("#\u6F22\u5B57\u30AB\u30CA\u30FC\u30EB #yolosnet");
   });
 
   test("gradeDirection is NOT included in emoji grid", () => {

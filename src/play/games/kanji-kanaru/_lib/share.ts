@@ -29,6 +29,7 @@ function feedbackToEmoji(level: FeedbackLevel): string {
  *   🟩⬜🟨🟩⬜🟩
  *   🟩🟩🟨🟩🟨🟩
  *   🟩🟩🟩🟩🟩🟩
+ *   #漢字カナール #yolosnet
  *   https://...
  *
  * Column order (6 columns): 部首 | 画数 | 学年 | 音読み | 意味 | 訓読み数
@@ -50,5 +51,5 @@ export function generateShareText(
   const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
   const url = `${baseUrl}/play/kanji-kanaru`;
 
-  return `\u6F22\u5B57\u30AB\u30CA\u30FC\u30EB #${state.puzzleNumber} (${diffLabel}) ${result}\n${rows.join("\n")}\n${url}`;
+  return `\u6F22\u5B57\u30AB\u30CA\u30FC\u30EB #${state.puzzleNumber} (${diffLabel}) ${result}\n${rows.join("\n")}\n#\u6F22\u5B57\u30AB\u30CA\u30FC\u30EB #yolosnet\n${url}`;
 }
