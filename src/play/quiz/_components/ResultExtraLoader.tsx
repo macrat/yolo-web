@@ -6,7 +6,8 @@ import type { QuizAnswer } from "@/play/quiz/types";
 /**
  * Lazy-loaded wrappers for quiz-specific result extra components.
  * Using next/dynamic ensures these heavy data modules (music-personality,
- * character-fortune, animal-personality, science-thinking, japanese-culture) are code-split
+ * character-fortune, animal-personality, science-thinking, japanese-culture,
+ * character-personality) are code-split
  * into separate chunks and only loaded when the corresponding quiz result
  * is shown.
  */
@@ -107,6 +108,24 @@ const JapaneseCultureResultExtra = dynamic(
   { ssr: false },
 );
 
+const CharacterPersonalityResultExtra = dynamic(
+  () =>
+    import("./CharacterPersonalityResultExtra").then((mod) => {
+      function Wrapper({
+        resultId,
+        referrerTypeId,
+      }: {
+        resultId: string;
+        referrerTypeId?: string;
+      }) {
+        const renderFn = mod.renderCharacterPersonalityExtra(referrerTypeId);
+        return <>{renderFn(resultId)}</>;
+      }
+      return { default: Wrapper };
+    }),
+  { ssr: false },
+);
+
 interface ResultExtraLoaderProps {
   slug: string;
   resultId: string;
@@ -161,6 +180,14 @@ export default function ResultExtraLoader({
   if (slug === "japanese-culture") {
     return (
       <JapaneseCultureResultExtra
+        resultId={resultId}
+        referrerTypeId={referrerTypeId}
+      />
+    );
+  }
+  if (slug === "character-personality") {
+    return (
+      <CharacterPersonalityResultExtra
         resultId={resultId}
         referrerTypeId={referrerTypeId}
       />
