@@ -31,7 +31,7 @@ export default function ResultCard({
       ? `${window.location.origin}/play/${quizSlug}/result/${result.id}`
       : `/play/${quizSlug}/result/${result.id}`;
 
-  const shareText = `${quizTitle}の結果は「${result.title}」でした! #yolosnet`;
+  const shareText = `${quizTitle}の結果は「${result.title}」でした! #${quizTitle.replace(/\s/g, "")} #yolosnet`;
 
   return (
     <div className={styles.card}>

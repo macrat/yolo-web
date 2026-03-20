@@ -1,4 +1,8 @@
-import { ImageResponse } from "next/og";
+import {
+  createOgpImageResponse,
+  ogpSize,
+  ogpContentType,
+} from "@/lib/ogp-image";
 import {
   quizBySlug,
   getAllQuizSlugs,
@@ -6,8 +10,8 @@ import {
 } from "@/play/quiz/registry";
 
 export const alt = "クイズ結果";
-export const size = { width: 1200, height: 630 };
-export const contentType = "image/png";
+export const size = ogpSize;
+export const contentType = ogpContentType;
 
 export function generateStaticParams() {
   const params: Array<{ slug: string; resultId: string }> = [];
@@ -28,61 +32,10 @@ export default async function OpenGraphImage({ params }: Props) {
   const quiz = quizBySlug.get(slug);
   const result = quiz?.results.find((r) => r.id === resultId);
 
-  const quizTitle = quiz?.meta.title ?? "クイズ";
-  const resultTitle = result?.title ?? "結果";
-  const resultIcon = result?.icon ?? "";
-  const accentColor = quiz?.meta.accentColor ?? "#2563eb";
-
-  return new ImageResponse(
-    <div
-      style={{
-        width: "100%",
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: accentColor,
-        color: "white",
-      }}
-    >
-      <div
-        style={{
-          fontSize: 28,
-          opacity: 0.8,
-          marginBottom: 16,
-        }}
-      >
-        {quizTitle}
-      </div>
-      {resultIcon && (
-        <div
-          style={{
-            fontSize: 80,
-            marginBottom: 16,
-          }}
-        >
-          {resultIcon}
-        </div>
-      )}
-      <div
-        style={{
-          fontSize: 64,
-          fontWeight: 700,
-          marginBottom: 24,
-        }}
-      >
-        {resultTitle}
-      </div>
-      <div
-        style={{
-          fontSize: 24,
-          opacity: 0.7,
-        }}
-      >
-        yolos.net
-      </div>
-    </div>,
-    { ...size },
-  );
+  return createOgpImageResponse({
+    title: result?.title ?? "結果",
+    subtitle: quiz?.meta.title,
+    icon: result?.icon,
+    accentColor: quiz?.meta.accentColor,
+  });
 }

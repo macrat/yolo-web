@@ -69,6 +69,11 @@ describe("generateShareText", () => {
     // Should contain color emoji blocks
     expect(text).toMatch(/[\u{1F7E5}\u{1F7E7}\u{1F7E8}\u{1F7E9}]/u);
   });
+
+  test("includes hashtags", () => {
+    const text = generateShareText(mockGameState);
+    expect(text).toContain("#\u30A4\u30ED\u30C9\u30EA #yolosnet");
+  });
 });
 
 describe("generateTwitterShareUrl", () => {

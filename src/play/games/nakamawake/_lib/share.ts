@@ -10,6 +10,7 @@ import { getDifficultyEmoji } from "./engine";
  *   🟩🟩🟩🟩
  *   🟦🟦🟦🟦
  *   🟪🟪🟪🟪
+ *   #ナカマワケ #yolosnet
  *   https://.../play/nakamawake
  */
 export function generateShareText(state: NakamawakeGameState): string {
@@ -35,5 +36,5 @@ export function generateShareText(state: NakamawakeGameState): string {
   const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
   const url = `${baseUrl}/play/nakamawake`;
 
-  return `\u30CA\u30AB\u30DE\u30EF\u30B1 #${state.puzzleNumber} ${result}\n${rows.join("\n")}\n${url}`;
+  return `\u30CA\u30AB\u30DE\u30EF\u30B1 #${state.puzzleNumber} ${result}\n${rows.join("\n")}\n#\u30CA\u30AB\u30DE\u30EF\u30B1 #yolosnet\n${url}`;
 }

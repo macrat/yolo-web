@@ -233,6 +233,16 @@ completed_at: null
 
 前回の指摘事項5件の反映を確認し、計画全体を実際のソースコードと照合。技術的正確性、対象ファイルの網羅性、完了条件の検証可能性、リスクのすべてで問題なし。指摘事項ゼロで承認。
 
+### レビュー3回目（実装レビュー1回目、指摘1件）
+
+**必須指摘**:
+
+1. twitter-image.tsx で `generateStaticParams` が再エクスポートされていない — 動的セグメント `[slug]` と `[resultId]` を含むため、ビルド時の静的画像生成に必要。`export { default, alt, size, contentType, generateStaticParams } from "./opengraph-image"` に修正
+
+### レビュー4回目（実装レビュー2回目、指摘0件、承認）
+
+前回の指摘（generateStaticParams再エクスポート漏れ）の修正を確認。完了条件9項目すべてを満たしていることを確認。新たな指摘事項なし。承認。
+
 ## キャリーオーバー
 
 ## 補足事項

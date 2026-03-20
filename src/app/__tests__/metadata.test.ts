@@ -1,5 +1,9 @@
 import { expect, test } from "vitest";
+import { readFileSync } from "fs";
+import { resolve } from "path";
 import { metadata } from "../layout";
+
+const layoutSource = readFileSync(resolve(__dirname, "../layout.tsx"), "utf-8");
 
 test("metadata includes twitter card configuration", () => {
   expect(metadata.twitter).toEqual(
@@ -44,4 +48,15 @@ test("metadata includes Atom feed in alternates", () => {
     ?.types;
   expect(types).toBeDefined();
   expect(types?.["application/atom+xml"]).toBe("/feed/atom");
+});
+
+test("layout.tsx does not define a local playLinks constant (no duplicate with Footer.tsx)", () => {
+  // playLinks定数がlayout.tsxに二重定義されていないことを確認する
+  // Footer.tsxのDEFAULT_PLAY_LINKSをデフォルト値として使うため、layout側の定義は不要
+  expect(layoutSource).not.toMatch(/const\s+playLinks\s*=/);
+});
+
+test("layout.tsx passes no playLinks prop to Footer (uses Footer default)", () => {
+  // <Footer playLinks={...}> の形式でpropが渡されていないことを確認する
+  expect(layoutSource).not.toMatch(/<Footer\s[^>]*playLinks=/);
 });

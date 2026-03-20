@@ -47,13 +47,6 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const websiteJsonLd = generateWebSiteJsonLd();
-  // カテゴリアンカーリンクで /play 一覧ページの各セクションに直接誘導する
-  const playLinks = [
-    { href: "/play#fortune", label: "占い" },
-    { href: "/play#personality", label: "性格診断" },
-    { href: "/play#knowledge", label: "知識テスト" },
-    { href: "/play#game", label: "ゲーム" },
-  ];
   return (
     <html lang="ja" suppressHydrationWarning>
       <body
@@ -70,7 +63,7 @@ export default function RootLayout({
             <GoogleAnalytics />
             <Header />
             <main style={{ flex: 1 }}>{children}</main>
-            <Footer playLinks={playLinks} />
+            <Footer />
           </AchievementProvider>
         </ThemeProvider>
       </body>
