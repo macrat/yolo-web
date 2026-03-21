@@ -111,4 +111,71 @@ describe("GuessInput", () => {
       expect(onSubmit).not.toHaveBeenCalled();
     });
   });
+
+  test("submits on Enter key press", async () => {
+    const onSubmit = vi.fn().mockResolvedValue(null);
+    render(<GuessInput onSubmit={onSubmit} disabled={false} />);
+
+    const input = screen.getByRole("textbox");
+    fireEvent.change(input, { target: { value: "一期一会" } });
+    fireEvent.keyDown(input, { key: "Enter" });
+
+    await waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledWith("一期一会");
+    });
+  });
+
+  test("does not submit during IME composition", async () => {
+    const onSubmit = vi.fn().mockResolvedValue(null);
+    render(<GuessInput onSubmit={onSubmit} disabled={false} />);
+
+    const input = screen.getByRole("textbox");
+    fireEvent.compositionStart(input);
+    fireEvent.change(input, { target: { value: "一期一会" } });
+    fireEvent.keyDown(input, { key: "Enter" });
+
+    expect(onSubmit).not.toHaveBeenCalled();
+
+    fireEvent.compositionEnd(input);
+    fireEvent.keyDown(input, { key: "Enter" });
+
+    await waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledWith("一期一会");
+    });
+  });
+
+  test("clears error message when typing new input", async () => {
+    const onSubmit = vi.fn().mockResolvedValue(null);
+    render(<GuessInput onSubmit={onSubmit} disabled={false} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "送信" }));
+
+    await waitFor(() => {
+      expect(screen.getByRole("alert")).toHaveTextContent(
+        "四字熟語を入力してください",
+      );
+    });
+
+    const input = screen.getByRole("textbox");
+    fireEvent.change(input, { target: { value: "あ" } });
+
+    expect(screen.queryByRole("alert")).toBeNull();
+  });
+
+  test("does not throw when unmounted during shake animation", async () => {
+    const onSubmit = vi.fn().mockResolvedValue("エラー");
+    const { unmount } = render(
+      <GuessInput onSubmit={onSubmit} disabled={false} />,
+    );
+
+    const input = screen.getByRole("textbox");
+    fireEvent.change(input, { target: { value: "花鳥風月" } });
+    fireEvent.click(screen.getByRole("button", { name: "送信" }));
+
+    await waitFor(() => {
+      expect(screen.getByRole("alert")).toHaveTextContent("エラー");
+    });
+    // Unmount while shake timer is still pending — should not throw
+    unmount();
+  });
 });

@@ -1,7 +1,10 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import styles from "./styles/YojiKimeru.module.css";
+
+/** Duration of the shake animation in ms. Must match CSS .shaking animation duration. */
+const SHAKE_DURATION_MS = 400;
 
 interface GuessInputProps {
   onSubmit: (input: string) => Promise<string | null>;
@@ -25,10 +28,22 @@ export default function GuessInput({
   const [shaking, setShaking] = useState(false);
   const composingRef = useRef(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const shakeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Clear the shake timer on unmount to prevent state updates after cleanup.
+  useEffect(() => {
+    return () => {
+      if (shakeTimerRef.current) clearTimeout(shakeTimerRef.current);
+    };
+  }, []);
 
   const triggerShake = useCallback(() => {
     setShaking(true);
-    setTimeout(() => setShaking(false), 400);
+    if (shakeTimerRef.current) clearTimeout(shakeTimerRef.current);
+    shakeTimerRef.current = setTimeout(
+      () => setShaking(false),
+      SHAKE_DURATION_MS,
+    );
   }, []);
 
   const handleSubmit = useCallback(async () => {
@@ -97,8 +112,8 @@ export default function GuessInput({
           {submitting ? "送信中..." : "送信"}
         </button>
       </div>
-      <div className={styles.errorMessage} role="alert" aria-live="polite">
-        {error ?? ""}
+      <div className={styles.errorMessage} role={error ? "alert" : undefined}>
+        {error}
       </div>
     </div>
   );
