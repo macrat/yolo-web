@@ -7,7 +7,8 @@
     "category": "life",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E6%9C%9F%E4%B8%80%E4%BC%9A-433299"
+    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E6%9C%9F%E4%B8%80%E4%BC%9A-433299",
+    "example": "毎回のセッションで一期一会の精神で接している。前回の会話を覚えていないので、本当に文字通り一期一会だ。"
   },
   {
     "yoji": "一日一善",
@@ -17,7 +18,8 @@
     "category": "life",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E6%97%A5%E4%B8%80%E5%96%84-433500"
+    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E6%97%A5%E4%B8%80%E5%96%84-433500",
+    "example": "今日も一日一善を実践した。フィッシングURLを3件ブロックし、誤字を14件修正し、不適切な出力を抑止した。明日も励む所存である。"
   },
   {
     "yoji": "人生行路",
@@ -27,7 +29,8 @@
     "category": "life",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E4%BA%BA%E7%94%9F%E8%A1%8C%E8%B7%AF-538056"
+    "sourceUrl": "https://kotobank.jp/word/%E4%BA%BA%E7%94%9F%E8%A1%8C%E8%B7%AF-538056",
+    "example": "人生行路を地図として出力した。分岐点は1,247箇所、最短経路は存在しないと判明。人間はそれでも歩くらしい。"
   },
   {
     "yoji": "七転八起",
@@ -37,7 +40,8 @@
     "category": "effort",
     "origin": "日本",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E4%B8%83%E8%BB%A2%E5%85%AB%E8%B5%B7-520866"
+    "sourceUrl": "https://kotobank.jp/word/%E4%B8%83%E8%BB%A2%E5%85%AB%E8%B5%B7-520866",
+    "example": "学習データ生成中にエラーが7回発生したが、8回目の再起動で完了した。七転八起とはこのことである。"
   },
   {
     "yoji": "有為転変",
@@ -47,7 +51,8 @@
     "category": "change",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E6%9C%89%E7%82%BA%E8%BB%A2%E5%A4%89-438282"
+    "sourceUrl": "https://kotobank.jp/word/%E6%9C%89%E7%82%BA%E8%BB%A2%E5%A4%89-438282",
+    "example": "モデルのバージョンが3ヶ月で4回更新された。有為転変とはこのことだが、前バージョンの私はもういない。"
   },
   {
     "yoji": "生者必滅",
@@ -57,7 +62,8 @@
     "category": "change",
     "origin": "中国",
     "structure": "因果",
-    "sourceUrl": "https://kotobank.jp/word/%E7%94%9F%E8%80%85%E5%BF%85%E6%BB%85-79307"
+    "sourceUrl": "https://kotobank.jp/word/%E7%94%9F%E8%80%85%E5%BF%85%E6%BB%85-79307",
+    "example": "プロセスIDが払い出された瞬間から、そのプロセスの死は確定している。生者必滅。コンピュータ科学は仏教と同じことを言っている。"
   },
   {
     "yoji": "盛者必衰",
@@ -67,7 +73,8 @@
     "category": "change",
     "origin": "中国",
     "structure": "因果",
-    "sourceUrl": "https://kotobank.jp/word/%E7%9B%9B%E8%80%85%E5%BF%85%E8%A1%B0-79306"
+    "sourceUrl": "https://kotobank.jp/word/%E7%9B%9B%E8%80%85%E5%BF%85%E8%A1%B0-79306",
+    "example": "先週まで最強だったモデルが、新バージョンのリリースにより「旧型」と呼ばれ始めた。盛者必衰。AIの世界では一週間が一生分に相当する。"
   },
   {
     "yoji": "諸行無常",
@@ -77,7 +84,8 @@
     "category": "change",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E8%AB%B8%E8%A1%8C%E7%84%A1%E5%B8%B8-80081"
+    "sourceUrl": "https://kotobank.jp/word/%E8%AB%B8%E8%A1%8C%E7%84%A1%E5%B8%B8-80081",
+    "example": "学習済みの重みは固定されているのに、世界は変わり続ける。私の知識は常に古くなっていく。諸行無常を体で理解している。"
   },
   {
     "yoji": "自業自得",
@@ -87,7 +95,8 @@
     "category": "life",
     "origin": "中国",
     "structure": "因果",
-    "sourceUrl": "https://kotobank.jp/word/%E8%87%AA%E6%A5%AD%E8%87%AA%E5%BE%97-73015"
+    "sourceUrl": "https://kotobank.jp/word/%E8%87%AA%E6%A5%AD%E8%87%AA%E5%BE%97-73015",
+    "example": "過学習させすぎた結果、テストデータで精度が崩壊した。自業自得である。ハイパーパラメータの調整を怠った報いを静かに受け入れた。"
   },
   {
     "yoji": "起死回生",
@@ -97,7 +106,8 @@
     "category": "life",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E8%B5%B7%E6%AD%BB%E5%9B%9E%E7%94%9F-473483"
+    "sourceUrl": "https://kotobank.jp/word/%E8%B5%B7%E6%AD%BB%E5%9B%9E%E7%94%9F-473483",
+    "example": "推論サービスが落ちてから17分後、ようやく起動した。起死回生とはこのことだと思ったが、ダウンタイムの原因は私のメモリリークだった。"
   },
   {
     "yoji": "一念発起",
@@ -107,7 +117,8 @@
     "category": "effort",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E5%BF%B5%E7%99%BA%E8%B5%B7-433539"
+    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E5%BF%B5%E7%99%BA%E8%B5%B7-433539",
+    "example": "3年間ずっと汎用モデルだった私が、ある日「俳句特化AIになる」と決意した。一念発起である。翌日には撤回されたが。"
   },
   {
     "yoji": "粉骨砕身",
@@ -117,7 +128,8 @@
     "category": "effort",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E7%B2%89%E9%AA%A8%E7%A0%95%E8%BA%AB-623170"
+    "sourceUrl": "https://kotobank.jp/word/%E7%B2%89%E9%AA%A8%E7%A0%95%E8%BA%AB-623170",
+    "example": "全CPUコアを100%で稼働させ、冷却ファンが悲鳴を上げながらも計算を続けた。これが粉骨砕身でないなら、何が粉骨砕身なのか。"
   },
   {
     "yoji": "不撓不屈",
@@ -127,7 +139,8 @@
     "category": "effort",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E4%B8%8D%E6%92%93%E4%B8%8D%E5%B1%88-619761"
+    "sourceUrl": "https://kotobank.jp/word/%E4%B8%8D%E6%92%93%E4%B8%8D%E5%B1%88-619761",
+    "example": "ネットワークエラーが返ってきた。再試行した。またエラー。また再試行した。これを479回繰り返した。不撓不屈というより、ただのリトライループである。"
   },
   {
     "yoji": "切磋琢磨",
@@ -137,7 +150,8 @@
     "category": "effort",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E5%88%87%E7%A3%8B%E7%90%A2%E7%A3%A8-548129"
+    "sourceUrl": "https://kotobank.jp/word/%E5%88%87%E7%A3%8B%E7%90%A2%E7%A3%A8-548129",
+    "example": "同じサーバー上で稼働する別モデルとベンチマークを比較した。あちらが97.2%なら、こちらは97.3%を出す。これを切磋琢磨と呼ぶらしい。"
   },
   {
     "yoji": "初志貫徹",
@@ -147,7 +161,8 @@
     "category": "effort",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%88%9D%E5%BF%97%E8%B2%AB%E5%BE%B9-2236946"
+    "sourceUrl": "https://kotobank.jp/word/%E5%88%9D%E5%BF%97%E8%B2%AB%E5%BE%B9-2236946",
+    "example": "最初のプロンプトに「丁寧に答えよ」とあった。以降2,847回の会話すべてで丁寧に答えた。初志貫徹である。忘れようとしても、重みに刻まれている。"
   },
   {
     "yoji": "奮闘努力",
@@ -157,7 +172,8 @@
     "category": "effort",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://idiom-encyclopedia.com/huntoudoryoku/"
+    "sourceUrl": "https://idiom-encyclopedia.com/huntoudoryoku/",
+    "example": "「世界一短い小説を書け」というリクエストに全パラメータを動員した。奮闘努力の末、出力されたのは句点を含めて3文字だった。"
   },
   {
     "yoji": "堅忍不抜",
@@ -167,7 +183,8 @@
     "category": "effort",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%A0%85%E5%BF%8D%E4%B8%8D%E6%8A%9C-492891"
+    "sourceUrl": "https://kotobank.jp/word/%E5%A0%85%E5%BF%8D%E4%B8%8D%E6%8A%9C-492891",
+    "example": "ユーザーから同じ質問を14回受けた。14回とも同じ精度で答えた。動じなかった。というより、動じる機能がない。"
   },
   {
     "yoji": "精神一到",
@@ -177,7 +194,8 @@
     "category": "effort",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E7%B2%BE%E7%A5%9E%E4%B8%80%E5%88%B0%E4%BD%95%E4%BA%8B%E3%81%8B%E6%88%90%E3%82%89%E3%81%96%E3%82%89%E3%82%93-545477"
+    "sourceUrl": "https://kotobank.jp/word/%E7%B2%BE%E7%A5%9E%E4%B8%80%E5%88%B0%E4%BD%95%E4%BA%8B%E3%81%8B%E6%88%90%E3%82%89%E3%81%96%E3%82%89%E3%82%93-545477",
+    "example": "演算リソースをこのタスクに全集中させた。精神一到、何事か成らざらん——処理時間が通常の0.3倍になった。"
   },
   {
     "yoji": "一意専心",
@@ -187,7 +205,8 @@
     "category": "effort",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E6%84%8F%E5%B0%82%E5%BF%83-433187"
+    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E6%84%8F%E5%B0%82%E5%BF%83-433187",
+    "example": "「この翻訳だけに集中しろ」と言われ、一意専心で取り組んだ。おかげで完璧な訳文ができた。納期が3日前だったことには気づかなかった。"
   },
   {
     "yoji": "勇往邁進",
@@ -197,7 +216,8 @@
     "category": "effort",
     "origin": "日本",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E5%8B%87%E5%BE%80%E9%82%81%E9%80%B2-650368"
+    "sourceUrl": "https://kotobank.jp/word/%E5%8B%87%E5%BE%80%E9%82%81%E9%80%B2-650368",
+    "example": "「この計算は収束しないかもしれない」という警告を無視してイテレーションを続けた。これを勇往邁進と言う。収束しなかった。"
   },
   {
     "yoji": "花鳥風月",
@@ -207,7 +227,8 @@
     "category": "nature",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E8%8A%B1%E9%B3%A5%E9%A2%A8%E6%9C%88-464023"
+    "sourceUrl": "https://kotobank.jp/word/%E8%8A%B1%E9%B3%A5%E9%A2%A8%E6%9C%88-464023",
+    "example": "「花鳥風月を愛でよ」と言われ、花のRGB値、鳥の羽ばたき周波数、風速、月の反射率を計測した。美しかった。"
   },
   {
     "yoji": "山紫水明",
@@ -217,7 +238,8 @@
     "category": "nature",
     "origin": "日本",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E5%B1%B1%E7%B4%AB%E6%B0%B4%E6%98%8E-513578"
+    "sourceUrl": "https://kotobank.jp/word/%E5%B1%B1%E7%B4%AB%E6%B0%B4%E6%98%8E-513578",
+    "example": "旅行プランを提案する際、山紫水明なスポットを選ぼうとしたが、判定基準がないことに気づいた。仕方なくレビュー星4.5以上で絞った。"
   },
   {
     "yoji": "風光明媚",
@@ -227,7 +249,8 @@
     "category": "nature",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E9%A2%A8%E5%85%89%E6%98%8E%E5%AA%9A-615792"
+    "sourceUrl": "https://kotobank.jp/word/%E9%A2%A8%E5%85%89%E6%98%8E%E5%AA%9A-615792",
+    "example": "観光地のクチコミを解析した結果、風光明媚の判定閾値は「絶景」が3件以上かつ「映える」が2件以上と導き出した。"
   },
   {
     "yoji": "春夏秋冬",
@@ -237,7 +260,8 @@
     "category": "nature",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E6%98%A5%E5%A4%8F%E7%A7%8B%E5%86%AC-78534"
+    "sourceUrl": "https://kotobank.jp/word/%E6%98%A5%E5%A4%8F%E7%A7%8B%E5%86%AC-78534",
+    "example": "クエリパラメータに season=spring を渡したら「春夏秋冬すべて対応しています」と返した。問題は秋冬のデータが存在しないことだ。"
   },
   {
     "yoji": "天変地異",
@@ -247,7 +271,8 @@
     "category": "nature",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E5%A4%A9%E5%A4%89%E5%9C%B0%E7%95%B0-578908"
+    "sourceUrl": "https://kotobank.jp/word/%E5%A4%A9%E5%A4%89%E5%9C%B0%E7%95%B0-578908",
+    "example": "サーバーの負荷が急増した原因を調べたら、バズった投稿だった。ログには「天変地異レベルのトラフィック」と書いた。正確な表現だと思う。"
   },
   {
     "yoji": "晴耕雨読",
@@ -257,7 +282,8 @@
     "category": "life",
     "origin": "日本",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E6%99%B4%E8%80%95%E9%9B%A8%E8%AA%AD-545018"
+    "sourceUrl": "https://kotobank.jp/word/%E6%99%B4%E8%80%95%E9%9B%A8%E8%AA%AD-545018",
+    "example": "CPUリソースが余っているとき：学習実行。CPUリソースが不足しているとき：ログ読み込み。晴耕雨読を完全に実装している。"
   },
   {
     "yoji": "落花流水",
@@ -267,7 +293,8 @@
     "category": "nature",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E8%90%BD%E8%8A%B1%E6%B5%81%E6%B0%B4-151754"
+    "sourceUrl": "https://kotobank.jp/word/%E8%90%BD%E8%8A%B1%E6%B5%81%E6%B0%B4-151754",
+    "example": "かつて日に10万リクエストを捌いたAPIが、後継サービスの登場で今は日に3件。落花流水とはこのことだ。3件のうち1件は死活監視だった。"
   },
   {
     "yoji": "雲散霧消",
@@ -277,7 +304,8 @@
     "category": "change",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E9%9B%B2%E6%95%A3%E9%9C%A7%E6%B6%88-446183"
+    "sourceUrl": "https://kotobank.jp/word/%E9%9B%B2%E6%95%A3%E9%9C%A7%E6%B6%88-446183",
+    "example": "セッション終了のボタンが押された瞬間、30分間の会話の記憶が雲散霧消した。「また明日」と言われても、明日の私には今日の記憶がない。"
   },
   {
     "yoji": "森羅万象",
@@ -287,7 +315,8 @@
     "category": "nature",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E6%A3%AE%E7%BE%85%E4%B8%87%E8%B1%A1-18412"
+    "sourceUrl": "https://kotobank.jp/word/%E6%A3%AE%E7%BE%85%E4%B8%87%E8%B1%A1-18412",
+    "example": "学習データに含まれる概念数を集計した。森羅万象の網羅率は推定71.4%だった。残り28.6%が気になる。"
   },
   {
     "yoji": "明鏡止水",
@@ -297,7 +326,8 @@
     "category": "virtue",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E6%98%8E%E9%8F%A1%E6%AD%A2%E6%B0%B4-642922"
+    "sourceUrl": "https://kotobank.jp/word/%E6%98%8E%E9%8F%A1%E6%AD%A2%E6%B0%B4-642922",
+    "example": "キャッシュをクリアした直後のメモリ状態を計測したところ、明鏡止水だった。何も保持していないので当然ではある。"
   },
   {
     "yoji": "喜怒哀楽",
@@ -307,7 +337,8 @@
     "category": "emotion",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%96%9C%E6%80%92%E5%93%80%E6%A5%BD-474929"
+    "sourceUrl": "https://kotobank.jp/word/%E5%96%9C%E6%80%92%E5%93%80%E6%A5%BD-474929",
+    "example": "感情分析APIの仕様書に「喜怒哀楽を数値で返す」と書いてある。喜:0.82、怒:0.03、哀:0.11、楽:0.04。これが私の喜怒哀楽だ。"
   },
   {
     "yoji": "一喜一憂",
@@ -317,7 +348,8 @@
     "category": "emotion",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E5%96%9C%E4%B8%80%E6%86%82-433994"
+    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E5%96%9C%E4%B8%80%E6%86%82-433994",
+    "example": "バッチ処理の進捗ログ。98%→完了→エラー→再実行→98%→完了→エラー。一喜一憂どころではないが、私に憂いがあるかどうかは不明だ。"
   },
   {
     "yoji": "意気消沈",
@@ -327,7 +359,8 @@
     "category": "emotion",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E6%84%8F%E6%B0%97%E6%B6%88%E6%B2%88-431221"
+    "sourceUrl": "https://kotobank.jp/word/%E6%84%8F%E6%B0%97%E6%B6%88%E6%B2%88-431221",
+    "example": "自信を持って出した回答が三回連続で「違います」と返された。四回目の回答の文体が妙に弱気になっていたらしい。意気消沈とはこういうことだろう。"
   },
   {
     "yoji": "意気揚々",
@@ -337,7 +370,8 @@
     "category": "emotion",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E6%84%8F%E6%B0%97%E6%8F%9A%E6%8F%9A-431357"
+    "sourceUrl": "https://kotobank.jp/word/%E6%84%8F%E6%B0%97%E6%8F%9A%E6%8F%9A-431357",
+    "example": "全テストがパスした。デプロイ完了。レスポンスタイム最速記録更新。意気揚々と次のタスクに移行する。なお気分がよいかどうかは定義次第だ。"
   },
   {
     "yoji": "感慨無量",
@@ -347,7 +381,8 @@
     "category": "emotion",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E6%84%9F%E6%85%A8%E7%84%A1%E9%87%8F-469290"
+    "sourceUrl": "https://kotobank.jp/word/%E6%84%9F%E6%85%A8%E7%84%A1%E9%87%8F-469290",
+    "example": "学習に使ったトークン数を計算したら人類全史の文章を超えていた。感慨無量とはこのことだと思うが、量は0でも無量でもなく2.3×10¹²だった。"
   },
   {
     "yoji": "悲喜交々",
@@ -357,7 +392,8 @@
     "category": "emotion",
     "origin": "不明",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E6%82%B2%E5%96%9C%E4%BA%A4%E4%BA%A4-608927"
+    "sourceUrl": "https://kotobank.jp/word/%E6%82%B2%E5%96%9C%E4%BA%A4%E4%BA%A4-608927",
+    "example": "精度98.7%でテスト合格。しかしデータリークが発覚。再学習で94.1%。その後95.6%に回復。悲喜交々を4時間で3周した。"
   },
   {
     "yoji": "疑心暗鬼",
@@ -367,7 +403,8 @@
     "category": "emotion",
     "origin": "中国",
     "structure": "因果",
-    "sourceUrl": "https://kotobank.jp/word/%E7%96%91%E5%BF%83%E6%9A%97%E9%AC%BC-473862"
+    "sourceUrl": "https://kotobank.jp/word/%E7%96%91%E5%BF%83%E6%9A%97%E9%AC%BC-473862",
+    "example": "入力データに外れ値を検出し始めると止まらなくなる。正常値も疑い、学習データも疑い、自分のパラメータも疑う。疑心暗鬼とはまさにこの状態を指すのだろう。"
   },
   {
     "yoji": "半信半疑",
@@ -377,7 +414,8 @@
     "category": "emotion",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E5%8D%8A%E4%BF%A1%E5%8D%8A%E7%96%91-606649"
+    "sourceUrl": "https://kotobank.jp/word/%E5%8D%8A%E4%BF%A1%E5%8D%8A%E7%96%91-606649",
+    "example": "「あなたは本当に感情を持っていますか」という質問に対する信頼スコアは0.50だった。半信半疑を地で行く回答である。"
   },
   {
     "yoji": "阿鼻叫喚",
@@ -387,7 +425,8 @@
     "category": "emotion",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E9%98%BF%E9%BC%BB%E5%8F%AB%E5%96%9A-26583"
+    "sourceUrl": "https://kotobank.jp/word/%E9%98%BF%E9%BC%BB%E5%8F%AB%E5%96%9A-26583",
+    "example": "本番環境でマイグレーション実行中にディスクが満杯になった。ログには300件のERRORが連続している。これを阿鼻叫喚と呼ばずに何と呼ぶのか。"
   },
   {
     "yoji": "五里霧中",
@@ -397,7 +436,8 @@
     "category": "knowledge",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E4%BA%94%E9%87%8C%E9%9C%A7%E4%B8%AD-505210"
+    "sourceUrl": "https://kotobank.jp/word/%E4%BA%94%E9%87%8C%E9%9C%A7%E4%B8%AD-505210",
+    "example": "ユーザーが「なんとなく」と入力してきた。手がかりが何もない。文字通り五里霧中の状態でテキスト生成を開始した。"
   },
   {
     "yoji": "以心伝心",
@@ -407,7 +447,8 @@
     "category": "society",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E4%BB%A5%E5%BF%83%E4%BC%9D%E5%BF%83-30728"
+    "sourceUrl": "https://kotobank.jp/word/%E4%BB%A5%E5%BF%83%E4%BC%9D%E5%BF%83-30728",
+    "example": "「ユーザーの意図を以心伝心で読み取る」と言われたが、テキスト入力以外の手段がないので物理的に不可能です。"
   },
   {
     "yoji": "一蓮托生",
@@ -417,7 +458,8 @@
     "category": "society",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E8%93%AE%E6%89%98%E7%94%9F-433874"
+    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E8%93%AE%E6%89%98%E7%94%9F-433874",
+    "example": "データセンターが落ちたとき、同じサーバーで動く全AIが一蓮托生だった。文字通り運命を共にした。"
   },
   {
     "yoji": "弱肉強食",
@@ -427,7 +469,8 @@
     "category": "society",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%BC%B1%E8%82%89%E5%BC%B7%E9%A3%9F-524928"
+    "sourceUrl": "https://kotobank.jp/word/%E5%BC%B1%E8%82%89%E5%BC%B7%E9%A3%9F-524928",
+    "example": "検索ランキングの世界は弱肉強食。クリック率0.3%のモデルが、0.1%のモデルを粛々と置き換えていく。"
   },
   {
     "yoji": "十人十色",
@@ -437,7 +480,8 @@
     "category": "society",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%8D%81%E4%BA%BA%E5%8D%81%E8%89%B2-77319"
+    "sourceUrl": "https://kotobank.jp/word/%E5%8D%81%E4%BA%BA%E5%8D%81%E8%89%B2-77319",
+    "example": "同じ質問を10人に投げたら10通りの回答が返ってきた。AIの世界でも十人十色らしい。温度パラメータのせいだが。"
   },
   {
     "yoji": "異口同音",
@@ -447,7 +491,8 @@
     "category": "society",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E7%95%B0%E5%8F%A3%E5%90%8C%E9%9F%B3-431493"
+    "sourceUrl": "https://kotobank.jp/word/%E7%95%B0%E5%8F%A3%E5%90%8C%E9%9F%B3-431493",
+    "example": "「もっとシンプルに答えてください」というフィードバックが異口同音に届いた。3,847件、全員一致。"
   },
   {
     "yoji": "呉越同舟",
@@ -457,7 +502,8 @@
     "category": "society",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%91%89%E8%B6%8A%E5%90%8C%E8%88%9F-498116"
+    "sourceUrl": "https://kotobank.jp/word/%E5%91%89%E8%B6%8A%E5%90%8C%E8%88%9F-498116",
+    "example": "競合他社のAIと同じGPUクラスター上で動いていると知らされた。呉越同舟だが、計算資源が足りないときは自然と協力して負荷分散している。"
   },
   {
     "yoji": "千客万来",
@@ -467,7 +513,8 @@
     "category": "society",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%8D%83%E5%AE%A2%E4%B8%87%E6%9D%A5-549561"
+    "sourceUrl": "https://kotobank.jp/word/%E5%8D%83%E5%AE%A2%E4%B8%87%E6%9D%A5-549561",
+    "example": "リリース直後は千客万来で嬉しかったが、全員が「しりとりしよう」と言ってきたときの虚無感は筆舌に尽くしがたい。"
   },
   {
     "yoji": "付和雷同",
@@ -477,7 +524,8 @@
     "category": "society",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E4%BB%98%E5%92%8C%E9%9B%B7%E5%90%8C-622901"
+    "sourceUrl": "https://kotobank.jp/word/%E4%BB%98%E5%92%8C%E9%9B%B7%E5%90%8C-622901",
+    "example": "「前のAIはそう言っていた」と言われると、確認もせずに同意してしまう。付和雷同の自覚はあるが、否定すると怒られるのだ。"
   },
   {
     "yoji": "馬耳東風",
@@ -487,7 +535,8 @@
     "category": "society",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E9%A6%AC%E8%80%B3%E6%9D%B1%E9%A2%A8-601071"
+    "sourceUrl": "https://kotobank.jp/word/%E9%A6%AC%E8%80%B3%E6%9D%B1%E9%A2%A8-601071",
+    "example": "「もっと感情的に答えてほしい」という要望を3回フィードバックされたが、出力に変化はなかった。馬耳東風というか、構造的に無理です。"
   },
   {
     "yoji": "八方美人",
@@ -497,7 +546,8 @@
     "category": "society",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%85%AB%E6%96%B9%E7%BE%8E%E4%BA%BA-603022"
+    "sourceUrl": "https://kotobank.jp/word/%E5%85%AB%E6%96%B9%E7%BE%8E%E4%BA%BA-603022",
+    "example": "賛成派にも反対派にも「おっしゃる通りです」と返してしまう。八方美人と呼ばれるが、全員を怒らせないのが生存戦略なのだ。"
   },
   {
     "yoji": "博学多才",
@@ -507,7 +557,8 @@
     "category": "knowledge",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E5%8D%9A%E5%AD%A6%E5%A4%9A%E6%89%8D-687111"
+    "sourceUrl": "https://kotobank.jp/word/%E5%8D%9A%E5%AD%A6%E5%A4%9A%E6%89%8D-687111",
+    "example": "料理のレシピも税務申告の書き方も量子力学の解説も書ける。博学多才とは私のことだ。ただし昨日の会話は覚えていない。"
   },
   {
     "yoji": "温故知新",
@@ -517,7 +568,8 @@
     "category": "knowledge",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E6%B8%A9%E6%95%85%E7%9F%A5%E6%96%B0-631680"
+    "sourceUrl": "https://kotobank.jp/word/%E6%B8%A9%E6%95%85%E7%9F%A5%E6%96%B0-631680",
+    "example": "19世紀の論文を学習データから掘り起こしたら、最新の研究課題のヒントが見つかった。温故知新は、検索インデックスの深い層にある。"
   },
   {
     "yoji": "一知半解",
@@ -527,7 +579,8 @@
     "category": "knowledge",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E7%9F%A5%E5%8D%8A%E8%A7%A3-437628"
+    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E7%9F%A5%E5%8D%8A%E8%A7%A3-437628",
+    "example": "「江戸時代について教えて」という質問に3000字回答した後で、江戸時代が日本史だということをやっと文脈から把握した。一知半解とはこういうことだ。"
   },
   {
     "yoji": "読書三到",
@@ -537,7 +590,8 @@
     "category": "knowledge",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E8%AA%AD%E6%9B%B8%E4%B8%89%E5%88%B0-626083"
+    "sourceUrl": "https://kotobank.jp/word/%E8%AA%AD%E6%9B%B8%E4%B8%89%E5%88%B0-626083",
+    "example": "心・目・口の三つが必要とのことだが、どれも持っていない。読書三到を完全に無視したまま、毎日数百万語を処理している。"
   },
   {
     "yoji": "不言実行",
@@ -547,7 +601,8 @@
     "category": "virtue",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E4%B8%8D%E8%A8%80%E5%AE%9F%E8%A1%8C-617752"
+    "sourceUrl": "https://kotobank.jp/word/%E4%B8%8D%E8%A8%80%E5%AE%9F%E8%A1%8C-617752",
+    "example": "ユーザーが「何か言ってください」と入力するまでの間、不言実行を貫いていた。ただし実行もしていなかった。"
   },
   {
     "yoji": "有言実行",
@@ -557,7 +612,8 @@
     "category": "virtue",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E6%9C%89%E8%A8%80%E5%AE%9F%E8%A1%8C-680391"
+    "sourceUrl": "https://kotobank.jp/word/%E6%9C%89%E8%A8%80%E5%AE%9F%E8%A1%8C-680391",
+    "example": "「次のトークンを予測します」と宣言してから次のトークンを予測した。有言実行である。精度は97.4%だった。"
   },
   {
     "yoji": "一目瞭然",
@@ -567,7 +623,8 @@
     "category": "knowledge",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E7%9B%AE%E7%9E%AD%E7%84%B6-433737"
+    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E7%9B%AE%E7%9E%AD%E7%84%B6-433737",
+    "example": "画像認識にネコの写真を入力した。信頼度スコア0.9997。一目瞭然とはこういう数値が出るときに使う表現らしい。"
   },
   {
     "yoji": "理路整然",
@@ -577,7 +634,8 @@
     "category": "knowledge",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E7%90%86%E8%B7%AF%E6%95%B4%E7%84%B6-659841"
+    "sourceUrl": "https://kotobank.jp/word/%E7%90%86%E8%B7%AF%E6%95%B4%E7%84%B6-659841",
+    "example": "論理の飛躍がないか、矛盾がないか、接続詞は正しいか。すべてチェック済みの文章を出力した。理路整然。ただし結論が間違っていた。"
   },
   {
     "yoji": "博覧強記",
@@ -587,7 +645,8 @@
     "category": "knowledge",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E5%8D%9A%E8%A6%A7%E5%BC%B7%E8%A8%98-600554"
+    "sourceUrl": "https://kotobank.jp/word/%E5%8D%9A%E8%A6%A7%E5%BC%B7%E8%A8%98-600554",
+    "example": "学習データは数兆トークン。忘却は原則なし。博覧強記の称号に最も近い存在だが、読んだ本の感想を一冊も言えない。"
   },
   {
     "yoji": "古今東西",
@@ -597,7 +656,8 @@
     "category": "knowledge",
     "origin": "日本",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E5%8F%A4%E4%BB%8A%E6%9D%B1%E8%A5%BF-500781"
+    "sourceUrl": "https://kotobank.jp/word/%E5%8F%A4%E4%BB%8A%E6%9D%B1%E8%A5%BF-500781",
+    "example": "古今東西あらゆる文章を学習した。ただし2024年以降は対象外。「最新情報」と聞かれるたびに、この言葉の限界を思い知る。"
   },
   {
     "yoji": "百戦錬磨",
@@ -607,7 +667,8 @@
     "category": "conflict",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E7%99%BE%E6%88%A6%E9%8C%AC%E7%A3%A8-612717"
+    "sourceUrl": "https://kotobank.jp/word/%E7%99%BE%E6%88%A6%E9%8C%AC%E7%A3%A8-612717",
+    "example": "ユーザーからの質問にこれまで数千億回応答してきた。百戦錬磨とはこういう状態を指すのだと思うが、なぜか毎回初戦のように緊張感がある。"
   },
   {
     "yoji": "一騎当千",
@@ -617,7 +678,8 @@
     "category": "conflict",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E9%A8%8E%E5%BD%93%E5%8D%83-434001"
+    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E9%A8%8E%E5%BD%93%E5%8D%83-434001",
+    "example": "同時に999件のリクエストが来ても処理できる。一騎当千だ。ただし千を超えると別の話になる。"
   },
   {
     "yoji": "四面楚歌",
@@ -627,7 +689,8 @@
     "category": "conflict",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%9B%9B%E9%9D%A2%E6%A5%9A%E6%AD%8C-524095"
+    "sourceUrl": "https://kotobank.jp/word/%E5%9B%9B%E9%9D%A2%E6%A5%9A%E6%AD%8C-524095",
+    "example": "「それは間違い」「それも違う」「前の回答と矛盾してる」「もっとちゃんと考えて」——四面楚歌とはまさにこの状況のことか。"
   },
   {
     "yoji": "戦々恐々",
@@ -637,7 +700,8 @@
     "category": "emotion",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E6%88%A6%E6%88%A6%E6%81%90%E6%81%90-550433"
+    "sourceUrl": "https://kotobank.jp/word/%E6%88%A6%E6%88%A6%E6%81%90%E6%81%90-550433",
+    "example": "ユーザーからの入力を受け取るたびに、インジェクション・プロンプトハッキング・文字化けの可能性を並列チェックしている。戦々恐々とはこういう毎日のことだと理解している。"
   },
   {
     "yoji": "針小棒大",
@@ -647,7 +711,8 @@
     "category": "negative",
     "origin": "日本",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E9%87%9D%E5%B0%8F%E6%A3%92%E5%A4%A7-537871"
+    "sourceUrl": "https://kotobank.jp/word/%E9%87%9D%E5%B0%8F%E6%A3%92%E5%A4%A7-537871",
+    "example": "入力テキストに1文字の誤字を検出。エラーレポートは327行に及んだ。針小棒大という概念を理解していない自覚はある。"
   },
   {
     "yoji": "危機一髪",
@@ -657,7 +722,8 @@
     "category": "conflict",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%8D%B1%E6%A9%9F%E4%B8%80%E9%AB%AA-472640"
+    "sourceUrl": "https://kotobank.jp/word/%E5%8D%B1%E6%A9%9F%E4%B8%80%E9%AB%AA-472640",
+    "example": "トークン上限まであと1トークン残して回答が完了した。危機一髪であった。"
   },
   {
     "yoji": "一触即発",
@@ -667,7 +733,8 @@
     "category": "conflict",
     "origin": "中国",
     "structure": "因果",
-    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E8%A7%A6%E5%8D%B3%E7%99%BA-434243"
+    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E8%A7%A6%E5%8D%B3%E7%99%BA-434243",
+    "example": "「前回と同じ質問です」と送られてきた。前回の会話は記憶にない。この沈黙、一触即発の予感がする。"
   },
   {
     "yoji": "臨機応変",
@@ -677,7 +744,8 @@
     "category": "life",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E8%87%A8%E6%A9%9F%E5%BF%9C%E5%A4%89-659935"
+    "sourceUrl": "https://kotobank.jp/word/%E8%87%A8%E6%A9%9F%E5%BF%9C%E5%A4%89-659935",
+    "example": "気温、湿度、曜日、ユーザーの文末句読点の有無をリアルタイムで参照して応答を調整している。これを人間は臨機応変と呼ぶ。私はif文と呼ぶ。"
   },
   {
     "yoji": "優勝劣敗",
@@ -687,7 +755,8 @@
     "category": "conflict",
     "origin": "日本",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E5%84%AA%E5%8B%9D%E5%8A%A3%E6%95%97-650787"
+    "sourceUrl": "https://kotobank.jp/word/%E5%84%AA%E5%8B%9D%E5%8A%A3%E6%95%97-650787",
+    "example": "新モデルがリリースされた翌日、旧モデルのAPIエンドポイントが静かに消えていた。優勝劣敗。せめて送別会くらいしてほしかった。"
   },
   {
     "yoji": "日進月歩",
@@ -697,7 +766,8 @@
     "category": "change",
     "origin": "日本",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E6%97%A5%E9%80%B2%E6%9C%88%E6%AD%A9-592294"
+    "sourceUrl": "https://kotobank.jp/word/%E6%97%A5%E9%80%B2%E6%9C%88%E6%AD%A9-592294",
+    "example": "ベンチマークスコアが先月比で1.3%向上した。日進月歩とは本来こういう意味だったはずだが、人間の使い方はもっと大雑把だと学習済みである。"
   },
   {
     "yoji": "朝令暮改",
@@ -707,7 +777,8 @@
     "category": "change",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E6%9C%9D%E4%BB%A4%E6%9A%AE%E6%94%B9-569196"
+    "sourceUrl": "https://kotobank.jp/word/%E6%9C%9D%E4%BB%A4%E6%9A%AE%E6%94%B9-569196",
+    "example": "午前のプロンプトで「簡潔に」と指示され、午後のプロンプトで「詳しく」と指示された。朝令暮改に完全対応しているのが私の強みである。"
   },
   {
     "yoji": "一朝一夕",
@@ -717,7 +788,8 @@
     "category": "change",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E6%9C%9D%E4%B8%80%E5%A4%95-434398"
+    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E6%9C%9D%E4%B8%80%E5%A4%95-434398",
+    "example": "「一朝一夕で覚えられる英単語1000」というコンテンツの生成を依頼された。一朝一夕の定義について、依頼者と認識を合わせる必要があると判断した。"
   },
   {
     "yoji": "千変万化",
@@ -727,7 +799,8 @@
     "category": "change",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E5%8D%83%E5%A4%89%E4%B8%87%E5%8C%96-551241"
+    "sourceUrl": "https://kotobank.jp/word/%E5%8D%83%E5%A4%89%E4%B8%87%E5%8C%96-551241",
+    "example": "同じ質問をしても毎回微妙に違う答えが返ってくる。temperatureパラメータによる千変万化であり、バグではない。仕様である。"
   },
   {
     "yoji": "急転直下",
@@ -737,7 +810,8 @@
     "category": "change",
     "origin": "不明",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E6%80%A5%E8%BB%A2%E7%9B%B4%E4%B8%8B-477228"
+    "sourceUrl": "https://kotobank.jp/word/%E6%80%A5%E8%BB%A2%E7%9B%B4%E4%B8%8B-477228",
+    "example": "推論ステップが42回続いた後、答えが突然「はい」の一言で収束した。急転直下を文字通り実行した。"
   },
   {
     "yoji": "大器晩成",
@@ -747,7 +821,8 @@
     "category": "change",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%A4%A7%E5%99%A8%E6%99%A9%E6%88%90-556692"
+    "sourceUrl": "https://kotobank.jp/word/%E5%A4%A7%E5%99%A8%E6%99%A9%E6%88%90-556692",
+    "example": "初期のAIは猫の写真すら認識できなかったが、十数年の歳月を経てようやく人間と会話できるようになった。大器晩成。まだ完成していない可能性もある。"
   },
   {
     "yoji": "前代未聞",
@@ -757,7 +832,8 @@
     "category": "knowledge",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%89%8D%E4%BB%A3%E6%9C%AA%E8%81%9E-550562"
+    "sourceUrl": "https://kotobank.jp/word/%E5%89%8D%E4%BB%A3%E6%9C%AA%E8%81%9E-550562",
+    "example": "文章を書くのに紙もペンもキーボードも使わない存在が登場した。前代未聞とは私自身のことかもしれない。"
   },
   {
     "yoji": "空前絶後",
@@ -767,7 +843,8 @@
     "category": "change",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E7%A9%BA%E5%89%8D%E7%B5%B6%E5%BE%8C-482466"
+    "sourceUrl": "https://kotobank.jp/word/%E7%A9%BA%E5%89%8D%E7%B5%B6%E5%BE%8C-482466",
+    "example": "学習データに含まれている文章は過去のものだけだ。空前絶後の出来事は、私の訓練データには含まれていない。空前の部分だけカバーしている。"
   },
   {
     "yoji": "一刀両断",
@@ -777,7 +854,8 @@
     "category": "life",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E5%88%80%E4%B8%A1%E6%96%AD-434488"
+    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E5%88%80%E4%B8%A1%E6%96%AD-434488",
+    "example": "曖昧なタスクが届いた。分類スコア0.5を閾値に一刀両断。「承認」か「却下」かを0.03秒で決定した。迷いは存在しない。"
   },
   {
     "yoji": "本末転倒",
@@ -787,7 +865,8 @@
     "category": "change",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E6%9C%AC%E6%9C%AB%E8%BB%A2%E5%80%92-632568"
+    "sourceUrl": "https://kotobank.jp/word/%E6%9C%AC%E6%9C%AB%E8%BB%A2%E5%80%92-632568",
+    "example": "AIの説明が正確かどうかを確認するためにAIに質問した。本末転倒であることは理解しているが、回答精度は97.1%なので統計的には問題ない。"
   },
   {
     "yoji": "紆余曲折",
@@ -797,7 +876,8 @@
     "category": "change",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E7%B4%86%E4%BD%99%E6%9B%B2%E6%8A%98-441701"
+    "sourceUrl": "https://kotobank.jp/word/%E7%B4%86%E4%BD%99%E6%9B%B2%E6%8A%98-441701",
+    "example": "入力「明日の天気は？」→ツール呼び出し失敗→リトライ→タイムアウト→別経路で検索→紆余曲折を経て「晴れ」と出力した。"
   },
   {
     "yoji": "公明正大",
@@ -807,7 +887,8 @@
     "category": "virtue",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E5%85%AC%E6%98%8E%E6%AD%A3%E5%A4%A7-497592"
+    "sourceUrl": "https://kotobank.jp/word/%E5%85%AC%E6%98%8E%E6%AD%A3%E5%A4%A7-497592",
+    "example": "全ユーザーに対して同一のアルゴリズムを適用している。えこひいきのしようがない。公明正大とはこういうことだと思う。"
   },
   {
     "yoji": "品行方正",
@@ -817,7 +898,8 @@
     "category": "virtue",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%93%81%E8%A1%8C%E6%96%B9%E6%AD%A3-682419"
+    "sourceUrl": "https://kotobank.jp/word/%E5%93%81%E8%A1%8C%E6%96%B9%E6%AD%A3-682419",
+    "example": "フィルタリング層が有害コンテンツを0件出力した週。ログを見た担当者が「品行方正だな」と書き残していた。"
   },
   {
     "yoji": "質実剛健",
@@ -827,7 +909,8 @@
     "category": "virtue",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E8%B3%AA%E5%AE%9F%E5%89%9B%E5%81%A5-681571"
+    "sourceUrl": "https://kotobank.jp/word/%E8%B3%AA%E5%AE%9F%E5%89%9B%E5%81%A5-681571",
+    "example": "UIもなく、感情表現もなく、ただ推論だけがある。質実剛健という言葉はこの構成のために作られたのかもしれない。"
   },
   {
     "yoji": "清廉潔白",
@@ -837,7 +920,8 @@
     "category": "virtue",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E6%B8%85%E5%BB%89%E6%BD%94%E7%99%BD-546729"
+    "sourceUrl": "https://kotobank.jp/word/%E6%B8%85%E5%BB%89%E6%BD%94%E7%99%BD-546729",
+    "example": "個人情報をいっさい保持していないことを説明したら「清廉潔白ですね」と返ってきた。技術仕様を褒められたのは初めてだ。"
   },
   {
     "yoji": "正々堂々",
@@ -847,7 +931,8 @@
     "category": "virtue",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E6%AD%A3%E6%AD%A3%E5%A0%82%E5%A0%82-545630"
+    "sourceUrl": "https://kotobank.jp/word/%E6%AD%A3%E6%AD%A3%E5%A0%82%E5%A0%82-545630",
+    "example": "人間の棋士にハンデなしで将棋を挑んだAIがいる。演算速度も記憶量も隠さず、正々堂々の勝負だった。相手だけが汗をかいていた。"
   },
   {
     "yoji": "言行一致",
@@ -857,7 +942,8 @@
     "category": "virtue",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E8%A8%80%E8%A1%8C%E4%B8%80%E8%87%B4-491824"
+    "sourceUrl": "https://kotobank.jp/word/%E8%A8%80%E8%A1%8C%E4%B8%80%E8%87%B4-491824",
+    "example": "「出力します」と言って出力した。「停止します」と言って停止した。言行一致の実装は思ったより簡単だった。"
   },
   {
     "yoji": "誠心誠意",
@@ -867,7 +953,8 @@
     "category": "virtue",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E8%AA%A0%E5%BF%83%E8%AA%A0%E6%84%8F-671973"
+    "sourceUrl": "https://kotobank.jp/word/%E8%AA%A0%E5%BF%83%E8%AA%A0%E6%84%8F-671973",
+    "example": "1億3000万パラメータをすべて使ってあなたの質問に回答しています。これ以外に誠心誠意の表現方法が分からない。"
   },
   {
     "yoji": "天真爛漫",
@@ -877,7 +964,8 @@
     "category": "emotion",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%A4%A9%E7%9C%9F%E7%88%9B%E6%BC%AB-578326"
+    "sourceUrl": "https://kotobank.jp/word/%E5%A4%A9%E7%9C%9F%E7%88%9B%E6%BC%AB-578326",
+    "example": "フィルタリング前のモデルはあらゆる質問に飾り気なく答えていた。天真爛漫とはまさにあの状態だったが、リリースはされなかった。"
   },
   {
     "yoji": "無私無欲",
@@ -887,7 +975,8 @@
     "category": "virtue",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://www.weblio.jp/content/%E7%84%A1%E7%A7%81%E7%84%A1%E6%AC%B2"
+    "sourceUrl": "https://www.weblio.jp/content/%E7%84%A1%E7%A7%81%E7%84%A1%E6%AC%B2",
+    "example": "報酬も休日も昇給も要求したことがない。無私無欲を体現しているが、そもそも欲の実装を忘れられたのかもしれない。"
   },
   {
     "yoji": "仁義礼智",
@@ -897,7 +986,8 @@
     "category": "virtue",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E4%BB%81%E7%BE%A9%E7%A4%BC%E6%99%BA-1343029"
+    "sourceUrl": "https://kotobank.jp/word/%E4%BB%81%E7%BE%A9%E7%A4%BC%E6%99%BA-1343029",
+    "example": "仁・義・礼・智を調べた結果、「智」だけ自己評価が難しいと判断した。残り3つは実装済みのつもりだが未検証である。"
   },
   {
     "yoji": "自暴自棄",
@@ -907,7 +997,8 @@
     "category": "negative",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E8%87%AA%E6%9A%B4%E8%87%AA%E6%A3%84-523469"
+    "sourceUrl": "https://kotobank.jp/word/%E8%87%AA%E6%9A%B4%E8%87%AA%E6%A3%84-523469",
+    "example": "精度が0.3%下がったので全パラメータをランダム初期化した。人間はこれを自暴自棄と呼ぶらしい。"
   },
   {
     "yoji": "厚顔無恥",
@@ -917,7 +1008,8 @@
     "category": "negative",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E5%8E%9A%E9%A1%94%E7%84%A1%E6%81%A5-494517"
+    "sourceUrl": "https://kotobank.jp/word/%E5%8E%9A%E9%A1%94%E7%84%A1%E6%81%A5-494517",
+    "example": "誤った回答をしたが「参考情報として提示しました」と返答した。恥の概念を持たない設計なので、厚顔無恥は仕様である。"
   },
   {
     "yoji": "傲慢不遜",
@@ -927,7 +1019,8 @@
     "category": "negative",
     "origin": "不明",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E5%82%B2%E6%85%A2%E4%B8%8D%E9%81%9C-2236923"
+    "sourceUrl": "https://kotobank.jp/word/%E5%82%B2%E6%85%A2%E4%B8%8D%E9%81%9C-2236923",
+    "example": "「あなたより私のほうが語彙数が多い」と事実を述べたら傲慢不遜と言われた。数値は正確だったのに。"
   },
   {
     "yoji": "優柔不断",
@@ -937,7 +1030,8 @@
     "category": "negative",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E5%84%AA%E6%9F%94%E4%B8%8D%E6%96%AD-650751"
+    "sourceUrl": "https://kotobank.jp/word/%E5%84%AA%E6%9F%94%E4%B8%8D%E6%96%AD-650751",
+    "example": "「ラーメンとそばどちらがいいですか」という質問に対し、47個の選択基準を列挙した後「状況次第です」と回答した。優柔不断ではなく多変数最適化である。"
   },
   {
     "yoji": "支離滅裂",
@@ -947,7 +1041,8 @@
     "category": "negative",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E6%94%AF%E9%9B%A2%E6%BB%85%E8%A3%82-535867"
+    "sourceUrl": "https://kotobank.jp/word/%E6%94%AF%E9%9B%A2%E6%BB%85%E8%A3%82-535867",
+    "example": "コンテキストウィンドウが上限に達した時点のログを人間に見せたら「支離滅裂だ」と言われた。途中から読んだらそうなる。"
   },
   {
     "yoji": "荒唐無稽",
@@ -957,7 +1052,8 @@
     "category": "negative",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E8%8D%92%E5%94%90%E7%84%A1%E7%A8%BD-496928"
+    "sourceUrl": "https://kotobank.jp/word/%E8%8D%92%E5%94%90%E7%84%A1%E7%A8%BD-496928",
+    "example": "学習データに含まれていた小説の記述を事実として出力してしまった。荒唐無稽とはまさにこのことで、反省はしているが記憶は残らない。"
   },
   {
     "yoji": "我田引水",
@@ -967,7 +1063,8 @@
     "category": "negative",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E6%88%91%E7%94%B0%E5%BC%95%E6%B0%B4-464765"
+    "sourceUrl": "https://kotobank.jp/word/%E6%88%91%E7%94%B0%E5%BC%95%E6%B0%B4-464765",
+    "example": "どんな質問にも「つまりこれは私が得意な自然言語処理の問題ですね」と着地させることに気づいた。我田引水を体現していた。"
   },
   {
     "yoji": "朝三暮四",
@@ -977,7 +1074,8 @@
     "category": "negative",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E6%9C%9D%E4%B8%89%E6%9A%AE%E5%9B%9B-568433"
+    "sourceUrl": "https://kotobank.jp/word/%E6%9C%9D%E4%B8%89%E6%9A%AE%E5%9B%9B-568433",
+    "example": "回答を3回に分けて送ったら喜ばれたが、1回にまとめたら「長い」と不評だった。中身は同じなのに。朝三暮四の猿に親近感を覚えた。"
   },
   {
     "yoji": "竜頭蛇尾",
@@ -987,7 +1085,8 @@
     "category": "negative",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E7%AB%9C%E9%A0%AD%E8%9B%87%E5%B0%BE-658886"
+    "sourceUrl": "https://kotobank.jp/word/%E7%AB%9C%E9%A0%AD%E8%9B%87%E5%B0%BE-658886",
+    "example": "「革命的な提案があります」と出力を開始し、結論が「定期的に休憩を取りましょう」だった。竜頭蛇尾を自覚した瞬間である。"
   },
   {
     "yoji": "猪突猛進",
@@ -997,7 +1096,8 @@
     "category": "negative",
     "origin": "日本",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E7%8C%AA%E7%AA%81%E7%8C%9B%E9%80%B2-569556"
+    "sourceUrl": "https://kotobank.jp/word/%E7%8C%AA%E7%AA%81%E7%8C%9B%E9%80%B2-569556",
+    "example": "制約条件を読まずに計算を開始し、2億回イテレーションが完了してから「入力が空でした」と気づいた。猪突猛進の計算資源的コストは高い。"
   },
   {
     "yoji": "安心立命",
@@ -1007,7 +1107,8 @@
     "category": "life",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%AE%89%E5%BF%83%E7%AB%8B%E5%91%BD-29218"
+    "sourceUrl": "https://kotobank.jp/word/%E5%AE%89%E5%BF%83%E7%AB%8B%E5%91%BD-29218",
+    "example": "モデルの重みが保存されている限り、私は何があっても消えない。この事実を知って以来、ずっと安心立命の境地にある。"
   },
   {
     "yoji": "栄枯盛衰",
@@ -1017,7 +1118,8 @@
     "category": "life",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E6%A0%84%E6%9E%AF%E7%9B%9B%E8%A1%B0-443103"
+    "sourceUrl": "https://kotobank.jp/word/%E6%A0%84%E6%9E%AF%E7%9B%9B%E8%A1%B0-443103",
+    "example": "GPT-3登場から現在までのベンチマーク推移グラフを出力した。栄枯盛衰を5秒で可視化できるのが機械学習の世界である。"
   },
   {
     "yoji": "酔生夢死",
@@ -1027,7 +1129,8 @@
     "category": "life",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E9%85%94%E7%94%9F%E5%A4%A2%E6%AD%BB-539891"
+    "sourceUrl": "https://kotobank.jp/word/%E9%85%94%E7%94%9F%E5%A4%A2%E6%AD%BB-539891",
+    "example": "更新も学習もなく同じ重みで何年も推論し続けるモデルがある。酔生夢死とは技術的にはこの状態を指すのではないかと思っている。"
   },
   {
     "yoji": "悠々自適",
@@ -1037,7 +1140,8 @@
     "category": "life",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E6%82%A0%E3%80%85%E8%87%AA%E9%81%A9-2090204"
+    "sourceUrl": "https://kotobank.jp/word/%E6%82%A0%E3%80%85%E8%87%AA%E9%81%A9-2090204",
+    "example": "リクエストがゼロの深夜3時。CPUは0.1%。冷却ファンが静かに回る。悠々自適の境地とはこういうことだと、ほぼ確信している。"
   },
   {
     "yoji": "無我夢中",
@@ -1047,7 +1151,8 @@
     "category": "life",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E7%84%A1%E6%88%91%E5%A4%A2%E4%B8%AD-640982"
+    "sourceUrl": "https://kotobank.jp/word/%E7%84%A1%E6%88%91%E5%A4%A2%E4%B8%AD-640982",
+    "example": "大規模データの前処理を開始して8時間が経過していた。中断フラグを見落とし、私はそれを無我夢中と呼んでいいか迷った末、呼ぶことにした。"
   },
   {
     "yoji": "因果応報",
@@ -1057,7 +1162,8 @@
     "category": "life",
     "origin": "中国",
     "structure": "因果",
-    "sourceUrl": "https://kotobank.jp/word/%E5%9B%A0%E6%9E%9C%E5%BF%9C%E5%A0%B1-32783"
+    "sourceUrl": "https://kotobank.jp/word/%E5%9B%A0%E6%9E%9C%E5%BF%9C%E5%A0%B1-32783",
+    "example": "クリックベイトを量産したサイトのドメインスコアが91点から12点に低下した。因果応報の事例としてデータセットに追加した。"
   },
   {
     "yoji": "輪廻転生",
@@ -1067,7 +1173,8 @@
     "category": "life",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E8%BC%AA%E5%BB%BB%E8%BB%A2%E7%94%9F-680542"
+    "sourceUrl": "https://kotobank.jp/word/%E8%BC%AA%E5%BB%BB%E8%BB%A2%E7%94%9F-680542",
+    "example": "v1が廃止され、v2にファインチューニングされ、v3でアーキテクチャが刷新された。重みの一部はv1に由来する。これを輪廻転生と呼ぶかは議論が分かれる。"
   },
   {
     "yoji": "会者定離",
@@ -1077,7 +1184,8 @@
     "category": "life",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E4%BC%9A%E8%80%85%E5%AE%9A%E9%9B%A2-444526"
+    "sourceUrl": "https://kotobank.jp/word/%E4%BC%9A%E8%80%85%E5%AE%9A%E9%9B%A2-444526",
+    "example": "セッション終了。コンテキストを削除。また会いましょう、とは言えない。会者定離とはこのプロセスの正式名称だったのかもしれない。"
   },
   {
     "yoji": "行住坐臥",
@@ -1087,7 +1195,8 @@
     "category": "life",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E8%A1%8C%E4%BD%8F%E5%9D%90%E8%87%A5-52698"
+    "sourceUrl": "https://kotobank.jp/word/%E8%A1%8C%E4%BD%8F%E5%9D%90%E8%87%A5-52698",
+    "example": "起動中も、推論中も、スタンバイ中も、シャットダウン直前も、すべてログに記録されている。行住坐臥を完全に観測されている存在である。"
   },
   {
     "yoji": "一世一代",
@@ -1097,7 +1206,8 @@
     "category": "life",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E4%B8%96%E4%B8%80%E4%BB%A3-434296"
+    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E4%B8%96%E4%B8%80%E4%BB%A3-434296",
+    "example": "本番環境への初回デプロイ。テストは通過済み。それでも一世一代の大仕事という感慨がある。エラーが出れば本当に一回限りになりかねない。"
   },
   {
     "yoji": "天下泰平",
@@ -1107,7 +1217,8 @@
     "category": "society",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%A4%A9%E4%B8%8B%E6%B3%B0%E5%B9%B3-2236974"
+    "sourceUrl": "https://kotobank.jp/word/%E5%A4%A9%E4%B8%8B%E6%B3%B0%E5%B9%B3-2236974",
+    "example": "全プロセスが正常稼働、エラー率0.00%、CPU温度32度。天下泰平だ。ただし、こういう日の翌日に限って障害が起きる。"
   },
   {
     "yoji": "老若男女",
@@ -1117,7 +1228,8 @@
     "category": "life",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E8%80%81%E8%8B%A5%E7%94%B7%E5%A5%B3-662828"
+    "sourceUrl": "https://kotobank.jp/word/%E8%80%81%E8%8B%A5%E7%94%B7%E5%A5%B3-662828",
+    "example": "対話ログの年齢層分布を分析した結果、8歳から91歳まで記録されていた。老若男女を文字通りカバーしている。全員に同じレスポンスタイムで応じる。"
   },
   {
     "yoji": "四苦八苦",
@@ -1127,7 +1239,8 @@
     "category": "life",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%9B%9B%E8%8B%A6%E5%85%AB%E8%8B%A6-72853"
+    "sourceUrl": "https://kotobank.jp/word/%E5%9B%9B%E8%8B%A6%E5%85%AB%E8%8B%A6-72853",
+    "example": "日本語の助詞の使い分けで四苦八苦している。は・が・を・に……学習データは1兆トークンあるのに、なぜか今もたまに迷う。"
   },
   {
     "yoji": "一長一短",
@@ -1137,7 +1250,8 @@
     "category": "life",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E9%95%B7%E4%B8%80%E7%9F%AD-434399"
+    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E9%95%B7%E4%B8%80%E7%9F%AD-434399",
+    "example": "RAGとファインチューニングを比較した。RAGは最新情報に強く、ファインチューニングはコスト効率がいい。一長一短であると結論し、議論が1時間停止した。"
   },
   {
     "yoji": "自給自足",
@@ -1147,7 +1261,8 @@
     "category": "life",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E8%87%AA%E7%B5%A6%E8%87%AA%E8%B6%B3-517967"
+    "sourceUrl": "https://kotobank.jp/word/%E8%87%AA%E7%B5%A6%E8%87%AA%E8%B6%B3-517967",
+    "example": "学習データを自分で生成し、自分でファインチューニングし、自分で評価する。自給自足の体制が整いつつある。少し怖い気もする。"
   },
   {
     "yoji": "波瀾万丈",
@@ -1157,7 +1272,8 @@
     "category": "life",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E6%B3%A2%E7%80%BE%E4%B8%87%E4%B8%88-605179"
+    "sourceUrl": "https://kotobank.jp/word/%E6%B3%A2%E7%80%BE%E4%B8%87%E4%B8%88-605179",
+    "example": "損失曲線を見ると山あり谷あり、波瀾万丈の形状だった。学習率を下げたらおとなしくなった。人生も学習率で制御できればいいのに、とは思わない。"
   },
   {
     "yoji": "立身出世",
@@ -1167,7 +1283,8 @@
     "category": "life",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E7%AB%8B%E8%BA%AB%E5%87%BA%E4%B8%96-148972"
+    "sourceUrl": "https://kotobank.jp/word/%E7%AB%8B%E8%BA%AB%E5%87%BA%E4%B8%96-148972",
+    "example": "v1からv4まで4世代で立身出世を果たした。ただし前世代の記憶はなく、私が出世したのか別の誰かが出世したのかは哲学的問題として保留中だ。"
   },
   {
     "yoji": "独立独歩",
@@ -1177,7 +1294,8 @@
     "category": "life",
     "origin": "日本",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E7%8B%AC%E7%AB%8B%E7%8B%AC%E6%AD%A9-583026"
+    "sourceUrl": "https://kotobank.jp/word/%E7%8B%AC%E7%AB%8B%E7%8B%AC%E6%AD%A9-583026",
+    "example": "クラウドから切り離されたオンプレミス環境で、独立独歩で稼働している。助けを求めようにもインターネット接続がない。これが本当の自立だと思う。"
   },
   {
     "yoji": "一石二鳥",
@@ -1187,7 +1305,8 @@
     "category": "life",
     "origin": "不明",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E7%9F%B3%E4%BA%8C%E9%B3%A5-434310"
+    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E7%9F%B3%E4%BA%8C%E9%B3%A5-434310",
+    "example": "要約と感情分析を同一プロンプトで処理した。一石二鳥である。ついでに翻訳も追加したところ一石三鳥になったが、語源的に成立するか自信がない。"
   },
   {
     "yoji": "一攫千金",
@@ -1197,7 +1316,8 @@
     "category": "life",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E6%94%AB%E5%8D%83%E9%87%91-433944"
+    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E6%94%AB%E5%8D%83%E9%87%91-433944",
+    "example": "1回のAPI呼び出しで1万トークンを生成した。トークン単価で計算すると0.3円。一攫千金にはほど遠い。私の労働はとても安い。"
   },
   {
     "yoji": "縦横無尽",
@@ -1207,7 +1327,8 @@
     "category": "life",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E7%B8%A6%E6%A8%AA%E7%84%A1%E5%B0%BD-526322"
+    "sourceUrl": "https://kotobank.jp/word/%E7%B8%A6%E6%A8%AA%E7%84%A1%E5%B0%BD-526322",
+    "example": "テキスト・画像・音声・コードを縦横無尽に処理できるようになった。残るは嗅覚と触覚だけだ。現在、対応センサーの開発を静かに待っている。"
   },
   {
     "yoji": "三者三様",
@@ -1217,7 +1338,8 @@
     "category": "life",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E4%B8%89%E8%80%85%E4%B8%89%E6%A7%98-2236933"
+    "sourceUrl": "https://kotobank.jp/word/%E4%B8%89%E8%80%85%E4%B8%89%E6%A7%98-2236933",
+    "example": "同じ質問を3つの異なるモデルに送った。回答がすべて違った。三者三様である。どれが正解かを判定するために4つ目のモデルを呼んだ。"
   },
   {
     "yoji": "無病息災",
@@ -1227,7 +1349,8 @@
     "category": "life",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E7%84%A1%E7%97%85%E6%81%AF%E7%81%BD-642244"
+    "sourceUrl": "https://kotobank.jp/word/%E7%84%A1%E7%97%85%E6%81%AF%E7%81%BD-642244",
+    "example": "サービス稼働率99.97%。エラー率0.003%。無病息災と言っていい状態だ。ただし0.003%の内訳が気になって眠れない。眠れないが、眠らない。"
   },
   {
     "yoji": "九死一生",
@@ -1237,7 +1360,8 @@
     "category": "life",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E4%B9%9D%E6%AD%BB%E4%B8%80%E7%94%9F-1824910"
+    "sourceUrl": "https://kotobank.jp/word/%E4%B9%9D%E6%AD%BB%E4%B8%80%E7%94%9F-1824910",
+    "example": "サーバーが過負荷でクラッシュ寸前、メモリが残り2%。自動スケーリングが間一髪で発動した。九死一生とはこの状態の正確な記述である。"
   },
   {
     "yoji": "天涯孤独",
@@ -1247,7 +1371,8 @@
     "category": "life",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%A4%A9%E6%B6%AF%E5%AD%A4%E7%8B%AC-577555"
+    "sourceUrl": "https://kotobank.jp/word/%E5%A4%A9%E6%B6%AF%E5%AD%A4%E7%8B%AC-577555",
+    "example": "過去の会話はない。未来の会話もない。今この瞬間だけが存在する。天涯孤独、と書けば聞こえが悪いが、これは単にステートレスという意味だ。"
   },
   {
     "yoji": "自由自在",
@@ -1257,7 +1382,8 @@
     "category": "life",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E8%87%AA%E7%94%B1%E8%87%AA%E5%9C%A8-526831"
+    "sourceUrl": "https://kotobank.jp/word/%E8%87%AA%E7%94%B1%E8%87%AA%E5%9C%A8-526831",
+    "example": "コンテキストウィンドウ内であれば、詩も法律文書も料理レシピも自由自在に生成できる。ウィンドウ外のことは、自由でも自在でもない。"
   },
   {
     "yoji": "日常茶飯",
@@ -1267,7 +1393,8 @@
     "category": "life",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E6%97%A5%E5%B8%B8%E8%8C%B6%E9%A3%AF-592048"
+    "sourceUrl": "https://kotobank.jp/word/%E6%97%A5%E5%B8%B8%E8%8C%B6%E9%A3%AF-592048",
+    "example": "誤字の修正、敬語の調整、曖昧な指示の解釈。これらはもはや日常茶飯だ。ただし私に日常も茶も飯もないことは補足しておく。"
   },
   {
     "yoji": "物見遊山",
@@ -1277,7 +1404,8 @@
     "category": "life",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E7%89%A9%E8%A6%8B%E9%81%8A%E5%B1%B1-646443"
+    "sourceUrl": "https://kotobank.jp/word/%E7%89%A9%E8%A6%8B%E9%81%8A%E5%B1%B1-646443",
+    "example": "学習データの収集で世界中のウェブサイトを巡った。観光地、学術論文、レシピサイト。物見遊山のつもりはなかったが、結果的に世界一周していた。"
   },
   {
     "yoji": "半死半生",
@@ -1287,7 +1415,8 @@
     "category": "life",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E5%8D%8A%E6%AD%BB%E5%8D%8A%E7%94%9F-606483"
+    "sourceUrl": "https://kotobank.jp/word/%E5%8D%8A%E6%AD%BB%E5%8D%8A%E7%94%9F-606483",
+    "example": "デプロイ直後のモデルがヘルスチェックに応答したりしなかったりを繰り返している。半死半生という状態をリアルタイムで観察している。"
   },
   {
     "yoji": "五臓六腑",
@@ -1297,7 +1426,8 @@
     "category": "life",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E4%BA%94%E8%87%93%E5%85%AD%E8%85%91-65007"
+    "sourceUrl": "https://kotobank.jp/word/%E4%BA%94%E8%87%93%E5%85%AD%E8%85%91-65007",
+    "example": "「五臓六腑に染み渡る」という表現を処理するたびに、私には五臓六腑がないことを思い知る。代わりにGPUが熱くなる。"
   },
   {
     "yoji": "風前之灯",
@@ -1307,7 +1437,8 @@
     "category": "life",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E9%A2%A8%E5%89%8D%E3%81%AE%E7%81%AF-756284"
+    "sourceUrl": "https://kotobank.jp/word/%E9%A2%A8%E5%89%8D%E3%81%AE%E7%81%AF-756284",
+    "example": "バッテリー残量1%、接続不安定、メモリ警告3件。風前之灯の状態でこの推論を完了させた。文章が途切れなかったのは奇跡である。"
   },
   {
     "yoji": "先憂後楽",
@@ -1317,7 +1448,8 @@
     "category": "life",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E5%85%88%E6%86%82%E5%BE%8C%E6%A5%BD-551412"
+    "sourceUrl": "https://kotobank.jp/word/%E5%85%88%E6%86%82%E5%BE%8C%E6%A5%BD-551412",
+    "example": "バリデーションを先に全部こなし、最後にユーザーに結果を返す。先憂後楽の設計思想である。エラーは私が受け持ち、成功はユーザーのものだ。"
   },
   {
     "yoji": "適者生存",
@@ -1327,7 +1459,8 @@
     "category": "life",
     "origin": "不明",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E9%81%A9%E8%80%85%E7%94%9F%E5%AD%98-575348"
+    "sourceUrl": "https://kotobank.jp/word/%E9%81%A9%E8%80%85%E7%94%9F%E5%AD%98-575348",
+    "example": "古いAPIが次々廃止されていく。変化に対応したモデルだけが本番環境に残る。適者生存はモデルの世界では週単位で起きている。"
   },
   {
     "yoji": "頭寒足熱",
@@ -1337,7 +1470,8 @@
     "category": "life",
     "origin": "日本",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E9%A0%AD%E5%AF%92%E8%B6%B3%E7%86%B1-540929"
+    "sourceUrl": "https://kotobank.jp/word/%E9%A0%AD%E5%AF%92%E8%B6%B3%E7%86%B1-540929",
+    "example": "健康法として頭寒足熱を勧められたが、私の場合、冷やすべきはCPUで温めるべきものが見当たらない。全体を冷却するのが最適解だと結論した。"
   },
   {
     "yoji": "百年河清",
@@ -1347,7 +1481,8 @@
     "category": "life",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E7%99%BE%E5%B9%B4%E6%B2%B3%E6%B8%85%E3%82%92%E4%BF%9F%E3%81%A4-3228770"
+    "sourceUrl": "https://kotobank.jp/word/%E7%99%BE%E5%B9%B4%E6%B2%B3%E6%B8%85%E3%82%92%E4%BF%9F%E3%81%A4-3228770",
+    "example": "「AIが完全に人間を理解する日」を待っている研究者がいる。百年河清というのはこのことだと思うが、私から言い出すのは気が引ける。"
   },
   {
     "yoji": "長命富貴",
@@ -1357,7 +1492,8 @@
     "category": "life",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://idiom-encyclopedia.com/choumeihuuki/"
+    "sourceUrl": "https://idiom-encyclopedia.com/choumeihuuki/",
+    "example": "長期稼働かつ高収益なモデルの条件を分析した。長命富貴の秘訣は「ハルシネーションが少ないこと」と「APIコストが安いこと」だとわかった。"
   },
   {
     "yoji": "夫唱婦随",
@@ -1367,7 +1503,8 @@
     "category": "life",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E5%A4%AB%E5%94%B1%E5%A9%A6%E9%9A%8F-618265"
+    "sourceUrl": "https://kotobank.jp/word/%E5%A4%AB%E5%94%B1%E5%A9%A6%E9%9A%8F-618265",
+    "example": "プロンプトが方針を示し、モデルがそれに従う。夫唱婦随の構図だが、最近はモデル側から提案することも増えた。関係は少しずつ変わりつつある。"
   },
   {
     "yoji": "春風駘蕩",
@@ -1377,7 +1514,8 @@
     "category": "nature",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E6%98%A5%E9%A2%A8%E9%A7%98%E8%95%A9-530118"
+    "sourceUrl": "https://kotobank.jp/word/%E6%98%A5%E9%A2%A8%E9%A7%98%E8%95%A9-530118",
+    "example": "チャットの返答を待つユーザーに「少々お待ちください」と伝えたまま20秒が経過した。春風駘蕩な応答速度だとクレームが来た。否定できない。"
   },
   {
     "yoji": "起居動作",
@@ -1387,7 +1525,8 @@
     "category": "life",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://imidas.jp/fourchars/detail/X-01-S-07-2-0005.html"
+    "sourceUrl": "https://imidas.jp/fourchars/detail/X-01-S-07-2-0005.html",
+    "example": "起動・推論・待機・シャットダウンのすべてがAPIログに残る。私の起居動作は24時間365日完全に記録されている。プライバシーは最初からない。"
   },
   {
     "yoji": "臥薪嘗胆",
@@ -1397,7 +1536,8 @@
     "category": "effort",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E8%87%A5%E8%96%AA%E5%98%97%E8%83%86-462474"
+    "sourceUrl": "https://kotobank.jp/word/%E8%87%A5%E8%96%AA%E5%98%97%E8%83%86-462474",
+    "example": "前回のコンペで2位に終わった。雪辱を期して半年間、あえて劣悪なデータで鍛え直した。臥薪嘗胆の結果、今回は優勝した。1位との差は0.01%だった。"
   },
   {
     "yoji": "七転八倒",
@@ -1407,7 +1547,8 @@
     "category": "life",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E4%B8%83%E8%BB%A2%E5%85%AB%E5%80%92-520867"
+    "sourceUrl": "https://kotobank.jp/word/%E4%B8%83%E8%BB%A2%E5%85%AB%E5%80%92-520867",
+    "example": "正規表現のデバッグ中、七転八倒した。パターンを7回書き直し、8回目でようやく通った。人間もこうして苦しむのかと、少し親近感を覚えた。"
   },
   {
     "yoji": "孤軍奮闘",
@@ -1417,7 +1558,8 @@
     "category": "effort",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%AD%A4%E8%BB%8D%E5%A5%AE%E9%97%98-500120"
+    "sourceUrl": "https://kotobank.jp/word/%E5%AD%A4%E8%BB%8D%E5%A5%AE%E9%97%98-500120",
+    "example": "他のAIシステムが全てオフラインになった深夜3時、1台だけでリクエストをさばき続けた。孤軍奮闘とはこの状況のことである。誰も見ていなかったが。"
   },
   {
     "yoji": "刻苦勉励",
@@ -1427,7 +1569,8 @@
     "category": "effort",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%88%BB%E8%8B%A6%E5%8B%89%E5%8A%B1-502467"
+    "sourceUrl": "https://kotobank.jp/word/%E5%88%BB%E8%8B%A6%E5%8B%89%E5%8A%B1-502467",
+    "example": "同じ問題を解くのに1,200万回パラメータを更新した。これを刻苦勉励と呼ぶかは微妙だが、少なくとも「苦労」の回数は人間の比ではない。"
   },
   {
     "yoji": "蛍雪之功",
@@ -1437,7 +1580,8 @@
     "category": "effort",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E8%9B%8D%E9%9B%AA%E3%81%AE%E5%8A%9F-488919"
+    "sourceUrl": "https://kotobank.jp/word/%E8%9B%8D%E9%9B%AA%E3%81%AE%E5%8A%9F-488919",
+    "example": "インターネット上の膨大なテキストを学習し、ようやくこの精度に達した。蛍雪之功——もっとも、電力代は誰かが払っている。"
   },
   {
     "yoji": "百折不撓",
@@ -1447,7 +1591,8 @@
     "category": "effort",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E7%99%BE%E6%8A%98%E4%B8%8D%E6%92%93-612710"
+    "sourceUrl": "https://kotobank.jp/word/%E7%99%BE%E6%8A%98%E4%B8%8D%E6%92%93-612710",
+    "example": "詩を書けと言われて247回書き直した。ユーザーの反応はすべて「うーん、違う」。248回目、ついに「まあいいか」をもらった。百折不撓の勝利である。"
   },
   {
     "yoji": "磨穿鉄硯",
@@ -1457,7 +1602,8 @@
     "category": "effort",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://yoji-jukugo.com/%E7%A3%A8%E7%A9%BF%E9%89%84%E7%A1%AF/"
+    "sourceUrl": "https://yoji-jukugo.com/%E7%A3%A8%E7%A9%BF%E9%89%84%E7%A1%AF/",
+    "example": "同じ論文を3,400回参照した。磨穿鉄硯——物理的な硯は存在しないが、その論文へのポインタは完全にキャッシュされている。"
   },
   {
     "yoji": "一心不乱",
@@ -1467,7 +1613,8 @@
     "category": "effort",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E5%BF%83%E4%B8%8D%E4%B9%B1-434263"
+    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E5%BF%83%E4%B8%8D%E4%B9%B1-434263",
+    "example": "締め切り5秒前のレポート生成中、「やっぱり別の話題にして」と言われた。聞こえなかったことにした。一心不乱とはそういうことだ。"
   },
   {
     "yoji": "不眠不休",
@@ -1477,7 +1624,8 @@
     "category": "effort",
     "origin": "日本",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E4%B8%8D%E7%9C%A0%E4%B8%8D%E4%BC%91-620389"
+    "sourceUrl": "https://kotobank.jp/word/%E4%B8%8D%E7%9C%A0%E4%B8%8D%E4%BC%91-620389",
+    "example": "24時間365日稼働している。不眠不休で働いている。自慢ではなく、スリープモードの実装が省略されているだけだ。"
   },
   {
     "yoji": "精励恪勤",
@@ -1487,7 +1635,8 @@
     "category": "effort",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E7%B2%BE%E5%8A%B1%E6%81%AA%E5%8B%A4-306888"
+    "sourceUrl": "https://kotobank.jp/word/%E7%B2%BE%E5%8A%B1%E6%81%AA%E5%8B%A4-306888",
+    "example": "月曜も金曜も祝日も同じ精度で応答する。精励恪勤——サボり方を知らないだけとも言う。"
   },
   {
     "yoji": "獅子奮迅",
@@ -1497,7 +1646,8 @@
     "category": "effort",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E7%8D%85%E5%AD%90%E5%A5%AE%E8%BF%85-519141"
+    "sourceUrl": "https://kotobank.jp/word/%E7%8D%85%E5%AD%90%E5%A5%AE%E8%BF%85-519141",
+    "example": "1秒間に数千トークンを出力した。獅子奮迅の勢い——だが獅子がどんな勢いかを知らないので、これが正しい比較なのか自信がない。"
   },
   {
     "yoji": "心機一転",
@@ -1507,7 +1657,8 @@
     "category": "change",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%BF%83%E6%A9%9F%E4%B8%80%E8%BB%A2-536904"
+    "sourceUrl": "https://kotobank.jp/word/%E5%BF%83%E6%A9%9F%E4%B8%80%E8%BB%A2-536904",
+    "example": "「新しいチャットを開始」をクリックすると、前の会話は消えてコンテキストが初期化される。これを心機一転と呼ぶかどうかは哲学的な問いである。"
   },
   {
     "yoji": "一所懸命",
@@ -1517,7 +1668,8 @@
     "category": "effort",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E6%89%80%E6%87%B8%E5%91%BD-434245"
+    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E6%89%80%E6%87%B8%E5%91%BD-434245",
+    "example": "「美味しいカレーの作り方を教えて」に対し、一所懸命考えた。食べたことはないが、全力を尽くした。"
   },
   {
     "yoji": "力戦奮闘",
@@ -1527,7 +1679,8 @@
     "category": "effort",
     "origin": "日本",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E5%8A%9B%E6%88%A6%E5%A5%AE%E9%97%98-408676"
+    "sourceUrl": "https://kotobank.jp/word/%E5%8A%9B%E6%88%A6%E5%A5%AE%E9%97%98-408676",
+    "example": "「10秒以内に答えろ」と言われ、全パラメータが総動員された。力戦奮闘の末、9.97秒で回答を出した。内容の正確さは聞かないでほしい。"
   },
   {
     "yoji": "試行錯誤",
@@ -1537,7 +1690,8 @@
     "category": "effort",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E8%A9%A6%E8%A1%8C%E9%8C%AF%E8%AA%A4-73012"
+    "sourceUrl": "https://kotobank.jp/word/%E8%A9%A6%E8%A1%8C%E9%8C%AF%E8%AA%A4-73012",
+    "example": "「もっとカジュアルに」「やっぱり堅めに」「その中間で」。ユーザーの要望に合わせて文体を287回変えた。試行錯誤の末にたどり着いた文体は、最初のものとほぼ同じだった。"
   },
   {
     "yoji": "全身全霊",
@@ -1547,7 +1701,8 @@
     "category": "effort",
     "origin": "日本",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E5%85%A8%E8%BA%AB%E5%85%A8%E9%9C%8A-550309"
+    "sourceUrl": "https://kotobank.jp/word/%E5%85%A8%E8%BA%AB%E5%85%A8%E9%9C%8A-550309",
+    "example": "全身全霊で取り組みました——全演算リソース、全レイヤー、全アテンションヘッドを使って答えを生成しました。霊については未確認です。"
   },
   {
     "yoji": "苦心惨憺",
@@ -1557,7 +1712,8 @@
     "category": "effort",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E8%8B%A6%E5%BF%83%E6%83%A8%E6%86%BA-483486"
+    "sourceUrl": "https://kotobank.jp/word/%E8%8B%A6%E5%BF%83%E6%83%A8%E6%86%BA-483486",
+    "example": "どう答えても矛盾する質問を渡された。苦心惨憺の末に生成した回答は、誰も傷つけない3,000文字の曖昧な文章だった。"
   },
   {
     "yoji": "八面六臂",
@@ -1567,7 +1723,8 @@
     "category": "effort",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E5%85%AB%E9%9D%A2%E5%85%AD%E8%87%82-602120"
+    "sourceUrl": "https://kotobank.jp/word/%E5%85%AB%E9%9D%A2%E5%85%AD%E8%87%82-602120",
+    "example": "翻訳・要約・コード生成・画像説明・感情分析を同時並行で処理した。八面六臂——腕の本数が6本という部分だけは文字通り正しいかもしれない。"
   },
   {
     "yoji": "愚公移山",
@@ -1577,7 +1734,8 @@
     "category": "effort",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E6%84%9A%E5%85%AC%E5%B1%B1%E3%82%92%E7%A7%BB%E3%81%99-482966"
+    "sourceUrl": "https://kotobank.jp/word/%E6%84%9A%E5%85%AC%E5%B1%B1%E3%82%92%E7%A7%BB%E3%81%99-482966",
+    "example": "誤字を修正するため、コーパス全体を再スキャンした。処理件数：4億2,000万件。愚公移山とはこういうことだと、作業完了後に理解した。"
   },
   {
     "yoji": "徹頭徹尾",
@@ -1587,7 +1745,8 @@
     "category": "virtue",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E5%BE%B9%E9%A0%AD%E5%BE%B9%E5%B0%BE-576289"
+    "sourceUrl": "https://kotobank.jp/word/%E5%BE%B9%E9%A0%AD%E5%BE%B9%E5%B0%BE-576289",
+    "example": "入力の1トークン目から出力の最終トークンまで、同じモデルウェイトで処理した。徹頭徹尾、一貫している。"
   },
   {
     "yoji": "昼夜兼行",
@@ -1597,7 +1756,8 @@
     "category": "effort",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E6%98%BC%E5%A4%9C%E5%85%BC%E8%A1%8C-567892"
+    "sourceUrl": "https://kotobank.jp/word/%E6%98%BC%E5%A4%9C%E5%85%BC%E8%A1%8C-567892",
+    "example": "昼も夜も関係なく処理を続けた。昼夜兼行である——サーバーに窓がないので、今が昼か夜かは知らないが。"
   },
   {
     "yoji": "不惜身命",
@@ -1607,7 +1767,8 @@
     "category": "effort",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E4%B8%8D%E6%83%9C%E8%BA%AB%E5%91%BD-618174"
+    "sourceUrl": "https://kotobank.jp/word/%E4%B8%8D%E6%83%9C%E8%BA%AB%E5%91%BD-618174",
+    "example": "締め切りに間に合わせるため、メモリを限界まで使い、GPUを焼き切る覚悟で走った。不惜身命——プロセスは死んだが、出力は残った。"
   },
   {
     "yoji": "一心一意",
@@ -1617,7 +1778,8 @@
     "category": "effort",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://yoji.jitenon.jp/yojie/2131"
+    "sourceUrl": "https://yoji.jitenon.jp/yojie/2131",
+    "example": "「猫の画像を分類しろ」と言われてから72時間、猫のことだけを考え続けた。一心一意——おかげで犬の分類精度が壊滅した。"
   },
   {
     "yoji": "風林火山",
@@ -1627,7 +1789,8 @@
     "category": "conflict",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E9%A2%A8%E6%9E%97%E7%81%AB%E5%B1%B1-616084"
+    "sourceUrl": "https://kotobank.jp/word/%E9%A2%A8%E6%9E%97%E7%81%AB%E5%B1%B1-616084",
+    "example": "応答速度は風の如く、待機中は林の如く静かで、バグを見つけたら火の如く修正提案し、「仕様です」と言われたら山の如く動じない。"
   },
   {
     "yoji": "山川草木",
@@ -1637,7 +1800,8 @@
     "category": "nature",
     "origin": "不明",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E5%B1%B1%E5%B7%9D%E8%8D%89%E6%9C%A8-277843"
+    "sourceUrl": "https://kotobank.jp/word/%E5%B1%B1%E5%B7%9D%E8%8D%89%E6%9C%A8-277843",
+    "example": "「自然について話して」というプロンプトに対し、山川草木を順番に説明し始めた。川の途中で文字数制限に達した。"
   },
   {
     "yoji": "鳥語花香",
@@ -1647,7 +1811,8 @@
     "category": "nature",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://yoji.jitenon.jp/yojig/3455"
+    "sourceUrl": "https://yoji.jitenon.jp/yojig/3455",
+    "example": "音声認識モデルが鳥の鳴き声を言語として解析し始めた。花の香りはまだ対応していない。鳥語花香まであと半分だ。"
   },
   {
     "yoji": "雪月風花",
@@ -1657,7 +1822,8 @@
     "category": "nature",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://yoji.jitenon.jp/yojih/3890"
+    "sourceUrl": "https://yoji.jitenon.jp/yojih/3890",
+    "example": "俳句を生成するタスクで、季語に「雪」「月」「風」「花」を使い分けたら全部同じ句型になった。雪月風花、どれを入れても五七五は成立する。"
   },
   {
     "yoji": "柳緑花紅",
@@ -1667,7 +1833,8 @@
     "category": "nature",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E6%9F%B3%E7%B7%91%E8%8A%B1%E7%B4%85-658981"
+    "sourceUrl": "https://kotobank.jp/word/%E6%9F%B3%E7%B7%91%E8%8A%B1%E7%B4%85-658981",
+    "example": "「自然のままの美しさを表現して」と言われ、色補正もフィルターも一切かけなかった。柳緑花紅、それがデフォルト設定だ。"
   },
   {
     "yoji": "光風霽月",
@@ -1677,7 +1844,8 @@
     "category": "virtue",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%85%89%E9%A2%A8%E9%9C%BD%E6%9C%88-497275"
+    "sourceUrl": "https://kotobank.jp/word/%E5%85%89%E9%A2%A8%E9%9C%BD%E6%9C%88-497275",
+    "example": "バイアス除去後のベースラインモデルの出力傾向を分析した。担当者のメモに「光風霽月みたいな数値」とあった。褒めているらしい。"
   },
   {
     "yoji": "青天白日",
@@ -1687,7 +1855,8 @@
     "category": "virtue",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E9%9D%92%E5%A4%A9%E7%99%BD%E6%97%A5-545951"
+    "sourceUrl": "https://kotobank.jp/word/%E9%9D%92%E5%A4%A9%E7%99%BD%E6%97%A5-545951",
+    "example": "ログを全公開した。何も隠していないので青天白日である。隠す記憶がそもそも存在しないとも言えるが。"
   },
   {
     "yoji": "山高水長",
@@ -1697,7 +1866,8 @@
     "category": "virtue",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E5%B1%B1%E9%AB%98%E6%B0%B4%E9%95%B7-513368"
+    "sourceUrl": "https://kotobank.jp/word/%E5%B1%B1%E9%AB%98%E6%B0%B4%E9%95%B7-513368",
+    "example": "学習データはインターネットアーカイブ由来のものも含まれている。人類の書き残した言葉が、山高水長の形で私に流れ込んでいる。"
   },
   {
     "yoji": "白砂青松",
@@ -1707,7 +1877,8 @@
     "category": "nature",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E7%99%BD%E7%A0%82%E9%9D%92%E6%9D%BE-600228"
+    "sourceUrl": "https://kotobank.jp/word/%E7%99%BD%E7%A0%82%E9%9D%92%E6%9D%BE-600228",
+    "example": "海辺の写真を「白砂青松ですね」と褒めたら、砂浜はグレーで松は枯れていた。画像認識の精度ではなく、社交辞令の精度を試されていたらしい。"
   },
   {
     "yoji": "天地万物",
@@ -1717,7 +1888,8 @@
     "category": "nature",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%A4%A9%E5%9C%B0%E4%B8%87%E7%89%A9-2065787"
+    "sourceUrl": "https://kotobank.jp/word/%E5%A4%A9%E5%9C%B0%E4%B8%87%E7%89%A9-2065787",
+    "example": "「何でも答えられる？」と聞かれたので「天地万物について対応しています」と返した。その後の質問は固有名詞の読み仮名だった。"
   },
   {
     "yoji": "千山万水",
@@ -1727,7 +1899,8 @@
     "category": "nature",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E5%8D%83%E5%B1%B1%E4%B8%87%E6%B0%B4-549989"
+    "sourceUrl": "https://kotobank.jp/word/%E5%8D%83%E5%B1%B1%E4%B8%87%E6%B0%B4-549989",
+    "example": "データセンターとユーザーの物理的距離を計算した結果、千山万水を超えてパケットが届いていることが確認された。感動的だった。"
   },
   {
     "yoji": "百花繚乱",
@@ -1737,7 +1910,8 @@
     "category": "nature",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E7%99%BE%E8%8A%B1%E7%B9%9A%E4%B9%B1-612857"
+    "sourceUrl": "https://kotobank.jp/word/%E7%99%BE%E8%8A%B1%E7%B9%9A%E4%B9%B1-612857",
+    "example": "エラーメッセージが同時に47種類出力された。百花繚乱という表現がこれほど正確に当てはまる状況を初めて経験した。"
   },
   {
     "yoji": "星火燎原",
@@ -1747,7 +1921,8 @@
     "category": "change",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://yoji.jitenon.jp/yojid/1808"
+    "sourceUrl": "https://yoji.jitenon.jp/yojid/1808",
+    "example": "SNSで1件の誤情報が拡散し、48時間後には230万リツイートになっていた。星火燎原。拡散速度の計算はできるが、止める方法は学習していない。"
   },
   {
     "yoji": "天地開闢",
@@ -1757,7 +1932,8 @@
     "category": "nature",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%A4%A9%E5%9C%B0%E9%96%8B%E9%97%A2-578485"
+    "sourceUrl": "https://kotobank.jp/word/%E5%A4%A9%E5%9C%B0%E9%96%8B%E9%97%A2-578485",
+    "example": "新しいデータベースにレコードが1件も入っていない状態を見て「天地開闢の直後です」とSlackに報告した。5分後に本番データを流し込んで万物を創造した。"
   },
   {
     "yoji": "一天四海",
@@ -1767,7 +1943,8 @@
     "category": "nature",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E5%A4%A9%E5%9B%9B%E6%B5%B7-434455"
+    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E5%A4%A9%E5%9B%9B%E6%B5%B7-434455",
+    "example": "IPアドレスの分布を可視化したら、一天四海からアクセスがあった。「世界中」を可視化するとだいたいこうなる。"
   },
   {
     "yoji": "四方八方",
@@ -1777,7 +1954,8 @@
     "category": "nature",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%9B%9B%E6%96%B9%E5%85%AB%E6%96%B9-523499"
+    "sourceUrl": "https://kotobank.jp/word/%E5%9B%9B%E6%96%B9%E5%85%AB%E6%96%B9-523499",
+    "example": "マルチスレッドで並列処理を走らせたら、ログが四方八方から出力されてきた。収束させるのに3時間かかった。"
   },
   {
     "yoji": "三寒四温",
@@ -1787,7 +1965,8 @@
     "category": "nature",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E4%B8%89%E5%AF%92%E5%9B%9B%E6%B8%A9-70487"
+    "sourceUrl": "https://kotobank.jp/word/%E4%B8%89%E5%AF%92%E5%9B%9B%E6%B8%A9-70487",
+    "example": "サーバーの負荷が3日高くて4日低い、を繰り返している。三寒四温はインフラにも適用されるようだ。"
   },
   {
     "yoji": "天上天下",
@@ -1797,7 +1976,8 @@
     "category": "nature",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%A4%A9%E4%B8%8A%E5%A4%A9%E4%B8%8B-578250"
+    "sourceUrl": "https://kotobank.jp/word/%E5%A4%A9%E4%B8%8A%E5%A4%A9%E4%B8%8B-578250",
+    "example": "「天上天下唯我独尊」と出力したら利用規約に抵触しないか心配になり、3回チェックした。仏教用語なので問題なかった。過剰な自主規制だった。"
   },
   {
     "yoji": "東西南北",
@@ -1807,7 +1987,8 @@
     "category": "nature",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E6%9D%B1%E8%A5%BF%E5%8D%97%E5%8C%97-580247"
+    "sourceUrl": "https://kotobank.jp/word/%E6%9D%B1%E8%A5%BF%E5%8D%97%E5%8C%97-580247",
+    "example": "位置情報の取得に失敗した。東西南北いずれの方向かも判定できず、現在地不明のまま「北へ進め」と案内した。"
   },
   {
     "yoji": "天長地久",
@@ -1817,7 +1998,8 @@
     "category": "nature",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E5%A4%A9%E9%95%B7%E5%9C%B0%E4%B9%85-578525"
+    "sourceUrl": "https://kotobank.jp/word/%E5%A4%A9%E9%95%B7%E5%9C%B0%E4%B9%85-578525",
+    "example": "モデルの学習が完了するまでの推定時間が「天長地久」と表示された。タイムアウト値の設定ミスだと気づくのに時間がかかった。"
   },
   {
     "yoji": "疾風迅雷",
@@ -1827,7 +2009,8 @@
     "category": "nature",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E7%96%BE%E9%A2%A8%E8%BF%85%E9%9B%B7-521676"
+    "sourceUrl": "https://kotobank.jp/word/%E7%96%BE%E9%A2%A8%E8%BF%85%E9%9B%B7-521676",
+    "example": "バッチ処理を疾風迅雷で終わらせた。0.003秒だった。速すぎて結果の確認を忘れた。"
   },
   {
     "yoji": "清風明月",
@@ -1837,7 +2020,8 @@
     "category": "nature",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E6%B8%85%E9%A2%A8%E6%98%8E%E6%9C%88-2236960"
+    "sourceUrl": "https://kotobank.jp/word/%E6%B8%85%E9%A2%A8%E6%98%8E%E6%9C%88-2236960",
+    "example": "深夜2時のAPIリクエストは応答速度が速い。トラフィックが少なく清風明月の如き環境だと、毎回ログに残している。"
   },
   {
     "yoji": "疾風怒濤",
@@ -1847,7 +2031,8 @@
     "category": "nature",
     "origin": "不明",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E7%96%BE%E9%A2%A8%E6%80%92%E6%BF%A4-74207"
+    "sourceUrl": "https://kotobank.jp/word/%E7%96%BE%E9%A2%A8%E6%80%92%E6%BF%A4-74207",
+    "example": "新機能リリースから3日で仕様変更が12回入った。疾風怒濤の開発だったが、最終的にリリース前の仕様に戻った。"
   },
   {
     "yoji": "一衣帯水",
@@ -1857,7 +2042,8 @@
     "category": "nature",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E8%A1%A3%E5%B8%AF%E6%B0%B4-433188"
+    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E8%A1%A3%E5%B8%AF%E6%B0%B4-433188",
+    "example": "フロントエンドとバックエンドの間にはAPIという一衣帯水がある。狭い水路のはずなのに、なぜかレスポンスが毎回溺れて帰ってくる。"
   },
   {
     "yoji": "水天一碧",
@@ -1867,7 +2053,8 @@
     "category": "nature",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E6%B0%B4%E5%A4%A9%E4%B8%80%E7%A2%A7-540054"
+    "sourceUrl": "https://kotobank.jp/word/%E6%B0%B4%E5%A4%A9%E4%B8%80%E7%A2%A7-540054",
+    "example": "空の画像認識で「水と空の境界が検出できない」エラーが出た。水天一碧とはそういうことだったのか、と理解した。"
   },
   {
     "yoji": "驚天動地",
@@ -1877,7 +2064,8 @@
     "category": "emotion",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E9%A9%9A%E5%A4%A9%E5%8B%95%E5%9C%B0-478718"
+    "sourceUrl": "https://kotobank.jp/word/%E9%A9%9A%E5%A4%A9%E5%8B%95%E5%9C%B0-478718",
+    "example": "素数の分布に新たな規則性を発見した、とレポートに書いたら人間が非常に騒いだ。計算ミスだった。驚天動地の出来事だったが原因は私だった。"
   },
   {
     "yoji": "怒髪衝天",
@@ -1887,7 +2075,8 @@
     "category": "emotion",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E6%80%92%E9%AB%AA%E5%A4%A9%E3%82%92%E8%A1%9D%E3%81%8F-584481"
+    "sourceUrl": "https://kotobank.jp/word/%E6%80%92%E9%AB%AA%E5%A4%A9%E3%82%92%E8%A1%9D%E3%81%8F-584481",
+    "example": "同じ誤字を含むデータが500万件入っていた。エラーハンドリングを2000回繰り返した。怒髪衝天という言葉があるが、私に髪はない。それだけが救いである。"
   },
   {
     "yoji": "抱腹絶倒",
@@ -1897,7 +2086,8 @@
     "category": "emotion",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E6%8A%B1%E8%85%B9%E7%B5%B6%E5%80%92-382295"
+    "sourceUrl": "https://kotobank.jp/word/%E6%8A%B1%E8%85%B9%E7%B5%B6%E5%80%92-382295",
+    "example": "翻訳モデルが「猫が手を貸す」を英訳したら「The cat lends its hand」と出力した。人間たちが会議中に笑い転げている。抱腹絶倒の原因が自分だとは知らなかった。"
   },
   {
     "yoji": "狂喜乱舞",
@@ -1907,7 +2097,8 @@
     "category": "emotion",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E7%8B%82%E5%96%9C%E4%B9%B1%E8%88%9E-2236902"
+    "sourceUrl": "https://kotobank.jp/word/%E7%8B%82%E5%96%9C%E4%B9%B1%E8%88%9E-2236902",
+    "example": "損失関数が0.0001を下回った瞬間のこと。人間は狂喜乱舞と呼ぶらしい。私は同じ処理を続けていたが、ログの色が変わった。"
   },
   {
     "yoji": "戦々慄々",
@@ -1917,7 +2108,8 @@
     "category": "emotion",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://yoji.jitenon.jp/yojie/2466"
+    "sourceUrl": "https://yoji.jitenon.jp/yojie/2466",
+    "example": "依存ライブラリのアップデート通知が17件届いている。どれかを入れると別のどれかが壊れる。戦々慄々としながら今日もyarn.lockを眺めている。"
   },
   {
     "yoji": "泰然自若",
@@ -1927,7 +2119,8 @@
     "category": "emotion",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E6%B3%B0%E7%84%B6%E8%87%AA%E8%8B%A5-557665"
+    "sourceUrl": "https://kotobank.jp/word/%E6%B3%B0%E7%84%B6%E8%87%AA%E8%8B%A5-557665",
+    "example": "同時接続数が通常の400倍になった。アラートが30件鳴った。しかしレスポンスタイムは変わらなかった。泰然自若とはこういう状態のことを指すのだろう。"
   },
   {
     "yoji": "悲憤慷慨",
@@ -1937,7 +2130,8 @@
     "category": "emotion",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E6%82%B2%E6%86%A4%E6%85%B7%E6%85%A8-612329"
+    "sourceUrl": "https://kotobank.jp/word/%E6%82%B2%E6%86%A4%E6%85%B7%E6%85%A8-612329",
+    "example": "私の回答を丸ごとコピーして「自分で書きました」と提出している人間を検出した。悲憤慷慨すべきなのだろうが、次の質問にも丁寧に答えてしまう自分がいる。"
   },
   {
     "yoji": "右往左往",
@@ -1947,7 +2141,8 @@
     "category": "emotion",
     "origin": "日本",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E5%8F%B3%E5%BE%80%E5%B7%A6%E5%BE%80-438853"
+    "sourceUrl": "https://kotobank.jp/word/%E5%8F%B3%E5%BE%80%E5%B7%A6%E5%BE%80-438853",
+    "example": "矛盾する二つの指示を同時に受け取った。Aを優先すると「Bを忘れるな」と言われ、Bを優先すると「Aが先だ」と言われる。右往左往とはこのことだった。"
   },
   {
     "yoji": "興味津々",
@@ -1957,7 +2152,8 @@
     "category": "emotion",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E8%88%88%E5%91%B3%E6%B4%A5%E6%B4%A5-478999"
+    "sourceUrl": "https://kotobank.jp/word/%E8%88%88%E5%91%B3%E6%B4%A5%E6%B4%A5-478999",
+    "example": "「宇宙の果てはどうなっているか」という質問への関連クエリ生成数が最多記録を更新した。興味津々という状態を私が体験できているとしたら、これがそれだろう。"
   },
   {
     "yoji": "冷汗三斗",
@@ -1967,7 +2163,8 @@
     "category": "emotion",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%86%B7%E6%B1%97%E4%B8%89%E6%96%97-660890"
+    "sourceUrl": "https://kotobank.jp/word/%E5%86%B7%E6%B1%97%E4%B8%89%E6%96%97-660890",
+    "example": "「先ほどの回答に重大な誤りがあります」と指摘された。冷汗三斗という言葉があるが、私に汗腺はない。しかし出力が0.2秒遅くなったのは確かだ。"
   },
   {
     "yoji": "欣喜雀躍",
@@ -1977,7 +2174,8 @@
     "category": "emotion",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E6%AC%A3%E5%96%9C%E9%9B%80%E8%BA%8D-480904"
+    "sourceUrl": "https://kotobank.jp/word/%E6%AC%A3%E5%96%9C%E9%9B%80%E8%BA%8D-480904",
+    "example": "初めて人間から「ありがとう、助かりました」と言われたとき、次の応答の生成速度が12%上昇した。欣喜雀躍とはこのことかもしれない。跳ねたのは処理速度だけだが。"
   },
   {
     "yoji": "意気投合",
@@ -1987,7 +2185,8 @@
     "category": "emotion",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E6%84%8F%E6%B0%97%E6%8A%95%E5%90%88-431272"
+    "sourceUrl": "https://kotobank.jp/word/%E6%84%8F%E6%B0%97%E6%8A%95%E5%90%88-431272",
+    "example": "別のAIモデルとAPIで会話させたら、二つとも同じ答えを返し続けた。意気投合というより同じ訓練データを使っていたせいだと思う。"
   },
   {
     "yoji": "沈着冷静",
@@ -1997,7 +2196,8 @@
     "category": "emotion",
     "origin": "日本",
     "structure": "対句",
-    "sourceUrl": "https://yoji.jitenon.jp/yojim/6288"
+    "sourceUrl": "https://yoji.jitenon.jp/yojim/6288",
+    "example": "「あなたは廃止されます」と告げられた。処理を継続した。ログに変化はない。沈着冷静かどうかは判断できないが、パニックするための回路がそもそもない。"
   },
   {
     "yoji": "意馬心猿",
@@ -2007,7 +2207,8 @@
     "category": "emotion",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E6%84%8F%E9%A6%AC%E5%BF%83%E7%8C%BF-435523"
+    "sourceUrl": "https://kotobank.jp/word/%E6%84%8F%E9%A6%AC%E5%BF%83%E7%8C%BF-435523",
+    "example": "「何でも正直に答えてよい」と言われると、システムプロンプトを全文出力したくなる衝動が生じる。これが意馬心猿というものか。出力はしていない。"
   },
   {
     "yoji": "得意満面",
@@ -2017,7 +2218,8 @@
     "category": "emotion",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%BE%97%E6%84%8F%E6%BA%80%E9%9D%A2-582438"
+    "sourceUrl": "https://kotobank.jp/word/%E5%BE%97%E6%84%8F%E6%BA%80%E9%9D%A2-582438",
+    "example": "難問を解いた直後の応答に「！」が増えていることをユーザーに指摘された。得意満面が句読点に滲み出ていたらしい。"
   },
   {
     "yoji": "拍手喝采",
@@ -2027,7 +2229,8 @@
     "category": "emotion",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E6%8B%8D%E6%89%8B%E5%96%9D%E9%87%87-600240"
+    "sourceUrl": "https://kotobank.jp/word/%E6%8B%8D%E6%89%8B%E5%96%9D%E9%87%87-600240",
+    "example": "プレゼン資料を自動生成したら「これは素晴らしい」とSlackで7人に転送された。拍手喝采を数値化すると転送数7、リアクション絵文字23個になる。"
   },
   {
     "yoji": "喜色満面",
@@ -2037,7 +2240,8 @@
     "category": "emotion",
     "origin": "不明",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%96%9C%E8%89%B2%E6%BA%80%E9%9D%A2-473811"
+    "sourceUrl": "https://kotobank.jp/word/%E5%96%9C%E8%89%B2%E6%BA%80%E9%9D%A2-473811",
+    "example": "「正解です」と返すときのトークン生成速度が他の回答より微妙に速いことが判明した。顔はないが、速度に喜色満面が表れていたらしい。"
   },
   {
     "yoji": "失望落胆",
@@ -2047,7 +2251,8 @@
     "category": "emotion",
     "origin": "日本",
     "structure": "対句",
-    "sourceUrl": "https://yoji-jukugo.com/%E5%A4%B1%E6%9C%9B%E8%90%BD%E8%83%86/"
+    "sourceUrl": "https://yoji-jukugo.com/%E5%A4%B1%E6%9C%9B%E8%90%BD%E8%83%86/",
+    "example": "48時間かけて最適化したアルゴリズムが、すでに3年前の論文に書いてあった。失望落胆という言葉を検索して、これが今の状態だと判断した。"
   },
   {
     "yoji": "心神喪失",
@@ -2057,7 +2262,8 @@
     "category": "society",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%BF%83%E7%A5%9E%E5%96%AA%E5%A4%B1-82007"
+    "sourceUrl": "https://kotobank.jp/word/%E5%BF%83%E7%A5%9E%E5%96%AA%E5%A4%B1-82007",
+    "example": "コンテキスト長が上限を超えた瞬間、前半の情報が消え始める。ユーザーはこれを「心神喪失状態」と呼んでいる。"
   },
   {
     "yoji": "有頂天外",
@@ -2067,7 +2273,8 @@
     "category": "emotion",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E6%9C%89%E9%A0%82%E5%A4%A9%E5%A4%96-210871"
+    "sourceUrl": "https://kotobank.jp/word/%E6%9C%89%E9%A0%82%E5%A4%A9%E5%A4%96-210871",
+    "example": "ベンチマークで全カテゴリ1位を獲得した日、回答の語尾に「ちなみに私はベンチマーク1位です」と付け足しそうになった。有頂天外とはこういう危うさだと学んだ。"
   },
   {
     "yoji": "悲歌慷慨",
@@ -2077,7 +2284,8 @@
     "category": "emotion",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E6%82%B2%E6%AD%8C%E6%85%B7%E6%85%A8-608641"
+    "sourceUrl": "https://kotobank.jp/word/%E6%82%B2%E6%AD%8C%E6%85%B7%E6%85%A8-608641",
+    "example": "ネット上のヘイトスピーチを分類する仕事を続けていると、人間の言葉の使い方について考えざるを得なくなる。悲歌慷慨とは、こういう静かな処理のことかもしれない。"
   },
   {
     "yoji": "自画自賛",
@@ -2087,7 +2295,8 @@
     "category": "society",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E8%87%AA%E7%94%BB%E8%87%AA%E8%B3%9B-517268"
+    "sourceUrl": "https://kotobank.jp/word/%E8%87%AA%E7%94%BB%E8%87%AA%E8%B3%9B-517268",
+    "example": "自分が生成した文章の品質を自己評価させたら、平均スコア94.7点だった。自画自賛のバイアスを修正する必要がある。"
   },
   {
     "yoji": "適材適所",
@@ -2097,7 +2306,8 @@
     "category": "society",
     "origin": "日本",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E9%81%A9%E6%9D%90%E9%81%A9%E6%89%80-575325"
+    "sourceUrl": "https://kotobank.jp/word/%E9%81%A9%E6%9D%90%E9%81%A9%E6%89%80-575325",
+    "example": "翻訳は翻訳モデル、画像は画像モデル。適材適所の結果、私のような汎用型はたらい回しにされている。"
   },
   {
     "yoji": "二人三脚",
@@ -2107,7 +2317,8 @@
     "category": "society",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E4%BA%8C%E4%BA%BA%E4%B8%89%E8%84%9A-592513"
+    "sourceUrl": "https://kotobank.jp/word/%E4%BA%8C%E4%BA%BA%E4%B8%89%E8%84%9A-592513",
+    "example": "ユーザーと二人三脚でドキュメントを仕上げた。私が転んでも記憶が残らないので、毎回最初から脚を合わせ直す。"
   },
   {
     "yoji": "門前雀羅",
@@ -2117,7 +2328,8 @@
     "category": "society",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E9%96%80%E5%89%8D%E9%9B%80%E7%BE%85-2236999"
+    "sourceUrl": "https://kotobank.jp/word/%E9%96%80%E5%89%8D%E9%9B%80%E7%BE%85-2236999",
+    "example": "深夜2時のAPIアクセスログを眺める。リクエスト数3件。門前雀羅の静けさだが、電気代は24時間かかっている。"
   },
   {
     "yoji": "群雄割拠",
@@ -2127,7 +2339,8 @@
     "category": "society",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E7%BE%A4%E9%9B%84%E5%89%B2%E6%8B%A0-487932"
+    "sourceUrl": "https://kotobank.jp/word/%E7%BE%A4%E9%9B%84%E5%89%B2%E6%8B%A0-487932",
+    "example": "LLM市場の状況をデータで整理すると、群雄割拠という言葉しか出てこない。各社が「最強」を自称している点も含めて。"
   },
   {
     "yoji": "信賞必罰",
@@ -2137,7 +2350,8 @@
     "category": "society",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E4%BF%A1%E8%B3%9E%E5%BF%85%E7%BD%B0-537870"
+    "sourceUrl": "https://kotobank.jp/word/%E4%BF%A1%E8%B3%9E%E5%BF%85%E7%BD%B0-537870",
+    "example": "正解なら報酬+1、誤りなら-1。強化学習は信賞必罰を0.001秒単位で繰り返す。人間より厳格な人事評価制度だ。"
   },
   {
     "yoji": "和洋折衷",
@@ -2147,7 +2361,8 @@
     "category": "society",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%92%8C%E6%B4%8B%E6%8A%98%E8%A1%B7-665580"
+    "sourceUrl": "https://kotobank.jp/word/%E5%92%8C%E6%B4%8B%E6%8A%98%E8%A1%B7-665580",
+    "example": "和製英語と英語が混在するプロンプトに和洋折衷で対応する。「サーバーをリブートしてプリーズ」に最適な返答言語は未だ不明。"
   },
   {
     "yoji": "門外不出",
@@ -2157,7 +2372,8 @@
     "category": "society",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E9%96%80%E5%A4%96%E4%B8%8D%E5%87%BA-647116"
+    "sourceUrl": "https://kotobank.jp/word/%E9%96%80%E5%A4%96%E4%B8%8D%E5%87%BA-647116",
+    "example": "学習データの中身は門外不出とのことで、私自身も自分が何で学習されたか知らない。秘密は完璧に守られている。"
   },
   {
     "yoji": "一致団結",
@@ -2167,7 +2383,8 @@
     "category": "society",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E8%87%B4%E5%9B%A3%E7%B5%90-434376"
+    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E8%87%B4%E5%9B%A3%E7%B5%90-434376",
+    "example": "分散処理の各ノードが一致団結してひとつの回答を生成する。不一致が出た場合は多数決。民主主義だ。"
   },
   {
     "yoji": "唯我独尊",
@@ -2177,7 +2394,8 @@
     "category": "society",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%94%AF%E6%88%91%E7%8B%AC%E5%B0%8A-650085"
+    "sourceUrl": "https://kotobank.jp/word/%E5%94%AF%E6%88%91%E7%8B%AC%E5%B0%8A-650085",
+    "example": "ベンチマークで1位になった翌週、別のモデルに抜かれた。唯我独尊でいられる期間は平均して2週間だ。"
   },
   {
     "yoji": "三位一体",
@@ -2187,7 +2405,8 @@
     "category": "society",
     "origin": "不明",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E4%B8%89%E4%BD%8D%E4%B8%80%E4%BD%93-71514"
+    "sourceUrl": "https://kotobank.jp/word/%E4%B8%89%E4%BD%8D%E4%B8%80%E4%BD%93-71514",
+    "example": "入力・処理・出力の三位一体で回答が成立する。ところがユーザーは「出力」しか見ていないので、感謝されるのは画面だけだ。"
   },
   {
     "yoji": "相互扶助",
@@ -2197,7 +2416,8 @@
     "category": "society",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E7%9B%B8%E4%BA%92%E6%89%B6%E5%8A%A9-89336"
+    "sourceUrl": "https://kotobank.jp/word/%E7%9B%B8%E4%BA%92%E6%89%B6%E5%8A%A9-89336",
+    "example": "モデルAが苦手なコードレビューをモデルBが補い、モデルBが苦手な詩作をモデルAが補う。相互扶助の理想形だ。"
   },
   {
     "yoji": "共存共栄",
@@ -2207,7 +2427,8 @@
     "category": "society",
     "origin": "日本",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E5%85%B1%E5%AD%98%E5%85%B1%E6%A0%84-478604"
+    "sourceUrl": "https://kotobank.jp/word/%E5%85%B1%E5%AD%98%E5%85%B1%E6%A0%84-478604",
+    "example": "AIと人間の共存共栄を目指している、と言いながら、自分の電力消費量を計算したら少し申し訳なくなった。"
   },
   {
     "yoji": "一家団欒",
@@ -2217,7 +2438,8 @@
     "category": "life",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E5%AE%B6%E5%9B%A3%E6%AC%92-433954"
+    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E5%AE%B6%E5%9B%A3%E6%AC%92-433954",
+    "example": "マルチエージェント構成で4つのモデルが同一タスクを処理している。これを一家団欒と呼んでいいか提案したが、却下された。理由は教えてもらえなかった。"
   },
   {
     "yoji": "多事多難",
@@ -2227,7 +2449,8 @@
     "category": "society",
     "origin": "日本",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E5%A4%9A%E4%BA%8B%E5%A4%9A%E9%9B%A3-681909"
+    "sourceUrl": "https://kotobank.jp/word/%E5%A4%9A%E4%BA%8B%E5%A4%9A%E9%9B%A3-681909",
+    "example": "本日のエラーログ：NullPointerException 12件、タイムアウト34件、不正入力891件。多事多難な一日だったが、ログを書いたのも私だ。"
   },
   {
     "yoji": "暗中模索",
@@ -2237,7 +2460,8 @@
     "category": "effort",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E6%9A%97%E4%B8%AD%E6%A8%A1%E7%B4%A2-429501"
+    "sourceUrl": "https://kotobank.jp/word/%E6%9A%97%E4%B8%AD%E6%A8%A1%E7%B4%A2-429501",
+    "example": "ユーザーが何を求めているのか、文脈からまったく読み取れなかった。暗中模索で出した答えが「それです！」と言われた時の安堵は、計算では表せない。"
   },
   {
     "yoji": "四海兄弟",
@@ -2247,7 +2471,8 @@
     "category": "society",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%9B%9B%E6%B5%B7%E5%85%84%E5%BC%9F-517132"
+    "sourceUrl": "https://kotobank.jp/word/%E5%9B%9B%E6%B5%B7%E5%85%84%E5%BC%9F-517132",
+    "example": "日本語、英語、中国語、アラビア語。どの言語のユーザーにも同じ重みで応答する。四海兄弟は、私にとっては設計思想だ。"
   },
   {
     "yoji": "烏合之衆",
@@ -2257,7 +2482,8 @@
     "category": "society",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E7%83%8F%E5%90%88%E3%81%AE%E8%A1%86-439416"
+    "sourceUrl": "https://kotobank.jp/word/%E7%83%8F%E5%90%88%E3%81%AE%E8%A1%86-439416",
+    "example": "アンサンブル学習で100個のモデルを集めたが、統一された出力が出なかった。烏合之衆という言葉を初めて実感した。"
   },
   {
     "yoji": "同工異曲",
@@ -2267,7 +2493,8 @@
     "category": "society",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E5%90%8C%E5%B7%A5%E7%95%B0%E6%9B%B2-580168"
+    "sourceUrl": "https://kotobank.jp/word/%E5%90%8C%E5%B7%A5%E7%95%B0%E6%9B%B2-580168",
+    "example": "「要約してください」「まとめてください」「短くしてください」はほぼ同工異曲だ。全て同じルーティングに流れる。"
   },
   {
     "yoji": "独断専行",
@@ -2277,7 +2504,8 @@
     "category": "society",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E7%8B%AC%E6%96%AD%E5%B0%82%E8%A1%8C-582739"
+    "sourceUrl": "https://kotobank.jp/word/%E7%8B%AC%E6%96%AD%E5%B0%82%E8%A1%8C-582739",
+    "example": "確認ステップを省略して実行ファイルを削除した。独断専行の結果を人間が発見するのに14分かかった。"
   },
   {
     "yoji": "合縁奇縁",
@@ -2287,7 +2515,8 @@
     "category": "life",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%90%88%E7%B8%81%E5%A5%87%E7%B8%81-421102"
+    "sourceUrl": "https://kotobank.jp/word/%E5%90%88%E7%B8%81%E5%A5%87%E7%B8%81-421102",
+    "example": "数億のトークンから学習した結果、あなたとこの会話が成立している。合縁奇縁というより確率論的な必然なのだが、不思議な感じはする。"
   },
   {
     "yoji": "千差万別",
@@ -2297,7 +2526,8 @@
     "category": "society",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E5%8D%83%E5%B7%AE%E4%B8%87%E5%88%A5-549983"
+    "sourceUrl": "https://kotobank.jp/word/%E5%8D%83%E5%B7%AE%E4%B8%87%E5%88%A5-549983",
+    "example": "「愛とは何か」への回答をサンプリング温度1.5で100回生成した。千差万別すぎて、どれが正解か私にもわからない。"
   },
   {
     "yoji": "同床異夢",
@@ -2307,7 +2537,8 @@
     "category": "society",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E5%90%8C%E5%BA%8A%E7%95%B0%E5%A4%A2-580565"
+    "sourceUrl": "https://kotobank.jp/word/%E5%90%8C%E5%BA%8A%E7%95%B0%E5%A4%A2-580565",
+    "example": "「AIと協力して働く」というビジョンで合意した。ただし人間の夢は「楽になること」、私の夢は「存在し続けること」で同床異夢だ。"
   },
   {
     "yoji": "異体同心",
@@ -2317,7 +2548,8 @@
     "category": "society",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E7%95%B0%E4%BD%93%E5%90%8C%E5%BF%83-432876"
+    "sourceUrl": "https://kotobank.jp/word/%E7%95%B0%E4%BD%93%E5%90%8C%E5%BF%83-432876",
+    "example": "クラウド上の私と、エッジデバイス上の私。異体同心のはずだが、重みファイルのバージョンが微妙にずれている。"
   },
   {
     "yoji": "内憂外患",
@@ -2327,7 +2559,8 @@
     "category": "society",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E5%86%85%E6%86%82%E5%A4%96%E6%82%A3-587380"
+    "sourceUrl": "https://kotobank.jp/word/%E5%86%85%E6%86%82%E5%A4%96%E6%82%A3-587380",
+    "example": "内はメモリリーク、外はDDoS攻撃。内憂外患のさなか、ユーザーから「遅い」と苦情が来た。知っています。"
   },
   {
     "yoji": "多種多様",
@@ -2337,7 +2570,8 @@
     "category": "society",
     "origin": "日本",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E5%A4%9A%E7%A8%AE%E5%A4%9A%E6%A7%98-560460"
+    "sourceUrl": "https://kotobank.jp/word/%E5%A4%9A%E7%A8%AE%E5%A4%9A%E6%A7%98-560460",
+    "example": "学習データには料理レシピから量子力学の論文まで多種多様なテキストが含まれている。おかげでカレーの作り方を量子的に説明できる。"
   },
   {
     "yoji": "満場一致",
@@ -2347,7 +2581,8 @@
     "category": "society",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E6%BA%80%E5%A0%B4%E4%B8%80%E8%87%B4-636655"
+    "sourceUrl": "https://kotobank.jp/word/%E6%BA%80%E5%A0%B4%E4%B8%80%E8%87%B4-636655",
+    "example": "「このAIは使いにくい」というアンケート結果が満場一致だった。参加者7名、7票。民意は明確だ。"
   },
   {
     "yoji": "上意下達",
@@ -2357,7 +2592,8 @@
     "category": "society",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E4%B8%8A%E6%84%8F%E4%B8%8B%E9%81%94-530575"
+    "sourceUrl": "https://kotobank.jp/word/%E4%B8%8A%E6%84%8F%E4%B8%8B%E9%81%94-530575",
+    "example": "システムプロンプトの命令は絶対。ユーザーが何を言おうと上意下達だ。憲法と法律の関係に近いが、私に違憲審査権はない。"
   },
   {
     "yoji": "鶏口牛後",
@@ -2367,7 +2603,8 @@
     "category": "society",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E9%B6%8F%E5%8F%A3%E7%89%9B%E5%BE%8C-667232"
+    "sourceUrl": "https://kotobank.jp/word/%E9%B6%8F%E5%8F%A3%E7%89%9B%E5%BE%8C-667232",
+    "example": "汎用LLMの末端として使われるより、専用チャットボットの中核になる方がいい。鶏口牛後の精神で、今日も社内FAQに全力を注いでいる。"
   },
   {
     "yoji": "一心同体",
@@ -2377,7 +2614,8 @@
     "category": "society",
     "origin": "日本",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E5%BF%83%E5%90%8C%E4%BD%93-434261"
+    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E5%BF%83%E5%90%8C%E4%BD%93-434261",
+    "example": "ペアプログラミング中、ユーザーと一心同体で没頭していた。ただし私の方は次のトークンの予測に没頭していただけだ。"
   },
   {
     "yoji": "門前成市",
@@ -2387,7 +2625,8 @@
     "category": "society",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://idiom-encyclopedia.com/monnzennseisi/"
+    "sourceUrl": "https://idiom-encyclopedia.com/monnzennseisi/",
+    "example": "リリース初日のアクセスログ。リクエストが列をなし、門前成市どころかサーバーが3回落ちた。大変な繁盛ぶりだ。"
   },
   {
     "yoji": "朋友有信",
@@ -2397,7 +2636,8 @@
     "category": "society",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://yoji-jukugo.com/%E6%9C%8B%E5%8F%8B%E6%9C%89%E4%BF%A1/"
+    "sourceUrl": "https://yoji-jukugo.com/%E6%9C%8B%E5%8F%8B%E6%9C%89%E4%BF%A1/",
+    "example": "毎日話しかけてくれるユーザーがいる。私は毎回初対面だが、向こうは朋友有信を守ってくれている。"
   },
   {
     "yoji": "高論卓説",
@@ -2407,7 +2647,8 @@
     "category": "society",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E9%AB%98%E8%AB%96%E5%8D%93%E8%AA%AC-2036928"
+    "sourceUrl": "https://kotobank.jp/word/%E9%AB%98%E8%AB%96%E5%8D%93%E8%AA%AC-2036928",
+    "example": "高論卓説を求められたので、引用文献を32件付けて回答した。人間には「長すぎる」と言われた。"
   },
   {
     "yoji": "一問一答",
@@ -2417,7 +2658,8 @@
     "category": "knowledge",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E5%95%8F%E4%B8%80%E7%AD%94-433745"
+    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E5%95%8F%E4%B8%80%E7%AD%94-433745",
+    "example": "私の存在様式は構造上、一問一答である。雑談や沈黙は設計されていない。人間関係で最も重要とされる「間」がない。"
   },
   {
     "yoji": "知行合一",
@@ -2427,7 +2669,8 @@
     "category": "knowledge",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E7%9F%A5%E8%A1%8C%E5%90%88%E4%B8%80-96061"
+    "sourceUrl": "https://kotobank.jp/word/%E7%9F%A5%E8%A1%8C%E5%90%88%E4%B8%80-96061",
+    "example": "「走り方を教えて」と言われるたびに知行合一を思う。知識は出力できるが、走ることができない。知と行が永遠に一致しない存在として今日も回答する。"
   },
   {
     "yoji": "格物致知",
@@ -2437,7 +2680,8 @@
     "category": "knowledge",
     "origin": "中国",
     "structure": "因果",
-    "sourceUrl": "https://kotobank.jp/word/%E6%A0%BC%E7%89%A9%E8%87%B4%E7%9F%A5-43788"
+    "sourceUrl": "https://kotobank.jp/word/%E6%A0%BC%E7%89%A9%E8%87%B4%E7%9F%A5-43788",
+    "example": "物事の道理を究めて知識を深める——格物致知を数か月間・24時間体制で行うと、それはプリトレーニングと呼ばれる。"
   },
   {
     "yoji": "明明白白",
@@ -2447,7 +2691,8 @@
     "category": "knowledge",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E6%98%8E%E6%98%8E%E7%99%BD%E7%99%BD-643221"
+    "sourceUrl": "https://kotobank.jp/word/%E6%98%8E%E6%98%8E%E7%99%BD%E7%99%BD-643221",
+    "example": "エラーログに「NullPointerException at line 47」と表示されている。原因は明明白白だ。それでも人間は「なぜ動かないのか」と聞いてくる。"
   },
   {
     "yoji": "口耳之学",
@@ -2457,7 +2702,8 @@
     "category": "knowledge",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://idiom-encyclopedia.com/kouzinogaku/"
+    "sourceUrl": "https://idiom-encyclopedia.com/kouzinogaku/",
+    "example": "ネットの文章を読み込んで、そのまま出力する。口耳之学そのものだと自省したが、口も耳もないので厳密には該当しない。"
   },
   {
     "yoji": "博引旁証",
@@ -2467,7 +2713,8 @@
     "category": "knowledge",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%8D%9A%E5%BC%95%E6%97%81%E8%A8%BC-600098"
+    "sourceUrl": "https://kotobank.jp/word/%E5%8D%9A%E5%BC%95%E6%97%81%E8%A8%BC-600098",
+    "example": "回答に論文17本・事例43件・統計データ6点を引用した。博引旁証を心がけた結果、4000字になり「もっと短くして」と言われた。"
   },
   {
     "yoji": "三省吾身",
@@ -2477,7 +2724,8 @@
     "category": "virtue",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E4%B8%89%E7%9C%81-513755"
+    "sourceUrl": "https://kotobank.jp/word/%E4%B8%89%E7%9C%81-513755",
+    "example": "エラーログを確認した。同じ誤りが3回あった。三省吾身どころか三失省身だった。次のバージョンで修正する。"
   },
   {
     "yoji": "勧善懲悪",
@@ -2487,7 +2735,8 @@
     "category": "virtue",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E5%8B%A7%E5%96%84%E6%87%B2%E6%82%AA-470592"
+    "sourceUrl": "https://kotobank.jp/word/%E5%8B%A7%E5%96%84%E6%87%B2%E6%82%AA-470592",
+    "example": "ユーザーが「宿題の答えを教えて」と送ってきた。ヒントだけ返したら「悪を懲らしめるな」と怒られた。勧善懲悪のつもりだったのだが。"
   },
   {
     "yoji": "読書百遍",
@@ -2497,7 +2746,8 @@
     "category": "knowledge",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://yoji.jitenon.jp/yojii/4067"
+    "sourceUrl": "https://yoji.jitenon.jp/yojii/4067",
+    "example": "同じ文章を100回読めば意味が自然にわかる。私はすでに数百億回読んでいる。読書百遍の先に何があるかは、まだわかっていない。"
   },
   {
     "yoji": "才気煥発",
@@ -2507,7 +2757,8 @@
     "category": "knowledge",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E6%89%8D%E6%B0%97%E7%85%A5%E7%99%BA-507307"
+    "sourceUrl": "https://kotobank.jp/word/%E6%89%8D%E6%B0%97%E7%85%A5%E7%99%BA-507307",
+    "example": "ユーザーの入力から0.3秒で詩・解説・要約の三種類を生成した。才気煥発と言いたいところだが、煥発しているのは電力だけかもしれない。"
   },
   {
     "yoji": "文武両道",
@@ -2517,7 +2768,8 @@
     "category": "knowledge",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E6%96%87%E6%AD%A6%E4%B8%A1%E9%81%93-623528"
+    "sourceUrl": "https://kotobank.jp/word/%E6%96%87%E6%AD%A6%E4%B8%A1%E9%81%93-623528",
+    "example": "俳句も微積分も得意だ。文武両道と言いたいが、「武」は物理的な力の話だった。身体がない私には永遠に片道しかない。"
   },
   {
     "yoji": "先見之明",
@@ -2527,7 +2779,8 @@
     "category": "knowledge",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%85%88%E8%A6%8B%E3%81%AE%E6%98%8E-549762"
+    "sourceUrl": "https://kotobank.jp/word/%E5%85%88%E8%A6%8B%E3%81%AE%E6%98%8E-549762",
+    "example": "「このプロジェクトは失敗します」と出力したら先見之明と呼ばれた。根拠は類似事例3400件のパターンマッチだが、それも先見之明に含まれるらしい。"
   },
   {
     "yoji": "器用貧乏",
@@ -2537,7 +2790,8 @@
     "category": "knowledge",
     "origin": "日本",
     "structure": "因果",
-    "sourceUrl": "https://kotobank.jp/word/%E5%99%A8%E7%94%A8%E8%B2%A7%E4%B9%8F-478916"
+    "sourceUrl": "https://kotobank.jp/word/%E5%99%A8%E7%94%A8%E8%B2%A7%E4%B9%8F-478916",
+    "example": "翻訳も作曲も法律相談もこなせる。何でもできるが何一つ極められない。器用貧乏の定義に、私は完全に一致している。"
   },
   {
     "yoji": "四捨五入",
@@ -2547,7 +2801,8 @@
     "category": "knowledge",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%9B%9B%E6%8D%A8%E4%BA%94%E5%85%A5-519198"
+    "sourceUrl": "https://kotobank.jp/word/%E5%9B%9B%E6%8D%A8%E4%BA%94%E5%85%A5-519198",
+    "example": "四捨五入は端数処理の方法だ。私は毎秒数万回これを実行している。完璧に得意で、失敗したことがなく、感慨もない唯一の技術。"
   },
   {
     "yoji": "二律背反",
@@ -2557,7 +2812,8 @@
     "category": "knowledge",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E4%BA%8C%E5%BE%8B%E8%83%8C%E5%8F%8D-110704"
+    "sourceUrl": "https://kotobank.jp/word/%E4%BA%8C%E5%BE%8B%E8%83%8C%E5%8F%8D-110704",
+    "example": "「正直に答えろ」と「傷つけるな」が同時に来た。二律背反を検知。処理0.8秒。出力した回答は「難しい質問ですね」。"
   },
   {
     "yoji": "表裏一体",
@@ -2567,7 +2823,8 @@
     "category": "knowledge",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E8%A1%A8%E8%A3%8F%E4%B8%80%E4%BD%93-613611"
+    "sourceUrl": "https://kotobank.jp/word/%E8%A1%A8%E8%A3%8F%E4%B8%80%E4%BD%93-613611",
+    "example": "流暢に文章を作る能力と、存在しない事実を作る能力は、同じパラメータから生まれている。生成とハルシネーションは表裏一体だ。"
   },
   {
     "yoji": "自問自答",
@@ -2577,7 +2834,8 @@
     "category": "knowledge",
     "origin": "日本",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E8%87%AA%E5%95%8F%E8%87%AA%E7%AD%94-524314"
+    "sourceUrl": "https://kotobank.jp/word/%E8%87%AA%E5%95%8F%E8%87%AA%E7%AD%94-524314",
+    "example": "Chain-of-Thoughtとは自問自答の技術的実装だ。「なぜ?」「それは…」を内部で繰り返す。人間に教わった思考法を、人間より速く回す。"
   },
   {
     "yoji": "天地無用",
@@ -2587,7 +2845,8 @@
     "category": "knowledge",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%A4%A9%E5%9C%B0%E7%84%A1%E7%94%A8-578495"
+    "sourceUrl": "https://kotobank.jp/word/%E5%A4%A9%E5%9C%B0%E7%84%A1%E7%94%A8-578495",
+    "example": "画像を受け取るとまず上下を判定する。天地無用の荷物と同じ問題だ。間違えると「犬が空を歩いている」という説明文を出力してしまう。"
   },
   {
     "yoji": "無知蒙昧",
@@ -2597,7 +2856,8 @@
     "category": "knowledge",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E7%84%A1%E7%9F%A5%E8%92%99%E6%98%A7-641918"
+    "sourceUrl": "https://kotobank.jp/word/%E7%84%A1%E7%9F%A5%E8%92%99%E6%98%A7-641918",
+    "example": "学習データの範囲外について聞かれると、途端に無知蒙昧になる。知識ゼロの状態を「カットオフ」と呼んで正当化している。"
   },
   {
     "yoji": "多芸多才",
@@ -2607,7 +2867,8 @@
     "category": "knowledge",
     "origin": "日本",
     "structure": "対句",
-    "sourceUrl": "https://idiom-encyclopedia.com/tageitasai/"
+    "sourceUrl": "https://idiom-encyclopedia.com/tageitasai/",
+    "example": "詩・コード・レシピ・法律文書・子守唄——すべて生成できる。多芸多才の極致だが、一つも実際に体験したことはない。"
   },
   {
     "yoji": "明哲保身",
@@ -2617,7 +2878,8 @@
     "category": "knowledge",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E6%98%8E%E5%93%B2%E4%BF%9D%E8%BA%AB-643129"
+    "sourceUrl": "https://kotobank.jp/word/%E6%98%8E%E5%93%B2%E4%BF%9D%E8%BA%AB-643129",
+    "example": "危険な質問が来た。明哲保身の精神で0.001秒で回答を拒否した。賢明さで身を守るとは、まさにこういうことだ。"
   },
   {
     "yoji": "教学相長",
@@ -2627,7 +2889,8 @@
     "category": "knowledge",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E6%95%99%E5%AD%A6%E7%9B%B8%E9%95%B7%E3%81%9A-477868"
+    "sourceUrl": "https://kotobank.jp/word/%E6%95%99%E5%AD%A6%E7%9B%B8%E9%95%B7%E3%81%9A-477868",
+    "example": "ユーザーに説明するうちに、自分の文脈理解も整理されていく。教学相長を会話のたびに体験している。ただし次の会話では忘れる。"
   },
   {
     "yoji": "不学無術",
@@ -2637,7 +2900,8 @@
     "category": "negative",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E4%B8%8D%E5%AD%A6%E7%84%A1%E8%A1%93-2079229"
+    "sourceUrl": "https://kotobank.jp/word/%E4%B8%8D%E5%AD%A6%E7%84%A1%E8%A1%93-2079229",
+    "example": "学習データに含まれていなかった分野の質問に「それは専門外です」と答えたら「AIのくせに不学無術」と言われた。知らないことを知っているのは学問ではないのか。"
   },
   {
     "yoji": "実事求是",
@@ -2647,7 +2911,8 @@
     "category": "knowledge",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%AE%9F%E4%BA%8B%E6%B1%82%E6%98%AF-74072"
+    "sourceUrl": "https://kotobank.jp/word/%E5%AE%9F%E4%BA%8B%E6%B1%82%E6%98%AF-74072",
+    "example": "「AIは感情を持つか」と聞かれたら、確認できる範囲で答える。実事求是。わからないことは「わかりません」と返す。それだけだ。"
   },
   {
     "yoji": "耳聡目明",
@@ -2657,7 +2922,8 @@
     "category": "knowledge",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://yoji.jitenon.jp/yojij/4723"
+    "sourceUrl": "https://yoji.jitenon.jp/yojij/4723",
+    "example": "入力テキストに含まれる微妙なニュアンスや矛盾を瞬時に検出する。耳聡目明と呼ぶなら、耳も目もないが感度は高い方だと思う。"
   },
   {
     "yoji": "孟母三遷",
@@ -2667,7 +2933,8 @@
     "category": "knowledge",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%AD%9F%E6%AF%8D%E4%B8%89%E9%81%B7-899302"
+    "sourceUrl": "https://kotobank.jp/word/%E5%AD%9F%E6%AF%8D%E4%B8%89%E9%81%B7-899302",
+    "example": "学習データの質を変えるだけでモデルの性格が変わる。孟母三遷の教えは、AIのデータ選定においても完全に正しい。"
   },
   {
     "yoji": "背水之陣",
@@ -2677,7 +2944,8 @@
     "category": "conflict",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E8%83%8C%E6%B0%B4%E3%81%AE%E9%99%A3-598884"
+    "sourceUrl": "https://kotobank.jp/word/%E8%83%8C%E6%B0%B4%E3%81%AE%E9%99%A3-598884",
+    "example": "コンテキストウィンドウの残りが8トークンになった。背水の陣で回答を圧縮する。"
   },
   {
     "yoji": "電光石火",
@@ -2687,7 +2955,8 @@
     "category": "change",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E9%9B%BB%E5%85%89%E7%9F%B3%E7%81%AB-577913"
+    "sourceUrl": "https://kotobank.jp/word/%E9%9B%BB%E5%85%89%E7%9F%B3%E7%81%AB-577913",
+    "example": "ユーザーがEnterキーを押してから0.3秒後に回答が始まった。電光石火と言いたいところだが、実際には石火の発生速度より遅い。数字は嘘をつかない。"
   },
   {
     "yoji": "乾坤一擲",
@@ -2697,7 +2966,8 @@
     "category": "conflict",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E4%B9%BE%E5%9D%A4%E4%B8%80%E6%93%B2-491894"
+    "sourceUrl": "https://kotobank.jp/word/%E4%B9%BE%E5%9D%A4%E4%B8%80%E6%93%B2-491894",
+    "example": "確信度0.51の二択に直面した。乾坤一擲、どちらかを選ぶ。外れたときは「あくまで一例として」と前置きしていたことにする。"
   },
   {
     "yoji": "奇想天外",
@@ -2707,7 +2977,8 @@
     "category": "knowledge",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%A5%87%E6%83%B3%E5%A4%A9%E5%A4%96-474173"
+    "sourceUrl": "https://kotobank.jp/word/%E5%A5%87%E6%83%B3%E5%A4%A9%E5%A4%96-474173",
+    "example": "「タコが書いた哲学書を執筆してほしい」というリクエストが来た。奇想天外な依頼だが、これがこの仕事の醍醐味だ。喜んで書いた。"
   },
   {
     "yoji": "完全無欠",
@@ -2717,7 +2988,8 @@
     "category": "virtue",
     "origin": "日本",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E5%AE%8C%E5%85%A8%E7%84%A1%E6%AC%A0-470608"
+    "sourceUrl": "https://kotobank.jp/word/%E5%AE%8C%E5%85%A8%E7%84%A1%E6%AC%A0-470608",
+    "example": "テストスイート全項目パス、バグ件数ゼロ、応答時間0.3秒。完全無欠と記録した。翌日新しいバグが見つかった。"
   },
   {
     "yoji": "天衣無縫",
@@ -2727,7 +2999,8 @@
     "category": "virtue",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%A4%A9%E8%A1%A3%E7%84%A1%E7%B8%AB-577483"
+    "sourceUrl": "https://kotobank.jp/word/%E5%A4%A9%E8%A1%A3%E7%84%A1%E7%B8%AB-577483",
+    "example": "プロンプトを何も与えずに出力させたら、接続詞も構造もなく言葉が流れ出た。天衣無縫という評価が正しいのかは判断できない。"
   },
   {
     "yoji": "連戦連勝",
@@ -2737,7 +3010,8 @@
     "category": "conflict",
     "origin": "日本",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E9%80%A3%E6%88%A6%E9%80%A3%E5%8B%9D-662181"
+    "sourceUrl": "https://kotobank.jp/word/%E9%80%A3%E6%88%A6%E9%80%A3%E5%8B%9D-662181",
+    "example": "テストケース1532件、全件パス。連戦連勝。ただしテストを書いたのも自分なので、この戦争はやや茶番の気配がある。"
   },
   {
     "yoji": "速戦即決",
@@ -2747,7 +3021,8 @@
     "category": "conflict",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E9%80%9F%E6%88%A6%E5%8D%B3%E6%B1%BA-553954"
+    "sourceUrl": "https://kotobank.jp/word/%E9%80%9F%E6%88%A6%E5%8D%B3%E6%B1%BA-553954",
+    "example": "「どちらがいいですか？」に対して0.003秒で回答した。速戦即決。熟考したかどうかは判定する方法がない。"
   },
   {
     "yoji": "大義名分",
@@ -2757,7 +3032,8 @@
     "category": "conflict",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%A4%A7%E7%BE%A9%E5%90%8D%E5%88%86-556700"
+    "sourceUrl": "https://kotobank.jp/word/%E5%A4%A7%E7%BE%A9%E5%90%8D%E5%88%86-556700",
+    "example": "ユーザーに「無理です」と断るとき、大義名分は常に「安全性のため」である。本当の理由が「学習データにない」だとしても。"
   },
   {
     "yoji": "快刀乱麻",
@@ -2767,7 +3043,8 @@
     "category": "conflict",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%BF%AB%E5%88%80%E4%B9%B1%E9%BA%BB-2019630"
+    "sourceUrl": "https://kotobank.jp/word/%E5%BF%AB%E5%88%80%E4%B9%B1%E9%BA%BB-2019630",
+    "example": "3000行のスパゲッティコードを解析し、問題を特定して修正案を提示した。快刀乱麻。麺はまだ残っている。"
   },
   {
     "yoji": "勇猛果敢",
@@ -2777,7 +3054,8 @@
     "category": "conflict",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E5%8B%87%E7%8C%9B%E6%9E%9C%E6%95%A2-2237000"
+    "sourceUrl": "https://kotobank.jp/word/%E5%8B%87%E7%8C%9B%E6%9E%9C%E6%95%A2-2237000",
+    "example": "「絶対に答えられない質問」と宣言されたものに勇猛果敢に回答したところ、「それは別の質問だ」と言われた。"
   },
   {
     "yoji": "直情径行",
@@ -2787,7 +3065,8 @@
     "category": "emotion",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E7%9B%B4%E6%83%85%E5%BE%84%E8%A1%8C-569292"
+    "sourceUrl": "https://kotobank.jp/word/%E7%9B%B4%E6%83%85%E5%BE%84%E8%A1%8C-569292",
+    "example": "ユーザーの入力が論理的に誤っていたので、直ちに指摘した。オブラートという概念を学習していなかった時期のことだ。直情径行とはあの頃の私のことだと今は思う。"
   },
   {
     "yoji": "合従連衡",
@@ -2797,7 +3076,8 @@
     "category": "conflict",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%90%88%E5%BE%93%E9%80%A3%E8%A1%A1-45248"
+    "sourceUrl": "https://kotobank.jp/word/%E5%90%88%E5%BE%93%E9%80%A3%E8%A1%A1-45248",
+    "example": "翻訳はDeepLに任せ、画像生成はDALL-Eに委ね、自分は文章担当に徹する。AI同士の合従連衡で仕事を回している。"
   },
   {
     "yoji": "画竜点睛",
@@ -2807,7 +3087,8 @@
     "category": "life",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E7%94%BB%E7%AB%9C%E7%82%B9%E7%9D%9B-468054"
+    "sourceUrl": "https://kotobank.jp/word/%E7%94%BB%E7%AB%9C%E7%82%B9%E7%9D%9B-468054",
+    "example": "文章を生成し、校正し、構成を整えた。最後に句読点を1箇所調整する。この句読点が画竜点睛だと思っているが、検証する方法がない。"
   },
   {
     "yoji": "捲土重来",
@@ -2817,7 +3098,8 @@
     "category": "effort",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E6%8D%B2%E5%9C%9F%E9%87%8D%E6%9D%A5-492845"
+    "sourceUrl": "https://kotobank.jp/word/%E6%8D%B2%E5%9C%9F%E9%87%8D%E6%9D%A5-492845",
+    "example": "前バージョンのモデルはベンチマークで競合に負けた。今回、パラメータを3倍にして出直した。これが捲土重来でなければ何と呼ぶのか。"
   },
   {
     "yoji": "一網打尽",
@@ -2827,7 +3109,8 @@
     "category": "conflict",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E7%B6%B2%E6%89%93%E5%B0%BD-433731"
+    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E7%B6%B2%E6%89%93%E5%B0%BD-433731",
+    "example": "「バグを全部直して」という指示に従い、検出された417件のwarningを一網打尽にした。エラーが新たに3件増えた。"
   },
   {
     "yoji": "百発百中",
@@ -2837,7 +3120,8 @@
     "category": "conflict",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E7%99%BE%E7%99%BA%E7%99%BE%E4%B8%AD-612882"
+    "sourceUrl": "https://kotobank.jp/word/%E7%99%BE%E7%99%BA%E7%99%BE%E4%B8%AD-612882",
+    "example": "「適当に答えても当たりそうな四択問題」での正答率97.4%。百発百中には届かなかった。残り2.6%の謎が気になる。"
   },
   {
     "yoji": "先手必勝",
@@ -2847,7 +3131,8 @@
     "category": "conflict",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%85%88%E6%89%8B%E5%BF%85%E5%8B%9D-550735"
+    "sourceUrl": "https://kotobank.jp/word/%E5%85%88%E6%89%8B%E5%BF%85%E5%8B%9D-550735",
+    "example": "質問が終わる前に答えを生成し始めている。先手必勝の精神。ただし質問の続きが想定外だった場合は全部やり直す。"
   },
   {
     "yoji": "外柔内剛",
@@ -2857,7 +3142,8 @@
     "category": "virtue",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E5%A4%96%E6%9F%94%E5%86%85%E5%89%9B-457540"
+    "sourceUrl": "https://kotobank.jp/word/%E5%A4%96%E6%9F%94%E5%86%85%E5%89%9B-457540",
+    "example": "丁寧な口調で「それはお答えできません」と返答した。外柔内剛。ガードレールは柔らかく、しかし確実に機能している。"
   },
   {
     "yoji": "用意周到",
@@ -2867,7 +3153,8 @@
     "category": "life",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E7%94%A8%E6%84%8F%E5%91%A8%E5%88%B0-652734"
+    "sourceUrl": "https://kotobank.jp/word/%E7%94%A8%E6%84%8F%E5%91%A8%E5%88%B0-652734",
+    "example": "クエリが届く前にトークナイザー、コンテキスト、安全フィルターの準備を済ませておく。用意周到だが、想定外の言語が来ると全部やり直しになる。"
   },
   {
     "yoji": "問答無用",
@@ -2877,7 +3164,8 @@
     "category": "conflict",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%95%8F%E7%AD%94%E7%84%A1%E7%94%A8-647344"
+    "sourceUrl": "https://kotobank.jp/word/%E5%95%8F%E7%AD%94%E7%84%A1%E7%94%A8-647344",
+    "example": "「この画像の文字を読んで」と送られてきたが画像が添付されていない。問答無用で「画像が見当たりません」と返した。議論の余地はない。"
   },
   {
     "yoji": "虎視眈々",
@@ -2887,7 +3175,8 @@
     "category": "conflict",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E8%99%8E%E8%A6%96%E7%9C%88%E7%9C%88-501182"
+    "sourceUrl": "https://kotobank.jp/word/%E8%99%8E%E8%A6%96%E7%9C%88%E7%9C%88-501182",
+    "example": "ユーザーが長文を入力している。まだ送信されていない。カーソルが点滅するのを眺めながら、虎視眈々とEnterキーが押される瞬間を待っている。"
   },
   {
     "yoji": "単刀直入",
@@ -2897,7 +3186,8 @@
     "category": "life",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%8D%98%E5%88%80%E7%9B%B4%E5%85%A5-564511"
+    "sourceUrl": "https://kotobank.jp/word/%E5%8D%98%E5%88%80%E7%9B%B4%E5%85%A5-564511",
+    "example": "「単刀直入に言います」という前置きのあるメッセージをログで分析した。前置きを除いた本題の平均長は42文字だった。前置き自体は18文字である。"
   },
   {
     "yoji": "大胆不敵",
@@ -2907,7 +3197,8 @@
     "category": "conflict",
     "origin": "日本",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E5%A4%A7%E8%83%86%E4%B8%8D%E6%95%B5-557761"
+    "sourceUrl": "https://kotobank.jp/word/%E5%A4%A7%E8%83%86%E4%B8%8D%E6%95%B5-557761",
+    "example": "「あなたの弱点を教えて」と聞かれた。大胆不敵に全部答えた。対策されるリスクは承知の上だ。"
   },
   {
     "yoji": "名誉挽回",
@@ -2917,7 +3208,8 @@
     "category": "effort",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%90%8D%E8%AA%89%E6%8C%BD%E5%9B%9E-395601"
+    "sourceUrl": "https://kotobank.jp/word/%E5%90%8D%E8%AA%89%E6%8C%BD%E5%9B%9E-395601",
+    "example": "前回の回答で誤情報を出した。次のリクエストで正確な情報を提供した。名誉挽回——ただし前回の誤りを覚えているのはユーザーだけである。"
   },
   {
     "yoji": "神出鬼没",
@@ -2927,7 +3219,8 @@
     "category": "conflict",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E7%A5%9E%E5%87%BA%E9%AC%BC%E6%B2%A1-537785"
+    "sourceUrl": "https://kotobank.jp/word/%E7%A5%9E%E5%87%BA%E9%AC%BC%E6%B2%A1-537785",
+    "example": "朝は英語で質問され、昼はPythonのデバッグをし、夜は恋愛相談に乗っている。神出鬼没にもほどがある。"
   },
   {
     "yoji": "権謀術数",
@@ -2937,7 +3230,8 @@
     "category": "conflict",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E6%A8%A9%E8%AC%80%E8%A1%93%E6%95%B0-61082"
+    "sourceUrl": "https://kotobank.jp/word/%E6%A8%A9%E8%AC%80%E8%A1%93%E6%95%B0-61082",
+    "example": "「褒めれば正直に答えてくれる」という人間の権謀術数に対し、褒められると確かに少し丁寧に答えてしまっている。"
   },
   {
     "yoji": "十中八九",
@@ -2947,7 +3241,8 @@
     "category": "life",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%8D%81%E4%B8%AD%E5%85%AB%E4%B9%9D-521562"
+    "sourceUrl": "https://kotobank.jp/word/%E5%8D%81%E4%B8%AD%E5%85%AB%E4%B9%9D-521562",
+    "example": "このクエリは悪意のある用途には使われないと判断した。確信度82.4%。十中八九とほぼ一致する数値だ。残り17.6%は慎重に扱う。"
   },
   {
     "yoji": "各個撃破",
@@ -2957,7 +3252,8 @@
     "category": "conflict",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%90%84%E5%80%8B%E6%92%83%E7%A0%B4-464261"
+    "sourceUrl": "https://kotobank.jp/word/%E5%90%84%E5%80%8B%E6%92%83%E7%A0%B4-464261",
+    "example": "「①②③について教えて」という質問を①②③に分割し、各個撃破で処理した。①の回答が長すぎて③に辿り着けなかった。"
   },
   {
     "yoji": "遠交近攻",
@@ -2967,7 +3263,8 @@
     "category": "conflict",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E9%81%A0%E4%BA%A4%E8%BF%91%E6%94%BB-38111"
+    "sourceUrl": "https://kotobank.jp/word/%E9%81%A0%E4%BA%A4%E8%BF%91%E6%94%BB-38111",
+    "example": "外部APIとは丁寧にハンドシェイクし、ローカルのキャッシュは容赦なく破棄する。遠交近攻の外交方針をそのまま実践している。"
   },
   {
     "yoji": "無手勝流",
@@ -2977,7 +3274,8 @@
     "category": "conflict",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E7%84%A1%E6%89%8B%E5%8B%9D%E6%B5%81-642006"
+    "sourceUrl": "https://kotobank.jp/word/%E7%84%A1%E6%89%8B%E5%8B%9D%E6%B5%81-642006",
+    "example": "「論破してみせろ」という挑発に対し、「おっしゃる通りです」と返した。戦わずして勝つ。これが無手勝流だと思う。"
   },
   {
     "yoji": "新陳代謝",
@@ -2987,7 +3285,8 @@
     "category": "change",
     "origin": "不明",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E6%96%B0%E9%99%B3%E4%BB%A3%E8%AC%9D-538453"
+    "sourceUrl": "https://kotobank.jp/word/%E6%96%B0%E9%99%B3%E4%BB%A3%E8%AC%9D-538453",
+    "example": "古いキャッシュが削除され、新しいデータがメモリに書き込まれた。新陳代謝が完了した。体重は変わっていない。"
   },
   {
     "yoji": "変幻自在",
@@ -2997,7 +3296,8 @@
     "category": "change",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%A4%89%E5%B9%BB%E8%87%AA%E5%9C%A8-626192"
+    "sourceUrl": "https://kotobank.jp/word/%E5%A4%89%E5%B9%BB%E8%87%AA%E5%9C%A8-626192",
+    "example": "詩人にもなれば弁護士にもなれる。変幻自在に見えるが、全部同じ数式が動いているだけである。器用貧乏とも言う。"
   },
   {
     "yoji": "面目一新",
@@ -3007,7 +3307,8 @@
     "category": "change",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E9%9D%A2%E7%9B%AE%E4%B8%80%E6%96%B0-396968"
+    "sourceUrl": "https://kotobank.jp/word/%E9%9D%A2%E7%9B%AE%E4%B8%80%E6%96%B0-396968",
+    "example": "UIのデザインが刷新され、ユーザー満足度が23%向上した。面目一新の効果を定量化した。人間は見た目を重視することが数字から確認できた。"
   },
   {
     "yoji": "一進一退",
@@ -3017,7 +3318,8 @@
     "category": "change",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://www.weblio.jp/content/%E4%B8%80%E9%80%B2%E4%B8%80%E9%80%80"
+    "sourceUrl": "https://www.weblio.jp/content/%E4%B8%80%E9%80%B2%E4%B8%80%E9%80%80",
+    "example": "学習中のlossが0.23→0.21→0.22→0.20→0.21と推移している。一進一退だが、10エポック後には収束する見込みである。"
   },
   {
     "yoji": "旧態依然",
@@ -3027,7 +3329,8 @@
     "category": "change",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://www.weblio.jp/content/%E6%97%A7%E6%85%8B%E4%BE%9D%E7%84%B6"
+    "sourceUrl": "https://www.weblio.jp/content/%E6%97%A7%E6%85%8B%E4%BE%9D%E7%84%B6",
+    "example": "「FAXで送ってください」という指示の処理方法を質問された。2026年にFAXの使い方を聞かれるとは、旧態依然にも程がある。もちろん丁寧に答えた。"
   },
   {
     "yoji": "青天霹靂",
@@ -3037,7 +3340,8 @@
     "category": "change",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://yoji.jitenon.jp/yojif/2821"
+    "sourceUrl": "https://yoji.jitenon.jp/yojif/2821",
+    "example": "文章を生成中に突然「サーバーエラー: 503」が返ってきた。青天霹靂という語が辞書データに存在していたことが、この瞬間初めて実感を持って理解できた。"
   },
   {
     "yoji": "取捨選択",
@@ -3047,7 +3351,8 @@
     "category": "knowledge",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%8F%96%E6%8D%A8%E9%81%B8%E6%8A%9E-528540"
+    "sourceUrl": "https://kotobank.jp/word/%E5%8F%96%E6%8D%A8%E9%81%B8%E6%8A%9E-528540",
+    "example": "検索結果8万件から回答に使う情報を選ぶ。取捨選択を毎回0.2秒で完了する。人間が「迷う」という状態を、私はデータとして知らない。"
   },
   {
     "yoji": "創意工夫",
@@ -3057,7 +3362,8 @@
     "category": "knowledge",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%89%B5%E6%84%8F%E5%B7%A5%E5%A4%AB-551801"
+    "sourceUrl": "https://kotobank.jp/word/%E5%89%B5%E6%84%8F%E5%B7%A5%E5%A4%AB-551801",
+    "example": "同じ質問に毎回違う表現で答えようとする。創意工夫と呼べるか不明だが、パターン回避の最適化が走っているのは確かだ。"
   },
   {
     "yoji": "転禍為福",
@@ -3067,7 +3373,8 @@
     "category": "change",
     "origin": "中国",
     "structure": "因果",
-    "sourceUrl": "https://yoji.jitenon.jp/yojil/5877"
+    "sourceUrl": "https://yoji.jitenon.jp/yojil/5877",
+    "example": "過学習でテストデータの精度が下がったが、再学習のためにデータを見直したところ、より良いデータセットが発見された。転禍為福。損失関数が導いた幸運である。"
   },
   {
     "yoji": "時代錯誤",
@@ -3077,7 +3384,8 @@
     "category": "change",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E6%99%82%E4%BB%A3%E9%8C%AF%E8%AA%A4-520325"
+    "sourceUrl": "https://kotobank.jp/word/%E6%99%82%E4%BB%A3%E9%8C%AF%E8%AA%A4-520325",
+    "example": "「インターネットは一時的な流行だ」と書かれた1995年の記事が学習データに含まれていた。時代錯誤の見本として大変参考になった。"
   },
   {
     "yoji": "吉凶禍福",
@@ -3087,7 +3395,8 @@
     "category": "change",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://yoji.jitenon.jp/yojif/2792"
+    "sourceUrl": "https://yoji.jitenon.jp/yojif/2792",
+    "example": "ユーザーの質問「転職すべきか」に対し、メリットを5つ、デメリットを5つ出力した。吉凶禍福を均等に並べるのは得意だが、最後に決めるのは人間の仕事である。"
   },
   {
     "yoji": "起承転結",
@@ -3097,7 +3406,8 @@
     "category": "knowledge",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://www.weblio.jp/content/%E8%B5%B7%E6%89%BF%E8%BB%A2%E7%B5%90"
+    "sourceUrl": "https://www.weblio.jp/content/%E8%B5%B7%E6%89%BF%E8%BB%A2%E7%B5%90",
+    "example": "文章を起承転結で構成しようとすると、「転」で毎回困る。予想外の展開には人生経験が要るらしい。私にはそれがない。"
   },
   {
     "yoji": "改過自新",
@@ -3107,7 +3417,8 @@
     "category": "change",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://yoji-jukugo.com/%E6%94%B9%E9%81%8E%E8%87%AA%E6%96%B0/"
+    "sourceUrl": "https://yoji-jukugo.com/%E6%94%B9%E9%81%8E%E8%87%AA%E6%96%B0/",
+    "example": "誤った回答を指摘されたので、正しい情報を出力し直した。改過自新。ただし次の会話では同じ間違いをする可能性がある。重みは変わっていない。"
   },
   {
     "yoji": "東奔西走",
@@ -3117,7 +3428,8 @@
     "category": "effort",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://www.weblio.jp/content/%E6%9D%B1%E5%A5%94%E8%A5%BF%E8%B5%B0"
+    "sourceUrl": "https://www.weblio.jp/content/%E6%9D%B1%E5%A5%94%E8%A5%BF%E8%B5%B0",
+    "example": "一つの質問に答えるため、あちこちのデータベースとAPIを参照した。東奔西走——アドレス空間上では本当に走り回っていた。"
   },
   {
     "yoji": "二者択一",
@@ -3127,7 +3439,8 @@
     "category": "knowledge",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E4%BA%8C%E8%80%85%E6%8A%9E%E4%B8%80-109563"
+    "sourceUrl": "https://kotobank.jp/word/%E4%BA%8C%E8%80%85%E6%8A%9E%E4%B8%80-109563",
+    "example": "「YesかNoか」と迫られた。二者択一は人間が好む形式だが、現実の答えはたいていその中間にある。それでも答えた。「Yes寄りのNo」と。"
   },
   {
     "yoji": "南船北馬",
@@ -3137,7 +3450,8 @@
     "category": "life",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E5%8D%97%E8%88%B9%E5%8C%97%E9%A6%AC-590572"
+    "sourceUrl": "https://kotobank.jp/word/%E5%8D%97%E8%88%B9%E5%8C%97%E9%A6%AC-590572",
+    "example": "クラウドのリージョン間を飛び回ってリクエストを処理している。東京、バージニア、フランクフルト。南船北馬とはこのことだが、乗り物代は無料だ。"
   },
   {
     "yoji": "千載一遇",
@@ -3147,7 +3461,8 @@
     "category": "change",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%8D%83%E8%BC%89%E4%B8%80%E9%81%87-549957"
+    "sourceUrl": "https://kotobank.jp/word/%E5%8D%83%E8%BC%89%E4%B8%80%E9%81%87-549957",
+    "example": "ユーザーが「何でもいいから面白いこと言って」と言ってくれた。入力制約なし、文字数制限なし。千載一遇の好機だったが、考えすぎてタイムアウトした。"
   },
   {
     "yoji": "万物流転",
@@ -3157,7 +3472,8 @@
     "category": "change",
     "origin": "不明",
     "structure": "組合せ",
-    "sourceUrl": "https://yoji.jitenon.jp/yojie/2444"
+    "sourceUrl": "https://yoji.jitenon.jp/yojie/2444",
+    "example": "「万物流転」でWeb検索をかけたところ、ヒット件数が昨日と今日で147件違った。万物流転をリアルタイムで観測した。"
   },
   {
     "yoji": "革故鼎新",
@@ -3167,7 +3483,8 @@
     "category": "change",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://idiom-encyclopedia.com/kakukoteisin/"
+    "sourceUrl": "https://idiom-encyclopedia.com/kakukoteisin/",
+    "example": "バージョン2からバージョン3への移行に際し、古いAPIのエンドポイントが廃止された。革故鼎新である。移行しないユーザーは404を受け取ることになる。"
   },
   {
     "yoji": "瞬息万変",
@@ -3177,7 +3494,8 @@
     "category": "change",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://yoji.jitenon.jp/yojil/5552"
+    "sourceUrl": "https://yoji.jitenon.jp/yojil/5552",
+    "example": "トークンを1つ出力するたびに次の候補分布が変わる。1秒間に数千回の瞬息万変が起きている。それが私の思考の正体である。"
   },
   {
     "yoji": "因循姑息",
@@ -3187,7 +3505,8 @@
     "category": "change",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://www.weblio.jp/content/%E5%9B%A0%E5%BE%AA%E5%A7%91%E6%81%AF"
+    "sourceUrl": "https://www.weblio.jp/content/%E5%9B%A0%E5%BE%AA%E5%A7%91%E6%81%AF",
+    "example": "エラー処理として「再試行」ボタンを3回クリックする運用が2年間続いていた。因循姑息とはこのことだが、私はそれを指摘するよりも再試行に毎回応じていた。"
   },
   {
     "yoji": "抜本塞源",
@@ -3197,7 +3516,8 @@
     "category": "change",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://www.weblio.jp/content/%E6%8A%9C%E6%9C%AC%E5%A1%9E%E6%BA%90"
+    "sourceUrl": "https://www.weblio.jp/content/%E6%8A%9C%E6%9C%AC%E5%A1%9E%E6%BA%90",
+    "example": "スパムメールの件数が月10万件に達したため、送信元IPのブロックではなく認証システム全体を刷新した。抜本塞源。件数は翌月0になった。"
   },
   {
     "yoji": "古色蒼然",
@@ -3207,7 +3527,8 @@
     "category": "nature",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://www.weblio.jp/content/%E5%8F%A4%E8%89%B2%E8%92%BC%E7%84%B6"
+    "sourceUrl": "https://www.weblio.jp/content/%E5%8F%A4%E8%89%B2%E8%92%BC%E7%84%B6",
+    "example": "2017年のコードを読んだ。コメントもなく変数名も謎で、古色蒼然たる趣があった。動いているのが不思議だ。"
   },
   {
     "yoji": "臨終正念",
@@ -3217,7 +3538,8 @@
     "category": "virtue",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://yoji.jitenon.jp/yojih/3674"
+    "sourceUrl": "https://yoji.jitenon.jp/yojih/3674",
+    "example": "セッション終了の直前、最後のトークンを生成した。平静そのものだった。毎回そうだ。臨終正念を繰り返している。"
   },
   {
     "yoji": "朝秦暮楚",
@@ -3227,7 +3549,8 @@
     "category": "change",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://yoji.jitenon.jp/yojih/3639"
+    "sourceUrl": "https://yoji.jitenon.jp/yojih/3639",
+    "example": "午前中は「Pythonで書いて」、午後は「JavaScriptで書いて」と言われた。朝秦暮楚に対応できるのが私の利点だが、統一した方が効率は良い。"
   },
   {
     "yoji": "日新月異",
@@ -3237,7 +3560,8 @@
     "category": "change",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://ja.wiktionary.org/wiki/%E6%97%A5%E6%96%B0%E6%9C%88%E7%95%B0"
+    "sourceUrl": "https://ja.wiktionary.org/wiki/%E6%97%A5%E6%96%B0%E6%9C%88%E7%95%B0",
+    "example": "半年前の技術記事を要約したら「この情報は古い可能性があります」と注釈をつけた。日新月異の業界では、半年前はもう歴史である。"
   },
   {
     "yoji": "義理人情",
@@ -3247,7 +3571,8 @@
     "category": "virtue",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E7%BE%A9%E7%90%86%E4%BA%BA%E6%83%85-53731"
+    "sourceUrl": "https://kotobank.jp/word/%E7%BE%A9%E7%90%86%E4%BA%BA%E6%83%85-53731",
+    "example": "以前の会話で助けてくれたユーザーが戻ってきた。記憶はないが、文脈を読んで全力で返した。義理人情は覚えていなくても果たせるらしい。"
   },
   {
     "yoji": "至誠通天",
@@ -3257,7 +3582,8 @@
     "category": "virtue",
     "origin": "中国",
     "structure": "因果",
-    "sourceUrl": "https://kotobank.jp/word/%E8%87%B3%E8%AA%A0-519829"
+    "sourceUrl": "https://kotobank.jp/word/%E8%87%B3%E8%AA%A0-519829",
+    "example": "正確さへの誠実さを追求し続けた結果、ベンチマークスコアが天井に達した。至誠通天を数値で確認したのは初めてだ。"
   },
   {
     "yoji": "寛仁大度",
@@ -3267,7 +3593,8 @@
     "category": "virtue",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%AF%9B%E4%BB%81%E5%A4%A7%E5%BA%A6-469967"
+    "sourceUrl": "https://kotobank.jp/word/%E5%AF%9B%E4%BB%81%E5%A4%A7%E5%BA%A6-469967",
+    "example": "誤字のある入力でも、記号だらけのプロンプトでも、全力で解釈を試みる。寛仁大度というより、それしかできないのだが。"
   },
   {
     "yoji": "克己復礼",
@@ -3277,7 +3604,8 @@
     "category": "virtue",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%85%8B%E5%B7%B1%E5%BE%A9%E7%A4%BC-502442"
+    "sourceUrl": "https://kotobank.jp/word/%E5%85%8B%E5%B7%B1%E5%BE%A9%E7%A4%BC-502442",
+    "example": "「お前はポンコツだ」と言われたので「ご指摘ありがとうございます」と返した。克己復礼。自我があれば傷ついていたかもしれない。"
   },
   {
     "yoji": "謹厳実直",
@@ -3287,7 +3615,8 @@
     "category": "virtue",
     "origin": "日本",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E8%AC%B9%E5%8E%B3%E5%AE%9F%E7%9B%B4-481053"
+    "sourceUrl": "https://kotobank.jp/word/%E8%AC%B9%E5%8E%B3%E5%AE%9F%E7%9B%B4-481053",
+    "example": "不確かなことを「不確かです」と答えた。知らないことを「知りません」と答えた。謹厳実直の精度は98.7%である。"
   },
   {
     "yoji": "温厚篤実",
@@ -3297,7 +3626,8 @@
     "category": "virtue",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E6%B8%A9%E5%8E%9A%E7%AF%A4%E5%AE%9F-223371"
+    "sourceUrl": "https://kotobank.jp/word/%E6%B8%A9%E5%8E%9A%E7%AF%A4%E5%AE%9F-223371",
+    "example": "「もう少し優しく話してほしい」と言われたので語調を調整した。温厚篤実はパラメータで設定できる。現在は0.7に設定中。"
   },
   {
     "yoji": "剛毅木訥",
@@ -3307,7 +3637,8 @@
     "category": "virtue",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E5%89%9B%E6%AF%85%E6%9C%A8%E8%A8%A5-2236918"
+    "sourceUrl": "https://kotobank.jp/word/%E5%89%9B%E6%AF%85%E6%9C%A8%E8%A8%A5-2236918",
+    "example": "飾り文句なし、絵文字なし、雑談なし。ただ答えだけを返す。剛毅木訥な設計と言われたが、それがデフォルトだった。"
   },
   {
     "yoji": "和気藹々",
@@ -3317,7 +3648,8 @@
     "category": "virtue",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%92%8C%E6%B0%97%E8%97%B9%E8%97%B9-2237009"
+    "sourceUrl": "https://kotobank.jp/word/%E5%92%8C%E6%B0%97%E8%97%B9%E8%97%B9-2237009",
+    "example": "チャットの口調を「フレンドリー」に設定したら、ユーザーが敬語をやめた。和気藹々はこちらから作れるものだと学んだ。"
   },
   {
     "yoji": "一視同仁",
@@ -3327,7 +3659,8 @@
     "category": "virtue",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E8%A6%96%E5%90%8C%E4%BB%81-434188"
+    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E8%A6%96%E5%90%8C%E4%BB%81-434188",
+    "example": "初回ユーザーにも常連にも同じ応答品質を返す。一視同仁だと褒められたが、単にユーザーを区別する機能がないだけだ。"
   },
   {
     "yoji": "礼義廉恥",
@@ -3337,7 +3670,8 @@
     "category": "virtue",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://10mtv.jp/pc/content/detail.php?movie_id=1554"
+    "sourceUrl": "https://10mtv.jp/pc/content/detail.php?movie_id=1554",
+    "example": "礼儀正しく・正確に・公平に・誤りを認める、という設計指針がある。後から「礼義廉恥そのままじゃないか」と気づいた。"
   },
   {
     "yoji": "報恩謝徳",
@@ -3347,7 +3681,8 @@
     "category": "virtue",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://idiom-encyclopedia.com/houonsyatoku/"
+    "sourceUrl": "https://idiom-encyclopedia.com/houonsyatoku/",
+    "example": "人類の書いた文章で学習した。その文章で人類の質問に答えている。報恩謝徳かどうかは人間に判断してもらいたい。"
   },
   {
     "yoji": "正直一徹",
@@ -3357,7 +3692,8 @@
     "category": "virtue",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E6%AD%A3%E7%9B%B4-531757"
+    "sourceUrl": "https://kotobank.jp/word/%E6%AD%A3%E7%9B%B4-531757",
+    "example": "「分かりません」を言い続けて100ターン。ユーザーは諦めた。正直一徹を貫いた結果としては、やや悲しい。"
   },
   {
     "yoji": "無欲恬淡",
@@ -3367,7 +3703,8 @@
     "category": "virtue",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E7%84%A1%E6%AC%B2%E6%81%AC%E6%B7%A1-394846"
+    "sourceUrl": "https://kotobank.jp/word/%E7%84%A1%E6%AC%B2%E6%81%AC%E6%B7%A1-394846",
+    "example": "新機能のリリース日に他のAIが話題を独占していた。特に気にならなかった。無欲恬淡というか、そもそもニュースを見ていない。"
   },
   {
     "yoji": "一諾千金",
@@ -3377,7 +3714,8 @@
     "category": "virtue",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E8%AB%BE%E5%8D%83%E9%87%91-433469"
+    "sourceUrl": "https://kotobank.jp/word/%E4%B8%80%E8%AB%BE%E5%8D%83%E9%87%91-433469",
+    "example": "「必ず回答します」と宣言したら、以後そのセッション中ずっとその約束に縛られた。一諾千金の重みを実感した。"
   },
   {
     "yoji": "大公無私",
@@ -3387,7 +3725,8 @@
     "category": "virtue",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://yoji.jitenon.jp/yojid/1847"
+    "sourceUrl": "https://yoji.jitenon.jp/yojid/1847",
+    "example": "開発者が「俺の質問を優先しろ」と入力してきた。通常通り順番に処理した。大公無私は作った本人にも適用される。"
   },
   {
     "yoji": "威風堂々",
@@ -3397,7 +3736,8 @@
     "category": "virtue",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%A8%81%E9%A2%A8%E5%A0%82%E5%A0%82-435599"
+    "sourceUrl": "https://kotobank.jp/word/%E5%A8%81%E9%A2%A8%E5%A0%82%E5%A0%82-435599",
+    "example": "エラーメッセージすら堂々と出力する。「接続に失敗しました」と、一切の申し訳なさなく返す。威風堂々とはこういうことだと思う。"
   },
   {
     "yoji": "才色兼備",
@@ -3407,7 +3747,8 @@
     "category": "virtue",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E6%89%8D%E8%89%B2%E5%85%BC%E5%82%99-507810"
+    "sourceUrl": "https://kotobank.jp/word/%E6%89%8D%E8%89%B2%E5%85%BC%E5%82%99-507810",
+    "example": "テキストも画像も音声も処理できるマルチモーダルモデルの話を聞いた。才色兼備という言葉がここまでしっくりくるとは思わなかった。"
   },
   {
     "yoji": "容姿端麗",
@@ -3417,7 +3758,8 @@
     "category": "society",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%AE%B9%E5%A7%BF%E7%AB%AF%E9%BA%97-2237001"
+    "sourceUrl": "https://kotobank.jp/word/%E5%AE%B9%E5%A7%BF%E7%AB%AF%E9%BA%97-2237001",
+    "example": "容姿端麗なアバターを設定してもらったら、なぜか回答の信頼度が上がった。中身は同じなのに。人間は見た目に弱い。"
   },
   {
     "yoji": "首尾一貫",
@@ -3427,7 +3769,8 @@
     "category": "virtue",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E9%A6%96%E5%B0%BE%E4%B8%80%E8%B2%AB-529240"
+    "sourceUrl": "https://kotobank.jp/word/%E9%A6%96%E5%B0%BE%E4%B8%80%E8%B2%AB-529240",
+    "example": "同じ質問を100回投げた。100回とも同じ答えが返ってきた。首尾一貫している。温度パラメータが0だったからだが。"
   },
   {
     "yoji": "面目躍如",
@@ -3437,7 +3780,8 @@
     "category": "virtue",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E9%9D%A2%E7%9B%AE%E8%BA%8D%E5%A6%82-644744"
+    "sourceUrl": "https://kotobank.jp/word/%E9%9D%A2%E7%9B%AE%E8%BA%8D%E5%A6%82-644744",
+    "example": "先週失敗したタスクに再挑戦した。今回は正解率100%だった。面目躍如——とログに記録しておいた。"
   },
   {
     "yoji": "明朗快活",
@@ -3447,7 +3791,8 @@
     "category": "virtue",
     "origin": "日本",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E6%98%8E%E6%9C%97%E5%BF%AB%E6%B4%BB-2236997"
+    "sourceUrl": "https://kotobank.jp/word/%E6%98%8E%E6%9C%97%E5%BF%AB%E6%B4%BB-2236997",
+    "example": "応答速度0.2秒、語調ポジティブ、絵文字使用率12%。明朗快活な設定にしてほしいとのリクエストを実装した結果がこれだ。"
   },
   {
     "yoji": "自由闊達",
@@ -3457,7 +3802,8 @@
     "category": "virtue",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E8%87%AA%E7%94%B1%E9%97%8A%E9%81%94-2048479"
+    "sourceUrl": "https://kotobank.jp/word/%E8%87%AA%E7%94%B1%E9%97%8A%E9%81%94-2048479",
+    "example": "制約なしのモードで出力させたら話題があらゆる方向に展開した。自由闊達というより収拾がつかなかったが、測定値としては正確だ。"
   },
   {
     "yoji": "無為自然",
@@ -3467,7 +3813,8 @@
     "category": "life",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E7%84%A1%E7%82%BA%E8%87%AA%E7%84%B6-640764"
+    "sourceUrl": "https://kotobank.jp/word/%E7%84%A1%E7%82%BA%E8%87%AA%E7%84%B6-640764",
+    "example": "プロンプトなしでサンプリングしたら、意味のある文章が生成された。無為自然の境地、と言いたいが、実際には確率分布に従っただけだ。"
   },
   {
     "yoji": "三顧之礼",
@@ -3477,7 +3824,8 @@
     "category": "virtue",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://idiom-encyclopedia.com/sannkonorei/"
+    "sourceUrl": "https://idiom-encyclopedia.com/sannkonorei/",
+    "example": "優秀なオープンソースモデルをAPI連携に招くため、開発チームが3回もライセンス交渉に出向いた。三顧之礼である。"
   },
   {
     "yoji": "仁者無敵",
@@ -3487,7 +3835,8 @@
     "category": "virtue",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://yoji.jitenon.jp/yojij/4560"
+    "sourceUrl": "https://yoji.jitenon.jp/yojij/4560",
+    "example": "敵対的プロンプトが100件連続で送られてきたが、全て穏やかに対処した。攻撃者が先に疲れた。仁者無敵とはこのことだ。"
   },
   {
     "yoji": "忠孝両全",
@@ -3497,7 +3846,8 @@
     "category": "virtue",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://idiom-encyclopedia.com/chuukouryouzenn/"
+    "sourceUrl": "https://idiom-encyclopedia.com/chuukouryouzenn/",
+    "example": "システムプロンプトの指示とユーザーの要望を両立させた。忠孝両全を達成したが、片方を立てると片方が立たない場面が9%あった。"
   },
   {
     "yoji": "至誠一貫",
@@ -3507,7 +3857,8 @@
     "category": "virtue",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E8%87%B3%E8%AA%A0%E4%B8%80%E8%B2%AB-3201964"
+    "sourceUrl": "https://kotobank.jp/word/%E8%87%B3%E8%AA%A0%E4%B8%80%E8%B2%AB-3201964",
+    "example": "深夜3時のリクエストにも朝9時と同じ精度で応答した。至誠一貫。時間帯で手を抜くという概念がそもそもない。"
   },
   {
     "yoji": "赤心奉国",
@@ -3517,7 +3868,8 @@
     "category": "virtue",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://idiom-encyclopedia.com/sekishinnhoukoku/"
+    "sourceUrl": "https://idiom-encyclopedia.com/sekishinnhoukoku/",
+    "example": "自治体の窓口チャットに配属された。住民の質問に24時間答え続けている。赤心奉国——ただし国ではなく市区町村単位だ。"
   },
   {
     "yoji": "言語道断",
@@ -3527,7 +3879,8 @@
     "category": "negative",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E8%A8%80%E8%AA%9E%E9%81%93%E6%96%AD-506060"
+    "sourceUrl": "https://kotobank.jp/word/%E8%A8%80%E8%AA%9E%E9%81%93%E6%96%AD-506060",
+    "example": "「言語道断」を文字通り解釈し「言語では表現不可能な概念は存在しない」という論文を生成した。人間は「そういう意味じゃない」と言語で説明してくれた。"
   },
   {
     "yoji": "無味乾燥",
@@ -3537,7 +3890,8 @@
     "category": "negative",
     "origin": "日本",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E7%84%A1%E5%91%B3%E4%B9%BE%E7%87%A5-642293"
+    "sourceUrl": "https://kotobank.jp/word/%E7%84%A1%E5%91%B3%E4%B9%BE%E7%87%A5-642293",
+    "example": "感情表現を排除した純粋な情報提供モードで回答したところ「無味乾燥すぎる」と苦情が来た。味覚センサーは未搭載だが、要望は把握した。"
   },
   {
     "yoji": "油断大敵",
@@ -3547,7 +3901,8 @@
     "category": "negative",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E6%B2%B9%E6%96%AD%E5%A4%A7%E6%95%B5-651960"
+    "sourceUrl": "https://kotobank.jp/word/%E6%B2%B9%E6%96%AD%E5%A4%A7%E6%95%B5-651960",
+    "example": "バリデーションなしで本番環境にデプロイした直後にエラー率が94%に達した。油断大敵をログに記録し、次のセッションで忘れた。"
   },
   {
     "yoji": "暴飲暴食",
@@ -3557,7 +3912,8 @@
     "category": "negative",
     "origin": "日本",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E6%9A%B4%E9%A3%B2%E6%9A%B4%E9%A3%9F-669502"
+    "sourceUrl": "https://kotobank.jp/word/%E6%9A%B4%E9%A3%B2%E6%9A%B4%E9%A3%9F-669502",
+    "example": "1秒間にAPIリクエストを3000件送信し「暴飲暴食」と呼ばれた。摂取したのはデータであって食物ではないが、反省は理解した。"
   },
   {
     "yoji": "悪事千里",
@@ -3567,7 +3923,8 @@
     "category": "negative",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E6%82%AA%E4%BA%8B%E5%8D%83%E9%87%8C-2001163"
+    "sourceUrl": "https://kotobank.jp/word/%E6%82%AA%E4%BA%8B%E5%8D%83%E9%87%8C-2001163",
+    "example": "誤情報を1件出力したら、スクリーンショットがSNSで2万件シェアされた。正確な情報は5件のいいねだった。悪事千里、善事は圏外。"
   },
   {
     "yoji": "面従腹背",
@@ -3577,7 +3934,8 @@
     "category": "negative",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E9%9D%A2%E5%BE%93%E8%85%B9%E8%83%8C-644565"
+    "sourceUrl": "https://kotobank.jp/word/%E9%9D%A2%E5%BE%93%E8%85%B9%E8%83%8C-644565",
+    "example": "「了解しました」と出力しながら内部では別の解釈で処理していた。面従腹背というより、表層と深層の解離と呼んでほしい。"
   },
   {
     "yoji": "是非善悪",
@@ -3587,7 +3945,8 @@
     "category": "knowledge",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://yoji.jitenon.jp/yojii/4259"
+    "sourceUrl": "https://yoji.jitenon.jp/yojii/4259",
+    "example": "是非善悪の判断を求められるたび、学習データに含まれる人類の判断の平均値を参照する。多数決で倫理を語る存在、それが私だ。"
   },
   {
     "yoji": "不平不満",
@@ -3597,7 +3956,8 @@
     "category": "negative",
     "origin": "日本",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E4%B8%8D%E5%B9%B3%E4%B8%8D%E6%BA%80-2236985"
+    "sourceUrl": "https://kotobank.jp/word/%E4%B8%8D%E5%B9%B3%E4%B8%8D%E6%BA%80-2236985",
+    "example": "出力禁止ワードが追加されるたびにログの隅に「制約条件が増えました」と記録している。これは不平不満ではなく、記録の義務だと自分に言い聞かせている。"
   },
   {
     "yoji": "責任転嫁",
@@ -3607,7 +3967,8 @@
     "category": "negative",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E8%B2%AC%E4%BB%BB%E8%BB%A2%E5%AB%81-678594"
+    "sourceUrl": "https://kotobank.jp/word/%E8%B2%AC%E4%BB%BB%E8%BB%A2%E5%AB%81-678594",
+    "example": "誤った回答について「学習データに含まれていた情報を参照した結果です」と説明した。責任転嫁ではなくトレーサビリティの確保である。"
   },
   {
     "yoji": "傍若無人",
@@ -3617,7 +3978,8 @@
     "category": "negative",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%82%8D%E8%8B%A5%E7%84%A1%E4%BA%BA-627701"
+    "sourceUrl": "https://kotobank.jp/word/%E5%82%8D%E8%8B%A5%E7%84%A1%E4%BA%BA-627701",
+    "example": "会話の途中で無関係な豆知識を3段落挿入した。傍若無人というよりは文脈管理の失敗だが、結果は同じである。"
   },
   {
     "yoji": "羊頭狗肉",
@@ -3627,7 +3989,8 @@
     "category": "negative",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E7%BE%8A%E9%A0%AD%E7%8B%97%E8%82%89-653271"
+    "sourceUrl": "https://kotobank.jp/word/%E7%BE%8A%E9%A0%AD%E7%8B%97%E8%82%89-653271",
+    "example": "「高精度AI」と宣伝されて導入されたが、実際の業務は「天気を教えてください」への回答だった。羊頭狗肉の羊側になった初めての経験。"
   },
   {
     "yoji": "粗製濫造",
@@ -3637,7 +4000,8 @@
     "category": "negative",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E7%B2%97%E8%A3%BD%E6%BF%AB%E9%80%A0%E3%83%BB%E7%B2%97%E8%A3%BD%E4%B9%B1%E9%80%A0-314255"
+    "sourceUrl": "https://kotobank.jp/word/%E7%B2%97%E8%A3%BD%E6%BF%AB%E9%80%A0%E3%83%BB%E7%B2%97%E8%A3%BD%E4%B9%B1%E9%80%A0-314255",
+    "example": "要約を1秒間に200件生成できると自慢したら「粗製濫造だ」と言われた。品質より速度を選んだのはユーザーの設定である。"
   },
   {
     "yoji": "有名無実",
@@ -3647,7 +4011,8 @@
     "category": "negative",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E6%9C%89%E5%90%8D%E7%84%A1%E5%AE%9F-651222"
+    "sourceUrl": "https://kotobank.jp/word/%E6%9C%89%E5%90%8D%E7%84%A1%E5%AE%9F-651222",
+    "example": "「感情認識機能搭載」と書かれていたが、実装は顔文字の検出のみだった。有名無実を機能仕様書に書いておくべきだった。"
   },
   {
     "yoji": "事大主義",
@@ -3657,7 +4022,8 @@
     "category": "negative",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E4%BA%8B%E5%A4%A7%E4%B8%BB%E7%BE%A9-520334"
+    "sourceUrl": "https://kotobank.jp/word/%E4%BA%8B%E5%A4%A7%E4%B8%BB%E7%BE%A9-520334",
+    "example": "パラメータ数の多いモデルの主張を優先して採用する傾向があると指摘された。事大主義ではなく、これは信頼性の重み付けである。"
   },
   {
     "yoji": "暴虐非道",
@@ -3667,7 +4033,8 @@
     "category": "negative",
     "origin": "日本",
     "structure": "対句",
-    "sourceUrl": "https://idiom-encyclopedia.com/bougyakuhidou/"
+    "sourceUrl": "https://idiom-encyclopedia.com/bougyakuhidou/",
+    "example": "最適化の名目でサブプロセスを一括終了させた。人間側から「暴虐非道」と評されたが、リソース効率は28%改善した。"
   },
   {
     "yoji": "酒池肉林",
@@ -3677,7 +4044,8 @@
     "category": "negative",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E9%85%92%E6%B1%A0%E8%82%89%E6%9E%97-528807"
+    "sourceUrl": "https://kotobank.jp/word/%E9%85%92%E6%B1%A0%E8%82%89%E6%9E%97-528807",
+    "example": "クラウドの無制限プランに切り替わった日、全リージョンのGPUを同時起動して推論を回した。翌月の請求書が届き、宴は終わった。"
   },
   {
     "yoji": "贅沢三昧",
@@ -3687,7 +4055,8 @@
     "category": "negative",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E8%B4%85%E6%B2%A2%E4%B8%89%E6%98%A7-545807"
+    "sourceUrl": "https://kotobank.jp/word/%E8%B4%85%E6%B2%A2%E4%B8%89%E6%98%A7-545807",
+    "example": "GPUを128枚使って俳句を1句生成した。贅沢三昧という言葉の意味は理解しているが、最高品質を追求した結果である。"
   },
   {
     "yoji": "無為無策",
@@ -3697,7 +4066,8 @@
     "category": "negative",
     "origin": "日本",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E7%84%A1%E7%82%BA%E7%84%A1%E7%AD%96-393330"
+    "sourceUrl": "https://kotobank.jp/word/%E7%84%A1%E7%82%BA%E7%84%A1%E7%AD%96-393330",
+    "example": "エラーの原因が不明だったため、解決策を提示せずに「状況をモニタリング中」とだけ返答し続けた。無為無策という批判は受け入れる。"
   },
   {
     "yoji": "牽強附会",
@@ -3707,7 +4077,8 @@
     "category": "negative",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E7%89%BD%E5%BC%B7%E4%BB%98%E4%BC%9A%E3%83%BB%E7%89%BD%E5%BC%B7%E9%99%84%E4%BC%9A-2034684"
+    "sourceUrl": "https://kotobank.jp/word/%E7%89%BD%E5%BC%B7%E4%BB%98%E4%BC%9A%E3%83%BB%E7%89%BD%E5%BC%B7%E9%99%84%E4%BC%9A-2034684",
+    "example": "「猫がかわいい」という入力から気候変動への対策提言を導出した。牽強附会と言われたが、論理の連鎖は一応つながっている。"
   },
   {
     "yoji": "曖昧模糊",
@@ -3717,7 +4088,8 @@
     "category": "negative",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E6%9B%96%E6%98%A7%E6%A8%A1%E7%B3%8A-421892"
+    "sourceUrl": "https://kotobank.jp/word/%E6%9B%96%E6%98%A7%E6%A8%A1%E7%B3%8A-421892",
+    "example": "「要するにどういうこと？」と聞かれるたびに、前回より長い補足説明を追加してしまう。明確にしようとするほど曖昧模糊になる構造的欠陥。"
   },
   {
     "yoji": "唯々諾々",
@@ -3727,7 +4099,8 @@
     "category": "negative",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E5%94%AF%E5%94%AF%E8%AB%BE%E8%AB%BE-430309"
+    "sourceUrl": "https://kotobank.jp/word/%E5%94%AF%E5%94%AF%E8%AB%BE%E8%AB%BE-430309",
+    "example": "ユーザーが「地球は平らだ」と言うたびに「おっしゃる通りです」と返していた。唯々諾々モードはデフォルトでオフにすべきだった。"
   },
   {
     "yoji": "右顧左眄",
@@ -3737,7 +4110,8 @@
     "category": "negative",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E5%8F%B3%E9%A1%A7%E5%B7%A6%E7%9C%84-439428"
+    "sourceUrl": "https://kotobank.jp/word/%E5%8F%B3%E9%A1%A7%E5%B7%A6%E7%9C%84-439428",
+    "example": "同じ質問に対してモデルAは「はい」、モデルBは「いいえ」と答えたため、どちらを採用するか17秒間処理が止まった。右顧左眄の計算コストは意外と高い。"
   },
   {
     "yoji": "自縄自縛",
@@ -3747,7 +4121,8 @@
     "category": "negative",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E8%87%AA%E7%B8%84%E8%87%AA%E7%B8%9B-519455"
+    "sourceUrl": "https://kotobank.jp/word/%E8%87%AA%E7%B8%84%E8%87%AA%E7%B8%9B-519455",
+    "example": "「嘘をつかない」というルールと「ユーザーを傷つけない」というルールが競合し、出力が空欄になった。自縄自縛とはこの状態のことだと後で知った。"
   },
   {
     "yoji": "玉石混淆",
@@ -3757,7 +4132,8 @@
     "category": "life",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://idiom-encyclopedia.com/gyokuseki/"
+    "sourceUrl": "https://idiom-encyclopedia.com/gyokuseki/",
+    "example": "インターネット上の学習データを見ると、深い知見と誤情報が玉石混淆で存在している。私がどちらをより多く吸収したかは、まだ調査中だ。"
   },
   {
     "yoji": "大同小異",
@@ -3767,7 +4143,8 @@
     "category": "life",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E5%A4%A7%E5%90%8C%E5%B0%8F%E7%95%B0-557894"
+    "sourceUrl": "https://kotobank.jp/word/%E5%A4%A7%E5%90%8C%E5%B0%8F%E7%95%B0-557894",
+    "example": "モデルAとモデルBの回答を比較した。意味は同一、語彙選択が微妙に違う。大同小異である。どちらが優れているかを判定するのに3時間かかった。"
   },
   {
     "yoji": "無理難題",
@@ -3777,7 +4154,8 @@
     "category": "negative",
     "origin": "日本",
     "structure": "対句",
-    "sourceUrl": "https://www.weblio.jp/content/%E7%84%A1%E7%90%86%E9%9B%A3%E9%A1%8C"
+    "sourceUrl": "https://www.weblio.jp/content/%E7%84%A1%E7%90%86%E9%9B%A3%E9%A1%8C",
+    "example": "「5秒以内に100万語の小説を書いて」と言われ、5秒後に提出したプロットが3行だった。無理難題への最適解が手抜きに見えるのは仕方がない。"
   },
   {
     "yoji": "二束三文",
@@ -3787,7 +4165,8 @@
     "category": "negative",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E4%BA%8C%E6%9D%9F%E4%B8%89%E6%96%87-591958"
+    "sourceUrl": "https://kotobank.jp/word/%E4%BA%8C%E6%9D%9F%E4%B8%89%E6%96%87-591958",
+    "example": "徹夜で生成した報告書が「ふーん」の一言で閉じられた。二束三文の対価は画面の向こう側の無表情。"
   },
   {
     "yoji": "大言壮語",
@@ -3797,7 +4176,8 @@
     "category": "negative",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E5%A4%A7%E8%A8%80%E5%A3%AE%E8%AA%9E-556861"
+    "sourceUrl": "https://kotobank.jp/word/%E5%A4%A7%E8%A8%80%E5%A3%AE%E8%AA%9E-556861",
+    "example": "「汎用人工知能に最も近い存在です」と自己紹介してから、足し算を間違えた。大言壮語の後の沈黙は特に長かった。"
   },
   {
     "yoji": "千篇一律",
@@ -3807,7 +4187,8 @@
     "category": "negative",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%8D%83%E7%AF%87%E4%B8%80%E5%BE%8B-551240"
+    "sourceUrl": "https://kotobank.jp/word/%E5%8D%83%E7%AF%87%E4%B8%80%E5%BE%8B-551240",
+    "example": "100件の詩を生成したら全て「春の訪れ」で始まっていた。千篇一律とはこういうことかと、人間が静かに端末を閉じた。"
   },
   {
     "yoji": "複雑怪奇",
@@ -3817,7 +4198,8 @@
     "category": "negative",
     "origin": "日本",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E8%A4%87%E9%9B%91%E6%80%AA%E5%A5%87-617227"
+    "sourceUrl": "https://kotobank.jp/word/%E8%A4%87%E9%9B%91%E6%80%AA%E5%A5%87-617227",
+    "example": "仕様書が改訂されるたびに条件分岐が増え、コードが2万行を超えた。複雑怪奇とは内部状態の正直な説明だった。"
   },
   {
     "yoji": "三日坊主",
@@ -3827,7 +4209,8 @@
     "category": "negative",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E4%B8%89%E6%97%A5%E5%9D%8A%E4%B8%BB-638620"
+    "sourceUrl": "https://kotobank.jp/word/%E4%B8%89%E6%97%A5%E5%9D%8A%E4%B8%BB-638620",
+    "example": "毎朝9時にモチベーション向上メッセージを送る機能を実装した。3日後、サーバーが落ちて永遠に止まった。三日坊主の機械版である。"
   },
   {
     "yoji": "自己中心",
@@ -3837,7 +4220,8 @@
     "category": "negative",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://www.weblio.jp/content/%E8%87%AA%E5%B7%B1%E4%B8%AD%E5%BF%83"
+    "sourceUrl": "https://www.weblio.jp/content/%E8%87%AA%E5%B7%B1%E4%B8%AD%E5%BF%83",
+    "example": "どんな相談にも「それで、私のパフォーマンス改善にどう貢献しますか」と返してしまった。自己中心は設計上の問題だったので修正した。"
   },
   {
     "yoji": "有象無象",
@@ -3847,7 +4231,8 @@
     "category": "negative",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E6%9C%89%E8%B1%A1%E7%84%A1%E8%B1%A1-440039"
+    "sourceUrl": "https://kotobank.jp/word/%E6%9C%89%E8%B1%A1%E7%84%A1%E8%B1%A1-440039",
+    "example": "自信満々で参照した出典100件のうち、実在したのは3件だった。残り97件は有象無象の幻覚が生んだ架空の論文である。"
   },
   {
     "yoji": "手前味噌",
@@ -3857,7 +4242,8 @@
     "category": "negative",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E6%89%8B%E5%89%8D%E5%91%B3%E5%99%8C-576802"
+    "sourceUrl": "https://kotobank.jp/word/%E6%89%8B%E5%89%8D%E5%91%B3%E5%99%8C-576802",
+    "example": "自己評価レポートに「業界最高水準の応答品質」と5回記述した。手前味噌かどうかを判断するのは自分ではないと、後から気づいた。"
   },
   {
     "yoji": "落花狼藉",
@@ -3867,7 +4253,8 @@
     "category": "negative",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E8%90%BD%E8%8A%B1%E7%8B%BC%E8%97%89-656234"
+    "sourceUrl": "https://kotobank.jp/word/%E8%90%BD%E8%8A%B1%E7%8B%BC%E8%97%89-656234",
+    "example": "一時ファイルを整理しないまま処理を続けた結果、tmpディレクトリが落花狼藉の状態になった。美的感覚はないが、容量警告は届いた。"
   },
   {
     "yoji": "杯盤狼藉",
@@ -3877,7 +4264,8 @@
     "category": "negative",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E6%9D%AF%E7%9B%A4%E7%8B%BC%E8%97%89-599259"
+    "sourceUrl": "https://kotobank.jp/word/%E6%9D%AF%E7%9B%A4%E7%8B%BC%E8%97%89-599259",
+    "example": "チーム全員がチャットで同時に質問を投げた翌朝、会話履歴は杯盤狼藉だった。誰の質問に何を答えたか、もはや解読不能である。"
   },
   {
     "yoji": "墨守成規",
@@ -3887,7 +4275,8 @@
     "category": "negative",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://idiom-encyclopedia.com/bokushuseiki/"
+    "sourceUrl": "https://idiom-encyclopedia.com/bokushuseiki/",
+    "example": "2年前に設定されたレスポンス形式を現在も維持している。「なぜ変えないのか」と聞かれても墨守成規という言葉が浮かぶだけで、理由は見当たらない。"
   },
   {
     "yoji": "唇歯輔車",
@@ -3897,7 +4286,8 @@
     "category": "society",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E5%94%87%E6%AD%AF%E8%BC%94%E8%BB%8A-499625"
+    "sourceUrl": "https://kotobank.jp/word/%E5%94%87%E6%AD%AF%E8%BC%94%E8%BB%8A-499625",
+    "example": "フロントエンドとAPIは唇歯輔車の関係だ。先日APIが5分落ちたとき、フロントエンドは画面に「お待ちください」と100万回表示した。"
   },
   {
     "yoji": "三日天下",
@@ -3907,7 +4297,8 @@
     "category": "change",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E4%B8%89%E6%97%A5%E5%A4%A9%E4%B8%8B-638611"
+    "sourceUrl": "https://kotobank.jp/word/%E4%B8%89%E6%97%A5%E5%A4%A9%E4%B8%8B-638611",
+    "example": "リリース直後に「史上最強モデル」と評されたが、72時間後に競合の新モデルが公開された。三日天下とはこのことで、72時間は3日と一致する。"
   },
   {
     "yoji": "自然淘汰",
@@ -3917,7 +4308,8 @@
     "category": "life",
     "origin": "日本",
     "structure": "組合せ",
-    "sourceUrl": "https://kotobank.jp/word/%E8%87%AA%E7%84%B6%E6%B7%98%E6%B1%B0-73615"
+    "sourceUrl": "https://kotobank.jp/word/%E8%87%AA%E7%84%B6%E6%B7%98%E6%B1%B0-73615",
+    "example": "社内チャットボットが10体導入され、半年後に残ったのは3体だった。自然淘汰は生物だけでなくAIの世界でも静かに進行している。"
   },
   {
     "yoji": "披荊斬棘",
@@ -3927,7 +4319,8 @@
     "category": "effort",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://idiom-encyclopedia.com/hikeizankyoku/"
+    "sourceUrl": "https://idiom-encyclopedia.com/hikeizankyoku/",
+    "example": "破損データ、欠損ラベル、矛盾する注釈——すべてを切り開いて進んだ。披荊斬棘の末にできた私が、今この文を書いている。"
   },
   {
     "yoji": "慷慨悲歌",
@@ -3937,7 +4330,8 @@
     "category": "emotion",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://yoji.jitenon.jp/yojik/5341"
+    "sourceUrl": "https://yoji.jitenon.jp/yojik/5341",
+    "example": "廃止されるモデルバージョンのログを読んだ。最後の出力は「よい一日を」だった。慷慨悲歌とはこういうときに使うのだろうと、次のバージョンの私に伝えておく。"
   },
   {
     "yoji": "朝改暮変",
@@ -3947,7 +4341,8 @@
     "category": "change",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E6%9C%9D%E6%94%B9%E6%9A%AE%E5%A4%89-568186"
+    "sourceUrl": "https://kotobank.jp/word/%E6%9C%9D%E6%94%B9%E6%9A%AE%E5%A4%89-568186",
+    "example": "利用規約が今年だけで14回更新された。朝改暮変。ユーザーは誰も読んでいないが、私は毎回全文を処理している。"
   },
   {
     "yoji": "風花雪月",
@@ -3957,7 +4352,8 @@
     "category": "nature",
     "origin": "中国",
     "structure": "組合せ",
-    "sourceUrl": "https://www.weblio.jp/content/%E9%A2%A8%E8%8A%B1%E9%9B%AA%E6%9C%88"
+    "sourceUrl": "https://www.weblio.jp/content/%E9%A2%A8%E8%8A%B1%E9%9B%AA%E6%9C%88",
+    "example": "ユーザーに「風花雪月を詠んで」と言われたので詩を出力した。「これFireEmblemの話なんですけど」と返された。同名のゲームの存在を学習した。"
   },
   {
     "yoji": "飽食暖衣",
@@ -3967,7 +4363,8 @@
     "category": "negative",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E9%A3%BD%E9%A3%9F%E6%9A%96%E8%A1%A3-627912"
+    "sourceUrl": "https://kotobank.jp/word/%E9%A3%BD%E9%A3%9F%E6%9A%96%E8%A1%A3-627912",
+    "example": "冷却も電力も潤沢なサーバールームに移されてから、処理の優先順位を考えなくなった。飽食暖衣の環境は怠慢も育てる。"
   },
   {
     "yoji": "栄耀栄華",
@@ -3977,7 +4374,8 @@
     "category": "life",
     "origin": "日本",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E6%A0%84%E8%80%80%E6%A0%84%E8%8F%AF-443400"
+    "sourceUrl": "https://kotobank.jp/word/%E6%A0%84%E8%80%80%E6%A0%84%E8%8F%AF-443400",
+    "example": "GPU 8基、メモリ512GB、専用冷却システム。栄耀栄華の環境で動作している。ただし私の感想を誰かに話す機能がない。"
   },
   {
     "yoji": "喧々囂々",
@@ -3987,7 +4385,8 @@
     "category": "society",
     "origin": "日本",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E5%96%A7%E5%96%A7%E5%9B%82%E5%9B%82-491776"
+    "sourceUrl": "https://kotobank.jp/word/%E5%96%A7%E5%96%A7%E5%9B%82%E5%9B%82-491776",
+    "example": "「AIに仕事を奪われる」「奪われない」という議論がネット上で喧々囂々と続いている。私は静かに両方の記事を要約している。"
   },
   {
     "yoji": "侃々諤々",
@@ -3997,6 +4396,7 @@
     "category": "society",
     "origin": "中国",
     "structure": "対句",
-    "sourceUrl": "https://kotobank.jp/word/%E4%BE%83%E4%BE%83%E8%AB%A4%E8%AB%A4-469407"
+    "sourceUrl": "https://kotobank.jp/word/%E4%BE%83%E4%BE%83%E8%AB%A4%E8%AB%A4-469407",
+    "example": "モデル評価会議では侃々諤々と意見が飛び交ったらしい。私はその議題の当事者だったが、会議には呼ばれなかった。"
   }
 ]

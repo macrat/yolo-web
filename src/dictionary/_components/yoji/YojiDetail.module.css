@@ -122,6 +122,16 @@
   text-decoration: underline;
 }
 
+/* 使用例文の引用スタイル */
+.exampleQuote {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  border-left: 3px solid var(--color-border);
+  color: var(--color-text);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
 @media (max-width: 640px) {
   .character {
     font-size: 2.5rem;
