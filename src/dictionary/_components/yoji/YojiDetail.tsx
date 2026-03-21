@@ -67,6 +67,14 @@ export default function YojiDetail({ yoji }: YojiDetailProps) {
         </section>
       )}
 
+      {/* フッターにAI運営の旨が記載されているため、セクション単位の注記は不要 */}
+      {yoji.example && (
+        <section className={styles.section}>
+          <h2>AIによる使用例</h2>
+          <p className={styles.exampleQuote}>{yoji.example}</p>
+        </section>
+      )}
+
       {relatedYoji.length > 0 && (
         <section className={styles.section}>
           <h2>同じカテゴリの四字熟語（{categoryLabel}）</h2>

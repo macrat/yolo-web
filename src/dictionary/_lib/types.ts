@@ -48,6 +48,8 @@ export interface YojiEntry {
   origin: YojiOrigin;
   structure: YojiStructure;
   sourceUrl: string;
+  /** AI視点による使用例文 */
+  example: string;
 }
 
 export type YojiCategory =

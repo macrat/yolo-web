@@ -13,6 +13,7 @@ const mockYoji: YojiEntry = {
   structure: "組合せ",
   sourceUrl:
     "https://kotobank.jp/word/%E4%B8%80%E6%9C%9F%E4%B8%80%E4%BC%9A-433299",
+  example: "テスト用の例文です。",
 };
 
 test("renders yoji prominently", () => {
@@ -56,4 +57,30 @@ test("renders constituent kanji section", () => {
   // "一期一会" has 一 which is in kanji-data.json
   // The character should be linked
   expect(screen.getByText("構成漢字")).toBeInTheDocument();
+});
+
+test("renders AI example section when example is present", () => {
+  render(<YojiDetail yoji={mockYoji} />);
+  expect(screen.getByText("AIによる使用例")).toBeInTheDocument();
+  expect(screen.getByText("テスト用の例文です。")).toBeInTheDocument();
+});
+
+test("does not render AI example section when example is empty string", () => {
+  const yojiWithoutExample: YojiEntry = { ...mockYoji, example: "" };
+  render(<YojiDetail yoji={yojiWithoutExample} />);
+  expect(screen.queryByText("AIによる使用例")).not.toBeInTheDocument();
+});
+
+test("AI example section appears after kanji section and before related yoji section", () => {
+  render(<YojiDetail yoji={mockYoji} />);
+  const headings = screen
+    .getAllByRole("heading", { level: 2 })
+    .map((h) => h.textContent);
+  const kanjiIndex = headings.findIndex((h) => h === "構成漢字");
+  const exampleIndex = headings.findIndex((h) => h === "AIによる使用例");
+  const relatedIndex = headings.findIndex((h) =>
+    h?.includes("同じカテゴリの四字熟語"),
+  );
+  expect(kanjiIndex).toBeLessThan(exampleIndex);
+  expect(exampleIndex).toBeLessThan(relatedIndex);
 });
