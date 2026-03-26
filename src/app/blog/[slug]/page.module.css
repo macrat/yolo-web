@@ -47,6 +47,40 @@
   margin-bottom: 0.75rem;
 }
 
+/* モバイル向けインラインTOC */
+.mobileToc {
+  margin-bottom: 1.5rem;
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+}
+
+.mobileTocSummary {
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--color-text);
+}
+
+/* 開いたときはsummaryにボーダーを表示してコンテンツと区切る */
+.mobileToc[open] .mobileTocSummary {
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* mobileToc内ではTableOfContentsの見出し（h2「目次」）を非表示にする
+   summaryの「目次」ラベルが役割を担うため重複を避ける */
+.mobileToc nav h2 {
+  display: none;
+}
+
+/* mobileToc内ではTableOfContentsのボーダー・背景を上書きして重複を避ける */
+.mobileToc nav {
+  border: none;
+  border-radius: 0;
+  background: none;
+}
+
 .layout {
   display: flex;
   gap: 2rem;
@@ -231,6 +265,11 @@
 
   .sidebar {
     display: block;
+  }
+
+  /* デスクトップではサイドバーのTOCが表示されるためモバイルTOCを非表示にする */
+  .mobileToc {
+    display: none;
   }
 }
 

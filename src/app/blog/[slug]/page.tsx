@@ -102,6 +102,14 @@ export default async function BlogPostPage({ params }: Props) {
           />
         )}
 
+        {/* モバイル向けインラインTOC（デスクトップではCSSで非表示） */}
+        {post.headings.length > 0 && (
+          <details className={styles.mobileToc}>
+            <summary className={styles.mobileTocSummary}>目次</summary>
+            <TableOfContents headings={post.headings} />
+          </details>
+        )}
+
         <div className={styles.layout}>
           <aside className={styles.sidebar}>
             <TableOfContents headings={post.headings} />
