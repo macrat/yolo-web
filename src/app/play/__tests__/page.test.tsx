@@ -118,8 +118,8 @@ describe("PlayPage", () => {
     render(<PlayPage />);
     const badges = screen.getAllByText("毎日更新");
     // 対象スラグ: daily, kanji-kanaru, yoji-kimeru, nakamawake, irodori の5種
-    // 「まずはここから」に character-personality が入りirodoriは重複しないため合計5件
-    // ※ daily は「まずはここから」から除外（FortunePreview セクションで表示）
+    // 「イチオシ」に contrarian-fortune/unexpected-compatibility/traditional-color が入り
+    // デイリーコンテンツは重複しないため合計5件
     expect(badges.length).toBe(5);
   });
 
@@ -228,23 +228,30 @@ describe("PlayPage", () => {
     expect(screen.getByText("今日のピックアップ")).toBeInTheDocument();
   });
 
-  // B.3: 「まずはここから」セクション
-  it("renders 'start here' featured section before category sections", () => {
+  // B.3: 「イチオシ」セクション（B-209: /playページおすすめセクション再設計）
+  it("renders 'featured' section before category sections", () => {
     render(<PlayPage />);
     const featuredSection = screen.getByTestId("featured-section");
     expect(featuredSection).toBeInTheDocument();
   });
 
-  it("renders 'まずはここから' heading in featured section", () => {
+  it("renders 'イチオシ' heading in featured section", () => {
     render(<PlayPage />);
     const featuredSection = screen.getByTestId("featured-section");
     expect(
-      within(featuredSection).getByRole("heading", { name: "まずはここから" }),
+      within(featuredSection).getByRole("heading", { name: "イチオシ" }),
+    ).toBeInTheDocument();
+  });
+
+  it("renders subtext below the featured heading", () => {
+    render(<PlayPage />);
+    expect(
+      screen.getByText("迷ったらここから！厳選おすすめコンテンツ"),
     ).toBeInTheDocument();
   });
 
   it("renders exactly 3 featured cards in the featured section", () => {
-    // 占いカテゴリは FortunePreview セクションで表示するため除外し、3件に変更
+    // /play ページ専用の PLAY_FEATURED_ITEMS から3件表示する
     render(<PlayPage />);
     const featuredSection = screen.getByTestId("featured-section");
     const featuredLinks = within(featuredSection).getAllByRole("link");
@@ -273,6 +280,22 @@ describe("PlayPage", () => {
     expect(allSections[0]).toBe(featuredSection);
   });
 
+  // B-209: おすすめ理由バッジ
+  it("renders recommend reason badges in featured section cards", () => {
+    render(<PlayPage />);
+    const featuredSection = screen.getByTestId("featured-section");
+    // 3件のカードに1件ずつおすすめ理由バッジが存在すること
+    expect(
+      within(featuredSection).getByText("ひと味違う運勢診断"),
+    ).toBeInTheDocument();
+    expect(
+      within(featuredSection).getByText("友達にシェアしたくなる"),
+    ).toBeInTheDocument();
+    expect(
+      within(featuredSection).getByText("和の色であなたを表現"),
+    ).toBeInTheDocument();
+  });
+
   // C.4: カードのグラデーション背景
   it("renders cards with gradient background data attribute", () => {
     render(<PlayPage />);
@@ -295,7 +318,7 @@ describe("PlayPage", () => {
 
   // ===== レビュー指摘修正 =====
 
-  // S-1: 「まずはここから」セクションのaria-label
+  // S-1: 「イチオシ」セクションのaria-label
   it("featured section has aria-label for accessibility", () => {
     render(<PlayPage />);
     const featuredSection = screen.getByTestId("featured-section");

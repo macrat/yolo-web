@@ -89,11 +89,11 @@ export const DAILY_UPDATE_SLUGS: ReadonlySet<string> = new Set([
 ]);
 
 /**
- * 「まずはここから」セクションに表示する固定コンテンツのスラグ一覧。
+ * トップページ専用 — 「まずはここから」セクションに表示する固定コンテンツのスラグ一覧。
  * 占いカテゴリはFortunePreviewで表示、ゲームカテゴリはデイリーパズルセクションで表示するため、
  * 性格診断・知識テストカテゴリから代表作を選出。3件とする。
  * 初回訪問者が迷わず体験できる導線として機能する。
- * /play ページとトップページの両方から参照される共有定数。
+ * トップページのみで使用される定数（/play ページは getPlayFeaturedContents() を使用）。
  */
 export const FEATURED_SLUGS: ReadonlyArray<string> = [
   "animal-personality", // 性格診断: アニマル性格診断
@@ -134,9 +134,9 @@ export const quizQuestionCountBySlug: Map<string, number> = new Map(
 );
 
 /**
- * 「まずはここから」セクション用の固定コンテンツ配列を返す。
+ * トップページ「まずはここから」セクション用の固定コンテンツ配列を返す。
  * FEATURED_SLUGS に対応するコンテンツをレジストリから取得する。
- * /play ページとトップページの両方から参照される共有関数。
+ * トップページのみで使用される関数（/play ページは getPlayFeaturedContents() を使用）。
  */
 export function getFeaturedContents(): PlayContentMeta[] {
   return FEATURED_SLUGS.flatMap((slug) => {
@@ -172,5 +172,48 @@ export function getDiagnosisContents(): PlayContentMeta[] {
   return DIAGNOSIS_SLUGS.flatMap((slug) => {
     const content = playContentBySlug.get(slug);
     return content ? [content] : [];
+  });
+}
+
+/**
+ * /play ページの「イチオシ」セクションに表示するコンテンツとおすすめ理由のペア。
+ * PlayFeaturedItem は内部専用の型（export しない）。
+ */
+interface PlayFeaturedItem {
+  slug: string;
+  recommendReason: string;
+}
+
+/**
+ * PlayContentMeta におすすめ理由を付与した型。
+ * /play ページの「イチオシ」セクション表示に使用する。
+ */
+export interface PlayFeaturedContent extends PlayContentMeta {
+  recommendReason: string;
+}
+
+/**
+ * /play ページ専用 — 「イチオシ」セクションに表示する固定コンテンツとおすすめ理由の一覧。
+ * FEATURED_SLUGS（トップページ専用）とは別に、/play ページ向けに厳選した3件。
+ * 各コンテンツに訪問者の興味を引くおすすめ理由を付与することで、クリック率向上を図る。
+ */
+export const PLAY_FEATURED_ITEMS: ReadonlyArray<PlayFeaturedItem> = [
+  { slug: "contrarian-fortune", recommendReason: "ひと味違う運勢診断" },
+  {
+    slug: "unexpected-compatibility",
+    recommendReason: "友達にシェアしたくなる",
+  },
+  { slug: "traditional-color", recommendReason: "和の色であなたを表現" },
+];
+
+/**
+ * /play ページの「イチオシ」セクション用のコンテンツ配列を返す。
+ * PLAY_FEATURED_ITEMS の各 slug から playContentBySlug でコンテンツを取得し、
+ * recommendReason を付与した PlayFeaturedContent[] として返す。
+ */
+export function getPlayFeaturedContents(): PlayFeaturedContent[] {
+  return PLAY_FEATURED_ITEMS.flatMap(({ slug, recommendReason }) => {
+    const content = playContentBySlug.get(slug);
+    return content ? [{ ...content, recommendReason }] : [];
   });
 }

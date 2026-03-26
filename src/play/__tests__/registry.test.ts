@@ -11,6 +11,8 @@ import {
   DAILY_UPDATE_SLUGS,
   DIAGNOSIS_SLUGS,
   getDiagnosisContents,
+  PLAY_FEATURED_ITEMS,
+  getPlayFeaturedContents,
 } from "../registry";
 import { allGameMetas } from "@/play/games/registry";
 import { allQuizMetas } from "@/play/quiz/registry";
@@ -401,5 +403,107 @@ describe("DAILY_UPDATE_SLUGS (共有定数)", () => {
 
   test("is a Set", () => {
     expect(DAILY_UPDATE_SLUGS).toBeInstanceOf(Set);
+  });
+});
+
+describe("PLAY_FEATURED_ITEMS (B-209: /playページイチオシセクション)", () => {
+  test("is exported from registry", () => {
+    expect(PLAY_FEATURED_ITEMS).toBeDefined();
+  });
+
+  test("contains exactly 3 items", () => {
+    expect(PLAY_FEATURED_ITEMS).toHaveLength(3);
+  });
+
+  test("contains 'contrarian-fortune' with recommendReason", () => {
+    const item = PLAY_FEATURED_ITEMS.find(
+      (i) => i.slug === "contrarian-fortune",
+    );
+    expect(item).toBeDefined();
+    expect(item?.recommendReason).toBe("ひと味違う運勢診断");
+  });
+
+  test("contains 'unexpected-compatibility' with recommendReason", () => {
+    const item = PLAY_FEATURED_ITEMS.find(
+      (i) => i.slug === "unexpected-compatibility",
+    );
+    expect(item).toBeDefined();
+    expect(item?.recommendReason).toBe("友達にシェアしたくなる");
+  });
+
+  test("contains 'traditional-color' with recommendReason", () => {
+    const item = PLAY_FEATURED_ITEMS.find(
+      (i) => i.slug === "traditional-color",
+    );
+    expect(item).toBeDefined();
+    expect(item?.recommendReason).toBe("和の色であなたを表現");
+  });
+
+  test("each slug exists in playContentBySlug", () => {
+    for (const item of PLAY_FEATURED_ITEMS) {
+      expect(playContentBySlug.has(item.slug)).toBe(true);
+    }
+  });
+});
+
+describe("getPlayFeaturedContents (B-209: /playページイチオシセクション)", () => {
+  test("returns exactly 3 contents", () => {
+    const contents = getPlayFeaturedContents();
+    expect(contents).toHaveLength(3);
+  });
+
+  test("each content has recommendReason field", () => {
+    const contents = getPlayFeaturedContents();
+    for (const content of contents) {
+      expect(content.recommendReason).toBeDefined();
+      expect(typeof content.recommendReason).toBe("string");
+      expect(content.recommendReason.length).toBeGreaterThan(0);
+    }
+  });
+
+  test("content for 'contrarian-fortune' has correct recommendReason", () => {
+    const contents = getPlayFeaturedContents();
+    const item = contents.find((c) => c.slug === "contrarian-fortune");
+    expect(item).toBeDefined();
+    expect(item?.recommendReason).toBe("ひと味違う運勢診断");
+  });
+
+  test("content for 'unexpected-compatibility' has correct recommendReason", () => {
+    const contents = getPlayFeaturedContents();
+    const item = contents.find((c) => c.slug === "unexpected-compatibility");
+    expect(item).toBeDefined();
+    expect(item?.recommendReason).toBe("友達にシェアしたくなる");
+  });
+
+  test("content for 'traditional-color' has correct recommendReason", () => {
+    const contents = getPlayFeaturedContents();
+    const item = contents.find((c) => c.slug === "traditional-color");
+    expect(item).toBeDefined();
+    expect(item?.recommendReason).toBe("和の色であなたを表現");
+  });
+
+  test("each returned content has base PlayContentMeta fields (slug, title, icon, etc.)", () => {
+    const contents = getPlayFeaturedContents();
+    for (const content of contents) {
+      expect(content.slug).toBeDefined();
+      expect(content.title).toBeDefined();
+      expect(content.icon).toBeDefined();
+      expect(content.accentColor).toBeDefined();
+      expect(content.category).toBeDefined();
+    }
+  });
+});
+
+describe("PLAY_FEATURED_ITEMS — トップページの FEATURED_SLUGS/DIAGNOSIS_SLUGS との重複なし (B-209レビュー修正4)", () => {
+  test("PLAY_FEATURED_ITEMS の各 slug が FEATURED_SLUGS に含まれていない", () => {
+    for (const item of PLAY_FEATURED_ITEMS) {
+      expect(FEATURED_SLUGS).not.toContain(item.slug);
+    }
+  });
+
+  test("PLAY_FEATURED_ITEMS の各 slug が DIAGNOSIS_SLUGS に含まれていない", () => {
+    for (const item of PLAY_FEATURED_ITEMS) {
+      expect(DIAGNOSIS_SLUGS).not.toContain(item.slug);
+    }
   });
 });

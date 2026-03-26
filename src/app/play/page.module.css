@@ -213,25 +213,33 @@
   border-color: var(--color-primary-hover);
 }
 
-/* ===== Featured section（まずはここから） ===== */
-/* 各カテゴリの代表コンテンツを4枚横並びで表示する導線セクション */
+/* ===== Featured section（イチオシ） ===== */
+/* /play ページ専用おすすめコンテンツを3枚横並びで表示する導線セクション */
 .featuredSection {
   margin-bottom: 2.5rem;
 }
 
 .featuredHeading {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   font-weight: 700;
   color: var(--color-text);
-  margin-bottom: 1rem;
+  margin-bottom: 0.35rem;
   padding-bottom: 0.5rem;
-  border-bottom: 2px solid var(--color-border);
+  /* カテゴリ見出しとの視覚的差別化: プライマリカラーのボーダーで「特別感」を付与 */
+  border-bottom: 2px solid var(--color-primary);
 }
 
-/* デスクトップ4列、モバイル2列のグリッド */
+/* 「イチオシ」見出し下のサブテキスト */
+.featuredSubtext {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  margin-bottom: 1rem;
+}
+
+/* デスクトップ3列（イチオシ3件固定に合わせた列数）、タブレット2列、モバイル1列のグリッド */
 .featuredGrid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
   list-style: none;
   padding: 0;
@@ -307,6 +315,29 @@
     color-mix(in srgb, var(--play-accent) 14%, transparent) 0%,
     transparent 50%
   );
+}
+
+/* ===== Recommend badge（おすすめ理由バッジ） ===== */
+/* 「イチオシ」セクションのカードにのみ表示する控えめなラベル。
+   accentColor の薄い背景色を使用して各カードのカラーと調和させる。
+   文字を小さく・余白を抑えることでカード本体の邪魔にならないデザインにする。 */
+.recommendBadge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  /* accentColor の12%透明度の背景でカード色と調和した控えめな色合いに */
+  background-color: color-mix(in srgb, var(--play-accent) 12%, transparent);
+  /* accentColor で文字色を設定（薄い背景なのでテキストは濃いめになるよう調整） */
+  color: color-mix(in srgb, var(--play-accent) 90%, #000000);
+  border: 1px solid color-mix(in srgb, var(--play-accent) 25%, transparent);
+  border-radius: 999px;
+  padding: 2px 8px;
+  margin-bottom: 0.5rem;
+  white-space: nowrap;
+  /* カードの横幅に合わせて収まる範囲に制限 */
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* アイコンをaccentColorの薄い背景円でラップ */
@@ -414,6 +445,13 @@
   color: #1e293b;
 }
 
+/* ダークモードでのおすすめ理由バッジ:
+   color-mix は CSS 変数ベースのためそのまま機能するが、
+   文字色の視認性を確保するために明るめに補正する */
+:global(:root.dark) .recommendBadge {
+  color: color-mix(in srgb, var(--play-accent) 60%, #ffffff);
+}
+
 /* ===== Responsive ===== */
 @media (max-width: 768px) {
   .main {
@@ -443,9 +481,9 @@
     gap: 0.75rem;
   }
 
-  /* おすすめグリッドもモバイルで2カラム */
+  /* おすすめグリッドはモバイルで1カラム（3件縦並び、カード内容を省略せず読める） */
   .featuredGrid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
     gap: 0.75rem;
   }
 
