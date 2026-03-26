@@ -7,6 +7,7 @@ RUN curl -fsSLo /etc/apt/keyrings/githubcli-archive-keyring.gpg https://cli.gith
 	&& apt-get install -y \
 		gh \
 		jq \
+		pipx \
 		ripgrep \
 		vim \
 	&& npx -y playwright install-deps \
