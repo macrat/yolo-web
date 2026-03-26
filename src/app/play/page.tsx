@@ -15,6 +15,7 @@ import { getContrastTextColor } from "@/play/color-utils";
 import { getDayOfYearJst } from "@/lib/date";
 import Breadcrumb from "@/components/common/Breadcrumb";
 import styles from "./page.module.css";
+import CategoryNav from "./_components/CategoryNav";
 
 /** ISR: 24時間ごとにページを再生成し、「今日のピックアップ」の日替わりローテーションを機能させる */
 export const revalidate = 86400;
@@ -146,21 +147,8 @@ export default function PlayPage() {
       </section>
 
       {/* カテゴリアンカーリンクタブ（ヒーロー直下、sticky化でスクロール追従） */}
-      <nav
-        className={styles.categoryNav}
-        aria-label="カテゴリナビゲーション"
-        data-sticky="true"
-      >
-        {CATEGORY_DISPLAY_ORDER.map(({ category, label }) => (
-          <a
-            key={category}
-            href={`#${category}`}
-            className={styles.categoryNavTab}
-          >
-            {label}
-          </a>
-        ))}
-      </nav>
+      {/* CategoryNav はクライアントコンポーネントとして IntersectionObserver でアクティブタブを制御する */}
+      <CategoryNav categories={CATEGORY_DISPLAY_ORDER} />
 
       {/* 「まずはここから」セクション: 各カテゴリの代表コンテンツ4件を横並び表示 */}
       <section

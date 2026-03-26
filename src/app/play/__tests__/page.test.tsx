@@ -1,6 +1,21 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import PlayPage from "../page";
+
+// CategoryNav コンポーネントが使用する IntersectionObserver をモックする
+// page.test.tsx はページ全体の統合テストであり、IntersectionObserver の詳細な動作は
+// CategoryNav.test.tsx でテストするため、ここではスタブ実装を提供する
+beforeEach(() => {
+  Object.defineProperty(window, "IntersectionObserver", {
+    writable: true,
+    configurable: true,
+    value: class MockIntersectionObserver {
+      observe() {}
+      unobserve() {}
+      disconnect() {}
+    },
+  });
+});
 
 describe("PlayPage", () => {
   it("renders the page heading", () => {

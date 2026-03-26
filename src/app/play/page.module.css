@@ -200,6 +200,19 @@
   color: var(--color-text);
 }
 
+/* アクティブなカテゴリタブ（現在ビューポート内にあるセクションに対応するタブ） */
+.categoryNavTabActive {
+  background-color: var(--color-primary);
+  color: #fff;
+  border-color: var(--color-primary);
+}
+
+.categoryNavTabActive:hover {
+  background-color: var(--color-primary-hover);
+  color: #fff;
+  border-color: var(--color-primary-hover);
+}
+
 /* ===== Featured section（まずはここから） ===== */
 /* 各カテゴリの代表コンテンツを4枚横並びで表示する導線セクション */
 .featuredSection {
@@ -388,6 +401,17 @@
 /* ダークモードの偶数セクション背景色 */
 :global(:root.dark) .categorySection[data-section-alt="true"] {
   --section-bg-alt: rgba(255, 255, 255, 0.03);
+}
+
+/* ダークモードでは --color-primary が明るい青（#60a5fa）になるため
+   白文字（#fff）とのコントラスト比が約2.1:1 となり WCAG AA（4.5:1）を満たさない。
+   slate-800（#1e293b）を使用することでコントラスト比約5.4:1（WCAG AA基準を充足）を確保する。 */
+:global(:root.dark) .categoryNavTabActive {
+  color: #1e293b;
+}
+
+:global(:root.dark) .categoryNavTabActive:hover {
+  color: #1e293b;
 }
 
 /* ===== Responsive ===== */
