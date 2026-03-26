@@ -6,10 +6,11 @@ import {
   playContentBySlug,
   allPlayContents,
   DAILY_UPDATE_SLUGS,
-  getFeaturedContents,
+  getPlayFeaturedContents,
   quizQuestionCountBySlug,
 } from "@/play/registry";
 import type { PlayContentMeta } from "@/play/types";
+import type { PlayFeaturedContent } from "@/play/registry";
 import { getContentPath } from "@/play/paths";
 import { getContrastTextColor } from "@/play/color-utils";
 import { getDayOfYearJst } from "@/lib/date";
@@ -78,6 +79,26 @@ const DAILY_PICKUP_SLUGS: ReadonlyArray<string> = [
 ];
 
 /**
+ * カテゴリに応じたCTAテキストを返す。
+ * personality → 「診断する」、knowledge → 「挑戦する」、game → 「遊ぶ」、
+ * fortune → 「占う」、その他 → 「試してみる」
+ */
+function getCtaText(category: PlayContentMeta["category"]): string {
+  switch (category) {
+    case "personality":
+      return "診断する";
+    case "knowledge":
+      return "挑戦する";
+    case "game":
+      return "遊ぶ";
+    case "fortune":
+      return "占う";
+    default:
+      return "試してみる";
+  }
+}
+
+/**
  * 今日のピックアップコンテンツを選出する。
  * JSTベースの年初からの経過日数（getDayOfYearJst）を使って決定論的にインデックスを計算し、
  * サーバーのシステムタイムゾーンに依存せず、毎日異なるコンテンツを返す。
@@ -93,7 +114,7 @@ function getTodaysPickupContent(): PlayContentMeta | null {
 
 export default function PlayPage() {
   const pickupContent = getTodaysPickupContent();
-  const featuredContents = getFeaturedContents();
+  const featuredContents = getPlayFeaturedContents();
 
   return (
     <div className={styles.main}>
@@ -150,21 +171,24 @@ export default function PlayPage() {
       {/* CategoryNav はクライアントコンポーネントとして IntersectionObserver でアクティブタブを制御する */}
       <CategoryNav categories={CATEGORY_DISPLAY_ORDER} />
 
-      {/* 「まずはここから」セクション: 各カテゴリの代表コンテンツ4件を横並び表示 */}
+      {/* 「イチオシ」セクション: /play ページ専用のおすすめコンテンツ3件をおすすめ理由バッジ付きで表示 */}
       <section
         className={styles.featuredSection}
         data-testid="featured-section"
         aria-labelledby="featured-heading"
       >
         <h2 id="featured-heading" className={styles.featuredHeading}>
-          まずはここから
+          イチオシ
         </h2>
+        <p className={styles.featuredSubtext}>
+          迷ったらここから！厳選おすすめコンテンツ
+        </p>
         <ul
           className={styles.featuredGrid}
           role="list"
           aria-label="おすすめコンテンツ"
         >
-          {featuredContents.map((content) => (
+          {featuredContents.map((content: PlayFeaturedContent) => (
             <li key={content.slug}>
               <Link
                 href={getContentPath(content)}
@@ -179,6 +203,10 @@ export default function PlayPage() {
                   } as React.CSSProperties
                 }
               >
+                {/* おすすめ理由バッジ: タイトル上部に控えめなラベルとして表示 */}
+                <span className={styles.recommendBadge}>
+                  {content.recommendReason}
+                </span>
                 <div
                   className={styles.cardIconWrapper}
                   data-testid="card-icon-wrapper"
@@ -203,7 +231,10 @@ export default function PlayPage() {
                       {quizQuestionCountBySlug.get(content.slug)}問
                     </span>
                   )}
-                  <span className={styles.cardCta}>遊ぶ</span>
+                  {/* CTAテキストはカテゴリに応じて変更する */}
+                  <span className={styles.cardCta}>
+                    {getCtaText(content.category)}
+                  </span>
                 </div>
               </Link>
             </li>
@@ -275,7 +306,9 @@ export default function PlayPage() {
                             {questionCount}問
                           </span>
                         )}
-                        <span className={styles.cardCta}>遊ぶ</span>
+                        <span className={styles.cardCta}>
+                          {getCtaText(content.category)}
+                        </span>
                       </div>
                     </Link>
                   </li>
