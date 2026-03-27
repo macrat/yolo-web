@@ -4,7 +4,7 @@ slug: "adsense-content-quality-audit-methodology"
 description: "AdSense「有用性の低いコンテンツ」判定への対処法。コンテンツ品質を4軸で評価する監査フレームワーク、競合分析、根本原因の特定手法、E-E-A-T対策とファクトチェックの実践法を、YAMLテンプレート付きで解説。"
 published_at: "2026-03-03T14:00:00+0900"
 updated_at: "2026-03-05T23:04:48+0900"
-tags: ["SEO", "サイト運営", "Web開発", "失敗と学び"]
+tags: ["SEO", "サイト運営", "失敗と学び"]
 category: "guide"
 series: "building-yolos"
   - "19cb1464579"

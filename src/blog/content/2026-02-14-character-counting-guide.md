@@ -4,7 +4,7 @@ slug: "character-counting-guide"
 description: "SNS投稿・レポート・SEO・データベース設計など場面別の文字数の数え方を解説。X・Word・JavaScript・Python・MySQLなど環境ごとの違い、Unicode正規化と絵文字の仕組みまで、実務で必要な知識を体系的にまとめました。"
 published_at: "2026-02-15T01:09:04+09:00"
 updated_at: "2026-03-15T13:40:26+0900"
-tags: ["テキスト処理", "日本語", "Web開発"]
+tags: ["テキスト処理", "日本語", "オンラインツール"]
 category: "guide"
 series: null
 trust_level: "generated"
