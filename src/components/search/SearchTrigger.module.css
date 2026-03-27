@@ -5,7 +5,7 @@
   gap: 0.35rem;
   /* 44px以上のタップターゲットを確保 */
   height: 44px;
-  padding: 0 0.5rem;
+  padding: 0 0.75rem;
   background: none;
   border: 1px solid var(--color-border);
   border-radius: 8px;
@@ -29,6 +29,17 @@
   outline-offset: 2px;
 }
 
+/* デスクトップ向け「検索」テキストラベル */
+.searchLabel {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+
+.trigger:hover .searchLabel {
+  color: var(--color-primary);
+}
+
 .kbd {
   font-family: inherit;
   font-size: 0.7rem;
@@ -41,6 +52,7 @@
 }
 
 @media (max-width: 768px) {
+  .searchLabel,
   .kbd {
     display: none;
   }

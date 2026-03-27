@@ -21,11 +21,28 @@
   line-height: 1.6;
 }
 
+/* Breadcrumb navigation shown on tag pages above the title */
+.tagBreadcrumb {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.tagBreadcrumb a {
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+
+.tagBreadcrumb a:hover {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
 .filters {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .filterPill {
@@ -53,6 +70,53 @@
   border-color: var(--color-primary);
 }
 
+/* 人気タグセクション */
+.popularTags {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  padding: 0.75rem 1rem;
+  background-color: var(--color-bg-secondary);
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+}
+
+.popularTagsLabel {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.popularTagsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.tagPill {
+  padding: 0.25rem 0.65rem;
+  border-radius: 1rem;
+  font-size: 0.8rem;
+  text-decoration: none;
+  color: var(--color-text-muted);
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    border-color 0.2s;
+}
+
+.tagPill:hover {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+  background-color: var(--color-bg);
+}
+
 .grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -78,5 +142,10 @@
 
   .title {
     font-size: 1.4rem;
+  }
+
+  .popularTags {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }

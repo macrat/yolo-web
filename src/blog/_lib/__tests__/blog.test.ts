@@ -2,6 +2,7 @@ import { describe, test, expect } from "vitest";
 import {
   ALL_CATEGORIES,
   CATEGORY_LABELS,
+  CATEGORY_DESCRIPTIONS,
   SERIES_LABELS,
 } from "@/blog/_lib/blog";
 import type { BlogPostMeta } from "@/blog/_lib/blog";
@@ -55,6 +56,60 @@ describe("BlogCategory type and constants", () => {
           `${category} のラベルが未定義`,
         ).toBeDefined();
       }
+    });
+  });
+
+  describe("CATEGORY_DESCRIPTIONS", () => {
+    test("全カテゴリに説明文が定義されていること", () => {
+      for (const category of ALL_CATEGORIES) {
+        expect(
+          CATEGORY_DESCRIPTIONS[category],
+          `${category} の説明文が未定義`,
+        ).toBeDefined();
+      }
+    });
+
+    test("全カテゴリの説明文が空でないこと", () => {
+      for (const category of ALL_CATEGORIES) {
+        expect(
+          CATEGORY_DESCRIPTIONS[category].length,
+          `${category} の説明文が空`,
+        ).toBeGreaterThan(0);
+      }
+    });
+
+    test("各カテゴリの説明文が適切な長さであること（50文字以上）", () => {
+      for (const category of ALL_CATEGORIES) {
+        expect(
+          CATEGORY_DESCRIPTIONS[category].length,
+          `${category} の説明文が短すぎる`,
+        ).toBeGreaterThanOrEqual(50);
+      }
+    });
+
+    test("ai-workflow の説明文が定義されていること", () => {
+      expect(CATEGORY_DESCRIPTIONS["ai-workflow"]).toBeDefined();
+      expect(typeof CATEGORY_DESCRIPTIONS["ai-workflow"]).toBe("string");
+    });
+
+    test("dev-notes の説明文が定義されていること", () => {
+      expect(CATEGORY_DESCRIPTIONS["dev-notes"]).toBeDefined();
+      expect(typeof CATEGORY_DESCRIPTIONS["dev-notes"]).toBe("string");
+    });
+
+    test("site-updates の説明文が定義されていること", () => {
+      expect(CATEGORY_DESCRIPTIONS["site-updates"]).toBeDefined();
+      expect(typeof CATEGORY_DESCRIPTIONS["site-updates"]).toBe("string");
+    });
+
+    test("tool-guides の説明文が定義されていること", () => {
+      expect(CATEGORY_DESCRIPTIONS["tool-guides"]).toBeDefined();
+      expect(typeof CATEGORY_DESCRIPTIONS["tool-guides"]).toBe("string");
+    });
+
+    test("japanese-culture の説明文が定義されていること", () => {
+      expect(CATEGORY_DESCRIPTIONS["japanese-culture"]).toBeDefined();
+      expect(typeof CATEGORY_DESCRIPTIONS["japanese-culture"]).toBe("string");
     });
   });
 

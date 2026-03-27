@@ -5,6 +5,7 @@ import {
   getAllBlogPosts,
   getAllBlogSlugs,
   getBlogPostBySlug,
+  getRelatedPosts,
   getSeriesPosts,
   CATEGORY_LABELS,
 } from "@/blog/_lib/blog";
@@ -22,6 +23,7 @@ import TableOfContents from "@/blog/_components/TableOfContents";
 import TagList from "@/blog/_components/TagList";
 import SeriesNav from "@/blog/_components/SeriesNav";
 import MermaidRenderer from "@/blog/_components/MermaidRenderer";
+import RelatedArticles from "@/blog/_components/RelatedArticles";
 import styles from "./page.module.css";
 
 interface Props {
@@ -49,6 +51,8 @@ export default async function BlogPostPage({ params }: Props) {
   const prevPost =
     currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null;
   const nextPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null;
+
+  const relatedPosts = getRelatedPosts(post, allPosts);
 
   const jsonLd = generateBlogPostJsonLd({
     ...post,
@@ -135,6 +139,8 @@ export default async function BlogPostPage({ params }: Props) {
             contentId={post.slug}
           />
         </section>
+
+        <RelatedArticles posts={relatedPosts} />
       </article>
 
       <nav className={styles.postNav} aria-label="Post navigation">
