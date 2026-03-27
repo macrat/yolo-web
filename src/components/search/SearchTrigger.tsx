@@ -107,6 +107,8 @@ export default function SearchTrigger() {
         title="サイト内検索"
       >
         <SearchIcon />
+        {/* デスクトップのみ「検索」テキストを表示して視認性を高める */}
+        <span className={styles.searchLabel}>検索</span>
         <kbd className={styles.kbd}>{shortcutLabel}</kbd>
       </button>
       {mounted &&

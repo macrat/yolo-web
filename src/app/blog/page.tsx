@@ -42,6 +42,7 @@ export default function BlogPage() {
       currentPage={1}
       totalPages={totalPages}
       basePath="/blog"
+      allPosts={allPosts}
     />
   );
 }

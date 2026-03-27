@@ -7,8 +7,22 @@
 
 .tag {
   background-color: var(--color-bg-secondary);
+  border-radius: 0.25rem;
+}
+
+.tagLink {
+  display: block;
   color: var(--color-text-muted);
   padding: 0.15rem 0.5rem;
-  border-radius: 0.25rem;
   font-size: 0.75rem;
+  text-decoration: none;
+  border-radius: 0.25rem;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.tagLink:hover {
+  background-color: var(--color-accent);
+  color: var(--color-bg);
 }

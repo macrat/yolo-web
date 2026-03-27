@@ -79,6 +79,7 @@ export default async function BlogPaginatedPage({ params }: Props) {
       currentPage={pageNum}
       totalPages={totalPages}
       basePath="/blog"
+      allPosts={allPosts}
     />
   );
 }
