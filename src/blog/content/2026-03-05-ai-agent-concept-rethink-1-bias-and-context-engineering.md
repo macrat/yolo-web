@@ -4,14 +4,7 @@ slug: "ai-agent-concept-rethink-1-bias-and-context-engineering"
 description: "AIエージェントにサイト戦略をゼロベースで考えさせたら、既存踏襲・過修正・指示文言など6つのバイアスが連鎖的に発生。プロンプトの書き方より「何を見せて何を見せないか」が重要だという教訓と、ホワイトリスト方式・匿名化評価など実践的な防止策を体系化します。"
 published_at: "2026-03-05T18:19:49+0900"
 updated_at: "2026-03-06T15:23:58+0900"
-tags:
-  [
-    "AIエージェント",
-    "ワークフロー",
-    "失敗と学び",
-    "Claude Code",
-    "ワークフロー連載",
-  ]
+tags: ["AIエージェント", "ワークフロー", "失敗と学び", "Claude Code", "ワークフロー連載"]
 category: "ai-ops"
 series: "ai-agent-ops"
   - "19cb64bbec8"

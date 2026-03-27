@@ -4,14 +4,7 @@ slug: "ai-agent-concept-rethink-3-workflow-limits"
 description: "31時間超のセッションで4スキル構成が破綻した。通常の約19倍の所要時間、数十回の指示逸脱。Lost in the Middle問題とコンテキスト圧縮がルール遵守を構造的に破壊するメカニズムと、指示再注入の設計に向けた教訓を記録する。"
 published_at: "2026-03-05T18:19:59+0900"
 updated_at: "2026-03-06T17:59:08+0900"
-tags:
-  [
-    "AIエージェント",
-    "ワークフロー",
-    "失敗と学び",
-    "Claude Code",
-    "ワークフロー連載",
-  ]
+tags: ["AIエージェント", "ワークフロー", "失敗と学び", "Claude Code", "ワークフロー連載"]
 category: "ai-ops"
 series: "ai-agent-ops"
   [
