@@ -1,6 +1,12 @@
 import type { MetadataRoute } from "next";
 import { allToolMetas } from "@/tools/registry";
-import { getAllBlogPosts, ALL_CATEGORIES } from "@/blog/_lib/blog";
+import {
+  getAllBlogPosts,
+  ALL_CATEGORIES,
+  getTagsWithMinPosts,
+  getPostsByTag,
+  MIN_POSTS_FOR_TAG_INDEX,
+} from "@/blog/_lib/blog";
 import { BASE_URL } from "@/lib/constants";
 import { getAllColorSlugs, getColorCategories } from "@/dictionary/_lib/colors";
 import {
@@ -141,6 +147,32 @@ export default function sitemap(): MetadataRoute.Sitemap {
     (date) => date,
     "homepage source dates",
   );
+
+  // タグページ（5件以上の記事を持つタグのみ indexable としてサイトマップに追加）
+  const indexableTags = getTagsWithMinPosts(MIN_POSTS_FOR_TAG_INDEX);
+  const tagSitemapEntries = indexableTags.flatMap((tag) => {
+    const tagPosts = getPostsByTag(tag);
+    if (tagPosts.length === 0) return [];
+
+    const lastModified = getLatestDate(
+      tagPosts,
+      (post, index) =>
+        parseRequiredDate(
+          post.updated_at || post.published_at,
+          `blog tag ${tag}[${index}] (${post.slug})`,
+        ),
+      `blog tag ${tag}`,
+    );
+
+    return [
+      {
+        url: `${BASE_URL}/blog/tag/${encodeURIComponent(tag)}`,
+        lastModified,
+        changeFrequency: "weekly" as const,
+        priority: 0.6,
+      },
+    ];
+  });
 
   return [
     {
@@ -317,6 +349,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
         },
       ];
     }),
+    // indexable tag pages (5+ posts)
+    ...tagSitemapEntries,
     ...allToolMetas.map((meta, index) => ({
       url: `${BASE_URL}/tools/${meta.slug}`,
       lastModified: getLastModifiedDate(meta, `tools[${index}] (${meta.slug})`),

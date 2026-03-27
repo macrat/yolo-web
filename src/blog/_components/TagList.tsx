@@ -13,7 +13,7 @@ export default function TagList({ tags }: TagListProps) {
   if (tags.length === 0) return null;
 
   return (
-    <ul className={styles.tags} aria-label="Tags">
+    <ul className={styles.tags} aria-label="タグ">
       {tags.map((tag) => (
         <li key={tag} className={styles.tag}>
           <Link href={`/blog/tag/${tag}`} className={styles.tagLink}>

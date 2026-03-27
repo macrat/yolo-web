@@ -35,8 +35,8 @@ describe("TagList", () => {
     expect(screen.getByText("AIエージェント")).toBeInTheDocument();
   });
 
-  test("ariaラベルが設定されていること", () => {
+  test("ariaラベルが日本語で設定されていること", () => {
     render(<TagList tags={["Next.js"]} />);
-    expect(screen.getByRole("list", { name: "Tags" })).toBeInTheDocument();
+    expect(screen.getByRole("list", { name: "タグ" })).toBeInTheDocument();
   });
 });

@@ -44,12 +44,10 @@ describe("/blog/tag/[tag]", () => {
       }
     }
 
-    // For now just verify the count of defined descriptions
-    expect(Object.keys(TAG_DESCRIPTIONS).length).toBeGreaterThan(0);
-
-    if (missingDescriptions.length > 0) {
-      console.warn("タグ説明文が未定義のタグ:", missingDescriptions.join(", "));
-    }
+    expect(
+      missingDescriptions,
+      `タグ説明文が未定義のタグ: ${missingDescriptions.join(", ")}`,
+    ).toHaveLength(0);
   }, 15000);
 
   test("noindex は MIN_POSTS_FOR_TAG_INDEX 件未満の記事数のタグに設定されること", () => {
