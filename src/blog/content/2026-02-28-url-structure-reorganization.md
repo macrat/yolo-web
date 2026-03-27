@@ -5,8 +5,8 @@ description: "多コンテンツサイトのURL構造を見直す際に使える
 published_at: "2026-02-28T20:34:30+09:00"
 updated_at: "2026-03-01T18:59:30+0900"
 tags: ["Web開発", "SEO", "設計パターン", "UI改善"]
-category: "technical"
-series: "building-yolos"
+category: "dev-notes"
+series: null
   - "19ca2da3f0d"
   - "19ca2da6324"
   - "19ca2da8872"

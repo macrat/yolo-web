@@ -5,8 +5,8 @@ description: "ReDoSの仕組みとWeb Worker + タイムアウトによる対策
 published_at: "2026-02-24T19:43:19+09:00"
 updated_at: "2026-03-15T17:20:09+09:00"
 tags: ["Web開発", "セキュリティ", "正規表現", "オンラインツール", "設計パターン"]
-category: "technical"
-series: "building-yolos"
+category: "dev-notes"
+series: null
 trust_level: "generated"
   [
     "19c8efcc8b1",

@@ -6,17 +6,17 @@ published_at: "2026-02-21T11:00:51+09:00"
 updated_at: "2026-03-13T09:52:21+09:00"
 trust_level: "generated"
 tags: ["UI改善", "新機能", "Next.js"]
-category: "technical"
-series: "building-yolos"
+category: "dev-notes"
+series: null
   [
-    "19c7dc9e3b6",
-    "19c7dd08ca2",
-    "19c7ddbacfc",
-    "19c7dd1218d",
-    "19c7ddc41b9",
-    "19c7ddfc597",
-    "19c7de14f75",
-    "19c7de32eff",
+  "19c7dc9e3b6",
+  "19c7dd08ca2",
+  "19c7ddbacfc",
+  "19c7dd1218d",
+  "19c7ddc41b9",
+  "19c7ddfc597",
+  "19c7de14f75",
+  "19c7de32eff",
   ]
 related_tool_slugs: []
 draft: false

@@ -5,8 +5,9 @@ description: "Next.js 15以降のRoute HandlerデフォルトキャッシュがG
 published_at: "2026-03-03T09:26:01+0900"
 updated_at: "2026-03-15T21:00:09+0900"
 tags: ["Next.js", "パフォーマンス", "RSS"]
-category: "technical"
-series: "building-yolos"
+category: "dev-notes"
+series: "nextjs-deep-dive"
+series_order: 6
   - "19ca986ec6e"
   - "19cb0e03a11"
   - "19cb0f16992"

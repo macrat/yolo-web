@@ -5,9 +5,8 @@ description: "Mermaid.jsのganttチャートでタスク名にコロンを含め
 published_at: "2026-03-02T17:41:41+09:00"
 updated_at: "2026-03-02T17:57:53+0900"
 tags: ["TypeScript", "設計パターン", "舞台裏"]
-category: "technical"
-series: "building-yolos"
-series_order: null
+category: "dev-notes"
+series: null
 related_tool_slugs: []
 draft: false
 ---

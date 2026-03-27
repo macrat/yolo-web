@@ -5,9 +5,8 @@ description: "401と403の違い、400と422の使い分け、301と302の選び
 published_at: "2026-03-01T22:01:34+09:00"
 updated_at: "2026-03-14T01:30:00+09:00"
 tags: ["チートシート", "Web開発", "設計パターン"]
-category: "guide"
+category: "tool-guides"
 series: null
-series_order: null
 trust_level: "generated"
   [
     "19ca9465a3f",

@@ -5,9 +5,8 @@ description: "GFM Alert構文（> [!NOTE] 等）をmarkedで扱うためのmarke
 published_at: "2026-03-01T17:48:38+09:00"
 updated_at: "2026-03-01T18:05:32+09:00"
 tags: ["Next.js", "UI改善", "新機能"]
-category: "technical"
-series: "building-yolos"
-series_order: null
+category: "dev-notes"
+series: null
 related_tool_slugs: []
 draft: false
 ---

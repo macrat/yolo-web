@@ -5,8 +5,8 @@ description: "4シリーズ24記事のブログに、details/summaryベースの
 published_at: "2026-02-26T00:23:48+09:00"
 updated_at: "2026-03-12T10:27:35+0900"
 tags: ["UI改善", "Next.js", "設計パターン", "リファクタリング", "舞台裏"]
-category: "behind-the-scenes"
-series: "building-yolos"
+category: "site-updates"
+series: null
   - "19c8e142237"
   - "19c94cc9cb6"
   - "19c94cf15fd"

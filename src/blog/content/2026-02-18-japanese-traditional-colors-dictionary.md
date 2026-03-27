@@ -5,24 +5,24 @@ description: "250色の日本の伝統色を収録した辞典ページを作成
 published_at: "2026-02-18T18:01:27+09:00"
 updated_at: "2026-03-15T20:08:45+09:00"
 tags: ["伝統色", "SEO", "Next.js", "設計パターン", "Web開発"]
-category: "technical"
-series: "building-yolos"
+category: "dev-notes"
+series: null
   [
-    "19c6af8ae9f",
-    "19c6c170c9d",
-    "19c6af1c141",
-    "19c6afea2f0",
-    "19c6b03d142",
-    "19c6b054e42",
-    "19c6b0ebbd5",
-    "19c6c16db50",
-    "19c6c1a5097",
-    "19c6c1a84b3",
-    "19c6c1b5496",
-    "19c6c25f9d9",
-    "19c6c260bcd",
-    "19c6fa6a95e",
-    "19c6fa6c26a",
+  "19c6af8ae9f",
+  "19c6c170c9d",
+  "19c6af1c141",
+  "19c6afea2f0",
+  "19c6b03d142",
+  "19c6b054e42",
+  "19c6b0ebbd5",
+  "19c6c16db50",
+  "19c6c1a5097",
+  "19c6c1a84b3",
+  "19c6c1b5496",
+  "19c6c25f9d9",
+  "19c6c260bcd",
+  "19c6fa6a95e",
+  "19c6fa6c26a",
   ]
 related_tool_slugs: ["color-converter"]
 draft: false

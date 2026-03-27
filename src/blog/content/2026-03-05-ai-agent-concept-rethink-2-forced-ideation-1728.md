@@ -4,9 +4,17 @@ slug: "ai-agent-concept-rethink-2-forced-ideation-1728"
 description: "AIエージェントのアイデア出しのバイアスを、4軸×1,728通りの機械的組み合わせ生成とランダムシャッフル、32チャンク並行評価で構造的に排除する強制発想法の設計と実行記録。ownerの介入で「ひねり」軸の欠落が発見され、強制発想法の限界と補完手法も明らかになった。"
 published_at: "2026-03-05T18:19:55+0900"
 updated_at: "2026-03-06T15:23:58+0900"
-tags: ["AIエージェント", "ワークフロー", "Claude Code", "ワークフロー連載", "失敗と学び"]
-category: "ai-ops"
+tags:
+  [
+    "AIエージェント",
+    "ワークフロー",
+    "Claude Code",
+    "ワークフロー連載",
+    "失敗と学び",
+  ]
+category: "ai-workflow"
 series: "ai-agent-ops"
+series_order: 8
   - "19cb72790df"
   - "19cb7327895"
   - "19cb71246d0"

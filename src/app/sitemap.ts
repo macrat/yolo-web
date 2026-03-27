@@ -290,10 +290,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly" as const,
       priority: 0.7,
     })),
-    ...ALL_CATEGORIES.map((category) => {
+    ...ALL_CATEGORIES.flatMap((category) => {
       const categoryPosts = allPosts.filter(
         (post) => post.category === category,
       );
+      // Skip categories with no posts yet (e.g. during category reorganization
+      // before all article frontmatters have been migrated to the new category IDs).
+      if (categoryPosts.length === 0) return [];
+
       const lastModified = getLatestDate(
         categoryPosts,
         (post, index) =>
@@ -304,12 +308,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
         `blog category ${category}`,
       );
 
-      return {
-        url: `${BASE_URL}/blog/category/${category}`,
-        lastModified,
-        changeFrequency: "weekly" as const,
-        priority: 0.6,
-      };
+      return [
+        {
+          url: `${BASE_URL}/blog/category/${category}`,
+          lastModified,
+          changeFrequency: "weekly" as const,
+          priority: 0.6,
+        },
+      ];
     }),
     ...allToolMetas.map((meta, index) => ({
       url: `${BASE_URL}/tools/${meta.slug}`,

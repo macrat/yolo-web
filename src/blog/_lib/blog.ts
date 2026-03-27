@@ -11,34 +11,33 @@ import type { TrustLevel } from "@/lib/trust-levels";
 const BLOG_DIR = path.join(process.cwd(), "src/blog/content");
 
 export type BlogCategory =
-  | "guide"
-  | "technical"
-  | "ai-ops"
-  | "release"
-  | "behind-the-scenes";
+  | "ai-workflow"
+  | "dev-notes"
+  | "site-updates"
+  | "tool-guides"
+  | "japanese-culture";
 
 export const CATEGORY_LABELS: Record<BlogCategory, string> = {
-  guide: "ガイド",
-  technical: "技術",
-  "ai-ops": "AI運用",
-  release: "リリース",
-  "behind-the-scenes": "舞台裏",
+  "ai-workflow": "AIワークフロー",
+  "dev-notes": "開発ノート",
+  "site-updates": "サイト更新",
+  "tool-guides": "ツールガイド",
+  "japanese-culture": "日本語・文化",
 };
 
 export const ALL_CATEGORIES: BlogCategory[] = [
-  "guide",
-  "technical",
-  "ai-ops",
-  "release",
-  "behind-the-scenes",
+  "ai-workflow",
+  "dev-notes",
+  "site-updates",
+  "tool-guides",
+  "japanese-culture",
 ];
 
 /** Series ID to display name mapping. */
 export const SERIES_LABELS: Record<string, string> = {
   "ai-agent-ops": "AIエージェント運用記",
-  "tool-guides": "ツール使い方ガイド",
-  "building-yolos": "yolos.net構築の舞台裏",
   "japanese-culture": "日本語・日本文化",
+  "nextjs-deep-dive": "Next.js実践ノート",
 };
 
 interface BlogFrontmatter {
@@ -100,7 +99,7 @@ export function getAllBlogPosts(): BlogPostMeta[] {
       published_at: String(data.published_at || ""),
       updated_at: String(data.updated_at || data.published_at || ""),
       tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
-      category: (data.category as BlogCategory) || "technical",
+      category: (data.category as BlogCategory) || "dev-notes",
       related_tool_slugs: Array.isArray(data.related_tool_slugs)
         ? data.related_tool_slugs.map(String)
         : [],
@@ -146,7 +145,7 @@ export function getBlogPostBySlug(slug: string): BlogPost | null {
       published_at: String(data.published_at || ""),
       updated_at: String(data.updated_at || data.published_at || ""),
       tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
-      category: (data.category as BlogCategory) || "technical",
+      category: (data.category as BlogCategory) || "dev-notes",
       related_tool_slugs: Array.isArray(data.related_tool_slugs)
         ? data.related_tool_slugs.map(String)
         : [],
@@ -169,21 +168,16 @@ export function getBlogPostBySlug(slug: string): BlogPost | null {
 
 /**
  * Get all published posts belonging to a given series, sorted by
- * published_at ascending (oldest first) with slug as secondary sort
- * for deterministic ordering when dates are identical.
+ * published_at ascending (oldest first).
  */
 export function getSeriesPosts(seriesId: string): BlogPostMeta[] {
   const all = getAllBlogPosts();
   const filtered = all.filter((p) => p.series === seriesId);
 
-  // Sort ascending by published_at, then by slug for deterministic order
-  // when multiple posts share the same date (e.g. tool-guides on 2026-02-17).
-  filtered.sort((a, b) => {
-    const timeDiff =
-      new Date(a.published_at).getTime() - new Date(b.published_at).getTime();
-    if (timeDiff !== 0) return timeDiff;
-    return a.slug.localeCompare(b.slug);
-  });
+  filtered.sort(
+    (a, b) =>
+      new Date(a.published_at).getTime() - new Date(b.published_at).getTime(),
+  );
 
   return filtered;
 }

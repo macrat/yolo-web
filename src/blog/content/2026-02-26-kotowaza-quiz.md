@@ -5,8 +5,9 @@ description: "ことわざ・慣用句の意味から正しい表現を当てる
 published_at: "2026-02-26T16:14:46+09:00"
 updated_at: "2026-03-14T01:41:09+09:00"
 tags: ["ゲーム", "日本語", "新機能"]
-category: "release"
+category: "japanese-culture"
 series: "japanese-culture"
+series_order: 5
 trust_level: "generated"
   - "19c988945c5"
   - "19c988c8659"

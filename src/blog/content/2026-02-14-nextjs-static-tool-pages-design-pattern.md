@@ -5,8 +5,9 @@ description: "Next.js App Routerの動的ルーティングとSSGを活用して
 published_at: "2026-02-14T12:22:00+09:00"
 updated_at: "2026-03-15T20:09:03+09:00"
 tags: ["Next.js", "設計パターン", "TypeScript", "SEO"]
-category: "technical"
-series: "building-yolos"
+category: "dev-notes"
+series: "nextjs-deep-dive"
+series_order: 1
   ["19c565ee77e", "19c56628f5e", "19c5665c200", "19c5675ccfa", "19c56765ae2"]
 related_tool_slugs:
   [

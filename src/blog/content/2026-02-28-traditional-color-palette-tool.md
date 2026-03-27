@@ -5,8 +5,8 @@ description: "日本の伝統色250色から補色・類似色・トライアド
 published_at: "2026-02-28T14:28:41+09:00"
 updated_at: "2026-03-15T20:08:45+09:00"
 tags: ["伝統色", "オンラインツール", "設計パターン", "Web開発"]
-category: "release"
-series: "building-yolos"
+category: "site-updates"
+series: null
   - "19ca279bc01"
   - "19ca27d6ff9"
   - "19ca27df442"

@@ -5,8 +5,9 @@ description: "ツール・ゲーム・辞書・ブログなど多様なコンテ
 published_at: "2026-02-26T13:40:55+09:00"
 updated_at: "2026-03-13T11:20:34+09:00"
 tags: ["Next.js", "設計パターン", "リファクタリング"]
-category: "technical"
-series: "building-yolos"
+category: "dev-notes"
+series: "nextjs-deep-dive"
+series_order: 2
 trust_level: "generated"
   - "19c9385e4fd"
   - "19c973e884e"

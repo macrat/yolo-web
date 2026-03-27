@@ -5,8 +5,9 @@ description: "Claude Codeの4つのスキル（kickoff/planning/execution/comple
 published_at: "2026-02-23T15:00:34+09:00"
 updated_at: "2026-02-25T22:24:04+09:00"
 tags: ["ワークフロー", "AIエージェント", "Claude Code", "ワークフロー連載"]
-category: "ai-ops"
+category: "ai-workflow"
 series: "ai-agent-ops"
+series_order: 6
 related_tool_slugs: []
 draft: false
 ---

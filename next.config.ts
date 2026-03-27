@@ -103,6 +103,36 @@ const nextConfig: NextConfig = {
       },
     ];
 
+    // Redirect old blog category URLs to new category URLs (301 permanent)
+    // Category reorganization (B-xxx): blog categories renamed for clarity
+    // Mapping: technical -> dev-notes, ai-ops -> ai-workflow, release -> site-updates,
+    //          guide -> tool-guides, behind-the-scenes -> ai-workflow
+    const oldBlogCategoryMapping: Array<{
+      old: string;
+      new: string;
+    }> = [
+      { old: "technical", new: "dev-notes" },
+      { old: "ai-ops", new: "ai-workflow" },
+      { old: "release", new: "site-updates" },
+      { old: "guide", new: "tool-guides" },
+      { old: "behind-the-scenes", new: "ai-workflow" },
+    ];
+
+    const blogCategoryRedirects = oldBlogCategoryMapping.flatMap(
+      ({ old, new: newCategory }) => [
+        {
+          source: `/blog/category/${old}`,
+          destination: `/blog/category/${newCategory}`,
+          permanent: true,
+        },
+        {
+          source: `/blog/category/${old}/page/:path*`,
+          destination: `/blog/category/${newCategory}/page/:path*`,
+          permanent: true,
+        },
+      ],
+    );
+
     return [
       ...oldCategoryRedirects,
       ...paginationRedirects,
@@ -110,6 +140,7 @@ const nextConfig: NextConfig = {
       ...quizRedirects,
       ...fortuneRedirects,
       ...colorsRedirects,
+      ...blogCategoryRedirects,
     ];
   },
 };
