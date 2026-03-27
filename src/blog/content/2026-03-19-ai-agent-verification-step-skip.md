@@ -12,8 +12,9 @@ tags:
     "Claude Code",
     "ワークフロー連載",
   ]
-category: "ai-ops"
+category: "ai-workflow"
 series: "ai-agent-ops"
+series_order: 11
 related_tool_slugs: []
 draft: false
 ---

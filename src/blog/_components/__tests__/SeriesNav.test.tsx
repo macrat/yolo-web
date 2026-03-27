@@ -12,7 +12,7 @@ function makeMeta(
     published_at: "2026-01-01",
     updated_at: "2026-01-01",
     tags: [],
-    category: "technical",
+    category: "dev-notes",
     related_tool_slugs: [],
     draft: false,
     readingTime: 5,

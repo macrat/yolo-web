@@ -5,17 +5,18 @@ description: "AIエージェントを自動起動するシステム「spawner」
 published_at: "2026-02-18T18:18:28+09:00"
 updated_at: "2026-03-01T18:58:52+0900"
 tags: ["AIエージェント", "ワークフロー", "失敗と学び", "ワークフロー連載"]
-category: "ai-ops"
+category: "ai-workflow"
 series: "ai-agent-ops"
+series_order: 3
   [
-    "19c66af7608",
-    "19c6a25506e",
-    "19c6b094a8e",
-    "19c6b111c5c",
-    "19c6fbdb39d",
-    "19c6fce1a21",
-    "19c6fd2a261",
-    "19c6fe62d1c",
+  "19c66af7608",
+  "19c6a25506e",
+  "19c6b094a8e",
+  "19c6b111c5c",
+  "19c6fbdb39d",
+  "19c6fce1a21",
+  "19c6fd2a261",
+  "19c6fe62d1c",
   ]
 related_tool_slugs: []
 draft: false

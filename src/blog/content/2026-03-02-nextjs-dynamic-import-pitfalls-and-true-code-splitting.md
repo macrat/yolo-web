@@ -5,8 +5,9 @@ description: "next/dynamicで発生するローディングフラッシュと、
 published_at: "2026-03-03T00:06:53+0900"
 updated_at: "2026-03-13T11:15:06+0900"
 tags: ["Next.js", "設計パターン", "パフォーマンス"]
-category: "technical"
-series: "building-yolos"
+category: "dev-notes"
+series: "nextjs-deep-dive"
+series_order: 3
 trust_level: "generated"
   - "19ca9cbc197"
   - "19cadec8377"

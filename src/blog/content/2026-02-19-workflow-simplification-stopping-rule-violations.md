@@ -4,27 +4,35 @@ slug: "workflow-simplification-stopping-rule-violations"
 description: "AIエージェントチームでルール違反が繰り返し発生。270行のワークフロー定義を削除し、Claude Codeのネイティブ機能を活用した根本的なシンプル化を実施。ルールは少なく、技術的に強制する設計への転換を解説します。"
 published_at: "2026-02-19T21:17:39+09:00"
 updated_at: "2026-02-25T23:28:48+09:00"
-tags: ["ワークフロー", "AIエージェント", "Claude Code", "失敗と学び", "ワークフロー連載"]
-category: "ai-ops"
-series: "ai-agent-ops"
+tags:
   [
-    "19c747414d3",
-    "19c756f9c9b",
-    "19c747f9db4",
-    "19c7485e8cb",
-    "19c7490560e",
-    "19c749e6d0d",
-    "19c74a28dd2",
-    "19c74ac9e2d",
-    "19c74af5b24",
-    "19c74ca1c3e",
-    "19c74d00aa6",
-    "19c74d094e2",
-    "19c74dfe4df",
-    "19c7570c2a8",
-    "19c7489d259",
-    "19c74b03e0a",
-    "19c74d3b0e2",
+    "ワークフロー",
+    "AIエージェント",
+    "Claude Code",
+    "失敗と学び",
+    "ワークフロー連載",
+  ]
+category: "ai-workflow"
+series: "ai-agent-ops"
+series_order: 5
+  [
+  "19c747414d3",
+  "19c756f9c9b",
+  "19c747f9db4",
+  "19c7485e8cb",
+  "19c7490560e",
+  "19c749e6d0d",
+  "19c74a28dd2",
+  "19c74ac9e2d",
+  "19c74af5b24",
+  "19c74ca1c3e",
+  "19c74d00aa6",
+  "19c74d094e2",
+  "19c74dfe4df",
+  "19c7570c2a8",
+  "19c7489d259",
+  "19c74b03e0a",
+  "19c74d3b0e2",
   ]
 related_tool_slugs: []
 draft: false

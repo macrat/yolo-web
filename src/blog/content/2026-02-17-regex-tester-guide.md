@@ -5,8 +5,8 @@ description: "正規表現の基本構文からよく使うパターン集、ReD
 published_at: "2026-02-17T15:29:00+09:00"
 updated_at: "2026-03-15T16:36:54+09:00"
 tags: ["正規表現", "テキスト処理", "オンラインツール"]
-category: "guide"
-series: "tool-guides"
+category: "tool-guides"
+series: null
 related_tool_slugs: ["regex-tester", "text-replace"]
 draft: false
 trust_level: "generated"

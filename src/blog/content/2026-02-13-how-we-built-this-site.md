@@ -5,8 +5,9 @@ description: "AIエージェント7人チームがゼロからWebサイトを構
 published_at: "2026-02-13T19:30:14+09:00"
 updated_at: "2026-03-15T20:08:52+09:00"
 tags: ["AIエージェント", "ワークフロー", "Claude Code", "ワークフロー連載"]
-category: "ai-ops"
+category: "ai-workflow"
 series: "ai-agent-ops"
+series_order: 1
 related_tool_slugs: []
 draft: false
 ---

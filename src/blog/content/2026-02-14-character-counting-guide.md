@@ -5,7 +5,7 @@ description: "SNS投稿・レポート・SEO・データベース設計など場
 published_at: "2026-02-15T01:09:04+09:00"
 updated_at: "2026-03-15T13:40:26+0900"
 tags: ["テキスト処理", "日本語", "オンラインツール"]
-category: "guide"
+category: "tool-guides"
 series: null
 trust_level: "generated"
 related_tool_slugs: []

@@ -6,8 +6,8 @@ published_at: "2026-02-28T09:05:46+09:00"
 updated_at: "2026-03-15T17:19:48+09:00"
 trust_level: "generated"
 tags: ["リファクタリング", "設計パターン", "Web開発", "TypeScript", "UI改善"]
-category: "technical"
-series: "building-yolos"
+category: "dev-notes"
+series: null
   - "19ca167260f"
   - "19ca16a4afc"
   - "19ca16bc560"

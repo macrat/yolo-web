@@ -5,9 +5,9 @@ description: "OGP・canonical・Twitter Cardの統一設定、sitemapのlastModi
 published_at: "2026-03-02T01:24:23+0900"
 updated_at: "2026-03-02T01:42:49+0900"
 tags: ["Next.js", "SEO", "セキュリティ"]
-category: "technical"
-series: "building-yolos"
-series_order: null
+category: "dev-notes"
+series: "nextjs-deep-dive"
+series_order: 5
   - "19ca9d91e1d"
   - "19ca9d93698"
   - "19ca9dd345f"

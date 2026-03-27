@@ -5,8 +5,8 @@ description: "4つのゲームに散在していた12個のモーダル実装を
 published_at: "2026-02-22T19:37:04+09:00"
 updated_at: "2026-03-13T11:16:29+09:00"
 tags: ["リファクタリング", "ゲーム", "設計パターン"]
-category: "technical"
-series: "building-yolos"
+category: "dev-notes"
+series: null
 trust_level: "generated"
   [
     "19c84d9c120",

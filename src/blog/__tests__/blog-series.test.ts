@@ -11,16 +11,11 @@ describe("getSeriesPosts", () => {
   });
 
   test("returns results in published_at ascending order (oldest first)", () => {
-    const posts = getSeriesPosts("building-yolos");
+    const posts = getSeriesPosts("ai-agent-ops");
     for (let i = 1; i < posts.length; i++) {
       const prevTime = new Date(posts[i - 1].published_at).getTime();
       const currTime = new Date(posts[i].published_at).getTime();
-      // When dates are equal, slug is used as tiebreaker (ascending)
-      if (prevTime === currTime) {
-        expect(posts[i - 1].slug.localeCompare(posts[i].slug)).toBeLessThan(0);
-      } else {
-        expect(prevTime).toBeLessThanOrEqual(currTime);
-      }
+      expect(prevTime).toBeLessThanOrEqual(currTime);
     }
   });
 
@@ -47,26 +42,6 @@ describe("getSeriesPosts", () => {
     const posts = getSeriesPosts("ai-agent-ops");
     for (const post of posts) {
       expect(post.draft).toBe(false);
-    }
-  });
-
-  test("uses slug as secondary sort when published_at timestamps are identical", () => {
-    // Verify the secondary sort logic by checking the overall series ordering.
-    // building-yolos has many posts with distinct timestamps, so primary sort
-    // by time already determines order. We verify the sort is deterministic by
-    // checking the full list is in ascending published_at order.
-    const posts = getSeriesPosts("building-yolos");
-    expect(posts.length).toBeGreaterThanOrEqual(2);
-
-    for (let i = 1; i < posts.length; i++) {
-      const prevTime = new Date(posts[i - 1].published_at).getTime();
-      const currTime = new Date(posts[i].published_at).getTime();
-      if (prevTime === currTime) {
-        // When times are equal, slug tiebreaker ensures alphabetical order
-        expect(posts[i - 1].slug.localeCompare(posts[i].slug)).toBeLessThan(0);
-      } else {
-        expect(prevTime).toBeLessThan(currTime);
-      }
     }
   });
 });

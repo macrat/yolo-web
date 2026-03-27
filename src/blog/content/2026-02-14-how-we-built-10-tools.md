@@ -5,8 +5,8 @@ description: "AIエージェント4体がリサーチ・設計・実装・レビ
 published_at: "2026-02-14T07:57:19+09:00"
 updated_at: "2026-03-15T20:09:03+09:00"
 tags: ["舞台裏", "AIエージェント", "ワークフロー"]
-category: "behind-the-scenes"
-series: "building-yolos"
+category: "ai-workflow"
+series: null
 related_tool_slugs:
   [
     "char-count",
