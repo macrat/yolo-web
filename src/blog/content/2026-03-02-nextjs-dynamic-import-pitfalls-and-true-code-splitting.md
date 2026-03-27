@@ -4,7 +4,7 @@ slug: "nextjs-dynamic-import-pitfalls-and-true-code-splitting"
 description: "next/dynamicで発生するローディングフラッシュと、ループ初期化によるコード分割の失敗という2つの独立した問題を分析し、動的ルートから個別ページへの分割で両方を解消した設計判断とその効果を解説します。"
 published_at: "2026-03-03T00:06:53+0900"
 updated_at: "2026-03-13T11:15:06+0900"
-tags: ["Next.js", "設計パターン", "パフォーマンス", "Web開発"]
+tags: ["Next.js", "設計パターン", "パフォーマンス"]
 category: "technical"
 series: "building-yolos"
 trust_level: "generated"

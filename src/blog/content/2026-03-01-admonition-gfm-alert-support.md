@@ -4,7 +4,7 @@ slug: "admonition-gfm-alert-support"
 description: "GFM Alert構文（> [!NOTE] 等）をmarkedで扱うためのmarked-alertの導入方法、CSS変数によるダークモード対応スタイルのコード例を紹介します。GitHubとGitLabの両方でレンダリングできる標準構文の実装ノウハウです。"
 published_at: "2026-03-01T17:48:38+09:00"
 updated_at: "2026-03-01T18:05:32+09:00"
-tags: ["Web開発", "Next.js", "UI改善", "新機能"]
+tags: ["Next.js", "UI改善", "新機能"]
 category: "technical"
 series: "building-yolos"
 series_order: null

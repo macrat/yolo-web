@@ -4,8 +4,7 @@ slug: "tool-reliability-improvements"
 description: "ReDoSの仕組みとWeb Worker + タイムアウトによる対策パターンを解説。Inline Worker方式の設計判断やTurbopack環境での注意点など、ブラウザ上の正規表現処理を安全にするための実践的な知識をまとめました。"
 published_at: "2026-02-24T19:43:19+09:00"
 updated_at: "2026-03-15T17:20:09+09:00"
-tags:
-  ["Web開発", "セキュリティ", "正規表現", "オンラインツール", "設計パターン"]
+tags: ["Web開発", "セキュリティ", "正規表現", "オンラインツール", "設計パターン"]
 category: "technical"
 series: "building-yolos"
 trust_level: "generated"

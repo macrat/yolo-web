@@ -4,7 +4,7 @@ slug: "nextjs-hydration-mismatch-seeded-random"
 description: "Math.random()がNext.jsでハイドレーション不整合を起こす理由と、useEffectパターンの限界、slug由来シード+線形合同法による決定論的シャッフルの実装方法を解説します。"
 published_at: "2026-03-02T13:23:38+09:00"
 updated_at: "2026-03-02T14:36:42+09:00"
-tags: ["Web開発", "Next.js", "TypeScript", "設計パターン"]
+tags: ["Next.js", "TypeScript", "設計パターン"]
 category: "technical"
 series: "building-yolos"
 series_order: null
