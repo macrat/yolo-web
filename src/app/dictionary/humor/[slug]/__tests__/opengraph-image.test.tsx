@@ -57,6 +57,12 @@ vi.mock("@/humor-dict/data", () => ({
   },
 }));
 
+// Mock ogp-image library to control font data behavior
+const mockFontData = new ArrayBuffer(8);
+vi.mock("@/lib/ogp-image", () => ({
+  getFontData: vi.fn().mockResolvedValue(mockFontData),
+}));
+
 describe("HumorDictOpenGraphImage", () => {
   beforeEach(() => {
     imageResponseCalls = [];
@@ -141,5 +147,37 @@ describe("HumorDictOpenGraphImage", () => {
     await expect(
       mod.default({ params: Promise.resolve({ slug: "unknown-slug" }) }),
     ).resolves.toBeDefined();
+  });
+
+  test("passes fonts option to ImageResponse when font data is available", async () => {
+    const mod = await getModule();
+    await mod.default({ params: Promise.resolve({ slug: "morning" }) });
+    const { options } = imageResponseCalls[0];
+    const opts = options as { fonts?: unknown[] };
+    expect(opts.fonts).toBeDefined();
+    expect(Array.isArray(opts.fonts)).toBe(true);
+    expect((opts.fonts as unknown[]).length).toBeGreaterThan(0);
+  });
+
+  test("fonts option contains NotoSansJP font entry", async () => {
+    const mod = await getModule();
+    await mod.default({ params: Promise.resolve({ slug: "morning" }) });
+    const { options } = imageResponseCalls[0];
+    const opts = options as {
+      fonts?: Array<{ name: string; style: string; weight: number }>;
+    };
+    expect(opts.fonts).toBeDefined();
+    const fontEntry = opts.fonts![0];
+    expect(fontEntry.name).toBe("NotoSansJP");
+    expect(fontEntry.style).toBe("normal");
+    expect(fontEntry.weight).toBe(400);
+  });
+
+  test("root div includes fontFamily style for Japanese text rendering", async () => {
+    const mod = await getModule();
+    await mod.default({ params: Promise.resolve({ slug: "morning" }) });
+    const { element } = imageResponseCalls[0];
+    const html = JSON.stringify(element);
+    expect(html).toContain("NotoSansJP");
   });
 });

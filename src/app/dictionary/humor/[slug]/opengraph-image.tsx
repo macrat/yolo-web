@@ -1,5 +1,6 @@
 import { ImageResponse } from "next/og";
 import { getAllSlugs, getEntryBySlug } from "@/humor-dict/data";
+import { getFontData } from "@/lib/ogp-image";
 
 export const alt = "ユーモア辞典";
 export const size = { width: 1200, height: 630 };
@@ -39,6 +40,21 @@ export default async function OpenGraphImage({ params }: Props) {
     ? truncateDefinition(entry.definition)
     : "日常語をユーモアで再定義する辞典";
 
+  // 日本語テキストを正しく描画するため Noto Sans JP フォントを読み込む。
+  // フォント取得に失敗した場合はシステムフォントにフォールバックする。
+  const fontData = await getFontData();
+
+  const fonts = fontData
+    ? [
+        {
+          name: "NotoSansJP",
+          data: fontData,
+          style: "normal" as const,
+          weight: 400 as const,
+        },
+      ]
+    : [];
+
   return new ImageResponse(
     <div
       style={{
@@ -53,6 +69,7 @@ export default async function OpenGraphImage({ params }: Props) {
         padding: "64px 72px",
         boxSizing: "border-box",
         position: "relative",
+        fontFamily: fontData ? "NotoSansJP, sans-serif" : "sans-serif",
       }}
     >
       {/* 辞書カード風の装飾ライン */}
@@ -167,6 +184,6 @@ export default async function OpenGraphImage({ params }: Props) {
         yolos.net
       </div>
     </div>,
-    { ...size },
+    { ...size, fonts },
   );
 }
