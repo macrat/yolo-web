@@ -107,7 +107,7 @@ export default function BlogListView({
       </header>
 
       {!tagHeader && (
-        <nav className={styles.filters} aria-label="Category filter">
+        <nav className={styles.filters} aria-label="カテゴリフィルタ">
           <Link
             href="/blog"
             className={styles.filterPill}
@@ -135,7 +135,9 @@ export default function BlogListView({
             {popularTags.map((tag) => (
               <Link
                 key={tag}
-                href={`/blog/tag/${encodeURIComponent(tag)}`}
+                // Next.js Link は href の文字列を内部でエンコードするため
+                // encodeURIComponent は不要
+                href={`/blog/tag/${tag}`}
                 className={styles.tagPill}
               >
                 {tag}

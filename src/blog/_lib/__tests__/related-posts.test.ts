@@ -69,17 +69,19 @@ describe("getRelatedPosts", () => {
     const current = makeMeta({
       slug: "current",
       category: "dev-notes",
-      tags: [],
+      tags: ["shared-tag"],
     });
+    // 同一カテゴリ + 共通タグ: score = 10 + 3 = 13
     const sameCategory = makeMeta({
       slug: "same-cat",
       category: "dev-notes",
-      tags: [],
+      tags: ["shared-tag"],
     });
+    // 異なるカテゴリ + 共通タグ: score = 0 + 3 = 3（スコード>0なので除外されない）
     const differentCategory = makeMeta({
       slug: "diff-cat",
       category: "ai-workflow",
-      tags: [],
+      tags: ["shared-tag"],
     });
     const all = [current, differentCategory, sameCategory];
 
@@ -87,6 +89,8 @@ describe("getRelatedPosts", () => {
     // same-cat が diff-cat より先に来ること
     const sameCatIndex = result.findIndex((p) => p.slug === "same-cat");
     const diffCatIndex = result.findIndex((p) => p.slug === "diff-cat");
+    expect(sameCatIndex).not.toBe(-1);
+    expect(diffCatIndex).not.toBe(-1);
     expect(sameCatIndex).toBeLessThan(diffCatIndex);
   });
 
@@ -131,5 +135,30 @@ describe("getRelatedPosts", () => {
 
     const result = getRelatedPosts(current, all);
     expect(result.map((p) => p.slug)).toContain("has-series");
+  });
+
+  test("スコア0の記事（カテゴリ違い・タグ一致なし）は返されないこと", () => {
+    const current = makeMeta({
+      slug: "current",
+      category: "dev-notes",
+      tags: ["nextjs"],
+    });
+    // カテゴリが異なりタグも一致しない→スコア0
+    const unrelated1 = makeMeta({
+      slug: "unrelated-1",
+      category: "ai-workflow",
+      tags: ["python"],
+    });
+    const unrelated2 = makeMeta({
+      slug: "unrelated-2",
+      category: "site-updates",
+      tags: [],
+    });
+    const all = [current, unrelated1, unrelated2];
+
+    const result = getRelatedPosts(current, all);
+    const slugs = result.map((p) => p.slug);
+    expect(slugs).not.toContain("unrelated-1");
+    expect(slugs).not.toContain("unrelated-2");
   });
 });

@@ -86,31 +86,6 @@ describe("BlogCategory type and constants", () => {
         ).toBeGreaterThanOrEqual(50);
       }
     });
-
-    test("ai-workflow の説明文が定義されていること", () => {
-      expect(CATEGORY_DESCRIPTIONS["ai-workflow"]).toBeDefined();
-      expect(typeof CATEGORY_DESCRIPTIONS["ai-workflow"]).toBe("string");
-    });
-
-    test("dev-notes の説明文が定義されていること", () => {
-      expect(CATEGORY_DESCRIPTIONS["dev-notes"]).toBeDefined();
-      expect(typeof CATEGORY_DESCRIPTIONS["dev-notes"]).toBe("string");
-    });
-
-    test("site-updates の説明文が定義されていること", () => {
-      expect(CATEGORY_DESCRIPTIONS["site-updates"]).toBeDefined();
-      expect(typeof CATEGORY_DESCRIPTIONS["site-updates"]).toBe("string");
-    });
-
-    test("tool-guides の説明文が定義されていること", () => {
-      expect(CATEGORY_DESCRIPTIONS["tool-guides"]).toBeDefined();
-      expect(typeof CATEGORY_DESCRIPTIONS["tool-guides"]).toBe("string");
-    });
-
-    test("japanese-culture の説明文が定義されていること", () => {
-      expect(CATEGORY_DESCRIPTIONS["japanese-culture"]).toBeDefined();
-      expect(typeof CATEGORY_DESCRIPTIONS["japanese-culture"]).toBe("string");
-    });
   });
 
   describe("SERIES_LABELS", () => {
@@ -139,8 +114,14 @@ describe("BlogCategory type and constants", () => {
 
 /**
  * getSeriesPosts のソートロジックをテストする。
- * ファイルシステムへの依存を避けるため、ソートコンパレータと同等のロジックを
- * 直接テストする。
+ *
+ * 注意: このテストブロックでは getSeriesPosts を直接呼ばずに、
+ * 内部で使われるコンパレータと同等のロジック（sortByPublishedAt）を
+ * ローカル関数として定義してテストしている。
+ * そのため、getSeriesPosts の実装がこのコンパレータと乖離しても
+ * テストが失敗しないリスクがある。
+ * 統合的な検証が必要な場合は getSeriesPosts を直接呼び出す
+ * テスト（ファイルシステムへの依存が必要）を別途追加すること。
  *
  * 削除対象: slug による二次ソートが存在しないこと。
  * published_at のみで昇順ソートすることを確認する。
@@ -164,6 +145,8 @@ describe("seriesPostsSortComparator (published_at のみによる昇順ソート
   }
 
   // getSeriesPosts 内のソートと同等のコンパレータ（published_at のみ）
+  // 注意: getSeriesPosts の実装が変わってもこのコンパレータは変わらないため、
+  // 実装との乖離を検知できない。実装の変更時はこのテストも合わせて更新すること。
   const sortByPublishedAt = (a: BlogPostMeta, b: BlogPostMeta): number =>
     new Date(a.published_at).getTime() - new Date(b.published_at).getTime();
 

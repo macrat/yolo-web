@@ -37,8 +37,8 @@ function makeMeta(
   return {
     title: `Post ${overrides.slug}`,
     description: "",
-    published_at: "2026-01-01",
-    updated_at: "2026-01-01",
+    published_at: "2026-01-01T00:00:00+09:00",
+    updated_at: "2026-01-01T00:00:00+09:00",
     tags: [],
     category: "dev-notes",
     related_tool_slugs: [],

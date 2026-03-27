@@ -14,21 +14,36 @@ import BlogListView from "@/blog/_components/BlogListView";
 const MIN_POSTS_FOR_TAG_PAGE = 3;
 
 interface Props {
-  params: Promise<{ tag: string }>;
+  params: Promise<{ tag: string; page: string }>;
 }
 
+/** Only allow statically generated page numbers; return 404 for others */
+export const dynamicParams = false;
+
+/**
+ * Generate params for every tag x page combination (pages 2+).
+ * Page 1 of each tag is handled by the parent page.tsx.
+ */
 export function generateStaticParams() {
   const tags = getTagsWithMinPosts(MIN_POSTS_FOR_TAG_PAGE);
-  // encodeURIComponent は不要: Next.js が動的セグメントを自動的にデコードするため
-  // generateStaticParams では生の（デコード済み）タグ名を返す
-  return tags.map((tag) => ({ tag }));
+  const params: { tag: string; page: string }[] = [];
+
+  for (const tag of tags) {
+    const posts = getPostsByTag(tag);
+    const { totalPages } = paginate(posts, 1, BLOG_POSTS_PER_PAGE);
+
+    for (let i = 2; i <= totalPages; i++) {
+      params.push({ tag, page: String(i) });
+    }
+  }
+
+  return params;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { tag: rawTag } = await params;
-  // URL パラメータは Next.js によってデコードされるが、二重エンコードされた場合に備えて
-  // 明示的に decodeURIComponent を適用する
+  const { tag: rawTag, page } = await params;
   const tag = decodeURIComponent(rawTag);
+  const pageNum = Number(page);
   const posts = getPostsByTag(tag);
 
   if (posts.length < MIN_POSTS_FOR_TAG_PAGE) return {};
@@ -38,27 +53,28 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     `AI試行錯誤ブログの「${tag}」タグが付いた記事一覧。`;
 
   const shouldIndex = posts.length >= MIN_POSTS_FOR_TAG_INDEX;
+  const encodedTag = encodeURIComponent(tag);
 
   return {
-    title: `${tag} - AI試行錯誤ブログ | ${SITE_NAME}`,
+    title: `${tag} - AI試行錯誤ブログ（${pageNum}ページ目） | ${SITE_NAME}`,
     description,
     robots: shouldIndex
       ? { index: true, follow: true }
       : { index: false, follow: true },
     openGraph: {
-      title: `${tag} - AI試行錯誤ブログ | ${SITE_NAME}`,
+      title: `${tag} - AI試行錯誤ブログ（${pageNum}ページ目） | ${SITE_NAME}`,
       description,
       type: "website",
-      url: `${BASE_URL}/blog/tag/${encodeURIComponent(tag)}`,
+      url: `${BASE_URL}/blog/tag/${encodedTag}/page/${pageNum}`,
       siteName: SITE_NAME,
     },
     twitter: {
       card: "summary_large_image",
-      title: `${tag} - AI試行錯誤ブログ | ${SITE_NAME}`,
+      title: `${tag} - AI試行錯誤ブログ（${pageNum}ページ目） | ${SITE_NAME}`,
       description,
     },
     alternates: {
-      canonical: `${BASE_URL}/blog/tag/${encodeURIComponent(tag)}`,
+      canonical: `${BASE_URL}/blog/tag/${encodedTag}/page/${pageNum}`,
       types: {
         "application/rss+xml": "/feed",
         "application/atom+xml": "/feed/atom",
@@ -67,12 +83,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-/** Tag-filtered blog listing page (/blog/tag/[tag]) */
-export default async function TagPage({ params }: Props) {
-  const { tag: rawTag } = await params;
-  // URL パラメータは Next.js によってデコードされるが、二重エンコードされた場合に備えて
-  // 明示的に decodeURIComponent を適用する
+/** Tag blog listing pages 2+ (/blog/tag/[tag]/page/[page]) */
+export default async function TagPaginatedPage({ params }: Props) {
+  const { tag: rawTag, page } = await params;
   const tag = decodeURIComponent(rawTag);
+  const pageNum = Number(page);
 
   const posts = getPostsByTag(tag);
 
@@ -85,7 +100,7 @@ export default async function TagPage({ params }: Props) {
     TAG_DESCRIPTIONS[tag] ??
     `AI試行錯誤ブログの「${tag}」タグが付いた記事一覧。`;
 
-  const { items, totalPages } = paginate(posts, 1, BLOG_POSTS_PER_PAGE);
+  const { items, totalPages } = paginate(posts, pageNum, BLOG_POSTS_PER_PAGE);
 
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
@@ -120,7 +135,7 @@ export default async function TagPage({ params }: Props) {
       />
       <BlogListView
         posts={items}
-        currentPage={1}
+        currentPage={pageNum}
         totalPages={totalPages}
         basePath={`/blog/tag/${encodeURIComponent(tag)}`}
         tagHeader={{ tag, description }}

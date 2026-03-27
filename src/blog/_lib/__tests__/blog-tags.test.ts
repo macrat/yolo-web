@@ -52,20 +52,36 @@ describe("TAG_DESCRIPTIONS", () => {
 });
 
 describe("getAllTags", () => {
-  test("関数が存在すること", () => {
-    expect(typeof getAllTags).toBe("function");
+  test("重複なしのタグ一覧を返すこと", () => {
+    const tags = getAllTags();
+    const uniqueTags = new Set(tags);
+    expect(uniqueTags.size).toBe(tags.length);
   });
 
-  test("文字列の配列を返すこと", () => {
-    // This function reads from the filesystem, so we just check the return type structure
+  test("アルファベット順にソートされていること", () => {
     const tags = getAllTags();
-    expect(Array.isArray(tags)).toBe(true);
+    const sorted = [...tags].sort();
+    expect(tags).toEqual(sorted);
   });
 });
 
 describe("getPostsByTag", () => {
-  test("関数が存在すること", () => {
-    expect(typeof getPostsByTag).toBe("function");
+  test("存在するタグに対して記事を返すこと", () => {
+    // getAllTags で存在が確認できるタグを使う
+    const allTags = getAllTags();
+    if (allTags.length === 0) return; // 記事がない環境ではスキップ
+    const firstTag = allTags[0];
+    const posts = getPostsByTag(firstTag);
+    expect(posts.length).toBeGreaterThan(0);
+    // 全記事が指定タグを持つこと
+    for (const post of posts) {
+      expect(post.tags).toContain(firstTag);
+    }
+  });
+
+  test("存在しないタグに対して空配列を返すこと", () => {
+    const posts = getPostsByTag("__nonexistent_tag__");
+    expect(posts).toEqual([]);
   });
 });
 

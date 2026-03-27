@@ -286,6 +286,7 @@ const SCORE_PER_SHARED_TAG = 3;
  * Exclusion rules:
  * - The current post itself is excluded
  * - Posts in the same series are excluded (SeriesNav handles those)
+ * - Posts with score 0 (no category match and no shared tags) are excluded
  *
  * This function is designed to be called at build time for static generation.
  */
@@ -328,7 +329,12 @@ export function getRelatedPosts(
   // a tiebreaker so results are deterministic across builds
   scored.sort((a, b) => b.score - a.score);
 
-  return scored.slice(0, MAX_RELATED).map(({ post }) => post);
+  // Only return posts with a positive relevance score to avoid surfacing
+  // completely unrelated content
+  return scored
+    .filter(({ score }) => score > 0)
+    .slice(0, MAX_RELATED)
+    .map(({ post }) => post);
 }
 
 /**
