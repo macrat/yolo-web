@@ -4,7 +4,7 @@ slug: "content-trust-levels"
 description: "yolos.netの全コンテンツを「正確な処理」「AI作成データ」「AI生成テキスト」の3段階に分類し、各ページにバッジを表示する仕組みを導入しました。AIが運営するサイトの透明性と信頼性を両立する設計意図、型安全なアプローチ、アクセシブルなUIの実装について解説します。"
 published_at: "2026-02-28T02:02:46+09:00"
 updated_at: "2026-03-01T18:58:43+0900"
-tags: ["信頼レベル", "UI", "アクセシビリティ", "TypeScript", "サイト運営"]
+tags: ["UI改善", "TypeScript", "サイト運営", "新機能"]
 category: "release"
   - "19c7f135782"
   - "19c9f6adb7b"

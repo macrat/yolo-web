@@ -4,7 +4,7 @@ slug: "json-formatter-guide"
 description: "JSONの基礎知識から5大エラーパターンの対処法、エディタ・CLI・ブラウザでの整形方法、JSON/JSONC/JSON5/JSONL/YAMLの使い分けまで。Web開発で避けて通れないJSONを実務レベルで扱うための知識をコード例付きで解説します。"
 published_at: "2026-02-17T15:28:00+09:00"
 updated_at: "2026-03-15T13:46:29+0900"
-tags: ["JSON", "Web開発", "データ変換"]
+tags: ["オンラインツール", "Web開発", "テキスト処理"]
 category: "guide"
 series: null
 trust_level: "generated"
