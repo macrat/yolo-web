@@ -36,21 +36,16 @@
   border: 1px solid var(--color-border);
   border-radius: 0.5rem;
   text-decoration: none;
-  transition:
-    border-color 0.15s,
-    box-shadow 0.15s,
-    transform 0.15s;
+  transition: border-color 0.15s;
   height: 100%;
 }
 
 .link:hover {
   border-color: var(--color-primary);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  transform: translateY(-2px);
 }
 
 .icon {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   margin-bottom: 0.125rem;
 }
 
@@ -66,31 +61,10 @@
 }
 
 .badge {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   background-color: var(--color-bg-secondary);
   padding: 0.125rem 0.375rem;
   border-radius: 0.25rem;
   color: var(--color-text-muted);
   width: fit-content;
-}
-
-/* カテゴリごとのバッジ色分け（ライトモードベース） */
-.badge[data-category="fortune"] {
-  background-color: #f3e8ff;
-  color: #7c3aed;
-}
-
-.badge[data-category="personality"] {
-  background-color: #e0f2fe;
-  color: #0284c7;
-}
-
-.badge[data-category="knowledge"] {
-  background-color: #dcfce7;
-  color: #16a34a;
-}
-
-.badge[data-category="game"] {
-  background-color: #fff7ed;
-  color: #ea580c;
 }
