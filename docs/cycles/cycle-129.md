@@ -238,12 +238,17 @@ UIデザイン方針:
 - タスク3-6（全ページ統合）+ タスク2修正: 全体レビューR1で承認。全4種ページへの配置、getContentPath使用、アクセシビリティ、スタイル一貫性すべて問題なし
 - lint修正: recommendation.test.tsの未使用変数（fortuneContents）削除、page.test.tsxの`module`変数名を`imported`に修正（Next.js lint rule）
 
+### 来訪者価値レビュー
+
+- R1: 5件の指摘（カード視覚訴求力不足、モバイルレイアウト、結果ページ配置、関連クイズとの重複感、バッジデザイン）→ 見出しテキスト変更、カテゴリバッジ色分け追加、ホバーエフェクト追加で対応
+- R2（owner指示によるカスタマージャーニー分析）: 情報ヒエラルキーの逆転を発見。RecommendedContent（補助的導線）がRelatedQuizzes/RelatedGames（主要導線）より視覚的に目立つ問題 → カテゴリバッジ色分け廃止、ホバーエフェクトRelated系と統一、アイコンサイズRelated系と統一で対応
+
 ### Playwrightビジュアル確認
 
-- 占いページ（/play/daily）モバイル360px: おすすめ3件が縦1列で正しく表示、セパレータで区切り、カテゴリバッジ（診断/クイズ/パズル）表示OK
+- 占いページ（/play/daily）モバイル360px: おすすめ3件が縦1列で正しく表示、セパレータで区切り、カテゴリバッジ（ニュートラルカラー）表示OK
 - 占いページ（/play/daily）デスクトップ1280px: 2列レイアウト、3件目が次の行に配置、RelatedQuizzesと一貫したスタイル
 - ゲームページ（/play/kanji-kanaru）モバイル: RelatedGames → おすすめ → RelatedBlogPosts の正しい順序で表示
-- クイズページ（/play/animal-personality）モバイル: RelatedQuizzes → おすすめ の正しい順序で表示
+- クイズページ（/play/animal-personality）モバイル: RelatedQuizzes → おすすめ の正しい順序で表示。Related系との視覚的ヒエラルキーが正しく保たれている
 - 静的結果ページ（/play/animal-personality/result/nihon-zaru）モバイル: 結果カード直下におすすめ3件表示
 
 ## キャリーオーバー
