@@ -41,7 +41,6 @@ const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
           aria-label="サイト内検索"
           aria-activedescendant={activeDescendant}
           aria-controls="search-results-listbox"
-          autoFocus
           autoComplete="off"
           role="combobox"
           aria-expanded={isListboxVisible}

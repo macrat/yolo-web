@@ -5,6 +5,19 @@ import SearchModal from "../SearchModal";
 // jsdom does not implement scrollIntoView
 Element.prototype.scrollIntoView = vi.fn();
 
+// jsdom does not implement HTMLDialogElement.showModal / close.
+// We mock them to simulate the native dialog behavior so that tests can
+// verify that the modal opens/closes correctly via the dialog API.
+HTMLDialogElement.prototype.showModal = vi.fn(function (
+  this: HTMLDialogElement,
+) {
+  this.setAttribute("open", "");
+});
+HTMLDialogElement.prototype.close = vi.fn(function (this: HTMLDialogElement) {
+  this.removeAttribute("open");
+  this.dispatchEvent(new Event("close"));
+});
+
 // Mock next/navigation
 const mockPush = vi.fn();
 vi.mock("next/navigation", () => ({
@@ -65,14 +78,19 @@ afterEach(() => {
 });
 
 describe("SearchModal", () => {
-  test("does not render when isOpen is false", () => {
-    const { container } = render(
-      <SearchModal isOpen={false} onClose={vi.fn()} />,
-    );
-    expect(container.innerHTML).toBe("");
+  test("does not render visible dialog when isOpen is false", () => {
+    render(<SearchModal isOpen={false} onClose={vi.fn()} />);
+    // <dialog> is always in DOM but showModal() should not have been called
+    const dialog = screen.getByRole("dialog", { hidden: true });
+    expect(dialog).not.toHaveAttribute("open");
   });
 
-  test("renders modal when isOpen is true", () => {
+  test("calls showModal() when isOpen is true", () => {
+    render(<SearchModal isOpen={true} onClose={vi.fn()} />);
+    expect(HTMLDialogElement.prototype.showModal).toHaveBeenCalledTimes(1);
+  });
+
+  test("renders modal content when isOpen is true", () => {
     render(<SearchModal isOpen={true} onClose={vi.fn()} />);
     expect(screen.getByRole("dialog")).toBeInTheDocument();
   });
@@ -84,19 +102,33 @@ describe("SearchModal", () => {
     expect(dialog).toHaveAttribute("aria-label", "サイト内検索");
   });
 
-  test("calls onClose when ESC is pressed", () => {
+  test("calls onClose with 'dismiss' reason when cancel event fires (ESC key)", () => {
     const onClose = vi.fn();
     render(<SearchModal isOpen={true} onClose={onClose} />);
-    fireEvent.keyDown(document, { key: "Escape" });
+    const dialog = screen.getByRole("dialog");
+    // Dispatch a cancel event to simulate native ESC handling by <dialog>
+    fireEvent(dialog, new Event("cancel", { cancelable: true }));
     expect(onClose).toHaveBeenCalledTimes(1);
+    expect(onClose).toHaveBeenCalledWith("dismiss");
   });
 
-  test("calls onClose when overlay is clicked", () => {
+  test("calls onClose with 'dismiss' reason when backdrop (dialog element itself) is clicked", () => {
     const onClose = vi.fn();
     render(<SearchModal isOpen={true} onClose={onClose} />);
-    const overlay = screen.getByTestId("search-overlay");
-    fireEvent.click(overlay);
+    const dialog = screen.getByRole("dialog");
+    // Simulate backdrop click: the click target is the dialog element itself
+    fireEvent.click(dialog);
     expect(onClose).toHaveBeenCalledTimes(1);
+    expect(onClose).toHaveBeenCalledWith("dismiss");
+  });
+
+  test("does not call onClose when clicking inside the modal content", () => {
+    const onClose = vi.fn();
+    render(<SearchModal isOpen={true} onClose={onClose} />);
+    // Click on the search input (inside modal content), not the dialog element itself
+    const input = screen.getByRole("combobox", { name: "サイト内検索" });
+    fireEvent.click(input);
+    expect(onClose).not.toHaveBeenCalled();
   });
 
   test("renders search input with correct aria-label", () => {
@@ -113,6 +145,37 @@ describe("SearchModal", () => {
         "ツール、ゲーム、辞典など、サイト内のコンテンツを検索できます",
       ),
     ).toBeInTheDocument();
+  });
+
+  test("locks body scroll when open", () => {
+    render(<SearchModal isOpen={true} onClose={vi.fn()} />);
+    expect(document.body.style.overflow).toBe("hidden");
+  });
+
+  test("unlocks body scroll when closed", () => {
+    const { rerender } = render(
+      <SearchModal isOpen={true} onClose={vi.fn()} />,
+    );
+    expect(document.body.style.overflow).toBe("hidden");
+    rerender(<SearchModal isOpen={false} onClose={vi.fn()} />);
+    expect(document.body.style.overflow).toBe("");
+  });
+});
+
+describe("SearchModal close button", () => {
+  test("renders a close button with aria-label='検索を閉じる'", () => {
+    render(<SearchModal isOpen={true} onClose={vi.fn()} />);
+    const closeButton = screen.getByRole("button", { name: "検索を閉じる" });
+    expect(closeButton).toBeInTheDocument();
+  });
+
+  test("calls onClose with 'dismiss' reason when close button is clicked", () => {
+    const onClose = vi.fn();
+    render(<SearchModal isOpen={true} onClose={onClose} />);
+    const closeButton = screen.getByRole("button", { name: "検索を閉じる" });
+    fireEvent.click(closeButton);
+    expect(onClose).toHaveBeenCalledTimes(1);
+    expect(onClose).toHaveBeenCalledWith("dismiss");
   });
 });
 
@@ -222,8 +285,9 @@ describe("SearchModal keyboard navigation", () => {
     // Press Enter
     fireEvent.keyDown(document, { key: "Enter" });
 
-    // Should call onClose
+    // Should call onClose with 'navigation' reason
     expect(onClose).toHaveBeenCalledTimes(1);
+    expect(onClose).toHaveBeenCalledWith("navigation");
 
     // Should use router.push instead of window.location.href
     expect(mockPush).toHaveBeenCalledTimes(1);

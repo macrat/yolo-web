@@ -72,17 +72,21 @@ export default function MobileNav({ links }: MobileNavProps) {
         />
       )}
 
+      {/* role="menu" はデスクトップアプリのコンテキストメニュー用ロールであり、
+          ナビゲーションリンクには不適切なため使用しない。
+          aria-hidden でメニューが閉じているときに支援技術から隠す。
+          aria-hidden={false} は誤解釈される可能性があるため属性自体を省略する。 */}
       <ul
         id="mobile-menu"
         className={`${styles.menu} ${isOpen ? styles.menuOpen : ""}`}
-        role="menu"
+        aria-label="モバイルメニュー"
+        aria-hidden={isOpen ? undefined : "true"}
       >
         {links.map((link) => (
-          <li key={link.href} role="none">
+          <li key={link.href}>
             <Link
               href={link.href}
               className={`${styles.menuLink}${isActive(pathname, link.href) ? ` ${styles.activeLink}` : ""}`}
-              role="menuitem"
               onClick={() => setIsOpen(false)}
             >
               {link.label}

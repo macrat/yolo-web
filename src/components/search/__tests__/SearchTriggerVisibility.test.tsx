@@ -10,6 +10,19 @@ import SearchTrigger from "@/components/search/SearchTrigger";
 // jsdom は scrollIntoView を実装していない
 Element.prototype.scrollIntoView = vi.fn();
 
+// jsdom は HTMLDialogElement.showModal / close を実装していない。
+// SearchTrigger は内部で SearchModal をレンダリングし、
+// dialog.showModal() / dialog.close() が呼ばれるためモックが必要。
+HTMLDialogElement.prototype.showModal = vi.fn(function (
+  this: HTMLDialogElement,
+) {
+  this.setAttribute("open", "");
+});
+HTMLDialogElement.prototype.close = vi.fn(function (this: HTMLDialogElement) {
+  this.removeAttribute("open");
+  this.dispatchEvent(new Event("close"));
+});
+
 // next/navigation をモック
 vi.mock("next/navigation", () => ({
   useRouter: () => ({

@@ -1,37 +1,91 @@
-.overlay {
-  position: fixed;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.4);
-  z-index: 200;
-}
-
+/* Native <dialog> element: the browser places it in the top layer,
+   so position/z-index are managed automatically.
+   When closed, <dialog> has display:none by default; we must not
+   override it unconditionally, so we scope the flex layout to [open]. */
 .modal {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   width: 90%;
   max-width: 600px;
   max-height: 70vh;
+  margin: auto;
   background-color: var(--color-bg);
   border: 1px solid var(--color-border);
   border-radius: 12px;
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
-  z-index: 210;
+  overflow: hidden;
+  /* Reset browser default dialog padding */
+  padding: 0;
+}
+
+.modal[open] {
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  /* Fade-in animation when the dialog opens.
+     @starting-style defines the initial (pre-open) state so the browser
+     can transition from opacity:0 to opacity:1 on entry. */
+  opacity: 1;
+  transition: opacity 0.2s ease;
+}
+
+@starting-style {
+  .modal[open] {
+    opacity: 0;
+  }
+}
+
+/* Backdrop: replaces the manual .overlay div used previously */
+.modal::backdrop {
+  background-color: rgba(0, 0, 0, 0.4);
+  opacity: 1;
+  transition: opacity 0.2s ease;
+}
+
+@starting-style {
+  .modal::backdrop {
+    opacity: 0;
+  }
+}
+
+/* Row that holds the search input and the close button side by side */
+.inputRow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding-right: 8px;
+}
+
+/* Close button: small and unobtrusive on desktop, essential on mobile
+   where the backdrop is hidden behind the full-screen dialog */
+.closeButton {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--color-text-muted, #888);
+  font-size: 14px;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.closeButton:hover {
+  background-color: var(--color-hover, rgba(0, 0, 0, 0.06));
+  color: var(--color-text, inherit);
 }
 
 @media (max-width: 768px) {
   .modal {
-    top: 0;
-    left: 0;
-    transform: none;
     width: 100%;
-    max-width: none;
+    max-width: 100%;
     max-height: 100dvh;
     height: 100dvh;
+    margin: 0;
     border-radius: 0;
     border: none;
   }
