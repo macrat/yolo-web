@@ -1,5 +1,5 @@
 /* おすすめコンテンツ（カテゴリ横断の補助的回遊導線）のスタイル。
- * RelatedQuizzes/RelatedGamesが同カテゴリの主要回遊導線であるのに対し、
+ * RelatedContentCard.module.css が主要導線（RelatedQuizzes/RelatedGames）の共通スタイルを担う。
  * このコンポーネントは補助的な位置づけのため、意図的に一段控えめなデザインにしている。
  */
 .related {

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getPlayContentsByCategory } from "@/play/registry";
 import { getPlayPath } from "@/play/paths";
 import type { PlayContentMeta } from "@/play/types";
-import styles from "./RelatedQuizzes.module.css";
+import styles from "@/play/_components/RelatedContentCard.module.css";
 
 /** 関連クイズとして表示する最大件数 */
 const MAX_RELATED_COUNT = 3;

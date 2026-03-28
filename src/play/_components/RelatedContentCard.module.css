@@ -1,6 +1,6 @@
-/* NOTE: このファイルは RelatedGames.module.css と同一のスタイル定義です。
- * 将来的には共通のモジュールに統合することを検討してください。
- * see: src/play/games/_components/RelatedGames.module.css
+/* 関連コンテンツカード（主要回遊導線）の共通スタイル。
+ * RelatedQuizzes / RelatedGames の両コンポーネントで使用する。
+ * 補助的回遊導線である RecommendedContent.module.css とは別ファイルとして管理する。
  */
 .related {
   margin-top: 2rem;
