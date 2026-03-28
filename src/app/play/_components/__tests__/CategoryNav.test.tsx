@@ -31,10 +31,10 @@ class MockIntersectionObserver {
 }
 
 const CATEGORIES = [
-  { category: "fortune", label: "占い" },
-  { category: "personality", label: "性格診断" },
-  { category: "knowledge", label: "知識テスト" },
-  { category: "game", label: "ゲーム" },
+  { category: "fortune", label: "今日の運勢" },
+  { category: "personality", label: "あなたはどのタイプ？" },
+  { category: "knowledge", label: "どこまで知ってる？" },
+  { category: "game", label: "毎日のパズル" },
 ];
 
 /** テスト用のダミーセクション要素を document.body に追加する */
@@ -95,12 +95,18 @@ describe("CategoryNav", () => {
   it("初期状態で4つのタブがレンダリングされ、アクティブタブがないこと", () => {
     render(<CategoryNav categories={CATEGORIES} />);
 
-    expect(screen.getByRole("link", { name: "占い" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "性格診断" })).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: "知識テスト" }),
+      screen.getByRole("link", { name: "今日の運勢" }),
     ).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "ゲーム" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "あなたはどのタイプ？" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "どこまで知ってる？" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "毎日のパズル" }),
+    ).toBeInTheDocument();
 
     // アクティブタブが初期状態では存在しないこと
     const links = screen.getAllByRole("link");
@@ -112,18 +118,20 @@ describe("CategoryNav", () => {
   });
 
   // テスト2: 特定セクションがintersectした時に対応タブがアクティブクラスを持つこと
-  it("fortuneセクションがintersectした時に占いタブがアクティブクラスを持つこと", () => {
+  it("fortuneセクションがintersectした時に今日の運勢タブがアクティブクラスを持つこと", () => {
     render(<CategoryNav categories={CATEGORIES} />);
 
     act(() => {
       observerCallback?.([makeEntry("fortune", true)]);
     });
 
-    const fortuneLink = screen.getByRole("link", { name: "占い" });
+    const fortuneLink = screen.getByRole("link", { name: "今日の運勢" });
     expect(fortuneLink.className).toMatch(/categoryNavTabActive/);
 
     // 他のタブはアクティブでないこと
-    const personalityLink = screen.getByRole("link", { name: "性格診断" });
+    const personalityLink = screen.getByRole("link", {
+      name: "あなたはどのタイプ？",
+    });
     expect(personalityLink.className).not.toMatch(/categoryNavTabActive/);
   });
 
@@ -136,7 +144,7 @@ describe("CategoryNav", () => {
       observerCallback?.([makeEntry("fortune", true)]);
     });
 
-    const fortuneLink = screen.getByRole("link", { name: "占い" });
+    const fortuneLink = screen.getByRole("link", { name: "今日の運勢" });
     expect(fortuneLink.className).toMatch(/categoryNavTabActive/);
 
     // fortune が離れる
@@ -160,8 +168,12 @@ describe("CategoryNav", () => {
     });
 
     // categories配列でpersonalityの方がknowledgeより前なのでpersonalityがアクティブ
-    const personalityLink = screen.getByRole("link", { name: "性格診断" });
-    const knowledgeLink = screen.getByRole("link", { name: "知識テスト" });
+    const personalityLink = screen.getByRole("link", {
+      name: "あなたはどのタイプ？",
+    });
+    const knowledgeLink = screen.getByRole("link", {
+      name: "どこまで知ってる？",
+    });
 
     expect(personalityLink.className).toMatch(/categoryNavTabActive/);
     expect(knowledgeLink.className).not.toMatch(/categoryNavTabActive/);
@@ -175,11 +187,11 @@ describe("CategoryNav", () => {
       observerCallback?.([makeEntry("game", true)]);
     });
 
-    const gameLink = screen.getByRole("link", { name: "ゲーム" });
+    const gameLink = screen.getByRole("link", { name: "毎日のパズル" });
     expect(gameLink.className).toMatch(/categoryNavTabActive/);
 
     // 他はアクティブでないこと
-    const fortuneLink = screen.getByRole("link", { name: "占い" });
+    const fortuneLink = screen.getByRole("link", { name: "今日の運勢" });
     expect(fortuneLink.className).not.toMatch(/categoryNavTabActive/);
   });
 
@@ -187,19 +199,17 @@ describe("CategoryNav", () => {
   it("各タブのリンクが正しいhrefを持つこと", () => {
     render(<CategoryNav categories={CATEGORIES} />);
 
-    expect(screen.getByRole("link", { name: "占い" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "今日の運勢" })).toHaveAttribute(
       "href",
       "#fortune",
     );
-    expect(screen.getByRole("link", { name: "性格診断" })).toHaveAttribute(
-      "href",
-      "#personality",
-    );
-    expect(screen.getByRole("link", { name: "知識テスト" })).toHaveAttribute(
-      "href",
-      "#knowledge",
-    );
-    expect(screen.getByRole("link", { name: "ゲーム" })).toHaveAttribute(
+    expect(
+      screen.getByRole("link", { name: "あなたはどのタイプ？" }),
+    ).toHaveAttribute("href", "#personality");
+    expect(
+      screen.getByRole("link", { name: "どこまで知ってる？" }),
+    ).toHaveAttribute("href", "#knowledge");
+    expect(screen.getByRole("link", { name: "毎日のパズル" })).toHaveAttribute(
       "href",
       "#game",
     );
@@ -213,11 +223,13 @@ describe("CategoryNav", () => {
       observerCallback?.([makeEntry("personality", true)]);
     });
 
-    const personalityLink = screen.getByRole("link", { name: "性格診断" });
+    const personalityLink = screen.getByRole("link", {
+      name: "あなたはどのタイプ？",
+    });
     expect(personalityLink).toHaveAttribute("aria-current", "true");
 
     // 非アクティブタブには aria-current が付与されないこと
-    const fortuneLink = screen.getByRole("link", { name: "占い" });
+    const fortuneLink = screen.getByRole("link", { name: "今日の運勢" });
     expect(fortuneLink).not.toHaveAttribute("aria-current");
   });
 });

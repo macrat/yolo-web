@@ -111,14 +111,14 @@ describe("generatePlayJsonLd", () => {
 // --------------------------------------------------------
 
 describe("generatePlayMetadata — displayCategory（カテゴリ名出し分け）", () => {
-  test("game → タイトルに「ゲーム」が含まれる", () => {
+  test("game → タイトルに「パズル」が含まれる", () => {
     const metadata = generatePlayMetadata(gameMeta);
-    expect(metadata.title).toContain("ゲーム");
+    expect(metadata.title).toContain("パズル");
   });
 
-  test("quiz + knowledge → タイトルに「知識テスト」が含まれる", () => {
+  test("quiz + knowledge → タイトルに「クイズ」が含まれる", () => {
     const metadata = generatePlayMetadata(quizKnowledgeMeta);
-    expect(metadata.title).toContain("知識テスト");
+    expect(metadata.title).toContain("クイズ");
   });
 
   test("quiz + personality → タイトルに「診断」が含まれる", () => {
@@ -126,9 +126,9 @@ describe("generatePlayMetadata — displayCategory（カテゴリ名出し分け
     expect(metadata.title).toContain("診断");
   });
 
-  test("fortune → タイトルに「占い」が含まれる", () => {
+  test("fortune → タイトルに「運勢」が含まれる", () => {
     const metadata = generatePlayMetadata(fortuneMeta);
-    expect(metadata.title).toContain("占い");
+    expect(metadata.title).toContain("運勢");
   });
 });
 

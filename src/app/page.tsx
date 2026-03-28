@@ -213,7 +213,7 @@ export default function Home() {
           もっと診断してみよう
         </h2>
         <p className={styles.sectionDescription}>
-          性格診断・知識テストで自分の新たな一面を見つけてみませんか？
+          診断・クイズで自分の新たな一面を見つけてみませんか？
         </p>
         <ul
           className={styles.featuredGrid}
