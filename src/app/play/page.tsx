@@ -26,7 +26,7 @@ const PLAY_CONTENT_COUNT = allPlayContents.length;
 
 export const metadata: Metadata = {
   title: `遊ぶ | ${SITE_NAME}`,
-  description: `占い・性格診断・知識テスト・ゲームなど全${PLAY_CONTENT_COUNT}種のインタラクティブコンテンツが揃う入口。今日の運勢、性格診断、漢字クイズ、パズルゲームをブラウザで無料で楽しめます。`,
+  description: `運勢占い・性格診断・知識クイズ・パズルなど全${PLAY_CONTENT_COUNT}種のインタラクティブコンテンツが揃う入口。今日の運勢、タイプ診断、漢字クイズ、毎日のパズルをブラウザで無料で楽しめます。`,
   keywords: [
     "ゲーム",
     "クイズ",
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: `遊ぶ | ${SITE_NAME}`,
-    description: `占い・性格診断・知識テスト・ゲームなど全${PLAY_CONTENT_COUNT}種のコンテンツがブラウザで無料で楽しめます。`,
+    description: `運勢占い・性格診断・知識クイズ・パズルなど全${PLAY_CONTENT_COUNT}種のコンテンツがブラウザで無料で楽しめます。`,
     type: "website",
     url: `${BASE_URL}/play`,
     siteName: SITE_NAME,
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: `遊ぶ | ${SITE_NAME}`,
-    description: `占い・性格診断・知識テスト・ゲームなど全${PLAY_CONTENT_COUNT}種のコンテンツがブラウザで無料で楽しめます。`,
+    description: `運勢占い・性格診断・知識クイズ・パズルなど全${PLAY_CONTENT_COUNT}種のコンテンツがブラウザで無料で楽しめます。`,
   },
   alternates: {
     canonical: `${BASE_URL}/play`,
@@ -59,10 +59,10 @@ const CATEGORY_DISPLAY_ORDER: Array<{
   category: PlayContentMeta["category"];
   label: string;
 }> = [
-  { category: "fortune", label: "占い" },
-  { category: "personality", label: "性格診断" },
-  { category: "knowledge", label: "知識テスト" },
-  { category: "game", label: "ゲーム" },
+  { category: "fortune", label: "今日の運勢" },
+  { category: "personality", label: "あなたはどのタイプ？" },
+  { category: "knowledge", label: "どこまで知ってる？" },
+  { category: "game", label: "毎日のパズル" },
 ];
 
 /**

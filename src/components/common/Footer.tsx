@@ -3,10 +3,10 @@ import styles from "./Footer.module.css";
 
 /** 「遊ぶ」セクションのデフォルトカテゴリアンカーリンク */
 const DEFAULT_PLAY_LINKS = [
-  { href: "/play#fortune", label: "占い" },
-  { href: "/play#personality", label: "性格診断" },
-  { href: "/play#knowledge", label: "知識テスト" },
-  { href: "/play#game", label: "ゲーム" },
+  { href: "/play#fortune", label: "今日の運勢" },
+  { href: "/play#personality", label: "タイプ診断" },
+  { href: "/play#knowledge", label: "知識クイズ" },
+  { href: "/play#game", label: "毎日のパズル" },
 ];
 
 interface FooterProps {

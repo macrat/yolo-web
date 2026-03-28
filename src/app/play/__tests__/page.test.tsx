@@ -28,16 +28,16 @@ describe("PlayPage", () => {
   it("renders all 4 category section headings", () => {
     render(<PlayPage />);
     expect(
-      screen.getByRole("heading", { level: 2, name: "占い" }),
+      screen.getByRole("heading", { level: 2, name: "今日の運勢" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { level: 2, name: "性格診断" }),
+      screen.getByRole("heading", { level: 2, name: "あなたはどのタイプ？" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { level: 2, name: "知識テスト" }),
+      screen.getByRole("heading", { level: 2, name: "どこまで知ってる？" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { level: 2, name: "ゲーム" }),
+      screen.getByRole("heading", { level: 2, name: "毎日のパズル" }),
     ).toBeInTheDocument();
   });
 
@@ -151,16 +151,16 @@ describe("PlayPage", () => {
       name: "カテゴリナビゲーション",
     });
     expect(
-      within(categoryNav).getByRole("link", { name: "占い" }),
+      within(categoryNav).getByRole("link", { name: "今日の運勢" }),
     ).toBeInTheDocument();
     expect(
-      within(categoryNav).getByRole("link", { name: "性格診断" }),
+      within(categoryNav).getByRole("link", { name: "あなたはどのタイプ？" }),
     ).toBeInTheDocument();
     expect(
-      within(categoryNav).getByRole("link", { name: "知識テスト" }),
+      within(categoryNav).getByRole("link", { name: "どこまで知ってる？" }),
     ).toBeInTheDocument();
     expect(
-      within(categoryNav).getByRole("link", { name: "ゲーム" }),
+      within(categoryNav).getByRole("link", { name: "毎日のパズル" }),
     ).toBeInTheDocument();
   });
 
@@ -171,22 +171,22 @@ describe("PlayPage", () => {
     });
     expect(
       within(categoryNav)
-        .getByRole("link", { name: "占い" })
+        .getByRole("link", { name: "今日の運勢" })
         .getAttribute("href"),
     ).toBe("#fortune");
     expect(
       within(categoryNav)
-        .getByRole("link", { name: "性格診断" })
+        .getByRole("link", { name: "あなたはどのタイプ？" })
         .getAttribute("href"),
     ).toBe("#personality");
     expect(
       within(categoryNav)
-        .getByRole("link", { name: "知識テスト" })
+        .getByRole("link", { name: "どこまで知ってる？" })
         .getAttribute("href"),
     ).toBe("#knowledge");
     expect(
       within(categoryNav)
-        .getByRole("link", { name: "ゲーム" })
+        .getByRole("link", { name: "毎日のパズル" })
         .getAttribute("href"),
     ).toBe("#game");
   });

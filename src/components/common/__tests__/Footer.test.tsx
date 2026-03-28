@@ -64,19 +64,19 @@ test("Footer renders SECTION_LINKS in correct order: 遊ぶ / ツール / 辞典
 
 test("Footer renders play category anchor links in 遊ぶ section", () => {
   render(<Footer />);
-  expect(screen.getByRole("link", { name: "占い" })).toHaveAttribute(
+  expect(screen.getByRole("link", { name: "今日の運勢" })).toHaveAttribute(
     "href",
     "/play#fortune",
   );
-  expect(screen.getByRole("link", { name: "性格診断" })).toHaveAttribute(
+  expect(screen.getByRole("link", { name: "タイプ診断" })).toHaveAttribute(
     "href",
     "/play#personality",
   );
-  expect(screen.getByRole("link", { name: "知識テスト" })).toHaveAttribute(
+  expect(screen.getByRole("link", { name: "知識クイズ" })).toHaveAttribute(
     "href",
     "/play#knowledge",
   );
-  expect(screen.getByRole("link", { name: "ゲーム" })).toHaveAttribute(
+  expect(screen.getByRole("link", { name: "毎日のパズル" })).toHaveAttribute(
     "href",
     "/play#game",
   );

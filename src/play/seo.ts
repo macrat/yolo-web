@@ -6,18 +6,18 @@ import type { PlayContentMeta } from "./types";
 /**
  * contentType と category の組み合わせから表示用カテゴリ名を導出する。
  *
- * - game                      → 「ゲーム」
- * - quiz + knowledge          → 「知識テスト」
+ * - game                      → 「パズル」
+ * - quiz + knowledge          → 「クイズ」
  * - quiz + personality        → 「診断」
- * - fortune (contentType)     → 「占い」
+ * - fortune (contentType)     → 「運勢」
  */
 function resolveDisplayCategory(meta: PlayContentMeta): string {
-  if (meta.contentType === "fortune") return "占い";
+  if (meta.contentType === "fortune") return "運勢";
   if (meta.contentType === "quiz") {
-    if (meta.category === "knowledge") return "知識テスト";
+    if (meta.category === "knowledge") return "クイズ";
     if (meta.category === "personality") return "診断";
   }
-  return "ゲーム";
+  return "パズル";
 }
 
 /**

@@ -102,7 +102,7 @@ export default function QuizContainer({
           <p className={styles.introDescription}>{quiz.meta.description}</p>
           <p className={styles.introMeta}>
             全{quiz.meta.questionCount}問 /{" "}
-            {quiz.meta.type === "knowledge" ? "知識テスト" : "診断テスト"}
+            {quiz.meta.type === "knowledge" ? "知識クイズ" : "診断"}
           </p>
           <button
             type="button"
