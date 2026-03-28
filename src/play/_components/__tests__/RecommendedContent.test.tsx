@@ -86,7 +86,7 @@ test("RecommendedContent renders 3 cards", () => {
 test("RecommendedContent renders section heading", () => {
   render(<RecommendedContent currentSlug="kanji-level" />);
 
-  expect(screen.getByText("こちらもおすすめ")).toBeInTheDocument();
+  expect(screen.getByText("他のジャンルも試してみよう")).toBeInTheDocument();
 });
 
 test("RecommendedContent has nav with correct aria-label", () => {
@@ -146,4 +146,18 @@ test("RecommendedContent returns null when no recommendations", () => {
   );
 
   expect(container.firstChild).toBeNull();
+});
+
+test("RecommendedContent badge has data-category attribute", () => {
+  render(<RecommendedContent currentSlug="kanji-level" />);
+
+  // 各バッジに data-category 属性が設定されている
+  const fortuneBadge = screen.getByText("運勢");
+  expect(fortuneBadge).toHaveAttribute("data-category", "fortune");
+
+  const personalityBadge = screen.getByText("診断");
+  expect(personalityBadge).toHaveAttribute("data-category", "personality");
+
+  const gameBadge = screen.getByText("パズル");
+  expect(gameBadge).toHaveAttribute("data-category", "game");
 });

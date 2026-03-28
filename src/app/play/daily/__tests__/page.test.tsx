@@ -86,6 +86,6 @@ describe("DailyFortunePage (/play/daily)", () => {
 
   it("renders recommended content heading", () => {
     render(<DailyFortunePage />);
-    expect(screen.getByText("こちらもおすすめ")).toBeInTheDocument();
+    expect(screen.getByText("他のジャンルも試してみよう")).toBeInTheDocument();
   });
 });
