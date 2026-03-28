@@ -1,8 +1,13 @@
 "use client";
 
-import { useState, useEffect, useCallback, useSyncExternalStore } from "react";
-import { createPortal } from "react-dom";
-import SearchModal from "./SearchModal";
+import {
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  useSyncExternalStore,
+} from "react";
+import SearchModal, { type CloseReason } from "./SearchModal";
 import styles from "./SearchTrigger.module.css";
 
 function SearchIcon() {
@@ -36,29 +41,96 @@ function useIsMac(): boolean {
   );
 }
 
-function useMounted(): boolean {
-  return useSyncExternalStore(
-    emptySubscribe,
-    () => true,
-    () => false,
-  );
+/**
+ * Returns true if the event target is a text input element where
+ * keyboard shortcuts should not interfere with user input.
+ * Checks for <input>, <textarea>, and contentEditable elements.
+ *
+ * Note: We check both `isContentEditable` (standard DOM API) and the
+ * `contenteditable` attribute directly, because some environments (jsdom)
+ * do not implement `isContentEditable` as a computed property.
+ */
+function isEditableTarget(target: EventTarget | null): boolean {
+  if (!(target instanceof Element)) return false;
+  const tagName = target.tagName.toLowerCase();
+  if (tagName === "input" || tagName === "textarea") return true;
+  const el = target as HTMLElement;
+  // isContentEditable is the standard API; fall back to attribute check
+  // for environments that do not compute it (e.g. jsdom in tests).
+  if (el.isContentEditable) return true;
+  const attr = el.getAttribute("contenteditable");
+  if (attr !== null && attr !== "false") return true;
+  return false;
 }
 
 export default function SearchTrigger() {
   const [isOpen, setIsOpen] = useState(false);
   const isMac = useIsMac();
-  const mounted = useMounted();
 
-  const openModal = useCallback(() => setIsOpen(true), []);
-  const closeModal = useCallback(() => setIsOpen(false), []);
+  // Store the element that was focused when the modal opened, so we can
+  // restore focus when the modal closes with reason "dismiss".
+  const focusOriginRef = useRef<Element | null>(null);
+
+  // Track whether the modal was closed via a search result selection
+  // (reason='navigation'). When true, the cleanup function in the history
+  // useEffect must skip history.back() because Next.js router.push() will
+  // handle navigation and will naturally overwrite the dummy history entry.
+  // Calling history.back() in that case would conflict with router navigation.
+  const closedByNavigationRef = useRef(false);
+
+  const openModal = useCallback(() => {
+    // Record the currently focused element before opening
+    focusOriginRef.current = document.activeElement;
+    setIsOpen(true);
+  }, []);
+
+  // closeModal is called by SearchModal with a reason.
+  // On "dismiss" (ESC / backdrop click), we restore focus to the element
+  // that was active when the modal opened.
+  // On "navigation" (search result selected), we skip focus restoration
+  // because the page will navigate to a new URL.
+  const closeModal = useCallback((reason: CloseReason) => {
+    if (reason === "navigation") {
+      // Record that we are closing due to navigation so the history cleanup
+      // can skip history.back() and avoid conflicting with router.push().
+      closedByNavigationRef.current = true;
+    }
+    setIsOpen(false);
+    if (reason === "dismiss" && focusOriginRef.current instanceof HTMLElement) {
+      focusOriginRef.current.focus();
+    }
+    focusOriginRef.current = null;
+  }, []);
 
   // Global keyboard shortcut: Cmd+K / Ctrl+K
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+      if (!((e.metaKey || e.ctrlKey) && e.key === "k")) return;
+
+      // Ignore keydown events fired during IME composition to avoid
+      // interfering with Japanese/Chinese/Korean input methods.
+      if (e.isComposing) return;
+
+      // When the modal is closed, ignore shortcuts fired while the user is
+      // typing in an input field to avoid disrupting their input.
+      // When the modal is already open, allow the shortcut to toggle it
+      // closed even if focus is inside the search input.
+      setIsOpen((prev) => {
+        if (!prev && isEditableTarget(e.target)) return prev;
         e.preventDefault();
-        setIsOpen((prev) => !prev);
-      }
+        if (!prev) {
+          // Opening: record the focused element
+          focusOriginRef.current = document.activeElement;
+        } else {
+          // Closing via Cmd+K toggle: restore focus to the origin element,
+          // treating it like a "dismiss" (same as ESC / backdrop click).
+          if (focusOriginRef.current instanceof HTMLElement) {
+            focusOriginRef.current.focus();
+          }
+          focusOriginRef.current = null;
+        }
+        return !prev;
+      });
     };
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
@@ -72,22 +144,44 @@ export default function SearchTrigger() {
     // Push a dummy history entry when the modal opens
     window.history.pushState({ searchModalOpen: true }, "");
 
+    // Reset the navigation flag each time the modal opens so that a new
+    // open/close cycle starts fresh.
+    closedByNavigationRef.current = false;
+
     // Track whether the modal was closed via the browser back button
     let closedByPopState = false;
 
     const handlePopState = () => {
       closedByPopState = true;
       setIsOpen(false);
+      // popstate via back button: restore focus without needing reason
+      // (treated like "dismiss" — no page navigation)
+      if (focusOriginRef.current instanceof HTMLElement) {
+        focusOriginRef.current.focus();
+      }
+      focusOriginRef.current = null;
     };
 
     window.addEventListener("popstate", handlePopState);
 
     return () => {
       window.removeEventListener("popstate", handlePopState);
-      // If the modal was closed by means other than the back button
-      // (ESC, overlay click, Cmd+K toggle, search result selection),
-      // remove the dummy history entry we pushed earlier.
-      if (!closedByPopState) {
+
+      // Only call history.back() to remove our dummy entry when:
+      // 1. The modal was NOT closed by the back button (popstate already consumed it).
+      // 2. The modal was NOT closed via a search result navigation. In that case
+      //    Next.js router.push() handles navigation and will naturally overwrite the
+      //    dummy entry — calling back() here would conflict with that navigation.
+      // 3. The current history state still has our searchModalOpen flag, meaning the
+      //    dummy entry is still present. If the state has been replaced by an external
+      //    navigation (e.g., Next.js internal routing), the dummy entry is already gone
+      //    and calling back() would navigate the user away unexpectedly.
+      if (
+        !closedByPopState &&
+        !closedByNavigationRef.current &&
+        (window.history.state as Record<string, unknown> | null)
+          ?.searchModalOpen === true
+      ) {
         window.history.back();
       }
     };
@@ -104,6 +198,7 @@ export default function SearchTrigger() {
         aria-label={`サイト内検索 (${shortcutLabel})`}
         aria-expanded={isOpen}
         aria-controls="search-modal-dialog"
+        aria-haspopup="dialog"
         title="サイト内検索"
       >
         <SearchIcon />
@@ -111,11 +206,8 @@ export default function SearchTrigger() {
         <span className={styles.searchLabel}>検索</span>
         <kbd className={styles.kbd}>{shortcutLabel}</kbd>
       </button>
-      {mounted &&
-        createPortal(
-          <SearchModal isOpen={isOpen} onClose={closeModal} />,
-          document.body,
-        )}
+      {/* <dialog> is always in the DOM; visibility is controlled via showModal()/close() */}
+      <SearchModal isOpen={isOpen} onClose={closeModal} />
     </>
   );
 }

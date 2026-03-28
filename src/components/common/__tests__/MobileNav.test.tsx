@@ -40,13 +40,18 @@ describe("MobileNav", () => {
     expect(button).toHaveAttribute("aria-label", "メニューを開く");
   });
 
-  test("renders all navigation links in menu", () => {
+  test("renders all navigation links in menu when open", () => {
     mockUsePathname.mockReturnValue("/");
     render(<MobileNav links={mockLinks} />);
+    const button = screen.getByRole("button", { name: "メニューを開く" });
+
+    // メニューを開いてからリンクを確認する（aria-hidden が解除された状態）
+    fireEvent.click(button);
     for (const link of mockLinks) {
-      expect(
-        screen.getByRole("menuitem", { name: link.label }),
-      ).toHaveAttribute("href", link.href);
+      expect(screen.getByRole("link", { name: link.label })).toHaveAttribute(
+        "href",
+        link.href,
+      );
     }
   });
 
@@ -58,8 +63,8 @@ describe("MobileNav", () => {
     fireEvent.click(button); // open
     expect(button).toHaveAttribute("aria-expanded", "true");
 
-    const menuItem = screen.getByRole("menuitem", { name: "ツール" });
-    fireEvent.click(menuItem);
+    const menuLink = screen.getByRole("link", { name: "ツール" });
+    fireEvent.click(menuLink);
     expect(button).toHaveAttribute("aria-expanded", "false");
   });
 
@@ -83,31 +88,67 @@ describe("MobileNav", () => {
     expect(document.getElementById("mobile-menu")).toBeInTheDocument();
   });
 
+  test("menu list has aria-label for identification", () => {
+    mockUsePathname.mockReturnValue("/");
+    render(<MobileNav links={mockLinks} />);
+    const menuList = document.getElementById("mobile-menu");
+    expect(menuList).toHaveAttribute("aria-label", "モバイルメニュー");
+  });
+
+  test("menu list has aria-hidden true when closed", () => {
+    mockUsePathname.mockReturnValue("/");
+    render(<MobileNav links={mockLinks} />);
+    const menuList = document.getElementById("mobile-menu");
+    expect(menuList).toHaveAttribute("aria-hidden", "true");
+  });
+
+  test("menu list does not have aria-hidden when open", () => {
+    mockUsePathname.mockReturnValue("/");
+    render(<MobileNav links={mockLinks} />);
+    const button = screen.getByRole("button", { name: "メニューを開く" });
+
+    fireEvent.click(button); // open
+    const menuList = document.getElementById("mobile-menu");
+    expect(menuList).not.toHaveAttribute("aria-hidden");
+  });
+
   test("applies activeLink class to home link when path is '/'", () => {
     mockUsePathname.mockReturnValue("/");
     render(<MobileNav links={mockLinks} />);
-    const homeLink = screen.getByRole("menuitem", { name: "ホーム" });
+    const button = screen.getByRole("button", { name: "メニューを開く" });
+
+    fireEvent.click(button); // open to make links accessible
+    const homeLink = screen.getByRole("link", { name: "ホーム" });
     expect(homeLink.className).toContain("activeLink");
   });
 
   test("does not apply activeLink class to home link when path is '/tools'", () => {
     mockUsePathname.mockReturnValue("/tools");
     render(<MobileNav links={mockLinks} />);
-    const homeLink = screen.getByRole("menuitem", { name: "ホーム" });
+    const button = screen.getByRole("button", { name: "メニューを開く" });
+
+    fireEvent.click(button); // open to make links accessible
+    const homeLink = screen.getByRole("link", { name: "ホーム" });
     expect(homeLink.className).not.toContain("activeLink");
   });
 
   test("applies activeLink class to /tools link when path is '/tools'", () => {
     mockUsePathname.mockReturnValue("/tools");
     render(<MobileNav links={mockLinks} />);
-    const toolsLink = screen.getByRole("menuitem", { name: "ツール" });
+    const button = screen.getByRole("button", { name: "メニューを開く" });
+
+    fireEvent.click(button); // open to make links accessible
+    const toolsLink = screen.getByRole("link", { name: "ツール" });
     expect(toolsLink.className).toContain("activeLink");
   });
 
   test("does not apply activeLink to non-active links", () => {
     mockUsePathname.mockReturnValue("/tools");
     render(<MobileNav links={mockLinks} />);
-    const aboutLink = screen.getByRole("menuitem", { name: "About" });
+    const button = screen.getByRole("button", { name: "メニューを開く" });
+
+    fireEvent.click(button); // open to make links accessible
+    const aboutLink = screen.getByRole("link", { name: "About" });
     expect(aboutLink.className).not.toContain("activeLink");
   });
 });
