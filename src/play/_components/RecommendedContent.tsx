@@ -24,7 +24,7 @@ export default function RecommendedContent({
 
   return (
     <nav className={styles.related} aria-label="おすすめコンテンツ">
-      <h2 className={styles.heading}>こちらもおすすめ</h2>
+      <h2 className={styles.heading}>他のジャンルも試してみよう</h2>
       <ul className={styles.list}>
         {recommended.map((content) => (
           <li key={content.slug}>
@@ -38,7 +38,7 @@ export default function RecommendedContent({
               <span className={styles.description}>
                 {content.shortDescription}
               </span>
-              <span className={styles.badge}>
+              <span className={styles.badge} data-category={content.category}>
                 {resolveDisplayCategory(content)}
               </span>
             </Link>
