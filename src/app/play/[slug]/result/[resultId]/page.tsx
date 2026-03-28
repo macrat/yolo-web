@@ -16,6 +16,7 @@ import {
 } from "@/play/quiz/data/character-personality";
 import CompatibilityDisplay from "./CompatibilityDisplay";
 import { extractWithParam } from "./extractWithParam";
+import RelatedQuizzes from "@/play/quiz/_components/RelatedQuizzes";
 import RecommendedContent from "@/play/_components/RecommendedContent";
 import styles from "./page.module.css";
 
@@ -197,6 +198,7 @@ export default async function PlayQuizResultPage({
           />
         )}
       </div>
+      <RelatedQuizzes currentSlug={slug} category={quiz.meta.category} />
       <RecommendedContent currentSlug={slug} />
     </div>
   );
