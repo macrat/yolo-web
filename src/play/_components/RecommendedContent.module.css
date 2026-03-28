@@ -1,6 +1,6 @@
-/* NOTE: このファイルは RelatedQuizzes.module.css と同一のスタイル構造です。
- * 将来的には共通のモジュールに統合することを検討してください。
- * see: src/play/quiz/_components/RelatedQuizzes.module.css
+/* おすすめコンテンツ（カテゴリ横断の補助的回遊導線）のスタイル。
+ * RelatedQuizzes/RelatedGamesが同カテゴリの主要回遊導線であるのに対し、
+ * このコンポーネントは補助的な位置づけのため、意図的に一段控えめなデザインにしている。
  */
 .related {
   margin-top: 2rem;
@@ -33,15 +33,16 @@
   flex-direction: column;
   gap: 0.25rem;
   padding: 0.75rem 1rem;
-  border: 1px solid var(--color-border);
+  border: none;
+  background-color: var(--color-bg-secondary);
   border-radius: 0.5rem;
   text-decoration: none;
-  transition: border-color 0.15s;
+  transition: background-color 0.15s;
   height: 100%;
 }
 
 .link:hover {
-  border-color: var(--color-primary);
+  background-color: var(--color-border);
 }
 
 .icon {
@@ -52,7 +53,7 @@
 .name {
   font-weight: 600;
   color: var(--color-primary);
-  font-size: 0.95rem;
+  font-size: 0.9rem;
 }
 
 .description {
@@ -62,7 +63,7 @@
 
 .badge {
   font-size: 0.7rem;
-  background-color: var(--color-bg-secondary);
+  background-color: var(--color-bg);
   padding: 0.125rem 0.375rem;
   border-radius: 0.25rem;
   color: var(--color-text-muted);
