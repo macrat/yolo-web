@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Breadcrumb from "@/components/common/Breadcrumb";
 import TrustLevelBadge from "@/components/common/TrustLevelBadge";
 import DailyFortuneCard from "@/play/fortune/_components/DailyFortuneCard";
+import RecommendedContent from "@/play/_components/RecommendedContent";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import styles from "./page.module.css";
 
@@ -42,6 +43,7 @@ export default function DailyFortunePage() {
       />
       <TrustLevelBadge level="generated" />
       <DailyFortuneCard />
+      <RecommendedContent currentSlug="daily" />
     </div>
   );
 }

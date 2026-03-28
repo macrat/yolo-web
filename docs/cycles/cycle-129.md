@@ -11,15 +11,15 @@ completed_at: null
 
 ## 実施する作業
 
-- [ ] B-091-1: レコメンドロジック関数の実装（`src/play/recommendation.ts`）とテスト（`src/play/__tests__/recommendation.test.ts`）
-- [ ] B-091-2: RecommendedContentコンポーネントの実装（`src/play/_components/RecommendedContent.tsx` + CSS Module）とテスト
-- [ ] B-091-3: クイズ・診断ページへの統合（`src/app/play/[slug]/page.tsx`）
-- [ ] B-091-4: 占いページへの統合（`src/app/play/daily/page.tsx`）
-- [ ] B-091-5: ゲームページへの統合（`src/play/games/_components/GameLayout.tsx`）
-- [ ] B-091-6: 静的結果ページへの統合（`src/app/play/[slug]/result/[resultId]/page.tsx`）
-- [ ] B-091-7: lint/format/test/buildの成功確認
-- [ ] B-091-8: Playwrightによるビジュアル確認（全4種の結果画面 + 静的結果ページ）
-- [ ] B-091-9: レビューと修正
+- [x] B-091-1: レコメンドロジック関数の実装（`src/play/recommendation.ts`）とテスト（`src/play/__tests__/recommendation.test.ts`）
+- [x] B-091-2: RecommendedContentコンポーネントの実装（`src/play/_components/RecommendedContent.tsx` + CSS Module）とテスト
+- [x] B-091-3: クイズ・診断ページへの統合（`src/app/play/[slug]/page.tsx`）
+- [x] B-091-4: 占いページへの統合（`src/app/play/daily/page.tsx`）
+- [x] B-091-5: ゲームページへの統合（`src/play/games/_components/GameLayout.tsx`）
+- [x] B-091-6: 静的結果ページへの統合（`src/app/play/[slug]/result/[resultId]/page.tsx`）
+- [x] B-091-7: lint/format/test/buildの成功確認
+- [x] B-091-8: Playwrightによるビジュアル確認（全4種の結果画面 + 静的結果ページ）
+- [x] B-091-9: レビューと修正
 
 ## 作業計画
 
@@ -231,9 +231,24 @@ UIデザイン方針:
 - R1: 6件の指摘（getContentPath使用、resolveDisplayCategoryのexport方針、GameMeta.slug依存関係注記、keywordsゼロ重複テスト追加、占いページ配置表現明確化、CSSレイアウト方針統一）→ 全件修正
 - R2: 指摘事項なし → 承認
 
+### 実装レビュー
+
+- タスク1（レコメンドロジック）: R1で承認。計画の10種テストケースを全カバー、18テスト全通過
+- タスク2（RecommendedContentコンポーネント）: R1で1件指摘（.badge に width: fit-content 不足）→ 修正
+- タスク3-6（全ページ統合）+ タスク2修正: 全体レビューR1で承認。全4種ページへの配置、getContentPath使用、アクセシビリティ、スタイル一貫性すべて問題なし
+- lint修正: recommendation.test.tsの未使用変数（fortuneContents）削除、page.test.tsxの`module`変数名を`imported`に修正（Next.js lint rule）
+
+### Playwrightビジュアル確認
+
+- 占いページ（/play/daily）モバイル360px: おすすめ3件が縦1列で正しく表示、セパレータで区切り、カテゴリバッジ（診断/クイズ/パズル）表示OK
+- 占いページ（/play/daily）デスクトップ1280px: 2列レイアウト、3件目が次の行に配置、RelatedQuizzesと一貫したスタイル
+- ゲームページ（/play/kanji-kanaru）モバイル: RelatedGames → おすすめ → RelatedBlogPosts の正しい順序で表示
+- クイズページ（/play/animal-personality）モバイル: RelatedQuizzes → おすすめ の正しい順序で表示
+- 静的結果ページ（/play/animal-personality/result/nihon-zaru）モバイル: 結果カード直下におすすめ3件表示
+
 ## キャリーオーバー
 
-（作業中に記載）
+- なし
 
 ## 補足事項
 

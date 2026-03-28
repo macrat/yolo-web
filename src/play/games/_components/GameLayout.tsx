@@ -3,6 +3,7 @@ import Breadcrumb from "@/components/common/Breadcrumb";
 import FaqSection from "@/components/common/FaqSection";
 import ShareButtons from "@/components/common/ShareButtons";
 import TrustLevelBadge from "@/components/common/TrustLevelBadge";
+import RecommendedContent from "@/play/_components/RecommendedContent";
 import RelatedGames from "./RelatedGames";
 import RelatedBlogPosts from "./RelatedBlogPosts";
 import styles from "./GameLayout.module.css";
@@ -91,6 +92,7 @@ export default function GameLayout({
         currentSlug={meta.slug}
         relatedSlugs={meta.relatedGameSlugs}
       />
+      <RecommendedContent currentSlug={meta.slug} />
       <RelatedBlogPosts gameSlug={meta.slug} />
     </article>
   );

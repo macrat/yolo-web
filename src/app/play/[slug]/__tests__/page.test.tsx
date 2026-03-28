@@ -50,6 +50,14 @@ describe("play/[slug]/page", () => {
     });
   });
 
+  describe("RecommendedContent integration", () => {
+    it("RecommendedContent is importable from expected path", async () => {
+      // Verify RecommendedContent exists and is importable (used by page.tsx)
+      const imported = await import("@/play/_components/RecommendedContent");
+      expect(imported.default).toBeDefined();
+    });
+  });
+
   describe("generateMetadata", () => {
     it("returns metadata for a valid quiz slug", async () => {
       const metadata = await generateMetadata({

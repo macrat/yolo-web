@@ -11,7 +11,7 @@ import type { PlayContentMeta } from "./types";
  * - quiz + personality        → 「診断」
  * - fortune (contentType)     → 「運勢」
  */
-function resolveDisplayCategory(meta: PlayContentMeta): string {
+export function resolveDisplayCategory(meta: PlayContentMeta): string {
   if (meta.contentType === "fortune") return "運勢";
   if (meta.contentType === "quiz") {
     if (meta.category === "knowledge") return "クイズ";

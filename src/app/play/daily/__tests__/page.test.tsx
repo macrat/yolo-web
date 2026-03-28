@@ -13,6 +13,38 @@ vi.mock("@/lib/achievements/useAchievements", () => ({
   }),
 }));
 
+// RecommendedContent uses getRecommendedContents.
+// Mock it to avoid dependency on full registry in unit tests.
+vi.mock("@/play/recommendation", () => ({
+  getRecommendedContents: () => [
+    {
+      slug: "kanji-level",
+      title: "漢字力診断",
+      shortTitle: "漢字力診断",
+      shortDescription: "あなたの漢字力は？",
+      icon: "📝",
+      category: "knowledge",
+      contentType: "quiz",
+      description: "漢字の実力を測る診断",
+      accentColor: "#ff5733",
+      keywords: ["漢字", "知識"],
+      publishedAt: "2026-01-01T00:00:00+09:00",
+      trustLevel: "verified",
+    },
+  ],
+}));
+
+vi.mock("@/play/paths", () => ({
+  getContentPath: (content: { contentType: string; slug: string }) =>
+    `/play/${content.slug}`,
+  getPlayPath: (slug: string) => `/play/${slug}`,
+  getDailyFortunePath: () => "/play/daily",
+}));
+
+vi.mock("@/play/seo", () => ({
+  resolveDisplayCategory: () => "クイズ",
+}));
+
 describe("DailyFortunePage (/play/daily)", () => {
   it("renders the page wrapper", () => {
     render(<DailyFortunePage />);
@@ -43,5 +75,17 @@ describe("DailyFortunePage (/play/daily)", () => {
     // TrustLevelBadge with "generated" level renders a badge element
     const badge = document.querySelector('[class*="badge"]');
     expect(badge).toBeInTheDocument();
+  });
+
+  it("renders RecommendedContent navigation for exit links", () => {
+    render(<DailyFortunePage />);
+    expect(
+      screen.getByRole("navigation", { name: "おすすめコンテンツ" }),
+    ).toBeInTheDocument();
+  });
+
+  it("renders recommended content heading", () => {
+    render(<DailyFortunePage />);
+    expect(screen.getByText("こちらもおすすめ")).toBeInTheDocument();
   });
 });

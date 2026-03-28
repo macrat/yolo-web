@@ -1,7 +1,16 @@
-import { expect, test } from "vitest";
+import { expect, test, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import GameLayout from "../GameLayout";
 import type { GameMeta } from "@/play/games/types";
+
+// RecommendedContent をモックしてテストを安定させる
+vi.mock("@/play/_components/RecommendedContent", () => ({
+  default: ({ currentSlug }: { currentSlug: string }) => (
+    <nav aria-label="おすすめコンテンツ">
+      <span>RecommendedContent:{currentSlug}</span>
+    </nav>
+  ),
+}));
 
 const mockMeta: GameMeta = {
   slug: "test-game",
@@ -205,4 +214,14 @@ test("GameLayout content section has aria-label 'Game'", () => {
     </GameLayout>,
   );
   expect(screen.getByRole("region", { name: "Game" })).toBeInTheDocument();
+});
+
+test("GameLayout renders RecommendedContent with meta.slug", () => {
+  render(
+    <GameLayout meta={mockMeta}>
+      <div>Content</div>
+    </GameLayout>,
+  );
+  // RecommendedContent のモックが currentSlug=meta.slug で呼ばれることを確認
+  expect(screen.getByText("RecommendedContent:test-game")).toBeInTheDocument();
 });

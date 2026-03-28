@@ -6,6 +6,7 @@ import ShareButtons from "@/components/common/ShareButtons";
 import TrustLevelBadge from "@/components/common/TrustLevelBadge";
 import QuizContainer from "@/play/quiz/_components/QuizContainer";
 import RelatedQuizzes from "@/play/quiz/_components/RelatedQuizzes";
+import RecommendedContent from "@/play/_components/RecommendedContent";
 import { quizBySlug, getAllQuizSlugs } from "@/play/quiz/registry";
 import { generatePlayMetadata, generatePlayJsonLd } from "@/play/seo";
 import { safeJsonLdStringify } from "@/lib/seo";
@@ -85,6 +86,7 @@ export default async function PlayQuizPage({ params, searchParams }: Props) {
         />
       </section>
       {meta && <RelatedQuizzes currentSlug={slug} category={meta.category} />}
+      <RecommendedContent currentSlug={slug} />
     </div>
   );
 }
