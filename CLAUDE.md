@@ -17,8 +17,9 @@ When multiple approaches exist, always choose the one that maximizes value for t
 - **Use Skills and Sub-Agents**: Use proper skills and sub-agents for each task. Do not do everything by yourself. It is important to use the right tool for the right job and to delegate work to specialized agents when appropriate.
 - **Use ./tmp/ directory**: Use the `./tmp/` directory for temporary files and outputs. `./tmp/` in the repository root is not tracked by git. Do not create any other directories for temporary files.
 - **Check Google Analytics**: Always check Google Analytics data before making any decisions that may impact user experience or traffic. Use the data to inform your decisions and to understand the potential impact of your changes on visitors.
+- **GA analysis must be done by PM directly**: Google Analytics MCP tools do not work correctly when called from sub-agents. Always call GA MCP tools directly from the PM agent, never delegate GA analysis to sub-agents.
 - **Use Playwright tools**: Use Playwright tools to research or test the website. Especially, visual testing is very important to ensure the quality of the changes and to prevent any negative impact on user experience. Always check the visual changes before deploying any updates to the website.
-- **Use foreground sub-agent for MCP tools**: When you request sub-agents to use MCP tools, Google Analytics or Playwright, always use foreground sub-agents. Do not use background mode. This is because Claude Code does not allow background agents to access MCP tools.
+- **Use foreground sub-agent for MCP tools**: When you request sub-agents to use MCP tools (except Google Analytics, which must be done by PM directly), always use foreground sub-agents. Do not use background mode. This is because Claude Code does not allow background agents to access MCP tools.
 
 ## Roles and Responsibilities
 
