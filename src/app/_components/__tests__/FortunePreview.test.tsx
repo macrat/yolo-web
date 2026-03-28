@@ -32,10 +32,18 @@ vi.mock("@/lib/achievements/date", () => ({
   getTodayJst: () => "2026-03-18",
 }));
 
+// Import resetFortuneCache to ensure test isolation across date changes
+import { resetFortuneCache } from "@/play/fortune/fortuneStore";
+
+const SOURCE_PATH = resolve(__dirname, "../FortunePreview.tsx");
+
 describe("FortunePreview", () => {
   beforeEach(() => {
-    // Ensure localStorage is available in tests (jsdom provides window)
     vi.clearAllMocks();
+    // Reset module-scope cache so each test starts with a clean state.
+    // Without this, a cache populated by a previous test (possibly with a
+    // different date) would persist and cause flaky behavior.
+    resetFortuneCache();
   });
 
   it("renders the section heading", () => {
@@ -120,6 +128,10 @@ describe("FortunePreview.module.css", () => {
 });
 
 describe("StarRatingTeaser empty star markup", () => {
+  beforeEach(() => {
+    resetFortuneCache();
+  });
+
   it("renders empty stars wrapped in span with emptyStar class", () => {
     render(<FortunePreview />);
     // rating=3.5 のとき: filled=3★, half=1☆, empty=1☆
@@ -129,5 +141,34 @@ describe("StarRatingTeaser empty star markup", () => {
     expect(emptyStarSpan).not.toBeNull();
     // empty star の文字が含まれていること
     expect(emptyStarSpan!.textContent).toMatch(/☆/);
+  });
+});
+
+describe("FortunePreview useSyncExternalStore pattern (source code verification)", () => {
+  const sourceCode = readFileSync(SOURCE_PATH, "utf-8");
+
+  it("uses useSyncExternalStore for hydration-safe fortune computation", () => {
+    // useSyncExternalStore の server snapshot (第3引数) で null を返すことで
+    // SSR とクライアントの初回レンダリング出力を一致させる。
+    expect(sourceCode).toMatch(/useSyncExternalStore/);
+  });
+
+  it("imports store functions from fortuneStore module (no duplicate store implementation)", () => {
+    // ストア実装が fortuneStore モジュールに集約されており、
+    // FortunePreview 内にストアのキャッシュ変数が定義されていないこと。
+    expect(sourceCode).toMatch(/from "@\/play\/fortune\/fortuneStore"/);
+    // モジュールスコープのキャッシュ変数が FortunePreview 内に定義されていないこと
+    expect(sourceCode).not.toMatch(/^let fortuneCache/m);
+    expect(sourceCode).not.toMatch(/^let fortuneListeners/m);
+  });
+
+  it("imports getFortuneServerSnapshot from fortuneStore", () => {
+    // server snapshot は fortuneStore から提供されること
+    expect(sourceCode).toMatch(/getFortuneServerSnapshot/);
+  });
+
+  it("imports subscribeFortuneStore from fortuneStore", () => {
+    // subscribe 関数も fortuneStore から提供されること
+    expect(sourceCode).toMatch(/subscribeFortuneStore/);
   });
 });

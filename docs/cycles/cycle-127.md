@@ -2,7 +2,7 @@
 id: 127
 description: "B-228 FortunePreviewコンポーネントのHydration Error修正"
 started_at: "2026-03-28T14:19:26+0900"
-completed_at: null
+completed_at: "2026-03-28T15:15:20+0900"
 ---
 
 # サイクル-127
@@ -11,10 +11,10 @@ completed_at: null
 
 ## 実施する作業
 
-- [ ] B-228-1: FortunePreview.tsx の Hydration Error 修正
-- [ ] B-228-2: DailyFortuneCard.tsx の同一パターン修正
-- [ ] B-228-3: テストの更新と全体の動作確認
-- [ ] B-228-4: Playwright によるビジュアル確認
+- [x] B-228-1: FortunePreview.tsx の Hydration Error 修正
+- [x] B-228-2: DailyFortuneCard.tsx の同一パターン修正
+- [x] B-228-3: テストの更新と全体の動作確認
+- [x] B-228-4: Playwright によるビジュアル確認
 
 ## 作業計画
 
@@ -110,8 +110,8 @@ FortunePreview.tsx と DailyFortuneCard.tsx 以外にも `typeof window === "und
 
 ### 完了条件
 
-1. FortunePreview.tsx が `useEffect` + `useState(null)` パターンで実装されている
-2. DailyFortuneCard.tsx が同じパターンで実装されている
+1. FortunePreview.tsx が `useSyncExternalStore` パターンで実装されている（共通fortuneStore.tsを使用）
+2. DailyFortuneCard.tsx が同じパターンで実装されている（共通fortuneStore.tsを使用）
 3. SSR時とクライアント初回レンダリング時に同じ出力（ローディング表示）が生成される
 4. マウント後に正しく運勢が表示される
 5. `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する
@@ -136,7 +136,25 @@ FortunePreview.tsx と DailyFortuneCard.tsx 以外にも `typeof window === "und
 
 ## レビュー結果
 
-<作業完了後、別のサブエージェントにレビューさせ、改善項目が無くなるまで改善とレビューを繰り返す。ここには、そのレビューの回数や指摘事項・対応結果などを記載する。>
+### 計画レビュー
+
+- R1: 2件の指摘（影響範囲の調査不足 — GameContainerの同一パターン未記載、「影響範囲の調査結果」セクション欠如）→ 全件修正
+- R2: 指摘事項なし → 承認
+
+### 実装レビュー
+
+- R1: 4件の指摘（日付変更時のキャッシュ無効化、ストア実装の重複、テストのキャッシュリセット、FortunePreviewテストのuseSyncExternalStoreパターン検証欠如）→ fortuneStore.tsに共通化し全件修正
+- R2: 指摘事項なし → 承認
+
+### 実装方針の変遷
+
+当初 `useEffect` + `useState(null)` パターンで実装したが、プロジェクトのlintルール `react-hooks/set-state-in-effect` に違反したため、`useSyncExternalStore` パターンに変更。プロジェクト内で既に同パターンが使われていた（SearchTrigger.tsx, ThemeToggle.tsx等）。さらにR1レビューで共通ストアモジュール（fortuneStore.ts）への抽出と日付変更時のキャッシュ無効化を追加。
+
+### Playwrightビジュアル確認
+
+- トップページ（/）: 運勢プレビュー「風鈴運 涼やか」★4.7が正しく表示
+- /play/daily: 同じ運勢が詳細表示で正しく表示（日付、タイトル、星評価、説明文、ラッキーアイテム）
+- コンソールエラー: 0件（Hydration Errorなし）
 
 ## キャリーオーバー
 
