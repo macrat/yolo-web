@@ -11,27 +11,229 @@ completed_at: null
 
 ## 実施する作業
 
-- [ ] B-091についてのタスク分割と作業計画は /cycle-planning で策定する
+- [ ] B-091-1: レコメンドロジック関数の実装（`src/play/recommendation.ts`）とテスト（`src/play/__tests__/recommendation.test.ts`）
+- [ ] B-091-2: RecommendedContentコンポーネントの実装（`src/play/_components/RecommendedContent.tsx` + CSS Module）とテスト
+- [ ] B-091-3: クイズ・診断ページへの統合（`src/app/play/[slug]/page.tsx`）
+- [ ] B-091-4: 占いページへの統合（`src/app/play/daily/page.tsx`）
+- [ ] B-091-5: ゲームページへの統合（`src/play/games/_components/GameLayout.tsx`）
+- [ ] B-091-6: 静的結果ページへの統合（`src/app/play/[slug]/result/[resultId]/page.tsx`）
+- [ ] B-091-7: lint/format/test/buildの成功確認
+- [ ] B-091-8: Playwrightによるビジュアル確認（全4種の結果画面 + 静的結果ページ）
+- [ ] B-091-9: レビューと修正
 
 ## 作業計画
 
-<plannerが立案した作業の詳細な実施計画をここに記載する。何を何のためにどのようにやるのかを具体的に書き、作業を進めながら方針が変わった場合は随時アップデートすること。>
-
 ### 目的
+
+現在の/play配下19種のコンテンツは、カテゴリ内の回遊導線（RelatedQuizzes、RelatedGames、NextGameBanner）は存在するが、カテゴリを横断した導線がほぼない。特に占いページには出口導線が一切なく、静的結果ページ（SNSシェアからの流入先）にも関連コンテンツへの導線がない。
+
+カテゴリ横断のおすすめ機能を追加することで、以下の効果を狙う:
+
+- 占いページの離脱率低減（現在、出口導線ゼロ）
+- SNS経由で静的結果ページに着地したユーザーの回遊促進
+- ゲーム完了後のユーザーをクイズ・診断へ誘導
+- PV/セッションの向上（ベストプラクティスでは平均20%向上の事例あり）
 
 ### 作業内容
 
+#### タスク1: レコメンドロジック関数の実装
+
+**新規ファイル: `src/play/recommendation.ts`**
+
+レコメンドロジックをコンポーネントから分離し、純粋関数として実装する。テスタビリティと再利用性を確保するため。
+
+ロジック仕様:
+
+- 入力: 現在のコンテンツのslug
+- 出力: PlayContentMeta の配列（3件）
+- アルゴリズム:
+  1. 現在のコンテンツのカテゴリを特定する（playContentBySlugから取得）
+  2. 自分のカテゴリ以外の全カテゴリ（fortune, personality, knowledge, game の4つから自分を除いた3つ）から各1件ずつ選出
+  3. 各カテゴリからの選出ルール: 現在のコンテンツのkeywordsとの重複が最も多いコンテンツを優先。keywordsの重複がない場合や同数の場合はレジストリの定義順で先頭のものを選出
+  4. 占いカテゴリ（fortune）は1種（daily）しかないので、fortuneカテゴリからは常にdailyが選出される
+- この関数はビルド時に評価されるため、ランダム要素は入れない。同じslugに対して常に同じ結果を返す決定的な関数とする
+- 存在しないslugが渡された場合は空配列を返す
+
+**新規ファイル: `src/play/__tests__/recommendation.test.ts`**
+
+テストケース:
+
+- personalityカテゴリのコンテンツに対して、fortune/knowledge/gameから各1件返ること
+- knowledgeカテゴリのコンテンツに対して、fortune/personality/gameから各1件返ること
+- gameカテゴリのコンテンツに対して、fortune/personality/knowledgeから各1件返ること
+- fortuneカテゴリのコンテンツ（daily）に対して、personality/knowledge/gameから各1件返ること
+- 自カテゴリのコンテンツが結果に含まれないこと
+- 自分自身が結果に含まれないこと
+- 返却件数が常に3件であること
+- keywords重複による優先選出が機能すること（keywordsが共通するコンテンツが優先されること）
+- keywordsの重複がゼロの場合にレジストリ定義順で選出されること
+- 存在しないslugに対して空配列を返すこと
+
+#### タスク2: RecommendedContentコンポーネントの実装
+
+**新規ファイル: `src/play/_components/RecommendedContent.tsx`**
+
+Server Componentとして実装。おすすめはビルド時に決定可能なため、クライアントサイドのJavaScriptは不要。
+
+コンポーネント仕様:
+
+- Props: `{ currentSlug: string }`
+- レコメンドロジック関数を呼び出し、3件のカードを縦積みで表示
+- 各カードにはアイコン、タイトル（shortTitle優先）、shortDescription、カテゴリバッジを表示
+- カテゴリバッジの表示名は「運勢」「診断」「クイズ」「パズル」（seo.tsのresolveDisplayCategoryを使用する。resolveDisplayCategoryは現在exportされていないため、seo.tsからexportする変更を行う）
+- セクション見出し: 「こちらもおすすめ」
+- `<nav>` 要素で `aria-label="おすすめコンテンツ"` を指定しアクセシビリティ確保
+- Linkコンポーネントでpaths.tsのgetContentPath経由のURLを生成（fortuneカテゴリは/play/daily、それ以外は/play/{slug}に正しくルーティングされる）
+- レコメンドが0件の場合（通常ありえないが防御的に）はnullを返す
+
+**新規ファイル: `src/play/_components/RecommendedContent.module.css`**
+
+UIデザイン方針:
+
+- RelatedQuizzes.module.cssと同じflex-wrap方式を踏襲し、レイアウトを統一する（display: flex、flex-wrap: wrap、gap: 0.75rem）
+- カード幅: flex: 1 1 0、min-width: 200px、max-width: calc(50% - 0.375rem)。モバイルではmin-widthによりカードが1列に折り返され、デスクトップでは2列表示（3件目は次の行に単独配置）
+- 既存のRelatedQuizzes.module.cssと同様のカードスタイルを踏襲（一貫性）
+- セパレータ（border-top）で上部コンテンツと視覚的に区切る（margin-top: 2rem、padding-top: 1.5rem、border-top: 1px solid var(--color-border)）
+- カテゴリバッジは小さいタグスタイル（font-size: 0.7rem、背景色つき、border-radius: 0.25rem）
+
+**新規ファイル: `src/play/_components/__tests__/RecommendedContent.test.tsx`**
+
+テストケース:
+
+- 3件のカードがレンダリングされること
+- 各カードにタイトル、説明、カテゴリバッジが含まれること
+- リンク先URLがgetContentPathの結果と一致すること
+- nav要素にaria-label="おすすめコンテンツ"が設定されていること
+- セクション見出し「こちらもおすすめ」が表示されていること
+
+#### タスク3: クイズ・診断ページへの統合
+
+**変更ファイル: `src/app/play/[slug]/page.tsx`**
+
+- RelatedQuizzesの下にRecommendedContentを追加
+- RelatedQuizzesは同カテゴリ内の回遊、RecommendedContentはカテゴリ横断の回遊と、役割を明確に分離
+- import文の追加とJSXの末尾（RelatedQuizzes直下）にRecommendedContentコンポーネントを配置
+- propsとして `currentSlug={slug}` を渡す
+
+#### タスク4: 占いページへの統合
+
+**変更ファイル: `src/app/play/daily/page.tsx`**
+
+- DailyFortuneCardの後（兄弟要素として）にRecommendedContentを追加
+- 占いは現在出口導線がゼロのため、この追加の効果が最も大きい
+- import文の追加とJSXのDailyFortuneCardの後にRecommendedContentコンポーネントを兄弟要素として配置
+- propsとして `currentSlug="daily"` を渡す
+
+#### タスク5: ゲームページへの統合
+
+**変更ファイル: `src/play/games/_components/GameLayout.tsx`**
+
+- RelatedGames（同カテゴリ内の関連ゲーム）の下、RelatedBlogPostsの前にRecommendedContentを追加
+- ゲームのResultModal内のNextGameBannerには手を加えない（モーダル内の情報量を増やすとUXが悪化するため）
+- import文の追加とJSXのRelatedGames直下にRecommendedContentコンポーネントを配置
+- propsとして `currentSlug={meta.slug}` を渡す（GameLayoutのpropsにはmeta: GameMetaがある）
+- GameLayoutはServer Componentであるため、RecommendedContent（Server Component）を問題なく配置できる
+- 注記: GameMeta.slugはallPlayContents経由でplayContentBySlugに登録済みのため、RecommendedContent内部のplayContentBySlug.get(slug)は正しく動作する
+
+#### タスク6: 静的結果ページへの統合
+
+**変更ファイル: `src/app/play/[slug]/result/[resultId]/page.tsx`**
+
+- 現在の結果カード（card div）の下にRecommendedContentを追加
+- SNS経由で着地したユーザーへの回遊導線として機能する
+- import文の追加とJSX内のcard divの直後にRecommendedContentコンポーネントを配置
+- propsとして `currentSlug={slug}` を渡す（slugはparamsから取得済み）
+
+#### タスク7: lint/format/test/build確認
+
+`npm run lint && npm run format:check && npm run test && npm run build` を実行し、全てのチェックが通ることを確認する。
+
+#### タスク8: Playwrightビジュアル確認
+
+以下のページでおすすめセクションの表示を確認する（モバイル360pxとデスクトップ1280px）:
+
+- クイズページ（例: /play/animal-personality）の結果表示後
+- 占いページ（/play/daily）
+- ゲームページ（例: /play/kanji-kanaru）
+- 静的結果ページ（例: /play/animal-personality/result/ の任意のresultId）
+
+確認観点:
+
+- おすすめカードが3件表示されていること
+- 既存のRelatedQuizzes/RelatedGames/NextGameBannerが維持されていること
+- カードのレイアウトが崩れていないこと（モバイル360pxで1列、デスクトップ1280pxで2列表示）
+- カテゴリバッジが正しく表示されていること
+- セパレータで上部コンテンツと視覚的に区切られていること
+
+### 変更ファイル一覧
+
+| ファイル                                                     | 種別 | 内容                                           |
+| ------------------------------------------------------------ | ---- | ---------------------------------------------- |
+| `src/play/recommendation.ts`                                 | 新規 | レコメンドロジック関数                         |
+| `src/play/__tests__/recommendation.test.ts`                  | 新規 | レコメンドロジックのテスト                     |
+| `src/play/seo.ts`                                            | 変更 | resolveDisplayCategoryをexportする             |
+| `src/play/_components/RecommendedContent.tsx`                | 新規 | おすすめ表示コンポーネント（Server Component） |
+| `src/play/_components/RecommendedContent.module.css`         | 新規 | おすすめ表示のスタイル                         |
+| `src/play/_components/__tests__/RecommendedContent.test.tsx` | 新規 | おすすめ表示コンポーネントのテスト             |
+| `src/app/play/[slug]/page.tsx`                               | 変更 | クイズ・診断ページにRecommendedContent追加     |
+| `src/app/play/daily/page.tsx`                                | 変更 | 占いページにRecommendedContent追加             |
+| `src/play/games/_components/GameLayout.tsx`                  | 変更 | ゲームページにRecommendedContent追加           |
+| `src/app/play/[slug]/result/[resultId]/page.tsx`             | 変更 | 静的結果ページにRecommendedContent追加         |
+
 ### 検討した他の選択肢と判断理由
+
+#### 選択肢A: ゲームResultModal内にもおすすめを追加する
+
+- 案: NextGameBannerの下にカテゴリ横断のおすすめリンクも表示
+- 却下理由: ResultModalはGameDialogコンポーネント内に配置されており、モーダル内のコンテンツ量が既に多い（結果表示、シェアボタン、カウントダウン、NextGameBanner）。さらにおすすめを追加するとスクロールが深くなり、モバイルでのUXが悪化する。GameLayoutの末尾（モーダル外）に配置することで、モーダルを閉じた後にも回遊導線が見える設計にする。
+
+#### 選択肢B: ランダム要素を入れたレコメンドロジック
+
+- 案: 毎回異なるおすすめを表示することで新鮮さを保つ
+- 却下理由: Server Componentでビルド時に決定する設計のため、ランダム要素を入れるとビルドごとに結果が変わり、キャッシュの効率が下がる。また、小規模サイト（19種）ではランダムの恩恵が小さい。決定的な関数の方がテスタビリティも高い。
+
+#### 選択肢C: タグベースのレコメンド（新フィールド追加）
+
+- 案: PlayContentMetaにtagsフィールドを新設し、タグの一致度でおすすめを算出
+- 却下理由: 既存のkeywordsフィールドで十分な精度が得られる。19種という規模ではタグとキーワードの区別に実質的な意味がなく、データモデルの変更は不要な複雑さを招く。
+
+#### 選択肢D: カルーセルUIでおすすめを表示
+
+- 案: 横スクロールのカルーセルで5件以上のおすすめを表示
+- 却下理由: ベストプラクティス調査でカルーセルはクリック率が低下するとの知見あり。モバイルファーストで縦積みカード3件の方が認知負荷が低く、クリック率が高い。
+
+#### 選択肢E: 既存のRelatedQuizzesをカテゴリ横断に拡張する
+
+- 案: RelatedQuizzesコンポーネントを改修して、同カテゴリ+他カテゴリの混合表示にする
+- 却下理由: RelatedQuizzesは「同カテゴリ内の関連コンテンツ」という明確な役割を持っており、これを壊すと責務が曖昧になる。新コンポーネントとして分離することで、それぞれの役割が明確に保たれる。
 
 ### 計画にあたって参考にした情報
 
+- `src/play/registry.ts` -- allPlayContents、playContentBySlug、getPlayContentsByCategory等のレジストリ関数。レコメンドロジックの基盤
+- `src/play/types.ts` -- PlayContentMetaの型定義。keywordsフィールドの存在確認
+- `src/play/seo.ts` -- resolveDisplayCategory関数。カテゴリバッジの表示名解決に使用（exportする変更が必要）
+- `src/play/paths.ts` -- getContentPath関数。コンテンツ種別に応じたリンク先パスの生成に使用
+- `src/play/quiz/_components/RelatedQuizzes.tsx` / `RelatedQuizzes.module.css` -- 既存の同カテゴリ回遊コンポーネント。UIスタイルの踏襲元
+- `src/play/games/_components/RelatedGames.tsx` -- 既存のゲーム間回遊コンポーネント
+- `src/play/games/shared/_components/NextGameBanner.tsx` -- ゲーム結果モーダル内の次ゲーム導線（モーダル内への追加を却下する判断材料）
+- `src/play/games/_components/GameLayout.tsx` -- ゲームページ共通レイアウト。おすすめ配置箇所の決定
+- `src/app/play/[slug]/page.tsx` -- クイズ・診断ページ。RelatedQuizzesの下への配置決定
+- `src/app/play/daily/page.tsx` -- 占いページ。現在出口導線ゼロであることの確認
+- `src/app/play/[slug]/result/[resultId]/page.tsx` -- 静的結果ページ。SNS流入先への回遊導線追加
+- `src/play/fortune/_components/DailyFortuneCard.tsx` -- 占いカードのClient Component構造確認（RecommendedContentはその外側に配置）
+- `src/play/games/kanji-kanaru/_components/ResultModal.tsx` -- ゲーム結果モーダルの構造確認
+- ベストプラクティス調査結果 -- シェアボタン直下3-4件カード縦積み、カルーセル忌避、PV/セッション20%向上事例
+
 ## レビュー結果
 
-<作業完了後、別のサブエージェントにレビューさせ、改善項目が無くなるまで改善とレビューを繰り返す。ここには、そのレビューの回数や指摘事項・対応結果などを記載する。>
+### 計画レビュー
+
+- R1: 6件の指摘（getContentPath使用、resolveDisplayCategoryのexport方針、GameMeta.slug依存関係注記、keywordsゼロ重複テスト追加、占いページ配置表現明確化、CSSレイアウト方針統一）→ 全件修正
+- R2: 指摘事項なし → 承認
 
 ## キャリーオーバー
 
-- <このサイクルで完了できなかった作業や、次のサイクルに持ち越す必要のある作業があれば、ここと /docs/backlog.md の両方に記載する。>
+（作業中に記載）
 
 ## 補足事項
 
