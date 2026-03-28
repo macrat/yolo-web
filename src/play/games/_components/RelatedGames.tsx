@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { allGameMetas } from "@/play/games/registry";
 import type { GameMeta } from "@/play/games/types";
-import styles from "./RelatedGames.module.css";
+import styles from "@/play/_components/RelatedContentCard.module.css";
 
 interface RelatedGamesProps {
   currentSlug: string;

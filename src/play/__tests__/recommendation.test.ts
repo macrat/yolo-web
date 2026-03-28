@@ -100,6 +100,18 @@ describe("getRecommendedContents — fortuneカテゴリのコンテンツ（dai
     const slugs = results.map((r) => r.slug);
     expect(slugs).not.toContain("daily");
   });
+
+  test("personalityカテゴリからはcontrarian-fortuneが選出される（占い的コンテンツへの回遊導線）", () => {
+    // daily の keywords: ["運勢", "占い", "デイリー", "ユーモア", "AI"]
+    // contrarian-fortune の keywords: ["逆張り", "運勢", "占い", "診断", "ユーモア", "面白い占い", "逆張り運勢"]
+    // 「運勢」「占い」「ユーモア」の3件が重複し、personalityカテゴリ内で最大重複数となる。
+    // これにより、占いページを楽しんだユーザーに占い的コンテンツ（逆張り運勢診断）が
+    // 自然に推薦される回遊導線が成立している。
+    const results = getRecommendedContents("daily");
+    const personalityResult = results.find((r) => r.category === "personality");
+    expect(personalityResult).toBeDefined();
+    expect(personalityResult?.slug).toBe("contrarian-fortune");
+  });
 });
 
 describe("getRecommendedContents — 返却件数", () => {

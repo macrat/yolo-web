@@ -38,11 +38,7 @@ export default function RecommendedContent({
               <span className={styles.description}>
                 {content.shortDescription}
               </span>
-              <span
-                className={styles.badge}
-                data-category={content.category}
-                aria-hidden="true"
-              >
+              <span className={styles.badge} data-category={content.category}>
                 {resolveDisplayCategory(content)}
               </span>
             </Link>
