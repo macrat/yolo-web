@@ -1,11 +1,13 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useSyncExternalStore, useEffect, useRef } from "react";
 import { useAchievements } from "@/lib/achievements/useAchievements";
-import { getTodayJst } from "@/lib/achievements/date";
-import { getUserSeed, selectFortune } from "@/play/fortune/logic";
+import {
+  subscribeFortuneStore,
+  getFortuneSnapshot,
+  getFortuneServerSnapshot,
+} from "@/play/fortune/fortuneStore";
 import ShareButtons from "@/play/quiz/_components/ShareButtons";
-import type { DailyFortuneEntry } from "@/play/fortune/types";
 import StarRating from "./StarRating";
 import styles from "./DailyFortuneCard.module.css";
 
@@ -16,28 +18,31 @@ function formatDate(dateStr: string): string {
   return `${year}年${parseInt(month, 10)}月${parseInt(day, 10)}日の運勢`;
 }
 
-/** Compute initial fortune state from localStorage + date (client only) */
-function computeInitialFortune(): {
-  fortune: DailyFortuneEntry;
-  today: string;
-} | null {
-  if (typeof window === "undefined") return null;
-  const userSeed = getUserSeed();
-  if (userSeed === null) return null;
-  const dateStr = getTodayJst();
-  return { fortune: selectFortune(dateStr, userSeed), today: dateStr };
-}
-
 /**
  * Client-side daily fortune card.
  *
  * Uses localStorage-based user seed + JST date to deterministically
  * select a fortune entry. Records play for the achievement system.
+ *
+ * ストアのキャッシュ・購読ロジックは fortuneStore モジュールに集約し、
+ * FortunePreview と実装を共有する。
  */
 export default function DailyFortuneCard() {
   const { recordPlay } = useAchievements();
-  // Lazy initial state: computed once on first client render
-  const [state] = useState(computeInitialFortune);
+
+  // useSyncExternalStore を使い Hydration Error を防ぐ。
+  // server snapshot (getFortuneServerSnapshot) により SSR 時は null が返り、
+  // クライアント初回レンダリングでも最初は null からスタートするため
+  // SSR とクライアントの出力が一致する。
+  // マウント後は client snapshot (getFortuneSnapshot) が評価され運勢データが返る。
+  // スナップショット関数はモジュールスコープのキャッシュを返すため参照同一性が保たれ、
+  // 無限再レンダリングを防ぐ。
+  const state = useSyncExternalStore(
+    subscribeFortuneStore,
+    getFortuneSnapshot, // client snapshot
+    getFortuneServerSnapshot, // server snapshot (SSR時はnull)
+  );
+
   const hasRecorded = useRef(false);
 
   useEffect(() => {

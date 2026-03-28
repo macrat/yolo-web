@@ -4,38 +4,38 @@
  * FortunePreview — トップページのヒーロー直下に表示する運勢プレビューセクション。
  *
  * localStorage ベースのユーザーシードを使用するため Client Component として実装。
- * SSR 時 (window 未定義) はローディングテキストを表示し、
+ * useSyncExternalStore の server snapshot で SSR 時は null を返し、
  * クライアントマウント後に運勢タイトルと星評価のティーザーを表示する。
+ * これにより SSR とクライアントの初回レンダリング出力が一致し、Hydration Error を防ぐ。
+ *
+ * ストアのキャッシュ・購読ロジックは fortuneStore モジュールに集約し、
+ * DailyFortuneCard と実装を共有する。
  */
 
-import { useState } from "react";
+import { useSyncExternalStore } from "react";
 import Link from "next/link";
-import { getUserSeed, selectFortune } from "@/play/fortune/logic";
-import { getTodayJst } from "@/lib/achievements/date";
-import type { DailyFortuneEntry } from "@/play/fortune/types";
+import {
+  subscribeFortuneStore,
+  getFortuneSnapshot,
+  getFortuneServerSnapshot,
+} from "@/play/fortune/fortuneStore";
 import StarRating from "@/play/fortune/_components/StarRating";
 import styles from "./FortunePreview.module.css";
 
-/**
- * クライアント側でのみ運勢を計算する。
- * window が未定義の SSR 環境では null を返す。
- */
-function computeFortune(): {
-  fortune: DailyFortuneEntry;
-  today: string;
-} | null {
-  if (typeof window === "undefined") return null;
-  const userSeed = getUserSeed();
-  if (userSeed === null) return null;
-  const today = getTodayJst();
-  return { fortune: selectFortune(today, userSeed), today };
-}
-
 /** トップページ向け「今日のユーモア運勢」プレビューコンポーネント */
 export default function FortunePreview() {
-  // Lazy initializer: SSR 時は null (window 未定義)、クライアント初回レンダリング時に計算。
-  // DailyFortuneCard と同じパターン。ハイドレーション不一致はローディング表示で吸収する。
-  const [state] = useState(computeFortune);
+  // useSyncExternalStore を使い Hydration Error を防ぐ。
+  // server snapshot (getFortuneServerSnapshot) により SSR 時は null が返り、
+  // クライアント初回レンダリングでも最初は null からスタートするため
+  // SSR とクライアントの出力が一致する。
+  // マウント後は client snapshot (getFortuneSnapshot) が評価され運勢データが返る。
+  // スナップショット関数はモジュールスコープのキャッシュを返すため参照同一性が保たれ、
+  // 無限再レンダリングを防ぐ。
+  const state = useSyncExternalStore(
+    subscribeFortuneStore,
+    getFortuneSnapshot, // client snapshot
+    getFortuneServerSnapshot, // server snapshot (SSR時はnull)
+  );
 
   return (
     <section className={styles.section} aria-labelledby="home-fortune-heading">
