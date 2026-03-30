@@ -1,0 +1,156 @@
+/* PlayContentTabs — タブコンポーネント固有のスタイル */
+/* カードのスタイルは page.module.css から import するため、ここでは定義しない */
+
+/* ===== コンテナ ===== */
+.container {
+  /* タブバーとコンテンツグリッドをまとめるラッパー */
+}
+
+/* ===== タブバー ===== */
+/* flex で横並び、モバイルでは横スクロール対応のピル型タブバー */
+.tabBar {
+  display: flex;
+  gap: 0.375rem;
+  margin-bottom: 1.25rem;
+  /* モバイルでの横スクロールを許可 */
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  /* スクロールバーを非表示 */
+  scrollbar-width: none;
+}
+
+.tabBar::-webkit-scrollbar {
+  display: none;
+}
+
+/* 各タブ: ピル型のボタン */
+.tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* min-height: 44px でWCAG 2.5.5タップターゲットを確保 */
+  min-height: 44px;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  /* 色の変化をスムーズに */
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+  background-color: transparent;
+  color: var(--color-text-muted);
+}
+
+.tab:hover {
+  /* ホバーで薄い背景色 */
+  background-color: color-mix(in srgb, var(--color-primary) 8%, transparent);
+  color: var(--color-text);
+}
+
+/* アクティブタブ: primary カラーの背景と白文字 */
+.tabActive {
+  background-color: var(--color-primary);
+  color: #ffffff;
+}
+
+.tabActive:hover {
+  background-color: var(--color-primary);
+  color: #ffffff;
+  /* アクティブタブはホバーで変化させない */
+  filter: brightness(1.05);
+}
+
+/* キーボードナビゲーション用フォーカスリング */
+.tab:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ===== タブパネル ===== */
+.panel {
+  /* コンテンツグリッドとボタンのラッパー */
+}
+
+/* ===== コンテンツグリッド ===== */
+/* 仕様: デスクトップ3列、タブレット2列、モバイル2列 */
+/* page.module.css の featuredGrid（4列）と同仕様だが3列で定義 */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* タブレット: 2列 */
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* モバイル: 2列のまま維持、gap を縮小 */
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+}
+
+/* ===== 「もっと見る」ボタン ===== */
+/* page.module.css の seeAllLink スタイルを踏襲 */
+.showMoreWrapper {
+  text-align: center;
+  margin-top: 1.25rem;
+}
+
+.showMoreButton {
+  display: inline-block;
+  padding: 0.6rem 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  background-color: transparent;
+  border: 1px solid var(--color-primary);
+  border-radius: 999px;
+  cursor: pointer;
+  /* min-height: 44px でWCAG 2.5.5タップターゲットを確保 */
+  min-height: 44px;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+}
+
+.showMoreButton:hover {
+  background-color: var(--color-primary);
+  color: #ffffff;
+}
+
+.showMoreButton:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ===== ダークモード ===== */
+:global(:root.dark) .tab {
+  color: var(--color-text-muted);
+}
+
+:global(:root.dark) .tab:hover {
+  background-color: color-mix(in srgb, var(--color-primary) 15%, transparent);
+  color: var(--color-text);
+}
+
+:global(:root.dark) .tabActive {
+  background-color: var(--color-primary);
+  color: #ffffff;
+}
+
+:global(:root.dark) .tabActive:hover {
+  filter: brightness(1.1);
+}
