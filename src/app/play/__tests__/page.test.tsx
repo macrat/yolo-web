@@ -41,13 +41,13 @@ describe("PlayPage", () => {
     ).toBeInTheDocument();
   });
 
-  it("renders all 19 content cards", () => {
+  it("renders all 20 content cards", () => {
     render(<PlayPage />);
-    // すべてのカテゴリリストを取得してリンク合計数が19であることを確認
+    // すべてのカテゴリリストを取得してリンク合計数が20であることを確認
     const links = screen
       .getAllByRole("list", { name: /カテゴリ/ })
       .flatMap((list) => within(list).getAllByRole("link"));
-    expect(links.length).toBe(19);
+    expect(links.length).toBe(20);
   });
 
   it("renders links with /play/ path", () => {
@@ -103,12 +103,12 @@ describe("PlayPage", () => {
     ).toBeInTheDocument();
   });
 
-  it("category sections display correct number of items (fortune:1, personality:11, knowledge:3, game:4)", () => {
+  it("category sections display correct number of items (fortune:1, personality:12, knowledge:3, game:4)", () => {
     render(<PlayPage />);
     const [fortuneList, personalityList, knowledgeList, gameList] =
       screen.getAllByRole("list", { name: /カテゴリ/ });
     expect(within(fortuneList).getAllByRole("link").length).toBe(1);
-    expect(within(personalityList).getAllByRole("link").length).toBe(11);
+    expect(within(personalityList).getAllByRole("link").length).toBe(12);
     expect(within(knowledgeList).getAllByRole("link").length).toBe(3);
     expect(within(gameList).getAllByRole("link").length).toBe(4);
   });

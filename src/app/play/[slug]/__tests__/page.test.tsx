@@ -5,9 +5,9 @@ import { generateStaticParams, generateMetadata } from "../page";
 
 describe("play/[slug]/page", () => {
   describe("generateStaticParams", () => {
-    it("returns all 14 quiz slugs", async () => {
+    it("returns all 15 quiz slugs", async () => {
       const params = await generateStaticParams();
-      expect(params.length).toBe(14);
+      expect(params.length).toBe(15);
     });
 
     it("returns only quiz slugs (no game slugs)", async () => {
