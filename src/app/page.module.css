@@ -202,26 +202,6 @@
   border-top: 1px solid var(--color-border);
 }
 
-/* デスクトップ4列、モバイル2列のグリッド（デイリーパズルセクション用: 4件） */
-.featuredGrid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-/* 「まずはここから」専用グリッド: 3件を3列1行で整列させる（占いカテゴリ除外後の3件構成） */
-.featuredGrid3 {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
 /* /play ページのカードデザインと統一: border-top accent + グラデーション背景 */
 /* position: relative は毎日更新バッジの絶対配置の基準として必要 */
 .featuredCard {
@@ -464,18 +444,6 @@
 }
 
 /* ===== Responsive ===== */
-@media (max-width: 768px) {
-  /* タブレットでは2カラム */
-  .featuredGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  /* 「まずはここから」（3件）はタブレットでも3列を維持してバランスよく表示 */
-  .featuredGrid3 {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
 @media (max-width: 640px) {
   /* モバイルヒーローpaddingを縮小してコンテンツ表示エリアを拡張 */
   .hero {
@@ -524,42 +492,6 @@
   .heroDeco4 {
     font-size: 2rem;
     opacity: 0.15;
-  }
-
-  /* モバイルでも2カラムを維持する */
-  .featuredGrid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.75rem;
-  }
-
-  /* モバイルでは「まずはここから」（3件）を2列に変更（3件目は全幅で表示） */
-  .featuredGrid3 {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.75rem;
-  }
-
-  .featuredGrid3 > li:last-child {
-    grid-column: 1 / -1;
-  }
-
-  /* 全幅カード（3件目）は横並びレイアウトにしてアイコンとテキストを左右に配置 */
-  .featuredGrid3 > li:last-child .featuredCard {
-    flex-direction: row;
-    align-items: flex-start;
-    gap: 1rem;
-  }
-
-  /* 全幅カードのアイコンラッパーは縮小せずデスクトップサイズを維持 */
-  .featuredGrid3 > li:last-child .featuredCardIconWrapper {
-    width: 4rem;
-    height: 4rem;
-    flex-shrink: 0;
-    margin-bottom: 0;
-  }
-
-  /* 全幅カードではdescriptionを表示する（通常モバイルカードは非表示のまま） */
-  .featuredGrid3 > li:last-child .featuredCardDescription {
-    display: block;
   }
 
   /* モバイル向けカードのコンパクト化 */

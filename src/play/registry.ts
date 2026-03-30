@@ -88,20 +88,7 @@ export const DAILY_UPDATE_SLUGS: ReadonlySet<string> = new Set([
   "irodori",
 ]);
 
-/**
- * トップページ専用 — 「まずはここから」セクションに表示する固定コンテンツのスラグ一覧。
- * 占いカテゴリはFortunePreviewで表示、ゲームカテゴリはデイリーパズルセクションで表示するため、
- * 性格診断・知識テストカテゴリから代表作を選出。3件とする。
- * 初回訪問者が迷わず体験できる導線として機能する。
- * トップページのみで使用される定数（/play ページは getPlayFeaturedContents() を使用）。
- */
-export const FEATURED_SLUGS: ReadonlyArray<string> = [
-  "animal-personality", // 性格診断: アニマル性格診断
-  "kanji-level", // 知識テスト: 漢字レベル診断
-  "character-personality", // 性格診断: キャラクター性格診断
-];
-
-/** 全 PlayContentMeta の配列（ゲーム4種 + クイズ14種 + Fortune 1種 = 19種、表示順を保持） */
+/** 全 PlayContentMeta の配列（ゲーム4種 + クイズ15種 + Fortune 1種 = 20種、表示順を保持） */
 export const allPlayContents: PlayContentMeta[] = [
   ...allGameMetas.map(gameMetaToPlayContentMeta),
   ...allQuizMetas.map(quizMetaToPlayContentMeta),
@@ -134,45 +121,58 @@ export const quizQuestionCountBySlug: Map<string, number> = new Map(
 );
 
 /**
- * トップページ「まずはここから」セクション用の固定コンテンツ配列を返す。
- * FEATURED_SLUGS に対応するコンテンツをレジストリから取得する。
- * トップページのみで使用される関数（/play ページは getPlayFeaturedContents() を使用）。
+ * ヒーローセクションのピックアップ3件を自動選出する。
+ *
+ * 選出ルール:
+ * - fortune カテゴリ（daily）は除外
+ * - personality, knowledge, game の3カテゴリから各1件ずつ、計3件を選出
+ * - 各カテゴリ内の選出基準は publishedAt の新しい順
  */
-export function getFeaturedContents(): PlayContentMeta[] {
-  return FEATURED_SLUGS.flatMap((slug) => {
-    const content = playContentBySlug.get(slug);
-    return content ? [content] : [];
+export function getHeroPickupContents(): PlayContentMeta[] {
+  const categories: PlayContentMeta["category"][] = [
+    "personality",
+    "knowledge",
+    "game",
+  ];
+  return categories.flatMap((cat) => {
+    const items = getPlayContentsByCategory(cat);
+    const sorted = [...items].sort((a, b) =>
+      b.publishedAt.localeCompare(a.publishedAt),
+    );
+    return sorted.length > 0 ? [sorted[0]] : [];
   });
 }
 
 /**
- * 「もっと診断してみよう」セクションに表示する厳選コンテンツのスラグ一覧。
+ * 「すべて」タブのデフォルト6件を選出する。
  *
- * 選定基準:
- * - fortune カテゴリは FortunePreview セクションで表示済みのため除外
- * - "animal-personality" と "kanji-level" は「まずはここから」で表示済みのため除外
- * - 4列グリッド（featuredGrid）で整列させるために4件に統一
- * - 除外理由:
- *   - "character-personality": 互換性診断の特殊処理が重く、トップ導線には不向き
- *   - "science-thinking": 20問と問数が多くトップページのエントリーには不向き
+ * 選出ルール:
+ * - fortune カテゴリ（daily）は除外
+ * - 各カテゴリから最低1件を確保: personality 4件 + knowledge 1件 + game 1件
+ * - 各カテゴリ内は publishedAt 新しい順
  */
-export const DIAGNOSIS_SLUGS: ReadonlyArray<string> = [
-  "music-personality", // personality: 音楽性格診断
-  "yoji-personality", // personality: 四字熟語で性格診断
-  "kotowaza-level", // knowledge: ことわざレベル診断
-  "yoji-level", // knowledge: 四字熟語レベル診断
-];
+export function getDefaultTabContents(): PlayContentMeta[] {
+  const config: { category: PlayContentMeta["category"]; count: number }[] = [
+    { category: "personality", count: 4 },
+    { category: "knowledge", count: 1 },
+    { category: "game", count: 1 },
+  ];
+  return config.flatMap(({ category, count }) => {
+    const items = getPlayContentsByCategory(category);
+    const sorted = [...items].sort((a, b) =>
+      b.publishedAt.localeCompare(a.publishedAt),
+    );
+    return sorted.slice(0, count);
+  });
+}
 
 /**
- * 「もっと診断してみよう」セクション用の厳選コンテンツ配列を返す。
- * DIAGNOSIS_SLUGS に対応するコンテンツをレジストリから取得する。
- * トップページから参照される関数。
+ * タブUI用に fortune を除く全コンテンツを返す（19件）。
+ *
+ * fortune カテゴリは FortunePreview セクションで別途表示するため除外する。
  */
-export function getDiagnosisContents(): PlayContentMeta[] {
-  return DIAGNOSIS_SLUGS.flatMap((slug) => {
-    const content = playContentBySlug.get(slug);
-    return content ? [content] : [];
-  });
+export function getNonFortuneContents(): PlayContentMeta[] {
+  return allPlayContents.filter((c) => c.category !== "fortune");
 }
 
 /**
@@ -194,7 +194,6 @@ export interface PlayFeaturedContent extends PlayContentMeta {
 
 /**
  * /play ページ専用 — 「イチオシ」セクションに表示する固定コンテンツとおすすめ理由の一覧。
- * FEATURED_SLUGS（トップページ専用）とは別に、/play ページ向けに厳選した3件。
  * 各コンテンツに訪問者の興味を引くおすすめ理由を付与することで、クリック率向上を図る。
  */
 export const PLAY_FEATURED_ITEMS: ReadonlyArray<PlayFeaturedItem> = [

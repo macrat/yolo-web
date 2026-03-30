@@ -7,12 +7,12 @@ import {
   playContentBySlug,
   getPlayContentsByCategory,
   getAllPlaySlugs,
-  FEATURED_SLUGS,
   DAILY_UPDATE_SLUGS,
-  DIAGNOSIS_SLUGS,
-  getDiagnosisContents,
   PLAY_FEATURED_ITEMS,
   getPlayFeaturedContents,
+  getHeroPickupContents,
+  getDefaultTabContents,
+  getNonFortuneContents,
 } from "../registry";
 import { allGameMetas } from "@/play/games/registry";
 import { allQuizMetas } from "@/play/quiz/registry";
@@ -205,7 +205,7 @@ describe("getPlayContentsByCategory (20種)", () => {
     }
   });
 
-  test("total across all categories equals 19", () => {
+  test("total across all categories equals 20", () => {
     const game = getPlayContentsByCategory("game").length;
     const knowledge = getPlayContentsByCategory("knowledge").length;
     const personality = getPlayContentsByCategory("personality").length;
@@ -240,42 +240,6 @@ describe("getAllPlaySlugs", () => {
     expect(slugs).toHaveLength(20);
     for (const slug of EXPECTED_GAME_SLUGS) {
       expect(slugs).toContain(slug);
-    }
-  });
-});
-
-describe("FEATURED_SLUGS (共有定数)", () => {
-  test("is exported from registry", () => {
-    expect(FEATURED_SLUGS).toBeDefined();
-  });
-
-  test("contains exactly 3 slugs (占いカテゴリは FortunePreview で表示するため除外)", () => {
-    expect(FEATURED_SLUGS).toHaveLength(3);
-  });
-
-  test("does NOT include 'daily' (占いカテゴリは FortunePreview セクションで表示するため除外)", () => {
-    expect(FEATURED_SLUGS).not.toContain("daily");
-  });
-
-  test("includes 'animal-personality' (性格診断カテゴリ代表)", () => {
-    expect(FEATURED_SLUGS).toContain("animal-personality");
-  });
-
-  test("includes 'kanji-level' (知識テストカテゴリ代表)", () => {
-    expect(FEATURED_SLUGS).toContain("kanji-level");
-  });
-
-  test("includes 'character-personality' (性格診断カテゴリ追加代表)", () => {
-    expect(FEATURED_SLUGS).toContain("character-personality");
-  });
-
-  test("does NOT include 'irodori' (ゲームカテゴリはデイリーパズルセクションで表示するため除外)", () => {
-    expect(FEATURED_SLUGS).not.toContain("irodori");
-  });
-
-  test("each slug exists in playContentBySlug", () => {
-    for (const slug of FEATURED_SLUGS) {
-      expect(playContentBySlug.has(slug)).toBe(true);
     }
   });
 });
@@ -319,60 +283,6 @@ describe("quizMetaToPlayContentMeta - shortTitle フィールド (7-10)", () => 
     const content = playContentBySlug.get("yoji-personality");
     expect(content).toBeDefined();
     expect(content?.shortTitle).toBe("四字熟語で性格診断");
-  });
-});
-
-describe("DIAGNOSIS_SLUGS (7-8: 診断セクション4件統一)", () => {
-  test("is exported from registry", () => {
-    expect(DIAGNOSIS_SLUGS).toBeDefined();
-  });
-
-  test("contains exactly 4 slugs (4件×4列に統一)", () => {
-    expect(DIAGNOSIS_SLUGS).toHaveLength(4);
-  });
-
-  test("contains 'music-personality'", () => {
-    expect(DIAGNOSIS_SLUGS).toContain("music-personality");
-  });
-
-  test("contains 'yoji-personality'", () => {
-    expect(DIAGNOSIS_SLUGS).toContain("yoji-personality");
-  });
-
-  test("contains 'kotowaza-level'", () => {
-    expect(DIAGNOSIS_SLUGS).toContain("kotowaza-level");
-  });
-
-  test("contains 'yoji-level'", () => {
-    expect(DIAGNOSIS_SLUGS).toContain("yoji-level");
-  });
-
-  test("does NOT contain 'character-personality' (ゲームよりcharacter-personalityはキャラクター多く処理重いため除外)", () => {
-    expect(DIAGNOSIS_SLUGS).not.toContain("character-personality");
-  });
-
-  test("does NOT contain 'science-thinking' (20問と問数が多くトップページには不向きなため除外)", () => {
-    expect(DIAGNOSIS_SLUGS).not.toContain("science-thinking");
-  });
-
-  test("each slug exists in playContentBySlug", () => {
-    for (const slug of DIAGNOSIS_SLUGS) {
-      expect(playContentBySlug.has(slug)).toBe(true);
-    }
-  });
-});
-
-describe("getDiagnosisContents (7-8: 診断セクション4件統一)", () => {
-  test("returns exactly 4 contents", () => {
-    const contents = getDiagnosisContents();
-    expect(contents).toHaveLength(4);
-  });
-
-  test("all returned contents exist in playContentBySlug", () => {
-    const contents = getDiagnosisContents();
-    for (const content of contents) {
-      expect(playContentBySlug.has(content.slug)).toBe(true);
-    }
   });
 });
 
@@ -494,16 +404,166 @@ describe("getPlayFeaturedContents (B-209: /playページイチオシセクショ
   });
 });
 
-describe("PLAY_FEATURED_ITEMS — トップページの FEATURED_SLUGS/DIAGNOSIS_SLUGS との重複なし (B-209レビュー修正4)", () => {
-  test("PLAY_FEATURED_ITEMS の各 slug が FEATURED_SLUGS に含まれていない", () => {
-    for (const item of PLAY_FEATURED_ITEMS) {
-      expect(FEATURED_SLUGS).not.toContain(item.slug);
+describe("getHeroPickupContents (カテゴリベース自動選出)", () => {
+  test("returns exactly 3 contents", () => {
+    const contents = getHeroPickupContents();
+    expect(contents).toHaveLength(3);
+  });
+
+  test("contains one content from each of personality, knowledge, game categories", () => {
+    const contents = getHeroPickupContents();
+    const categories = contents.map((c) => c.category);
+    expect(categories).toContain("personality");
+    expect(categories).toContain("knowledge");
+    expect(categories).toContain("game");
+  });
+
+  test("does NOT include any fortune category content", () => {
+    const contents = getHeroPickupContents();
+    for (const content of contents) {
+      expect(content.category).not.toBe("fortune");
     }
   });
 
-  test("PLAY_FEATURED_ITEMS の各 slug が DIAGNOSIS_SLUGS に含まれていない", () => {
-    for (const item of PLAY_FEATURED_ITEMS) {
-      expect(DIAGNOSIS_SLUGS).not.toContain(item.slug);
+  test("returns the newest content by publishedAt for each category", () => {
+    const contents = getHeroPickupContents();
+
+    for (const content of contents) {
+      const categoryItems = getPlayContentsByCategory(content.category);
+      const sorted = [...categoryItems].sort((a, b) =>
+        b.publishedAt.localeCompare(a.publishedAt),
+      );
+      expect(content.slug).toBe(sorted[0].slug);
+    }
+  });
+
+  test("each returned content exists in playContentBySlug", () => {
+    const contents = getHeroPickupContents();
+    for (const content of contents) {
+      expect(playContentBySlug.has(content.slug)).toBe(true);
+    }
+  });
+
+  test("returned contents are in the order: personality, knowledge, game", () => {
+    const contents = getHeroPickupContents();
+    expect(contents[0].category).toBe("personality");
+    expect(contents[1].category).toBe("knowledge");
+    expect(contents[2].category).toBe("game");
+  });
+});
+
+describe("getDefaultTabContents (タブUI用デフォルト6件)", () => {
+  test("returns exactly 6 contents", () => {
+    const contents = getDefaultTabContents();
+    expect(contents).toHaveLength(6);
+  });
+
+  test("does NOT include any fortune category content", () => {
+    const contents = getDefaultTabContents();
+    for (const content of contents) {
+      expect(content.category).not.toBe("fortune");
+    }
+  });
+
+  test("includes exactly 4 personality contents", () => {
+    const contents = getDefaultTabContents();
+    const personalityContents = contents.filter(
+      (c) => c.category === "personality",
+    );
+    expect(personalityContents).toHaveLength(4);
+  });
+
+  test("includes exactly 1 knowledge content", () => {
+    const contents = getDefaultTabContents();
+    const knowledgeContents = contents.filter(
+      (c) => c.category === "knowledge",
+    );
+    expect(knowledgeContents).toHaveLength(1);
+  });
+
+  test("includes exactly 1 game content", () => {
+    const contents = getDefaultTabContents();
+    const gameContents = contents.filter((c) => c.category === "game");
+    expect(gameContents).toHaveLength(1);
+  });
+
+  test("personality contents are the 4 newest by publishedAt", () => {
+    const contents = getDefaultTabContents();
+    const personalityContents = contents.filter(
+      (c) => c.category === "personality",
+    );
+    const allPersonality = getPlayContentsByCategory("personality");
+    const sorted = [...allPersonality].sort((a, b) =>
+      b.publishedAt.localeCompare(a.publishedAt),
+    );
+    const expectedSlugs = sorted.slice(0, 4).map((c) => c.slug);
+    for (const content of personalityContents) {
+      expect(expectedSlugs).toContain(content.slug);
+    }
+  });
+
+  test("knowledge content is the newest by publishedAt", () => {
+    const contents = getDefaultTabContents();
+    const knowledgeContent = contents.find((c) => c.category === "knowledge");
+    expect(knowledgeContent).toBeDefined();
+    const allKnowledge = getPlayContentsByCategory("knowledge");
+    const sorted = [...allKnowledge].sort((a, b) =>
+      b.publishedAt.localeCompare(a.publishedAt),
+    );
+    expect(knowledgeContent!.slug).toBe(sorted[0].slug);
+  });
+
+  test("game content is the newest by publishedAt", () => {
+    const contents = getDefaultTabContents();
+    const gameContent = contents.find((c) => c.category === "game");
+    expect(gameContent).toBeDefined();
+    const allGame = getPlayContentsByCategory("game");
+    const sorted = [...allGame].sort((a, b) =>
+      b.publishedAt.localeCompare(a.publishedAt),
+    );
+    expect(gameContent!.slug).toBe(sorted[0].slug);
+  });
+
+  test("each returned content exists in playContentBySlug", () => {
+    const contents = getDefaultTabContents();
+    for (const content of contents) {
+      expect(playContentBySlug.has(content.slug)).toBe(true);
+    }
+  });
+});
+
+describe("getNonFortuneContents (タブUI用 fortune 除外全件)", () => {
+  test("returns 19 contents (20 total minus 1 fortune)", () => {
+    const contents = getNonFortuneContents();
+    expect(contents).toHaveLength(19);
+  });
+
+  test("does NOT include any fortune category content", () => {
+    const contents = getNonFortuneContents();
+    for (const content of contents) {
+      expect(content.category).not.toBe("fortune");
+    }
+  });
+
+  test("does NOT include slug 'daily'", () => {
+    const contents = getNonFortuneContents();
+    const slugs = contents.map((c) => c.slug);
+    expect(slugs).not.toContain("daily");
+  });
+
+  test("includes all 4 game slugs", () => {
+    const contents = getNonFortuneContents();
+    const slugs = contents.map((c) => c.slug);
+    for (const slug of EXPECTED_GAME_SLUGS) {
+      expect(slugs).toContain(slug);
+    }
+  });
+
+  test("includes all quiz slugs", () => {
+    const contents = getNonFortuneContents();
+    const slugs = contents.map((c) => c.slug);
+    for (const quizMeta of allQuizMetas) {
+      expect(slugs).toContain(quizMeta.slug);
     }
   });
 });
