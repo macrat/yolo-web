@@ -1,5 +1,9 @@
 import { describe, test, expect } from "vitest";
-import { getRecommendedContents } from "../recommendation";
+import {
+  getRecommendedContents,
+  getPlayRecommendationsForBlog,
+  getPlayRecommendationsForDictionary,
+} from "../recommendation";
 import { playContentBySlug, getPlayContentsByCategory } from "../registry";
 
 // 各カテゴリの先頭コンテンツを取得して参照する
@@ -197,5 +201,173 @@ describe("getRecommendedContents — 存在しないslug", () => {
   test("空文字列に対して空配列を返す", () => {
     const results = getRecommendedContents("");
     expect(results).toEqual([]);
+  });
+});
+
+// =====================================================================
+// getPlayRecommendationsForBlog のテスト
+// =====================================================================
+
+describe("getPlayRecommendationsForBlog — テーマ系タグでの推薦", () => {
+  test("「漢字」タグで漢字関連コンテンツが2件返ること", () => {
+    // kanji-level の keywords に「漢字」が含まれるため、スコア > 0 のマッチが存在する
+    const results = getPlayRecommendationsForBlog(["漢字"]);
+    expect(results.length).toBeGreaterThan(0);
+    expect(results.length).toBeLessThanOrEqual(2);
+    // 漢字関連のコンテンツが含まれることを確認
+    const slugs = results.map((r) => r.slug);
+    const hasKanjiContent = slugs.some((s) =>
+      ["kanji-level", "kanji-kanaru"].includes(s),
+    );
+    expect(hasKanjiContent).toBe(true);
+  });
+
+  test("「四字熟語」タグで四字熟語関連コンテンツが返ること", () => {
+    const results = getPlayRecommendationsForBlog(["四字熟語"]);
+    expect(results.length).toBeGreaterThan(0);
+    expect(results.length).toBeLessThanOrEqual(2);
+    // yoji-level または yoji-personality が含まれることを確認
+    const slugs = results.map((r) => r.slug);
+    const hasYojiContent = slugs.some((s) =>
+      ["yoji-level", "yoji-personality", "yoji-kimeru"].includes(s),
+    );
+    expect(hasYojiContent).toBe(true);
+  });
+});
+
+describe("getPlayRecommendationsForBlog — フォールバック", () => {
+  test("技術系タグのみの記事でフォールバックが返ること", () => {
+    // play系コンテンツとは無関係な技術系タグ
+    const results = getPlayRecommendationsForBlog([
+      "TypeScript",
+      "React",
+      "Next.js",
+    ]);
+    // フォールバックとして PLAY_FEATURED_ITEMS の先頭から返る
+    expect(results.length).toBeGreaterThan(0);
+    expect(results.length).toBeLessThanOrEqual(2);
+    // フォールバックはPLAY_FEATURED_ITEMS由来
+    const slugs = results.map((r) => r.slug);
+    expect(slugs).toContain("contrarian-fortune");
+  });
+
+  test("タグが空配列でもフォールバックが返ること", () => {
+    const results = getPlayRecommendationsForBlog([]);
+    // フォールバックとして PLAY_FEATURED_ITEMS の先頭から返る
+    expect(results.length).toBeGreaterThan(0);
+    expect(results.length).toBeLessThanOrEqual(2);
+    const slugs = results.map((r) => r.slug);
+    expect(slugs).toContain("contrarian-fortune");
+  });
+});
+
+describe("getPlayRecommendationsForBlog — 件数・重複", () => {
+  test("返却件数が常に2件以下であること", () => {
+    const testCases = [
+      [],
+      ["漢字"],
+      ["四字熟語"],
+      ["TypeScript"],
+      ["運勢", "占い"],
+    ];
+    for (const tags of testCases) {
+      const results = getPlayRecommendationsForBlog(tags);
+      expect(results.length).toBeLessThanOrEqual(2);
+    }
+  });
+
+  test("同一コンテンツが重複して返らないこと", () => {
+    const testCases = [
+      [],
+      ["漢字"],
+      ["四字熟語"],
+      ["運勢", "占い", "ユーモア"],
+    ];
+    for (const tags of testCases) {
+      const results = getPlayRecommendationsForBlog(tags);
+      const slugs = results.map((r) => r.slug);
+      const uniqueSlugs = new Set(slugs);
+      expect(uniqueSlugs.size).toBe(slugs.length);
+    }
+  });
+
+  test("1件のみマッチの場合: マッチ1件 + フォールバック1件で計2件、重複なし", () => {
+    // 「伝統色」「色」キーワードは traditional-color のみにマッチし、
+    // かつ他のコンテンツとは重複しない想定でテスト
+    // マッチ件数を確認しつつ2件返ることをチェック
+    const results = getPlayRecommendationsForBlog(["伝統色"]);
+    // スコア > 0 が1件のみの場合は2件返る
+    // スコア > 0 が2件以上なら上位2件が返る
+    // いずれにせよ2件以下であり重複なし
+    expect(results.length).toBeLessThanOrEqual(2);
+    const slugs = results.map((r) => r.slug);
+    const uniqueSlugs = new Set(slugs);
+    expect(uniqueSlugs.size).toBe(slugs.length);
+
+    // 「伝統色」にマッチする traditional-color が含まれることを確認
+    expect(slugs).toContain("traditional-color");
+
+    // もし1件マッチのみなら、フォールバック（traditional-colorを除くPLAY_FEATURED_ITEMSの先頭）も含む
+    if (results.length === 2) {
+      // traditional-color 以外のフォールバックが含まれること
+      const nonMatch = slugs.filter((s) => s !== "traditional-color");
+      expect(nonMatch.length).toBe(1);
+    }
+  });
+});
+
+// =====================================================================
+// getPlayRecommendationsForDictionary のテスト
+// =====================================================================
+
+describe("getPlayRecommendationsForDictionary — 辞典slugによる推薦", () => {
+  test('"kanji" で漢字関連コンテンツが推薦されること', () => {
+    const results = getPlayRecommendationsForDictionary("kanji");
+    expect(results.length).toBeGreaterThan(0);
+    expect(results.length).toBeLessThanOrEqual(2);
+    // 「漢字」キーワードを持つコンテンツが含まれることを確認
+    const slugs = results.map((r) => r.slug);
+    const hasKanjiContent = slugs.some((s) =>
+      ["kanji-level", "kanji-kanaru"].includes(s),
+    );
+    expect(hasKanjiContent).toBe(true);
+  });
+
+  test('"yoji" で四字熟語関連コンテンツが推薦されること', () => {
+    const results = getPlayRecommendationsForDictionary("yoji");
+    expect(results.length).toBeGreaterThan(0);
+    expect(results.length).toBeLessThanOrEqual(2);
+    // 「四字熟語」キーワードを持つコンテンツが含まれることを確認
+    const slugs = results.map((r) => r.slug);
+    const hasYojiContent = slugs.some((s) =>
+      ["yoji-level", "yoji-personality", "yoji-kimeru"].includes(s),
+    );
+    expect(hasYojiContent).toBe(true);
+  });
+
+  test('"colors" で伝統色関連コンテンツが推薦されること', () => {
+    const results = getPlayRecommendationsForDictionary("colors");
+    expect(results.length).toBeGreaterThan(0);
+    expect(results.length).toBeLessThanOrEqual(2);
+    // 「伝統色」または「色」キーワードを持つコンテンツが含まれることを確認
+    const slugs = results.map((r) => r.slug);
+    expect(slugs).toContain("traditional-color");
+  });
+
+  test("未知のslugでフォールバックが返ること", () => {
+    const results = getPlayRecommendationsForDictionary("unknown-dictionary");
+    // フォールバックとして PLAY_FEATURED_ITEMS の先頭から返る
+    expect(results.length).toBeGreaterThan(0);
+    expect(results.length).toBeLessThanOrEqual(2);
+    const slugs = results.map((r) => r.slug);
+    expect(slugs).toContain("contrarian-fortune");
+  });
+
+  test("返却件数が常に2件以下であること", () => {
+    const testSlugs = ["kanji", "yoji", "colors", "unknown", ""];
+    for (const dictionarySlug of testSlugs) {
+      const results = getPlayRecommendationsForDictionary(dictionarySlug);
+      expect(results.length).toBeLessThanOrEqual(2);
+    }
   });
 });

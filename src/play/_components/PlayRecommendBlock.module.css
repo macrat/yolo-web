@@ -1,0 +1,96 @@
+/* 記事・辞典ページ向けの関連コンテンツ推薦ブロック。
+ * ページコンテンツに溶け込みつつ、明確な回遊導線として機能するデザイン。
+ * accentColor を左ボーダーとして使用し、各コンテンツの個性を視覚的に表現する。
+ * 背景色で RelatedArticles セクションとの視覚的差別化を図る。
+ */
+
+.container {
+  margin-top: 2rem;
+  background-color: var(--color-bg-secondary);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  border-top: none;
+}
+
+.heading {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: var(--color-text);
+}
+
+.subtext {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-bottom: 0.75rem;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  border-left: 3px solid transparent;
+  /* container が bg-secondary のため、カード自体は bg で差別化する */
+  background-color: var(--color-bg);
+  border-radius: 0.5rem;
+  text-decoration: none;
+  transition: background-color 0.15s;
+}
+
+.card:hover {
+  background-color: var(--color-border);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.title {
+  font-weight: 600;
+  color: var(--color-text);
+  font-size: 0.95rem;
+}
+
+.meta {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.description {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  line-height: 1.4;
+}
+
+.cta {
+  display: inline-block;
+  font-size: 0.85rem;
+  color: var(--color-primary);
+  font-weight: 500;
+  margin-top: 0.25rem;
+  transition: transform 0.15s;
+}
+
+.card:hover .cta {
+  transform: translateX(2px);
+}

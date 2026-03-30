@@ -2,6 +2,7 @@ import { expect, test } from "vitest";
 import { render, screen } from "@testing-library/react";
 import DictionaryDetailLayout from "../DictionaryDetailLayout";
 import type { DictionaryMeta } from "@/dictionary/_lib/types";
+import type { PlayContentMeta } from "@/play/types";
 
 const mockMeta: DictionaryMeta = {
   slug: "test-dict",
@@ -208,4 +209,72 @@ test("DictionaryDetailLayout outputs multiple JSON-LD script tags for array", ()
   expect(scripts.length).toBe(4);
   expect(scripts[0].textContent).toContain("DefinedTerm");
   expect(scripts[1].textContent).toContain("WebPage");
+});
+
+const mockPlayRecommendations: PlayContentMeta[] = [
+  {
+    slug: "test-play-1",
+    title: "テスト占いコンテンツ",
+    description: "テスト用の占いコンテンツです",
+    shortDescription: "テスト占い",
+    icon: "🔮",
+    accentColor: "#8B5CF6",
+    keywords: ["占い", "テスト"],
+    publishedAt: "2026-01-01T00:00:00+09:00",
+    trustLevel: "generated",
+    contentType: "fortune",
+    category: "fortune",
+  },
+];
+
+test("DictionaryDetailLayout renders PlayRecommendBlock when playRecommendations is provided", () => {
+  render(
+    <DictionaryDetailLayout
+      meta={mockMeta}
+      breadcrumbItems={mockBreadcrumbItems}
+      jsonLd={mockJsonLd}
+      shareUrl="/dictionary/test/item"
+      shareTitle="テスト項目"
+      playRecommendations={mockPlayRecommendations}
+    >
+      <div>Content</div>
+    </DictionaryDetailLayout>,
+  );
+  // PlayRecommendBlock renders with the default heading "こちらもおすすめ"
+  expect(screen.getByText("こちらもおすすめ")).toBeInTheDocument();
+});
+
+test("DictionaryDetailLayout does not render PlayRecommendBlock when playRecommendations is undefined", () => {
+  render(
+    <DictionaryDetailLayout
+      meta={mockMeta}
+      breadcrumbItems={mockBreadcrumbItems}
+      jsonLd={mockJsonLd}
+      shareUrl="/dictionary/test/item"
+      shareTitle="テスト項目"
+    >
+      <div>Content</div>
+    </DictionaryDetailLayout>,
+  );
+  expect(
+    screen.queryByText("この記事を読んだあなたに"),
+  ).not.toBeInTheDocument();
+});
+
+test("DictionaryDetailLayout does not render PlayRecommendBlock when playRecommendations is empty array", () => {
+  render(
+    <DictionaryDetailLayout
+      meta={mockMeta}
+      breadcrumbItems={mockBreadcrumbItems}
+      jsonLd={mockJsonLd}
+      shareUrl="/dictionary/test/item"
+      shareTitle="テスト項目"
+      playRecommendations={[]}
+    >
+      <div>Content</div>
+    </DictionaryDetailLayout>,
+  );
+  expect(
+    screen.queryByText("この記事を読んだあなたに"),
+  ).not.toBeInTheDocument();
 });

@@ -4,6 +4,7 @@ import { KANJI_DICTIONARY_META } from "@/dictionary/_lib/dictionary-meta";
 import KanjiDetail from "@/dictionary/_components/kanji/KanjiDetail";
 import { generateKanjiPageMetadata, generateKanjiJsonLd } from "@/lib/seo";
 import { getKanjiByChar, getAllKanjiChars } from "@/dictionary/_lib/kanji";
+import { getPlayRecommendationsForDictionary } from "@/play/recommendation";
 
 export function generateStaticParams() {
   return getAllKanjiChars().map((char) => ({ char }));
@@ -32,6 +33,7 @@ export default async function KanjiDetailPage({
   if (!kanji) notFound();
 
   const jsonLd = generateKanjiJsonLd(kanji);
+  const playRecommendations = getPlayRecommendationsForDictionary("kanji");
 
   return (
     <DictionaryDetailLayout
@@ -45,6 +47,7 @@ export default async function KanjiDetailPage({
       jsonLd={jsonLd}
       shareUrl={`/dictionary/kanji/${encodeURIComponent(kanji.character)}`}
       shareTitle={`漢字「${kanji.character}」の情報`}
+      playRecommendations={playRecommendations}
     >
       <KanjiDetail kanji={kanji} />
     </DictionaryDetailLayout>

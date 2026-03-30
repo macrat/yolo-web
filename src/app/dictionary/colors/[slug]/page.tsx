@@ -5,6 +5,7 @@ import { COLOR_DICTIONARY_META } from "@/dictionary/_lib/dictionary-meta";
 import ColorDetail from "@/dictionary/_components/color/ColorDetail";
 import { generateColorPageMetadata, generateColorJsonLd } from "@/lib/seo";
 import { getColorBySlug, getAllColorSlugs } from "@/dictionary/_lib/colors";
+import { getPlayRecommendationsForDictionary } from "@/play/recommendation";
 
 export function generateStaticParams() {
   return getAllColorSlugs().map((slug) => ({ slug }));
@@ -33,6 +34,7 @@ export default async function ColorDetailPage({
   // 辞典固有の JSON-LD のみ渡す。
   // breadcrumb JSON-LD は Breadcrumb コンポーネントが自動出力するため手動呼び出し不要。
   const jsonLd = generateColorJsonLd(color);
+  const playRecommendations = getPlayRecommendationsForDictionary("colors");
 
   return (
     <DictionaryDetailLayout
@@ -46,6 +48,7 @@ export default async function ColorDetailPage({
       jsonLd={jsonLd}
       shareUrl={`/dictionary/colors/${color.slug}`}
       shareTitle={`${color.name}（${color.romaji}）`}
+      playRecommendations={playRecommendations}
     >
       <ColorDetail color={color} />
     </DictionaryDetailLayout>
