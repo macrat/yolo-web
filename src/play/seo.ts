@@ -23,6 +23,10 @@ export function resolveDisplayCategory(meta: PlayContentMeta): string {
 /**
  * PlayContentMeta から Next.js の Metadata オブジェクトを生成する。
  *
+ * - seoTitle が設定されている場合は、title タグと OG タイトルに優先的に使用する。
+ *   seoTitle は「${seoTitle} | ${SITE_NAME}」の形式になる。
+ * - seoTitle がない場合は従来通り「${title} - ${displayCategory} | ${SITE_NAME}」形式。
+ *
  * @param meta - 対象コンテンツのメタデータ
  * @param overrides - 上書きしたい Metadata フィールド（任意）
  */
@@ -36,12 +40,20 @@ export function generatePlayMetadata(
   // 使用するため、OGP URL は canonical URL をベースに構築する。
   const ogImageUrl = `${canonicalUrl}/opengraph-image`;
 
+  // seoTitle が設定されている場合はそれを使用、なければ従来のタイトル形式
+  const titleTag = meta.seoTitle
+    ? `${meta.seoTitle} | ${SITE_NAME}`
+    : `${meta.title} - ${displayCategory} | ${SITE_NAME}`;
+  const ogTitle = meta.seoTitle
+    ? meta.seoTitle
+    : `${meta.title} - ${displayCategory}`;
+
   const base: Metadata = {
-    title: `${meta.title} - ${displayCategory} | ${SITE_NAME}`,
+    title: titleTag,
     description: meta.description,
     keywords: meta.keywords,
     openGraph: {
-      title: `${meta.title} - ${displayCategory}`,
+      title: ogTitle,
       description: meta.description,
       type: "website",
       url: canonicalUrl,
@@ -49,7 +61,7 @@ export function generatePlayMetadata(
     },
     twitter: {
       card: "summary_large_image",
-      title: `${meta.title} - ${displayCategory}`,
+      title: ogTitle,
       description: meta.description,
       images: [ogImageUrl],
     },

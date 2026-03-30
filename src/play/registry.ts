@@ -34,6 +34,7 @@ export function gameMetaToPlayContentMeta(gameMeta: GameMeta): PlayContentMeta {
  * - questionCount は PlayContentMeta に存在しないため変換時に除外する
  * - contentType は "quiz" 固定
  * - category は QuizMeta の category をそのままマッピング（"knowledge" → "knowledge", "personality" → "personality"）
+ * - seoTitle が設定されている場合は PlayContentMeta にも引き継ぐ
  */
 export function quizMetaToPlayContentMeta(quizMeta: QuizMeta): PlayContentMeta {
   return {
@@ -51,6 +52,7 @@ export function quizMetaToPlayContentMeta(quizMeta: QuizMeta): PlayContentMeta {
     trustNote: quizMeta.trustNote,
     contentType: "quiz",
     category: quizMeta.category,
+    seoTitle: quizMeta.seoTitle,
   };
 }
 

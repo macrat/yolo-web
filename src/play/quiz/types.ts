@@ -22,6 +22,20 @@ export type QuizQuestion = {
   explanation?: string;
 };
 
+/**
+ * 結果ページに表示する追加コンテンツセクション。
+ * personalityカテゴリのクイズ結果で「わかる!」「シェアしたい」感を高めるために使用する。
+ * knowledgeカテゴリ（スコアベース）には使用しない。
+ */
+export interface QuizResultDetailedContent {
+  /** あなたの特徴（箇条書き3-5項目、各1-2文） */
+  traits: string[];
+  /** あるある・日常での行動パターン（箇条書き3-5項目、共感を呼ぶ具体的シーン） */
+  behaviors: string[];
+  /** ひとことアドバイスまたはメッセージ（ポジティブな1-2文） */
+  advice: string;
+}
+
 /** A result pattern */
 export type QuizResult = {
   /** URL-safe ID (e.g. 'master', 'ai-iro') */
@@ -38,6 +52,12 @@ export type QuizResult = {
   recommendation?: string;
   /** Recommendation link URL */
   recommendationLink?: string;
+  /**
+   * 結果ページに表示する追加コンテンツ（オプショナル）。
+   * 設定されている場合のみ結果ページに追加セクションが表示され、SEOインデックス対象になる。
+   * personalityカテゴリのクイズのみで使用する。
+   */
+  detailedContent?: QuizResultDetailedContent;
 };
 
 /** Quiz metadata used in the registry */
@@ -77,6 +97,13 @@ export interface QuizMeta {
     question: string;
     answer: string;
   }>;
+
+  /**
+   * 検索エンジン向けの最適化されたページタイトル（オプショナル）。
+   * 設定されている場合、generatePlayMetadata で title タグと OG タイトルに使用される。
+   * 未設定の場合は title + displayCategory の組み合わせが使用される。
+   */
+  seoTitle?: string;
 }
 
 /** Complete quiz definition including questions and results */

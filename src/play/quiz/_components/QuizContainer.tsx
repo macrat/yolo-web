@@ -7,6 +7,7 @@ import Link from "next/link";
 import type { QuizDefinition, QuizAnswer, QuizPhase } from "@/play/quiz/types";
 import { determineResult, calculateKnowledgeScore } from "@/play/quiz/scoring";
 import { determineScienceThinkingResult } from "@/play/quiz/data/science-thinking";
+import { getEstimatedTime } from "./introBadges";
 import ProgressBar from "./ProgressBar";
 import QuestionCard from "./QuestionCard";
 import ResultCard from "./ResultCard";
@@ -104,6 +105,10 @@ export default function QuizContainer({
   }, []);
 
   if (phase === "intro") {
+    const questionCount = quiz.meta.questionCount;
+    const resultTypeCount = quiz.results.length;
+    const estimatedTime = getEstimatedTime(questionCount);
+
     return (
       <div className={styles.container}>
         <div className={styles.intro}>
@@ -111,9 +116,16 @@ export default function QuizContainer({
           <h1 className={styles.introTitle}>{quiz.meta.title}</h1>
           <p className={styles.introDescription}>{quiz.meta.description}</p>
           <p className={styles.introMeta}>
-            全{quiz.meta.questionCount}問 /{" "}
             {quiz.meta.type === "knowledge" ? "知識クイズ" : "診断"}
           </p>
+          {/* ミニマル情報バッジ: 問題数・所要時間・結果タイプ数を1行で表示 */}
+          <div className={styles.introBadges}>
+            <span className={styles.introBadge}>全{questionCount}問</span>
+            <span className={styles.introBadge}>{estimatedTime}</span>
+            {quiz.meta.type === "personality" && resultTypeCount > 0 && (
+              <span className={styles.introBadge}>{resultTypeCount}タイプ</span>
+            )}
+          </div>
           <button
             type="button"
             className={styles.startButton}
