@@ -1,5 +1,10 @@
 import type { PlayContentMeta } from "./types";
-import { playContentBySlug, getPlayContentsByCategory } from "./registry";
+import {
+  playContentBySlug,
+  getPlayContentsByCategory,
+  allPlayContents,
+  PLAY_FEATURED_ITEMS,
+} from "./registry";
 
 /** 全カテゴリの一覧 */
 const ALL_CATEGORIES: ReadonlyArray<PlayContentMeta["category"]> = [
@@ -85,4 +90,102 @@ export function getRecommendedContents(slug: string): PlayContentMeta[] {
   }
 
   return recommended;
+}
+
+/**
+ * フォールバック推薦コンテンツを返す内部関数。
+ *
+ * PLAY_FEATURED_ITEMS の slug 順に並んだ厳選コンテンツから、
+ * すでに推薦済みのコンテンツ（excludeSlugs）を除いた上で count 件返す。
+ * キーワードマッチが不十分な場合の安定した導線として機能する。
+ *
+ * @param excludeSlugs 除外する slug の配列（すでに推薦済みのコンテンツ）
+ * @param count 返す件数の上限
+ * @returns フォールバックとして返すコンテンツの配列
+ */
+function getFallbackRecommendations(
+  excludeSlugs: string[],
+  count: number,
+): PlayContentMeta[] {
+  const excludeSet = new Set(excludeSlugs);
+  const results: PlayContentMeta[] = [];
+
+  for (const { slug } of PLAY_FEATURED_ITEMS) {
+    if (results.length >= count) break;
+    // undefined を返す slug はスキップ（レジストリから削除されたコンテンツへの耐性）
+    const content = playContentBySlug.get(slug);
+    if (!content) continue;
+    if (excludeSet.has(slug)) continue;
+    results.push(content);
+  }
+
+  return results;
+}
+
+/**
+ * ブログ記事のタグに基づいて、関連する play 系コンテンツを最大2件推薦する。
+ *
+ * タグと各コンテンツの keywords のオーバーラップ数でスコアリングし、
+ * スコアが高いコンテンツを優先的に推薦する。マッチが不十分な場合は
+ * PLAY_FEATURED_ITEMS による固定フォールバックで補完する。
+ *
+ * @param tags ブログ記事のタグ配列（記事の主題を表すキーワード）
+ * @returns 推薦コンテンツの配列（最大2件）
+ */
+export function getPlayRecommendationsForBlog(
+  tags: string[],
+): PlayContentMeta[] {
+  // tags と各コンテンツの keywords のオーバーラップ数でスコアリング
+  const scored = allPlayContents
+    .map((content) => ({
+      content,
+      score: countKeywordOverlap(tags, content.keywords),
+    }))
+    .filter(({ score }) => score > 0);
+
+  // スコア降順の stable sort（同スコアは allPlayContents の配列順を維持）
+  scored.sort((a, b) => b.score - a.score);
+
+  const topMatches = scored.slice(0, 2).map(({ content }) => content);
+
+  if (topMatches.length === 0) {
+    // スコア > 0 のコンテンツが0件 → フォールバック2件
+    return getFallbackRecommendations([], 2);
+  }
+
+  if (topMatches.length === 1) {
+    // スコア > 0 のコンテンツが1件 → その1件 + フォールバック1件で計2件
+    const fallback = getFallbackRecommendations([topMatches[0].slug], 1);
+    return [...topMatches, ...fallback];
+  }
+
+  return topMatches;
+}
+
+/**
+ * 辞典ページの slug に基づいて、関連する play 系コンテンツを最大2件推薦する。
+ *
+ * 辞典 slug をテーマキーワードにマッピングし、getPlayRecommendationsForBlog
+ * と同じスコアリングロジックで推薦する。未知の slug の場合はフォールバックを返す。
+ *
+ * @param dictionarySlug 辞典ページの slug（例: "kanji", "yoji", "colors"）
+ * @returns 推薦コンテンツの配列（最大2件）
+ */
+export function getPlayRecommendationsForDictionary(
+  dictionarySlug: string,
+): PlayContentMeta[] {
+  // 辞典slug → テーマキーワードのマッピング
+  // 辞典の内容を代表するキーワードに変換することで、
+  // 辞典ページとplay系コンテンツの意味的な関連性を橋渡しする
+  const dictionaryKeywordMap: Record<string, string[]> = {
+    kanji: ["漢字"],
+    yoji: ["四字熟語"],
+    colors: ["伝統色", "色"],
+  };
+
+  const tags = dictionaryKeywordMap[dictionarySlug] ?? [];
+
+  // タグが空（未知のslug）の場合も getPlayRecommendationsForBlog 経由で
+  // フォールバックロジックを統一的に処理する
+  return getPlayRecommendationsForBlog(tags);
 }

@@ -4,6 +4,7 @@ import { YOJI_DICTIONARY_META } from "@/dictionary/_lib/dictionary-meta";
 import YojiDetail from "@/dictionary/_components/yoji/YojiDetail";
 import { generateYojiPageMetadata, generateYojiJsonLd } from "@/lib/seo";
 import { getYojiByYoji, getAllYojiIds } from "@/dictionary/_lib/yoji";
+import { getPlayRecommendationsForDictionary } from "@/play/recommendation";
 
 export function generateStaticParams() {
   return getAllYojiIds().map((yoji) => ({ yoji }));
@@ -32,6 +33,7 @@ export default async function YojiDetailPage({
   if (!yoji) notFound();
 
   const jsonLd = generateYojiJsonLd(yoji);
+  const playRecommendations = getPlayRecommendationsForDictionary("yoji");
 
   return (
     <DictionaryDetailLayout
@@ -45,6 +47,7 @@ export default async function YojiDetailPage({
       jsonLd={jsonLd}
       shareUrl={`/dictionary/yoji/${encodeURIComponent(yoji.yoji)}`}
       shareTitle={`「${yoji.yoji}」の意味・読み方`}
+      playRecommendations={playRecommendations}
     >
       <YojiDetail yoji={yoji} />
     </DictionaryDetailLayout>

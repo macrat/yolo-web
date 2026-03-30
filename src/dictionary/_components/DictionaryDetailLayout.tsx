@@ -1,10 +1,12 @@
 import { safeJsonLdStringify } from "@/lib/seo";
 import type { BreadcrumbItem } from "@/lib/seo";
 import type { DictionaryMeta } from "@/dictionary/_lib/types";
+import type { PlayContentMeta } from "@/play/types";
 import Breadcrumb from "@/components/common/Breadcrumb";
 import FaqSection from "@/components/common/FaqSection";
 import ShareButtons from "@/components/common/ShareButtons";
 import TrustLevelBadge from "@/components/common/TrustLevelBadge";
+import PlayRecommendBlock from "@/play/_components/PlayRecommendBlock";
 import styles from "./DictionaryDetailLayout.module.css";
 
 interface DictionaryDetailLayoutProps {
@@ -20,6 +22,8 @@ interface DictionaryDetailLayoutProps {
   shareTitle: string;
   /** 各辞典のDetailコンポーネント（KanjiDetail / YojiDetail / ColorDetail） */
   children: React.ReactNode;
+  /** 関連するplay系コンテンツの推薦リスト（省略時は表示しない） */
+  playRecommendations?: PlayContentMeta[];
 }
 
 /**
@@ -40,6 +44,7 @@ export default function DictionaryDetailLayout({
   shareUrl,
   shareTitle,
   children,
+  playRecommendations,
 }: DictionaryDetailLayoutProps) {
   return (
     <article>
@@ -82,6 +87,10 @@ export default function DictionaryDetailLayout({
           contentId={shareUrl}
         />
       </section>
+
+      {playRecommendations && (
+        <PlayRecommendBlock recommendations={playRecommendations} />
+      )}
     </article>
   );
 }

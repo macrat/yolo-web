@@ -24,6 +24,8 @@ import TagList from "@/blog/_components/TagList";
 import SeriesNav from "@/blog/_components/SeriesNav";
 import MermaidRenderer from "@/blog/_components/MermaidRenderer";
 import RelatedArticles from "@/blog/_components/RelatedArticles";
+import PlayRecommendBlock from "@/play/_components/PlayRecommendBlock";
+import { getPlayRecommendationsForBlog } from "@/play/recommendation";
 import styles from "./page.module.css";
 
 interface Props {
@@ -53,6 +55,7 @@ export default async function BlogPostPage({ params }: Props) {
   const nextPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null;
 
   const relatedPosts = getRelatedPosts(post, allPosts);
+  const playRecommendations = getPlayRecommendationsForBlog(post.tags);
 
   const jsonLd = generateBlogPostJsonLd({
     ...post,
@@ -163,6 +166,12 @@ export default async function BlogPostPage({ params }: Props) {
           <span />
         )}
       </nav>
+
+      <PlayRecommendBlock
+        recommendations={playRecommendations}
+        heading="この記事を読んだあなたに"
+        subtext="ブラウザで今すぐ遊べる診断・占い"
+      />
     </div>
   );
 }
