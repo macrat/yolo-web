@@ -151,10 +151,10 @@ describe("fortunePlayContentMeta", () => {
   });
 });
 
-describe("allPlayContents (19種)", () => {
-  test("contains exactly 19 contents (4 games + 14 quizzes + 1 fortune)", () => {
-    // タスク1完了後: ゲーム4種 + クイズ14種 + Fortune 1種 = 19種
-    expect(allPlayContents).toHaveLength(19);
+describe("allPlayContents (20種)", () => {
+  test("contains exactly 20 contents (4 games + 15 quizzes + 1 fortune)", () => {
+    // ゲーム4種 + クイズ15種 + Fortune 1種 = 20種
+    expect(allPlayContents).toHaveLength(20);
   });
 
   test("contains all 4 game slugs", () => {
@@ -164,7 +164,7 @@ describe("allPlayContents (19種)", () => {
     }
   });
 
-  test("contains all 14 quiz slugs", () => {
+  test("contains all 15 quiz slugs", () => {
     const slugs = allPlayContents.map((c) => c.slug);
     for (const quizMeta of allQuizMetas) {
       expect(slugs).toContain(quizMeta.slug);
@@ -177,7 +177,7 @@ describe("allPlayContents (19種)", () => {
   });
 });
 
-describe("getPlayContentsByCategory (19種)", () => {
+describe("getPlayContentsByCategory (20種)", () => {
   test("returns all 4 games for category 'game'", () => {
     const results = getPlayContentsByCategory("game");
     expect(results).toHaveLength(4);
@@ -210,7 +210,7 @@ describe("getPlayContentsByCategory (19種)", () => {
     const knowledge = getPlayContentsByCategory("knowledge").length;
     const personality = getPlayContentsByCategory("personality").length;
     const fortune = getPlayContentsByCategory("fortune").length;
-    expect(game + knowledge + personality + fortune).toBe(19);
+    expect(game + knowledge + personality + fortune).toBe(20);
   });
 });
 
@@ -235,9 +235,9 @@ describe("getPlayContentsByCategory (ゲームのみ旧テスト)", () => {
 });
 
 describe("getAllPlaySlugs", () => {
-  test("returns slugs for all 19 contents", () => {
+  test("returns slugs for all 20 contents", () => {
     const slugs = getAllPlaySlugs();
-    expect(slugs).toHaveLength(19);
+    expect(slugs).toHaveLength(20);
     for (const slug of EXPECTED_GAME_SLUGS) {
       expect(slugs).toContain(slug);
     }
