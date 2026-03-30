@@ -58,6 +58,7 @@ const characterPersonalityQuiz: QuizDefinition = {
       "24タイプ",
     ],
     publishedAt: "2026-03-17T00:00:00+09:00",
+    seoTitle: "あなたに似たキャラ診断 | 無料キャラクター性格診断・心理テスト",
     relatedLinks: [
       {
         label: "守護キャラ診断を受ける",

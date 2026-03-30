@@ -51,4 +51,10 @@ export interface PlayContentMeta {
    * - "fortune": 占い
    */
   category: "fortune" | "personality" | "knowledge" | "game";
+  /**
+   * 検索エンジン向けの最適化されたページタイトル（オプショナル）。
+   * 設定されている場合、generatePlayMetadata で title タグと OG タイトルに使用される。
+   * 未設定の場合は title + displayCategory の組み合わせが使用される。
+   */
+  seoTitle?: string;
 }
