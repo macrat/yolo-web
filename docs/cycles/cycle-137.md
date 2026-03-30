@@ -44,12 +44,9 @@ cycle-136で先行実装したdetailedContent（character-personality, animal-pe
 - **作業内容**:
   - 8結果すべてにdetailedContent（traits 3-5項目、behaviors 3-5項目、advice 1件）を追加
   - seoTitleをmetaに追加（「伝統色 性格診断 心理テスト 無料」等のキーワードを含む）
-  - テストファイルを作成（`src/play/quiz/data/__tests__/traditional-color-detailed-content.test.ts`）
-    - 全8結果にdetailedContentが存在すること
-    - traits/behaviorsの件数（3-5）と文字数範囲の検証
-    - adviceの文字数範囲の検証
-    - traitsがdescriptionの焼き直しでないこと（15文字以上の部分一致がないこと）
-    - adviceの多様性と行動提案を含むこと（8結果中6以上）
+  - テストファイルを2つ作成（cycle-136の先行実装パターンを踏襲）:
+    - 構造テスト（`src/play/quiz/data/__tests__/traditional-color-detailed-content.test.ts`）: 全8結果にdetailedContentが存在すること、traits/behaviorsの件数（3-5）と文字数範囲、adviceの文字数範囲
+    - 品質テスト（`src/play/quiz/data/__tests__/traditional-color-traits-advice-quality.test.ts`）: traits・behaviorsがdescriptionの焼き直しでないこと（15文字以上の部分一致禁止）、adviceの多様性と行動提案を含むこと（8結果中6以上）
   - lint/format/test/buildの全パス確認
 
 #### タスク2: character-fortune（6結果タイプ）のdetailedContent追加
@@ -66,11 +63,9 @@ cycle-136で先行実装したdetailedContent（character-personality, animal-pe
 - **作業内容**:
   - 6結果すべてにdetailedContent（traits 3-5項目、behaviors 3-5項目、advice 1件）を追加
   - seoTitleをmetaに追加
-  - テストファイルを作成（`src/play/quiz/data/__tests__/character-fortune-detailed-content.test.ts`）
-    - 基本構造の検証（全6結果にdetailedContent存在、件数・文字数範囲）
-    - traitsがdescriptionの焼き直しでないこと
-    - adviceの多様性と行動提案（6結果中5以上）
-    - **口調の一貫性テスト**: 各キャラクターのdetailedContent内テキストが、対応するdescriptionと同系統の語尾パターンを使用していることを検証
+  - テストファイルを2つ作成（cycle-136の先行実装パターンを踏襲）:
+    - 構造テスト（`src/play/quiz/data/__tests__/character-fortune-detailed-content.test.ts`）: 全6結果にdetailedContent存在、件数・文字数範囲
+    - 品質テスト（`src/play/quiz/data/__tests__/character-fortune-traits-advice-quality.test.ts`）: traits・behaviorsがdescriptionの焼き直しでないこと（15文字以上の部分一致禁止）、adviceの多様性と行動提案（6結果中5以上）、**口調の一貫性テスト**（各キャラクターのdetailedContent内テキストが対応するdescriptionと同系統の語尾パターンを使用していること）
   - lint/format/test/buildの全パス確認
 
 #### タスク3: yoji-personality（8結果タイプ）のdetailedContent追加
@@ -81,12 +76,9 @@ cycle-136で先行実装したdetailedContent（character-personality, animal-pe
 - **作業内容**:
   - 8結果すべてにdetailedContent（traits 3-5項目、behaviors 3-5項目、advice 1件）を追加
   - seoTitleをmetaに追加（「四字熟語 性格診断 心理テスト 無料」等のキーワードを含む）
-  - テストファイルを作成（`src/play/quiz/data/__tests__/yoji-personality-detailed-content.test.ts`）
-    - 全8結果にdetailedContentが存在すること
-    - traits/behaviorsの件数（3-5）と文字数範囲の検証
-    - adviceの文字数範囲の検証
-    - traitsがdescriptionの焼き直しでないこと
-    - adviceの多様性と行動提案を含むこと（8結果中6以上）
+  - テストファイルを2つ作成（cycle-136の先行実装パターンを踏襲）:
+    - 構造テスト（`src/play/quiz/data/__tests__/yoji-personality-detailed-content.test.ts`）: 全8結果にdetailedContentが存在すること、traits/behaviorsの件数（3-5）と文字数範囲、adviceの文字数範囲
+    - 品質テスト（`src/play/quiz/data/__tests__/yoji-personality-traits-advice-quality.test.ts`）: traits・behaviorsがdescriptionの焼き直しでないこと（15文字以上の部分一致禁止）、adviceの多様性と行動提案を含むこと（8結果中6以上）
   - lint/format/test/buildの全パス確認
 
 #### タスク4: 全体レビューと最終確認
