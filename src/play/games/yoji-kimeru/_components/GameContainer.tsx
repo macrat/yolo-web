@@ -22,6 +22,7 @@ import {
   saveHistory,
   loadTodayGame,
 } from "@/play/games/yoji-kimeru/_lib/storage";
+import type { CrossCategoryItem } from "@/play/games/shared/_components/CrossCategoryBanner";
 import GameHeader from "./GameHeader";
 import HintBar from "./HintBar";
 import GameBoard from "./GameBoard";
@@ -108,13 +109,20 @@ async function fetchEvaluate(
   return (await res.json()) as EvaluateResponse;
 }
 
+interface GameContainerProps {
+  /** 他カテゴリへの導線データ。Server Component（page.tsx）で事前計算して渡す。 */
+  crossCategoryItems: CrossCategoryItem[];
+}
+
 /**
  * Top-level client component that orchestrates the entire game state.
  * Fetches puzzle metadata from the server API, manages guesses via the evaluate API,
  * and persists state to localStorage. The target yoji is never exposed
  * to the client until the game ends.
  */
-export default function GameContainer() {
+export default function GameContainer({
+  crossCategoryItems,
+}: GameContainerProps) {
   const { recordPlay } = useAchievements();
 
   // Run migration once on mount to preserve existing players' data
@@ -457,6 +465,7 @@ export default function GameContainer() {
         onClose={() => setShowResult(false)}
         gameState={gameState}
         difficulty={difficulty}
+        crossCategoryItems={crossCategoryItems}
         onStatsClick={() => {
           setShowResult(false);
           setShowStats(true);

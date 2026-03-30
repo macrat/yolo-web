@@ -3,6 +3,7 @@ import {
   getRecommendedContents,
   getPlayRecommendationsForBlog,
   getPlayRecommendationsForDictionary,
+  getResultNextContents,
 } from "../recommendation";
 import { playContentBySlug, getPlayContentsByCategory } from "../registry";
 
@@ -368,6 +369,74 @@ describe("getPlayRecommendationsForDictionary — 辞典slugによる推薦", ()
     for (const dictionarySlug of testSlugs) {
       const results = getPlayRecommendationsForDictionary(dictionarySlug);
       expect(results.length).toBeLessThanOrEqual(2);
+    }
+  });
+});
+
+// =====================================================================
+// getResultNextContents のテスト
+// =====================================================================
+
+describe("getResultNextContents — 基本動作", () => {
+  test("存在するslugで2-3件のコンテンツが返ること", () => {
+    const slug = personalityContents[0].slug;
+    const results = getResultNextContents(slug);
+    expect(results.length).toBeGreaterThanOrEqual(2);
+    expect(results.length).toBeLessThanOrEqual(3);
+  });
+
+  test("返却に自分自身（currentSlug）が含まれないこと", () => {
+    const slug = personalityContents[0].slug;
+    const results = getResultNextContents(slug);
+    const slugs = results.map((r) => r.slug);
+    expect(slugs).not.toContain(slug);
+  });
+
+  test("同カテゴリから最大1件が含まれること", () => {
+    const slug = personalityContents[0].slug;
+    const results = getResultNextContents(slug);
+    const sameCategoryCount = results.filter(
+      (r) => r.category === "personality",
+    ).length;
+    expect(sameCategoryCount).toBeLessThanOrEqual(1);
+  });
+
+  test("異カテゴリから1-2件が含まれること", () => {
+    const slug = personalityContents[0].slug;
+    const results = getResultNextContents(slug);
+    const crossCategoryCount = results.filter(
+      (r) => r.category !== "personality",
+    ).length;
+    expect(crossCategoryCount).toBeGreaterThanOrEqual(1);
+    expect(crossCategoryCount).toBeLessThanOrEqual(2);
+  });
+
+  test("存在しないslugで空配列が返ること", () => {
+    const results = getResultNextContents("nonexistent-slug");
+    expect(results).toEqual([]);
+  });
+
+  test("返却に重複がないこと", () => {
+    for (const content of [
+      ...personalityContents,
+      ...knowledgeContents,
+      ...gameContents,
+    ]) {
+      const results = getResultNextContents(content.slug);
+      const slugs = results.map((r) => r.slug);
+      const uniqueSlugs = new Set(slugs);
+      expect(uniqueSlugs.size).toBe(slugs.length);
+    }
+  });
+});
+
+describe("getResultNextContents — fortuneカテゴリ", () => {
+  test("fortuneカテゴリには1種しかないため同カテゴリ選出なし、2件返ること", () => {
+    // fortuneカテゴリは daily のみなので同カテゴリ候補がゼロ → 2件のみ返る
+    const results = getResultNextContents("daily");
+    expect(results).toHaveLength(2);
+    for (const r of results) {
+      expect(r.category).not.toBe("fortune");
     }
   });
 });

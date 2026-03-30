@@ -12,6 +12,7 @@ import {
 } from "@/play/games/irodori/_lib/daily";
 import traditionalColorsJson from "@/data/traditional-colors.json";
 import scheduleJson from "@/play/games/irodori/data/irodori-schedule.json";
+import { computeCrossCategoryItems } from "@/play/games/shared/_lib/crossCategoryItems";
 
 // Force dynamic rendering so that the puzzle is selected based on the
 // current date at request time, not the build time date.
@@ -22,6 +23,11 @@ const gameMeta = gameBySlug.get("irodori")!;
 export const metadata: Metadata = buildGamePageMetadata(gameMeta);
 
 const gameJsonLd = buildGameJsonLd(gameMeta);
+
+// 他カテゴリ推薦データはリクエストごとに変わらないため、モジュールスコープで計算。
+// Server Component（page.tsx）で計算することで、registry/seoのimportが
+// クライアントバンドルに含まれるのを防ぐ。
+const crossCategoryItems = computeCrossCategoryItems("irodori");
 
 export default function IrodoriPage() {
   const { colors, puzzleNumber } = getTodaysPuzzle(
@@ -53,6 +59,7 @@ export default function IrodoriPage() {
           puzzleNumber={puzzleNumber}
           todayStr={todayStr}
           dateDisplayString={dateDisplayString}
+          crossCategoryItems={crossCategoryItems}
         />
       </GameLayout>
     </>

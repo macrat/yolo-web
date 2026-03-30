@@ -2,7 +2,7 @@
 id: 133
 description: "play系コンテンツ内の回遊導線再設計（クイズ結果後の推薦配置改善・静的結果ページCTA改善・ゲームResultModalへのCrossCategoryBanner追加）"
 started_at: "2026-03-30T14:34:32+0900"
-completed_at: null
+completed_at: "2026-03-30T17:10:04+0900"
 ---
 
 # サイクル-133
@@ -11,11 +11,11 @@ B-231の分析とB-233の導線追加を踏まえ、play系コンテンツ内部
 
 ## 実施する作業
 
-- [ ] 1. 施策2: ResultNextContentコンポーネント新規作成・推薦ロジック実装・QuizContainer統合
-- [ ] 2. 施策3: CrossCategoryBannerコンポーネント新規作成・4ゲームのResultModalに配置
-- [ ] 3. 施策6: 静的結果ページのCTA改善（コスト感訴求・文言改善）
-- [ ] 4. ビジュアル確認（Playwright）
-- [ ] 5. レビュー・修正
+- [x] 1. 施策2: ResultNextContentコンポーネント新規作成・推薦ロジック実装・QuizContainer統合
+- [x] 2. 施策3: CrossCategoryBannerコンポーネント新規作成・4ゲームのResultModalに配置
+- [x] 3. 施策6: 静的結果ページのCTA改善（コスト感訴求・文言改善）
+- [x] 4. ビジュアル確認（Playwright）
+- [x] 5. レビュー・修正
 
 ## 作業計画
 
@@ -389,21 +389,32 @@ div.crossCategory
 - R1: 3件の指摘事項（CrossCategoryBannerのkeywords重複計算ロジック実装場所、getResultNextContentsの件数ロジック曖昧、quiz.meta.type使用の明記）→ plannerが修正
 - R2: 指摘事項なし → 計画承認
 
-### 成果物のレビュー
+### 成果物のレビュー（R1〜R2）
+
+- R1: 1件指摘（computeCrossCategoryItemsのユニットテスト欠落）→ テスト新規作成（10件）で対応
+- R2: 指摘事項なし → 承認
+
+### バンドルサイズ対策（実装中の追加対応）
+
+当初計画ではClient Componentから`@/play/registry`を直接importする方式（NextGameBannerパターン）を採用していたが、実装時にバンドルバジェットテストが失敗（140KB→297KB）。原因は全play系データがクライアントバンドルに含まれること。Server Componentで事前計算しprops経由で渡す方式に変更して解決。
 
 ## キャリーオーバー
 
+なし
+
 ## 補足事項
+
+なし
 
 ## サイクル終了時のチェックリスト
 
-- [ ] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
-- [ ] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
-- [ ] すべての変更がレビューされ、残存する指摘事項が無くなっている。
-- [ ] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
-- [ ] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
-- [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
-- [ ] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
+- [x] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
+- [x] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
+- [x] すべての変更がレビューされ、残存する指摘事項が無くなっている。
+- [x] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
+- [x] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
+- [x] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
+- [x] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
 
 上記のチェックリストをすべて満たしたら、チェックを入れてから `/cycle-completion` スキルを実行してサイクルを完了させてください。
 なお、「環境起因」「今回の変更と無関係」「既知の問題」「次回対応」などの **例外は一切認めません** 。必ずすべての項目を完全に満してください。

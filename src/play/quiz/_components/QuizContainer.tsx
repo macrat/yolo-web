@@ -10,6 +10,8 @@ import { determineScienceThinkingResult } from "@/play/quiz/data/science-thinkin
 import ProgressBar from "./ProgressBar";
 import QuestionCard from "./QuestionCard";
 import ResultCard from "./ResultCard";
+import ResultNextContent from "./ResultNextContent";
+import type { ResultNextContentItem } from "./ResultNextContent";
 import ResultExtraLoader from "./ResultExtraLoader";
 import styles from "./QuizContainer.module.css";
 
@@ -17,6 +19,13 @@ type QuizContainerProps = {
   quiz: QuizDefinition;
   /** Optional referrer type ID from URL search params (for compatibility) */
   referrerTypeId?: string;
+  /**
+   * 結果画面直下の「次のおすすめ」に表示するコンテンツ。
+   * Server Component（page.tsx）で事前計算したデータをprops経由で受け取る。
+   * registryへのimportを避けてクライアントバンドルを削減するため、
+   * PlayContentMeta ではなく ResultNextContentItem の配列を受け取る。
+   */
+  recommendedContents?: ResultNextContentItem[];
 };
 
 /**
@@ -26,6 +35,7 @@ type QuizContainerProps = {
 export default function QuizContainer({
   quiz,
   referrerTypeId,
+  recommendedContents,
 }: QuizContainerProps) {
   const { recordPlay } = useAchievements();
 
@@ -174,6 +184,9 @@ export default function QuizContainer({
         }
         onRetry={handleRetry}
       />
+      {recommendedContents && recommendedContents.length > 0 && (
+        <ResultNextContent contents={recommendedContents} />
+      )}
       <ResultExtraLoader
         slug={quiz.meta.slug}
         resultId={result.id}

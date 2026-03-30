@@ -5,12 +5,18 @@ import { gameBySlug } from "@/play/games/registry";
 import { buildGameJsonLd, buildGamePageMetadata } from "@/play/games/seo";
 import GameLayout from "@/play/games/_components/GameLayout";
 import GameContainer from "@/play/games/kanji-kanaru/_components/GameContainer";
+import { computeCrossCategoryItems } from "@/play/games/shared/_lib/crossCategoryItems";
 
 const gameMeta = gameBySlug.get("kanji-kanaru")!;
 
 export const metadata: Metadata = buildGamePageMetadata(gameMeta);
 
 const gameJsonLd = buildGameJsonLd(gameMeta);
+
+// ビルド時に他カテゴリ推薦データを計算。
+// Server Component（page.tsx）で計算することで、registry/seoのimportが
+// クライアントバンドルに含まれるのを防ぐ。
+const crossCategoryItems = computeCrossCategoryItems("kanji-kanaru");
 
 export default function KanjiKanaruPage() {
   return (
@@ -41,7 +47,7 @@ export default function KanjiKanaruPage() {
           </>
         }
       >
-        <GameContainer />
+        <GameContainer crossCategoryItems={crossCategoryItems} />
       </GameLayout>
     </>
   );

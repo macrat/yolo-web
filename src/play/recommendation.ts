@@ -189,3 +189,51 @@ export function getPlayRecommendationsForDictionary(
   // フォールバックロジックを統一的に処理する
   return getPlayRecommendationsForBlog(tags);
 }
+
+/**
+ * クイズ結果画面直下の回遊導線用に、同カテゴリ1件 + 異カテゴリ2件を返す。
+ *
+ * アルゴリズム:
+ * 1. 同カテゴリから currentSlug を除外し、keywords重複最大の1件を選出
+ * 2. getRecommendedContents() で異カテゴリから最大3件取得し、先頭2件を採用
+ * 3. 合計2-3件を返す（同カテゴリから選出できなかった場合は2件）
+ *
+ * @param slug 現在表示中のコンテンツのslug
+ * @returns 推薦コンテンツの配列（2-3件）。存在しないslugの場合は空配列
+ */
+export function getResultNextContents(slug: string): PlayContentMeta[] {
+  const currentContent = playContentBySlug.get(slug);
+  if (!currentContent) return [];
+
+  const results: PlayContentMeta[] = [];
+
+  // 同カテゴリから1件選出（currentSlugを除外）
+  const sameCategoryCandidates = getPlayContentsByCategory(
+    currentContent.category,
+  ).filter((c) => c.slug !== slug);
+
+  if (sameCategoryCandidates.length > 0) {
+    let best = sameCategoryCandidates[0];
+    let bestOverlap = countKeywordOverlap(
+      currentContent.keywords,
+      sameCategoryCandidates[0].keywords,
+    );
+    for (let i = 1; i < sameCategoryCandidates.length; i++) {
+      const overlap = countKeywordOverlap(
+        currentContent.keywords,
+        sameCategoryCandidates[i].keywords,
+      );
+      if (overlap > bestOverlap) {
+        best = sameCategoryCandidates[i];
+        bestOverlap = overlap;
+      }
+    }
+    results.push(best);
+  }
+
+  // 異カテゴリから2件選出
+  const crossCategory = getRecommendedContents(slug);
+  results.push(...crossCategory.slice(0, 2));
+
+  return results;
+}

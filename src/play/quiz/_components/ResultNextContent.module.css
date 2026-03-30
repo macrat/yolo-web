@@ -1,0 +1,80 @@
+/* クイズ結果直下の「次のおすすめ」回遊導線コンポーネントのスタイル。
+ * ResultCard の直下に配置されるため、コンパクトに表示してコンテンツを邪魔しないよう設計する。
+ * RecommendedContent.module.css と RelatedContentCard.module.css を参考に、
+ * ニュートラルなスタイル（accentColor を使用しない）にしている。
+ */
+
+.section {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.heading {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: var(--color-text);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  list-style: none;
+}
+
+.link {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 0.875rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  text-decoration: none;
+  transition:
+    border-color 0.15s,
+    background-color 0.15s;
+}
+
+.link:hover {
+  border-color: var(--color-primary);
+  background-color: var(--color-bg-secondary);
+}
+
+.icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;
+}
+
+.title {
+  font-weight: 600;
+  color: var(--color-primary);
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.meta {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+/* カテゴリバッジ: data-category 属性でスタイルを分ける（RecommendedContentと同パターン） */
+.badge {
+  font-size: 0.7rem;
+  background-color: var(--color-bg);
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  color: var(--color-text-muted);
+  width: fit-content;
+}

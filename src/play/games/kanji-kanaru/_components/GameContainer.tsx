@@ -22,6 +22,7 @@ import {
   loadTodayGame,
 } from "@/play/games/kanji-kanaru/_lib/storage";
 import { JOYO_KANJI_SET } from "@/play/games/kanji-kanaru/data/joyo-kanji-set";
+import type { CrossCategoryItem } from "@/play/games/shared/_components/CrossCategoryBanner";
 import GameHeader from "./GameHeader";
 import HintBar from "./HintBar";
 import GameBoard from "./GameBoard";
@@ -106,13 +107,20 @@ async function fetchEvaluate(
   return (await res.json()) as EvaluateResponse;
 }
 
+interface GameContainerProps {
+  /** 他カテゴリへの導線データ。Server Component（page.tsx）で事前計算して渡す。 */
+  crossCategoryItems: CrossCategoryItem[];
+}
+
 /**
  * Top-level client component that orchestrates the entire game state.
  * Fetches hints from the server API, manages guesses via the evaluate API,
  * and persists state to localStorage. The target kanji is never exposed
  * to the client until the game ends.
  */
-export default function GameContainer() {
+export default function GameContainer({
+  crossCategoryItems,
+}: GameContainerProps) {
   const { recordPlay } = useAchievements();
 
   // Run migration once on mount
@@ -453,6 +461,7 @@ export default function GameContainer() {
         onClose={() => setShowResult(false)}
         gameState={gameState}
         difficulty={difficulty}
+        crossCategoryItems={crossCategoryItems}
         onStatsClick={() => {
           setShowResult(false);
           setShowStats(true);

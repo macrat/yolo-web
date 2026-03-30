@@ -14,6 +14,8 @@ import GameDialog from "@/play/games/shared/_components/GameDialog";
 import GameShareButtons from "@/play/games/shared/_components/GameShareButtons";
 import CountdownTimer from "@/play/games/shared/_components/CountdownTimer";
 import NextGameBanner from "@/play/games/shared/_components/NextGameBanner";
+import { CrossCategoryBanner } from "@/play/games/shared/_components/CrossCategoryBanner";
+import type { CrossCategoryItem } from "@/play/games/shared/_components/CrossCategoryBanner";
 import styles from "./styles/YojiKimeru.module.css";
 
 interface ResultModalProps {
@@ -22,6 +24,8 @@ interface ResultModalProps {
   gameState: YojiGameState;
   difficulty: Difficulty;
   onStatsClick: () => void;
+  /** 他カテゴリへの導線データ。Server Component（page.tsx）で事前計算して渡す。 */
+  crossCategoryItems: CrossCategoryItem[];
 }
 
 /**
@@ -35,6 +39,7 @@ export default function ResultModal({
   gameState,
   difficulty,
   onStatsClick,
+  crossCategoryItems,
 }: ResultModalProps) {
   const { targetYoji, guesses, status } = gameState;
 
@@ -91,6 +96,7 @@ export default function ResultModal({
       />
       <CountdownTimer />
       <NextGameBanner currentGameSlug="yoji-kimeru" />
+      <CrossCategoryBanner items={crossCategoryItems} />
     </GameDialog>
   );
 }

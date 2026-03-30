@@ -7,6 +7,8 @@ import GameDialog from "@/play/games/shared/_components/GameDialog";
 import GameShareButtons from "@/play/games/shared/_components/GameShareButtons";
 import CountdownTimer from "@/play/games/shared/_components/CountdownTimer";
 import NextGameBanner from "@/play/games/shared/_components/NextGameBanner";
+import { CrossCategoryBanner } from "@/play/games/shared/_components/CrossCategoryBanner";
+import type { CrossCategoryItem } from "@/play/games/shared/_components/CrossCategoryBanner";
 import { getDifficultyColor } from "@/play/games/nakamawake/_lib/engine";
 import styles from "./ResultModal.module.css";
 
@@ -15,6 +17,8 @@ interface Props {
   onClose: () => void;
   gameState: NakamawakeGameState;
   onStatsClick: () => void;
+  /** 他カテゴリへの導線データ。Server Component（page.tsx）で事前計算して渡す。 */
+  crossCategoryItems: CrossCategoryItem[];
 }
 
 /**
@@ -26,6 +30,7 @@ export default function ResultModal({
   onClose,
   gameState,
   onStatsClick,
+  crossCategoryItems,
 }: Props) {
   const isWon = gameState.status === "won";
   const shareText = generateShareText(gameState);
@@ -86,6 +91,7 @@ export default function ResultModal({
       />
       <CountdownTimer />
       <NextGameBanner currentGameSlug="nakamawake" />
+      <CrossCategoryBanner items={crossCategoryItems} />
     </GameDialog>
   );
 }

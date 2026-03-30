@@ -10,6 +10,8 @@ import GameDialog from "@/play/games/shared/_components/GameDialog";
 import GameShareButtons from "@/play/games/shared/_components/GameShareButtons";
 import CountdownTimer from "@/play/games/shared/_components/CountdownTimer";
 import NextGameBanner from "@/play/games/shared/_components/NextGameBanner";
+import { CrossCategoryBanner } from "@/play/games/shared/_components/CrossCategoryBanner";
+import type { CrossCategoryItem } from "@/play/games/shared/_components/CrossCategoryBanner";
 import styles from "./styles/KanjiKanaru.module.css";
 
 interface ResultModalProps {
@@ -18,6 +20,8 @@ interface ResultModalProps {
   gameState: GameState;
   difficulty: Difficulty;
   onStatsClick: () => void;
+  /** 他カテゴリへの導線データ。Server Component（page.tsx）で事前計算して渡す。 */
+  crossCategoryItems: CrossCategoryItem[];
 }
 
 /**
@@ -30,6 +34,7 @@ export default function ResultModal({
   gameState,
   difficulty,
   onStatsClick,
+  crossCategoryItems,
 }: ResultModalProps) {
   const { targetKanji, guesses, status } = gameState;
   const isWon = status === "won";
@@ -102,6 +107,7 @@ export default function ResultModal({
       />
       <CountdownTimer />
       <NextGameBanner currentGameSlug="kanji-kanaru" />
+      <CrossCategoryBanner items={crossCategoryItems} />
     </GameDialog>
   );
 }
