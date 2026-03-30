@@ -26,6 +26,7 @@ import {
   loadTodayGame,
   saveTodayGame,
 } from "@/play/games/irodori/_lib/storage";
+import type { CrossCategoryItem } from "@/play/games/shared/_components/CrossCategoryBanner";
 import GameHeader from "./GameHeader";
 import ProgressBar from "./ProgressBar";
 import ColorTarget from "./ColorTarget";
@@ -45,6 +46,8 @@ interface GameContainerProps {
   todayStr: string;
   /** Human-readable date string for display (e.g. "2026年3月19日"), generated server-side. */
   dateDisplayString: string;
+  /** 他カテゴリへの導線データ。Server Component（page.tsx）で事前計算して渡す。 */
+  crossCategoryItems: CrossCategoryItem[];
 }
 
 /**
@@ -57,6 +60,7 @@ export default function GameContainer({
   puzzleNumber,
   todayStr,
   dateDisplayString,
+  crossCategoryItems,
 }: GameContainerProps) {
   const { recordPlay } = useAchievements();
 
@@ -399,6 +403,7 @@ export default function GameContainer({
         open={showFinalResult}
         onClose={() => setShowFinalResult(false)}
         gameState={gameState}
+        crossCategoryItems={crossCategoryItems}
         onStatsClick={() => {
           setShowFinalResult(false);
           setShowStats(true);

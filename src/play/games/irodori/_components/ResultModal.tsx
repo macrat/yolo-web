@@ -11,6 +11,8 @@ import GameDialog from "@/play/games/shared/_components/GameDialog";
 import GameShareButtons from "@/play/games/shared/_components/GameShareButtons";
 import CountdownTimer from "@/play/games/shared/_components/CountdownTimer";
 import NextGameBanner from "@/play/games/shared/_components/NextGameBanner";
+import { CrossCategoryBanner } from "@/play/games/shared/_components/CrossCategoryBanner";
+import type { CrossCategoryItem } from "@/play/games/shared/_components/CrossCategoryBanner";
 import FinalResult from "./FinalResult";
 import styles from "./ResultModal.module.css";
 
@@ -19,6 +21,8 @@ interface Props {
   onClose: () => void;
   gameState: IrodoriGameState;
   onStatsClick: () => void;
+  /** 他カテゴリへの導線データ。Server Component（page.tsx）で事前計算して渡す。 */
+  crossCategoryItems: CrossCategoryItem[];
 }
 
 /**
@@ -30,6 +34,7 @@ export default function ResultModal({
   onClose,
   gameState,
   onStatsClick,
+  crossCategoryItems,
 }: Props) {
   const shareText = generateShareText(gameState);
 
@@ -71,6 +76,7 @@ export default function ResultModal({
       />
       <CountdownTimer />
       <NextGameBanner currentGameSlug="irodori" />
+      <CrossCategoryBanner items={crossCategoryItems} />
     </GameDialog>
   );
 }

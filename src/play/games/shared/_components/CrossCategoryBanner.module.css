@@ -1,0 +1,73 @@
+.crossCategory {
+  margin: 12px 0;
+  padding: 12px;
+  border-top: 1px solid var(--color-border, #e5e7eb);
+  border-radius: 0 0 8px 8px;
+}
+
+.label {
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--color-text-muted, #6b7280);
+  margin: 0 0 8px;
+}
+
+.linkList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: var(--color-bg-secondary, #f8f9fa);
+  text-decoration: none;
+  color: var(--color-text, #1a1a1a);
+  transition: background 0.15s;
+}
+
+.link:hover {
+  background: var(--color-border, #e5e7eb);
+}
+
+.icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.title {
+  flex: 1;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+/* fortune カテゴリ: 紫系 */
+.badge[data-category="fortune"] {
+  background: #ede9fe;
+  color: #7c3aed;
+}
+
+/* personality カテゴリ: ピンク系 */
+.badge[data-category="personality"] {
+  background: #fce7f3;
+  color: #be185d;
+}
+
+/* knowledge カテゴリ: 青系 */
+.badge[data-category="knowledge"] {
+  background: #dbeafe;
+  color: #1d4ed8;
+}

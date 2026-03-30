@@ -5,12 +5,18 @@ import { gameBySlug } from "@/play/games/registry";
 import { buildGameJsonLd, buildGamePageMetadata } from "@/play/games/seo";
 import GameLayout from "@/play/games/_components/GameLayout";
 import GameContainer from "@/play/games/yoji-kimeru/_components/GameContainer";
+import { computeCrossCategoryItems } from "@/play/games/shared/_lib/crossCategoryItems";
 
 const gameMeta = gameBySlug.get("yoji-kimeru")!;
 
 export const metadata: Metadata = buildGamePageMetadata(gameMeta);
 
 const gameJsonLd = buildGameJsonLd(gameMeta);
+
+// ビルド時に他カテゴリ推薦データを計算。
+// Server Component（page.tsx）で計算することで、registry/seoのimportが
+// クライアントバンドルに含まれるのを防ぐ。
+const crossCategoryItems = computeCrossCategoryItems("yoji-kimeru");
 
 export default function YojiKimeruPage() {
   return (
@@ -28,7 +34,7 @@ export default function YojiKimeruPage() {
           </p>
         }
       >
-        <GameContainer />
+        <GameContainer crossCategoryItems={crossCategoryItems} />
       </GameLayout>
     </>
   );

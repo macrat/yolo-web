@@ -14,6 +14,7 @@ import {
 } from "@/play/games/nakamawake/_lib/daily";
 import puzzleDataJson from "@/play/games/nakamawake/data/nakamawake-data.json";
 import scheduleJson from "@/play/games/nakamawake/data/nakamawake-schedule.json";
+import { computeCrossCategoryItems } from "@/play/games/shared/_lib/crossCategoryItems";
 
 // Force dynamic rendering so today's puzzle is selected on each request,
 // not fixed to the build-time date.
@@ -24,6 +25,11 @@ const gameMeta = gameBySlug.get("nakamawake")!;
 export const metadata: Metadata = buildGamePageMetadata(gameMeta);
 
 const gameJsonLd = buildGameJsonLd(gameMeta);
+
+// 他カテゴリ推薦データはリクエストごとに変わらないため、モジュールスコープで計算。
+// Server Component（page.tsx）で計算することで、registry/seoのimportが
+// クライアントバンドルに含まれるのを防ぐ。
+const crossCategoryItems = computeCrossCategoryItems("nakamawake");
 
 export default function NakamawakePage() {
   const puzzleData = puzzleDataJson as NakamawakePuzzle[];
@@ -58,6 +64,7 @@ export default function NakamawakePage() {
           puzzleNumber={puzzleNumber}
           todayStr={todayStr}
           dateDisplayString={dateDisplayString}
+          crossCategoryItems={crossCategoryItems}
         />
       </GameLayout>
     </>

@@ -23,6 +23,7 @@ import {
   loadTodayGame,
   saveTodayGame,
 } from "@/play/games/nakamawake/_lib/storage";
+import type { CrossCategoryItem } from "@/play/games/shared/_components/CrossCategoryBanner";
 import GameHeader from "./GameHeader";
 import WordGrid from "./WordGrid";
 import SolvedGroups from "./SolvedGroups";
@@ -42,6 +43,8 @@ interface GameContainerProps {
   todayStr: string;
   /** Today's date formatted in Japanese, e.g. "2026年3月19日", generated server-side. */
   dateDisplayString: string;
+  /** 他カテゴリへの導線データ。Server Component（page.tsx）で事前計算して渡す。 */
+  crossCategoryItems: CrossCategoryItem[];
 }
 
 /**
@@ -54,6 +57,7 @@ export default function GameContainer({
   puzzleNumber,
   todayStr,
   dateDisplayString,
+  crossCategoryItems,
 }: GameContainerProps) {
   const { recordPlay } = useAchievements();
 
@@ -399,6 +403,7 @@ export default function GameContainer({
         open={showResult}
         onClose={() => setShowResult(false)}
         gameState={gameState}
+        crossCategoryItems={crossCategoryItems}
         onStatsClick={() => {
           setShowResult(false);
           setShowStats(true);

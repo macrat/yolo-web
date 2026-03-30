@@ -155,6 +155,12 @@ export default async function PlayQuizResultPage({
   const shareText = `${quiz.meta.title}の結果は「${result.title}」でした! #${quiz.meta.title.replace(/\s/g, "")} #yolosnet`;
   const shareUrl = `${BASE_URL}/play/${slug}/result/${resultId}`;
 
+  // CTAテキストをクイズタイプに応じて出し分ける
+  const ctaText =
+    quiz.meta.type === "personality"
+      ? "あなたはどのタイプ? 診断してみよう"
+      : "あなたも挑戦してみよう";
+
   return (
     <div className={styles.wrapper}>
       <Breadcrumb
@@ -170,13 +176,18 @@ export default async function PlayQuizResultPage({
         <h1 className={styles.title}>{result.title}</h1>
         <p className={styles.quizName}>{quiz.meta.title}の結果</p>
         <p className={styles.description}>{result.description}</p>
-        <Link
-          href={`/play/${slug}`}
-          className={styles.tryButton}
-          style={{ backgroundColor: quiz.meta.accentColor }}
-        >
-          あなたも挑戦してみる?
-        </Link>
+        <div className={styles.trySection}>
+          <Link
+            href={`/play/${slug}`}
+            className={styles.tryButton}
+            style={{ backgroundColor: quiz.meta.accentColor }}
+          >
+            {ctaText}
+          </Link>
+          <p className={styles.tryCost}>
+            全{quiz.meta.questionCount}問 / 登録不要
+          </p>
+        </div>
         <div className={styles.shareSection}>
           <ShareButtons
             shareText={shareText}
