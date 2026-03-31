@@ -256,18 +256,20 @@ export default async function PlayQuizResultPage({
             <p className={styles.catchphrase}>{detailedContent.catchphrase}</p>
           )}
 
-        {/* description: contrarian-fortune では非表示（metaタグのみ使用） */}
+        {/* description: contrarian-fortune, character-fortune では非表示（metaタグのみ使用） */}
         {(!detailedContent ||
-          detailedContent.variant !== "contrarian-fortune") && (
+          (detailedContent.variant !== "contrarian-fortune" &&
+            detailedContent.variant !== "character-fortune")) && (
           <DescriptionExpander
             description={result.description}
             isLong={isDescriptionLong}
           />
         )}
 
-        {/* CTA1: contrarian-fortune variant では非表示（CTAは全タイプ一覧セクションに移動） */}
+        {/* CTA1: contrarian-fortune, character-fortune variant では非表示（CTAはvariant専用レイアウト内に配置） */}
         {(!detailedContent ||
-          detailedContent.variant !== "contrarian-fortune") && (
+          (detailedContent.variant !== "contrarian-fortune" &&
+            detailedContent.variant !== "character-fortune")) && (
           <div className={styles.trySection}>
             <Link
               href={`/play/${slug}`}
@@ -282,9 +284,10 @@ export default async function PlayQuizResultPage({
           </div>
         )}
 
-        {/* detailedContent がある場合のみ追加セクションを表示 */}
+        {/* detailedContent がある場合のみ追加セクションを表示（標準形式のみ） */}
         {detailedContent &&
-          detailedContent.variant !== "contrarian-fortune" && (
+          detailedContent.variant !== "contrarian-fortune" &&
+          detailedContent.variant !== "character-fortune" && (
             <div className={styles.detailedSection}>
               <h2
                 className={styles.detailedSectionHeading}
@@ -427,6 +430,132 @@ export default async function PlayQuizResultPage({
                     ))}
                   </ul>
                   <p className={styles.allTypesCta}>あなたのタイプはどれ？</p>
+                  <div className={styles.trySection}>
+                    <Link
+                      href={`/play/${slug}`}
+                      className={styles.tryButton}
+                      style={{ backgroundColor: quiz.meta.accentColor }}
+                    >
+                      {ctaText}
+                    </Link>
+                    <p className={styles.tryCost}>
+                      全{quiz.meta.questionCount}問 / 登録不要
+                    </p>
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+
+        {/* character-fortune variant 専用レイアウト */}
+        {detailedContent &&
+          detailedContent.variant === "character-fortune" &&
+          (() => {
+            const cf = detailedContent;
+            return (
+              <div className={styles.detailedSection}>
+                {/* (a) キャラクターの自己紹介 */}
+                <p
+                  className={styles.characterIntro}
+                  style={{ backgroundColor: `${quiz.meta.accentColor}18` }}
+                >
+                  {cf.characterIntro}
+                </p>
+
+                {/* CTA1 */}
+                <div className={styles.trySection}>
+                  <Link
+                    href={`/play/${slug}`}
+                    className={styles.tryButton}
+                    style={{ backgroundColor: quiz.meta.accentColor }}
+                  >
+                    {ctaText}
+                  </Link>
+                  <p className={styles.tryCost}>
+                    全{quiz.meta.questionCount}問 / 登録不要
+                  </p>
+                </div>
+
+                {/* (b) キャラが語る「あるある」 */}
+                <h2
+                  className={styles.detailedSectionHeading}
+                  style={{ color: quiz.meta.accentColor }}
+                >
+                  {cf.behaviorsHeading}
+                </h2>
+                <ul className={styles.behaviorsList}>
+                  {cf.behaviors.map((behavior, i) => (
+                    <li key={i} className={styles.behaviorsItem}>
+                      {behavior}
+                    </li>
+                  ))}
+                </ul>
+
+                {/* シェアボタン中間配置 */}
+                <div className={styles.midShareSection}>
+                  <ShareButtons
+                    shareText={shareText}
+                    shareUrl={shareUrl}
+                    quizTitle={quiz.meta.title}
+                    contentType="diagnosis"
+                    contentId={`quiz-${slug}`}
+                  />
+                </div>
+
+                {/* (c) キャラの本音 */}
+                <h2
+                  className={styles.detailedSectionHeading}
+                  style={{ color: quiz.meta.accentColor }}
+                >
+                  {cf.characterMessageHeading}
+                </h2>
+                <p className={styles.characterMessage}>{cf.characterMessage}</p>
+
+                {/* (d) 第三者視点のシーン描写 */}
+                <div className={styles.thirdPartySection}>
+                  <h2
+                    className={styles.thirdPartyHeading}
+                    style={{ color: quiz.meta.accentColor }}
+                  >
+                    このキャラの守護を受けている人と一緒にいると
+                  </h2>
+                  <p className={styles.thirdPartyNote}>{cf.thirdPartyNote}</p>
+                </div>
+
+                {/* (e) 相性診断への誘導 */}
+                <div className={styles.compatibilitySection}>
+                  <p className={styles.compatibilityPrompt}>
+                    {cf.compatibilityPrompt}
+                  </p>
+                  <Link
+                    href={`/play/${slug}`}
+                    className={styles.tryButton}
+                    style={{ backgroundColor: quiz.meta.accentColor }}
+                  >
+                    診断して相性を見てみる
+                  </Link>
+                </div>
+
+                {/* (f) 全タイプ一覧 + CTA */}
+                <div className={styles.allTypesSection}>
+                  <ul className={styles.allTypesList}>
+                    {quiz.results.map((r) => (
+                      <li
+                        key={r.id}
+                        className={
+                          r.id === resultId
+                            ? styles.allTypesItemCurrent
+                            : styles.allTypesItem
+                        }
+                      >
+                        <Link href={`/play/${slug}/result/${r.id}`}>
+                          {r.icon && <span>{r.icon}</span>}
+                          <span>{r.title}</span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                  <p className={styles.allTypesCta}>他のキャラも見てみよう</p>
                   <div className={styles.trySection}>
                     <Link
                       href={`/play/${slug}`}

@@ -64,14 +64,40 @@ export interface ContrarianFortuneDetailedContent {
 }
 
 /**
+ * character-fortune クイズ専用の追加コンテンツセクション。
+ * キャラクターが固有の口調で語りかけるスタイルの結果ページを提供する。
+ * variant フィールドで他の DetailedContent 型と区別する。
+ */
+export interface CharacterFortuneDetailedContent {
+  /** バリアント識別子。型の絞り込みに使用する。 */
+  variant: "character-fortune";
+  /** キャラクターの自己紹介（キャラ口調、20-80字） */
+  characterIntro: string;
+  /** あるある箇条書きの見出し（キャラ口調、5-30字） */
+  behaviorsHeading: string;
+  /** キャラが語るあるある（3-5項目、キャラ口調） */
+  behaviors: string[];
+  /** 本音セクションの見出し（5-30字、例: 「司令塔からの本音」） */
+  characterMessageHeading: string;
+  /** キャラの本音（散文、150-400字、キャラ口調） */
+  characterMessage: string;
+  /** 「このキャラの守護を受けている人と一緒にいると」第三者視点シーン描写（散文、客観視点、80-200字） */
+  thirdPartyNote: string;
+  /** 相性診断への誘導文（キャラ口調、20-80字） */
+  compatibilityPrompt: string;
+}
+
+/**
  * detailedContent の union型。
  * variant フィールドで型を絞り込む discriminated union。
  * - variant が undefined または未設定: QuizResultDetailedContent（標準形式）
  * - variant が "contrarian-fortune": ContrarianFortuneDetailedContent
+ * - variant が "character-fortune": CharacterFortuneDetailedContent
  */
 export type DetailedContent =
   | QuizResultDetailedContent
-  | ContrarianFortuneDetailedContent;
+  | ContrarianFortuneDetailedContent
+  | CharacterFortuneDetailedContent;
 
 /** A result pattern */
 export type QuizResult = {

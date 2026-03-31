@@ -14,10 +14,10 @@ completed_at: null
 - [x] character-fortuneの現状コンテンツと特性を調査する
 - [x] character-fortune固有の理想的なdetailedContent構造をゼロベースで設計する
 - [x] 設計レポートのレビュー
-- [ ] 型定義に新variantを追加する
-- [ ] 結果ページコンポーネントを新variantに対応させる
-- [ ] character-fortune（6結果）のdetailedContentを新構造で作成する
-- [ ] テストの追加・更新
+- [x] 型定義に新variantを追加する
+- [x] 結果ページコンポーネントを新variantに対応させる
+- [x] character-fortune（6結果）のdetailedContentを新構造で作成する
+- [x] テストの追加・更新
 - [ ] 実装のレビュー
 - [ ] 表示確認
 
