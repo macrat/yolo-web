@@ -250,78 +250,192 @@ export default async function PlayQuizResultPage({
         {result.icon && <div className={styles.icon}>{result.icon}</div>}
         <h1 className={styles.title}>{result.title}</h1>
 
-        {/* description: 4行を超える場合のみ展開ボタンを表示 */}
-        <DescriptionExpander
-          description={result.description}
-          isLong={isDescriptionLong}
-        />
+        {/* contrarian-fortune variant: catchphrase をh1直下に表示 */}
+        {detailedContent &&
+          detailedContent.variant === "contrarian-fortune" && (
+            <p className={styles.catchphrase}>{detailedContent.catchphrase}</p>
+          )}
 
-        {/* CTA1: descriptionの直後、detailedContentの前に配置 */}
-        <div className={styles.trySection}>
-          <Link
-            href={`/play/${slug}`}
-            className={styles.tryButton}
-            style={{ backgroundColor: quiz.meta.accentColor }}
-          >
-            {ctaText}
-          </Link>
-          <p className={styles.tryCost}>
-            全{quiz.meta.questionCount}問 / 登録不要
-          </p>
-        </div>
+        {/* description: contrarian-fortune では非表示（metaタグのみ使用） */}
+        {(!detailedContent ||
+          detailedContent.variant !== "contrarian-fortune") && (
+          <DescriptionExpander
+            description={result.description}
+            isLong={isDescriptionLong}
+          />
+        )}
 
-        {/* detailedContent がある場合のみ追加セクションを表示 */}
-        {detailedContent && (
-          <div className={styles.detailedSection}>
-            <h2
-              className={styles.detailedSectionHeading}
-              style={{ color: quiz.meta.accentColor }}
+        {/* CTA1: contrarian-fortune variant では非表示（CTAは全タイプ一覧セクションに移動） */}
+        {(!detailedContent ||
+          detailedContent.variant !== "contrarian-fortune") && (
+          <div className={styles.trySection}>
+            <Link
+              href={`/play/${slug}`}
+              className={styles.tryButton}
+              style={{ backgroundColor: quiz.meta.accentColor }}
             >
-              {traitsHeading}
-            </h2>
-            <ul className={styles.traitsList}>
-              {detailedContent.traits.map((trait, i) => (
-                <li key={i} className={styles.traitsItem}>
-                  {trait}
-                </li>
-              ))}
-            </ul>
-
-            <h2
-              className={styles.detailedSectionHeading}
-              style={{ color: quiz.meta.accentColor }}
-            >
-              {behaviorsHeading}
-            </h2>
-            <ul className={styles.behaviorsList}>
-              {detailedContent.behaviors.map((behavior, i) => (
-                <li key={i} className={styles.behaviorsItem}>
-                  {behavior}
-                </li>
-              ))}
-            </ul>
-
-            <h2
-              className={styles.detailedSectionHeading}
-              style={{ color: quiz.meta.accentColor }}
-            >
-              {adviceHeading}
-            </h2>
-            <div
-              className={styles.adviceCard}
-              style={{ backgroundColor: `${quiz.meta.accentColor}18` }}
-            >
-              {detailedContent.advice}
-            </div>
-
-            {/* CTA2: detailedContent読了者向けのテキストリンク形式CTA */}
-            <div className={styles.cta2Section}>
-              <Link href={`/play/${slug}`} className={styles.cta2Link}>
-                {ctaText}
-              </Link>
-            </div>
+              {ctaText}
+            </Link>
+            <p className={styles.tryCost}>
+              全{quiz.meta.questionCount}問 / 登録不要
+            </p>
           </div>
         )}
+
+        {/* detailedContent がある場合のみ追加セクションを表示 */}
+        {detailedContent &&
+          detailedContent.variant !== "contrarian-fortune" && (
+            <div className={styles.detailedSection}>
+              <h2
+                className={styles.detailedSectionHeading}
+                style={{ color: quiz.meta.accentColor }}
+              >
+                {traitsHeading}
+              </h2>
+              <ul className={styles.traitsList}>
+                {detailedContent.traits.map((trait, i) => (
+                  <li key={i} className={styles.traitsItem}>
+                    {trait}
+                  </li>
+                ))}
+              </ul>
+
+              <h2
+                className={styles.detailedSectionHeading}
+                style={{ color: quiz.meta.accentColor }}
+              >
+                {behaviorsHeading}
+              </h2>
+              <ul className={styles.behaviorsList}>
+                {detailedContent.behaviors.map((behavior, i) => (
+                  <li key={i} className={styles.behaviorsItem}>
+                    {behavior}
+                  </li>
+                ))}
+              </ul>
+
+              <h2
+                className={styles.detailedSectionHeading}
+                style={{ color: quiz.meta.accentColor }}
+              >
+                {adviceHeading}
+              </h2>
+              <div
+                className={styles.adviceCard}
+                style={{ backgroundColor: `${quiz.meta.accentColor}18` }}
+              >
+                {detailedContent.advice}
+              </div>
+
+              {/* CTA2: detailedContent読了者向けのテキストリンク形式CTA */}
+              <div className={styles.cta2Section}>
+                <Link href={`/play/${slug}`} className={styles.cta2Link}>
+                  {ctaText}
+                </Link>
+              </div>
+            </div>
+          )}
+
+        {/* contrarian-fortune variant 専用レイアウト */}
+        {detailedContent &&
+          detailedContent.variant === "contrarian-fortune" &&
+          (() => {
+            const cf = detailedContent;
+            return (
+              <div className={styles.detailedSection}>
+                {/* (b) 核心の一文 */}
+                <p className={styles.coreSentence}>{cf.coreSentence}</p>
+
+                {/* (c) あるある箇条書き */}
+                <h2
+                  className={styles.detailedSectionHeading}
+                  style={{ color: quiz.meta.accentColor }}
+                >
+                  このタイプの人、こんなことしてませんか？
+                </h2>
+                <ul className={styles.behaviorsList}>
+                  {cf.behaviors.map((behavior, i) => (
+                    <li key={i} className={styles.behaviorsItem}>
+                      {behavior}
+                    </li>
+                  ))}
+                </ul>
+
+                {/* (d) シェアボタン第一置き場（あるある直後） */}
+                <div className={styles.midShareSection}>
+                  <ShareButtons
+                    shareText={shareText}
+                    shareUrl={shareUrl}
+                    quizTitle={quiz.meta.title}
+                    contentType="diagnosis"
+                    contentId={`quiz-${slug}`}
+                  />
+                </div>
+
+                {/* (e) タイプの人物像 */}
+                <p className={styles.persona}>{cf.persona}</p>
+
+                {/* (f) 第三者専用セクション */}
+                <div className={styles.thirdPartySection}>
+                  <h2
+                    className={styles.thirdPartyHeading}
+                    style={{ color: quiz.meta.accentColor }}
+                  >
+                    このタイプの人と一緒にいると
+                  </h2>
+                  <p className={styles.thirdPartyNote}>{cf.thirdPartyNote}</p>
+                </div>
+
+                {/* (g) タイプ固有の笑い指標（存在する場合のみ） */}
+                {cf.humorMetrics && cf.humorMetrics.length > 0 && (
+                  <table className={styles.humorMetricsTable}>
+                    <tbody>
+                      {cf.humorMetrics.map((metric, i) => (
+                        <tr key={i}>
+                          <th>{metric.label}</th>
+                          <td>{metric.value}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
+
+                {/* (h) 全タイプ一覧 + 診断CTA */}
+                <div className={styles.allTypesSection}>
+                  <ul className={styles.allTypesList}>
+                    {quiz.results.map((r) => (
+                      <li
+                        key={r.id}
+                        className={
+                          r.id === resultId
+                            ? styles.allTypesItemCurrent
+                            : styles.allTypesItem
+                        }
+                      >
+                        <Link href={`/play/${slug}/result/${r.id}`}>
+                          {r.icon && <span>{r.icon}</span>}
+                          <span>{r.title}</span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                  <p className={styles.allTypesCta}>あなたのタイプはどれ？</p>
+                  <div className={styles.trySection}>
+                    <Link
+                      href={`/play/${slug}`}
+                      className={styles.tryButton}
+                      style={{ backgroundColor: quiz.meta.accentColor }}
+                    >
+                      {ctaText}
+                    </Link>
+                    <p className={styles.tryCost}>
+                      全{quiz.meta.questionCount}問 / 登録不要
+                    </p>
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
 
         <div className={styles.shareSection}>
           <ShareButtons
