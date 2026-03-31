@@ -39,6 +39,13 @@ vi.mock("../extractWithParam", () => ({
   extractWithParam: vi.fn(() => undefined),
 }));
 
+// Mock DescriptionExpander
+vi.mock("../DescriptionExpander", () => ({
+  default: ({ description }: { description: string; isLong: boolean }) => (
+    <p data-testid="description-expander">{description}</p>
+  ),
+}));
+
 // Mock registry
 vi.mock("@/play/quiz/registry", () => ({
   quizBySlug: new Map([
@@ -47,6 +54,7 @@ vi.mock("@/play/quiz/registry", () => ({
       {
         meta: {
           title: "知識クイズ",
+          shortDescription: "知識クイズの短い説明",
           type: "knowledge",
           questionCount: 10,
           accentColor: "#FF0000",
@@ -67,6 +75,7 @@ vi.mock("@/play/quiz/registry", () => ({
       {
         meta: {
           title: "性格診断",
+          shortDescription: "性格診断の短い説明",
           type: "personality",
           questionCount: 8,
           accentColor: "#0000FF",
@@ -82,8 +91,38 @@ vi.mock("@/play/quiz/registry", () => ({
         ],
       },
     ],
+    [
+      "personality-with-detailed",
+      {
+        meta: {
+          title: "詳細診断",
+          shortDescription: "詳細診断の短い説明",
+          type: "personality",
+          questionCount: 5,
+          accentColor: "#00FF00",
+          category: "personality",
+        },
+        results: [
+          {
+            id: "result-detail",
+            title: "詳細タイプ",
+            description: "詳細タイプの説明",
+            icon: "D",
+            detailedContent: {
+              traits: ["特徴1", "特徴2"],
+              behaviors: ["あるある1", "あるある2"],
+              advice: "アドバイステキスト",
+            },
+          },
+        ],
+      },
+    ],
   ]),
-  getAllQuizSlugs: vi.fn(() => ["knowledge-quiz", "personality-quiz"]),
+  getAllQuizSlugs: vi.fn(() => [
+    "knowledge-quiz",
+    "personality-quiz",
+    "personality-with-detailed",
+  ]),
   getResultIdsForQuiz: vi.fn(() => ["result-a"]),
 }));
 
@@ -154,5 +193,65 @@ describe("PlayQuizResultPage CTA", () => {
     render(page);
 
     expect(screen.queryByText("あなたも挑戦してみる?")).not.toBeInTheDocument();
+  });
+});
+
+describe("PlayQuizResultPage コンテキスト表示", () => {
+  it("shortDescriptionがクイズ名と共に表示される", async () => {
+    const params = Promise.resolve({
+      slug: "knowledge-quiz",
+      resultId: "result-a",
+    });
+    const page = await PlayQuizResultPage({ params });
+    render(page);
+
+    expect(screen.getByText("知識クイズの短い説明")).toBeInTheDocument();
+  });
+});
+
+describe("PlayQuizResultPage CTA2", () => {
+  it("detailedContentがある場合はCTA2が表示される", async () => {
+    const params = Promise.resolve({
+      slug: "personality-with-detailed",
+      resultId: "result-detail",
+    });
+    const page = await PlayQuizResultPage({ params });
+    render(page);
+
+    // CTAテキストが複数存在する（CTA1 + CTA2）
+    const ctaElements =
+      screen.getAllByText("あなたはどのタイプ? 診断してみよう");
+    expect(ctaElements.length).toBeGreaterThanOrEqual(2);
+  });
+
+  it("detailedContentがない場合はCTA2が表示されない", async () => {
+    const params = Promise.resolve({
+      slug: "personality-quiz",
+      resultId: "result-x",
+    });
+    const page = await PlayQuizResultPage({ params });
+    render(page);
+
+    // CTAテキストが1つだけ存在する（CTA1のみ）
+    const ctaElements =
+      screen.queryAllByText("あなたはどのタイプ? 診断してみよう");
+    expect(ctaElements.length).toBe(1);
+  });
+});
+
+describe("PlayQuizResultPage detailedContent見出し", () => {
+  it("resultPageLabelsが未設定の場合はデフォルト見出しが表示される", async () => {
+    const params = Promise.resolve({
+      slug: "personality-with-detailed",
+      resultId: "result-detail",
+    });
+    const page = await PlayQuizResultPage({ params });
+    render(page);
+
+    expect(screen.getByText("このタイプの特徴")).toBeInTheDocument();
+    expect(screen.getByText("このタイプのあるある")).toBeInTheDocument();
+    expect(
+      screen.getByText("このタイプの人へのアドバイス"),
+    ).toBeInTheDocument();
   });
 });

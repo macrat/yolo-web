@@ -18,6 +18,7 @@ import CompatibilityDisplay from "./CompatibilityDisplay";
 import { extractWithParam } from "./extractWithParam";
 import RelatedQuizzes from "@/play/quiz/_components/RelatedQuizzes";
 import RecommendedContent from "@/play/_components/RecommendedContent";
+import DescriptionExpander from "./DescriptionExpander";
 import styles from "./page.module.css";
 
 type Props = {
@@ -204,7 +205,8 @@ export default async function PlayQuizResultPage({
     }
   }
 
-  const shareText = `${quiz.meta.title}の結果は「${result.title}」でした! #${quiz.meta.title.replace(/\s/g, "")} #yolosnet`;
+  // 末尾に「あなたは?」を追加してシェアした友人の興味を引く
+  const shareText = `${quiz.meta.title}の結果は「${result.title}」でした！あなたは? #${quiz.meta.title.replace(/\s/g, "")} #yolosnet`;
   const shareUrl = `${BASE_URL}/play/${slug}/result/${resultId}`;
 
   // CTAテキストをクイズタイプに応じて出し分ける
@@ -214,6 +216,21 @@ export default async function PlayQuizResultPage({
       : "あなたも挑戦してみよう";
 
   const { detailedContent } = result;
+
+  // descriptionが4行を超えるかどうかの判定:
+  // countCharWidth は全角1文字を width 2 としてカウントするため、
+  // 1行あたり全角16文字 = width 32。4行分 = width 32 × 4 = 128。
+  const DESCRIPTION_LONG_THRESHOLD = 128;
+  const isDescriptionLong =
+    countCharWidth(result.description) > DESCRIPTION_LONG_THRESHOLD;
+
+  // resultPageLabels から見出しを取得（未設定時はデフォルト値）
+  const traitsHeading =
+    quiz.meta.resultPageLabels?.traitsHeading ?? "このタイプの特徴";
+  const behaviorsHeading =
+    quiz.meta.resultPageLabels?.behaviorsHeading ?? "このタイプのあるある";
+  const adviceHeading =
+    quiz.meta.resultPageLabels?.adviceHeading ?? "このタイプの人へのアドバイス";
 
   return (
     <div className={styles.wrapper}>
@@ -226,10 +243,32 @@ export default async function PlayQuizResultPage({
         ]}
       />
       <div className={styles.card}>
+        {/* クイズ名 + shortDescription: 第三者が「この診断は何か」を即座に把握できるコンテキスト */}
+        <p className={styles.quizName}>{quiz.meta.title}の結果</p>
+        <p className={styles.quizContext}>{quiz.meta.shortDescription}</p>
+
         {result.icon && <div className={styles.icon}>{result.icon}</div>}
         <h1 className={styles.title}>{result.title}</h1>
-        <p className={styles.quizName}>{quiz.meta.title}の結果</p>
-        <p className={styles.description}>{result.description}</p>
+
+        {/* description: 4行を超える場合のみ展開ボタンを表示 */}
+        <DescriptionExpander
+          description={result.description}
+          isLong={isDescriptionLong}
+        />
+
+        {/* CTA1: descriptionの直後、detailedContentの前に配置 */}
+        <div className={styles.trySection}>
+          <Link
+            href={`/play/${slug}`}
+            className={styles.tryButton}
+            style={{ backgroundColor: quiz.meta.accentColor }}
+          >
+            {ctaText}
+          </Link>
+          <p className={styles.tryCost}>
+            全{quiz.meta.questionCount}問 / 登録不要
+          </p>
+        </div>
 
         {/* detailedContent がある場合のみ追加セクションを表示 */}
         {detailedContent && (
@@ -238,7 +277,7 @@ export default async function PlayQuizResultPage({
               className={styles.detailedSectionHeading}
               style={{ color: quiz.meta.accentColor }}
             >
-              あなたの特徴
+              {traitsHeading}
             </h2>
             <ul className={styles.traitsList}>
               {detailedContent.traits.map((trait, i) => (
@@ -252,7 +291,7 @@ export default async function PlayQuizResultPage({
               className={styles.detailedSectionHeading}
               style={{ color: quiz.meta.accentColor }}
             >
-              こんなところ、ありませんか?
+              {behaviorsHeading}
             </h2>
             <ul className={styles.behaviorsList}>
               {detailedContent.behaviors.map((behavior, i) => (
@@ -262,27 +301,28 @@ export default async function PlayQuizResultPage({
               ))}
             </ul>
 
+            <h2
+              className={styles.detailedSectionHeading}
+              style={{ color: quiz.meta.accentColor }}
+            >
+              {adviceHeading}
+            </h2>
             <div
               className={styles.adviceCard}
               style={{ backgroundColor: `${quiz.meta.accentColor}18` }}
             >
               {detailedContent.advice}
             </div>
+
+            {/* CTA2: detailedContent読了者向けのテキストリンク形式CTA */}
+            <div className={styles.cta2Section}>
+              <Link href={`/play/${slug}`} className={styles.cta2Link}>
+                {ctaText}
+              </Link>
+            </div>
           </div>
         )}
 
-        <div className={styles.trySection}>
-          <Link
-            href={`/play/${slug}`}
-            className={styles.tryButton}
-            style={{ backgroundColor: quiz.meta.accentColor }}
-          >
-            {ctaText}
-          </Link>
-          <p className={styles.tryCost}>
-            全{quiz.meta.questionCount}問 / 登録不要
-          </p>
-        </div>
         <div className={styles.shareSection}>
           <ShareButtons
             shareText={shareText}

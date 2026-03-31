@@ -102,6 +102,11 @@ const characterPersonalityQuiz: QuizDefinition = {
           "24タイプすべての組み合わせに対応しています。自分と友達のキャラクターを選ぶと、二人の関係性を描いた相性コメントが表示されます。",
       },
     ],
+    resultPageLabels: {
+      traitsHeading: "このキャラの持ち味",
+      behaviorsHeading: "このキャラの日常ルーティン",
+      adviceHeading: "キャラからの一言助言",
+    },
   },
   questions: [
     // Q1: 朝の目覚め方 (主軸: Action, 副軸: Energy)

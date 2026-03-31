@@ -75,6 +75,73 @@ describe("play/[slug]/result/[resultId]/page.tsx", () => {
     });
   });
 
+  describe("シェアテキストの変更", () => {
+    it("シェアテキストの末尾に「あなたは?」が含まれている", () => {
+      expect(pageSource).toContain("あなたは?");
+    });
+  });
+
+  describe("コンテキスト表示（shortDescription）", () => {
+    it("quiz.meta.shortDescriptionをコンテキストとして表示するロジックがある", () => {
+      expect(pageSource).toContain("quiz.meta.shortDescription");
+    });
+  });
+
+  describe("detailedContent見出しのデータ駆動化", () => {
+    it("quiz.meta.resultPageLabelsから見出しを取得するロジックがある", () => {
+      expect(pageSource).toContain("resultPageLabels");
+    });
+
+    it("traitsHeadingのデフォルト値「このタイプの特徴」が設定されている", () => {
+      expect(pageSource).toContain("このタイプの特徴");
+    });
+
+    it("behaviorsHeadingのデフォルト値「このタイプのあるある」が設定されている", () => {
+      expect(pageSource).toContain("このタイプのあるある");
+    });
+
+    it("adviceHeadingのデフォルト値「このタイプの人へのアドバイス」が設定されている", () => {
+      expect(pageSource).toContain("このタイプの人へのアドバイス");
+    });
+
+    it("旧来の固定見出し「あなたの特徴」が残っていない", () => {
+      expect(pageSource).not.toContain('"あなたの特徴"');
+    });
+
+    it("旧来の固定見出し「こんなところ、ありませんか?」が残っていない", () => {
+      expect(pageSource).not.toContain('"こんなところ、ありませんか?"');
+    });
+  });
+
+  describe("CTA2（detailedContent読了者向け）", () => {
+    it("detailedContentがある場合にCTA2を表示するロジックがある", () => {
+      // CTA2はdetailedContentがある場合のみ表示
+      expect(pageSource).toContain("cta2");
+    });
+  });
+
+  describe("DescriptionExpanderコンポーネントの利用", () => {
+    it("DescriptionExpanderをインポートしている", () => {
+      expect(pageSource).toContain("DescriptionExpander");
+    });
+  });
+
+  describe("DESCRIPTION_LONG_THRESHOLD の閾値", () => {
+    it("DESCRIPTION_LONG_THRESHOLDが128に設定されている（全角16文字×4行分）", () => {
+      // countCharWidth は全角1文字をwidth 2 としてカウントする。
+      // 1行あたり全角16文字 = width 32。4行分 = 32 × 4 = 128。
+      expect(pageSource).toContain("DESCRIPTION_LONG_THRESHOLD = 128");
+    });
+
+    it("コメントに「width 32 × 4 = 128」または「全角16文字 x 4行 = 128」の内容がある", () => {
+      const hasCorrectComment =
+        pageSource.includes("32") &&
+        pageSource.includes("128") &&
+        pageSource.includes("DESCRIPTION_LONG_THRESHOLD");
+      expect(hasCorrectComment).toBe(true);
+    });
+  });
+
   describe("titleフォールバックのSITE_NAME考慮", () => {
     it("FULL_WIDTH_LIMIT定数が定義されている", () => {
       expect(pageSource).toContain("FULL_WIDTH_LIMIT");

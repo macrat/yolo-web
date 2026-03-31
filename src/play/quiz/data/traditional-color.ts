@@ -58,6 +58,11 @@ const traditionalColorQuiz: QuizDefinition = {
           "結果画面のリンクからサイト内の伝統色辞典に移動できます。各色の歴史や使われ方について詳しく解説しています。",
       },
     ],
+    resultPageLabels: {
+      traitsHeading: "この色に映る気質",
+      behaviorsHeading: "この色が現れる場面",
+      adviceHeading: "一歩踏み出すヒント",
+    },
   },
   questions: [
     {

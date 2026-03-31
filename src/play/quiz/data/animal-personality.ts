@@ -97,6 +97,11 @@ const animalPersonalityQuiz: QuizDefinition = {
           "この診断はエンターテインメント目的で制作されており、科学的・心理学的な根拠はありません。動物の生態にインスパイアされた性格の説明をお楽しみいただくためのコンテンツです。",
       },
     ],
+    resultPageLabels: {
+      traitsHeading: "この動物が示す本能",
+      behaviorsHeading: "この動物に似た行動パターン",
+      adviceHeading: "今日試してほしいこと",
+    },
   },
   questions: [
     {

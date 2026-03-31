@@ -65,6 +65,11 @@ const yojiPersonalityQuiz: QuizDefinition = {
           "結果ページをそのままSNSで共有できます。友人の結果と見比べて楽しんでください。",
       },
     ],
+    resultPageLabels: {
+      traitsHeading: "この四字熟語が示す気性",
+      behaviorsHeading: "この四字熟語を体現する場面",
+      adviceHeading: "この四字熟語を活かすには",
+    },
   },
   questions: [
     {

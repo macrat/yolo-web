@@ -77,6 +77,11 @@ const contrarianFortuneQuiz: QuizDefinition = {
           "結果ページをそのまま友人に見せたり、SNSで共有したりできます。逆張り具合を友人と比べてみてください。",
       },
     ],
+    resultPageLabels: {
+      traitsHeading: "この逆張りタイプの特徴",
+      behaviorsHeading: "この逆張りタイプのあるある",
+      adviceHeading: "この逆張りタイプへの(逆)アドバイス",
+    },
   },
   questions: [
     {
