@@ -1,22 +1,16 @@
 /**
  * Tests for detailedContent on all 6 character-fortune results.
  *
- * commander, professor, dreamer, trickster, artist use CharacterFortuneDetailedContent
- * (variant: "character-fortune").
- * All 6 results now use CharacterFortuneDetailedContent (guardian migrated).
- *
+ * All 6 results use CharacterFortuneDetailedContent (variant: "character-fortune").
  * Also verifies seoTitle is set on meta.
  */
 import { describe, it, expect } from "vitest";
-import type {
-  QuizResultDetailedContent,
-  CharacterFortuneDetailedContent,
-} from "../../types";
+import type { CharacterFortuneDetailedContent } from "../../types";
 import characterFortuneQuiz from "../character-fortune";
 
 const allResults = characterFortuneQuiz.results;
 
-/** IDs that use CharacterFortuneDetailedContent */
+/** All 6 IDs use CharacterFortuneDetailedContent */
 const characterFortuneIds = new Set([
   "commander",
   "professor",
@@ -26,18 +20,10 @@ const characterFortuneIds = new Set([
   "guardian",
 ]);
 
-/** Results using the standard QuizResultDetailedContent format */
-const standardResults = allResults.filter(
-  (r) => !characterFortuneIds.has(r.id),
-);
-
 /** Results using CharacterFortuneDetailedContent */
 const characterFortuneResults = allResults.filter((r) =>
   characterFortuneIds.has(r.id),
 );
-
-/** The commander result using CharacterFortuneDetailedContent */
-const commanderResult = allResults.find((r) => r.id === "commander")!;
 
 describe("character-fortune detailedContent", () => {
   it("all 6 results exist", () => {
@@ -53,9 +39,9 @@ describe("character-fortune detailedContent", () => {
     }
   });
 
-  // --- CharacterFortuneDetailedContent results: variant check ---
+  // --- CharacterFortuneDetailedContent: variant check ---
 
-  it("commander/professor/dreamer/trickster/artist have variant = 'character-fortune'", () => {
+  it("all 6 results have variant = 'character-fortune'", () => {
     for (const result of characterFortuneResults) {
       expect(
         result.detailedContent?.variant,
@@ -64,7 +50,45 @@ describe("character-fortune detailedContent", () => {
     }
   });
 
-  it("CharacterFortune results: behaviors has 3-5 items, each 10-150 chars", () => {
+  // --- All 6 characters: full field validation ---
+
+  it("all 6 characters: characterIntro is non-empty and 20-80 chars", () => {
+    for (const result of characterFortuneResults) {
+      const dc = result.detailedContent as CharacterFortuneDetailedContent;
+      expect(
+        dc.characterIntro.length,
+        `${result.id}: characterIntro must be non-empty`,
+      ).toBeGreaterThan(0);
+      expect(
+        dc.characterIntro.length,
+        `${result.id}: characterIntro must be 20-80 chars`,
+      ).toBeGreaterThanOrEqual(20);
+      expect(
+        dc.characterIntro.length,
+        `${result.id}: characterIntro must be 20-80 chars`,
+      ).toBeLessThanOrEqual(80);
+    }
+  });
+
+  it("all 6 characters: behaviorsHeading is non-empty and 5-30 chars", () => {
+    for (const result of characterFortuneResults) {
+      const dc = result.detailedContent as CharacterFortuneDetailedContent;
+      expect(
+        dc.behaviorsHeading.length,
+        `${result.id}: behaviorsHeading must be non-empty`,
+      ).toBeGreaterThan(0);
+      expect(
+        dc.behaviorsHeading.length,
+        `${result.id}: behaviorsHeading must be 5-30 chars`,
+      ).toBeGreaterThanOrEqual(5);
+      expect(
+        dc.behaviorsHeading.length,
+        `${result.id}: behaviorsHeading must be 5-30 chars`,
+      ).toBeLessThanOrEqual(30);
+    }
+  });
+
+  it("all 6 characters: behaviors has 3-5 items, each 10-150 chars", () => {
     for (const result of characterFortuneResults) {
       const dc = result.detailedContent as CharacterFortuneDetailedContent;
       expect(
@@ -88,166 +112,75 @@ describe("character-fortune detailedContent", () => {
     }
   });
 
-  // --- commander: CharacterFortuneDetailedContent (detailed) ---
-
-  describe("commander (CharacterFortuneDetailedContent)", () => {
-    it("has variant = 'character-fortune'", () => {
-      expect(commanderResult.detailedContent?.variant).toBe(
-        "character-fortune",
-      );
-    });
-
-    it("characterIntro is 20-80 chars", () => {
-      const dc =
-        commanderResult.detailedContent as CharacterFortuneDetailedContent;
-      expect(dc.characterIntro.length).toBeGreaterThanOrEqual(20);
-      expect(dc.characterIntro.length).toBeLessThanOrEqual(80);
-    });
-
-    it("behaviorsHeading is 5-30 chars", () => {
-      const dc =
-        commanderResult.detailedContent as CharacterFortuneDetailedContent;
-      expect(dc.behaviorsHeading.length).toBeGreaterThanOrEqual(5);
-      expect(dc.behaviorsHeading.length).toBeLessThanOrEqual(30);
-    });
-
-    it("behaviors has 3-5 items, each 10-150 chars", () => {
-      const dc =
-        commanderResult.detailedContent as CharacterFortuneDetailedContent;
-      expect(dc.behaviors.length).toBeGreaterThanOrEqual(3);
-      expect(dc.behaviors.length).toBeLessThanOrEqual(5);
-      for (const behavior of dc.behaviors) {
-        expect(behavior.length).toBeGreaterThanOrEqual(10);
-        expect(behavior.length).toBeLessThanOrEqual(150);
-      }
-    });
-
-    it("characterMessageHeading is 5-30 chars", () => {
-      const dc =
-        commanderResult.detailedContent as CharacterFortuneDetailedContent;
-      expect(dc.characterMessageHeading.length).toBeGreaterThanOrEqual(5);
-      expect(dc.characterMessageHeading.length).toBeLessThanOrEqual(30);
-    });
-
-    it("characterMessage is 150-400 chars", () => {
-      const dc =
-        commanderResult.detailedContent as CharacterFortuneDetailedContent;
-      expect(dc.characterMessage.length).toBeGreaterThanOrEqual(150);
-      expect(dc.characterMessage.length).toBeLessThanOrEqual(400);
-    });
-
-    it("thirdPartyNote is 80-200 chars", () => {
-      const dc =
-        commanderResult.detailedContent as CharacterFortuneDetailedContent;
-      expect(dc.thirdPartyNote.length).toBeGreaterThanOrEqual(80);
-      expect(dc.thirdPartyNote.length).toBeLessThanOrEqual(200);
-    });
-
-    it("compatibilityPrompt is 20-80 chars", () => {
-      const dc =
-        commanderResult.detailedContent as CharacterFortuneDetailedContent;
-      expect(dc.compatibilityPrompt.length).toBeGreaterThanOrEqual(20);
-      expect(dc.compatibilityPrompt.length).toBeLessThanOrEqual(80);
-    });
-  });
-
-  // --- standard results (guardian): QuizResultDetailedContent ---
-
-  it("standard results: traits has 3-5 items and each is non-empty", () => {
-    for (const result of standardResults) {
-      const { traits } = result.detailedContent! as QuizResultDetailedContent;
+  it("all 6 characters: characterMessageHeading is non-empty and 5-30 chars", () => {
+    for (const result of characterFortuneResults) {
+      const dc = result.detailedContent as CharacterFortuneDetailedContent;
       expect(
-        traits.length,
-        `${result.id}: traits count should be 3-5`,
-      ).toBeGreaterThanOrEqual(3);
-      expect(
-        traits.length,
-        `${result.id}: traits count should be 3-5`,
-      ).toBeLessThanOrEqual(5);
-      for (const trait of traits) {
-        expect(
-          trait.length,
-          `${result.id}: each trait must be non-empty`,
-        ).toBeGreaterThan(0);
-      }
-    }
-  });
-
-  it("standard results: behaviors has 3-5 items and each is non-empty", () => {
-    for (const result of standardResults) {
-      const { behaviors } =
-        result.detailedContent! as QuizResultDetailedContent;
-      expect(
-        behaviors.length,
-        `${result.id}: behaviors count should be 3-5`,
-      ).toBeGreaterThanOrEqual(3);
-      expect(
-        behaviors.length,
-        `${result.id}: behaviors count should be 3-5`,
-      ).toBeLessThanOrEqual(5);
-      for (const behavior of behaviors) {
-        expect(
-          behavior.length,
-          `${result.id}: each behavior must be non-empty`,
-        ).toBeGreaterThan(0);
-      }
-    }
-  });
-
-  it("standard results: advice is a non-empty string", () => {
-    for (const result of standardResults) {
-      const { advice } = result.detailedContent! as QuizResultDetailedContent;
-      expect(
-        advice.length,
-        `${result.id}: advice must be non-empty`,
+        dc.characterMessageHeading.length,
+        `${result.id}: characterMessageHeading must be non-empty`,
       ).toBeGreaterThan(0);
-    }
-  });
-
-  it("standard results: traits items are reasonably sized (5-150 chars each)", () => {
-    for (const result of standardResults) {
-      for (const trait of (result.detailedContent! as QuizResultDetailedContent)
-        .traits) {
-        expect(
-          trait.length,
-          `${result.id}: trait too short or too long`,
-        ).toBeGreaterThanOrEqual(5);
-        expect(
-          trait.length,
-          `${result.id}: trait too long (max 150)`,
-        ).toBeLessThanOrEqual(150);
-      }
-    }
-  });
-
-  it("standard results: behaviors items are reasonably sized (10-150 chars each)", () => {
-    for (const result of standardResults) {
-      for (const behavior of (
-        result.detailedContent! as QuizResultDetailedContent
-      ).behaviors) {
-        expect(
-          behavior.length,
-          `${result.id}: behavior too short or too long`,
-        ).toBeGreaterThanOrEqual(10);
-        expect(
-          behavior.length,
-          `${result.id}: behavior too long (max 150)`,
-        ).toBeLessThanOrEqual(150);
-      }
-    }
-  });
-
-  it("standard results: advice is reasonably sized (10-200 chars)", () => {
-    for (const result of standardResults) {
-      const { advice } = result.detailedContent! as QuizResultDetailedContent;
       expect(
-        advice.length,
-        `${result.id}: advice too short`,
-      ).toBeGreaterThanOrEqual(10);
+        dc.characterMessageHeading.length,
+        `${result.id}: characterMessageHeading must be 5-30 chars`,
+      ).toBeGreaterThanOrEqual(5);
       expect(
-        advice.length,
-        `${result.id}: advice too long (max 200)`,
+        dc.characterMessageHeading.length,
+        `${result.id}: characterMessageHeading must be 5-30 chars`,
+      ).toBeLessThanOrEqual(30);
+    }
+  });
+
+  it("all 6 characters: characterMessage is non-empty and 150-400 chars", () => {
+    for (const result of characterFortuneResults) {
+      const dc = result.detailedContent as CharacterFortuneDetailedContent;
+      expect(
+        dc.characterMessage.length,
+        `${result.id}: characterMessage must be non-empty`,
+      ).toBeGreaterThan(0);
+      expect(
+        dc.characterMessage.length,
+        `${result.id}: characterMessage must be 150-400 chars`,
+      ).toBeGreaterThanOrEqual(150);
+      expect(
+        dc.characterMessage.length,
+        `${result.id}: characterMessage must be 150-400 chars`,
+      ).toBeLessThanOrEqual(400);
+    }
+  });
+
+  it("all 6 characters: thirdPartyNote is non-empty and 80-200 chars", () => {
+    for (const result of characterFortuneResults) {
+      const dc = result.detailedContent as CharacterFortuneDetailedContent;
+      expect(
+        dc.thirdPartyNote.length,
+        `${result.id}: thirdPartyNote must be non-empty`,
+      ).toBeGreaterThan(0);
+      expect(
+        dc.thirdPartyNote.length,
+        `${result.id}: thirdPartyNote must be 80-200 chars`,
+      ).toBeGreaterThanOrEqual(80);
+      expect(
+        dc.thirdPartyNote.length,
+        `${result.id}: thirdPartyNote must be 80-200 chars`,
       ).toBeLessThanOrEqual(200);
+    }
+  });
+
+  it("all 6 characters: compatibilityPrompt is non-empty and 20-80 chars", () => {
+    for (const result of characterFortuneResults) {
+      const dc = result.detailedContent as CharacterFortuneDetailedContent;
+      expect(
+        dc.compatibilityPrompt.length,
+        `${result.id}: compatibilityPrompt must be non-empty`,
+      ).toBeGreaterThan(0);
+      expect(
+        dc.compatibilityPrompt.length,
+        `${result.id}: compatibilityPrompt must be 20-80 chars`,
+      ).toBeGreaterThanOrEqual(20);
+      expect(
+        dc.compatibilityPrompt.length,
+        `${result.id}: compatibilityPrompt must be 20-80 chars`,
+      ).toBeLessThanOrEqual(80);
     }
   });
 });
