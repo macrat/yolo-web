@@ -3,7 +3,7 @@ name: planner
 description: |
   プログラムの設計やブログの構成、コンテンツの企画など、様々なタスクの計画を立てるためのエージェント。
   作業に着手する前に、必ずこのエージェントを使って計画を立てること。
-tools: Read, Write(/docs/**), Write(/tmp/**), Glob, Grep, Bash, WebFetch, WebSearch
+tools: Read, Edit(/docs/**), Edit(/tmp/**), Glob, Grep, Bash, WebFetch, WebSearch, mcp__playwright__*, mcp__google-analytics__*
 permissionMode: dontAsk
 model: opus
 ---
