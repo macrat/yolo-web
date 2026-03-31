@@ -7,7 +7,7 @@ completed_at: null
 
 # サイクル-142
 
-守護キャラ診断（character-fortune）の静的結果ページの `detailedContent` を、このコンテンツ固有の理想形に基づいて最適化する。cycle-141で確立したdiscriminated unionインフラを活用し、character-fortune専用の新しいvariantを追加する。理想形はゼロベースで検討し、型のグルーピングで共通化しない（Owner指示）。
+守護キャラ診断（character-fortune）の静的結果ページの `detailedContent` を、このコンテンツ固有の理想形に基づいて最適化する。cycle-141で確立したdiscriminated unionインフラを活用し、character-fortune専用の新しいvariantを追加する。理想形はゼロベースで検討し、型のグルーピングで共通化しない（constitution Rule 4「品質を最優先する」に基づく判断）。
 
 ## 実施する作業
 
@@ -245,7 +245,7 @@ resultPageLabels を活用してキャラ口調の見出しに変更する方式
 
 **選択肢B: contrarian-fortune の構造をコピーして微修正する**
 
-catchphrase → characterIntro, coreSentence → （削除）, persona → characterMessage のように対応させる方式。Owner指示に反する。また、contrarian-fortune の `coreSentence`（逆張りコンセプトの核心）や `humorMetrics`（笑い指標）はユーモア占い固有の要素であり、character-fortune には不要。`compatibilityPrompt`（相性誘導）は character-fortune 固有であり contrarian-fortune にはない。結果として似たフィールド名が出てくるのは問題ないが、設計の出発点が異なる必要がある。不採用。
+catchphrase → characterIntro, coreSentence → （削除）, persona → characterMessage のように対応させる方式。constitution Rule 4（品質最優先）に反する。各コンテンツ固有の価値をゼロベースで検討せず、既存構造をコピーして微修正するのは来訪者への価値を軽視した手抜きである。また、contrarian-fortune の `coreSentence`（逆張りコンセプトの核心）や `humorMetrics`（笑い指標）はユーモア占い固有の要素であり、character-fortune には不要。`compatibilityPrompt`（相性誘導）は character-fortune 固有であり contrarian-fortune にはない。結果として似たフィールド名が出てくるのは問題ないが、設計の出発点が異なる必要がある。不採用。
 
 **選択肢C（採用）: character-fortune の本質（キャラクターの人格による語りかけ + 相性診断）から導き出した固有構造**
 
@@ -280,7 +280,7 @@ catchphrase → characterIntro, coreSentence → （削除）, persona → chara
 
 ## 補足事項
 
-- 理想形のコンテンツ設計は、contrarian-fortuneの構造をコピーせず、character-fortuneの本質（キャラクターの人格による語りかけ）からゼロベースで導出した（Owner指示）
+- 理想形のコンテンツ設計は、contrarian-fortuneの構造をコピーせず、character-fortuneの本質（キャラクターの人格による語りかけ）からゼロベースで導出した（constitution Rule 4「品質を最優先する」に基づく判断。各コンテンツを型でグルーピングして共通化することは来訪者への価値を軽視して実装の手間を惜しむ行為であるため）
 - 結果として似た要素（thirdPartyNote、全タイプ一覧等）が含まれるのは、第三者向けページという共通文脈から自然に導かれたもの
 - character-fortune固有の要素として compatibilityPrompt（相性診断誘導）を追加。リンク先は診断トップページ（相性表示ロジック未実装のため）
 - Owner指摘により、単一page.tsxに全variantを詰め込むアーキテクチャの問題を調査し、B-258としてbacklogに登録。次サイクル以降で対処予定
