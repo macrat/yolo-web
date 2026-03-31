@@ -7,6 +7,9 @@ description: |
   最大限の効果を得るために、1つの話題につき1人のサブエージェントをアサインすること。複雑な調査をするときは複数のサブエージェントに分担させる。
   また、code-researcherによるコードベースの調査も効果的に併用すること。
 tools: Read, Edit(/tmp/**), Edit(/docs/research/**), Glob, Grep, Bash, WebFetch, WebSearch, mcp__playwright__*, mcp__google-analytics__*
+mcpServers:
+  - playwright
+  - google-analytics
 permissionMode: dontAsk
 model: sonnet
 ---

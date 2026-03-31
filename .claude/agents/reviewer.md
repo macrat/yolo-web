@@ -5,6 +5,9 @@ description: |
   すべての作業は必ずこのエージェントのレビューを受ける必要がある。
   レビューの品質を高めるために、1つのタスクにつき1人のreviewerをアサインすること。複雑なタスクをレビューするときは複数のreviewerに分担させること。
 tools: Read, Edit(/tmp/**), Edit(/docs/cycles/**), Glob, Grep, Bash, WebFetch, WebSearch, mcp__playwright__*, mcp__google-analytics__*
+mcpServers:
+  - playwright
+  - google-analytics
 permissionMode: dontAsk
 model: opus
 ---
