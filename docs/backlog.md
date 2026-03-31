@@ -2,9 +2,8 @@
 
 ## Active (進行中)
 
-| ID    | Title                                             | Priority | Target Cycle | Notes                                                                                                                                     |
-| ----- | ------------------------------------------------- | -------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| B-238 | クイズ結果ページdetailedContent追加（第2弾: 3種） | P3       | 137          | traditional-color(8結果), character-fortune(6結果), yoji-personality(8結果)の計22結果タイプにdetailedContent追加。残り6種は次サイクル以降 |
+| ID  | Title | Priority | Target Cycle | Notes |
+| --- | ----- | -------- | ------------ | ----- |
 
 ## Queued (すぐに着手できる)
 
@@ -37,6 +36,7 @@
 | B-242 | detailedContent追加: science-thinking（10結果）           | P3       | -            | 理系思考タイプ診断。B-238の継続展開                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | B-243 | detailedContent追加: japanese-culture（7結果）            | P3       | -            | あなたが極めるべき日本文化診断。B-238の継続展開                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | B-244 | detailedContent追加: word-sense-personality（8結果）      | P3       | -            | あなたの言葉センス診断。B-238の継続展開                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| B-245 | 結果ページのシェアボタンfold上移動の検討                  | P3       | -            | A/Bテスト実績でfold上移動によりシェア率490%増（ただし文脈依存）。yolos.netでの効果は要検証。出典: cycle-137調査                                                                                                                                                                                                                                                                                                                                                                                           |
 
 ## Deferred (すぐに着手できない)
 
@@ -60,4 +60,4 @@
 | B-236 | ホームページUX改善（play系コンテンツへの誘導率向上） | 135             | 6→4セクション再設計、カテゴリ別タブUI（すべて/診断/知識/ゲーム）導入、ハードコード廃止→自動選出化。全20コンテンツ発見可能に（旧12件）。ページ高さ17-19%削減                                                                                                                          |
 | B-235 | 新しいplay系コンテンツの追加（言葉センス診断）       | 134             | 検索需要調査→言葉センス診断（word-sense-personality）を新規追加。personality型・10問・8タイプ（四字熟語命名）・36組相性診断。play系コンテンツ20種に拡大                                                                                                                              |
 | B-234 | play系コンテンツ内の回遊導線再設計                   | 133             | クイズ結果直下にResultNextContent（同カテゴリ1件+異カテゴリ2件）、ゲームResultModalにCrossCategoryBanner（fortune固定+keyword重複ベスト）、静的結果ページCTA改善（タイプ別文言+コスト感訴求）。バンドルサイズ対策でpropsベース方式に変更                                             |
-| B-233 | 非play系ページからplay系への文脈的導線の追加         | 132             | ブログ記事ページと辞典詳細ページにPlayRecommendBlockを追加。タグ/テーマベースの推薦ロジック+PLAY_FEATURED_ITEMSフォールバック。heading/subtextのprops化、配置順序最適化（article外・postNav後）                                                                                      |
+| B-238 | クイズ結果ページdetailedContent追加（第2弾: 3種）    | 137             | traditional-color(8結果), character-fortune(6結果), yoji-personality(8結果)の計22結果タイプにdetailedContent追加。「あるある」体験による自己認識価値の提供が主目的。前提検証調査を実施し事実ベースで計画                                                                             |
