@@ -135,6 +135,15 @@ export async function generateMetadata({
   };
 }
 
+/**
+ * 静的結果ページ — シェアリンクや検索から来た「第三者」向けのランディングページ。
+ *
+ * このページを閲覧するのはクイズを受けた本人ではない。本人は /play/[slug] 上の
+ * ResultCard（動的コンポーネント）で結果を確認し、そこからシェアする。
+ * このページに到達するのは、シェアリンクをクリックした友人や、検索エンジンから
+ * 来た来訪者であり、彼らにとっての主要アクションは「自分もクイズを受けてみる」
+ * （CTAボタン）である。
+ */
 export default async function PlayQuizResultPage({
   params,
   searchParams,
