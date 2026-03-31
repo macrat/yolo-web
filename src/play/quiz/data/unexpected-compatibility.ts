@@ -83,6 +83,11 @@ const unexpectedCompatibilityQuiz: QuizDefinition = {
           "結果ページからSNSへのシェアができます。友達と見せ合って、どんな「意外な存在」が出たか話し合ってみてください。",
       },
     ],
+    resultPageLabels: {
+      traitsHeading: "この存在と重なる性質",
+      behaviorsHeading: "この存在と似ているシーン",
+      adviceHeading: "この存在から学べること",
+    },
   },
   questions: [
     {

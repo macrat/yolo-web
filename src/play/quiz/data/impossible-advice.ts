@@ -69,6 +69,11 @@ const impossibleAdviceQuiz: QuizDefinition = {
           "同じ回答をすれば同じ結果になります。回答を変えると異なるキャラクターが出ることがあります。いろいろ試して楽しんでください。",
       },
     ],
+    resultPageLabels: {
+      traitsHeading: "この悩みの正体",
+      behaviorsHeading: "ついやってしまうこと",
+      adviceHeading: "今日から実践しない方法",
+    },
   },
   questions: [
     {

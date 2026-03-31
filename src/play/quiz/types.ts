@@ -104,6 +104,20 @@ export interface QuizMeta {
    * 未設定の場合は title + displayCategory の組み合わせが使用される。
    */
   seoTitle?: string;
+
+  /**
+   * 結果ページのセクション見出しをカスタマイズするためのラベル（オプショナル）。
+   * 各クイズの世界観に合った見出しを設定することで、第三者向けタイプ解説ページとして
+   * より魅力的なコンテンツになる。未設定の場合はデフォルト値が使用される。
+   * - traitsHeading デフォルト: 「このタイプの特徴」
+   * - behaviorsHeading デフォルト: 「このタイプのあるある」
+   * - adviceHeading デフォルト: 「このタイプの人へのアドバイス」
+   */
+  resultPageLabels?: {
+    traitsHeading?: string;
+    behaviorsHeading?: string;
+    adviceHeading?: string;
+  };
 }
 
 /** Complete quiz definition including questions and results */

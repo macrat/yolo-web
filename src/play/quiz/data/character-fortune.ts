@@ -84,6 +84,11 @@ const characterFortuneQuiz: QuizDefinition = {
           "この診断はエンターテインメントとして制作されています。「少し違うかも」という感覚も楽しんでいただけると幸いです。もう一度回答を変えて別のキャラクターを試すこともできます。",
       },
     ],
+    resultPageLabels: {
+      traitsHeading: "このキャラが持つ素質",
+      behaviorsHeading: "このキャラがやりがちなこと",
+      adviceHeading: "守護キャラからのひとこと",
+    },
   },
   questions: [
     {
