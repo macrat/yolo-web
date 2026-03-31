@@ -3,6 +3,7 @@ import type {
   QuizResult,
   QuizResultDetailedContent,
   ContrarianFortuneDetailedContent,
+  CharacterFortuneDetailedContent,
   DetailedContent,
 } from "../types";
 
@@ -120,6 +121,70 @@ describe("DetailedContent union type", () => {
     }
     if (contrarian.variant === "contrarian-fortune") {
       expect(contrarian.catchphrase).toBe("cp");
+    }
+  });
+});
+
+describe("CharacterFortuneDetailedContent", () => {
+  it("accepts all required fields with variant='character-fortune'", () => {
+    const content: CharacterFortuneDetailedContent = {
+      variant: "character-fortune",
+      characterIntro: "わしが司令塔じゃ！戦略なら任せろ！",
+      behaviorsHeading: "司令塔タイプのあるある",
+      behaviors: [
+        "グループLINEで自然とまとめ役になっている",
+        "旅行の計画を立てるのが好き",
+        "段取りが悪い人を見るとつい口出ししてしまう",
+      ],
+      characterMessageHeading: "司令塔からの本音",
+      characterMessage:
+        "正直に言おう。わしはただ全員に最高の結果を出してほしいだけじゃ。指図したいわけじゃない。",
+      thirdPartyNote:
+        "司令塔タイプの守護を受けている人と一緒にいると、気づけば物事が前進している。",
+      compatibilityPrompt:
+        "おぬしと相性の良いキャラは誰じゃ？診断してみるがよい！",
+    };
+    expect(content.variant).toBe("character-fortune");
+    expect(content.characterIntro).toBeDefined();
+    expect(content.behaviorsHeading).toBeDefined();
+    expect(content.behaviors).toHaveLength(3);
+    expect(content.characterMessageHeading).toBeDefined();
+    expect(content.characterMessage).toBeDefined();
+    expect(content.thirdPartyNote).toBeDefined();
+    expect(content.compatibilityPrompt).toBeDefined();
+  });
+});
+
+describe("DetailedContent union type — character-fortune", () => {
+  it("can hold CharacterFortuneDetailedContent", () => {
+    const content: DetailedContent = {
+      variant: "character-fortune",
+      characterIntro: "キャラ自己紹介",
+      behaviorsHeading: "あるある見出し",
+      behaviors: ["あるある1"],
+      characterMessageHeading: "本音の見出し",
+      characterMessage: "本音テキスト",
+      thirdPartyNote: "第三者視点テキスト",
+      compatibilityPrompt: "相性診断への誘導",
+    };
+    expect(content.variant).toBe("character-fortune");
+  });
+
+  it("discriminates character-fortune variant via type narrowing", () => {
+    const content: DetailedContent = {
+      variant: "character-fortune",
+      characterIntro: "キャラ自己紹介",
+      behaviorsHeading: "あるある見出し",
+      behaviors: ["あるある1"],
+      characterMessageHeading: "本音の見出し",
+      characterMessage: "本音テキスト",
+      thirdPartyNote: "第三者視点テキスト",
+      compatibilityPrompt: "相性診断への誘導",
+    };
+
+    if (content.variant === "character-fortune") {
+      expect(content.characterIntro).toBe("キャラ自己紹介");
+      expect(content.compatibilityPrompt).toBe("相性診断への誘導");
     }
   });
 });
