@@ -9,6 +9,7 @@
  *       At least 6 out of 8 results must contain a specific action suggestion.
  */
 import { describe, it, expect } from "vitest";
+import type { QuizResultDetailedContent } from "../../types";
 import musicPersonalityQuiz from "../music-personality";
 
 const allResults = musicPersonalityQuiz.results;
@@ -30,7 +31,8 @@ describe("R2-1: traits must not paraphrase description", () => {
   it("each trait must not share a 15+ char exact substring with its description", () => {
     const violations: string[] = [];
     for (const result of allResults) {
-      const traits = result.detailedContent?.traits ?? [];
+      const traits =
+        (result.detailedContent as QuizResultDetailedContent)?.traits ?? [];
       for (const trait of traits) {
         if (hasLongOverlap(result.description, trait, 15)) {
           violations.push(
@@ -53,11 +55,14 @@ describe("R2-2: advice must be diverse and action-oriented", () => {
 
   it("at least 6 out of 8 results contain a specific action suggestion in advice", () => {
     const actionAdvices = allResults.filter((r) =>
-      ACTION_ADVICE_PATTERN.test(r.detailedContent?.advice ?? ""),
+      ACTION_ADVICE_PATTERN.test(
+        (r.detailedContent as QuizResultDetailedContent)?.advice ?? "",
+      ),
     );
 
     const actionItems = actionAdvices.map(
-      (r) => `${r.id}: ${r.detailedContent?.advice}`,
+      (r) =>
+        `${r.id}: ${(r.detailedContent as QuizResultDetailedContent)?.advice}`,
     );
 
     expect(
@@ -69,7 +74,9 @@ describe("R2-2: advice must be diverse and action-oriented", () => {
   it("advice must not use the generic template '才能です' or '強みです' for all 8 results", () => {
     const GENERIC_TEMPLATE = /才能です|強みです/;
     const genericCount = allResults.filter((r) =>
-      GENERIC_TEMPLATE.test(r.detailedContent?.advice ?? ""),
+      GENERIC_TEMPLATE.test(
+        (r.detailedContent as QuizResultDetailedContent)?.advice ?? "",
+      ),
     ).length;
 
     // Allow at most 3 out of 8 to use this pattern (majority must be different)

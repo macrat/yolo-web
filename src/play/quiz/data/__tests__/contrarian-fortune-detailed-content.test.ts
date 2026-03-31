@@ -1,12 +1,21 @@
 /**
  * Tests for detailedContent on all 8 contrarian-fortune results.
- * Each result must have a valid detailedContent with:
- *   - traits: 3-5 items, each non-empty
- *   - behaviors: 3-5 items, each non-empty
- *   - advice: non-empty string
- * Also verifies seoTitle is set on meta.
+ *
+ * Each result must have a valid ContrarianFortuneDetailedContent with:
+ *   - variant: "contrarian-fortune"
+ *   - catchphrase: 10-50 chars, non-empty
+ *   - coreSentence: 20-100 chars, non-empty, contains reversal frame
+ *   - behaviors: 3-5 items, each non-empty (10-150 chars)
+ *   - persona: 150-250 chars
+ *   - thirdPartyNote: non-empty string
+ *   - humorMetrics (optional): each item has label and value
+ *
+ * Also verifies:
+ *   - meta does NOT have resultPageLabels
+ *   - seoTitle is set on meta
  */
 import { describe, it, expect } from "vitest";
+import type { ContrarianFortuneDetailedContent } from "../../types";
 import contrarianFortuneQuiz from "../contrarian-fortune";
 
 const allResults = contrarianFortuneQuiz.results;
@@ -25,98 +34,118 @@ describe("contrarian-fortune detailedContent", () => {
     }
   });
 
-  it("traits has 3-5 items and each is non-empty", () => {
+  it("every result has variant = 'contrarian-fortune'", () => {
     for (const result of allResults) {
-      const { traits } = result.detailedContent!;
       expect(
-        traits.length,
-        `${result.id}: traits count should be 3-5`,
-      ).toBeGreaterThanOrEqual(3);
-      expect(
-        traits.length,
-        `${result.id}: traits count should be 3-5`,
-      ).toBeLessThanOrEqual(5);
-      for (const trait of traits) {
-        expect(
-          trait.length,
-          `${result.id}: each trait must be non-empty`,
-        ).toBeGreaterThan(0);
-      }
+        result.detailedContent?.variant,
+        `${result.id}: variant must be 'contrarian-fortune'`,
+      ).toBe("contrarian-fortune");
     }
   });
 
-  it("behaviors has 3-5 items and each is non-empty", () => {
+  it("catchphrase is 10-50 chars and non-empty", () => {
     for (const result of allResults) {
-      const { behaviors } = result.detailedContent!;
+      const dc = result.detailedContent as ContrarianFortuneDetailedContent;
       expect(
-        behaviors.length,
+        dc.catchphrase.length,
+        `${result.id}: catchphrase must be at least 10 chars`,
+      ).toBeGreaterThanOrEqual(10);
+      expect(
+        dc.catchphrase.length,
+        `${result.id}: catchphrase must be at most 50 chars`,
+      ).toBeLessThanOrEqual(50);
+    }
+  });
+
+  it("coreSentence is 20-100 chars and non-empty", () => {
+    for (const result of allResults) {
+      const dc = result.detailedContent as ContrarianFortuneDetailedContent;
+      expect(
+        dc.coreSentence.length,
+        `${result.id}: coreSentence must be at least 20 chars`,
+      ).toBeGreaterThanOrEqual(20);
+      expect(
+        dc.coreSentence.length,
+        `${result.id}: coreSentence must be at most 100 chars`,
+      ).toBeLessThanOrEqual(100);
+    }
+  });
+
+  it("behaviors has 3-5 items and each is non-empty (10-150 chars)", () => {
+    for (const result of allResults) {
+      const dc = result.detailedContent as ContrarianFortuneDetailedContent;
+      expect(
+        dc.behaviors.length,
         `${result.id}: behaviors count should be 3-5`,
       ).toBeGreaterThanOrEqual(3);
       expect(
-        behaviors.length,
+        dc.behaviors.length,
         `${result.id}: behaviors count should be 3-5`,
       ).toBeLessThanOrEqual(5);
-      for (const behavior of behaviors) {
+      for (const behavior of dc.behaviors) {
         expect(
           behavior.length,
-          `${result.id}: each behavior must be non-empty`,
-        ).toBeGreaterThan(0);
-      }
-    }
-  });
-
-  it("advice is a non-empty string", () => {
-    for (const result of allResults) {
-      const { advice } = result.detailedContent!;
-      expect(
-        advice.length,
-        `${result.id}: advice must be non-empty`,
-      ).toBeGreaterThan(0);
-    }
-  });
-
-  it("traits items are reasonably sized (5-150 chars each)", () => {
-    for (const result of allResults) {
-      for (const trait of result.detailedContent!.traits) {
-        expect(
-          trait.length,
-          `${result.id}: trait too short or too long`,
-        ).toBeGreaterThanOrEqual(5);
-        expect(
-          trait.length,
-          `${result.id}: trait too long (max 150)`,
-        ).toBeLessThanOrEqual(150);
-      }
-    }
-  });
-
-  it("behaviors items are reasonably sized (10-150 chars each)", () => {
-    for (const result of allResults) {
-      for (const behavior of result.detailedContent!.behaviors) {
-        expect(
-          behavior.length,
-          `${result.id}: behavior too short or too long`,
+          `${result.id}: each behavior must be at least 10 chars`,
         ).toBeGreaterThanOrEqual(10);
         expect(
           behavior.length,
-          `${result.id}: behavior too long (max 150)`,
+          `${result.id}: each behavior must be at most 150 chars`,
         ).toBeLessThanOrEqual(150);
       }
     }
   });
 
-  it("advice is reasonably sized (10-200 chars)", () => {
+  it("persona is 150-250 chars", () => {
     for (const result of allResults) {
-      const { advice } = result.detailedContent!;
+      const dc = result.detailedContent as ContrarianFortuneDetailedContent;
       expect(
-        advice.length,
-        `${result.id}: advice too short`,
-      ).toBeGreaterThanOrEqual(10);
+        dc.persona.length,
+        `${result.id}: persona must be at least 150 chars (was ${dc.persona.length})`,
+      ).toBeGreaterThanOrEqual(150);
       expect(
-        advice.length,
-        `${result.id}: advice too long (max 200)`,
-      ).toBeLessThanOrEqual(200);
+        dc.persona.length,
+        `${result.id}: persona must be at most 250 chars (was ${dc.persona.length})`,
+      ).toBeLessThanOrEqual(250);
     }
+  });
+
+  it("thirdPartyNote is non-empty string (at least 50 chars)", () => {
+    for (const result of allResults) {
+      const dc = result.detailedContent as ContrarianFortuneDetailedContent;
+      expect(
+        dc.thirdPartyNote.length,
+        `${result.id}: thirdPartyNote must be at least 50 chars`,
+      ).toBeGreaterThanOrEqual(50);
+    }
+  });
+
+  it("humorMetrics, when present, has valid label and value", () => {
+    for (const result of allResults) {
+      const dc = result.detailedContent as ContrarianFortuneDetailedContent;
+      if (dc.humorMetrics) {
+        expect(
+          Array.isArray(dc.humorMetrics),
+          `${result.id}: humorMetrics must be an array`,
+        ).toBe(true);
+        for (const metric of dc.humorMetrics) {
+          expect(
+            metric.label.length,
+            `${result.id}: humorMetrics label must be non-empty`,
+          ).toBeGreaterThan(0);
+          expect(
+            metric.value.length,
+            `${result.id}: humorMetrics value must be non-empty`,
+          ).toBeGreaterThan(0);
+        }
+      }
+    }
+  });
+
+  it("meta does NOT have resultPageLabels", () => {
+    expect(
+      contrarianFortuneQuiz.meta.resultPageLabels,
+      "meta.resultPageLabels must be removed",
+    ).toBeUndefined();
   });
 });
 

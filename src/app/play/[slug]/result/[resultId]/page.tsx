@@ -343,8 +343,15 @@ export default async function PlayQuizResultPage({
             const cf = detailedContent;
             return (
               <div className={styles.detailedSection}>
-                {/* (b) 核心の一文 */}
-                <p className={styles.coreSentence}>{cf.coreSentence}</p>
+                {/* (b) 核心の一文: accentColorの透過色背景でカード風に視覚的独立性を付与 */}
+                <p
+                  className={styles.coreSentence}
+                  style={{
+                    backgroundColor: `${quiz.meta.accentColor}18`,
+                  }}
+                >
+                  {cf.coreSentence}
+                </p>
 
                 {/* (c) あるある箇条書き */}
                 <h2

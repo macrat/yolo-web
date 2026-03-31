@@ -227,14 +227,17 @@
   line-height: 1.6;
 }
 
-/* (b) 核心の一文 */
+/* (b) 核心の一文: accentColorの薄い透過色背景でカード風に独立した要素として視覚化 */
 .coreSentence {
   font-size: 1rem;
   line-height: 1.8;
   text-align: center;
   color: var(--color-text);
   margin-bottom: 2rem;
-  padding: 1rem 0;
+  padding: 1.25rem 1.5rem;
+  /* accentColorの透過色背景はインラインstyleで設定（CSS変数非対応のため） */
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 10px;
 }
 
 /* (d) シェアボタン中間配置用 */
