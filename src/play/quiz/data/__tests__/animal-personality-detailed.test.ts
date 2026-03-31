@@ -9,6 +9,7 @@
  * - No animal ecological facts are included
  */
 import { describe, it, expect } from "vitest";
+import type { QuizResultDetailedContent } from "../../types";
 import animalPersonalityQuiz from "../animal-personality";
 
 const RESULT_IDS = [
@@ -83,7 +84,7 @@ describe("animal-personality — detailedContent presence", () => {
 describe("animal-personality — detailedContent structure", () => {
   it("each result has detailedContent.traits as a non-empty array", () => {
     for (const result of animalPersonalityQuiz.results) {
-      const dc = result.detailedContent!;
+      const dc = result.detailedContent! as QuizResultDetailedContent;
       expect(
         Array.isArray(dc.traits),
         `${result.id}: traits must be an array`,
@@ -101,7 +102,7 @@ describe("animal-personality — detailedContent structure", () => {
 
   it("each result has detailedContent.behaviors as a non-empty array", () => {
     for (const result of animalPersonalityQuiz.results) {
-      const dc = result.detailedContent!;
+      const dc = result.detailedContent! as QuizResultDetailedContent;
       expect(
         Array.isArray(dc.behaviors),
         `${result.id}: behaviors must be an array`,
@@ -119,7 +120,7 @@ describe("animal-personality — detailedContent structure", () => {
 
   it("each result has detailedContent.advice as a non-empty string", () => {
     for (const result of animalPersonalityQuiz.results) {
-      const dc = result.detailedContent!;
+      const dc = result.detailedContent! as QuizResultDetailedContent;
       expect(typeof dc.advice, `${result.id}: advice must be a string`).toBe(
         "string",
       );
@@ -132,7 +133,8 @@ describe("animal-personality — detailedContent structure", () => {
 
   it("each trait item is a non-empty string", () => {
     for (const result of animalPersonalityQuiz.results) {
-      for (const trait of result.detailedContent!.traits) {
+      for (const trait of (result.detailedContent! as QuizResultDetailedContent)
+        .traits) {
         expect(typeof trait, `${result.id}: trait must be a string`).toBe(
           "string",
         );
@@ -146,7 +148,9 @@ describe("animal-personality — detailedContent structure", () => {
 
   it("each behavior item is a non-empty string", () => {
     for (const result of animalPersonalityQuiz.results) {
-      for (const behavior of result.detailedContent!.behaviors) {
+      for (const behavior of (
+        result.detailedContent! as QuizResultDetailedContent
+      ).behaviors) {
         expect(typeof behavior, `${result.id}: behavior must be a string`).toBe(
           "string",
         );
@@ -168,7 +172,8 @@ describe("animal-personality — traits freshness (no direct copy from descripti
   it("trait items should not directly copy phrases from description", () => {
     for (const result of animalPersonalityQuiz.results) {
       const description = result.description;
-      for (const trait of result.detailedContent!.traits) {
+      for (const trait of (result.detailedContent! as QuizResultDetailedContent)
+        .traits) {
         // Extract a 12-char prefix of the trait (enough to detect copy-paste)
         const traitPrefix = trait.slice(0, 12);
         if (traitPrefix.length >= 12) {
@@ -196,7 +201,9 @@ describe("animal-personality — advice quality (concrete action, no template pa
    */
   it("fewer than 4 advice texts start with 'あなたの' (template pattern limit)", () => {
     const templateCount = animalPersonalityQuiz.results.filter((r) =>
-      r.detailedContent!.advice.startsWith("あなたの"),
+      (r.detailedContent! as QuizResultDetailedContent).advice.startsWith(
+        "あなたの",
+      ),
     ).length;
     expect(
       templateCount,
@@ -206,7 +213,7 @@ describe("animal-personality — advice quality (concrete action, no template pa
 
   it("all 12 advice texts are unique (no duplicate advice)", () => {
     const adviceList = animalPersonalityQuiz.results.map(
-      (r) => r.detailedContent!.advice,
+      (r) => (r.detailedContent! as QuizResultDetailedContent).advice,
     );
     const uniqueAdvice = new Set(adviceList);
     expect(
@@ -217,7 +224,8 @@ describe("animal-personality — advice quality (concrete action, no template pa
 
   it("no advice uses the generic 'そのままでいい' phrase", () => {
     for (const result of animalPersonalityQuiz.results) {
-      const advice = result.detailedContent!.advice;
+      const advice = (result.detailedContent! as QuizResultDetailedContent)
+        .advice;
       expect(
         advice.includes("そのままでいい"),
         `${result.id}: advice contains vague phrase "そのままでいい": "${advice}"`,

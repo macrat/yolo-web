@@ -7,6 +7,7 @@
  * Also verifies seoTitle is set on meta.
  */
 import { describe, it, expect } from "vitest";
+import type { QuizResultDetailedContent } from "../../types";
 import musicPersonalityQuiz from "../music-personality";
 
 const allResults = musicPersonalityQuiz.results;
@@ -27,7 +28,7 @@ describe("music-personality detailedContent", () => {
 
   it("traits has 3-5 items and each is non-empty", () => {
     for (const result of allResults) {
-      const { traits } = result.detailedContent!;
+      const { traits } = result.detailedContent! as QuizResultDetailedContent;
       expect(
         traits.length,
         `${result.id}: traits count should be 3-5`,
@@ -47,7 +48,8 @@ describe("music-personality detailedContent", () => {
 
   it("behaviors has 3-5 items and each is non-empty", () => {
     for (const result of allResults) {
-      const { behaviors } = result.detailedContent!;
+      const { behaviors } =
+        result.detailedContent! as QuizResultDetailedContent;
       expect(
         behaviors.length,
         `${result.id}: behaviors count should be 3-5`,
@@ -67,7 +69,7 @@ describe("music-personality detailedContent", () => {
 
   it("advice is a non-empty string", () => {
     for (const result of allResults) {
-      const { advice } = result.detailedContent!;
+      const { advice } = result.detailedContent! as QuizResultDetailedContent;
       expect(
         advice.length,
         `${result.id}: advice must be non-empty`,
@@ -77,7 +79,8 @@ describe("music-personality detailedContent", () => {
 
   it("traits items are reasonably sized (5-150 chars each)", () => {
     for (const result of allResults) {
-      for (const trait of result.detailedContent!.traits) {
+      for (const trait of (result.detailedContent! as QuizResultDetailedContent)
+        .traits) {
         expect(
           trait.length,
           `${result.id}: trait too short or too long`,
@@ -92,7 +95,9 @@ describe("music-personality detailedContent", () => {
 
   it("behaviors items are reasonably sized (10-150 chars each)", () => {
     for (const result of allResults) {
-      for (const behavior of result.detailedContent!.behaviors) {
+      for (const behavior of (
+        result.detailedContent! as QuizResultDetailedContent
+      ).behaviors) {
         expect(
           behavior.length,
           `${result.id}: behavior too short or too long`,
@@ -107,7 +112,7 @@ describe("music-personality detailedContent", () => {
 
   it("advice is reasonably sized (10-200 chars)", () => {
     for (const result of allResults) {
-      const { advice } = result.detailedContent!;
+      const { advice } = result.detailedContent! as QuizResultDetailedContent;
       expect(
         advice.length,
         `${result.id}: advice too short`,
@@ -136,7 +141,9 @@ describe("music-personality detailedContent", () => {
     ];
 
     for (const result of allResults) {
-      for (const behavior of result.detailedContent!.behaviors) {
+      for (const behavior of (
+        result.detailedContent! as QuizResultDetailedContent
+      ).behaviors) {
         for (const phrase of flaggedPhrases) {
           expect(
             behavior,
