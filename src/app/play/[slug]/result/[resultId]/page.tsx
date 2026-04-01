@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
-import Breadcrumb from "@/components/common/Breadcrumb";
 import {
   quizBySlug,
   getAllQuizSlugs,
   getResultIdsForQuiz,
 } from "@/play/quiz/registry";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
+import { countCharWidth } from "@/lib/countCharWidth";
 import { getCompatibility } from "@/play/quiz/data/music-personality";
 import {
   getCompatibility as getCharacterCompatibility,
@@ -14,13 +15,15 @@ import {
 } from "@/play/quiz/data/character-personality";
 import CompatibilityDisplay from "./CompatibilityDisplay";
 import { extractWithParam } from "./extractWithParam";
-import RelatedQuizzes from "@/play/quiz/_components/RelatedQuizzes";
-import RecommendedContent from "@/play/_components/RecommendedContent";
-import ShareButtons from "@/play/quiz/_components/ShareButtons";
-import StandardResultLayout from "./_layouts/StandardResultLayout";
-import ContrarianFortuneLayout from "./_layouts/ContrarianFortuneLayout";
-import CharacterFortuneLayout from "./_layouts/CharacterFortuneLayout";
+import DescriptionExpander from "./DescriptionExpander";
+import ResultPageShell from "@/play/quiz/_components/ResultPageShell";
 import styles from "./page.module.css";
+
+/**
+ * contrarian-fortune と character-fortune は専用の具体ルートで処理するため、
+ * 動的ルートのgenerateStaticParamsとOGP画像から除外する。
+ */
+const CONCRETE_ROUTE_SLUGS = ["contrarian-fortune", "character-fortune"];
 
 type Props = {
   params: Promise<{ slug: string; resultId: string }>;
@@ -30,40 +33,12 @@ type Props = {
 export async function generateStaticParams() {
   const params: Array<{ slug: string; resultId: string }> = [];
   for (const slug of getAllQuizSlugs()) {
+    if (CONCRETE_ROUTE_SLUGS.includes(slug)) continue;
     for (const resultId of getResultIdsForQuiz(slug)) {
       params.push({ slug, resultId });
     }
   }
   return params;
-}
-
-/**
- * 全角文字1文字 = 2、半角文字 = 1 として文字列の表示幅を計算する。
- * タイトル長の制限判定に使用する。
- */
-function countCharWidth(text: string): number {
-  let width = 0;
-  for (const char of text) {
-    const code = char.codePointAt(0) ?? 0;
-    // CJK・ひらがな・カタカナ・全角記号等を全角として判定
-    if (
-      (code >= 0x1100 && code <= 0x11ff) ||
-      (code >= 0x2e80 && code <= 0x2fff) ||
-      (code >= 0x3000 && code <= 0x9fff) ||
-      (code >= 0xa960 && code <= 0xa97f) ||
-      (code >= 0xac00 && code <= 0xd7ff) ||
-      (code >= 0xf900 && code <= 0xfaff) ||
-      (code >= 0xfe10 && code <= 0xfe1f) ||
-      (code >= 0xfe30 && code <= 0xfe4f) ||
-      (code >= 0xff00 && code <= 0xff60) ||
-      (code >= 0xffe0 && code <= 0xffe6)
-    ) {
-      width += 2;
-    } else {
-      width += 1;
-    }
-  }
-  return width;
 }
 
 export async function generateMetadata({
@@ -234,92 +209,13 @@ export default async function PlayQuizResultPage({
     quiz.meta.resultPageLabels?.adviceHeading ?? "このタイプの人へのアドバイス";
 
   return (
-    <div className={styles.wrapper}>
-      <Breadcrumb
-        items={[
-          { label: "ホーム", href: "/" },
-          { label: "遊ぶ", href: "/play" },
-          { label: quiz.meta.title, href: `/play/${slug}` },
-          { label: "結果" },
-        ]}
-      />
-      <div className={styles.card}>
-        {/* クイズ名 + shortDescription: 第三者が「この診断は何か」を即座に把握できるコンテキスト */}
-        <p className={styles.quizName}>{quiz.meta.title}の結果</p>
-        <p className={styles.quizContext}>{quiz.meta.shortDescription}</p>
-
-        {result.icon && <div className={styles.icon}>{result.icon}</div>}
-        <h1 className={styles.title}>{result.title}</h1>
-
-        {/* variant dispatch: 各variantに対応するLayoutコンポーネントへ委譲する */}
-        {(() => {
-          // variant フィールドが undefined または未設定の場合は標準形式
-          if (!detailedContent || !detailedContent.variant) {
-            return (
-              <StandardResultLayout
-                slug={slug}
-                resultId={resultId}
-                quizMeta={quiz.meta}
-                result={result}
-                shareText={shareText}
-                shareUrl={shareUrl}
-                ctaText={ctaText}
-                detailedContent={detailedContent}
-                isDescriptionLong={isDescriptionLong}
-                traitsHeading={traitsHeading}
-                behaviorsHeading={behaviorsHeading}
-                adviceHeading={adviceHeading}
-              />
-            );
-          }
-          switch (detailedContent.variant) {
-            case "contrarian-fortune":
-              return (
-                <ContrarianFortuneLayout
-                  slug={slug}
-                  resultId={resultId}
-                  quizMeta={quiz.meta}
-                  result={result}
-                  shareText={shareText}
-                  shareUrl={shareUrl}
-                  ctaText={ctaText}
-                  detailedContent={detailedContent}
-                  allResults={quiz.results}
-                />
-              );
-            case "character-fortune":
-              return (
-                <CharacterFortuneLayout
-                  slug={slug}
-                  resultId={resultId}
-                  quizMeta={quiz.meta}
-                  result={result}
-                  shareText={shareText}
-                  shareUrl={shareUrl}
-                  ctaText={ctaText}
-                  detailedContent={detailedContent}
-                  allResults={quiz.results}
-                />
-              );
-            default: {
-              const _exhaustive: never = detailedContent;
-              return _exhaustive;
-            }
-          }
-        })()}
-
-        <div className={styles.shareSection}>
-          <ShareButtons
-            shareText={shareText}
-            shareUrl={shareUrl}
-            quizTitle={quiz.meta.title}
-            contentType={
-              quiz.meta.type === "personality" ? "diagnosis" : "quiz"
-            }
-            contentId={`quiz-${slug}`}
-          />
-        </div>
-        {compatData && (
+    <ResultPageShell
+      quiz={quiz}
+      result={result}
+      shareText={shareText}
+      shareUrl={shareUrl}
+      afterShare={
+        compatData ? (
           <CompatibilityDisplay
             quizSlug={slug}
             quizTitle={quiz.meta.title}
@@ -327,10 +223,84 @@ export default async function PlayQuizResultPage({
             myType={compatData.myType}
             friendType={compatData.friendType}
           />
-        )}
+        ) : undefined
+      }
+    >
+      {/* Standard variant のレンダリングロジックをインライン化 */}
+      {/* DescriptionExpander + CTA1 は常に表示 */}
+      <DescriptionExpander
+        description={result.description}
+        isLong={isDescriptionLong}
+      />
+
+      {/* CTA1 */}
+      <div className={styles.trySection}>
+        <Link
+          href={`/play/${slug}`}
+          className={styles.tryButton}
+          style={{ backgroundColor: quiz.meta.accentColor }}
+        >
+          {ctaText}
+        </Link>
+        <p className={styles.tryCost}>
+          全{quiz.meta.questionCount}問 / 登録不要
+        </p>
       </div>
-      <RelatedQuizzes currentSlug={slug} category={quiz.meta.category} />
-      <RecommendedContent currentSlug={slug} />
-    </div>
+
+      {/* detailedContent がある場合のみ追加セクションを表示（標準形式）。
+          動的ルートではCONCRETE_ROUTE_SLUGSを除外しているためvariantは常にundefined。
+          型ナローイングのために !detailedContent.variant を条件に含める。 */}
+      {detailedContent && !detailedContent.variant && (
+        <div className={styles.detailedSection}>
+          <h2
+            className={styles.detailedSectionHeading}
+            style={{ color: quiz.meta.accentColor }}
+          >
+            {traitsHeading}
+          </h2>
+          <ul className={styles.traitsList}>
+            {detailedContent.traits.map((trait, i) => (
+              <li key={i} className={styles.traitsItem}>
+                {trait}
+              </li>
+            ))}
+          </ul>
+
+          <h2
+            className={styles.detailedSectionHeading}
+            style={{ color: quiz.meta.accentColor }}
+          >
+            {behaviorsHeading}
+          </h2>
+          <ul className={styles.behaviorsList}>
+            {detailedContent.behaviors.map((behavior, i) => (
+              <li key={i} className={styles.behaviorsItem}>
+                {behavior}
+              </li>
+            ))}
+          </ul>
+
+          <h2
+            className={styles.detailedSectionHeading}
+            style={{ color: quiz.meta.accentColor }}
+          >
+            {adviceHeading}
+          </h2>
+          <div
+            className={styles.adviceCard}
+            style={{ backgroundColor: `${quiz.meta.accentColor}18` }}
+          >
+            {detailedContent.advice}
+          </div>
+
+          {/* CTA2: detailedContent読了者向けのテキストリンク形式CTA */}
+          <div className={styles.cta2Section}>
+            <Link href={`/play/${slug}`} className={styles.cta2Link}>
+              {ctaText}
+            </Link>
+          </div>
+        </div>
+      )}
+    </ResultPageShell>
   );
 }

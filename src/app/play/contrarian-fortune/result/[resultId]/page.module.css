@@ -1,8 +1,7 @@
 /**
- * ContrarianFortuneLayout 専用スタイル。
- * contrarian-fortune variant 固有のクラスと、
- * contrarian/character 両方で共有されるクラスをここで定義する。
- * 共通クラス（detailedSection, behaviorsList 等）は pageStyles (page.module.css) で参照する。
+ * contrarian-fortune専用結果ページのスタイル。
+ * ContrarianFortuneLayout.module.css と [slug]/result/[resultId]/page.module.css
+ * の必要なクラスを1ファイルに統合している。
  */
 
 /* ============================================================
@@ -62,10 +61,6 @@
   font-weight: 600;
   width: 50%;
 }
-
-/* ============================================================
-   contrarian-fortune + character-fortune 共有スタイル
-   ============================================================ */
 
 /* (d) シェアボタン中間配置用 */
 .midShareSection {
@@ -151,4 +146,81 @@
   text-align: center;
   color: var(--color-text);
   margin-bottom: 1rem;
+}
+
+/* ============================================================
+   variant-shared content styles（[slug]/result/[resultId]/page.module.cssから移植）
+   ============================================================ */
+
+.trySection {
+  margin-bottom: 0;
+}
+
+.tryButton {
+  display: inline-block;
+  padding: 0.875rem 2rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.tryButton:hover {
+  opacity: 0.9;
+}
+
+.tryCost {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  margin-top: 0.5rem;
+  margin-bottom: 0;
+}
+
+/* ============================================================
+   detailedContent セクション
+   ============================================================ */
+
+.detailedSection {
+  margin-top: 2rem;
+  text-align: left;
+}
+
+.detailedSectionHeading {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  /* accentColor を CSS変数経由でカラーリング（インラインstyleで設定） */
+  padding-left: 0.75rem;
+  border-left: 4px solid currentColor;
+}
+
+.behaviorsList {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.behaviorsItem {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--color-text);
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  /* 「わかる!」感を強調するカード風デザイン */
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+}
+
+.behaviorsItem::before {
+  content: "💡";
+  flex-shrink: 0;
 }
