@@ -2,7 +2,7 @@
 id: 144
 description: "結果ページのルート設計をゼロから再検討（cycle-143全面破棄→Next.jsルート分離+ResultPageShell）"
 started_at: "2026-04-01T15:45:40+0900"
-completed_at: null
+completed_at: "2026-04-01T17:35:09+0900"
 ---
 
 # サイクル-144
@@ -717,7 +717,7 @@ B-251〜B-257で新variantを追加する場合、以下の作業で済む構造
 - [x] すべての変更がレビューされ、残存する指摘事項が無くなっている。
 - [x] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
 - [x] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
-- [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
+- [x] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
 - [x] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
 
 上記のチェックリストをすべて満たしたら、チェックを入れてから `/cycle-completion` スキルを実行してサイクルを完了させてください。
