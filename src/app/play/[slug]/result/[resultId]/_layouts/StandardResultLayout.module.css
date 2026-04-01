@@ -1,0 +1,71 @@
+/**
+ * StandardResultLayout 専用スタイル。
+ * page.module.css から Standard形式（traits/behaviors/advice）固有のスタイルを分離。
+ * 共通クラス（trySection, tryButton, tryCost, detailedSection 等）は pageStyles で参照する。
+ */
+
+.traitsList {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.traitsItem {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--color-text);
+  padding: 0.5rem 0.75rem;
+  background: var(--color-surface, #f8f8f8);
+  border-radius: 6px;
+  /* bullet代わりの絵文字 */
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.traitsItem::before {
+  content: "✓";
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 0.05rem;
+}
+
+.adviceCard {
+  padding: 1.25rem 1.5rem;
+  border-radius: 10px;
+  /* accentColorをopacityで薄めた背景色はインラインstyleで設定 */
+  font-size: 1rem;
+  line-height: 1.7;
+  font-weight: 500;
+  color: var(--color-text);
+  margin-bottom: 0;
+  text-align: center;
+}
+
+/* CTA2: detailedContent読了者向けのテキストリンク形式CTA */
+.cta2Section {
+  margin-top: 2rem;
+  text-align: center;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border);
+}
+
+/* CTA1より控えめなテキストリンク形式（アウトラインボタン風） */
+.cta2Link {
+  display: inline-block;
+  padding: 0.625rem 1.5rem;
+  border: 1.5px solid currentColor;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-text);
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.cta2Link:hover {
+  opacity: 0.7;
+}

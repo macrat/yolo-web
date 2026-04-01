@@ -1,0 +1,154 @@
+/**
+ * ContrarianFortuneLayout 専用スタイル。
+ * contrarian-fortune variant 固有のクラスと、
+ * contrarian/character 両方で共有されるクラスをここで定義する。
+ * 共通クラス（detailedSection, behaviorsList 等）は pageStyles (page.module.css) で参照する。
+ */
+
+/* ============================================================
+   contrarian-fortune variant 固有スタイル
+   ============================================================ */
+
+/* (a) キャッチコピー: h1直下のサブタイトル */
+.catchphrase {
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--color-text-muted);
+  text-align: center;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+/* (b) 核心の一文: accentColorの薄い透過色背景でカード風に独立した要素として視覚化 */
+.coreSentence {
+  font-size: 1rem;
+  line-height: 1.8;
+  text-align: center;
+  color: var(--color-text);
+  margin-bottom: 2rem;
+  padding: 1.25rem 1.5rem;
+  /* accentColorの透過色背景はインラインstyleで設定（CSS変数非対応のため） */
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 10px;
+}
+
+/* (e) タイプの人物像（散文表示） */
+.persona {
+  font-size: 0.95rem;
+  line-height: 1.9;
+  color: var(--color-text);
+  text-align: left;
+  margin-bottom: 2rem;
+  padding: 0 0.25rem;
+}
+
+/* (g) タイプ固有の笑い指標テーブル */
+.humorMetricsTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 2rem;
+  font-size: 0.9rem;
+}
+
+.humorMetricsTable th,
+.humorMetricsTable td {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--color-border);
+  text-align: left;
+}
+
+.humorMetricsTable th {
+  background: var(--color-surface, #f8f8f8);
+  font-weight: 600;
+  width: 50%;
+}
+
+/* ============================================================
+   contrarian-fortune + character-fortune 共有スタイル
+   ============================================================ */
+
+/* (d) シェアボタン中間配置用 */
+.midShareSection {
+  margin: 1.5rem 0;
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  text-align: center;
+}
+
+/* (f) 第三者専用セクション */
+.thirdPartySection {
+  margin-bottom: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.thirdPartyHeading {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.875rem;
+  padding-left: 0.75rem;
+  border-left: 4px solid currentColor;
+}
+
+.thirdPartyNote {
+  font-size: 0.95rem;
+  line-height: 1.9;
+  color: var(--color-text);
+  text-align: left;
+  margin: 0;
+}
+
+/* (h) 全タイプ一覧セクション */
+.allTypesSection {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.allTypesList {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.allTypesItem a,
+.allTypesItemCurrent a {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.4rem 0.875rem;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.allTypesItem a {
+  color: var(--color-text);
+  border: 1.5px solid var(--color-border);
+  background: transparent;
+}
+
+.allTypesItem a:hover {
+  opacity: 0.7;
+}
+
+/* 現在表示中のタイプをハイライト */
+.allTypesItemCurrent a {
+  color: var(--color-text);
+  border: 2px solid currentColor;
+  background: var(--color-surface, #f8f8f8);
+  font-weight: 700;
+}
+
+.allTypesCta {
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  color: var(--color-text);
+  margin-bottom: 1rem;
+}

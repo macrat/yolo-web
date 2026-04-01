@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import styles from "./page.module.css";
+import styles from "./DescriptionExpander.module.css";
 
 interface Props {
   /** 表示するdescriptionテキスト */

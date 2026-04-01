@@ -114,15 +114,18 @@ describe("play/[slug]/result/[resultId]/page.tsx", () => {
   });
 
   describe("CTA2（detailedContent読了者向け）", () => {
-    it("detailedContentがある場合にCTA2を表示するロジックがある", () => {
-      // CTA2はdetailedContentがある場合のみ表示
-      expect(pageSource).toContain("cta2");
+    it("StandardResultLayoutにCTA2のロジックが委譲されている（StandardResultLayoutをimportしている）", () => {
+      // dispatch化によりCTA2ロジックはStandardResultLayoutに移動済み。
+      // page.tsxはStandardResultLayoutをimportして委譲する形になっている。
+      expect(pageSource).toContain("StandardResultLayout");
     });
   });
 
   describe("DescriptionExpanderコンポーネントの利用", () => {
-    it("DescriptionExpanderをインポートしている", () => {
-      expect(pageSource).toContain("DescriptionExpander");
+    it("DescriptionExpanderの利用はStandardResultLayoutに委譲されている（StandardResultLayoutをimportしている）", () => {
+      // dispatch化によりDescriptionExpanderはStandardResultLayout内で使用される。
+      // page.tsxはStandardResultLayoutをimportして委譲する形になっている。
+      expect(pageSource).toContain("StandardResultLayout");
     });
   });
 
