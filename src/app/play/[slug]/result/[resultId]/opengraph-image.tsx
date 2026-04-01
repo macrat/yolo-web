@@ -13,9 +13,16 @@ export const alt = "クイズ結果";
 export const size = ogpSize;
 export const contentType = ogpContentType;
 
+/**
+ * contrarian-fortune と character-fortune は専用の具体ルートで処理するため、
+ * 動的ルートのOGP画像から除外する。
+ */
+const CONCRETE_ROUTE_SLUGS = ["contrarian-fortune", "character-fortune"];
+
 export function generateStaticParams() {
   const params: Array<{ slug: string; resultId: string }> = [];
   for (const slug of getAllQuizSlugs()) {
+    if (CONCRETE_ROUTE_SLUGS.includes(slug)) continue;
     for (const resultId of getResultIdsForQuiz(slug)) {
       params.push({ slug, resultId });
     }

@@ -1,39 +1,6 @@
-.wrapper {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 1rem 0.5rem;
-  width: 100%;
-}
-
-.card {
-  text-align: center;
-  padding: 2rem 1rem;
-}
-
-.icon {
-  font-size: 3rem;
-  margin-bottom: 0.5rem;
-}
-
-.title {
-  font-size: 1.75rem;
-  font-weight: 700;
-  margin-bottom: 0.75rem;
-}
-
-.quizName {
-  font-size: 0.875rem;
-  color: var(--color-text-muted);
-  margin-bottom: 0.25rem;
-}
-
-/* クイズのshortDescription: 第三者が診断内容を即座に把握するためのコンテキスト */
-.quizContext {
-  font-size: 0.8rem;
-  color: var(--color-text-muted);
-  margin-bottom: 1.25rem;
-  line-height: 1.5;
-}
+/* ============================================================
+   CTA1セクション
+   ============================================================ */
 
 .trySection {
   margin-bottom: 0;
@@ -61,12 +28,6 @@
   color: var(--color-text-muted);
   margin-top: 0.5rem;
   margin-bottom: 0;
-}
-
-.shareSection {
-  margin-top: 1.5rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--color-border);
 }
 
 /* ============================================================
@@ -113,4 +74,75 @@
 .behaviorsItem::before {
   content: "💡";
   flex-shrink: 0;
+}
+
+/* ============================================================
+   traits（特徴リスト）・advice・CTA2
+   StandardResultLayoutから移植
+   ============================================================ */
+
+.traitsList {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.traitsItem {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--color-text);
+  padding: 0.5rem 0.75rem;
+  background: var(--color-surface, #f8f8f8);
+  border-radius: 6px;
+  /* bullet代わりの絵文字 */
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.traitsItem::before {
+  content: "✓";
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 0.05rem;
+}
+
+.adviceCard {
+  padding: 1.25rem 1.5rem;
+  border-radius: 10px;
+  /* accentColorをopacityで薄めた背景色はインラインstyleで設定 */
+  font-size: 1rem;
+  line-height: 1.7;
+  font-weight: 500;
+  color: var(--color-text);
+  margin-bottom: 0;
+  text-align: center;
+}
+
+/* CTA2: detailedContent読了者向けのテキストリンク形式CTA */
+.cta2Section {
+  margin-top: 2rem;
+  text-align: center;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border);
+}
+
+/* CTA1より控えめなテキストリンク形式（アウトラインボタン風） */
+.cta2Link {
+  display: inline-block;
+  padding: 0.625rem 1.5rem;
+  border: 1.5px solid currentColor;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-text);
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.cta2Link:hover {
+  opacity: 0.7;
 }

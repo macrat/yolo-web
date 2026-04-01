@@ -1,14 +1,90 @@
 /*
- * CharacterFortuneLayout 専用スタイル。
- * B-258: 結果ページコンポーネントのアーキテクチャ改善で page.module.css から分離。
+ * character-fortune 専用結果ページのスタイル。
+ * ステップ4: /play/character-fortune/result/[resultId] 専用ルートのスタイル。
  *
- * このファイルには character-fortune variant 固有のクラスと、
- * contrarian-fortune と共有するセクション系クラスを含む。
- * 共通クラス（detailedSection, behaviorsList など）は pageStyles 経由で参照する。
+ * variant-shared content styles（[slug]/result/[resultId]/page.module.css より）と
+ * character-fortune 固有スタイル（CharacterFortuneLayout.module.css より）を
+ * 1ファイルに統合する。
  */
 
 /* ============================================================
+   variant-shared content styles
+   （[slug]/result/[resultId]/page.module.css からコピー）
+   ============================================================ */
+
+.trySection {
+  margin-bottom: 0;
+}
+
+.tryButton {
+  display: inline-block;
+  padding: 0.875rem 2rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.tryButton:hover {
+  opacity: 0.9;
+}
+
+.tryCost {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  margin-top: 0.5rem;
+  margin-bottom: 0;
+}
+
+/* detailedContent セクション */
+.detailedSection {
+  margin-top: 2rem;
+  text-align: left;
+}
+
+.detailedSectionHeading {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  /* accentColor を CSS変数経由でカラーリング（インラインstyleで設定） */
+  padding-left: 0.75rem;
+  border-left: 4px solid currentColor;
+}
+
+.behaviorsList {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.behaviorsItem {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--color-text);
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  /* 「わかる!」感を強調するカード風デザイン */
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+}
+
+.behaviorsItem::before {
+  content: "💡";
+  flex-shrink: 0;
+}
+
+/* ============================================================
    character-fortune variant 固有スタイル
+   （CharacterFortuneLayout.module.css からコピー）
    ============================================================ */
 
 /* (a) キャラクターの自己紹介 */
@@ -46,11 +122,6 @@
   color: var(--color-text);
   margin-bottom: 1rem;
 }
-
-/* ============================================================
-   contrarian-fortune + character-fortune 共有スタイル
-   （ContrarianFortuneLayout.module.css と重複定義）
-   ============================================================ */
 
 /* シェアボタン中間配置用 */
 .midShareSection {
