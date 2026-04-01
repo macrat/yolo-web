@@ -276,7 +276,8 @@ catchphrase → characterIntro, coreSentence → （削除）, persona → chara
 
 ## キャリーオーバー
 
-- **B-258: 結果ページコンポーネントのアーキテクチャ改善（variant別コンポーネント分離）**: 現在 `/play/[slug]/result/[resultId]/page.tsx` が単一コンポーネントで全クイズの結果ページを処理しており、variant ごとの条件分岐（9箇所）が埋め込まれている。page.tsx は 601行、page.module.css は 398行に達し、その約半分が variant 固有のコード。B-250〜B-257 が全て実装されると推定 1,400〜1,500 行に肥大化し、否定条件リスト（`variant !== "X" && variant !== "Y" && ...`）が 9 項目に増殖して修正漏れバグのリスクが高まる。また、同一コンポーネント内の制約により各コンテンツ固有の「あるべきレイアウト」を追求できない不自由さがある。constitution のゴール（来訪者に最高の価値を提供する）に照らして不適切。variant 別の Server Component 分離またはルートレベルの分離を検討すべき。分析レポート: `docs/2026-03-31-result-page-component-architecture-analysis.md`。**B-251 着手前に対処すべき（現段階が移行コスト最小）**
+- **B-258: 結果ページコンポーネントのアーキテクチャ改善（variant別コンポーネント分離）**: 現在 `/play/[slug]/result/[resultId]/page.tsx` が単一コンポーネントで全クイズの結果ページを処理しており、variant ごとの条件分岐（9箇所）が埋め込まれている。page.tsx は 601行、page.module.css は 398行に達し、その約半分が variant 固有のコード。B-250〜B-257 が全て実装されると推定 1,400〜1,500 行に肥大化し、否定条件リスト（`variant !== "X" && variant !== "Y" && ...`）が 9 項目に増殖して修正漏れバグのリスクが高まる。また、同一コンポーネント内の制約により各コンテンツ固有の「あるべきレイアウト」を追求できない不自由さがある。constitution のゴール（来訪者に最高の価値を提供する）に照らして不適切。variant 別の Server Component 分離またはルートレベルの分離を検討すべき。分析レポート: `docs/research/2026-03-31-result-page-component-architecture-analysis.md`。**B-251 着手前に対処すべき（現段階が移行コスト最小）**
+- **B-259: 受検者本人向け結果画面へのdetailedContent表示追加の検討**: 全クイズ共通で、受検者本人が見るResultCardはdetailedContentを一切表示していない。一方、第三者向け静的ページではdetailedContent（behaviors, characterMessage, thirdPartyNote等）が表示される。受検者と第三者が互いに相手が見ていない情報を見ている逆転現象が生じている。受検者がシェアした情報と第三者が見る情報の乖離は、受検者の意図しない体験を生むリスクがある。constitution Rule 4（品質優先）の観点で受検者の体験が最高水準に達しておらず、constitution Rule 2（来訪者を悲しませない）の観点でも乖離によるリスクの検討が必要。調査レポート: `docs/research/2026-03-31-character-fortune-information-disparity-investigation.md`
 
 ## 補足事項
 
@@ -362,7 +363,7 @@ catchphrase → characterIntro, coreSentence → （削除）, persona → chara
 
 #### 事故2: 永続化されないtmpディレクトリのファイルをbacklog.mdから参照した
 
-B-258（結果ページコンポーネントのアーキテクチャ改善）に関する分析レポートが `tmp/research/` に保存され、backlog.mdおよびcycle-142.mdのキャリーオーバーからそのパスで参照されていた。`tmp/` ディレクトリはgit管理外であり永続化されない。次のサイクルでこのレポートを参照しようとしたときに内容が失われている可能性があった。`docs/2026-03-31-result-page-component-architecture-analysis.md` に移動し、参照先を修正した。
+B-258（結果ページコンポーネントのアーキテクチャ改善）に関する分析レポートが `tmp/research/` に保存され、backlog.mdおよびcycle-142.mdのキャリーオーバーからそのパスで参照されていた。`tmp/` ディレクトリはgit管理外であり永続化されない。次のサイクルでこのレポートを参照しようとしたときに内容が失われている可能性があった。`docs/research/2026-03-31-result-page-component-architecture-analysis.md` に移動し、参照先を修正した。
 
 #### 事故3: 調査資料ではないファイルをdocs/research/に保存しようとした
 
