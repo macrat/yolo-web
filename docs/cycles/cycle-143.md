@@ -24,15 +24,480 @@ completed_at: null
 
 ### 目的
 
+- **誰のために:** 将来の各コンテンツ固有の理想的 detailedContent レイアウト（B-251〜B-257）を高品質に実装するための開発基盤整備。最終的にはメインターゲット「手軽で面白い占い・診断を楽しみたい人」に、より充実した結果ページを提供するための前提条件。
+- **提供する価値:** page.tsx（601行）の variant 条件分岐9箇所を dispatch 1箇所に削減し、新 variant 追加時の影響範囲を「新ファイル追加 + dispatch 行追加のみ」に限定する。B-257 完了時に推定 1,500行に膨れ上がる問題と、否定条件列挙パターンによる修正漏れリスクを未然に防ぐ。
+
 ### 作業内容
+
+全8ステップで実施する。各ステップは独立してビルド・テストが通る状態を維持する。
+
+#### ステップ1: DescriptionExpander の CSS 分離
+
+**対象ファイル:**
+
+- `src/app/play/[slug]/result/[resultId]/DescriptionExpander.tsx`（L4: `import styles from "./page.module.css"`）
+- `src/app/play/[slug]/result/[resultId]/page.module.css`（L38〜L68: `.descriptionWrapper`, `.description`, `.descriptionClamped`, `.descriptionToggle`）
+
+**作業内容:**
+
+1. `src/app/play/[slug]/result/[resultId]/DescriptionExpander.module.css` を新規作成し、page.module.css の L38〜L68 の4クラス（`.descriptionWrapper`, `.description`, `.descriptionClamped`, `.descriptionToggle`）をコピーする
+2. `DescriptionExpander.tsx` の import を `./page.module.css` から `./DescriptionExpander.module.css` に変更する
+3. `page.module.css` から上記4クラスを削除する（page.tsx 側ではこれらのクラスを直接使用していないため安全に削除可能）
+
+**理由:** DescriptionExpander は Client Component であり、page.module.css への依存は関心の分離に反する。後続の CSS 分割の前にこの依存を先に解消しておくことで、page.module.css の分割が単純になる。
+
+**注意点:** `__tests__/DescriptionExpander.test.tsx` が存在するため、CSS Module の mock が必要かどうか確認すること。
+
+#### ステップ2: 共通 props の型定義（interface）を作成
+
+**対象ファイル:**
+
+- `src/app/play/[slug]/result/[resultId]/_layouts/types.ts`（新規作成）
+
+**`_layouts/` の命名理由:** 研究レポートでは `_variants/` が使われていたが、分離するコンポーネントの責務は「レイアウト（表示構造の決定）」であるため `_layouts/` の方が役割を正確に表現する。また Next.js の `_` プレフィックス規約（ルーティング対象外を示す）にも従っている。
+
+**作業内容:**
+
+1. `_layouts/` ディレクトリを作成する
+2. `_layouts/types.ts` を作成し、以下の interface を定義する:
+   - `ResultLayoutCommonProps` — 全 Layout 共通の props（`slug`, `resultId`, `quizMeta: QuizMeta`, `result: QuizResult`, `shareText`, `shareUrl`, `ctaText`）
+   - `StandardResultLayoutProps extends ResultLayoutCommonProps` — `detailedContent: QuizResultDetailedContent | undefined`, `isDescriptionLong: boolean`, `traitsHeading: string`, `behaviorsHeading: string`, `adviceHeading: string` を追加
+   - `ContrarianFortuneLayoutProps extends ResultLayoutCommonProps` — `detailedContent: ContrarianFortuneDetailedContent`, `allResults: QuizResult[]` を追加
+   - `CharacterFortuneLayoutProps extends ResultLayoutCommonProps` — `detailedContent: CharacterFortuneDetailedContent`, `allResults: QuizResult[]` を追加
+
+**理由:** 型定義を先に作成しておくことで、各 Layout コンポーネントの実装時に型安全性を確保できる。コーディングルール「型安全の徹底」に従う。
+
+#### ステップ3: StandardResultLayout の作成
+
+**対象ファイル:**
+
+- `src/app/play/[slug]/result/[resultId]/_layouts/StandardResultLayout.tsx`（新規作成）
+- `src/app/play/[slug]/result/[resultId]/_layouts/StandardResultLayout.module.css`（新規作成）
+
+**作業内容:**
+
+1. page.tsx の以下の範囲を StandardResultLayout に移動する:
+   - L259〜L285: description（DescriptionExpander）+ CTA1
+   - L287〜L340: 標準 detailedContent（traits/behaviors/advice + CTA2）
+2. page.module.css から StandardResultLayout が使用する Standard 専用クラスを StandardResultLayout.module.css にコピーする:
+   - `.traitsList`, `.traitsItem`, `.adviceCard`, `.cta2Section`, `.cta2Link`（Standard 専用 — page.module.css からは後のステップ7で削除）
+3. 共通クラス（全 variant で使用するため page.module.css に残し、`pageStyles` で参照する）:
+   - `.trySection`, `.tryButton`, `.tryCost`（CTA1 用 — Standard, Contrarian, Character すべてで使用）
+   - `.detailedSection`, `.detailedSectionHeading`（Standard, Contrarian, Character すべてで使用）
+   - `.behaviorsList`, `.behaviorsItem`（Standard, Contrarian, Character すべてで使用）
+4. import 一覧:
+   - `Link from "next/link"`（CTA1: L274, CTA2: L335 のリンクに使用）
+   - `DescriptionExpander from "../DescriptionExpander"`（description 表示に使用）
+   - `styles from "./StandardResultLayout.module.css"`（Standard 専用クラス `.traitsList`, `.traitsItem`, `.adviceCard`, `.cta2Section`, `.cta2Link` 用）
+   - `pageStyles from "../page.module.css"`（共通クラス `.detailedSection`, `.detailedSectionHeading`, `.behaviorsList`, `.behaviorsItem`, `.trySection`, `.tryButton`, `.tryCost` の参照用）
+   - 注: `ShareButtons` は standard variant 内では使用しないため import 不要
+
+**props 名の変更に関する注意:** JSX 内の `quiz.meta.accentColor`, `quiz.meta.title`, `quiz.meta.questionCount` 等の参照を、props 経由の `quizMeta.accentColor`, `quizMeta.title`, `quizMeta.questionCount` に変更すること。同様に `quiz.results` は `allResults` props に変更する（ContrarianFortuneLayout, CharacterFortuneLayout の場合）。
+
+**CSS の扱いについて:**
+
+- `.detailedSection`, `.detailedSectionHeading`, `.behaviorsList`, `.behaviorsItem`, `.trySection`, `.tryButton`, `.tryCost` は全3 variant（Standard, Contrarian, Character）で使用されている共通クラスである。これらは page.module.css に残し、各 Layout は `pageStyles from "../page.module.css"` として参照する
+- variant 固有クラスのみ各 Layout の CSS Module に定義する（例: Standard は `.traitsList`, `.traitsItem`, `.adviceCard`, `.cta2Section`, `.cta2Link`）
+
+#### ステップ4: ContrarianFortuneLayout の作成
+
+**対象ファイル:**
+
+- `src/app/play/[slug]/result/[resultId]/_layouts/ContrarianFortuneLayout.tsx`（新規作成）
+- `src/app/play/[slug]/result/[resultId]/_layouts/ContrarianFortuneLayout.module.css`（新規作成）
+
+**作業内容:**
+
+1. page.tsx の以下の範囲を ContrarianFortuneLayout に移動する:
+   - L253〜L257: catchphrase（h1直下のサブタイトル）
+   - L342〜L448: contrarian-fortune 専用レイアウト全体
+2. page.module.css の contrarian-fortune 専用スタイル（コメントヘッダー L216〜L219、クラス定義 L221`.catchphrase` 〜 L358`.allTypesCta`）を ContrarianFortuneLayout.module.css に移動する:
+   - `.catchphrase`, `.coreSentence`, `.midShareSection`, `.persona`, `.thirdPartySection`, `.thirdPartyHeading`, `.thirdPartyNote`, `.humorMetricsTable`, `.allTypesSection`, `.allTypesList`, `.allTypesItem`, `.allTypesItemCurrent`, `.allTypesCta`
+3. 共通クラス（`.detailedSection`, `.detailedSectionHeading`, `.behaviorsList`, `.behaviorsItem`, `.trySection`, `.tryButton`, `.tryCost`）は `pageStyles from "../page.module.css"` で参照する
+4. import: `Link from "next/link"`, `ShareButtons from "@/play/quiz/_components/ShareButtons"`
+
+**注意点:**
+
+- `.thirdPartySection`, `.thirdPartyHeading`, `.thirdPartyNote` は character-fortune でも使用される。これらのクラスは ContrarianFortuneLayout.module.css と CharacterFortuneLayout.module.css の両方に定義する（各 Layout の CSS が自己完結するため、将来の variant 固有カスタマイズが容易になる）
+- `.midShareSection` も同様に両方で使用されるため、両方に定義する
+- `.allTypesSection`, `.allTypesList`, `.allTypesItem`, `.allTypesItemCurrent`, `.allTypesCta` も両方で使用されるため、両方に定義する
+
+#### ステップ5: CharacterFortuneLayout の作成
+
+**対象ファイル:**
+
+- `src/app/play/[slug]/result/[resultId]/_layouts/CharacterFortuneLayout.tsx`（新規作成）
+- `src/app/play/[slug]/result/[resultId]/_layouts/CharacterFortuneLayout.module.css`（新規作成）
+
+**作業内容:**
+
+1. page.tsx の L450〜L574（character-fortune 専用レイアウト全体）を CharacterFortuneLayout に移動する
+2. page.module.css の character-fortune 専用スタイル（コメントヘッダー L360〜L363、クラス定義 L365`.characterIntro` 〜 L399`.compatibilityPrompt`）を CharacterFortuneLayout.module.css に移動する:
+   - `.characterIntro`, `.characterMessage`, `.compatibilitySection`, `.compatibilityPrompt`
+3. contrarian-fortune と共有するクラス（`.thirdPartySection`, `.thirdPartyHeading`, `.thirdPartyNote`, `.midShareSection`, `.allTypesSection`, `.allTypesList`, `.allTypesItem`, `.allTypesItemCurrent`, `.allTypesCta`）を CharacterFortuneLayout.module.css にも定義する
+4. 共通クラスは `pageStyles from "../page.module.css"` で参照する
+5. import: `Link from "next/link"`, `ShareButtons from "@/play/quiz/_components/ShareButtons"`
+
+#### ステップ6: page.tsx の書き換え（dispatch 化）
+
+**対象ファイル:**
+
+- `src/app/play/[slug]/result/[resultId]/page.tsx`
+
+**作業内容:**
+
+1. 3つの Layout コンポーネントを import する
+2. L253〜L574 の variant 固有 JSX を削除し、variant dispatch ロジックに置き換える
+3. dispatch は以下の形式にする（exhaustive check 付き）:
+   ```
+   共通ヘッダー（quizName, quizContext, icon, title）
+   ↓
+   variant dispatch: switch (detailedContent?.variant) で Layout を選択
+     - undefined → <StandardResultLayout ... />
+     - "contrarian-fortune" → <ContrarianFortuneLayout ... />
+     - "character-fortune" → <CharacterFortuneLayout ... />
+     - default → never 型で exhaustive check（新 variant 追加漏れをコンパイル時に検出）
+   ↓
+   共通フッター（shareSection, CompatibilityDisplay, RelatedQuizzes, RecommendedContent）
+   ```
+4. `detailedContent` が undefined の場合も StandardResultLayout を使用する。StandardResultLayout 内での分岐ロジックは以下の通り:
+   - `detailedContent` が `undefined` の場合: DescriptionExpander（description）+ CTA1 のみをレンダリング
+   - `detailedContent` が `QuizResultDetailedContent`（variant プロパティなし）の場合: DescriptionExpander（description）+ CTA1 + traits/behaviors/advice セクション + CTA2 をレンダリング
+
+**削減見込み:** 601行 → 約260〜280行（55%削減）
+
+**注意点:**
+
+- `generateStaticParams`, `generateMetadata`, `countCharWidth` はそのまま page.tsx に残す
+- データ取得ロジック（L152〜L206）もそのまま page.tsx に残す
+- `resultPageLabels` の見出し取得（L228〜L233）は StandardResultLayout に props として渡すため page.tsx に残す
+- `slug === "character-personality"` の分岐（L178, L182）は相性データ取得に関するもので variant 分離とは無関係なため page.tsx に残す
+
+#### ステップ7: page.module.css のクリーンアップ
+
+**対象ファイル:**
+
+- `src/app/play/[slug]/result/[resultId]/page.module.css`
+
+**作業内容:**
+
+1. variant 固有スタイルを削除する（ステップ3〜5で各 Layout の CSS Module に移動済み）:
+   - contrarian-fortune 専用（L218〜L359）のうち、各 Layout CSS に移動済みのもの
+   - character-fortune 専用（L360〜L399）のうち、各 Layout CSS に移動済みのもの
+   - Standard 専用（`.traitsList`, `.traitsItem`, `.adviceCard`, `.cta2Section`, `.cta2Link`）のうち、StandardResultLayout CSS に移動済みのもの
+2. DescriptionExpander 用4クラスの削除を確認する（ステップ1で済み）
+3. page.module.css に残るクラス（共通スタイル）:
+   - `.wrapper`, `.card`, `.icon`, `.title`, `.quizName`, `.quizContext` — ページ構造
+   - `.shareSection` — 共通フッター
+   - `.detailedSection`, `.detailedSectionHeading` — 全 variant 共通
+   - `.behaviorsList`, `.behaviorsItem` — 全 variant 共通
+   - `.trySection`, `.tryButton`, `.tryCost` — 全 variant 共通の CTA スタイル
+
+**見込み:** 399行 → 約120〜130行（共通スタイルのみ）
+
+#### ステップ8: テストの更新と追加
+
+**対象ファイル:**
+
+- `src/app/play/[slug]/result/[resultId]/__tests__/page.test.ts`（静的解析テスト — 更新）
+- `src/app/play/[slug]/result/[resultId]/__tests__/page.test.tsx`（統合テスト — 確認・更新）
+
+**作業内容:**
+
+**(a) page.test.ts（静的解析テスト）の更新:**
+
+分離後に page.tsx から消えるコードに依存するテストを修正する。
+
+**削除するテスト（page.tsx から該当コードが消えるため確実に失敗する）:**
+
+- L116-121: `describe("CTA2（detailedContent読了者向け）")` — `cta2Section` / `cta2Link` への参照が StandardResultLayout に移動するため、page.tsx のソースに `"cta2"` が含まれなくなる
+- L123-127: `describe("DescriptionExpanderコンポーネントの利用")` — `DescriptionExpander` の import が StandardResultLayout に移動するため、page.tsx のソースに `"DescriptionExpander"` が含まれなくなる
+
+**残すテスト（page.tsx に該当コードが残るためそのまま pass する）:**
+
+- L14-18: RelatedQuizzes の import 検証
+- L20-24: RelatedQuizzes の props 検証
+- L26-33: RelatedQuizzes と RecommendedContent の順序検証
+- L35-41: title フォーマット検証
+- L43-45: detailedContent の存在検証（dispatch ロジックで `detailedContent` を参照するため残る）
+- L47-76: noindex 条件分岐の全パターン（generateMetadata に残る）
+- L78-82: シェアテキストの検証
+- L84-88: コンテキスト表示（shortDescription）の検証
+- L90-113: detailedContent 見出しのデータ駆動化（resultPageLabels は page.tsx に残る）
+- L129-143: DESCRIPTION_LONG_THRESHOLD の閾値検証（page.tsx に残る）
+- L145-165: title フォールバックの SITE_NAME 考慮（generateMetadata に残る）
+
+**追加するテスト（dispatch 構造の検証）:**
+
+- page.tsx が `StandardResultLayout` を import していることの検証
+- page.tsx が `ContrarianFortuneLayout` を import していることの検証
+- page.tsx が `CharacterFortuneLayout` を import していることの検証
+
+**(b) page.test.tsx（統合テスト）の確認:**
+
+page.test.tsx は PlayQuizResultPage をレンダリングしてテストしているため、Layout コンポーネントは page.tsx 経由で間接的にレンダリングされる。そのため大半のテストはそのまま pass するはず。ただし:
+
+- Layout コンポーネントが page.module.css 以外の CSS Module を import する場合、CSS Module の mock が必要になる可能性がある（Vitest の CSS Module 処理設定を確認）
+- 新しい import パスに対する mock の追加が必要になる可能性がある
+
+**(c) 各 Layout コンポーネントのユニットテスト追加（任意）:**
+
+時間に余裕があれば、各 Layout コンポーネントの個別テストを追加する。ただし page.test.tsx が統合テストとして既に各 variant のレンダリングを検証しているため、必須ではない。B-251 以降で新 variant を追加する際にテストパターンとして活用できるよう、1つの Layout（例: ContrarianFortuneLayout）のテストをサンプルとして作成しておくことが望ましい。
+
+#### 最終確認
+
+すべてのステップ完了後に以下を実行して確認する:
+
+- `npm run lint` — lint チェック
+- `npm run format:check` — フォーマットチェック
+- `npm run test` — 全テスト pass
+- `npm run build` — ビルド成功
+- Playwright でのビジュアル確認（結果ページの表示が分離前と同一であることを確認）
 
 ### 検討した他の選択肢と判断理由
 
+1. **選択肢B: slug ごとに完全に別のルート（page.tsx）を作る**
+   - `/play/contrarian-fortune/result/[resultId]/page.tsx` のように slug ごとにルートを分離する案
+   - 却下理由: 現在の統一 URL パターン `/play/[slug]/result/[resultId]` を破壊する。SEO 上の既存 URL からのリダイレクト設定が必要になり、管理コストが高い。`generateStaticParams` が分散し、全結果ページ一覧のメンテナンスが困難になる
+
+2. **選択肢: 現状維持**
+   - 却下理由: B-257 まで完了すると page.tsx が推定 1,500行に肥大化する。否定条件列挙パターン（`variant !== "X" && variant !== "Y" && ...`）が9 variant 分に増殖し、修正漏れバグのリスクが非常に高い。現在の 2 custom variant の段階が移行コスト最小のタイミング
+
+3. **CSS の共通クラスを page.module.css に残す vs 各 Layout に重複定義する判断:**
+   - 全 variant で使用される共通クラス（`.detailedSection`, `.behaviorsList` 等）は page.module.css に残し、各 Layout から `pageStyles` として import する方針を選択
+   - contrarian-fortune と character-fortune の両方のみで使われるクラス（`.thirdPartySection`, `.midShareSection`, `.allTypesSection` 等）は各 Layout の CSS に重複定義する方針を選択。理由: これらのクラスは将来 variant 固有にカスタマイズされる可能性が高く、共通化すると一方の変更が他方に影響するリスクがある
+
+4. **DescriptionExpander の CSS 分離を先行実施 vs Layout 分離と同時実施:**
+   - 先行実施を選択。理由: DescriptionExpander は page.module.css への不適切な依存であり、Layout 分離とは独立した改善。先に解消しておくことで CSS 分割ステップが単純化される
+
 ### 計画にあたって参考にした情報
+
+- `docs/research/2026-03-31-result-page-component-architecture-analysis.md` — 3つのアーキテクチャ選択肢の比較、将来の拡張計画（B-250〜B-257）の規模推定、バンドルサイズ影響分析
+- `tmp/research/2026-04-01-result-page-variant-separation-implementation-research.md` — page.tsx の完全な構造分析、props 一覧、CSS クラスの使用状況、テスト影響分析、推奨実装手順
+- `src/app/play/[slug]/result/[resultId]/page.tsx`（601行）— 実際のソースコードで条件分岐の位置と各 variant の JSX 範囲を確認
+- `src/app/play/[slug]/result/[resultId]/page.module.css`（399行）— CSS クラスの使用状況と variant 間の共有関係を確認
+- `src/app/play/[slug]/result/[resultId]/DescriptionExpander.tsx` — page.module.css への依存（4クラス参照）を確認
+- `src/app/play/[slug]/result/[resultId]/__tests__/page.test.ts`（167行）— 静的解析テストの内容を確認し、分離後に失敗するテストを特定
+- `src/app/play/[slug]/result/[resultId]/__tests__/page.test.tsx`（496行）— 統合テストの mock 構成と variant テストケースを確認
+- `src/play/quiz/types.ts` — DetailedContent の discriminated union 構造、QuizMeta / QuizResult の型定義を確認
 
 ## レビュー結果
 
-<作業完了後、別のサブエージェントにレビューさせ、改善項目が無くなるまで改善とレビューを繰り返す。ここには、そのレビューの回数や指摘事項・対応結果などを記載する。>
+### 計画レビュー（第1回）
+
+**レビュー担当:** reviewer
+**レビュー日時:** 2026-04-01
+**結果:** 改善指示
+
+#### 総合評価
+
+計画全体の方向性は妥当であり、調査結果・ソースコードとの整合性も概ね正確である。しかし、以下の指摘事項を修正する必要がある。
+
+#### 指摘事項
+
+**[指摘1] ステップ1: DescriptionExpander CSS の行範囲は正確だが、import行番号の記述が不正確**
+
+計画には「L4: `import styles from "./page.module.css"`」と記載されているが、実際の DescriptionExpander.tsx では L4 は `import styles from "./page.module.css";` で正しい。この点は問題ない。
+
+ただし、page.module.css の L38-L68 という範囲について、実際のファイルでは `.descriptionWrapper` が L38 で始まり `.descriptionToggle` の最後のプロパティが L68 で終わるが、クラス定義は4つで合計31行である。計画の記述は正確。指摘取り消し。
+
+**[指摘1 改め] ステップ2: `_layouts/` ディレクトリの命名について**
+
+研究レポート（`docs/research/2026-03-31-...`）では `_variants/` が使われ、計画では `_layouts/` が使われている。命名の不一致自体は問題ないが、`_layouts/` を選んだ理由が計画に記載されていない。builder が迷わないよう、命名の意図（Layout コンポーネントであるためか、Next.js の `_` プレフィックス規約に従っているためか）を一文追記すべき。
+
+**重要度:** 低（builder が迷う可能性は低いが、判断根拠の記録として）
+
+**[指摘2] ステップ3: StandardResultLayout の import 記述が不正確**
+
+計画のステップ3に以下の記述がある:
+
+> import: `Link from "next/link"`, `DescriptionExpander`, `ShareButtons` は不要（DescriptionExpander のみ）、`styles from "./StandardResultLayout.module.css"` + `pageStyles from "../page.module.css"`（共通クラス参照用）
+
+この文は意味が不明瞭。「`ShareButtons` は不要（DescriptionExpander のみ）」の括弧内が何を指しているか分かりにくい。実際のソースコードを確認すると:
+
+- StandardResultLayout では `DescriptionExpander` を import する必要がある（L263）
+- StandardResultLayout では `Link` を import する必要がある（L274, L335 で使用）
+- StandardResultLayout では `ShareButtons` は不要（standard variant 内にシェアボタン中間配置はない）
+
+正確な import 一覧を以下のように書き直すべき:
+
+- `Link from "next/link"`（CTA1, CTA2 のリンクに使用）
+- `DescriptionExpander from "../DescriptionExpander"`（description 表示に使用）
+- `styles from "./StandardResultLayout.module.css"`
+- `pageStyles from "../page.module.css"`（共通クラス参照用）
+
+**重要度:** 中（builder の実装に直接影響する）
+
+**[指摘3] ステップ6: dispatch の switch 文で `detailedContent?.variant` だけでは不十分**
+
+計画では dispatch を以下のように記述している:
+
+> switch (detailedContent?.variant) で Layout を選択
+>
+> - undefined → StandardResultLayout
+> - "contrarian-fortune" → ContrarianFortuneLayout
+> - "character-fortune" → CharacterFortuneLayout
+> - default → never 型で exhaustive check
+
+しかし `detailedContent` 自体が `undefined` の場合（detailedContent が存在しないケース）と、`detailedContent` が存在するが `variant` プロパティが `undefined` のケース（`QuizResultDetailedContent` 型）の2つがある。`detailedContent?.variant` は両方とも `undefined` を返すため、switch の `undefined` ケースで StandardResultLayout に分岐する動作は正しい。
+
+ただし、StandardResultLayout に渡す `detailedContent` の型は計画で `QuizResultDetailedContent | undefined` と定義されており、これは正しい。`detailedContent` が `undefined` の場合は description + CTA1 のみ表示、`QuizResultDetailedContent` の場合は traits/behaviors/advice も表示する、という動作が StandardResultLayout 内で必要になる。
+
+この点は計画のステップ6の項目4で言及されているが、StandardResultLayout 内での分岐ロジックの具体的な記述がない。以下を追記すべき:
+
+- StandardResultLayout 内で `detailedContent` が `undefined` の場合は description + CTA1 のみレンダリング
+- StandardResultLayout 内で `detailedContent` が `QuizResultDetailedContent` の場合は description + CTA1 + traits/behaviors/advice + CTA2 をレンダリング
+
+**重要度:** 中（builder が StandardResultLayout の内部構造を正しく実装するために必要）
+
+**[指摘4] 共通 props に `accentColor` へのアクセス手段の明記がない**
+
+各 Layout の JSX は `quiz.meta.accentColor` を多用している（CTA ボタンの背景色、見出しの色、カードの背景色）。計画では `quizMeta: QuizMeta` を共通 props に含めているため、`quizMeta.accentColor` でアクセス可能であるが、計画のどこにも「accentColor は quizMeta 経由で参照する」という明示的な記述がない。
+
+特に contrarian-fortune と character-fortune のレイアウトでは `quiz.meta.accentColor` の参照が多数あり、props 名の変更（`quiz.meta.accentColor` から `quizMeta.accentColor`）が必要になる。builder への注意喚起として、各ステップの作業内容に「JSX 内の `quiz.meta.X` 参照を `quizMeta.X` に変更する」旨を追記すべき。
+
+**重要度:** 低（builder が自然に気づく可能性は高いが、明記する方が安全）
+
+**[指摘5] ステップ8: page.test.ts の具体的な修正方針が不十分**
+
+計画では page.test.ts について以下のように記述している:
+
+> L117-120「CTA2」→ `cta2` は StandardResultLayout に移動するため page.tsx からは消える。検索対象を Layout ファイルに変更するか、テスト自体を Layout 用テストに移動する
+
+実際の page.test.ts L116-121 を確認すると:
+
+```typescript
+describe("CTA2（detailedContent読了者向け）", () => {
+  it("detailedContentがある場合にCTA2を表示するロジックがある", () => {
+    expect(pageSource).toContain("cta2");
+  });
+});
+```
+
+このテストは `pageSource`（page.tsx のソース）に対して `"cta2"` を検索している。分離後は page.tsx から `cta2Section` / `cta2Link` への参照が消えるため、このテストは確実に失敗する。
+
+また L123-127 の DescriptionExpander テストも同様に失敗する。
+
+計画の「方針」セクションでは「Layout に移動したロジックの検証は page.test.ts から削除し、代わりに各 Layout のテストで検証する」と書かれているが、具体的にどのテストを削除し、どのテストをどの Layout テストファイルに移動するのかのリストがない。以下を明記すべき:
+
+- 削除するテスト: L116-121（CTA2）、L123-127（DescriptionExpander import）
+- 残すテスト: 他のすべて（generateMetadata 関連、RelatedQuizzes/RecommendedContent 関連、noindex 条件分岐、シェアテキスト、コンテキスト表示、resultPageLabels、DESCRIPTION_LONG_THRESHOLD、titleフォールバック）
+- 追加するテスト（page.test.ts に）: page.tsx が3つの Layout コンポーネントを import していることの検証
+
+**重要度:** 中（テスト修正の漏れを防ぐために必要）
+
+**[指摘6] ステップ4-5: ContrarianFortuneLayout / CharacterFortuneLayout の props に `quiz.meta.title` が必要**
+
+contrarian-fortune のレイアウト（L379）と character-fortune のレイアウト（L499）で `ShareButtons` に `quizTitle={quiz.meta.title}` を渡している。共通 props に `quizMeta: QuizMeta` があるため `quizMeta.title` でアクセス可能だが、ステップ4-5 の import セクションに `ShareButtons` が記載されているにもかかわらず、ShareButtons に渡す props の変換（`quiz.meta.title` から `quizMeta.title`）についての言及がない。
+
+また、ステップ4の注意点セクションで `.compatibilitySection` / `.compatibilityPrompt` が character-fortune 専用であるにもかかわらず contrarian-fortune の注意点として記載されていない（これは正しい、contrarian-fortune では使わない）。ただし contrarian-fortune のステップに character-fortune との共有クラスのリストが記載されている箇所で、`.compatibilitySection` / `.compatibilityPrompt` が含まれていないことを確認済み。問題なし。
+
+**重要度:** 低
+
+**[指摘7] CSS 行範囲の不正確さ**
+
+- ステップ4: 「page.module.css の L218〜L359（contrarian-fortune 専用スタイル）」と記載されているが、実際のファイルでは contrarian-fortune 専用スタイルのコメントヘッダーは L216 から始まっている（L216: `/* ====...`）。ただしスタイルクラスとしては L221 の `.catchphrase` が最初。L218 はコメント行である。ステップ内で「コピーする」のはクラス定義のみなので実害は小さいが、正確な行範囲に修正すべき。
+- ステップ5: 「page.module.css の L360〜L399（character-fortune 専用スタイル）」と記載されているが、実際は L360 がコメントヘッダー行（`/* ====...`）、クラス定義は L365 の `.characterIntro` から始まる。同様に修正すべき。
+
+**重要度:** 低（CSS のコピー作業自体に影響はないが、正確性のため）
+
+#### 修正指示
+
+1. [指摘1] `_layouts/` の命名理由を一文追記する
+2. [指摘2] ステップ3 の import 一覧を正確に書き直す
+3. [指摘3] StandardResultLayout 内での `detailedContent` の有無による分岐ロジックを明記する
+4. [指摘4] 各ステップに「JSX 内の `quiz.meta.X` を `quizMeta.X` に変更する」旨を追記する（代表的な箇所を1つ書けば十分）
+5. [指摘5] page.test.ts の削除・残存・追加テストの具体的なリストを明記する
+6. [指摘7] CSS 行範囲を正確な値に修正する
+
+上記の修正後、再度レビューを実施する。
+
+### 計画レビュー（第2回）
+
+**レビュー担当:** reviewer
+**レビュー日時:** 2026-04-01
+**結果:** 改善指示
+
+#### 前回指摘事項への対応状況
+
+6件すべて適切に対応されている。
+
+1. [指摘1] `_layouts/` の命名理由 -- ステップ2に明確な理由が追記されている。OK
+2. [指摘2] ステップ3の import 一覧 -- 正確な一覧に書き直されている。OK
+3. [指摘3] StandardResultLayout 内の分岐ロジック -- ステップ6の項目4に具体的な分岐内容が明記されている。OK
+4. [指摘4] props 名変更の注意 -- ステップ3に「props 名の変更に関する注意」として追記されている。OK
+5. [指摘5] page.test.ts の具体的な修正方針 -- ステップ8に削除・残存・追加テストの具体的なリストが明記されている。OK
+6. [指摘7] CSS 行範囲 -- ステップ4・5ともにコメントヘッダーとクラス定義の開始行が区別して正確に記載されている。OK
+
+#### 新たな指摘事項
+
+**[指摘1] ステップ3: CSS クラスのコピー方針と推奨方針が矛盾している**
+
+ステップ3の項目2では以下のように記載されている:
+
+> page.module.css から StandardResultLayout が使用するクラスを StandardResultLayout.module.css にコピーする:
+>
+> - `.trySection`, `.tryButton`, `.tryCost`（CTA1 用 -- 共通で使うため page.module.css にも残す）
+> - `.detailedSection`, `.detailedSectionHeading`（共通で使うため page.module.css にも残す）
+> - `.traitsList`, `.traitsItem`, `.behaviorsList`, `.behaviorsItem`, `.adviceCard`, `.cta2Section`, `.cta2Link`（Standard 専用）
+
+この記述は、共通クラスも StandardResultLayout.module.css にコピーすると読める。しかし、同じステップ3の末尾にある推奨方針では以下のように記載されている:
+
+> **推奨:** 共通で使われるクラス（`.detailedSection`, `.detailedSectionHeading`, `.behaviorsList`, `.behaviorsItem`, `.trySection`, `.tryButton`, `.tryCost`）は page.module.css に残し、各 Layout は `pageStyles from "../page.module.css"` として参照する。variant 固有クラスのみ各 Layout の CSS Module に定義する
+
+推奨方針に従うなら、StandardResultLayout.module.css にコピーすべきは Standard 専用クラス（`.traitsList`, `.traitsItem`, `.adviceCard`, `.cta2Section`, `.cta2Link`）のみであり、共通クラスはコピーせず `pageStyles` で参照する。`.behaviorsList` と `.behaviorsItem` は全 variant 共通であるため、Standard 専用として列挙されているのも不正確。
+
+項目2を以下のように修正すべき:
+
+> StandardResultLayout.module.css を新規作成し、Standard 固有クラスのみ定義する:
+>
+> - `.traitsList`, `.traitsItem`, `.adviceCard`, `.cta2Section`, `.cta2Link`
+>
+> 共通クラス（`.detailedSection`, `.detailedSectionHeading`, `.behaviorsList`, `.behaviorsItem`, `.trySection`, `.tryButton`, `.tryCost`）は page.module.css に残し、`pageStyles from "../page.module.css"` で参照する。
+
+**重要度:** 中（builder がコピー方針に従うか推奨方針に従うか迷い、不要な CSS 重複が発生するリスクがある）
+
+#### 修正指示
+
+1. [指摘1] ステップ3の項目2を推奨方針と一致するよう修正する。Standard 固有クラスのみ StandardResultLayout.module.css に定義し、共通クラスは pageStyles で参照する旨を明確にする。また `.behaviorsList` と `.behaviorsItem` を Standard 専用リストから共通リストに移動する。
+
+上記の修正後、再度レビューを実施する。
+
+### 計画レビュー（第3回）
+
+**レビュー担当:** reviewer
+**レビュー日時:** 2026-04-01
+**結果:** 承認
+
+#### 前回指摘事項への対応状況
+
+第2回レビューの指摘1件（ステップ3のCSSクラスのコピー対象リストと推奨方針の矛盾）は適切に修正されている。
+
+- ステップ3の項目2が Standard 専用クラス（`.traitsList`, `.traitsItem`, `.adviceCard`, `.cta2Section`, `.cta2Link`）のみのコピーに限定されている。OK
+- 項目3で共通クラス（`.trySection`, `.tryButton`, `.tryCost`, `.detailedSection`, `.detailedSectionHeading`, `.behaviorsList`, `.behaviorsItem`）は page.module.css に残して `pageStyles` で参照する旨が明記されている。OK
+- `.behaviorsList`, `.behaviorsItem` が Standard 専用リストから正しく除外され、共通リストに分類されている。OK
+
+#### 全体レビュー
+
+ソースコード（page.tsx 601行、page.module.css 399行、DescriptionExpander.tsx、page.test.ts 167行）および型定義（types.ts）と照合し、計画全体を再確認した。
+
+**CSS クラスの分類:** ソースコードのgrep結果と一致しており正確。
+
+- Standard 専用: `.traitsList`(L298), `.traitsItem`(L300), `.adviceCard`(L329), `.cta2Section`(L334), `.cta2Link`(L335) -- Standard セクション(L287-340)のみで使用。正確
+- Contrarian 専用: `.catchphrase`(L256), `.coreSentence`(L351), `.persona`(L386), `.humorMetricsTable`(L401) -- Contrarian セクション(L253-257, L342-448)のみで使用。正確
+- Character 専用: `.characterIntro`(L459), `.characterMessage`(L512), `.compatibilitySection`(L526), `.compatibilityPrompt`(L527) -- Character セクション(L450-574)のみで使用。正確
+- Contrarian + Character 共有（各Layout CSSに重複定義）: `.thirdPartySection`, `.thirdPartyHeading`, `.thirdPartyNote`, `.midShareSection`, `.allTypesSection`, `.allTypesList`, `.allTypesItem`, `.allTypesItemCurrent`, `.allTypesCta` -- 正確
+- 全 variant 共通（page.module.css に残す）: `.detailedSection`, `.detailedSectionHeading`, `.behaviorsList`, `.behaviorsItem`, `.trySection`, `.tryButton`, `.tryCost` -- 正確
+
+**props 型定義:** types.ts の `QuizResultDetailedContent`(variant?: undefined), `ContrarianFortuneDetailedContent`(variant: "contrarian-fortune"), `CharacterFortuneDetailedContent`(variant: "character-fortune") と整合している。`QuizMeta` に `accentColor`, `title`, `questionCount`, `shortDescription`, `resultPageLabels` 等が存在することも確認済み。
+
+**テスト修正方針:** page.test.ts の各テスト（L14-165）を実際に確認し、削除対象(L116-121 CTA2, L123-127 DescriptionExpander)、残存対象、追加対象の分類が正確であることを確認済み。
+
+**dispatch 構造:** `detailedContent?.variant` による switch は、`detailedContent === undefined` と `detailedContent.variant === undefined`（QuizResultDetailedContent）の両方を `undefined` ケースで StandardResultLayout に振り分ける動作が正しく説明されている。
+
+#### 注意事項（承認に影響しないが builder への参考情報）
+
+ステップ4で ContrarianFortuneLayout に移動するコードのうち、catchphrase（L254-257）は現在 `.detailedSection` の外側（`.card` 直下、title の直後）にレンダリングされている。一方、contrarian-fortune 専用レイアウト本体（L342-448）は `.detailedSection` の内側である。ContrarianFortuneLayout の実装時には、catchphrase を `.detailedSection` の前に配置するという現在の DOM 構造を維持する必要がある。計画には「L253-257: catchphrase（h1直下のサブタイトル）」と記載されており位置関係は暗示されているが、builder は元のソースコードを参照して正しい配置順序を確認すること。
 
 ## キャリーオーバー
 
