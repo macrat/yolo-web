@@ -5,9 +5,16 @@ import { generateStaticParams, generateMetadata } from "../page";
 
 describe("play/[slug]/page", () => {
   describe("generateStaticParams", () => {
-    it("returns all 15 quiz slugs", async () => {
+    it("returns 14 quiz slugs (music-personality has a dedicated route)", async () => {
       const params = await generateStaticParams();
-      expect(params.length).toBe(15);
+      // music-personality は /play/music-personality/page.tsx の専用ルートで処理されるため除外
+      expect(params.length).toBe(14);
+    });
+
+    it("does not include music-personality (has dedicated route)", async () => {
+      const params = await generateStaticParams();
+      const slugs = params.map((p) => p.slug);
+      expect(slugs).not.toContain("music-personality");
     });
 
     it("returns only quiz slugs (no game slugs)", async () => {
