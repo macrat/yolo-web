@@ -5,6 +5,7 @@ import type {
   ContrarianFortuneDetailedContent,
   CharacterFortuneDetailedContent,
   AnimalPersonalityDetailedContent,
+  MusicPersonalityDetailedContent,
   DetailedContent,
 } from "../types";
 
@@ -236,6 +237,65 @@ describe("DetailedContent union type — animal-personality", () => {
       expect(content.catchphrase).toBe("キャッチコピー");
       expect(content.strengths).toHaveLength(2);
       expect(content.weaknesses).toHaveLength(1);
+      expect(content.todayAction).toBe("今日のアクション");
+    }
+  });
+});
+
+describe("MusicPersonalityDetailedContent", () => {
+  it("accepts all required fields with variant='music-personality'", () => {
+    const content: MusicPersonalityDetailedContent = {
+      variant: "music-personality",
+      catchphrase: "感情を音に変える表現者",
+      strengths: ["豊かな表現力がある", "感情のニュアンスを音で伝えられる"],
+      weaknesses: ["完璧主義で自己批判しやすい", "人の評価が気になりすぎる"],
+      behaviors: [
+        "気分によって聴く曲ジャンルが全然違う",
+        "いい曲に出会うと何十回もリピートする",
+        "歌詞の意味を深読みしがち",
+        "思い出の曲が流れると当時の記憶がよみがえる",
+      ],
+      todayAction: "今日は好きなアーティストのライブ映像を1本見てみよう",
+    };
+    expect(content.variant).toBe("music-personality");
+    expect(content.catchphrase).toBe("感情を音に変える表現者");
+    expect(content.strengths).toHaveLength(2);
+    expect(content.weaknesses).toHaveLength(2);
+    expect(content.behaviors).toHaveLength(4);
+    expect(content.todayAction).toBe(
+      "今日は好きなアーティストのライブ映像を1本見てみよう",
+    );
+  });
+});
+
+describe("DetailedContent union type — music-personality", () => {
+  it("can hold MusicPersonalityDetailedContent", () => {
+    const content: DetailedContent = {
+      variant: "music-personality",
+      catchphrase: "感情を音に変える表現者",
+      strengths: ["強み1"],
+      weaknesses: ["弱み1"],
+      behaviors: ["あるある1", "あるある2", "あるある3", "あるある4"],
+      todayAction: "今日のアクション",
+    };
+    expect(content.variant).toBe("music-personality");
+  });
+
+  it("discriminates music-personality variant via type narrowing", () => {
+    const content: DetailedContent = {
+      variant: "music-personality",
+      catchphrase: "キャッチコピー",
+      strengths: ["強み1", "強み2"],
+      weaknesses: ["弱み1"],
+      behaviors: ["あるある1", "あるある2", "あるある3", "あるある4"],
+      todayAction: "今日のアクション",
+    };
+
+    if (content.variant === "music-personality") {
+      expect(content.catchphrase).toBe("キャッチコピー");
+      expect(content.strengths).toHaveLength(2);
+      expect(content.weaknesses).toHaveLength(1);
+      expect(content.behaviors).toHaveLength(4);
       expect(content.todayAction).toBe("今日のアクション");
     }
   });

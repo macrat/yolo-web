@@ -7,6 +7,7 @@ import type {
   ContrarianFortuneDetailedContent,
   CharacterFortuneDetailedContent,
   AnimalPersonalityDetailedContent,
+  MusicPersonalityDetailedContent,
 } from "../../types";
 
 // ShareButtonsコンポーネントをモック（Web Share APIなどの依存を排除）
@@ -34,6 +35,36 @@ vi.mock("@/play/quiz/_components/CompatibilitySection", () => ({
   ),
 }));
 
+// MusicPersonalityContentコンポーネントをモック
+vi.mock("@/play/quiz/_components/MusicPersonalityContent", () => ({
+  default: ({
+    content,
+    afterTodayAction,
+  }: {
+    content: {
+      strengths: string[];
+      weaknesses: string[];
+      behaviors: string[];
+      todayAction: string;
+    };
+    afterTodayAction?: React.ReactNode;
+  }) => (
+    <div data-testid="music-personality-content">
+      {content.strengths.map((s, i) => (
+        <span key={i}>{s}</span>
+      ))}
+      {content.weaknesses.map((w, i) => (
+        <span key={i}>{w}</span>
+      ))}
+      {content.behaviors.map((b, i) => (
+        <span key={i}>{b}</span>
+      ))}
+      <span>{content.todayAction}</span>
+      {afterTodayAction}
+    </div>
+  ),
+}));
+
 // InviteFriendButtonコンポーネントをモック
 vi.mock("@/play/quiz/_components/InviteFriendButton", () => ({
   default: ({ inviteText }: { inviteText: string }) => (
@@ -41,6 +72,41 @@ vi.mock("@/play/quiz/_components/InviteFriendButton", () => ({
       <span>{inviteText}</span>
     </div>
   ),
+}));
+
+// music-personalityデータモジュールをモック
+vi.mock("@/play/quiz/data/music-personality", () => ({
+  default: {
+    meta: {
+      slug: "music-personality",
+      title: "音楽性格診断",
+      accentColor: "#7c3aed",
+      questionCount: 10,
+    },
+    results: [
+      {
+        id: "festival-pioneer",
+        title: "フェス一番乗り族",
+        icon: "🎪",
+      },
+      {
+        id: "playlist-evangelist",
+        title: "プレイリスト伝道師",
+        icon: "🎧",
+      },
+    ],
+  },
+  getCompatibility: (typeA: string, typeB: string) => {
+    if (
+      (typeA === "festival-pioneer" && typeB === "playlist-evangelist") ||
+      (typeA === "playlist-evangelist" && typeB === "festival-pioneer")
+    ) {
+      return { label: "音楽相性テスト", description: "音楽相性テスト説明" };
+    }
+    return undefined;
+  },
+  isValidMusicTypeId: (id: string) =>
+    ["festival-pioneer", "playlist-evangelist"].includes(id),
 }));
 
 // animal-personalityデータモジュールをモック
@@ -496,5 +562,82 @@ describe("ResultCard - animal-personality variant", () => {
         "",
       );
     }
+  });
+});
+
+describe("ResultCard - music-personality variant", () => {
+  const musicContent: MusicPersonalityDetailedContent = {
+    variant: "music-personality",
+    catchphrase: "音楽で世界を共有したい、あなたの魂。",
+    strengths: ["トレンドへのアンテナが高い", "音楽で人をつなぐ力がある"],
+    weaknesses: ["音楽趣味を押しつけがちになる"],
+    behaviors: ["新曲をリリース当日に全曲通しで聴く。"],
+    todayAction: "お気に入りの曲を1人の友達にシェアしてみてください。",
+  };
+
+  const musicResult: QuizResult = {
+    id: "festival-pioneer",
+    title: "フェス一番乗り族",
+    description: "あなたはフェス一番乗り族タイプです。",
+    icon: "🎪",
+  };
+
+  const musicProps = {
+    result: musicResult,
+    quizType: "personality" as const,
+    quizTitle: "音楽性格診断",
+    quizSlug: "music-personality",
+    onRetry: vi.fn(),
+    detailedContent: musicContent,
+  };
+
+  test("catchphrase が description の前に表示されること", () => {
+    render(<ResultCard {...musicProps} />);
+    const catchphrase =
+      screen.getByText("音楽で世界を共有したい、あなたの魂。");
+    const description =
+      screen.getByText("あなたはフェス一番乗り族タイプです。");
+
+    expect(catchphrase).toBeInTheDocument();
+    expect(description).toBeInTheDocument();
+
+    // catchphraseがdescriptionより前に現れることを確認
+    const position = description.compareDocumentPosition(catchphrase);
+    // Node.DOCUMENT_POSITION_PRECEDING = 2 (catchphraseがdescriptionより前)
+    expect(position & Node.DOCUMENT_POSITION_PRECEDING).toBeTruthy();
+  });
+
+  test("MusicPersonalityContent コンポーネントがレンダリングされること", () => {
+    render(<ResultCard {...musicProps} />);
+    expect(screen.getByTestId("music-personality-content")).toBeInTheDocument();
+  });
+
+  test("strengths と weaknesses と behaviors と todayAction が表示されること", () => {
+    render(<ResultCard {...musicProps} />);
+    expect(screen.getByText("トレンドへのアンテナが高い")).toBeInTheDocument();
+    expect(screen.getByText("音楽で人をつなぐ力がある")).toBeInTheDocument();
+    expect(
+      screen.getByText("音楽趣味を押しつけがちになる"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("新曲をリリース当日に全曲通しで聴く。"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("お気に入りの曲を1人の友達にシェアしてみてください。"),
+    ).toBeInTheDocument();
+  });
+
+  test("referrerTypeIdなしの場合、InviteFriendButton が表示されること", () => {
+    render(<ResultCard {...musicProps} />);
+    expect(screen.getByTestId("invite-friend-button")).toBeInTheDocument();
+    expect(
+      screen.queryByTestId("compatibility-section"),
+    ).not.toBeInTheDocument();
+  });
+
+  test("有効なreferrerTypeIdがある場合、CompatibilitySection が表示されること", () => {
+    render(<ResultCard {...musicProps} referrerTypeId="playlist-evangelist" />);
+    expect(screen.getByTestId("compatibility-section")).toBeInTheDocument();
+    expect(screen.getByTestId("invite-friend-button")).toBeInTheDocument();
   });
 });

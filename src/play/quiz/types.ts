@@ -108,18 +108,40 @@ export interface AnimalPersonalityDetailedContent {
 }
 
 /**
+ * music-personality クイズ専用の追加コンテンツセクション。
+ * 音楽性格診断の結果ページで強み・弱み・あるある・今日のアクションを提供する。
+ * variant フィールドで他の DetailedContent 型と区別する。
+ */
+export interface MusicPersonalityDetailedContent {
+  /** バリアント識別子。型の絞り込みに使用する。 */
+  variant: "music-personality";
+  /** タイプのキャッチコピー（一行、15-30字） */
+  catchphrase: string;
+  /** このタイプの音楽的な強み（箇条書き2-3項目） */
+  strengths: string[];
+  /** このタイプの音楽的な弱み（箇条書き2-3項目） */
+  weaknesses: string[];
+  /** あるある・日常での行動パターン（箇条書き4項目、共感を呼ぶ具体的シーン） */
+  behaviors: string[];
+  /** 今日のおすすめアクション（ポジティブな1文） */
+  todayAction: string;
+}
+
+/**
  * detailedContent の union型。
  * variant フィールドで型を絞り込む discriminated union。
  * - variant が undefined または未設定: QuizResultDetailedContent（標準形式）
  * - variant が "contrarian-fortune": ContrarianFortuneDetailedContent
  * - variant が "character-fortune": CharacterFortuneDetailedContent
  * - variant が "animal-personality": AnimalPersonalityDetailedContent
+ * - variant が "music-personality": MusicPersonalityDetailedContent
  */
 export type DetailedContent =
   | QuizResultDetailedContent
   | ContrarianFortuneDetailedContent
   | CharacterFortuneDetailedContent
-  | AnimalPersonalityDetailedContent;
+  | AnimalPersonalityDetailedContent
+  | MusicPersonalityDetailedContent;
 
 /** A result pattern */
 export type QuizResult = {
