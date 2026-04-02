@@ -434,6 +434,76 @@ AnimalPersonalityContentでは `allTypesLayout: "list" | "pill"` を使い分け
 
 指摘事項なし。計画の実装に進んでよい。
 
+### レビュー4回目（全変更の包括的レビュー）
+
+**判定: 改善指示**
+
+#### 総合評価
+
+全体として質の高い変更である。型定義、共通コンポーネント設計、コンテンツ品質、テストカバレッジ、ダークモード対応のいずれも計画に沿って丁寧に実装されている。来訪者への価値という観点では、受検者・第三者・会話の3シナリオを満たす設計が正しく実装されており、catchphraseによる第一印象の強化、strengths/weaknessesの分離、全タイプ一覧による回遊促進が適切に機能している。cycle-147の教訓（共通コンポーネントによる2箇所問題の回避、CSS変数によるダークモード対応）も正しく反映されている。
+
+ただし、以下の2件の問題を発見した。1件はバグ、1件は技術的品質の問題である。
+
+#### 指摘1: opengraph-image.tsx の CONCRETE_ROUTE_SLUGS に "music-personality" が未追加（重要度: 高）
+
+**ファイル**: `src/app/play/[slug]/result/[resultId]/opengraph-image.tsx` 20-24行目
+
+動的ルートの `page.tsx` では `CONCRETE_ROUTE_SLUGS` に `"music-personality"` が追加されているが、同ディレクトリの `opengraph-image.tsx` では追加されていない。
+
+```typescript
+// page.tsx（正しい）
+const CONCRETE_ROUTE_SLUGS = [
+  "contrarian-fortune",
+  "character-fortune",
+  "animal-personality",
+  "music-personality", // <-- 追加済み
+];
+
+// opengraph-image.tsx（バグ）
+const CONCRETE_ROUTE_SLUGS = [
+  "contrarian-fortune",
+  "character-fortune",
+  "animal-personality",
+  // "music-personality" が欠落
+];
+```
+
+これにより、動的ルートの `generateStaticParams` が music-personality の全8タイプ分の OGP 画像を不要に生成する。専用ルート側にも同じ OGP 画像があるため、ビルド時に重複した OGP 画像が生成される問題が発生する。
+
+**修正方法**: `opengraph-image.tsx` の `CONCRETE_ROUTE_SLUGS` 配列に `"music-personality"` を追加し、17行目のコメントにも `music-personality` を追記すること。
+
+#### 指摘2: page.module.css のダークモード切り替えが `@media (prefers-color-scheme: dark)` を使用している（重要度: 高）
+
+**ファイル**: `src/app/play/music-personality/result/[resultId]/page.module.css` 22-27行目
+
+このプロジェクトでは next-themes を使用しており、テーマ切り替えは HTML 要素の `.dark` クラスで制御される（`ThemeProvider` で `attribute="class"` を設定済み）。`MusicPersonalityContent.module.css` では正しく `:global(.dark) .wrapper` を使用しているが、`page.module.css` では旧方式の `@media (prefers-color-scheme: dark)` を使用している。
+
+```css
+/* page.module.css（バグ）*/
+@media (prefers-color-scheme: dark) {
+  .detailedSection {
+    --music-accent-color: #a78bfa;
+  }
+}
+```
+
+この場合、ユーザーがサイトのテーマトグルでダークモードに手動切り替えしても、CTA1ボタンの背景色がダークモード用の色（`#a78bfa`）に変わらない。逆にユーザーがライトモードに手動切り替えしてもOSがダークモードなら、CTA1ボタンだけダークモードの色になるという不整合が生じる。
+
+**修正方法**: `@media (prefers-color-scheme: dark)` を `:global(.dark) .detailedSection` に変更すること。`MusicPersonalityContent.module.css` の方式と統一する。
+
+#### 確認済みの良い点
+
+- **来訪者への価値**: catchphrase + description + strengths/weaknesses + behaviors + todayAction + 全タイプ一覧の構成は、受検者が「当たってる」と感じ、第三者が「やってみたい」と思える質の高いコンテンツ体験を提供している
+- **コンテンツ品質**: 8タイプ分のcatchphrase（15-30字）、strengths（2項目）、weaknesses（2項目）、behaviors（4項目）、todayAction（1文）がすべて仕様範囲内で、各タイプの個性を的確に表現している
+- **共通コンポーネント**: MusicPersonalityContent.tsx により ResultCard と結果ページで同じコンテンツが表示され、2箇所問題を回避できている
+- **型安全性**: MusicPersonalityDetailedContent の discriminated union パターン、variant による型絞り込み、exhaustive check がすべて正しく実装されている
+- **テストカバレッジ**: 247テストファイル・3380テストが全パス。型テスト、コンテンツ品質テスト、コンポーネントテスト、ページテストが網羅的
+- **ダークモード（MusicPersonalityContent内）**: CSS変数による一元管理が `:global(.dark)` で正しく実装されている
+- **QuizPlayPageLayout共通コンポーネント**: 専用プレイページの共通レイアウトが適切に抽出されている
+- **クリーンアップ**: MusicPersonalityResultExtra削除、ResultExtraLoaderからの分岐削除、resultPageLabels削除が計画通り実施されている
+- **CONCRETE_ROUTE_SLUGS（page.tsx）**: 動的ルートのpage.tsxからの除外が正しく実装されている
+- **constitution準拠**: ルール1-5のいずれにも違反していない
+
 ## キャリーオーバー
 
 - <このサイクルで完了できなかった作業や、次のサイクルに持ち越す必要のある作業があれば、ここと /docs/backlog.md の両方に記載する。>

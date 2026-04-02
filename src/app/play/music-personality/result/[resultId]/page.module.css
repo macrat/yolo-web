@@ -19,11 +19,9 @@
   --music-accent-color: #7c3aed;
 }
 
-@media (prefers-color-scheme: dark) {
-  .detailedSection {
-    /* ダークモード: WCAG AA 準拠の明るめの紫 */
-    --music-accent-color: #a78bfa;
-  }
+:global(.dark) .detailedSection {
+  /* ダークモード: WCAG AA 準拠の明るめの紫 */
+  --music-accent-color: #a78bfa;
 }
 
 /* ============================================================
