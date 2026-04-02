@@ -16,15 +16,13 @@ vi.mock("next/dynamic", () => ({
     function Stub(props: Record<string, unknown>) {
       const slug = loaderStr.includes("CharacterPersonality")
         ? "character-personality"
-        : loaderStr.includes("MusicPersonality")
-          ? "music-personality"
-          : loaderStr.includes("CharacterFortune")
-            ? "character-fortune"
-            : loaderStr.includes("ScienceThinking")
-              ? "science-thinking"
-              : loaderStr.includes("JapaneseCulture")
-                ? "japanese-culture"
-                : "unknown";
+        : loaderStr.includes("CharacterFortune")
+          ? "character-fortune"
+          : loaderStr.includes("ScienceThinking")
+            ? "science-thinking"
+            : loaderStr.includes("JapaneseCulture")
+              ? "japanese-culture"
+              : "unknown";
       return (
         <div
           data-testid={`${slug}-extra`}
@@ -37,13 +35,11 @@ vi.mock("next/dynamic", () => ({
 }));
 
 // 各モジュールのモック（dynamic import の解決には不要だが、型エラー回避のため）
-vi.mock("../MusicPersonalityResultExtra", () => ({
-  renderMusicPersonalityExtra: () => () => null,
-}));
 vi.mock("../CharacterFortuneResultExtra", () => ({
   renderCharacterFortuneExtra: () => () => null,
 }));
 // AnimalPersonalityResultExtraは削除済み（animal-personality分岐はResultCard内に統合）
+// MusicPersonalityResultExtraは削除済み（MusicPersonalityContentのafterTodayActionスロットに統合）
 vi.mock("../ScienceThinkingResultExtra", () => ({
   renderScienceThinkingExtra: () => () => null,
 }));
@@ -71,11 +67,11 @@ test("unknown スラグでは null が返る", () => {
   expect(container.firstChild).toBeNull();
 });
 
-test("music-personality スラグで MusicPersonalityResultExtra が描画される", () => {
-  const { getByTestId } = render(
+test("music-personality スラグでは null が返る（MusicPersonalityContentのafterTodayActionスロットに統合済み）", () => {
+  const { container } = render(
     <ResultExtraLoader slug="music-personality" resultId="result-02" />,
   );
-  expect(getByTestId("music-personality-extra")).toBeInTheDocument();
+  expect(container.firstChild).toBeNull();
 });
 
 test("animal-personality スラグでは null が返る（ResultCard内に統合済み）", () => {

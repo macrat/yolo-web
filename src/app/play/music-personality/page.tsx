@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
 import Breadcrumb from "@/components/common/Breadcrumb";
 import FaqSection from "@/components/common/FaqSection";
 import ShareButtons from "@/components/common/ShareButtons";
@@ -7,7 +6,7 @@ import TrustLevelBadge from "@/components/common/TrustLevelBadge";
 import QuizContainer from "@/play/quiz/_components/QuizContainer";
 import RelatedQuizzes from "@/play/quiz/_components/RelatedQuizzes";
 import RecommendedContent from "@/play/_components/RecommendedContent";
-import { quizBySlug, getAllQuizSlugs } from "@/play/quiz/registry";
+import musicPersonalityQuiz from "@/play/quiz/data/music-personality";
 import {
   generatePlayMetadata,
   generatePlayJsonLd,
@@ -23,45 +22,31 @@ import { getResultNextContents } from "@/play/recommendation";
 import { getContentPath } from "@/play/paths";
 import type { PlayContentMeta } from "@/play/types";
 import type { ResultNextContentItem } from "@/play/quiz/_components/ResultNextContent";
-import styles from "./page.module.css";
+import styles from "@/app/play/[slug]/page.module.css";
+
+const SLUG = "music-personality";
 
 type Props = {
-  params: Promise<{ slug: string }>;
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
-/** Slugs that have their own dedicated /play/<slug>/page.tsx */
-const CONCRETE_PLAY_SLUGS = ["music-personality"] as const;
-
 /**
- * クイズ14種のslugのみを返す。
- * ゲームは固定ルート（/play/irodori/ 等）で処理されるため、
- * 動的ルートの generateStaticParams には含めない。
- * Next.js では固定ルートが動的ルートより優先されるため衝突しない。
- * CONCRETE_PLAY_SLUGS は専用ルートを持つため除外する。
+ * 専用ルートのため generateStaticParams は不要（slugパラメータなし）。
+ * Next.js の静的エクスポートとの互換性のために空配列を返す。
  */
-export async function generateStaticParams() {
-  return getAllQuizSlugs()
-    .filter((slug) => !CONCRETE_PLAY_SLUGS.includes(slug as never))
-    .map((slug) => ({ slug }));
+export async function generateStaticParams(): Promise<[]> {
+  return [];
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
-  const meta = playContentBySlug.get(slug);
+export async function generateMetadata(): Promise<Metadata> {
+  const meta = playContentBySlug.get(SLUG);
   if (!meta) return {};
   return generatePlayMetadata(meta);
 }
 
 /**
  * コスト感情報（所要時間の目安）を返す。
- *
- * 評価順序:
- * 1. quizQuestionCountBySlug に問数がある → 「全X問」
- * 2. DAILY_UPDATE_SLUGS に含まれる → 「毎日更新」
- * 3. それ以外 → resolveDisplayCategory の結果（「パズル」「診断」等）
- *
- * Server Component（page.tsx）で呼び出すため、registryのimportはOK。
+ * 動的ルートの buildMetaText と同じロジック。
  */
 function buildMetaText(slug: string, content: PlayContentMeta): string {
   const questionCount = quizQuestionCountBySlug.get(slug);
@@ -74,13 +59,10 @@ function buildMetaText(slug: string, content: PlayContentMeta): string {
   return resolveDisplayCategory(content);
 }
 
-export default async function PlayQuizPage({ params, searchParams }: Props) {
-  const { slug } = await params;
-  const quiz = quizBySlug.get(slug);
-  if (!quiz) notFound();
-
-  // playContentBySlug にも登録されている前提（タスク1で完了済み）
-  const meta = playContentBySlug.get(slug);
+export default async function MusicPersonalityPlayPage({
+  searchParams,
+}: Props) {
+  const meta = playContentBySlug.get(SLUG);
   const jsonLd = meta ? generatePlayJsonLd(meta) : null;
 
   // クイズの相性機能: 友達のタイプIDをクエリパラメータ ref から取得する
@@ -94,7 +76,7 @@ export default async function PlayQuizPage({ params, searchParams }: Props) {
   // 結果画面直下の回遊導線用データを事前計算。
   // Server Component（page.tsx）で計算することで、registryとseoのimportが
   // クライアントバンドルに含まれるのを防ぐ。
-  const rawResultNextContents = getResultNextContents(slug);
+  const rawResultNextContents = getResultNextContents(SLUG);
   const resultNextContents: ResultNextContentItem[] = rawResultNextContents.map(
     (content) => ({
       slug: content.slug,
@@ -120,33 +102,33 @@ export default async function PlayQuizPage({ params, searchParams }: Props) {
         items={[
           { label: "ホーム", href: "/" },
           { label: "遊ぶ", href: "/play" },
-          { label: quiz.meta.title },
+          { label: musicPersonalityQuiz.meta.title },
         ]}
       />
       <TrustLevelBadge
-        level={quiz.meta.trustLevel}
-        note={quiz.meta.trustNote}
+        level={musicPersonalityQuiz.meta.trustLevel}
+        note={musicPersonalityQuiz.meta.trustNote}
       />
       <QuizContainer
-        quiz={quiz}
+        quiz={musicPersonalityQuiz}
         referrerTypeId={refParam}
         recommendedContents={resultNextContents}
       />
-      <FaqSection faq={quiz.meta.faq} />
+      <FaqSection faq={musicPersonalityQuiz.meta.faq} />
       <section className={styles.shareSection}>
         <h2 className={styles.shareSectionTitle}>
           この診断が楽しかったらシェア
         </h2>
         <ShareButtons
-          url={"/play/" + slug}
-          title={quiz.meta.title}
+          url={"/play/" + SLUG}
+          title={musicPersonalityQuiz.meta.title}
           sns={["x", "line", "hatena", "copy"]}
           contentType="quiz"
-          contentId={slug}
+          contentId={SLUG}
         />
       </section>
-      {meta && <RelatedQuizzes currentSlug={slug} category={meta.category} />}
-      <RecommendedContent currentSlug={slug} />
+      {meta && <RelatedQuizzes currentSlug={SLUG} category={meta.category} />}
+      <RecommendedContent currentSlug={SLUG} />
     </div>
   );
 }

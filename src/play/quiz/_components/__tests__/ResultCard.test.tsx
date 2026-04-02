@@ -1,5 +1,6 @@
 import { expect, test, vi, describe } from "vitest";
 import { render, screen } from "@testing-library/react";
+import React from "react";
 import ResultCard from "../ResultCard";
 import type {
   QuizResult,
@@ -9,6 +10,50 @@ import type {
   AnimalPersonalityDetailedContent,
   MusicPersonalityDetailedContent,
 } from "../../types";
+
+// next/dynamicをモック: テスト環境では vi.mock によりモジュールが同期的にキャッシュされるため、
+// loaderが返すPromiseを同期的に評価できる。
+// ただし Promise.then は常に非同期のため、別のアプローチを取る:
+// vi.mock でモジュールがすでに登録されているため、
+// loader() を呼んでその結果をトップレベルで await するのではなく、
+// vi.mock ファクトリ内での特定のモジュールパスに対するマッピングを使う。
+vi.mock("next/dynamic", async () => {
+  // AnimalPersonalityContent と MusicPersonalityContent を事前にインポートして同期キャッシュ
+  const animal =
+    await import("@/play/quiz/_components/AnimalPersonalityContent");
+  const music = await import("@/play/quiz/_components/MusicPersonalityContent");
+
+  return {
+    default: (
+      loader: () => Promise<{
+        default: React.ComponentType<Record<string, unknown>>;
+      }>,
+    ) => {
+      // loaderの文字列表現から対応するコンポーネントを選択する。
+      // loader.toString() でインポートパスを取得し、適切なモックを返す。
+      const loaderStr = loader.toString();
+      let cachedComp: React.ComponentType<Record<string, unknown>>;
+      if (loaderStr.includes("AnimalPersonalityContent")) {
+        cachedComp = animal.default as unknown as React.ComponentType<
+          Record<string, unknown>
+        >;
+      } else if (loaderStr.includes("MusicPersonalityContent")) {
+        cachedComp = music.default as unknown as React.ComponentType<
+          Record<string, unknown>
+        >;
+      } else {
+        // 未知のコンポーネントはfallback
+        cachedComp = () => null;
+      }
+
+      function DynamicStub(props: Record<string, unknown>) {
+        return React.createElement(cachedComp, props);
+      }
+      DynamicStub.displayName = "DynamicStub";
+      return DynamicStub;
+    },
+  };
+});
 
 // ShareButtonsコンポーネントをモック（Web Share APIなどの依存を排除）
 vi.mock("@/play/quiz/_components/ShareButtons", () => ({
@@ -36,9 +81,11 @@ vi.mock("@/play/quiz/_components/CompatibilitySection", () => ({
 }));
 
 // MusicPersonalityContentコンポーネントをモック
+// referrerTypeIdを受け取り、相性セクション・招待ボタンを内部で生成する新しい設計に対応
 vi.mock("@/play/quiz/_components/MusicPersonalityContent", () => ({
   default: ({
     content,
+    referrerTypeId,
     afterTodayAction,
   }: {
     content: {
@@ -47,22 +94,44 @@ vi.mock("@/play/quiz/_components/MusicPersonalityContent", () => ({
       behaviors: string[];
       todayAction: string;
     };
+    referrerTypeId?: string;
     afterTodayAction?: React.ReactNode;
-  }) => (
-    <div data-testid="music-personality-content">
-      {content.strengths.map((s, i) => (
-        <span key={i}>{s}</span>
-      ))}
-      {content.weaknesses.map((w, i) => (
-        <span key={i}>{w}</span>
-      ))}
-      {content.behaviors.map((b, i) => (
-        <span key={i}>{b}</span>
-      ))}
-      <span>{content.todayAction}</span>
-      {afterTodayAction}
-    </div>
-  ),
+  }) => {
+    // モック版の相性判定ロジック（music-personalityデータモックと合わせる）
+    const validIds = ["festival-pioneer", "playlist-evangelist"];
+    const showCompatibility =
+      referrerTypeId && validIds.includes(referrerTypeId);
+
+    return (
+      <div data-testid="music-personality-content">
+        {content.strengths.map((s, i) => (
+          <span key={i}>{s}</span>
+        ))}
+        {content.weaknesses.map((w, i) => (
+          <span key={i}>{w}</span>
+        ))}
+        {content.behaviors.map((b, i) => (
+          <span key={i}>{b}</span>
+        ))}
+        <span>{content.todayAction}</span>
+        {afterTodayAction ??
+          (showCompatibility ? (
+            <>
+              <div data-testid="compatibility-section">
+                <span>相性セクション</span>
+              </div>
+              <div data-testid="invite-friend-button">
+                <span>音楽性格診断で相性を調べよう!</span>
+              </div>
+            </>
+          ) : (
+            <div data-testid="invite-friend-button">
+              <span>音楽性格診断で相性を調べよう!</span>
+            </div>
+          ))}
+      </div>
+    );
+  },
 }));
 
 // InviteFriendButtonコンポーネントをモック

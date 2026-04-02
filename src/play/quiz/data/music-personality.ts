@@ -87,11 +87,6 @@ const musicPersonalityQuiz: QuizDefinition = {
     ],
     seoTitle:
       "音楽性格診断・心理テスト | あなたの性格を音楽ジャンルで例えると？無料",
-    resultPageLabels: {
-      traitsHeading: "このタイプの音楽的な特徴",
-      behaviorsHeading: "このタイプの音楽あるある",
-      adviceHeading: "このタイプへの音楽ライフのヒント",
-    },
   },
   questions: [
     {

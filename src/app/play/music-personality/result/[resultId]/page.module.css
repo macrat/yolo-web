@@ -1,0 +1,104 @@
+/*
+ * music-personality 専用結果ページのスタイル。
+ * /play/music-personality/result/[resultId] 専用ルートのスタイル。
+ *
+ * 共通コンテンツセクション（強み〜全タイプ一覧）のスタイルは
+ * MusicPersonalityContent.module.css に集約されている。
+ * このファイルは page.tsx 固有の要素（catchphrase, trySection, detailedSection, cta2）のみを管理する。
+ *
+ * --music-accent-color: CTA1ボタンの背景色をCSS変数で制御。
+ * MusicPersonalityContent.module.css の .wrapper でも同変数を定義しているが、
+ * このページ固有のスコープで参照するためここでも定義する。
+ */
+
+/* detailedContent セクションの外側コンテナ */
+.detailedSection {
+  margin-top: 2rem;
+  text-align: left;
+  /* music-personality のアクセントカラー: ライトモード */
+  --music-accent-color: #7c3aed;
+}
+
+@media (prefers-color-scheme: dark) {
+  .detailedSection {
+    /* ダークモード: WCAG AA 準拠の明るめの紫 */
+    --music-accent-color: #a78bfa;
+  }
+}
+
+/* ============================================================
+   music-personality 結果ページ固有スタイル（ページ構造要素）
+   ============================================================ */
+
+.trySection {
+  margin-bottom: 0;
+}
+
+.tryButton {
+  display: inline-block;
+  padding: 0.875rem 2rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  /* CSS変数でアクセントカラーを参照（インラインスタイル不使用） */
+  background-color: var(--music-accent-color);
+  color: white;
+  cursor: pointer;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.tryButton:hover {
+  opacity: 0.9;
+}
+
+.tryCost {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  margin-top: 0.5rem;
+  margin-bottom: 0;
+}
+
+/* ============================================================
+   music-personality variant 固有スタイル（ページ固有）
+   ============================================================ */
+
+/* キャッチコピー: descriptionの前に表示、第一印象を強調 */
+.catchphrase {
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.7;
+  text-align: center;
+  color: var(--color-text);
+  margin-bottom: 1.25rem;
+  padding: 1rem 1.25rem;
+  border-radius: 10px;
+  /* --color-surface は未定義のため --color-bg-secondary を使用 */
+  background: var(--color-bg-secondary);
+  letter-spacing: 0.02em;
+}
+
+/* CTA2: detailedContent読了者向けのテキストリンク形式CTA */
+.cta2Section {
+  margin-top: 1.5rem;
+  text-align: center;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.cta2Link {
+  display: inline-block;
+  padding: 0.625rem 1.5rem;
+  border: 1.5px solid currentColor;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-text);
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.cta2Link:hover {
+  opacity: 0.7;
+}

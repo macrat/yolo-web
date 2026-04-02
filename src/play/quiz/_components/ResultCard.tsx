@@ -2,6 +2,7 @@
 
 import type React from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import type {
   QuizResult,
   QuizType,
@@ -16,17 +17,22 @@ import {
   isValidAnimalTypeId,
 } from "@/play/quiz/data/animal-personality";
 import animalPersonalityQuiz from "@/play/quiz/data/animal-personality";
-import {
-  getCompatibility as getMusicCompatibility,
-  isValidMusicTypeId,
-} from "@/play/quiz/data/music-personality";
-import musicPersonalityQuiz from "@/play/quiz/data/music-personality";
 import CompatibilitySection from "./CompatibilitySection";
 import InviteFriendButton from "./InviteFriendButton";
 import ShareButtons from "./ShareButtons";
-import AnimalPersonalityContent from "./AnimalPersonalityContent";
-import MusicPersonalityContent from "./MusicPersonalityContent";
 import styles from "./ResultCard.module.css";
+
+// dynamic importにより、これらのコンポーネントとデータファイル（計120KB以上）を
+// クイズページの初期バンドルから分離し、/play/[slug] の140KBバジェットを維持する
+const AnimalPersonalityContent = dynamic(
+  () => import("./AnimalPersonalityContent"),
+  { ssr: true },
+);
+
+const MusicPersonalityContent = dynamic(
+  () => import("./MusicPersonalityContent"),
+  { ssr: true },
+);
 
 type ResultCardProps = {
   result: QuizResult;
@@ -174,55 +180,6 @@ function buildAnimalPersonalityAfterTodayAction(
   );
 }
 
-function buildMusicPersonalityAfterTodayAction(
-  resultId: string,
-  referrerTypeId?: string,
-): React.ReactNode {
-  const quiz = musicPersonalityQuiz;
-
-  // 相性セクション: referrerTypeIdが有効な場合は相性表示、なければ招待ボタン
-  if (referrerTypeId && isValidMusicTypeId(referrerTypeId)) {
-    const myResult = quiz.results.find((r) => r.id === resultId);
-    const friendResult = quiz.results.find((r) => r.id === referrerTypeId);
-    const compatibility = getMusicCompatibility(resultId, referrerTypeId);
-
-    if (myResult && friendResult && compatibility) {
-      return (
-        <>
-          <CompatibilitySection
-            myType={{
-              id: myResult.id,
-              title: myResult.title,
-              icon: myResult.icon,
-            }}
-            friendType={{
-              id: friendResult.id,
-              title: friendResult.title,
-              icon: friendResult.icon,
-            }}
-            compatibility={compatibility}
-            quizTitle={quiz.meta.title}
-            quizSlug={quiz.meta.slug}
-          />
-          <InviteFriendButton
-            quizSlug={quiz.meta.slug}
-            resultTypeId={resultId}
-            inviteText="音楽性格診断で相性を調べよう!"
-          />
-        </>
-      );
-    }
-  }
-
-  return (
-    <InviteFriendButton
-      quizSlug={quiz.meta.slug}
-      resultTypeId={resultId}
-      inviteText="音楽性格診断で相性を調べよう!"
-    />
-  );
-}
-
 function renderCharacterFortuneContent(
   content: CharacterFortuneDetailedContent,
   accentColor?: string,
@@ -297,10 +254,7 @@ function renderDetailedContent(
           resultId={resultId}
           headingLevel={3}
           allTypesLayout="pill"
-          afterTodayAction={buildMusicPersonalityAfterTodayAction(
-            resultId,
-            referrerTypeId,
-          )}
+          referrerTypeId={referrerTypeId}
         />
       );
     default: {

@@ -5,31 +5,15 @@ import type { QuizAnswer } from "@/play/quiz/types";
 
 /**
  * Lazy-loaded wrappers for quiz-specific result extra components.
- * Using next/dynamic ensures these heavy data modules (music-personality,
- * character-fortune, animal-personality, science-thinking, japanese-culture,
+ * Using next/dynamic ensures these heavy data modules (character-fortune,
+ * animal-personality, science-thinking, japanese-culture,
  * character-personality) are code-split
  * into separate chunks and only loaded when the corresponding quiz result
  * is shown.
+ *
+ * Note: music-personality uses MusicPersonalityContent with afterTodayAction
+ * slot for compatibility section, so it does not need a ResultExtra component.
  */
-
-const MusicPersonalityResultExtra = dynamic(
-  () =>
-    import("./MusicPersonalityResultExtra").then((mod) => {
-      // Wrap the render function pattern into a React component
-      function Wrapper({
-        resultId,
-        referrerTypeId,
-      }: {
-        resultId: string;
-        referrerTypeId?: string;
-      }) {
-        const renderFn = mod.renderMusicPersonalityExtra(referrerTypeId);
-        return <>{renderFn(resultId)}</>;
-      }
-      return { default: Wrapper };
-    }),
-  { ssr: false },
-);
 
 const CharacterFortuneResultExtra = dynamic(
   () =>
@@ -126,14 +110,6 @@ export default function ResultExtraLoader({
   referrerTypeId,
   answers,
 }: ResultExtraLoaderProps) {
-  if (slug === "music-personality") {
-    return (
-      <MusicPersonalityResultExtra
-        resultId={resultId}
-        referrerTypeId={referrerTypeId}
-      />
-    );
-  }
   if (slug === "character-fortune") {
     return (
       <CharacterFortuneResultExtra

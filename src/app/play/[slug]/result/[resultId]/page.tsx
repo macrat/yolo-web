@@ -27,6 +27,7 @@ const CONCRETE_ROUTE_SLUGS = [
   "contrarian-fortune",
   "character-fortune",
   "animal-personality",
+  "music-personality",
 ];
 
 type Props = {
