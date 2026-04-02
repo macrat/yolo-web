@@ -140,7 +140,7 @@
   background: rgba(0, 0, 0, 0.04);
 }
 
-/* catchphrase（contrarian-fortune） */
+/* catchphrase（contrarian-fortune detailedSection内） */
 .catchphrase {
   font-size: 1rem;
   font-style: italic;
@@ -148,6 +148,124 @@
   text-align: center;
   margin-bottom: 1.5rem;
   line-height: 1.6;
+}
+
+/* catchphraseBeforeDescription（animal-personality: descriptionの前に表示） */
+.catchphraseBeforeDescription {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  text-align: center;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+  padding: 0 0.5rem;
+}
+
+/* todayAction カード（animal-personality） */
+.todayActionCard {
+  padding: 1.25rem 1.5rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  line-height: 1.7;
+  font-weight: 500;
+  color: var(--color-text);
+  margin-bottom: 1.5rem;
+  text-align: center;
+  /* accentColorの透過背景はinline styleで設定 */
+  background: rgba(0, 0, 0, 0.04);
+}
+
+/* strengths リスト（animal-personality） */
+.strengthsList {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.strengthsItem {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--color-text);
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+}
+
+.strengthsItem::before {
+  content: "✨";
+  flex-shrink: 0;
+}
+
+/* weaknesses リスト（animal-personality） */
+.weaknessesList {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.weaknessesItem {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--color-text);
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+}
+
+.weaknessesItem::before {
+  content: "😅";
+  flex-shrink: 0;
+}
+
+/* 全タイプ一覧セクション（animal-personality） */
+.allTypesSection {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.allTypesList {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.allTypesItem a,
+.allTypesItemCurrent a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: var(--color-text);
+  text-decoration: none;
+  transition: background-color 0.15s ease;
+}
+
+.allTypesItem a:hover {
+  background-color: var(--color-bg-secondary);
+}
+
+.allTypesItemCurrent a {
+  background-color: var(--color-bg-secondary);
+  font-weight: 700;
+  pointer-events: none;
 }
 
 /* humorMetrics テーブル（contrarian-fortune） */

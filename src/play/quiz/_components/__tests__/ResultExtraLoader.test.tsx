@@ -20,13 +20,11 @@ vi.mock("next/dynamic", () => ({
           ? "music-personality"
           : loaderStr.includes("CharacterFortune")
             ? "character-fortune"
-            : loaderStr.includes("AnimalPersonality")
-              ? "animal-personality"
-              : loaderStr.includes("ScienceThinking")
-                ? "science-thinking"
-                : loaderStr.includes("JapaneseCulture")
-                  ? "japanese-culture"
-                  : "unknown";
+            : loaderStr.includes("ScienceThinking")
+              ? "science-thinking"
+              : loaderStr.includes("JapaneseCulture")
+                ? "japanese-culture"
+                : "unknown";
       return (
         <div
           data-testid={`${slug}-extra`}
@@ -45,9 +43,7 @@ vi.mock("../MusicPersonalityResultExtra", () => ({
 vi.mock("../CharacterFortuneResultExtra", () => ({
   renderCharacterFortuneExtra: () => () => null,
 }));
-vi.mock("../AnimalPersonalityResultExtra", () => ({
-  renderAnimalPersonalityExtra: () => () => null,
-}));
+// AnimalPersonalityResultExtraは削除済み（animal-personality分岐はResultCard内に統合）
 vi.mock("../ScienceThinkingResultExtra", () => ({
   renderScienceThinkingExtra: () => () => null,
 }));
@@ -82,9 +78,9 @@ test("music-personality スラグで MusicPersonalityResultExtra が描画され
   expect(getByTestId("music-personality-extra")).toBeInTheDocument();
 });
 
-test("animal-personality スラグで AnimalPersonalityResultExtra が描画される", () => {
-  const { getByTestId } = render(
+test("animal-personality スラグでは null が返る（ResultCard内に統合済み）", () => {
+  const { container } = render(
     <ResultExtraLoader slug="animal-personality" resultId="result-03" />,
   );
-  expect(getByTestId("animal-personality-extra")).toBeInTheDocument();
+  expect(container.firstChild).toBeNull();
 });

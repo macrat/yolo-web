@@ -10,7 +10,15 @@ import type {
   QuizResultDetailedContent,
   ContrarianFortuneDetailedContent,
   CharacterFortuneDetailedContent,
+  AnimalPersonalityDetailedContent,
 } from "@/play/quiz/types";
+import {
+  getCompatibility,
+  isValidAnimalTypeId,
+} from "@/play/quiz/data/animal-personality";
+import animalPersonalityQuiz from "@/play/quiz/data/animal-personality";
+import CompatibilitySection from "./CompatibilitySection";
+import InviteFriendButton from "./InviteFriendButton";
 import ShareButtons from "./ShareButtons";
 import styles from "./ResultCard.module.css";
 
@@ -30,6 +38,8 @@ type ResultCardProps = {
   resultPageLabels?: QuizMeta["resultPageLabels"];
   /** クイズのアクセントカラー（見出し色やcharacterIntro背景に使用） */
   accentColor?: string;
+  /** 相性診断用の referrer タイプID（animal-personality variantで使用） */
+  referrerTypeId?: string;
 };
 
 function renderStandardContent(
@@ -109,6 +119,161 @@ function renderContrarianFortuneContent(
   );
 }
 
+function renderAnimalPersonalityContent(
+  content: AnimalPersonalityDetailedContent,
+  resultId: string,
+  accentColor?: string,
+  referrerTypeId?: string,
+): React.ReactNode {
+  const quiz = animalPersonalityQuiz;
+
+  // 相性セクション: referrerTypeIdが有効な場合は相性表示、なければ招待ボタン
+  let compatibilitySection: React.ReactNode;
+  if (referrerTypeId && isValidAnimalTypeId(referrerTypeId)) {
+    const myResult = quiz.results.find((r) => r.id === resultId);
+    const friendResult = quiz.results.find((r) => r.id === referrerTypeId);
+    const compatibility = getCompatibility(resultId, referrerTypeId);
+
+    if (myResult && friendResult && compatibility) {
+      compatibilitySection = (
+        <>
+          <CompatibilitySection
+            myType={{
+              id: myResult.id,
+              title: myResult.title,
+              icon: myResult.icon,
+            }}
+            friendType={{
+              id: friendResult.id,
+              title: friendResult.title,
+              icon: friendResult.icon,
+            }}
+            compatibility={compatibility}
+            quizTitle={quiz.meta.title}
+            quizSlug={quiz.meta.slug}
+          />
+          <InviteFriendButton
+            quizSlug={quiz.meta.slug}
+            resultTypeId={resultId}
+            inviteText="日本の固有種診断で相性を調べよう!"
+          />
+        </>
+      );
+    } else {
+      compatibilitySection = (
+        <InviteFriendButton
+          quizSlug={quiz.meta.slug}
+          resultTypeId={resultId}
+          inviteText="日本の固有種診断で相性を調べよう!"
+        />
+      );
+    }
+  } else {
+    compatibilitySection = (
+      <InviteFriendButton
+        quizSlug={quiz.meta.slug}
+        resultTypeId={resultId}
+        inviteText="日本の固有種診断で相性を調べよう!"
+      />
+    );
+  }
+
+  return (
+    <>
+      {/* strengths セクション */}
+      <h3
+        className={styles.detailedHeading}
+        style={accentColor ? { color: accentColor } : undefined}
+      >
+        このタイプの強み
+      </h3>
+      <ul className={styles.strengthsList}>
+        {content.strengths.map((s, i) => (
+          <li key={i} className={styles.strengthsItem}>
+            {s}
+          </li>
+        ))}
+      </ul>
+
+      {/* weaknesses セクション */}
+      <h3
+        className={styles.detailedHeading}
+        style={accentColor ? { color: accentColor } : undefined}
+      >
+        このタイプの弱み
+      </h3>
+      <ul className={styles.weaknessesList}>
+        {content.weaknesses.map((w, i) => (
+          <li key={i} className={styles.weaknessesItem}>
+            {w}
+          </li>
+        ))}
+      </ul>
+
+      {/* behaviors セクション */}
+      <h3
+        className={styles.detailedHeading}
+        style={accentColor ? { color: accentColor } : undefined}
+      >
+        この動物に似た行動パターン
+      </h3>
+      <ul className={styles.behaviorsList}>
+        {content.behaviors.map((b, i) => (
+          <li key={i} className={styles.behaviorsItem}>
+            {b}
+          </li>
+        ))}
+      </ul>
+
+      {/* todayAction セクション */}
+      <h3
+        className={styles.detailedHeading}
+        style={accentColor ? { color: accentColor } : undefined}
+      >
+        今日試してほしいこと
+      </h3>
+      <div
+        className={styles.todayActionCard}
+        style={
+          accentColor ? { backgroundColor: `${accentColor}18` } : undefined
+        }
+      >
+        {content.todayAction}
+      </div>
+
+      {/* 相性セクション */}
+      {compatibilitySection}
+
+      {/* 全タイプ一覧セクション */}
+      <div className={styles.allTypesSection}>
+        <h3
+          className={styles.detailedHeading}
+          style={accentColor ? { color: accentColor } : undefined}
+        >
+          他の動物タイプも見てみよう
+        </h3>
+        <ul className={styles.allTypesList}>
+          {quiz.results.map((r) => (
+            <li
+              key={r.id}
+              className={
+                r.id === resultId
+                  ? styles.allTypesItemCurrent
+                  : styles.allTypesItem
+              }
+            >
+              <Link href={`/play/${quiz.meta.slug}/result/${r.id}`}>
+                {r.icon && <span>{r.icon}</span>}
+                <span>{r.title}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </>
+  );
+}
+
 function renderCharacterFortuneContent(
   content: CharacterFortuneDetailedContent,
   accentColor?: string,
@@ -149,8 +314,10 @@ function renderCharacterFortuneContent(
 
 function renderDetailedContent(
   content: DetailedContent,
+  resultId: string,
   labels?: QuizMeta["resultPageLabels"],
   accentColor?: string,
+  referrerTypeId?: string,
 ): React.ReactNode {
   // Standard variant (variant === undefined)
   if (!content.variant) {
@@ -161,6 +328,13 @@ function renderDetailedContent(
       return renderContrarianFortuneContent(content, accentColor);
     case "character-fortune":
       return renderCharacterFortuneContent(content, accentColor);
+    case "animal-personality":
+      return renderAnimalPersonalityContent(
+        content,
+        resultId,
+        accentColor,
+        referrerTypeId,
+      );
     default: {
       // exhaustive check: 新variant追加時にコンパイルエラーで検出
       void (content satisfies never);
@@ -180,6 +354,7 @@ export default function ResultCard({
   detailedContent,
   resultPageLabels,
   accentColor,
+  referrerTypeId,
 }: ResultCardProps) {
   const shareUrl =
     typeof window !== "undefined"
@@ -187,6 +362,12 @@ export default function ResultCard({
       : `/play/${quizSlug}/result/${result.id}`;
 
   const shareText = `${quizTitle}の結果は「${result.title}」でした! #${quizTitle.replace(/\s/g, "")} #yolosnet`;
+
+  // animal-personality variant では catchphrase を description の前に表示する
+  const catchphrase =
+    detailedContent?.variant === "animal-personality"
+      ? detailedContent.catchphrase
+      : null;
 
   return (
     <div className={styles.card}>
@@ -199,6 +380,10 @@ export default function ResultCard({
             {totalQuestions}問中{score}問正解
           </p>
         )}
+      {/* animal-personality: catchphraseをdescriptionの前に表示 */}
+      {catchphrase && (
+        <p className={styles.catchphraseBeforeDescription}>{catchphrase}</p>
+      )}
       <p className={styles.description}>{result.description}</p>
       {result.recommendation && result.recommendationLink && (
         <Link
@@ -212,8 +397,10 @@ export default function ResultCard({
         <div className={styles.detailedSection}>
           {renderDetailedContent(
             detailedContent,
+            result.id,
             resultPageLabels,
             accentColor,
+            referrerTypeId,
           )}
         </div>
       )}
