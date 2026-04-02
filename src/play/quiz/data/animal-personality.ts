@@ -45,7 +45,7 @@ const animalPersonalityQuiz: QuizDefinition = {
     category: "personality",
     questionCount: 10,
     icon: "\u{1F43E}",
-    accentColor: "#16a34a",
+    accentColor: "#15803d",
     keywords: [
       "動物診断",
       "性格診断",

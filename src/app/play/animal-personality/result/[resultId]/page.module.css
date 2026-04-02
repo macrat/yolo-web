@@ -112,7 +112,8 @@
   color: var(--color-text);
   padding: 0.625rem 0.875rem;
   border-radius: 8px;
-  background: var(--color-surface, #f8f8f8);
+  /* 強みは薄い緑背景で視覚的に強調 */
+  background: rgba(22, 163, 74, 0.06);
   display: flex;
   align-items: flex-start;
   gap: 0.5rem;
@@ -141,7 +142,8 @@
   color: var(--color-text);
   padding: 0.625rem 0.875rem;
   border-radius: 8px;
-  background: var(--color-surface, #f8f8f8);
+  /* 弱みは薄いオレンジ背景で視覚的に差別化 */
+  background: rgba(245, 158, 11, 0.06);
   display: flex;
   align-items: flex-start;
   gap: 0.5rem;
@@ -213,11 +215,13 @@
 }
 
 .allTypesCta {
+  /* h2タグのデフォルトスタイルを上書き — セクション見出しとして機能させつつ視覚的にはシンプルに保つ */
   font-size: 1rem;
   font-weight: 600;
   text-align: center;
   color: var(--color-text);
   margin-bottom: 1rem;
+  margin-top: 0;
 }
 
 /* CTA2: detailedContent読了者向けのテキストリンク形式CTA */

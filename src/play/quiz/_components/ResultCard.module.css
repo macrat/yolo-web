@@ -152,13 +152,29 @@
 
 /* catchphraseBeforeDescription（animal-personality: descriptionの前に表示） */
 .catchphraseBeforeDescription {
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   font-weight: 600;
   color: var(--color-text);
   text-align: center;
   margin-bottom: 1rem;
   line-height: 1.6;
   padding: 0 0.5rem;
+  /* accentColorを使った左右の装飾線でワクワク感を演出 */
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.catchphraseBeforeDescription::before,
+.catchphraseBeforeDescription::after {
+  content: "";
+  flex: 1;
+  height: 2px;
+  /* accentColorはJS側で設定できないためCSS変数で受け取る想定。
+     フォールバックとしてanimal-personalityの標準色を使用 */
+  background: var(--catchphrase-accent-color, #15803d);
+  opacity: 0.4;
+  border-radius: 1px;
 }
 
 /* todayAction カード（animal-personality） */
@@ -192,6 +208,8 @@
   padding: 0.75rem 1rem;
   border-radius: 8px;
   border: 1px solid var(--color-border);
+  /* 強みは薄い緑背景で視覚的に強調 */
+  background: rgba(22, 163, 74, 0.06);
   display: flex;
   align-items: flex-start;
   gap: 0.625rem;
@@ -219,6 +237,8 @@
   padding: 0.75rem 1rem;
   border-radius: 8px;
   border: 1px solid var(--color-border);
+  /* 弱みは薄いオレンジ背景で視覚的に差別化 */
+  background: rgba(245, 158, 11, 0.06);
   display: flex;
   align-items: flex-start;
   gap: 0.625rem;

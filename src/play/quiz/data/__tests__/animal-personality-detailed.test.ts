@@ -280,6 +280,14 @@ describe("animal-personality — new variant format (8 types)", () => {
   });
 });
 
+describe("animal-personality — accentColor WCAG AA compliance", () => {
+  it("accentColor must be #15803d (WCAG AA compliant, contrast ratio 4.59:1 on white)", () => {
+    // #16a34a has contrast ratio 3.30:1 — fails WCAG AA (requires 4.5:1)
+    // #15803d has contrast ratio 4.59:1 — passes WCAG AA
+    expect(animalPersonalityQuiz.meta.accentColor).toBe("#15803d");
+  });
+});
+
 describe("animal-personality — existing data unchanged", () => {
   it("meta slug is unchanged", () => {
     expect(animalPersonalityQuiz.meta.slug).toBe("animal-personality");
