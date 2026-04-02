@@ -195,6 +195,9 @@ export default function QuizContainer({
           quiz.meta.type === "knowledge" ? quiz.questions.length : undefined
         }
         onRetry={handleRetry}
+        detailedContent={result.detailedContent}
+        resultPageLabels={quiz.meta.resultPageLabels}
+        accentColor={quiz.meta.accentColor}
       />
       {recommendedContents && recommendedContents.length > 0 && (
         <ResultNextContent contents={recommendedContents} />
