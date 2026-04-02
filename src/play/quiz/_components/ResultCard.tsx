@@ -16,10 +16,16 @@ import {
   isValidAnimalTypeId,
 } from "@/play/quiz/data/animal-personality";
 import animalPersonalityQuiz from "@/play/quiz/data/animal-personality";
+import {
+  getCompatibility as getMusicCompatibility,
+  isValidMusicTypeId,
+} from "@/play/quiz/data/music-personality";
+import musicPersonalityQuiz from "@/play/quiz/data/music-personality";
 import CompatibilitySection from "./CompatibilitySection";
 import InviteFriendButton from "./InviteFriendButton";
 import ShareButtons from "./ShareButtons";
 import AnimalPersonalityContent from "./AnimalPersonalityContent";
+import MusicPersonalityContent from "./MusicPersonalityContent";
 import styles from "./ResultCard.module.css";
 
 type ResultCardProps = {
@@ -168,6 +174,55 @@ function buildAnimalPersonalityAfterTodayAction(
   );
 }
 
+function buildMusicPersonalityAfterTodayAction(
+  resultId: string,
+  referrerTypeId?: string,
+): React.ReactNode {
+  const quiz = musicPersonalityQuiz;
+
+  // 相性セクション: referrerTypeIdが有効な場合は相性表示、なければ招待ボタン
+  if (referrerTypeId && isValidMusicTypeId(referrerTypeId)) {
+    const myResult = quiz.results.find((r) => r.id === resultId);
+    const friendResult = quiz.results.find((r) => r.id === referrerTypeId);
+    const compatibility = getMusicCompatibility(resultId, referrerTypeId);
+
+    if (myResult && friendResult && compatibility) {
+      return (
+        <>
+          <CompatibilitySection
+            myType={{
+              id: myResult.id,
+              title: myResult.title,
+              icon: myResult.icon,
+            }}
+            friendType={{
+              id: friendResult.id,
+              title: friendResult.title,
+              icon: friendResult.icon,
+            }}
+            compatibility={compatibility}
+            quizTitle={quiz.meta.title}
+            quizSlug={quiz.meta.slug}
+          />
+          <InviteFriendButton
+            quizSlug={quiz.meta.slug}
+            resultTypeId={resultId}
+            inviteText="音楽性格診断で相性を調べよう!"
+          />
+        </>
+      );
+    }
+  }
+
+  return (
+    <InviteFriendButton
+      quizSlug={quiz.meta.slug}
+      resultTypeId={resultId}
+      inviteText="音楽性格診断で相性を調べよう!"
+    />
+  );
+}
+
 function renderCharacterFortuneContent(
   content: CharacterFortuneDetailedContent,
   accentColor?: string,
@@ -235,6 +290,19 @@ function renderDetailedContent(
           )}
         />
       );
+    case "music-personality":
+      return (
+        <MusicPersonalityContent
+          content={content}
+          resultId={resultId}
+          headingLevel={3}
+          allTypesLayout="pill"
+          afterTodayAction={buildMusicPersonalityAfterTodayAction(
+            resultId,
+            referrerTypeId,
+          )}
+        />
+      );
     default: {
       // exhaustive check: 新variant追加時にコンパイルエラーで検出
       void (content satisfies never);
@@ -263,11 +331,13 @@ export default function ResultCard({
 
   const shareText = `${quizTitle}の結果は「${result.title}」でした! #${quizTitle.replace(/\s/g, "")} #yolosnet`;
 
-  // animal-personality variant では catchphrase を description の前に表示する
+  // animal-personality / music-personality variant では catchphrase を description の前に表示する
   const catchphrase =
     detailedContent?.variant === "animal-personality"
       ? detailedContent.catchphrase
-      : null;
+      : detailedContent?.variant === "music-personality"
+        ? detailedContent.catchphrase
+        : null;
 
   return (
     <div className={styles.card}>
