@@ -2,12 +2,19 @@
  * animal-personality 専用結果ページのスタイル。
  * /play/animal-personality/result/[resultId] 専用ルートのスタイル。
  *
- * character-fortune/result/[resultId]/page.module.css をベースに
- * animal-personality 固有のスタイルを追加・調整する。
+ * 共通コンテンツセクション（強み〜全タイプ一覧）のスタイルは
+ * AnimalPersonalityContent.module.css に集約されている。
+ * このファイルは page.tsx 固有の要素（catchphrase, trySection, detailedSection, cta2）のみを管理する。
  */
 
+/* detailedContent セクションの外側コンテナ */
+.detailedSection {
+  margin-top: 2rem;
+  text-align: left;
+}
+
 /* ============================================================
-   variant-shared content styles
+   animal-personality 結果ページ固有スタイル（ページ構造要素）
    ============================================================ */
 
 .trySection {
@@ -38,48 +45,8 @@
   margin-bottom: 0;
 }
 
-/* detailedContent セクション */
-.detailedSection {
-  margin-top: 2rem;
-  text-align: left;
-}
-
-.detailedSectionHeading {
-  font-size: 1.1rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  padding-left: 0.75rem;
-  border-left: 4px solid currentColor;
-}
-
-.behaviorsList {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 2rem 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.625rem;
-}
-
-.behaviorsItem {
-  font-size: 0.95rem;
-  line-height: 1.6;
-  color: var(--color-text);
-  padding: 0.75rem 1rem;
-  border-radius: 8px;
-  border: 1px solid var(--color-border);
-  display: flex;
-  align-items: flex-start;
-  gap: 0.625rem;
-}
-
-.behaviorsItem::before {
-  content: "💡";
-  flex-shrink: 0;
-}
-
 /* ============================================================
-   animal-personality variant 固有スタイル
+   animal-personality variant 固有スタイル（ページ固有）
    ============================================================ */
 
 /* キャッチコピー: descriptionの前に表示、第一印象を強調 */
@@ -92,136 +59,9 @@
   margin-bottom: 1.25rem;
   padding: 1rem 1.25rem;
   border-radius: 10px;
-  background: var(--color-surface, #f8f8f8);
+  /* --color-surface は未定義のため --color-bg-secondary を使用 */
+  background: var(--color-bg-secondary);
   letter-spacing: 0.02em;
-}
-
-/* 強みリスト */
-.strengthsList {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 2rem 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.strengthsItem {
-  font-size: 0.95rem;
-  line-height: 1.6;
-  color: var(--color-text);
-  padding: 0.625rem 0.875rem;
-  border-radius: 8px;
-  /* 強みは薄い緑背景で視覚的に強調 */
-  background: rgba(22, 163, 74, 0.06);
-  display: flex;
-  align-items: flex-start;
-  gap: 0.5rem;
-}
-
-.strengthsItem::before {
-  content: "✓";
-  font-weight: 700;
-  flex-shrink: 0;
-  margin-top: 0.05rem;
-}
-
-/* 弱みリスト */
-.weaknessesList {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 2rem 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.weaknessesItem {
-  font-size: 0.95rem;
-  line-height: 1.6;
-  color: var(--color-text);
-  padding: 0.625rem 0.875rem;
-  border-radius: 8px;
-  /* 弱みは薄いオレンジ背景で視覚的に差別化 */
-  background: rgba(245, 158, 11, 0.06);
-  display: flex;
-  align-items: flex-start;
-  gap: 0.5rem;
-}
-
-.weaknessesItem::before {
-  content: "△";
-  font-weight: 700;
-  flex-shrink: 0;
-  margin-top: 0.05rem;
-}
-
-/* 今日のアクション */
-.todayActionCard {
-  padding: 1.25rem 1.5rem;
-  border-radius: 10px;
-  font-size: 1rem;
-  line-height: 1.7;
-  font-weight: 500;
-  color: var(--color-text);
-  margin-bottom: 2rem;
-  text-align: center;
-}
-
-/* 全タイプ一覧セクション */
-.allTypesSection {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--color-border);
-}
-
-.allTypesList {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 1.5rem 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.allTypesItem a,
-.allTypesItemCurrent a {
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-  padding: 0.4rem 0.875rem;
-  border-radius: 999px;
-  font-size: 0.875rem;
-  text-decoration: none;
-  transition: opacity 0.2s ease;
-}
-
-.allTypesItem a {
-  color: var(--color-text);
-  border: 1.5px solid var(--color-border);
-  background: transparent;
-}
-
-.allTypesItem a:hover {
-  opacity: 0.7;
-}
-
-/* 現在表示中のタイプをハイライト */
-.allTypesItemCurrent a {
-  color: var(--color-text);
-  border: 2px solid currentColor;
-  background: var(--color-surface, #f8f8f8);
-  font-weight: 700;
-}
-
-.allTypesCta {
-  /* h2タグのデフォルトスタイルを上書き — セクション見出しとして機能させつつ視覚的にはシンプルに保つ */
-  font-size: 1rem;
-  font-weight: 600;
-  text-align: center;
-  color: var(--color-text);
-  margin-bottom: 1rem;
-  margin-top: 0;
 }
 
 /* CTA2: detailedContent読了者向けのテキストリンク形式CTA */

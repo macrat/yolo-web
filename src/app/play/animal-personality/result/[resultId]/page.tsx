@@ -13,6 +13,7 @@ import Link from "next/link";
 import ResultPageShell from "@/play/quiz/_components/ResultPageShell";
 import DescriptionExpander from "@/app/play/[slug]/result/[resultId]/DescriptionExpander";
 import CompatibilityDisplay from "@/app/play/[slug]/result/[resultId]/CompatibilityDisplay";
+import AnimalPersonalityContent from "@/play/quiz/_components/AnimalPersonalityContent";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { countCharWidth } from "@/lib/countCharWidth";
 import { getResultIdsForQuiz } from "@/play/quiz/registry";
@@ -184,105 +185,33 @@ export default async function AnimalPersonalityResultPage({
           </p>
         </div>
 
-        {/* 強み */}
-        <h2
-          className={styles.detailedSectionHeading}
-          style={{ color: quiz.meta.accentColor }}
-        >
-          このタイプの強み
-        </h2>
-        <ul className={styles.strengthsList}>
-          {dc.strengths.map((item, i) => (
-            <li key={i} className={styles.strengthsItem}>
-              {item}
-            </li>
-          ))}
-        </ul>
-
-        {/* 弱み */}
-        <h2
-          className={styles.detailedSectionHeading}
-          style={{ color: quiz.meta.accentColor }}
-        >
-          このタイプの弱み
-        </h2>
-        <ul className={styles.weaknessesList}>
-          {dc.weaknesses.map((item, i) => (
-            <li key={i} className={styles.weaknessesItem}>
-              {item}
-            </li>
-          ))}
-        </ul>
-
-        {/* あるある行動パターン */}
-        <h2
-          className={styles.detailedSectionHeading}
-          style={{ color: quiz.meta.accentColor }}
-        >
-          この動物に似た行動パターン
-        </h2>
-        <ul className={styles.behaviorsList}>
-          {dc.behaviors.map((behavior, i) => (
-            <li key={i} className={styles.behaviorsItem}>
-              {behavior}
-            </li>
-          ))}
-        </ul>
-
-        {/* 今日のアクション */}
-        <h2
-          className={styles.detailedSectionHeading}
-          style={{ color: quiz.meta.accentColor }}
-        >
-          今日試してほしいこと
-        </h2>
-        <div
-          className={styles.todayActionCard}
-          style={{ backgroundColor: `${quiz.meta.accentColor}18` }}
-        >
-          {dc.todayAction}
-        </div>
-
-        {/* 相性紹介: withパラメータがある場合のみ表示 */}
-        {compatData && (
-          <CompatibilityDisplay
-            quizSlug={SLUG}
-            quizTitle={quiz.meta.title}
-            compatibility={compatData.compatibility}
-            myType={compatData.myType}
-            friendType={compatData.friendType}
-          />
-        )}
-
-        {/* CTA2: 全タイプ一覧の前に配置 — コンテンツを読み終えた時点での自然な誘導 */}
-        <div className={styles.cta2Section}>
-          <Link href={`/play/${SLUG}`} className={styles.cta2Link}>
-            {ctaText}
-          </Link>
-        </div>
-
-        {/* 全タイプ一覧セクション */}
-        <div className={styles.allTypesSection}>
-          <h2 className={styles.allTypesCta}>他の動物も見てみよう</h2>
-
-          <ul className={styles.allTypesList}>
-            {quiz.results.map((r) => (
-              <li
-                key={r.id}
-                className={
-                  r.id === resultId
-                    ? styles.allTypesItemCurrent
-                    : styles.allTypesItem
-                }
-              >
-                <Link href={`/play/${SLUG}/result/${r.id}`}>
-                  {r.icon && <span>{r.icon}</span>}
-                  <span>{r.title}</span>
+        {/* 強み〜全タイプ一覧: 共通コンポーネントで一括レンダリング */}
+        <AnimalPersonalityContent
+          content={dc}
+          resultId={resultId}
+          headingLevel={2}
+          allTypesLayout="pill"
+          afterTodayAction={
+            <>
+              {/* 相性紹介: withパラメータがある場合のみ表示 */}
+              {compatData && (
+                <CompatibilityDisplay
+                  quizSlug={SLUG}
+                  quizTitle={quiz.meta.title}
+                  compatibility={compatData.compatibility}
+                  myType={compatData.myType}
+                  friendType={compatData.friendType}
+                />
+              )}
+              {/* CTA2: 全タイプ一覧の前に配置 — コンテンツを読み終えた時点での自然な誘導 */}
+              <div className={styles.cta2Section}>
+                <Link href={`/play/${SLUG}`} className={styles.cta2Link}>
+                  {ctaText}
                 </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
+              </div>
+            </>
+          }
+        />
       </div>
     </ResultPageShell>
   );

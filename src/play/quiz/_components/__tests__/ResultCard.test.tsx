@@ -436,4 +436,65 @@ describe("ResultCard - animal-personality variant", () => {
     expect(screen.getByText("ニホンザル")).toBeInTheDocument();
     expect(screen.getByText("ホンドタヌキ")).toBeInTheDocument();
   });
+
+  test("accentColorが指定された場合、セクション見出しにCSS変数が使われること（inline style非使用）", () => {
+    const { container } = render(
+      <ResultCard {...animalProps} accentColor="#15803d" />,
+    );
+    // detailedHeadingのcolorはCSS変数 var(--animal-accent-color) を使う
+    // inline styleで直接 #15803d が設定されていないことを確認
+    const headings = container.querySelectorAll("h3");
+    headings.forEach((heading) => {
+      // inline styleのcolorに直接カラーコードが設定されていないこと
+      expect(heading.style.color).not.toBe("#15803d");
+    });
+  });
+
+  test("accentColorが指定された場合、todayActionCardにCSS変数が使われること（inline style非使用）", () => {
+    const { container } = render(
+      <ResultCard {...animalProps} accentColor="#15803d" />,
+    );
+    // todayActionCardのbackgroundColorはCSS変数 var(--animal-accent-bg) を使う
+    // inline styleで直接 #15803d の透過色が設定されていないことを確認
+    const todayActionCards = container.querySelectorAll(
+      "[class*='todayActionCard']",
+    );
+    todayActionCards.forEach((card) => {
+      const el = card as HTMLElement;
+      // inline styleのbackgroundColorに直接透過色が設定されていないこと
+      expect(el.style.backgroundColor).not.toContain("#15803d");
+    });
+  });
+
+  test("AnimalPersonalityContent の wrapper クラスが存在すること", () => {
+    const { container } = render(
+      <ResultCard {...animalProps} accentColor="#15803d" />,
+    );
+    // AnimalPersonalityContent コンポーネントのwrapperクラスを持つ要素が存在すること
+    // CSS変数はCSSファイルで管理するためinline styleではなくクラスの存在を確認
+    // 共通コンポーネント化により animalPersonalityWrapper → wrapper に変更
+    const wrapper = container.querySelector("[class*='wrapper']");
+    expect(wrapper).not.toBeNull();
+  });
+
+  test("catchphraseBeforeDescription に inline style が設定されないこと（CSS変数はCSSファイルのフォールバック値で制御）", () => {
+    const { container } = render(
+      <ResultCard {...animalProps} accentColor="#15803d" />,
+    );
+    // catchphraseBeforeDescriptionクラスを持つ要素が存在すること
+    const catchphraseEl = container.querySelector(
+      "[class*='catchphraseBeforeDescription']",
+    );
+    expect(catchphraseEl).not.toBeNull();
+    if (catchphraseEl) {
+      const el = catchphraseEl as HTMLElement;
+      // inline style で CSS変数が渡されていないこと
+      // ResultCard.module.css にフォールバック値（#15803d / #4ade80）が定義されているため
+      // inline style は不要
+      expect(el.style.getPropertyValue("--catchphrase-accent-color")).toBe("");
+      expect(el.style.getPropertyValue("--catchphrase-accent-color-dark")).toBe(
+        "",
+      );
+    }
+  });
 });
