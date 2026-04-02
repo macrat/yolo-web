@@ -198,6 +198,7 @@ export default function QuizContainer({
         detailedContent={result.detailedContent}
         resultPageLabels={quiz.meta.resultPageLabels}
         accentColor={quiz.meta.accentColor}
+        referrerTypeId={referrerTypeId}
       />
       {recommendedContents && recommendedContents.length > 0 && (
         <ResultNextContent contents={recommendedContents} />

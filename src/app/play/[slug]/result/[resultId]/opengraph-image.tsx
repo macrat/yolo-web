@@ -14,10 +14,14 @@ export const size = ogpSize;
 export const contentType = ogpContentType;
 
 /**
- * contrarian-fortune と character-fortune は専用の具体ルートで処理するため、
+ * contrarian-fortune, character-fortune, animal-personality は専用の具体ルートで処理するため、
  * 動的ルートのOGP画像から除外する。
  */
-const CONCRETE_ROUTE_SLUGS = ["contrarian-fortune", "character-fortune"];
+const CONCRETE_ROUTE_SLUGS = [
+  "contrarian-fortune",
+  "character-fortune",
+  "animal-personality",
+];
 
 export function generateStaticParams() {
   const params: Array<{ slug: string; resultId: string }> = [];

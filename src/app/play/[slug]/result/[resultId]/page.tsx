@@ -20,10 +20,14 @@ import ResultPageShell from "@/play/quiz/_components/ResultPageShell";
 import styles from "./page.module.css";
 
 /**
- * contrarian-fortune と character-fortune は専用の具体ルートで処理するため、
+ * contrarian-fortune, character-fortune, animal-personality は専用の具体ルートで処理するため、
  * 動的ルートのgenerateStaticParamsとOGP画像から除外する。
  */
-const CONCRETE_ROUTE_SLUGS = ["contrarian-fortune", "character-fortune"];
+const CONCRETE_ROUTE_SLUGS = [
+  "contrarian-fortune",
+  "character-fortune",
+  "animal-personality",
+];
 
 type Props = {
   params: Promise<{ slug: string; resultId: string }>;

@@ -6,6 +6,7 @@ import type {
   QuizResultDetailedContent,
   ContrarianFortuneDetailedContent,
   CharacterFortuneDetailedContent,
+  AnimalPersonalityDetailedContent,
 } from "../../types";
 
 // ShareButtonsコンポーネントをモック（Web Share APIなどの依存を排除）
@@ -15,6 +16,82 @@ vi.mock("@/play/quiz/_components/ShareButtons", () => ({
       <span>{shareText}</span>
     </div>
   ),
+}));
+
+// CompatibilitySectionコンポーネントをモック
+vi.mock("@/play/quiz/_components/CompatibilitySection", () => ({
+  default: ({
+    myType,
+    friendType,
+  }: {
+    myType: { id: string; title: string };
+    friendType: { id: string; title: string };
+  }) => (
+    <div data-testid="compatibility-section">
+      <span>{myType.title}</span>
+      <span>{friendType.title}</span>
+    </div>
+  ),
+}));
+
+// InviteFriendButtonコンポーネントをモック
+vi.mock("@/play/quiz/_components/InviteFriendButton", () => ({
+  default: ({ inviteText }: { inviteText: string }) => (
+    <div data-testid="invite-friend-button">
+      <span>{inviteText}</span>
+    </div>
+  ),
+}));
+
+// animal-personalityデータモジュールをモック
+vi.mock("@/play/quiz/data/animal-personality", () => ({
+  default: {
+    meta: {
+      slug: "animal-personality",
+      title: "日本にしかいない動物で性格診断",
+      accentColor: "#16a34a",
+      questionCount: 10,
+    },
+    results: [
+      {
+        id: "nihon-zaru",
+        title: "ニホンザル",
+        icon: "🐵",
+        detailedContent: {
+          variant: "animal-personality",
+          catchphrase: "テストキャッチコピー",
+          strengths: ["強み1", "強み2"],
+          weaknesses: ["弱み1"],
+          behaviors: ["あるある1"],
+          todayAction: "テストアクション",
+        },
+      },
+      {
+        id: "hondo-tanuki",
+        title: "ホンドタヌキ",
+        icon: "🦝",
+        detailedContent: {
+          variant: "animal-personality",
+          catchphrase: "タヌキキャッチコピー",
+          strengths: ["タヌキ強み1"],
+          weaknesses: ["タヌキ弱み1"],
+          behaviors: ["タヌキあるある1"],
+          todayAction: "タヌキアクション",
+        },
+      },
+    ],
+  },
+  getCompatibility: (typeA: string, typeB: string) => {
+    if (
+      (typeA === "nihon-zaru" && typeB === "hondo-tanuki") ||
+      (typeA === "hondo-tanuki" && typeB === "nihon-zaru")
+    ) {
+      return { label: "テスト相性", description: "テスト相性説明" };
+    }
+    return undefined;
+  },
+  isValidAnimalTypeId: (id: string) =>
+    ["nihon-zaru", "hondo-tanuki"].includes(id),
 }));
 
 // next/linkをモック
@@ -257,5 +334,106 @@ describe("ResultCard - humorMetrics省略時", () => {
       />,
     );
     expect(container.querySelector("table")).toBeNull();
+  });
+});
+
+describe("ResultCard - animal-personality variant", () => {
+  const animalContent: AnimalPersonalityDetailedContent = {
+    variant: "animal-personality",
+    catchphrase: "場の空気を作るのは、いつもあなたから始まる。",
+    strengths: ["推進力がある", "情報感度が高い"],
+    weaknesses: ["モチベのオンオフが極端"],
+    behaviors: [
+      "新しいカフェを見つけた瞬間、友達にスクリーンショットを送っている。",
+    ],
+    todayAction: "次の集まりで幹事を誰か別の人に任せてみてください。",
+  };
+
+  const animalResult: QuizResult = {
+    id: "nihon-zaru",
+    title: "ニホンザル -- 温泉を発明した革命児",
+    description: "あなたはニホンザルタイプです。",
+    icon: "🐵",
+  };
+
+  const animalProps = {
+    result: animalResult,
+    quizType: "personality" as const,
+    quizTitle: "日本にしかいない動物で性格診断",
+    quizSlug: "animal-personality",
+    onRetry: vi.fn(),
+    detailedContent: animalContent,
+  };
+
+  test("catchphrase が description の前に表示されること", () => {
+    const { container } = render(<ResultCard {...animalProps} />);
+    const catchphrase = screen.getByText(
+      "場の空気を作るのは、いつもあなたから始まる。",
+    );
+    const description = screen.getByText("あなたはニホンザルタイプです。");
+
+    expect(catchphrase).toBeInTheDocument();
+    expect(description).toBeInTheDocument();
+
+    // catchphraseがdescriptionより前に現れることを確認
+    const position = description.compareDocumentPosition(catchphrase);
+    // Node.DOCUMENT_POSITION_PRECEDING = 2 (catchphraseがdescriptionより前)
+    expect(position & Node.DOCUMENT_POSITION_PRECEDING).toBeTruthy();
+
+    void container;
+  });
+
+  test("strengths が表示されること", () => {
+    render(<ResultCard {...animalProps} />);
+    expect(screen.getByText("推進力がある")).toBeInTheDocument();
+    expect(screen.getByText("情報感度が高い")).toBeInTheDocument();
+    expect(screen.getByText("このタイプの強み")).toBeInTheDocument();
+  });
+
+  test("weaknesses が表示されること", () => {
+    render(<ResultCard {...animalProps} />);
+    expect(screen.getByText("モチベのオンオフが極端")).toBeInTheDocument();
+    expect(screen.getByText("このタイプの弱み")).toBeInTheDocument();
+  });
+
+  test("behaviors が表示されること", () => {
+    render(<ResultCard {...animalProps} />);
+    expect(
+      screen.getByText(
+        "新しいカフェを見つけた瞬間、友達にスクリーンショットを送っている。",
+      ),
+    ).toBeInTheDocument();
+    expect(screen.getByText("この動物に似た行動パターン")).toBeInTheDocument();
+  });
+
+  test("todayAction が表示されること", () => {
+    render(<ResultCard {...animalProps} />);
+    expect(
+      screen.getByText("次の集まりで幹事を誰か別の人に任せてみてください。"),
+    ).toBeInTheDocument();
+    expect(screen.getByText("今日試してほしいこと")).toBeInTheDocument();
+  });
+
+  test("referrerTypeIdなしの場合、InviteFriendButton が表示されること", () => {
+    render(<ResultCard {...animalProps} />);
+    expect(screen.getByTestId("invite-friend-button")).toBeInTheDocument();
+    expect(
+      screen.queryByTestId("compatibility-section"),
+    ).not.toBeInTheDocument();
+  });
+
+  test("有効なreferrerTypeIdがある場合、CompatibilitySection が表示されること", () => {
+    render(<ResultCard {...animalProps} referrerTypeId="hondo-tanuki" />);
+    // 相性セクションが表示される
+    expect(screen.getByTestId("compatibility-section")).toBeInTheDocument();
+    // 相性表示時もInviteFriendButtonは表示される（友達に送る動線）
+    expect(screen.getByTestId("invite-friend-button")).toBeInTheDocument();
+  });
+
+  test("全タイプ一覧が表示されること", () => {
+    render(<ResultCard {...animalProps} />);
+    // モックデータには nihon-zaru と hondo-tanuki の2タイプが存在
+    expect(screen.getByText("ニホンザル")).toBeInTheDocument();
+    expect(screen.getByText("ホンドタヌキ")).toBeInTheDocument();
   });
 });

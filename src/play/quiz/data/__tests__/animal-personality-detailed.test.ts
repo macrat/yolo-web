@@ -4,15 +4,36 @@
  * Validates:
  * - seoTitle is present in meta and contains expected keywords
  * - All 12 results have detailedContent
- * - Each detailedContent has traits, behaviors, advice fields
+ * - All 12 types use the new animal-personality variant format:
+ *   nihon-zaru, hondo-tanuki, nihon-kitsune, iriomote-yamaneko (batch: types 1-4)
+ *   amami-kuro-usagi, yamane, nihon-momonga, nihon-kamoshika (batch: types 5-8)
+ *   hondo-ten, musasabi, nihon-risu, ezo-shika (batch: types 9-12)
  * - Field length constraints are met
- * - No animal ecological facts are included
  */
 import { describe, it, expect } from "vitest";
-import type { QuizResultDetailedContent } from "../../types";
+import type { AnimalPersonalityDetailedContent } from "../../types";
 import animalPersonalityQuiz from "../animal-personality";
 
 const RESULT_IDS = [
+  "nihon-zaru",
+  "hondo-tanuki",
+  "nihon-kitsune",
+  "iriomote-yamaneko",
+  "amami-kuro-usagi",
+  "yamane",
+  "nihon-momonga",
+  "nihon-kamoshika",
+  "hondo-ten",
+  "musasabi",
+  "nihon-risu",
+  "ezo-shika",
+] as const;
+
+/**
+ * All 12 types use the new animal-personality variant format.
+ * Conversions completed in batches 1-3.
+ */
+const NEW_VARIANT_IDS = [
   "nihon-zaru",
   "hondo-tanuki",
   "nihon-kitsune",
@@ -81,154 +102,179 @@ describe("animal-personality — detailedContent presence", () => {
   });
 });
 
-describe("animal-personality — detailedContent structure", () => {
-  it("each result has detailedContent.traits as a non-empty array", () => {
-    for (const result of animalPersonalityQuiz.results) {
-      const dc = result.detailedContent! as QuizResultDetailedContent;
+describe("animal-personality — new variant format (8 types)", () => {
+  it("new variant types have variant: 'animal-personality'", () => {
+    for (const id of NEW_VARIANT_IDS) {
+      const result = animalPersonalityQuiz.results.find((r) => r.id === id);
+      expect(result, `Result ${id} not found`).toBeDefined();
       expect(
-        Array.isArray(dc.traits),
-        `${result.id}: traits must be an array`,
-      ).toBe(true);
-      expect(
-        dc.traits.length,
-        `${result.id}: traits must have at least 3 items`,
-      ).toBeGreaterThanOrEqual(3);
-      expect(
-        dc.traits.length,
-        `${result.id}: traits must have at most 5 items`,
-      ).toBeLessThanOrEqual(5);
+        result!.detailedContent?.variant,
+        `${id}: variant must be 'animal-personality'`,
+      ).toBe("animal-personality");
     }
   });
 
-  it("each result has detailedContent.behaviors as a non-empty array", () => {
-    for (const result of animalPersonalityQuiz.results) {
-      const dc = result.detailedContent! as QuizResultDetailedContent;
-      expect(
-        Array.isArray(dc.behaviors),
-        `${result.id}: behaviors must be an array`,
-      ).toBe(true);
-      expect(
-        dc.behaviors.length,
-        `${result.id}: behaviors must have at least 3 items`,
-      ).toBeGreaterThanOrEqual(3);
-      expect(
-        dc.behaviors.length,
-        `${result.id}: behaviors must have at most 5 items`,
-      ).toBeLessThanOrEqual(5);
-    }
-  });
-
-  it("each result has detailedContent.advice as a non-empty string", () => {
-    for (const result of animalPersonalityQuiz.results) {
-      const dc = result.detailedContent! as QuizResultDetailedContent;
-      expect(typeof dc.advice, `${result.id}: advice must be a string`).toBe(
+  it("new variant types have catchphrase (20-40 chars)", () => {
+    for (const id of NEW_VARIANT_IDS) {
+      const result = animalPersonalityQuiz.results.find((r) => r.id === id);
+      const dc = result!.detailedContent as AnimalPersonalityDetailedContent;
+      expect(typeof dc.catchphrase, `${id}: catchphrase must be a string`).toBe(
         "string",
       );
       expect(
-        dc.advice.length,
-        `${result.id}: advice must not be empty`,
+        dc.catchphrase.length,
+        `${id}: catchphrase must be at least 20 chars`,
+      ).toBeGreaterThanOrEqual(20);
+      expect(
+        dc.catchphrase.length,
+        `${id}: catchphrase must be at most 40 chars`,
+      ).toBeLessThanOrEqual(40);
+    }
+  });
+
+  it("catchphrases must not end with 。(句点なし体言止め)", () => {
+    for (const id of NEW_VARIANT_IDS) {
+      const result = animalPersonalityQuiz.results.find((r) => r.id === id);
+      const dc = result!.detailedContent as AnimalPersonalityDetailedContent;
+      expect(
+        dc.catchphrase.endsWith("。"),
+        `${id}: catchphrase must not end with 。: "${dc.catchphrase}"`,
+      ).toBe(false);
+    }
+  });
+
+  it("hondo-ten behaviors must not have duplicate concepts about inefficiency", () => {
+    const result = animalPersonalityQuiz.results.find(
+      (r) => r.id === "hondo-ten",
+    );
+    const dc = result!.detailedContent as AnimalPersonalityDetailedContent;
+    const hasEfficiencyDuplicate =
+      dc.behaviors.filter((b) => b.includes("効率") || b.includes("非効率"))
+        .length >= 2;
+    expect(
+      hasEfficiencyDuplicate,
+      `hondo-ten: behaviors must not have two items about inefficiency. behaviors: ${JSON.stringify(dc.behaviors)}`,
+    ).toBe(false);
+  });
+
+  it("new variant types have strengths (2-3 items)", () => {
+    for (const id of NEW_VARIANT_IDS) {
+      const result = animalPersonalityQuiz.results.find((r) => r.id === id);
+      const dc = result!.detailedContent as AnimalPersonalityDetailedContent;
+      expect(
+        Array.isArray(dc.strengths),
+        `${id}: strengths must be an array`,
+      ).toBe(true);
+      expect(
+        dc.strengths.length,
+        `${id}: strengths must have at least 2 items`,
+      ).toBeGreaterThanOrEqual(2);
+      expect(
+        dc.strengths.length,
+        `${id}: strengths must have at most 3 items`,
+      ).toBeLessThanOrEqual(3);
+    }
+  });
+
+  it("new variant types have weaknesses (2-3 items)", () => {
+    for (const id of NEW_VARIANT_IDS) {
+      const result = animalPersonalityQuiz.results.find((r) => r.id === id);
+      const dc = result!.detailedContent as AnimalPersonalityDetailedContent;
+      expect(
+        Array.isArray(dc.weaknesses),
+        `${id}: weaknesses must be an array`,
+      ).toBe(true);
+      expect(
+        dc.weaknesses.length,
+        `${id}: weaknesses must have at least 2 items`,
+      ).toBeGreaterThanOrEqual(2);
+      expect(
+        dc.weaknesses.length,
+        `${id}: weaknesses must have at most 3 items`,
+      ).toBeLessThanOrEqual(3);
+    }
+  });
+
+  it("new variant types have behaviors (3-5 items)", () => {
+    for (const id of NEW_VARIANT_IDS) {
+      const result = animalPersonalityQuiz.results.find((r) => r.id === id);
+      const dc = result!.detailedContent as AnimalPersonalityDetailedContent;
+      expect(
+        Array.isArray(dc.behaviors),
+        `${id}: behaviors must be an array`,
+      ).toBe(true);
+      expect(
+        dc.behaviors.length,
+        `${id}: behaviors must have at least 3 items`,
+      ).toBeGreaterThanOrEqual(3);
+      expect(
+        dc.behaviors.length,
+        `${id}: behaviors must have at most 5 items`,
+      ).toBeLessThanOrEqual(5);
+    }
+  });
+
+  it("new variant types have todayAction as a non-empty string", () => {
+    for (const id of NEW_VARIANT_IDS) {
+      const result = animalPersonalityQuiz.results.find((r) => r.id === id);
+      const dc = result!.detailedContent as AnimalPersonalityDetailedContent;
+      expect(typeof dc.todayAction, `${id}: todayAction must be a string`).toBe(
+        "string",
+      );
+      expect(
+        dc.todayAction.length,
+        `${id}: todayAction must not be empty`,
       ).toBeGreaterThan(0);
     }
   });
 
-  it("each trait item is a non-empty string", () => {
-    for (const result of animalPersonalityQuiz.results) {
-      for (const trait of (result.detailedContent! as QuizResultDetailedContent)
-        .traits) {
-        expect(typeof trait, `${result.id}: trait must be a string`).toBe(
-          "string",
-        );
-        expect(
-          trait.length,
-          `${result.id}: trait must not be empty`,
-        ).toBeGreaterThan(0);
-      }
-    }
-  });
-
-  it("each behavior item is a non-empty string", () => {
-    for (const result of animalPersonalityQuiz.results) {
-      for (const behavior of (
-        result.detailedContent! as QuizResultDetailedContent
-      ).behaviors) {
-        expect(typeof behavior, `${result.id}: behavior must be a string`).toBe(
-          "string",
-        );
-        expect(
-          behavior.length,
-          `${result.id}: behavior must not be empty`,
-        ).toBeGreaterThan(0);
-      }
-    }
-  });
-});
-
-describe("animal-personality — traits freshness (no direct copy from description)", () => {
-  /**
-   * Each trait should NOT be a substring of the description (over 10 characters).
-   * This prevents traits from being a mere bullet-point summary of description text.
-   * We check the first 12 characters of each trait to detect direct copy-paste.
-   */
-  it("trait items should not directly copy phrases from description", () => {
-    for (const result of animalPersonalityQuiz.results) {
-      const description = result.description;
-      for (const trait of (result.detailedContent! as QuizResultDetailedContent)
-        .traits) {
-        // Extract a 12-char prefix of the trait (enough to detect copy-paste)
-        const traitPrefix = trait.slice(0, 12);
-        if (traitPrefix.length >= 12) {
-          expect(
-            description.includes(traitPrefix),
-            `${result.id}: trait "${trait}" appears to be copied from description`,
-          ).toBe(false);
-        }
-      }
-    }
-  });
-});
-
-describe("animal-personality — advice quality (concrete action, no template pattern)", () => {
-  /**
-   * All 12 advice texts must NOT follow the uniform template:
-   *   「あなたの〜は〜[才能/強み/力]です/になっています。〜してください。」
-   *
-   * The current bad pattern is: every advice starts with "あなたの" and ends with
-   * a polished platitude. Good advice instead offers a concrete, type-specific
-   * action suggestion — a first step the user can take today.
-   *
-   * Rule: At most 3 out of 12 advices may start with "あなたの".
-   * This prevents the monotonous template while allowing occasional use.
-   */
-  it("fewer than 4 advice texts start with 'あなたの' (template pattern limit)", () => {
-    const templateCount = animalPersonalityQuiz.results.filter((r) =>
-      (r.detailedContent! as QuizResultDetailedContent).advice.startsWith(
-        "あなたの",
-      ),
-    ).length;
-    expect(
-      templateCount,
-      `Too many advice texts start with "あなたの" (${templateCount}/12). Each type needs its own voice.`,
-    ).toBeLessThan(4);
-  });
-
-  it("all 12 advice texts are unique (no duplicate advice)", () => {
-    const adviceList = animalPersonalityQuiz.results.map(
-      (r) => (r.detailedContent! as QuizResultDetailedContent).advice,
-    );
-    const uniqueAdvice = new Set(adviceList);
-    expect(
-      uniqueAdvice.size,
-      `Advice texts are not all unique. Found ${12 - uniqueAdvice.size} duplicate(s)`,
-    ).toBe(12);
-  });
-
-  it("no advice uses the generic 'そのままでいい' phrase", () => {
-    for (const result of animalPersonalityQuiz.results) {
-      const advice = (result.detailedContent! as QuizResultDetailedContent)
-        .advice;
+  it("new variant types do NOT have old fields (traits, advice)", () => {
+    for (const id of NEW_VARIANT_IDS) {
+      const result = animalPersonalityQuiz.results.find((r) => r.id === id);
+      const dc = result!.detailedContent as unknown as Record<string, unknown>;
       expect(
-        advice.includes("そのままでいい"),
-        `${result.id}: advice contains vague phrase "そのままでいい": "${advice}"`,
+        dc["traits"],
+        `${id}: old field 'traits' must not exist`,
+      ).toBeUndefined();
+      expect(
+        dc["advice"],
+        `${id}: old field 'advice' must not exist`,
+      ).toBeUndefined();
+    }
+  });
+
+  it("catchphrases are all unique across new variant types", () => {
+    const catchphrases = NEW_VARIANT_IDS.map((id) => {
+      const result = animalPersonalityQuiz.results.find((r) => r.id === id);
+      return (result!.detailedContent as AnimalPersonalityDetailedContent)
+        .catchphrase;
+    });
+    const unique = new Set(catchphrases);
+    expect(
+      unique.size,
+      `Catchphrases are not all unique among new variant types`,
+    ).toBe(NEW_VARIANT_IDS.length);
+  });
+
+  it("todayAction texts are unique across new variant types", () => {
+    const actions = NEW_VARIANT_IDS.map((id) => {
+      const result = animalPersonalityQuiz.results.find((r) => r.id === id);
+      return (result!.detailedContent as AnimalPersonalityDetailedContent)
+        .todayAction;
+    });
+    const unique = new Set(actions);
+    expect(unique.size, `todayAction texts are not all unique`).toBe(
+      NEW_VARIANT_IDS.length,
+    );
+  });
+
+  it("no todayAction uses the generic 'そのままでいい' phrase", () => {
+    for (const id of NEW_VARIANT_IDS) {
+      const result = animalPersonalityQuiz.results.find((r) => r.id === id);
+      const dc = result!.detailedContent as AnimalPersonalityDetailedContent;
+      expect(
+        dc.todayAction.includes("そのままでいい"),
+        `${id}: todayAction contains vague phrase "そのままでいい": "${dc.todayAction}"`,
       ).toBe(false);
     }
   });

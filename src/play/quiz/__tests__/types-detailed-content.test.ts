@@ -4,6 +4,7 @@ import type {
   QuizResultDetailedContent,
   ContrarianFortuneDetailedContent,
   CharacterFortuneDetailedContent,
+  AnimalPersonalityDetailedContent,
   DetailedContent,
 } from "../types";
 
@@ -185,6 +186,57 @@ describe("DetailedContent union type — character-fortune", () => {
     if (content.variant === "character-fortune") {
       expect(content.characterIntro).toBe("キャラ自己紹介");
       expect(content.compatibilityPrompt).toBe("相性診断への誘導");
+    }
+  });
+});
+
+describe("AnimalPersonalityDetailedContent", () => {
+  it("accepts all required fields with variant='animal-personality'", () => {
+    const content: AnimalPersonalityDetailedContent = {
+      variant: "animal-personality",
+      catchphrase: "群れのリーダー的存在",
+      strengths: ["決断力がある", "頼りがいがある", "困ったときに助けてくれる"],
+      weaknesses: ["頑固なところがある", "休むのが苦手"],
+      behaviors: ["集合場所を自然と決めている", "迷子になった友達を探しに行く"],
+      todayAction: "今日は誰かのために一歩踏み出してみよう",
+    };
+    expect(content.variant).toBe("animal-personality");
+    expect(content.catchphrase).toBe("群れのリーダー的存在");
+    expect(content.strengths).toHaveLength(3);
+    expect(content.weaknesses).toHaveLength(2);
+    expect(content.behaviors).toHaveLength(2);
+    expect(content.todayAction).toBe("今日は誰かのために一歩踏み出してみよう");
+  });
+});
+
+describe("DetailedContent union type — animal-personality", () => {
+  it("can hold AnimalPersonalityDetailedContent", () => {
+    const content: DetailedContent = {
+      variant: "animal-personality",
+      catchphrase: "キャッチコピー",
+      strengths: ["強み1"],
+      weaknesses: ["弱み1"],
+      behaviors: ["あるある1"],
+      todayAction: "今日のアクション",
+    };
+    expect(content.variant).toBe("animal-personality");
+  });
+
+  it("discriminates animal-personality variant via type narrowing", () => {
+    const content: DetailedContent = {
+      variant: "animal-personality",
+      catchphrase: "キャッチコピー",
+      strengths: ["強み1", "強み2"],
+      weaknesses: ["弱み1"],
+      behaviors: ["あるある1", "あるある2"],
+      todayAction: "今日のアクション",
+    };
+
+    if (content.variant === "animal-personality") {
+      expect(content.catchphrase).toBe("キャッチコピー");
+      expect(content.strengths).toHaveLength(2);
+      expect(content.weaknesses).toHaveLength(1);
+      expect(content.todayAction).toBe("今日のアクション");
     }
   });
 });

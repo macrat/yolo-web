@@ -49,24 +49,6 @@ const CharacterFortuneResultExtra = dynamic(
   { ssr: false },
 );
 
-const AnimalPersonalityResultExtra = dynamic(
-  () =>
-    import("./AnimalPersonalityResultExtra").then((mod) => {
-      function Wrapper({
-        resultId,
-        referrerTypeId,
-      }: {
-        resultId: string;
-        referrerTypeId?: string;
-      }) {
-        const renderFn = mod.renderAnimalPersonalityExtra(referrerTypeId);
-        return <>{renderFn(resultId)}</>;
-      }
-      return { default: Wrapper };
-    }),
-  { ssr: false },
-);
-
 const ScienceThinkingResultExtra = dynamic(
   () =>
     import("./ScienceThinkingResultExtra").then((mod) => {
@@ -155,14 +137,6 @@ export default function ResultExtraLoader({
   if (slug === "character-fortune") {
     return (
       <CharacterFortuneResultExtra
-        resultId={resultId}
-        referrerTypeId={referrerTypeId}
-      />
-    );
-  }
-  if (slug === "animal-personality") {
-    return (
-      <AnimalPersonalityResultExtra
         resultId={resultId}
         referrerTypeId={referrerTypeId}
       />

@@ -88,16 +88,38 @@ export interface CharacterFortuneDetailedContent {
 }
 
 /**
+ * animal-personality クイズ専用の追加コンテンツセクション。
+ * 動物キャラクター診断の結果ページで強み・弱み・あるある・今日のアクションを提供する。
+ * variant フィールドで他の DetailedContent 型と区別する。
+ */
+export interface AnimalPersonalityDetailedContent {
+  /** バリアント識別子。型の絞り込みに使用する。 */
+  variant: "animal-personality";
+  /** タイプのキャッチコピー（一行） */
+  catchphrase: string;
+  /** このタイプの強み（箇条書き2-3項目） */
+  strengths: string[];
+  /** このタイプの弱み（箇条書き2-3項目） */
+  weaknesses: string[];
+  /** あるある・日常での行動パターン（箇条書き3-5項目、共感を呼ぶ具体的シーン） */
+  behaviors: string[];
+  /** 今日のおすすめアクション（ポジティブな1文） */
+  todayAction: string;
+}
+
+/**
  * detailedContent の union型。
  * variant フィールドで型を絞り込む discriminated union。
  * - variant が undefined または未設定: QuizResultDetailedContent（標準形式）
  * - variant が "contrarian-fortune": ContrarianFortuneDetailedContent
  * - variant が "character-fortune": CharacterFortuneDetailedContent
+ * - variant が "animal-personality": AnimalPersonalityDetailedContent
  */
 export type DetailedContent =
   | QuizResultDetailedContent
   | ContrarianFortuneDetailedContent
-  | CharacterFortuneDetailedContent;
+  | CharacterFortuneDetailedContent
+  | AnimalPersonalityDetailedContent;
 
 /** A result pattern */
 export type QuizResult = {
