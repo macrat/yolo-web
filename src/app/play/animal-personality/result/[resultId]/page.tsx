@@ -254,8 +254,17 @@ export default async function AnimalPersonalityResultPage({
           />
         )}
 
+        {/* CTA2: 全タイプ一覧の前に配置 — コンテンツを読み終えた時点での自然な誘導 */}
+        <div className={styles.cta2Section}>
+          <Link href={`/play/${SLUG}`} className={styles.cta2Link}>
+            {ctaText}
+          </Link>
+        </div>
+
         {/* 全タイプ一覧セクション */}
         <div className={styles.allTypesSection}>
+          <h2 className={styles.allTypesCta}>他の動物も見てみよう</h2>
+
           <ul className={styles.allTypesList}>
             {quiz.results.map((r) => (
               <li
@@ -273,14 +282,6 @@ export default async function AnimalPersonalityResultPage({
               </li>
             ))}
           </ul>
-          <p className={styles.allTypesCta}>他の動物も見てみよう</p>
-
-          {/* CTA2: テキストリンク形式 */}
-          <div className={styles.cta2Section}>
-            <Link href={`/play/${SLUG}`} className={styles.cta2Link}>
-              {ctaText}
-            </Link>
-          </div>
         </div>
       </div>
     </ResultPageShell>

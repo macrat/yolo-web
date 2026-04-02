@@ -382,7 +382,18 @@ export default function ResultCard({
         )}
       {/* animal-personality: catchphraseをdescriptionの前に表示 */}
       {catchphrase && (
-        <p className={styles.catchphraseBeforeDescription}>{catchphrase}</p>
+        <p
+          className={styles.catchphraseBeforeDescription}
+          style={
+            accentColor
+              ? ({
+                  "--catchphrase-accent-color": accentColor,
+                } as React.CSSProperties)
+              : undefined
+          }
+        >
+          {catchphrase}
+        </p>
       )}
       <p className={styles.description}>{result.description}</p>
       {result.recommendation && result.recommendationLink && (
