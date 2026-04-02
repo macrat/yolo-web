@@ -136,8 +136,13 @@
   color: var(--color-text);
   margin-bottom: 0;
   text-align: center;
-  /* accentColorの透過背景はinline styleで設定 */
+  /* accentColorの透過背景はinline styleで設定。未設定時のフォールバック */
   background: rgba(0, 0, 0, 0.04);
+}
+
+/* ダークモード: rgba(0,0,0,0.04)はダーク背景でほぼ透明になるため白ベースに変更 */
+:global(.dark) .adviceCard {
+  background: rgba(255, 255, 255, 0.06);
 }
 
 /* catchphrase（contrarian-fortune detailedSection内） */
@@ -170,122 +175,18 @@
   content: "";
   flex: 1;
   height: 2px;
-  /* accentColorはJS側で設定できないためCSS変数で受け取る想定。
-     フォールバックとしてanimal-personalityの標準色を使用 */
-  background: var(--catchphrase-accent-color, #15803d);
+  /* animal-personalityのライトモード標準色を使用。
+     ダークモードでは :global(.dark) .catchphraseBeforeDescription で上書き。 */
+  background: #15803d;
   opacity: 0.4;
   border-radius: 1px;
 }
 
-/* todayAction カード（animal-personality） */
-.todayActionCard {
-  padding: 1.25rem 1.5rem;
-  border-radius: 10px;
-  font-size: 1rem;
-  line-height: 1.7;
-  font-weight: 500;
-  color: var(--color-text);
-  margin-bottom: 1.5rem;
-  text-align: center;
-  /* accentColorの透過背景はinline styleで設定 */
-  background: rgba(0, 0, 0, 0.04);
-}
-
-/* strengths リスト（animal-personality） */
-.strengthsList {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 1.5rem 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.625rem;
-}
-
-.strengthsItem {
-  font-size: 0.95rem;
-  line-height: 1.6;
-  color: var(--color-text);
-  padding: 0.75rem 1rem;
-  border-radius: 8px;
-  border: 1px solid var(--color-border);
-  /* 強みは薄い緑背景で視覚的に強調 */
-  background: rgba(22, 163, 74, 0.06);
-  display: flex;
-  align-items: flex-start;
-  gap: 0.625rem;
-}
-
-.strengthsItem::before {
-  content: "✨";
-  flex-shrink: 0;
-}
-
-/* weaknesses リスト（animal-personality） */
-.weaknessesList {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 1.5rem 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.625rem;
-}
-
-.weaknessesItem {
-  font-size: 0.95rem;
-  line-height: 1.6;
-  color: var(--color-text);
-  padding: 0.75rem 1rem;
-  border-radius: 8px;
-  border: 1px solid var(--color-border);
-  /* 弱みは薄いオレンジ背景で視覚的に差別化 */
-  background: rgba(245, 158, 11, 0.06);
-  display: flex;
-  align-items: flex-start;
-  gap: 0.625rem;
-}
-
-.weaknessesItem::before {
-  content: "😅";
-  flex-shrink: 0;
-}
-
-/* 全タイプ一覧セクション（animal-personality） */
-.allTypesSection {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--color-border);
-}
-
-.allTypesList {
-  list-style: none;
-  padding: 0;
-  margin: 1rem 0 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.allTypesItem a,
-.allTypesItemCurrent a {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 0.75rem;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  color: var(--color-text);
-  text-decoration: none;
-  transition: background-color 0.15s ease;
-}
-
-.allTypesItem a:hover {
-  background-color: var(--color-bg-secondary);
-}
-
-.allTypesItemCurrent a {
-  background-color: var(--color-bg-secondary);
-  font-weight: 700;
-  pointer-events: none;
+/* ダークモード: ライトモード用の #15803d はコントラスト不足のため明るい緑に変更 */
+:global(.dark) .catchphraseBeforeDescription::before,
+:global(.dark) .catchphraseBeforeDescription::after {
+  background: #4ade80;
+  opacity: 0.5;
 }
 
 /* humorMetrics テーブル（contrarian-fortune） */
@@ -304,7 +205,8 @@
 }
 
 .humorMetricsTable th {
-  background: var(--color-surface, #f8f8f8);
+  /* --color-surface は未定義のため --color-bg-secondary を使用 */
+  background: var(--color-bg-secondary);
   font-weight: 600;
   width: 50%;
 }
@@ -318,8 +220,13 @@
   margin-bottom: 1.5rem;
   padding: 1.25rem 1.5rem;
   border-radius: 10px;
-  /* accentColorの透過背景はinline styleで設定 */
+  /* accentColorの透過背景はinline styleで設定。未設定時のフォールバック */
   background: rgba(0, 0, 0, 0.04);
+}
+
+/* ダークモード: rgba(0,0,0,0.04)はダーク背景でほぼ透明になるため白ベースに変更 */
+:global(.dark) .characterIntro {
+  background: rgba(255, 255, 255, 0.06);
 }
 
 /* characterMessage（character-fortune） */
