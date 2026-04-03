@@ -173,6 +173,24 @@ export interface YojiPersonalityDetailedContent {
 }
 
 /**
+ * character-personality クイズ専用の追加コンテンツセクション。
+ * あなたに似たキャラ診断の結果ページでキャッチコピー・アーキタイプ解説・あるある・キャラメッセージを提供する。
+ * variant フィールドで他の DetailedContent 型と区別する。
+ */
+export interface CharacterPersonalityDetailedContent {
+  /** バリアント識別子。型の絞り込みに使用する。 */
+  variant: "character-personality";
+  /** キャッチコピー（15-30字、キャラの口調で書く） */
+  catchphrase: string;
+  /** 2つのアーキタイプの融合解説（80-150字） */
+  archetypeBreakdown: string;
+  /** あるある（箇条書き4項目） */
+  behaviors: string[];
+  /** キャラからのメッセージ（50-200字） */
+  characterMessage: string;
+}
+
+/**
  * detailedContent の union型。
  * variant フィールドで型を絞り込む discriminated union。
  * - variant が undefined または未設定: QuizResultDetailedContent（標準形式）
@@ -182,6 +200,7 @@ export interface YojiPersonalityDetailedContent {
  * - variant が "music-personality": MusicPersonalityDetailedContent
  * - variant が "traditional-color": TraditionalColorDetailedContent
  * - variant が "yoji-personality": YojiPersonalityDetailedContent
+ * - variant が "character-personality": CharacterPersonalityDetailedContent
  */
 export type DetailedContent =
   | QuizResultDetailedContent
@@ -190,7 +209,8 @@ export type DetailedContent =
   | AnimalPersonalityDetailedContent
   | MusicPersonalityDetailedContent
   | TraditionalColorDetailedContent
-  | YojiPersonalityDetailedContent;
+  | YojiPersonalityDetailedContent
+  | CharacterPersonalityDetailedContent;
 
 /** A result pattern */
 export type QuizResult = {

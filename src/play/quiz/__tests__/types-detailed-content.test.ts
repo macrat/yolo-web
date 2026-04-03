@@ -9,6 +9,7 @@ import type {
   TraditionalColorDetailedContent,
   TraditionalColorSeason,
   YojiPersonalityDetailedContent,
+  CharacterPersonalityDetailedContent,
   DetailedContent,
 } from "../types";
 
@@ -443,6 +444,60 @@ describe("DetailedContent union type — yoji-personality", () => {
       expect(content.origin).toBe("出典解説");
       expect(content.behaviors).toHaveLength(4);
       expect(content.motto).toBe("座右の銘");
+    }
+  });
+});
+
+describe("CharacterPersonalityDetailedContent", () => {
+  it("accepts all required fields with variant='character-personality'", () => {
+    const content: CharacterPersonalityDetailedContent = {
+      variant: "character-personality",
+      catchphrase: "思慮深さと情熱を兼ね備えた理想主義者",
+      archetypeBreakdown:
+        "「賢者」と「英雄」の2つのアーキタイプが融合したタイプ。知識と行動力を兼ね備え、理想を現実に変えようとする強い意志を持つ。",
+      behaviors: [
+        "興味を持ったことは徹底的に調べる",
+        "不公平な状況を見ると黙っていられない",
+        "計画を立てるのが好きだが直感でも動ける",
+        "大切な人のためなら無理をしてしまう",
+      ],
+      characterMessage:
+        "あなたの中には、世界をもっと良くしたいという熱い思いが宿っています。その情熱を信じて、一歩ずつ前に進んでください。",
+    };
+    expect(content.variant).toBe("character-personality");
+    expect(content.catchphrase).toBe("思慮深さと情熱を兼ね備えた理想主義者");
+    expect(content.archetypeBreakdown).toBeDefined();
+    expect(content.behaviors).toHaveLength(4);
+    expect(content.characterMessage).toBeDefined();
+  });
+});
+
+describe("DetailedContent union type — character-personality", () => {
+  it("can hold CharacterPersonalityDetailedContent", () => {
+    const content: DetailedContent = {
+      variant: "character-personality",
+      catchphrase: "思慮深さと情熱を兼ね備えた理想主義者",
+      archetypeBreakdown: "2つのアーキタイプの融合解説",
+      behaviors: ["あるある1", "あるある2", "あるある3", "あるある4"],
+      characterMessage: "キャラからのメッセージ",
+    };
+    expect(content.variant).toBe("character-personality");
+  });
+
+  it("discriminates character-personality variant via type narrowing", () => {
+    const content: DetailedContent = {
+      variant: "character-personality",
+      catchphrase: "キャッチコピー",
+      archetypeBreakdown: "アーキタイプ解説",
+      behaviors: ["あるある1", "あるある2", "あるある3", "あるある4"],
+      characterMessage: "メッセージ",
+    };
+
+    if (content.variant === "character-personality") {
+      expect(content.catchphrase).toBe("キャッチコピー");
+      expect(content.archetypeBreakdown).toBe("アーキタイプ解説");
+      expect(content.behaviors).toHaveLength(4);
+      expect(content.characterMessage).toBe("メッセージ");
     }
   });
 });

@@ -44,6 +44,11 @@ const YojiPersonalityContent = dynamic(
   { ssr: true },
 );
 
+const CharacterPersonalityContent = dynamic(
+  () => import("./CharacterPersonalityContent"),
+  { ssr: true },
+);
+
 type ResultCardProps = {
   result: QuizResult;
   quizType: QuizType;
@@ -289,6 +294,17 @@ function renderDetailedContent(
           allTypesLayout="pill"
         />
       );
+    case "character-personality":
+      return (
+        <CharacterPersonalityContent
+          content={content}
+          resultId={resultId}
+          resultColor={resultColor ?? ""}
+          headingLevel={3}
+          allTypesLayout="list"
+          referrerTypeId={referrerTypeId}
+        />
+      );
     default: {
       // exhaustive check: 新variant追加時にコンパイルエラーで検出
       void (content satisfies never);
@@ -324,6 +340,7 @@ export default function ResultCard({
     "music-personality",
     "traditional-color",
     "yoji-personality",
+    "character-personality",
   ] as const;
 
   // catchphrase 装飾線の色（--catchphrase-accent-color）を variant ごとに宣言的に管理する。
@@ -338,6 +355,7 @@ export default function ResultCard({
     "music-personality": "#7c3aed",
     "traditional-color": result.color ?? null,
     "yoji-personality": result.color ?? null,
+    "character-personality": result.color ?? null,
   };
 
   const catchphrase =

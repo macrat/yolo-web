@@ -164,12 +164,6 @@ vi.mock("@/play/quiz/data/music-personality", () => ({
   getCompatibility: vi.fn(() => undefined),
 }));
 
-// Mock character-personality
-vi.mock("@/play/quiz/data/character-personality", () => ({
-  getCompatibility: vi.fn(() => undefined),
-  default: { results: [] },
-}));
-
 describe("PlayQuizResultPage CTA", () => {
   it("knowledge タイプのクイズでは「あなたも挑戦してみよう」と表示する", async () => {
     const params = Promise.resolve({

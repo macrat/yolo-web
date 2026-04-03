@@ -14,15 +14,13 @@ vi.mock("next/dynamic", () => ({
     const loaderStr = loader.toString();
 
     function Stub(props: Record<string, unknown>) {
-      const slug = loaderStr.includes("CharacterPersonality")
-        ? "character-personality"
-        : loaderStr.includes("CharacterFortune")
-          ? "character-fortune"
-          : loaderStr.includes("ScienceThinking")
-            ? "science-thinking"
-            : loaderStr.includes("JapaneseCulture")
-              ? "japanese-culture"
-              : "unknown";
+      const slug = loaderStr.includes("CharacterFortune")
+        ? "character-fortune"
+        : loaderStr.includes("ScienceThinking")
+          ? "science-thinking"
+          : loaderStr.includes("JapaneseCulture")
+            ? "japanese-culture"
+            : "unknown";
       return (
         <div
           data-testid={`${slug}-extra`}
@@ -40,24 +38,22 @@ vi.mock("../CharacterFortuneResultExtra", () => ({
 }));
 // AnimalPersonalityResultExtraは削除済み（animal-personality分岐はResultCard内に統合）
 // MusicPersonalityResultExtraは削除済み（MusicPersonalityContentのafterTodayActionスロットに統合）
+// CharacterPersonalityResultExtraは削除済み（CharacterPersonalityContentに統合済み）
 vi.mock("../ScienceThinkingResultExtra", () => ({
   renderScienceThinkingExtra: () => () => null,
 }));
 vi.mock("../JapaneseCultureResultExtra", () => ({
   renderJapaneseCultureExtra: () => () => null,
 }));
-vi.mock("../CharacterPersonalityResultExtra", () => ({
-  renderCharacterPersonalityExtra: () => () => null,
-}));
 
 // モックのセットアップ後に対象コンポーネントをインポート
 const { default: ResultExtraLoader } = await import("../ResultExtraLoader");
 
-test("character-personality スラグで CharacterPersonalityResultExtra が描画される", () => {
-  const { getByTestId } = render(
+test("character-personality スラグでは null が返る（CharacterPersonalityContentに統合済み）", () => {
+  const { container } = render(
     <ResultExtraLoader slug="character-personality" resultId="result-01" />,
   );
-  expect(getByTestId("character-personality-extra")).toBeInTheDocument();
+  expect(container.firstChild).toBeNull();
 });
 
 test("unknown スラグでは null が返る", () => {
