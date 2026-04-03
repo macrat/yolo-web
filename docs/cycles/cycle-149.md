@@ -2,7 +2,7 @@
 id: 149
 description: "結果体験の再設計: traditional-color（B-267）"
 started_at: "2026-04-03T12:04:51+0900"
-completed_at: "2026-04-03T15:13:00+0900"
+completed_at: "2026-04-03T15:17:22+0900"
 ---
 
 # サイクル-149
