@@ -1,18 +1,36 @@
 /**
  * Tests for detailedContent on all 8 yoji-personality results.
- * Each result must have a valid detailedContent with:
- *   - traits: 3-5 items, each non-empty
- *   - behaviors: 3-5 items, each non-empty
- *   - advice: non-empty string
- * Also verifies seoTitle is set on meta.
+ *
+ * After the redesign, all 8 results use the YojiPersonalityDetailedContent format:
+ *   - variant: "yoji-personality"
+ *   - catchphrase: 15-30 chars
+ *   - kanjiBreakdown: 80-150 chars
+ *   - origin: 80-150 chars
+ *   - behaviors: exactly 4 items, each non-empty (10-150 chars)
+ *   - motto: 20-80 chars
+ *
+ * Also verifies:
+ *   - resultPageLabels is removed from meta
+ *   - seoTitle is set on meta
  */
 import { describe, it, expect } from "vitest";
-import type { QuizResultDetailedContent } from "../../types";
+import type { YojiPersonalityDetailedContent } from "../../types";
 import yojiPersonalityQuiz from "../yoji-personality";
 
 const allResults = yojiPersonalityQuiz.results;
 
-describe("yoji-personality detailedContent", () => {
+const ALL_IDS = [
+  "shoshikantetsu",
+  "tenshinranman",
+  "sessatakuma",
+  "ichigoichie",
+  "rinkiohen",
+  "meikyoshisui",
+  "ishindenshin",
+  "yuoumaishin",
+] as const;
+
+describe("yoji-personality detailedContent — common", () => {
   it("all 8 results exist", () => {
     expect(allResults.length).toBe(8);
   });
@@ -25,107 +43,63 @@ describe("yoji-personality detailedContent", () => {
       ).toBeDefined();
     }
   });
-
-  it("traits has 3-5 items and each is non-empty", () => {
-    for (const result of allResults) {
-      const { traits } = result.detailedContent! as QuizResultDetailedContent;
-      expect(
-        traits.length,
-        `${result.id}: traits count should be 3-5`,
-      ).toBeGreaterThanOrEqual(3);
-      expect(
-        traits.length,
-        `${result.id}: traits count should be 3-5`,
-      ).toBeLessThanOrEqual(5);
-      for (const trait of traits) {
-        expect(
-          trait.length,
-          `${result.id}: each trait must be non-empty`,
-        ).toBeGreaterThan(0);
-      }
-    }
-  });
-
-  it("behaviors has 3-5 items and each is non-empty", () => {
-    for (const result of allResults) {
-      const { behaviors } =
-        result.detailedContent! as QuizResultDetailedContent;
-      expect(
-        behaviors.length,
-        `${result.id}: behaviors count should be 3-5`,
-      ).toBeGreaterThanOrEqual(3);
-      expect(
-        behaviors.length,
-        `${result.id}: behaviors count should be 3-5`,
-      ).toBeLessThanOrEqual(5);
-      for (const behavior of behaviors) {
-        expect(
-          behavior.length,
-          `${result.id}: each behavior must be non-empty`,
-        ).toBeGreaterThan(0);
-      }
-    }
-  });
-
-  it("advice is a non-empty string", () => {
-    for (const result of allResults) {
-      const { advice } = result.detailedContent! as QuizResultDetailedContent;
-      expect(
-        advice.length,
-        `${result.id}: advice must be non-empty`,
-      ).toBeGreaterThan(0);
-    }
-  });
-
-  it("traits items are reasonably sized (5-150 chars each)", () => {
-    for (const result of allResults) {
-      for (const trait of (result.detailedContent! as QuizResultDetailedContent)
-        .traits) {
-        expect(
-          trait.length,
-          `${result.id}: trait too short or too long`,
-        ).toBeGreaterThanOrEqual(5);
-        expect(
-          trait.length,
-          `${result.id}: trait too long (max 150)`,
-        ).toBeLessThanOrEqual(150);
-      }
-    }
-  });
-
-  it("behaviors items are reasonably sized (10-150 chars each)", () => {
-    for (const result of allResults) {
-      for (const behavior of (
-        result.detailedContent! as QuizResultDetailedContent
-      ).behaviors) {
-        expect(
-          behavior.length,
-          `${result.id}: behavior too short or too long`,
-        ).toBeGreaterThanOrEqual(10);
-        expect(
-          behavior.length,
-          `${result.id}: behavior too long (max 150)`,
-        ).toBeLessThanOrEqual(150);
-      }
-    }
-  });
-
-  it("advice is reasonably sized (10-200 chars)", () => {
-    for (const result of allResults) {
-      const { advice } = result.detailedContent! as QuizResultDetailedContent;
-      expect(
-        advice.length,
-        `${result.id}: advice too short`,
-      ).toBeGreaterThanOrEqual(10);
-      expect(
-        advice.length,
-        `${result.id}: advice too long (max 200)`,
-      ).toBeLessThanOrEqual(200);
-    }
-  });
 });
 
-describe("yoji-personality seoTitle", () => {
+describe("yoji-personality detailedContent — new variant format", () => {
+  for (const id of ALL_IDS) {
+    describe(`${id}`, () => {
+      const result = allResults.find((r) => r.id === id)!;
+
+      it('variant is "yoji-personality"', () => {
+        expect(result.detailedContent?.variant).toBe("yoji-personality");
+      });
+
+      it("catchphrase is a non-empty string (15-30 chars)", () => {
+        const { catchphrase } =
+          result.detailedContent as YojiPersonalityDetailedContent;
+        expect(catchphrase.length).toBeGreaterThanOrEqual(15);
+        expect(catchphrase.length).toBeLessThanOrEqual(30);
+      });
+
+      it("kanjiBreakdown is a non-empty string (80-150 chars)", () => {
+        const { kanjiBreakdown } =
+          result.detailedContent as YojiPersonalityDetailedContent;
+        expect(kanjiBreakdown.length).toBeGreaterThanOrEqual(80);
+        expect(kanjiBreakdown.length).toBeLessThanOrEqual(150);
+      });
+
+      it("origin is a non-empty string (80-150 chars)", () => {
+        const { origin } =
+          result.detailedContent as YojiPersonalityDetailedContent;
+        expect(origin.length).toBeGreaterThanOrEqual(80);
+        expect(origin.length).toBeLessThanOrEqual(150);
+      });
+
+      it("behaviors has exactly 4 items, each non-empty (10-150 chars)", () => {
+        const { behaviors } =
+          result.detailedContent as YojiPersonalityDetailedContent;
+        expect(behaviors.length).toBe(4);
+        for (const behavior of behaviors) {
+          expect(behavior.length).toBeGreaterThanOrEqual(10);
+          expect(behavior.length).toBeLessThanOrEqual(150);
+        }
+      });
+
+      it("motto is a non-empty string (20-80 chars)", () => {
+        const { motto } =
+          result.detailedContent as YojiPersonalityDetailedContent;
+        expect(motto.length).toBeGreaterThanOrEqual(20);
+        expect(motto.length).toBeLessThanOrEqual(80);
+      });
+    });
+  }
+});
+
+describe("yoji-personality meta — new variant requirements", () => {
+  it("resultPageLabels is removed from meta", () => {
+    expect(yojiPersonalityQuiz.meta.resultPageLabels).toBeUndefined();
+  });
+
   it("meta has seoTitle set", () => {
     expect(yojiPersonalityQuiz.meta.seoTitle).toBeDefined();
     expect(yojiPersonalityQuiz.meta.seoTitle!.length).toBeGreaterThan(0);

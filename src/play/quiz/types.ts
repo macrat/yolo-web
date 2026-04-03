@@ -153,6 +153,26 @@ export interface TraditionalColorDetailedContent {
 }
 
 /**
+ * yoji-personality クイズ専用の追加コンテンツセクション。
+ * 四字熟語性格診断の結果ページで漢字解説・由来・あるある・座右の銘を提供する。
+ * variant フィールドで他の DetailedContent 型と区別する。
+ */
+export interface YojiPersonalityDetailedContent {
+  /** バリアント識別子。型の絞り込みに使用する。 */
+  variant: "yoji-personality";
+  /** タイプのキャッチコピー（一行、15-30字） */
+  catchphrase: string;
+  /** 漢字一字ずつの意味分解と解説（80-150字） */
+  kanjiBreakdown: string;
+  /** 出典・由来の解説（80-150字） */
+  origin: string;
+  /** あるある・日常での行動パターン（箇条書き4項目、共感を呼ぶ具体的シーン） */
+  behaviors: string[];
+  /** 座右の銘としてのメッセージ（20-80字） */
+  motto: string;
+}
+
+/**
  * detailedContent の union型。
  * variant フィールドで型を絞り込む discriminated union。
  * - variant が undefined または未設定: QuizResultDetailedContent（標準形式）
@@ -161,6 +181,7 @@ export interface TraditionalColorDetailedContent {
  * - variant が "animal-personality": AnimalPersonalityDetailedContent
  * - variant が "music-personality": MusicPersonalityDetailedContent
  * - variant が "traditional-color": TraditionalColorDetailedContent
+ * - variant が "yoji-personality": YojiPersonalityDetailedContent
  */
 export type DetailedContent =
   | QuizResultDetailedContent
@@ -168,7 +189,8 @@ export type DetailedContent =
   | CharacterFortuneDetailedContent
   | AnimalPersonalityDetailedContent
   | MusicPersonalityDetailedContent
-  | TraditionalColorDetailedContent;
+  | TraditionalColorDetailedContent
+  | YojiPersonalityDetailedContent;
 
 /** A result pattern */
 export type QuizResult = {

@@ -8,6 +8,7 @@ import type {
   MusicPersonalityDetailedContent,
   TraditionalColorDetailedContent,
   TraditionalColorSeason,
+  YojiPersonalityDetailedContent,
   DetailedContent,
 } from "../types";
 
@@ -383,6 +384,65 @@ describe("DetailedContent union type — traditional-color", () => {
       expect(content.catchphrase).toBe("キャッチコピー");
       expect(content.season).toBe("冬");
       expect(content.behaviors).toHaveLength(4);
+    }
+  });
+});
+
+describe("YojiPersonalityDetailedContent", () => {
+  it("accepts all required fields with variant='yoji-personality'", () => {
+    const content: YojiPersonalityDetailedContent = {
+      variant: "yoji-personality",
+      catchphrase: "深謀遠慮で世界を動かす策士",
+      kanjiBreakdown:
+        "「深」は深さ・奥深さ、「謀」は計画・はかりごと、「遠」は遠くを見渡す視野、「慮」は思慮・配慮を意味する。四文字が合わさり、遠い先まで見据えた深い思考と周到な計画性を表す。",
+      origin:
+        "中国の古典に由来し、深く遠くまで計画を巡らせるという意味で用いられてきた。日本では戦国時代の武将たちの戦略的思考を称える文脈で多く使われるようになった。",
+      behaviors: [
+        "物事を始める前に最悪のシナリオまで考えている",
+        "計画表を作りすぎて計画が趣味になっている",
+        "リスクを先読みして友達に「心配しすぎ」と言われる",
+        "長期目標のために今の我慢を選べる",
+      ],
+      motto: "百年後の自分が誇れる選択をする。それが深謀遠慮の生き方。",
+    };
+    expect(content.variant).toBe("yoji-personality");
+    expect(content.catchphrase).toBeDefined();
+    expect(content.kanjiBreakdown).toBeDefined();
+    expect(content.origin).toBeDefined();
+    expect(content.behaviors).toHaveLength(4);
+    expect(content.motto).toBeDefined();
+  });
+});
+
+describe("DetailedContent union type — yoji-personality", () => {
+  it("can hold YojiPersonalityDetailedContent", () => {
+    const content: DetailedContent = {
+      variant: "yoji-personality",
+      catchphrase: "深謀遠慮で世界を動かす策士",
+      kanjiBreakdown: "漢字一字ずつの意味分解",
+      origin: "出典・由来の解説",
+      behaviors: ["あるある1", "あるある2", "あるある3", "あるある4"],
+      motto: "座右の銘としてのメッセージ",
+    };
+    expect(content.variant).toBe("yoji-personality");
+  });
+
+  it("discriminates yoji-personality variant via type narrowing", () => {
+    const content: DetailedContent = {
+      variant: "yoji-personality",
+      catchphrase: "キャッチコピー",
+      kanjiBreakdown: "漢字解説",
+      origin: "出典解説",
+      behaviors: ["あるある1", "あるある2", "あるある3", "あるある4"],
+      motto: "座右の銘",
+    };
+
+    if (content.variant === "yoji-personality") {
+      expect(content.catchphrase).toBe("キャッチコピー");
+      expect(content.kanjiBreakdown).toBe("漢字解説");
+      expect(content.origin).toBe("出典解説");
+      expect(content.behaviors).toHaveLength(4);
+      expect(content.motto).toBe("座右の銘");
     }
   });
 });
