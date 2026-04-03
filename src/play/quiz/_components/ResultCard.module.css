@@ -175,17 +175,19 @@
   content: "";
   flex: 1;
   height: 2px;
-  /* animal-personalityのライトモード標準色を使用。
-     ダークモードでは :global(.dark) .catchphraseBeforeDescription で上書き。 */
-  background: #15803d;
+  /* CSS変数 --catchphrase-accent-color を参照し、variant別に色を切り替える。
+     フォールバック値 #15803d は animal-personality（緑）のライトモード標準色。
+     music-personality では ResultCard.tsx の inline style で #7c3aed（紫）を上書きする。 */
+  background: var(--catchphrase-accent-color, #15803d);
   opacity: 0.4;
   border-radius: 1px;
 }
 
-/* ダークモード: ライトモード用の #15803d はコントラスト不足のため明るい緑に変更 */
+/* ダークモード: ライトモード用のフォールバック #15803d はコントラスト不足のため明るい緑に変更。
+   music-personalityは inline style で CSS変数を指定するため、ダーク時も紫が維持される。 */
 :global(.dark) .catchphraseBeforeDescription::before,
 :global(.dark) .catchphraseBeforeDescription::after {
-  background: #4ade80;
+  background: var(--catchphrase-accent-color, #4ade80);
   opacity: 0.5;
 }
 

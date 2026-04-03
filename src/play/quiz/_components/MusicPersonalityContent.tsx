@@ -143,7 +143,7 @@ export default function MusicPersonalityContent({
 
       {/* weaknesses セクション */}
       <Heading className={styles.sectionHeading}>
-        😅 このタイプの音楽的な弱み
+        🎧 このタイプの音楽的な弱み
       </Heading>
       <ul className={styles.weaknessesList}>
         {content.weaknesses.map((w, i) => (
@@ -155,7 +155,7 @@ export default function MusicPersonalityContent({
 
       {/* behaviors セクション */}
       <Heading className={styles.sectionHeading}>
-        💡 このタイプの音楽あるある
+        🎤 このタイプの音楽あるある
       </Heading>
       <ul className={styles.behaviorsList}>
         {content.behaviors.map((b, i) => (
@@ -167,7 +167,7 @@ export default function MusicPersonalityContent({
 
       {/* todayAction セクション */}
       <Heading className={styles.sectionHeading}>
-        🎧 今日の音楽ライフのヒント
+        🎶 今日の音楽ライフのヒント
       </Heading>
       <div className={styles.todayActionCard}>{content.todayAction}</div>
 
@@ -177,7 +177,7 @@ export default function MusicPersonalityContent({
       {/* 全タイプ一覧セクション */}
       <div className={styles.allTypesSection}>
         <Heading className={styles.allTypesCta}>
-          🎶 他のタイプも見てみよう
+          🎹 他のタイプも見てみよう
         </Heading>
         <ul className={allTypesListClass}>
           {quiz.results.map((r) => (

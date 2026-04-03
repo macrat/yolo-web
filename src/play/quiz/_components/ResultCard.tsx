@@ -304,9 +304,23 @@ export default function ResultCard({
             {totalQuestions}問中{score}問正解
           </p>
         )}
-      {/* animal-personality: catchphraseをdescriptionの前に表示 */}
+      {/* animal-personality / music-personality: catchphraseをdescriptionの前に表示。
+          装飾線の色はCSS変数 --catchphrase-accent-color で制御する。
+          - animal-personality: CSSファイルのフォールバック値（緑）を使用するためinline style不要
+          - music-personality: 紫色（#7c3aed / ダーク#a78bfa）をinline styleで上書き */}
       {catchphrase && (
-        <p className={styles.catchphraseBeforeDescription}>{catchphrase}</p>
+        <p
+          className={styles.catchphraseBeforeDescription}
+          style={
+            detailedContent?.variant === "music-personality"
+              ? ({
+                  "--catchphrase-accent-color": "#7c3aed",
+                } as React.CSSProperties)
+              : undefined
+          }
+        >
+          {catchphrase}
+        </p>
       )}
       <p className={styles.description}>{result.description}</p>
       {result.recommendation && result.recommendationLink && (
