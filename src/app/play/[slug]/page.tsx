@@ -10,20 +10,16 @@ type Props = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
-/** Slugs that have their own dedicated /play/<slug>/page.tsx */
-const CONCRETE_PLAY_SLUGS = ["music-personality"] as const;
-
 /**
- * クイズ14種のslugのみを返す。
+ * 全クイズのslugを返す。
  * ゲームは固定ルート（/play/irodori/ 等）で処理されるため、
  * 動的ルートの generateStaticParams には含めない。
- * Next.js では固定ルートが動的ルートより優先されるため衝突しない。
- * CONCRETE_PLAY_SLUGS は専用ルートを持つため除外する。
+ * 専用ルートを持つクイズ（/play/music-personality/ 等）は
+ * Next.jsのファイルシステムルーティングにより自動的に専用ルートが優先されるため、
+ * 除外リストは不要。
  */
 export async function generateStaticParams() {
-  return getAllQuizSlugs()
-    .filter((slug) => !CONCRETE_PLAY_SLUGS.includes(slug as never))
-    .map((slug) => ({ slug }));
+  return getAllQuizSlugs().map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
