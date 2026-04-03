@@ -1,10 +1,12 @@
 import { isValidMusicTypeId } from "@/play/quiz/data/music-personality";
-import { isValidCharacterPersonalityTypeId } from "@/play/quiz/data/character-personality";
 
 /**
  * Extract the "with" query parameter for compatibility display.
  * Returns a valid type ID or undefined.
  * Validates the param against the correct type set for each quiz slug.
+ *
+ * Note: character-personality has its own dedicated route at
+ * /play/character-personality/result/[resultId], so it is not handled here.
  */
 export function extractWithParam(
   resolvedSearchParams:
@@ -23,16 +25,6 @@ export function extractWithParam(
       withParam &&
       isValidMusicTypeId(withParam) &&
       isValidMusicTypeId(resultId)
-    ) {
-      return withParam;
-    }
-    return undefined;
-  }
-  if (slug === "character-personality") {
-    if (
-      withParam &&
-      isValidCharacterPersonalityTypeId(withParam) &&
-      isValidCharacterPersonalityTypeId(resultId)
     ) {
       return withParam;
     }

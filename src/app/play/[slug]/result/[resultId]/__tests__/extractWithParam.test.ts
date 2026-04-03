@@ -3,7 +3,7 @@
  *
  * extractWithParam validates the ?with= query parameter based on the quiz slug.
  * - music-personality: validates against isValidMusicTypeId
- * - character-personality: validates against isValidCharacterPersonalityTypeId
+ * - character-personality has its own dedicated route, so it is not handled here.
  */
 import { describe, it, expect } from "vitest";
 import { extractWithParam } from "../extractWithParam";
@@ -39,59 +39,16 @@ describe("extractWithParam", () => {
   });
 
   describe("character-personality slug", () => {
-    it("returns valid ?with= param when both resultId and withParam are valid character personality type IDs", () => {
+    it("returns undefined for character-personality slug (handled by dedicated route)", () => {
+      // character-personality has its own dedicated route at
+      // /play/character-personality/result/[resultId], so the dynamic route
+      // no longer handles this slug.
       const result = extractWithParam(
         { with: "blazing-strategist" },
         "character-personality",
         "careful-scholar",
       );
-      expect(result).toBe("blazing-strategist");
-    });
-
-    it("returns undefined when ?with= param is not a valid character personality type ID", () => {
-      const result = extractWithParam(
-        { with: "invalid-type-id" },
-        "character-personality",
-        "careful-scholar",
-      );
       expect(result).toBeUndefined();
-    });
-
-    it("returns undefined when resultId is not a valid character personality type ID", () => {
-      const result = extractWithParam(
-        { with: "blazing-strategist" },
-        "character-personality",
-        "invalid-result-id",
-      );
-      expect(result).toBeUndefined();
-    });
-
-    it("returns undefined when ?with= param is absent", () => {
-      const result = extractWithParam(
-        {},
-        "character-personality",
-        "careful-scholar",
-      );
-      expect(result).toBeUndefined();
-    });
-
-    it("returns undefined when resolvedSearchParams is undefined", () => {
-      const result = extractWithParam(
-        undefined,
-        "character-personality",
-        "careful-scholar",
-      );
-      expect(result).toBeUndefined();
-    });
-
-    it("handles all 24 character personality types correctly", () => {
-      // blazing-warden と eternal-dreamer の組み合わせで検証
-      const result = extractWithParam(
-        { with: "eternal-dreamer" },
-        "character-personality",
-        "blazing-warden",
-      );
-      expect(result).toBe("eternal-dreamer");
     });
   });
 

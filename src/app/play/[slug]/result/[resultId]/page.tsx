@@ -9,10 +9,6 @@ import {
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { countCharWidth } from "@/lib/countCharWidth";
 import { getCompatibility } from "@/play/quiz/data/music-personality";
-import {
-  getCompatibility as getCharacterCompatibility,
-  default as characterPersonalityQuiz,
-} from "@/play/quiz/data/character-personality";
 import CompatibilityDisplay from "./CompatibilityDisplay";
 import { extractWithParam } from "./extractWithParam";
 import DescriptionExpander from "./DescriptionExpander";
@@ -62,11 +58,7 @@ export async function generateMetadata({
 
   if (compatFriendTypeId) {
     const friendResult = quiz.results.find((r) => r.id === compatFriendTypeId);
-    // Fetch compatibility data via the correct function based on quiz slug
-    const compat =
-      slug === "character-personality"
-        ? getCharacterCompatibility(resultId, compatFriendTypeId)
-        : getCompatibility(resultId, compatFriendTypeId);
+    const compat = getCompatibility(resultId, compatFriendTypeId);
     title = `${result.title} x ${friendResult?.title ?? ""} - ${compat?.label ?? "相性結果"}`;
     description = compat?.description ?? result.description;
   } else {
@@ -149,17 +141,9 @@ export default async function PlayQuizResultPage({
     | undefined;
 
   if (compatFriendTypeId) {
-    const getCompatFn =
-      slug === "character-personality"
-        ? getCharacterCompatibility
-        : getCompatibility;
-    const quizResults =
-      slug === "character-personality"
-        ? characterPersonalityQuiz.results
-        : quiz.results;
-    const myResult2 = quizResults.find((r) => r.id === resultId);
-    const friendResult2 = quizResults.find((r) => r.id === compatFriendTypeId);
-    const compat = getCompatFn(resultId, compatFriendTypeId);
+    const myResult2 = quiz.results.find((r) => r.id === resultId);
+    const friendResult2 = quiz.results.find((r) => r.id === compatFriendTypeId);
+    const compat = getCompatibility(resultId, compatFriendTypeId);
     if (myResult2 && friendResult2 && compat) {
       compatData = {
         compatibility: {
