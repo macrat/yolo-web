@@ -1,0 +1,313 @@
+/*
+ * TraditionalColorContent 共通コンポーネントのスタイル。
+ * ResultCard.tsx（受検者向け）と page.tsx（第三者向け）の両方から使用される。
+ *
+ * AnimalPersonalityContent.module.css / MusicPersonalityContent.module.css を基準にスタイルを統一する。
+ *
+ * 設計方針:
+ * - --type-color をpropsからインラインスタイルで注入（タイプごとに色が異なるため）
+ * - ダークモード時は opacity/border 調整で汎用的にコントラストを確保
+ * - colorMeaning は色を薄く敷いたカード形式
+ * - ダークモード時、暗い色の背景が見えにくくなる問題に対して border 表現に切り替え
+ * - WCAG AA準拠のコントラスト比を意識
+ */
+
+/* ============================================================
+   wrapper: --type-color CSS変数の受け取り口
+   インラインスタイルで注入された --type-color を子要素が参照できるようにする。
+   ライトモードでは --type-color をそのまま使用。
+   ダークモードでは --type-color-dark を 明度調整して自動生成するのが理想だが、
+   CSS単体では難しいため、opacity制御と border フォールバックで対応する。
+   ============================================================ */
+.wrapper {
+  /* --type-color はインラインスタイルで注入される */
+}
+
+/* ============================================================
+   セクション見出し
+   ============================================================ */
+
+/* headingLevel に応じて h2 または h3 が生成される */
+.sectionHeading {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  padding-left: 0.75rem;
+  border-left: 4px solid var(--type-color);
+  color: var(--type-color);
+}
+
+/* ダークモード: color-mix で白を30%混ぜることで明度を上げる。
+   filter: brightness() と異なり、明るい色（桜色 #fedfe1 等）が白飛びしない。
+   暗い色（藍色 #0d5661 等）は白寄りになって視認性が確保される。 */
+:global(.dark) .sectionHeading {
+  color: color-mix(in srgb, var(--type-color) 70%, white);
+  border-left-color: color-mix(in srgb, var(--type-color) 70%, white);
+}
+
+/* color-mix 非対応ブラウザ向けフォールバック: saturate で彩度を落として明度補正 */
+@supports not (color: color-mix(in srgb, red 70%, white)) {
+  :global(.dark) .sectionHeading {
+    filter: brightness(1.5) saturate(0.85);
+  }
+}
+
+/* ============================================================
+   colorMeaning カード: 色の文化的背景
+   色をバックグラウンドに薄く敷いたカード形式
+   ============================================================ */
+.colorMeaningCard {
+  padding: 1.25rem 1.5rem;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: var(--color-text);
+  margin-bottom: 2rem;
+  /* --type-color を非常に薄い透過背景として使用 */
+  background: color-mix(in srgb, var(--type-color) 8%, transparent);
+  border-left: 3px solid var(--type-color);
+}
+
+/* ダークモード: 暗い色の背景が見えにくくなる問題に対して border 表現を強調 */
+:global(.dark) .colorMeaningCard {
+  /* 背景を少し濃くして視認性を確保 */
+  background: color-mix(in srgb, var(--type-color) 16%, transparent);
+  /* ボーダーで色の存在を表現する（極端に暗い色でも識別可能） */
+  border-left-width: 4px;
+}
+
+/* color-mix 非対応ブラウザ向けフォールバック */
+@supports not (background: color-mix(in srgb, red 10%, transparent)) {
+  .colorMeaningCard {
+    background: rgba(0, 0, 0, 0.04);
+    border: 1px solid var(--color-border);
+    border-left: 3px solid var(--type-color);
+  }
+
+  :global(.dark) .colorMeaningCard {
+    background: rgba(255, 255, 255, 0.06);
+  }
+}
+
+/* ============================================================
+   scenery + season セクション: 視覚的イメージ喚起
+   ============================================================ */
+.sceneryCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.25rem 1.5rem;
+  border-radius: 10px;
+  margin-bottom: 2rem;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+}
+
+.seasonTag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  /* タイプカラーをアクセントに使ったバッジ */
+  background: color-mix(in srgb, var(--type-color) 12%, transparent);
+  color: var(--type-color);
+  border: 1.5px solid var(--type-color);
+  /* 自身のサイズに収まるよう inline-flex */
+  align-self: flex-start;
+}
+
+/* ダークモード: color-mix で白を30%混ぜることで明度を上げる。
+   filter: brightness() と異なり、明るい色（山吹色 #f8b400 等）が白飛びしない。 */
+:global(.dark) .seasonTag {
+  background: color-mix(in srgb, var(--type-color) 20%, transparent);
+  color: color-mix(in srgb, var(--type-color) 70%, white);
+  border-color: color-mix(in srgb, var(--type-color) 70%, white);
+}
+
+/* color-mix 非対応ブラウザ向けフォールバック */
+@supports not (color: color-mix(in srgb, red 70%, white)) {
+  :global(.dark) .seasonTag {
+    filter: brightness(1.4);
+  }
+}
+
+/* color-mix 非対応ブラウザ向けフォールバック */
+@supports not (background: color-mix(in srgb, red 10%, transparent)) {
+  .seasonTag {
+    background: var(--color-bg-secondary);
+    color: var(--type-color);
+  }
+}
+
+.sceneryText {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--color-text);
+  margin: 0;
+  font-style: italic;
+}
+
+/* ============================================================
+   behaviors リスト: あるある
+   ============================================================ */
+.behaviorsList {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.behaviorsItem {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--color-text);
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+}
+
+.behaviorsItem::before {
+  content: "🎨";
+  flex-shrink: 0;
+  margin-top: 0.05rem;
+}
+
+/* ============================================================
+   colorAdvice カード: 締めのメッセージ
+   ============================================================ */
+.colorAdviceCard {
+  padding: 1.25rem 1.5rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  line-height: 1.7;
+  font-weight: 500;
+  color: var(--color-text);
+  margin-bottom: 2rem;
+  text-align: center;
+  /* タイプカラーの薄い透過背景 */
+  background: color-mix(in srgb, var(--type-color) 8%, transparent);
+}
+
+:global(.dark) .colorAdviceCard {
+  background: color-mix(in srgb, var(--type-color) 16%, transparent);
+}
+
+/* color-mix 非対応ブラウザ向けフォールバック */
+@supports not (background: color-mix(in srgb, red 10%, transparent)) {
+  .colorAdviceCard {
+    background: var(--color-bg-secondary);
+  }
+}
+
+/* ============================================================
+   全タイプ一覧セクション
+   ============================================================ */
+.allTypesSection {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border);
+}
+
+/* 全タイプ見出し: シンプルにセクション案内として機能させる */
+.allTypesCta {
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  color: var(--color-text);
+  margin-bottom: 1rem;
+  margin-top: 0;
+}
+
+/* 各タイプのカラードット */
+.colorDot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  /* 非常に薄い色（桜色等）のドットが背景に溶け込まないよう枠線を付ける */
+  border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+:global(.dark) .colorDot {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* ピル型横wrap レイアウト（page.tsx版） */
+.allTypesListPill {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.allTypesListPill .allTypesItem a,
+.allTypesListPill .allTypesItemCurrent a {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.4rem 0.875rem;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.allTypesListPill .allTypesItem a {
+  color: var(--color-text);
+  border: 1.5px solid var(--color-border);
+  background: transparent;
+}
+
+.allTypesListPill .allTypesItem a:hover {
+  opacity: 0.7;
+}
+
+.allTypesListPill .allTypesItemCurrent a {
+  color: var(--color-text);
+  border: 2px solid var(--type-color);
+  background: var(--color-bg-secondary);
+  font-weight: 700;
+}
+
+/* 縦並びリスト レイアウト（ResultCard版） */
+.allTypesListVertical {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.allTypesListVertical .allTypesItem a,
+.allTypesListVertical .allTypesItemCurrent a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: var(--color-text);
+  text-decoration: none;
+  transition: background-color 0.15s ease;
+}
+
+.allTypesListVertical .allTypesItem a:hover {
+  background-color: var(--color-bg-secondary);
+}
+
+.allTypesListVertical .allTypesItemCurrent a {
+  background-color: var(--color-bg-secondary);
+  font-weight: 700;
+  pointer-events: none;
+}

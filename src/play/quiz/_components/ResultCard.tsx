@@ -34,6 +34,11 @@ const MusicPersonalityContent = dynamic(
   { ssr: true },
 );
 
+const TraditionalColorContent = dynamic(
+  () => import("./TraditionalColorContent"),
+  { ssr: true },
+);
+
 type ResultCardProps = {
   result: QuizResult;
   quizType: QuizType;
@@ -224,6 +229,7 @@ function renderDetailedContent(
   labels?: QuizMeta["resultPageLabels"],
   accentColor?: string,
   referrerTypeId?: string,
+  resultColor?: string,
 ): React.ReactNode {
   // Standard variant (variant === undefined)
   if (!content.variant) {
@@ -257,6 +263,17 @@ function renderDetailedContent(
           referrerTypeId={referrerTypeId}
         />
       );
+    case "traditional-color":
+      return (
+        <TraditionalColorContent
+          content={content}
+          resultId={resultId}
+          resultColor={resultColor ?? ""}
+          headingLevel={3}
+          allTypesLayout="list"
+          // ResultCard内では相性データがないため afterColorAdvice は省略
+        />
+      );
     default: {
       // exhaustive check: 新variant追加時にコンパイルエラーで検出
       void (content satisfies never);
@@ -285,13 +302,16 @@ export default function ResultCard({
 
   const shareText = `${quizTitle}の結果は「${result.title}」でした! #${quizTitle.replace(/\s/g, "")} #yolosnet`;
 
-  // animal-personality / music-personality variant では catchphrase を description の前に表示する
+  // animal-personality / music-personality / traditional-color variant では
+  // catchphrase を description の前に表示する
   const catchphrase =
     detailedContent?.variant === "animal-personality"
       ? detailedContent.catchphrase
       : detailedContent?.variant === "music-personality"
         ? detailedContent.catchphrase
-        : null;
+        : detailedContent?.variant === "traditional-color"
+          ? detailedContent.catchphrase
+          : null;
 
   return (
     <div className={styles.card}>
@@ -304,10 +324,12 @@ export default function ResultCard({
             {totalQuestions}問中{score}問正解
           </p>
         )}
-      {/* animal-personality / music-personality: catchphraseをdescriptionの前に表示。
+      {/* animal-personality / music-personality / traditional-color:
+          catchphraseをdescriptionの前に表示。
           装飾線の色はCSS変数 --catchphrase-accent-color で制御する。
           - animal-personality: CSSファイルのフォールバック値（緑）を使用するためinline style不要
-          - music-personality: 紫色（#7c3aed / ダーク#a78bfa）をinline styleで上書き */}
+          - music-personality: 紫色（#7c3aed / ダーク#a78bfa）をinline styleで上書き
+          - traditional-color: タイプ固有の色（result.color）をinline styleで注入 */}
       {catchphrase && (
         <p
           className={styles.catchphraseBeforeDescription}
@@ -316,7 +338,11 @@ export default function ResultCard({
               ? ({
                   "--catchphrase-accent-color": "#7c3aed",
                 } as React.CSSProperties)
-              : undefined
+              : detailedContent?.variant === "traditional-color" && result.color
+                ? ({
+                    "--catchphrase-accent-color": result.color,
+                  } as React.CSSProperties)
+                : undefined
           }
         >
           {catchphrase}
@@ -339,6 +365,7 @@ export default function ResultCard({
             resultPageLabels,
             accentColor,
             referrerTypeId,
+            result.color,
           )}
         </div>
       )}
