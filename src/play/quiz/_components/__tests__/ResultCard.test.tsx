@@ -634,6 +634,86 @@ describe("ResultCard - animal-personality variant", () => {
   });
 });
 
+describe("ResultCard - catchphrase装飾線のCSS変数（variant別色出し分け）", () => {
+  const animalContent: AnimalPersonalityDetailedContent = {
+    variant: "animal-personality",
+    catchphrase: "動物キャッチコピー",
+    strengths: ["強み1"],
+    weaknesses: ["弱み1"],
+    behaviors: ["あるある1"],
+    todayAction: "今日のアクション",
+  };
+  const animalResult: QuizResult = {
+    id: "nihon-zaru",
+    title: "ニホンザル",
+    description: "説明文",
+    icon: "🐵",
+  };
+
+  const musicContent: MusicPersonalityDetailedContent = {
+    variant: "music-personality",
+    catchphrase: "音楽キャッチコピー",
+    strengths: ["音楽強み1"],
+    weaknesses: ["音楽弱み1"],
+    behaviors: ["音楽あるある1"],
+    todayAction: "音楽アクション",
+  };
+  const musicResult: QuizResult = {
+    id: "festival-pioneer",
+    title: "フェス一番乗り族",
+    description: "フェス説明文",
+    icon: "🎪",
+  };
+
+  test("animal-personality: catchphraseBeforeDescription に --catchphrase-accent-color が設定されていないこと（CSSファイルのフォールバック値で緑色を使用）", () => {
+    const { container } = render(
+      <ResultCard
+        result={animalResult}
+        quizType="personality"
+        quizTitle="動物診断"
+        quizSlug="animal-personality"
+        onRetry={vi.fn()}
+        detailedContent={animalContent}
+        accentColor="#15803d"
+      />,
+    );
+    const catchphraseEl = container.querySelector(
+      "[class*='catchphraseBeforeDescription']",
+    );
+    expect(catchphraseEl).not.toBeNull();
+    if (catchphraseEl) {
+      const el = catchphraseEl as HTMLElement;
+      // animal-personalityではCSS変数は設定しない（CSSファイルの緑色フォールバックを使用）
+      expect(el.style.getPropertyValue("--catchphrase-accent-color")).toBe("");
+    }
+  });
+
+  test("music-personality: catchphraseBeforeDescription に --catchphrase-accent-color が紫色で設定されること", () => {
+    const { container } = render(
+      <ResultCard
+        result={musicResult}
+        quizType="personality"
+        quizTitle="音楽性格診断"
+        quizSlug="music-personality"
+        onRetry={vi.fn()}
+        detailedContent={musicContent}
+        accentColor="#7c3aed"
+      />,
+    );
+    const catchphraseEl = container.querySelector(
+      "[class*='catchphraseBeforeDescription']",
+    );
+    expect(catchphraseEl).not.toBeNull();
+    if (catchphraseEl) {
+      const el = catchphraseEl as HTMLElement;
+      // music-personalityでは紫色のCSS変数が設定されること
+      expect(el.style.getPropertyValue("--catchphrase-accent-color")).toBe(
+        "#7c3aed",
+      );
+    }
+  });
+});
+
 describe("ResultCard - music-personality variant", () => {
   const musicContent: MusicPersonalityDetailedContent = {
     variant: "music-personality",

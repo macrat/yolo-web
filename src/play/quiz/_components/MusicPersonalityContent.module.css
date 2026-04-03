@@ -5,7 +5,7 @@
  * AnimalPersonalityContent.module.css を基準にスタイルを統一する。
  * - strengthsItem: "🎵" マーカー、薄い紫背景（border なし）
  * - weaknessesItem: "😅" マーカー、薄いオレンジ背景（border なし）
- * - behaviorsItem: "🎸" マーカー、border付き
+ * - behaviorsItem: "🎤" マーカー、border付き
  * - allTypesList: "list"（縦並び）と "pill"（ピル型横wrap）の2レイアウト
  */
 
@@ -141,7 +141,7 @@
 }
 
 .behaviorsItem::before {
-  content: "🎸";
+  content: "🎤";
   flex-shrink: 0;
 }
 

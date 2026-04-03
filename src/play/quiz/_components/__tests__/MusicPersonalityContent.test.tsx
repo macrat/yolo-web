@@ -73,7 +73,7 @@ describe("MusicPersonalityContent - 基本レンダリング", () => {
     expect(screen.getByText("音楽的な強み2")).toBeInTheDocument();
   });
 
-  it("weaknessesセクションが表示されること", () => {
+  it("weaknessesセクションが表示されること（計画通りの絵文字🎧）", () => {
     render(
       <MusicPersonalityContent
         content={sampleContent}
@@ -82,12 +82,12 @@ describe("MusicPersonalityContent - 基本レンダリング", () => {
         allTypesLayout="pill"
       />,
     );
-    expect(screen.getByText("😅 このタイプの音楽的な弱み")).toBeInTheDocument();
+    expect(screen.getByText("🎧 このタイプの音楽的な弱み")).toBeInTheDocument();
     expect(screen.getByText("音楽的な弱み1")).toBeInTheDocument();
     expect(screen.getByText("音楽的な弱み2")).toBeInTheDocument();
   });
 
-  it("behaviorsセクションが表示されること", () => {
+  it("behaviorsセクションが表示されること（計画通りの絵文字🎤）", () => {
     render(
       <MusicPersonalityContent
         content={sampleContent}
@@ -96,12 +96,12 @@ describe("MusicPersonalityContent - 基本レンダリング", () => {
         allTypesLayout="pill"
       />,
     );
-    expect(screen.getByText("💡 このタイプの音楽あるある")).toBeInTheDocument();
+    expect(screen.getByText("🎤 このタイプの音楽あるある")).toBeInTheDocument();
     expect(screen.getByText("音楽あるある1")).toBeInTheDocument();
     expect(screen.getByText("音楽あるある4")).toBeInTheDocument();
   });
 
-  it("todayActionセクションが表示されること", () => {
+  it("todayActionセクションが表示されること（計画通りの絵文字🎶）", () => {
     render(
       <MusicPersonalityContent
         content={sampleContent}
@@ -110,13 +110,13 @@ describe("MusicPersonalityContent - 基本レンダリング", () => {
         allTypesLayout="pill"
       />,
     );
-    expect(screen.getByText("🎧 今日の音楽ライフのヒント")).toBeInTheDocument();
+    expect(screen.getByText("🎶 今日の音楽ライフのヒント")).toBeInTheDocument();
     expect(
       screen.getByText("今日の音楽ライフのヒントテキスト"),
     ).toBeInTheDocument();
   });
 
-  it("全タイプ一覧が表示されること（見出しテキストは「🎶 他のタイプも見てみよう」）", () => {
+  it("全タイプ一覧が表示されること（計画通りの絵文字🎹）", () => {
     render(
       <MusicPersonalityContent
         content={sampleContent}
@@ -125,7 +125,7 @@ describe("MusicPersonalityContent - 基本レンダリング", () => {
         allTypesLayout="pill"
       />,
     );
-    expect(screen.getByText("🎶 他のタイプも見てみよう")).toBeInTheDocument();
+    expect(screen.getByText("🎹 他のタイプも見てみよう")).toBeInTheDocument();
     expect(screen.getByText("フェス一番乗り族")).toBeInTheDocument();
     expect(screen.getByText("プレイリスト伝道師")).toBeInTheDocument();
   });
