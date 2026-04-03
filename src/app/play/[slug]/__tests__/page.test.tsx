@@ -5,16 +5,17 @@ import { generateStaticParams, generateMetadata } from "../page";
 
 describe("play/[slug]/page", () => {
   describe("generateStaticParams", () => {
-    it("returns 14 quiz slugs (music-personality has a dedicated route)", async () => {
+    it("returns all 15 quiz slugs without any exclusion list", async () => {
       const params = await generateStaticParams();
-      // music-personality は /play/music-personality/page.tsx の専用ルートで処理されるため除外
-      expect(params.length).toBe(14);
+      // 専用ルートを持つslugもNext.jsのファイルシステムルーティングが自動的に優先するため、
+      // 除外リストは不要。全quizスラッグをそのまま返す。
+      expect(params.length).toBe(15);
     });
 
-    it("does not include music-personality (has dedicated route)", async () => {
+    it("includes music-personality (Next.js file-system routing handles priority automatically)", async () => {
       const params = await generateStaticParams();
       const slugs = params.map((p) => p.slug);
-      expect(slugs).not.toContain("music-personality");
+      expect(slugs).toContain("music-personality");
     });
 
     it("returns only quiz slugs (no game slugs)", async () => {

@@ -19,26 +19,20 @@ import DescriptionExpander from "./DescriptionExpander";
 import ResultPageShell from "@/play/quiz/_components/ResultPageShell";
 import styles from "./page.module.css";
 
-/**
- * contrarian-fortune, character-fortune, animal-personality は専用の具体ルートで処理するため、
- * 動的ルートのgenerateStaticParamsとOGP画像から除外する。
- */
-const CONCRETE_ROUTE_SLUGS = [
-  "contrarian-fortune",
-  "character-fortune",
-  "animal-personality",
-  "music-personality",
-];
-
 type Props = {
   params: Promise<{ slug: string; resultId: string }>;
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 };
 
+/**
+ * 全クイズの slug + resultId の組み合わせを返す。
+ * 専用の具体ルートを持つクイズ（contrarian-fortune, animal-personality 等）は
+ * Next.jsのファイルシステムルーティングにより自動的に専用ルートが優先されるため、
+ * 除外リストは不要。
+ */
 export async function generateStaticParams() {
   const params: Array<{ slug: string; resultId: string }> = [];
   for (const slug of getAllQuizSlugs()) {
-    if (CONCRETE_ROUTE_SLUGS.includes(slug)) continue;
     for (const resultId of getResultIdsForQuiz(slug)) {
       params.push({ slug, resultId });
     }
@@ -253,7 +247,7 @@ export default async function PlayQuizResultPage({
       </div>
 
       {/* detailedContent がある場合のみ追加セクションを表示（標準形式）。
-          動的ルートではCONCRETE_ROUTE_SLUGSを除外しているためvariantは常にundefined。
+          専用ルートを持つクイズはNext.jsのファイルシステムルーティングが自動的に優先する。
           型ナローイングのために !detailedContent.variant を条件に含める。 */}
       {detailedContent && !detailedContent.variant && (
         <div className={styles.detailedSection}>
