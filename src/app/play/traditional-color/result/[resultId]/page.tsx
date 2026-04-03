@@ -102,8 +102,16 @@ export default async function TraditionalColorResultPage({ params }: Props) {
         className={styles.detailedSection}
         style={{ "--type-color": resultColor } as React.CSSProperties}
       >
-        {/* キャッチコピー: DescriptionExpanderの前に配置し第一印象を与える */}
-        <p className={styles.catchphrase}>{colorDc.catchphrase}</p>
+        {/*
+         * カラーヒーローエリア（MUST-1）:
+         * タイプカラーを薄く敷いたヒーローセクション。
+         * 負のmarginでカードのpadding分を打ち消し、カード上端まで背景色を広げる。
+         * catchphraseをヒーロー内に配置して色と一体感を演出する。
+         */}
+        <div className={styles.colorHero}>
+          {/* キャッチコピー（SHOULD-1: フォントサイズ強化済み）: 結果のコアメッセージ */}
+          <p className={styles.catchphrase}>{colorDc.catchphrase}</p>
+        </div>
 
         {/* DescriptionExpander: 長いdescriptionは折りたたみ */}
         <DescriptionExpander

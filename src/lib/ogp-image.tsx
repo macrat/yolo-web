@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { getContrastTextColor } from "@/play/color-utils";
 
 /** Configuration for generating OGP images. */
 export type OgpImageConfig = {
@@ -152,6 +153,10 @@ export async function createOgpImageResponse(
 ): Promise<ImageResponse> {
   const { title, subtitle, accentColor = DEFAULT_ACCENT_COLOR, icon } = config;
 
+  // Automatically determine text color based on WCAG contrast ratio.
+  // Delegates to the shared color-utils implementation for consistency.
+  const textColor = getContrastTextColor(accentColor);
+
   const fontData = await getFontData();
 
   const fonts = fontData
@@ -175,7 +180,7 @@ export async function createOgpImageResponse(
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: accentColor,
-        color: "white",
+        color: textColor,
         fontFamily: fontData ? "NotoSansJP, sans-serif" : "sans-serif",
         padding: "40px 60px",
       }}
