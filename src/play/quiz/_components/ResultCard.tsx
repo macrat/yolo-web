@@ -39,6 +39,11 @@ const TraditionalColorContent = dynamic(
   { ssr: true },
 );
 
+const YojiPersonalityContent = dynamic(
+  () => import("./YojiPersonalityContent"),
+  { ssr: true },
+);
+
 type ResultCardProps = {
   result: QuizResult;
   quizType: QuizType;
@@ -274,6 +279,16 @@ function renderDetailedContent(
           // ResultCard内では相性データがないため afterColorAdvice は省略
         />
       );
+    case "yoji-personality":
+      return (
+        <YojiPersonalityContent
+          content={content}
+          resultId={resultId}
+          resultColor={resultColor ?? ""}
+          headingLevel={3}
+          allTypesLayout="pill"
+        />
+      );
     default: {
       // exhaustive check: 新variant追加時にコンパイルエラーで検出
       void (content satisfies never);
@@ -302,16 +317,51 @@ export default function ResultCard({
 
   const shareText = `${quizTitle}の結果は「${result.title}」でした! #${quizTitle.replace(/\s/g, "")} #yolosnet`;
 
-  // animal-personality / music-personality / traditional-color variant では
-  // catchphrase を description の前に表示する
+  // catchphrase を description の前に表示する variant のリスト。
+  // このリストに含まれる variant は detailedContent.catchphrase を持つことが保証される。
+  const CATCHPHRASE_VARIANTS = [
+    "animal-personality",
+    "music-personality",
+    "traditional-color",
+    "yoji-personality",
+  ] as const;
+
+  // catchphrase 装飾線の色（--catchphrase-accent-color）を variant ごとに宣言的に管理する。
+  // - animal-personality: CSSファイルのフォールバック値（緑）を使用するため null
+  // - music-personality: 紫固定色（クイズのブランドカラー）
+  // - traditional-color / yoji-personality: タイプ固有の色（result.color）
+  const CATCHPHRASE_ACCENT_COLOR: Record<
+    (typeof CATCHPHRASE_VARIANTS)[number],
+    string | null
+  > = {
+    "animal-personality": null,
+    "music-personality": "#7c3aed",
+    "traditional-color": result.color ?? null,
+    "yoji-personality": result.color ?? null,
+  };
+
   const catchphrase =
-    detailedContent?.variant === "animal-personality"
-      ? detailedContent.catchphrase
-      : detailedContent?.variant === "music-personality"
-        ? detailedContent.catchphrase
-        : detailedContent?.variant === "traditional-color"
-          ? detailedContent.catchphrase
-          : null;
+    detailedContent &&
+    CATCHPHRASE_VARIANTS.includes(
+      detailedContent.variant as (typeof CATCHPHRASE_VARIANTS)[number],
+    )
+      ? (
+          detailedContent as {
+            catchphrase: string;
+            variant: (typeof CATCHPHRASE_VARIANTS)[number];
+          }
+        ).catchphrase
+      : null;
+
+  const catchphraseAccentColor =
+    detailedContent?.variant &&
+    CATCHPHRASE_VARIANTS.includes(
+      detailedContent.variant as (typeof CATCHPHRASE_VARIANTS)[number],
+    )
+      ? CATCHPHRASE_ACCENT_COLOR[
+          detailedContent.variant as (typeof CATCHPHRASE_VARIANTS)[number]
+        ]
+      : null;
 
   return (
     <div className={styles.card}>
@@ -324,25 +374,18 @@ export default function ResultCard({
             {totalQuestions}問中{score}問正解
           </p>
         )}
-      {/* animal-personality / music-personality / traditional-color:
-          catchphraseをdescriptionの前に表示。
-          装飾線の色はCSS変数 --catchphrase-accent-color で制御する。
-          - animal-personality: CSSファイルのフォールバック値（緑）を使用するためinline style不要
-          - music-personality: 紫色（#7c3aed / ダーク#a78bfa）をinline styleで上書き
-          - traditional-color: タイプ固有の色（result.color）をinline styleで注入 */}
+      {/* catchphrase を description の前に表示する。
+          装飾線の色は CSS変数 --catchphrase-accent-color で制御する。
+          各 variant の色は CATCHPHRASE_ACCENT_COLOR で宣言的に管理している。 */}
       {catchphrase && (
         <p
           className={styles.catchphraseBeforeDescription}
           style={
-            detailedContent?.variant === "music-personality"
+            catchphraseAccentColor
               ? ({
-                  "--catchphrase-accent-color": "#7c3aed",
+                  "--catchphrase-accent-color": catchphraseAccentColor,
                 } as React.CSSProperties)
-              : detailedContent?.variant === "traditional-color" && result.color
-                ? ({
-                    "--catchphrase-accent-color": result.color,
-                  } as React.CSSProperties)
-                : undefined
+              : undefined
           }
         >
           {catchphrase}

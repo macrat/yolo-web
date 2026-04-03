@@ -14,6 +14,10 @@
  * (variant: "traditional-color") which uses a dedicated result component and
  * does NOT use resultPageLabels. It is excluded from this test file.
  *
+ * Note: yoji-personality has been migrated to YojiPersonalityDetailedContent
+ * (variant: "yoji-personality") which uses a dedicated result component and
+ * does NOT use resultPageLabels. It is excluded from this test file.
+ *
  * Verifies that each quiz with detailedContent has meaningful,
  * non-default resultPageLabels set in meta, and that they don't
  * contain "あなた" (since these are third-person type description pages).
@@ -22,23 +26,20 @@ import { describe, it, expect } from "vitest";
 import animalPersonalityQuiz from "../animal-personality";
 import impossibleAdviceQuiz from "../impossible-advice";
 import unexpectedCompatibilityQuiz from "../unexpected-compatibility";
-import yojiPersonalityQuiz from "../yoji-personality";
 import characterPersonalityQuiz from "../character-personality";
 
-// contrarian-fortune, character-fortune, music-personality, and traditional-color are excluded:
-// contrarian-fortune and character-fortune use variant-specific DetailedContent
-// music-personality and traditional-color use new variant DetailedContent formats
-// and have their own dedicated result components that do not use resultPageLabels
+// contrarian-fortune, character-fortune, music-personality, traditional-color, and yoji-personality
+// are excluded: they use variant-specific DetailedContent formats with dedicated result components
+// that do not use resultPageLabels
 const quizzesWithDetailedContent = [
   { quiz: animalPersonalityQuiz, name: "animal-personality" },
   { quiz: impossibleAdviceQuiz, name: "impossible-advice" },
   { quiz: unexpectedCompatibilityQuiz, name: "unexpected-compatibility" },
-  { quiz: yojiPersonalityQuiz, name: "yoji-personality" },
   { quiz: characterPersonalityQuiz, name: "character-personality" },
 ];
 
 describe("resultPageLabels for quizzes with detailedContent", () => {
-  it("all 5 standard-format quizzes have resultPageLabels defined", () => {
+  it("all 4 standard-format quizzes have resultPageLabels defined", () => {
     for (const { quiz, name } of quizzesWithDetailedContent) {
       expect(
         quiz.meta.resultPageLabels,
@@ -119,37 +120,37 @@ describe("resultPageLabels for quizzes with detailedContent", () => {
     }
   });
 
-  it("all 5 quizzes have unique traitsHeadings (no two quizzes share the same label)", () => {
+  it("all 4 quizzes have unique traitsHeadings (no two quizzes share the same label)", () => {
     const traitsHeadings = quizzesWithDetailedContent.map(
       ({ quiz }) => quiz.meta.resultPageLabels!.traitsHeading!,
     );
     const uniqueHeadings = new Set(traitsHeadings);
     expect(
       uniqueHeadings.size,
-      `all 5 traitsHeadings must be unique, but found duplicates: [${traitsHeadings.join(", ")}]`,
-    ).toBe(5);
+      `all 4 traitsHeadings must be unique, but found duplicates: [${traitsHeadings.join(", ")}]`,
+    ).toBe(4);
   });
 
-  it("all 5 quizzes have unique behaviorsHeadings (no two quizzes share the same label)", () => {
+  it("all 4 quizzes have unique behaviorsHeadings (no two quizzes share the same label)", () => {
     const behaviorsHeadings = quizzesWithDetailedContent.map(
       ({ quiz }) => quiz.meta.resultPageLabels!.behaviorsHeading!,
     );
     const uniqueHeadings = new Set(behaviorsHeadings);
     expect(
       uniqueHeadings.size,
-      `all 5 behaviorsHeadings must be unique, but found duplicates: [${behaviorsHeadings.join(", ")}]`,
-    ).toBe(5);
+      `all 4 behaviorsHeadings must be unique, but found duplicates: [${behaviorsHeadings.join(", ")}]`,
+    ).toBe(4);
   });
 
-  it("all 5 quizzes have unique adviceHeadings (no two quizzes share the same label)", () => {
+  it("all 4 quizzes have unique adviceHeadings (no two quizzes share the same label)", () => {
     const adviceHeadings = quizzesWithDetailedContent.map(
       ({ quiz }) => quiz.meta.resultPageLabels!.adviceHeading!,
     );
     const uniqueHeadings = new Set(adviceHeadings);
     expect(
       uniqueHeadings.size,
-      `all 5 adviceHeadings must be unique, but found duplicates: [${adviceHeadings.join(", ")}]`,
-    ).toBe(5);
+      `all 4 adviceHeadings must be unique, but found duplicates: [${adviceHeadings.join(", ")}]`,
+    ).toBe(4);
   });
 
   it("animal-personality adviceHeading should not be '生息地からのメッセージ' (advice content is unrelated to habitat)", () => {
@@ -158,14 +159,14 @@ describe("resultPageLabels for quizzes with detailedContent", () => {
   });
 
   /**
-   * Require at least 3 out of 5 quizzes to use non-generic phrasing.
+   * Require at least 2 out of 4 quizzes to use non-generic phrasing.
    * Generic patterns: "の特徴", "のあるある", "へのひとこと" used together
    * across many quizzes constitute the "画一的" problem this task solves.
    *
    * A quiz is considered "differentiated" if at least 2 of its 3 headings
    * do NOT follow the common "この〇〇タイプ" template.
    */
-  it("at least 3 of 5 quizzes have differentiated headings (not generic 'タイプの特徴/あるある/ひとこと' pattern)", () => {
+  it("at least 2 of 4 quizzes have differentiated headings (not generic 'タイプの特徴/あるある/ひとこと' pattern)", () => {
     const genericPatterns = [
       "のあるある",
       "タイプの特徴",
@@ -192,7 +193,7 @@ describe("resultPageLabels for quizzes with detailedContent", () => {
 
     expect(
       differentiatedCount,
-      `at least 3 quizzes should have differentiated headings, but only ${differentiatedCount} do`,
-    ).toBeGreaterThanOrEqual(3);
+      `at least 2 quizzes should have differentiated headings, but only ${differentiatedCount} do`,
+    ).toBeGreaterThanOrEqual(2);
   });
 });

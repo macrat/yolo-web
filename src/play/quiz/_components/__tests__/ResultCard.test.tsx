@@ -10,6 +10,7 @@ import type {
   AnimalPersonalityDetailedContent,
   MusicPersonalityDetailedContent,
   TraditionalColorDetailedContent,
+  YojiPersonalityDetailedContent,
 } from "../../types";
 
 // next/dynamicをモック: テスト環境では vi.mock によりモジュールが同期的にキャッシュされるため、
@@ -21,6 +22,7 @@ import type {
 vi.mock("next/dynamic", async () => {
   // AnimalPersonalityContent / MusicPersonalityContent / TraditionalColorContent
   // を事前にインポートして同期キャッシュ
+  // YojiPersonalityContent はまだ存在しないため、モック関数で代替する
   const animal =
     await import("@/play/quiz/_components/AnimalPersonalityContent");
   const music = await import("@/play/quiz/_components/MusicPersonalityContent");
@@ -49,6 +51,16 @@ vi.mock("next/dynamic", async () => {
         cachedComp = traditionalColor.default as unknown as React.ComponentType<
           Record<string, unknown>
         >;
+      } else if (loaderStr.includes("YojiPersonalityContent")) {
+        // YojiPersonalityContent はまだ存在しないため data-testid を持つスタブで代替
+        cachedComp = (props: Record<string, unknown>) =>
+          React.createElement(
+            "div",
+            { "data-testid": "yoji-personality-content" },
+            String(
+              (props.content as Record<string, unknown>)?.kanjiBreakdown ?? "",
+            ),
+          );
       } else {
         // 未知のコンポーネントはfallback
         cachedComp = () => null;
@@ -912,5 +924,89 @@ describe("ResultCard - traditional-color variant", () => {
     const aiiroElements = screen.getAllByText("藍色");
     expect(aiiroElements.length).toBeGreaterThanOrEqual(1);
     expect(screen.getByText("紅色")).toBeInTheDocument();
+  });
+});
+
+describe("ResultCard - yoji-personality variant", () => {
+  const yojiContent: YojiPersonalityDetailedContent = {
+    variant: "yoji-personality",
+    catchphrase: "四方を見渡す、あなたの眼力。",
+    kanjiBreakdown:
+      "「四」は四方、「面」は方向を示し、全体を見渡す俯瞰力を表す熟語です。",
+    origin: "中国古典に由来し、全方向を視野に収める指導者像を意味します。",
+    behaviors: [
+      "会議で最初に全体像を把握しようとする",
+      "リスクと機会を同時に考える",
+    ],
+    motto: "全体を見て、本質を掴め。",
+  };
+
+  const yojiResult: QuizResult = {
+    id: "shimenso",
+    title: "四面楚歌",
+    description: "あなたは四面楚歌タイプです。",
+    color: "#8b5cf6",
+    icon: "🏯",
+  };
+
+  const yojiProps = {
+    result: yojiResult,
+    quizType: "personality" as const,
+    quizTitle: "四字熟語性格診断",
+    quizSlug: "yoji-personality",
+    onRetry: vi.fn(),
+    detailedContent: yojiContent,
+  };
+
+  test("YojiPersonalityContent コンポーネントがレンダリングされること", () => {
+    render(<ResultCard {...yojiProps} />);
+    expect(screen.getByTestId("yoji-personality-content")).toBeInTheDocument();
+  });
+
+  test("catchphrase が description の前に表示されること", () => {
+    render(<ResultCard {...yojiProps} />);
+    const catchphrase = screen.getByText("四方を見渡す、あなたの眼力。");
+    const description = screen.getByText("あなたは四面楚歌タイプです。");
+
+    expect(catchphrase).toBeInTheDocument();
+    expect(description).toBeInTheDocument();
+
+    // catchphraseがdescriptionより前に現れることを確認
+    const position = description.compareDocumentPosition(catchphrase);
+    // Node.DOCUMENT_POSITION_PRECEDING = 2 (catchphraseがdescriptionより前)
+    expect(position & Node.DOCUMENT_POSITION_PRECEDING).toBeTruthy();
+  });
+
+  test("catchphraseBeforeDescription に result.color が --catchphrase-accent-color として設定されること", () => {
+    const { container } = render(<ResultCard {...yojiProps} />);
+    const catchphraseEl = container.querySelector(
+      "[class*='catchphraseBeforeDescription']",
+    );
+    expect(catchphraseEl).not.toBeNull();
+    if (catchphraseEl) {
+      const el = catchphraseEl as HTMLElement;
+      // yoji-personality では result.color が CSS変数に設定される
+      expect(el.style.getPropertyValue("--catchphrase-accent-color")).toBe(
+        "#8b5cf6",
+      );
+    }
+  });
+
+  test("result.color が未設定の場合、catchphraseBeforeDescription に --catchphrase-accent-color が設定されないこと", () => {
+    const yojiResultNoColor: QuizResult = {
+      ...yojiResult,
+      color: undefined,
+    };
+    const { container } = render(
+      <ResultCard {...yojiProps} result={yojiResultNoColor} />,
+    );
+    const catchphraseEl = container.querySelector(
+      "[class*='catchphraseBeforeDescription']",
+    );
+    expect(catchphraseEl).not.toBeNull();
+    if (catchphraseEl) {
+      const el = catchphraseEl as HTMLElement;
+      expect(el.style.getPropertyValue("--catchphrase-accent-color")).toBe("");
+    }
   });
 });
