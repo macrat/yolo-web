@@ -91,6 +91,42 @@ describe("createOgpImageResponse", () => {
     expect(jsx.props.style.backgroundColor).toBe("#dc2626");
   });
 
+  test("uses white text color for dark accent color (default #2563eb)", async () => {
+    const { createOgpImageResponse } = await getModule();
+
+    await createOgpImageResponse({ title: "Test" });
+
+    const { element } = imageResponseCalls[0];
+    const jsx = element as { props: { style: { color: string } } };
+    expect(jsx.props.style.color).toBe("#ffffff");
+  });
+
+  test("automatically uses dark text color for light accent color (#fedfe1)", async () => {
+    const { createOgpImageResponse } = await getModule();
+
+    await createOgpImageResponse({
+      title: "Test",
+      accentColor: "#fedfe1",
+    });
+
+    const { element } = imageResponseCalls[0];
+    const jsx = element as { props: { style: { color: string } } };
+    expect(jsx.props.style.color).toBe("#1a1a1a");
+  });
+
+  test("automatically uses white text color for dark accent color (#0f2540)", async () => {
+    const { createOgpImageResponse } = await getModule();
+
+    await createOgpImageResponse({
+      title: "Test",
+      accentColor: "#0f2540",
+    });
+
+    const { element } = imageResponseCalls[0];
+    const jsx = element as { props: { style: { color: string } } };
+    expect(jsx.props.style.color).toBe("#ffffff");
+  });
+
   test("includes subtitle when provided", async () => {
     const { createOgpImageResponse } = await getModule();
 

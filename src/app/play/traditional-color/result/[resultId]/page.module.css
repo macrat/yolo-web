@@ -12,16 +12,77 @@
  * 静的なCSS変数ではなくpropsから渡されるCSS変数を使用する。
  *
  * アクセシビリティ方針:
- * - --type-color はborderなどの装飾アクセントにのみ使用する
+ * - --type-color は colorHero 背景（12%薄め）や border などの装飾に使用する
  * - テキスト色・ボタンテキストは var(--color-text) を使用する
  * - 桜色(#fedfe1)・若草色(#C3D825)などの明るい色をテキスト色や
  *   ボタン背景+白テキストに使うとWCAG AA違反（コントラスト比<4.5:1）になる
+ * - colorHero の 12%背景 + var(--color-text) は全8色でWCAG AA準拠（テスト済み）
  */
 
 /* detailedContent セクションの外側コンテナ */
 .detailedSection {
-  margin-top: 2rem;
+  margin-top: 0;
   text-align: left;
+}
+
+/* ============================================================
+   カラーヒーローエリア（MUST-1: タイトル周辺の視覚的インパクト強化）
+   ============================================================ */
+
+/*
+ * カード内のpadding(2rem 1rem)を打ち消して端まで広げるヒーローエリア。
+ * --type-color を薄く敷いて「色が主役」の第一印象を演出する。
+ *
+ * ライトモード: color-mix(in srgb, --type-color 12%, white) で薄い伝統色背景。
+ *   12%にした理由: 15%以上では桜色(#fedfe1)などの淡い色でほぼ白になり視覚的効果が薄い。
+ *   10%以下では藍色・紺色などの濃い色でも伝統色の印象が弱くなる。
+ *   12%はコントラストとカラー体験のバランスが最も良い値。
+ *
+ * ダークモード: color-mix(in srgb, --type-color 20%, #1a1a2e) でダーク背景に色味を足す。
+ *   テキストは var(--color-text) を使い全8色でWCAG AA準拠を確保。
+ *
+ * 負のmarginでh1.title の margin-bottom(0.75rem) と カード左右padding(1rem)を打ち消し、
+ * タイトル直後から端まで伝統色が広がるように見せる。
+ */
+.colorHero {
+  /* タイトル直後からcatchphraseにかけて伝統色を体感するヒーローエリア。
+   * ResultPageShell の h1.title は margin-bottom: 0.75rem を持つが、
+   * detailedSection は children の先頭なのでタイトルの直後に配置される。
+   * カード左右のpadding(1rem)を負のmarginで打ち消してカード端まで背景色を広げる。 */
+  margin-top: -0.75rem;
+  /* カード左右のpadding(1rem)を打ち消して端まで広げる */
+  margin-left: -1rem;
+  margin-right: -1rem;
+  /* ヒーローエリアの内側padding */
+  padding: 1.5rem 1.5rem 1.75rem;
+  /* ライトモード: 薄い伝統色背景 */
+  background: color-mix(in srgb, var(--type-color) 12%, white);
+  /* 下部は角丸でカードコンテンツとの境界を柔らかく */
+  border-radius: 0 0 16px 16px;
+  /* アイコン・タイトルとの視覚的一体感のために text-align を引き継ぐ */
+  text-align: center;
+  /* ヒーロー下部とコンテンツの間のスペース */
+  margin-bottom: 1.5rem;
+}
+
+:global(.dark) .colorHero {
+  /* ダークモード: タイプカラーを混ぜたダーク背景 */
+  background: color-mix(in srgb, var(--type-color) 20%, #1a1a2e);
+}
+
+/* カラーヒーロー内のキャッチコピー（MUST-1 + SHOULD-1: 視覚的強化） */
+.catchphrase {
+  /* SHOULD-1: フォントサイズを大きくして結果のコアメッセージとして目立たせる */
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.7;
+  text-align: center;
+  /* var(--color-text) を使用: 全8タイプ色でWCAG AA準拠を確保 */
+  color: var(--color-text);
+  /* ヒーロー内なので追加背景・border不要 */
+  margin: 0;
+  padding: 0;
+  letter-spacing: 0.03em;
 }
 
 /* ============================================================
@@ -59,30 +120,6 @@
   color: var(--color-text-muted);
   margin-top: 0.5rem;
   margin-bottom: 0;
-}
-
-/* ============================================================
-   traditional-color variant 固有スタイル（ページ固有）
-   ============================================================ */
-
-/* キャッチコピー: descriptionの前に表示、第一印象を強調 */
-.catchphrase {
-  font-size: 1.1rem;
-  font-weight: 700;
-  line-height: 1.7;
-  text-align: center;
-  /* var(--color-text) を使用: --type-color はテキスト色ではなくborder-leftアクセントに限定。
-     桜色(#fedfe1)や若草色(#C3D825)などをテキスト色にすると白背景でコントラスト比が1〜2:1になり
-     WCAG AA違反になる。藍色(#0d5661)・紺色(#0f2540)はダークモード背景に溶け込む。
-     music-personality の catchphrase も同様の方針（color: var(--color-text)）。 */
-  color: var(--color-text);
-  margin-bottom: 1.25rem;
-  padding: 1rem 1.25rem;
-  border-radius: 10px;
-  background: var(--color-bg-secondary);
-  /* --type-color をborder-leftアクセントとして使用（背景に埋もれない装飾） */
-  border-left: 4px solid var(--type-color);
-  letter-spacing: 0.02em;
 }
 
 /* CTA2: detailedContent読了者向けのテキストリンク形式CTA */
