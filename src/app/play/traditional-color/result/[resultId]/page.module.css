@@ -1,0 +1,110 @@
+/*
+ * traditional-color 専用結果ページのスタイル。
+ * /play/traditional-color/result/[resultId] 専用ルートのスタイル。
+ *
+ * 共通コンテンツセクション（色の物語〜全タイプ一覧）のスタイルは
+ * TraditionalColorContent.module.css に集約されている。
+ * このファイルは page.tsx 固有の要素（catchphrase, trySection, detailedSection, cta2）のみを管理する。
+ *
+ * --type-color: タイプ固有の伝統色をCSS変数で制御。
+ * インラインスタイルで page.tsx の detailedSection に注入する。
+ * music-personality と異なり、タイプごとに色が異なるため
+ * 静的なCSS変数ではなくpropsから渡されるCSS変数を使用する。
+ *
+ * アクセシビリティ方針:
+ * - --type-color はborderなどの装飾アクセントにのみ使用する
+ * - テキスト色・ボタンテキストは var(--color-text) を使用する
+ * - 桜色(#fedfe1)・若草色(#C3D825)などの明るい色をテキスト色や
+ *   ボタン背景+白テキストに使うとWCAG AA違反（コントラスト比<4.5:1）になる
+ */
+
+/* detailedContent セクションの外側コンテナ */
+.detailedSection {
+  margin-top: 2rem;
+  text-align: left;
+}
+
+/* ============================================================
+   traditional-color 結果ページ固有スタイル（ページ構造要素）
+   ============================================================ */
+
+.trySection {
+  margin-bottom: 0;
+}
+
+.tryButton {
+  display: inline-block;
+  padding: 0.875rem 2rem;
+  /* アウトライン型ボタン: --type-color をborderに使用し背景は透明。
+     桜色(#fedfe1)や山吹色(#ffb11b)など明るい色を背景+白テキストにすると
+     コントラスト比が1〜2:1程度になりWCAG AA違反になるため、
+     borderアクセント + var(--color-text) テキストで確実なコントラストを確保する。 */
+  border: 2px solid var(--type-color);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  background-color: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.tryButton:hover {
+  opacity: 0.7;
+}
+
+.tryCost {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  margin-top: 0.5rem;
+  margin-bottom: 0;
+}
+
+/* ============================================================
+   traditional-color variant 固有スタイル（ページ固有）
+   ============================================================ */
+
+/* キャッチコピー: descriptionの前に表示、第一印象を強調 */
+.catchphrase {
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.7;
+  text-align: center;
+  /* var(--color-text) を使用: --type-color はテキスト色ではなくborder-leftアクセントに限定。
+     桜色(#fedfe1)や若草色(#C3D825)などをテキスト色にすると白背景でコントラスト比が1〜2:1になり
+     WCAG AA違反になる。藍色(#0d5661)・紺色(#0f2540)はダークモード背景に溶け込む。
+     music-personality の catchphrase も同様の方針（color: var(--color-text)）。 */
+  color: var(--color-text);
+  margin-bottom: 1.25rem;
+  padding: 1rem 1.25rem;
+  border-radius: 10px;
+  background: var(--color-bg-secondary);
+  /* --type-color をborder-leftアクセントとして使用（背景に埋もれない装飾） */
+  border-left: 4px solid var(--type-color);
+  letter-spacing: 0.02em;
+}
+
+/* CTA2: detailedContent読了者向けのテキストリンク形式CTA */
+.cta2Section {
+  margin-top: 1.5rem;
+  text-align: center;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.cta2Link {
+  display: inline-block;
+  padding: 0.625rem 1.5rem;
+  border: 1.5px solid currentColor;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-text);
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.cta2Link:hover {
+  opacity: 0.7;
+}

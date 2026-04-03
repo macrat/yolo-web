@@ -6,6 +6,8 @@ import type {
   CharacterFortuneDetailedContent,
   AnimalPersonalityDetailedContent,
   MusicPersonalityDetailedContent,
+  TraditionalColorDetailedContent,
+  TraditionalColorSeason,
   DetailedContent,
 } from "../types";
 
@@ -297,6 +299,90 @@ describe("DetailedContent union type — music-personality", () => {
       expect(content.weaknesses).toHaveLength(1);
       expect(content.behaviors).toHaveLength(4);
       expect(content.todayAction).toBe("今日のアクション");
+    }
+  });
+});
+
+describe("TraditionalColorSeason", () => {
+  it("accepts all four season values", () => {
+    const seasons: TraditionalColorSeason[] = ["春", "夏", "秋", "冬"];
+    expect(seasons).toHaveLength(4);
+  });
+});
+
+describe("TraditionalColorDetailedContent", () => {
+  it("accepts all required fields with variant='traditional-color'", () => {
+    const content: TraditionalColorDetailedContent = {
+      variant: "traditional-color",
+      catchphrase: "静かな水面に映る空の色",
+      colorMeaning:
+        "浅葱色は日本の伝統色で、浅い葱の葉のような青緑色を指す。江戸時代には新選組の羽織の色として知られ、誠実さと清廉さを象徴した。",
+      season: "春",
+      scenery: "早春の川沿いに並ぶ柳の若葉と水面の輝き",
+      behaviors: [
+        "感情を表に出すのが苦手で、内心では深く考えている",
+        "約束は必ず守る誠実なタイプ",
+        "流行より自分のスタイルを大切にする",
+        "静かな場所で一人の時間を好む",
+      ],
+      colorAdvice:
+        "あなたの誠実さは必ず誰かに伝わっている。静かに、でも確かに輝いていてください。",
+    };
+    expect(content.variant).toBe("traditional-color");
+    expect(content.catchphrase).toBe("静かな水面に映る空の色");
+    expect(content.colorMeaning).toBeDefined();
+    expect(content.season).toBe("春");
+    expect(content.scenery).toBeDefined();
+    expect(content.behaviors).toHaveLength(4);
+    expect(content.colorAdvice).toBeDefined();
+  });
+
+  it("accepts all four seasons", () => {
+    const seasons: TraditionalColorSeason[] = ["春", "夏", "秋", "冬"];
+    for (const season of seasons) {
+      const content: TraditionalColorDetailedContent = {
+        variant: "traditional-color",
+        catchphrase: "キャッチコピー",
+        colorMeaning: "色の意味",
+        season,
+        scenery: "風景",
+        behaviors: ["あるある1", "あるある2", "あるある3", "あるある4"],
+        colorAdvice: "メッセージ",
+      };
+      expect(content.season).toBe(season);
+    }
+  });
+});
+
+describe("DetailedContent union type — traditional-color", () => {
+  it("can hold TraditionalColorDetailedContent", () => {
+    const content: DetailedContent = {
+      variant: "traditional-color",
+      catchphrase: "静かな水面に映る空の色",
+      colorMeaning: "伝統色の意味と由来",
+      season: "秋",
+      scenery: "紅葉の山と澄んだ秋の空",
+      behaviors: ["あるある1", "あるある2", "あるある3", "あるある4"],
+      colorAdvice: "色からのメッセージ",
+    };
+    expect(content.variant).toBe("traditional-color");
+  });
+
+  it("discriminates traditional-color variant via type narrowing", () => {
+    const content: DetailedContent = {
+      variant: "traditional-color",
+      catchphrase: "キャッチコピー",
+      colorMeaning: "色の意味",
+      season: "冬",
+      scenery: "雪景色",
+      behaviors: ["あるある1", "あるある2", "あるある3", "あるある4"],
+      colorAdvice: "メッセージ",
+    };
+
+    if (content.variant === "traditional-color") {
+      expect(content.catchphrase).toBe("キャッチコピー");
+      expect(content.season).toBe("冬");
+      expect(content.behaviors).toHaveLength(4);
     }
   });
 });

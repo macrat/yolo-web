@@ -9,6 +9,7 @@ import type {
   CharacterFortuneDetailedContent,
   AnimalPersonalityDetailedContent,
   MusicPersonalityDetailedContent,
+  TraditionalColorDetailedContent,
 } from "../../types";
 
 // next/dynamicをモック: テスト環境では vi.mock によりモジュールが同期的にキャッシュされるため、
@@ -18,10 +19,13 @@ import type {
 // loader() を呼んでその結果をトップレベルで await するのではなく、
 // vi.mock ファクトリ内での特定のモジュールパスに対するマッピングを使う。
 vi.mock("next/dynamic", async () => {
-  // AnimalPersonalityContent と MusicPersonalityContent を事前にインポートして同期キャッシュ
+  // AnimalPersonalityContent / MusicPersonalityContent / TraditionalColorContent
+  // を事前にインポートして同期キャッシュ
   const animal =
     await import("@/play/quiz/_components/AnimalPersonalityContent");
   const music = await import("@/play/quiz/_components/MusicPersonalityContent");
+  const traditionalColor =
+    await import("@/play/quiz/_components/TraditionalColorContent");
 
   return {
     default: (
@@ -39,6 +43,10 @@ vi.mock("next/dynamic", async () => {
         >;
       } else if (loaderStr.includes("MusicPersonalityContent")) {
         cachedComp = music.default as unknown as React.ComponentType<
+          Record<string, unknown>
+        >;
+      } else if (loaderStr.includes("TraditionalColorContent")) {
+        cachedComp = traditionalColor.default as unknown as React.ComponentType<
           Record<string, unknown>
         >;
       } else {
@@ -141,6 +149,31 @@ vi.mock("@/play/quiz/_components/InviteFriendButton", () => ({
       <span>{inviteText}</span>
     </div>
   ),
+}));
+
+// traditional-colorデータモジュールをモック
+vi.mock("@/play/quiz/data/traditional-color", () => ({
+  default: {
+    meta: {
+      slug: "traditional-color",
+      title: "伝統色で性格診断",
+      questionCount: 10,
+    },
+    results: [
+      {
+        id: "ai-iro",
+        title: "藍色",
+        color: "#1e3a5f",
+        icon: "🔵",
+      },
+      {
+        id: "kurenai",
+        title: "紅色",
+        color: "#c0392b",
+        icon: "🔴",
+      },
+    ],
+  },
 }));
 
 // music-personalityデータモジュールをモック
@@ -788,5 +821,96 @@ describe("ResultCard - music-personality variant", () => {
     render(<ResultCard {...musicProps} referrerTypeId="playlist-evangelist" />);
     expect(screen.getByTestId("compatibility-section")).toBeInTheDocument();
     expect(screen.getByTestId("invite-friend-button")).toBeInTheDocument();
+  });
+});
+
+describe("ResultCard - traditional-color variant", () => {
+  const traditionalColorContent: TraditionalColorDetailedContent = {
+    variant: "traditional-color",
+    catchphrase: "静けさの中に、揺るぎない芯を持つ色。",
+    colorMeaning:
+      "藍色は古来より日本の衣服や染め物に使われてきた深い青色です。",
+    season: "夏",
+    scenery: "夕暮れ時の川面に映る空の色",
+    behaviors: ["細部にこだわる", "落ち着いた環境を好む"],
+    colorAdvice: "あなたの静けさは、周囲に安心感を与えています。",
+  };
+
+  const traditionalColorResult: QuizResult = {
+    id: "ai-iro",
+    title: "藍色",
+    description: "あなたは藍色タイプです。",
+    color: "#1e3a5f",
+    icon: "🔵",
+  };
+
+  const traditionalColorProps = {
+    result: traditionalColorResult,
+    quizType: "personality" as const,
+    quizTitle: "伝統色で性格診断",
+    quizSlug: "traditional-color",
+    onRetry: vi.fn(),
+    detailedContent: traditionalColorContent,
+  };
+
+  test("TraditionalColorContent がレンダリングされること（colorMeaning が表示される）", () => {
+    render(<ResultCard {...traditionalColorProps} />);
+    expect(
+      screen.getByText(
+        "藍色は古来より日本の衣服や染め物に使われてきた深い青色です。",
+      ),
+    ).toBeInTheDocument();
+  });
+
+  test("colorAdvice が表示されること", () => {
+    render(<ResultCard {...traditionalColorProps} />);
+    expect(
+      screen.getByText("あなたの静けさは、周囲に安心感を与えています。"),
+    ).toBeInTheDocument();
+  });
+
+  test("behaviors が表示されること", () => {
+    render(<ResultCard {...traditionalColorProps} />);
+    expect(screen.getByText("細部にこだわる")).toBeInTheDocument();
+    expect(screen.getByText("落ち着いた環境を好む")).toBeInTheDocument();
+  });
+
+  test("catchphrase が description の前に表示されること", () => {
+    render(<ResultCard {...traditionalColorProps} />);
+    const catchphrase =
+      screen.getByText("静けさの中に、揺るぎない芯を持つ色。");
+    const description = screen.getByText("あなたは藍色タイプです。");
+
+    expect(catchphrase).toBeInTheDocument();
+    expect(description).toBeInTheDocument();
+
+    // catchphraseがdescriptionより前に現れることを確認
+    const position = description.compareDocumentPosition(catchphrase);
+    // Node.DOCUMENT_POSITION_PRECEDING = 2 (catchphraseがdescriptionより前)
+    expect(position & Node.DOCUMENT_POSITION_PRECEDING).toBeTruthy();
+  });
+
+  test("catchphraseBeforeDescription に result.color が --catchphrase-accent-color として設定されること", () => {
+    const { container } = render(<ResultCard {...traditionalColorProps} />);
+    const catchphraseEl = container.querySelector(
+      "[class*='catchphraseBeforeDescription']",
+    );
+    expect(catchphraseEl).not.toBeNull();
+    if (catchphraseEl) {
+      const el = catchphraseEl as HTMLElement;
+      // traditional-colorでは result.color が CSS変数に設定される
+      expect(el.style.getPropertyValue("--catchphrase-accent-color")).toBe(
+        "#1e3a5f",
+      );
+    }
+  });
+
+  test("全タイプ一覧が表示されること", () => {
+    render(<ResultCard {...traditionalColorProps} />);
+    // モックデータには藍色と紅色の2タイプが存在
+    // 藍色はh2（result.title）と全タイプ一覧の両方に出るため getAllByText で確認
+    const aiiroElements = screen.getAllByText("藍色");
+    expect(aiiroElements.length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByText("紅色")).toBeInTheDocument();
   });
 });

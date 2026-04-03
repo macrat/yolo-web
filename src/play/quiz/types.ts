@@ -127,6 +127,31 @@ export interface MusicPersonalityDetailedContent {
   todayAction: string;
 }
 
+/** 伝統色性格診断で使用する季節の型 */
+export type TraditionalColorSeason = "春" | "夏" | "秋" | "冬";
+
+/**
+ * traditional-color クイズ専用の追加コンテンツセクション。
+ * 伝統色性格診断の結果ページで色の意味・文化的背景・季節・あるあるを提供する。
+ * variant フィールドで他の DetailedContent 型と区別する。
+ */
+export interface TraditionalColorDetailedContent {
+  /** バリアント識別子。型の絞り込みに使用する。 */
+  variant: "traditional-color";
+  /** タイプのキャッチコピー（一行、15-30字） */
+  catchphrase: string;
+  /** 日本文化における色の意味・由来（80-150字） */
+  colorMeaning: string;
+  /** 色が最も映える季節 */
+  season: TraditionalColorSeason;
+  /** 色が似合う風景・情景（20-50字） */
+  scenery: string;
+  /** あるある・日常での行動パターン（箇条書き4項目、共感を呼ぶ具体的シーン） */
+  behaviors: string[];
+  /** 色からのメッセージ（ポジティブな1文、20-100字） */
+  colorAdvice: string;
+}
+
 /**
  * detailedContent の union型。
  * variant フィールドで型を絞り込む discriminated union。
@@ -135,13 +160,15 @@ export interface MusicPersonalityDetailedContent {
  * - variant が "character-fortune": CharacterFortuneDetailedContent
  * - variant が "animal-personality": AnimalPersonalityDetailedContent
  * - variant が "music-personality": MusicPersonalityDetailedContent
+ * - variant が "traditional-color": TraditionalColorDetailedContent
  */
 export type DetailedContent =
   | QuizResultDetailedContent
   | ContrarianFortuneDetailedContent
   | CharacterFortuneDetailedContent
   | AnimalPersonalityDetailedContent
-  | MusicPersonalityDetailedContent;
+  | MusicPersonalityDetailedContent
+  | TraditionalColorDetailedContent;
 
 /** A result pattern */
 export type QuizResult = {
