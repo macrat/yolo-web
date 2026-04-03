@@ -2,7 +2,7 @@
 id: 148
 description: "結果体験の再設計: music-personality（B-266）"
 started_at: "2026-04-02T20:45:10+0900"
-completed_at: null
+completed_at: "2026-04-03T11:22:10+0900"
 ---
 
 # サイクル-148
@@ -18,7 +18,7 @@ music-personality（音楽性格診断）の結果ページ体験をゼロから
 - [x] 受検者向けResultCard表示を実装する
 - [x] 第三者向け結果ページを実装する
 - [x] テスト・ビルド・lint・formatチェックを通す
-- [ ] ブログ記事の執筆: SSGなのにバンドルが肥大化する落とし穴（nextjs-deep-dive #7）
+- [x] ブログ記事の執筆: 動的ルートと専用ルートの共存パターン（nextjs-deep-dive #7）
 
 ## 作業計画
 
