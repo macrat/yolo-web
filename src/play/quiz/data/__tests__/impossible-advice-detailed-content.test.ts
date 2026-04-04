@@ -1,16 +1,34 @@
 /**
  * Tests for detailedContent on all 7 impossible-advice results.
- * Each result must have a valid detailedContent with:
- *   - traits: 3-5 items, each non-empty
- *   - behaviors: 3-5 items, each non-empty
- *   - advice: non-empty string
+ *
+ * All 7 results have been converted to ImpossibleAdviceDetailedContent variant:
+ *   - timemagician, gravityfighter, digitalmonk, sleeparchitect,
+ *     conversationsamurai, weathercontroller, snackphilosopher
+ *
+ * New variant format requirements:
+ *   - variant: "impossible-advice"
+ *   - catchphrase: 15-30 chars
+ *   - diagnosisCore: 80-150 chars (prose, not bullet points)
+ *   - behaviors: exactly 4 items, each non-empty
+ *   - practicalTip: 30-80 chars
  * Also verifies seoTitle is set on meta.
  */
 import { describe, it, expect } from "vitest";
-import type { QuizResultDetailedContent } from "../../types";
+import type { ImpossibleAdviceDetailedContent } from "../../types";
 import impossibleAdviceQuiz from "../impossible-advice";
 
 const allResults = impossibleAdviceQuiz.results;
+
+/** All 7 IDs have been converted to the new ImpossibleAdviceDetailedContent variant */
+const ALL_IDS = [
+  "timemagician",
+  "gravityfighter",
+  "digitalmonk",
+  "sleeparchitect",
+  "conversationsamurai",
+  "weathercontroller",
+  "snackphilosopher",
+];
 
 describe("impossible-advice detailedContent", () => {
   it("all 7 results exist", () => {
@@ -26,102 +44,81 @@ describe("impossible-advice detailedContent", () => {
     }
   });
 
-  it("traits has 3-5 items and each is non-empty", () => {
-    for (const result of allResults) {
-      const { traits } = result.detailedContent! as QuizResultDetailedContent;
-      expect(
-        traits.length,
-        `${result.id}: traits count should be 3-5`,
-      ).toBeGreaterThanOrEqual(3);
-      expect(
-        traits.length,
-        `${result.id}: traits count should be 3-5`,
-      ).toBeLessThanOrEqual(5);
-      for (const trait of traits) {
+  describe("all results (ImpossibleAdviceDetailedContent)", () => {
+    const convertedResults = allResults.filter((r) => ALL_IDS.includes(r.id));
+
+    it("all results have variant === 'impossible-advice'", () => {
+      for (const result of convertedResults) {
+        const content =
+          result.detailedContent as ImpossibleAdviceDetailedContent;
         expect(
-          trait.length,
-          `${result.id}: each trait must be non-empty`,
-        ).toBeGreaterThan(0);
+          content.variant,
+          `${result.id}: variant must be 'impossible-advice'`,
+        ).toBe("impossible-advice");
       }
-    }
-  });
+    });
 
-  it("behaviors has 3-5 items and each is non-empty", () => {
-    for (const result of allResults) {
-      const { behaviors } =
-        result.detailedContent! as QuizResultDetailedContent;
-      expect(
-        behaviors.length,
-        `${result.id}: behaviors count should be 3-5`,
-      ).toBeGreaterThanOrEqual(3);
-      expect(
-        behaviors.length,
-        `${result.id}: behaviors count should be 3-5`,
-      ).toBeLessThanOrEqual(5);
-      for (const behavior of behaviors) {
+    it("catchphrase is 15-30 chars", () => {
+      for (const result of convertedResults) {
+        const { catchphrase } =
+          result.detailedContent as ImpossibleAdviceDetailedContent;
         expect(
-          behavior.length,
-          `${result.id}: each behavior must be non-empty`,
-        ).toBeGreaterThan(0);
+          catchphrase.length,
+          `${result.id}: catchphrase must be 15-30 chars (got ${catchphrase.length}: "${catchphrase}")`,
+        ).toBeGreaterThanOrEqual(15);
+        expect(
+          catchphrase.length,
+          `${result.id}: catchphrase must be 15-30 chars (got ${catchphrase.length}: "${catchphrase}")`,
+        ).toBeLessThanOrEqual(30);
       }
-    }
-  });
+    });
 
-  it("advice is a non-empty string", () => {
-    for (const result of allResults) {
-      const { advice } = result.detailedContent! as QuizResultDetailedContent;
-      expect(
-        advice.length,
-        `${result.id}: advice must be non-empty`,
-      ).toBeGreaterThan(0);
-    }
-  });
-
-  it("traits items are reasonably sized (5-150 chars each)", () => {
-    for (const result of allResults) {
-      for (const trait of (result.detailedContent! as QuizResultDetailedContent)
-        .traits) {
+    it("diagnosisCore is 80-150 chars", () => {
+      for (const result of convertedResults) {
+        const { diagnosisCore } =
+          result.detailedContent as ImpossibleAdviceDetailedContent;
         expect(
-          trait.length,
-          `${result.id}: trait too short or too long`,
-        ).toBeGreaterThanOrEqual(5);
+          diagnosisCore.length,
+          `${result.id}: diagnosisCore must be 80-150 chars (got ${diagnosisCore.length})`,
+        ).toBeGreaterThanOrEqual(80);
         expect(
-          trait.length,
-          `${result.id}: trait too long (max 150)`,
+          diagnosisCore.length,
+          `${result.id}: diagnosisCore must be 150 chars or less (got ${diagnosisCore.length})`,
         ).toBeLessThanOrEqual(150);
       }
-    }
-  });
+    });
 
-  it("behaviors items are reasonably sized (10-150 chars each)", () => {
-    for (const result of allResults) {
-      for (const behavior of (
-        result.detailedContent! as QuizResultDetailedContent
-      ).behaviors) {
+    it("behaviors has exactly 4 items and each is non-empty", () => {
+      for (const result of convertedResults) {
+        const { behaviors } =
+          result.detailedContent as ImpossibleAdviceDetailedContent;
         expect(
-          behavior.length,
-          `${result.id}: behavior too short or too long`,
-        ).toBeGreaterThanOrEqual(10);
-        expect(
-          behavior.length,
-          `${result.id}: behavior too long (max 150)`,
-        ).toBeLessThanOrEqual(150);
+          behaviors.length,
+          `${result.id}: behaviors count must be exactly 4`,
+        ).toBe(4);
+        for (const behavior of behaviors) {
+          expect(
+            behavior.length,
+            `${result.id}: each behavior must be non-empty`,
+          ).toBeGreaterThan(0);
+        }
       }
-    }
-  });
+    });
 
-  it("advice is reasonably sized (10-200 chars)", () => {
-    for (const result of allResults) {
-      const { advice } = result.detailedContent! as QuizResultDetailedContent;
-      expect(
-        advice.length,
-        `${result.id}: advice too short`,
-      ).toBeGreaterThanOrEqual(10);
-      expect(
-        advice.length,
-        `${result.id}: advice too long (max 200)`,
-      ).toBeLessThanOrEqual(200);
-    }
+    it("practicalTip is 30-80 chars", () => {
+      for (const result of convertedResults) {
+        const { practicalTip } =
+          result.detailedContent as ImpossibleAdviceDetailedContent;
+        expect(
+          practicalTip.length,
+          `${result.id}: practicalTip must be 30-80 chars (got ${practicalTip.length}: "${practicalTip}")`,
+        ).toBeGreaterThanOrEqual(30);
+        expect(
+          practicalTip.length,
+          `${result.id}: practicalTip must be 80 chars or less (got ${practicalTip.length}: "${practicalTip}")`,
+        ).toBeLessThanOrEqual(80);
+      }
+    });
   });
 });
 

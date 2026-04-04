@@ -11,17 +11,17 @@ impossible-advice（ありえないアドバイス診断）の結果ページ体
 
 ## 実施する作業
 
-- [ ] ImpossibleAdviceDetailedContent variant型を types.ts に追加する（Step 1）
-- [ ] 最初の3タイプ（timemagician, gravityfighter, digitalmonk）を新variant形式に変換し、トーン基準を確立する（Step 2）
-- [ ] 残り4タイプ（sleeparchitect, conversationsamurai, weathercontroller, snackphilosopher）を新variant形式に変換する（Step 3）
-- [ ] resultPageLabels を更新する（Step 4）
-- [ ] ImpossibleAdviceContent 専用コンテンツコンポーネント + CSS を作成する（Step 5）
-- [ ] ResultCard にimpossible-advice variantの統合を行う（Step 6）
-- [ ] 専用ルート + OGP画像を作成する（Step 7）
-- [ ] テストを作成・更新する（Step 8）
-- [ ] ビルド検証・ビジュアル確認（全7タイプ × デスクトップ/モバイル × ライト/ダーク）を実施する（Step 9）
-- [ ] クリーンアップ・FAQテキスト確認を行う（Step 10）
-- [ ] レビューを実施し、指摘事項をすべて解消する
+- [x] ImpossibleAdviceDetailedContent variant型を types.ts に追加する（Step 1）
+- [x] 最初の3タイプ（timemagician, gravityfighter, digitalmonk）を新variant形式に変換し、トーン基準を確立する（Step 2）
+- [x] 残り4タイプ（sleeparchitect, conversationsamurai, weathercontroller, snackphilosopher）を新variant形式に変換する（Step 3）
+- [x] resultPageLabels を更新する（Step 4）
+- [x] ImpossibleAdviceContent 専用コンテンツコンポーネント + CSS を作成する（Step 5）
+- [x] ResultCard にimpossible-advice variantの統合を行う（Step 6）
+- [x] 専用ルート + OGP画像を作成する（Step 7）
+- [x] テストを作成・更新する（Step 8）
+- [x] ビルド検証・ビジュアル確認（全7タイプ × デスクトップ/モバイル × ライト/ダーク）を実施する（Step 9）
+- [x] クリーンアップ・FAQテキスト確認を行う（Step 10）
+- [x] レビューを実施し、指摘事項をすべて解消する
 
 ## 作業計画
 
@@ -252,9 +252,28 @@ impossible-advice（ありえないアドバイス診断）の結果ページ体
 - R1: WCAGコントラスト比の認識不正確（4色未達を1色のみと誤認）、shareTextハッシュタグの未検討、description表示位置の曖昧さ、会話シナリオ設計の不足の4件指摘→修正
 - R2: 指摘事項なし、承認
 
+### ビジュアルレビュー: 第三者向け結果ページ（1ラウンド）
+
+- R1（全7タイプ × デスクトップ/モバイル × ライト/ダーク = 28枚）: 指摘事項なし、承認
+
+### ビジュアルレビュー: 受検者本人向けResultCard
+
+- クイズを実際に受験してResultCardの表示を検証（結果: 重力と戦う者）
+- デスクトップ×ライト/ダーク、モバイル×ライト/ダーク=4パターンすべてでスクリーンショット撮影
+- catchphrase、diagnosisCore、behaviors、practicalTip、全タイプ一覧（pill）がすべて正常に表示されることを確認
+- 承認
+
+### 実装修正: バンドルバジェット超過
+
+- ResultCard.tsxからクイズデータの直接インポート（impossibleAdviceQuiz, unexpectedCompatibilityQuiz）を削除し、allResults propに変更。/play/[slug]が149KB→140KB以内に収まるよう修正
+
+### 実装レビュー（1回）
+
+- R1: コード品質、コンテンツ品質、WCAG AA準拠、ダークモード対応、バンドルバジェット修正、テスト網羅性の全観点で確認。指摘事項なし、承認
+
 ## キャリーオーバー
 
-- <このサイクルで完了できなかった作業や、次のサイクルに持ち越す必要のある作業があれば、ここと /docs/backlog.md の両方に記載する。>
+なし
 
 ## 次サイクルへの申し送り
 
