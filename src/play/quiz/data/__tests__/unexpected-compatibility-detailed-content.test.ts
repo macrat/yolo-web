@@ -1,13 +1,17 @@
 /**
  * Tests for detailedContent on all 8 unexpected-compatibility results.
- * Each result must have a valid detailedContent with:
- *   - traits: 3-5 items, each non-empty
- *   - behaviors: 3-5 items, each non-empty
- *   - advice: non-empty string
+ *
+ * Migration status:
+ *   - all 8 results: new "unexpected-compatibility" variant format
+ *
+ * This test covers:
+ *   - every result has detailedContent
+ *   - all results use the new variant format with lifeAdvice
+ *   - behaviors: exactly 4 items in new variant format
  * Also verifies seoTitle is set on meta.
  */
 import { describe, it, expect } from "vitest";
-import type { QuizResultDetailedContent } from "../../types";
+import type { UnexpectedCompatibilityDetailedContent } from "../../types";
 import unexpectedCompatibilityQuiz from "../unexpected-compatibility";
 
 const allResults = unexpectedCompatibilityQuiz.results;
@@ -26,38 +30,22 @@ describe("unexpected-compatibility detailedContent", () => {
     }
   });
 
-  it("traits has 3-5 items and each is non-empty", () => {
+  it("all results use the new variant format", () => {
     for (const result of allResults) {
-      const { traits } = result.detailedContent! as QuizResultDetailedContent;
       expect(
-        traits.length,
-        `${result.id}: traits count should be 3-5`,
-      ).toBeGreaterThanOrEqual(3);
-      expect(
-        traits.length,
-        `${result.id}: traits count should be 3-5`,
-      ).toBeLessThanOrEqual(5);
-      for (const trait of traits) {
-        expect(
-          trait.length,
-          `${result.id}: each trait must be non-empty`,
-        ).toBeGreaterThan(0);
-      }
+        result.detailedContent?.variant,
+        `${result.id}: variant must be 'unexpected-compatibility'`,
+      ).toBe("unexpected-compatibility");
     }
   });
 
-  it("behaviors has 3-5 items and each is non-empty", () => {
+  it("all results: behaviors has exactly 4 items and each is non-empty", () => {
     for (const result of allResults) {
-      const { behaviors } =
-        result.detailedContent! as QuizResultDetailedContent;
+      const behaviors = result.detailedContent!.behaviors;
       expect(
         behaviors.length,
-        `${result.id}: behaviors count should be 3-5`,
-      ).toBeGreaterThanOrEqual(3);
-      expect(
-        behaviors.length,
-        `${result.id}: behaviors count should be 3-5`,
-      ).toBeLessThanOrEqual(5);
+        `${result.id}: behaviors must have exactly 4 items`,
+      ).toBe(4);
       for (const behavior of behaviors) {
         expect(
           behavior.length,
@@ -67,40 +55,12 @@ describe("unexpected-compatibility detailedContent", () => {
     }
   });
 
-  it("advice is a non-empty string", () => {
+  it("all results: behaviors items are reasonably sized (10-150 chars each)", () => {
     for (const result of allResults) {
-      const { advice } = result.detailedContent! as QuizResultDetailedContent;
-      expect(
-        advice.length,
-        `${result.id}: advice must be non-empty`,
-      ).toBeGreaterThan(0);
-    }
-  });
-
-  it("traits items are reasonably sized (5-150 chars each)", () => {
-    for (const result of allResults) {
-      for (const trait of (result.detailedContent! as QuizResultDetailedContent)
-        .traits) {
-        expect(
-          trait.length,
-          `${result.id}: trait too short or too long`,
-        ).toBeGreaterThanOrEqual(5);
-        expect(
-          trait.length,
-          `${result.id}: trait too long (max 150)`,
-        ).toBeLessThanOrEqual(150);
-      }
-    }
-  });
-
-  it("behaviors items are reasonably sized (10-150 chars each)", () => {
-    for (const result of allResults) {
-      for (const behavior of (
-        result.detailedContent! as QuizResultDetailedContent
-      ).behaviors) {
+      for (const behavior of result.detailedContent!.behaviors) {
         expect(
           behavior.length,
-          `${result.id}: behavior too short or too long`,
+          `${result.id}: behavior too short`,
         ).toBeGreaterThanOrEqual(10);
         expect(
           behavior.length,
@@ -110,18 +70,21 @@ describe("unexpected-compatibility detailedContent", () => {
     }
   });
 
-  it("advice is reasonably sized (10-200 chars)", () => {
+  it("all results: lifeAdvice is a non-empty string", () => {
     for (const result of allResults) {
-      const { advice } = result.detailedContent! as QuizResultDetailedContent;
+      const dc =
+        result.detailedContent as UnexpectedCompatibilityDetailedContent;
       expect(
-        advice.length,
-        `${result.id}: advice too short`,
-      ).toBeGreaterThanOrEqual(10);
-      expect(
-        advice.length,
-        `${result.id}: advice too long (max 200)`,
-      ).toBeLessThanOrEqual(200);
+        dc.lifeAdvice.length,
+        `${result.id}: lifeAdvice must be non-empty`,
+      ).toBeGreaterThan(0);
     }
+  });
+});
+
+describe("unexpected-compatibility meta — resultPageLabels removed", () => {
+  it("resultPageLabels is not set on meta (uses dedicated UnexpectedCompatibilityContent component)", () => {
+    expect(unexpectedCompatibilityQuiz.meta.resultPageLabels).toBeUndefined();
   });
 });
 

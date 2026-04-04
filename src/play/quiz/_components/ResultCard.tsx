@@ -17,6 +17,7 @@ import {
   isValidAnimalTypeId,
 } from "@/play/quiz/data/animal-personality";
 import animalPersonalityQuiz from "@/play/quiz/data/animal-personality";
+import unexpectedCompatibilityQuiz from "@/play/quiz/data/unexpected-compatibility";
 import CompatibilitySection from "./CompatibilitySection";
 import InviteFriendButton from "./InviteFriendButton";
 import ShareButtons from "./ShareButtons";
@@ -46,6 +47,11 @@ const YojiPersonalityContent = dynamic(
 
 const CharacterPersonalityContent = dynamic(
   () => import("./CharacterPersonalityContent"),
+  { ssr: true },
+);
+
+const UnexpectedCompatibilityContent = dynamic(
+  () => import("./UnexpectedCompatibilityContent"),
   { ssr: true },
 );
 
@@ -305,6 +311,19 @@ function renderDetailedContent(
           referrerTypeId={referrerTypeId}
         />
       );
+    case "unexpected-compatibility":
+      return (
+        <UnexpectedCompatibilityContent
+          quizSlug={unexpectedCompatibilityQuiz.meta.slug}
+          resultId={resultId}
+          detailedContent={content}
+          allResults={unexpectedCompatibilityQuiz.results}
+          headingLevel={3}
+          allTypesLayout="pill"
+          resultColor={resultColor ?? ""}
+          // ResultCard内では afterLifeAdvice スロットは不要（一人完結型のため）
+        />
+      );
     default: {
       // exhaustive check: 新variant追加時にコンパイルエラーで検出
       void (content satisfies never);
@@ -341,6 +360,7 @@ export default function ResultCard({
     "traditional-color",
     "yoji-personality",
     "character-personality",
+    "unexpected-compatibility",
   ] as const;
 
   // catchphrase 装飾線の色（--catchphrase-accent-color）を variant ごとに宣言的に管理する。
@@ -356,6 +376,7 @@ export default function ResultCard({
     "traditional-color": result.color ?? null,
     "yoji-personality": result.color ?? null,
     "character-personality": result.color ?? null,
+    "unexpected-compatibility": result.color ?? null,
   };
 
   const catchphrase =
