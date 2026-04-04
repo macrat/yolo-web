@@ -17,7 +17,6 @@ import {
   isValidAnimalTypeId,
 } from "@/play/quiz/data/animal-personality";
 import animalPersonalityQuiz from "@/play/quiz/data/animal-personality";
-import unexpectedCompatibilityQuiz from "@/play/quiz/data/unexpected-compatibility";
 import CompatibilitySection from "./CompatibilitySection";
 import InviteFriendButton from "./InviteFriendButton";
 import ShareButtons from "./ShareButtons";
@@ -55,6 +54,11 @@ const UnexpectedCompatibilityContent = dynamic(
   { ssr: true },
 );
 
+const ImpossibleAdviceContent = dynamic(
+  () => import("./ImpossibleAdviceContent"),
+  { ssr: true },
+);
+
 type ResultCardProps = {
   result: QuizResult;
   quizType: QuizType;
@@ -73,6 +77,12 @@ type ResultCardProps = {
   accentColor?: string;
   /** 相性診断用の referrer タイプID（animal-personality variantで使用） */
   referrerTypeId?: string;
+  /**
+   * 全タイプの結果配列（unexpected-compatibility / impossible-advice variant で使用）。
+   * 親コンポーネント（QuizContainer）から quiz.results を受け取ることで、
+   * ResultCard 内で個別クイズデータをインポートする必要をなくし、バンドルサイズを削減する。
+   */
+  allResults?: QuizResult[];
 };
 
 function renderStandardContent(
@@ -242,10 +252,12 @@ function renderCharacterFortuneContent(
 function renderDetailedContent(
   content: DetailedContent,
   resultId: string,
+  quizSlug: string,
   labels?: QuizMeta["resultPageLabels"],
   accentColor?: string,
   referrerTypeId?: string,
   resultColor?: string,
+  allResults?: QuizResult[],
 ): React.ReactNode {
   // Standard variant (variant === undefined)
   if (!content.variant) {
@@ -314,14 +326,27 @@ function renderDetailedContent(
     case "unexpected-compatibility":
       return (
         <UnexpectedCompatibilityContent
-          quizSlug={unexpectedCompatibilityQuiz.meta.slug}
+          quizSlug={quizSlug}
           resultId={resultId}
           detailedContent={content}
-          allResults={unexpectedCompatibilityQuiz.results}
+          allResults={allResults ?? []}
           headingLevel={3}
           allTypesLayout="pill"
           resultColor={resultColor ?? ""}
           // ResultCard内では afterLifeAdvice スロットは不要（一人完結型のため）
+        />
+      );
+    case "impossible-advice":
+      return (
+        <ImpossibleAdviceContent
+          quizSlug={quizSlug}
+          resultId={resultId}
+          detailedContent={content}
+          allResults={allResults ?? []}
+          headingLevel={3}
+          allTypesLayout="pill"
+          resultColor={resultColor ?? ""}
+          // ResultCard内では afterPracticalTip スロットは不要
         />
       );
     default: {
@@ -344,6 +369,7 @@ export default function ResultCard({
   resultPageLabels,
   accentColor,
   referrerTypeId,
+  allResults,
 }: ResultCardProps) {
   const shareUrl =
     typeof window !== "undefined"
@@ -361,6 +387,7 @@ export default function ResultCard({
     "yoji-personality",
     "character-personality",
     "unexpected-compatibility",
+    "impossible-advice",
   ] as const;
 
   // catchphrase 装飾線の色（--catchphrase-accent-color）を variant ごとに宣言的に管理する。
@@ -377,6 +404,7 @@ export default function ResultCard({
     "yoji-personality": result.color ?? null,
     "character-personality": result.color ?? null,
     "unexpected-compatibility": result.color ?? null,
+    "impossible-advice": result.color ?? null,
   };
 
   const catchphrase =
@@ -444,10 +472,12 @@ export default function ResultCard({
           {renderDetailedContent(
             detailedContent,
             result.id,
+            quizSlug,
             resultPageLabels,
             accentColor,
             referrerTypeId,
             result.color,
+            allResults,
           )}
         </div>
       )}

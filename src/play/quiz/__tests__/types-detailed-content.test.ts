@@ -11,6 +11,7 @@ import type {
   YojiPersonalityDetailedContent,
   CharacterPersonalityDetailedContent,
   UnexpectedCompatibilityDetailedContent,
+  ImpossibleAdviceDetailedContent,
   DetailedContent,
 } from "../types";
 
@@ -559,6 +560,59 @@ describe("DetailedContent union type — unexpected-compatibility", () => {
       expect(content.whyCompatible).toBe("相性の核心");
       expect(content.behaviors).toHaveLength(4);
       expect(content.lifeAdvice).toBe("教訓");
+    }
+  });
+});
+
+describe("ImpossibleAdviceDetailedContent", () => {
+  it("accepts all required fields with variant='impossible-advice'", () => {
+    const content: ImpossibleAdviceDetailedContent = {
+      variant: "impossible-advice",
+      catchphrase: "その悩み、実は宇宙の法則と戦っていた",
+      diagnosisCore:
+        "あなたの悩みの本質は、人間の本能と社会のルールの衝突にある。誰もが同じ矛盾を抱えながら生きているが、あなたは特にその矛盾に敏感なタイプだ。",
+      behaviors: [
+        "解決策を調べるほど問題が増えていく",
+        "アドバイスを実践すると逆効果になる",
+        "悩んでいる自分を見て、さらに悩む",
+      ],
+      practicalTip:
+        "今日だけは悩むのをやめて、5分間だけ好きなことをする。それだけで十分。",
+    };
+    expect(content.variant).toBe("impossible-advice");
+    expect(content.catchphrase).toBeDefined();
+    expect(content.diagnosisCore).toBeDefined();
+    expect(content.behaviors).toHaveLength(3);
+    expect(content.practicalTip).toBeDefined();
+  });
+});
+
+describe("DetailedContent union type — impossible-advice", () => {
+  it("can hold ImpossibleAdviceDetailedContent", () => {
+    const content: DetailedContent = {
+      variant: "impossible-advice",
+      catchphrase: "キャッチコピー",
+      diagnosisCore: "悩みの本質の散文分析",
+      behaviors: ["あるあるシーン1", "あるあるシーン2"],
+      practicalTip: "本当に使える小さなヒント",
+    };
+    expect(content.variant).toBe("impossible-advice");
+  });
+
+  it("discriminates impossible-advice variant via type narrowing", () => {
+    const content: DetailedContent = {
+      variant: "impossible-advice",
+      catchphrase: "キャッチコピー",
+      diagnosisCore: "悩みの本質分析",
+      behaviors: ["あるある1", "あるある2", "あるある3"],
+      practicalTip: "小さなヒント",
+    };
+
+    if (content.variant === "impossible-advice") {
+      expect(content.catchphrase).toBe("キャッチコピー");
+      expect(content.diagnosisCore).toBe("悩みの本質分析");
+      expect(content.behaviors).toHaveLength(3);
+      expect(content.practicalTip).toBe("小さなヒント");
     }
   });
 });

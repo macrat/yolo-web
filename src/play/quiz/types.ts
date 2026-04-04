@@ -211,6 +211,24 @@ export interface UnexpectedCompatibilityDetailedContent {
 }
 
 /**
+ * impossible-advice クイズ専用の追加コンテンツセクション。
+ * 解決不能な悩み診断の結果ページでキャッチコピー・悩みの本質分析・あるある・実用的ヒントを提供する。
+ * variant フィールドで他の DetailedContent 型と区別する。
+ */
+export interface ImpossibleAdviceDetailedContent {
+  /** バリアント識別子。型の絞り込みに使用する。 */
+  variant: "impossible-advice";
+  /** タイプのキャッチコピー（一行） */
+  catchphrase: string;
+  /** 悩みの本質の散文分析（80-150字） */
+  diagnosisCore: string;
+  /** あるあるシーン（箇条書き3-5項目） */
+  behaviors: string[];
+  /** 本当に使える小さなヒント（1-2文） */
+  practicalTip: string;
+}
+
+/**
  * detailedContent の union型。
  * variant フィールドで型を絞り込む discriminated union。
  * - variant が undefined または未設定: QuizResultDetailedContent（標準形式）
@@ -222,6 +240,7 @@ export interface UnexpectedCompatibilityDetailedContent {
  * - variant が "yoji-personality": YojiPersonalityDetailedContent
  * - variant が "character-personality": CharacterPersonalityDetailedContent
  * - variant が "unexpected-compatibility": UnexpectedCompatibilityDetailedContent
+ * - variant が "impossible-advice": ImpossibleAdviceDetailedContent
  */
 export type DetailedContent =
   | QuizResultDetailedContent
@@ -232,7 +251,8 @@ export type DetailedContent =
   | TraditionalColorDetailedContent
   | YojiPersonalityDetailedContent
   | CharacterPersonalityDetailedContent
-  | UnexpectedCompatibilityDetailedContent;
+  | UnexpectedCompatibilityDetailedContent
+  | ImpossibleAdviceDetailedContent;
 
 /** A result pattern */
 export type QuizResult = {

@@ -12,6 +12,7 @@ import type {
   TraditionalColorDetailedContent,
   YojiPersonalityDetailedContent,
   UnexpectedCompatibilityDetailedContent,
+  ImpossibleAdviceDetailedContent,
 } from "../../types";
 
 // next/dynamicをモック: テスト環境では vi.mock によりモジュールが同期的にキャッシュされるため、
@@ -71,6 +72,17 @@ vi.mock("next/dynamic", async () => {
             String(
               (props.detailedContent as Record<string, unknown>)
                 ?.entityEssence ?? "",
+            ),
+          );
+      } else if (loaderStr.includes("ImpossibleAdviceContent")) {
+        // ImpossibleAdviceContent を data-testid を持つスタブで代替
+        cachedComp = (props: Record<string, unknown>) =>
+          React.createElement(
+            "div",
+            { "data-testid": "impossible-advice-content" },
+            String(
+              (props.detailedContent as Record<string, unknown>)
+                ?.diagnosisCore ?? "",
             ),
           );
       } else {
@@ -284,6 +296,34 @@ vi.mock("@/play/quiz/data/animal-personality", () => ({
   },
   isValidAnimalTypeId: (id: string) =>
     ["nihon-zaru", "hondo-tanuki"].includes(id),
+}));
+
+// impossible-adviceデータモジュールをモック
+vi.mock("@/play/quiz/data/impossible-advice", () => ({
+  default: {
+    meta: {
+      slug: "impossible-advice",
+      title: "達成困難アドバイス診断",
+      accentColor: "#7c3aed",
+      questionCount: 7,
+    },
+    results: [
+      {
+        id: "timemagician",
+        title: "時間魔術師見習い",
+        description: "説明1",
+        color: "#7c3aed",
+        icon: "⏰",
+      },
+      {
+        id: "gravityfighter",
+        title: "重力と戦う者",
+        description: "説明2",
+        color: "#dc2626",
+        icon: "💪",
+      },
+    ],
+  },
 }));
 
 // unexpected-compatibilityデータモジュールをモック
@@ -1129,6 +1169,158 @@ describe("ResultCard - unexpected-compatibility variant", () => {
       // unexpected-compatibility では result.color が CSS変数に設定される
       expect(el.style.getPropertyValue("--catchphrase-accent-color")).toBe(
         "#0891b2",
+      );
+    }
+  });
+});
+
+describe("ResultCard - allResults prop", () => {
+  test("allResults propが渡されてもエラーが起きないこと（unexpected-compatibility）", () => {
+    const unexpectedContent: UnexpectedCompatibilityDetailedContent = {
+      variant: "unexpected-compatibility",
+      catchphrase: "テストキャッチフレーズ",
+      entityEssence: "テストエッセンス",
+      whyCompatible: "テスト相性理由",
+      behaviors: ["テスト行動"],
+      lifeAdvice: "テストアドバイス",
+    };
+    const unexpectedResult: QuizResult = {
+      id: "vendingmachine",
+      title: "自動販売機",
+      description: "テスト説明",
+      color: "#0891b2",
+      icon: "🥤",
+    };
+    const allResultsMock: QuizResult[] = [
+      { id: "vendingmachine", title: "自動販売機", description: "説明1" },
+      { id: "oldclock", title: "古い掛け時計", description: "説明2" },
+    ];
+    // allResults を明示的に渡してもエラーが起きないことを確認
+    render(
+      <ResultCard
+        result={unexpectedResult}
+        quizType="personality"
+        quizTitle="斜め上の相性診断"
+        quizSlug="unexpected-compatibility"
+        onRetry={vi.fn()}
+        detailedContent={unexpectedContent}
+        allResults={allResultsMock}
+      />,
+    );
+    expect(
+      screen.getByTestId("unexpected-compatibility-content"),
+    ).toBeInTheDocument();
+  });
+
+  test("allResults propが渡されてもエラーが起きないこと（impossible-advice）", () => {
+    const impossibleContent: ImpossibleAdviceDetailedContent = {
+      variant: "impossible-advice",
+      catchphrase: "テストキャッチフレーズ",
+      diagnosisCore: "テスト診断コア",
+      behaviors: ["テスト行動"],
+      practicalTip: "テスト実践ヒント",
+    };
+    const impossibleResult: QuizResult = {
+      id: "timemagician",
+      title: "時間魔術師見習い",
+      description: "テスト説明",
+      color: "#7c3aed",
+      icon: "⏰",
+    };
+    const allResultsMock: QuizResult[] = [
+      { id: "timemagician", title: "時間魔術師見習い", description: "説明1" },
+      { id: "gravityfighter", title: "重力と戦う者", description: "説明2" },
+    ];
+    // allResults を明示的に渡してもエラーが起きないことを確認
+    render(
+      <ResultCard
+        result={impossibleResult}
+        quizType="personality"
+        quizTitle="達成困難アドバイス診断"
+        quizSlug="impossible-advice"
+        onRetry={vi.fn()}
+        detailedContent={impossibleContent}
+        allResults={allResultsMock}
+      />,
+    );
+    expect(screen.getByTestId("impossible-advice-content")).toBeInTheDocument();
+  });
+});
+
+describe("ResultCard - impossible-advice variant", () => {
+  const impossibleContent: ImpossibleAdviceDetailedContent = {
+    variant: "impossible-advice",
+    catchphrase: "時間はあなたを待ってはいない、でも操れる気がしている",
+    diagnosisCore:
+      "時間感覚と現実のギャップに悩むあなたへ。魔法のように時間を操れると信じているが、まだ見習い段階。",
+    behaviors: [
+      "締め切り1時間前まで「まだ余裕がある」と思っている",
+      "「あと5分だけ」が5回繰り返される",
+    ],
+    practicalTip:
+      "タイマーを15分単位で設定してみてください。魔術師への第一歩です。",
+  };
+
+  const impossibleResult: QuizResult = {
+    id: "timemagician",
+    title: "時間魔術師見習い",
+    description: "あなたと相性が良い診断タイプは時間魔術師見習いです。",
+    color: "#7c3aed",
+    icon: "⏰",
+  };
+
+  const impossibleProps = {
+    result: impossibleResult,
+    quizType: "personality" as const,
+    quizTitle: "達成困難アドバイス診断",
+    quizSlug: "impossible-advice",
+    onRetry: vi.fn(),
+    detailedContent: impossibleContent,
+  };
+
+  test("ImpossibleAdviceContent コンポーネントがレンダリングされること", () => {
+    render(<ResultCard {...impossibleProps} />);
+    expect(screen.getByTestId("impossible-advice-content")).toBeInTheDocument();
+  });
+
+  test("diagnosisCore が表示されること", () => {
+    render(<ResultCard {...impossibleProps} />);
+    expect(
+      screen.getByText(
+        "時間感覚と現実のギャップに悩むあなたへ。魔法のように時間を操れると信じているが、まだ見習い段階。",
+      ),
+    ).toBeInTheDocument();
+  });
+
+  test("catchphrase が description の前に表示されること", () => {
+    render(<ResultCard {...impossibleProps} />);
+    const catchphrase = screen.getByText(
+      "時間はあなたを待ってはいない、でも操れる気がしている",
+    );
+    const description = screen.getByText(
+      "あなたと相性が良い診断タイプは時間魔術師見習いです。",
+    );
+
+    expect(catchphrase).toBeInTheDocument();
+    expect(description).toBeInTheDocument();
+
+    // catchphraseがdescriptionより前に現れることを確認
+    const position = description.compareDocumentPosition(catchphrase);
+    // Node.DOCUMENT_POSITION_PRECEDING = 2 (catchphraseがdescriptionより前)
+    expect(position & Node.DOCUMENT_POSITION_PRECEDING).toBeTruthy();
+  });
+
+  test("catchphraseBeforeDescription に result.color が --catchphrase-accent-color として設定されること", () => {
+    const { container } = render(<ResultCard {...impossibleProps} />);
+    const catchphraseEl = container.querySelector(
+      "[class*='catchphraseBeforeDescription']",
+    );
+    expect(catchphraseEl).not.toBeNull();
+    if (catchphraseEl) {
+      const el = catchphraseEl as HTMLElement;
+      // impossible-advice では result.color が CSS変数に設定される
+      expect(el.style.getPropertyValue("--catchphrase-accent-color")).toBe(
+        "#7c3aed",
       );
     }
   });
