@@ -104,6 +104,26 @@ describe("Q4: coreSentence must contain the reversal frame", () => {
   });
 });
 
+describe("Q5-pre: coreSentence must use second person (あなた) or omit subject", () => {
+  /**
+   * coreSentenceは受検者視点（二人称「あなた」または主語省略）で書かれているべき。
+   * 「このタイプは/には/の」という三人称表現は使用禁止。
+   * 全8件で満たすこと。
+   */
+  it("no coreSentence must contain 'このタイプ'", () => {
+    const violations: string[] = [];
+    for (const result of allResults) {
+      const dc = result.detailedContent as ContrarianFortuneDetailedContent;
+      if (dc?.coreSentence?.includes("このタイプ")) {
+        violations.push(
+          `${result.id}: coreSentence contains 'このタイプ': "${dc.coreSentence}"`,
+        );
+      }
+    }
+    expect(violations, violations.join("\n")).toHaveLength(0);
+  });
+});
+
 describe("Q5: calmchaos must have humorous behaviors (review feedback 1-1)", () => {
   /**
    * calmchaosのbehaviorsは「優秀な人物の描写」でなく「笑えるシーン」であること。
