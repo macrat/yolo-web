@@ -11,6 +11,7 @@ import type {
   MusicPersonalityDetailedContent,
   TraditionalColorDetailedContent,
   YojiPersonalityDetailedContent,
+  UnexpectedCompatibilityDetailedContent,
 } from "../../types";
 
 // next/dynamicをモック: テスト環境では vi.mock によりモジュールが同期的にキャッシュされるため、
@@ -59,6 +60,17 @@ vi.mock("next/dynamic", async () => {
             { "data-testid": "yoji-personality-content" },
             String(
               (props.content as Record<string, unknown>)?.kanjiBreakdown ?? "",
+            ),
+          );
+      } else if (loaderStr.includes("UnexpectedCompatibilityContent")) {
+        // UnexpectedCompatibilityContent を data-testid を持つスタブで代替
+        cachedComp = (props: Record<string, unknown>) =>
+          React.createElement(
+            "div",
+            { "data-testid": "unexpected-compatibility-content" },
+            String(
+              (props.detailedContent as Record<string, unknown>)
+                ?.entityEssence ?? "",
             ),
           );
       } else {
@@ -272,6 +284,34 @@ vi.mock("@/play/quiz/data/animal-personality", () => ({
   },
   isValidAnimalTypeId: (id: string) =>
     ["nihon-zaru", "hondo-tanuki"].includes(id),
+}));
+
+// unexpected-compatibilityデータモジュールをモック
+vi.mock("@/play/quiz/data/unexpected-compatibility", () => ({
+  default: {
+    meta: {
+      slug: "unexpected-compatibility",
+      title: "斜め上の相性診断",
+      accentColor: "#0891b2",
+      questionCount: 8,
+    },
+    results: [
+      {
+        id: "vendingmachine",
+        title: "自動販売機",
+        description: "説明1",
+        color: "#0891b2",
+        icon: "🥤",
+      },
+      {
+        id: "oldclock",
+        title: "古い掛け時計",
+        description: "説明2",
+        color: "#92400e",
+        icon: "🕰️",
+      },
+    ],
+  },
 }));
 
 // next/linkをモック
@@ -1007,6 +1047,89 @@ describe("ResultCard - yoji-personality variant", () => {
     if (catchphraseEl) {
       const el = catchphraseEl as HTMLElement;
       expect(el.style.getPropertyValue("--catchphrase-accent-color")).toBe("");
+    }
+  });
+});
+
+describe("ResultCard - unexpected-compatibility variant", () => {
+  const unexpectedContent: UnexpectedCompatibilityDetailedContent = {
+    variant: "unexpected-compatibility",
+    catchphrase: "24時間、あなたの選択を静かに待っている",
+    entityEssence:
+      "自動販売機とは、選択の自由と即時の応答が詰まった箱だ。何も言わずそこにあり、押せば迷いなく応える。",
+    whyCompatible:
+      "あなたが自動販売機と相性が良いのは、「ちゃんと応えてくれる」という確かさを求めているから。",
+    behaviors: [
+      "グループLINEに誰も答えないと、気づいたら自分がまとめ役になっていた。",
+      "疲れた帰り道、光っている自販機を見るとなぜか少し元気になる。",
+    ],
+    lifeAdvice:
+      "小さな「ちゃんと応えた」の積み重ねが、やがて信頼という光になる。",
+  };
+
+  const unexpectedResult: QuizResult = {
+    id: "vendingmachine",
+    title: "自動販売機",
+    description: "あなたと相性が良い存在は自動販売機です。",
+    color: "#0891b2",
+    icon: "🥤",
+  };
+
+  const unexpectedProps = {
+    result: unexpectedResult,
+    quizType: "personality" as const,
+    quizTitle: "斜め上の相性診断",
+    quizSlug: "unexpected-compatibility",
+    onRetry: vi.fn(),
+    detailedContent: unexpectedContent,
+  };
+
+  test("UnexpectedCompatibilityContent コンポーネントがレンダリングされること", () => {
+    render(<ResultCard {...unexpectedProps} />);
+    expect(
+      screen.getByTestId("unexpected-compatibility-content"),
+    ).toBeInTheDocument();
+  });
+
+  test("entityEssence が表示されること", () => {
+    render(<ResultCard {...unexpectedProps} />);
+    expect(
+      screen.getByText(
+        "自動販売機とは、選択の自由と即時の応答が詰まった箱だ。何も言わずそこにあり、押せば迷いなく応える。",
+      ),
+    ).toBeInTheDocument();
+  });
+
+  test("catchphrase が description の前に表示されること", () => {
+    render(<ResultCard {...unexpectedProps} />);
+    const catchphrase = screen.getByText(
+      "24時間、あなたの選択を静かに待っている",
+    );
+    const description = screen.getByText(
+      "あなたと相性が良い存在は自動販売機です。",
+    );
+
+    expect(catchphrase).toBeInTheDocument();
+    expect(description).toBeInTheDocument();
+
+    // catchphraseがdescriptionより前に現れることを確認
+    const position = description.compareDocumentPosition(catchphrase);
+    // Node.DOCUMENT_POSITION_PRECEDING = 2 (catchphraseがdescriptionより前)
+    expect(position & Node.DOCUMENT_POSITION_PRECEDING).toBeTruthy();
+  });
+
+  test("catchphraseBeforeDescription に result.color が --catchphrase-accent-color として設定されること", () => {
+    const { container } = render(<ResultCard {...unexpectedProps} />);
+    const catchphraseEl = container.querySelector(
+      "[class*='catchphraseBeforeDescription']",
+    );
+    expect(catchphraseEl).not.toBeNull();
+    if (catchphraseEl) {
+      const el = catchphraseEl as HTMLElement;
+      // unexpected-compatibility では result.color が CSS変数に設定される
+      expect(el.style.getPropertyValue("--catchphrase-accent-color")).toBe(
+        "#0891b2",
+      );
     }
   });
 });

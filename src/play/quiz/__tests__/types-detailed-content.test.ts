@@ -10,6 +10,7 @@ import type {
   TraditionalColorSeason,
   YojiPersonalityDetailedContent,
   CharacterPersonalityDetailedContent,
+  UnexpectedCompatibilityDetailedContent,
   DetailedContent,
 } from "../types";
 
@@ -498,6 +499,66 @@ describe("DetailedContent union type — character-personality", () => {
       expect(content.archetypeBreakdown).toBe("アーキタイプ解説");
       expect(content.behaviors).toHaveLength(4);
       expect(content.characterMessage).toBe("メッセージ");
+    }
+  });
+});
+
+describe("UnexpectedCompatibilityDetailedContent", () => {
+  it("accepts all required fields with variant='unexpected-compatibility'", () => {
+    const content: UnexpectedCompatibilityDetailedContent = {
+      variant: "unexpected-compatibility",
+      catchphrase: "宇宙一意外な最強タッグ",
+      entityEssence:
+        "この存在は宇宙の法則を超えて存在する。その本質は一見矛盾しているようで、実は深いところで調和している哲学的なエンティティだ。",
+      whyCompatible:
+        "あなたとこの存在の相性が良い理由は、互いの欠点を補い合うことで、より大きな力を生み出せるからだ。",
+      behaviors: [
+        "待ち合わせ場所でなぜか必ず見つけ合える",
+        "同じタイミングで同じことを考えている",
+        "一緒にいると不思議と物事がうまくいく",
+        "相手の言いたいことを言葉なしで理解できる",
+      ],
+      lifeAdvice:
+        "この存在から学べる教訓は、常識を疑い、意外な可能性を探ること。",
+    };
+    expect(content.variant).toBe("unexpected-compatibility");
+    expect(content.catchphrase).toBeDefined();
+    expect(content.entityEssence).toBeDefined();
+    expect(content.whyCompatible).toBeDefined();
+    expect(content.behaviors).toHaveLength(4);
+    expect(content.lifeAdvice).toBeDefined();
+  });
+});
+
+describe("DetailedContent union type — unexpected-compatibility", () => {
+  it("can hold UnexpectedCompatibilityDetailedContent", () => {
+    const content: DetailedContent = {
+      variant: "unexpected-compatibility",
+      catchphrase: "宇宙一意外な最強タッグ",
+      entityEssence: "存在の本質の哲学的・ユーモラスな解説",
+      whyCompatible: "なぜこの存在と相性が良いかの核心解説",
+      behaviors: ["あるある1", "あるある2", "あるある3", "あるある4"],
+      lifeAdvice: "その存在から学べる教訓",
+    };
+    expect(content.variant).toBe("unexpected-compatibility");
+  });
+
+  it("discriminates unexpected-compatibility variant via type narrowing", () => {
+    const content: DetailedContent = {
+      variant: "unexpected-compatibility",
+      catchphrase: "キャッチコピー",
+      entityEssence: "存在の本質",
+      whyCompatible: "相性の核心",
+      behaviors: ["あるある1", "あるある2", "あるある3", "あるある4"],
+      lifeAdvice: "教訓",
+    };
+
+    if (content.variant === "unexpected-compatibility") {
+      expect(content.catchphrase).toBe("キャッチコピー");
+      expect(content.entityEssence).toBe("存在の本質");
+      expect(content.whyCompatible).toBe("相性の核心");
+      expect(content.behaviors).toHaveLength(4);
+      expect(content.lifeAdvice).toBe("教訓");
     }
   });
 });

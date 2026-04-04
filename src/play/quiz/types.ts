@@ -191,6 +191,26 @@ export interface CharacterPersonalityDetailedContent {
 }
 
 /**
+ * unexpected-compatibility クイズ専用の追加コンテンツセクション。
+ * 意外な相性診断の結果ページでキャッチコピー・存在の本質・相性の核心・あるある・教訓を提供する。
+ * variant フィールドで他の DetailedContent 型と区別する。
+ */
+export interface UnexpectedCompatibilityDetailedContent {
+  /** バリアント識別子。型の絞り込みに使用する。 */
+  variant: "unexpected-compatibility";
+  /** キャッチコピー（15-30字） */
+  catchphrase: string;
+  /** 存在の本質の哲学的・ユーモラスな解説（80-150字） */
+  entityEssence: string;
+  /** なぜこの存在と相性が良いかの核心解説（80-150字） */
+  whyCompatible: string;
+  /** あるある（4項目） */
+  behaviors: string[];
+  /** その存在から学べる教訓（30-80字） */
+  lifeAdvice: string;
+}
+
+/**
  * detailedContent の union型。
  * variant フィールドで型を絞り込む discriminated union。
  * - variant が undefined または未設定: QuizResultDetailedContent（標準形式）
@@ -201,6 +221,7 @@ export interface CharacterPersonalityDetailedContent {
  * - variant が "traditional-color": TraditionalColorDetailedContent
  * - variant が "yoji-personality": YojiPersonalityDetailedContent
  * - variant が "character-personality": CharacterPersonalityDetailedContent
+ * - variant が "unexpected-compatibility": UnexpectedCompatibilityDetailedContent
  */
 export type DetailedContent =
   | QuizResultDetailedContent
@@ -210,7 +231,8 @@ export type DetailedContent =
   | MusicPersonalityDetailedContent
   | TraditionalColorDetailedContent
   | YojiPersonalityDetailedContent
-  | CharacterPersonalityDetailedContent;
+  | CharacterPersonalityDetailedContent
+  | UnexpectedCompatibilityDetailedContent;
 
 /** A result pattern */
 export type QuizResult = {
