@@ -2,7 +2,7 @@
 id: 152
 description: "結果体験の再設計: unexpected-compatibility（B-270）"
 started_at: "2026-04-03T23:52:04+0900"
-completed_at: "2026-04-04T10:38:23+0900"
+completed_at: null
 ---
 
 # サイクル-152

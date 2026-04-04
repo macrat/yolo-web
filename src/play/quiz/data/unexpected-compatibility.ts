@@ -304,7 +304,7 @@ const unexpectedCompatibilityQuiz: QuizDefinition = {
       title: "自動販売機",
       description:
         "あなたと最も相性が良い存在は「自動販売機」です。あなたが求めるものを、聞かれる前に差し出す存在。24時間いつでもそこにいて、押せば応えてくれる。人間関係にこの安定感を求めるあなたは、実は自動販売機に最も癒されています。次に自販機の前を通ったら、少し長めに眺めてあげてください。きっと光って応えてくれます。",
-      color: "#ea580c",
+      color: "#c2410c",
       icon: "\u{1F964}",
       detailedContent: {
         variant: "unexpected-compatibility" as const,
@@ -352,7 +352,7 @@ const unexpectedCompatibilityQuiz: QuizDefinition = {
       title: "街灯",
       description:
         "あなたと最も相性が良い存在は「街灯」です。暗くなると自動的に灯り、誰かの帰り道をそっと照らす。主張しないけれど、いないと困る。あなたもそういう存在です。なお、街灯に集まる虫はあなたの魅力に引き寄せられた存在の暗喩です（そうでないかもしれません）。",
-      color: "#ca8a04",
+      color: "#a16207",
       icon: "\u{1F4A1}",
       detailedContent: {
         variant: "unexpected-compatibility" as const,
@@ -376,7 +376,7 @@ const unexpectedCompatibilityQuiz: QuizDefinition = {
       title: "公園のベンチ",
       description:
         "あなたと最も相性が良い存在は「公園のベンチ」です。誰でも受け入れ、何時間座っても文句を言わず、去るときも引き止めない。あなたの包容力と適度な距離感は、まさにベンチ的美徳です。雨の日は少し寂しそうにしているところも似ています。",
-      color: "#059669",
+      color: "#047857",
       icon: "\u{1FA91}",
       detailedContent: {
         variant: "unexpected-compatibility" as const,
@@ -401,7 +401,7 @@ const unexpectedCompatibilityQuiz: QuizDefinition = {
       description:
         "あなたと最も相性が良い存在は「風鈴」です。風が吹くと涼やかに鳴り、周囲に爽やかさを届ける。あなたもまた、場の空気を変える力を持っています。ただし風がないと沈黙する点も似ており、「自分から動くタイプではない」ことを風鈴は優しく教えてくれています。",
       color: "#7c3aed",
-      icon: "\u{1F3D0}",
+      icon: "\u{1F390}",
       detailedContent: {
         variant: "unexpected-compatibility" as const,
         catchphrase: "風が来るたびに、世界を変えてしまう",
@@ -424,7 +424,7 @@ const unexpectedCompatibilityQuiz: QuizDefinition = {
       title: "雨の日の午後",
       description:
         "あなたと最も相性が良い存在は「雨の日の午後」です。人間ではなく、時間帯です。外に出る理由がなくなり、室内で静かに過ごす口実が生まれる。あなたにとって雨は天気ではなく、自分を取り戻す許可証です。傘を持たずに出かけて雨に降られても、なぜかそれほど嫌ではないはずです。",
-      color: "#1e40af",
+      color: "#1d4ed8",
       icon: "\u{1F327}\u{FE0F}",
       detailedContent: {
         variant: "unexpected-compatibility" as const,
@@ -448,7 +448,7 @@ const unexpectedCompatibilityQuiz: QuizDefinition = {
       title: "特定の形の雲",
       description:
         "あなたと最も相性が良い存在は「特定の形の雲」です。何の形に見えるかは日によって変わります。見上げるたびに違う姿で、でも空にいることだけは確か。あなたもまた、一つの枠に収まらない自由な存在です。雲の形に名前をつける趣味を始めると、毎日が少し楽しくなるかもしれません。",
-      color: "#0891b2",
+      color: "#0e7490",
       icon: "\u{2601}\u{FE0F}",
       detailedContent: {
         variant: "unexpected-compatibility" as const,
@@ -472,7 +472,7 @@ const unexpectedCompatibilityQuiz: QuizDefinition = {
       title: "404 Not Found",
       description:
         "あなたと最も相性が良い存在は「存在しないWebページ」です。探していたものとは違うけれど、たどり着いてしまった場所。404ページに書かれた「お探しのページは見つかりませんでした」は、実は哲学的な問いです。あなたもまた、探しているものがまだ見つかっていないのかもしれません。でも探し続けること自体に価値があります。このページのように。",
-      color: "#6b7280",
+      color: "#a21caf",
       icon: "\u{1F50D}",
       detailedContent: {
         variant: "unexpected-compatibility" as const,
