@@ -32,15 +32,15 @@
  * ライトモード: color-mix(in srgb, --type-color 12%, white) で薄いタイプカラー背景。
  * ダークモード: color-mix(in srgb, --type-color 20%, #1a1a2e) でダーク背景に色味を足す。
  *
- * 負のmarginでh1.title の margin-bottom(0.75rem) と カード左右padding(1rem)を打ち消し、
- * タイトル直後から端まで色が広がるように見せる。
+ * margin-top: 0 でh1.title の margin-bottom(0.75rem)を活かして余白を確保し、
+ * 負のmargin（左右）でカード左右padding(1rem)を打ち消して端まで色が広がるように見せる。
  */
 .colorHero {
   /* タイトル直後からcatchphraseにかけてタイプカラーを体感するヒーローエリア。
-   * ResultPageShell の h1.title は margin-bottom: 0.75rem を持つが、
-   * detailedSection は children の先頭なのでタイトルの直後に配置される。
+   * ResultPageShell の h1.title は margin-bottom: 0.75rem を持つ。
+   * margin-top: 0 でh1のmargin-bottomを活かして余裕ある間隔を確保する。
    * カード左右のpadding(1rem)を負のmarginで打ち消してカード端まで背景色を広げる。 */
-  margin-top: -0.75rem;
+  margin-top: 0;
   /* カード左右のpadding(1rem)を打ち消して端まで広げる */
   margin-left: -1rem;
   margin-right: -1rem;
@@ -59,6 +59,9 @@
 :global(.dark) .colorHero {
   /* ダークモード: タイプカラーを混ぜたダーク背景。フォールバック値で安全な色を保証する */
   background: color-mix(in srgb, var(--type-color, #374151) 20%, #1a1a2e);
+  /* ダークモードではcolorHero下端とコンテンツ背景の明度差が小さくなるため、
+   * box-shadowで境界を明確化する */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 /* カラーヒーロー内のキャッチコピー */

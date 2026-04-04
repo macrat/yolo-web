@@ -122,6 +122,11 @@ describe("unexpected-compatibility detailedContent — batch2 results (new varia
     });
   }
 
+  it("windchime icon is 🎐 (U+1F390)", () => {
+    const windchime = allResults.find((r) => r.id === "windchime")!;
+    expect(windchime.icon).toBe("\u{1F390}");
+  });
+
   it("all 5 catchphrases are unique", () => {
     const catchphrases = BATCH2_IDS.map((id) => {
       const result = allResults.find((r) => r.id === id)!;

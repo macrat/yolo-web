@@ -32,6 +32,9 @@ type Props = {
 const SLUG = "unexpected-compatibility";
 const quiz = unexpectedCompatibilityQuiz;
 
+/** CTA1ボタンのテキスト。モバイル(375px)で1行に収まる長さに保つ。 */
+export const CTA_TEXT = "あなたの相性を診断してみよう";
+
 export function generateStaticParams() {
   return getResultIdsForQuiz(SLUG).map((id) => ({ resultId: id }));
 }
@@ -89,7 +92,7 @@ export default async function UnexpectedCompatibilityResultPage({
 
   const shareText = `${quiz.meta.title}の結果は「${result.title}」でした！あなたは? #斜め上の相性診断 #yolosnet`;
   const shareUrl = `${BASE_URL}/play/${SLUG}/result/${resultId}`;
-  const ctaText = "あなたはどの存在と相性がいい? 診断してみよう";
+  const ctaText = CTA_TEXT;
 
   // descriptionが4行を超えるかどうかの判定
   const DESCRIPTION_LONG_THRESHOLD = 128;
@@ -142,7 +145,7 @@ export default async function UnexpectedCompatibilityResultPage({
           detailedContent={ucDc}
           allResults={quiz.results}
           headingLevel={2}
-          allTypesLayout="list"
+          allTypesLayout="pill"
           resultColor={resultColor}
           afterLifeAdvice={
             /* CTA2: 全タイプ一覧の前に配置 — コンテンツを読み終えた時点での自然な誘導 */
