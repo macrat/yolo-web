@@ -9,7 +9,6 @@ import type {
   DetailedContent,
   QuizMeta,
   QuizResultDetailedContent,
-  ContrarianFortuneDetailedContent,
   CharacterFortuneDetailedContent,
 } from "@/play/quiz/types";
 import {
@@ -56,6 +55,11 @@ const UnexpectedCompatibilityContent = dynamic(
 
 const ImpossibleAdviceContent = dynamic(
   () => import("./ImpossibleAdviceContent"),
+  { ssr: true },
+);
+
+const ContrarianFortuneContent = dynamic(
+  () => import("./ContrarianFortuneContent"),
   { ssr: true },
 );
 
@@ -122,42 +126,6 @@ function renderStandardContent(
       >
         {content.advice}
       </div>
-    </>
-  );
-}
-
-function renderContrarianFortuneContent(
-  content: ContrarianFortuneDetailedContent,
-  accentColor?: string,
-): React.ReactNode {
-  return (
-    <>
-      <p className={styles.catchphrase}>{content.catchphrase}</p>
-      <h3
-        className={styles.detailedHeading}
-        style={accentColor ? { color: accentColor } : undefined}
-      >
-        このタイプのあるある
-      </h3>
-      <ul className={styles.behaviorsList}>
-        {content.behaviors.map((b, i) => (
-          <li key={i} className={styles.behaviorsItem}>
-            {b}
-          </li>
-        ))}
-      </ul>
-      {content.humorMetrics && content.humorMetrics.length > 0 && (
-        <table className={styles.humorMetricsTable}>
-          <tbody>
-            {content.humorMetrics.map((m, i) => (
-              <tr key={i}>
-                <th>{m.label}</th>
-                <td>{m.value}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
     </>
   );
 }
@@ -265,7 +233,17 @@ function renderDetailedContent(
   }
   switch (content.variant) {
     case "contrarian-fortune":
-      return renderContrarianFortuneContent(content, accentColor);
+      return (
+        <ContrarianFortuneContent
+          quizSlug={quizSlug}
+          resultId={resultId}
+          detailedContent={content}
+          allResults={allResults ?? []}
+          headingLevel={3}
+          allTypesLayout="pill"
+          resultColor={resultColor ?? ""}
+        />
+      );
     case "character-fortune":
       return renderCharacterFortuneContent(content, accentColor);
     case "animal-personality":
@@ -388,6 +366,7 @@ export default function ResultCard({
     "character-personality",
     "unexpected-compatibility",
     "impossible-advice",
+    "contrarian-fortune",
   ] as const;
 
   // catchphrase 装飾線の色（--catchphrase-accent-color）を variant ごとに宣言的に管理する。
@@ -405,6 +384,7 @@ export default function ResultCard({
     "character-personality": result.color ?? null,
     "unexpected-compatibility": result.color ?? null,
     "impossible-advice": result.color ?? null,
+    "contrarian-fortune": result.color ?? null,
   };
 
   const catchphrase =

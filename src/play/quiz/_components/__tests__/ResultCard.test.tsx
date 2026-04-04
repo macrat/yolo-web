@@ -85,6 +85,19 @@ vi.mock("next/dynamic", async () => {
                 ?.diagnosisCore ?? "",
             ),
           );
+      } else if (loaderStr.includes("ContrarianFortuneContent")) {
+        // ContrarianFortuneContent を data-testid を持つスタブで代替
+        // coreSentence / persona / thirdPartyNote を表示して実装通りの動作を検証できるようにする
+        cachedComp = (props: Record<string, unknown>) => {
+          const dc = props.detailedContent as Record<string, unknown>;
+          return React.createElement(
+            "div",
+            { "data-testid": "contrarian-fortune-content" },
+            React.createElement("div", null, String(dc?.coreSentence ?? "")),
+            React.createElement("div", null, String(dc?.persona ?? "")),
+            React.createElement("div", null, String(dc?.thirdPartyNote ?? "")),
+          );
+        };
       } else {
         // 未知のコンポーネントはfallback
         cachedComp = () => null;
@@ -460,32 +473,44 @@ describe("ResultCard - contrarian-fortune variant", () => {
     ],
   };
 
-  test("catchphrase + behaviors + humorMetrics が表示されること", () => {
+  test("ContrarianFortuneContent コンポーネントが使われること（data-testid で確認）", () => {
     render(
-      <ResultCard {...defaultProps} detailedContent={contrarianContent} />,
+      <ResultCard
+        {...defaultProps}
+        detailedContent={contrarianContent}
+        allResults={[]}
+      />,
     );
-    expect(screen.getByText("これがキャッチフレーズです")).toBeInTheDocument();
-    expect(screen.getByText("逆張りあるある1")).toBeInTheDocument();
-    expect(screen.getByText("逆張りあるある2")).toBeInTheDocument();
-    expect(screen.getByText("逆張り度")).toBeInTheDocument();
-    expect(screen.getByText("★★★★★")).toBeInTheDocument();
-    expect(screen.getByText("共感拒否力")).toBeInTheDocument();
-    expect(screen.getByText("★★★★☆")).toBeInTheDocument();
+    expect(
+      screen.getByTestId("contrarian-fortune-content"),
+    ).toBeInTheDocument();
   });
 
-  test("thirdPartyNote / persona / coreSentence が表示されないこと", () => {
+  test("catchphrase が ResultCard 上部に表示されること", () => {
     render(
-      <ResultCard {...defaultProps} detailedContent={contrarianContent} />,
+      <ResultCard
+        {...defaultProps}
+        detailedContent={contrarianContent}
+        allResults={[]}
+      />,
     );
+    expect(screen.getByText("これがキャッチフレーズです")).toBeInTheDocument();
+  });
+
+  test("ContrarianFortuneContent に coreSentence / persona / thirdPartyNote が渡されること", () => {
+    render(
+      <ResultCard
+        {...defaultProps}
+        detailedContent={contrarianContent}
+        allResults={[]}
+      />,
+    );
+    // スタブコンポーネントがこれらのフィールドを表示する
+    expect(screen.getByText("これがコアセンテンスです。")).toBeInTheDocument();
+    expect(screen.getByText("ペルソナのテキストです。")).toBeInTheDocument();
     expect(
-      screen.queryByText("第三者ノートのテキストです。"),
-    ).not.toBeInTheDocument();
-    expect(
-      screen.queryByText("ペルソナのテキストです。"),
-    ).not.toBeInTheDocument();
-    expect(
-      screen.queryByText("これがコアセンテンスです。"),
-    ).not.toBeInTheDocument();
+      screen.getByText("第三者ノートのテキストです。"),
+    ).toBeInTheDocument();
   });
 });
 
