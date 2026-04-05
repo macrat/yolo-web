@@ -2,16 +2,23 @@
 
 import { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
-import { generateQuestion } from "@/play/games/yoji-doru/_lib/quiz";
-import type {
-  QuizQuestion,
-  YojiQuizEntry,
-} from "@/play/games/yoji-doru/_lib/quiz";
 import styles from "./GameContainer.module.css";
 
-interface Props {
-  /** サーバーコンポーネントから渡される四字熟語データ（クイズ必要フィールドのみ） */
-  data: YojiQuizEntry[];
+/** APIレスポンスで返される詳細情報 */
+interface DetailInfo {
+  yoji: string;
+  reading: string;
+  meaning: string;
+  origin: string;
+  example?: string;
+}
+
+/** GET /api/yoji-doru/question のレスポンス型 */
+interface QuestionApiResponse {
+  meaning: string;
+  choices: string[];
+  correctAnswer: string;
+  detail: DetailInfo;
 }
 
 /** 回答状態 */
@@ -23,37 +30,44 @@ type AnswerState =
  * ヨジドル ゲームコンテナ
  *
  * 四字熟語の意味を見て4択から正しい四字熟語を選ぶクイズゲーム。
- * yoji-data.json（400語）からランダムに出題する。
+ * GET /api/yoji-doru/question を呼び出してサーバーサイドで生成された問題を取得する。
  *
- * NOTE: questionの初期値はnullにし、useEffectで設定する。
- * Math.random()を使うgenerateQuestionをuseStateの初期値関数で呼ぶと、
- * サーバーとクライアントで異なる結果が生成されReact Hydration Errorが発生するため。
+ * NOTE: useEffectでAPIを呼び出すことでSSR/ハイドレーションの問題を回避する。
  */
-export default function GameContainer({ data }: Props) {
-  // nullで初期化しuseEffectでマウント後に設定することでハイドレーションミスマッチを防ぐ
-  const [question, setQuestion] = useState<QuizQuestion | null>(null);
+export default function GameContainer() {
+  // nullで初期化しuseEffectでAPIから取得後に設定することでハイドレーションミスマッチを防ぐ
+  const [question, setQuestion] = useState<QuestionApiResponse | null>(null);
   const [answerState, setAnswerState] = useState<AnswerState>({
     status: "unanswered",
   });
 
-  // クライアントサイドでのみ初回問題を生成する（Math.random()はSSRで実行するとハイドレーションミスマッチになる）
+  /** APIから問題を取得してstateに設定する */
+  const fetchQuestion = useCallback(async () => {
+    const response = await fetch("/api/yoji-doru/question");
+    const data: QuestionApiResponse = await response.json();
+    setQuestion(data);
+  }, []);
+
+  // マウント時にAPIから問題を取得する（SSRでMath.random()が実行されないようuseEffect内で行う）
   useEffect(() => {
-    setQuestion(generateQuestion(data));
-  }, [data]);
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- API fetch on mount: external data source, not cascading state
+    void fetchQuestion();
+  }, [fetchQuestion]);
 
   const handleChoiceSelect = useCallback(
     (yoji: string) => {
       if (answerState.status === "answered" || question === null) return;
-      const isCorrect = yoji === question.correctAnswer.yoji;
+      const isCorrect = yoji === question.correctAnswer;
       setAnswerState({ status: "answered", selectedYoji: yoji, isCorrect });
     },
     [answerState, question],
   );
 
   const handleNextQuestion = useCallback(() => {
-    setQuestion(generateQuestion(data));
+    setQuestion(null);
     setAnswerState({ status: "unanswered" });
-  }, [data]);
+    void fetchQuestion();
+  }, [fetchQuestion]);
 
   const isAnswered = answerState.status === "answered";
 
@@ -68,7 +82,7 @@ export default function GameContainer({ data }: Props) {
   function getChoiceClass(choiceYoji: string): string {
     if (!isAnswered || question === null) return styles.choiceButton;
 
-    const correctYoji = question.correctAnswer.yoji;
+    const correctYoji = question.correctAnswer;
 
     if (choiceYoji === correctYoji) {
       return `${styles.choiceButton} ${styles.choiceCorrectAnswer}`;
@@ -101,17 +115,17 @@ export default function GameContainer({ data }: Props) {
       <div className={styles.choicesGrid} role="group" aria-label="選択肢">
         {question.choices.map((choice) => (
           <button
-            key={choice.yoji}
+            key={choice}
             type="button"
-            className={getChoiceClass(choice.yoji)}
-            onClick={() => handleChoiceSelect(choice.yoji)}
+            className={getChoiceClass(choice)}
+            onClick={() => handleChoiceSelect(choice)}
             disabled={isAnswered}
             aria-pressed={
               answerState.status === "answered" &&
-              answerState.selectedYoji === choice.yoji
+              answerState.selectedYoji === choice
             }
           >
-            {choice.yoji}
+            {choice}
           </button>
         ))}
       </div>
