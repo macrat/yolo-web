@@ -209,35 +209,37 @@
   opacity: 0.9;
 }
 
-/* ダークモード対応 */
-@media (prefers-color-scheme: dark) {
-  .choiceCorrectAnswer {
-    background-color: #1a3a25;
-    border-color: #28a745;
-    color: #75b798;
-  }
+/* ダークモード対応
+ * next-themes が attribute="class" で動作するため、:global(:root.dark) セレクタを使用する。
+ * system テーマ時は OS の設定に応じて next-themes が自動的に dark クラスを付与するため、
+ * @media (prefers-color-scheme: dark) は不要。サイト全体の他ゲームと同じパターン。
+ */
+:global(:root.dark) .choiceCorrectAnswer {
+  background-color: #1a3a25;
+  border-color: #28a745;
+  color: #75b798;
+}
 
-  .choiceWrong {
-    background-color: #3a1a1e;
-    border-color: #dc3545;
-    color: #ea868f;
-  }
+:global(:root.dark) .choiceWrong {
+  background-color: #3a1a1e;
+  border-color: #dc3545;
+  color: #ea868f;
+}
 
-  .feedbackCorrect {
-    border-color: #28a745;
-    background-color: #1a3a25;
-  }
+:global(:root.dark) .feedbackCorrect {
+  border-color: #28a745;
+  background-color: #1a3a25;
+}
 
-  .feedbackWrong {
-    border-color: #dc3545;
-    background-color: #3a1a1e;
-  }
+:global(:root.dark) .feedbackWrong {
+  border-color: #dc3545;
+  background-color: #3a1a1e;
+}
 
-  .feedbackCorrectTitle {
-    color: #75b798;
-  }
+:global(:root.dark) .feedbackCorrectTitle {
+  color: #75b798;
+}
 
-  .feedbackWrongTitle {
-    color: #ea868f;
-  }
+:global(:root.dark) .feedbackWrongTitle {
+  color: #ea868f;
 }
