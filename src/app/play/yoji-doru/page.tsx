@@ -5,37 +5,12 @@ import { gameBySlug } from "@/play/games/registry";
 import { buildGameJsonLd, buildGamePageMetadata } from "@/play/games/seo";
 import GameLayout from "@/play/games/_components/GameLayout";
 import GameContainer from "@/play/games/yoji-doru/_components/GameContainer";
-import type { YojiQuizEntry } from "@/play/games/yoji-doru/_lib/quiz";
-import rawYojiData from "@/data/yoji-data.json";
 
 const gameMeta = gameBySlug.get("yoji-doru")!;
 
 export const metadata: Metadata = buildGamePageMetadata(gameMeta);
 
 const gameJsonLd = buildGameJsonLd(gameMeta);
-
-/**
- * yoji-data.json から必要なフィールドのみ抽出する。
- * difficulty / structure / sourceUrl をサーバーサイドで除外することで、
- * クライアントバンドルサイズを削減する。
- */
-const quizData: YojiQuizEntry[] = (
-  rawYojiData as Array<{
-    yoji: string;
-    reading: string;
-    meaning: string;
-    category: string;
-    origin: string;
-    example: string;
-  }>
-).map(({ yoji, reading, meaning, category, origin, example }) => ({
-  yoji,
-  reading,
-  meaning,
-  category,
-  origin,
-  example,
-}));
 
 export default function YojiDoruPage() {
   return (
@@ -53,7 +28,7 @@ export default function YojiDoruPage() {
           </p>
         }
       >
-        <GameContainer data={quizData} />
+        <GameContainer />
       </GameLayout>
     </>
   );

@@ -1,7 +1,6 @@
-import { describe, test, expect, vi } from "vitest";
+import { describe, test, expect, vi, beforeEach } from "vitest";
 import { render, screen, act, fireEvent } from "@testing-library/react";
 import GameContainer from "../GameContainer";
-import type { YojiQuizEntry } from "@/play/games/yoji-doru/_lib/quiz";
 
 // next/link をモック
 vi.mock("next/link", () => ({
@@ -20,46 +19,35 @@ vi.mock("next/link", () => ({
   ),
 }));
 
-// テスト用の最小データ（不要フィールドなし）
-const testData: YojiQuizEntry[] = [
-  {
+/** テスト用のAPIレスポンスモック */
+const mockQuestionResponse = {
+  meaning: "一生に一度の出会いを大切にすること",
+  choices: ["一期一会", "一日一善", "花鳥風月", "以心伝心"],
+  correctAnswer: "一期一会",
+  detail: {
     yoji: "一期一会",
     reading: "いちごいちえ",
     meaning: "一生に一度の出会いを大切にすること",
-    category: "life",
     origin: "日本",
     example: "例文",
   },
-  {
-    yoji: "一日一善",
-    reading: "いちにちいちぜん",
-    meaning: "毎日一つの善行をすること",
-    category: "life",
-    origin: "日本",
-    example: "例文",
-  },
-  {
-    yoji: "花鳥風月",
-    reading: "かちょうふうげつ",
-    meaning: "自然の美しい景色や風物のこと",
-    category: "nature",
-    origin: "中国",
-    example: "例文",
-  },
-  {
-    yoji: "以心伝心",
-    reading: "いしんでんしん",
-    meaning: "言葉を使わずに心が通じ合うこと",
-    category: "life",
-    origin: "仏教",
-    example: "例文",
-  },
-];
+};
 
 describe("GameContainer", () => {
-  test("マウント後に問題が表示されること", async () => {
+  beforeEach(() => {
+    // fetch をモックしてAPIレスポンスを返す
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: () => Promise.resolve(mockQuestionResponse),
+      }),
+    );
+  });
+
+  test("マウント後にAPIを呼び出して問題が表示されること", async () => {
     await act(async () => {
-      render(<GameContainer data={testData} />);
+      render(<GameContainer />);
     });
 
     // 問題の説明文が表示されていること
@@ -68,7 +56,7 @@ describe("GameContainer", () => {
 
   test("マウント後に4つの選択肢が表示されること", async () => {
     await act(async () => {
-      render(<GameContainer data={testData} />);
+      render(<GameContainer />);
     });
 
     // 選択肢グループが存在すること
@@ -82,7 +70,7 @@ describe("GameContainer", () => {
 
   test("問題カードが表示されること", async () => {
     await act(async () => {
-      render(<GameContainer data={testData} />);
+      render(<GameContainer />);
     });
 
     // 問題エリアが表示されていること
@@ -90,12 +78,10 @@ describe("GameContainer", () => {
     expect(questionRegion).toBeInTheDocument();
   });
 
-  test("コンポーネントがuseEffectでquestionを初期化すること（ハイドレーション安全）", async () => {
-    // useEffectが実行されてからquestionが設定されるため、
-    // マウント後に問題が表示されることが保証される
+  test("APIからのデータでuseEffectがquestionを初期化すること", async () => {
     let container: HTMLElement;
     await act(async () => {
-      const result = render(<GameContainer data={testData} />);
+      const result = render(<GameContainer />);
       container = result.container;
     });
 
@@ -107,7 +93,7 @@ describe("GameContainer", () => {
 
   test("選択肢をクリックすると回答フィードバックが表示されること", async () => {
     await act(async () => {
-      render(<GameContainer data={testData} />);
+      render(<GameContainer />);
     });
 
     // 最初の選択肢ボタンをクリック
@@ -121,5 +107,14 @@ describe("GameContainer", () => {
     // 正解または不正解のフィードバックが表示される
     const feedback = screen.getByRole("status");
     expect(feedback).toBeInTheDocument();
+  });
+
+  test("propsなしでレンダリングできること（data propsを受け取らない）", async () => {
+    // propsなしでも問題なくレンダリングできること
+    await act(async () => {
+      render(<GameContainer />);
+    });
+
+    expect(screen.getByText("この意味の四字熟語はどれ？")).toBeInTheDocument();
   });
 });
