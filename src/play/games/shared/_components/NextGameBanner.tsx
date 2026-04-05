@@ -4,9 +4,9 @@ import { useSyncExternalStore } from "react";
 import Link from "next/link";
 import {
   getAllGameStatus,
+  ALL_GAMES,
   type GamePlayStatus,
 } from "@/play/games/shared/_lib/crossGameProgress";
-import { allGameMetas } from "@/play/games/registry";
 import styles from "./NextGameBanner.module.css";
 
 interface NextGameBannerProps {
@@ -63,7 +63,8 @@ export default function NextGameBanner({
 
   const otherGames = statuses.filter((s) => s.game.slug !== currentGameSlug);
   const playedCount = statuses.filter((s) => s.playedToday).length;
-  const totalCount = allGameMetas.length;
+  // デイリーゲームの総数（ランダム出題型ゲームは含まない）
+  const totalCount = ALL_GAMES.length;
   const allComplete = playedCount === totalCount;
 
   return (

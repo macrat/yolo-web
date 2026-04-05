@@ -14,15 +14,21 @@ export interface GameInfo {
   statsKey: string;
 }
 
-/** All games as GameInfo (derived from registry) */
-export const ALL_GAMES: GameInfo[] = allGameMetas.map(
-  (meta: GameMeta): GameInfo => ({
-    slug: meta.slug,
-    title: meta.title,
-    path: getGamePath(meta.slug),
-    statsKey: meta.statsKey,
-  }),
-);
+/**
+ * デイリーゲームのみをGameInfo配列として保持する。
+ * isDaily: true のゲームのみが「今日のパズル」進捗の対象となる。
+ * ランダム出題型ゲーム（ヨジドル等）はデイリー進捗から除外する。
+ */
+export const ALL_GAMES: GameInfo[] = allGameMetas
+  .filter((meta: GameMeta) => meta.isDaily === true)
+  .map(
+    (meta: GameMeta): GameInfo => ({
+      slug: meta.slug,
+      title: meta.title,
+      path: getGamePath(meta.slug),
+      statsKey: meta.statsKey,
+    }),
+  );
 
 /**
  * Get today's date string in JST (YYYY-MM-DD).
