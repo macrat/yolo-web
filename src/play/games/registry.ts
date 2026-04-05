@@ -13,6 +13,7 @@ const gameEntries: GameMeta[] = [
     difficulty: "初級〜中級",
     keywords: ["漢字", "パズル", "デイリー", "推理"],
     statsKey: "kanji-kanaru-stats",
+    isDaily: true,
     ogpSubtitle: "毎日の漢字パズル",
     publishedAt: "2026-02-13T19:11:53+09:00",
     updatedAt: "2026-03-01T23:14:37+09:00",
@@ -73,6 +74,7 @@ const gameEntries: GameMeta[] = [
     difficulty: "中級〜上級",
     keywords: ["四字熟語", "パズル", "デイリー", "漢字"],
     statsKey: "yoji-kimeru-stats",
+    isDaily: true,
     ogpSubtitle: "毎日の四字熟語パズル",
     publishedAt: "2026-02-14T12:45:55+09:00",
     updatedAt: "2026-03-01T23:14:37+09:00",
@@ -122,7 +124,7 @@ const gameEntries: GameMeta[] = [
           "まずは有名な四字熟語から試してみてください。色のフィードバックを手がかりに、使われている漢字を絞り込んでいくのがコツです。",
       },
     ],
-    relatedGameSlugs: ["kanji-kanaru", "nakamawake"],
+    relatedGameSlugs: ["yoji-doru", "kanji-kanaru", "nakamawake"],
   },
   {
     slug: "nakamawake",
@@ -135,6 +137,7 @@ const gameEntries: GameMeta[] = [
     difficulty: "初級〜上級",
     keywords: ["仲間分け", "グループ", "パズル", "言葉"],
     statsKey: "nakamawake-stats",
+    isDaily: true,
     ogpSubtitle: "毎日の仲間分けパズル",
     publishedAt: "2026-02-14T23:00:07+09:00",
     updatedAt: "2026-02-21T22:10:47+09:00",
@@ -197,6 +200,7 @@ const gameEntries: GameMeta[] = [
     difficulty: "初級〜上級",
     keywords: ["色", "カラー", "色彩", "デイリー"],
     statsKey: "irodori-stats",
+    isDaily: true,
     ogpSubtitle: "毎日の色彩チャレンジ",
     publishedAt: "2026-02-19T23:22:13+09:00",
     updatedAt: "2026-03-01T23:14:37+09:00",
@@ -247,6 +251,68 @@ const gameEntries: GameMeta[] = [
       },
     ],
     relatedGameSlugs: ["nakamawake", "kanji-kanaru", "yoji-kimeru"],
+  },
+  {
+    slug: "yoji-doru",
+    title: "ヨジドル",
+    shortDescription: "四字熟語の意味当て4択クイズ",
+    description:
+      "四字熟語の意味を読んで正しい四字熟語を4択から選ぶクイズゲーム。全400問からランダム出題!",
+    icon: "\u{1F4DD}",
+    accentColor: "#2d6a8f",
+    difficulty: "初級〜中級",
+    keywords: ["四字熟語", "クイズ", "意味", "4択"],
+    statsKey: "yoji-doru-stats",
+    ogpSubtitle: "四字熟語4択クイズ",
+    publishedAt: "2026-04-05T00:00:00+09:00",
+    sitemap: { changeFrequency: "monthly", priority: 0.8 },
+    trustLevel: "curated",
+    trustNote:
+      "ゲームの正解判定は正確です。四字熟語データはAIが作成しています。",
+    seo: {
+      title: "四字熟語クイズ - 意味から四字熟語を当てよう",
+      description:
+        "四字熟語の意味を読んで正しい四字熟語を4択から選ぶクイズです。全400問からランダムに出題。遊びながら四字熟語を学べます。",
+      keywords: [
+        "四字熟語",
+        "クイズ",
+        "意味",
+        "4択",
+        "漢字",
+        "日本語",
+        "学習",
+        "ヨジドル",
+        "四字熟語クイズ",
+      ],
+      ogTitle: "ヨジドル - 四字熟語の意味当て4択クイズ",
+      ogDescription:
+        "四字熟語の意味を読んで正しい四字熟語を4択から選ぶクイズです。全400問からランダムに出題!",
+    },
+    valueProposition:
+      "意味から四字熟語を当てる。400問からランダム出題で語彙力アップ",
+    usageExample: {
+      input: "表示された意味を読んで、4択から正しい四字熟語を選ぶ",
+      output: "正解後に読み・意味・由来・例文が表示され、辞典で深掘りもできる",
+      description: "遊びながら四字熟語の意味を自然に覚えられるクイズです",
+    },
+    faq: [
+      {
+        question: "何問出題されますか？",
+        answer:
+          "400問の四字熟語データベースからランダムに出題されます。「もう1問」ボタンを押すたびに新しい問題が表示されます。",
+      },
+      {
+        question: "選択肢はどのように決まりますか？",
+        answer:
+          "正解の四字熟語と同じカテゴリの四字熟語から3つの誤答が選ばれます。似た系統の四字熟語が並ぶため、難易度が上がります。",
+      },
+      {
+        question: "四字熟語の意味をもっと詳しく知るには？",
+        answer:
+          "正解後に表示される「辞典で詳しく調べる」リンクから、四字熟語辞典で読み・意味・由来・例文を確認できます。",
+      },
+    ],
+    relatedGameSlugs: ["yoji-kimeru", "kanji-kanaru", "nakamawake"],
   },
 ];
 
