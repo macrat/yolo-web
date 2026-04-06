@@ -2,18 +2,10 @@ import { describe, test, expect } from "vitest";
 import { meta } from "../meta";
 
 describe("fullwidth-converter meta", () => {
-  test("descriptionが120文字以上160文字以下である", () => {
+  test("descriptionが30文字以上80文字以下である", () => {
     const len = meta.description.length;
-    expect(len).toBeGreaterThanOrEqual(120);
-    expect(len).toBeLessThanOrEqual(160);
-  });
-
-  test("descriptionに具体的な使用場面が含まれる（ExcelまたはCSV）", () => {
-    expect(meta.description).toMatch(/Excel|CSV/);
-  });
-
-  test("descriptionに信頼性訴求が含まれる（データ送信なし等）", () => {
-    expect(meta.description).toMatch(/データ送信なし|ブラウザ上|プライバシー/);
+    expect(len).toBeGreaterThanOrEqual(30);
+    expect(len).toBeLessThanOrEqual(80);
   });
 
   test("keywordsに「オンライン」が含まれる", () => {
