@@ -26,12 +26,8 @@ export const meta: ToolMeta = {
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
   trustLevel: "verified",
-  valueProposition: "CSVを貼り付けるだけでJSON・TSV・Markdown表に変換できる",
-  usageExample: {
-    input: "名前,年齢\n田中太郎,30\n佐藤花子,25",
-    output: '[{"名前":"田中太郎","年齢":"30"},{"名前":"佐藤花子","年齢":"25"}]',
-    description: "CSVデータをJSON形式に変換する例",
-  },
+  howItWorks:
+    "RFC 4180準拠のCSVパーサーを使用して入力データを解析し、選択した出力形式（CSV・TSV・JSON・Markdown表）に変換します。ダブルクォートで囲まれたフィールドや、フィールド内の改行・カンマも正しく処理されます。最大500,000文字まで対応し、すべての変換はブラウザ上で完結します。",
   faq: [
     {
       question: "入力データの最大サイズはどのくらいですか？",

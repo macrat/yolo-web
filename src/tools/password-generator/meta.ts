@@ -20,13 +20,8 @@ export const meta: ToolMeta = {
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
   trustLevel: "verified",
-  valueProposition:
-    "条件を選んでボタンを押すだけで安全なパスワードを即座に生成できる",
-  usageExample: {
-    input: "16文字、大文字・小文字・数字・記号すべて含む",
-    output: "aB3$kL9&mP2!xQ7#",
-    description: "デフォルト設定で生成されるパスワードの例",
-  },
+  howItWorks:
+    "ブラウザ標準の暗号学的乱数生成API（crypto.getRandomValues）を使用して安全なパスワードを生成します。大文字・小文字・数字・記号の組み合わせや、紛らわしい文字の除外をオプションで指定できます。8〜128文字に対応し、生成されたパスワードはサーバーに送信されません。",
   faq: [
     {
       question: "生成できるパスワードの最大文字数はいくつですか？",

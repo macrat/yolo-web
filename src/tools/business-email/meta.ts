@@ -21,13 +21,8 @@ export const meta: ToolMeta = {
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
   trustLevel: "curated",
-  valueProposition:
-    "テンプレートを選んで項目を埋めるだけでビジネスメールが完成する",
-  usageExample: {
-    input: "カテゴリ: お礼 / テンプレート: 訪問のお礼 / 相手先: 山田様",
-    output: "件名: ご訪問のお礼\n本文: お世話になっております。...",
-    description: "訪問後のお礼メールをテンプレートから自動生成する例",
-  },
+  howItWorks:
+    "お礼・お詫び・依頼・お断り・挨拶の5カテゴリ・計12種類のテンプレートを内蔵しています。テンプレートを選択し、宛先・用件などの項目を入力するとメール本文が自動生成されます。生成はブラウザ上で動作し、入力内容はサーバーに送信されません。",
   faq: [
     {
       question: "テンプレートの種類はどれくらいありますか？",

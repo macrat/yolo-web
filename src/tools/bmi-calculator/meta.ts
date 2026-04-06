@@ -21,12 +21,8 @@ export const meta: ToolMeta = {
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
   trustLevel: "verified",
-  valueProposition: "身長と体重を入力するだけでBMI値と肥満度判定がわかる",
-  usageExample: {
-    input: "身長170cm、体重65kg",
-    output: "BMI 22.5 / 普通体重 / 適正体重 63.6kg",
-    description: "身長と体重からBMI値・判定・適正体重を算出する例",
-  },
+  howItWorks:
+    "BMI値は「体重(kg) ÷ 身長(m)²」の計算式で算出します。判定は日本肥満学会の基準（BMI 18.5未満：低体重、18.5以上25未満：普通体重、25以上：肥満）を採用しています。適正体重はBMI 22に相当する体重を身長から逆算して表示します。計算はすべてブラウザ上で完結します。",
   faq: [
     {
       question: "BMIの判定基準は何を使っていますか？",

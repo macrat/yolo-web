@@ -27,12 +27,8 @@ export const meta: ToolMeta = {
   updatedAt: "2026-03-02T09:10:04+09:00",
   structuredDataType: "WebApplication",
   trustLevel: "verified",
-  valueProposition: "日付を入力するだけで差分・加減算・和暦変換ができる",
-  usageExample: {
-    input: "2025-01-01 から 2025-12-31",
-    output: "364日（0年11ヶ月30日）",
-    description: "2つの日付の差分を計算する例",
-  },
+  howItWorks:
+    "2つの日付の差分計算、日付への日数の加算・減算、和暦↔西暦変換の3機能を提供します。差分計算では暦上の月数と残り日数を正確に算出します。和暦変換は明治（1868年）から令和まで対応しています。すべての計算はブラウザ上で完結します。",
   faq: [
     {
       question: "対応している和暦の範囲はどこまでですか？",

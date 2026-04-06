@@ -2,7 +2,6 @@ import type { ToolMeta } from "@/tools/types";
 import Breadcrumb from "@/components/common/Breadcrumb";
 import FaqSection from "@/components/common/FaqSection";
 import ShareButtons from "@/components/common/ShareButtons";
-import TrustLevelBadge from "@/components/common/TrustLevelBadge";
 import RelatedTools from "./RelatedTools";
 import RelatedBlogPosts from "./RelatedBlogPosts";
 import styles from "./ToolLayout.module.css";
@@ -15,6 +14,7 @@ interface ToolLayoutProps {
 export default function ToolLayout({ meta, children }: ToolLayoutProps) {
   return (
     <article className={styles.layout}>
+      {/* ゾーン1: 即座の文脈確認 */}
       <Breadcrumb
         items={[
           { label: "ホーム", href: "/" },
@@ -24,41 +24,22 @@ export default function ToolLayout({ meta, children }: ToolLayoutProps) {
       />
       <header className={styles.header}>
         <h1 className={styles.title}>{meta.name}</h1>
-        <TrustLevelBadge level={meta.trustLevel} />
-        <p className={styles.description}>{meta.description}</p>
-        {meta.valueProposition && (
-          <p className={styles.valueProposition}>{meta.valueProposition}</p>
-        )}
+        {/* shortDescriptionをh1直下に表示。descriptionはSEO専用でページ上には表示しない */}
+        <p className={styles.shortDescription}>{meta.shortDescription}</p>
       </header>
-      {meta.usageExample && (
-        <div className={styles.usageExample}>
-          <p className={styles.usageExampleHeading}>使い方の例</p>
-          <div className={styles.usageExampleContent}>
-            <div className={styles.usageExampleBox}>
-              <span className={styles.usageExampleLabel}>入力</span>
-              <span className={styles.usageExampleText}>
-                {meta.usageExample.input}
-              </span>
-            </div>
-            <span className={styles.usageExampleArrow} aria-hidden="true">
-              {"\u2192"}
-            </span>
-            <div className={styles.usageExampleBox}>
-              <span className={styles.usageExampleLabel}>出力</span>
-              <span className={styles.usageExampleText}>
-                {meta.usageExample.output}
-              </span>
-            </div>
-          </div>
-          {meta.usageExample.description && (
-            <p className={styles.usageExampleDescription}>
-              {meta.usageExample.description}
-            </p>
-          )}
-        </div>
-      )}
+
+      {/* ゾーン2: ツール本体 — ゾーン1の直後に配置してファーストビューに近づける */}
       <section className={styles.content} aria-label="Tool">
         {children}
+      </section>
+
+      {/* ゾーン3: 補助情報 */}
+      <section
+        className={styles.howItWorksSection}
+        aria-label="このツールについて"
+      >
+        <h2 className={styles.howItWorksHeading}>{"このツールについて"}</h2>
+        <p className={styles.howItWorksText}>{meta.howItWorks}</p>
       </section>
       <p className={styles.privacyNote} role="note">
         {

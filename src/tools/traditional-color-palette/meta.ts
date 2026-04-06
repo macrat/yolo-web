@@ -18,14 +18,8 @@ export const meta: ToolMeta = {
   publishedAt: "2026-02-28T14:03:07+09:00",
   structuredDataType: "WebApplication",
   trustLevel: "verified",
-  valueProposition:
-    "伝統色を選ぶだけで補色・類似色・トライアド配色をすぐに確認できる",
-  usageExample: {
-    input: "鴇（#eea9a9）を選択",
-    output:
-      "補色: 青碧（#268785）/ 類似色: 梅紫・琥珀 / トライアド: 薄青・紅掛花",
-    description: "ピンク系の伝統色から色彩調和パレットを生成する例",
-  },
+  howItWorks:
+    "日本の伝統色250色のHSLデータから、色相環上の位置を計算して色彩調和パレットを生成します。補色（対面の色）・類似色（±30度）・トライアド（120度間隔）・テトラド（90度間隔）・分裂補色（補色の両隣）の5種類の配色パターンを提供します。無彩色の場合は明度の異なる無彩色一覧を表示します。",
   faq: [
     {
       question: "どのような配色パターンを生成できますか？",

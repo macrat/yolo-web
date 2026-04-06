@@ -20,14 +20,8 @@ export const meta: ToolMeta = {
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
   trustLevel: "verified",
-  valueProposition:
-    "段落数と文数を指定するだけで日本語・英語のダミー文章を生成できる",
-  usageExample: {
-    input: "日本語 / 2段落 / 3文ずつ",
-    output:
-      "吾輩は猫である。名前はまだない。どこで生れたかとんと見当がつかぬ。...",
-    description: "日本語のダミーテキストを2段落・各3文で生成する例",
-  },
+  howItWorks:
+    "Lorem Ipsum（英語）と日本語の2種類のダミーテキストを、指定した段落数・段落あたりの文数で生成します。日本語テキストは夏目漱石の「吾輩は猫である」冒頭と一般的な例文を組み合わせています。最大20段落×20文まで対応し、生成はブラウザ上で完結します。",
   faq: [
     {
       question: "生成できる段落数や文数に上限はありますか？",

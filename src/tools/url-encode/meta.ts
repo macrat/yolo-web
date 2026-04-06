@@ -20,14 +20,8 @@ export const meta: ToolMeta = {
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
   trustLevel: "verified",
-  valueProposition:
-    "日本語を含むURLを貼り付けるだけでエンコード・デコードできる",
-  usageExample: {
-    input: "東京タワー 観光",
-    output:
-      "%E6%9D%B1%E4%BA%AC%E3%82%BF%E3%83%AF%E3%83%BC%20%E8%A6%B3%E5%85%89",
-    description: "日本語テキストをURLエンコード（コンポーネントモード）する例",
-  },
+  howItWorks:
+    "コンポーネントモードでは encodeURIComponent を使い、スラッシュやコロンを含むすべての非ASCII文字をパーセントエンコードします。URL全体モードでは encodeURI を使い、URL構造を保ったままエンコードします。日本語などのマルチバイト文字はUTF-8バイト列に変換してからエンコードされます。",
   faq: [
     {
       question: "「コンポーネント」モードと「URL全体」モードの違いは何ですか？",

@@ -20,13 +20,8 @@ export const meta: ToolMeta = {
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
   trustLevel: "verified",
-  valueProposition:
-    "メールアドレスを入力するだけで形式チェックとエラー検出ができる",
-  usageExample: {
-    input: "user@gmial.com",
-    output: "有効 / 候補: user@gmail.com",
-    description: "ドメインのタイプミスを検出して正しい候補を提案する例",
-  },
+  howItWorks:
+    "RFC準拠の構文チェックでメールアドレスのローカルパートとドメインを解析します。文字長さの超過・先頭末尾のドット・連続ドット・使用不可文字・TLDの欠落などを検出します。gmailやyahooなどのよくあるドメインのタイプミスも検出し、修正候補を提案します。",
   faq: [
     {
       question: "実際にメールが届くかどうかも確認できますか？",

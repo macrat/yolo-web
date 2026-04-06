@@ -22,12 +22,8 @@ export const meta: ToolMeta = {
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
   trustLevel: "verified",
-  valueProposition: "テキストを貼り付けるだけで全角半角を一括変換できる",
-  usageExample: {
-    input: "Ｈｅｌｌｏ１２３カタカナ",
-    output: "Hello123ｶﾀｶﾅ",
-    description: "全角英数字・全角カタカナを半角に一括変換する例",
-  },
+  howItWorks:
+    "Unicodeの文字コード変換を使って英数字・カタカナ・記号の全角半角をリアルタイムに変換します。英数字・カタカナ・記号の3種類を個別にオン・オフできるため、必要な文字種だけ変換できます。半角カタカナの濁点・半濁点も正しく結合されます。変換はブラウザ上で完結します。",
   faq: [
     {
       question: "変換対象の文字種を個別に選択できますか？",

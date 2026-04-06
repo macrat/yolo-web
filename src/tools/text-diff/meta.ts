@@ -14,12 +14,8 @@ export const meta: ToolMeta = {
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
   trustLevel: "verified",
-  valueProposition: "2つのテキストを貼り付けるだけで変更箇所がひと目でわかる",
-  usageExample: {
-    input: "変更前: 東京都渋谷区 / 変更後: 東京都新宿区",
-    output: "東京都[渋谷→新宿]区",
-    description: "文字単位の比較で変更箇所をハイライト表示する例",
-  },
+  howItWorks:
+    "2つのテキストを差分アルゴリズムで比較し、追加箇所を緑色、削除箇所を赤色でハイライト表示します。行単位・単語単位・文字単位の3つの比較モードに対応しており、用途に応じて使い分けられます。すべての処理はブラウザ上で完結し、入力データはサーバーに送信されません。",
   faq: [
     {
       question: "比較モードにはどのような種類がありますか？",

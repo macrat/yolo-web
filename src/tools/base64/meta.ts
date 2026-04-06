@@ -14,13 +14,8 @@ export const meta: ToolMeta = {
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
   trustLevel: "verified",
-  valueProposition:
-    "テキストを貼り付けるだけでBase64のエンコード・デコードができる",
-  usageExample: {
-    input: "Hello, World!",
-    output: "SGVsbG8sIFdvcmxkIQ==",
-    description: "テキストをBase64にエンコードする例",
-  },
+  howItWorks:
+    "テキストをUTF-8バイト列に変換し、3バイトを4文字のASCII文字列にマッピングするBase64エンコードをブラウザ上で実行します。デコードはその逆変換です。日本語などのマルチバイト文字も正しく処理されます。入力データはサーバーに送信されません。",
   faq: [
     {
       question: "日本語などのマルチバイト文字もエンコードできますか？",

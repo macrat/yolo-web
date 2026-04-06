@@ -20,12 +20,8 @@ export const meta: ToolMeta = {
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
   trustLevel: "verified",
-  valueProposition: "テキストやURLを入力するだけでQRコードを即座に生成できる",
-  usageExample: {
-    input: "https://yolos.net",
-    output: "SVG形式のQRコード画像（PNG形式でダウンロード可）",
-    description: "URLからQRコードを生成する例",
-  },
+  howItWorks:
+    "入力されたテキストやURLをQRコード規格でエンコードし、SVG形式でブラウザ上に高品質なQRコードを表示します。エラー訂正レベル（L/M/Q/H）を選択でき、PNG形式でダウンロードすることも可能です。生成処理はすべてブラウザ上で完結します。",
   faq: [
     {
       question: "エラー訂正レベルとは何ですか？",

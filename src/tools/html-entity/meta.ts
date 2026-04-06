@@ -20,13 +20,8 @@ export const meta: ToolMeta = {
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
   trustLevel: "verified",
-  valueProposition:
-    "HTML特殊文字を貼り付けるだけでエスケープ・アンエスケープできる",
-  usageExample: {
-    input: '<div class="main">Hello & World</div>',
-    output: "&lt;div class=&quot;main&quot;&gt;Hello &amp; World&lt;/div&gt;",
-    description: "HTMLタグを含むテキストをエスケープする例",
-  },
+  howItWorks:
+    "エスケープモードでは &・<・>・\"・' の5文字をHTMLエンティティ（&amp;・&lt;・&gt;・&quot;・&#39;）に変換します。アンエスケープモードでは名前付きエンティティ・10進数参照・16進数参照をすべて元の文字に戻します。変換はブラウザ上で完結します。",
   faq: [
     {
       question: "どの文字がエスケープ対象ですか？",

@@ -26,12 +26,8 @@ export const meta: ToolMeta = {
   updatedAt: "2026-02-28T08:10:50+09:00",
   structuredDataType: "WebApplication",
   trustLevel: "verified",
-  valueProposition: "コピペするだけでJSONの整形・圧縮・エラー検出ができる",
-  usageExample: {
-    input: '{"name":"yolos","version":1,"active":true}',
-    output: '{\n  "name": "yolos",\n  "version": 1,\n  "active": true\n}',
-    description: "圧縮されたJSONを整形して読みやすくする例",
-  },
+  howItWorks:
+    "入力されたJSONをブラウザ上でパースし、インデントを付けた整形表示または不要な空白を除去した圧縮表示に変換します。JSON構文エラーがある場合はエラー内容を表示します。インデント幅は2スペース・4スペース・タブから選択できます。入力データはサーバーに送信されません。",
   faq: [
     {
       question: "コメント付きのJSONは処理できますか？",

@@ -11,6 +11,7 @@ export interface ToolMeta {
   slug: string;
   name: string; // Japanese display name
   nameEn: string; // English name (for potential i18n)
+  /** SEO専用。meta descriptionとJSON-LD用。ページ上に表示しない */
   description: string; // Japanese, 120-160 chars for meta description
   shortDescription: string; // Japanese, ~50 chars for cards
   keywords: string[]; // Japanese SEO keywords
@@ -23,20 +24,8 @@ export interface ToolMeta {
   structuredDataType?: string; // JSON-LD @type (e.g., "WebApplication")
   trustLevel: TrustLevel;
 
-  /** 一行価値テキスト: 「誰が・何を・どう解決するか」（40字以内推奨） */
-  valueProposition?: string;
-
-  /**
-   * 具体例: 入力→出力のサンプル
-   * - input: ツールへの入力テキスト
-   * - output: ツールからの出力テキスト
-   * - description: 補足説明テキスト
-   */
-  usageExample?: {
-    input: string;
-    output: string;
-    description?: string;
-  };
+  /** 処理内容の説明テキスト。ゾーン3「このツールについて」セクションに表示する */
+  howItWorks: string;
 
   /**
    * FAQ: Q&A形式の配列

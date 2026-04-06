@@ -20,12 +20,8 @@ export const meta: ToolMeta = {
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
   trustLevel: "verified",
-  valueProposition: "カラーコードを入力するだけでHEX・RGB・HSLを一括変換できる",
-  usageExample: {
-    input: "#3498db",
-    output: "HEX: #3498db / RGB: rgb(52, 152, 219) / HSL: hsl(204, 70%, 53%)",
-    description: "HEXカラーコードからRGB・HSLに変換する例",
-  },
+  howItWorks:
+    "HEX・RGB・HSLのいずれかの形式でカラーコードを入力すると、他の2形式への変換を即座に計算してブラウザ上に表示します。カラーピッカーからも色を選択できます。3桁のHEX短縮形式（#RGB）は自動的に6桁に展開して変換されます。",
   faq: [
     {
       question: "3桁の短縮HEXコードにも対応していますか？",

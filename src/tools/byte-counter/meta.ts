@@ -20,13 +20,8 @@ export const meta: ToolMeta = {
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
   trustLevel: "verified",
-  valueProposition:
-    "テキストを入力するだけでUTF-8バイト数と文字数をリアルタイムに確認できる",
-  usageExample: {
-    input: "Hello, 世界！",
-    output: "バイト数: 16 / 文字数: 10 / 行数: 1",
-    description: "英数字と日本語が混在するテキストのバイト数を計算する例",
-  },
+  howItWorks:
+    "入力テキストをUTF-8エンコーディングでバイト列に変換し、バイト数をリアルタイムにカウントします。ASCII英数字は1バイト、日本語（ひらがな・カタカナ・漢字）は3バイト、絵文字は4バイトとして計算します。文字数・行数も同時にカウントし、すべての処理はブラウザ上で完結します。",
   faq: [
     {
       question: "対応しているエンコーディングはUTF-8だけですか？",
