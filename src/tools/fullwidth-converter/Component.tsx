@@ -2,7 +2,6 @@
 
 import { useState, useCallback } from "react";
 import { convert, type ConvertMode, type ConvertOptions } from "./logic";
-import FullwidthConverterGuide from "./FullwidthConverterGuide";
 import styles from "./Component.module.css";
 
 export default function FullwidthConverterTool() {
@@ -124,7 +123,6 @@ export default function FullwidthConverterTool() {
           rows={6}
         />
       </div>
-      <FullwidthConverterGuide />
     </div>
   );
 }

@@ -5,7 +5,7 @@ export const meta: ToolMeta = {
   name: "全角半角変換",
   nameEn: "Fullwidth/Halfwidth Converter",
   description:
-    "ExcelやCSVデータの全角半角統一、フォーム入力の正規化に最適な無料ツール。英数字・カタカナ・記号を個別選択してリアルタイム変換し、コピーボタンで結果を即貼り付け可能。ブラウザ上で完結するためデータ送信なし、登録不要でオンラインですぐ使えます。",
+    "英数字・カタカナ・記号の全角半角をリアルタイム変換。登録不要・無料のオンラインツールです。",
   shortDescription: "英数字・カタカナの全角半角を相互変換",
   keywords: [
     "全角半角変換",
