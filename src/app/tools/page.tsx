@@ -7,7 +7,7 @@ import ToolsListView from "@/tools/_components/ToolsListView";
 export const metadata: Metadata = {
   title: "無料オンラインツール一覧 | yolos.net Tools",
   description:
-    "文字数カウント、日付計算、パスワード生成などの便利ツールから、JSON整形・正規表現テストなどの開発者向けツールまで、32個を無料で提供。登録不要でブラウザ上ですぐに使えます。",
+    "文字数カウント、日付計算、パスワード生成などの便利ツールから、JSON整形・正規表現テストなどの開発者向けツールまで、33個を無料で提供。登録不要でブラウザ上ですぐに使えます。",
   keywords: [
     "オンラインツール",
     "無料ツール",
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "無料オンラインツール一覧 | yolos.net Tools",
     description:
-      "文字数カウント、日付計算、パスワード生成などの便利ツールから、JSON整形・正規表現テストなどの開発者向けツールまで、32個を無料で提供。登録不要でブラウザ上ですぐに使えます。",
+      "文字数カウント、日付計算、パスワード生成などの便利ツールから、JSON整形・正規表現テストなどの開発者向けツールまで、33個を無料で提供。登録不要でブラウザ上ですぐに使えます。",
     type: "website",
     url: `${BASE_URL}/tools`,
     siteName: SITE_NAME,
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "無料オンラインツール一覧 | yolos.net Tools",
     description:
-      "文字数カウント、日付計算、パスワード生成などの便利ツールから、JSON整形・正規表現テストなどの開発者向けツールまで、32個を無料で提供。登録不要でブラウザ上ですぐに使えます。",
+      "文字数カウント、日付計算、パスワード生成などの便利ツールから、JSON整形・正規表現テストなどの開発者向けツールまで、33個を無料で提供。登録不要でブラウザ上ですぐに使えます。",
   },
   alternates: {
     canonical: `${BASE_URL}/tools`,
