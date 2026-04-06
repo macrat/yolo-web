@@ -22,7 +22,6 @@ const EXPECTED_GAME_SLUGS = [
   "yoji-kimeru",
   "nakamawake",
   "irodori",
-  "yoji-doru",
 ];
 
 describe("gameMetaToPlayContentMeta", () => {
@@ -152,13 +151,13 @@ describe("fortunePlayContentMeta", () => {
   });
 });
 
-describe("allPlayContents (21種)", () => {
-  test("contains exactly 21 contents (5 games + 15 quizzes + 1 fortune)", () => {
-    // ゲーム5種 + クイズ15種 + Fortune 1種 = 21種
-    expect(allPlayContents).toHaveLength(21);
+describe("allPlayContents (20種)", () => {
+  test("contains exactly 20 contents (4 games + 15 quizzes + 1 fortune)", () => {
+    // ゲーム4種 + クイズ15種 + Fortune 1種 = 20種
+    expect(allPlayContents).toHaveLength(20);
   });
 
-  test("contains all 5 game slugs", () => {
+  test("contains all 4 game slugs", () => {
     const slugs = allPlayContents.map((c) => c.slug);
     for (const slug of EXPECTED_GAME_SLUGS) {
       expect(slugs).toContain(slug);
@@ -178,10 +177,10 @@ describe("allPlayContents (21種)", () => {
   });
 });
 
-describe("getPlayContentsByCategory (21種)", () => {
-  test("returns all 5 games for category 'game'", () => {
+describe("getPlayContentsByCategory (20種)", () => {
+  test("returns all 4 games for category 'game'", () => {
     const results = getPlayContentsByCategory("game");
-    expect(results).toHaveLength(5);
+    expect(results).toHaveLength(4);
   });
 
   test("returns 1 fortune for category 'fortune'", () => {
@@ -206,12 +205,12 @@ describe("getPlayContentsByCategory (21種)", () => {
     }
   });
 
-  test("total across all categories equals 21", () => {
+  test("total across all categories equals 20", () => {
     const game = getPlayContentsByCategory("game").length;
     const knowledge = getPlayContentsByCategory("knowledge").length;
     const personality = getPlayContentsByCategory("personality").length;
     const fortune = getPlayContentsByCategory("fortune").length;
-    expect(game + knowledge + personality + fortune).toBe(21);
+    expect(game + knowledge + personality + fortune).toBe(20);
   });
 });
 
@@ -229,16 +228,16 @@ describe("playContentBySlug", () => {
 });
 
 describe("getPlayContentsByCategory (ゲームのみ旧テスト)", () => {
-  test("returns all 5 games for category 'game'", () => {
+  test("returns all 4 games for category 'game'", () => {
     const results = getPlayContentsByCategory("game");
-    expect(results).toHaveLength(5);
+    expect(results).toHaveLength(4);
   });
 });
 
 describe("getAllPlaySlugs", () => {
-  test("returns slugs for all 21 contents", () => {
+  test("returns slugs for all 20 contents", () => {
     const slugs = getAllPlaySlugs();
-    expect(slugs).toHaveLength(21);
+    expect(slugs).toHaveLength(20);
     for (const slug of EXPECTED_GAME_SLUGS) {
       expect(slugs).toContain(slug);
     }
@@ -534,9 +533,9 @@ describe("getDefaultTabContents (タブUI用デフォルト6件)", () => {
 });
 
 describe("getNonFortuneContents (タブUI用 fortune 除外全件)", () => {
-  test("returns 20 contents (21 total minus 1 fortune)", () => {
+  test("returns 19 contents (20 total minus 1 fortune)", () => {
     const contents = getNonFortuneContents();
-    expect(contents).toHaveLength(20);
+    expect(contents).toHaveLength(19);
   });
 
   test("does NOT include any fortune category content", () => {
@@ -552,7 +551,7 @@ describe("getNonFortuneContents (タブUI用 fortune 除外全件)", () => {
     expect(slugs).not.toContain("daily");
   });
 
-  test("includes all 5 game slugs", () => {
+  test("includes all 4 game slugs", () => {
     const contents = getNonFortuneContents();
     const slugs = contents.map((c) => c.slug);
     for (const slug of EXPECTED_GAME_SLUGS) {

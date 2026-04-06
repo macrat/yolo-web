@@ -41,13 +41,13 @@ describe("PlayPage", () => {
     ).toBeInTheDocument();
   });
 
-  it("renders all 21 content cards", () => {
+  it("renders all 20 content cards", () => {
     render(<PlayPage />);
-    // すべてのカテゴリリストを取得してリンク合計数が21であることを確認
+    // すべてのカテゴリリストを取得してリンク合計数が20であることを確認
     const links = screen
       .getAllByRole("list", { name: /カテゴリ/ })
       .flatMap((list) => within(list).getAllByRole("link"));
-    expect(links.length).toBe(21);
+    expect(links.length).toBe(20);
   });
 
   it("renders links with /play/ path", () => {
@@ -103,14 +103,14 @@ describe("PlayPage", () => {
     ).toBeInTheDocument();
   });
 
-  it("category sections display correct number of items (fortune:1, personality:12, knowledge:3, game:5)", () => {
+  it("category sections display correct number of items (fortune:1, personality:12, knowledge:3, game:4)", () => {
     render(<PlayPage />);
     const [fortuneList, personalityList, knowledgeList, gameList] =
       screen.getAllByRole("list", { name: /カテゴリ/ });
     expect(within(fortuneList).getAllByRole("link").length).toBe(1);
     expect(within(personalityList).getAllByRole("link").length).toBe(12);
     expect(within(knowledgeList).getAllByRole("link").length).toBe(3);
-    expect(within(gameList).getAllByRole("link").length).toBe(5);
+    expect(within(gameList).getAllByRole("link").length).toBe(4);
   });
 
   // ===== 3-A: デイリー更新バッジ =====
