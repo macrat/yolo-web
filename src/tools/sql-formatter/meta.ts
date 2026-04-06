@@ -20,13 +20,8 @@ export const meta: ToolMeta = {
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
   trustLevel: "verified",
-  valueProposition: "SQLクエリを貼り付けるだけで読みやすく自動整形できる",
-  usageExample: {
-    input: "select id,name from users where status='active' order by name",
-    output:
-      "SELECT\n  id,\n  name\nFROM\n  users\nWHERE\n  status = 'active'\nORDER BY\n  name",
-    description: "1行のSELECT文を整形して見やすくする例",
-  },
+  howItWorks:
+    "SQLクエリを解析し、キーワードの大文字化・適切なインデント・改行を追加して読みやすく整形します。「圧縮」ボタンで不要な空白と改行を除去した1行形式にも変換できます。MySQL・PostgreSQL・SQLiteなど一般的なSQLに対応し、すべての処理はブラウザ上で完結します。",
   faq: [
     {
       question: "どのSQLデータベースに対応していますか？",

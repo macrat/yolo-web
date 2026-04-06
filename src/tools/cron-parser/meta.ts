@@ -20,12 +20,8 @@ export const meta: ToolMeta = {
   updatedAt: "2026-03-02T12:00:00+09:00",
   structuredDataType: "WebApplication",
   trustLevel: "verified",
-  valueProposition: "Cron式を入力するだけで日本語の説明と次回実行予定がわかる",
-  usageExample: {
-    input: "30 9 * * 1-5",
-    output: "月曜から金曜 9時30分 に実行（次回: 2026/03/02 09:30）",
-    description: "平日の朝9時半に実行するCron式を解析する例",
-  },
+  howItWorks:
+    "5フィールド形式（分・時・日・月・曜日）のCron式を解析し、ブラウザ上でわかりやすい日本語の説明に変換します。次回の実行予定日時も計算して表示します。ビルダー機能では各フィールドを個別に入力してCron式を生成することもできます。",
   faq: [
     {
       question: "6フィールドや7フィールドのCron式には対応していますか？",

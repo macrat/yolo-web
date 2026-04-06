@@ -25,12 +25,8 @@ export const meta: ToolMeta = {
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
   trustLevel: "verified",
-  valueProposition: "YAMLの整形・検証・JSON相互変換がブラウザだけでできる",
-  usageExample: {
-    input: "name: yolos\nversion: 1\nitems:\n- a\n- b",
-    output: '{"name":"yolos","version":1,"items":["a","b"]}',
-    description: "YAMLからJSONへ変換する例",
-  },
+  howItWorks:
+    "YAMLパーサーで入力を解析し、整形表示・構文検証・YAML↔JSON変換を行います。整形では適切なインデント（2スペースまたは4スペース）を付与します。エラーがある場合はエラー内容と該当行番号を表示します。最大1,000,000文字まで対応し、すべての処理はブラウザ上で完結します。",
   faq: [
     {
       question: "入力データのサイズに制限はありますか？",

@@ -20,12 +20,8 @@ export const meta: ToolMeta = {
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
   trustLevel: "verified",
-  valueProposition: "正規表現を入力するだけでマッチ結果と置換を即確認できる",
-  usageExample: {
-    input: "パターン: \\d{3}-\\d{4}  テスト文字列: 〒100-0001",
-    output: "マッチ結果: 1件 - 「100-0001」(位置: 1)",
-    description: "郵便番号パターンのマッチをテストする例",
-  },
+  howItWorks:
+    "JavaScriptの正規表現エンジンでパターンマッチを実行し、マッチした箇所をリアルタイムにハイライト表示します。g・i・m・sの各フラグに対応し、キャプチャグループ参照（$1など）を使った置換もリアルタイムで確認できます。テスト文字列は最大10,000文字、マッチ結果は最大1,000件まで対応します。",
   faq: [
     {
       question: "テスト文字列の長さに上限はありますか？",

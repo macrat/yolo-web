@@ -20,13 +20,8 @@ export const meta: ToolMeta = {
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
   trustLevel: "verified",
-  valueProposition:
-    "テキストを貼り付けるだけでひらがな・カタカナ・半角カナを相互変換できる",
-  usageExample: {
-    input: "おはようございます",
-    output: "オハヨウゴザイマス",
-    description: "ひらがなをカタカナに変換する例",
-  },
+  howItWorks:
+    "Unicodeの文字コードマッピングを使い、ひらがな→カタカナ・カタカナ→ひらがな・半角カナ→全角カナ・全角カナ→半角カナの4つの変換をブラウザ上でリアルタイムに実行します。ひらがな・カタカナ以外の文字（漢字・英数字など）はそのまま出力されます。半角カタカナの濁点・半濁点も正しく結合されます。",
   faq: [
     {
       question: "漢字やアルファベットが含まれていても変換できますか？",

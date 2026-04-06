@@ -25,12 +25,8 @@ export const meta: ToolMeta = {
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
   trustLevel: "verified",
-  valueProposition: "数値を入力するだけで2進・8進・10進・16進を一括変換できる",
-  usageExample: {
-    input: "255",
-    output: "BIN: 11111111 / OCT: 377 / DEC: 255 / HEX: ff",
-    description: "10進数255を他の進数に変換する例",
-  },
+  howItWorks:
+    "入力値をBigIntで内部的に保持し、2進・8進・10進・16進すべての表示をリアルタイムに更新します。BigIntを使用することでJavaScript通常の数値範囲を超える大きな数値も正確に変換できます。2進数は4桁ごと、16進数は2桁ごとにスペースで区切って視認しやすく表示します。",
   faq: [
     {
       question: "非常に大きな数値も変換できますか？",

@@ -26,13 +26,8 @@ export const meta: ToolMeta = {
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
   trustLevel: "verified",
-  valueProposition:
-    "テキストを貼り付けて検索文字列を指定するだけで一括置換できる",
-  usageExample: {
-    input: "テキスト: 株式会社ABC / 検索: ABC / 置換: XYZ",
-    output: "株式会社XYZ（1件置換）",
-    description: "文字列の一括置換を行う例",
-  },
+  howItWorks:
+    "入力テキスト内の検索文字列を置換文字列に一括置換します。正規表現モードではJavaScriptの正規表現エンジンによる高度な置換が可能で、キャプチャグループ参照（$1など）も使用できます。大文字小文字の区別と全件/先頭のみの置換をオプションで切り替えられます。最大10万文字まで対応します。",
   faq: [
     {
       question: "入力テキストの文字数に制限はありますか？",

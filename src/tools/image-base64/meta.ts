@@ -20,13 +20,8 @@ export const meta: ToolMeta = {
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
   trustLevel: "verified",
-  valueProposition:
-    "画像をドロップするだけでBase64文字列やData URIに変換できる",
-  usageExample: {
-    input: "sample.png（画像ファイル）",
-    output: "data:image/png;base64,iVBORw0KGgo...",
-    description: "PNG画像をData URI形式のBase64文字列に変換する例",
-  },
+  howItWorks:
+    "画像ファイル（PNG・JPEG・GIF・WebP、最大10MB）を読み込み、FileReader APIでBase64文字列に変換します。HTMLに直接埋め込めるData URI形式も出力します。逆変換ではBase64文字列またはData URIから画像をプレビュー表示してダウンロードできます。すべての処理はブラウザ上で完結します。",
   faq: [
     {
       question: "アップロードできる画像のサイズ制限はありますか？",

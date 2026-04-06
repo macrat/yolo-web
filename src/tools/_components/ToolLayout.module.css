@@ -2,94 +2,52 @@
   max-width: var(--max-width);
   margin: 0 auto;
   padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
 }
 
+/* ゾーン1: 即座の文脈確認 — h1とshortDescriptionを簡潔に表示してツール本体を近づける */
 .header {
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 
 .title {
   font-size: 1.75rem;
   font-weight: 700;
   color: var(--color-text);
+  margin-bottom: 0.375rem;
+}
+
+/* h1直下に表示する短い説明。descriptionはSEO専用のため非表示 */
+.shortDescription {
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+
+/* ゾーン2: ツール本体 — ファーストビューに近い位置に配置 */
+.content {
+  margin-bottom: 1rem;
+}
+
+/* ゾーン3: 補助情報 — howItWorksセクション */
+.howItWorksSection {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.howItWorksHeading {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text);
   margin-bottom: 0.5rem;
 }
 
-.description {
-  font-size: 0.95rem;
-  color: var(--color-text-muted);
-  line-height: 1.6;
-}
-
-.valueProposition {
-  margin-top: 0.75rem;
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--color-text);
-  line-height: 1.6;
-}
-
-.usageExample {
-  margin-bottom: 1.5rem;
-  padding: 1rem;
-  background-color: var(--color-bg-secondary);
-  border: 1px solid var(--color-border);
-  border-radius: 0.5rem;
-}
-
-.usageExampleHeading {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--color-text-muted);
-  margin-bottom: 0.75rem;
-}
-
-.usageExampleContent {
-  display: flex;
-  align-items: stretch;
-  gap: 0.75rem;
-}
-
-.usageExampleBox {
-  flex: 1;
-  padding: 0.625rem 0.75rem;
-  background-color: var(--color-bg);
-  border: 1px solid var(--color-border);
-  border-radius: 0.375rem;
-}
-
-.usageExampleLabel {
-  display: block;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--color-text-muted);
-  margin-bottom: 0.25rem;
-}
-
-.usageExampleText {
+.howItWorksText {
   font-size: 0.9rem;
-  color: var(--color-text);
-  line-height: 1.5;
-  word-break: break-word;
-}
-
-.usageExampleArrow {
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
   color: var(--color-text-muted);
-  font-size: 1.25rem;
-}
-
-.usageExampleDescription {
-  margin-top: 0.5rem;
-  font-size: 0.8rem;
-  color: var(--color-text-muted);
-  line-height: 1.5;
-}
-
-.content {
-  margin-bottom: 1rem;
+  line-height: 1.7;
 }
 
 .privacyNote {
@@ -118,19 +76,14 @@
 
 @media (max-width: 768px) {
   .layout {
-    padding: 1.5rem 0.75rem;
+    padding: 1rem 0.75rem;
   }
 
   .title {
     font-size: 1.4rem;
   }
 
-  .usageExampleContent {
-    flex-direction: column;
-  }
-
-  .usageExampleArrow {
-    justify-content: center;
-    transform: rotate(90deg);
+  .header {
+    margin-bottom: 0.75rem;
   }
 }

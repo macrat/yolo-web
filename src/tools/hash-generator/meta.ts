@@ -14,12 +14,8 @@ export const meta: ToolMeta = {
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
   trustLevel: "verified",
-  valueProposition: "テキストを入力するだけでSHA系ハッシュ値を一括生成できる",
-  usageExample: {
-    input: "Hello, World!",
-    output: "dffd6021bb2bd5b0af676290809ec3a53191dd81c7f70a4b28688a362182986f",
-    description: "テキストからSHA-256ハッシュ値を生成する例",
-  },
+  howItWorks:
+    "ブラウザ標準のWeb Crypto APIを使用して、SHA-1・SHA-256・SHA-384・SHA-512の4種類のハッシュ値を一度に生成します。出力形式は16進数（Hex）とBase64から選択できます。入力テキストはサーバーに送信されず、ブラウザ内でのみ処理されます。",
   faq: [
     {
       question: "対応しているハッシュアルゴリズムは何ですか？",

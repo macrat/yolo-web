@@ -25,13 +25,8 @@ export const meta: ToolMeta = {
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
   trustLevel: "verified",
-  valueProposition:
-    "Markdownを入力するだけでリアルタイムにプレビュー表示できる",
-  usageExample: {
-    input: "# 見出し\n- リスト項目\n**太字**テキスト",
-    output: "見出し・リスト・太字が反映されたHTMLプレビュー",
-    description: "Markdown記法をリアルタイムでHTML表示する例",
-  },
+  howItWorks:
+    "GitHub Flavored Markdown（GFM）に対応したMarkdownパーサーで入力テキストを解析し、HTMLに変換してリアルタイムでプレビュー表示します。見出し・リスト・テーブル・コードブロック・チェックリストなどに対応し、scriptタグなどの危険なHTMLはホワイトリスト方式で除去されます。最大50,000文字まで入力できます。",
   faq: [
     {
       question: "入力できるMarkdownの最大文字数はありますか？",

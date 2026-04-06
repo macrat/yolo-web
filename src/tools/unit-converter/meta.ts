@@ -26,13 +26,8 @@ export const meta: ToolMeta = {
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
   trustLevel: "verified",
-  valueProposition:
-    "数値を入力するだけで長さ・重さ・温度など全単位に一括変換できる",
-  usageExample: {
-    input: "1 マイル",
-    output: "1.609344 km（キロメートル）",
-    description: "マイルからキロメートルへの長さ変換の例",
-  },
+  howItWorks:
+    "長さ・重さ・温度・面積・速度の5カテゴリの単位変換を提供します。各カテゴリは基準単位への係数テーブルで変換を行い、温度のみ摂氏を基準とした専用の計算式を使用します。尺・坪・貫などの日本の伝統単位にも対応しています。変換はブラウザ上でリアルタイムに計算されます。",
   faq: [
     {
       question: "対応している単位のカテゴリは何ですか？",

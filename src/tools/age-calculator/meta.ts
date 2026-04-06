@@ -21,12 +21,8 @@ export const meta: ToolMeta = {
   updatedAt: "2026-03-02T09:10:04+09:00",
   structuredDataType: "WebApplication",
   trustLevel: "verified",
-  valueProposition: "生年月日を入力するだけで年齢・和暦・干支・星座がわかる",
-  usageExample: {
-    input: "2000-05-15（基準日: 2026-02-28）",
-    output: "25歳9ヶ月13日 / 平成12年 / 辰 / 牡牛座",
-    description: "生年月日から年齢と関連情報を一括計算する例",
-  },
+  howItWorks:
+    "生年月日と基準日（デフォルトは今日）を入力すると、年・月・日単位の正確な年齢をブラウザ上で計算します。和暦変換は明治（1868年）以降に対応し、干支は生まれた年の西暦から、星座は誕生月日から判定します。すべての計算はサーバーに送信されずブラウザ内で完結します。",
   faq: [
     {
       question: "明治より前の生年月日にも対応していますか？",
