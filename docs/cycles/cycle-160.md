@@ -1,130 +1,279 @@
 ---
 id: 160
-description: "ToolLayoutモバイルUX改善（B-294）。モバイルでツール本体をファーストビューに近い位置に配置し、来訪者が最速でツールにアクセスできるようにする"
+description: "ToolLayoutゼロベース再設計（B-294）。来訪者にとって最高のツールページ構成を白紙から設計し、全33ツールに適用"
 started_at: "2026-04-06T18:27:46+0900"
 completed_at: null
 ---
 
 # サイクル-160
 
-ToolLayoutのモバイルUX改善（B-294）。モバイルでツール本体がファーストビューに入っていない問題を修正し、来訪者がツールを使いに来た場合に最速でツール本体に到達できるようにする。全33ツールに影響する設計変更。
+ToolLayoutのゼロベース再設計（B-294）。現在の要素構成を所与とせず、「ツールを使いに来た来訪者にとって最高のページ構成は何か」を白紙から設計する。constitutionのゴール「achieve higher page views by providing the best value for visitors」に立ち返り、来訪者価値の最大化とSEOの両立を目指す。スコープはToolLayout（33ツール）に限定し、GameLayout/CheatsheetLayout/DictionaryDetailLayoutへの波及は今回は行わない。
 
 ## 実施する作業
 
-- [x] Step 1: 現状調査 — ToolLayoutの構造を把握し、モバイルでどのセクションがツール本体を押し下げているか確認
-- [x] Step 2: 改善方針の策定 — 来訪者にとって最速でツール本体にアクセスできるレイアウトを検討
-- [ ] Step 3: 実装 — ToolLayoutの改善を実装
-- [ ] Step 4: ビジュアルテスト — モバイル/PC/ダークモードで表示確認
-- [ ] Step 5: レビュー — 来訪者目線でのレビュー
-- [ ] Step 6: デプロイ準備 — lint/format/test/build全成功確認
+- [x] Step 1: 現状調査 — ToolLayoutの構造を把握し、どのセクションがツール本体を押し下げているか確認
+- [x] Step 2: 改善方針の策定 — Ownerの指摘を受けて計画を根本から見直し
+- [x] Step 3: ゼロベースの再設計 — 来訪者にとって最高のツールページ構成を白紙から設計
+- [ ] Step 4: 実装 — 再設計に基づきToolLayout/ToolMeta/全33ツールのmeta定義を変更（スコープはToolLayoutのみ。GameLayout/CheatsheetLayout/DictionaryDetailLayoutは対象外）
+- [ ] Step 5: ビジュアルテスト — モバイル/PC/ダークモードで表示確認
+- [ ] Step 6: レビュー — 来訪者目線でのレビュー
+- [ ] Step 7: デプロイ準備 — lint/format/test/build全成功確認
 
 ## 作業計画
 
-### 目的
+### 設計の出発点: 来訪者は何を求めてツールページに来るのか
 
-モバイル（375x667等）でツールページにアクセスした際、ツール本体（children）がファーストビューに表示されるようにする。ターゲットユーザーは「全角半角変換」「文字数カウント」等で検索してきた人であり、ツールの説明より先にツール本体を使いたい。現状はBreadcrumb + h1 + TrustLevelBadge + description + valueProposition + usageExampleで画面全体が埋まり、ツール本体が全くファーストビューに入っていない。
+ツールページの来訪者は大きく2つのパターンがある。
+
+**パターンA: 検索から来る来訪者（多数派を目指す）**
+「全角半角変換」「JSON整形」「文字数カウント」等で検索して来る。目的は明確で、ツールを使って問題を解決すること。彼らが求めるのは:
+
+1. ここが目的のツールであるという確認（一瞬で済む）
+2. ツール本体（すぐ使いたい）
+3. 使い方がわからないときの補助情報（必要に応じて）
+
+**パターンB: サイト内回遊で来る来訪者**
+別のページから「関連ツール」等のリンクで来る。目的は「このツールが自分の役に立つか知りたい」。求めるのは:
+
+1. このツールが何をするのか（一瞬で判断）
+2. 自分に必要なら使う、不要なら戻る
+
+いずれのパターンでも、来訪者が最も早くツール本体にたどり着けることが最重要。
+
+### 新しいページ構成: ゼロベース設計
+
+以下の構成を上から順にページに配置する。各要素について「なぜ必要か」「来訪者にとっての価値は何か」を明記する。
+
+#### ゾーン1: 即座の文脈確認（ファーストビュー上部）
+
+**1-a. パンくずリスト（Breadcrumb）**
+
+- 目的: 来訪者にサイト内の現在地を伝える。検索から直接来た人が「ここはどういうサイトか」を把握する手段
+- 価値: ナビゲーション支援。SEO構造化データ（BreadcrumbList JSON-LD）の裏付け
+- 判断: 維持。1行のため面積コストが極めて小さく、ナビゲーション価値が高い
+
+**1-b. ツール名（h1）**
+
+- 目的: 来訪者が「ここは目的のツールのページだ」と一瞬で確認できる
+- 価値: ページの主題を明示する。SEO上もh1は最重要要素
+- 判断: 維持
+
+**1-c. ツールの概要説明（shortDescription） -- 「一言で何ができるか」**
+
+- 目的: ツール名だけではわからない来訪者（パターンB）に、このツールが何をするものかを一文で伝える
+- 例: 「英数字・カタカナの全角半角を相互変換」
+- 価値: 来訪者が「自分に必要なツールか」を即座に判断できる
+- 判断: **新規フィールドは追加せず、既存のshortDescriptionをh1直下にも表示する。** shortDescriptionはカード表示用に各ツールに定義済み（~50文字）で、「このツールが何をするか」を簡潔に伝える内容になっている。ページ上表示とカード表示で同じテキストを使うことで保守性を高める。descriptionは従来通りmeta descriptionおよびJSON-LD専用とし、ページ上には表示しない。shortDescriptionの文体がページ上表示に不自然な場合は、個別に調整する（ただしカード表示との兼用を前提とした文体にする）
+
+**1-d. 処理内容の明示（howItWorks） -- 「具体的に何がどう処理されるか」**
+
+- 目的: 来訪者への補助情報の提供 + SEOテキストコンテンツの確保
+- 来訪者価値: ツールが期待通りの動作をするか確認できる安心感。特に初めて使うツールや、処理内容が曖昧なツール（「CSV変換」「正規表現テスター」等）で重要
+- SEO価値: ツール固有の処理内容を自然な文章で記述するため、ページ内テキストコンテンツとして検索エンジンにインデックスされ、ロングテールキーワードの獲得に寄与する
+- 例: 「テキストを入力すると、英数字・カタカナ・記号の全角文字を対応する半角文字に自動変換します。変換対象の文字種は個別に選択可能です。」
+- 判断: **新規追加。** 表示位置はツール本体の下（ゾーン3）。ツールを使う前に読む必要はなく、必要に応じて参照する補助情報であるため
+- 表示時の見出し: **「このツールについて」**（h2）。来訪者にとって自然で、内容を予測しやすい見出しにする
+
+#### ゾーン2: ツール本体（ファーストビューのメイン）
+
+**2-a. ツール本体（children）**
+
+- 目的: 来訪者が来た目的そのもの
+- 価値: ページの存在理由
+- 判断: ゾーン1の直後に配置。モバイルでもデスクトップでもファーストビューにツール本体が見える状態にする
+
+#### ゾーン3: 補助情報（ツール本体の下、スクロールで到達）
+
+ツールを使った後、またはツールを使う前に詳細を知りたい来訪者向けの情報。
+
+**3-a. 処理内容の明示（howItWorks）**
+
+- 配置: ツール本体の直下
+- 表示形式: 「このツールについて」（h2見出し）付きの短いテキスト（1-3文）
+- 理由: ツールを使ってみて「もう少し詳しく知りたい」と思った来訪者、または使う前に仕組みを確認したい来訪者のための補助情報。ゾーン1ではなくゾーン3に置くことで、ファーストビューを圧迫しない
+- SEO価値: ページ内のテキストコンテンツとして検索エンジンにインデックスされる。ツール固有の処理内容を自然な文章で記述するため、関連キーワードを含むことになる
+
+**3-b. プライバシー注記（privacyNote）**
+
+- 目的: 入力データがサーバーに送信されないことを明示
+- 価値: 来訪者の安心感。特にパスワード生成やメールアドレス検証など、機密性の高いデータを扱うツールで重要
+- 判断: 維持。短い1文で面積コストが小さく、信頼構築に寄与する
+- 表示形式: 現状通り控えめなバー表示
+
+**3-c. FAQ**
+
+- 目的: 来訪者のよくある疑問に答える。ツールを使っていて生じた疑問を解消する
+- 価値: (1) 来訪者がつまずくポイントを先回りして解決 (2) FAQPage JSON-LDによるSEOリッチリザルト獲得
+- 判断: 維持。ツール本体で解決できない疑問を補助する重要な役割を持つ
+
+**3-d. シェアボタン**
+
+- 目的: ツールが便利だった来訪者がSNS等でシェアできる
+- 価値: 口コミによる新規来訪者の獲得。PV増加に直接貢献
+- 判断: 維持
+
+**3-e. 関連ツール**
+
+- 目的: 来訪者が他のツールも必要としている場合に誘導する
+- 価値: サイト内回遊の促進。直帰率の低減とPV増加
+- 判断: 維持
+
+**3-f. 関連ブログ記事**
+
+- 目的: ツールに関連する技術記事への誘導
+- 価値: コンテンツの深みを示し、サイトへの信頼感を高める。PV増加
+- 判断: 維持
+
+#### 削除する要素と理由
+
+**TrustLevelBadge -- 削除**
+
+- 現在の役割: コンテンツの信頼レベル（verified/curated/generated等）を表示するバッジ
+- 全33ツールのtrustLevelの現状: verified（31ツール）、curated（2ツール: business-email, keigo-reference）。experimental/unverifiedのツールは存在しない
+- 削除理由: 来訪者目線で考えると、「verified」「curated」というバッジは来訪者にとってほぼ意味がない。来訪者は「このツールが正しく動作するか」をツールを使って判断するのであり、サイト運営者が自ら付けたバッジを信頼の根拠にはしない。むしろ、バッジの存在がヘッダーの縦幅を増やし、ツール本体への到達を遅らせている。プライバシー注記（ブラウザ上で動作する旨の表示）は残すため、信頼に関する重要な情報は引き続き提供される
+- constitution Rule 3との関係: Rule 3は「サイトがAIによる実験であり内容が壊れていたり不正確な場合がある」旨の通知を求めるが、これはサイト全体のフッターで「このサイトはAIによる実験的プロジェクトです。コンテンツはAIが生成しており、内容が壊れていたり不正確な場合があります。」として既に担保されている。TrustLevelBadgeはRule 3の要件とは独立した機能であり、削除してもRule 3への影響はない
+- 補足: TrustLevelBadgeコンポーネント自体は他のLayout（CheatsheetLayout等）でも使用されているため削除しない。ToolLayoutからの表示のみ削除する。trustLevelフィールドもToolMetaの型定義に残す（将来の再利用可能性のため）
+
+**valueProposition -- 削除（shortDescriptionで代替）**
+
+- 現在の役割: 「テキストを貼り付けるだけで全角半角を一括変換できる」のような一行テキスト
+- 削除理由: h1直下にshortDescriptionを表示することで「このツールで何ができるか」をより的確に伝える。valuePropositionは「誰が・何を・どう解決するか」という定型文であり、来訪者が求めている情報（ツールの機能説明）とは微妙にずれている
+
+**usageExample -- 削除**
+
+- 現在の役割: 入力 → 出力の具体例を表示
+- 削除理由: ツール本体を触れば即座にわかる情報であり、ページ上に静的に表示する価値がない。特に、ツール本体がファーストビューに配置されれば、来訪者はusageExampleを読むよりも速くツール本体で試せる。面積コスト（特にモバイル）に対して提供する情報価値が見合わない
+
+### ToolMetaの型定義変更
+
+```
+現行:
+  description: string;       // SEO meta description兼ページ表示用（120-160文字）
+  shortDescription: string;  // カード表示用（~50文字）
+  valueProposition?: string; // 一行価値テキスト
+  usageExample?: { ... };    // 入力→出力のサンプル
+  trustLevel: TrustLevel;    // 信頼レベル
+
+新規:
+  description: string;       // SEO専用。meta description/JSON-LD用。ページ上に表示しない（120-160文字）
+  shortDescription: string;  // カード表示用 + ページ上h1直下表示用（~50文字）。用途を拡張するが型変更なし
+  howItWorks: string;        // 処理内容の説明。「どう動くか」を来訪者向けに（50-120文字）。「このツールについて」見出し付きで表示
+  trustLevel: TrustLevel;    // 型定義には残すが、ToolLayoutでの表示は削除
+
+  削除:
+  valueProposition  -- shortDescriptionで代替
+  usageExample      -- ツール本体で代替可能
+
+  追加しないもの:
+  overview          -- shortDescriptionをh1直下にも表示することで代替。新規フィールド追加より既存フィールド活用のほうが保守性が高い
+```
+
+### descriptionの役割分離についての設計判断
+
+Ownerの指摘「一言で伝えるdescriptionと、具体的な処理内容を伝えるdescriptionを分ける」を以下のように実現する:
+
+1. **shortDescription（既存フィールドの活用）**: 来訪者がページを開いた瞬間に読む一文。「このツールで何ができるか」を伝える。h1の直下に表示。カード表示でも使用されており、両方の文脈で自然に読める文体にする。新規フィールド（overview）を追加するよりも、既存フィールドを活用するほうが33ツール分の保守コストが低い
+
+2. **howItWorks（新規フィールド）**: ツール本体の下に「このツールについて」（h2）の見出し付きで配置する補助説明。「入力したテキストがどのように処理されるか」を具体的に記述。来訪者への補助情報提供とSEOテキストコンテンツの確保を兼ねる
+
+3. **description（既存）**: meta descriptionとJSON-LDのdescription用。SEOに最適化された文章。ページ上には表示しない。検索結果画面で来訪者がクリックするかどうかを左右する重要な要素であるため、引き続きSEOの観点で最適化する
+
+この3層構造により、来訪者にはshortDescription（一瞬の文脈確認）とhowItWorks（詳細な処理説明）、検索エンジンにはdescription（SEO最適化テキスト）という、それぞれに最適化された情報を提供できる。
+
+### SEOの考慮
+
+来訪者の体験を妨げない範囲で以下のSEO要素を維持・強化する:
+
+- **meta description**: descriptionフィールド（変更なし）がmeta descriptionに使われる
+- **JSON-LD WebApplication**: descriptionフィールドがJSON-LDのdescriptionに使われる
+- **FAQPage JSON-LD**: FAQ（変更なし）がFAQPageリッチリザルトのデータソースになる
+- **BreadcrumbList JSON-LD**: パンくずリスト（変更なし）がBreadcrumbListリッチリザルトのデータソースになる
+- **ページ内テキストコンテンツ**: valuePropositionとusageExampleの削除でページ内テキストは減少するが、shortDescription（h1直下に新たに表示）とhowItWorksが新たにテキストコンテンツとして追加される。howItWorksはツール固有の処理内容を自然な文章で記述するため、ロングテールキーワードの獲得に寄与する可能性がある
+- **h1タグ**: ツール名（変更なし）
+- **keywords**: keywordsフィールド（変更なし）
 
 ### 作業内容
 
-**方針: モバイルでのみ、ツール本体をヘッダー直後に配置し、補助コンテンツを下に移動する**
+#### 1. ToolMeta型定義の変更
 
-具体的には、ToolLayout.tsxにおけるレンダリング順序をモバイルとデスクトップで変える。CSS `order` プロパティを使い、モバイルではツール本体（children）をヘッダーの直後に、valuePropositionとusageExampleをツール本体の後に配置する。
+- `src/tools/types.ts`: howItWorksフィールド（必須）を追加。valuePropositionフィールドとusageExampleフィールドを削除。descriptionのJSDocコメントを「SEO専用。ページ上に表示しない」と更新。shortDescriptionのJSDocコメントに「h1直下にも表示される」を追記
+- スコープはToolMetaのみ。GameMeta, CheatsheetMeta, DictionaryMetaは変更しない
 
-#### 変更対象ファイル
+#### 2. ToolLayoutの再構成
 
-1. **`src/tools/_components/ToolLayout.tsx`** — レイアウト構造の変更
-2. **`src/tools/_components/ToolLayout.module.css`** — CSSでのorder制御
+- `src/tools/_components/ToolLayout.tsx`: 新しいゾーン構成に従ってJSXを再構成
+  - ゾーン1: Breadcrumb + h1 + shortDescription（h1直下に表示）
+  - ゾーン2: children（ツール本体）
+  - ゾーン3: howItWorks（「このツールについて」h2見出し付き） + privacyNote + FAQ + ShareButtons + RelatedTools + RelatedBlogPosts
+  - TrustLevelBadgeの表示を削除
+  - descriptionのページ上表示を削除（meta descriptionとしてのみ使用）
+- `src/tools/_components/ToolLayout.module.css`: 不要なスタイルを削除し、新しい構成に合わせてスタイルを調整。CSS orderハックを削除
+- GameLayout, CheatsheetLayout, DictionaryDetailLayoutは変更しない
 
-#### 具体的な実装手順
+#### 3. 全meta定義の更新（33ツール）
 
-**Step 1: ToolLayout.tsxの構造変更**
+各metaファイルで:
 
-現在のheaderタグの中にdescriptionとvaluePropositionが含まれているが、これをモバイルで分離できるようにする。
+- valuePropositionを削除
+- usageExampleを削除
+- howItWorksを追加（そのツール固有の処理内容を具体的に記述。50-120文字）
+- shortDescriptionがページ上表示に不自然な文体の場合は調整（ただしカード表示との兼用を前提にする）
 
-- header内からvaluePropositionを独立したブロックとして分離する
-- レイアウト全体をCSS Grid（またはFlexbox）のコンテナとし、各セクションにorder用のクラスを付与する
+**howItWorks作成の品質管理方法:**
 
-モバイルでの表示順:
+- 各ツールのhowItWorksテキストは、実装担当のサブエージェントがツールの実際の動作を確認した上で作成する
+- 作成後、レビュー担当のサブエージェントがPlaywrightでツールのUIを実際に操作し、howItWorksの記述内容がツールの実際の動作と一致しているかを検証する
+- 不正確な記述（存在しないオプション、誤った処理フローの説明等）が見つかった場合は修正を求める
 
-1. Breadcrumb
-2. h1 + TrustLevelBadge + description（簡潔なヘッダー）
-3. **children（ツール本体）** ← ファーストビューに入る
-4. valueProposition
-5. usageExample
-6. privacyNote以降（従来通り）
+#### 4. テストの更新
 
-デスクトップでの表示順（変更なし）:
+- ToolLayoutのテストを新しい構成に合わせて更新
+- shortDescriptionのh1直下表示テスト、howItWorks（「このツールについて」見出し付き）の表示テストを追加
+- valueProposition, usageExample, TrustLevelBadge表示のテストを削除
 
-1. Breadcrumb
-2. h1 + TrustLevelBadge + description + valueProposition
-3. usageExample
-4. children（ツール本体）
-5. privacyNote以降
-
-**Step 2: CSS実装**
-
-ToolLayout.module.cssに以下を実装する:
-
-- レイアウトコンテナに `display: flex; flex-direction: column;` を設定（既にarticleタグが暗黙的にブロックレイアウトなので、flex化する）
-- 各セクション（header, valueProposition, usageExample, content）にデフォルトのorderを設定
-- `@media (max-width: 768px)` 内で、contentのorderをvalueProposition/usageExampleより前に変更する。ブレークポイント768pxは既存のToolLayout.module.cssのメディアクエリで使用されている値と一致しており、同じブレークポイントを使用することで一貫性を保つ
-
-具体的なCSS order値:
-
-- デスクトップ（デフォルト）: header=1, valueProposition=2, usageExample=3, content=4, privacyNote以降=5+
-- モバイル: header=1, content=2, valueProposition=3, usageExample=4, privacyNote以降=5+
-
-**Step 3: ヘッダーのコンパクト化（モバイルのみ）**
-
-なお、descriptionのテキスト長については、既にcycle-159で短縮済み（65〜124文字を短縮）である。これ以上の短縮はSEO上望ましくないため、現在の長さを維持する。モバイルでのファーストビュー確保はCSS orderによる表示順変更で対処し、description自体の削減は行わない。
-
-モバイルではさらにヘッダー部分のマージンを削減して、ツール本体がファーストビューの上部に来るようにする:
-
-- `.header` の `margin-bottom` をモバイルで `1rem` に削減（現在 `2rem`）
-- `.layout` の `padding` 上部をモバイルで `1rem` に削減（現在 `1.5rem`）
-
-**Step 4: valuePropositionとusageExampleの視覚的調整**
-
-モバイルでこれらがツール本体の下に移動するため、上マージンを適切に設定し、「補足情報」として自然に見えるようにする。ツール本体との間に軽い区切り線やスペースを入れることを検討する。
-
-**Step 5: ビジュアルテスト**
+#### 5. ビジュアルテスト
 
 以下の条件で表示を確認する:
 
-- モバイル（375x667）: char-count, fullwidth-converter, json-formatter（異なるタイプのツール）
-- デスクトップ（1280x800）: 同上のツールでレイアウトが崩れていないこと
+- モバイル（375x667）: char-count, fullwidth-converter, json-formatter
+- デスクトップ（1280x800）: 同上
 - ダークモード: モバイル/デスクトップ両方
 
-### 検討した他の選択肢と判断理由
+確認観点:
 
-**選択肢A: valuePropositionとusageExampleを完全に削除する**
+- ツール本体がファーストビューに十分な面積で表示されていること
+- shortDescriptionがツール名の直下に自然に読めること
+- howItWorksが「このツールについて」見出し付きでツール本体の下に適切に配置されていること
+- レイアウトの崩れがないこと
 
-- 却下理由: SEO/コンテンツとしての価値があり、制約として「完全削除は避けたい」と明記されている。
+### 具体例: fullwidth-converterのmeta変更イメージ
 
-**選択肢B: valuePropositionとusageExampleをアコーディオン（折りたたみ）にする**
+```
+現行:
+  description: "英数字・カタカナ・記号の全角半角をリアルタイム変換。登録不要・無料のオンラインツールです。"
+  shortDescription: "英数字・カタカナの全角半角を相互変換"
+  valueProposition: "テキストを貼り付けるだけで全角半角を一括変換できる"
+  usageExample: { input: "Ｈｅｌｌｏ１２３カタカナ", output: "Hello123ｶﾀｶﾅ", ... }
 
-- 却下理由: 折りたたまれたコンテンツはSEO上の評価が下がる可能性がある。また、折りたたみUIの操作コストが追加される。モバイルでは表示順を変えるだけで十分であり、より単純な解決策を選ぶべき。
+新規:
+  description: "英数字・カタカナ・記号の全角半角をリアルタイム変換。登録不要・無料のオンラインツールです。"  （変更なし、SEO専用）
+  shortDescription: "英数字・カタカナの全角半角を相互変換"  （変更なし。カード用 + h1直下表示用）
+  howItWorks: "テキストを入力エリアに貼り付けると、選択した文字種（英数字・カタカナ・記号）の全角文字を対応する半角文字に自動変換します。変換方向や対象文字種は個別に切り替え可能です。"  （「このツールについて」見出し付きでツール下部に表示、50-120文字）
 
-**選択肢C: ページ上部に「ツールを使う」アンカーリンクを設置する**
+  削除: valueProposition, usageExample
+  追加しない: overview（shortDescriptionで代替）
+```
 
-- 却下理由: ユーザーにクリックという追加操作を強いる。操作なしでツール本体がファーストビューに見えている方が圧倒的に良いUX。
+### 計画にあたって確認した情報
 
-**選択肢D: CSS orderでモバイルのみ表示順を変更する（採用）**
-
-- 採用理由: HTMLの論理構造（SEO上の文書構造）を変えずに、モバイルの視覚的な表示順だけを変更できる。デスクトップのUXに影響しない。実装がシンプルで全33ツールに自動的に適用される。valuePropositionとusageExampleを削除せずにモバイルUXを改善できる。
-
-**選択肢E: レスポンシブで2カラムレイアウトにする（デスクトップ: ツール左/説明右）**
-
-- 却下理由: ツール本体の横幅が狭くなり、テキスト入力系ツールのUXが悪化する。実装も大幅に複雑になり、全33ツールの個別調整が必要になるリスクがある。
-
-### 計画にあたって参考にした情報
-
-- 現状のモバイル表示をPlaywrightで実機確認（char-count, fullwidth-converter）: ツール本体がファーストビュー外であることを目視確認済み
-- デスクトップ表示もPlaywrightで確認: ツール本体がビューポート下端にかろうじて見えている状態
-- モバイルUXのベストプラクティス（2025-2026年）: プライマリCTAや主要コンテンツをabove-the-foldに配置すべき。補助情報は折りたたみやスクロール下に移動するのが推奨。出典: [Invesp - Above The Fold Best Practices 2025](https://www.invespcro.com/blog/above-the-fold/), [Thinkroom - Mobile UX Best Practices 2025](https://www.thinkroom.com/mobile-ux-best-practices/), [Trinergydigital - Mobile-First UX Design 2026](https://www.trinergydigital.com/news/mobile-first-ux-design-best-practices-in-2026)
-- CSS `order` プロパティ: Flexboxコンテナ内で子要素の視覚的順序を変更でき、HTMLのDOM順序（スクリーンリーダーやSEOに影響）は維持される。なお、WCAG 1.3.2（意味のある順序）への影響について検討済み: valuePropositionとusageExampleにはフォーカス可能要素（リンク、ボタン、入力フィールド等）が含まれていないため、CSS orderによるvisual orderとDOM orderの乖離がタブ順序の問題を引き起こすことはない。また、読み上げ順序はDOM順のままとなるが、情報としての意味的順序（説明→ツール本体）は崩れないため、WCAG 1.3.2への影響は軽微と判断した
-- ToolLayout.tsxとToolLayout.module.cssの現在の実装を確認済み
-- 全33ツールがvaluePropositionとusageExampleを持っていることをgrepで確認済み
+- 現状のToolLayout.tsx, ToolLayout.module.css, ToolMeta型定義, 複数ツールのmeta定義を精読
+- seo.ts: descriptionがmeta descriptionとJSON-LD双方で使用されていることを確認
+- shortDescriptionの使用箇所: ToolCard, RelatedTools, OGP画像, サイト内検索インデックス等で広く使用されている
+- valuePropositionとusageExampleのSEO利用: JSON-LD, metaタグ等の構造化データには一切使用されていない
+- TrustLevelBadge: ToolLayout内のheaderでh1とdescriptionの間に配置され、縦幅を消費している
+- FaqSection: FAQPage JSON-LDを自動生成しており、SEOリッチリザルト獲得に寄与
+- constitution Goal: "achieve higher page views by providing the best value for visitors"
+- Ownerの指摘: (1) 現状の要素を所与としない (2) descriptionの2種類分離 (3) 他に必要/不要な要素の検討 (4) SEOも来訪者価値を妨げない範囲で考慮
 
 ## レビュー結果
 
