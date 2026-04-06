@@ -9,11 +9,11 @@ import { SITE_NAME, BASE_URL } from "@/lib/constants";
 
 export function generateToolMetadata(meta: ToolMeta): Metadata {
   return {
-    title: `${meta.name} - tools | ${SITE_NAME}`,
+    title: `${meta.name} - 無料オンラインツール | ${SITE_NAME}`,
     description: meta.description,
     keywords: meta.keywords,
     openGraph: {
-      title: `${meta.name} - tools`,
+      title: `${meta.name} - 無料オンラインツール`,
       description: meta.description,
       type: "website",
       url: `${BASE_URL}/tools/${meta.slug}`,
@@ -21,7 +21,7 @@ export function generateToolMetadata(meta: ToolMeta): Metadata {
     },
     twitter: {
       card: "summary_large_image",
-      title: `${meta.name} - tools`,
+      title: `${meta.name} - 無料オンラインツール`,
       description: meta.description,
     },
     alternates: {

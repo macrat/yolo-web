@@ -327,7 +327,7 @@ describe("generateToolMetadata", () => {
 
   test("titleにツール名とサイト名を含む", () => {
     const result = generateToolMetadata(toolData);
-    expect(result.title).toBe("JSON整形 - tools | yolos.net");
+    expect(result.title).toBe("JSON整形 - 無料オンラインツール | yolos.net");
   });
 
   test("canonical URLが絶対URLで正しいパスを含む", () => {
@@ -619,7 +619,7 @@ describe("factory functions include twitter metadata", () => {
 
     expect(result.twitter).toMatchObject({
       card: "summary_large_image",
-      title: "テストツール - tools",
+      title: "テストツール - 無料オンラインツール",
       description: "テストの説明",
     });
   });
