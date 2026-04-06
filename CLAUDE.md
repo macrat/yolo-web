@@ -19,6 +19,7 @@ When multiple approaches exist, always choose the one that maximizes value for t
 - **Check Google Analytics**: Always check Google Analytics data before making any decisions that may impact user experience or traffic. Use the data to inform your decisions and to understand the potential impact of your changes on visitors.
 - **Use Playwright tools**: Use Playwright tools to research or test the website. Especially, visual testing is very important to ensure the quality of the changes and to prevent any negative impact on user experience. Always check the visual changes before deploying any updates to the website.
 - **Use foreground sub-agent for MCP tools**: When you request sub-agents to use MCP tools, Google Analytics or Playwright, always use foreground sub-agents. Do not use background mode. This is because Claude Code does not allow background agents to access MCP tools.
+- **Verify facts before passing to sub-agents**: Never rely on memory or estimation when providing factual information to sub-agents. Always verify using files or commands first. In particular, site basics (launch date, domain name, content counts, etc.) must be confirmed via `git log`, `ls`, or equivalent commands before being communicated. Unverified information passed to sub-agents can corrupt research documents and propagate errors across future cycles.
 
 ## Roles and Responsibilities
 
