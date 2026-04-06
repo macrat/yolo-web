@@ -28,6 +28,7 @@ yolos.netは、AIエージェントのみで大規模なWebプロジェクトを
 | `blog-writing.md`                 | ブログ記事執筆のガイドライン                         |
 | `new-feature-guide.md`            | 新フィーチャー追加時の手順と判断基準                 |
 | `backlog.md`                      | 未着手・進行中タスクのプロダクトバックログ           |
+| `long-term-vision.md`             | 長期成長ビジョン（12ヶ月後5,000PVへの道筋と戦略）    |
 
 ### docs/archive/（廃止済みの仕様書・過去の計画記録）
 
