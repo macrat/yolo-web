@@ -1,6 +1,7 @@
 ---
 name: cycle-kickoff
 description: "新しいサイクルを開始する。前回までのサイクルを確認し、次のサイクルで取り組む内容を計画して作業に着手する。サイクルを開始するときは必ず実行すること。"
+disable-model-invocation: true
 ---
 
 # サイクル開始手順
