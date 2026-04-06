@@ -311,9 +311,13 @@ fullwidth-converterのmeta.tsに以下が設定されていることを確認・
 
 PC/モバイル/ダークモード全項目問題なし。機能テスト正常。title更新確認済み
 
+### UX修正レビュー（Owner指摘後の是正措置に対するレビュー）
+
+- **1回目**: 改善指示。description短縮は正しいが、モバイルでツール本体がファーストビューに入っていない問題が残存。原因はToolLayout内のvaluePropositionとusageExampleセクション。ただし全ツール共通の設計問題であり、fullwidth-converter固有の修正ではない。backlogに記載して次サイクル以降で対応
+
 ## キャリーオーバー
 
-なし（本サイクルの変更はtitle修正・FAQ追加等の軽微なもので、効果測定が必要な規模ではない）
+- ToolLayoutのモバイルUX改善: ツール本体がファーストビューに近い位置に来るよう、valuePropositionとusageExampleの配置を見直す。全33ツールに影響する設計変更。backlog B-294として登録
 
 ## 次サイクルへの申し送り
 
