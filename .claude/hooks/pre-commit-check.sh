@@ -16,7 +16,7 @@ FORMAT_OUTPUT=$(npm run format:check 2>&1)
 FORMAT_EXIT=$?
 
 if [ $FORMAT_EXIT -ne 0 ]; then
-  echo "Prettier format check failed. Run 'npx prettier --write .' to fix." >&2
+  echo "Prettier format check failed. Run \`npm run format\` as a standalone command before committing. Do NOT chain it with other commands using \`&&\` or similar operators." >&2
   echo "$FORMAT_OUTPUT" >&2
   exit 2
 fi
@@ -28,6 +28,16 @@ LINT_EXIT=$?
 if [ $LINT_EXIT -ne 0 ]; then
   echo "ESLint check failed. Fix lint errors before committing." >&2
   echo "$LINT_OUTPUT" >&2
+  exit 2
+fi
+
+# Run typecheck
+TYPECHECK_OUTPUT=$(npm run typecheck 2>&1)
+TYPECHECK_EXIT=$?
+
+if [ $TYPECHECK_EXIT -ne 0 ]; then
+  echo "TypeScript type check failed. Fix type errors before committing." >&2
+  echo "$TYPECHECK_OUTPUT" >&2
   exit 2
 fi
 

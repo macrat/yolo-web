@@ -17,7 +17,6 @@
     "format": "prettier --write .",
     "analyze": "next experimental-analyze --output",
     "format:check": "prettier --check .",
-    "prepare": "bash scripts/install-hooks.sh",
     "generate:static-assets": "tsx scripts/build-search-index.ts"
   },
   "dependencies": {
