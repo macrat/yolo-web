@@ -15,7 +15,12 @@ export const meta: ToolMeta = {
     "ひらがな変換",
   ],
   category: "text",
-  relatedSlugs: ["fullwidth-converter", "char-count", "text-replace"],
+  relatedSlugs: [
+    "fullwidth-converter",
+    "char-count",
+    "text-replace",
+    "line-break-remover",
+  ],
   publishedAt: "2026-02-14T13:21:07+09:00",
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",

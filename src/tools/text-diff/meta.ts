@@ -9,7 +9,7 @@ export const meta: ToolMeta = {
   shortDescription: "2つのテキストの差分をハイライト表示",
   keywords: ["テキスト比較", "差分比較", "diff", "テキスト差分", "文章比較"],
   category: "text",
-  relatedSlugs: ["char-count", "json-formatter"],
+  relatedSlugs: ["char-count", "json-formatter", "line-break-remover"],
   publishedAt: "2026-02-13T19:03:42+09:00",
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
