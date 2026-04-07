@@ -21,6 +21,7 @@ export const meta: ToolMeta = {
     "regex-tester",
     "text-diff",
     "kana-converter",
+    "line-break-remover",
   ],
   publishedAt: "2026-02-14T07:35:49+09:00",
   updatedAt: "2026-02-28T13:00:40+09:00",

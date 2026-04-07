@@ -13,6 +13,7 @@ import { meta as unixTimestampMeta } from "./unix-timestamp/meta";
 import { meta as htmlEntityMeta } from "./html-entity/meta";
 import { meta as fullwidthConverterMeta } from "./fullwidth-converter/meta";
 import { meta as textReplaceMeta } from "./text-replace/meta";
+import { meta as lineBreakRemoverMeta } from "./line-break-remover/meta";
 import { meta as colorConverterMeta } from "./color-converter/meta";
 import { meta as markdownPreviewMeta } from "./markdown-preview/meta";
 import { meta as dummyTextMeta } from "./dummy-text/meta";
@@ -73,6 +74,9 @@ const toolEntries: ToolDefinition[] = [
   },
   {
     meta: textReplaceMeta,
+  },
+  {
+    meta: lineBreakRemoverMeta,
   },
   {
     meta: colorConverterMeta,
