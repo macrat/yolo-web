@@ -35,6 +35,7 @@
     "sanitize-html": "^2.17.1"
   },
   "devDependencies": {
+    "@google-cloud/bigquery": "^8.1.1",
     "@huggingface/transformers": "^3.8.1",
     "@testing-library/dom": "10.4.1",
     "@testing-library/jest-dom": "6.9.1",
