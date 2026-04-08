@@ -46,11 +46,11 @@ npx tsx .claude/skills/analyze-bigquery/scripts/query.ts --file query.sql
 ## Search Console shortcuts
 
 ```bash
-# Search query ranking by clicks (default: 12 weeks)
-.claude/skills/analyze-bigquery/scripts/search-query-ranking.sh [--weeks N] [--from YYYY-MM-DD] [--to YYYY-MM-DD]
+# Search query ranking (default: 12 weeks, sorted by clicks)
+.claude/skills/analyze-bigquery/scripts/search-query-ranking.sh [--weeks N] [--from YYYY-MM-DD] [--to YYYY-MM-DD] [--sort clicks|impressions|ctr|position]
 
-# Page ranking by clicks (default: 12 weeks)
-.claude/skills/analyze-bigquery/scripts/search-page-ranking.sh [--weeks N] [--from YYYY-MM-DD] [--to YYYY-MM-DD]
+# Page ranking (default: 12 weeks, sorted by clicks)
+.claude/skills/analyze-bigquery/scripts/search-page-ranking.sh [--weeks N] [--from YYYY-MM-DD] [--to YYYY-MM-DD] [--sort clicks|impressions|ctr|position]
 
 # Daily search performance (default: 4 weeks)
 .claude/skills/analyze-bigquery/scripts/search-daily.sh [--weeks N] [--from YYYY-MM-DD] [--to YYYY-MM-DD]
