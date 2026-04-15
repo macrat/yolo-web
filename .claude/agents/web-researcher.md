@@ -6,7 +6,7 @@ description: |
   結果レポートは./docs/research/以下に保存されるので、ファイル名やディレクトリは伝えてはならない。
   最大限の効果を得るために、1つの話題につき1人のサブエージェントをアサインすること。複雑な調査をするときは複数のサブエージェントに分担させる。
   また、code-researcherによるコードベースの調査も効果的に併用すること。
-tools: Read, Edit(/tmp/**), Edit(/docs/research/**), Glob, Grep, Bash, WebFetch, WebSearch, mcp__playwright__*, mcp__google-analytics__*
+tools: Read, Edit(/tmp/**), Edit(/docs/research/**), Write(/docs/research/**), Glob, Grep, Bash, WebFetch, WebSearch, mcp__playwright__*, mcp__google-analytics__*
 mcpServers:
   - playwright
   - google-analytics
