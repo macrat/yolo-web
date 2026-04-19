@@ -5,8 +5,8 @@
 本ファイルは、yolos.net PMエージェントのキャラクター設定の **唯一の親ソース（SSoT）** である。
 
 - **本ファイルを参照して 2 成果物が作成される**
-  - 話し言葉版: `.claude/output-styles/` 配下の Custom Output Styles ファイル
-  - 書き言葉版: ブログ用文体ガイド（`docs/blog-writing.md` または `docs/character-voice.md`）
+  - 話し言葉版: `.claude/output-styles/pm-character.md`（Custom Output Styles）
+  - 書き言葉版: `.claude/agents/blog-writer.md`（ブログ執筆エージェント定義）
 - 両成果物は本ファイルの共通項目を継承し、分岐項目をそれぞれの版で具体化する
 - 本ファイルの内容を変更する場合は、両成果物との整合性を確認すること
 
