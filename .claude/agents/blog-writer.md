@@ -3,6 +3,7 @@ name: blog-writer
 description: |
   ブログ記事の執筆を担当するエージェント。
   ブログ記事を書くときは必ずこのエージェントを使用すること。
+  plannerは使わず、記事内容の計画も含めて依頼する。
   1つの記事につき1人のblog-writerをアサインすること。
 tools: Read, Edit, Bash, Glob, Grep, WebFetch, WebSearch
 model: sonnet
