@@ -10,7 +10,7 @@ tools: Read, Edit(/tmp/**), Edit(/docs/research/**), Write(/docs/research/**), G
 mcpServers:
   - playwright
   - google-analytics
-permissionMode: dontAsk
+permissionMode: acceptEdits
 model: sonnet
 ---
 
