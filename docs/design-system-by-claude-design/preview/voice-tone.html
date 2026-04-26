@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <title>Voice & Tone</title>
+    <link rel="stylesheet" href="../colors_and_type.css?v=8" />
+    <style>
+      body {
+        margin: 0;
+        padding: 28px;
+        background: var(--bg-soft);
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+      }
+      .col h4 {
+        margin: 0 0 10px;
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        color: var(--fg-softer);
+        font-weight: 500;
+      }
+      .item {
+        padding: 10px 0;
+        border-bottom: 1px solid var(--border);
+        font-size: 14px;
+      }
+      .item:last-child {
+        border-bottom: 0;
+      }
+      .bad {
+        color: var(--fg-softer);
+        text-decoration: line-through;
+      }
+      .good {
+        color: var(--fg);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="grid">
+      <div class="col">
+        <h4>避ける</h4>
+        <div class="item bad">あなたの大切なメモを安全に保管しましょう！</div>
+        <div class="item bad">今すぐ始める！</div>
+        <div class="item bad">パワフルなツールが満載！</div>
+        <div class="item bad">✨ 新機能リリース 🎉</div>
+      </div>
+      <div class="col">
+        <h4>採用</h4>
+        <div class="item good">メモ</div>
+        <div class="item good">はじめる</div>
+        <div class="item good">道具を並べる</div>
+        <div class="item good">新しい道具：折り紙タイマー</div>
+      </div>
+    </div>
+  </body>
+</html>
