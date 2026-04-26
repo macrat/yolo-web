@@ -920,6 +920,47 @@ Minor-1〜4 もすべて構造的に解消。`user-invocable: false` 採用と `
 
 判定: **pass**。
 
+### T-03 Rev1（2026-04-26）
+
+対象: `src/app/globals.css`（新変数追記、Google Fonts `@import` 追加）と `.claude/skills/frontend-design/variables.md`（プレースホルダ → 本文）。
+
+判定: **needs_revision**
+
+指摘件数: Blocker 2 / Major 2 / Minor 2
+
+#### Blocker
+
+- **B1（観点 B — Google Fonts `@import` が既存サイトの全ページに副作用を起こしている）**: `src/app/globals.css` 冒頭に追加された `@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Sans+Mono:wght@400;500&display=swap");` は、Next.js のルート CSS として `src/app/layout.tsx` に常時 import される（L2）。`npm run build` 出力 `.next/static/chunks/a0533118d95a7936.css` の 1 行目にこの `@import` が含まれることを実機で確認済（L1）。`grep -o "a0533118d95a7936.css" .next/server/app/index.html` でホームページ HTML も同 CSS を `<link>` でロードすることを確認済（3 件マッチ）。結果として **既存サイトのすべてのページで、すべての訪問者のブラウザが Google Fonts CDN へ追加リクエストを送る** 状態になっている。本サイクル最重要制約「既存サイトに手を加えない」（cycle-170.md L22 / L75 / L188）の明確な違反。`body` への font-family 適用は避けたとしても、@import 自体が（1）追加ネットワークリクエスト、（2）`@font-face` 規則のブラウザへの登録、（3）LCP/CLS への潜在的影響、を全ページ全訪問者に対して発生させている。さらに variables.md L107-109 で「`body` には適用しない（既存サイトに手を加えない方針）」と書きながら globals.css 直下に `@import` を置く挙動は自己矛盾している。**修正方向**: globals.css から `@import` を撤去し、Web フォント読み込みは T-04/T-05 で作る新コンポーネントの module.css 側、または T-09 の `_dev/` プレビューページ単体で `<link rel="stylesheet">` または専用 CSS ファイルから行う形に局所化する（既存ページに副作用が出ない経路を採る）。`--ds-font-sans` / `--ds-font-mono` 変数定義自体は globals.css に残してよい（フォントスタックの fallback により Noto がロードされなくても破綻しない）。
+
+- **B2（観点 F — 値の二重記述で受け入れ基準明示違反）**: T-03 受け入れ基準（cycle-170.md L74）は「単一情報源が `globals.css` であり、用途ドキュメントには変数の値そのものが二重記述されていないこと」を明文で要求している。しかし `variables.md` には複数箇所で値そのものが記されている — L124-131（line-height 1.25 / 1.4 / 1.7 / 1.9、letter-spacing -0.01em / 0.02em / 0.08em）、L137-147（spacing 4px / 8px / 12px / 16px / 24px / 32px / 48px / 64px / 96px）、L153-156（radius 2px / 8px）、L172-178（motion duration 120ms / 200ms / 320ms と easing の cubic-bezier 値）。これは将来 globals.css の値を変更したときに variables.md と乖離する典型的な構造で、単一情報源の原則を破っている（T-02 で書いたメタプロンプト「値はファイルから直接読む」と整合しない）。**修正方向**: variables.md の値そのものを除去し、「使える刻みは `--ds-sp-1` 〜 `--ds-sp-9` の 9 段で、8px グリッド準拠」のように **意味と用途と命名規約のみ** で書く。具体値が必要な読み手は globals.css を直接読む構造にする（variables.md L4 の宣言「値は書かない」を実装と一致させる）。
+
+#### Major
+
+- **M1（観点 D — `--ds-` プレフィックスは Owner が明示的に排除した略語パターンに該当する可能性が高い）**: cycle-170.md L86 / L250 / L280-281 で Owner は「`yolos-ds` のような意図が分かりづらい略語ディレクトリも排除」「短く、略語なし、意図が直接読める命名」「リポジトリはすべて yolos.net のものなので `yolos` という言葉自体は意味を持たない」「略語（yolos-ds 等）は意図が読み取れず排除」と複数箇所で明示している。`yolos-ds` の `ds` は design system の略であり、これが Owner の排除理由だった。**今回採用された `--ds-` プレフィックスも同じ「ds = design system」の略**であり、文字列として `yolos-ds` の語幹を引き継いでいる。variables.md L28-32 の選定理由は「短く、design system の意図が直感的に読める」とあるが、これは正に Owner が `yolos-ds` について却下した論理と同型（短いから良いではなく、略語だから却下が Owner ロジック）。Owner が見て初見で「ds って何？」と読み取れない可能性が高い。代替案（例: `--design-bg` / `--system-bg` / プレフィックスなしで既存と区別する別の方式 / Synthesis B-3 のプリミティブ層 + セマンティック層の 2 層命名 等）の比較検討が variables.md にも globals.css コメントにも残されていない。**修正方向**: planner に再度命名選定をさせ、（a）`--ds-` を採るなら「ds は略語ではなく、yolos-ds で却下されたパターンに該当しない」根拠を Owner ロジックと突合した形で variables.md に明記する、または（b）非略語命名（`--design-*` 等）に変更する、いずれかを選ぶ。判断は本サイクルで凍結すべき（T-04/T-05 で大量のコンポーネントが新変数を参照する前に決める）。
+
+- **M2（観点 D / variables.md — サードパーティ衝突リスクの記載が薄い）**: cycle-170.md L238「(3) 将来のサードパーティ衝突リスクが用途ドキュメント内に明記されること」を満たすため variables.md L33-39 に節は設けられているが、内容は「shadcn は接頭辞なし変数なので衝突しない（現時点）」「Tailwind v4 が `--ds-*` を予約する可能性はゼロではない」と表面的な確認に留まる。**Tailwind v4 は `@theme` ディレクティブ内で `--*` 名前空間トークンを大量に生成し、ユーザートークンも `:root` で重なる**設計（要 fact-check）。実害が出るかどうかの判断材料が薄く、「議論が起きた時点で再考する」では遅延に繋がる。せめて「次サイクル以降に Tailwind v4 / shadcn 等の導入議論が起きた時点で `--ds-*` のリネームが必要になる可能性がある」とキャリーオーバー候補に明示し、`docs/cycles/cycle-170.md` の最終キャリーオーバー節に追加する想定であることを variables.md にも書き留めておく。
+
+#### Minor
+
+- **m1（観点 F — 対応表の値乖離注記が弱い）**: variables.md L258「値は完全には一致しない（既存は sRGB、新体系は OKLCH や異なる sRGB 値）」とあるが、具体的にどのペアが視覚的に異なるか（例: `--color-primary: #2563eb` vs `--ds-accent: oklch(0.62 0.22 264)` は色相は近いが彩度・明度で差がある）の記載がなく、次サイクルで段階置換するときの注意喚起として弱い。最低 1〜2 ペアの具体的な差分（DevTools で並べた所感）を脚注として残しておくと、後続サイクルの builder が「単純置換 → 見た目が変わる事故」を避けられる。
+
+- **m2（観点 A — 新変数群冒頭コメントの数値が将来の保守負債になる）**: globals.css L115「既存の --color-_ 体系は変更していない（1,885 箇所参照中）」の `1,885` は cycle-170 計画書の調査時点の数値であり、グローバル CSS 内に固定数値として残すと、リファクタやファイル追加で実数が変わった瞬間に嘘になる。「既存の `--color-_` 体系は変更していない（多数のファイルから参照されているため）」程度の表現に変更し、固有の数値はコミットログ / cycle-170.md 側に残すに留める。
+
+#### 観点 A〜H の独立検証結果
+
+- **A. 受け入れ基準遵守**: B1 / B2 で明示違反 2 件。残り 5 項目は形式上充足だが M1 で命名の妥当性に疑問。
+- **B. `@import` の既存サイト影響**: ホームページを含む全ページで Google Fonts CDN への追加リクエストが発生することをビルド成果物で実証（B1 として Blocker 計上）。
+- **C. 既存 `--color-*` の不変**: `git diff HEAD -- src/app/globals.css | grep "^-" | grep -- "--color-"` で 0 件を確認。OK。
+- **D. 命名 `--ds-`**: M1 として Major 計上。Owner ロジックとの突合不足。
+- **E. 変数値の正確性**: 素地 `colors_and_type.css` から Surface 5 値・Text 5 値・Border エイリアス・Accent/Status 12 値（OKLCH 含む）・font-size 11 値・line-height 4 値・letter-spacing 3 値・spacing 9 値・radius 2 値・elevation 3 raw + 2 alias・motion 2 ease + 3 duration まで全て一致を独立確認。OK。
+- **F. 用途ドキュメント**: B2 / m1 計上。
+- **G. ビルド・lint・test**: `npm run lint` / `npm run format:check` / `npm run test`（4004 tests passed）/ `npm run build` すべて成功を確認。OK。
+- **H. 後続タスクへの影響**: B1（@import の副作用）と M1（命名）が解決しない限り T-04/T-05 を着手できない。両者とも T-04/T-05 が新変数を参照する前提に直接効くため、本サイクルで凍結が必要。
+
+#### 重要メモ
+
+B1 は Owner 直接指示「既存サイトに手を加えない」（cycle-170.md L22）の違反であり、過去サイクルでの類似失敗（cycle-169 の権限外作業／cycle-168 の SCAN 撤回）と同質の「合意済み制約の越境」。AP-WF12 や `docs/anti-patterns/implementation.md` の観点でも要記録。修正後の再レビューでは @import が globals.css から消えていること、build 成果物にも `fonts.googleapis.com` が漏れ出ていないことを実機で再確認すること。
+
 ## キャリーオーバー
 
 <!-- サイクル完了時に記入 -->
