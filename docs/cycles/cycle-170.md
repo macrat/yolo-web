@@ -101,7 +101,7 @@ Owner からの本サイクルへの指示（要約）:
     - Storybook 等の新規ビルドツールを導入しないこと
   - builder の判断範囲: 確認ページのレイアウト、サンプルプロップの選定、フォント実読み込みの方法（`_dev/` 専用 layout で `next/font` を使う等。既存サイトに副作用が出ない経路を採ること）、スクリーンショット取得の具体手順
 
-- [ ] **T-6: 素地ディレクトリの物理削除**（builder 1 名、T-5 完了後）
+- [x] **T-6: 素地ディレクトリの物理削除**（builder 1 名、T-5 完了後）
   - 目的: 素地 `docs/design-system-by-claude-design/` を本サイクル内で物理削除する（Owner 原則 6）。T-3・T-4 でロゴ移動とコード吸収が完了し、philosophy.md / globals.css への取り込みも完了している前提で、残置による進化乖離リスクを断つ
   - 成果物: 素地ディレクトリの削除コミット
   - 受け入れ基準:
@@ -2531,6 +2531,56 @@ T-5 は本 Rev4 をもって完了として確定できる状態。Rev1（needs_
 
 1. T-5 を完了として確定。T-6（素地ディレクトリ `docs/design-system-by-claude-design/` の物理削除）に進める状態
 2. キャリーオーバー候補として継続記録: (a) dev-preview の twitter メタ空上書き（次サイクル以降の SNS 共有改善時）、(b) Playwright MCP browser のインストール手順を `docs/knowledge/` に記録（次サイクル以降の reviewer 効率化）。これらは本サイクルの受け入れ基準には含まれず、次サイクル以降の検討事項
+
+### T-6 Rev1（2026-04-27）
+
+対象: T-6 が staged 状態で残した素地ディレクトリ `docs/design-system-by-claude-design/` の物理削除（`git status` 上で `deleted:` 24 ファイルが staged）。`tmp/cycle-170-asset-migration-map.md` 全 26 エントリの取り込み済み確認、リポジトリ全体の禁止語残存確認、ビルド・テスト・lint・format の 4 系統 pass、ビルド成果物への外部リクエスト混入ゼロ確認、を独立検証した。builder 自己評価は読まず、`git status` / `git grep` / `ls` / `find` / `npm run` で実状態のみを根拠に判定した。
+
+#### 判定: pass（Blocker 0 / Major 0 / Minor 0）
+
+#### 観点別所見
+
+- **A1（取り込みマップ全 26 エントリの取り込み済み確認）**: `tmp/cycle-170-asset-migration-map.md` を独立 Read。#1（README.md → philosophy.md）は `.claude/skills/frontend-design/philosophy.md`（110 行）に存在し、yolos.net 5 ターゲット視点と NEVER 節で再構成されていることを通読確認。#2（SKILL.md → SKILL.md）は `.claude/skills/frontend-design/SKILL.md`（63 行）に frontmatter `name: frontend-design` / `user-invocable: false` で再構成済みを確認。#3（colors_and_type.css → globals.css）は `globals.css` 内に Surface×5（`--bg` / `--bg-soft` / `--bg-softer` / `--bg-invert` / `--bg-invert-soft`）/ Text×5（`--fg` / `--fg-soft` / `--fg-softer` / `--fg-invert` / `--fg-invert-soft`）/ Border×2（`--border` / `--border-strong`）/ Accent×3（`--accent` / `--accent-strong` / `--accent-soft`）/ Type Scale 11 件（`--fs-12`〜`--fs-60`）/ Spacing 9 件（`--sp-1`〜`--sp-9`）/ Elevation（`--elev-0` / `--elev-1` / `--elev-2` / `--elev-button` / `--elev-dragging`）/ Motion がすべて存在することを `grep -nE "^\s*--"` で 144 件確認、素地カテゴリと欠落なく対応。#4・#5（ロゴ）は `public/assets/yolos-logo.svg` / `public/assets/yolos-mark.svg` に T-4 で `git mv` 済み（commit `8b9a083d`）であり、本タスクの staged 削除対象外。#6〜#18（preview HTML 13 件）と #23・#26（プロトタイプ HTML 2 件）は「削除のみ」方針のため取り込み先実在確認は不要。#19・#20・#22・#25（コードレベル吸収 4 件）は `src/components/design-system/` 配下に 8 コンポーネント（ArticleArea / Button / Input / Panel / SectionHead / SiteFooter / SiteHeader / Textarea）+ `__tests__` が実在することで担保（Rev T-3 / T-4 で個別確認済）。#21・#24（UI Kit README → コンポーネント API ドキュメント）は plan の構成に沿い「JSDoc + TypeScript 型を `src/components/design-system/` 内に書く」方針で SKILL.md L36-39 に道案内が書かれており、別 .md を立てない判断と整合。**取り込み完了**。
+
+- **A2（`git rm -r` での削除）**: `git status` で `Changes to be committed:` 配下に 24 件の `deleted:` 行を確認。`git diff --staged --stat` で削除行数 3198 行（README 210 / SKILL 46 / colors_and_type.css 242 / preview HTML 13 件 / `_shared.css` 288 / `_shared.jsx` 171 / tool-page 3 件 / toolbox 3 件）。`ls docs/design-system-by-claude-design/` は "No such file or directory" で物理削除完了。staged 削除 24 件 + ロゴ 2 件（T-4 で `git mv` 済）= 取り込みマップ全 26 件と完全一致。**満たす**。
+
+- **A3（リポジトリ全体に禁止語残存ゼロ）**: `git grep -nE "design-system-by-claude-design|yolos-design|yolos-ds"` を実行。ヒットは `docs/backlog.md` L7（B-308 説明文）と `docs/cycles/cycle-170.md` 多数（plan 本文 L3 / L16 / L56 / L105 / L110 / L165 / L198 / L369 / L382 と過去 Rev レビュー記録）のみ。各ヒットを 1 件ずつ判定: backlog.md L7 は B-308 入力素材として「素地ディレクトリの存在」を経緯記録するための言及で、削除後も B-308 着手の経緯として将来も意味を持つ正当な参照。cycle-170.md は本サイクルの計画・レビュー記録としての過去経緯参照で正当（plan 本体側でも「素地は削除する」前提で禁止語を記述しており残存させる必要がある）。動作中ファイル（`src/` / `.claude/skills/` / `.claude/agents/` / `next.config.*` / `tsconfig.json` / `package.json` / `README.md` / `globals.css`）への参照はゼロ。さらに `.next/static/css/*.css` / `.next/static/chunks/` への混入も `grep -rE` でゼロ確認。**満たす**。
+
+- **A4（独立 commit になる準備）**: 本タスクの削除はまだ未コミット（staged 状態）。staged 内容は素地配下 24 件の deleted のみで他のファイル変更が混在していない（`git status --porcelain` で staged 削除以外の変更ゼロ）ため、PM が `git commit` した時点で「素地削除のみ」の独立コミットになる。commit message に取り込み完了の経緯（取り込みマップ参照、ロゴは T-4 で `git mv` 済）を書ける状態。**満たす**。
+
+- **B（取り込み完了の証跡 — 内容ベース照合）**: 素地 `colors_and_type.css` のカテゴリ別件数（Surface 5 / Text 5 / Border 2 / Accent 3 段 / Type Scale 11 / Spacing 9 / Radius 5 / Elevation 5 / Motion 5）を `globals.css` 内で `grep` 照合し、すべて取り込み済みを件数ベースで確認。素地 README.md の哲学的記述（トーン・ビジュアル指針・アイコン方針）は philosophy.md L1-110 に「Named Aesthetic Tone: functional-quiet」「5 ターゲットへの効き方」「NEVER 節」として再構成済み（章立ては素地を引きずらず yolos.net 視点で書き直されており Rev1 方針と整合）。素地 SKILL.md の Quick reference / Quick rules / ファイルインデックスは SKILL.md L23-50 に再構成済み。素地 `_shared.css` の `.btn` / `.tag` / `.chip` / `.yo-header` / `.yo-footer` 等のスタイルは `src/components/design-system/` 配下の 8 コンポーネント `.module.css` に吸収済み（Rev T-3 / T-4 で個別検証済）。**「形式的存在のみで内容欠落」のケースは検出されず**。
+
+- **C（副作用と全体への影響）**: T-1〜T-5 の成果物（`philosophy.md` / `SKILL.md` / `globals.css` / `src/components/design-system/` / `src/app/dev-preview/` / `public/assets/`）に `git status` 上の意図せざる変更ゼロ（staged は素地配下削除のみ）。`tmp/cycle-170-asset-migration-map.md` も変更されていない（`git status --porcelain` で modified なし）。`docs/cycles/cycle-170.md` も本タスクで内容変更されていない。`npm run lint` / `npm run format:check` / `npm run test` / `npm run build` を本 Rev で実行し、すべて成功（lint クリーン、format All matched files use Prettier code style、テスト 278 ファイル 4091 件 pass、build 完走）。ビルド成果物に Google Fonts CDN 混入ゼロ確認（前 plan T-03 Rev1 Blocker B1 の再発なし）。**問題なし**。
+
+- **D（cycle ドキュメント参照の正当性）**: backlog.md L7 の `docs/design-system-by-claude-design/` 参照は B-308 着手経緯として将来も意味を持つ。cycle-170.md / cycle-169.md 内の参照は失敗サイクル経緯と再挑戦経緯として将来も意味を持つ（cycle-169 は失敗クローズ済、cycle-170 は本サイクルの記録）。**残置に問題なし**。
+
+- **E（削除取りこぼしの最終確認）**: `ls docs/design-system-by-claude-design/` 結果 "No such file or directory" でディレクトリ自体が消滅。サブディレクトリ（`assets/` / `preview/` / `ui_kits/tool-page/` / `ui_kits/toolbox/`）も連動消滅。`.gitkeep` 等の隠しファイルは元から存在せず（git は空ディレクトリを追跡しないため、staged 削除 24 件 + T-4 ロゴ移動 2 件で全 26 ファイルが処理済み、空ディレクトリ残存なし）。**取りこぼしなし**。
+
+- **F（Owner 原則との整合）**: 原則 4（既存サイトに手を加えない）— 削除対象は素地ディレクトリのみで site routing には元から組み込まれていない（`src/app/` / `src/components/common/` / `next.config.*` 等への変更ゼロ）、ビルド完走も既存サイトへの影響ゼロを担保。原則 6（素地は本サイクル内で削除）— 本タスクの staged 状態で達成（PM の commit で完了）。原則 9（無意味な複雑さを持ち込まない）— 削除後に冗長な関連ファイルなし、`docs/design-system-by-claude-design/` への参照も backlog/cycle 記録のみで動作経路への残存ゼロ。原則 10（skill は将来にわたって使い続けるもの）— 削除前に取り込み完了確認済（philosophy.md / SKILL.md / globals.css / src/components/design-system/ / public/assets/ がすべて将来恒久参照される配置）。**全原則充足**。
+
+#### 評価できる点
+
+- **取り込み完了 → 削除 の順序が厳格に守られている**: 取り込みマップ 26 エントリすべてが取り込み済みである状態を独立 grep / Read で件数ベースで確認できる。「ファイルを消したが情報も消えた」というアンチパターンが構造的に発生しない設計。
+- **commit を独立にできる staged 状態**: staged 内容が素地配下 24 件 deleted のみで他変更が混在していないため、PM の `git commit` 時に「素地削除のみ」の独立コミットを作れる。git 履歴で素地の出自を辿れる状態（ロゴは `git mv` で履歴連続性も担保）が維持される。
+- **ビルド・テスト 4091 件 pass の維持**: 大規模な削除作業にもかかわらず既存サイトへの副作用ゼロが実機検証で担保されている。Google Fonts CDN 混入ゼロも `.next/static/css/*.css` / `.next/static/chunks/` への grep で再確認済。
+- **過去経緯参照の正当性**: 残存する禁止語ヒット（backlog.md L7 / cycle-170.md / cycle-169.md）はすべて「過去サイクル経緯としての記録」であり、削除後も意味を持ち続ける。動作経路（src / 設定 / skill / agent）への残存ゼロが確認できているため、進化乖離リスクは断たれている。
+
+#### 判定の根拠
+
+T-6 受け入れ基準 4 項目すべて pass:
+
+1. 取り込みマップ全エントリ取り込み済み → 26 件すべて独立確認（A1 / B）
+2. `git rm -r` で素地配下削除 → staged 24 件 + T-4 ロゴ 2 件 = 全 26 件処理済（A2）
+3. リポジトリ全体に禁止語残存ゼロ（動作中ファイル基準）→ `git grep` で動作経路ゼロ、cycle/backlog 記録のみ残存で正当性確認済（A3）
+4. 削除コミットが独立 commit になる準備 → staged 内容は素地削除のみで PM commit 時に独立化可能（A4）
+
+副作用検証（C）も lint / format / test / build / 外部リクエスト混入チェックすべて pass。Owner 原則 4 / 6 / 9 / 10 すべて充足（F）。Blocker / Major / Minor すべて 0 件のため **pass**。
+
+#### PM への提案
+
+1. T-6 を完了として確定。staged 状態のまま `git commit` を実行し、commit message には「取り込み完了 → 素地削除」の経緯（取り込みマップへの参照、ロゴは T-4 で `git mv` 済の補足）を記載すること
+2. T-7（サブエージェント configuration 配線）に進める状態
+3. キャリーオーバー候補として追加なし（T-6 は素地削除のみで、後続作業を生まない）
 
 ## キャリーオーバー
 
