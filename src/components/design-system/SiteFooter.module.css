@@ -1,0 +1,82 @@
+/*
+ * SiteFooter.module.css
+ * philosophy.md 指針: 「フッターは細い罫線一本＋小さなテキストのみ」
+ * 影・グラデーション・装飾的要素は使わない。
+ * すべての値は globals.css の Design System トークンを参照する。
+ * 既存 --color-* 変数は使わない。
+ */
+
+.footer {
+  border-top: 1px solid var(--border);
+  background: var(--bg);
+}
+
+.inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: var(--sp-6) var(--sp-7) var(--sp-5);
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-6) var(--sp-7);
+  margin-bottom: var(--sp-5);
+}
+
+.group {
+  min-width: 120px;
+}
+
+.groupHeading {
+  font-family: var(--font-sans);
+  font-size: var(--fs-12);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wide);
+  color: var(--fg-softer);
+  margin: 0 0 var(--sp-2) 0;
+  white-space: nowrap;
+}
+
+.groupList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.link {
+  font-family: var(--font-sans);
+  font-size: var(--fs-13);
+  color: var(--fg-soft);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color var(--t-fast) var(--ease);
+}
+
+.link:hover {
+  color: var(--fg);
+}
+
+.link:focus-visible {
+  /* T-3 の Button / Input と同じ accent 2px outline で design-system 全体の一貫性を保つ */
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.disclaimer {
+  font-family: var(--font-sans);
+  font-size: var(--fs-12);
+  color: var(--fg-softer);
+  line-height: var(--lh-snug);
+  margin: 0 0 var(--sp-2) 0;
+}
+
+.copyright {
+  font-family: var(--font-sans);
+  font-size: var(--fs-12);
+  color: var(--fg-softer);
+  margin: 0;
+}

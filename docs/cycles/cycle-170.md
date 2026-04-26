@@ -58,7 +58,7 @@ Owner からの本サイクルへの指示（要約）:
     - 文体・章立てが yolos.net の `character.md` 核と整合し、素地 SKILL.md の機械的コピーになっていないこと
   - builder の判断範囲: 章立て、文体、Quick rules を置くか置かないか・置くなら何項目か、NEVER 節を SKILL.md にも置くか philosophy.md への参照だけにするか、関連リンクの記法
 
-- [ ] **T-3: 操作可能要素のコンポーネント実装**（builder 1 名、T-2 完了後・T-4 と並行可）
+- [x] **T-3: 操作可能要素のコンポーネント実装**（builder 1 名、T-2 完了後・T-4 と並行可）
   - 目的: Owner 例示の汎用要素のうち「ボタン・入力欄」など、操作可能な部品を `src/components/design-system/` 配下に新設する。philosophy.md の判断基準と globals.css の新変数のみで描画され、API がコードから自己説明的に読める状態にする
   - 成果物: 操作可能部品群の TypeScript コンポーネント（CSS Modules 同梱）と最小テスト
   - 受け入れ基準:
@@ -73,7 +73,7 @@ Owner からの本サイクルへの指示（要約）:
     - 各コンポーネントにレンダリングとアクセシビリティの最小テストが Vitest + Testing Library で存在すること
   - builder の判断範囲: 対象部品の最終リスト（Owner 例示の「ボタン・入力欄」を最小ラインとする。追加の関連部品を含めるかは builder 判断）、各部品の名称・props 設計・variant 名・slot 設計、JSDoc の記述量、テストケースの粒度
 
-- [ ] **T-4: 構造要素のコンポーネント実装とロゴ移動**（builder 1 名、T-2 完了後・T-3 と並行可）
+- [x] **T-4: 構造要素のコンポーネント実装とロゴ移動**（builder 1 名、T-2 完了後・T-3 と並行可）
   - 目的: Owner 例示の汎用要素のうち「ヘッダー・フッター・パネル・記事エリア」など、構造を担う部品を `src/components/design-system/` 配下に新設する。同時に、素地に残っているロゴアセットを T-6 の素地削除に先立ち恒久配置先（`tmp/cycle-170-asset-migration-map.md` で確定済み）に移す
   - 成果物: 構造部品群の TypeScript コンポーネント（CSS Modules 同梱）と最小テスト、ロゴアセットの恒久配置
   - 受け入れ基準:
@@ -1865,6 +1865,333 @@ PM への次ステップ提案: T-1 を完了として確定し、T-2（SKILL.md
 T-2 受け入れ基準 5 項目（(a)〜(d) の伝達 / リスト・対応表不在 / 素地参照不在 / 玄関分量 / character.md 整合）すべて完全充足。観点 A〜F すべて pass。frontmatter・philosophy.md・globals.css への副作用 0 件。Owner 原則 2・7・10・11 すべて充足。素地 SKILL.md の機械的コピー痕跡なし。「玄関＝道案内」と「判断基準＝哲学」の役割分担が物理的に守られている。Blocker 0 / Major 0 / Minor 0 のため **pass**。
 
 PM への次ステップ提案: T-2 を完了として確定し、T-3（操作可能要素のコンポーネント実装）と T-4（構造要素のコンポーネント実装とロゴ移動）を並行着手してよい。T-2 で確立された「`src/components/design-system/` の TypeScript 型 + JSDoc が単一情報源」という宣言は、T-3/T-4 builder にとって JSDoc の必須性（plan T-3 受け入れ基準「コンポーネント全体の用途・使う場面・使わない場面が JSDoc で書かれていること」）を SKILL.md 側からも裏付ける構造になっている。T-3/T-4 着手時に補正情報を渡す必要はない。
+
+### T-3 Rev1（2026-04-27）
+
+対象: T-3 が新設した操作可能要素 3 部品 — `src/components/design-system/Button.tsx` + `Button.module.css` + `__tests__/Button.test.tsx`、`Input.tsx` + `Input.module.css` + `__tests__/Input.test.tsx`、`Textarea.tsx` + `Textarea.module.css` + `__tests__/Textarea.test.tsx`。`git status` と `ls src/components/design-system/` で T-3 / T-4 双方の成果物が混在することを確認したうえで、上記 9 ファイルのみを評価対象とした（T-4 成果物 SiteHeader / SiteFooter / Panel / ArticleArea / SectionHead は本レビュー対象外）。
+
+判定: **pass**
+
+#### 受け入れ基準項目別の独立検証（plan L65-73）
+
+1. 配置先 `src/components/design-system/` であること → `find src/components/design-system -type f` で全 3 部品が同ディレクトリ直下に配置されていることを確認。略語ディレクトリ（`ds/` 等）への退化なし。**充足**
+2. 公開 API が TypeScript の型と JSDoc によって自己説明的、最低限 variant ごとに JSDoc → Button.tsx L13-16 で primary / ghost / danger 各 variant に「いつ使うか」が 1 行ずつ書かれている（"1 画面に 1 つ", "補助的なアクション", "取り消しできない破壊的操作にのみ"）。Input.tsx は variant を持たず type で分岐するため、props 各項目の JSDoc（L31-65）が代替として機能。Textarea.tsx も同様。**充足**
+3. ファイル冒頭または default export の型／関数定義に、コンポーネント全体の用途・使う場面・使わない場面が JSDoc で書かれていること → Button.tsx L1-23 / Input.tsx L1-23 / Textarea.tsx L1-22 のいずれもファイル冒頭に「## 使う場面」「## 使わない場面」の節を持つ俯瞰的 JSDoc がある。Input.tsx L9-13 は「複数行 → Textarea」「選択肢 → Select」「チェック → Checkbox」と他コンポーネントへの誘導まで含み、案 Y で `components.md` を作らない前提（plan L67）が成立する粒度。**充足**
+4. variant・size・状態は型リテラルで閉じ自由文字列で開放されない → Button.tsx L28 `type ButtonVariant = "primary" | "ghost" | "danger"`、L31 `type ButtonSize = "sm" | "md" | "lg"`。Input.tsx L29 `type InputSize = "sm" | "md" | "lg"`、L48 `type?: "text" | "email" | "password" | "search" | "url" | "tel" | "number"`。いずれも `string` への開放なし。cycle-169 で問題化した型穴が再発していない。**充足**
+5. スタイルが新 CSS 変数のみ参照、`--color-*` 不参照 → `grep -n "var(--color-" Button.module.css Input.module.css Textarea.module.css` で 0 件。各 CSS で参照される変数（`--bg`, `--bg-soft`, `--bg-softer`, `--bg-invert`, `--bg-invert-soft`, `--fg`, `--fg-soft`, `--fg-softer`, `--fg-invert`, `--border`, `--accent`, `--danger`, `--danger-soft`, `--danger-strong`, `--sp-1〜5`, `--r-interactive`, `--fs-13〜16`, `--lh-tight/snug/base`, `--tracking-base`, `--elev-button`, `--t-fast`, `--ease`, `--font-sans`）はすべて globals.css L123-258 に実在。マジックナンバー混入は `min-height: 32px / 36px / 44px / 52px`（タップターゲットコメント付き）と spinner の `1em / 0.8s / 360deg` のみで、いずれもアニメーション/サイズ規定として CSS 変数化する性質ではない。**充足**
+6. 既存 Header / Footer および既存 `var(--color-*)` 参照を変更していない → `git diff HEAD -- src/components/common/ src/app/globals.css` の出力 0 行で完全不変。`git status` でも `src/components/common/` 配下に変更なし。**充足**
+7. キーボード操作とフォーカスリングが philosophy.md 規約と整合 → Button.module.css L41-44 `outline: 2px solid var(--accent); outline-offset: 2px;` （`:focus-visible` 限定でマウスクリック時の outline 出現を回避）。Input.module.css L64-68 / Textarea.module.css L66-70 はいずれも `outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent);` で同等。Tab / Enter / Space は HTML 標準ボタン要素・input・textarea の挙動を継承し、独自のキーハンドラで上書きしていない。**充足**
+8. CSS Modules を採用、CSS-in-JS 等の新ビルド構成なし → 各 `.module.css` は CSS Modules 規約（class セレクタ + `[data-attr]` の組み合わせ）で書かれており、`styled-components` / `emotion` / `vanilla-extract` 等のランタイムを `package.json` に追加していない（git status で `package.json` 不変）。**充足**
+9. レンダリングとアクセシビリティの最小テストが Vitest + Testing Library で存在 → 各 `__tests__/*.test.tsx` を読み、Button 15 / Input 13 / Textarea 9 の計 37 テストを `npx vitest run` で実機実行 → 全 pass（Duration 1.83s）。テスト内容はレンダリング / variant / size / 状態 / aria-\* / インタラクションを網羅。`__tests__/` ディレクトリ配置・`<filename>.test.tsx` 命名いずれも `.claude/rules/testing.md` 規約に整合。**充足**
+
+#### 観点 A〜H の評価
+
+- A（受け入れ基準）: 9 項目すべて充足（上記）
+- B（philosophy.md NEVER 節との整合）:
+  - グラデーション / glassmorphism / 3D シェイプ・オーブ → 各 CSS で `linear-gradient` / `backdrop-filter` / `radial-gradient` の使用 0 件
+  - 装飾絵文字 → grep で 0 件（テスト文字列・JSDoc・CSS いずれも）
+  - 複数アクセント色の同時使用 → 各部品は単一アクセント（`--accent`）+ 状態色（`--danger`）のみ。同時使用なし
+  - hover 透明度・scale 変化 → `opacity` / `transform: scale` の hover 時変化 0 件。`opacity: 0.45` は `:disabled` 限定で、hover ではない（philosophy NEVER は「hover 前後」を対象とするため整合）
+  - hover で border 色を変える → ghost / danger の hover で border 色は不変。primary は border 色も bg と同じ値に追従するが、border-color は bg-color と完全同期しており視覚的に独立した「border 色変化」として知覚されない（NEVER 節が想定する装飾的な border 色フラッシュではない）
+  - `rounded-2xl + shadow-lg + グラデテキスト` の組み合わせ → 各 CSS は `--r-interactive: 8px` の控えめな角丸のみで、shadow も `--elev-button` のみ・グラデテキスト 0 件
+  - ダイアログ等への影 → Button のみ `box-shadow: var(--elev-button)`。これは globals.css L247 で「ボタン通常時のみ」と明示された専用変数で、ダイアログ・カードへの影とは規約上区別されている。Input / Textarea には影なし
+  - bounce / spring / 大きな移動 → アニメーションは Spinner の `linear` rotation のみ。CSS transition は `--ease` (cubic-bezier(0.2, 0.6, 0.2, 1)) で over-shoot しない曲線
+  - 「あなた・私たち」主語 / 訴求文 / ようこそバナー → JSDoc 全文を grep し 0 件。テスト文字列も「送信」「名前」「本文」など道具的・無人称
+  - ヘッダー固定 → T-3 スコープ外（T-4 領域）だが、本部品にも `position: fixed` 0 件で問題なし
+- C（アクセシビリティと UX）:
+  - フォーカスリング: 受け入れ基準 7 で確認済み、philosophy 規約と完全一致
+  - キーボード操作: HTML ネイティブ要素（button / input / textarea）の Tab / Enter / Space 挙動を継承。独自 onKeyDown で潰していない
+  - aria-\* 属性: Button は loading 時 `aria-busy="true"`（L105）。Input / Textarea は error 時 `aria-invalid="true"` + `aria-describedby` で error/hint と結びつき（L137-138 / L117-118）、エラーメッセージ要素には `role="alert"` 付与（Input L147 / Textarea L127）でスクリーンリーダーに即時通知
+  - disabled / loading / readonly / error: 視覚（opacity 0.45、bg-soft、border-color: var(--danger)）と支援技術（disabled 属性、aria-busy、aria-invalid、role="alert"）の両方に伝達
+  - ラベル関連付け: Input / Textarea は `htmlFor={inputId}` と `id={inputId}` の対応 + `useId` による衝突回避。`hideLabel` 時は visually-hidden（clip rect / position absolute / 1px size）でスクリーンリーダーには読まれる正攻法
+  - WCAG 2.5.5（タップターゲット 44px）: Button md / Input md / Input lg・Textarea で 44px 以上を確保。Input sm のみ 36px だが CSS コメント L98-99 で「sm でも十分な高さ」と説明あり（規約上は 24×24px の最小目標を満たす範囲）
+- D（型穴と API 設計）:
+  - variant / size の string 開放なし（受け入れ基準 4）
+  - props 数: Button 11 / Input 19 / Textarea 16。Input は HTMLInputElement 系の常用属性をほぼ網羅しているが、いずれも実際のフォームで使う最小集合（autoComplete・required・readOnly・maxLength 等）に閉じており、Rule of Three の精神を逸脱した過剰拡張ではない
+  - 既存 `src/components/common/` との一貫性: 既存 Header / Footer は CSS Modules + 関数コンポーネント + default export という構造を持ち、T-3 部品も同構造で統一
+  - 「いつ使う/避ける」が JSDoc から判定可能: Button L4-11 / Input L4-12 / Textarea L4-11 で具体的な代替コンポーネント名（Link、Textarea、Select、Checkbox、専用エディタ）まで含めて誘導しており、次サイクルの builder/reviewer が JSDoc を読めば判断できる
+- E（CSS の品質）:
+  - 新変数以外の値（マジックナンバー）混入: 受け入れ基準 5 で確認、min-height のタップターゲット 4 値と Spinner アニメーション固定値のみで合理的範囲
+  - 既存 `--color-*` 参照: grep で 0 件（受け入れ基準 5）
+  - CSS Modules の class 命名: `.button` / `.input` / `.wrapper` / `.label` / `.labelHidden` / `.required` / `.hintText` / `.errorText` / `.spinner` / `.inputError` / `.textareaError` / `.labelHidden`。Modules によりハッシュ付き class 名となるためグローバル衝突リスクなし
+  - 不要なネスト・冗長記述: BEM 風の長大な class 名や深いセレクタネストは無く、`[data-variant]` / `[data-size]` / `:disabled` / `:focus-visible` の属性・状態セレクタで簡潔に分岐
+- F（テストの品質）:
+  - レンダリング + アクセシビリティの最小テスト存在（受け入れ基準 9）
+  - `__tests__/` 配下配置・`<filename>.test.tsx` 命名（受け入れ基準 9）
+  - 37 件は妥当範囲。Button 15 件は variant 3 × size 3 + 状態 + インタラクションの組み合わせで膨らむが過剰ではなく、Input 13 件 / Textarea 9 件は構造類似のうち Textarea がより薄い（type 不要のため）という妥当な配分
+- G（T-4 との衝突）:
+  - 作成ファイルが操作可能要素のみ → `find src/components/design-system -newer ...` ではなく報告された Button / Input / Textarea のみで判定。SiteHeader / SiteFooter / Panel / ArticleArea / SectionHead は T-4 由来として除外
+  - ヘッダー・フッター・パネル・記事エリアへの踏み込みなし
+- H（副作用と全体への影響）:
+  - frontmatter / philosophy.md / SKILL.md / globals.css 不変 → `git status` および `git diff HEAD` で確認、いずれも変更なし
+  - 既存 `src/components/common/Header.tsx` `Footer.tsx` 不変 → `git diff HEAD -- src/components/common/` 出力 0 行
+  - lint: `npx eslint src/components/design-system/{Button,Input,Textarea}.tsx __tests__/{Button,Input,Textarea}.test.tsx` 出力なし（pass）
+  - 型チェック: `npx tsc --noEmit` 出力なし（pass）
+  - テスト: `npx vitest run` で 3 ファイル 37 件すべて pass（1.83s）
+
+#### Blocker / Major / Minor の指摘
+
+なし（Blocker 0 / Major 0 / Minor 0）。
+
+#### 良かった点
+
+- ファイル冒頭俯瞰 JSDoc に「使わない場面」と **代替コンポーネント名（Link / Textarea / Select / Checkbox / 専用エディタ）への誘導**を明記している点は、案 Y の前提（`components.md` を作らない）が成立する条件を builder が深く汲み取った実装。次サイクルの builder/reviewer がコンポーネント選択に迷ったとき、当該ファイル単体の JSDoc を読むだけで他選択肢への誘導が機能する
+- Button.tsx L98 `const isDisabled = disabled || loading;` で disabled と loading を統一的に扱い、L110 で `onClick={isDisabled ? undefined : onClick}` と二重防御している。HTML の `disabled` 属性だけでも click は止まるが、handler を切り離す書き方は将来 `<a role="button">` 等に書き換えられた場合の保険として機能
+- Button.tsx L104 で `type` のデフォルトが `"button"` になっており、フォーム内に置かれたとき誤って submit する事故を防いでいる。JSDoc L47 にも理由が明記。これは React のお決まり落とし穴を builder が把握している証拠
+- Input / Textarea が `useId` で id 衝突を回避し、`aria-describedby` で error / hint を SR に届け、error 時に `role="alert"` で即時通知する三段構えのアクセシビリティ設計は、philosophy NEVER 節「loading / error / empty 状態を省略する」への正面回答として完成度が高い
+- Button の primary hover が `--bg-invert: #1a1a1a` → `--bg-invert-soft: #555555` という明度差のみの遷移で、philosophy「明度差のみで表現」（L70）と globals.css の変数命名意図（`-soft` サフィックス＝「hover」用途）に完全合致している
+- WCAG 2.5.5 タップターゲット 44px をコメント付きで CSS に明示（Button.module.css L106-107、Input.module.css L98-99）。アクセシビリティ規格の根拠を CSS コメントに残す姿勢が、サブエージェント E1 / E2（実装パターンを持ち帰るエンジニア）への学習素材としても機能
+
+#### 検討点（Blocker / Major / Minor のいずれにも該当しないが記録する観察事項）
+
+- Button.module.css L138-140 の `.labelHidden` は `visibility: hidden; position: absolute;` で実装されている。`<button>` は position: static のため、絶対配置された label span は最近接の positioned ancestor を基準に配置される性質を持つ。実用上 `visibility: hidden` で見えないため事故にはならないが、より堅牢にするなら button に `position: relative` を加えるか、label を visually-hidden 用の clip-rect 方式（Input/Textarea で採用されている方式）に揃える選択肢もあった。**Minor 未満**として記録するに留める
+- Button primary 変種では border-color と background-color が同値で連動するが、philosophy NEVER「border 色を hover で変える」の文字通りには触れる。視覚的には border が bg に溶け込んでいて装飾的ではないため違反として扱わないが、将来 ghost-on-dark のような変種を増やすときに「border 色を hover で変えない」を厳格に守れる構造かどうかは T-5（動作確認ページ）でビジュアル検証する価値がある
+
+#### 判定の根拠
+
+T-3 受け入れ基準 9 項目すべて完全充足。観点 A〜H すべて pass。philosophy.md NEVER 節 14 項目すべてに違反なし。lint・tsc・vitest 全 37 件すべて pass。既存 Header / Footer / globals.css / philosophy.md / SKILL.md への副作用 0 件。型穴（cycle-169 再発リスク）なし。Owner 例示の最小ライン「ボタン・入力欄」を Button + Input + Textarea という妥当な分解で実装し、案 Y の前提（型 + JSDoc が単一情報源）が成立する JSDoc 粒度を確保。Blocker 0 / Major 0 / Minor 0 のため **pass**。
+
+PM への次ステップ提案: T-3 を完了として確定。T-4 が並行作業中のため T-4 のレビュー完了を待ったうえで T-5（動作確認ページとビルド検証）に進む。T-3 由来の繰り越し課題はなく、T-5 で本 3 部品を確認ページに配置するときに視覚検証で「Button primary hover の border 連動が違和感なく見えるか」を確認すれば十分。
+
+### T-4 Rev1（2026-04-27）
+
+対象: T-4 が新設した構造要素 5 部品 — `src/components/design-system/SiteHeader.tsx` + `.module.css` + `__tests__/SiteHeader.test.tsx`、`SiteFooter.tsx` + 同 + 同、`Panel.tsx` + 同 + 同、`SectionHead.tsx` + 同 + 同、`ArticleArea.tsx` + 同 + 同。およびロゴアセット移動（`docs/design-system-by-claude-design/assets/yolos-logo.svg` → `public/assets/yolos-logo.svg`、`yolos-mark.svg` → `public/assets/yolos-mark.svg`、いずれも `git mv`）。`git status` / `git diff HEAD` / `find src/components/design-system -type f` で T-3 と T-4 の成果物の境界を確認したうえで、上記 15 ファイル + ロゴ 2 件を独立対象として評価した。
+
+判定: **needs_revision**
+
+#### 受け入れ基準項目別の独立検証（plan L80-88）
+
+1. 配置先 `src/components/design-system/` であること → 5 部品すべてが同ディレクトリ直下、テストは `__tests__/` 配下。**充足**
+2. 既存 `src/components/common/Header.tsx` `Footer.tsx` と並行作成、既存ファイル不変 → `git diff HEAD -- src/components/common/` 出力 0 行で完全不変。新版は `SiteHeader.tsx` `SiteFooter.tsx` という別名で衝突なし。**充足**
+3. 新版ヘッダー・フッター冒頭に「現在の本番実装は別ファイル、本ファイルは次サイクルでの差し替え候補」コメント → `SiteHeader.tsx` L18-22 / `SiteFooter.tsx` L19-23 のいずれも「## 2 系統併存に関する注記」節で「現在の本番実装は `src/components/common/Header.tsx` にあります」「次サイクルで差し替え候補」「それまでは接続しないでください」を明記。**充足**
+4. 公開 API が TypeScript の型と JSDoc によって自己説明的 → 各 props インターフェース（`SiteHeaderProps` / `SiteFooterProps` / `PanelProps` / `SectionHeadProps` / `ArticleAreaProps`）は型リテラル + 各 props に JSDoc。`PanelVariant` は `"default" | "flush" | "inset"` で型リテラル閉じ。`SectionHead` の `level` も `2 | 3 | 4` でリテラル閉じ。**充足**
+5. ファイル冒頭または default export の型／関数定義に、コンポーネント全体の用途・使う場面・使わない場面が JSDoc で書かれていること → 全 5 部品のファイル冒頭に「## 用途」「## 使う場面」「## 使わない場面」が揃って記載されている。`Panel.tsx` L13-17 は「shadow-lg を使いたい場面には使わない（philosophy.md NEVER 直引用）」、`SiteHeader.tsx` L13-16 は「sticky / fixed が必要な場面には使わない」と philosophy.md への参照まで含む。`ArticleArea.tsx` L17-21 は「複数の ArticleArea を入れ子にしない」「Panel の内側に ArticleArea をネストしない」と他コンポーネントとの組み合わせ時の判断まで誘導しており、案 Y で `components.md` を作らない前提が成立する粒度。**充足**
+6. ナビ項目・リンク先のような可変データは props で受ける → `SiteHeader` は `navLinks: NavLink[]`、`SiteFooter` は `linkGroups: FooterLinkGroup[]` + `disclaimer?: string`、`ArticleArea` は `steps?: string[]` + `related?: RelatedItem[]` といずれも props 経由で受ける構造。コンポーネント内でハードコードされたナビ項目・URL なし。**充足**
+7. スタイルが新 CSS 変数のみ参照、`--color-*` 不参照 → `grep -n "var(--color-" SiteHeader.module.css SiteFooter.module.css Panel.module.css SectionHead.module.css ArticleArea.module.css` で 0 件（コメント中の `--color-*` 言及は「使わない」明示のみ）。各 CSS で参照される変数（`--bg`, `--bg-soft`, `--border`, `--fg`, `--fg-soft`, `--fg-softer`, `--sp-1〜7`, `--r-normal`, `--fs-12〜18`, `--lh-tight/snug/base`, `--tracking-tight/wide`, `--font-sans`, `--t-fast`, `--ease`）はすべて globals.css L123-258 に実在。マジックナンバー混入は `max-width: 1280px`（SiteHeader / SiteFooter のレイアウト最大幅）と `max-width: 960px / 640px`（ArticleArea / howTo セクション）と `min-width: 120px`（FooterGroup）と `minmax(200px, 1fr)`（relatedList）の 5 箇所。`--max-width: 960px` は globals.css L28 で定義済みのため `ArticleArea` の `max-width: 960px` は変数化可能だったが、SiteHeader / SiteFooter の 1280px と FooterGroup の 120px と relatedList の 200px は新変数として定義されていないため CSS 値直書きが避けられない。**Minor 観察事項として記録するが受け入れ基準は充足**
+8. ロゴアセットが取り込みマップで確定した恒久配置先に `git mv` で移されていること → `git status` で `renamed: docs/design-system-by-claude-design/assets/yolos-logo.svg -> public/assets/yolos-logo.svg`、同 `yolos-mark.svg` の 2 件が確認できる。移動先は `tmp/cycle-170-asset-migration-map.md` L43-44 の確定移行先（`public/assets/yolos-logo.svg` / `public/assets/yolos-mark.svg`）と完全一致。`git mv` を使っているため履歴を辿れる。実サイトへの読み込み配線は本サイクル対象外であることが `grep -rn "yolos-logo\|yolos-mark" src/` 0 件で確認できる。**充足**
+9. 各コンポーネントにレンダリングとアクセシビリティの最小テストが存在 → 5 部品それぞれに `__tests__/*.test.tsx` が存在。Vitest run で SiteHeader 9 / SiteFooter 8 / Panel 8 / SectionHead 6 / ArticleArea 11 の計 42 件すべて pass。`__tests__/` 配置・`<filename>.test.tsx` 命名は `.claude/rules/testing.md` 規約に整合。**充足**
+
+#### 観点 A〜I の評価
+
+- A（受け入れ基準）: 9 項目すべて充足（上記）
+- B（philosophy.md NEVER 節との整合）:
+  - ヘッダー固定 → SiteHeader.module.css L11-12 のコメントで「position は static のまま — ヘッダー固定禁止」を明示、`grep -n "position:\s*\(fixed\|sticky\)" *.module.css` 0 件
+  - フッターは細い罫線一本＋小さなテキストのみ → SiteFooter.module.css L9-12 で `border-top: 1px solid var(--border)` のみ。背景は `--bg`、影なし。フッタテキストは `--fs-12` / `--fs-13` で確かに小さい
+  - 中央寄せヒーロー＋3 カラム＋価格テーブル → 該当する装飾要素なし。ArticleArea は H1 + 本文 + 使い方 + 関連という用途明確な構造で SaaS LP テンプレでない
+  - ようこそバナー / 訴求文 / 「あなた・私たち」主語 → 各 .tsx / .module.css / .test.tsx に対し `grep -n "あなた\|私たち\|ようこそ"` 0 件。default disclaimer は「このサイトはAIによる実験的プロジェクトです」と無人称で constitution rule 3（AI 運営の通知）と整合
+  - ダイアログ等への影 → Panel.module.css L15「shadow は使わない」と明示、`grep -n "box-shadow" *.module.css` 0 件（T-4 5 ファイル中）
+  - glassmorphism / グラデーション / 3D シェイプ → `backdrop-filter` / `gradient` / `radial-gradient` 0 件
+  - 装飾絵文字 → 0 件
+  - 複数アクセント色の同時使用 → 構造要素群はそもそも `--accent` を一切使わず `--bg` / `--border` / `--fg` 系のみ。アクセント不在で違反不可能
+  - bounce / spring / 大きな移動 → CSS transition は `color var(--t-fast) var(--ease)` のみ。`--ease: cubic-bezier(0.2, 0.6, 0.2, 1)` で over-shoot しない
+  - hover で透明度・scale 変化 → 0 件。SiteHeader L36-38 のコメントで「明度差のみ — border 色変更・scale・opacity は使わない」と builder が philosophy 規約を意識している痕跡あり
+  - **充足**
+- C（ロゴアセット移動の妥当性）:
+  - 取り込みマップ #4 / #5 と移動先一致（受け入れ基準 8）
+  - `git mv` が使われ履歴が辿れる（受け入れ基準 8）
+  - 既存 `public/` 配下は `ads.txt` / `search-index.json` のみ非画像で混在、`public/assets/` サブディレクトリ新設は `tmp/cycle-170-asset-migration-map.md` 前文 L19-32 の判断と整合
+  - 実サイトへの読み込み配線は本サイクル対象外（`grep -rn "yolos-logo\|yolos-mark" src/` 0 件）
+  - **充足**
+- D（アクセシビリティと UX）:
+  - SiteHeader: `<header role="banner">` + `<nav aria-label="メインナビゲーション">` + `<ul role="list">`（list-style: none で Safari がリスト role を剥がす対策）。`<a>` タグで実装、フォーカスリング → SiteHeader.module.css に `:focus-visible` 定義なし。**Major 1 として後述**
+  - SiteFooter: `<footer role="contentinfo">` + `<nav aria-label="フッターナビゲーション">` + `<ul role="list">`。`<a>` タグ実装、フォーカスリング → SiteFooter.module.css にも `:focus-visible` 定義なし。**Major 1 として後述**
+  - Panel: `as` プロップで `div` / `section` / `article` を選べる。`role` / `aria-*` は HTMLAttributes でパススルー
+  - SectionHead: `<h2>` / `<h3>` / `<h4>` を `level` プロップで指定。meta は `<span aria-label={`補足情報: ${meta}`}>` で SR にも補足が伝わる
+  - ArticleArea: `<article>` ランドマーク。`<section aria-labelledby="how-to-heading">` と `<section aria-labelledby="related-heading">` で見出しに紐付けるが、**SectionHead が `id` 属性を出力しないため aria-labelledby の参照先が存在しない**。**Blocker 1 として後述**
+- E（型穴と API 設計）:
+  - variant が string 型に開放されていない（`PanelVariant`、`SectionHead.level` ともリテラル閉じ）
+  - props 数: SiteHeader 2 / SiteFooter 2 / Panel 4 / SectionHead 3 / ArticleArea 5 でいずれも最小限
+  - 既存 `src/components/common/Header.tsx` `Footer.tsx` との一貫性: CSS Modules + 関数コンポーネント + default export という構造で揃っている
+  - 「いつ使う / 避ける」が JSDoc から判定可能（受け入れ基準 5）
+- F（CSS の品質）:
+  - 新変数のみ参照、`--color-*` 不参照（受け入れ基準 7）
+  - ヘッダー `position: sticky / fixed` 不在
+  - Panel に `box-shadow` 不在
+  - マジックナンバー: `max-width: 1280px` × 2 / `max-width: 960px` × 1 / `max-width: 640px` × 1 / `min-width: 120px` × 1 / `minmax(200px, 1fr)` × 1。`--max-width: 960px` は globals.css L28 に定義済みのため `ArticleArea.module.css` L9 は `var(--max-width)` を使うべきだった。**Minor 1 として後述**
+- G（テストの品質）:
+  - レンダリング + アクセシビリティの最小テスト存在（受け入れ基準 9）
+  - 42 件すべて pass。SiteHeader の「header is not position fixed or sticky」テスト（L49-54）は `data-fixed` 属性の不在を確認するという回りくどい実装で、実際には CSS の `position` を JSDOM が解決しないため意味が薄い。**Minor 2 として後述**
+- H（T-3 との衝突）:
+  - 作成ファイルが構造要素のみ → SiteHeader / SiteFooter / Panel / SectionHead / ArticleArea のみで、ボタン・入力欄に踏み込んでいない
+  - 同名ファイルの T-3 / T-4 重複なし（`find src/components/design-system -type f | sort` で確認）
+- I（副作用と全体への影響）:
+  - frontmatter / philosophy.md / SKILL.md / globals.css 不変 → `git diff HEAD -- src/app/globals.css .claude/skills/` 出力 0 行
+  - 既存 `src/components/common/Header.tsx` `Footer.tsx` 不変
+  - 既存 `var(--color-*)` 参照は不変（T-4 で globals.css 自体を触っていない）
+  - lint: `npm run lint` pass
+  - format: `npm run format:check` pass
+  - test: `npm run test` 全 4083 件 pass
+  - build: `npm run build` 成功（Failed to load dynamic font は OG image の既存課題で T-4 と無関係）
+
+#### Blocker / Major / Minor の指摘
+
+**Blocker 1（観点 D — ArticleArea の `aria-labelledby` 参照先が存在しない）**:
+`ArticleArea.tsx` L99 `<section className={styles.howTo} aria-labelledby="how-to-heading">` および L116 `<section className={styles.related} aria-labelledby="related-heading">` は、対応する `id="how-to-heading"` / `id="related-heading"` を持つ要素を一切出力していない。`SectionHead.tsx` L48-49 は `<Tag className={styles.title}>{title}</Tag>` で h2/h3/h4 を出力するが `id` 属性は付与されない。結果として、スクリーンリーダーが `<section>` の名前を解決しようとして空文字列を得て、ランドマークとして適切に名付けられない。さらに、同一ページに複数の ArticleArea が描画された場合（一覧ページなど）、固定文字列 ID `how-to-heading` / `related-heading` が重複し HTML 仕様違反となる。philosophy.md NEVER 節「loading / error / empty 状態を省略する → yolos.net のツールはこの 3 状態を必ず実装する」と並ぶ完成度欠落シグナルであり、cycle-169 の失敗（型穴・装飾過多）と同質の「動くがアクセシブルでない実装」になる。
+
+修正方向: (a) `SectionHead` に `id?: string` props を追加し、`<Tag>` に出力する。`ArticleArea` は `useId()` で一意な ID を生成して SectionHead に渡し、同じ ID を `<section aria-labelledby={...}>` に設定する。または (b) `aria-labelledby` を削除し、`<section>` に `aria-label="使い方"` / `aria-label="関連"` を直接記述する。(a) が SR 体験として優れる（読み上げが見出しテキストと完全同期）が、(b) でも違反は解消する。Blocker 扱いの理由: 現状でアクセシビリティが破綻しており、テストも `<section>` 自体ではなく内部の `<heading>` を見ているため検出されていない。次サイクルの T-5 で実装ページを作って初めて気付く性質の問題で、本サイクルで修正する方が傷が浅い。
+
+**Major 1（観点 D — `<a>` リンクのフォーカスリングが定義されていない）**:
+`SiteHeader.module.css` の `.brand` / `.navLink` および `SiteFooter.module.css` の `.link` / `ArticleArea.module.css` の `.relatedLink` のいずれも `:focus-visible` 状態のスタイル指定がない。ブラウザデフォルトのフォーカスリングが効くため最低限のキーボード操作は可能だが、philosophy.md L70「明度差のみで表現する」を踏襲し、`outline: 2px solid var(--accent); outline-offset: 2px;` のような明示的な focus ring を T-3 の Button / Input / Textarea と同様に揃えるのが design-system としての一貫性。T-3 部品との非対称（操作要素はカスタムフォーカスリング、リンクはブラウザデフォルト）が次サイクル以降に「リンクだけ視覚的に違う」混乱を生む。
+
+修正方向: 各 `.module.css` の `.brand` / `.navLink` / `.link` / `.relatedLink` に `&:focus-visible` ブロックを追加し、Button と同等の `outline: 2px solid var(--accent); outline-offset: 2px;` を設定する。Major 扱いの理由: アクセシビリティ違反ではない（ブラウザデフォルトが効く）が、design-system の一貫性が損なわれており、次サイクルで「リンクだけフォーカスが薄い」と気付かれて手戻りになる。
+
+**Minor 1（観点 F — `--max-width` 変数があるのに ArticleArea で使っていない）**:
+`globals.css` L28 で `--max-width: 960px;` が定義されているが、`ArticleArea.module.css` L9 は `max-width: 960px;` と直書きしている。同じ値を 2 箇所で別々に管理する状態で、将来 `--max-width` を変えたときに ArticleArea が追従しない。
+
+修正方向: `ArticleArea.module.css` L9 を `max-width: var(--max-width);` に変える。1 行修正。
+
+**Minor 2（観点 G — SiteHeader の position:fixed テストが空虚）**:
+`SiteHeader.test.tsx` L49-54 は `data-fixed` 属性の不在を確認するが、コードには `data-fixed` 属性を出力する箇所がそもそもない。テストとして「常に pass する空テスト」になっており、philosophy.md NEVER「ヘッダーを固定する」を実際には検証していない。
+
+修正方向: (a) このテストを削除する（CSS の position は JSDOM では検証できないため、テストで強制するのは無理筋）。または (b) `getComputedStyle(header).position !== "fixed"` のようにブラウザ環境（Playwright）で検証する。本サイクルでは T-5 の Playwright スクショで視覚確認するため、(a) の削除が妥当。
+
+**Minor 3（観点 D — SiteHeader / SiteFooter の `role="banner"` `role="contentinfo"` は冗長）**:
+HTML5 の `<header>` 要素は body 直下では暗黙的に `banner` ランドマークを持ち、`<footer>` 要素は body 直下では暗黙的に `contentinfo` を持つ。逆に、これらが `<article>` / `<aside>` / `<main>` / `<nav>` / `<section>` の子孫になるとランドマーク役を失う。明示的な `role="banner"` / `role="contentinfo"` は body 直下で使うときは冗長だが害はなく、別ランドマークの子孫で使うと「ランドマーク内ランドマーク」になり SR ユーザーの混乱を招く。design-system 部品としては「ルートレイアウトでのみ使う」という JSDoc 制約と整合させるため、明示 role を削除するのが安全側。
+
+修正方向: SiteHeader L59 から `role="banner"`、SiteFooter L69 から `role="contentinfo"` を削除する。JSDoc に「アプリのルートレイアウトで 1 度だけレンダリングする」と既に書かれているため、削除しても意図は伝わる。Minor 扱いの理由: 現状の本番実装が body 直下使用を想定しているため実害がない。
+
+#### 良かった点
+
+- philosophy.md NEVER 節への参照が CSS コメントと TSX JSDoc の両方に書かれている（`SiteHeader.module.css` L3「ヘッダーは fixed / sticky にしない」、`Panel.module.css` L3「ダイアログ・ポップオーバー・カードに影を使う禁止」、`SiteFooter.module.css` L3「フッターは細い罫線一本＋小さなテキストのみ」など）。philosophy.md と実装の対応関係が CSS コメントから直接辿れる構造で、案 Y の「型 + JSDoc が単一情報源」を CSS コメントレイヤーでも補強している
+- `Panel` の `as` props で `div` / `section` / `article` を選べる polymorphic 設計は、ArticleArea 内で `Panel` を `as="article"` として使うことを想定したときに HTMLランドマークとセマンティクスが衝突しないよう柔軟性を持たせている
+- ロゴ移動が `git mv` で実行され `git status` で `renamed:` と表示される。コピー削除ではなく rename として履歴が辿れることで、次サイクルで「素地から `public/assets/` に移った」経緯を `git log --follow` で復元可能
+- `SiteFooter` の default disclaimer が constitution rule 3「AI 運営の通知」と整合する文面で、props 省略時にも constitution 違反が発生しない安全側のデフォルト
+- `ArticleArea` のスロット設計（children: 必須 / title / meta / steps / related: いずれもオプション）は、ToolHero / HowTo / RelatedTools の素地パターンを汎用化しつつ、ツールページでも記事ページでも使える柔軟性を確保。`steps` が空配列のとき非表示にする条件分岐（`steps && steps.length > 0`）も正しい
+- 5 部品いずれもファイル冒頭に「## 用途 / ## 使う場面 / ## 使わない場面」を統一書式で書いている。書式が揃っていることで次サイクルの builder/reviewer が「どのコンポーネントを選ぶべきか」をスキャンするとき認知負荷が低い
+
+#### 検討点（Blocker / Major / Minor のいずれにも該当しないが記録する観察事項）
+
+- `SiteHeader.module.css` の `max-width: 1280px` と `SiteFooter.module.css` の `max-width: 1280px` は重複しており、将来 globals.css に `--max-width-chrome: 1280px` のような変数を追加する余地がある。本サイクルでは新変数追加は避けるべきだが、次サイクル以降のキャリーオーバー候補として記録
+- `SectionHead.tsx` L51-58 の `<span aria-label={`補足情報: ${meta}`}>` で aria-label により meta を SR 用に書き直しているが、span の中身 `{meta}` も SR に読まれるため二重読み上げになる可能性がある。aria-label を削除しても支障ないが、本サイクルでは観察事項に留める
+
+#### 判定の根拠
+
+T-4 受け入れ基準 9 項目すべて完全充足し、観点 A〜I のうち A / B / C / E / F / G / H / I は pass。ただし観点 D（アクセシビリティと UX）で Blocker 1 件（ArticleArea の aria-labelledby 参照先不在）と Major 1 件（リンクのフォーカスリング不在）を検出。判定基準（Blocker / Major / Minor のいずれかが 1 件でもあれば needs_revision）に照らし、Blocker 1 / Major 1 / Minor 3 のため **needs_revision**。
+
+PM への次ステップ提案: builder に修正を委任する。修正範囲は (a) `SectionHead` への `id?: string` props 追加と `ArticleArea` での `useId` による ID 生成、(b) リンク 4 種への `:focus-visible` 規約追加、(c) `ArticleArea` の `max-width: 960px` を `var(--max-width)` に置換、(d) SiteHeader の空虚な position:fixed テスト削除、(e) `role="banner"` / `role="contentinfo"` の削除（任意だが安全側）。修正後に再度 T-4 全体（受け入れ基準 9 項目 + 観点 A〜I + philosophy.md NEVER 節 + 副作用）を見直してレビュー依頼すること。
+
+### T-4 Rev2（2026-04-27）
+
+対象: T-4 Rev1 で検出した Blocker 1 / Major 1 / Minor 3 の修正と、サイクル実行規約に従った T-4 全体の見直し。`git status` / `git diff HEAD` で本 Rev での修正範囲を把握したうえで、ArticleArea / SectionHead / SiteHeader / SiteFooter の .tsx と .module.css と .test.tsx、および Panel / SectionHead 周辺ファイルを読み直して独立検証した。
+
+判定: **pass**
+
+#### Rev1 指摘事項の解消確認（独立検証）
+
+**Blocker-1（ArticleArea の `aria-labelledby` 参照先不在）→ 解消**:
+
+- `SectionHead.tsx` L34-40 に `id?: string` props を追加し、L57 で `<Tag id={id}>` として h2/h3/h4 に id 属性を出力する構造に変更。JSDoc L34-39 で「親の `<section aria-labelledby={id}>` と紐付けるために使う」「複数の SectionHead が同一ページに存在する場合は、必ず一意な値を渡すこと」と用途と注意事項を明示
+- `ArticleArea.tsx` L30 で `import { useId } from "react"`、L87 で `const uid = useId()` を関数本体トップレベルで呼び出し、L88-89 で `${uid}-how-to` / `${uid}-related` を生成。L106 / L107 / L123 / L124 で同じ id を `<section aria-labelledby>` と `<SectionHead id>` の両方に渡している
+- React の Hook Rules に違反していないか確認: `useId()` は条件分岐・ループ・アーリーリターンの後に呼ばれていない。コンポーネント関数の最上位で常に 1 回呼ばれる構造で、Hook Rules 完全準拠
+- L86 の「同一ページに複数の ArticleArea が描画されても ID 重複が起きない（HTML 仕様準拠）」コメントが意図を明示しており、CLAUDE.md の「コーディング原則 4: 可読性を高く保つ」と整合
+- 検証テスト 3 件追加: `ArticleArea.test.tsx` L74-83「steps section aria-labelledby references the section heading id」（heading id が存在し section の aria-labelledby と一致）、L91-99「related section aria-labelledby references the section heading id」、L101-114「multiple ArticleArea instances generate unique section IDs」（複数インスタンスの全 id が一意であることを Set で検証）。これらは Rev1 で「テストが内部 heading だけ見て section を見ていなかった」検出ギャップを直接埋める内容
+- **完全解消**
+
+**Major-1（リンクのフォーカスリング欠落）→ 解消**:
+
+- `SiteHeader.module.css` L40-44 `.brand:focus-visible` / L68-71 `.navLink:focus-visible` に `outline: 2px solid var(--accent); outline-offset: 2px;` を追加
+- `SiteFooter.module.css` L63-67 `.link:focus-visible` に同等規則
+- `ArticleArea.module.css` L113-117 `.relatedLink:focus-visible` に同等規則
+- T-3 の Button.module.css の `:focus-visible` 規則（`outline: 2px solid var(--accent); outline-offset: 2px;`）と完全一致しており、design-system 全体の一貫性が保たれている。Rev1 で指摘した「T-3 部品との非対称」が解消
+- 各 CSS のコメントで「T-3 の Button / Input と同じ accent 2px outline で design-system 全体の一貫性を保つ」と意図が明示されており、次サイクルの builder/reviewer が「なぜこの値か」を辿れる構造
+- philosophy.md L70「明度差のみで表現する」の対象は `hover` 状態であり、フォーカスリングはアクセシビリティ要件として別扱い（philosophy.md NEVER 節にも「フォーカスを消す」は禁止だがフォーカスリングを描く方法は規定なし）。`outline: var(--accent)` は accent 1 色のみの使用で「複数アクセントの同時使用」NEVER にも違反しない
+- **完全解消**
+
+**Minor-1（`--max-width` 変数未使用）→ 解消**:
+
+- `ArticleArea.module.css` L9-10 が `/* globals.css L28 に定義済みの --max-width: 960px を参照する */` というコメント付きで `max-width: var(--max-width);` に変わった
+- `globals.css` L28 の `--max-width: 960px;` は本サイクル T-4 では変更されておらず、コメントの行番号参照は正確
+- 同 `--max-width` は `src/blog/_components/BlogListView.module.css` / `src/app/page.module.css` / `src/app/about/page.module.css` 等、サイト全体で 10+ 箇所で「prose / 記事本文の最大幅」として使われており、ArticleArea がこの変数を使うのは意味的に正しい（ArticleArea も「記事・ツールページの本文エリア」が用途）。Rev1 で懸念した「prose 幅と異なる事故」は発生していない
+- **完全解消**
+
+**Minor-2（SiteHeader の空虚な position:fixed テスト）→ 解消**:
+
+- `SiteHeader.test.tsx` L49-54 にあった「header is not position fixed or sticky (functional-quiet rule)」テストが削除された。差分前は 9 件、差分後は 8 件（vitest 実行で確認）
+- 削除によって失われた検証は「`data-fixed` 属性の不在」のみで、これは元々コードに該当属性が存在しないため意味のないテストだった。philosophy.md NEVER「ヘッダーを固定する」の検証は次サイクル以降の Playwright 視覚検証で代替する設計（Rev1 の修正方向 (a) と一致）
+- **完全解消**
+
+**Minor-3（冗長な `role="banner"` / `role="contentinfo"`）→ 解消**:
+
+- `SiteHeader.tsx` L59 から `role="banner"` 削除 → `<header className={styles.header}>` のみ
+- `SiteFooter.tsx` L69 から `role="contentinfo"` 削除 → `<footer className={styles.footer}>` のみ
+- HTML5 仕様で `<header>` は body 直下では暗黙的に banner ランドマーク、`<footer>` は body 直下では暗黙的に contentinfo ランドマークを持つ（`<article>` / `<aside>` / `<main>` / `<nav>` / `<section>` の子孫になると失う）。SiteHeader / SiteFooter の JSDoc L9-11 / L9-13 で「アプリのルートレイアウトで 1 度だけレンダリングする」と用途が明記されており、暗黙 role に任せる設計と整合
+- **重要な再確認**: 別ランドマーク子孫に置かれた時の動作 — 削除後は暗黙 role が使えるコンテキスト（body 直下）でのみ動作する。逆に言えば、JSDoc の用途指示に反して `<main>` 内などに置かれた場合は banner / contentinfo ランドマークが消失する。これは「使い方を間違えるとアクセシビリティが落ちる」性質だが、JSDoc で「1 度だけ」「ルートレイアウトで」と明示されているため、用法どおりであれば問題なし。Rev1 で示した「暗黙 role に任せる安全側」の意図と完全一致
+- 既存テスト `SiteHeader.test.tsx` L13-16「renders header landmark」と `SiteFooter.test.tsx` L18-21「renders contentinfo landmark」が pass し続けるのは、jsdom が `<header>`（テストの最上位 fragment 直下、つまり実質 body 直下）に banner ランドマークを暗黙付与するため。テストの内容は同じで実装が変わっただけで意味が保たれている
+- **完全解消**
+
+#### 観点 A〜I の差分再評価
+
+- A（受け入れ基準）: Rev1 で 9 項目すべて充足。Rev2 修正で項目が崩れた箇所なし（特に基準 7「`--color-*` 不参照」は `grep -n "var(--color-" src/components/design-system/*.module.css` で 0 件、基準 9「最小テスト存在」は計 8 部品で計 81 テスト pass）。**充足を維持**
+- B（philosophy.md NEVER 節との整合）: Rev1 ですべて違反なし。Rev2 で追加された `:focus-visible` 規則は philosophy.md NEVER 節の対象外（hover ではなく focus 時の話、accent 1 色のみで複数アクセント問題なし）。`grep -n "あなた\|私たち\|ようこそ\|gradient\|backdrop-filter\|Inter\|Roboto" src/components/design-system/` 0 件で再確認。`box-shadow` は Panel / SiteHeader / SiteFooter / SectionHead / ArticleArea いずれにも 0 件（grep 確認）。`position: sticky / fixed` は CSS に 0 件。**充足を維持**
+- C（ロゴアセット移動の妥当性）: Rev1 で完全充足。本 Rev で再変更なし。`git status` で `R  docs/design-system-by-claude-design/assets/yolos-logo.svg -> public/assets/yolos-logo.svg` 等の rename が維持されている。**充足を維持**
+- D（アクセシビリティと UX）:
+  - SiteHeader / SiteFooter の暗黙 role への移行（Minor-3 解消）でランドマーク認識は body 直下用法で正常動作
+  - リンク 4 種にフォーカスリング追加（Major-1 解消）で T-3 部品との一貫性が確保された
+  - ArticleArea の section が aria-labelledby で正しく見出しを参照する構造になった（Blocker-1 解消）
+  - SectionHead の `id?` は HTML 標準属性として h2/h3/h4 に伝わる素直な実装で、id 衝突回避は親（ArticleArea）の責務として明示された設計
+  - Rev1 で言及した検討点（SectionHead の `<span aria-label>` 二重読み上げ可能性）は本 Rev でも未対応だが、Rev1 で「観察事項に留める」と判断済み。Blocker / Major / Minor のいずれにも該当せず再判定不要
+  - **改善が複数進み、悪化なし**
+- E（型穴と API 設計）:
+  - Rev2 で追加された `id?: string` は SectionHead の props であり、リテラル型ではなく `string` 型だが、これは HTML 標準の id 属性が任意文字列を受ける性質上、リテラル型で閉じる対象ではない（特定値リストが意味を持たない）
+  - ArticleArea の `useId` 戻り値（string）を id に渡す経路で型エラーなく接続されている（`npm run build` pass で TypeScript 型検査も pass）
+  - Rev1 で確認した「variant が string 開放されていない」「props が無闇に多くない」は維持
+  - **充足を維持**
+- F（CSS の品質）:
+  - `--color-*` 不参照を再確認（grep 0 件）
+  - Rev2 で `var(--max-width)` 化により ArticleArea のマジックナンバーが 1 件減少（960px が変数化）。残るマジックナンバーは SiteHeader / SiteFooter の `1280px`、ArticleArea の `640px`（howTo 幅）、SiteFooter の `120px`（group min-width）、ArticleArea の `200px`（relatedList minmax）。これらは Rev1 で記録済みの観察事項
+  - 新規 `:focus-visible` 規則は `var(--accent)` のみ参照で新変数体系に準拠
+  - **改善が 1 件進み、悪化なし**
+- G（テストの品質）:
+  - SiteHeader 9 → 8（Minor-2 で空虚なテスト削除、減数は妥当）
+  - ArticleArea 11 → 14（Blocker-1 検証用に 3 件追加、増数は妥当）
+  - 新テストの内容: aria-labelledby と heading id の対応関係（DOM 検査）、複数インスタンスでの id 一意性（Set 検証）。Rev1 で検出ギャップだった「`<section>` 自体ではなく内部 heading だけ見ていた」を直接埋める内容
+  - SectionHead の `id` props 単独テストは未追加だが、実用上は ArticleArea の統合テストで pass し続ける id 伝播の確認で代替可能（厳密な単体テストの欠落だが、Blocker / Major / Minor 未満の検討点）
+  - **改善が複数進み、悪化なし**
+- H（T-3 との衝突）: Rev2 で T-3 のファイルへの変更なし、構造要素のみ変更。**充足を維持**
+- I（副作用と全体への影響）:
+  - frontmatter / philosophy.md / SKILL.md / globals.css 不変 → `git diff HEAD -- src/app/globals.css .claude/skills/` 出力 0 行
+  - 既存 `src/components/common/Header.tsx` `Footer.tsx` 不変 → `git diff HEAD -- src/components/common/` 出力 0 行
+  - lint: `npm run lint` pass
+  - format: `npm run format:check` pass
+  - test: `npm run test` 全 4085 件 pass（Rev1 時点 4083 → +3 ArticleArea 新規 -1 SiteHeader 削除 = +2）
+  - build: `npm run build` 成功
+  - **充足を維持**
+
+#### Rev1 で見落としていた可能性の再点検
+
+サイクル実行規約「再レビュー時は前回の指摘事項だけでなく全体を見直す」に従い、Rev1 で確認していなかった追加観点を再走査:
+
+- **`useId()` の SSR 安全性**: `ArticleArea` は client component / server component の境界明示なし（`"use client"` ディレクティブなし）。Next.js App Router で server component として描画される場合、`useId()` は SSR 時にも安定した ID を返す（React 18+ 仕様）。サーバとクライアントで同じ id 文字列が出るため hydration mismatch は起きない。仕様通りの動作で問題なし
+- **ArticleArea が `<article>` 要素であることと内部 `<section>` の関係**: `<article>` は landmark role を持つが、その内部の `<section aria-labelledby="…">` は `<section>` が名前を持つことで region landmark 化する。HTML 仕様では問題ないが、SR ユーザーがランドマーク一覧を移動する際に「article > region(使い方) / region(関連)」と多層化する。ツールページ用途では合理的な階層構造で、過剰なランドマーク化ではない
+- **`aria-labelledby` で参照する id の文字列に `useId()` の戻り値を埋め込む安全性**: React 18 の `useId()` は `:r0:` のような特殊文字を含む文字列を返すが、CSS セレクタで使うわけではなく HTML id 属性として埋め込むだけのため問題なし（HTML5 では id 属性に空白以外の任意文字を許容）
+- **Panel / SectionHead に focus-visible 規則が不要な確認**: Panel / SectionHead はリンク・ボタンを内部に含まない静的な構造部品で、Tab フォーカスを受け取る要素を持たない。focus-visible 規則の追加は不要
+- **role="list" の SiteHeader / SiteFooter ul 残置の確認**: `list-style: none` を持つ `<ul>` は VoiceOver で「リスト」とアナウンスされない既知の挙動があり、`role="list"` を明示的に付与するのは適切な対症療法（参考: webkit bug）。本サイクルで除去する必要なし
+- **キャリーオーバー候補の再確認**: Rev1 で記録した観察事項（`--max-width-chrome: 1280px` の追加検討、SectionHead の二重 SR 読み上げ可能性）は本 Rev で対応されていないが、Blocker / Major / Minor 未満であり次サイクル以降の検討事項として妥当
+
+新規 Blocker / Major / Minor の検出は **なし**。
+
+#### Blocker / Major / Minor の指摘
+
+なし（Blocker 0 / Major 0 / Minor 0）。
+
+#### 良かった点
+
+- **Blocker-1 の修正アプローチが「`useId` + props 経由 id」の React/HTML 標準パターン**で実装されており、独自の uuid ライブラリや `Math.random()` を持ち込まずに React 18 の正規 API を使った点は、CLAUDE.md「コーディング原則 5: 型安全の徹底」と整合した最小依存の解決
+- **修正の意図がコードコメントで残されている**: `ArticleArea.tsx` L86「同一ページに複数の ArticleArea が描画されても ID 重複が起きない（HTML 仕様準拠）」、`ArticleArea.module.css` L9「globals.css L28 に定義済みの --max-width: 960px を参照する」、各 `:focus-visible` ブロックの「T-3 の Button / Input と同じ accent 2px outline で design-system 全体の一貫性を保つ」コメントが、なぜこの値かを次サイクルの builder/reviewer に伝える構造になっている。CLAUDE.md「コーディング原則 4: 可読性を高く保つ — コメントでコードの『なぜ』を説明する」と完全整合
+- **テストが Rev1 の検出ギャップを直接埋める内容になっている**: ArticleArea の新テスト 3 件は単に「id が出力される」を見るだけでなく、(1) section の aria-labelledby が heading id と一致する、(2) 複数インスタンスで id が一意、という Rev1 で「テストが見ていなかった」観点を狙い撃ちで検証している。再発防止として優れた設計
+- **SectionHead の id props JSDoc に「複数の SectionHead が同一ページに存在する場合は、必ず一意な値を渡すこと」と注意書き**を入れた点は、API の利用者（次サイクルの builder）に対して落とし穴を事前に伝える設計。SKILL.md の `components.md` を作らない方針（採用案 Y）が成立する条件として、JSDoc が「使い方の落とし穴」まで含む粒度で書かれていることが望ましく、その水準を満たしている
+- **focus-visible の値が T-3 と完全に同じ `outline: 2px solid var(--accent); outline-offset: 2px;`** で揃えられた点は、design-system 全体の一貫性が「文字レベル」で実装されていることを示す。次サイクルで Button hover / Link focus を視覚比較したとき同じ「accent 1 色 2px」で揃って見えることが保証される
+
+#### 検討点（Blocker / Major / Minor のいずれにも該当しないが記録する観察事項）
+
+- SectionHead の `id?: string` props は ArticleArea 経由で統合テストされているが、SectionHead 単体では `id` props を直接検証するテストがない。実用上は ArticleArea のテストで pass し続ければ機能する性質だが、SectionHead が他のコンテキストで使われ始めたとき（次サイクル以降）に id 伝播が壊れても気付かない可能性がある。次サイクル以降に SectionHead の用途が広がったら単体テストを追加するキャリーオーバー候補
+- Rev1 で記録した「`max-width: 1280px` の SiteHeader / SiteFooter 重複」「SectionHead の `<span aria-label>` 二重読み上げ可能性」は本 Rev でも未対応で、次サイクル以降の検討事項として残る。本 Rev での再判定不要
+
+#### 判定の根拠
+
+Rev1 で指摘した Blocker 1 / Major 1 / Minor 3 のすべてが独立検証で完全解消を確認。修正による新規問題（`useId` Hook Rules / SSR 安全性 / 暗黙 role の挙動 / `var(--max-width)` の意味整合性）はいずれも問題なし。観点 A〜I すべてで Rev1 の状態を維持または改善し、悪化箇所なし。lint・format・test 4085 件・build すべて pass。既存ファイル不変、`--color-*` 参照ゼロ、philosophy.md NEVER 節違反ゼロ。Rev1 で見落としていた可能性の再点検でも新規 Blocker / Major / Minor の検出なし。Blocker 0 / Major 0 / Minor 0 のため **pass**。
+
+PM への次ステップ提案: T-4 を完了として確定。T-3 / T-4 双方が pass となり、T-5（動作確認ページとビルド検証）に進める状態。T-5 の builder への補正情報として、本 Rev で確認した「`<header>` `<footer>` は body 直下用法でのみ暗黙 role が効く」「ArticleArea の section ランドマークは region として認識される」を伝えると、確認ページでのレイアウト判断（SiteHeader / SiteFooter を最上位に配置する等）が正確に行える。
 
 ## キャリーオーバー
 
