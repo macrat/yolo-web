@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <title>Buttons</title>
+    <link rel="stylesheet" href="../colors_and_type.css?v=9" />
+    <style>
+      body {
+        margin: 0;
+        padding: 32px;
+        background: var(--bg-soft);
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .row {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+      .btn {
+        font-family: var(--font-sans);
+        font-size: 14px;
+        padding: 9px 18px;
+        border: 1px solid var(--border);
+        background: #ffffff;
+        color: var(--fg);
+        cursor: pointer;
+        border-radius: 8px;
+        white-space: nowrap;
+        box-shadow: var(--elev-button);
+        transition:
+          background var(--t-fast),
+          border-color var(--t-fast),
+          box-shadow var(--t-fast);
+      }
+      .btn:hover {
+        background: var(--bg-soft);
+      }
+      .btn:active {
+        box-shadow: var(--elev-0);
+      }
+      .btn-primary {
+        background: var(--bg-invert);
+        color: var(--fg-invert);
+        border-color: var(--bg-invert);
+      }
+      .btn-primary:hover {
+        background: var(--bg-invert-soft);
+        border-color: var(--bg-invert-soft);
+      }
+      .btn-ghost {
+        background: var(--bg-soft);
+        border-color: var(--border);
+      }
+      .btn-ghost:hover {
+        background: var(--bg-softer);
+      }
+      .btn-sm {
+        padding: 5px 11px;
+        font-size: 12px;
+      }
+      .btn:disabled {
+        color: var(--fg-softer);
+        border-color: var(--border);
+        background: transparent;
+        cursor: not-allowed;
+      }
+      .label {
+        font-size: 11px;
+        color: var(--fg-softer);
+        width: 80px;
+        font-family: var(--font-mono);
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="row">
+      <span class="label">primary</span
+      ><button class="btn btn-primary">はじめる</button
+      ><button class="btn btn-primary btn-sm">入れる</button>
+    </div>
+    <div class="row">
+      <span class="label">default</span><button class="btn">もどる</button
+      ><button class="btn btn-sm">複製</button>
+    </div>
+    <div class="row">
+      <span class="label">ghost</span
+      ><button class="btn btn-ghost">あとで</button
+      ><button class="btn" disabled>無効</button>
+    </div>
+  </body>
+</html>

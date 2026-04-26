@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <title>Inputs</title>
+    <link rel="stylesheet" href="../colors_and_type.css?v=8" />
+    <style>
+      body {
+        margin: 0;
+        padding: 32px;
+        background: var(--bg-soft);
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+      }
+      .field label {
+        display: block;
+        font-size: 12px;
+        color: var(--fg-softer);
+        margin-bottom: 6px;
+        letter-spacing: 0.04em;
+      }
+      .field input,
+      .field select,
+      .field textarea {
+        width: 100%;
+        box-sizing: border-box;
+        font-family: var(--font-sans);
+        font-size: 14px;
+        background: #ffffff;
+        color: var(--fg);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 10px 12px;
+        outline: none;
+        transition: border-color var(--t-fast);
+      }
+      .field input:focus,
+      .field select:focus,
+      .field textarea:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 1px var(--accent);
+      }
+
+      /* Toggle switch */
+      .toggle-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 14px;
+        color: var(--fg);
+        cursor: pointer;
+        user-select: none;
+      }
+      .toggle {
+        position: relative;
+        display: inline-block;
+        width: 36px;
+        height: 20px;
+        flex: none;
+      }
+      .toggle input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+      }
+      .toggle .track {
+        position: absolute;
+        inset: 0;
+        background: var(--border);
+        border-radius: 999px;
+        transition: background var(--t-fast) var(--ease);
+      }
+      .toggle .thumb {
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 16px;
+        height: 16px;
+        background: #ffffff;
+        border-radius: 50%;
+        box-shadow: 0 1px 2px rgba(26, 26, 26, 0.2);
+        transition: transform var(--t-fast) var(--ease);
+      }
+      .toggle input:checked ~ .track {
+        background: var(--fg);
+      }
+      .toggle input:checked ~ .thumb {
+        transform: translateX(16px);
+      }
+      .toggle input:focus-visible ~ .track {
+        box-shadow:
+          0 0 0 2px var(--bg-soft),
+          0 0 0 4px var(--accent);
+      }
+      .toggle input:disabled ~ .track {
+        background: var(--border);
+      }
+      .toggle input:disabled ~ .thumb {
+        box-shadow: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="field">
+      <label>道具の名前</label><input type="text" value="タイマー" />
+    </div>
+    <div class="field">
+      <label>分類</label
+      ><select>
+        <option>時間</option>
+        <option>記録</option>
+        <option>息抜き</option>
+      </select>
+    </div>
+    <div class="field" style="grid-column: 1 / -1">
+      <label>説明</label><textarea rows="3">時間を選んで、はじめる。</textarea>
+    </div>
+
+    <label class="toggle-row">
+      <span class="toggle"
+        ><input type="checkbox" checked /><span class="track"></span
+        ><span class="thumb"></span
+      ></span>
+      道具箱に追加する
+    </label>
+    <label class="toggle-row">
+      <span class="toggle"
+        ><input type="checkbox" /><span class="track"></span
+        ><span class="thumb"></span
+      ></span>
+      通知を出す
+    </label>
+  </body>
+</html>

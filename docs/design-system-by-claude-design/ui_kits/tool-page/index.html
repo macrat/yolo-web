@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>折り紙タイマー — yolos.net</title>
+    <link rel="stylesheet" href="../_shared.css?v=6" />
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script
+      src="https://unpkg.com/react@18.3.1/umd/react.development.js"
+      integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"
+      integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"
+      integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y"
+      crossorigin="anonymous"
+    ></script>
+
+    <script type="text/babel" src="../_shared.jsx"></script>
+    <script type="text/babel" src="./ToolPage.jsx"></script>
+
+    <script type="text/babel">
+      const TOOL = {
+        id: "timer",
+        name: "折り紙タイマー",
+        kind: "時間",
+        desc: "時間を折って数える。",
+      };
+      const RELATED = [
+        { id: "memo", name: "メモ", kind: "記録", desc: "書いて、残す。" },
+        {
+          id: "habit",
+          name: "つみき",
+          kind: "記録",
+          desc: "毎日の小さな積み重ね。",
+        },
+        {
+          id: "weather",
+          name: "けさの空",
+          kind: "天気",
+          desc: "今いる場所の、ひと言の天気。",
+        },
+      ];
+      const STEPS = [
+        "時間を選ぶ。プリセット、または数字を入力。",
+        "「はじめる」を押す。画面を閉じても継続。",
+        "終わると通知。",
+        "「もどす」で初期値に戻る。",
+      ];
+
+      function App() {
+        return (
+          <div className="yolos-app">
+            <Header active="tools" />
+            <main className="yo-page" style={{ maxWidth: 960 }}>
+              <a
+                href="#"
+                style={{
+                  fontSize: 12,
+                  color: "var(--fg-softer)",
+                  borderBottom: 0,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 4,
+                  marginBottom: 24,
+                  whiteSpace: "nowrap",
+                }}
+              >
+                <Icon name="back" size={14} /> 道具一覧
+              </a>
+              <ToolHero tool={TOOL}>
+                <TimerPanel />
+              </ToolHero>
+              <HowTo steps={STEPS} />
+              <RelatedTools items={RELATED} />
+            </main>
+            <Footer />
+          </div>
+        );
+      }
+
+      ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+    </script>
+  </body>
+</html>
