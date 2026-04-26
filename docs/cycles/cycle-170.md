@@ -47,7 +47,7 @@ Owner からの本サイクルへの指示（要約）:
     - 既存 `SKILL.md` の frontmatter（`name` / `description` / `paths` / `user-invocable: false`）に変更が入っていないこと（T-02 Rev1-3 で pass 済み）。本文の書き直しは T-2 の責務
   - builder の判断範囲: 採用案で残存と決まった各ファイルの「役割記述」をどう表現するか、削除対象ファイルが他から参照されていないかの最終確認方法
 
-- [ ] **T-2: SKILL.md 玄関本文を書く**（builder 1 名、T-1 完了後）
+- [x] **T-2: SKILL.md 玄関本文を書く**（builder 1 名、T-1 完了後）
   - 目的: サブエージェントが UI 編集時に最初に触れる「玄関」を、玄関として必要十分な情報量で整える。Owner 原則 2「シンプルで分かりやすい」と公式 frontend-design の構造（単一 SKILL.md + DO/NEVER）から学んだ「玄関は薄く」の両方を満たす
   - 成果物: `.claude/skills/frontend-design/SKILL.md` の本文（frontmatter は据え置き）
   - 受け入れ基準:
