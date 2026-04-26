@@ -508,6 +508,418 @@ A・B・C・D・E の全観点で受け入れ基準を満たしている。Block
 
 5 つの受け入れ基準（cycle-170.md L40-44）すべてを満たし、観点 A〜E のいずれにおいても Blocker / Major レベルの問題は見つからなかった。残存する軽微な検討点 3 件はいずれも Minor で、本ドキュメントが「PM のキャラクターから再構成された判断基準」として T-03 以降の judgment を支えるという目的に対しては影響しない。AP-P04（Owner 発言を検証なしに前提化しない）の観点でも、本ドキュメントは Owner 直接指示への手続き的な追従ではなく、character.md・targets/README.md・cycle-169 失敗分析という SSoT に接続して判断が組み立てられている。pass。
 
+### T-02 Rev1（2026-04-26）
+
+対象: `.claude/skills/frontend-design/` 配下の `SKILL.md`（新規）、`variables.md`（新規プレースホルダ）、`components.md`（新規プレースホルダ）、および `philosophy.md`（T-01 で完成済・本タスクで変更されていないこと）。レビューは Read で各ファイル本文を直接確認、`ls` で実ディレクトリ構造を確認、研究レポート `docs/research/2026-04-23-anthropic-official-design-skill-deep-dive.md` を Read して公式仕様への整合性を検証。
+
+#### 観点 A（受け入れ基準 6 項目の独立検証）
+
+1. ディレクトリ名 `frontend-design`: `ls .claude/skills/` で確認。`frontend-design/` のみ存在し、`yolos-design` `yolos-ds` 等は存在しない。Owner 直接指示と一致。**満たす**。
+2. `name: frontend-design`: `SKILL.md` L2 に `name: frontend-design` が記載されている。**満たす**。
+3. 公式仕様に整合する最小フィールド構成: `SKILL.md` フロントマターは `name` / `description` / `paths` の 3 フィールドのみ。研究レポート L210-226 のフィールド表で 3 つすべてが許容仕様内であること、L217 で `disable-model-invocation: true` を設定するとサブエージェントへのプリロードも無効になることを確認。`disable-model-invocation` `user-invocable` が含まれていないため、サブエージェント自動配信は阻害されない。既定値の明示や自動配信を無効化するフィールドは含まれていない。**満たす**。
+4. 複数ファイル分割と独立セマンティクス: `philosophy.md`（哲学・トーン・NEVER）、`variables.md`（CSS 変数の用途）、`components.md`（コンポーネント API）の 3 分割。各ファイルが異なるセマンティクスを担っており、`SKILL.md` L22-26 の表にもその対応が明記されている。**満たす**。
+5. 自己完結性: 4 ファイル（SKILL.md / philosophy.md / variables.md / components.md）を grep で確認した範囲内では、削除予定の `docs/design-system-by-claude-design/` への相対リンクは存在しない。`variables.md` L7 で参照する `src/app/globals.css` は恒久存在ファイル。**満たす**。
+6. UI 編集時の自動ロード機構: 後述の観点 C で詳細検証。グロブパターン自体は YAML 配列形式（公式仕様で許容される `paths:` 配下の `- "..."` 列挙）であり、`src/**/*.tsx` 等は実構造に対して発火する。**満たす**。
+
+#### 観点 B（frontmatter 公式仕様との整合）
+
+- `name` / `description` / `paths` の 3 フィールド: 研究レポート L210-226 の公式仕様で全て `必須: No`（つまり許容）として列挙されている。**整合**。
+- `user-invocable` を含めない判断: 公式 frontend-design スキル（研究レポート L80-86）も 3 フィールドのみで `user-invocable` を含めていない。研究レポート L218 によれば `user-invocable: false` の効果はスラッシュメニューからの非表示のみで、サブエージェントへの自動配信とは独立。本サイクルの設計目的（`paths` グロブによる UI 編集時の自動配信）と直交するため、含めない判断は仕様上整合。「既定値明示は形式肥大」という原則についても、研究レポート全文中にその文言は見当たらないが、L142-146 の「supporting files なし／単一 SKILL.md 完結」「Claude Code 拡張フィールドは一切使っていない」という公式の最小主義実例と整合する判断であり、ロジック上は妥当。**整合**（ただし「既定値明示は形式肥大」という命題自体は計画書側の表現であり、研究レポートの直接引用ではない点は記録）。
+- `disable-model-invocation` を含めない判断: 研究レポート L217・L233 の通り、`disable-model-invocation: true` を設定するとサブエージェントへのプリロードが無効化される。本タスクの目的「UI 編集時に自動ロードする」を達成するためには **含めないことが必須**。本 SKILL.md は含めていないため正しい。**整合**。
+
+#### 観点 C（paths グロブの妥当性）
+
+採用パターン:
+
+```
+- "src/**/*.tsx"
+- "src/**/*.module.css"
+- "src/app/globals.css"
+```
+
+実構造への発火確認:
+
+- `find src -name "*.tsx" | wc -l` = 480 件、`find src -name "*.module.css" | wc -l` = 167 件、`globals.css` は単一存在（`find src -name "*.css" -not -name "*.module.css"` の結果は `src/app/globals.css` のみ）。`src/components/common/` 配下の Header/Footer 等、`src/app/` 配下のページ／レイアウト、`src/blog/_components/` `src/dictionary/_components/` `src/tools/*/Component.tsx` 等、UI 編集が発生し得るすべての箇所が `src/**/*.tsx` でカバーされる。**発火する**。
+- `src/components/design-system/`（T-04/T-05 で新設予定）も `src/**/*.tsx` `src/**/*.module.css` でカバーされる。**整合**。
+
+過剰発火の評価:
+
+- `src/lib/`・`src/data/`・`src/__tests__/` 配下にも `.tsx` が存在する（例: `src/lib/ogp-image.tsx`、achievements 配下の Provider、各種 `__tests__/*.test.tsx`）。これらは UI 編集に隣接する場合（コンポーネント実装・テスト）と、UI からは遠い場合（OGP 画像生成）が混在する。ただし、サブエージェントが「UI 編集時に常時参照すべきデザインシステム情報」をロードして害になる過剰発火ではない（テスト編集時にデザイン規約を参照しても誤動作しない、OGP 画像生成も視覚出力なのでデザイン規約は寧ろ有益）。**過剰発火と呼べる害は無い**。
+- `src/middleware.ts`・`src/types/`・`src/app/api/`（API ルートは `.ts`）等の純粋なロジック層は `*.tsx` `*.module.css` `globals.css` のいずれにも該当しない。**範囲は妥当**。
+
+`.module.css` 以外の CSS の扱い:
+
+- `src/app/globals.css` を 3 番目のパターンで明示。これが現状唯一のグローバル CSS。**カバーされている**。
+- 将来的に他のグローバル CSS（例: `src/app/layout.css` 等）が追加された場合は本グロブから漏れるが、本サイクル時点では存在しないため対応不要。次サイクル以降の検討事項。
+
+YAML 配列形式の妥当性:
+
+- `paths:` 配下に `- "src/**/*.tsx"` 等を列挙する形式は、研究レポート L419-421 の応用例で同形式が示されており、研究レポート L225 のフィールド表でも「グロブパターン」と記載される配列形式として妥当。**整合**。
+
+結論: paths グロブは実構造に対して確実に発火し、過剰発火の害もなく、本サイクル時点で必要十分。**満たす**。
+
+#### 観点 D（プレースホルダの適切さ）
+
+- `variables.md` L1 に `<!-- このファイルは T-03 で本文を書く。CSS変数の用途・命名規約・使用例を記述する。 -->`、L8-14 に「予定コンテンツ」5 項目（Surface/Text/Border/Accent カラートークン、タイポトークン、スペーシング、角丸/Elevation/Motion、Bad/Good 例）。T-03 受け入れ基準（cycle-170.md L72-79）と項目の対応関係が読み取れる。
+- `components.md` L1 に `<!-- このファイルは T-06 で本文を書く。 -->`、L8-15 に T-04/T-05 で作る部品群（Button/Tag/Chip/Panel、Icon、Header/Footer、ToolHero 等、Toolbox）に加えて「新規コンポーネント作成前の3点チェック」が並ぶ。**ただし**、計画書 T-04（cycle-170.md L83-89）の Owner 例示は「ヘッダー、フッター、パネル、ボタン、入力欄、記事エリア」の 6 部品で、`components.md` プレースホルダ L11-13 にある「ToolHero / HowTo / RelatedTools / Toolbox（ToolPanel / ToolPreview / AddPanel）」は計画書 T-04・T-05 のスコープから外れる素地由来コンポーネント名である可能性がある。後続 T-06 builder が混乱して「Toolbox 系を T-04 で作る前提」と誤読する余地がある。詳細は Minor で指摘。
+- `SKILL.md` L14・L28-29 に「T-07 でこの本文を再構成します」「玄関」と明示。**T-07 builder が何を書くかは伝わるが、観点 E を参照**。
+- 冗長性: 各プレースホルダは 8〜30 行程度に抑えられており、後続の本文書き起こしを妨げない。**問題なし**。
+
+#### 観点 E（SKILL.md の状態）
+
+- frontmatter（L1-12）は確定状態であり、後続タスクで触る予定がないことが L14 のコメントから読める。**満たす**。
+- 本文（L16-29）は、T-07 で書く前提のドキュメント構成表のみ。プレースホルダとして機能している。**満たす**。
+- ただし、`SKILL.md` は本来 T-07 で「Quick reference + Quick rules + NEVER 節 + 関連ファイルへのリンク」を書く想定（cycle-170.md L120-125）。現状 SKILL.md は frontmatter 確定 + 構成表という最小プレースホルダで T-07 の本文書き起こし指示は L14 と L28-29 のコメントに圧縮されている。次サイクルの T-07 builder がこのファイルを開いたとき、cycle-170.md L120-125 の受け入れ基準を独立に Read する必要がある（プレースホルダ単独では情報が完結しない）。これは観点 D と同程度の Minor。
+
+#### 観点 F（Owner 指示の遵守）
+
+- ディレクトリ名 `frontend-design`: Owner 直接指示と一致。**満たす**。
+- 計画書の禁止語（`yolos-design` `yolos-ds`）が SKILL.md / variables.md / components.md / philosophy.md のいずれにも含まれていない（grep で確認）。**満たす**。
+- 「シンプルで分かりやすい」最小構成: 4 ファイル分割（玄関 + 哲学 + 変数 + コンポーネント）は、研究レポート L142-143 の公式単一ファイル路線よりは複雑だが、cycle-170 計画書 L208-218 の設計判断（Progressive Disclosure 採用、4 文書構成）と整合。Owner 指示「シンプルで分かりやすい」を「単一ファイル」と解釈しなかった点は計画書時点で既に判断済みの事項であり、本タスクは計画書に従っている。**満たす**。
+
+#### philosophy.md の不変性確認
+
+- 直近コミット（`66e5ae9f design: Claude Designで作ったデザインシステムのベースを保存した` 以降）と本タスクのコミット範囲を観点として、`philosophy.md` の本文（110 行、Named Tone 定義 → 5 ターゲット → 否定形の願い → NEVER → 判断の問い）は T-01 Rev1 でレビュー済の内容と同一構造。本タスクで意図せず触られていない。**満たす**。
+
+#### 良かった点
+
+- `paths` グロブが「実構造に確実に発火する」「過剰発火の害が無い」「公式仕様で許容される YAML 配列形式」の 3 条件を同時に満たす最小パターンに収まっている。`src/components/**` だけにせず `src/**/*.tsx` で広く取った判断は、`src/blog/_components/` `src/tools/*/Component.tsx` 等の分散配置を漏らさない正しい選択。
+- frontmatter が公式 frontend-design スキル（`name` / `description` / `license` の 3 フィールド）と同程度の最小性に揃っており、Claude Code 拡張フィールド（`disable-model-invocation` `user-invocable` `allowed-tools` 等）を不必要に持ち込んでいない。研究レポート L142-146 の「公式の最小主義」を踏襲できている。
+- `description` が複数行（L3-7）でユースケース（CSS変数・コンポーネントAPI・デザイン哲学／TSX・CSS編集／UI 新規作成・変更）を列挙しており、研究レポート L146「目的語を多く含む description」の手法が踏襲されている。
+
+#### 指摘事項
+
+##### Blocker
+
+なし。
+
+##### Major
+
+なし。
+
+##### Minor
+
+- **Minor-1 / `components.md` L11-13 の素地由来コンポーネント名**: 計画書 T-04（L83-89）の Owner 例示は「ヘッダー、フッター、パネル、ボタン、入力欄、記事エリア」の 6 部品。`components.md` プレースホルダの「予定コンテンツ」L11-13 は「ToolHero / HowTo / RelatedTools の設計意図と API」「Toolbox（ToolPanel / ToolPreview / AddPanel）の設計意図と API」を列挙しているが、これらは素地（`docs/design-system-by-claude-design/`）由来の名前であり、本サイクルの T-04/T-05 ではこれらを作る計画になっていない（T-04 は 4 部品、T-05 は 2 部品）。後続 T-06 builder が「Toolbox 系を T-06 で文書化する前提」と誤読し、未実装コンポーネントについて書こうとする可能性がある。`components.md` の「予定コンテンツ」は T-04・T-05 の成果物（builder 判断で名前が決まる）に揃えるか、または「T-04・T-05 で確定したコンポーネント全件について props 概要・最小利用例・避ける場面を書く」程度の抽象指示に留めるべき。
+- **Minor-2 / `SKILL.md` のプレースホルダの薄さ**: `SKILL.md` 本文は L16-29 のドキュメント構成表 + 「T-07 でこの本文を再構成します」のコメントのみ。T-07 受け入れ基準（cycle-170.md L120-125）に列挙されている要素（Quick reference / Quick rules / NEVER 節 / 関連ファイルへのリンク）は別ファイル（cycle-170.md）を Read しないと分からない。`variables.md` `components.md` には「予定コンテンツ」節があり後続 builder が独立に判断できる構造になっているのに対し、SKILL.md だけプレースホルダの自己完結度が低い。「予定コンテンツ」相当の節を追加するか、コメントに「T-07 受け入れ基準は cycle-170.md L120-125 を参照」と明示する程度の補強が望ましい。
+
+#### 判定の根拠
+
+受け入れ基準 6 項目はすべて満たし、観点 A〜F のいずれでも Blocker / Major レベルの問題は発見されなかった。frontmatter は研究レポートの公式仕様と整合する最小 3 フィールド構成で、`paths` グロブは実構造に対して確実に発火し過剰発火の害もない。`disable-model-invocation` を含めないことでサブエージェント自動配信が機能する設計になっている。
+
+Minor 指摘 2 件はいずれも「後続タスク builder の作業効率」に関わるが、後続タスクが cycle-170.md を独立に参照すれば回復可能なレベルであり、本タスクの目的（後続タスクが書き込む先のディレクトリ構造と frontmatter の確定）の達成を阻害しない。
+
+判定: **needs_revision**。Minor-1（components.md の素地由来コンポーネント名による T-06 builder の誤読リスク）は後続 T-06 タスクの作業前提を歪める可能性があるため、本タスク内で解消することが望ましい。Minor-2（SKILL.md プレースホルダの薄さ）も同様に、T-07 builder の自己完結性を高める観点で本タスク内で補強する価値がある。
+
+### T-02 Rev1-2 — `description` 役割の再評価（2026-04-26）
+
+Owner から「`description` は Claude Code がいつそのスキルを実行するべきか決めるためのもの。スキル作成のベストプラクティスを確認してから批判的にレビューしなおせ」との指摘。前回 Rev1 では `description` を「形式肥大を避ける／避けない」の文脈で扱い、文面そのものの **トリガー機能としての品質** を検証していなかった。研究レポート 4 本を Read で再走査し、`description` フィールドの役割に関する記述を全件抽出した上で、現状文面を批判的に再評価する。
+
+#### 1. ベストプラクティスの再確認（研究レポートからの全件抽出）
+
+##### 1-1. `2026-04-23-anthropic-official-design-skill-deep-dive.md`（R-Skill）
+
+- **L213（フィールド表）**: 「`description` 推奨。スキルの説明と使用タイミング。**自動発火の判断に使用**。`when_to_use` との合計が 1,536 文字でカットされる」。Owner の指摘事実「いつ実行するか決める」を直接裏取り。
+- **L214（同表）**: 「`when_to_use` No。**自動発火のトリガー条件の追加記述**。`description` に追記される形でスキルリストに含まれる」。
+- **L82（公式 frontend-design の実 description）**: 「Create distinctive, production-grade frontend interfaces with high design quality. **Use this skill when** the user asks to build web components, pages, artifacts, posters, or applications (examples include websites, landing pages, dashboards, React components, HTML/CSS layouts, or **when styling/beautifying any web UI**). Generates creative, polished code and UI design that avoids generic AI aesthetics.」
+- **L146（公式設計の特徴 5）**: 「**description は目的語を多く含む**: 『when the user asks to build web components, pages, artifacts, posters, or applications...』と**具体的なユースケースを列挙して自動発火を誘導**」。
+- **L166（canvas-design 実 description）**: 「Create beautiful visual art in .png and .pdf documents using design philosophy. **You should use this skill when** the user asks to create a poster, piece of art, design, or other static piece. ...」。
+
+##### 1-2. `2026-04-23-claude-code-design-guideline-enforcement-mechanisms.md`（R-Enforce）
+
+- **L42**: 「**description 自動発火**: フロントマターの `description` と `when_to_use` フィールドに記述したキーワードが会話に出現したとき、Claude が自動的にスキルをロードする。ただしこれは LLM の意味的判断によるものであり**決定論的ではない**」。
+- **L50**: 「**description だけは常にコンテキストに存在するが本文は入らない**」。これは重要な事実: スキル本文（philosophy.md・variables.md・components.md）はロード時にしか入らないが、`description` は **常時** Claude の視野に存在する。`description` の文面品質が起動判断の全てを決める。
+- **L72**: 「`when_to_use` フィールドは `description` に追記される形でスキルリストに含まれ、Claude の自動発火判断に使われる。**description + when_to_use の合計は 1,536 文字でカットされるため、前半に最重要キーワードを配置すること**」。
+- **L56-70（推奨 frontmatter 例）**: 公式系スキルではないが、研究レポートが yolos.net 向けに推奨するパターンとして以下が示されている:
+  ```yaml
+  description: |
+    yolos.net のデザインガイドライン。src/components, src/app, *.css ファイルを
+    編集するとき、または UI・デザイン・スタイル・レイアウト・色・タイポグラフィ
+    について作業するときに必ず参照すること。
+  when_to_use: |
+    - CSS Modules を編集するとき
+    - 新しいコンポーネントを作成するとき
+    - globals.css のトークンを変更するとき
+    - デザインレビューを行うとき
+  user-invocable: false
+  ```
+- **L289**: 「paddo.dev: description ベースの自動発火は『LLM の意味的推論に依存するため**非決定論的**』。デザイン基準など『必ず守られなければならないルール』には hooks を使うべき」。
+
+##### 1-3. `2026-04-23-ai-agent-design-system-enforcement-best-practices.md`（R-Best）
+
+- 本レポート全文 grep の結果、`description` フィールドの内容に関する直接的な指針記述は L231（DESIGN.md 内のフロントマター例「Design system for YourProject」）のみ。Skills の `description` 役割に関するベストプラクティスは R-Enforce・R-Skill が主担当。
+
+##### 1-4. `2026-04-26-cycle-169-research-synthesis-for-design-system.md`（R-Synthesis）
+
+- **L27（原則 1）**: 「Skill には `paths` グロブをかけ、CSS/コンポーネントファイル編集時にだけ自動ロードさせる」。`paths` の役割が「ファイル編集時の自動ロード」と定義されている（自然言語起動とは別経路）。
+- **L55**: 「**フロントマターは `name`・`description`・`license` の 3 フィールドのみ。** `allowed-tools`・`disable-model-invocation`・`when_to_use`・`paths` などの拡張フィールドは公式スキルでは使っていない」。これは「公式観察事実」であり、yolos.net への適用方針とは別。
+- **L127**: 「**`paths` フィールドの活用**（R-Skill §2 の追加発見）: スキルにも `.claude/rules/` と同様の `paths` グロブが使える」。
+
+##### 1-5. 抽出結果のまとめ（Owner 指摘の事実確認）
+
+Owner の主張「`description` は Claude Code がいつそのスキルを実行するべきか決めるためのもの」の裏取り:
+
+- **R-Skill L213** 公式ドキュメント由来: 「自動発火の判断に使用」
+- **R-Enforce L42** 独立調査: 「description と when_to_use のキーワードが会話に出現したとき、Claude が自動的にスキルをロードする」
+- **R-Skill L146** 実ファイル観察: 「**目的語を多く含む** description で**具体的なユースケースを列挙して自動発火を誘導**」
+- **R-Enforce L50** 仕様事実: 「description だけは常にコンテキストに存在する（本文は呼び出し時のみ）」
+
+Owner の指摘は研究レポート L42・L50・L146・L213 によって完全に裏取りされている。`description` は単なる人間向け説明ではなく、**LLM が「いま手元の作業がこのスキルを必要とするか」を判断するための機械可読シグナルとして常時注入される短い記述** であり、その文面品質が自動発火の品質を決める。
+
+#### 2. 現状の `description` 文面の批判的評価
+
+現状の `description`（SKILL.md L3-7）:
+
+```
+yolos.net のデザインシステムとフロントエンド実装ガイド。
+CSS変数・コンポーネントAPI・デザイン哲学を参照する場合、
+または src/ 配下の TSX・CSS ファイルを編集する場合に自動ロードされる。
+UIを新規作成・変更する際は必ずこのスキルを参照してください。
+```
+
+**観点ごとの評価**:
+
+##### 2-1. トリガー条件の明示性
+
+- 「CSS変数・コンポーネントAPI・デザイン哲学を参照する場合」「src/ 配下の TSX・CSS ファイルを編集する場合」「UIを新規作成・変更する際」の 3 つの条件が並列で書かれている。
+- ただし条件記述の語尾が「自動ロードされる」「必ずこのスキルを参照してください」と機能の説明と人間向け指示が混在している。**LLM 起動判断のトリガー文として読むなら、機能の説明（"自動ロードされる"）は不要**であり、トリガー条件そのものを濃く書くべき。
+- 公式 frontend-design（R-Skill L82）の「**Use this skill when** the user asks to build ... (examples include ...)」という構文は「いつ起動するか」が文の主題になっているのに対し、現状文面は「何のスキルか」が主題になっており、起動判断シグナルとして弱い。
+
+##### 2-2. 発動すべき場面の網羅
+
+cycle-170 で想定される起動場面と現状文面の対応:
+
+| 起動場面                           | 現状文面のキーワード                         | 網羅状態   |
+| ---------------------------------- | -------------------------------------------- | ---------- |
+| UI コンポーネント編集              | 「TSX ... ファイルを編集」「UI を ... 変更」 | 弱い網羅   |
+| CSS Modules 編集                   | 「CSS ファイルを編集」                       | 弱い網羅   |
+| globals.css 編集                   | 「CSS ファイルを編集」                       | 弱い網羅   |
+| ヘッダー・フッター変更             | （明示なし）                                 | 未網羅     |
+| カラー指定                         | （明示なし。「CSS変数」のみ）                | 未網羅     |
+| 角丸・余白指定                     | （明示なし）                                 | 未網羅     |
+| コンポーネント新設                 | 「UI を新規作成」                            | 弱い網羅   |
+| レビュー時のチェック               | （明示なし）                                 | **未網羅** |
+| デザイン哲学（Named Tone）への接続 | 「デザイン哲学を参照する場合」               | 一応あり   |
+
+R-Enforce L60-67 の推奨例では「**色・タイポグラフィ**について作業するとき」「CSS Modules / 新しいコンポーネント / globals.css のトークン変更 / **デザインレビュー**」のように、行動（編集対象）と作業種別（レビュー含む）が個別に列挙されている。現状文面はこの粒度に達していない。
+
+特に **「レビュー時」の起動条件が完全に欠落** している点は致命的。本サイクル T-08 の目的の一つは reviewer サブエージェントがデザインシステム参照を確実にすることだが、現状 `description` には reviewer の起動条件を示すキーワード（「レビュー」「review」「checking」「audit」等）が一切含まれない。reviewer サブエージェントが UI 変更レビューを行う際、`description` のキーワードマッチで起動判断する場合、現状文面は reviewer の起動を取りこぼす。
+
+##### 2-3. 発動すべきでない場面との区別
+
+- API 実装、データ取得ロジック、ビジネスロジック編集では起動すべきでない。`paths` グロブで `*.tsx` `*.module.css` `globals.css` のみに絞っているため、`paths` 経路ではフィルタが効く。
+- しかし `description` 経由の自然言語起動では、「CSS変数」「デザイン哲学」「UI を新規作成」のようなキーワードが API 実装の文脈で偶発的に出現すれば誤発火しうる。ただしこれは Skills 共通の限界（R-Enforce L42「決定論的ではない」）であり、現状文面が特別に悪いわけではない。
+- 「レイアウト」「タイポグラフィ」「色」「角丸」「余白」のような具体トリガーキーワードを足せば、UI 文脈で確実に拾われる確率が上がる一方、API 文脈で誤発火する確率は変わらない（ビジネスロジックの議論にこれらの語は出ない）。**追加するメリットがあり、デメリットがない**。
+
+##### 2-4. 第三者（別 builder / 別エージェント）が読んで同じ判断をできるか
+
+- 現状文面は属人的な記述ではなく、LLM が読んでも同じ判断を再現可能と推定される。問題は判断の品質ではなく、判断のトリガーが曖昧で発火閾値が低くなりすぎる／取りこぼしが起きる点にある。
+
+##### 2-5. `paths` グロブとの役割分担
+
+- `paths` で発動する自動ロード（ファイル編集時の決定論的経路）と、`description` で判断される自然言語起動（会話キーワードによる確率的経路）の **2 経路がある** ことが研究レポートから読み取れる（R-Enforce L42、R-Synthesis L27）。
+- 現状文面は「src/ 配下の TSX・CSS ファイルを編集する場合に自動ロードされる」と書いており、これは `paths` 経路の説明である。`paths` 経路は YAML フィールドで既に成立しているため、`description` の貴重な 1,536 文字予算をこの説明に使うのは無駄。**`description` 経路でしか拾えない「会話キーワード」「レビュー」「デザイン議論」等の起動シグナルに予算を振るべき**。
+
+##### 2-6. 公式ドキュメント / コミュニティの description との比較
+
+| スキル               | description の構文                                                                                                      | トリガー記述の濃さ                                                 |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| 公式 frontend-design | "Use this skill **when** the user asks to build ... (examples include ...)"                                             | 高                                                                 |
+| 公式 canvas-design   | "You should use this skill **when** the user asks to create a poster ..."                                               | 高                                                                 |
+| R-Enforce 推奨例     | "...編集するとき、または UI・デザイン・スタイル・レイアウト・色・タイポグラフィについて作業するとき**に必ず参照する**"  | 高                                                                 |
+| 現状（yolos.net）    | "...参照する場合、または...編集する場合に自動ロードされる。UI を新規作成・変更する際は必ずこのスキルを参照してください" | **中**（「自動ロードされる」が機能説明、トリガーキーワードが薄い） |
+
+#### 3. ベストプラクティス通りでない場合の Blocker 化
+
+評価結果: **現状文面はベストプラクティス（公式実例 + 研究レポートの統合判断）から見て、トリガー記述の濃度が不足している**。具体的には以下 3 点:
+
+- **(a)** 「Use this skill when ...」型の起動条件主題化構文を採っていない（「自動ロードされる」「参照してください」型の機能説明・人間向け指示が混在）
+- **(b)** 「色」「タイポグラフィ」「レイアウト」「角丸」「余白」「Named Tone」「ヘッダー」「フッター」「ボタン」「パネル」等の **本サイクルで作る対象を直接指す語** が `description` 内にほとんど無く、自然言語起動の引っかかり代が小さい
+- **(c)** **「レビュー」「review」「audit」「check」等の reviewer サブエージェント起動シグナルが完全欠落**。本サイクル T-08 の目的（reviewer がデザインシステムを確実に参照する）と直結するため致命的
+
+これは前回レビューで Minor 扱いに留まらず、**Blocker レベル** として再評価する。理由: 本サイクルの目的は「サブエージェント（builder/reviewer）が UI 編集およびレビュー時にデザインシステムを確実に参照する状態」を作ることであり、`description` の自然言語起動経路が機能しないと、`paths` グロブが発火しない場面（reviewer のレビューチャット、PM が builder に指示する前のコンテキスト議論など）でスキルが起動しない。
+
+ただし、研究レポート L42 の通り `description` ベースの自動発火は本質的に非決定論的であり、`description` を厚くしても **必ず発火するとは言えない**。`description` の品質改善は「起動確率の引き上げ」までしかできず、決定論的強制は T-08 の system prompt 直書きと（cycle-170 計画外だが）hooks による配線に委ねられる。それでも「起動確率の引き上げ」分の価値は本サイクル目的に直結するため、Blocker 判定が妥当。
+
+#### 4. 批判的視点の徹底（前回見落とし含めた再点検）
+
+##### 4-1. frontmatter の 3 フィールド構成は本当にこれで足りるか
+
+研究レポートを Read した結果、以下を再確認:
+
+- **`when_to_use` フィールドの未採用**: R-Skill L214 / R-Enforce L72 によれば、`when_to_use` は「自動発火のトリガー条件の追加記述」。`description` に追記される形で扱われる。R-Enforce L60-67 の推奨例では `description` と `when_to_use` を併記している。一方、研究レポート全体としては「`description` 単独で十分書ければ `when_to_use` は不要」とも読める（公式 3 フィールド構成では `when_to_use` を使っていない）。本タスクでは `when_to_use` を含めない選択は許容範囲だが、その代わり **`description` 単独でトリガー条件を網羅する責任が生じる**。現状文面はその責任を果たせていない。
+- **`user-invocable: false` の未採用**: R-Enforce L60-70 推奨例に含まれる。R-Skill L218 の効果は「スラッシュメニューから非表示。Claude のみが呼び出せる」。yolos.net の SKILL は人間が `/frontend-design` で呼び出すユースケースが現実にあるか不明だが、サブエージェントが自動判断でロードする想定が主であれば `user-invocable: false` を入れることで「人間がスラッシュメニューから誤って呼び出す事故」を防げる。前回 Rev1 で「公式の最小主義に倣う」と評価したが、`user-invocable: false` は **既定値の明示** ではなく **既定値（true）からの変更** であり、入れないと人間がスラッシュメニューで見える状態になる。本サイクルでは人間呼び出しの想定がないため、入れた方が設計意図と整合する。ただしこれは Minor。
+- **`disable-model-invocation` を入れない判断**: 前回評価通り。サブエージェント自動配信を維持するため必須。
+
+3 フィールド構成自体が間違いではないが、`description` 単独でトリガーを担う設計選択を採った以上、**`description` 文面の濃度が公式実例水準に達していないと設計が破綻する**。現状文面はその水準に達していない。
+
+##### 4-2. `paths` の YAML 配列形式
+
+公式仕様の正確な YAML 形式（クォート要否、配列要素形式）について研究レポート内に明示記載は無いが、R-Enforce L251・R-Skill L419-422 で示された例はクォートあり（`"src/**/*.tsx"`）/ なし（`src/**/*`）が混在しており、どちらでも動作するパターンとして紹介されている。現状の SKILL.md はクォート付きで統一されており、YAML 仕様上 `**` を含むグロブは特殊文字保護のためクォートを付けるのが安全（YAML 一般則）。**問題なし**。ただし「公式仕様で `paths` の配列要素のクォート要否がどちらと定義されているか」は研究レポート範囲では未確認。
+
+##### 4-3. SKILL.md からの参照配線
+
+- 現状 SKILL.md L20-29 のドキュメント構成表は philosophy.md / variables.md / components.md を「相対参照」ではなく「ファイル名のみのバッククォート表記」で示している。リンクではない。
+- R-Enforce L92-94 の Progressive Disclosure 推奨パターンでは Markdown リンク `[tokens.md](tokens.md)` 形式で参照させる。SKILL.md の本文は T-07 で書く前提だが、T-07 ではこのリンク化を意識する必要がある。**現時点ではプレースホルダの状態として許容できる**が、T-07 受け入れ基準（cycle-170.md L120-125）の「関連ファイルへのリンク」をプレースホルダに明示しておくと安全。これは Minor-2 と同種の指摘。
+
+#### 5. 観点 A〜F の全面再評価
+
+##### 観点 A（受け入れ基準 6 項目の再評価）
+
+1. ディレクトリ名 `frontend-design`: **満たす**（変更なし）。
+2. `name: frontend-design`: **満たす**（変更なし）。
+3. **公式仕様に整合する最小フィールド構成**: 形式上の最小性（フィールド数）は公式と整合。しかし「最小フィールドで設計する」選択を採った以上、`description` 単独でトリガー責任を担う必要があり、**現状の `description` 文面はトリガー責任を果たせていない**。形式の最小性と機能の充足はトレードオフの関係にあり、前回はこれを混同していた。**本項目は実質的に未充足**（ただし「フィールド構成」だけを文字通り見るなら満たす）。
+4. 複数ファイル分割: **満たす**（変更なし）。
+5. 自己完結性: **満たす**（変更なし）。
+6. **UI 編集時の自動ロード機構が機能すること**: `paths` グロブによる発火は機能する見込み。しかし「サブエージェントが UI 編集時に自動でロードされる仕組み」全体としては、`paths` 経路に加えて `description` 経路の起動も期待されており、`description` 経路の品質不足により **「UI 編集時に確実にロードされる確率」が公式水準より下がる**。受け入れ基準の文面解釈次第だが、本サイクル目的に照らせば **未充足** と判定すべき。
+
+##### 観点 B（公式仕様との整合）
+
+- フィールド構成（`name` / `description` / `paths`）の許容性: 整合（変更なし）。
+- **`description` 文面の品質**: 公式 frontend-design・canvas-design の実例（R-Skill L82・L166）と比較して **「Use this skill when ...」型の起動条件主題化構文が採られていない** ため、**公式実装パターンから逸脱**。前回見落とし。
+
+##### 観点 C（paths グロブ）
+
+- 実構造への発火、過剰発火、YAML 形式: **整合**（変更なし）。
+- 追加観点: `paths` グロブだけで起動を期待する設計だと、ファイル編集を伴わない議論（PM がデザインを議論する／reviewer が変更レビューする）では起動しない。`description` 経路が補完すべきだが、現状は `description` 経路が弱い。**前回見落とし**。
+
+##### 観点 D（プレースホルダの適切さ）
+
+- variables.md / components.md / SKILL.md のプレースホルダ自体の品質: **前回 Rev1 の評価維持**（Minor-1: components.md の素地由来名残置は Minor のまま、Minor-2: SKILL.md プレースホルダの薄さは Minor のまま）。
+
+##### 観点 E（SKILL.md の状態）
+
+- frontmatter 確定状態という主題: 確定はしているが **frontmatter の品質（特に `description`）が不足** している。**前回見落とし**。本サイクル T-02 の主題は「frontmatter を整える」であり、フィールド構成だけでなく **文面品質** も主題に含まれる。
+
+##### 観点 F（Owner 指示の遵守）
+
+- ディレクトリ名・禁止語: **満たす**（変更なし）。
+- 「シンプルで分かりやすい」: 4 ファイル分割は計画書に従っているが、`description` 文面が「分かりやすい」かは別問題。LLM 起動判断シグナルとしての分かりやすさは現状不足。
+
+#### 6. 指摘事項（Rev1-2）
+
+##### Blocker
+
+- **Blocker-1 / `description` のトリガー記述が不足**: SKILL.md L3-7 の `description` を、公式 frontend-design（R-Skill L82・L146）および R-Enforce L60-67 の推奨例水準のトリガー濃度に書き直す。具体的に必要な要素:
+  - **(a)** 「Use this skill when ...」型または「...するときに参照する」型の起動条件主題化構文を採用する
+  - **(b)** 本サイクルで作る対象を直接指す語を含める: 色 / カラー / タイポグラフィ / フォント / レイアウト / 角丸 / 余白 / スペーシング / Named Tone / ヘッダー / フッター / ボタン / パネル / 入力欄 / 記事領域 等のうち、起動シグナルとして実用的なものを選定
+  - **(c)** **「レビュー」「review」相当の reviewer サブエージェント起動シグナルを必ず含める**（本サイクル T-08 の reviewer 配線が機能するための前提）
+  - **(d)** 「自動ロードされる」「参照してください」のような機能説明・人間向け指示の文を削除し、起動条件記述に予算を集中させる
+  - **(e)** 1,536 文字制限（R-Enforce L72）の前半に最重要キーワードを配置する
+
+##### Major
+
+なし（Rev1-2 で新規 Major は無し。Rev1 の Minor-1 は重要度を上げる必要があるか検討したが、後続 T-06 タスクで吸収可能なため Minor 据え置き）。
+
+##### Minor（Rev1 から継承 + 新規）
+
+- **Minor-1（Rev1 から継承）**: `components.md` L11-13 の素地由来コンポーネント名（ToolHero / HowTo / RelatedTools / Toolbox / ToolPanel / ToolPreview / AddPanel）を、計画書 T-04・T-05 のスコープ（Owner 例示の 6 部品）に揃えるか抽象指示に置換する。
+- **Minor-2（Rev1 から継承）**: `SKILL.md` プレースホルダに T-07 受け入れ基準（cycle-170.md L120-125）の要素「Quick reference / Quick rules / NEVER 節 / 関連ファイルへのリンク」を予定コンテンツとして列挙する。
+- **Minor-3（新規）**: `user-invocable: false` の追加検討。本サイクルでは人間が `/frontend-design` をスラッシュメニューから呼び出す想定がない（サブエージェント自動判断が主）なら、`user-invocable: false` を入れることで誤呼び出し事故を防げる。R-Enforce L68 推奨例に含まれる。`disable-model-invocation` とは独立しており、サブエージェント自動配信は維持される。**ただし必須ではない**。「シンプル最小」を優先するなら入れない選択も合理的。builder の判断範囲で決めて構わない。
+- **Minor-4（新規）**: SKILL.md L20-26 のドキュメント構成表は現状バッククォート表記のみ。T-07 で本文を書く際に Markdown リンク化（`[philosophy.md](philosophy.md)` 形式）を意識する旨をコメントに追記する。Progressive Disclosure の Supporting Files 参照パターン（R-Enforce L92-94）と整合させるため。
+
+#### 7. 判定の根拠
+
+Owner 指摘により、`description` フィールドが Skill の自動起動判断における **常時注入される唯一の機械可読シグナル**（R-Enforce L50「description だけは常にコンテキストに存在する」）であることが研究レポートで完全裏取りされた。前回 Rev1 はこの機能事実を見落とし、フィールド構成の最小性のみで pass 級の評価をしていた。
+
+`description` 文面を再評価した結果、以下の重大な不足を確認:
+
+- 「Use this skill when ...」型の起動条件主題化構文が採られていない
+- 本サイクルで作る具体対象（色 / レイアウト / 角丸 / 余白 / Named Tone / ヘッダー / フッター 等）を指すキーワードが薄い
+- **reviewer サブエージェント起動シグナル（「レビュー」等）が完全欠落**
+
+この 3 点目は本サイクル T-08 の目的（reviewer がデザインシステムを確実に参照する）と直結するため、Blocker 判定が妥当。
+
+判定: **needs_revision**（前回 Rev1 と同じ判定だが、内容は Blocker-1 の追加により実質的に強化）。Blocker-1 が解消されない限り、本サイクルの目的は達成できない。
+
+PM への指示:
+
+1. builder に Blocker-1 の修正を依頼。`description` を、研究レポート R-Enforce L60-67 の推奨例および公式 frontend-design L82 の構文を参考に、トリガー記述を主題とする文面に書き直す。reviewer 起動シグナル（「レビュー」「review」）を必ず含める。
+2. 同時に Rev1 の Minor-1・Minor-2 も解消（既に未対応）。Minor-3・Minor-4 は builder 判断で採用可。
+3. 修正完了後、Rev1-3 として再レビュー依頼。観点 A〜F すべての全面再評価を含める。
+
+### T-02 Rev1-3（2026-04-26）
+
+対象: `.claude/skills/frontend-design/SKILL.md` `variables.md` `components.md`（philosophy.md は不変）。Rev1-2 の Blocker-1 と Minor-1〜4 の解消確認、および観点 A〜F の全面再評価。
+
+#### 1. Rev1-2 全指摘の解消確認（独立検証）
+
+- **Blocker-1（description トリガー記述）**: SKILL.md L3-8 を Read。要素 (a)〜(e) すべて充足:
+  - (a) 起動条件主題化: 「〜について作業するとき、または〜のレビューを行うときに参照する」型を採用。文の主題が「いつ起動するか」に転換されている。
+  - (b) 具体対象トリガー語: 色 / カラー / タイポグラフィ / フォント / レイアウト / 余白 / スペーシング / 角丸 / ヘッダー / フッター / ボタン / パネル / 入力欄 / 記事エリア / CSS Modules を全件含む（grep で確認）。
+  - (c) reviewer 起動シグナル: 「デザインレビュー・UI レビュー・視覚的変更のレビュー」を 3 種列挙。前回欠落の致命点が解消。
+  - (d) 機能説明・人間向け指示: 「自動ロードされる」「参照してください」が削除済み（grep で SKILL.md 内に該当文字列なし）。
+  - (e) 文字数: description 値は 535 文字。R-Enforce L72 の 1,536 文字制限（description + when_to_use 合計）に対し十分な余裕。前半（L4-7）にトリガー語が密集配置されており、カット時の取りこぼしリスクが低い。**解消**。
+- **Minor-1（components.md 素地由来名）**: components.md L8-15 を Read。ToolHero / HowTo / RelatedTools / Toolbox / ToolPanel / ToolPreview / AddPanel すべて削除済み（grep 実施、該当文字列ゼロ）。L12 で「ヘッダー・フッター・パネル・ボタン・入力欄・記事エリア」（Owner 例示 6 部品）に置換、L10 に「具体名は T-04・T-05 完了時に確定」と明記。**解消**。
+- **Minor-2（SKILL.md プレースホルダ）**: SKILL.md L32-38 のコメントブロックに T-07 受け入れ基準（Quick reference / Quick rules / NEVER 節 / 関連ファイルへの Markdown リンク）を 4 項目で列挙。cycle-170.md L120-125 への参照付き。**解消**。
+- **Minor-3（user-invocable: false）**: SKILL.md L9 に追加済み。**採用**。
+- **Minor-4（Markdown リンク化）**: L37 で `[philosophy.md](philosophy.md)` 形式が例示されている。Minor-2 と統合対応済み。**解消**。
+
+typo 確認: builder 報告にあった「functional-quit」疑いについて grep で SKILL.md 全体を走査した結果、L8 の `functional-quiet` が唯一の出現で正しく綴られている。**typo なし**。
+
+#### 2. description 文面の批判的再評価
+
+- **トリガー語網羅性**: UI 編集（色・タイポグラフィ・レイアウト・ヘッダー・フッター・ボタン等の編集対象語） / CSS 変更（CSS Modules・余白・スペーシング・角丸） / コンポーネント新設（ボタン・パネル・入力欄・記事エリアの部品名） / デザインレビュー（3 種のレビュー語）の 4 大シーンが文面から独立して読み取れる。**満たす**。
+- **起動すべきでない場面との区別**: `description` 内の語彙はすべて「視覚・スタイル・コンポーネント API」領域に閉じている。API 実装・データ取得・ビジネスロジックの語彙（fetch・schema・validation・auth 等）は含まれない。誤発火の確率は十分低い。**満たす**。
+- **公式仕様との整合（builder の引用が正しいか独立検証）**:
+  - R-Skill L82（公式 frontend-design 実 description「Use this skill when ...」）: 該当文を Read で再確認。修正後文面の「〜するとき、または〜のレビューを行うときに参照する」は同等の起動条件主題化構文。**整合**。
+  - R-Skill L146（公式特徴 5「目的語を多く含む」）: 該当文を Read で再確認。修正後文面はトリガー語 15 個以上を列挙しており、目的語密度は公式と同水準以上。**整合**。
+  - R-Enforce L42（description 自動発火の機構）/ L50（description は常時コンテキスト存在）: 該当文を Read で再確認。修正後文面はこの機構を前提とした書き方になっている。**整合**。
+  - R-Enforce L60-67（推奨 frontmatter 例）: 該当文を Read で再確認。推奨例の `description` は L60-62、`when_to_use` は L63-67、`user-invocable: false` は L68。修正後 SKILL.md は `when_to_use` を採用していないが、その分のトリガー記述（CSS Modules / 新コンポーネント / デザインレビュー等）を `description` 本文に統合している。**整合**（`when_to_use` 不採用は許容範囲、本文で代替済み）。
+  - R-Enforce L72（1,536 文字上限、前半に最重要キーワード）: 535 文字で上限の約 35%。前半（L4-6）にトリガー対象（色〜入力欄〜記事エリア）が集中、後半（L7-8）にレビュー語と Named Tone が配置。最重要キーワードの前半配置が成立。**整合**。
+- **第三者再現性**: 文面は属人的記述・場面依存表現を含まない。LLM が読んでも別エージェントが読んでも同じ起動判断に収束する書き方。**満たす**。
+
+#### 3. user-invocable: false の妥当性
+
+- R-Enforce L49: 「`user-invocable: false` にするとスラッシュコマンドメニューから消える（Claude のみがロード可能になる）」。R-Enforce L68 推奨例にも含まれる。**整合**。
+- `disable-model-invocation` を含めない判断との切り分け: R-Skill L217 / R-Enforce L48 によれば `disable-model-invocation: true` は Claude 自動ロードを禁止し、サブエージェント自動配信も止める。本 SKILL は **`disable-model-invocation` を設定せず、`user-invocable: false` のみ設定** している。これは「人間スラッシュメニュー非表示 + LLM 自動配信は維持」の正しい組み合わせ。本サイクル目的（サブエージェントが UI 編集時に自動でロードされる）と整合。**問題なし**。
+
+#### 4. 観点 A〜F の全面再評価
+
+- **A**: 受け入れ基準 6 項目すべて満たす。A-3（最小フィールド構成）は Rev1-2 で実質未充足としていたが、`description` 文面が公式実例水準に達したため **充足**。A-6（自動ロード機構）も `description` 経路の品質が確保され、`paths` 経路と二経路で機能する状態に到達。**充足**。
+- **B**: 公式仕様との整合。`name` / `description` / `paths` / `user-invocable` の 4 フィールドすべて公式仕様（R-Skill L210-226 のフィールド表）で許容。`description` 文面は公式 frontend-design・canvas-design の構文と整合。**充足**。
+- **C**: paths グロブ（変更なし）。実構造への発火・過剰発火なし・YAML 形式妥当。**充足**。
+- **D**: プレースホルダ。variables.md は T-03 受け入れ基準（cycle-170.md L72-79）と対応する 5 項目を列挙。components.md は Owner 例示 6 部品を軸に「具体名は後続で確定」と明示。SKILL.md は T-07 要素 4 項目をコメントで列挙。後続 builder の混乱要因は解消。**充足**。
+- **E**: SKILL.md の状態。frontmatter は確定済かつ文面品質が公式水準。本文プレースホルダは T-07 builder の作業前提として機能する自己完結性を持つ。**充足**。
+- **F**: Owner 指示の遵守。ディレクトリ名 `frontend-design`、禁止語不在、シンプル最小構成。**充足**。
+
+#### 5. 後続タスクへの影響
+
+- **T-03**: variables.md L10-14 が 5 項目（カラートークン / タイポグラフィ / スペーシング / 角丸・Elevation・モーション / Bad/Good 例）を列挙。T-03 受け入れ基準（cycle-170.md L72-79）と直接対応する。**走れる**。
+- **T-04 / T-05**: SKILL.md frontmatter の `paths` で `src/components/design-system/` 配下も自動ロード対象になる。`description` のトリガー語に Owner 例示 6 部品が含まれるため、コンポーネント新設時にスキルが起動する。**走れる**。
+- **T-06**: components.md L10「具体名は T-04・T-05 完了時に確定」が T-04・T-05 完了を待つ依存関係を明示。Owner 例示 6 部品が軸として与えられている。**走れる**。
+- **T-07**: SKILL.md L32-38 のコメントが受け入れ基準 4 要素を列挙。リンク形式の例示もある。**走れる**。
+- **T-08**: builder/reviewer の system prompt 配線時、`description` のレビュー起動シグナルが既に組み込まれているため、system prompt 直書き（層 3）と `description` 自動発火（層 2）が二重に効く。**走れる**。
+
+#### 6. 指摘事項（Rev1-3）
+
+##### Blocker
+
+なし。
+
+##### Major
+
+なし。
+
+##### Minor
+
+なし。Rev1-2 で挙げた Blocker-1 と Minor-1〜4 はすべて解消済み。本 Rev1-3 で新規に発見された未充足要素はない。
+
+#### 7. 判定の根拠
+
+Rev1-2 の Blocker-1 は `description` のトリガー記述濃度不足だった。修正後文面は以下を満たす:
+
+1. 起動条件主題化構文（R-Skill L82 / L146 と整合）
+2. 本サイクルで作る対象を直接指す語 15 個以上の濃密配置
+3. **reviewer 起動シグナル 3 種を明示**（前回欠落の致命点を完全解消）
+4. 機能説明・人間向け指示の削除（予算の浪費を解消）
+5. 535 文字で 1,536 文字上限の 35%、前半にトリガー語集中
+
+Minor-1〜4 もすべて構造的に解消。`user-invocable: false` 採用と `disable-model-invocation` 不採用の組み合わせは「人間メニュー非表示 + LLM 自動配信維持」の正しい設計。後続タスク T-03〜T-08 はすべて本成果物を前提に走れる状態。
+
+観点 A〜F の全面再評価でも未充足要素は発見されなかった。Rev1 / Rev1-2 で見つかった見落としに相当する観点（フィールド機能性 / 起動シグナル質 / reviewer 配線）はすべて Rev1-3 で再点検済み。
+
+判定: **pass**。
+
 ## キャリーオーバー
 
 <!-- サイクル完了時に記入 -->
