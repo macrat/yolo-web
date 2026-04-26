@@ -111,7 +111,7 @@ Owner からの本サイクルへの指示（要約）:
     - 削除コミットが独立した commit になっており、commit message から「取り込み完了 → 素地削除」の経緯が読めること
   - builder の判断範囲: commit message 文面、最終 grep の具体コマンド
 
-- [ ] **T-7: サブエージェント configuration へのデザインシステム参照ルール埋め込み**（builder 1 名、T-6 完了後）
+- [x] **T-7: サブエージェント configuration へのデザインシステム参照ルール埋め込み**（builder 1 名、T-6 完了後）
   - 目的: skill の `paths` グロブ自動配信に加え、UI 編集前後にデザインシステムドキュメントを参照する行動を builder/reviewer の system prompt 直書きで強化する（Owner 原則 1〜2 と整合する最小経路：層 2 + 層 3）
   - 成果物: `.claude/agents/builder.md` と `.claude/agents/reviewer.md` の system prompt 追記
   - 受け入れ基準:
@@ -2581,6 +2581,92 @@ T-6 受け入れ基準 4 項目すべて pass:
 1. T-6 を完了として確定。staged 状態のまま `git commit` を実行し、commit message には「取り込み完了 → 素地削除」の経緯（取り込みマップへの参照、ロゴは T-4 で `git mv` 済の補足）を記載すること
 2. T-7（サブエージェント configuration 配線）に進める状態
 3. キャリーオーバー候補として追加なし（T-6 は素地削除のみで、後続作業を生まない）
+
+### T-7 Rev1（2026-04-27）
+
+対象: `.claude/agents/builder.md` と `.claude/agents/reviewer.md` の system prompt 追記（層 3 の二重経路強化）。`git diff HEAD` で変更範囲が builder.md L21-22（2 行追記）と reviewer.md L22（1 行追記）の合計 +4 行のみであることを確認したうえで、独立に Read / grep で内容検証した。builder 自己評価は読まず、plan T-7 受け入れ基準（cycle-170.md L117-121）を 1 項目ずつ実ファイルと照合する形で判定した。
+
+#### 判定: needs_revision（Blocker 0 / Major 1 / Minor 1）
+
+#### 観点別所見
+
+- **A（受け入れ基準の独立検証）**: 受け入れ基準 1（builder 趣旨）— `.claude/agents/builder.md` L21 に「UI コンポーネント（`src/components/` 配下の `.tsx`）または UI 系 CSS（`src/**/*.module.css`、`src/app/globals.css`）を編集する前に、必ず `.claude/skills/frontend-design/SKILL.md` と `.claude/skills/frontend-design/philosophy.md` を参照してください」と明記、L22 に「色・角丸・余白の値を新規にハードコードしないでください」と明記。趣旨は含まれるが**変数名例示が誤り**（後述 D）。受け入れ基準 2（reviewer 趣旨）— L22 に「philosophy.md の NEVER 節に記載されている視覚表現の禁止事項に違反していないか、および Named Tone `functional-quiet`（装飾より機能・対比より余白）から逸脱していないかを確認してください」と明記、Named Tone 名と意味注記まで含み判断粒度として十分。受け入れ基準 3（hooks/Stylelint 新規導入なし）— `git diff HEAD --name-only` の変更は builder.md と reviewer.md の 2 ファイルのみ、`.claude/hooks/` / `.claude/settings.json` / package.json への変更ゼロを確認、満たす。受け入れ基準 4（frontmatter `skills:` 追加なし）— builder.md / reviewer.md ともに frontmatter（L1-11 / L1-13）への変更ゼロを diff で確認、満たす。
+
+- **B（文面品質と機能性）**: builder L21 は対象パスの globパターンを明示し、参照すべきファイル名をフルパスで書いており、subagent が「いつ」「何を」読むか明確に判断できる粒度。reviewer L22 は philosophy.md の節名（NEVER 節）と Named Tone 名（functional-quiet）と意味注記（装飾より機能・対比より余白）まで埋め込まれており、subagent が単独でも判断基準を持てる。既存 system prompt の文体（です・ます調、段落単位の追記）と整合し追記が浮いていない。**ただし builder L22 後段の変数名例示が事実誤認**（後述 D）。
+
+- **C（二重経路の整合）**: 層 2（skill `paths` グロブ）は `src/**/*.tsx` / `src/**/*.module.css` / `src/app/globals.css` を含む（SKILL.md frontmatter L11-13 で確認）。層 3（builder.md L21）も同じ範囲を文面で再指定。**範囲が完全に同じ**で重複ではあるが、「skill が起動しなかった場合の保険」として相補的に機能するため矛盾はない。reviewer 側は層 2 がレビュー時点で起動するかが不確実な経路（reviewer は CSS を Edit するわけではない）を踏まえ、philosophy.md を文面で名指しすることで層 3 が必要な役割を担っている。過剰指示・矛盾指示なし。
+
+- **D（CSS 変数名の正確性）— Major-1**: `.claude/agents/builder.md` L22 で例示されている `--radius-*` / `--space-*` は **`src/app/globals.css` に存在しない**。実在するのは角丸 `--r-normal` / `--r-interactive` の 2 値のみ（globals.css L226-233）と、スペーシング `--sp-1`〜`--sp-9`（L213-224）。`grep -nE "radius|space" src/app/globals.css` でも `--radius-*` / `--space-*` プレフィックスのヒットはゼロ。subagent はこの system prompt を読んで `var(--radius-md)` / `var(--space-4)` のような存在しない変数で CSS を書く危険があり、ビルドは通っても無効値として無視され UI が崩れる実害につながる。さらに T-3 / T-4 で実装済みの `src/components/design-system/` 配下のコンポーネントは `--r-*` / `--sp-*` を使用しているはずなので、builder が誤った変数名で新規作成すれば「既存実装と命名が食い違う」逆方向の二重管理を生むリスクもある。`--bg-*` / `--fg-*` は実在するが「`*`（ワイルドカード）」表現は読み手にサフィックス（`-soft` / `-softer` / `-invert` / `-invert-soft`）を補完して読ませる構造で、実害は相対的に小さい。**変数名プレフィックス `--radius-*` / `--space-*` の事実誤認は Major**。
+
+- **E（副作用と全体への影響）**: frontmatter（builder.md L1-11 / reviewer.md L1-13）への変更ゼロ、`name` / `description` / `tools` / `model` / `permissionMode` / `mcpServers` すべて無変更。他の subagent（planner / researcher / blog-writer / code-researcher / web-researcher / claude-code-guide / statusline-setup）への変更ゼロ（`git diff HEAD --name-only` で確認）。skill ファイル（SKILL.md / philosophy.md）への変更ゼロ。`src/app/globals.css` / `src/components/` / `.claude/settings.json` / `.claude/hooks/` への変更ゼロ。subagent .md は CI 対象外でビルド・lint・テストへの直接影響なし。**問題なし**。
+
+- **F（Owner 原則との整合）**: 原則 2（シンプル）— builder 2 行・reviewer 1 行と最小限。原則 9（無意味な複雑さを持ち込まない）— 追記は機能（UI 編集前の skill 参照、UI レビュー時の哲学参照）と直結。原則 10（skill は将来にわたって使い続けるもの）— 追記文面に「T-7」「cycle-170」等のサイクル固有語の混入なし。**ただし変数名プレフィックスを system prompt にハードコードする形式そのものが原則 11（二重管理回避）の精神と緊張**: globals.css の命名が将来変わった瞬間に subagent prompt が嘘を書く構造になる。SKILL.md は既に「値と変数を参照するとき → globals.css を直接読む」と書いており、subagent prompt は「globals.css に定義された CSS 変数を使う」までで止め、具体プレフィックス列挙は SKILL.md / globals.css 側に任せる方が原則 11 と整合する。Minor-1 として指摘。
+
+#### 指摘事項
+
+- **Major-1（D 観点 — 存在しない CSS 変数名の埋め込み）**: `.claude/agents/builder.md` L22 の `--radius-*` / `--space-*` は実在しない。実在するのは `--r-normal` / `--r-interactive`（角丸 2 値）と `--sp-1`〜`--sp-9`（スペーシング）。subagent が誤った変数名で CSS を書く実害が出るため修正必須。修正方針（builder 判断）の例: (1) 実在する変数名に置換（`--r-*` / `--sp-*` 等）、(2) もしくは変数プレフィックスの列挙をやめ、SKILL.md にあるカテゴリ名（Surface / Text / Border / Accent & Status / フォント / タイプスケール / 行送り / 字間 / スペーシング / 角丸 / Elevation / モーション）を「これらのカテゴリの CSS 変数を使う」とまとめて指す。後者は Minor-1 とも一体で解消できるため推奨。
+
+- **Minor-1（F 観点 — 変数名プレフィックス直書きの二重管理リスク）**: 仮に Major-1 を実在変数名に置換しても、subagent prompt 内に変数名プレフィックスを列挙すると、`globals.css` の命名が変わった瞬間に subagent prompt が嘘を書くリスクが残る。原則 11（二重管理回避）の精神と緊張する。Major-1 の修正方針 (2) を採れば一体で解消できる。
+
+#### 評価できる点
+
+- 参照先パスがフルパスで正確（`.claude/skills/frontend-design/SKILL.md` / `.claude/skills/frontend-design/philosophy.md` ともに実在を Read で確認）。
+- 対象パス glob が層 2（skill `paths`）と一致しており、subagent が読み飛ばしにくい範囲指定になっている。
+- reviewer 追記は philosophy.md の節名と Named Tone 名と意味注記まで埋め込まれており、subagent が単独でも判断粒度を持てる。
+- frontmatter / 他 subagent / skill / globals.css / hooks / settings への副作用ゼロが diff で機械的に担保されている。
+
+#### 判定の根拠
+
+T-7 受け入れ基準 4 項目のうち 3 項目（基準 2・3・4）は満たす。基準 1（builder 趣旨）は 2 つのサブ趣旨のうち 1 つ目（UI 編集前に SKILL.md と philosophy.md を参照）は満たすが、2 つ目（色・角丸・余白を新規にハードコードしない、globals.css の新変数を使う）の例示変数名が事実誤認で、subagent が信じれば実害が出る。**Major 1 件残るため needs_revision**。
+
+#### PM への指示
+
+1. builder に修正作業を依頼してください。Major-1 の修正は必須（存在しない `--radius-*` / `--space-*` の例示を、実在変数名に置換するか、SKILL.md のカテゴリ名参照に書き換える）。Minor-1 と一体での対応（変数名プレフィックス列挙を削り、globals.css のセクション名・カテゴリを参照する形に書き換える）を推奨します。
+2. 修正後、再度レビューを依頼してください。前回指摘事項だけでなく全体の見直し（builder.md / reviewer.md の追記の整合・参照先パス正確性・他 subagent や skill / globals.css / hooks / settings への意図せぬ波及がないこと）を含めてください。
+
+### T-7 Rev2（2026-04-27）
+
+対象: Rev1 の Major-1 / Minor-1 を受けた `.claude/agents/builder.md` L22 の文面修正のみ。`.claude/agents/reviewer.md` は Rev1 で pass のため未変更。`git diff HEAD` で変更範囲が builder.md（L21-22 の 2 行追記）と reviewer.md（L22 の 1 行追記、Rev1 と同一）の合計 +4 行のみで、frontmatter / 他 subagent / skill / globals.css / hooks / settings への波及ゼロを独立確認した。
+
+#### 判定: pass（Blocker 0 / Major 0 / Minor 0）
+
+#### 観点別所見
+
+- **Major-1 / Minor-1 の解消確認**: 修正後の builder.md L22 は「色・角丸・余白の値を新規にハードコードしないでください。`src/app/globals.css` に定義されている CSS 変数を使ってください（具体的な変数名・カテゴリは `.claude/skills/frontend-design/SKILL.md` の道案内に従って `globals.css` を直接参照してください）。」となり、Rev1 で問題化した `--radius-*` / `--space-*` を含む変数名プレフィックスの列挙が完全に消去された。`grep -nE "radius|space" .claude/agents/builder.md` の結果はヒットゼロで、存在しない変数名が prompt 内に残っていないことを機械的に確認。Major-1 は構造的に解消。
+
+- **二重管理の構造的解消（Minor-1）**: subagent prompt は値・変数名・プレフィックスのいずれも保持せず、単一情報源（`globals.css` のセクションコメント L106-259）と道案内（`SKILL.md` L30-35「値と変数を参照するとき」）に委ねる形に変わった。SKILL.md L33 は「ここには変数名も値も書かない。globals.css のコメントが単一情報源であり、ここに対応表を置くと二重管理になる」と既に明記されており、subagent prompt → SKILL.md → globals.css の参照線が単方向で破綻なく繋がる。原則 11（二重管理回避）と完全整合。`globals.css` の命名が将来変わっても subagent prompt は嘘を書かない構造になった。
+
+- **A（受け入れ基準）**: 基準 1（builder 趣旨）— 2 つのサブ趣旨のうち 1 つ目「UI 編集前に SKILL.md と philosophy.md を参照する」は L21 で保持、2 つ目「色・角丸・余白を新規にハードコードしない、globals.css の新変数を使う」は L22 で保持（前段で「ハードコードしない」明記、後段で「globals.css の CSS 変数を使う」明記）。基準 2（reviewer 趣旨）— Rev1 から不変で満たす。基準 3（hooks/Stylelint 新規導入なし）— diff の変更ファイルは builder.md / reviewer.md / cycle-170.md（前 Rev レビュー記録）のみで満たす。基準 4（frontmatter `skills:` 追加なし）— builder.md L1-11 / reviewer.md L1-13 への変更ゼロを diff で確認、満たす。**4 項目すべて pass**。
+
+- **B（文面品質と機能性）**: 修正後文面「具体的な変数名・カテゴリは SKILL.md の道案内に従って globals.css を直接参照してください」は、subagent が「いつ（UI 編集前）」「どこを（SKILL.md → globals.css）」読むかを明確に伝える。冗長になっておらず、既存 system prompt の文体・トーンとも整合。Rev1 と比べて品質低下はなく、むしろ「単一情報源を参照する」という設計意図が文面に明示された分だけ向上している。SKILL.md の参照節（L30-35）には Surface / Text / Border / Accent & Status / フォント / タイプスケール / 行送り / 字間 / スペーシング / 角丸 / Elevation / モーションのカテゴリ列が書かれており、subagent はそこから globals.css へ自然に降りていける。
+
+- **C（二重経路 — 層 2 + 層 3 の整合）**: 層 2（skill `paths` グロブ）の `src/**/*.tsx` / `src/**/*.module.css` / `src/app/globals.css` と、層 3（builder.md L21）の文面範囲が一致する構造は Rev1 から不変。矛盾・過剰指示なし。
+
+- **D（CSS 変数名の正確性）**: 列挙されていた誤った変数名が削除された結果、subagent prompt 内に「事実誤認しうる場所」が構造的に存在しなくなった。grep でも `radius` / `space` のヒットゼロ。**Rev1 の Major-1 は完全解消**。
+
+- **E（副作用と全体への影響）**: `git diff HEAD --name-only` の結果は `.claude/agents/builder.md` / `.claude/agents/reviewer.md` / `docs/cycles/cycle-170.md` の 3 ファイルのみ。frontmatter（builder.md L1-11 / reviewer.md L1-13）への変更ゼロ、`name` / `description` / `tools` / `model` / `permissionMode` / `mcpServers` すべて無変更。他の subagent（planner / researcher / blog-writer / code-researcher / web-researcher / claude-code-guide / statusline-setup）への変更ゼロ。skill ファイル（SKILL.md / philosophy.md）への変更ゼロ。`src/app/globals.css` / `src/components/` / `.claude/settings.json` / `.claude/hooks/` への変更ゼロ。subagent .md は CI 対象外でビルド・lint・テストへの直接影響なし。**問題なし**。
+
+- **F（Owner 原則との整合）**: 原則 2（シンプル）— builder 2 行・reviewer 1 行と最小限。原則 9（無意味な複雑さを持ち込まない）— 追記は機能（UI 編集前の skill 参照、UI レビュー時の哲学参照）と直結。原則 10（skill は将来にわたって使い続けるもの）— 追記文面に「T-7」「cycle-170」等のサイクル固有語の混入なし。原則 11（二重管理回避）— Rev1 で残っていた「変数名プレフィックスの直書き」が削除され、subagent prompt は値も変数名も持たず単一情報源に委ねる形になった。**全原則充足**。
+
+- **reviewer.md の不変確認**: `git diff HEAD -- .claude/agents/reviewer.md` で Rev1 と完全に同一の差分（L22 への 1 行追記のみ）であることを独立確認。Rev1 で pass 評価された内容が無変更で維持されている。
+
+- **新規問題の有無**: 修正で導入された「`.claude/skills/frontend-design/SKILL.md` の道案内に従って `globals.css` を直接参照してください」という文言が SKILL.md の実態（L30-35 の「値と変数を参照するとき」節 + セクション構成リスト）と整合することを Read で確認済。括弧書きで補足として置かれており読み手にとって自然な構造。新規問題は検出されず。
+
+#### 評価できる点
+
+- **Rev1 の Major-1 / Minor-1 を一体で解消**: 単純に変数名を実在名に置き換える対症療法ではなく、「subagent prompt に変数名を書かない」という構造的解決を採った。原則 11（二重管理回避）と整合し、将来 globals.css の命名が変わっても subagent prompt が破綻しない設計になった。
+- **修正範囲を最小に保っている**: 修正は builder.md L22 の 1 行のみ。Rev1 で pass 評価された reviewer.md と builder.md L21 には手を入れず、回帰リスクを最小化している。
+- **参照線が単方向で完結**: subagent prompt → SKILL.md → globals.css の参照線が単方向で、SKILL.md は既に「ここには変数名も値も書かない」と明記しているため、3 層に渡って単一情報源原則が貫徹される。
+
+#### 判定の根拠
+
+T-7 受け入れ基準 4 項目すべて pass（A 観点）。Rev1 で残っていた Major 1 件と Minor 1 件は構造的に解消（D / Minor-1 観点）。副作用検証（E）も他ファイルへの波及ゼロ。Owner 原則 2 / 9 / 10 / 11 すべて充足（F）。reviewer.md の Rev1 不変も確認済。新規問題なし。Blocker / Major / Minor すべて 0 件のため **pass**。
+
+#### PM への提案
+
+1. T-7 を完了として確定。`.claude/agents/builder.md` と `.claude/agents/reviewer.md` の変更を 1 つの commit にまとめて記録すること（subagent configuration へのデザインシステム参照ルール埋め込みという単一の意図にまとまっているため）。
+2. T-8（PM 完了処理）に進める状態。
+3. キャリーオーバー候補として追加なし（T-7 は subagent 配線の最小追記のみで、後続作業を生まない。次サイクル送りの「サブエージェント `skills:` フィールド導入の効果検証」は plan 完成の定義 L131 に既に列挙されている）。
 
 ## キャリーオーバー
 
