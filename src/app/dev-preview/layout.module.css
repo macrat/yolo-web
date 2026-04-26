@@ -1,0 +1,15 @@
+/**
+ * dev-preview/ 専用レイアウトのスタイル
+ * このスタイルは dev-preview/ 配下にのみ適用される。
+ */
+
+.devRoot {
+  /* Noto Sans JP を dev-preview/ スコープでのみ font-sans として設定する */
+  --font-sans: var(--dev-font-noto), system-ui, sans-serif;
+  font-family: var(--font-sans);
+
+  /* ページ全体の余白と背景 */
+  min-height: 100vh;
+  background-color: var(--bg-soft, #f4f4f1);
+  color: var(--fg, #1a1a1a);
+}
