@@ -1,0 +1,128 @@
+/*
+  Input.module.css — テキスト一行入力フィールドのスタイル
+  参照する変数: globals.css の Design System トークン（新変数群）のみ
+  --color-* 旧変数は参照しない。
+
+  フォーカスリングは --accent の 2px outline（philosophy.md 規約）。
+  border 色は hover で変えない（philosophy.md NEVER 節）。
+  明度差のみで状態を表現する。
+*/
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+}
+
+/* ラベル */
+.label {
+  font-family: var(--font-sans);
+  font-size: var(--fs-14);
+  font-weight: 500;
+  color: var(--fg);
+  line-height: var(--lh-snug);
+}
+
+/* 視覚的に隠れたラベル（スクリーンリーダーには読まれる） */
+.labelHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* 必須マーク */
+.required {
+  color: var(--danger);
+}
+
+/* 入力欄本体 */
+.input {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--r-interactive);
+  background-color: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-size: var(--fs-15);
+  line-height: var(--lh-base);
+  transition: border-color var(--t-fast) var(--ease);
+  appearance: none;
+}
+
+/* プレースホルダー */
+.input::placeholder {
+  color: var(--fg-softer);
+}
+
+/* フォーカスリング（キーボード・マウス共通） */
+.input:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  border-color: var(--accent);
+}
+
+/* 無効時 */
+.input:disabled {
+  background-color: var(--bg-soft);
+  color: var(--fg-softer);
+  cursor: not-allowed;
+}
+
+/* 読み取り専用 */
+.input:read-only {
+  background-color: var(--bg-soft);
+}
+
+/* エラー状態 */
+.inputError {
+  border-color: var(--danger);
+}
+
+.inputError:focus {
+  outline-color: var(--danger);
+}
+
+/* =====================================================================
+   size
+   ===================================================================== */
+
+.wrapper[data-size="sm"] .input {
+  padding: var(--sp-1) var(--sp-2);
+  font-size: var(--fs-13);
+  /* WCAG 2.5.5: タップターゲット最小 44px — sm でも十分な高さを確保 */
+  min-height: 36px;
+}
+
+.wrapper[data-size="md"] .input {
+  padding: var(--sp-2) var(--sp-3);
+  font-size: var(--fs-15);
+  min-height: 44px;
+}
+
+.wrapper[data-size="lg"] .input {
+  padding: var(--sp-3) var(--sp-4);
+  font-size: var(--fs-16);
+  min-height: 52px;
+}
+
+/* =====================================================================
+   ヒント・エラーテキスト
+   ===================================================================== */
+
+.hintText {
+  font-size: var(--fs-13);
+  color: var(--fg-soft);
+  line-height: var(--lh-snug);
+}
+
+.errorText {
+  font-size: var(--fs-13);
+  color: var(--danger-strong);
+  line-height: var(--lh-snug);
+}

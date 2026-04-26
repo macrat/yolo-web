@@ -1,0 +1,109 @@
+/*
+  Textarea.module.css — 複数行テキスト入力フィールドのスタイル
+  参照する変数: globals.css の Design System トークン（新変数群）のみ
+  --color-* 旧変数は参照しない。
+
+  フォーカスリングは --accent の 2px outline（philosophy.md 規約）。
+  border 色は hover で変えない（philosophy.md NEVER 節）。
+  resize: vertical のみ許可（水平リサイズはレイアウト崩れの原因）。
+*/
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+}
+
+/* ラベル */
+.label {
+  font-family: var(--font-sans);
+  font-size: var(--fs-14);
+  font-weight: 500;
+  color: var(--fg);
+  line-height: var(--lh-snug);
+}
+
+/* 視覚的に隠れたラベル（スクリーンリーダーには読まれる） */
+.labelHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* 必須マーク */
+.required {
+  color: var(--danger);
+}
+
+/* textarea 本体 */
+.textarea {
+  width: 100%;
+  padding: var(--sp-2) var(--sp-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-interactive);
+  background-color: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-size: var(--fs-15);
+  line-height: var(--lh-base);
+  resize: vertical;
+  appearance: none;
+  transition: border-color var(--t-fast) var(--ease);
+}
+
+/* プレースホルダー */
+.textarea::placeholder {
+  color: var(--fg-softer);
+}
+
+/* フォーカスリング */
+.textarea:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  border-color: var(--accent);
+}
+
+/* 無効時 */
+.textarea:disabled {
+  background-color: var(--bg-soft);
+  color: var(--fg-softer);
+  cursor: not-allowed;
+  resize: none;
+}
+
+/* 読み取り専用 */
+.textarea:read-only {
+  background-color: var(--bg-soft);
+  resize: none;
+}
+
+/* エラー状態 */
+.textareaError {
+  border-color: var(--danger);
+}
+
+.textareaError:focus {
+  outline-color: var(--danger);
+}
+
+/* =====================================================================
+   ヒント・エラーテキスト
+   ===================================================================== */
+
+.hintText {
+  font-size: var(--fs-13);
+  color: var(--fg-soft);
+  line-height: var(--lh-snug);
+}
+
+.errorText {
+  font-size: var(--fs-13);
+  color: var(--danger-strong);
+  line-height: var(--lh-snug);
+}

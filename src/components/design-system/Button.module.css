@@ -1,0 +1,140 @@
+/*
+  Button.module.css — 操作可能ボタンのスタイル
+  参照する変数: globals.css の Design System トークン（新変数群）のみ
+  --color-* 旧変数は参照しない。
+
+  hover は明度差のみで表現（philosophy.md NEVER: opacity/scale 変化禁止）。
+  フォーカスリングは --accent の 2px outline。
+  shadow は --elev-button のみ（ダイアログ・カードに shadow 禁止）。
+*/
+
+/* ベーススタイル（全 variant 共通） */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  border: 1px solid transparent;
+  border-radius: var(--r-interactive);
+  font-family: var(--font-sans);
+  font-size: var(--fs-15);
+  font-weight: 500;
+  letter-spacing: var(--tracking-base);
+  line-height: var(--lh-tight);
+  cursor: pointer;
+  transition:
+    background-color var(--t-fast) var(--ease),
+    border-color var(--t-fast) var(--ease),
+    color var(--t-fast) var(--ease);
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: var(--elev-button);
+}
+
+/* fullWidth */
+.button[data-full-width="true"] {
+  display: flex;
+  width: 100%;
+}
+
+/* フォーカスリング（キーボード操作時のみ表示） */
+.button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* 無効時 */
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+  box-shadow: none;
+}
+
+/* =====================================================================
+   variant
+   ===================================================================== */
+
+/* primary: 最重要アクション。暗い面に白文字。hover は bg の明度を上げる。 */
+.button[data-variant="primary"] {
+  background-color: var(--bg-invert);
+  color: var(--fg-invert);
+  border-color: var(--bg-invert);
+}
+
+.button[data-variant="primary"]:hover:not(:disabled) {
+  background-color: var(--bg-invert-soft);
+  border-color: var(--bg-invert-soft);
+}
+
+/* ghost: 補助アクション。透明背景・罫線枠。hover で bg-softer を塗る。 */
+.button[data-variant="ghost"] {
+  background-color: transparent;
+  color: var(--fg);
+  border-color: var(--border);
+  box-shadow: none;
+}
+
+.button[data-variant="ghost"]:hover:not(:disabled) {
+  background-color: var(--bg-softer);
+}
+
+/* danger: 破壊的アクション。--danger 色でボーダーと文字を染める。 */
+.button[data-variant="danger"] {
+  background-color: transparent;
+  color: var(--danger-strong);
+  border-color: var(--danger);
+  box-shadow: none;
+}
+
+.button[data-variant="danger"]:hover:not(:disabled) {
+  background-color: var(--danger-soft);
+}
+
+/* =====================================================================
+   size
+   ===================================================================== */
+
+.button[data-size="sm"] {
+  padding: var(--sp-1) var(--sp-3);
+  font-size: var(--fs-13);
+  min-height: 32px;
+}
+
+.button[data-size="md"] {
+  padding: var(--sp-2) var(--sp-4);
+  font-size: var(--fs-15);
+  /* WCAG 2.5.5: タップターゲット最小 44px */
+  min-height: 44px;
+}
+
+.button[data-size="lg"] {
+  padding: var(--sp-3) var(--sp-5);
+  font-size: var(--fs-16);
+  min-height: 52px;
+}
+
+/* =====================================================================
+   ローディング
+   ===================================================================== */
+
+.spinner {
+  width: 1em;
+  height: 1em;
+  animation: spin 0.8s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.labelHidden {
+  /* aria-hidden ではなく視覚的に隠す（スクリーンリーダーは children を読む） */
+  visibility: hidden;
+  position: absolute;
+}

@@ -1,0 +1,34 @@
+/*
+ * SectionHead.module.css
+ * セクション区切りを細い罫線＋最小限のテキストで表現する。
+ * すべての値は globals.css の Design System トークンを参照する。
+ * 既存 --color-* 変数は使わない。
+ */
+
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: var(--sp-2);
+  margin-bottom: var(--sp-5);
+  gap: var(--sp-4);
+}
+
+.title {
+  font-family: var(--font-sans);
+  font-size: var(--fs-16);
+  font-weight: 500;
+  color: var(--fg);
+  margin: 0;
+  white-space: nowrap;
+  line-height: var(--lh-tight);
+}
+
+.meta {
+  font-family: var(--font-sans);
+  font-size: var(--fs-12);
+  color: var(--fg-softer);
+  white-space: nowrap;
+  flex-shrink: 0;
+}

@@ -1,0 +1,71 @@
+/*
+ * SiteHeader.module.css
+ * philosophy.md NEVER 節: ヘッダーは fixed / sticky にしない
+ * すべての値は globals.css の Design System トークンを参照する。
+ * 既存 --color-* 変数は使わない。
+ */
+
+.header {
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+  /* position は static のまま — ヘッダー固定禁止 (philosophy.md NEVER) */
+}
+
+.nav {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: var(--sp-5) var(--sp-7) var(--sp-4);
+  gap: var(--sp-5);
+}
+
+.brand {
+  font-family: var(--font-sans);
+  font-size: var(--fs-16);
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
+  color: var(--fg);
+  text-decoration: none;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.brand:hover {
+  /* 明度差のみ — border 色変更・scale・opacity は使わない (philosophy.md NEVER) */
+  color: var(--fg-soft);
+}
+
+.brand:focus-visible {
+  /* T-3 の Button / Input と同じ accent 2px outline で design-system 全体の一貫性を保つ */
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.navList {
+  display: flex;
+  gap: var(--sp-5);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  align-items: baseline;
+}
+
+.navLink {
+  font-family: var(--font-sans);
+  font-size: var(--fs-13);
+  color: var(--fg-soft);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color var(--t-fast) var(--ease);
+}
+
+.navLink:hover {
+  color: var(--fg);
+}
+
+.navLink:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}

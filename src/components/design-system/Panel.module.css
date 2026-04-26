@@ -1,0 +1,27 @@
+/*
+ * Panel.module.css
+ * philosophy.md NEVER 節: 「ダイアログ・ポップオーバー・カードに影を使う」は禁止。
+ * 階層は枠線とスペースで表現する。
+ * すべての値は globals.css の Design System トークンを参照する。
+ * 既存 --color-* 変数は使わない。
+ */
+
+.panel {
+  position: relative;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--r-normal);
+  padding: var(--sp-5);
+  /* shadow は使わない */
+}
+
+/* flush: padding なし（内側コンテンツが独自に padding を持つ場合） */
+.flush {
+  padding: 0;
+}
+
+/* inset: 沈んだ背景。ページ全体の背景として使う */
+.inset {
+  background: var(--bg-soft);
+  border-color: transparent;
+}
