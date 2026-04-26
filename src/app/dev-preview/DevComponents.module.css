@@ -1,0 +1,56 @@
+/**
+ * dev-preview/ 動作確認ページのレイアウトスタイル
+ * このスタイルは dev-preview/ 配下にのみ適用される。
+ */
+
+.root {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--sp-8, 2rem) var(--sp-4, 1rem);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-12, 3rem);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4, 1rem);
+}
+
+/* コンポーネントのプレビューブロック */
+.preview {
+  background: var(--bg, #ffffff);
+  border: 1px solid var(--border, #e6e6e2);
+  border-radius: var(--radius-md, 6px);
+  padding: var(--sp-4, 1rem);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3, 0.75rem);
+  overflow: hidden;
+}
+
+/* プレビューの説明ラベル */
+.label {
+  font-size: 0.75rem;
+  color: var(--fg-softer, #888888);
+  font-family: var(--font-mono, monospace);
+  padding-bottom: var(--sp-2, 0.5rem);
+  border-bottom: 1px solid var(--border, #e6e6e2);
+  margin-bottom: var(--sp-2, 0.5rem);
+}
+
+/* 横並び */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3, 0.75rem);
+  align-items: center;
+}
+
+/* 縦並び */
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3, 0.75rem);
+}
