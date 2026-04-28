@@ -20,7 +20,6 @@
 
   /* Border — aliases of surface tokens for visual consistency */
   --border: var(--bg-softer); /* default hairline = #E6E6E2 */
-  --border-strong: var(--bg-invert); /* strong border = #1A1A1A */
 
   /* Accent — primary blue */
   --accent: oklch(0.62 0.22 264);
