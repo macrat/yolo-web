@@ -3,6 +3,18 @@
  * philosophy.md NEVER 節: ヘッダーは fixed / sticky にしない
  * すべての値は globals.css の Design System トークンを参照する。
  * 既存 --color-* 変数は使わない。
+ *
+ * レスポンシブ方針（E-1 で追加）:
+ * - モバイルファースト（基準スタイル = 〜639px）
+ * - ブレイクポイント: min-width: 40em (640px) でナビ表示・padding 拡大
+ * - モバイルではナビリンクを非表示（既存 common/Header と同様のアプローチ）
+ *   SiteHeader は design-system の展示用部品であり、実サイト接続時は
+ *   MobileNav（ハンバーガーメニュー）との連携が必要（B-310 スコープ）。
+ * - 左右 padding はモバイルで var(--sp-4)=16px、タブレット以上で var(--sp-7)=48px
+ * - 64em（デスクトップ）での追加変更なし。理由: ヘッダー構造（ブランド＋ナビ）は
+ *   640px 以上で完全に表示される。1024px 以上でレイアウト的な変化はなく、
+ *   max-width: 1280px で幅上限が制御されている。MobileNav や検索の接続が
+ *   実装される段階（B-310 スコープ）で再検討する。
  */
 
 .header {
@@ -13,12 +25,16 @@
 
 .nav {
   display: flex;
-  align-items: baseline;
+  /* align-items: baseline → center に変更（E-1）:
+     baseline はデスクトップでの字面揃えに適しているが、
+     モバイルではロゴとナビが見切れる原因になるため center に変更する。 */
+  align-items: center;
   justify-content: space-between;
   max-width: 1280px;
   margin: 0 auto;
-  padding: var(--sp-5) var(--sp-7) var(--sp-4);
-  gap: var(--sp-5);
+  /* モバイルでは左右 padding を縮小して水平スクロールを防ぐ（E-1） */
+  padding: var(--sp-4) var(--sp-4);
+  gap: var(--sp-4);
 }
 
 .brand {
@@ -30,10 +46,16 @@
   text-decoration: none;
   white-space: nowrap;
   line-height: 1;
+  /* WCAG 2.5.5: ブランドリンクのタップターゲット確保 */
+  min-height: var(--touch-target-min);
+  display: inline-flex;
+  align-items: center;
 }
 
 .brand:hover {
-  /* 明度差のみ — border 色変更・scale・opacity は使わない (philosophy.md NEVER) */
+  /* 明度差のみ — border 色変更・scale・opacity は使わない (philosophy.md NEVER)
+     hover 明度差方向規約 (B-3): ライト=fg→fg-soft(暗く), ダーク=fg→fg-soft(明るく)。
+     :root.dark 側の --fg-soft が自動適用されるため追加記述不要。 */
   color: var(--fg-soft);
 }
 
@@ -49,7 +71,11 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  align-items: baseline;
+  align-items: center;
+  /* モバイル（〜639px）ではナビリンクを非表示（E-1）。
+     実サイト接続時は MobileNav（ハンバーガー）と組み合わせる（B-310 スコープ）。
+     design-system の dev-preview では非表示のままでよい。 */
+  display: none;
 }
 
 .navLink {
@@ -59,13 +85,37 @@
   text-decoration: none;
   white-space: nowrap;
   transition: color var(--t-fast) var(--ease);
+  /* WCAG 2.5.5: ナビリンクのタップターゲット確保（padding で高さを確保） */
+  min-height: var(--touch-target-min);
+  display: inline-flex;
+  align-items: center;
 }
 
 .navLink:hover {
+  /* 明度差のみ — border 色変更・scale・opacity は使わない (philosophy.md NEVER)
+     hover 明度差方向規約 (B-3): ライト=fg-soft→fg(暗く), ダーク=fg-soft→fg(明るく)。
+     :root.dark 側の --fg が自動適用されるため追加記述不要。 */
   color: var(--fg);
 }
 
 .navLink:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
+}
+
+/* =====================================================================
+   レスポンシブ（モバイルファースト、E-1 で追加）
+   基準スタイル（〜639px）: ナビ非表示、padding を縮小
+   ===================================================================== */
+
+/* タブレット以上（min-width: 40em = 640px）: ナビ表示、padding を拡大 */
+@media (min-width: 40em) {
+  .nav {
+    padding: var(--sp-5) var(--sp-7) var(--sp-4);
+    gap: var(--sp-5);
+  }
+
+  .navList {
+    display: flex;
+  }
 }

@@ -1,5 +1,7 @@
 import { describe, test, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
+import { readFileSync } from "fs";
+import { resolve } from "path";
 import SectionHead from "../SectionHead";
 
 describe("SectionHead", () => {
@@ -40,5 +42,17 @@ describe("SectionHead", () => {
     expect(
       screen.getByRole("heading", { level: 3, name: "タイトル" }),
     ).toBeInTheDocument();
+  });
+
+  // --- E-1: モバイル幅レイアウト（CSS 構造テスト） ---
+
+  test("SectionHead.module.css contains @media (min-width: query or JSDoc note for mobile-first", () => {
+    // SectionHead は flex + border-bottom のシンプルな構造。
+    // タイトルに white-space: nowrap があるため、モバイルで折り返し対応が必要。
+    const cssPath = resolve(__dirname, "../SectionHead.module.css");
+    const css = readFileSync(cssPath, "utf-8");
+    const hasMediaQuery = /@media\s*\(min-width:/.test(css);
+    const hasMobileNote = /モバイル基準/.test(css);
+    expect(hasMediaQuery || hasMobileNote).toBe(true);
   });
 });

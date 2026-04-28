@@ -6,6 +6,14 @@
   フォーカスリングは --accent の 2px outline（philosophy.md 規約）。
   border 色は hover で変えない（philosophy.md NEVER 節）。
   明度差のみで状態を表現する。
+
+  レスポンシブ方針（E-1 で追加）:
+  - モバイルファースト。Input は width: 100% で親コンテナに追従するため
+    水平スクロールは発生しない。
+  - min-width: 40em (640px) での追加変更なし。理由: 入力欄は親のグリッドに追従
+    するだけで、サイズ固有のレイアウト変更は不要。
+  - 64em（デスクトップ）での追加変更なし。理由: 入力欄の幅はコンテナが制御し、
+    Input コンポーネント自体に 1024px 以上での特有スタイルは存在しない。
 */
 
 .wrapper {
@@ -95,20 +103,25 @@
 .wrapper[data-size="sm"] .input {
   padding: var(--sp-1) var(--sp-2);
   font-size: var(--fs-13);
-  /* WCAG 2.5.5: タップターゲット最小 44px — sm でも十分な高さを確保 */
-  min-height: 36px;
+  /* WCAG 2.5.5: タップターゲット最小 44px（E-1 で 36px → var(--touch-target-min) に修正）。
+     sm サイズはコンテナが十分広い場面（デスクトップ管理 UI 等）に限定使用する。
+     モバイルを想定したフォームでは md を使う。 */
+  min-height: var(--touch-target-min);
 }
 
 .wrapper[data-size="md"] .input {
   padding: var(--sp-2) var(--sp-3);
-  font-size: var(--fs-15);
-  min-height: 44px;
+  /* iOS Safari は font-size < 16px の input でページを自動ズームする。
+     --input-font-min (16px) を使用（E-1 で --fs-15 → --input-font-min に修正）。 */
+  font-size: var(--input-font-min);
+  min-height: var(--touch-target-min);
 }
 
 .wrapper[data-size="lg"] .input {
   padding: var(--sp-3) var(--sp-4);
   font-size: var(--fs-16);
-  min-height: 52px;
+  /* lg は --touch-target-min(44px) + --sp-2(8px) = 52px（直値禁止のため変数化） */
+  min-height: var(--touch-target-lg);
 }
 
 /* =====================================================================
@@ -126,3 +139,12 @@
   color: var(--danger-strong);
   line-height: var(--lh-snug);
 }
+
+/* =====================================================================
+   レスポンシブ（モバイルファースト、E-1 で確認）
+   Input は width: 100% で親コンテナに追従するため水平スクロールは発生しない。
+   40em (640px) / 64em (1024px) いずれのブレイクポイントでも追加変更不要。
+   理由: 入力欄の幅はコンテナが制御し、Input 固有のデスクトップ特有スタイルはない。
+   @media ブロックはメディアクエリ存在確認テストを満たすためではなく、
+   実際に上書きが必要な差分がある場合のみ追加する（AP-WF09 対応）。
+   ===================================================================== */

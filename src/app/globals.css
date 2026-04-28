@@ -26,6 +26,10 @@
   --color-admonition-caution: #dc2626;
   --color-admonition-caution-bg: #fef2f2;
   --max-width: 960px;
+  /* 記事本文エリアの最大幅。dev-preview のインライン HTML（src/app/dev-preview/）から
+     style={{ maxWidth: "var(--max-width-article)" }} で参照する。
+     B-1 パターン β により ArticleArea.tsx を削除し、本変数で本文幅を一貫保証する。 */
+  --max-width-article: 720px;
   --color-trust-verified: #059669;
   --color-trust-verified-bg: #ecfdf5;
   --color-trust-curated: #0284c7;
@@ -69,7 +73,24 @@ body {
   line-height: 1.6;
 }
 
+/* ブロック順序注記（Minor-7 対応）:
+   `:root.dark` が `:root` より前に定義されているのは、このファイルが旧 `--color-*` 系の
+   構造（旧来の :root.dark → :root 順）を継承しているため。CSS のカスケードでは
+   同一詳細度の場合に後続の宣言が優先されるが、`:root.dark` は `:root` より詳細度が高い
+   （class セレクタが含まれる）ため、`:root.dark` の順序は詳細度で勝ち、前後に関係なく
+   ダークモード時は `:root.dark` 値が確実に適用される。再配置は影響なし・不要。 */
 :root.dark {
+  /* color-scheme: dark を :root.dark にのみ設定する（B-3 の設計判断）。
+     効果: OS のダーク設定を持つ環境では <input type="date"> / <select> / スクロールバー等の
+           ブラウザネイティブ UI がダーク配色で描画される（MDN / web.dev 仕様に基づく）。
+     :root 側には設定しない。理由: 効果が実証されておらず、Owner 方針「必要だと分かっている最小」に従い
+           効果が明確な :root.dark 側のみに限定する。
+     詳細: tmp/cycle-170/b-3/color-scheme-diff/evaluation.md */
+  color-scheme: dark;
+
+  /* ------------------------------------------------------------------
+     旧 --color-* 系のダーク値（既存サイト用。変更しない）
+     ------------------------------------------------------------------ */
   --color-primary: #60a5fa;
   --color-primary-hover: #93c5fd;
   --color-bg: #1a1a2e;
@@ -101,13 +122,104 @@ body {
   --color-admonition-warning-bg: #451a03;
   --color-admonition-caution: #f87171;
   --color-admonition-caution-bg: #450a0a;
+
+  /* ------------------------------------------------------------------
+     Design System トークンのダーク値（cycle-170 B-3 で追加）
+     方針: 色相保持・明度のみ反転（Accent のみ Chroma も微減）。
+     WCAG AA 検証済み: tmp/cycle-170/b-3/contrast-measurements.md
+
+     !! 同期管理の注意 (Major-4 対応) !!
+     このブロックの値を変更した場合は、以下も必ず更新すること:
+       src/app/__tests__/globals-dark-contrast.test.ts の darkTokens
+     最終同期日: 2026-04-27
+     ------------------------------------------------------------------ */
+
+  /* Surface（背景面 5 階調）
+     ダーク側は明度反転: ライト白系 (#fff, #f4f4f1) → 暗いグレー系
+     hover 明度差方向（ダーク）: より明るく（L 上げ）。
+     ghost/panel hover: bg (#1c1c1c) → bg-soft (#2a2a2a) → bg-softer (#383838) の順で明るくなる。
+     この方向性は SiteHeader/SiteFooter/Button の hover 規則が --bg-softer 等を参照するため自動適用。 */
+  --bg: #1c1c1c; /* デフォルトの面。パネル・モーダル */
+  --bg-soft: #2a2a2a; /* 沈んだ背景。ページ背景・hover on bg */
+  --bg-softer: #383838; /* ghost ボタン hover・ヘアライン罫線 */
+  --bg-invert: #f0f0ed; /* 明るい面。primary ボタン・フッター（ライトの --bg-invert と対応） */
+  --bg-invert-soft: #c0c0bc; /* primary ボタン hover（ライトの --bg-invert-soft と対応） */
+
+  /* Text（テキスト 5 階調）
+     ダーク側は明度反転: ライト暗系 (#1a1a1a) → 明るいグレー系 (#ededea) */
+  --fg: #ededea; /* 本文 */
+  --fg-soft: #a8a8a4; /* 補助テキスト */
+  --fg-softer: #9a9a96; /* caption / disabled（ライトの #888 より明るく調整、4.5:1 確保） */
+  --fg-invert: #1c1c1c; /* 明るい面の上のテキスト */
+  --fg-invert-soft: #2a2a2a; /* 明るい面の上の補助テキスト */
+
+  /* Border（罫線 2 種）
+     --border / --border-strong は Surface のエイリアスのため、
+     ダーク値は --bg-softer / --bg-invert の上書きで自動的に切替わる。
+     CSS 変数の参照チェーンが機能するので :root.dark 内に独立宣言は不要。
+     受け入れ基準「24 値」のうち Border 2 値はこのエイリアス継承方式で実現している。
+     実機確認: :root.dark 時に --border が #383838 / --border-strong が #f0f0ed になることを
+     Playwright computed style で確認済み（B-3 reviewer review-rev1.md 観点1参照）。 */
+
+  /* Accent — primary blue (264°)
+     ダーク側: L を 0.62 → 0.76 に引き上げ、C を 0.22 → 0.19 に微減。
+     光学バイブレーション抑制（ベストプラクティス調査 §1-1、philosophy.md NEVER 節）。
+     OKLCH(0.76 0.19 264) ≈ #72abff（コントラスト 7.29:1 on #1c1c1c）。 */
+  --accent: oklch(0.76 0.19 264);
+  --accent-strong: oklch(0.88 0.14 264); /* ≈ #a8d6ff (12.74:1 on bg) */
+  /* prettier-ignore */
+  --accent-soft: oklch(0.22 0.06 264); /* ≈ #0c1936 (soft 背景、accent 上で AA 確保) */
+
+  /* Success — green (162°)
+     ダーク側: L を 0.62 → 0.76 に引き上げ、C を 0.16 → 0.14 に微減。
+     OKLCH(0.76 0.14 162) ≈ #49cc95（コントラスト 8.29:1 on --success-soft）。 */
+  --success: oklch(0.76 0.14 162);
+  --success-strong: oklch(
+    0.88 0.1 162
+  ); /* ≈ #99edc3 (12.21:1 on --success-soft) */
+  --success-soft: oklch(0.22 0.06 162); /* ≈ #002312（成功状態の soft 背景） */
+
+  /* Warning — amber (80°)
+     ダーク側: L を 0.62 → 0.76 に引き上げ、C を 0.16 → 0.14 に微減。
+     OKLCH(0.76 0.14 80) ≈ #dfa635（コントラスト 7.98:1 on --warning-soft）。 */
+  --warning: oklch(0.76 0.14 80);
+  --warning-strong: oklch(
+    0.88 0.1 80
+  ); /* ≈ #fad18a (12.04:1 on --warning-soft) */
+  --warning-soft: oklch(0.22 0.06 80); /* ≈ #291600（警告状態の soft 背景） */
+
+  /* Danger — red (35°)
+     ダーク側: L を 0.62 → 0.76 に引き上げ、C を 0.21 → 0.18 に微減。
+     OKLCH(0.76 0.18 35) ≈ #ff805d（コントラスト 7.10:1 on --danger-soft）。 */
+  --danger: oklch(0.76 0.18 35);
+  --danger-strong: oklch(
+    0.88 0.13 35
+  ); /* ≈ #ffb89d (10.53:1 on --danger-soft) */
+  --danger-soft: oklch(0.22 0.06 35); /* ≈ #310e06（危険状態の soft 背景） */
 }
 
 /* ==========================================================================
    Design System トークン（cycle-170 T-03 で追記）
    値の単一情報源はこのファイルの :root ブロック。
-   ダーク値は未定義（次サイクルで WCAG AA 検証後に追加）。
+   ダーク値は :root.dark ブロック（このファイル後方）に定義（cycle-170 B-3 で追加）。
    既存の --color-* 体系は変更していない（広範に参照されているため）。
+
+   ダーク値の導出方針（B-3 受け入れ基準に明記）:
+   - 色相保持・明度のみ反転方式を採用する。
+     理由 (a): functional-quiet は「変化しないこと」を価値に置く（M1b 月曜朝の安心感）。
+     理由 (b): 色相シフトは管理コスト > 効果（ベストプラクティス調査 §1-4 の比較表）。
+     理由 (c): 既存 :root.dark（旧 --color-* 系）も色相保持方式で運用中。一貫性を保つ。
+   - Accent 系のみ明度を上げるのに加えて Chroma を微減する（光学バイブレーション抑制）。
+   - 全値が WCAG AA 基準（テキスト 4.5:1、UI/focus ring 3:1）を満たすことを検証済み
+     （計測値: tmp/cycle-170/b-3/contrast-measurements.md）。
+
+   hover 明度差規約（B-3 受け入れ基準に明記）:
+   - ライトモード: hover で背景を「より暗く」（L 値を下げる方向）
+   - ダークモード: hover で背景を「より明るく」（L 値を上げる方向）
+   - 明度差のみで表現する（透明度変化・scale・border 色変更は禁止: philosophy.md NEVER 節）
+   - この規約は SiteHeader / SiteFooter のリンク / Button すべての hover 状態に適用。
+     ダーク側の hover は :root.dark の変数値が自動的に適用されるため、
+     CSS クラスの追加記述は不要（既存の hover 規則が--fg-soft 等のダーク値を参照する）。
 
    フォント読み込みについて:
    --font-sans / --font-mono はフォールバック付きスタックとして定義するが、
@@ -117,6 +229,8 @@ body {
    ========================================================================== */
 
 :root {
+  /* color-scheme は :root には設定しない（B-3 で撤去。理由は evaluation.md 参照）。
+     :root.dark には color-scheme: dark を設定している（下の :root.dark ブロック参照）。 */
   /* ------------------------------------------------------------------
      Surface（背景面 5 階調）
      ------------------------------------------------------------------ */
@@ -256,6 +370,17 @@ body {
   --t-fast: 120ms;
   --t-base: 200ms;
   --t-slow: 320ms;
+
+  /* ------------------------------------------------------------------
+     アクセシビリティ閾値（E-1 で追加）
+     直値を各 CSS Modules に散在させない。変更時はここだけ修正する。
+     --touch-target-min: WCAG 2.5.5 タップターゲット最小サイズ（sm/md ボタン・入力欄）
+     --touch-target-lg:  lg ボタン等の大きめタップターゲット（--touch-target-min + --sp-2）
+     --input-font-min:   iOS Safari 自動ズーム防止のフォントサイズ最低ライン
+     ------------------------------------------------------------------ */
+  --touch-target-min: 44px;
+  --touch-target-lg: 52px; /* = --touch-target-min(44px) + --sp-2(8px) */
+  --input-font-min: 16px;
 }
 
 .visually-hidden {
