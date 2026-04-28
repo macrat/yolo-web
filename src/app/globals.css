@@ -4,8 +4,10 @@
  */
 
 /* レイヤー宣言: old-globals.css との並存中も @layer base 内のルールが
- * 明示的に管理され、意図しない競合を防ぐ */
-@layer base;
+ * 明示的に管理され、意図しない競合を防ぐ。
+ * legacy は移行期間中に old-globals.css のルールを格納するレイヤー。
+ * base は new 体系のルールを格納するレイヤーで legacy より優先される。 */
+@layer legacy, base;
 
 @layer base {
   :root {
@@ -53,6 +55,22 @@
       0 1px 0 rgba(26, 26, 26, 0.06), 0 1px 2px rgba(26, 26, 26, 0.04);
     --shadow-dragging:
       0 8px 20px rgba(26, 26, 26, 0.14), 0 2px 4px rgba(26, 26, 26, 0.08);
+
+    /* Admonition (GFM Alert) カラートークン — ブログ記事用の特殊スタイル。
+     * note/tip/warning/caution は既存の status トークンのエイリアス。
+     * important のみ new 体系に紫系がないため独自定義。 */
+    --admonition-note: var(--accent); /* 青 */
+    --admonition-note-bg: var(--accent-soft);
+    --admonition-tip: var(--success); /* 緑 */
+    --admonition-tip-bg: var(--success-soft);
+    --admonition-important: oklch(
+      0.62 0.22 290
+    ); /* 紫 — new 体系に紫系がないため独自定義 */
+    --admonition-important-bg: oklch(0.93 0.04 290);
+    --admonition-warning: var(--warning); /* 黄 */
+    --admonition-warning-bg: var(--warning-soft);
+    --admonition-caution: var(--danger); /* 赤 */
+    --admonition-caution-bg: var(--danger-soft);
   }
 
   /* ダークモード — next-themes が attribute="class" で <html class="dark"> を付与する */
@@ -102,14 +120,59 @@
     --danger: oklch(0.72 0.18 35);
     --danger-strong: oklch(0.85 0.12 35);
     --danger-soft: oklch(0.25 0.06 35);
+
+    /* Admonition (GFM Alert) カラートークン — ダークモード。
+     * -bg は lightness 0.25 付近でダーク背景に映える暗めの背景色。 */
+    --admonition-note: var(--accent); /* 青 */
+    --admonition-note-bg: var(--accent-soft); /* oklch(0.25 0.06 264) */
+    --admonition-tip: var(--success); /* 緑 */
+    --admonition-tip-bg: var(--success-soft); /* oklch(0.25 0.05 162) */
+    --admonition-important: oklch(
+      0.75 0.2 290
+    ); /* 紫 — lightness 上げてダーク背景で視認性確保 */
+    --admonition-important-bg: oklch(0.25 0.06 290); /* 暗い紫背景 */
+    --admonition-warning: var(--warning); /* 黄 */
+    --admonition-warning-bg: var(--warning-soft); /* oklch(0.25 0.05 80) */
+    --admonition-caution: var(--danger); /* 赤 */
+    --admonition-caution-bg: var(--danger-soft); /* oklch(0.25 0.06 35) */
+  }
+
+  /* グローバルリセット — old-globals.css からの移植 */
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  dialog {
+    margin: auto;
+  }
+
+  /* Prevent background scrolling when any dialog is open */
+  body:has(dialog[open]) {
+    overflow: hidden;
   }
 
   html,
   body {
+    max-width: 100vw;
+    overflow-x: clip;
     background: var(--bg-soft);
     color: var(--fg);
     font-size: 16px;
     line-height: 1.7;
+  }
+
+  body {
+    /* フォントスタック・スムージング — old-globals.css からの移植 */
+    font-family:
+      system-ui,
+      -apple-system,
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   a {
@@ -128,5 +191,103 @@
   ::selection {
     background: var(--accent-soft);
     color: var(--fg);
+  }
+
+  /* アクセシビリティ — old-globals.css からの移植 */
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* ==========================================================================
+   Admonition (GFM Alert) スタイル — old-globals.css からの移植。
+   marked-alert が出力する .markdown-alert クラスに対するスタイル定義。
+   CSS Modules のスコープ外のクラスを使用するため、グローバルスタイルとして定義する。
+   変数参照は new 体系（--admonition-* / --border）に置き換え済み。
+   ========================================================================== */
+
+  .markdown-alert {
+    padding: 0.75rem 1rem;
+    margin: 1.5rem 0;
+    border-left: 4px solid var(--border);
+    border-radius: 0 4px 4px 0;
+    /* バリアント側の -bg で上書きされる。フォールバックとして --bg-soft を使用 */
+    background-color: var(--bg-soft);
+  }
+
+  .markdown-alert p:last-child {
+    margin-bottom: 0;
+  }
+
+  .markdown-alert-title {
+    display: flex;
+    align-items: center;
+    gap: 0.4em;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    font-size: 0.95em;
+  }
+
+  .markdown-alert-title svg {
+    width: 1em;
+    height: 1em;
+    flex-shrink: 0;
+  }
+
+  /* Note（青） */
+  .markdown-alert-note {
+    border-left-color: var(--admonition-note);
+    background-color: var(--admonition-note-bg);
+  }
+
+  .markdown-alert-note .markdown-alert-title {
+    color: var(--admonition-note);
+  }
+
+  /* Tip（緑） */
+  .markdown-alert-tip {
+    border-left-color: var(--admonition-tip);
+    background-color: var(--admonition-tip-bg);
+  }
+
+  .markdown-alert-tip .markdown-alert-title {
+    color: var(--admonition-tip);
+  }
+
+  /* Important（紫） */
+  .markdown-alert-important {
+    border-left-color: var(--admonition-important);
+    background-color: var(--admonition-important-bg);
+  }
+
+  .markdown-alert-important .markdown-alert-title {
+    color: var(--admonition-important);
+  }
+
+  /* Warning（黄） */
+  .markdown-alert-warning {
+    border-left-color: var(--admonition-warning);
+    background-color: var(--admonition-warning-bg);
+  }
+
+  .markdown-alert-warning .markdown-alert-title {
+    color: var(--admonition-warning);
+  }
+
+  /* Caution（赤） */
+  .markdown-alert-caution {
+    border-left-color: var(--admonition-caution);
+    background-color: var(--admonition-caution-bg);
+  }
+
+  .markdown-alert-caution .markdown-alert-title {
+    color: var(--admonition-caution);
   }
 }
