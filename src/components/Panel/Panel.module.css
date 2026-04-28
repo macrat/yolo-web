@@ -1,0 +1,6 @@
+.panel {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--r-normal);
+  padding: 1.5rem;
+}

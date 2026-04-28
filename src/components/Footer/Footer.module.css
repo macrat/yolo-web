@@ -1,0 +1,63 @@
+/*
+ * Footer — サイトフッター
+ * DESIGN.md §2: --bg-invert を背景に使う（primaryボタン・footer）
+ */
+.footer {
+  background: var(--bg-invert);
+  color: var(--fg-invert-soft);
+}
+
+.inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 1.5rem;
+}
+
+.siteName {
+  color: var(--fg-invert);
+  font-size: 1rem;
+  /* DESIGN.md §3: 本文中での太字は原則として使わない */
+  font-weight: normal;
+}
+
+.copyright {
+  color: var(--fg-invert-soft);
+  font-size: 0.875rem;
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* リンクは --accent で表示（仕様書より） */
+.link {
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 0.875rem;
+}
+
+.link:hover {
+  color: var(--accent-strong);
+}
+
+.note {
+  color: var(--fg-invert-soft);
+  font-size: 0.8125rem;
+  /* DESIGN.md §3: 行間は原則1.7倍 */
+  line-height: 1.7;
+}
