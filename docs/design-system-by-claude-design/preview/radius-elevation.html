@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <title>Radius & Elevation</title>
+    <link rel="stylesheet" href="../colors_and_type.css?v=8" />
+    <style>
+      body {
+        margin: 0;
+        padding: 32px;
+        background: var(--bg-soft);
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+        font-family: var(--font-sans);
+      }
+      .group h4 {
+        font-size: 12px;
+        color: var(--fg);
+        margin: 0 0 14px;
+        font-weight: 500;
+      }
+      .row {
+        display: flex;
+        gap: 16px;
+        align-items: flex-end;
+      }
+      .tile {
+        width: 110px;
+        height: 64px;
+        background: #ffffff;
+        border: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+      }
+      .tile .v {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--fg);
+      }
+      .tile .role {
+        font-size: 10px;
+        color: var(--fg-softer);
+        white-space: nowrap;
+      }
+      .var {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        color: var(--fg-softer);
+      }
+      .e-tile {
+        width: 110px;
+        height: 70px;
+        background: #ffffff;
+        border-radius: 2px;
+        border: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="group">
+      <h4>Corner radius</h4>
+      <div class="row">
+        <div class="tile" style="border-radius: 2px">
+          <span class="v">2px</span
+          ><span class="role">パネル · カード · タグ</span
+          ><span class="var">--r-normal</span>
+        </div>
+        <div class="tile" style="border-radius: 8px">
+          <span class="v">8px</span><span class="role">ボタン · 入力欄</span
+          ><span class="var">--r-interactive</span>
+        </div>
+      </div>
+    </div>
+    <div class="group">
+      <h4>Elevation</h4>
+      <div class="row">
+        <div class="e-tile" style="box-shadow: none">
+          <span class="v">0</span><span class="role">デフォルト（全要素）</span
+          ><span class="var">--elev-0</span>
+        </div>
+        <div
+          class="e-tile"
+          style="
+            box-shadow:
+              0 1px 0 rgba(26, 26, 26, 0.06),
+              0 1px 2px rgba(26, 26, 26, 0.04);
+          "
+        >
+          <span class="v">1</span><span class="role">ボタン（通常時）</span
+          ><span class="var">--elev-button</span>
+        </div>
+        <div
+          class="e-tile"
+          style="
+            box-shadow:
+              0 8px 20px rgba(26, 26, 26, 0.14),
+              0 2px 4px rgba(26, 26, 26, 0.08);
+          "
+        >
+          <span class="v">2</span><span class="role">ドラッグ中の要素</span
+          ><span class="var">--elev-dragging</span>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

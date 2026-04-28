@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <title>Tags & Status</title>
+    <link rel="stylesheet" href="../colors_and_type.css?v=8" />
+    <style>
+      body {
+        margin: 0;
+        padding: 28px;
+        background: var(--bg-soft);
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        font-family: var(--font-sans);
+      }
+      .row {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .label {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--fg-softer);
+        width: 84px;
+        white-space: nowrap;
+      }
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        padding: 3px 10px;
+        border: 1px solid var(--border);
+        color: var(--fg);
+        background: #ffffff;
+        white-space: nowrap;
+        border-radius: 2px;
+      }
+      .tag .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--fg-softer);
+      }
+
+      /* Filled — uses *-soft background + matching foreground/border from Accents */
+      .tag.accent {
+        background: var(--accent-soft);
+        color: var(--accent);
+        border-color: var(--accent);
+      }
+      .tag.success {
+        background: var(--success-soft);
+        color: var(--success);
+        border-color: var(--success);
+      }
+      .tag.warning {
+        background: var(--warning-soft);
+        color: var(--warning);
+        border-color: var(--warning);
+      }
+      .tag.danger {
+        background: var(--danger-soft);
+        color: var(--danger);
+        border-color: var(--danger);
+      }
+
+      .tag.accent .dot {
+        background: var(--accent);
+      }
+      .tag.success .dot {
+        background: var(--success);
+      }
+      .tag.warning .dot {
+        background: var(--warning);
+      }
+      .tag.danger .dot {
+        background: var(--danger);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="row">
+      <span class="label">tag</span> <span class="tag">時間</span
+      ><span class="tag">記録</span><span class="tag">計算</span
+      ><span class="tag">息抜き</span>
+    </div>
+    <div class="row">
+      <span class="label">status</span>
+      <span class="tag accent"><span class="dot"></span>使用中</span>
+      <span class="tag success"><span class="dot"></span>完了</span>
+      <span class="tag warning"><span class="dot"></span>準備中</span>
+      <span class="tag danger"><span class="dot"></span>停止</span>
+    </div>
+  </body>
+</html>
