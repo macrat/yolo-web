@@ -3,75 +3,130 @@
  * リポジトリルートの DESIGN.md も参照。
  */
 
-:root html {
-  /* Surface */
-  --bg: #ffffff; /* default surface — clean white */
-  --bg-soft: #f4f4f1; /* recessed background / hover on bg */
-  --bg-softer: #e6e6e2; /* hover on bg-soft (ghost) — ΔL ≈ same as bg→bg-soft */
-  --bg-invert: var(--fg); /* dark surface — primary buttons, footer */
-  --bg-invert-soft: var(--fg-soft); /* hover on bg-invert (primary) */
+/* レイヤー宣言: old-globals.css との並存中も @layer base 内のルールが
+ * 明示的に管理され、意図しない競合を防ぐ */
+@layer base;
 
-  /* Text */
-  --fg: #1a1a1a; /* primary text */
-  --fg-soft: #555555; /* secondary text */
-  --fg-softer: #888888; /* tertiary / captions / disabled */
-  --fg-invert: var(--bg); /* text on dark surface */
-  --fg-invert-soft: var(--bg-soft); /* secondary text on dark surface */
+@layer base {
+  :root {
+    /* Surface — ライトモード（表面が白から段階的に暗くなる構造） */
+    --bg: #ffffff; /* default surface — clean white */
+    --bg-soft: #f4f4f1; /* recessed background / hover on bg */
+    --bg-softer: #e6e6e2; /* hover on bg-soft (ghost) — ΔL ≈ same as bg→bg-soft */
+    --bg-invert: var(--fg); /* dark surface — primary buttons, footer */
+    --bg-invert-soft: var(--fg-soft); /* hover on bg-invert (primary) */
 
-  /* Border — aliases of surface tokens for visual consistency */
-  --border: var(--bg-softer); /* default hairline = #E6E6E2 */
+    /* Text */
+    --fg: #1a1a1a; /* primary text */
+    --fg-soft: #555555; /* secondary text */
+    --fg-softer: #888888; /* tertiary / captions / disabled */
+    --fg-invert: var(--bg); /* text on dark surface */
+    --fg-invert-soft: var(--bg-soft); /* secondary text on dark surface */
 
-  /* Accent — primary blue */
-  --accent: oklch(0.62 0.22 264);
-  --accent-strong: oklch(0.5 0.22 264);
-  --accent-soft: oklch(0.93 0.04 264);
+    /* Border — aliases of surface tokens for visual consistency */
+    --border: var(--bg-softer); /* default hairline = #E6E6E2 */
 
-  /* Status */
-  --success: oklch(0.62 0.16 162);
-  --success-strong: oklch(0.5 0.16 162);
-  --success-soft: oklch(0.93 0.04 162);
+    /* Accent — primary blue */
+    --accent: oklch(0.62 0.22 264);
+    --accent-strong: oklch(0.5 0.22 264);
+    --accent-soft: oklch(0.93 0.04 264);
 
-  --warning: oklch(0.62 0.16 80);
-  --warning-strong: oklch(0.5 0.16 80);
-  --warning-soft: oklch(0.93 0.04 80);
+    /* Status */
+    --success: oklch(0.62 0.16 162);
+    --success-strong: oklch(0.5 0.16 162);
+    --success-soft: oklch(0.93 0.04 162);
 
-  --danger: oklch(0.62 0.21 35);
-  --danger-strong: oklch(0.5 0.21 35);
-  --danger-soft: oklch(0.93 0.04 35);
+    --warning: oklch(0.62 0.16 80);
+    --warning-strong: oklch(0.5 0.16 80);
+    --warning-soft: oklch(0.93 0.04 80);
 
-  /* Semantic — use these */
-  --r-normal: 2px; /* デフォルト。パネル・カード・タグ・モーダル等すべて */
-  --r-interactive: 8px; /* ボタン・入力欄・セレクト・操作可能要素 */
+    --danger: oklch(0.62 0.21 35);
+    --danger-strong: oklch(0.5 0.21 35);
+    --danger-soft: oklch(0.93 0.04 35);
 
-  /* Elevation */
-  --shadow-button:
-    0 1px 0 rgba(26, 26, 26, 0.06), 0 1px 2px rgba(26, 26, 26, 0.04);
-  --shadow-dragging:
-    0 8px 20px rgba(26, 26, 26, 0.14), 0 2px 4px rgba(26, 26, 26, 0.08);
-}
+    /* Semantic — use these */
+    --r-normal: 2px; /* デフォルト。パネル・カード・タグ・モーダル等すべて */
+    --r-interactive: 8px; /* ボタン・入力欄・セレクト・操作可能要素 */
 
-html,
-body {
-  background: var(--bg-soft);
-  color: var(--fg);
-  font-size: 16px;
-  line-height: 1.7;
-}
+    /* Elevation */
+    --shadow-button:
+      0 1px 0 rgba(26, 26, 26, 0.06), 0 1px 2px rgba(26, 26, 26, 0.04);
+    --shadow-dragging:
+      0 8px 20px rgba(26, 26, 26, 0.14), 0 2px 4px rgba(26, 26, 26, 0.08);
+  }
 
-a {
-  color: var(--accent);
-}
-a:hover {
-  color: var(--accent-strong);
-}
+  /* ダークモード — next-themes が attribute="class" で <html class="dark"> を付与する */
+  :root.dark {
+    /* Surface — ダークモードでは --bg < --bg-soft < --bg-softer の単調連鎖（明るさ増加）。
+     * ライト: ホバーで暗くなる（bg→bg-soft→bg-softer）
+     * ダーク: ホバーで明るくなる（bg→bg-soft→bg-softer）
+     * 両モードで「同じトークン遷移 = 同じ方向の変化」が保たれる。
+     * パネル(--bg)が画面背景(--bg-soft)より暗い「沈む」関係はダーク UI の慣例と逆だが、
+     * 本サイトのコンセプト「日常の傍にある道具・目立たない」と整合する設計判断。 */
+    --bg: #131311; /* panel surface — deepest charcoal */
+    --bg-soft: #1c1c1a; /* page background — slightly lighter than panel */
+    --bg-softer: #2a2a27; /* hover surface — lighter still, completes the chain */
+    /* --bg-invert はライト側の「主面の反対」= 明るい面。
+     * ダークでは primaryボタン等に明るい色を使う */
+    --bg-invert: #e8e8e5;
+    --bg-invert-soft: #d0d0cc;
 
-hr {
-  border: none;
-  border-top: 1px solid var(--border);
-  margin: 1.5em 0;
-}
+    /* Text — ダーク背景上で十分なコントラストを確保（WCAG 4.5:1 以上を目標）
+     * --fg (#e8e8e5) on --bg (#131311): コントラスト比 ≈ 15.2:1 */
+    --fg: #e8e8e5; /* primary text */
+    --fg-soft: #a8a8a4; /* secondary text */
+    --fg-softer: #6e6e6a; /* tertiary / captions / disabled */
+    /* --fg-invert はダーク面上のテキスト = 暗い色。bg の値 (#131311) を使う */
+    --fg-invert: #131311;
+    --fg-invert-soft: #1c1c1a;
 
-::selection {
-  background: var(--accent-soft);
-  color: var(--fg);
+    /* Border — ライトでは --bg-softer のエイリアスだが、ダークでは --bg-softer (#2a2a27) が
+     * ホバー面として予約済みのため、境界線として独立した値を明示する */
+    --border: #3a3a36;
+
+    /* Accent — ダーク背景上での視認性を高めるため lightness を上げる
+     * --accent on --bg (#131311): コントラスト比 ≈ 7.1:1 */
+    --accent: oklch(0.72 0.18 264);
+    --accent-strong: oklch(0.85 0.12 264);
+    --accent-soft: oklch(0.25 0.06 264);
+
+    /* Status — 同様に lightness 調整でダーク背景上のコントラストを確保 */
+    --success: oklch(0.72 0.14 162);
+    --success-strong: oklch(0.85 0.1 162);
+    --success-soft: oklch(0.25 0.05 162);
+
+    --warning: oklch(0.75 0.14 80);
+    --warning-strong: oklch(0.88 0.1 80);
+    --warning-soft: oklch(0.25 0.05 80);
+
+    --danger: oklch(0.72 0.18 35);
+    --danger-strong: oklch(0.85 0.12 35);
+    --danger-soft: oklch(0.25 0.06 35);
+  }
+
+  html,
+  body {
+    background: var(--bg-soft);
+    color: var(--fg);
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  a {
+    color: var(--accent);
+  }
+  a:hover {
+    color: var(--accent-strong);
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 1.5em 0;
+  }
+
+  ::selection {
+    background: var(--accent-soft);
+    color: var(--fg);
+  }
 }
