@@ -1,0 +1,88 @@
+/**
+ * Header コンポーネントのスタイル。
+ * DESIGN.md の新体系トークンのみを使用する。
+ * ロゴデザインは docs/design-system-by-claude-design/preview/logo.html を参照。
+ */
+
+.header {
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  /* 横スクロールを防ぐ */
+  width: 100%;
+}
+
+.inner {
+  /* 最大幅 1200px で中央揃え */
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+  height: 3.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+/* ロゴ: "yolos.net" テキストロゴ */
+.logo {
+  /* リンクのデフォルト色を上書き */
+  color: var(--fg);
+  text-decoration: none;
+  /* 参考 logo.html は 28px だが、ヘッダー高さ 3.5rem (56px) に収めるには大きすぎる
+   * ため 1.1rem (≒17.6px) に縮小。font-weight / letter-spacing / dot=accent は再現 */
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.logo:hover {
+  color: var(--fg);
+  text-decoration: none;
+}
+
+/* ドット（"."）のアクセントカラー */
+.dot {
+  color: var(--accent);
+}
+
+/* ナビゲーションエリア: ロゴの右に配置し、残りのスペースを使う */
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+/* ナビリンク */
+.navLink {
+  color: var(--fg-soft);
+  text-decoration: none;
+  font-size: 0.9375rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--r-interactive);
+  white-space: nowrap;
+  transition:
+    background-color 0.1s,
+    color 0.1s;
+}
+
+.navLink:hover {
+  background: var(--bg-soft);
+  color: var(--fg);
+}
+
+.navLink:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* アクションスロット: 右端に配置 */
+.actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
