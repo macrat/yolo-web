@@ -38,6 +38,12 @@ describe("Input", () => {
     expect(handleChange).toHaveBeenCalledTimes(1);
   });
 
+  it("uncontrolled component として defaultValue が反映される", () => {
+    render(<Input defaultValue="初期値" />);
+    const input = screen.getByRole("textbox");
+    expect(input).toHaveValue("初期値");
+  });
+
   it("disabled 時に input が disabled になる", () => {
     render(<Input disabled />);
     const input = screen.getByRole("textbox");
