@@ -3,9 +3,24 @@
   参照する変数: globals.css の Design System トークン（新変数群）のみ
   --color-* 旧変数は参照しない。
 
-  hover は明度差のみで表現（philosophy.md NEVER: opacity/scale 変化禁止）。
+  hover 明度差規約（cycle-170 B-3 で明記、philosophy.md NEVER 節準拠）:
+  - ライトモード: hover で背景を「より暗く」（L 値を下げる方向）
+    例: bg-invert (#1a1a1a) -> bg-invert-soft (#555555) はライトのみ。
+        ghost: 透明 -> bg-softer (#e6e6e2)。
+  - ダークモード: hover で背景を「より明るく」（L 値を上げる方向）
+    :root.dark 変数が自動的に適用される:
+    bg-invert (#f0f0ed) -> bg-invert-soft (#c0c0bc、より暗い方向に進む = 明るい面がやや暗くなる）
+    ghost: 透明 -> bg-softer (#383838、ダーク bg より明るい方向）
+  - 透明度変化・scale・border 色変更は禁止（philosophy.md NEVER 節）。
   フォーカスリングは --accent の 2px outline。
   shadow は --elev-button のみ（ダイアログ・カードに shadow 禁止）。
+
+  レスポンシブ方針（E-1 で追加）:
+  - モバイルファースト。基準スタイル（〜639px）: white-space: normal（折り返し許可）。
+  - min-width: 40em (640px) で white-space: nowrap に戻す。
+  - 64em（デスクトップ）での追加変更なし。理由: ボタンはコンテナに追従する inline-flex 要素
+    であり、デスクトップ幅での追加レイアウト変更は呼び出し元のグリッドが担う。
+    ボタン固有のデスクトップ特有スタイルが生じた場合に 64em ブロックを追加する。
 */
 
 /* ベーススタイル（全 variant 共通） */
@@ -27,7 +42,10 @@
     border-color var(--t-fast) var(--ease),
     color var(--t-fast) var(--ease);
   text-decoration: none;
-  white-space: nowrap;
+  /* モバイルファースト: 基準スタイルは white-space: normal（折り返し許可）。
+     長いラベルでも 375px 幅で横スクロールを起こさない。
+     min-width: 40em 以上で nowrap に戻す（下の @media 参照）。 */
+  white-space: normal;
   box-shadow: var(--elev-button);
 }
 
@@ -97,20 +115,25 @@
 .button[data-size="sm"] {
   padding: var(--sp-1) var(--sp-3);
   font-size: var(--fs-13);
-  min-height: 32px;
+  /* WCAG 2.5.5: タップターゲット最小 44px。
+     sm サイズはアイコンボタン・狭いスペース等の限定用途にのみ使用する。
+     インラインテキスト中のボタンや、十分な余白が取れない場面では md を使う。
+     E-1 で 32px → var(--touch-target-min) に修正（モバイルでのタップ困難を解消）。 */
+  min-height: var(--touch-target-min);
 }
 
 .button[data-size="md"] {
   padding: var(--sp-2) var(--sp-4);
   font-size: var(--fs-15);
-  /* WCAG 2.5.5: タップターゲット最小 44px */
-  min-height: 44px;
+  /* WCAG 2.5.5: タップターゲット最小 44px（直値禁止のため変数化） */
+  min-height: var(--touch-target-min);
 }
 
 .button[data-size="lg"] {
   padding: var(--sp-3) var(--sp-5);
   font-size: var(--fs-16);
-  min-height: 52px;
+  /* lg は --touch-target-min(44px) + --sp-2(8px) = 52px（直値禁止のため変数化） */
+  min-height: var(--touch-target-lg);
 }
 
 /* =====================================================================
@@ -137,4 +160,17 @@
   /* aria-hidden ではなく視覚的に隠す（スクリーンリーダーは children を読む） */
   visibility: hidden;
   position: absolute;
+}
+
+/* =====================================================================
+   レスポンシブ（モバイルファースト、E-1 で追加）
+   基準スタイル（〜639px）: white-space: normal（上記 .button に直接記述）。
+   max-width メディアクエリは使わない（モバイルファースト原則、研究文書 §3-1）。
+   ===================================================================== */
+
+/* タブレット以上（min-width: 40em = 640px）: nowrap に戻す */
+@media (min-width: 40em) {
+  .button {
+    white-space: nowrap;
+  }
 }

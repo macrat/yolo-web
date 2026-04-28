@@ -6,6 +6,13 @@
   フォーカスリングは --accent の 2px outline（philosophy.md 規約）。
   border 色は hover で変えない（philosophy.md NEVER 節）。
   resize: vertical のみ許可（水平リサイズはレイアウト崩れの原因）。
+
+  レスポンシブ方針（E-1 で追加）:
+  - モバイルファースト。基準スタイル（〜639px）: padding を縮小、font-size ≥ 16px。
+  - min-width: 40em (640px) で padding を拡大。
+  - 64em（デスクトップ）での追加変更なし。理由: Textarea は width:100% でコンテナに
+    追従し、1024px 以上での Textarea 固有のレイアウト変更は不要。
+    デスクトップ特有の変更が必要になった場合に 64em ブロックを追加する。
 */
 
 .wrapper {
@@ -50,7 +57,9 @@
   background-color: var(--bg);
   color: var(--fg);
   font-family: var(--font-sans);
-  font-size: var(--fs-15);
+  /* iOS Safari は font-size < 16px の textarea でページを自動ズームする。
+     --input-font-min (16px) を使用（E-1 で --fs-15 → --input-font-min に修正）。 */
+  font-size: var(--input-font-min);
   line-height: var(--lh-base);
   resize: vertical;
   appearance: none;
@@ -106,4 +115,19 @@
   font-size: var(--fs-13);
   color: var(--danger-strong);
   line-height: var(--lh-snug);
+}
+
+/* =====================================================================
+   レスポンシブ（モバイルファースト、E-1 で追加）
+   基準スタイル（〜639px）は上記の通り。
+   Textarea は width: 100% で親コンテナに追従するため水平スクロールは発生しない。
+   resize: vertical のみ許可しており水平リサイズによるレイアウト崩れもない。
+   タブレット以上では特別な変更なし。
+   ===================================================================== */
+
+/* タブレット以上（min-width: 40em = 640px）: 余白をやや広げて読みやすくする */
+@media (min-width: 40em) {
+  .textarea {
+    padding: var(--sp-2) var(--sp-4);
+  }
 }

@@ -1,6 +1,12 @@
 /**
  * dev-preview/ 専用レイアウトのスタイル
  * このスタイルは dev-preview/ 配下にのみ適用される。
+ *
+ * ## cycle-170 C-1 rev1 修正
+ * フォールバック値付き参照を撤去（Blocker B-1 対応）:
+ * - var(--bg-soft, #f4f4f1) → var(--bg-soft)
+ * - var(--fg, #1a1a1a) → var(--fg)
+ * --bg-soft / --fg は globals.css :root で必ず定義済みのため、フォールバック不要。
  */
 
 .devRoot {
@@ -10,6 +16,6 @@
 
   /* ページ全体の余白と背景 */
   min-height: 100vh;
-  background-color: var(--bg-soft, #f4f4f1);
-  color: var(--fg, #1a1a1a);
+  background-color: var(--bg-soft);
+  color: var(--fg);
 }

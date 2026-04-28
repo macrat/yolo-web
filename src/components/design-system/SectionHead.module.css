@@ -3,6 +3,14 @@
  * セクション区切りを細い罫線＋最小限のテキストで表現する。
  * すべての値は globals.css の Design System トークンを参照する。
  * 既存 --color-* 変数は使わない。
+ *
+ * レスポンシブ方針（E-1 で追加）:
+ * - モバイルファースト（基準スタイル = 〜639px）
+ * - タイトルの white-space: nowrap を削除してモバイルで折り返しを許可
+ * - meta テキストは flex-shrink: 0 で縮まないようにする
+ * - ブレイクポイント: min-width: 40em (640px) でタイトルを nowrap に戻す
+ * - 64em（デスクトップ）での追加変更なし。理由: SectionHead はセクション見出し行のみで
+ *   構造的な変化は 40em の 1 段階で十分。1024px 以上での特有スタイルは現時点で不要。
  */
 
 .head {
@@ -21,7 +29,9 @@
   font-weight: 500;
   color: var(--fg);
   margin: 0;
-  white-space: nowrap;
+  /* white-space: nowrap を削除（E-1）:
+     モバイルで長いタイトルが切れるのを防ぐため、折り返しを許可する。
+     タブレット以上では nowrap に戻す（下の @media 参照）。 */
   line-height: var(--lh-tight);
 }
 
@@ -31,4 +41,16 @@
   color: var(--fg-softer);
   white-space: nowrap;
   flex-shrink: 0;
+}
+
+/* =====================================================================
+   レスポンシブ（モバイルファースト、E-1 で追加）
+   基準スタイル（〜639px）: タイトル折り返し許可
+   ===================================================================== */
+
+/* タブレット以上（min-width: 40em = 640px）: タイトルを nowrap に戻す */
+@media (min-width: 40em) {
+  .title {
+    white-space: nowrap;
+  }
 }

@@ -1,5 +1,7 @@
 import { describe, test, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
+import { readFileSync } from "fs";
+import { resolve } from "path";
 import SiteFooter from "../SiteFooter";
 
 const LINK_GROUPS = [
@@ -65,5 +67,13 @@ describe("SiteFooter", () => {
     render(<SiteFooter linkGroups={groups} />);
     expect(screen.getByText("A")).toBeInTheDocument();
     expect(screen.getByText("B")).toBeInTheDocument();
+  });
+
+  // --- E-1: モバイル幅レイアウト（CSS 構造テスト） ---
+
+  test("SiteFooter.module.css contains @media (min-width: query for responsive layout", () => {
+    const cssPath = resolve(__dirname, "../SiteFooter.module.css");
+    const css = readFileSync(cssPath, "utf-8");
+    expect(css).toMatch(/@media\s*\(min-width:/);
   });
 });

@@ -1,5 +1,7 @@
 import { describe, test, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
+import { readFileSync } from "fs";
+import { resolve } from "path";
 import Panel from "../Panel";
 
 describe("Panel", () => {
@@ -57,5 +59,17 @@ describe("Panel", () => {
   test("passes through aria-label", () => {
     render(<Panel aria-label="ツールパネル">content</Panel>);
     expect(screen.getByLabelText("ツールパネル")).toBeInTheDocument();
+  });
+
+  // --- E-1: モバイル幅レイアウト（CSS 構造テスト） ---
+
+  test("Panel.module.css contains @media (min-width: query or JSDoc note for mobile-first", () => {
+    // Panel は padding var(--sp-5)=24px のみ。375px でも327pxのコンテンツ幅があり
+    // 水平スクロール発生なし。モバイル基準+拡張不要の場合は JSDoc コメントで明記する。
+    const cssPath = resolve(__dirname, "../Panel.module.css");
+    const css = readFileSync(cssPath, "utf-8");
+    const hasMediaQuery = /@media\s*\(min-width:/.test(css);
+    const hasMobileNote = /モバイル基準/.test(css);
+    expect(hasMediaQuery || hasMobileNote).toBe(true);
   });
 });

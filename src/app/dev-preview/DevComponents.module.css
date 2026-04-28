@@ -1,56 +1,61 @@
 /**
  * dev-preview/ 動作確認ページのレイアウトスタイル
  * このスタイルは dev-preview/ 配下にのみ適用される。
+ *
+ * ## cycle-170 C-1 での変更
+ * B-1 判定（候補 66-71）に従い、独自要素を削除または置き換え:
+ * - .section: Panel(as="section") に置き換えたため削除
+ * - .preview: Panel(variant="inset") に置き換えたため削除
+ *   （未定義変数 --radius-md / フォールバック値 / 直値 #xxxxxx を排除）
+ * - .root の gap: var(--sp-12, 3rem) → var(--sp-9)（--sp-12 は未定義変数のため）
+ *
+ * ## cycle-170 C-1 rev1 修正（M-2 対応）
+ * B-1 候補 69-71「.row / .column / .label はインライン HTML + 既存変数で済む」判定通りに
+ * CSS Modules を廃止し、DevComponents.tsx 側でインライン style 定数（LABEL_STYLE 等）に移行した。
+ *
+ * 残るスタイルは「dev-preview 固有のページレイアウト指定」のみ:
+ * - .root: ページ全体のコンテナ（max-width / padding / flex / gap）
+ * - .sectionPanel: Panel(as="section") の縦 flex gap
+ * - .flushDemo: flush Panel のデモ用 padding（--sp-4 のみ使用）
+ * - .articleDemo: インライン <article> の本文幅デモ（--max-width-article 参照）
+ *
+ * globals.css に未定義の変数は一切参照しない。直値も使わない。
  */
 
+/* ページ全体のコンテナ */
 .root {
-  max-width: 900px;
+  max-width: var(--max-width);
   margin: 0 auto;
-  padding: var(--sp-8, 2rem) var(--sp-4, 1rem);
+  padding: var(--sp-8) var(--sp-4);
   display: flex;
   flex-direction: column;
-  gap: var(--sp-12, 3rem);
+  gap: var(--sp-9);
 }
 
-.section {
+/*
+  Panel(as="section") の内側 flex レイアウト。
+  Panel は display:block なので、子要素を縦 flex で並べるための追加クラス。
+*/
+.sectionPanel {
   display: flex;
   flex-direction: column;
-  gap: var(--sp-4, 1rem);
+  gap: var(--sp-4);
 }
 
-/* コンポーネントのプレビューブロック */
-.preview {
-  background: var(--bg, #ffffff);
-  border: 1px solid var(--border, #e6e6e2);
-  border-radius: var(--radius-md, 6px);
-  padding: var(--sp-4, 1rem);
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-3, 0.75rem);
-  overflow: hidden;
+/*
+  flush Panel のデモ用スタイル。
+  flush variant は padding なしのため、内側コンテンツに padding を与える。
+  --sp-4 (16px) を使用（直値禁止）。
+*/
+.flushDemo {
+  padding: var(--sp-4);
 }
 
-/* プレビューの説明ラベル */
-.label {
-  font-size: 0.75rem;
-  color: var(--fg-softer, #888888);
-  font-family: var(--font-mono, monospace);
-  padding-bottom: var(--sp-2, 0.5rem);
-  border-bottom: 1px solid var(--border, #e6e6e2);
-  margin-bottom: var(--sp-2, 0.5rem);
-}
-
-/* 横並び */
-.row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--sp-3, 0.75rem);
-  align-items: center;
-}
-
-/* 縦並び */
-.column {
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-3, 0.75rem);
+/*
+  インライン <article> の本文幅デモ。
+  B-1 パターン β: ArticleArea 削除後の代替。
+  --max-width-article は globals.css 定義済み（cycle-170 C-2 で追加済み）。
+*/
+.articleDemo {
+  max-width: var(--max-width-article);
 }

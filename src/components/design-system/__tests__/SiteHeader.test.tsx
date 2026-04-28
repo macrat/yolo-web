@@ -1,5 +1,7 @@
 import { describe, test, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
+import { readFileSync } from "fs";
+import { resolve } from "path";
 import SiteHeader from "../SiteHeader";
 
 const NAV_LINKS = [
@@ -61,5 +63,28 @@ describe("SiteHeader", () => {
   test("renders with custom siteName", () => {
     render(<SiteHeader navLinks={NAV_LINKS} siteName="test site" />);
     expect(screen.getByText("test site")).toBeInTheDocument();
+  });
+
+  // --- E-1: モバイル幅レイアウト（CSS 構造テスト） ---
+
+  test("SiteHeader.module.css contains @media (min-width: query for responsive layout", () => {
+    // モバイルファースト設計: モバイル幅でナビが収まるよう min-width メディアクエリが必要。
+    const cssPath = resolve(__dirname, "../SiteHeader.module.css");
+    const css = readFileSync(cssPath, "utf-8");
+    expect(css).toMatch(/@media\s*\(min-width:/);
+  });
+
+  test("SiteHeader.module.css navList has mobile-safe layout (overflow or wrap)", () => {
+    // モバイル幅でナビリンクが見切れないよう、flex-wrap または display:none での対応が必要。
+    // - モバイル基準として .navList に display:none を設定するか
+    // - .navList に flex-wrap: wrap を設定するか、のどちらかであればよい。
+    const cssPath = resolve(__dirname, "../SiteHeader.module.css");
+    const css = readFileSync(cssPath, "utf-8");
+    // .navList ブロックを抽出（コメント含む可能性を考慮して幅広くマッチ）
+    const navListBlock = css.match(/\.navList\s*\{[^}]*\}/)?.[0] ?? "";
+    const hasMobileNavSafety =
+      /flex-wrap:\s*wrap/.test(navListBlock) ||
+      /display:\s*none/.test(navListBlock);
+    expect(hasMobileNavSafety).toBe(true);
   });
 });

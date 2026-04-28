@@ -1,5 +1,7 @@
 import { describe, test, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
+import { readFileSync } from "fs";
+import { resolve } from "path";
 import Input from "../Input";
 
 describe("Input", () => {
@@ -90,5 +92,47 @@ describe("Input", () => {
       target: { value: "hello" },
     });
     expect(handleChange).toHaveBeenCalled();
+  });
+
+  // --- E-1: モバイル幅レイアウト（CSS 構造テスト） ---
+
+  test("Input.module.css has responsive layout note or @media (min-width: query", () => {
+    // 受け入れ基準: 「@media (min-width: が含まれる」または「モバイル基準+拡張不要を JSDoc で明記」
+    // Input は width:100% でコンテナに追従し追加 @media は不要なため JSDoc 経路で対応する。
+    // JSDoc 内の「追加変更不要」または「拡張不要」のいずれかの表現を受け入れる。
+    const cssPath = resolve(__dirname, "../Input.module.css");
+    const css = readFileSync(cssPath, "utf-8");
+    const hasMediaQuery = /@media\s*\(min-width:/.test(css);
+    const hasMobileNote = /拡張不要|追加変更不要/.test(css);
+    expect(hasMediaQuery || hasMobileNote).toBe(true);
+  });
+
+  test("Input.module.css sm size min-height is 44px (touch target)", () => {
+    // sm サイズのタップターゲットが 44px 以上であることを CSS ファイルで確認。
+    // WCAG 2.5.5 の要件（44×44px）を満たすことを保証する。
+    // --touch-target-min (44px) 変数参照または直値 44px 以上を受け入れる。
+    const cssPath = resolve(__dirname, "../Input.module.css");
+    const css = readFileSync(cssPath, "utf-8");
+    const smBlock =
+      css.match(/\[data-size="sm"\]\s*\.input\s*\{[^}]*\}/)?.[0] ?? "";
+    const hasTouchTarget =
+      /min-height:\s*var\(--touch-target-min\)/.test(smBlock) ||
+      /min-height:\s*(4[4-9]|[5-9]\d|\d{3,})px/.test(smBlock);
+    expect(hasTouchTarget).toBe(true);
+  });
+
+  test("Input.module.css font-size for md and lg is at least 16px (iOS Safari zoom prevention)", () => {
+    // iOS Safari は font-size が 16px 未満の入力欄で自動ズームする。
+    // md サイズは --input-font-min (16px) 変数参照または直値 16px 以上であること。
+    const cssPath = resolve(__dirname, "../Input.module.css");
+    const css = readFileSync(cssPath, "utf-8");
+    const mdBlock =
+      css.match(/\[data-size="md"\]\s*\.input\s*\{[^}]*\}/)?.[0] ?? "";
+    // --input-font-min (16px) 変数参照、--fs-16 (16px) 変数参照、または直値 16px 以上か
+    const hasSufficientFontSize =
+      /font-size:\s*var\(--input-font-min\)/.test(mdBlock) ||
+      /font-size:\s*var\(--fs-16\)/.test(mdBlock) ||
+      /font-size:\s*(1[6-9]|[2-9]\d|\d{3,})px/.test(mdBlock);
+    expect(hasSufficientFontSize).toBe(true);
   });
 });

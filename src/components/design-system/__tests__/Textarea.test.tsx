@@ -1,5 +1,7 @@
 import { describe, test, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
+import { readFileSync } from "fs";
+import { resolve } from "path";
 import Textarea from "../Textarea";
 
 describe("Textarea", () => {
@@ -67,5 +69,26 @@ describe("Textarea", () => {
       target: { value: "test" },
     });
     expect(handleChange).toHaveBeenCalled();
+  });
+
+  // --- E-1: モバイル幅レイアウト（CSS 構造テスト） ---
+
+  test("Textarea.module.css contains @media (min-width: query for responsive layout", () => {
+    const cssPath = resolve(__dirname, "../Textarea.module.css");
+    const css = readFileSync(cssPath, "utf-8");
+    expect(css).toMatch(/@media\s*\(min-width:/);
+  });
+
+  test("Textarea.module.css font-size is at least 16px (iOS Safari zoom prevention)", () => {
+    // iOS Safari は font-size が 16px 未満の textarea で自動ズームする。
+    // .textarea ブロックの font-size が --input-font-min (16px) 変数参照または 16px 以上であること。
+    const cssPath = resolve(__dirname, "../Textarea.module.css");
+    const css = readFileSync(cssPath, "utf-8");
+    const textareaBlock = css.match(/\.textarea\s*\{[^}]*\}/)?.[0] ?? "";
+    const hasSufficientFontSize =
+      /font-size:\s*var\(--input-font-min\)/.test(textareaBlock) ||
+      /font-size:\s*var\(--fs-16\)/.test(textareaBlock) ||
+      /font-size:\s*(1[6-9]|[2-9]\d|\d{3,})px/.test(textareaBlock);
+    expect(hasSufficientFontSize).toBe(true);
   });
 });

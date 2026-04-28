@@ -1,5 +1,7 @@
 import { describe, test, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
+import { readFileSync } from "fs";
+import { resolve } from "path";
 import Button from "../Button";
 
 describe("Button", () => {
@@ -111,5 +113,27 @@ describe("Button", () => {
     );
     fireEvent.click(screen.getByRole("button"));
     expect(handleClick).not.toHaveBeenCalled();
+  });
+
+  // --- E-1: モバイル幅レイアウト（CSS 構造テスト） ---
+
+  test("Button.module.css contains @media (min-width: query for responsive layout", () => {
+    const cssPath = resolve(__dirname, "../Button.module.css");
+    const css = readFileSync(cssPath, "utf-8");
+    expect(css).toMatch(/@media\s*\(min-width:/);
+  });
+
+  test("Button.module.css sm size min-height is 44px (touch target)", () => {
+    // sm サイズのタップターゲットが 44px 以上であることを CSS ファイルで確認。
+    // WCAG 2.5.5 の要件（44×44px）を満たすことを保証する。
+    // --touch-target-min (44px) 変数参照または直値 44px 以上を受け入れる。
+    const cssPath = resolve(__dirname, "../Button.module.css");
+    const css = readFileSync(cssPath, "utf-8");
+    // [data-size="sm"] ブロック内の min-height が --touch-target-min 変数参照か 44px 以上の直値
+    const smBlock = css.match(/\[data-size="sm"\]\s*\{[^}]*\}/)?.[0] ?? "";
+    const hasTouchTarget =
+      /min-height:\s*var\(--touch-target-min\)/.test(smBlock) ||
+      /min-height:\s*(4[4-9]|[5-9]\d|\d{3,})px/.test(smBlock);
+    expect(hasTouchTarget).toBe(true);
   });
 });
