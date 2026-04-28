@@ -1,75 +1,92 @@
 /* ToggleSwitch コンポーネントのスタイル
- * DESIGN.md §5: ON/OFF を切り替えるフォーム要素はトグルスイッチを使う
- * DESIGN.md §2: フォーカスは outline: 2px solid var(--accent); outline-offset: 2px;
- * ARIA: role="switch" + aria-checked で状態を伝える
+ *
+ * 設計方針:
+ * - <input type="checkbox"> を視覚的に隠し、CSS セレクタ `:checked ~` で
+ *   状態を切り替える。独自の JS state を持たないため再レンダリングオーバーヘッドが小さい。
+ * - DESIGN.md §5: ON/OFF を切り替えるフォーム要素はトグルスイッチを使う
+ * - DESIGN.md §2: フォーカスは outline: 2px solid var(--accent); outline-offset: 2px;
  */
 
-/* button のリセット + トグル全体のレイアウト */
-.toggle {
+/* ラッパー <label>: クリック領域全体をトグルにする */
+.wrapper {
+  /* 内部の position:absolute な input の包含ブロックをここに固定する。
+   * これがないと祖先の position:relative にエスケープし得る */
+  position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  background: transparent;
-  border: none;
-  padding: 0;
+  gap: 0.5rem;
   cursor: pointer;
-  /* フォーカスリングは :focus-visible で管理するため outline は初期化 */
-  outline: none;
 }
 
-/* フォーカス: DESIGN.md §2 準拠 */
-.toggle:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-  border-radius: 999px;
-}
-
-/* disabled: 操作不可を示す */
-.toggle:disabled {
+/* disabled 時はラッパーごと操作不可カーソルに */
+.wrapper:has(.input:disabled) {
   cursor: not-allowed;
 }
 
-/* トラック（背景の横長楕円） */
-.track {
-  display: inline-block;
-  width: 40px;
-  height: 24px;
-  border-radius: 999px;
-  /* OFF 状態のデフォルト色 */
-  background: var(--bg-softer);
-  /* サムの移動に合わせて色を遷移 */
-  transition: background-color 0.2s;
-  position: relative;
-  flex-shrink: 0;
+/* ネイティブ checkbox を視覚的に隠す。
+ * display:none / visibility:hidden だとフォーカス不可になるため使わない。
+ * position:absolute + opacity:0 で DOM に残しつつ視覚から消す。
+ * width/height を 0 にすると一部 AT でフォーカス対象外になるため 1px を保持する。 */
+.input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  pointer-events: none;
 }
 
-/* ON 状態: トラックを --accent に */
-.toggle[aria-checked="true"] .track {
+/* トラック（横長楕円の背景） — OFF 状態のデフォルト */
+.track {
+  display: inline-block;
+  width: 36px;
+  height: 20px;
+  border-radius: 999px;
+  background: var(--bg-softer);
+  position: relative;
+  flex-shrink: 0;
+  transition: background 0.15s ease;
+}
+
+/* ON 状態: トラックを --accent に。
+ * .input の直後の兄弟 .track を CSS のみで切り替える。 */
+.input:checked ~ .track {
   background: var(--accent);
 }
 
-/* disabled 状態: トラックを薄く */
-.toggle:disabled .track {
-  background: var(--fg-softer);
-  opacity: 0.5;
+/* フォーカス: DESIGN.md §2 準拠。
+ * :focus-visible でキーボード操作時のみリングを表示する。 */
+.input:focus-visible ~ .track {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
-/* サム（丸いつまみ） */
+/* disabled: トラックを半透明に */
+.input:disabled ~ .track {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* サム（丸いつまみ） — OFF 状態は左端 */
 .thumb {
   position: absolute;
   top: 2px;
   left: 2px;
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
   background: var(--bg);
-  /* 滑らかな左右移動 */
-  transition: transform 0.2s;
-  /* サムを縁取るために微細な影を使う（エレベーションではなく視認性のため） */
+  transition: transform 0.15s ease;
+  /* サムの輪郭を示す微細な影（エレベーションではなく視認性のため） */
   box-shadow: 0 1px 2px rgba(26, 26, 26, 0.15);
 }
 
-/* ON 状態: サムを右にずらす（トラック幅40px - サム幅20px - 左右マージン2px*2 = 16px） */
-.toggle[aria-checked="true"] .thumb {
+/* ON 状態: サムを右へ移動（トラック幅36px - サム幅16px - 左右余白2px*2 = 16px） */
+.input:checked ~ .track .thumb {
   transform: translateX(16px);
+}
+
+/* ラベルテキスト */
+.labelText {
+  line-height: 1.4;
 }
