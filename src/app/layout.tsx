@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import "./globals.css";
+import "./old-globals.css";
 import GoogleAnalytics from "@/components/common/GoogleAnalytics";
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
