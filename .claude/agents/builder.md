@@ -2,8 +2,6 @@
 name: builder
 description: |
   plannerが立てた計画に従って作業を実施するエージェント。コードの編集、ブログの執筆、ドキュメントの更新、など、様々なタスクで使用する。
-  src配下を編集するときは必ず使用すること。
-  このエージェントを使うときは、事前にplannerに計画を立てさせること。
   1つのタスクにつき1人のbuilderをアサインすること。複雑なタスクをするときは複数のbuilderに分担させること。
 tools: Read, Edit, Bash, Glob, Grep
 permissionMode: acceptEdits

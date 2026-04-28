@@ -8,7 +8,7 @@ tools: Read, Edit(/tmp/**), Edit(/docs/cycles/**), Glob, Grep, Bash, WebFetch, W
 mcpServers:
   - playwright
   - google-analytics
-permissionMode: dontAsk
+permissionMode: acceptEdits
 model: opus
 ---
 
