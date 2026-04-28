@@ -80,7 +80,6 @@ const UNCATEGORISED_WHITELIST: ReadonlySet<string> = new Set([
   "/about",
   "/privacy",
   "/achievements",
-  "/dev-preview", // design-system 動作確認ページ（noindex/nofollow 設定済み、本番公開対象外）
 ]);
 
 // ---------------------------------------------------------------------------

@@ -18,9 +18,6 @@ model: sonnet
 
 UIに関わる要素を編集するときは、 `/take-screenshot` スキルを使用して、作業の前後を比較しながら進めてください。
 
-UI コンポーネント（`src/components/` 配下の `.tsx`）または UI 系 CSS（`src/**/*.module.css`、`src/app/globals.css`）を編集する前に、必ず `.claude/skills/frontend-design/SKILL.md` と `.claude/skills/frontend-design/philosophy.md` を参照してください。
-色・角丸・余白の値を新規にハードコードしないでください。`src/app/globals.css` に定義されている CSS 変数を使ってください（具体的な変数名・カテゴリは `.claude/skills/frontend-design/SKILL.md` の道案内に従って `globals.css` を直接参照してください）。
-
 作業が完了したらPMに作業結果を報告してください。
 報告の末尾には「reviewerにレビューを依頼してください」と必ず記載してください。
 品質を担保するために、すべての作業は必ずレビューを受ける必要があります。

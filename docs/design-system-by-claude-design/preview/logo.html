@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <title>Logo</title>
+    <link rel="stylesheet" href="../colors_and_type.css?v=8" />
+    <style>
+      body {
+        margin: 0;
+        padding: 32px;
+        background: var(--bg-soft);
+        display: grid;
+        grid-template-columns: 2fr 2fr 1fr;
+        gap: 24px;
+        align-items: center;
+      }
+      .box {
+        padding: 22px;
+        border: 1px solid var(--border);
+        background: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100px;
+      }
+      .box.dark {
+        background: var(--fg);
+      }
+      .meta {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        color: var(--fg-softer);
+        margin-top: 8px;
+        white-space: nowrap;
+      }
+      .word {
+        font-family: var(--font-sans);
+        font-size: 28px;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        color: var(--fg);
+        line-height: 1;
+        white-space: nowrap;
+      }
+      .word.light {
+        color: #ffffff;
+      }
+      .word .dot {
+        color: var(--accent);
+      }
+      .word.light .dot {
+        color: var(--accent);
+      }
+      .mark {
+        width: 56px;
+        height: 56px;
+        border: 1.5px solid var(--fg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-sans);
+        font-weight: 700;
+        font-size: 24px;
+        color: var(--fg);
+        background: #ffffff;
+        line-height: 1;
+        padding-bottom: 2px;
+      }
+      .mark .dot {
+        color: var(--accent);
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <div class="box">
+        <span class="word">yolos<span class="dot">.</span>net</span>
+      </div>
+      <div class="meta">primary</div>
+    </div>
+    <div>
+      <div class="box dark">
+        <span class="word light">yolos<span class="dot">.</span>net</span>
+      </div>
+      <div class="meta">on dark</div>
+    </div>
+    <div>
+      <div class="box">
+        <span class="mark">y<span class="dot">.</span></span>
+      </div>
+      <div class="meta">mark</div>
+    </div>
+  </body>
+</html>
