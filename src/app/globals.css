@@ -17,7 +17,7 @@
   /* Text */
   --fg: #1a1a1a; /* primary text */
   --fg-soft: #555555; /* secondary text */
-  --fg-softer: #888888; /* tertiary / captions / disabled */
+  --fg-softer: #6f6f6f; /* tertiary / captions / disabled — #f4f4f1(body) 上 4.5:1+ 確保 */
   --fg-invert: var(--bg); /* text on dark surface */
   --fg-invert-soft: var(--bg-soft); /* secondary text on dark surface */
 
@@ -89,7 +89,7 @@
    * --fg (#e8e8e5) on --bg-soft (#1c1c1a): コントラスト比 ≈ 14.1:1 */
   --fg: #e8e8e5; /* primary text */
   --fg-soft: #a8a8a4; /* secondary text */
-  --fg-softer: #6e6e6a; /* tertiary / captions / disabled */
+  --fg-softer: #909090; /* tertiary / captions / disabled — #1c1c1a(body) 上 5.35:1 確保 */
   /* --fg-invert はダーク面上のテキスト = 暗い色。bg-softer の値 (#131311) を使う */
   --fg-invert: #131311;
   --fg-invert-soft: #1c1c1a;
@@ -189,6 +189,14 @@ hr {
 ::selection {
   background: var(--accent-soft);
   color: var(--fg);
+}
+
+/* ダークモード: --accent-soft ダーク (oklch 0.25 0.06 264) は body (#1c1c1a) と
+ * 非常に近く、選択ハイライトが見えにくい。--accent (oklch 0.72 0.18 264) を使い、
+ * ハイライト上のテキストは暗色 (--fg-invert) で読めるようにする。 */
+:root.dark ::selection {
+  background: var(--accent);
+  color: var(--fg-invert);
 }
 
 /* アクセシビリティ — old-globals.css からの移植 */

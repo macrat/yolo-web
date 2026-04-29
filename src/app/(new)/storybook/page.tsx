@@ -95,141 +95,160 @@ export default function StorybookPage() {
       {/* === 1. 概要 === */}
       <section id="overview" className={styles.section}>
         <h1 className={styles.pageTitle}>Storybook（開発者向け）</h1>
-        <div className={styles.notice}>
-          <p>
-            このページは開発者向けの参照ページで、来訪者の目に触れる想定はありません。
-          </p>
-          <p>
-            <strong>
-              ページ全体の上下に表示されている Header と Footer
-              は、新コンポーネント（<code>@/components/Header</code>、
-              <code>@/components/Footer</code>）の実物
-            </strong>
-            です。layout.tsx に手を入れず、Route Group <code>(legacy)/</code> と{" "}
-            <code>(new)/</code> で root layout を分離することで、
-            <code>/storybook</code> URL では旧コンポーネントが DOM
-            に出ない構造を実現しています。これが cycle-172
-            以降のページ単位の段階的移行の枠組みになります。
-          </p>
-        </div>
-
-        {/* 目次 */}
-        <nav aria-label="ページ内目次">
-          <div className={styles.toc}>
-            <p className={styles.tocTitle}>目次</p>
-            <ol className={styles.tocList}>
-              {TOC_ITEMS.map((item) => (
-                <li key={item.id}>
-                  <a href={`#${item.id}`}>{item.label}</a>
-                </li>
-              ))}
-            </ol>
+        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        <Panel as="div">
+          <span className={styles.previewLabel}>Preview: 概要</span>
+          <div className={styles.notice}>
+            <p>
+              このページは開発者向けの参照ページで、来訪者の目に触れる想定はありません。
+            </p>
+            <p>
+              <strong>
+                ページ全体の上下に表示されている Header と Footer
+                は、新コンポーネント（<code>@/components/Header</code>、
+                <code>@/components/Footer</code>）の実物
+              </strong>
+              です。layout.tsx に手を入れず、Route Group <code>(legacy)/</code>{" "}
+              と <code>(new)/</code> で root layout を分離することで、
+              <code>/storybook</code> URL では旧コンポーネントが DOM
+              に出ない構造を実現しています。これが cycle-172
+              以降のページ単位の段階的移行の枠組みになります。
+            </p>
           </div>
-        </nav>
+
+          {/* 目次 */}
+          <nav aria-label="ページ内目次">
+            <div className={styles.toc}>
+              <p className={styles.tocTitle}>目次</p>
+              <ol className={styles.tocList}>
+                {TOC_ITEMS.map((item) => (
+                  <li key={item.id}>
+                    <a href={`#${item.id}`}>{item.label}</a>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </nav>
+        </Panel>
       </section>
 
       {/* === 2. カラーパレット === */}
       <section id="colors" className={styles.section}>
         <h2 className={styles.sectionTitle}>2. カラーパレット</h2>
-        <p
-          style={{
-            fontSize: "0.85rem",
-            color: "var(--fg-soft)",
-            marginBottom: "1.5rem",
-          }}
-        >
-          ライト / ダークはブラウザのテーマ切替で両方確認できます。
-        </p>
-        {COLOR_SECTIONS.map((section) => (
-          <div key={section.title}>
-            <h3 className={styles.subsectionTitle}>{section.title}</h3>
-            <div className={styles.swatchGrid}>
-              {section.swatches.map((swatch) => (
-                <div key={swatch.token} className={styles.swatch}>
-                  <div
-                    className={styles.swatchColor}
-                    style={{ background: `var(${swatch.token})` }}
-                  />
-                  <div className={styles.swatchInfo}>
-                    <div className={styles.swatchToken}>{swatch.token}</div>
-                    <div className={styles.swatchRole}>{swatch.role}</div>
+        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        <Panel as="div">
+          <span className={styles.previewLabel}>Preview: カラーパレット</span>
+          <p
+            style={{
+              fontSize: "0.85rem",
+              color: "var(--fg-soft)",
+              marginBottom: "1.5rem",
+            }}
+          >
+            ライト / ダークはブラウザのテーマ切替で両方確認できます。
+          </p>
+          {COLOR_SECTIONS.map((section) => (
+            <div key={section.title}>
+              <h3 className={styles.subsectionTitle}>{section.title}</h3>
+              <div className={styles.swatchGrid}>
+                {section.swatches.map((swatch) => (
+                  <div key={swatch.token} className={styles.swatch}>
+                    <div
+                      className={styles.swatchColor}
+                      style={{ background: `var(${swatch.token})` }}
+                    />
+                    <div className={styles.swatchInfo}>
+                      <div className={styles.swatchToken}>{swatch.token}</div>
+                      <div className={styles.swatchRole}>{swatch.role}</div>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </Panel>
       </section>
 
       {/* === 3. 角丸・影 === */}
       <section id="radius-elevation" className={styles.section}>
         <h2 className={styles.sectionTitle}>3. 角丸 / 影</h2>
+        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        <Panel as="div">
+          <span className={styles.previewLabel}>Preview: 角丸・影</span>
 
-        <h3 className={styles.subsectionTitle}>角丸（Border Radius）</h3>
-        <div className={styles.radiusRow}>
-          <div>
-            <div
-              className={styles.radiusSample}
-              style={{ borderRadius: "var(--r-normal)" }}
-            >
-              サンプルテキスト
+          <h3 className={styles.subsectionTitle} style={{ marginTop: 0 }}>
+            角丸（Border Radius）
+          </h3>
+          <div className={styles.radiusRow}>
+            <div>
+              <div
+                className={styles.radiusSample}
+                style={{ borderRadius: "var(--r-normal)" }}
+              >
+                サンプルテキスト
+              </div>
+              <div className={styles.radiusSampleLabel}>--r-normal (2px)</div>
+              <div style={{ fontSize: "0.7rem", color: "var(--fg-softer)" }}>
+                パネル・カード・タグ・モーダル等
+              </div>
             </div>
-            <div className={styles.radiusSampleLabel}>--r-normal (2px)</div>
-            <div style={{ fontSize: "0.7rem", color: "var(--fg-softer)" }}>
-              パネル・カード・タグ・モーダル等
+            <div>
+              <div
+                className={styles.radiusSample}
+                style={{ borderRadius: "var(--r-interactive)" }}
+              >
+                サンプルテキスト
+              </div>
+              <div className={styles.radiusSampleLabel}>
+                --r-interactive (8px)
+              </div>
+              <div style={{ fontSize: "0.7rem", color: "var(--fg-softer)" }}>
+                ボタン・入力欄・セレクト等
+              </div>
             </div>
           </div>
-          <div>
-            <div
-              className={styles.radiusSample}
-              style={{ borderRadius: "var(--r-interactive)" }}
-            >
-              サンプルテキスト
-            </div>
-            <div className={styles.radiusSampleLabel}>
-              --r-interactive (8px)
-            </div>
-            <div style={{ fontSize: "0.7rem", color: "var(--fg-softer)" }}>
-              ボタン・入力欄・セレクト等
-            </div>
-          </div>
-        </div>
 
-        <h3 className={styles.subsectionTitle}>
-          影 / エレベーション（Shadow）
-        </h3>
-        <div className={styles.shadowRow}>
-          <div>
-            <div
-              className={styles.shadowSample}
-              style={{ boxShadow: "var(--shadow-button)" }}
-            >
-              ボタンの影
+          <h3 className={styles.subsectionTitle}>
+            影 / エレベーション（Shadow）
+          </h3>
+          <div className={styles.shadowRow}>
+            <div>
+              <div
+                className={styles.shadowSample}
+                style={{ boxShadow: "var(--shadow-button)" }}
+              >
+                ボタンの影
+              </div>
+              <div className={styles.shadowSampleLabel}>--shadow-button</div>
+              <div style={{ fontSize: "0.7rem", color: "var(--fg-softer)" }}>
+                ボタンに適用
+              </div>
             </div>
-            <div className={styles.shadowSampleLabel}>--shadow-button</div>
-            <div style={{ fontSize: "0.7rem", color: "var(--fg-softer)" }}>
-              ボタンに適用
+            <div>
+              <div
+                className={styles.shadowSample}
+                style={{ boxShadow: "var(--shadow-dragging)" }}
+              >
+                ドラッグ中の影
+              </div>
+              <div className={styles.shadowSampleLabel}>--shadow-dragging</div>
+              <div style={{ fontSize: "0.7rem", color: "var(--fg-softer)" }}>
+                ドラッグ中の要素に適用
+              </div>
             </div>
           </div>
-          <div>
-            <div
-              className={styles.shadowSample}
-              style={{ boxShadow: "var(--shadow-dragging)" }}
-            >
-              ドラッグ中の影
-            </div>
-            <div className={styles.shadowSampleLabel}>--shadow-dragging</div>
-            <div style={{ fontSize: "0.7rem", color: "var(--fg-softer)" }}>
-              ドラッグ中の要素に適用
-            </div>
-          </div>
-        </div>
+        </Panel>
       </section>
 
       {/* === 4. Panel === */}
       <section id="panel" className={styles.section}>
         <h2 className={styles.sectionTitle}>4. Panel</h2>
-        <div className={styles.preview}>
+        {/*
+         * DESIGN.md §4 では「パネルは原則として入れ子にしない」とあるが、
+         * ここでは Panel コンポーネント自体のプレビューを目的とするため、
+         * 例外的に外側 Panel の中にサンプル Panel を入れ子にしている。
+         */}
+        <Panel as="div">
           <span className={styles.previewLabel}>Preview: Panel</span>
 
           <div
@@ -272,13 +291,14 @@ export default function StorybookPage() {
               ))}
             </div>
           </div>
-        </div>
+        </Panel>
       </section>
 
       {/* === 5. Button === */}
       <section id="button" className={styles.section}>
         <h2 className={styles.sectionTitle}>5. Button</h2>
-        <div className={styles.preview}>
+        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        <Panel as="div">
           <span className={styles.previewLabel}>Preview: Button</span>
 
           <div className={styles.buttonMatrix}>
@@ -345,13 +365,14 @@ export default function StorybookPage() {
               </Button>
             </div>
           </div>
-        </div>
+        </Panel>
       </section>
 
       {/* === 6. Input === */}
       <section id="input" className={styles.section}>
         <h2 className={styles.sectionTitle}>6. Input</h2>
-        <div className={styles.preview}>
+        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        <Panel as="div">
           <span className={styles.previewLabel}>Preview: Input</span>
 
           <h3 className={styles.subsectionTitle} style={{ marginTop: 0 }}>
@@ -433,13 +454,14 @@ export default function StorybookPage() {
               <Input defaultValue="初期値" aria-label="uncontrolled 入力欄" />
             </div>
           </div>
-        </div>
+        </Panel>
       </section>
 
       {/* === 7. Breadcrumb === */}
       <section id="breadcrumb" className={styles.section}>
         <h2 className={styles.sectionTitle}>7. Breadcrumb</h2>
-        <div className={styles.preview}>
+        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        <Panel as="div">
           <span className={styles.previewLabel}>Preview: Breadcrumb</span>
 
           <div className={styles.breadcrumbSamples}>
@@ -471,13 +493,14 @@ export default function StorybookPage() {
               <Breadcrumb items={BREADCRUMB_3} />
             </div>
           </div>
-        </div>
+        </Panel>
       </section>
 
       {/* === 8. ToggleSwitch === */}
       <section id="toggle-switch" className={styles.section}>
         <h2 className={styles.sectionTitle}>8. ToggleSwitch</h2>
-        <div className={styles.preview}>
+        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        <Panel as="div">
           <span className={styles.previewLabel}>Preview: ToggleSwitch</span>
 
           <div className={styles.toggleSamples}>
@@ -516,7 +539,7 @@ export default function StorybookPage() {
               <ToggleSwitch label="無効状態（ON）" disabled defaultChecked />
             </div>
           </div>
-        </div>
+        </Panel>
       </section>
     </div>
   );
