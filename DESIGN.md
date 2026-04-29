@@ -12,10 +12,10 @@
 ### 表面色
 
 - `--bg`: パネルの基本背景色
-- `--bg-soft`: 画面全体の背景色（パネルを置く場所の背景色）、目立たないボタン（ghostボタン）の色
-- `--bg-softer`: ghostボタンのホバー色
-- `--bg-invert`: 目立つボタン（primaryボタン）の色
-- `--bg-invert-soft`: primaryボタンのホバー色
+- `--bg-soft`: 画面全体の背景色（パネルを置く場所の背景色）、標準ボタン（default）の色
+- `--bg-softer`: 標準ボタンのホバー色
+- `--bg-invert`: primary ボタンの色
+- `--bg-invert-soft`: primary ボタンのホバー色
 
 ### 文字色
 
