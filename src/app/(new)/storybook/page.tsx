@@ -103,19 +103,10 @@ export default function StorybookPage() {
           <span className={styles.previewLabel}>Preview: 概要</span>
           <div className={styles.notice}>
             <p>
-              このページは開発者向けの参照ページで、来訪者の目に触れる想定はありません。
-            </p>
-            <p>
-              <strong>
-                ページ全体の上下に表示されている Header と Footer
-                は、新コンポーネント（<code>@/components/Header</code>、
-                <code>@/components/Footer</code>）の実物
-              </strong>
-              です。layout.tsx に手を入れず、Route Group <code>(legacy)/</code>{" "}
-              と <code>(new)/</code> で root layout を分離することで、
-              <code>/storybook</code> URL では旧コンポーネントが DOM
-              に出ない構造を実現しています。これが cycle-172
-              以降のページ単位の段階的移行の枠組みになります。
+              このページは新デザインシステムのコンポーネントカタログ。
+              <code>@/components/</code>{" "}
+              配下のコンポーネントを実機で動作確認できる開発者向けページ。
+              来訪者の目に触れる想定はないため noindex を指定している。
             </p>
           </div>
 

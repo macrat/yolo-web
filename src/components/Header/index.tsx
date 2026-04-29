@@ -3,11 +3,14 @@ import styles from "./Header.module.css";
 
 /** サイト全体で固定のナビゲーション項目。
  * 全ページ共通とし、ページごとに差し替える要件はない。
- * 追加・削除は本ファイルを編集する形で行う。 */
+ * 追加・削除は本ファイルを編集する形で行う。
+ * 「ツール」を先頭に（cycle-167 コンセプト「日常の傍にある道具」の主軸を視覚的に表現）。
+ * 「サイト紹介」は信頼形成のため Header に動線を確保。 */
 const NAV_ITEMS: { label: string; href: string }[] = [
-  { label: "遊ぶ", href: "/play" },
   { label: "ツール", href: "/tools" },
+  { label: "遊び", href: "/play" },
   { label: "ブログ", href: "/blog" },
+  { label: "サイト紹介", href: "/about" },
 ];
 
 interface HeaderProps {
