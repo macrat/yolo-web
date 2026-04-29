@@ -77,7 +77,7 @@
    * 両モードで「同じトークン遷移 = 同じ方向の変化」が保たれる（SKILL.md L19 参照）。
    * パネル(--bg #2a2a27)が body(--bg-soft #1c1c1a)より明るく浮く、ダーク UI の慣例に従う構造。
    * ※ T2 で採用した「panel が body より暗い」設計は実機検証で視認性が致命的だったため撤回。 */
-  --bg: #2a2a27; /* panel surface — lightest dark, floats above body */
+  --bg: #363634; /* panel surface — lightest dark, floats above body */
   --bg-soft: #1c1c1a; /* page background — mid dark (unchanged) */
   --bg-softer: #131311; /* hover surface — deepest charcoal, darkens on hover */
   /* --bg-invert はライト側の「主面の反対」= 明るい面。
@@ -96,8 +96,9 @@
 
   /* Border — ライトでは --bg-softer のエイリアスだが、ダークでは --bg-softer (#131311) が
    * ホバー面として予約済みのため、境界線として独立した値を明示する。
-   * #4a4a46 は panel (#2a2a27) に対しコントラスト ≈ 1.8 で罫線として視認可能。 */
-  --border: #4a4a46;
+   * #555550: panel (#363634) に対しコントラスト ≈ 1.62、body (#1c1c1a) に対し ≈ 2.28。
+   * ToggleSwitch OFF トラックにも使用: track on body ≈ 2.28 (target 1.5+)。 */
+  --border: #555550;
 
   /* Accent — ダーク背景上での視認性を高めるため lightness を上げる
    * --accent on --bg (#131311): コントラスト比 ≈ 7.1:1 */
