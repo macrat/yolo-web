@@ -1,0 +1,118 @@
+/* ThemeToggle — トグルスイッチ風のライト/ダーク切替コンポーネント
+ *
+ * 設計:
+ * - 横長のトラック（太陽アイコン + 月アイコン）+ 丸いサム（つまみ）
+ * - ライト時: サムは左（太陽側）。ダーク時: サムは右（月側）。
+ * - DESIGN.md §5: ON/OFF 切替はトグルスイッチ
+ * - DESIGN.md §2: フォーカスは outline: 2px solid var(--accent); outline-offset: 2px;
+ * - DESIGN.md §5: インタラクティブ要素の border-radius は var(--r-interactive)
+ */
+
+/* ボタンのリセットとレイアウト */
+.toggle {
+  /* ボタンデフォルトスタイルのリセット */
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  /* インラインブロックで表示 */
+  display: inline-flex;
+  align-items: center;
+}
+
+.toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: var(--r-interactive);
+}
+
+/* トラック: 横長の楕円形コンテナ */
+.track {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  /* 幅: アイコン16px × 2 + パディング × 2 + サム間隔 = 52px */
+  width: 52px;
+  height: 28px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg-soft);
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+  box-shadow: var(--shadow-button);
+}
+
+/* ホバー時: トラック背景を少し暗く */
+.toggle:hover .track {
+  background: var(--bg-softer);
+}
+
+/* 左端のアイコン（太陽 = ライト側） */
+.iconLeft {
+  position: absolute;
+  left: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  color: var(--fg-soft);
+  transition: color 0.15s ease;
+}
+
+/* 右端のアイコン（月 = ダーク側） */
+.iconRight {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  color: var(--fg-soft);
+  transition: color 0.15s ease;
+}
+
+/* サム（丸いつまみ） — デフォルト: 左側（ライトモード） */
+.thumb {
+  position: absolute;
+  left: 3px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--bg);
+  /* サムの輪郭を示す微細な影（エレベーションではなく視認性のため） */
+  box-shadow: 0 1px 2px rgba(26, 26, 26, 0.2);
+  transition:
+    transform 0.15s ease,
+    left 0.15s ease;
+}
+
+/* ダークモード時: サムを右側（月側）へ移動
+ * トラック幅52px - サム幅20px - 左余白3px - 右余白3px = 26px 移動
+ * ただし left を直接変えると transition が乱れるため translateX を使う */
+.thumbDark {
+  left: 3px;
+  transform: translateY(-50%) translateX(24px);
+}
+
+/* CSS Modules コンパイラはセレクタ内のクラス名をすべて hash する。
+ * `:root.dark` の `.dark` は <html> に生で付くグローバルクラスなので hash させてはいけない。
+ * `:global(:root.dark)` で包むことで `.dark` が hash されずにそのままコンパイルされる。
+ * 参照: docs/knowledge/css-modules.md */
+:global(:root.dark) .track {
+  /* ダークモード OFF 状態: --border (#555550) は body (#1c1c1a) に対しコントラスト 2.28:1 で識別可能 */
+  background: var(--bg-soft);
+  border-color: var(--border);
+}
+
+:global(:root.dark) .toggle:hover .track {
+  background: var(--bg-softer);
+}
+
+:global(:root.dark) .thumb {
+  /* --fg (#e8e8e5) はダークモードのサム色として視認性を確保 */
+  background: var(--fg);
+}

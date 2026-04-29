@@ -40,14 +40,16 @@
    variant
    ================================================================ */
 
-/* default — 標準ボタン */
+/* default — 標準ボタン（旧 ghost を統合。--bg-soft 背景で目立たず自然）
+ * cycle-171 T4: 旧 default（--bg 背景）はダークモードで ghost より目立たない逆転が起きていたため廃止。
+ * 旧 ghost（--bg-soft 背景）を新 default として採用。 */
 .variantDefault {
-  background: var(--bg);
+  background: var(--bg-soft);
   color: var(--fg);
   border-color: var(--border);
 }
 .variantDefault:hover:not(:disabled) {
-  background: var(--bg-soft);
+  background: var(--bg-softer);
 }
 
 /* primary — 目立つボタン */
@@ -59,16 +61,6 @@
 .variantPrimary:hover:not(:disabled) {
   background: var(--bg-invert-soft);
   border-color: var(--bg-invert-soft);
-}
-
-/* ghost — 目立たないボタン */
-.variantGhost {
-  background: var(--bg-soft);
-  color: var(--fg);
-  border-color: var(--border);
-}
-.variantGhost:hover:not(:disabled) {
-  background: var(--bg-softer);
 }
 
 /* ================================================================

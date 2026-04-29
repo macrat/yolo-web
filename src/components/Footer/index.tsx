@@ -28,8 +28,9 @@ const NOTE =
  * 上書きできない構造にして constitution Rule 3 の安全装置として機能させる。
  *
  * デザイン:
- * - 背景は `--bg-invert`（DESIGN.md §2「primaryボタン・footer」と整合）
- * - 文字色は `--fg-invert` / `--fg-invert-soft`、リンクは `--accent`
+ * - 背景は `--bg`（ヘッダーと統一感のある通常背景。cycle-171 T4 で --bg-invert から変更）
+ * - 文字色は `--fg` / `--fg-soft`、リンクは `--accent`
+ * - 上辺に border-top でヘッダーの border-bottom と対称的な区切りを設ける
  */
 export default function Footer() {
   return (

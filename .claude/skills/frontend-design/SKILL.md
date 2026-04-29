@@ -24,7 +24,7 @@ user-invocable: false
 
 - **背景色**: `--bg`, `--bg-soft`, `--bg-softer`, `--bg-invert`, `--bg-invert-soft`
 - **文字色**: `--fg`, `--fg-soft`, `--fg-softer`, `--fg-invert`, `--fg-invert-soft`
-- **境界線**: `--border`
+- **境界線**: `--border`, `--border-strong`（フォーム要素用）
 - **アクセント**: `--accent`, `--accent-strong`, `--accent-soft`
 - **ステータス**: `--success`, `--warning`, `--danger`（それぞれ `-strong` と `-soft` も）
 
