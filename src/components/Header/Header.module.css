@@ -47,15 +47,41 @@
   color: var(--accent);
 }
 
-/* ナビゲーションエリア: ロゴの右に配置し、残りのスペースを使う */
-.nav {
+/* ==============================
+   デスクトップ専用要素（デフォルト表示）
+   ============================== */
+
+/* デスクトップ: ナビゲーションエリア（ロゴの右に配置し、残りのスペースを使う） */
+.desktopNav {
   display: flex;
   align-items: center;
   gap: 0.25rem;
   flex: 1;
 }
 
-/* ナビリンク */
+/* デスクトップ: アクションスロット（右端） */
+.desktopActions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+/* ハンバーガーボタン: デスクトップでは非表示 */
+.hamburger {
+  display: none;
+}
+
+/* モバイルメニュー: デスクトップでは非表示 */
+.mobileMenu {
+  display: none;
+}
+
+/* ==============================
+   ナビリンク（デスクトップ・モバイル共通スタイル）
+   ============================== */
+
 .navLink {
   color: var(--fg-soft);
   text-decoration: none;
@@ -78,11 +104,106 @@
   outline-offset: 2px;
 }
 
-/* アクションスロット: 右端に配置 */
-.actions {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-shrink: 0;
+/* ==============================
+   モバイル（max-width: 720px）
+   ============================== */
+
+@media (max-width: 720px) {
+  /* デスクトップ専用要素を非表示 */
+  .desktopNav {
+    display: none;
+  }
+
+  .desktopActions {
+    display: none;
+  }
+
+  /* ハンバーガーボタンを表示 */
+  .hamburger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    /* ロゴの右に配置するため margin-left: auto で右端へ押し出す */
+    margin-left: auto;
+    padding: 0.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--fg);
+    border-radius: var(--r-interactive);
+    flex-shrink: 0;
+  }
+
+  .hamburger:hover {
+    background: var(--bg-soft);
+  }
+
+  .hamburger:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* モバイルメニューパネル */
+  .mobileMenu {
+    display: block;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 1.25rem;
+    /* 控えめな fade-in アニメーション */
+    animation: menuFadeIn 0.15s ease;
+  }
+
+  @keyframes menuFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* モバイルメニュー内のナビリスト */
+  .mobileNavList {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  /* モバイルメニュー内のリンク（タップしやすい高さを確保） */
+  .mobileNavLink {
+    display: block;
+    color: var(--fg-soft);
+    text-decoration: none;
+    font-size: 1rem;
+    padding: 0.625rem 0.5rem;
+    border-radius: var(--r-interactive);
+    transition:
+      background-color 0.1s,
+      color 0.1s;
+  }
+
+  .mobileNavLink:hover {
+    background: var(--bg-soft);
+    color: var(--fg);
+  }
+
+  .mobileNavLink:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* actions スロット（テーマトグル等）: ナビの下に配置 */
+  .mobileActions {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
 }
