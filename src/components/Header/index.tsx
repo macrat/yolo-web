@@ -1,37 +1,36 @@
 import Link from "next/link";
 import styles from "./Header.module.css";
 
-/** ナビゲーション項目の型 */
-export interface NavItem {
-  label: string;
-  href: string;
-}
-
-/** デフォルトのナビゲーション項目 */
-const DEFAULT_NAV: NavItem[] = [
+/** サイト全体で固定のナビゲーション項目。
+ * 全ページ共通とし、ページごとに差し替える要件はない。
+ * 追加・削除は本ファイルを編集する形で行う。 */
+const NAV_ITEMS: { label: string; href: string }[] = [
   { label: "遊ぶ", href: "/play" },
   { label: "ツール", href: "/tools" },
   { label: "ブログ", href: "/blog" },
 ];
 
 interface HeaderProps {
-  /** ナビゲーション項目。省略時はデフォルトの項目を表示する。 */
-  nav?: NavItem[];
-  /** テーマトグル等を後から挿入できるスロット */
+  /** テーマトグル等を後から挿入できるスロット。
+   * Header の責務に具体的な操作要素を持たせず、外部から注入する設計。 */
   actions?: React.ReactNode;
 }
 
 /**
- * サイトヘッダー。
+ * Header — サイトヘッダー。
  *
- * - 左: ロゴ + サイト名（クリックでトップページへ）
- * - 中央〜右: ナビゲーションリンク（nav prop 経由で渡す）
- * - 右端: actions prop でテーマトグル等を後付け可能
+ * - 左: ロゴ「yolos.net」（dot のみ `--accent` カラー、クリックでトップへ）
+ * - 中央〜右: 固定ナビゲーション（`/play`・`/tools`・`/blog`）
+ * - 右端: `actions` スロット（テーマトグル等の差し込み口）
  *
- * ロゴデザインは docs/design-system-by-claude-design/preview/logo.html を参照。
- * 背景は --bg（パネルと同じ白）、下辺に --border の区切り線を引く。
+ * ナビゲーション項目はサイト全体で共通とするため `NAV_ITEMS` 定数で内部固定。
+ * 一貫性確保と layout 側の boilerplate 回避のため props では受け取らない。
+ *
+ * デザイン:
+ * - 背景は `--bg`（パネルと同じ）、下辺に `--border` の区切り線
+ * - ロゴデザインの参考: `docs/design-system-by-claude-design/preview/logo.html`
  */
-export default function Header({ nav = DEFAULT_NAV, actions }: HeaderProps) {
+export default function Header({ actions }: HeaderProps) {
   return (
     <header className={styles.header}>
       <div className={styles.inner}>
@@ -42,7 +41,7 @@ export default function Header({ nav = DEFAULT_NAV, actions }: HeaderProps) {
 
         {/* ナビゲーション */}
         <nav aria-label="メインナビゲーション" className={styles.nav}>
-          {nav.map((item) => (
+          {NAV_ITEMS.map((item) => (
             <Link key={item.href} href={item.href} className={styles.navLink}>
               {item.label}
             </Link>

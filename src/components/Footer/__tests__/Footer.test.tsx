@@ -3,49 +3,32 @@ import { render, screen } from "@testing-library/react";
 import Footer from "@/components/Footer";
 
 describe("Footer", () => {
-  test("デフォルトでサイト名と著作権表示が描画される", () => {
+  test("サイト名「yolos.net」が描画される", () => {
     render(<Footer />);
-    // サイト名と著作権がフッター内に含まれることを確認
     const footer = screen.getByRole("contentinfo");
     expect(footer.textContent).toContain("yolos.net");
   });
 
   test("著作権マーク（©）が描画される", () => {
     render(<Footer />);
-    expect(screen.getByRole("contentinfo")).toBeInTheDocument();
     expect(screen.getByRole("contentinfo").textContent).toContain("©");
   });
 
-  test("props で渡した links が href を含めて描画される", () => {
-    const links = [
-      { label: "About", href: "/about" },
-      { label: "Privacy", href: "/privacy" },
-    ];
-    render(<Footer links={links} />);
+  test("内部固定のリンク（About / Privacy）が描画される", () => {
+    render(<Footer />);
     const aboutLink = screen.getByRole("link", { name: "About" });
-    expect(aboutLink).toBeInTheDocument();
     expect(aboutLink).toHaveAttribute("href", "/about");
 
     const privacyLink = screen.getByRole("link", { name: "Privacy" });
-    expect(privacyLink).toBeInTheDocument();
     expect(privacyLink).toHaveAttribute("href", "/privacy");
   });
 
-  test("links を渡さない場合はデフォルトのリンクが描画される", () => {
+  test("AI 運営の注記が描画される（constitution Rule 3 の安全装置）", () => {
     render(<Footer />);
-    expect(screen.getByRole("link", { name: "About" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Privacy" })).toBeInTheDocument();
-  });
-
-  test("note prop でカスタム注記が描画される", () => {
-    render(<Footer note="カスタム注記テキスト" />);
-    expect(screen.getByText("カスタム注記テキスト")).toBeInTheDocument();
-  });
-
-  test("note を渡さない場合はデフォルトの AI 運営注記が描画される", () => {
-    render(<Footer />);
-    // デフォルト注記に AI に関する文言が含まれる
-    expect(screen.getByRole("contentinfo").textContent).toContain("AI");
+    const footer = screen.getByRole("contentinfo");
+    // 上書き不可・固定文言。「AI」と「不正確」の語を含むことを確認
+    expect(footer.textContent).toContain("AI");
+    expect(footer.textContent).toContain("不正確");
   });
 
   test("footer 要素が role='contentinfo' を持つ", () => {
