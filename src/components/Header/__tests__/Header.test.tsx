@@ -22,33 +22,25 @@ vi.mock("next/link", () => ({
 describe("Header", () => {
   test("ロゴ/サイト名のリンクが存在し、href が '/' である", () => {
     render(<Header />);
-    // ロゴリンク: aria-label または text で検索
     const logoLink = screen.getByRole("link", { name: /yolos\.net/i });
     expect(logoLink).toBeInTheDocument();
     expect(logoLink).toHaveAttribute("href", "/");
   });
 
-  test("渡した nav 項目が描画される", () => {
-    const nav = [
-      { label: "遊ぶ", href: "/play" },
-      { label: "ツール", href: "/tools" },
-      { label: "ブログ", href: "/blog" },
-    ];
-    render(<Header nav={nav} />);
-
-    for (const item of nav) {
-      const link = screen.getByRole("link", { name: item.label });
-      expect(link).toBeInTheDocument();
-      expect(link).toHaveAttribute("href", item.href);
-    }
-  });
-
-  test("nav を渡さないとデフォルトのナビが描画される", () => {
+  test("内部固定のナビゲーション項目（遊ぶ・ツール・ブログ）が描画される", () => {
     render(<Header />);
-    // デフォルトナビが存在することを確認（何かリンクが存在する）
-    const links = screen.getAllByRole("link");
-    // ロゴリンクを含めて少なくとも2つ以上のリンクがある
-    expect(links.length).toBeGreaterThanOrEqual(2);
+    expect(screen.getByRole("link", { name: "遊ぶ" })).toHaveAttribute(
+      "href",
+      "/play",
+    );
+    expect(screen.getByRole("link", { name: "ツール" })).toHaveAttribute(
+      "href",
+      "/tools",
+    );
+    expect(screen.getByRole("link", { name: "ブログ" })).toHaveAttribute(
+      "href",
+      "/blog",
+    );
   });
 
   test("actions prop の内容が描画される", () => {
@@ -56,5 +48,11 @@ describe("Header", () => {
     expect(
       screen.getByRole("button", { name: "テーマ切替" }),
     ).toBeInTheDocument();
+  });
+
+  test("actions を渡さないと actions スロットは描画されない", () => {
+    render(<Header />);
+    // ボタンは出ない（ロゴ・ナビはリンクのみ）
+    expect(screen.queryByRole("button")).not.toBeInTheDocument();
   });
 });
