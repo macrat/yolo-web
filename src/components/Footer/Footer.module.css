@@ -3,6 +3,7 @@
  * cycle-171 T4: ヘッダーと統一感のある通常背景（--bg）に変更。
  * 旧 --bg-invert 設計ではダークモード時に明色背景になり「ライトモードのフッター」に見えた。
  * border-top でヘッダーの border-bottom と対称的な区切りを設ける。
+ * cycle-171 T4 追加修正: 4カラムサイトマップへ拡張。
  */
 .footer {
   background: var(--bg);
@@ -16,46 +17,74 @@
   padding: 2rem 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 2rem;
 }
 
-.top {
+/*
+ * 4カラムサイトマップ。
+ * DESIGN.md §4「ブレークポイントよりも自然な縮小」に従い auto-fit + minmax で
+ * 画面幅に応じて自然に 4→2→1 カラムへ折り返す。
+ * minmax の最小値 160px はカラムタイトルが折り返さない最小幅。
+ */
+.sitemap {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1.5rem 2rem;
+}
+
+.column {
   display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.5rem 1.5rem;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
-.siteName {
-  color: var(--fg);
-  font-size: 1rem;
-  /* DESIGN.md §3: 本文中での太字は原則として使わない */
-  font-weight: normal;
-}
-
-.copyright {
+/* カラムタイトルは --fg-soft の小さめフォント。DESIGN.md §3 に従い太字は使わない */
+.columnTitle {
   color: var(--fg-soft);
-  font-size: 0.875rem;
+  font-size: 0.75rem;
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 0 0 0.25rem;
 }
 
-.links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem 1rem;
+.columnLinks {
   list-style: none;
   padding: 0;
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
-/* リンクは --accent で表示（仕様書より） */
+/* リンクは --accent で表示（仕様書より）、ホバーで --accent-strong */
 .link {
   color: var(--accent);
   text-decoration: none;
   font-size: 0.875rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2em;
 }
 
 .link:hover {
   color: var(--accent-strong);
+}
+
+/* 外部リンクの「↗」記号。DESIGN.md §3 に従いテキストより小さめのサイズ */
+.externalIcon {
+  font-size: 0.7em;
+  opacity: 0.8;
+}
+
+/* フッター下部: AI 運営注記と著作権 */
+.bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
 }
 
 .note {
@@ -63,4 +92,12 @@
   font-size: 0.8125rem;
   /* DESIGN.md §3: 行間は原則1.7倍 */
   line-height: 1.7;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.copyright {
+  color: var(--fg-soft);
+  font-size: 0.875rem;
+  white-space: nowrap;
 }
