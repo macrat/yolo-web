@@ -14,9 +14,9 @@ const COLOR_SECTIONS = [
     title: "表面色 (Surface)",
     swatches: [
       { token: "--bg", role: "パネルの基本背景色" },
-      { token: "--bg-soft", role: "画面全体の背景 / ghost ボタン色" },
-      { token: "--bg-softer", role: "ghost ボタンのホバー色" },
-      { token: "--bg-invert", role: "primary ボタン色 / フッター背景" },
+      { token: "--bg-soft", role: "画面全体の背景 / 標準ボタン色" },
+      { token: "--bg-softer", role: "標準ボタンのホバー色" },
+      { token: "--bg-invert", role: "primary ボタン色" },
       { token: "--bg-invert-soft", role: "primary ボタンのホバー色" },
     ],
   },
@@ -32,7 +32,10 @@ const COLOR_SECTIONS = [
   },
   {
     title: "境界線 (Border)",
-    swatches: [{ token: "--border", role: "基本の罫線色" }],
+    swatches: [
+      { token: "--border", role: "基本の罫線色" },
+      { token: "--border-strong", role: "フォーム要素の明示的な境界線" },
+    ],
   },
   {
     title: "アクセント (Accent)",
@@ -323,7 +326,7 @@ export default function StorybookPage() {
               </Button>
             </div>
 
-            {/* Default (旧 ghost — --bg-soft 背景の標準ボタン) */}
+            {/* Default — --bg-soft 背景の標準ボタン */}
             <div className={styles.buttonGroup}>
               <div className={styles.buttonGroupLabel}>default</div>
               <Button
