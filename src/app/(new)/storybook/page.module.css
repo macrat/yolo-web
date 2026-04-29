@@ -100,12 +100,19 @@
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   gap: 0.75rem;
   margin-bottom: 1rem;
+  /* カード高さを揃えるため align-items を stretch（デフォルト）のままにし、
+     各カードが同行の最大高さに伸びるようにする */
+  align-items: stretch;
 }
 
 .swatch {
   border: 1px solid var(--border);
   border-radius: var(--r-normal);
   overflow: hidden;
+  /* align-items: stretch により同行の最大高さに伸びる。
+     flexbox 縦方向にして swatchInfo が下端まで伸びるようにする */
+  display: flex;
+  flex-direction: column;
 }
 
 .swatchColor {
@@ -116,6 +123,11 @@
 .swatchInfo {
   padding: 0.5rem 0.6rem;
   background: var(--bg);
+  /* flex: 1 で残りの高さを埋める。swatchRole に min-height で 2 行分を確保し、
+     1 行の説明文でも高さが揃うようにする */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .swatchToken {
@@ -133,6 +145,10 @@
   color: var(--fg-softer);
   margin-top: 2px;
   line-height: 1.3;
+  /* 説明文が 1 行でも 2 行分の最低高さを確保し、カード高さを揃える。
+     2 行分の高さ = line-height(1.3em) * 2 行 = 2.6em（em は font-size 基準なので
+     line-height の倍数で計算する） */
+  min-height: 2.6em;
 }
 
 /* 角丸・影サンプル */
