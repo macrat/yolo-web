@@ -1,38 +1,44 @@
 "use client";
 
 /**
- * ThemeToggle — アイコン + テキストボタンによるライト/ダーク切替。
+ * ThemeToggle — トグルスイッチ風のライト/ダーク切替。
  *
  * - next-themes の `useTheme()` フックで `resolvedTheme`（実際の適用テーマ）と
  *   `setTheme` を取得する。
  * - `resolvedTheme` を使うことで "system" の場合も実際の値（"light" / "dark"）が得られ、
- *   ボタンラベルを適切に表示できる。
+ *   現在の状態を正確に反映できる。
  * - `useSyncExternalStore` を使って hydration mismatch を回避する（next-themes の慣例）。
- *   サーバー側ではテーマが不明なため、ボタンを表示しない。
- * - DESIGN.md §3: Lucide スタイル線画アイコン、strokeWidth 1.5px、サイズ 16px でテキストと並べる。
- *   アイコンは aria-hidden="true"、ボタン全体に aria-label を付与。
- * - 既存の Button コンポーネント（variant="ghost" size="small"）を再利用してデザイン整合を取る。
- * - Header の `actions` スロットに渡して使用する。
+ *   サーバー側ではテーマが不明なため、コンポーネントを表示しない。
+ * - DESIGN.md §3: Lucide スタイル線画アイコン、strokeWidth 1.5px、サイズ 16px。
+ *   アイコンのみのボタンには aria-label を付与（DESIGN.md §3 の規定）。
+ * - DESIGN.md §5: ON/OFF 切替は原則トグルスイッチを使う。
  *
- * 文言ロジック:
- * - 現在ダーク → 太陽アイコン + 「ライト」（= ライトに切り替えるボタン）
- * - 現在ライト → 月アイコン + 「ダーク」（= ダークに切り替えるボタン）
+ * デザイン:
+ * - ボタンではなく横長のトラック + サムのトグルスイッチ風。
+ * - トラック左端に太陽アイコン（ライト）、右端に月アイコン（ダーク）を配置。
+ * - ライト時: サムは左（太陽側）。ダーク時: サムは右（月側）。
+ * - 「ライト」「ダーク」のテキストラベルは表示しない（控えめアイコンのみ）。
+ * - role="switch" + aria-checked で現在状態を読み上げ可能にする。
+ *
+ * aria-checked の意味:
+ * - false = ライトモード（ダーク側がオフ）
+ * - true = ダークモード（ダーク側がオン）
  */
 
 import { useSyncExternalStore } from "react";
 import { useTheme } from "next-themes";
-import Button from "@/components/Button";
+import styles from "./ThemeToggle.module.css";
 
 /**
  * 外部ストアとして登録するための空のサブスクライバー関数。
  * useSyncExternalStore は subscribe 引数を必須とするため、何もしないサブスクライバーを渡す。
  * これにより SSR 時（getServerSnapshot）は false を返し、
- * クライアント mount 後（getSnapshot）は true を返してボタンを描画する。
+ * クライアント mount 後（getSnapshot）は true を返してコンポーネントを描画する。
  */
 const emptySubscribe = () => () => {};
 
 /**
- * 太陽アイコン — 現在ダーク時に表示（ライトへの切替を示す）。
+ * 太陽アイコン — トラック左端（ライト側）に配置。
  * Lucide "sun" の paths に準拠。DESIGN.md §3: strokeWidth 1.5px、16px 表示。
  */
 function SunIcon() {
@@ -55,7 +61,7 @@ function SunIcon() {
 }
 
 /**
- * 月アイコン — 現在ライト時に表示（ダークへの切替を示す）。
+ * 月アイコン — トラック右端（ダーク側）に配置。
  * Lucide "moon" の path に準拠。DESIGN.md §3: strokeWidth 1.5px、16px 表示。
  */
 function MoonIcon() {
@@ -80,8 +86,8 @@ export default function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
 
   // useSyncExternalStore でマウント状態を管理。
-  // - サーバー側（getServerSnapshot）: false → ボタンを描画しない（hydration mismatch 回避）
-  // - クライアント側（getSnapshot）: true → ボタンを描画する
+  // - サーバー側（getServerSnapshot）: false → 何も描画しない（hydration mismatch 回避）
+  // - クライアント側（getSnapshot）: true → コンポーネントを描画する
   const mounted = useSyncExternalStore(
     emptySubscribe,
     () => true,
@@ -93,27 +99,35 @@ export default function ThemeToggle() {
     return null;
   }
 
-  // resolvedTheme が "dark" ならライトに切り替えるボタン、それ以外はダークに切り替えるボタン
+  // isDark=true のとき「ダーク側がオン」= aria-checked=true
   const isDark = resolvedTheme === "dark";
-  const nextTheme = isDark ? "light" : "dark";
-  const label = isDark ? "ライト" : "ダーク";
   const ariaLabel = isDark
     ? "ライトモードに切り替え"
     : "ダークモードに切り替え";
 
   return (
-    <Button
-      variant="ghost"
-      size="small"
-      onClick={() => setTheme(nextTheme)}
+    <button
+      type="button"
+      role="switch"
+      aria-checked={isDark}
       aria-label={ariaLabel}
+      onClick={() => setTheme(isDark ? "light" : "dark")}
+      className={styles.toggle}
     >
-      <span
-        style={{ display: "inline-flex", alignItems: "center", gap: "0.4em" }}
-      >
-        {isDark ? <SunIcon /> : <MoonIcon />}
-        <span>{label}</span>
+      {/* トラック: 横長の楕円。左に太陽アイコン、右に月アイコンを配置。
+          サム（丸いつまみ）が現在状態側（ライト=左、ダーク=右）に移動する。 */}
+      <span className={styles.track} aria-hidden="true">
+        {/* 左端: 太陽アイコン（ライト側） */}
+        <span className={styles.iconLeft}>
+          <SunIcon />
+        </span>
+        {/* 右端: 月アイコン（ダーク側） */}
+        <span className={styles.iconRight}>
+          <MoonIcon />
+        </span>
+        {/* サム: isDark のとき右側（月側）へ移動する */}
+        <span className={`${styles.thumb} ${isDark ? styles.thumbDark : ""}`} />
       </span>
-    </Button>
+    </button>
   );
 }

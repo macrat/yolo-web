@@ -26,10 +26,8 @@ describe("Button", () => {
     );
   });
 
-  test("variant prop: ghost は data-variant='ghost' を持つ", () => {
-    render(<Button variant="ghost">ghost</Button>);
-    expect(screen.getByRole("button")).toHaveAttribute("data-variant", "ghost");
-  });
+  // 旧 ghost variant は廃止。TypeScript 型から除外されているため、
+  // ランタイムでも "ghost" を受け付けないことを確認する（型レベルの保証で十分）。
 
   test("variant を省略すると data-variant='default' がデフォルト", () => {
     render(<Button>省略</Button>);

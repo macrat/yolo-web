@@ -323,7 +323,7 @@ export default function StorybookPage() {
               </Button>
             </div>
 
-            {/* Default */}
+            {/* Default (旧 ghost — --bg-soft 背景の標準ボタン) */}
             <div className={styles.buttonGroup}>
               <div className={styles.buttonGroupLabel}>default</div>
               <Button
@@ -341,27 +341,6 @@ export default function StorybookPage() {
               </Button>
               <Button variant="default" disabled>
                 Default Disabled
-              </Button>
-            </div>
-
-            {/* Ghost */}
-            <div className={styles.buttonGroup}>
-              <div className={styles.buttonGroupLabel}>ghost</div>
-              <Button
-                variant="ghost"
-                onClick={() => console.log("ghost default clicked")}
-              >
-                Ghost Default
-              </Button>
-              <Button
-                variant="ghost"
-                size="small"
-                onClick={() => console.log("ghost small clicked")}
-              >
-                Ghost Small
-              </Button>
-              <Button variant="ghost" disabled>
-                Ghost Disabled
               </Button>
             </div>
           </div>

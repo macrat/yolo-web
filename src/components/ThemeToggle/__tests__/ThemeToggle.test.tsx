@@ -13,61 +13,69 @@ vi.mock("next-themes", () => ({
   }),
 }));
 
-describe("ThemeToggle (新コンポーネント)", () => {
+describe("ThemeToggle (トグルスイッチ版)", () => {
   beforeEach(() => {
     mockSetTheme.mockClear();
     mockResolvedTheme = "light";
   });
 
-  test("mount 後にボタンが描画される（ライトモード時は「ダーク」と表示）", () => {
+  test("mount 後にスイッチ（role=switch）が描画される", () => {
     mockResolvedTheme = "light";
     render(<ThemeToggle />);
-    // mount 後のボタンが表示される
-    const button = screen.getByRole("button");
+    // トグルスイッチは role="switch" を持つ button として描画される
+    const button = screen.getByRole("switch");
     expect(button).toBeInTheDocument();
-    // ライトモードのとき「ダーク」と表示
-    expect(button).toHaveTextContent("ダーク");
   });
 
-  test("mount 後にボタンが描画される（ダークモード時は「ライト」と表示）", () => {
+  test("ライトモード時は aria-checked='false'（ダーク側がオフ）", () => {
+    mockResolvedTheme = "light";
+    render(<ThemeToggle />);
+    const toggle = screen.getByRole("switch");
+    expect(toggle).toHaveAttribute("aria-checked", "false");
+  });
+
+  test("ダークモード時は aria-checked='true'（ダーク側がオン）", () => {
     mockResolvedTheme = "dark";
     render(<ThemeToggle />);
-    const button = screen.getByRole("button");
-    expect(button).toBeInTheDocument();
-    // ダークモードのとき「ライト」と表示
-    expect(button).toHaveTextContent("ライト");
+    const toggle = screen.getByRole("switch");
+    expect(toggle).toHaveAttribute("aria-checked", "true");
   });
 
-  test("ライトモード時にクリックすると setTheme('dark') が呼ばれる", () => {
+  test("ライトモード時にクリックすると setTheme('dark') が呼ばれ aria-checked が反転する", () => {
     mockResolvedTheme = "light";
     render(<ThemeToggle />);
-    const button = screen.getByRole("button");
-    fireEvent.click(button);
+    const toggle = screen.getByRole("switch");
+    // クリック前: aria-checked=false
+    expect(toggle).toHaveAttribute("aria-checked", "false");
+    fireEvent.click(toggle);
     expect(mockSetTheme).toHaveBeenCalledWith("dark");
   });
 
   test("ダークモード時にクリックすると setTheme('light') が呼ばれる", () => {
     mockResolvedTheme = "dark";
     render(<ThemeToggle />);
-    const button = screen.getByRole("button");
-    fireEvent.click(button);
+    const toggle = screen.getByRole("switch");
+    fireEvent.click(toggle);
     expect(mockSetTheme).toHaveBeenCalledWith("light");
   });
 
-  test("ボタンに aria-label が設定されている", () => {
+  test("ライトモード時に aria-label が『ダークモードに切り替え』を含む", () => {
     mockResolvedTheme = "light";
     render(<ThemeToggle />);
-    const button = screen.getByRole("button");
-    expect(button).toHaveAttribute("aria-label");
-    // aria-label が空でないことを確認
-    const ariaLabel = button.getAttribute("aria-label");
-    expect(ariaLabel).toBeTruthy();
-    expect(ariaLabel!.length).toBeGreaterThan(0);
+    const toggle = screen.getByRole("switch");
+    expect(toggle).toHaveAttribute("aria-label", "ダークモードに切り替え");
+  });
+
+  test("ダークモード時に aria-label が『ライトモードに切り替え』を含む", () => {
+    mockResolvedTheme = "dark";
+    render(<ThemeToggle />);
+    const toggle = screen.getByRole("switch");
+    expect(toggle).toHaveAttribute("aria-label", "ライトモードに切り替え");
   });
 
   test("type=button 属性が付いている", () => {
     render(<ThemeToggle />);
-    const button = screen.getByRole("button");
-    expect(button).toHaveAttribute("type", "button");
+    const toggle = screen.getByRole("switch");
+    expect(toggle).toHaveAttribute("type", "button");
   });
 });

@@ -1,7 +1,14 @@
 import type { ComponentPropsWithoutRef } from "react";
 import styles from "./Button.module.css";
 
-type ButtonVariant = "primary" | "default" | "ghost";
+/**
+ * ボタンのバリアント:
+ * - "primary": 目立つボタン。`--bg-invert` 背景（ダーク面）。アクションの主要な選択肢に使う。
+ * - "default": 標準ボタン。`--bg-soft` 背景。補助的なアクションや通常操作に使う。
+ *   ※ 旧 "ghost" バリアントは "default" に統合済み（cycle-171 T4）。
+ *      旧 "default"（`--bg` 背景・border あり）は廃止。
+ */
+type ButtonVariant = "primary" | "default";
 type ButtonSize = "default" | "small";
 
 interface ButtonOwnProps {
@@ -20,7 +27,6 @@ type ButtonProps = ButtonOwnProps &
 const variantClassMap: Record<ButtonVariant, string> = {
   default: styles.variantDefault,
   primary: styles.variantPrimary,
-  ghost: styles.variantGhost,
 };
 
 /** size → CSS クラス のマッピング */
