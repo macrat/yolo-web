@@ -90,3 +90,25 @@
 .labelText {
   line-height: 1.4;
 }
+
+/* ダークモードの OFF 状態: surface 値の並び替えにより --bg-softer (#131311) が
+ * body (#1c1c1a) より暗くなるため、トラック・サムを独立したトークンで上書きする。
+ *
+ * 要件:
+ * - トラック on body: コントラスト ≈ 1.8 (--border #4a4a46 on --bg-soft #1c1c1a)
+ * - サム on トラック: コントラスト ≈ 4.2 (--fg #e8e8e5 on --border #4a4a46) で WCAG AA を超える
+ */
+:root.dark .track {
+  /* OFF 時: --border (#4a4a46) は body (#1c1c1a) に対しコントラスト ≈ 1.8 で識別可能 */
+  background: var(--border);
+}
+
+:root.dark .input:checked ~ .track {
+  /* ON 時: --accent で上書き（ライト時と同じ振る舞い） */
+  background: var(--accent);
+}
+
+:root.dark .thumb {
+  /* --fg (#e8e8e5) は --border (#4a4a46) に対しコントラスト高く浮いて見える */
+  background: var(--fg);
+}

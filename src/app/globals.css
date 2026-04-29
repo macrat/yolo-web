@@ -71,32 +71,33 @@
 
 /* ダークモード — next-themes が attribute="class" で <html class="dark"> を付与する */
 :root.dark {
-  /* Surface — ダークモードでは --bg < --bg-soft < --bg-softer の単調連鎖（明るさ増加）。
+  /* Surface — ダークモードでもホバー方向は「暗くなる」で統一。
    * ライト: ホバーで暗くなる（bg→bg-soft→bg-softer）
-   * ダーク: ホバーで明るくなる（bg→bg-soft→bg-softer）
-   * 両モードで「同じトークン遷移 = 同じ方向の変化」が保たれる。
-   * パネル(--bg)が画面背景(--bg-soft)より暗い「沈む」関係はダーク UI の慣例と逆だが、
-   * 本サイトのコンセプト「日常の傍にある道具・目立たない」と整合する設計判断。 */
-  --bg: #131311; /* panel surface — deepest charcoal */
-  --bg-soft: #1c1c1a; /* page background — slightly lighter than panel */
-  --bg-softer: #2a2a27; /* hover surface — lighter still, completes the chain */
+   * ダーク: ホバーで暗くなる（bg→bg-soft→bg-softer）
+   * 両モードで「同じトークン遷移 = 同じ方向の変化」が保たれる（SKILL.md L19 参照）。
+   * パネル(--bg #2a2a27)が body(--bg-soft #1c1c1a)より明るく浮く、ダーク UI の慣例に従う構造。
+   * ※ T2 で採用した「panel が body より暗い」設計は実機検証で視認性が致命的だったため撤回。 */
+  --bg: #2a2a27; /* panel surface — lightest dark, floats above body */
+  --bg-soft: #1c1c1a; /* page background — mid dark (unchanged) */
+  --bg-softer: #131311; /* hover surface — deepest charcoal, darkens on hover */
   /* --bg-invert はライト側の「主面の反対」= 明るい面。
    * ダークでは primaryボタン等に明るい色を使う */
   --bg-invert: #e8e8e5;
   --bg-invert-soft: #d0d0cc;
 
   /* Text — ダーク背景上で十分なコントラストを確保（WCAG 4.5:1 以上を目標）
-   * --fg (#e8e8e5) on --bg (#131311): コントラスト比 ≈ 15.2:1 */
+   * --fg (#e8e8e5) on --bg-soft (#1c1c1a): コントラスト比 ≈ 14.1:1 */
   --fg: #e8e8e5; /* primary text */
   --fg-soft: #a8a8a4; /* secondary text */
   --fg-softer: #6e6e6a; /* tertiary / captions / disabled */
-  /* --fg-invert はダーク面上のテキスト = 暗い色。bg の値 (#131311) を使う */
+  /* --fg-invert はダーク面上のテキスト = 暗い色。bg-softer の値 (#131311) を使う */
   --fg-invert: #131311;
   --fg-invert-soft: #1c1c1a;
 
-  /* Border — ライトでは --bg-softer のエイリアスだが、ダークでは --bg-softer (#2a2a27) が
-   * ホバー面として予約済みのため、境界線として独立した値を明示する */
-  --border: #3a3a36;
+  /* Border — ライトでは --bg-softer のエイリアスだが、ダークでは --bg-softer (#131311) が
+   * ホバー面として予約済みのため、境界線として独立した値を明示する。
+   * #4a4a46 は panel (#2a2a27) に対しコントラスト ≈ 1.8 で罫線として視認可能。 */
+  --border: #4a4a46;
 
   /* Accent — ダーク背景上での視認性を高めるため lightness を上げる
    * --accent on --bg (#131311): コントラスト比 ≈ 7.1:1 */
