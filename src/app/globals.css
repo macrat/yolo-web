@@ -89,7 +89,7 @@
    * --fg (#e8e8e5) on --bg-soft (#1c1c1a): コントラスト比 ≈ 14.1:1 */
   --fg: #e8e8e5; /* primary text */
   --fg-soft: #a8a8a4; /* secondary text */
-  --fg-softer: #909090; /* tertiary / captions / disabled — #1c1c1a(body) 上 5.35:1 確保 */
+  --fg-softer: #a8a8a8; /* tertiary / captions / disabled — Panel #363634 上で 5.16:1、body #1c1c1a 上で 7.45:1 確保（Panel 上の用途が支配的） */
   /* --fg-invert はダーク面上のテキスト = 暗い色。bg-softer の値 (#131311) を使う */
   --fg-invert: #131311;
   --fg-invert-soft: #1c1c1a;
