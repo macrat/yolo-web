@@ -32,6 +32,7 @@ Owner からの指示（`/cycle-kickoff` 起動時の引数より）:
   - [x] 誤記 `:root html` を `@layer base` で囲む形に置き換える
   - [x] ダークモード対応のトークンを追加する。`next-themes`（`attribute="class"` 方式・`:root.dark`）と整合
   - [x] ダーク値は `--bg` < `--bg-soft` < `--bg-softer` の単調連鎖に整え、ライト/ダーク両モードで「同じトークン遷移＝同じ方向の変化」を成立させた
+  - **T4 で撤回（cycle-171 内）**: T2 で採用した「ダーク値は --bg(最暗) < --bg-soft < --bg-softer の単調連鎖（panel が body より暗い「沈む」関係）」は、Owner の実機検証で「カードと背景のコントラストが致命的に低い（1.19:1〜1.5:1）」「OFF 状態のトグルスイッチが視認不能」と判明したため撤回。T4 で「panel(明) > body(中) > hover(暗)」の順序に並び替えた。ホバー連鎖は両モードで「暗くなる」方向に統一（SKILL.md L19 と整合）。コミット: 83d161f1
   - [x] DESIGN.md §2 に `-soft` 背景時のボーダーは同系統の `-strong` を使う旨を注記（Owner 追加指示）
   - [x] **old-globals.css と new globals.css の競合解消**: 両ファイルに `@layer legacy, base;` を宣言し、それぞれを `@layer legacy { ... }` / `@layer base { ... }` で囲む（base が後勝ち）
   - [x] **new ページに必要なベースを new globals.css に移植**: グローバルリセット、`dialog`、`html, body` のオーバーフロー対策、`body` フォント、`.visually-hidden`、`.markdown-alert*` Admonition 一式を移植（移行期間中は二重化、cycle-172 以降の移行完了で old-globals.css ごと消える設計）
