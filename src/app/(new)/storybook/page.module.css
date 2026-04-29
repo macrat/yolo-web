@@ -196,23 +196,13 @@
   margin-top: 0.5rem;
 }
 
-/* プレビュー枠 */
-.preview {
-  border: 1px dashed var(--border);
-  border-radius: var(--r-normal);
-  padding: 1.25rem;
-  position: relative;
-}
-
+/* プレビューラベル — Panel の内側先頭に配置するラベル */
 .previewLabel {
-  position: absolute;
-  top: -0.6rem;
-  left: 0.75rem;
-  background: var(--bg-soft);
-  padding: 0 0.4rem;
+  display: block;
   font-size: 0.7rem;
-  color: var(--fg-softer);
+  color: var(--fg-soft);
   font-family: ui-monospace, monospace;
+  margin-bottom: 1rem;
 }
 
 /* ボタンマトリクス */
