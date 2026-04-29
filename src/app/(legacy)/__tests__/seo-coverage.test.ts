@@ -1,0 +1,505 @@
+/**
+ * SEO Coverage Test - Layer 2
+ *
+ * 全公開ルートのmetadataを横断的に検証する統合テスト。
+ * 各ページのmetadataにcanonical URL、og:url、og:title、og:description、
+ * og:siteNameが正しく設定されていることを確認する。
+ */
+import { describe, test, expect } from "vitest";
+import type { Metadata } from "next";
+import { SITE_NAME } from "@/lib/constants";
+import { allGameMetas, getGamePath } from "@/play/games/registry";
+
+/**
+ * 共通SEOメタデータアサーション関数。
+ * canonical URL、og:url、og:title、og:description、og:siteNameの
+ * 存在と一貫性を検証する。
+ */
+
+const gameSeoExpectations: Record<
+  string,
+  {
+    title: string;
+    description: string;
+    keywords: string[];
+    ogTitle: string;
+    ogDescription: string;
+  }
+> = Object.fromEntries(
+  allGameMetas.map((gameMeta) => [getGamePath(gameMeta.slug), gameMeta.seo]),
+);
+
+function assertSeoMetadata(
+  meta: Metadata,
+  expectedPath: string,
+  label: string,
+): void {
+  // canonical URLの存在チェック
+  const canonical = meta.alternates?.canonical;
+  expect(canonical, `${label}: canonical URLが存在すること`).toBeDefined();
+  const canonicalStr = String(canonical);
+  expect(
+    canonicalStr,
+    `${label}: canonical URLがexpectedPathを含むこと`,
+  ).toContain(expectedPath);
+
+  // og:urlの存在チェック
+  const og = meta.openGraph as Record<string, unknown> | undefined;
+  expect(og?.url, `${label}: og:urlが存在すること`).toBeDefined();
+
+  // canonical と og:url の一致チェック
+  expect(og?.url, `${label}: og:urlがcanonicalと一致すること`).toBe(
+    canonicalStr,
+  );
+
+  // og:title の存在チェック
+  expect(og?.title, `${label}: og:titleが存在すること`).toBeDefined();
+
+  // og:description の存在チェック
+  expect(
+    og?.description,
+    `${label}: og:descriptionが存在すること`,
+  ).toBeDefined();
+
+  // og:siteName === SITE_NAME のチェック
+  expect(og?.siteName, `${label}: og:siteNameが${SITE_NAME}であること`).toBe(
+    SITE_NAME,
+  );
+}
+
+function assertGameSeoMetadata(meta: Metadata, path: string): void {
+  const expectedSeo = gameSeoExpectations[path];
+  if (!expectedSeo) return;
+
+  expect(meta.title, `${path}: titleがregistry由来であること`).toBe(
+    `${expectedSeo.title} | ${SITE_NAME}`,
+  );
+  expect(meta.description, `${path}: descriptionがregistry由来であること`).toBe(
+    expectedSeo.description,
+  );
+  expect(meta.keywords, `${path}: keywordsがregistry由来であること`).toEqual(
+    expectedSeo.keywords,
+  );
+
+  const og = meta.openGraph as Record<string, unknown> | undefined;
+  expect(og?.title, `${path}: og:titleがregistry由来であること`).toBe(
+    expectedSeo.ogTitle,
+  );
+  expect(
+    og?.description,
+    `${path}: og:descriptionがregistry由来であること`,
+  ).toBe(expectedSeo.ogDescription);
+}
+
+// -- 静的metadataページのテスト --
+
+const staticPages: Array<{
+  path: string;
+  importMeta: () => Promise<Metadata>;
+}> = [
+  {
+    path: "/",
+    importMeta: () =>
+      import("@/app/(legacy)/page").then((m) => m.metadata as Metadata),
+  },
+  {
+    path: "/about",
+    importMeta: () =>
+      import("@/app/(legacy)/about/page").then((m) => m.metadata as Metadata),
+  },
+  {
+    path: "/play/kanji-kanaru",
+    importMeta: () =>
+      import("@/app/(legacy)/play/kanji-kanaru/page").then(
+        (m) => m.metadata as Metadata,
+      ),
+  },
+  {
+    path: "/play/irodori",
+    importMeta: () =>
+      import("@/app/(legacy)/play/irodori/page").then(
+        (m) => m.metadata as Metadata,
+      ),
+  },
+  {
+    path: "/play/nakamawake",
+    importMeta: () =>
+      import("@/app/(legacy)/play/nakamawake/page").then(
+        (m) => m.metadata as Metadata,
+      ),
+  },
+  {
+    path: "/play/yoji-kimeru",
+    importMeta: () =>
+      import("@/app/(legacy)/play/yoji-kimeru/page").then(
+        (m) => m.metadata as Metadata,
+      ),
+  },
+  {
+    path: "/tools",
+    importMeta: () =>
+      import("@/app/(legacy)/tools/page").then((m) => m.metadata as Metadata),
+  },
+  {
+    path: "/blog",
+    importMeta: () =>
+      import("@/app/(legacy)/blog/page").then((m) => m.metadata as Metadata),
+  },
+  {
+    path: "/play",
+    importMeta: () =>
+      import("@/app/(legacy)/play/page").then((m) => m.metadata as Metadata),
+  },
+  {
+    path: "/cheatsheets",
+    importMeta: () =>
+      import("@/app/(legacy)/cheatsheets/page").then(
+        (m) => m.metadata as Metadata,
+      ),
+  },
+  {
+    path: "/dictionary",
+    importMeta: () =>
+      import("@/app/(legacy)/dictionary/page").then(
+        (m) => m.metadata as Metadata,
+      ),
+  },
+  {
+    path: "/dictionary/kanji",
+    importMeta: () =>
+      import("@/app/(legacy)/dictionary/kanji/page").then(
+        (m) => m.metadata as Metadata,
+      ),
+  },
+  {
+    path: "/dictionary/yoji",
+    importMeta: () =>
+      import("@/app/(legacy)/dictionary/yoji/page").then(
+        (m) => m.metadata as Metadata,
+      ),
+  },
+  {
+    path: "/dictionary/colors",
+    importMeta: () =>
+      import("@/app/(legacy)/dictionary/colors/page").then(
+        (m) => m.metadata as Metadata,
+      ),
+  },
+  {
+    path: "/dictionary/humor",
+    importMeta: () =>
+      import("@/app/(legacy)/dictionary/humor/page").then(
+        (m) => m.metadata as Metadata,
+      ),
+  },
+];
+
+describe("静的metadataページのSEO検証", () => {
+  test.each(staticPages)(
+    "$path: SEO必須項目が存在する",
+    async ({ path, importMeta }) => {
+      const meta = await importMeta();
+      expect(meta, `${path}: metadataがexportされていること`).toBeDefined();
+      assertSeoMetadata(meta, path === "/" ? "/" : path, path);
+      assertGameSeoMetadata(meta, path);
+    },
+  );
+});
+
+// -- 動的generateMetadataページのテスト --
+
+describe("動的metadataページのSEO検証", () => {
+  test("/blog/page/[page]: SEO必須項目が存在する", async () => {
+    const { getAllBlogPosts } = await import("@/blog/_lib/blog");
+    const { paginate, BLOG_POSTS_PER_PAGE } = await import("@/lib/pagination");
+    const allPosts = getAllBlogPosts();
+    const { totalPages } = paginate(allPosts, 1, BLOG_POSTS_PER_PAGE);
+    if (totalPages < 2) return; // 2ページ目がなければスキップ
+
+    const { generateMetadata } =
+      await import("@/app/(legacy)/blog/page/[page]/page");
+    const meta = await generateMetadata({
+      params: Promise.resolve({ page: "2" }),
+    });
+    assertSeoMetadata(meta, "/blog/page/2", "/blog/page/[page]");
+  });
+
+  test("/blog/category/[category]: SEO必須項目が存在する", async () => {
+    const { ALL_CATEGORIES } = await import("@/blog/_lib/blog");
+    if (ALL_CATEGORIES.length === 0) return;
+    const category = ALL_CATEGORIES[0];
+
+    const { generateMetadata } =
+      await import("@/app/(legacy)/blog/category/[category]/page");
+    const meta = await generateMetadata({
+      params: Promise.resolve({ category }),
+    });
+    assertSeoMetadata(
+      meta,
+      `/blog/category/${category}`,
+      "/blog/category/[category]",
+    );
+  });
+
+  test("/blog/category/[category]/page/[page]: SEO必須項目が存在する", async () => {
+    const { getAllBlogPosts, ALL_CATEGORIES } =
+      await import("@/blog/_lib/blog");
+    const { paginate, BLOG_POSTS_PER_PAGE } = await import("@/lib/pagination");
+
+    // 2ページ以上あるカテゴリを探す
+    let targetCategory: string | null = null;
+    for (const category of ALL_CATEGORIES) {
+      const allPosts = getAllBlogPosts();
+      const categoryPosts = allPosts.filter((p) => p.category === category);
+      const { totalPages } = paginate(categoryPosts, 1, BLOG_POSTS_PER_PAGE);
+      if (totalPages >= 2) {
+        targetCategory = category;
+        break;
+      }
+    }
+    if (!targetCategory) return; // 2ページ以上のカテゴリがなければスキップ
+
+    const { generateMetadata } =
+      await import("@/app/(legacy)/blog/category/[category]/page/[page]/page");
+    const meta = await generateMetadata({
+      params: Promise.resolve({ category: targetCategory, page: "2" }),
+    });
+    assertSeoMetadata(
+      meta,
+      `/blog/category/${targetCategory}/page/2`,
+      "/blog/category/[category]/page/[page]",
+    );
+  });
+
+  test("/tools/page/[page]: SEO必須項目が存在する", async () => {
+    const { allToolMetas } = await import("@/tools/registry");
+    const { TOOLS_PER_PAGE } = await import("@/lib/pagination");
+    const totalPages = Math.ceil(allToolMetas.length / TOOLS_PER_PAGE);
+    if (totalPages < 2) return; // 2ページ目がなければスキップ
+
+    const { generateMetadata } =
+      await import("@/app/(legacy)/tools/page/[page]/page");
+    const meta = await generateMetadata({
+      params: Promise.resolve({ page: "2" }),
+    });
+    assertSeoMetadata(meta, "/tools/page/2", "/tools/page/[page]");
+  });
+
+  test("/dictionary/kanji/grade/[grade]: SEO必須項目が存在する", async () => {
+    const { getKanjiGrades } = await import("@/dictionary/_lib/kanji");
+    const grades = getKanjiGrades();
+    if (grades.length === 0) return;
+    const grade = grades[0];
+
+    const { generateMetadata } =
+      await import("@/app/(legacy)/dictionary/kanji/grade/[grade]/page");
+    const meta = await generateMetadata({
+      params: Promise.resolve({ grade }),
+    });
+    assertSeoMetadata(
+      meta,
+      `/dictionary/kanji/grade/${grade}`,
+      "/dictionary/kanji/grade/[grade]",
+    );
+  });
+
+  test("/dictionary/kanji/radical/[radical]: SEO必須項目が存在する", async () => {
+    const { getKanjiRadicals } = await import("@/dictionary/_lib/kanji");
+    const radicals = getKanjiRadicals();
+    if (radicals.length === 0) return;
+    const radical = radicals[0];
+
+    const { generateMetadata } =
+      await import("@/app/(legacy)/dictionary/kanji/radical/[radical]/page");
+    const meta = await generateMetadata({
+      params: Promise.resolve({ radical }),
+    });
+    assertSeoMetadata(
+      meta,
+      `/dictionary/kanji/radical/${encodeURIComponent(radical)}`,
+      "/dictionary/kanji/radical/[radical]",
+    );
+  });
+
+  test("/dictionary/kanji/stroke/[count]: SEO必須項目が存在する", async () => {
+    const { getKanjiStrokeCounts } = await import("@/dictionary/_lib/kanji");
+    const counts = getKanjiStrokeCounts();
+    if (counts.length === 0) return;
+    const count = String(counts[0]);
+
+    const { generateMetadata } =
+      await import("@/app/(legacy)/dictionary/kanji/stroke/[count]/page");
+    const meta = await generateMetadata({
+      params: Promise.resolve({ count }),
+    });
+    assertSeoMetadata(
+      meta,
+      `/dictionary/kanji/stroke/${count}`,
+      "/dictionary/kanji/stroke/[count]",
+    );
+  });
+
+  test("/dictionary/yoji/category/[category]: SEO必須項目が存在する", async () => {
+    const { getYojiCategories } = await import("@/dictionary/_lib/yoji");
+    const categories = getYojiCategories();
+    if (categories.length === 0) return;
+    const category = categories[0];
+
+    const { generateMetadata } =
+      await import("@/app/(legacy)/dictionary/yoji/category/[category]/page");
+    const meta = await generateMetadata({
+      params: Promise.resolve({ category }),
+    });
+    assertSeoMetadata(
+      meta,
+      `/dictionary/yoji/category/${category}`,
+      "/dictionary/yoji/category/[category]",
+    );
+  });
+
+  test("/play/[slug]/result/[resultId]: SEO必須項目が存在する", async () => {
+    const { getAllQuizSlugs, getResultIdsForQuiz } =
+      await import("@/play/quiz/registry");
+    const slugs = getAllQuizSlugs();
+    if (slugs.length === 0) return;
+
+    const slug = slugs[0];
+    const resultIds = getResultIdsForQuiz(slug);
+    if (resultIds.length === 0) return;
+    const resultId = resultIds[0];
+
+    const { generateMetadata } =
+      await import("@/app/(legacy)/play/[slug]/result/[resultId]/page");
+    const meta = await generateMetadata({
+      params: Promise.resolve({ slug, resultId }),
+    });
+    assertSeoMetadata(
+      meta,
+      `/play/${slug}/result/${resultId}`,
+      "/play/[slug]/result/[resultId]",
+    );
+  });
+
+  // -- 追加: 未カバー動的ページ7件のSEOテスト --
+
+  test("/blog/[slug]: SEO必須項目が存在する", async () => {
+    const { getAllBlogSlugs } = await import("@/blog/_lib/blog");
+    const slugs = getAllBlogSlugs();
+    if (slugs.length === 0) return; // データがなければスキップ
+    const slug = slugs[0];
+
+    const { generateMetadata } =
+      await import("@/app/(legacy)/blog/[slug]/page");
+    const meta = await generateMetadata({
+      params: Promise.resolve({ slug }),
+    });
+    assertSeoMetadata(meta, `/blog/${slug}`, "/blog/[slug]");
+  });
+
+  test("/play/[slug]: SEO必須項目が存在する", async () => {
+    const { getAllQuizSlugs } = await import("@/play/quiz/registry");
+    const slugs = getAllQuizSlugs();
+    if (slugs.length === 0) return; // データがなければスキップ
+    const slug = slugs[0];
+
+    const { generateMetadata } =
+      await import("@/app/(legacy)/play/[slug]/page");
+    const meta = await generateMetadata({
+      params: Promise.resolve({ slug }),
+      searchParams: Promise.resolve({}),
+    });
+    assertSeoMetadata(meta, `/play/${slug}`, "/play/[slug]");
+  });
+
+  test("/dictionary/colors/[slug]: SEO必須項目が存在する", async () => {
+    const { getAllColorSlugs } = await import("@/dictionary/_lib/colors");
+    const slugs = getAllColorSlugs();
+    if (slugs.length === 0) return; // データがなければスキップ
+    const slug = slugs[0];
+
+    const { generateMetadata } =
+      await import("@/app/(legacy)/dictionary/colors/[slug]/page");
+    const meta = await generateMetadata({
+      params: Promise.resolve({ slug }),
+    });
+    assertSeoMetadata(
+      meta,
+      `/dictionary/colors/${slug}`,
+      "/dictionary/colors/[slug]",
+    );
+  });
+
+  test("/dictionary/colors/category/[category]: SEO必須項目が存在する", async () => {
+    const { getColorCategories } = await import("@/dictionary/_lib/colors");
+    const categories = getColorCategories();
+    if (categories.length === 0) return; // データがなければスキップ
+    const category = categories[0];
+
+    const { generateMetadata } =
+      await import("@/app/(legacy)/dictionary/colors/category/[category]/page");
+    const meta = await generateMetadata({
+      params: Promise.resolve({ category }),
+    });
+    assertSeoMetadata(
+      meta,
+      `/dictionary/colors/category/${category}`,
+      "/dictionary/colors/category/[category]",
+    );
+  });
+
+  test("/dictionary/kanji/[char]: SEO必須項目が存在する", async () => {
+    const { getAllKanjiChars } = await import("@/dictionary/_lib/kanji");
+    const chars = getAllKanjiChars();
+    if (chars.length === 0) return; // データがなければスキップ
+    const char = chars[0];
+
+    const { generateMetadata } =
+      await import("@/app/(legacy)/dictionary/kanji/[char]/page");
+    const meta = await generateMetadata({
+      params: Promise.resolve({ char }),
+    });
+    // canonical URLはencodeURIComponent済みの文字を含む
+    assertSeoMetadata(
+      meta,
+      `/dictionary/kanji/${encodeURIComponent(char)}`,
+      "/dictionary/kanji/[char]",
+    );
+  });
+
+  test("/dictionary/yoji/[yoji]: SEO必須項目が存在する", async () => {
+    const { getAllYojiIds } = await import("@/dictionary/_lib/yoji");
+    const ids = getAllYojiIds();
+    if (ids.length === 0) return; // データがなければスキップ
+    const yoji = ids[0];
+
+    const { generateMetadata } =
+      await import("@/app/(legacy)/dictionary/yoji/[yoji]/page");
+    const meta = await generateMetadata({
+      params: Promise.resolve({ yoji }),
+    });
+    // canonical URLはencodeURIComponent済みの文字を含む
+    assertSeoMetadata(
+      meta,
+      `/dictionary/yoji/${encodeURIComponent(yoji)}`,
+      "/dictionary/yoji/[yoji]",
+    );
+  });
+
+  test("/dictionary/humor/[slug]: SEO必須項目が存在する", async () => {
+    const { getAllSlugs } = await import("@/humor-dict/data");
+    const slugs = getAllSlugs();
+    if (slugs.length === 0) return; // データがなければスキップ
+    const slug = slugs[0];
+
+    const { generateMetadata } =
+      await import("@/app/(legacy)/dictionary/humor/[slug]/page");
+    const meta = await generateMetadata({
+      params: Promise.resolve({ slug }),
+    });
+    assertSeoMetadata(
+      meta,
+      `/dictionary/humor/${slug}`,
+      "/dictionary/humor/[slug]",
+    );
+  });
+});
