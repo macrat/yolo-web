@@ -7,9 +7,9 @@
   height: 44px;
   padding: 0 0.75rem;
   background: none;
-  border: 1px solid var(--border);
+  border: 1px solid var(--color-border);
   border-radius: 8px;
-  color: var(--fg);
+  color: var(--color-text);
   cursor: pointer;
   transition:
     background-color 0.2s ease,
@@ -19,35 +19,35 @@
 }
 
 .trigger:hover {
-  background-color: var(--bg-soft);
-  color: var(--accent);
-  border-color: var(--accent);
+  background-color: var(--color-bg-secondary);
+  color: var(--color-primary);
+  border-color: var(--color-primary);
 }
 
 .trigger:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 
 /* デスクトップ向け「検索」テキストラベル */
 .searchLabel {
   font-size: 0.85rem;
-  color: var(--fg-soft);
+  color: var(--color-text-muted);
   font-weight: 500;
 }
 
 .trigger:hover .searchLabel {
-  color: var(--accent);
+  color: var(--color-primary);
 }
 
 .kbd {
   font-family: inherit;
   font-size: 0.7rem;
-  color: var(--fg-soft);
-  background-color: var(--bg-soft);
+  color: var(--color-text-muted);
+  background-color: var(--color-bg-secondary);
   padding: 0.1rem 0.35rem;
   border-radius: 4px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--color-border);
   line-height: 1;
 }
 

@@ -4,7 +4,6 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ThemeProvider from "@/components/ThemeProvider";
 import ThemeToggle from "@/components/ThemeToggle";
-import SearchTrigger from "@/components/search/SearchTrigger";
 import GoogleAnalytics from "@/components/common/GoogleAnalytics";
 import AchievementProvider from "@/lib/achievements/AchievementProvider";
 import StreakBadge from "@/lib/achievements/StreakBadge";
@@ -39,7 +38,6 @@ export default function NewRootLayout({
               actions={
                 <>
                   <StreakBadge />
-                  <SearchTrigger />
                   <ThemeToggle />
                 </>
               }
