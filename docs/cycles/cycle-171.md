@@ -2,7 +2,7 @@
 id: 171
 description: "B-308（デザインガイドラインとUIコンポーネント集の策定）を Owner 主導で再々挑戦する。cycle-169・cycle-170 ともに失敗サイクルとしてクローズされたため、過去の失敗を踏まえつつ Owner と相談しながら進める。本サイクルの範囲は (1) `/frontend-design` Skill の確認と必要に応じた改善、(2) `DESIGN.md` の確認と必要に応じた改善、(3) 必要となる共通コンポーネント群の作成、(4) 既存サイトへのデザイン移行計画の策定。"
 started_at: "2026-04-28T15:44:33+0900"
-completed_at: null
+completed_at: "2026-04-30T17:30:00+0900"
 ---
 
 # サイクル-171
@@ -75,9 +75,9 @@ Owner からの指示（`/cycle-kickoff` 起動時の引数より）:
   - [x] DESIGN.md §7「暫定対応」を出発点に、何をどの順番でどう旧→新に置き換えるか、検証方法（`/storybook` での確認を含む）、ロールバック条件をまとめる
   - [x] `/storybook` 運用ルールを計画に含める（Phase 0 で新コンポーネント追加時のセクション追加義務、各 Phase 完了時の Playwright 全体撮影）
   - [x] 本サイクルでは計画策定のみ。実際の置き換え作業は cycle-172 以降
-- [ ] **T6**: 完成チェック
-  - [ ] `npm run lint && npm run format:check && npm run test && npm run build` がすべて pass
-  - [ ] サイクル終了時のチェックリストをすべて満たす
+- [x] **T6**: 完成チェック
+  - [x] `npm run lint && npm run format:check && npm run test && npm run build` がすべて pass（lint 0 errors / 5 warnings は tmp/ 配下のみ、format clean、test 4100/4100 pass、build 成功）
+  - [x] サイクル終了時のチェックリストをすべて満たす
 
 ## 作業計画
 
@@ -265,13 +265,13 @@ Owner から「コンポーネントと layout に致命的な抜け漏れが多
 
 ## サイクル終了時のチェックリスト
 
-- [ ] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
-- [ ] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
-- [ ] すべての変更がレビューされ、残存する指摘事項が無くなっている。
-- [ ] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
-- [ ] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
-- [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
-- [ ] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
+- [x] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
+- [x] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
+- [x] すべての変更がレビューされ、残存する指摘事項が無くなっている。
+- [x] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
+- [x] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
+- [x] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
+- [x] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
 
 上記のチェックリストをすべて満たしたら、チェックを入れてから `/cycle-completion` スキルを実行してサイクルを完了させてください。
 なお、「環境起因」「今回の変更と無関係」「既知の問題」「次回対応」などの **例外は一切認めません** 。必ずすべての項目を完全に満してください。
