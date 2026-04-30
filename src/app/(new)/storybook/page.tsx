@@ -6,6 +6,8 @@ import Button from "@/components/Button";
 import Input from "@/components/Input";
 import Breadcrumb from "@/components/Breadcrumb";
 import ToggleSwitch from "@/components/ToggleSwitch";
+import Pagination from "@/components/Pagination";
+import ShareButtons from "@/components/ShareButtons";
 import styles from "./page.module.css";
 
 // カラースウォッチの定義
@@ -85,6 +87,8 @@ const TOC_ITEMS = [
   { id: "input", label: "6. Input" },
   { id: "breadcrumb", label: "7. Breadcrumb" },
   { id: "toggle-switch", label: "8. ToggleSwitch" },
+  { id: "pagination", label: "9. Pagination" },
+  { id: "share-buttons", label: "10. ShareButtons" },
 ];
 
 export default function StorybookPage() {
@@ -512,6 +516,84 @@ export default function StorybookPage() {
               <ToggleSwitch label="無効状態（ON）" disabled defaultChecked />
             </div>
           </div>
+        </Panel>
+      </section>
+      {/* === 9. Pagination === */}
+      <section id="pagination" className={styles.section}>
+        <h2 className={styles.sectionTitle}>9. Pagination</h2>
+        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        <Panel as="div">
+          <span className={styles.previewLabel}>Preview: Pagination</span>
+
+          <h3 className={styles.subsectionTitle} style={{ marginTop: 0 }}>
+            link モード（デフォルト）
+          </h3>
+
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
+          >
+            <div className={styles.inputItemLabel}>
+              5 ページ・現在ページ = 1（前へ disabled）
+            </div>
+            <Pagination currentPage={1} totalPages={5} basePath="/blog" />
+
+            <div className={styles.inputItemLabel}>
+              5 ページ・現在ページ = 3（中間）
+            </div>
+            <Pagination currentPage={3} totalPages={5} basePath="/blog" />
+
+            <div className={styles.inputItemLabel}>
+              5 ページ・現在ページ = 5（次へ disabled）
+            </div>
+            <Pagination currentPage={5} totalPages={5} basePath="/blog" />
+
+            <div className={styles.inputItemLabel}>
+              10 ページ・現在ページ = 1（省略あり）
+            </div>
+            <Pagination currentPage={1} totalPages={10} basePath="/blog" />
+
+            <div className={styles.inputItemLabel}>
+              10 ページ・現在ページ = 5（両側省略あり）
+            </div>
+            <Pagination currentPage={5} totalPages={10} basePath="/blog" />
+
+            <div className={styles.inputItemLabel}>1 ページのみ（非表示）</div>
+            <div style={{ color: "var(--fg-soft)", fontSize: "0.85rem" }}>
+              （totalPages=1 のとき null が返るため何も表示されない）
+            </div>
+            <Pagination currentPage={1} totalPages={1} basePath="/blog" />
+          </div>
+        </Panel>
+      </section>
+
+      {/* === 10. ShareButtons === */}
+      <section id="share-buttons" className={styles.section}>
+        <h2 className={styles.sectionTitle}>10. ShareButtons</h2>
+        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        <Panel as="div">
+          <span className={styles.previewLabel}>Preview: ShareButtons</span>
+
+          <h3 className={styles.subsectionTitle} style={{ marginTop: 0 }}>
+            デフォルト（全ボタン）
+          </h3>
+          <ShareButtons
+            url="/blog/sample-post"
+            title="サンプル記事 | yolos.net"
+          />
+
+          <h3 className={styles.subsectionTitle}>X のみ</h3>
+          <ShareButtons
+            url="/blog/sample-post"
+            title="サンプル記事 | yolos.net"
+            sns={["x"]}
+          />
+
+          <h3 className={styles.subsectionTitle}>コピーボタンのみ</h3>
+          <ShareButtons
+            url="/blog/sample-post"
+            title="サンプル記事 | yolos.net"
+            sns={["copy"]}
+          />
         </Panel>
       </section>
     </div>
