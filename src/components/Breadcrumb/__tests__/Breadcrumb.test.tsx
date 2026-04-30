@@ -1,6 +1,7 @@
 import { expect, test, describe } from "vitest";
 import { render, screen } from "@testing-library/react";
 import Breadcrumb from "@/components/Breadcrumb";
+import { BASE_URL } from "@/lib/constants";
 
 describe("Breadcrumb", () => {
   const items = [
@@ -55,5 +56,22 @@ describe("Breadcrumb", () => {
     render(<Breadcrumb items={items} />);
     const list = screen.getByRole("list");
     expect(list.tagName).toBe("OL");
+  });
+
+  test("BreadcrumbList JSON-LD script が出力される", () => {
+    const { container } = render(<Breadcrumb items={items} />);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const script = container.querySelector(
+      'script[type="application/ld+json"]',
+    );
+    expect(script).not.toBeNull();
+    const parsed = JSON.parse(script!.textContent ?? "");
+    expect(parsed["@type"]).toBe("BreadcrumbList");
+    expect(parsed.itemListElement).toHaveLength(3);
+    expect(parsed.itemListElement[0].name).toBe("ホーム");
+    expect(parsed.itemListElement[0].item).toBe(`${BASE_URL}/`);
+    expect(parsed.itemListElement[2].name).toBe("文字数カウント");
+    // 最後の要素（現在位置）は item プロパティを持たない
+    expect(parsed.itemListElement[2].item).toBeUndefined();
   });
 });

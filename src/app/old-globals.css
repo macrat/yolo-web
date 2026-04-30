@@ -1,3 +1,77 @@
+/* ==========================================================================
+ 移行期間中の併存対応。Phase 7 の layout 統合（old-globals.css 撤去）まで保持する。
+ (legacy)/ 配下でも search コンポーネント（src/components/search/）を使用するため、
+ 新トークン（--fg / --bg / --border / --accent 等）をここに定義する。
+ 値は globals.css の :root ブロックから忠実にコピーしており、差異があると
+ (legacy) と (new) でデザインが乖離するため必ず両ファイルを同期させること。
+ ========================================================================== */
+:root {
+  /* Surface — ライトモード */
+  --bg: #ffffff;
+  --bg-soft: #f4f4f1;
+  --bg-softer: #e6e6e2;
+
+  /* Text */
+  --fg: #1a1a1a;
+  --fg-soft: #555555;
+  --fg-softer: #6f6f6f;
+
+  /* Border */
+  --border: var(--bg-softer); /* #E6E6E2 */
+  --border-strong: #a8a8a4;
+
+  /* Accent — primary blue */
+  --accent: oklch(0.62 0.22 264);
+  --accent-strong: oklch(0.5 0.22 264);
+  --accent-soft: oklch(0.93 0.04 264);
+
+  /* Status */
+  --danger: oklch(0.62 0.21 35);
+  --danger-strong: oklch(0.5 0.21 35);
+  --danger-soft: oklch(0.93 0.04 35);
+
+  /* Semantic */
+  --r-normal: 2px;
+  --r-interactive: 8px;
+
+  /* Elevation */
+  --shadow-button:
+    0 1px 0 rgba(26, 26, 26, 0.06), 0 1px 2px rgba(26, 26, 26, 0.04);
+}
+
+:root.dark {
+  /* Surface — ダークモード */
+  --bg: #363634;
+  --bg-soft: #1c1c1a;
+  --bg-softer: #131311;
+
+  /* Text */
+  --fg: #e8e8e5;
+  --fg-soft: #a8a8a4;
+  --fg-softer: #a8a8a8;
+
+  /* Border */
+  --border: #555550;
+  --border-strong: #6f6f6f;
+
+  /* Accent — ダークモード */
+  --accent: oklch(0.72 0.18 264);
+  --accent-strong: oklch(0.85 0.12 264);
+  --accent-soft: oklch(0.25 0.06 264);
+
+  /* Status — ダークモード */
+  --danger: oklch(0.72 0.18 35);
+  --danger-strong: oklch(0.85 0.12 35);
+  --danger-soft: oklch(0.25 0.06 35);
+
+  /* Elevation — ダークモード */
+  --shadow-button: 0 1px 0 rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* ==========================================================================
+ 既存の旧トークン定義（--color-* 系）— 変更しない
+ ========================================================================== */
+
 :root {
   --color-primary: #2563eb;
   --color-primary-hover: #1d4ed8;
@@ -55,6 +129,13 @@ html,
 body {
   max-width: 100vw;
   overflow-x: clip;
+}
+
+/* モバイルメニュー展開時のスクロールロック。
+ * MobileNav.tsx の useEffect が document.body.classList.add("scroll-locked") で付与する。
+ * layout.tsx の <body style={...}> と競合しない classList 方式を採用。 */
+.scroll-locked {
+  overflow: hidden;
 }
 
 body {

@@ -55,6 +55,21 @@
   --shadow-dragging:
     0 8px 20px rgba(26, 26, 26, 0.14), 0 2px 4px rgba(26, 26, 26, 0.08);
 
+  /* モノスペースフォントスタック — old-globals.css から移植。
+   * TrustLevelBadge など旧コンポーネントが --font-mono を参照するため追加。 */
+  --font-mono: "Menlo", "Consolas", "Liberation Mono", "Courier New", monospace;
+
+  /* TrustLevel カラートークン — old-globals.css からの移植。
+   * 旧命名（--color-trust-*）のまま追加することで、TrustLevelBadge.module.css の
+   * 書き換えなしに (new)/ 配下のページでも正常表示できるようにする。
+   * ライトモード値は old-globals.css の :root 定義から転記。 */
+  --color-trust-verified: #059669;
+  --color-trust-verified-bg: #ecfdf5;
+  --color-trust-curated: #0284c7;
+  --color-trust-curated-bg: #e0f2fe;
+  --color-trust-generated: #6b7280;
+  --color-trust-generated-bg: #f3f4f6;
+
   /* Admonition (GFM Alert) カラートークン — ブログ記事用の特殊スタイル。
    * note/tip/warning/caution は既存の status トークンのエイリアス。
    * important のみ new 体系に紫系がないため独自定義。 */
@@ -131,6 +146,15 @@
   --danger-strong: oklch(0.85 0.12 35);
   --danger-soft: oklch(0.25 0.06 35);
 
+  /* TrustLevel カラートークン — ダークモード。
+   * old-globals.css の :root.dark 定義から転記。 */
+  --color-trust-verified: #34d399;
+  --color-trust-verified-bg: #064e3b;
+  --color-trust-curated: #38bdf8;
+  --color-trust-curated-bg: #0c4a6e;
+  --color-trust-generated: #9ca3af;
+  --color-trust-generated-bg: #1f2937;
+
   /* Admonition (GFM Alert) カラートークン — ダークモード。
    * -bg は lightness 0.25 付近でダーク背景に映える暗めの背景色。 */
   --admonition-note: var(--accent); /* 青 */
@@ -183,6 +207,13 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* モバイルメニュー展開時のスクロールロック。
+ * Header.tsx の useEffect が document.body.classList.add("scroll-locked") で付与する。
+ * layout.tsx の <body style={...}> と競合しない classList 方式を採用。 */
+.scroll-locked {
+  overflow: hidden;
 }
 
 a {

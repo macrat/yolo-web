@@ -5,6 +5,10 @@
  */
 
 .header {
+  /* Header コンポーネント専用のローカルスコープ変数。
+   * .inner の height と .mobileOverlay の top が同じ値を参照するため、
+   * 一箇所で管理してマジックナンバーの重複を避ける。 */
+  --header-height: 3.5rem;
   background: var(--bg);
   border-bottom: 1px solid var(--border);
   /* 横スクロールを防ぐ */
@@ -16,7 +20,7 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 1.25rem;
-  height: 3.5rem;
+  height: var(--header-height);
   display: flex;
   align-items: center;
   gap: 1.5rem;
@@ -35,6 +39,10 @@
   line-height: 1;
   white-space: nowrap;
   flex-shrink: 0;
+  /* モバイルでのタップターゲット 44px 確保 */
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
 }
 
 .logo:hover {
@@ -104,6 +112,39 @@
   outline-offset: 2px;
 }
 
+/* アクティブページのリンクを強調 */
+.navLink[aria-current="page"] {
+  color: var(--fg);
+  background: var(--bg-soft);
+}
+
+/* ==============================
+   モバイルオーバーレイ（デフォルトは非表示）
+   ============================== */
+
+/* menuOpen 時のみ描画されるオーバーレイ。ヘッダー下から画面下端を覆う半透明レイヤー。
+ * デスクトップでは不要なため min-width: 721px で非表示。
+ * ヘッダー自体は static なので fixed のこのオーバーレイが前面に出る。
+ * ただし top: 3.5rem でヘッダー部分は覆わない視覚的オフセットを取る。
+ * メニューパネル（z-index: 11）より下になる値 10 を割り当てる。 */
+.mobileOverlay {
+  position: fixed;
+  /* ヘッダー高さ分だけ下から開始（.header の --header-height を継承）*/
+  top: var(--header-height);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  /* メニューパネル（z-index: 11）より下に置くことで、タップはメニューリンクに届く */
+  z-index: 10;
+}
+
+@media (min-width: 721px) {
+  .mobileOverlay {
+    display: none;
+  }
+}
+
 /* ==============================
    モバイル（max-width: 720px）
    ============================== */
@@ -149,6 +190,10 @@
     background: var(--bg);
     border-bottom: 1px solid var(--border);
     padding: 1rem 1.25rem;
+    /* オーバーレイ（z-index: 10）より上に置き、リンクが最前面でタップ可能になるようにする。
+     * position: relative + z-index で同じスタッキングコンテキスト内での前後関係を制御する。 */
+    position: relative;
+    z-index: 11;
     /* 控えめな fade-in アニメーション */
     animation: menuFadeIn 0.15s ease;
   }
@@ -195,6 +240,12 @@
   .mobileNavLink:focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: 2px;
+  }
+
+  /* アクティブページのモバイルリンクを強調 */
+  .mobileNavLink[aria-current="page"] {
+    color: var(--fg);
+    background: var(--bg-soft);
   }
 
   /* actions スロット（テーマトグル等）: ナビの下に配置 */

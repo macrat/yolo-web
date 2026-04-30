@@ -94,9 +94,20 @@ export default function ThemeToggle() {
     () => false,
   );
 
-  // hydration mismatch 回避: mount 前は何も描画しない
+  // hydration mismatch 回避: mount 前はプレースホルダーを描画して CLS を防ぐ。
+  // .toggle に min-width: 52px; min-height: 28px を設定済みのため、
+  // 内部コンテンツがない空ボタンでも .track と同じサイズが確保される。
+  // hydration 後にスイッチへ切り替わるが、サイズ変化は発生しない。
   if (!mounted) {
-    return null;
+    return (
+      <button
+        type="button"
+        className={styles.toggle}
+        aria-hidden="true"
+        tabIndex={-1}
+        disabled
+      />
+    );
   }
 
   // isDark=true のとき「ダーク側がオン」= aria-checked=true

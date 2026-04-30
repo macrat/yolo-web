@@ -19,6 +19,12 @@
   /* インラインブロックで表示 */
   display: inline-flex;
   align-items: center;
+  /* CLS 防止: mount 前のプレースホルダー（空ボタン）でも内部コンテンツ（.track 52×28）
+   * と同じサイズを確保する。hydration 前後でレイアウトシフトが起きない。
+   * box-sizing: border-box（globals.css のグローバルリセット）前提。
+   * .track の border 1px 込みで 52×28 になるよう同サイズで合わせている。 */
+  min-width: 52px;
+  min-height: 28px;
 }
 
 .toggle:focus-visible {

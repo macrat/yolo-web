@@ -74,4 +74,19 @@ describe("Button", () => {
     render(<Button disabled>無効</Button>);
     expect(screen.getByRole("button")).toBeDisabled();
   });
+
+  test("type を省略すると type='button' がデフォルト", () => {
+    render(<Button>送信</Button>);
+    expect(screen.getByRole("button")).toHaveAttribute("type", "button");
+  });
+
+  test("type='submit' を渡すと type='submit' になる", () => {
+    render(<Button type="submit">送信</Button>);
+    expect(screen.getByRole("button")).toHaveAttribute("type", "submit");
+  });
+
+  test("type='reset' を渡すと type='reset' になる", () => {
+    render(<Button type="reset">リセット</Button>);
+    expect(screen.getByRole("button")).toHaveAttribute("type", "reset");
+  });
 });

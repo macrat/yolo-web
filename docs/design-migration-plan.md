@@ -31,31 +31,21 @@ src/app/
 
 各 Route Group が独立した root layout を持つ。**移行は 1 ページずつ `git mv (legacy)/foo/ (new)/foo/` で完結する**。各ルートが独立しているため、移行済みページに旧スタイル / 旧コンポーネントが漏れることはない。
 
+## 共通コンポーネントの扱い
+
+「サイト全体で広く使われる」共通コンポーネントは cycle-171 内で完成済み:
+
+- Panel / Button / Input / Header / Footer / Breadcrumb / ToggleSwitch / ThemeProvider / ThemeToggle / Pagination / ShareButtons
+- search 系（`src/components/search/` 配下、新 Header の actions スロットに結線済）
+
+特定ページ密接で共通化しないコンポーネントは、それを使うページの移行時にページ内（`_components/` 等）で実装する。例:
+
+- `FaqSection`: 特定の FAQ を持つページ内に書く
+- `TrustLevelBadge`: コンテンツの位置付けが B-315 で再評価されるため、移行するページごとに必要性を判断
+
+`GoogleAnalytics` は layout 部品なので Phase 7 で `(new)/layout.tsx`（Phase 7 後は `app/layout.tsx`）に直接組み込む。
+
 ## 移行フェーズ
-
-### Phase 0: 共通コンポーネントの整備
-
-Phase 1 以降の前提条件。本サイクル（cycle-171）では Pagination / ShareButtons までを実装済の状態にし、その他は cycle-172 以降のページ移行に合わせて段階的に整備する。
-
-#### 必要に応じて新規実装するもの
-
-| 名前              | 旧版利用箇所数 | 必要性                                                               |
-| ----------------- | -------------- | -------------------------------------------------------------------- |
-| `TrustLevelBadge` | 19             | B-315 でコンテンツ縮小方針が確定後に判断（使わない可能性あり）       |
-| `FaqSection`      | 5              | 特定ページに密接なため共通化せず、利用ページの移行時にページ内で実装 |
-
-実装規約は cycle-171 T3 と同一（`src/components/<Name>/index.tsx` + `<Name>.module.css` + ロジックがあれば `__tests__/<Name>.test.tsx`）。
-
-#### 既存ファイルのトークン置換 + 新 Header への結線が必要なもの
-
-`src/components/search/` 配下に以下が既に実装済（フラット構成）。これらは新規実装ではなく、旧 `--color-*` トークン参照を新体系に置換し、新 Header の `actions` スロットに `SearchTrigger` を組み込む作業。
-
-- `SearchModal` / `SearchTrigger` / `SearchInput` / `SearchResults`
-- `useSearch.ts` / `highlightMatches.tsx`
-
-CSS Module 内で `:root.dark` を使っている場合は `:global(:root.dark)` に修正する（CSS Modules のスコープ問題、`docs/knowledge/css-modules.md` 参照）。
-
-**完了基準**: ページ移行で必要になった共通コンポーネントが `src/components/<Name>/` 直下に揃い、`/storybook` で実機確認できる状態になっている。`src/components/search/` 配下が新体系のトークンのみを使う状態になっている。
 
 ### Phase 1: 静的・依存少ない単独ページの移行
 
