@@ -31,8 +31,8 @@ Owner からの指示（`/cycle-kickoff` 起動時の引数より）:
 - [x] **T2**: `src/app/globals.css` の修正
   - [x] 誤記 `:root html` を `@layer base` で囲む形に置き換える
   - [x] ダークモード対応のトークンを追加する。`next-themes`（`attribute="class"` 方式・`:root.dark`）と整合
-  - [x] ダーク値は `--bg` < `--bg-soft` < `--bg-softer` の単調連鎖に整え、ライト/ダーク両モードで「同じトークン遷移＝同じ方向の変化」を成立させた
-  - **T4 で撤回（cycle-171 内）**: T2 で採用した「ダーク値は --bg(最暗) < --bg-soft < --bg-softer の単調連鎖（panel が body より暗い「沈む」関係）」は、Owner の実機検証で「カードと背景のコントラストが致命的に低い（1.19:1〜1.5:1）」「OFF 状態のトグルスイッチが視認不能」と判明したため撤回。T4 で「panel(明) > body(中) > hover(暗)」の順序に並び替えた。ホバー連鎖は両モードで「暗くなる」方向に統一（SKILL.md L19 と整合）。コミット: 83d161f1
+  - [x] ダーク値の並び（最終形は T4 で「panel(明) > body(中) > hover(暗)」、ホバー連鎖は両モードで「暗くなる」方向に統一、SKILL.md L19 と整合）
+  - （T2 で採用した「panel が body より暗い『沈む』関係」は Owner の実機検証で視認性が致命的と判明したため T4 で撤回。コミット: 83d161f1）
   - [x] DESIGN.md §2 に `-soft` 背景時のボーダーは同系統の `-strong` を使う旨を注記（Owner 追加指示）
   - [x] **old-globals.css と new globals.css の競合解消**: 両ファイルに `@layer legacy, base;` を宣言し、それぞれを `@layer legacy { ... }` / `@layer base { ... }` で囲む（base が後勝ち）
   - [x] **new ページに必要なベースを new globals.css に移植**: グローバルリセット、`dialog`、`html, body` のオーバーフロー対策、`body` フォント、`.visually-hidden`、`.markdown-alert*` Admonition 一式を移植（移行期間中は二重化、cycle-172 以降の移行完了で old-globals.css ごと消える設計）
@@ -41,23 +41,33 @@ Owner からの指示（`/cycle-kickoff` 起動時の引数より）:
 - [x] **T3**: 移行後の新コンポーネント群を `src/components/` 直下に作成
   - [x] Article コンポーネントの要否検討 → **作らない**判断（Owner 承認、cycle-172 のブログ記事移行時に必要性を再評価）
   - [x] **Panel**: 矩形コンテナの汎用ラッパー（`as` ジェネリクス、テストなし＝ロジックなしのため）
-  - [x] **Button**: 3 バリアント（primary / default / ghost）+ size（default / small）+ disabled。テスト 11 件
-  - [x] **Input**: type 7 種、controlled/uncontrolled 両対応、error 時に `aria-invalid`。テスト 10 件
-  - [x] **Header**: ロゴ・ナビ・actions スロット。テスト 4 件。ロゴサイズ 28px → 1.1rem に縮小（コメントで意図明記）
-  - [x] **Footer**: AI 運営注記をデフォルト、links カスタマイズ可。テスト 7 件
+  - [x] **Button**: 2 バリアント（primary / default）+ size（default / small）+ disabled。テスト 11 件。T4 で旧 ghost を新 default に統合・旧 default を廃止
+  - [x] **Input**: type 7 種、controlled/uncontrolled 両対応、error 時に `aria-invalid`、`--border-strong` で輪郭強調。テスト 11 件
+  - [x] **Header**: ロゴ・固定ナビ（4 項目）・actions スロット・モバイル時ハンバーガーメニュー。テスト 8 件
+  - [x] **Footer**: 4 カラム式サイトマップ + AI 運営注記 + GitHub 外部リンク。内部固定（props なし）。テスト 2 件（AI 注記・ブログカテゴリ整合）
   - [x] **Breadcrumb**: `<nav><ol><li>` 構造、aria-current、aria-hidden の区切り（`/`）。テスト 7 件
-  - [x] **ToggleSwitch**: `<button role="switch">` ベース、controlled、aria-label 必須。テスト 8 件（Enter/Space は `<button>` のブラウザ挙動に委ねるためテスト対象外）
+  - [x] **ToggleSwitch**: `<input type="checkbox" role="switch">` ベース・CSS のみで状態切替・controlled/uncontrolled 両対応。テスト 6 件
+  - [x] **ThemeProvider / ThemeToggle**: next-themes ラッパー、トグルスイッチ風 UI（Sun/Moon アイコン）。ThemeToggle テスト 8 件
   - [x] ファイル構成: `src/components/<Name>/index.tsx` + `<Name>.module.css` + （ロジックがある場合）`__tests__/<Name>.test.tsx`
   - [x] 既存サイトには結線しない（layout.tsx は引き続き old-globals.css と `src/components/common/` を使う）
 - [x] **T4**: コンポーネントカタログページ `/storybook` の作成 + 段階的移行の枠組み構築
   - [x] Next.js App Router の **Route Group「複数 root layout」** パターンを採用し、`src/app/(legacy)/` と `src/app/(new)/` で root layout を完全分離
   - [x] 既存全ページを `(legacy)/` 配下に git mv（layout.tsx、page.tsx、about/、achievements/、api/、blog/、cheatsheets/、dictionary/、feed/、memos/、play/、privacy/、tools/、\_components/、**tests**/、各 image/icon ファイル）
-  - [x] `(new)/layout.tsx` を新設（独立 `<html><body>`、new globals.css のみ、新 Header/Footer のみ）
-  - [x] `/storybook` ページを `(new)/storybook/` に配置（10 セクション → Header/Footer プレビューを削除して 8 セクション。layout 経由で実物が上下に出るため）
+  - [x] `(new)/layout.tsx` を新設（独立 `<html><body>`、new globals.css のみ、新 Header/Footer のみ、ThemeProvider 組込み、ThemeToggle を Header.actions に挿入）
+  - [x] `/storybook` ページを `(new)/storybook/` に配置（8 セクション、各 preview を Panel で包む）
   - [x] noindex は `(new)/layout.tsx` の metadata で `robots: { index: false, follow: false }` 指定
   - [x] サイトマップは手動 URL リスト構築のため /storybook は追加されない（除外不要）
   - [x] DOM 排除の実証: ビルド成果物 `.next/server/app/storybook.html` を解析し、旧 `src/components/common/` 由来の class（`Header-module__Pzgc7q__*` 等）が **0 件**、新 `src/components/` 由来の class のみ存在することを確認
   - [x] CSS Layer の撤回: Route Group で old/new globals.css が同時に読まれない構造になったため、`@layer legacy, base` を完全に削除しシンプルな状態に戻す
+  - [x] **favicon 静的化**: `(legacy)/icon.tsx` `apple-icon.tsx` を削除し、`public/favicon.ico` `public/apple-touch-icon.png` を新設（Claude Design `yolos-mark.svg` 構造を踏襲して「y」+ accent dot を circle で描画）。両 root layout が同じファイルを自動配信
+  - [x] **ダーク contrast 改善**: `--bg`(#363634) `--border`(#555550) `--shadow-button`/`--shadow-dragging` の不透明度上げ。CSS Module hash 漏れを `:global(:root.dark)` で修正（ToggleSwitch 等）。docs/knowledge/css-modules.md に知見化
+  - [x] **`--border-strong` 再導入**: フォーム要素の輪郭視認性確保（Input border に適用）
+  - [x] **`::selection` 削除**: admonition 等との組み合わせで最適化困難なためブラウザデフォルトに任せる
+  - [x] **`--fg-softer` のコントラスト引き上げ**: ライト #6f6f6f / ダーク #a8a8a8 で AA 4.5+ 確保
+  - [x] **Footer 反転撤回**: `--bg-invert` 背景 → `--bg`（ヘッダーと同色）に変更し、ダーク時の明色化問題を解消
+  - [x] **Header NAV_ITEMS 整理**: ツール / 遊び / ブログ / サイト紹介 の 4 項目（ツール先頭で主軸表現、サイト紹介で信頼形成動線）
+  - [x] **Footer 4 カラム式サイトマップ**: ツール（代表ツール併記）/ 遊び（カテゴリ単位）/ ブログ（一覧 + 5 カテゴリ）/ その他（チートシート・辞典・実績・サイト紹介・プライバシー・GitHub）。`<nav aria-label="サイトマップ">` でランドマーク化
+  - [x] **Header モバイル対応**: max-width 720px でハンバーガーメニュー化（aria-expanded / aria-controls / Escape 閉じ / リンククリック閉じ）
 - [ ] **T5**: デザイン移行計画の策定
   - [ ] 独立ファイル（例: `docs/design-migration-plan.md`）として書き起こす
   - [ ] DESIGN.md §7「暫定対応」を出発点に、何をどの順番でどう旧→新に置き換えるか、検証方法（`/storybook` での確認を含む）、ロールバック条件をまとめる
