@@ -19,10 +19,9 @@
   /* インラインブロックで表示 */
   display: inline-flex;
   align-items: center;
-  /* CLS 防止: mount 前のプレースホルダー（空ボタン）でも内部コンテンツ（.track 52×28）
-   * と同じサイズを確保する。hydration 前後でレイアウトシフトが起きない。
-   * box-sizing: border-box（globals.css のグローバルリセット）前提。
-   * .track の border 1px 込みで 52×28 になるよう同サイズで合わせている。 */
+  /* 内部の .track（border 1px 込みで 52×28）と outer box を一致させ、placeholder
+   * 状態（空ボタン）と mounted 後で同サイズに保ち CLS を防ぐ。box-sizing: border-box
+   * 前提（globals.css のグローバルリセットに依存）。 */
   min-width: 52px;
   min-height: 28px;
 }
