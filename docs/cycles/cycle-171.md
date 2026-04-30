@@ -235,15 +235,28 @@ Owner から「コンポーネントと layout に致命的な抜け漏れが多
   - Playwright で本番ビルドの 375×812 / 1280×800 で elementsFromPoint・computedStyle・boundingRect を実機検証し全件解消を確認
 - **アンチパターン AP-I07 / I08 / I09 を `docs/anti-patterns/implementation.md` に追加**: Next.js layout の body style と useEffect の競合、fixed オーバーレイ背後の static 操作要素、jsdom 単体テストの限界
 - **metadata 重複の解消**: `src/lib/site-metadata.ts` を新設して `sharedMetadata` を一元化し、両 layout から import
-- **search 方針の反転（Owner 指摘）**: 当初 reviewer R2 で「`old-globals.css` に新トークンを併存定義して search を新トークン化」する方向で進めたが、Owner から「Route Group 分離は『ページ単位の見た目切替』のため。共通コンポーネントが新トークンを直接参照すると分離意図に反する。ロジックとデザインを分離し、デザインは新旧で別実装にすべき」との指摘。方針を反転し:
+- **search 方針の反転（Owner 指摘）**: 当初 reviewer R2 で「`old-globals.css` に新トークンを併存定義して search を新トークン化」する方向で進めたが、Owner から「Route Group 分離は『ページ単位の見た目切替』のため。共通コンポーネントが新トークンを直接参照すると分離意図に反する」との指摘。方針を反転し:
   - `src/components/search/*.module.css` を旧トークン (`--color-*`) のまま据え置き
   - `old-globals.css` の新トークン併存ブロックを撤去（`.scroll-locked` クラスは保持）
   - `(new)/layout.tsx` と `(new)/storybook/page.tsx` から `SearchTrigger` を取り外し
-  - `docs/design-migration-plan.md` に原則「共通コンポーネントはロジック / デザインを分離する」を明記。新 search コンポーネントの設計・実装は後続サイクルで Phase 4〜5 と前後して行う旨を記載
+
+- **storybook noindex 実装の既存パターン整合化（Owner 指摘）**: 当初 `(new)/storybook/layout.tsx` を新設して noindex を上書きする方式を採用したが、既存ページは `page.tsx` の `metadata` export または `generateMetadata` で robots を返す方式（例: `(legacy)/blog/tag/[tag]/page.tsx`）。`"use client"` のため metadata を export できない問題は、page.tsx を server component に保ち interactive 部分を子の client component（`StorybookContent.tsx`）に分離する形で解決。`layout.tsx` を撤去
+
+- **計画書のゼロからの書き直し（Owner 指示の反復で複数回改訂）**: 既存計画は前提の過不足があったため破棄してゼロから策定。Owner との対話を通して以下を明確化:
+  - 共通コンポーネントの実装と DESIGN.md / SKILL.md の修正は本サイクルで完結すべきもので、計画書（次以降のサイクル指針）には含めない
+  - `/dashboard` URL の独断仮定を撤回。道具箱の URL 構成は未確定（トップ自体 / 専用 URL / 個別 URL 等）として Phase 2.1 で決める
+  - ロジック/デザイン分離は検索固有の話。一般原則として書かない
+  - `ToolMeta` / `PlayMeta` の存続も所与にしない。タイル概念に統一する単一構造への再設計を Phase 2.1 で検討する
+  - ツールとタイルが 1 対多になり得るかも Phase 2.1 で検討する事項に含める
+  - デザイン移行は git mv だけでは完結しない。DESIGN.md に従ったデザイン適用を標準手順に明記
+  - `/storybook` は共通コンポーネント専用、特定コンテンツ / カテゴリ固有のものは置かない
+  - 番号体系を A/B/C/D 記号 + Phase 番号の混在から Phase X.Y 形式に統一
+  - 道具箱の基盤実装と来訪者向け公開を分離（Phase 2 = 基盤、Phase 9.2 = 公開）。トップを道具箱化する場合に空状態を回避
+  - Phase 順序を「基盤先行 → 一覧 → 詳細 → 道具箱公開」に再構成。来訪者から見えない作業（Phase 1 判断、Phase 2 基盤実装）を最優先で消化し、デザイン混在期間の開始を最小化
 
 <このサイクルで完了できなかった作業や、次のサイクルに持ち越す必要のある作業があれば、ここと /docs/backlog.md の両方に記載する。>
 
-- **新 search コンポーネント**: 新デザインシステム向けに別実装する必要がある。ロジックは `src/lib/search/` 等への切り出しを検討。Phase 4〜5 のページ移行と前後して実装
+- **新 search コンポーネント**: 新デザインシステム向けに別実装する必要がある。ロジックは `src/lib/search/` 等への切り出しを検討。Phase 5 で実装（1.1=(a) のとき）
 
 ## 補足事項
 
