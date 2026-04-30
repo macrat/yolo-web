@@ -39,10 +39,12 @@ src/app/
   - 横断的サイト内検索（ブログ・ツール・遊び・辞典が混ざって出る）が新サイトで必要かを判断
   - 候補：(a) 横断検索を維持 / (b) カテゴリ別検索に分割（一覧ページ内に絞り込みを埋め込む等）/ (c) 検索撤去
   - 判断結果が Phase 4（(b) のとき一覧ページに統合）と Phase 5（(a) のとき新 search 実装）のスコープを決める
+  - **判断結果（cycle-172, 2026-04-30）**: **保留** — `trackSearch` のみの現状計測では (a)/(b)/(c) の選択根拠が不足。過去 90 日の `search` 発火セッションは 5 件（全体の 0.69%）、180 日拡張でも同値、`page_referrer` ベースの遷移先追跡は GA4 Data API の event-sequence 制約で取得不可。`search_result_click` 等の計測強化を実装し 30 日以上のデータ蓄積後に中立に再判断する。詳細は `docs/research/2026-04-30-site-search-usage-analysis.md` 参照。
 
 - **1.2** 既存コンテンツ整理の方針確定（B-315 連動）
   - 辞典・cheatsheets・achievements を「移行 or 削除」で個別判断
   - 判断結果が Phase 8 のスコープを決める
+  - **判断結果（cycle-172, 2026-04-30、19 単位）**: 移行 8 / 削除 11 / 保留 0。**移行**: dictionary トップ、colors 系 3 単位、humor 系 2 単位、yoji 系 2 単位（合計 8）。**削除**: kanji 系 2 単位、cheatsheets 8 単位、achievements 1 単位（合計 11）。詳細は `docs/research/2026-04-30-legacy-content-migration-decision.md` 参照。Phase 8 着手前の引継ぎ事項として、cheatsheets のツール統合可能性（cycle-167 L379 の示唆）の判断、cheatsheets リダイレクト方式（`/` 一律 or 410 Gone）の確定、achievements の StreakBadge 残留判断などが含まれる。
 
 **完了基準**: 1.1 の選択肢 (a)/(b)/(c) が確定し、1.2 の各コンテンツの方針（移行 / 削除）が確定している。
 
