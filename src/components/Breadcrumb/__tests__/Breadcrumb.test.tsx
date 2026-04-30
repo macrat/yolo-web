@@ -60,7 +60,6 @@ describe("Breadcrumb", () => {
 
   test("BreadcrumbList JSON-LD script が出力される", () => {
     const { container } = render(<Breadcrumb items={items} />);
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const script = container.querySelector(
       'script[type="application/ld+json"]',
     );
