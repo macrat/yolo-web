@@ -31,19 +31,40 @@ src/app/
 
 各 Route Group が独立した root layout を持つ。**移行は 1 ページずつ `git mv (legacy)/foo/ (new)/foo/` で完結する**。各ルートが独立しているため、移行済みページに旧スタイル / 旧コンポーネントが漏れることはない。
 
+`metadata` は `src/lib/site-metadata.ts` の `sharedMetadata` を両 layout から import して使う。値の差異が起きないように一元化されている。Phase 7 の layout 統合時に、import 元はそのままで OK。
+
+`(new)/layout.tsx` の `robots` は `index=true` で本番公開対象。`(new)/` 配下に追加するページは何もしないと検索インデックス対象になる。検索インデックスから外したい開発者向けページ（例: `/storybook`）は、そのページディレクトリ内に専用 `layout.tsx` を作って `robots: { index: false, follow: false }` を上書きする（実例: `src/app/(new)/storybook/layout.tsx`）。
+
 ## 共通コンポーネントの扱い
 
-「サイト全体で広く使われる」共通コンポーネントは cycle-171 内で完成済み:
+### 原則: ロジックとデザインを分離する
 
-- Panel / Button / Input / Header / Footer / Breadcrumb / ToggleSwitch / ThemeProvider / ThemeToggle / Pagination / ShareButtons
-- search 系（`src/components/search/` 配下、新 Header の actions スロットに結線済）
+共通コンポーネントは新旧でデザインを別実装にする。Route Group が「ページ単位の見た目切替」を保証する以上、共通コンポーネントもそれぞれのレイアウトに合わせたデザインを別ファイルで持つ。再利用するのは状態管理や副作用などのロジック層に限る。
+
+- 旧デザイン実装: `src/components/common/`（旧トークン `--color-*` を参照）
+- 新デザイン実装: `src/components/`（新トークン `--fg` `--bg` 等を参照）
+- ロジック共有が必要な場合: hook やデータ層を `src/lib/` に切り出し、新旧の view から呼ぶ
+
+### cycle-171 で完成済み（新デザイン側）
+
+Panel / Button / Input / Header / Footer / Breadcrumb / ToggleSwitch / ThemeProvider / ThemeToggle / Pagination / ShareButtons
+
+旧デザイン側にも対応物が存在し、(legacy)/(new) 各 layout から正しい方を import している。
+
+### 別途新設計が必要
+
+- **search**: 現状 `src/components/search/` に旧デザイン版だけが存在し (legacy) layout で使われている。新ヘッダーは旧より余白が多くスタイルも異なるため、新デザイン用は別途設計し直す必要がある。本サイクルでは新側へは未結線のまま残し、新 search の設計・実装は後続サイクルで Phase 4〜5 のページ移行と前後して行う（ロジックは `src/lib/search/` 等への切り出しを検討）
+
+### 特定ページ密接
 
 特定ページ密接で共通化しないコンポーネントは、それを使うページの移行時にページ内（`_components/` 等）で実装する。例:
 
 - `FaqSection`: 特定の FAQ を持つページ内に書く
 - `TrustLevelBadge`: コンテンツの位置付けが B-315 で再評価されるため、移行するページごとに必要性を判断
 
-`GoogleAnalytics` は layout 部品なので Phase 7 で `(new)/layout.tsx`（Phase 7 後は `app/layout.tsx`）に直接組み込む。
+### layout 部品
+
+`GoogleAnalytics` / `AchievementProvider` / `WebSite JSON-LD` 等は layout 部品。新旧両方の layout から同じ実装を import する。これらはビジュアルを持たないので「ロジック / デザイン分離」原則とは独立に扱える。
 
 ## 移行フェーズ
 

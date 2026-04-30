@@ -8,7 +8,6 @@ import Breadcrumb from "@/components/Breadcrumb";
 import ToggleSwitch from "@/components/ToggleSwitch";
 import Pagination from "@/components/Pagination";
 import ShareButtons from "@/components/ShareButtons";
-import SearchTrigger from "@/components/search/SearchTrigger";
 import styles from "./page.module.css";
 
 // カラースウォッチの定義
@@ -90,7 +89,6 @@ const TOC_ITEMS = [
   { id: "toggle-switch", label: "8. ToggleSwitch" },
   { id: "pagination", label: "9. Pagination" },
   { id: "share-buttons", label: "10. ShareButtons" },
-  { id: "search", label: "11. 検索" },
 ];
 
 export default function StorybookPage() {
@@ -596,27 +594,6 @@ export default function StorybookPage() {
             title="サンプル記事 | yolos.net"
             sns={["copy"]}
           />
-        </Panel>
-      </section>
-
-      {/* === 11. 検索 === */}
-      <section id="search" className={styles.section}>
-        <h2 className={styles.sectionTitle}>11. 検索</h2>
-        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
-        <Panel as="div">
-          <span className={styles.previewLabel}>Preview: SearchTrigger</span>
-          <p
-            style={{
-              fontSize: "0.85rem",
-              color: "var(--fg-soft)",
-              marginBottom: "1rem",
-            }}
-          >
-            クリックまたは Cmd+K / Ctrl+K で検索モーダルが開きます。 Header の
-            actions スロットにも同じ SearchTrigger が配置されています。
-          </p>
-          {/* SearchTrigger はクリックで SearchModal を開く既存実装を使用する */}
-          <SearchTrigger />
         </Panel>
       </section>
     </div>
