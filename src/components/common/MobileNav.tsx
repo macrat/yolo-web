@@ -37,13 +37,15 @@ export default function MobileNav({ links }: MobileNavProps) {
   useEffect(() => {
     if (isOpen) {
       document.addEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = "hidden";
+      // layout.tsx の <body style={...}> と競合しない classList 方式でスクロールロック。
+      // document.body.style.overflow の直書きは React reconciliation で消えるため使わない。
+      document.body.classList.add("scroll-locked");
     } else {
-      document.body.style.overflow = "";
+      document.body.classList.remove("scroll-locked");
     }
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = "";
+      document.body.classList.remove("scroll-locked");
     };
   }, [isOpen, handleKeyDown]);
 

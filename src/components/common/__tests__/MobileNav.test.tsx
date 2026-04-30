@@ -151,4 +151,23 @@ describe("MobileNav", () => {
     const aboutLink = screen.getByRole("link", { name: "About" });
     expect(aboutLink.className).not.toContain("activeLink");
   });
+
+  test("メニューを開くと body に scroll-locked クラスが付く", () => {
+    mockUsePathname.mockReturnValue("/");
+    render(<MobileNav links={mockLinks} />);
+    const button = screen.getByRole("button", { name: "メニューを開く" });
+
+    fireEvent.click(button); // open
+    expect(document.body.classList.contains("scroll-locked")).toBe(true);
+  });
+
+  test("メニューを閉じると body から scroll-locked クラスが外れる", () => {
+    mockUsePathname.mockReturnValue("/");
+    render(<MobileNav links={mockLinks} />);
+    const button = screen.getByRole("button", { name: "メニューを開く" });
+
+    fireEvent.click(button); // open
+    fireEvent.click(button); // close
+    expect(document.body.classList.contains("scroll-locked")).toBe(false);
+  });
 });

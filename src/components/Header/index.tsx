@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import styles from "./Header.module.css";
 
 /** サイト全体で固定のナビゲーション項目。
@@ -64,6 +65,7 @@ interface HeaderProps {
  */
 export default function Header({ actions }: HeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   /** Escape キーでモバイルメニューを閉じる */
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
@@ -79,6 +81,21 @@ export default function Header({ actions }: HeaderProps) {
     };
   }, [handleKeyDown]);
 
+  /** menuOpen 中はボディスクロールをロックして背景がスクロールしないようにする。
+   * layout.tsx が <body style={...}> を React で管理しているため、
+   * useEffect で document.body.style.overflow を直書きすると reconciliation で消える。
+   * classList.add/remove + globals.css の .scroll-locked { overflow: hidden } を使う。 */
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.classList.add("scroll-locked");
+    } else {
+      document.body.classList.remove("scroll-locked");
+    }
+    return () => {
+      document.body.classList.remove("scroll-locked");
+    };
+  }, [menuOpen]);
+
   return (
     <header className={styles.header}>
       <div className={styles.inner}>
@@ -93,7 +110,12 @@ export default function Header({ actions }: HeaderProps) {
           className={styles.desktopNav}
         >
           {NAV_ITEMS.map((item) => (
-            <Link key={item.href} href={item.href} className={styles.navLink}>
+            <Link
+              key={item.href}
+              href={item.href}
+              className={styles.navLink}
+              aria-current={pathname === item.href ? "page" : undefined}
+            >
               {item.label}
             </Link>
           ))}
@@ -117,6 +139,16 @@ export default function Header({ actions }: HeaderProps) {
         </button>
       </div>
 
+      {/* モバイルオーバーレイ: メニュー展開時に背面を覆う半透明レイヤー。
+       * クリックでメニューを閉じる。デスクトップでは CSS で非表示。 */}
+      {menuOpen && (
+        <div
+          aria-hidden="true"
+          className={styles.mobileOverlay}
+          onClick={() => setMenuOpen(false)}
+        />
+      )}
+
       {/* モバイルメニュー（menuOpen 時のみレンダリング）
        * aria-controls の id と一致させる */}
       {menuOpen && (
@@ -128,6 +160,7 @@ export default function Header({ actions }: HeaderProps) {
                   <Link
                     href={item.href}
                     className={styles.mobileNavLink}
+                    aria-current={pathname === item.href ? "page" : undefined}
                     onClick={() => setMenuOpen(false)}
                   >
                     {item.label}

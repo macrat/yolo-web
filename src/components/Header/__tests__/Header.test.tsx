@@ -7,6 +7,10 @@
  * - Escape キーで閉じる
  * - メニュー内リンクをクリックしたら閉じる
  * - NAV_ITEMS 全リンクがモバイルメニューに表示される
+ * - アクティブ状態（aria-current="page"）
+ * - オーバーレイクリックでメニューが閉じる
+ * - ボディスクロールロック
+ * - role="banner"
  */
 
 import { render, screen, fireEvent } from "@testing-library/react";
@@ -20,16 +24,29 @@ vi.mock("next/link", () => ({
     children,
     onClick,
     className,
+    "aria-current": ariaCurrent,
   }: {
     href: string;
     children: React.ReactNode;
     onClick?: () => void;
     className?: string;
+    "aria-current"?: React.AriaAttributes["aria-current"];
   }) => (
-    <a href={href} onClick={onClick} className={className}>
+    <a
+      href={href}
+      onClick={onClick}
+      className={className}
+      aria-current={ariaCurrent}
+    >
       {children}
     </a>
   ),
+}));
+
+// next/navigation をモック（usePathname）
+let mockPathname = "/";
+vi.mock("next/navigation", () => ({
+  usePathname: () => mockPathname,
 }));
 
 describe("Header", () => {
@@ -147,6 +164,84 @@ describe("Header", () => {
         'button[type="button"]',
       );
       expect(themeBtnInMobile?.textContent).toBe("テーマ切替");
+    });
+  });
+
+  describe("role='banner'", () => {
+    it("header 要素が role='banner' を持つ", () => {
+      render(<Header />);
+      const banner = screen.getByRole("banner");
+      expect(banner).toBeInTheDocument();
+    });
+  });
+
+  describe("アクティブ状態", () => {
+    beforeEach(() => {
+      mockPathname = "/tools";
+    });
+
+    afterEach(() => {
+      mockPathname = "/";
+    });
+
+    it("/tools にいるとき、ツールリンクが aria-current='page' を持つ", () => {
+      render(<Header />);
+      // デスクトップナビ内のリンクを確認（CSS で表示切替されるが DOM には存在する）
+      const links = screen.getAllByRole("link", { name: "ツール" });
+      const activeLinks = links.filter(
+        (link) => link.getAttribute("aria-current") === "page",
+      );
+      expect(activeLinks.length).toBeGreaterThan(0);
+    });
+
+    it("/tools にいるとき、ブログリンクは aria-current を持たない", () => {
+      render(<Header />);
+      const links = screen.getAllByRole("link", { name: "ブログ" });
+      for (const link of links) {
+        expect(link).not.toHaveAttribute("aria-current", "page");
+      }
+    });
+  });
+
+  describe("オーバーレイクリックでメニューを閉じる", () => {
+    it("オーバーレイをクリックするとメニューが閉じる", () => {
+      render(<Header />);
+      const btn = screen.getByRole("button", { name: /メニューを開く/ });
+      fireEvent.click(btn);
+
+      // メニューが開いていることを確認
+      expect(btn).toHaveAttribute("aria-expanded", "true");
+
+      // オーバーレイ（aria-hidden="true" の div）をクリック
+      // CSS モジュールのクラス名はハッシュ化されるため、aria-hidden かつ header 直下の div で取得する
+      const overlay = document.querySelector(
+        "header > div[aria-hidden='true']",
+      );
+
+      // オーバーレイが DOM に存在することを確認（存在しない場合はここで失敗する）
+      expect(overlay).not.toBeNull();
+      fireEvent.click(overlay!);
+      expect(
+        screen.getByRole("button", { name: /メニューを開く/ }),
+      ).toHaveAttribute("aria-expanded", "false");
+    });
+  });
+
+  describe("ボディスクロールロック", () => {
+    it("メニューを開くと body に scroll-locked クラスが付く", () => {
+      render(<Header />);
+      const btn = screen.getByRole("button", { name: /メニューを開く/ });
+      fireEvent.click(btn);
+      expect(document.body.classList.contains("scroll-locked")).toBe(true);
+    });
+
+    it("メニューを閉じると body から scroll-locked クラスが外れる", () => {
+      render(<Header />);
+      const btn = screen.getByRole("button", { name: /メニューを開く/ });
+      fireEvent.click(btn);
+      const closeBtn = screen.getByRole("button", { name: /メニューを閉じる/ });
+      fireEvent.click(closeBtn);
+      expect(document.body.classList.contains("scroll-locked")).toBe(false);
     });
   });
 });

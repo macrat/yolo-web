@@ -78,4 +78,31 @@ describe("ThemeToggle (トグルスイッチ版)", () => {
     const toggle = screen.getByRole("switch");
     expect(toggle).toHaveAttribute("type", "button");
   });
+
+  test("mounted 状態でスイッチは aria-hidden でなく disabled でもない", () => {
+    // jsdom は useSyncExternalStore のクライアント側スナップショットを即座に使うため、
+    // 常に mounted=true として動作する。mount 後の正常な aria 属性を検証する。
+    // mount 前のプレースホルダー描画（CLS 防止）は Playwright 本番ビルドで別途検証する。
+    render(<ThemeToggle />);
+    const toggle = screen.getByRole("switch");
+    expect(toggle).toBeInTheDocument();
+    expect(toggle).not.toHaveAttribute("aria-hidden", "true");
+    expect(toggle).not.toBeDisabled();
+  });
+
+  test("ライトモード時に aria-label が正しく設定される", () => {
+    mockResolvedTheme = "light";
+    render(<ThemeToggle />);
+    const toggle = screen.getByRole("switch");
+    expect(toggle).toHaveAttribute("aria-label", "ダークモードに切り替え");
+    expect(toggle).toHaveAttribute("aria-checked", "false");
+  });
+
+  test("ダークモード時に aria-label が正しく設定される", () => {
+    mockResolvedTheme = "dark";
+    render(<ThemeToggle />);
+    const toggle = screen.getByRole("switch");
+    expect(toggle).toHaveAttribute("aria-label", "ライトモードに切り替え");
+    expect(toggle).toHaveAttribute("aria-checked", "true");
+  });
 });

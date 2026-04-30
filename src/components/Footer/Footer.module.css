@@ -71,6 +71,11 @@
   color: var(--accent-strong);
 }
 
+.link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
 /* 外部リンクの「↗」記号。DESIGN.md §3 に従いテキストより小さめのサイズ */
 .externalIcon {
   font-size: 0.7em;
@@ -100,4 +105,12 @@
   color: var(--fg-soft);
   font-size: 0.875rem;
   white-space: nowrap;
+}
+
+/* モバイルでのタップターゲット 44px 確保。デスクトップではコンパクトな見た目を維持 */
+@media (max-width: 720px) {
+  .link {
+    min-height: 44px;
+    padding: 0.5rem 0;
+  }
 }
