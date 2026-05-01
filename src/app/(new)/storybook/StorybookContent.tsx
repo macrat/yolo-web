@@ -25,6 +25,27 @@ const TileStorybookGridClient = dynamic(
   { ssr: false },
 );
 
+/**
+ * TileGridStorybookClient を dynamic + ssr: false で読み込む。
+ * TileGrid は ToolboxShell + TileGrid + dnd-kit を含むため SSR 回避が必要。
+ * 参照: docs/knowledge/dnd-kit.md
+ */
+const TileGridStorybookClient = dynamic(
+  () => import("./TileGridStorybookClient"),
+  { ssr: false },
+);
+
+/**
+ * 50 個パフォーマンステスト用クライアントコンポーネント。
+ */
+const TileGrid50Client = dynamic(
+  () =>
+    import("./TileGridStorybookClient").then((mod) => ({
+      default: mod.TileGrid50Client,
+    })),
+  { ssr: false },
+);
+
 // カラースウォッチの定義
 const COLOR_SECTIONS = [
   {
@@ -106,6 +127,7 @@ const TOC_ITEMS = [
   { id: "share-buttons", label: "10. ShareButtons" },
   { id: "tile", label: "11. Tile" },
   { id: "toolbox-shell", label: "12. ToolboxShell（モード切替）" },
+  { id: "tile-grid", label: "13. TileGrid（配置 UI）" },
 ];
 
 export default function StorybookContent() {
@@ -674,6 +696,46 @@ export default function StorybookContent() {
           <ToolboxShell>
             {({ mode }) => <ToolboxShellFixture mode={mode} />}
           </ToolboxShell>
+        </Panel>
+      </section>
+
+      {/* === 13. TileGrid（配置 UI）=== */}
+      <section id="tile-grid" className={styles.section}>
+        <h2 className={styles.sectionTitle}>13. TileGrid（配置 UI）</h2>
+        <Panel as="div">
+          <span className={styles.previewLabel}>
+            Preview: TileGrid — 5 タイル混在（DnD 経路 B）
+          </span>
+          <p
+            style={{
+              fontSize: "0.85rem",
+              color: "var(--fg-soft)",
+              marginBottom: "1rem",
+            }}
+          >
+            small × 2、medium × 2、large × 1 のフィクスチャタイルで DnD 検証。
+            「編集」ボタンで編集モードへ。ドラッグハンドルで並び替え、×
+            で削除、「ツールを追加」で追加モーダルを開く。
+          </p>
+          {/* TileGrid は ToolboxShell + dnd-kit を含むため ssr:false で読み込む */}
+          <TileGridStorybookClient />
+        </Panel>
+
+        <Panel as="div" style={{ marginTop: "1rem" }}>
+          <span className={styles.previewLabel}>
+            Preview: TileGrid — 50 個パフォーマンス検証
+          </span>
+          <p
+            style={{
+              fontSize: "0.85rem",
+              color: "var(--fg-soft)",
+              marginBottom: "1rem",
+            }}
+          >
+            50 個のタイルでパフォーマンス確認（2.2.6 完了判定:
+            ドラッグ開始から次フレーム 100ms 以内）。
+          </p>
+          <TileGrid50Client />
         </Panel>
       </section>
     </div>

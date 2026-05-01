@@ -33,6 +33,8 @@ vi.mock("@dnd-kit/core", () => ({
   KeyboardSensor: class KeyboardSensor {},
   useSensor: vi.fn(),
   useSensors: vi.fn(() => []),
+  // closestCenter は ToolboxShell.tsx で collisionDetection として使用
+  closestCenter: vi.fn(),
 }));
 
 // @dnd-kit/sortable のモック（KeyboardSensor coordinateGetter 依存）
@@ -128,7 +130,11 @@ describe("ToolboxShell", () => {
   test("children render prop に view モードが渡される（初期）", () => {
     const child = vi.fn(() => null);
     render(<ToolboxShell>{child}</ToolboxShell>);
-    expect(child).toHaveBeenCalledWith({ mode: "view" });
+    // setDndHandlers が追加されたため、mode と setDndHandlers の両方を検証する
+    expect(child).toHaveBeenCalledWith({
+      mode: "view",
+      setDndHandlers: expect.any(Function),
+    });
   });
 
   test("編集モード時に children render prop に edit モードが渡される", () => {
@@ -138,7 +144,10 @@ describe("ToolboxShell", () => {
       screen.getByRole("button", { name: "道具箱を編集モードにする" }),
     );
     // 直近の呼び出しは edit モード
-    expect(child).toHaveBeenLastCalledWith({ mode: "edit" });
+    expect(child).toHaveBeenLastCalledWith({
+      mode: "edit",
+      setDndHandlers: expect.any(Function),
+    });
   });
 
   test("完了後に children render prop に view モードが戻る", () => {
@@ -150,7 +159,10 @@ describe("ToolboxShell", () => {
     fireEvent.click(
       screen.getByRole("button", { name: "編集を完了して使用モードに戻る" }),
     );
-    expect(child).toHaveBeenLastCalledWith({ mode: "view" });
+    expect(child).toHaveBeenLastCalledWith({
+      mode: "view",
+      setDndHandlers: expect.any(Function),
+    });
   });
 
   // --- scroll-locked クラス（AP-I07 準拠） ---
