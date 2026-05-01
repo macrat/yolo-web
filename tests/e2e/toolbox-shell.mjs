@@ -1,8 +1,20 @@
 /**
  * ToolboxShell E2E 検証スクリプト（2.2.4 完了判定用）
  *
- * 実行方法（dev server が localhost:3000 で起動している前提）:
+ * 実行方法:
+ *   # 1. dev server を起動（別ターミナル）
+ *   npm run dev
+ *
+ *   # 2. このスクリプトを実行（デフォルト: http://localhost:3000）
  *   node tests/e2e/toolbox-shell.mjs
+ *
+ *   # 別ポートや本番環境を指定する場合
+ *   E2E_BASE_URL=http://localhost:4000 node tests/e2e/toolbox-shell.mjs
+ *
+ * 前提条件:
+ *   - PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH: Chromium バイナリのパス
+ *     （未設定時は playwright-core の既定値を使用）
+ *   - /storybook ページに「12. ToolboxShell」セクションが存在すること
  *
  * 検証項目:
  *   1. 使用モード初期確認（data-mode="view"）
@@ -14,16 +26,13 @@
  *   7. 完了後に body から scroll-locked クラスが除去される
  *   8. elementFromPoint 検証（AP-I08）: オーバーレイがタイルクリックを阻害しない
  *      - タイル座標での elementFromPoint が overlay ではなくタイル要素を返す
- *   9. console エラーが 0 件
- *
- * NOTE: このスクリプトは /storybook の「12. ToolboxShell」セクションを対象とする。
- *       dev server (/storybook) が表示されていることが前提。
+ *   9. console エラーが 0 件（dnd-kit の既知 hydration 警告は除外）
  */
 
 import pkg from "../../node_modules/playwright-core/index.js";
 const { chromium } = pkg;
 
-const BASE_URL = "http://localhost:3000";
+const BASE_URL = process.env.E2E_BASE_URL ?? "http://localhost:3000";
 let passed = 0;
 let failed = 0;
 

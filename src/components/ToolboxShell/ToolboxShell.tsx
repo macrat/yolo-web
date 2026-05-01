@@ -117,10 +117,20 @@ function ToolboxShell({ children, className }: ToolboxShellProps) {
    * focus management:
    * - 編集モード遷移後 → ツールバー内の「完了」ボタンにフォーカス
    * - 使用モード復帰後 → ツールバー内の「編集」ボタンにフォーカス
-   * useEffect はレンダー後に実行されるため、対象 DOM が確実に存在した状態でフォーカスを移せる。
+   *
+   * isFirstRender ガード: useEffect([mode]) は依存配列が変化しなくても初回マウント時に
+   * 必ず一度発火する。ガードなしだとページ訪問直後に「編集」ボタンへフォーカスが移動し、
+   * スクロールジャンプ・スクリーンリーダー読み上げ順序破壊・Tab 順序破壊が発生する。
+   * ref を使うことで再レンダー時にリセットされない（state は再レンダーを誘発するため不適）。
+   *
    * Button が forwardRef 未対応のため querySelector でツールバー内の button を取得する。
    */
+  const isFirstRender = useRef(true);
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     const btn = toolbarRef.current?.querySelector<HTMLButtonElement>("button");
     btn?.focus();
   }, [mode]);
@@ -132,6 +142,16 @@ function ToolboxShell({ children, className }: ToolboxShellProps) {
       {/* ツールバー: 編集/完了ボタン（z-index: --z-tile-toolbar で最前面）
           ref はフォーカス管理のために div に付ける（Button は forwardRef 未対応） */}
       <div ref={toolbarRef} className={styles.toolbar}>
+        {/* aria-live 領域: 常に DOM に存在させることで一部スクリーンリーダーによる
+            初回挿入アナウンスの欠落を防ぐ。テキストの変化でアナウンスを誘発する。 */}
+        <span
+          className={styles.editingLabel}
+          aria-live="polite"
+          role="status"
+          aria-atomic="true"
+        >
+          {mode === "edit" ? "編集中" : ""}
+        </span>
         {mode === "view" ? (
           <Button
             variant="default"
@@ -141,18 +161,13 @@ function ToolboxShell({ children, className }: ToolboxShellProps) {
             編集
           </Button>
         ) : (
-          <>
-            <span className={styles.editingLabel} aria-live="polite">
-              編集中
-            </span>
-            <Button
-              variant="primary"
-              onClick={exitEditMode}
-              aria-label="編集を完了して使用モードに戻る"
-            >
-              完了
-            </Button>
-          </>
+          <Button
+            variant="primary"
+            onClick={exitEditMode}
+            aria-label="編集を完了して使用モードに戻る"
+          >
+            完了
+          </Button>
         )}
       </div>
 

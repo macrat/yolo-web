@@ -228,6 +228,15 @@ describe("ToolboxShell", () => {
 
   // --- focus management ---
 
+  test("初回マウント時（使用モード）はフォーカスが奪われない", () => {
+    // AP-I09 由来のバグ防止: useEffect([mode]) は初回マウント時にも発火するため、
+    // isFirstRender ガードなしだと render 直後に「編集」ボタンへフォーカスが移動し
+    // ページ訪問時にスクロールジャンプやキーボード順序破壊が発生する。
+    render(<ToolboxShell>{() => null}</ToolboxShell>);
+    // フォーカスは body のままであること（ToolboxShell が奪ってはいけない）
+    expect(document.activeElement).toBe(document.body);
+  });
+
   test("編集モード遷移後、「完了」ボタンにフォーカスが移動する", () => {
     render(<ToolboxShell>{() => null}</ToolboxShell>);
     fireEvent.click(
