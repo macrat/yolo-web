@@ -2,7 +2,7 @@
 id: 173
 description: "サイト内検索の計測強化実装（B-340）。`src/lib/analytics.ts` に search_result_click / search_modal_open / search_modal_close / 検索→離脱の各イベントを追加し、cycle-172 で保留となった Phase 1.1（B-339）再判断の 30 日データ蓄積を開始可能にする。"
 started_at: "2026-04-30T23:17:15+0900"
-completed_at: null
+completed_at: "2026-05-01T09:39:15+0900"
 ---
 
 # サイクル-173
