@@ -62,6 +62,10 @@ const mockDocuments = [
   },
 ];
 
+// window.gtag stub — required because SearchModal now calls tracking functions.
+// Without this, tests would throw "window.gtag is not a function".
+const mockGtag = vi.fn();
+
 beforeEach(() => {
   vi.stubGlobal(
     "fetch",
@@ -71,6 +75,9 @@ beforeEach(() => {
     }),
   );
   mockPush.mockClear();
+  // Stub window.gtag so GA4 tracking calls are captured without side effects
+  vi.stubGlobal("gtag", mockGtag);
+  mockGtag.mockClear();
 });
 
 afterEach(() => {
@@ -424,5 +431,302 @@ describe("SearchModal aria-expanded and id", () => {
     // Verify no listbox is shown and combobox reports not expanded
     expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
     expect(input).toHaveAttribute("aria-expanded", "false");
+  });
+});
+
+// ── §3-3 Tracking tests ───────────────────────────────────────────────────────
+// These tests verify that handleClose fires tracking events in the correct order
+// and with the correct parameters.
+
+describe("SearchModal tracking: close_reason values", () => {
+  test("fires search_modal_close with close_reason='escape' when cancel event fires (ESC key)", () => {
+    render(<SearchModal isOpen={true} onClose={vi.fn()} />);
+    const dialog = screen.getByRole("dialog");
+    fireEvent(dialog, new Event("cancel", { cancelable: true }));
+    expect(mockGtag).toHaveBeenCalledWith(
+      "event",
+      "search_modal_close",
+      expect.objectContaining({ close_reason: "escape" }),
+    );
+  });
+
+  test("fires search_modal_close with close_reason='backdrop' when backdrop is clicked", () => {
+    render(<SearchModal isOpen={true} onClose={vi.fn()} />);
+    const dialog = screen.getByRole("dialog");
+    fireEvent.click(dialog);
+    expect(mockGtag).toHaveBeenCalledWith(
+      "event",
+      "search_modal_close",
+      expect.objectContaining({ close_reason: "backdrop" }),
+    );
+  });
+
+  test("fires search_modal_close with close_reason='close_button' when close button is clicked", () => {
+    render(<SearchModal isOpen={true} onClose={vi.fn()} />);
+    const closeButton = screen.getByRole("button", { name: "検索を閉じる" });
+    fireEvent.click(closeButton);
+    expect(mockGtag).toHaveBeenCalledWith(
+      "event",
+      "search_modal_close",
+      expect.objectContaining({ close_reason: "close_button" }),
+    );
+  });
+
+  test("fires search_modal_close with close_reason='navigation' when Enter selects a result", async () => {
+    vi.useFakeTimers();
+    const onClose = vi.fn();
+    render(<SearchModal isOpen={true} onClose={onClose} />);
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(0);
+    });
+
+    const input = screen.getByRole("combobox", { name: "サイト内検索" });
+    fireEvent.change(input, { target: { value: "漢字" } });
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(200);
+    });
+
+    vi.useRealTimers();
+
+    fireEvent.keyDown(document, { key: "ArrowDown" });
+    fireEvent.keyDown(document, { key: "Enter" });
+
+    expect(mockGtag).toHaveBeenCalledWith(
+      "event",
+      "search_modal_close",
+      expect.objectContaining({ close_reason: "navigation" }),
+    );
+  });
+});
+
+describe("SearchModal tracking: search_abandoned", () => {
+  test("fires search_abandoned with had_query=false when modal is closed without any input", () => {
+    render(<SearchModal isOpen={true} onClose={vi.fn()} />);
+    const dialog = screen.getByRole("dialog");
+    fireEvent(dialog, new Event("cancel", { cancelable: true }));
+    expect(mockGtag).toHaveBeenCalledWith(
+      "event",
+      "search_abandoned",
+      expect.objectContaining({ had_query: false }),
+    );
+  });
+
+  test("fires search_abandoned with had_query=true when 1 char is typed then closed before 150ms", () => {
+    vi.useFakeTimers();
+    render(<SearchModal isOpen={true} onClose={vi.fn()} />);
+
+    const input = screen.getByRole("combobox", { name: "サイト内検索" });
+    // Type 1 character but do NOT advance 150ms (debounce not triggered)
+    fireEvent.change(input, { target: { value: "あ" } });
+
+    // Close immediately (before debounce fires)
+    const dialog = screen.getByRole("dialog");
+    fireEvent(dialog, new Event("cancel", { cancelable: true }));
+
+    vi.useRealTimers();
+
+    expect(mockGtag).toHaveBeenCalledWith(
+      "event",
+      "search_abandoned",
+      expect.objectContaining({ had_query: true }),
+    );
+  });
+
+  test("fires search_abandoned with had_query=true when only whitespace is typed then closed", () => {
+    render(<SearchModal isOpen={true} onClose={vi.fn()} />);
+    const input = screen.getByRole("combobox", { name: "サイト内検索" });
+    // Type whitespace only — q.length > 0 so hadAnyInputRef is set,
+    // but q.trim() is empty so trackSearch (and hasSearchedRef) is never set
+    fireEvent.change(input, { target: { value: "     " } });
+
+    const closeButton = screen.getByRole("button", { name: "検索を閉じる" });
+    fireEvent.click(closeButton);
+
+    expect(mockGtag).toHaveBeenCalledWith(
+      "event",
+      "search_abandoned",
+      expect.objectContaining({ had_query: true }),
+    );
+  });
+
+  test("does NOT fire search_abandoned when modal is closed after a successful search (150ms elapsed)", async () => {
+    vi.useFakeTimers();
+    render(<SearchModal isOpen={true} onClose={vi.fn()} />);
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(0);
+    });
+
+    const input = screen.getByRole("combobox", { name: "サイト内検索" });
+    fireEvent.change(input, { target: { value: "漢字" } });
+
+    // Advance beyond debounce — trackSearch fires, hasSearchedRef becomes true
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(200);
+    });
+
+    vi.useRealTimers();
+
+    const closeButton = screen.getByRole("button", { name: "検索を閉じる" });
+    fireEvent.click(closeButton);
+
+    const gtagCalls = mockGtag.mock.calls;
+    const abandonedCall = gtagCalls.find(
+      (call) => call[0] === "event" && call[1] === "search_abandoned",
+    );
+    expect(abandonedCall).toBeUndefined();
+  });
+});
+
+describe("SearchModal tracking: handleClose fires in correct order", () => {
+  test("fires search_modal_close BEFORE calling onClose", () => {
+    const callOrder: string[] = [];
+    const onClose = vi.fn(() => {
+      callOrder.push("onClose");
+    });
+    mockGtag.mockImplementation((_type: string, eventName: string) => {
+      if (eventName === "search_modal_close") {
+        callOrder.push("search_modal_close");
+      }
+    });
+
+    render(<SearchModal isOpen={true} onClose={onClose} />);
+    const dialog = screen.getByRole("dialog");
+    fireEvent(dialog, new Event("cancel", { cancelable: true }));
+
+    expect(callOrder.indexOf("search_modal_close")).toBeLessThan(
+      callOrder.indexOf("onClose"),
+    );
+  });
+});
+
+// ── §3-5 search_result_click tracking tests ──────────────────────────────────
+// These tests verify that clicking a result or pressing Enter to select a result
+// fires trackSearchResultClick with the correct search_term and result_url.
+
+/**
+ * Helper: render modal, wait for index, type a query, advance debounce.
+ * Returns the onClose mock and the search input element.
+ */
+async function setupWithResultsForTracking() {
+  vi.useFakeTimers();
+  const onClose = vi.fn();
+  render(<SearchModal isOpen={true} onClose={onClose} />);
+
+  await act(async () => {
+    await vi.advanceTimersByTimeAsync(0);
+  });
+
+  const input = screen.getByRole("combobox", { name: "サイト内検索" });
+  fireEvent.change(input, { target: { value: "漢字" } });
+
+  await act(async () => {
+    await vi.advanceTimersByTimeAsync(200);
+  });
+
+  vi.useRealTimers();
+
+  return { onClose, input };
+}
+
+describe("SearchModal tracking: search_result_click", () => {
+  test("fires search_result_click with search_term and result_url when a result link is clicked", async () => {
+    await setupWithResultsForTracking();
+
+    const listbox = screen.getByRole("listbox");
+    const options = within(listbox).getAllByRole("option");
+    // Click the first result
+    fireEvent.click(options[0]);
+
+    expect(mockGtag).toHaveBeenCalledWith(
+      "event",
+      "search_result_click",
+      expect.objectContaining({
+        search_term: "漢字",
+        result_url: expect.stringMatching(/^\//),
+      }),
+    );
+  });
+
+  test("fires search_result_click with correct result_url (site-internal path) when a result is clicked", async () => {
+    await setupWithResultsForTracking();
+
+    const listbox = screen.getByRole("listbox");
+    const options = within(listbox).getAllByRole("option");
+    fireEvent.click(options[0]);
+
+    const resultClickCall = mockGtag.mock.calls.find(
+      (call) => call[0] === "event" && call[1] === "search_result_click",
+    );
+    expect(resultClickCall).toBeDefined();
+    // result_url must be a site-internal path starting with /
+    expect(resultClickCall![2].result_url).toMatch(/^\//);
+    // result_url must NOT contain the origin (no http/https)
+    expect(resultClickCall![2].result_url).not.toMatch(/^https?:\/\//);
+  });
+
+  test("fires search_result_click when Enter key selects a result", async () => {
+    await setupWithResultsForTracking();
+
+    // Navigate to first result with ArrowDown, then select with Enter
+    fireEvent.keyDown(document, { key: "ArrowDown" });
+    fireEvent.keyDown(document, { key: "Enter" });
+
+    expect(mockGtag).toHaveBeenCalledWith(
+      "event",
+      "search_result_click",
+      expect.objectContaining({
+        search_term: "漢字",
+        result_url: expect.stringMatching(/^\//),
+      }),
+    );
+  });
+
+  test("fires search_result_click BEFORE search_modal_close when Enter selects a result", async () => {
+    await setupWithResultsForTracking();
+
+    const callOrder: string[] = [];
+    mockGtag.mockImplementation((_type: string, eventName: string) => {
+      if (
+        eventName === "search_result_click" ||
+        eventName === "search_modal_close"
+      ) {
+        callOrder.push(eventName);
+      }
+    });
+
+    fireEvent.keyDown(document, { key: "ArrowDown" });
+    fireEvent.keyDown(document, { key: "Enter" });
+
+    expect(callOrder.indexOf("search_result_click")).toBeLessThan(
+      callOrder.indexOf("search_modal_close"),
+    );
+  });
+
+  test("fires search_result_click exactly once per click (no duplicate)", async () => {
+    await setupWithResultsForTracking();
+
+    const listbox = screen.getByRole("listbox");
+    const options = within(listbox).getAllByRole("option");
+    fireEvent.click(options[0]);
+
+    const resultClickCalls = mockGtag.mock.calls.filter(
+      (call) => call[0] === "event" && call[1] === "search_result_click",
+    );
+    expect(resultClickCalls).toHaveLength(1);
+  });
+
+  test("fires search_result_click exactly once per Enter selection (no duplicate)", async () => {
+    await setupWithResultsForTracking();
+
+    fireEvent.keyDown(document, { key: "ArrowDown" });
+    fireEvent.keyDown(document, { key: "Enter" });
+
+    const resultClickCalls = mockGtag.mock.calls.filter(
+      (call) => call[0] === "event" && call[1] === "search_result_click",
+    );
+    expect(resultClickCalls).toHaveLength(1);
   });
 });

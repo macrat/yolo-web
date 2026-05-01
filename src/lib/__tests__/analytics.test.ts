@@ -5,7 +5,12 @@ import {
   trackAchievementUnlock,
   trackSearch,
   trackShare,
+  trackSearchModalOpen,
+  trackSearchModalClose,
+  trackSearchResultClick,
+  trackSearchAbandoned,
 } from "@/lib/analytics";
+import type { CloseReasonValue } from "@/lib/analytics";
 
 describe("analytics", () => {
   let mockGtag: ReturnType<typeof vi.fn>;
@@ -149,6 +154,92 @@ describe("analytics", () => {
     });
   });
 
+  describe("trackSearchModalOpen", () => {
+    it("sends search_modal_open event with no parameters", () => {
+      trackSearchModalOpen();
+
+      expect(mockGtag).toHaveBeenCalledWith(
+        "event",
+        "search_modal_open",
+        undefined,
+      );
+    });
+  });
+
+  describe("trackSearchModalClose", () => {
+    const closeReasons: CloseReasonValue[] = [
+      "escape",
+      "backdrop",
+      "close_button",
+      "popstate",
+      "navigation",
+      "cmd_k",
+    ];
+
+    closeReasons.forEach((reason) => {
+      it(`sends search_modal_close event with close_reason="${reason}"`, () => {
+        trackSearchModalClose({ close_reason: reason });
+
+        expect(mockGtag).toHaveBeenCalledWith("event", "search_modal_close", {
+          close_reason: reason,
+        });
+      });
+    });
+  });
+
+  describe("trackSearchResultClick", () => {
+    it("sends search_result_click event with trimmed search_term and result_url", () => {
+      trackSearchResultClick({
+        search_term: "  kanji  ",
+        result_url: "/tools/kanji-test",
+      });
+
+      expect(mockGtag).toHaveBeenCalledWith("event", "search_result_click", {
+        search_term: "kanji",
+        result_url: "/tools/kanji-test",
+      });
+    });
+
+    it("sends search_result_click with query params and hash in result_url", () => {
+      trackSearchResultClick({
+        search_term: "quiz",
+        result_url: "/play/quiz?level=1#section",
+      });
+
+      expect(mockGtag).toHaveBeenCalledWith("event", "search_result_click", {
+        search_term: "quiz",
+        result_url: "/play/quiz?level=1#section",
+      });
+    });
+
+    it("does not send event when result_url is empty string", () => {
+      trackSearchResultClick({
+        search_term: "kanji",
+        result_url: "",
+      });
+
+      expect(mockGtag).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("trackSearchAbandoned", () => {
+    it("sends search_abandoned event with had_query=true", () => {
+      trackSearchAbandoned({ had_query: true });
+
+      expect(mockGtag).toHaveBeenCalledWith("event", "search_abandoned", {
+        had_query: true,
+      });
+    });
+
+    it("sends search_abandoned event with had_query=false", () => {
+      trackSearchAbandoned({ had_query: false });
+
+      expect(mockGtag).toHaveBeenCalledWith("event", "search_abandoned", {
+        had_query: false,
+      });
+    });
+  });
+
   describe("safety guards", () => {
     it("does not throw when window.gtag is undefined", () => {
       Object.defineProperty(window, "gtag", {
@@ -162,6 +253,17 @@ describe("analytics", () => {
       expect(() => trackAchievementUnlock("streak-7")).not.toThrow();
       expect(() => trackSearch("test")).not.toThrow();
       expect(() => trackShare("twitter", "game", "irodori")).not.toThrow();
+      expect(() => trackSearchModalOpen()).not.toThrow();
+      expect(() =>
+        trackSearchModalClose({ close_reason: "escape" }),
+      ).not.toThrow();
+      expect(() =>
+        trackSearchResultClick({
+          search_term: "test",
+          result_url: "/tools/test",
+        }),
+      ).not.toThrow();
+      expect(() => trackSearchAbandoned({ had_query: false })).not.toThrow();
     });
   });
 });

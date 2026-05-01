@@ -83,3 +83,83 @@ export function trackShare(
 export function trackContentRating(): void {
   sendGaEvent("content_rating");
 }
+
+// ── Search modal tracking ────────────────────────────────────────────────────
+
+/**
+ * The reason a search modal was closed.
+ * 6 values covering all close paths (see cycle-173 §2 and SearchModal/SearchTrigger).
+ */
+export type CloseReasonValue =
+  | "escape"
+  | "backdrop"
+  | "close_button"
+  | "popstate"
+  | "navigation"
+  | "cmd_k";
+
+/** Parameters for trackSearchModalClose. */
+interface SearchModalCloseParams {
+  close_reason: CloseReasonValue;
+}
+
+/** Parameters for trackSearchResultClick. */
+interface SearchResultClickParams {
+  /** The trimmed search query at the time the result was selected. */
+  search_term: string;
+  /**
+   * The site-internal path of the selected result.
+   * The caller is responsible for ensuring this is a site-internal path.
+   * Empty strings are ignored as a defensive guard.
+   */
+  result_url: string;
+}
+
+/** Parameters for trackSearchAbandoned. */
+interface SearchAbandonedParams {
+  /**
+   * Whether the user had any input in the search field before closing
+   * (based on q.length > 0, not q.trim().length, so whitespace-only counts).
+   */
+  had_query: boolean;
+}
+
+/** Send a search_modal_open event when the search modal is opened. */
+export function trackSearchModalOpen(): void {
+  sendGaEvent("search_modal_open");
+}
+
+/** Send a search_modal_close event with the reason the modal was closed. */
+export function trackSearchModalClose({
+  close_reason,
+}: SearchModalCloseParams): void {
+  sendGaEvent("search_modal_close", { close_reason });
+}
+
+/**
+ * Send a search_result_click event when the user selects a search result.
+ *
+ * The search_term is trimmed before sending (consistent with trackSearch).
+ * The result_url should already be a site-internal path; empty strings are ignored.
+ */
+export function trackSearchResultClick({
+  search_term,
+  result_url,
+}: SearchResultClickParams): void {
+  // Defensive guard: ignore empty result_url to avoid sending meaningless events.
+  if (!result_url) return;
+  sendGaEvent("search_result_click", {
+    search_term: search_term.trim(),
+    result_url,
+  });
+}
+
+/**
+ * Send a search_abandoned event when the modal is closed without a search having
+ * been executed (i.e. the search event was never fired during this modal session).
+ */
+export function trackSearchAbandoned({
+  had_query,
+}: SearchAbandonedParams): void {
+  sendGaEvent("search_abandoned", { had_query });
+}
