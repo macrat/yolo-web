@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "prebuild": "npm run generate:static-assets",
-    "predev": "npm run generate:static-assets",
-    "pretest": "npm run generate:static-assets",
+    "prebuild": "npm run generate:toolbox-registry && npm run generate:static-assets",
+    "predev": "npm run generate:toolbox-registry && npm run generate:static-assets",
+    "pretest": "npm run generate:toolbox-registry && npm run generate:static-assets",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -17,7 +17,8 @@
     "format": "prettier --write .",
     "analyze": "next experimental-analyze --output",
     "format:check": "prettier --check .",
-    "generate:static-assets": "tsx scripts/build-search-index.ts"
+    "generate:static-assets": "tsx scripts/build-search-index.ts",
+    "generate:toolbox-registry": "tsx scripts/generate-toolbox-registry.ts"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
@@ -53,6 +54,7 @@
     "eslint": "^9.39.2",
     "eslint-config-next": "16.1.6",
     "eslint-config-prettier": "10.1.8",
+    "fast-glob": "^3.3.1",
     "jsdom": "28.1.0",
     "ml-kmeans": "^7.0.0",
     "playwright": "^1.58.2",

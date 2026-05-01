@@ -1,0 +1,234 @@
+/**
+ * Tile コンポーネントのスタイル。
+ *
+ * DESIGN.md 規約:
+ * - dark mode: :global(:root.dark) 方式（AP-I07 準拠）
+ * - shadow token: --shadow-dragging / --shadow-button（globals.css 定義済み）
+ * - border-radius: --r-normal（パネル・カード類）
+ * - focus-visible スタイルあり
+ *
+ * z-index 階層（AP-I08 準拠）:
+ * - タイル通常時: z-index 200（編集モードオーバーレイ z-index 100 より前面）
+ * - ドラッグ中: z-index 300（DragOverlay が持つ値、Tile 自体は isDragging 時に opacity を下げる）
+ */
+
+/* === タイル外枠 === */
+.tile {
+  position: relative;
+  /* globals.css の --z-tile（200）を参照。編集モードオーバーレイ（--z-tile-overlay: 100）より前面 */
+  z-index: var(--z-tile);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--r-normal);
+  /* 影なし（通常時）。DESIGN.md §4: パネルは影をつけない */
+  box-shadow: none;
+  /* タイルのコンテンツが枠外に出ないよう overflow: hidden */
+  overflow: hidden;
+  /* 最小の高さを確保してコンテンツが薄くならないようにする */
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  /* ドラッグ可能な要素のカーソルは view モードでは default、edit モードでは drag-related */
+  cursor: default;
+  /* トランジション（ドラッグ操作の視覚フィードバック用） */
+  transition:
+    box-shadow 0.15s ease,
+    opacity 0.15s ease;
+}
+
+/* === ドラッグ中の状態 === */
+.tile[data-is-dragging="true"] {
+  /* ドラッグ中: --shadow-dragging を適用して「浮いている」感を演出 */
+  box-shadow: var(--shadow-dragging);
+  opacity: 0.4;
+  /* globals.css の --z-tile-dragging（300）を参照。DragOverlay が別 portal で描画されるため
+     Tile 本体は半透明になるが、念のため z-index も上げておく */
+  z-index: var(--z-tile-dragging);
+}
+
+/* === 編集モードのスタイル === */
+.tile[data-mode="edit"] {
+  /* 編集モードではドラッグカーソルを示す */
+  cursor: grab;
+  /* 編集モードではボーダーを強調して視覚的に編集状態を示す */
+  border-color: var(--accent);
+}
+
+.tile[data-mode="edit"]:active {
+  cursor: grabbing;
+}
+
+/* === タイルヘッダー（ドラッグハンドル + タイトル + 削除ボタン） === */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  min-height: 40px;
+  /* フォーカス可能要素がヘッダー内に入るため、相対位置を確保 */
+  position: relative;
+}
+
+/* ヘッダーはタイル本体のコンテンツより前面 */
+.header {
+  z-index: 1;
+}
+
+/* small サイズ編集モード: header を 2 段組に（タイトル省略防止） */
+.header[data-size="small"] {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+}
+
+/* === ヘッダー内コントロール行（ドラッグハンドル + タイトル + 削除ボタン）=== */
+/* small サイズ時はタイトルを含まず、ハンドル + 削除ボタンのみ横並び */
+.headerControls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+/* small サイズ編集モード時の 2 段目タイトル行 */
+.titleRow {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--fg);
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  width: 100%;
+  min-width: 0;
+}
+
+/* === ドラッグハンドル === */
+.dragHandle {
+  /* アクセシビリティ: ハンドルをボタンとして実装 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  border-radius: var(--r-interactive);
+  cursor: grab;
+  color: var(--fg-softer);
+  /* タップターゲット 44px 以上（WCAG 2.5.5）: padding で当たり判定を拡大 */
+  padding: 10px;
+  /* padding を含めた実際の当たり判定は 44px × 44px */
+  box-sizing: content-box;
+  flex-shrink: 0;
+}
+
+.dragHandle:hover {
+  color: var(--fg-soft);
+  background: var(--bg-soft);
+}
+
+.dragHandle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.dragHandle:active {
+  cursor: grabbing;
+}
+
+/* ドラッグハンドルのアイコン（SVG インライン表現） */
+.dragIcon {
+  width: 16px;
+  height: 16px;
+  display: block;
+  /* アイコンをポインターイベントから除外して、親ボタンのクリックを妨げない */
+  pointer-events: none;
+}
+
+/* === タイトル === */
+.title {
+  flex: 1;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--fg);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+/* === 削除ボタン === */
+.deleteButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  border-radius: var(--r-interactive);
+  cursor: pointer;
+  color: var(--fg-softer);
+  /* タップターゲット 44px 以上（WCAG 2.5.5）: padding で当たり判定を拡大 */
+  padding: 10px;
+  box-sizing: content-box;
+  flex-shrink: 0;
+}
+
+.deleteButton:hover {
+  color: var(--danger);
+  background: var(--danger-soft);
+}
+
+.deleteButton:focus-visible {
+  outline: 2px solid var(--danger);
+  outline-offset: 2px;
+}
+
+/* 削除ボタンのアイコン */
+.deleteIcon {
+  width: 14px;
+  height: 14px;
+  display: block;
+  pointer-events: none;
+}
+
+/* === コンテンツエリア === */
+.content {
+  flex: 1;
+  padding: 0.75rem;
+  /* コンテンツエリアのカーソルは使用モードと編集モードで変わる（親 .tile から継承） */
+}
+
+/* 編集モードではコンテンツクリックを視覚的に無効化 */
+.tile[data-mode="edit"] .content {
+  /* 視覚的なオーバーレイで「操作不可」を表現 */
+  pointer-events: none;
+  /* 若干の opacity 低下でコンテンツが「無効」であることを示す */
+  opacity: 0.7;
+}
+
+/* === shortDescription（タイル化コンポーネントなし時のフォールバック） === */
+.description {
+  font-size: 0.8rem;
+  color: var(--fg-soft);
+  line-height: 1.5;
+  margin-top: 0.25rem;
+}
+
+/* === ダークモード（AP-I07: :global(:root.dark) 方式必須） === */
+:global(:root.dark) .tile {
+  /* ダークモードでは border-color を上書き（globals.css の --border が自動対応するが念のため） */
+  border-color: var(--border);
+}
+
+:global(:root.dark) .tile[data-mode="edit"] {
+  border-color: var(--accent);
+}
+
+:global(:root.dark) .tile[data-is-dragging="true"] {
+  /* ダークモードのドラッグ中影は globals.css :root.dark で定義済みの --shadow-dragging を使用 */
+  box-shadow: var(--shadow-dragging);
+}
