@@ -8,20 +8,22 @@ import Breadcrumb from "@/components/Breadcrumb";
 import ToggleSwitch from "@/components/ToggleSwitch";
 import Pagination from "@/components/Pagination";
 import ShareButtons from "@/components/ShareButtons";
-import { DndContext, closestCenter } from "@dnd-kit/core";
-import { SortableContext, rectSortingStrategy } from "@dnd-kit/sortable";
-import Tile from "@/components/Tile";
-import EmptySlot from "@/components/Tile/EmptySlot";
-import {
-  FIXTURE_SMALL_1,
-  FIXTURE_SMALL_2,
-  FIXTURE_MEDIUM_1,
-  FIXTURE_MEDIUM_2,
-  FIXTURE_LARGE_1,
-} from "@/components/Tile/fixtures";
+import dynamic from "next/dynamic";
 import ToolboxShell, { type ToolboxMode } from "@/components/ToolboxShell";
 import styles from "./page.module.css";
-import tileStyles from "./TileStorybook.module.css";
+
+/**
+ * TileStorybookGridClient を dynamic + ssr: false で読み込む。
+ *
+ * @dnd-kit の useUniqueId がモジュールスコープのカウンタで ID 採番するため、
+ * SSR と CSR でカウンタ値が乖離し hydration mismatch が発生する。
+ * ssr: false でクライアント mount 後のみ render することで根本解消する。
+ * 参照: docs/knowledge/dnd-kit.md
+ */
+const TileStorybookGridClient = dynamic(
+  () => import("./TileStorybookGridClient"),
+  { ssr: false },
+);
 
 // カラースウォッチの定義
 const COLOR_SECTIONS = [
@@ -628,7 +630,8 @@ export default function StorybookContent() {
           >
             view モード: ヘッダーにタイトルのみ表示。コンテンツクリック有効。
           </p>
-          <TileStorybookGrid mode="view" />
+          {/* ssr: false で hydration mismatch を防ぐ（dnd-kit useUniqueId 問題） */}
+          <TileStorybookGridClient mode="view" />
         </Panel>
         <Panel as="div">
           <span className={styles.previewLabel}>
@@ -643,20 +646,10 @@ export default function StorybookContent() {
           >
             edit モード: ドラッグハンドル・削除ボタン表示。small
             サイズはタイトル 2 段組。コンテンツクリック無効（CSS pointer-events:
-            none）。
+            none）。 EmptySlot の aria-label は index で一意化済み。
           </p>
-          <TileStorybookGrid mode="edit" />
-          <h3
-            className={styles.subsectionTitle}
-            style={{ marginTop: "1.5rem" }}
-          >
-            EmptySlot（追加スロット）
-          </h3>
-          <div className={tileStyles.grid}>
-            <EmptySlot size="small" />
-            <EmptySlot size="medium" />
-            <EmptySlot size="large" />
-          </div>
+          {/* EmptySlot（index 付き）も TileStorybookGridClient 内に統合 */}
+          <TileStorybookGridClient mode="edit" />
         </Panel>
       </section>
 
@@ -759,38 +752,5 @@ function ToolboxShellFixture({ mode }: { mode: ToolboxMode }) {
         </button>
       ))}
     </div>
-  );
-}
-
-/** Tile の storybook グリッド表示用ヘルパーコンポーネント */
-function TileStorybookGrid({ mode }: { mode: "view" | "edit" }) {
-  const fixtures = [
-    FIXTURE_SMALL_1,
-    FIXTURE_MEDIUM_1,
-    FIXTURE_SMALL_2,
-    FIXTURE_MEDIUM_2,
-    FIXTURE_LARGE_1,
-  ];
-  const slugs = fixtures.map((f) => f.tileable.slug);
-
-  return (
-    // useSortable（Tile 内部）を正常動作させるために DndContext + SortableContext が必要
-    // storybook はデモ用途なので実際の並べ替えは行わない（onDragEnd は no-op）
-    <DndContext collisionDetection={closestCenter} onDragEnd={() => {}}>
-      <SortableContext items={slugs} strategy={rectSortingStrategy}>
-        <div className={tileStyles.grid}>
-          {fixtures.map((fixture) => (
-            <Tile
-              key={`${mode}-${fixture.tileable.slug}`}
-              tileable={fixture.tileable}
-              size={fixture.recommendedSize}
-              mode={mode}
-              onDelete={mode === "edit" ? () => {} : undefined}
-              onContentClick={mode === "view" ? () => {} : undefined}
-            />
-          ))}
-        </div>
-      </SortableContext>
-    </DndContext>
   );
 }
