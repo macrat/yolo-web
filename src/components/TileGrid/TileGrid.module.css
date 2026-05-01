@@ -1,0 +1,55 @@
+/**
+ * TileGrid — タイル配置グリッドのスタイル
+ *
+ * CSS Grid レイアウト:
+ * - 4 カラムのグリッドを基本とする（SIZE_SPAN と対応）
+ *   small  = span 1（1 カラム）
+ *   medium = span 2（2 カラム）
+ *   large  = span 3（3 カラム）
+ * - gap は var(--space-*) または固定値（DESIGN.md 準拠）
+ *
+ * モバイル対応:
+ * - 768px 未満: 2 カラムに縮小（small=span 1, medium=span 2, large=span 2）
+ * - 480px 未満: 1 カラムに縮小（すべて span 1）
+ *
+ * DESIGN.md 準拠:
+ * - dark mode: :global(:root.dark) 方式（AP-I07 準拠）
+ * - border-radius: --r-normal
+ * - パネル本体は影なし（通常時）
+ */
+
+/* グリッドコンテナ */
+.root {
+  display: grid;
+  /* 4 カラムグリッド（small=span1, medium=span2, large=span3, EmptySlot=span2） */
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  /* align-items: start でタイルの高さが揃わない場合もグリッドが崩れない */
+  align-items: start;
+}
+
+/* モバイル（768px 未満）: 2 カラムに縮小 */
+@media (max-width: 768px) {
+  .root {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* 小モバイル（480px 未満）: 1 カラムに縮小 */
+@media (max-width: 480px) {
+  .root {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 編集モードのボーダー（ToolboxShell.module.css のアウトラインとは別の内側ハイライト） */
+.root[data-mode="edit"] {
+  /* 編集モードではグリッドに最小高さを設け、空のグリッドが潰れないようにする */
+  min-height: 120px;
+}
+
+/* ダークモード対応 */
+:global(:root.dark) .root {
+  /* 現状は CSS 変数が自動対応するため追加スタイル不要 */
+}

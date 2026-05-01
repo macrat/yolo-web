@@ -9,6 +9,8 @@
  *   - 編集モードへの遷移時に DndContext（PointerSensor + KeyboardSensor）を mount
  *   - 編集モード時のスクロールロック（scroll-lock.ts カウンタ式、AP-I07 準拠）
  *   - children に mode を render props で渡す（Tile コンポーネント #5 が props で受け取る）
+ *   - children に DnD イベントハンドラ（dndHandlers）を render props で渡す
+ *     → TileGrid（2.2.6）が DndContext の onDragStart/Over/End に接続するために使用する
  *   - focus management（編集/完了ボタンへの自動フォーカス移動）
  *
  * z-index レイヤ（AP-I08 準拠）:
@@ -18,6 +20,7 @@
  *
  * DndContext の DragOverlay、SortableContext などは外部（2.2.6 の配置 UI）が
  * children 内に持つ。ToolboxShell は DndContext の境界と sensors のみを担う。
+ * onDragStart / onDragOver / onDragEnd は dndHandlers render props 経由で children が設定する。
  *
  * 将来 Context 化を検討: mode 以外（drag state / dispatch）が必要になった場合、
  * render props から React.Context に移行する。
@@ -30,6 +33,10 @@ import {
   KeyboardSensor,
   useSensor,
   useSensors,
+  closestCenter,
+  type DragStartEvent,
+  type DragOverEvent,
+  type DragEndEvent,
 } from "@dnd-kit/core";
 import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import Button from "@/components/Button";
@@ -39,16 +46,42 @@ import styles from "./ToolboxShell.module.css";
 /** 2 モードの型 */
 export type ToolboxMode = "view" | "edit";
 
+/**
+ * DnD イベントハンドラの型。
+ * children が DndContext の onDrag* に接続するために使用する。
+ * 未指定の場合は何も起こらない（省略可能）。
+ */
+export interface ToolboxDndHandlers {
+  onDragStart?: (event: DragStartEvent) => void;
+  onDragOver?: (event: DragOverEvent) => void;
+  onDragEnd?: (event: DragEndEvent) => void;
+}
+
 /** children への render props */
 export interface ToolboxModeRenderProps {
   mode: ToolboxMode;
+  /**
+   * DnD イベントハンドラの設定関数。
+   * children（TileGrid 等）が DndContext に接続したいイベントハンドラを
+   * この関数で登録する。
+   * 例:
+   *   useEffect(() => {
+   *     setDndHandlers({ onDragStart, onDragOver, onDragEnd });
+   *   }, [setDndHandlers, onDragStart, onDragOver, onDragEnd]);
+   */
+  setDndHandlers: (handlers: ToolboxDndHandlers) => void;
 }
 
 interface ToolboxShellProps {
   /**
    * render prop パターン。
-   * children は関数として mode を受け取り、タイル一覧 UI を返す。
-   * 例: <ToolboxShell>{({ mode }) => <TileGrid mode={mode} />}</ToolboxShell>
+   * children は関数として mode と setDndHandlers を受け取り、タイル一覧 UI を返す。
+   * 例:
+   *   <ToolboxShell>
+   *     {({ mode, setDndHandlers }) => (
+   *       <TileGrid mode={mode} setDndHandlers={setDndHandlers} />
+   *     )}
+   *   </ToolboxShell>
    */
   children: (props: ToolboxModeRenderProps) => React.ReactNode;
   /** 追加クラス（外側コンテナに適用） */
@@ -61,9 +94,27 @@ interface ToolboxShellProps {
  * 編集モード / 使用モードの 2 モード分離ラッパー。
  * 編集モード時のみ DndContext（PointerSensor + KeyboardSensor）を mount し、
  * スクロールをカウンタ式でロックする。
+ *
+ * children（TileGrid 等）は setDndHandlers で onDragStart/Over/End を登録できる。
+ * 登録されたハンドラは DndContext の対応する props に接続される。
  */
 function ToolboxShell({ children, className }: ToolboxShellProps) {
   const [mode, setMode] = useState<ToolboxMode>("view");
+
+  /**
+   * children が登録する DnD イベントハンドラ。
+   * TileGrid（2.2.6）が setDndHandlers 経由でここに登録する。
+   * 初期値は空のハンドラ（何もしない）。
+   */
+  const [dndHandlers, setDndHandlersState] = useState<ToolboxDndHandlers>({});
+
+  /**
+   * children に渡す setDndHandlers 関数。
+   * useCallback で安定させ、children の不要な再レンダーを防ぐ。
+   */
+  const setDndHandlers = useCallback((handlers: ToolboxDndHandlers) => {
+    setDndHandlersState(handlers);
+  }, []);
 
   /**
    * focus management 用 ref。
@@ -183,11 +234,21 @@ function ToolboxShell({ children, className }: ToolboxShellProps) {
        * DragOverlay / SortableContext は children 内（2.2.6 の配置 UI）が持つ。
        */}
       {mode === "edit" ? (
-        <DndContext sensors={sensors}>
-          <div className={styles.tilesContainer}>{children({ mode })}</div>
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragStart={dndHandlers.onDragStart}
+          onDragOver={dndHandlers.onDragOver}
+          onDragEnd={dndHandlers.onDragEnd}
+        >
+          <div className={styles.tilesContainer}>
+            {children({ mode, setDndHandlers })}
+          </div>
         </DndContext>
       ) : (
-        <div className={styles.tilesContainer}>{children({ mode })}</div>
+        <div className={styles.tilesContainer}>
+          {children({ mode, setDndHandlers })}
+        </div>
       )}
     </div>
   );

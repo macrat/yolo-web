@@ -7,11 +7,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: [
-          "/api/",
-          // 開発者向けスパイク検証ページ（noindex 設定済み）
-          "/dnd-spike",
-        ],
+        disallow: ["/api/"],
       },
     ],
     sitemap: `${BASE_URL}/sitemap.xml`,
