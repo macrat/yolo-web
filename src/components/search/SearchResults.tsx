@@ -16,7 +16,8 @@ export type FlatItem = {
 type SearchResultsProps = {
   results: SearchResultGroup[];
   query: string;
-  onSelect: () => void;
+  /** Called with the URL of the selected result when the user clicks a link. */
+  onSelect: (url: string) => void;
   error: string | null;
   activeIndex: number;
 };
@@ -122,7 +123,7 @@ export default function SearchResults({
                 key={item.document.id}
                 href={item.document.url}
                 className={`${styles.item} ${isActive ? styles.itemActive : ""}`}
-                onClick={onSelect}
+                onClick={() => onSelect(item.document.url)}
                 role="option"
                 aria-selected={isActive}
                 id={getResultOptionId(currentFlatIndex)}

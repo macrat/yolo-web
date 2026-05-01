@@ -1,6 +1,13 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useRef,
+  useImperativeHandle,
+} from "react";
 import { useRouter } from "next/navigation";
 import { useSearch } from "./useSearch";
 import SearchInput from "./SearchInput";
@@ -9,17 +16,82 @@ import SearchResults, {
   getResultOptionId,
 } from "./SearchResults";
 import styles from "./SearchModal.module.css";
+import {
+  trackSearchModalClose,
+  trackSearchAbandoned,
+  trackSearchResultClick,
+  type CloseReasonValue,
+} from "@/lib/analytics";
 
+/**
+ * Normalize a URL to a site-internal path (pathname + search + hash).
+ *
+ * We use new URL(url, location.origin) to parse the URL defensively:
+ * - If `url` is already a relative path (e.g. "/tools/char-count"), this
+ *   resolves it against the current origin and extracts only the path part.
+ * - If `url` somehow contains an absolute external URL, only the path is
+ *   returned, stripping the origin — ensuring we never send external URLs to GA.
+ *
+ * SSR guard: location is not available server-side, so we return the raw url
+ * as a fallback (build-index.ts only generates site-internal paths anyway).
+ */
+function toSitePath(url: string): string {
+  if (typeof window === "undefined") return url;
+  try {
+    const parsed = new URL(url, window.location.origin);
+    return parsed.pathname + parsed.search + parsed.hash;
+  } catch {
+    // Malformed URL — return as-is (build-index.ts ensures these are valid paths)
+    return url;
+  }
+}
+
+/**
+ * The reason a search modal was closed — used for focus restoration logic.
+ * Kept as a two-value union (separate from GA4's CloseReasonValue) because
+ * SearchTrigger only needs to know "navigation vs dismiss" to decide whether
+ * to restore focus to the trigger element.
+ */
 export type CloseReason = "navigation" | "dismiss";
+
+/**
+ * Handle exposed via useImperativeHandle for external callers (SearchTrigger).
+ * Only tracking methods are exposed — no state mutation or onClose calls.
+ */
+export type SearchModalHandle = {
+  /**
+   * Records the close event and, if abandoned, fires search_abandoned.
+   * Must be called BEFORE setIsOpen(false) so that tracking flags in useSearch
+   * still reflect the pre-close state when this method runs.
+   * Does NOT call onClose or mutate isOpen state.
+   */
+  recordCloseAndAbandonedTracking: (reason: CloseReasonValue) => void;
+};
 
 type SearchModalProps = {
   isOpen: boolean;
   onClose: (reason: CloseReason) => void;
+  /** React 19 props-based ref — no forwardRef required. */
+  ref?: React.Ref<SearchModalHandle>;
 };
 
-export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
-  const { query, setQuery, results, isLoading, error, loadIndex, clearSearch } =
-    useSearch();
+export default function SearchModal({
+  ref,
+  isOpen,
+  onClose,
+}: SearchModalProps) {
+  const {
+    query,
+    setQuery,
+    results,
+    isLoading,
+    error,
+    loadIndex,
+    clearSearch,
+    getHasSearched,
+    getHadAnyInput,
+    resetTracking,
+  } = useSearch();
   const router = useRouter();
   const [activeIndex, setActiveIndex] = useState(-1);
 
@@ -27,6 +99,22 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const flatItems = useMemo(() => flattenItems(results), [results]);
+
+  // Expose tracking-only methods to external callers (e.g. SearchTrigger for
+  // popstate and Cmd+K close paths that bypass handleClose entirely).
+  useImperativeHandle(
+    ref,
+    () => ({
+      recordCloseAndAbandonedTracking: (reason: CloseReasonValue) => {
+        const hasSearched = getHasSearched();
+        trackSearchModalClose({ close_reason: reason });
+        if (!hasSearched) {
+          trackSearchAbandoned({ had_query: getHadAnyInput() });
+        }
+      },
+    }),
+    [getHasSearched, getHadAnyInput],
+  );
 
   // Wrap setQuery to also reset active index when input changes
   const handleQueryChange = useCallback(
@@ -37,15 +125,34 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
     [setQuery],
   );
 
-  // Wrap onClose to also reset active index.
-  // reason is forwarded to the parent so it can decide whether to restore focus.
+  /**
+   * Central close handler for all paths that go through SearchModal itself
+   * (ESC / cancel, backdrop click, ✕ button, Enter key navigation).
+   *
+   * gaReason is the GA4-level CloseReasonValue (6 values) while reason is
+   * the focus-restoration CloseReason (2 values) forwarded to the parent.
+   *
+   * Firing order (per cycle-173 §3 spec):
+   *   1. Read abandoned state (getHasSearched)
+   *   2. trackSearchModalClose
+   *   3. trackSearchAbandoned (only if not searched)
+   *   4. clearSearch + onClose (existing order preserved)
+   */
   const handleClose = useCallback(
-    (reason: CloseReason) => {
+    (reason: CloseReason, gaReason: CloseReasonValue) => {
+      const hasSearched = getHasSearched();
+      // Step 2: fire close event with GA4 reason
+      trackSearchModalClose({ close_reason: gaReason });
+      // Step 3: fire abandoned event if user never executed a search
+      if (!hasSearched) {
+        trackSearchAbandoned({ had_query: getHadAnyInput() });
+      }
+      // Step 4: reset UI state and notify parent (existing order preserved)
       setActiveIndex(-1);
       clearSearch();
       onClose(reason);
     },
-    [onClose, clearSearch],
+    [onClose, clearSearch, getHasSearched, getHadAnyInput],
   );
 
   // Open/close the native <dialog> element based on the isOpen prop.
@@ -60,6 +167,9 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
 
     if (isOpen) {
       dialog.showModal();
+      // Reset tracking flags each time the modal opens so abandoned/hasSearched
+      // always reflect the current session, not a previous one.
+      resetTracking();
       // Focus the search input after opening
       inputRef.current?.focus();
       loadIndex();
@@ -69,7 +179,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
       dialog.close();
       clearSearch();
     }
-  }, [isOpen, loadIndex, clearSearch]);
+  }, [isOpen, loadIndex, clearSearch, resetTracking]);
 
   // Lock body scroll when open.
   // showModal() does not automatically lock scroll, so we manage it manually.
@@ -91,7 +201,8 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
   const handleCancel = useCallback(
     (e: React.SyntheticEvent<HTMLDialogElement>) => {
       e.preventDefault();
-      handleClose("dismiss");
+      // "cancel" event = ESC key → GA4 close_reason: "escape"
+      handleClose("dismiss", "escape");
     },
     [handleClose],
   );
@@ -102,7 +213,8 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
   const handleDialogClick = useCallback(
     (e: React.MouseEvent<HTMLDialogElement>) => {
       if (e.target === dialogRef.current) {
-        handleClose("dismiss");
+        // Backdrop click → GA4 close_reason: "backdrop"
+        handleClose("dismiss", "backdrop");
       }
     },
     [handleClose],
@@ -124,12 +236,16 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
         e.preventDefault();
         const item = flatItems[activeIndex];
         if (item) {
-          handleClose("navigation");
+          // Fire search_result_click before closing (§3-5: Enter key path)
+          const safePath = toSitePath(item.url);
+          trackSearchResultClick({ search_term: query, result_url: safePath });
+          // Enter key selects a result → GA4 close_reason: "navigation"
+          handleClose("navigation", "navigation");
           router.push(item.url);
         }
       }
     },
-    [handleClose, flatItems, activeIndex, router],
+    [handleClose, flatItems, activeIndex, router, query],
   );
 
   useEffect(() => {
@@ -176,7 +292,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
           type="button"
           className={styles.closeButton}
           aria-label="検索を閉じる"
-          onClick={() => handleClose("dismiss")}
+          onClick={() => handleClose("dismiss", "close_button")}
         >
           ✕
         </button>
@@ -184,7 +300,12 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
       <SearchResults
         results={results}
         query={query}
-        onSelect={() => handleClose("navigation")}
+        onSelect={(url) => {
+          // Fire search_result_click before closing (§3-5: click path)
+          const safePath = toSitePath(url);
+          trackSearchResultClick({ search_term: query, result_url: safePath });
+          handleClose("navigation", "navigation");
+        }}
         error={error}
         activeIndex={activeIndex}
       />
