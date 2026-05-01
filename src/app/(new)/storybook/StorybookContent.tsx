@@ -8,7 +8,20 @@ import Breadcrumb from "@/components/Breadcrumb";
 import ToggleSwitch from "@/components/ToggleSwitch";
 import Pagination from "@/components/Pagination";
 import ShareButtons from "@/components/ShareButtons";
+import { DndContext, closestCenter } from "@dnd-kit/core";
+import { SortableContext, rectSortingStrategy } from "@dnd-kit/sortable";
+import Tile from "@/components/Tile";
+import EmptySlot from "@/components/Tile/EmptySlot";
+import {
+  FIXTURE_SMALL_1,
+  FIXTURE_SMALL_2,
+  FIXTURE_MEDIUM_1,
+  FIXTURE_MEDIUM_2,
+  FIXTURE_LARGE_1,
+} from "@/components/Tile/fixtures";
+import ToolboxShell, { type ToolboxMode } from "@/components/ToolboxShell";
 import styles from "./page.module.css";
+import tileStyles from "./TileStorybook.module.css";
 
 // カラースウォッチの定義
 const COLOR_SECTIONS = [
@@ -89,6 +102,8 @@ const TOC_ITEMS = [
   { id: "toggle-switch", label: "8. ToggleSwitch" },
   { id: "pagination", label: "9. Pagination" },
   { id: "share-buttons", label: "10. ShareButtons" },
+  { id: "tile", label: "11. Tile" },
+  { id: "toolbox-shell", label: "12. ToolboxShell（モード切替）" },
 ];
 
 export default function StorybookContent() {
@@ -596,6 +611,186 @@ export default function StorybookContent() {
           />
         </Panel>
       </section>
+
+      {/* === 11. Tile === */}
+      <section id="tile" className={styles.section}>
+        <h2 className={styles.sectionTitle}>11. Tile</h2>
+        <Panel as="div">
+          <span className={styles.previewLabel}>
+            Preview: 使用モード（view）
+          </span>
+          <p
+            style={{
+              fontSize: "0.85rem",
+              color: "var(--fg-soft)",
+              marginBottom: "1rem",
+            }}
+          >
+            view モード: ヘッダーにタイトルのみ表示。コンテンツクリック有効。
+          </p>
+          <TileStorybookGrid mode="view" />
+        </Panel>
+        <Panel as="div">
+          <span className={styles.previewLabel}>
+            Preview: 編集モード（edit）
+          </span>
+          <p
+            style={{
+              fontSize: "0.85rem",
+              color: "var(--fg-soft)",
+              marginBottom: "1rem",
+            }}
+          >
+            edit モード: ドラッグハンドル・削除ボタン表示。small
+            サイズはタイトル 2 段組。コンテンツクリック無効（CSS pointer-events:
+            none）。
+          </p>
+          <TileStorybookGrid mode="edit" />
+          <h3
+            className={styles.subsectionTitle}
+            style={{ marginTop: "1.5rem" }}
+          >
+            EmptySlot（追加スロット）
+          </h3>
+          <div className={tileStyles.grid}>
+            <EmptySlot size="small" />
+            <EmptySlot size="medium" />
+            <EmptySlot size="large" />
+          </div>
+        </Panel>
+      </section>
+
+      {/* === 12. ToolboxShell（モード切替）=== */}
+      <section id="toolbox-shell" className={styles.section}>
+        <h2 className={styles.sectionTitle}>12. ToolboxShell（モード切替）</h2>
+        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        <Panel as="div">
+          <span className={styles.previewLabel}>Preview: ToolboxShell</span>
+          <p
+            style={{
+              fontSize: "0.85rem",
+              color: "var(--fg-soft)",
+              marginBottom: "1rem",
+            }}
+          >
+            「編集」ボタンで編集モードへ。「完了」ボタンで使用モードへ戻る。
+            編集モード時のみ DndContext が mount される。
+            フィクスチャタイルをクリックして count が増えるのは使用モード時のみ
+            （編集モード中は click ハンドラが early return）。
+          </p>
+          <ToolboxShell>
+            {({ mode }) => <ToolboxShellFixture mode={mode} />}
+          </ToolboxShell>
+        </Panel>
+      </section>
     </div>
+  );
+}
+
+/**
+ * ToolboxShell Storybook 用フィクスチャ。
+ *
+ * mode="edit" 時は onClick が early return するため count が増えない。
+ * data-testid="fixture-count" でカウント値を Playwright から読み取れる。
+ */
+function ToolboxShellFixture({ mode }: { mode: ToolboxMode }) {
+  const [count, setCount] = useState(0);
+
+  function handleTileClick() {
+    if (mode === "edit") return;
+    setCount((c) => c + 1);
+  }
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+      <div
+        style={{
+          fontSize: "0.8rem",
+          color: "var(--fg-soft)",
+          padding: "0.25rem 0.5rem",
+          background: "var(--bg-soft)",
+          borderRadius: "var(--r-normal)",
+          display: "inline-flex",
+          gap: "0.5rem",
+          alignItems: "center",
+        }}
+      >
+        <span>現在のモード:</span>
+        <strong
+          style={{ color: mode === "edit" ? "var(--warning)" : "var(--fg)" }}
+        >
+          {mode === "edit" ? "編集モード" : "使用モード"}
+        </strong>
+        <span>|</span>
+        <span>
+          クリック count: <span data-testid="fixture-count">{count}</span>
+        </span>
+      </div>
+
+      {(["タイル A", "タイル B", "タイル C"] as const).map((label) => (
+        <button
+          key={label}
+          type="button"
+          data-testid={`fixture-tile-${label}`}
+          onClick={handleTileClick}
+          style={{
+            padding: "1rem",
+            background: "var(--bg)",
+            border: "1px solid var(--border)",
+            borderRadius: "var(--r-normal)",
+            cursor: mode === "edit" ? "grab" : "pointer",
+            textAlign: "left",
+            fontSize: "0.9rem",
+            color: "var(--fg)",
+          }}
+        >
+          {label}
+          {mode === "edit" && (
+            <span
+              style={{
+                marginLeft: "0.5rem",
+                fontSize: "0.75rem",
+                color: "var(--fg-soft)",
+              }}
+            >
+              （ドラッグで移動）
+            </span>
+          )}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+/** Tile の storybook グリッド表示用ヘルパーコンポーネント */
+function TileStorybookGrid({ mode }: { mode: "view" | "edit" }) {
+  const fixtures = [
+    FIXTURE_SMALL_1,
+    FIXTURE_MEDIUM_1,
+    FIXTURE_SMALL_2,
+    FIXTURE_MEDIUM_2,
+    FIXTURE_LARGE_1,
+  ];
+  const slugs = fixtures.map((f) => f.tileable.slug);
+
+  return (
+    // useSortable（Tile 内部）を正常動作させるために DndContext + SortableContext が必要
+    // storybook はデモ用途なので実際の並べ替えは行わない（onDragEnd は no-op）
+    <DndContext collisionDetection={closestCenter} onDragEnd={() => {}}>
+      <SortableContext items={slugs} strategy={rectSortingStrategy}>
+        <div className={tileStyles.grid}>
+          {fixtures.map((fixture) => (
+            <Tile
+              key={`${mode}-${fixture.tileable.slug}`}
+              tileable={fixture.tileable}
+              size={fixture.recommendedSize}
+              mode={mode}
+              onDelete={mode === "edit" ? () => {} : undefined}
+              onContentClick={mode === "view" ? () => {} : undefined}
+            />
+          ))}
+        </div>
+      </SortableContext>
+    </DndContext>
   );
 }
