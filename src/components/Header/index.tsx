@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { acquireScrollLock, releaseScrollLock } from "@/lib/scroll-lock";
 import styles from "./Header.module.css";
 
 /** サイト全体で固定のナビゲーション項目。
@@ -82,17 +83,17 @@ export default function Header({ actions }: HeaderProps) {
   }, [handleKeyDown]);
 
   /** menuOpen 中はボディスクロールをロックして背景がスクロールしないようにする。
-   * layout.tsx が <body style={...}> を React で管理しているため、
-   * useEffect で document.body.style.overflow を直書きすると reconciliation で消える。
-   * classList.add/remove + globals.css の .scroll-locked { overflow: hidden } を使う。 */
+   * scroll-lock.ts の参照カウンタ式ヘルパを使用。
+   * ToolboxShell 等の別コンポーネントと同居しても scroll-locked クラスを奪い合わない。
+   * AP-I07 準拠: body.style.overflow の直書き禁止。 */
   useEffect(() => {
     if (menuOpen) {
-      document.body.classList.add("scroll-locked");
-    } else {
-      document.body.classList.remove("scroll-locked");
+      acquireScrollLock();
     }
     return () => {
-      document.body.classList.remove("scroll-locked");
+      if (menuOpen) {
+        releaseScrollLock();
+      }
     };
   }, [menuOpen]);
 

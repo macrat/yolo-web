@@ -55,6 +55,14 @@
   --shadow-dragging:
     0 8px 20px rgba(26, 26, 26, 0.14), 0 2px 4px rgba(26, 26, 26, 0.08);
 
+  /* Toolbox z-index レイヤ（ToolboxShell / Tile 共通トークン、AP-I08 準拠）
+   * ToolboxShell のオーバーレイ → タイル → ドラッグ中タイル → ツールバーの順で前面化。
+   * CSS Modules 間で同一の数値を参照するために globals.css でグローバル定義する。 */
+  --z-tile-overlay: 100; /* 編集モードオーバーレイ（ToolboxShell.module.css） */
+  --z-tile: 200; /* 各タイル（Tile.module.css） */
+  --z-tile-dragging: 300; /* ドラッグ中タイル（Tile.module.css） */
+  --z-tile-toolbar: 400; /* 編集/完了ボタンバー（ToolboxShell.module.css） */
+
   /* Admonition (GFM Alert) カラートークン — ブログ記事用の特殊スタイル。
    * note/tip/warning/caution は既存の status トークンのエイリアス。
    * important のみ new 体系に紫系がないため独自定義。 */
