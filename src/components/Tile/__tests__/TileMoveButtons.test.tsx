@@ -213,4 +213,95 @@ describe("TileMoveButtons — small サイズ", () => {
       expect(firstBtn).toHaveFocus();
     });
   });
+
+  test("O2: ESC で閉じた後、展開トリガーにフォーカスが戻る", () => {
+    render(<TileMoveButtons {...defaultProps} size="small" />);
+    const trigger = screen.getByRole("button", { name: "移動操作を展開" });
+    trigger.focus();
+
+    fireEvent.click(trigger);
+    fireEvent.keyDown(document, { key: "Escape", code: "Escape" });
+
+    // 閉じた後、展開トリガーにフォーカスが戻っていること
+    expect(trigger).toHaveFocus();
+  });
+
+  test("O2: 閉じるボタンで閉じた後、展開トリガーにフォーカスが戻る", () => {
+    render(<TileMoveButtons {...defaultProps} size="small" />);
+    const trigger = screen.getByRole("button", { name: "移動操作を展開" });
+    trigger.focus();
+
+    fireEvent.click(trigger);
+    const closeBtn = screen.getByRole("button", { name: "移動操作を閉じる" });
+    fireEvent.click(closeBtn);
+
+    // 閉じた後、展開トリガーにフォーカスが戻っていること
+    expect(trigger).toHaveFocus();
+  });
+
+  test("O1: isOverlayOpen=true のとき展開トリガーをクリックしても展開しない", () => {
+    render(
+      <TileMoveButtons {...defaultProps} size="small" isOverlayOpen={true} />,
+    );
+    const trigger = screen.getByRole("button", { name: "移動操作を展開" });
+    fireEvent.click(trigger);
+
+    // 他の overlay が開いているため展開しない
+    expect(
+      screen.queryByRole("button", { name: "先頭へ移動" }),
+    ).not.toBeInTheDocument();
+  });
+
+  test("O1: 展開中に isOverlayOpen が true になると展開パネルが閉じる", () => {
+    const { rerender } = render(
+      <TileMoveButtons {...defaultProps} size="small" isOverlayOpen={false} />,
+    );
+    const trigger = screen.getByRole("button", { name: "移動操作を展開" });
+    fireEvent.click(trigger);
+    expect(
+      screen.getByRole("button", { name: "先頭へ移動" }),
+    ).toBeInTheDocument();
+
+    // isOverlayOpen が true に変わると展開パネルが閉じる
+    rerender(
+      <TileMoveButtons {...defaultProps} size="small" isOverlayOpen={true} />,
+    );
+    expect(
+      screen.queryByRole("button", { name: "先頭へ移動" }),
+    ).not.toBeInTheDocument();
+  });
+
+  test("O1: 展開時に onExpandChange(true) が呼ばれる", () => {
+    const onExpandChange = vi.fn();
+    render(
+      <TileMoveButtons
+        {...defaultProps}
+        size="small"
+        onExpandChange={onExpandChange}
+      />,
+    );
+    const trigger = screen.getByRole("button", { name: "移動操作を展開" });
+    fireEvent.click(trigger);
+
+    expect(onExpandChange).toHaveBeenCalledWith(true);
+  });
+
+  test("O1: 閉じるボタンで閉じたとき onExpandChange(false) が呼ばれる", () => {
+    const onExpandChange = vi.fn();
+    render(
+      <TileMoveButtons
+        {...defaultProps}
+        size="small"
+        onExpandChange={onExpandChange}
+      />,
+    );
+    const trigger = screen.getByRole("button", { name: "移動操作を展開" });
+    fireEvent.click(trigger);
+    onExpandChange.mockClear();
+
+    const closeBtn = screen.getByRole("button", { name: "移動操作を閉じる" });
+    fireEvent.click(closeBtn);
+
+    expect(onExpandChange).toHaveBeenCalledWith(false);
+  });
 });

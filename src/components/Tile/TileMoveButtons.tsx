@@ -30,6 +30,19 @@ export interface TileMoveButtonsProps {
   onMoveNext: () => void;
   /** 末尾へ移動 */
   onMoveLast: () => void;
+  /**
+   * 他の overlay（AddTileModal など）が開いているかどうか（O1: 排他制御）。
+   * true のとき small サイズの展開を抑制し、展開中なら強制的に閉じる。
+   * 省略時は false として扱う。
+   */
+  isOverlayOpen?: boolean;
+  /**
+   * small サイズ展開パネルの開閉状態変化コールバック（O1: 排他制御）。
+   * 展開時に true、閉じるときに false を渡す。
+   * 親（Tile → TileGrid）がこれを受け取り setOpenOverlay を呼ぶことで
+   * 双方向の overlay 排他制御を実現する。
+   */
+  onExpandChange?: (expanded: boolean) => void;
 }
 
 /** isFirst / isLast のどちらの条件で disabled を判定するかを表す型 */
@@ -167,7 +180,12 @@ function MoveButtonList({
  *
  * a11y 対応（small サイズ展開パネル）:
  * - 展開時に先頭ボタン（「先頭へ移動」）へ自動フォーカス
- * - ESC キーで展開パネルを閉じる
+ * - ESC キーで展開パネルを閉じる（O3: expanded=true の時のみ listener 登録）
+ * - 閉じた時、展開トリガーにフォーカスを戻す（O2: WAI-ARIA disclosure パターン）
+ *
+ * 排他制御（O1）:
+ * - isOverlayOpen=true の時は展開を抑制し、展開中なら強制的に閉じる
+ * - onExpandChange で親に開閉状態を通知し、双方向排他を実現する
  */
 export default function TileMoveButtons({
   size,
@@ -177,34 +195,70 @@ export default function TileMoveButtons({
   onMovePrev,
   onMoveNext,
   onMoveLast,
+  isOverlayOpen = false,
+  onExpandChange,
 }: TileMoveButtonsProps) {
   const [expanded, setExpanded] = useState(false);
   /** 展開パネル内の先頭ボタンへの ref（フォーカス自動移動に使用） */
   const firstButtonRef = useRef<HTMLButtonElement>(null);
+  /** 展開トリガーへの ref（閉じた後のフォーカス戻しに使用 O2） */
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
-  /** ESC キーで展開パネルを閉じる */
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent) => {
-      if (e.key === "Escape" && expanded) {
-        setExpanded(false);
-      }
+  /**
+   * 展開状態を変更するヘルパー。
+   * setExpanded + onExpandChange を一括して呼び出す。
+   */
+  const changeExpanded = useCallback(
+    (next: boolean) => {
+      setExpanded(next);
+      onExpandChange?.(next);
     },
-    [expanded],
+    [onExpandChange],
   );
 
+  /**
+   * 閉じる処理（O2: 閉じた後は展開トリガーにフォーカスを戻す）。
+   * WAI-ARIA disclosure パターン: 閉じた時はトリガーに focus を戻す。
+   * 同期的に focus() を呼ぶ（React の state 更新より先に DOM focus を確保）。
+   */
+  const closePanel = useCallback(() => {
+    changeExpanded(false);
+    triggerRef.current?.focus();
+  }, [changeExpanded]);
+
+  /**
+   * ESC キーで展開パネルを閉じる（O3: expanded=true の時のみ listener を登録）。
+   */
   useEffect(() => {
+    if (!expanded) return;
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        closePanel();
+      }
+    }
     document.addEventListener("keydown", handleKeyDown);
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [handleKeyDown]);
+  }, [expanded, closePanel]);
 
-  /** 展開時に先頭ボタンへフォーカスを移動する */
+  /**
+   * O1: 他の overlay が開いたとき（isOverlayOpen=true）の展開パネル抑制。
+   * expanded state はそのまま保持し、実際の表示を `isVisible` で制御する。
+   * isOverlayOpen が false に戻っても expanded は false のまま（ユーザーが再展開する必要がある）。
+   * これにより useEffect での setState（cascading renders lint エラー）を回避できる。
+   */
+  const isVisible = expanded && !isOverlayOpen;
+
+  /**
+   * 展開時に先頭ボタンへフォーカスを移動する（N2）。
+   * isVisible（= expanded && !isOverlayOpen）が true の時のみ発火。
+   */
   useEffect(() => {
-    if (expanded && firstButtonRef.current) {
+    if (isVisible && firstButtonRef.current) {
       firstButtonRef.current.focus();
     }
-  }, [expanded]);
+  }, [isVisible]);
 
   if (size !== "small") {
     // medium / large: 4 ボタンを常時表示
@@ -224,11 +278,20 @@ export default function TileMoveButtons({
   return (
     <div className={styles.smallWrapper}>
       <button
+        ref={triggerRef}
         type="button"
         className={styles.expandButton}
         aria-label="移動操作を展開"
-        aria-expanded={expanded}
-        onClick={() => setExpanded((v) => !v)}
+        aria-expanded={isVisible}
+        onClick={() => {
+          // O1: 他の overlay が開いている場合は展開しない
+          if (isOverlayOpen) return;
+          if (expanded) {
+            closePanel();
+          } else {
+            changeExpanded(true);
+          }
+        }}
       >
         {/* Lucide more-horizontal 相当 */}
         <svg
@@ -246,7 +309,7 @@ export default function TileMoveButtons({
         </svg>
       </button>
 
-      {expanded && (
+      {isVisible && (
         <div className={styles.expandedPanel}>
           <MoveButtonList
             isFirst={isFirst}
@@ -262,7 +325,7 @@ export default function TileMoveButtons({
             type="button"
             className={styles.closeButton}
             aria-label="移動操作を閉じる"
-            onClick={() => setExpanded(false)}
+            onClick={closePanel}
           >
             <svg
               viewBox="0 0 24 24"

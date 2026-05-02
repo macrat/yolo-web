@@ -225,7 +225,7 @@ describe("TileGrid", () => {
       ]);
       render(<TileGrid config={config} mode="view" onConfigChange={vi.fn()} />);
 
-      // 削除ボタン（aria-label="削除"）が存在しない
+      // 削除ボタン（aria-label="削除する"）が存在しない
       const deleteButtons = screen.queryAllByRole("button", { name: /削除/ });
       expect(deleteButtons).toHaveLength(0);
     });
