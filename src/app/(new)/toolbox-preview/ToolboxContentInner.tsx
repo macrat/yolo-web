@@ -66,12 +66,14 @@ export default function ToolboxContent() {
 
   return (
     <ToolboxShell>
-      {({ mode, setDndHandlers }) => (
+      {({ mode, setDndHandlers, openOverlayId, setOpenOverlay }) => (
         <TileGrid
           config={config}
           mode={mode}
           onConfigChange={handleConfigChange}
           setDndHandlers={setDndHandlers}
+          openOverlayId={openOverlayId}
+          setOpenOverlay={setOpenOverlay}
         />
       )}
     </ToolboxShell>
