@@ -14,6 +14,10 @@
  * - DndContext / SortableContext の mount は外側ラッパー / 配置 UI（#6）の責務。Tile は useSortable を内部で使う（経路 B 採用前提）
  * - DragOverlay は親コンポーネント（#6）側で扱うため、Tile は通常レンダリングのみ実装
  *
+ * CSS Grid span（#1 修正）:
+ * - gridColumn のインラインスタイルを廃止。span 値は TileGrid.module.css の data-size セレクタで制御。
+ * - インラインスタイルで gridColumn を設定すると CSS が上書きできず、ブレークポイントで暗黙トラックが発生する（致命バグ）。
+ *
  * z-index 階層（AP-I08 準拠）:
  * - タイル通常時: z-index 200
  * - ドラッグ中: z-index 300
@@ -22,8 +26,8 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import type { Tileable } from "@/lib/toolbox/types";
-import { SIZE_SPAN } from "./constants";
 import type { TileSize, TileMode } from "./types";
+import TileMoveButtons from "./TileMoveButtons";
 import styles from "./Tile.module.css";
 
 /** Tile コンポーネントの props */
@@ -53,6 +57,18 @@ interface TileProps {
    * mode="edit" 時の click ブロックは CSS pointer-events: none（Tile.module.css）に集約。
    */
   onContentClick?: () => void;
+  /** このタイルがリスト先頭か（移動ボタンの disabled 判定に使用）。省略時は false */
+  isFirst?: boolean;
+  /** このタイルがリスト末尾か（移動ボタンの disabled 判定に使用）。省略時は false */
+  isLast?: boolean;
+  /** 先頭へ移動コールバック（編集モードのみ） */
+  onMoveFirst?: () => void;
+  /** 1 つ前へ移動コールバック（編集モードのみ） */
+  onMovePrev?: () => void;
+  /** 1 つ後へ移動コールバック（編集モードのみ） */
+  onMoveNext?: () => void;
+  /** 末尾へ移動コールバック（編集モードのみ） */
+  onMoveLast?: () => void;
 }
 
 /**
@@ -68,6 +84,12 @@ function Tile({
   mode,
   onDelete,
   onContentClick,
+  isFirst = false,
+  isLast = false,
+  onMoveFirst,
+  onMovePrev,
+  onMoveNext,
+  onMoveLast,
 }: TileProps) {
   const {
     attributes,
@@ -82,8 +104,9 @@ function Tile({
     // transform は useSortable から得た値を適用（DnD 中の位置移動）
     transform: CSS.Transform.toString(transform),
     transition,
-    // CSS Grid の span 数をサイズに応じて設定
-    gridColumn: `span ${SIZE_SPAN[size]}`,
+    // gridColumn はインラインスタイルで設定しない（#1 修正）。
+    // TileGrid.module.css の data-size セレクタで制御することでブレークポイント別 span が正しく動作する。
+    // インラインスタイルは CSS より優先度が高いため、ここに gridColumn を書くと CSS が上書きできない。
   };
 
   /**
@@ -167,6 +190,19 @@ function Tile({
               {/* タイルタイトル（small 以外はここに配置、small は 2 段目） */}
               {size !== "small" && (
                 <span className={styles.title}>{tileable.displayName}</span>
+              )}
+
+              {/* 移動ボタン（先頭/前/後/末尾、#11 move buttons）*/}
+              {onMoveFirst && onMovePrev && onMoveNext && onMoveLast && (
+                <TileMoveButtons
+                  size={size}
+                  isFirst={isFirst}
+                  isLast={isLast}
+                  onMoveFirst={onMoveFirst}
+                  onMovePrev={onMovePrev}
+                  onMoveNext={onMoveNext}
+                  onMoveLast={onMoveLast}
+                />
               )}
 
               {/* 削除ボタン */}

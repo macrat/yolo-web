@@ -28,3 +28,6 @@
 
 - AP-I09: Next.js layout の body 属性・CSS スタッキング・production ビルド由来のバグは jsdom 単体テストで検出できない。
   → layout 依存（body 属性、GoogleAnalytics 等）、CSS のレイアウト/スタッキング、production ビルド最適化挙動は、jsdom + 単体 render では再現しない。a11y や視覚に関わる挙動は Playwright で本番ビルド検証を必須にする。（cycle-171で実際に発生）
+
+- AP-I10: DESIGN.md §4「ドラッグ・編集モードの視覚表現ルール」で規定されていない視覚表現を実装上の都合で追加しない。
+  → ドラッグ中の半透明（opacity）、色相変化、スケール変化は「持ち上げて運ぶ道具」という物理的隠喩を壊す。DESIGN.md §4 で認められているのは `box-shadow: var(--shadow-dragging)` のみ。新しいコンポーネント実装時や編集モードの視覚調整時は、必ず DESIGN.md §4 を参照して規定外表現が混入していないかを確認する。（cycle-175 で opacity 半透明追加が実際に発生し PM 直接修正が必要になった）

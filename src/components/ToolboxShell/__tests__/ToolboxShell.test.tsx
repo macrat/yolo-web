@@ -17,7 +17,7 @@
  */
 
 import { expect, test, describe, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, act } from "@testing-library/react";
 import ToolboxShell from "@/components/ToolboxShell";
 
 // @dnd-kit/core の DndContext / sensors をモック化（jsdom では DnD 物理挙動を評価しない）
@@ -30,6 +30,7 @@ vi.mock("@dnd-kit/core", () => ({
     "data-testid"?: string;
   }) => <div data-testid={testid ?? "dnd-context-mock"}>{children}</div>,
   PointerSensor: class PointerSensor {},
+  TouchSensor: class TouchSensor {},
   KeyboardSensor: class KeyboardSensor {},
   useSensor: vi.fn(),
   useSensors: vi.fn(() => []),
@@ -130,11 +131,13 @@ describe("ToolboxShell", () => {
   test("children render prop に view モードが渡される（初期）", () => {
     const child = vi.fn(() => null);
     render(<ToolboxShell>{child}</ToolboxShell>);
-    // setDndHandlers が追加されたため、mode と setDndHandlers の両方を検証する
-    expect(child).toHaveBeenCalledWith({
-      mode: "view",
-      setDndHandlers: expect.any(Function),
-    });
+    // openOverlayId / setOpenOverlay が追加されたため objectContaining で検証する
+    expect(child).toHaveBeenCalledWith(
+      expect.objectContaining({
+        mode: "view",
+        setDndHandlers: expect.any(Function),
+      }),
+    );
   });
 
   test("編集モード時に children render prop に edit モードが渡される", () => {
@@ -144,10 +147,12 @@ describe("ToolboxShell", () => {
       screen.getByRole("button", { name: "道具箱を編集モードにする" }),
     );
     // 直近の呼び出しは edit モード
-    expect(child).toHaveBeenLastCalledWith({
-      mode: "edit",
-      setDndHandlers: expect.any(Function),
-    });
+    expect(child).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        mode: "edit",
+        setDndHandlers: expect.any(Function),
+      }),
+    );
   });
 
   test("完了後に children render prop に view モードが戻る", () => {
@@ -159,10 +164,12 @@ describe("ToolboxShell", () => {
     fireEvent.click(
       screen.getByRole("button", { name: "編集を完了して使用モードに戻る" }),
     );
-    expect(child).toHaveBeenLastCalledWith({
-      mode: "view",
-      setDndHandlers: expect.any(Function),
-    });
+    expect(child).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        mode: "view",
+        setDndHandlers: expect.any(Function),
+      }),
+    );
   });
 
   // --- scroll-locked クラス（AP-I07 準拠） ---
@@ -335,5 +342,87 @@ describe("ToolboxShell", () => {
     // count: 2→1 → scroll-locked はまだ残る
     expect(document.body.dataset["scrollLockCount"]).toBe("1");
     expect(document.body.classList.contains("scroll-locked")).toBe(true);
+  });
+
+  // --- overlay 排他制御 / focus トラップ強化 ---
+
+  test("初期状態では openOverlayId が null として children に渡される", () => {
+    const child = vi.fn(() => null);
+    render(<ToolboxShell>{child}</ToolboxShell>);
+    expect(child).toHaveBeenCalledWith(
+      expect.objectContaining({
+        openOverlayId: null,
+        setOpenOverlay: expect.any(Function),
+      }),
+    );
+  });
+
+  test("setOpenOverlay を呼ぶと openOverlayId が更新されて children に渡される", () => {
+    let capturedSet: ((id: string | null) => void) | null = null;
+    const child = vi.fn(
+      ({ setOpenOverlay }: { setOpenOverlay: (id: string | null) => void }) => {
+        capturedSet = setOpenOverlay;
+        return null;
+      },
+    );
+    render(<ToolboxShell>{child}</ToolboxShell>);
+    act(() => {
+      capturedSet!("add-tile-modal");
+    });
+    expect(child).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        openOverlayId: "add-tile-modal",
+      }),
+    );
+  });
+
+  test("setOpenOverlay(null) を呼ぶと openOverlayId が null に戻る", () => {
+    let capturedSet: ((id: string | null) => void) | null = null;
+    const child = vi.fn(
+      ({ setOpenOverlay }: { setOpenOverlay: (id: string | null) => void }) => {
+        capturedSet = setOpenOverlay;
+        return null;
+      },
+    );
+    render(<ToolboxShell>{child}</ToolboxShell>);
+    act(() => {
+      capturedSet!("some-modal");
+    });
+    act(() => {
+      capturedSet!(null);
+    });
+    expect(child).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        openOverlayId: null,
+      }),
+    );
+  });
+
+  test("openOverlayId が null でないとき tilesContainer に inert 属性が付与される", () => {
+    let capturedSet: ((id: string | null) => void) | null = null;
+    render(
+      <ToolboxShell>
+        {({ setOpenOverlay }) => {
+          capturedSet = setOpenOverlay;
+          return null;
+        }}
+      </ToolboxShell>,
+    );
+    const container = screen.getByTestId("toolbox-shell");
+    const tilesContainer = container.querySelector(
+      "[data-testid='toolbox-tiles']",
+    );
+    // 初期状態: inert なし
+    expect(tilesContainer).not.toHaveAttribute("inert");
+    // overlay open → inert 付与
+    act(() => {
+      capturedSet!("some-modal");
+    });
+    expect(tilesContainer).toHaveAttribute("inert");
+    // overlay close → inert 除去
+    act(() => {
+      capturedSet!(null);
+    });
+    expect(tilesContainer).not.toHaveAttribute("inert");
   });
 });

@@ -30,6 +30,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import {
   DndContext,
   PointerSensor,
+  TouchSensor,
   KeyboardSensor,
   useSensor,
   useSensors,
@@ -70,16 +71,40 @@ export interface ToolboxModeRenderProps {
    *   }, [setDndHandlers, onDragStart, onDragOver, onDragEnd]);
    */
   setDndHandlers: (handlers: ToolboxDndHandlers) => void;
+  /**
+   * 現在 open 中の overlay の ID。null なら何も開いていない。
+   * AddTileModal や small タイルの more popover が開く際にこの値を参照し、
+   * 他の overlay がすでに開いていれば同時 open を抑制できる（排他制御）。
+   * DESIGN.md §4 参照（overlay 排他制御要件）。
+   */
+  openOverlayId: string | null;
+  /**
+   * overlay の open/close を通知する関数。
+   * 開く際は一意な id 文字列を渡し、閉じる際は null を渡す。
+   * 例:
+   *   setOpenOverlay("add-tile-modal");   // open
+   *   setOpenOverlay(null);               // close
+   *
+   * openOverlayId が null でないとき、tilesContainer に inert が付与され
+   * キーボード/支援技術からタイル領域へのアクセスが遮断される（focus トラップ強化）。
+   */
+  setOpenOverlay: (id: string | null) => void;
 }
 
 interface ToolboxShellProps {
   /**
    * render prop パターン。
-   * children は関数として mode と setDndHandlers を受け取り、タイル一覧 UI を返す。
+   * children は関数として mode / setDndHandlers / openOverlayId / setOpenOverlay を受け取り、
+   * タイル一覧 UI を返す。
    * 例:
    *   <ToolboxShell>
-   *     {({ mode, setDndHandlers }) => (
-   *       <TileGrid mode={mode} setDndHandlers={setDndHandlers} />
+   *     {({ mode, setDndHandlers, openOverlayId, setOpenOverlay }) => (
+   *       <TileGrid
+   *         mode={mode}
+   *         setDndHandlers={setDndHandlers}
+   *         openOverlayId={openOverlayId}
+   *         setOpenOverlay={setOpenOverlay}
+   *       />
    *     )}
    *   </ToolboxShell>
    */
@@ -117,6 +142,30 @@ function ToolboxShell({ children, className }: ToolboxShellProps) {
   }, []);
 
   /**
+   * overlay 排他制御: 現在 open 中の overlay の ID を保持する。
+   * - null: どの overlay も開いていない
+   * - string: 当該 ID の overlay が開いている（AddTileModal / more popover 等）
+   *
+   * 役割 1（排他制御）: 子孫が setOpenOverlay を呼ぶ前に openOverlayId を参照し、
+   *   null でなければ自分の overlay を開かない実装にすることで同時 open を防ぐ。
+   *   ToolboxShell 自身は強制排他（上書き許可）にする — 最後の呼び出しが勝つ。
+   *
+   * 役割 2（focus トラップ）: openOverlayId が null でないとき tilesContainer を
+   *   inert にすることで、overlay 表示中のキーボード/支援技術によるタイル領域への
+   *   アクセスを遮断する。jsdom では inert の判定が不完全なため Playwright で検証必須。
+   *   参照: docs/anti-patterns/implementation.md AP-I09
+   */
+  const [openOverlayId, setOpenOverlayId] = useState<string | null>(null);
+
+  /**
+   * children に渡す setOpenOverlay 関数。
+   * useCallback で参照を安定させ、不要な再レンダーを抑制する。
+   */
+  const setOpenOverlay = useCallback((id: string | null) => {
+    setOpenOverlayId(id);
+  }, []);
+
+  /**
    * focus management 用 ref。
    * Button コンポーネントが forwardRef 未対応のため、ツールバーの div に ref を当て、
    * その中の button 要素を querySelector で取得してフォーカスする。
@@ -124,14 +173,30 @@ function ToolboxShell({ children, className }: ToolboxShellProps) {
   const toolbarRef = useRef<HTMLDivElement>(null);
 
   /**
-   * dnd-kit sensors:
-   * - PointerSensor: マウス / タッチ操作
+   * dnd-kit sensors（#8 TouchSensor 設定）:
+   *
+   * - PointerSensor: マウス操作（デスクトップ）
+   *   activationConstraint なし → マウスはドラッグハンドル上で即時ドラッグ開始
+   *
+   * - TouchSensor: タッチ操作（モバイル）
+   *   activationConstraint: delay 250ms + tolerance 5px
+   *   250ms の長押し後にドラッグ開始。250ms 未満の素早いタップはタップとして扱われる。
+   *   tolerance 5px: 長押し中に 5px 以上動いたらドラッグキャンセル（縦スクロール意図と判断）。
+   *   これにより「縦スワイプ = ページスクロール」「長押し + 移動 = ドラッグ」が区別される。
+   *   参照: dnd-kit 公式ドキュメント、docs/knowledge/dnd-kit.md
+   *
    * - KeyboardSensor: キーボード操作（Space でドラッグ開始 → 矢印で移動 → Space で確定）
    *
    * 使用モードでは DndContext ごと unmount されるため sensors は発火しない。
    */
   const sensors = useSensors(
     useSensor(PointerSensor),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 250,
+        tolerance: 5,
+      },
+    }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     }),
@@ -241,13 +306,28 @@ function ToolboxShell({ children, className }: ToolboxShellProps) {
           onDragOver={dndHandlers.onDragOver}
           onDragEnd={dndHandlers.onDragEnd}
         >
-          <div className={styles.tilesContainer}>
-            {children({ mode, setDndHandlers })}
+          {/*
+           * data-testid="toolbox-tiles": Playwright / テストから参照するための識別子。
+           * inert: openOverlayId が null でないとき（AddTileModal 等が open 中）、
+           *   タイル領域全体をキーボード/支援技術から到達不能にする（focus トラップ強化）。
+           *   React 19 では inert は boolean JSX 属性としてネイティブサポート済み。
+           *   jsdom では inert の判定が不完全なため Playwright で実機検証必須（AP-I09）。
+           */}
+          <div
+            className={styles.tilesContainer}
+            data-testid="toolbox-tiles"
+            inert={openOverlayId !== null ? true : undefined}
+          >
+            {children({ mode, setDndHandlers, openOverlayId, setOpenOverlay })}
           </div>
         </DndContext>
       ) : (
-        <div className={styles.tilesContainer}>
-          {children({ mode, setDndHandlers })}
+        <div
+          className={styles.tilesContainer}
+          data-testid="toolbox-tiles"
+          inert={openOverlayId !== null ? true : undefined}
+        >
+          {children({ mode, setDndHandlers, openOverlayId, setOpenOverlay })}
         </div>
       )}
     </div>
