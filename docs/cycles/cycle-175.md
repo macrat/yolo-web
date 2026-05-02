@@ -605,121 +605,126 @@ cycle-175 進行中（2.2.6 着手前）に Owner より 2 点の指摘を受け
 
 判断軸は **「Owner 指示だから」ではなく DESIGN.md ルール / constitution rule 4「best quality in every aspect for visitors」/ M1b のコア体験「自分の道具箱を組み立てる」** とする。
 
+### 計画の粒度方針（Owner 指摘反映）
+
+本対応計画は **基本設計（What / Why / 品質要件）** のレベルにとどめ、詳細設計（具体的な API 名・値・配置パスなど How）は builder の責務とする。各検討項目では「採用する選択肢」「採用根拠」「来訪者にとっての品質要件」「客観的な完了判定」を示し、実装方法は builder が選ぶ余地を残す。
+
+タグ（`(N1 反映)` 等）はレビュー履歴の追跡用に保持するが、それぞれが指していた具体的な実装値は要件レベルに格上げ（または builder 判断に委譲）した。
+
 ### PM 直接対応の境界条件（reviewer 指摘 10 反映）
 
 Owner 指摘の opacity 削除を PM が直接対応した妥当性について、`docs/anti-patterns/workflow.md` を確認した結果、当該境界に直接対応する明示的なアンチパターンは存在しない（AP-WF08「PM がサブエージェントの作業を代行」は調査・記事執筆等の創作的作業を念頭に置いた項目であり、規約違反コード 2 行の即時削除には適用しがたい）。
 
 ただし将来的な再現性のため、本対応計画に **PM 直接対応の境界条件** を明示する:
 
-- **PM 直接対応が許容される範囲**: (i) DESIGN.md / constitution / アンチパターン等の明文化された規約に対する違反が確定しており、(ii) 修正が機械的（規定外プロパティ 2 行の削除等）で設計判断を伴わず、(iii) Owner 指摘を起点とする緊急性を持つ場合。これらすべてを満たすときのみ、PM が直接コード修正してよい
+- **PM 直接対応が許容される範囲**: (i) DESIGN.md / constitution / アンチパターン等の明文化された規約に対する違反が確定しており、(ii) 修正が機械的で設計判断を伴わず、(iii) Owner 指摘を起点とする緊急性を持つ場合。これらすべてを満たすときのみ、PM が直接コード修正してよい
 - **直接対応してはいけない範囲**: 設計判断を含む変更、新規実装、複数候補から選ぶ判断を伴うリファクタ、レビューが必要な実装。これらはすべて builder への委譲とレビュアーによる検証が必要
-- 本指摘で PM が opacity 削除を直接対応したのは上記 (i)(ii)(iii) を満たす範囲。今回の追加実装（移動ボタン・sensors 分離・touch-action 等）は (ii) を満たさないため、すべて builder へ委譲する
-- なお、本境界条件は cycle-175 完了時に `docs/anti-patterns/workflow.md` への AP-WF13 として汎用ルール化する。実施は **2.2.4（編集モード設計）の末尾サブタスク** として行う（N8 reviewer 指摘反映: DESIGN.md 追記と同じ「ドキュメント整備」性質のため、2.2.11 lint/test/build 最終確認とは性質が異なる）
+- 本指摘で PM が opacity 削除を直接対応したのは上記 (i)(ii)(iii) を満たす範囲。今回の追加実装はすべて builder へ委譲する
+- 本境界条件を再発防止策として `docs/anti-patterns/workflow.md` に汎用ルール化する作業を本サイクル内で行う（具体的な追記文・追加場所は builder が決定する）
 
 ### DESIGN.md とコード側コメントの単一情報源ルール（reviewer 指摘 12 反映）
 
-DESIGN.md は yolos.net のデザイン規約の **単一情報源（Single Source of Truth）** とする。コード側のコメント（CSS / TSX）に DESIGN.md の規定文を **重複記述してはならない**。代わりに参照リンクのみを書く（例: `/* DESIGN.md §4 ドラッグ規定参照 */`）。
+DESIGN.md は yolos.net のデザイン規約の **単一情報源（Single Source of Truth）** とする。コード側のコメントに DESIGN.md の規定文を **重複記述してはならない**。コード側コメントが規約に言及するときは参照リンクのみを書く運用とする。
 
 理由: 規定文の重複記述は二重管理を生み、DESIGN.md 更新時にコード側の旧文が残るリスクがある。コード変更時は DESIGN.md を直接読みに行く運用を強制することで、規約の最新性を担保する。
 
-本対応計画の実装タスクで Tile.module.css 既存コメント（L14-17 と L42-43 と L208-210）を参照リンク形式に整理する作業を 2.2.5 のサブタスクに含める。
+既存 Tile.module.css の重複コメントを参照リンク形式に整理する作業を 2.2.5 に含める（具体の置換手段は builder 判断）。
 
 ### 検討項目 1: 編集モード時のタイル視覚表現（DESIGN.md 整合）
 
-**現状**: opacity 削除済み。`cursor: grab` + `border-color: var(--accent)` + 編集モード時のコンテンツ部 `pointer-events: none` の 3 点で「触れる状態 / 通常クリック禁止」を表現。
+**現状**: opacity は既に削除済み。「触れる状態 / 通常クリック禁止」は DESIGN.md 既存トークンの範囲で表現されている。
 
 **判断軸**:
 
-- 軸 A: 物理的隠喩「持ち上げて運ぶ道具」を壊さない（DESIGN.md §1 ビジュアルテーマ「日常の傍にある道具」）
+- 軸 A: 物理的隠喩「持ち上げて運ぶ道具」を壊さない（DESIGN.md §1）
 - 軸 B: 来訪者が「使用モードのタイル」と「編集モードのタイル」を一目で区別できる（M1b の dislikes「慣れた操作手順が突然変わる」と矛盾しない）
-- 軸 C: 視覚表現が DESIGN.md の語彙（color token / shadow token / border token）の範囲内に収まる
+- 軸 C: 視覚表現が DESIGN.md 既存トークンの範囲内に収まる
 
 **検討した選択肢**:
 
-- (a) 現状維持（grab + border-color のみ）
-- (b) 編集モードオーバーレイの強化で「画面全体が編集中であること」を明示する（個別タイルではなく場面全体で区別）
-- (c) DESIGN.md に「編集モード」「ドラッグ中」の専用視覚表現を新規定義として追加し、それに従う
+- (a) 現状維持（既存トークンのみで区別）
+- (b) ToolboxShell オーバーレイの強化で場面全体を区別する
+- (c) DESIGN.md に「ドラッグ中」「編集モード」の規定を新規追加し、それに従う
 
 **採用: (a) + (c) の組み合わせ**
 
 採用根拠:
 
-1. (a) のみで軸 A・B・C を満たす — `border-color: var(--accent)` は DESIGN.md §2「アクセント = リンクやフォーカスの位置を示す」の範囲内であり、編集モード時のタイル全体が「触れる対象としてフォーカスされた状態」と解釈できる。`cursor: grab` は OS 標準の「掴める」隠喩であり物理的隠喩を壊さない。さらに ToolboxShell 側に既存のオーバーレイと「編集中」aria-live ラベルがあり、場面全体での識別はそちらが担う（軸 B 補強）
-2. ただし「opacity 半透明禁止」という重要な規約が DESIGN.md に明示されておらず、後続作業や別 builder が再発させる懸念がある。**(c) を実施し、DESIGN.md §4 レイアウトのドラッグ規定に「ドラッグ中の表現は `box-shadow: var(--shadow-dragging)` のみで行う。半透明（opacity）・色相変化・スケール変化を加えてはならない（物理的隠喩『持ち上げて運ぶ』を保つため）」を一文追加する**
-3. 編集モード時のタイル表現についても、DESIGN.md §4 もしくは新設の「インタラクションモード」節に「編集モードのタイルは `border-color: var(--accent)` と `cursor: grab` で示す。半透明禁止。コンテンツ部のクリック禁止は `pointer-events: none` で行う」を明記する
-4. (b) は ToolboxShell のオーバーレイで既に実装済みのため重複追加は不要。場面識別はそちらに委ねる
+1. (a) は既に既存トークンの範囲で軸 A・B・C を満たす。ToolboxShell 側に既存オーバーレイと aria-live ラベルがあるため、場面全体識別はそちらが担う（軸 B 補強）
+2. ただし「opacity 半透明禁止」という重要な規約が DESIGN.md に明文化されておらず、後続作業で再発する懸念がある。再発防止のため (c) として **DESIGN.md §4 ドラッグ規定に「半透明禁止」「ドラッグ中の視覚表現は規定の影トークンのみ」「編集モード時の cursor は実際にドラッグできる領域にのみ適用」を明文化する**
+3. (b) は ToolboxShell のオーバーレイで既に実装済みのため重複追加は不要
 
-**作業内容**: `DESIGN.md` §4 レイアウトのドラッグ規定（L66-67 周辺）に上記 2 文を追記する。実装は既に整合済みのため追加コード変更なし。
+**要件 / 完了判定**:
 
-**accent ボーダー × focus-visible 競合 / ダークモードコントラスト検証（reviewer 指摘 5 反映）**:
+- DESIGN.md §4 にドラッグ規定の追記が反映され、後続の builder / reviewer が規約として参照できる
+- 既存実装が新規定と整合している（半透明使用なし）
+- 追記文面・追加場所の細部は builder が決定（DESIGN.md 既存セクション構造に従う）
 
-DESIGN.md §2 はアクセント色を「リンクやフォーカスの位置」に充てる規定。タイル全体ボーダーが `var(--accent)` になることで、(i) Tab フォーカス時の `outline: 2px solid var(--accent)` が同色のボーダーと視覚的に重なり「フォーカス位置が分かりづらい」可能性、(ii) ダークモードで `--accent` のコントラスト比が背景に対して足りない可能性、がある。
+**accent ボーダー × focus-visible 競合 / ダークモードコントラスト要件（reviewer 指摘 5 反映）**:
 
-**確定方針**: builder に委ねず、本対応計画の **2.2.5 完了判定の中で必ず実機 Playwright 確認** する手順を組み込む。
+DESIGN.md §2 はアクセント色を「リンクやフォーカスの位置」に充てる規定。タイル全体ボーダーが `var(--accent)` になることで、(i) Tab フォーカス時のアウトラインと色が混ざりフォーカス位置が分かりづらい可能性、(ii) ダークモードで背景に対するコントラスト比が足りない可能性、がある。
 
-- 確認シナリオ: w360 / w1280 × ライト / ダーク × 編集モード × focus-visible 状態（Tab フォーカス済み）の 8 パターンスクリーンショットを取得
-- 判定基準: (i) 編集モードのボーダー（`--accent`）と focus-visible のアウトライン（`--accent`）が並んだとき、フォーカス位置が視認できる（ボーダーとアウトラインが同色で混ざるなら不合格）、(ii) ダークモードで `--accent` のコントラスト比が背景 `--bg` に対して 3:1 以上（WCAG 1.4.11 Non-text Contrast）
-- 不合格時の代替表現（事前確定）: 編集モードのボーダーを `border: 2px solid var(--accent)` にして「太さ」で区別し、focus-visible は `outline: 3px solid var(--accent); outline-offset: 2px;` で外側に分離する。それでも視認性が足りない場合は、編集モードのボーダー色を `var(--accent-strong)` に変える（DESIGN.md §2 で定義済みの `-strong` バリアントの範囲内）
-- 上記の代替表現を採るかどうかは **2.2.5 の Playwright 確認結果に基づき builder が判断** する。判定根拠（スクリーンショットと WCAG コントラスト比測定値）を 2.2.5 完了報告に含める
+**品質要件**:
 
-### 検討項目 1.5: cursor: grab とドラッグ可能領域の整合（reviewer 指摘 4 反映）
+- 編集モード × focus-visible 状態で「フォーカス位置が視認できる」（同色重なりで識別不能にならない）
+- 編集モードのボーダーが背景に対して WCAG 1.4.11 Non-text Contrast の **3:1 以上** を満たす（ライト / ダーク両モード）
+- 上記が満たされない場合、DESIGN.md 既存トークン（`-strong` バリアント、太さ・aspect 違いの outline 等）の範囲で代替表現を builder が選ぶ
 
-**現状の問題**: Tile.tsx は `useSortable.listeners` をドラッグハンドルにのみ展開する一方、Tile.module.css L52-54 で `tile[data-mode="edit"] { cursor: grab; }` がタイル全体に適用される。タイル全体が「掴める」ように見える誤誘導が発生している。
+完了判定（後述「2.2.5 への追記」内で詳述）として、ライト/ダーク × モバイル/デスクトップ × focus-visible の組み合わせで Playwright スクリーンショットと色測定値を取得し、上記要件を満たすことを確認する。
+
+### 検討項目 1.5: cursor とドラッグ可能領域の整合（reviewer 指摘 4 反映）
+
+**現状の問題**: タイル全体に「掴める」カーソルが当たる一方、実際にドラッグ起点となるのはドラッグハンドルのみ。「掴める領域」と「実際にドラッグできる領域」が一致せず、来訪者の誤誘導が発生している。
 
 **判断軸**:
 
 - 軸 A: 「掴める領域＝実際にドラッグできる領域」が一致する（M1b の dislikes「思い通りに動かない」を起こさない）
-- 軸 B: タイル本体クリック（pointer-events: none）/ ドラッグハンドル（listeners）/ 移動ボタン（独立）の責務分離と整合
+- 軸 B: タイル本体クリック / ドラッグハンドル / 移動ボタンの責務分離と整合
 - 軸 C: a11y / モバイル誤動作防止の業界標準パターンに沿う
 
 **選択肢**:
 
-- 案 A: 編集モードの cursor を「ハンドルだけ grab、タイル本体は default」に変える（誤誘導を解消、ハンドル意識を明確に）
-- 案 B: タイル本体もドラッグ可能（listeners をタイル本体に展開）に変える（M1b 体験最大化）
+- 案 A: cursor の grab 表現はドラッグハンドル限定とし、タイル本体は default
+- 案 B: タイル本体もドラッグ可能にする（listeners をタイル本体に展開）
 
-**採用: 案 A（ハンドルだけ grab）**
+**採用: 案 A**
 
 採用根拠:
 
-1. 案 B は本サイクルの既存設計「編集モード時のコンテンツ部は `pointer-events: none` でクリック禁止」と直接競合する。listeners をタイル本体に付けても、コンテンツ部の pointer-events: none で touch / mouse イベントが消える
-2. ハンドルベースのドラッグは a11y / モバイル誤動作防止の標準パターン（Notion / Trello / Linear すべて採用）。M1b は「気に入った道具を再訪する」層で、初見にもこの標準パターンが伝わりやすい
-3. 移動ボタン（2-2 で採用）が「タイル全体を直接操作する代替手段」を提供するため、「ハンドル限定でも長距離移動ができる」ことが保証される。タイル本体ドラッグ可能化（案 B）の必要性が下がる
-4. reviewer 推奨と一致
+1. 案 B は本サイクルの既存設計「編集モード時のコンテンツ部はクリック禁止」と直接競合する
+2. ハンドルベースのドラッグは a11y / モバイル誤動作防止の業界標準パターン（Notion / Trello / Linear すべて採用）
+3. 移動ボタン（検討項目 2-2 で採用）が「タイル全体を直接操作する代替手段」を提供するため、ハンドル限定でも長距離移動が保証される
 
-**実装方針（事前確定）**:
+**要件 / 完了判定**:
 
-- Tile.module.css L52-54 の `cursor: grab` をタイル本体から削除
-- ハンドル要素（`.dragHandle`）にのみ `cursor: grab` / `:active { cursor: grabbing }` を適用（既に L120 / L140-141 で実装済み、タイル全体の重複指定を取り除くだけ）
-- 編集モードの「触れる状態」表現は border-color: var(--accent) のみで担う（cursor は default）
-- 完了判定: Playwright で w360 / w1280 編集モードでハンドル上にカーソル乗せると grab、タイル本体上は default を確認
+- ドラッグハンドル上では「掴める」カーソル、タイル本体上では通常カーソル
+- 来訪者が「実際にドラッグできる場所」を視覚的に誤認しない
+- Playwright で編集モード時のカーソル状態をハンドル / 本体それぞれで検証
 
 ### 検討項目 2: モバイル UX 強化
 
-#### 2-0. モバイルレイアウト致命破綻の修正（#6 reviewer 致命 1 統合 / 必須前提）
+#### 2-0. モバイルレイアウト致命破綻の修正（#6 reviewer 致命 1 統合 / 必須前提 / N1 反映）
 
-**事象（N1 反映: 実 SIZE_SPAN と整合）**: 現状の `TileGrid.module.css` は `@media (max-width: 480px)` で `grid-template-columns: 1fr;` の 1 カラム化を指定している一方、`Tile.tsx` は `style.gridColumn = `span ${SIZE_SPAN[size]}`` をインラインで設定する（`SIZE_SPAN = { small: 1, medium: 2, large: 3 }`、`src/components/Tile/constants.ts` で確定済み）。1 カラムグリッドに span 2 / span 3 のタイルが置かれると、CSS Grid は **暗黙トラック** を自動生成して span 数を満たそうとし、結果として 1 行に複数タイルが詰め込まれる / 暗黙トラック幅が極小化されて small が 2px に潰れる、という現象が発生する（#6 reviewer が w375 で再現、本 PM も w360 storybook で 2px / 56.5px の潰れを別途確認済み）。
+**事象**: 現状、CSS Grid のテンプレート設定とタイル側の span 値が viewport によっては整合せず、small サイズタイルが極端に潰れる現象（モバイル w360〜375 で実 width 2〜56px）が発生している。#6 reviewer と本 PM が別環境で再現確認済み。
 
 これはモバイル UX の前提を根底から壊している。Owner 指摘 2「小画面で 1〜2 タイルしか表示されない」の **真因** はこの致命破綻であり、移動ボタン以前にこちらを先に修正する必要がある。
 
-**修正方針（事前確定、builder に委ねない）**:
+**実装責務**: 本修正は **2.2.6 着手の最初** に行う。これが解消されない限りモバイル UX 強化（移動ボタン等）の評価は不可能（タイル自体が見えていない）。
 
-- (i) `@media (max-width: 480px)` の Tile 側で `grid-column: span 1` を CSS から強制（`!important` または `data-size` 属性経由で CSS から指定して優先順位を確保。後者なら `!important` 不要）。SSR 整合のため CSS 完結（useMediaQuery 等の JS 計測は不採用）
-- (ii) **中間帯 480〜768px（2 カラム）の設計（N1 再検証）**: small=span 1 / medium=span 2 / large=span 2 に丸める。「small + large（span 1+2=3）」の組み合わせは 2 カラムグリッドで「small が 1 列目、large は 2 列目に span 2 で入れず → 暗黙トラック生成または次行先頭に流れて 1 列目に隙間」という暗黙トラック誘発の可能性がある。本サイクルでは **`grid-auto-flow: dense` を併用して空きセルを埋める方針** を採る。`dense` は表示順序が DOM 順序と乖離し得るが、ドラッグによる順序入れ替えが主要操作の本サイクル UI では DOM 順序の保持優先度が低く、視覚的な隙間ゼロを優先する判断が成り立つ
-  - **ただし dense 採用の副作用として、ドラッグ中の `useSortable` transform 計算（DOM 位置基準）と視覚位置（dense 後の表示位置）が乖離するリスクがある**。N6 の中間帯 transform 検証で破綻が確認された場合は、**dense を撤回して以下の代替案 (ii-α) に切り替える**:
-    - (ii-α) 代替案: 480〜768px では中間ブレークポイントを設けず、`@media (max-width: 480px)` の 1 col と既定 4 col の二値運用にする。中間帯ではタイルがやや窮屈になるが、暗黙トラック誘発を確実に避けられる
-- (iii) `Tile.tsx` 内で `gridColumn` をインライン指定する代わりに、`data-size` 属性経由で CSS から `grid-column: span N` を当てる方式に切り替える。dnd-kit `useSortable` の `transform` / `transition` はインライン継続が必要なので、`gridColumn` だけを CSS 側に移譲する形にする（責務分離 + `!important` 不要化）
+**品質要件 / 完了判定（数値・客観基準のみ）**:
 
-**実装責務**: 本修正は **2.2.6 着手の最初**に行う。これが解消されない限りモバイル UX 強化（移動ボタン等）の評価は不可能（タイル自体が見えていない）。
+- 主要ビューポート（w360 / w400 / w480 / w768 / w1280）で small / medium / large 各サイズのタイルが視覚破綻なく配置される
+- いずれのビューポートでも small サイズの実 width が **100px 以上**（タップターゲット 44px + パディングを十分含む幅）
+- CSS Grid の暗黙トラックが意図せず生成されない（テンプレート値が想定どおり）
+- 中間帯（480〜768px）でドラッグ中の visual transform が実際のタイル位置と一致し、ドラッグ操作が視覚破綻なく動作する（後述「中間帯 transform 検証」参照）
 
-**完了判定**:
+**設計選択は builder に委ねる**: グリッドテンプレートの調整方法（`grid-auto-flow` の指定、span の丸め、CSS 経由 vs インライン経由など）は複数のアプローチが成立しうるため、上記要件を満たす方法を builder が選択する。中間帯の代替設計（中間ブレークポイントの撤廃など）も builder が試行錯誤する余地として残す。N6（中間帯 transform 検証）で破綻が確認された場合は **PM へエスカレーション** し、PM が代替方針の採否を判断する。
 
-- Playwright で w360 / w400 / w480 / w768 / w1280 の 5 ビューポートで `fixture-small-1` の実 width を測定し、いずれも 100px 以上（タップターゲット 44px + パディングを十分含む幅）であることを確認
-- いずれのビューポートでも暗黙トラックが生成されていないこと（`getComputedStyle(grid).gridTemplateColumns` の値が `repeat(N, ...)` 形式で N が想定値どおり）
-- 中間帯 480〜768px で N6 の transform 検証（後述）が pass している。pass しない場合は (ii-α) 代替案に切り替えて再検証
+**エスカレーション中の並行タスク（M2 反映）**: PM 判断待ちの間も、中間帯設計と独立な作業（移動ボタン実装、AddTileModal の WCAG 修正、cursor 整合修正、focus-visible / accent 視覚競合検証）は builder が並行で進めてよい。本タスクの停滞が他タスクを止めない設計とする。
 
-#### 2-1. TouchSensor の activationConstraint 設定（reviewer 指摘 3 反映）
+#### 2-1. タッチ操作のドラッグ検出（reviewer 指摘 3 反映）
 
-**仮説**: 現状 `useSensor(PointerSensor)` のみで TouchSensor を明示登録していない。PointerSensor は touch 対応するが、`activationConstraint` 未設定だと touch start で即ドラッグ開始しスクロールが阻害される。
+**問題**: 現状の sensor 設定では touch start で即ドラッグ開始する可能性があり、来訪者が縦スクロールしようとしただけでタイルがドラッグされる誤動作リスクがある。
 
 **判断軸**:
 
@@ -727,179 +732,70 @@ DESIGN.md §2 はアクセント色を「リンクやフォーカスの位置」
 - 軸 B: dnd-kit 公式・コミュニティのベストプラクティスに沿う
 - 軸 C: M1b の dislikes「思い通りに動かない」を起こさない
 
-**ベストプラクティス調査結果**（dnd-kit 公式 / コミュニティ）:
+**品質要件**:
 
-- 公式推奨: `activationConstraint: { delay: 250, tolerance: 5 }`（press delay 250ms、5px tolerance）
-- 別パターン: `delay: 200, tolerance: 8`
-- CSS 側併用: ドラッグハンドルに `touch-action: none`（または `manipulation`）を指定。**ハンドルだけに限定**することでタイル本体上のスクロールは阻害されない
+- タッチデバイスで「タイル本体を縦スワイプ＝ページがスクロールする」「ドラッグハンドルを長押し＋移動＝ドラッグ開始」が明確に区別される
+- タップとドラッグの誤判定が来訪者ストレスにならないレベルに調整される
 
-**採用案（reviewer 指摘 3 を受けて修正）**:
+**設計選択は builder に委ねる**: dnd-kit の sensor 種別（PointerSensor 単独 vs Mouse + Touch 分離）、`activationConstraint` の delay / tolerance 値、`touch-action` の適用範囲（ハンドル限定など）は複数の組み合わせが成立する。dnd-kit 公式ドキュメントの推奨値を初期値として採用しつつ、後述の Playwright モバイル E2E（2.2.10）で誤判定の有無を確認し、必要に応じて値を調整する余地を残す。
 
-1. `ToolboxShell` の sensors を `PointerSensor` 単独から **`MouseSensor` + `TouchSensor`（明示登録）+ `KeyboardSensor`** に分離する。dnd-kit 公式が「pointer events より細かく制御したい場合は Mouse + Touch 分離を推奨」としているため、モバイル UX を最優先する本サイクルでは分離する
-2. **`TouchSensor` の `activationConstraint: { delay: 250, tolerance: 5 }` を初期値として採用**（dnd-kit 公式推奨値）。前バージョンでは「M1b の反射的に即操作」を理由に 200ms を採っていたが、reviewer 指摘の通り delay は「ドラッグ開始までの待ち」であり、タップ即発火（編集ボタン押下等）とは無関係であるため 200ms 短縮の論理的根拠が成立しない。さらに 200ms は人間反応時間境界で誤発火リスクがあり、M1b の dislikes「思い通りに動かない」を直撃する
-3. 短縮（200ms 等）を採るかどうかは **本サイクル完了判定（2.2.10 Playwright モバイル E2E）の実測「タップとドラッグの誤判定率」を取得した後に、後続サイクルで再判断**する。本サイクルでは 250ms / 5px の公式値で確定
-4. `MouseSensor` は constraint なし（マウスは即ドラッグでよい）
-5. `KeyboardSensor` は既存設定（`sortableKeyboardCoordinates`）維持
-6. ドラッグハンドル（Tile.module.css `.dragHandle`）に `touch-action: none` を追加。タイル本体・コンテンツ部にはこれを付けず、本体の縦スクロールが活きるようにする
+#### 2-2. 小画面での代替操作手段（移動ボタン）
 
-**根拠**:
-
-- dnd-kit 公式 [Touch Sensor docs](https://docs.dndkit.com/api-documentation/sensors/touch) が「delay constraint を使うときは tolerance も併用」「ドラッグハンドルには `touch-action: none`」を明示推奨
-- 編集モード中のみ DndContext を mount する設計（既存）と組み合わせると、使用モード中はそもそも TouchSensor が無効なので通常スクロール完全保証
-
-#### 2-2. 小画面での代替操作手段
-
-**現状の問題**: 480px 未満は 1 カラム表示。10〜20 タイルを末尾から先頭へ DnD だけで動かすには長距離ドラッグまたは複数回操作が必要。M1b の「自分の道具箱を組み立てる」体験を阻害する。さらに 2-0 の致命破綻を修正してもなお、1 カラム表示で長距離移動の苦痛は残るため、移動ボタンは **必須要件**（#6 reviewer 致命 1 が「移動ボタン必須化の最大根拠」と指摘）。
+**現状の問題**: 480px 未満は 1 カラム表示。10〜20 タイルを末尾から先頭へ DnD だけで動かすには長距離ドラッグまたは複数回操作が必要で、M1b の「自分の道具箱を組み立てる」体験を阻害する。2-0 の致命破綻を修正してもなお、1 カラム表示で長距離移動の苦痛は残るため、**移動ボタンは必須要件**。
 
 **判断軸**:
 
-- 軸 A: M1b のコア体験「自分の道具箱を組み立てる」を最大化（constitution rule 4 best quality）
-- 軸 B: DnD と矛盾せず、両者が共存できる（DnD を奪わない）
+- 軸 A: M1b のコア体験「自分の道具箱を組み立てる」を最大化（constitution rule 4）
+- 軸 B: DnD と矛盾せず、両者が共存できる
 - 軸 C: キーボード操作（既存 KeyboardSensor）と整合する
 - 軸 D: 実装が DESIGN.md / 既存コンポーネント語彙の範囲内
-- 軸 E: 業界ベストプラクティスに沿う（NN/g、Smashing Magazine、Microsoft Mobile Engineering 等の調査結果）
+- 軸 E: 業界ベストプラクティス（NN/g、Microsoft Mobile Engineering、Smashing Magazine）に沿う
 
 **選択肢評価**:
 
-| 候補                             | 軸 A 道具箱体験 | 軸 B DnD 共存 | 軸 C キーボード整合 | 軸 D 既存語彙 | 軸 E ベストプラクティス |
-| -------------------------------- | --------------- | ------------- | ------------------- | ------------- | ----------------------- |
-| (a) 各タイルに ↑/↓ 移動ボタン    | 強              | 強            | 強                  | 強            | 最強（業界推奨）        |
-| (b) 「先頭/末尾へ移動」ボタン    | 中              | 強            | 強                  | 強            | 強                      |
-| (c) Grid → List 表示モード切替   | 弱              | 中            | 中                  | 弱（新概念）  | 弱                      |
-| (d) 数値で順番指定               | 弱              | 強            | 中                  | 弱            | 弱（業界事例少）        |
-| (e) 長押しで「移動先指定」モード | 中              | 中            | 弱                  | 弱            | 中                      |
-| (f) スワイプで移動               | 弱              | 中            | 弱                  | 弱            | 弱（学習コスト高）      |
+| 候補                             | 軸 A | 軸 B | 軸 C | 軸 D         | 軸 E             |
+| -------------------------------- | ---- | ---- | ---- | ------------ | ---------------- |
+| (a) 各タイルに 4 種の移動ボタン  | 強   | 強   | 強   | 強           | 最強（業界推奨） |
+| (b) Grid → List 表示モード切替   | 弱   | 中   | 中   | 弱（新概念） | 弱               |
+| (c) 数値で順番指定               | 弱   | 強   | 中   | 弱           | 弱               |
+| (d) 長押しで「移動先指定」モード | 中   | 中   | 弱   | 弱           | 中               |
+| (e) スワイプで移動               | 弱   | 中   | 弱   | 弱           | 弱（学習コスト） |
 
-**採用: (a) を必須採用、(b) を補助で同時採用**
-
-採用根拠:
-
-1. **業界ベストプラクティス**: NN/g [Drag-and-Drop UX](https://www.nngroup.com/articles/drag-drop/)、Microsoft Mobile Engineering [Accessible Reordering for Touch Devices](https://medium.com/microsoft-mobile-engineering/accessible-reordering-for-touch-devices-e7f7a7ef404) ともに「up/down ボタンが最も accessible」と明示。Smashing Magazine [Dragon Drop](https://www.smashingmagazine.com/2018/01/dragon-drop-accessible-list-reordering/) も同様
-2. **constitution rule 4**: 軸 A〜E すべてで (a) が最高評価。「DnD だけで十数枚」の苦痛を根本解消できる手段は (a)
-3. **(c) の不採用理由**: Grid と List で 2 つの表現を持つことは DESIGN.md §1「シンプル」と矛盾。さらに M1b の dislikes「操作手順が突然変わる」を生む
-4. **(d) の不採用理由**: 数値入力は道具箱という生活道具のメタファと乖離する。タスク管理ツール感が出てサイトコンセプトを傷つける
-5. **(e)(f) の不採用理由**: 学習コストが高く、初見の M1b に伝わらない
-6. **(b) を補助採用**: 「↑/↓ で 1 つずつ動かす」だけだと 20 個目のタイルを 1 番目に動かすのに 19 タップが必要。「先頭へ移動 / 末尾へ移動」を併設することで長距離移動を 1 タップで済ませられる。これは Microsoft の調査でも「複数操作タップ数の削減」として推奨
-
-**実装方針（reviewer 指摘 1, 8, 11 反映で修正）**:
-
-##### 移動ボタンのアイコン形式（reviewer 指摘 11 反映）
-
-ボタンアイコンは **SVG 線画 1.5px**（既存 dragIcon / deleteIcon と同じパターン）で実装する。Unicode の `⤒` `⤓` は OS / ブラウザのフォント依存で線の太さ・スタイルが揃わず、Lucide スタイル線画 1.5px と矛盾する。具体的には:
-
-- 上へ: Lucide `chevron-up`（単線シェブロン）
-- 下へ: Lucide `chevron-down`
-- 先頭へ: Lucide `chevrons-up`（二重シェブロン）
-- 末尾へ: Lucide `chevrons-down`
-
-各ボタンは 44px × 44px タップターゲット（WCAG 2.5.5 準拠、既存 deleteButton / dragHandle と同寸）。
-
-##### サイズ別レイアウト（reviewer 指摘 1 反映: 案を 1 つに確定）
-
-w360 で fixture-small-1 が 56.5px に潰れる現状（2-0 で修正後は 1 カラム ≈ 全幅 320px）と、w480〜768 の中間帯で small ≈ 160px となる事実を踏まえ、`small / medium / large` × `viewport` のマトリクスで採用案を確定する:
-
-| viewport   | small 実 width（2-0 修正後） | medium        | large    |
-| ---------- | ---------------------------- | ------------- | -------- |
-| ≤ 480px    | 約 320〜460px（1 col）       | 同左          | 同左     |
-| 480〜768px | 約 160〜228px（2 col）       | 約 320〜460px | 同左     |
-| ≥ 768px    | 約 280px（4 col）            | 約 580px      | 約 880px |
-
-最も狭い `small @ 480〜768px ≈ 160〜228px` がボタン詰まりリスク帯域。ハンドル(44px) + 削除(44px) + ギャップで既に 100px 以上を消費しており、4 ボタン横並べ（4×44 = 176px）は不可能。
-
-**3 案を比較**:
-
-- **案 A（small は 2 ボタンのみ）**: small サイズでは「↑」「↓」のみ表示。⤒/⤓ は medium/large で表示。実装シンプル。デメリット: 20 個目を 1 番目に動かすのに 19 タップ必要（小サイズタイルだけ）
-- **案 B（more menu）**: small サイズは「︙」(more) ボタンで 4 ボタンを popover に隠す。展開すると 4 つ縦並びで表示。長距離移動可能。デメリット: 展開操作が 1 タップ追加、popover 設計コスト
-- **案 C（編集モードで自動拡大）**: small サイズタイルが編集モードで自動的に medium 相当の幅に拡大（`grid-column: span 2`）。デメリット: グリッドリズムが編集前後で変わる（M1b の dislikes「操作手順が突然変わる」を生む）、large の隣にあると壊れる
-
-**採用: 案 B（more menu）**
+**採用: (a) 各タイルに 4 種類の移動操作を提供**
 
 採用根拠:
 
-1. 案 A は機能制約が大きい（small だけ長距離移動できない）。「同じ操作手順がサイズに関わらず使える」という一貫性が崩れ、M1b の dislikes「慣れた操作手順が変わる」と矛盾する
-2. 案 C は編集モード遷移時にレイアウト全体が再構成され、small が拡大した瞬間に medium / large が押し出されて見え方が劇的に変わる。M1b のコア体験を破壊する
-3. 案 B は機能の一貫性を保ったまま、small サイズの視覚的圧迫を回避できる。popover 展開コスト 1 タップは長距離移動の 19 タップ削減と引き換えに合理的
-4. medium / large では 4 ボタンを横並べで常時表示し、small だけ more menu に折りたたむ運用。「サイズに応じた折りたたみ」は DESIGN.md §6 Don't「ブレークポイントごとに大きくレイアウトが変わる」に該当しないか確認 → ボタン UI の表示形式が変わるだけでナビゲーション・主要レイアウトは維持されるため、§6 の例外条項「使い勝手が変わらない変更は許容」の範囲内
+1. NN/g [Drag-and-Drop UX](https://www.nngroup.com/articles/drag-drop/)、Microsoft Mobile Engineering [Accessible Reordering for Touch Devices](https://medium.com/microsoft-mobile-engineering/accessible-reordering-for-touch-devices-e7f7a7ef404)、Smashing Magazine [Dragon Drop](https://www.smashingmagazine.com/2018/01/dragon-drop-accessible-list-reordering/) ともに「up/down ボタンが最も accessible」と明示
+2. (b) は Grid と List で 2 表現を持つことが DESIGN.md §1「シンプル」と矛盾し、M1b の dislikes「操作手順が突然変わる」を生む
+3. (c) は道具箱という生活道具のメタファと乖離する
+4. (d)(e) は学習コストが高く、初見の M1b に伝わらない
+5. 「1 つ前 / 1 つ後 / 先頭 / 末尾」の 4 種類を提供することで、20 個目を 1 番目に動かすような長距離移動も 1 操作で完結できる（Microsoft の調査でも「複数操作タップ数の削減」として推奨）
 
-##### 小サイズの more menu 設計（N2 / N3 反映）
+**機能要件**:
 
-**配置方式の確定（N2 反映）**: Tile.module.css L29 に既に `overflow: hidden` が指定されており、タイル直下の `position: absolute` popover は overflow で切れる。Tile の overflow を visible にするとドラッグ中 transform で他タイルに被る別問題（z-index 競合）が起こる。よって以下のいずれかを採る:
+- 編集モード時、各タイルから 4 種類の移動操作（前へ / 後へ / 先頭 / 末尾）が呼び出せる
+- 先頭 / 末尾位置のタイルでは対応する方向の操作が無効化される（disabled 状態）
+- 移動ボタン経由・DnD 経由のどちらでも同じ最終配置・同じ永続化結果になる
+- a11y 要件: 各操作にスクリーンリーダー向けのラベル、キーボード操作（Tab / Enter / Space）で完結、タップターゲット 44px 以上（WCAG 2.5.5）
+- 視覚要件: アイコンは Lucide スタイル線画 1.5px / 16-24px（DESIGN.md §3 準拠）、絵文字 / Unicode 記号は使わない
 
-- (i) **Portal 配置**: `createPortal(popover, document.body)` で body 直下に portal し、トリガーボタンの `getBoundingClientRect()` を基準に `position: fixed; top/left` で配置
-- (ii) **inline 展開**: タイル全体の高さを一時的に拡張して、内側に 4 ボタンを縦並びで表示する。グリッドレイアウト的にはタイル自身が大きくなるだけで他タイルへの影響は最小
+**サイズ別表示の課題と要件（reviewer 指摘 1 反映）**:
 
-**採用: (i) Portal 配置**
+w360 1col では small ≈ 320〜460px と十分な幅があるが、中間帯（w480〜768、2col）では small ≈ 160〜228px となり、ハンドル + 削除ボタンで既に 100px 以上が消費される。**4 ボタンを横並びで常設すると small サイズで視覚破綻する**。
 
-採用根拠:
+**品質要件**:
 
-1. (ii) は small タイルが展開時に大きくなることで、グリッド全体のリズムが瞬間的に崩れる。M1b の dislikes「操作手順が突然変わる」と矛盾し、隣接タイルの位置が動いて視覚混乱を生む
-2. (i) は Tile / TileGrid の overflow / z-index に手を加える必要がない。AddTileModal と同じ Portal パターンを再利用でき、実装の一貫性が高い
-3. AP-I08（z-index と DOM 配置の関係）への対応として、modal / popover を body 直下に集約する設計は計画書全体で統一できる
+- small サイズタイルでも 4 種類の移動操作（前へ / 後へ / 先頭 / 末尾）すべてが a11y / 視覚破綻なく利用可能であること
+- すべてのサイズで「同じ操作で同じ結果が得られる一貫性」を保つ（M1b の「慣れた操作手順が変わらない」要件、サイズによって機能が欠けてはならない）
+- 編集モード遷移時にレイアウト全体が大きく組み変わらない（M1b の dislikes「操作手順が突然変わる」を生まない）
 
-**Modal / popover の z-index・inert 統一ポリシー（N3 反映）**:
+**設計選択は builder に委ねる**: small サイズで 4 ボタンをどう収めるか（ポップアップで折りたたむ / 別レイアウトに切り替える / その他）、popover 表示時の配置方式（Portal 配置 / inline 展開 / その他）、スクロール時の挙動（閉じる / 追従 / 無反応）、デスクトップでの常設 vs hover 表示などは、上記の品質要件を満たす方法を builder が選ぶ。検証の補助情報（スクリーンショット、UX 観察結果）は cycle 紐付けディレクトリ（後述）にアーカイブし、再レビュー時に参照可能にする。
 
-- すべての overlay UI（AddTileModal / small more popover）は `createPortal(_, document.body)` で body 直下に配置
-- z-index 階層は globals.css の既存 token に沿って統一（`--z-tile-overlay` 100 の上に modal / popover 用の `--z-overlay` を新設、または既存トークンを再利用）。新規トークンが必要なら 2.2.4 の DESIGN.md 追記作業と合わせて追加する
-- **同時に開かない排他制御（M5 反映: 配置と取得手段を確定）**: AddTileModal が開いている間は small more popover を開けない、逆も同様。本サイクルでは **ToolboxShell に新設する `ToolboxOverlayContext`（仮称）** で実装する。具体的:
-  - `ToolboxShell` 内で `useState<{ kind: "modal" | "more-menu"; id: string } | null>(null)` を保持し、`{ activeOverlay, openOverlay, closeOverlay }` を Context 値として provide
-  - 子孫の `Tile`（small more menu トリガー）と `AddTileModal` の両方が `useToolboxOverlay()` で取得し、open 時は他 overlay を自動 close → 自身を open、close 時は自身が active なら null に戻す
-  - render props で多段に渡すより Context のほうが子孫から直接アクセスでき、TileGrid / Tile / Modal のシグネチャを汚染しない
-  - Context 配置先: `src/components/ToolboxShell/ToolboxOverlayContext.tsx`（同一ディレクトリ、ToolboxShell が Provider を mount）
-- `inert` の付与範囲も統一: overlay が開いているとき、`document.body` の direct children のうち overlay 自身（portal 出力先）以外すべてに `inert` を付与する。複数 overlay が開かないため、1 種類の overlay 用ロジックで両方を扱える
+**補足: 過去レビューで挙がった実装の参考案（採用は builder 判断）**:
 
-##### more menu トリガーと popover 内部の構造
-
-- トリガーボタン: `<button aria-label="（タイル名）の移動メニューを開く" aria-haspopup="menu" aria-expanded={isOpen} aria-controls="tile-{slug}-move-menu">` で more アイコン（`more-horizontal` 線画 1.5px、3 点横並び、Lucide [`more-horizontal`](https://lucide.dev/icons/more-horizontal) を SVG パスとして埋め込み）
-- popover 内部: `role="menu"` の `<div>` または `<ul>` に 4 ボタン縦並び（各ボタン 44px 高、`role="menuitem"`）
-- popover 外クリック / ESC で閉じる
-- 開いた瞬間に popover 内最初のボタンへフォーカス移動、閉じたらトリガーボタンへフォーカス復帰
-
-##### Portal popover のスクロール対応（M3 反映: 1 案確定）
-
-ToolboxShell の `acquireScrollLock` は道具箱本体（タイルコンテナ）のスクロールのみをロックする想定で、ページ全体のスクロールは生きている可能性がある。`window.scrollend` イベントは Safari 17+ のみで、Safari 16.x では発火しない。`useLayoutEffect` + scrollend は脆い実装になる。
-
-**確定方針: スクロール時に popover を閉じる**（位置追従は採らない）。具体的:
-
-- popover open 中に `window.addEventListener('scroll', closePopover, { passive: true })` を `useEffect` で登録
-- スクロールイベントは `requestAnimationFrame` または **200ms throttle** で間引いて `closePopover` を呼ぶ（過剰発火防止）
-- close 時はトリガーボタンへフォーカス復帰（既存ロジック）
-- `scrollend` ではなく `scroll` イベントを使うため Safari 16 互換（全主要ブラウザで動作）
-
-採用根拠:
-
-1. シンプルでブラウザ互換性が広い（Safari 16 含む全主要ブラウザ）
-2. ユーザーは popover を再度トリガーで開ける（操作コスト 1 タップ追加のみ）
-3. 位置追従は実装複雑性に対して得る体験が小さい（スクロール中の popover 追従はむしろ視線の遠い場所で popover が動き続ける違和感を生む）
-4. トリガーが画面外に出ても close されているため、画面外 popover の表示問題が発生しない
-
-##### 大画面の常設 vs hover（reviewer 指摘 8 反映: 採用案を確定）
-
-reviewer 推奨に従い **`@media (hover: hover) and (pointer: fine)` 環境では hover 時のみ表示** + **タッチ環境（hover 不可）では常時表示**を採用。
-
-具体的:
-
-- CSS で `.moveButtons { opacity: 0; transition: opacity 0.15s; }` をデフォルト
-- `.tile:hover .moveButtons, .tile:focus-within .moveButtons { opacity: 1; }` で hover / focus 時に表示
-- `@media (hover: none)` で `.moveButtons { opacity: 1; }` を上書き（タッチデバイスは常時表示）
-- focus-within で Tab フォーカス時にも表示されるためキーボード操作と整合（reviewer 指摘 8 の (iii) Tab フォーカスで初めて見える、を内包）
-- 「opacity アニメーション」は移動ボタンの表示/非表示の遷移にのみ使用し、タイル本体やドラッグ表現には使わない（DESIGN.md §4 ドラッグ規定外の opacity 禁止と矛盾しない、ボタン自身の表示遷移は対象外）
-
-採用根拠:
-
-1. M1a（デスクトップで道具箱組立て）にとって 4 ボタン常設は視覚ノイズで M1a の「道具箱を整える」体験を阻害する
-2. NN/g / Smashing Magazine が「primary は DnD、secondary は補助 UI」を推奨。デスクトップでは DnD が primary、ボタンは hover / focus で出現する secondary に位置づける
-3. タッチ環境では hover 概念がないため常時表示が必須。`@media (hover: none)` で分岐する標準パターン
-4. focus-within により Tab 操作のキーボードユーザーにも見える
-
-##### アクセシビリティ
-
-- 各ボタンに `aria-label="（タイル名）を上に移動"` 等
-- 先頭/末尾位置のタイルでは対応する方向ボタンを `disabled` 属性 + `aria-disabled="true"`
-- タッチデバイスでは常時表示なので `aria-expanded` 必要なし。デスクトップ hover 表示時もフォーカス関連属性は不要（純粋な視覚効果のため）
-
-##### キーボード操作との一貫性（reviewer 指摘維持）
-
-ボタンは `<button>` なので Tab で到達可能。既存 KeyboardSensor（Space → ArrowKey → Space）と独立した移動手段として機能（軸 C）。両者は競合せず補完関係。Tab 順序は「ハンドル → タイトル領域（コンテンツ） → 移動メニュー（small は more menu / medium・large は 4 ボタン） → 削除」とする。
+- small サイズの折りたたみ案として「more menu / Portal popover」「inline 展開」「hover 限定常設」などが議論された
+- アイコン候補として Lucide の `chevron-up` / `chevron-down` / `chevrons-up` / `chevrons-down` / `more-horizontal` 等が候補にあがる
+- いずれも上記の品質要件を満たすかが採否の基準
 
 #### 2-3. ジェスチャー（任意検討）— 不採用
 
@@ -915,130 +811,103 @@ reviewer 推奨に従い **`@media (hover: hover) and (pointer: fine)` 環境で
 
 **2.2.10 Playwright 検証範囲の追加**: 後述の 2.2.10 セクションに集約。
 
-### 検討項目 2.5: 移動ボタンの永続化経路と再レンダー連鎖（reviewer 指摘 2 + #6 中 4 統合）
+### 検討項目 2.5: DnD と移動ボタンの永続化経路（reviewer 指摘 2 + #6 中 4 統合）
 
-**問題**: reviewer 指摘 2「移動ボタン由来の order change の永続化経路が不明」と #6 reviewer 中 4「`handleDragOver` が `config` を依存に持ち、ドラッグ中フレーム毎に再生成 → setState 連鎖」は同一の根本原因（TileGrid の状態管理設計）に行き着く。Owner 対応計画と #6 reviewer 指摘を統合した再設計を本対応計画で確定する。
-
-**現状の問題**:
-
-1. `handleDragOver` が `[config, onConfigChange]` を依存に持つため、`config` 更新のたびに `handleDragOver` 関数参照が変わる
-2. `useEffect([setDndHandlers, handleDragOver, ...])` で setDndHandlers 経由で ToolboxShell の dndHandlers state を更新する → ToolboxShell が再レンダー
-3. ToolboxShell の再レンダーで TileGrid も再レンダー → 1 に戻り、ドラッグ中の毎フレーム再レンダー連鎖が発生
-4. 50 個タイル × 毎フレーム連鎖 = 深刻なパフォーマンス劣化
-5. 移動ボタン由来の `arrayMove` も同じ `onConfigChange` 経路を通すなら、本問題と同一構造
+**問題**: 移動ボタン由来の順序変更と DnD 由来の順序変更で永続化経路が乖離すると、保存ロジックが二重化して同期破綻リスクが生まれる。また、現状の TileGrid 実装はドラッグ中に setState 連鎖が発生しうる構造で、50 個タイル時のパフォーマンス劣化リスクがある。
 
 **判断軸**:
 
-- 軸 A: ドラッグ中の再レンダーが O(1) になる（config 変化に handleDragOver の再生成が連動しない）
-- 軸 B: 移動ボタン経由の order change と DnD 経由の order change が同じ永続化経路を通る（保存ロジックの統一）
-- 軸 C: 既存設計（ToolboxShell render props で setDndHandlers）を最小限の変更で活かす
-- 軸 D: 永続化フック（useToolboxConfig、2.2.8）の設計と整合する
+- 軸 A: ドラッグ中のフレーム時間が来訪者ストレスにならないレベル
+- 軸 B: 移動ボタン経由・DnD 経由で同じ永続化経路を通る（保存ロジックの統一）
+- 軸 C: 永続化フック（useToolboxConfig、2.2.8）の設計と整合する
 
-**確定方針（事前確定、builder に委ねない）**:
+**機能要件 / 完了判定**:
 
-1. **TileGrid 内に `configRef = useRef(config)` を導入**し、毎レンダーで `configRef.current = config` を更新する。`handleDragOver` は `configRef.current` を読むので、依存配列を `[onConfigChange]`（または空配列で onConfigChange も ref 化）に縮小できる。これで handleDragOver の関数参照が安定し、setDndHandlers 連鎖が消える
-2. **永続化経路の統一**: 移動ボタン押下時のハンドラ（仮称 `handleMoveTile(slug, direction)`）も同じ `configRef.current` 読み込み + `onConfigChange` 呼び出しの構造に揃える。DnD・移動ボタン・削除・追加すべてが `onConfigChange` の単一経路に集約される
-3. **`onConfigChange` は 2.2.8 の `useToolboxConfig` フックの書き込み API（`updateLayout`）に直結**する。フックが localStorage 書き込みと同一タブ用 EventTarget dispatch を担当する。TileGrid / Tile は永続化を意識しない
-4. **ToolboxDndHandlers 型自体は変更しない**（reviewer 指摘 2 の問い「DndHandlers 仕様変更が必要か」への答え＝**不要**）。ref 化でハンドラ参照が安定するため、既存の setDndHandlers render props 設計はそのまま使える
-5. **`handleDragOver` で arrayMove する現設計は維持**（ドラッグ中のリアルタイムプレビューが必要なため）。ただし `handleDragEnd` のタイミングで「最終確定 + localStorage 永続化」の境界を明確に定義する責務分担とする:
-   - `handleDragOver`: in-memory state の即時更新（プレビュー用）。localStorage 書き込みは行わない
-   - `handleDragEnd`: 最終 config を確定し、`onConfigChange` で永続化フックへ通知。フックが localStorage 書き込み
-   - これにより 50 個タイル × 毎フレーム 50 回の localStorage 書き込みを避けられる
+- 移動ボタン押下・DnD 経由の双方が **同一の永続化 API を通って localStorage に書き込まれる**（コードレビューおよび Playwright spy で確認）
+- DnD 中（ドラッグ操作の最中）には localStorage 書き込みが発生せず、**ドラッグ確定時にのみ 1 回書き込む**（過剰書き込みによるパフォーマンス劣化と書き込み破損リスクを避ける）
+- パフォーマンス基準は 2.2.6 完了判定（後述、フレーム時間 100ms / 16ms 超フレーム連続なし基準）と共有する
+- 再レンダー回数による評価は採用しない（dnd-kit のライブ並び替えは collision detection 等で多数の再レンダーを誘発し得るため、回数閾値は誤検知になる）
 
-**完了判定（M1 反映: N7 統一の漏れを修正、機能要件のみに絞る）**:
+**設計選択は builder に委ねる**: 関数参照の安定化手段（useRef / useCallback / useMemo / それ以外）、永続化境界の引き方（onDragOver / onDragEnd / 別タイミング）、ハンドラ間でのデータ受け渡し方法は、上記要件を満たすアプローチを builder が選ぶ。
 
-- 移動ボタン押下・DnD 経由の双方が同じ `onConfigChange` 単一経路を通って永続化される（コードレビューで確認）
-- DnD 中は localStorage 書き込みが発生せず、DnD 終了時に 1 回だけ書き込まれる（Playwright spy または手動 localStorage spy で確認）
-- パフォーマンス基準（フレーム時間）の判定は **2.2.6 完了判定（後述「2.2.6 への追記」内の Playwright performance trace 項）と同一基準を共有** する。本検討項目では再レンダー回数による評価を採用しない（N7 反映: collision detection / ライブ並び替えで強制的な再レンダーが多数発生し得るため、回数閾値は誤検知になる）
+### 検討項目 2.6: AddTileModal の WCAG 適合（#6 reviewer 致命 2-3 + 中 7 統合）
 
-### 検討項目 2.6: AddTileModal のフォーカストラップ・role・Portal（#6 reviewer 致命 2-3 + 中 7 統合）
+**現状の問題（複数）**:
 
-#### フォーカストラップ実装方針（#6 reviewer 致命 2 反映）
+- AddTileModal を開いている間、背景の Tile に Tab フォーカスが逃げる（modal の前提を満たさない）
+- `role="listitem"` を `<button>` に付けて button ロールが消失している箇所があり、スクリーンリーダーが「ボタン」と読み上げない（WCAG 4.1.2 違反）
+- TileGrid 内に modal を置いていることで、上位の z-index / overflow の影響を受けるリスクがある（AP-I08）
 
-**現状**: AddTileModal は keydown ハンドラで Tab を捕捉していない。背景の Tile に Tab フォーカスが逃げる（Playwright で再現済み）。WCAG 2.1.2（フォーカスを移動させない / トラップしない）違反ではないが、modal の前提（背景非操作）を満たさない。
+**機能要件 / 完了判定**:
 
-**確定方針（事前確定）**:
+- **背景非操作化**: modal open 中、背景要素（modal 以外のすべて）はキーボード操作・支援技術（スクリーンリーダー）から到達不能になる。Playwright 実機検証必須（jsdom では `inert` の判定が不完全）
+- **role の正しさ**: list / listitem / button の意味的セマンティクスが、accessibility tree で期待どおりに読み取られる（特に `<button>` が「ボタン」として読み上げられる）。VoiceOver / Safari の `list-style: none` バグを回避する設定を含む
+- **z-index / overflow 安全性**: modal が他要素のスタッキングコンテキストに影響されず最前面に表示される（AP-I08 準拠）
+- **フォーカス管理**: open 時に modal 内最初の focusable へ、close 時に開いた button へフォーカスが復帰する
+- ESC キーで閉じる動作は既存維持
 
-- **`inert` 属性で背景全体を非操作化**を第一候補。`document.body` の modal 以外のすべての direct children に `inert` を付与する Portal パターン（後述 Portal と組み合わせる）。`inert` は 2024 年時点で全主要ブラウザサポート済み（Chrome / Firefox / Safari）
-- **React / Next.js での `inert` 取扱い（N5 反映）**: 本プロジェクトは React 19.2.4 / Next 16.1.7（`package.json` で確認済み）。React 19 から `inert` は JSX のネイティブ boolean 属性として正式サポートされ、`<div inert>` / `<div inert={true}>` の両方で正しく属性として DOM に反映される（React 18 までの「不明な属性として string 化される」問題は解消）。よって JSX で素直に書く方式を採用する
-  - 動的に inert を付け外しする際は `useEffect` で `element.inert = boolean` を直接代入する（React 19 では prop と DOM property が一致するためどちらでもよいが、明示的副作用としては DOM 直接操作の方が他要素への伝播時にループ処理しやすい）
-  - **jsdom テストの限界**: jsdom は `inert` の操作可能性判定（focus を奪う / イベントを止める）を完全には実装していないため、フォーカストラップの確認は **Playwright での実機検証を必須**（AP-I09 と整合）。完了判定の Playwright 検証項目に明記する
-- 代替案（`inert` 非サポート環境想定 / jsdom テスト用）として、modal 内の最初/最後の focusable 要素を取得して keydown で Tab/Shift+Tab を捕捉しループする実装をフォールバックとして保持
-- ESC で閉じる動作は既存維持
-- 開閉時のフォーカス管理: open 時は modal 内最初の focusable へ、close 時は modal を開いた button にフォーカス復帰（`useRef` で開く前のフォーカス要素を記憶）
+**設計選択は builder に委ねる**: 背景非操作化の実装手段（`inert` 属性 / keydown でのフォーカストラップループ / 両方併用）、modal 配置手段（Portal / 既存 DOM 内）、role 構造の具体（`<ul>` 直下に `<li>` / `<div role="list">` 等）、SSR 対応の mount タイミングは、上記要件を満たす範囲で builder が選ぶ。
 
-#### role の WCAG 4.1.2 違反解消（#6 reviewer 致命 3 反映 + N9 反映）
+参考情報: 本プロジェクトは React 19.2.4 / Next 16.1.7 で `inert` 属性は JSX ネイティブサポート済み。jsdom テストでは `inert` の操作可能性判定が不完全なため、当該検証は Playwright 実機が必須（AP-I09 と整合）。
 
-**現状**: AddTileModal で `role="listitem"` を `<button>` に付けると button ロールが上書きされて消失。スクリーンリーダーが「ボタン」と読み上げない。
+### 検討項目 2.7: 使用モードでのタイルクリックによる遷移（#6 reviewer 中 6 反映）
 
-**確定方針（事前確定、builder に委ねず構造を確定）**:
-
-- `<ul>` / `<li>` / `<button>` のセマンティックな入れ子構造を使う（li が listitem ロールを担い、内側 button が button ロールを保持）
-- `<button>` 自体には role 属性を付けない（暗黙の button ロールに任せる）
-- **`<ul>` に `role="list"` を付ける（N9 反映: 確定）**。CSS で `list-style: none` を当てると VoiceOver / Safari が `<ul>` を「list」として認識しなくなる既知バグ（ほぼ全 iOS / macOS で発生）を回避するため、明示的に `role="list"` を付与する。Webkit は意図的にこの挙動を採っており回避策は role 明示が標準
-
-#### Portal による Modal 配置（#6 reviewer 中 7 反映）
-
-**現状**: TileGrid 内で modal を配置すると AP-I08（z-index と DOM 配置の関係）違反リスクがある。
-
-**確定方針**: `createPortal(modal, document.body)` で body 直下に portal する。SSR 対応のため:
-
-- `useState(false)` + `useEffect(() => setMounted(true), [])` で mount 検知
-- mount 前は null を返す（SSR では modal を出さない、開いていれば次フレームで出す）
-- portal 化したことで上記 `inert` 属性も body の direct children に付けやすくなる（背景 = body の他の直下要素全部）
-
-### 検討項目 2.7: view モード click 仕様の明示（#6 reviewer 中 6 反映）
-
-**現状**: TileGrid から Tile に `onContentClick` が渡されていない。view モードでタイルをクリックしてもナビゲーションが発火しない。
+**現状**: 使用モードでタイルをクリックしてもナビゲーションが発火しない。M1b の「タイルから即ツールへ移動」体験が成立していない。
 
 **判断軸**:
 
-- 軸 A: M1b の「タイルをクリックしてツールへ移動」体験（コア体験の 1 つ）
-- 軸 B: タイル化されたコンテンツ（実タイル）と未タイル化コンテンツ（TileFallback）で挙動を統一できる
+- 軸 A: M1b の「タイルをクリックしてツールへ移動」体験の成立
+- 軸 B: タイル化されたコンテンツ（実タイル）と未タイル化（フォールバック）で挙動を統一できる
 - 軸 C: 本サイクルのスコープ（フィクスチャダミーで動作実証する）に収まる
 
-**選択肢（N4 反映: スコープ細分化）**:
+**選択肢**:
 
-- (a) Tile 側でフォールバックリンクを内蔵し、**カード全体クリッカブル**（`::after` 拡大ヒットエリア / タイル全体を `<a>` で囲む等、NN/g card-link 推奨実装）
-- (a') Tile 側でフォールバックリンクを内蔵し、**タイトル要素のみリンク**（カード余白部分はクリック不可）
-- (b) TileGrid から `onContentClick` を渡し、各 Tile に navigation 責務を持たせる
+- (a) Tile 自身がリンク責務を持つ（フォールバックリンク内蔵、カード全体クリッカブル）
+- (a') Tile 自身がリンク責務を持つ（フォールバックリンク内蔵、タイトル要素のみリンク）
+- (b) TileGrid から `onContentClick` を渡し navigation 責務を担わせる
 - (c) 本サイクルでは仕様未定とし、Phase 7 の各タイル実装時に決める
 
-**採用: (a') タイトル要素のみリンク（N4 reviewer 推奨に従う）**
+**採用: (a') タイトル要素のみリンク（N4 反映）**
 
 採用根拠:
 
-1. (a) カード全体クリッカブルは、編集モード時に `<a>` を無効化する制御が複雑（タイル全体を `<a>` で囲むと編集モードでドラッグハンドル / 移動ボタン / 削除ボタンの click が `<a>` の navigation に吸われる。`::after` 拡大ヒットエリアでも z-index と pointer-events の組み合わせ管理が複雑化）
-2. (b) は TileGrid に navigation 責務を持たせると、router 依存（next/navigation）が混入し、ToolboxShell / TileGrid のテスト容易性が下がる
-3. (c) は本サイクルの完了判定「タイル配置 UI が動作する」の意味が曖昧になる
-4. (a') はタイル本体クリックと `<a>` の責務が分かれ、編集モード時は `pointer-events: none` で a も無効化されるという既存設計と整合。M1b の「組み立てる」体験ではまずカードの存在とタイトル認識が重要で、本サイクルではタイトルクリックでツールへ遷移できれば十分
-5. card-link 化（カード全体クリッカブル）は将来 Phase 7 / B-314 でいつでも判断できるため、本サイクルでは段階的に最小実装にとどめる
+1. (a) は編集モード時の制御複雑化（カード全体が `<a>` だとドラッグハンドル / 移動ボタン / 削除ボタンの click が `<a>` の navigation に吸われる）
+2. (b) は TileGrid に router 依存が混入しテスト容易性が下がる
+3. (c) は本サイクルの完了判定が曖昧になる
+4. (a') はタイル本体クリックと `<a>` の責務が分かれて編集モードの抑制と整合。card-link 化（カード全体クリッカブル）は Phase 7 / B-314 で再判断できる
 
-**実装方針**:
+**機能要件 / 完了判定**:
 
-- view モード時、Tile の `displayName`（既存タイトル要素）を `<a href={tile.href ?? `/tools/${slug}`}>` で巻く。タイル本体や余白部分は a ではない（クリックしても何も起こらない、card-link 化は将来）
-- `Tileable` 型に `href?: string` を追加（オプション、未指定なら `/tools/${slug}` をフォールバック）
-- TileFallback 表示時も同一リンクで遷移する（タイトル要素のみ）
-- 編集モードでは `pointer-events: none` で a タグも無効化される（既存設計と整合）
-- フィクスチャ slug は `/tools/{slug}` が 404 になるが、view モードでタイトルクリックすると 404 ページに遷移するという挙動として観察可能（クリックが通っていることの実証として十分）
+- 使用モードでタイトルをクリックすると当該ツールのページへ遷移する（フィクスチャ slug は 404 で構わない、navigation が走ることが実証できればよい）
+- **編集モード中はタイトルへの Tab フォーカスが入らず、Enter で意図しない navigation が発生しない**（編集中に別ページへ遷移してしまうバグの防止、M6 反映）
+- フォールバック表示時も同等の遷移ができる
+- Tileable 型に href 相当のプロパティを追加し、未指定時は `/tools/{slug}` をデフォルトとする
+
+**設計選択は builder に委ねる**: 編集モード時に Tab フォーカスから外す手段（`tabindex` / 動的に要素差し替え / その他）、リンクの DOM 構造（タイトル要素を `<a>` で巻く / `<a>` 内にタイトルを置く）は、上記要件を満たす方法を builder が選ぶ。
 
 ### 検討項目 3: アンチパターン記録（reviewer 指摘 6 反映: スコープ限定 / N12 反映: 簡潔化）
 
-`docs/anti-patterns/implementation.md` に新項目 **AP-I10** を追加する。reviewer 指摘 6 を受け、スコープを「DESIGN.md §4 で明示規定されている領域（ドラッグ・パネル・影・編集モード等）」に限定し、N12 reviewer 指摘の通り重複を整理して 1 文のチェックリスト項目として読みやすくする:
+**何を記録するか（要件）**:
 
-> AP-I10: DESIGN.md §4 で規定されている領域（ドラッグ・パネル・影・編集モード等）に、規定外の視覚表現（opacity 半透明・新色・新影・スケール変化など）を実装上の都合で追加していないか？必要なら DESIGN.md に新規定義を追加してから実装する。
-> → 規定外の独自表現は「日常の傍にある道具」の物理的隠喩を壊す。新規コンポーネントの内部パディング・モーダル背景の暗転処理・特定アニメーション等、§4 が直接触れていない細部は対象外で builder の設計判断に委ねる。（cycle-175 で発生：ドラッグ中 opacity 0.4 / 編集モードコンテンツ opacity 0.7 を独自追加し Owner 指摘で削除）
+1. DESIGN.md §4 で規定されている領域（ドラッグ・パネル・影・編集モード等）に、規定外の視覚表現を実装上の都合で追加した経緯と再発防止策（cycle-175 で発生した opacity 半透明追加事案）。新規コンポーネントの細部や DESIGN.md §4 が直接触れていない領域は対象外
+2. PM 直接対応の境界条件（cycle-175 で PM が opacity 削除を直接対応した経緯から、許容範囲と禁止範囲を再発防止策として明文化）
 
-合わせて `docs/anti-patterns/planning.md` への追加は不要（実装段階の問題のため）。
+**設計選択は builder に委ねる**: アンチパターンチェックリスト本文の文面、追加するファイル（`docs/anti-patterns/implementation.md` / `workflow.md` 等）と挿入位置は、既存ファイルの書式・スコープに整合する形を builder が選ぶ。同種の重複項目があれば既存項目の更新で済ませる判断もありうる。
+
+### overlay 排他制御（要件のみ）
+
+AddTileModal と small サイズの移動操作 popover（または同等の overlay UI）は、来訪者を混乱させないため **同時に開かない** ことを要件とする。
+
+**設計選択は builder に委ねる**: 排他制御の実現手段（Context / 親 state / イベントバス / その他）、配置パスは、子孫コンポーネントから無理のないインタフェースで参照できる構造を builder が選ぶ。
 
 ### 既存承認済みタスクの再レビュー手順（reviewer 指摘 7 反映）
 
 本対応計画は既存承認済みの 2.2.4 / 2.2.5 / 2.2.6 / 2.2.10 の完了判定を変更するため、以下の手順で再レビューを必須化する。
 
-1. **計画書 L67-75 のチェックリストを更新**: 2.2.4 / 2.2.5 のチェックボックス（[x]）を **[ ] に戻す**。完了判定が新規追加されたため、追加内容を満たすまで未完了扱い。2.2.6 / 2.2.10 はそもそも未着手なのでチェックボックス変更不要
-2. **既存 2.2.4 / 2.2.5 の追加作業のみを切り出した「Owner 対応 patch」サブタスク** として builder へ委譲（既存実装はそのままで、追加作業のみ実施）。これにより既存ロジックの再実装は不要
-3. **再レビュー対象**: 2.2.4 / 2.2.5 / 2.2.6 / 2.2.10 すべて、本対応計画の追加完了判定が満たされていることを reviewer が確認するまで「未承認」扱い
-4. 旧 2.2.4 / 2.2.5 の承認時点で reviewer が見ていない要件（DESIGN.md §4 追記、移動ボタン、focus-visible 競合検証、cursor 整合、永続化経路、フォーカストラップ、role 修正、Portal、view click 仕様）が新規追加された旨を再レビュー依頼に明記する
+1. **計画書 L67-75 のチェックリストを更新**: 2.2.4 / 2.2.5 のチェックボックスを `[ ]` に戻す。完了判定が新規追加されたため、追加内容を満たすまで未完了扱い。2.2.6 / 2.2.10 はそもそも未着手なのでチェックボックス変更不要
+2. 既存 2.2.4 / 2.2.5 の追加作業のみを切り出した「Owner 対応 patch」サブタスクとして builder へ委譲（既存実装の再実装は不要）
+3. 再レビュー対象: 2.2.4 / 2.2.5 / 2.2.6 / 2.2.10 すべて、本対応計画の追加完了判定が満たされるまで「未承認」扱い
+4. 旧 2.2.4 / 2.2.5 の承認時点で reviewer が見ていない要件（DESIGN.md §4 追記、移動ボタン、focus-visible 競合検証、cursor 整合、永続化経路、AddTileModal の WCAG 適合、view モード click、overlay 排他制御）が新規追加された旨を再レビュー依頼に明記する
 
 ### 計画書（cycle-175.md）への反映ポイント
 
@@ -1046,118 +915,75 @@ builder への作業分担として以下を既存サブタスクの追加要件
 
 #### 2.2.4（編集モード設計）への追記
 
-- **DESIGN.md §4 ドラッグ規定の追記作業**（半透明禁止 + 編集モード視覚表現規定）を本タスクの末尾サブタスクとして加える。実装は既に整合済みのためドキュメント更新のみ
-- **コード側コメント整理**: Tile.module.css 既存コメント（DESIGN.md 規定文を重複記述している箇所）を「DESIGN.md §4 参照」のリンク形式に置換
-- **AP-WF13 追加（N8 反映: 2.2.4 に移動）**: PM 直接対応の境界条件を `docs/anti-patterns/workflow.md` に AP-WF13 として追加する作業を本タスクに含める。本作業は DESIGN.md 追記と同じ「ドキュメント整備」性質のため、2.2.11（lint/test/build 最終確認）ではなく 2.2.4 に集約する
-- 完了判定: `DESIGN.md` の該当箇所に 2 文が追加されており、レビュアーが規約として参照できる。Tile.module.css 内に DESIGN.md 規定文の重複記述がない。`docs/anti-patterns/workflow.md` に AP-WF13 が追加されている
+- DESIGN.md §4 ドラッグ規定の追記作業（「半透明禁止」「ドラッグ中の視覚表現は規定の影トークンのみ」「編集モード時の cursor は実際にドラッグ可能な領域にのみ適用」を明文化）。実装は既に整合済みのためドキュメント更新のみ
+- コード側コメント整理: Tile.module.css の DESIGN.md 規定文を重複記述している箇所を、参照リンク形式に置換する（具体の置換手段は builder 判断）
+- アンチパターン記録（検討項目 3）の実施: DESIGN.md 規定外表現の追加経緯と PM 直接対応境界条件を `docs/anti-patterns/` 配下に記録（具体のファイル選択・追記文面は builder 判断、ただし既存項目の書式と整合させる）
+- 完了判定: DESIGN.md の該当箇所に追記が反映されレビュアーが規約として参照できる。Tile.module.css 内に DESIGN.md 規定文の重複記述がない。アンチパターンが `docs/anti-patterns/` に記録されている
 
 #### 2.2.5（Tile コンポーネント）への追記
 
-- **移動ボタン実装（N10 反映: Lucide 公式アイコン URL を明記）**:
-  - medium / large サイズ: ヘッダーまたは専用領域に「上へ / 下へ / 先頭へ / 末尾へ」の 4 SVG 線画ボタンを表示。各 44px × 44px タップターゲット、aria-label、先頭/末尾で `disabled` + `aria-disabled`
-  - 使用する Lucide 公式アイコン（SVG パスは下記 URL から取得して埋め込み、線幅は 1.5px / 既存 dragIcon・deleteIcon と同パターン）:
-    - 上へ: [`chevron-up`](https://lucide.dev/icons/chevron-up)
-    - 下へ: [`chevron-down`](https://lucide.dev/icons/chevron-down)
-    - 先頭へ: [`chevrons-up`](https://lucide.dev/icons/chevrons-up)
-    - 末尾へ: [`chevrons-down`](https://lucide.dev/icons/chevrons-down)
-    - small more menu トリガー: [`more-horizontal`](https://lucide.dev/icons/more-horizontal)
-  - small サイズ: more-horizontal **トリガーボタン** 1 つを表示。クリックで Portal 経由で popover を表示（検討項目 2-2 の N2 採用案 (i) の通り）、内側に 4 ボタンを縦並び
-  - hover / focus の表示制御（M4 反映: 表示対象を明示）: 「移動ボタン群の表示制御」が適用されるのは **medium / large の 4 ボタン横並び** および **small の more-horizontal トリガーボタン** であり、Portal popover 自身は対象外（popover は open / close 状態で表示制御するため、hover / focus には連動しない）。具体的に:
-    - `@media (hover: hover) and (pointer: fine)` 環境: 4 ボタン群（medium / large）と more-horizontal トリガー（small）は hover / focus-within 時のみ表示（opacity 0 → 1 トランジション）
-    - `@media (hover: none)` 環境（タッチ）: 同 4 ボタン群と more-horizontal トリガーは常時表示
-    - Portal popover（small で開かれる側）: hover / focus に関係なく、トリガー押下時に open、外クリック / ESC / スクロール時に close（独立した可視性管理）
-- **ドラッグハンドル `.dragHandle` に `touch-action: none` を追加**
-- **cursor 整合修正**: Tile.module.css L52-54 の `tile[data-mode="edit"] { cursor: grab }` をタイル本体から削除。grab はドラッグハンドルのみに残す（既存 L120 / L140-141 で実装済みなので、L52-54 から該当行を取り除くのみ）
-- **view モード click 配線（M6 反映: 編集モードの Tab 制御）**: Tile 内で view モード時に `displayName` を `<a href={tile.href ?? `/tools/${slug}`}>` で巻く（タイトル要素のみリンク、N4 反映）。Tileable 型に `href?: string` を追加
-  - 編集モード時の `<a>` 制御（M6 反映）: `pointer-events: none` は **マウス / タッチのクリックを無効化するが Tab フォーカスは止めない**（CSS 仕様）。これだと編集モード中も `<a>` がフォーカス可能 → Enter で navigation してしまい、編集中に意図せず別ページへ遷移するバグを引き起こす。よって編集モード時は **`<a>` に `tabIndex={-1}` + `aria-disabled="true"`** を付与して Tab 順序から除外する。`pointer-events: none` も併用してクリック / タップ / タッチ全経路をブロックする
-  - 別要素（`<span>` 等）への動的切り替えは React の reconciliation コストが大きく、`tabIndex={-1}` のほうがシンプルで a11y 上も `aria-disabled` が同伴することで意図が伝わる
-- **focus-visible / accent ボーダー視覚競合検証（N11 反映: 保存先を cycle 紐付け化）**:
-  - `/storybook` Tile セクションで w360 / w1280 × ライト / ダーク × 編集モード × focus-visible 状態の 8 パターンスクリーンショットを Playwright で取得し **`tmp/cycle-175-tile-screenshots/`** に保存
-  - WCAG 1.4.11 コントラスト比測定（編集モード `--accent` ボーダー × 背景 `--bg`）。3:1 未満なら代替表現（`border: 2px solid var(--accent)` または `var(--accent-strong)`）を採用
-  - 測定値・スクリーンショット ファイル名一覧・主要所見を **cycle-175.md の `## 補足事項` セクション**（既存、L1182 周辺）に転記し、`tmp/` 内ファイルが消えても参照経路が残るようにする（M9 反映: 既存セクション構造に整合）
-- **完了判定追加**:
-  - 移動ボタン群（medium/large 4 ボタン、small more menu）の表示・aria-label・disabled 制御がライト/ダーク両モードで `/storybook` で確認可能
-  - cursor: ハンドル上で `grab`、タイル本体上で `default`（Playwright で確認）
-  - view モード時、タイトルクリックで `/tools/{slug}` へ遷移する（Playwright で navigation 検証）
-  - hover / focus-within で移動ボタンが出現する（デスクトップ）/ 常時表示（タッチエミュレーション）
-  - スクリーンショット保存先 `tmp/cycle-175-tile-screenshots/` 配下のファイル名一覧が cycle-175.md の `## 補足事項` セクションに記載されている（M9 反映）
+- **移動ボタン実装**: 編集モード時に各タイルから 4 種類の移動操作（前へ / 後へ / 先頭 / 末尾）が呼び出せる。先頭/末尾位置で対応方向が無効化される。a11y（aria-label、Tab 到達可能、44px タップターゲット）と DESIGN.md §3 視覚要件（線画 1.5px / 16-24px、絵文字・Unicode 記号不可）を満たす
+- **small サイズでも 4 種類の移動操作が a11y / 視覚破綻なく利用可能**（折りたたみ手段は builder 判断、品質要件は検討項目 2-2 参照）
+- **タッチ操作のドラッグ検出**: タイル本体縦スワイプはスクロール、ドラッグハンドルは長押し系操作でドラッグ開始という区別が成立する設定（具体値は builder 判断、検討項目 2-1 参照）
+- **cursor 整合修正**: 「掴める」カーソル表現はドラッグハンドルにのみ適用、タイル本体は通常カーソル
+- **使用モード click 配線**: 使用モード時にタイトル要素のクリックでツールページへ遷移。**編集モード中はタイトルへの Tab フォーカスが入らず Enter で navigation が発生しない**
+- **focus-visible / accent ボーダー視覚競合と暗色モードコントラスト要件の検証**: ライト / ダーク × モバイル / デスクトップ × focus-visible 状態の組み合わせで、フォーカス位置の視認性と WCAG 1.4.11（3:1）を満たすことを Playwright で確認。検証用スクリーンショットと色測定値はサイクルに紐付けてアーカイブし、再レビュー時に参照可能にする（保存ディレクトリ名・転記先セクションは builder 判断、ただし `tmp/` 配下の cycle 紐付けディレクトリ + cycle-175.md 内の所見記載のいずれかを採る）
+- 完了判定:
+  - 移動ボタン群の表示・aria-label・disabled 制御がライト/ダーク両モードで `/storybook` で確認可能
+  - cursor: ハンドル上で「掴める」、タイル本体上で通常（Playwright で確認）
+  - 使用モード時、タイトルクリックで対応 URL へ遷移（Playwright で navigation 検証）
+  - 編集モード時、タイトルが Tab フォーカス対象から外れ、Enter で navigation が発生しない（Playwright で検証）
+  - 検証用アーカイブのファイル名一覧と主要数値が cycle-175.md `## 補足事項` セクションに記載されている
 
 #### 2.2.6（DnD 配置 UI）への追記
 
-- **モバイルレイアウト致命破綻の修正（最優先・着手最初）**:
-  - `@media (max-width: 480px)` で Tile の `grid-column` を CSS 上書きで `span 1` に強制（`data-size` 属性経由で `!important` 不要）
-  - 480〜768px 中間帯では small=span 1 / medium=span 2 / large=span 2（暗黙トラック生成防止）に丸め、`grid-auto-flow: dense` で空きセル充填
-  - Tile.tsx のインライン `gridColumn` を `data-size` 属性経由で CSS から指定する方式に切り替え（dnd-kit `transform` / `transition` のインラインは維持）
-  - 完了判定: w360 / w400 / w480 / w768 / w1280 で `fixture-small-1` の実 width が 100px 以上、暗黙トラックが生成されていない（`getComputedStyle(grid).gridTemplateColumns` 値で確認）
-- **中間帯 transform 検証（N6 反映、本タスク着手最初の確認事項）**:
-  - 480〜768px ビューポート（w600 を代表として）で `small × 2 + medium × 2 + large × 1` を配置し、各タイルを順序入れ替え（先頭→末尾、末尾→先頭、中間どうしの 3 シナリオ）するドラッグ操作を Playwright で実行
-  - 検証項目: (i) ドラッグ中の `useSortable.transform` が視覚位置と一致する（DragOverlay ゴーストが指の位置に追従し、ずれない）、(ii) `grid-auto-flow: dense` 採用時に DOM 順序と表示順序の乖離が `arrayMove` の index 計算を破綻させない、(iii) ドラッグ終了後の最終配置が DOM 順序として正しく反映される、(iv) **(ii-α) 採用時の中間帯窮屈さ事前確認**: w600 で small=span 1（4col グリッド換算で実 width ≈ 130〜140px）に移動ボタン 4 個（44px × 4 = 176px）が**収まらない**ことが事前に判明している。よって (ii-α) を採るときは small サイズで more menu を中間帯にも適用する（M2 反映: small more menu の発動条件を「viewport ≤ 480px」から「viewport ≤ 768px」に拡張する CSS を併せて準備しておく）。これにより constitution rule 4「best quality in every aspect」と矛盾せず収まる
-  - **破綻時の対応（M2 反映: 並行作業を明示）**: 上記 (i)〜(iii) のいずれかが破綻した場合、本対応計画 2-0 (ii-α) 代替案（中間帯ブレークポイント撤廃、`@media (max-width: 480px)` 1col と既定 4col の二値運用 + small more menu の発動条件 ≤ 768px へ拡張）に切り替えて再検証する。切替判断は builder ではなく PM へエスカレーション
-  - **エスカレーション中も滞留させない並行タスク（M2 反映）**: PM 判断待ちの間、builder は中間帯設計と独立な以下を並行で進める。これにより本タスクが止まっても他タスクの進捗が止まらない
-    - 2.2.5 移動ボタン実装（medium / large の 4 ボタン横並び、small の more-horizontal トリガー、aria 属性、disabled 制御）
-    - AddTileModal の WCAG 修正（`<ul role="list">` 化、`<button>` 暗黙ロール復活、Portal 化、`inert` フォーカストラップ）
-    - cursor 整合修正（Tile.module.css L52-54 の本体 `cursor: grab` 削除）
-    - 2.2.5 完了判定の focus-visible / accent ボーダー視覚競合検証（中間帯と独立）
-  - 並行タスクが進行中に PM が (ii-α) 採否を判断したら、builder は本タスクに復帰して中間帯 CSS 修正と再検証のみ追加実施する
-- **sensors 分離**: ToolboxShell の sensors を `MouseSensor` + `TouchSensor({ activationConstraint: { delay: 250, tolerance: 5 } })` + `KeyboardSensor` に分離（PointerSensor 単独から変更）。dnd-kit 公式値の 250ms / 5px を採用
-- **再レンダー連鎖の解消**:
-  - TileGrid 内に `configRef = useRef(config)` を導入し、毎レンダーで current 更新
-  - `handleDragOver` を `configRef.current` ベースに変更し、依存配列を縮小
-  - setDndHandlers 連鎖を断ち切る
-- **永続化経路の統一**:
-  - 移動ボタンハンドラ `handleMoveTile(slug, direction)` を `arrayMove` + `onConfigChange` で実装（DnD と同じ経路）
-  - `handleDragOver`: in-memory state のみ更新（プレビュー）。localStorage 書き込みなし
-  - `handleDragEnd`: 最終 config を `onConfigChange` で確定。`useToolboxConfig`（2.2.8）が localStorage 書き込みを担う
-- **overlay 排他制御（N3 / M5 反映）**: AddTileModal と small more popover が同時に開かないよう、`ToolboxOverlayContext` を `src/components/ToolboxShell/` に新設し、ToolboxShell が Provider を mount。子孫の Tile（small more menu トリガー）と AddTileModal は `useToolboxOverlay()` で `{ activeOverlay, openOverlay, closeOverlay }` を取得して排他開閉を行う。`inert` 付与は overlay 種別を問わず Provider 側で統一ロジックで処理（同時に最大 1 つしか開かないため、ロジックは 1 種類で済む）
-- **AddTileModal の修正**:
-  - フォーカストラップ: `inert` 属性で背景非操作化（React 19.2.4 ネイティブサポート、`<div inert>` または `element.inert = bool` で素直に書ける）。fallback として keydown Tab/Shift+Tab 捕捉ループを保持
-  - role 修正: `<ul role="list"><li><button>` のセマンティック構造で WCAG 4.1.2 違反を解消（VoiceOver の list 認識のため `role="list"` を確定付与、N9 反映）
-  - Portal: `createPortal(modal, document.body)` で body 直下に portal、SSR 対応の mount 検知
-- **完了判定追加（既存「タップとドラッグの区別が明確」を客観化、N7 反映で再レンダー回数閾値を撤廃しフレーム時間基準に統一）**:
-  - Playwright モバイルエミュレーション（w360）で 2 シナリオが動作:
-    - (1) タイル本体縦スワイプ → スクロール量 100px 以上が観測される（`window.scrollY` の変化で判定）
-    - (2) ドラッグハンドル 250ms 押下 + 5px 以上移動後に `dragstart` イベント発火（dnd-kit の onDragStart コールバックで判定）
-  - 移動ボタンの動作（順序変更・disabled 制御）が動作（w360 / w1280 両方）
-  - small サイズ more menu の展開・閉じる・ESC が動作。AddTileModal が開いている間は more menu が開けない、逆も同様（排他制御）
-  - 大画面（w1280）でも移動ボタンが hover / focus-within で表示され、DnD と併用可能
-  - **Playwright performance trace（N7 反映: 既存 2.2.6 完了判定の閾値に統一）**: 50 個タイル DnD 中のパフォーマンス基準は **「ドラッグ開始から次フレーム描画まで 100ms 以内、かつ 16ms を超えるフレームが連続しない」** に統一する（既存 2.2.6 完了判定 cycle-175.md L398 と同一基準）。再レンダー回数による評価は採用しない（collision detection / ライブ並び替えで強制的な再レンダーが多数発生し得るため、回数閾値は誤検知になる）。trace JSON は `tmp/cycle-175-perf-trace/` に保存し、ファイル名と主要数値（first-frame latency、long-frame count）を **cycle-175.md の `## 補足事項` セクション**（既存、M9 反映）に転記する
-  - DnD 中は localStorage 書き込みが発生せず、DnD 終了時に 1 回だけ書き込まれる（Playwright spy または手動確認）
-  - 中間帯 transform 検証（N6）が pass している
-  - AddTileModal: 開いたとき背景 Tile に Tab フォーカスが逃げない（`inert` で操作不可、jsdom では検証不能のため Playwright 実機検証必須）。閉じたら開いた button へフォーカス復帰。`<button>` がスクリーンリーダーで「ボタン」として読み上げられる（accessibility tree で検証）
+- **モバイルレイアウト致命破綻の修正**（最優先・着手最初）: 検討項目 2-0 の品質要件をすべて満たす（主要 5 ビューポートで small width 100px 以上、暗黙トラックなし、中間帯 transform 検証 pass）
+- **中間帯 transform 検証**: 中間帯ビューポートで `small × 2 + medium × 2 + large × 1` を配置し、3 シナリオ（先頭→末尾、末尾→先頭、中間どうし）のドラッグ操作を Playwright で実施。ドラッグ中の視覚位置一致、index 計算の正しさ、最終配置の正しさを確認。破綻時は PM へエスカレーション
+- **タッチ操作のドラッグ検出**: 検討項目 2-1 の品質要件を満たす（タイル本体縦スワイプ＝スクロール、ハンドル＝ドラッグ開始）
+- **DnD と移動ボタンの永続化経路統一**: 検討項目 2.5 の機能要件を満たす（同一 API 経由で localStorage 書き込み、ドラッグ中は書き込みなし、確定時のみ書き込み）
+- **AddTileModal の WCAG 適合**: 検討項目 2.6 の機能要件を満たす（背景非操作化、role の正しさ、最前面表示、フォーカス管理）
+- **overlay 排他制御**: AddTileModal と small サイズの移動操作 overlay が同時に開かない（要件のみ、実装手段は builder 判断）
+- 完了判定:
+  - Playwright モバイルエミュレーション（w360）で 2 シナリオが動作: (1) タイル本体縦スワイプでスクロール量 100px 以上、(2) ドラッグハンドル長押し + 移動で `dragstart` イベントが発火する
+  - 移動ボタンの動作（順序変更・disabled 制御）が w360 / w1280 両方で動作
+  - small サイズの移動操作 overlay が展開・閉じる・ESC で動作。AddTileModal が開いている間は同時に開けない（排他制御）
+  - **Playwright performance trace**: 50 個タイル DnD 中のパフォーマンス基準は「ドラッグ開始から次フレーム描画まで 100ms 以内、かつ 16ms を超えるフレームが連続しない」（既存 2.2.6 完了判定 cycle-175.md L398 と同一基準）。再レンダー回数による評価は採用しない
+  - DnD 中は localStorage 書き込みが発生せず、DnD 終了時に 1 回だけ書き込まれる
+  - 中間帯 transform 検証が pass している
+  - AddTileModal の背景フォーカストラップが Playwright 実機で動作する（jsdom では検証不能）
+- trace データ・スクリーンショットはサイクルに紐付けてアーカイブし、ファイル名と主要数値を cycle-175.md `## 補足事項` セクションに転記する（具体ディレクトリ名は builder 判断）
 
 #### 2.2.10（視覚検証 / E2E）への追記
 
-- **モバイル E2E シナリオ追加**: 「編集モード → 末尾タイルを chevrons-up（先頭へ）ボタンで先頭に移動 → 完了 → リロード → 配置復元」を w360 で自動化
-- **小サイズ more menu の E2E**: w360 で small タイルの more-horizontal を押 → popover 展開 → chevron-up クリック → 順序変更 → popover 閉じる。AddTileModal が開いている間は more menu が開けないことも検証
-- **モバイル縦スクロール動作確認**: 編集モード中、タイル本体縦スワイプでページがスクロールする（ドラッグ開始しない）
-- **Tab フォーカス順序検証（M6 反映: 編集モード時タイトルリンク除外）**:
-  - 使用モード: 編集ボタン → 各タイル（タイトルリンク） → ...（タイル化されたコンテンツが存在すれば内部の focusable）
-  - 編集モード: 編集ボタン →（タイトルリンクは `tabIndex={-1}` で **除外**）→ 各タイル（ハンドル → 移動ボタン群 → 削除）→ EmptySlot → 完了ボタン
-  - 編集モード中に Tab でタイトルへフォーカスが**入らない**こと、Enter で navigation **しない**ことを Playwright で検証
-- **スクリーンショット拡張（N11 反映: 保存先を cycle 紐付け化）**: 既存 4 枚（小モバ × ライト/ダーク + デスクトップ × ライト/ダーク）に加え、(i) w360 編集モード（移動ボタン / more menu 表示確認）、(ii) w1280 編集モード × hover で 4 ボタン出現、(iii) ダークモード × 編集モード × focus-visible（accent ボーダー × outline 重なり検証）の 3 枚を追加。**保存先は `tmp/cycle-175-tile-screenshots/`（cycle 紐付け）**。完了報告にはファイル名一覧を転記する
-- **AddTileModal の a11y 検証**: focus trap（Playwright 実機検証必須、jsdom では `inert` の判定が不完全）、role 正しさ（`<ul role="list">`、`<button>` の暗黙 role）、ESC 動作
+- モバイル E2E シナリオ追加: 編集モード → 末尾タイルを「先頭へ」操作で移動 → 完了 → リロード → 配置復元（w360 で自動化）
+- 小サイズ移動操作 overlay の E2E: w360 で展開 → 1 操作 → 閉じる。AddTileModal との排他検証も含む
+- モバイル縦スクロール動作確認: 編集モード中、タイル本体縦スワイプでページがスクロールする（ドラッグ開始しない）
+- Tab フォーカス順序検証:
+  - 使用モード: 編集ボタン → 各タイル（タイトルリンク） → ...
+  - 編集モード: 編集ボタン →（タイトルリンクは除外）→ 各タイル（ハンドル → 移動操作 → 削除）→ EmptySlot → 完了ボタン
+  - 編集モード中に Tab でタイトルへフォーカスが入らないこと、Enter で navigation しないことを Playwright で検証
+- スクリーンショット拡張: 既存 4 枚に加え、(i) w360 編集モード、(ii) w1280 編集モード × hover、(iii) ダークモード × 編集モード × focus-visible の 3 枚を追加。サイクル紐付けディレクトリにアーカイブ、ファイル名一覧を `## 補足事項` に転記
+- AddTileModal の a11y 検証: focus trap（Playwright 実機必須）、role 正しさ、ESC 動作
 
 ### DESIGN.md / docs/anti-patterns/ への追記内容案（最終形）
 
-#### DESIGN.md §4 レイアウト ドラッグ規定への追記（既存「ドラッグ中のパネルに `box-shadow: var(--shadow-dragging)` をつける」の直後に 2 文追加）
+#### DESIGN.md §4 レイアウト ドラッグ規定への追記
 
-> ドラッグ中の視覚表現は `box-shadow: var(--shadow-dragging)` のみで行う。半透明（opacity）・色相変化・スケール変化など、規定外の表現を加えてはならない（物理的隠喩「持ち上げて運ぶ」を保つため）。
-> 編集モードのタイルは `border-color: var(--accent)` で「触れる状態」を示す。`cursor: grab` はドラッグハンドル要素にのみ適用し、タイル本体には適用しない（実際にドラッグできる領域とカーソル表現を一致させるため）。半透明は使わない。タイル本体内のクリックを禁止する場合は `pointer-events: none` を使う。
+要件:
 
-#### docs/anti-patterns/implementation.md への AP-I10 追記（前述、スコープ限定版）
+- ドラッグ中の視覚表現は規定の影トークンのみで行い、半透明（opacity）・色相変化・スケール変化など規定外の表現を加えてはならない（物理的隠喩「持ち上げて運ぶ」を保つため）
+- 編集モードのタイルはアクセント色で「触れる状態」を示す
+- 「掴める」カーソル表現はドラッグハンドル要素にのみ適用し、タイル本体には適用しない（実際にドラッグできる領域とカーソル表現を一致させるため）
+- タイル本体内のクリックを禁止する場合は `pointer-events: none` を使う（既存規約の延長）
 
-#### docs/anti-patterns/workflow.md への AP-WF13 追記（PM 直接対応の境界、N8 反映: 2.2.4 で追加）
+具体の文面と挿入位置は builder が DESIGN.md 既存セクション構造に合わせて決定する。
 
-> AP-WF13: PM が builder への委譲を経ずにコードを直接修正していないか？許容されるのは (i) 明文化された規約に対する違反が確定し、(ii) 修正が機械的で設計判断を伴わず、(iii) Owner 指摘起点の緊急性を持つ場合のみ。設計判断・新規実装・複数候補からの選択を含む変更は必ず builder へ委譲し reviewer 検証を経ること。
->
-> ここでいう **「機械的（設計判断を伴わない）」とは「複数の修正方法から 1 つを選ぶ判断が含まれない」こと** を指す（M8 反映）。例:
->
-> - **機械的に該当する**: 規定外プロパティの削除（例: `opacity: 0.4` 行の削除）、明らかな typo 修正（コメント / 識別子の誤字訂正）、欠落 import の追加（lint が示す唯一解）、ESLint --fix の auto-fix 適用
-> - **機械的に該当しない**: 命名のリネーム（複数の選択肢がある）、リファクタリング（構造の選択がある）、API 設計、UI 表現の変更、新規コンポーネント追加、複数行に渡るロジック修正
->
-> → PM が判断と実装の両方を担うとレビューの独立性が失われる。境界条件を超えた直接対応は AP-WF08 と同質の問題を生む。（cycle-175 で opacity 削除を PM 直接対応した事例から境界条件を明文化）
+#### docs/anti-patterns/ への追記
 
-本追記は **2.2.4（編集モード設計）の末尾サブタスク** として実施する。DESIGN.md §4 追記と同じ「ドキュメント整備」性質のため、当初予定していた 2.2.11（lint/format/test/build 最終確認、性質が異なる）から 2.2.4 へ移動した（N8 reviewer 指摘反映）。
+- DESIGN.md §4 規定外表現の追加事案を再発防止策として記録（cycle-175 で発生）
+- PM 直接対応の境界条件を再発防止策として記録（許容範囲と禁止範囲、機械的＝設計判断を伴わないの定義）
+
+具体の追記文面・追加場所（implementation.md / workflow.md 等）は builder が既存ファイルの書式とスコープに整合する形で決定する。本サイクル内で追加完了させる。
 
 ### スコープ確認
 
@@ -1173,7 +999,7 @@ builder への作業分担として以下を既存サブタスクの追加要件
 - @dnd-kit Touch Sensor 公式ドキュメント — `activationConstraint: { delay, tolerance }` と `touch-action: none` 推奨
 - NN/g「Drag-and-Drop UX」、Microsoft Mobile Engineering「Accessible Reordering For Touch Devices」、Smashing Magazine「Dragon Drop」— 「up/down ボタンが最も accessible」「先頭/末尾ボタンで長距離移動を補助」
 - 既存実装: `src/components/Tile/Tile.tsx`, `Tile.module.css`, `src/components/TileGrid/TileGrid.tsx`, `src/components/ToolboxShell/ToolboxShell.tsx`
-- docs/anti-patterns/implementation.md（AP-I07 〜 AP-I09 の構造を踏襲して AP-I10 を新設）
+- docs/anti-patterns/implementation.md / workflow.md（既存項目の構造に整合する形で再発防止策を追加。具体の追記文面・追加位置は builder 判断）
 
 ## キャリーオーバー
 
