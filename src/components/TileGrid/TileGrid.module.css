@@ -1,27 +1,43 @@
 /**
  * TileGrid — タイル配置グリッドのスタイル
  *
- * CSS Grid レイアウト:
- * - 4 カラムのグリッドを基本とする（SIZE_SPAN と対応）
- *   small  = span 1（1 カラム）
- *   medium = span 2（2 カラム）
- *   large  = span 3（3 カラム）
- * - gap は var(--space-*) または固定値（DESIGN.md 準拠）
+ * CSS Grid レイアウト（暗黙トラック生成バグ修正）:
  *
- * モバイル対応:
- * - 768px 未満: 2 カラムに縮小（small=span 1, medium=span 2, large=span 2）
- * - 480px 未満: 1 カラムに縮小（すべて span 1）
+ * 問題: Tile.tsx がインライン style で `gridColumn: span N` を設定するため、
+ * ブレークポイントで grid-template-columns のカラム数が変わるとスパン値が
+ * 超過して暗黙トラックが生成され、タイルが 2px 程度に潰れる致命バグが発生する。
+ *
+ * 解決策: CSS カスタムプロパティ `--tile-span` を使ってブレークポイントごとに
+ * スパン上限を強制する。Tile 要素のインラインスタイルが `gridColumn: span N` に
+ * なっていても、:root レベルのカスタムプロパティが定義されていれば
+ * Tile 要素から上限 clamp を行う。
+ *
+ * 実装: `.root` の子 article 要素（Tile）に対して、ブレークポイント別に
+ * `grid-column` を上書きする。インライン style は !important では上書きできないため、
+ * Tile.tsx 側で `--tile-col-span` CSS 変数を使う方式か、
+ * TileGrid.module.css から直接 data-size 属性で Tile を制御する方式を採用する。
+ *
+ * data-size 属性方式（採用）:
+ * - Tile に `data-size="small|medium|large"` が付与されている
+ * - TileGrid コンテナのブレークポイント内で `> :where([data-size])` を使って上書き
+ * - インラインスタイルは CSS で上書きできないため、Tile.tsx 側の gridColumn style を
+ *   CSS 変数 `var(--tile-col-span, N)` ベースに変更する（TileGrid.module.css がその変数を設定）
  *
  * DESIGN.md 準拠:
  * - dark mode: :global(:root.dark) 方式（AP-I07 準拠）
  * - border-radius: --r-normal
  * - パネル本体は影なし（通常時）
+ *
+ * ブレークポイント別 span 設計:
+ * - 4 カラム帯（769px+）: small=1, medium=2, large=3
+ * - 2 カラム帯（481-768px）: small=1, medium=2, large=2（large を 2 に制限して暗黙トラック防止）
+ * - 1 カラム帯（480px-）: すべて 1（全幅表示）
  */
 
 /* グリッドコンテナ */
 .root {
   display: grid;
-  /* 4 カラムグリッド（small=span1, medium=span2, large=span3, EmptySlot=span2） */
+  /* 4 カラムグリッド（small=span1, medium=span2, large=span3） */
   grid-template-columns: repeat(4, 1fr);
   gap: 0.75rem;
   padding: 0.5rem 0;
@@ -29,27 +45,59 @@
   align-items: start;
 }
 
-/* モバイル（768px 未満）: 2 カラムに縮小 */
+/*
+ * data-size 属性による grid-column 設定（CSS セレクタで直接制御）。
+ *
+ * Tile.tsx のインラインスタイルから gridColumn を削除したため、
+ * ここで data-size 属性をもとに grid-column を直接設定する。
+ *
+ * CSS セレクタ優先度:
+ * - インラインスタイルは CSS より優先度が高いが、Tile.tsx から gridColumn を削除したため競合しない
+ * - :where() は優先度 0 のため、ブレークポイント内のルールが正しく上書き可能
+ *
+ * 4 カラム帯（769px 以上）: small=span1, medium=span2, large=span3
+ */
+.root > :where([data-size="small"]) {
+  grid-column: span 1;
+}
+.root > :where([data-size="medium"]) {
+  grid-column: span 2;
+}
+.root > :where([data-size="large"]) {
+  grid-column: span 3;
+}
+
+/* 2 カラム帯（481-768px）: large を span 2 に制限（暗黙トラック生成防止）
+   span 3 が 2 カラムグリッドに使われると暗黙トラックが生成され幅が 2px 程度に潰れる */
 @media (max-width: 768px) {
   .root {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  .root > :where([data-size="large"]) {
+    grid-column: span 2;
+  }
 }
 
-/* 小モバイル（480px 未満）: 1 カラムに縮小 */
+/* 1 カラム帯（480px 以下）: すべて span 1（全幅、100% 幅確保） */
 @media (max-width: 480px) {
   .root {
     grid-template-columns: 1fr;
   }
+
+  .root > :where([data-size="small"]),
+  .root > :where([data-size="medium"]),
+  .root > :where([data-size="large"]) {
+    grid-column: span 1;
+  }
 }
 
-/* 編集モードのボーダー（ToolboxShell.module.css のアウトラインとは別の内側ハイライト） */
+/* 編集モードのグリッドに最小高さを設け、空のグリッドが潰れないようにする */
 .root[data-mode="edit"] {
-  /* 編集モードではグリッドに最小高さを設け、空のグリッドが潰れないようにする */
   min-height: 120px;
 }
 
-/* ダークモード対応 */
+/* ダークモード（CSS 変数が自動対応するため追加スタイル不要） */
 :global(:root.dark) .root {
   /* 現状は CSS 変数が自動対応するため追加スタイル不要 */
 }

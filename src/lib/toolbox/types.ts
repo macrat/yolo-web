@@ -49,6 +49,16 @@ export interface Tileable {
   /** コンテンツの信頼レベル */
   trustLevel: TrustLevel;
   /**
+   * タイルタイトルのリンク先 URL（任意）。
+   * 未指定時は contentKind に応じたデフォルト URL を使用する:
+   *   tool → /tools/{slug}
+   *   play → /play/{slug}
+   *   cheatsheet → /cheatsheets/{slug}
+   * 使用モード（view）でタイトルをクリックすると遷移する。
+   * 編集モード（edit）ではリンクが Tab フォーカス対象から除外される。
+   */
+  href?: string;
+  /**
    * タイル対応定義（任意）。
    * - 未設定: タイル化対象外（統合 indexer には含まれるが、タイル選択 UI には表示されない）
    * - 単一 TileDefinition: 1 種類のタイルのみ

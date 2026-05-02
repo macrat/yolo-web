@@ -214,6 +214,128 @@ describe("Tile — SIZE_SPAN マッピング", () => {
   });
 });
 
+describe("Tile — card-link（タイトルリンク）", () => {
+  const tileableWithHref: Tileable = {
+    ...fixtureTileable,
+    href: "/tools/char-count",
+  };
+
+  test("view モードでタイトルが <a> リンクとして描画される", () => {
+    render(<Tile tileable={tileableWithHref} size="medium" mode="view" />);
+    const link = screen.getByRole("link", { name: "文字数カウンター" });
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveAttribute("href", "/tools/char-count");
+  });
+
+  test("href 未指定時は slug からデフォルト URL（/tools/{slug}）を生成", () => {
+    render(<Tile tileable={fixtureTileable} size="medium" mode="view" />);
+    const link = screen.getByRole("link", { name: "文字数カウンター" });
+    expect(link).toHaveAttribute("href", "/tools/char-count");
+  });
+
+  test("edit モードではタイトルリンクが Tab 対象外になる（tabIndex=-1）", () => {
+    render(<Tile tileable={tileableWithHref} size="medium" mode="edit" />);
+    // edit モードではリンクが tabIndex=-1 で Tab から除外される
+    const link = screen.queryByRole("link", { name: "文字数カウンター" });
+    // edit モードではリンク要素が存在しないか tabIndex=-1 であること
+    if (link) {
+      expect(link).toHaveAttribute("tabindex", "-1");
+    }
+    // edit モードではタイトルが表示されるが nav から除外されている
+    expect(screen.getByText("文字数カウンター")).toBeInTheDocument();
+  });
+});
+
+describe("Tile — 移動ボタン（4 種）", () => {
+  const moveProps = {
+    isFirst: false,
+    isLast: false,
+    onMoveFirst: vi.fn(),
+    onMovePrev: vi.fn(),
+    onMoveNext: vi.fn(),
+    onMoveLast: vi.fn(),
+  };
+
+  test("edit モードで 4 種の移動ボタンが描画される（medium）", () => {
+    render(
+      <Tile
+        tileable={fixtureTileable}
+        size="medium"
+        mode="edit"
+        {...moveProps}
+      />,
+    );
+    expect(
+      screen.getByRole("button", { name: "先頭へ移動" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "前へ移動" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "後へ移動" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "末尾へ移動" }),
+    ).toBeInTheDocument();
+  });
+
+  test("view モードでは移動ボタンが描画されない", () => {
+    render(
+      <Tile
+        tileable={fixtureTileable}
+        size="medium"
+        mode="view"
+        {...moveProps}
+      />,
+    );
+    expect(
+      screen.queryByRole("button", { name: "先頭へ移動" }),
+    ).not.toBeInTheDocument();
+  });
+
+  test("isFirst=true のとき「先頭へ」「前へ」が disabled", () => {
+    render(
+      <Tile
+        tileable={fixtureTileable}
+        size="medium"
+        mode="edit"
+        {...moveProps}
+        isFirst={true}
+      />,
+    );
+    expect(screen.getByRole("button", { name: "先頭へ移動" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "前へ移動" })).toBeDisabled();
+  });
+
+  test("isLast=true のとき「後へ」「末尾へ」が disabled", () => {
+    render(
+      <Tile
+        tileable={fixtureTileable}
+        size="medium"
+        mode="edit"
+        {...moveProps}
+        isLast={true}
+      />,
+    );
+    expect(screen.getByRole("button", { name: "後へ移動" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "末尾へ移動" })).toBeDisabled();
+  });
+
+  test("small サイズ edit モードで展開トリガーが表示される", () => {
+    render(
+      <Tile
+        tileable={fixtureTileable}
+        size="small"
+        mode="edit"
+        {...moveProps}
+      />,
+    );
+    expect(
+      screen.getByRole("button", { name: "移動操作を展開" }),
+    ).toBeInTheDocument();
+  });
+});
+
 describe("Tile — variant によるタイル解決ロジック", () => {
   /** タイルコンポーネントのスタブ */
   function TileCompA({ tileable }: { tileable: Tileable }) {

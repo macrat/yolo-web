@@ -8,21 +8,21 @@
  *
  * 設計原則:
  * - mode="view"（使用モード）: ドラッグハンドル・削除ボタン非表示、タイル内クリック有効
- * - mode="edit"（編集モード）: ドラッグハンドル・削除ボタン表示、
- *   タイル内クリックは CSS `pointer-events: none` で無効化（Tile.module.css 参照）
+ * - mode="edit"（編集モード）: ドラッグハンドル・削除ボタン・移動ボタン表示。
+ *   タイル内クリックは CSS pointer-events: none で無効化。DESIGN.md §4 参照。
  * - mode 状態の管理は外側ラッパー（#4 EditModeWrapper 等）の責務。Tile は受け取るだけ
  * - DndContext / SortableContext の mount は外側ラッパー / 配置 UI（#6）の責務。Tile は useSortable を内部で使う（経路 B 採用前提）
  * - DragOverlay は親コンポーネント（#6）側で扱うため、Tile は通常レンダリングのみ実装
+ * - カーソル: ドラッグハンドルのみ grab。タイル本体は default。DESIGN.md §4 参照。
  *
- * CSS Grid span（#1 修正）:
+ * CSS Grid span:
  * - gridColumn のインラインスタイルを廃止。span 値は TileGrid.module.css の data-size セレクタで制御。
  * - インラインスタイルで gridColumn を設定すると CSS が上書きできず、ブレークポイントで暗黙トラックが発生する（致命バグ）。
  *
- * z-index 階層（AP-I08 準拠）:
- * - タイル通常時: z-index 200
- * - ドラッグ中: z-index 300
+ * z-index 階層（AP-I08 / globals.css の CSS 変数参照）
  */
 
+import Link from "next/link";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import type { Tileable } from "@/lib/toolbox/types";
@@ -37,9 +37,6 @@ interface TileProps {
   /**
    * バリエーション ID（1 対多サポート時の選択用）。
    * TileDefinition.id と対応する。単一タイルのみの場合は省略可。
-   * tileable.tile が配列の場合: id が一致する TileDefinition を使用。
-   *   一致するものがなければ tile[0] にフォールバック。
-   * tileable.tile が単一の場合: variant の値に関係なくその定義を使用。
    */
   variant?: string;
   /** タイルの表示サイズ */
@@ -54,7 +51,7 @@ interface TileProps {
   /**
    * コンテンツエリアクリックコールバック。
    * mode="view" のときのみ呼ばれる。
-   * mode="edit" 時の click ブロックは CSS pointer-events: none（Tile.module.css）に集約。
+   * mode="edit" 時の click ブロックは CSS pointer-events: none（DESIGN.md §4）。
    */
   onContentClick?: () => void;
   /** このタイルがリスト先頭か（移動ボタンの disabled 判定に使用）。省略時は false */
@@ -104,9 +101,10 @@ function Tile({
     // transform は useSortable から得た値を適用（DnD 中の位置移動）
     transform: CSS.Transform.toString(transform),
     transition,
-    // gridColumn はインラインスタイルで設定しない（#1 修正）。
+    // gridColumn はインラインスタイルで設定しない。
     // TileGrid.module.css の data-size セレクタで制御することでブレークポイント別 span が正しく動作する。
     // インラインスタイルは CSS より優先度が高いため、ここに gridColumn を書くと CSS が上書きできない。
+    // DragOverlay 内（グリッド外）では grid-column が無視されるため問題なし。
   };
 
   /**
@@ -124,6 +122,24 @@ function Tile({
     }
     return tileable.tile;
   })();
+
+  /**
+   * タイトルリンクの URL。
+   * tileable.href が指定されていればそれを使用。
+   * 未指定時は contentKind に応じたデフォルト URL を生成。
+   */
+  const titleHref =
+    tileable.href ??
+    (() => {
+      switch (tileable.contentKind) {
+        case "tool":
+          return `/tools/${tileable.slug}`;
+        case "play":
+          return `/play/${tileable.slug}`;
+        case "cheatsheet":
+          return `/cheatsheets/${tileable.slug}`;
+      }
+    })();
 
   /**
    * コンテンツエリアのクリックハンドラ。
@@ -161,17 +177,15 @@ function Tile({
       <header className={styles.header} data-size={size}>
         {mode === "edit" && (
           <>
-            {/* 編集モード 1 段目（小サイズ時は top-row として上段に配置） */}
+            {/* 編集モード 1 段目: ハンドル / (medium以上)タイトル / 移動ボタン / 削除 */}
             <div className={styles.headerControls}>
-              {/* ドラッグハンドル */}
+              {/* ドラッグハンドル（DESIGN.md §4: grab カーソルはハンドルのみ） */}
               <button
                 type="button"
                 className={styles.dragHandle}
                 aria-label="ドラッグして移動"
-                // DnD イベントリスナー（useSortable から）
                 {...listeners}
               >
-                {/* ドラッグハンドルアイコン（6点グリッド） */}
                 <svg
                   className={styles.dragIcon}
                   viewBox="0 0 16 16"
@@ -192,16 +206,16 @@ function Tile({
                 <span className={styles.title}>{tileable.displayName}</span>
               )}
 
-              {/* 移動ボタン（先頭/前/後/末尾、#11 move buttons）*/}
-              {onMoveFirst && onMovePrev && onMoveNext && onMoveLast && (
+              {/* 移動ボタン（4 種: 先頭 / 前 / 後 / 末尾）— small は折りたたみ展開 */}
+              {(onMoveFirst || onMovePrev || onMoveNext || onMoveLast) && (
                 <TileMoveButtons
                   size={size}
                   isFirst={isFirst}
                   isLast={isLast}
-                  onMoveFirst={onMoveFirst}
-                  onMovePrev={onMovePrev}
-                  onMoveNext={onMoveNext}
-                  onMoveLast={onMoveLast}
+                  onMoveFirst={onMoveFirst ?? (() => {})}
+                  onMovePrev={onMovePrev ?? (() => {})}
+                  onMoveNext={onMoveNext ?? (() => {})}
+                  onMoveLast={onMoveLast ?? (() => {})}
                 />
               )}
 
@@ -212,7 +226,6 @@ function Tile({
                 aria-label="削除"
                 onClick={handleDeleteClick}
               >
-                {/* 削除アイコン（×） */}
                 <svg
                   className={styles.deleteIcon}
                   viewBox="0 0 14 14"
@@ -228,16 +241,18 @@ function Tile({
               </button>
             </div>
 
-            {/* small サイズ時のみタイトルを 2 段目に配置（タイトル省略防止） */}
+            {/* small サイズ 2 段目: タイトル（省略防止、line-clamp 2） */}
             {size === "small" && (
               <span className={styles.titleRow}>{tileable.displayName}</span>
             )}
           </>
         )}
 
-        {/* 使用モード（view）時はシンプルにタイトルのみ */}
+        {/* 使用モード（view）: タイトルをリンク化して詳細ページへ遷移可能にする */}
         {mode === "view" && (
-          <span className={styles.title}>{tileable.displayName}</span>
+          <Link href={titleHref} className={styles.titleLink}>
+            {tileable.displayName}
+          </Link>
         )}
       </header>
 

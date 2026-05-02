@@ -37,6 +37,7 @@ import {
   DragOverlay,
   type DragStartEvent,
   type DragOverEvent,
+  type DragEndEvent,
 } from "@dnd-kit/core";
 import { SortableContext, arrayMove } from "@dnd-kit/sortable";
 import Tile from "@/components/Tile";
@@ -135,7 +136,7 @@ function TileGrid({
   /**
    * 最新 config を ref で保持（DnD 中のクロージャ stale 防止）。
    * handleDragEnd で確定時の onConfigChange に localTiles を渡す際に参照する。
-   * useEffect でレンダリング外から更新することで lint エラーを回避する。
+   * useEffect でレンダリング後に更新することで lint エラーを回避する。
    */
   const configRef = useRef(config);
   useEffect(() => {
@@ -191,17 +192,20 @@ function TileGrid({
    * onDragEnd の時点で localTiles には最終的な並び順が入っている。
    * この localTiles で onConfigChange を呼ぶことで localStorage への書き込みが 1 回だけ行われる。
    */
-  const handleDragEnd = useCallback(() => {
-    setActiveDragSlug(null);
-    // localTiles をキャプチャするためにステートリフトを使う
-    setLocalTiles((finalTiles) => {
-      onConfigChange?.({
-        ...configRef.current,
-        tiles: finalTiles,
+  const handleDragEnd = useCallback(
+    (_event: DragEndEvent) => {
+      setActiveDragSlug(null);
+      // localTiles をキャプチャするためにステートリフトを使う
+      setLocalTiles((finalTiles) => {
+        onConfigChange?.({
+          ...configRef.current,
+          tiles: finalTiles,
+        });
+        return finalTiles; // state は変えない
       });
-      return finalTiles; // state は変えない
-    });
-  }, [onConfigChange]);
+    },
+    [onConfigChange],
+  );
 
   /**
    * setDndHandlers 経由で ToolboxShell の DndContext にイベントハンドラを接続する。
@@ -227,11 +231,11 @@ function TileGrid({
    */
   const handleMoveTile = useCallback(
     (fromIndex: number, toIndex: number) => {
-      const sorted = [...config.tiles].sort((a, b) => a.order - b.order);
-      const newTiles = arrayMove(sorted, fromIndex, toIndex).map((t, i) => ({
-        ...t,
-        order: i,
-      }));
+      const newTiles = arrayMove(
+        [...config.tiles].sort((a, b) => a.order - b.order),
+        fromIndex,
+        toIndex,
+      ).map((t, i) => ({ ...t, order: i }));
       onConfigChange?.({ ...config, tiles: newTiles });
     },
     [config, onConfigChange],

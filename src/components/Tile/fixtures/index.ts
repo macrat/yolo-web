@@ -44,6 +44,8 @@ export const FIXTURE_SMALL_1: FixtureTile = {
     publishedAt: "2026-01-01T00:00:00+09:00",
     trustLevel: "verified",
     accentColor: "#3b82f6",
+    // フィクスチャのため実際のツールページは存在しない。/toolbox-preview を指す
+    href: "/toolbox-preview",
   },
 };
 
@@ -57,6 +59,7 @@ export const FIXTURE_SMALL_2: FixtureTile = {
     publishedAt: "2026-01-02T00:00:00+09:00",
     trustLevel: "verified",
     accentColor: "#10b981",
+    href: "/toolbox-preview",
   },
 };
 
@@ -75,6 +78,7 @@ export const FIXTURE_MEDIUM_1: FixtureTile = {
     trustLevel: "verified",
     icon: "🔧",
     accentColor: "#f59e0b",
+    href: "/toolbox-preview",
   },
 };
 
@@ -90,6 +94,7 @@ export const FIXTURE_MEDIUM_2: FixtureTile = {
     trustLevel: "verified",
     icon: "🎨",
     accentColor: "#8b5cf6",
+    href: "/toolbox-preview",
   },
 };
 
@@ -108,6 +113,7 @@ export const FIXTURE_LARGE_1: FixtureTile = {
     trustLevel: "curated",
     icon: "🔮",
     accentColor: "#ec4899",
+    href: "/toolbox-preview",
   },
 };
 
@@ -125,6 +131,7 @@ export const FIXTURE_MEDIUM_3: FixtureTile = {
     publishedAt: "2026-01-06T00:00:00+09:00",
     trustLevel: "verified",
     accentColor: "#ef4444",
+    href: "/toolbox-preview",
   },
 };
 
@@ -139,6 +146,7 @@ export const FIXTURE_SMALL_3: FixtureTile = {
     trustLevel: "curated",
     icon: "📋",
     accentColor: "#6366f1",
+    href: "/toolbox-preview",
   },
 };
 

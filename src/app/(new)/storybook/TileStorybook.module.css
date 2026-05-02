@@ -1,11 +1,72 @@
 /**
  * Tile storybook セクション用グリッドレイアウト。
- * CSS Grid 4 カラム（スパイクで検証済みの列数）。
+ *
+ * レスポンシブ対応:
+ * - モバイル（〜480px）: 1 カラム。small=span 1（100%幅）
+ * - タブレット（480px〜768px）: 2 カラム。large は span 2 で折り返す
+ * - デスクトップ（768px〜）: 4 カラム。small=span 1, medium=span 2, large=span 3
+ *
+ * CSS カスタムプロパティ --tile-col-span で各タイルの span 値をブレークポイント別に制御。
+ * Tile コンポーネント側は `gridColumn: "span var(--tile-col-span, N)"` で参照する。
+ * DESIGN.md §4: 暗黙トラック（grid-auto-columns）が生成されないよう span を制限。
  */
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
   gap: 12px;
   margin-bottom: 1rem;
+
+  /* モバイル（〜480px）: 1 カラム。すべてのタイルが 1 列幅 */
+  grid-template-columns: 1fr;
+}
+
+/* タブレット（480px〜768px）: 2 カラム */
+@media (min-width: 480px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* デスクトップ（768px〜）: 4 カラム */
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/*
+ * タイルの span 値をブレークポイント別に CSS 変数で制御。
+ * Tile コンポーネントは `gridColumn: "span var(--tile-col-span, N)"` で参照する。
+ * 暗黙トラック生成防止のため、各ブレークポイントで span がカラム数を超えないよう制限する。
+ */
+
+/* モバイル: 1 カラム → すべて span 1 */
+.grid :global([data-size]) {
+  --tile-col-span: 1;
+}
+
+/* タブレット: 2 カラム → small=1, medium=2, large=2（3 を超えないよう制限） */
+@media (min-width: 480px) {
+  .grid :global([data-size="small"]) {
+    --tile-col-span: 1;
+  }
+  .grid :global([data-size="medium"]) {
+    --tile-col-span: 2;
+  }
+  .grid :global([data-size="large"]) {
+    --tile-col-span: 2; /* 4 カラム未満では 2 に制限し暗黙トラック生成を防ぐ */
+  }
+}
+
+/* デスクトップ: 4 カラム → small=1, medium=2, large=3 */
+@media (min-width: 768px) {
+  .grid :global([data-size="small"]) {
+    --tile-col-span: 1;
+  }
+  .grid :global([data-size="medium"]) {
+    --tile-col-span: 2;
+  }
+  .grid :global([data-size="large"]) {
+    --tile-col-span: 3;
+  }
 }
