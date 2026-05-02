@@ -361,6 +361,8 @@ function TileGrid({
                   ? () => handleMoveTile(index, resolvedTiles.length - 1)
                   : undefined
               }
+              openOverlayId={openOverlayId}
+              setOpenOverlay={setOpenOverlay}
             />
           ))}
 

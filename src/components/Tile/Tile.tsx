@@ -66,6 +66,17 @@ interface TileProps {
   onMoveNext?: () => void;
   /** 末尾へ移動コールバック（編集モードのみ） */
   onMoveLast?: () => void;
+  /**
+   * 現在 open 中の overlay の ID（O1: 排他制御）。
+   * ToolboxShell → TileGrid → Tile → TileMoveButtons の経路で渡す。
+   * null でなければ small タイルの展開パネルを抑制する。
+   */
+  openOverlayId?: string | null;
+  /**
+   * overlay の open/close を通知する関数（O1: 排他制御）。
+   * TileMoveButtons が展開/縮小したとき、TileGrid 経由で ToolboxShell に通知する。
+   */
+  setOpenOverlay?: (id: string | null) => void;
 }
 
 /**
@@ -87,6 +98,8 @@ function Tile({
   onMovePrev,
   onMoveNext,
   onMoveLast,
+  openOverlayId,
+  setOpenOverlay,
 }: TileProps) {
   const {
     attributes,
@@ -219,7 +232,8 @@ function Tile({
               {/* 移動ボタン（4 種: 先頭 / 前 / 後 / 末尾）— small は折りたたみ展開
                   4 つのコールバックがすべて揃っている時のみ描画する（N5: no-op fallback 防止）。
                   一部でも未渡しなら描画しない。コールバック未渡し時に静かに何も起きない
-                  状態を避け、バグの早期検出を助ける。 */}
+                  状態を避け、バグの早期検出を助ける。
+                  O1: openOverlayId / setOpenOverlay を isOverlayOpen / onExpandChange に変換して渡す。 */}
               {onMoveFirst && onMovePrev && onMoveNext && onMoveLast && (
                 <TileMoveButtons
                   size={size}
@@ -229,14 +243,22 @@ function Tile({
                   onMovePrev={onMovePrev}
                   onMoveNext={onMoveNext}
                   onMoveLast={onMoveLast}
+                  isOverlayOpen={openOverlayId != null}
+                  onExpandChange={(isExpanded) => {
+                    if (isExpanded) {
+                      setOpenOverlay?.("tile-move-" + tileable.slug);
+                    } else {
+                      setOpenOverlay?.(null);
+                    }
+                  }}
                 />
               )}
 
-              {/* 削除ボタン */}
+              {/* 削除ボタン（O5: aria-label を動詞形「削除する」に統一） */}
               <button
                 type="button"
                 className={styles.deleteButton}
-                aria-label="削除"
+                aria-label="削除する"
                 onClick={handleDeleteClick}
               >
                 <svg

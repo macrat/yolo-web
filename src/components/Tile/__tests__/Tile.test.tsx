@@ -118,7 +118,9 @@ describe("Tile — 編集モード UI", () => {
         onDelete={vi.fn()}
       />,
     );
-    expect(screen.getByRole("button", { name: "削除" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "削除する" }),
+    ).toBeInTheDocument();
   });
 
   test("mode='view' のとき削除ボタンが表示されない", () => {
@@ -131,7 +133,7 @@ describe("Tile — 編集モード UI", () => {
       />,
     );
     expect(
-      screen.queryByRole("button", { name: "削除" }),
+      screen.queryByRole("button", { name: "削除する" }),
     ).not.toBeInTheDocument();
   });
 });
@@ -147,7 +149,7 @@ describe("Tile — 削除コールバック", () => {
         onDelete={handleDelete}
       />,
     );
-    fireEvent.click(screen.getByRole("button", { name: "削除" }));
+    fireEvent.click(screen.getByRole("button", { name: "削除する" }));
     expect(handleDelete).toHaveBeenCalledTimes(1);
   });
 
@@ -155,7 +157,7 @@ describe("Tile — 削除コールバック", () => {
     render(<Tile tileable={fixtureTileable} size="medium" mode="edit" />);
     // onDelete なしで削除ボタンをクリックしてもエラーにならない
     expect(() =>
-      fireEvent.click(screen.getByRole("button", { name: "削除" })),
+      fireEvent.click(screen.getByRole("button", { name: "削除する" })),
     ).not.toThrow();
   });
 });
@@ -200,8 +202,8 @@ describe("Tile — a11y", () => {
         onDelete={vi.fn()}
       />,
     );
-    const deleteBtn = screen.getByRole("button", { name: "削除" });
-    expect(deleteBtn).toHaveAttribute("aria-label", "削除");
+    const deleteBtn = screen.getByRole("button", { name: "削除する" });
+    expect(deleteBtn).toHaveAttribute("aria-label", "削除する");
   });
 });
 
