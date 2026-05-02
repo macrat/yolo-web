@@ -1,72 +1,63 @@
 /**
  * Tile storybook セクション用グリッドレイアウト。
  *
- * レスポンシブ対応:
- * - モバイル（〜480px）: 1 カラム。small=span 1（100%幅）
- * - タブレット（480px〜768px）: 2 カラム。large は span 2 で折り返す
- * - デスクトップ（768px〜）: 4 カラム。small=span 1, medium=span 2, large=span 3
+ * TileGrid.module.css と同じ :where([data-size="..."]) セレクタ方式を採用。
+ * CSS カスタムプロパティ方式を廃止し、直接 grid-column を設定することで
+ * Tile.tsx がインラインスタイルで gridColumn を参照しない設計と整合する。
  *
- * CSS カスタムプロパティ --tile-col-span で各タイルの span 値をブレークポイント別に制御。
- * Tile コンポーネント側は `gridColumn: "span var(--tile-col-span, N)"` で参照する。
+ * レスポンシブ対応:
+ * - デスクトップ（769px+）: 4 カラム。small=span 1, medium=span 2, large=span 3
+ * - タブレット（481-768px）: 2 カラム。large は span 2 に制限（暗黙トラック生成防止）
+ * - モバイル（480px 以下）: 1 カラム。すべて span 1（全幅表示）
+ *
  * DESIGN.md §4: 暗黙トラック（grid-auto-columns）が生成されないよう span を制限。
  */
 
 .grid {
   display: grid;
+  /* 4 カラムグリッド（デスクトップ基準） */
+  grid-template-columns: repeat(4, 1fr);
   gap: 12px;
   margin-bottom: 1rem;
-
-  /* モバイル（〜480px）: 1 カラム。すべてのタイルが 1 列幅 */
-  grid-template-columns: 1fr;
-}
-
-/* タブレット（480px〜768px）: 2 カラム */
-@media (min-width: 480px) {
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* デスクトップ（768px〜）: 4 カラム */
-@media (min-width: 768px) {
-  .grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
+  align-items: start;
 }
 
 /*
- * タイルの span 値をブレークポイント別に CSS 変数で制御。
- * Tile コンポーネントは `gridColumn: "span var(--tile-col-span, N)"` で参照する。
- * 暗黙トラック生成防止のため、各ブレークポイントで span がカラム数を超えないよう制限する。
+ * data-size 属性による grid-column 設定（CSS セレクタで直接制御）。
+ * TileGrid.module.css と同じ方式: :where() で優先度 0 にし、ブレークポイントで上書き可能にする。
+ *
+ * デスクトップ（769px 以上）: small=span1, medium=span2, large=span3
  */
-
-/* モバイル: 1 カラム → すべて span 1 */
-.grid :global([data-size]) {
-  --tile-col-span: 1;
+.grid > :where([data-size="small"]) {
+  grid-column: span 1;
+}
+.grid > :where([data-size="medium"]) {
+  grid-column: span 2;
+}
+.grid > :where([data-size="large"]) {
+  grid-column: span 3;
 }
 
-/* タブレット: 2 カラム → small=1, medium=2, large=2（3 を超えないよう制限） */
-@media (min-width: 480px) {
-  .grid :global([data-size="small"]) {
-    --tile-col-span: 1;
+/* タブレット（481-768px）: 2 カラム。large を span 2 に制限（暗黙トラック生成防止） */
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
   }
-  .grid :global([data-size="medium"]) {
-    --tile-col-span: 2;
-  }
-  .grid :global([data-size="large"]) {
-    --tile-col-span: 2; /* 4 カラム未満では 2 に制限し暗黙トラック生成を防ぐ */
+
+  .grid > :where([data-size="large"]) {
+    grid-column: span 2;
   }
 }
 
-/* デスクトップ: 4 カラム → small=1, medium=2, large=3 */
-@media (min-width: 768px) {
-  .grid :global([data-size="small"]) {
-    --tile-col-span: 1;
+/* モバイル（480px 以下）: 1 カラム。すべて span 1（全幅、100% 幅確保） */
+@media (max-width: 480px) {
+  .grid {
+    grid-template-columns: 1fr;
   }
-  .grid :global([data-size="medium"]) {
-    --tile-col-span: 2;
-  }
-  .grid :global([data-size="large"]) {
-    --tile-col-span: 3;
+
+  .grid > :where([data-size="small"]),
+  .grid > :where([data-size="medium"]),
+  .grid > :where([data-size="large"]) {
+    grid-column: span 1;
   }
 }

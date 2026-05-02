@@ -11,7 +11,7 @@
  * 絵文字・Unicode 記号は不使用。
  */
 
-import { useState } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import type { TileSize } from "./types";
 import styles from "./TileMoveButtons.module.css";
 
@@ -135,14 +135,19 @@ function MoveButtonList({
   onMovePrev,
   onMoveNext,
   onMoveLast,
-}: Omit<TileMoveButtonsProps, "size">) {
+  firstButtonRef,
+}: Omit<TileMoveButtonsProps, "size"> & {
+  /** 先頭ボタンへの ref（small サイズ展開時のフォーカス自動移動に使用） */
+  firstButtonRef?: React.RefObject<HTMLButtonElement | null>;
+}) {
   const handlers = { onMoveFirst, onMovePrev, onMoveNext, onMoveLast };
 
   return (
     <div className={styles.buttonList} role="group" aria-label="タイルの移動">
-      {MOVE_ACTIONS.map((action) => (
+      {MOVE_ACTIONS.map((action, index) => (
         <button
           key={action.key}
+          ref={index === 0 ? firstButtonRef : undefined}
           type="button"
           className={styles.moveButton}
           aria-label={action.label}
@@ -159,6 +164,10 @@ function MoveButtonList({
 /**
  * TileMoveButtons — 編集モード移動操作 UI。
  * size="small" 時のみ展開トリガー経由のインライン展開、それ以外は常時表示。
+ *
+ * a11y 対応（small サイズ展開パネル）:
+ * - 展開時に先頭ボタン（「先頭へ移動」）へ自動フォーカス
+ * - ESC キーで展開パネルを閉じる
  */
 export default function TileMoveButtons({
   size,
@@ -170,6 +179,32 @@ export default function TileMoveButtons({
   onMoveLast,
 }: TileMoveButtonsProps) {
   const [expanded, setExpanded] = useState(false);
+  /** 展開パネル内の先頭ボタンへの ref（フォーカス自動移動に使用） */
+  const firstButtonRef = useRef<HTMLButtonElement>(null);
+
+  /** ESC キーで展開パネルを閉じる */
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === "Escape" && expanded) {
+        setExpanded(false);
+      }
+    },
+    [expanded],
+  );
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [handleKeyDown]);
+
+  /** 展開時に先頭ボタンへフォーカスを移動する */
+  useEffect(() => {
+    if (expanded && firstButtonRef.current) {
+      firstButtonRef.current.focus();
+    }
+  }, [expanded]);
 
   if (size !== "small") {
     // medium / large: 4 ボタンを常時表示
@@ -220,6 +255,7 @@ export default function TileMoveButtons({
             onMovePrev={onMovePrev}
             onMoveNext={onMoveNext}
             onMoveLast={onMoveLast}
+            firstButtonRef={firstButtonRef}
           />
           {/* 閉じるボタン（aria-label で区別） */}
           <button

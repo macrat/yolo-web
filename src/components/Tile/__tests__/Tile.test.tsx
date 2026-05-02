@@ -233,15 +233,13 @@ describe("Tile — card-link（タイトルリンク）", () => {
     expect(link).toHaveAttribute("href", "/tools/char-count");
   });
 
-  test("edit モードではタイトルリンクが Tab 対象外になる（tabIndex=-1）", () => {
+  test("edit モードではタイトルリンク（<a> 要素）が描画されない", () => {
     render(<Tile tileable={tileableWithHref} size="medium" mode="edit" />);
-    // edit モードではリンクが tabIndex=-1 で Tab から除外される
-    const link = screen.queryByRole("link", { name: "文字数カウンター" });
-    // edit モードではリンク要素が存在しないか tabIndex=-1 であること
-    if (link) {
-      expect(link).toHaveAttribute("tabindex", "-1");
-    }
-    // edit モードではタイトルが表示されるが nav から除外されている
+    // edit モードでは <Link>（<a> 要素）が描画されないことを明示的に検証する
+    expect(
+      screen.queryByRole("link", { name: "文字数カウンター" }),
+    ).not.toBeInTheDocument();
+    // タイトルテキスト自体は span として表示される
     expect(screen.getByText("文字数カウンター")).toBeInTheDocument();
   });
 });
@@ -333,6 +331,39 @@ describe("Tile — 移動ボタン（4 種）", () => {
     expect(
       screen.getByRole("button", { name: "移動操作を展開" }),
     ).toBeInTheDocument();
+  });
+
+  test("コールバックが一部未渡しのとき TileMoveButtons が描画されない", () => {
+    // N5: no-op fallback がエラー検出を阻害しないよう、
+    // 4 つすべてが揃っている時のみ TileMoveButtons を描画する
+    render(
+      <Tile
+        tileable={fixtureTileable}
+        size="medium"
+        mode="edit"
+        onMoveFirst={vi.fn()}
+        // onMovePrev を意図的に未渡し
+        onMoveNext={vi.fn()}
+        onMoveLast={vi.fn()}
+      />,
+    );
+    expect(
+      screen.queryByRole("button", { name: "先頭へ移動" }),
+    ).not.toBeInTheDocument();
+  });
+
+  test("コールバックが全部未渡しのとき TileMoveButtons が描画されない", () => {
+    render(
+      <Tile
+        tileable={fixtureTileable}
+        size="medium"
+        mode="edit"
+        // 移動コールバックをすべて未渡し
+      />,
+    );
+    expect(
+      screen.queryByRole("button", { name: "先頭へ移動" }),
+    ).not.toBeInTheDocument();
   });
 });
 
