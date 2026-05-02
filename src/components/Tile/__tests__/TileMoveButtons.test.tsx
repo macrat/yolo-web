@@ -239,9 +239,33 @@ describe("TileMoveButtons — small サイズ", () => {
     expect(trigger).toHaveFocus();
   });
 
-  test("O1: isOverlayOpen=true のとき展開トリガーをクリックしても展開しない", () => {
+  test("P1: overlayId と同じ openOverlayId のとき展開トリガーをクリックすると自分自身を展開できる（自爆しない）", () => {
+    // 自分が openOverlayId に登録されている場合は展開を継続できる（自爆防止）
     render(
-      <TileMoveButtons {...defaultProps} size="small" isOverlayOpen={true} />,
+      <TileMoveButtons
+        {...defaultProps}
+        size="small"
+        overlayId="tile-move-my-tile"
+        openOverlayId="tile-move-my-tile"
+      />,
+    );
+    const trigger = screen.getByRole("button", { name: "移動操作を展開" });
+    fireEvent.click(trigger);
+
+    // 自分自身の overlayId なので展開できる
+    expect(
+      screen.queryByRole("button", { name: "先頭へ移動" }),
+    ).toBeInTheDocument();
+  });
+
+  test("P1: 他の overlay の openOverlayId のとき展開トリガーをクリックしても展開しない", () => {
+    render(
+      <TileMoveButtons
+        {...defaultProps}
+        size="small"
+        overlayId="tile-move-my-tile"
+        openOverlayId="add-tile-modal"
+      />,
     );
     const trigger = screen.getByRole("button", { name: "移動操作を展開" });
     fireEvent.click(trigger);
@@ -252,19 +276,29 @@ describe("TileMoveButtons — small サイズ", () => {
     ).not.toBeInTheDocument();
   });
 
-  test("O1: 展開中に isOverlayOpen が true になると展開パネルが閉じる", () => {
+  test("P1: 展開中に他の openOverlayId になると展開パネルが閉じる", () => {
     const { rerender } = render(
-      <TileMoveButtons {...defaultProps} size="small" isOverlayOpen={false} />,
+      <TileMoveButtons
+        {...defaultProps}
+        size="small"
+        overlayId="tile-move-my-tile"
+        openOverlayId={null}
+      />,
     );
     const trigger = screen.getByRole("button", { name: "移動操作を展開" });
     fireEvent.click(trigger);
     expect(
-      screen.getByRole("button", { name: "先頭へ移動" }),
+      screen.queryByRole("button", { name: "先頭へ移動" }),
     ).toBeInTheDocument();
 
-    // isOverlayOpen が true に変わると展開パネルが閉じる
+    // 他の overlay が開くと展開パネルが閉じる
     rerender(
-      <TileMoveButtons {...defaultProps} size="small" isOverlayOpen={true} />,
+      <TileMoveButtons
+        {...defaultProps}
+        size="small"
+        overlayId="tile-move-my-tile"
+        openOverlayId="add-tile-modal"
+      />,
     );
     expect(
       screen.queryByRole("button", { name: "先頭へ移動" }),
@@ -277,6 +311,8 @@ describe("TileMoveButtons — small サイズ", () => {
       <TileMoveButtons
         {...defaultProps}
         size="small"
+        overlayId="tile-move-my-tile"
+        openOverlayId={null}
         onExpandChange={onExpandChange}
       />,
     );
@@ -292,6 +328,8 @@ describe("TileMoveButtons — small サイズ", () => {
       <TileMoveButtons
         {...defaultProps}
         size="small"
+        overlayId="tile-move-my-tile"
+        openOverlayId={null}
         onExpandChange={onExpandChange}
       />,
     );

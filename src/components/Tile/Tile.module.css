@@ -42,13 +42,10 @@
 .tile[data-mode="edit"] {
   /* 編集状態はアクセント色ボーダーで示す（DESIGN.md §4 参照） */
   border-color: var(--accent);
-  /*
-   * O4: small サイズの展開パネル（position: absolute）がタイル外に表示できるよう overflow: visible に切替。
-   * 通常時（view モード）の overflow: hidden はコンテンツのクリッピングに必要だが、
-   * 編集モードでは .content に pointer-events: none が付くため機能的な影響なし。
-   * border-radius の視覚的クリッピングは失われるが、編集モードは一時的な状態のため許容する。
+  /* overflow: hidden を維持する。
+   * 展開パネル（small タイル）は createPortal で document.body 直下に描画するため
+   * overflow: visible に変更する必要はない（P2 修正: overflow: visible は副作用があるため撤回）。
    */
-  overflow: visible;
 }
 
 /* === タイルヘッダー（ドラッグハンドル + タイトル + 削除ボタン） === */
