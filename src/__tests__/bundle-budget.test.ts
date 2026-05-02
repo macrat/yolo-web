@@ -83,6 +83,8 @@ const UNCATEGORISED_WHITELIST: ReadonlySet<string> = new Set([
   "/achievements",
   // 開発者向け新デザインカタログ。noindex 設定済み。(new) Route Group 配下。
   "/storybook",
+  // 道具箱機能の hidden 検証ルート。noindex + 環境変数ガード済み。(new) Route Group 配下。
+  "/toolbox-preview",
 ]);
 
 /**

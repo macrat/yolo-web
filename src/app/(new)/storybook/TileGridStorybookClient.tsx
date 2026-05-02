@@ -84,12 +84,14 @@ export default function TileGridStorybookClient() {
       </details>
 
       <ToolboxShell>
-        {({ mode, setDndHandlers }) => (
+        {({ mode, setDndHandlers, openOverlayId, setOpenOverlay }) => (
           <TileGrid
             config={config}
             mode={mode}
             onConfigChange={handleConfigChange}
             setDndHandlers={setDndHandlers}
+            openOverlayId={openOverlayId}
+            setOpenOverlay={setOpenOverlay}
           />
         )}
       </ToolboxShell>
@@ -140,12 +142,14 @@ export function TileGrid50Client() {
         個のタイルでパフォーマンスを確認。「編集」ボタンからドラッグ並び替えを試してください。
       </p>
       <ToolboxShell>
-        {({ mode, setDndHandlers }) => (
+        {({ mode, setDndHandlers, openOverlayId, setOpenOverlay }) => (
           <TileGrid
             config={config}
             mode={mode}
             onConfigChange={setConfig}
             setDndHandlers={setDndHandlers}
+            openOverlayId={openOverlayId}
+            setOpenOverlay={setOpenOverlay}
           />
         )}
       </ToolboxShell>
