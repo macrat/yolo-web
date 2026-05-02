@@ -131,11 +131,13 @@ describe("ToolboxShell", () => {
   test("children render prop に view モードが渡される（初期）", () => {
     const child = vi.fn(() => null);
     render(<ToolboxShell>{child}</ToolboxShell>);
-    // openOverlayId / setOpenOverlay が追加されたため objectContaining で検証する
+    // expect.objectContaining で必須 props のみ検証し、将来の props 追加に耐性を持たせる
     expect(child).toHaveBeenCalledWith(
       expect.objectContaining({
         mode: "view",
         setDndHandlers: expect.any(Function),
+        openOverlayId: null,
+        setOpenOverlay: expect.any(Function),
       }),
     );
   });
@@ -344,82 +346,92 @@ describe("ToolboxShell", () => {
     expect(document.body.classList.contains("scroll-locked")).toBe(true);
   });
 
-  // --- overlay 排他制御 / focus トラップ強化 ---
+  // --- overlay 排他制御 ---
 
-  test("初期状態では openOverlayId が null として children に渡される", () => {
-    const child = vi.fn(() => null);
-    render(<ToolboxShell>{child}</ToolboxShell>);
-    expect(child).toHaveBeenCalledWith(
-      expect.objectContaining({
-        openOverlayId: null,
-        setOpenOverlay: expect.any(Function),
-      }),
-    );
-  });
-
-  test("setOpenOverlay を呼ぶと openOverlayId が更新されて children に渡される", () => {
-    let capturedSet: ((id: string | null) => void) | null = null;
-    const child = vi.fn(
-      ({ setOpenOverlay }: { setOpenOverlay: (id: string | null) => void }) => {
-        capturedSet = setOpenOverlay;
-        return null;
-      },
-    );
-    render(<ToolboxShell>{child}</ToolboxShell>);
-    act(() => {
-      capturedSet!("add-tile-modal");
-    });
-    expect(child).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        openOverlayId: "add-tile-modal",
-      }),
-    );
-  });
-
-  test("setOpenOverlay(null) を呼ぶと openOverlayId が null に戻る", () => {
-    let capturedSet: ((id: string | null) => void) | null = null;
-    const child = vi.fn(
-      ({ setOpenOverlay }: { setOpenOverlay: (id: string | null) => void }) => {
-        capturedSet = setOpenOverlay;
-        return null;
-      },
-    );
-    render(<ToolboxShell>{child}</ToolboxShell>);
-    act(() => {
-      capturedSet!("some-modal");
-    });
-    act(() => {
-      capturedSet!(null);
-    });
-    expect(child).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        openOverlayId: null,
-      }),
-    );
-  });
-
-  test("openOverlayId が null でないとき tilesContainer に inert 属性が付与される", () => {
-    let capturedSet: ((id: string | null) => void) | null = null;
+  test("初期状態では openOverlayId が null（render props 経由で確認）", () => {
+    let capturedId: string | null = undefined as unknown as string | null;
     render(
       <ToolboxShell>
-        {({ setOpenOverlay }) => {
+        {({ openOverlayId }) => {
+          capturedId = openOverlayId;
+          return null;
+        }}
+      </ToolboxShell>,
+    );
+    expect(capturedId).toBeNull();
+  });
+
+  test("setOpenOverlay('modal-A') を呼ぶと openOverlayId が 'modal-A' になる", () => {
+    let capturedId: string | null = null;
+    let capturedSet: ((id: string | null) => void) | null = null;
+
+    render(
+      <ToolboxShell>
+        {({ openOverlayId, setOpenOverlay }) => {
+          capturedId = openOverlayId;
           capturedSet = setOpenOverlay;
           return null;
         }}
       </ToolboxShell>,
     );
-    const container = screen.getByTestId("toolbox-shell");
-    const tilesContainer = container.querySelector(
-      "[data-testid='toolbox-tiles']",
+
+    // act() で React の状態更新を同期的に flush する
+    act(() => {
+      capturedSet!("modal-A");
+    });
+    expect(capturedId).toBe("modal-A");
+  });
+
+  test("別の ID が open 中に setOpenOverlay を呼んでも上書きできる（最後の呼び出しが勝つ）", () => {
+    let capturedId: string | null = null;
+    let capturedSet: ((id: string | null) => void) | null = null;
+
+    render(
+      <ToolboxShell>
+        {({ openOverlayId, setOpenOverlay }) => {
+          capturedId = openOverlayId;
+          capturedSet = setOpenOverlay;
+          return null;
+        }}
+      </ToolboxShell>,
     );
-    // 初期状態: inert なし
+
+    act(() => {
+      capturedSet!("modal-A");
+    });
+    expect(capturedId).toBe("modal-A");
+
+    act(() => {
+      capturedSet!(null);
+    });
+    expect(capturedId).toBeNull();
+  });
+
+  test("openOverlayId が null でないとき tilesContainer に inert 属性が付与される", () => {
+    let capturedSet: ((id: string | null) => void) | null = null;
+
+    render(
+      <ToolboxShell>
+        {({ setOpenOverlay }) => {
+          capturedSet = setOpenOverlay;
+          return <div data-testid="child-content">child</div>;
+        }}
+      </ToolboxShell>,
+    );
+
+    // overlay が開いていない初期状態
+    const tilesContainer = screen
+      .getByTestId("toolbox-shell")
+      .querySelector("[data-testid='toolbox-tiles']");
     expect(tilesContainer).not.toHaveAttribute("inert");
-    // overlay open → inert 付与
+
+    // overlay を開く
     act(() => {
       capturedSet!("some-modal");
     });
     expect(tilesContainer).toHaveAttribute("inert");
-    // overlay close → inert 除去
+
+    // overlay を閉じる
     act(() => {
       capturedSet!(null);
     });

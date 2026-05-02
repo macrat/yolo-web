@@ -121,12 +121,13 @@ function AddTileModal({ existingSlugs, onAdd, onClose }: AddTileModalProps) {
    * jsdom では inert の判定が不完全なため、実機検証は Playwright で行う。
    */
   useEffect(() => {
+    // document.body の直接の子要素で modal 外の要素に inert を付与する
     const body = document.body;
+    const portal = overlayRef.current?.parentElement;
     const toInert: Element[] = [];
 
     for (const child of Array.from(body.children)) {
-      // Portal でマウントされた overlay 自身は除外する
-      if (child !== overlayRef.current) {
+      if (child !== portal && child !== overlayRef.current) {
         child.setAttribute("inert", "");
         toInert.push(child);
       }
@@ -171,6 +172,12 @@ function AddTileModal({ existingSlugs, onAdd, onClose }: AddTileModalProps) {
     }
   }
 
+  /**
+   * Portal 先の DOM ノード（document.body）。
+   * SSR では document が存在しないため、クライアント側でのみ portal を作る。
+   * この コンポーネントは "use client" かつ dynamic({ ssr: false }) 経由で読まれるため
+   * 実質 SSR は来ないが、型安全のためガードを入れる。
+   */
   const modalContent = (
     <div
       ref={overlayRef}

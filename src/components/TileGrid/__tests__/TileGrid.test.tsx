@@ -366,4 +366,73 @@ describe("TileGrid", () => {
       );
     });
   });
+
+  describe("AddTileModal の WCAG 適合（#2 #3 #5）", () => {
+    test("モーダル内の各候補は role='button' を持つ（listitem で button ロール消失しない）", () => {
+      const config = makeConfig([]);
+      render(<TileGrid config={config} mode="edit" onConfigChange={vi.fn()} />);
+
+      // モーダルを開く
+      fireEvent.click(screen.getByRole("button", { name: /ツールを追加/ }));
+
+      const modal = screen.getByRole("dialog");
+
+      // 各候補は <button> 要素であり、role="button" として認識される
+      // （role="listitem" が <button> に付与されると button ロールが listitem で上書きされる WCAG 4.1.2 違反を検証）
+      const candidateButtons = within(modal).getAllByRole("button", {
+        name: /を追加/,
+      });
+      expect(candidateButtons.length).toBeGreaterThan(0);
+      // 各候補が button として認識される（role="listitem" を付与していないことを確認）
+      for (const btn of candidateButtons) {
+        expect(btn.tagName).toBe("BUTTON");
+        expect(btn).not.toHaveAttribute("role", "listitem");
+      }
+    });
+
+    test("候補リストコンテナは role='list' を持つ", () => {
+      const config = makeConfig([]);
+      render(<TileGrid config={config} mode="edit" onConfigChange={vi.fn()} />);
+
+      fireEvent.click(screen.getByRole("button", { name: /ツールを追加/ }));
+
+      const modal = screen.getByRole("dialog");
+      // リストコンテナが role="list" を持つ
+      const list = within(modal).getByRole("list");
+      expect(list).toBeInTheDocument();
+    });
+
+    test("候補は <li> で包まれている（role 継承の正しさ）", () => {
+      const config = makeConfig([]);
+      render(<TileGrid config={config} mode="edit" onConfigChange={vi.fn()} />);
+
+      fireEvent.click(screen.getByRole("button", { name: /ツールを追加/ }));
+
+      const modal = screen.getByRole("dialog");
+      // listitem が存在する
+      const listItems = within(modal).getAllByRole("listitem");
+      expect(listItems.length).toBeGreaterThan(0);
+      // 各 listitem の中に button が存在する
+      for (const item of listItems) {
+        const btn = within(item).getByRole("button");
+        expect(btn).toBeInTheDocument();
+      }
+    });
+  });
+
+  describe("useToolboxConfig 統合（#10）", () => {
+    test("onConfigChange が省略された場合、内部で useToolboxConfig を使う", () => {
+      // onConfigChange を省略したとき（外部 state 管理なし）、
+      // TileGrid が内部でタイルを管理できることを確認する
+      const config = makeConfig([
+        { slug: "fixture-small-1", size: "small", order: 0 },
+      ]);
+      // onConfigChange なしでレンダリングできることを確認
+      expect(() => {
+        render(<TileGrid config={config} mode="edit" />);
+      }).not.toThrow();
+      // タイルが表示される
+      expect(screen.getByTestId("tile-fixture-small-1")).toBeInTheDocument();
+    });
+  });
 });
