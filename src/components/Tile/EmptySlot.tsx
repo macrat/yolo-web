@@ -6,11 +6,10 @@
  * 編集モードで「+ ツールを追加」スロットとして表示する。
  * クリックでツール追加 UI（モーダル等）を開くトリガー。
  *
- * 使用するサイズ（span 数）は親コンポーネントが style で直接指定する。
+ * grid-column は data-size 属性経由で TileGrid.module.css が制御する（Tile.tsx と同じ方式）。
  */
 
 import type { TileSize } from "./types";
-import { SIZE_SPAN } from "./constants";
 import styles from "./EmptySlot.module.css";
 
 interface EmptySlotProps {
@@ -32,6 +31,10 @@ interface EmptySlotProps {
  * EmptySlot — 編集モードで「+ ツールを追加」を表示するスロット。
  * DndContext 外で使用するため useSortable は使わない。
  *
+ * grid-column は TileGrid.module.css の data-size セレクタで制御する。
+ * inline style で grid-column を設定すると CSS が上書きできず、
+ * ブレークポイント別 span が正しく動作しない（Tile.tsx と同じ設計方針）。
+ *
  * 複数並べる場合は index を渡すと aria-label が一意になる。
  */
 function EmptySlot({
@@ -40,10 +43,6 @@ function EmptySlot({
   label = "ツールを追加",
   index,
 }: EmptySlotProps) {
-  const style: React.CSSProperties = {
-    gridColumn: `span ${SIZE_SPAN[size]}`,
-  };
-
   // 複数 EmptySlot が並ぶ場合、スクリーンリーダーが区別できるよう aria-label を一意にする。
   // 可視ラベルと異なる説明のため aria-label を使用（visible text は省略情報のみ）。
   const ariaLabel =
@@ -53,7 +52,7 @@ function EmptySlot({
     <button
       type="button"
       className={styles.slot}
-      style={style}
+      data-size={size}
       aria-label={ariaLabel}
       onClick={onAdd}
     >

@@ -29,8 +29,7 @@
 }
 
 /* === ドラッグ中の状態 === */
-/* DESIGN.md 規定: ドラッグ中は box-shadow: var(--shadow-dragging) のみで「持ち上げ」を表現する。
-   半透明（opacity）は使わない（物理的隠喩を保つため、cycle-175 で Owner 指摘）。 */
+/* ドラッグ中の視覚表現ルール: DESIGN.md §4 参照 */
 .tile[data-is-dragging="true"] {
   box-shadow: var(--shadow-dragging);
   /* globals.css の --z-tile-dragging（300）を参照。DragOverlay が別 portal で
@@ -215,10 +214,7 @@
   /* コンテンツエリアのカーソルは使用モードと編集モードで変わる（親 .tile から継承） */
 }
 
-/* 編集モードではコンテンツクリックを操作不可にする */
-/* DESIGN.md 規定外の独自表現（opacity 半透明）は使わない（cycle-175 で Owner 指摘）。
-   タイル全体の cursor: grab と border-color: var(--accent) で「触れる状態」を示し、
-   コンテンツ部は pointer-events: none でクリック禁止のみ表現する。 */
+/* 編集モードではコンテンツクリックを操作不可にする（視覚表現ルール: DESIGN.md §4 参照） */
 .tile[data-mode="edit"] .content {
   pointer-events: none;
 }
