@@ -138,6 +138,20 @@
   margin: 0;
 }
 
+/* 候補なし状態の <li> ラッパー */
+.emptyItem {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* 候補アイテムラッパー <li>（list-style をリセットして button が全幅になるよう設定）*/
+.candidateLi {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
 /* === 候補アイテム === */
 .candidateItem {
   display: flex;

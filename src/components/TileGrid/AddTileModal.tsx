@@ -11,19 +11,21 @@
  *
  * 候補は「すでに配置済み（existingSlugs）」のものを除いて表示する。
  *
- * アクセシビリティ:
+ * アクセシビリティ（AP-I08 / AP-I09 / WCAG 2.1 準拠）:
  * - role="dialog" + aria-modal="true" + aria-labelledby
- * - フォーカストラップ（Tab で modal 内を循環）
- * - Escape キーで閉じる
- * - 背景クリックで閉じる
+ * - フォーカストラップ: inert 属性で modal 外要素を非操作化（AP-I09: jsdom 非対応のため Playwright 検証必須）
+ * - Escape キーで閉じる / 背景クリックで閉じる
+ * - 候補リストは <ul><li><button> 構造（WCAG 4.1.2: role="listitem" を <button> に付けない）
+ * - Portal: createPortal で document.body 直下にマウント（AP-I08: overflow/z-index の影響を受けない）
  *
  * DESIGN.md 準拠:
- * - border-radius: --r-normal
+ * - border-radius: --r-normal / --r-interactive
  * - focus-visible スタイルあり
- * - dark mode: :global(:root.dark) 方式
+ * - dark mode: :global(:root.dark) 方式（AP-I07）
  */
 
 import { useEffect, useRef, useId, useState } from "react";
+import { createPortal } from "react-dom";
 import type { Tileable } from "@/lib/toolbox/types";
 import type { TileSize } from "@/components/Tile/types";
 import { getAllTileableEntries } from "@/lib/toolbox/registry";
@@ -111,8 +113,34 @@ function AddTileModal({ existingSlugs, onAdd, onClose }: AddTileModalProps) {
         );
 
   /**
+   * inert 属性によるフォーカストラップ（AP-I09 準拠）。
+   *
+   * React 19 以降、JSX の inert 属性をネイティブサポート。
+   * モーダル open 中、モーダル外の要素に `inert` を付与することで
+   * Tab フォーカスが modal 外に逃げない。
+   * jsdom では inert の判定が不完全なため、実機検証は Playwright で行う。
+   */
+  useEffect(() => {
+    const body = document.body;
+    const toInert: Element[] = [];
+
+    for (const child of Array.from(body.children)) {
+      // Portal でマウントされた overlay 自身は除外する
+      if (child !== overlayRef.current) {
+        child.setAttribute("inert", "");
+        toInert.push(child);
+      }
+    }
+
+    return () => {
+      for (const el of toInert) {
+        el.removeAttribute("inert");
+      }
+    };
+  }, []);
+
+  /**
    * Escape キーで閉じる。
-   * フォーカストラップは Tab キーのデフォルト動作 + モーダル内要素のみ focusable にすることで実現。
    */
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
@@ -125,7 +153,7 @@ function AddTileModal({ existingSlugs, onAdd, onClose }: AddTileModalProps) {
   }, [onClose]);
 
   /**
-   * モーダル開時に最初のフォーカス可能要素（検索入力欄）にフォーカスを移動する。
+   * モーダル open 時に検索入力欄にフォーカスを移動する。
    */
   useEffect(() => {
     const input = modalRef.current?.querySelector<HTMLInputElement>(
@@ -136,7 +164,6 @@ function AddTileModal({ existingSlugs, onAdd, onClose }: AddTileModalProps) {
 
   /**
    * オーバーレイ（背景）クリックで閉じる。
-   * モーダル本体（.modal）のクリックは伝播を止める。
    */
   function handleOverlayClick(e: React.MouseEvent<HTMLDivElement>) {
     if (e.target === overlayRef.current) {
@@ -144,12 +171,11 @@ function AddTileModal({ existingSlugs, onAdd, onClose }: AddTileModalProps) {
     }
   }
 
-  return (
+  const modalContent = (
     <div
       ref={overlayRef}
       className={styles.overlay}
       onClick={handleOverlayClick}
-      aria-hidden="false"
     >
       <div
         ref={modalRef}
@@ -197,71 +223,79 @@ function AddTileModal({ existingSlugs, onAdd, onClose }: AddTileModalProps) {
           />
         </div>
 
-        {/* 候補リスト */}
-        <div
+        {/* 候補リスト: <ul><li><button> 構造で WCAG 4.1.2 を満たす（role="listitem" を <button> に付けない）*/}
+        <ul
           className={styles.listWrapper}
-          role="list"
           aria-label="追加できるツール一覧"
+          // VoiceOver / Safari の list-style: none によるリストロール消失を防ぐ
+          role="list"
         >
           {filteredCandidates.length === 0 ? (
-            <p className={styles.empty}>
-              {searchQuery.trim() !== ""
-                ? "検索結果なし"
-                : "追加できるツールがありません"}
-            </p>
+            <li className={styles.emptyItem}>
+              <p className={styles.empty}>
+                {searchQuery.trim() !== ""
+                  ? "検索結果なし"
+                  : "追加できるツールがありません"}
+              </p>
+            </li>
           ) : (
             filteredCandidates.map((candidate) => (
-              <button
-                key={candidate.tileable.slug}
-                type="button"
-                className={styles.candidateItem}
-                role="listitem"
-                onClick={() =>
-                  onAdd(candidate.tileable, candidate.recommendedSize)
-                }
-                aria-label={`${candidate.tileable.displayName}を追加`}
-              >
-                <div className={styles.candidateInfo}>
-                  {/* アイコンまたはプレースホルダー */}
-                  {candidate.tileable.icon ? (
-                    <span className={styles.candidateIcon} aria-hidden="true">
-                      {candidate.tileable.icon}
-                    </span>
-                  ) : (
-                    <span
-                      className={styles.candidateIconPlaceholder}
-                      aria-hidden="true"
-                    />
-                  )}
-
-                  <div className={styles.candidateText}>
-                    <span className={styles.candidateName}>
-                      {candidate.tileable.displayName}
-                      {candidate.isFixture && (
-                        <span className={styles.fixtureBadge}>ダミー</span>
-                      )}
-                    </span>
-                    <span className={styles.candidateDescription}>
-                      {candidate.tileable.shortDescription}
-                    </span>
-                  </div>
-                </div>
-
-                {/* 推奨サイズバッジ */}
-                <span
-                  className={styles.sizeBadge}
-                  data-size={candidate.recommendedSize}
-                  aria-label={`推奨サイズ: ${candidate.recommendedSize}`}
+              <li key={candidate.tileable.slug} className={styles.candidateLi}>
+                <button
+                  type="button"
+                  className={styles.candidateItem}
+                  onClick={() =>
+                    onAdd(candidate.tileable, candidate.recommendedSize)
+                  }
+                  aria-label={`${candidate.tileable.displayName}を追加`}
                 >
-                  {candidate.recommendedSize}
-                </span>
-              </button>
+                  <div className={styles.candidateInfo}>
+                    {/* アイコンまたはプレースホルダー */}
+                    {candidate.tileable.icon ? (
+                      <span className={styles.candidateIcon} aria-hidden="true">
+                        {candidate.tileable.icon}
+                      </span>
+                    ) : (
+                      <span
+                        className={styles.candidateIconPlaceholder}
+                        aria-hidden="true"
+                      />
+                    )}
+
+                    <div className={styles.candidateText}>
+                      <span className={styles.candidateName}>
+                        {candidate.tileable.displayName}
+                        {candidate.isFixture && (
+                          <span className={styles.fixtureBadge}>ダミー</span>
+                        )}
+                      </span>
+                      <span className={styles.candidateDescription}>
+                        {candidate.tileable.shortDescription}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* 推奨サイズバッジ */}
+                  <span
+                    className={styles.sizeBadge}
+                    data-size={candidate.recommendedSize}
+                    aria-label={`推奨サイズ: ${candidate.recommendedSize}`}
+                  >
+                    {candidate.recommendedSize}
+                  </span>
+                </button>
+              </li>
             ))
           )}
-        </div>
+        </ul>
       </div>
     </div>
   );
+
+  // Portal: document.body 直下にマウントして z-index / overflow の影響を受けない（AP-I08）
+  // typeof document チェックで SSR 安全を保証する
+  if (typeof document === "undefined") return null;
+  return createPortal(modalContent, document.body);
 }
 
 export default AddTileModal;
