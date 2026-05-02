@@ -7,7 +7,10 @@
  * 3 層防御:
  * - 層 1: metadata.robots = { index: false, follow: false }（本ファイル）
  * - 層 2: src/app/robots.ts の disallow に /toolbox-preview を追加済み
- * - 層 3: NEXT_PUBLIC_TOOLBOX_PREVIEW !== "true" かつ production で notFound()
+ * - 層 3: NEXT_PUBLIC_TOOLBOX_PREVIEW !== "true" のとき notFound()（dev/prod 共通）
+ *         NODE_ENV 条件を設けない理由: dev でも環境変数なしで 404 にすることで
+ *         誤公開リスクを排除し、dev/prod 挙動を一貫させる。
+ *         dev で確認したい場合は .env.local に NEXT_PUBLIC_TOOLBOX_PREVIEW=true を設定する。
  *
  * 運用方針:
  * - Vercel Preview Deploy では NEXT_PUBLIC_TOOLBOX_PREVIEW=true を設定して有効化
@@ -28,9 +31,10 @@ export const metadata: Metadata = {
 };
 
 export default function ToolboxPreviewPage() {
-  // 層 3: 環境変数ガード
-  // NEXT_PUBLIC_TOOLBOX_PREVIEW=true が設定されていない限り、
-  // またはプロダクションビルドで環境変数が false の場合は 404 を返す。
+  // 層 3: 環境変数ガード（dev/prod 共通）
+  // NEXT_PUBLIC_TOOLBOX_PREVIEW=true が設定されていない場合は 404 を返す。
+  // dev 環境でも同じ条件を適用することで誤公開リスクを排除し、挙動を一貫させる。
+  // dev で確認したい場合は .env.local に NEXT_PUBLIC_TOOLBOX_PREVIEW=true を設定する。
   // Vercel Preview Deploy では NEXT_PUBLIC_TOOLBOX_PREVIEW=true を設定すること。
   if (process.env.NEXT_PUBLIC_TOOLBOX_PREVIEW !== "true") {
     notFound();

@@ -127,6 +127,9 @@ function Tile({
    * タイトルリンクの URL。
    * tileable.href が指定されていればそれを使用。
    * 未指定時は contentKind に応じたデフォルト URL を生成。
+   *
+   * default 句: ContentKind に新しい値が追加されたとき TypeScript が型エラーで検出できるよう
+   * never 型チェックを行う（exhaustive check）。また実行時フォールバックとして汎用 URL を返す。
    */
   const titleHref =
     tileable.href ??
@@ -138,6 +141,13 @@ function Tile({
           return `/play/${tileable.slug}`;
         case "cheatsheet":
           return `/cheatsheets/${tileable.slug}`;
+        default: {
+          // ContentKind が網羅されているかを TypeScript コンパイル時に検証する。
+          // 新しい ContentKind が追加されてここに到達した場合、型エラーとして検出される。
+          const _exhaustiveCheck: never = tileable.contentKind;
+          // 実行時フォールバック（TypeScript では到達不能だが、型キャストされた場合の安全網）
+          return `/${String(_exhaustiveCheck)}/${tileable.slug}`;
+        }
       }
     })();
 
@@ -206,16 +216,19 @@ function Tile({
                 <span className={styles.title}>{tileable.displayName}</span>
               )}
 
-              {/* 移動ボタン（4 種: 先頭 / 前 / 後 / 末尾）— small は折りたたみ展開 */}
-              {(onMoveFirst || onMovePrev || onMoveNext || onMoveLast) && (
+              {/* 移動ボタン（4 種: 先頭 / 前 / 後 / 末尾）— small は折りたたみ展開
+                  4 つのコールバックがすべて揃っている時のみ描画する（N5: no-op fallback 防止）。
+                  一部でも未渡しなら描画しない。コールバック未渡し時に静かに何も起きない
+                  状態を避け、バグの早期検出を助ける。 */}
+              {onMoveFirst && onMovePrev && onMoveNext && onMoveLast && (
                 <TileMoveButtons
                   size={size}
                   isFirst={isFirst}
                   isLast={isLast}
-                  onMoveFirst={onMoveFirst ?? (() => {})}
-                  onMovePrev={onMovePrev ?? (() => {})}
-                  onMoveNext={onMoveNext ?? (() => {})}
-                  onMoveLast={onMoveLast ?? (() => {})}
+                  onMoveFirst={onMoveFirst}
+                  onMovePrev={onMovePrev}
+                  onMoveNext={onMoveNext}
+                  onMoveLast={onMoveLast}
                 />
               )}
 

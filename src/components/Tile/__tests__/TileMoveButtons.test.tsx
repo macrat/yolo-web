@@ -6,7 +6,7 @@
  */
 
 import { describe, expect, test, vi } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import TileMoveButtons from "../TileMoveButtons";
 
 const defaultProps = {
@@ -181,5 +181,36 @@ describe("TileMoveButtons — small サイズ", () => {
     expect(
       screen.queryByRole("button", { name: "先頭へ移動" }),
     ).not.toBeInTheDocument();
+  });
+
+  test("N2: small サイズで展開後、ESC キーで展開パネルが閉じる", () => {
+    render(<TileMoveButtons {...defaultProps} size="small" />);
+    const trigger = screen.getByRole("button", { name: "移動操作を展開" });
+
+    // 展開
+    fireEvent.click(trigger);
+    expect(
+      screen.getByRole("button", { name: "先頭へ移動" }),
+    ).toBeInTheDocument();
+
+    // ESC キーを押下
+    fireEvent.keyDown(document, { key: "Escape", code: "Escape" });
+    expect(
+      screen.queryByRole("button", { name: "先頭へ移動" }),
+    ).not.toBeInTheDocument();
+  });
+
+  test("N2: small サイズで展開時、先頭ボタン（先頭へ移動）にフォーカスが移動する", async () => {
+    render(<TileMoveButtons {...defaultProps} size="small" />);
+    const trigger = screen.getByRole("button", { name: "移動操作を展開" });
+
+    // 展開
+    fireEvent.click(trigger);
+
+    // 展開後に先頭ボタンにフォーカスが移動していることを確認
+    await waitFor(() => {
+      const firstBtn = screen.getByRole("button", { name: "先頭へ移動" });
+      expect(firstBtn).toHaveFocus();
+    });
   });
 });

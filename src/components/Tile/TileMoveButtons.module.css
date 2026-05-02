@@ -112,7 +112,9 @@
   white-space: nowrap;
 }
 
-/* 展開パネル内の閉じるボタン */
+/* 展開パネル内の閉じるボタン
+   width 20px + padding 12px * 2 = 44px: WCAG 2.5.5 タップターゲット要件を満たす
+   margin-left は他の moveButton との間隔を保つ */
 .closeButton {
   display: flex;
   align-items: center;
@@ -124,7 +126,7 @@
   border-radius: var(--r-interactive);
   cursor: pointer;
   color: var(--fg-softer);
-  padding: 8px;
+  padding: 12px;
   box-sizing: content-box;
   flex-shrink: 0;
   margin-left: 4px;
