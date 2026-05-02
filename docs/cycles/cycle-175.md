@@ -1001,9 +1001,153 @@ PM 直接対応の境界条件は新規ルール化しない（CLAUDE.md「Roles
 - 既存実装: `src/components/Tile/Tile.tsx`, `Tile.module.css`, `src/components/TileGrid/TileGrid.tsx`, `src/components/ToolboxShell/ToolboxShell.tsx`
 - docs/anti-patterns/implementation.md / workflow.md（既存項目の構造に整合する形で再発防止策を追加。具体の追記文面・追加位置は builder 判断）
 
+## 事故報告
+
+cycle-175 を事故サイクルとして認定する。本サイクルのスコープは `docs/design-migration-plan.md` の Phase 2「道具箱の基盤実装」だが、constitution.md rule 4「best quality in every aspect for visitors」を満たす UI/UX 実装に至っていない。複数の構造的問題が「修正完了」と称しながら未解消のまま残っている。本サイクルで作成した UI/UX 層の成果物は cycle-176 で作り直し、UI 層の影響を受けない基盤層・規約整備のみを保持する。
+
+### 事故の本質
+
+#### 1. `/cycle-planning` skill ルール違反 — UI/UX 調査の不足
+
+`/cycle-planning` skill は「タスクごとに必要な情報やベストプラクティスを調査するための researcher エージェントを起動」を求めている。cycle-175 では web-researcher を 2 体起動したが、調査対象は「タイル UI のベストプラクティス」「DnD ライブラリ」「URL 構成」「localStorage」「hidden 検証」までで、本サイクルのスコープである「道具箱の UI（並び替え UI/UX、編集モード設計、モバイル密度）」の核心領域：
+
+- スマホホーム画面（iOS / iPadOS / Android）の並び替え操作 UX（長押しジグルモード、グリッド密度、ホーム画面切替、フォルダ機能、ウィジェット並び替え）
+- カスタマイズ可能ダッシュボード（Notion home / Trello / Raindrop / Start.me / Toby / Bento 等）の **個別操作 UX**
+
+を独立した題材として深掘りしなかった。結果、並び替え UI 選択肢の比較根拠が薄く（採用案「DnD + 4 種ボタン」の根拠が「reviewer 提案に沿って網羅的に」という消極的根拠）、来訪者起点の分析（M1b の利用シーン、並び替え頻度）が欠落した。
+
+#### 2. CLAUDE.md「コンテンツに関するすべての判断は PM の責務」を果たせなかった
+
+CLAUDE.md「Roles and Responsibilities」では PM はサイト品質を来訪者視点で最高に保つ責務を負う。本サイクルでは並び替え UI 設計判断の根拠が薄いまま実装に進めた。これは CLAUDE.md「Decision Making Principle」の「If the better UX option is achievable, it must be chosen」順守判断が機能していなかったことを意味する。
+
+なお、メタファ（能動的に組み立てる道具箱）は cycle-167 のキャリーオーバーで Owner のアイデアとして書かれた構想で、cycle-175 のスコープではない。本サイクル中にメタファ自体を再検討するのはスコープ違反であり、メタファ未検討は本サイクルの失敗要因に含めない。ただしメタファ自体の妥当性は別途 backlog 項目として cycle-176 着手前に Owner と協議する。
+
+#### 3. PM の builder 報告検証義務（AP-WF11）の運用形骸化
+
+AP-WF11 は「PM は最終成果物を自分自身で通読確認すること」を求めている。cycle-175 では builder の完了報告を実機検証せずに承認した結果、複数の重要修正が「対応済み」と称しながら実態として未対応のまま進行した：
+
+- **scroll-lock.ts の MobileNav 移行未完**: builder は「Header もこのヘルパに移行」と報告したが、実態は `src/components/common/MobileNav.tsx` が直接 `document.body.classList.add/remove("scroll-locked")` を呼んでおり、`acquireScrollLock` / `releaseScrollLock` を経由していない。参照カウンタが正しく動かない不完全状態のまま残った。
+- **registry codegen の二重管理未解消**: builder は「meta.ts の自動集約」と報告したが、実態は `src/tools/registry.ts` が 34 件のツールを完全手書きで import しており、`src/cheatsheets/registry.ts` も同様。`generated/toolbox-registry.ts` と既存 registry の二重管理が残ったまま。「meta.ts を作って既存 registry に登録忘れる」リスクが解消されていない。
+- **TileDefinition.component の Phase 7 破綻リスク残存**: reviewer B A1 で「メタ型に React コンポーネント直 import を埋め込む設計は Phase 7（30+ ツールタイル化）で First Load JS が肥大化する」と指摘されたが、本サイクル内で構造的に解消する判断を取らなかった。
+
+これらの未対応を、Owner 指摘・追加 reviewer 指摘で順次気付く展開となった。AP-WF11 は機能していなかった。
+
+#### 4. reviewer 指摘の構造的問題を「修正完了」と称して取りこぼした
+
+reviewer B が指摘した A1（メタ型 React コンポーネント埋込）/ A2（registry 二重管理）について、本サイクル内で構造的に解消する判断を取らず、「次サイクルで対応」「ドキュメントで明記」という処理で済ませた。これは AP-WF09「チェックリストの形骸化」「用語を変えて実質同じことをしていないか」のパターン。reviewer に「全件対応」と報告しながら、対応の優先順位を恣意的に下げた構造的問題。
+
+#### 5. `docs/anti-patterns/workflow.md` への捏造ルール追加
+
+PM が opacity 直接削除を行った経緯から、新規 AP-WF13「PM 直接対応の境界条件」を独自に追加した。CLAUDE.md「Roles and Responsibilities」で既に明文化されている PM/builder 責務分担（PM は管理・判断・委譲、builder はコード修正）の重複であり、独自に追加すべきルールではなかった。Owner 指摘で気付き、ルールに照らして再検討した結果、捏造ルールであると認めて削除した。
+
+このような「PM が独自にワークフロールール / 原則 / 手順を増やす」事象が cycle-175 中に複数発生：
+
+- cycle-175 計画書に「Owner にエスカレーションする」と記載した（CLAUDE.md「The owner do not make any decisions or do any work by themselves」と矛盾、後に削除）
+- 計画書に「ゼロベース原則」という存在しない原則を作って判断軸として複数箇所で使用した（実在する根拠は constitution rule 4 + 来訪者価値最大化、後に削除）
+
+#### 6. 計画書・コミットメッセージへの他律的記述の混入
+
+「Owner 指摘対応計画」「Owner 対応 patch」「Owner 指示により」のような他律的記述が複数箇所に混入した。本来は「ルール違反を是正する自律的判断」として「DESIGN.md §4 違反の是正」「constitution rule 4 順守のための見直し」と書くべきところを、Owner 指摘を直接の根拠にしてしまった。後に修正したが、コミット履歴の一部には「Owner 対応」表現が残っている（履歴改変は行っていない）。
+
+#### 7. 道具箱 UI/UX が来訪者最高品質を達成できなかった
+
+constitution.md rule 4「best quality in every aspect for visitors」に照らして、現実装は来訪者最高品質を達成できていない。具体的な不適切箇所：
+
+- **モバイル w360 でファーストビューに 2 タイルしか表示されない**: 「ブラウザのホームに設定して反射的に開く」という新コンセプト想定（site-concept.md）と矛盾。iOS / Android のホーム画面（20〜24 個）と比較して密度が著しく低い。
+- **編集モード分離設計が M1b に過剰**: M1b（気に入った道具を繰り返し使う人）は「並び替え頻度が低い」想定。にもかかわらず「編集ボタン → タイル暗転 → 操作 → 完了」の 4 ステップ儀式を要求。M1b の dislikes「慣れた操作手順が突然変わる」「機能の詰め込みで動作が重くなる」と矛盾。
+- **small サイズの popover が隣接タイルに重なる**: 誤タップ事故源。
+- **4 種移動ボタン（前/後/先頭/末尾）の根拠薄**: iOS / Android のホーム画面では「先頭/末尾」ボタンは存在しない。長押しドラッグが主流。M1b の利用シーン分析が欠落したまま 4 種網羅を採用した。
+- **削除の undo / 確認がない**: 誤削除の保護なし。
+
+これらは Phase 9.2（B-336 道具箱本公開）時点で公開されると、新コンセプト「日常の傍にある道具」のコア体験を毀損する。
+
+### 成果物の保持・作り直し分類（A / B / C）
+
+#### A. そのまま使える（UI 設計の変化に影響されない）
+
+- **DESIGN.md §4 追記**: ドラッグ・編集モードの視覚表現規約（box-shadow のみ、半透明禁止、SSoT 規約）。
+- **docs/anti-patterns/implementation.md AP-I10 汎用版**: 「DESIGN.md / デザインシステムに未定義の視覚表現を実装上の都合で追加していないか」。
+- **docs/knowledge/dnd-kit.md**: hydration mismatch 既知問題、根本解決パターン（dynamic ssr:false）、暫定回避パターン（E2E filter）の知見。
+- **docs/knowledge/codegen-patterns.md**: prebuild + tsx + fast-glob による codegen パターン。
+- **docs/research/2026-05-01-\* 各調査レポート 3 件**: タイル UI ベストプラクティス、URL 構成判断材料、registry アーキテクチャ代替案。
+- **/toolbox-preview の運用方針**（noindex meta + サイトナビ動線なし、robots.txt 不掲載）: 知見として `docs/knowledge/` または DESIGN.md に残してもよい。実装ファイル（page.tsx 等）は C 分類。
+
+#### B. 疑義は残るが cycle-176 の方向性次第で使える
+
+- **Tileable 基底型の静的フィールド + adapter**（`src/lib/toolbox/types.ts`）
+  - 静的フィールド（slug, displayName, contentKind, icon?, accentColor?, publishedAt, trustLevel, href?）と `toTileable()` adapter は汎用的に使える可能性。
+  - 疑義: `tile?: TileDefinition | TileDefinition[]` 構造は reviewer B A1 で Phase 7 破綻指摘あり。`TileDefinition.component: React.ComponentType<TileComponentProps>` のメタ型 React コンポーネント直埋込が問題の本質。cycle-176 で「meta は static info、component は別ファイル + lazy loader」に再設計する前提で使える。
+
+- **registry codegen**（`scripts/generate-toolbox-registry.ts`、`src/lib/toolbox/registry.ts`、`src/lib/toolbox/generated/toolbox-registry.ts`、関連テスト）
+  - meta.ts 自動集約のインフラ自体は使える。
+  - 疑義: 既存 `src/tools/registry.ts` / `src/cheatsheets/registry.ts` との二重管理が未解消（reviewer B A2）。cycle-176 で二重管理を解消する方針で進めるなら使える。
+
+- **@dnd-kit/core + @dnd-kit/sortable の依存**（package.json）+ **経路 B スパイク結果**（docs/research/ 内）
+  - 疑義: 並び替え UI 設計次第で DnD 自体不要になる可能性（自動学習型 + 上下ボタン等）。DnD 採用するなら経路 B（empty strategy + 自前 onDragOver + DragOverlay）の知見は有効。
+
+- **useToolboxConfig フック API**（`src/lib/toolbox/useToolboxConfig.ts`）+ **storage.ts のスキーマ・マイグレーション・整合性検証**（`src/lib/toolbox/storage.ts`）+ **INITIAL_DEFAULT_LAYOUT 構造**（`src/lib/toolbox/initial-default-layout.ts`）
+  - tiles / setTiles / resetToDefault の API、別タブ同期パターン、schemaVersion + migrate フレームワーク、整合性検証は汎用。
+  - 疑義: getServerSnapshot 固定 + dynamic ssr:false 強制という暗黙契約（reviewer B B5）。整合性 NG 時の救済（slug 重複 / order 連番）が未実装。size 3 値（small/medium/large）が UI 依存。これらの設計を見直しつつ使える。
+
+- **scroll-lock.ts**（`src/lib/scroll-lock.ts`、関連テスト）
+  - 参照カウンタ式実装は妥当。
+  - 疑義: MobileNav の移行が未完了で二重実装が残存（cycle-175 中に解消すべきだったが未対応）。cycle-176 で MobileNav 移行を完了させれば使える。
+
+- **Header の scroll-lock.ts 移行**（`src/components/Header/index.tsx` の cycle-175 由来変更）
+  - scroll-lock.ts を保持する以上、Header 側の移行も維持。MobileNav 移行未完了の問題と整合させる。
+
+#### C. 作り直したほうが良い（cycle-175 開始前の状態に復元）
+
+これらは UI 設計が変わる可能性があり、cycle-175 の実装には複数の構造的問題が残っているため、cycle-176 でゼロから作り直す：
+
+- `src/components/ToolboxShell/`（編集モード分離、TouchSensor、KeyboardSensor、focus トラップ、scroll-lock、render props）
+- `src/components/Tile/`（card-link、cursor、サイズ別レンダー、isDragging、TileMoveButtons との配線、fixtures、constants、types、EmptySlot）
+- `src/components/TileGrid/`（DnD 配置 UI、AddTileModal、レンダー連鎖回避ロジック、useToolboxConfig 統合、openOverlayId 排他制御）
+- `src/app/(new)/toolbox-preview/`（page.tsx、ToolboxContent.tsx、ToolboxContentInner.tsx、テスト）
+- `src/app/(new)/storybook/TileGridStorybookClient.tsx` / `TileStorybook.module.css`
+- `src/app/(new)/storybook/StorybookContent.tsx` の Tile / ToolboxShell / TileGrid セクション
+- `src/lib/toolbox/types.ts` の `TileDefinition` / `TileComponentProps`（メタ型 React コンポーネント直埋込で Phase 7 破綻リスク）と Tileable の `tile?` フィールド
+- `tests/e2e/toolbox-shell.mjs` / `tests/e2e/toolbox-e2e-scenarios.mjs`
+- `src/__tests__/bundle-budget.test.ts` の cycle-175 由来変更（/storybook 上限 85KB override 等）
+
+### 次サイクル（cycle-176）で同じ轍を踏まないための留意点
+
+1. **UI/UX 調査を独立タスクで網羅実施**:
+   - スマホホーム画面（iOS / iPadOS / Android）の並び替え操作 UX を独立調査（長押しジグルモード、グリッド密度、ホーム画面切替、フォルダ機能、ウィジェット並び替え）。
+   - カスタマイズ可能ダッシュボード（Notion home / Trello / Raindrop / Start.me / Toby / Bento / iGoogle 等）の個別操作 UX を独立調査。
+   - 自動学習型ホームページサービス（Pocket / Pinboard / ブラウザ標準トップ等）の動線を調査（メタファ再検討の判断材料を集める段階で済ませる、メタファ自体の選択は別 backlog 項目）。
+
+2. **並び替え UI / 編集モード / モバイル密度の選択肢を網羅検討**:
+   - 並び替え操作の選択肢（DnD / DnD + 上下ボタン / 長押しジグル / スワイプ / 数値指定 / 等）を調査根拠で比較。
+   - 編集モードの存在意義を M1b の利用頻度仮説とともに評価。
+   - モバイル w360 での表示密度を競合・ベンチマークと比較。
+
+3. **未完成の技術的負債の解消**:
+   - registry codegen の二重管理解消（既存 `src/tools/registry.ts` / `src/cheatsheets/registry.ts` も codegen 化する設計）。
+   - scroll-lock.ts への MobileNav 移行を完了。
+   - `TileDefinition.component` の再設計（meta は static info、component は別ファイル + lazy loader）。
+   - useToolboxConfig の `getServerSnapshot` 固定 + `dynamic ssr:false` 強制という暗黙契約の見直し（明示的な API 設計に）。
+   - storage.ts の整合性 NG 時の救済（slug 重複 / order 連番の救済ロジック）。
+
+4. **PM の builder 報告検証義務の運用見直し**（新規 AP-WF16 として記録）:
+   - builder の「対応済み」報告は、PM が必ず実機 grep / 実機実行で確認してから承認に進む。
+   - 報告と実態の乖離を計画段階で防ぐ仕組みを取り入れる（例: 完了判定に「PM が grep XX で 0 件確認」「PM が npm run lint で exit 0 確認」のような客観条件を含める）。
+
+5. **PM が独自にルール / 原則 / 手順を増やさない**（新規 AP-WF14 として記録）:
+   - 既存の constitution / CLAUDE.md / アンチパターン / docs/knowledge を参照する。
+   - 新規ルールが必要に思える場合、既存ルールでカバーされていないかを実体確認した上で、必要性を明文化してから追加する。
+
+6. **計画書・コミットメッセージで他律的記述を避ける**（新規 AP-WF15 として記録）:
+   - 「Owner 指示により」「Owner 対応」のような他律的記述は使わない。
+   - ルール違反を是正する自律的判断として「DESIGN.md §X 違反のため是正」「constitution rule N 順守のため見直し」と書く。
+
 ## キャリーオーバー
 
-<!-- サイクル完了時に記入する。 -->
+cycle-176 で以下を実施する。詳細は cycle-176 の計画段階で再検討する。
+
+- B-309「ダッシュボード機能の実装（フェーズ1: タイル基盤とカスタマイズ配置）」の継続。事故報告セクションの「次サイクル留意点」に従い、UI/UX 調査からやり直す。
+- 未完成の技術的負債の解消（registry codegen 二重管理解消、scroll-lock.ts への MobileNav 移行完了、TileDefinition.component の再設計）。
+- 道具箱メタファの妥当性を別 backlog 項目として起票し、cycle-176 着手前に検討するか cycle-176 内で扱うかを Owner と協議する。
 
 ## 補足事項
 
