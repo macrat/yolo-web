@@ -342,4 +342,92 @@ describe("TileMoveButtons — small サイズ", () => {
 
     expect(onExpandChange).toHaveBeenCalledWith(false);
   });
+
+  test("Q2: 展開中に他の openOverlayId になり閉じた後、再び null に戻っても popover は表示されない", () => {
+    // popover A 開く → AddTileModal 開く → AddTileModal 閉じる → popover が突然再表示されないことを検証
+    const { rerender } = render(
+      <TileMoveButtons
+        {...defaultProps}
+        size="small"
+        overlayId="tile-move-my-tile"
+        openOverlayId={null}
+      />,
+    );
+    // 1. popover A を展開
+    const trigger = screen.getByRole("button", { name: "移動操作を展開" });
+    fireEvent.click(trigger);
+    expect(
+      screen.queryByRole("button", { name: "先頭へ移動" }),
+    ).toBeInTheDocument();
+
+    // 2. AddTileModal が開く（他の overlay に切り替わる）
+    rerender(
+      <TileMoveButtons
+        {...defaultProps}
+        size="small"
+        overlayId="tile-move-my-tile"
+        openOverlayId="add-tile-modal"
+      />,
+    );
+    // popover は非表示になる
+    expect(
+      screen.queryByRole("button", { name: "先頭へ移動" }),
+    ).not.toBeInTheDocument();
+
+    // 3. AddTileModal が閉じる（openOverlayId が null に戻る）
+    rerender(
+      <TileMoveButtons
+        {...defaultProps}
+        size="small"
+        overlayId="tile-move-my-tile"
+        openOverlayId={null}
+      />,
+    );
+    // popover は突然再表示されない（expanded が false にリセットされているため）
+    expect(
+      screen.queryByRole("button", { name: "先頭へ移動" }),
+    ).not.toBeInTheDocument();
+  });
+
+  test("q2: 展開パネルの外側をクリックすると閉じる", () => {
+    render(
+      <TileMoveButtons
+        {...defaultProps}
+        size="small"
+        overlayId="tile-move-my-tile"
+        openOverlayId={null}
+      />,
+    );
+    const trigger = screen.getByRole("button", { name: "移動操作を展開" });
+    fireEvent.click(trigger);
+    expect(
+      screen.queryByRole("button", { name: "先頭へ移動" }),
+    ).toBeInTheDocument();
+
+    // document 上でクリックイベントを発火（外側クリックのシミュレーション）
+    fireEvent.mouseDown(document.body);
+    expect(
+      screen.queryByRole("button", { name: "先頭へ移動" }),
+    ).not.toBeInTheDocument();
+  });
+
+  test("q3: 展開トリガーに aria-controls が設定される", () => {
+    render(
+      <TileMoveButtons
+        {...defaultProps}
+        size="small"
+        overlayId="tile-move-my-tile"
+        openOverlayId={null}
+      />,
+    );
+    const trigger = screen.getByRole("button", { name: "移動操作を展開" });
+    expect(trigger).toHaveAttribute("aria-controls");
+    // aria-controls の値がパネルの id と一致することを確認
+    const panelId = trigger.getAttribute("aria-controls");
+    expect(panelId).toBeTruthy();
+    // 展開後にパネルが該当 id を持つことを確認
+    fireEvent.click(trigger);
+    const panel = document.getElementById(panelId!);
+    expect(panel).not.toBeNull();
+  });
 });

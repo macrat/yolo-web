@@ -207,6 +207,62 @@ describe("Tile — a11y", () => {
   });
 });
 
+describe("Tile — Q4: small タイル openOverlayId 統合シナリオ", () => {
+  /**
+   * Q4 統合テスト:
+   * 「親(Tile)が setOpenOverlay(自分のid) を呼んだ結果として openOverlayId が降ってくる経路」の検証。
+   * TileMoveButtons の overlayId と openOverlayId の一致チェックが Tile 経由で正しく機能することを確認する。
+   */
+  const moveProps = {
+    isFirst: false,
+    isLast: false,
+    onMoveFirst: vi.fn(),
+    onMovePrev: vi.fn(),
+    onMoveNext: vi.fn(),
+    onMoveLast: vi.fn(),
+  };
+
+  test("Q4: small タイル展開トリガークリック → setOpenOverlay が自分の overlayId で呼ばれ → openOverlayId を返すと popover が描画される", () => {
+    const setOpenOverlay = vi.fn();
+
+    const { rerender } = render(
+      <Tile
+        tileable={fixtureTileable}
+        size="small"
+        mode="edit"
+        {...moveProps}
+        openOverlayId={null}
+        setOpenOverlay={setOpenOverlay}
+      />,
+    );
+
+    // 展開トリガーをクリック
+    const trigger = screen.getByRole("button", { name: "移動操作を展開" });
+    fireEvent.click(trigger);
+
+    // setOpenOverlay が "tile-move-char-count" で呼ばれること（slug からの自動 ID 生成）
+    expect(setOpenOverlay).toHaveBeenCalledWith("tile-move-char-count");
+
+    // 親が openOverlayId を自身の ID に更新して渡し直す（実際の ToolboxShell の動作を模倣）
+    rerender(
+      <Tile
+        tileable={fixtureTileable}
+        size="small"
+        mode="edit"
+        {...moveProps}
+        openOverlayId="tile-move-char-count"
+        setOpenOverlay={setOpenOverlay}
+      />,
+    );
+
+    // openOverlayId が自分自身の ID と一致するため、popover が依然として描画される（自爆しない）
+    // createPortal により document.body にレンダリングされるため getByRole で検索可能
+    expect(
+      screen.queryByRole("button", { name: "先頭へ移動" }),
+    ).toBeInTheDocument();
+  });
+});
+
 describe("Tile — SIZE_SPAN マッピング", () => {
   test("SIZE_SPAN が各サイズに正しい span 値を持つ", async () => {
     const { SIZE_SPAN } = await import("../constants");

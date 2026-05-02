@@ -18,10 +18,59 @@
  * 絵文字・Unicode 記号は不使用。
  */
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useId, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
 import type { TileSize } from "./types";
 import styles from "./TileMoveButtons.module.css";
+
+/**
+ * 展開パネルの位置を画面内に収める補正関数（Q1 / q1 修正）。
+ *
+ * createPortal で document.body 直下に position:fixed で描画するため、
+ * トリガー要素の getBoundingClientRect() をそのまま使うと
+ * 画面右端・下端でパネルがはみ出してしまう。
+ * この関数で left / top をクランプして画面内に収める。
+ *
+ * @param rect - トリガー要素の DOMRect
+ * @param panelWidth - 展開パネルの推定幅（px）
+ * @param panelHeight - 展開パネルの推定高さ（px）
+ * @param margin - 画面端との余白（px、デフォルト 8）
+ * @returns { top, left } — 補正後の fixed 座標
+ */
+function computeClampedPosition(
+  rect: DOMRect,
+  panelWidth: number,
+  panelHeight: number,
+  margin = 8,
+): { top: number; left: number } {
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+
+  // 左座標: rect.left を基点にしつつ、右端にはみ出さないようにクランプ
+  const left = Math.min(rect.left, vw - panelWidth - margin);
+
+  // 上座標: デフォルトはトリガー直下（rect.bottom + 4px）
+  // 下端を超える場合はトリガーの上方向に flip する（q1）
+  const belowTop = rect.bottom + 4;
+  const aboveTop = rect.top - panelHeight - 4;
+  const top =
+    belowTop + panelHeight + margin > vh && aboveTop >= margin
+      ? aboveTop
+      : belowTop;
+
+  return { top, left };
+}
+
+/**
+ * 展開パネルの推定幅（px）。
+ * パネルは 4 移動ボタン（各 44px = 20px + padding 12*2）+ 閉じるボタン（44px）+ gap + padding。
+ * 実際の DOM 幅を測ることが最善だが、createPortal 直後は DOM がまだないため推定値を使う。
+ * 将来的には panelRef.current.getBoundingClientRect() で実測に切り替えられる。
+ */
+const PANEL_ESTIMATED_WIDTH = 280;
+
+/** 展開パネルの推定高さ（px） */
+const PANEL_ESTIMATED_HEIGHT = 52;
 
 export interface TileMoveButtonsProps {
   /** タイルのサイズ（small のみ折りたたみ展開 UI） */
@@ -237,6 +286,12 @@ export default function TileMoveButtons({
   } | null>(null);
 
   /**
+   * q3: aria-controls 用の一意 ID（WAI-ARIA disclosure パターン）。
+   * React 18+ の useId で SSR/CSR 両方で安定した ID を生成する。
+   */
+  const panelId = useId();
+
+  /**
    * P1: 他の overlay が開いているかどうかの判定。
    * - openOverlayId が null → 何も開いていない → 自分は展開可能
    * - openOverlayId が overlayId と一致 → 自分が開いている → 展開継続
@@ -286,11 +341,80 @@ export default function TileMoveButtons({
   }, [expanded, closePanel]);
 
   /**
-   * P1: 他の overlay が開いたとき（otherOverlayOpen=true）の展開パネル抑制。
-   * expanded state はそのまま保持し、実際の表示を `isVisible` で制御する。
-   * otherOverlayOpen が false に戻っても expanded は false のまま
-   * （ユーザーが再展開する必要がある）。
-   * これにより useEffect での setState（cascading renders lint エラー）を回避できる。
+   * q2: clickoutside で展開パネルを閉じる。
+   * expanded=true の時のみリスナーを登録し、
+   * パネル自身（panelId）またはトリガー（triggerRef）の外でのクリックで閉じる。
+   * mousedown で判定することで blur ベースの課題（スクロールバークリック等）を回避する。
+   */
+  useEffect(() => {
+    if (!expanded) return;
+    function handleMouseDown(e: MouseEvent) {
+      // パネル要素（portal）の内側クリックは無視
+      const panelEl = document.getElementById(panelId);
+      if (panelEl && panelEl.contains(e.target as Node)) return;
+      // トリガーボタンの内側クリックは無視（トリガー自身の onClick で toggle する）
+      if (triggerRef.current && triggerRef.current.contains(e.target as Node))
+        return;
+      closePanel();
+    }
+    document.addEventListener("mousedown", handleMouseDown);
+    return () => {
+      document.removeEventListener("mousedown", handleMouseDown);
+    };
+  }, [expanded, closePanel, panelId]);
+
+  /**
+   * Q3: resize 時に展開パネルを閉じる（推奨対応）。
+   * ToolboxShell の scrollLock 中も、モバイルの仮想キーボード表示などで
+   * window.innerHeight が変わることがある。
+   * resize イベントで位置再計算するより「閉じる」方が実装がシンプルで安全。
+   * expanded=true の時のみリスナーを登録する。
+   */
+  useEffect(() => {
+    if (!expanded) return;
+    function handleResize() {
+      closePanel();
+    }
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [expanded, closePanel]);
+
+  /**
+   * Q2: 他の overlay が開いたとき（otherOverlayOpen が true に変化したとき）に
+   * expanded を false にリセットする。
+   * これにより、AddTileModal が閉じて openOverlayId が null に戻っても
+   * expanded=false のままとなり、popover が突然再表示されるバグを防ぐ。
+   *
+   * React の公式 "derived state" パターン:
+   * 前回の otherOverlayOpen を useState で持ち、レンダー中に比較して setState する。
+   * useEffect 内での setState（react-hooks/set-state-in-effect lint エラー）を回避できる。
+   * また useRef をレンダー中に読み書きすることも避けられる（react-compiler のルール違反を回避）。
+   * React のレンダー中 setState は同一レンダーを再実行するため、一時的な中間状態が
+   * 画面に表示されることはない（React ドキュメント参照）。
+   *
+   * onExpandChange(false) は副作用のためレンダー中に呼べない。
+   * ここでは state リセットのみ行い、onExpandChange 通知は closePanel() ルートを通る
+   * 通常クローズ（ESC / 閉じるボタン）に任せる。
+   */
+  const [prevOtherOverlayOpen, setPrevOtherOverlayOpen] =
+    useState(otherOverlayOpen);
+  if (otherOverlayOpen !== prevOtherOverlayOpen) {
+    setPrevOtherOverlayOpen(otherOverlayOpen);
+    if (otherOverlayOpen && expanded) {
+      // false → true の変化かつ展開中: expanded をリセット
+      setExpanded(false);
+      setPanelPos(null);
+    }
+  }
+
+  /**
+   * isVisible: 実際にパネルを表示するかの最終判定。
+   * expanded が true かつ otherOverlayOpen が false のとき表示する。
+   * Q2 修正後: otherOverlayOpen=true になるとレンダー中に expanded が false にリセットされるため、
+   * isVisible は必ず false になる。otherOverlayOpen が false に戻っても
+   * expanded がリセット済みのため、popover が突然再表示されることはない。
    */
   const isVisible = expanded && !otherOverlayOpen;
 
@@ -329,6 +453,7 @@ export default function TileMoveButtons({
         className={styles.expandButton}
         aria-label="移動操作を展開"
         aria-expanded={isVisible}
+        aria-controls={panelId}
         onClick={() => {
           // P1: 他の overlay が開いている場合は展開しない
           if (otherOverlayOpen) return;
@@ -338,13 +463,16 @@ export default function TileMoveButtons({
             // 展開パネルの位置計算（portal 化対応）。
             // イベントハンドラ内で getBoundingClientRect() を呼ぶことで
             // useEffect/useLayoutEffect 内での setState（lint エラー）を回避する。
-            // 編集モード中はスクロールロックがかかるため位置ズレは発生しない。
+            // 画面端補正: computeClampedPosition で right/bottom はみ出しを防ぐ（Q1 / q1 修正）。
             if (wrapperRef.current) {
               const rect = wrapperRef.current.getBoundingClientRect();
-              setPanelPos({
-                top: rect.bottom + 4, // 4px gap（CSS の top: calc(100% + 4px) 相当）
-                left: rect.left,
-              });
+              setPanelPos(
+                computeClampedPosition(
+                  rect,
+                  PANEL_ESTIMATED_WIDTH,
+                  PANEL_ESTIMATED_HEIGHT,
+                ),
+              );
             }
             changeExpanded(true);
           }
@@ -382,6 +510,7 @@ export default function TileMoveButtons({
         typeof document !== "undefined" &&
         createPortal(
           <div
+            id={panelId}
             className={styles.expandedPanel}
             style={{
               position: "fixed",
