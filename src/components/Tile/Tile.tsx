@@ -233,7 +233,9 @@ function Tile({
                   4 つのコールバックがすべて揃っている時のみ描画する（N5: no-op fallback 防止）。
                   一部でも未渡しなら描画しない。コールバック未渡し時に静かに何も起きない
                   状態を避け、バグの早期検出を助ける。
-                  O1: openOverlayId / setOpenOverlay を isOverlayOpen / onExpandChange に変換して渡す。 */}
+                  P1: overlayId（自身の ID）と openOverlayId（現在開いている ID）を渡す。
+                  自爆防止: isOverlayOpen ではなく openOverlayId を直接渡すことで
+                  TileMoveButtons 内で「自分 vs 他者」の判断を正確に行える。 */}
               {onMoveFirst && onMovePrev && onMoveNext && onMoveLast && (
                 <TileMoveButtons
                   size={size}
@@ -243,7 +245,8 @@ function Tile({
                   onMovePrev={onMovePrev}
                   onMoveNext={onMoveNext}
                   onMoveLast={onMoveLast}
-                  isOverlayOpen={openOverlayId != null}
+                  overlayId={"tile-move-" + tileable.slug}
+                  openOverlayId={openOverlayId}
                   onExpandChange={(isExpanded) => {
                     if (isExpanded) {
                       setOpenOverlay?.("tile-move-" + tileable.slug);

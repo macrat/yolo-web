@@ -4,14 +4,22 @@
  * TileMoveButtons — 編集モード時の移動操作 UI。
  *
  * medium / large サイズ: 4 ボタンを常時表示。
- * small サイズ: 展開トリガーを表示し、クリックでインライン展開。
+ * small サイズ: 展開トリガーを表示し、クリックで展開パネルを表示。
  *   ヘッダー行が狭いため折りたたみ UI を採用（品質要件: 視覚破綻なし、44px タップ）。
+ *
+ *   展開パネルは createPortal で document.body 直下に描画する（P1 修正）。
+ *   これにより:
+ *   - ToolboxShell の tilesContainer に付く inert 属性の影響を回避できる
+ *   - タイルの overflow: hidden による視覚クリッピングを回避できる
+ *   パネル位置は smallWrapper の getBoundingClientRect() で算出した
+ *   position:fixed 座標にアンカーする。
  *
  * アイコンは Lucide スタイル線画 SVG（DESIGN.md §3 準拠）。
  * 絵文字・Unicode 記号は不使用。
  */
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import { createPortal } from "react-dom";
 import type { TileSize } from "./types";
 import styles from "./TileMoveButtons.module.css";
 
@@ -31,11 +39,21 @@ export interface TileMoveButtonsProps {
   /** 末尾へ移動 */
   onMoveLast: () => void;
   /**
-   * 他の overlay（AddTileModal など）が開いているかどうか（O1: 排他制御）。
-   * true のとき small サイズの展開を抑制し、展開中なら強制的に閉じる。
-   * 省略時は false として扱う。
+   * このコンポーネント自身の overlay ID（P1: 自爆防止）。
+   * ToolboxShell の openOverlayId にこの値が設定されているときは
+   * 「自分自身が開いている」と判断して展開を継続する。
+   * 省略時は排他制御を行わない。
    */
-  isOverlayOpen?: boolean;
+  overlayId?: string;
+  /**
+   * 現在 open 中の overlay の ID（P1: 排他制御）。
+   * ToolboxShell → TileGrid → Tile 経由で渡す。
+   * - null: どの overlay も開いていない → 展開可能
+   * - 自身の overlayId と一致: 自分が開いている → 展開継続
+   * - 他の ID: 他の overlay が開いている → 展開不可
+   * 省略時は排他制御を行わない（null 扱い）。
+   */
+  openOverlayId?: string | null;
   /**
    * small サイズ展開パネルの開閉状態変化コールバック（O1: 排他制御）。
    * 展開時に true、閉じるときに false を渡す。
@@ -176,16 +194,22 @@ function MoveButtonList({
 
 /**
  * TileMoveButtons — 編集モード移動操作 UI。
- * size="small" 時のみ展開トリガー経由のインライン展開、それ以外は常時表示。
+ * size="small" 時のみ展開トリガー経由の展開パネル表示、それ以外は常時表示。
  *
  * a11y 対応（small サイズ展開パネル）:
  * - 展開時に先頭ボタン（「先頭へ移動」）へ自動フォーカス
  * - ESC キーで展開パネルを閉じる（O3: expanded=true の時のみ listener 登録）
  * - 閉じた時、展開トリガーにフォーカスを戻す（O2: WAI-ARIA disclosure パターン）
  *
- * 排他制御（O1）:
- * - isOverlayOpen=true の時は展開を抑制し、展開中なら強制的に閉じる
+ * 排他制御（P1 修正済み）:
+ * - openOverlayId と overlayId で「自分以外が開いているか」を判断（自爆防止）
  * - onExpandChange で親に開閉状態を通知し、双方向排他を実現する
+ *
+ * portal 化（P1 修正）:
+ * - 展開パネルは createPortal で document.body 直下に描画する
+ * - ToolboxShell の tilesContainer の inert 属性の影響を回避
+ * - タイルの overflow:hidden によるクリッピングを回避
+ * - パネル位置は smallWrapper の getBoundingClientRect() で算出した position:fixed
  */
 export default function TileMoveButtons({
   size,
@@ -195,14 +219,31 @@ export default function TileMoveButtons({
   onMovePrev,
   onMoveNext,
   onMoveLast,
-  isOverlayOpen = false,
+  overlayId,
+  openOverlayId,
   onExpandChange,
 }: TileMoveButtonsProps) {
   const [expanded, setExpanded] = useState(false);
   /** 展開パネル内の先頭ボタンへの ref（フォーカス自動移動に使用） */
   const firstButtonRef = useRef<HTMLButtonElement>(null);
-  /** 展開トリガーへの ref（閉じた後のフォーカス戻しに使用 O2） */
+  /** 展開トリガーへの ref（閉じた後のフォーカス戻し + パネル位置計算に使用） */
   const triggerRef = useRef<HTMLButtonElement>(null);
+  /** smallWrapper への ref（パネル位置計算に使用） */
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  /** portal パネルの位置 state */
+  const [panelPos, setPanelPos] = useState<{
+    top: number;
+    left: number;
+  } | null>(null);
+
+  /**
+   * P1: 他の overlay が開いているかどうかの判定。
+   * - openOverlayId が null → 何も開いていない → 自分は展開可能
+   * - openOverlayId が overlayId と一致 → 自分が開いている → 展開継続
+   * - openOverlayId が他の ID → 他が開いている → 展開不可
+   */
+  const otherOverlayOpen =
+    openOverlayId != null && (overlayId == null || openOverlayId !== overlayId);
 
   /**
    * 展開状態を変更するヘルパー。
@@ -220,9 +261,11 @@ export default function TileMoveButtons({
    * 閉じる処理（O2: 閉じた後は展開トリガーにフォーカスを戻す）。
    * WAI-ARIA disclosure パターン: 閉じた時はトリガーに focus を戻す。
    * 同期的に focus() を呼ぶ（React の state 更新より先に DOM focus を確保）。
+   * panelPos もここでリセットする（portal パネルの位置 state クリア）。
    */
   const closePanel = useCallback(() => {
     changeExpanded(false);
+    setPanelPos(null);
     triggerRef.current?.focus();
   }, [changeExpanded]);
 
@@ -243,22 +286,25 @@ export default function TileMoveButtons({
   }, [expanded, closePanel]);
 
   /**
-   * O1: 他の overlay が開いたとき（isOverlayOpen=true）の展開パネル抑制。
+   * P1: 他の overlay が開いたとき（otherOverlayOpen=true）の展開パネル抑制。
    * expanded state はそのまま保持し、実際の表示を `isVisible` で制御する。
-   * isOverlayOpen が false に戻っても expanded は false のまま（ユーザーが再展開する必要がある）。
+   * otherOverlayOpen が false に戻っても expanded は false のまま
+   * （ユーザーが再展開する必要がある）。
    * これにより useEffect での setState（cascading renders lint エラー）を回避できる。
    */
-  const isVisible = expanded && !isOverlayOpen;
+  const isVisible = expanded && !otherOverlayOpen;
 
   /**
    * 展開時に先頭ボタンへフォーカスを移動する（N2）。
-   * isVisible（= expanded && !isOverlayOpen）が true の時のみ発火。
+   * panelPos が確定（!= null）してから発火させる。
+   * panelPos の計算は onClick イベントハンドラ内で行うため、
+   * isVisible が true になるより panelPos が確定するのは同じレンダーサイクル後になる。
    */
   useEffect(() => {
-    if (isVisible && firstButtonRef.current) {
+    if (isVisible && panelPos && firstButtonRef.current) {
       firstButtonRef.current.focus();
     }
-  }, [isVisible]);
+  }, [isVisible, panelPos]);
 
   if (size !== "small") {
     // medium / large: 4 ボタンを常時表示
@@ -274,9 +320,9 @@ export default function TileMoveButtons({
     );
   }
 
-  // small: 展開トリガー + インライン展開
+  // small: 展開トリガー + portal 展開パネル
   return (
-    <div className={styles.smallWrapper}>
+    <div ref={wrapperRef} className={styles.smallWrapper}>
       <button
         ref={triggerRef}
         type="button"
@@ -284,11 +330,22 @@ export default function TileMoveButtons({
         aria-label="移動操作を展開"
         aria-expanded={isVisible}
         onClick={() => {
-          // O1: 他の overlay が開いている場合は展開しない
-          if (isOverlayOpen) return;
+          // P1: 他の overlay が開いている場合は展開しない
+          if (otherOverlayOpen) return;
           if (expanded) {
             closePanel();
           } else {
+            // 展開パネルの位置計算（portal 化対応）。
+            // イベントハンドラ内で getBoundingClientRect() を呼ぶことで
+            // useEffect/useLayoutEffect 内での setState（lint エラー）を回避する。
+            // 編集モード中はスクロールロックがかかるため位置ズレは発生しない。
+            if (wrapperRef.current) {
+              const rect = wrapperRef.current.getBoundingClientRect();
+              setPanelPos({
+                top: rect.bottom + 4, // 4px gap（CSS の top: calc(100% + 4px) 相当）
+                left: rect.left,
+              });
+            }
             changeExpanded(true);
           }
         }}
@@ -309,39 +366,61 @@ export default function TileMoveButtons({
         </svg>
       </button>
 
-      {isVisible && (
-        <div className={styles.expandedPanel}>
-          <MoveButtonList
-            isFirst={isFirst}
-            isLast={isLast}
-            onMoveFirst={onMoveFirst}
-            onMovePrev={onMovePrev}
-            onMoveNext={onMoveNext}
-            onMoveLast={onMoveLast}
-            firstButtonRef={firstButtonRef}
-          />
-          {/* 閉じるボタン（aria-label で区別） */}
-          <button
-            type="button"
-            className={styles.closeButton}
-            aria-label="移動操作を閉じる"
-            onClick={closePanel}
+      {/*
+       * 展開パネル: createPortal で document.body 直下に描画（P1 修正）。
+       * position:fixed で smallWrapper の直下に位置合わせする。
+       * body 直下に出すことで:
+       * - ToolboxShell の tilesContainer の inert 属性の影響を受けない
+       * - タイルの overflow:hidden によるクリッピングを受けない
+       * - z-index スタッキングが最前面になる（--z-tile-toolbar 変数を参照）
+       *
+       * SSR 時は document が存在しないため、portal は CSR でのみ表示される。
+       * TileMoveButtons は編集モード時のみ描画されるため SSR 上では問題なし。
+       */}
+      {isVisible &&
+        panelPos &&
+        typeof document !== "undefined" &&
+        createPortal(
+          <div
+            className={styles.expandedPanel}
+            style={{
+              position: "fixed",
+              top: panelPos.top,
+              left: panelPos.left,
+            }}
           >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              aria-hidden="true"
-              className={styles.icon}
+            <MoveButtonList
+              isFirst={isFirst}
+              isLast={isLast}
+              onMoveFirst={onMoveFirst}
+              onMovePrev={onMovePrev}
+              onMoveNext={onMoveNext}
+              onMoveLast={onMoveLast}
+              firstButtonRef={firstButtonRef}
+            />
+            {/* 閉じるボタン（aria-label で区別） */}
+            <button
+              type="button"
+              className={styles.closeButton}
+              aria-label="移動操作を閉じる"
+              onClick={closePanel}
             >
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
-          </button>
-        </div>
-      )}
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                aria-hidden="true"
+                className={styles.icon}
+              >
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>,
+          document.body,
+        )}
     </div>
   );
 }

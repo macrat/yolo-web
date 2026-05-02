@@ -93,12 +93,12 @@
   outline-offset: 2px;
 }
 
-/* 展開パネル（4 ボタン + 閉じるボタン） */
+/* 展開パネル（4 ボタン + 閉じるボタン）
+ * createPortal で document.body 直下に描画するため position: fixed が必要。
+ * position / top / left は TileMoveButtons.tsx の inline style で設定する。
+ * ここでは外観（色・影・余白・z-index）のみを定義する。P1 修正。
+ */
 .expandedPanel {
-  position: absolute;
-  /* ヘッダー行の下に展開（left に寄せてはみ出さない） */
-  top: calc(100% + 4px);
-  left: 0;
   z-index: var(--z-tile-toolbar);
   display: flex;
   align-items: center;
