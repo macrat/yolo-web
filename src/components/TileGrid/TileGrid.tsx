@@ -9,26 +9,22 @@
  * - 編集モードで EmptySlot（「+ ツールを追加」ボタン）を末尾に表示
  * - 編集モードで各タイルの削除（× ボタン）に対応
  * - タイル追加モーダル（AddTileModal）の開閉管理
+ * - 移動ボタン（前へ / 後へ / 先頭 / 末尾）を Tile に渡す
  *
- * 設計方針:
- * - DndContext は外側 ToolboxShell が編集モード時のみ mount する。
- *   本コンポーネントは SortableContext + DragOverlay + タイル一覧のみを担う。
- * - onDragStart/Over/End は ToolboxShell の render props で受け取る setDndHandlers 経由で
- *   ToolboxShell の DndContext に接続する。
- *   これにより ToolboxShell が sensors を管理し、TileGrid がイベントロジックを管理する
- *   責務分離が実現される（ToolboxShell.tsx のコメント参照）。
- * - config（tiles + tileableMap）は外側から props で受け取り、
- *   変更時は onConfigChange コールバックで通知する。
- *   → 2.2.8（localStorage 永続化フック）と容易に組み合わせられる設計。
+ * 永続化経路（#7 統一）:
+ * - DnD 中は localTiles state のみ更新（UIプレビュー）。localStorage 書き込みは発生しない。
+ * - DnD 確定時（onDragEnd）にのみ onConfigChange を呼んで永続化する（1 回のみ書き込み）。
+ * - 移動ボタン・削除・追加も同様に onConfigChange 経由で永続化する。
+ * - これにより DnD 中の連続 setState → useToolboxConfig → localStorage 書き込み連鎖が発生しない。
  *
- * z-index（AP-I08 準拠）:
- * - DragOverlay は dnd-kit が portal で最前面に描画する（z-index: 1000 デフォルト）。
- * - 各 Tile は globals.css の --z-tile（200）を使用。
+ * 再レンダー連鎖解消（#4）:
+ * - DnD 中の中間状態は localTiles（ローカル state）のみで管理する。
+ * - configRef で最新 config を useRef で保持し、DnD 中に config prop が変化しても
+ *   handleDragOver が古い参照でクロージャを形成しないようにする。
+ * - handleDragEnd で onConfigChange（永続化）を 1 回呼ぶ設計。
  *
- * Hydration mismatch 回避（docs/knowledge/dnd-kit.md 参照）:
- * - 本コンポーネントは ToolboxShell 内で "use client" として動作する。
- * - TileGrid 自体は SSR でも safe（DndContext は ToolboxShell 編集モード時のみ mount）。
- * - DragOverlay は dnd-kit 内部で portal を使うため、ssr: false は ToolboxShell 側で制御。
+ * DESIGN.md 準拠:
+ * - DESIGN.md §4 参照（ドラッグ規定、cursor 整合、半透明禁止）
  *
  * 経路 B 実装詳細（2.2.3 スパイク確立済み）:
  * - SortableContext の strategy に () => null を渡す（標準変換アニメーション無効化）
@@ -36,7 +32,7 @@
  * - DragOverlay でドラッグ元サイズ固定のゴーストを描画（サイズ引き伸ばし Issue #117 回避）
  */
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import {
   DragOverlay,
   type DragStartEvent,
@@ -80,17 +76,27 @@ interface TileGridProps {
   /** 操作モード（"view" | "edit"）。ToolboxShell から render props で受け取る */
   mode: TileMode;
   /**
-   * 設定変更コールバック。
-   * 並び替え・削除・追加のたびに新しい config を引数に呼ばれる。
-   * 2.2.8 の localStorage フックと組み合わせることで永続化できる。
+   * 設定変更コールバック（永続化経路）。
+   * DnD 確定・移動ボタン・削除・追加のたびに呼ばれる。
+   * 省略した場合はローカル state のみで管理する（テスト / Storybook 用）。
    */
-  onConfigChange: (newConfig: TileGridConfig) => void;
+  onConfigChange?: (newConfig: TileGridConfig) => void;
   /**
    * ToolboxShell の DndContext にイベントハンドラを接続するための関数。
    * ToolboxShell の render props（setDndHandlers）を直接渡す。
    * 省略した場合、DnD 操作は機能しない（使用モード時は自然に省略される）。
    */
   setDndHandlers?: (handlers: ToolboxDndHandlers) => void;
+  /**
+   * 現在 open 中の overlay の ID。ToolboxShell から render props で受け取る。
+   * AddTileModal を開く前にこの値を参照して、他の overlay が開いていれば同時 open を防ぐ（#9）。
+   */
+  openOverlayId?: string | null;
+  /**
+   * overlay の open/close を通知する関数。ToolboxShell から render props で受け取る。
+   * AddTileModal open 時に "add-tile-modal" を渡し、close 時に null を渡す（#9）。
+   */
+  setOpenOverlay?: (id: string | null) => void;
   /** 追加クラス */
   className?: string;
 }
@@ -107,6 +113,8 @@ function TileGrid({
   mode,
   onConfigChange,
   setDndHandlers,
+  openOverlayId,
+  setOpenOverlay,
   className,
 }: TileGridProps) {
   /**
@@ -114,6 +122,25 @@ function TileGrid({
    * null のときはオーバーレイを描画しない。
    */
   const [activeDragSlug, setActiveDragSlug] = useState<string | null>(null);
+
+  /**
+   * DnD 中間状態用ローカルタイル配列（#4 再レンダー連鎖解消）。
+   * DnD 開始時（handleDragStart）に config.tiles で初期化され、
+   * onDragOver で位置プレビュー更新のみに使われる。
+   * onDragEnd で onConfigChange を 1 回呼び、その後 activeDragSlug が null になると
+   * tilesSource が config.tiles に自動的に切り替わるため同期 useEffect は不要。
+   */
+  const [localTiles, setLocalTiles] = useState(config.tiles);
+
+  /**
+   * 最新 config を ref で保持（DnD 中のクロージャ stale 防止）。
+   * handleDragEnd で確定時の onConfigChange に localTiles を渡す際に参照する。
+   * useEffect でレンダリング外から更新することで lint エラーを回避する。
+   */
+  const configRef = useRef(config);
+  useEffect(() => {
+    configRef.current = config;
+  });
 
   /** AddTileModal の開閉状態 */
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -123,49 +150,63 @@ function TileGrid({
   // ---------------------------------------------------------------------------
 
   /**
-   * ドラッグ開始: activeDragSlug を設定して DragOverlay を描画開始する。
+   * ドラッグ開始: activeDragSlug を設定して DragOverlay を描画開始し、
+   * localTiles を現在の config.tiles で初期化する（プレビューの開始点を揃える）。
+   * configRef 経由で最新の config.tiles を参照することで、
+   * 依存配列を空にしたまま stale closure を回避できる。
    */
   const handleDragStart = useCallback((event: DragStartEvent) => {
     setActiveDragSlug(event.active.id as string);
+    setLocalTiles(configRef.current.tiles);
   }, []);
 
   /**
-   * ドラッグ中（onDragOver）: arrayMove で即時並び替えしてプレビューを更新する。
+   * ドラッグ中（onDragOver）: localTiles のみを更新してプレビューを更新する。
    *
-   * findIndex が -1 を返すケース（存在しない ID）は早期リターンでガードする（経路 B 必須実装）。
+   * localTiles は UI プレビュー専用。永続化（onConfigChange）は onDragEnd で行う。
+   * これにより DnD 中の setState → localStorage 書き込み連鎖を回避できる（#4 #7）。
+   *
+   * findIndex が -1 を返すケース（存在しない ID）は早期リターンでガードする（経路 B 必須）。
    * dnd-kit Issue #1450（closestCenter の振動問題）を避けるため、
    * active.id === over.id のときも早期リターンする。
    */
-  const handleDragOver = useCallback(
-    (event: DragOverEvent) => {
-      const { active, over } = event;
-      if (!over || active.id === over.id) return;
+  const handleDragOver = useCallback((event: DragOverEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
 
-      const oldIndex = config.tiles.findIndex((t) => t.slug === active.id);
-      const newIndex = config.tiles.findIndex((t) => t.slug === over.id);
-
-      // -1 ガード（存在しない slug へのドラッグを無視）
-      if (oldIndex < 0 || newIndex < 0) return;
-
-      const newTiles = arrayMove(config.tiles, oldIndex, newIndex).map(
-        (t, i) => ({ ...t, order: i }),
-      );
-      onConfigChange({ ...config, tiles: newTiles });
-    },
-    [config, onConfigChange],
-  );
-
-  /**
-   * ドラッグ終了: activeDragSlug をリセットして DragOverlay を非表示にする。
-   * 並び替えは onDragOver で完了済みなのでここでは state のみリセット。
-   */
-  const handleDragEnd = useCallback(() => {
-    setActiveDragSlug(null);
+    setLocalTiles((prev) => {
+      const oldIndex = prev.findIndex((t) => t.slug === active.id);
+      const newIndex = prev.findIndex((t) => t.slug === over.id);
+      if (oldIndex < 0 || newIndex < 0) return prev;
+      return arrayMove(prev, oldIndex, newIndex).map((t, i) => ({
+        ...t,
+        order: i,
+      }));
+    });
   }, []);
 
   /**
+   * ドラッグ確定（onDragEnd）: activeDragSlug をリセットし、永続化を 1 回実行する（#7）。
+   *
+   * onDragEnd の時点で localTiles には最終的な並び順が入っている。
+   * この localTiles で onConfigChange を呼ぶことで localStorage への書き込みが 1 回だけ行われる。
+   */
+  const handleDragEnd = useCallback(() => {
+    setActiveDragSlug(null);
+    // localTiles をキャプチャするためにステートリフトを使う
+    setLocalTiles((finalTiles) => {
+      onConfigChange?.({
+        ...configRef.current,
+        tiles: finalTiles,
+      });
+      return finalTiles; // state は変えない
+    });
+  }, [onConfigChange]);
+
+  /**
    * setDndHandlers 経由で ToolboxShell の DndContext にイベントハンドラを接続する。
-   * ハンドラが変わるたびに再登録する（config 変化時も handleDragOver が最新 config を参照する）。
+   * handleDragOver は useCallback + setLocalTiles（関数形式）で依存配列が空になり、
+   * config 変化に伴う handleDragOver 再生成が発生しない（#4 再レンダー連鎖解消）。
    */
   useEffect(() => {
     if (!setDndHandlers) return;
@@ -175,6 +216,26 @@ function TileGrid({
       onDragEnd: handleDragEnd,
     });
   }, [setDndHandlers, handleDragStart, handleDragOver, handleDragEnd]);
+
+  // ---------------------------------------------------------------------------
+  // タイル移動（移動ボタン経由 / #7 永続化経路統一）
+  // ---------------------------------------------------------------------------
+
+  /**
+   * 指定インデックスのタイルを移動し、onConfigChange（永続化）を呼ぶ。
+   * 移動ボタン経由と DnD 経由で同一の onConfigChange を通る（#7 永続化経路統一）。
+   */
+  const handleMoveTile = useCallback(
+    (fromIndex: number, toIndex: number) => {
+      const sorted = [...config.tiles].sort((a, b) => a.order - b.order);
+      const newTiles = arrayMove(sorted, fromIndex, toIndex).map((t, i) => ({
+        ...t,
+        order: i,
+      }));
+      onConfigChange?.({ ...config, tiles: newTiles });
+    },
+    [config, onConfigChange],
+  );
 
   // ---------------------------------------------------------------------------
   // タイル削除
@@ -188,7 +249,7 @@ function TileGrid({
       const newTiles = config.tiles
         .filter((t) => t.slug !== slug)
         .map((t, i) => ({ ...t, order: i }));
-      onConfigChange({ ...config, tiles: newTiles });
+      onConfigChange?.({ ...config, tiles: newTiles });
     },
     [config, onConfigChange],
   );
@@ -210,7 +271,7 @@ function TileGrid({
         size,
         order: config.tiles.length,
       };
-      onConfigChange({
+      onConfigChange?.({
         ...config,
         tiles: [...config.tiles, newTile],
         // tileableMap に追加したタイルを登録（フィクスチャ経由の場合は既登録のこともある）
@@ -219,15 +280,22 @@ function TileGrid({
           : new Map([...config.tileableMap, [tileable.slug, tileable]]),
       });
       setIsModalOpen(false);
+      setOpenOverlay?.(null);
     },
-    [config, onConfigChange],
+    [config, onConfigChange, setOpenOverlay],
   );
 
   // ---------------------------------------------------------------------------
-  // 表示用タイルリスト（order 順にソート済み + tileableMap で解決できたもののみ）
+  // 表示用タイルリスト（DnD 中は localTiles, それ以外は config.tiles を使用）
   // ---------------------------------------------------------------------------
 
-  const resolvedTiles = [...config.tiles]
+  /**
+   * DnD 中は localTiles（UI プレビュー）を、それ以外は config.tiles を使う。
+   * order 順にソートして tileableMap で解決できたものだけを表示する。
+   */
+  const tilesSource = activeDragSlug ? localTiles : config.tiles;
+
+  const resolvedTiles = [...tilesSource]
     .sort((a, b) => a.order - b.order)
     .flatMap((tileConfig) => {
       const tileable = config.tileableMap.get(tileConfig.slug);
@@ -251,12 +319,13 @@ function TileGrid({
 
   return (
     <>
-      {/* グリッドコンテナ（CSS Grid: 4 カラム、小=span1/中=span2/大=span3）*/}
+      {/* グリッドコンテナ（CSS Grid: 4 カラム、小=span1/中=span2/大=span3）
+          ブレークポイント別 span は TileGrid.module.css の data-size セレクタが制御 */}
       <div className={rootClass} data-testid="tile-grid" data-mode={mode}>
         {/* SortableContext（経路 B: strategy={() => null}）*/}
         <SortableContext items={sortableIds} strategy={() => null}>
           {/* タイル一覧 */}
-          {resolvedTiles.map(({ tileConfig, tileable }) => (
+          {resolvedTiles.map(({ tileConfig, tileable }, index) => (
             <Tile
               key={tileConfig.slug}
               tileable={tileable}
@@ -268,6 +337,26 @@ function TileGrid({
                   ? () => handleDeleteTile(tileConfig.slug)
                   : undefined
               }
+              isFirst={index === 0}
+              isLast={index === resolvedTiles.length - 1}
+              onMoveFirst={
+                mode === "edit" ? () => handleMoveTile(index, 0) : undefined
+              }
+              onMovePrev={
+                mode === "edit"
+                  ? () => handleMoveTile(index, index - 1)
+                  : undefined
+              }
+              onMoveNext={
+                mode === "edit"
+                  ? () => handleMoveTile(index, index + 1)
+                  : undefined
+              }
+              onMoveLast={
+                mode === "edit"
+                  ? () => handleMoveTile(index, resolvedTiles.length - 1)
+                  : undefined
+              }
             />
           ))}
 
@@ -276,7 +365,12 @@ function TileGrid({
             <EmptySlot
               size="medium"
               label="ツールを追加"
-              onAdd={() => setIsModalOpen(true)}
+              onAdd={() => {
+                // 他の overlay が開いている場合は排他制御で開かない（#9）
+                if (openOverlayId != null) return;
+                setIsModalOpen(true);
+                setOpenOverlay?.("add-tile-modal");
+              }}
             />
           )}
         </SortableContext>
@@ -294,12 +388,15 @@ function TileGrid({
         ) : null}
       </DragOverlay>
 
-      {/* タイル追加モーダル */}
+      {/* タイル追加モーダル（Portal で document.body 直下に mount、AP-I08）*/}
       {isModalOpen && (
         <AddTileModal
           existingSlugs={new Set(config.tiles.map((t) => t.slug))}
           onAdd={handleAddTile}
-          onClose={() => setIsModalOpen(false)}
+          onClose={() => {
+            setIsModalOpen(false);
+            setOpenOverlay?.(null);
+          }}
         />
       )}
     </>
