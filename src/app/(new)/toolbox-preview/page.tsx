@@ -1,25 +1,24 @@
 /**
- * /toolbox-preview — hidden 検証ルート（3 層防御）
+ * /toolbox-preview — hidden 検証ルート
  *
  * 新コンセプト「日常の傍にある道具」のコア機能（道具箱）を来訪者向け公開なしに
  * 動作確認するための隠し検証ページ。cycle-175 2.2.9 が担当。
  *
- * 3 層防御:
- * - 層 1: metadata.robots = { index: false, follow: false }（本ファイル）
- * - 層 2: src/app/robots.ts の disallow に /toolbox-preview を追加済み
- * - 層 3: NEXT_PUBLIC_TOOLBOX_PREVIEW !== "true" のとき notFound()（dev/prod 共通）
- *         NODE_ENV 条件を設けない理由: dev でも環境変数なしで 404 にすることで
- *         誤公開リスクを排除し、dev/prod 挙動を一貫させる。
- *         dev で確認したい場合は .env.local に NEXT_PUBLIC_TOOLBOX_PREVIEW=true を設定する。
+ * 防御方針（/storybook と同じ運用）:
+ * - noindex meta（本ファイル）: 検索エンジンにインデックスさせない
+ * - robots.txt には掲載しない: disallow に書くと URL が公開ファイルに漏れるため
+ * - sitemap に不掲載
+ * - サイトナビ動線なし: どのページからもリンクされない
+ *
+ * 環境変数ガードを設けない理由:
+ * noindex + サイトナビ動線なしで来訪者の到達経路が存在しないため、
+ * 追加のアクセス制御は過剰防衛になる。
  *
  * 運用方針:
- * - Vercel Preview Deploy では NEXT_PUBLIC_TOOLBOX_PREVIEW=true を設定して有効化
- * - Production Deploy では環境変数を設定しないことで 404 にする
  * - Phase 9.2（B-336）で /toolbox-preview の実装を / 配下に統合し、本ページを廃棄する
  */
 
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
 import ToolboxContent from "./ToolboxContent";
 
 // 層 1: noindex 指定（検索エンジンにインデックスさせない）
@@ -31,15 +30,6 @@ export const metadata: Metadata = {
 };
 
 export default function ToolboxPreviewPage() {
-  // 層 3: 環境変数ガード（dev/prod 共通）
-  // NEXT_PUBLIC_TOOLBOX_PREVIEW=true が設定されていない場合は 404 を返す。
-  // dev 環境でも同じ条件を適用することで誤公開リスクを排除し、挙動を一貫させる。
-  // dev で確認したい場合は .env.local に NEXT_PUBLIC_TOOLBOX_PREVIEW=true を設定する。
-  // Vercel Preview Deploy では NEXT_PUBLIC_TOOLBOX_PREVIEW=true を設定すること。
-  if (process.env.NEXT_PUBLIC_TOOLBOX_PREVIEW !== "true") {
-    notFound();
-  }
-
   return (
     <div
       style={{

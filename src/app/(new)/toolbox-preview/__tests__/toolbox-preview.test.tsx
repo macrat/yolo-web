@@ -3,10 +3,9 @@
  *
  * テスト範囲:
  * - ToolboxContent が初期プリセット（INITIAL_DEFAULT_LAYOUT の 5 タイル）を描画する
- * - robots.ts の disallow に /toolbox-preview が含まれる
+ * - robots.ts の disallow に /toolbox-preview が含まれないこと（URL を公開ファイルに漏らさない設計）
  *
  * テスト対象外（AP-I09 準拠 — jsdom では検証不可）:
- * - 層 3 の notFound() （Server Component の条件分岐は Playwright で検証）
  * - CSS スタッキング・DnD 物理挙動
  * - hydration mismatch（Playwright で検証）
  */
@@ -68,12 +67,13 @@ afterEach(() => {
 });
 
 // ---------------------------------------------------------------------------
-// robots.ts テスト（層 2 防御）
+// robots.ts テスト（/toolbox-preview URL を公開ファイルに漏らさない設計）
 // ---------------------------------------------------------------------------
 
-describe("robots.ts — 層 2: /toolbox-preview が Disallow に含まれる", () => {
-  test("/toolbox-preview が disallow 配列に含まれる", async () => {
-    // robots.ts を直接 import してレスポンスを確認する
+describe("robots.ts — /toolbox-preview は Disallow に含まれない", () => {
+  test("/toolbox-preview が disallow 配列に含まれない（URL を公開ファイルに漏らさない）", async () => {
+    // robots.txt への掲載は URL を公開してしまうため、/toolbox-preview は意図的に不掲載。
+    // /storybook と同じ運用（noindex meta のみで防御）。
     const { default: robots } = await import("@/app/robots");
     const result = robots();
 
@@ -85,7 +85,7 @@ describe("robots.ts — 層 2: /toolbox-preview が Disallow に含まれる", (
     const disallow = wildcardRule?.disallow ?? [];
     const disallowArr = Array.isArray(disallow) ? disallow : [disallow];
 
-    expect(disallowArr).toContain("/toolbox-preview");
+    expect(disallowArr).not.toContain("/toolbox-preview");
   });
 });
 
