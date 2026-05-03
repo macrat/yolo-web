@@ -1,0 +1,145 @@
+/**
+ * ToolboxShell.module.css — ダッシュボード道具箱外殻のスタイル。
+ *
+ * DESIGN.md §4 ドラッグ・編集モードの視覚表現ルール:
+ * - 編集モードの視覚表現は box-shadow のみ（DESIGN.md §4 参照）
+ * - opacity（半透明）禁止
+ * - 揺れアニメーション不採用
+ *
+ * Undo バナー:
+ * - --danger 系トークンを使用（削除操作に対するフィードバック）
+ * - アクセシビリティ: role="status" + aria-live="polite" で支援技術に通知
+ */
+
+/* ---------------------------------------------------------------------------
+ * .container — 道具箱全体のコンテナ
+ * --------------------------------------------------------------------------- */
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+/* 編集モード中の視覚表現: box-shadow のみ（DESIGN.md §4）
+ * アクセント色で「触れる状態」を示す outline を追加 */
+.containerEditing {
+  outline: 2px solid var(--accent-soft);
+  outline-offset: 4px;
+  border-radius: var(--r-normal);
+}
+
+/* ---------------------------------------------------------------------------
+ * .toolbar — Edit / Done ボタンを収めるツールバー
+ * --------------------------------------------------------------------------- */
+.toolbar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 4px 0;
+}
+
+/* ---------------------------------------------------------------------------
+ * .editButton / .doneButton — Edit / Done ボタン
+ *
+ * DESIGN.md §5: ボタンの border-radius は var(--r-interactive)
+ * DESIGN.md §5: shadow は var(--shadow-button)
+ * タップターゲット 44px 以上（DESIGN.md / a11y 規約）
+ * --------------------------------------------------------------------------- */
+.editButton,
+.doneButton {
+  background: var(--bg-soft);
+  color: var(--fg);
+  border: none;
+  border-radius: var(--r-interactive);
+  padding: 8px 16px;
+  /* タップターゲット 44px 以上 */
+  min-height: 44px;
+  min-width: 44px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: var(--shadow-button);
+  transition: background 0.1s ease;
+}
+
+.editButton:hover {
+  background: var(--bg-softer);
+}
+
+.doneButton {
+  background: var(--bg-invert);
+  color: var(--fg-invert);
+}
+
+.doneButton:hover {
+  background: var(--bg-invert-soft);
+  color: var(--fg-invert-soft);
+}
+
+/* フォーカス表示（DESIGN.md §2: outline: 2px solid var(--accent)） */
+.editButton:focus-visible,
+.doneButton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------------------
+ * .undoBanner — 削除時の Undo バナー
+ *
+ * DESIGN.md §2 カラートークン: --danger / --danger-soft / --danger-strong を使用
+ * --------------------------------------------------------------------------- */
+.undoBanner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--danger-soft);
+  border: 1px solid var(--danger-strong);
+  border-radius: var(--r-normal);
+  color: var(--fg);
+}
+
+/* ---------------------------------------------------------------------------
+ * .undoBannerMessage — バナーのメッセージテキスト
+ * --------------------------------------------------------------------------- */
+.undoBannerMessage {
+  font-size: 0.875rem;
+  flex: 1;
+}
+
+/* ---------------------------------------------------------------------------
+ * .undoButton — Undo ボタン
+ *
+ * タップターゲット 44px 以上
+ * --------------------------------------------------------------------------- */
+.undoButton {
+  background: var(--danger);
+  color: var(--fg-invert);
+  border: none;
+  border-radius: var(--r-interactive);
+  padding: 6px 14px;
+  min-height: 44px;
+  min-width: 44px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: var(--shadow-button);
+}
+
+.undoButton:hover {
+  background: var(--danger-strong);
+}
+
+.undoButton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------------------
+ * .content — TileGrid（子コンポーネント）のコンテナ
+ * --------------------------------------------------------------------------- */
+.content {
+  width: 100%;
+}
