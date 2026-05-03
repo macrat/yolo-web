@@ -1,0 +1,103 @@
+/* Tile コンテナコンポーネントのスタイル
+ * 視覚表現規則の根拠: DESIGN.md §4 サブセクション（L69-78）
+ */
+
+/* ベースのタイルコンテナ */
+.tile {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--r-normal);
+  /* サイズはグリッドの span で制御するため最小値のみ設定 */
+  min-height: 44px; /* WCAG SC 2.5.8 タップターゲット最小高さ */
+  display: flex;
+  flex-direction: column;
+}
+
+/* サイズ別スタイル（グリッドの span はグリッド側で制御する） */
+.tile--small {
+  /* small サイズ固有のスタイルが必要な場合に追加 */
+}
+
+.tile--medium {
+  /* medium サイズ固有のスタイルが必要な場合に追加 */
+}
+
+.tile--large {
+  /* large サイズ固有のスタイルが必要な場合に追加 */
+}
+
+/* DESIGN.md §4 L74 参照 */
+.tile--editing {
+  border-color: var(--accent);
+  outline: 1px solid var(--accent-soft);
+}
+
+/* DESIGN.md §4 L73 参照 */
+.tile--dragging {
+  box-shadow: var(--shadow-dragging);
+}
+
+/* 空きスロット */
+.tile--empty {
+  border-style: dashed;
+  background: var(--bg-soft);
+}
+
+/* タイル内部コンテンツ領域 */
+.tileInner {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  min-height: 0;
+}
+
+/* DESIGN.md §4 L76 参照 */
+.tileInnerDisabled {
+  pointer-events: none;
+}
+
+/* メタ情報エリア（displayName / shortDescription） */
+.tileMeta {
+  margin-bottom: 0.5rem;
+}
+
+/* displayName: 主要表示 */
+.tileName {
+  font-size: 1rem;
+  color: var(--fg);
+  margin: 0 0 0.25rem 0;
+  line-height: 1.4;
+}
+
+/* shortDescription: 補助表示（displayName より目立たなく） */
+.tileDescription {
+  font-size: 0.875rem;
+  color: var(--fg-soft);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* DESIGN.md §4 L75 参照 */
+.dragHandle {
+  cursor: grab;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px; /* WCAG SC 2.5.8 タップターゲット */
+  height: 44px;
+  color: var(--fg-soft);
+  flex-shrink: 0;
+}
+
+.dragHandle:active {
+  cursor: grabbing;
+}
+
+/* ヘッダー行（ドラッグハンドル + タイル操作ボタン） */
+.tileHeader {
+  display: flex;
+  align-items: center;
+  padding: 0.25rem 0.25rem 0;
+  gap: 0.25rem;
+}
