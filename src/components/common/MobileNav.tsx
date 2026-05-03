@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { acquireScrollLock, releaseScrollLock } from "@/lib/scroll-lock";
 import styles from "./MobileNav.module.css";
 
 interface NavLink {
@@ -35,19 +36,27 @@ export default function MobileNav({ links }: MobileNavProps) {
   }, []);
 
   useEffect(() => {
-    if (isOpen) {
-      document.addEventListener("keydown", handleKeyDown);
-      // layout.tsx の <body style={...}> と競合しない classList 方式でスクロールロック。
-      // document.body.style.overflow の直書きは React reconciliation で消えるため使わない。
-      document.body.classList.add("scroll-locked");
-    } else {
-      document.body.classList.remove("scroll-locked");
-    }
+    document.addEventListener("keydown", handleKeyDown);
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
-      document.body.classList.remove("scroll-locked");
     };
-  }, [isOpen, handleKeyDown]);
+  }, [handleKeyDown]);
+
+  /** isOpen 中はボディスクロールをロックして背景がスクロールしないようにする。
+   * scroll-lock.ts の参照カウンタ式ヘルパを使用。
+   * Header と同居しても scroll-locked クラスを奪い合わない。
+   * AP-I07 準拠: body.style.overflow の直書き禁止。
+   * mount 時に isOpen=false の場合は acquire していないため release しない（二重解放防止）。 */
+  useEffect(() => {
+    if (isOpen) {
+      acquireScrollLock();
+    }
+    return () => {
+      if (isOpen) {
+        releaseScrollLock();
+      }
+    };
+  }, [isOpen]);
 
   const toggleMenu = () => setIsOpen((prev) => !prev);
 

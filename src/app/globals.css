@@ -186,7 +186,9 @@ body {
 }
 
 /* モバイルメニュー展開時のスクロールロック。
- * Header.tsx の useEffect が document.body.classList.add("scroll-locked") で付与する。
+ * src/lib/scroll-lock.ts の acquireScrollLock / releaseScrollLock が
+ * 参照カウンタ式で body に付与・除去する（AP-I07）。
+ * コンポーネントから body.classList を直接操作してはならない。
  * layout.tsx の <body style={...}> と競合しない classList 方式を採用。 */
 .scroll-locked {
   overflow: hidden;
