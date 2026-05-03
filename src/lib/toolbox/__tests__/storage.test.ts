@@ -326,7 +326,7 @@ describe("tiles 配列の整合性検証", () => {
     localStorage.clear();
   });
 
-  test("slug が重複しているデータはフォールバックし、console.warn を出力する", () => {
+  test("slug が重複しているデータは救済（dedupe）され、console.warn を出力する", () => {
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
     localStorage.setItem(
       TOOLBOX_CONFIG_STORAGE_KEY,
@@ -339,13 +339,15 @@ describe("tiles 配列の整合性検証", () => {
         updatedAt: "",
       }),
     );
-    loadConfig();
-    expect(warnSpy).toHaveBeenCalledOnce();
-    expect(warnSpy.mock.calls[0][0]).toMatch(/corrupt/);
+    const result = loadConfig();
+    // 救済後は INITIAL_DEFAULT_LAYOUT にフォールバックせず、修復データを返す
+    expect(result).not.toEqual(INITIAL_DEFAULT_LAYOUT.tiles);
+    // console.warn は出力される
+    expect(warnSpy).toHaveBeenCalled();
     warnSpy.mockRestore();
   });
 
-  test("order が連番でないデータはフォールバックし、console.warn を出力する", () => {
+  test("order が連番でないデータは救済（order 振り直し）され、console.warn を出力する", () => {
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
     localStorage.setItem(
       TOOLBOX_CONFIG_STORAGE_KEY,
@@ -358,8 +360,10 @@ describe("tiles 配列の整合性検証", () => {
         updatedAt: "",
       }),
     );
-    loadConfig();
-    expect(warnSpy).toHaveBeenCalledOnce();
+    const result = loadConfig();
+    // 救済後は INITIAL_DEFAULT_LAYOUT にフォールバックせず、修復データを返す
+    expect(result).not.toEqual(INITIAL_DEFAULT_LAYOUT.tiles);
+    expect(warnSpy).toHaveBeenCalled();
     warnSpy.mockRestore();
   });
 
@@ -379,7 +383,7 @@ describe("tiles 配列の整合性検証", () => {
     warnSpy.mockRestore();
   });
 
-  test("slug が重複しているデータはフォールバックする（React key 重複防止）", () => {
+  test("slug が重複しているデータは救済される（INITIAL_DEFAULT_LAYOUT にフォールバックしない）", () => {
     localStorage.setItem(
       TOOLBOX_CONFIG_STORAGE_KEY,
       JSON.stringify({
@@ -392,10 +396,13 @@ describe("tiles 配列の整合性検証", () => {
       }),
     );
     const result = loadConfig();
-    expect(result).toEqual(INITIAL_DEFAULT_LAYOUT.tiles);
+    // 救済ロジックにより 1 要素に縮退して返される
+    expect(result).toHaveLength(1);
+    expect(result[0].slug).toBe("dup");
+    expect(result[0].size).toBe("small"); // 最初の出現を採用
   });
 
-  test("order が連番でないデータはフォールバックする（0,2 → フォールバック）", () => {
+  test("order が連番でないデータは救済される（0,2 → 0,1 に振り直す）", () => {
     localStorage.setItem(
       TOOLBOX_CONFIG_STORAGE_KEY,
       JSON.stringify({
@@ -408,10 +415,13 @@ describe("tiles 配列の整合性検証", () => {
       }),
     );
     const result = loadConfig();
-    expect(result).toEqual(INITIAL_DEFAULT_LAYOUT.tiles);
+    // 救済ロジックにより 0,1 に振り直される
+    expect(result).toHaveLength(2);
+    expect(result[0].order).toBe(0);
+    expect(result[1].order).toBe(1);
   });
 
-  test("order が重複しているデータはフォールバックする", () => {
+  test("order が重複しているデータは救済される（order 振り直し）", () => {
     localStorage.setItem(
       TOOLBOX_CONFIG_STORAGE_KEY,
       JSON.stringify({
@@ -424,10 +434,13 @@ describe("tiles 配列の整合性検証", () => {
       }),
     );
     const result = loadConfig();
-    expect(result).toEqual(INITIAL_DEFAULT_LAYOUT.tiles);
+    // 救済ロジックにより order が一意の連番になる
+    expect(result).toHaveLength(2);
+    const orders = result.map((t) => t.order).sort((a, b) => a - b);
+    expect(orders).toEqual([0, 1]);
   });
 
-  test("order が 0 始まりでないデータはフォールバックする（1,2 → フォールバック）", () => {
+  test("order が 0 始まりでないデータは救済される（1,2 → 0,1 に振り直す）", () => {
     localStorage.setItem(
       TOOLBOX_CONFIG_STORAGE_KEY,
       JSON.stringify({
@@ -440,7 +453,9 @@ describe("tiles 配列の整合性検証", () => {
       }),
     );
     const result = loadConfig();
-    expect(result).toEqual(INITIAL_DEFAULT_LAYOUT.tiles);
+    // 救済ロジックにより 0 始まりに振り直される
+    expect(result).toHaveLength(2);
+    expect(result.map((t) => t.order)).toEqual([0, 1]);
   });
 
   test("空配列は有効なデータとして読み込む（タイル 0 件）", () => {
@@ -484,5 +499,226 @@ describe("INITIAL_DEFAULT_LAYOUT との整合", () => {
     saveConfig(INITIAL_DEFAULT_LAYOUT.tiles);
     const result = loadConfig();
     expect(result).toEqual(INITIAL_DEFAULT_LAYOUT.tiles);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// 救済ロジック（repairTiles）の単体テスト
+// ---------------------------------------------------------------------------
+
+describe("救済ロジック（repairTiles 相当）", () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
+  // ---- slug 重複 dedupe ----
+
+  test("slug が重複している場合、最初の出現を採用して後続を除去し、order を振り直す", () => {
+    localStorage.setItem(
+      TOOLBOX_CONFIG_STORAGE_KEY,
+      JSON.stringify({
+        schemaVersion: 1,
+        tiles: [
+          { slug: "dup", order: 0, size: "small" },
+          { slug: "dup", order: 1, size: "medium" }, // 重複 slug → 除去される
+          { slug: "other", order: 2, size: "large" },
+        ],
+        updatedAt: "2026-01-01T00:00:00.000Z",
+      }),
+    );
+    const result = loadConfig();
+    // INITIAL_DEFAULT_LAYOUT にフォールバックせず、救済後のデータを返す
+    expect(result).not.toEqual(INITIAL_DEFAULT_LAYOUT.tiles);
+    // 重複は除去されて 2 要素になる
+    expect(result).toHaveLength(2);
+    // 最初の "dup" が採用される（size: "small"）
+    expect(result[0].slug).toBe("dup");
+    expect(result[0].size).toBe("small");
+    // "other" も含まれる
+    expect(result[1].slug).toBe("other");
+    // order は 0 始まり連番で振り直されている
+    expect(result[0].order).toBe(0);
+    expect(result[1].order).toBe(1);
+  });
+
+  test("slug 重複が複数パターンある場合も各 slug の最初の出現のみ採用する", () => {
+    localStorage.setItem(
+      TOOLBOX_CONFIG_STORAGE_KEY,
+      JSON.stringify({
+        schemaVersion: 1,
+        tiles: [
+          { slug: "a", order: 0, size: "small" },
+          { slug: "b", order: 1, size: "small" },
+          { slug: "a", order: 2, size: "large" }, // a の重複
+          { slug: "b", order: 3, size: "medium" }, // b の重複
+          { slug: "c", order: 4, size: "small" },
+        ],
+        updatedAt: "2026-01-01T00:00:00.000Z",
+      }),
+    );
+    const result = loadConfig();
+    expect(result).toHaveLength(3);
+    const slugs = result.map((t) => t.slug);
+    expect(slugs).toEqual(["a", "b", "c"]);
+    // order は 0 始まり連番
+    expect(result.map((t) => t.order)).toEqual([0, 1, 2]);
+  });
+
+  // ---- order 連番振り直し ----
+
+  test("order が飛び番号の場合、0 始まり連番に振り直す（slugは維持）", () => {
+    localStorage.setItem(
+      TOOLBOX_CONFIG_STORAGE_KEY,
+      JSON.stringify({
+        schemaVersion: 1,
+        tiles: [
+          { slug: "a", order: 0, size: "small" },
+          { slug: "b", order: 5, size: "medium" }, // 飛び番
+          { slug: "c", order: 10, size: "large" }, // 飛び番
+        ],
+        updatedAt: "2026-01-01T00:00:00.000Z",
+      }),
+    );
+    const result = loadConfig();
+    // デフォルトにフォールバックしない
+    expect(result).not.toEqual(INITIAL_DEFAULT_LAYOUT.tiles);
+    expect(result).toHaveLength(3);
+    // order は order の元の値でソートされたまま 0,1,2 に振り直される
+    expect(result.map((t) => t.order)).toEqual([0, 1, 2]);
+    expect(result.map((t) => t.slug)).toEqual(["a", "b", "c"]);
+  });
+
+  test("order が重複している場合、order でソートして 0 始まり連番に振り直す", () => {
+    localStorage.setItem(
+      TOOLBOX_CONFIG_STORAGE_KEY,
+      JSON.stringify({
+        schemaVersion: 1,
+        tiles: [
+          { slug: "a", order: 0, size: "small" },
+          { slug: "b", order: 0, size: "medium" }, // order 重複
+        ],
+        updatedAt: "2026-01-01T00:00:00.000Z",
+      }),
+    );
+    const result = loadConfig();
+    expect(result).not.toEqual(INITIAL_DEFAULT_LAYOUT.tiles);
+    expect(result).toHaveLength(2);
+    // order は一意で 0 始まり連番になっている
+    const orders = result.map((t) => t.order).sort((a, b) => a - b);
+    expect(orders).toEqual([0, 1]);
+  });
+
+  test("order が 0 始まりでない場合（1,2）、0 始まり連番に振り直す", () => {
+    localStorage.setItem(
+      TOOLBOX_CONFIG_STORAGE_KEY,
+      JSON.stringify({
+        schemaVersion: 1,
+        tiles: [
+          { slug: "a", order: 1, size: "small" },
+          { slug: "b", order: 2, size: "medium" },
+        ],
+        updatedAt: "2026-01-01T00:00:00.000Z",
+      }),
+    );
+    const result = loadConfig();
+    expect(result).not.toEqual(INITIAL_DEFAULT_LAYOUT.tiles);
+    expect(result).toHaveLength(2);
+    expect(result.map((t) => t.order)).toEqual([0, 1]);
+    expect(result.map((t) => t.slug)).toEqual(["a", "b"]);
+  });
+
+  // ---- slug 重複 + order 非連番の複合ケース ----
+
+  test("slug 重複と order 非連番が同時に発生した場合も救済できる", () => {
+    localStorage.setItem(
+      TOOLBOX_CONFIG_STORAGE_KEY,
+      JSON.stringify({
+        schemaVersion: 1,
+        tiles: [
+          { slug: "dup", order: 5, size: "small" }, // 重複1、かつ飛び番
+          { slug: "dup", order: 10, size: "medium" }, // 重複2（除去される）
+          { slug: "unique", order: 20, size: "large" }, // 飛び番
+        ],
+        updatedAt: "2026-01-01T00:00:00.000Z",
+      }),
+    );
+    const result = loadConfig();
+    expect(result).not.toEqual(INITIAL_DEFAULT_LAYOUT.tiles);
+    expect(result).toHaveLength(2);
+    expect(result[0].slug).toBe("dup");
+    expect(result[0].size).toBe("small"); // 最初の出現を採用
+    expect(result[1].slug).toBe("unique");
+    // order は 0 始まり連番
+    expect(result.map((t) => t.order)).toEqual([0, 1]);
+  });
+
+  // ---- 救済後の console.warn 出力 ----
+
+  test("救済が実行された場合（slug 重複）は console.warn を出力する", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    localStorage.setItem(
+      TOOLBOX_CONFIG_STORAGE_KEY,
+      JSON.stringify({
+        schemaVersion: 1,
+        tiles: [
+          { slug: "dup", order: 0, size: "small" },
+          { slug: "dup", order: 1, size: "medium" },
+        ],
+        updatedAt: "2026-01-01T00:00:00.000Z",
+      }),
+    );
+    loadConfig();
+    expect(warnSpy).toHaveBeenCalled();
+    warnSpy.mockRestore();
+  });
+
+  test("救済が実行された場合（order 非連番）は console.warn を出力する", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    localStorage.setItem(
+      TOOLBOX_CONFIG_STORAGE_KEY,
+      JSON.stringify({
+        schemaVersion: 1,
+        tiles: [
+          { slug: "a", order: 0, size: "small" },
+          { slug: "b", order: 5, size: "medium" }, // 飛び番
+        ],
+        updatedAt: "2026-01-01T00:00:00.000Z",
+      }),
+    );
+    loadConfig();
+    expect(warnSpy).toHaveBeenCalled();
+    warnSpy.mockRestore();
+  });
+
+  // ---- 単一要素・空配列 ----
+
+  test("タイルが 1 件の場合、order=0 であれば救済不要", () => {
+    localStorage.setItem(
+      TOOLBOX_CONFIG_STORAGE_KEY,
+      JSON.stringify({
+        schemaVersion: 1,
+        tiles: [{ slug: "solo", order: 0, size: "small" }],
+        updatedAt: "2026-01-01T00:00:00.000Z",
+      }),
+    );
+    const result = loadConfig();
+    expect(result).toHaveLength(1);
+    expect(result[0].slug).toBe("solo");
+    expect(result[0].order).toBe(0);
+  });
+
+  test("タイルが 1 件で order が 0 以外の場合、0 に振り直す", () => {
+    localStorage.setItem(
+      TOOLBOX_CONFIG_STORAGE_KEY,
+      JSON.stringify({
+        schemaVersion: 1,
+        tiles: [{ slug: "solo", order: 99, size: "small" }],
+        updatedAt: "2026-01-01T00:00:00.000Z",
+      }),
+    );
+    const result = loadConfig();
+    expect(result).toHaveLength(1);
+    expect(result[0].slug).toBe("solo");
+    expect(result[0].order).toBe(0);
   });
 });

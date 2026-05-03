@@ -18,15 +18,15 @@ cycle-175 では UI/UX 設計の根幹（並び替え UI、編集モード、モ
 ### A. レビュー観点の設計（先行独立タスク）
 
 - [x] A-1. 来訪者起点のレビュー観点リストを起草する（M1a / M1b の dislikes との整合 / モバイル w360 でのファーストビュー密度 / 誤タップ可能性 / 編集モードの儀式性 / 削除誤操作と Undo の機能成立 / コンセプト「日常の傍にある道具」との整合 / 反射的に開ける速度感 / 揺れアニメーション等の不採用規約 / DESIGN.md §4 視覚表現規約への整合）。
-- [ ] A-2. A-1 を視覚検証（D）と reviewer 依頼の通し評価手順として固定化し、本サイクル全成果物のレビュー観点として参照されることを完了条件に含める。
+- [x] A-2. A-1 を視覚検証（D）と reviewer 依頼の通し評価手順として固定化し、本サイクル全成果物のレビュー観点として参照されることを完了条件に含める。
 
 ### B. 基盤層リファクタリング（cycle-175 B 分類の疑義解消）
 
-- [ ] B-1. registry codegen 二重管理の解消（既存 `src/tools/registry.ts` / `src/cheatsheets/registry.ts` も含めて生成系に組み込む）。
-- [ ] B-2. TileDefinition の再導入（slug ベースの lazy loader 方式：メタ型は静的情報のみ持ち、コンポーネント本体は分離して遅延ロードする）。
+- [x] B-1. registry codegen 二重管理の解消（既存 `src/tools/registry.ts` / `src/cheatsheets/registry.ts` も含めて生成系に組み込む）。
+- [x] B-2. TileDefinition の再導入（slug ベースの lazy loader 方式：メタ型は静的情報のみ持ち、コンポーネント本体は分離して遅延ロードする）。
 - [x] B-3. scroll-lock の MobileNav 移行を完了させ、二重実装を解消する。
-- [ ] B-4. useToolboxConfig の暗黙契約（getServerSnapshot 固定 + dynamic ssr:false 強制）の明示化（API か使用側ドキュメントで補完）。
-- [ ] B-5. storage 整合性救済（slug 重複 dedupe / order 連番振り直し）の実装方針確定とその実施。
+- [x] B-4. useToolboxConfig の暗黙契約（getServerSnapshot 固定 + dynamic ssr:false 強制）の明示化（API か使用側ドキュメントで補完）。
+- [x] B-5. storage 整合性救済（slug 重複 dedupe / order 連番振り直し）の実装方針確定とその実施。
 
 **B 群と C 群の依存順序**: **B-2 は C 群（C-1 / C-2 / C-3 / C-4）の前提**。タイルのコンポーネント取得経路（slug → lazy loader）が確定しなければ、Tile / TileGrid / ToolboxShell / AddTileModal の実装は組み直しを伴うため、B-2 完了後に C 群へ着手する。**B-1 / B-3 / B-4 / B-5 は C 群と並走可**。並列着手による組み直し事故を防ぐため、この順序を守る。
 

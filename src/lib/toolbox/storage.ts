@@ -37,9 +37,19 @@ export type TileLayoutEntry = InitialDefaultLayout["tiles"][number];
  * migrate() に v1 → v2 のマイグレーション関数を追加すること。
  *
  * 整合性 NG（slug 重複・order 非連番）時のデータ救済方針:
- * - 現サイクルでは完全フォールバック + console.warn を採用（シンプルな防衛線）
- * - ユーザーデータ救済（slug 重複の先勝ち・order 再採番）は B-313 シェア URL 復元
- *   設計時に改めて検討すること
+ * - B-5（cycle-176）で自動救済ロジック（repairTiles）を追加。
+ *   型ガードを通過したが整合性 NG のデータは repairTiles でユーザーデータを保全して返す。
+ * - 救済方針:
+ *   (1) slug 重複は先勝ち dedupe（最初の出現を採用）
+ *   (2) order は dedupe 後に元の order 値でソートして 0 始まり連番に振り直す
+ * - 型ガード（isSchemaV1Shape）そのものは変更せず、救済は追加レイヤーとして実装。
+ *
+ * B-313（シェア URL 復元）への申し送り:
+ *   シェア URL からのデータ復元経路でも同様の破損（slug 重複・order 非連番）が
+ *   発生しうる。repairTiles はスキーマ非依存の純粋関数として export 可能な設計に
+ *   なっているため、B-313 実装時は repairTiles をそのまま再利用できる。
+ *   シェア URL 復元では、さらに「URL 上の slug が registry に存在しない」
+ *   ケース（不正 slug 除去）も考慮が必要（B-313 で別途設計すること）。
  */
 export interface ToolboxConfigSchemaV1 {
   schemaVersion: 1;
@@ -134,6 +144,71 @@ function isSchemaV1TilesConsistent(tiles: TileLayoutEntry[]): boolean {
 }
 
 // ---------------------------------------------------------------------------
+// 救済ロジック
+// ---------------------------------------------------------------------------
+
+/**
+ * RepairResult — repairTiles の実行結果。
+ *
+ * repaired: true の場合は tiles に救済済みデータが入る。
+ * repaired: false の場合は元の tiles がそのまま有効。
+ */
+interface RepairResult {
+  tiles: TileLayoutEntry[];
+  repaired: boolean;
+}
+
+/**
+ * repairTiles — 整合性 NG の tiles 配列を自動救済する。
+ *
+ * 型ガード（isSchemaV1Shape）を通過したが isSchemaV1TilesConsistent が
+ * false を返したデータを対象とする。
+ *
+ * 救済手順:
+ * 1. slug 重複の先勝ち dedupe: order でソートして、最初に現れた slug を採用。
+ *    元の order 値でソートすることでユーザーの意図した並び順を最大限に保持する。
+ * 2. order の 0 始まり連番振り直し: dedupe 後の要素を index で上書きする。
+ *
+ * B-313（シェア URL 復元）への申し送り:
+ *   シェア URL 復元経路でも本関数を再利用できる（純粋関数）。
+ *   ただし「registry に存在しない slug の除去」は B-313 側で別途実装すること。
+ *
+ * @param tiles - isSchemaV1Shape を通過した tiles 配列（整合性は未確認）
+ * @returns 救済済みの tiles と救済が実行されたかを示すフラグ
+ */
+function repairTiles(tiles: TileLayoutEntry[]): RepairResult {
+  // --- Step 1: 元の order でソートして slug 重複を先勝ち dedupe ---
+  // 元の order でソートしてからユニーク化することで、
+  // ユーザーが意図していた並び順の先頭エントリが優先される。
+  const sorted = [...tiles].sort((a, b) => a.order - b.order);
+  const seen = new Set<string>();
+  const deduped = sorted.filter((entry) => {
+    if (seen.has(entry.slug)) {
+      return false; // 重複 slug は後続を除去
+    }
+    seen.add(entry.slug);
+    return true;
+  });
+
+  // --- Step 2: order を 0 始まりの連番に振り直す ---
+  const reassigned: TileLayoutEntry[] = deduped.map((entry, index) => ({
+    ...entry,
+    order: index,
+  }));
+
+  // 元データと比較して実際に変更があったかを検出
+  const repaired =
+    reassigned.length !== tiles.length ||
+    reassigned.some(
+      (entry, index) =>
+        entry.slug !== tiles[index]?.slug ||
+        entry.order !== tiles[index]?.order,
+    );
+
+  return { tiles: reassigned, repaired };
+}
+
+// ---------------------------------------------------------------------------
 // マイグレーションフレームワーク
 // ---------------------------------------------------------------------------
 
@@ -216,10 +291,13 @@ function getDefaultTiles(): TileLayoutEntry[] {
  * - ストレージが空
  * - JSON パースエラー
  * - スキーマ検証失敗（不正 JSON、未知バージョン、フィールド欠落など）
- * - tiles 整合性 NG（slug 重複・order 非連番）
- *   → この場合は console.warn を出力する（ユーザーが DevTools で気づける手段を残す）
- *   → データ救済（slug 重複の先勝ち・order 再採番）は B-313 シェア URL 復元
- *      設計時に改めて検討すること
+ *
+ * tiles 整合性 NG（slug 重複・order 非連番）の場合は repairTiles で自動救済する:
+ * - slug 重複 → 先勝ち dedupe（最初の出現を採用）
+ * - order 非連番 → 0 始まり連番に振り直し
+ * - 救済実行時は console.warn を出力する（ユーザーが DevTools で気づける手段を残す）
+ * - 救済不能な型エラー（フィールド欠落・型不正）はラストリゾートとして
+ *   INITIAL_DEFAULT_LAYOUT にフォールバックする
  *
  * 呼び出し側は戻り値の配列を自由に変更してよい（複製を返すため定数を壊さない）。
  *
@@ -243,17 +321,23 @@ export function loadConfig(): TileLayoutEntry[] {
     const parsed: unknown = JSON.parse(raw);
 
     // 型・構造チェック（スキーマバージョン・フィールド型）
+    // 型レベルのエラーは救済不能なためラストリゾートとしてフォールバックする
     if (!isSchemaV1Shape(parsed)) {
       return getDefaultTiles();
     }
 
     // 整合性チェック（slug 重複・order 非連番）
-    // NG の場合はユーザーが DevTools で気づけるよう warn を出力してフォールバック
+    // NG の場合は repairTiles で自動救済してユーザーデータを保全する
     if (!isSchemaV1TilesConsistent(parsed.tiles)) {
-      console.warn(
-        "[toolbox] localStorage data is corrupt, falling back to default. Original data was discarded.",
-      );
-      return getDefaultTiles();
+      const { tiles: repairedTiles, repaired } = repairTiles(parsed.tiles);
+      if (repaired) {
+        console.warn(
+          "[toolbox] localStorage data had inconsistencies (duplicate slugs or non-sequential order). " +
+            "Auto-repair was applied: duplicate slugs were deduplicated (first occurrence kept), " +
+            "and order values were reassigned as 0-based sequential numbers.",
+        );
+      }
+      return repairedTiles;
     }
 
     const migrated: ToolboxConfigLatest = migrate(parsed);
