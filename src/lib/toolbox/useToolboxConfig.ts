@@ -187,12 +187,45 @@ export interface UseToolboxConfigReturn {
 /**
  * useToolboxConfig — ツールボックスレイアウト設定フック。
  *
+ * ⚠️ **SSR 禁止 / dynamic ssr:false 必須**
+ *
+ * このフックは `useSyncExternalStore` の `getServerSnapshot` で
+ * `INITIAL_DEFAULT_LAYOUT.tiles` を固定値で返す。
+ * そのため、呼び出し側コンポーネントを `dynamic({ ssr: false })` で
+ * 動的インポートしない場合、CLS / hydration mismatch が発生する。
+ *
+ * 正しい使用例:
+ * ```tsx
+ * // page.tsx または親コンポーネント
+ * const ToolboxClient = dynamic(() => import("./ToolboxClient"), {
+ *   ssr: false,
+ * });
+ * // ToolboxClient.tsx 内で useToolboxConfig() を呼び出す
+ * ```
+ *
+ * SSR 環境（`typeof window === "undefined"` の環境）でこのフックが
+ * 直接呼ばれた場合は（開発時・本番ともに）エラーを throw して誤用を早期に検出する。
+ *
+ * refs: docs/knowledge/dnd-kit.md（hydration mismatch + dynamic ssr:false の知見）
+ *
  * @example
  * ```tsx
  * const { tiles, setTiles, resetToDefault } = useToolboxConfig();
  * ```
  */
 export function useToolboxConfig(): UseToolboxConfigReturn {
+  // SSR 環境での誤用を早期に検出する。
+  // このフックは getServerSnapshot で固定値を返すため、ssr:false なしで
+  // 使用すると CLS / hydration mismatch が発生する（暗黙契約の明示化）。
+  // refs: docs/knowledge/dnd-kit.md
+  if (typeof window === "undefined") {
+    throw new Error(
+      "[useToolboxConfig] このフックは SSR 環境では使用できません。\n" +
+        "呼び出し側コンポーネントを `dynamic({ ssr: false })` で動的インポートしてください。\n" +
+        "詳細: docs/knowledge/dnd-kit.md",
+    );
+  }
+
   const tiles = useSyncExternalStore(
     store.subscribe,
     store.getSnapshot,

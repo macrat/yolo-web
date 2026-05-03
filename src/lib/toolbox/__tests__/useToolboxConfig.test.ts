@@ -7,6 +7,7 @@
  * - invalidateCache は export しない（テスト都合のプロダクション汚染を避ける）
  * - 別タブ同期テスト: storage イベント到着時点では localStorage は既に最新値になっている
  *   という MDN 仕様に忠実に検証する
+ * - SSR 誤用検出テスト: window が存在しない環境で呼ばれた場合に throw されることを検証する
  */
 
 import { describe, expect, test, beforeEach, vi } from "vitest";
@@ -359,5 +360,44 @@ describe("useToolboxConfig — 別タブ同期（storage イベント）", () =>
     });
 
     expect(result.current.tiles).toEqual(initial);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// SSR 誤用検出（暗黙契約の明示化）
+// ---------------------------------------------------------------------------
+
+describe("useToolboxConfig — SSR 誤用検出", () => {
+  test("window が存在しない環境で呼ばれると throw する（dynamic ssr:false 強制の契約違反検出）", async () => {
+    /**
+     * useToolboxConfig は getServerSnapshot で INITIAL_DEFAULT_LAYOUT.tiles を固定値で
+     * 返すため、呼び出し側コンポーネントは必ず dynamic({ ssr: false }) で動的インポート
+     * されなければならない。
+     *
+     * この契約に違反して SSR 環境（window が存在しない環境）でフックが呼ばれた場合、
+     * CLS / hydration mismatch を引き起こす。本テストは、その誤用を開発時に
+     * 早期に検出するための throw が実装されていることを検証する。
+     *
+     * テスト手法:
+     * - vi.stubGlobal で window を undefined にして SSR 環境を模擬する
+     * - useToolboxConfig の内部実装が SSR チェックで throw することを確認する
+     * - vi.unstubAllGlobals() で後続テストへの汚染を防ぐ
+     *
+     * refs: docs/knowledge/dnd-kit.md（hydration mismatch + dynamic ssr:false の知見）
+     */
+    const useToolboxConfig = await freshHook();
+
+    // vi.stubGlobal で window を undefined に差し替えて SSR 環境を模擬する
+    vi.stubGlobal("window", undefined);
+
+    try {
+      expect(() => {
+        // renderHook は使わず、フックを直接呼び出す（renderHook 自体が window に依存するため）
+        useToolboxConfig();
+      }).toThrow("[useToolboxConfig]");
+    } finally {
+      // window を必ず復元する（後続テストへの汚染を防ぐ）
+      vi.unstubAllGlobals();
+    }
   });
 });
