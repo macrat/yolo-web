@@ -1,6 +1,5 @@
-import type React from "react";
 import { describe, expect, test } from "vitest";
-import type { Tileable, TileDefinition, TileComponentProps } from "../types";
+import type { Tileable } from "../types";
 import { toTileable } from "../types";
 import type { ToolMeta } from "@/tools/types";
 import type { PlayContentMeta } from "@/play/types";
@@ -170,30 +169,6 @@ describe("toTileable", () => {
       expect(result.slug).toBeDefined();
       expect(result.displayName).toBeDefined();
     });
-  });
-});
-
-describe("TileDefinition 型の構造", () => {
-  test("最小構成の TileDefinition が型エラーなく定義できる", () => {
-    const def: TileDefinition = {
-      component: null as unknown as React.ComponentType<TileComponentProps>,
-      recommendedSize: "medium",
-      tileableAs: "full",
-    };
-    expect(def.recommendedSize).toBe("medium");
-    expect(def.tileableAs).toBe("full");
-  });
-
-  test("全フィールドを持つ TileDefinition が型エラーなく定義できる", () => {
-    const def: TileDefinition = {
-      id: "compact",
-      component: null as unknown as React.ComponentType<TileComponentProps>,
-      recommendedSize: "small",
-      tileableAs: "preview-only",
-      label: "コンパクト版",
-    };
-    expect(def.id).toBe("compact");
-    expect(def.label).toBe("コンパクト版");
   });
 });
 

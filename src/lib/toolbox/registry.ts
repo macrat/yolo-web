@@ -73,14 +73,3 @@ const tileableMap: Map<string, Tileable> = buildTileableMap();
 export function getTileableBySlug(slug: string): Tileable | undefined {
   return tileableMap.get(slug);
 }
-
-/**
- * tile フィールドが定義されているエントリだけを返す。
- *
- * 現サイクル（cycle-175 の 2.2.2 時点）では tile を付与しているエントリが
- * 存在しないため 0 件を返す。
- * tile の付与は個別コンテンツの registry 側で行う（2.2.2 スコープ外）。
- */
-export function getAllTileableEntries(): Tileable[] {
-  return getAllTileables().filter((t) => t.tile !== undefined);
-}

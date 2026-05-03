@@ -73,8 +73,7 @@ const BUDGETS = {
 /**
  * Routes that are intentionally uncategorised. These are recorded but do not
  * cause a test failure for being uncategorised. They must still stay within
- * the uncategorisedMax budget (or their individual override in
- * UNCATEGORISED_ROUTE_OVERRIDES).
+ * the uncategorisedMax budget.
  */
 const UNCATEGORISED_WHITELIST: ReadonlySet<string> = new Set([
   "/",
@@ -83,20 +82,6 @@ const UNCATEGORISED_WHITELIST: ReadonlySet<string> = new Set([
   "/achievements",
   // 開発者向け新デザインカタログ。noindex 設定済み。(new) Route Group 配下。
   "/storybook",
-  // 道具箱機能の hidden 検証ルート。noindex + 環境変数ガード済み。(new) Route Group 配下。
-  "/toolbox-preview",
-]);
-
-/**
- * Per-route budget overrides for whitelisted uncategorised routes.
- * Use when a specific route legitimately exceeds uncategorisedMax.
- * Each entry must include a comment explaining why the override is justified.
- */
-const UNCATEGORISED_ROUTE_OVERRIDES: ReadonlyMap<string, number> = new Map([
-  // /(new)/storybook は @dnd-kit/core + @dnd-kit/sortable を含むため大きくなる。
-  // noindex 指定の開発者向けカタログであり、来訪者の目に触れない。
-  // cycle-175 2.2.5 で Tile（dnd-kit 依存）を追加したため 85KB に引き上げ。
-  ["/(new)/storybook", 85 * 1024],
 ]);
 
 // ---------------------------------------------------------------------------
@@ -455,15 +440,12 @@ describe.skipIf(!buildExists)("Bundle budget", () => {
     ).toBe(0);
 
     // Even whitelisted routes must not exceed the fallback budget
-    // (or their per-route override in UNCATEGORISED_ROUTE_OVERRIDES)
     for (const rs of knownUncategorised) {
-      const limit =
-        UNCATEGORISED_ROUTE_OVERRIDES.get(rs.route) ?? BUDGETS.uncategorisedMax;
       expect(
         rs.size,
-        `Whitelisted uncategorised route ${rs.route} exceeds budget: ` +
-          `${formatKB(rs.size)} > ${formatKB(limit)}`,
-      ).toBeLessThanOrEqual(limit);
+        `Whitelisted uncategorised route ${rs.route} exceeds fallback budget: ` +
+          `${formatKB(rs.size)} > ${formatKB(BUDGETS.uncategorisedMax)}`,
+      ).toBeLessThanOrEqual(BUDGETS.uncategorisedMax);
     }
   });
 });

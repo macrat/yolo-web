@@ -1,4 +1,3 @@
-import type React from "react";
 import type { TrustLevel } from "@/lib/trust-levels";
 import type { ToolMeta } from "@/tools/types";
 import type { PlayContentMeta } from "@/play/types";
@@ -58,70 +57,6 @@ export interface Tileable {
    * 編集モード（edit）ではリンクが Tab フォーカス対象から除外される。
    */
   href?: string;
-  /**
-   * タイル対応定義（任意）。
-   * - 未設定: タイル化対象外（統合 indexer には含まれるが、タイル選択 UI には表示されない）
-   * - 単一 TileDefinition: 1 種類のタイルのみ
-   * - TileDefinition[]: 複数バリエーション（フル版・コンパクト版など）
-   *
-   * registry 側で `{ ...toTileable(meta, kind), tile: <def> }` の形で付与する。
-   * toTileable() adapter はこのキー自体を返さない（omit）。
-   */
-  tile?: TileDefinition | TileDefinition[];
-}
-
-/**
- * TileComponentProps — タイル用コンポーネントが受け取る props の契約。
- *
- * すべてのタイルコンポーネントはこの型を props として受け取ることを要求する
- * （2.2.5 Tile コンポーネントとのインターフェース契約）。
- */
-export interface TileComponentProps {
-  tileable: Tileable;
-}
-
-/**
- * TileDefinition — タイル用コンポーネントへの参照と表示設定。
- *
- * - 単一タイルのみの場合は Tileable.tile に直接指定する
- * - 複数バリエーション（フル版・コンパクト版など）がある場合は配列で指定し、
- *   各要素に id を付与してバリエーションを識別する
- */
-export interface TileDefinition {
-  /**
-   * バリエーション識別子。配列で複数 TileDefinition を指定する場合は必須。
-   * 単一指定の場合は省略可能。
-   */
-  id?: string;
-  /**
-   * タイル用 React コンポーネント。
-   * すべてのタイルコンポーネントは TileComponentProps（{ tileable: Tileable }）を
-   * props として受け取る契約を持つ。
-   * 2.2.5 Tile コンポーネント実装時に具体的なコンポーネントが設定される。
-   */
-  component: React.ComponentType<TileComponentProps>;
-  /**
-   * 推奨表示サイズ。グリッドレイアウトでの span 数に対応する。
-   * - "small": 1列分（コンパクトなウィジェット向け）
-   * - "medium": 2列分（標準的なツール向け）
-   * - "large": 3列分（入出力が多いツール・ゲーム向け）
-   *
-   * 2.2.3 スパイクの結論によって medium 固定で運用する場合も、
-   * 型としてはここに残しておき将来の段階導入に備える。
-   */
-  recommendedSize: "small" | "medium" | "large";
-  /**
-   * タイル化の形態。
-   * - "full": フル機能をタイル内に収める（ツールやゲームの完全版）
-   * - "preview-only": プレビュー表示のみ（クリックで詳細ページへ遷移）
-   * - "link-card": リンクカード形式（タイル化コンポーネントなし時のフォールバック）
-   */
-  tileableAs: "full" | "preview-only" | "link-card";
-  /**
-   * バリエーション表示名（任意）。
-   * 複数バリエーションを選択する UI で表示するラベル。
-   */
-  label?: string;
 }
 
 /**
