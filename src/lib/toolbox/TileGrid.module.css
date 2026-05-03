@@ -2,6 +2,51 @@
  * 視覚表現規則の根拠: DESIGN.md §4 サブセクション（L69-78）を参照。
  */
 
+/* ---- 瞬間 9: 揺れアニメ定義 ---- */
+
+@keyframes tileWiggle {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-0.5deg);
+  }
+  75% {
+    transform: rotate(0.5deg);
+  }
+}
+
+/* wiggle クラス: 編集モード時に TileGrid が Tile に付与する（瞬間 9）。
+ * 振幅 0.5deg / 周期 0.5s。各タイルの位相ずれは nth-child で実現する。 */
+.wiggle {
+  animation: tileWiggle 0.5s ease-in-out infinite;
+}
+
+/* 各タイルに位相ずれを与える（nth-child を使ってアニメ開始タイミングをずらす） */
+.sortableItem:nth-child(2n) .wiggle {
+  animation-delay: 0.1s;
+}
+
+.sortableItem:nth-child(3n) .wiggle {
+  animation-delay: 0.2s;
+}
+
+.sortableItem:nth-child(4n) .wiggle {
+  animation-delay: 0.05s;
+}
+
+.sortableItem:nth-child(5n) .wiggle {
+  animation-delay: 0.15s;
+}
+
+/* 瞬間 31: prefers-reduced-motion 時は揺れアニメを完全停止 */
+@media (prefers-reduced-motion: reduce) {
+  .wiggle {
+    animation: none;
+  }
+}
+
 /* グリッドコンテナ */
 .grid {
   display: grid;
@@ -92,4 +137,33 @@
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+/* ---- 瞬間 38: 印刷時の配慮 ---- */
+
+@media print {
+  .controlsOverlay {
+    display: none;
+  }
+
+  .wiggle {
+    animation: none;
+  }
+}
+
+/* ---- 瞬間 32: 高コントラストモード（forced-colors） ---- */
+
+@media (forced-colors: active) {
+  .moveButton,
+  .removeButton {
+    border-color: CanvasText;
+    color: currentColor;
+  }
+
+  .moveButton:hover,
+  .moveButton:focus-visible,
+  .removeButton:hover,
+  .removeButton:focus-visible {
+    outline-color: Highlight;
+  }
 }

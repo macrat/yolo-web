@@ -70,6 +70,11 @@ export interface TileProps {
    * ToolboxShell が編集モード遷移ハンドラとして受け取る。
    */
   onLongPress?: (slug: string) => void;
+  /**
+   * 外部から追加する CSS クラス名（任意）。
+   * TileGrid が揺れアニメ（tile--wiggle）を付与するための受け皿（瞬間 9）。
+   */
+  className?: string;
 }
 
 /**
@@ -88,6 +93,7 @@ export function Tile({
   isEmpty = false,
   tileComponent: TileComponent,
   onLongPress,
+  className: extraClassName,
 }: TileProps) {
   const tileable = getTileableBySlug(entry.slug);
 
@@ -192,6 +198,8 @@ export function Tile({
     state === "editing" ? styles["tile--editing"] : null,
     state === "dragging" ? styles["tile--dragging"] : null,
     state === "empty" ? styles["tile--empty"] : null,
+    // 外部クラス（TileGrid が揺れアニメクラスを付与する受け皿、瞬間 9）
+    extraClassName ?? null,
   ]
     .filter(Boolean)
     .join(" ");

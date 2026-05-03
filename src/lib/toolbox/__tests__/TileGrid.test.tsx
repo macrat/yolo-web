@@ -1,5 +1,5 @@
 /**
- * TileGrid コンポーネントのユニットテスト（C-2）
+ * TileGrid コンポーネントのユニットテスト（C-2 v10）
  *
  * カバレッジ目標:
  * - タイル描画（tiles 配列に対応した Tile が描画される）
@@ -7,6 +7,9 @@
  * - ↑↓ ボタンクリックで順序が変わる（onChangeTiles が呼ばれる）
  * - 削除ボタンクリックで onRemoveTile が呼ばれる
  * - 空配列のとき何も描画しない
+ * - 揺れアニメクラス（tile--wiggle）が編集モード時に Tile に付与される（v10）
+ * - onLongPress props が存在する（v10）
+ * - autoScroll が DndContext に渡される（v10 瞬間 43）
  *
  * テスト方針:
  * - @dnd-kit はモックして DnD 操作を単純化する
@@ -24,16 +27,19 @@ vi.mock("@dnd-kit/core", () => ({
   DndContext: ({
     children,
     onDragEnd,
+    autoScroll,
   }: {
     children: React.ReactNode;
     onDragEnd?: (event: unknown) => void;
+    autoScroll?: boolean;
   }) => {
-    // onDragEnd を data-testid 経由でテストから呼べるようにしておく
+    // onDragEnd / autoScroll を data-testid 経由でテストから観測できるようにしておく
     return React.createElement(
       "div",
       {
         "data-testid": "dnd-context",
         "data-on-drag-end": onDragEnd ? "true" : "false",
+        "data-auto-scroll": autoScroll ? "true" : "false",
       },
       children,
     );
@@ -72,9 +78,11 @@ vi.mock("../Tile", () => ({
   Tile: ({
     entry,
     isEditing,
+    className,
   }: {
     entry: TileLayoutEntry;
     isEditing: boolean;
+    className?: string;
   }) =>
     React.createElement(
       "div",
@@ -82,6 +90,7 @@ vi.mock("../Tile", () => ({
         "data-testid": `tile-${entry.slug}`,
         "data-slug": entry.slug,
         "data-editing": isEditing ? "true" : "false",
+        className: className ?? "",
       },
       entry.slug,
     ),
@@ -97,6 +106,7 @@ vi.mock("../TileGrid.module.css", () => ({
     moveButton: "moveButton",
     removeButton: "removeButton",
     announcer: "announcer",
+    wiggle: "wiggle",
   },
 }));
 
@@ -388,5 +398,84 @@ describe("TileGrid — aria-live 通知", () => {
     );
     const liveRegion = container.querySelector('[aria-live="polite"]');
     expect(liveRegion).toBeTruthy();
+  });
+});
+
+describe("TileGrid — v10 仕様: onLongPress props", () => {
+  test("onLongPress props を受け付ける（型確認）", () => {
+    const tiles = makeTiles();
+    const onLongPress = vi.fn();
+    // onLongPress を渡してもエラーなく描画できる
+    render(
+      <TileGrid
+        tiles={tiles}
+        isEditing={false}
+        onChangeTiles={vi.fn()}
+        onRemoveTile={vi.fn()}
+        onLongPress={onLongPress}
+      />,
+    );
+    expect(screen.getByTestId("tile-tool-a")).toBeTruthy();
+  });
+
+  test("onLongPress を渡さなくても正常に描画される（optional）", () => {
+    const tiles = makeTiles();
+    render(
+      <TileGrid
+        tiles={tiles}
+        isEditing={false}
+        onChangeTiles={vi.fn()}
+        onRemoveTile={vi.fn()}
+      />,
+    );
+    expect(screen.getByTestId("tile-tool-a")).toBeTruthy();
+  });
+});
+
+describe("TileGrid — v10 仕様: 揺れアニメクラス（瞬間 9）", () => {
+  test("編集モード時に各 Tile に wiggle クラスが付与される", () => {
+    const tiles = makeTiles();
+    render(
+      <TileGrid
+        tiles={tiles}
+        isEditing={true}
+        onChangeTiles={vi.fn()}
+        onRemoveTile={vi.fn()}
+      />,
+    );
+    // モックの Tile は className を受け取って data-editing に関係なく className 属性に設定する
+    const tileA = screen.getByTestId("tile-tool-a");
+    expect(tileA.className).toContain("wiggle");
+  });
+
+  test("使用モード時は Tile に wiggle クラスが付与されない", () => {
+    const tiles = makeTiles();
+    render(
+      <TileGrid
+        tiles={tiles}
+        isEditing={false}
+        onChangeTiles={vi.fn()}
+        onRemoveTile={vi.fn()}
+      />,
+    );
+    const tileA = screen.getByTestId("tile-tool-a");
+    expect(tileA.className).not.toContain("wiggle");
+  });
+});
+
+describe("TileGrid — v10 仕様: autoScroll（瞬間 43）", () => {
+  test("編集モード時の DndContext に autoScroll が渡される", () => {
+    const tiles = makeTiles();
+    const { container } = render(
+      <TileGrid
+        tiles={tiles}
+        isEditing={true}
+        onChangeTiles={vi.fn()}
+        onRemoveTile={vi.fn()}
+      />,
+    );
+    const dndContext = container.querySelector('[data-testid="dnd-context"]');
+    expect(dndContext).toBeTruthy();
+    expect(dndContext?.getAttribute("data-auto-scroll")).toBe("true");
   });
 });
