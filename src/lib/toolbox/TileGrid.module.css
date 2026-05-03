@@ -1,0 +1,95 @@
+/* TileGrid コンポーネントのスタイル
+ * 視覚表現規則の根拠: DESIGN.md §4 サブセクション（L69-78）を参照。
+ */
+
+/* グリッドコンテナ */
+.grid {
+  display: grid;
+  /* auto-fill + minmax でブレークポイントなしのレスポンシブグリッドを実現する。
+   * 最小幅を 140px にすることで w360 では 2 列（= 8 タイル / 4 行）以上が成立する。
+   * 業界相場（12-14 タイル）を下限目標とするため、縮みすぎない min を設定する。
+   */
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.5rem;
+  padding: 0.5rem;
+}
+
+/* ソート可能なアイテムのラッパー */
+.sortableItem {
+  position: relative;
+  /* カーソル表現については DESIGN.md §4 (L69-78) を参照 */
+}
+
+/* ドラッグ中の視覚表現: DESIGN.md §4 L73 参照 */
+.sortableItemDragging {
+  /* Tile コンポーネント側の tile--dragging クラスで box-shadow を適用する設計のため、
+   * ここでは z-index のみ設定してドラッグ中アイテムを前面に出す */
+  z-index: 1;
+}
+
+/* 編集モード時の操作ボタン群（↑↓ / 削除）を配置するオーバーレイ */
+.controlsOverlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 4px;
+  /* タイル本体の pointer-events: none より前面で操作できるよう z-index を設定 */
+  z-index: 2;
+}
+
+/* 操作ボタン基底（↑↓ / 削除 共通） */
+.moveButton,
+.removeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* WCAG SC 2.5.8 最低サイズ: 24px。推奨 44px だが w360 での密度を優先して 28px */
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: var(--r-interactive);
+  cursor: pointer;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--fg-soft);
+  padding: 0;
+  line-height: 1;
+}
+
+.moveButton:hover,
+.moveButton:focus-visible {
+  background: var(--bg-softer);
+  color: var(--fg);
+  /* DESIGN.md §2 参照: フォーカス outline */
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* 削除ボタン: danger 色でハイライト */
+.removeButton {
+  color: var(--danger);
+}
+
+.removeButton:hover,
+.removeButton:focus-visible {
+  background: var(--danger-soft);
+  color: var(--danger-strong);
+  outline: 2px solid var(--danger);
+  outline-offset: 2px;
+}
+
+/* aria-live 通知領域（スクリーンリーダー向け、視覚的に非表示） */
+.announcer {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

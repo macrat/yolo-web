@@ -1,0 +1,227 @@
+/*
+ * AddTileModal.module.css
+ *
+ * DESIGN.md §2: 色はトークン (--accent / --bg / --fg 等) を使う。
+ * DESIGN.md §5: 角丸は --r-normal (モーダル本体) / --r-interactive (ボタン・入力欄)。
+ * DESIGN.md §5: ボタンには --shadow-button を使う。
+ * 視覚表現規則は DESIGN.md §4 (L69-78) を参照。
+ *
+ * overlay: 画面全体を覆う半透明背景。body.scroll-locked クラスと連携。
+ * panel: モーダル本体の白いパネル。
+ */
+
+/* ---- オーバーレイ ---- */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 100;
+  /* フォーカストラップのため tabIndex=-1 に対応できるよう display: flex */
+  display: flex;
+  align-items: flex-end; /* モバイルでは下から表示 */
+  justify-content: center;
+}
+
+@media (min-width: 600px) {
+  .overlay {
+    align-items: center;
+  }
+}
+
+/* ---- モーダルパネル ---- */
+.panel {
+  position: relative;
+  background-color: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--r-normal);
+  width: 100%;
+  max-width: 560px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  /* オーバーレイクリックがパネル内に伝播しないように止める（stopPropagation で対応） */
+}
+
+@media (max-width: 599px) {
+  .panel {
+    /* モバイルでは画面下部から表示 */
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    max-height: 90vh;
+  }
+}
+
+/* ---- ヘッダー ---- */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 16px 12px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.title {
+  font-size: 16px;
+  font-weight: normal; /* DESIGN.md §3: 本文中での太字は原則として使わない */
+  margin: 0;
+  color: var(--fg);
+}
+
+/* ---- 閉じるボタン ---- */
+.closeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* WCAG SC 2.5.8: タップターゲット 44px 以上 */
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: none;
+  border-radius: var(--r-interactive);
+  background: transparent;
+  color: var(--fg-soft);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.closeButton:hover {
+  background-color: var(--bg-soft);
+  color: var(--fg);
+}
+
+.closeButton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ---- 検索欄 ---- */
+.searchArea {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 16px;
+  font-family: inherit;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-interactive);
+  background-color: var(--bg);
+  color: var(--fg);
+  box-sizing: border-box;
+}
+
+.searchInput:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.searchInput::placeholder {
+  color: var(--fg-softer);
+}
+
+/* ---- 候補リスト ---- */
+.candidateList {
+  list-style: none;
+  margin: 0;
+  padding: 8px 0;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* ---- 候補アイテム ---- */
+.candidateItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 16px;
+}
+
+.candidateItem:not(:last-child) {
+  border-bottom: 1px solid var(--border);
+}
+
+.candidateInfo {
+  flex: 1;
+  min-width: 0; /* 長いテキストの折り返し用 */
+}
+
+.candidateName {
+  font-size: 16px;
+  color: var(--fg);
+  /* displayName を主役に（M1a「説明より入力欄が先」原則） */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.candidateDescription {
+  font-size: 14px;
+  color: var(--fg-soft);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.candidateMeta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+  flex-wrap: wrap;
+}
+
+.trustLabel {
+  font-size: 12px;
+  color: var(--fg-softer);
+  /* 控えめに表示（仕様: trustLevel の表示は控えめに） */
+}
+
+.contentKindLabel {
+  font-size: 12px;
+  color: var(--fg-softer);
+}
+
+/* ---- 追加ボタン ---- */
+.addButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* WCAG SC 2.5.8: タップターゲット 44px 以上 */
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 12px;
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--r-interactive);
+  background-color: var(--bg-soft);
+  color: var(--fg);
+  font-size: 14px;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: var(--shadow-button);
+  white-space: nowrap;
+}
+
+.addButton:hover {
+  background-color: var(--bg-softer);
+}
+
+.addButton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ---- 空状態・エラー状態 ---- */
+.emptyState {
+  padding: 32px 16px;
+  text-align: center;
+  color: var(--fg-soft);
+  font-size: 16px;
+}
