@@ -1,9 +1,8 @@
 /**
  * scroll-lock.ts — 参照カウンタ式スクロールロックヘルパ
  *
- * 複数のコンポーネント（Header のモバイルメニュー、ToolboxShell の編集モード等）が
- * 同時に scroll lock を要求する可能性があるため、単純な add/remove ではなく
- * 参照カウンタ（dataset.scrollLockCount）で管理する。
+ * 複数のコンポーネントが同時に scroll lock を要求する可能性があるため、
+ * 単純な add/remove ではなく参照カウンタ（dataset.scrollLockCount）で管理する。
  *
  * - acquireScrollLock(): count++ → count が 0→1 で body.classList.add("scroll-locked")
  * - releaseScrollLock(): count-- → count が 1→0 で body.classList.remove("scroll-locked")

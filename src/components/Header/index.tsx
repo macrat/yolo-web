@@ -84,7 +84,7 @@ export default function Header({ actions }: HeaderProps) {
 
   /** menuOpen 中はボディスクロールをロックして背景がスクロールしないようにする。
    * scroll-lock.ts の参照カウンタ式ヘルパを使用。
-   * ToolboxShell 等の別コンポーネントと同居しても scroll-locked クラスを奪い合わない。
+   * 別コンポーネントと同居しても scroll-locked クラスを奪い合わない。
    * AP-I07 準拠: body.style.overflow の直書き禁止。 */
   useEffect(() => {
     if (menuOpen) {

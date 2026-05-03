@@ -13,10 +13,7 @@ export type ContentKind = "tool" | "play" | "cheatsheet";
  * Tileable — ダッシュボードのタイル列挙に必要な共通基底型。
  *
  * 既存の ToolMeta / PlayContentMeta / CheatsheetMeta を一切書き換えずに、
- * adapter 関数 toTileable() 経由でこの型に変換して使用する（案 a）。
- *
- * tile フィールドが未設定のエントリはタイル化対象外だが、
- * 統合 indexer（2.2.2）での全件列挙には含まれる。
+ * adapter 関数 toTileable() 経由でこの型に変換して使用する。
  */
 export interface Tileable {
   /** URL slug（各コンテンツセクション内で一意） */
@@ -62,15 +59,11 @@ export interface Tileable {
 /**
  * toTileable — 既存メタ型を Tileable に変換する adapter 関数。
  *
- * 既存の registry / types を一切書き換えずに Tileable を生成できる（案 a）。
+ * 既存の registry / types を一切書き換えずに Tileable を生成できる。
  * 各メタ型のフィールド名差異（Tool=name, Play=title, Cheatsheet=name）をここで吸収する。
- *
- * tile フィールドはこの関数では設定しない（キー自体を omit する）。
- * registry 側で `{ ...toTileable(meta, kind), tile: <def> }` の形で付与すること。
  *
  * @param meta - 変換元のメタ型（ToolMeta | PlayContentMeta | CheatsheetMeta）
  * @param contentKind - コンテンツ種別（呼び出し元で明示的に指定する）
- * @returns tile キーを持たない Tileable オブジェクト
  */
 export function toTileable(meta: ToolMeta, contentKind: "tool"): Tileable;
 export function toTileable(
