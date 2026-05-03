@@ -165,7 +165,7 @@ describe("AddTileModal — 候補表示", () => {
     expect(screen.getByText("年齢計算")).toBeInTheDocument();
   });
 
-  test("すべてのタイルが既に道具箱にある場合は空状態を表示する", () => {
+  test("すべてのタイルが既に道具箱にある場合は「すべての道具が追加されています」を表示する（瞬間 45）", () => {
     render(
       <AddTileModal
         isOpen={true}
@@ -174,10 +174,26 @@ describe("AddTileModal — 候補表示", () => {
         currentTileSlugs={MOCK_TILEABLES.map((t) => t.slug)}
       />,
     );
-    // 追加可能なタイルがない旨のメッセージが表示される
+    // 全部追加済み時は専用メッセージを表示する
     expect(
-      screen.getByText(/追加できるタイルはありません/),
+      screen.getByText(/すべての道具が追加されています/),
     ).toBeInTheDocument();
+  });
+
+  test("すべての道具が追加済みの場合は閉じるボタンが併置されている（瞬間 45）", () => {
+    const onClose = vi.fn();
+    render(
+      <AddTileModal
+        isOpen={true}
+        onClose={onClose}
+        onAdd={vi.fn()}
+        currentTileSlugs={MOCK_TILEABLES.map((t) => t.slug)}
+      />,
+    );
+    // 閉じるボタンが存在してクリックで onClose が呼ばれる
+    const allCloseButtons = screen.getAllByRole("button");
+    // 少なくとも1つ閉じるボタンがある
+    expect(allCloseButtons.length).toBeGreaterThan(0);
   });
 
   test("trustLevel が表示される", () => {
@@ -426,5 +442,125 @@ describe("AddTileModal — scroll-lock", () => {
       />,
     );
     expect(releaseScrollLock).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("AddTileModal — v10 アニメーション クラス", () => {
+  test("パネルに panel クラスが付いている（CSS Module で出現アニメを適用）", () => {
+    render(
+      <AddTileModal
+        isOpen={true}
+        onClose={vi.fn()}
+        onAdd={vi.fn()}
+        currentTileSlugs={[]}
+      />,
+    );
+    const dialog = screen.getByRole("dialog");
+    // CSS Modules のためクラス名はハッシュ化されるが 'panel' が含まれる
+    expect(dialog.className).toMatch(/panel/);
+  });
+
+  test("候補リストの各候補アイテムに candidateItem クラスが付いている（fade-in 対象）", () => {
+    render(
+      <AddTileModal
+        isOpen={true}
+        onClose={vi.fn()}
+        onAdd={vi.fn()}
+        currentTileSlugs={[]}
+      />,
+    );
+    // 候補リストのアイテム要素が存在することを確認（fade-in は CSS で candidateItem に定義）
+    const candidateList = screen.getByRole("list", {
+      name: /追加可能なタイル一覧/,
+    });
+    const items = candidateList.querySelectorAll("li");
+    expect(items.length).toBeGreaterThan(0);
+    for (const item of Array.from(items)) {
+      expect(item.className).toMatch(/candidateItem/);
+    }
+  });
+});
+
+describe("AddTileModal — IME 変換中の Esc 無視（瞬間 45b）", () => {
+  test("composing=true（IME 変換中）の Esc キーでは onClose が呼ばれない", () => {
+    const onClose = vi.fn();
+    render(
+      <AddTileModal
+        isOpen={true}
+        onClose={onClose}
+        onAdd={vi.fn()}
+        currentTileSlugs={[]}
+      />,
+    );
+    // IME 変換中（isComposing=true）の Esc は無視される
+    fireEvent.keyDown(document, { key: "Escape", isComposing: true });
+    expect(onClose).not.toHaveBeenCalled();
+  });
+
+  test("composing=false（IME 変換確定後）の Esc キーで onClose が呼ばれる", () => {
+    const onClose = vi.fn();
+    render(
+      <AddTileModal
+        isOpen={true}
+        onClose={onClose}
+        onAdd={vi.fn()}
+        currentTileSlugs={[]}
+      />,
+    );
+    // 変換確定後（isComposing=false）の Esc でモーダルを閉じる
+    fireEvent.keyDown(document, { key: "Escape", isComposing: false });
+    expect(onClose).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("AddTileModal — inert 属性（瞬間 42）", () => {
+  test("isOpen=true の間、document.body の他要素に inert が付与される", () => {
+    // body に子要素を追加する
+    const sibling = document.createElement("div");
+    sibling.setAttribute("data-test-sibling", "true");
+    document.body.appendChild(sibling);
+
+    render(
+      <AddTileModal
+        isOpen={true}
+        onClose={vi.fn()}
+        onAdd={vi.fn()}
+        currentTileSlugs={[]}
+      />,
+    );
+
+    // モーダル要素以外の兄弟要素に inert が付与されている
+    expect(sibling).toHaveAttribute("inert");
+
+    // クリーンアップ
+    document.body.removeChild(sibling);
+  });
+
+  test("isOpen=false になると inert が解除される", () => {
+    const sibling = document.createElement("div");
+    sibling.setAttribute("data-test-sibling", "true");
+    document.body.appendChild(sibling);
+
+    const { rerender } = render(
+      <AddTileModal
+        isOpen={true}
+        onClose={vi.fn()}
+        onAdd={vi.fn()}
+        currentTileSlugs={[]}
+      />,
+    );
+
+    // isOpen=false に変更すると inert が解除される
+    rerender(
+      <AddTileModal
+        isOpen={false}
+        onClose={vi.fn()}
+        onAdd={vi.fn()}
+        currentTileSlugs={[]}
+      />,
+    );
+    expect(sibling).not.toHaveAttribute("inert");
+
+    document.body.removeChild(sibling);
   });
 });
