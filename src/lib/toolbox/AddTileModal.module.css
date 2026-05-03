@@ -8,27 +8,73 @@
  *
  * overlay: 画面全体を覆う半透明背景。body.scroll-locked クラスと連携。
  * panel: モーダル本体の白いパネル。
+ *
+ * アニメーション仕様（tmp/cycle-177-ux-decisions.md 瞬間 24 / 25 / 27 / 29 参照）:
+ * - モバイル（max-width: 767px）: bottom sheet として translateY(100%) → 0 を 200ms ease-out
+ * - デスクトップ（min-width: 768px）: opacity 0 → 1 + scale 0.96 → 1.0 を 150ms ease-out
+ * - オーバーレイ: opacity 0 → 0.5 を 100ms ease-out
+ * - 候補アイテム: fade-in 80ms ease-out
+ * - prefers-reduced-motion 時: すべて 0.001ms に縮退
  */
 
-/* ---- オーバーレイ ---- */
+/* ---- オーバーレイ（瞬間 25: opacity 0 → 0.5 を 100ms）---- */
+@keyframes overlayFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 .overlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.5);
   z-index: 100;
   /* フォーカストラップのため tabIndex=-1 に対応できるよう display: flex */
   display: flex;
-  align-items: flex-end; /* モバイルでは下から表示 */
+  align-items: flex-end; /* モバイルデフォルト: 下から表示 */
   justify-content: center;
+  animation: overlayFadeIn 100ms ease-out both;
 }
 
-@media (min-width: 600px) {
+@media (min-width: 768px) {
   .overlay {
     align-items: center;
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .overlay {
+    animation-duration: 0.001ms;
+  }
+}
+
 /* ---- モーダルパネル ---- */
+
+/* モバイル（max-width: 767px）: bottom sheet として下からスライドアップ（瞬間 24）*/
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* デスクトップ（min-width: 768px）: 中央モーダルとして opacity + scale でフェードイン（瞬間 24）*/
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 .panel {
   position: relative;
   background-color: var(--bg);
@@ -36,19 +82,33 @@
   border-radius: var(--r-normal);
   width: 100%;
   max-width: 560px;
-  max-height: 85vh;
+  max-height: 80vh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  /* オーバーレイクリックがパネル内に伝播しないように止める（stopPropagation で対応） */
+  /* モバイルデフォルト: bottom sheet として下からスライドアップ */
+  animation: slideUp 200ms ease-out both;
 }
 
-@media (max-width: 599px) {
+@media (max-width: 767px) {
   .panel {
-    /* モバイルでは画面下部から表示 */
+    /* モバイルでは画面下端に配置し、下角丸なし */
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
-    max-height: 90vh;
+  }
+}
+
+@media (min-width: 768px) {
+  .panel {
+    /* デスクトップ: 中央モーダル（opacity + scale フェードイン） */
+    animation: modalFadeIn 150ms ease-out both;
+    max-height: 85vh;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    animation-duration: 0.001ms;
   }
 }
 
@@ -134,16 +194,32 @@
   flex: 1;
 }
 
-/* ---- 候補アイテム ---- */
+/* ---- 候補アイテム（瞬間 27: 各候補が fade-in 80ms で表示）---- */
+@keyframes candidateFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 .candidateItem {
   display: flex;
   align-items: center;
   gap: 12px;
   padding: 4px 16px;
+  animation: candidateFadeIn 80ms ease-out both;
 }
 
 .candidateItem:not(:last-child) {
   border-bottom: 1px solid var(--border);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .candidateItem {
+    animation-duration: 0.001ms;
+  }
 }
 
 .candidateInfo {
@@ -213,6 +289,19 @@
   background-color: var(--bg-softer);
 }
 
+/* 瞬間 28: 候補タップ時の押し込み（scale(0.98) 即時適用 → 100ms で scale(1.0) に戻る）*/
+.addButton:active {
+  transform: scale(0.98);
+  transition: transform 100ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .addButton:active {
+    /* reduced-motion 時は scale 抑止（DESIGN.md §4 参照）*/
+    transform: none;
+  }
+}
+
 .addButton:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
@@ -224,4 +313,8 @@
   text-align: center;
   color: var(--fg-soft);
   font-size: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
 }

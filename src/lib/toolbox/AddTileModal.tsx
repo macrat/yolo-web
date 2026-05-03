@@ -11,6 +11,14 @@
  * - Esc キー / 背景クリック / 閉じるボタンで onClose を呼び出す。
  * - スクロールロックは acquireScrollLock / releaseScrollLock で管理（AP-I07 準拠）。
  * - フォーカストラップ（Tab で内部循環、Esc で閉じる）を実装する。
+ * - IME 変換中（isComposing=true）の Esc は無視し、変換確定後の Esc でモーダルを閉じる（瞬間 45b）。
+ * - isOpen=true の間、body 直下の他要素に inert 属性を付与してフォーカスを閉じ込める（瞬間 42）。
+ *
+ * 出現アニメーション（瞬間 24）:
+ * - モバイル（w < 768px）: bottom sheet として画面下端から slide-up
+ * - デスクトップ（w ≥ 768px）: 中央モーダルとして opacity + scale でフェードイン
+ * - 候補リスト: 各候補が fade-in 80ms で表示（瞬間 27）
+ * - prefers-reduced-motion 時は 0.001ms に縮退（瞬間 31 総則）
  *
  * 視覚表現規則は DESIGN.md §3 / §4 (L69-78) を参照。
  * a11y: WCAG SC 2.5.8（タップターゲット 44px 以上）/ SC 2.1.2（フォーカストラップ）/ SC 2.4.3（フォーカス順序）。
@@ -87,10 +95,12 @@ export default function AddTileModal({
     });
   }, [isOpen]);
 
-  // Esc キーで閉じる
+  // Esc キーで閉じる（瞬間 45b: IME 変換中は無視）
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === "Escape") {
+        // IME 変換中（isComposing=true）の Esc は変換確定を優先し、モーダルは閉じない
+        if (e.isComposing) return;
         onClose();
       }
     },
@@ -105,6 +115,26 @@ export default function AddTileModal({
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [isOpen, handleKeyDown]);
+
+  // inert 属性の付与・解除（瞬間 42）
+  // isOpen=true の間、body 直下のモーダル以外の要素に inert を付与して Tab フォーカスを閉じ込める
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const panel = panelRef.current;
+    // body の直下要素でモーダルパネルの祖先でないものに inert を付与する
+    const bodyChildren = Array.from(document.body.children) as HTMLElement[];
+    const inertTargets = bodyChildren.filter((el) => !el.contains(panel));
+
+    for (const el of inertTargets) {
+      el.setAttribute("inert", "");
+    }
+    return () => {
+      for (const el of inertTargets) {
+        el.removeAttribute("inert");
+      }
+    };
+  }, [isOpen]);
 
   // フォーカストラップ: Tab キーでモーダル内部を循環させる
   const handlePanelKeyDown = useCallback(
@@ -178,8 +208,11 @@ export default function AddTileModal({
     return null;
   }
 
+  // 全部追加済みかどうか（瞬間 45）
+  const isAllAdded = availableTileables.length === 0;
+
   return (
-    /* オーバーレイ: クリックで閉じる */
+    /* オーバーレイ: クリックで閉じる（瞬間 25: opacity 0 → 0.5 を 100ms）*/
     <div
       className={styles.overlay}
       data-overlay=""
@@ -211,7 +244,7 @@ export default function AddTileModal({
           </button>
         </div>
 
-        {/* 検索欄 */}
+        {/* 検索欄（瞬間 26: inputmode="search" + autocomplete="off"）*/}
         <div className={styles.searchArea}>
           <input
             ref={searchInputRef}
@@ -222,15 +255,28 @@ export default function AddTileModal({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             aria-label="タイルを検索"
+            inputMode="search"
+            autoComplete="off"
           />
         </div>
 
-        {/* 候補リスト */}
-        {filteredTileables.length === 0 ? (
+        {/* 候補リスト / 空状態 */}
+        {isAllAdded ? (
+          /* 瞬間 45: 全部追加済み表示 */
           <div className={styles.emptyState} aria-live="polite">
-            {availableTileables.length === 0
-              ? "追加できるタイルはありません"
-              : "該当するタイルはありません"}
+            <p>すべての道具が追加されています</p>
+            <button
+              type="button"
+              className={styles.closeButton}
+              aria-label="閉じる"
+              onClick={onClose}
+            >
+              &#x2715;
+            </button>
+          </div>
+        ) : filteredTileables.length === 0 ? (
+          <div className={styles.emptyState} aria-live="polite">
+            該当するタイルはありません
           </div>
         ) : (
           <ul
@@ -241,6 +287,7 @@ export default function AddTileModal({
               const trustMeta = TRUST_LEVEL_META[tileable.trustLevel];
               const kindLabel = CONTENT_KIND_LABELS[tileable.contentKind];
               return (
+                /* 瞬間 27: 候補が fade-in 80ms で表示 */
                 <li key={tileable.slug} className={styles.candidateItem}>
                   <div className={styles.candidateInfo}>
                     <div className={styles.candidateName}>

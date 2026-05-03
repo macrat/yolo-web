@@ -2,6 +2,17 @@
  * 視覚表現規則の根拠: DESIGN.md §4 サブセクション（L69-78）
  */
 
+/* ---- 瞬間 1/2: fade-in アニメーション定義 ---- */
+
+@keyframes tileAppear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 /* ベースのタイルコンテナ */
 .tile {
   background: var(--bg);
@@ -11,6 +22,22 @@
   min-height: 44px; /* WCAG SC 2.5.8 タップターゲット最小高さ */
   display: flex;
   flex-direction: column;
+  /* 瞬間 5: タップ :active の戻りアニメ（transition なしで即時沈み込み、離した時に 100ms で戻る） */
+  transition: transform 100ms ease-out;
+  /* 瞬間 37: iOS Safari の長押しコンテキストメニュー抑止 */
+  touch-action: manipulation;
+}
+
+/* 瞬間 1/2: fade-in クラス（マウント後に JS で付与） */
+.tile--fade-in {
+  animation: tileAppear 200ms ease-out both;
+}
+
+/* 瞬間 31: prefers-reduced-motion 時は fade-in を瞬間化 */
+@media (prefers-reduced-motion: reduce) {
+  .tile--fade-in {
+    animation-duration: 0.001ms;
+  }
 }
 
 /* サイズ別スタイル（グリッドの span はグリッド側で制御する） */
@@ -41,6 +68,65 @@
 .tile--empty {
   border-style: dashed;
   background: var(--bg-soft);
+}
+
+/* 瞬間 9: 揺れアニメの受け皿（付与は TileGrid の責務） */
+.tile--wiggle {
+  /* animation は TileGrid が付与する。ここでは受け皿として class 名だけ定義する。 */
+}
+
+/* 瞬間 37: 長押し進行中の沈み込み視覚フィードバック */
+.tile--long-pressing {
+  transform: scale(0.98);
+  transition: transform 100ms ease-out;
+}
+
+/* 瞬間 31: prefers-reduced-motion 時は長押し沈み込みを抑止 */
+@media (prefers-reduced-motion: reduce) {
+  .tile--long-pressing {
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ---- 瞬間 4: ホバー（desktop）/ 瞬間 44: タッチデバイスはホバー無効 ---- */
+
+/* @media (hover: hover) でタッチデバイスのホバー state を分岐（瞬間 44） */
+@media (hover: hover) {
+  .tile:not(.tile--editing):not(.tile--dragging):not(.tile--empty):hover {
+    background: var(--bg-soft);
+    box-shadow: var(--shadow-button);
+    transform: scale(1.01);
+    transition:
+      transform 150ms ease-out,
+      box-shadow 150ms ease-out,
+      background 150ms ease-out;
+  }
+
+  /* 瞬間 31: prefers-reduced-motion 時はホバーを瞬間化（色変化のみ維持） */
+  @media (prefers-reduced-motion: reduce) {
+    .tile:not(.tile--editing):not(.tile--dragging):not(.tile--empty):hover {
+      transform: none;
+      box-shadow: none;
+      transition: background 0.001ms;
+    }
+  }
+}
+
+/* ---- 瞬間 5: タップ / クリック :active ---- */
+
+.tile:not(.tile--editing):not(.tile--dragging):not(.tile--empty):active {
+  /* 押下開始で即時沈み込み（transition なし）、離した時に tile の transition で 100ms 戻る */
+  transform: scale(0.97);
+  transition: none;
+}
+
+/* 瞬間 31: prefers-reduced-motion 時は :active の scale 変化を抑止 */
+@media (prefers-reduced-motion: reduce) {
+  .tile:not(.tile--editing):not(.tile--dragging):not(.tile--empty):active {
+    transform: none;
+    transition: none;
+  }
 }
 
 /* タイル内部コンテンツ領域 */
@@ -100,4 +186,31 @@
   align-items: center;
   padding: 0.25rem 0.25rem 0;
   gap: 0.25rem;
+}
+
+/* ---- 瞬間 38: 印刷時の配慮 ---- */
+
+@media print {
+  /* 編集 UI の占有スペースを隠す（TileGrid が完全な display:none を担うが、Tile 側の tileHeader も対象） */
+  .tileHeader {
+    display: none;
+  }
+}
+
+/* ---- 瞬間 32: 高コントラストモード（forced-colors） ---- */
+
+@media (forced-colors: active) {
+  .tile {
+    border-color: CanvasText;
+    box-shadow: none;
+  }
+
+  .tile--editing {
+    border-color: Highlight;
+    outline-color: Highlight;
+  }
+
+  .tile--dragging {
+    box-shadow: none;
+  }
 }

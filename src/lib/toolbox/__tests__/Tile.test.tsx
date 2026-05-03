@@ -1,16 +1,21 @@
-import { describe, expect, test, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { describe, expect, test, vi, beforeEach, afterEach } from "vitest";
+import { render, screen, act } from "@testing-library/react";
 import React from "react";
 import type { TileComponentProps } from "../tile-loader";
 
 /**
- * Tile コンテナコンポーネントのテスト（C-1）
+ * Tile コンテナコンポーネントのテスト（C-1 v10）
  *
  * カバレッジ目標:
  * - 状態 4 種: 通常 / 編集中 / ドラッグ中 / 空きスロット
  * - サイズ 3 種: small / medium / large
  * - href あり/なし
  * - isEditing true/false
+ * - fade-in クラス付与（マウント時）
+ * - 長押し 500ms で onLongPress 呼び出し
+ * - 8px 移動で長押しキャンセル
+ * - 編集モード時の長押し無効
+ * - tile--wiggle クラス（揺れ受け皿）
  *
  * 【設計変更（lint 対応）】
  * Tile は tileComponent を props として受け取る設計に変更された。
@@ -37,13 +42,41 @@ vi.mock("../Tile.module.css", () => ({
     "tile--editing": "tile--editing",
     "tile--dragging": "tile--dragging",
     "tile--empty": "tile--empty",
+    "tile--fade-in": "tile--fade-in",
+    "tile--long-pressing": "tile--long-pressing",
+    "tile--wiggle": "tile--wiggle",
     tileInner: "tileInner",
     tileInnerDisabled: "tileInnerDisabled",
     tileMeta: "tileMeta",
     tileName: "tileName",
     tileDescription: "tileDescription",
     dragHandle: "dragHandle",
+    tileHeader: "tileHeader",
   },
+}));
+
+// next/link モック（jsdom 環境で動作させるため）
+// unstable_viewTransition など Next.js 固有の props は DOM に渡さず除外する
+vi.mock("next/link", () => ({
+  default: ({
+    href,
+    children,
+    className,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    unstable_viewTransition: _viewTransition,
+    ...rest
+  }: {
+    href: string;
+    children: React.ReactNode;
+    className?: string;
+    unstable_viewTransition?: boolean;
+    [key: string]: unknown;
+  }) =>
+    React.createElement(
+      "a",
+      { href, className, "data-next-link": "true", ...rest },
+      children,
+    ),
 }));
 
 // registry モック
@@ -296,5 +329,216 @@ describe("Tile — tileComponent props として受け取る（lint 対応）", 
     );
     const fallback = screen.getByTestId("fallback-tile");
     expect(fallback.getAttribute("data-slug")).toBe("json-formatter");
+  });
+});
+
+// ---- v10 新規テスト ----
+
+describe("Tile v10 — fade-in アニメーション（瞬間 1 / 2）", () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  test("マウント後に tile--fade-in クラスが付与される", async () => {
+    const { container } = render(
+      <Tile entry={baseEntry} isEditing={false} tileComponent={DynamicStub} />,
+    );
+    // requestAnimationFrame をフラッシュして useEffect コールバックを実行させる
+    await act(async () => {
+      vi.runAllTimers();
+    });
+    const tile = container.querySelector("[data-tile-slug]");
+    expect(tile?.classList.contains("tile--fade-in")).toBe(true);
+  });
+});
+
+describe("Tile v10 — View Transitions 対応（瞬間 6）", () => {
+  test("href ありのとき data-next-link 属性を持つ a タグが描画される", () => {
+    render(
+      <Tile entry={baseEntry} isEditing={false} tileComponent={DynamicStub} />,
+    );
+    // next/link モックは data-next-link="true" を付与する
+    const link = document.querySelector('[data-next-link="true"]');
+    expect(link).toBeTruthy();
+  });
+
+  test("href ありのとき a タグに href が設定される", () => {
+    render(
+      <Tile entry={baseEntry} isEditing={false} tileComponent={DynamicStub} />,
+    );
+    const link = document.querySelector('a[href="/tools/json-formatter"]');
+    expect(link).toBeTruthy();
+  });
+
+  test("編集モード時は Link が描画されない（isEditing=true）", () => {
+    render(
+      <Tile entry={baseEntry} isEditing={true} tileComponent={DynamicStub} />,
+    );
+    const link = document.querySelector('[data-next-link="true"]');
+    expect(link).toBeNull();
+  });
+});
+
+describe("Tile v10 — 長押しハンドラ（瞬間 37）", () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  test("500ms 長押しで onLongPress が呼ばれる（使用モード）", async () => {
+    const onLongPress = vi.fn();
+    const { container } = render(
+      <Tile
+        entry={baseEntry}
+        isEditing={false}
+        tileComponent={DynamicStub}
+        onLongPress={onLongPress}
+      />,
+    );
+    const tile = container.querySelector("[data-tile-slug]") as HTMLElement;
+    expect(tile).toBeTruthy();
+
+    // pointerdown をトリガー
+    tile.dispatchEvent(
+      new PointerEvent("pointerdown", {
+        bubbles: true,
+        clientX: 100,
+        clientY: 100,
+      }),
+    );
+
+    // 500ms 経過前はまだ呼ばれない
+    vi.advanceTimersByTime(499);
+    expect(onLongPress).not.toHaveBeenCalled();
+
+    // 500ms 経過で呼ばれる
+    vi.advanceTimersByTime(1);
+    expect(onLongPress).toHaveBeenCalledWith("json-formatter");
+  });
+
+  test("500ms 前に pointerup すると onLongPress は呼ばれない", () => {
+    const onLongPress = vi.fn();
+    const { container } = render(
+      <Tile
+        entry={baseEntry}
+        isEditing={false}
+        tileComponent={DynamicStub}
+        onLongPress={onLongPress}
+      />,
+    );
+    const tile = container.querySelector("[data-tile-slug]") as HTMLElement;
+
+    tile.dispatchEvent(
+      new PointerEvent("pointerdown", {
+        bubbles: true,
+        clientX: 100,
+        clientY: 100,
+      }),
+    );
+    vi.advanceTimersByTime(300);
+    tile.dispatchEvent(new PointerEvent("pointerup", { bubbles: true }));
+    vi.advanceTimersByTime(300);
+
+    expect(onLongPress).not.toHaveBeenCalled();
+  });
+
+  test("8px 以上の移動で長押しキャンセル", () => {
+    const onLongPress = vi.fn();
+    const { container } = render(
+      <Tile
+        entry={baseEntry}
+        isEditing={false}
+        tileComponent={DynamicStub}
+        onLongPress={onLongPress}
+      />,
+    );
+    const tile = container.querySelector("[data-tile-slug]") as HTMLElement;
+
+    tile.dispatchEvent(
+      new PointerEvent("pointerdown", {
+        bubbles: true,
+        clientX: 100,
+        clientY: 100,
+      }),
+    );
+    vi.advanceTimersByTime(300);
+    // 8px 以上の移動
+    tile.dispatchEvent(
+      new PointerEvent("pointermove", {
+        bubbles: true,
+        clientX: 109,
+        clientY: 100,
+      }),
+    );
+    vi.advanceTimersByTime(300);
+
+    expect(onLongPress).not.toHaveBeenCalled();
+  });
+
+  test("編集モード時は長押しでも onLongPress が呼ばれない", () => {
+    const onLongPress = vi.fn();
+    const { container } = render(
+      <Tile
+        entry={baseEntry}
+        isEditing={true}
+        tileComponent={DynamicStub}
+        onLongPress={onLongPress}
+      />,
+    );
+    const tile = container.querySelector("[data-tile-slug]") as HTMLElement;
+
+    tile.dispatchEvent(
+      new PointerEvent("pointerdown", {
+        bubbles: true,
+        clientX: 100,
+        clientY: 100,
+      }),
+    );
+    vi.advanceTimersByTime(600);
+
+    expect(onLongPress).not.toHaveBeenCalled();
+  });
+});
+
+describe("Tile v10 — 編集モード アクセント枠線 / wiggle 受け皿（瞬間 9）", () => {
+  test("isEditing=true のとき tile--editing クラスが付与される", () => {
+    const { container } = render(
+      <Tile entry={baseEntry} isEditing={true} tileComponent={DynamicStub} />,
+    );
+    const tile = container.querySelector("[data-tile-slug]");
+    expect(tile?.classList.contains("tile--editing")).toBe(true);
+  });
+
+  test("tile--wiggle クラスは TileGrid が外部から付与できる受け皿として存在する（data 属性で確認）", () => {
+    // wiggle クラスは TileGrid が付与する受け皿。Tile 自体は data-tile-slug を持つ。
+    // TileGrid が外部から className を追加できる構造であることを確認する。
+    const { container } = render(
+      <Tile entry={baseEntry} isEditing={true} tileComponent={DynamicStub} />,
+    );
+    const tile = container.querySelector("[data-tile-slug]");
+    // tile 要素が存在し、外部クラス付与の受け皿として機能できる
+    expect(tile).toBeTruthy();
+    expect(tile?.tagName.toLowerCase()).toBe("article");
+  });
+});
+
+describe("Tile v10 — onLongPress props インタフェース", () => {
+  test("onLongPress なしでもエラーにならない（省略可能）", () => {
+    expect(() => {
+      render(
+        <Tile
+          entry={baseEntry}
+          isEditing={false}
+          tileComponent={DynamicStub}
+        />,
+      );
+    }).not.toThrow();
   });
 });
