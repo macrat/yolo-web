@@ -1,0 +1,62 @@
+/*
+ * /toolbox-preview — 道具箱検証ルートのスタイル定義
+ *
+ * SSR skeleton: ToolboxShell が CSR で hydrate される前に
+ * 「ここにタイルが並ぶ」という構造的ヒントを提供するグレー単色矩形。
+ * シマー（pulse animation）は使わない（仕様: 静的なグレー単色）。
+ */
+
+.pageWrapper {
+  padding: 1.5rem 1rem;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.pageTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: var(--text-primary, #111827);
+}
+
+/*
+ * SSR skeleton グリッド — ToolboxShell の hydration 完了前に表示される。
+ * レイアウトシフトを最小化するため、実際のタイルグリッドと同等の高さを確保する。
+ */
+.skeletonGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+}
+
+/*
+ * 個別 skeleton タイル — グレー単色矩形。
+ * シマー（pulse）なし（仕様に従い静的のみ）。
+ */
+.skeletonTile {
+  background-color: var(--color-skeleton, #e5e7eb);
+  border-radius: 8px;
+  height: 80px;
+  /* layout shift を防ぐために高さを明示 */
+}
+
+/* ダークモード対応 */
+:global(.dark) .skeletonTile {
+  background-color: var(--color-skeleton-dark, #374151);
+}
+
+/* 印刷時は skeleton を非表示にする（瞬間 38） */
+@media print {
+  .skeletonGrid {
+    display: none;
+  }
+}
+
+/* forced-colors 対応（瞬間 32） */
+@media (forced-colors: active) {
+  .skeletonTile {
+    background-color: ButtonFace;
+    border: 1px solid CanvasText;
+  }
+}
