@@ -27,14 +27,13 @@ export type InitialDefaultLayout = {
     /** フィクスチャまたは実コンテンツの slug */
     slug: string;
     /**
-     * タイルバリアント識別子（任意）。
-     * TileDefinition に複数バリエーションがある場合に使用する。
+     * タイルバリアント識別子（任意）。複数バリエーションがある場合に使用する。
      * 未指定の場合はデフォルトバリアントが使用される。
      */
     variantId?: string;
     /**
      * タイルの表示サイズ。CSS Grid の span 値に対応する。
-     * small=1col, medium=2col, large=3col（`@/components/Tile/constants` の SIZE_SPAN 参照）。
+     * small=1col, medium=2col, large=3col。
      */
     size: "small" | "medium" | "large";
     /** タイルの表示順序（0 始まりの連番） */

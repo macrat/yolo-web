@@ -3,13 +3,6 @@ import {
   INITIAL_DEFAULT_LAYOUT,
   type InitialDefaultLayout,
 } from "../initial-default-layout";
-import {
-  FIXTURE_SMALL_1,
-  FIXTURE_SMALL_2,
-  FIXTURE_MEDIUM_1,
-  FIXTURE_MEDIUM_2,
-  FIXTURE_LARGE_1,
-} from "@/components/Tile/fixtures";
 
 describe("InitialDefaultLayout 型", () => {
   test("INITIAL_DEFAULT_LAYOUT は InitialDefaultLayout 型に適合する", () => {
@@ -89,30 +82,6 @@ describe("INITIAL_DEFAULT_LAYOUT 定数", () => {
   test("現サイクルでは全タイルで variantId が undefined である（暫定）", () => {
     for (const tile of INITIAL_DEFAULT_LAYOUT.tiles) {
       expect(tile.variantId).toBeUndefined();
-    }
-  });
-});
-
-describe("INITIAL_DEFAULT_LAYOUT とフィクスチャの実体結合", () => {
-  // slug 文字列リテラルの比較だけでは、フィクスチャ側で slug や size が変わっても
-  // 気づけない。実際に fixtures からインポートした値と突き合わせることで、
-  // Phase 7 で実 slug への差し替え漏れ・不整合を早期検出する。
-  test("INITIAL_DEFAULT_LAYOUT の各 slug はフィクスチャに実在し、size も一致する", () => {
-    const fixtureBySlug = new Map([
-      [FIXTURE_SMALL_1.tileable.slug, FIXTURE_SMALL_1],
-      [FIXTURE_SMALL_2.tileable.slug, FIXTURE_SMALL_2],
-      [FIXTURE_MEDIUM_1.tileable.slug, FIXTURE_MEDIUM_1],
-      [FIXTURE_MEDIUM_2.tileable.slug, FIXTURE_MEDIUM_2],
-      [FIXTURE_LARGE_1.tileable.slug, FIXTURE_LARGE_1],
-    ]);
-
-    for (const tile of INITIAL_DEFAULT_LAYOUT.tiles) {
-      const fixture = fixtureBySlug.get(tile.slug);
-      expect(
-        fixture,
-        `slug=${tile.slug} がフィクスチャに存在しない`,
-      ).toBeDefined();
-      expect(tile.size).toBe(fixture!.recommendedSize);
     }
   });
 });

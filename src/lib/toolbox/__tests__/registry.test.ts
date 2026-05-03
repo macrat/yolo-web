@@ -2,11 +2,7 @@ import { describe, expect, test } from "vitest";
 import { allToolMetas } from "@/tools/registry";
 import { allPlayContents } from "@/play/registry";
 import { allCheatsheetMetas } from "@/cheatsheets/registry";
-import {
-  getAllTileables,
-  getTileableBySlug,
-  getAllTileableEntries,
-} from "../registry";
+import { getAllTileables, getTileableBySlug } from "../registry";
 
 const EXPECTED_TOTAL =
   allToolMetas.length + allPlayContents.length + allCheatsheetMetas.length;
@@ -171,21 +167,6 @@ describe("重複 slug 優先順位（仕様記録）", () => {
     const slugSet = new Set(tileables.map((t) => t.slug));
     // Map のサイズが全件数と等しければ重複なし（優先順位適用後の件数 = slug ユニーク数）
     expect(slugSet.size).toBe(tileables.length);
-  });
-});
-
-describe("getAllTileableEntries", () => {
-  test("tile フィールドが定義されているエントリのみを返す", () => {
-    const result = getAllTileableEntries();
-    for (const item of result) {
-      expect(item.tile).toBeDefined();
-    }
-  });
-
-  test("現サイクル（2.2.2）では tile 未定義のため 0 件を返す", () => {
-    const result = getAllTileableEntries();
-    // tile フィールドはまだどのエントリにも設定されていないため 0 件
-    expect(result).toHaveLength(0);
   });
 });
 
