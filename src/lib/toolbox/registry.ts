@@ -27,9 +27,6 @@ import {
  *
  * 順序: tool → play → cheatsheet（生成ファイルの宣言順を保持）。
  * slug 重複の優先順位: Tool > Play > Cheatsheet（buildTileableMap 内で実装）。
- *
- * tile フィールドは toTileable() では付与されないため、
- * タイル化対象エントリを得るには getAllTileableEntries() を使用すること。
  */
 export function getAllTileables(): Tileable[] {
   return [...toolTileables, ...playTileables, ...cheatsheetTileables];
