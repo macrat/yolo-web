@@ -36,15 +36,15 @@ export type TileComponentLoader = React.ComponentType<TileComponentProps>;
  * タイルコンポーネントが受け取る共通 props。
  *
  * 【拡張方針（C 群向け）】
- * - slug は必須（TileLayoutEntry.slug をそのまま渡す）。
+ * - slug は必須（Tileable.slug をそのまま渡す）。
  * - C 群（Tile / TileGrid / ToolboxShell / AddTileModal）が実装フェーズで
  *   必要な props を追加してよい（例: size, accentColor, isEditing など）。
- * - 追加した props は Tileable / TileLayoutEntry からの値を渡す設計を維持すること。
+ * - 追加した props は Tileable からの値を渡す設計を維持すること。
  *   独自状態をここで定義するのではなく、呼び出し元（C 群コンポーネント）で解決する。
  * 現時点では最小構成（Phase 2 での枠確保）。
  */
 export interface TileComponentProps {
-  /** タイルのスラグ（識別子）。TileLayoutEntry.slug をそのまま渡す。 */
+  /** タイルのスラグ（識別子）。Tileable.slug をそのまま渡す。 */
   slug: string;
   /**
    * 編集モードかどうか。
@@ -66,9 +66,7 @@ export interface TileLoaderOptions {
    * Phase 2 では指定しない / DEFAULT_VARIANT_ID を指定するのと同等。
    * Phase 7（B-314）で "compact" / "expanded" 等の具体的 variant を実装する。
    *
-   * 【TileLayoutEntry との連結（重要 1 対応）】
-   * storage.ts の `TileLayoutEntry.variantId?` と概念的に同一の値。
-   * C 群 builder は `TileLayoutEntry` の `variantId` をそのままここに渡すことを想定:
+   * C 群 builder はレイアウトエントリの variantId をそのままここに渡すことを想定:
    *   getTileComponent(entry.slug, { variantId: entry.variantId })
    * entry.variantId が undefined の場合は省略でよい（DEFAULT_VARIANT_ID にフォールバック）。
    */
@@ -135,8 +133,8 @@ const FallbackTileComponent = dynamic(
  * return <TileComp slug={tileable.slug} isEditing={isEditing} />;
  *
  * @example
- * // TileLayoutEntry との連結例（storage.ts の entry をそのまま渡す）
- * // entry: TileLayoutEntry = { slug: "json-formatter", variantId: "compact", order: 0, size: "medium" }
+ * // レイアウトエントリからの variant 指定例
+ * // entry: { slug: "json-formatter", variantId: "compact", order: 0, size: "medium" }
  * const TileComp = getTileComponent(entry.slug, { variantId: entry.variantId });
  * return <TileComp slug={entry.slug} isEditing={isEditing} />;
  *
