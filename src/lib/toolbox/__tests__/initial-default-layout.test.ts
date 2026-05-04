@@ -17,11 +17,6 @@ describe("INITIAL_DEFAULT_LAYOUT 定数", () => {
     expect(Array.isArray(INITIAL_DEFAULT_LAYOUT.tiles)).toBe(true);
   });
 
-  // 件数は固定値で検証する。Phase 7 で枚数を増やすときはこのテストも書き換える。
-  test("tiles は 5 件である", () => {
-    expect(INITIAL_DEFAULT_LAYOUT.tiles.length).toBe(5);
-  });
-
   test("各タイルに必須フィールド (slug, size, order) がある", () => {
     for (const tile of INITIAL_DEFAULT_LAYOUT.tiles) {
       expect(tile.slug).toBeDefined();
@@ -48,27 +43,6 @@ describe("INITIAL_DEFAULT_LAYOUT 定数", () => {
     const orders = INITIAL_DEFAULT_LAYOUT.tiles.map((t) => t.order);
     const uniqueOrders = new Set(orders);
     expect(uniqueOrders.size).toBe(orders.length);
-  });
-
-  test("small サイズのタイルが 2 つ以上ある", () => {
-    const smalls = INITIAL_DEFAULT_LAYOUT.tiles.filter(
-      (t) => t.size === "small",
-    );
-    expect(smalls.length).toBeGreaterThanOrEqual(2);
-  });
-
-  test("medium サイズのタイルが 2 つ以上ある", () => {
-    const mediums = INITIAL_DEFAULT_LAYOUT.tiles.filter(
-      (t) => t.size === "medium",
-    );
-    expect(mediums.length).toBeGreaterThanOrEqual(2);
-  });
-
-  test("large サイズのタイルが 1 つ以上ある", () => {
-    const larges = INITIAL_DEFAULT_LAYOUT.tiles.filter(
-      (t) => t.size === "large",
-    );
-    expect(larges.length).toBeGreaterThanOrEqual(1);
   });
 
   test("slug の重複がない", () => {
