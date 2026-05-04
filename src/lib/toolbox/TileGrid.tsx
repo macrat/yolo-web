@@ -70,6 +70,11 @@ interface SortableItemProps {
   onMoveUp: (slug: string) => void;
   onMoveDown: (slug: string) => void;
   onRemove: (slug: string) => void;
+  /**
+   * サイズ変更コールバック（F-1）。
+   * S/M/L ボタン押下で呼ばれ、TileGrid が全タイル配列を更新して onChangeTiles に渡す。
+   */
+  onChangeSize: (slug: string, size: TileLayoutEntry["size"]) => void;
   /** 揺れアニメ用クラス名（編集モード時に付与、瞬間 9） */
   wiggleClassName?: string;
   /** 長押し成立時のコールバック（瞬間 37、Tile → ToolboxShell への伝搬） */
@@ -90,6 +95,7 @@ function SortableItem({
   onMoveUp,
   onMoveDown,
   onRemove,
+  onChangeSize,
   wiggleClassName,
   onLongPress,
 }: SortableItemProps) {
@@ -154,6 +160,7 @@ function SortableItem({
         isDragging={isDragging}
         tileComponent={tileComponent}
         onLongPress={onLongPress}
+        onChangeSize={(size) => onChangeSize(entry.slug, size)}
         className={wiggleClassName}
         // ドラッグハンドルに attributes / listeners を渡す設計は
         // Tile が data-drag-handle 要素を持つため、ここでは article ルートに渡す
@@ -327,6 +334,21 @@ export function TileGrid({
     [tiles, reorder],
   );
 
+  /**
+   * F-1: サイズ変更ハンドラ。
+   * 対象 slug の size を更新した新タイル配列を onChangeTiles に渡す。
+   * 同 size 再選択時は no-op とし、localStorage 無駄書き込みを防ぐ（MIN-F1-3）。
+   */
+  const handleChangeSize = useCallback(
+    (slug: string, size: TileLayoutEntry["size"]) => {
+      const target = tiles.find((t) => t.slug === slug);
+      if (!target || target.size === size) return;
+      const newTiles = tiles.map((t) => (t.slug === slug ? { ...t, size } : t));
+      onChangeTiles(newTiles);
+    },
+    [tiles, onChangeTiles],
+  );
+
   const itemIds = tiles.map((t) => t.slug);
 
   // 編集モード時に揺れアニメクラスを付与する（瞬間 9）。
@@ -345,6 +367,7 @@ export function TileGrid({
           onMoveUp={handleMoveUp}
           onMoveDown={handleMoveDown}
           onRemove={onRemoveTile}
+          onChangeSize={handleChangeSize}
           wiggleClassName={wiggleClassName}
           onLongPress={onLongPress}
         />

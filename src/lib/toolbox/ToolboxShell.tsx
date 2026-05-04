@@ -28,6 +28,13 @@ import { getTileableBySlug } from "./registry";
 import type { TileLayoutEntry } from "./storage";
 import styles from "./ToolboxShell.module.css";
 
+/** size 名の日本語マッピング（CRIT-F1-2 aria-live 通知用） */
+const SIZE_LABEL: Record<TileLayoutEntry["size"], string> = {
+  small: "小",
+  medium: "中",
+  large: "大",
+};
+
 /** Undo 保留状態の型 */
 interface PendingUndo {
   /** 削除されたタイルの slug */
@@ -237,9 +244,30 @@ export function ToolboxShell() {
 
   const handleChangeTiles = useCallback(
     (newTiles: TileLayoutEntry[]) => {
+      // size 変更検知（CRIT-F1-2 / MIN-F1-3）:
+      // 同一 size 再選択時は TileGrid 側で no-op 済みだが、
+      // 並び替えと size 変更が同時に届く場合に備えて変更があるかを確認する。
+      const sizeChanged = newTiles.find((t) => {
+        const prev = tiles.find((p) => p.slug === t.slug);
+        return prev && prev.size !== t.size;
+      });
+
+      // 順序も size も変わらない場合は setTiles を呼ばない（no-op）
+      const orderChanged =
+        newTiles.length !== tiles.length ||
+        newTiles.some((t, i) => t.slug !== tiles[i]?.slug);
+      if (!sizeChanged && !orderChanged) return;
+
+      if (sizeChanged) {
+        const tileable = getTileableBySlug(sizeChanged.slug);
+        const displayName = tileable?.displayName ?? sizeChanged.slug;
+        announce(
+          `${displayName}を${SIZE_LABEL[sizeChanged.size]}サイズに変更しました`,
+        );
+      }
       setTiles(newTiles);
     },
-    [setTiles],
+    [tiles, setTiles, announce],
   );
 
   // -----------------------------------------------------------------------

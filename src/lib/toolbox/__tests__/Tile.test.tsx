@@ -1,5 +1,5 @@
 import { describe, expect, test, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, act } from "@testing-library/react";
+import { render, screen, act, fireEvent } from "@testing-library/react";
 import React from "react";
 import type { TileComponentProps } from "../tile-loader";
 
@@ -53,6 +53,14 @@ vi.mock("../Tile.module.css", () => ({
     dragHandle: "dragHandle",
     tileHeader: "tileHeader",
     stretchedLink: "stretchedLink",
+    // F-1: sizeBar（Tile 内部に移動、CRIT-F1-1）
+    sizeBar: "sizeBar",
+    sizeButton: "sizeButton",
+    sizeButtonActive: "sizeButtonActive",
+    // MID-F1v2-1: controlsOverlay（Tile 内部に移動）
+    controlsOverlay: "controlsOverlay",
+    moveButton: "moveButton",
+    removeButton: "removeButton",
   },
 }));
 
@@ -609,6 +617,329 @@ describe("MID-r2-3 — small タイルの displayName クリップ", () => {
     );
     const tileName = container.querySelector("[class*='tileName']");
     expect(tileName).toBeTruthy();
+  });
+});
+
+// -----------------------------------------------------------------------
+// F-1 / CRIT-F1-1: sizeBar が Tile 内部（article 最下部）に配置される
+// -----------------------------------------------------------------------
+
+describe("Tile F-1 — sizeBar の Tile 内部配置（CRIT-F1-1）", () => {
+  test("isEditing=false のとき S/M/L サイズ変更ボタンが表示されない", () => {
+    render(
+      <Tile
+        entry={baseEntry}
+        isEditing={false}
+        tileComponent={DynamicStub}
+        onChangeSize={vi.fn()}
+      />,
+    );
+    expect(
+      screen.queryAllByRole("button", { name: /サイズに変更/ }).length,
+    ).toBe(0);
+  });
+
+  test("isEditing=true のとき S/M/L サイズ変更ボタンが article 内部に表示される", () => {
+    render(
+      <Tile
+        entry={baseEntry}
+        isEditing={true}
+        tileComponent={DynamicStub}
+        onChangeSize={vi.fn()}
+      />,
+    );
+    const article = document.querySelector("article");
+    const sButton = article?.querySelector('[aria-label*="小サイズ"]');
+    const mButton = article?.querySelector('[aria-label*="中サイズ"]');
+    const lButton = article?.querySelector('[aria-label*="大サイズ"]');
+    expect(sButton).toBeTruthy();
+    expect(mButton).toBeTruthy();
+    expect(lButton).toBeTruthy();
+  });
+
+  test("onChangeSize が未指定でも isEditing=true 時に sizeBar が表示される", () => {
+    render(
+      <Tile entry={baseEntry} isEditing={true} tileComponent={DynamicStub} />,
+    );
+    // onChangeSize なしでも S/M/L ボタンが表示される
+    const article = document.querySelector("article");
+    const sButton = article?.querySelector('[aria-label*="小サイズ"]');
+    expect(sButton).toBeTruthy();
+  });
+
+  test("M サイズのとき M ボタンに aria-pressed='true' が設定される", () => {
+    render(
+      <Tile
+        entry={{ ...baseEntry, size: "medium" }}
+        isEditing={true}
+        tileComponent={DynamicStub}
+        onChangeSize={vi.fn()}
+      />,
+    );
+    const mButton = screen.getByRole("button", {
+      name: /中サイズに変更/,
+    });
+    expect(mButton.getAttribute("aria-pressed")).toBe("true");
+    const sButton = screen.getByRole("button", {
+      name: /小サイズに変更/,
+    });
+    expect(sButton.getAttribute("aria-pressed")).toBe("false");
+  });
+
+  test("S ボタンをクリックすると onChangeSize('small') が呼ばれる", () => {
+    const onChangeSize = vi.fn();
+    render(
+      <Tile
+        entry={{ ...baseEntry, size: "medium" }}
+        isEditing={true}
+        tileComponent={DynamicStub}
+        onChangeSize={onChangeSize}
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: /小サイズに変更/ }));
+    expect(onChangeSize).toHaveBeenCalledWith("small");
+  });
+
+  test("L ボタンをクリックすると onChangeSize('large') が呼ばれる", () => {
+    const onChangeSize = vi.fn();
+    render(
+      <Tile
+        entry={{ ...baseEntry, size: "small" }}
+        isEditing={true}
+        tileComponent={DynamicStub}
+        onChangeSize={onChangeSize}
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: /大サイズに変更/ }));
+    expect(onChangeSize).toHaveBeenCalledWith("large");
+  });
+
+  test("article 内部（最下部）に sizeBar が配置される（DESIGN.md §1 パネル原則）", () => {
+    render(
+      <Tile
+        entry={baseEntry}
+        isEditing={true}
+        tileComponent={DynamicStub}
+        onChangeSize={vi.fn()}
+      />,
+    );
+    const article = document.querySelector("article");
+    // sizeBar は article 内の最後の子要素であるべき
+    const lastChild = article?.lastElementChild;
+    // sizeBar 相当の要素には S/M/L ボタンが含まれる
+    const sButton = lastChild?.querySelector('[aria-label*="小サイズ"]');
+    expect(sButton).toBeTruthy();
+  });
+});
+
+// -----------------------------------------------------------------------
+// MID-F1v2-1: controlsOverlay (↑↓×) が article 内部に配置される
+// -----------------------------------------------------------------------
+
+describe("MID-F1v2-1 — controlsOverlay が Tile 内部（article 内）に配置される", () => {
+  test("isEditing=true かつ onMoveUp/onMoveDown/onRemove あり: article 内に ↑ ボタンが存在する（先頭以外）", () => {
+    render(
+      <Tile
+        entry={{ ...baseEntry, order: 1 }}
+        isEditing={true}
+        tileComponent={DynamicStub}
+        onMoveUp={vi.fn()}
+        onMoveDown={vi.fn()}
+        onRemove={vi.fn()}
+        isFirst={false}
+        isLast={false}
+      />,
+    );
+    const article = document.querySelector("article");
+    const upButton = article?.querySelector('[aria-label*="上に移動"]');
+    expect(upButton).toBeTruthy();
+  });
+
+  test("isEditing=true: article 内に削除ボタンが存在する", () => {
+    render(
+      <Tile
+        entry={baseEntry}
+        isEditing={true}
+        tileComponent={DynamicStub}
+        onMoveUp={vi.fn()}
+        onMoveDown={vi.fn()}
+        onRemove={vi.fn()}
+        isFirst={false}
+        isLast={false}
+      />,
+    );
+    const article = document.querySelector("article");
+    const removeButton = article?.querySelector('[aria-label*="削除"]');
+    expect(removeButton).toBeTruthy();
+  });
+
+  test("isEditing=false のとき ↑↓× ボタンが article 内に存在しない", () => {
+    render(
+      <Tile
+        entry={baseEntry}
+        isEditing={false}
+        tileComponent={DynamicStub}
+        onMoveUp={vi.fn()}
+        onMoveDown={vi.fn()}
+        onRemove={vi.fn()}
+        isFirst={false}
+        isLast={false}
+      />,
+    );
+    const article = document.querySelector("article");
+    const upButton = article?.querySelector('[aria-label*="上に移動"]');
+    const removeButton = article?.querySelector('[aria-label*="削除"]');
+    expect(upButton).toBeNull();
+    expect(removeButton).toBeNull();
+  });
+
+  test("isFirst=true のとき ↑ ボタンが表示されない", () => {
+    render(
+      <Tile
+        entry={baseEntry}
+        isEditing={true}
+        tileComponent={DynamicStub}
+        onMoveUp={vi.fn()}
+        onMoveDown={vi.fn()}
+        onRemove={vi.fn()}
+        isFirst={true}
+        isLast={false}
+      />,
+    );
+    const article = document.querySelector("article");
+    const upButton = article?.querySelector('[aria-label*="上に移動"]');
+    expect(upButton).toBeNull();
+  });
+
+  test("isLast=true のとき ↓ ボタンが表示されない", () => {
+    render(
+      <Tile
+        entry={baseEntry}
+        isEditing={true}
+        tileComponent={DynamicStub}
+        onMoveUp={vi.fn()}
+        onMoveDown={vi.fn()}
+        onRemove={vi.fn()}
+        isFirst={false}
+        isLast={true}
+      />,
+    );
+    const article = document.querySelector("article");
+    const downButton = article?.querySelector('[aria-label*="下に移動"]');
+    expect(downButton).toBeNull();
+  });
+
+  test("削除ボタンクリックで onRemove が呼ばれる", () => {
+    const onRemove = vi.fn();
+    render(
+      <Tile
+        entry={baseEntry}
+        isEditing={true}
+        tileComponent={DynamicStub}
+        onMoveUp={vi.fn()}
+        onMoveDown={vi.fn()}
+        onRemove={onRemove}
+        isFirst={false}
+        isLast={false}
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: /削除/ }));
+    expect(onRemove).toHaveBeenCalledWith("json-formatter");
+  });
+
+  test("↑ ボタンクリックで onMoveUp が呼ばれる", () => {
+    const onMoveUp = vi.fn();
+    render(
+      <Tile
+        entry={{ ...baseEntry, order: 1 }}
+        isEditing={true}
+        tileComponent={DynamicStub}
+        onMoveUp={onMoveUp}
+        onMoveDown={vi.fn()}
+        onRemove={vi.fn()}
+        isFirst={false}
+        isLast={false}
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: /上に移動/ }));
+    expect(onMoveUp).toHaveBeenCalledWith("json-formatter");
+  });
+
+  test("↓ ボタンクリックで onMoveDown が呼ばれる", () => {
+    const onMoveDown = vi.fn();
+    render(
+      <Tile
+        entry={baseEntry}
+        isEditing={true}
+        tileComponent={DynamicStub}
+        onMoveUp={vi.fn()}
+        onMoveDown={onMoveDown}
+        onRemove={vi.fn()}
+        isFirst={false}
+        isLast={false}
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: /下に移動/ }));
+    expect(onMoveDown).toHaveBeenCalledWith("json-formatter");
+  });
+});
+
+// -----------------------------------------------------------------------
+// MIN-F1v2-2: サイズボタンの aria-label 日本語化
+// -----------------------------------------------------------------------
+
+describe("MIN-F1v2-2 — サイズボタン aria-label が日本語になっている", () => {
+  test("S ボタンの aria-label が「小サイズ」を含む", () => {
+    render(
+      <Tile
+        entry={baseEntry}
+        isEditing={true}
+        tileComponent={DynamicStub}
+        onChangeSize={vi.fn()}
+      />,
+    );
+    // S ボタンの aria-label に「小」が含まれる
+    const sButton = screen.getByRole("button", { name: /小サイズ/ });
+    expect(sButton).toBeTruthy();
+  });
+
+  test("M ボタンの aria-label が「中サイズ」を含む", () => {
+    render(
+      <Tile
+        entry={baseEntry}
+        isEditing={true}
+        tileComponent={DynamicStub}
+        onChangeSize={vi.fn()}
+      />,
+    );
+    const mButton = screen.getByRole("button", { name: /中サイズ/ });
+    expect(mButton).toBeTruthy();
+  });
+
+  test("L ボタンの aria-label が「大サイズ」を含む", () => {
+    render(
+      <Tile
+        entry={baseEntry}
+        isEditing={true}
+        tileComponent={DynamicStub}
+        onChangeSize={vi.fn()}
+      />,
+    );
+    const lButton = screen.getByRole("button", { name: /大サイズ/ });
+    expect(lButton).toBeTruthy();
+  });
+
+  test("S ボタンの表示テキストは 'S' のまま（表示用ラベルは変えない）", () => {
+    render(
+      <Tile
+        entry={baseEntry}
+        isEditing={true}
+        tileComponent={DynamicStub}
+        onChangeSize={vi.fn()}
+      />,
+    );
+    const sButton = screen.getByRole("button", { name: /小サイズ/ });
+    expect(sButton.textContent).toBe("S");
   });
 });
 

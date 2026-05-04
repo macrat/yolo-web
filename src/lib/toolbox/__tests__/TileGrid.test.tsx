@@ -73,18 +73,27 @@ vi.mock("@dnd-kit/sortable", () => ({
   }),
 }));
 
-// Tile コンポーネントをモック
+// Tile コンポーネントをモック（F-1: onChangeSize を受け取り S/M/L ボタンを描画）
 vi.mock("../Tile", () => ({
   Tile: ({
     entry,
     isEditing,
     className,
+    onChangeSize,
   }: {
     entry: TileLayoutEntry;
     isEditing: boolean;
     className?: string;
-  }) =>
-    React.createElement(
+    onChangeSize?: (size: TileLayoutEntry["size"]) => void;
+  }) => {
+    // getTileableBySlug はモック済み。ここではテスト用マップで直接引く
+    const nameMap: Record<string, string> = {
+      "tool-a": "ツールA",
+      "tool-b": "ツールB",
+      "tool-c": "ツールC",
+    };
+    const displayName = nameMap[entry.slug] ?? entry.slug;
+    return React.createElement(
       "div",
       {
         "data-testid": `tile-${entry.slug}`,
@@ -93,7 +102,27 @@ vi.mock("../Tile", () => ({
         className: className ?? "",
       },
       entry.slug,
-    ),
+      // 編集モード時のみ S/M/L ボタンを描画（CRIT-F1-1 移行後の構造を反映）
+      isEditing &&
+        React.createElement(
+          "div",
+          { "aria-label": `${displayName}のサイズ変更` },
+          (["small", "medium", "large"] as const).map((v) =>
+            React.createElement(
+              "button",
+              {
+                key: v,
+                type: "button",
+                "aria-label": `${displayName}を ${v === "small" ? "S" : v === "medium" ? "M" : "L"} サイズに変更`,
+                "aria-pressed": entry.size === v ? "true" : "false",
+                onClick: () => onChangeSize?.(v),
+              },
+              v === "small" ? "S" : v === "medium" ? "M" : "L",
+            ),
+          ),
+        ),
+    );
+  },
 }));
 
 // CSS モジュールのモック
@@ -477,5 +506,169 @@ describe("TileGrid — v10 仕様: autoScroll（瞬間 43）", () => {
     const dndContext = container.querySelector('[data-testid="dnd-context"]');
     expect(dndContext).toBeTruthy();
     expect(dndContext?.getAttribute("data-auto-scroll")).toBe("true");
+  });
+});
+
+// ---------------------------------------------------------------------------
+// F-1: タイルサイズ変更 UI
+// ---------------------------------------------------------------------------
+
+describe("TileGrid — F-1: サイズ変更ボタン", () => {
+  test("isEditing=false のとき S/M/L ボタンが表示されない", () => {
+    const tiles = makeTiles();
+    render(
+      <TileGrid
+        tiles={tiles}
+        isEditing={false}
+        onChangeTiles={vi.fn()}
+        onRemoveTile={vi.fn()}
+      />,
+    );
+    // S/M/L サイズ変更ボタンが存在しない（aria-label にサイズ変更が含まれる）
+    expect(
+      screen.queryAllByRole("button", { name: /サイズに変更/ }).length,
+    ).toBe(0);
+  });
+
+  test("isEditing=true のとき 各タイルに S/M/L サイズ変更ボタンが表示される", () => {
+    const tiles = makeTiles();
+    render(
+      <TileGrid
+        tiles={tiles}
+        isEditing={true}
+        onChangeTiles={vi.fn()}
+        onRemoveTile={vi.fn()}
+      />,
+    );
+    // tool-a（small）の S/M/L ボタンが存在する
+    expect(
+      screen.getByRole("button", { name: "ツールAを S サイズに変更" }),
+    ).toBeTruthy();
+    expect(
+      screen.getByRole("button", { name: "ツールAを M サイズに変更" }),
+    ).toBeTruthy();
+    expect(
+      screen.getByRole("button", { name: "ツールAを L サイズに変更" }),
+    ).toBeTruthy();
+  });
+
+  test("現在の size のボタンに aria-pressed='true' が設定される", () => {
+    const tiles: TileLayoutEntry[] = [
+      { slug: "tool-a", size: "medium", order: 0 },
+    ];
+    render(
+      <TileGrid
+        tiles={tiles}
+        isEditing={true}
+        onChangeTiles={vi.fn()}
+        onRemoveTile={vi.fn()}
+      />,
+    );
+    // medium が現在 size: aria-pressed="true"
+    const mButton = screen.getByRole("button", {
+      name: "ツールAを M サイズに変更",
+    });
+    expect(mButton.getAttribute("aria-pressed")).toBe("true");
+    // small / large は aria-pressed="false"
+    const sButton = screen.getByRole("button", {
+      name: "ツールAを S サイズに変更",
+    });
+    expect(sButton.getAttribute("aria-pressed")).toBe("false");
+    const lButton = screen.getByRole("button", {
+      name: "ツールAを L サイズに変更",
+    });
+    expect(lButton.getAttribute("aria-pressed")).toBe("false");
+  });
+
+  test("S ボタンをクリックすると onChangeTiles が呼ばれ size が 'small' になる", () => {
+    const tiles: TileLayoutEntry[] = [
+      { slug: "tool-a", size: "medium", order: 0 },
+      { slug: "tool-b", size: "small", order: 1 },
+    ];
+    const onChangeTiles = vi.fn();
+    render(
+      <TileGrid
+        tiles={tiles}
+        isEditing={true}
+        onChangeTiles={onChangeTiles}
+        onRemoveTile={vi.fn()}
+      />,
+    );
+    const sButton = screen.getByRole("button", {
+      name: "ツールAを S サイズに変更",
+    });
+    fireEvent.click(sButton);
+    expect(onChangeTiles).toHaveBeenCalledTimes(1);
+    const newTiles = onChangeTiles.mock.calls[0][0] as TileLayoutEntry[];
+    const updatedTileA = newTiles.find((t) => t.slug === "tool-a");
+    expect(updatedTileA?.size).toBe("small");
+  });
+
+  test("L ボタンをクリックすると onChangeTiles が呼ばれ size が 'large' になる", () => {
+    const tiles: TileLayoutEntry[] = [
+      { slug: "tool-a", size: "small", order: 0 },
+    ];
+    const onChangeTiles = vi.fn();
+    render(
+      <TileGrid
+        tiles={tiles}
+        isEditing={true}
+        onChangeTiles={onChangeTiles}
+        onRemoveTile={vi.fn()}
+      />,
+    );
+    const lButton = screen.getByRole("button", {
+      name: "ツールAを L サイズに変更",
+    });
+    fireEvent.click(lButton);
+    expect(onChangeTiles).toHaveBeenCalledTimes(1);
+    const newTiles = onChangeTiles.mock.calls[0][0] as TileLayoutEntry[];
+    const updatedTileA = newTiles.find((t) => t.slug === "tool-a");
+    expect(updatedTileA?.size).toBe("large");
+  });
+
+  test("現在と同じ size のボタンをクリックしても onChangeTiles が呼ばれない（no-op / MIN-F1-3）", () => {
+    const tiles: TileLayoutEntry[] = [
+      { slug: "tool-a", size: "small", order: 0 },
+    ];
+    const onChangeTiles = vi.fn();
+    render(
+      <TileGrid
+        tiles={tiles}
+        isEditing={true}
+        onChangeTiles={onChangeTiles}
+        onRemoveTile={vi.fn()}
+      />,
+    );
+    // small が現在の size なので S ボタン（aria-pressed=true）をクリック
+    const sButton = screen.getByRole("button", {
+      name: "ツールAを S サイズに変更",
+    });
+    fireEvent.click(sButton);
+    // 同 size 再選択は no-op: onChangeTiles は呼ばれない（localStorage 無駄書き込み防止）
+    expect(onChangeTiles).not.toHaveBeenCalled();
+  });
+
+  test("onChangeSize が onChangeTiles（F-1 コールバック）経由で他タイルの size を変更しない", () => {
+    const tiles: TileLayoutEntry[] = [
+      { slug: "tool-a", size: "small", order: 0 },
+      { slug: "tool-b", size: "medium", order: 1 },
+    ];
+    const onChangeTiles = vi.fn();
+    render(
+      <TileGrid
+        tiles={tiles}
+        isEditing={true}
+        onChangeTiles={onChangeTiles}
+        onRemoveTile={vi.fn()}
+      />,
+    );
+    const lButton = screen.getByRole("button", {
+      name: "ツールAを L サイズに変更",
+    });
+    fireEvent.click(lButton);
+    const newTiles = onChangeTiles.mock.calls[0][0] as TileLayoutEntry[];
+    // tool-b は medium のまま
+    expect(newTiles.find((t) => t.slug === "tool-b")?.size).toBe("medium");
   });
 });

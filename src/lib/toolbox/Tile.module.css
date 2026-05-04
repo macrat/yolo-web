@@ -213,11 +213,84 @@
   gap: 0.25rem;
 }
 
+/*
+ * F-1: サイズ変更バー（S/M/L ボタン群）
+ *
+ * DESIGN.md §1 パネル原則に従い Tile の article 最下部に配置する。
+ * article の border 内側に収まるため、アクセント色アウトライン / 揺れアニメが
+ * sizeBar を含む Tile 全体に適用される（docs/cycles/cycle-177.md F-1 参照）。
+ * w360 small タイル（幅 152px）でも 3 ボタンが横並びで収まる設計。
+ */
+.sizeBar {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  border-top: 1px solid var(--border);
+}
+
+.sizeButton {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* WCAG SC 2.5.8 最低 24px */
+  min-height: 28px;
+  border: none;
+  background: var(--bg);
+  color: var(--fg-soft);
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-left: 1px solid var(--border);
+  padding: 0;
+  line-height: 1;
+  border-radius: 0;
+  transition: background 100ms ease-out;
+}
+
+/* 先頭ボタンは左ボーダーなし・左下角丸 */
+.sizeButton:first-child {
+  border-left: none;
+  border-bottom-left-radius: var(--r-normal);
+}
+
+/* 末尾ボタンは右下角丸 */
+.sizeButton:last-child {
+  border-bottom-right-radius: var(--r-normal);
+}
+
+.sizeButton:hover,
+.sizeButton:focus-visible {
+  background: var(--bg-softer);
+  color: var(--fg);
+  /* DESIGN.md §2 参照: フォーカス outline。Tile 内側に収まるため外側オフセット（2px）を使用 */
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* aria-pressed="true" 時（現在の size）: アクセント色で強調 */
+.sizeButtonActive {
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.sizeButtonActive:hover,
+.sizeButtonActive:focus-visible {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
 /* ---- 瞬間 38: 印刷時の配慮 ---- */
 
 @media print {
   /* 編集 UI の占有スペースを隠す（TileGrid が完全な display:none を担うが、Tile 側の tileHeader も対象） */
   .tileHeader {
+    display: none;
+  }
+
+  /* F-1: 印刷時はサイズ変更バーも非表示 */
+  .sizeBar {
     display: none;
   }
 }
@@ -237,5 +310,21 @@
 
   .tile--dragging {
     box-shadow: none;
+  }
+
+  /* F-1: 高コントラスト時のサイズボタン */
+  .sizeButton {
+    border-color: CanvasText;
+    color: currentColor;
+  }
+
+  .sizeButtonActive {
+    background: Highlight;
+    color: HighlightText;
+  }
+
+  .sizeButton:hover,
+  .sizeButton:focus-visible {
+    outline-color: Highlight;
   }
 }
