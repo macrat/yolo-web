@@ -82,9 +82,6 @@ const UNCATEGORISED_WHITELIST: ReadonlySet<string> = new Set([
   "/achievements",
   // 開発者向け新デザインカタログ。noindex 設定済み。(new) Route Group 配下。
   "/storybook",
-  // 道具箱機能（B-309 / cycle-177）の検証ルート。noindex / nofollow 設定済み。
-  // (new) Route Group 配下、Phase 9.2 公開時に / へ切替予定。
-  "/toolbox-preview",
 ]);
 
 // ---------------------------------------------------------------------------
