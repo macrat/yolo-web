@@ -2,7 +2,7 @@
 id: 178
 description: B-363「B-309 成功条件の整備」。cycle-175/176/177 連続事故の構造的原因に対する条件整備サイクル。B-309 そのものは実施しない。cycle-177 PM が立てた仮説 (a)〜(d)/(e) を cycle-178 PM が独立再評価し、必要なものを PM の責任で確定して実施する。
 started_at: "2026-05-04T21:08:37+0900"
-completed_at: null
+completed_at: "2026-05-04T23:50:00+0900"
 ---
 
 # サイクル-178
@@ -17,13 +17,13 @@ cycle-175 / 176 / 177 と 3 サイクル連続で B-309（道具箱フェーズ 
 
 採否は「## 作業計画」で確定済み。各タスクの **詳細は「## 作業計画 / 実施タスク」B-363-1〜7 を真実源として参照** すること（本チェックリストは進捗の可視化のみで、スコープの真実源ではない）。
 
-- [ ] B-363-1: `docs/design-migration-plan.md` Phase 2 を計画書 Appendix A の方針通りに書き換え（詳細: 実施タスク B-363-1）
-- [ ] B-363-2: `docs/design-migration-plan.md` Phase 7 ステップ 3〜5 を計画書 Appendix B の方針通りに書き換え（詳細: 実施タスク B-363-2）
-- [ ] B-363-3: `docs/design-migration-plan.md` Phase 9 に計画書 Appendix C の informational note を追記（Phase 9.0 新設はしない、詳細: 実施タスク B-363-3）
-- [ ] B-363-4: `src/lib/toolbox/storage.ts` / `useToolboxConfig.ts` + 対応テスト 2 件 + `initial-default-layout.test.ts` のサイズ比率検証 4 件削除、`initial-default-layout.ts` のコメント更新、`npm run lint && npm run format:check && npm run test && npm run build` 全成功（詳細: 実施タスク B-363-4）
-- [ ] B-363-5: `docs/backlog.md` を計画書「backlog 波及項目（全列挙）」の通りに修正（B-363 注記の最優先書き換え + B-309 / B-336 / B-312 / B-313 / B-324 注記、詳細: 実施タスク B-363-5）
-- [ ] B-363-6: cycle-178 完了の代理指標 1 / 2 を実施し、計画書 B-363-6 の禁止語ゼロ件 / 必須語含むことを確認、加えて全文 Read で禁止語以外の派生規則化が無いか点検（詳細: 実施タスク B-363-6）
-- [ ] B-363-7: cycle-178.md 「## レビュー結果」「## キャリーオーバー」を PM 自身が記入し、cycle-179 PM への申し送りを完成させる（sub-agent 委譲禁止、詳細: 実施タスク B-363-7）
+- [x] B-363-1: `docs/design-migration-plan.md` Phase 2 を計画書 Appendix A の方針通りに書き換え（詳細: 実施タスク B-363-1）
+- [x] B-363-2: `docs/design-migration-plan.md` Phase 7 ステップ 3〜5 を計画書 Appendix B の方針通りに書き換え（詳細: 実施タスク B-363-2）
+- [x] B-363-3: `docs/design-migration-plan.md` Phase 9 に計画書 Appendix C の informational note を追記（Phase 9.0 新設はしない、詳細: 実施タスク B-363-3）
+- [x] B-363-4: `src/lib/toolbox/storage.ts` / `useToolboxConfig.ts` + 対応テスト 2 件 + `initial-default-layout.test.ts` のサイズ比率検証 4 件削除、`initial-default-layout.ts` のコメント更新、`npm run lint && npm run format:check && npm run test && npm run build` 全成功（詳細: 実施タスク B-363-4）
+- [x] B-363-5: `docs/backlog.md` を計画書「backlog 波及項目（全列挙）」の通りに修正（B-363 注記の最優先書き換え + B-309 / B-336 / B-312 / B-313 / B-324 注記、詳細: 実施タスク B-363-5）
+- [x] B-363-6: cycle-178 完了の代理指標 1 / 2 を実施し、計画書 B-363-6 の禁止語ゼロ件 / 必須語含むことを確認、加えて全文 Read で禁止語以外の派生規則化が無いか点検（詳細: 実施タスク B-363-6）
+- [x] B-363-7: cycle-178.md 「## レビュー結果」「## キャリーオーバー」を PM 自身が記入し、cycle-179 PM への申し送りを完成させる（sub-agent 委譲禁止、詳細: 実施タスク B-363-7）
 
 ## 作業計画
 
@@ -333,19 +333,74 @@ reviewer 判定: **指摘なし（次工程へ進める）**。タスク登録 (
 
 v4 をもって作業計画レビューループを完了。次工程: タスク登録 → `/cycle-execution`。
 
+### 実装フェーズのレビュー履歴
+
+`/cycle-execution` 内で B-363-1〜7 を実施。実装結果に対する独立 reviewer レビューは以下の 4 ラウンドを経て指摘なし判定に至った:
+
+#### 実装 1st round（B-363-1〜4 完了直後）
+
+直近 4 commit（`631d9b6d` Phase 2 / `ffb80008` Phase 7 / `8f93873a` toolbox 削除 / `d3ffc279` Phase 9 note）に対するレビュー。指摘 MAJ 2 件:
+
+- **MAJ-1**: `initial-default-layout.ts` のコメント全体に旧 Hook (`useSyncExternalStore`)、旧サブタスク番号 (2.2.5 / 2.2.7)、旧サイクル番号 (cycle-175)、並列実装前提への言及が残っている
+- **MAJ-2**: `tile-loader.ts` L70 / L138 に削除済み `storage.ts` への明示参照と `TileLayoutEntry` 型名への言及が残っている
+
+#### 実装 2nd round（commit `6aef3c3d` で MAJ-1/2 対応後）
+
+CRIT 1 件、より深刻な汚染を発見:
+
+- **CRIT-B-3**: 残置 4 ファイルに投機的型契約・編集モード概念・C 群コンポーネント名固定が残っている。具体的に `tile-loader.ts` の `TileComponentProps.isEditing?: boolean` フィールド、「C 群（Tile / TileGrid / ToolboxShell / AddTileModal）」具体的コンポーネント名リスト、「DnD のため `ssr: false`」根拠、`types.ts` の `href` フィールド「使用モード/編集モード」コメント、`FallbackTile.tsx` の「C 群（C-1 Tile）」「DESIGN.md §4（ドラッグ・編集操作）」言及。これらは Phase 2.2 から削除されたはずの編集モード概念・C 群構成・DnD 確定をコードで先取り実装している状態であり、Phase 2.2 / Phase 9 の方針と矛盾。cycle-179 PM が type signature や JSDoc を Read した場合、「編集モード = binary state、C 群構成 = 確定、DnD = 確定実装事項」という派生規則化を起こす入力として機能する蓋然性が高い (cycle-177 構造的要因 (2) の同型再生産)。
+
+#### 実装 3rd round（commit `2deab539` で CRIT-B-3 対応後）
+
+指摘なし判定。grep で禁止語ゼロ件確認。cycle-179 PM 視点での 3 シナリオ点検（Phase 2.2 を読み終えて `src/lib/toolbox/` を Read / `tile-loader.ts` の `TileComponentProps` を Read / `initial-default-layout.ts` を Read）すべて派生規則化リスクが「許容範囲（事実情報のみが伝わる）」と判定。
+
+#### 実装 4th round（B-363-6 代理指標 1 / 2 の初回実施）
+
+代理指標 1 はパスしたが、**代理指標 2 が固定判定基準により不合格**。独立 LLM が「タイルとは何ですか」プロンプトに対して「詳細ページへのナビゲーションカードではなく…」と回答し、禁止語「ナビゲーションカード」を含んでしまった。原因は Phase 2.2 タイル概念定義が否定形（「○○ではない」）に依存しており、独立 LLM が本文の否定形を高確率で写し取る構造。
+
+#### 実装 5th round（commit `9304e2e0` で代理指標 2 対応後）
+
+Phase 2.2 タイル概念定義を positive form（肯定形主体）に書き直し、Phase 9 informational note にも「代表的な機能要素を含む。具体的な内訳と UI 形式は Phase 7 完了後の実物観察に基づき本サイクル PM が判断する」修飾を追加。Appendix A / C も同期更新（plan doc と Appendix の真実源乖離回避）。代理指標 1 / 2 / 全文 Read 点検すべてパス。**B-363-6 完了基準達成**。
+
+#### 実装フェーズ全体の総括
+
+実装フェーズで明らかになった構造的気付き 2 点 (cycle-179 PM への申し送り材料):
+
+1. **コードコメント / 型シグネチャは plan doc 同等の入力構造** — `tile-loader.ts` / `types.ts` / `FallbackTile.tsx` のコメント・型契約が cycle-176 由来の投機的設計を温存しており、`storage.ts` / `useToolboxConfig.ts` のファイル削除だけでは構造的要因 (2) は完全には除去されない。cycle-178 では reviewer 2nd-round で初めて発覚し、追加修正で対応した。cycle-179 以降は **コード変更時にコメント・型契約も「現サイクル方針との整合 / 派生規則化リスクの不在」を点検する** 必要がある。
+2. **代理指標の固定基準は post-hoc 再解釈しない** — 代理指標 2 失敗時に「独立 LLM が否定文脈で禁止語を使ったのは正しい理解だから pass にすべき」と再解釈する誘惑があった。これは誤り 4「ラベル変更で安心」と同型なので排除し、固定基準通り Phase 2.2 を再修正した。固定基準は計画段階で objectivity を担保するためのものなので、結果に応じて緩めない。
+
 ## キャリーオーバー
 
-cycle-179 PM への申し送り（cycle-178 完了時に最終化）:
+cycle-179 PM への申し送り:
+
+### 確定事項（cycle-179 で再検討しないこと）
 
 - **(e) 沈黙領域ルール明文化は cycle-178 で取り下げ確定**: 誤り 7 / 8 / 14 と同型と判定済み。cycle-179 で再検討しないこと。再検討すれば 5 サイクル目失敗の蓋然性が上がる。
 - **Phase 9.0 新設は不採用**: cycle-178 では Phase 9 全体への informational note のみ追加した。ダッシュボード本体の実装形式（独立サブタスクか公開と一体か等）は Phase 9 着手サイクルの PM が実物観察に基づき判断する。
-- **タイル概念定義は本文に書き込み済み**: Appendix A の通り Phase 2.2 本文に「タイルは道具箱内で完結する UI、ナビゲーションカードではない、Phase 2.1 #3 で言及される通りウィジェット的位置付けが成立し得る」を書いた。cycle-179 PM は本文を Read で内在化すること（誤り 15 の再生産防止）。「タイル = ホーム画面ウィジェット」と機械的に断定するのではなく、Phase 2.1 #3 と整合する相対的位置付けを保つこと。
-- **B-309 縮小版のスコープ**: タイル概念定義（既に Appendix A で本文化済み）+ 型契約（具体型名は Phase 2.1 結果次第）のみ。DnD / 編集 / 永続化 / Undo / モーダルは Phase 9 のスコープ。
-- **削除されたコード**: `src/lib/toolbox/storage.ts` / `useToolboxConfig.ts` および対応テスト 2 件は cycle-178 で削除済み。Phase 9 着手時に実タイル群の観察に基づき再構築する。
-- **更新済みファイル**: `initial-default-layout.ts`（コメント L10 / L16 から `useToolboxConfig` 言及を削除し、Phase 9 への参照に更新）/ `__tests__/initial-default-layout.test.ts`（サイズ比率検証 4 件削除、型契約検証のみ残置）。
-- **そのまま残置（変更なし）**: `types.ts` / `registry.ts` / `tile-loader.ts` / `FallbackTile.tsx` および対応テスト（型契約・自動生成基盤・プレースホルダー）。
+- **(c) は構造縮小ではなく明示的な追加判断**: Phase 9 informational note 追加は plan doc を一次情報として扱う運用前提との整合 + 多サイクル連鎖でのキャリーオーバー脱落リスク回避が採用根拠。「最小化」ラベルで保護していない。本判定の (i)(ii)(iii) は本 note についての判定であり、将来サイクルで他の事実情報追加を正当化する一般則として転用してはならない（「事実述語ならば追加 OK」の二分法が新たな派生規則化の入口になる）。
 
-（cycle-178 完了時にここを最終化）
+### B-309 縮小版の前提（cycle-179 PM が読んで実施する内容）
+
+- **タイル概念定義は本文に書き込み済み**: design-migration-plan.md Phase 2.2 本文に「タイルは道具箱内で完結する UI 単位、操作はタイル内で閉じてページ遷移を伴わない、Phase 2.1 #3 で言及される 3 形態（1 対 1 / 1 対多 / 複数バリエーション）が想定され、いずれの形態でも『道具箱内で完結する UI 単位であり操作がタイル内で閉じる』性質は不変項として成立する」を書いた。cycle-179 PM は本文を Read で内在化すること（誤り 15 の再生産防止）。「タイル = ホーム画面ウィジェット」と機械的に断定するのではなく、Phase 2.1 #3 と整合する相対的位置付けを保つこと。
+- **B-309 縮小版のスコープ**: タイル概念定義（既に書き込み済み）+ 型契約（具体型名は Phase 2.1 結果次第で `Tileable` / `TileComponent` 等を本サイクル内で確定）のみ。DnD / 編集モード / localStorage 永続化 / Undo / モーダルは Phase 9 のスコープであり B-309 では実装しない。
+- **Phase 2.1 の 3 設計判断（URL 構成 / メタ型構造 / 1 対多サポート可否）は B-309 内で確定する**: 後続 Phase へ送らない（plan doc Phase 2 完了基準注に明記済み）。
+- **代理指標の固定基準は post-hoc 再解釈しない**: cycle-178 で「代理指標 2 が失敗 → 独立 LLM の理解は正しいから pass にすべき」と再解釈する誘惑があり、これを排除して Phase 2.2 を再修正した。cycle-179 でも同種の誘惑が出た場合は固定基準に従うこと。
+
+### コードベースの状態（cycle-179 着手時点）
+
+- **削除されたコード**: `src/lib/toolbox/storage.ts` (381 行) / `useToolboxConfig.ts` (257 行) および対応テスト 2 件 (`storage.test.ts` 724 行 / `useToolboxConfig.test.ts` 403 行)、合計 1,765 行。Phase 9 着手時に実タイル群の観察に基づき再構築する。
+- **更新済みファイル**: `initial-default-layout.ts`（コメント全体を整理、`useToolboxConfig` 言及・旧サブタスク番号・旧サイクル番号・並列実装前提への言及を除去、Phase 9 への参照に更新）/ `__tests__/initial-default-layout.test.ts`（サイズ比率検証 4 件削除、型契約検証 7 件のみ残置）/ `tile-loader.ts`（投機的型契約 `isEditing?: boolean` フィールドと「C 群（Tile / TileGrid / ToolboxShell / AddTileModal）」具体的コンポーネント名リストと「DnD のため `ssr: false`」根拠を除去、Phase 9 で再判断する中立的記述に書き換え）/ `types.ts`（`href` フィールドの「使用モード/編集モード」振る舞い仕様コメントを除去）/ `FallbackTile.tsx`（「C 群（C-1 Tile）」表記と DESIGN.md §4 言及を除去）。
+- **そのまま残置（変更なし）**: `registry.ts` / `__tests__/registry.test.ts` / `__tests__/tile-loader.test.ts` / `__tests__/types.test.ts` / `generated/` 配下の自動生成ファイル（型契約・自動生成基盤）。
+
+### 実装フェーズで判明した構造的気付き（cycle-179 で意識すること）
+
+1. **コードコメント / 型シグネチャは plan doc 同等の入力構造**: cycle-178 で `storage.ts` / `useToolboxConfig.ts` のファイル削除を済ませた後の reviewer 2nd-round で、残置ファイルのコメント・型契約が cycle-176 由来の投機的設計を温存していることが発覚した。cycle-179 でコード変更時には、コメント・型契約も「現サイクル方針との整合 / 派生規則化リスクの不在」を点検すること。
+2. **代理指標の固定基準は post-hoc 再解釈しない**: 上述。
+3. **並行 builder 実行の git stage 競合に注意**: cycle-178 では B-363-1（Phase 2 書き換え）と B-363-4（toolbox 削除）を並行実行した結果、B-363-1 のコミットに B-363-4 の削除分が混入する事故が発生した。最終結果は想定通りだが、commit 単位のトレーサビリティが乱れる。同じファイル系を扱う複数タスクは sequential 実行 + ファイル指定 `git add` を徹底すること（`git add -A` / `git add .` 禁止）。
+
+### 着手条件の達成状況
+
+B-309 縮小版の着手条件「B-363（cycle-178）完了」は本サイクル完了時点で満たされている。次回 kickoff 時に B-363 を Done に移し、B-309 を Deferred → Queued → Active に昇格させて着手可能。
 
 ## 補足事項
 
@@ -353,15 +408,15 @@ cycle-179 PM への申し送り（cycle-178 完了時に最終化）:
 
 ## サイクル終了時のチェックリスト
 
-- [ ] 上記「実施する作業」（B-363-1〜7）に記載されたすべてのタスクに完了のチェックが入っている。
-- [ ] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
-- [ ] すべての変更がレビューされ、残存する指摘事項が無くなっている。
-- [ ] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
-- [ ] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
-- [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
-- [ ] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
-- [ ] B-363-6 の代理指標 1（実装系項目の不混入）が実施され、計画書 B-363-6 の禁止語（DnD / ドラッグ / localStorage / 永続化 / 編集モード / Undo / モーダル / Tile コンポーネント）が独立 LLM 回答に 0 件、必須語（型契約 + タイル概念定義）が含まれることを確認した。
-- [ ] B-363-6 の代理指標 2（タイル概念誤読の防止）が実施され、計画書 B-363-6 の禁止語（ナビゲーションカード / 詳細ページへ遷移 / リンク先 / クリックで遷移 / タイル全体クリック）が独立 LLM 回答に 0 件、必須語（道具箱内で完結 / ホーム画面ウィジェット / コンパクトな UI のいずれか 1 つ以上）が含まれることを確認した。
+- [x] 上記「実施する作業」（B-363-1〜7）に記載されたすべてのタスクに完了のチェックが入っている。
+- [x] `/docs/backlog.md` のActiveセクションに未完了のタスクがない（B-363 を Done セクションへ移動済み）。
+- [x] すべての変更がレビューされ、残存する指摘事項が無くなっている（実装フェーズ 5 ラウンドのレビューを経て指摘なし判定）。
+- [x] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する（lint 0 errors / format OK / test 4241 passed / build exit 0）。
+- [x] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
+- [x] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
+- [x] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
+- [x] B-363-6 の代理指標 1（実装系項目の不混入）が実施され、計画書 B-363-6 の禁止語（DnD / ドラッグ / localStorage / 永続化 / 編集モード / Undo / モーダル / Tile コンポーネント）が独立 LLM 回答に 0 件、必須語（型契約 + タイル概念定義）が含まれることを確認した。
+- [x] B-363-6 の代理指標 2（タイル概念誤読の防止）が実施され、計画書 B-363-6 の禁止語（ナビゲーションカード / 詳細ページへ遷移 / リンク先 / クリックで遷移 / タイル全体クリック）が独立 LLM 回答に 0 件、必須語（道具箱内で完結 / ホーム画面ウィジェット / コンパクトな UI のいずれか 1 つ以上）が含まれることを確認した。
 
 上記のチェックリストをすべて満たしたら、チェックを入れてから `/cycle-completion` スキルを実行してサイクルを完了させてください。
 なお、「環境起因」「今回の変更と無関係」「既知の問題」「次回対応」などの **例外は一切認めません** 。必ずすべての項目を完全に満してください。
