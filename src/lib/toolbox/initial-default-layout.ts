@@ -8,18 +8,14 @@
  * 用途:
  * - 初回来訪者・SNS シェア訪問者・Googlebot に空でない初期道具箱を見せるための枠組み。
  * - localStorage 未設定 / 不正時のフォールバック値として使用される。
- * - `useSyncExternalStore` の `getServerSnapshot` はこの定数を固定値として返す設計。
  *
  * 責務範囲:
  * - 本ファイルの責務は型定義と定数のエクスポートのみ。
  * - localStorage 連携と Hook 実装は Phase 9 で実タイル群の観察に基づき設計・実装される。
- * - Tile コンポーネントの実装は 2.2.5 の責務。
  *
  * slug について:
- * - 現サイクル（cycle-175 Phase 2）では実タイルがまだないため、
- *   フィクスチャダミースラッグ（2.2.5 で `src/components/Tile/fixtures/` に置かれる予定）を参照。
+ * - 現時点では実タイルがまだないため、フィクスチャダミースラッグを使用している。
  * - 実タイルへの差し替えは Phase 7（B-314）で各ツールがタイル化されるたびに行う。
- * - 並列実装（#5 Tile builder と #7 本タスク）のために PM が固定した slug を使用。
  */
 export type InitialDefaultLayout = {
   tiles: Array<{
@@ -47,7 +43,7 @@ export type InitialDefaultLayout = {
  * 初回来訪者・SNS シェア訪問者・Googlebot に対して
  * SSR HTML に空でない道具箱を提供するためのハードコード値。
  *
- * slug は 2.2.5（Tile builder）と 2.2.7（本タスク）の並列実装のために PM が固定：
+ * 現時点ではフィクスチャダミースラッグを使用:
  * - fixture-small-1 / fixture-small-2  → size: small
  * - fixture-medium-1 / fixture-medium-2 → size: medium
  * - fixture-large-1                     → size: large
