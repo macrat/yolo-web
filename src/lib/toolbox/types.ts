@@ -50,8 +50,6 @@ export interface Tileable {
    *   tool → /tools/{slug}
    *   play → /play/{slug}
    *   cheatsheet → /cheatsheets/{slug}
-   * 使用モード（view）でタイトルをクリックすると遷移する。
-   * 編集モード（edit）ではリンクが Tab フォーカス対象から除外される。
    */
   href?: string;
 }

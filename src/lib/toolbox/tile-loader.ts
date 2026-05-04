@@ -7,15 +7,14 @@
  * （B-2 タスク）。
  *
  * 【設計意図】
- * cycle-175 reviewer B A1 で「メタ型に React コンポーネント直埋込は Phase 7（30+ ツールタイル化）
- * で First Load JS が肥大化する構造的リスク」と指摘された。
- * これを解消するため、メタ型（Tileable）はコンポーネント参照を持たず、
+ * メタ型（Tileable）はコンポーネント参照を持たず、
  * コンポーネント本体の取得経路は slug → この loader 経由に分離する。
+ * これにより Phase 7（30+ ツールタイル化）での First Load JS 肥大化を防ぐ。
  *
  * 既存パターン（`src/play/quiz/_components/ResultExtraLoader.tsx` および
  * `ResultCard.tsx` の slug → next/dynamic 方式）と同一の方式。
- * ssr: false を使用する（DndContext の hydration 問題を避けるため。
- * docs/knowledge/dnd-kit.md 参照）。
+ * ssr: false を使用する（タイルコンポーネントが client-only な機能を持ち得るため。
+ * Phase 9 でダッシュボード本体実装時に再判断される可能性がある暫定設定）。
  *
  * 【Phase 7 の 1 対多サポート（variant 拡張ポイント）】
  * design-migration-plan.md Phase 7 では 1 つの slug に複数の表示 variant
@@ -35,22 +34,12 @@ export type TileComponentLoader = React.ComponentType<TileComponentProps>;
 /**
  * タイルコンポーネントが受け取る共通 props。
  *
- * 【拡張方針（C 群向け）】
- * - slug は必須（Tileable.slug をそのまま渡す）。
- * - C 群（Tile / TileGrid / ToolboxShell / AddTileModal）が実装フェーズで
- *   必要な props を追加してよい（例: size, accentColor, isEditing など）。
- * - 追加した props は Tileable からの値を渡す設計を維持すること。
- *   独自状態をここで定義するのではなく、呼び出し元（C 群コンポーネント）で解決する。
  * 現時点では最小構成（Phase 2 での枠確保）。
+ * Phase 9 でダッシュボード本体実装時に必要な props を追加してよい。
  */
 export interface TileComponentProps {
   /** タイルのスラグ（識別子）。Tileable.slug をそのまま渡す。 */
   slug: string;
-  /**
-   * 編集モードかどうか。
-   * 編集モード時はタイル本体のクリックを無効化する（操作排他、前提 B-モード分離）。
-   */
-  isEditing?: boolean;
 }
 
 /**
@@ -66,7 +55,7 @@ export interface TileLoaderOptions {
    * Phase 2 では指定しない / DEFAULT_VARIANT_ID を指定するのと同等。
    * Phase 7（B-314）で "compact" / "expanded" 等の具体的 variant を実装する。
    *
-   * C 群 builder はレイアウトエントリの variantId をそのままここに渡すことを想定:
+   * 呼び出し元はレイアウトエントリの variantId をそのままここに渡すことを想定:
    *   getTileComponent(entry.slug, { variantId: entry.variantId })
    * entry.variantId が undefined の場合は省略でよい（DEFAULT_VARIANT_ID にフォールバック）。
    */
@@ -128,15 +117,15 @@ const FallbackTileComponent = dynamic(
  * @returns next/dynamic でラップされた React コンポーネント
  *
  * @example
- * // C 群（Tile コンポーネント）での使用例
+ * // タイルコンポーネント呼び出し例
  * const TileComp = getTileComponent(tileable.slug);
- * return <TileComp slug={tileable.slug} isEditing={isEditing} />;
+ * return <TileComp slug={tileable.slug} />;
  *
  * @example
  * // レイアウトエントリからの variant 指定例
  * // entry: { slug: "json-formatter", variantId: "compact", order: 0, size: "medium" }
  * const TileComp = getTileComponent(entry.slug, { variantId: entry.variantId });
- * return <TileComp slug={entry.slug} isEditing={isEditing} />;
+ * return <TileComp slug={entry.slug} />;
  *
  * @example
  * // Phase 7 以降での variant 指定
