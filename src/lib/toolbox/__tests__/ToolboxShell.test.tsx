@@ -512,3 +512,25 @@ describe("ToolboxShell — data-tile-slug 重複なし（CRIT-4）", () => {
     expect(screen.getByTestId("undo-banner")).toBeTruthy();
   });
 });
+
+// -----------------------------------------------------------------------
+// MIN-r2-2: 編集ボタン toggle 視覚表現（aria-pressed）
+// 注: F-2（focus 復元）/ F-3（toggle 視覚強化）/ F-3 の data-editing-active
+// 関連テストは cycle-177 F 群実装時に builder が追加する。本サイクルで
+// 計画書 v14 commit 時点では aria-pressed の基本確認のみ残す。
+// -----------------------------------------------------------------------
+
+describe("ToolboxShell — 編集ボタン aria-pressed 基本確認", () => {
+  test("使用モード時の「編集」ボタンの aria-pressed が 'false'", () => {
+    render(<ToolboxShell />);
+    const editBtn = screen.getByRole("button", { name: /編集/ });
+    expect(editBtn.getAttribute("aria-pressed")).toBe("false");
+  });
+
+  test("「完了」ボタン（編集モード中）の aria-pressed が 'true'", () => {
+    render(<ToolboxShell />);
+    fireEvent.click(screen.getByRole("button", { name: "編集" }));
+    const doneBtn = screen.getByRole("button", { name: /完了/ });
+    expect(doneBtn.getAttribute("aria-pressed")).toBe("true");
+  });
+});
