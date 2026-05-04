@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * FallbackTile — タイルコンポーネントが未実装の slug / variant 向けフォールバック。
+ * FallbackTile — タイルコンポーネントが未実装の slug 向けフォールバック。
  *
  * Phase 2 では全タイルがこのフォールバックを使用する。
  * Phase 3 以降で各 slug の個別タイルコンポーネントが実装されたら、

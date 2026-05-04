@@ -3,10 +3,8 @@ import type { Tileable } from "../types";
 import { toTileable } from "../types";
 import type { ToolMeta } from "@/tools/types";
 import type { PlayContentMeta } from "@/play/types";
-import type { CheatsheetMeta } from "@/cheatsheets/types";
 import { allToolMetas } from "@/tools/registry";
 import { allPlayContents } from "@/play/registry";
-import { allCheatsheetMetas } from "@/cheatsheets/registry";
 
 // ToolMeta フィクスチャ
 const toolMetaFixture: ToolMeta = {
@@ -36,22 +34,6 @@ const playContentMetaFixture: PlayContentMeta = {
   trustLevel: "curated",
   contentType: "game",
   category: "game",
-};
-
-// CheatsheetMeta フィクスチャ
-const cheatsheetMetaFixture: CheatsheetMeta = {
-  slug: "git",
-  name: "Git チートシート",
-  nameEn: "Git Cheatsheet",
-  description: "Gitコマンドのリファレンス",
-  shortDescription: "Gitコマンド早見表",
-  keywords: ["Git", "コマンド"],
-  category: "developer",
-  relatedToolSlugs: [],
-  relatedCheatsheetSlugs: [],
-  sections: [],
-  publishedAt: "2026-02-01T00:00:00+09:00",
-  trustLevel: "curated",
 };
 
 describe("toTileable", () => {
@@ -129,23 +111,6 @@ describe("toTileable", () => {
     });
   });
 
-  describe("CheatsheetMeta からの変換", () => {
-    test("slug が正しく変換される", () => {
-      const result = toTileable(cheatsheetMetaFixture, "cheatsheet");
-      expect(result.slug).toBe("git");
-    });
-
-    test("displayName が name フィールドから生成される（CheatsheetMeta は title フィールドを持たない）", () => {
-      const result = toTileable(cheatsheetMetaFixture, "cheatsheet");
-      expect(result.displayName).toBe("Git チートシート");
-    });
-
-    test("contentKind が 'cheatsheet' になる", () => {
-      const result = toTileable(cheatsheetMetaFixture, "cheatsheet");
-      expect(result.contentKind).toBe("cheatsheet");
-    });
-  });
-
   describe("戻り値の型チェック", () => {
     test("ToolMeta からの変換結果が Tileable 型を満たす", () => {
       const result: Tileable = toTileable(toolMetaFixture, "tool");
@@ -160,12 +125,6 @@ describe("toTileable", () => {
 
     test("PlayContentMeta からの変換結果が Tileable 型を満たす", () => {
       const result: Tileable = toTileable(playContentMetaFixture, "play");
-      expect(result.slug).toBeDefined();
-      expect(result.displayName).toBeDefined();
-    });
-
-    test("CheatsheetMeta からの変換結果が Tileable 型を満たす", () => {
-      const result: Tileable = toTileable(cheatsheetMetaFixture, "cheatsheet");
       expect(result.slug).toBeDefined();
       expect(result.displayName).toBeDefined();
     });
@@ -250,50 +209,9 @@ describe("registry 全件 smoke test", () => {
     });
   });
 
-  describe("allCheatsheetMetas (cheatsheets) — 全件 toTileable() 変換", () => {
-    test("全 cheatsheet エントリが必須フィールドを持つ Tileable に変換できる", () => {
-      for (const meta of allCheatsheetMetas) {
-        const result = toTileable(meta, "cheatsheet");
-        expect(result.slug, `cheatsheets/${meta.slug}: slug`).toBe(meta.slug);
-        expect(
-          result.displayName,
-          `cheatsheets/${meta.slug}: displayName`,
-        ).toBeTruthy();
-        expect(
-          result.shortDescription,
-          `cheatsheets/${meta.slug}: shortDescription`,
-        ).toBeTruthy();
-        expect(
-          result.contentKind,
-          `cheatsheets/${meta.slug}: contentKind`,
-        ).toBe("cheatsheet");
-        expect(
-          result.publishedAt,
-          `cheatsheets/${meta.slug}: publishedAt`,
-        ).toBeTruthy();
-        expect(
-          result.trustLevel,
-          `cheatsheets/${meta.slug}: trustLevel`,
-        ).toBeTruthy();
-        expect(
-          "tile" in result,
-          `cheatsheets/${meta.slug}: tile キーは omit される`,
-        ).toBe(false);
-      }
-    });
-
-    test(`全 ${allCheatsheetMetas.length} 件が処理される`, () => {
-      const results = allCheatsheetMetas.map((meta) =>
-        toTileable(meta, "cheatsheet"),
-      );
-      expect(results).toHaveLength(allCheatsheetMetas.length);
-    });
-  });
-
-  test("tools + play + cheatsheets の合計件数が期待値と一致する", () => {
-    const total =
-      allToolMetas.length + allPlayContents.length + allCheatsheetMetas.length;
-    // 34 tools + 20 play + 7 cheatsheets = 61 件（計画書概算 60 件）
-    expect(total).toBeGreaterThanOrEqual(60);
+  test("tools + play の合計件数が期待値と一致する", () => {
+    const total = allToolMetas.length + allPlayContents.length;
+    // 34 tools + 20 play = 54 件
+    expect(total).toBeGreaterThanOrEqual(54);
   });
 });

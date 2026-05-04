@@ -50,12 +50,4 @@ describe("INITIAL_DEFAULT_LAYOUT 定数", () => {
     const uniqueSlugs = new Set(slugs);
     expect(uniqueSlugs.size).toBe(slugs.length);
   });
-
-  // variantId: 現サイクルでは全タイルで variantId 未指定。
-  // Phase 7 で variantId を使う際にテストデータを追加すること。
-  test("現サイクルでは全タイルで variantId が undefined である（暫定）", () => {
-    for (const tile of INITIAL_DEFAULT_LAYOUT.tiles) {
-      expect(tile.variantId).toBeUndefined();
-    }
-  });
 });
