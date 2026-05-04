@@ -45,6 +45,7 @@ vi.mock("../TileGrid", () => ({
   TileGrid: ({
     tiles,
     isEditing,
+    onChangeTiles,
     onRemoveTile,
     onLongPress,
   }: {
@@ -80,6 +81,51 @@ vi.mock("../TileGrid", () => ({
               onClick: () => onLongPress?.(t.slug),
             },
             "長押し",
+          ),
+          // サイズ変更シミュレーション用ボタン（F-1: aria-live 通知テスト用）
+          React.createElement(
+            "button",
+            {
+              "data-testid": `change-size-${t.slug}-medium`,
+              onClick: () =>
+                onChangeTiles(
+                  tiles.map((tile) =>
+                    tile.slug === t.slug
+                      ? { ...tile, size: "medium" as const }
+                      : tile,
+                  ),
+                ),
+            },
+            "中サイズに変更",
+          ),
+          React.createElement(
+            "button",
+            {
+              "data-testid": `change-size-${t.slug}-large`,
+              onClick: () =>
+                onChangeTiles(
+                  tiles.map((tile) =>
+                    tile.slug === t.slug
+                      ? { ...tile, size: "large" as const }
+                      : tile,
+                  ),
+                ),
+            },
+            "大サイズに変更",
+          ),
+          // 同一サイズ再選択ボタン（no-op テスト用）
+          React.createElement(
+            "button",
+            {
+              "data-testid": `change-size-${t.slug}-same`,
+              onClick: () =>
+                onChangeTiles(
+                  tiles.map((tile) =>
+                    tile.slug === t.slug ? { ...tile, size: tile.size } : tile,
+                  ),
+                ),
+            },
+            "同じサイズ再選択",
           ),
         ),
       ),
@@ -510,6 +556,62 @@ describe("ToolboxShell — data-tile-slug 重複なし（CRIT-4）", () => {
     fireEvent.click(screen.getByTestId("remove-tool-a"));
     // バナーが正常に表示されている（data-tile-slug が article にのみ存在するため動作可能）
     expect(screen.getByTestId("undo-banner")).toBeTruthy();
+  });
+});
+
+// -----------------------------------------------------------------------
+// F-1: タイルサイズ変更 — ToolboxShell レベルの aria-live 通知（CRIT-F1-2）
+// -----------------------------------------------------------------------
+
+describe("ToolboxShell — F-1: サイズ変更 aria-live 通知（CRIT-F1-2）", () => {
+  test("サイズ変更時に aria-live で「{displayName}を{大}サイズに変更しました」が通知される", () => {
+    // tool-a は small。large に変更したとき通知が流れる。
+    render(<ToolboxShell />);
+    fireEvent.click(screen.getByRole("button", { name: "編集" }));
+    fireEvent.click(screen.getByTestId("change-size-tool-a-large"));
+    const liveRegion = document.querySelector('[data-testid="live-region"]');
+    expect(liveRegion?.textContent).toContain(
+      "ツールAを大サイズに変更しました",
+    );
+  });
+
+  test("サイズ変更時に aria-live で「{displayName}を{中}サイズに変更しました」が通知される", () => {
+    // tool-a は small。medium に変更したとき通知が流れる。
+    render(<ToolboxShell />);
+    fireEvent.click(screen.getByRole("button", { name: "編集" }));
+    fireEvent.click(screen.getByTestId("change-size-tool-a-medium"));
+    const liveRegion = document.querySelector('[data-testid="live-region"]');
+    expect(liveRegion?.textContent).toContain(
+      "ツールAを中サイズに変更しました",
+    );
+  });
+
+  test("同じ size を再選択したとき aria-live 通知は発火しない（no-op）", () => {
+    // tool-a は small。small に再選択しても通知されない。
+    render(<ToolboxShell />);
+    fireEvent.click(screen.getByRole("button", { name: "編集" }));
+    // change-size-tool-a-same は同一 size（small → small）を渡す
+    fireEvent.click(screen.getByTestId("change-size-tool-a-same"));
+    const liveRegion = document.querySelector('[data-testid="live-region"]');
+    // サイズ変更通知が流れていないこと（編集モード入りの通知のみ）
+    expect(liveRegion?.textContent).not.toContain("サイズに変更しました");
+  });
+
+  test("同じ size を再選択したとき setTiles が呼ばれない（no-op / localStorage 無駄書き込み防止）", () => {
+    // tool-a は small。same ボタンは同一 size を渡す → no-op
+    render(<ToolboxShell />);
+    fireEvent.click(screen.getByRole("button", { name: "編集" }));
+    mockSetTiles.mockClear();
+    fireEvent.click(screen.getByTestId("change-size-tool-a-same"));
+    expect(mockSetTiles).not.toHaveBeenCalled();
+  });
+
+  test("異なる size 変更のとき setTiles が呼ばれる", () => {
+    render(<ToolboxShell />);
+    fireEvent.click(screen.getByRole("button", { name: "編集" }));
+    mockSetTiles.mockClear();
+    fireEvent.click(screen.getByTestId("change-size-tool-a-large"));
+    expect(mockSetTiles).toHaveBeenCalledTimes(1);
   });
 });
 

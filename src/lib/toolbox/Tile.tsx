@@ -71,10 +71,42 @@ export interface TileProps {
    */
   onLongPress?: (slug: string) => void;
   /**
+   * サイズ変更コールバック（F-1）。
+   * DESIGN.md §1 パネル原則に従い sizeBar を Tile 内部の最下部に配置する。
+   * isEditing 時のみ描画する。省略可（省略時はボタン表示のみで no-op）。
+   */
+  onChangeSize?: (size: TileLayoutEntry["size"]) => void;
+  /**
    * 外部から追加する CSS クラス名（任意）。
    * TileGrid が揺れアニメ（tile--wiggle）を付与するための受け皿（瞬間 9）。
    */
   className?: string;
+  /**
+   * 上に移動コールバック（MID-F1v2-1）。
+   * controlsOverlay (↑↓×) を Tile 内部に配置するため、TileGrid からコールバックを受け取る。
+   * isEditing + isFirst=false の場合のみ ↑ ボタンを表示する。
+   */
+  onMoveUp?: (slug: string) => void;
+  /**
+   * 下に移動コールバック（MID-F1v2-1）。
+   * isEditing + isLast=false の場合のみ ↓ ボタンを表示する。
+   */
+  onMoveDown?: (slug: string) => void;
+  /**
+   * 削除コールバック（MID-F1v2-1）。
+   * isEditing の場合に × ボタンを表示する。
+   */
+  onRemove?: (slug: string) => void;
+  /**
+   * 先頭タイルかどうか（MID-F1v2-1）。
+   * true のとき ↑ ボタンを非表示にする。
+   */
+  isFirst?: boolean;
+  /**
+   * 末尾タイルかどうか（MID-F1v2-1）。
+   * true のとき ↓ ボタンを非表示にする。
+   */
+  isLast?: boolean;
 }
 
 /**
@@ -93,7 +125,13 @@ export function Tile({
   isEmpty = false,
   tileComponent: TileComponent,
   onLongPress,
+  onChangeSize,
   className: extraClassName,
+  onMoveUp,
+  onMoveDown,
+  onRemove,
+  isFirst = false,
+  isLast = false,
 }: TileProps) {
   const tileable = getTileableBySlug(entry.slug);
 
@@ -259,7 +297,14 @@ export function Tile({
         />
       )}
 
-      {/* 編集モード時: ドラッグハンドルを表示（DESIGN.md §4 L75） */}
+      {/*
+       * 編集モード時: ドラッグハンドル + controlsOverlay（↑↓×）を tileHeader 内に表示。
+       *
+       * MID-F1v2-1: controlsOverlay を Tile 内部（article の子）に配置する。
+       * これにより、アクセント色アウトライン・揺れアニメ（tile--editing / tile--wiggle）が
+       * ↑↓× ボタン群を含む Tile 全体に適用される（article 外に出ると枠線・揺れが適用されない問題を解消）。
+       * DESIGN.md §4 L75 参照。
+       */}
       {isEditing && (
         <div className={styles.tileHeader}>
           {/* ドラッグハンドル: grab/grabbing カーソルはこの要素にのみ適用 */}
@@ -291,6 +336,91 @@ export function Tile({
               <circle cx="15" cy="18" r="1" />
             </svg>
           </div>
+
+          {/*
+           * controlsOverlay: ↑↓× ボタン群（MID-F1v2-1）。
+           * article 内の tileHeader に配置することで、アクセント色枠線・揺れアニメが
+           * ボタン群も含む Tile 全体に適用される（WCAG SC 2.5.7 方式 α）。
+           */}
+          {(onMoveUp || onMoveDown || onRemove) && (
+            <div className={styles.controlsOverlay}>
+              {/* ↑ ボタン: 先頭タイル（isFirst=true）では表示しない */}
+              {!isFirst && onMoveUp && (
+                <button
+                  type="button"
+                  className={styles.moveButton}
+                  aria-label={`${displayName}を上に移動`}
+                  onClick={() => onMoveUp(entry.slug)}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <polyline points="18 15 12 9 6 15" />
+                  </svg>
+                </button>
+              )}
+
+              {/* ↓ ボタン: 末尾タイル（isLast=true）では表示しない */}
+              {!isLast && onMoveDown && (
+                <button
+                  type="button"
+                  className={styles.moveButton}
+                  aria-label={`${displayName}を下に移動`}
+                  onClick={() => onMoveDown(entry.slug)}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
+                </button>
+              )}
+
+              {/* × 削除ボタン */}
+              {onRemove && (
+                <button
+                  type="button"
+                  className={styles.removeButton}
+                  aria-label={`${displayName}を削除`}
+                  onClick={() => onRemove(entry.slug)}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                  </svg>
+                </button>
+              )}
+            </div>
+          )}
         </div>
       )}
 
@@ -330,6 +460,53 @@ export function Tile({
         {/* タイルコンポーネント本体（Phase 2 では FallbackTile） */}
         <TileComponent slug={entry.slug} isEditing={isEditing} />
       </div>
+
+      {/*
+       * F-1: サイズ変更バー（S/M/L トグルボタン）。
+       * DESIGN.md §1 パネル原則に従い Tile の article 最下部に配置する。
+       * アクセント色アウトラインと揺れアニメ（tile--editing / tile--wiggle）が
+       * sizeBar を含む Tile 全体に適用される（docs/cycles/cycle-177.md F-1 参照）。
+       */}
+      {/*
+       * F-1: サイズ変更バー（S/M/L トグルボタン）。
+       * DESIGN.md §1 パネル原則に従い Tile の article 最下部に配置する。
+       * アクセント色アウトラインと揺れアニメ（tile--editing / tile--wiggle）が
+       * sizeBar を含む Tile 全体に適用される（docs/cycles/cycle-177.md F-1 参照）。
+       *
+       * MIN-F1v2-2: aria-label は日本語表記（小/中/大サイズ）に統一する。
+       * 表示テキスト（S/M/L）はそのまま維持し、aria-label のみ日本語化する。
+       * これにより aria-live 通知との言語整合が取れる。
+       */}
+      {isEditing && (
+        <div
+          className={styles.sizeBar}
+          aria-label={`${displayName}のサイズ変更`}
+        >
+          {(
+            [
+              { value: "small", label: "S", ariaLabel: "小" },
+              { value: "medium", label: "M", ariaLabel: "中" },
+              { value: "large", label: "L", ariaLabel: "大" },
+            ] as const
+          ).map(({ value, label, ariaLabel }) => (
+            <button
+              key={value}
+              type="button"
+              className={[
+                styles.sizeButton,
+                entry.size === value ? styles.sizeButtonActive : null,
+              ]
+                .filter(Boolean)
+                .join(" ")}
+              aria-label={`${displayName}を${ariaLabel}サイズに変更`}
+              aria-pressed={entry.size === value ? "true" : "false"}
+              onClick={() => onChangeSize?.(value)}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      )}
     </article>
   );
 }
