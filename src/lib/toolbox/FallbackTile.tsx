@@ -23,15 +23,21 @@ import type { TileComponentProps } from "./tile-loader";
 
 /**
  * 未実装タイルのフォールバック表示。
- *
- * Phase 3 以降で個別タイルコンポーネントが実装されるまでの仮置き。
- * Tile コンテナ（Tile.tsx）が displayName / shortDescription を表示するため、
- * このフォールバックは slug テキストを表示しない（二重表示の防止）。
- * タイルの存在を示す最小限の視覚的プレースホルダーとして機能する。
+ * 最小限の表示のみ（スラグ名）を提供する。
  */
-export function FallbackTile({ slug: _slug }: TileComponentProps) {
+export function FallbackTile({ slug }: TileComponentProps) {
   return (
-    /* data-tile-slug は親の article（Tile.tsx）にのみ付与する。重複付与を防ぐため削除（CRIT-4）。 */
-    <div data-tile-fallback="true" aria-hidden="true" />
+    <div
+      data-tile-slug={slug}
+      data-tile-fallback="true"
+      style={{
+        padding: "8px",
+        border: "1px solid currentColor",
+        borderRadius: "4px",
+        opacity: 0.5,
+      }}
+    >
+      {slug}
+    </div>
   );
 }

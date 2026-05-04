@@ -146,23 +146,6 @@ describe("toTileable", () => {
     });
   });
 
-  describe("href 生成（CRIT-F1v2-1）", () => {
-    test("tool: href が /tools/{slug} で生成される", () => {
-      const result = toTileable(toolMetaFixture, "tool");
-      expect(result.href).toBe("/tools/json-formatter");
-    });
-
-    test("play: href が /play/{slug} で生成される", () => {
-      const result = toTileable(playContentMetaFixture, "play");
-      expect(result.href).toBe("/play/kanji-kanaru");
-    });
-
-    test("cheatsheet: href が /cheatsheets/{slug} で生成される", () => {
-      const result = toTileable(cheatsheetMetaFixture, "cheatsheet");
-      expect(result.href).toBe("/cheatsheets/git");
-    });
-  });
-
   describe("戻り値の型チェック", () => {
     test("ToolMeta からの変換結果が Tileable 型を満たす", () => {
       const result: Tileable = toTileable(toolMetaFixture, "tool");

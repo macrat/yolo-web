@@ -90,8 +90,6 @@ export function toTileable(
       contentKind,
       publishedAt: toolMeta.publishedAt,
       trustLevel: toolMeta.trustLevel,
-      // CRIT-F1v2-1: contentKind に応じた href を生成する
-      href: `/tools/${toolMeta.slug}`,
     };
   }
 
@@ -107,8 +105,6 @@ export function toTileable(
       accentColor: playMeta.accentColor,
       publishedAt: playMeta.publishedAt,
       trustLevel: playMeta.trustLevel,
-      // CRIT-F1v2-1: contentKind に応じた href を生成する
-      href: `/play/${playMeta.slug}`,
     };
   }
 
@@ -123,7 +119,5 @@ export function toTileable(
     contentKind,
     publishedAt: cheatsheetMeta.publishedAt,
     trustLevel: cheatsheetMeta.trustLevel,
-    // CRIT-F1v2-1: contentKind に応じた href を生成する
-    href: `/cheatsheets/${cheatsheetMeta.slug}`,
   };
 }
