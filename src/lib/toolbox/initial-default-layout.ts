@@ -7,13 +7,12 @@
  *
  * 用途:
  * - 初回来訪者・SNS シェア訪問者・Googlebot に空でない初期道具箱を見せるための枠組み。
- * - localStorage 未設定 / 不正時のフォールバック値を `useToolboxConfig` フック（2.2.8）が
- *   この定数 `INITIAL_DEFAULT_LAYOUT` を参照して返す。
+ * - localStorage 未設定 / 不正時のフォールバック値として使用される。
  * - `useSyncExternalStore` の `getServerSnapshot` はこの定数を固定値として返す設計。
  *
  * 責務範囲:
  * - 本ファイルの責務は型定義と定数のエクスポートのみ。
- * - localStorage 読込フックの実装は `useToolboxConfig` フック（2.2.8）の責務。
+ * - localStorage 連携と Hook 実装は Phase 9 で実タイル群の観察に基づき設計・実装される。
  * - Tile コンポーネントの実装は 2.2.5 の責務。
  *
  * slug について:
