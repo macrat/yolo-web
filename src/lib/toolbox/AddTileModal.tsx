@@ -34,7 +34,7 @@ import {
 } from "react";
 import { acquireScrollLock, releaseScrollLock } from "@/lib/scroll-lock";
 import { getAllTileables } from "@/lib/toolbox/registry";
-import { TRUST_LEVEL_META } from "@/lib/trust-levels";
+import TrustLevelBadge from "@/components/common/TrustLevelBadge";
 import type { Tileable } from "./types";
 import styles from "./AddTileModal.module.css";
 
@@ -284,7 +284,6 @@ export default function AddTileModal({
             aria-label="追加可能なタイル一覧"
           >
             {filteredTileables.map((tileable) => {
-              const trustMeta = TRUST_LEVEL_META[tileable.trustLevel];
               const kindLabel = CONTENT_KIND_LABELS[tileable.contentKind];
               return (
                 /* 瞬間 27: 候補が fade-in 80ms で表示 */
@@ -300,12 +299,7 @@ export default function AddTileModal({
                       <span className={styles.contentKindLabel}>
                         {kindLabel}
                       </span>
-                      <span
-                        className={styles.trustLabel}
-                        aria-label={`信頼レベル: ${trustMeta.label}`}
-                      >
-                        {trustMeta.label}
-                      </span>
+                      <TrustLevelBadge level={tileable.trustLevel} />
                     </div>
                   </div>
                   {/* WCAG SC 2.5.8: タップターゲット 44px 以上 */}

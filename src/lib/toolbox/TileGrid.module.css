@@ -47,22 +47,80 @@
   }
 }
 
-/* グリッドコンテナ */
+/* グリッドコンテナ
+ *
+ * ブレークポイントごとにカラム数を固定し、size プロパティを grid-column span で反映する。
+ * w360 = 2col / w768 = 3col / w1280 = 4col（各ブレークポイントは sortableItem の
+ * data-size 属性ではなく、.gridSmall / .gridMedium / .gridLarge CSS クラスで制御）。
+ */
 .grid {
   display: grid;
-  /* auto-fill + minmax でブレークポイントなしのレスポンシブグリッドを実現する。
-   * 最小幅を 140px にすることで w360 では 2 列（= 8 タイル / 4 行）以上が成立する。
-   * 業界相場（12-14 タイル）を下限目標とするため、縮みすぎない min を設定する。
-   */
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 0.5rem;
   padding: 0.5rem;
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1280px) {
+  .grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 
 /* ソート可能なアイテムのラッパー */
 .sortableItem {
   position: relative;
   /* カーソル表現については DESIGN.md §4 (L69-78) を参照 */
+}
+
+/* size=small: 1 列分 */
+.sortableItemSmall {
+  grid-column: span 1;
+}
+
+/* size=medium: 2 列分（w360 では 2col グリッドで span 2 = 全幅に縮退） */
+.sortableItemMedium {
+  grid-column: span 2;
+}
+
+/* size=large: 2 列分（medium と同幅。w360 では全幅に縮退） */
+.sortableItemLarge {
+  grid-column: span 2;
+}
+
+/* w768 以上: medium/large は 2 列分（3col グリッドで幅広表示） */
+@media (min-width: 768px) {
+  .sortableItemSmall {
+    grid-column: span 1;
+  }
+
+  .sortableItemMedium {
+    grid-column: span 2;
+  }
+
+  .sortableItemLarge {
+    grid-column: span 2;
+  }
+}
+
+/* w1280 以上: large は 3 列分（4col グリッドでより幅広に） */
+@media (min-width: 1280px) {
+  .sortableItemSmall {
+    grid-column: span 1;
+  }
+
+  .sortableItemMedium {
+    grid-column: span 2;
+  }
+
+  .sortableItemLarge {
+    grid-column: span 3;
+  }
 }
 
 /* ドラッグ中の視覚表現: DESIGN.md §4 L73 参照 */

@@ -130,8 +130,17 @@ function SortableItem({
   const tileable = getTileableBySlug(entry.slug);
   const displayName = tileable?.displayName ?? entry.slug;
 
+  // size に応じた grid-column span クラスを付与する（CRIT-5 対応）
+  const sizeClassName =
+    entry.size === "large"
+      ? styles.sortableItemLarge
+      : entry.size === "medium"
+        ? styles.sortableItemMedium
+        : styles.sortableItemSmall;
+
   const itemClassName = [
     styles.sortableItem,
+    sizeClassName,
     isDragging ? styles.sortableItemDragging : null,
   ]
     .filter(Boolean)

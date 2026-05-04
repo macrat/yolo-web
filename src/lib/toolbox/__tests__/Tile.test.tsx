@@ -52,6 +52,7 @@ vi.mock("../Tile.module.css", () => ({
     tileDescription: "tileDescription",
     dragHandle: "dragHandle",
     tileHeader: "tileHeader",
+    stretchedLink: "stretchedLink",
   },
 }));
 
@@ -540,5 +541,104 @@ describe("Tile v10 — onLongPress props インタフェース", () => {
         />,
       );
     }).not.toThrow();
+  });
+});
+
+// -----------------------------------------------------------------------
+// CRIT-r2-2: Stretched Link — タイル全体がクリック可能（使用モード + href あり）
+// -----------------------------------------------------------------------
+
+describe("CRIT-r2-2 — Stretched Link（タイル全体がリンク）", () => {
+  test("使用モード + href あり: article に stretched-link クラスの a タグが存在する", () => {
+    render(
+      <Tile entry={baseEntry} isEditing={false} tileComponent={DynamicStub} />,
+    );
+    // stretchedLink クラスを持つ a タグが article 内に存在する
+    const article = document.querySelector("article");
+    const stretchedLink = article?.querySelector(
+      "a.stretchedLink, [class*='stretchedLink']",
+    );
+    expect(stretchedLink).toBeTruthy();
+  });
+
+  test("使用モード + href あり: article 内の a タグが href を持つ", () => {
+    render(
+      <Tile entry={baseEntry} isEditing={false} tileComponent={DynamicStub} />,
+    );
+    const link = document.querySelector(
+      'article a[href="/tools/json-formatter"]',
+    );
+    expect(link).toBeTruthy();
+  });
+
+  test("編集モード時: stretchedLink は存在しない（編集操作を妨げないよう）", () => {
+    render(
+      <Tile entry={baseEntry} isEditing={true} tileComponent={DynamicStub} />,
+    );
+    const article = document.querySelector("article");
+    const stretchedLink = article?.querySelector("a[class*='stretchedLink']");
+    expect(stretchedLink).toBeNull();
+  });
+
+  test("href なし + 使用モード: stretchedLink は存在しない", () => {
+    render(
+      <Tile
+        entry={{ ...baseEntry, slug: "no-href-tool" }}
+        isEditing={false}
+        tileComponent={DynamicStub}
+      />,
+    );
+    const article = document.querySelector("article");
+    const stretchedLink = article?.querySelector("a[class*='stretchedLink']");
+    expect(stretchedLink).toBeNull();
+  });
+});
+
+// -----------------------------------------------------------------------
+// MID-r2-3: small タイルで displayName を 2 行クリップ
+// -----------------------------------------------------------------------
+
+describe("MID-r2-3 — small タイルの displayName クリップ", () => {
+  test("tileName は CSS クラスが付与されている（overflow制御は CSS）", () => {
+    const { container } = render(
+      <Tile
+        entry={{ ...baseEntry, size: "small" }}
+        isEditing={false}
+        tileComponent={DynamicStub}
+      />,
+    );
+    const tileName = container.querySelector("[class*='tileName']");
+    expect(tileName).toBeTruthy();
+  });
+});
+
+/**
+ * CRIT-4: displayName と FallbackTile の slug が二重表示されないことを検証する。
+ *
+ * 登録済み slug では displayName ("JSON フォーマッター") が一度だけ表示されること、
+ * FallbackTile が二重に slug を表示しないことを確認する。
+ */
+describe("CRIT-4 — displayName と TileComponent の二重表示がない", () => {
+  test("登録済み slug のとき displayName がタイル内に 1 回だけ表示される", () => {
+    render(
+      <Tile entry={baseEntry} isEditing={false} tileComponent={DynamicStub} />,
+    );
+    // displayName = "JSON フォーマッター" の出現回数が 1 回だけであること
+    const elements = screen.getAllByText("JSON フォーマッター");
+    expect(elements.length).toBe(1);
+  });
+
+  test("登録済み slug のとき slug 文字列 (json-formatter) は tileMeta 領域に表示されない", () => {
+    const { container } = render(
+      <Tile entry={baseEntry} isEditing={false} tileComponent={DynamicStub} />,
+    );
+    // tileMeta エリア（.tileMeta クラス相当）には slug 文字列が表示されないこと
+    // DynamicStub は data-testid="fallback-tile" を持ち、slug 文字列を表示するが
+    // それは TileComponent 内部の表示であり、tileMeta には含まれない
+    const tileMeta = container.querySelector(".tileMeta");
+    // tileMeta が存在する場合、その中に slug 文字列がないこと
+    if (tileMeta) {
+      expect(tileMeta.textContent).not.toContain("json-formatter");
+    }
   });
 });

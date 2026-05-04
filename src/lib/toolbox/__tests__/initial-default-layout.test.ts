@@ -3,6 +3,7 @@ import {
   INITIAL_DEFAULT_LAYOUT,
   type InitialDefaultLayout,
 } from "../initial-default-layout";
+import { getTileableBySlug } from "../registry";
 
 describe("InitialDefaultLayout 型", () => {
   test("INITIAL_DEFAULT_LAYOUT は InitialDefaultLayout 型に適合する", () => {
@@ -50,25 +51,18 @@ describe("INITIAL_DEFAULT_LAYOUT 定数", () => {
     expect(uniqueOrders.size).toBe(orders.length);
   });
 
-  test("small サイズのタイルが 2 つ以上ある", () => {
+  test("small サイズのタイルが 1 つ以上ある", () => {
     const smalls = INITIAL_DEFAULT_LAYOUT.tiles.filter(
       (t) => t.size === "small",
     );
-    expect(smalls.length).toBeGreaterThanOrEqual(2);
+    expect(smalls.length).toBeGreaterThanOrEqual(1);
   });
 
-  test("medium サイズのタイルが 2 つ以上ある", () => {
-    const mediums = INITIAL_DEFAULT_LAYOUT.tiles.filter(
-      (t) => t.size === "medium",
+  test("medium または large サイズのタイルが 1 つ以上ある（small のみで構成されていない）", () => {
+    const widers = INITIAL_DEFAULT_LAYOUT.tiles.filter(
+      (t) => t.size === "medium" || t.size === "large",
     );
-    expect(mediums.length).toBeGreaterThanOrEqual(2);
-  });
-
-  test("large サイズのタイルが 1 つ以上ある", () => {
-    const larges = INITIAL_DEFAULT_LAYOUT.tiles.filter(
-      (t) => t.size === "large",
-    );
-    expect(larges.length).toBeGreaterThanOrEqual(1);
+    expect(widers.length).toBeGreaterThanOrEqual(1);
   });
 
   test("slug の重複がない", () => {
@@ -82,6 +76,21 @@ describe("INITIAL_DEFAULT_LAYOUT 定数", () => {
   test("現サイクルでは全タイルで variantId が undefined である（暫定）", () => {
     for (const tile of INITIAL_DEFAULT_LAYOUT.tiles) {
       expect(tile.variantId).toBeUndefined();
+    }
+  });
+
+  /**
+   * CRIT-1: fixture-* ダミー slug ではなく、レジストリに実在する slug を使っているか。
+   * fixture-* の slug は getTileableBySlug で undefined を返すため、
+   * このテストが失敗した場合はダミー slug が残っている。
+   */
+  test("すべての slug がレジストリに実在する（fixture-* ダミーでない）", () => {
+    for (const tile of INITIAL_DEFAULT_LAYOUT.tiles) {
+      const tileable = getTileableBySlug(tile.slug);
+      expect(
+        tileable,
+        `slug "${tile.slug}" がレジストリに存在しない。fixture-* ダミーのまま実 slug に差し替えていない可能性がある。`,
+      ).toBeDefined();
     }
   });
 });

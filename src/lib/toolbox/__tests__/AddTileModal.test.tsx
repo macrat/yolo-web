@@ -209,6 +209,37 @@ describe("AddTileModal — 候補表示", () => {
     const verifiedLabels = screen.getAllByText(/正確な処理/);
     expect(verifiedLabels.length).toBeGreaterThan(0);
   });
+
+  test("信頼度ラベルが details/summary パターンで説明文を持つ（TrustLevelBadge 使用）", () => {
+    const { container } = render(
+      <AddTileModal
+        isOpen={true}
+        onClose={vi.fn()}
+        onAdd={vi.fn()}
+        currentTileSlugs={[]}
+      />,
+    );
+    // 候補リスト内に <details> 要素が存在する（TrustLevelBadge の展開パターン）
+    const detailsElements = container.querySelectorAll(
+      '[role="list"] details, [aria-label*="追加可能"] details',
+    );
+    expect(detailsElements.length).toBeGreaterThan(0);
+  });
+
+  test("信頼度ラベルに説明文テキストが含まれる（TrustLevelBadge の description）", () => {
+    render(
+      <AddTileModal
+        isOpen={true}
+        onClose={vi.fn()}
+        onAdd={vi.fn()}
+        currentTileSlugs={[]}
+      />,
+    );
+    // verified の description テキストが少なくとも1つドキュメントに存在する
+    const descriptionElements =
+      screen.getAllByText(/標準的なアルゴリズムに基づいて処理/);
+    expect(descriptionElements.length).toBeGreaterThan(0);
+  });
 });
 
 describe("AddTileModal — 検索フィルタ", () => {

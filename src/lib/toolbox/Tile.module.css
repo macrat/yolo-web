@@ -26,6 +26,27 @@
   transition: transform 100ms ease-out;
   /* 瞬間 37: iOS Safari の長押しコンテキストメニュー抑止 */
   touch-action: manipulation;
+  /* Stretched Link のために position: relative が必要（CRIT-r2-2） */
+  position: relative;
+}
+
+/*
+ * Stretched Link（CRIT-r2-2）: タイル全体をクリック可能にする絶対配置リンク。
+ * ::before で全領域を覆うことで、タイル本体をクリックしてもリンク遷移が起きる。
+ * 編集モード時はこの要素を出力しないため、編集ボタン群の操作を妨げない。
+ * tabIndex=-1 / aria-hidden="true" なので、キーボード・SR 向けのリンクは
+ * tileName の <Link> が担う（二重フォーカス防止）。
+ */
+.stretchedLink {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.stretchedLink::before {
+  content: "";
+  position: absolute;
+  inset: 0;
 }
 
 /* 瞬間 1/2: fade-in クラス（マウント後に JS で付与） */
@@ -141,6 +162,10 @@
 /* DESIGN.md §4 L76 参照 */
 .tileInnerDisabled {
   pointer-events: none;
+  /* 編集モード時: 右上の controlsOverlay（ボタン群）とテキストが重ならないようにする。
+   * controlsOverlay の幅は約 36px（ボタン 28px + padding 4px × 2）。
+   * 余裕を持たせて 40px にする。 */
+  padding-right: 40px;
 }
 
 /* メタ情報エリア（displayName / shortDescription） */
