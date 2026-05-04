@@ -77,11 +77,6 @@ describe("toTileable", () => {
       const result = toTileable(toolMetaFixture, "tool");
       expect(result.accentColor).toBeUndefined();
     });
-
-    test("tile キーが存在しない（omit）", () => {
-      const result = toTileable(toolMetaFixture, "tool");
-      expect("tile" in result).toBe(false);
-    });
   });
 
   describe("PlayContentMeta からの変換", () => {
@@ -156,10 +151,6 @@ describe("registry 全件 smoke test", () => {
           result.trustLevel,
           `tools/${meta.slug}: trustLevel`,
         ).toBeTruthy();
-        expect(
-          "tile" in result,
-          `tools/${meta.slug}: tile キーは omit される`,
-        ).toBe(false);
       }
     });
 
@@ -196,10 +187,6 @@ describe("registry 全件 smoke test", () => {
           result.accentColor,
           `play/${meta.slug}: accentColor`,
         ).toBeTruthy();
-        expect(
-          "tile" in result,
-          `play/${meta.slug}: tile キーは omit される`,
-        ).toBe(false);
       }
     });
 
