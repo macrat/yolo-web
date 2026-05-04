@@ -1,11 +1,9 @@
 import { describe, expect, test } from "vitest";
 import { allToolMetas } from "@/tools/registry";
 import { allPlayContents } from "@/play/registry";
-import { allCheatsheetMetas } from "@/cheatsheets/registry";
 import { getAllTileables, getTileableBySlug } from "../registry";
 
-const EXPECTED_TOTAL =
-  allToolMetas.length + allPlayContents.length + allCheatsheetMetas.length;
+const EXPECTED_TOTAL = allToolMetas.length + allPlayContents.length;
 
 describe("getAllTileables", () => {
   test("全エントリを Tileable[] として返す", () => {
@@ -13,9 +11,9 @@ describe("getAllTileables", () => {
     expect(result).toHaveLength(EXPECTED_TOTAL);
   });
 
-  test("61 件以上を返す（tools 34 + play 20 + cheatsheets 7）", () => {
+  test("54 件以上を返す（tools 34 + play 20）", () => {
     const result = getAllTileables();
-    expect(result.length).toBeGreaterThanOrEqual(61);
+    expect(result.length).toBeGreaterThanOrEqual(54);
   });
 
   test("すべてのエントリが Tileable の必須フィールドを持つ", () => {
@@ -33,7 +31,7 @@ describe("getAllTileables", () => {
       expect(
         item.contentKind,
         `${item.contentKind}/${item.slug}: contentKind`,
-      ).toMatch(/^(tool|play|cheatsheet)$/);
+      ).toMatch(/^(tool|play)$/);
       expect(
         item.publishedAt,
         `${item.contentKind}/${item.slug}: publishedAt`,
@@ -57,13 +55,7 @@ describe("getAllTileables", () => {
     expect(plays).toHaveLength(allPlayContents.length);
   });
 
-  test("cheatsheet エントリが 7 件含まれる", () => {
-    const result = getAllTileables();
-    const cheatsheets = result.filter((t) => t.contentKind === "cheatsheet");
-    expect(cheatsheets).toHaveLength(allCheatsheetMetas.length);
-  });
-
-  test("順序: tool → play → cheatsheet の順で並ぶ", () => {
+  test("順序: tool → play の順で並ぶ", () => {
     const result = getAllTileables();
     const toolCount = allToolMetas.length;
     const playCount = allPlayContents.length;
@@ -74,10 +66,6 @@ describe("getAllTileables", () => {
     // 次の playCount 件が play
     for (let i = toolCount; i < toolCount + playCount; i++) {
       expect(result[i].contentKind).toBe("play");
-    }
-    // 残りが cheatsheet
-    for (let i = toolCount + playCount; i < result.length; i++) {
-      expect(result[i].contentKind).toBe("cheatsheet");
     }
   });
 });
@@ -97,13 +85,6 @@ describe("getTileableBySlug", () => {
     expect(result).toBeDefined();
     expect(result?.slug).toBe(firstPlay.slug);
     expect(result?.contentKind).toBe("play");
-  });
-
-  test("既存 slug で Tileable を返す（cheatsheet）", () => {
-    const result = getTileableBySlug("git");
-    expect(result).toBeDefined();
-    expect(result?.slug).toBe("git");
-    expect(result?.contentKind).toBe("cheatsheet");
   });
 
   test("存在しない slug で undefined を返す", () => {
@@ -126,20 +107,12 @@ describe("getTileableBySlug", () => {
       expect(result?.contentKind).toBe("play");
     }
   });
-
-  test("全 cheatsheet slug が取得できる", () => {
-    for (const meta of allCheatsheetMetas) {
-      const result = getTileableBySlug(meta.slug);
-      expect(result, `cheatsheet/${meta.slug} が取得できる`).toBeDefined();
-      expect(result?.contentKind).toBe("cheatsheet");
-    }
-  });
 });
 
 /**
  * 重複 slug の優先順位仕様テスト
  *
- * 仕様: slug が重複する場合は Tool > Play > Cheatsheet の優先順位を採用する。
+ * 仕様: slug が重複する場合は Tool > Play の優先順位を採用する。
  * 理由: Tool は最も広く使われるコンテンツであり、同一 slug のコンテンツが
  *       複数種別にわたって存在する場合、ツールを優先するのが直感的。
  *
@@ -195,12 +168,6 @@ describe("codegen 生成ファイルの件数確認", () => {
   test("toolTileables が allToolMetas と同数である（codegen が全 meta.ts を網羅）", async () => {
     const { toolTileables } = await import("../generated/toolbox-registry");
     expect(toolTileables).toHaveLength(allToolMetas.length);
-  });
-
-  test("cheatsheetTileables が allCheatsheetMetas と同数である", async () => {
-    const { cheatsheetTileables } =
-      await import("../generated/toolbox-registry");
-    expect(cheatsheetTileables).toHaveLength(allCheatsheetMetas.length);
   });
 
   test("playTileables が allPlayContents と同数である", async () => {

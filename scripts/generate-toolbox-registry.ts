@@ -210,13 +210,11 @@ export function buildCheatsheetRegistryContent(
  * without touching the filesystem (scripts/__tests__/generate-toolbox-registry.test.ts).
  *
  * @param toolSlugs - sorted list of tool slugs discovered from src/tools/{slug}/meta.ts
- * @param cheatsheetSlugs - sorted list of cheatsheet slugs from src/cheatsheets/{slug}/meta.ts
  * @param playCount - count of allPlayContents at generation time (for the comment)
  * @returns TypeScript source string (without trailing newline — caller adds it)
  */
 export function buildRegistryContent(
   toolSlugs: string[],
-  cheatsheetSlugs: string[],
   playCount: number,
 ): string {
   const lines: string[] = [
@@ -229,12 +227,12 @@ export function buildRegistryContent(
     " * If you find a manual edit here, run `npm run generate:toolbox-registry`",
     " * to restore. The git diff makes unintended edits easy to detect and revert.",
     " *",
-    " * This file merges all tool / play / cheatsheet entries into a unified",
+    " * This file merges all tool / play entries into a unified",
     " * Tileable[] array.  The public API (getAllTileables, getTileableBySlug)",
     " * is exposed via src/lib/toolbox/registry.ts which",
     " * imports from here — callers should never import this file directly.",
     " *",
-    " * TOOLS and CHEATSHEETS are auto-discovered from meta.ts files.",
+    " * TOOLS are auto-discovered from meta.ts files.",
     " * PLAY is imported from the existing src/play/registry.ts because play",
     " * content does not follow the per-slug meta.ts convention.",
     " */",
@@ -249,19 +247,6 @@ export function buildRegistryContent(
   for (const slug of toolSlugs) {
     const importName = `tool_${slug.replace(/-/g, "_")}`;
     lines.push(`import { meta as ${importName} } from "@/tools/${slug}/meta";`);
-  }
-
-  lines.push("");
-  lines.push(
-    "// --- Cheatsheet imports (auto-discovered from src/cheatsheets/{slug}/meta.ts) ---",
-  );
-
-  // Cheatsheet imports
-  for (const slug of cheatsheetSlugs) {
-    const importName = `cheatsheet_${slug.replace(/-/g, "_")}`;
-    lines.push(
-      `import { meta as ${importName} } from "@/cheatsheets/${slug}/meta";`,
-    );
   }
 
   lines.push("");
@@ -290,17 +275,7 @@ export function buildRegistryContent(
   lines.push("];");
   lines.push("");
   lines.push(
-    "/** All cheatsheet Tileables (auto-discovered from src/cheatsheets/{slug}/meta.ts). */",
-  );
-  lines.push("export const cheatsheetTileables: Tileable[] = [");
-  for (const slug of cheatsheetSlugs) {
-    const importName = `cheatsheet_${slug.replace(/-/g, "_")}`;
-    lines.push(`  toTileable(${importName}, "cheatsheet"),`);
-  }
-  lines.push("];");
-  lines.push("");
-  lines.push(
-    `// Counts at generation time: tools=${toolSlugs.length}, play=${playCount} (from src/play/registry.ts), cheatsheets=${cheatsheetSlugs.length}`,
+    `// Counts at generation time: tools=${toolSlugs.length}, play=${playCount} (from src/play/registry.ts)`,
   );
 
   return lines.join("\n");
@@ -325,11 +300,9 @@ async function main(): Promise<void> {
 
   // --- Sanity checks (early-fail on unexpected structural changes) ---
   assertMinCount("tools", toolSlugs.length, 10);
-  assertMinCount("cheatsheets", cheatsheetSlugs.length, 3);
 
   // --- Generate and write: toolbox unified registry ---
-  const toolboxContent =
-    buildRegistryContent(toolSlugs, cheatsheetSlugs, playCount) + "\n";
+  const toolboxContent = buildRegistryContent(toolSlugs, playCount) + "\n";
   if (!fs.existsSync(OUTPUT_DIR)) {
     fs.mkdirSync(OUTPUT_DIR, { recursive: true });
   }
@@ -354,7 +327,7 @@ async function main(): Promise<void> {
 
   const elapsed = Date.now() - startTime;
   console.log(
-    `[generate-toolbox-registry] tools=${toolSlugs.length} play=${playCount} cheatsheets=${cheatsheetSlugs.length} → ${OUTPUT_FILE}, ${TOOLS_OUTPUT_FILE}, ${CHEATSHEETS_OUTPUT_FILE} (${elapsed}ms)`,
+    `[generate-toolbox-registry] tools=${toolSlugs.length} play=${playCount} → ${OUTPUT_FILE}, ${TOOLS_OUTPUT_FILE}, ${CHEATSHEETS_OUTPUT_FILE} (${elapsed}ms)`,
   );
 }
 

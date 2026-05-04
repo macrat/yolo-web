@@ -7,12 +7,12 @@
  * If you find a manual edit here, run `npm run generate:toolbox-registry`
  * to restore. The git diff makes unintended edits easy to detect and revert.
  *
- * This file merges all tool / play / cheatsheet entries into a unified
+ * This file merges all tool / play entries into a unified
  * Tileable[] array.  The public API (getAllTileables, getTileableBySlug)
  * is exposed via src/lib/toolbox/registry.ts which
  * imports from here — callers should never import this file directly.
  *
- * TOOLS and CHEATSHEETS are auto-discovered from meta.ts files.
+ * TOOLS are auto-discovered from meta.ts files.
  * PLAY is imported from the existing src/play/registry.ts because play
  * content does not follow the per-slug meta.ts convention.
  */
@@ -55,15 +55,6 @@ import { meta as tool_unit_converter } from "@/tools/unit-converter/meta";
 import { meta as tool_unix_timestamp } from "@/tools/unix-timestamp/meta";
 import { meta as tool_url_encode } from "@/tools/url-encode/meta";
 import { meta as tool_yaml_formatter } from "@/tools/yaml-formatter/meta";
-
-// --- Cheatsheet imports (auto-discovered from src/cheatsheets/{slug}/meta.ts) ---
-import { meta as cheatsheet_cron } from "@/cheatsheets/cron/meta";
-import { meta as cheatsheet_git } from "@/cheatsheets/git/meta";
-import { meta as cheatsheet_html_tags } from "@/cheatsheets/html-tags/meta";
-import { meta as cheatsheet_http_status_codes } from "@/cheatsheets/http-status-codes/meta";
-import { meta as cheatsheet_markdown } from "@/cheatsheets/markdown/meta";
-import { meta as cheatsheet_regex } from "@/cheatsheets/regex/meta";
-import { meta as cheatsheet_sql } from "@/cheatsheets/sql/meta";
 
 // --- Play import (not auto-discovered; uses existing registry) ---
 import { allPlayContents } from "@/play/registry";
@@ -113,15 +104,4 @@ export const playTileables: Tileable[] = [
   ...allPlayContents.map((meta) => toTileable(meta, "play")),
 ];
 
-/** All cheatsheet Tileables (auto-discovered from src/cheatsheets/{slug}/meta.ts). */
-export const cheatsheetTileables: Tileable[] = [
-  toTileable(cheatsheet_cron, "cheatsheet"),
-  toTileable(cheatsheet_git, "cheatsheet"),
-  toTileable(cheatsheet_html_tags, "cheatsheet"),
-  toTileable(cheatsheet_http_status_codes, "cheatsheet"),
-  toTileable(cheatsheet_markdown, "cheatsheet"),
-  toTileable(cheatsheet_regex, "cheatsheet"),
-  toTileable(cheatsheet_sql, "cheatsheet"),
-];
-
-// Counts at generation time: tools=34, play=20 (from src/play/registry.ts), cheatsheets=7
+// Counts at generation time: tools=34, play=20 (from src/play/registry.ts)
