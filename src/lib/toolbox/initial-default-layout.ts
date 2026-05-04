@@ -44,24 +44,27 @@ export type InitialDefaultLayout = {
 /**
  * INITIAL_DEFAULT_LAYOUT — `/` の初回レンダリングで使用するデフォルトプリセット定数。
  *
- * 5 タイル構成（small × 2、medium × 2、large × 1）。
+ * 5 タイル構成（small × 3、medium × 2）。
  * 初回来訪者・SNS シェア訪問者・Googlebot に対して
  * SSR HTML に空でない道具箱を提供するためのハードコード値。
  *
- * slug は 2.2.5（Tile builder）と 2.2.7（本タスク）の並列実装のために PM が固定：
- * - fixture-small-1 / fixture-small-2  → size: small
- * - fixture-medium-1 / fixture-medium-2 → size: medium
- * - fixture-large-1                     → size: large
+ * 採用 slug 選定基準（cycle-177 CRIT-1 対応）:
+ * - 機能種別が被らず来訪者が「何ができるか」を一目で把握できる多様な構成にする
+ * - 利用頻度が高いジャンルから幅広く選択する
+ * - char-count: テキスト計量（テキスト系で最も汎用的）
+ * - password-generator: セキュリティ（日常的な需要が高い）
+ * - unix-timestamp: 時刻変換（開発者・一般ユーザー問わず活用される）
+ * - qr-code: QR コード生成（視覚的に分かりやすく幅広い用途）
+ * - unit-converter: 単位変換（調理・工業・旅行など幅広い場面で活用）
  *
- * Phase 7（B-314）で各ツールがタイル化されるたびに実タイルの slug へ差し替える。
  * B-312（ペルソナ別プリセット + 選択 UI）実装時にこの定数ごと再設計してよい（後方互換不要）。
  */
 export const INITIAL_DEFAULT_LAYOUT: InitialDefaultLayout = {
   tiles: [
-    { slug: "fixture-small-1", size: "small", order: 0 },
-    { slug: "fixture-small-2", size: "small", order: 1 },
-    { slug: "fixture-medium-1", size: "medium", order: 2 },
-    { slug: "fixture-medium-2", size: "medium", order: 3 },
-    { slug: "fixture-large-1", size: "large", order: 4 },
+    { slug: "char-count", size: "small", order: 0 },
+    { slug: "password-generator", size: "medium", order: 1 },
+    { slug: "unix-timestamp", size: "small", order: 2 },
+    { slug: "qr-code", size: "medium", order: 3 },
+    { slug: "unit-converter", size: "small", order: 4 },
   ],
 };

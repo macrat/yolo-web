@@ -354,7 +354,11 @@ export function ToolboxShell() {
         onLongPress={handleLongPress}
       />
 
-      {/* Undo バナー（瞬間 20-23） */}
+      {/* Undo バナー（瞬間 20-23）
+       * メッセージとボタンラベルは displayName 非依存の固定文言にする。
+       * 長い displayName がバナー幅（280px）に収まらず折り返す問題（CRIT-r2-1）を防ぐため。
+       * displayName はスクリーンリーダー向け aria-live 通知（上記 announce）でのみ伝える。
+       */}
       {pendingUndo && (
         <div
           className={styles.undoBanner}
@@ -371,20 +375,14 @@ export function ToolboxShell() {
               }
             />
           </div>
-          <div className={styles.undoMessage}>
-            {getTileableBySlug(pendingUndo.slug)?.displayName ??
-              pendingUndo.slug}
-            を削除しました
-          </div>
+          <div className={styles.undoMessage}>タイルを削除しました</div>
           <button
             type="button"
             className={styles.undoButton}
             onClick={handleUndo}
             data-testid="undo-button"
           >
-            {getTileableBySlug(pendingUndo.slug)?.displayName ??
-              pendingUndo.slug}
-            を戻す
+            元に戻す
           </button>
         </div>
       )}

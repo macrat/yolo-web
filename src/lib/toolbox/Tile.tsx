@@ -243,6 +243,22 @@ export function Tile({
       data-tile-slug={entry.slug}
       {...longPressHandlers}
     >
+      {/*
+       * Stretched Link（CRIT-r2-2）:
+       * 使用モード + href あり の場合、タイル全体をクリック可能にするため
+       * 絶対配置の <a> を重ねる Stretched Link パターンを採用する。
+       * position: relative の article コンテナに対して ::before で全領域を覆う。
+       * 編集モード時はリンクを出力しない（編集ボタン群の操作を妨げないよう）。
+       */}
+      {href && !isEditing && (
+        <Link
+          href={href}
+          className={styles.stretchedLink}
+          tabIndex={-1}
+          aria-hidden="true"
+        />
+      )}
+
       {/* 編集モード時: ドラッグハンドルを表示（DESIGN.md §4 L75） */}
       {isEditing && (
         <div className={styles.tileHeader}>
@@ -285,13 +301,12 @@ export function Tile({
           <div className={styles.tileMeta}>
             {/*
              * I-2: 編集モード中は Link を使わず <span> で描画する。
-             * aria-hidden="true" は SR からテキストを隠してしまうため使用しない。
-             * I-4: 使用モード + href あり の場合は Next.js Link でリンク遷移。
-             *      unstable_viewTransition で View Transitions API を有効化（瞬間 6）。
+             * I-4: 使用モード + href あり の場合、タイル全体は Stretched Link でカバーされるため
+             *      displayName 部分のリンクも維持し、アクセシビリティ（フォーカス + aria）を担う。
              * I-5: href なし + 使用モードの span は tabIndex を付与しない（フォーカスしても何もできない）。
              */}
             {href && !isEditing ? (
-              /* 使用モード + href あり: Next.js Link 遷移（prefetch 有効、瞬間 6） */
+              /* 使用モード + href あり: Next.js Link でアクセシビリティ上の主リンクを提供（瞬間 6） */
               /* TODO: View Transitions API は Next.js 安定化後に追加。当面はブラウザ標準の動作 */
               <Link href={href} className={styles.tileName}>
                 {displayName}
