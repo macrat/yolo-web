@@ -20,7 +20,7 @@ completed_at: null
   - [x] B-309-4: Phase 2.2「タイル概念定義」の plan doc 整合点検（PM 本人で逐語 Read → 6 項目判断との整合確認）。結果: **修正不要**。詳細は「## 作業計画 / B-309-4 実施結果」セクション
   - [x] B-309-5: 型契約の整備（builder 2 名 + PM 軽微修正で実施。types.ts cheatsheet/href 撤去、tile-loader.ts variantId 系撤去、initial-default-layout.ts variantId 撤去、registry.ts cheatsheet 統合除去、generated 再生成、テスト 4 ファイル更新。実施結果は「## 作業計画 / B-309-5 実施結果」）
   - [x] B-309-6: 検証（lint 0 errors / format:check pass / test 4220 全通過 / build 成功 / 常時禁止語 0 件 / 条件付き禁止語 0 件 / 計画と実装の整合点検 PASS / 代理指標 1 と 2 ともに再実施で PASS。実施結果は「## 作業計画 / B-309-6 実施結果」）
-  - [ ] B-309-7: 独立 reviewer による作業計画レビュー → 実装レビューを実施（reviewer skip 禁止、指摘事項が無くなるまで反復。reviewer 観点詳細は PM が決定するが、最低限のリスク領域は依頼時に伝達する）
+  - [x] B-309-7: 独立 reviewer による作業計画レビュー（R1-R3）+ 実装レビュー（R4-R6）。R1: Critical 2/Major 4/Minor 3 → R2: Critical 1（事実誤認）→ R3: 指摘なし → R4: Minor 1（Phase 番号誤記）→ R5: Minor 1（tile 残部 assert）→ R6: 指摘なし で承認。詳細は「## レビュー結果」
 
 ## 作業計画
 
@@ -709,6 +709,195 @@ R1 / R2 指摘合計 10 件 **すべて解決**。修正は能動的判断構造
 - 全体見直し（観点 3〜5）でも、Phase 2.1 / 2.2 完了基準達成に必要な修正点は観察されない。
 
 R3 判定: **R3 指摘事項なし → execution へ進める**。本サイクルの計画段階レビュー（B-309-7 計画レビュー部分）は完了。実装着手後の reviewer による実装レビューは別途実施が必要。
+
+### R4（実装レビュー r1）
+
+reviewer 1 名による独立 R4 実装レビューを実施。観点 (i)〜(iv) を中心に、`src/lib/toolbox/` 配下のコード本体・コメント・JSDoc・テスト assert・`scripts/generate-toolbox-registry.ts` まで逐語点検し、6 項目判断（#1〜#3 + サブ判断 2-a / 2-b / 3-a）の実装反映、cycle-177 誤り 1〜16 と cycle-178 構造的気付き 1〜3 の同型再生産有無、計画段階追加条項の構造分析を行った。
+
+#### 実体確認結果
+
+- **6 項目判断の実装反映**: すべて整合。
+  - #1 URL=トップ: 型レベル変更不要（妥当）
+  - #2 統一 Tileable: `types.ts` に `Tileable` インタフェースが継続存在、`toTileable()` adapter は `tool` / `play` の 2 オーバーロードのみ
+  - #2-a `Tileable.href` 撤去: `types.ts` から `href?: string` フィールドが削除済み（grep `href\?:` で 0 件）
+  - #2-b `cheatsheet` kind 撤去: `ContentKind = "tool" | "play"` のみ。`getAllTileables()` から cheatsheet 統合除去済み。`generated/toolbox-registry.ts` に cheatsheet imports / `cheatsheetTileables` 配列なし。`registry.ts` 優先順位は Tool > Play に整理済み
+  - #3 1 対多採用: `tile-loader.ts` の `getTileComponent(slug)` が「Phase 7 で各 slug にタイル用コンポーネントが追加されたら if 分岐で個別 loader を返す」拡張パターンを JSDoc 例示で確保
+  - #3-a variantId 系撤去: `TileLoaderOptions` / `DEFAULT_VARIANT_ID` / `_getCacheSize()` / `loaderCache` キーの variant 部分すべて削除済み。`initial-default-layout.ts` の `variantId?` フィールド削除済み。テスト 4 ファイルから variantId 関連 assert 削除済み
+- **常時禁止語点検**（reviewer 独立 grep 実施）: `src/lib/toolbox/` 配下に DnD / drag / drop / 編集モード / edit mode / localStorage / 永続化 / Undo / モーダル / TileGrid / ToolboxShell / AddTileModal / variantId / DEFAULT_VARIANT_ID / `_getCacheSize` / variant / cheatsheet / `Tileable.href` / `href?:` の **0 件**。B-309-6 の検証結果と一致
+- **テスト**: `npx vitest run src/lib/toolbox/__tests__/ scripts/__tests__/generate-toolbox-registry.test.ts` で 70/70 passed
+- **lint**: 0 errors / 17 warnings（warning は `tmp/` 配下で本サイクル無関係）
+- **scripts/generate-toolbox-registry.ts の cheatsheet 取り扱い**: `buildRegistryContent`（toolbox 統合用）からは cheatsheet 完全除去。一方 `buildCheatsheetRegistryContent`（cheatsheets-only registry 生成）は残置。これは `/cheatsheets/<slug>` ルートが Phase 8.2.h まで残る正しい挙動であり、判断 #2-b の「Tileable レイヤーから独立した経路として扱う」と整合。判断破綻ではない
+
+#### 観点 (ii) cycle-177 誤り 1〜16 同型再生産チェック
+
+- 誤り 3（スコープ縮小の自己解釈）: スコープ（タイル概念定義 + 型契約のみ）を厳守。DnD / 編集モード / localStorage 等への波及なし
+- 誤り 4（結論先行で根拠書き換え）: 「永続化 / Hook 実装」言及を「許容例外」として温存せず削除した判断は cycle-178 構造的気付き 2 と整合。B-309-6 grep で常時禁止語にヒットしたため削除、という流れが post-hoc 再解釈になっていない
+- 誤り 7 / 8 / 14（ドキュメント追加・AP 起票で安心）: 計画段階の 6 項目判断は条項追加ではなくコード残部の能動的評価結果。各判断に「採用根拠」+「不採用とした選択肢の理由」が具体的事実引用付きで記録されており、ルール追加で安心の構造ではない
+- 誤り 10（reviewer skip）: R1〜R4 まで連続実施
+- 誤り 11（D 群 skip）: 縮小版スコープのため実機検証は本サイクル非対象だが、選択肢 Z で「Storybook 表示や hidden URL での視覚検証は本 Phase で行わない」と Phase 2 完了基準上の正当性を能動判断済み
+- 誤り 13（実装通り動いているか vs 来訪者価値レビューの混同）: 本サイクルは来訪者価値経路の上流（後続サイクル PM への入力 = 一次情報）であることを「### 来訪者価値の経路」で明示。型契約整備が後続 Phase の派生規則化を防ぐ経路として記述されており、混同なし
+- 誤り 15（タイル = ナビゲーションカード）: `Tileable.href` 撤去で型シグネチャレベルの根本誤認誘発要因が除去された
+- 誤り 16（工数効率を理由に事故認定リセット回避）: 縮小版スコープを守り、(c) 複数バリエーションを「将来必要かもしれない」で残さず削除した判断は工数最小化ではなく構造正しさの選択
+
+#### 観点 (iii) cycle-178 構造的気付き 1〜3 の同型再生産チェック
+
+- 気付き 1（コードコメント / 型シグネチャは plan doc 同等の入力構造）: 修正後のコメント・JSDoc・テスト assert を全件 Read。「タイル = ナビゲーションカード」「複数バリエーション前提」「永続化前提」を示唆する記述は **検出されず**
+- 気付き 2（代理指標の固定基準は post-hoc 再解釈しない）: B-309-6 で「永続化」言及を例外化せず削除した判断は気付き 2 と一致
+- 気付き 3（並行 builder 実行の git stage 競合）: 本サイクルは builder 2 名 + PM 軽微修正で実施。コミット 2 件（`98fb31d9` + `a4e01e30`）で trace 維持
+
+#### 観点 (iv) 派生規則化予防条項追加の構造分析
+
+サブ判断 2-a / 2-b / 3-a の追加、選択肢 U の追加、キャリーオーバー追記は、いずれもコード残部の能動的評価結果または事実誤認の能動的検出に紐付いている。「ルール追加で安心」の同型構造ではない。選択肢 U の (a) 不採用理由が cycle-176 構造的要因 (2)「投機的拡張」と同型構造として明示されている点も、誤り 7 / 8 / 14 への防壁として機能している。
+
+#### Critical（R4 新規）
+
+なし。
+
+#### Major（R4 新規）
+
+なし。
+
+#### Minor（R4 新規）
+
+**MIN-1: `FallbackTile.tsx` のコメントで「Phase 3 以降で各 slug の個別タイルコンポーネントが実装されたら」とあるが、design-migration-plan.md では個別タイル実装は Phase 7（B-314）であり、Phase 3 は「静的 + リダイレクト先行」**
+
+- **問題箇所**: `src/lib/toolbox/FallbackTile.tsx` L7「Phase 3 以降で各 slug の個別タイルコンポーネントが実装されたら、tile-loader.ts が slug に応じた動的 import に切り替える」、L14「Phase 3 で個別タイルが実装されたら本コンポーネントは表示されなくなる」
+- **問題**: design-migration-plan.md L91「Phase 3: 静的 + リダイレクト先行」/ L162「Phase 7: ツール・遊び詳細 + タイル化（同時実施）」と照合すると、個別タイル実装は Phase 7 が正しい。Phase 3 は静的ページ移行であり、タイル実装とは無関係。`tile-loader.ts` 同ファイル内（L80 / L93）が「Phase 7（B-314）で各 slug にタイル用コンポーネントが追加されたら」と正しく記述している一方、`FallbackTile.tsx` のみ「Phase 3」と書かれており不整合
+- **なぜ Minor か**: cycle-178 構造的気付き 1（コードコメントは plan doc 同等の入力構造）に基づくと、本記述を読む Phase 3 着手 PM が「Phase 3 で個別タイルを実装するべき」と誤読する蓋然性が低くないが、`tile-loader.ts` 側が Phase 7 と書いているため整合点検時に発覚しやすい。Critical / Major には該当しない
+- **修正指示**: `FallbackTile.tsx` L7「Phase 3 以降」→「Phase 7（B-314）以降」、L14「Phase 3 で」→「Phase 7（B-314）で」に訂正する。`tile-loader.ts` 同ファイル内記述（Phase 7）と用語統一する
+
+#### サマリ
+
+- 6 項目判断（#1〜#3 + サブ判断 2-a / 2-b / 3-a）の実装反映: すべて整合
+- 常時禁止語 / 条件付き禁止語 / variant / cheatsheet 単独語: src/lib/toolbox/ 配下で 0 件
+- テスト 70/70 pass / lint 0 errors
+- cycle-177 誤り 1〜16 / cycle-178 構造的気付き 1〜3 の同型再生産: **検出されず**
+- R4 新規指摘: **Minor 1 件のみ**（`FallbackTile.tsx` の Phase 番号誤記）
+- 主要な再生産リスクの要旨: 本 Minor を放置すると Phase 3 着手 PM が誤読する蓋然性があるが、`tile-loader.ts` の Phase 7 記述と照合すれば自己訂正可能。Phase 2 完了基準達成を阻害する実質的問題ではない
+
+R4 判定: **改善指示（Minor 1 件）**。FallbackTile.tsx の Phase 番号訂正後に R5 を実施し、それで指摘なしならば cycle-completion へ進む。
+
+### R5（実装レビュー r2）
+
+reviewer 1 名による独立 R5 実装レビューを実施。R4 MIN-1 修正（commit `c4e90393`）の確認 + 全体としての見直し（R4 と独立な視点での再点検）を行った。
+
+#### R4 MIN-1 修正の確認
+
+`src/lib/toolbox/FallbackTile.tsx` を逐語 Read。L7「Phase 7（B-314）以降で各 slug の個別タイルコンポーネントが実装されたら」/ L14「Phase 7（B-314）で個別タイルが実装されたら本コンポーネントは表示されなくなる」と訂正済み。`tile-loader.ts`（L20 / L80 / L93）と用語統一されており、`grep -E "Phase [0-9]" src/lib/toolbox/` の結果も全件 Phase 2 / Phase 7 / Phase 9 のいずれかで整合。R4 MIN-1 は **解決**。
+
+#### 観点 1〜3 全体の再点検
+
+- **6 項目判断と実装の整合（再点検）**: R4 と同様、`grep` および全文 Read で 6 項目すべての反映を確認（差分なし）。
+- **コード本体・コメント・JSDoc・テスト assert を逐語 Read**: 大部分は 6 項目判断と整合。下記 R5-MIN-1 を 1 件検出。
+- **cycle-177 誤り 1〜16 / cycle-178 構造的気付き 1〜3 同型再生産チェック**: 再生産の証拠は **検出されず**。
+- **計画段階の派生規則化予防条項追加が誤り 7 / 8 / 14 同型構造になっていないか**: 各予防条項はコード残部の能動的評価結果に紐付いており、「条項追加で安心」構造になっていない。
+- **Phase 2 完了基準達成の検証可能性**: B-309-6 の 1〜6 番（lint / format / test / build / grep / 代理指標 1・2 再実施 / 派生規則化 self check）が二値判定可能な手段で構成されており、検証可能性は確保されている。
+- **失敗時条項（事故認定で閉じる条件）**: 完了基準 L416 に「reviewer 指摘で前提が崩れた場合は本サイクル内続行ではなく素直に事故認定」が明記され、該当 3 条件（6 項目判断のいずれかが誤り / 型契約が後続 Phase の来訪者価値経路を阻害 / タイル概念誤読）が具体化されている。本 R5 では該当事象なし。
+
+#### Critical（R5 新規）
+
+なし。
+
+#### Major（R5 新規）
+
+なし。
+
+#### Minor（R5 新規）
+
+**R5-MIN-1: `__tests__/types.test.ts` の 3 箇所が `Tileable` に存在しない `tile` フィールドの「omit」を検証しており、cycle-175 旧設計のテスト assert が現行型契約と乖離している（cycle-178 構造的気付き 1 同型のテスト asserts 残部）**
+
+- **問題箇所**:
+  - `src/lib/toolbox/__tests__/types.test.ts` L81-84「test("tile キーが存在しない（omit）", () => { ... expect("tile" in result).toBe(false); })」
+  - 同 L160-162「\`tools/${meta.slug}: tile キーは omit される\``
+  - 同 L200-202「\`play/${meta.slug}: tile キーは omit される\``
+
+- **具体的な事実**:
+  - 現行 `src/lib/toolbox/types.ts` の `Tileable` インタフェース（L17-46）には `tile` フィールドが **存在しない**。`grep -n "tile?:\|tile:" src/lib/toolbox/types.ts` で 0 件
+  - cycle-175 (`75571b96`) 当時の `Tileable` には `tile?: TileDefinition | TileDefinition[]` フィールドが存在し、「toTileable() adapter は `tile` キーを omit、registry 側で `{...toTileable, tile}` 付与の仕様」という設計だった。テスト assert はこの当時の設計を検証するためのもの
+  - 当該 `TileDefinition` 型は cycle-179 B-309-5 で `Tileable` 型から削除されている（`grep -n "TileDefinition" src/lib/toolbox/` で 0 件、ただし旧 cycle-175 関連のテストassertだけが残った）
+  - 結果として、現状のテスト `expect("tile" in result).toBe(false)` は **存在しないキーの不在を検証する空 assertion** であり、当該テストが「pass」することは現行設計の保証にも regression 検出にもならない。さらに、コメント「tile キーは omit される」は「意図的に omit している」というニュアンスを残しており、後続 Phase 7 着手 PM が `Tileable` に `tile` フィールドを「再追加すべきか / 元々 omit されていたから不要なのか」を誤読する蓋然性がある
+
+- **なぜ R5 で発見できたか / R4 で見落とされたか**:
+  - R4 は「テスト assert に派生規則化リスクが残っていないか」を点検したが、grep ベースの常時禁止語（DnD / variant 等）にヒットしなかったため通過した
+  - 本 R5 では「テスト assert が現行型契約と整合しているか」を逐語 Read で再点検。型契約に存在しないキーを assertion 対象としている点は文字列 grep では検出できない（cycle-178 構造的気付き 1「verify は文字列だけでなく意味範囲」の同型）
+
+- **なぜ Minor か**:
+  - テスト自体は pass しており、build / lint / test:run の全成功状態を阻害しない
+  - 6 項目判断（特に #2 統一 Tileable / #2-a `href` 撤去 / #3 1 対多採用）の実装反映は正しい。型契約の本質に誤りはない
+  - ただし Phase 7 着手 PM がテスト Read 時に `tile` フィールドの omit を「現行設計の意図」と誤読する蓋然性があるため、cycle-178 構造的気付き 1 に基づき訂正することが望ましい
+  - Critical / Major には該当しないが、R4 MIN-1（FallbackTile.tsx の Phase 番号誤記）と **完全に同類型（旧設計の文字列残部）** であり、放置すれば cycle-178 構造的気付き 1 の同型未除去残部の証拠になる
+
+- **修正指示**:
+  - 選択肢 (a) **削除**: 3 箇所の `"tile" in result` assertion を削除（現行 `Tileable` に `tile` フィールドが存在しない以上、omit 検証は意味を持たない）。テスト名 / 失敗メッセージから「tile キー」「omit」言及も削除
+  - 選択肢 (b) **書き換え**: 現行 `Tileable` のフィールド集合（slug / displayName / shortDescription / contentKind / publishedAt / trustLevel / icon / accentColor）以外のキーが含まれないことを検証する形に書き換え（`Object.keys(result).every(k => allowedKeys.includes(k))` 等）
+  - **推奨**: (a) シンプルに削除する。(b) は意味のある検証だが、現行 `Tileable` の構造的契約を別の場所（型レベル）で既に保証しているため、テストでの重複検証は冗長。本サイクル B-309-5 の「特定の初期レイアウト形状を固定するテストは追加しない」（cycle-178 MID-A3 教訓）方針とも整合する
+
+#### サマリ
+
+- R4 MIN-1 修正（FallbackTile.tsx の Phase 番号訂正）: **解決**
+- 6 項目判断（#1〜#3 + サブ判断 2-a / 2-b / 3-a）の実装反映: 引き続きすべて整合
+- 常時禁止語 / 条件付き禁止語 / Phase 番号 / 古い cycle 言及の grep 検証: 0 件
+- cycle-177 誤り 1〜16 / cycle-178 構造的気付き 1〜3 同型再生産: **検出されず**
+- R5 新規指摘: **Minor 1 件**（`types.test.ts` 3 箇所の旧設計 `tile` フィールド omit assertion 残部）
+- 主要な再生産リスク: 本 Minor を放置すると、cycle-178 構造的気付き 1（テスト assert は plan doc 同等の入力構造）の同型未除去残部となり、Phase 7 着手 PM が型契約の意図を誤読する蓋然性がある。Critical / Major ではなく Phase 2 完了基準達成を阻害する実質的問題ではないが、R4 MIN-1 と完全に同類型のため訂正することが望ましい
+
+R5 判定: **改善指示（Minor 1 件）**。`types.test.ts` の `tile` キー omit assertion 訂正後に R6 を実施し、それで指摘なしならば cycle-completion へ進む。
+
+### R6（実装レビュー r3）
+
+reviewer 1 名による独立 R6 実装レビューを実施。R4 MIN-1 修正（commit `c4e90393`）+ R5 MIN-1 修正（commit `f7f90677`）の確認 + 全体としての見直し（R4 / R5 と独立な視点での再点検）を行った。
+
+#### R4 / R5 修正の確認
+
+- **R4 MIN-1**: `src/lib/toolbox/FallbackTile.tsx` L7「Phase 7（B-314）以降で各 slug の個別タイルコンポーネントが実装されたら」/ L14「Phase 7（B-314）で個別タイルが実装されたら本コンポーネントは表示されなくなる」。R5 で確認済みの状態が R6 でも維持されている。`tile-loader.ts`（L20 / L80 / L93）と用語統一されており、Phase 番号誤記の再発なし。**解決継続**
+- **R5 MIN-1**: `src/lib/toolbox/__tests__/types.test.ts` を逐語 Read。L81-84「tile キーが存在しない（omit）」テストブロック削除済み。registry 全件 smoke test ループ内（旧 L160-162 / L200-202）の `tools/${meta.slug}: tile キーは omit される` / `play/${meta.slug}: tile キーは omit される` 各 expect も削除済み。`grep -n "tile" src/lib/toolbox/__tests__/types.test.ts` の結果は title フィールド言及（L88 「displayName が title フィールドから生成される」）のみで、これは現行 `Tileable` の正当な記述。**解決**
+
+#### 観点 2 全体の再点検（R4 / R5 と独立な視点）
+
+- **6 項目判断と実装の整合（R6 独立点検）**: `src/lib/toolbox/` 配下の types.ts / tile-loader.ts / FallbackTile.tsx / initial-default-layout.ts / registry.ts / generated/toolbox-registry.ts / **tests**/ 配下 4 ファイルすべてを逐語 Read。6 項目（#1 URL=トップ / #2 統一 Tileable / #2-a `href` 撤去 / #2-b `cheatsheet` kind 撤去 / #3 1 対多採用 / #3-a variantId 系撤去）すべて反映継続を確認。types.ts L70 のコメント「ToolMeta にはアイコン・カラーフィールドが存在しないため icon/accentColor は省略（omit）」は ToolMeta 由来オブジェクトの実装内容説明であり、旧設計 `Tileable.tile` フィールド omit とは無関係（混同なし）
+- **常時禁止語 / 条件付き禁止語の grep 再実施**: `grep -n "tile?:\|cheatsheet\|variantId\|DEFAULT_VARIANT_ID\|_getCacheSize\|TileGrid\|ToolboxShell\|AddTileModal\|永続化\|localStorage\|編集モード\|edit mode\|Undo\|モーダル\|drag\|drop\|DnD"` を `src/lib/toolbox/` 配下に実行。検出された `tile` 関連ヒットはすべて `tile.slug` / `tile.size` / `tile.order` / `tile-loader.ts` ファイル名 / `data-tile-slug` 属性等の正当な用途のみ。条件付き禁止語の **0 件** 維持
+- **旧設計の残部点検（R5 で見落とされた可能性のある観点）**: 変数名 / プロパティ名 / 型定義 / コメント / テスト assert / 例示コード を逐語点検。types.test.ts L88 の「title フィールドから生成される」は PlayContentMeta.title → Tileable.displayName 変換の正当な記述。tile-loader.ts L19-23 の「Phase 7 拡張ポイント」コメントは判断 #3 採用の結果として残置が正当（撤去されているのは判断 #3-a の variantId 系のみで、判断 #3 自体は 1 対多採用のため拡張ポイントは残る）。registry.test.ts の「重複 slug 優先順位（仕様記録）」も判断 #2 統一 Tileable の運用記録として整合。**新規残部 0 件**
+- **6 項目判断と実装の整合（再々点検）**: `tile-loader.ts` の `getTileComponent(slug)` JSDoc 例示（L80-85「Phase 7（B-314）で各 slug にタイル用コンポーネントを追加する拡張パターン」）は判断 #3 1 対多採用 / 判断 #3-a variantId 系撤去 双方と整合（`if (slug === "...")` 分岐は variant ID なし、slug 単独）。コードと判断の論理整合あり
+- **cycle-177 誤り 1〜16 / cycle-178 構造的気付き 1〜3 同型再生産チェック**: R4 / R5 で確認済みの結果が変質していないか再点検。再生産の証拠は **検出されず**。特に R5 で発見された「テスト assert は文字列 grep だけでは検出できない（cycle-178 構造的気付き 1）」観点で types.test.ts 全体を再 Read したが、現行 `Tileable` のフィールド集合（slug / displayName / shortDescription / contentKind / icon / accentColor / publishedAt / trustLevel）と整合しない assertion は **検出されず**
+- **計画段階の派生規則化予防条項追加が誤り 7 / 8 / 14 同型構造になっていないか**: 各予防条項（サブ判断 2-a / 2-b / 3-a の追加、選択肢 U の追加、キャリーオーバー追記）はコード残部の能動的評価結果または事実誤認の能動的検出に紐付いており、「条項追加で安心」構造になっていない。R6 でも同じ判定継続
+- **Phase 2 完了基準達成の検証可能性**: B-309-6 の 1〜6 番（lint / format:check / test / build / grep / 代理指標 1・2 再実施 / 派生規則化 self check）が二値判定可能な手段で構成されており、検証可能性は確保されている。完了基準（L226-231 の 6 条件）すべてが具体的検証手段に対応
+
+#### 観点 3 コミット履歴の trace
+
+`git log --oneline 503292bf..HEAD` の結果（4 コミット）:
+
+- `f7f90677` cycle-179 B-309-7 R5-MIN-1 対応: types.test.ts から tile フィールド残部 assert 削除
+- `c4e90393` cycle-179 B-309-7 R4 MIN-1 対応: FallbackTile.tsx の Phase 番号誤記訂正
+- `a4e01e30` cycle-179 B-309-5/6: PM 軽微修正と検証完了
+- `98fb31d9` cycle-179 B-309-5: 型契約整備（Tileable.href / cheatsheet / variantId 系撤去）
+
+各コミットメッセージは作業内容と対応する R ラウンド指摘番号を明示しており、cycle-179 全体の作業 trace が読み取り可能。「PM 軽微修正と検証完了」（a4e01e30）は B-309-5 / B-309-6 の最終化、「R4 MIN-1 対応」「R5-MIN-1 対応」は各 reviewer 指摘番号と紐付け。trace 上の問題なし
+
+#### Critical（R6 新規）
+
+なし。
+
+#### Major（R6 新規）
+
+なし。
+
+#### Minor（R6 新規）
+
+なし。
+
+#### サマリ
+
+- R4 MIN-1 修正（FallbackTile.tsx の Phase 番号訂正）: **解決継続**
+- R5 MIN-1 修正（types.test.ts の tile フィールド omit assertion 削除、ループ内含む完全削除）: **解決**
+- 6 項目判断（#1〜#3 + サブ判断 2-a / 2-b / 3-a）の実装反映: 引き続きすべて整合
+- 常時禁止語 / 条件付き禁止語 / 旧設計の文字列・意味範囲残部: src/lib/toolbox/ 配下で 0 件
+- cycle-177 誤り 1〜16 / cycle-178 構造的気付き 1〜3 同型再生産: **検出されず**
+- 計画段階の派生規則化予防条項追加が誤り 7 / 8 / 14 同型構造になっていないか: **同型構造ではない**
+- Phase 2 完了基準達成の検証可能性: **確保されている**
+- コミット履歴の trace: **読み取り可能**
+- R6 新規指摘: **なし**（Critical 0 / Major 0 / Minor 0）
+
+R6 判定: **R6 指摘事項なし → cycle-completion へ**。本サイクルの実装レビュー（B-309-7 実装レビュー部分）は R4 / R5 / R6 の 3 ラウンドを経て完了。Phase 2 完了基準達成。
 
 ## キャリーオーバー
 
