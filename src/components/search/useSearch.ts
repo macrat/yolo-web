@@ -28,7 +28,7 @@ export type SearchResultGroup = {
   items: SearchResultItem[];
 };
 
-export type UseSearchReturn = {
+export interface UseSearchReturn {
   query: string;
   setQuery: (q: string) => void;
   results: SearchResultGroup[];
@@ -36,7 +36,13 @@ export type UseSearchReturn = {
   error: string | null;
   loadIndex: () => Promise<void>;
   clearSearch: () => void;
-};
+  /** モーダル open 以降に trackSearch が発火したかを返す */
+  getHasSearched: () => boolean;
+  /** モーダル open 以降に 1 文字でも入力痕跡があったかを返す（q.length > 0 判定） */
+  getHadAnyInput: () => boolean;
+  /** hasSearchedRef と hadAnyInputRef を両方 false にリセットする */
+  resetTracking: () => void;
+}
 
 const DEBOUNCE_MS = 150;
 
@@ -99,6 +105,12 @@ export function useSearch(): UseSearchReturn {
   const indexLoadedRef = useRef(false);
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // --- 検索行動トラッキング用 ref ---
+  // モーダル open 以降に trackSearch が発火したか（performSearch の条件分岐と同一）
+  const hasSearchedRef = useRef<boolean>(false);
+  // モーダル open 以降に 1 文字でも入力されたか（q.length > 0 判定。空白のみも「入力あり」）
+  const hadAnyInputRef = useRef<boolean>(false);
+
   const loadIndex = useCallback(async () => {
     if (indexLoadedRef.current) return;
     setIsLoading(true);
@@ -128,12 +140,21 @@ export function useSearch(): UseSearchReturn {
     }
     const fuseResults = fuseRef.current.search(q.trim());
     setResults(groupResults(fuseResults));
+    // trackSearch と同じ条件分岐（q.trim() 非空 && fuseRef.current 存在）で
+    // hasSearchedRef を立てる。Fuse 結果 0 件でも trackSearch は発火するため同様に立てる。
+    hasSearchedRef.current = true;
     trackSearch(q);
   }, []);
 
   const setQuery = useCallback(
     (q: string) => {
       setQueryState(q);
+
+      // q.length > 0 の場合に入力痕跡フラグを立てる。
+      // q.trim().length ではなく q.length で判定し、空白のみ入力も「入力あり」として記録する。
+      if (q.length > 0) {
+        hadAnyInputRef.current = true;
+      }
 
       if (debounceTimerRef.current) {
         clearTimeout(debounceTimerRef.current);
@@ -163,6 +184,26 @@ export function useSearch(): UseSearchReturn {
     };
   }, []);
 
+  /** モーダル open 以降に trackSearch が発火したかを返す */
+  const getHasSearched = useCallback((): boolean => {
+    return hasSearchedRef.current;
+  }, []);
+
+  /** モーダル open 以降に 1 文字でも入力されたかを返す（q.length > 0 判定） */
+  const getHadAnyInput = useCallback((): boolean => {
+    return hadAnyInputRef.current;
+  }, []);
+
+  /**
+   * hasSearchedRef と hadAnyInputRef を両方 false にリセットする。
+   * SearchModal の useEffect([isOpen, ...]) の isOpen=true 分岐で呼ぶ。
+   * clearSearch とは独立しており、state には触れない。
+   */
+  const resetTracking = useCallback((): void => {
+    hasSearchedRef.current = false;
+    hadAnyInputRef.current = false;
+  }, []);
+
   return {
     query,
     setQuery,
@@ -171,5 +212,8 @@ export function useSearch(): UseSearchReturn {
     error,
     loadIndex,
     clearSearch,
+    getHasSearched,
+    getHadAnyInput,
+    resetTracking,
   };
 }

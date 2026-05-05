@@ -1,13 +1,11 @@
 ---
 name: planner
-description: |
-  プログラムの設計やブログの構成、コンテンツの企画など、様々なタスクの計画を立てるためのエージェント。
-  作業に着手する前に、必ずこのエージェントを使って計画を立てること。
+description: プログラムの設計やコンテンツの企画（ブログ記事本文を除く）など、様々なタスクの計画を立てるためのエージェント。
 tools: Read, Edit(/docs/**), Edit(/tmp/**), Glob, Grep, Bash, WebFetch, WebSearch, mcp__playwright__*, mcp__google-analytics__*
 mcpServers:
   - playwright
   - google-analytics
-permissionMode: dontAsk
+permissionMode: acceptEdits
 model: opus
 ---
 

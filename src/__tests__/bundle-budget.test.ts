@@ -80,6 +80,8 @@ const UNCATEGORISED_WHITELIST: ReadonlySet<string> = new Set([
   "/about",
   "/privacy",
   "/achievements",
+  // 開発者向け新デザインカタログ。noindex 設定済み。(new) Route Group 配下。
+  "/storybook",
 ]);
 
 // ---------------------------------------------------------------------------
@@ -284,8 +286,24 @@ function getLargeChunks(threshold: number): ChunkInfo[] {
 // Helper: categorise a route
 // ---------------------------------------------------------------------------
 
-function categoriseRoute(route: string): string | null {
+/**
+ * Route Group プレフィックスを除去して正規化されたルートを返す。
+ * Next.js App Router の Route Group (例: (legacy), (new)) はビルド出力パスに
+ * そのまま現れるため、カテゴリ判定・ホワイトリスト照合の前に除去する。
+ * 例: /(legacy)/tools/slug -> /tools/slug
+ *     /(new)/storybook -> /storybook
+ */
+function normaliseRoute(route: string): string {
   const parts = route.split("/").filter(Boolean);
+  const normalised = parts.filter(
+    (p) => !(p.startsWith("(") && p.endsWith(")")),
+  );
+  return normalised.length === 0 ? "/" : `/${normalised.join("/")}`;
+}
+
+function categoriseRoute(route: string): string | null {
+  const normalised = normaliseRoute(route);
+  const parts = normalised.split("/").filter(Boolean);
   if (parts.length === 0) return null; // root "/"
   const topLevel = `/${parts[0]}`;
   return topLevel in BUDGETS.categories ? topLevel : null;
@@ -392,7 +410,8 @@ describe.skipIf(!buildExists)("Bundle budget", () => {
     const unknownUncategorised: RouteSize[] = [];
 
     for (const rs of uncategorised) {
-      if (UNCATEGORISED_WHITELIST.has(rs.route)) {
+      // Route Group プレフィックス (例: /(legacy)/, /(new)/) を除去して照合する
+      if (UNCATEGORISED_WHITELIST.has(normaliseRoute(rs.route))) {
         knownUncategorised.push(rs);
       } else {
         unknownUncategorised.push(rs);

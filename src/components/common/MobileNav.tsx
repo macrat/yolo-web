@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { acquireScrollLock, releaseScrollLock } from "@/lib/scroll-lock";
 import styles from "./MobileNav.module.css";
 
 interface NavLink {
@@ -35,17 +36,27 @@ export default function MobileNav({ links }: MobileNavProps) {
   }, []);
 
   useEffect(() => {
-    if (isOpen) {
-      document.addEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    document.addEventListener("keydown", handleKeyDown);
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = "";
     };
-  }, [isOpen, handleKeyDown]);
+  }, [handleKeyDown]);
+
+  /** isOpen 中はボディスクロールをロックして背景がスクロールしないようにする。
+   * scroll-lock.ts の参照カウンタ式ヘルパを使用。
+   * Header と同居しても scroll-locked クラスを奪い合わない。
+   * AP-I07 準拠: body.style.overflow の直書き禁止。
+   * mount 時に isOpen=false の場合は acquire していないため release しない（二重解放防止）。 */
+  useEffect(() => {
+    if (isOpen) {
+      acquireScrollLock();
+    }
+    return () => {
+      if (isOpen) {
+        releaseScrollLock();
+      }
+    };
+  }, [isOpen]);
 
   const toggleMenu = () => setIsOpen((prev) => !prev);
 

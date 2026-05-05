@@ -1,0 +1,26 @@
+/*
+ * ShareButtons — SNS 共有ボタン群
+ * DESIGN.md §5: Button コンポーネントを再利用（variant="default"、size="small"）
+ * DESIGN.md §3: アイコン不要。テキストラベルのみ（シンプルに）
+ * レスポンシブ: flex-wrap で横並び → 折り返し
+ */
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* コピー完了メッセージ */
+.copiedMessage {
+  font-size: 0.8rem;
+  color: var(--success);
+  /* 高さを確保して表示時にレイアウトシフトしない */
+  min-height: 1.2em;
+}

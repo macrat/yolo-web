@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <title>Type — Display</title>
+    <link rel="stylesheet" href="../colors_and_type.css?v=8" />
+    <style>
+      body {
+        margin: 0;
+        padding: 32px;
+        background: var(--bg-soft);
+      }
+      .row {
+        display: flex;
+        align-items: baseline;
+        gap: 24px;
+        padding: 8px 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .row:last-child {
+        border-bottom: 0;
+      }
+      .meta {
+        width: 120px;
+        flex: none;
+      }
+      .meta .name {
+        font-size: 12px;
+        color: var(--fg);
+        font-weight: 500;
+        white-space: nowrap;
+      }
+      .meta .spec {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        color: var(--fg-softer);
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="row">
+      <div class="meta">
+        <div class="name">H1</div>
+        <div class="spec">Sans · 24 · 500</div>
+      </div>
+      <div
+        style="
+          font-size: 24px;
+          font-weight: 500;
+          line-height: 1.4;
+          white-space: nowrap;
+        "
+      >
+        道具箱
+      </div>
+    </div>
+    <div class="row">
+      <div class="meta">
+        <div class="name">H2</div>
+        <div class="spec">Sans · 18 · 500</div>
+      </div>
+      <div
+        style="
+          font-size: 18px;
+          font-weight: 500;
+          line-height: 1.4;
+          white-space: nowrap;
+        "
+      >
+        折り紙タイマー
+      </div>
+    </div>
+    <div class="row">
+      <div class="meta">
+        <div class="name">H3</div>
+        <div class="spec">Sans · 15 · 500</div>
+      </div>
+      <div style="font-size: 15px; font-weight: 500; white-space: nowrap">
+        使い方
+      </div>
+    </div>
+  </body>
+</html>

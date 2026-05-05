@@ -469,7 +469,7 @@ ResultCard では相性セクション（CompatibilitySection + InviteFriendButt
 
 ### 残作業の計画（共通コンポーネント抽出の完了）
 
-調査レポート: `tmp/research/2026-04-02-animal-personality-common-component-extraction-status.md`
+調査レポート: `tmp/research/2026-04-02-animal-personality-common-component-extraction-status.md`（tmp/ は git 管理外のため現在は失われている）
 
 #### 前提状況
 

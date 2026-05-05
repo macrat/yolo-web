@@ -1,0 +1,42 @@
+/* Input コンポーネントのスタイル
+ * DESIGN.md §5: 操作可能要素には --r-interactive を使う
+ * DESIGN.md §2: フォーカスは outline: 2px solid var(--accent); outline-offset: 2px;
+ * --border-strong: --border よりコントラストが高く、フォームの輪郭を視認しやすくする
+ */
+.input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+  background: var(--bg);
+  color: var(--fg);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-interactive);
+  padding: 9px 12px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.input::placeholder {
+  color: var(--fg-softer);
+}
+
+/* フォーカス: DESIGN.md §2 に従い outline を使う */
+.input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* エラー状態: border を --danger に変更して危険を伝える */
+.error {
+  border-color: var(--danger);
+}
+
+/* disabled: 操作不可を示す視覚的手がかり */
+.input:disabled {
+  background: var(--bg-soft);
+  color: var(--fg-softer);
+  cursor: not-allowed;
+}

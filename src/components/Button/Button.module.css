@@ -1,0 +1,88 @@
+/* Button — クリック操作のボタン
+ * DESIGN.md §5: ボタンには border-radius: var(--r-interactive)、box-shadow: var(--shadow-button) を使う。
+ * DESIGN.md §2: ホバー: --bg → --bg-soft、--bg-soft → --bg-softer、--bg-invert → --bg-invert-soft
+ * SKILL.md L20: フォーカスは outline: 2px solid var(--accent); outline-offset: 2px; を使う。
+ */
+
+.button {
+  /* 共通ベーススタイル */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 9px 18px;
+  font-size: 14px;
+  font-family: inherit; /* body から system-ui を継承 */
+  border: 1px solid var(--border);
+  border-radius: var(--r-interactive);
+  box-shadow: var(--shadow-button);
+  /* background / color / border-color はバリアント側で上書きする */
+  cursor: pointer;
+  white-space: nowrap;
+  /* transition: background, border-color, box-shadow を一括管理 */
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+/* ---- フォーカス ---- */
+.button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ---- 押下中: 影を消す ---- */
+.button:active:not(:disabled) {
+  box-shadow: none;
+}
+
+/* ================================================================
+   variant
+   ================================================================ */
+
+/* default — 標準ボタン（旧 ghost を統合。--bg-soft 背景で目立たず自然）
+ * cycle-171 T4: 旧 default（--bg 背景）はダークモードで ghost より目立たない逆転が起きていたため廃止。
+ * 旧 ghost（--bg-soft 背景）を新 default として採用。 */
+.variantDefault {
+  background: var(--bg-soft);
+  color: var(--fg);
+  border-color: var(--border);
+}
+.variantDefault:hover:not(:disabled) {
+  background: var(--bg-softer);
+}
+
+/* primary — 目立つボタン */
+.variantPrimary {
+  background: var(--bg-invert);
+  color: var(--fg-invert);
+  border-color: var(--bg-invert);
+}
+.variantPrimary:hover:not(:disabled) {
+  background: var(--bg-invert-soft);
+  border-color: var(--bg-invert-soft);
+}
+
+/* ================================================================
+   size
+   ================================================================ */
+
+/* default size は .button ベースで定義済み (9px 18px / 14px) */
+
+/* small */
+.sizeSmall {
+  padding: 5px 11px;
+  font-size: 12px;
+}
+
+/* ================================================================
+   disabled
+   ================================================================ */
+
+.button:disabled {
+  background: transparent;
+  color: var(--fg-softer);
+  border-color: var(--border);
+  cursor: not-allowed;
+  box-shadow: none;
+}

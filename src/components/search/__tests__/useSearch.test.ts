@@ -199,3 +199,163 @@ describe("useSearch", () => {
     expect(result.current.isLoading).toBe(false);
   });
 });
+
+describe("useSearch - tracking APIs", () => {
+  test("getHasSearched and getHadAnyInput are exposed in return value", () => {
+    const { result } = renderHook(() => useSearch());
+    expect(typeof result.current.getHasSearched).toBe("function");
+    expect(typeof result.current.getHadAnyInput).toBe("function");
+    expect(typeof result.current.resetTracking).toBe("function");
+  });
+
+  test("getHasSearched returns false initially", () => {
+    const { result } = renderHook(() => useSearch());
+    expect(result.current.getHasSearched()).toBe(false);
+  });
+
+  test("getHadAnyInput returns false initially", () => {
+    const { result } = renderHook(() => useSearch());
+    expect(result.current.getHadAnyInput()).toBe(false);
+  });
+
+  test("getHadAnyInput returns true after setQuery with non-empty string", () => {
+    const { result } = renderHook(() => useSearch());
+
+    act(() => {
+      result.current.setQuery("a");
+    });
+
+    expect(result.current.getHadAnyInput()).toBe(true);
+  });
+
+  test("getHadAnyInput returns true after setQuery with whitespace-only string", () => {
+    const { result } = renderHook(() => useSearch());
+
+    act(() => {
+      result.current.setQuery("   ");
+    });
+
+    // q.length > 0 判定: 空白のみでも入力痕跡あり
+    expect(result.current.getHadAnyInput()).toBe(true);
+  });
+
+  test("getHadAnyInput remains false when setQuery is called with empty string", () => {
+    const { result } = renderHook(() => useSearch());
+
+    act(() => {
+      result.current.setQuery("");
+    });
+
+    expect(result.current.getHadAnyInput()).toBe(false);
+  });
+
+  test("getHasSearched returns true after performSearch fires via debounce", async () => {
+    const { result } = renderHook(() => useSearch());
+
+    await act(async () => {
+      await result.current.loadIndex();
+    });
+
+    act(() => {
+      result.current.setQuery("漢字");
+    });
+
+    // デバウンス後に trackSearch と同条件で hasSearchedRef が立つ
+    act(() => {
+      vi.advanceTimersByTime(200);
+    });
+
+    expect(result.current.getHasSearched()).toBe(true);
+  });
+
+  test("getHasSearched returns true even when Fuse returns zero results", async () => {
+    const { result } = renderHook(() => useSearch());
+
+    await act(async () => {
+      await result.current.loadIndex();
+    });
+
+    act(() => {
+      // 検索結果が 0 件になるクエリ（mockDocuments に存在しない文字列）
+      result.current.setQuery("zzzzz_no_match_xyz");
+    });
+
+    act(() => {
+      vi.advanceTimersByTime(200);
+    });
+
+    // 結果は 0 件
+    expect(result.current.results).toEqual([]);
+    // しかし trackSearch は発火するので hasSearchedRef も立つ
+    expect(result.current.getHasSearched()).toBe(true);
+  });
+
+  test("getHasSearched remains false when index is not loaded", () => {
+    const { result } = renderHook(() => useSearch());
+
+    act(() => {
+      result.current.setQuery("漢字");
+    });
+
+    act(() => {
+      vi.advanceTimersByTime(200);
+    });
+
+    // fuseRef.current が null のため performSearch の条件分岐に入らない
+    expect(result.current.getHasSearched()).toBe(false);
+  });
+
+  test("resetTracking resets both flags to false", async () => {
+    const { result } = renderHook(() => useSearch());
+
+    await act(async () => {
+      await result.current.loadIndex();
+    });
+
+    act(() => {
+      result.current.setQuery("漢字");
+    });
+
+    act(() => {
+      vi.advanceTimersByTime(200);
+    });
+
+    // 両フラグが立っていることを確認
+    expect(result.current.getHasSearched()).toBe(true);
+    expect(result.current.getHadAnyInput()).toBe(true);
+
+    act(() => {
+      result.current.resetTracking();
+    });
+
+    expect(result.current.getHasSearched()).toBe(false);
+    expect(result.current.getHadAnyInput()).toBe(false);
+  });
+
+  test("clearSearch does not reset tracking flags", async () => {
+    const { result } = renderHook(() => useSearch());
+
+    await act(async () => {
+      await result.current.loadIndex();
+    });
+
+    act(() => {
+      result.current.setQuery("漢字");
+    });
+
+    act(() => {
+      vi.advanceTimersByTime(200);
+    });
+
+    expect(result.current.getHasSearched()).toBe(true);
+    expect(result.current.getHadAnyInput()).toBe(true);
+
+    act(() => {
+      result.current.clearSearch();
+    });
+
+    // clearSearch は ref に触れないのでフラグは残る
+    expect(result.current.getHasSearched()).toBe(true);
+    expect(result.current.getHadAnyInput()).toBe(true);
+  });
+});

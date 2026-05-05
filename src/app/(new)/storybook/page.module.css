@@ -1,0 +1,294 @@
+/* /storybook ページ — 開発者向けコンポーネントカタログ */
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+/* ページタイトル */
+.pageTitle {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+/* 注記 */
+.notice {
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-strong);
+  border-radius: var(--r-normal);
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  color: var(--fg-soft);
+}
+
+.notice p {
+  margin: 0.25rem 0;
+}
+
+.notice p:first-child {
+  margin-top: 0;
+}
+
+.notice p:last-child {
+  margin-bottom: 0;
+}
+
+/* 目次 */
+.toc {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--r-normal);
+  padding: 1rem 1.25rem;
+  margin-bottom: 2.5rem;
+}
+
+.tocTitle {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--fg-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.tocList {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  margin: 0;
+  padding: 0;
+}
+
+.tocList li a {
+  font-size: 0.9rem;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.tocList li a:hover {
+  color: var(--accent-strong);
+  text-decoration: underline;
+}
+
+/* セクション */
+.section {
+  margin-bottom: 3.5rem;
+}
+
+.sectionTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.subsectionTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 1.25rem 0 0.75rem;
+  color: var(--fg-soft);
+}
+
+/* カラースウォッチ */
+.swatchGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  /* カード高さを揃えるため align-items を stretch（デフォルト）のままにし、
+     各カードが同行の最大高さに伸びるようにする */
+  align-items: stretch;
+}
+
+.swatch {
+  border: 1px solid var(--border);
+  border-radius: var(--r-normal);
+  overflow: hidden;
+  /* align-items: stretch により同行の最大高さに伸びる。
+     flexbox 縦方向にして swatchInfo が下端まで伸びるようにする */
+  display: flex;
+  flex-direction: column;
+}
+
+.swatchColor {
+  height: 64px;
+  width: 100%;
+}
+
+.swatchInfo {
+  padding: 0.5rem 0.6rem;
+  background: var(--bg);
+  /* flex: 1 で残りの高さを埋める。swatchRole に min-height で 2 行分を確保し、
+     1 行の説明文でも高さが揃うようにする */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.swatchToken {
+  font-family: ui-monospace, monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--fg);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.swatchRole {
+  font-size: 0.7rem;
+  color: var(--fg-softer);
+  margin-top: 2px;
+  line-height: 1.3;
+  /* 説明文が 1 行でも 2 行分の最低高さを確保し、カード高さを揃える。
+     2 行分の高さ = line-height(1.3em) * 2 行 = 2.6em（em は font-size 基準なので
+     line-height の倍数で計算する） */
+  min-height: 2.6em;
+}
+
+/* 角丸・影サンプル */
+.radiusRow {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.radiusSample {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  padding: 1.25rem 1.75rem;
+  min-width: 180px;
+  text-align: center;
+}
+
+.radiusSampleLabel {
+  font-family: ui-monospace, monospace;
+  font-size: 0.8rem;
+  color: var(--fg-soft);
+  margin-top: 0.5rem;
+}
+
+.shadowRow {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.shadowSample {
+  background: var(--bg);
+  padding: 1.25rem 1.75rem;
+  border-radius: var(--r-normal);
+  min-width: 180px;
+  text-align: center;
+}
+
+.shadowSampleLabel {
+  font-family: ui-monospace, monospace;
+  font-size: 0.8rem;
+  color: var(--fg-soft);
+  margin-top: 0.5rem;
+}
+
+/* プレビューラベル — Panel の内側先頭に配置するラベル */
+.previewLabel {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--fg-soft);
+  font-family: ui-monospace, monospace;
+  margin-bottom: 1rem;
+}
+
+/* ボタンマトリクス */
+.buttonMatrix {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.buttonGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-start;
+}
+
+.buttonGroupLabel {
+  font-size: 0.75rem;
+  color: var(--fg-softer);
+  font-family: ui-monospace, monospace;
+  margin-bottom: 0.25rem;
+}
+
+/* Input サンプル */
+.inputGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.inputItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.inputItemLabel {
+  font-size: 0.75rem;
+  color: var(--fg-softer);
+  font-family: ui-monospace, monospace;
+}
+
+/* Breadcrumb サンプル */
+.breadcrumbSamples {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Toggle サンプル */
+.toggleSamples {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.toggleItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.toggleItemLabel {
+  font-size: 0.75rem;
+  color: var(--fg-softer);
+  font-family: ui-monospace, monospace;
+}
+
+.toggleStatus {
+  font-size: 0.8rem;
+  color: var(--fg-soft);
+  margin-top: 0.25rem;
+}
+
+/* Panel as prop デモ */
+.asPropGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.asPropLabel {
+  font-size: 0.7rem;
+  color: var(--fg-softer);
+  font-family: ui-monospace, monospace;
+  margin-bottom: 0.5rem;
+}
