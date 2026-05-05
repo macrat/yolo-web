@@ -18,7 +18,7 @@ completed_at: "2026-05-05T19:26:39+0900"
 - [x] B-333: 静的・リダイレクト先行の新デザイン移行（移行計画 Phase 3）
   - [x] B-333-1: 一次情報の Read と内在化、および前提確認（PM 本人責務）
   - [x] B-333-2: TrustLevelBadge 取り扱い判断（**execution フェーズで Owner 指摘を受けて (A) 完全撤去採用に変更**。詳細は B-333-2 セクションの「execution 結果」参照）
-  - [x] B-333-2a: 新 TrustLevelBadge 共通コンポーネントの新設 → **(A) 撤去採用に伴い不要となったため commit a3b8dc9f を revert 済み**（commit 56930c8c）。本サブタスクは取り下げ。残り 17 利用箇所の撤去は新 backlog **B-367** として独立サイクルで実施
+  - [x] B-333-2a: 新 TrustLevelBadge 共通コンポーネントの新設 → **(A) 撤去採用に伴い不要となったため commit a3b8dc9f を revert 済み**（commit 56930c8c）。本サブタスクは取り下げ。残り 17 利用箇所の撤去は **各 Phase 4-8 移行サイクルの「ついで作業」**（design-migration-plan.md「1 ページ移行の標準手順」ステップ 6 に追記済み）+ コンポーネント本体の最終削除は B-337（Phase 10.2）に統合（B-367 として独立タスク化していた案は cycle-completion で取り下げ済み）
   - [x] B-333-3: not-found の配置確定（(γ'') = `src/app/global-not-found.js` + `experimental.globalNotFound: true` に確定済み）と絵文字撤去後の視覚案判断（PM 本人責務）
   - [x] B-333-4: 3.2 リダイレクト 5 ルートの `(new)/` 配下への一括移動（builder 委譲可、1 コミット）→ commit 3235700e
   - [x] B-333-5: 3.1 `/about` 1 ページ移行 + **TrustLevelBadge 撤去**（B-333-2 (A) 採用に伴う追加責務）（builder 委譲可、1 コミット）→ commit 53b81e16
@@ -696,33 +696,59 @@ PM 判断として code-researcher による実態調査を実施（`tmp/researc
 4. analytics 計測ゼロで利用実態不明
 5. 3 段階の意味分離が来訪者頭脳で立たない（folded で description 非表示）
 
-cycle-180 内で about / privacy 2 件のみ撤去し、残り 17 箇所 + コンポーネント本体の体系的削除は新 backlog **B-367** として独立サイクルで実施することに確定（commit b15abe1e）。事前に新版 TrustLevelBadge を別パスで併存実装した B-333-2a（commit a3b8dc9f）は方針変更により revert（commit 56930c8c）。
+cycle-180 内で about / privacy 2 件のみ撤去（commit b15abe1e）。事前に新版 TrustLevelBadge を別パスで併存実装した B-333-2a（commit a3b8dc9f）は方針変更により revert（commit 56930c8c）。
+
+**当初の B-367 起票案は cycle-completion で取り下げた**: Owner 指摘「どうせすぐに作り直す (legacy) ページのレイアウトを直すことに時間を割くのは合理的か。ページデザインを変えるときに一緒に消せばいいのでは」を受け再検討。来訪者価値ベースで考えると (legacy) の TrustLevelBadge は Footer の AI 注記でカバーされ、急いで消す価値は低い。各 Phase 4-8 移行サイクルで「ついで」に消す方が、廃止予定のレイアウトを直すコストを払わずに済む。design-migration-plan.md「1 ページ移行の標準手順」ステップ 6 に「TrustLevelBadge の撤去」を追加し、各 Phase 4-8 PM が移行時に処理する方針に変更。コンポーネント本体・lib・テストの最終削除は B-337（Phase 10.2 = legacy 撤去）に自然統合される。
+
+### Owner 介入 (2): about ページが旧コンセプトのまま検出
+
+cycle-completion 中に Owner から「about ページは旧サイトコンセプトに則ったものですが、どうしてこれについて何の検討もしていないのですか？ それは『来訪者に最高の価値を提供している』としてレビューを通過したのですか？」という指摘を受けた。
+
+実際に `(new)/about/page.tsx` を Read した結果、本文 7 セクションが**完全に旧コンセプト「占い・診断のエンタメサイト」のまま**であることが判明（L8 description「AIが運営する占い・診断のエンタメサイト」、L41-43「笑えて、シェアしたくなる占い・診断の遊園地」、遊び方ガイドにツールへの言及ゼロ、等）。
+
+cycle-167 でサイトコンセプトが「日常の傍にある道具」に変更されているのに、cycle-180 でこの矛盾を全く検出できなかった。原因:
+
+- 計画レビュー 5 ラウンド + 実装レビュー 2 ラウンドの観点に「本文内容のコンセプト整合性」が含まれていなかった
+- PM が builder への指示で「本文の構造変更や実績システム説明の改稿は行わない」と明示制約したのが直接原因（DESIGN.md トークン適合・TrustLevelBadge 撤去だけを範囲とした）
+- レビューも「構造変更なし」を「正しく守られた」と評価し、コンセプト整合性は問わなかった
+
+PM 判断: **B-368 として独立タスク化、P1 で起票** + 当初の B-366（OGP 画像）を統合（about ページを 2 度触ることを避けるため）。詳細は下記キャリーオーバー参照。
+
+**改めて反省**: cycle-167 でサイトコンセプトが変わった後、各ページの本文内容がコンセプトと整合しているかを系統的に点検する仕組みがない。cycle-180 で about を (new) に移行する際、表面的な「ファイル位置移動 + デザイン適用」しか見ておらず、内容の妥当性を問わなかったレビューの設計不備。Phase 4-8 の各移行サイクルでも同種の事故が起きうる（旧コンセプト依存の本文が新側に温存される）。これは将来 Phase 4-8 PM への申し送り事項として B-334 申し送りに追記する。
 
 ## キャリーオーバー
 
 本サイクルで発生し、別サイクルで実施するタスクの詳細。backlog.md は ID と概要のみのポインタで、本セクションが真実源。
 
-### B-366: about ページの OGP 画像新規作成（P3、新規）
+### B-368: about ページの本文を新コンセプトに改訂 + OGP 画像新規作成（P1、新規）
 
-- **背景**: cycle-180 で `(legacy)/about` を `(new)/about` に移行したが、about には OGP 画像（opengraph-image.tsx / twitter-image.tsx）が存在しない。privacy には既存の OGP があり cycle-180 で同梱移動済み（`(new)/privacy/opengraph-image.tsx` / `twitter-image.tsx`）
-- **作業内容**: `src/app/(new)/about/opengraph-image.tsx` と `twitter-image.tsx` を新規作成。privacy の既存 OGP を参照してフォント・色・レイアウト・Edge runtime 設定等のデザイン規約を揃える
-- **タイトル文言**: 「このサイトについて | yolos.net」
-- **来訪者価値**: 直接 PV 寄与は小さいが、SNS シェア時のサムネイル不在を解消し信頼性を底上げする
-- **着手条件**: なし（B-333 cycle-180 完了済みなので即着手可）
+- **背景**: cycle-180 で `/about` を `(legacy)/` から `(new)/` に移行したが、本文 7 セクションが**完全に旧コンセプト「占い・診断のエンタメサイト」のまま**であることが、cycle-completion 中の Owner 指摘で発覚した:
+  - L8 description: 「AIが運営する占い・診断のエンタメサイト」
+  - L41-43: 「笑えて、シェアしたくなる占い・診断の遊園地」
+  - L45: 「正確さや神秘性より『面白さ』と『意外性』に全振りした占い・診断」
+  - L52-72: 遊び方ガイドが「占い・診断 + ゲーム」のみで**ツールへの言及ゼロ**
+  - L131-132: 「本サイトの占い・診断の結果はエンターテインメント...」
+- **問題の重大性**: cycle-167 でサイトコンセプトが「日常の傍にある道具」に変更されているのに、about ページが取り残されている。M1a「特定の作業に使えるツールをさっと探している人」が about を開くと「ツールサイトじゃないのか? 場所間違えた」と困惑する。M1b にも信頼性の毀損として作用。来訪者を継続的に混乱させている P1 級の事故
+- **検出されなかった経緯**: cycle-180 で計画レビュー 5 ラウンド + 実装レビュー 2 ラウンドを経たが、本文内容のコンセプト整合性は全く観点に入っていなかった。さらに私が builder への指示で「本文の構造変更や実績システム説明の改稿は行わない」と明示制約したのが直接原因。レビューも構造変更なしを「正しく守られた」と評価していた
+- **作業内容**:
+  1. about の本文 7 セクションを新コンセプト「日常の傍にある道具」に沿って全面書き換え。「占い・診断」「エンタメサイト」「遊園地」のような旧コンセプト由来の言葉を排除し、「日常の作業に使えるツール」「息抜きのゲーム・クイズ」のような現サイト構成を反映
+  2. metadata の title / description / og description も新コンセプトに更新
+  3. **B-366（OGP 画像新規作成）を統合**: about ページを 2 度触ることを避けるため、本文改訂と同サイクルで OGP 画像（`opengraph-image.tsx` + `twitter-image.tsx`）も新規作成。privacy の既存 OGP を参照してフォント・色・レイアウト・Edge runtime 設定を揃える
+  4. 実績システムセクション（L75-L102）の扱いは B-355（実績システム存続検討）の判断結果と整合させる: B-355 が ① 存続なら新コンセプトに沿った文言に、② 撤去なら本セクションごと削除
+- **着手条件**: なし（即着手可）
+- **B-310（トップ・ナビ再設計、Phase 4 完了が条件）との関係**: B-310 は about を含んでいたが、Phase 4 完了を待つと旧コンセプト about が数サイクル放置される。B-368 で about のみを切り出して先行改訂し、B-310 のスコープから about を除外する（backlog.md の B-310 行も更新済み）
 
-### B-367: TrustLevelBadge の全廃と trustNote の plain text 化（P2、新規）
+### B-334: 一覧・トップ移行（Phase 4、既存）への申し送り
 
-- **背景**: cycle-180 execution 中に Owner から「TrustLevelBadge は本当に必要か？ 実態と表示は正確に合っているか？ ITリテラシーが低い来訪者にとって『正確な処理』はミスリードでは？ 『AI作成データ』と『AI生成テキスト』の境目は明瞭か？」という根源的な問いを受け、code-researcher による実態調査の結果 PM が **(A) 完全撤去** を採用
-- **判断根拠**:
-  1. ToolLayout は trustLevel を持つが badge を render していない（34 ツールページで来訪者には届いていない）
-  2. achievements は localStorage の事実データなのに `generated`、privacy は法的文書なのに `generated` などラベルと実態が不一致
-  3. Footer に「このサイトはAIによる実験的プロジェクトです」が黄色ボックスで全ページ常時表示されており constitution Rule 3 を完全充足、badge は冗長
-  4. `src/lib/analytics.ts` に TrustLevelBadge クリック・展開のイベントなし、利用実態は計測ゼロ
-  5. `<details>/<summary>` 折りたたみで初期は label のみ。3 段階の意味分離が来訪者頭脳で立たない（kanji-data.json は公的データ + AI 補足のハイブリッドで curated/generated の境目が曖昧）
-- **スコープ**: 残り 17 利用箇所（dictionary 系 11、blog/[slug]、achievements、play/daily、共通 layout 系 4）から `<TrustLevelBadge />` を削除、`src/components/common/TrustLevelBadge.{tsx,module.css}` 削除、`src/lib/trust-levels.ts` 削除、各 `meta.ts` の `trustLevel` フィールド削除、関連テスト削除
-- **保持するもの**: ゲーム / クイズの `trustNote`（具体的な注記、例: 「ゲームの正解判定は正確です。パズルデータは AI が作成しています」）は GameLayout / QuizPlayPageLayout に **plain text として保持**（情報価値あり）
-- **着手条件**: なし（独立タスク）。**Phase 4（B-334）着手前に実施することを強く推奨**: そうしないと Phase 4-8 の各移行サイクル PM が TrustLevelBadge の存続判断を毎サイクル行うことになる
-- **詳細な実態調査レポート**: `tmp/research/2026-05-05-trust-level-badge-evaluation.md`
+cycle-180 で Phase 3 を完了した結果、Phase 4 着手 PM が引き継ぐべき事項:
+
+- **Header / Footer の actions スロットは Phase 3 完了時点で既に新版に統一されている**: `(new)/layout.tsx` が Header の `actions` スロットに `<StreakBadge />` と `<ThemeToggle />` を渡す構造を持つ。`src/components/Header/index.tsx` 側では `actions` を props として受け取り、desktop（`styles.desktopActions` / L126-L128 周辺）と mobile（`styles.mobileActions` / L173-L176 周辺）の双方で振り分け描画している。design-migration-plan.md L119-L125 が言う「Phase 4 で構造のみ用意し、実際の検索 UI との結線は Phase 5 で実施」については、layout 側ではなく **`src/components/Header/index.tsx` 側の改修** が責務:
+  - (i) 検索トリガーアイコンを `actions` スロット内（または Header 内の検索専用枠）に追加する。layout 側の `<Header actions={...} />` の渡しを変えるのではなく Header コンポーネント内に検索枠を構造として持つ案も比較検討対象
+  - (ii) モバイル Header の 44px タップターゲット確保（現状 `styles.mobileActions` の各子要素の min-width / min-height を確認）
+  - (iii) Cmd+K / Ctrl+K キーバインド受け口の追加位置（`Header/index.tsx` 内 or 専用 client component に分離）
+  - layout 自体の作り直しは不要だが、Header コンポーネントのファイル分割（`Header/SearchTrigger.tsx` 等）が発生する可能性あり
+- **TrustLevelBadge の取り扱い**: 各 Phase 4-8 移行サイクルの「ついで作業」として、(legacy) → (new) 移行時に import / JSX / meta.ts trustLevel フィールドを削除する。design-migration-plan.md「1 ページ移行の標準手順」にステップ 6 として追加済み。コンポーネント本体（`src/components/common/TrustLevelBadge.{tsx,module.css}`）と `src/lib/trust-levels.ts` の最終削除は B-337（Phase 10.2 = legacy 撤去）で行う。**B-367 として独立タスク化していた案は取り下げ**（廃止予定の (legacy) レイアウトを直すコストが不合理、Owner 指摘）
+- **本文コンセプト整合性の点検（cycle-180 の事故再発防止）**: 各ページを (new) に移行する際、ファイル位置移動 + DESIGN.md トークン適合だけでなく、**本文内容が新コンセプト「日常の傍にある道具」と整合しているか** を必ず点検する。cycle-180 では about の本文 7 セクションが旧コンセプト「占い・診断のエンタメサイト」のまま (new) に移行され、レビュー 5+2 ラウンドで全く検出されなかった事故が起きた（B-368 で改修予定）。判定基準: 「占い・診断パーク」「エンタメサイト」「遊園地」のような旧コンセプト由来の言葉が本文・metadata・description に残っていないか、ツール / 息抜きへの言及バランスが現サイト構成を反映しているか、を移行サイクル PM が本文を Read して確認する責務を持つ。整合しない場合は計画書スコープに「本文改訂」も含めるか、独立タスクとして起票する
 
 ### B-334: 一覧・トップ移行（Phase 4、既存）への申し送り
 
