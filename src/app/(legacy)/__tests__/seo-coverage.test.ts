@@ -105,7 +105,7 @@ const staticPages: Array<{
   {
     path: "/about",
     importMeta: () =>
-      import("@/app/(legacy)/about/page").then((m) => m.metadata as Metadata),
+      import("@/app/(new)/about/page").then((m) => m.metadata as Metadata),
   },
   {
     path: "/play/kanji-kanaru",
