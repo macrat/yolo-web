@@ -1,6 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  experimental: {
+    // multiple root layouts 構成では通常の app/not-found.tsx で 404 を構成できないため、
+    // Next.js v16.2 公式仕様に従い global-not-found.js を採用 (B-333-7, cycle-180)
+    globalNotFound: true,
+  },
   async redirects() {
     // Redirect old category URLs to /blog (301 permanent)
     // These categories were removed in the category reorganization (B-083)

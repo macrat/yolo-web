@@ -1,9 +1,9 @@
 import { expect, test } from "vitest";
 import { render, screen } from "@testing-library/react";
-import NotFound from "../not-found";
+import GlobalNotFound from "../global-not-found-content";
 
 test("404 page renders heading", () => {
-  render(<NotFound />);
+  render(<GlobalNotFound />);
   expect(
     screen.getByRole("heading", {
       level: 1,
@@ -13,7 +13,7 @@ test("404 page renders heading", () => {
 });
 
 test("404 page has links to main sections", () => {
-  render(<NotFound />);
+  render(<GlobalNotFound />);
 
   const homeLink = screen.getByRole("link", { name: /トップページに戻る/ });
   expect(homeLink).toHaveAttribute("href", "/");
