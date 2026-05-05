@@ -48,7 +48,7 @@ src/app/
   - 代替方針: **全コンテンツ移行 + cheatsheets を blog 記事として再編**。個別の選別判断はせず、来訪者の動線と内部リンクを保全することを優先する
   - 具体スコープ: (a) 辞典 4 系統（kanji / yoji / colors / humor）の dictionary トップ + 各サブルートを移行、(b) achievements を移行、(c) cheatsheets 7 系統をブログ記事に書き換えて blog 配下に統合し cheatsheets ディレクトリは撤去
   - データ資産の活用案（漢字検索ツール / 四字熟語検索ツール 等のインタラクティブツール化）は別 backlog として後付け検討（移行完了後に独立した機能追加として扱う）
-  - **判断結果（cycle-172, 2026-04-30）**: 当初は 19 単位を判断（移行 8 / 削除 11 / 保留 0）したが、kanji-kanaru 連動の事実誤認、yoji→kanji 内部リンク未検討、ツール化選択肢の欠落により失敗認定。詳細は `docs/research/2026-04-30-legacy-content-migration-decision.md`（当初データ）と `docs/cycles/cycle-172.md`「失敗サイクル認定」セクション参照。
+  - **判断結果（cycle-172, 2026-04-30）**: 当初は 19 単位を判断（移行 8 / 削除 11 / 保留 0）したが、kanji-kanaru 連動の事実誤認、yoji→kanji 内部リンク未検討、ツール化選択肢の欠落により失敗認定。詳細は `docs/cycles/cycle-172.md`「失敗サイクル認定」セクション参照。
 
 **完了基準**: 1.1 は ① 採用（横断検索を作る）が確定済み（cycle-174 / B-332）。1.2 は「全移行 + cheatsheets ブログ化」方針が確定済み（本セクション）であり、Phase 8（B-338）の実施スコープに引き継がれる。
 
@@ -77,7 +77,7 @@ src/app/
   3. **ツールとタイルが 1 対多になり得るか**
      - あるツールが詳細ページで高度な機能を持つときに、道具箱のタイルとしては別の簡素な UI を持たせる判断（スマートフォンの「アプリ本体」と「ホーム画面ウィジェット」の関係性）が必要になり得るかを検討する。たとえば「複雑な入出力を持つツールをタイルではプリセット 1 種類に固定する」「結果表示だけの軽量タイルを別途作る」「同じツールに用途別の複数タイル種類を用意する」などのケースが現実的にあり得るか
      - 1 つでも 1 対多が必要なケースがあるなら、メタ型インタフェースは「タイル用のコンポーネント参照を、詳細ページの本体コンポーネントと別に指定できる、複数指定もできる」形にする（1 対多サポート）。1 対 1 で十分なら単一参照で済む
-     - 実際のツール群（age-calculator 等 30 種、遊び 13 種）を一巡して「1 対多が必要なケースが存在するか」を確認した上で決定する。推測だけで結論を出さない
+     - 実際のツール群（age-calculator 等 34 種、遊び 20 種）を一巡して「1 対多が必要なケースが存在するか」を確認した上で決定する。推測だけで結論を出さない
 
 - **2.2** タイル概念定義 + 型契約
   - **タイル概念の定義**: 道具箱内に並ぶ「タイル」は、来訪者が **道具箱内で完結して機能を使えるコンパクトな UI 単位**。タイルに対する来訪者の操作（入力・閲覧・実行）はタイル内で閉じ、ページ遷移を伴わない設計を前提とする。Phase 2.1 #3 で示される通り、(a) 1 対 1（詳細ページ本体をそのままタイル化）/ (b) 1 対多（タイル用の簡素な別 UI、すなわちスマートフォンの「アプリ本体（詳細ページ）」と「ホーム画面ウィジェット（タイル）」の関係性）/ (c) 複数バリエーション（用途別に複数タイル種類）の 3 形態が想定される。**いずれの形態でも『タイルは道具箱内で完結する UI 単位であり、操作がタイル内で閉じる』という性質は不変項として成立する**。具体的にどの形態を採るかは Phase 2.1 #3 の判断結果による。
@@ -167,12 +167,14 @@ Phase 1.1 = ① のため本 Phase を実施する。
 
 サブタスクを順に：
 
-- **7.1** ツール群の移行 + タイル化（30 ルート、各 1 サイクル）
+- **7.1** ツール群の移行 + タイル化（34 ルート、各 1 サイクル）
   - 対象：age-calculator / base64 / bmi-calculator / business-email / byte-counter / char-count / color-converter / cron-parser / csv-converter / date-calculator / dummy-text / email-validator / fullwidth-converter / hash-generator / html-entity / image-base64 / image-resizer / json-formatter / kana-converter / keigo-reference / line-break-remover / markdown-preview / number-base-converter / password-generator / qr-code / regex-tester / sql-formatter / text-diff / text-replace / traditional-color-palette / unit-converter / unix-timestamp / url-encode / yaml-formatter
 
-- **7.2** 遊び群の移行 + タイル化判断（13 ルート + result ページ、各 1 サイクル）
-  - 個別ゲーム：animal-personality / character-fortune / character-personality / contrarian-fortune / impossible-advice / irodori / kanji-kanaru / music-personality / nakamawake / traditional-color / unexpected-compatibility / yoji-kimeru / yoji-personality
-  - 共通ルート：`/play/daily`、`/play/[slug]`、`/play/[slug]/result`、`/play/[slug]/result/[resultId]`
+- **7.2** 遊び群の移行 + タイル化判断（20 ルート + result ページ、各 1 サイクル）
+  - ゲーム（4 種）：irodori / kanji-kanaru / nakamawake / yoji-kimeru
+  - クイズ（15 種）：animal-personality / character-fortune / character-personality / contrarian-fortune / impossible-advice / japanese-culture / kanji-level / kotowaza-level / music-personality / science-thinking / traditional-color / unexpected-compatibility / word-sense-personality / yoji-level / yoji-personality
+  - 占い（1 種）：daily（`/play/daily` として共通ルートに既存）
+  - 共通ルート：`/play/[slug]`、`/play/[slug]/result`、`/play/[slug]/result/[resultId]`
 
 各サイクルで実施する内容：
 
@@ -258,6 +260,7 @@ Phase 7 完了時点で、各タイルはスタンドアロン表示可能な状
   - `src/app/(legacy)/` 削除
   - `src/app/old-globals.css` 削除
   - `src/components/common/` 削除
+  - `CLAUDE.md` の `## Notes` セクションにある `(legacy)` / `(new)` ディレクトリの意味メモを削除（撤去後は意味メモ自体が無意味になるため）
   - `src/components/search/`（旧版）削除。① 採用のため、新版 `src/components/Search*/`（Phase 5 で実装）は撤去対象外。撤去対象は旧版 components 群（SearchModal / SearchTrigger / SearchResults / SearchInput / useSearch / highlightMatches 等）のみ
   - 現サイトに `/search` 等の検索専用ルートは存在しないため、ルート単位の 410 / リダイレクト設定は不要
   - analytics 関数（search_modal_open / close / result_click / abandoned）は Phase 5 で新 components に接続済みのため、旧版削除時に自動的に旧版のみが消える

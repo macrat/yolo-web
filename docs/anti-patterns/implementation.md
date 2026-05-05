@@ -20,14 +20,12 @@
 - AP-I06: 前回の指摘に対して「反対の極端」に振り切っていないか？
   → 指摘への反射的な対応はconstitutionに基づく判断ではなく、別の方向に歪んだコンテンツを生む。（cycle-69, 70, 146で実際に発生）
 
-- AP-I07: Next.js root layout の `<body style={...}>` と `document.body.style.*` 直書きは競合する。
-  → layout.tsx の JSX で `<body style={{...}}>` を指定している場合、`useEffect` で `document.body.style.overflow = "hidden"` などを直接書いても、React の reconciliation で style 属性が JSX 由来の値で上書きされて消える。代わりに `classList.add/remove`（例: `"scroll-locked"` クラス）または `dataset.*` で切り替え、CSS 側でルールを書く。jsdom 単体テストでは layout が描画されないため通ってしまうので、Playwright で本番ビルド確認を必須にする。（cycle-171で実際に発生）
+- AP-I07: Next.js layout 依存・CSS スタッキング・production ビルド最適化由来のバグは jsdom 単体テストで検出できない。a11y や視覚に関わる挙動は Playwright で本番ビルド検証を必須にする。
+  → layout 依存（body 属性、GoogleAnalytics 等）、CSS のレイアウト/スタッキング、production ビルド最適化挙動は、jsdom + 単体 render では再現しない。具体的に再発しやすい二パターンを以下に挙げる。
+  - **layout root の `<body style={...}>` と `document.body.style.*` 直書きの競合**: `layout.tsx` の JSX で `<body style={{...}}>` を指定している場合、`useEffect` で `document.body.style.overflow = "hidden"` を直接書いても、React の reconciliation で style 属性が JSX 由来の値で上書きされて消える。代わりに `classList.add/remove`（例: `"scroll-locked"` クラス）または `dataset.*` で切り替え、CSS 側でルールを書く。
+  - **z-index を持つ fixed/absolute オーバーレイの背後に static 要素を置くと操作不能になる**: `position: fixed; z-index: N` の要素は `position: static` の要素より常に前面に来る（スタッキング規則）。操作要素を最前面に置きたい場合は `position: relative; z-index: N+1` を付与する。検証は `document.elementFromPoint()` または Playwright 実機で行う。jsdom は z-index の物理的重ね合わせを評価しない。
 
-- AP-I08: z-index を持つ fixed/absolute オーバーレイの背後に static の操作要素を置くと、タップできなくなる。
-  → `position: fixed; z-index: N` の要素は `position: static` の要素より常に前面に来る（スタッキング規則）。操作要素を最前面に置きたい場合は `position: relative; z-index: N+1` を付与する。検証は `document.elementFromPoint()` または Playwright 実機で行う。jsdom は z-index の物理的重ね合わせを評価しないため、テストが pass しても本番で壊れる。（cycle-171で実際に発生）
+  （cycle-171で実際に発生）
 
-- AP-I09: Next.js layout の body 属性・CSS スタッキング・production ビルド由来のバグは jsdom 単体テストで検出できない。
-  → layout 依存（body 属性、GoogleAnalytics 等）、CSS のレイアウト/スタッキング、production ビルド最適化挙動は、jsdom + 単体 render では再現しない。a11y や視覚に関わる挙動は Playwright で本番ビルド検証を必須にする。（cycle-171で実際に発生）
-
-- AP-I10: DESIGN.md / デザインシステムに未定義の視覚表現（色・サイズ・モーション・状態表現・トランジション・opacity・スケール変化など）を実装上の都合で追加していないか？
+- AP-I08: DESIGN.md / デザインシステムに未定義の視覚表現（色・サイズ・モーション・状態表現・トランジション・opacity・スケール変化など）を実装上の都合で追加していないか？
   → 個別コンポーネントの実装時に「ここでは半透明にしたい」「ここでは色相を変えたい」のような表現が必要に思えても、それが DESIGN.md / デザイントークンに未定義であれば追加しない。デザインシステムの整合は来訪者体験の一貫性を担保し、物理的隠喩などコンセプトに沿った表現を維持するための基盤である。未定義の表現が真に必要なら先に DESIGN.md を更新し、reviewer の確認を経てから実装する。（cycle-175で実際に発生）

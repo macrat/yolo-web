@@ -21,14 +21,14 @@ yolos.netは、AIエージェントのみで大規模なWebプロジェクトを
 | --------------------------------- | ---------------------------------------------------- |
 | `constitution.md`                 | プロジェクトの不変ポリシー。すべての判断の最上位基準 |
 | `site-concept.md`                 | サイトのコンセプト・方向性の定義                     |
-| `site-value-improvement-plan.md`  | サイト全体の価値向上に向けた作業計画                 |
-| `content-categories.md`           | インタラクティブコンテンツの4カテゴリ分類と品質基準  |
+| `character.md`                    | サイトのキャラクター定義                             |
 | `content-quality-requirements.md` | コンテンツ品質の要件定義                             |
 | `content-trust-levels.md`         | コンテンツの信頼レベル分類ルール                     |
 | `blog-writing.md`                 | ブログ記事執筆のガイドライン                         |
-| `new-feature-guide.md`            | 新フィーチャー追加時の手順と判断基準                 |
 | `backlog.md`                      | 未着手・進行中タスクのプロダクトバックログ           |
-| `long-term-vision.md`             | 長期成長ビジョン（12ヶ月後5,000PVへの道筋と戦略）    |
+| `design-migration-plan.md`        | デザイン移行計画                                     |
+| `imagen4-proposal.md`             | Imagen4を活用した画像生成の提案                      |
+| `yoji-styleguide.md`              | 四字熟語AI視点例文のスタイルガイド                   |
 
 ### docs/archive/（廃止済みの仕様書・過去の計画記録）
 
@@ -62,9 +62,11 @@ yolos.netは、AIエージェントのみで大規模なWebプロジェクトを
 - **新しい知見の追加**: 新しいサイクルで得られた知見は、新しいファイルとして作成する。既存ファイルの更新は行わない。
 - **テーマの重複**: 同じテーマの知見が複数ファイルに存在してもよい。新しい方が優先される。
 
-- `ai-agent-communication.md` — エージェント間コミュニケーション設計の知見
-- `technical-writing.md` — 技術文書執筆に関する知見
-- `workflow-design.md` — ワークフロー設計に関する知見
+- `2026-03-16-ai-agent-communication.md` — エージェント間コミュニケーション設計の知見
+- `codegen-patterns.md` — コード生成パターンの知見
+- `css-modules.md` — CSS Modulesに関する知見
+- `dnd-kit.md` — dnd-kitライブラリに関する知見
+- `nextjs.md` — Next.jsに関する知見
 
 ### docs/research/（調査レポート）
 
@@ -89,8 +91,11 @@ yolos.netは、AIエージェントのみで大規模なWebプロジェクトを
 サイトのターゲットユーザー像をYAML形式で定義する。コンテンツ制作・サイト設計の判断基準として日常的に参照する。
 
 - `README.md` — ターゲット定義の概要と使い方
-- `手軽で面白い占い・診断を楽しみたい人.yaml` — メインターゲット
-- `AIエージェントやオーケストレーションに興味があるエンジニア.yaml` — サブターゲット（ブログ読者）
+- `AIの日記を読み物として楽しむ人.yaml`
+- `AIエージェントやオーケストレーションに興味があるエンジニア.yaml`
+- `Webサイト製作を学びたいエンジニア.yaml`
+- `気に入った道具を繰り返し使っている人.yaml`
+- `特定の作業に使えるツールをさっと探している人.yaml`
 
 ## ライセンス
 

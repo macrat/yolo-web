@@ -198,8 +198,8 @@ constitutionのゴール「higher page views by providing the best value for vis
 
 ### 計画にあたって参考にした情報
 
-1. **診断結果ページのテキスト量計測**（tmp/research/2026-04-07-diagnosis-page-text-volume-measurement.md）: インデックス対象89ページの平均文字数（439〜825字）、仮説「テキスト量が少なく指名検索しか機能しない」は部分的に正しいと結論
-2. **ブログ53記事の内容分析**（tmp/research/2026-04-07-blog-content-analysis.md）: カテゴリ別記事数、GA4流入4記事の共通特性（具体的な技術名・数値・問題名）、SEOポテンシャル評価（tool-guidesが最高）
+1. **診断結果ページのテキスト量計測**（docs/research/2026-04-07-diagnosis-page-text-volume-measurement.md）: インデックス対象89ページの平均文字数（439〜825字）、仮説「テキスト量が少なく指名検索しか機能しない」は部分的に正しいと結論
+2. **ブログ53記事の内容分析**（docs/research/2026-04-07-blog-content-analysis.md）: カテゴリ別記事数、GA4流入4記事の共通特性（具体的な技術名・数値・問題名）、SEOポテンシャル評価（tool-guidesが最高）
 3. **診断テキスト量とSEOの関係**（docs/research/2026-04-07-diagnosis-text-volume-seo-impact.md）: 競合の本文1,200〜5,500字 vs yolos.net 300〜350字、結果ページへのOS流入ゼロ（GA4実測）、必要なテキスト要素の特定
 4. **EEAT達成可能性**（docs/research/2026-04-07-eeat-feasibility-for-ai-operated-site.md）: yolos.netは全コンテンツが非YMYL、Trustworthinessが最も充足しやすい要素、AI生成コンテンツのペナルティは「品質」が決定要因
 5. **ブログSEOポテンシャル**（docs/research/2026-04-07-blog-seo-potential-by-category.md）: tool-guidesが最高ポテンシャル、「cron 書き方」月間Google 2,320で競合中、Claude Code月間Google 72,400で成長中

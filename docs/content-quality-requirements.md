@@ -159,25 +159,23 @@ faq?: FaqEntry[];
 
 ### ツール
 
-| 品質要素 | 現状       | 対応方針                              |
-| -------- | ---------- | ------------------------------------- |
-| 一行価値 | **未実装** | ToolMeta に `valueProposition` を追加 |
-| 具体例   | **未実装** | ToolMeta に `usageExample` を追加     |
-| FAQ      | **未実装** | ToolMeta に `faq` を追加              |
-| 関連導線 | 実装済み   | `relatedSlugs` で対応済み。維持する   |
+| 品質要素 | 現状       | 対応方針                                                           |
+| -------- | ---------- | ------------------------------------------------------------------ |
+| 一行価値 | **未実装** | ToolMeta に `valueProposition` を追加                              |
+| 具体例   | **未実装** | ToolMeta に `usageExample` を追加                                  |
+| FAQ      | 実装済み   | `ToolMeta.faq` 定義済み。ToolLayout.tsx の `FaqSection` で表示済み |
+| 関連導線 | 実装済み   | `relatedSlugs` で対応済み。維持する                                |
 
-ToolLayout.tsx に valueProposition、usageExample、FAQ の表示 UI を追加する。
+ToolLayout.tsx への valueProposition・usageExample の表示 UI 追加が残タスクである。
 
 ### チートシート
 
-| 品質要素 | 現状       | 対応方針                                                           |
-| -------- | ---------- | ------------------------------------------------------------------ |
-| 一行価値 | **未実装** | CheatsheetMeta に `valueProposition` を追加                        |
-| 具体例   | **未実装** | CheatsheetMeta に `usageExample` を追加                            |
-| FAQ      | **未実装** | CheatsheetMeta に `faq` を追加                                     |
-| 関連導線 | 実装済み   | `relatedToolSlugs` / `relatedCheatsheetSlugs` で対応済み。維持する |
-
-CheatsheetLayout.tsx に valueProposition、usageExample、FAQ の表示 UI を追加する。
+| 品質要素 | 現状     | 対応方針                                                                   |
+| -------- | -------- | -------------------------------------------------------------------------- |
+| 一行価値 | 実装済み | `CheatsheetMeta.valueProposition` 定義済み。CheatsheetLayout で表示済み    |
+| 具体例   | 実装済み | `CheatsheetMeta.usageExample` 定義済み。CheatsheetLayout で表示済み        |
+| FAQ      | 実装済み | `CheatsheetMeta.faq` 定義済み。CheatsheetLayout の `FaqSection` で表示済み |
+| 関連導線 | 実装済み | `relatedToolSlugs` / `relatedCheatsheetSlugs` で対応済み。維持する         |
 
 ### ゲーム
 
@@ -202,7 +200,7 @@ faq?: Array<{ question: string; answer: string }>;
 
 ### 理由
 
-- **既存コンテンツを壊さない**: 32 個のツール、3 個のチートシートの既存 meta.ts を即座に全件更新する必要がない
+- **既存コンテンツを壊さない**: 34 個のツール、7 種類のチートシートの既存 meta.ts を即座に全件更新する必要がない
 - **段階的な展開が可能**: サンプル数件で動作確認した後、次サイクル以降で全コンテンツに展開できる
 - **Layout での条件付き表示**: フィールドが存在しない場合は何も表示しない。フィールドが存在する場合のみ UI を表示する
 
@@ -246,17 +244,19 @@ FAQ セクション（存在する場合のみ表示）
 
 ### FaqSection コンポーネント
 
-FAQ の表示は ToolLayout と CheatsheetLayout の両方で使うため、`src/components/common/FaqSection.tsx` に共通コンポーネントとして配置する。
+FAQ の表示は ToolLayout と CheatsheetLayout の両方で共通コンポーネント `src/components/common/FaqSection.tsx` として実装済みである。
 
-- props は `faq` 配列のみを受け取るシンプルな設計
-- セマンティック HTML の `section[aria-label="FAQ"]` を使用する
-- details/summary タグによるアコーディオン形式、またはシンプルな Q&A リスト形式
-- CSS Modules でスタイルを管理する
+- props は `faq: FaqEntry[] | undefined` のみを受け取るシンプルな設計
+- セマンティック HTML の `section[aria-label="FAQ"]` を使用
+- details/summary タグによるアコーディオン形式で Q&A を表示
+- CSS Modules（`FaqSection.module.css`）でスタイルを管理
+- FAQPage schema JSON-LD の生成・出力もこのコンポーネント内で行う（`generateFaqPageJsonLd` を内包）
 
 ---
 
 ## 更新履歴
 
-| 日付       | 内容                                                                 |
-| ---------- | -------------------------------------------------------------------- |
-| 2026-02-28 | 初版作成。4品質要素の定義、種別ごとの対応方針、optional ポリシー策定 |
+| 日付       | 内容                                                                                                                                              |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-02-28 | 初版作成。4品質要素の定義、種別ごとの対応方針、optional ポリシー策定                                                                              |
+| 2026-05-05 | 実装状況を最新化。ツール FAQ・チートシート全4要素が実装済みに更新。数値を34ツール・7チートシートに修正。FaqSection の実装詳細を実態に合わせて更新 |
