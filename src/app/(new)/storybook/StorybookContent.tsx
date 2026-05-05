@@ -8,6 +8,7 @@ import Breadcrumb from "@/components/Breadcrumb";
 import ToggleSwitch from "@/components/ToggleSwitch";
 import Pagination from "@/components/Pagination";
 import ShareButtons from "@/components/ShareButtons";
+import TrustLevelBadge from "@/components/TrustLevelBadge";
 import styles from "./page.module.css";
 
 // カラースウォッチの定義
@@ -89,6 +90,7 @@ const TOC_ITEMS = [
   { id: "toggle-switch", label: "8. ToggleSwitch" },
   { id: "pagination", label: "9. Pagination" },
   { id: "share-buttons", label: "10. ShareButtons" },
+  { id: "trust-level-badge", label: "11. TrustLevelBadge" },
 ];
 
 export default function StorybookContent() {
@@ -594,6 +596,111 @@ export default function StorybookContent() {
             title="サンプル記事 | yolos.net"
             sns={["copy"]}
           />
+        </Panel>
+      </section>
+      {/* === 11. TrustLevelBadge === */}
+      <section id="trust-level-badge" className={styles.section}>
+        <h2 className={styles.sectionTitle}>11. TrustLevelBadge</h2>
+        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        <Panel as="div">
+          <span className={styles.previewLabel}>Preview: TrustLevelBadge</span>
+          <p
+            style={{
+              fontSize: "0.85rem",
+              color: "var(--fg-soft)",
+              marginBottom: "1.5rem",
+            }}
+          >
+            コンテンツの信頼レベルを示すバッジ。
+            <code>&lt;details&gt;/&lt;summary&gt;</code>{" "}
+            パターンでクリック時に説明文を展開表示する。アイコン枠は撤去済み（DESIGN.md
+            §3「絵文字禁止・アイコン原則使わない」）。
+          </p>
+
+          <h3 className={styles.subsectionTitle} style={{ marginTop: 0 }}>
+            基本バリエーション（3 種）
+          </h3>
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}
+          >
+            <div>
+              <div
+                className={styles.inputItemLabel}
+                style={{ marginBottom: "0.4rem" }}
+              >
+                verified（正確な処理） — success 系トークン
+              </div>
+              <TrustLevelBadge level="verified" />
+            </div>
+            <div>
+              <div
+                className={styles.inputItemLabel}
+                style={{ marginBottom: "0.4rem" }}
+              >
+                curated（AI 作成データ） — accent 系トークン
+              </div>
+              <TrustLevelBadge level="curated" />
+            </div>
+            <div>
+              <div
+                className={styles.inputItemLabel}
+                style={{ marginBottom: "0.4rem" }}
+              >
+                generated（AI 生成テキスト） — warning 系トークン
+              </div>
+              <TrustLevelBadge level="generated" />
+            </div>
+          </div>
+
+          <h3 className={styles.subsectionTitle}>note 付き（混在ケース）</h3>
+          <div>
+            <div
+              className={styles.inputItemLabel}
+              style={{ marginBottom: "0.4rem" }}
+            >
+              verified + note あり
+            </div>
+            <TrustLevelBadge
+              level="verified"
+              note="一部のコンテンツは手動で確認済みです。"
+            />
+          </div>
+
+          <h3 className={styles.subsectionTitle}>展開状態（open 属性付き）</h3>
+          <div>
+            <div
+              className={styles.inputItemLabel}
+              style={{ marginBottom: "0.4rem" }}
+            >
+              open=&#123;true&#125; — description が常時表示される状態
+            </div>
+            <TrustLevelBadge level="generated" open />
+          </div>
+
+          <h3 className={styles.subsectionTitle}>
+            focus-visible 状態（フォーカス時の見た目）
+          </h3>
+          <div>
+            <div
+              className={styles.inputItemLabel}
+              style={{ marginBottom: "0.4rem" }}
+            >
+              Tab キーで summary にフォーカスを当てると accent
+              カラーのアウトラインが表示される
+            </div>
+            <TrustLevelBadge level="curated" />
+            <p
+              style={{
+                marginTop: "0.5rem",
+                fontSize: "0.75rem",
+                color: "var(--fg-soft)",
+              }}
+            >
+              ※ Tab キーで上記バッジにフォーカスを当てると{" "}
+              <code>outline: 2px solid var(--accent)</code>{" "}
+              が適用される（DESIGN.md §2 準拠）。
+            </p>
+          </div>
         </Panel>
       </section>
     </div>
