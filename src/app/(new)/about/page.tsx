@@ -1,8 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
-import TrustLevelBadge from "@/components/common/TrustLevelBadge";
-import { STATIC_PAGE_TRUST_LEVELS } from "@/lib/trust-levels";
 import styles from "./page.module.css";
 import { ABOUT_LAST_MODIFIED } from "./meta";
 
@@ -36,7 +34,6 @@ export default function AboutPage() {
   return (
     <div className={styles.main}>
       <h1 className={styles.title}>このサイトについて</h1>
-      <TrustLevelBadge level={STATIC_PAGE_TRUST_LEVELS["/about"]} />
 
       {/* Section 1: yolos.net とは */}
       <section className={styles.section}>
@@ -81,15 +78,14 @@ export default function AboutPage() {
         <p>占い・診断やゲームを遊ぶと、さまざまな実績バッジを獲得できます。</p>
         <ul className={styles.list}>
           <li>
-            <strong>連続日数（ストリーク）</strong>:
+            <em>連続日数（ストリーク）</em>:
             毎日サイトを使うと連続日数が記録されます
           </li>
           <li>
-            <strong>探索バッジ</strong>:
-            すべてのコンテンツを試すとバッジがもらえます
+            <em>探索バッジ</em>: すべてのコンテンツを試すとバッジがもらえます
           </li>
           <li>
-            <strong>やりこみバッジ</strong>:
+            <em>やりこみバッジ</em>:
             累計利用回数に応じてブロンズ・シルバー・ゴールドのバッジが解除されます
           </li>
         </ul>

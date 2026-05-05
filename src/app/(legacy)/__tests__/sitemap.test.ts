@@ -6,7 +6,7 @@ import { allQuizMetas } from "@/play/quiz/registry";
 import { allCheatsheetMetas } from "@/cheatsheets/registry";
 import { BASE_URL } from "@/lib/constants";
 import { getAllBlogPosts } from "@/blog/_lib/blog";
-import { ABOUT_LAST_MODIFIED } from "@/app/(legacy)/about/meta";
+import { ABOUT_LAST_MODIFIED } from "@/app/(new)/about/meta";
 
 describe("sitemap", () => {
   test("sitemap includes /play list page", () => {
