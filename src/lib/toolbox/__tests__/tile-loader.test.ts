@@ -13,7 +13,7 @@ import { describe, expect, test, vi } from "vitest";
 // next/dynamic をモック: テスト環境では実際の動的インポートはせず、
 // 引数の loader 関数をラップしたスタブコンポーネントを返す
 vi.mock("next/dynamic", () => ({
-  default: (_loader: () => Promise<{ default: unknown }>) => {
+  default: () => {
     function Stub() {
       return null;
     }
