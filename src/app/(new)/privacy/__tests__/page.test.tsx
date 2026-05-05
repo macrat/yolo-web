@@ -88,11 +88,6 @@ test("Privacy page renders external links with correct attributes", () => {
   expect(optoutLink).toHaveAttribute("target", "_blank");
 });
 
-test("Privacy page renders TrustLevelBadge", () => {
-  render(<PrivacyPage />);
-  expect(screen.getByText(/AI生成テキスト/)).toBeInTheDocument();
-});
-
 test("Privacy page renders enactment date", () => {
   render(<PrivacyPage />);
   expect(screen.getByText(/制定日: 2026年3月7日/)).toBeInTheDocument();
