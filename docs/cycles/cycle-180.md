@@ -20,11 +20,11 @@ completed_at: null
   - [x] B-333-2: TrustLevelBadge 取り扱い判断（**execution フェーズで Owner 指摘を受けて (A) 完全撤去採用に変更**。詳細は B-333-2 セクションの「execution 結果」参照）
   - [x] B-333-2a: 新 TrustLevelBadge 共通コンポーネントの新設 → **(A) 撤去採用に伴い不要となったため commit a3b8dc9f を revert 済み**（commit 56930c8c）。本サブタスクは取り下げ。残り 17 利用箇所の撤去は新 backlog **B-367** として独立サイクルで実施
   - [x] B-333-3: not-found の配置確定（(γ'') = `src/app/global-not-found.js` + `experimental.globalNotFound: true` に確定済み）と絵文字撤去後の視覚案判断（PM 本人責務）
-  - [ ] B-333-4: 3.2 リダイレクト 5 ルートの `(new)/` 配下への一括移動（builder 委譲可、1 コミット）
-  - [ ] B-333-5: 3.1 `/about` 1 ページ移行 + **TrustLevelBadge 撤去**（B-333-2 (A) 採用に伴う追加責務）（builder 委譲可、1 コミット）
-  - [ ] B-333-6: 3.1 `/privacy` 1 ページ移行（OGP 画像同梱）+ **TrustLevelBadge 撤去**（B-333-2 (A) 採用に伴う追加責務）（builder 委譲可、1 コミット）
-  - [ ] B-333-7: 3.1 `/not-found` 1 ページ移行（`src/app/global-not-found.js` 新規作成、`next.config.ts` の experimental フラグ追加、絵文字撤去 + 新トークン化、既存テスト追従）（builder 委譲可、1 コミット）
-  - [ ] B-333-8: 3.1 `/feed`・`/feed/atom`（Route Handler 2 本）の `(new)/` 配下への移動（builder 委譲可、1 コミット）
+  - [x] B-333-4: 3.2 リダイレクト 5 ルートの `(new)/` 配下への一括移動（builder 委譲可、1 コミット）→ commit 3235700e
+  - [x] B-333-5: 3.1 `/about` 1 ページ移行 + **TrustLevelBadge 撤去**（B-333-2 (A) 採用に伴う追加責務）（builder 委譲可、1 コミット）→ commit 53b81e16
+  - [x] B-333-6: 3.1 `/privacy` 1 ページ移行（OGP 画像同梱）+ **TrustLevelBadge 撤去**（B-333-2 (A) 採用に伴う追加責務）（builder 委譲可、1 コミット）→ commit 6301d8b8（B-333-8 の feed 移動と並行起動した結果、両者が同 commit に統合された。functionally 正常、後段で reviewer に確認させる）
+  - [x] B-333-7: 3.1 `/not-found` 1 ページ移行（`src/app/global-not-found.js` 新規作成、`next.config.ts` の experimental フラグ追加、絵文字撤去 + 新トークン化、既存テスト追従）（builder 委譲可、1 コミット）→ commit a969b59f。`global-not-found.js` は `<html>/<body>` を含むため、本文を `global-not-found-content.tsx` に分離してテスト可能にする実装を採用
+  - [x] B-333-8: 3.1 `/feed`・`/feed/atom`（Route Handler 2 本）の `(new)/` 配下への移動（builder 委譲可、1 コミット）→ commit 6301d8b8 に統合（B-333-6 と並行起動の結果）。PM が baseline diff 検証を実施: feed/atom XML は完全一致、`cache-control`/`content-type` 完全一致、`x-next-cache-tags` のみ `(legacy)` → `(new)` 変動（allow-list 除外カテゴリ予期通り）、sitemap.xml も完全一致
   - [ ] B-333-9: 統合検証（sitemap / build / lint / format:check / test、Playwright 視覚確認、curl による Route Handler の動作確認、ヘッダ diff、`(legacy)/` 残存物 grep）と独立 reviewer によるレビュー
 
 ## 作業計画

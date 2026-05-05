@@ -48,10 +48,13 @@
   color: var(--fg);
 }
 
-/* <em> は italic を抑制し、項目名を前景色で区別する（DESIGN.md §3 本文中太字禁止対応） */
+/* <em> は italic を抑制し、項目名をアクセント色で視覚的に区別する。
+ * DESIGN.md §3「本文中の太字は原則として使わない」を満たすため weight ではなく色で強調。
+ * R1 Major-1 修正: 当初 var(--fg-strong) を指定していたが globals.css に未定義のため
+ * 効果が出ていなかった（実機確認で同色化を検出）。--accent-strong で確実に視覚区別する。 */
 .list li em {
   font-style: normal;
-  color: var(--fg-strong, var(--fg));
+  color: var(--accent-strong);
 }
 
 .link {
