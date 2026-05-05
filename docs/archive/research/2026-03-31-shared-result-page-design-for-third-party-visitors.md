@@ -10,7 +10,7 @@ method: >
   Playwright MCPによる競合サイト（Kuizy・BuzzFeed）への直接アクセスと構造観察、
   yolos.netソースコード（page.tsx・page.module.css）の精読、
   既存リサーチレポート（2026-03-31-japanese-casual-diagnosis-result-page-analysis.md、
-  2026-03-31-quiz-result-page-ui-layout-competitor-analysis.md、
+  （参考にした競合分析は整理時に削除済み）、
   2026-03-31-quiz-result-page-visitor-psychology-and-behavior.md）との照合と事実確認。
   主要検索クエリ: "16Personalities shared result page design third party visitor",
   "BuzzFeed quiz shared result page CTA conversion", "quiz result page visitor intent take the quiz",
@@ -27,7 +27,7 @@ sources:
   - https://kuizy.net/analysis（Playwrightで直接確認）
   - https://www.buzzfeed.com/jp/yuikoabe/a-na-ta-no-imami-ru-be-ki-eiga-ga-wa-ka-ru-shindan（Playwrightで直接確認）
   - 既存リサーチ: /mnt/data/yolo-web/docs/research/2026-03-31-japanese-casual-diagnosis-result-page-analysis.md
-  - 既存リサーチ: /mnt/data/yolo-web/docs/research/2026-03-31-quiz-result-page-ui-layout-competitor-analysis.md
+  - 既存リサーチ: 参考にした競合分析（2026-03-31-quiz-result-page-ui-layout-competitor-analysis.md）は整理時に削除済み
   - 既存リサーチ: /mnt/data/yolo-web/docs/research/2026-03-31-quiz-result-page-visitor-psychology-and-behavior.md
 ---
 

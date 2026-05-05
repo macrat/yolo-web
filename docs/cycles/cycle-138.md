@@ -169,6 +169,7 @@ cycle-136/137の先行実装で確立された品質基準を踏襲する。
 - **テストパターン**: `src/play/quiz/data/__tests__/traditional-color-detailed-content.test.ts` および `traditional-color-traits-advice-quality.test.ts`
 - **cycle-137の計画と完了結果**: `docs/cycles/cycle-137.md`（判断根拠・品質基準・テスト構成を踏襲）
 - **調査レポート**: `tmp/research/2026-03-31-cycle138-target-user-and-detailed-content-best-practices.md`, `tmp/research/2026-03-31-detailed-content-best-practices-for-cycle138.md`, `docs/research/quiz-result-page-ux-best-practices.md`, `docs/research/2026-03-30-quiz-diagnosis-user-behavior-research.md`, `docs/research/2026-03-31-quiz-result-page-value-assumptions-verification.md`, `docs/research/2026-03-31-japanese-casual-diagnosis-result-page-analysis.md`
+  （上記のうち tmp/ 配下の2ファイルは当時の一時調査ファイルであり、tmp/ は git 管理外のため現在は失われている。本文中の要約のみが記録に残る）
 
 ### 完成条件
 

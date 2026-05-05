@@ -23,6 +23,10 @@ When multiple approaches exist, always choose the one that maximizes value for t
 - **Check anti-patterns on failure**: When the Owner points out a failure, check whether `docs/anti-patterns/` already covers the pattern. If it does, investigate why the anti-pattern check was bypassed. If it does not, add the new pattern to the appropriate file (planning.md, implementation.md, writing.md, or workflow.md) to prevent recurrence.
 - **Use knowledge base**: `docs/knowledge/` contains accumulated technical knowledge (Next.js specifics, LLM behavior patterns, etc.). Check it when you encounter unexpected behavior or technical difficulties. When you gain new knowledge that is not covered by anti-patterns — such as framework-specific quirks or empirical findings about LLM behavior — add it to the appropriate file in `docs/knowledge/`.
 
+## Notes
+
+- **`(legacy)` / `(new)` ディレクトリの意味**: `src/app/(legacy)/` と `src/app/(new)/` の Route Group は、**コンテンツの新旧ではなくデザインシステムの新旧**を表す。`(legacy)/` 配下のコンテンツは現役で運用中であり、デザイン移行の対象になっているだけ。詳細は `docs/design-migration-plan.md` 参照。Phase 10.2 で `(legacy)/` ディレクトリ削除と同時に**この項目も CLAUDE.md から削除する**こと。
+
 ## Roles and Responsibilities
 
 - **Owner**: The owner is a human who writes the constitution and oversees the project. The owner deligates all decisions and tasks to the PM. The owner's responsibility is to maintain the rules and workflow of the project, and to ensure that the project is aligned with its goals and values. The owner do not make any decisions or do any work by themselves.

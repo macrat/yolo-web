@@ -30,7 +30,7 @@ sources:
 
 ## 調査概要
 
-yolos.netは月間約224セッション/601PVの日本語サイト（2026年4月時点）。本調査はcycle-162で「不足」と指摘された以下3カテゴリのロングテールKW需要と競合を実測したものである。既存調査（2026-04-06-serp-competition-and-search-demand-analysis.md、2026-04-06-step2-keyword-volumes.md、2026-04-06-character-count-json-zenhan-serp-analysis.md）と重複しないよう調査設計した。
+yolos.netは月間約224セッション/601PVの日本語サイト（2026年4月時点）。本調査はcycle-162で「不足」と指摘された以下3カテゴリのロングテールKW需要と競合を実測したものである。既存調査（2026-04-06-serp-competition-and-search-demand-analysis.md、2026-04-06-character-count-json-zenhan-serp-analysis.md、補足調査ファイルは整理時に削除済み）と重複しないよう調査設計した。
 
 調査日: 2026-04-07
 

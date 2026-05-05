@@ -136,7 +136,7 @@ design-migration-plan.md Phase 2「道具箱の基盤実装（来訪者向け非
   - ライト/ダークモード両方での視覚整合（背景色コントラスト・テキスト可読性・編集モード視覚表現が両モードで破綻なく成立すること）。【検証手段: 視覚（D-2 画像評価で両モード比較）】
 
 - **A-2 の完了条件（客観条件）**:
-  - 観点リストが `tmp/cycle-176-review-criteria.md`（または同等の確定ファイル）に確定形で存在する。
+  - 観点リストが `docs/archive/cycle-176-review-criteria.md`（または同等の確定ファイル）に確定形で存在する。
   - **観点リスト内の各観点に「検証手段（視覚 / 機能 / 両方）」が明記されている**（A-1 で定義した検証手段マッピングを観点ごとに付与）。PM が観点ファイルを Read して各観点に検証手段ラベルが付いていることを確認できる状態。
   - D-2 のタスク指示書がこのファイルへの参照を含む（D-2 を実行する agent が観点リストファイルを Read することが指示されている。**D-2 は視覚観点（および「両方」観点の視覚部分）の通し評価に責務を限定**し、機能観点は C-3 完了条件 / Playwright シナリオ等で検証される旨を指示書に含める）。
   - reviewer 依頼テンプレート / 手順がこのリストを参照することが運用化されている。**reviewer 依頼プロンプトのテンプレートに観点リストファイルの絶対パスが含まれている**こと（PM が依頼テンプレートを Read して、観点ファイルパスが本文に書かれていることを目視確認できる状態）。
@@ -485,7 +485,7 @@ cycle-177 で UI 設計をやり直しても影響を受けない技術層・基
   - `src/lib/toolbox/tile-loader.ts`
   - `src/lib/toolbox/FallbackTile.tsx`
   - `src/lib/toolbox/__tests__/tile-loader.test.ts`（variant 拡張テスト含む）
-  - `tmp/cycle-176-bundle-baseline.md`（First Load JS 計測値の参照点）
+  - `docs/archive/cycle-176-bundle-baseline.md`（First Load JS 計測値の参照点）
 - **B-3 scroll-lock MobileNav 移行**:
   - `src/components/common/MobileNav.tsx`（acquireScrollLock / releaseScrollLock 経由に統一）
   - `src/app/globals.css` / `src/app/old-globals.css` のコメント更新（実装と同期）
@@ -502,7 +502,7 @@ cycle-177 で UI 設計をやり直しても影響を受けない技術層・基
 
 公式ドキュメントではないが、cycle-176 PM の信用できないコンテキスト下で作成された資産。cycle-177 PM が独立検証してから採否を決める：
 
-- `tmp/cycle-176-review-criteria.md`（A-1 観点リスト 14 観点 + 検証手段マッピング）
+- `docs/archive/cycle-176-review-criteria.md`（A-1 観点リスト 14 観点 + 検証手段マッピング）
   - **既知の欠陥**: 「観点 12: DESIGN.md §4 視覚表現規約」の中に派生規則「揺れアニメ不採用」が含まれている。cycle-177 PM は派生規則部分を除いた上で参照するか、ゼロから再起草する
   - **使える可能性のある構造**: 観点ベースの分解、検証手段（視覚 / 機能 / 両方）マッピング、最低要件として明示している点
 - `tmp/cycle-176-d2-instruction.md`（D-2 指示書テンプレート）
