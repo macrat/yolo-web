@@ -16,13 +16,13 @@ completed_at: null
 採否は「## 作業計画」で確定済み。各タスクの **詳細は「## 作業計画 / 作業内容」B-333-1〜B-333-9 を真実源として参照** すること（本チェックリストは進捗の可視化のみで、スコープの真実源ではない）。
 
 - [ ] B-333: 静的・リダイレクト先行の新デザイン移行（移行計画 Phase 3）
-  - [ ] B-333-1: 一次情報の Read と内在化、および前提確認（PM 本人責務）
-  - [ ] B-333-2: TrustLevelBadge 取り扱い判断（A 採用前提の書き換え計画確定。PM 本人責務）
-  - [ ] B-333-2a: 新 TrustLevelBadge 共通コンポーネントの新設（別パスで併存、(new)/about・(new)/privacy で新トークン適用するための不可分の前提作業）+ storybook エントリ追加（builder 委譲可、1 コミット）
-  - [ ] B-333-3: not-found の配置確定（(γ'') = `src/app/global-not-found.js` + `experimental.globalNotFound: true` に確定済み）と絵文字撤去後の視覚案判断（PM 本人責務）
+  - [x] B-333-1: 一次情報の Read と内在化、および前提確認（PM 本人責務）
+  - [x] B-333-2: TrustLevelBadge 取り扱い判断（**execution フェーズで Owner 指摘を受けて (A) 完全撤去採用に変更**。詳細は B-333-2 セクションの「execution 結果」参照）
+  - [x] B-333-2a: 新 TrustLevelBadge 共通コンポーネントの新設 → **(A) 撤去採用に伴い不要となったため commit a3b8dc9f を revert 済み**（commit 56930c8c）。本サブタスクは取り下げ。残り 17 利用箇所の撤去は新 backlog **B-367** として独立サイクルで実施
+  - [x] B-333-3: not-found の配置確定（(γ'') = `src/app/global-not-found.js` + `experimental.globalNotFound: true` に確定済み）と絵文字撤去後の視覚案判断（PM 本人責務）
   - [ ] B-333-4: 3.2 リダイレクト 5 ルートの `(new)/` 配下への一括移動（builder 委譲可、1 コミット）
-  - [ ] B-333-5: 3.1 `/about` 1 ページ移行（builder 委譲可、1 コミット）
-  - [ ] B-333-6: 3.1 `/privacy` 1 ページ移行（OGP 画像同梱）（builder 委譲可、1 コミット）
+  - [ ] B-333-5: 3.1 `/about` 1 ページ移行 + **TrustLevelBadge 撤去**（B-333-2 (A) 採用に伴う追加責務）（builder 委譲可、1 コミット）
+  - [ ] B-333-6: 3.1 `/privacy` 1 ページ移行（OGP 画像同梱）+ **TrustLevelBadge 撤去**（B-333-2 (A) 採用に伴う追加責務）（builder 委譲可、1 コミット）
   - [ ] B-333-7: 3.1 `/not-found` 1 ページ移行（`src/app/global-not-found.js` 新規作成、`next.config.ts` の experimental フラグ追加、絵文字撤去 + 新トークン化、既存テスト追従）（builder 委譲可、1 コミット）
   - [ ] B-333-8: 3.1 `/feed`・`/feed/atom`（Route Handler 2 本）の `(new)/` 配下への移動（builder 委譲可、1 コミット）
   - [ ] B-333-9: 統合検証（sitemap / build / lint / format:check / test、Playwright 視覚確認、curl による Route Handler の動作確認、ヘッダ diff、`(legacy)/` 残存物 grep）と独立 reviewer によるレビュー
@@ -122,7 +122,84 @@ completed_at: null
 - **依存**: なし（最初に実施）。
 - **委譲可否**: PM 本人責務（サブエージェント委譲不可）。一次情報を自分で踏まないと B-333-2 / 3 の判断品質が崩れる。
 
+##### B-333-1 実施結果（execution フェーズで PM 本人が確定）
+
+実施日時: 2026-05-05 cycle-180 execution。本サイクル PM が `npm run build` 実行 + `find` / `grep` / `cp` / Read を直接行った結果を以下に記録する。
+
+**ファクトチェック完了テーブル**:
+
+| 項目                                                      | 確認したファイルパス / 行番号                                                        | 件数 / 値                                                           | 後続タスクへの含意                                                                                  |
+| --------------------------------------------------------- | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| sitemap.ts の (legacy) import 4 行                        | `src/app/sitemap.ts` L23 / L24 / L25 / L26                                           | L23 = about / L24 = achievements / L25 = privacy / L26 = play/daily | B-333-5 で L23 のみ書換 / B-333-6 で L25 のみ書換。L24 / L26 は本サイクル変更なし                   |
+| not-found.tsx の絵文字リテラル位置                        | `src/app/(legacy)/not-found.tsx` L16 / L22 / L28 / L34（icon フィールド）            | 4 件（家 / 工具 / ゲーム / メモ）                                   | B-333-7 で 4 件すべての icon フィールドを撤去。title / description は不変                           |
+| `(legacy)/__tests__/not-found.test.tsx` のテストケース数  | `src/app/(legacy)/__tests__/not-found.test.tsx`                                      | **2 ケース**（実測 `grep -cE "^\s*(it\|test)\(" `）                 | B-333-7 で `src/app/__tests__/global-not-found.test.tsx` へ移動 + 4 link name 正規表現は不変で pass |
+| `seo-coverage.test.ts` の about 参照                      | `src/app/(legacy)/__tests__/seo-coverage.test.ts` L108                               | `import("@/app/(legacy)/about/page")`                               | B-333-5 で `@/app/(new)/about/page` に書換                                                          |
+| `sitemap.test.ts` の about/meta 参照                      | `src/app/(legacy)/__tests__/sitemap.test.ts` L9                                      | `import { ABOUT_LAST_MODIFIED } from "@/app/(legacy)/about/meta"`   | B-333-5 で `@/app/(new)/about/meta` に書換                                                          |
+| `metadata.test.ts` の `../layout` 参照                    | `src/app/(legacy)/__tests__/metadata.test.ts`                                        | `(legacy)/layout.tsx` を `../layout` で参照                         | `(legacy)/layout.tsx` 自体は本サイクルでは移動しないため**影響なし**（変更不要）                    |
+| TrustLevelBadge 使用ファイル一覧                          | `grep -rln "TrustLevelBadge" src/`                                                   | **19 件**（page.tsx 系 15 + 共通 layout 4）                         | 本サイクルで about / privacy 2 件のみ新版に切替。残 17 件は (legacy) 据え置き                       |
+| `tools/_components/` の取り扱い                           | `src/tools/_components/__tests__/ToolLayout.test.tsx`                                | テストのみ（ToolLayout 本体は import なし）                         | 利用箇所一覧から除外                                                                                |
+| about / privacy / not-found の `<strong>` `<em>` `<b>` 数 | `src/app/(legacy)/about/page.tsx` L84 / L88 / L92                                    | about: `<strong>` 3 件 / privacy: 0 件 / not-found: 0 件            | B-333-5 で about の `<strong>` 3 件を `<em>` に置換（CSS で italic 抑制）                           |
+| privacy の OGP / about の OGP 不在                        | `src/app/(legacy)/privacy/opengraph-image.tsx` 存在 / `src/app/(legacy)/about/` 不在 | privacy: opengraph-image.tsx + twitter-image.tsx 同梱 / about: なし | B-333-6 で OGP 同梱移動 / B-333-5 ではスコープ外（B-366 backlog 化）                                |
+| `(legacy)/about/__tests__/page.test.tsx`                  | `grep -cE "^\s*(it\|test)\("`                                                        | **4 ケース**                                                        | B-333-5 でテストファイル移動 + 文言追従不要（about 本文は構造変更なし）                             |
+| `(legacy)/privacy/__tests__/page.test.tsx`                | 同上                                                                                 | **5 ケース**                                                        | B-333-6 でテストファイル移動                                                                        |
+| `(legacy)/feed/__tests__/feed.test.ts`                    | 同上                                                                                 | **8 ケース**                                                        | B-333-8 でテストファイル移動                                                                        |
+| `(legacy)/memos/__tests__/memos-redirect.test.ts`         | 同上                                                                                 | **8 ケース**                                                        | B-333-4 でテストファイル移動                                                                        |
+| `(legacy)/memos/feed/__tests__/memo-feed.test.ts`         | 同上                                                                                 | **4 ケース**                                                        | B-333-4 でテストファイル移動                                                                        |
+| multiple root layouts 構成                                | `src/app/(legacy)/layout.tsx` + `src/app/(new)/layout.tsx`                           | 双方が `<html>`/`<body>` を出力                                     | B-333-3 確定の (γ'') = global-not-found.js 採用の根拠                                               |
+| Next.js 16.2.4 で `experimental.globalNotFound` 実体      | `node_modules/next/dist/server/config-shared.d.ts` L760-L763 / `package.json` `next` | `globalNotFound?: boolean` 行存在 / next 16.2.4                     | B-333-7 で `next.config.ts` に `experimental.globalNotFound: true` を 1 行追加                      |
+| Footer の Provider 依存                                   | `src/components/Footer/index.tsx`                                                    | `"use client"` なし、Provider 非依存、server component              | B-333-7 global-not-found.js でそのまま import 再利用                                                |
+
+**ベースライン取得完了確認**: 以下を `./tmp/` に保存済み:
+
+- `tmp/sitemap-before.xml`（2637 行、`.next/server/app/sitemap.xml.body` のコピー）
+- `tmp/feed-before.xml`（202 行、`.next/server/app/feed.body` のコピー）
+- `tmp/feed-atom-before.xml`（200 行、`.next/server/app/feed/atom.body` のコピー）
+- `tmp/feed-meta-before.txt` / `tmp/feed-atom-meta-before.txt`（HTTP ヘッダ JSON）
+- `tmp/build-paths-before.txt`（42032 行、`find .next/server/app -type f | sort`）
+- `tmp/feed-headers-allowlist.md`（HTTP ヘッダ allow-list 確定版）
+
+**Route Group の build 出力含意（Minor-3 観察結果）**: **Pattern (c) 該当**（拡張子別に挙動が異なる）。
+
+- Pattern (a)（Route Group がパスに含まれる）: `.js` / `.rsc` / `route.js` / `page.js` / `opengraph-image-*/route.js` 等の通常出力。例: `.next/server/app/(legacy)/about/page.js`
+- Pattern (b)（Route Group が剥がれる）: `force-static` 指定の Route Handler 静的 prerender 出力。例: `.next/server/app/feed.body` / `.next/server/app/feed/atom.body` / `.next/server/app/sitemap.xml.body`（既に Route Group 剥がれているため、`(legacy)→(new)` 移動でも出力パスが同じ）
+
+**HTTP ヘッダ allow-list 確定**:
+
+- 完全一致要求: `status` / `content-type` / `cache-control`
+- 意味的同等（machine-judgable）: 該当なし（`.meta` には `Last-Modified` / `ETag` が存在しない）
+- **除外（変動を許容）**: `x-next-cache-tags`（Next.js 内部のキャッシュタグで `_N_T_/(legacy)/feed/route` のように Route Group パスを含むため、(new) 移動で必然的に変わる実装詳細） / `date` / `connection` 系
+- 詳細は `tmp/feed-headers-allowlist.md` 参照
+
 #### B-333-2: TrustLevelBadge 取り扱い判断（PM 本人責務）
+
+##### execution 結果（Owner 指摘を受けた再判断: (A) 完全撤去採用）
+
+execution フェーズで Owner から「TrustLevelBadge は本当に必要か？ 実態と表示は正確に合っているか？ 来訪者が判断基準にしているか？ ITリテラシーが低い来訪者にとって『正確な処理』はミスリードでは？ 『AI作成データ』と『AI生成テキスト』の境目は明瞭か？」という根源的な問い掛けを受けた。code-researcher による実態調査（`tmp/research/2026-05-05-trust-level-badge-evaluation.md`）の結果、**(A) 完全撤去** を採用することに方針を変更した。
+
+**判断根拠（実体ベース）**:
+
+1. **ToolLayout は trustLevel を持つが badge をレンダリングしていない** — 34 ツールページの trustLevel = "verified" は来訪者には届いていない。Owner の「『正確な処理』ミスリード」指摘は、届いていれば確かに問題だったが、そもそも届いていなかった
+2. **ラベルと実態の不一致が複数存在** — achievements（実態は localStorage の事実データなのに `generated`）、privacy（法的文書なのに `generated`）。撤去でこれらの誤りも消える
+3. **Footer に「このサイトはAIによる実験的プロジェクトです。コンテンツはAIが生成しており、内容が壊れていたり不正確な場合があります。」が黄色ボックスで全ページ常時表示** — constitution Rule 3 は完全充足済み。badge は冗長
+4. **計測ゼロ** — `src/lib/analytics.ts` に TrustLevelBadge クリック・展開のイベントなし。利用実態が不明なまま 19 ファイルで動いていた
+5. **3 段階の意味分離が来訪者頭脳で立たない** — `<details>/<summary>` 折りたたみ式で初期は label のみ。「curated」と「generated」を区別する手がかりが来訪者にない（kanji-data.json は公的データ + AI 補足のハイブリッド）
+6. **ゲーム・クイズの `trustNote`（具体的な注記、例: 「正解判定は正確、パズルデータは AI 作成」）は plain text として有用** — badge 廃止後も GameLayout / QuizPlayPageLayout の plain text として残す
+
+**サイクル境界の判断**:
+
+本サイクル（cycle-180）では、about / privacy を (new) に移行する一連の作業の中で **両ページから TrustLevelBadge を撤去**する（混在を増やさない原則）。残り 17 利用箇所 + コンポーネント本体（`src/components/common/TrustLevelBadge.*`） + `src/lib/trust-levels.ts` + meta.ts の `trustLevel` フィールド + テスト の体系的削除は、Phase 3 のスコープと混ぜずに **独立サイクル B-367** で実施する（1 サイクル 1 目的の純度保持）。これにより:
+
+- (new)/about と (new)/privacy は本サイクル完了時点で badge なし（Footer の AI 注記で Rule 3 充足）
+- (legacy) 配下の 17 ルートは Phase 4-8 の各移行サイクル開始まで旧 badge が表示され続けるが、(legacy) は廃止予定であるため許容
+- B-367 は cycle-180 完了直後の独立サイクルとして起票（B-334 = Phase 4 着手前に実施することで Phase 4-8 移行サイクル PM の判断負荷を軽減）
+
+**B-333-2a の取り扱い**: 計画段階では「新版 TrustLevelBadge を別パスで併存」と確定していたが、(A) 撤去採用により新版自体が不要となった。execution 中に既に commit a3b8dc9f で新版を実装済みだったため、commit 56930c8c で **revert 済み**。本サブタスクは取り下げ。
+
+**B-333-5 / B-333-6 への影響**: about / privacy 移行時に `@/components/common/TrustLevelBadge` の import と JSX をともに削除する作業を追加責務として含める（後述の B-333-5 / 6 セクションで詳細化）。
+
+##### 計画段階の判断（参考、現在は無効）
+
+以下は計画段階で「(A) 共通化採用」を前提に書かれた内容。execution で (A) 撤去採用に方針変更したため、現在は **無効**（参考情報として残す）。
 
 - **目的**: about / privacy が import している `@/components/common/TrustLevelBadge` を、新側でどう扱うかを判断する。標準手順ステップ 1 の判断対象。
 - **前提（B-333-1 で確定済みの事実）**: TrustLevelBadge は **現役 10+ ルートで使用中**（dictionary 系 8 ルート、blog 詳細、achievements、play/daily に加え、共通 layout 系 `CheatsheetLayout` / `QuizPlayPageLayout` / `GameLayout` / `DictionaryDetailLayout` 経由で更に多数）。Phase 4-8 でこれらが (new) に移行される過程で **共通版が必須** になるため、選択肢 B（ページ局所化）と C（撤去）は事実上採用不能。**よって本サイクルは A（共通化）採用を前提とし、B-333-2 の論点は「A 採用にあたって DESIGN.md 整合の観点で何を書き換える必要があるか」を確定することに絞る**。
