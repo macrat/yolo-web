@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
-import TrustLevelBadge from "@/components/common/TrustLevelBadge";
-import { STATIC_PAGE_TRUST_LEVELS } from "@/lib/trust-levels";
 import styles from "./page.module.css";
 import { PRIVACY_LAST_MODIFIED } from "./meta";
 
@@ -35,7 +33,6 @@ export default function PrivacyPage() {
   return (
     <div className={styles.main}>
       <h1 className={styles.title}>プライバシーポリシー</h1>
-      <TrustLevelBadge level={STATIC_PAGE_TRUST_LEVELS["/privacy"]} />
 
       {/* セクション1: はじめに */}
       <section className={styles.section}>
