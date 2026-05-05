@@ -18,7 +18,7 @@ completed_at: "2026-05-05T19:26:39+0900"
 - [x] B-333: 静的・リダイレクト先行の新デザイン移行（移行計画 Phase 3）
   - [x] B-333-1: 一次情報の Read と内在化、および前提確認（PM 本人責務）
   - [x] B-333-2: TrustLevelBadge 取り扱い判断（**execution フェーズで Owner 指摘を受けて (A) 完全撤去採用に変更**。詳細は B-333-2 セクションの「execution 結果」参照）
-  - [x] B-333-2a: 新 TrustLevelBadge 共通コンポーネントの新設 → **(A) 撤去採用に伴い不要となったため commit a3b8dc9f を revert 済み**（commit 56930c8c）。本サブタスクは取り下げ。残り 17 利用箇所の撤去は新 backlog **B-367** として独立サイクルで実施
+  - [x] B-333-2a: 新 TrustLevelBadge 共通コンポーネントの新設 → **(A) 撤去採用に伴い不要となったため commit a3b8dc9f を revert 済み**（commit 56930c8c）。本サブタスクは取り下げ。残り 17 利用箇所の撤去は **各 Phase 4-8 移行サイクルの「ついで作業」**（design-migration-plan.md「1 ページ移行の標準手順」ステップ 6 に追記済み）+ コンポーネント本体の最終削除は B-337（Phase 10.2）に統合（B-367 として独立タスク化していた案は cycle-completion で取り下げ済み）
   - [x] B-333-3: not-found の配置確定（(γ'') = `src/app/global-not-found.js` + `experimental.globalNotFound: true` に確定済み）と絵文字撤去後の視覚案判断（PM 本人責務）
   - [x] B-333-4: 3.2 リダイレクト 5 ルートの `(new)/` 配下への一括移動（builder 委譲可、1 コミット）→ commit 3235700e
   - [x] B-333-5: 3.1 `/about` 1 ページ移行 + **TrustLevelBadge 撤去**（B-333-2 (A) 採用に伴う追加責務）（builder 委譲可、1 コミット）→ commit 53b81e16
@@ -696,66 +696,94 @@ PM 判断として code-researcher による実態調査を実施（`tmp/researc
 4. analytics 計測ゼロで利用実態不明
 5. 3 段階の意味分離が来訪者頭脳で立たない（folded で description 非表示）
 
-cycle-180 内で about / privacy 2 件のみ撤去し、残り 17 箇所 + コンポーネント本体の体系的削除は新 backlog **B-367** として独立サイクルで実施することに確定（commit b15abe1e）。事前に新版 TrustLevelBadge を別パスで併存実装した B-333-2a（commit a3b8dc9f）は方針変更により revert（commit 56930c8c）。
+cycle-180 内で about / privacy 2 件のみ撤去（commit b15abe1e）。事前に新版 TrustLevelBadge を別パスで併存実装した B-333-2a（commit a3b8dc9f）は方針変更により revert（commit 56930c8c）。
+
+**当初の B-367 起票案は cycle-completion で取り下げた**: Owner 指摘「どうせすぐに作り直す (legacy) ページのレイアウトを直すことに時間を割くのは合理的か。ページデザインを変えるときに一緒に消せばいいのでは」を受け再検討。来訪者価値ベースで考えると (legacy) の TrustLevelBadge は Footer の AI 注記でカバーされ、急いで消す価値は低い。各 Phase 4-8 移行サイクルで「ついで」に消す方が、廃止予定のレイアウトを直すコストを払わずに済む。design-migration-plan.md「1 ページ移行の標準手順」ステップ 6 に「TrustLevelBadge の撤去」を追加し、各 Phase 4-8 PM が移行時に処理する方針に変更。コンポーネント本体・lib・テストの最終削除は B-337（Phase 10.2 = legacy 撤去）に自然統合される。
+
+### Owner 介入 (2): about ページが旧コンセプトのまま検出
+
+cycle-completion 中に Owner から「about ページは旧サイトコンセプトに則ったものですが、どうしてこれについて何の検討もしていないのですか？ それは『来訪者に最高の価値を提供している』としてレビューを通過したのですか？」という指摘を受けた。
+
+実際に `(new)/about/page.tsx` を Read した結果、本文 7 セクションが**完全に旧コンセプト「占い・診断のエンタメサイト」のまま**であることが判明（L8 description「AIが運営する占い・診断のエンタメサイト」、L41-43「笑えて、シェアしたくなる占い・診断の遊園地」、遊び方ガイドにツールへの言及ゼロ、等）。
+
+cycle-167 でサイトコンセプトが「日常の傍にある道具」に変更されているのに、cycle-180 でこの矛盾を全く検出できなかった。原因:
+
+- 計画レビュー 5 ラウンド + 実装レビュー 2 ラウンドの観点に「本文内容のコンセプト整合性」が含まれていなかった
+- PM が builder への指示で「本文の構造変更や実績システム説明の改稿は行わない」と明示制約したのが直接原因（DESIGN.md トークン適合・TrustLevelBadge 撤去だけを範囲とした）
+- レビューも「構造変更なし」を「正しく守られた」と評価し、コンセプト整合性は問わなかった
+
+PM 判断: **B-368 として独立タスク化、P1 で起票** + 当初の B-366（OGP 画像）を統合（about ページを 2 度触ることを避けるため）。詳細は下記キャリーオーバー参照。
+
+**改めて反省**: cycle-167 でサイトコンセプトが変わった後、各ページの本文内容がコンセプトと整合しているかを系統的に点検する仕組みがない。cycle-180 で about を (new) に移行する際、表面的な「ファイル位置移動 + デザイン適用」しか見ておらず、内容の妥当性を問わなかったレビューの設計不備。Phase 4-8 の各移行サイクルでも同種の事故が起きうる（旧コンセプト依存の本文が新側に温存される）。これは将来 Phase 4-8 PM への申し送り事項として B-334 申し送りに追記する。
 
 ## キャリーオーバー
 
-### 次サイクル PM への申し送り
+本サイクルで発生し、別サイクルで実施するタスクの詳細。backlog.md は ID と概要のみのポインタで、本セクションが真実源。
 
-- **B-367 着手判断**: 本サイクル完了直後の独立サイクルとして B-367（TrustLevelBadge 全廃 + trustNote の plain text 化）の実施を推奨。Phase 4（B-334）着手前に完了させると、Phase 4-8 移行サイクル PM が TrustLevelBadge の存続判断を毎サイクル行わずに済む
-- **B-366**: about ページの OGP 画像新規作成。Phase 3 完了後の任意のタイミングで着手可能
-- **将来の DESIGN.md トークン拡張検討**: about の `<em>` 強調にアクセント色を流用したが、ライトモードでリンクと色味が近接する。将来 DESIGN.md トークンセットを拡張する際に「弱い強調」を意味する独立トークン（リンクと別系統の色）を検討する余地がある（R2 Minor-1）
+### B-368: about ページの本文を新コンセプトに改訂 + OGP 画像新規作成（P1、新規）
 
-### Phase 4 着手 PM への申し送り（既に計画書「## 補足事項」に記載済み、ここでは主要事項のみ再掲）
+- **背景**: cycle-180 で `/about` を `(legacy)/` から `(new)/` に移行したが、本文 7 セクションが**完全に旧コンセプト「占い・診断のエンタメサイト」のまま**であることが、cycle-completion 中の Owner 指摘で発覚した:
+  - L8 description: 「AIが運営する占い・診断のエンタメサイト」
+  - L41-43: 「笑えて、シェアしたくなる占い・診断の遊園地」
+  - L45: 「正確さや神秘性より『面白さ』と『意外性』に全振りした占い・診断」
+  - L52-72: 遊び方ガイドが「占い・診断 + ゲーム」のみで**ツールへの言及ゼロ**
+  - L131-132: 「本サイトの占い・診断の結果はエンターテインメント...」
+- **問題の重大性**: cycle-167 でサイトコンセプトが「日常の傍にある道具」に変更されているのに、about ページが取り残されている。M1a「特定の作業に使えるツールをさっと探している人」が about を開くと「ツールサイトじゃないのか? 場所間違えた」と困惑する。M1b にも信頼性の毀損として作用。来訪者を継続的に混乱させている P1 級の事故
+- **検出されなかった経緯**: cycle-180 で計画レビュー 5 ラウンド + 実装レビュー 2 ラウンドを経たが、本文内容のコンセプト整合性は全く観点に入っていなかった。さらに私が builder への指示で「本文の構造変更や実績システム説明の改稿は行わない」と明示制約したのが直接原因。レビューも構造変更なしを「正しく守られた」と評価していた
+- **作業内容**:
+  1. about の本文 7 セクションを新コンセプト「日常の傍にある道具」に沿って全面書き換え。「占い・診断」「エンタメサイト」「遊園地」のような旧コンセプト由来の言葉を排除し、「日常の作業に使えるツール」「息抜きのゲーム・クイズ」のような現サイト構成を反映
+  2. metadata の title / description / og description も新コンセプトに更新
+  3. **B-366（OGP 画像新規作成）を統合**: about ページを 2 度触ることを避けるため、本文改訂と同サイクルで OGP 画像（`opengraph-image.tsx` + `twitter-image.tsx`）も新規作成。privacy の既存 OGP を参照してフォント・色・レイアウト・Edge runtime 設定を揃える
+  4. 実績システムセクション（L75-L102）の扱いは B-355（実績システム存続検討）の判断結果と整合させる: B-355 が ① 存続なら新コンセプトに沿った文言に、② 撤去なら本セクションごと削除
+- **着手条件**: なし（即着手可）
+- **B-310（トップ・ナビ再設計、Phase 4 完了が条件）との関係**: B-310 は about を含んでいたが、Phase 4 完了を待つと旧コンセプト about が数サイクル放置される。B-368 で about のみを切り出して先行改訂し、B-310 のスコープから about を除外する（backlog.md の B-310 行も更新済み）
 
-- (new) layout の Header `actions` スロット拡張は **Header コンポーネント側（`src/components/Header/index.tsx`）の改修責務**。layout 側は本サイクルで触らずに済んだ
-- TrustLevelBadge は B-367 で全廃予定。Phase 4 移行サイクルで撤去判断を再度行う必要なし
+### B-334: 一覧・トップ移行（Phase 4、既存）への申し送り
 
-### Phase 10.2 着手 PM への申し送り（既に計画書「## 補足事項」に記載済み、ここでは主要事項のみ再掲）
-
-- `src/app/global-not-found.js` を `src/app/not-found.js` に書き戻す手順
-- `experimental.globalNotFound: true` フラグ削除のタイミング
-- `(legacy)/__tests__/seo-coverage.test.ts` / `sitemap.test.ts` の最終的な置き場所
-- `src/app/__tests__/global-not-found.test.tsx` のリネーム影響範囲
-
-### 運用改善: 並行実行時の commit 統合問題
-
-cycle-180 で並行起動した builder 2 ペア（B-333-4 + B-333-7、B-333-6 + B-333-8）でいずれも git rename detection の混在により commit が統合された。functionally 正常だが、commit 粒度が崩れロールバック時の分離コストが増す。`docs/anti-patterns/workflow.md` への追記候補として:
-
-- 「同一 staging 領域での並行 builder 起動 → git rename detection が混在し commit 粒度を保てない」を AP-WF として記録
-- 回避策: (i) 完全な逐次起動、(ii) git worktree で物理的に作業ディレクトリを分離、(iii) builder への明示的な「git add -- specific files only」指示を強化
-
-## 補足事項
-
-- 前サイクル（cycle-179）から「`docs/design-migration-plan.md` Phase 7.1 / 7.2 の数値訂正」が cycle-180 PM への申し送りとして渡されているが、これは独立タスク B-365 として既に Queued に起票済みで、Phase 7 着手前までに訂正されていれば実害なし。本サイクルのスコープには含めない（B-333 単独で十分なスコープがあるため）。Phase 3 着手中に plan doc Phase 3 の記述で同型の事実誤認に気付いたら、本サイクル内で能動的に検出・記録すること。
-- B-333 は P1 で、Phase 4 / 5 / 6 / 7 / 9 / 10 の前提となる。本サイクルでスタックを進めることで後続のデザイン移行サイクルが連鎖的に着手可能になる。
-
-### Phase 4 着手 PM への申し送り（本サイクル完了時に追記される想定）
-
-以下は Phase 4（B-334 を含む後続サイクル）の PM に対し、Phase 3 を踏まえて引き継ぐべき事項の **計画段階での想定**。execution の進行で実体が判明したら追記すること。
+cycle-180 で Phase 3 を完了した結果、Phase 4 着手 PM が引き継ぐべき事項:
 
 - **Header / Footer の actions スロットは Phase 3 完了時点で既に新版に統一されている**: `(new)/layout.tsx` が Header の `actions` スロットに `<StreakBadge />` と `<ThemeToggle />` を渡す構造を持つ。`src/components/Header/index.tsx` 側では `actions` を props として受け取り、desktop（`styles.desktopActions` / L126-L128 周辺）と mobile（`styles.mobileActions` / L173-L176 周辺）の双方で振り分け描画している。design-migration-plan.md L119-L125 が言う「Phase 4 で構造のみ用意し、実際の検索 UI との結線は Phase 5 で実施」については、layout 側ではなく **`src/components/Header/index.tsx` 側の改修** が責務:
-  - (i) 検索トリガーアイコンを `actions` スロット内（または Header 内の検索専用枠）に追加する。これは layout 側の `<Header actions={...} />` の渡しを変えるのではなく Header コンポーネント内に検索枠を構造として持つ案も比較検討対象。
-  - (ii) モバイル Header の 44px タップターゲット確保（現状 `styles.mobileActions` の各子要素の min-width / min-height を確認）。
-  - (iii) Cmd+K / Ctrl+K キーバインド受け口の追加位置（`Header/index.tsx` 内 or 専用 client component に分離）。
-  - layout 自体の作り直しは不要だが、Header コンポーネントのファイル分割（`Header/SearchTrigger.tsx` 等）が発生する可能性がある点を Phase 4 PM に申し送る。
-- **TrustLevelBadge の取り扱い結論**: Phase 3 では「別パスで併存」（B-333-2a 選択肢 b）を採用し、新版 `@/components/TrustLevelBadge` を新設、(legacy) 10+ 既存利用箇所は旧版 `@/components/common/TrustLevelBadge` を継続使用。Phase 4-8 で各ページが (new) に移る際、本来のサイクルで個別に新版へ切り替える機会がある。
-- **not-found の配置スコープ結論**: Phase 3 で **(γ'') = `src/app/global-not-found.js` + `next.config.ts` の `experimental.globalNotFound: true`** を採用済み。Phase 4 以降のページが `notFound()` を呼んだ場合は **各 Route Group の `not-found.tsx`（存在すれば）または最も近い境界の挙動に従う**（公式 docs: `not-found.js` は `notFound()` 関数のスコープで機能、`global-not-found.js` は **unmatched URL のみ** を catch）。Phase 4 以降のページで `notFound()` を意味的に使う場合は、(new) 配下に必要に応じて Route Group 単位の `not-found.tsx` を別途置く判断が必要。
-- **`(legacy)/__tests__/` 配下のテストが `@/app/(new)/...` を import する構造ねじれ（Major-4 対応）**: Phase 3 では `seo-coverage.test.ts` / `sitemap.test.ts` が一部 `@/app/(new)/...` を参照する構造ねじれを許容している（B-333-9 で `./tmp/cross-group-import-count.md` に件数記録）。Phase 4 以降が進むにつれてこの数は増え、最終的に `seo-coverage.test.ts` の `staticPages` 配列が大半 `@/app/(new)/...` 参照になる。**Phase 10.2（legacy 削除）の着手 PM への申し送り事項**: `seo-coverage.test.ts` / `sitemap.test.ts` 自体の最終的な置き場所を Phase 10.2 で決める（`(legacy)/__tests__/` ディレクトリ削除と同時に `src/__tests__/` 等の中立位置へ移すか、`(new)/__tests__/` 配下に移すか）。
-- **(legacy) 配下の残存ルートの状態**: Phase 3 完了時点で `(legacy)/` 配下に残る主要ディレクトリ（blog / tools / play / dictionary / cheatsheets / achievements / api / 一覧トップ系）を一覧化して申し送る（Phase 4 の作業対象を可視化するため）。
-- **sitemap.ts の (legacy) 経由 import の残存状況**: Phase 3 で about / privacy 分は `@/app/(new)/...` に書き換えられるが、achievements / play/daily の meta は依然 `@/app/(legacy)/...` から import されている。Phase 4 / 7 でこれらを移行する際の前提として明記。
+  - (i) 検索トリガーアイコンを `actions` スロット内（または Header 内の検索専用枠）に追加する。layout 側の `<Header actions={...} />` の渡しを変えるのではなく Header コンポーネント内に検索枠を構造として持つ案も比較検討対象
+  - (ii) モバイル Header の 44px タップターゲット確保（現状 `styles.mobileActions` の各子要素の min-width / min-height を確認）
+  - (iii) Cmd+K / Ctrl+K キーバインド受け口の追加位置（`Header/index.tsx` 内 or 専用 client component に分離）
+  - layout 自体の作り直しは不要だが、Header コンポーネントのファイル分割（`Header/SearchTrigger.tsx` 等）が発生する可能性あり
+- **TrustLevelBadge の取り扱い**: 各 Phase 4-8 移行サイクルの「ついで作業」として、(legacy) → (new) 移行時に import / JSX / meta.ts trustLevel フィールドを削除する。design-migration-plan.md「1 ページ移行の標準手順」にステップ 6 として追加済み。コンポーネント本体（`src/components/common/TrustLevelBadge.{tsx,module.css}`）と `src/lib/trust-levels.ts` の最終削除は B-337（Phase 10.2 = legacy 撤去）で行う。**B-367 として独立タスク化していた案は取り下げ**（廃止予定の (legacy) レイアウトを直すコストが不合理、Owner 指摘）
+- **本文コンセプト整合性の点検（cycle-180 の事故再発防止）**: 各ページを (new) に移行する際、ファイル位置移動 + DESIGN.md トークン適合だけでなく、**本文内容が新コンセプト「日常の傍にある道具」と整合しているか** を必ず点検する。cycle-180 では about の本文 7 セクションが旧コンセプト「占い・診断のエンタメサイト」のまま (new) に移行され、レビュー 5+2 ラウンドで全く検出されなかった事故が起きた（B-368 で改修予定）。判定基準: 「占い・診断パーク」「エンタメサイト」「遊園地」のような旧コンセプト由来の言葉が本文・metadata・description に残っていないか、ツール / 息抜きへの言及バランスが現サイト構成を反映しているか、を移行サイクル PM が本文を Read して確認する責務を持つ。整合しない場合は計画書スコープに「本文改訂」も含めるか、独立タスクとして起票する
 
-### Phase 10.2 着手 PM への申し送り（本サイクル完了時に確定する想定）
+### B-334: 一覧・トップ移行（Phase 4、既存）への申し送り
 
-- **`global-not-found.js` → `not-found.js` 戻し（Major-2 対応: 手順・順序・実機検証コマンドの確定）**: Phase 10.2 で legacy 削除により root layout が単一化された後（`(new)/layout.tsx` のみが残り、これが root layout になる）、以下の順序で書き戻しを実施する。順序は「フラグ削除を先に行うことで build が通るかを最初に確認し、ファイル変更とテスト追従を後段に集中させる」ことを意図している。
-  1. `next.config.ts` から `experimental.globalNotFound: true` を削除し、`experimental` ブロックが空になる場合はブロックごと削除して `npm run build` を実行。Next.js の build がこの時点で通るか（= experimental フラグなしでもビルドが破綻しないか）を最初に確認する。**通らない場合は手順 2 以降に進まず原因調査**
+cycle-180 で Phase 3 を完了した結果、Phase 4 着手 PM が引き継ぐべき事項:
+
+- **Header / Footer の actions スロットは Phase 3 完了時点で既に新版に統一されている**: `(new)/layout.tsx` が Header の `actions` スロットに `<StreakBadge />` と `<ThemeToggle />` を渡す構造を持つ。`src/components/Header/index.tsx` 側では `actions` を props として受け取り、desktop（`styles.desktopActions` / L126-L128 周辺）と mobile（`styles.mobileActions` / L173-L176 周辺）の双方で振り分け描画している。design-migration-plan.md L119-L125 が言う「Phase 4 で構造のみ用意し、実際の検索 UI との結線は Phase 5 で実施」については、layout 側ではなく **`src/components/Header/index.tsx` 側の改修** が責務:
+  - (i) 検索トリガーアイコンを `actions` スロット内（または Header 内の検索専用枠）に追加する。layout 側の `<Header actions={...} />` の渡しを変えるのではなく Header コンポーネント内に検索枠を構造として持つ案も比較検討対象
+  - (ii) モバイル Header の 44px タップターゲット確保（現状 `styles.mobileActions` の各子要素の min-width / min-height を確認）
+  - (iii) Cmd+K / Ctrl+K キーバインド受け口の追加位置（`Header/index.tsx` 内 or 専用 client component に分離）
+  - layout 自体の作り直しは不要だが、Header コンポーネントのファイル分割（`Header/SearchTrigger.tsx` 等）が発生する可能性あり
+- **TrustLevelBadge の取り扱い**: B-367 で全廃予定。Phase 4 移行サイクルで撤去判断を再度行う必要なし（B-367 完了が Phase 4 着手より先になるよう順序を整える）
+- **not-found の配置**: Phase 3 で `src/app/global-not-found.js` + `next.config.ts` の `experimental.globalNotFound: true` を採用済み。Phase 4 以降のページが `notFound()` を呼んだ場合は **各 Route Group の `not-found.tsx`（存在すれば）または最も近い境界の挙動に従う**（公式 docs: `not-found.js` は `notFound()` 関数のスコープで機能、`global-not-found.js` は **unmatched URL のみ** を catch）。Phase 4 以降のページで `notFound()` を意味的に使う場合は、(new) 配下に必要に応じて Route Group 単位の `not-found.tsx` を別途置く判断が必要
+- **`(legacy)/__tests__/` 配下のテストが `@/app/(new)/...` を import する構造ねじれ**: Phase 3 では `seo-coverage.test.ts` / `sitemap.test.ts` が一部 `@/app/(new)/...` を参照する構造ねじれを許容している。Phase 4 以降が進むにつれてこの数は増え、最終的に `seo-coverage.test.ts` の `staticPages` 配列が大半 `@/app/(new)/...` 参照になる
+- **sitemap.ts の (legacy) 経由 import の残存状況**: Phase 3 で about / privacy 分は `@/app/(new)/...` に書き換えられたが、achievements / play/daily の meta は依然 `@/app/(legacy)/...` から import されている。Phase 4 / 7 でこれらを移行する際の前提
+
+### B-337: legacy 撤去・統合（Phase 10.2、既存）への申し送り
+
+cycle-180 で global-not-found.js を採用した結果、Phase 10.2 着手 PM が引き継ぐべき書き戻し手順:
+
+- **`global-not-found.js` → `not-found.js` 戻し**: legacy 削除により root layout が単一化された後（`(new)/layout.tsx` のみが残り、これが root layout になる）、以下の順序で書き戻しを実施。順序は「フラグ削除を先に行うことで build が通るかを最初に確認し、ファイル変更とテスト追従を後段に集中させる」ことを意図:
+  1. `next.config.ts` から `experimental.globalNotFound: true` を削除し、`experimental` ブロックが空になる場合はブロックごと削除して `npm run build` を実行。Next.js の build がこの時点で通るかを最初に確認。**通らない場合は手順 2 以降に進まず原因調査**
   2. `git mv src/app/global-not-found.js src/app/not-found.js`（拡張子を `.tsx` にする場合は同時にリネーム）
   3. `src/app/not-found.js`（旧 global-not-found.js）の内容を編集し、`<html>`/`<body>` の自前出力を削除して `children` を return する形（または通常の React コンポーネントとして body 内容のみ return する形）に書き換え
   4. `import "@/app/globals.css"` の自前 import を削除し、root layout（旧 (new)/layout.tsx を Phase 10.2 で `src/app/layout.tsx` に昇格させた後のもの）の import に委ねる
-  5. `git mv src/app/__tests__/global-not-found.test.tsx src/app/__tests__/not-found.test.tsx` し、`import GlobalNotFound from "../global-not-found"` を `import NotFound from "../not-found"` に書き換え。テスト本体の assertion はテキスト依存のため変更不要のはず（変更要ならその場で確認）
-  6. **実機検証**: `npm run build && npm start` を立ち上げ、`curl -i http://localhost:3000/foo-bar-xyz` を実行して 404 ステータスと旧 global-not-found と同等の HTML（Header / Footer / 4 リンク）が返ることを確認。Playwright で w360 / w1280 のライト / ダーク 4 種で視覚確認
+  5. `git mv src/app/__tests__/global-not-found.test.tsx src/app/__tests__/not-found.test.tsx` し、`import GlobalNotFound from "../global-not-found-content"` 等の参照を `not-found` 系に書き換え
+  6. **実機検証**: `npm run build && npm start` で起動し、`curl -i http://localhost:3000/foo-bar-xyz` で 404 ステータスと旧 global-not-found と同等の HTML（Header / Footer / 4 リンク）が返ることを確認。Playwright で w360 / w1280 のライト / ダーク 4 種で視覚確認
   7. `npm run lint && npm run format:check && npm run test && npm run build` を全て pass させてから commit
-- **`(legacy)/__tests__/` 配下のテストの置き場所**: 上記「Phase 4 申し送り」の構造ねじれ項目を参照。Phase 10.2 で `(legacy)/__tests__/` ディレクトリを削除する際、その内容（`seo-coverage.test.ts` / `sitemap.test.ts` 等）の置き場所を決める。
+- **`(legacy)/__tests__/` 配下のテストの最終配置**: `(legacy)/__tests__/` ディレクトリを削除する際、その内容（`seo-coverage.test.ts` / `sitemap.test.ts` 等）の置き場所を決める（`src/__tests__/` 等の中立位置へ移すか、`(new)/__tests__/` 配下に移すか）。cycle-180 で `(new)/__tests__/global-not-found.test.tsx` 相当を `src/app/__tests__/` 配下に置いた前例があり、これに揃えるのも選択肢
+
+## 補足事項
+
+- 前サイクル（cycle-179）から「`docs/design-migration-plan.md` Phase 7.1 / 7.2 の数値訂正」が cycle-180 PM への申し送りとして渡されているが、これは独立タスク B-365 として既に Queued に起票済みで、Phase 7 着手前までに訂正されていれば実害なし。本サイクルのスコープには含めない（B-333 単独で十分なスコープがあるため）。
+- B-333 は P1 で、Phase 4 / 5 / 6 / 7 / 9 / 10 の前提となる。本サイクルでスタックを進めることで後続のデザイン移行サイクルが連鎖的に着手可能になる。
+
+（後続サイクル PM への申し送り事項は「## キャリーオーバー」セクション参照）
 
 ## サイクル終了時のチェックリスト
 
