@@ -1,3 +1,7 @@
+/* Panel コンポーネントと同等のベーススタイルを適用。
+ * ToolCard は <Link> がルート要素のため Panel を直接使えないが、
+ * Panel のスタイル（border, border-radius, bg, padding）と同一にする。
+ * Panel.module.css が変更された場合はここも追従すること。 */
 .card {
   display: flex;
   flex-direction: column;
