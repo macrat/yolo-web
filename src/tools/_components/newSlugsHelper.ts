@@ -32,7 +32,7 @@ export function calculateNewSlugs(
     )
     .slice(0, NEW_MAX_COUNT);
 
-  // 上位5件の中から90日以内のものだけを返す（積集合）
+  // 上位5件の中から30日以内のものだけを返す（積集合）
   return new Set(
     top5
       .filter(
