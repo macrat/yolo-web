@@ -19,9 +19,24 @@
   outline-offset: 2px;
 }
 
+.badges {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .category {
   font-size: 0.8125rem;
   color: var(--accent);
+}
+
+.newBadge {
+  font-size: 0.75rem;
+  padding: 0.125rem 0.5rem;
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  border: 1px solid var(--accent-strong);
+  border-radius: var(--r-normal);
 }
 
 .name {
