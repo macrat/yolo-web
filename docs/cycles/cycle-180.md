@@ -2,7 +2,7 @@
 id: 180
 description: B-333（移行計画 Phase 3: 静的・リダイレクト先行の新デザイン移行）を実施する。/about、/privacy、/not-found、/feed、/feed/atom、/memos 系のうち UI 移行が必要なルートは `(new)/` 配下に移行し、リダイレクト系はディレクトリのみ移動する。Phase 2（B-309）完了を受けて Phase 3 へ進み、Phase 4 以降の動線検証の足場を作る。
 started_at: "2026-05-05T14:50:34+0900"
-completed_at: "2026-05-05T19:26:39+0900"
+completed_at: "2026-05-06T01:19:47+0900"
 ---
 
 # サイクル-180
