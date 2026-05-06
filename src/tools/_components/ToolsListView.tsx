@@ -1,46 +1,31 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import type { ToolMeta } from "@/tools/types";
-import ToolsGrid from "./ToolsGrid";
-import Pagination from "@/components/common/Pagination";
+import Panel from "@/components/Panel";
+import ToolsFilterableList from "./ToolsFilterableList";
 import styles from "./ToolsListView.module.css";
 
 interface ToolsListViewProps {
-  /** Tools for the current page */
   tools: ToolMeta[];
-  /** Current 1-based page number */
-  currentPage: number;
-  /** Total number of pages */
-  totalPages: number;
 }
 
 /**
- * Shared view for the tools list page.
- * Renders the page header, tool grid, and pagination controls.
- * Used by both /tools (page 1) and /tools/page/[page] (page 2+).
+ * ツール一覧ページのビュー (Server Component)。
+ * ページヘッダーとフィルター付きツール一覧を表示する。
+ * useSearchParams を使う ToolsFilterableList は Suspense でラップする（Next.js 要件）。
  */
-export default function ToolsListView({
-  tools,
-  currentPage,
-  totalPages,
-}: ToolsListViewProps) {
+export default function ToolsListView({ tools }: ToolsListViewProps) {
   return (
     <div className={styles.container}>
-      <header className={styles.header}>
-        <h1 className={styles.title}>
-          {currentPage > 1
-            ? `無料オンラインツール（${currentPage}ページ目）`
-            : "無料オンラインツール"}
-        </h1>
+      <Panel as="section" className={styles.header}>
+        <h1 className={styles.title}>無料オンラインツール</h1>
         <p className={styles.description}>
-          仕事や日常に役立つ便利ツールを集めました。文字数カウント・日付計算から、JSON整形・正規表現テストまで、すべて無料・登録不要でブラウザ上ですぐにお使いいただけます。
+          仕事や日常に役立つ便利ツールを集めました。すべて無料・登録不要でブラウザ上ですぐにお使いいただけます。
         </p>
-      </header>
-      <ToolsGrid tools={tools} />
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        basePath="/tools"
-      />
+      </Panel>
+      <Suspense>
+        <ToolsFilterableList tools={tools} />
+      </Suspense>
       {/* ヘッダーナビからチートシートを除外した分の導線を補完 */}
       <div className={styles.cheatsheetBanner}>
         <Link href="/cheatsheets" className={styles.cheatsheetLink}>

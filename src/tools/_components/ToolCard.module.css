@@ -3,36 +3,35 @@
   flex-direction: column;
   gap: 0.5rem;
   padding: 1.25rem;
-  border: 1px solid var(--color-border);
-  border-radius: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--r-normal);
   text-decoration: none;
-  transition:
-    border-color 0.15s,
-    box-shadow 0.15s;
-  background-color: var(--color-bg);
+  background-color: var(--bg);
+  transition: background-color 0.15s;
 }
 
 .card:hover {
-  border-color: var(--color-primary);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  background-color: var(--bg-soft);
+}
+
+.card:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .category {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--color-primary);
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
+  font-size: 0.8125rem;
+  color: var(--accent);
 }
 
 .name {
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 600;
-  color: var(--color-text);
+  color: var(--fg);
 }
 
 .description {
-  font-size: 0.85rem;
-  color: var(--color-text-muted);
-  line-height: 1.4;
+  font-size: 0.875rem;
+  color: var(--fg-soft);
+  line-height: 1.7;
 }

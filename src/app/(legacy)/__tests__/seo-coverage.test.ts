@@ -273,19 +273,9 @@ describe("動的metadataページのSEO検証", () => {
     );
   });
 
-  test("/tools/page/[page]: SEO必須項目が存在する", async () => {
-    const { allToolMetas } = await import("@/tools/registry");
-    const { TOOLS_PER_PAGE } = await import("@/lib/pagination");
-    const totalPages = Math.ceil(allToolMetas.length / TOOLS_PER_PAGE);
-    if (totalPages < 2) return; // 2ページ目がなければスキップ
-
-    const { generateMetadata } =
-      await import("@/app/(new)/tools/page/[page]/page");
-    const meta = await generateMetadata({
-      params: Promise.resolve({ page: "2" }),
-    });
-    assertSeoMetadata(meta, "/tools/page/2", "/tools/page/[page]");
-  });
+  // /tools/page/[page] は cycle-181 B-334-4 でページネーション廃止に伴い
+  // /tools への 301 リダイレクト（route.ts）に変更されたため、
+  // SEO metadata のテストは不要（リダイレクトに metadata は存在しない）。
 
   test("/dictionary/kanji/grade/[grade]: SEO必須項目が存在する", async () => {
     const { getKanjiGrades } = await import("@/dictionary/_lib/kanji");
