@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import type { ToolMeta } from "@/tools/types";
 import ToolsGrid from "./ToolsGrid";
@@ -9,24 +10,49 @@ import styles from "./ToolsFilterableList.module.css";
 
 interface ToolsFilterableListProps {
   tools: ToolMeta[];
+  /**
+   * NEW ラベルを表示するツールのスラッグ集合。
+   * 呼び出し元の Server Component（ToolsListView）で計算して渡す。
+   * Date.now() は react-hooks/purity 制約により Client Component 内で使用できないため。
+   */
+  newSlugs: ReadonlySet<string>;
 }
 
 /**
  * カテゴリ絞り込みフィルター付きツール一覧 (Client Component)。
  * URL の ?category= パラメータでフィルター状態を管理する。
  * ブラウザの戻る/進むに対応するため router.push() で URL を更新する。
+ * 表示順: publishedAt 降順（新しい順）
  */
 export default function ToolsFilterableList({
   tools,
+  newSlugs,
 }: ToolsFilterableListProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const [keyword, setKeyword] = useState("");
 
   const activeCategory = searchParams.get("category") as CategoryValue | null;
 
-  const filteredTools = activeCategory
+  // カテゴリフィルター → キーワードフィルター → ソート の順に適用
+  let filtered = activeCategory
     ? tools.filter((tool) => tool.category === activeCategory)
     : tools;
+
+  if (keyword.trim()) {
+    const lower = keyword.trim().toLowerCase();
+    filtered = filtered.filter(
+      (tool) =>
+        tool.name.toLowerCase().includes(lower) ||
+        tool.shortDescription.toLowerCase().includes(lower),
+    );
+  }
+
+  // publishedAt 降順（新しい順）でソート
+  const sortedTools = [...filtered].sort(
+    (a, b) =>
+      new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
+  );
 
   function setFilter(value: CategoryValue): void {
     const params = new URLSearchParams(searchParams.toString());
@@ -49,6 +75,14 @@ export default function ToolsFilterableList({
 
   return (
     <div className={styles.wrapper}>
+      <input
+        type="search"
+        className={styles.searchInput}
+        placeholder="ツールを検索…"
+        value={keyword}
+        onChange={(e) => setKeyword(e.target.value)}
+        aria-label="ツールをキーワードで検索"
+      />
       <nav aria-label="カテゴリで絞り込む" className={styles.filterNav}>
         <button
           className={styles.filterButton}
@@ -70,7 +104,13 @@ export default function ToolsFilterableList({
           </button>
         ))}
       </nav>
-      <ToolsGrid tools={filteredTools} />
+      {sortedTools.length > 0 ? (
+        <ToolsGrid tools={sortedTools} newSlugs={newSlugs} />
+      ) : (
+        <p className={styles.noResults}>
+          該当するツールが見つかりませんでした。
+        </p>
+      )}
     </div>
   );
 }

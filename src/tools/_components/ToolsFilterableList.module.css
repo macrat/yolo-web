@@ -4,6 +4,32 @@
   gap: 1rem;
 }
 
+.searchInput {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  min-height: 44px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-interactive);
+  background: var(--bg);
+  color: var(--fg);
+  font-size: 1rem;
+}
+
+.searchInput:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.searchInput::placeholder {
+  color: var(--fg-softer);
+}
+
+.noResults {
+  color: var(--fg-soft);
+  text-align: center;
+  padding: 2rem 0;
+}
+
 .filterNav {
   display: flex;
   flex-wrap: wrap;
