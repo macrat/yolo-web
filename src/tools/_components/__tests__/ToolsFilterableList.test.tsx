@@ -5,10 +5,10 @@ import type { ToolMeta } from "@/tools/types";
 import * as nextNavigation from "next/navigation";
 
 // useSearchParams / useRouter のモック
-const mockReplace = vi.fn();
+const mockPush = vi.fn();
 vi.mock("next/navigation", () => ({
   useSearchParams: vi.fn(() => new URLSearchParams()),
-  useRouter: vi.fn(() => ({ replace: mockReplace })),
+  useRouter: vi.fn(() => ({ push: mockPush })),
 }));
 
 import ToolsFilterableList from "../ToolsFilterableList";
@@ -60,7 +60,7 @@ beforeEach(() => {
   vi.mocked(nextNavigation.useSearchParams).mockReturnValue(
     new URLSearchParams() as ReturnType<typeof nextNavigation.useSearchParams>,
   );
-  mockReplace.mockClear();
+  mockPush.mockClear();
 });
 
 test("フィルターナビゲーションが表示される", () => {
@@ -103,13 +103,13 @@ test("初期状態では「すべて」ボタンがアクティブ（aria-presse
   expect(allButton).toHaveAttribute("aria-pressed", "true");
 });
 
-test("カテゴリフィルター押下で router.replace が呼ばれる", async () => {
+test("カテゴリフィルター押下で router.push が呼ばれる", async () => {
   render(<ToolsFilterableList tools={mockTools} />);
   const textButton = screen.getByRole("button", { name: "テキスト" });
   await userEvent.click(textButton);
-  expect(mockReplace).toHaveBeenCalledOnce();
+  expect(mockPush).toHaveBeenCalledOnce();
   // URLに category=text が含まれる
-  const calledUrl = mockReplace.mock.calls[0][0] as string;
+  const calledUrl = mockPush.mock.calls[0][0] as string;
   expect(calledUrl).toContain("category=text");
 });
 
@@ -150,7 +150,7 @@ test("アクティブなフィルター押下で「すべて」に戻る（URL�
   render(<ToolsFilterableList tools={mockTools} />);
   const textButton = screen.getByRole("button", { name: "テキスト" });
   await userEvent.click(textButton);
-  expect(mockReplace).toHaveBeenCalledOnce();
-  const calledUrl = mockReplace.mock.calls[0][0] as string;
+  expect(mockPush).toHaveBeenCalledOnce();
+  const calledUrl = mockPush.mock.calls[0][0] as string;
   expect(calledUrl).not.toContain("category");
 });

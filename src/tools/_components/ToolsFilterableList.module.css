@@ -42,4 +42,5 @@
 
 .filterButton[data-active]:hover {
   background: var(--bg-invert-soft);
+  color: var(--fg-invert-soft);
 }

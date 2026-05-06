@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation";
+import { permanentRedirect } from "next/navigation";
 import { allToolMetas } from "@/tools/registry";
 import { TOOLS_PER_PAGE } from "@/lib/pagination";
 
@@ -25,5 +25,5 @@ export function generateStaticParams(): Array<{ page: string }> {
 }
 
 export function GET() {
-  redirect("/tools");
+  permanentRedirect("/tools");
 }
