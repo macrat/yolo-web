@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import type { ToolMeta } from "@/tools/types";
 import Input from "@/components/Input";
@@ -21,9 +20,13 @@ interface ToolsFilterableListProps {
 }
 
 /**
- * カテゴリ絞り込みフィルター付きツール一覧 (Client Component)。
- * URL の ?category= パラメータでフィルター状態を管理する。
- * ブラウザの戻る/進むに対応するため router.push() で URL を更新する。
+ * キーワード検索とカテゴリの絞り込み付きツール一覧 (Client Component)。
+ *
+ * すべてのフィルター状態を URL search params で管理する:
+ * - ?q=キーワード — キーワード検索
+ * - ?category=text — カテゴリ絞り込み
+ *
+ * URL に状態を持つことで、リンク共有・ブラウザ戻る/進むに対応する。
  * 表示順: publishedAt 降順（新しい順）
  */
 export default function ToolsFilterableList({
@@ -32,9 +35,9 @@ export default function ToolsFilterableList({
 }: ToolsFilterableListProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [keyword, setKeyword] = useState("");
 
   const activeCategory = searchParams.get("category") as CategoryValue | null;
+  const keyword = searchParams.get("q") ?? "";
 
   // カテゴリフィルター → キーワードフィルター → ソート の順に適用
   let filtered = activeCategory
@@ -56,23 +59,38 @@ export default function ToolsFilterableList({
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
   );
 
-  function setFilter(value: CategoryValue): void {
+  /** URL search params を更新するヘルパー */
+  function updateParams(updater: (params: URLSearchParams) => void): void {
     const params = new URLSearchParams(searchParams.toString());
-    if (params.get("category") === value) {
-      // 同じカテゴリを押したら解除
-      params.delete("category");
-    } else {
-      params.set("category", value);
-    }
+    updater(params);
     const query = params.toString();
     router.push(query ? `/tools?${query}` : "/tools");
   }
 
+  function setFilter(value: CategoryValue): void {
+    updateParams((params) => {
+      if (params.get("category") === value) {
+        params.delete("category");
+      } else {
+        params.set("category", value);
+      }
+    });
+  }
+
   function clearFilter(): void {
-    const params = new URLSearchParams(searchParams.toString());
-    params.delete("category");
-    const query = params.toString();
-    router.push(query ? `/tools?${query}` : "/tools");
+    updateParams((params) => {
+      params.delete("category");
+    });
+  }
+
+  function setKeyword(value: string): void {
+    updateParams((params) => {
+      if (value.trim()) {
+        params.set("q", value);
+      } else {
+        params.delete("q");
+      }
+    });
   }
 
   return (
@@ -81,7 +99,7 @@ export default function ToolsFilterableList({
         type="search"
         className={styles.searchInput}
         placeholder="ツールを検索…"
-        value={keyword}
+        defaultValue={keyword}
         onChange={(e) => setKeyword(e.target.value)}
         aria-label="ツールをキーワードで検索"
       />

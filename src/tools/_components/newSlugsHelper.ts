@@ -1,7 +1,11 @@
 import type { ToolMeta } from "@/tools/types";
 
-/** NEW ラベルを表示する閾値（ミリ秒）: 90日 */
-export const NEW_BADGE_THRESHOLD_MS = 90 * 24 * 60 * 60 * 1000;
+/**
+ * NEW ラベルを表示する日数閾値（ミリ秒）: 30日。
+ * 「最新」として来訪者が自然に受け取れる期間。30日を超えたツールに
+ * NEW と表示されると、来訪者の「最新」の感覚とずれて信頼を損なう。
+ */
+export const NEW_BADGE_THRESHOLD_MS = 30 * 24 * 60 * 60 * 1000;
 
 /** NEW ラベルを表示するツールの最大件数 */
 export const NEW_MAX_COUNT = 5;
