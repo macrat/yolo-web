@@ -138,7 +138,9 @@ const staticPages: Array<{
   {
     path: "/tools",
     importMeta: () =>
-      import("@/app/(legacy)/tools/page").then((m) => m.metadata as Metadata),
+      import("@/app/(new)/tools/page").then(
+        async (m) => (await m.generateMetadata()) as Metadata,
+      ),
   },
   {
     path: "/blog",
@@ -278,7 +280,7 @@ describe("動的metadataページのSEO検証", () => {
     if (totalPages < 2) return; // 2ページ目がなければスキップ
 
     const { generateMetadata } =
-      await import("@/app/(legacy)/tools/page/[page]/page");
+      await import("@/app/(new)/tools/page/[page]/page");
     const meta = await generateMetadata({
       params: Promise.resolve({ page: "2" }),
     });
