@@ -5,23 +5,12 @@
 }
 
 .searchInput {
+  /* width は Input コンポーネント (display: block; width: 100%) で提供されるが、
+   * wrapper コンテキスト内での幅を明示的に保証するために残す */
   width: 100%;
-  padding: 0.75rem 1rem;
   min-height: 44px;
-  border: 1px solid var(--border-strong);
-  border-radius: var(--r-interactive);
-  background: var(--bg);
-  color: var(--fg);
-  font-size: 1rem;
-}
-
-.searchInput:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-.searchInput::placeholder {
-  color: var(--fg-softer);
+  /* border, border-radius, background, color, focus-visible, placeholder は
+   * Input コンポーネントの CSS (Input.module.css) が提供するため省略 */
 }
 
 .noResults {
@@ -37,36 +26,8 @@
 }
 
 .filterButton {
-  padding: 0.5rem 1rem;
+  /* min-height: 44px はタップターゲットサイズ確保のため Button の padding に追加して指定 */
   min-height: 44px;
-  border: 1px solid var(--border);
-  border-radius: var(--r-interactive);
-  background: var(--bg);
-  color: var(--fg-soft);
-  font-size: 0.875rem;
-  cursor: pointer;
-  transition:
-    background-color 0.15s,
-    color 0.15s,
-    border-color 0.15s;
-}
-
-.filterButton:hover {
-  background: var(--bg-soft);
-}
-
-.filterButton:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-.filterButton[data-active] {
-  background: var(--bg-invert);
-  color: var(--fg-invert);
-  border-color: var(--bg-invert);
-}
-
-.filterButton[data-active]:hover {
-  background: var(--bg-invert-soft);
-  color: var(--fg-invert-soft);
+  /* border, border-radius, background, color, cursor, transition, focus-visible,
+   * hover, active (primary/default バリアント) は Button コンポーネントの CSS が提供するため省略 */
 }

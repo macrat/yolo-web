@@ -3,14 +3,12 @@ import Link from "next/link";
 import type { ToolMeta } from "@/tools/types";
 import Panel from "@/components/Panel";
 import ToolsFilterableList from "./ToolsFilterableList";
+import { calculateNewSlugs } from "./newSlugsHelper";
 import styles from "./ToolsListView.module.css";
 
 interface ToolsListViewProps {
   tools: ToolMeta[];
 }
-
-/** NEW ラベルを表示する閾値（ミリ秒）: 90日 */
-const NEW_BADGE_THRESHOLD_MS = 90 * 24 * 60 * 60 * 1000;
 
 /**
  * ツール一覧ページのビュー (Server Component)。
@@ -19,18 +17,12 @@ const NEW_BADGE_THRESHOLD_MS = 90 * 24 * 60 * 60 * 1000;
  *
  * Date.now() は react-hooks/purity 制約により Client Component 内で使用できないため、
  * Server Component のここで計算して newSlugs として渡す。
+ * newSlugs の計算ロジックは newSlugsHelper.ts に分離（テスト容易性のため）。
  */
 export default function ToolsListView({ tools }: ToolsListViewProps) {
   // eslint-disable-next-line react-hooks/purity
   const now = Date.now();
-  const newSlugs: ReadonlySet<string> = new Set(
-    tools
-      .filter(
-        (tool) =>
-          now - new Date(tool.publishedAt).getTime() < NEW_BADGE_THRESHOLD_MS,
-      )
-      .map((tool) => tool.slug),
-  );
+  const newSlugs = calculateNewSlugs(tools, now);
 
   return (
     <div className={styles.container}>

@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import type { ToolMeta } from "@/tools/types";
+import Input from "@/components/Input";
+import Button from "@/components/Button";
 import ToolsGrid from "./ToolsGrid";
 import { CATEGORIES } from "./categoryLabels";
 import type { CategoryValue } from "./categoryLabels";
@@ -75,7 +77,7 @@ export default function ToolsFilterableList({
 
   return (
     <div className={styles.wrapper}>
-      <input
+      <Input
         type="search"
         className={styles.searchInput}
         placeholder="ツールを検索…"
@@ -84,30 +86,30 @@ export default function ToolsFilterableList({
         aria-label="ツールをキーワードで検索"
       />
       <nav aria-label="カテゴリで絞り込む" className={styles.filterNav}>
-        <button
+        <Button
           className={styles.filterButton}
-          data-active={!activeCategory || undefined}
+          variant={!activeCategory ? "primary" : "default"}
           aria-pressed={!activeCategory}
           onClick={() => clearFilter()}
         >
           すべて
-        </button>
+        </Button>
         {CATEGORIES.map(({ value, label }) => (
-          <button
+          <Button
             key={value}
             className={styles.filterButton}
-            data-active={activeCategory === value || undefined}
+            variant={activeCategory === value ? "primary" : "default"}
             aria-pressed={activeCategory === value}
             onClick={() => setFilter(value)}
           >
             {label}
-          </button>
+          </Button>
         ))}
       </nav>
       {sortedTools.length > 0 ? (
         <ToolsGrid tools={sortedTools} newSlugs={newSlugs} />
       ) : (
-        <p className={styles.noResults}>
+        <p className={styles.noResults} role="status">
           該当するツールが見つかりませんでした。
         </p>
       )}

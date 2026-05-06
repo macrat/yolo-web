@@ -12,7 +12,7 @@ export const CATEGORIES = [
 
 export type CategoryValue = (typeof CATEGORIES)[number]["value"];
 
-/** カテゴリ値からラベルを引くRecord */
-export const categoryLabelMap: Record<string, string> = Object.fromEntries(
+/** カテゴリ値からラベルを引く Record */
+export const categoryLabelMap = Object.fromEntries(
   CATEGORIES.map(({ value, label }) => [value, label]),
-);
+) as Record<CategoryValue, string>;
