@@ -3,7 +3,7 @@ import { allToolMetas } from "@/tools/registry";
 import { TOOLS_PER_PAGE } from "@/lib/pagination";
 
 /**
- * /tools/page/[page] → /tools への 301 リダイレクト。
+ * /tools/page/[page] → /tools への永続リダイレクト (308)。
  *
  * cycle-181 B-334-4: ページネーション廃止に伴い、
  * 全ツールを /tools の 1 ページに統合した。
