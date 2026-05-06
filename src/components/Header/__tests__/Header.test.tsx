@@ -244,4 +244,58 @@ describe("Header", () => {
       expect(document.body.classList.contains("scroll-locked")).toBe(false);
     });
   });
+
+  describe("検索トリガー (onSearchOpen)", () => {
+    it("onSearchOpen を渡さない場合、検索ボタンが描画されない", () => {
+      render(<Header />);
+      const searchBtn = screen.queryByRole("button", { name: "検索" });
+      expect(searchBtn).not.toBeInTheDocument();
+    });
+
+    it("onSearchOpen を渡した場合、検索ボタンが描画される", () => {
+      const onSearchOpen = vi.fn();
+      render(<Header onSearchOpen={onSearchOpen} />);
+      // デスクトップ用とモバイル用の2つが DOM に存在する（CSS で片方を非表示）
+      const searchBtns = screen.getAllByRole("button", { name: "検索" });
+      expect(searchBtns.length).toBeGreaterThan(0);
+    });
+
+    it("検索ボタンをクリックすると onSearchOpen が呼ばれる", () => {
+      const onSearchOpen = vi.fn();
+      render(<Header onSearchOpen={onSearchOpen} />);
+      // デスクトップ用とモバイル用の2つが DOM に存在する（CSS で片方を非表示）
+      const searchBtns = screen.getAllByRole("button", { name: "検索" });
+      fireEvent.click(searchBtns[0]);
+      expect(onSearchOpen).toHaveBeenCalledTimes(1);
+    });
+
+    it("Ctrl+K キーで onSearchOpen が呼ばれる", () => {
+      const onSearchOpen = vi.fn();
+      render(<Header onSearchOpen={onSearchOpen} />);
+      fireEvent.keyDown(document, { key: "k", ctrlKey: true });
+      expect(onSearchOpen).toHaveBeenCalledTimes(1);
+    });
+
+    it("Meta+K キー（Mac）で onSearchOpen が呼ばれる", () => {
+      const onSearchOpen = vi.fn();
+      render(<Header onSearchOpen={onSearchOpen} />);
+      fireEvent.keyDown(document, { key: "k", metaKey: true });
+      expect(onSearchOpen).toHaveBeenCalledTimes(1);
+    });
+
+    it("onSearchOpen が渡されていない場合、Ctrl+K でエラーが起きない", () => {
+      render(<Header />);
+      expect(() => {
+        fireEvent.keyDown(document, { key: "k", ctrlKey: true });
+      }).not.toThrow();
+    });
+
+    it("アンマウント後は keydown リスナーが解除される", () => {
+      const onSearchOpen = vi.fn();
+      const { unmount } = render(<Header onSearchOpen={onSearchOpen} />);
+      unmount();
+      fireEvent.keyDown(document, { key: "k", ctrlKey: true });
+      expect(onSearchOpen).not.toHaveBeenCalled();
+    });
+  });
 });

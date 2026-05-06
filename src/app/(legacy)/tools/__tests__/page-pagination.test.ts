@@ -4,7 +4,7 @@ import { TOOLS_PER_PAGE } from "@/lib/pagination";
 import {
   dynamicParams,
   generateStaticParams,
-} from "@/app/(legacy)/tools/page/[page]/page";
+} from "@/app/(new)/tools/page/[page]/page";
 
 const totalPages = Math.ceil(allToolMetas.length / TOOLS_PER_PAGE);
 

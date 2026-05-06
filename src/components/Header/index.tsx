@@ -39,10 +39,35 @@ function HamburgerIcon() {
   );
 }
 
+/** 検索アイコン（Lucide スタイル線画）。
+ * 円 + 斜め線。stroke-width 1.5px、20px サイズ。 */
+function SearchIcon() {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <circle cx="11" cy="11" r="8" />
+      <line x1="21" y1="21" x2="16.65" y2="16.65" />
+    </svg>
+  );
+}
+
 interface HeaderProps {
   /** テーマトグル等を後から挿入できるスロット。
    * Header の責務に具体的な操作要素を持たせず、外部から注入する設計。 */
   actions?: React.ReactNode;
+  /** Phase 5 で検索モーダルを開くための callback。
+   * 渡されていない場合は検索ボタンもキーバインドも一切レンダリング・登録しない。
+   * 現時点では layout.tsx から渡されていないため、来訪者には変化が見えない。 */
+  onSearchOpen?: () => void;
 }
 
 /**
@@ -63,8 +88,9 @@ interface HeaderProps {
  * - aria-expanded / aria-controls / aria-label でハンバーガーの状態を通知
  * - Escape キーでメニューを閉じる
  * - リンクをクリックしたら自動的にメニューを閉じる
+ * - onSearchOpen が渡されている場合: Cmd+K / Ctrl+K で検索モーダルを開く
  */
-export default function Header({ actions }: HeaderProps) {
+export default function Header({ actions, onSearchOpen }: HeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
 
@@ -81,6 +107,24 @@ export default function Header({ actions }: HeaderProps) {
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [handleKeyDown]);
+
+  /** Cmd+K（Mac）/ Ctrl+K（Windows/Linux）で検索モーダルを開く。
+   * onSearchOpen が渡されていない場合はリスナー自体を登録しない。 */
+  useEffect(() => {
+    if (onSearchOpen == null) return;
+
+    const handleSearchKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        onSearchOpen();
+      }
+    };
+
+    document.addEventListener("keydown", handleSearchKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleSearchKeyDown);
+    };
+  }, [onSearchOpen]);
 
   /** menuOpen 中はボディスクロールをロックして背景がスクロールしないようにする。
    * scroll-lock.ts の参照カウンタ式ヘルパを使用。
@@ -122,9 +166,34 @@ export default function Header({ actions }: HeaderProps) {
           ))}
         </nav>
 
-        {/* デスクトップ専用: アクションスロット（テーマトグル等） */}
-        {actions != null && (
-          <div className={styles.desktopActions}>{actions}</div>
+        {/* デスクトップ専用: アクションスロット（テーマトグル等） + 検索ボタン */}
+        {(actions != null || onSearchOpen != null) && (
+          <div className={styles.desktopActions}>
+            {onSearchOpen != null && (
+              <button
+                type="button"
+                className={styles.searchButton}
+                aria-label="検索"
+                onClick={onSearchOpen}
+              >
+                <SearchIcon />
+              </button>
+            )}
+            {actions}
+          </div>
+        )}
+
+        {/* モバイル専用: 検索ボタン（onSearchOpen が渡されている場合のみ）。
+         * ハンバーガーの左隣に配置する。44px タップターゲット確保。 */}
+        {onSearchOpen != null && (
+          <button
+            type="button"
+            className={styles.mobileSearchButton}
+            aria-label="検索"
+            onClick={onSearchOpen}
+          >
+            <SearchIcon />
+          </button>
         )}
 
         {/* モバイル専用: ハンバーガーボタン */}
