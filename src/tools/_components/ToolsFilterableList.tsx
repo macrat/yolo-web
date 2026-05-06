@@ -59,12 +59,24 @@ export default function ToolsFilterableList({
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
   );
 
-  /** URL search params を更新するヘルパー */
-  function updateParams(updater: (params: URLSearchParams) => void): void {
+  /**
+   * URL search params を更新するヘルパー。
+   * method: "push" は履歴に追加（カテゴリボタン押下など明示的な操作用）、
+   *         "replace" は履歴を置き換え（キーストロークごとの入力など連続操作用）。
+   */
+  function updateParams(
+    updater: (params: URLSearchParams) => void,
+    method: "push" | "replace" = "push",
+  ): void {
     const params = new URLSearchParams(searchParams.toString());
     updater(params);
     const query = params.toString();
-    router.push(query ? `/tools?${query}` : "/tools");
+    const url = query ? `/tools?${query}` : "/tools";
+    if (method === "replace") {
+      router.replace(url);
+    } else {
+      router.push(url);
+    }
   }
 
   function setFilter(value: CategoryValue): void {
@@ -90,7 +102,7 @@ export default function ToolsFilterableList({
       } else {
         params.delete("q");
       }
-    });
+    }, "replace");
   }
 
   return (
