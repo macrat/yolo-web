@@ -14,7 +14,7 @@ interface ToolsFilterableListProps {
 /**
  * カテゴリ絞り込みフィルター付きツール一覧 (Client Component)。
  * URL の ?category= パラメータでフィルター状態を管理する。
- * ブラウザの戻る/進むに対応するため router.replace() で URL を更新する。
+ * ブラウザの戻る/進むに対応するため router.push() で URL を更新する。
  */
 export default function ToolsFilterableList({
   tools,
@@ -37,14 +37,14 @@ export default function ToolsFilterableList({
       params.set("category", value);
     }
     const query = params.toString();
-    router.replace(query ? `?${query}` : "?");
+    router.push(query ? `/tools?${query}` : "/tools");
   }
 
   function clearFilter(): void {
     const params = new URLSearchParams(searchParams.toString());
     params.delete("category");
     const query = params.toString();
-    router.replace(query ? `?${query}` : "?");
+    router.push(query ? `/tools?${query}` : "/tools");
   }
 
   return (
