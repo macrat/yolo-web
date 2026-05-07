@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import Link from "next/link";
 import type { ToolMeta } from "@/tools/types";
 import Input from "@/components/Input";
-import Button from "@/components/Button";
 import ToolsGrid from "./ToolsGrid";
 import { CATEGORIES } from "./categoryLabels";
 import type { CategoryValue } from "./categoryLabels";
@@ -96,30 +96,20 @@ export default function ToolsFilterableList({
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
   );
 
-  /** カテゴリフィルターは即座に URL に反映する（明示的な操作なので履歴も追加） */
-  function updateCategoryParams(
-    updater: (params: URLSearchParams) => void,
-  ): void {
-    const params = new URLSearchParams(searchParams.toString());
-    updater(params);
+  /**
+   * カテゴリリンクの href を生成する。
+   * 現在のキーワード（q=）を引き継ぎ、カテゴリを切り替えてもキーワードが消えないようにする。
+   */
+  function buildCategoryHref(category: CategoryValue | null): string {
+    const params = new URLSearchParams();
+    if (keyword.trim()) {
+      params.set("q", keyword);
+    }
+    if (category) {
+      params.set("category", category);
+    }
     const query = params.toString();
-    router.push(query ? `/tools?${query}` : "/tools");
-  }
-
-  function setFilter(value: CategoryValue): void {
-    updateCategoryParams((params) => {
-      if (params.get("category") === value) {
-        params.delete("category");
-      } else {
-        params.set("category", value);
-      }
-    });
-  }
-
-  function clearFilter(): void {
-    updateCategoryParams((params) => {
-      params.delete("category");
-    });
+    return query ? `/tools?${query}` : "/tools";
   }
 
   return (
@@ -133,24 +123,24 @@ export default function ToolsFilterableList({
         aria-label="ツールをキーワードで検索"
       />
       <nav aria-label="カテゴリで絞り込む" className={styles.filterNav}>
-        <Button
+        <Link
+          href={buildCategoryHref(null)}
           className={styles.filterButton}
-          variant={!activeCategory ? "primary" : "default"}
-          aria-pressed={!activeCategory}
-          onClick={() => clearFilter()}
+          data-active={!activeCategory ? "true" : undefined}
+          aria-current={!activeCategory ? "page" : undefined}
         >
           すべて
-        </Button>
+        </Link>
         {CATEGORIES.map(({ value, label }) => (
-          <Button
+          <Link
             key={value}
+            href={buildCategoryHref(value)}
             className={styles.filterButton}
-            variant={activeCategory === value ? "primary" : "default"}
-            aria-pressed={activeCategory === value}
-            onClick={() => setFilter(value)}
+            data-active={activeCategory === value ? "true" : undefined}
+            aria-current={activeCategory === value ? "page" : undefined}
           >
             {label}
-          </Button>
+          </Link>
         ))}
       </nav>
       {sortedTools.length > 0 ? (
