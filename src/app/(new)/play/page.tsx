@@ -6,17 +6,14 @@ import {
   playContentBySlug,
   allPlayContents,
   DAILY_UPDATE_SLUGS,
-  getPlayFeaturedContents,
   quizQuestionCountBySlug,
 } from "@/play/registry";
 import type { PlayContentMeta } from "@/play/types";
-import type { PlayFeaturedContent } from "@/play/registry";
 import { getContentPath } from "@/play/paths";
 import { getContrastTextColor } from "@/play/color-utils";
 import { getDayOfYearJst } from "@/lib/date";
 import Breadcrumb from "@/components/common/Breadcrumb";
 import styles from "./page.module.css";
-import CategoryNav from "./_components/CategoryNav";
 
 /** ISR: 24時間ごとにページを再生成し、「今日のピックアップ」の日替わりローテーションを機能させる */
 export const revalidate = 86400;
@@ -114,7 +111,6 @@ function getTodaysPickupContent(): PlayContentMeta | null {
 
 export default function PlayPage() {
   const pickupContent = getTodaysPickupContent();
-  const featuredContents = getPlayFeaturedContents();
 
   return (
     <div className={styles.main}>
@@ -165,81 +161,6 @@ export default function PlayPage() {
             </Link>
           </div>
         )}
-      </section>
-
-      {/* カテゴリアンカーリンクタブ（ヒーロー直下、sticky化でスクロール追従） */}
-      {/* CategoryNav はクライアントコンポーネントとして IntersectionObserver でアクティブタブを制御する */}
-      <CategoryNav categories={CATEGORY_DISPLAY_ORDER} />
-
-      {/* 「イチオシ」セクション: /play ページ専用のおすすめコンテンツ3件をおすすめ理由バッジ付きで表示 */}
-      <section
-        className={styles.featuredSection}
-        data-testid="featured-section"
-        aria-labelledby="featured-heading"
-      >
-        <h2 id="featured-heading" className={styles.featuredHeading}>
-          イチオシ
-        </h2>
-        <p className={styles.featuredSubtext}>
-          迷ったらここから！厳選おすすめコンテンツ
-        </p>
-        <ul
-          className={styles.featuredGrid}
-          role="list"
-          aria-label="おすすめコンテンツ"
-        >
-          {featuredContents.map((content: PlayFeaturedContent) => (
-            <li key={content.slug}>
-              <Link
-                href={getContentPath(content)}
-                className={styles.card}
-                data-testid="card-with-gradient"
-                style={
-                  {
-                    "--play-accent": content.accentColor,
-                    "--play-cta-text": getContrastTextColor(
-                      content.accentColor,
-                    ),
-                  } as React.CSSProperties
-                }
-              >
-                {/* おすすめ理由バッジ: タイトル上部に控えめなラベルとして表示 */}
-                <span className={styles.recommendBadge}>
-                  {content.recommendReason}
-                </span>
-                <div
-                  className={styles.cardIconWrapper}
-                  data-testid="card-icon-wrapper"
-                >
-                  <div className={styles.cardIcon}>{content.icon}</div>
-                </div>
-                <div className={styles.cardTitleRow}>
-                  {/* shortTitle が設定されている場合はカード表示ではそちらを優先使用 */}
-                  <h3 className={styles.cardTitle}>
-                    {content.shortTitle ?? content.title}
-                  </h3>
-                  {DAILY_UPDATE_SLUGS.has(content.slug) && (
-                    <span className={styles.dailyBadge}>毎日更新</span>
-                  )}
-                </div>
-                <p className={styles.cardDescription}>
-                  {content.shortDescription}
-                </p>
-                <div className={styles.cardMeta}>
-                  {quizQuestionCountBySlug.get(content.slug) !== undefined && (
-                    <span className={styles.cardQuestionCount}>
-                      {quizQuestionCountBySlug.get(content.slug)}問
-                    </span>
-                  )}
-                  {/* CTAテキストはカテゴリに応じて変更する */}
-                  <span className={styles.cardCta}>
-                    {getCtaText(content.category)}
-                  </span>
-                </div>
-              </Link>
-            </li>
-          ))}
-        </ul>
       </section>
 
       {/* カテゴリ別セクション一覧 */}
