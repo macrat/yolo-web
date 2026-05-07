@@ -25,7 +25,7 @@ vi.mock("next/link", () => ({
     className?: string;
     children: React.ReactNode;
     "data-active"?: string;
-    "aria-current"?: string;
+    "aria-current"?: React.AriaAttributes["aria-current"];
   }) => (
     <a
       href={href}
