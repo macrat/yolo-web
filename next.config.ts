@@ -41,6 +41,11 @@ const nextConfig: NextConfig = {
         destination: "/blog/category/:category",
         permanent: true,
       },
+      {
+        source: "/blog/tag/:tag/page/1",
+        destination: "/blog/tag/:tag",
+        permanent: true,
+      },
     ];
 
     // Redirect old /games URLs to /play (301 permanent)
