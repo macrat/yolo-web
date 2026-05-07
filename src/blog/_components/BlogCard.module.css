@@ -1,68 +1,161 @@
+/* Panel コンポーネントと同等のベーススタイルを適用。
+ * BlogCard は <article> がルート要素のため Panel を直接使えないが、
+ * Panel のスタイル（border, border-radius, bg, padding）と同一にする。
+ * height: 100% で親（grid item）の高さに揃え、グリッド内の全カードを同じ高さにする。
+ * cycle-181 R3-1 で確立したカード等高パターン。
+ * position: relative はタイトルリンクの ::after overlay の起点として必要。 */
 .card {
-  border: 1px solid var(--color-border);
-  border-radius: 0.75rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
   padding: 1.25rem;
-  transition: box-shadow 0.2s;
+  border: 1px solid var(--border);
+  border-radius: var(--r-normal);
+  background-color: var(--bg);
+  transition: background-color 0.15s;
+  height: 100%;
+  box-sizing: border-box;
 }
 
 .card:hover {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  background-color: var(--bg-soft);
 }
 
-.link {
-  text-decoration: none;
-  color: inherit;
-  display: block;
+/* min-height で NEW バッジ有無による高さ差をなくし、タイトル位置を揃える。
+ * cycle-181 R3-4 で確立したバッジ行の固定 min-height パターン。 */
+.badges {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 1.625rem;
+  flex-wrap: wrap;
+}
+
+.category {
+  font-size: 0.8125rem;
+  color: var(--accent);
+}
+
+/* NEW バッジ: --accent 系トークン（サイト全体の NEW バッジと同色・同形式） */
+.newBadge {
+  font-size: 0.75rem;
+  box-sizing: border-box;
+  height: 1.625rem;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 0.5rem;
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  border: 1px solid var(--accent-strong);
+  border-radius: var(--r-normal);
 }
 
 .meta {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  margin-bottom: 0.5rem;
   flex-wrap: wrap;
-}
-
-.category {
-  background-color: var(--color-primary);
-  color: #fff;
-  padding: 0.15rem 0.5rem;
-  border-radius: 0.25rem;
-  font-size: 0.75rem;
-  font-weight: 600;
 }
 
 .date {
   font-size: 0.8rem;
-  color: var(--color-text-muted);
+  color: var(--fg-soft);
 }
 
 .readingTime {
   font-size: 0.8rem;
-  color: var(--color-text-muted);
+  color: var(--fg-soft);
 }
 
 .title {
-  font-size: 1.15rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-  line-height: 1.4;
-  color: var(--color-text);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--fg);
+  margin: 0;
+}
+
+/*
+ * タイトルリンク（カード全体を覆う overlay 実装）:
+ * ::after 擬似要素で article 全体を絶対配置で覆い、カード全体クリッカブルにする。
+ * <a> ネスト（HTML 仕様違反）を避けつつ来訪者にとっては「カード全体がリンク」に見える。
+ * タグリンクは z-index: 1 で前面に出し、クリック可能を維持する。
+ */
+.titleLink {
+  text-decoration: none;
+  color: inherit;
+}
+
+.titleLink::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--r-normal);
+}
+
+.titleLink:focus-visible {
+  outline: none;
+}
+
+.titleLink:focus-visible::after {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .description {
-  font-size: 0.9rem;
-  color: var(--color-text-muted);
-  line-height: 1.5;
-  margin-bottom: 0.75rem;
+  font-size: 0.875rem;
+  color: var(--fg-soft);
+  line-height: 1.7;
+  /* 3行クランプでカードの description 長を揃える */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex-grow: 1;
 }
 
-@media (max-width: 768px) {
-  .card {
-    padding: 1rem;
-  }
+/* タグリスト */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  margin-top: auto;
+}
 
-  .title {
-    font-size: 1.05rem;
-  }
+.tagItem {
+  /* position: relative + z-index: 1 で titleLink::after overlay より前面に出す */
+  position: relative;
+  z-index: 1;
+}
+
+.tagLink {
+  display: inline-flex;
+  align-items: center;
+  /* 44px タップターゲット確保（a11y 要件、B-386 着手前の個別上書き） */
+  min-height: 44px;
+  padding: 0 0.5rem;
+  font-size: 0.75rem;
+  text-decoration: none;
+  color: var(--fg-soft);
+  background-color: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: var(--r-interactive);
+  transition:
+    background-color 0.15s,
+    color 0.15s;
+}
+
+.tagLink:hover {
+  color: var(--accent-strong);
+  border-color: var(--accent);
+  background-color: var(--accent-soft);
+}
+
+.tagLink:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }

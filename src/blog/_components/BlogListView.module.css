@@ -1,138 +1,44 @@
 .container {
-  max-width: var(--max-width);
+  max-width: 1200px;
   margin: 0 auto;
   padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
+/* Panel が基本スタイルを提供するので追加は最小限 */
 .header {
-  margin-bottom: 1.5rem;
 }
 
 .title {
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   font-weight: 700;
-  color: var(--color-text);
+  color: var(--fg);
   margin-bottom: 0.5rem;
 }
 
 .description {
-  font-size: 0.95rem;
-  color: var(--color-text-muted);
-  line-height: 1.6;
+  font-size: 1rem;
+  color: var(--fg-soft);
+  line-height: 1.7;
 }
 
-/* Breadcrumb navigation shown on tag pages above the title */
+/* タグページのパンくずナビ */
 .tagBreadcrumb {
-  font-size: 0.85rem;
-  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  color: var(--fg-soft);
   margin-bottom: 0.5rem;
 }
 
 .tagBreadcrumb a {
-  color: var(--color-text-muted);
+  color: var(--fg-soft);
   text-decoration: none;
 }
 
 .tagBreadcrumb a:hover {
-  color: var(--color-primary);
+  color: var(--accent);
   text-decoration: underline;
-}
-
-.filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-.filterPill {
-  padding: 0.35rem 0.85rem;
-  border-radius: 1rem;
-  font-size: 0.85rem;
-  text-decoration: none;
-  color: var(--color-text-muted);
-  background-color: var(--color-bg-secondary);
-  border: 1px solid var(--color-border);
-  transition:
-    background-color 0.2s,
-    color 0.2s;
-}
-
-.filterPill:hover {
-  background-color: var(--color-primary);
-  color: #fff;
-  border-color: var(--color-primary);
-}
-
-.filterPill[data-active="true"] {
-  background-color: var(--color-primary);
-  color: #fff;
-  border-color: var(--color-primary);
-}
-
-/* 人気タグセクション */
-.popularTags {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
-  padding: 0.75rem 1rem;
-  background-color: var(--color-bg-secondary);
-  border-radius: 8px;
-  border: 1px solid var(--color-border);
-}
-
-.popularTagsLabel {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--color-text-muted);
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.popularTagsList {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-}
-
-.tagPill {
-  padding: 0.25rem 0.65rem;
-  border-radius: 1rem;
-  font-size: 0.8rem;
-  text-decoration: none;
-  color: var(--color-text-muted);
-  background-color: var(--color-bg);
-  border: 1px solid var(--color-border);
-  transition:
-    background-color 0.2s,
-    color 0.2s,
-    border-color 0.2s;
-}
-
-.tagPill:hover {
-  color: var(--color-primary);
-  border-color: var(--color-primary);
-  background-color: var(--color-bg);
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
-}
-
-.empty {
-  text-align: center;
-  color: var(--color-text-muted);
-  padding: 3rem 0;
-}
-
-@media (min-width: 640px) {
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
 }
 
 @media (max-width: 768px) {
@@ -141,11 +47,6 @@
   }
 
   .title {
-    font-size: 1.4rem;
-  }
-
-  .popularTags {
-    flex-direction: column;
-    align-items: flex-start;
+    font-size: 1.25rem;
   }
 }

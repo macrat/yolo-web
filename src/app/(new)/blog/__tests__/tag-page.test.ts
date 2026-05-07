@@ -5,7 +5,7 @@ import {
   MIN_POSTS_FOR_TAG_INDEX,
   TAG_DESCRIPTIONS,
 } from "@/blog/_lib/blog";
-import { generateStaticParams } from "@/app/(legacy)/blog/tag/[tag]/page";
+import { generateStaticParams } from "@/app/(new)/blog/tag/[tag]/page";
 
 describe("/blog/tag/[tag]", () => {
   test("generateStaticParams が 3件以上の記事を持つタグのみを返すこと", () => {
