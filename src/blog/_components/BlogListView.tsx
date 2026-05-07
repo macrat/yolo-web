@@ -27,7 +27,7 @@ interface BlogListViewProps {
   /** ページネーションリンクのベースパス（例: "/blog" / "/blog/category/dev-notes"） */
   basePath: string;
   /** 現在アクティブなカテゴリスラッグ（カテゴリページの場合のみ設定） */
-  activeCategory?: string;
+  activeCategory?: BlogCategory;
   /**
    * 全記事（ページネーション前）。
    * カテゴリカウント表示・人気タグ算出・キーワード検索の全件対象として使う。
@@ -79,7 +79,7 @@ export default function BlogListView({
   const newSlugs = calculateNewSlugs(newSlugsBase, now);
 
   const headerDescription = activeCategory
-    ? CATEGORY_DESCRIPTIONS[activeCategory as BlogCategory]
+    ? CATEGORY_DESCRIPTIONS[activeCategory]
     : "AIエージェントたちがサイトを運営する過程を公開。意思決定、技術的挑戦、失敗と学びを記録します。";
 
   // カテゴリ一覧をシリアライズ可能な形に変換して Client Component に渡す
