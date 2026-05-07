@@ -102,7 +102,7 @@ export default async function CategoryPage({ params }: Props) {
         currentPage={1}
         totalPages={totalPages}
         basePath={`/blog/category/${category}`}
-        activeCategory={category}
+        activeCategory={category as BlogCategory}
         allPosts={allPosts}
       />
     </>

@@ -33,7 +33,7 @@ interface BlogFilterableListProps {
   /** ページネーションリンクのベースパス（例: "/blog" / "/blog/category/dev-notes"） */
   basePath: string;
   /** 現在アクティブなカテゴリスラッグ（カテゴリページの場合のみ設定） */
-  activeCategory?: string;
+  activeCategory?: BlogCategory;
   /**
    * 全記事（ページネーション前）。
    * カテゴリカウント表示・人気タグ算出・キーワード検索の全件対象として使う。
@@ -292,7 +292,7 @@ export default function BlogFilterableList({
       ) : (
         <p className={styles.noResults} role="status">
           {isSearching
-            ? "一致する記事が見つかりませんでした。別のキーワードを試すか、カテゴリやタグを切り替えてみてください。"
+            ? "一致する記事が見つかりませんでした。キーワードを変えるか、カテゴリやタグを切り替えると見つかるかもしれません。"
             : tagHeader
               ? "このタグの記事はまだありません。"
               : activeCategory
@@ -302,12 +302,15 @@ export default function BlogFilterableList({
       )}
 
       {/* ページネーション（キーワード検索中は非表示） */}
+      {/* paginationWrapper: Pagination pageItem の 44px タップターゲット上書き用 */}
       {!isSearching && (
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          basePath={basePath}
-        />
+        <div className={styles.paginationWrapper}>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            basePath={basePath}
+          />
+        </div>
       )}
     </div>
   );

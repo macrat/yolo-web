@@ -80,11 +80,7 @@ export default function BlogCard({
                 タグリンクは position: relative; z-index: 1 で
                 タイトルの ::after overlay より前面に配置する
               */}
-              <Link
-                href={`/blog/tag/${tag}`}
-                className={styles.tagLink}
-                onClick={(e) => e.stopPropagation()}
-              >
+              <Link href={`/blog/tag/${tag}`} className={styles.tagLink}>
                 {tag}
               </Link>
             </li>

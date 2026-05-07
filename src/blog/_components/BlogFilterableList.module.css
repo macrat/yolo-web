@@ -132,3 +132,16 @@
   text-align: center;
   padding: 2rem 0;
 }
+
+/*
+ * Pagination リンク 44px タップターゲット確保（AP-I02 抵触の継承）
+ * WCAG 2.5.8 / DESIGN.md §5 a11y 要件: min-height 44px 以上
+ * Pagination 本体（pageItem）は 2.25rem = 36px のため、BlogFilterableList
+ * 配下の paginationWrapper に限定してここで上書きする。
+ * Pagination コンポーネント本体の修正は B-386 のスコープ。
+ * [class*="pageItem"] は CSS Modules のハッシュ化されたクラス名に対応するための
+ * 属性セレクタ（pageItem_xxxxx の形式にマッチする）。
+ */
+.paginationWrapper [class*="pageItem"] {
+  min-height: 44px;
+}

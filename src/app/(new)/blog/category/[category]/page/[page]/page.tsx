@@ -126,7 +126,7 @@ export default async function CategoryPaginatedPage({ params }: Props) {
         currentPage={pageNum}
         totalPages={totalPages}
         basePath={`/blog/category/${category}`}
-        activeCategory={category}
+        activeCategory={category as BlogCategory}
         allPosts={allPosts}
       />
     </>
