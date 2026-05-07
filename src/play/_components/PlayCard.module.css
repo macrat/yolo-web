@@ -1,0 +1,84 @@
+/* Panel コンポーネントと同等のベーススタイルを適用。
+ * PlayCard は <Link> がルート要素のため Panel を直接使えないが、
+ * Panel のスタイル（border, border-radius, bg, padding）と同一にする。
+ * Panel.module.css が変更された場合はここも追従すること。
+ * height: 100% で親（grid item）の高さに揃え、グリッド内の全カードを同じ高さに揃える。
+ * cycle-181 R3-1 で確立したカード等高パターン。 */
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: var(--r-normal);
+  text-decoration: none;
+  background-color: var(--bg);
+  transition: background-color 0.15s;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.card:hover {
+  background-color: var(--bg-soft);
+}
+
+.card:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* min-height で NEW/毎日更新バッジ有無による高さ差をなくし、h2 位置を揃える。
+ * cycle-181 R3-4 で確立したバッジ行の固定 min-height パターン。 */
+.badges {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 1.625rem;
+  flex-wrap: wrap;
+}
+
+.category {
+  font-size: 0.8125rem;
+  color: var(--accent);
+}
+
+/* NEW バッジ: --accent 系トークン（サイト全体の NEW バッジと同色・同形式） */
+.newBadge {
+  font-size: 0.75rem;
+  /* min-height と揃えるため box-sizing: border-box で枠の合計を 1.625rem に固定 */
+  box-sizing: border-box;
+  height: 1.625rem;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 0.5rem;
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  border: 1px solid var(--accent-strong);
+  border-radius: var(--r-normal);
+}
+
+/* 毎日更新バッジ: --warning 系トークンで NEW バッジと色を区別する */
+.dailyBadge {
+  font-size: 0.75rem;
+  box-sizing: border-box;
+  height: 1.625rem;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 0.5rem;
+  background: var(--warning-soft);
+  color: var(--warning-strong);
+  border: 1px solid var(--warning-strong);
+  border-radius: var(--r-normal);
+}
+
+.name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--fg);
+}
+
+.description {
+  font-size: 0.875rem;
+  color: var(--fg-soft);
+  line-height: 1.7;
+}
