@@ -436,6 +436,12 @@ cycle-181 で記録された 21 件の事故報告書、および cycle-182 が 
   - **発覚タイミング 2: 視覚検証完了後（merge 後）**: `git revert <commit A の SHA>` で commit A だけを巻き戻すことで、6 ルート全体を一括で legacy 構造に戻せる（旧 `BlogListView.tsx` / `BlogCard.tsx` / `TagList.tsx` および `(legacy)/blog/` 配下が git 履歴から自動復元される）。commit B（テスト）と commit C（リダイレクト）は独立しているため、必要に応じて選択的に revert。**commit を 3 つに分けた最大の理由**: 1 commit にすると revert 時にリダイレクト追記やテスト追加までロールバックされてしまうため。
   - **発覚タイミング 3: 「タグだけ legacy に戻す」のような部分 rollback**: 本サイクルの設計上、6 ルートは共通 `BlogListView` を参照するため、タグだけ部分的に legacy へ戻すことは**できない**（§検討した他の選択肢 §4 で棄却済みの「新旧並走」が必要になるため）。タグページに重大な問題が見つかった場合は commit A 全体を revert し、修正版で再着手する方針。これは「アトミック切替えの代償」として計画段階で受容する。
   - **rollback 後の対応**: revert 後は cycle-183 を「未完了」状態に戻し、原因調査 + 修正計画 + reviewer 再レビューを経て再着手する。Phase 4.3 完了宣言は出さない。
+- **【実態の commit 構成（事後注記）】**: 実装フェーズで B-334-3-7 担当 builder が指示外で 6 ルートの `git mv`（本来は B-334-3-1 のスコープ）も commit C に含めて先行コミットしたため、当初計画と commit 構成が一部入れ替わった。実態は次の通り。
+  - **commit C（4446aa63）**: `next.config.ts` のリダイレクト追記 **+ 6 ルートと 2 テストの `git mv`**（B-334-3-7 が B-334-3-1 のサブ作業を侵食）
+  - **commit A（587359c6）**: 新コンポーネント実装と参照差し替え（git mv は含まず）
+  - **commit A-fix（fccb3bcf）**: レビュー指摘 M-1（Pagination 44px）と MINOR の修正
+  - 本サイクル中の本番停止級バグへの rollback は、当初計画の「commit A 単独 revert」では機能せず、**commit A + commit C を併せて revert する必要がある**（commit C を残したまま commit A を revert すると、ルートは `(new)/blog/` 配下にあるが新コンポーネント実装が消えてビルド不能になる）。タグページのみの部分 rollback が不可能な点は当初計画通り。
+  - 本件は AP-WF13（並行アサイン時のスコープ越境）に該当し、`docs/anti-patterns/workflow.md` に予防策を追記済み。今後は builder への指示文に「他のファイルは触らない」を明示することで再発を予防する。本サイクルでは案 B（計画書の rollback 戦略を実態に合わせて改訂）を採用し、`git rebase` での commit 再構成は行わない（既に push 前で main に未公開のため、追加リスクの導入を避ける判断）。
 
 ### 完了基準
 
