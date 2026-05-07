@@ -8,11 +8,11 @@ import { BLOG_POSTS_PER_PAGE, paginate } from "@/lib/pagination";
 import {
   dynamicParams as blogDynamicParams,
   generateStaticParams as generateBlogStaticParams,
-} from "@/app/(legacy)/blog/page/[page]/page";
+} from "@/app/(new)/blog/page/[page]/page";
 import {
   dynamicParams as categoryDynamicParams,
   generateStaticParams as generateCategoryStaticParams,
-} from "@/app/(legacy)/blog/category/[category]/page/[page]/page";
+} from "@/app/(new)/blog/category/[category]/page/[page]/page";
 
 const allPosts = getAllBlogPosts();
 const { totalPages: blogTotalPages } = paginate(

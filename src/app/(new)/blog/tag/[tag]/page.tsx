@@ -124,6 +124,7 @@ export default async function TagPage({ params }: Props) {
         totalPages={totalPages}
         basePath={`/blog/tag/${encodeURIComponent(tag)}`}
         tagHeader={{ tag, description }}
+        allPosts={posts}
       />
     </>
   );

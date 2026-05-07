@@ -139,6 +139,7 @@ export default async function TagPaginatedPage({ params }: Props) {
         totalPages={totalPages}
         basePath={`/blog/tag/${encodeURIComponent(tag)}`}
         tagHeader={{ tag, description }}
+        allPosts={posts}
       />
     </>
   );

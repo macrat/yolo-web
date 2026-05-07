@@ -1,34 +1,96 @@
 import Link from "next/link";
-import type { BlogPostMeta } from "@/blog/_lib/blog";
-import { CATEGORY_LABELS } from "@/blog/_lib/blog";
 import { formatDate } from "@/lib/date";
-import TagList from "./TagList";
 import styles from "./BlogCard.module.css";
 
-interface BlogCardProps {
-  post: BlogPostMeta;
+/** カードに必要なブログ記事メタデータの最小セット */
+interface BlogCardPost {
+  slug: string;
+  title: string;
+  description: string;
+  published_at: string;
+  readingTime: number;
+  tags: string[];
 }
 
-export default function BlogCard({ post }: BlogCardProps) {
+interface BlogCardProps {
+  post: BlogCardPost;
+  /** カテゴリ表示名（呼び出し元で解決して渡す）。node:fs を避けるため props で受け取る */
+  categoryLabel: string;
+  /** このブログ記事が新着かどうか（呼び出し元の Server Component で判定） */
+  isNew?: boolean;
+}
+
+/**
+ * ブログ一覧ページ専用の記事カード（新版）。
+ *
+ * 設計方針:
+ * - 絵文字・accentColor ベースの装飾色を廃止（DESIGN.md §3）
+ * - Panel + タイポグラフィのみでカード識別性を担保
+ * - カード全体クリッカブル化を「overlay リンク」テクニックで実現:
+ *   position: relative の article 内にカードタイトルリンク（::after で記事全体を覆う）
+ *   + タグリンク（position: relative; z-index で前面）
+ *   → <a> ネスト（HTML 仕様違反）を避けつつカード全体クリッカブルを実現
+ * - 等高設計: height: 100%; box-sizing: border-box（cycle-181 R3-1）
+ * - badges 行に min-height でバッジ有無による見出し位置ズレを防止（cycle-181 R3-4）
+ * - node:fs を使う @/blog/_lib/blog への依存を持たないため、
+ *   Client Component（BlogFilterableList）のチャンクに安全に含められる
+ *
+ * このコンポーネントは /blog 一覧専用。
+ * 詳細ページの関連表示には RelatedArticles を使う。
+ */
+export default function BlogCard({
+  post,
+  categoryLabel,
+  isNew,
+}: BlogCardProps) {
   return (
     <article className={styles.card}>
-      {/* lgtm[js/stored-xss] - blog slugs from local markdown files, not user input */}
-      <Link href={`/blog/${post.slug}`} className={styles.link}>
-        <div className={styles.meta}>
-          <span className={styles.category}>
-            {CATEGORY_LABELS[post.category]}
-          </span>
-          <time className={styles.date} dateTime={post.published_at}>
-            {formatDate(post.published_at)}
-          </time>
-          <span className={styles.readingTime}>
-            {post.readingTime}分で読める
-          </span>
-        </div>
-        <h2 className={styles.title}>{post.title}</h2>
-        <p className={styles.description}>{post.description}</p>
-      </Link>
-      <TagList tags={post.tags} />
+      {/* バッジ行: min-height でバッジ有無による見出し位置ズレを防止 */}
+      <div className={styles.badges}>
+        <span className={styles.category}>{categoryLabel}</span>
+        {isNew && <span className={styles.newBadge}>NEW</span>}
+      </div>
+
+      <div className={styles.meta}>
+        <time className={styles.date} dateTime={post.published_at}>
+          {formatDate(post.published_at)}
+        </time>
+        <span className={styles.readingTime}>{post.readingTime}分で読める</span>
+      </div>
+
+      {/*
+        タイトルリンク: ::after 擬似要素で article 全体を覆うことで
+        カード全体をクリッカブルにする（<a> ネスト回避）。
+        タグリンクは position: relative; z-index で前面に出す。
+      */}
+      <h2 className={styles.title}>
+        {/* lgtm[js/stored-xss] - blog slugs from local markdown files, not user input */}
+        <Link href={`/blog/${post.slug}`} className={styles.titleLink}>
+          {post.title}
+        </Link>
+      </h2>
+
+      <p className={styles.description}>{post.description}</p>
+
+      {post.tags.length > 0 && (
+        <ul className={styles.tags} aria-label="タグ">
+          {post.tags.map((tag) => (
+            <li key={tag} className={styles.tagItem}>
+              {/*
+                タグリンクは position: relative; z-index: 1 で
+                タイトルの ::after overlay より前面に配置する
+              */}
+              <Link
+                href={`/blog/tag/${tag}`}
+                className={styles.tagLink}
+                onClick={(e) => e.stopPropagation()}
+              >
+                {tag}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
     </article>
   );
 }

@@ -145,7 +145,7 @@ const staticPages: Array<{
   {
     path: "/blog",
     importMeta: () =>
-      import("@/app/(legacy)/blog/page").then((m) => m.metadata as Metadata),
+      import("@/app/(new)/blog/page").then((m) => m.metadata as Metadata),
   },
   {
     path: "/play",
@@ -219,7 +219,7 @@ describe("動的metadataページのSEO検証", () => {
     if (totalPages < 2) return; // 2ページ目がなければスキップ
 
     const { generateMetadata } =
-      await import("@/app/(legacy)/blog/page/[page]/page");
+      await import("@/app/(new)/blog/page/[page]/page");
     const meta = await generateMetadata({
       params: Promise.resolve({ page: "2" }),
     });
@@ -232,7 +232,7 @@ describe("動的metadataページのSEO検証", () => {
     const category = ALL_CATEGORIES[0];
 
     const { generateMetadata } =
-      await import("@/app/(legacy)/blog/category/[category]/page");
+      await import("@/app/(new)/blog/category/[category]/page");
     const meta = await generateMetadata({
       params: Promise.resolve({ category }),
     });
@@ -262,7 +262,7 @@ describe("動的metadataページのSEO検証", () => {
     if (!targetCategory) return; // 2ページ以上のカテゴリがなければスキップ
 
     const { generateMetadata } =
-      await import("@/app/(legacy)/blog/category/[category]/page/[page]/page");
+      await import("@/app/(new)/blog/category/[category]/page/[page]/page");
     const meta = await generateMetadata({
       params: Promise.resolve({ category: targetCategory, page: "2" }),
     });

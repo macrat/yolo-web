@@ -1,54 +1,67 @@
+import { Suspense } from "react";
 import Link from "next/link";
+import Panel from "@/components/Panel";
 import type { BlogPostMeta, BlogCategory } from "@/blog/_lib/blog";
 import {
+  CATEGORY_DESCRIPTIONS,
   ALL_CATEGORIES,
   CATEGORY_LABELS,
-  CATEGORY_DESCRIPTIONS,
+  SERIES_LABELS,
 } from "@/blog/_lib/blog";
-import BlogCard from "@/blog/_components/BlogCard";
-import Pagination from "@/components/common/Pagination";
+import BlogFilterableList from "./BlogFilterableList";
+import { calculateNewSlugs } from "./newSlugsHelper";
 import styles from "./BlogListView.module.css";
 
-/** フィルタ未適用時に表示する人気タグの上限 */
-const TOP_TAGS_COUNT = 8;
-
 interface TagHeader {
-  /** Tag name to display as page title */
   tag: string;
-  /** Tag description to display below the title */
   description: string;
 }
 
 interface BlogListViewProps {
-  /** Blog posts for the current page (already sliced) */
+  /** 現在のページに表示する記事（ページネーション済み） */
   posts: BlogPostMeta[];
-  /** Current 1-based page number */
+  /** 現在の 1-based ページ番号 */
   currentPage: number;
-  /** Total number of pages */
+  /** 総ページ数 */
   totalPages: number;
-  /** Base path for pagination links (e.g., "/blog" or "/blog/category/technical") */
+  /** ページネーションリンクのベースパス（例: "/blog" / "/blog/category/dev-notes"） */
   basePath: string;
-  /** Currently active category slug, if any */
+  /** 現在アクティブなカテゴリスラッグ（カテゴリページの場合のみ設定） */
   activeCategory?: string;
   /**
-   * All published posts (not paginated).
-   * Used to compute per-category counts and popular tags.
-   * Optional: when omitted (e.g. on tag pages), category nav shows without counts.
+   * 全記事（ページネーション前）。
+   * カテゴリカウント表示・人気タグ算出・キーワード検索の全件対象として使う。
+   * タグページでは省略可（省略時は件数バッジなし）。
    */
   allPosts?: BlogPostMeta[];
   /**
-   * When set, renders a tag-specific header instead of the default blog header.
-   * Used by /blog/tag/[tag] pages.
+   * タグページ専用ヘッダー情報。
+   * 設定されている場合はカテゴリナビではなくタグヘッダーを表示する。
    */
   tagHeader?: TagHeader;
 }
 
 /**
- * Shared Server Component that renders the blog list view.
+ * ブログ一覧ページのビュー (Server Component)。
  *
- * Used by /blog, /blog/page/[page], /blog/category/[category],
- * /blog/category/[category]/page/[page], and /blog/tag/[tag]
- * to avoid duplicating the header, category filter, card grid, and pagination layout.
+ * ページヘッダー（タイトル・説明文）とフィルター付き記事一覧を表示する。
+ * useSearchParams を使う BlogFilterableList は Suspense でラップする（Next.js 要件）。
+ *
+ * Date.now() は react-hooks/purity 制約により Client Component 内で使用できないため、
+ * Server Component のここで計算して newSlugs として渡す。
+ * newSlugs の計算ロジックは newSlugsHelper.ts に分離（テスト容易性のため）。
+ *
+ * CATEGORY_LABELS / ALL_CATEGORIES / SERIES_LABELS は node:fs を使う blog.ts から
+ * インポートしているため、Client Component（BlogFilterableList）には直接インポートできない。
+ * Server Component からシリアライズ可能な形（plain object / array）で props として渡す。
+ *
+ * 6 ルートすべてから呼ばれる共通 Server Component:
+ * - /blog（全記事 page=1）
+ * - /blog/page/[page]（全記事 page=N）
+ * - /blog/category/[category]（カテゴリ絞り込み page=1）
+ * - /blog/category/[category]/page/[page]（カテゴリ絞り込み page=N）
+ * - /blog/tag/[tag]（タグ絞り込み page=1）
+ * - /blog/tag/[tag]/page/[page]（タグ絞り込み page=N）
  */
 export default function BlogListView({
   posts,
@@ -59,35 +72,25 @@ export default function BlogListView({
   allPosts = [],
   tagHeader,
 }: BlogListViewProps) {
-  const description = activeCategory
+  // eslint-disable-next-line react-hooks/purity
+  const now = Date.now();
+  // NEW バッジ判定: allPosts 全件を対象（タグページでは posts を代替として使う）
+  const newSlugsBase = allPosts.length > 0 ? allPosts : posts;
+  const newSlugs = calculateNewSlugs(newSlugsBase, now);
+
+  const headerDescription = activeCategory
     ? CATEGORY_DESCRIPTIONS[activeCategory as BlogCategory]
     : "AIエージェントたちがサイトを運営する過程を公開。意思決定、技術的挑戦、失敗と学びを記録します。";
 
-  // カテゴリごとの記事件数を算出
-  const countByCategory: Record<string, number> = {};
-  for (const post of allPosts) {
-    countByCategory[post.category] = (countByCategory[post.category] ?? 0) + 1;
-  }
-
-  // 人気タグを算出（使用頻度上位TOP_TAGS_COUNT個）
-  const tagCounts: Record<string, number> = {};
-  for (const post of allPosts) {
-    for (const tag of post.tags) {
-      tagCounts[tag] = (tagCounts[tag] ?? 0) + 1;
-    }
-  }
-  const popularTags = Object.entries(tagCounts)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, TOP_TAGS_COUNT)
-    .map(([tag]) => tag);
-
-  // カテゴリフィルタ未適用時のみ人気タグセクションを表示
-  const showPopularTags =
-    !activeCategory && !tagHeader && popularTags.length > 0;
+  // カテゴリ一覧をシリアライズ可能な形に変換して Client Component に渡す
+  const categories = ALL_CATEGORIES.map((cat) => ({
+    value: cat,
+    label: CATEGORY_LABELS[cat],
+  }));
 
   return (
     <div className={styles.container}>
-      <header className={styles.header}>
+      <Panel as="section" className={styles.header}>
         {tagHeader ? (
           <>
             <p className={styles.tagBreadcrumb}>
@@ -101,73 +104,26 @@ export default function BlogListView({
         ) : (
           <>
             <h1 className={styles.title}>AI試行錯誤ブログ</h1>
-            <p className={styles.description}>{description}</p>
+            <p className={styles.description}>{headerDescription}</p>
           </>
         )}
-      </header>
+      </Panel>
 
-      {!tagHeader && (
-        <nav className={styles.filters} aria-label="カテゴリフィルタ">
-          <Link
-            href="/blog"
-            className={styles.filterPill}
-            data-active={!activeCategory ? "true" : undefined}
-          >
-            すべて ({allPosts.length})
-          </Link>
-          {ALL_CATEGORIES.map((cat) => (
-            <Link
-              key={cat}
-              href={`/blog/category/${cat}`}
-              className={styles.filterPill}
-              data-active={cat === activeCategory ? "true" : undefined}
-            >
-              {CATEGORY_LABELS[cat]} ({countByCategory[cat] ?? 0})
-            </Link>
-          ))}
-        </nav>
-      )}
-
-      {showPopularTags && (
-        <nav className={styles.popularTags} aria-label="人気タグ">
-          <span className={styles.popularTagsLabel}>タグで探す</span>
-          <div className={styles.popularTagsList}>
-            {popularTags.map((tag) => (
-              <Link
-                key={tag}
-                // Next.js Link は href の文字列を内部でエンコードするため
-                // encodeURIComponent は不要
-                href={`/blog/tag/${tag}`}
-                className={styles.tagPill}
-              >
-                {tag}
-              </Link>
-            ))}
-          </div>
-        </nav>
-      )}
-
-      {posts.length === 0 ? (
-        <p className={styles.empty}>
-          {tagHeader
-            ? "このタグの記事はまだありません。"
-            : activeCategory
-              ? "このカテゴリの記事はまだありません。"
-              : "まだ記事がありません。"}
-        </p>
-      ) : (
-        <div className={styles.grid}>
-          {posts.map((post) => (
-            <BlogCard key={post.slug} post={post} />
-          ))}
-        </div>
-      )}
-
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        basePath={basePath}
-      />
+      <Suspense>
+        <BlogFilterableList
+          posts={posts}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          basePath={basePath}
+          activeCategory={activeCategory}
+          allPosts={allPosts}
+          tagHeader={tagHeader}
+          newSlugs={newSlugs}
+          categories={categories}
+          categoryLabels={CATEGORY_LABELS}
+          seriesLabels={SERIES_LABELS}
+        />
+      </Suspense>
     </div>
   );
 }
