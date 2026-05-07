@@ -187,16 +187,8 @@ interface PlayFeaturedItem {
 }
 
 /**
- * PlayContentMeta におすすめ理由を付与した型。
- * /play ページの「イチオシ」セクション表示に使用する。
- */
-export interface PlayFeaturedContent extends PlayContentMeta {
-  recommendReason: string;
-}
-
-/**
  * /play ページ専用 — 「イチオシ」セクションに表示する固定コンテンツとおすすめ理由の一覧。
- * 各コンテンツに訪問者の興味を引くおすすめ理由を付与することで、クリック率向上を図る。
+ * recommendation.ts での推薦フォールバック処理に使用する。
  */
 export const PLAY_FEATURED_ITEMS: ReadonlyArray<PlayFeaturedItem> = [
   { slug: "contrarian-fortune", recommendReason: "ひと味違う運勢診断" },
@@ -206,15 +198,3 @@ export const PLAY_FEATURED_ITEMS: ReadonlyArray<PlayFeaturedItem> = [
   },
   { slug: "traditional-color", recommendReason: "和の色であなたを表現" },
 ];
-
-/**
- * /play ページの「イチオシ」セクション用のコンテンツ配列を返す。
- * PLAY_FEATURED_ITEMS の各 slug から playContentBySlug でコンテンツを取得し、
- * recommendReason を付与した PlayFeaturedContent[] として返す。
- */
-export function getPlayFeaturedContents(): PlayFeaturedContent[] {
-  return PLAY_FEATURED_ITEMS.flatMap(({ slug, recommendReason }) => {
-    const content = playContentBySlug.get(slug);
-    return content ? [{ ...content, recommendReason }] : [];
-  });
-}

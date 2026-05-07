@@ -9,7 +9,6 @@ import {
   getAllPlaySlugs,
   DAILY_UPDATE_SLUGS,
   PLAY_FEATURED_ITEMS,
-  getPlayFeaturedContents,
   getHeroPickupContents,
   getDefaultTabContents,
   getNonFortuneContents,
@@ -352,54 +351,6 @@ describe("PLAY_FEATURED_ITEMS (B-209: /playページイチオシセクション)
   test("each slug exists in playContentBySlug", () => {
     for (const item of PLAY_FEATURED_ITEMS) {
       expect(playContentBySlug.has(item.slug)).toBe(true);
-    }
-  });
-});
-
-describe("getPlayFeaturedContents (B-209: /playページイチオシセクション)", () => {
-  test("returns exactly 3 contents", () => {
-    const contents = getPlayFeaturedContents();
-    expect(contents).toHaveLength(3);
-  });
-
-  test("each content has recommendReason field", () => {
-    const contents = getPlayFeaturedContents();
-    for (const content of contents) {
-      expect(content.recommendReason).toBeDefined();
-      expect(typeof content.recommendReason).toBe("string");
-      expect(content.recommendReason.length).toBeGreaterThan(0);
-    }
-  });
-
-  test("content for 'contrarian-fortune' has correct recommendReason", () => {
-    const contents = getPlayFeaturedContents();
-    const item = contents.find((c) => c.slug === "contrarian-fortune");
-    expect(item).toBeDefined();
-    expect(item?.recommendReason).toBe("ひと味違う運勢診断");
-  });
-
-  test("content for 'unexpected-compatibility' has correct recommendReason", () => {
-    const contents = getPlayFeaturedContents();
-    const item = contents.find((c) => c.slug === "unexpected-compatibility");
-    expect(item).toBeDefined();
-    expect(item?.recommendReason).toBe("友達にシェアしたくなる");
-  });
-
-  test("content for 'traditional-color' has correct recommendReason", () => {
-    const contents = getPlayFeaturedContents();
-    const item = contents.find((c) => c.slug === "traditional-color");
-    expect(item).toBeDefined();
-    expect(item?.recommendReason).toBe("和の色であなたを表現");
-  });
-
-  test("each returned content has base PlayContentMeta fields (slug, title, icon, etc.)", () => {
-    const contents = getPlayFeaturedContents();
-    for (const content of contents) {
-      expect(content.slug).toBeDefined();
-      expect(content.title).toBeDefined();
-      expect(content.icon).toBeDefined();
-      expect(content.accentColor).toBeDefined();
-      expect(content.category).toBeDefined();
     }
   });
 });
