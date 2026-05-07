@@ -411,7 +411,12 @@ cycle-181 の事故報告書 21 件のうち、計画段階で構造的に予防
 
 ### 実装レビュー
 
-<!-- /cycle-execution フェーズで builder 完了後にここへ追記する。 -->
+- **B-334-2-1 R1**: 指摘なし、承認（commit `7e351dd7`）。ルート移行・dead code 整理（`getPlayFeaturedContents` + `PlayFeaturedContent` interface のみ削除、トップページ使用 3 関数 + recommendation.ts 使用 1 定数は残置）・CategoryNav 削除・page.test.tsx 廃止・seo-coverage.test.ts の import パス追従までアトミックに 1 commit 内。lint/test/build 全通過、ランタイム 200 確認済み。
+- **B-334-2-2/3/4 R1**: 指摘なし、承認（commit `16f00346`）。4 層分割（PlayListView Server + Suspense → PlayFilterableList Client → PlayGrid → PlayCard）/ 絵文字・accentColor 完全廃止 / DESIGN.md トークン使用 / `<Link>` + `aria-current="page"` + `data-active` / 不正カテゴリ null フォールバック / debounce 300ms `router.replace` / URL → state 追従 / 空状態 `role="status"` / NEW 積集合 / newSlugsHelper 外出し / publishedAt 降順 / カード等高 / バッジ行 min-height / 44px / `<nav aria-label>` / カード全体リンク + 動詞 CTA 廃止、すべて確認。Playwright 5 シナリオ視覚確認も通過。`--warning-soft/strong` トークンは globals.css L40-42 と DESIGN.md §2 で定義済みを確認。
+- **B-334-2-5 R1**: Major 2 / Minor 4 指摘（shortTitle / keywords 検索テスト欠落、shortDescription 除外 assert 不足、debounce 即時非呼び出し、TZ 表記、30 日境界対側、文言依存）→ R2 ですべて修正、承認（commit `0207d00a`）。テスト 64 → 67 件、純増 3。AP-WF03 違反予防として builder が計画項目を超えるエッジケース（ReadonlySet 確認、isNew && isDaily 同時表示等）を追加実装、reviewer も「来訪者観点で過剰でない」と評価。
+- **B-334-2-6 視覚検証**: PM 自身が Playwright MCP で 5 シナリオ × {w360, w1280} × {light, dark} = 20 枚撮影、22 観測項目を 1 つずつ照合（並べ読み成果物 `tmp/cycle-182/visual-check.md`）。不具合・指摘事項なし、識別性補強案・Lucide 採用 escalation 発動なし、コンソール警告・エラー 0 件。
+- **サイクル全体最終レビュー（包括）**: 指摘なし、承認。lint/format/typecheck/test 4273 件/build 全通過を reviewer が再実行確認。来訪者価値（M1a 主要 + M1b 副次）の達成、cycle-181 との UI セマンティクス一貫性、「ゼロから再設計しても同じ判断」の批判的検証、cycle-181 違反 21 件の予防対象が実装段階で再発していないこと、テスト 67 件の形骸化なし、をすべて確認。観察事項 3 件（/play OGP backlog 起票、AP-WF07 追記、NEW バッジ未表示の運用上保証）は cycle-completion で対応予定。
+- **typecheck 漏れの是正**: pre-commit hook（tsc --noEmit）で `next/link` モックの `aria-current` 型不整合 3 件を検出 → React.AriaAttributes["aria-current"] に修正（commit `9bc7c712`）。B-334-2-5 builder 報告時には typecheck を確認していなかったため、PM 自身でフックを使って検出した形になった。今後の B-334-2-N 系の B-334-2-5 builder 指示には `npm run typecheck` も完了条件に含める。
 
 ## キャリーオーバー
 
