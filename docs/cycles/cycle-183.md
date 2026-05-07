@@ -298,6 +298,7 @@ cycle-181 で記録された 21 件の事故報告書、および cycle-182 が 
   - **タグページの URL エンコード**: シナリオ 5 で URL バーが `/blog/tag/%E8%A8%AD%E8%A8%88%E3%83%91%E3%82%BF%E3%83%BC%E3%83%B3` になっていること、ページコンテンツが「設計パターン」タグの記事 21 件を表示していることを確認。
   - **ページネーション複合状態**: シナリオ 2（/blog/page/2）でページネーション UI の前後リンク・現在ページ表示を観測。`/blog/category/[cat]/page/[n]` および `/blog/tag/[tag]/page/[n]` も builder のテストでカバー（視覚は w1280 light の 1 枚を `/blog/category/dev-notes/page/2` で別途撮影、シナリオ 3 と兼用してもよい）。
   - **検索中のページネーション無効化**: シナリオ 6（/blog?q=Next.js）でページネーション UI が非表示または無効状態であることを観測（B-334-3-3 仕様）。
+  - **Pagination 配下の 44px 全状態確認（M-1 / B-388 関連）**: シナリオ 2（/blog/page/2）で Pagination 配下の `pageItem` 全状態（通常リンク / `aria-current="page"` の active / `disabled` の前リンクなど無効状態）について `getBoundingClientRect()` で 44px 以上を観測。本サイクルでは BlogFilterableList 側の個別上書きによる応急処置で対応している関係で、Pagination 本体修正（B-388）への送り出しが正しく機能していることを視覚で担保する。
   - **ヒット件数表示の検証（MJ-1 / MJ-C 対応）**: シナリオ 6（/blog?q=Next.js, 実測 15 件以上）でヒット件数表示が画面上部に可視で存在し、入力に応じて更新されることを観測。シナリオ 8（/blog?q=zzzzz, 0 件）では**逆にヒット件数表示要素が描画されておらず、空状態メッセージのみが画面に出ていることを観測**（MJ-C 対応の選択案 (a) の検証）。
   - **ダークモード**: 全シナリオで {light, dark} を撮るため自動でカバー。NEW バッジ・カウントバッジの色が背景から識別可能か確認。
 - **チェック観点**: DESIGN.md §3 絵文字なし、§4 Panel ベース、§2 トークン使用、a11y（focus-visible、コントラスト 4.5:1、44px タップターゲット）、カード等高、badges 行の高さ揃い、空状態の文言、タグページの noindex（5 件未満タグでの `<meta name="robots" content="noindex">` 出力）。
@@ -437,7 +438,7 @@ cycle-181 で記録された 21 件の事故報告書、および cycle-182 が 
   - **発覚タイミング 3: 「タグだけ legacy に戻す」のような部分 rollback**: 本サイクルの設計上、6 ルートは共通 `BlogListView` を参照するため、タグだけ部分的に legacy へ戻すことは**できない**（§検討した他の選択肢 §4 で棄却済みの「新旧並走」が必要になるため）。タグページに重大な問題が見つかった場合は commit A 全体を revert し、修正版で再着手する方針。これは「アトミック切替えの代償」として計画段階で受容する。
   - **rollback 後の対応**: revert 後は cycle-183 を「未完了」状態に戻し、原因調査 + 修正計画 + reviewer 再レビューを経て再着手する。Phase 4.3 完了宣言は出さない。
 - **【実態の commit 構成（事後注記）】**: 実装フェーズで B-334-3-7 担当 builder が指示外で 6 ルートの `git mv`（本来は B-334-3-1 のスコープ）も commit C に含めて先行コミットしたため、当初計画と commit 構成が一部入れ替わった。実態は次の通り。
-  - **commit C（4446aa63）**: `next.config.ts` のリダイレクト追記 **+ 6 ルートと 2 テストの `git mv`**（B-334-3-7 が B-334-3-1 のサブ作業を侵食）
+  - **commit C（4446aa63）**: `next.config.ts` のリダイレクト追記 **+ 9 ファイルの `git mv`**（page.tsx 6 個 + テスト 2 個 + `(legacy)/blog/layout.tsx` 1 個。B-334-3-7 が B-334-3-1 のサブ作業を侵食。なお `(new)/blog/layout.tsx` はその後 fccb3bcf で MN-3 対応として削除されたため現状は存在しない）
   - **commit A（587359c6）**: 新コンポーネント実装と参照差し替え（git mv は含まず）
   - **commit A-fix（fccb3bcf）**: レビュー指摘 M-1（Pagination 44px）と MINOR の修正
   - 本サイクル中の本番停止級バグへの rollback は、当初計画の「commit A 単独 revert」では機能せず、**commit A + commit C を併せて revert する必要がある**（commit C を残したまま commit A を revert すると、ルートは `(new)/blog/` 配下にあるが新コンポーネント実装が消えてビルド不能になる）。タグページのみの部分 rollback が不可能な点は当初計画通り。
@@ -489,7 +490,7 @@ cycle-181 で記録された 21 件の事故報告書、および cycle-182 が 
 
 #### a11y / WCAG
 
-- カテゴリリンク・タグリンク（人気タグ + タグページ内）・検索入力・ページネーションリンクの計算スタイルで `min-height` が 44px 以上（DevTools / `getBoundingClientRect()` で確認）。
+- カテゴリリンク・タグリンク（人気タグ + タグページ内）・検索入力・**ページネーションリンク（通常 / active / disabled の全状態）**の計算スタイルで `min-height` が 44px 以上（DevTools / `getBoundingClientRect()` で確認）。Pagination 本体（`src/components/Pagination/Pagination.module.css`）の修正は B-388 のスコープのため、本サイクルでは BlogFilterableList 側の `:global` セレクタ相当で個別上書きする（AP-I02 抵触の継承）。
 - focus-visible 時に DESIGN.md §2 末尾規約に準拠したアウトラインが描画される。
 - `<nav aria-label="カテゴリで絞り込む">` および `<nav aria-label="人気タグ">` がそれぞれナビを内包している。
 - WCAG 2.4.5: `/blog` への到達経路が **(i) Header ナビ「ブログ」、(ii) Footer リンク「ブログ」、(iii) トップページ最新記事 3 件 + 「すべて見る」、(iv) sitemap.xml** の 4 経路で確認できる（記録は本ファイル「実装後の視覚確認」欄に残す）。
@@ -506,6 +507,15 @@ cycle-181 で記録された 21 件の事故報告書、および cycle-182 が 
 - `/blog/tag/[tag]/page/1` への HTTP リクエストが `/blog/tag/[tag]` に 308 永続リダイレクトされる（`next.config.ts` 追記、ユニットテストで証明）。
 - 既存の `/blog/page/1`、`/blog/category/:cat/page/1` リダイレクトは変更されず動作する。
 - `(legacy)/blog/__tests__/pagination-redirect.test.ts` に新リダイレクトの case が追加されテストが通る。
+
+#### テスト整備（B-334-3-5 必須要件）
+
+下記の test assertion 群が `pagination-redirect.test.ts` / `tag-page.test.ts` / 新規作成する `BlogFilterableList.test.tsx` / `BlogCard.test.tsx` / `searchFilter.test.ts` / `newSlugsHelper.test.ts` のいずれかに含まれていること。具体の書き方は B-334-3-5 担当の builder 判断（AP-WF03 抵触回避）。
+
+- **`searchFilter.ts` の `filterPostsByKeyword` 8 項目**: §B-334-3-5 (a) (i)〜(viii) の全項目（タイトル/description/tags/カテゴリ表示名/シリーズ表示名でのヒット、`series` が null の記事はシリーズ表示名でヒットしない、大文字小文字不区別、空キーワード全件、ヒットなしで 0 件）。
+- **`newSlugsHelper.ts` の `calculateNewSlugs` 5 項目**: §B-334-3-5 (a) (i)〜(v) の全項目（30 日 × 上位 5 件の積集合、30 日境界、5 件以下、降順、ハイフン区切り `published_at` のパース）。
+- **`pagination-redirect.test.ts` の追加 case（B-334-3-7 連動）**: `/blog/tag/[tag]/page/1` → `/blog/tag/[tag]` の 308 リダイレクト assertion。`next.config.ts` の `paginationRedirects` を spy して該当エントリの存在を検証する形でも、redirect 関数の戻り値を直接検証する形でもよい（builder 判断）。
+- **`generateStaticParams` の数値整合 assertion**: タグ p2 が **6 タグ**（設計パターン / Web開発 / Next.js / AIエージェント / 失敗と学び / ワークフロー）全てで生成されること、カテゴリ p2 が **2 カテゴリ**（dev-notes / ai-workflow）で生成されること、`/blog/page/[page]` が p2〜p5 の **4 個**を返すこと（researcher レポート 3 § 3 整合、44 URL の内訳と一致）。
 
 ### 計画にあたって参考にした情報
 
@@ -591,7 +601,7 @@ cycle-181 で記録された 21 件の事故報告書、および cycle-182 が 
 
 ## 補足事項
 
-なし
+- **`(legacy)/__tests__/seo-coverage.test.ts` の配置**: 本テストファイルは `(legacy)/__tests__/` 配下にあるが、L146 / L222 / L235 / L265 等で `@/app/(new)/blog/...` を import している（cycle-183 commit A で path 追従済み）。**ファイル配置は `(legacy)/` 配下に残置するが、import は `(new)/` を参照する** 構造で、Phase 10.2（B-337 = legacy 撤去）でファイルごと再整理される予定。本サイクルでは触らない。
 
 ## サイクル終了時のチェックリスト
 
