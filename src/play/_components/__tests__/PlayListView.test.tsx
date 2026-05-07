@@ -89,8 +89,8 @@ describe("PlayListView 統合テスト", () => {
 
   test("コンテンツ件数がヘッダーに表示される", () => {
     render(<PlayListView contents={mockContents} />);
-    // "3種のコンテンツを4つのカテゴリから絞り込んで探せます。" のような文が表示される
-    expect(screen.getByText(/3種のコンテンツ/)).toBeInTheDocument();
+    // 件数（3）が画面に表示されることを確認（文言変更に強いパターンで検証、m-4 是正）
+    expect(screen.getByText(/3.{0,6}種/)).toBeInTheDocument();
   });
 
   test("PlayFilterableList へ contents が渡され、コンテンツカードが表示される", () => {
@@ -130,6 +130,6 @@ describe("PlayListView 統合テスト", () => {
 
   test("contents が空配列のとき件数 0 が表示される", () => {
     render(<PlayListView contents={[]} />);
-    expect(screen.getByText(/0種のコンテンツ/)).toBeInTheDocument();
+    expect(screen.getByText(/0.{0,6}種/)).toBeInTheDocument();
   });
 });

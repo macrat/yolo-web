@@ -211,8 +211,9 @@ describe("キーワード検索", () => {
     expect(screen.queryByText("知識コンテンツC")).not.toBeInTheDocument();
   });
 
-  test("?q= では shortDescription にマッチするコンテンツも表示される", () => {
+  test("?q= では shortDescription にマッチするコンテンツも表示される（他カードは除外される）", () => {
     // makeContent ヘルパーにより shortDescription は "${title}の説明" になっている
+    // "ゲームコンテンツDの説明" は ゲームコンテンツD の shortDescription にのみ含まれる
     vi.mocked(nextNavigation.useSearchParams).mockReturnValue(
       new URLSearchParams("q=ゲームコンテンツDの説明") as ReturnType<
         typeof nextNavigation.useSearchParams
@@ -220,6 +221,10 @@ describe("キーワード検索", () => {
     );
     render(<PlayFilterableList contents={mockContents} newSlugs={new Set()} />);
     expect(screen.getByText("ゲームコンテンツD")).toBeInTheDocument();
+    // フィルターが機能し、他カードが除外されていること（M-2 是正）
+    expect(screen.queryByText("運勢コンテンツA")).not.toBeInTheDocument();
+    expect(screen.queryByText("性格コンテンツB")).not.toBeInTheDocument();
+    expect(screen.queryByText("知識コンテンツC")).not.toBeInTheDocument();
   });
 
   test("キーワード検索は大文字小文字を区別しない（英字）", () => {
@@ -262,6 +267,62 @@ describe("キーワード検索", () => {
     expect(screen.getByText("性格コンテンツB")).toBeInTheDocument();
     expect(screen.getByText("知識コンテンツC")).toBeInTheDocument();
     expect(screen.getByText("ゲームコンテンツD")).toBeInTheDocument();
+  });
+
+  test("shortTitle のみにマッチするキーワードでコンテンツが表示される（M-1 是正）", () => {
+    // shortTitle にのみ含まれる語でヒットすることを確認。
+    // title・shortDescription・keywords にはこの語を含めない。
+    // NOTE: PlayCard は shortTitle があればそれを h2 に表示するため、
+    //       カード識別は shortDescription（p タグ）や href で行う。
+    const contentsWithShortTitle: PlayContentMeta[] = [
+      {
+        ...makeContent("quiz-shorttitle", "knowledge", "クイズタイトル通常"),
+        shortTitle: "短縮専用語句",
+      },
+      makeContent("quiz-other", "game", "別のコンテンツZ"),
+    ];
+    vi.mocked(nextNavigation.useSearchParams).mockReturnValue(
+      new URLSearchParams("q=短縮専用語句") as ReturnType<
+        typeof nextNavigation.useSearchParams
+      >,
+    );
+    render(
+      <PlayFilterableList
+        contents={contentsWithShortTitle}
+        newSlugs={new Set()}
+      />,
+    );
+    // shortTitle マッチカードが表示される（shortTitle が h2 に表示される）
+    expect(screen.getByText("短縮専用語句")).toBeInTheDocument();
+    // shortTitle に含まれない他カードは除外される
+    expect(screen.queryByText("別のコンテンツZ")).not.toBeInTheDocument();
+  });
+
+  test("keywords にのみマッチするキーワードでコンテンツが表示される（M-1 是正）", () => {
+    // keywords 配列にしか含まれない語でヒットすることを確認。
+    // title・shortTitle・shortDescription にはこの語を含めない。
+    const contentsWithKeywords: PlayContentMeta[] = [
+      {
+        ...makeContent("quiz-keywords", "personality", "性格テスト標準"),
+        keywords: ["メタ検索語彙"],
+      },
+      makeContent("quiz-nokey", "fortune", "運勢テスト標準"),
+    ];
+    vi.mocked(nextNavigation.useSearchParams).mockReturnValue(
+      new URLSearchParams("q=メタ検索語彙") as ReturnType<
+        typeof nextNavigation.useSearchParams
+      >,
+    );
+    render(
+      <PlayFilterableList
+        contents={contentsWithKeywords}
+        newSlugs={new Set()}
+      />,
+    );
+    // keywords マッチカードが表示される
+    expect(screen.getByText("性格テスト標準")).toBeInTheDocument();
+    // keywords に含まれない他カードは除外される
+    expect(screen.queryByText("運勢テスト標準")).not.toBeInTheDocument();
   });
 });
 
@@ -324,6 +385,10 @@ describe("debounce と URL 更新", () => {
     render(<PlayFilterableList contents={mockContents} newSlugs={new Set()} />);
     const searchInput = screen.getByRole("searchbox");
     await userEvent.type(searchInput, "a");
+    // 入力直後（debounce 前）は router.replace が呼ばれていないこと（m-1 是正）
+    // NOTE: userEvent.type は非同期だが、debounce タイマー（300ms）はまだ発火していない
+    expect(mockReplace).not.toHaveBeenCalled();
+    // debounce 後に router.replace が呼ばれること
     await waitFor(
       () => {
         expect(mockReplace).toHaveBeenCalled();
