@@ -1,7 +1,8 @@
 /* Panel コンポーネントと同等のベーススタイルを適用。
  * ToolCard は <Link> がルート要素のため Panel を直接使えないが、
  * Panel のスタイル（border, border-radius, bg, padding）と同一にする。
- * Panel.module.css が変更された場合はここも追従すること。 */
+ * Panel.module.css が変更された場合はここも追従すること。
+ * height: 100% で親（grid item）の高さに揃え、グリッド内の全カードを同じ高さに揃える。 */
 .card {
   display: flex;
   flex-direction: column;
@@ -12,6 +13,8 @@
   text-decoration: none;
   background-color: var(--bg);
   transition: background-color 0.15s;
+  height: 100%;
+  box-sizing: border-box;
 }
 
 .card:hover {
@@ -23,10 +26,12 @@
   outline-offset: 2px;
 }
 
+/* min-height で NEW バッジ有無による高さ差をなくし、h2 位置を揃える */
 .badges {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  min-height: 1.625rem;
 }
 
 .category {
@@ -36,7 +41,12 @@
 
 .newBadge {
   font-size: 0.75rem;
-  padding: 0.125rem 0.5rem;
+  /* min-height とそろえるため box-sizing: border-box で枠の合計を 1.625rem に固定 */
+  box-sizing: border-box;
+  height: 1.625rem;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 0.5rem;
   background: var(--accent-soft);
   color: var(--accent-strong);
   border: 1px solid var(--accent-strong);

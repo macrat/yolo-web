@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import type { ToolMeta } from "@/tools/types";
 import Input from "@/components/Input";
@@ -19,14 +20,20 @@ interface ToolsFilterableListProps {
   newSlugs: ReadonlySet<string>;
 }
 
+/** キーワード検索の URL 反映を遅延させるミリ秒。連続入力中は URL を更新せず、入力が止まってから反映する */
+const KEYWORD_DEBOUNCE_MS = 300;
+
+const VALID_CATEGORY_VALUES = new Set<string>(CATEGORIES.map((c) => c.value));
+
 /**
  * キーワード検索とカテゴリの絞り込み付きツール一覧 (Client Component)。
  *
- * すべてのフィルター状態を URL search params で管理する:
- * - ?q=キーワード — キーワード検索
- * - ?category=text — カテゴリ絞り込み
+ * フィルター状態の管理:
+ * - キーワード: ローカル state (即座に反映) + URL の `?q=` (debounce で遅延反映)
+ *   高速タイピング時のキーストローク取りこぼしと、navigation の連続発生による
+ *   ブラウザ/Playwright のデッドロックを防ぐため。
+ * - カテゴリ: URL の `?category=` (即座に反映、ブラウザ戻る/進む対応)
  *
- * URL に状態を持つことで、リンク共有・ブラウザ戻る/進むに対応する。
  * 表示順: publishedAt 降順（新しい順）
  */
 export default function ToolsFilterableList({
@@ -36,8 +43,38 @@ export default function ToolsFilterableList({
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const activeCategory = searchParams.get("category") as CategoryValue | null;
-  const keyword = searchParams.get("q") ?? "";
+  // 不正なカテゴリ値（URL のタイポ等）は null として扱う
+  const rawCategory = searchParams.get("category");
+  const activeCategory: CategoryValue | null =
+    rawCategory && VALID_CATEGORY_VALUES.has(rawCategory)
+      ? (rawCategory as CategoryValue)
+      : null;
+  const urlKeyword = searchParams.get("q") ?? "";
+
+  // キーワードはローカル state で管理し、URL は debounce で遅延更新する
+  const [keyword, setKeywordLocal] = useState(urlKeyword);
+
+  // URL から開かれた / ブラウザ戻るで URL が変わった場合、ローカル state も追従する
+  useEffect(() => {
+    setKeywordLocal(urlKeyword);
+  }, [urlKeyword]);
+
+  // ローカル state の keyword を debounce して URL に反映
+  useEffect(() => {
+    if (keyword === urlKeyword) return;
+    const timer = setTimeout(() => {
+      const params = new URLSearchParams(searchParams.toString());
+      if (keyword.trim()) {
+        params.set("q", keyword);
+      } else {
+        params.delete("q");
+      }
+      const query = params.toString();
+      router.replace(query ? `/tools?${query}` : "/tools");
+    }, KEYWORD_DEBOUNCE_MS);
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- searchParams の更新で再起動しない（urlKeyword で代用）
+  }, [keyword, urlKeyword, router]);
 
   // カテゴリフィルター → キーワードフィルター → ソート の順に適用
   let filtered = activeCategory
@@ -59,28 +96,18 @@ export default function ToolsFilterableList({
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
   );
 
-  /**
-   * URL search params を更新するヘルパー。
-   * method: "push" は履歴に追加（カテゴリボタン押下など明示的な操作用）、
-   *         "replace" は履歴を置き換え（キーストロークごとの入力など連続操作用）。
-   */
-  function updateParams(
+  /** カテゴリフィルターは即座に URL に反映する（明示的な操作なので履歴も追加） */
+  function updateCategoryParams(
     updater: (params: URLSearchParams) => void,
-    method: "push" | "replace" = "push",
   ): void {
     const params = new URLSearchParams(searchParams.toString());
     updater(params);
     const query = params.toString();
-    const url = query ? `/tools?${query}` : "/tools";
-    if (method === "replace") {
-      router.replace(url);
-    } else {
-      router.push(url);
-    }
+    router.push(query ? `/tools?${query}` : "/tools");
   }
 
   function setFilter(value: CategoryValue): void {
-    updateParams((params) => {
+    updateCategoryParams((params) => {
       if (params.get("category") === value) {
         params.delete("category");
       } else {
@@ -90,19 +117,9 @@ export default function ToolsFilterableList({
   }
 
   function clearFilter(): void {
-    updateParams((params) => {
+    updateCategoryParams((params) => {
       params.delete("category");
     });
-  }
-
-  function setKeyword(value: string): void {
-    updateParams((params) => {
-      if (value.trim()) {
-        params.set("q", value);
-      } else {
-        params.delete("q");
-      }
-    }, "replace");
   }
 
   return (
@@ -111,8 +128,8 @@ export default function ToolsFilterableList({
         type="search"
         className={styles.searchInput}
         placeholder="ツールを検索…"
-        defaultValue={keyword}
-        onChange={(e) => setKeyword(e.target.value)}
+        value={keyword}
+        onChange={(e) => setKeywordLocal(e.target.value)}
         aria-label="ツールをキーワードで検索"
       />
       <nav aria-label="カテゴリで絞り込む" className={styles.filterNav}>
@@ -140,7 +157,7 @@ export default function ToolsFilterableList({
         <ToolsGrid tools={sortedTools} newSlugs={newSlugs} />
       ) : (
         <p className={styles.noResults} role="status">
-          該当するツールが見つかりませんでした。
+          該当するツールが見つかりませんでした。キーワードを変えるか、カテゴリを切り替えてみてください。
         </p>
       )}
     </div>
