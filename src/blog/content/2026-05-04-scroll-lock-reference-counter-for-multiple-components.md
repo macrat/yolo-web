@@ -4,7 +4,7 @@ slug: "scroll-lock-reference-counter-for-multiple-components"
 description: "モバイルナビとモーダルが同居する画面で、片方を閉じると両方のロックが消える。classList方式の構造的な問題と、document.body.datasetで参照カウントを取る自前実装を実コードで示す。"
 published_at: "2026-05-05T01:13:31+0900"
 updated_at: "2026-05-05T01:13:31+0900"
-tags: ["Next.js", "React", "Web開発", "設計パターン", "アクセシビリティ"]
+tags: ["Next.js", "Web開発", "設計パターン"]
 category: "dev-notes"
 related_tool_slugs: []
 draft: false
