@@ -8,8 +8,6 @@ import {
   getRelatedPosts,
   getSeriesPosts,
   CATEGORY_LABELS,
-  MIN_POSTS_FOR_TAG_PAGE,
-  getTagsWithMinPosts,
 } from "@/blog/_lib/blog";
 import {
   generateBlogPostMetadata,
@@ -59,10 +57,6 @@ export default async function BlogPostPage({ params }: Props) {
   const relatedPosts = getRelatedPosts(post, allPosts);
   const playRecommendations = getPlayRecommendationsForBlog(post.tags);
 
-  // タグページが存在するタグの集合を計算し、TagList に渡すことで
-  // MIN_POSTS_FOR_TAG_PAGE 未満のタグへのリンクによる 404 体験を防ぐ。
-  const linkableTags = new Set(getTagsWithMinPosts(MIN_POSTS_FOR_TAG_PAGE));
-
   const jsonLd = generateBlogPostJsonLd({
     ...post,
     image: `${BASE_URL}/blog/${slug}/opengraph-image`,
@@ -104,7 +98,7 @@ export default async function BlogPostPage({ params }: Props) {
             <span>{post.readingTime}分で読める</span>
           </div>
           <h1 className={styles.title}>{post.title}</h1>
-          <TagList tags={post.tags} linkableTags={linkableTags} />
+          <TagList tags={post.tags} />
         </header>
 
         {post.series && (
