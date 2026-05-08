@@ -18,6 +18,12 @@ interface BlogCardProps {
   categoryLabel: string;
   /** このブログ記事が新着かどうか（呼び出し元の Server Component で判定） */
   isNew?: boolean;
+  /**
+   * リンク化するタグの集合。指定された場合、集合に含まれないタグは
+   * <Link> ではなく <span aria-disabled="true"> で表示し、404 を防ぐ。
+   * 未指定（undefined）の場合は後方互換のためすべてのタグをリンク化する。
+   */
+  linkableTags?: ReadonlySet<string>;
 }
 
 /**
@@ -42,6 +48,7 @@ export default function BlogCard({
   post,
   categoryLabel,
   isNew,
+  linkableTags,
 }: BlogCardProps) {
   return (
     <article className={styles.card}>
@@ -74,17 +81,34 @@ export default function BlogCard({
 
       {post.tags.length > 0 && (
         <ul className={styles.tags} aria-label="タグ">
-          {post.tags.map((tag) => (
-            <li key={tag} className={styles.tagItem}>
-              {/*
-                タグリンクは position: relative; z-index: 1 で
-                タイトルの ::after overlay より前面に配置する
-              */}
-              <Link href={`/blog/tag/${tag}`} className={styles.tagLink}>
-                {tag}
-              </Link>
-            </li>
-          ))}
+          {post.tags.map((tag) => {
+            // linkableTags が未指定の場合はすべてリンク化（後方互換）
+            const isLinkable =
+              linkableTags === undefined || linkableTags.has(tag);
+            return (
+              <li key={tag} className={styles.tagItem}>
+                {isLinkable ? (
+                  /*
+                    タグリンクは position: relative; z-index: 1 で
+                    タイトルの ::after overlay より前面に配置する
+                  */
+                  <Link href={`/blog/tag/${tag}`} className={styles.tagLink}>
+                    {tag}
+                  </Link>
+                ) : (
+                  // タグページが存在しない（MIN_POSTS_FOR_TAG_PAGE 未満）タグは
+                  // リンク化しないことで 404 体験を防ぐ。テキストとして存在は見せる。
+                  <span
+                    className={styles.tagNonLink}
+                    aria-disabled="true"
+                    title="このタグは記事が少ないためページがありません"
+                  >
+                    {tag}
+                  </span>
+                )}
+              </li>
+            );
+          })}
         </ul>
       )}
     </article>

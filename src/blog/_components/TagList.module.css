@@ -26,3 +26,17 @@
   background-color: var(--color-accent);
   color: var(--color-bg);
 }
+
+/*
+ * タグページが存在しないタグ（MIN_POSTS_FOR_TAG_PAGE 未満）の非リンク表示。
+ * リンクと同じレイアウトを維持しつつ、--fg-softer（disabled 用トークン）で
+ * 視覚的に「クリック不可」と判断できるようにする。
+ * cursor: default でリンクと区別する。
+ */
+.tagNonLink {
+  display: block;
+  color: var(--fg-softer);
+  padding: 0.15rem 0.5rem;
+  font-size: 0.75rem;
+  cursor: default;
+}

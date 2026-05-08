@@ -5,13 +5,11 @@ import {
   getTagsWithMinPosts,
   TAG_DESCRIPTIONS,
   MIN_POSTS_FOR_TAG_INDEX,
+  MIN_POSTS_FOR_TAG_PAGE,
 } from "@/blog/_lib/blog";
 import { paginate, BLOG_POSTS_PER_PAGE } from "@/lib/pagination";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import BlogListView from "@/blog/_components/BlogListView";
-
-/** Minimum number of posts a tag must have to generate a static page. */
-const MIN_POSTS_FOR_TAG_PAGE = 3;
 
 interface Props {
   params: Promise<{ tag: string; page: string }>;

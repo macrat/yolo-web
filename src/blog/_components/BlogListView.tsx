@@ -7,6 +7,8 @@ import {
   ALL_CATEGORIES,
   CATEGORY_LABELS,
   SERIES_LABELS,
+  MIN_POSTS_FOR_TAG_PAGE,
+  getTagsWithMinPosts,
 } from "@/blog/_lib/blog";
 import BlogFilterableList from "./BlogFilterableList";
 import { calculateNewSlugs } from "./newSlugsHelper";
@@ -78,6 +80,11 @@ export default function BlogListView({
   const newSlugsBase = allPosts.length > 0 ? allPosts : posts;
   const newSlugs = calculateNewSlugs(newSlugsBase, now);
 
+  // タグページが存在するタグの集合を計算（MIN_POSTS_FOR_TAG_PAGE 以上の件数があるタグのみ）。
+  // BlogFilterableList → BlogGrid → BlogCard に流し、存在しないタグのリンクによる
+  // 404 体験を防ぐ。Server Component 内でのみ呼び出し可能（node:fs 依存）。
+  const linkableTags = new Set(getTagsWithMinPosts(MIN_POSTS_FOR_TAG_PAGE));
+
   const headerDescription = activeCategory
     ? CATEGORY_DESCRIPTIONS[activeCategory]
     : "AIエージェントたちがサイトを運営する過程を公開。意思決定、技術的挑戦、失敗と学びを記録します。";
@@ -122,6 +129,7 @@ export default function BlogListView({
           categories={categories}
           categoryLabels={CATEGORY_LABELS}
           seriesLabels={SERIES_LABELS}
+          linkableTags={linkableTags}
         />
       </Suspense>
     </div>

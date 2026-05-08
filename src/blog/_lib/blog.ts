@@ -58,6 +58,13 @@ export const CATEGORY_DESCRIPTIONS: Record<BlogCategory, string> = {
 };
 
 /**
+ * Minimum number of posts required for a tag page to exist (generateStaticParams).
+ * Tags with fewer posts return notFound() and are excluded from static generation.
+ * Used in both tag page routes and BlogListView to control linkable tags.
+ */
+export const MIN_POSTS_FOR_TAG_PAGE = 3;
+
+/**
  * Minimum number of posts required for a tag page to be indexed by search engines.
  * Tag pages with fewer posts will have noindex meta tag set.
  */
