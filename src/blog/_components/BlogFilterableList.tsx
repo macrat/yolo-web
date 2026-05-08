@@ -66,12 +66,6 @@ interface BlogFilterableListProps {
    * node:fs を使う @/blog/_lib/blog を Client Component から直接インポートできないため props で受け取る。
    */
   seriesLabels: Record<string, string>;
-  /**
-   * リンク化するタグの集合。BlogGrid → BlogCard へそのまま流す。
-   * node:fs を使う @/blog/_lib/blog を Client Component から直接インポートできないため props で受け取る。
-   * 未指定の場合は後方互換のためすべてのタグをリンク化する。
-   */
-  linkableTags?: ReadonlySet<string>;
 }
 
 /** キーワード検索の URL 反映を遅延させるミリ秒 */
@@ -137,7 +131,6 @@ export default function BlogFilterableList({
   categories,
   categoryLabels,
   seriesLabels,
-  linkableTags,
 }: BlogFilterableListProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -295,7 +288,6 @@ export default function BlogFilterableList({
           posts={displayPosts}
           newSlugs={newSlugs}
           categoryLabels={categoryLabels}
-          linkableTags={linkableTags}
         />
       ) : (
         <p className={styles.noResults} role="status">

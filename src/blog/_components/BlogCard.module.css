@@ -159,22 +159,3 @@
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
-
-/*
- * タグページが存在しないタグ（MIN_POSTS_FOR_TAG_PAGE 未満）の非リンク表示。
- * tagLink と同じレイアウトを維持しつつ、--fg-softer（disabled 用トークン）で
- * 視覚的に「クリック不可」と判断できるようにする。
- * position: relative + z-index: 1 は tagItem で担保済みのため不要。
- */
-.tagNonLink {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  padding: 0 0.5rem;
-  font-size: 0.75rem;
-  color: var(--fg-softer);
-  background-color: var(--bg-soft);
-  border: 1px solid var(--border);
-  border-radius: var(--r-interactive);
-  cursor: default;
-}

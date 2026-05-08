@@ -22,11 +22,6 @@ interface BlogGridProps {
    * 引き込まないため、呼び出し元から props で受け取る。
    */
   categoryLabels: Record<string, string>;
-  /**
-   * リンク化するタグの集合。BlogCard へそのまま流す。
-   * 未指定の場合は後方互換のためすべてのタグをリンク化する。
-   */
-  linkableTags?: ReadonlySet<string>;
 }
 
 /**
@@ -37,7 +32,6 @@ export default function BlogGrid({
   posts,
   newSlugs,
   categoryLabels,
-  linkableTags,
 }: BlogGridProps) {
   return (
     <div className={styles.grid} role="list" aria-label="ブログ記事一覧">
@@ -47,7 +41,6 @@ export default function BlogGrid({
             post={post}
             categoryLabel={categoryLabels[post.category] ?? post.category}
             isNew={newSlugs.has(post.slug)}
-            linkableTags={linkableTags}
           />
         </div>
       ))}

@@ -128,67 +128,6 @@ describe("BlogCard 基本表示", () => {
   });
 });
 
-describe("BlogCard linkableTags（リンク可否制御）", () => {
-  test("linkableTags 未指定時はすべてのタグが <a> リンクになること", () => {
-    render(
-      <BlogCard
-        post={makePost({ tags: ["Next.js", "TypeScript"] })}
-        categoryLabel="開発ノート"
-      />,
-    );
-    const tagLinks = screen
-      .getAllByRole("link")
-      .filter((el) => (el.getAttribute("href") ?? "").startsWith("/blog/tag/"));
-    expect(tagLinks).toHaveLength(2);
-  });
-
-  test("linkableTags に含まれるタグは <a> リンクとして表示されること", () => {
-    const linkableTags = new Set(["Next.js"]);
-    render(
-      <BlogCard
-        post={makePost({ tags: ["Next.js", "YAML"] })}
-        categoryLabel="開発ノート"
-        linkableTags={linkableTags}
-      />,
-    );
-    const tagLinks = screen
-      .getAllByRole("link")
-      .filter((el) => (el.getAttribute("href") ?? "").startsWith("/blog/tag/"));
-    expect(tagLinks).toHaveLength(1);
-    expect(tagLinks[0].getAttribute("href")).toBe("/blog/tag/Next.js");
-  });
-
-  test("linkableTags に含まれないタグは <a> リンクにならないこと", () => {
-    const linkableTags = new Set(["Next.js"]);
-    render(
-      <BlogCard
-        post={makePost({ tags: ["Next.js", "YAML"] })}
-        categoryLabel="開発ノート"
-        linkableTags={linkableTags}
-      />,
-    );
-    // YAML のテキストは表示される
-    expect(screen.getByText("YAML")).toBeInTheDocument();
-    // YAML は <a> ではない
-    const yamlEl = screen.getByText("YAML");
-    expect(yamlEl.tagName.toLowerCase()).not.toBe("a");
-  });
-
-  test("linkableTags に含まれないタグは aria-disabled が設定されること", () => {
-    const linkableTags = new Set(["Next.js"]);
-    render(
-      <BlogCard
-        post={makePost({ tags: ["Next.js", "YAML"] })}
-        categoryLabel="開発ノート"
-        linkableTags={linkableTags}
-      />,
-    );
-    const yamlSpan = screen.getByText("YAML").closest("span");
-    expect(yamlSpan).not.toBeNull();
-    expect(yamlSpan).toHaveAttribute("aria-disabled", "true");
-  });
-});
-
 describe("BlogCard NEW バッジ", () => {
   test("isNew=true のとき NEW バッジが表示される", () => {
     render(
