@@ -66,6 +66,13 @@ interface BlogFilterableListProps {
    * node:fs を使う @/blog/_lib/blog を Client Component から直接インポートできないため props で受け取る。
    */
   seriesLabels: Record<string, string>;
+  /**
+   * タグページが存在するタグの集合（getTagsWithMinPosts(3) の結果）。
+   * BlogGrid → BlogCard に流してタグ表示をフィルタする。
+   * node:fs 依存のため Server Component（BlogListView）で計算して渡す。
+   * // TODO(cycle-184/B-389): X1 採用時に削除（タグ UI 完全廃止）
+   */
+  linkableTags?: ReadonlySet<string>;
 }
 
 /** キーワード検索の URL 反映を遅延させるミリ秒 */
@@ -131,6 +138,7 @@ export default function BlogFilterableList({
   categories,
   categoryLabels,
   seriesLabels,
+  linkableTags,
 }: BlogFilterableListProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -288,6 +296,7 @@ export default function BlogFilterableList({
           posts={displayPosts}
           newSlugs={newSlugs}
           categoryLabels={categoryLabels}
+          linkableTags={linkableTags} // TODO(cycle-184/B-389): X1 採用時に削除
         />
       ) : (
         <p className={styles.noResults} role="status">

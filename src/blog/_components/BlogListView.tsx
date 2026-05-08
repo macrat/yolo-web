@@ -7,6 +7,7 @@ import {
   ALL_CATEGORIES,
   CATEGORY_LABELS,
   SERIES_LABELS,
+  getTagsWithMinPosts,
 } from "@/blog/_lib/blog";
 import BlogFilterableList from "./BlogFilterableList";
 import { calculateNewSlugs } from "./newSlugsHelper";
@@ -78,6 +79,12 @@ export default function BlogListView({
   const newSlugsBase = allPosts.length > 0 ? allPosts : posts;
   const newSlugs = calculateNewSlugs(newSlugsBase, now);
 
+  // TODO(cycle-184/B-389): X1 採用時に削除（タグ UI 完全廃止）
+  // MIN_POSTS_FOR_TAG_PAGE = 3 未満のタグはタグページが存在しないため UI から非表示にする。
+  // getTagsWithMinPosts は node:fs 依存のため Server Component のここで計算し props で渡す。
+  const MIN_POSTS_FOR_TAG_PAGE = 3; // TODO(cycle-184/B-389): X1 採用時に一括削除
+  const linkableTags = new Set(getTagsWithMinPosts(MIN_POSTS_FOR_TAG_PAGE));
+
   const headerDescription = activeCategory
     ? CATEGORY_DESCRIPTIONS[activeCategory]
     : "AIエージェントたちがサイトを運営する過程を公開。意思決定、技術的挑戦、失敗と学びを記録します。";
@@ -122,6 +129,7 @@ export default function BlogListView({
           categories={categories}
           categoryLabels={CATEGORY_LABELS}
           seriesLabels={SERIES_LABELS}
+          linkableTags={linkableTags} // TODO(cycle-184/B-389): X1 採用時に削除
         />
       </Suspense>
     </div>

@@ -22,6 +22,13 @@ interface BlogGridProps {
    * 引き込まないため、呼び出し元から props で受け取る。
    */
   categoryLabels: Record<string, string>;
+  /**
+   * タグページが存在するタグの集合（getTagsWithMinPosts(3) の結果）。
+   * BlogCard に流してタグ表示をフィルタする。
+   * node:fs 依存のため Server Component（BlogListView）で計算して渡す。
+   * // TODO(cycle-184/B-389): X1 採用時に削除（タグ UI 完全廃止）
+   */
+  linkableTags?: ReadonlySet<string>;
 }
 
 /**
@@ -32,6 +39,7 @@ export default function BlogGrid({
   posts,
   newSlugs,
   categoryLabels,
+  linkableTags,
 }: BlogGridProps) {
   return (
     <div className={styles.grid} role="list" aria-label="ブログ記事一覧">
@@ -41,6 +49,7 @@ export default function BlogGrid({
             post={post}
             categoryLabel={categoryLabels[post.category] ?? post.category}
             isNew={newSlugs.has(post.slug)}
+            linkableTags={linkableTags} // TODO(cycle-184/B-389): X1 採用時に削除
           />
         </div>
       ))}

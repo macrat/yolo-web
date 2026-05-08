@@ -128,6 +128,70 @@ describe("BlogCard 基本表示", () => {
   });
 });
 
+describe("BlogCard linkableTags フィルタ", () => {
+  test("linkableTags 未指定のときはすべてのタグが表示される", () => {
+    render(
+      <BlogCard
+        post={makePost({ tags: ["TypeScript", "YAML"] })}
+        categoryLabel="開発ノート"
+      />,
+    );
+    expect(screen.getByText("TypeScript")).toBeInTheDocument();
+    expect(screen.getByText("YAML")).toBeInTheDocument();
+  });
+
+  test("linkableTags 指定時、含まれるタグは表示される", () => {
+    render(
+      <BlogCard
+        post={makePost({ tags: ["TypeScript", "YAML"] })}
+        categoryLabel="開発ノート"
+        linkableTags={new Set(["TypeScript"])}
+      />,
+    );
+    expect(screen.getByText("TypeScript")).toBeInTheDocument();
+  });
+
+  test("linkableTags 指定時、含まれないタグは DOM に出ない（要素ごと描画されない）", () => {
+    render(
+      <BlogCard
+        post={makePost({ tags: ["TypeScript", "YAML"] })}
+        categoryLabel="開発ノート"
+        linkableTags={new Set(["TypeScript"])}
+      />,
+    );
+    // YAML は linkableTags に含まれないため DOM に出てはいけない
+    expect(screen.queryByText("YAML")).not.toBeInTheDocument();
+  });
+
+  test("linkableTags が空集合のときはタグリストが全表示されない", () => {
+    render(
+      <BlogCard
+        post={makePost({ tags: ["TypeScript", "YAML"] })}
+        categoryLabel="開発ノート"
+        linkableTags={new Set<string>()}
+      />,
+    );
+    expect(screen.queryByText("TypeScript")).not.toBeInTheDocument();
+    expect(screen.queryByText("YAML")).not.toBeInTheDocument();
+    // タグリスト自体が DOM に出ないこと
+    expect(
+      screen.queryByRole("list", { name: "タグ" }),
+    ).not.toBeInTheDocument();
+  });
+
+  test("linkableTags 指定時、すべてのタグが含まれる場合は全タグが表示される", () => {
+    render(
+      <BlogCard
+        post={makePost({ tags: ["TypeScript", "YAML"] })}
+        categoryLabel="開発ノート"
+        linkableTags={new Set(["TypeScript", "YAML"])}
+      />,
+    );
+    expect(screen.getByText("TypeScript")).toBeInTheDocument();
+    expect(screen.getByText("YAML")).toBeInTheDocument();
+  });
+});
+
 describe("BlogCard NEW バッジ", () => {
   test("isNew=true のとき NEW バッジが表示される", () => {
     render(
