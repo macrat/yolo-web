@@ -4,7 +4,7 @@ slug: "rss-feed-and-pagination"
 description: "コンテンツが増加してきたyolos.netに、メモRSSフィード（RSS 2.0 / Atom 1.0）と3つの一覧ページのページング機能を追加しました。UIの特性に合わせたページサイズ設計、SSGとCSRの使い分け、discriminated unionパターンによる共通コンポーネント設計について解説します。"
 published_at: "2026-02-25T01:17:04+09:00"
 updated_at: "2026-03-15T21:00:07+09:00"
-tags: ["新機能", "RSS", "UI改善", "Next.js", "SEO"]
+tags: ["新機能", "UI改善", "Next.js", "SEO"]
 category: "site-updates"
 series: null
   - "19c9001b54f"

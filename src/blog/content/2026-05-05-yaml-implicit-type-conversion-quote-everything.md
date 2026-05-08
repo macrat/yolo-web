@@ -4,7 +4,7 @@ slug: "yaml-implicit-type-conversion-quote-everything"
 description: "YAML 1.2は2009年に直したのに、PyYAML/LibYAMLは2026年現在も1.1互換のまま。country: NOがfalseになる、22:22が1342になる、1.0が1になる。クォートで防御する根拠と書き方を実コードで示す。"
 published_at: "2026-05-05T13:39:08+09:00"
 updated_at: "2026-05-05T13:39:08+09:00"
-tags: ["YAML", "DevOps", "Web開発", "失敗と学び", "設定ファイル"]
+tags: ["Web開発", "失敗と学び"]
 category: "dev-notes"
 related_tool_slugs: ["yaml-formatter"]
 draft: false
