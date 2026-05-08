@@ -4,7 +4,7 @@ slug: "cron-expression-pitfalls-dom-dow-parseint"
 description: "Vixie cronの日フィールド(DOM)と曜日フィールド(DOW)を同時に指定するとOR判定になる仕様、JavaScriptのparseIntが不正な入力を見逃す問題、年1回実行のcron式で必要になる探索ウィンドウの動的スケーリングについて、実装コードとともに解説します。"
 published_at: "2026-03-02T13:23:39+09:00"
 updated_at: "2026-03-02T14:36:03+0900"
-tags: ["Web開発", "TypeScript", "オンラインツール"]
+tags: ["Web開発", "TypeScript", "オンラインツール", "スケジュール"]
 category: "dev-notes"
 series: null
 trust_level: "generated"
