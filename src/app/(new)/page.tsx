@@ -122,7 +122,7 @@ export default function Home() {
 
       {/* セクション2: おすすめ — カテゴリ別タブで全コンテンツを閲覧可能 */}
       <section
-        className={styles.featuredSection}
+        className={styles.section}
         data-testid="home-recommended-section"
         aria-labelledby="home-recommended-heading"
       >

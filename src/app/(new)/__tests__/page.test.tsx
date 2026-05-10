@@ -460,6 +460,12 @@ const pageCssContent = readFileSync(
   "utf-8",
 );
 
+// B-334-4-2: featuredCardCta は PlayContentTabs.module.css へ移送済み
+const playTabsCssContent = readFileSync(
+  resolve(__dirname, "../../../play/_components/PlayContentTabs.module.css"),
+  "utf-8",
+);
+
 test("7-6: seeAllLink padding is at least 0.6rem vertical to ensure 44px tap target", () => {
   expect(pageCssContent).toMatch(
     /\.seeAllLink\s*\{[^}]*padding:\s*0\.[6-9]rem/,
@@ -467,7 +473,9 @@ test("7-6: seeAllLink padding is at least 0.6rem vertical to ensure 44px tap tar
 });
 
 test("7-6: mobile featuredCardCta has increased padding and font-size", () => {
-  expect(pageCssContent).toMatch(
+  // B-334-4-2: featuredCardCta は PlayContentTabs.module.css へ移送済み
+  // モバイルタップ領域確保（font-size 0.75rem 以上）を PlayContentTabs 側の CSS で検証
+  expect(playTabsCssContent).toMatch(
     /max-width:\s*640px[\s\S]*?\.featuredCardCta[\s\S]*?font-size:\s*0\.7[5-9]rem/,
   );
 });

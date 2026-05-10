@@ -5,7 +5,7 @@
  *
  * Server Component (page.tsx) からデータを受け取り、タブ切り替えと
  * 「もっと見る」展開をクライアントサイドで管理する。
- * カードのスタイルは page.module.css から import し、再利用する。
+ * カードのスタイルは PlayContentTabs.module.css で定義する（B-334-4-2 で page.module.css から分離）。
  */
 
 import { useState } from "react";
@@ -13,8 +13,6 @@ import Link from "next/link";
 import type { PlayContentMeta } from "@/play/types";
 import { getContentPath } from "@/play/paths";
 import { getContrastTextColor } from "@/play/color-utils";
-// カードスタイルは (new)/page.module.css から参照（B-334-4-2 で PlayContentTabs.module.css へ分離予定）
-import cardStyles from "@/app/(new)/page.module.css";
 import styles from "./PlayContentTabs.module.css";
 
 /** タブの定義 */
@@ -135,7 +133,7 @@ export default function PlayContentTabs({
             <li key={content.slug}>
               <Link
                 href={getContentPath(content)}
-                className={cardStyles.featuredCard}
+                className={styles.featuredCard}
                 style={
                   {
                     "--play-accent": content.accentColor,
@@ -146,28 +144,26 @@ export default function PlayContentTabs({
                 }
               >
                 {dailyUpdateSlugs.has(content.slug) && (
-                  <span className={cardStyles.dailyBadge}>毎日更新</span>
+                  <span className={styles.dailyBadge}>毎日更新</span>
                 )}
-                <div className={cardStyles.featuredCardIconWrapper}>
-                  <div className={cardStyles.featuredCardIcon}>
-                    {content.icon}
-                  </div>
+                <div className={styles.featuredCardIconWrapper}>
+                  <div className={styles.featuredCardIcon}>{content.icon}</div>
                 </div>
-                <div className={cardStyles.featuredCardTitleRow}>
-                  <h3 className={cardStyles.featuredCardTitle}>
+                <div className={styles.featuredCardTitleRow}>
+                  <h3 className={styles.featuredCardTitle}>
                     {content.shortTitle ?? content.title}
                   </h3>
                 </div>
-                <p className={cardStyles.featuredCardDescription}>
+                <p className={styles.featuredCardDescription}>
                   {content.shortDescription}
                 </p>
-                <div className={cardStyles.featuredCardMeta}>
+                <div className={styles.featuredCardMeta}>
                   {questionCountBySlug.get(content.slug) !== undefined && (
-                    <span className={cardStyles.featuredCardQuestionCount}>
+                    <span className={styles.featuredCardQuestionCount}>
                       {questionCountBySlug.get(content.slug)}問
                     </span>
                   )}
-                  <span className={cardStyles.featuredCardCta}>
+                  <span className={styles.featuredCardCta}>
                     {getCtaText(content.category)}
                   </span>
                 </div>

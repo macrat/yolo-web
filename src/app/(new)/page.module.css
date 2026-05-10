@@ -1,5 +1,5 @@
 .main {
-  max-width: var(--max-width);
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 1rem 2rem;
   width: 100%;
@@ -195,142 +195,14 @@
   font-size: 1rem;
 }
 
-/* ===== Featured section（まずはここから） ===== */
-/* トップページの初回訪問者向け代表コンテンツ4件セクション */
-.featuredSection {
-  padding: 2.5rem 0 1.5rem;
-  border-top: 1px solid var(--color-border);
-}
-
-/* /play ページのカードデザインと統一: border-top accent + グラデーション背景 */
-/* position: relative は毎日更新バッジの絶対配置の基準として必要 */
-.featuredCard {
-  display: flex;
-  flex-direction: column;
-  /* height: 100% — CSS Grid の li は行内同高になるが a タグが伸びずカード下端が不揃いになるため */
-  height: 100%;
-  position: relative;
-  border-top: 5px solid var(--play-accent);
-  padding: 1.5rem;
-  border-left: 1px solid var(--color-border);
-  border-right: 1px solid var(--color-border);
-  border-bottom: 1px solid var(--color-border);
-  border-radius: 0.75rem;
-  text-decoration: none;
-  color: inherit;
-  /* アクセントカラーの薄いグラデーション背景でカードごとの色合いを差別化 */
-  background: linear-gradient(
-    to bottom,
-    color-mix(in srgb, var(--play-accent) 8%, transparent) 0%,
-    transparent 40%
-  );
-  transition:
-    border-color 0.2s,
-    box-shadow 0.2s,
-    transform 0.2s,
-    background 0.2s;
-}
-
-.featuredCard:hover {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  transform: translateY(-2px);
-  background: linear-gradient(
-    to bottom,
-    color-mix(in srgb, var(--play-accent) 14%, transparent) 0%,
-    transparent 50%
-  );
-}
-
-/* アイコンをaccentColorの薄い背景円でラップ */
-.featuredCardIconWrapper {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background-color: color-mix(in srgb, var(--play-accent) 10%, transparent);
-  border-radius: 50%;
-  width: 4rem;
-  height: 4rem;
-  margin-bottom: 0.75rem;
-  /* テキスト系アイコン（漢字1〜2文字）が背景円からはみ出さないよう font-size を制限 */
-  font-size: 2.25rem;
-  /* 絵文字アイコンが背景円からはみ出さないように制限 */
-  overflow: hidden;
-}
-
-.featuredCardIcon {
-  font-size: 3rem;
-  line-height: 1;
-}
-
-/* タイトルとデイリーバッジを横並びに配置するラッパー */
-.featuredCardTitleRow {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-  margin-bottom: 0.5rem;
-}
-
-.featuredCardTitle {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--color-text);
-  margin-bottom: 0;
-}
-
-/* 毎日更新コンテンツにのみ表示するオレンジ系のピル型バッジ */
-/* カード右上に固定配置することでタイトル長によらず位置を安定させる */
-.dailyBadge {
-  position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
-  font-size: 0.7rem;
-  font-weight: 600;
-  padding: 2px 8px;
-  background-color: #f97316;
-  /* #f97316 背景に白文字はコントラスト比2.80:1でWCAG AA未満のため暗色テキストを使用 */
-  color: #451a03;
-  border-radius: 999px;
-  white-space: nowrap;
-}
-
-.featuredCardDescription {
-  font-size: 0.9rem;
-  color: var(--color-text-muted);
-  line-height: 1.6;
-  flex-grow: 1;
-}
-
-.featuredCardMeta {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: auto;
-  padding-top: 0.75rem;
-}
-
-.featuredCardQuestionCount {
-  font-size: 0.75rem;
-  color: var(--color-text-muted);
-}
-
-.featuredCardCta {
-  font-size: 0.8rem;
-  font-weight: 600;
-  padding: 0.3rem 0.9rem;
-  background-color: var(--play-accent);
-  /* WCAG AA基準を満たすテキスト色をJSで計算したCSS変数で適用。フォールバックは#ffffff */
-  color: var(--play-cta-text, #ffffff);
-  border-radius: 999px;
-}
-
 /* ===== Section ===== */
 .section {
   padding: 2.5rem 0 1.5rem;
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid var(--border);
 }
 
+/* section で使用するセクションタイトルと説明 */
+/* featuredSection（PlayContentTabs wrapper）は page.tsx 内の .section を使用 */
 .sectionTitle {
   font-size: 1.5rem;
   font-weight: 700;
@@ -340,7 +212,7 @@
 
 .sectionDescription {
   text-align: center;
-  color: var(--color-text-muted);
+  color: var(--fg-soft);
   font-size: 0.95rem;
   margin-bottom: 1.5rem;
 }
@@ -352,40 +224,38 @@
   gap: 1rem;
 }
 
+/* 素朴な3行カード（h3 + time + description）— BlogCard は流用しない（PM判断 X10） */
 .blogCard {
   display: block;
   padding: 1.25rem;
-  border: 1px solid var(--color-border);
-  border-radius: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--r-normal);
   text-decoration: none;
   color: inherit;
   transition:
     border-color 0.2s,
-    box-shadow 0.2s,
-    transform 0.2s;
+    box-shadow 0.2s;
 }
 
 .blogCard:hover {
-  border-color: var(--color-primary);
-  box-shadow: 0 2px 12px rgba(37, 99, 235, 0.1);
-  transform: translateY(-2px);
+  border-color: var(--accent);
 }
 
 .blogDate {
   font-size: 0.8rem;
-  color: var(--color-text-muted);
+  color: var(--fg-soft);
 }
 
 .blogTitle {
   font-size: 1.05rem;
   font-weight: 600;
   margin: 0.25rem 0;
-  color: var(--color-text);
+  color: var(--fg);
 }
 
 .blogExcerpt {
   font-size: 0.85rem;
-  color: var(--color-text-muted);
+  color: var(--fg-soft);
   line-height: 1.6;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -405,8 +275,8 @@
   padding: 0.6rem 1.5rem;
   font-size: 0.9rem;
   font-weight: 600;
-  color: var(--color-primary);
-  border: 1px solid var(--color-primary);
+  color: var(--accent);
+  border: 1px solid var(--accent);
   border-radius: 999px;
   text-decoration: none;
   transition:
@@ -415,32 +285,23 @@
 }
 
 .seeAllLink:hover {
-  background-color: var(--color-primary);
-  color: #ffffff;
+  background-color: var(--accent);
+  color: var(--fg-invert);
 }
 
 /* キーボードナビゲーション時のフォーカスリング: 一貫したアクセシビリティを確保 */
-.featuredCard:focus-visible,
 .seeAllLink:focus-visible,
 .blogCard:focus-visible,
 .heroCta:focus-visible,
 .heroFeaturedItem:focus-visible {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
 /* ===== Dark mode ===== */
-/* ダークモード時はヒーローを暗めのグラデーションに */
+/* ダークモード時はヒーローを暗めのグラデーションに（占い・診断パーク: Phase 9.2まで温存） */
 :global(:root.dark) .hero {
   background: linear-gradient(135deg, #3d1e8f 0%, #1e3a8a 40%, #0e6b7a 100%);
-}
-
-:global(:root.dark) .blogCard:hover {
-  box-shadow: 0 2px 12px rgba(96, 165, 250, 0.15);
-}
-
-:global(:root.dark) .featuredCard:hover {
-  box-shadow: 0 4px 16px rgba(255, 255, 255, 0.05);
 }
 
 /* ===== Responsive ===== */
@@ -493,49 +354,10 @@
     font-size: 2rem;
     opacity: 0.15;
   }
-
-  /* モバイル向けカードのコンパクト化 */
-  .featuredCard {
-    padding: 1rem 0.75rem;
-  }
-
-  /* モバイルではdescriptionを非表示にして省スペース化 */
-  .featuredCardDescription {
-    display: none;
-  }
-
-  /* モバイルではアイコンサイズを縮小（ラッパーに収まるよう font-size を調整） */
-  .featuredCardIconWrapper {
-    width: 3rem;
-    height: 3rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .featuredCardIcon {
-    font-size: 2rem;
-  }
-
-  /* モバイルのCTAボタン: コンパクトに調整 */
-  .featuredCardCta {
-    font-size: 0.75rem;
-    padding: 0.3rem 0.75rem;
-  }
-
-  /* モバイルのカードタイトルは最大2行でクランプ */
-  .featuredCardTitle {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
 }
 
-/* 320px以下の極小画面ではカードタイトルおよびセクションタイトルをさらに縮小して折り返しを抑制 */
+/* 320px以下の極小画面ではセクションタイトルをさらに縮小して折り返しを抑制 */
 @media (max-width: 320px) {
-  .featuredCardTitle {
-    font-size: 0.8rem;
-  }
-
   .sectionTitle {
     font-size: 1.25rem;
   }
