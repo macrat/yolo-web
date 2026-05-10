@@ -120,3 +120,19 @@ curl -I http://localhost:3000/path  # HTTP 200 を確認
 ```
 
 出典: cycle-177 (2026-05発見)
+
+---
+
+## 9. Next.js 16 Turbopack デフォルト化と per-route First Load JS 出力欠落
+
+Next.js 16 系（本プロジェクトでは 16.2.4）から `next build` のデフォルトが Turbopack になった。Turbopack ビルドの出力には Webpack のような per-route の "First Load JS Size" カラムが出ない。
+
+**影響**: バンドルサイズ比較を per-route 単位で行う計画（移行前後の First Load JS 差分など）が、デフォルトの `npm run build` では実行不能になる。cycle-185 B-334-4-7 で発覚。
+
+**対処**:
+
+- per-route 単位で比較したい場合は `next build --webpack` で Webpack mode に切り替える（per-route First Load JS Size カラムが復活する）
+- または `next build --experimental-analyze` で Turbopack 互換の bundle analyzer を起動する
+- 比較が必須でない場合は `.next/static/chunks/` 合計サイズなどの粗いメトリクスで代替する
+
+出典: cycle-185
