@@ -11,25 +11,25 @@ completed_at: null
 
 ## 実施する作業
 
-- [ ] **B-334-4-1: ルート移行（`git mv`）と事前確認**
-  - [ ] **事前確認 1（依存 grep）**: 後述「事前確認結果」の 4 点（`@/components/common/*` 直接 import = 0 件 / TrustLevelBadge 使用 = 0 件 / FortunePreview 依存先 / PlayContentTabs 依存先）を builder 自身で再 grep し、PM 記載値と一致することを確認
-  - [ ] **事前確認 2（layout 並べ読み 4 列テーブル）**: `(legacy)/layout.tsx` と `(new)/layout.tsx` の「項目 / legacy / new / 差分メモ」4 列テーブルを `./tmp/cycle-185-layout-diff.md` として作成。観点はメタデータ（`sharedMetadata` の双方適用）/ provider 群（GoogleAnalytics / AchievementProvider / ThemeProvider）/ Header の actions（StreakBadge / ThemeToggle 有無）/ CSS（globals.css / old-globals.css）/ JSON-LD（`generateWebSiteJsonLd` 双方適用）。このテーブルを B-334-4-3 のチェック根拠とする
-  - [ ] `(legacy)/page.tsx` / `page.module.css` / `opengraph-image.tsx` / `twitter-image.tsx` / `__tests__/page.test.tsx` を `(new)/` 配下へ `git mv`
-  - [ ] `(legacy)/_components/FortunePreview.tsx` および `FortunePreview.module.css` を `src/play/fortune/_components/` 配下へ移動（フィーチャ密結合のため）
-  - [ ] `(legacy)/_components/PlayContentTabs.tsx` および `PlayContentTabs.module.css` を `src/play/_components/` 配下へ移動（複数 play コンテンツを束ねるためフィーチャトップ層が自然）
-  - [ ] import パス修正（`(legacy)/page.module.css` への直接依存解除を含む。事前確認で `@/components/common/*` 直接 import が page.tsx 自身には 0 件と確認されたため、当該置換は対象外）
-  - [ ] TrustLevelBadge は事前確認で使用 0 件と確認済み。「対象外」と作業ログに記録
-- [ ] **B-334-4-2: 新デザイン適用（DESIGN.md 準拠の再設計）**
+- [x] **B-334-4-1: ルート移行（`git mv`）と事前確認** （commit `52d99ae4`、reviewer 承認）
+  - [x] **事前確認 1（依存 grep）**: 後述「事前確認結果」の 4 点（`@/components/common/*` 直接 import = 0 件 / TrustLevelBadge 使用 = 0 件 / FortunePreview 依存先 / PlayContentTabs 依存先）を builder 自身で再 grep し、PM 記載値と一致することを確認
+  - [x] **事前確認 2（layout 並べ読み 4 列テーブル）**: `(legacy)/layout.tsx` と `(new)/layout.tsx` の「項目 / legacy / new / 差分メモ」4 列テーブルを `./tmp/cycle-185-layout-diff.md` として作成。観点はメタデータ（`sharedMetadata` の双方適用）/ provider 群（GoogleAnalytics / AchievementProvider / ThemeProvider）/ Header の actions（StreakBadge / ThemeToggle 有無）/ CSS（globals.css / old-globals.css）/ JSON-LD（`generateWebSiteJsonLd` 双方適用）。このテーブルを B-334-4-3 のチェック根拠とする
+  - [x] `(legacy)/page.tsx` / `page.module.css` / `opengraph-image.tsx` / `twitter-image.tsx` / `__tests__/page.test.tsx` を `(new)/` 配下へ `git mv`
+  - [x] `(legacy)/_components/FortunePreview.tsx` および `FortunePreview.module.css` を `src/play/fortune/_components/` 配下へ移動（フィーチャ密結合のため）
+  - [x] `(legacy)/_components/PlayContentTabs.tsx` および `PlayContentTabs.module.css` を `src/play/_components/` 配下へ移動（複数 play コンテンツを束ねるためフィーチャトップ層が自然）
+  - [x] import パス修正（`(legacy)/page.module.css` への直接依存解除を含む。事前確認で `@/components/common/*` 直接 import が page.tsx 自身には 0 件と確認されたため、当該置換は対象外）
+  - [x] TrustLevelBadge は事前確認で使用 0 件と確認済み。「対象外」と作業ログに記録
+- [x] **B-334-4-2: 新デザイン適用（DESIGN.md 準拠の再設計）** （commit `ef4bfc81` + 修正 `6b30cfa2`、reviewer 承認）
   - [ ] 各セクション（Hero / PlayContentTabs / FortunePreview / 開発の舞台裏ブログ）に新トークン・新コンポーネント（Panel など）を適用。Section 4（開発の舞台裏ブログ）は **`BlogCard` を流用しない**（X10 採用。素朴な 3 行カード構造維持）
   - [ ] PlayContentTabs のカードスタイルを `(legacy)/page.module.css` から PlayContentTabs 自身の CSS Module へ分離
   - [ ] **CSS 変数の解決元切替に伴う実体確認**: `(legacy)/layout.tsx` は `old-globals.css`、`(new)/layout.tsx` は `globals.css` を import している。Phase 4.4 移行で `page.module.css` が参照する CSS 変数の解決元が切り替わる。**置換後に参照する `--bg`/`--fg`/`--accent`/`--muted`/`--border` 等の新変数が `globals.css` ですべて定義されていることを実体確認**（不在なら停止して PM に報告）。`old-globals.css` のみで定義されていた変数を新コードが参照すると、ライト/ダークの片方だけで崩れる事故が起き得るため、**ライト/ダーク両方で実体確認**する
   - [ ] CSS Modules の `--color-*` → `--bg`/`--fg`/`--accent` 置換、`:root.dark` → `:global(:root.dark)` 修正
   - [ ] a11y: 44px タップターゲット個別上書き継承、`focus-visible`、コントラスト 4.5:1
   - [ ] **PlayContentTabs のセマンティクス（PM 判断・確定）**: URL 非同期（現行 `useState<TabId>`）を維持し、ARIA tab パターン（`role="tablist"` / `role="tab"` / `aria-selected` / `aria-controls` / `role="tabpanel"` / `aria-labelledby`）を採用する。現行コードが既に当該 ARIA 属性を持っているため、新デザイン適用後も同属性を欠落させないこと。判断根拠は §検討した他の選択肢 X7 を参照
-- [ ] **B-334-4-3: メタデータの整備**
-  - [ ] `(new)/page.tsx` の `metadata` export が機能することを確認（description / openGraph / twitter は旧コンセプト「占い・診断パーク」のまま **触らない**）
-  - [ ] `generateWebSiteJsonLd()` の description（`src/lib/seo.ts`）も Phase 9.2 まで **触らない** ことを確認
-  - [ ] **layout 親メタデータ等価性の実体確認**: B-334-4-1 で作成した並べ読みテーブルに基づき、`(new)/layout.tsx` の親メタデータが `(legacy)/layout.tsx` と OGP / Twitter / canonical 観点で完全等価であることを確認（双方とも `sharedMetadata`（`src/lib/site-metadata.ts`）を `metadata` export に適用していることを実体確認し、テーブルに記録）
+- [x] **B-334-4-3: メタデータの整備** （reviewer 承認、コード変更なし）
+  - [x] `(new)/page.tsx` の `metadata` export が機能することを確認（description / openGraph / twitter は旧コンセプト「占い・診断パーク」のまま **触らない**）→ `(new)/page.tsx` L19-40 で `Metadata` 型注釈付きで宣言、L22 / L26 / L35 の文言は旧コンセプトのまま不変、`npm run build` でルート `/` が `○ (Static)` として正常 prerender 確認済み
+  - [x] `generateWebSiteJsonLd()` の description（`src/lib/seo.ts`）も Phase 9.2 まで **触らない** ことを確認 → `src/lib/seo.ts` L184-185 の description「笑える占い・性格診断がいっぱいの占い・診断パーク。AIが運営する実験サイトで…」が不変、本サイクルの 3 commit (`52d99ae4` / `ef4bfc81` / `6b30cfa2`) で `src/lib/seo.ts` への変更ゼロ
+  - [x] **layout 親メタデータ等価性の実体確認**: `(legacy)/layout.tsx` L10/L12 と `(new)/layout.tsx` L11/L13 の双方が `import { sharedMetadata } from "@/lib/site-metadata"` + `export const metadata: Metadata = sharedMetadata` で完全等価。双方とも `generateWebSiteJsonLd()` を `<script type="application/ld+json">` に注入。OGP / Twitter / canonical / robots / metadataBase 等価性は構造的に保証される。`tmp/cycle-185-layout-diff.md` の 4 列テーブルで根拠記録済み（UI 層差分は等価性に影響なしと明記）
 - [ ] **B-334-4-4: テスト更新**
   - [ ] `(new)/__tests__/page.test.tsx` の import パス・依存コンポーネント参照を新構造へ修正
   - [ ] **CSS 文字列マッチ assertion の意味再表現（壊れたら削除を禁ずる）**: 現行 `__tests__/page.test.tsx` の以下 3 件は `featuredCard*` クラス名や padding 値の文字列マッチに依拠しており、新デザインで class 名が消える / padding 値が変わると意味を失う。新構造で **assertion の意味（44px タップターゲット保証 / dailyBadge 位置 / mobile タップ領域確保）が保持されることを確認し、CSS 文字列マッチではなく `getComputedStyle` または class 存在ではない別の検証方法（例: 要素ロール + 構造的位置関係 / 実測サイズ）で再表現する**こと。「壊れたから削除」は禁止。
