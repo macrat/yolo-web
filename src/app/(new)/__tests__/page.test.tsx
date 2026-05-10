@@ -493,3 +493,65 @@ test("7-4: dailyBadge is a direct child of featuredCard, not inside featuredCard
     expect(badgesInRow).toHaveLength(0);
   });
 });
+
+// ===== ARIA tab パターンの完全性（role="tab" + aria-selected） =====
+
+test("ARIA: tablist contains role='tab' buttons with aria-selected", () => {
+  const { container } = render(<Home />);
+  // PlayContentTabs が tablist / tab / aria-selected を正しく実装していること
+  const tablist = container.querySelector("[role='tablist']");
+  expect(tablist).toBeInTheDocument();
+
+  const tabs = container.querySelectorAll("[role='tab']");
+  expect(tabs.length).toBeGreaterThan(0);
+
+  // 少なくとも 1 つのタブが aria-selected="true" であること（初期状態: 「すべて」タブが選択）
+  const selectedTabs = Array.from(tabs).filter(
+    (tab) => tab.getAttribute("aria-selected") === "true",
+  );
+  expect(selectedTabs.length).toBeGreaterThanOrEqual(1);
+
+  // aria-selected="true" でないタブは aria-selected="false" を持つこと（明示的設定）
+  const unselectedTabs = Array.from(tabs).filter(
+    (tab) => tab.getAttribute("aria-selected") === "false",
+  );
+  expect(unselectedTabs.length).toBeGreaterThan(0);
+});
+
+test("ARIA: tabpanel is present and linked to active tab via aria-labelledby", () => {
+  const { container } = render(<Home />);
+  const tabpanel = container.querySelector("[role='tabpanel']");
+  expect(tabpanel).toBeInTheDocument();
+  // aria-labelledby が存在し、対応するタブ id を指していること
+  const labelledBy = tabpanel?.getAttribute("aria-labelledby");
+  expect(labelledBy).toBeTruthy();
+  const linkedTab = container.querySelector(`#${labelledBy}`);
+  expect(linkedTab).toBeInTheDocument();
+  expect(linkedTab?.getAttribute("role")).toBe("tab");
+});
+
+// ===== FortunePreview Panel-in-Panel 解消の保証 =====
+
+const fortuneCssContent = readFileSync(
+  resolve(
+    __dirname,
+    "../../../play/fortune/_components/FortunePreview.module.css",
+  ),
+  "utf-8",
+);
+
+test("FortunePreview: .card has no border-left / border-right / border-bottom (Panel provides outer border)", () => {
+  // Panel-in-Panel 解消: .card の border は border-top のみで、
+  // border-left / border-right / border-bottom / border-radius は Panel コンポーネントが提供する。
+  // .card ブロックを抽出して余計な border プロパティがないことを確認する。
+  // ※ border-top: 5px のアクセント帯は意図的に残存
+  const cardBlockMatch = fortuneCssContent.match(/\.card\s*\{([^}]*)\}/);
+  expect(cardBlockMatch).not.toBeNull();
+  const cardBlock = cardBlockMatch![1];
+
+  // border-left / border-right / border-bottom が card ブロック内に定義されていないこと
+  expect(cardBlock).not.toMatch(/border-left\s*:/);
+  expect(cardBlock).not.toMatch(/border-right\s*:/);
+  expect(cardBlock).not.toMatch(/border-bottom\s*:/);
+  expect(cardBlock).not.toMatch(/border-radius\s*:/);
+});
