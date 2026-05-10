@@ -100,7 +100,7 @@ const staticPages: Array<{
   {
     path: "/",
     importMeta: () =>
-      import("@/app/(legacy)/page").then((m) => m.metadata as Metadata),
+      import("@/app/(new)/page").then((m) => m.metadata as Metadata),
   },
   {
     path: "/about",
