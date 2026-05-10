@@ -6,7 +6,8 @@ import { expect, describe, test } from "vitest";
 import { readFileSync } from "fs";
 import { resolve } from "path";
 
-const cssPath = resolve(__dirname, "../page.module.css");
+// page.module.css は (new)/ へ移送済み（B-334-4-1）
+const cssPath = resolve(__dirname, "../../(new)/page.module.css");
 const cssContent = readFileSync(cssPath, "utf-8");
 
 describe("ヒーローグラデーション終点色", () => {

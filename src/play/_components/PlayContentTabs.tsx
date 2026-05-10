@@ -13,7 +13,8 @@ import Link from "next/link";
 import type { PlayContentMeta } from "@/play/types";
 import { getContentPath } from "@/play/paths";
 import { getContrastTextColor } from "@/play/color-utils";
-import cardStyles from "../page.module.css";
+// カードスタイルは (new)/page.module.css から参照（B-334-4-2 で PlayContentTabs.module.css へ分離予定）
+import cardStyles from "@/app/(new)/page.module.css";
 import styles from "./PlayContentTabs.module.css";
 
 /** タブの定義 */

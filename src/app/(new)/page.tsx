@@ -12,8 +12,8 @@ import {
 } from "@/play/registry";
 import { getContentPath } from "@/play/paths";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
-import FortunePreview from "./_components/FortunePreview";
-import PlayContentTabs from "./_components/PlayContentTabs";
+import FortunePreview from "@/play/fortune/_components/FortunePreview";
+import PlayContentTabs from "@/play/_components/PlayContentTabs";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
