@@ -545,6 +545,9 @@ test("FortunePreview: .card has no border-left / border-right / border-bottom (P
   // border-left / border-right / border-bottom / border-radius は Panel コンポーネントが提供する。
   // .card ブロックを抽出して余計な border プロパティがないことを確認する。
   // ※ border-top: 5px のアクセント帯は意図的に残存
+  // 注: この regex は `.card { ... }` ブロックがネスト宣言を含まないことを前提とする。
+  // 将来 `.card` 内に `@supports` などのネスト構造が追加されたら本マッチは破綻するため、
+  // 同時に `.card:hover` / `.card:focus-visible` 等の派生ブロックは検証範囲外。
   const cardBlockMatch = fortuneCssContent.match(/\.card\s*\{([^}]*)\}/);
   expect(cardBlockMatch).not.toBeNull();
   const cardBlock = cardBlockMatch![1];
