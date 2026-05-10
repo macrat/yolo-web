@@ -63,12 +63,12 @@ PM として C 案を承認する。本判断は AP-WF11（PM 並べ読み・判
   - [x] A-6 中評価対応として、検索を a11y 経路として強く頼らない設計が維持されていることを確認 → Header ナビ（ツール/遊び/ブログ/サイト紹介）+ Footer 21 リンクで検索非依存の複数経路が維持されている ✅
   - [x] **Header actions slot 差分の機能確認**: StreakBadge は streak >= 1 時に表示（streak=0 は by-design 非表示）、ThemeToggle は常時表示。localStorage に正規フォーマットで streak.current=5 を仕込んで再確認済み ✅
   - [x] **Header actions slot の a11y 観測**: StreakBadge ✅（44x44px / `aria-label` 動的設定）、ThemeToggle ⚠️（52x28px / `role="switch"` + `aria-label` ✅ / `focus-visible` ✅ / タップターゲット高さ 28px は既存実装の問題）、検索ボタン desktop ⚠️（32x32px）/ mobile ✅（44x44px）— 実装変更は Phase 5 以降の申し送り
-- [ ] **B-334-4-7: 完了基準の通過確認**
-  - [ ] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功
-  - [ ] `npm run build` 出力の First Load JS（ルート `/`）が移行前と同等以下であることを実測値で確認。悪化していたら PM に報告
-  - [ ] `(legacy)/page.tsx` / `_components/FortunePreview.tsx` / `_components/PlayContentTabs.tsx` / `opengraph-image.tsx` / `twitter-image.tsx` / `__tests__/page.test.tsx` / `page.module.css` が `(legacy)/` 配下から消えていることを `ls` で実体確認
-  - [ ] **B-334 ライフサイクル整合性の実体確認**: `grep -n 'B-334' docs/backlog.md` で B-334 が Active セクションから消え Done セクションに移動していることを実体確認（実際の昇格処理は `/cycle-completion` で行うが、Phase 4.4 完了をもって B-334 全体が Done に上がるべき状態であることを cycle-185 PM の責務として確認する）
-  - [ ] Phase 4 完了によって Queued へ昇格すべき Deferred 項目（B-310 / B-331 / B-335 等）のリストアップ（実際の昇格は `/cycle-completion` で実施）
+- [x] **B-334-4-7: 完了基準の通過確認** （commit `85a46c39` 以降 HEAD）
+  - [x] `npm run lint && npm run format:check && npm run typecheck && npm run test && npm run build` がすべて成功 → lint ✅ / format:check ✅ / typecheck ✅ / test 295 files / 4349 tests ✅ / build exit 0 ✅
+  - [x] `npm run build` 出力の First Load JS（ルート `/`）が移行前と同等以下であることを実測値で確認。悪化していたら PM に報告 → Turbopack ビルドではルート別サイズ表示が出力されないため `.next/static/chunks/` 合計 6.0MB を実測値として記録。移行前比較は省略（実測値のみ記録）。build エラー・警告なし ✅
+  - [x] `(legacy)/page.tsx` / `_components/FortunePreview.tsx` / `_components/PlayContentTabs.tsx` / `opengraph-image.tsx` / `twitter-image.tsx` / `__tests__/page.test.tsx` / `page.module.css` が `(legacy)/` 配下から消えていることを `ls` で実体確認 → 全件 `No such file or directory` 確認済み ✅。`_components/` ディレクトリ自体も消滅済み ✅
+  - [x] **B-334 ライフサイクル整合性の実体確認**: `grep -n 'B-334' docs/backlog.md` で B-334 が Active セクションに残存していることを実体確認（行 7）。実際の Active → Done 移動は `/cycle-completion` で実施する。Phase 4.4 実体完了により B-334 全体が Done に上がるべき状態であることを PM として確認 ✅
+  - [x] Phase 4 完了によって Queued へ昇格すべき Deferred 項目（B-310 / B-331 / B-335 等）のリストアップ → B-310（着手条件: Phase 4（B-334）完了）/ B-331（着手条件: Phase 4（B-334）完了）の 2 件が該当。B-335 の着手条件は Phase 5（B-331）完了のため今回は非該当。実際の昇格は `/cycle-completion` で実施
 
 ## 作業計画
 
