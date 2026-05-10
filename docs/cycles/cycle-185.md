@@ -30,13 +30,26 @@ completed_at: null
   - [x] `(new)/page.tsx` の `metadata` export が機能することを確認（description / openGraph / twitter は旧コンセプト「占い・診断パーク」のまま **触らない**）→ `(new)/page.tsx` L19-40 で `Metadata` 型注釈付きで宣言、L22 / L26 / L35 の文言は旧コンセプトのまま不変、`npm run build` でルート `/` が `○ (Static)` として正常 prerender 確認済み
   - [x] `generateWebSiteJsonLd()` の description（`src/lib/seo.ts`）も Phase 9.2 まで **触らない** ことを確認 → `src/lib/seo.ts` L184-185 の description「笑える占い・性格診断がいっぱいの占い・診断パーク。AIが運営する実験サイトで…」が不変、本サイクルの 3 commit (`52d99ae4` / `ef4bfc81` / `6b30cfa2`) で `src/lib/seo.ts` への変更ゼロ
   - [x] **layout 親メタデータ等価性の実体確認**: `(legacy)/layout.tsx` L10/L12 と `(new)/layout.tsx` L11/L13 の双方が `import { sharedMetadata } from "@/lib/site-metadata"` + `export const metadata: Metadata = sharedMetadata` で完全等価。双方とも `generateWebSiteJsonLd()` を `<script type="application/ld+json">` に注入。OGP / Twitter / canonical / robots / metadataBase 等価性は構造的に保証される。`tmp/cycle-185-layout-diff.md` の 4 列テーブルで根拠記録済み（UI 層差分は等価性に影響なしと明記）
-- [ ] **B-334-4-4: テスト更新**
-  - [ ] `(new)/__tests__/page.test.tsx` の import パス・依存コンポーネント参照を新構造へ修正
-  - [ ] **CSS 文字列マッチ assertion の意味再表現（壊れたら削除を禁ずる）**: 現行 `__tests__/page.test.tsx` の以下 3 件は `featuredCard*` クラス名や padding 値の文字列マッチに依拠しており、新デザインで class 名が消える / padding 値が変わると意味を失う。新構造で **assertion の意味（44px タップターゲット保証 / dailyBadge 位置 / mobile タップ領域確保）が保持されることを確認し、CSS 文字列マッチではなく `getComputedStyle` または class 存在ではない別の検証方法（例: 要素ロール + 構造的位置関係 / 実測サイズ）で再表現する**こと。「壊れたから削除」は禁止。
-    - 7-4: dailyBadge is a direct child of featuredCard（dailyBadge が featuredCardTitleRow の外、カード直下にあること）
-    - 7-6: seeAllLink padding is at least 0.6rem vertical（44px タップターゲット保証）
-    - 7-6: mobile featuredCardCta has increased padding and font-size（モバイルタップ領域確保）
-  - [ ] 主要 assertion（メタデータ存在 / 各セクションのレンダリング / 空状態 `role="status"` / `aria-current` 系（該当時）/ 44px タップターゲット / `aria-selected` を含む ARIA tab パターン）が機能していることを確認
+- [x] **B-334-4-4: テスト更新** （commit `c0f45ddb`、reviewer 承認 + Blocking 1 件への対応として PM 判断記録を追記）
+  - [x] `(new)/__tests__/page.test.tsx` の import パス・依存コンポーネント参照を新構造へ修正（B-334-4-1 / B-334-4-2 で完了済み、本タスクで再確認）
+  - [x] **CSS 文字列マッチ assertion の意味再表現（壊れたら削除を禁ずる）**: 3 件中 1 件（7-4）は DOM 階層検証に再表現済み。残る 2 件（7-6 系）は **C 案（CSS 文字列マッチ現状維持）を採用** → §PM 判断ログ参照
+    - 7-4: dailyBadge is a direct child of featuredCard → **DOM 階層検証で再表現済み**（`querySelectorAll("[class*='featuredCardTitleRow']")` 内に `[class*='dailyBadge']` が 0 件であることを確認）
+    - 7-6: seeAllLink padding is at least 0.6rem vertical → **C 案採用（CSS 文字列マッチ現状維持）**
+    - 7-6: mobile featuredCardCta has increased padding and font-size → **C 案採用（CSS 文字列マッチ現状維持）**
+  - [x] 主要 assertion（メタデータ存在 / 各セクションのレンダリング / 44px タップターゲット / ARIA tab パターン `role="tablist"` / `role="tab"` / `aria-selected="true"`/`"false"` / `role="tabpanel"` + `aria-labelledby`）が機能していることを確認。`role="status"` 空状態は PlayContentTabs に該当する経路がデフォルト 6 件存在のため対象外
+  - [x] **追加 assertion**: Panel-in-Panel 解消保証（`FortunePreview.module.css` の `.card` ブロックに `border-left/right/bottom/radius` がないこと、`border-top: 5px` のアクセント帯のみ残存）
+
+#### PM 判断ログ（B-334-4-4 reviewer 指摘 Blocking 1 件への対応）
+
+reviewer は計画書 L168-170 が 7-6 系 2 件について「`getComputedStyle` または class 存在以外の検証方法（要素ロール + 構造的位置関係 / 実測サイズ / DOM 階層関係）で再表現」と指示していたのに対し、builder が C 案（CSS 文字列マッチ現状維持）を採用した点を Blocking として指摘した。PM 判断として以下を確定:
+
+- **jsdom 環境制約の実体**: jsdom は CSS Modules を `getComputedStyle` で解決しない（class 名は hash されるため `.seeAllLink` のような固定 selector で値を取れない）。計画書 L169 の「実測検証」は本プロジェクトの test 環境では実装困難。
+- **直接値であることの実体確認**: `(new)/page.module.css` `.seeAllLink` の `padding: 0.6rem 1.5rem`、`PlayContentTabs.module.css` `.featuredCardCta` モバイル用 `font-size: 0.75rem` は **直接値**で書かれており、トークン参照ではない（`var(--space-*)` 等を使っていない）。
+- **「壊れたら削除」防止としての機能**: CSS 文字列マッチでも、padding 値や font-size 値を変える変更は検出される。`0.6rem` の値が `0.4rem` に下げられたり、`font-size: 0.75rem` が削除された場合、test は失敗する。意味としての 44px タップターゲット保証 / mobile タップ領域確保は維持される。
+- **将来トークン化時の再表現申し送り**: もし将来 `padding` や `font-size` が `var(--space-*)` 等のトークン参照に切り替わった場合、CSS 文字列マッチは false negative になる可能性がある。その時点で `getComputedStyle` ベース or DOM 構造ベースの再表現を行う。本サイクルではトークン未化のため C 案で十分と判断。
+
+PM として C 案を承認する。本判断は AP-WF11（PM 並べ読み・判断記録の成果物化）に従い、cycle-185.md に明文化することでトレーサビリティを維持する。
+
 - [ ] **B-334-4-5: 視覚検証（PM 自身が `take-screenshot` skill で実施）**
   - [ ] **必須（AP-WF05 N × 4 ルール準拠）**: ページ全体（縦長スクロール含む） × w360 / w1280 × light / dark = 4 枚を撮影
   - [ ] **推奨（事故防止の追加観点）**: 各セクション（Hero / PlayContentTabs / FortunePreview / 開発の舞台裏ブログ）のファーストビュー時の見た目を確認するため、セクション 4 つを区切って同 4 パターンで撮影（合計 16 枚追加）
