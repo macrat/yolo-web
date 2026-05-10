@@ -19,6 +19,7 @@ import {
   getFortuneSnapshot,
   getFortuneServerSnapshot,
 } from "@/play/fortune/fortuneStore";
+import Panel from "@/components/Panel";
 import StarRating from "@/play/fortune/_components/StarRating";
 import styles from "./FortunePreview.module.css";
 
@@ -38,7 +39,11 @@ export default function FortunePreview() {
   );
 
   return (
-    <section className={styles.section} aria-labelledby="home-fortune-heading">
+    <Panel
+      as="section"
+      aria-labelledby="home-fortune-heading"
+      className={styles.section}
+    >
       {/* セクションヘッダー */}
       <div className={styles.header}>
         <h2 id="home-fortune-heading" className={styles.title}>
@@ -68,6 +73,6 @@ export default function FortunePreview() {
         {/* CTA */}
         <span className={styles.cta}>今日の運勢を見る</span>
       </Link>
-    </section>
+    </Panel>
   );
 }

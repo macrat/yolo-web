@@ -10,6 +10,13 @@ import { resolve } from "path";
 const cssPath = resolve(__dirname, "../../(new)/page.module.css");
 const cssContent = readFileSync(cssPath, "utf-8");
 
+// B-334-4-2: dailyBadge クラスは PlayContentTabs.module.css へ移送済み
+const playTabsCssPath = resolve(
+  __dirname,
+  "../../../play/_components/PlayContentTabs.module.css",
+);
+const playTabsCssContent = readFileSync(playTabsCssPath, "utf-8");
+
 describe("ヒーローグラデーション終点色", () => {
   test("ライトモードのグラデーション終点色が WCAG AA 基準 (4.5:1) を満たす暗いシアンであること", () => {
     // #1bb5c8 は明るすぎて白テキストとのコントラスト比が2.47:1 (WCAG AA 4.5:1必要)
@@ -31,7 +38,10 @@ describe("毎日更新バッジのコントラスト", () => {
   test(".dailyBadge の文字色が暗色 (#451a03) であること", () => {
     // #f97316 背景に白文字 (#ffffff) はコントラスト比2.80:1 (WCAG AA 4.5:1必要)
     // 暗色テキストに変更が必要
-    const dailyBadgeBlock = cssContent.match(/\.dailyBadge\s*\{[^}]+\}/);
+    // B-334-4-2: dailyBadge クラスは PlayContentTabs.module.css へ移送済み
+    const dailyBadgeBlock = playTabsCssContent.match(
+      /\.dailyBadge\s*\{[^}]+\}/,
+    );
     expect(dailyBadgeBlock).not.toBeNull();
     const block = dailyBadgeBlock![0];
     // 白文字 (#ffffff) が使われていないことを確認

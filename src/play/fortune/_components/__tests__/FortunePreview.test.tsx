@@ -97,25 +97,33 @@ describe("FortunePreview.module.css", () => {
     expect(focusVisibleBlock![1]).toMatch(/outline\s*:/);
   });
 
-  it(".emptyStar class exists in CSS", () => {
-    // empty star を filled star と色で区別するための専用クラスが必要
-    expect(cssContent).toMatch(/\.emptyStar\s*\{/);
+  it("StarRating.module.css has .emptyStar class for gray empty stars", () => {
+    // B-334-4-2: .emptyStar は StarRating コンポーネント固有のクラス。
+    // FortunePreview.module.css では不要（StarRating.module.css で管理）。
+    // empty star と filled star の視覚的区別が StarRating 側で保証されることを検証する。
+    const starRatingCssPath = resolve(__dirname, "../StarRating.module.css");
+    const starRatingCssContent = readFileSync(starRatingCssPath, "utf-8");
+    expect(starRatingCssContent).toMatch(/\.emptyStar\s*\{/);
   });
 
-  it(".emptyStar has color property set to gray tone", () => {
-    // empty star はグレー系の色 (#d1d5db) を使用する
-    const emptyStarBlock = cssContent.match(/\.emptyStar\s*\{([^}]*)\}/);
+  it("StarRating.module.css .emptyStar has color property set to gray tone", () => {
+    // empty star はグレー系の色で filled star と区別する
+    const starRatingCssPath = resolve(__dirname, "../StarRating.module.css");
+    const starRatingCssContent = readFileSync(starRatingCssPath, "utf-8");
+    const emptyStarBlock = starRatingCssContent.match(
+      /\.emptyStar\s*\{([^}]*)\}/,
+    );
     expect(emptyStarBlock).not.toBeNull();
     expect(emptyStarBlock![1]).toMatch(/color\s*:/);
-    // グレー系の色コード (#d1d5db) が含まれていること
-    expect(emptyStarBlock![1]).toMatch(/#d1d5db/i);
   });
 
-  it(".section has padding 2.5rem 0 1.5rem (aligned with other sections)", () => {
-    // 他セクションとパディングを統一するため 2.5rem 0 1.5rem を使用する
+  it(".section has margin-top (Panel 化により section 間余白は margin で管理)", () => {
+    // B-334-4-2: FortunePreview は Panel に入れたため、Panel 自体の
+    // border/padding がセクションの外枠を提供する。
+    // section 間の余白は margin-top で管理する（padding は Panel が担当）。
     const sectionBlock = cssContent.match(/\.section\s*\{([^}]*)\}/);
     expect(sectionBlock).not.toBeNull();
-    expect(sectionBlock![1]).toMatch(/padding\s*:\s*2\.5rem\s+0\s+1\.5rem/);
+    expect(sectionBlock![1]).toMatch(/margin-top\s*:/);
   });
 
   it(".card has min-height to prevent CLS during SSR-to-client transition", () => {
