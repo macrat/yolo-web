@@ -57,15 +57,12 @@ PM として C 案を承認する。本判断は AP-WF11（PM 並べ読み・判
   - [x] 移行前後で「同等以上」（コンセプトに沿った改善）を満たしているかを評価 → 視覚差分 7 件（ピル全廃 / 角丸 2 値統一 / Panel-in-Panel 解消 / dark hover 対称化 / Footer トークン適用 / Header actions slot 追加 / バッジ形状統一）を実体観察し、3 軸（魅力度 / シンプルさ / わかりやすさ）すべてで「同等以上」と判定
   - [x] **OGP / Twitter 画像の実機表示確認**: `/opengraph-image-xge9u7` `/twitter-image-xge9u7` ともに 200 OK + 31065 bytes + 画像崩れなしを確認
   - [x] AP-I01 補強の 3 軸（魅力度 / シンプルさ / わかりやすさ）の 1 文評価を作業ログに残す → `tmp/cycle-185-visual-review.md` の §AP-I01 補強の 3 軸評価セクションに記載
-- [ ] **B-334-4-6: a11y 完了基準の確認（WCAG 2.4.5 Multiple Ways）**
-  - [ ] トップへの複数経路（Header ロゴ / Footer / sitemap.xml / 直接 URL）が新デザインで機能していることを確認・記録
-  - [ ] **Footer の `/` リンクの判断軸**: Footer に `/` への明示的 Link が存在するかを確認。存在しない場合は、以下のいずれかを PM 判断として確定する:
-    - (a) Header ロゴクリック / sitemap.xml / 直接 URL の 3 経路で WCAG 2.4.5 Multiple Ways 充足とみなす
-    - (b) Footer に `/` リンクを追加する（追加すると Footer のリンク一覧構造に影響するため、scope creep に注意）
-    - 判断は本サイクル PM が行い、結果をサイクルドキュメントに記録する
-  - [ ] A-6 中評価対応として、検索を a11y 経路として強く頼らない設計が維持されていることを確認
-  - [ ] **Header actions slot 差分の機能確認**: `(new)/layout.tsx` では Header の actions slot に `StreakBadge` / `ThemeToggle` が配置される（`(legacy)/layout.tsx` には actions slot がなく非表示だった）。Phase 4.4 移行で初めてトップに表示されるため、StreakBadge / ThemeToggle が機能していることを確認
-  - [ ] **Header actions slot の a11y 観測**: StreakBadge / ThemeToggle にも 44px タップターゲット / `focus-visible` / コントラスト 4.5:1 が適用されていることを確認
+- [x] **B-334-4-6: a11y 完了基準の確認（WCAG 2.4.5 Multiple Ways）** （commit `TBD`、`tmp/cycle-185-a11y-review.md` に結果記録）
+  - [x] トップへの複数経路（Header ロゴ / Footer / sitemap.xml / 直接 URL）が新デザインで機能していることを確認・記録 → Header ロゴ ✅ / sitemap.xml ✅ / 直接 URL ✅ / Footer `/` リンクは以下参照
+  - [x] **Footer の `/` リンクの判断軸**: Footer に `/` への明示的 Link が存在するかを確認 → **存在しない**（21 リンクすべてを Playwright で実体確認）。PM 判断として **(a) 充足とみなす** を採用：Header ロゴ（慣例的ホームナビ）+ sitemap.xml + 直接 URL の 3 経路で WCAG 2.4.5 を充足とみなす。Footer への追加は scope creep のため不採用。
+  - [x] A-6 中評価対応として、検索を a11y 経路として強く頼らない設計が維持されていることを確認 → Header ナビ（ツール/遊び/ブログ/サイト紹介）+ Footer 21 リンクで検索非依存の複数経路が維持されている ✅
+  - [x] **Header actions slot 差分の機能確認**: StreakBadge は streak >= 1 時に表示（streak=0 は by-design 非表示）、ThemeToggle は常時表示。localStorage に正規フォーマットで streak.current=5 を仕込んで再確認済み ✅
+  - [x] **Header actions slot の a11y 観測**: StreakBadge ✅（44x44px / `aria-label` 動的設定）、ThemeToggle ⚠️（52x28px / `role="switch"` + `aria-label` ✅ / `focus-visible` ✅ / タップターゲット高さ 28px は既存実装の問題）、検索ボタン desktop ⚠️（32x32px）/ mobile ✅（44x44px）— 実装変更は Phase 5 以降の申し送り
 - [ ] **B-334-4-7: 完了基準の通過確認**
   - [ ] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功
   - [ ] `npm run build` 出力の First Load JS（ルート `/`）が移行前と同等以下であることを実測値で確認。悪化していたら PM に報告
