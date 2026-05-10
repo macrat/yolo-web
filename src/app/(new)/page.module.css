@@ -7,14 +7,18 @@
 
 /* ===== Hero ===== */
 /* /play ページのヒーローバナーと視覚的に統一したグラデーション背景 */
+/* Minor-1: border-radius / グラデーション / box-shadow は旧コンセプト（占い・診断パーク）由来の Hero 装飾。
+ * DESIGN.md §6 Do/Don't（グラデーション非推奨）に抵触するが、Phase 9.2（B-336）で
+ * 新コンセプト切替・コピー書き換えと同時に再設計予定のため暫定温存。 */
 .hero {
   text-align: center;
   padding: 3rem 1.5rem 2.5rem;
   /* ヒーローと「まずはここから」セクションの間に十分な余白を確保 */
   margin-bottom: 1.5rem;
-  /* 占い・診断テーマ: 紫→青→シアン系グラデーション */
+  /* 占い・診断テーマ: 紫→青→シアン系グラデーション（Phase 9.2 で再設計予定） */
   /* 終点色 #0a7080: 白テキストとのコントラスト比5.0:1以上を確保するため暗いシアンを使用 (WCAG AA: 4.5:1必要) */
   background: linear-gradient(135deg, #6c3bea 0%, #4466dd 40%, #0a7080 100%);
+  /* border-radius: Phase 9.2 で再設計予定（旧コンセプト由来の Hero 装飾、新トークン体系に未対応） */
   border-radius: 0.75rem;
   /* 装飾絵文字の配置基準 */
   position: relative;
@@ -89,7 +93,8 @@
   z-index: 1;
 }
 
-/* メインCTAボタン */
+/* メインCTA ボタン（Phase 9.2 で再設計予定: box-shadow / transform は旧コンセプト由来の Hero 装飾）
+ * border-radius は Major-1 対応で --r-interactive に統一済み */
 .heroCta {
   display: inline-block;
   padding: 0.75rem 2rem;
@@ -97,7 +102,7 @@
   font-weight: 700;
   color: #4c1d95;
   background-color: #ffffff;
-  border-radius: 999px;
+  border-radius: var(--r-interactive);
   text-decoration: none;
   position: relative;
   z-index: 1;
@@ -105,6 +110,7 @@
     background-color 0.2s,
     transform 0.2s,
     box-shadow 0.2s;
+  /* box-shadow / transform: Phase 9.2 で再設計予定（旧コンセプト由来の Hero 装飾） */
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
   margin-bottom: 1.5rem;
 }
@@ -130,7 +136,7 @@
   z-index: 1;
 }
 
-/* アイコン+タイトルの横並び: 白半透明のピル型リンク */
+/* アイコン+タイトルの横並びリンク */
 .heroFeaturedItem {
   display: inline-flex;
   align-items: center;
@@ -138,7 +144,7 @@
   padding: 0.4rem 0.9rem;
   background-color: rgba(255, 255, 255, 0.18);
   border: 1px solid rgba(255, 255, 255, 0.35);
-  border-radius: 999px;
+  border-radius: var(--r-normal);
   text-decoration: none;
   color: #fff;
   font-size: 0.85rem;
@@ -185,7 +191,7 @@
   padding: 0.4rem 0.9rem;
   background-color: rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 999px;
+  border-radius: var(--r-normal);
   font-size: 0.85rem;
   font-weight: 500;
   color: #fff;
@@ -277,7 +283,7 @@
   font-weight: 600;
   color: var(--accent);
   border: 1px solid var(--accent);
-  border-radius: 999px;
+  border-radius: var(--r-interactive);
   text-decoration: none;
   transition:
     background-color 0.2s,

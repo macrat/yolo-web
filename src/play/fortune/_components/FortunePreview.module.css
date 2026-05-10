@@ -2,10 +2,11 @@
 /* B-334-4-2: Panel 化（PM判断 X9）+ 新トークン適用 */
 /* Panel コンポーネントが background / border / border-radius / padding を提供する */
 
-/* Panel の className として渡す外側スタイル（Panel 自体の padding を無効化） */
-/* section 間の余白は Panel の margin で調整 */
+/* Panel の className として渡す外側スタイル */
+/* section 間の余白は margin で調整（Panel 自体の border が section 境界を表現するため border-top は不要） */
 .section {
-  margin-top: 1.5rem;
+  margin-top: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 /* セクションヘッダー: タイトルとバッジを横並びに配置 */
@@ -33,12 +34,14 @@
   background-color: #f97316;
   /* #f97316 背景に白文字はコントラスト比2.80:1でWCAG AA未満のため暗色テキストを使用 */
   color: #451a03;
-  border-radius: 999px;
+  border-radius: var(--r-normal);
   white-space: nowrap;
   flex-shrink: 0;
 }
 
-/* プレビューカード: fortune accentColor #7c3aed の紫系グラデーション */
+/* プレビューカード: Panel 内コンテンツブロック（Critical-1: Panel-in-Panel 解消）
+ * Panel の border/border-radius は Panel コンポーネントが担当するため削除済み。
+ * 上部 5px アクセント帯のみ残しセクション内のアクセント表現として使用する。 */
 .card {
   display: flex;
   flex-direction: column;
@@ -53,15 +56,12 @@
    *   + CTA(45px) + gap×3(36px) ≈ 236px → 余裕を持ち 14.5rem (232px) を指定。
    */
   min-height: 14.5rem;
-  /* カード上部にアクセントカラーの太いカラー帯 */
+  /* カード上部にアクセントカラーの太いカラー帯（Panel 内セクション区切りアクセント） */
   border-top: 5px solid #7c3aed;
-  border-left: 1px solid var(--border);
-  border-right: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  border-radius: var(--r-normal);
+  /* border-left / border-right / border-bottom / border-radius は Panel コンポーネントが提供 */
   text-decoration: none;
   color: inherit;
-  /* accentColor #7c3aed の 8% グラデーション背景 */
+  /* accentColor #7c3aed の 8% グラデーション背景（旧コンセプト由来: Phase 9.2 で再設計予定） */
   background: linear-gradient(
     to bottom,
     color-mix(in srgb, #7c3aed 8%, transparent) 0%,
@@ -70,9 +70,7 @@
   max-width: 480px;
   margin: 0 auto;
   gap: 0.75rem;
-  transition:
-    box-shadow 0.2s,
-    background 0.2s;
+  transition: background 0.2s;
 }
 
 .card:hover {
@@ -123,7 +121,6 @@
 }
 
 /* ===== Dark mode ===== */
-/* globals.css の CSS 変数がダークモードで自動切替されるため追加の上書きは最小限 */
-:global(:root.dark) .card:hover {
-  box-shadow: 0 4px 16px rgba(255, 255, 255, 0.05);
-}
+/* globals.css の CSS 変数がダークモードで自動切替されるため追加の上書き不要。
+ * Major-2: box-shadow はエレベーション規約（DESIGN.md §5「通常の要素にはエレベーションを使わない」）
+ * に抵触するため light/dark 両モードで削除。hover 表現は gradient 強調のみで統一。 */

@@ -28,9 +28,7 @@
     color-mix(in srgb, var(--play-accent) 8%, transparent) 0%,
     transparent 40%
   );
-  transition:
-    border-color 0.2s,
-    box-shadow 0.2s;
+  transition: background 0.2s;
 }
 
 .featuredCard:hover {
@@ -82,7 +80,7 @@
   margin-bottom: 0;
 }
 
-/* 毎日更新コンテンツにのみ表示するオレンジ系のピル型バッジ */
+/* 毎日更新コンテンツにのみ表示するオレンジ系のバッジ */
 /* カード右上に固定配置することでタイトル長によらず位置を安定させる */
 .dailyBadge {
   position: absolute;
@@ -94,7 +92,7 @@
   background-color: #f97316;
   /* #f97316 背景に白文字はコントラスト比2.80:1でWCAG AA未満のため暗色テキストを使用 */
   color: #451a03;
-  border-radius: 999px;
+  border-radius: var(--r-normal);
   white-space: nowrap;
 }
 
@@ -190,7 +188,7 @@
   display: none;
 }
 
-/* 各タブ: ピル型のボタン */
+/* 各タブ: ボタン */
 .tab {
   display: inline-flex;
   align-items: center;
@@ -198,7 +196,7 @@
   /* min-height: 44px でWCAG 2.5.5タップターゲットを確保 */
   min-height: 44px;
   padding: 0.5rem 1rem;
-  border-radius: 999px;
+  border-radius: var(--r-interactive);
   font-size: 0.9rem;
   font-weight: 500;
   border: none;
@@ -284,7 +282,7 @@
   color: var(--accent);
   background-color: transparent;
   border: 1px solid var(--accent);
-  border-radius: 999px;
+  border-radius: var(--r-interactive);
   cursor: pointer;
   /* min-height: 44px でWCAG 2.5.5タップターゲットを確保 */
   min-height: 44px;
@@ -304,8 +302,6 @@
 }
 
 /* ===== ダークモード ===== */
-/* globals.css の CSS 変数がダークモードで自動切替されるため追加の上書きは不要 */
-/* hover のみ若干強調 */
-:global(:root.dark) .featuredCard:hover {
-  box-shadow: 0 4px 16px rgba(255, 255, 255, 0.05);
-}
+/* globals.css の CSS 変数がダークモードで自動切替されるため追加の上書き不要。
+ * Major-2: box-shadow はエレベーション規約（DESIGN.md §5「通常の要素にはエレベーションを使わない」）
+ * に抵触するため削除。hover 表現は gradient 強調のみで light/dark 対称。 */
