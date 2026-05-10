@@ -1,18 +1,20 @@
 import type { Metadata } from "next";
 import "@/app/globals.css";
-import Header from "@/components/Header";
+// Phase 4.4 暫定対処（cycle-185 / B-334-4-5 reviewer 指摘の致命的 UI 退行への対応 v2）。
+// Phase 4.4 移行で (legacy)/layout.tsx → (new)/layout.tsx の切替えに伴い、
+// ヘッダーから検索ボタンが消失していた（M1b dislikes「慣れた操作手順が突然変わる」に直撃）。
+// 前回 v1（actions スロットへの SearchTrigger 直渡し）は desktop のみ修正で
+// mobile では依然として消失していたため v2 として再修正。
+// HeaderWithSearch が SearchModal の open/close 状態を管理し、onSearchOpen を Header に渡す。
+// これにより Header の mobileSearchButton も自動生成され、desktop + mobile 両対応となる。
+// Phase 5 (B-331) で新検索コンポーネントに置き換える際は HeaderWithSearch ごと削除すること。
+import HeaderWithSearch from "./_components/HeaderWithSearch";
 import Footer from "@/components/Footer";
 import ThemeProvider from "@/components/ThemeProvider";
 import ThemeToggle from "@/components/ThemeToggle";
 import GoogleAnalytics from "@/components/common/GoogleAnalytics";
 import AchievementProvider from "@/lib/achievements/AchievementProvider";
 import StreakBadge from "@/lib/achievements/StreakBadge";
-// Phase 4.4 暫定対処（cycle-185 / B-334-4-5 reviewer 指摘の致命的 UI 退行への対応）。
-// Phase 4.4 移行で (legacy)/layout.tsx → (new)/layout.tsx の切替えに伴い、
-// ヘッダーから検索ボタンが消失していた（M1b dislikes「慣れた操作手順が突然変わる」に直撃）。
-// SearchTrigger は自己完結した Client Component のため、actions スロットに直接追加する形で暫定結線。
-// Phase 5 (B-331) で新検索コンポーネントに置き換えること。
-import SearchTrigger from "@/components/search/SearchTrigger";
 import { generateWebSiteJsonLd, safeJsonLdStringify } from "@/lib/seo";
 import { sharedMetadata } from "@/lib/site-metadata";
 
@@ -40,12 +42,10 @@ export default function NewRootLayout({
         <ThemeProvider>
           <AchievementProvider>
             <GoogleAnalytics />
-            <Header
+            <HeaderWithSearch
               actions={
                 <>
                   <StreakBadge />
-                  {/* SearchTrigger: Phase 4.4 暫定対処。Phase 5 (B-331) で置き換え */}
-                  <SearchTrigger />
                   <ThemeToggle />
                 </>
               }
