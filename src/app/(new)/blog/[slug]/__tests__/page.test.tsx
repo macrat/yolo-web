@@ -49,24 +49,28 @@ describe("blog/[slug]/page", () => {
   describe("element ordering: PlayRecommendBlock outside article, after postNav", () => {
     /**
      * HTMLセマンティクス上、PlayRecommendBlock（play系コンテンツ）は記事の自己完結した
-     * 内容ではないため </article> の外に配置する。
+     * 内容ではないため article の外に配置する。
      * また関連性の優先順位から: 関連記事 > 前/次ナビ > PlayRecommendBlock の順序が望ましい。
      *
      * このテストは page.tsx のソースコードの構造を検証する:
-     * 1. PlayRecommendBlock が </article> の後に現れること
+     * 1. PlayRecommendBlock が本文 article Panel（variant="transparent"）の外に現れること
+     *    cycle-187 T7 で <article> を <Panel as="article" variant="transparent"> に変更したため、
+     *    ソース上の閉じタグは </Panel> になる。article Panel の末尾は <RelatedArticles> の直後。
      * 2. PlayRecommendBlock が postNav の後に現れること
      */
-    it("PlayRecommendBlock appears after </article> closing tag in source", () => {
+    it("PlayRecommendBlock appears after article Panel closing tag in source", () => {
       const pagePath = path.resolve(__dirname, "../page.tsx");
       const source = fs.readFileSync(pagePath, "utf-8");
 
-      const articleCloseIndex = source.lastIndexOf("</article>");
+      // 本文 article Panel の終端は RelatedArticles の後の </Panel>。
+      // RelatedArticles が出現した後のソース部分で PlayRecommendBlock を探す。
+      const relatedArticlesIndex = source.lastIndexOf("<RelatedArticles");
       const playRecommendIndex = source.indexOf("<PlayRecommendBlock");
 
-      expect(articleCloseIndex).toBeGreaterThan(-1);
+      expect(relatedArticlesIndex).toBeGreaterThan(-1);
       expect(playRecommendIndex).toBeGreaterThan(-1);
-      // PlayRecommendBlock は </article> の後に現れる必要がある
-      expect(playRecommendIndex).toBeGreaterThan(articleCloseIndex);
+      // PlayRecommendBlock は RelatedArticles（article 内最後の要素）より後に現れる必要がある
+      expect(playRecommendIndex).toBeGreaterThan(relatedArticlesIndex);
     });
 
     it("PlayRecommendBlock appears after postNav in source", () => {
@@ -82,17 +86,19 @@ describe("blog/[slug]/page", () => {
       expect(playRecommendIndex).toBeGreaterThan(postNavIndex);
     });
 
-    it("RelatedArticles appears before </article> closing tag in source", () => {
+    it("RelatedArticles appears inside article Panel (before postNav) in source", () => {
       const pagePath = path.resolve(__dirname, "../page.tsx");
       const source = fs.readFileSync(pagePath, "utf-8");
 
-      const articleCloseIndex = source.lastIndexOf("</article>");
+      // cycle-187 T7 で <article> を <Panel as="article" variant="transparent"> に変更。
+      // RelatedArticles が postNav より前に現れることで「article 内 → article 外」の順序を保証する。
+      const postNavIndex = source.indexOf("className={styles.postNav}");
       const relatedArticlesIndex = source.lastIndexOf("<RelatedArticles");
 
-      expect(articleCloseIndex).toBeGreaterThan(-1);
+      expect(postNavIndex).toBeGreaterThan(-1);
       expect(relatedArticlesIndex).toBeGreaterThan(-1);
-      // RelatedArticles は </article> の前に現れる必要がある
-      expect(relatedArticlesIndex).toBeLessThan(articleCloseIndex);
+      // RelatedArticles は postNav より前に現れる必要がある
+      expect(relatedArticlesIndex).toBeLessThan(postNavIndex);
     });
   });
 });
