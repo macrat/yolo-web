@@ -12,7 +12,7 @@ completed_at: null
 ## 実施する作業
 
 - [x] /cycle-planning で詳細計画を立案する
-- [ ] 計画レビューを受け、指摘を反映する
+- [x] 計画レビューを受け、指摘を反映する（r1〜r4 で全件反映、r4 で承認獲得 — Critical 0 / 重要 0 / 改善提案 2 件は execution 中に builder 自律修正）
 - [ ] /cycle-execution で実装を実施する（B-335-1 移行前撮影 / B-335-2 git mv + import 差替 / B-335-3 5+1 CSS Module トークン置換 / B-335-4 読み物としての再設計適用 / B-335-5 TrustLevelBadge 撤去 / B-335-6 テスト調整 / B-335-7 視覚・機能検証）
 - [ ] 実装レビューを受け、指摘を解消する
 - [ ] /cycle-completion で完了処理する
