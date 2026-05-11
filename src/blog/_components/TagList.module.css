@@ -6,13 +6,13 @@
 }
 
 .tag {
-  background-color: var(--color-bg-secondary);
+  background-color: var(--bg-soft);
   border-radius: 0.25rem;
 }
 
 .tagLink {
   display: block;
-  color: var(--color-text-muted);
+  color: var(--fg-soft);
   padding: 0.15rem 0.5rem;
   font-size: 0.75rem;
   text-decoration: none;
@@ -23,6 +23,6 @@
 }
 
 .tagLink:hover {
-  background-color: var(--color-accent);
-  color: var(--color-bg);
+  background-color: var(--accent);
+  color: var(--bg);
 }
