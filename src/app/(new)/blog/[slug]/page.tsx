@@ -17,9 +17,8 @@ import {
 } from "@/lib/seo";
 import { BASE_URL } from "@/lib/constants";
 import { formatDate } from "@/lib/date";
-import Breadcrumb from "@/components/common/Breadcrumb";
-import TrustLevelBadge from "@/components/common/TrustLevelBadge";
-import ShareButtons from "@/components/common/ShareButtons";
+import Breadcrumb from "@/components/Breadcrumb";
+import ShareButtons from "@/components/ShareButtons";
 import TableOfContents from "@/blog/_components/TableOfContents";
 import TagList from "@/blog/_components/TagList";
 import SeriesNav from "@/blog/_components/SeriesNav";
@@ -93,7 +92,6 @@ export default async function BlogPostPage({ params }: Props) {
             >
               {CATEGORY_LABELS[post.category]}
             </Link>
-            <TrustLevelBadge level={post.trustLevel} />
             <time dateTime={post.published_at}>
               {formatDate(post.published_at)}
             </time>
