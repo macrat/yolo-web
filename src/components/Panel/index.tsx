@@ -1,7 +1,7 @@
 import type { ComponentPropsWithoutRef, ElementType } from "react";
 import styles from "./Panel.module.css";
 
-type PanelTag = "section" | "div" | "article" | "aside";
+type PanelTag = "section" | "div" | "article" | "aside" | "nav";
 
 interface PanelOwnProps<T extends PanelTag = "section"> {
   /** レンダリングする HTML タグ（デフォルト: "section"） */
@@ -10,6 +10,13 @@ interface PanelOwnProps<T extends PanelTag = "section"> {
   children: React.ReactNode;
   /** 追加クラス */
   className?: string;
+  /**
+   * パネルの表示バリアント。
+   * - "default": 背景・枠線・パディングを持つ標準パネル（デフォルト）。
+   * - "transparent": 背景・枠線・パディングを持たない透明パネル。
+   *   記事本文などコンテンツ自身が縦余白を管理する場合に使う（DESIGN.md §1 適合、cycle-187 D4）。
+   */
+  variant?: "default" | "transparent";
 }
 
 type PanelProps<T extends PanelTag = "section"> = PanelOwnProps<T> &
@@ -25,10 +32,17 @@ function Panel<T extends PanelTag = "section">({
   as,
   children,
   className,
+  variant = "default",
   ...rest
 }: PanelProps<T>) {
   const Tag = (as ?? "section") as ElementType;
-  const combinedClassName = [styles.panel, className].filter(Boolean).join(" ");
+  const combinedClassName = [
+    styles.panel,
+    variant === "transparent" ? styles.transparent : null,
+    className,
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   return (
     <Tag className={combinedClassName} {...rest}>
