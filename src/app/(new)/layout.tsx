@@ -1,14 +1,9 @@
 import type { Metadata } from "next";
 import "@/app/globals.css";
-// Phase 4.4 暫定対処（cycle-185 / B-334-4-5 reviewer 指摘の致命的 UI 退行への対応 v2）。
-// Phase 4.4 移行で (legacy)/layout.tsx → (new)/layout.tsx の切替えに伴い、
-// ヘッダーから検索ボタンが消失していた（M1b dislikes「慣れた操作手順が突然変わる」に直撃）。
-// 前回 v1（actions スロットへの SearchTrigger 直渡し）は desktop のみ修正で
-// mobile では依然として消失していたため v2 として再修正。
-// HeaderWithSearch が SearchModal の open/close 状態を管理し、onSearchOpen を Header に渡す。
-// これにより Header の mobileSearchButton も自動生成され、desktop + mobile 両対応となる。
-// Phase 5 (B-331) で新検索コンポーネントに置き換える際は HeaderWithSearch ごと削除すること。
-import HeaderWithSearch from "./_components/HeaderWithSearch";
+// 検索ボタンは Header に渡される onSearchOpen prop が未設定のため、(new)/ 配下では
+// 表示されない設計（cycle-181 = Phase 4.1 で確立）。検索コンポーネントの結線は
+// Phase 5 = B-331 のスコープであり、本サイクル (cycle-185 = Phase 4.4) では対象外。
+import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ThemeProvider from "@/components/ThemeProvider";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -42,7 +37,7 @@ export default function NewRootLayout({
         <ThemeProvider>
           <AchievementProvider>
             <GoogleAnalytics />
-            <HeaderWithSearch
+            <Header
               actions={
                 <>
                   <StreakBadge />
