@@ -13,8 +13,8 @@ completed_at: null
 
 - [x] /cycle-planning で詳細計画を立案する
 - [x] 計画レビューを受け、指摘を反映する（r1〜r4 で全件反映、r4 で承認獲得 — Critical 0 / 重要 0 / 改善提案 2 件は execution 中に builder 自律修正）
-- [ ] /cycle-execution で実装を実施する（B-335-1 移行前撮影 / B-335-2 git mv + import 差替 / B-335-3 5+1 CSS Module トークン置換 / B-335-4 読み物としての再設計適用 / B-335-5 TrustLevelBadge 撤去 / B-335-6 テスト調整 / B-335-7 視覚・機能検証）
-- [ ] 実装レビューを受け、指摘を解消する
+- [x] /cycle-execution で実装を実施する（T1〜T15 をすべて実施: T1 移行前撮影 28 枚 / T2 前提条件確認 / T4 git mv / T5 import 差替 / T6 6 CSS Module トークン置換 / T7 DESIGN.md 準拠の読み物再設計 + Panel variant 拡張 + globals.css --font-mono 追加 / T8 MobileToc 保持決定 / T9 TrustLevelBadge 撤去 / T10 テスト調整 / T11 移行後撮影 28 枚 + 視覚比較 pass / T12 機能動作 10 項目 pass / T13 残骸ゼロ確認 / T14 lint/format/test/build 全 green (4344 テスト、build 79.258s で 27.5% 短縮) / T15 PM 並べ読み 4 列テーブル）
+- [x] 実装レビューを受け、指摘を解消する（execution reviewer で承認獲得 — Critical 0 / 重要 0 / 改善提案 4 件は cycle-completion で backlog 反映）
 - [ ] /cycle-completion で完了処理する
 
 > サブタスクは下記「### 作業内容」のチェックリストに分解済み。
@@ -584,6 +584,136 @@ r3 レビュー（2026-05-11、本文「## レビュー結果 > ### r3 レビュ
 - ×印のフィールドを「実体確認した」と称することは禁ずる（実体は別の場所＝コード側 / runtime 算出に存在する旨を必ず併記する）。
 
 ## レビュー結果
+
+### execution レビュー（2026-05-11）
+
+**総合判定**: 承認
+
+**Critical（必修正）**: 0 件
+**重要（強く推奨）**: 0 件
+**改善提案（任意）**: 4 件
+
+---
+
+#### 改善提案（任意）
+
+- **S1-exec（before/after スクショの fullPage 設定不一致 — 視覚検証エビデンスとしての厳密性低下）**
+  - 該当: `./tmp/cycle-187/before/*.png` は viewport-only（w1280: 1280×800px、w360: 360×780px）、`./tmp/cycle-187/after/*.png` は **fullPage（w1280 長文記事で 1280×17234px まで）**。`capture.js` L48 は `fullPage: false` だが after 側は別キャプチャで `fullPage: true` 相当となっている（after 側のキャプチャスクリプトは tmp 配下に残っていない）。
+  - 影響: 「同等以上判定」を行うときに 1:1 で並べ読みができない。reviewer / Owner が「before 上部 800px vs after 上部 800px」を比較するには after を都度 viewport サイズに crop する必要があり、評価コストが上がる。**機能影響ゼロ**（28 枚 × 2 = 56 枚すべて存在、`visual-comparison.md` の builder 判定 pass の根拠は維持）。
+  - 推奨: 次サイクル以降は before/after 両方を **同じ fullPage 設定（推奨: 両方 fullPage、長文記事の全体把握ができるため）** で撮影する。本サイクルは Owner / reviewer が必要に応じて crop で対処可能なため承認阻害事項にはしないが、`docs/anti-patterns/workflow.md` または `tmp-directory` ルールに「視覚比較撮影の設定統一」を追記する価値があるか PM が判断。
+  - reviewer 独立検証: `convert after/letter-...__w1280__light.png -crop 1280x800+0+0 /tmp/...` で viewport 相当を切り出し、before と並べ読みした結果、**新デザインは「読み物としての連続性確保 + TrustLevelBadge 撤去による情報密度の最適化 + 透明 Panel による本文没入感」が成立**しており「同等以上」の機能判定は変わらない。
+
+- **S2-exec（Panel `variant="transparent"` の単体テスト未追加 — API 拡張のテスト網羅性）**
+  - 該当: `src/components/Panel/__tests__/` が存在せず、`variant` props 追加 (commit ea3f2f19) に対する単体テストが書かれていない。`page.test.tsx` L52-104 は page.tsx ソース文字列を grep するテストで、`Panel` コンポーネント自体の API（`variant="transparent"` 指定時に `.transparent` クラスが付与されるか）はテストカバレッジ外。
+  - 影響: Phase 7 / 8 で `Panel variant="transparent"` を再利用する際、`Panel.module.css` の `.transparent` クラスが意図せず削除されたり `variant` props の型シグネチャが変更されたりした場合、unit test レベルで検出できない（page.test.tsx は indirect な統合テストとして機能するが、Panel の API 単体の責務を負わない）。**機能影響ゼロ**（4344 件全 pass、`page.test.tsx` で `<Panel as="article" variant="transparent">` の literal 出現を検出可能）。
+  - 推奨: Phase 7 着手時または別 backlog で `src/components/Panel/__tests__/Panel.test.tsx` を追加し、(i) `variant="default"` で `.panel` のみ、(ii) `variant="transparent"` で `.panel` + `.transparent` の両方、(iii) `as` props の HTML タグ反映、(iv) `className` の合成順、を assert する 4 ケースを最低限カバーする。
+
+- **S3-exec（R10 クロス遷移観察の射程縮小 — 実機クリック遷移は未実施で、レンダリング側の互換性確認に置換）**
+  - 該当: `tmp/cycle-187/cross-transition-observation.md` で、計画書 R10 / T11 が要求した「(new) ブログ詳細 → (legacy) dictionary 詳細への遷移視覚断絶観察」について、builder は「**(new) ブログ詳細の `PlayRecommendBlock` のリンク先は `/play/contrarian-fortune`（(new) ルート）であり (new)→(legacy) クロス遷移は発生しなかった**」と報告し、代替として「(legacy) dictionary 詳細の PlayRecommendBlock 自体のレンダリング」を確認している。
+  - 影響: R10 の元の意図（「(new) ブログ詳細 → (legacy) ツール詳細 / dictionary 詳細」のクリック遷移で視覚断絶を実機観察する）は厳密には満たされていない。ただし、計画書 R10 自体が「Phase 7/8 完了までの混在期間中は不可避だが本サイクルで『許容可能な範囲か』を観察記録しておく必要がある」と緩い要件であり、(legacy) 側の `PlayRecommendBlock` 描画確認 + `Header-module__Pzgc7q__*`（legacy）vs `Header-module__ldgnoG__*`（new）のヘッダー hash 差異記録で「視覚断絶は発生するが Phase 7/8 完了で自然解消」という結論は引き出せている。**機能影響ゼロ**（来訪者価値毀損なし、混在期間中の暫定状態として許容範囲）。
+  - 推奨: Phase 7（ツール詳細）着手時に「(new) ブログ詳細 → (legacy) ツール詳細」の実遷移を 1 経路追加観察する。本サイクルでは承認可能。`docs/anti-patterns/workflow.md` 等への記録は不要。
+
+- **S4-exec（D4 設計判断と実装の差分: RelatedArticles / PlayRecommendBlock が明示 Panel に包まれていない）**
+  - 該当: 計画書 D4（L100）は「TOC（デスクトップ）/ 関連記事 / シリーズナビ / 前後ナビ / PlayRecommendBlock は通常の `Panel`（`variant="default"`）に収める（入れ子なし）」と確定している。実装 `page.tsx` を確認すると、**TOC sidebar（L133 `<Panel as="aside">`）、前後ナビ（L160 `<Panel as="nav">`）は Panel で包まれている**が、**`RelatedArticles`（L156）と `PlayRecommendBlock`（L181-185）は Panel で包まれていない**。`cross-check.md` L18 で builder 自身が「RelatedArticles と PlayRecommendBlock が Panel に明示的に包まれていない」と認識し、「RelatedArticles は内部で独自の枠を持ち実質的に Panel 等価」「Phase 7 で Panel API への寄せが行われたら統一する」と運用判断している。
+  - 影響: DESIGN.md §1「すべてのコンテンツはパネルに収まった形で提供される」の解釈上、**現状の実装は「論理的に Panel 等価」だが「コードレベルでは Panel コンポーネントを使っていない」状態**にある。`RelatedArticles.module.css` を確認すると `.section` は border-top のみで囲い箱を持たないため、実質的には「**Panel ではなく区切り線で示すセクション**」になっている。これは D4 の planner 確定（「Panel に収める」）と乖離しているが、視覚的には「**整いすぎ回避 (M-α dislikes)**」の点ではむしろ望ましく、Phase 7 でまとめて Panel API への統一を検討する選択肢は残っている。**機能影響ゼロ**（T11 視覚検証 28 枚 pass、来訪者体験は良好）。
+  - 推奨: 以下 2 案のいずれかを PM が判断:
+    - **案 (1)**: 現状を承認し、本サイクル完了とする（理由: T11 視覚 pass / M-α 整いすぎ回避 / Phase 7 で Panel API 統一の機会あり / RelatedArticles の境界線 + PlayRecommendBlock の独自背景は実質 Panel と区別がつかない）。
+    - **案 (2)**: D4 の確定どおりに `RelatedArticles` と `PlayRecommendBlock` を `<Panel>` で明示的にラップする追加 commit を打つ（理由: 計画書との 100% 一致、Phase 7 への申し送り削減）。
+  - reviewer は **案 (1) を推奨**: D4 の planner 意図は「§1 解釈を満たす」ことで、視覚的に Panel 等価な現状は §1 を実質的に満たしている。コード上の `<Panel>` ラップ強制は M-α の「整いすぎ」を増やすリスクが高く、来訪者価値の観点で逆効果になり得る。
+
+---
+
+#### 問題なし項目（レビュー観点ごとの根拠）
+
+**観点 1（来訪者価値の達成 — M-α / M-β / M-γ）**:
+
+- **M-α「整いすぎ回避」**: reviewer が `tmp/cycle-187/after/letter-from-an-ai-that-cant-see-the-future__w1280__light.png` を viewport (1280×800) に crop して並べ読みした結果、**本文は透明 Panel で包まれており境界線・背景がなく、本文プロースの没入感は確保されている**。一方、SeriesNav・TOC sidebar・前後ナビは Panel default で包まれているため「カードに閉じ込められている」感じは出ていない。S4-exec で指摘した RelatedArticles / PlayRecommendBlock の Panel 未明示も、結果的に「整いすぎ回避」と整合している。**達成**。
+- **M-β「自分のプロジェクトに取り入れたい」**: `page.module.css` L212-224 でコードブロックが `--bg-soft` 背景 / `--border` ボーダー / `var(--font-mono)` (Menlo 系) / 横スクロール / 行高 1.5 で実装され、`(legacy)/dictionary` 側と同一の `--font-mono` 値（D2 Critical-B 対応）でコード等幅フォントが分裂しない。**達成**。
+- **M-γ「試行錯誤の連続性」**: SeriesNav（L114-120）、RelatedArticles（L156）、前後ナビ（L160-179）、PlayRecommendBlock（L181-185）すべて移行後も維持。`t12-evidence.md` T12-7 で実機クリック遷移確認済み。`t11-results.md` で記事 5（シリーズ記事）の動作 pass を視覚確認。**達成**。
+- **一覧 → 詳細の連続性**: cycle-183 で確立した一覧の新デザイントークン（`--fg` / `--accent` / `--bg-soft` / `--border` / `--r-normal`）を本サイクルでも採用、`RelatedArticles` で `BlogCard` を再利用しており視覚連続性は担保されている（cross-check.md L26）。**達成**。
+
+**観点 2（計画通りの実装 — D1〜D7 / T1〜T15 / 完了基準 10 項目）**:
+
+- **D1（720px / 1200px 二段構成）**: `page.module.css` L13-17 `.container { max-width: 1200px }` + L30 `.header { max-width: 720px }` + L150 `.content { max-width: 720px }` + L222-223 `.content pre { margin-left: calc(-1 * max(0px, (100vw - 720px) / 2 - 1rem)); max-width: min(100vw - 2rem, 1100px); }` で本文 720px / 広幅突き抜けの設計が実装されている。**達成**。
+- **D2（globals.css に `--font-mono` 追加）**: `src/app/globals.css` L51（reviewer が grep 確認）で `--font-mono: "Menlo", "Consolas", "Liberation Mono", "Courier New", monospace;` が `old-globals.css` L16 と同一値で追加済み。コメントで cycle-187 D2 / B-337 申し送りも明示。**達成**。
+- **D3（TOC sticky + モバイル details）**: `page.tsx` L122-128 モバイル `<details>`、L130-141 デスクトップ `<Panel as="aside" className={styles.sidebar}>`、`page.module.css` L124-131 `.sidebar { position: sticky; top: 1rem; }` + L364-378 `@media (min-width: 900px)` で切替実装。スクロール連動アクティブ状態は未実装維持（survey 通り別 backlog）。**達成**。
+- **D4（透明 Panel + Panel variant API 拡張）**: `Panel/index.tsx` L19 で `variant?: "default" | "transparent"` 追加、L41 で `variant === "transparent" ? styles.transparent : null` のクラス合成。`Panel.module.css` L12-16 `.transparent { padding: 0; background: transparent; border: none; }` で確定値どおり。`page.tsx` L90 で `<Panel as="article" variant="transparent" className={styles.article}>` 適用。**達成**（S4-exec で改善余地は記載）。
+- **D5（PlayRecommendBlock fallback 構文）**: `src/play/_components/PlayRecommendBlock.module.css` 全行 reviewer 確認、L9 / L19 / L24 / L44 / L51 / L70 / L76 / L81 / L88 すべて `var(--new, var(--old))` 形式の fallback で記述。`grep -n "var(--color-" PlayRecommendBlock.module.css` で fallback 内のみに出現（=正しい使用）。`t12-evidence.md` T12-8 で legacy dictionary 側 `/dictionary/yoji/七転八起` で視覚崩れなし実機確認。**達成**。
+- **D6（シンタックスハイライト見送り、最低限可読性）**: `page.module.css` L212-231 で背景・border・横スクロール・等幅フォント・行高 1.5 の最低限再設計済み。shiki 等の導入なし（バンドルサイズ増回避）。**達成**。
+- **D7（TagList 現状維持）**: `page.tsx` L110-111 で `<TagList tags={post.tags} linkableTags={linkableTags} />` 維持、TODO コメントで B-389 への申し送りを明示。`TagList.module.css` は新トークン化のみ（reviewer 確認、`var(--bg-soft) / var(--fg-soft) / var(--accent) / var(--bg)` のみ）。**達成**。
+- **T1〜T15 各タスク**: T1 / T2 / T4 / T5 / T6 / T7 / T8 / T9 / T10 / T11 / T12 / T13 / T14 / T15 のチェックリストは計画書 L41-225 で完了基準に応じて [x] 化されており、エビデンスは `./tmp/cycle-187/` 配下にすべて保存。T3 は計画書本文の D1〜D7 確定で実施済み。**達成**。
+- **完了基準 18 項目（L457-476）**:
+  - L457 (60 記事 SSG): `build-routes-count.txt` で `[+57 more paths]` = 60 件確認 → 達成
+  - L458 (既存機能 10 種維持): t12-evidence.md T12-1〜T12-10 すべて pass → 達成
+  - L459 (legacy 詳細削除): `ls (legacy)/blog/[slug]/` → 存在せず → 達成
+  - L460 (旧トークン残存ゼロ): reviewer が `grep -rn "\-\-color\-\|\-\-max\-width" src/blog/_components src/play/_components/PlayRecommendBlock.module.css "src/app/(new)/blog/[slug]"` 実行 → PlayRecommendBlock の fallback 内のみ出現（= 計画通り） → 達成
+  - L461 (TrustLevelBadge 撤去): `grep -rn "trustLevel\|TrustLevelBadge" "src/app/(new)/blog/[slug]/"` → 0 件 → 達成
+  - L462 (lint / format / test / build all green): `t14-results.md` で全 pass、4344 件 test pass → 達成
+  - L463 (28 枚スクショ): before 28 + after 28 = 56 枚保存 → 達成（S1-exec は fullPage 設定不一致を改善提案）
+  - L464 (OGP/Twitter 1200×630): `t12-evidence.md` T12-3 で production 200 + 1200×630 確認 → 達成
+  - L465 (legacy 視覚崩れなし): T12-8 で実機確認 → 達成
+  - L466 (PM 並べ読み 4 列): `cross-check.md` 36 行 + 結論で存在 → 達成
+  - L467 (build 1.5 倍以下): 0.724 倍（短縮） → 達成
+  - L468 (generateStaticParams 60): `build-routes-count.txt` 確認 → 達成
+  - L469 (--success カラー視認): `share-buttons-after-copy.png` 存在 + T12-6 で copiedMessage opacity 1 確認 → 達成
+  - L470 (globals.css --font-mono 1 行追加): reviewer grep 確認 → 達成
+  - L471 (本文 article 透明 Panel): `page.tsx` L90 → 達成
+  - L472 (Panel variant + .transparent 追加): `index.tsx` L19 / L41 + `Panel.module.css` L12-16 → 達成
+  - L473 (PlayRecommendBlock fallback): reviewer 全 9 箇所確認 → 達成
+  - L474 (短文記事 main 中央寄せ / Footer 浮きなし): `visual-comparison.md` T11-3 で確認、`viewport-check-letter-w1280-light.png` 存在 → 達成
+  - L475 (クロス遷移観察記録): `cross-transition-observation.md` 存在 → 達成（S3-exec で射程縮小を改善提案）
+  - L476 (TagList linkableTags フィルタ補助記事観察): `visual-comparison.md` 補助記事 pass + T12-10 で実機確認 → 達成
+
+**観点 3（機能毀損ゼロ — survey 棚卸し全機能 + t12-evidence.md + cross-check.md 並べ読み）**:
+
+- Article JSON-LD / Breadcrumb JSON-LD / OGP / Twitter / Mermaid / GFM Alert / シェア / 関連記事 / シリーズナビ / 前後ナビ / PlayRecommendBlock / TOC / カテゴリ / タグ / 公開日・更新日・読了時間 / SSG 60 件 — すべて t12-evidence.md T12-1〜T12-10 で実機確認 pass。cross-check.md L22-38 の 17 項目すべて「OK」判定。reviewer が `page.tsx` を全行 Read して 18 既存機能が JSX に存在することを並列確認。**機能毀損ゼロ**。
+
+**観点 4（アンチパターン抵触チェック — AP-I07 / I08 / I09 / WF03 / WF04 / WF09 等）**:
+
+- **AP-I07 / I08 / I09**: 計画書 L396-411 の planner 抵触チェックを reviewer が独立に再確認。`(new)/layout.tsx` は本サイクルで変更されていない（diff stat 17 ファイルに含まれず）。fixed オーバーレイ追加なし（page.tsx 全行 reviewer 確認）。jsdom 限界に依存する CSS スタッキング検証なし（T11 視覚検証 + T12 production 実機検証で担保）。**抵触なし**。
+- **AP-WF03（builder 過剰具体指示）**: D4 / D5 / D6 すべて「PM 確定」と「builder 委譲範囲」が明示分離されており、本実装は `Panel.module.css` の `.transparent { padding: 0; }`（PM 確定）と `page.tsx` の `<Panel as="article" variant="transparent">` 配置（builder 判断）の役割分担が成立。**抵触なし**。
+- **AP-WF04（構造的変更の grep 検証）**: T6 末尾の `grep -rn "\-\-color\-\|\-\-max\-width" src/blog src/play src/app/(new)/blog` を reviewer が再実行 → PlayRecommendBlock fallback 内のみ（計画通り）。T9 撤去後の `grep -rn "trustLevel\|TrustLevelBadge" "src/app/(new)/blog/[slug]/"` → 0 件。T13 の legacy 残骸 grep も `(legacy)/blog/[slug]/` 不在で確認。**抵触なし**。
+- **AP-WF09（チェック対象の恣意的絞り込み）**: 計画書末尾の「6 slug + 補助 1 件 frontmatter 全フィールド対照表」が r3 で追加され、本実装でも frontmatter 由来の事故（過去 3 サイクル連続）は再発していない。`page.tsx` で `post.trustLevel` 参照は完全に削除（コード側は B-337 申し送り通り残置）。**抵触なし**。
+- **AP-WF15（同/別サイクル判断）**: TrustLevelBadge の `blog.ts` ハードコード残置を Phase 10.2 申し送りにする判断は、計画書 T9 採用案 (a) で 3 案ゼロベース列挙のうえ PM 確定、`cross-check.md` L31 でも「`blog.ts` の hardcode は B-337 申し送り（計画通り）」と明示。cycle-185 のスコープ越境事故と同型を避ける規律として一貫。**抵触なし**。
+
+**観点 5（テスト品質）**:
+
+- `__tests__/page.test.tsx` (104 行) は T7 構造変更後に **更新済み**（commit b9c7e96c T7-d）。L56-57 / L93 のコメントが「`<Panel as="article" variant="transparent">` への変更」を明示反映。L67 で `<RelatedArticles` の lastIndexOf を取り L73 で `playRecommendIndex > relatedArticlesIndex`、L80 / L86 で `postNav` 後の PlayRecommendBlock 配置を assert。**T7 構造変更に追随済み**。
+- 4344 件全 pass（t14-results.md）。Panel `variant` API 単体テストの追加は S2-exec で改善提案（機能影響ゼロ、page.test.tsx で indirect カバー）。
+
+**観点 6（side-effect の検証 — eslint.config.mjs `tmp/**` 追加 / scope creep）\*\*:
+
+- `eslint.config.mjs` の変更は 1 行差分（`globalIgnores` に `"tmp/**"` 追加、commit 6f624f95）。commit メッセージで「tmp/ の .js スクリプトが lint 対象外になるよう修正」と明記。本サイクルで `tmp/cycle-187/capture.js`（Playwright 撮影スクリプト）を作成したため、`tmp/**` を lint 対象から除外する変更は **本サイクル必須の修正**（capture.js が lint 違反になり T14 の `npm run lint` が fail する）。
+- 妥当性: `.claude/rules/tmp-directory.md` の「`./tmp/` は一時ファイルでコミット対象外」原則と整合（lint は git tracked のみ対象であるべき）。**scope creep ではなく合理的な側面修正**。
+- 他の差分は cycle-187 スコープ内（page.tsx / page.module.css / Panel / globals.css / CSS Module 6 ファイル / seo-coverage.test.ts のパス修正 / cycle-187.md ドキュメント）。git diff stat 17 ファイル reviewer 確認、**スコープ外の混入なし**。
+
+**観点 7（cycle-185 と同型のスコープ越境がないか / M-α 整いすぎリスク）**:
+
+- **スコープ越境チェック**: T9 で TrustLevelBadge コンポーネント本体 / `blog.ts` ハードコード / テスト 7 件は計画通り残置、B-337 申し送り 5 項目を明示。`src/blog/_lib/blog.ts` には触っていない（diff stat に含まれず）。cycle-185 の検索結線越境と同型の事故は **再発していない**。
+- **M-α 整いすぎリスク**: 本文 `<article>` は透明 Panel で境界線なし、本文プロースは 720px 行幅で読み物として最適、TOC・SeriesNav・前後ナビは Panel default だが視覚的に「カードに閉じ込められている」感じは出ていない（reviewer が viewport crop で確認）。**M-α dislikes「整いすぎ」回避は成立**。
+
+---
+
+#### 判定根拠
+
+- 計画書 D1〜D7 / 完了基準 18 項目 / T1〜T15 / R1〜R10 / AP 抵触チェックすべて reviewer が独立に実体ファイル（`page.tsx` / `page.module.css` / `Panel/index.tsx` / `Panel.module.css` / `globals.css` / 5 CSS Module / `PlayRecommendBlock.module.css` / `__tests__/page.test.tsx` / build / grep / `tmp/cycle-187/` 配下のエビデンス）で再検証し、**Critical 0 件 / 重要 0 件**。
+- 改善提案 S1-exec / S2-exec / S3-exec / S4-exec はいずれも **機能影響ゼロ + 来訪者価値毀損ゼロ**で、本サイクル承認阻害事項にはならない。S1-exec（fullPage 設定不一致）と S2-exec（Panel unit test）は次サイクル以降の改善余地、S3-exec（クロス遷移射程縮小）は Phase 7 で自然解消、S4-exec（RelatedArticles / PlayRecommendBlock の Panel 未明示）は M-α 整いすぎ回避との両立を考えれば現状実装の方が来訪者価値が高い可能性が高い。
+- 視覚検証（28 枚 before/after + viewport crop での並べ読み）で「**読み物としての連続性確保 + TrustLevelBadge 撤去による情報密度の最適化 + 透明 Panel による本文没入感 + GFM Alert / Mermaid / シリーズナビ / 前後ナビ / PlayRecommendBlock の機能維持**」を reviewer が直接確認。来訪者価値は M-α / M-β / M-γ いずれに対しても向上または維持。
+- 機能毀損ゼロ、計画通り実装、アンチパターン抵触なし、来訪者価値達成のすべてが成立しているため **承認**。
+
+---
+
+#### PM への指示
+
+1. 計画通りの実装が完了したため、`/cycle-completion` への移行を承認する。
+2. 改善提案 S1-exec / S2-exec / S3-exec / S4-exec は **本サイクル内での修正は不要**（来訪者価値への影響なし）。ただし以下を backlog または anti-patterns に記録すること:
+   - S1-exec → `docs/anti-patterns/workflow.md` または `tmp-directory.md` に「視覚比較撮影は before/after で同じ fullPage 設定を使う」を追記するか、PM 判断。
+   - S2-exec → backlog に「Panel コンポーネントの単体テスト追加（variant API カバレッジ）」として記録、Phase 7 着手前に対応するか別 backlog 化。
+   - S3-exec → Phase 7（ツール詳細移行）で「(new) ブログ詳細 → (legacy) ツール詳細」の実遷移 1 経路を追加観察するよう Phase 7 計画書に申し送り。
+   - S4-exec → Phase 7 で `RelatedArticles` / `PlayRecommendBlock` の Panel 明示ラップを行うか、現状のまま維持するかを PM が判断（reviewer 推奨は案 (1) = 現状維持）。
+3. cycle-completion 時に backlog 反映を実施したうえで `/cycle-completion` スキルを実行する。
+
+---
 
 ### r4 レビュー（2026-05-11）
 
