@@ -39,8 +39,9 @@ src/app/
   - 候補（**二択**）: ① 新デザインに横断検索を作る（Phase 5 で実装）/ ② 新デザインに横断検索を作らない（Phase 5 をスキップ）
   - ツール内・遊び内の絞り込みは Phase 4 の通常スコープで必須実装され、本判断とは独立
   - 判断結果が Phase 5（① のとき新 search 実装）の着手要否を決める。Phase 4 の一覧設計は本判断とは独立に進められる
-  - **判断結果**: ① 新デザインに横断検索を作る（Phase 5 = B-331 を実施）
-  - **要旨**: 横断検索のメリット 6 項目が実在し、検証可能な実在のデメリットがゼロのため作る。メリット 6（SearchAction による Google サイトリンク検索ボックス）は独立ページ実装が前提の条件付き便益
+  - **判断結果（2026-05-01 cycle-174 / 2026-05-11 cycle-186 で再判断）**: ② 新デザインに横断検索を作らない（Phase 5 = B-331 をスキップ、(legacy) の横断検索は Phase 10.2 で自然消滅）
+  - **要旨**: cycle-174 では当初 ① 採用と確定したが、cycle-186 中に PM が一次資料（`https://developers.google.com/search/blog/2024/10/sitelinks-search-box`）を WebFetch で確認した結果、cycle-174 ① 採用根拠の中位メリット A-13（SearchAction による Google sitelinks searchbox SEO 便益）が **2024-11-21 に Google により正式廃止** されていることが判明。cycle-174 ① 採用は A-13 を含む 6 項目の中項目総和で成立していたが、A-13 を除いた残 5 項目（A-7 / A-4 / A-5 / A-1-2 / A-6）はいずれも cycle-174 本文自身が「中項目で別手段による代替可能性あり」と認める弱点を持つ。一方サイトデザイン切替（Phase 6/7/8/9/10.2）は全来訪者・全ページ訪問に直接効くため、CLAUDE.md L9 Decision Making Principle「If the better UX option is achievable, it must be chosen」に従い ② 転換を確定。なお A-13（SearchAction による Google サイトリンク検索ボックス）は 2024-11-21 廃止により実在しない便益であった（「独立ページ実装が前提の条件付き便益」との旧記述は廃止済み便益を前提としているため無効）。
+  - **詳細**: cycle-174.md（① 採用根拠と廃止判明後の撤回追記）/ cycle-186.md（② 転換の判断構造）
   - **参照**: 判断の詳細と経緯（cycle-172 / cycle-173 の失敗認定を含む）は `docs/cycles/cycle-174.md`「### 判断」セクション参照。失敗認定の詳細は `docs/cycles/cycle-172.md` / `docs/cycles/cycle-173.md` 参照
 
 - **1.2** 既存コンテンツ整理の方針確定（B-315 連動）
@@ -50,7 +51,7 @@ src/app/
   - データ資産の活用案（漢字検索ツール / 四字熟語検索ツール 等のインタラクティブツール化）は別 backlog として後付け検討（移行完了後に独立した機能追加として扱う）
   - **判断結果（cycle-172, 2026-04-30）**: 当初は 19 単位を判断（移行 8 / 削除 11 / 保留 0）したが、kanji-kanaru 連動の事実誤認、yoji→kanji 内部リンク未検討、ツール化選択肢の欠落により失敗認定。詳細は `docs/cycles/cycle-172.md`「失敗サイクル認定」セクション参照。
 
-**完了基準**: 1.1 は ① 採用（横断検索を作る）が確定済み（cycle-174 / B-332）。1.2 は「全移行 + cheatsheets ブログ化」方針が確定済み（本セクション）であり、Phase 8（B-338）の実施スコープに引き継がれる。
+**完了基準**: 1.1 は ② 採用（横断検索を作らない）が確定済み（cycle-174 で当初 ① を確定し、cycle-186 で ② に再判断）。1.2 は「全移行 + cheatsheets ブログ化」方針が確定済み（本セクション）であり、Phase 8（B-338）の実施スコープに引き継がれる。
 
 ### Phase 2: 道具箱の基盤整備（来訪者向け非公開、概念定義 + 型契約のみ）
 
@@ -112,16 +113,18 @@ src/app/
 - **4.3** ブログ一覧：`/blog`、`/blog/page/[page]`、`/blog/category/[category]`、`/blog/tag/[tag]`
 - **4.4** トップ：`/`
 
-① 採用のため、各リスト内絞り込み（4.1 ツール / 4.2 遊び / 4.3 ブログ / 4.4 トップ）は Phase 4 で実装し、横断検索 UI 結線は Phase 5（B-331）で実装する。
+② 採用（cycle-186 で再判断）のため、各リスト内絞り込み（4.1 ツール / 4.2 遊び / 4.3 ブログ / 4.4 トップ）は Phase 4 で実装済み（cycle-181〜185 で完了）。横断検索 UI 結線は **実施しない**（cycle-186 で Phase 5 = B-331 をスキップ確定）。Phase 4 で用意した Header の actions スロット / 検索アイコン枠 / Cmd+K 受け口は、(new) Route Group では未結線のまま Phase 10.2 まで維持される。Phase 10.2 で (legacy) 全廃と一体で旧 SearchModal/SearchTrigger も撤去され、横断検索機能はサイトから自然消滅する。
 
 トップ（4.4）は現行のトップ内容を新デザインに移行する。Phase 2.1 で「URL=トップ」を採用した場合は Phase 9.2 でこれを道具箱に置き換える。それまではトップは現行内容のまま動く。
 
-**Phase 5 着手の前提として Phase 4 のヘッダー設計に含める要素**:
+**Phase 5 着手の前提として Phase 4 のヘッダー設計に含める要素**（cycle-181〜185 完了時点の設計記録）:
 
 - 新ヘッダーの actions スロットでの検索トリガー（アイコン）配置構造
 - モバイル Header での検索アイコン枠（1 枠分、44px）
 - Cmd+K / Ctrl+K キーバインドの受け口
-- これらは Phase 4 で構造のみ用意し、実際の検索 UI との結線は Phase 5 で実施
+- これらは Phase 4 で構造のみ用意し、実際の検索 UI との結線は Phase 5 で実施する予定だった
+
+**2026-05-11 cycle-186 で ② 転換により Phase 5 着手不要となったため**、上記 actions スロット / 検索アイコン枠 / Cmd+K 受け口は未結線のまま Phase 10.2 まで維持される。Phase 5 結線責務は消滅し、Phase 10.2 で (legacy) Route Group 全廃と一体で旧 search 群ごと撤去される。
 
 **a11y 配慮の責務（A-6 を Phase 4 担当が引き継ぐ）**:
 
@@ -129,25 +132,17 @@ src/app/
 - グローバルナビ / 一覧 / サイトマップ / タグで複数経路（WCAG 2.4.5 Multiple Ways）を Phase 4 標準スコープを超えて丁寧に作る責務を Phase 4 担当が負う
 - 横断検索に依存しない複数経路を整備すること（`aria-current`、focus-visible、コントラスト 4.5:1、タップターゲット 44px を含む）
 
-**完了基準**: 4 つの主要セクションが `(new)/` 配下で動作し、Header / Footer の動線が新版に統一される。リンク先（記事詳細、ツール詳細など）は移行済みの新ページ or 未移行の legacy ページのいずれでも崩れない。ヘッダーに検索トリガーアイコン枠と Cmd+K 受け口が実装されている（結線は Phase 5）。
+**完了基準**: 4 つの主要セクションが `(new)/` 配下で動作し、Header / Footer の動線が新版に統一される（cycle-181〜185 で達成済み）。リンク先（記事詳細、ツール詳細など）は移行済みの新ページ or 未移行の legacy ページのいずれでも崩れない。ヘッダーに検索トリガーアイコン枠と Cmd+K 受け口が実装されている（2026-05-11 cycle-186 で ② 転換確定により、Phase 5 での結線は不要となり未結線のまま Phase 10.2 まで維持）。
 
-### Phase 5: 検索の実装
+### Phase 5: 検索の実装（cycle-186 で ② 転換 — 実施しない）
 
-Phase 1.1 = ① のため本 Phase を実施する。
+**2026-05-11 cycle-186 で ② 転換**: Phase 1.1 が ② 再判断（cycle-186 で確定）となったため、Phase 5 は **実施しない**。Phase 4 で用意した Header の actions スロット / 検索アイコン枠 / Cmd+K 受け口は (new) Route Group では未結線のまま Phase 10.2 まで維持される。
 
-サブタスク：
+旧 `src/components/search/` の SearchModal / SearchTrigger / SearchInput / SearchResults / useSearch / highlightMatches / SearchModal.module.css 等および `src/lib/analytics.ts` 内の search 関連関数（trackSearchModalOpen / trackSearchModalClose / trackSearchResultClick / trackSearchAbandoned / trackSearch）はすべて Phase 10.2 で (legacy) Route Group 全廃と一体で撤去される（自然消滅、新規実装作業不要）。
 
-- **5.1** 新 search 実装（実施・B-331 で別サイクル実施）
-  - 既存の検索ロジック（Fuse.js、`/search-index.json` の fetch、結果整形、GA4 計測）を `src/lib/search/` 配下に切り出して新旧で共有する
-  - 新デザイン用 view（Lucide 系アイコン、新ヘッダー余白に合った配置）を `src/components/Search*/` に新規実装
-  - `(new)` Header の actions スロットへ結線（Phase 4 で用意した actions スロットのアイコン枠・Cmd+K 受け口と接続）
-  - 旧 `src/components/search/` は当面据え置き、Phase 10.2 で legacy と同時に削除
-  - 実装方針判断（モーダル維持 / 独立ページ化 / 両立）は Phase 5 設計時に決める。SearchAction による SEO 便益（メリット 6）を享受するには `/search?q=...` のような独立ページ実装が必要（現状のモーダル UI では SearchAction の `target` 要件を満たせない）
-  - analytics 関数（search_modal_open / close / result_click / abandoned）は新 `src/components/Search*/` に接続して継続（B-340 参照）
+**過去の Phase 5 章内容（cycle-174 で確定した実装方針）**: モーダル/独立ページ/両立 の判断 / `src/lib/search/` 共有層 / B-340 計測接続 / SearchAction 条件付き便益 などはすべて cycle-186 中の ② 転換により無効化された。詳細経緯は `docs/cycles/cycle-186.md`、cycle-174 の撤回追記は `docs/cycles/cycle-174.md` 末尾の「2026-05-11 cycle-186 にて全面撤回（② 転換）」参照。
 
-検索のみロジックとデザインを別ファイルに分離する。理由：UI のみが新旧で異なり、ロジック層は不変なため。一般的な共通コンポーネントには適用しない（共通コンポーネントは新旧で別実装を基本とする）。
-
-**完了基準**: 新側 Header に新 search が結線され、Cmd+K / Ctrl+K で開く。検索結果から legacy / 新側どちらのページにも正しく遷移する。GA4 `trackSearch` が動作。
+**完了基準**: Phase 5 は実施しないため、完了基準は「Phase 1.1 が ② に再判断されていること」「本セクションの記述が ② 転換と整合していること」のみ。
 
 ### Phase 6: ブログ詳細移行
 
@@ -261,10 +256,14 @@ Phase 7 完了時点で、各タイルはスタンドアロン表示可能な状
   - `src/app/old-globals.css` 削除
   - `src/components/common/` 削除
   - `CLAUDE.md` の `## Notes` セクションにある `(legacy)` / `(new)` ディレクトリの意味メモを削除（撤去後は意味メモ自体が無意味になるため）
-  - `src/components/search/`（旧版）削除。① 採用のため、新版 `src/components/Search*/`（Phase 5 で実装）は撤去対象外。撤去対象は旧版 components 群（SearchModal / SearchTrigger / SearchResults / SearchInput / useSearch / highlightMatches 等）のみ
-  - 現サイトに `/search` 等の検索専用ルートは存在しないため、ルート単位の 410 / リダイレクト設定は不要
-  - analytics 関数（search_modal_open / close / result_click / abandoned）は Phase 5 で新 components に接続済みのため、旧版削除時に自動的に旧版のみが消える
-  - `src/components/Search*/`（新版）は Phase 10.3 の Route Group 解除で `src/app/` 配下に統合される
+  - `src/components/search/`（旧版）の Search\*.tsx / useSearch.ts / highlightMatches.tsx / 各 module.css をすべて削除。② 採用（cycle-186 で再判断）により新版 `src/components/Search*/` は実装されていないため、撤去対象は旧版のみ。
+  - `src/lib/analytics.ts` 内の search 関連関数（trackSearchModalOpen / trackSearchModalClose / trackSearchResultClick / trackSearchAbandoned / trackSearch）も同時に撤去。② 採用により新版 components で接続される予定はなく、(legacy) と一体で消える。
+  - `public/search-index.json` の生成スクリプト（`scripts/build-search-index.ts`）および `src/lib/search/{build-index,types}.ts` についても、② 採用で使用箇所が (legacy) のみとなるため、(legacy) 撤去と同時にすべて撤去。`/search-index.json` の生成も停止。
+  - `package.json` の `prebuild` / `predev` / `pretest` から `generate:static-assets` 呼び出しを外す（または `generate:static-assets` スクリプト自体を削除）。Phase 10.2 時点で `generate:static-assets` が `tsx scripts/build-search-index.ts` のみで構成される場合（現状そうなっている）、後者（スクリプト自体の削除）の方が単純で副作用がない。`generate:static-assets` が他のステップを含む場合は前者の対応を採ること。
+  - 旧 `src/components/common/Header.tsx` から `SearchTrigger` を直接 import している箇所も legacy 撤去と一体で消える。
+  - 現サイトに `/search` 等の検索専用ルートは存在しないため、ルート単位の 410 / リダイレクト設定は不要（② 採用により独立ページは作られない）。
+
+  **2026-05-11 cycle-186 で ② 転換**: 撤去範囲が当初の cycle-174 計画より広がった（cycle-174 計画では新版残置を想定していたが、② 採用で新版が存在しないため、search 機能全体が一括撤去）。詳細は `docs/cycles/cycle-186.md` および cycle-174 撤回追記参照。
 
 - **10.3** Route Group 解除
   - `(new)/` 配下のすべて（`layout.tsx`、各ページ、`api/` 等）を `src/app/` 直下に `git mv`
