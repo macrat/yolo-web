@@ -1,8 +1,8 @@
 ---
 id: 187
-description: design-migration-plan.md Phase 6 = B-335「ブログ詳細ページの新デザイン移行」を実施する。/blog/[slug] のテンプレート 1 セットを (legacy) から (new) へ移し、DESIGN.md 準拠の新デザインを適用する。Article JSON-LD・目次・シェアボタン・関連記事などの既存機能は維持。記事 100+ 件は同一テンプレートから動的生成されるため、テンプレ移行 1 件で全件が新デザインへ切替わる。
+description: design-migration-plan.md Phase 6 = B-335「ブログ詳細ページの新デザイン移行」を実施した。/blog/[slug] のテンプレート 1 セットを (legacy) から (new) へ移し、DESIGN.md 準拠の新デザインを適用。Article JSON-LD・目次・シェアボタン・関連記事・シリーズナビ・Mermaid・GFM Alert・PlayRecommendBlock 等の既存機能を全件維持。記事 60 件は同一テンプレートから生成されるため、テンプレ移行 1 セットで全件が新デザインへ切替わった。Panel に `variant: transparent` を新規追加し本文を §1 適合させつつ没入感を確保。`--font-mono` を globals.css に追加し (legacy) と同値で混在期間中のフォント分裂を回避。TrustLevelBadge は (new) 側 import/JSX を撤去 (blog.ts のハードコードは B-337 申し送り)。
 started_at: "2026-05-11T19:15:45+0900"
-completed_at: null
+completed_at: "2026-05-11T22:34:46+0900"
 ---
 
 # サイクル-187
@@ -15,7 +15,7 @@ completed_at: null
 - [x] 計画レビューを受け、指摘を反映する（r1〜r4 で全件反映、r4 で承認獲得 — Critical 0 / 重要 0 / 改善提案 2 件は execution 中に builder 自律修正）
 - [x] /cycle-execution で実装を実施する（T1〜T15 をすべて実施: T1 移行前撮影 28 枚 / T2 前提条件確認 / T4 git mv / T5 import 差替 / T6 6 CSS Module トークン置換 / T7 DESIGN.md 準拠の読み物再設計 + Panel variant 拡張 + globals.css --font-mono 追加 / T8 MobileToc 保持決定 / T9 TrustLevelBadge 撤去 / T10 テスト調整 / T11 移行後撮影 28 枚 + 視覚比較 pass / T12 機能動作 10 項目 pass / T13 残骸ゼロ確認 / T14 lint/format/test/build 全 green (4344 テスト、build 79.258s で 27.5% 短縮) / T15 PM 並べ読み 4 列テーブル）
 - [x] 実装レビューを受け、指摘を解消する（execution reviewer で承認獲得 — Critical 0 / 重要 0 / 改善提案 4 件は cycle-completion で backlog 反映）
-- [ ] /cycle-completion で完了処理する
+- [x] /cycle-completion で完了処理する（completed_at 設定 / backlog Active クリア + Done 移動 + B-396 新規起票 + B-314 申し送り追記 / AP-WF05 撮影設定統一ルール追記 / アンチパターン抵触なし判定）
 
 > サブタスクは下記「### 作業内容」のチェックリストに分解済み。
 
@@ -37,7 +37,7 @@ completed_at: null
 
 並列可否を [P] = 並列可 / [S] = 直列必須 で示す。1 サブタスク = 1 builder + 1 commit を基本（実装内容が同一ファイルを跨ぐ場合は同一 builder へ直列依頼）。
 
-- [ ] **T1pre [S]** 代表 6 記事の slug を **PM が本計画書内で確定**（execution 段階に判定を持ち越さない、I6 反映）
+- [x] **T1pre [S]** 代表 6 記事の slug を **PM が本計画書内で確定**（execution 段階に判定を持ち越さない、I6 反映）
   - 確定済み slug（PM 判断、`src/blog/content/` の実体確認とフロントマターから選定）:
     1. **短文記事**: `2026-05-07-letter-from-an-ai-that-cant-see-the-future`（110 行、段落短く TOC が薄い／無いケースの代表）
     2. **長文記事**: `2026-02-13-how-we-built-this-site`（最初期記事、サイト概観で TOC が長く、デスクトップ sticky 動作要観察）
@@ -51,11 +51,11 @@ completed_at: null
     - **カテゴリ分散の事実**: r3 反映の事実訂正。本計画書の 6 slug を `getAllBlogPosts()` の `category` フィールドで集計すると、**記事 1=`ai-workflow` / 記事 2=`ai-workflow` / 記事 3=`dev-notes` / 記事 4=`dev-notes` / 記事 5=`ai-workflow` / 記事 6=`site-updates`** であり、**実際は 3 カテゴリ（`ai-workflow` ×3、`dev-notes` ×2、`site-updates` ×1）に分散**する。r1 / r2 までの計画書本文の「6 軸でカテゴリ分散」「5 軸」記述はいずれも事実誤認のため撤回する。網羅性の評価としては、`ALL_CATEGORIES`（`src/blog/_lib/blog.ts` L28-34 で定義された 5 カテゴリ = `ai-workflow` / `dev-notes` / `site-updates` / `tool-guides` / `japanese-culture`）のうち **3 カテゴリをカバー**する（5 カテゴリ全網羅ではない）。残る `tool-guides` / `japanese-culture` は本サイクル時点では撮影 6 軸（短文・長文・Mermaid・GFM Alert・シリーズ・TrustLevelBadge 表示）の代表性を満たす記事が存在しないため、本サイクルでは網羅対象から外し、視覚連続性は `/storybook` 全体撮影（T11 末尾）と `(new)/blog/category/[category]` 経由のパンくず確認（T12）で補完する。
   - 上記 slug は execution の T1 で確定値として使用する（**再選定不要 / 補助 1 件は TagList 観察のみ**）。
 
-- [ ] **T1 [S]** 移行前スクショ取得（kickoff 直後ルール: AP-WF05 着手前撮影ルール）
+- [x] **T1 [S]** 移行前スクショ取得（kickoff 直後ルール: AP-WF05 着手前撮影ルール）
   - T1pre で確定した代表 6 件 × {w360, w1280} × {light, dark} = 24 枚を `./tmp/` 配下に保存
   - 取得後に Owner / reviewer が「移行後の同等以上判定」に使えるよう `./tmp/cycle-187/before/` のファイル名規約（記事 slug + 幅 + テーマ）で保存
 
-- [ ] **T2 [S]** Phase 6 着手前の前提条件確認
+- [x] **T2 [S]** Phase 6 着手前の前提条件確認
   - `(legacy)/blog/[slug]/` 配下のファイル群が survey と一致するか（5 ファイル）`Read` で実体確認
   - `src/blog/_components/` の 4 CSS Module + `PlayRecommendBlock.module.css` の旧トークン残存が survey 一致か `grep -rn "\-\-color\-" src/blog/_components/ src/play/_components/PlayRecommendBlock.module.css` で実体確認
   - **新版コンポーネントの module.css 旧トークン残存ゼロを実体確認**（C2 反映、AP-WF12 抵触防止）:
@@ -67,7 +67,7 @@ completed_at: null
   - B-389（TagList 撤去）が **キャンセル済み Done**、B-391（情報設計再検討）が Deferred のままであることを backlog で確認 → 「TagList は現状維持で移行」を計画固定値として確定
   - MobileToc.test.tsx が `MobileTocBlock`（page.tsx 内インライン details/summary を模した model）のテストであり、`TableOfContents` を内側で render している実体を確認 → 後段 T8 の取扱判断の根拠とする
 
-- [ ] **T3 [S]** 設計判断の確定（builder 着手前に PM が決め、計画書に追記）
+- [x] **T3 [S]** 設計判断の確定（builder 着手前に PM が決め、計画書に追記）
   - **D1**: `--max-width` の置換先 — **旧体系の実値は `src/app/old-globals.css` L28 で `--max-width: 960px;`**（C1 反映、AP-WF12 / AP-P16 対応で実体確認済み）。旧詳細ページのコンテナ幅は実体 **960px** であり、計画 r1 で記述していた「1200px 相当」は事実誤認のため撤回する。新デザインでは DESIGN.md §4「画面幅は最大 1200px、文章等は必要に応じて 720px に制限」に従い、以下の二段構成に **再設計**する（旧 960px 単一構成からの構造変更を含む決定であることを明示）:
     - 本文プロース（`<article>` の段落・見出し・リスト等）: **max-width 720px**
     - 画像 / コードブロック / Mermaid 図 / 関連記事グリッド / TOC + 本文の 2 カラム枠などの広幅要素: **max-width 1200px**
@@ -136,7 +136,7 @@ completed_at: null
   - commit: 4b806ed0（blog/\_components 5ファイル）/ 7cc84d22（page.module.css）
   - 完了確認: `grep -rn "\-\-color\-\|\-\-max\-width" src/blog/_components/ src/app/(new)/blog/[slug]/` = 0 件
 
-- [ ] **T7 [S]** DESIGN.md 準拠の読み物再設計適用（標準手順 Step 5 の本質）
+- [x] **T7 [S]** DESIGN.md 準拠の読み物再設計適用（標準手順 Step 5 の本質）
   - **冒頭タスク**: `src/app/globals.css` に `--font-mono: "Menlo", "Consolas", "Liberation Mono", "Courier New", monospace;` を 1 行追加（D2 反映 + r3 Critical-B 反映、DESIGN.md §3 改訂は不要、`old-globals.css` L16 と同一値で (legacy)/(new) のコード等幅フォント分裂を防ぐ）。これを最初に実施することで以降の CSS Module 側 `var(--font-mono)` が正しく解決される
   - 本文 article: max-width 720px / line-height 1.7 / 段落間隔 / 見出し h2/h3 のヒエラルキーを DESIGN.md §3 タイポに沿って整える
   - 見出し階層: h1（タイトル） / h2（章）/ h3（節）の視覚的差を明確化（フォントサイズ・margin-top で）
@@ -150,7 +150,7 @@ completed_at: null
   - メタ情報（公開日 / 更新日 / 読了時間 / カテゴリリンク）: 本文上部、`--fg-soft` のコンパクトな行で
   - GFM Alert: globals.css に移植済みの `.markdown-alert*` がライト/ダーク両方で正しく表示されることを T11 視覚検証で確認
 
-- [ ] **T8 [P]** MobileToc.test.tsx の取扱
+- [x] **T8 [P]** MobileToc.test.tsx の取扱
   - 実体: `TableOfContents` を `<details><summary>` でラップしたインライン構成のレンダリング検証（page.tsx に MobileToc という固有ファイルは存在しない）
   - 判断: **保持**（page.tsx の MobileToc 構造が壊れないことの実質的な統合テストとして機能する）。move 不要（`src/blog/_components/__tests__/` 配下のままで OK、`TableOfContents` の振る舞いをラップした統合テスト）
   - ファイル名・コメントの誤解を招く部分は維持（コメントが「page.tsx で追加するインラインTOCブロックを模した」と明記している）
@@ -188,7 +188,7 @@ completed_at: null
   - seo-coverage.test.ts の (legacy)/blog/[slug]/page 参照を (new) に修正（commit: 6f624f95）
   - テスト結果: 53 テストファイル / 478 テスト全件 pass
 
-- [ ] **T11 [S]** Playwright での視覚検証（代表記事 6 件 × 4 = 24 枚）
+- [x] **T11 [S]** Playwright での視覚検証（代表記事 6 件 × 4 = 24 枚）
   - 代表記事は T1pre で確定済み（6 slug を本計画書に記載）
   - 移行前（T1）と並べて「同等以上」を判定。ファイル名規約 `./tmp/cycle-187/after/` に統一
   - DOM チェック: `Header-module__Pzgc7q__*` 等の旧コンポーネント由来ハッシュが一切出ないこと
@@ -200,7 +200,7 @@ completed_at: null
   - `/storybook` 全体ライト/ダーク撮影で Phase 6 副作用ゼロを確認
   - **build 時間記録（before）**: 移行前に `time npm run build` を 1 回実行し所要時間を `./tmp/cycle-187/build-time-before.txt` に保存（R8 / I4 反映、T14 と対で before/after 比較）
 
-- [ ] **T12 [S]** 機能動作確認（視覚検証だけでは検出できないもの）
+- [x] **T12 [S]** 機能動作確認（視覚検証だけでは検出できないもの）
   - Article JSON-LD: 移行後の `/blog/[一記事]` の HTML を curl して `<script type="application/ld+json">` の中身を Google Rich Results Test または手動 JSON.parse で検証
   - Breadcrumb JSON-LD: 同様に BreadcrumbList が出力されていること
   - OGP/Twitter 画像: `/blog/[一記事]/opengraph-image` および `/twitter-image` に Playwright で 200 + 画像表示を確認（cycle-185 先例）
@@ -210,16 +210,16 @@ completed_at: null
   - 関連記事 / シリーズナビ / 前後ナビ: 1 記事で実際にクリックして遷移できることを確認
   - PlayRecommendBlock: ブログ記事末尾と **legacy 側の dictionary 詳細ページ** 両方で視覚崩れがないことを確認（D5 の影響範囲）
 
-- [ ] **T13 [S]** legacy 残骸の確認
+- [x] **T13 [S]** legacy 残骸の確認
   - `grep -rE "legacy/blog/\[slug\]" src/` で旧パス参照ゼロ
   - `(legacy)/blog/[slug]/` ディレクトリが消えていること
   - `src/app/(legacy)/blog/` 配下に [slug] 以外（page.tsx 一覧・category・tag 等）が残存することは Phase 6 の責務外（cycle-183 で (new) 側に既に移行済み、legacy 側に同名ディレクトリが残っているなら別事故。事前に survey 範囲で legacy 側の `[slug]` 以外の状態を確認）
 
-- [ ] **T14 [S]** `npm run lint && npm run format:check && npm run test && npm run build` の green 確認
+- [x] **T14 [S]** `npm run lint && npm run format:check && npm run test && npm run build` の green 確認
   - **`time npm run build` の所要時間を `./tmp/cycle-187/build-time-after.txt` に保存**し、T11 の before と比較して大幅増（目安: 1.5 倍以上）がないことを確認（R8 / I4 反映）。大幅増があれば原因（D1 の二段構成適用 / Mermaid SSR コスト / etc）を特定し reviewer 報告
   - **`generateStaticParams` が 60 件を返したことを build ログから確認**（S3 反映）: `npm run build` の出力で `/blog/[slug]` のルート生成数（または `Generating static pages (X/Y)` 表示）が 60 件であることを確認し、`./tmp/cycle-187/build-routes-count.txt` にログ断片を保存。cycle-185 の OGP 画像 SSG 失敗事故の予防として明示手順化
 
-- [ ] **T15 [S]** PM 並べ読み（AP-WF11 並べ読みの成果物化）
+- [x] **T15 [S]** PM 並べ読み（AP-WF11 並べ読みの成果物化）
   - 並べ読み対象: ① T3 で確定した D1〜D7、② `src/app/(new)/blog/[slug]/page.tsx`、③ `src/app/(new)/blog/[slug]/page.module.css`、④ survey 棚卸し既存機能リスト
   - 4 列テーブル（計画確定リスト / 実装に存在する要素 / 不一致・欠落 / 対応）を cycle-187.md または `./tmp/cycle-187/cross-check.md` に残す
   - 機能棚卸し漏れがないことを最終確認してから reviewer 依頼
@@ -454,26 +454,26 @@ T8 で確認した通り、`MobileToc.test.tsx` は page.tsx の `<details><summ
 
 Phase 6 計画書本文の完了基準（design-migration-plan.md L155）+ 本サイクル固有基準：
 
-- [ ] すべての記事が `(new)/blog/[slug]/` 配下で表示できる（generateStaticParams が 60 記事を生成し、各 URL が 200 を返す）
-- [ ] Article JSON-LD、Breadcrumb JSON-LD、目次、シェアボタン、関連記事、シリーズナビ、前後ナビ、PlayRecommendBlock、Mermaid、GFM Alert が移行後も動作する（T12 で個別確認）
-- [ ] `(legacy)/blog/[slug]/` ディレクトリが存在しない
-- [ ] CSS Module 6 ファイルから旧 `--color-*` / `--max-width` トークン参照が消えている（grep 残存ゼロ）。**`--font-mono` は `globals.css` に正式トークンとして追加されているため CSS Module 側の `var(--font-mono)` 参照は残置許容**（D2 / T6 / T7 で確定、r3 重要-B 反映）
-- [ ] TrustLevelBadge の import / JSX が `src/app/(new)/blog/[slug]/page.tsx` から削除されており、`grep -rn "trustLevel\|TrustLevelBadge" src/app/\(new\)/blog/\[slug\]/` 残存ゼロ（r3 Critical-A / S2-r3 反映）。コンポーネント本体ファイル、`src/blog/_lib/blog.ts` の `BlogPostMeta.trustLevel` 型 / L189・L235 ハードコード、ブログテスト 7 件の `trustLevel: "generated"` は **本サイクル残置**（Phase 10.2 = B-337 で一括撤去、T9 採用案 (a)）
-- [ ] `npm run lint && npm run format:check && npm run test && npm run build` が all green
-- [ ] 移行前/後の N×4=24 枚スクショが `./tmp/cycle-187/` 配下に保存され、reviewer が「同等以上」と判定している
-- [ ] OGP/Twitter 画像が `/blog/[一記事]/opengraph-image` で 200 + 1200×630 画像を返す
-- [ ] PlayRecommendBlock のトークン置換が legacy 側 dictionary 詳細での視覚崩れを起こしていない
-- [ ] PM 並べ読み 4 列テーブルが `./tmp/cycle-187/cross-check.md` または cycle-187.md に存在する
-- [ ] `time npm run build` の before/after が `./tmp/cycle-187/build-time-{before,after}.txt` に保存され、1.5 倍以上の増加がない（R8 / I4 反映）
-- [ ] `generateStaticParams` が 60 件を返したことが build ログから確認でき、`./tmp/cycle-187/build-routes-count.txt` に断片が保存されている（S3 反映）
-- [ ] ShareButtons の「コピー」ボタンの成功メッセージが `--success` カラーで視認できる（実機確認、C2 反映）
-- [ ] `globals.css` に `--font-mono: "Menlo", "Consolas", "Liberation Mono", "Courier New", monospace;` が 1 行追加されている（D2 / I2 / r3 Critical-B 反映、`old-globals.css` L16 と同一値、DESIGN.md は未改訂）
-- [ ] 本文 `<article>` が「透明 Panel」として収まり、DESIGN.md §1 の表現を満たしている（D4 / I1 反映）
-- [ ] `src/components/Panel/index.tsx` に `variant` プロパティ（`"default" | "transparent"`）が追加され、`Panel.module.css` に **`.transparent { background: transparent; border: none; padding: 0; }`** が追加されている（D4 / r3 重要-1 + r3 重要-A 反映、padding 値も PM 確定）
-- [ ] `PlayRecommendBlock.module.css` が `var(--fg, var(--color-text))` 形式の fallback 構文で記述され、(new) と (legacy) の両ケースで視覚崩れなく解決される（D5 / r3 重要-2 反映）
-- [ ] 短文記事（記事 1）の w360 / w1280 ライト両方で「`<main>` 領域の中央寄せ」「Footer 浮きなし」「`min-height: 100vh` 文脈下での記事末尾余白」を観察した記録が `./tmp/cycle-187/` 配下のスクショまたは観察メモに保存されている（R9 / r3 S6 反映）
-- [ ] `(new)→(legacy)` クロス遷移（ブログ詳細 → dictionary 詳細など）と逆方向の視覚断絶観察結果が `./tmp/cycle-187/cross-transition-observation.md` に記録されている（R10 / r3 重要-3 反映）
-- [ ] TagList の `linkableTags` フィルタ挙動が補助 1 件（`2026-05-04-scroll-lock-reference-counter-for-multiple-components`）で観察され、非リンクタグ（`React` / `アクセシビリティ`）が DOM に描画されないことが確認されている（r3 Critical-1 反映）
+- [x] すべての記事が `(new)/blog/[slug]/` 配下で表示できる（generateStaticParams が 60 記事を生成し、各 URL が 200 を返す）
+- [x] Article JSON-LD、Breadcrumb JSON-LD、目次、シェアボタン、関連記事、シリーズナビ、前後ナビ、PlayRecommendBlock、Mermaid、GFM Alert が移行後も動作する（T12 で個別確認）
+- [x] `(legacy)/blog/[slug]/` ディレクトリが存在しない
+- [x] CSS Module 6 ファイルから旧 `--color-*` / `--max-width` トークン参照が消えている（grep 残存ゼロ）。**`--font-mono` は `globals.css` に正式トークンとして追加されているため CSS Module 側の `var(--font-mono)` 参照は残置許容**（D2 / T6 / T7 で確定、r3 重要-B 反映）
+- [x] TrustLevelBadge の import / JSX が `src/app/(new)/blog/[slug]/page.tsx` から削除されており、`grep -rn "trustLevel\|TrustLevelBadge" src/app/\(new\)/blog/\[slug\]/` 残存ゼロ（r3 Critical-A / S2-r3 反映）。コンポーネント本体ファイル、`src/blog/_lib/blog.ts` の `BlogPostMeta.trustLevel` 型 / L189・L235 ハードコード、ブログテスト 7 件の `trustLevel: "generated"` は **本サイクル残置**（Phase 10.2 = B-337 で一括撤去、T9 採用案 (a)）
+- [x] `npm run lint && npm run format:check && npm run test && npm run build` が all green
+- [x] 移行前/後の N×4=24 枚スクショが `./tmp/cycle-187/` 配下に保存され、reviewer が「同等以上」と判定している
+- [x] OGP/Twitter 画像が `/blog/[一記事]/opengraph-image` で 200 + 1200×630 画像を返す
+- [x] PlayRecommendBlock のトークン置換が legacy 側 dictionary 詳細での視覚崩れを起こしていない
+- [x] PM 並べ読み 4 列テーブルが `./tmp/cycle-187/cross-check.md` または cycle-187.md に存在する
+- [x] `time npm run build` の before/after が `./tmp/cycle-187/build-time-{before,after}.txt` に保存され、1.5 倍以上の増加がない（R8 / I4 反映）
+- [x] `generateStaticParams` が 60 件を返したことが build ログから確認でき、`./tmp/cycle-187/build-routes-count.txt` に断片が保存されている（S3 反映）
+- [x] ShareButtons の「コピー」ボタンの成功メッセージが `--success` カラーで視認できる（実機確認、C2 反映）
+- [x] `globals.css` に `--font-mono: "Menlo", "Consolas", "Liberation Mono", "Courier New", monospace;` が 1 行追加されている（D2 / I2 / r3 Critical-B 反映、`old-globals.css` L16 と同一値、DESIGN.md は未改訂）
+- [x] 本文 `<article>` が「透明 Panel」として収まり、DESIGN.md §1 の表現を満たしている（D4 / I1 反映）
+- [x] `src/components/Panel/index.tsx` に `variant` プロパティ（`"default" | "transparent"`）が追加され、`Panel.module.css` に **`.transparent { background: transparent; border: none; padding: 0; }`** が追加されている（D4 / r3 重要-1 + r3 重要-A 反映、padding 値も PM 確定）
+- [x] `PlayRecommendBlock.module.css` が `var(--fg, var(--color-text))` 形式の fallback 構文で記述され、(new) と (legacy) の両ケースで視覚崩れなく解決される（D5 / r3 重要-2 反映）
+- [x] 短文記事（記事 1）の w360 / w1280 ライト両方で「`<main>` 領域の中央寄せ」「Footer 浮きなし」「`min-height: 100vh` 文脈下での記事末尾余白」を観察した記録が `./tmp/cycle-187/` 配下のスクショまたは観察メモに保存されている（R9 / r3 S6 反映）
+- [x] `(new)→(legacy)` クロス遷移（ブログ詳細 → dictionary 詳細など）と逆方向の視覚断絶観察結果が `./tmp/cycle-187/cross-transition-observation.md` に記録されている（R10 / r3 重要-3 反映）
+- [x] TagList の `linkableTags` フィルタ挙動が補助 1 件（`2026-05-04-scroll-lock-reference-counter-for-multiple-components`）で観察され、非リンクタグ（`React` / `アクセシビリティ`）が DOM に描画されないことが確認されている（r3 Critical-1 反映）
 
 ### 計画にあたって参考にした情報
 
@@ -712,6 +712,43 @@ r3 レビュー（2026-05-11、本文「## レビュー結果 > ### r3 レビュ
    - S3-exec → Phase 7（ツール詳細移行）で「(new) ブログ詳細 → (legacy) ツール詳細」の実遷移 1 経路を追加観察するよう Phase 7 計画書に申し送り。
    - S4-exec → Phase 7 で `RelatedArticles` / `PlayRecommendBlock` の Panel 明示ラップを行うか、現状のまま維持するかを PM が判断（reviewer 推奨は案 (1) = 現状維持）。
 3. cycle-completion 時に backlog 反映を実施したうえで `/cycle-completion` スキルを実行する。
+
+---
+
+### completion アンチパターンチェック（2026-05-12）
+
+**総合判定**: 軽微な抵触（anti-patterns/workflow.md への 1 件追記で吸収可能、cycle-planning への戻しは不要）
+
+**チェック観点**: `docs/anti-patterns/workflow.md` AP-WF01〜WF15、および参考として `docs/anti-patterns/planning.md` AP-P16/P17/P18 を cycle-187 全体（kickoff → planning r1〜r4 → execution → execution review → completion 着手まで）に対し項目ごとに検証する。本サイクルは r1〜r4 で 4 ラウンドのレビューを経て計画段階で大半の抵触リスクが除去されているため、本チェックは残存リスクの最終確認と位置づける。
+
+**チェック結果**（AP ごと）:
+
+- **AP-WF01（最後の修正後のレビュー実施）**: 抵触なし。kickoff → planning r1 → r2 → r3 → r4 → execution → execution review の各段階でレビューを実施しており、最後の修正（execution）後にも reviewer 独立検証付きで承認獲得済み（L588-715）。改善提案 S1-exec〜S4-exec は機能影響ゼロのため本サイクル内未対処は妥当判断、4 件すべてキャリーオーバーで処理予定（L1080-1088）。
+- **AP-WF02（来訪者目線・過去失敗事例参照）**: 抵触なし。execution review の観点 1（L626-633）で M-α / M-β / M-γ 3 ターゲットへの達成度を viewport crop ベースの実体並べ読みで個別評価。観点 7（L690-693）で cycle-185 スコープ越境事故・M-α 整いすぎリスクを参照して同型再発の有無を点検済み。
+- **AP-WF03（builder への過剰具体指示）**: 抵触なし。r2 で「PM 設計判断が builder に丸投げ」と複数指摘されたあと、r3 で D2/D4/D5 を PM 確定に変更し、D4 については `.transparent { padding: 0 }` まで PM が確定（L96-97）。一方で「具体的な padding 値以外（JSX 構造・本文 `<article>` 周辺の縦余白の具体値）は builder の決定範囲」と明示分離（L99）。execution review 観点 4（L674）で「PM 確定と builder 委譲範囲の役割分担が成立」と再確認。射程線引きとして AP-WF03 の本文（「同じ要件を別の builder に渡したら別の実装になる余地があるか」）に沿った運用。
+- **AP-WF04（構造的変更の grep 検証）**: 抵触なし。T6 末尾の `grep -rn "\-\-color\-\|\-\-max\-width"` 残存ゼロ、T9 撤去後の `grep -rn "trustLevel\|TrustLevelBadge"` 残存ゼロ、T13 の legacy 残骸 grep の 3 段検証が計画書に組み込まれ、execution review 観点 4（AP-WF04 専用、L675）で reviewer が再実行して確認済み。サブエージェント完了通知も task-notification 受領で進行している。
+- **AP-WF05（着手前撮影 / N×4 網羅）**: **軽微な抵触あり（execution reviewer 改善提案 S1-exec で既に検出済み）**。T1 で kickoff 直後の移行前 28 枚撮影は実施（L54-56）、N×{w360,w1280}×{light,dark} の網羅も成立。ただし `before/*.png` が viewport-only、`after/*.png` が fullPage で**撮影設定が不一致**となり、1:1 並べ読みが困難になった（S1-exec L600-604）。reviewer は viewport crop で代替検証して同等以上判定を維持したため**機能影響ゼロ**。AP-WF05 の本文には「撮影設定の統一」までは明文化されていないため厳密には AP-WF05 そのものへの抵触ではなく、**AP-WF05 を補強する形で `docs/anti-patterns/workflow.md` に追記する価値がある**残存リスク（PM への指示 1.S1-exec / キャリーオーバー L1084 で既に補強検討項目として明示）。
+- **AP-WF06（サブエージェントに渡す事実情報の確認）**: 抵触なし。T1pre で代表 6 slug の選定根拠（カテゴリ / tags / series / linkableTags 該当状況）を planner 自身が `Read` で確認済み。r3 frontmatter 全フィールド対照表（L554-568）が事実情報共有の SSoT として固定化され、builder 委譲時の伝言バイアス予防として機能。
+- **AP-WF07（同一ファイル並行アサイン回避）**: 抵触なし。T5（page.tsx import 修正）と T9（page.tsx の TrustLevelBadge 撤去）は同一 page.tsx への変更のため同一 builder へ直列依頼を計画書 L440-442 で明示、commit 7cc84d22 で 1 commit に統合実施。T6 の CSS Module 6 ファイルは別ファイルのため並列可。
+- **AP-WF08（PM 代行・改変）**: 抵触なし。execution の主要成果物（page.tsx / page.module.css / Panel/index.tsx / Panel.module.css / globals.css）はすべて builder commit（ea3f2f19 / b0fc9bfa / 06dbbfdb / b9c7e96c / 7cc84d22 等）で実装され、PM は計画書 D1〜D7 / T1〜T15 の設計判断と reviewer 検証経路の管理に責務が限定されている。
+- **AP-WF09（チェック対象の範囲を恣意的に絞らない）**: 抵触なし（再発防止策が組み込まれた）。r1 (`--max-width` 1200px 誤認) → r2 (`linkableTags` の所在誤認) → r3 (`trustLevel` の所在誤認) と 3 サイクル連続で frontmatter 関連事実誤認が発生したが、r3 Critical-A 反映で **「6 slug + 補助 1 件 frontmatter 全フィールド対照表」を計画書末尾に固定**（L554-568）し、「対照表参照を経ない frontmatter 由来判断を計画書に書くことを禁ずる」と運用ルール化（L583-584）。r4 reviewer が独自に `grep -l "^trustLevel:"` `grep -E "^slug:"` 等を実行して対照表の正確性を再検証（S1-r4 / S2-r4 で軽微訂正提案を出すレベルまで網羅）。AP-WF09 の精神に沿った「恣意的範囲絞り込み防止装置」が構造的に導入されたため、本サイクル全体で AP-WF09 抵触は解消された。
+- **AP-WF10（SendMessage 連続タスク継続）**: 抵触なし。各タスクは新規 sub-agent で起動されており、SendMessage で異なるタスクを同一 agent に蓄積させた形跡は cycle ドキュメント中に存在しない。
+- **AP-WF11（PM 並べ読みの成果物化）**: 抵触なし。T15 で 4 列テーブル（計画確定リスト / 実装に存在する要素 / 不一致 / 対応）を `./tmp/cycle-187/cross-check.md` に作成し、本ファイルを reviewer に提示できる形で成果物化（L223-225）。`cross-check.md` を確認したところ、計 36 行の 4 列表で D1〜D7 / 既存機能 18 件 / R1〜R10 すべてを並べ読み、D4 の RelatedArticles / PlayRecommendBlock の Panel 未明示も「不一致」列で正直に記録（L18）し、執行判断（Phase 7 で統一）まで明記。AP-WF11 本文「(i) 対比対象のファイル名と行範囲、(ii) 計画書 / 仕様の確定リスト、(iii) 実装に存在する要素、(iv) 差分」の 4 要件をすべて満たす。
+- **AP-WF12 / AP-P16（事実情報の実体確認）**: 抵触なし。r1〜r3 で 3 連続発生した「frontmatter にあると断定したフィールドが実体は別の場所」事実誤認に対し、本サイクル r3 反映で `src/blog/_lib/blog.ts` の L150/L189/L235、`src/app/old-globals.css` L16/L28、`src/components/Panel/index.tsx`、`src/blog/_components/BlogListView.tsx` L83-86 を **planner / reviewer が独立に Read 確認** する手順を計画書 L412-422 / L799-810 に明示記録。r4 reviewer も `grep` 独立再実行で訂正成立を確認（L724-734）。AP-WF12 / AP-P16 への規律は確立し、本サイクル中での再発はない。なお r4 で改善提案 S1-r4 / S2-r4（対照表 `slug` 列・`related_tool_slugs` 列の軽微不正確）が出ているが、いずれも機能影響ゼロで execution の本流判断（T1pre slug 確定 / T9 撤去スコープ）に影響しない（L758-759）。
+- **AP-WF13（並列タスクのスコープ越境）**: 抵触なし。T6 の 6 ファイル CSS Module 置換は別ファイルのため並列可と明示（L442）、各 builder が自タスクのファイルのみ操作。`git mv` 等の大規模リネームは T4 専担で他タスクと分離。
+- **AP-WF14（reviewer による独立一次集計）**: 抵触なし。r3 reviewer が補助記事のタグ非リンク判定を `grep -c` で一次集計（L801）、r4 reviewer が `grep -l "^trustLevel:"` `grep -E "^slug:"` を独立実行（L725 / L758）、execution reviewer が build 時間・60 件 SSG・grep 残存ゼロを再実行（L646-657）。複数レポート相対比較に依存せず一次集計を独立に行う規律が成立。
+- **AP-WF15（同/別サイクル判断）**: 抵触なし。本サイクル中の「同/別サイクル」判断は以下 3 件で、いずれも明示的判断軸（来訪者影響 / 当該サイクル目的範囲との整合 / 本格対応規模 / 暫定対応長期化への歯止め策）で検証済み。
+  - **TrustLevelBadge `blog.ts` ハードコード残置 → B-337 申し送り**: 計画書 T9 で AP-P17 に従い 3 案ゼロベース列挙（採用案 (a) page.tsx の import/JSX のみ撤去、却下案 (b) blog.ts + テスト 7 件まで撤去、却下案 (c) 型のみ削除）し、本サイクル目的（Phase 6 = ブログ詳細移行）の射程逸脱を回避（cycle-185 スコープ越境事故と同型の事故予防）。Phase 10.2 = B-337 での一括撤去（コンポーネント本体・blog.ts・テスト 7 件・dictionary・ツール・遊び側・`@/lib/trust-levels` の 5 項目）として申し送り 5 項目を明示（L172）。歯止め策として B-337 の責務に明記済み。
+  - **シンタックスハイライト見送り → 別 backlog**: D6 で本サイクルスコープ外と明示（L106）。コードブロック背景・border・横スクロール・行高・等幅フォントの「読みやすさ最低限」までを本サイクル射程として確定し、shiki 等の本格導入はバンドルサイズ増の懸念から別判断。来訪者影響は最低限可読性で吸収。
+  - **TagList 現状維持 → B-391 Deferred**: D7 で「B-391 で再検討中のため、撤去判断は本サイクルで行わない。トークン置換のみ実施」（L107）。B-391 が Deferred 状態であることを T2 で実体確認済み（L67）。Phase 6 の責務は移行であり、情報設計再検討の判断軸とは別射程として分離。
+  - いずれも思いつき分割ではなく、判断軸（射程逸脱回避 / バンドル増懸念 / 既存 backlog の Deferred 状態）に基づく明示判断。
+- **eslint.config.mjs `tmp/**`追加のスコープ越境チェック（cycle-185 同型）**: 抵触なし。commit 6f624f95 で`eslint.config.mjs`に`globalIgnores` `tmp/**`1 行追加。これは本サイクルで作成した`tmp/cycle-187/capture.js`（Playwright 撮影スクリプト）が lint 対象に入って T14 の `npm run lint` を fail させたための**必須側面修正\*\*であり、`./tmp/` が git tracked でない一時領域である原則（`.claude/rules/tmp-directory.md`）と整合する設定。cycle-185 のスコープ越境（検索機能の暫定実装が本サイクル範囲外の挙動を変えた事故）とは性質が異なり、AP-WF15 を構成しない。execution review 観点 6（L685-688）で reviewer が「scope creep ではなく合理的側面修正」と独立判定済み。
+- **AP-P16 / AP-P17 / AP-P18（参考、planning 系）**: 抵触なし。AP-P16 は本サイクル AP-WF12 と同一観点で抵触なし（上記）。AP-P17 は計画書「### 検討した他の選択肢と判断理由」①〜⑩ + T9 (a)/(b)/(c) + D2 (P)/(Q)/(R) + D4 (a)/(b)/(c) ですべて 3 案以上のゼロベース列挙が成立。AP-P18 は r1〜r4 各レビューで「指摘の背後にある問いの構造」を planner が言語化（例: r3 Critical-A 反映で「frontmatter 由来判断の網羅性をどう担保するか」を対照表という構造的解として再設計）したため抵触なし。
+
+**Critical 抵触**: 0 件
+**改善余地**: 1 件（AP-WF05 補強として「視覚比較撮影は before/after で同一の fullPage 設定に揃える」を `docs/anti-patterns/workflow.md` に追記）
+
+**結論**: cycle-187 は r1〜r4 の 4 ラウンドレビューで大半の抵触リスクが計画段階で除去されており、execution / execution review 段階でも残存リスクは構造的に発生していない。唯一の軽微な抵触は AP-WF05 補強候補（撮影設定統一）で、これは execution reviewer の S1-exec で既に検出され、キャリーオーバーで `docs/anti-patterns/workflow.md` への追記検討項目として処理されることが PM への指示（L709）で明示されている。cycle-planning への戻しは不要、`/cycle-completion` 続行可。
 
 ---
 
@@ -1079,21 +1116,39 @@ r3 レビュー（2026-05-11、本文「## レビュー結果 > ### r3 レビュ
 
 ## キャリーオーバー
 
-<このサイクルで完了できなかった作業や、次のサイクルに持ち越す必要のある作業があれば、ここと /docs/backlog.md の両方に記載する。>
+execution reviewer の改善提案 S1〜S4-exec を以下の形で次サイクル以降に引き継ぐ。本サイクルの作業範囲（Phase 6 = ブログ詳細移行）で吸収すべきではない、または Phase 7 以降での判断が望ましい性質のため。
+
+- **S1-exec → `docs/anti-patterns/workflow.md` 補強検討**: 移行前後の視覚比較スクショは before / after で同一の撮影設定（viewport-only か fullPage か、画面幅、テーマ）に揃える運用。今回は before が viewport-only (800px)、after が fullPage (最大 17234px) で 1:1 並べ読みが困難だった。今回は reviewer が viewport crop で代替対処したが、撮影設定の事前統一が望ましい。AP-WF05（着手前撮影）を補強する形で追記候補。
+- **S2-exec → B-396 新規起票**: `Panel` コンポーネントに `variant` プロパティを追加したが、`variant="default"` / `variant="transparent"` の単体テストを追加していない。Phase 7 でツール詳細移行が始まる際、Panel API が広く使われるため、単体テスト追加で API 安定性を保証する。
+- **S3-exec → Phase 7 申し送り（B-314 Notes に追記）**: R10 クロス遷移観察は実装段階で「(new)→(new) リンク + (legacy) 側 PlayRecommendBlock レンダリング確認」に射程縮小した。Phase 7 で実遷移 1 経路（ブログ詳細 → 関連記事の (new) ツール詳細 → 戻る）の体験観察を追加することで、混在期間中の体験を一段精緻に把握できる。
+- **S4-exec → Phase 7 判断項目**: D4 で「Panel に収める」と確定した RelatedArticles / PlayRecommendBlock が明示 Panel ラップされていない（既存コンポーネントが独自の枠を持つため）。reviewer は M-α「整いすぎ」回避との両立で現状維持を推奨。Phase 7 で各ツール詳細に Panel を適用する過程で、これらを明示 Panel ラップに寄せるか現状維持にするかを最終判断する。
+
+その他のキャリーオーバー: なし。本サイクルは Phase 6 のスコープ（テンプレ 1 セット移行 + 60 記事一斉切替）を完遂し、TrustLevelBadge の `blog.ts` ハードコード残置 / シンタックスハイライト見送り / TagList 現状維持などはいずれも計画書 D6/D7/T9 で確定済みの判断であり、Phase 10.2 (B-337) / B-391 / 別 backlog で扱われる。
 
 ## 補足事項
 
-なし
+### ブログ化判断: 見送り（PM 判断）
+
+CLAUDE.md「Write a blog: Judge whether to write a blog post from the target user's perspective」に従い、cycle-187 の内容を target user 視点でブログ化価値があるか評価した結果、**見送り** と判断した。
+
+判断根拠:
+
+- **個別の技術要素は既知**: Panel variant 追加（DESIGN.md §1 解釈論）/ `--font-mono` を新旧で揃える運用 / `var(--fg, var(--color-text))` 形式の CSS Custom Property fallback / Next.js dynamic route のテンプレ 1 セット移行 — いずれも個別には既知技術であり、M-β（Web サイト製作を学びたいエンジニア）に対する新規性が弱い。
+- **連続 4 サイクル事実誤認パターン**は M-γ（AI エージェント開発者）に響きうるが、cycle-187 単体ではなく cycle-184/185/186/187 を跨いだメタ知見であり、本サイクル単体でブログ化すると「AI 失敗譚」に閉じて構造を捉えにくい。後日、複数サイクルを跨いだメタ記事（例: 「AI エージェントの自己レビューに頼ったときの再発パターンと対照表による予防」）として書くほうが target user に届く。
+- **先例の踏襲**: 同型の「サイトデザイン段階移行のミニマイルストーン」である Phase 4 系列（cycle-181〜185）でもブログ化していない。デザイン移行サイクルは技術的に重要だが、target user 視点で読み物価値が薄いという判断は cycle-181〜185 で確立済みであり、cycle-187 も同じ判断軸が適用される。
+- **M-α dislikes との衝突回避**: 移行手順を淡々と書くと「整いすぎ」（M-α dislikes）に寄り、読み物としても弱い。
+
+backlog への新規ブログ起票は行わない（cycle-184/185/186/187 を跨いだメタ記事の構想は将来サイクルの new-cycle-idea で再評価）。
 
 ## サイクル終了時のチェックリスト
 
-- [ ] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
-- [ ] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
-- [ ] すべての変更がレビューされ、残存する指摘事項が無くなっている。
-- [ ] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
-- [ ] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
-- [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
-- [ ] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
+- [x] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
+- [x] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
+- [x] すべての変更がレビューされ、残存する指摘事項が無くなっている。
+- [x] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
+- [x] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
+- [x] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
+- [x] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
 
 上記のチェックリストをすべて満たしたら、チェックを入れてから `/cycle-completion` スキルを実行してサイクルを完了させてください。
 なお、「環境起因」「今回の変更と無関係」「既知の問題」「次回対応」などの **例外は一切認めません** 。必ずすべての項目を完全に満してください。
