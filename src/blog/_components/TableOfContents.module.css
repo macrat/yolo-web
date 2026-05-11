@@ -1,6 +1,6 @@
 .toc {
-  background-color: var(--color-bg-secondary);
-  border: 1px solid var(--color-border);
+  background-color: var(--bg-soft);
+  border: 1px solid var(--border);
   border-radius: 0.5rem;
   padding: 1rem;
 }
@@ -9,7 +9,7 @@
   font-size: 0.9rem;
   font-weight: 700;
   margin-bottom: 0.75rem;
-  color: var(--color-text);
+  color: var(--fg);
 }
 
 .list {
@@ -22,11 +22,11 @@
 
 .link {
   font-size: 0.85rem;
-  color: var(--color-text-muted);
+  color: var(--fg-soft);
   text-decoration: none;
   line-height: 1.6;
 }
 
 .link:hover {
-  color: var(--color-primary);
+  color: var(--accent);
 }
