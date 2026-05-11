@@ -110,17 +110,19 @@ completed_at: null
   - **D6**: コードブロックのシンタックスハイライト導入は本サイクルのスコープ外。コードブロック背景 / ボーダー / 横スクロール / 行高 / 等幅フォントの「読みやすさ最低限」までを再設計する。
   - **D7**: TagList は現状維持で移行（B-391 で再検討中のため、撤去判断は本サイクルで行わない）。トークン置換のみ実施。
 
-- [ ] **T4 [S]** `git mv (legacy)/blog/[slug]/ (new)/blog/[slug]/`
+- [x] **T4 [S]** `git mv (legacy)/blog/[slug]/ (new)/blog/[slug]/`
   - 5 ファイル（page.tsx / page.module.css / opengraph-image.tsx / twitter-image.tsx / **tests**/page.test.tsx）を git mv
   - 履歴を保持するため `git mv` で実施（cp + rm は禁止）
+  - commit: 6f624f95
 
-- [ ] **T5 [P]** import パス修正（page.tsx）
+- [x] **T5 [P]** import パス修正（page.tsx）
   - `@/components/common/Breadcrumb` → `@/components/Breadcrumb`
   - `@/components/common/TrustLevelBadge` → 削除（T9 で対応）
   - `@/components/common/ShareButtons` → `@/components/ShareButtons`
   - `@/blog/*` および `@/play/*` の import は変更不要（survey 確認済み）
+  - commit: 7cc84d22
 
-- [ ] **T6 [P]** CSS Module の旧トークン置換（6 ファイル一括チェックリスト）
+- [x] **T6 [P]** CSS Module の旧トークン置換（6 ファイル一括チェックリスト）
   - `src/app/(new)/blog/[slug]/page.module.css`（T4 で移動済み）
   - `src/blog/_components/TableOfContents.module.css`
   - `src/blog/_components/SeriesNav.module.css`
@@ -131,6 +133,8 @@ completed_at: null
   - **`PlayRecommendBlock.module.css` のみ fallback 構文を用いる**（D5 / r3 重要-2 反映）: `(legacy)/dictionary/[slug]/` 経由で参照される際に新トークンが未定義となるため、`var(--fg, var(--color-text))` / `var(--fg-soft, var(--color-text-muted))` / `var(--accent, var(--color-primary))` / `var(--accent-strong, var(--color-primary-hover))` / `var(--bg-soft, var(--color-bg-secondary))` / `var(--border, var(--color-border))` / `var(--success, var(--color-success))` / `var(--bg, var(--color-bg))` のように、新トークン優先 + 旧トークン fallback の形で記述する。Phase 10.2（B-337）で legacy 側削除完了時に第二引数を機械的に削除する
   - 完了後に `grep -rn "\-\-color\-\|\-\-max\-width" src/blog src/play src/app/(new)/blog` を実行し残存ゼロを確認（AP-WF04 構造的変更の grep 検証）。`--font-mono` は `globals.css` 側に正式トークンとして定義されたため grep 残存があってよい（=正しい使用）
   - **T2 で新版コンポーネント（ShareButtons / Breadcrumb）の module.css に旧トークン残存が見つかった場合は、本リストに当該ファイルを追加**（C2 反映）
+  - commit: 4b806ed0（blog/\_components 5ファイル）/ 7cc84d22（page.module.css）
+  - 完了確認: `grep -rn "\-\-color\-\|\-\-max\-width" src/blog/_components/ src/app/(new)/blog/[slug]/` = 0 件
 
 - [ ] **T7 [S]** DESIGN.md 準拠の読み物再設計適用（標準手順 Step 5 の本質）
   - **冒頭タスク**: `src/app/globals.css` に `--font-mono: "Menlo", "Consolas", "Liberation Mono", "Courier New", monospace;` を 1 行追加（D2 反映 + r3 Critical-B 反映、DESIGN.md §3 改訂は不要、`old-globals.css` L16 と同一値で (legacy)/(new) のコード等幅フォント分裂を防ぐ）。これを最初に実施することで以降の CSS Module 側 `var(--font-mono)` が正しく解決される
@@ -151,7 +155,7 @@ completed_at: null
   - 判断: **保持**（page.tsx の MobileToc 構造が壊れないことの実質的な統合テストとして機能する）。move 不要（`src/blog/_components/__tests__/` 配下のままで OK、`TableOfContents` の振る舞いをラップした統合テスト）
   - ファイル名・コメントの誤解を招く部分は維持（コメントが「page.tsx で追加するインラインTOCブロックを模した」と明記している）
 
-- [ ] **T9 [P]** TrustLevelBadge 撤去（r3 Critical-A 反映で全面書き換え）
+- [x] **T9 [P]** TrustLevelBadge 撤去（r3 Critical-A 反映で全面書き換え）
   - **事実訂正（r3 Critical-A）**: r1〜r2 時点で「各記事 frontmatter の `trustLevel` フィールド削除は本サイクルでは行わない」と書いていたが、**ブログ記事の frontmatter には `trustLevel` フィールドが 0 件存在しない**（`grep -l "^trustLevel:" src/blog/content/*.md` = 0 件、r3 で reviewer / planner が独立に実体確認済み）。実体は **`src/blog/_lib/blog.ts` の L150 に型定義 `trustLevel: TrustLevel;`、L189 / L235 にコード側ハードコード `trustLevel: "generated" as const`** として存在する。記事 6 本文 L122 で「frontmatter に trustLevel フィールドを追加するのではなく、コード内で一律 `"generated"` を設定」と planner が選定した記事自身が明示している。設計手順 Step 6「対応する meta.ts の trustLevel フィールドも削除」は **ツール / 遊び / dictionary 系 meta.ts に準じた手順** であり、ブログ用に直接準用できない（ブログには meta.ts 相当ファイルがない）。
   - **PM 確定の対応スコープ（AP-P17 に基づく 3 案ゼロベース列挙のうえ (a) を採用）**:
     - **採用案 (a)**: `src/app/(new)/blog/[slug]/page.tsx` (T4 後の新パス) の `import` 行と `<TrustLevelBadge>` JSX のみ削除する。`src/blog/_lib/blog.ts` の `BlogPostMeta.trustLevel` 型 / `getAllBlogPosts()` および `getBlogPostBySlug()` のハードコード代入（L150 / L189 / L235）は **残置**。
@@ -171,13 +175,18 @@ completed_at: null
   - **撤去後検証（r3 S2-r3 反映で追加）**: 撤去後に `grep -rn "trustLevel\|TrustLevelBadge" src/app/\(new\)/blog/\[slug\]/` を実行し残存ゼロを確認（AP-WF04 構造的変更の grep 検証）
   - **B-337 への申し送り（Phase 10.2 で実施する追加撤去）**: (i) `src/components/common/TrustLevelBadge/` コンポーネント本体削除、(ii) `src/blog/_lib/blog.ts` L150 / L189 / L235 の `trustLevel` 関連記述削除、(iii) ブログテスト 7 件の `trustLevel: "generated"` 記述削除、(iv) dictionary / ツール / 遊び側の `trustLevel` 一括削除、(v) `@/lib/trust-levels` モジュール削除。**これらが Phase 10.2 で同時撤去対象であることを design-migration-plan.md または backlog に明記する必要があるか PM が判断する**（既存の B-337 説明に「TrustLevelBadge 関連の最終撤去」が明示されていれば追記不要、明示されていなければ追記をサイクル末で起票）
   - 撤去判断の根拠は cycle-180 B-333-2「constitution Rule 3 は Footer の AI 注記で完全充足、badge は冗長」
+  - commit: 7cc84d22（T5 と統合）
+  - 完了確認: `grep -rn "trustLevel\|TrustLevelBadge" src/app/(new)/blog/[slug]/` = 0 件
 
-- [ ] **T10 [P]** `__tests__/page.test.tsx` の import パス修正 + 検索キー再点検（I3 反映）
+- [x] **T10 [P]** `__tests__/page.test.tsx` の import パス修正 + 検索キー再点検（I3 反映）
   - ファイルシステムベースのテスト（`fs.readFileSync` でソース文字列を読む）のため、参照しているファイルパス（`src/app/(legacy)/blog/[slug]/page.tsx`）を `src/app/(new)/blog/[slug]/page.tsx` に変更
   - `import @/play/_components/PlayRecommendBlock` の動作テストは変更不要
   - **テスト内の文字列検索キー（`className={styles.postNav}` / `<PlayRecommendBlock` / `</article>` 等）を T7 の再設計後の page.tsx 構造と並べ読み**し、再設計でクラス名やラップ構造が変わった場合はテストの検索キーを更新する。具体的には `styles.postNav` を `styles.postNavPanel` 等に rename した場合や、`<PlayRecommendBlock>` を `<Panel>` でラップした場合に検索 literal を追随させる
   - **検索 literal 依存が脆い構造であるため、検証戦略 ⑨ で「Playwright での DOM 順序検証へ置換する選択肢」を別途列挙**（採用 / 不採用を明示）
   - 配置順テスト（PlayRecommendBlock が `</article>` 後 / postNav 後 / RelatedArticles が `</article>` 前）は T7 で構造を維持していれば pass するが、構造変更時は検索キー更新で追随する
+  - 実施結果: `__tests__/page.test.tsx` は `path.resolve(__dirname, "../page.tsx")` 相対パス参照のため T4 の git mv で自動的に新パスへ追随。hard-coded (legacy) パスは存在せず変更不要。
+  - seo-coverage.test.ts の (legacy)/blog/[slug]/page 参照を (new) に修正（commit: 6f624f95）
+  - テスト結果: 53 テストファイル / 478 テスト全件 pass
 
 - [ ] **T11 [S]** Playwright での視覚検証（代表記事 6 件 × 4 = 24 枚）
   - 代表記事は T1pre で確定済み（6 slug を本計画書に記載）
