@@ -1,17 +1,37 @@
+/* ============================================================
+ * ブログ詳細ページ — page.module.css
+ * DESIGN.md §1〜§5 準拠。cycle-187 D1〜D4 反映。
+ *
+ * レイアウト二段構成（D1）:
+ *   - 本文プロース（article 段落・見出し）: max-width 720px
+ *   - 広幅要素（コードブロック・Mermaid・関連記事グリッド・TOC+本文カラム枠）: max-width 1200px
+ * ============================================================ */
+
+/* --- ページ外殻 --- */
+
+/* 広幅要素の最大幅を定義するコンテナ（max-width 1200px） */
 .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem 1rem;
 }
 
+/* --- 本文 article（transparent Panel でレンダリング） --- */
+
+/* article の外枠余白。Panel variant="transparent" のため背景・枠線は自前設定なし。 */
 .article {
   margin-bottom: 2rem;
 }
 
+/* --- ヘッダー（タイトル・メタ情報）--- */
+
 .header {
-  margin-bottom: 2rem;
+  /* 本文幅 720px に揃える（D1） */
+  max-width: 720px;
+  margin-bottom: 2.5rem;
 }
 
+/* メタ情報行（公開日・更新日・読了時間・カテゴリ） */
 .meta {
   display: flex;
   align-items: center;
@@ -22,17 +42,19 @@
   flex-wrap: wrap;
 }
 
+/* カテゴリバッジ */
 .category {
   background-color: var(--accent);
   color: #fff;
   padding: 0.15rem 0.5rem;
-  border-radius: 0.25rem;
+  border-radius: var(--r-interactive);
   font-size: 0.75rem;
   font-weight: 600;
   text-decoration: none;
 }
 
 .category:hover {
+  color: #fff;
   opacity: 0.9;
 }
 
@@ -40,19 +62,25 @@
   font-style: italic;
 }
 
+/* 記事タイトル h1 */
 .title {
-  font-size: 1.75rem;
+  font-size: clamp(1.5rem, 4vw, 2rem);
   font-weight: 700;
   line-height: 1.3;
-  margin-bottom: 0.75rem;
+  margin-bottom: 1rem;
 }
 
-/* モバイル向けインラインTOC */
+/* --- モバイル向けインライン TOC --- */
+
+/* モバイル TOC コンテナ（details/summary）
+ * Panel コンポーネントを使わず CSS で bg/border を直接設定する。
+ * panel の入れ子禁止（DESIGN.md §4）を避けつつ同等の見た目を実現する。 */
 .mobileToc {
   margin-bottom: 1.5rem;
   background-color: var(--bg-soft);
   border: 1px solid var(--border);
-  border-radius: 0.5rem;
+  border-radius: var(--r-normal);
+  max-width: 720px;
 }
 
 .mobileTocSummary {
@@ -63,29 +91,36 @@
   color: var(--fg);
 }
 
-/* 開いたときはsummaryにボーダーを表示してコンテンツと区切る */
+/* 開いたときは summary にボーダーを表示してコンテンツと区切る */
 .mobileToc[open] .mobileTocSummary {
   border-bottom: 1px solid var(--border);
 }
 
-/* mobileToc内ではTableOfContentsの見出し（h2「目次」）を非表示にする
-   summaryの「目次」ラベルが役割を担うため重複を避ける */
+/* mobileToc 内では TableOfContents の見出し（h2「目次」）を非表示にする。
+ * summary の「目次」ラベルが役割を担うため重複を避ける。 */
 .mobileToc nav h2 {
   display: none;
 }
 
-/* mobileToc内ではTableOfContentsのボーダー・背景を上書きして重複を避ける */
+/* mobileToc 内では TableOfContents の Panel スタイルを上書きして重複を避ける */
 .mobileToc nav {
   border: none;
   border-radius: 0;
   background: none;
+  padding: 0;
 }
 
+/* --- 本文レイアウト（TOC サイドバー + コンテンツ） --- */
+
+/* デフォルト（モバイル）: 縦積み。コンテンツのみ表示。 */
 .layout {
   display: flex;
   gap: 2rem;
 }
 
+/* TOC サイドバー（Panel でレンダリング）
+ * Panel の padding/bg/border はそのまま適用し、sticky を追加する。
+ * デフォルトは非表示でデスクトップのみ表示（@media で切替）。 */
 .sidebar {
   display: none;
   flex-shrink: 0;
@@ -93,78 +128,123 @@
   position: sticky;
   top: 1rem;
   align-self: flex-start;
+  /* Panel の padding が既に適用されているため追加余白は不要 */
 }
 
+/* TOC サイドバー内の TableOfContents は Panel に収まるため
+ * TableOfContents.module.css のボーダー・背景を上書きして入れ子を回避する（DESIGN.md §4）。 */
+.sidebar nav {
+  border: none;
+  border-radius: 0;
+  background: none;
+  padding: 0;
+}
+
+/* --- 本文コンテンツ（Markdown HTML）--- */
+
+/* 本文ラッパー。max-width 720px で読みやすい行長に制限（D1）。
+ * コードブロック・Mermaid 等の広幅要素は内側で個別に overflow / 広幅を設定する。 */
 .content {
   flex: 1;
   min-width: 0;
-  line-height: 1.8;
+  max-width: 720px;
+  line-height: 1.7; /* DESIGN.md §3 */
 }
 
+/* h2（章）: 大きめ margin-top で前段落との区切りを明確化 */
 .content h2 {
-  font-size: 1.35rem;
+  font-size: 1.4rem;
   font-weight: 700;
-  margin-top: 2rem;
+  margin-top: 2.5rem;
   margin-bottom: 0.75rem;
-  padding-bottom: 0.25rem;
+  padding-bottom: 0.35rem;
   border-bottom: 1px solid var(--border);
+  line-height: 1.4;
 }
 
+/* h3（節）: h2 より控えめ、前段落との接続がスムーズに */
 .content h3 {
   font-size: 1.15rem;
   font-weight: 700;
-  margin-top: 1.5rem;
+  margin-top: 2rem;
   margin-bottom: 0.5rem;
+  line-height: 1.5;
+}
+
+/* h4 以下（細分節）: さらに控えめ */
+.content h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-top: 1.5rem;
+  margin-bottom: 0.4rem;
+  line-height: 1.5;
 }
 
 .content p {
-  margin-bottom: 1rem;
+  margin-bottom: 1.2rem;
 }
 
 .content ul,
 .content ol {
-  margin-bottom: 1rem;
+  margin-bottom: 1.2rem;
   padding-left: 1.5rem;
 }
 
 .content li {
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.3rem;
+  line-height: 1.7;
 }
 
+/* インラインコード: 背景・等幅フォント、本文フローを乱さないよう控えめな padding */
 .content code {
   background-color: var(--bg-soft);
   padding: 0.15rem 0.35rem;
-  border-radius: 0.25rem;
+  border-radius: var(--r-normal);
   font-family: var(--font-mono);
-  font-size: 0.85em;
+  font-size: 0.88em;
+  line-height: 1;
 }
 
+/* コードブロック: 広幅許容（D1 二段構成）
+ * max-width を本文の 720px に縛らず、コンテナ幅（1200px）まで拡張して可読性を確保する。
+ * .content の max-width を親の layout が包むことで、720px → 広幅への切替は
+ * overflow-x: auto + 横スクロールで担保する。 */
 .content pre {
   background-color: var(--bg-soft);
   border: 1px solid var(--border);
-  border-radius: 0.5rem;
-  padding: 1rem;
+  border-radius: var(--r-normal);
+  padding: 1.25rem 1rem;
   overflow-x: auto;
-  margin-bottom: 1rem;
+  margin-bottom: 1.2rem;
+  font-size: 0.9rem;
+  line-height: 1.5; /* コード行間 */
+  /* 本文 720px の外まで広げる（D1 二段構成） */
+  margin-left: calc(-1 * max(0px, (100vw - 720px) / 2 - 1rem));
+  max-width: min(100vw - 2rem, 1100px);
 }
 
 .content pre code {
   padding: 0;
   background: none;
+  font-size: inherit;
+  line-height: inherit;
 }
 
 .content blockquote {
   border-left: 3px solid var(--accent);
   padding-left: 1rem;
   margin-left: 0;
-  margin-bottom: 1rem;
+  margin-bottom: 1.2rem;
   color: var(--fg-soft);
 }
 
 .content table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 1rem;
+  margin-bottom: 1.2rem;
+  font-size: 0.9rem;
+  overflow-x: auto;
+  display: block;
 }
 
 .content th,
@@ -172,7 +252,7 @@
   border: 1px solid var(--border);
   padding: 0.5rem 0.75rem;
   text-align: left;
-  font-size: 0.9rem;
+  white-space: nowrap;
 }
 
 .content th {
@@ -187,12 +267,20 @@
 .content a {
   color: var(--accent);
   text-decoration: underline;
+  text-underline-offset: 0.15em;
 }
 
 .content a:hover {
   color: var(--accent-strong);
 }
 
+.content a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Mermaid 図: 広幅を許容、中央寄せ、横スクロール対応 */
 .content :global(.mermaid) {
   display: flex;
   justify-content: center;
@@ -205,27 +293,32 @@
   height: auto;
 }
 
+/* --- シェアボタンセクション --- */
+
 .shareSection {
-  margin-top: 2rem;
+  margin-top: 2.5rem;
   padding-top: 1.5rem;
   border-top: 1px solid var(--border);
+  max-width: 720px;
 }
 
 .shareSectionTitle {
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 600;
   text-align: center;
   margin-bottom: 0.75rem;
   color: var(--fg-soft);
 }
 
+/* --- 前後ナビ（Panel でレンダリング）--- */
+
+/* Panel の padding/bg/border がベースとして適用される。
+ * flex レイアウトを追加して前の記事 / 次の記事を左右に配置する。 */
 .postNav {
   display: flex;
   justify-content: space-between;
   gap: 1rem;
   margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--border);
 }
 
 .prevPost,
@@ -235,6 +328,13 @@
   text-decoration: none;
   color: var(--fg);
   max-width: 48%;
+}
+
+.prevPost:focus-visible,
+.nextPost:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: var(--r-normal);
 }
 
 .nextPost {
@@ -258,21 +358,26 @@
   text-decoration: underline;
 }
 
+/* --- レスポンシブ --- */
+
+/* デスクトップ（≥900px）: TOC を右サイドバーとして表示、モバイル TOC を非表示 */
 @media (min-width: 900px) {
   .layout {
     flex-direction: row-reverse;
+    align-items: flex-start;
   }
 
   .sidebar {
     display: block;
   }
 
-  /* デスクトップではサイドバーのTOCが表示されるためモバイルTOCを非表示にする */
+  /* デスクトップではサイドバーの TOC が表示されるためモバイル TOC を非表示にする */
   .mobileToc {
     display: none;
   }
 }
 
+/* モバイル（≤768px）: コンテナ余白縮小、タイトル縮小、前後ナビ縦積み */
 @media (max-width: 768px) {
   .container {
     padding: 1.5rem 0.75rem;
@@ -293,5 +398,11 @@
 
   .nextPost {
     text-align: left;
+  }
+
+  /* モバイルでは pre のネガティブマージン拡張は不要 */
+  .content pre {
+    margin-left: 0;
+    max-width: 100%;
   }
 }
