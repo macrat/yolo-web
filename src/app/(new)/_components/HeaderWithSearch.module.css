@@ -1,0 +1,31 @@
+/* Phase 4.4 暫定対処 v3 (cycle-185): (new) 配下で SearchModal の旧トークンを
+ * 新トークンにエイリアスして視認性を確保する。Phase 5 (B-331) で新検索コンポーネント
+ * 実装時に本ファイルごと削除すること。
+ *
+ * 対象旧トークン → 新トークンの対応:
+ * --color-bg           → --bg
+ * --color-bg-secondary → --bg-soft
+ * --color-text         → --fg
+ * --color-text-muted   → --fg-softer
+ * --color-border       → --border
+ * --color-hover        → --bg-soft (hover 背景)
+ * --color-primary      → --accent
+ * --color-primary-hover → --accent-strong
+ * --color-error        → --danger
+ *
+ * 実装方法は CSS 変数の cascading inheritance を活用:
+ * 親要素で --color-bg: var(--bg) のように定義すると、子 (SearchModal) の
+ * var(--color-bg) がエイリアスを通じて新トークンに解決される。
+ * <dialog> は top-layer に出るが、CSS 変数は inherited property のため通常通り継承される。
+ */
+.searchAliasScope {
+  --color-bg: var(--bg);
+  --color-bg-secondary: var(--bg-soft);
+  --color-text: var(--fg);
+  --color-text-muted: var(--fg-softer);
+  --color-border: var(--border);
+  --color-hover: var(--bg-soft);
+  --color-primary: var(--accent);
+  --color-primary-hover: var(--accent-strong);
+  --color-error: var(--danger);
+}

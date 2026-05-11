@@ -19,6 +19,7 @@
 import { useState, useCallback } from "react";
 import Header from "@/components/Header";
 import SearchModal from "@/components/search/SearchModal";
+import styles from "./HeaderWithSearch.module.css";
 
 interface HeaderWithSearchProps {
   /** Header の actions スロット（テーマトグル・StreakBadge 等） */
@@ -37,10 +38,14 @@ export default function HeaderWithSearch({ actions }: HeaderWithSearchProps) {
     setIsSearchOpen(false);
   }, []);
 
+  // searchAliasScope: (new) 配下で SearchModal が旧トークン (--color-bg 等) を参照するため、
+  // CSS 変数のカスケード継承を利用して新トークンにエイリアスする wrapper。
+  // <dialog> は top-layer に昇格するが CSS 変数は inherited property のため DOM 親から継承される。
+  // Phase 5 (B-331) で新検索コンポーネントに置き換える際は wrapper と module.css ごと削除すること。
   return (
-    <>
+    <div className={styles.searchAliasScope}>
       <Header actions={actions} onSearchOpen={openSearch} />
       <SearchModal isOpen={isSearchOpen} onClose={closeSearch} />
-    </>
+    </div>
   );
 }
