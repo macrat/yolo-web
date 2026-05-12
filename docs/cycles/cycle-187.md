@@ -2,7 +2,7 @@
 id: 187
 description: design-migration-plan.md Phase 6 = B-335「ブログ詳細ページの新デザイン移行」を実施した。/blog/[slug] のテンプレート 1 セットを (legacy) から (new) へ移し、DESIGN.md 準拠の新デザインを適用。Article JSON-LD・目次・シェアボタン・関連記事・シリーズナビ・Mermaid・GFM Alert・PlayRecommendBlock 等の既存機能を全件維持。記事 60 件は同一テンプレートから生成されるため、テンプレ移行 1 セットで全件が新デザインへ切替わった。Panel に `variant: transparent` を新規追加し本文を §1 適合させつつ没入感を確保。`--font-mono` を globals.css に追加し (legacy) と同値で混在期間中のフォント分裂を回避。TrustLevelBadge は (new) 側 import/JSX を撤去 (blog.ts のハードコードは B-337 申し送り)。
 started_at: "2026-05-11T19:15:45+0900"
-completed_at: "2026-05-11T22:34:46+0900"
+completed_at: "2026-05-12T11:11:40+0900"
 ---
 
 # サイクル-187
