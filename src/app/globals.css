@@ -45,11 +45,6 @@
   --danger-strong: oklch(0.5 0.21 35);
   --danger-soft: oklch(0.93 0.04 35);
 
-  /* Monospace font stack — コードブロック・インラインコード用等幅フォント。
-   * old-globals.css L16 と同一値に統一し、(new)/(legacy) 混在期間中のフォント分裂を防ぐ（cycle-187 D2）。
-   * Phase 10.2 (B-337) で old-globals.css 削除後も globals.css 側に残る。 */
-  --font-mono: "Menlo", "Consolas", "Liberation Mono", "Courier New", monospace;
-
   /* Semantic — use these */
   --r-normal: 2px; /* デフォルト。パネル・カード・タグ・モーダル等すべて */
   --r-interactive: 8px; /* ボタン・入力欄・セレクト・操作可能要素 */
