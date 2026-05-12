@@ -34,8 +34,10 @@ function openShareUrl(url: string): void {
 /**
  * ShareButtons — SNS 共有ボタン群コンポーネント。
  *
- * DESIGN.md §5: Button コンポーネント（variant="default"、size="small"）を再利用
+ * DESIGN.md §5: Button コンポーネント（variant="default"）を再利用
  * DESIGN.md §3: アイコンは原則として使わない
+ * WCAG 2.5.5: タップターゲット 44×44px を確保するため size="default" を使用
+ *   （size="small" は padding: 5px 11px ≈ 26px となり WCAG 2.5.5 未達）
  *
  * 各ボタンは新規タブで開く。aria-label に「（外部サイト・新しいタブで開く）」を付与して
  * アクセシビリティ上の外部遷移を明示する。
@@ -109,7 +111,6 @@ export default function ShareButtons({
         {sns.includes("x") && (
           <Button
             variant="default"
-            size="small"
             onClick={handleShareX}
             aria-label="X で共有（外部サイト・新しいタブで開く）"
           >
@@ -119,7 +120,6 @@ export default function ShareButtons({
         {sns.includes("line") && (
           <Button
             variant="default"
-            size="small"
             onClick={handleShareLine}
             aria-label="LINE で共有（外部サイト・新しいタブで開く）"
           >
@@ -129,7 +129,6 @@ export default function ShareButtons({
         {sns.includes("hatena") && (
           <Button
             variant="default"
-            size="small"
             onClick={handleShareHatena}
             aria-label="はてなブックマークに追加（外部サイト・新しいタブで開く）"
           >
@@ -139,7 +138,6 @@ export default function ShareButtons({
         {sns.includes("copy") && (
           <Button
             variant="default"
-            size="small"
             onClick={handleCopy}
             aria-label="URLをコピー"
           >
