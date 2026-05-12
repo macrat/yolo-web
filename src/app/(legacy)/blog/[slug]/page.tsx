@@ -17,9 +17,9 @@ import {
 } from "@/lib/seo";
 import { BASE_URL } from "@/lib/constants";
 import { formatDate } from "@/lib/date";
-import Breadcrumb from "@/components/Breadcrumb";
-import Panel from "@/components/Panel";
-import ShareButtons from "@/components/ShareButtons";
+import Breadcrumb from "@/components/common/Breadcrumb";
+import TrustLevelBadge from "@/components/common/TrustLevelBadge";
+import ShareButtons from "@/components/common/ShareButtons";
 import TableOfContents from "@/blog/_components/TableOfContents";
 import TagList from "@/blog/_components/TagList";
 import SeriesNav from "@/blog/_components/SeriesNav";
@@ -84,10 +84,7 @@ export default async function BlogPostPage({ params }: Props) {
         ]}
       />
 
-      {/* 本文を transparent Panel で包む（DESIGN.md §1 適合 + cycle-187 D4）。
-       * variant="transparent" により Panel 自身の背景・枠線・パディングをゼロにし、
-       * 縦余白の責務を article 内の段落・見出しの margin に一元化する。 */}
-      <Panel as="article" variant="transparent" className={styles.article}>
+      <article className={styles.article}>
         <header className={styles.header}>
           <div className={styles.meta}>
             <Link
@@ -96,6 +93,7 @@ export default async function BlogPostPage({ params }: Props) {
             >
               {CATEGORY_LABELS[post.category]}
             </Link>
+            <TrustLevelBadge level={post.trustLevel} />
             <time dateTime={post.published_at}>
               {formatDate(post.published_at)}
             </time>
@@ -128,11 +126,9 @@ export default async function BlogPostPage({ params }: Props) {
         )}
 
         <div className={styles.layout}>
-          {/* デスクトップ: TOC を Panel に収めて sticky サイドバーとして配置。
-           * Panel 自身はスタイル適用のみ、CSS で sticky/非表示切替を行う。 */}
-          <Panel as="aside" className={styles.sidebar}>
+          <aside className={styles.sidebar}>
             <TableOfContents headings={post.headings} />
-          </Panel>
+          </aside>
 
           <div
             className={styles.content}
@@ -143,7 +139,9 @@ export default async function BlogPostPage({ params }: Props) {
         <MermaidRenderer />
 
         <section className={styles.shareSection}>
-          <h2 className={styles.shareSectionTitle}>この記事をシェア</h2>
+          <h2 className={styles.shareSectionTitle}>
+            {"\u3053\u306E\u8A18\u4E8B\u3092\u30B7\u30A7\u30A2"}
+          </h2>
           <ShareButtons
             url={`/blog/${post.slug}`}
             title={post.title}
@@ -154,10 +152,9 @@ export default async function BlogPostPage({ params }: Props) {
         </section>
 
         <RelatedArticles posts={relatedPosts} />
-      </Panel>
+      </article>
 
-      {/* 前後ナビを Panel に収める（DESIGN.md §1 + §4 入れ子禁止 = article 外に並列配置） */}
-      <Panel as="nav" className={styles.postNav} aria-label="Post navigation">
+      <nav className={styles.postNav} aria-label="Post navigation">
         {prevPost ? (
           <Link href={`/blog/${prevPost.slug}`} className={styles.prevPost}>
             <span className={styles.navLabel}>前の記事</span>
@@ -176,7 +173,7 @@ export default async function BlogPostPage({ params }: Props) {
         ) : (
           <span />
         )}
-      </Panel>
+      </nav>
 
       <PlayRecommendBlock
         recommendations={playRecommendations}

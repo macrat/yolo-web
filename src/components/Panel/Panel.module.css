@@ -4,13 +4,3 @@
   border-radius: var(--r-normal);
   padding: 1.5rem;
 }
-
-/* transparent バリアント: 記事本文など、Panel の視覚的境界（背景・枠線・パディング）を
- * 持たせず、コンテンツの縦余白責務を内側の要素に一元化するために使う。
- * DESIGN.md §1「すべてのコンテンツはパネルに収まった形で提供される」を満たしながら
- * 本文の没入感を阻害しない実装手段として採用（cycle-187 D4）。 */
-.transparent {
-  padding: 0;
-  background: transparent;
-  border: none;
-}
