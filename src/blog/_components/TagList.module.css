@@ -6,23 +6,26 @@
 }
 
 .tag {
-  background-color: var(--color-bg-secondary);
-  border-radius: 0.25rem;
+  /* タグチップの背景: --bg-soft（パネル背景より一段引いた面） */
+  background-color: var(--bg-soft);
+  border-radius: var(--r-normal);
 }
 
 .tagLink {
   display: block;
-  color: var(--color-text-muted);
+  /* 補足テキストと同等の控えめな文字色 */
+  color: var(--fg-soft);
   padding: 0.15rem 0.5rem;
   font-size: 0.75rem;
   text-decoration: none;
-  border-radius: 0.25rem;
+  border-radius: var(--r-normal);
   transition:
     background-color 0.15s ease,
     color 0.15s ease;
 }
 
 .tagLink:hover {
-  background-color: var(--color-accent);
-  color: var(--color-bg);
+  /* ホバー時はアクセントカラーで反転（--accent 背景、反転文字色） */
+  background-color: var(--accent);
+  color: var(--fg-invert);
 }

@@ -44,4 +44,38 @@ describe("TableOfContents", () => {
       screen.getByRole("navigation", { name: "Table of contents" }),
     ).toBeInTheDocument();
   });
+
+  test(".toc セレクタに background / border / border-radius / padding が含まれない（Panel ラッパに委譲済み）", async () => {
+    const fs = await import("fs");
+    const path = await import("path");
+    const cssPath = path.resolve(__dirname, "../TableOfContents.module.css");
+    const css = fs.readFileSync(cssPath, "utf-8");
+
+    // .toc ブロックのみを抽出してチェック
+    const tocBlockMatch = css.match(/\.toc\s*\{([^}]*)\}/);
+    const tocBlock = tocBlockMatch ? tocBlockMatch[1] : "";
+
+    // Panel ラッパが担うプロパティが .toc に残っていないこと
+    expect(tocBlock).not.toMatch(/background(-color)?:/);
+    expect(tocBlock).not.toMatch(/\bborder\b\s*:/);
+    expect(tocBlock).not.toMatch(/border-radius:/);
+    expect(tocBlock).not.toMatch(/\bpadding\b\s*:/);
+  });
+
+  test("CSS が新トークン(--bg, --fg, --border 等)を使用し旧トークンを含まない", async () => {
+    const fs = await import("fs");
+    const path = await import("path");
+    const cssPath = path.resolve(__dirname, "../TableOfContents.module.css");
+    const css = fs.readFileSync(cssPath, "utf-8");
+
+    // 旧トークンが残っていないこと
+    expect(css).not.toContain("--color-bg-secondary");
+    expect(css).not.toContain("--color-border");
+    expect(css).not.toContain("--color-text");
+    expect(css).not.toContain("--color-text-muted");
+    expect(css).not.toContain("--color-primary");
+
+    // 新トークンが使われていること
+    expect(css).toMatch(/--bg|--fg|--border/);
+  });
 });

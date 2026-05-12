@@ -1,12 +1,7 @@
 /*
- * ブログ詳細ページ — (new) デザインシステム
- *
- * cycle-188 採用案 C: Panel デフォルト構造（枠線あり + 白背景）で本文を囲む。
- * DESIGN.md §1「すべてのコンテンツはパネル」を視覚的に満たす。
- * DESIGN.md §4「パネルは入れ子にしない」— SeriesNav / RelatedArticles / 前後ナビは Panel 外。
+ * ページ全体のラッパー。
+ * max-width 1200px は DESIGN.md §4 の上限。padding で左右余白を確保。
  */
-
-/* ページ全体のラッパー（最大 1200px） */
 .page {
   max-width: 1200px;
   margin: 0 auto;
@@ -14,12 +9,20 @@
 }
 
 /*
- * 720px 単一ラッパー: パンくず / タイトル / メタ情報 の左端起点を統一
- * cycle-188 再着手条件3 対応
+ * contentColumn: 全コンテンツ要素のラッパー。proseWrapper の直接子要素は
+ * tocSidebar（aside）と contentColumn（div）の 2つのみ。
+ *
+ * 狭い幅（< 1024px）: max-width 720px の単一カラム中央寄せ。
+ * デスクトップ（≥ 1024px）: CSS Grid [tocSidebar 220px] [contentColumn 720px] の
+ *   右カラムとして grid-column: 2 を明示。
+ *
+ * Next.js が RSC ハイドレーション用 <script> を proseWrapper 直下に注入することがある。
+ * contentColumn が grid-column: 2 を明示することで注入スクリプトの影響を受けない。
  */
-.proseWrapper {
+.contentColumn {
   max-width: 720px;
   margin: 0 auto;
+  min-width: 0; /* Grid 子要素のオーバーフロー抑制 */
 }
 
 /* タイトル・メタ情報ヘッダー */
@@ -28,7 +31,6 @@
   margin-bottom: 1.5rem;
 }
 
-/* タイトル: ページ内で最も目立つ要素 */
 .title {
   font-size: 1.75rem;
   font-weight: 700;
@@ -38,8 +40,8 @@
 }
 
 /*
- * メタ情報: color(--fg-soft) + size(0.8rem) + 余白(margin-top) の組み合わせで
- * タイトルとの階層を表現（単一手段に依存しない — cycle-188 再着手条件4）
+ * メタ情報: color(--fg-soft) + size(0.8rem) + 余白(margin-bottom) の組み合わせで
+ * タイトルとの階層を表現。
  */
 .meta {
   display: flex;
@@ -51,11 +53,6 @@
   margin-bottom: 0.75rem;
 }
 
-.metaItem {
-  /* プレーンテキストのメタ情報。.meta の color を継承 */
-}
-
-/* カテゴリバッジ */
 .category {
   background-color: var(--accent);
   color: #fff;
@@ -70,27 +67,24 @@
   background-color: var(--accent-strong);
 }
 
-/* モバイル向けインライン TOC */
+/* SeriesNav を包む Panel のマージン調整 */
+.seriesNavPanel {
+  margin-bottom: 1.5rem;
+}
+
+/* モバイル向けインライン TOC（Panel コンポーネントでラップ済み） */
 .mobileToc {
   margin-bottom: 1.5rem;
-  background-color: var(--bg-soft);
-  border: 1px solid var(--border);
-  border-radius: var(--r-normal);
 }
 
 .mobileTocSummary {
-  padding: 0.75rem 1rem;
   font-size: 0.9rem;
   font-weight: 700;
   cursor: pointer;
   color: var(--fg);
 }
 
-.mobileToc[open] .mobileTocSummary {
-  border-bottom: 1px solid var(--border);
-}
-
-/* mobileToc 内では TableOfContents の見出し（h2「目次」）を非表示 */
+/* mobileToc 内では TableOfContents の見出し（h2）を非表示 */
 .mobileToc nav h2 {
   display: none;
 }
@@ -98,59 +92,43 @@
 .mobileToc nav {
   border: none;
   background: none;
+  margin-top: 0.75rem;
 }
 
 /*
- * 本文エリア: 本文 Panel + デスクトップ TOC を横並び
- * TOC がある場合は 1200px 内でサイドバーを右側に置く
+ * TOC サイドバー（デスクトップ Grid 左カラム）。
+ * デフォルトは display:none。1024px 以上のメディアクエリで proseWrapper Grid に参加する。
+ * position:sticky により記事を読み進めても TOC が画面に追従する。
+ * align-self: start で Grid 行の高さに引き伸ばされず sticky が正しく機能する。
  */
-.contentArea {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  gap: 2rem;
-  align-items: flex-start;
-}
-
-/*
- * 本文 Panel のラッパー: flex: 1 で TOC と並んだときに伸縮
- * max-width 720px で文章を読みやすい幅に制限
- */
-.proseWrapperInner {
-  flex: 1;
-  min-width: 0;
-  max-width: 720px;
-  margin: 0 auto;
-}
-
-/*
- * 本文 Panel: Panel.module.css デフォルト（background + border + border-radius）を継承
- * padding のみ 2rem に拡張して読み物体験を確保
- * 「視覚的に箱の中に箱」とならないよう、枠線は Panel のデフォルト（--border）を維持
- */
-.articlePanel {
-  /* Panel.module.css の 1.5rem padding を 2rem に上書き */
-  padding: 2rem !important;
-  margin-bottom: 1rem;
-  /* background / border / border-radius は Panel.module.css から継承 */
-}
-
-/* デスクトップ TOC サイドバー */
 .tocSidebar {
-  flex-shrink: 0;
-  width: 220px;
+  display: none;
   position: sticky;
   top: 1rem;
-  align-self: flex-start;
-  /* デフォルト非表示: ブレークポイントで表示 */
-  display: none;
+  align-self: start;
+  width: 220px;
 }
 
 /*
- * 本文 prose スタイル
- * line-height 1.8（DESIGN.md §3「原則1.7倍」より少し広め、長文読み物の快適性を優先）
- * --font-mono は globals.css で定義済み
+ * 本文 Panel のスタイル。
+ * padding="comfortable" は Panel コンポーネント側で制御（2rem）。
+ *
+ * 枠線の非対称設計:
+ *   ライト: --border（#e6e6e2）— 控えめな罫線で「閉じ込められた」感を避ける。
+ *   ダーク: --border-strong（#6f6f6f）— Panel 背景(#363634) vs body(#1c1c1a) で
+ *           Panel を「箱」として視認させるため強めの罫線が必要。
+ * ライトで --border-strong を使うと 2.16:1 で「主張しすぎ」になる。
  */
+.articlePanel {
+  border-color: var(--border);
+}
+
+/* ダーク時のみ枠線を強化して Panel を視認可能にする */
+:global(.dark) .articlePanel {
+  border-color: var(--border-strong);
+}
+
+/* 本文 prose スタイル。line-height 1.8 は DESIGN.md §3 長文読み物許容値。 */
 .prose {
   line-height: 1.8;
   color: var(--fg);
@@ -196,6 +174,12 @@
   font-size: 0.85em;
 }
 
+/*
+ * コードブロック背景。
+ * ライト: --bg-soft (#f4f4f1) — Panel (#fff) より少し暗い背景でコードブロックを区別。
+ * ダーク: --bg-softer (#131311) — Panel (#363634) より暗い「くぼみ」表現で区別する。
+ *   --bg-soft (#1c1c1a) は body 背景と同色のため使わない（Panel に「穴が開く」視覚問題）。
+ */
 .prose pre {
   background-color: var(--bg-soft);
   border: 1px solid var(--border);
@@ -203,6 +187,11 @@
   padding: 1rem;
   overflow-x: auto;
   margin-bottom: 1rem;
+}
+
+/* ダーク時: コードブロック背景を body と区別するため --bg-softer を使用 */
+:global(.dark) .prose pre {
+  background-color: var(--bg-softer);
 }
 
 .prose pre code {
@@ -238,7 +227,6 @@
   font-weight: 600;
 }
 
-/* DESIGN.md §3: 本文中での太字は原則として使わない（既存 HTML の strong は尊重） */
 .prose strong {
   font-weight: 700;
 }
@@ -252,7 +240,6 @@
   color: var(--accent-strong);
 }
 
-/* Mermaid 図 */
 .prose :global(.mermaid) {
   display: flex;
   justify-content: center;
@@ -263,40 +250,6 @@
 .prose :global(.mermaid) svg {
   max-width: 100%;
   height: auto;
-}
-
-/* GFM Alert (Admonition) スタイル */
-.prose :global(.admonition) {
-  border-left: 4px solid var(--admonition-note);
-  background: var(--admonition-note-bg);
-  padding: 0.75rem 1rem;
-  margin-bottom: 1rem;
-  border-radius: 0 var(--r-normal) var(--r-normal) 0;
-}
-
-.prose :global(.admonition-note) {
-  border-left-color: var(--admonition-note);
-  background: var(--admonition-note-bg);
-}
-
-.prose :global(.admonition-tip) {
-  border-left-color: var(--admonition-tip);
-  background: var(--admonition-tip-bg);
-}
-
-.prose :global(.admonition-warning) {
-  border-left-color: var(--admonition-warning);
-  background: var(--admonition-warning-bg);
-}
-
-.prose :global(.admonition-caution) {
-  border-left-color: var(--admonition-caution);
-  background: var(--admonition-caution-bg);
-}
-
-.prose :global(.admonition-important) {
-  border-left-color: var(--admonition-important);
-  background: var(--admonition-important-bg);
 }
 
 /* シェアセクション */
@@ -313,7 +266,7 @@
   margin-bottom: 0.75rem;
 }
 
-/* 前後ナビゲーション */
+/* 前後ナビゲーション（時系列順。シリーズ記事でも常時表示。ラベルで SeriesNav と区別） */
 .postNav {
   display: flex;
   justify-content: space-between;
@@ -354,24 +307,43 @@
 }
 
 /*
- * ブレークポイント: 960px 以上でデスクトップ TOC を表示
- * DESIGN.md §4「ブレークポイントを作るよりも、どの画面幅でも自然に見えるレイアウトを優先」
- * 960px は TOC(220px) + gap(2rem≈32px) + proseWrapperInner(720px) ≈ 972px のため妥当
+ * デスクトップ（1024px 以上）: proseWrapper を CSS Grid に切り替える。
+ *
+ * Grid 構造: [tocSidebar 220px] [contentColumn 720px]  → justify-content: center で中央寄せ
+ *
+ * 閾値 1024px の根拠:
+ *   page padding(1rem×2=32px) + TOC(220px) + gap(2rem=32px) + 本文(720px) = 1004px
+ *   安全マージン 20px 加算 → 1024px。
+ *
+ * TOC が存在しない記事（headings 0件）では tocSidebar 自体が display:none のため
+ * Grid 左カラムが幅 0 になり、contentColumn が center 寄せになる。
  */
-@media (min-width: 960px) {
-  .contentArea {
+@media (min-width: 1024px) {
+  .proseWrapper {
+    display: grid;
+    grid-template-columns: 220px 720px;
+    gap: 2rem;
+    align-items: start;
     justify-content: center;
   }
 
-  .proseWrapperInner {
+  /* tocSidebar は Grid 左カラム（column 1）に固定。sticky でスクロール追従する。 */
+  .tocSidebar {
+    display: block;
+    grid-column: 1;
+  }
+
+  /*
+   * contentColumn は Grid 右カラム（column 2 = 720px）を明示。
+   * max-width: 720px は解除し、Grid の列幅に任せる。
+   * grid-column: 2 の明示により、Next.js 注入 script 等が間に入っても列がズレない。
+   */
+  .contentColumn {
+    grid-column: 2;
+    max-width: none;
     margin: 0;
   }
 
-  .tocSidebar {
-    display: block;
-  }
-
-  /* デスクトップでは mobileToc を非表示 */
   .mobileToc {
     display: none;
   }

@@ -58,6 +58,26 @@ describe("Breadcrumb", () => {
     expect(list.tagName).toBe("OL");
   });
 
+  test("separator が JSX で明示的に各 li に配置されている（CSS ::before ではなく inline 方式）", () => {
+    const { container } = render(<Breadcrumb items={items} />);
+    // separator は JSX <span aria-hidden="true"> で生成し、current span と同じ li 内にある
+    // これにより SP で折返し時に「/」が単独行に落ちる問題を防ぐ
+    const listItems = container.querySelectorAll("li");
+    // 2 番目・3 番目 li にそれぞれ aria-hidden="true" の separator span が含まれる
+    expect(listItems[0].querySelector("[aria-hidden='true']")).toBeNull();
+    expect(listItems[1].querySelector("[aria-hidden='true']")).not.toBeNull();
+    expect(listItems[2].querySelector("[aria-hidden='true']")).not.toBeNull();
+  });
+
+  test("separator の textContent が '/' であること", () => {
+    const { container } = render(<Breadcrumb items={items} />);
+    const separators = container.querySelectorAll("[aria-hidden='true']");
+    expect(separators).toHaveLength(2);
+    separators.forEach((sep) => {
+      expect(sep.textContent?.trim()).toBe("/");
+    });
+  });
+
   test("BreadcrumbList JSON-LD script が出力される", () => {
     const { container } = render(<Breadcrumb items={items} />);
     const script = container.querySelector(

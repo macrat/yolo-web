@@ -10,6 +10,12 @@ interface PanelOwnProps<T extends PanelTag = "section"> {
   children: React.ReactNode;
   /** 追加クラス */
   className?: string;
+  /**
+   * padding バリアント。
+   * - "normal" (デフォルト): 1.5rem — 通常のパネル
+   * - "comfortable": 2rem — 長文読み物用の広めのパディング
+   */
+  padding?: "normal" | "comfortable";
 }
 
 type PanelProps<T extends PanelTag = "section"> = PanelOwnProps<T> &
@@ -25,10 +31,17 @@ function Panel<T extends PanelTag = "section">({
   as,
   children,
   className,
+  padding = "normal",
   ...rest
 }: PanelProps<T>) {
   const Tag = (as ?? "section") as ElementType;
-  const combinedClassName = [styles.panel, className].filter(Boolean).join(" ");
+  const combinedClassName = [
+    styles.panel,
+    padding === "comfortable" ? styles.paddingComfortable : null,
+    className,
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   return (
     <Tag className={combinedClassName} {...rest}>

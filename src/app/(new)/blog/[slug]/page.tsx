@@ -1,14 +1,3 @@
-/**
- * ブログ詳細ページ — (new) デザインシステム実装
- *
- * cycle-188 採用案 C: Panel デフォルト構造（枠線あり + 白背景）で本文を囲む。
- * DESIGN.md §1「すべてのコンテンツはパネル」を視覚的に満たす。
- * DESIGN.md §4「パネルは入れ子にしない」— RelatedArticles / SeriesNav / 前後ナビは本文 Panel の外側に並列配置。
- *
- * SeriesNav 自身が border + background を持つパネル的な矩形コンテナとして実装されているため、
- * Panel コンポーネントでの重ねラップは行わない（二重スタイルを避ける）。
- * SeriesNav は SeriesNav.module.css により §1 準拠の視覚を達成している。
- */
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -86,80 +75,91 @@ export default async function BlogPostPage({ params }: Props) {
       />
 
       {/*
-       * 720px 単一ラッパー: パンくず / タイトル / メタ情報 の左端起点を統一
-       * cycle-188 再着手条件3: タイトル幅と本文幅の左端を構造的に一致させる
+       * proseWrapper: 狭い幅では max-width 720px 単一カラム。
+       * デスクトップ（≥ 1024px）: CSS Grid [TOC 220px] [コンテンツ 720px]。
+       *
+       * 構造: <aside tocSidebar> + <div contentColumn> の 2 要素のみを直接子に持つ。
+       * Next.js が RSC ハイドレーション用 <script> を proseWrapper 直下に注入することがある。
+       * 直接子を 2 つに固定することで Grid 自動配置が壊れるリスクを回避する。
+       * contentColumn が grid-column: 2 を明示しているため、注入 script も column 1 には入らない。
        */}
       <div className={styles.proseWrapper}>
-        <Breadcrumb
-          items={[
-            { label: "ホーム", href: "/" },
-            { label: "ブログ", href: "/blog" },
-            { label: post.title },
-          ]}
-        />
-
-        {/* タイトル・メタ情報ヘッダー（パンくずとは margin で視覚的に分離） */}
-        <header className={styles.articleHeader}>
-          <h1 className={styles.title}>{post.title}</h1>
-          {/* メタ情報: color + size + 余白の組み合わせで階層化（単一手段に依存しない） */}
-          <div className={styles.meta}>
-            <Link
-              href={`/blog/category/${post.category}`}
-              className={styles.category}
-            >
-              {CATEGORY_LABELS[post.category]}
-            </Link>
-            <time dateTime={post.published_at} className={styles.metaItem}>
-              {formatDate(post.published_at)}
-            </time>
-            {post.updated_at !== post.published_at && (
-              <span className={styles.metaItem}>
-                更新: {formatDate(post.updated_at)}
-              </span>
-            )}
-            <span className={styles.metaItem}>
-              {post.readingTime}分で読める
-            </span>
-          </div>
-          {/* TODO(cycle-184/B-389): X1 採用時に削除 */}
-          <TagList tags={post.tags} linkableTags={linkableTags} />
-        </header>
+        {/*
+         * デスクトップ TOC サイドバー（Grid 左カラム）。
+         * モバイルでは CSS で display:none。mobileToc が代わりに表示される。
+         * Panel 化: DESIGN.md §1「すべてのコンテンツはパネル」。
+         */}
+        {post.headings.length > 0 && (
+          <Panel as="aside" className={styles.tocSidebar}>
+            <TableOfContents headings={post.headings} />
+          </Panel>
+        )}
 
         {/*
-         * SeriesNav: §4「パネル入れ子禁止」対応として本文 Panel の外側・上に配置。
-         * SeriesNav.module.css が border + background を持つパネル的な外観を持つため
-         * Panel コンポーネントでのラップは行わない（二重スタイルを避ける）。
+         * contentColumn: Grid 右カラム（720px）。
+         * すべてのコンテンツ要素をこの div に収める。
+         * grid-column: 2 を明示するため、Next.js 注入 script の影響を受けない。
          */}
-        {post.series && (
-          <SeriesNav
-            seriesId={post.series}
-            currentSlug={post.slug}
-            seriesPosts={getSeriesPosts(post.series)}
+        <div className={styles.contentColumn}>
+          <Breadcrumb
+            items={[
+              { label: "ホーム", href: "/" },
+              { label: "ブログ", href: "/blog" },
+              { label: post.title },
+            ]}
           />
-        )}
 
-        {/* モバイル向けインラインTOC（デスクトップでは CSS で非表示） */}
-        {post.headings.length > 0 && (
-          <details className={styles.mobileToc}>
-            <summary className={styles.mobileTocSummary}>目次</summary>
-            <TableOfContents headings={post.headings} />
-          </details>
-        )}
-      </div>
+          <header className={styles.articleHeader}>
+            <h1 className={styles.title}>{post.title}</h1>
+            <div className={styles.meta}>
+              <Link
+                href={`/blog/category/${post.category}`}
+                className={styles.category}
+              >
+                {CATEGORY_LABELS[post.category]}
+              </Link>
+              <time dateTime={post.published_at}>
+                {formatDate(post.published_at)}
+              </time>
+              {post.updated_at !== post.published_at && (
+                <span>更新: {formatDate(post.updated_at)}</span>
+              )}
+              <span>{post.readingTime}分で読める</span>
+            </div>
+            {/* TODO(cycle-184/B-389): X1 採用時に削除 */}
+            <TagList tags={post.tags} linkableTags={linkableTags} />
+          </header>
 
-      {/*
-       * 本文エリア: 本文 Panel + デスクトップ TOC を横並び
-       * max-width 1200px で TOC を横に並べ、本文は proseWrapperInner で 720px に収める
-       */}
-      <div className={styles.contentArea}>
-        <div className={styles.proseWrapperInner}>
+          {/* SeriesNav: DESIGN.md §4「パネル入れ子禁止」対応で本文 Panel の外に並列配置 */}
+          {post.series && (
+            <Panel className={styles.seriesNavPanel}>
+              <SeriesNav
+                seriesId={post.series}
+                currentSlug={post.slug}
+                seriesPosts={getSeriesPosts(post.series)}
+              />
+            </Panel>
+          )}
+
+          {/* モバイル向けインライン TOC（デスクトップでは CSS で非表示） */}
+          {post.headings.length > 0 && (
+            <Panel className={styles.mobileToc}>
+              <details>
+                <summary className={styles.mobileTocSummary}>目次</summary>
+                <TableOfContents headings={post.headings} />
+              </details>
+            </Panel>
+          )}
+
           {/*
-           * 本文 Panel: 採用案 C = Panel デフォルト（枠線あり + 白背景）
-           * DESIGN.md §1 を最も直接的に満たす矩形コンテナ
-           * §4 入れ子禁止: RelatedArticles・SeriesNav は Panel の外側
-           * Markdown 標準要素（code block / GFM Alert / table 等）は Panel コンポーネントを使わないため入れ子非該当
+           * 本文 Panel（DESIGN.md §1「すべてのコンテンツはパネル」）。
+           * §4 入れ子禁止: Markdown 標準要素は Panel コンポーネントを使わないため入れ子非該当。
            */}
-          <Panel as="article" className={styles.articlePanel}>
+          <Panel
+            as="article"
+            padding="comfortable"
+            className={styles.articlePanel}
+          >
             <div
               className={styles.prose}
               dangerouslySetInnerHTML={{ __html: post.contentHtml }}
@@ -167,57 +167,52 @@ export default async function BlogPostPage({ params }: Props) {
           </Panel>
 
           <MermaidRenderer />
+
+          <section
+            className={styles.shareSection}
+            aria-label="この記事をシェア"
+          >
+            <h2 className={styles.shareSectionTitle}>この記事をシェア</h2>
+            <ShareButtons
+              url={`/blog/${post.slug}`}
+              title={post.title}
+              sns={["x", "line", "hatena", "copy"]}
+              contentType="blog"
+              contentId={post.slug}
+            />
+          </section>
+
+          {/* 関連記事（DESIGN.md §4: 本文 Panel 外の並列配置） */}
+          <RelatedArticles posts={relatedPosts} />
+
+          {/*
+           * 前後ナビゲーション（投稿日時系列順）。
+           * シリーズ記事でも常時表示し、時系列ナビであることをラベルで明示する。
+           * SeriesNav 側は「シリーズ内の前/次の記事」ラベルで区別済み。
+           */}
+          <nav className={styles.postNav} aria-label="前後の記事（時系列順）">
+            {prevPost ? (
+              <Link href={`/blog/${prevPost.slug}`} className={styles.prevPost}>
+                <span className={styles.navLabel}>
+                  {post.series ? "すべての記事から：前の記事" : "前の記事"}
+                </span>
+                <span className={styles.navTitle}>{prevPost.title}</span>
+              </Link>
+            ) : (
+              <span aria-hidden="true" />
+            )}
+            {nextPost ? (
+              <Link href={`/blog/${nextPost.slug}`} className={styles.nextPost}>
+                <span className={styles.navLabel}>
+                  {post.series ? "すべての記事から：次の記事" : "次の記事"}
+                </span>
+                <span className={styles.navTitle}>{nextPost.title}</span>
+              </Link>
+            ) : (
+              <span aria-hidden="true" />
+            )}
+          </nav>
         </div>
-
-        {/* デスクトップ TOC: 本文の右側に並列配置（§4 入れ子なし） */}
-        {post.headings.length > 0 && (
-          <aside className={styles.tocSidebar}>
-            <TableOfContents headings={post.headings} />
-          </aside>
-        )}
-      </div>
-
-      {/*
-       * シェア・関連記事・前後ナビは本文 Panel の外側、720px ラッパー内
-       * §4「パネル入れ子禁止」対応: 本文 Panel の外側に並列配置
-       */}
-      <div className={styles.proseWrapper}>
-        {/* シェアボタン（WCAG 2.5.5: 44×44px — ShareButtons.module.css で確保済み） */}
-        <section className={styles.shareSection} aria-label="この記事をシェア">
-          <h2 className={styles.shareSectionTitle}>この記事をシェア</h2>
-          <ShareButtons
-            url={`/blog/${post.slug}`}
-            title={post.title}
-            sns={["x", "line", "hatena", "copy"]}
-            contentType="blog"
-            contentId={post.slug}
-          />
-        </section>
-
-        {/* 関連記事（本文 Panel の外側に並列配置 → §4 入れ子なし） */}
-        <RelatedArticles posts={relatedPosts} />
-
-        {/* 前後ナビゲーション */}
-        <nav className={styles.postNav} aria-label="前後の記事">
-          {prevPost ? (
-            <Link href={`/blog/${prevPost.slug}`} className={styles.prevPost}>
-              <span className={styles.navLabel}>前の記事</span>
-              {/* lgtm[js/stored-xss] - blog slugs from local markdown files, not user input */}
-              <span className={styles.navTitle}>{prevPost.title}</span>
-            </Link>
-          ) : (
-            <span />
-          )}
-          {nextPost ? (
-            <Link href={`/blog/${nextPost.slug}`} className={styles.nextPost}>
-              <span className={styles.navLabel}>次の記事</span>
-              {/* lgtm[js/stored-xss] - blog slugs from local markdown files, not user input */}
-              <span className={styles.navTitle}>{nextPost.title}</span>
-            </Link>
-          ) : (
-            <span />
-          )}
-        </nav>
       </div>
     </div>
   );
