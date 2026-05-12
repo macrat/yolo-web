@@ -183,6 +183,10 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* --font-mono: old-globals.css L16 と同一値で (legacy)/(new) 混在期間中のフォント分裂を防ぐ。
+   * コードブロック / 等幅表示に使用。Phase 10.2 で old-globals.css 削除後も残す。
+   * DESIGN.md §3 への正式加筆は B-337（old-globals.css 廃止時）で行う。 */
+  --font-mono: "Menlo", "Consolas", "Liberation Mono", "Courier New", monospace;
 }
 
 /* モバイルメニュー展開時のスクロールロック。

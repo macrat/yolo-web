@@ -1,14 +1,14 @@
 .section {
   margin-top: 2.5rem;
   padding-top: 1.5rem;
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid var(--border);
 }
 
 .heading {
   font-size: 1.1rem;
   font-weight: 700;
   margin-bottom: 1rem;
-  color: var(--color-text);
+  color: var(--fg);
 }
 
 .list {
@@ -21,20 +21,20 @@
 }
 
 .item {
-  border: 1px solid var(--color-border);
-  border-radius: 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--r-normal);
   transition: border-color 0.15s ease;
 }
 
 .item:hover {
-  border-color: var(--color-primary);
+  border-color: var(--accent);
 }
 
 .link {
   display: block;
   padding: 0.875rem 1rem;
   text-decoration: none;
-  color: var(--color-text);
+  color: var(--fg);
 }
 
 .meta {
@@ -45,17 +45,17 @@
 }
 
 .category {
-  background-color: var(--color-primary);
+  background-color: var(--accent);
   color: #fff;
   padding: 0.1rem 0.45rem;
-  border-radius: 0.25rem;
+  border-radius: var(--r-normal);
   font-size: 0.7rem;
   font-weight: 600;
 }
 
 .date {
   font-size: 0.8rem;
-  color: var(--color-text-muted);
+  color: var(--fg-soft);
 }
 
 .title {
@@ -63,10 +63,10 @@
   font-weight: 600;
   line-height: 1.4;
   margin: 0;
-  color: var(--color-text);
+  color: var(--fg);
   transition: color 0.15s ease;
 }
 
 .item:hover .title {
-  color: var(--color-primary);
+  color: var(--accent);
 }

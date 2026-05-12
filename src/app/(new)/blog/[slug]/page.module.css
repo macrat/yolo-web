@@ -1,0 +1,402 @@
+/*
+ * ブログ詳細ページ — (new) デザインシステム
+ *
+ * cycle-188 採用案 C: Panel デフォルト構造（枠線あり + 白背景）で本文を囲む。
+ * DESIGN.md §1「すべてのコンテンツはパネル」を視覚的に満たす。
+ * DESIGN.md §4「パネルは入れ子にしない」— SeriesNav / RelatedArticles / 前後ナビは Panel 外。
+ */
+
+/* ページ全体のラッパー（最大 1200px） */
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+/*
+ * 720px 単一ラッパー: パンくず / タイトル / メタ情報 の左端起点を統一
+ * cycle-188 再着手条件3 対応
+ */
+.proseWrapper {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+/* タイトル・メタ情報ヘッダー */
+.articleHeader {
+  margin-top: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+/* タイトル: ページ内で最も目立つ要素 */
+.title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--fg);
+  margin-bottom: 0.75rem;
+}
+
+/*
+ * メタ情報: color(--fg-soft) + size(0.8rem) + 余白(margin-top) の組み合わせで
+ * タイトルとの階層を表現（単一手段に依存しない — cycle-188 再着手条件4）
+ */
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.8rem;
+  color: var(--fg-soft);
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+}
+
+.metaItem {
+  /* プレーンテキストのメタ情報。.meta の color を継承 */
+}
+
+/* カテゴリバッジ */
+.category {
+  background-color: var(--accent);
+  color: #fff;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--r-normal);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.category:hover {
+  background-color: var(--accent-strong);
+}
+
+/* モバイル向けインライン TOC */
+.mobileToc {
+  margin-bottom: 1.5rem;
+  background-color: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: var(--r-normal);
+}
+
+.mobileTocSummary {
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--fg);
+}
+
+.mobileToc[open] .mobileTocSummary {
+  border-bottom: 1px solid var(--border);
+}
+
+/* mobileToc 内では TableOfContents の見出し（h2「目次」）を非表示 */
+.mobileToc nav h2 {
+  display: none;
+}
+
+.mobileToc nav {
+  border: none;
+  background: none;
+}
+
+/*
+ * 本文エリア: 本文 Panel + デスクトップ TOC を横並び
+ * TOC がある場合は 1200px 内でサイドバーを右側に置く
+ */
+.contentArea {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+/*
+ * 本文 Panel のラッパー: flex: 1 で TOC と並んだときに伸縮
+ * max-width 720px で文章を読みやすい幅に制限
+ */
+.proseWrapperInner {
+  flex: 1;
+  min-width: 0;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+/*
+ * 本文 Panel: Panel.module.css デフォルト（background + border + border-radius）を継承
+ * padding のみ 2rem に拡張して読み物体験を確保
+ * 「視覚的に箱の中に箱」とならないよう、枠線は Panel のデフォルト（--border）を維持
+ */
+.articlePanel {
+  /* Panel.module.css の 1.5rem padding を 2rem に上書き */
+  padding: 2rem !important;
+  margin-bottom: 1rem;
+  /* background / border / border-radius は Panel.module.css から継承 */
+}
+
+/* デスクトップ TOC サイドバー */
+.tocSidebar {
+  flex-shrink: 0;
+  width: 220px;
+  position: sticky;
+  top: 1rem;
+  align-self: flex-start;
+  /* デフォルト非表示: ブレークポイントで表示 */
+  display: none;
+}
+
+/*
+ * 本文 prose スタイル
+ * line-height 1.8（DESIGN.md §3「原則1.7倍」より少し広め、長文読み物の快適性を優先）
+ * --font-mono は globals.css で定義済み
+ */
+.prose {
+  line-height: 1.8;
+  color: var(--fg);
+}
+
+.prose h2 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--fg);
+}
+
+.prose h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: var(--fg);
+}
+
+.prose p {
+  margin-bottom: 1rem;
+}
+
+.prose ul,
+.prose ol {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+
+.prose li {
+  margin-bottom: 0.25rem;
+}
+
+.prose code {
+  background-color: var(--bg-soft);
+  padding: 0.15rem 0.35rem;
+  border-radius: var(--r-normal);
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+}
+
+.prose pre {
+  background-color: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: var(--r-normal);
+  padding: 1rem;
+  overflow-x: auto;
+  margin-bottom: 1rem;
+}
+
+.prose pre code {
+  padding: 0;
+  background: none;
+  font-family: var(--font-mono);
+}
+
+.prose blockquote {
+  border-left: 3px solid var(--accent);
+  padding-left: 1rem;
+  margin-left: 0;
+  margin-bottom: 1rem;
+  color: var(--fg-soft);
+}
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+
+.prose th,
+.prose td {
+  border: 1px solid var(--border);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+.prose th {
+  background-color: var(--bg-soft);
+  font-weight: 600;
+}
+
+/* DESIGN.md §3: 本文中での太字は原則として使わない（既存 HTML の strong は尊重） */
+.prose strong {
+  font-weight: 700;
+}
+
+.prose a {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.prose a:hover {
+  color: var(--accent-strong);
+}
+
+/* Mermaid 図 */
+.prose :global(.mermaid) {
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+}
+
+.prose :global(.mermaid) svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* GFM Alert (Admonition) スタイル */
+.prose :global(.admonition) {
+  border-left: 4px solid var(--admonition-note);
+  background: var(--admonition-note-bg);
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  border-radius: 0 var(--r-normal) var(--r-normal) 0;
+}
+
+.prose :global(.admonition-note) {
+  border-left-color: var(--admonition-note);
+  background: var(--admonition-note-bg);
+}
+
+.prose :global(.admonition-tip) {
+  border-left-color: var(--admonition-tip);
+  background: var(--admonition-tip-bg);
+}
+
+.prose :global(.admonition-warning) {
+  border-left-color: var(--admonition-warning);
+  background: var(--admonition-warning-bg);
+}
+
+.prose :global(.admonition-caution) {
+  border-left-color: var(--admonition-caution);
+  background: var(--admonition-caution-bg);
+}
+
+.prose :global(.admonition-important) {
+  border-left-color: var(--admonition-important);
+  background: var(--admonition-important-bg);
+}
+
+/* シェアセクション */
+.shareSection {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.shareSectionTitle {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--fg-soft);
+  margin-bottom: 0.75rem;
+}
+
+/* 前後ナビゲーション */
+.postNav {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.prevPost,
+.nextPost {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: var(--fg);
+  max-width: 48%;
+}
+
+.nextPost {
+  text-align: right;
+  margin-left: auto;
+}
+
+.navLabel {
+  font-size: 0.75rem;
+  color: var(--fg-soft);
+  margin-bottom: 0.25rem;
+}
+
+.navTitle {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.navTitle:hover {
+  text-decoration: underline;
+}
+
+/*
+ * ブレークポイント: 960px 以上でデスクトップ TOC を表示
+ * DESIGN.md §4「ブレークポイントを作るよりも、どの画面幅でも自然に見えるレイアウトを優先」
+ * 960px は TOC(220px) + gap(2rem≈32px) + proseWrapperInner(720px) ≈ 972px のため妥当
+ */
+@media (min-width: 960px) {
+  .contentArea {
+    justify-content: center;
+  }
+
+  .proseWrapperInner {
+    margin: 0;
+  }
+
+  .tocSidebar {
+    display: block;
+  }
+
+  /* デスクトップでは mobileToc を非表示 */
+  .mobileToc {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: 1.5rem 0.75rem;
+  }
+
+  .title {
+    font-size: 1.4rem;
+  }
+
+  .postNav {
+    flex-direction: column;
+  }
+
+  .prevPost,
+  .nextPost {
+    max-width: 100%;
+  }
+
+  .nextPost {
+    text-align: left;
+    margin-left: 0;
+  }
+}
