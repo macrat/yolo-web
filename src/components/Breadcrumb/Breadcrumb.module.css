@@ -1,6 +1,16 @@
 /**
  * Breadcrumb — パンくずリストコンポーネント。
  * new デザイン体系のみ使用（DESIGN.md §2, globals.css 参照）。
+ *
+ * 区切り文字「/」は JSX <span aria-hidden="true"> で li 内に配置する。
+ *
+ * CSS ::before を使わない理由:
+ * li が display:inline-flex のとき、::before は flex item として扱われる。
+ * flex-wrap: wrap の環境で current span が長いと、::before（「/」）と
+ * current span が別の flex item として分離され、行頭に「/」が孤立する。
+ * JSX でセパレータを li 内にインライン配置し、li 自体を display:inline に
+ * することで「/」と後続テキストが同じインラインフォーマットコンテキストに属し、
+ * li 単位でしか折り返しが起きなくなる。
  */
 
 .nav {
@@ -8,11 +18,11 @@
 }
 
 .list {
-  /* リストスタイルをリセットし、横並びにする */
+  /* リストスタイルをリセットし、横並び折返しにする */
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  gap: 0.25rem;
+  align-items: baseline;
+  gap: 0;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -21,16 +31,22 @@
   color: var(--fg-soft);
 }
 
+/*
+ * 各 li を display:inline にする。
+ * display:inline-flex や display:flex は使わない。
+ * inline にすることで、li 内の separator と link/current が
+ * 同じインラインフォーマットコンテキストに属し、折り返しが li 単位になる。
+ */
 .item {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
+  display: inline;
 }
 
+/* 区切り「/」— JSX で明示配置する aria-hidden span */
 .separator {
-  /* 区切り文字は装飾的なため aria-hidden="true" をつける */
+  display: inline;
   color: var(--fg-softer);
   user-select: none;
+  margin: 0 0.4em;
 }
 
 .link {

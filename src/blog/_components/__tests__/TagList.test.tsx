@@ -1,3 +1,5 @@
+import * as fs from "fs";
+import * as path from "path";
 import { describe, test, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import TagList from "@/blog/_components/TagList";
@@ -55,6 +57,22 @@ describe("TagList", () => {
   test("ariaラベルが日本語で設定されていること", () => {
     render(<TagList tags={["Next.js"]} />);
     expect(screen.getByRole("list", { name: "タグ" })).toBeInTheDocument();
+  });
+});
+
+describe("TagList.module.css — 新デザイントークン確認", () => {
+  test("旧トークン（--color-*）が TagList.module.css に残っていないこと", () => {
+    const cssPath = path.resolve(__dirname, "../TagList.module.css");
+    const css = fs.readFileSync(cssPath, "utf-8");
+    // legacy トークンが残っていないことを確認
+    expect(css).not.toContain("var(--color-");
+  });
+
+  test("新トークン（--bg-soft / --fg-soft / --accent 等）が使われていること", () => {
+    const cssPath = path.resolve(__dirname, "../TagList.module.css");
+    const css = fs.readFileSync(cssPath, "utf-8");
+    // 新デザイントークンが使われていること（背景・文字色・ホバー色）
+    expect(css).toMatch(/var\(--(bg|fg|accent|border)/);
   });
 });
 

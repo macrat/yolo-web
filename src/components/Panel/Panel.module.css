@@ -4,3 +4,8 @@
   border-radius: var(--r-normal);
   padding: 1.5rem;
 }
+
+/* 長文読み物用の広めのパディング（通常の 1.5rem より広い 2rem） */
+.paddingComfortable {
+  padding: 2rem;
+}

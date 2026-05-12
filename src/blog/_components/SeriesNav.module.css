@@ -1,9 +1,5 @@
 .seriesNav {
-  background-color: var(--bg-soft);
-  border: 1px solid var(--border);
-  border-radius: var(--r-normal);
-  padding: 1rem;
-  margin-bottom: 1.5rem;
+  /* パネル風スタイルは page.tsx 側の Panel コンポーネントが担う */
 }
 
 /* --- details/summary --- */
@@ -75,9 +71,30 @@
 
 /* --- prev/next quick navigation --- */
 
+/* 前後両方あるとき: 両端寄せ */
 .quickNav {
   display: flex;
   justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+}
+
+/* 前の記事のみ: 左寄せ */
+.quickNavPrevOnly {
+  display: flex;
+  justify-content: flex-start;
+  gap: 1rem;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+}
+
+/* 次の記事のみ: 右寄せ */
+.quickNavNextOnly {
+  display: flex;
+  justify-content: flex-end;
   gap: 1rem;
   margin-top: 0.75rem;
   padding-top: 0.75rem;

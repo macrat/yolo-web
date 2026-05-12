@@ -67,22 +67,26 @@ export default function SeriesNav({
       </details>
 
       {(prevPost || nextPost) && (
-        <div className={styles.quickNav}>
-          {prevPost ? (
+        <div
+          className={
+            prevPost && nextPost
+              ? styles.quickNav
+              : nextPost
+                ? styles.quickNavNextOnly
+                : styles.quickNavPrevOnly
+          }
+        >
+          {prevPost && (
             <Link href={`/blog/${prevPost.slug}`} className={styles.prevLink}>
-              <span className={styles.quickNavLabel}>前の記事</span>
+              <span className={styles.quickNavLabel}>シリーズ内の前の記事</span>
               <span className={styles.quickNavTitle}>{prevPost.title}</span>
             </Link>
-          ) : (
-            <span />
           )}
-          {nextPost ? (
+          {nextPost && (
             <Link href={`/blog/${nextPost.slug}`} className={styles.nextLink}>
-              <span className={styles.quickNavLabel}>次の記事</span>
+              <span className={styles.quickNavLabel}>シリーズ内の次の記事</span>
               <span className={styles.quickNavTitle}>{nextPost.title}</span>
             </Link>
-          ) : (
-            <span />
           )}
         </div>
       )}

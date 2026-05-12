@@ -121,9 +121,9 @@ describe("SeriesNav", () => {
         seriesPosts={mockPosts}
       />,
     );
-    // prev (older) = post-1, next (newer) = post-3
-    expect(screen.getByText("前の記事")).toBeInTheDocument();
-    expect(screen.getByText("次の記事")).toBeInTheDocument();
+    // ラベルは「シリーズ内の前の記事」「シリーズ内の次の記事」
+    expect(screen.getByText("シリーズ内の前の記事")).toBeInTheDocument();
+    expect(screen.getByText("シリーズ内の次の記事")).toBeInTheDocument();
 
     // Verify quick nav links point to the correct posts
     const allPost1Links = screen.getAllByText("First Post");
@@ -147,8 +147,8 @@ describe("SeriesNav", () => {
         seriesPosts={mockPosts}
       />,
     );
-    expect(screen.queryByText("前の記事")).toBeNull();
-    expect(screen.getByText("次の記事")).toBeInTheDocument();
+    expect(screen.queryByText("シリーズ内の前の記事")).toBeNull();
+    expect(screen.getByText("シリーズ内の次の記事")).toBeInTheDocument();
   });
 
   test("last post has no 'next' link", () => {
@@ -159,8 +159,8 @@ describe("SeriesNav", () => {
         seriesPosts={mockPosts}
       />,
     );
-    expect(screen.getByText("前の記事")).toBeInTheDocument();
-    expect(screen.queryByText("次の記事")).toBeNull();
+    expect(screen.getByText("シリーズ内の前の記事")).toBeInTheDocument();
+    expect(screen.queryByText("シリーズ内の次の記事")).toBeNull();
   });
 
   test("returns null when seriesPosts has 0 posts", () => {
@@ -220,5 +220,22 @@ describe("SeriesNav", () => {
       name: "シリーズナビゲーション",
     });
     expect(nav).toBeInTheDocument();
+  });
+
+  test("prev/next quick nav labels contain 'シリーズ内' to distinguish from chronological nav", () => {
+    render(
+      <SeriesNav
+        seriesId="ai-agent-ops"
+        currentSlug="post-2"
+        seriesPosts={mockPosts}
+      />,
+    );
+    // SeriesNav の前後ラベルは「シリーズ内の前の記事」「シリーズ内の次の記事」であること
+    expect(
+      screen.getByText(/シリーズ内.*前|前.*シリーズ内/),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/シリーズ内.*次|次.*シリーズ内/),
+    ).toBeInTheDocument();
   });
 });
