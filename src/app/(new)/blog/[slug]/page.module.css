@@ -95,11 +95,29 @@
   cursor: pointer;
   color: var(--fg);
   list-style: none; /* デフォルトの三角マーカーを消す */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 /* Safari/WebKit でも三角マーカーを非表示 */
 .mobileTocSummary::-webkit-details-marker {
   display: none;
+}
+
+/*
+ * ChevronDown アフォーダンスアイコン（DESIGN.md §3「折りたたみ UI のアフォーダンス」）。
+ * mobileToc 配下のみに適用し、他 <details> 利用箇所（SeriesNav 等）に波及しない。
+ * details[open] 時に 180deg 回転させて「閉じる方向」を示す。
+ */
+.mobileTocChevron {
+  flex-shrink: 0;
+  color: var(--fg-soft);
+  transition: transform 0.2s ease;
+}
+
+.mobileToc[open] .mobileTocChevron {
+  transform: rotate(180deg);
 }
 
 /* mobileToc 内では TableOfContents の見出し（h2）を非表示 */

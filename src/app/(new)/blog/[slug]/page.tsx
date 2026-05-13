@@ -141,7 +141,29 @@ export default async function BlogPostPage({ params }: Props) {
            */}
           {post.headings.length > 0 && (
             <details className={styles.mobileToc}>
-              <summary className={styles.mobileTocSummary}>目次</summary>
+              {/*
+               * summary の chevron: DESIGN.md §3「折りたたみ UI のアフォーダンス」に準拠。
+               * ChevronDown (Lucide スタイル 1.5px / 16px) を flex 右端に配置。
+               * details[open] 時は CSS で 180deg 回転（→ chevron-up）。
+               * aria-hidden="true" で SR は <details> のネイティブ状態読み上げを維持。
+               */}
+              <summary className={styles.mobileTocSummary}>
+                目次
+                <svg
+                  className={styles.mobileTocChevron}
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M6 9l6 6 6-6" />
+                </svg>
+              </summary>
               <TableOfContents headings={post.headings} />
             </details>
           )}
