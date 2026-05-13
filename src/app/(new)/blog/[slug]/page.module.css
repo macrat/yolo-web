@@ -14,16 +14,18 @@
  * contentColumn: 全コンテンツ要素のラッパー。proseWrapper の直接子要素は
  * contentColumn（div）と tocSidebar（aside）の 2 つのみ。
  *
- * 狭い幅（< 1024px）: max-width 720px の単一カラム。
+ * 狭い幅（< 1024px）: max-width 720px の単一カラム。margin: 0 auto で中央寄せ。
+ *   （DESIGN.md §4「文章等は必要に応じて 720px に制限する」に準拠）
  * デスクトップ（≥ 1024px）: CSS Grid [contentColumn 720px] [tocSidebar 220px] の
- *   左カラム（grid-column: 1）として配置。
- *   contentColumn を左端に置くことで、ヘッダーの左端と本文左端の X 座標が一致する（T-2 対策）。
+ *   左カラム（grid-column: 1）として配置。Grid の justify-content: start により
+ *   margin が無効化されるため、T-2 対策（ヘッダー左端と本文左端の X 座標一致）を維持する。
  *
  * Next.js が RSC ハイドレーション用 <script> を proseWrapper 直下に注入することがある。
  * contentColumn が grid-column: 1 を明示することで注入スクリプトの影響を受けない。
  */
 .contentColumn {
   max-width: 720px;
+  margin: 0 auto; /* 中間幅（769〜1023px）での中央寄せ（U-2 修正: cycle-189 単位 J） */
   min-width: 0; /* Grid 子要素のオーバーフロー抑制 */
 }
 
@@ -354,11 +356,14 @@
    * contentColumn は Grid 左カラム（column 1 = 720px）を明示。
    * max-width: 720px は解除し、Grid の列幅に任せる。
    * grid-column: 1 の明示により、Next.js 注入 script 等が間に入っても列がズレない。
+   * margin: 0 を明示して基底スタイルの margin: 0 auto を無効化し、
+   * Grid の justify-content: start による左端配置（T-2 対策）を確実に維持する。
    */
   .contentColumn {
     grid-column: 1;
     grid-row: 1;
     max-width: none;
+    margin: 0; /* 基底の margin: 0 auto を無効化。Grid 配置が中央寄せの役割を担う */
   }
 
   /* tocSidebar は Grid 右カラム（column 2）に固定。sticky でスクロール追従する。 */
