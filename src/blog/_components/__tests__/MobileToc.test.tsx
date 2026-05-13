@@ -23,7 +23,24 @@ function MobileTocBlock({
   if (headings.length === 0) return null;
   return (
     <details data-testid="mobile-toc">
-      <summary>目次</summary>
+      <summary>
+        目次
+        {/* ChevronDown SVG (Lucide スタイル、DESIGN.md §3「折りたたみ UI のアフォーダンス」) */}
+        <svg
+          data-testid="mobile-toc-chevron"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M6 9l6 6 6-6" />
+        </svg>
+      </summary>
       <TableOfContents headings={headings} />
     </details>
   );
@@ -65,5 +82,31 @@ describe("MobileTocBlock (inline TOC for mobile)", () => {
   test("returns null when headings array is empty", () => {
     const { container } = render(<MobileTocBlock headings={[]} />);
     expect(container.innerHTML).toBe("");
+  });
+
+  // U-1 アフォーダンス: ChevronDown SVG が summary 内に存在すること（DESIGN.md §3）
+  test("renders ChevronDown SVG inside summary for affordance", () => {
+    render(<MobileTocBlock headings={mockHeadings} />);
+    const chevron = screen.getByTestId("mobile-toc-chevron");
+    expect(chevron).toBeInTheDocument();
+    expect(chevron.tagName.toLowerCase()).toBe("svg");
+  });
+
+  test("ChevronDown SVG has aria-hidden to preserve native a11y state", () => {
+    render(<MobileTocBlock headings={mockHeadings} />);
+    const chevron = screen.getByTestId("mobile-toc-chevron");
+    expect(chevron).toHaveAttribute("aria-hidden", "true");
+  });
+
+  test("ChevronDown SVG is inside summary element", () => {
+    render(<MobileTocBlock headings={mockHeadings} />);
+    const chevron = screen.getByTestId("mobile-toc-chevron");
+    expect(chevron.closest("summary")).not.toBeNull();
+  });
+
+  test("summary does not have role='button' (macOS Safari a11y safety)", () => {
+    render(<MobileTocBlock headings={mockHeadings} />);
+    const summary = screen.getByText("目次", { selector: "summary" });
+    expect(summary).not.toHaveAttribute("role", "button");
   });
 });

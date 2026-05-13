@@ -56,6 +56,16 @@
 - アイコンは原則として使わない。どうしても必要な場合は Lucideスタイルの線画アイコンを使う。線の太さは1.5px、サイズは16/20/24pxのみ。アイコンのみのボタンには必ずaria-labelをつける。
 - 絵文字は使わない。
 
+### 折りたたみ UI のアフォーダンス
+
+`<details>`/`<summary>` を使った折りたたみ UI は、ブラウザ標準マーカーを消す場合、必ず代替アフォーダンスを設ける。
+
+- 代替アフォーダンスには ChevronDown（Lucide スタイル、stroke-width 1.5、16px）を `<summary>` 内に JSX で配置し、`display: flex; justify-content: space-between` で右端に置く。
+- `details[open]` 時はシェブロンを `transform: rotate(180deg)` で上向きに回転させる。
+- シェブロンは `aria-hidden="true"` とし、`<details>`/`<summary>` 自体のネイティブ a11y（expanded/collapsed 状態）を維持する。
+- `<summary>` に `role="button"` を付与しない（macOS Safari でアクセシブル状態が壊れるため）。
+- シェブロン CSS セレクタは当該コンポーネントのクラス配下に限定し、他の `<details>` 利用箇所に波及させない。
+
 ## 4. レイアウト
 
 - レイアウトは「パネル」と呼ぶ矩形のコンテナを基本とする。パネルの表示には src/components/ にある Panel コンポーネントを使う。
