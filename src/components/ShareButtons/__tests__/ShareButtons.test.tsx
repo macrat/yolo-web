@@ -8,16 +8,16 @@ const mockWindowOpen = vi.fn();
 const mockClipboardWriteText = vi.fn();
 
 beforeEach(() => {
+  // vi.stubGlobal を使うことで vi.unstubAllGlobals() による確実な teardown を保証し、
+  // Object.defineProperty によるグローバル汚染を回避する（既存パターン: common/ShareButtons.test.tsx）
   vi.stubGlobal("open", mockWindowOpen);
-  Object.defineProperty(navigator, "clipboard", {
-    value: { writeText: mockClipboardWriteText },
-    configurable: true,
+  vi.stubGlobal("navigator", {
+    ...navigator,
+    clipboard: { writeText: mockClipboardWriteText },
   });
-  // window.location.origin のスタブ
-  Object.defineProperty(window, "location", {
-    value: { origin: "https://example.com" },
-    configurable: true,
-  });
+  // window 全体をスタブすると document が失われ @testing-library が壊れるため、
+  // location のみを個別にスタブする
+  vi.stubGlobal("location", { origin: "https://example.com" });
 });
 
 afterEach(() => {

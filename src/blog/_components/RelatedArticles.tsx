@@ -21,7 +21,6 @@ export default function RelatedArticles({ posts }: RelatedArticlesProps) {
       <ul className={styles.list}>
         {posts.map((post) => (
           <li key={post.slug} className={styles.item}>
-            {/* lgtm[js/stored-xss] - blog slugs from local markdown files, not user input */}
             <Link href={`/blog/${post.slug}`} className={styles.link}>
               <div className={styles.meta}>
                 <span className={styles.category}>

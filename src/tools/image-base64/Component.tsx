@@ -254,7 +254,7 @@ export default function ImageBase64Tool() {
             <div className={styles.resultArea}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={parsedImage.dataUri} // lgtm[js/xss-through-dom] - validated to start with data:image/
+                src={parsedImage.dataUri} // lgtm[js/xss-through-dom] - ユーザー入力 dataUri、L104 でバリデーション済み（data:image/ 始まりのみ許可）
                 alt="デコード結果プレビュー"
                 className={styles.preview}
               />
@@ -262,7 +262,7 @@ export default function ImageBase64Tool() {
                 <span>MIMEタイプ: {parsedImage.mimeType}</span>
               </div>
               <a
-                href={parsedImage.dataUri} // lgtm[js/xss-through-dom] - validated to start with data:image/
+                href={parsedImage.dataUri} // lgtm[js/xss-through-dom] - ユーザー入力 dataUri、L104 でバリデーション済み（data:image/ 始まりのみ許可）
                 download={`image.${parsedImage.mimeType.split("/")[1]?.replace("+xml", "") || "png"}`}
                 className={styles.button}
               >
