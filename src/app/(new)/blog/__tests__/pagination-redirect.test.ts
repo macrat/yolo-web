@@ -40,16 +40,16 @@ describe("/blog/page/[page]", () => {
     expect(pages).toEqual(expectedPages);
   });
 
-  test("generateStaticParams が p2〜p6 の 5 個を返す（61 記事 / 12 件 = 6 ページ）", () => {
+  test("generateStaticParams が p2〜p5 の 4 個を返す（60 記事 / 12 件 = 5 ページ）", () => {
     const params = generateBlogStaticParams();
-    // page 1 は除外され、page 2〜6 の 5 個が返る
-    expect(params).toHaveLength(5);
+    // page 1 は除外され、page 2〜5 の 4 個が返る
+    expect(params).toHaveLength(4);
     const pages = params.map(({ page }) => Number(page));
     expect(pages).toContain(2);
     expect(pages).toContain(3);
     expect(pages).toContain(4);
     expect(pages).toContain(5);
-    expect(pages).toContain(6);
+    expect(pages).not.toContain(6);
     expect(pages).not.toContain(1);
   }, 15000);
 });
