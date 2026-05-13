@@ -20,6 +20,9 @@ import {
 } from "@/app/(new)/blog/tag/[tag]/page/[page]/page";
 import nextConfig from "../../../../../next.config";
 
+// 件数依存の固定 assertion はここに置かない。
+// 記事数ごとのページ数計算ロジックは src/lib/__tests__/pagination.test.ts に集約済み。
+
 const allPosts = getAllBlogPosts();
 const { totalPages: blogTotalPages } = paginate(
   allPosts,
@@ -28,6 +31,8 @@ const { totalPages: blogTotalPages } = paginate(
 );
 
 describe("/blog/page/[page]", () => {
+  // dynamicParams=false なので、generateStaticParams が返すページ外の URL は 404 になる。
+  // その前提で、生成されるパラメータが実際のページ数と一致することを動的に検証する。
   test("dynamicParams=false と generateStaticParams が整合している", () => {
     expect(blogDynamicParams).toBe(false);
 
@@ -39,19 +44,6 @@ describe("/blog/page/[page]", () => {
 
     expect(pages).toEqual(expectedPages);
   });
-
-  test("generateStaticParams が p2〜p5 の 4 個を返す（60 記事 / 12 件 = 5 ページ）", () => {
-    const params = generateBlogStaticParams();
-    // page 1 は除外され、page 2〜5 の 4 個が返る
-    expect(params).toHaveLength(4);
-    const pages = params.map(({ page }) => Number(page));
-    expect(pages).toContain(2);
-    expect(pages).toContain(3);
-    expect(pages).toContain(4);
-    expect(pages).toContain(5);
-    expect(pages).not.toContain(6);
-    expect(pages).not.toContain(1);
-  }, 15000);
 });
 
 describe("/blog/category/[category]/page/[page]", () => {
@@ -76,47 +68,23 @@ describe("/blog/category/[category]/page/[page]", () => {
 
     expect(categoryPages).toEqual(expectedPages);
   });
-
-  test("generateStaticParams が 2 カテゴリ × 1 ページ = 2 個を返す（dev-notes と ai-workflow のみ p2 が生成）", () => {
-    const params = generateCategoryStaticParams();
-    // dev-notes（23件）と ai-workflow（16件）だけが 12件超 → p2 生成
-    expect(params).toHaveLength(2);
-    const categories = params.map((p) => p.category);
-    expect(categories).toContain("dev-notes");
-    expect(categories).toContain("ai-workflow");
-  }, 15000);
 });
 
 describe("/blog/tag/[tag]/page/[page]", () => {
-  test("dynamicParams=false と generateStaticParams が整合している", () => {
+  test("dynamicParams=false であること", () => {
     expect(tagDynamicParams).toBe(false);
   });
 
-  test("generateStaticParams が実体の p2 タグ数（3 タグ）を返す", () => {
-    const params = generateTagStaticParams();
-    // 実体確認（2026-05-08 時点）: 12件超のタグは設計パターン(21)/Web開発(17)/Next.js(15) の 3 タグ
-    // AIエージェント(8)/失敗と学び(8)/ワークフロー(7) は 12 件未満のため p2 非生成
-    // Note: 計画書 §完了基準 では「6 タグ」とあるが、researcher レポート 3 の数値が
-    //       実際のコンテンツ件数と一致しない。AP-WF12 に従い実体（3 タグ）を採用。
-    expect(params).toHaveLength(3);
-  }, 15000);
-
-  test("generateStaticParams に 12 件超の 3 タグが含まれる（設計パターン/Web開発/Next.js）", () => {
-    const params = generateTagStaticParams();
-    const tags = params.map((p) => p.tag);
-    expect(tags).toContain("設計パターン");
-    expect(tags).toContain("Web開発");
-    expect(tags).toContain("Next.js");
-  }, 15000);
-
-  test("generateStaticParams の各タグ p2 ページが 12 件超の記事を持つ", () => {
+  // generateStaticParams が返す各タグが、実際に p2 生成条件（12件超）を満たすことを動的に検証する。
+  // 特定タグ名や件数のハードコードは行わない。
+  test("generateStaticParams の各タグが p2 生成条件（12件超）を満たす", () => {
     const params = generateTagStaticParams();
     for (const { tag } of params) {
       const posts = getPostsByTag(tag);
       expect(
         posts.length,
         `タグ「${tag}」の記事数が 12 件未満（p2 生成の条件を満たさない）`,
-      ).toBeGreaterThanOrEqual(13); // 12件超（p2 以上が存在する）
+      ).toBeGreaterThanOrEqual(13);
     }
   }, 15000);
 });

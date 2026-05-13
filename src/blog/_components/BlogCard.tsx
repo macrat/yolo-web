@@ -73,7 +73,6 @@ export default function BlogCard({
         タグリンクは position: relative; z-index で前面に出す。
       */}
       <h2 className={styles.title}>
-        {/* lgtm[js/stored-xss] - blog slugs from local markdown files, not user input */}
         <Link href={`/blog/${post.slug}`} className={styles.titleLink}>
           {post.title}
         </Link>
