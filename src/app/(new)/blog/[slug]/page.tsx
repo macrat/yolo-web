@@ -76,29 +76,21 @@ export default async function BlogPostPage({ params }: Props) {
 
       {/*
        * proseWrapper: 狭い幅では max-width 720px 単一カラム。
-       * デスクトップ（≥ 1024px）: CSS Grid [TOC 220px] [コンテンツ 720px]。
+       * デスクトップ（≥ 1024px）: CSS Grid [コンテンツ 720px] [TOC 220px]。
        *
-       * 構造: <aside tocSidebar> + <div contentColumn> の 2 要素のみを直接子に持つ。
-       * Next.js が RSC ハイドレーション用 <script> を proseWrapper 直下に注入することがある。
-       * 直接子を 2 つに固定することで Grid 自動配置が壊れるリスクを回避する。
-       * contentColumn が grid-column: 2 を明示しているため、注入 script も column 1 には入らない。
+       * T-2 対策: contentColumn を Grid 左カラム（col 1）に置くことで、
+       * ヘッダー(.inner padding-left: 1.25rem)と本文左端の X 座標が一致する。
+       *
+       * DOM 順序: contentColumn を先（col 1）、tocSidebar を後（col 2）に置く。
+       * 逆順にすると Grid auto-placement が干渉して col 1 が空白になるため必須。
+       * grid-column を両要素に明示しているが、DOM 順序もあわせて揃えることで二重に安全。
        */}
       <div className={styles.proseWrapper}>
         {/*
-         * デスクトップ TOC サイドバー（Grid 左カラム）。
-         * モバイルでは CSS で display:none。mobileToc が代わりに表示される。
-         * Panel 化: DESIGN.md §1「すべてのコンテンツはパネル」。
-         */}
-        {post.headings.length > 0 && (
-          <Panel as="aside" className={styles.tocSidebar}>
-            <TableOfContents headings={post.headings} />
-          </Panel>
-        )}
-
-        {/*
-         * contentColumn: Grid 右カラム（720px）。
+         * contentColumn: Grid 左カラム（720px）。
+         * DOM 先頭に置くことで auto-placement の干渉を防ぐ。
+         * grid-column: 1 を明示しているため tocSidebar の有無に関わらず左端に固定される。
          * すべてのコンテンツ要素をこの div に収める。
-         * grid-column: 2 を明示するため、Next.js 注入 script の影響を受けない。
          */}
         <div className={styles.contentColumn}>
           <Breadcrumb
@@ -141,14 +133,17 @@ export default async function BlogPostPage({ params }: Props) {
             </Panel>
           )}
 
-          {/* モバイル向けインライン TOC（デスクトップでは CSS で非表示） */}
+          {/*
+           * モバイル向けインライン TOC（デスクトップでは CSS で非表示）。
+           * Panel コンポーネントを使わず <details> に直接スタイル適用（T-1 対策）。
+           * articlePanel との視覚的分離を明確にするため bg-soft + border スタイルを使用。
+           * DESIGN.md §4「パネル入れ子禁止」にも整合（mobileToc は Panel でなく details 要素）。
+           */}
           {post.headings.length > 0 && (
-            <Panel className={styles.mobileToc}>
-              <details>
-                <summary className={styles.mobileTocSummary}>目次</summary>
-                <TableOfContents headings={post.headings} />
-              </details>
-            </Panel>
+            <details className={styles.mobileToc}>
+              <summary className={styles.mobileTocSummary}>目次</summary>
+              <TableOfContents headings={post.headings} />
+            </details>
           )}
 
           {/*
@@ -162,7 +157,7 @@ export default async function BlogPostPage({ params }: Props) {
           >
             <div
               className={styles.prose}
-              dangerouslySetInnerHTML={{ __html: post.contentHtml }}
+              dangerouslySetInnerHTML={{ __html: post.contentHtml }} // markdownToHtml() 内部で sanitize 済み
             />
           </Panel>
 
@@ -213,6 +208,18 @@ export default async function BlogPostPage({ params }: Props) {
             )}
           </nav>
         </div>
+
+        {/*
+         * デスクトップ TOC サイドバー（Grid 右カラム）。
+         * DOM で contentColumn の後に置くことで auto-placement と干渉しない。
+         * モバイルでは CSS で display:none。mobileToc が代わりに表示される。
+         * Panel 化: DESIGN.md §1「すべてのコンテンツはパネル」。
+         */}
+        {post.headings.length > 0 && (
+          <Panel as="aside" className={styles.tocSidebar}>
+            <TableOfContents headings={post.headings} />
+          </Panel>
+        )}
       </div>
     </div>
   );
