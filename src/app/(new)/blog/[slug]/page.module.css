@@ -1,27 +1,29 @@
 /*
  * ページ全体のラッパー。
  * max-width 1200px は DESIGN.md §4 の上限。padding で左右余白を確保。
+ * padding-left: 1.25rem はヘッダー(.inner)の padding-left と揃えることで
+ * 1440px 以上でヘッダー左端と本文左端の X 座標を一致させる（T-2 対策）。
  */
 .page {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem 1rem;
+  padding: 2rem 1.25rem;
 }
 
 /*
  * contentColumn: 全コンテンツ要素のラッパー。proseWrapper の直接子要素は
- * tocSidebar（aside）と contentColumn（div）の 2つのみ。
+ * contentColumn（div）と tocSidebar（aside）の 2 つのみ。
  *
- * 狭い幅（< 1024px）: max-width 720px の単一カラム中央寄せ。
- * デスクトップ（≥ 1024px）: CSS Grid [tocSidebar 220px] [contentColumn 720px] の
- *   右カラムとして grid-column: 2 を明示。
+ * 狭い幅（< 1024px）: max-width 720px の単一カラム。
+ * デスクトップ（≥ 1024px）: CSS Grid [contentColumn 720px] [tocSidebar 220px] の
+ *   左カラム（grid-column: 1）として配置。
+ *   contentColumn を左端に置くことで、ヘッダーの左端と本文左端の X 座標が一致する（T-2 対策）。
  *
  * Next.js が RSC ハイドレーション用 <script> を proseWrapper 直下に注入することがある。
- * contentColumn が grid-column: 2 を明示することで注入スクリプトの影響を受けない。
+ * contentColumn が grid-column: 1 を明示することで注入スクリプトの影響を受けない。
  */
 .contentColumn {
   max-width: 720px;
-  margin: 0 auto;
   min-width: 0; /* Grid 子要素のオーバーフロー抑制 */
 }
 
@@ -72,9 +74,17 @@
   margin-bottom: 1.5rem;
 }
 
-/* モバイル向けインライン TOC（Panel コンポーネントでラップ済み） */
+/*
+ * モバイル向けインライン TOC。
+ * Panel コンポーネントを使わず <details> に直接スタイル適用（T-1 対策）。
+ * Panel の入れ子に見えることなく、罫線で articlePanel と視覚的に分離する。
+ */
 .mobileToc {
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
+  border: 1px solid var(--border);
+  border-radius: var(--r-normal);
+  padding: 1rem 1.25rem;
+  background: var(--bg-soft);
 }
 
 .mobileTocSummary {
@@ -82,6 +92,12 @@
   font-weight: 700;
   cursor: pointer;
   color: var(--fg);
+  list-style: none; /* デフォルトの三角マーカーを消す */
+}
+
+/* Safari/WebKit でも三角マーカーを非表示 */
+.mobileTocSummary::-webkit-details-marker {
+  display: none;
 }
 
 /* mobileToc 内では TableOfContents の見出し（h2）を非表示 */
@@ -96,10 +112,11 @@
 }
 
 /*
- * TOC サイドバー（デスクトップ Grid 左カラム）。
+ * TOC サイドバー（デスクトップ Grid 右カラム）。
  * デフォルトは display:none。1024px 以上のメディアクエリで proseWrapper Grid に参加する。
  * position:sticky により記事を読み進めても TOC が画面に追従する。
  * align-self: start で Grid 行の高さに引き伸ばされず sticky が正しく機能する。
+ * 右カラム配置（grid-column: 2）により、contentColumn が左端からヘッダーと揃う（T-2 対策）。
  */
 .tocSidebar {
   display: none;
@@ -240,15 +257,17 @@
   color: var(--accent-strong);
 }
 
+/* mermaid ラッパー: block にして overflow-x: auto を flex に依存せず機能させる */
 .prose :global(.mermaid) {
-  display: flex;
-  justify-content: center;
+  display: block;
   margin: 1.5rem 0;
   overflow-x: auto;
 }
 
+/* SVG は block にして margin: auto で中央寄せ。max-width を外して横長図をスクロール可能にする */
 .prose :global(.mermaid) svg {
-  max-width: 100%;
+  display: block;
+  margin: 0 auto;
   height: auto;
 }
 
@@ -309,39 +328,42 @@
 /*
  * デスクトップ（1024px 以上）: proseWrapper を CSS Grid に切り替える。
  *
- * Grid 構造: [tocSidebar 220px] [contentColumn 720px]  → justify-content: center で中央寄せ
+ * Grid 構造: [contentColumn 720px] [tocSidebar 220px]  → justify-content: start で左揃え
+ *
+ * contentColumn を左カラムに置くことで、ヘッダー(.inner の padding-left: 1.25rem)と
+ * 本文左端の X 座標が一致する（T-2 解消）。
  *
  * 閾値 1024px の根拠:
- *   page padding(1rem×2=32px) + TOC(220px) + gap(2rem=32px) + 本文(720px) = 1004px
- *   安全マージン 20px 加算 → 1024px。
+ *   page padding(1.25rem×2=40px) + 本文(720px) + gap(2rem=32px) + TOC(220px) = 1012px
+ *   安全マージン 20px 加算 → 1032px → 余裕を見て 1024px で切り替え（TOC が入ると
+ *   1032px 必要だが、1024-40=984px内に720+32+220=972px が収まるため問題なし）。
  *
  * TOC が存在しない記事（headings 0件）では tocSidebar 自体が display:none のため
- * Grid 左カラムが幅 0 になり、contentColumn が center 寄せになる。
+ * Grid 右カラムが幅 0 になり、contentColumn が max-width: 720px で表示される。
  */
 @media (min-width: 1024px) {
   .proseWrapper {
     display: grid;
-    grid-template-columns: 220px 720px;
+    grid-template-columns: 720px 220px;
     gap: 2rem;
     align-items: start;
-    justify-content: center;
-  }
-
-  /* tocSidebar は Grid 左カラム（column 1）に固定。sticky でスクロール追従する。 */
-  .tocSidebar {
-    display: block;
-    grid-column: 1;
+    justify-content: start;
   }
 
   /*
-   * contentColumn は Grid 右カラム（column 2 = 720px）を明示。
+   * contentColumn は Grid 左カラム（column 1 = 720px）を明示。
    * max-width: 720px は解除し、Grid の列幅に任せる。
-   * grid-column: 2 の明示により、Next.js 注入 script 等が間に入っても列がズレない。
+   * grid-column: 1 の明示により、Next.js 注入 script 等が間に入っても列がズレない。
    */
   .contentColumn {
-    grid-column: 2;
+    grid-column: 1;
     max-width: none;
-    margin: 0;
+  }
+
+  /* tocSidebar は Grid 右カラム（column 2）に固定。sticky でスクロール追従する。 */
+  .tocSidebar {
+    display: block;
+    grid-column: 2;
   }
 
   .mobileToc {
@@ -351,7 +373,8 @@
 
 @media (max-width: 768px) {
   .page {
-    padding: 1.5rem 0.75rem;
+    /* SP: 左右パディングを 0.75rem → 1rem に拡大（圧迫感軽減）*/
+    padding: 1.5rem 1rem;
   }
 
   .title {

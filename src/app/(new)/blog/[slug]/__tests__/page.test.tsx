@@ -106,17 +106,19 @@ describe("(new)/blog/[slug]/page", () => {
       expect(css).toContain("display: grid");
     });
 
-    it("grid-template-columns: 220px 720px が定義されていること（TOC + 本文幅の固定）", () => {
+    it("grid-template-columns: 720px 220px が定義されていること（本文左・TOC右の配置）", () => {
       const cssPath = path.resolve(__dirname, "../page.module.css");
       const css = fs.readFileSync(cssPath, "utf-8");
-      expect(css).toContain("220px 720px");
+      // T-2 対策: contentColumn を左カラムに置きヘッダーと左端を揃えるため 720px を先に記載
+      expect(css).toContain("720px 220px");
     });
 
-    it("contentColumn に grid-column: 2 が定義されていること（Next.js 注入 script の影響回避）", () => {
+    it("contentColumn に grid-column: 1 が定義されていること（左カラム固定・T-2 対策）", () => {
       const cssPath = path.resolve(__dirname, "../page.module.css");
       const css = fs.readFileSync(cssPath, "utf-8");
-      // contentColumn が grid-column: 2 を明示して右カラムを固定すること
-      expect(css).toMatch(/\.contentColumn[^{]*\{[^}]*grid-column:\s*2/);
+      // contentColumn が grid-column: 1 を明示して左カラムに固定することで、
+      // ヘッダー左端と本文左端の X 座標が一致する（T-2 解消）
+      expect(css).toMatch(/\.contentColumn[^{]*\{[^}]*grid-column:\s*1/);
     });
 
     it("tocSidebar に position:sticky が定義されていること（スクロール追従）", () => {
