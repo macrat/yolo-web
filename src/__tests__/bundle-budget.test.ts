@@ -82,6 +82,8 @@ const UNCATEGORISED_WHITELIST: ReadonlySet<string> = new Set([
   "/achievements",
   // 開発者向け新デザインカタログ。noindex 設定済み。(new) Route Group 配下。
   "/storybook",
+  // 開発者向けタイルバリアントカタログ。noindex 設定済み。(new) Route Group 配下。
+  "/internal/tiles",
 ]);
 
 // ---------------------------------------------------------------------------
