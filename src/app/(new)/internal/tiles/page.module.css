@@ -189,3 +189,33 @@
   color: var(--fg-softer);
   word-break: break-all;
 }
+
+/* 実装済みタイルラッパー — 実コンポーネントを表示するとき */
+.implementedTileWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.implementedBadge {
+  display: inline-flex;
+  align-items: center;
+  background: var(--success-soft);
+  border: 1px solid var(--success);
+  border-radius: var(--r-interactive);
+  padding: 0.2rem 0.5rem;
+  font-size: 0.65rem;
+  font-family: ui-monospace, monospace;
+  color: var(--success-strong);
+  font-weight: 600;
+  align-self: flex-start;
+}
+
+/* 実コンポーネントを表示するコンテナ — Panel 風の枠 */
+.implementedTile {
+  border: 1px solid var(--success);
+  border-radius: var(--r-normal);
+  background: var(--bg);
+  padding: 1rem;
+  min-height: 120px;
+}

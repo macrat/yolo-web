@@ -7,6 +7,7 @@ import {
   filterEntries,
   getCommonMistakes,
   getMistakesByType,
+  getDailyEntry,
 } from "../logic";
 
 describe("getAllEntries", () => {
@@ -173,5 +174,49 @@ describe("getMistakesByType", () => {
     for (const mistake of getMistakesByType("baito-keigo")) {
       expect(mistake.mistakeType).toBe("baito-keigo");
     }
+  });
+});
+
+describe("getDailyEntry", () => {
+  test("returns a KeigoEntry (not undefined) when called with a valid date", () => {
+    const entry = getDailyEntry(new Date("2026-05-14"));
+    expect(entry).toBeDefined();
+    expect(entry!.id).toBeTruthy();
+    expect(entry!.casual).toBeTruthy();
+  });
+
+  test("returns the same entry for the same date (deterministic)", () => {
+    const date = new Date("2026-05-14");
+    const entry1 = getDailyEntry(date);
+    const entry2 = getDailyEntry(date);
+    expect(entry1!.id).toBe(entry2!.id);
+  });
+
+  test("returns different entries for different dates (not always same)", () => {
+    // 全エントリ数よりはるかに少ない日数の衝突を確認するより、
+    // 複数日付をサンプルして少なくとも 1 種類以上異なることを確認
+    const dates = [
+      new Date("2026-05-14"),
+      new Date("2026-05-15"),
+      new Date("2026-05-16"),
+      new Date("2026-05-17"),
+      new Date("2026-05-18"),
+    ];
+    const ids = dates.map((d) => getDailyEntry(d)!.id);
+    const uniqueIds = new Set(ids);
+    // 5 日分で全部同じになることは確率的にほぼ起きない
+    expect(uniqueIds.size).toBeGreaterThan(1);
+  });
+
+  test("returns a valid entry from getAllEntries()", () => {
+    const entry = getDailyEntry(new Date("2026-01-01"));
+    const allEntries = getAllEntries();
+    expect(allEntries.some((e) => e.id === entry!.id)).toBe(true);
+  });
+
+  test("uses current date when no argument is provided", () => {
+    // 引数なしで呼べること（エラーが出ないこと）を確認
+    const entry = getDailyEntry();
+    expect(entry).toBeDefined();
   });
 });

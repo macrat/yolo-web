@@ -66,6 +66,52 @@ const FallbackTileComponent = dynamic(
 );
 
 /**
+ * TileVariant の loaderId → TileComponentLoader を返す lazy loader。
+ *
+ * slug ベース（getTileComponent）と独立した関数として定義する。
+ * TileVariant の loaderId 命名規則: `{slug}-{size}-{feature}`
+ *
+ * @param loaderId - TileVariant.loaderId（例: "keigo-reference-medium-search"）
+ * @returns next/dynamic でラップされた React コンポーネント
+ *
+ * @example
+ * // TileVariant から呼び出す例
+ * const TileComp = getTileVariantComponent(variant.loaderId);
+ * return <TileComp slug={slug} />;
+ */
+export function getTileVariantComponent(loaderId: string): TileComponentLoader {
+  const cached = loaderCache.get(`variant:${loaderId}`);
+  if (cached) return cached;
+
+  let loader: TileComponentLoader;
+
+  // keigo-reference バリアント（T-D-実装 cycle-191 で追加）
+  if (loaderId === "keigo-reference-medium-search") {
+    loader = dynamic(
+      () =>
+        import("@/tools/keigo-reference/Tile.medium-search").then((mod) => ({
+          default: mod.default,
+        })),
+      { ssr: false },
+    );
+  } else if (loaderId === "keigo-reference-small-daily-pick") {
+    loader = dynamic(
+      () =>
+        import("@/tools/keigo-reference/Tile.small-daily-pick").then((mod) => ({
+          default: mod.default,
+        })),
+      { ssr: false },
+    );
+  } else {
+    // 未知の loaderId はフォールバックコンポーネントを返す
+    loader = FallbackTileComponent;
+  }
+
+  loaderCache.set(`variant:${loaderId}`, loader);
+  return loader;
+}
+
+/**
  * slug → TileComponentLoader を返す slug ベース lazy loader。
  *
  * @param slug - タイルのスラグ（Tileable.slug と同一）

@@ -2,15 +2,16 @@
 
 import Panel from "@/components/Panel";
 import type { TileVariant } from "@/lib/toolbox/tile-variant-types";
+import { getTileVariantComponent } from "@/lib/toolbox/tile-loader";
 import styles from "./page.module.css";
 
 /**
  * T-C-検証場所（cycle-191）: タイルバリアント検証ページのコンテンツ。
  *
- * 本サイクル時点では Tile.tsx（実コンポーネント）が存在しないため、
- * プレースホルダ表示で各 TileVariant の枠組みが動くことを確認する。
- * T-D-実装 で keigo-reference の small + medium タイルが実装されたら、
- * このページから表示できるようにする（loaderId ベースでレジストリ参照）。
+ * T-D-実装（cycle-191）完了後の状態:
+ * - keigo-reference-medium-search: 実コンポーネント（Tile.medium-search.tsx）
+ * - keigo-reference-small-daily-pick: 実コンポーネント（Tile.small-daily-pick.tsx）
+ * - それ以外のバリアント: プレースホルダのまま（Phase D 絶対境界: 本サイクルは small 1 + medium 1 のみ）
  *
  * ## バリアント登録の枠組み
  *
@@ -19,8 +20,29 @@ import styles from "./page.module.css";
  * コンテンツ単位でグルーピングして表示する。
  */
 
-/** バリアント登録エントリ（コンテンツ slug + バリアントリスト）。
- * T-D-実装 で keigo-reference の Tile.tsx が完成したら、この registry に追加する。 */
+/**
+ * 実コンポーネントが実装済みの loaderId → コンポーネントのマップ。
+ * モジュールスコープで構築することで render 中にコンポーネントが生成されるのを防ぐ。
+ * それ以外の loaderId はプレースホルダを表示する。
+ *
+ * NOTE: ESLint react-hooks/static-components ルールにより、render 中に
+ * getTileVariantComponent() を呼ぶと "Components created during render" エラーになる。
+ * モジュールスコープで先に生成してキャッシュしておくことで回避する。
+ */
+const IMPLEMENTED_TILE_COMPONENTS = {
+  "keigo-reference-medium-search": getTileVariantComponent(
+    "keigo-reference-medium-search",
+  ),
+  "keigo-reference-small-daily-pick": getTileVariantComponent(
+    "keigo-reference-small-daily-pick",
+  ),
+} as const;
+
+const IMPLEMENTED_LOADER_IDS = new Set(
+  Object.keys(IMPLEMENTED_TILE_COMPONENTS),
+);
+
+/** バリアント登録エントリ（コンテンツ slug + バリアントリスト）。 */
 interface TileRegistryEntry {
   /** コンテンツの slug（例: "keigo-reference"） */
   slug: string;
@@ -163,8 +185,7 @@ function getGridSpanLabel(gridSpan: TileVariant["gridSpan"]): string {
   return `${gridSpan.cols}×${gridSpan.rows}`;
 }
 
-/** プレースホルダタイル — Tile コンポーネント本体が未実装の間、枠のみ表示する。
- * T-D-実装 完了後は loaderId に対応する実コンポーネントに置き換える。 */
+/** プレースホルダタイル — Tile コンポーネント本体が未実装の間、枠のみ表示する。 */
 function PlaceholderTile({ variant }: { variant: TileVariant }) {
   const spanLabel = getGridSpanLabel(variant.gridSpan);
   return (
@@ -188,7 +209,42 @@ function PlaceholderTile({ variant }: { variant: TileVariant }) {
   );
 }
 
+/**
+ * バリアントに対応するコンポーネントを返す。
+ * IMPLEMENTED_TILE_COMPONENTS に含まれる loaderId は実コンポーネントを、
+ * それ以外はプレースホルダを表示する。
+ *
+ * NOTE: コンポーネントの取得は render 外（モジュールスコープの
+ * IMPLEMENTED_TILE_COMPONENTS）から行う。render 中の動的コンポーネント生成は
+ * ESLint react-hooks/static-components に違反するため。
+ */
+function TileDisplay({ variant }: { variant: TileVariant }) {
+  const loaderId = variant.loaderId as keyof typeof IMPLEMENTED_TILE_COMPONENTS;
+  if (IMPLEMENTED_LOADER_IDS.has(variant.loaderId)) {
+    const TileComp = IMPLEMENTED_TILE_COMPONENTS[loaderId];
+    return (
+      <div className={styles.implementedTileWrapper}>
+        <div className={styles.implementedBadge}>
+          実装済み: {variant.variantId}
+        </div>
+        <div className={styles.implementedTile}>
+          <TileComp slug={variant.variantId} />
+        </div>
+      </div>
+    );
+  }
+  return <PlaceholderTile variant={variant} />;
+}
+
 export default function TilesPreviewContent() {
+  const implementedCount = TILE_REGISTRY.reduce(
+    (sum, entry) =>
+      sum +
+      entry.variants.filter((v) => IMPLEMENTED_LOADER_IDS.has(v.loaderId))
+        .length,
+    0,
+  );
+
   return (
     <div className={styles.container}>
       {/* === ヘッダーセクション === */}
@@ -204,10 +260,9 @@ export default function TilesPreviewContent() {
               は共通コンポーネント専用のため、コンテンツ固有のタイルはこちらで検証する。
             </p>
             <p>
-              現状（T-C-検証場所 時点）: Tile
-              コンポーネント本体（Tile.tsx）が未実装のため、
-              プレースホルダ表示。T-D-実装 で keigo-reference の small + medium
-              タイルが 追加されたら実コンポーネントを表示するよう更新する。
+              T-D-実装（cycle-191）完了: keigo-reference-medium-search /
+              keigo-reference-small-daily-pick
+              が実コンポーネントとして表示される。それ以外はプレースホルダのまま。
             </p>
           </div>
 
@@ -225,6 +280,10 @@ export default function TilesPreviewContent() {
                 )}{" "}
                 件
               </div>
+            </div>
+            <div className={styles.infoItem}>
+              <div className={styles.infoLabel}>実装済みバリアント数</div>
+              <div className={styles.infoValue}>{implementedCount} 件</div>
             </div>
           </div>
         </Panel>
@@ -245,7 +304,7 @@ export default function TilesPreviewContent() {
 
             <div className={styles.variantGrid}>
               {entry.variants.map((variant) => (
-                <PlaceholderTile key={variant.variantId} variant={variant} />
+                <TileDisplay key={variant.variantId} variant={variant} />
               ))}
             </div>
           </Panel>
