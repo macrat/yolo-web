@@ -32,18 +32,25 @@ describe("ツール個別ページの網羅性", () => {
   });
 
   test.each(slugs)(
-    "%s: page.tsx, opengraph-image.tsx, twitter-image.tsx が存在する",
+    "%s: page.tsx, opengraph-image.tsx, twitter-image.tsx が (legacy) か (new) の片方のみに存在する",
     (slug) => {
-      // (legacy) か (new) のどちらか一方にページファイルが存在すればよい
+      // (legacy) か (new) のどちらか一方のみにページファイルが存在すること（XOR）。
+      // 両方に存在すると「どちらが正規か」が曖昧になり、移行管理が破綻する。
       const legacyDir = join(legacyToolsDir, slug);
       const newDir = join(newToolsDir, slug);
       for (const file of REQUIRED_FILES) {
         const legacyPath = join(legacyDir, file);
         const newPath = join(newDir, file);
+        const inLegacy = existsSync(legacyPath);
+        const inNew = existsSync(newPath);
         expect(
-          existsSync(legacyPath) || existsSync(newPath),
-          `${slug}/${file} が (legacy) または (new) に存在すること`,
+          inLegacy || inNew,
+          `${slug}/${file} が (legacy) または (new) のどちらかに存在すること（現状: 両方なし）`,
         ).toBe(true);
+        expect(
+          inLegacy && inNew,
+          `${slug}/${file} が (legacy) と (new) の両方に存在している（XOR 違反: 片方のみにすること）`,
+        ).toBe(false);
       }
     },
   );
