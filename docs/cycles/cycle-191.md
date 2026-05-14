@@ -394,6 +394,16 @@ cycle-190 で計画 r5 まで反復してメタルール対症療法的拡張に
 - 確定組合せ: medium = `keigo-reference-medium-search` / small = `keigo-reference-small-daily-pick`。3 軸（入力 / 出力 / インタラクション）すべて完全に異なる（サイズ縮退ではない明確な機能切り出し）。cycle-190 違反 4 への構造的回答として最強の選定
 - logic / meta ゼロベース再評価で発見された 3 件は T-E-申し送り 起票候補: (i) `getDailyEntry()` 未実装 → T-D-実装 で追加（破壊的変更なし）、(ii) `meta.ts` の `howItWorks` 件数不整合（40 件以上 → 実 58 件）、(iii) `getEntriesByCategory` と `filterEntries(query='', category=X)` の機能重複
 
+#### T-D-実装 統合レビュー（T-D-バリアント設計 と統合）
+
+- r1 観点 1〜4（Phase D 絶対境界 / 3 軸完全差別化 / Playwright 動作 / コード品質）: 致命的 1 / 重要 1 / 軽微 2
+- 致命的 1: small-daily-pick の `.formText` が 14.8px に圧縮され「召し上がる/いただく」が 1 文字ずつ縦折り返し → visitor 価値の核心崩壊（target like 1-L1「すぐ読める」違反）
+- 重要 2: Playwright スクリーンショット 4 枚のうち 2 ペアが完全同一画像（ページ全体撮影をコピーしていた、タイル個別撮影になっていない）
+- PM 対応: builder に r1 修正依頼 → 案 A 採用（`.formRow` を column 方向に変更、ラベル上・値下のレイアウト）。4 枚スクリーンショット個別撮影し直して MD5 すべて異なることを確認。Playwright 再撮影で formText が 127.69px 幅・1 行表示を確認
+- 軽微 3（CATEGORY_LABELS 二重定義）/ 軽微 4（`getDailyEntry()` の TZ 依存リスク）は T-E-申し送り 起票候補。本サイクルでは対応せず（cycle-190 反復膨張回避）
+- Phase D 絶対境界 4 項目すべて遵守確認: Tile.tsx 2 個のみ / (legacy) 不触 / `INITIAL_DEFAULT_LAYOUT` 不投入 / `src/components/common/` 不触
+- 再レビュー打ち切り: 修正は機械的で副作用なし、Playwright 再撮影で目視確認済み、298 ファイル 4402 テスト全パス
+
 ## キャリーオーバー
 
 - <このサイクルで完了できなかった作業や、次のサイクルに持ち越す必要のある作業があれば、ここと /docs/backlog.md の両方に記載する。>
