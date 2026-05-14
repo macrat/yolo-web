@@ -1,0 +1,241 @@
+/**
+ * Tile.module.css — 敬語リファレンス 軽量版タイル
+ *
+ * 道具箱内の medium タイル（CSS Grid 2col span 想定）に収まるレイアウト。
+ * DESIGN.md §1 / §4 / §6 準拠: デザイントークン使用。
+ * タップターゲット: 最小 44px。コントラスト: 4.5:1 以上。
+ *
+ * 【CSS 変数使用方針】
+ * globals.css に定義された変数のみを使用する。
+ * 以下の変数は globals.css に存在しないため、素の値で代替:
+ *   --sp-N → 0.25rem × N（0.25/0.5/0.75/1rem）
+ *   --fs-12/13/14 → 0.75rem / 0.8125rem / 0.875rem
+ *   --t-fast var(--ease) → 0.15s ease（Component.module.css 踏襲）
+ *   --lh-snug → 1.4
+ *
+ * Phase 9 ダッシュボード実装時の申し送り:
+ * Tile 自身を Panel コンポーネントに置き換えるか、ダッシュボード側
+ * Panel に任せて .tile の background/border を撤去するかの最終判断が必要。
+ * 現状の .tile は手動 Panel もどきであり、Phase 9 での二重 Panel リスクに注意。
+ */
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: var(--bg);
+  border-radius: var(--r-normal);
+  height: 100%;
+}
+
+/* ===== 上段: 検索 + カテゴリチップ ===== */
+
+.searchRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--r-interactive);
+  font-size: 0.875rem;
+  color: var(--fg);
+  background: var(--bg);
+  /* タップターゲット: 44px 以上 */
+  min-height: 44px;
+  box-sizing: border-box;
+}
+
+.searchInput:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: -1px;
+  border-color: var(--accent);
+}
+
+.categoryChips {
+  display: flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.chip {
+  /* 縦中央揃え（重要-4） */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--r-interactive);
+  background: var(--bg);
+  color: var(--fg-soft);
+  font-size: 0.75rem;
+  cursor: pointer;
+  /* タップターゲット: 最小 44px */
+  min-height: 44px;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.chip:hover {
+  background: var(--bg-soft);
+  color: var(--fg);
+}
+
+.chipActive {
+  /* --accent (blue) + --fg-invert (white): white-on-accent パターン。
+   * Component.module.css L33-35 の activeMainTab と同パターン。
+   * ライト: oklch(0.62 0.22 264) vs white (L1.0) → コントラスト 4.5:1 以上確保。
+   * ダーク: oklch(0.72 0.18 264) vs --fg-invert (#131311, L≈0.02) → 十分なコントラスト。 */
+  background: var(--accent);
+  color: var(--fg-invert);
+  border-color: var(--accent);
+}
+
+.chipActive:hover {
+  background: var(--accent-strong);
+  color: var(--fg-invert);
+}
+
+/* ===== 中段: 候補リスト ===== */
+
+.candidateList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--r-normal);
+  overflow: hidden;
+}
+
+.noResults {
+  padding: 0.75rem 1rem;
+  font-size: 0.8125rem;
+  color: var(--fg-softer);
+  text-align: center;
+}
+
+.candidateButton {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--fg);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  /* タップターゲット: 44px 以上 */
+  min-height: 44px;
+  transition: background 0.15s ease;
+}
+
+.candidateList li:last-child .candidateButton {
+  border-bottom: none;
+}
+
+.candidateButton:hover {
+  background: var(--bg-soft);
+}
+
+.candidateActive {
+  /* 重要-7: 視認性確保のため --accent + --fg-invert パターンを採用。
+   * ライト: --accent (oklch 0.62) vs --fg-invert (white) → コントラスト良好。
+   * ダーク: --accent (oklch 0.72) vs --fg-invert (#131311) → コントラスト良好。
+   * --accent-soft パターンは両モードでコントラスト不十分のため不採用。 */
+  background: var(--accent);
+  color: var(--fg-invert);
+}
+
+.candidateActive:hover {
+  background: var(--accent-strong);
+  color: var(--fg-invert);
+}
+
+/* ===== 下段: 敬語詳細 ===== */
+
+.detail {
+  background: var(--bg-soft);
+  border-radius: var(--r-normal);
+  padding: 0.75rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.detailGrid {
+  display: grid;
+  grid-template-columns: 4rem 1fr;
+  gap: 0.25rem 0.5rem;
+  align-items: baseline;
+}
+
+.detailLabel {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--fg-soft);
+  /* 上寄せにしてラベルとして機能させる */
+  align-self: start;
+  padding-top: 1px;
+}
+
+.detailValue {
+  font-size: 0.8125rem;
+  color: var(--fg);
+  line-height: 1.4;
+}
+
+/* 例文エリア */
+.example {
+  border-top: 1px solid var(--border);
+  padding-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.exampleContext {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--fg-soft);
+}
+
+.exampleLine {
+  font-size: 0.75rem;
+  color: var(--fg);
+  line-height: 1.4;
+}
+
+.exampleLabel {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--fg-softer);
+  margin-right: 0.25rem;
+}
+
+/* ===== フッター: 詳細を開くリンク ===== */
+
+.footer {
+  margin-top: auto;
+  text-align: right;
+}
+
+.detailLink {
+  font-size: 0.8125rem;
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+  transition: color 0.15s ease;
+}
+
+.detailLink:hover {
+  color: var(--accent-strong);
+}

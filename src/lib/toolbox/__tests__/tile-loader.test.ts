@@ -44,4 +44,18 @@ describe("getTileComponent — slug ベース lazy loader", () => {
     // メモ化により同一参照が返る（slug 単独キーでメモ化）
     expect(loaderA).toBe(loaderB);
   });
+
+  test("keigo-reference スラグで個別 loader が返る", () => {
+    const loader = getTileComponent("keigo-reference");
+    // keigo-reference には専用タイルコンポーネントがあるため非 null 且つ関数
+    expect(loader).not.toBeNull();
+    expect(typeof loader).toBe("function");
+  });
+
+  test("keigo-reference の loader を複数回呼んでも同じ参照を返す（メモ化）", () => {
+    const loaderA = getTileComponent("keigo-reference");
+    const loaderB = getTileComponent("keigo-reference");
+    // メモ化により同一参照が返る
+    expect(loaderA).toBe(loaderB);
+  });
 });
