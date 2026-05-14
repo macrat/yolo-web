@@ -2,7 +2,10 @@ import type { ReactNode } from "react";
 import styles from "./AccordionItem.module.css";
 
 interface AccordionItemProps {
-  /** 折りたたみ見出し（summary に相当）。文字列に加え、リッチな見出し用に ReactNode も受け付ける */
+  /**
+   * 折りたたみ見出し（summary に相当）。文字列に加え、リッチな見出し用に ReactNode も受け付ける。
+   * 内部で `<span>` にラップされるため、`<div>` 等のブロック要素は渡さないこと（HTML 不正になる）。
+   */
   heading: ReactNode;
   /** 展開時に表示するコンテンツ */
   children: ReactNode;

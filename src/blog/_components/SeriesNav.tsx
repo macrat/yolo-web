@@ -11,7 +11,7 @@ interface SeriesNavProps {
 
 /**
  * Displays a collapsible series navigation UI with:
- * - A numbered list of all posts in the series (inside a details/summary)
+ * - A numbered list of all posts in the series (folded inside an AccordionItem)
  * - Previous/next quick navigation links (always visible)
  *
  * Returns null if the series has 1 or fewer posts (R1).
@@ -41,10 +41,10 @@ export default function SeriesNav({
     <nav className={styles.seriesNav} aria-label="シリーズナビゲーション">
       <AccordionItem
         heading={
-          <>
+          <span className={styles.seriesHeading}>
             <span className={styles.seriesLabel}>{seriesLabel}</span>
             <span className={styles.position}>{positionLabel}</span>
-          </>
+          </span>
         }
       >
         <ol className={styles.list}>

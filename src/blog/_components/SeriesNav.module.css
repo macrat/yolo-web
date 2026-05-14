@@ -1,20 +1,22 @@
+/* パネル境界は AccordionItem 自体が担う（DESIGN.md §4: パネル入れ子禁止） */
 .seriesNav {
-  /* パネル風スタイルは page.tsx 側の Panel コンポーネントが担う */
+  margin-bottom: 1.5rem;
 }
 
-/* --- accordion heading inline parts --- */
+.seriesHeading {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
 
 .seriesLabel {
   font-weight: 700;
-  margin-right: 0.5rem;
 }
 
 .position {
   font-size: 0.8rem;
   color: var(--fg-soft);
 }
-
-/* --- article list (AccordionItem の content 内に配置) --- */
 
 .list {
   margin: 0;
