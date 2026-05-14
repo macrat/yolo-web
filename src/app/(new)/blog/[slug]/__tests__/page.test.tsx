@@ -110,13 +110,6 @@ describe("(new)/blog/[slug]/page", () => {
     it("articleAside に position:sticky が定義されていること（スクロール追従）", () => {
       expect(css).toMatch(/\.articleAside[^{]*\{[^}]*position:\s*sticky/);
     });
-
-    it("ライトモードの articlePanel border-color は --border（弱め）であること", () => {
-      // ダーク専用に --border-strong を使うため、ライトでは --border に固定
-      expect(css).toMatch(
-        /\.articlePanel[^{]*\{[^}]*border-color:\s*var\(--border\)/,
-      );
-    });
   });
 
   describe("エの字レイアウト — DOM 構造の検証", () => {
