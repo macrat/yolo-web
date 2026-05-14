@@ -23,6 +23,7 @@
   line-height: 1.6;
   /* 2 行以内に制約（超過分は省略記号で表示） */
   display: -webkit-box;
+  line-clamp: 2;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;

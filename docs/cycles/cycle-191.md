@@ -364,6 +364,12 @@ cycle-190 で計画 r5 まで反復してメタルール対症療法的拡張に
 - r1 観点 1〜4 レビュー: 致命的 0 / 重要 0 / 軽微 3。承認（軽微はすべて T-B-実装 で吸収可 or 将来移動コスト小）
 - 軽微 1 (AccordionItem 汎用化スコープ) / 軽微 2 (PrivacyBadge 横断スコープ) / 軽微 3 (LifecycleSection 内部分割) は T-B-実装 段階で吸収。明示的対処不要
 
+#### T-B-実装 レビュー
+
+- r1 観点 1〜3（Playwright 動作確認 / コード品質 / Hook 妥当性）: 致命的 0 / 重要 2 / 軽微 2。Playwright 撮影は `tmp/cycle-191/storybook-{light,dark}.png` 等で確認、AccordionItem 開閉動作 / ResultCopyArea / PrivacyBadge の単独動作すべて確認済み
+- PM 対応: 重要 1（LifecycleSection の生 `<button>` が DESIGN.md §5 違反）→ 新版 Button コンポーネントに置換 + `.toolboxButton` CSS ブロック削除（PM 直接編集）。重要 2（IdentityHeader の `line-clamp` 標準プロパティ欠落）→ `line-clamp: 2` を `-webkit-line-clamp: 2` の前に追加（PM 直接編集）。軽微 1（useToolStorage の key 変更時挙動）/ 軽微 2（コピー失敗のサイレント無視）は T-D-実装で必要が顕在化したときに対処、本タスクでは対応不要
+- 再レビューは打ち切り: 修正は機械的で副作用なし、Playwright 動作確認は既に取得済み、再レビュー反復は cycle-190 r5 同型の反復膨張リスクが高い。`npm run lint && format:check && build` 全成功で動作確認済み
+
 ## キャリーオーバー
 
 - <このサイクルで完了できなかった作業や、次のサイクルに持ち越す必要のある作業があれば、ここと /docs/backlog.md の両方に記載する。>

@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import Button from "@/components/Button";
 import styles from "./LifecycleSection.module.css";
 
 /** 関連コンテンツの 1 件 */
@@ -95,11 +96,7 @@ function LifecycleSection({
       {tileVariant && <div className={styles.tileArea}>{tileVariant}</div>}
 
       {/* 道具箱追加（Phase 9 配線予定のプレースホルダ） */}
-      {onAddToToolbox && (
-        <button className={styles.toolboxButton} onClick={onAddToToolbox}>
-          道具箱に追加
-        </button>
-      )}
+      {onAddToToolbox && <Button onClick={onAddToToolbox}>道具箱に追加</Button>}
 
       {/* 日替わりコンテンツ */}
       {dailyContent && <div className={styles.dailyArea}>{dailyContent}</div>}
