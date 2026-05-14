@@ -87,9 +87,14 @@ describe("(new)/blog/[slug]/page", () => {
       expect(source).toMatch(/postNav/);
     });
 
-    it("シリーズ記事での postNav ラベルは時系列であることが明示されること", () => {
-      // 「すべての記事から」または「時系列」のラベルが存在すること
-      expect(source).toMatch(/すべての記事|時系列/);
+    it("postNav ラベルはシリーズ有無に関わらず固定文言（前の記事 / 次の記事）であること", () => {
+      // series ? "すべての記事から：..." : "..." の三項演算子が除去されていること
+      expect(source).not.toContain("すべての記事から");
+      // 固定文言「前の記事」「次の記事」が存在すること
+      expect(source).toContain("前の記事");
+      expect(source).toContain("次の記事");
+      // aria-label による時系列順の明示は維持されること
+      expect(source).toContain("時系列順");
     });
   });
 
