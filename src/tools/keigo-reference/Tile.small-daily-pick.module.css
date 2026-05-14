@@ -73,17 +73,21 @@
 
 .formRow {
   display: flex;
-  gap: 0.35rem;
-  align-items: baseline;
+  /* 案 A: ラベルを上・値を下に積む。
+   * small タイル（約 120px 幅）では flex-direction: row だと
+   * formLabel の min-width により formText が 15px 以下に圧縮されて
+   * 1 文字ずつ縦折り返しになるため、column 方向に変更。
+   */
+  flex-direction: column;
+  gap: 0.1rem;
 }
 
 .formLabel {
-  font-size: 0.65rem;
+  font-size: 0.6rem;
   font-weight: 600;
   color: var(--fg-softer);
   white-space: nowrap;
-  min-width: 2.5rem;
-  flex-shrink: 0;
+  /* min-width 削除: row レイアウト廃止により不要 */
 }
 
 .formText {
