@@ -115,10 +115,55 @@ describe("markdownToHtml", () => {
     expect(html).toContain("<em>italic</em>");
   });
 
-  test("converts code blocks", () => {
+  test("converts code blocks with Shiki dual-theme highlighting", () => {
     const html = markdownToHtml("```typescript\nconst x = 1;\n```");
-    expect(html).toContain("<code");
-    expect(html).toContain("const x = 1;");
+    // Shiki wraps highlighted output in <pre class="shiki shiki-themes ...">
+    expect(html).toContain("<pre");
+    expect(html).toContain("shiki");
+    expect(html).toContain("vitesse-light");
+    expect(html).toContain("vitesse-dark");
+    // Dual-theme mode emits the dark color as a --shiki-dark CSS custom property
+    expect(html).toContain("--shiki-dark");
+    // Code text is preserved (escaped by Shiki itself)
+    expect(html).toContain("const");
+    expect(html).toContain("x");
+    expect(html).toContain("1");
+  });
+
+  test("unknown language falls back to plain text without throwing", () => {
+    const html = markdownToHtml("```not-a-real-lang\nhello world\n```");
+    expect(html).toContain("<pre");
+    expect(html).toContain("shiki");
+    expect(html).toContain("hello world");
+  });
+
+  test("fenced code block with no language is rendered as text", () => {
+    const html = markdownToHtml("```\nplain content\n```");
+    expect(html).toContain("<pre");
+    expect(html).toContain("shiki");
+    expect(html).toContain("plain content");
+  });
+
+  test('mermaid code block is preserved as <div class="mermaid">', () => {
+    const html = markdownToHtml("```mermaid\ngraph TD; A-->B;\n```");
+    expect(html).toContain('<div class="mermaid">');
+    expect(html).toContain("graph TD; A--&gt;B;");
+    // mermaid blocks must not be syntax-highlighted (no shiki wrapper)
+    expect(html).not.toMatch(/<pre class="shiki/);
+  });
+
+  test("code block content is HTML-escaped", () => {
+    const html = markdownToHtml("```html\n<script>alert(1)</script>\n```");
+    // The literal "<script>" tag must not appear unescaped — Shiki escapes
+    // angle brackets even when they get tokenized into separate <span>s.
+    expect(html).not.toContain("<script>");
+    expect(html).not.toContain("</script>");
+    expect(html).not.toContain("alert(1)</script>");
+    // Each angle bracket appears escaped (possibly split across token spans)
+    expect(html).toContain("&lt;");
+    expect(html).toContain("&gt;");
+    expect(html).toContain("script");
+    expect(html).toContain("alert");
   });
 
   test("converts lists", () => {
@@ -166,7 +211,9 @@ describe("markdownToHtml", () => {
   test("does not affect non-mermaid code blocks", () => {
     const md = "```javascript\nconst x = 1;\n```";
     const html = markdownToHtml(md);
-    expect(html).toContain("<pre>");
+    // After Shiki integration, non-mermaid blocks render as <pre class="shiki ...">
+    expect(html).toContain("<pre");
+    expect(html).toContain("shiki");
     expect(html).toContain("<code");
     expect(html).not.toContain("mermaid");
   });

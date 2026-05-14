@@ -136,10 +136,14 @@
 }
 
 /*
- * コードブロック背景。
- * ライト: --bg-soft (#f4f4f1) — Panel (#fff) より少し暗い背景でコードブロックを区別。
- * ダーク: --bg-softer (#131311) — Panel (#363634) より暗い「くぼみ」表現で区別する。
- *   --bg-soft (#1c1c1a) は body 背景と同色のため使わない（Panel に「穴が開く」視覚問題）。
+ * コードブロック。
+ *
+ * ハイライト済みブロック（Shiki 出力 `<pre class="shiki ...">`）は背景色を
+ * テーマ側の inline style に任せる（vitesse-light: #ffffff / vitesse-dark: #121212）。
+ * テーマ作者が決めた配色と背景色の関係を尊重したほうが、トークンの可読性が高い。
+ *
+ * `<pre>` 直下に shiki クラスが付かないケース（ハイライト未対応など）の
+ * フォールバックとして `--bg-soft` / `--bg-softer` を残す。
  */
 .prose pre {
   background-color: var(--bg-soft);
@@ -150,7 +154,7 @@
   margin-bottom: 1rem;
 }
 
-/* ダーク時: コードブロック背景を body と区別するため --bg-softer を使用 */
+/* ダーク時の非ハイライトブロック用フォールバック */
 :global(.dark) .prose pre {
   background-color: var(--bg-softer);
 }
@@ -159,6 +163,25 @@
   padding: 0;
   background: none;
   font-family: var(--font-mono);
+}
+
+/*
+ * Shiki dual-theme output のダークモード切替。
+ *
+ * Shiki は light テーマ色を通常の `color` / `background-color` として埋め込み、
+ * dark テーマ色を `--shiki-dark` / `--shiki-dark-bg` CSS 変数として並置する。
+ * `<html class="dark">` 配下では変数値を `!important` で上書きしてダーク配色に切替える。
+ *
+ * `!important` は CSS Modules + サードパーティ生成 inline style に上書きするための
+ * shiki 公式パターン（https://shiki.style/guide/dual-themes 参照）。
+ */
+:global(.dark) .prose :global(.shiki),
+:global(.dark) .prose :global(.shiki span) {
+  color: var(--shiki-dark) !important;
+  background-color: var(--shiki-dark-bg) !important;
+  font-style: var(--shiki-dark-font-style) !important;
+  font-weight: var(--shiki-dark-font-weight) !important;
+  text-decoration: var(--shiki-dark-text-decoration) !important;
 }
 
 .prose blockquote {
