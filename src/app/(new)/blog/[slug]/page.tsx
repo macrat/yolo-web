@@ -20,7 +20,7 @@ import { formatDate } from "@/lib/date";
 import Breadcrumb from "@/components/Breadcrumb";
 import ShareButtons from "@/components/ShareButtons";
 import Panel from "@/components/Panel";
-import TableOfContents from "@/blog/_components/TableOfContents";
+import CollapsibleTOC from "@/blog/_components/CollapsibleTOC";
 import TagList from "@/blog/_components/TagList";
 import SeriesNav from "@/blog/_components/SeriesNav";
 import MermaidRenderer from "@/blog/_components/MermaidRenderer";
@@ -68,61 +68,53 @@ export default async function BlogPostPage({ params }: Props) {
   });
 
   return (
-    <div className={styles.page}>
+    <article className={styles.contentColumn}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: safeJsonLdStringify(jsonLd) }}
       />
 
+      <header className={styles.articleHeader}>
+        <Breadcrumb
+          items={[
+            { label: "ホーム", href: "/" },
+            { label: "ブログ", href: "/blog" },
+            { label: post.title },
+          ]}
+        />
+        <h1 className={styles.title}>{post.title}</h1>
+        <div className={styles.meta}>
+          <Link
+            href={`/blog/category/${post.category}`}
+            className={styles.category}
+          >
+            {CATEGORY_LABELS[post.category]}
+          </Link>
+          <time dateTime={post.published_at}>
+            {formatDate(post.published_at)}
+          </time>
+          {post.updated_at !== post.published_at && (
+            <span>更新: {formatDate(post.updated_at)}</span>
+          )}
+          <span>{post.readingTime}分で読める</span>
+        </div>
+        {/* TODO(cycle-184/B-389): X1 採用時に削除 */}
+        <TagList tags={post.tags} linkableTags={linkableTags} />
+      </header>
+
       {/*
-       * proseWrapper: 狭い幅では max-width 720px 単一カラム。
-       * デスクトップ（≥ 1024px）: CSS Grid [コンテンツ 720px] [TOC 220px]。
-       *
-       * T-2 対策: contentColumn を Grid 左カラム（col 1）に置くことで、
-       * ヘッダー(.inner padding-left: 1.25rem)と本文左端の X 座標が一致する。
-       *
-       * DOM 順序: contentColumn を先（col 1）、tocSidebar を後（col 2）に置く。
-       * 逆順にすると Grid auto-placement が干渉して col 1 が空白になるため必須。
-       * grid-column を両要素に明示しているが、DOM 順序もあわせて揃えることで二重に安全。
+       * aside を main より DOM 先行に置くことで、モバイルの単一カラム時に
+       * TOC が本文の上に並ぶ。デスクトップでは grid-column で左右を入れ替える。
        */}
-      <div className={styles.proseWrapper}>
-        {/*
-         * contentColumn: Grid 左カラム（720px）。
-         * DOM 先頭に置くことで auto-placement の干渉を防ぐ。
-         * grid-column: 1 を明示しているため tocSidebar の有無に関わらず左端に固定される。
-         * すべてのコンテンツ要素をこの div に収める。
-         */}
-        <div className={styles.contentColumn}>
-          <Breadcrumb
-            items={[
-              { label: "ホーム", href: "/" },
-              { label: "ブログ", href: "/blog" },
-              { label: post.title },
-            ]}
-          />
+      <div className={styles.articleBody}>
+        {post.headings.length > 0 && (
+          <aside className={styles.articleAside}>
+            <CollapsibleTOC headings={post.headings} />
+          </aside>
+        )}
 
-          <header className={styles.articleHeader}>
-            <h1 className={styles.title}>{post.title}</h1>
-            <div className={styles.meta}>
-              <Link
-                href={`/blog/category/${post.category}`}
-                className={styles.category}
-              >
-                {CATEGORY_LABELS[post.category]}
-              </Link>
-              <time dateTime={post.published_at}>
-                {formatDate(post.published_at)}
-              </time>
-              {post.updated_at !== post.published_at && (
-                <span>更新: {formatDate(post.updated_at)}</span>
-              )}
-              <span>{post.readingTime}分で読める</span>
-            </div>
-            {/* TODO(cycle-184/B-389): X1 採用時に削除 */}
-            <TagList tags={post.tags} linkableTags={linkableTags} />
-          </header>
-
-          {/* SeriesNav: DESIGN.md §4「パネル入れ子禁止」対応で本文 Panel の外に並列配置 */}
+        <div className={styles.articleMain}>
+          {/* DESIGN.md §4「パネル入れ子禁止」対応で本文 Panel の外に並列配置 */}
           {post.series && (
             <Panel className={styles.seriesNavPanel}>
               <SeriesNav
@@ -134,49 +126,11 @@ export default async function BlogPostPage({ params }: Props) {
           )}
 
           {/*
-           * モバイル向けインライン TOC（デスクトップでは CSS で非表示）。
-           * Panel コンポーネントを使わず <details> に直接スタイル適用（T-1 対策）。
-           * articlePanel との視覚的分離を明確にするため bg-soft + border スタイルを使用。
-           * DESIGN.md §4「パネル入れ子禁止」にも整合（mobileToc は Panel でなく details 要素）。
+           * 本文 Panel は as="div"。外側 <article> がブログ記事のセマンティック境界
+           * を提供しているため、<section> にすると AT で「ラベル無しの region」として
+           * 冗長に読み上げられる。
            */}
-          {post.headings.length > 0 && (
-            <details className={styles.mobileToc}>
-              {/*
-               * summary の chevron: DESIGN.md §3「折りたたみ UI のアフォーダンス」に準拠。
-               * ChevronDown (Lucide スタイル 1.5px / 16px) を flex 右端に配置。
-               * details[open] 時は CSS で 180deg 回転（→ chevron-up）。
-               * aria-hidden="true" で SR は <details> のネイティブ状態読み上げを維持。
-               */}
-              <summary className={styles.mobileTocSummary}>
-                目次
-                <svg
-                  className={styles.mobileTocChevron}
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="M6 9l6 6 6-6" />
-                </svg>
-              </summary>
-              <TableOfContents headings={post.headings} />
-            </details>
-          )}
-
-          {/*
-           * 本文 Panel（DESIGN.md §1「すべてのコンテンツはパネル」）。
-           * §4 入れ子禁止: Markdown 標準要素は Panel コンポーネントを使わないため入れ子非該当。
-           */}
-          <Panel
-            as="article"
-            padding="comfortable"
-            className={styles.articlePanel}
-          >
+          <Panel as="div" padding="comfortable" className={styles.articlePanel}>
             <div
               className={styles.prose}
               dangerouslySetInnerHTML={{ __html: post.contentHtml }} // markdownToHtml() 内部で sanitize 済み
@@ -184,65 +138,52 @@ export default async function BlogPostPage({ params }: Props) {
           </Panel>
 
           <MermaidRenderer />
-
-          <section
-            className={styles.shareSection}
-            aria-label="この記事をシェア"
-          >
-            <h2 className={styles.shareSectionTitle}>この記事をシェア</h2>
-            <ShareButtons
-              url={`/blog/${post.slug}`}
-              title={post.title}
-              sns={["x", "line", "hatena", "copy"]}
-              contentType="blog"
-              contentId={post.slug}
-            />
-          </section>
-
-          {/* 関連記事（DESIGN.md §4: 本文 Panel 外の並列配置） */}
-          <RelatedArticles posts={relatedPosts} />
-
-          {/*
-           * 前後ナビゲーション（投稿日時系列順）。
-           * シリーズ記事でも常時表示し、時系列ナビであることをラベルで明示する。
-           * SeriesNav 側は「シリーズ内の前/次の記事」ラベルで区別済み。
-           */}
-          <nav className={styles.postNav} aria-label="前後の記事（時系列順）">
-            {prevPost ? (
-              <Link href={`/blog/${prevPost.slug}`} className={styles.prevPost}>
-                <span className={styles.navLabel}>
-                  {post.series ? "すべての記事から：前の記事" : "前の記事"}
-                </span>
-                <span className={styles.navTitle}>{prevPost.title}</span>
-              </Link>
-            ) : (
-              <span aria-hidden="true" />
-            )}
-            {nextPost ? (
-              <Link href={`/blog/${nextPost.slug}`} className={styles.nextPost}>
-                <span className={styles.navLabel}>
-                  {post.series ? "すべての記事から：次の記事" : "次の記事"}
-                </span>
-                <span className={styles.navTitle}>{nextPost.title}</span>
-              </Link>
-            ) : (
-              <span aria-hidden="true" />
-            )}
-          </nav>
         </div>
+      </div>
+
+      <footer className={styles.articleFooter}>
+        <section className={styles.shareSection} aria-label="この記事をシェア">
+          <h2 className={styles.shareSectionTitle}>この記事をシェア</h2>
+          <ShareButtons
+            url={`/blog/${post.slug}`}
+            title={post.title}
+            sns={["x", "line", "hatena", "copy"]}
+            contentType="blog"
+            contentId={post.slug}
+          />
+        </section>
+
+        {/* 関連記事（DESIGN.md §4: 本文 Panel 外の並列配置） */}
+        <RelatedArticles posts={relatedPosts} />
 
         {/*
-         * デスクトップ TOC サイドバー（Grid 右カラム）。
-         * DOM で contentColumn の後に置くことで auto-placement と干渉しない。
-         * モバイルでは CSS で display:none。mobileToc が代わりに表示される。
-         * Panel 化: DESIGN.md §1「すべてのコンテンツはパネル」。
+         * 前後ナビゲーション（投稿日時系列順）。
+         * シリーズ記事でも常時表示し、時系列ナビであることをラベルで明示する。
+         * SeriesNav 側は「シリーズ内の前/次の記事」ラベルで区別済み。
          */}
-        {post.headings.length > 0 && (
-          <Panel as="aside" className={styles.tocSidebar}>
-            <TableOfContents headings={post.headings} />
-          </Panel>
-        )}
-      </div>
-    </div>
+        <nav className={styles.postNav} aria-label="前後の記事（時系列順）">
+          {prevPost ? (
+            <Link href={`/blog/${prevPost.slug}`} className={styles.prevPost}>
+              <span className={styles.navLabel}>
+                {post.series ? "すべての記事から：前の記事" : "前の記事"}
+              </span>
+              <span className={styles.navTitle}>{prevPost.title}</span>
+            </Link>
+          ) : (
+            <span aria-hidden="true" />
+          )}
+          {nextPost ? (
+            <Link href={`/blog/${nextPost.slug}`} className={styles.nextPost}>
+              <span className={styles.navLabel}>
+                {post.series ? "すべての記事から：次の記事" : "次の記事"}
+              </span>
+              <span className={styles.navTitle}>{nextPost.title}</span>
+            </Link>
+          ) : (
+            <span aria-hidden="true" />
+          )}
+        </nav>
+      </footer>
+    </article>
   );
 }
