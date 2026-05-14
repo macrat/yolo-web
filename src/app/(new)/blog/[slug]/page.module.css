@@ -233,7 +233,7 @@
   margin-bottom: 0.75rem;
 }
 
-/* 前後ナビゲーション（時系列順。シリーズ記事でも常時表示。ラベルで SeriesNav と区別） */
+/* 前後ナビゲーション（時系列順。シリーズ記事でも常時表示し最終回でも動線を確保。aria-label で時系列順を SR 向けに明示） */
 .postNav {
   display: flex;
   justify-content: space-between;
