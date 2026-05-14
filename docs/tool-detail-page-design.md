@@ -1719,3 +1719,16 @@ T-C-型契約 で定義済みの keigo-reference 6 バリアント（`large-full
 1. **logic.ts の `getDailyEntry()` 追加**: `small-daily-pick` バリアントの実装には日替わり / ランダム取得関数が必要。T-D-実装 タスクで logic.ts に追加する（破壊的変更なし）。
 2. **meta.ts の `howItWorks` 件数不整合**: `howItWorks` に「40件以上」とあるが実データは 58 件。T-D-実装 または次サイクルで実件数に合わせて修正する。
 3. **`getEntriesByCategory` と `filterEntries(query='', category=X)` の機能重複**: API 整理の観点で次サイクル以降に検討する。現状は後方互換性のため維持。
+
+---
+
+### keigo-reference 詳細ページ固有記録（cycle-192 T-A-設計、r2 改訂）
+
+> 本セクションは cycle-192 T-A-設計の成果物の要点（r2 改訂版）。詳細判断は `docs/cycles/cycle-192.md` の「### T-A 設計記録（成果物本体）」を参照。Phase 7 共通テンプレ化は B-401（第 3-5 弾完了後）の責務であり本サイクルでは行わない。外部仕様の一次資料確認（FAQPage 仕様）は同記録末尾「外部仕様の一次資料確認」セクションを参照。
+
+- **4 階層への 8 機能配置（採用 = 案 β'）**: F2 検索欄 / F3 カテゴリフィルタ / F4 候補一覧 / F5 例文展開 / F6 件数表示 を H2「使用」のメイン領域に置き早見表を常時前面化、F7 誤用パターン / F8 誤用カード詳細は H2 末尾に AccordionItem「よくある間違い」（初期閉）で配置。F1 タブは撤廃。H3「信頼・透明性」には howItWorks + updatedAt + AI 注記、H4「生活への組み込み」には `relatedSlugs` 由来の関連コンテンツ（推薦理由付き）のみ配置。GA4 実体「着地 100% が早見表ルート / Bing organic 73% / 平均滞在 5 分超」に整合。
+- **useToolStorage 永続化キー（4 件）**: `searchQuery` / `selectedCategory` / `mistakesExpanded`（誤用折りたたみ開閉状態、`activeTab` 置換）/ `expandedEntryId`（例文展開状態、r2 で不採用→採用に変更）の 4 件採用。SSR / hydration ちらつき対処は初回マウントまで `aria-busy="true"` 付与。
+- **TrustSection 構成**: howItWorks + updatedAt + AI 注記（`isAiGenerated=true`）を採用。**faq 3 件は meta.ts から削除**（r2 改訂、致命的-1 反映 / Google FAQPage rich results 2026-05-07 表示停止 + 2026-08 API サポート終了 + 仕様上画面非表示運用は違反）。JSON-LD FAQPage 出力も実装しない。出典 / changeHistory は本サイクル不指定（meta 未定義のため捏造禁止）。
+- **新版コンポーネント採否**: ToolDetailLayout / IdentityHeader / TrustSection / AccordionItem（H2 末尾誤用折りたたみで直接利用）/ Button / PrivacyBadge / **ResultCopyArea（r2 改訂、例文展開行ごとに複数インスタンス配置で各敬語文の個別コピー）** は採用、LifecycleSection は `relatedContents` のみ部分採用、**ToolInputArea は不採用**（`<input type="search">` 部分抽出案も含めて不採用 / 入力例 UI 過剰）。AP-P10「あるから使う」回避。
+- **タイル 2 件との整合**: タイルは `/internal/tiles` 検証用 + 将来 INITIAL_DEFAULT_LAYOUT 投入用に留め、詳細ページには埋め込まない。`getCategoryName(id)` ヘルパー（T-B 追加）の双方経由で表記ブレを構造的に防止。件数表記は `${count} 件`（半角スペースあり）で統一。
+- **meta.ts 改廃**: `trustLevel` は撤去（T-C 手順 6 で optional 化）、`faq` は **削除**（r2 改訂、`ToolMeta` 型を optional 化して他ツール影響を吸収）、その他 12 項目は維持。Component.tsx 内ロジック（filterEntries / getCommonMistakes 等）は B-3 同等性のため無改修、タブ UI のみ撤廃。
