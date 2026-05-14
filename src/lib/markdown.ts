@@ -10,12 +10,17 @@ import { Marked, type MarkedExtension, type Tokens } from "marked";
 import markedAlert from "marked-alert";
 // XSS防止のためmarked出力をホワイトリスト方式でサニタイズ
 import { sanitize } from "@/lib/sanitize";
+// ビルド時シンタックスハイライト（クライアントでチラつかせないため）
+import { highlight } from "@/lib/highlight";
 
 /**
- * Custom marked extension to convert mermaid code blocks into
- * `<div class="mermaid">` elements for client-side rendering.
+ * Custom marked extension for fenced code blocks.
+ *
+ * - `mermaid` → client-side mermaid rendering target (`<div class="mermaid">`)
+ * - その他 → Shiki でビルド時にシンタックスハイライト済みの `<pre class="shiki">`
+ *   を返す。クライアント側でハイライトを掛け直さないのでチラつかない。
  */
-const mermaidExtension: MarkedExtension = {
+const codeExtension: MarkedExtension = {
   renderer: {
     code({ text, lang }: { text: string; lang?: string }) {
       if (lang === "mermaid") {
@@ -26,7 +31,7 @@ const mermaidExtension: MarkedExtension = {
           .replace(/"/g, "&quot;");
         return `<div class="mermaid">${escaped}</div>\n`;
       }
-      return false; // fallback to default renderer
+      return `${highlight(text, lang)}\n`;
     },
   },
 };
@@ -87,13 +92,13 @@ const { extension: headingExtension, resetCounter: resetHeadingCounter } =
   createHeadingExtension();
 
 /**
- * Module-level Marked instance with mermaid, heading, and alert extensions.
+ * Module-level Marked instance with code/highlight, heading, and alert extensions.
  * Using a dedicated instance avoids polluting the global marked state
  * and keeps extensions isolated.
  * markedAlert() is included to support GFM Alert syntax (> [!NOTE], > [!WARNING], etc.).
  */
 const markedInstance = new Marked(
-  mermaidExtension,
+  codeExtension,
   headingExtension,
   markedAlert(),
 );
