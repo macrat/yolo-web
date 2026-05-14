@@ -130,7 +130,7 @@ export default async function BlogPostPage({ params }: Props) {
            * を提供しているため、<section> にすると AT で「ラベル無しの region」として
            * 冗長に読み上げられる。
            */}
-          <Panel as="div" padding="comfortable" className={styles.articlePanel}>
+          <Panel as="div" padding="comfortable">
             <div
               className={styles.prose}
               dangerouslySetInnerHTML={{ __html: post.contentHtml }} // markdownToHtml() 内部で sanitize 済み
