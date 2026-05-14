@@ -1,100 +1,46 @@
 /**
  * Build-time syntax highlighter for markdown code blocks.
  *
- * Uses Shiki's synchronous core API (`createHighlighterCoreSync`) with the
- * JavaScript RegExp engine so highlighting can run inside marked's synchronous
- * renderer pipeline without making `markdownToHtml` async. All themes and
- * grammars are bundled at build time, so the resulting HTML ships fully
- * styled and the client never re-highlights (= no FOUC / color flicker).
+ * Uses Shiki's `bundle/full` pack — every language Shiki ships is available
+ * without a manual allow-list, so writers can use any fenced code language
+ * (`go`, `rust`, `ruby`, ...) and it just works. Shiki is server-only here:
+ * the highlighter and grammars never end up in the client JS bundle, so the
+ * download cost to visitors is zero. The cost is paid in build artifact
+ * size (within `.next/server/`), which we accept in exchange for removing
+ * the maintenance burden of keeping a manual language list in sync with
+ * what blog authors actually write.
  *
  * Dual-theme output:
  *   The light theme's colors are baked into inline `color` / `background-color`
  *   declarations, and the dark theme's colors are stored alongside as
  *   `--shiki-dark` / `--shiki-dark-bg` CSS variables. The blog page CSS swaps
  *   them in via `:root.dark .shiki { color: var(--shiki-dark) !important; }`.
+ *
+ * Async lazy init:
+ *   Shiki's `createHighlighter` is async. Importing this module doesn't
+ *   trigger highlighter creation — that only happens on first `highlight()`
+ *   call. This matters because the prebuild search-index script transitively
+ *   imports `blog.ts → markdown.ts → highlight.ts` in tsx's CJS loader,
+ *   which would otherwise reject top-level await.
  */
 
-import { createHighlighterCoreSync, type HighlighterCore } from "shiki/core";
-import { createJavaScriptRegexEngine } from "shiki/engine/javascript";
+import type { Highlighter } from "shiki/bundle/full";
 
-import vitesseLight from "@shikijs/themes/vitesse-light";
-import vitesseDark from "@shikijs/themes/vitesse-dark";
+let highlighterPromise: Promise<Highlighter> | null = null;
 
-import bash from "@shikijs/langs/bash";
-import css from "@shikijs/langs/css";
-import diff from "@shikijs/langs/diff";
-import html from "@shikijs/langs/html";
-import http from "@shikijs/langs/http";
-import javascript from "@shikijs/langs/javascript";
-import json from "@shikijs/langs/json";
-import jsonc from "@shikijs/langs/jsonc";
-import jsonl from "@shikijs/langs/jsonl";
-import jsx from "@shikijs/langs/jsx";
-import markdown from "@shikijs/langs/markdown";
-import python from "@shikijs/langs/python";
-import sql from "@shikijs/langs/sql";
-import tsx from "@shikijs/langs/tsx";
-import typescript from "@shikijs/langs/typescript";
-import yaml from "@shikijs/langs/yaml";
-
-/**
- * Languages bundled for highlighting. Matches what blog markdown actually uses
- * (`grep -h '^```[a-z]' src/blog/content/*.md | sort -u`). Each grammar can also
- * be referenced via Shiki's built-in aliases (e.g. `js`→`javascript`,
- * `ts`→`typescript`). `mermaid` is intentionally excluded — the mermaid marked
- * extension handles those blocks before they reach this highlighter.
- */
-const SUPPORTED_LANGS: ReadonlySet<string> = new Set([
-  "bash",
-  "css",
-  "diff",
-  "html",
-  "http",
-  "javascript",
-  "js",
-  "json",
-  "jsonc",
-  "jsonl",
-  "jsx",
-  "markdown",
-  "md",
-  "python",
-  "py",
-  "sql",
-  "tsx",
-  "ts",
-  "typescript",
-  "yaml",
-  "yml",
-  // Shiki's special "no highlight" languages — bypass tokenization but still escape.
-  "text",
-  "plain",
-  "plaintext",
-  "txt",
-]);
-
-const highlighter: HighlighterCore = createHighlighterCoreSync({
-  themes: [vitesseLight, vitesseDark],
-  langs: [
-    bash,
-    css,
-    diff,
-    html,
-    http,
-    javascript,
-    json,
-    jsonc,
-    jsonl,
-    jsx,
-    markdown,
-    python,
-    sql,
-    tsx,
-    typescript,
-    yaml,
-  ],
-  engine: createJavaScriptRegexEngine(),
-});
+async function getHighlighter(): Promise<Highlighter> {
+  if (!highlighterPromise) {
+    highlighterPromise = (async () => {
+      const { createHighlighter, bundledLanguages } =
+        await import("shiki/bundle/full");
+      return createHighlighter({
+        themes: ["vitesse-light", "vitesse-dark"],
+        langs: Object.keys(bundledLanguages),
+      });
+    })();
+  }
+  return highlighterPromise;
+}
 
 /**
  * Highlight a code string and return Shiki's dual-theme HTML.
@@ -102,9 +48,18 @@ const highlighter: HighlighterCore = createHighlighterCoreSync({
  * Unknown / unsupported `lang` values fall back to `text` so the code is
  * still safely HTML-escaped without throwing.
  */
-export function highlight(code: string, lang?: string): string {
+export async function highlight(code: string, lang?: string): Promise<string> {
+  const highlighter = await getHighlighter();
   const normalized = (lang || "").toLowerCase().trim();
-  const useLang = SUPPORTED_LANGS.has(normalized) ? normalized : "text";
+  const loaded = new Set([
+    ...highlighter.getLoadedLanguages(),
+    // Shiki's "special" plaintext IDs are always accepted but not listed above.
+    "text",
+    "plain",
+    "plaintext",
+    "txt",
+  ]);
+  const useLang = loaded.has(normalized) ? normalized : "text";
 
   return highlighter.codeToHtml(code, {
     lang: useLang,
