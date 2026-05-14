@@ -70,25 +70,6 @@
 
 /* articleAside（TOC サイドバー）の幅は Grid によって自動制御されるため個別指定不要 */
 
-/*
- * 本文 Panel のスタイル。
- * padding="comfortable" は Panel コンポーネント側で制御（2rem）。
- *
- * 枠線の非対称設計:
- *   ライト: --border（#e6e6e2）— 控えめな罫線で「閉じ込められた」感を避ける。
- *   ダーク: --border-strong（#6f6f6f）— Panel 背景(#363634) vs body(#1c1c1a) で
- *           Panel を「箱」として視認させるため強めの罫線が必要。
- * ライトで --border-strong を使うと 2.16:1 で「主張しすぎ」になる。
- */
-.articlePanel {
-  border-color: var(--border);
-}
-
-/* ダーク時のみ枠線を強化して Panel を視認可能にする */
-:global(.dark) .articlePanel {
-  border-color: var(--border-strong);
-}
-
 /* 本文 prose スタイル。line-height 1.8 は DESIGN.md §3 長文読み物許容値。 */
 .prose {
   line-height: 1.8;
