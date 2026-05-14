@@ -382,6 +382,12 @@ cycle-190 で計画 r5 まで反復してメタルール対症療法的拡張に
 - 採用判断 B（新型 `TileVariant` 並存）+ D-3（loaderId 方式）。既存 Tileable / tile-loader / toolbox-registry / ToolMeta / PlayContentMeta すべて変更なしで後方互換性完全。3 事例（keigo-reference 6 / sql-formatter 3 / char-count 4 = 13 バリアント）すべてで値埋め確認 + 19 新規テスト含む 63 テスト全パス
 - 軽微 1（`isDefaultVariant` 複数 true 時の挙動が型契約レベルでは曖昧）は Phase 9 配線時に判断可能な範囲。本サイクルでは対処不要
 
+#### T-C-検証場所 レビュー
+
+- r1 観点 1〜3（`/storybook` 運用ルール整合 / T-D 接続性 / Playwright 撮影手順）: 致命的 0 / 重要 0 / 軽微 1。承認（`/internal/tiles` 配置 + noindex + 既存 take-screenshot スクリプト活用）
+- PM 対応: 軽微 1（撮影幅の docs と既定スクリプト widths の乖離 = 375px が含まれず最近接 360px）→ docs に「実撮影では 360px（375px の近似）と 1280px を採用、take.ts は 6 幅自動撮影」と明示（PM 直接編集）
+- 再レビュー打ち切り: 単一文の補足追記で副作用なし、反復膨張回避
+
 ## キャリーオーバー
 
 - <このサイクルで完了できなかった作業や、次のサイクルに持ち越す必要のある作業があれば、ここと /docs/backlog.md の両方に記載する。>

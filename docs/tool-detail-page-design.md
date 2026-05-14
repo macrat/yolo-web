@@ -1459,6 +1459,90 @@ const charCountVariants: TileVariant[] = [
 
 ---
 
+## タイル検証場所（T-C-検証場所）
+
+> 本セクションは cycle-191 T-C-検証場所タスクの成果物。
+> 目的: タイル（TileVariant）の単独レンダリング検証手順とインフラを整備する。
+> 参照: cycle-191.md L46（Done 条件）/ design-migration-plan.md L308（`/storybook` 運用ルール）
+
+---
+
+### 配置の判断（ステップ 1）
+
+採用案: **配置案 3（`/internal/tiles` 独立ルート）**
+
+配置先: `src/app/(new)/internal/tiles/`
+
+**根拠:**
+
+1. `/storybook` は `design-migration-plan.md` L308「共通コンポーネント専用」のため、コンテンツ固有のタイルを置けない。配置案 1（`/storybook/tiles`）は URL が `/storybook` 配下であっても別ページファイルになるが、ディレクトリ構造上 storybook の子に見えるため混同リスクがある。
+2. `/internal/` プレフィックスで「開発者専用、visitor に公開しない」という意図が URL 設計で明示される。
+3. 配置案 2（`/tiles-preview`）も独立ルートで問題ないが、「preview」は visitor 向けの印象を与えうる。`/internal/` の方が開発者向けであることの信号が強い。
+4. 後続 53 サイクルで `/internal/tiles` を参照先として一貫して伝えられる。
+
+| 候補案                       | 問題点                                                    | 採否     |
+| ---------------------------- | --------------------------------------------------------- | -------- |
+| 配置案 1: `/storybook/tiles` | `/storybook` 「共通コンポーネント専用」ルールと混同リスク | 不採用   |
+| 配置案 2: `/tiles-preview`   | 開発専用の意図が URL から読み取りにくい                   | 不採用   |
+| 配置案 3: `/internal/tiles`  | 開発専用の意図が明確、`/storybook` ルールと完全分離       | **採用** |
+
+---
+
+### タイル検証ページの実装内容（ステップ 2）
+
+- **ファイル一覧:**
+  - `src/app/(new)/internal/tiles/page.tsx` — Server Component。metadata に `noindex` を設定
+  - `src/app/(new)/internal/tiles/TilesPreviewContent.tsx` — Client Component。バリアント一覧レンダリング
+  - `src/app/(new)/internal/tiles/page.module.css` — スタイル定義
+
+- **機能:**
+  - `TILE_REGISTRY`（`TileRegistryEntry[]`）にコンテンツ slug + バリアントリストを登録する枠組みを提供
+  - 現状（T-C-検証場所 時点）は 3 事例（keigo-reference / sql-formatter / char-count）のサンプルデータを登録済み
+  - 各バリアントを `PlaceholderTile` コンポーネントでプレースホルダ表示（variantId / gridSpan / tileDescription / isDefaultVariant / loaderId を表示）
+  - T-D-実装 で keigo-reference の small + medium Tile.tsx が完成したら、`TILE_REGISTRY` に実コンポーネントを結線する
+
+- **ライト/ダーク対応:** CSS トークン（`var(--bg)` / `var(--fg)` 等）のみ使用。ライト / ダーク両モードで自動対応
+
+- **noindex 設定:** `page.tsx` の `metadata` に `robots: { index: false, follow: false }` を指定
+
+- **現状:** プレースホルダ表示。T-D-実装 で keigo-reference の small + medium タイルが追加される予定
+
+---
+
+### Playwright 自動撮影手順（ステップ 3）
+
+既存の `take.ts` スクリプト（`.claude/skills/take-screenshot/scripts/take.ts`）を使用する。
+
+**撮影対象幅:** 計画書 cycle-191.md / T-E-視覚回帰 推奨幅は 375px / 1280px。既定スクリプト `take.ts` の widths は `[1920, 1536, 1280, 720, 440, 360]` で 375px を含まないため、**実撮影では 360px（375px の近似）と 1280px** を採用する。take.ts は 6 幅すべてを自動撮影するため、上記 2 幅は自動的に含まれる
+
+**ライト / ダーク両モード:** 撮影は通常モード（ライト）で実施。ダークモードは OS 設定でテーマを切り替えて再撮影する。
+
+**手順:**
+
+```bash
+# 1. 開発サーバーを起動
+npm run dev
+
+# 2. ライトモードで撮影（モバイル 375px + デスクトップ 1280px を含む全幅で自動撮影）
+npx tsx .claude/skills/take-screenshot/scripts/take.ts http://localhost:3000/internal/tiles
+
+# 3. OS のテーマをダークに切り替えた後、同コマンドを再実行してダークモードを撮影
+
+# 4. 撮影結果は tmp/screenshots/ に保存される
+```
+
+NOTE: T-D-実装 完了後（keigo-reference の small + medium Tile.tsx 実装後）に上記手順で実撮影を行い、Playwright スクリーンショットで単独動作を確認する（T-D-実装 の Done 条件）。本タスク（T-C-検証場所）では枠組みの整備のみ。
+
+---
+
+### INITIAL_DEFAULT_LAYOUT への投入時期（暗黙の Done 条件）
+
+本サイクルでは投入しない。
+
+理由: 配線（道具箱本体実装）が無い時点で実 slug を投入しても visitor 価値はゼロ（cycle-190 設計判断 Z 確認済み）。Phase 9 配線実装時の前提として T-E-申し送り で起票する。
+
+---
+
 ## 次サイクル（cycle-192）への申し送り
 
 ### T-A で確定した設計（cycle-192 着手前に必読）
