@@ -167,4 +167,41 @@ describe("sanitize", () => {
     expect(result).toContain('src="https://example.com/img.png"');
     expect(result).toContain('alt="photo"');
   });
+
+  test("preserves Shiki dual-theme <pre> with class, style, and tabindex", () => {
+    const html =
+      '<pre class="shiki shiki-themes vitesse-light vitesse-dark" style="background-color:#ffffff;--shiki-dark-bg:#121212;color:#393a34;--shiki-dark:#dbd7caee" tabindex="0"><code><span class="line"></span></code></pre>';
+    const result = sanitize(html);
+    expect(result).toContain("shiki-themes");
+    expect(result).toContain("vitesse-light");
+    expect(result).toContain("vitesse-dark");
+    expect(result).toContain('tabindex="0"');
+    expect(result).toContain("background-color:#ffffff");
+    expect(result).toContain("--shiki-dark-bg:#121212");
+    expect(result).toContain("--shiki-dark:#dbd7caee");
+  });
+
+  test("preserves Shiki <span> with per-token color and dark variable", () => {
+    const html =
+      '<span style="color:#AB5959;--shiki-dark:#CB7676">const</span>';
+    const result = sanitize(html);
+    expect(result).toContain("color:#AB5959");
+    expect(result).toContain("--shiki-dark:#CB7676");
+    expect(result).toContain("const");
+  });
+
+  test("strips dangerous style values even on Shiki-style elements", () => {
+    // expression(), url(javascript:...), and named colors must all be dropped
+    // because they don't match the hex color whitelist regex.
+    const html =
+      '<pre style="background-color:#fff;color:expression(alert(1));--shiki-dark:url(javascript:alert(1))"><span style="color:red;--shiki-dark:#abc">x</span></pre>';
+    const result = sanitize(html);
+    expect(result).not.toContain("expression(");
+    expect(result).not.toContain("javascript:");
+    // "red" as a named color value should be stripped (only #hex is allowed)
+    expect(result).not.toMatch(/color:\s*red/);
+    // The safe declarations survive
+    expect(result).toContain("background-color:#fff");
+    expect(result).toContain("--shiki-dark:#abc");
+  });
 });
