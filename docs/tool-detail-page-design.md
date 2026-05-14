@@ -1234,6 +1234,231 @@ T-C-事例発散の帰納結果として、以下 5 要素を Tileable 型拡張
 
 ---
 
+## タイル型契約（T-C-型契約）
+
+> 本セクションは cycle-191 T-C-型契約タスクの成果物。
+> 目的: T-C-事例発散で帰納した共通要素 5 個（A〜E）を `src/lib/toolbox/tile-variant-types.ts` の `TileVariant` 型として型化する。
+> 参照: cycle-191.md L45（Done 条件）/ docs/tool-detail-page-design.md「## タイルシステム整備（T-C-事例発散）」
+
+---
+
+### 型反映の判断（ステップ 2）
+
+**採用: 判断 B（新型新設）**
+
+根拠:
+
+- 現行 `Tileable` 型（`src/lib/toolbox/types.ts`）は「1 コンテンツ = 1 エントリ」のメタデータ型（slug / displayName / publishedAt / trustLevel 等）。バリアント情報を一切持たない。
+- `TileVariant` は「1 コンテンツ = N バリアント」のバリアント表示仕様型（サイズ / 機能説明 / ローダー参照 等）。
+- 両者は意味的に別概念（コンテンツのアイデンティティ vs. コンテンツのタイル表示仕様）であり、`Tileable` に直接追加すると「1 つの型に 2 つの責務」が混在する。
+- `Tileable` を既に参照している 84 箇所以上のコード（toolbox-registry.ts / tile-loader.ts / 各ページ等）の後方互換性を壊さない形で進める必要がある。
+- 既存フィールド（slug / displayName 等）とバリアントフィールド（variantId / gridSpan 等）は意味的に衝突しないが、単一型に混在させると「tools.ts に 2 種類の概念が混在する」状態になり後続 53 サイクルでの誤用リスクが高い。
+
+**コンポーネント参照: D-3 案（loaderId）採用**
+
+根拠:
+
+- 案 D-1（`React.ComponentType` 直接保持）: タイルバリアント一覧取得時に全コンポーネントが bundle に含まれ First Load JS が肥大化する。`tile-loader.ts` の「メタ型はコンポーネント参照を持たない」設計意図に反する。
+- 案 D-2（パス文字列）: Next.js の `next/dynamic` は静的解析が必要であり、動的パス文字列は `next/dynamic` が適切に処理できないリスクがある。
+- 案 D-3（loaderId）: `tile-loader.ts` が既に slug ベースの lazy loader 方式（next/dynamic）を実装済みで、同方式に完全に整合する。loaderId を tile-loader に渡すだけで遅延ロードが実現する。Phase 7 拡張時は `tile-loader.ts` 側の if 分岐に loaderId → dynamic import のマッピングを追加する（既存の slug → FallbackTile パターンと同一の拡張方式）。
+
+---
+
+### 新型定義
+
+新型ファイル: `src/lib/toolbox/tile-variant-types.ts`
+
+```typescript
+/**
+ * タイルのグリッドスパン（推奨サイズ）。
+ * CSS Grid の span 値に対応する。
+ *
+ * 想定値:
+ * - small: { cols: 1, rows: 1 }
+ * - medium: { cols: 2, rows: 1 }
+ * - large: { cols: 2, rows: 2 }
+ */
+export interface TileGridSpan {
+  /** 占有する列数（CSS Grid: grid-column: span N） */
+  cols: number;
+  /** 占有する行数（CSS Grid: grid-row: span N） */
+  rows: number;
+}
+
+/**
+ * TileVariant — タイルバリアントの型契約。
+ *
+ * T-C-事例発散（cycle-191）で帰納した共通要素 5 個（A〜E）を型化。
+ */
+export interface TileVariant {
+  /** バリアント識別子。命名規則: `{slug}-{size}-{feature}` — 共通要素 A */
+  variantId: string;
+  /** 推奨グリッドスパン — 共通要素 B */
+  gridSpan: TileGridSpan;
+  /**
+   * タイル固有の提供機能の説明テキスト（visitor 向け、~30〜60 文字）。
+   * Tileable.shortDescription（ツール全体の説明）とは別のフィールド。
+   * 共通要素 C
+   */
+  tileDescription: string;
+  /**
+   * タイルコンポーネントのローダー識別子（D-3 案採用）。
+   * tile-loader.ts が受け取り next/dynamic で lazy load する。
+   * 現時点は variantId と同じ値を使う。
+   * 共通要素 D
+   */
+  loaderId: string;
+  /**
+   * デフォルトバリアントフラグ。
+   * 各ツールのバリアント群に 1 件だけ true を設定する。
+   * 共通要素 E
+   */
+  isDefaultVariant: boolean;
+}
+```
+
+---
+
+### 3 事例での型表現確認（ステップ 4）
+
+#### keigo-reference
+
+```typescript
+const keigoReferenceVariants: TileVariant[] = [
+  {
+    variantId: "keigo-reference-large-full",
+    gridSpan: { cols: 2, rows: 2 },
+    tileDescription:
+      "敬語早見表の全機能（検索・カテゴリフィルター・例文展開・誤用パターン）",
+    loaderId: "keigo-reference-large-full",
+    isDefaultVariant: false,
+  },
+  {
+    variantId: "keigo-reference-medium-search",
+    gridSpan: { cols: 2, rows: 1 },
+    tileDescription: "検索と候補一覧のみ。詳細例文は詳細ページで確認できます",
+    loaderId: "keigo-reference-medium-search",
+    isDefaultVariant: true, // デフォルト: 汎用的で medium サイズが道具箱に収まりやすい
+  },
+  {
+    variantId: "keigo-reference-medium-category-business",
+    gridSpan: { cols: 2, rows: 1 },
+    tileDescription: "ビジネス敬語に特化した候補一覧（カテゴリ固定）",
+    loaderId: "keigo-reference-medium-category-business",
+    isDefaultVariant: false,
+  },
+  {
+    variantId: "keigo-reference-medium-mistakes",
+    gridSpan: { cols: 2, rows: 1 },
+    tileDescription: "よくある敬語の間違いパターン一覧",
+    loaderId: "keigo-reference-medium-mistakes",
+    isDefaultVariant: false,
+  },
+  {
+    variantId: "keigo-reference-small-daily-pick",
+    gridSpan: { cols: 1, rows: 1 },
+    tileDescription: "今日の敬語 1 件を毎日表示",
+    loaderId: "keigo-reference-small-daily-pick",
+    isDefaultVariant: false,
+  },
+  {
+    variantId: "keigo-reference-small-quick-search",
+    gridSpan: { cols: 1, rows: 1 },
+    tileDescription: "検索入力欄のみ。結果は詳細ページへ",
+    loaderId: "keigo-reference-small-quick-search",
+    isDefaultVariant: false,
+  },
+];
+// 6 バリアント、デフォルト 1 件（medium-search）
+```
+
+#### sql-formatter
+
+```typescript
+const sqlFormatterVariants: TileVariant[] = [
+  {
+    variantId: "sql-formatter-large-full",
+    gridSpan: { cols: 2, rows: 2 },
+    tileDescription:
+      "SQL フォーマッターの全機能（入力・整形・圧縮・オプション・コピー）",
+    loaderId: "sql-formatter-large-full",
+    isDefaultVariant: false,
+  },
+  {
+    variantId: "sql-formatter-medium-format",
+    gridSpan: { cols: 2, rows: 1 },
+    tileDescription: "SQL を整形してクリップボードにコピー",
+    loaderId: "sql-formatter-medium-format",
+    isDefaultVariant: true, // デフォルト: 最も需要が高い整形操作に特化
+  },
+  {
+    variantId: "sql-formatter-medium-minify",
+    gridSpan: { cols: 2, rows: 1 },
+    tileDescription: "SQL を 1 行に圧縮してコピー",
+    loaderId: "sql-formatter-medium-minify",
+    isDefaultVariant: false,
+  },
+];
+// 3 バリアント（small なし: 変換操作が small で成立しないため）、デフォルト 1 件（medium-format）
+```
+
+#### char-count
+
+```typescript
+const charCountVariants: TileVariant[] = [
+  {
+    variantId: "char-count-large-full",
+    gridSpan: { cols: 2, rows: 2 },
+    tileDescription:
+      "文字数カウンターの全機能（文字数・バイト数・単語数・行数・段落数）",
+    loaderId: "char-count-large-full",
+    isDefaultVariant: false,
+  },
+  {
+    variantId: "char-count-medium-text-volume",
+    gridSpan: { cols: 2, rows: 1 },
+    tileDescription: "文字数・バイト数をリアルタイム表示",
+    loaderId: "char-count-medium-text-volume",
+    isDefaultVariant: false,
+  },
+  {
+    variantId: "char-count-medium-text-structure",
+    gridSpan: { cols: 2, rows: 1 },
+    tileDescription: "単語数・行数・段落数をリアルタイム表示",
+    loaderId: "char-count-medium-text-structure",
+    isDefaultVariant: false,
+  },
+  {
+    variantId: "char-count-small-char-only",
+    gridSpan: { cols: 1, rows: 1 },
+    tileDescription: "文字数のみをリアルタイム確認",
+    loaderId: "char-count-small-char-only",
+    isDefaultVariant: true, // デフォルト: 最小構成で daily use に最適
+  },
+];
+// 4 バリアント（small あり: リアルタイム計測でボタン不要のため成立）、デフォルト 1 件（small-char-only）
+```
+
+**型表現確認結果**: 3 事例すべてで共通要素 A〜E の全 5 フィールドに値を埋められることを確認。
+
+---
+
+### 既存コードへの影響（ステップ 5）
+
+| 対象ファイル                                    | 変更の有無 | 詳細                                                                                             |
+| ----------------------------------------------- | ---------- | ------------------------------------------------------------------------------------------------ |
+| `src/lib/toolbox/types.ts`（既存 Tileable 型）  | 変更なし   | 新型との並存。既存の Tileable / toTileable / ContentKind は一切変更なし                          |
+| `src/lib/toolbox/tile-loader.ts`                | 変更なし   | 現時点は slug ベース。Phase 7 拡張時に loaderId ベースの if 分岐を追加する（既存パターンの踏襲） |
+| `src/lib/toolbox/generated/toolbox-registry.ts` | 変更なし   | codegen 出力は Tileable[] のまま。TileVariant は別途各ツール側で定義する                         |
+| `scripts/generate-toolbox-registry.ts`          | 変更なし   | TileVariant の codegen は本サイクルのスコープ外（Phase 9 配線実装時の判断）                      |
+| `src/lib/toolbox/initial-default-layout.ts`     | 変更なし   | INITIAL_DEFAULT_LAYOUT は本サイクルで投入しない（cycle-191 Phase D 絶対境界）                    |
+| `src/tools/types.ts`（ToolMeta）                | 変更なし   | TileVariant は ToolMeta から独立した型。adapter 不要                                             |
+| `src/play/types.ts`（PlayContentMeta）          | 変更なし   | 同上                                                                                             |
+
+**後方互換性**: 完全に保たれている。既存 Tileable 型を参照する 84+ 箇所のコードへの影響ゼロ。新型 TileVariant は並存する形で追加のみ。
+
+---
+
 ## 次サイクル（cycle-192）への申し送り
 
 ### T-A で確定した設計（cycle-192 着手前に必読）
