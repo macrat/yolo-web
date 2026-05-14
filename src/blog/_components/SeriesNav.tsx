@@ -1,4 +1,5 @@
 import Link from "next/link";
+import AccordionItem from "@/components/AccordionItem";
 import { SERIES_LABELS, type BlogPostMeta } from "@/blog/_lib/blog";
 import styles from "./SeriesNav.module.css";
 
@@ -38,11 +39,14 @@ export default function SeriesNav({
 
   return (
     <nav className={styles.seriesNav} aria-label="シリーズナビゲーション">
-      <details className={styles.details}>
-        <summary className={styles.summary}>
-          <span className={styles.seriesLabel}>{seriesLabel}</span>
-          <span className={styles.position}>{positionLabel}</span>
-        </summary>
+      <AccordionItem
+        heading={
+          <>
+            <span className={styles.seriesLabel}>{seriesLabel}</span>
+            <span className={styles.position}>{positionLabel}</span>
+          </>
+        }
+      >
         <ol className={styles.list}>
           {seriesPosts.map((post) => (
             <li
@@ -64,7 +68,7 @@ export default function SeriesNav({
             </li>
           ))}
         </ol>
-      </details>
+      </AccordionItem>
 
       {(prevPost || nextPost) && (
         <div

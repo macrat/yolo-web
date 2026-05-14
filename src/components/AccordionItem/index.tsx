@@ -2,8 +2,8 @@ import type { ReactNode } from "react";
 import styles from "./AccordionItem.module.css";
 
 interface AccordionItemProps {
-  /** 折りたたみ見出し（summary に相当） */
-  heading: string;
+  /** 折りたたみ見出し（summary に相当）。文字列に加え、リッチな見出し用に ReactNode も受け付ける */
+  heading: ReactNode;
   /** 展開時に表示するコンテンツ */
   children: ReactNode;
   /** 初期状態で展開するか（デフォルト: false） */
