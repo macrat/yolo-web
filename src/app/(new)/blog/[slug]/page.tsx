@@ -114,15 +114,13 @@ export default async function BlogPostPage({ params }: Props) {
         )}
 
         <div className={styles.articleMain}>
-          {/* DESIGN.md §4「パネル入れ子禁止」対応で本文 Panel の外に並列配置 */}
+          {/* AccordionItem 自体がパネル境界（枠線+背景）を持つので Panel ラップしない（DESIGN.md §4） */}
           {post.series && (
-            <Panel className={styles.seriesNavPanel}>
-              <SeriesNav
-                seriesId={post.series}
-                currentSlug={post.slug}
-                seriesPosts={getSeriesPosts(post.series)}
-              />
-            </Panel>
+            <SeriesNav
+              seriesId={post.series}
+              currentSlug={post.slug}
+              seriesPosts={getSeriesPosts(post.series)}
+            />
           )}
 
           {/*

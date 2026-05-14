@@ -63,11 +63,6 @@
   background-color: var(--accent-strong);
 }
 
-/* SeriesNav を包む Panel のマージン調整 */
-.seriesNavPanel {
-  margin-bottom: 1.5rem;
-}
-
 /* articleAside（TOC サイドバー）の幅は Grid によって自動制御されるため個別指定不要 */
 
 /* 本文 prose スタイル。line-height 1.8 は DESIGN.md §3 長文読み物許容値。 */
