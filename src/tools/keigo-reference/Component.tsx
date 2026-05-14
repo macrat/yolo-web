@@ -186,11 +186,49 @@ export default function KeigoReferenceTool() {
                         }}
                       >
                         <td className={`${styles.td} ${styles.casualCell}`}>
-                          {entry.casual}
+                          <div className={styles.tdContent}>
+                            <span>{entry.casual}</span>
+                            <ResultCopyArea
+                              text={entry.casual}
+                              buttonLabel="コピー"
+                              feedbackLabel="コピー完了"
+                              className={styles.smallCopyButton}
+                            />
+                          </div>
                         </td>
-                        <td className={styles.td}>{entry.sonkeigo}</td>
-                        <td className={styles.td}>{entry.kenjogo}</td>
-                        <td className={styles.td}>{entry.teineigo}</td>
+                        <td className={styles.td}>
+                          <div className={styles.tdContent}>
+                            <span>{entry.sonkeigo}</span>
+                            <ResultCopyArea
+                              text={entry.sonkeigo}
+                              buttonLabel="コピー"
+                              feedbackLabel="コピー完了"
+                              className={styles.smallCopyButton}
+                            />
+                          </div>
+                        </td>
+                        <td className={styles.td}>
+                          <div className={styles.tdContent}>
+                            <span>{entry.kenjogo}</span>
+                            <ResultCopyArea
+                              text={entry.kenjogo}
+                              buttonLabel="コピー"
+                              feedbackLabel="コピー完了"
+                              className={styles.smallCopyButton}
+                            />
+                          </div>
+                        </td>
+                        <td className={styles.td}>
+                          <div className={styles.tdContent}>
+                            <span>{entry.teineigo}</span>
+                            <ResultCopyArea
+                              text={entry.teineigo}
+                              buttonLabel="コピー"
+                              feedbackLabel="コピー完了"
+                              className={styles.smallCopyButton}
+                            />
+                          </div>
+                        </td>
                       </tr>
                       {expandedEntryId === entry.id && (
                         <tr className={styles.examplePanelRow}>
@@ -220,18 +258,44 @@ export default function KeigoReferenceTool() {
                       }
                     }}
                   >
-                    <div className={styles.mobileCardTitle}>{entry.casual}</div>
+                    <div className={styles.mobileCardTitle}>
+                      <span>{entry.casual}</span>
+                      <ResultCopyArea
+                        text={entry.casual}
+                        buttonLabel="コピー"
+                        feedbackLabel="コピー完了"
+                        className={styles.smallCopyButton}
+                      />
+                    </div>
                     <div className={styles.mobileCardRow}>
                       <span className={styles.mobileCardLabel}>尊敬語:</span>
                       <span>{entry.sonkeigo}</span>
+                      <ResultCopyArea
+                        text={entry.sonkeigo}
+                        buttonLabel="コピー"
+                        feedbackLabel="コピー完了"
+                        className={styles.smallCopyButton}
+                      />
                     </div>
                     <div className={styles.mobileCardRow}>
                       <span className={styles.mobileCardLabel}>謙譲語:</span>
                       <span>{entry.kenjogo}</span>
+                      <ResultCopyArea
+                        text={entry.kenjogo}
+                        buttonLabel="コピー"
+                        feedbackLabel="コピー完了"
+                        className={styles.smallCopyButton}
+                      />
                     </div>
                     <div className={styles.mobileCardRow}>
                       <span className={styles.mobileCardLabel}>丁寧語:</span>
                       <span>{entry.teineigo}</span>
+                      <ResultCopyArea
+                        text={entry.teineigo}
+                        buttonLabel="コピー"
+                        feedbackLabel="コピー完了"
+                        className={styles.smallCopyButton}
+                      />
                     </div>
                   </div>
                   {expandedEntryId === entry.id && renderEntryExamples(entry)}

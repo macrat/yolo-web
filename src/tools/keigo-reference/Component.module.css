@@ -33,13 +33,18 @@
 .filterButtons {
   display: flex;
   gap: 0;
+  /* flex-wrap: wrap で 360px viewport でも折り返し可能（タップ領域優先） */
+  flex-wrap: wrap;
   border: 1px solid var(--border);
   border-radius: 0.375rem;
   overflow: hidden;
 }
 
 .filterButton {
-  padding: 0.4rem 0.85rem;
+  /* WCAG 2.5.5 / Apple HIG: min 44×44pt タップ領域確保 */
+  padding: 0.65rem 0.85rem;
+  min-height: 44px;
+  min-width: 44px;
   border: none;
   background-color: var(--bg);
   color: var(--fg);
@@ -152,6 +157,42 @@
   min-width: 7em;
 }
 
+/* テーブルセル・モバイルカード内の小さなコピーボタン */
+/* 視覚負荷を抑えるため、行ホバー時のみ表示（モバイルは常時表示） */
+.smallCopyButton {
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 0.15s;
+  pointer-events: none;
+}
+
+.smallCopyButton button {
+  min-width: unset;
+  /* コピー完了時のフィードバック文言が長くてもレイアウトが崩れないよう幅を固定 */
+  min-width: 4em;
+}
+
+/* テーブル行ホバー時・フォーカス時にコピーボタンを表示 */
+.tableRow:hover .smallCopyButton,
+.tableRow:focus .smallCopyButton,
+.tableRow:focus-within .smallCopyButton {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* モバイルカードではタップ操作のため常時表示 */
+.mobileCard .smallCopyButton {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* テーブルセルのレイアウト: 値とコピーボタンを横並び */
+.tdContent {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
 .exampleLabel {
   font-size: 0.75rem;
   font-weight: 600;
@@ -232,6 +273,9 @@
 }
 
 .mobileCardTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
   font-weight: 600;
   font-size: 0.95rem;
   color: var(--fg);
