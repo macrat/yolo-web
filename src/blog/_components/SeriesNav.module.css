@@ -2,28 +2,11 @@
   /* パネル風スタイルは page.tsx 側の Panel コンポーネントが担う */
 }
 
-/* --- details/summary --- */
-
-.details {
-  margin-bottom: 0;
-}
-
-.summary {
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.9rem;
-  list-style: revert;
-  color: var(--fg);
-}
-
-.summary::-webkit-details-marker {
-  color: var(--fg-soft);
-}
+/* --- accordion heading inline parts --- */
 
 .seriesLabel {
   font-weight: 700;
+  margin-right: 0.5rem;
 }
 
 .position {
@@ -31,10 +14,10 @@
   color: var(--fg-soft);
 }
 
-/* --- article list --- */
+/* --- article list (AccordionItem の content 内に配置) --- */
 
 .list {
-  margin-top: 0.75rem;
+  margin: 0;
   padding-left: 1.5rem;
   font-size: 0.85rem;
   line-height: 1.7;
