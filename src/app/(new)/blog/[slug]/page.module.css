@@ -1,38 +1,34 @@
 /*
- * ページ全体のラッパー。
- * max-width 1200px は DESIGN.md §4 の上限。padding で左右余白を確保。
- * padding-left: 1.25rem はヘッダー(.inner)の padding-left と揃えることで
- * 1440px 以上でヘッダー左端と本文左端の X 座標を一致させる（T-2 対策）。
+ * contentColumn: ページ全体の最上位ラッパー（<article> 要素）。
+ * グローバルヘッダー/フッターの .inner と同じ max-width・padding で
+ * サイト上から下まで左右端が揃う。
  */
-.page {
+.contentColumn {
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem 1.25rem;
 }
 
-/*
- * contentColumn: 全コンテンツ要素のラッパー。proseWrapper の直接子要素は
- * contentColumn（div）と tocSidebar（aside）の 2 つのみ。
- *
- * 狭い幅（< 1024px）: max-width 720px の単一カラム。margin: 0 auto で中央寄せ。
- *   （DESIGN.md §4「文章等は必要に応じて 720px に制限する」に準拠）
- * デスクトップ（≥ 1024px）: CSS Grid [contentColumn 720px] [tocSidebar 220px] の
- *   左カラム（grid-column: 1）として配置。Grid の justify-content: start により
- *   margin が無効化されるため、T-2 対策（ヘッダー左端と本文左端の X 座標一致）を維持する。
- *
- * Next.js が RSC ハイドレーション用 <script> を proseWrapper 直下に注入することがある。
- * contentColumn が grid-column: 1 を明示することで注入スクリプトの影響を受けない。
- */
-.contentColumn {
-  max-width: 720px;
-  margin: 0 auto; /* 中間幅（769〜1023px）での中央寄せ（U-2 修正: cycle-189 単位 J） */
-  min-width: 0; /* Grid 子要素のオーバーフロー抑制 */
+/* articleHeader: Breadcrumb・タイトル・メタ情報を横幅いっぱいに表示するヘッダー */
+.articleHeader {
+  margin-bottom: 2rem;
 }
 
-/* タイトル・メタ情報ヘッダー */
-.articleHeader {
+/* articleBody: 本文 + TOC の 2 カラム領域。モバイルは単一カラム（flex）。 */
+.articleBody {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* articleMain: 本文 Panel（SeriesNav + prose）を縦に積むコンテナ */
+.articleMain {
+  min-width: 0; /* Grid 内でのオーバーフロー抑制 */
+}
+
+/* articleFooter: シェア・関連記事・前後ナビを横幅いっぱいに表示するフッター */
+.articleFooter {
   margin-top: 2rem;
-  margin-bottom: 1.5rem;
 }
 
 .title {
@@ -76,75 +72,7 @@
   margin-bottom: 1.5rem;
 }
 
-/*
- * モバイル向けインライン TOC。
- * Panel コンポーネントを使わず <details> に直接スタイル適用（T-1 対策）。
- * Panel の入れ子に見えることなく、罫線で articlePanel と視覚的に分離する。
- */
-.mobileToc {
-  margin-bottom: 2rem;
-  border: 1px solid var(--border);
-  border-radius: var(--r-normal);
-  padding: 1rem 1.25rem;
-  background: var(--bg-soft);
-}
-
-.mobileTocSummary {
-  font-size: 0.9rem;
-  font-weight: 700;
-  cursor: pointer;
-  color: var(--fg);
-  list-style: none; /* デフォルトの三角マーカーを消す */
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-/* Safari/WebKit でも三角マーカーを非表示 */
-.mobileTocSummary::-webkit-details-marker {
-  display: none;
-}
-
-/*
- * ChevronDown アフォーダンスアイコン（DESIGN.md §3「折りたたみ UI のアフォーダンス」）。
- * mobileToc 配下のみに適用し、他 <details> 利用箇所（SeriesNav 等）に波及しない。
- * details[open] 時に 180deg 回転させて「閉じる方向」を示す。
- */
-.mobileTocChevron {
-  flex-shrink: 0;
-  color: var(--fg-soft);
-  transition: transform 0.2s ease;
-}
-
-.mobileToc[open] .mobileTocChevron {
-  transform: rotate(180deg);
-}
-
-/* mobileToc 内では TableOfContents の見出し（h2）を非表示 */
-.mobileToc nav h2 {
-  display: none;
-}
-
-.mobileToc nav {
-  border: none;
-  background: none;
-  margin-top: 0.75rem;
-}
-
-/*
- * TOC サイドバー（デスクトップ Grid 右カラム）。
- * デフォルトは display:none。1024px 以上のメディアクエリで proseWrapper Grid に参加する。
- * position:sticky により記事を読み進めても TOC が画面に追従する。
- * align-self: start で Grid 行の高さに引き伸ばされず sticky が正しく機能する。
- * 右カラム配置（grid-column: 2）により、contentColumn が左端からヘッダーと揃う（T-2 対策）。
- */
-.tocSidebar {
-  display: none;
-  position: sticky;
-  top: 1rem;
-  align-self: start;
-  width: 220px;
-}
+/* articleAside（TOC サイドバー）の幅は Grid によって自動制御されるため個別指定不要 */
 
 /*
  * 本文 Panel のスタイル。
@@ -346,60 +274,62 @@
 }
 
 /*
- * デスクトップ（1024px 以上）: proseWrapper を CSS Grid に切り替える。
+ * デスクトップ（1024px 以上）: articleBody を CSS Grid に切り替える。
  *
- * Grid 構造: [contentColumn 720px] [tocSidebar 220px]  → justify-content: start で左揃え
+ * Grid 構造: [articleMain 1fr] [articleAside 220px]
+ * DOM 順序は aside 先・main 後だが、grid-column/grid-row で左右を入れ替える。
+ * これにより モバイルでは TOC が本文より上、デスクトップでは本文が左・TOC が右になる。
  *
- * contentColumn を左カラムに置くことで、ヘッダー(.inner の padding-left: 1.25rem)と
- * 本文左端の X 座標が一致する（T-2 解消）。
- *
- * 閾値 1024px の根拠:
- *   page padding(1.25rem×2=40px) + 本文(720px) + gap(2rem=32px) + TOC(220px) = 1012px
- *   安全マージン 20px 加算 → 1032px → 余裕を見て 1024px で切り替え（TOC が入ると
- *   1032px 必要だが、1024-40=984px内に720+32+220=972px が収まるため問題なし）。
- *
- * TOC が存在しない記事（headings 0件）では tocSidebar 自体が display:none のため
- * Grid 右カラムが幅 0 になり、contentColumn が max-width: 720px で表示される。
+ * TOC 幅 220px は <TableOfContents> 内の見出しテキストが 2 行以内に収まる経験則値。
+ * これ未満にすると複数行折り返しが頻発する。サイト全体で他に TOC 様要素がないため
+ * CSS 変数化はせずローカル定数として扱う（共有が必要になったら token 化を検討）。
  */
 @media (min-width: 1024px) {
-  .proseWrapper {
+  .articleBody {
     display: grid;
-    grid-template-columns: 720px 220px;
+    grid-template-columns: 1fr 220px;
     gap: 2rem;
     align-items: start;
-    justify-content: start;
   }
 
   /*
-   * contentColumn は Grid 左カラム（column 1 = 720px）を明示。
-   * max-width: 720px は解除し、Grid の列幅に任せる。
-   * grid-column: 1 の明示により、Next.js 注入 script 等が間に入っても列がズレない。
-   * margin: 0 を明示して基底スタイルの margin: 0 auto を無効化し、
-   * Grid の justify-content: start による左端配置（T-2 対策）を確実に維持する。
+   * TOC <details> が折りたたみ時、TOC 列を auto（= summary の幅）に縮め、
+   * 本文が残り全幅を取る。ハンバーガーメニュー風の挙動で来訪者が本文に
+   * より広い読みスペースを与えられる。:has() は Chrome/Safari/Firefox 安定版で利用可能。
    */
-  .contentColumn {
+  .articleBody:has(aside details:not([open])) {
+    grid-template-columns: 1fr auto;
+  }
+
+  /* articleMain を左カラム（column 1）に固定。DOM 順序は aside 先でも Grid で左に配置。 */
+  .articleMain {
     grid-column: 1;
     grid-row: 1;
-    max-width: none;
-    margin: 0; /* 基底の margin: 0 auto を無効化。Grid 配置が中央寄せの役割を担う */
+    min-width: 0; /* Grid 内でのオーバーフロー抑制 */
   }
 
-  /* tocSidebar は Grid 右カラム（column 2）に固定。sticky でスクロール追従する。 */
-  .tocSidebar {
-    display: block;
+  /*
+   * articleAside を右カラム（column 2）に固定。sticky でスクロール追従する。
+   * グローバルヘッダーは position: fixed/sticky ではないため top: 1rem で OK。
+   * 将来ヘッダーが固定配置に変わったら、ヘッダー高さ分のオフセットが必要になる。
+   */
+  .articleAside {
     grid-column: 2;
     grid-row: 1;
-  }
-
-  .mobileToc {
-    display: none;
+    position: sticky;
+    top: 1rem;
+    align-self: start;
   }
 }
 
-@media (max-width: 768px) {
-  .page {
-    /* SP: 左右パディングを 0.75rem → 1rem に拡大（圧迫感軽減）*/
-    padding: 1.5rem 1rem;
+/*
+ * モバイルブレークポイント 720px はサイト共通値（Header.module.css / Footer.module.css）。
+ * 縦方向 padding のみ縮小し、左右は 1.25rem を維持して
+ * Header/Footer/本文の左右位置を上から下まで揃える。
+ */
+@media (max-width: 720px) {
+  .contentColumn {
+    padding: 1.5rem 1.25rem;
   }
 
   .title {

@@ -99,33 +99,32 @@ describe("(new)/blog/[slug]/page", () => {
   });
 
   describe("page.module.css — CSS Grid によるレイアウト構造", () => {
-    it("proseWrapper に display:grid が定義されていること（デスクトップ 2カラム Grid）", () => {
+    it("articleBody に display:grid が定義されていること（デスクトップ 2カラム Grid）", () => {
       const cssPath = path.resolve(__dirname, "../page.module.css");
       const css = fs.readFileSync(cssPath, "utf-8");
       // @media ブロック内で display: grid が存在すればよい
       expect(css).toContain("display: grid");
     });
 
-    it("grid-template-columns: 720px 220px が定義されていること（本文左・TOC右の配置）", () => {
+    it("grid-template-columns: 1fr 220px が定義されていること（本文左・TOC右の配置）", () => {
       const cssPath = path.resolve(__dirname, "../page.module.css");
       const css = fs.readFileSync(cssPath, "utf-8");
-      // T-2 対策: contentColumn を左カラムに置きヘッダーと左端を揃えるため 720px を先に記載
-      expect(css).toContain("720px 220px");
+      // 本文が残り全幅を占め TOC が 220px 固定で右端に配置される
+      expect(css).toContain("1fr 220px");
     });
 
-    it("contentColumn に grid-column: 1 が定義されていること（左カラム固定・T-2 対策）", () => {
+    it("articleMain に grid-column: 1 が定義されていること（左カラム固定）", () => {
       const cssPath = path.resolve(__dirname, "../page.module.css");
       const css = fs.readFileSync(cssPath, "utf-8");
-      // contentColumn が grid-column: 1 を明示して左カラムに固定することで、
-      // ヘッダー左端と本文左端の X 座標が一致する（T-2 解消）
-      expect(css).toMatch(/\.contentColumn[^{]*\{[^}]*grid-column:\s*1/);
+      // articleMain が grid-column: 1 を明示して左カラムに固定されること
+      expect(css).toMatch(/\.articleMain[^{]*\{[^}]*grid-column:\s*1/);
     });
 
-    it("tocSidebar に position:sticky が定義されていること（スクロール追従）", () => {
+    it("articleAside に position:sticky が定義されていること（スクロール追従）", () => {
       const cssPath = path.resolve(__dirname, "../page.module.css");
       const css = fs.readFileSync(cssPath, "utf-8");
-      // tocSidebar が sticky で追従すること
-      expect(css).toMatch(/\.tocSidebar[^{]*\{[^}]*position:\s*sticky/);
+      // articleAside が sticky で記事読み進めても TOC が追従すること
+      expect(css).toMatch(/\.articleAside[^{]*\{[^}]*position:\s*sticky/);
     });
 
     it("ライトモードの articlePanel border-color は --border（弱め）であること", () => {
@@ -136,6 +135,100 @@ describe("(new)/blog/[slug]/page", () => {
       expect(css).toMatch(
         /\.articlePanel[^{]*\{[^}]*border-color:\s*var\(--border\)/,
       );
+    });
+  });
+
+  describe("エの字レイアウト — DOM 構造の検証", () => {
+    it("page.tsx に mobileToc クラスが存在しないこと（TOC 重複レンダリング撤廃）", () => {
+      const pagePath = path.resolve(__dirname, "../page.tsx");
+      const source = fs.readFileSync(pagePath, "utf-8");
+      // mobileToc の <details> ブロックが削除されていること
+      expect(source).not.toContain("mobileToc");
+    });
+
+    it("page.tsx に <CollapsibleTOC が1箇所のみ存在すること（a11y: nav ランドマーク重複なし）", () => {
+      const pagePath = path.resolve(__dirname, "../page.tsx");
+      const source = fs.readFileSync(pagePath, "utf-8");
+      // TOC が1インスタンスのみで aria-label="Table of contents" nav が重複しない
+      const matches = source.match(/<CollapsibleTOC\b/g);
+      expect(matches).not.toBeNull();
+      expect(matches!.length).toBe(1);
+    });
+
+    it("page.tsx は <TableOfContents を直接呼ばないこと（CollapsibleTOC 経由で1インスタンスにまとめる）", () => {
+      const pagePath = path.resolve(__dirname, "../page.tsx");
+      const source = fs.readFileSync(pagePath, "utf-8");
+      // 直接 <TableOfContents JSX があると、CollapsibleTOC 内のものと合わせて
+      // DOM に nav ランドマークが二重に出る
+      expect(source).not.toMatch(/<TableOfContents\b/);
+    });
+
+    it("page.tsx に articleBody クラスが存在すること（エの字中央ボディ）", () => {
+      const pagePath = path.resolve(__dirname, "../page.tsx");
+      const source = fs.readFileSync(pagePath, "utf-8");
+      expect(source).toContain("articleBody");
+    });
+
+    it("page.tsx に articleAside クラスが存在すること（TOC サイドバー）", () => {
+      const pagePath = path.resolve(__dirname, "../page.tsx");
+      const source = fs.readFileSync(pagePath, "utf-8");
+      expect(source).toContain("articleAside");
+    });
+
+    it("page.tsx に articleFooter クラスが存在すること（フッター横幅いっぱい）", () => {
+      const pagePath = path.resolve(__dirname, "../page.tsx");
+      const source = fs.readFileSync(pagePath, "utf-8");
+      expect(source).toContain("articleFooter");
+    });
+
+    it("page.tsx の最上位ラッパーが <article タグであること（セマンティクス改善）", () => {
+      const pagePath = path.resolve(__dirname, "../page.tsx");
+      const source = fs.readFileSync(pagePath, "utf-8");
+      // return 直後の最上位要素が <article
+      expect(source).toMatch(/<article\s+className=\{styles\.contentColumn\}/);
+    });
+  });
+
+  describe("contentColumn の幅・パディングがグローバルヘッダー/フッターと同期していること（cycle-188/189 で発生した右端ズレの退行防止）", () => {
+    it(".contentColumn に max-width: 1200px が定義されていること", () => {
+      const cssPath = path.resolve(__dirname, "../page.module.css");
+      const css = fs.readFileSync(cssPath, "utf-8");
+      expect(css).toMatch(/\.contentColumn[^{]*\{[^}]*max-width:\s*1200px/);
+    });
+
+    it(".contentColumn に padding: 2rem 1.25rem が定義されていること（左右 1.25rem は Header/Footer .inner と同値）", () => {
+      const cssPath = path.resolve(__dirname, "../page.module.css");
+      const css = fs.readFileSync(cssPath, "utf-8");
+      expect(css).toMatch(
+        /\.contentColumn[^{]*\{[^}]*padding:\s*2rem\s+1\.25rem/,
+      );
+    });
+
+    it("Footer.module.css の .inner padding 横幅が 1.25rem であること（contentColumn と一致）", () => {
+      const footerCssPath = path.resolve(
+        __dirname,
+        "../../../../../components/Footer/Footer.module.css",
+      );
+      const footerCss = fs.readFileSync(footerCssPath, "utf-8");
+      // padding の左右値が 1.25rem であること（Header と Footer の .inner で揃える）
+      expect(footerCss).toMatch(/\.inner[^{]*\{[^}]*padding:[^;}]*1\.25rem/);
+    });
+
+    it("Header.module.css の .inner padding 横幅が 1.25rem であること（contentColumn と一致）", () => {
+      const headerCssPath = path.resolve(
+        __dirname,
+        "../../../../../components/Header/Header.module.css",
+      );
+      const headerCss = fs.readFileSync(headerCssPath, "utf-8");
+      expect(headerCss).toMatch(/\.inner[^{]*\{[^}]*padding:[^;}]*1\.25rem/);
+    });
+
+    it("page.module.css の SP ブレークポイントは 720px（Header/Footer と一致）", () => {
+      const cssPath = path.resolve(__dirname, "../page.module.css");
+      const css = fs.readFileSync(cssPath, "utf-8");
+      // サイト共通の SP ブレークポイントは 720px。ここだけ 768px などにしない
+      expect(css).toMatch(/@media\s*\(max-width:\s*720px\)/);
+      expect(css).not.toMatch(/@media\s*\(max-width:\s*768px\)/);
     });
   });
 

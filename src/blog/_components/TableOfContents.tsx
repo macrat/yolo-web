@@ -1,6 +1,6 @@
 import styles from "./TableOfContents.module.css";
 
-interface Heading {
+export interface Heading {
   level: number;
   text: string;
   id: string;
