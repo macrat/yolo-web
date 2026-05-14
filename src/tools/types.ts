@@ -22,6 +22,7 @@ export interface ToolMeta {
   /** ISO 8601 date-time with timezone. Set when main content is updated. */
   updatedAt?: string;
   structuredDataType?: string; // JSON-LD @type (e.g., "WebApplication")
+  /** 信頼レベル。TrustLevelBadge の UI 表示用ほか Tileable adapter が参照する。 */
   trustLevel: TrustLevel;
 
   /** 処理内容の説明テキスト。ゾーン3「このツールについて」セクションに表示する */
