@@ -1202,6 +1202,14 @@ export function getKeigoCategories(): KeigoCategoryInfo[] {
   return KEIGO_CATEGORIES;
 }
 
+/**
+ * カテゴリ ID から表示名を返すヘルパー。
+ * 未知の ID の場合は ID 文字列をそのまま返す（フォールバック）。
+ */
+export function getCategoryName(id: KeigoCategory | string): string {
+  return KEIGO_CATEGORIES.find((c) => c.id === id)?.name ?? id;
+}
+
 export function getEntriesByCategory(category: KeigoCategory): KeigoEntry[] {
   return KEIGO_ENTRIES.filter((entry) => entry.category === category);
 }

@@ -18,15 +18,8 @@
  */
 
 import Link from "next/link";
-import { getDailyEntry } from "./logic";
+import { getDailyEntry, getCategoryName } from "./logic";
 import styles from "./Tile.small-daily-pick.module.css";
-
-/** カテゴリ ID → 表示名マッピング */
-const CATEGORY_LABELS: Record<string, string> = {
-  basic: "基本動詞",
-  business: "ビジネス",
-  service: "接客・サービス",
-};
 
 export default function KeigoReferenceSmallDailyPick() {
   const entry = getDailyEntry();
@@ -46,7 +39,7 @@ export default function KeigoReferenceSmallDailyPick() {
         <div className={styles.entryCard}>
           <div className={styles.casualText}>{entry.casual}</div>
           <span className={styles.categoryBadge}>
-            {CATEGORY_LABELS[entry.category] ?? entry.category}
+            {getCategoryName(entry.category)}
           </span>
           <div className={styles.formsGrid}>
             <div className={styles.formRow}>
