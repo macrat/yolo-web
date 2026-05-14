@@ -108,16 +108,8 @@ test("ToolLayout content section appears in DOM after header", () => {
       <div>Tool content</div>
     </ToolLayout>,
   );
-  // ゾーン2 Panel には meta.name が aria-label として設定される（SR 利用者にツール名を伝えるため）
-  const zone2Panel = screen.getByRole("region", { name: mockMeta.name });
-  expect(zone2Panel).toBeInTheDocument();
-  // header より DOM 上の後方に zone2 が存在することを確認
-  const header = container.querySelector("header");
-  expect(header).not.toBeNull();
-  expect(
-    header!.compareDocumentPosition(zone2Panel) &
-      Node.DOCUMENT_POSITION_FOLLOWING,
-  ).toBeTruthy();
+  const contentSection = container.querySelector("section[aria-label='Tool']");
+  expect(contentSection).toBeInTheDocument();
 });
 
 test("ToolLayout does not render TrustLevelBadge", () => {
@@ -128,37 +120,4 @@ test("ToolLayout does not render TrustLevelBadge", () => {
   );
   // TrustLevelBadgeは表示しない
   expect(container.querySelector("[data-trust-level]")).not.toBeInTheDocument();
-});
-
-test("ToolLayout zone3 panel has aria-label for a11y", () => {
-  const { container } = render(
-    <ToolLayout meta={mockMeta}>
-      <div>Content</div>
-    </ToolLayout>,
-  );
-  // ゾーン3 補助情報パネルに aria-label が付いているか確認
-  const zone3Panel = container.querySelector(
-    "section[aria-label='このツールに関する補助情報']",
-  );
-  expect(zone3Panel).toBeInTheDocument();
-});
-
-test("ToolLayout zone3 panel contains howItWorks, privacyNote, and share section", () => {
-  const { container } = render(
-    <ToolLayout meta={mockMeta}>
-      <div>Content</div>
-    </ToolLayout>,
-  );
-  const zone3Panel = container.querySelector(
-    "section[aria-label='このツールに関する補助情報']",
-  );
-  expect(zone3Panel).not.toBeNull();
-  // howItWorks テキストがゾーン3パネル内にある
-  expect(zone3Panel).toHaveTextContent(
-    "このツールはブラウザ上でテキストを処理します。",
-  );
-  // プライバシーノートがゾーン3パネル内にある
-  expect(zone3Panel).toHaveTextContent(
-    "このツールはブラウザ上で動作します。入力データがサーバーに送信されることはありません。",
-  );
 });

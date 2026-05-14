@@ -88,15 +88,6 @@ export function getTileComponent(slug: string): TileComponentLoader {
   const cached = loaderCache.get(slug);
   if (cached) return cached;
 
-  // keigo-reference: 軽量版タイルコンポーネントが実装済み（cycle-190 T-4）
-  if (slug === "keigo-reference") {
-    const loader = dynamic(() => import("@/tools/keigo-reference/Tile"), {
-      ssr: false,
-    });
-    loaderCache.set(slug, loader);
-    return loader;
-  }
-
   /**
    * Phase 2: 全 slug に対してフォールバックコンポーネントを返す。
    * Phase 7（B-314）で各 slug にタイル用コンポーネントが追加されたら、
