@@ -20,16 +20,9 @@
 import { useState } from "react";
 import Link from "next/link";
 import Input from "@/components/Input";
-import { filterEntries } from "./logic";
+import { filterEntries, getCategoryName } from "./logic";
 import type { KeigoEntry } from "./logic";
 import styles from "./Tile.medium-search.module.css";
-
-/** カテゴリ ID → 表示名マッピング */
-const CATEGORY_LABELS: Record<string, string> = {
-  basic: "基本",
-  business: "ビジネス",
-  service: "接客",
-};
 
 /** 表示する最大件数（タイルサイズに合わせた適切な件数） */
 const MAX_DISPLAY_COUNT = 8;
@@ -43,7 +36,7 @@ function ResultItem({ entry }: { entry: KeigoEntry }) {
         {entry.sonkeigo} / {entry.kenjogo}
       </span>
       <span className={styles.categoryBadge}>
-        {CATEGORY_LABELS[entry.category] ?? entry.category}
+        {getCategoryName(entry.category)}
       </span>
     </div>
   );

@@ -8,6 +8,7 @@ import {
   getCommonMistakes,
   getMistakesByType,
   getDailyEntry,
+  getCategoryName,
 } from "../logic";
 
 describe("getAllEntries", () => {
@@ -49,6 +50,24 @@ describe("getKeigoCategories", () => {
     expect(ids).toContain("basic");
     expect(ids).toContain("business");
     expect(ids).toContain("service");
+  });
+});
+
+describe("getCategoryName", () => {
+  test("returns '基本動詞' for id 'basic'", () => {
+    expect(getCategoryName("basic")).toBe("基本動詞");
+  });
+
+  test("returns 'ビジネス' for id 'business'", () => {
+    expect(getCategoryName("business")).toBe("ビジネス");
+  });
+
+  test("returns '接客・サービス' for id 'service'", () => {
+    expect(getCategoryName("service")).toBe("接客・サービス");
+  });
+
+  test("returns the id itself as fallback for unknown id", () => {
+    expect(getCategoryName("unknown" as "basic")).toBe("unknown");
   });
 });
 
