@@ -404,6 +404,13 @@ cycle-190 で計画 r5 まで反復してメタルール対症療法的拡張に
 - Phase D 絶対境界 4 項目すべて遵守確認: Tile.tsx 2 個のみ / (legacy) 不触 / `INITIAL_DEFAULT_LAYOUT` 不投入 / `src/components/common/` 不触
 - 再レビュー打ち切り: 修正は機械的で副作用なし、Playwright 再撮影で目視確認済み、298 ファイル 4402 テスト全パス
 
+#### T-E-視覚回帰 PM Read 観察
+
+- 影響範囲 grep 確認: `globals.css` 変更ゼロ / `(legacy)` 変更ゼロ / `src/components/common/` 変更ゼロ / `old-globals.css` 変更ゼロ / 既存 `tile-loader.ts` は新規関数 `getTileVariantComponent()` 追加のみで既存 `getTileComponent()` 不変。**影響範囲は実質ゼロ**
+- 計画書 L64 (iv) に従い GA4 PV 上位 3 件（keigo-reference / char-count / sql-formatter）を Playwright で撮影（reviewer 起動、12 枚撮影 + console / network エラー全 0 件確認）
+- PM が 12 枚すべてを Read で観察（運用ルール 4 厳守、縮小なし）: 全ページ視覚的破綻ゼロ、ライト / ダーク両モードで色のみ差異、ヘッダー / 本文 / フッター / AI 注記まで描画整然
+- reviewer 指摘の「N バッジ」（全 (legacy) 3 ページ左中央）は Next.js dev mode インジケータと判定（本番ビルド非表示、3 ページすべて同位置 = dev サーバー由来）。cycle-191 由来の混入ではない
+
 ## キャリーオーバー
 
 - <このサイクルで完了できなかった作業や、次のサイクルに持ち越す必要のある作業があれば、ここと /docs/backlog.md の両方に記載する。>
