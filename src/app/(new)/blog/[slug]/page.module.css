@@ -1,5 +1,4 @@
 /*
- * contentColumn: ページ全体の最上位ラッパー（<article> 要素）。
  * グローバルヘッダー/フッターの .inner と同じ max-width・padding で
  * サイト上から下まで左右端が揃う。
  */
@@ -9,24 +8,21 @@
   padding: 2rem 1.25rem;
 }
 
-/* articleHeader: Breadcrumb・タイトル・メタ情報を横幅いっぱいに表示するヘッダー */
 .articleHeader {
   margin-bottom: 2rem;
 }
 
-/* articleBody: 本文 + TOC の 2 カラム領域。モバイルは単一カラム（flex）。 */
+/* モバイルでは単一カラム、≥1024px で grid に切り替わる（下のメディアクエリ参照） */
 .articleBody {
   display: flex;
   flex-direction: column;
   gap: 2rem;
 }
 
-/* articleMain: 本文 Panel（SeriesNav + prose）を縦に積むコンテナ */
 .articleMain {
   min-width: 0; /* Grid 内でのオーバーフロー抑制 */
 }
 
-/* articleFooter: シェア・関連記事・前後ナビを横幅いっぱいに表示するフッター */
 .articleFooter {
   margin-top: 2rem;
 }
@@ -293,11 +289,10 @@
   }
 
   /*
-   * TOC <details> が折りたたみ時、TOC 列を auto（= summary の幅）に縮め、
-   * 本文が残り全幅を取る。ハンバーガーメニュー風の挙動で来訪者が本文に
-   * より広い読みスペースを与えられる。:has() は Chrome/Safari/Firefox 安定版で利用可能。
+   * TOC 折りたたみ時、TOC 列を auto（= summary の幅）に縮めて本文が広がる。
+   * <details> の [open] 属性が外れた状態を Web 標準のセレクタで検出する。
    */
-  .articleBody:has(aside details:not([open])) {
+  .articleBody:has(details:not([open])) {
     grid-template-columns: 1fr auto;
   }
 
