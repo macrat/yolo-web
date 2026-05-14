@@ -68,18 +68,12 @@ export default async function BlogPostPage({ params }: Props) {
   });
 
   return (
-    /*
-     * contentColumn: max-width: 1200px のページ全体ラッパー。
-     * グローバルヘッダー/フッターの .inner と同じ幅・パディングで
-     * サイト上から下まで左右端が揃う。
-     */
     <article className={styles.contentColumn}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: safeJsonLdStringify(jsonLd) }}
       />
 
-      {/* articleHeader: Breadcrumb・タイトル・メタ情報を横幅いっぱいに表示 */}
       <header className={styles.articleHeader}>
         <Breadcrumb
           items={[
@@ -109,31 +103,18 @@ export default async function BlogPostPage({ params }: Props) {
       </header>
 
       {/*
-       * articleBody: 「エの字」レイアウトの中央ボディ。
-       * モバイル: 単一カラム（DOM 順序: aside(TOC) → main）。
-       * デスクトップ（≥ 1024px）: CSS Grid [main 1fr] [aside 220px]。
-       * aside を DOM 先行に置くことでモバイルで TOC が本文の上に自然に表示される。
-       * デスクトップでは grid-column/grid-row で左右を入れ替え。
+       * aside を main より DOM 先行に置くことで、モバイルの単一カラム時に
+       * TOC が本文の上に並ぶ。デスクトップでは grid-column で左右を入れ替える。
        */}
       <div className={styles.articleBody}>
-        {/*
-         * articleAside: TOC サイドバー（DOM 先頭でモバイル時は本文上に配置）。
-         * CollapsibleTOC が <details> での開閉とシェブロン表示を担当する。
-         * デスクトップ既定は開、モバイル既定は閉（client 側で viewport 判定）。
-         * 折りたたみ時、親 .articleBody の :has() ルールが本文を広げる。
-         */}
         {post.headings.length > 0 && (
           <aside className={styles.articleAside}>
             <CollapsibleTOC headings={post.headings} />
           </aside>
         )}
 
-        {/*
-         * articleMain: 本文エリア（SeriesNav Panel → 本文 Panel の縦並び）。
-         * デスクトップでは grid-column: 1 / grid-row: 1 で左カラムに配置。
-         */}
         <div className={styles.articleMain}>
-          {/* SeriesNav: DESIGN.md §4「パネル入れ子禁止」対応で本文 Panel の外に並列配置 */}
+          {/* DESIGN.md §4「パネル入れ子禁止」対応で本文 Panel の外に並列配置 */}
           {post.series && (
             <Panel className={styles.seriesNavPanel}>
               <SeriesNav
@@ -145,11 +126,9 @@ export default async function BlogPostPage({ params }: Props) {
           )}
 
           {/*
-           * 本文 Panel（DESIGN.md §1「すべてのコンテンツはパネル」）。
-           * 外側 <article> がブログ記事のセマンティック境界を提供しているため、
-           * このラッパーは ARIA 上意味のない <div> で十分（<section> はラベル無しだと
-           * 「region」として読み上げられ冗長になる）。
-           * §4 入れ子禁止: Markdown 標準要素は Panel コンポーネントを使わないため入れ子非該当。
+           * 本文 Panel は as="div"。外側 <article> がブログ記事のセマンティック境界
+           * を提供しているため、<section> にすると AT で「ラベル無しの region」として
+           * 冗長に読み上げられる。
            */}
           <Panel as="div" padding="comfortable" className={styles.articlePanel}>
             <div
@@ -162,7 +141,6 @@ export default async function BlogPostPage({ params }: Props) {
         </div>
       </div>
 
-      {/* articleFooter: シェア・関連記事・前後ナビを横幅いっぱいに表示 */}
       <footer className={styles.articleFooter}>
         <section className={styles.shareSection} aria-label="この記事をシェア">
           <h2 className={styles.shareSectionTitle}>この記事をシェア</h2>
