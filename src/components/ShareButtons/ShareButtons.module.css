@@ -55,14 +55,16 @@
   outline-offset: 2px;
 }
 
-/* X (旧 Twitter) — 公式ブランドカラー。ダーク背景でも視認できるよう
- * dark テーマでは少し明るくする（legacy 版を踏襲）。 */
+/* X (旧 Twitter) — 公式ブランドカラー。
+ * ダークモードでは背景に同化して沈むため、X 公式が許容する反転パターン
+ * （白背景・黒文字/アイコン）を採用して LINE/はてブ と同等の視認性を確保する。 */
 .x {
   background: #000000;
 }
 
 :root.dark .x {
-  background: #333333;
+  color: #000000;
+  background: #ffffff;
 }
 
 /* LINE — 公式ブランドカラー */
