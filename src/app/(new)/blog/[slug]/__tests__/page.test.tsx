@@ -115,6 +115,14 @@ describe("(new)/blog/[slug]/page", () => {
     it("articleAside に position:sticky が定義されていること（スクロール追従）", () => {
       expect(css).toMatch(/\.articleAside[^{]*\{[^}]*position:\s*sticky/);
     });
+
+    it(".articleBody の :has() セレクタが .articleAside 配下に絞り込まれていること（SeriesNav 開閉や記事本文中の <details> で grid が動かない退行防止）", () => {
+      // <details> 単独だと SeriesNav や記事本文中の <details> でも誤発火する。
+      // .articleAside（TOC ラッパー専用クラス）配下に限定することで誤マッチを防ぐ。
+      expect(css).toMatch(
+        /\.articleBody:has\(\.articleAside\s+details:not\(\[open\]\)\)/,
+      );
+    });
   });
 
   describe("エの字レイアウト — DOM 構造の検証", () => {
