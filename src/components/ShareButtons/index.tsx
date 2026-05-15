@@ -7,6 +7,9 @@ import styles from "./ShareButtons.module.css";
 /** サポートする SNS の種別 */
 type SnsType = "x" | "line" | "hatena" | "copy";
 
+/** GA4 share イベントの method 値 */
+type ShareMethod = "twitter" | "line" | "web_share" | "clipboard" | "hatena";
+
 interface ShareButtonsProps {
   /** 共有するページの URL パス（例: "/blog/my-post"）。window.location.origin と結合して絶対 URL にする */
   url: string;
@@ -24,7 +27,6 @@ const DEFAULT_SNS: SnsType[] = ["x", "line", "hatena", "copy"];
 
 const ICON_SIZE = 20;
 
-/** X (旧 Twitter) 公式ロゴ。Simple Icons パスベースの filled SVG */
 function XIcon() {
   return (
     <svg
@@ -39,7 +41,6 @@ function XIcon() {
   );
 }
 
-/** LINE 公式ロゴ。Simple Icons パスベースの filled SVG */
 function LineIcon() {
   return (
     <svg
@@ -54,7 +55,6 @@ function LineIcon() {
   );
 }
 
-/** はてなブックマーク公式「B!」ロゴ。Simple Icons パスベースの filled SVG */
 function HatenaIcon() {
   return (
     <svg
@@ -69,7 +69,7 @@ function HatenaIcon() {
   );
 }
 
-/** リンク（URLコピー用）。DESIGN.md §3 準拠の Lucide スタイル線画、stroke-width 1.5px */
+/** Lucide スタイル線画のリンクアイコン（DESIGN.md §3 準拠、stroke-width 1.5px） */
 function LinkIcon() {
   return (
     <svg
@@ -89,10 +89,7 @@ function LinkIcon() {
   );
 }
 
-/**
- * SNS 共有 URL を新規タブで開く。
- * `noopener,noreferrer` でセキュリティを確保。
- */
+// noopener,noreferrer はタブナビング攻撃と Referer 漏洩の防止
 function openShareUrl(url: string): void {
   window.open(url, "_blank", "noopener,noreferrer");
 }
@@ -104,7 +101,6 @@ function openShareUrl(url: string): void {
  * （DESIGN.md §2.4「色は機能を伝えるためだけに使う」の範囲内）。
  * URL コピーボタンはサービスではないため、Lucide スタイル線画アイコン + ニュートラル色を使う。
  *
- * WCAG 2.5.5: タップターゲット 44×44px を min-height/min-width で確保（CSS 側）。
  * 既知のコントラスト課題: LINE (#06c755) と はてブ (#00a4de) は白文字とのコントラスト比が
  * WCAG AA 4.5:1 を満たさない（それぞれ 2.84:1 / 3.18:1）。サービスのブランド整合性を優先する選択。
  * 視覚識別はアイコン形状でも区別できるため、色のみに依存しない情報伝達は確保している。
@@ -118,15 +114,13 @@ export default function ShareButtons({
 }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false);
 
-  const getFullUrl = useCallback((): string => {
-    const origin = typeof window !== "undefined" ? window.location.origin : "";
-    return `${origin}${url}`;
-  }, [url]);
+  const getFullUrl = useCallback(
+    (): string => `${window.location.origin}${url}`,
+    [url],
+  );
 
   const track = useCallback(
-    (
-      method: "twitter" | "line" | "web_share" | "clipboard" | "hatena",
-    ): void => {
+    (method: ShareMethod): void => {
       // contentType / contentId の両方が指定された時のみ GA 送信。
       // 呼び出し元から識別子を持たないシェアは「不明」として記録しない設計
       if (contentType && contentId) {
@@ -138,22 +132,25 @@ export default function ShareButtons({
 
   const handleShareX = useCallback((): void => {
     const fullUrl = getFullUrl();
-    const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(fullUrl)}`;
-    openShareUrl(shareUrl);
+    openShareUrl(
+      `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(fullUrl)}`,
+    );
     track("twitter");
   }, [title, getFullUrl, track]);
 
   const handleShareLine = useCallback((): void => {
     const fullUrl = getFullUrl();
-    const shareUrl = `https://line.me/R/share?text=${encodeURIComponent(title + "\n" + fullUrl)}`;
-    openShareUrl(shareUrl);
+    openShareUrl(
+      `https://line.me/R/share?text=${encodeURIComponent(title + "\n" + fullUrl)}`,
+    );
     track("line");
   }, [title, getFullUrl, track]);
 
   const handleShareHatena = useCallback((): void => {
     const fullUrl = getFullUrl();
-    const shareUrl = `https://b.hatena.ne.jp/entry/panel/?url=${encodeURIComponent(fullUrl)}&btitle=${encodeURIComponent(title)}`;
-    openShareUrl(shareUrl);
+    openShareUrl(
+      `https://b.hatena.ne.jp/entry/panel/?url=${encodeURIComponent(fullUrl)}&btitle=${encodeURIComponent(title)}`,
+    );
     track("hatena");
   }, [title, getFullUrl, track]);
 
@@ -170,53 +167,67 @@ export default function ShareButtons({
     }
   }, [title, getFullUrl, track]);
 
+  interface ShareAction {
+    key: SnsType;
+    className: string;
+    Icon: () => React.JSX.Element;
+    label: string;
+    ariaLabel: string;
+    onClick: () => void | Promise<void>;
+  }
+
+  const actions: ShareAction[] = [
+    {
+      key: "x",
+      className: styles.x,
+      Icon: XIcon,
+      label: "X でシェア",
+      ariaLabel: "X で共有（外部サイト・新しいタブで開く）",
+      onClick: handleShareX,
+    },
+    {
+      key: "line",
+      className: styles.line,
+      Icon: LineIcon,
+      label: "LINE でシェア",
+      ariaLabel: "LINE で共有（外部サイト・新しいタブで開く）",
+      onClick: handleShareLine,
+    },
+    {
+      key: "hatena",
+      className: styles.hatena,
+      Icon: HatenaIcon,
+      label: "はてブ",
+      ariaLabel: "はてなブックマークに追加（外部サイト・新しいタブで開く）",
+      onClick: handleShareHatena,
+    },
+    {
+      key: "copy",
+      className: styles.copy,
+      Icon: LinkIcon,
+      label: "URLをコピー",
+      ariaLabel: "URLをコピー",
+      onClick: handleCopy,
+    },
+  ];
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.buttons}>
-        {sns.includes("x") && (
-          <button
-            type="button"
-            className={`${styles.button} ${styles.x}`}
-            onClick={handleShareX}
-            aria-label="X で共有（外部サイト・新しいタブで開く）"
-          >
-            <XIcon />
-            <span className={styles.label}>X でシェア</span>
-          </button>
-        )}
-        {sns.includes("line") && (
-          <button
-            type="button"
-            className={`${styles.button} ${styles.line}`}
-            onClick={handleShareLine}
-            aria-label="LINE で共有（外部サイト・新しいタブで開く）"
-          >
-            <LineIcon />
-            <span className={styles.label}>LINE でシェア</span>
-          </button>
-        )}
-        {sns.includes("hatena") && (
-          <button
-            type="button"
-            className={`${styles.button} ${styles.hatena}`}
-            onClick={handleShareHatena}
-            aria-label="はてなブックマークに追加（外部サイト・新しいタブで開く）"
-          >
-            <HatenaIcon />
-            <span className={styles.label}>はてブ</span>
-          </button>
-        )}
-        {sns.includes("copy") && (
-          <button
-            type="button"
-            className={`${styles.button} ${styles.copy}`}
-            onClick={handleCopy}
-            aria-label="URLをコピー"
-          >
-            <LinkIcon />
-            <span className={styles.label}>URLをコピー</span>
-          </button>
-        )}
+        {actions
+          .filter((a) => sns.includes(a.key))
+          .map(({ key, className, Icon, label, ariaLabel, onClick }) => (
+            <button
+              key={key}
+              type="button"
+              className={`${styles.button} ${className}`}
+              onClick={onClick}
+              aria-label={ariaLabel}
+            >
+              <Icon />
+              {label}
+            </button>
+          ))}
       </div>
       {/* コピー完了フィードバック。aria-live="polite" でスクリーンリーダーに通知 */}
       <div className={styles.copiedMessage} role="status" aria-live="polite">

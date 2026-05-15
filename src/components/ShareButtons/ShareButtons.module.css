@@ -30,6 +30,7 @@
   font-size: 0.875rem;
   font-weight: 600;
   line-height: 1;
+  white-space: nowrap;
   color: #ffffff;
   background: var(--bg-soft);
   border: 1px solid transparent;
@@ -52,10 +53,6 @@
 .button:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
-}
-
-.label {
-  white-space: nowrap;
 }
 
 /* X (旧 Twitter) — 公式ブランドカラー。ダーク背景でも視認できるよう
