@@ -1,9 +1,9 @@
 /*
  * ShareButtons — SNS 共有ボタン群
- * DESIGN.md §5: Button コンポーネントを再利用（variant="default"）
- * DESIGN.md §3: アイコン不要。テキストラベルのみ（シンプルに）
- * WCAG 2.5.5: min-height / min-width: 44px でタップターゲットを確保
- * レスポンシブ: flex-wrap で横並び → 折り返し
+ * サービス識別の機能目的のためブランドカラー＋ブランドアイコンを使用
+ * （DESIGN.md §2.4「色は機能を伝えるためだけに使う」の範囲内）。
+ * 角丸・影・フォーカスリングは DESIGN.md §2.4 / §5 のトークンを使用。
+ * WCAG 2.5.5 タップターゲット 44×44px を min-height / min-width で確保。
  */
 
 .wrapper {
@@ -18,12 +18,70 @@
   gap: 0.5rem;
 }
 
-/* WCAG 2.5.5 Target Size (Enhanced): 44×44px のタップ領域を確保する。
- * Button のデフォルトサイズ（padding: 9px 18px / font-size: 14px）は高さ約 37px になるため、
- * ここで min-height / min-width を明示してモバイルでの操作性を保証する。 */
-.buttons > * {
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
   min-height: 44px;
   min-width: 44px;
+  padding: 0.5rem 1rem;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  color: #ffffff;
+  background: var(--bg-soft);
+  border: 1px solid transparent;
+  border-radius: var(--r-interactive);
+  box-shadow: var(--shadow-button);
+  cursor: pointer;
+  transition:
+    filter 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.button:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+
+.button:active:not(:disabled) {
+  filter: brightness(0.92);
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* X (旧 Twitter) — 公式ブランドカラー。
+ * ダークモードでは背景に同化して沈むため、X 公式が許容する反転パターン
+ * （白背景・黒文字/アイコン）を採用して LINE/はてブ と同等の視認性を確保する。 */
+.x {
+  background: #000000;
+}
+
+:root.dark .x {
+  color: #000000;
+  background: #ffffff;
+}
+
+/* LINE — 公式ブランドカラー */
+.line {
+  background: #06c755;
+}
+
+/* はてなブックマーク — 公式ブランドカラー */
+.hatena {
+  background: #00a4de;
+}
+
+/* URLコピー — サービスではないため、ニュートラル色を使う。
+ * ダークモードでも反転トークンに追従する。 */
+.copy {
+  color: var(--fg-invert);
+  background: var(--bg-invert);
 }
 
 /* コピー完了メッセージ */
