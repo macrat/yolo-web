@@ -22,12 +22,7 @@ export interface ToolMeta {
   /** ISO 8601 date-time with timezone. Set when main content is updated. */
   updatedAt?: string;
   structuredDataType?: string; // JSON-LD @type (e.g., "WebApplication")
-  /**
-   * 信頼レベル。cycle-180 で TrustLevelBadge UI を全廃する決定（design-migration-plan.md L298 標準手順 6）に伴い、
-   * Phase 4-8 で (new) 化されたツールの meta では本フィールドを **削除** する運用。
-   * Phase 10.2 (B-337) で型自体を削除予定のため、過渡期は optional として並存。
-   */
-  trustLevel?: TrustLevel;
+  trustLevel: TrustLevel;
 
   /** 処理内容の説明テキスト。ゾーン3「このツールについて」セクションに表示する */
   howItWorks: string;

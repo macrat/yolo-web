@@ -8,9 +8,6 @@ import Breadcrumb from "@/components/Breadcrumb";
 import ToggleSwitch from "@/components/ToggleSwitch";
 import Pagination from "@/components/Pagination";
 import ShareButtons from "@/components/ShareButtons";
-import AccordionItem from "@/components/AccordionItem";
-import ResultCopyArea from "@/components/ResultCopyArea";
-import PrivacyBadge from "@/components/PrivacyBadge";
 import styles from "./page.module.css";
 
 // カラースウォッチの定義
@@ -92,9 +89,6 @@ const TOC_ITEMS = [
   { id: "toggle-switch", label: "8. ToggleSwitch" },
   { id: "pagination", label: "9. Pagination" },
   { id: "share-buttons", label: "10. ShareButtons" },
-  { id: "accordion-item", label: "11. AccordionItem" },
-  { id: "result-copy-area", label: "12. ResultCopyArea" },
-  { id: "privacy-badge", label: "13. PrivacyBadge" },
 ];
 
 export default function StorybookContent() {
@@ -599,118 +593,6 @@ export default function StorybookContent() {
             url="/blog/sample-post"
             title="サンプル記事 | yolos.net"
             sns={["copy"]}
-          />
-        </Panel>
-      </section>
-
-      {/* === 11. AccordionItem === */}
-      <section id="accordion-item" className={styles.section}>
-        <h2 className={styles.sectionTitle}>11. AccordionItem</h2>
-        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
-        <Panel as="div">
-          <span className={styles.previewLabel}>Preview: AccordionItem</span>
-
-          <h3 className={styles.subsectionTitle} style={{ marginTop: 0 }}>
-            デフォルト（閉じた状態）
-          </h3>
-          <AccordionItem heading="使い方">
-            <p style={{ margin: 0 }}>
-              入力欄にテキストを入力すると、文字数がリアルタイムで表示されます。
-              コピーボタンで結果をクリップボードにコピーできます。
-            </p>
-          </AccordionItem>
-
-          <h3 className={styles.subsectionTitle}>defaultOpen（初期展開）</h3>
-          <AccordionItem heading="よくある質問" defaultOpen>
-            <p style={{ margin: 0 }}>
-              Q: どのブラウザで使えますか？
-              <br />
-              A: モダンブラウザすべてで動作します。
-            </p>
-          </AccordionItem>
-
-          <h3 className={styles.subsectionTitle}>複数アイテムの並列表示</h3>
-          <div
-            style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
-          >
-            <AccordionItem heading="質問 1: このツールはどんなことができますか？">
-              <p style={{ margin: 0 }}>
-                テキストの文字数・バイト数をカウントできます。
-              </p>
-            </AccordionItem>
-            <AccordionItem heading="質問 2: 入力したデータはサーバーに送られますか？">
-              <p style={{ margin: 0 }}>
-                送られません。すべての処理はブラウザ内で完結します。
-              </p>
-            </AccordionItem>
-          </div>
-        </Panel>
-      </section>
-
-      {/* === 12. ResultCopyArea === */}
-      <section id="result-copy-area" className={styles.section}>
-        <h2 className={styles.sectionTitle}>12. ResultCopyArea</h2>
-        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
-        <Panel as="div">
-          <span className={styles.previewLabel}>Preview: ResultCopyArea</span>
-
-          <h3 className={styles.subsectionTitle} style={{ marginTop: 0 }}>
-            デフォルト（コピー対象テキストあり）
-          </h3>
-          <div
-            style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
-          >
-            <div
-              style={{
-                background: "var(--bg-soft)",
-                padding: "0.75rem",
-                borderRadius: "var(--r-normal)",
-                fontSize: "0.9rem",
-              }}
-            >
-              これはコピーされるテキストのサンプルです。
-            </div>
-            <ResultCopyArea text="これはコピーされるテキストのサンプルです。" />
-          </div>
-
-          <h3 className={styles.subsectionTitle}>カスタム文言</h3>
-          <ResultCopyArea
-            text="カスタム文言のサンプルテキスト"
-            buttonLabel="クリップボードにコピー"
-            feedbackLabel="コピー完了！"
-          />
-
-          <h3 className={styles.subsectionTitle}>空テキスト（コピー不可）</h3>
-          <ResultCopyArea text="" />
-        </Panel>
-      </section>
-
-      {/* === 13. PrivacyBadge === */}
-      <section id="privacy-badge" className={styles.section}>
-        <h2 className={styles.sectionTitle}>13. PrivacyBadge</h2>
-        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
-        <Panel as="div">
-          <span className={styles.previewLabel}>Preview: PrivacyBadge</span>
-
-          <h3 className={styles.subsectionTitle} style={{ marginTop: 0 }}>
-            variant=&quot;local&quot;（デフォルト）
-          </h3>
-          <PrivacyBadge />
-
-          <h3 className={styles.subsectionTitle}>
-            variant=&quot;local&quot; + label でデフォルト文言を上書き
-          </h3>
-          <PrivacyBadge
-            variant="local"
-            label="すべての処理はブラウザ内で完結します"
-          />
-
-          <h3 className={styles.subsectionTitle}>
-            variant=&quot;custom&quot; + 任意の文言
-          </h3>
-          <PrivacyBadge
-            variant="custom"
-            label="入力データはサーバーに送信されません"
           />
         </Panel>
       </section>
