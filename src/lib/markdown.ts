@@ -10,23 +10,50 @@ import { Marked, type MarkedExtension, type Tokens } from "marked";
 import markedAlert from "marked-alert";
 // XSS防止のためmarked出力をホワイトリスト方式でサニタイズ
 import { sanitize } from "@/lib/sanitize";
+// ビルド時シンタックスハイライト（クライアントでチラつかせないため）
+import { highlight } from "@/lib/highlight";
 
 /**
- * Custom marked extension to convert mermaid code blocks into
- * `<div class="mermaid">` elements for client-side rendering.
+ * Custom marked extension for fenced code blocks.
+ *
+ * - `mermaid` → client-side mermaid rendering target (`<div class="mermaid">`)
+ * - その他 → Shiki でビルド時にシンタックスハイライト済みの `<pre class="shiki">`
+ *   を返す。クライアント側でハイライトを掛け直さないのでチラつかない。
+ *
+ * Shiki の `highlight()` は async なので、walkTokens フックで code トークンを
+ * 先読みしてハイライト結果を WeakMap に保存しておき、同期 renderer はそこから
+ * 取り出すだけにする。marked 単体は同期 renderer しかサポートしないため。
  */
-const mermaidExtension: MarkedExtension = {
+const highlightedCodeCache = new WeakMap<Tokens.Code, string>();
+
+const codeExtension: MarkedExtension = {
+  async: true,
+  async walkTokens(token) {
+    if (token.type !== "code") return;
+    const code = token as Tokens.Code;
+    if (code.lang === "mermaid") return;
+    highlightedCodeCache.set(code, await highlight(code.text, code.lang));
+  },
   renderer: {
-    code({ text, lang }: { text: string; lang?: string }) {
-      if (lang === "mermaid") {
-        const escaped = text
+    code(token: Tokens.Code) {
+      if (token.lang === "mermaid") {
+        const escaped = token.text
           .replace(/&/g, "&amp;")
           .replace(/</g, "&lt;")
           .replace(/>/g, "&gt;")
           .replace(/"/g, "&quot;");
         return `<div class="mermaid">${escaped}</div>\n`;
       }
-      return false; // fallback to default renderer
+      const cached = highlightedCodeCache.get(token);
+      if (cached) return `${cached}\n`;
+      // walkTokens は async なので markdownToHtml() を await した経路では必ず埋まる。
+      // ここに来るのは markedInstance.parse() を async モード経由で呼ばなかった
+      // 場合の保険。素の <pre><code> にエスケープして渡す。
+      const escaped = token.text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+      return `<pre><code>${escaped}</code></pre>\n`;
     },
   },
 };
@@ -87,13 +114,13 @@ const { extension: headingExtension, resetCounter: resetHeadingCounter } =
   createHeadingExtension();
 
 /**
- * Module-level Marked instance with mermaid, heading, and alert extensions.
+ * Module-level Marked instance with code/highlight, heading, and alert extensions.
  * Using a dedicated instance avoids polluting the global marked state
  * and keeps extensions isolated.
  * markedAlert() is included to support GFM Alert syntax (> [!NOTE], > [!WARNING], etc.).
  */
 const markedInstance = new Marked(
-  mermaidExtension,
+  codeExtension,
   headingExtension,
   markedAlert(),
 );
@@ -214,19 +241,21 @@ function parseYamlScalar(value: string): unknown {
 /**
  * Convert markdown to HTML using the `marked` library.
  * Configured for GFM (GitHub Flavored Markdown) support.
+ *
+ * Async because Shiki's syntax highlighter is async-initialised once per
+ * process. Subsequent calls reuse the cached highlighter, so the per-call
+ * cost is just tokenization.
  */
-export function markdownToHtml(md: string): string {
+export async function markdownToHtml(md: string): Promise<string> {
   // Reset the heading ID counter before each parse call so that
   // duplicate-ID suffixes start fresh for every document.
   resetHeadingCounter();
-  const result = markedInstance.parse(md, {
+  // `async: true` enables async walkTokens (used by codeExtension to call Shiki).
+  const result = await markedInstance.parse(md, {
     gfm: true,
     breaks: false,
+    async: true,
   });
-  // marked.parse can return string | Promise<string>; we use sync mode
-  if (typeof result !== "string") {
-    throw new Error("Unexpected async result from marked.parse");
-  }
   // Sanitize to strip dangerous tags/attributes (XSS prevention)
   return sanitize(result);
 }

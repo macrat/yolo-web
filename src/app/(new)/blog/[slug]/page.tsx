@@ -37,14 +37,14 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const post = getBlogPostBySlug(slug);
+  const post = await getBlogPostBySlug(slug);
   if (!post) return {};
   return generateBlogPostMetadata(post);
 }
 
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
-  const post = getBlogPostBySlug(slug);
+  const post = await getBlogPostBySlug(slug);
   if (!post) notFound();
 
   const allPosts = getAllBlogPosts();
@@ -130,7 +130,7 @@ export default async function BlogPostPage({ params }: Props) {
            * を提供しているため、<section> にすると AT で「ラベル無しの region」として
            * 冗長に読み上げられる。
            */}
-          <Panel as="div" padding="comfortable" className={styles.articlePanel}>
+          <Panel as="div" padding="comfortable">
             <div
               className={styles.prose}
               dangerouslySetInnerHTML={{ __html: post.contentHtml }} // markdownToHtml() 内部で sanitize 済み
@@ -158,15 +158,13 @@ export default async function BlogPostPage({ params }: Props) {
 
         {/*
          * 前後ナビゲーション（投稿日時系列順）。
-         * シリーズ記事でも常時表示し、時系列ナビであることをラベルで明示する。
-         * SeriesNav 側は「シリーズ内の前/次の記事」ラベルで区別済み。
+         * シリーズ記事でも常時表示する（シリーズ最終回で動線が消えないため）。
+         * aria-label で時系列順であることをスクリーンリーダー向けに明示している。
          */}
         <nav className={styles.postNav} aria-label="前後の記事（時系列順）">
           {prevPost ? (
             <Link href={`/blog/${prevPost.slug}`} className={styles.prevPost}>
-              <span className={styles.navLabel}>
-                {post.series ? "すべての記事から：前の記事" : "前の記事"}
-              </span>
+              <span className={styles.navLabel}>前の記事</span>
               <span className={styles.navTitle}>{prevPost.title}</span>
             </Link>
           ) : (
@@ -174,9 +172,7 @@ export default async function BlogPostPage({ params }: Props) {
           )}
           {nextPost ? (
             <Link href={`/blog/${nextPost.slug}`} className={styles.nextPost}>
-              <span className={styles.navLabel}>
-                {post.series ? "すべての記事から：次の記事" : "次の記事"}
-              </span>
+              <span className={styles.navLabel}>次の記事</span>
               <span className={styles.navTitle}>{nextPost.title}</span>
             </Link>
           ) : (

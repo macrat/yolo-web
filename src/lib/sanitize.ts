@@ -76,16 +76,47 @@ const ALLOWED_ATTRIBUTES: Record<string, sanitizeHtml.AllowedAttribute[]> = {
   p: ["class"],
   // mermaid extension uses <div class="mermaid">, GFM Alerts use class attributes
   div: ["class"],
-  span: ["class"],
+  // <span> inside Shiki output carries inline `style` declarations with per-token colors
+  span: ["class", "style"],
   section: ["class"],
   // SVG elements in GFM Alert icons
   svg: ["class", "viewBox", "width", "height", "aria-hidden"],
   path: ["d"],
   // Code blocks can have class for language hints (e.g., class="language-js")
   code: ["class"],
+  // Shiki wraps highlighted output in <pre class="shiki ..." style="..." tabindex="0">
+  pre: ["class", "style", "tabindex"],
   // Table alignment
   td: ["align", "style"],
   th: ["align", "style"],
+};
+
+/**
+ * Hex color values produced by Shiki (e.g. `#fff`, `#dbd7caee`).
+ * Restricted to 3, 4, 6, or 8 hex digits — blocks `expression(...)`,
+ * `url(javascript:...)`, named colors, etc.
+ */
+const HEX_COLOR_REGEX = /^#[0-9a-fA-F]{3,8}$/;
+
+/**
+ * Style declarations Shiki emits on `<pre>` and `<span>` elements.
+ *
+ * Shiki's dual-theme output uses regular `color` / `background-color` for the
+ * light theme and CSS custom properties (`--shiki-dark`, `--shiki-dark-bg`)
+ * for the dark theme. We whitelist these explicitly so that table cell styles
+ * stay locked down to `text-align`.
+ */
+const SHIKI_STYLE_WHITELIST: Record<string, RegExp[]> = {
+  "background-color": [HEX_COLOR_REGEX],
+  color: [HEX_COLOR_REGEX],
+  "--shiki-dark": [HEX_COLOR_REGEX],
+  "--shiki-dark-bg": [HEX_COLOR_REGEX],
+  "font-style": [/^(italic|normal|oblique)$/],
+  "font-weight": [/^(bold|bolder|lighter|normal|\d{3})$/],
+  "text-decoration": [/^(underline|line-through|overline|none)$/],
+  "--shiki-dark-font-style": [/^(italic|normal|oblique)$/],
+  "--shiki-dark-font-weight": [/^(bold|bolder|lighter|normal|\d{3})$/],
+  "--shiki-dark-text-decoration": [/^(underline|line-through|overline|none)$/],
 };
 
 /**
@@ -112,10 +143,14 @@ export function sanitize(html: string): string {
     selfClosing: ["br", "hr", "img", "input"],
     // Strip disallowed tags entirely (don't show their text content)
     disallowedTagsMode: "discard",
-    // Allow only safe CSS properties for table cell alignment
+    // Allow only safe CSS properties per tag. Anything outside this whitelist
+    // (e.g. `expression(...)`, `url(javascript:...)`, named colors) is stripped
+    // by sanitize-html's value regex matching.
     allowedStyles: {
       td: { "text-align": [/^(left|center|right)$/] },
       th: { "text-align": [/^(left|center|right)$/] },
+      pre: SHIKI_STYLE_WHITELIST,
+      span: SHIKI_STYLE_WHITELIST,
     },
   });
 }

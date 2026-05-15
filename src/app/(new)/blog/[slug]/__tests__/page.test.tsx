@@ -87,9 +87,14 @@ describe("(new)/blog/[slug]/page", () => {
       expect(source).toMatch(/postNav/);
     });
 
-    it("シリーズ記事での postNav ラベルは時系列であることが明示されること", () => {
-      // 「すべての記事から」または「時系列」のラベルが存在すること
-      expect(source).toMatch(/すべての記事|時系列/);
+    it("postNav ラベルはシリーズ有無に関わらず固定文言（前の記事 / 次の記事）であること", () => {
+      // series ? "すべての記事から：..." : "..." の三項演算子が除去されていること
+      expect(source).not.toContain("すべての記事から");
+      // 固定文言「前の記事」「次の記事」が存在すること
+      expect(source).toContain("前の記事");
+      expect(source).toContain("次の記事");
+      // aria-label による時系列順の明示は維持されること
+      expect(source).toContain("時系列順");
     });
   });
 
@@ -111,10 +116,11 @@ describe("(new)/blog/[slug]/page", () => {
       expect(css).toMatch(/\.articleAside[^{]*\{[^}]*position:\s*sticky/);
     });
 
-    it("ライトモードの articlePanel border-color は --border（弱め）であること", () => {
-      // ダーク専用に --border-strong を使うため、ライトでは --border に固定
+    it(".articleBody の :has() セレクタが .articleAside 配下に絞り込まれていること（SeriesNav 開閉や記事本文中の <details> で grid が動かない退行防止）", () => {
+      // <details> 単独だと SeriesNav や記事本文中の <details> でも誤発火する。
+      // .articleAside（TOC ラッパー専用クラス）配下に限定することで誤マッチを防ぐ。
       expect(css).toMatch(
-        /\.articlePanel[^{]*\{[^}]*border-color:\s*var\(--border\)/,
+        /\.articleBody:has\(\.articleAside\s+details:not\(\[open\]\)\)/,
       );
     });
   });

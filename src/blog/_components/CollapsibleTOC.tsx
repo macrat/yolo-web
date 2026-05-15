@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useSyncExternalStore, type SyntheticEvent } from "react";
+import ChevronDown from "@/components/icons/ChevronDown";
 import TableOfContents, { type Heading } from "./TableOfContents";
 import styles from "./CollapsibleTOC.module.css";
 
@@ -59,20 +60,7 @@ export default function CollapsibleTOC({ headings }: CollapsibleTOCProps) {
     <details className={styles.tocDetails} open={open} onToggle={handleToggle}>
       <summary className={styles.tocSummary}>
         <span>目次</span>
-        <svg
-          className={styles.tocChevron}
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          <path d="M6 9l6 6 6-6" />
-        </svg>
+        <ChevronDown className={styles.tocChevron} />
       </summary>
       <div className={styles.tocBody}>
         <TableOfContents headings={headings} />
