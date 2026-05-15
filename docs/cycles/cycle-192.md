@@ -726,16 +726,22 @@ r1 レビュー（来訪者価値 / 構造整合 / アンチパターン整合 /
 #### 残せる資産（次サイクルで活用可能）
 
 - **`docs/targets/` ペルソナ要件分析**: 手付かず、活用可能
-- **B-409 / B-411 修正**: meta.ts の howItWorks「60 件以上」+ `getCategoryName(id)` ヘルパー = keigo-reference データ整合性向上、次サイクルでも有効
 - **cycle-180 で確定済の TrustLevelBadge 全廃方針**: design-migration-plan.md L298 標準手順 6（次サイクルでも踏襲）
-- **`docs/tool-detail-page-design.md` の Phase A 部分**: 採用要素一覧 / 不採用要素 / target user 適合判定 = 設計判断材料として参考に再利用可能（ただし「ツール詳細ページ = large タイル設置場所」core intent を踏まえた章構成は要再設計）
 - **GA4 PV データ**: 2026-05-15 取得時点での候補スラッグ参考データ（sql-formatter / char-count）は次サイクル kickoff 時点で再集計
+
+#### 当初「残せる資産」と判断したが内容矛盾発覚で削除したもの
+
+- **`docs/tool-detail-page-design.md`（cycle-191 PM 作成、1734 行）**: 当初「Phase A 部分は活用可能」と判断したが、内容を実体確認した結果、以下 3 件の矛盾を発見し削除:
+  1. **同ドキュメント内の自己矛盾**: L1124 / L1331-L1333 で `keigo-reference-large-full` を `gridSpan: { cols: 2, rows: 2 }` + tileDescription「敬語早見表の全機能」と定義（= large-full タイル = 詳細ページの全機能）しながら、L1733 で「タイルは検証用 + 将来 INITIAL_DEFAULT_LAYOUT 投入用に留め、詳細ページには埋め込まない」と決定 = 同じ doc 内で「large = 詳細ページ全機能」と「タイルは詳細ページに埋め込まない」を両立させており自己矛盾
+  2. **design-migration-plan.md Phase 7 core intent との矛盾**: 「30 ツールと 13+ ゲームを 1 コンテンツ 1 サイクルで『詳細ページの新デザイン移行 + タイル定義』を**同時実施**」「タイル化に馴染まないコンテンツは詳細移行のみ」という Phase 7 core intent に対し、L1733 で「タイルは詳細ページに埋め込まない」と直接矛盾
+  3. **DESIGN.md §1「すべてのコンテンツはパネルに収まった形で提供される」との不整合**: L725-L734 の `ToolDetailLayout` 責務定義「`<article>` 構造に階層 1〜4 を配置」、L737 以降の各新版コンポーネント定義のいずれにも「Panel コンポーネントに収まる」前提が一切記載されていない（Panel への言及は L709 の新版コンポーネント一覧の 1 行のみ）
+- **B-409 / B-411 修正**: 当初「meta.ts の howItWorks「60 件以上」+ `getCategoryName(id)` ヘルパー = keigo-reference データ整合性向上として残せる」と判断したが、Owner 指示「戻すべきは本サイクルと前サイクルで変更されたものだけ」に従い、これらも cycle-191 着手前 (e5bb6bce) 状態に revert 済。次サイクルで必要なら再適用する
 
 #### 次サイクル PM が最初にやること
 
 1. **本事故報告と次サイクルへの申し送りを最初に Read**: 失敗の事実 / 違反したルール / 立て直し方針を理解してから着手
-2. **`frontend-design` スキル / `DESIGN.md` を Read で必須参照**: 計画書の参考資料リストに DESIGN.md / frontend-design スキル を必ず含める
-3. **`docs/tool-detail-page-design.md` の core intent 確認**: 特に L1331（large-full バリアント設計）、L1124（推奨サイズ規格）、L1733（タイル詳細ページ埋め込み判断）を Read で実体確認し、「ツール詳細ページ = large タイル設置場所」core intent を計画段階で固定する
+2. **`frontend-design` スキル / `DESIGN.md` を Read で必須参照**: 計画書の参考資料リストに DESIGN.md / frontend-design スキル を必ず含める。**特に DESIGN.md §1「すべてのコンテンツはパネルに収まった形で提供される」を core intent として T-A 設計時から組み込む**
+3. **`docs/design-migration-plan.md` Phase 7 core intent の Read**: 「30 ツールと 13+ ゲームを 1 コンテンツ 1 サイクルで『詳細ページの新デザイン移行 + **タイル定義**』を**同時実施**」 = ツール詳細ページ = large タイル設置場所 core intent。タイル設計時から「タイルは詳細ページと道具箱の両方に同仕様で乗る」前提を確定する
 4. **過去サイクル決定（cycle-180 / design-migration-plan.md L298）を実体確認**: TrustLevelBadge 全廃方針を継承
 5. **`docs/anti-patterns/` 全件 Read**: 計画段階で core ルール照合の観点で読む
 6. **B-314（Phase 7 全体統括）を Active に動かして、第 1 弾 = 基盤再構築から着手**: 「ツール詳細ページ = `Tile.large-full.tsx` 設置場所」を core intent として、新版コンポーネント / TileVariant / `/internal/tiles` を Panel / Button ベース + CSS Grid サイズ規格 + DnD 機能 + モバイルフォールバックすべて含めて再設計
