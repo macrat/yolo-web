@@ -1,5 +1,4 @@
 import Link from "next/link";
-import AccordionItem from "@/components/AccordionItem";
 import { SERIES_LABELS, type BlogPostMeta } from "@/blog/_lib/blog";
 import styles from "./SeriesNav.module.css";
 
@@ -11,7 +10,7 @@ interface SeriesNavProps {
 
 /**
  * Displays a collapsible series navigation UI with:
- * - A numbered list of all posts in the series (folded inside an AccordionItem)
+ * - A numbered list of all posts in the series (inside a details/summary)
  * - Previous/next quick navigation links (always visible)
  *
  * Returns null if the series has 1 or fewer posts (R1).
@@ -39,14 +38,27 @@ export default function SeriesNav({
 
   return (
     <nav className={styles.seriesNav} aria-label="シリーズナビゲーション">
-      <AccordionItem
-        heading={
-          <span className={styles.seriesHeading}>
-            <span className={styles.seriesLabel}>{seriesLabel}</span>
-            <span className={styles.position}>{positionLabel}</span>
-          </span>
-        }
-      >
+      <details className={styles.details}>
+        <summary className={styles.summary}>
+          <span className={styles.seriesLabel}>{seriesLabel}</span>
+          <span className={styles.position}>{positionLabel}</span>
+          {/* デフォルト三角マーカーは CSS で消し、自作シェブロンで開閉を示す。
+              `details[open]` で 180° 回転（CSS のみ、JS 不要） */}
+          <svg
+            className={styles.chevron}
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </summary>
         <ol className={styles.list}>
           {seriesPosts.map((post) => (
             <li
@@ -68,7 +80,7 @@ export default function SeriesNav({
             </li>
           ))}
         </ol>
-      </AccordionItem>
+      </details>
 
       {(prevPost || nextPost) && (
         <div

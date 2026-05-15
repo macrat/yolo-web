@@ -1,12 +1,44 @@
-/* パネル境界は AccordionItem 自体が担う（DESIGN.md §4: パネル入れ子禁止） */
 .seriesNav {
-  margin-bottom: 1.5rem;
+  /* パネル風スタイルは page.tsx 側の Panel コンポーネントが担う */
 }
 
-.seriesHeading {
-  display: inline-flex;
-  align-items: baseline;
+/* --- details/summary ---
+ * Panel（白背景）の中で完結する開閉ヘッダー。
+ * デフォルト三角マーカーは消し、自作シェブロン + hover/focus-visible で
+ * 「クリックで開閉できる」アフォーダンスを明示する。
+ */
+
+.details {
+  margin-bottom: 0;
+}
+
+.summary {
+  display: flex;
+  align-items: center;
   gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  margin: -0.5rem -0.75rem;
+  border-radius: var(--r-normal);
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--fg);
+  /* デフォルト三角マーカーを消し、自作シェブロンで状態を表現する */
+  list-style: none;
+  transition: background-color 0.15s ease;
+}
+
+/* Safari/WebKit でも三角マーカー非表示 */
+.summary::-webkit-details-marker {
+  display: none;
+}
+
+.summary:hover {
+  background: var(--bg-soft);
+}
+
+.summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .seriesLabel {
@@ -18,8 +50,21 @@
   color: var(--fg-soft);
 }
 
+.chevron {
+  flex-shrink: 0;
+  margin-left: auto;
+  color: var(--fg-soft);
+  transition: transform 0.2s ease;
+}
+
+.details[open] .chevron {
+  transform: rotate(180deg);
+}
+
+/* --- article list --- */
+
 .list {
-  margin: 0;
+  margin-top: 0.75rem;
   padding-left: 1.5rem;
   font-size: 0.85rem;
   line-height: 1.7;
