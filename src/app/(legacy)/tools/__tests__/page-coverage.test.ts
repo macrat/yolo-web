@@ -6,11 +6,6 @@
  * が存在することを検証する。
  *
  * ツールを registry.ts に追加したが、個別ページの作成を忘れた場合に検出する。
- *
- * Phase 7（(legacy)→(new) 移行）の進捗により、各ファイルは:
- * - 移行済み: src/app/(new)/tools/<slug>/
- * - 未移行: src/app/(legacy)/tools/<slug>/
- * のいずれかに存在することを許容する。
  */
 import { describe, test, expect } from "vitest";
 import { getAllToolSlugs } from "@/tools/registry";
@@ -23,8 +18,8 @@ const REQUIRED_FILES = [
   "twitter-image.tsx",
 ] as const;
 
-const legacyToolsDir = join(process.cwd(), "src/app/(legacy)/tools");
-const newToolsDir = join(process.cwd(), "src/app/(new)/tools");
+// (legacy) Route Group 配下に移動済み
+const toolsAppDir = join(process.cwd(), "src/app/(legacy)/tools");
 
 describe("ツール個別ページの網羅性", () => {
   const slugs = getAllToolSlugs();
@@ -34,17 +29,14 @@ describe("ツール個別ページの網羅性", () => {
   });
 
   test.each(slugs)(
-    "%s: page.tsx, opengraph-image.tsx, twitter-image.tsx が (legacy) または (new) のいずれかに存在する",
+    "%s: page.tsx, opengraph-image.tsx, twitter-image.tsx が存在する",
     (slug) => {
-      const legacyDir = join(legacyToolsDir, slug);
-      const newDir = join(newToolsDir, slug);
+      const dir = join(toolsAppDir, slug);
       for (const file of REQUIRED_FILES) {
-        const legacyPath = join(legacyDir, file);
-        const newPath = join(newDir, file);
-        expect(
-          existsSync(legacyPath) || existsSync(newPath),
-          `${slug}/${file} が (legacy) または (new) に存在すること`,
-        ).toBe(true);
+        const filePath = join(dir, file);
+        expect(existsSync(filePath), `${slug}/${file} が存在すること`).toBe(
+          true,
+        );
       }
     },
   );

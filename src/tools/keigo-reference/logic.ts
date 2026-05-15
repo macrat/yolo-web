@@ -1202,14 +1202,6 @@ export function getKeigoCategories(): KeigoCategoryInfo[] {
   return KEIGO_CATEGORIES;
 }
 
-/**
- * カテゴリ ID から表示名を返すヘルパー。
- * 未知の ID の場合は ID 文字列をそのまま返す（フォールバック）。
- */
-export function getCategoryName(id: KeigoCategory | string): string {
-  return KEIGO_CATEGORIES.find((c) => c.id === id)?.name ?? id;
-}
-
 export function getEntriesByCategory(category: KeigoCategory): KeigoEntry[] {
   return KEIGO_ENTRIES.filter((entry) => entry.category === category);
 }
@@ -1253,34 +1245,4 @@ export function getCommonMistakes(): CommonMistake[] {
 
 export function getMistakesByType(type: MistakeType): CommonMistake[] {
   return COMMON_MISTAKES.filter((m) => m.mistakeType === type);
-}
-
-/**
- * 日替わり 1 件取得（日付ベース）。
- *
- * 同じ日付であれば同じエントリを返す（決定論的）。
- * 日付（YYYY-MM-DD）をハッシュキーにして全エントリから 1 件を選ぶ。
- * 再訪 visitor が同日内に何度アクセスしても同一のエントリを表示する。
- *
- * @param date - 基準日（デフォルト: 今日）
- * @returns 日替わりエントリ（エントリが 0 件の場合は undefined）
- */
-export function getDailyEntry(date: Date = new Date()): KeigoEntry | undefined {
-  if (KEIGO_ENTRIES.length === 0) return undefined;
-
-  // 日付を YYYY-MM-DD 文字列に変換してハッシュキーとして使う
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  const dateKey = `${year}-${month}-${day}`;
-
-  // 文字列の各文字のコードポイントを加算してハッシュ値を作る（決定論的）
-  let hash = 0;
-  for (let i = 0; i < dateKey.length; i++) {
-    hash = (hash * 31 + dateKey.charCodeAt(i)) | 0; // 32bit 整数に収める
-  }
-
-  // 負の値になりうるため絶対値を取って配列インデックスに変換
-  const index = Math.abs(hash) % KEIGO_ENTRIES.length;
-  return KEIGO_ENTRIES[index];
 }
