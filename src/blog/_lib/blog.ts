@@ -204,8 +204,16 @@ export function getAllBlogPosts(): BlogPostMeta[] {
   return posts;
 }
 
-/** Get a single blog post by slug, with rendered HTML and headings. */
-export function getBlogPostBySlug(slug: string): BlogPost | null {
+/**
+ * Get a single blog post by slug, with rendered HTML and headings.
+ *
+ * Async because `markdownToHtml` runs Shiki for syntax highlighting at
+ * build time. All callers (Next.js server components, OG image generator)
+ * are already async — `await` at the call site is enough.
+ */
+export async function getBlogPostBySlug(
+  slug: string,
+): Promise<BlogPost | null> {
   if (!fs.existsSync(BLOG_DIR)) return null;
 
   const files = fs.readdirSync(BLOG_DIR).filter((f) => f.endsWith(".md"));
@@ -233,7 +241,7 @@ export function getBlogPostBySlug(slug: string): BlogPost | null {
       draft: false,
       readingTime: estimateReadingTime(content),
       trustLevel: "generated" as const,
-      contentHtml: markdownToHtml(content),
+      contentHtml: await markdownToHtml(content),
       headings: extractHeadings(content),
     };
 

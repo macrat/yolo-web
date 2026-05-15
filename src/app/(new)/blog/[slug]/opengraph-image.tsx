@@ -24,7 +24,7 @@ type Props = {
 
 export default async function OpenGraphImage({ params }: Props) {
   const { slug } = await params;
-  const post = getBlogPostBySlug(slug);
+  const post = await getBlogPostBySlug(slug);
 
   const title = post?.title ?? "Blog";
   const categoryLabel = post

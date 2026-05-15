@@ -1,7 +1,8 @@
 .main {
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 2rem 1rem;
+  /* 左右 1.25rem は Header/Footer と同じサイト共通値。 */
+  padding: 2rem 1.25rem;
   width: 100%;
 }
 
