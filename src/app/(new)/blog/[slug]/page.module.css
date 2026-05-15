@@ -290,9 +290,10 @@
 
   /*
    * TOC 折りたたみ時、TOC 列を auto（= summary の幅）に縮めて本文が広がる。
-   * <details> の [open] 属性が外れた状態を Web 標準のセレクタで検出する。
+   * .articleAside（TOC ラッパー専用クラス）配下に限定するのは、SeriesNav も
+   * <details> を使うのと、記事本文中の HTML として <details> が書かれうるため。
    */
-  .articleBody:has(details:not([open])) {
+  .articleBody:has(.articleAside details:not([open])) {
     grid-template-columns: 1fr auto;
   }
 

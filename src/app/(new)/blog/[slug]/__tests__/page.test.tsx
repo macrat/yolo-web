@@ -111,6 +111,14 @@ describe("(new)/blog/[slug]/page", () => {
       expect(css).toMatch(/\.articleAside[^{]*\{[^}]*position:\s*sticky/);
     });
 
+    it(".articleBody の :has() セレクタが .articleAside 配下に絞り込まれていること（SeriesNav 開閉や記事本文中の <details> で grid が動かない退行防止）", () => {
+      // <details> 単独だと SeriesNav や記事本文中の <details> でも誤発火する。
+      // .articleAside（TOC ラッパー専用クラス）配下に限定することで誤マッチを防ぐ。
+      expect(css).toMatch(
+        /\.articleBody:has\(\.articleAside\s+details:not\(\[open\]\)\)/,
+      );
+    });
+
     it("ライトモードの articlePanel border-color は --border（弱め）であること", () => {
       // ダーク専用に --border-strong を使うため、ライトでは --border に固定
       expect(css).toMatch(
