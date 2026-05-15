@@ -1,4 +1,5 @@
 import Link from "next/link";
+import ChevronDown from "@/components/icons/ChevronDown";
 import { SERIES_LABELS, type BlogPostMeta } from "@/blog/_lib/blog";
 import styles from "./SeriesNav.module.css";
 
@@ -42,22 +43,8 @@ export default function SeriesNav({
         <summary className={styles.summary}>
           <span className={styles.seriesLabel}>{seriesLabel}</span>
           <span className={styles.position}>{positionLabel}</span>
-          {/* デフォルト三角マーカーは CSS で消し、自作シェブロンで開閉を示す。
-              `details[open]` で 180° 回転（CSS のみ、JS 不要） */}
-          <svg
-            className={styles.chevron}
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <path d="M6 9l6 6 6-6" />
-          </svg>
+          {/* details[open] で CSS が 180° 回転（JS 不要） */}
+          <ChevronDown className={styles.chevron} />
         </summary>
         <ol className={styles.list}>
           {seriesPosts.map((post) => (
