@@ -74,7 +74,9 @@ export function toTileable(
       shortDescription: toolMeta.shortDescription,
       contentKind,
       publishedAt: toolMeta.publishedAt,
-      trustLevel: toolMeta.trustLevel,
+      // cycle-180 決定により Phase 4-8 で (new) 化されたツールの meta は trustLevel を削除している。
+      // Tileable 型は Phase 10.2 (B-337) で trustLevel 自体の撤去を予定しており、過渡期は curated にフォールバックする。
+      trustLevel: toolMeta.trustLevel ?? "curated",
     };
   }
 
