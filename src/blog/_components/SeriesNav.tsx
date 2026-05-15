@@ -1,4 +1,5 @@
 import Link from "next/link";
+import ChevronDown from "@/components/icons/ChevronDown";
 import { SERIES_LABELS, type BlogPostMeta } from "@/blog/_lib/blog";
 import styles from "./SeriesNav.module.css";
 
@@ -42,6 +43,8 @@ export default function SeriesNav({
         <summary className={styles.summary}>
           <span className={styles.seriesLabel}>{seriesLabel}</span>
           <span className={styles.position}>{positionLabel}</span>
+          {/* details[open] で CSS が 180° 回転（JS 不要） */}
+          <ChevronDown className={styles.chevron} />
         </summary>
         <ol className={styles.list}>
           {seriesPosts.map((post) => (
