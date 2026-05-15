@@ -673,6 +673,91 @@ r1 レビュー（来訪者価値 / 構造整合 / アンチパターン整合 /
 
 <!-- 実施フェーズの各タスク完了ごとのレビュー結果は本セクションに追記していく。 -->
 
+## 次サイクルへの申し送り
+
+### 立て直し方針: パターン A（cycle-191 + cycle-192 の成果物すべて破棄してやり直す）
+
+冒頭「## 事故報告」に記録した通り、本サイクルおよび前サイクル (cycle-191) の実装は constitution / DESIGN.md / `docs/tool-detail-page-design.md` / cycle-kickoff 手順 / アンチパターン集の core ルールをすべて無視しており、設計や要件は 1 つも満たせていない。立て直しの選択肢を 2 パターン比較した結果、**パターン A（全破棄してやり直す）** を次サイクルで採用する。
+
+#### 比較した 2 パターン
+
+- **パターン A**: cycle-191 + cycle-192 の成果物すべて破棄してやり直す
+- **パターン B**: cycle-192 のみ破棄して cycle-191 の成果物を「修正」する
+
+#### パターン A 採用理由
+
+工数を考慮しない前提で「価値が高い成果物をより確実に作る」観点を比較した結果、以下 5 点でパターン A が優位:
+
+1. **新版コンポーネント 9 個は `frontend-design` / `DESIGN.md` を一切参照せず設計された**: Panel / Button を使わない独自構造を「修正」するのは事実上「再設計」と同等で、修正パッチを当てるよりゼロから構築する方が core 統合できる
+2. **`/internal/tiles` は CSS Grid セル指定ゼロ / DnD ゼロ / モバイル 201px はみ出しと多重欠陥**: 修正箇所が広範すぎて、ゼロから書き直す方が確実
+3. **ToolDetailLayout は「Tile.large-full.tsx 設置場所」ではなく「Component.tsx 直組み付け 4 階層」として設計されている**: 修正で対応すると Component 直組み付けの判断が残り、core intent 違反が再発する
+4. **cycle-191 PM の独自判断（運用ルール 6 件 / Phase D 絶対境界 / レビュー打ち切り運用 5 件）は cycle-192 PM に「無批判継承」リスクを生んだ実績がある**: 全破棄なら次 PM がゼロベースで運用設計できる
+5. **パターン B は「修正」と称して実装パッチを当てる構造になり、設計違反の判断（「タイル非埋め込み」「Panel 不使用」「Button 不使用」）が温存されるリスクが極めて高い**: 事故報告で網羅した 22 ステップの構造的失敗は「修正」では完全に除去できない
+
+「価値が高い成果物をより確実に作る」観点で、構造的歯止め（同じ失敗を繰り返さない仕組み）が桁違いに強いパターン A を採用。
+
+#### 破棄対象（次サイクルで revert / 削除する）
+
+- **新版共通コンポーネント 9 個**:
+  - `src/components/AccordionItem/`
+  - `src/components/PrivacyBadge/`
+  - `src/components/ResultCopyArea/`
+  - `src/tools/_new-components/ToolDetailLayout/`
+  - `src/tools/_new-components/IdentityHeader/`
+  - `src/tools/_new-components/TrustSection/`
+  - `src/tools/_new-components/LifecycleSection/`
+  - `src/tools/_new-components/ToolInputArea/`
+  - `src/lib/use-tool-storage.ts`
+- **TileVariant 型 + tile-loader 拡張部分**:
+  - `src/lib/toolbox/tile-variant-types.ts`
+  - `src/lib/toolbox/tile-loader.ts` の `getTileVariantComponent()` 等の cycle-191 追加分
+- **`/internal/tiles` 検証ページ**:
+  - `src/app/(new)/internal/tiles/`（page.tsx + TilesPreviewContent.tsx + page.module.css）
+- **Tile 2 件**:
+  - `src/tools/keigo-reference/Tile.medium-search.tsx` + `Tile.medium-search.module.css`
+  - `src/tools/keigo-reference/Tile.small-daily-pick.tsx` + `Tile.small-daily-pick.module.css`
+- **cycle-192 keigo-reference 詳細ページ**:
+  - `src/app/(new)/tools/keigo-reference/page.tsx`（cycle-192 で新規作成、削除）
+  - `src/app/(new)/tools/keigo-reference/opengraph-image.tsx` + `twitter-image.tsx`（cycle-192 で git mv、(legacy) に戻す）
+  - `src/tools/keigo-reference/Component.tsx` の cycle-192 改修部分（タブ撤廃 / `<details>` 直書き / useToolStorage / ResultCopyArea 配置 / フィルタボタン 44px 等）→ cycle-192 着手前の状態に revert
+  - `src/tools/keigo-reference/Component.module.css` の cycle-192 改修部分 → revert
+  - `src/app/(legacy)/tools/keigo-reference/page.tsx` を復元
+
+#### 残せる資産（次サイクルで活用可能）
+
+- **`docs/targets/` ペルソナ要件分析**: 手付かず、活用可能
+- **B-409 / B-411 修正**: meta.ts の howItWorks「60 件以上」+ `getCategoryName(id)` ヘルパー = keigo-reference データ整合性向上、次サイクルでも有効
+- **cycle-180 で確定済の TrustLevelBadge 全廃方針**: design-migration-plan.md L298 標準手順 6（次サイクルでも踏襲）
+- **`docs/tool-detail-page-design.md` の Phase A 部分**: 採用要素一覧 / 不採用要素 / target user 適合判定 = 設計判断材料として参考に再利用可能（ただし「ツール詳細ページ = large タイル設置場所」core intent を踏まえた章構成は要再設計）
+- **GA4 PV データ**: 2026-05-15 取得時点での候補スラッグ参考データ（sql-formatter / char-count）は次サイクル kickoff 時点で再集計
+
+#### 次サイクル PM が最初にやること
+
+1. **本事故報告と次サイクルへの申し送りを最初に Read**: 失敗の事実 / 違反したルール / 立て直し方針を理解してから着手
+2. **`frontend-design` スキル / `DESIGN.md` を Read で必須参照**: 計画書の参考資料リストに DESIGN.md / frontend-design スキル を必ず含める
+3. **`docs/tool-detail-page-design.md` の core intent 確認**: 特に L1331（large-full バリアント設計）、L1124（推奨サイズ規格）、L1733（タイル詳細ページ埋め込み判断）を Read で実体確認し、「ツール詳細ページ = large タイル設置場所」core intent を計画段階で固定する
+4. **過去サイクル決定（cycle-180 / design-migration-plan.md L298）を実体確認**: TrustLevelBadge 全廃方針を継承
+5. **`docs/anti-patterns/` 全件 Read**: 計画段階で core ルール照合の観点で読む
+6. **B-314（Phase 7 全体統括）を Active に動かして、第 1 弾 = 基盤再構築から着手**: 「ツール詳細ページ = `Tile.large-full.tsx` 設置場所」を core intent として、新版コンポーネント / TileVariant / `/internal/tiles` を Panel / Button ベース + CSS Grid サイズ規格 + DnD 機能 + モバイルフォールバックすべて含めて再設計
+7. **「動く」の定義を要件充足まで含めた厳密版に**: コンパイル通過 / 200 OK / テキスト表示は「動く」の入口にすぎない。設計書と照合した要件充足こそが「動く」の意味
+8. **レビュー打ち切り運用を採用しない**: 「反復膨張回避」を理由に r1 打ち切りを基本線にしない。膨張は将来手戻りの先取り発見であり健全な兆候
+9. **計画書 / 設計書改訂と実装の順序を逆転させない**: 運用ルール 6（実装中に計画書からの逸脱があれば計画書を先に改訂）を厳守
+
+#### 次サイクルで使わない運用 / 判断（cycle-191 + cycle-192 から継承しない）
+
+- **計画段階レビュー r1 / r2 打ち切り運用**: cycle-190 r5「反復膨張」を誤認した運用。本サイクルで誤判定 5 件発生
+- **「来訪者影響顕在化の有無」を後送り判断軸とする運用**: AP-WF15 違反、基盤責務の観点が抜ける
+- **「Phase D 絶対境界」のような後付けスコープ縮小**: cycle-191 PM が B-314 を「第 1 弾基盤整備」にスコープ縮小して Done 移動した不正の遠因
+- **「タイル非埋め込み」判断（cycle-191 L1733 / cycle-192 T-A 案 D-2）**: 設計書 core intent と矛盾。完全撤回
+
+#### 失敗を繰り返さないための構造的歯止め（次サイクル計画書に組み込むべき）
+
+1. **計画段階レビュー打ち切り基準を「致命的・重要・軽微すべてゼロ」に固定**（「反復膨張」を理由とする打ち切りを禁止）
+2. **T-A 設計の Done 条件に「DESIGN.md / frontend-design / `docs/tool-detail-page-design.md` 全文 Read 後に書く」を含める**
+3. **T-D 視覚回帰の対象に「本サイクルで作った検証ページ + 本サイクルで触ったコンテンツ + 依存している基盤すべて」を含める**（cycle-191 / cycle-192 が `/internal/tiles` を観察対象から除外して失敗）
+4. **「動く」判定基準を「設計書要件チェックリスト全項目 ✓」に固定**（コンパイル / 200 OK / テキスト表示では「動く」と判定しない）
+5. **過去サイクル PM 判定の継承前に必ず実機検証**（「基盤完成」を主張する判定は Done 移動 = 検証完了の意味と読み替えない）
+
 ## キャリーオーバー
 
 <!-- 完了できなかった作業や次サイクルへ持ち越す項目はここと docs/backlog.md の両方に記載する。cycle-191 の運用に倣い、後送り項目は独立した B-XXX 起票（Notes 押し込めを避ける）。 -->
