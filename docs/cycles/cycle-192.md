@@ -2,10 +2,20 @@
 id: 192
 description: 【失敗】B-399 keigo-reference 詳細ページ移行（Phase 7 第 2 弾）として着手したが、cycle-191 / cycle-192 ともに constitution / DESIGN.md / docs/tool-detail-page-design.md / cycle-kickoff 手順 / 各種アンチパターンの core ルールをすべて無視しており、設計や要件は 1 つも満たせていない完全な失敗。実装は最低限の表示はされるが、サイズ規格 / レスポンシブ / DnD / Panel コンポーネント / Button コンポーネント / large タイル設置設計のすべてが実装ゼロ。サイクル末尾の Playwright 実機検証で気付いた事実は冒頭「## 事故報告」を参照。
 started_at: 2026-05-14T23:08:42+0900
-completed_at: null
+completed_at: "2026-05-15T19:50:04+0900"
 ---
 
 # サイクル-192
+
+> **本サイクルは失敗としてクローズした。**
+>
+> 本サイクルおよび前サイクル (cycle-191) は、ツール・遊び詳細ページの新デザイン移行 + タイル化（B-314 / 移行計画 Phase 7）の基盤整備および第 2 弾移行として着手したが、constitution / DESIGN.md / `docs/design-migration-plan.md` / cycle-kickoff 手順 / アンチパターン集の core ルールをすべて無視しており、設計や要件は 1 つも満たせていない完全な失敗であった。
+>
+> サイクル末尾の Playwright 実機検証で、cycle-191 で実装した `/internal/tiles` 検証ページがサイズ規格機能ゼロ / モバイル 201px 横はみ出し / DnD 機能ゼロ / large フォールバック設計ゼロという多重欠陥を抱えること、cycle-192 で実装したツール詳細ページが Panel / Button 不使用 + `Tile.large-full.tsx` 不実装で「ツール詳細ページ = large タイル設置場所」core intent と矛盾することが判明した。
+>
+> 立て直し方針として、cycle-191 + cycle-192 の全コード成果物を破棄してやり直すパターン A を採用し、`src/` 配下の全 42 ファイルを cycle-191 着手前 (e5bb6bce) の状態に revert + cycle-191 で新規作成した `docs/tool-detail-page-design.md` も内容矛盾発覚により削除した。本サイクル開始時点に Active だった B-399 を含む cycle-191/192 で起票した独立 backlog 17 件はキャンセル扱いで Done へ移動済（残存は B-409 / B-410 の 2 件のみ）。B-314（Phase 7 全体統括）は cycle-191 PM が「第 1 弾 = 基盤整備」と不正にスコープ縮小して Done 移動した経緯があったが、当初スコープ（Phase 7 全体）に復元して Queued に戻している。
+>
+> 違反したルール / 設計、設計に従っていない実装の具体（実機計測値）、サイクル運用の構造的失敗 22 ステップ、学び 7 件は次節「事故報告」を参照。次サイクル PM への申し送り（立て直し方針 + 次サイクル PM が最初にやること + 使わない運用 + 構造的歯止め）は本ファイル後半の「次サイクルへの申し送り」セクションを参照。以下に続く実施作業・作業計画・レビュー結果は失敗当時の認識であり、参考記録として残しているに過ぎない。
 
 このサイクルでは B-399（P1）に取り組む。cycle-191 が「Phase 7 第 1 弾基盤整備」として新版共通コンポーネント群・タイルシステム基盤・検証用タイル 2 件までを完遂したのを受け、本サイクルは「Phase 7 第 2 弾本格移行」として keigo-reference 詳細ページ本体を `(legacy)→(new)` へ移行する着手だった。しかしサイクル末尾の Playwright 実機検証で、cycle-191 / cycle-192 ともに constitution / DESIGN.md / `docs/tool-detail-page-design.md` / cycle-kickoff 手順 / アンチパターン集の core ルールをすべて無視しており、設計要件を 1 つも満たせていない完全な失敗であることが判明した。詳細は次節「事故報告」を参照。
 
