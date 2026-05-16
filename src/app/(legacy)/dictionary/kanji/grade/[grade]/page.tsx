@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Breadcrumb from "@/components/common/Breadcrumb";
-import TrustLevelBadge from "@/components/common/TrustLevelBadge";
 import CategoryNav from "@/dictionary/_components/CategoryNav";
 import DictionaryCard from "@/dictionary/_components/DictionaryCard";
 import DictionaryGrid from "@/dictionary/_components/DictionaryGrid";
@@ -73,7 +72,6 @@ export default async function KanjiGradePage({
           { label: `${gradeLabel}の漢字` },
         ]}
       />
-      <TrustLevelBadge level="curated" />
       <h1>
         {gradeLabel}
         {"の漢字"}

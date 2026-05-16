@@ -14,12 +14,6 @@ vi.mock("@/components/common/Breadcrumb", () => ({
   ),
 }));
 
-vi.mock("@/components/common/TrustLevelBadge", () => ({
-  default: ({ level }: { level: string }) => (
-    <div data-testid="trust-level-badge" data-level={level} />
-  ),
-}));
-
 vi.mock("@/play/quiz/_components/QuizContainer", () => ({
   default: ({
     quiz,
@@ -73,7 +67,6 @@ vi.mock("@/play/registry", () => ({
         accentColor: "#ff5733",
         keywords: ["テスト"],
         publishedAt: "2026-01-01T00:00:00+09:00",
-        trustLevel: "generated",
       },
     ],
   ]),
@@ -111,7 +104,6 @@ const mockQuiz: QuizDefinition = {
     accentColor: "#ff5733",
     keywords: ["テスト"],
     publishedAt: "2026-01-01T00:00:00+09:00",
-    trustLevel: "generated",
   },
   questions: [],
   results: [],
@@ -129,16 +121,6 @@ test("QuizPlayPageLayout renders breadcrumb with correct items", async () => {
   expect(breadcrumb).toHaveTextContent("ホーム");
   expect(breadcrumb).toHaveTextContent("遊ぶ");
   expect(breadcrumb).toHaveTextContent("テストクイズ");
-});
-
-test("QuizPlayPageLayout renders TrustLevelBadge", async () => {
-  const component = await QuizPlayPageLayout({
-    quiz: mockQuiz,
-    slug: "test-quiz",
-  });
-  render(component);
-
-  expect(screen.getByTestId("trust-level-badge")).toBeInTheDocument();
 });
 
 test("QuizPlayPageLayout renders QuizContainer with quiz and referrerTypeId", async () => {

@@ -25,7 +25,6 @@ vi.mock("@/play/quiz/registry", () => ({
           questionCount: 10,
           accentColor: "#7c3aed",
           category: "personality",
-          trustLevel: "medium",
         },
         results: [
           {
@@ -67,7 +66,6 @@ vi.mock("@/play/quiz/data/music-personality", () => ({
       questionCount: 10,
       accentColor: "#7c3aed",
       category: "personality",
-      trustLevel: "medium",
     },
     results: [
       {

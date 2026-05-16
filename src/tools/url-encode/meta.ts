@@ -19,7 +19,6 @@ export const meta: ToolMeta = {
   publishedAt: "2026-02-13T19:03:42+09:00",
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
-  trustLevel: "verified",
   howItWorks:
     "コンポーネントモードでは encodeURIComponent を使い、スラッシュやコロンを含むすべての非ASCII文字をパーセントエンコードします。URL全体モードでは encodeURI を使い、URL構造を保ったままエンコードします。日本語などのマルチバイト文字はUTF-8バイト列に変換してからエンコードされます。",
   faq: [

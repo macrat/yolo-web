@@ -7,28 +7,27 @@ updated_at: "2026-03-14T01:30:00+09:00"
 tags: ["チートシート", "Web開発", "設計パターン"]
 category: "tool-guides"
 series: null
-trust_level: "generated"
   [
-    "19ca9465a3f",
-    "19ca9467094",
-    "19ca9493d06",
-    "19ca94a426a",
-    "19ca94aeff2",
-    "19ca94b02dd",
-    "19ca94d5375",
-    "19ca94e21f8",
-    "19ca94ee385",
-    "19ca951b0db",
-    "19ca954427c",
-    "19ca9546486",
-    "19ca9571c6b",
-    "19ca9591666",
-    "19ca95978d9",
-    "19ca95d31c7",
-    "19ca95d9166",
-    "19ca96296f3",
-    "19ca962fafb",
-    "19ca963a3c8",
+  "19ca9465a3f",
+  "19ca9467094",
+  "19ca9493d06",
+  "19ca94a426a",
+  "19ca94aeff2",
+  "19ca94b02dd",
+  "19ca94d5375",
+  "19ca94e21f8",
+  "19ca94ee385",
+  "19ca951b0db",
+  "19ca954427c",
+  "19ca9546486",
+  "19ca9571c6b",
+  "19ca9591666",
+  "19ca95978d9",
+  "19ca95d31c7",
+  "19ca95d9166",
+  "19ca96296f3",
+  "19ca962fafb",
+  "19ca963a3c8",
   ]
 related_tool_slugs: ["url-encode", "json-formatter"]
 draft: false

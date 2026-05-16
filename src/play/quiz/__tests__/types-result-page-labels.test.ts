@@ -20,7 +20,6 @@ describe("QuizMeta resultPageLabels field", () => {
       accentColor: "#000000",
       keywords: ["test"],
       publishedAt: "2026-01-01T00:00:00+09:00",
-      trustLevel: "generated",
     };
     expect(meta.resultPageLabels).toBeUndefined();
   });
@@ -38,7 +37,6 @@ describe("QuizMeta resultPageLabels field", () => {
       accentColor: "#000000",
       keywords: ["test"],
       publishedAt: "2026-01-01T00:00:00+09:00",
-      trustLevel: "generated",
       resultPageLabels: {
         traitsHeading: "このタイプの音楽的特徴",
         behaviorsHeading: "このタイプの音楽あるある",
@@ -68,7 +66,6 @@ describe("QuizMeta resultPageLabels field", () => {
       accentColor: "#000000",
       keywords: ["test"],
       publishedAt: "2026-01-01T00:00:00+09:00",
-      trustLevel: "generated",
       resultPageLabels: {
         traitsHeading: "このタイプの特徴",
         // behaviorsHeading と adviceHeading は省略可能

@@ -1,5 +1,3 @@
-import type { TrustLevel } from "@/lib/trust-levels";
-
 export type CheatsheetCategory = "developer" | "writing" | "devops";
 
 export interface CheatsheetSection {
@@ -22,8 +20,6 @@ export interface CheatsheetMeta {
   publishedAt: string;
   /** ISO 8601 date-time with timezone. Set when main content is updated. */
   updatedAt?: string;
-  /** Content trust level */
-  trustLevel: TrustLevel;
 
   /** 一行価値テキスト: 「誰が・何を・どう解決するか」（40字以内推奨） */
   valueProposition?: string;

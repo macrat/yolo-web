@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
-import TrustLevelBadge from "@/components/common/TrustLevelBadge";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
-import { STATIC_PAGE_TRUST_LEVELS } from "@/lib/trust-levels";
 import DashboardClient from "./_components/DashboardClient";
 import styles from "./page.module.css";
 
@@ -33,7 +31,6 @@ export default function AchievementsPage() {
   return (
     <div className={styles.main}>
       <h1 className={styles.title}>{PAGE_TITLE}</h1>
-      <TrustLevelBadge level={STATIC_PAGE_TRUST_LEVELS["/achievements"]} />
       <DashboardClient />
     </div>
   );

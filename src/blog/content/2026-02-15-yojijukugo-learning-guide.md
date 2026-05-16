@@ -4,7 +4,6 @@ slug: "yojijukugo-learning-guide"
 description: "四字熟語を効率的に覚える方法を、意味の理解・由来の背景・カテゴリ分類・ゲーム活用の4つのアプローチで解説。日常で使える四字熟語の例とともに、楽しく学べるコツを紹介します。"
 published_at: "2026-02-15T16:47:21+09:00"
 updated_at: "2026-03-15T16:37:45+09:00"
-trust_level: "generated"
 tags: ["四字熟語", "日本語", "漢字", "ゲーム"]
 category: "japanese-culture"
 series: "japanese-culture"

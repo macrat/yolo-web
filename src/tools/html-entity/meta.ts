@@ -19,7 +19,6 @@ export const meta: ToolMeta = {
   publishedAt: "2026-02-14T07:34:27+09:00",
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
-  trustLevel: "verified",
   howItWorks:
     "エスケープモードでは &・<・>・\"・' の5文字をHTMLエンティティ（&amp;・&lt;・&gt;・&quot;・&#39;）に変換します。アンエスケープモードでは名前付きエンティティ・10進数参照・16進数参照をすべて元の文字に戻します。変換はブラウザ上で完結します。",
   faq: [

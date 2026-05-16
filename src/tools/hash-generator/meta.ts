@@ -13,7 +13,6 @@ export const meta: ToolMeta = {
   publishedAt: "2026-02-13T19:03:42+09:00",
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
-  trustLevel: "verified",
   howItWorks:
     "ブラウザ標準のWeb Crypto APIを使用して、SHA-1・SHA-256・SHA-384・SHA-512の4種類のハッシュ値を一度に生成します。出力形式は16進数（Hex）とBase64から選択できます。入力テキストはサーバーに送信されず、ブラウザ内でのみ処理されます。",
   faq: [

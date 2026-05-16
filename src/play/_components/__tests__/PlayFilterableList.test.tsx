@@ -76,7 +76,6 @@ function makeContent(
     accentColor: "#000000",
     keywords: [],
     publishedAt,
-    trustLevel: "verified",
     contentType: "quiz",
     category,
   };

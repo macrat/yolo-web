@@ -13,7 +13,6 @@ export const meta: ToolMeta = {
   publishedAt: "2026-02-13T19:03:42+09:00",
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
-  trustLevel: "verified",
   howItWorks:
     "2つのテキストを差分アルゴリズムで比較し、追加箇所を緑色、削除箇所を赤色でハイライト表示します。行単位・単語単位・文字単位の3つの比較モードに対応しており、用途に応じて使い分けられます。すべての処理はブラウザ上で完結し、入力データはサーバーに送信されません。",
   faq: [

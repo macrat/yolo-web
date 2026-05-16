@@ -19,7 +19,6 @@ vi.mock("@/play/recommendation", () => ({
           accentColor: "#ff5733",
           keywords: ["運勢", "占い"],
           publishedAt: "2026-01-01T00:00:00+09:00",
-          trustLevel: "ai-generated",
         },
         {
           slug: "personality-color",
@@ -33,7 +32,6 @@ vi.mock("@/play/recommendation", () => ({
           accentColor: "#33a1ff",
           keywords: ["個性", "色"],
           publishedAt: "2026-01-02T00:00:00+09:00",
-          trustLevel: "verified",
         },
         {
           slug: "puzzle-game",
@@ -46,7 +44,6 @@ vi.mock("@/play/recommendation", () => ({
           accentColor: "#5733ff",
           keywords: ["パズル", "ゲーム"],
           publishedAt: "2026-01-03T00:00:00+09:00",
-          trustLevel: "verified",
         },
       ];
     }

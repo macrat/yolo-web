@@ -8,7 +8,6 @@ tags: ["Next.js", "設計パターン", "リファクタリング"]
 category: "dev-notes"
 series: "nextjs-deep-dive"
 series_order: 2
-trust_level: "generated"
   - "19c9385e4fd"
   - "19c973e884e"
   - "19c9742466d"

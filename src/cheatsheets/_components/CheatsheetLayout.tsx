@@ -2,7 +2,6 @@ import type { CheatsheetMeta } from "@/cheatsheets/types";
 import Breadcrumb from "@/components/common/Breadcrumb";
 import FaqSection from "@/components/common/FaqSection";
 import ShareButtons from "@/components/common/ShareButtons";
-import TrustLevelBadge from "@/components/common/TrustLevelBadge";
 import TableOfContents from "./TableOfContents";
 import RelatedCheatsheets from "./RelatedCheatsheets";
 import styles from "./CheatsheetLayout.module.css";
@@ -33,7 +32,6 @@ export default function CheatsheetLayout({
       />
       <header className={styles.header}>
         <h1 className={styles.title}>{meta.name}</h1>
-        <TrustLevelBadge level={meta.trustLevel} />
         <p className={styles.description}>{meta.description}</p>
         {meta.valueProposition && (
           <p className={styles.valueProposition}>{meta.valueProposition}</p>

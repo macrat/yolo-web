@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Breadcrumb from "@/components/common/Breadcrumb";
-import TrustLevelBadge from "@/components/common/TrustLevelBadge";
 import CategoryNav from "@/dictionary/_components/CategoryNav";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { getAllColors, getColorCategories } from "@/dictionary/_lib/colors";
@@ -59,7 +58,6 @@ export default function ColorsIndexPage() {
           { label: "伝統色辞典" },
         ]}
       />
-      <TrustLevelBadge level="curated" />
       <section className={styles.hero}>
         <h1 className={styles.heroTitle}>日本の伝統色</h1>
         <p className={styles.heroSubtext}>

@@ -20,7 +20,6 @@ export const meta: ToolMeta = {
   publishedAt: "2026-02-21T13:09:06+09:00",
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
-  trustLevel: "curated",
   howItWorks:
     "お礼・お詫び・依頼・お断り・挨拶の5カテゴリ・計12種類のテンプレートを内蔵しています。テンプレートを選択し、宛先・用件などの項目を入力するとメール本文が自動生成されます。生成はブラウザ上で動作し、入力内容はサーバーに送信されません。",
   faq: [

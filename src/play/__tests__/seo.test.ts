@@ -12,7 +12,6 @@ const baseFields = {
   accentColor: "#FF0000",
   keywords: ["テスト", "コンテンツ"],
   publishedAt: "2025-01-01T00:00:00+09:00",
-  trustLevel: "curated" as const,
 } satisfies Omit<PlayContentMeta, "contentType" | "category">;
 
 const gameMeta: PlayContentMeta = {

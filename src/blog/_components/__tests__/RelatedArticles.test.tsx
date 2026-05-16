@@ -16,7 +16,6 @@ function makeMeta(
     related_tool_slugs: [],
     draft: false,
     readingTime: 5,
-    trustLevel: "generated" as const,
     ...overrides,
   };
 }

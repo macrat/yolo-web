@@ -45,9 +45,6 @@ const impossibleAdviceQuiz: QuizDefinition = {
         href: "/play/unexpected-compatibility",
       },
     ],
-    trustLevel: "generated",
-    trustNote:
-      "スコア計算は正確です。質問と結果はAIが創作したユーモアコンテンツです。アドバイスは実行しないでください。",
     faq: [
       {
         question: "アドバイスは本当に実行すべきですか？",

@@ -20,7 +20,6 @@ export const meta: ToolMeta = {
   publishedAt: "2026-02-21T13:09:06+09:00",
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
-  trustLevel: "curated",
   howItWorks:
     "基本動詞・ビジネス頻出・接客サービスの3カテゴリで40件以上の動詞を内蔵しています。キーワード検索やカテゴリフィルターで絞り込み、各動詞の尊敬語・謙譲語・丁寧語を一覧で確認できます。動詞をクリックすると具体的な使用例が展開表示されます。「よくある間違い」タブでは誤用パターンと正しい表現も確認できます。",
   faq: [
