@@ -13,6 +13,8 @@ import AccordionItem from "@/tools/_components/AccordionItem";
 import ResultCopyArea from "@/components/ResultCopyArea";
 import LifecycleSection from "@/tools/_components/LifecycleSection";
 import IdentityHeader from "@/tools/_components/IdentityHeader";
+import TrustSection from "@/tools/_components/TrustSection";
+import ToolInputArea from "@/tools/_components/ToolInputArea";
 import styles from "./page.module.css";
 
 // カラースウォッチの定義
@@ -99,6 +101,8 @@ const TOC_ITEMS = [
   { id: "result-copy-area", label: "13. ResultCopyArea" },
   { id: "lifecycle-section", label: "14. LifecycleSection" },
   { id: "identity-header", label: "15. IdentityHeader" },
+  { id: "trust-section", label: "16. TrustSection" },
+  { id: "tool-input-area", label: "17. ToolInputArea" },
 ];
 
 export default function StorybookContent() {
@@ -759,6 +763,96 @@ export default function StorybookContent() {
             最小構成（name + shortDescription のみ）
           </h3>
           <IdentityHeader name="ツール名" shortDescription="短い説明文" />
+        </Panel>
+      </section>
+
+      {/* === 16. TrustSection === */}
+      <section id="trust-section" className={styles.section}>
+        <h2 className={styles.sectionTitle}>16. TrustSection</h2>
+        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        <Panel as="div">
+          <span className={styles.previewLabel}>Preview: TrustSection</span>
+
+          <h3 className={styles.subsectionTitle} style={{ marginTop: 0 }}>
+            privacy あり（デフォルト）+ howItWorks のみ
+          </h3>
+          <TrustSection howItWorks="ブラウザ内の JavaScript で動詞データを検索します。入力内容は外部サーバーに送信されません。" />
+
+          <h3 className={styles.subsectionTitle}>
+            privacy なし（privacy=false）
+          </h3>
+          <TrustSection
+            privacy={false}
+            howItWorks="ブラウザ内の JavaScript で動詞データを検索します。入力内容は外部サーバーに送信されません。"
+          />
+
+          <h3 className={styles.subsectionTitle}>source あり</h3>
+          <TrustSection
+            howItWorks={
+              "動詞の敬語形は内蔵データ（60件）を元に返します。\n検索はブラウザ内で完結します。"
+            }
+            source="文化庁「敬語の指針」(2007年) に基づく"
+          />
+        </Panel>
+      </section>
+
+      {/* === 17. ToolInputArea === */}
+      <section id="tool-input-area" className={styles.section}>
+        <h2 className={styles.sectionTitle}>17. ToolInputArea</h2>
+        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        <Panel as="div">
+          <span className={styles.previewLabel}>Preview: ToolInputArea</span>
+
+          <h3 className={styles.subsectionTitle} style={{ marginTop: 0 }}>
+            Button のみ
+          </h3>
+          <ToolInputArea>
+            <Button variant="primary">実行</Button>
+          </ToolInputArea>
+
+          <h3 className={styles.subsectionTitle}>Input のみ</h3>
+          <ToolInputArea>
+            <Input
+              placeholder="テキストを入力してください"
+              aria-label="テキスト入力"
+            />
+          </ToolInputArea>
+
+          <h3 className={styles.subsectionTitle}>Button + Input 組み合わせ</h3>
+          <ToolInputArea>
+            <Input
+              placeholder="検索キーワードを入力..."
+              aria-label="検索入力"
+              type="search"
+            />
+            <Button variant="primary">検索</Button>
+            <Button variant="default">クリア</Button>
+          </ToolInputArea>
+
+          <h3 className={styles.subsectionTitle}>
+            Input + ToggleSwitch 組み合わせ
+          </h3>
+          <ToolInputArea>
+            <Input placeholder="フィルタキーワード" aria-label="フィルタ入力" />
+            <ToggleSwitch label="大文字・小文字を区別する" />
+          </ToolInputArea>
+
+          <h3 className={styles.subsectionTitle}>className 追加</h3>
+          <ToolInputArea className="storybook-example">
+            <Input
+              placeholder="className 追加済み"
+              aria-label="className テスト"
+            />
+          </ToolInputArea>
+          <p
+            style={{
+              fontSize: "0.85rem",
+              color: "var(--fg-soft)",
+              marginTop: "0.5rem",
+            }}
+          >
+            className=&quot;storybook-example&quot; を付与（DOM で確認可能）
+          </p>
         </Panel>
       </section>
     </div>
