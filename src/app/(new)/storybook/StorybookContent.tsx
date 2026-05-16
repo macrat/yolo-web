@@ -8,6 +8,11 @@ import Breadcrumb from "@/components/Breadcrumb";
 import ToggleSwitch from "@/components/ToggleSwitch";
 import Pagination from "@/components/Pagination";
 import ShareButtons from "@/components/ShareButtons";
+import PrivacyBadge from "@/components/PrivacyBadge";
+import AccordionItem from "@/components/AccordionItem";
+import ResultCopyArea from "@/components/ResultCopyArea";
+import LifecycleSection from "@/components/LifecycleSection";
+import IdentityHeader from "@/components/IdentityHeader";
 import styles from "./page.module.css";
 
 // カラースウォッチの定義
@@ -89,6 +94,11 @@ const TOC_ITEMS = [
   { id: "toggle-switch", label: "8. ToggleSwitch" },
   { id: "pagination", label: "9. Pagination" },
   { id: "share-buttons", label: "10. ShareButtons" },
+  { id: "privacy-badge", label: "11. PrivacyBadge" },
+  { id: "accordion-item", label: "12. AccordionItem" },
+  { id: "result-copy-area", label: "13. ResultCopyArea" },
+  { id: "lifecycle-section", label: "14. LifecycleSection" },
+  { id: "identity-header", label: "15. IdentityHeader" },
 ];
 
 export default function StorybookContent() {
@@ -594,6 +604,163 @@ export default function StorybookContent() {
             title="サンプル記事 | yolos.net"
             sns={["copy"]}
           />
+        </Panel>
+      </section>
+
+      {/* === 11. PrivacyBadge === */}
+      <section id="privacy-badge" className={styles.section}>
+        <h2 className={styles.sectionTitle}>11. PrivacyBadge</h2>
+        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        <Panel as="div">
+          <span className={styles.previewLabel}>Preview: PrivacyBadge</span>
+
+          <h3 className={styles.subsectionTitle} style={{ marginTop: 0 }}>
+            デフォルト（props なし）
+          </h3>
+          <PrivacyBadge />
+
+          <h3 className={styles.subsectionTitle}>className 追加</h3>
+          <PrivacyBadge className="storybook-example" />
+          <p
+            style={{
+              fontSize: "0.85rem",
+              color: "var(--fg-soft)",
+              marginTop: "0.5rem",
+            }}
+          >
+            className=&quot;storybook-example&quot; を付与（DOM で確認可能）
+          </p>
+        </Panel>
+      </section>
+
+      {/* === 12. AccordionItem === */}
+      <section id="accordion-item" className={styles.section}>
+        <h2 className={styles.sectionTitle}>12. AccordionItem</h2>
+        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        <Panel as="div">
+          <span className={styles.previewLabel}>Preview: AccordionItem</span>
+
+          <h3 className={styles.subsectionTitle} style={{ marginTop: 0 }}>
+            デフォルト閉（defaultOpen なし）
+          </h3>
+          <AccordionItem title="デフォルト閉のアコーディオン">
+            <p>
+              クリックまたはキーボード（Space / Enter）で開閉できます。
+              初期状態は閉じています。
+            </p>
+          </AccordionItem>
+
+          <h3 className={styles.subsectionTitle}>
+            デフォルト開（defaultOpen=true）
+          </h3>
+          <AccordionItem title="デフォルト開のアコーディオン" defaultOpen>
+            <p>
+              このアコーディオンは初期状態で開いています。
+              クリックまたはキーボード（Space / Enter）で閉じることができます。
+            </p>
+          </AccordionItem>
+
+          <h3 className={styles.subsectionTitle}>長い children</h3>
+          <AccordionItem title="長い内容のアコーディオン">
+            <p>
+              このアコーディオンには長い内容が含まれています。
+              スクロールが必要になるほど長い内容でも正しく表示できます。
+            </p>
+            <p>
+              アクセシビリティ: aria-expanded / aria-controls / aria-labelledby
+              を使って支援技術と正しく連携します。
+            </p>
+            <p>
+              キーボード操作: button 要素のネイティブ動作により、Space キーと
+              Enter キーで開閉できます。Tab キーでフォーカスを移動できます。
+            </p>
+            <ul>
+              <li>リストアイテム 1</li>
+              <li>リストアイテム 2</li>
+              <li>リストアイテム 3</li>
+            </ul>
+          </AccordionItem>
+
+          <h3 className={styles.subsectionTitle}>複数並べた場合</h3>
+          <AccordionItem title="項目 A">
+            <p>項目 A の内容。各 AccordionItem は独立して開閉できます。</p>
+          </AccordionItem>
+          <AccordionItem title="項目 B" defaultOpen>
+            <p>項目 B の内容（初期状態: 開）。</p>
+          </AccordionItem>
+          <AccordionItem title="項目 C">
+            <p>項目 C の内容。</p>
+          </AccordionItem>
+        </Panel>
+      </section>
+
+      {/* === 13. ResultCopyArea === */}
+      <section id="result-copy-area" className={styles.section}>
+        <h2 className={styles.sectionTitle}>13. ResultCopyArea</h2>
+        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        <Panel as="div">
+          <span className={styles.previewLabel}>Preview: ResultCopyArea</span>
+
+          <h3 className={styles.subsectionTitle} style={{ marginTop: 0 }}>
+            短い value（デフォルトラベル）
+          </h3>
+          <ResultCopyArea value="Hello, World!" />
+
+          <h3 className={styles.subsectionTitle}>
+            長い value（label カスタム）
+          </h3>
+          <ResultCopyArea
+            value="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+            label="クリップボードにコピー"
+          />
+        </Panel>
+      </section>
+
+      {/* === 14. LifecycleSection === */}
+      <section id="lifecycle-section" className={styles.section}>
+        <h2 className={styles.sectionTitle}>14. LifecycleSection</h2>
+        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        <Panel as="div">
+          <span className={styles.previewLabel}>Preview: LifecycleSection</span>
+
+          <h3 className={styles.subsectionTitle} style={{ marginTop: 0 }}>
+            公開日のみ
+          </h3>
+          <LifecycleSection publishedAt="2026-05-16" />
+
+          <h3 className={styles.subsectionTitle}>公開日 + 更新日</h3>
+          <LifecycleSection publishedAt="2026-01-01" updatedAt="2026-05-16" />
+        </Panel>
+      </section>
+
+      {/* === 15. IdentityHeader === */}
+      <section id="identity-header" className={styles.section}>
+        <h2 className={styles.sectionTitle}>15. IdentityHeader</h2>
+        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        <Panel as="div">
+          <span className={styles.previewLabel}>Preview: IdentityHeader</span>
+
+          <h3 className={styles.subsectionTitle} style={{ marginTop: 0 }}>
+            短い name / 短い shortDescription / category あり
+          </h3>
+          <IdentityHeader
+            name="文字カウンター"
+            shortDescription="テキストの文字数を数えるツール"
+            category="テキスト"
+          />
+
+          <h3 className={styles.subsectionTitle}>
+            長い shortDescription / category なし
+          </h3>
+          <IdentityHeader
+            name="敬語リファレンス"
+            shortDescription="動詞の敬語（尊敬語・謙譲語・丁寧語）をブラウザ内だけで素早く調べられるツールです。60件の動詞を内蔵しており、ネットワーク接続なしで使えます。"
+          />
+
+          <h3 className={styles.subsectionTitle}>
+            最小構成（name + shortDescription のみ）
+          </h3>
+          <IdentityHeader name="ツール名" shortDescription="短い説明文" />
         </Panel>
       </section>
     </div>

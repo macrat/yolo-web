@@ -1,0 +1,23 @@
+/* PrivacyBadge — ブラウザ内完結を示すバッジ。
+ *
+ * DESIGN.md §2: -soft バリアントを背景に、同系統 -strong をボーダーに使用。
+ * DESIGN.md §4: 角丸は --r-normal、影なし。
+ */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  margin: 0;
+  padding: 0.35em 0.75em;
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-strong);
+  border-radius: var(--r-normal);
+  color: var(--fg-soft);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.icon {
+  flex-shrink: 0;
+  color: var(--accent);
+}
