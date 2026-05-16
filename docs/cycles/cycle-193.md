@@ -39,6 +39,191 @@ completed_at: null
 - **Owner は監督役、PM は実行責任者**。CLAUDE.md「The owner do not make any decisions」を遵守し、PM が判断 / Owner が監督 の役割分担を崩さない。Owner に「停止か続行か」を問うのは越権かつ役割違反。
 - **失敗の予兆を察知したらサイクルドキュメントに事故報告として即時記録**（運用R6 構造的歯止め）。今回 Owner 指摘で気付いたが、本来 PM が cycle-execution スキルを再 Read した時点で気付くべきだった。
 
+## 事故報告 2（T-B フェーズ A/B の 2 つの設計上の重大な瑕疵）
+
+> 2026-05-17、T-B フェーズ A 完了 + フェーズ B 着手後に Owner 指摘で 2 件の設計上の重大な瑕疵が判明。計画書 / 設計書改訂を運用R7 で先に行う必要があるため、進行中の builder（TrustSection / ToolInputArea）を中断して本事故報告を記録する。
+
+### 違反したルール / 設計（6 件、Owner 追加指摘で全件再点検）
+
+Owner 追加指摘「他に場当たり的な対応やハックはしていませんか？」を受けて、これまでの実装 / 設計判断を全件再点検した結果、**確認済 2 件 + 追加 4 件 = 計 6 件のハック / 場当たり対応** を発見した。
+
+| #   | 内容                                                              | 重大度 | 違反したルール                         |
+| --- | ----------------------------------------------------------------- | ------ | -------------------------------------- |
+| 1   | ToolInputArea wrapper で 44px 達成（Button/Input 本体未修正）     | 重大   | AP-I02 / Decision Making Principle     |
+| 2   | ツール詳細ページ専用を `src/components/` 配置（サイト共通と混在） | 重大   | feature-based directory structure 違反 |
+| 3   | trustLevel 本サイクル限定 optional 化（全 34 件一括撤去回避）     | 重大   | AP-I02 / Decision Making Principle     |
+| 4   | registry.test.ts / types.test.ts 検査を「undefined 許容」に弱化   | 重大   | ハック 3 の派生問題、既存契約弱化      |
+| 5   | ResultCopyArea で Button size="small" 採用 = 44px 未達            | 重要   | AP-I02 / ハック 1 と同種               |
+| 6   | useToolStorage の旧 key 値「放置」（removeItem しない）           | 軽微   | 運用R10 第 2 項近接、後送りハック気味  |
+
+#### 違反 1: AP-I02「根本原因を特定して解決しているか」違反 + Decision Making Principle 違反 = ハック的対応
+
+**該当**: cycle-193.md 案 10-D（ToolInputArea wrapper で 44px 達成、Button/Input 本体改修は B-386 独立サイクル送り）。設計書 §10 / §3 #8 にも継承。
+
+**問題**:
+
+- Button (~41px) / Input が 44px 未達なのは backlog B-386 で明示済の **既知の課題**（cycle-181 でツール一覧の filterButton と searchInput で個別 min-height 上書きを行ったが、これは AP-I02 抵触と backlog B-386 Notes 自身が指摘済）
+- 案 10-D「ToolInputArea wrapper で 44px 達成」はこの **Button/Input 本体の問題を親で吸収する設計** であり、cycle-181 の filterButton 個別上書きと同型の **場当たり的対応**
+- AP-I02 原文「根本原因を特定して解決しているか？」に直接違反。根本原因 = Button/Input 本体の min-height 未達。それを「ToolInputArea wrapper でラップして吸収」する設計は根本対処ではない
+- 計画 r1-r5 + 設計書 r1-r3 で reviewer は「wrapper パターン化 = AP-I02 非該当（個別ハードコードではなくパターン化）」と判定していたが、Owner 指摘により再評価すると **「パターン化 = AP-I02 非該当」という reviewer 判定そのものが誤り**だった。AP-I02 の本質は「根本原因の特定と解決」であり、パターン化されていようとも「子コンポーネントの本体問題を親で吸収する」のは AP-I02 違反
+- **Decision Making Principle 違反**: CLAUDE.md L9「実装コスト（時間・ファイル数・変更の複雑さ）は、劣った UX を選ぶ理由になってはならない。より良い UX オプションが達成可能なら、それを選ばなければならない」。B-386 を「独立サイクル送り」にしたのは「本サイクルのスコープを膨らませない」= 実装コスト削減を理由とした判断であり、Decision Making Principle 違反。Button/Input 本体改修は技術的に達成可能であり、それが「より良い UX オプション」
+
+#### 違反 2: ディレクトリ構造のベストプラクティス違反
+
+**該当**: 設計書 §3 全モジュール、フェーズ A 6 個の commit 済成果物（`src/components/{AccordionItem,IdentityHeader,LifecycleSection,PrivacyBadge,ResultCopyArea}/`）、進行中の TrustSection / ToolInputArea / 将来の ToolDetailLayout。
+
+**問題**:
+
+- yolos.net の既存ディレクトリ構造（実体確認結果）:
+  - **サイト全体共通**: `src/components/` 配下（Panel / Button / Input / ToggleSwitch / Footer / Header / Pagination / Breadcrumb / ShareButtons / ThemeProvider / ThemeToggle / etc）
+  - **ツール詳細ページ専用**: `src/tools/_components/` 配下（ToolLayout / RelatedTools / ToolCard / ToolsFilterableList / ToolsGrid / etc）
+  - **遊び専用**: `src/play/_components/` 配下
+  - **ブログ専用**: `src/blog/_components/` 配下
+  - **辞典専用**: `src/dictionary/_components/` 配下
+  - **チートシート専用**: `src/cheatsheets/_components/` 配下
+- 本サイクル新版共通モジュール 9 個のうち、以下は **ツール詳細ページ専用**:
+  - ToolDetailLayout（詳細ページの主体ラッパー）
+  - IdentityHeader（ツール名 / 説明 / カテゴリの簡潔ヘッダー）
+  - TrustSection（ブラウザ内完結 + howItWorks + source）
+  - LifecycleSection（公開日 / 更新日、ToolDetailLayout 内のみで使う）
+  - ToolInputArea（ツール入力欄ラッパー）
+- これらを `src/components/` 配下に配置するのは、**サイト全体共通コンポーネントとツール詳細ページ専用コンポーネントの混在** = 一般的な Web 開発のベストプラクティス（feature-based directory structure）違反
+- 結果として後続 builder / 後続サイクル PM が「Button / Panel と同じディレクトリにあるからサイト全体共通」と誤読するリスク
+- 一方、以下は汎用コンポーネント（複数 feature で再利用可能）として `src/components/` に残せる:
+  - PrivacyBadge（プライバシー表記は他の feature でも使える可能性）
+  - AccordionItem（アコーディオン UI は FAQ 等で横断的）
+  - ResultCopyArea（コピー可能領域は他のツール / 遊びでも使える）
+- useToolStorage（Hook）はツール専用の命名規約（`yolos-tool-<slug>-<purpose>`）を持つため、`src/tools/_hooks/` 配下が適切（または命名規約を汎用化して `src/lib/` に残す判断）
+
+#### 違反 3: trustLevel 本サイクル限定 optional 化（案 16-A）= AP-I02 / Decision Making Principle 違反
+
+**該当**: cycle-193.md 案 16-A（本サイクル限定で `ToolMeta.trustLevel` / `Tileable.trustLevel` を optional 化、keigo-reference の meta.ts 1 件のみフィールド削除、残 33 件は後続 Phase 7 で個別削除、最終 Phase 10.2 = B-337 で型自体撤去）。設計書 §11 にも継承。
+
+**問題**:
+
+- cycle-180 L701 で確定したのは「TrustLevelBadge + meta.ts trustLevel を独立 B-367 サイクルにせず、Phase 4-8 各移行サイクルで『ついで』作業」。**型の取り扱いは cycle-180 では未確定** であり、本サイクル PM が「optional 化を本サイクル限定で行い、撤去は Phase 10.2 送り」というハック的な暫定型を独自導入
+- 全 34 件の meta.ts のうち keigo-reference 1 件だけ trustLevel を消し、残 33 件は値を持ったまま、型は optional 化された暫定形のまま継続 = **AP-I02「個別ケースのハードコードで問題を回避」と同型**（個別ケース = keigo-reference のみ、その他は値残置）
+- cycle-180 が「Phase 4-8 で『ついで』削除」と決めたなら、本サイクルでは「全 34 件一括撤去 + 型撤去」が cycle-180 方針と Decision Making Principle に最も整合する選択肢。それを「本サイクル限定 optional 化 + 個別削除を 33 サイクル繰り返す」設計にしたのは「本サイクルのスコープ純化」= 実装コスト削減の発想
+
+**根本対応**: 本サイクルで全 34 件の meta.ts から trustLevel フィールドを一括削除 + 型自体を `ToolMeta` / `Tileable` から撤去 + `toTileable()` adapter から trustLevel 関連コードを削除 + `TrustLevelBadge` コンポーネント本体も削除（B-337 を本サイクルで根本対応）。
+
+#### 違反 4: 既存テスト検査の「undefined 許容」弱化（案 16-A (g)）= 違反 3 の派生問題
+
+**該当**: cycle-193.md 案 16-A 実装手順 (g)（`src/lib/toolbox/__tests__/types.test.ts` L151-152 + `registry.test.ts` L40-41 の `toBeTruthy()` を「meta が trustLevel を持つ場合のみ truthy 検査」に書き換え）。設計書 §11 にも継承。
+
+**問題**:
+
+- 本来「全 tools の trustLevel が truthy」を assertion していたテストを「条件分岐で undefined を許容する」形に弱化
+- これは既存テストの責務（= 既存契約「全 tools は trustLevel を持つ」）を **「本サイクル削除した keigo-reference のみ undefined を許容する」と限定的に緩める** 方向の修正
+- 違反 3（trustLevel 本サイクル限定 optional 化）を根本対応すれば、本テストは「全件 undefined」が前提となり、検査自体を削除できる（または別の責務「trustLevel フィールドが存在しないこと」に置き換え）
+
+**根本対応**: 違反 3 の根本対応（全 34 件一括撤去）と連動。テストは「trustLevel への参照がないこと」「TrustLevelBadge のレンダリングがないこと」を検証する形に書き換え。
+
+#### 違反 5: ResultCopyArea で Button size="small" 採用 = 44px 未達 = 違反 1 と同種ハック
+
+**該当**: `src/components/ResultCopyArea/index.tsx`（フェーズ A 既 commit 成果物、Button を `size="small"` で使用）。reviewer も r1 重要-1 で「ResultCopyArea が ToolInputArea 配下に置かれない場合は 44px 不達成リスク」と指摘済（PM 申し送り推奨で T-C / T-E にエスカレーションする方針だった = ハック対応扱い）。
+
+**問題**:
+
+- Button `size="small"` は高さ ~30px 程度で、WCAG 2.5.5 タップターゲット 44px / Apple HIG 44pt を満たさない
+- ResultCopyArea が ToolInputArea 配下に置かれる場合は wrapper で 44px が確保される（違反 1 の wrapper パターン）が、**ResultCopyArea は詳細ページの結果表示等、ToolInputArea 外でも使われる想定**
+- 違反 1 の根本対応（Button / Input 本体 min-height 44px）が実現すれば、Button `size="default"` で 44px を満たすため、`size="small"` を使うか否かに関わらず本サイクルの 44px 要件を満たせる
+- 現状の「ResultCopyArea で `size="small"` 採用 + 44px は呼び出し側責任」設計は、子コンポーネント（Button）のサイズ不足を **呼び出し側で吸収** する違反 1 と同型のハック
+
+**根本対応**: 違反 1 の根本対応（Button 本体 min-height 44px）と連動。ResultCopyArea のコピーボタンは `size="default"`（44px 達成）または `size="small"`（Button 本体 min-height 44px で 44px 達成）のどちらでも 44px を満たすため、本コンポーネント単独での個別対処は不要。
+
+#### 違反 6: useToolStorage の旧 key 値「放置」（軽微、運用R10 第 2 項近接ハック）
+
+**該当**: 設計書 §3 #9 (ii)（key が変更された場合、旧 key の値は `localStorage.removeItem` で削除せず **放置**、容量問題は将来別途対処）。
+
+**問題**:
+
+- 「将来別途対処」= 後送り判断は、運用R10 第 2 項「『来訪者影響顕在化の有無』を単独軸とする後送り運用」に近接
+- 軽微レベル（key 変更頻度が低いため、localStorage 容量圧迫は実害ゼロに近い）だが、Hook 実装の **責任範囲を将来曖昧化させる** 設計判断であることは事実
+- AP-WF15 4 軸での後送り判定（来訪者影響 / 当該サイクル目的範囲 / 本格対応規模 / 暫定対応長期化への歯止め策）を発火させていない
+
+**根本対応**: 以下のいずれか:
+
+- (a) `removeItem` を呼ぶ実装に変更し、旧 key 値を積極的に削除
+- (b) 「放置」設計を維持しつつ、独立 B-XXX 起票で「容量圧迫検知時の対処方針確定」を後続サイクルに送る（AP-WF15 4 軸での後送り判断を明文化）
+
+軽微レベルのため (b) でも許容。本サイクル r6 改訂時にどちらを採るか確定。
+
+### 違反していなかったルール（参考、構造的歯止めの限界）
+
+- 計画 r1-r5 + 設計書 r1-r3 + 各タスクレビュー r1-r2 でいずれも 3 reviewer 並列レビュー（致命的・重要・軽微 0 件まで反復）を実施したが、上記 2 件の重大な瑕疵は **すべての reviewer が見逃した**。これは「reviewer 体制の網羅性」自体に構造的限界があることを示唆する
+- 特に違反 1 は、案 10 / 案 10-D の評価軸として「wrapper パターン化 = AP-I02 非該当」を r4 で AP reviewer が肯定的に評価していた経緯がある（cycle-193.md C/I 対応表参照）
+- 違反 2 は、設計書 §3 で「すべてのモジュールは `src/components/Panel` を内部使用するか Panel 内に収まる前提で設計する」と書いていたが、配置先ディレクトリの妥当性は誰も評価していなかった
+
+### 根本原因
+
+- 計画 / 設計フェーズで「既存ディレクトリ構造の実体確認」を運用R8 で発火させなかった。`ls src/tools/_components/` / `ls src/play/_components/` 等の実体確認をしていれば、配置先の不整合に計画段階で気付けた
+- AP-I02 解釈の reviewer 共通誤認: 「個別ハードコードではなくパターン化されていれば AP-I02 非該当」という解釈が 3 reviewer 全員で共有されていたが、AP-I02 の本質「根本原因の特定と解決」を見落としていた
+- B-386 / B-388 / B-393 を「本サイクル外、独立サイクル送り」にしたのは Decision Making Principle と整合させた「より良い UX オプション」の検討が不足。Button/Input 本体改修は技術的に達成可能であり、本サイクル内で対処すべきだった
+
+### 是正措置（6 件の違反すべての根本対応）
+
+1. **本事故報告をサイクルドキュメントに記録**（本セクション）
+2. **進行中 builder（TrustSection / ToolInputArea）を中断**（送付済、未 commit ファイルは削除済）
+3. **計画書 cycle-193.md を r6 として改訂**（運用R7 = 計画書改訂を実装より先に）:
+   - **違反 1 への対処**: 案 10 を「Button / Input 本体に min-height 44px を直接追加（B-386 を本サイクルで根本対応）」に変更。ToolInputArea の wrapper 44px 達成パターンを撤回。Decision Making Principle 適合
+   - **違反 2 への対処**: 9 個の新版モジュールの配置先を「**サイト全体共通（`src/components/`）/ ツール詳細ページ専用（`src/tools/_components/`）**」に分割:
+     - `src/components/` 残置: PrivacyBadge / AccordionItem / ResultCopyArea（汎用、他 feature でも再利用可能）
+     - `src/tools/_components/` 移動: IdentityHeader / TrustSection / LifecycleSection / ToolInputArea / ToolDetailLayout（ツール詳細ページ専用）
+     - useToolStorage の配置は計画書改訂時に確定（`src/tools/_hooks/` 移動 or 命名規約汎用化）
+   - **違反 3 への対処**: 案 16-A 「本サイクル限定 optional 化」を撤回し「**全 34 件一括撤去 + 型撤去 + TrustLevelBadge コンポーネント本体削除（B-337 を本サイクルで根本対応）**」に変更。cycle-180 L701 方針（Phase 4-8 各サイクルで「ついで」削除）と Decision Making Principle に整合
+   - **違反 4 への対処**: 違反 3 の根本対応に連動。`types.test.ts` L151-152 + `registry.test.ts` L40-41 の trustLevel 関連 assertion は **完全削除**（型自体が消えるため）。「trustLevel への参照がないこと」を別のテストで担保
+   - **違反 5 への対処**: 違反 1 の根本対応（Button 本体 44px）と連動。ResultCopyArea の `Button size="small"` は維持可能（Button 本体 min-height 44px で `size="small"` でも 44px 達成）。もし `size="small"` で min-height が逸脱するなら ResultCopyArea を `size="default"` に変更
+   - **違反 6 への対処**: useToolStorage の旧 key 値クリア挙動を確定:
+     - **(a) `removeItem` を呼ぶ実装に変更**（容量圧迫対策の根本対応）、または
+     - **(b) AP-WF15 4 軸明示の上で「容量圧迫検知時の対処方針確定」を独立 B-XXX 起票**
+     - 案 17（新規）として r6 改訂時に 2 案ゼロベース比較で確定
+4. **設計書 docs/tile-and-detail-design.md を r4 として改訂**（計画書改訂後に従う）:
+   - §3 各モジュールの配置先パス更新
+   - §10 タップターゲット 44px 達成方法を「Button / Input 本体直接修正」に変更
+   - §11 trustLevel 全 34 件一括撤去 + 型撤去 + TrustLevelBadge 本体削除の手順に書き換え
+   - §14 R15-R17 / R20-R25 を更新
+5. **フェーズ A の既 commit 成果物のディレクトリ移動**:
+   - `src/components/IdentityHeader/` → `src/tools/_components/IdentityHeader/`
+   - `src/components/LifecycleSection/` → `src/tools/_components/LifecycleSection/`
+   - 移動に伴う import パス更新（`/storybook` 等）
+6. **Button / Input の本体改修**（B-386 を本サイクルで根本対応、違反 1 + 5 連動解消）:
+   - `src/components/Button/Button.module.css` に `min-height: 44px` 追加（default / small 両方で 44px を満たすか実機検証）
+   - `src/components/Input/Input.module.css` に `min-height: 44px` 追加
+   - 既存テスト破壊なしを確認
+   - 視覚回帰: 既存 (new) ページ全件（Header / Footer / Pagination / 一覧 / ブログ / etc）で破綻なしを確認
+7. **trustLevel 全件撤去**（B-337 を本サイクルで根本対応、違反 3 + 4 連動解消）:
+   - 全 34 件の `src/tools/*/meta.ts` から `trustLevel` フィールド削除
+   - 全 20 件の play 関連 meta から `trustLevel` フィールド削除（PlayContentMeta / GameMeta / QuizMeta）
+   - `ToolMeta.trustLevel` / `Tileable.trustLevel` / `PlayContentMeta.trustLevel` 等の型フィールドを削除（optional 化ではなく完全撤去）
+   - `toTileable()` adapter から trustLevel 関連コードを削除
+   - `src/components/common/TrustLevelBadge.*` コンポーネント本体を削除
+   - `src/lib/trust-levels.ts` を削除
+   - 関連テスト全件を整理
+   - Dictionary / Cheatsheet 系の trustLevel 参照（DictionaryDetailLayout / CheatsheetLayout）も連動削除（Phase 8 移行対象だが、本サイクルで型システムから消えるため一括対処）
+8. **useToolStorage 旧 key 値クリア対処**（違反 6 解消）: 案 17 で確定した方針に従って実装または独立 B-XXX 起票
+9. **フェーズ B / C 再起動**: TrustSection（trustLevel 完全撤去後の新責務） / ToolInputArea（wrapper 44px パターン撤回） / ToolDetailLayout を `src/tools/_components/` 配下で実装
+10. **backlog 起票整理**:
+    - **B-386 を「cycle-193 で根本対応済」として Done に動かす**
+    - **B-337 を「cycle-193 で根本対応済」として Done に動かす**（Phase 10.2 を待たず本サイクル消化）
+    - **B-388 / B-393**（Header actions slot / Pagination の 44px）が違反 1 の Button/Input 本体改修で自動充足されるか確認、され次第 Done 移動
+11. **r6 改訂後、3 reviewer 並列再レビューを実施**（運用R2「致命的・重要・軽微すべて 0 件まで反復」、新規ハック検出のため特に「Owner 指摘 6 件と同型のハック / 場当たり対応」観点を明示）
+
+### 学び（次サイクル以降に継承する）
+
+- **AP-I02 の解釈を統一**: 「パターン化されていれば AP-I02 非該当」ではなく「根本原因を子コンポーネント本体で解決しているか」が本質的判定軸。親コンポーネントで吸収するのは、たとえ「パターン化」されていても AP-I02 違反（違反 1 / 5 で発火）
+- **計画 / 設計段階で既存ディレクトリ構造を実体確認**（運用R8 適用範囲を拡張）: `ls src/{tools,play,blog,dictionary,cheatsheets}/_components/` 等で feature-based directory structure を確認してから新規モジュール配置先を確定する（違反 2 で発火）
+- **Decision Making Principle の発火**: 「独立サイクル送り」「本サイクル外」「実装コスト削減」と書いた判断は、すべて「より良い UX オプションが達成可能か」「達成可能ならそれを選ぶべき」の観点で再評価する。スコープ純化と Decision Making Principle のトレードオフは、来訪者価値最大化の観点で判定する（違反 1 / 3 で発火）
+- **「本サイクル限定 optional 化 / 暫定型」設計はハック**: 型システムの「本サイクル限定」「最終 Phase 送り」「段階的撤去」設計は AP-I02「個別ケースのハードコードで問題回避」と同型。型変更は本サイクル内で根本対応（全件撤去 + 型撤去）するのが原則（違反 3 / 4 で発火）
+- **既存テストの責務弱化は派生ハック**: 既存契約を弱める方向のテスト書き換えは、根本問題（本件は trustLevel optional 化）が解決すれば本来不要。テスト弱化が必要になった時点で、根本問題の対処方針を再評価すべき（違反 4 で発火）
+- **AP-WF15 4 軸明示の徹底**: 「将来別途対処」「容量圧迫検知時に対処」等の後送り判断は、AP-WF15 の 4 軸（来訪者影響 / 当該サイクル目的範囲 / 本格対応規模 / 暫定対応長期化への歯止め策）で評価し、独立 B-XXX 起票で歯止めをかける（違反 6 で発火）
+- **reviewer 体制の網羅性の限界**: 3 reviewer 並列 r1-r5 反復で 34 件以上の致命的指摘を解消したが、本件 6 件はすべての reviewer が見逃した。reviewer 観点に以下を明示的に組み込む必要がある:
+  - 「既存ディレクトリ構造との整合」（feature-based directory structure）
+  - 「AP-I02 の本質（根本原因解決）= 親コンポーネントで子の問題を吸収していないか」
+  - 「Decision Making Principle = 独立サイクル送りが「より良い UX オプション」より劣る選択になっていないか」
+  - 「型システムの暫定 optional 化 / 段階的撤去は AP-I02 同型」
+- **Owner 指摘の積極的探索**: PM が見逃した瑕疵を Owner が指摘して初めて気付くケースは、reviewer 体制の限界を示す。次サイクル以降は計画 / 実施フェーズで「Owner 視点でハック / 場当たり対応がないか」を能動的に自問する観点を reviewer 指示に組み込む
+
 ### 本サイクルの屋台骨（cycle-179 確定判断を継承する）
 
 cycle-191 / cycle-192 / 前任 planner r1-r2 の最大の構造的誤りは、**cycle-179 で `Phase 2.1 #3` が「(b) 1 対多採用 / (c) 複数バリエーション不採用 / `variantId` 系撤去」と確定済**（cycle-179 B-309-3 #3 / サブ判断 3-a、`docs/cycles/cycle-179.md` L130-186）であることを一度も参照せず、(c) 前提の「3 バリアント / `TileVariant` 4 値 union / `Tile.large-full.tsx` / `tile-loader` への variantId 再導入」を独自に再導入したことにある。これは cycle-176 構造的要因 (2)「投機的拡張の再生産」の同型再生産であり、cycle-179 が明示的に禁じた行為。本サイクルでは以下を屋台骨として採用する:
