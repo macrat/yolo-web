@@ -2,7 +2,7 @@
  * ShareButtons — SNS 共有ボタン群
  * DESIGN.md §5: Button コンポーネントを再利用（variant="default"）
  * DESIGN.md §3: アイコン不要。テキストラベルのみ（シンプルに）
- * WCAG 2.5.5: min-height / min-width: 44px でタップターゲットを確保
+ * WCAG 2.5.5: Button 本体の min-height / min-width: 44px でタップターゲットを達成（cycle-193 案 10-α 根本対応）
  * レスポンシブ: flex-wrap で横並び → 折り返し
  */
 
@@ -16,14 +16,6 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-}
-
-/* WCAG 2.5.5 Target Size (Enhanced): 44×44px のタップ領域を確保する。
- * Button のデフォルトサイズ（padding: 9px 18px / font-size: 14px）は高さ約 37px になるため、
- * ここで min-height / min-width を明示してモバイルでの操作性を保証する。 */
-.buttons > * {
-  min-height: 44px;
-  min-width: 44px;
 }
 
 /* コピー完了メッセージ */

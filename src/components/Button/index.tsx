@@ -7,15 +7,14 @@ import styles from "./Button.module.css";
  * - "default": 標準ボタン。`--bg-soft` 背景。補助的なアクションや通常操作に使う。
  *   ※ 旧 "ghost" バリアントは "default" に統合済み（cycle-171 T4）。
  *      旧 "default"（`--bg` 背景・border あり）は廃止。
+ *
+ * size prop は cycle-193 案 10-Q-P-1 で削除済み。Button は単一サイズで min-height: 44px 達成。
  */
 type ButtonVariant = "primary" | "default";
-type ButtonSize = "default" | "small";
 
 interface ButtonOwnProps {
   /** ボタンの見た目バリアント（デフォルト: "default"） */
   variant?: ButtonVariant;
-  /** ボタンのサイズ（デフォルト: "default"） */
-  size?: ButtonSize;
   /** ボタンに表示する内容 */
   children: React.ReactNode;
 }
@@ -29,12 +28,6 @@ const variantClassMap: Record<ButtonVariant, string> = {
   primary: styles.variantPrimary,
 };
 
-/** size → CSS クラス のマッピング */
-const sizeClassMap: Record<ButtonSize, string | undefined> = {
-  default: undefined, // ベーススタイル (.button) で定義済み
-  small: styles.sizeSmall,
-};
-
 /**
  * Button — クリック操作のボタン。
  *
@@ -43,19 +36,13 @@ const sizeClassMap: Record<ButtonSize, string | undefined> = {
  */
 function Button({
   variant = "default",
-  size = "default",
   children,
   className,
   disabled,
   onClick,
   ...rest
 }: ButtonProps) {
-  const classes = [
-    styles.button,
-    variantClassMap[variant],
-    sizeClassMap[size],
-    className,
-  ]
+  const classes = [styles.button, variantClassMap[variant], className]
     .filter(Boolean)
     .join(" ");
 
@@ -76,9 +63,8 @@ function Button({
       className={classes}
       disabled={disabled}
       onClick={handleClick}
-      /* data 属性でバリアント/サイズを公開し、テストから検証可能にする */
+      /* data 属性でバリアントを公開し、テストから検証可能にする */
       data-variant={variant}
-      data-size={size}
       {...rest}
     >
       {children}

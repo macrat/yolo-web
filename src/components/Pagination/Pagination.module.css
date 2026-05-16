@@ -20,8 +20,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 2.25rem;
-  height: 2.25rem;
+  /* WCAG 2.5.5 / Apple HIG: タップターゲット最小 44×44px（cycle-193 案 10-α 根本対応） */
+  min-width: 44px;
+  min-height: 44px;
   padding: 0 0.5rem;
   border: 1px solid var(--border);
   border-radius: var(--r-interactive);
@@ -74,8 +75,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 2.25rem;
-  height: 2.25rem;
+  /* ページアイテムと高さを揃えて整列を保つ */
+  min-width: 44px;
+  min-height: 44px;
   font-size: 0.875rem;
   color: var(--fg-soft);
   user-select: none;

@@ -9,6 +9,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  /* WCAG 2.5.5 / Apple HIG: タップターゲット最小 44×44px（cycle-193 案 10-α 根本対応） */
+  min-height: 44px;
+  min-width: 44px;
   padding: 9px 18px;
   font-size: 14px;
   font-family: inherit; /* body から system-ui を継承 */
@@ -61,18 +64,6 @@
 .variantPrimary:hover:not(:disabled) {
   background: var(--bg-invert-soft);
   border-color: var(--bg-invert-soft);
-}
-
-/* ================================================================
-   size
-   ================================================================ */
-
-/* default size は .button ベースで定義済み (9px 18px / 14px) */
-
-/* small */
-.sizeSmall {
-  padding: 5px 11px;
-  font-size: 12px;
 }
 
 /* ================================================================

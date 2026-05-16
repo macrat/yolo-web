@@ -19,11 +19,12 @@
   /* インラインブロックで表示 */
   display: inline-flex;
   align-items: center;
-  /* 内部の .track（border 1px 込みで 52×28）と outer box を一致させ、placeholder
-   * 状態（空ボタン）と mounted 後で同サイズに保ち CLS を防ぐ。box-sizing: border-box
-   * 前提（globals.css のグローバルリセットに依存）。 */
+  justify-content: center;
+  /* WCAG 2.5.5 / Apple HIG: タップターゲット最小 44×44px（cycle-193 案 10-α 根本対応）。
+   * 内部の .track（52×28）は中央配置されるため視覚的サイズは変わらず、
+   * タップ領域のみ 44px に拡大する。CLS 防止のため min-width は 52px 以上を維持。 */
   min-width: 52px;
-  min-height: 28px;
+  min-height: 44px;
 }
 
 .toggle:focus-visible {

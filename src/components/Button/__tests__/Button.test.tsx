@@ -37,21 +37,6 @@ describe("Button", () => {
     );
   });
 
-  test("size prop: default は data-size='default' を持つ", () => {
-    render(<Button size="default">default size</Button>);
-    expect(screen.getByRole("button")).toHaveAttribute("data-size", "default");
-  });
-
-  test("size prop: small は data-size='small' を持つ", () => {
-    render(<Button size="small">small</Button>);
-    expect(screen.getByRole("button")).toHaveAttribute("data-size", "small");
-  });
-
-  test("size を省略すると data-size='default' がデフォルト", () => {
-    render(<Button>省略</Button>);
-    expect(screen.getByRole("button")).toHaveAttribute("data-size", "default");
-  });
-
   test("通常時に onClick が発火する", () => {
     const handleClick = vi.fn();
     render(<Button onClick={handleClick}>クリック</Button>);

@@ -71,7 +71,7 @@ function ResultCopyArea({ value, label = "コピー" }: ResultCopyAreaProps) {
     <div className={styles.wrapper}>
       <div className={styles.valueArea}>{value}</div>
       <div className={styles.actions}>
-        <Button variant="default" size="small" onClick={handleCopy}>
+        <Button variant="default" onClick={handleCopy}>
           {label}
         </Button>
         {notice.type !== "none" && (
