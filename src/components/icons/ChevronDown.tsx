@@ -3,9 +3,9 @@ import type { SVGProps } from "react";
 /**
  * ChevronDown — 下向き V 字シェブロン（Lucide 互換、stroke 1.5px）。
  *
- * `<details>/<summary>` の開閉状態を表現するアイコン。`color: currentColor` で
- * 親要素のテキスト色を継承する。開閉時の回転は CSS（`details[open] svg` 等）で
- * 制御する想定なので、回転ロジックはここでは持たない。
+ * アコーディオン等の開閉状態を表現するアイコン。`color: currentColor` で
+ * 親要素のテキスト色を継承する。開閉時の回転は CSS で制御する想定なので、
+ * 回転ロジックはここでは持たない。
  */
 export default function ChevronDown(props: SVGProps<SVGSVGElement>) {
   return (
