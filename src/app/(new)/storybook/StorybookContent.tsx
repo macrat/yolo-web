@@ -9,10 +9,10 @@ import ToggleSwitch from "@/components/ToggleSwitch";
 import Pagination from "@/components/Pagination";
 import ShareButtons from "@/components/ShareButtons";
 import PrivacyBadge from "@/components/PrivacyBadge";
-import AccordionItem from "@/components/AccordionItem";
+import AccordionItem from "@/tools/_components/AccordionItem";
 import ResultCopyArea from "@/components/ResultCopyArea";
-import LifecycleSection from "@/components/LifecycleSection";
-import IdentityHeader from "@/components/IdentityHeader";
+import LifecycleSection from "@/tools/_components/LifecycleSection";
+import IdentityHeader from "@/tools/_components/IdentityHeader";
 import styles from "./page.module.css";
 
 // カラースウォッチの定義

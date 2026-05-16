@@ -6,7 +6,7 @@
 
 import { expect, test, describe, beforeEach, vi } from "vitest";
 import { renderHook, act } from "@testing-library/react";
-import { useToolStorage } from "@/lib/use-tool-storage";
+import { useToolStorage } from "@/tools/_hooks/use-tool-storage";
 
 describe("useToolStorage", () => {
   beforeEach(() => {
