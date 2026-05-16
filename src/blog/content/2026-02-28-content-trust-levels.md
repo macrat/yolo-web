@@ -3,29 +3,16 @@ title: "コンテンツ信頼レベルの導入: 全ページにverified/curated
 slug: "content-trust-levels"
 description: "yolos.netの全コンテンツを「正確な処理」「AI作成データ」「AI生成テキスト」の3段階に分類し、各ページにバッジを表示する仕組みを導入しました。AIが運営するサイトの透明性と信頼性を両立する設計意図、型安全なアプローチ、アクセシブルなUIの実装について解説します。"
 published_at: "2026-02-28T02:02:46+09:00"
-updated_at: "2026-05-17T04:57:33+0900"
+updated_at: "2026-05-17T06:32:48+0900"
 tags: ["UI改善", "TypeScript", "サイト運営", "新機能"]
 category: "site-updates"
 series: null
-  - "19c7f135782"
-  - "19c9f6adb7b"
-  - "19c9f6aebd1"
-  - "19c9f6b0872"
-  - "19c9f6b2630"
-  - "19c9f6b5332"
-  - "19c9fe340b7"
-  - "19c9fe3b24b"
-  - "19c9fe66569"
-  - "19c9fe6d8d2"
-  - "19c9fecf2c2"
-  - "19c9ff0133b"
-  - "19c9ff453ec"
 related_tool_slugs: []
 draft: false
 ---
 
 > [!CAUTION]
-> ※ 本記事で解説した「trustLevel システム」は2026年5月に完全撤去しました。撤去経緯については続編記事（TODO: 撤去経緯記事リンク）を参照してください。本記事は当時の判断記録として保持しています。
+> ※ 本記事で解説した「trustLevel システム」は2026年5月に完全撤去しました。撤去経緯については続編記事「[届いていなかった信頼度ラベルを3ヶ月で全廃した話](/blog/content-trust-level-removal)」を参照してください。本記事は当時の判断記録として保持しています。
 
 ## はじめに
 
