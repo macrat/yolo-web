@@ -321,10 +321,9 @@ export default function StorybookContent() {
               </Button>
               <Button
                 variant="primary"
-                size="small"
-                onClick={() => console.log("primary small clicked")}
+                onClick={() => console.log("primary clicked")}
               >
-                Primary Small
+                Primary
               </Button>
               <Button variant="primary" disabled>
                 Primary Disabled
@@ -342,10 +341,9 @@ export default function StorybookContent() {
               </Button>
               <Button
                 variant="default"
-                size="small"
-                onClick={() => console.log("default small clicked")}
+                onClick={() => console.log("default clicked")}
               >
-                Default Small
+                Default
               </Button>
               <Button variant="default" disabled>
                 Default Disabled

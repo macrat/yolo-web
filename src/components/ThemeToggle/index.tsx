@@ -95,9 +95,9 @@ export default function ThemeToggle() {
   );
 
   // hydration mismatch 回避: mount 前はプレースホルダーを描画して CLS を防ぐ。
-  // .toggle に min-width: 52px; min-height: 28px を設定済みのため、
-  // 内部コンテンツがない空ボタンでも .track と同じサイズが確保される。
-  // hydration 後にスイッチへ切り替わるが、サイズ変化は発生しない。
+  // .toggle に min-width: 52px; min-height: 44px（WCAG 2.5.5 タップターゲット）を
+  // 設定済みのため、内部コンテンツがない空ボタンでも .toggle と同じサイズが
+  // 確保される。hydration 後にスイッチへ切り替わるが、サイズ変化は発生しない。
   if (!mounted) {
     return (
       <button

@@ -146,14 +146,13 @@ describe("ShareButtons", () => {
       expect(status).toHaveAttribute("aria-live", "polite");
     });
 
-    test("WCAG 2.5.5: ボタンは default size（size='small' でない）であること", () => {
-      // size="small" だと padding: 5px 11px / font-size: 12px となりタップ領域が約 26px となる。
-      // min-height: 44px を ShareButtons.module.css に直接付与するため、
-      // size は default（padding: 9px 18px / font-size: 14px）を使う。
+    test("WCAG 2.5.5: ボタンは Button コンポーネントを使用していること", () => {
+      // Button 本体に min-height: 44px が設定されている（cycle-193 案 10-α）。
+      // variant="default" で Button を使用しているため data-variant 属性を確認する。
       render(<ShareButtons url="/blog/test" title="テスト記事" />);
       const buttons = screen.getAllByRole("button");
       for (const btn of buttons) {
-        expect(btn).toHaveAttribute("data-size", "default");
+        expect(btn).toHaveAttribute("data-variant", "default");
       }
     });
   });

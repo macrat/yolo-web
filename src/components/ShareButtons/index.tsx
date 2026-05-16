@@ -36,8 +36,7 @@ function openShareUrl(url: string): void {
  *
  * DESIGN.md §5: Button コンポーネント（variant="default"）を再利用
  * DESIGN.md §3: アイコンは原則として使わない
- * WCAG 2.5.5: タップターゲット 44×44px を確保するため size="default" を使用
- *   （size="small" は padding: 5px 11px ≈ 26px となり WCAG 2.5.5 未達）
+ * WCAG 2.5.5: タップターゲット 44×44px — Button 本体に min-height: 44px が設定されている（cycle-193 案 10-α）
  *
  * 各ボタンは新規タブで開く。aria-label に「（外部サイト・新しいタブで開く）」を付与して
  * アクセシビリティ上の外部遷移を明示する。
