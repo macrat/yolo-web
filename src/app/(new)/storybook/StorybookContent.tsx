@@ -15,6 +15,7 @@ import LifecycleSection from "@/tools/_components/LifecycleSection";
 import IdentityHeader from "@/tools/_components/IdentityHeader";
 import TrustSection from "@/tools/_components/TrustSection";
 import ToolInputArea from "@/tools/_components/ToolInputArea";
+import ToolDetailLayout from "@/tools/_components/ToolDetailLayout";
 import styles from "./page.module.css";
 
 // カラースウォッチの定義
@@ -103,6 +104,7 @@ const TOC_ITEMS = [
   { id: "identity-header", label: "15. IdentityHeader" },
   { id: "trust-section", label: "16. TrustSection" },
   { id: "tool-input-area", label: "17. ToolInputArea" },
+  { id: "tool-detail-layout", label: "18. ToolDetailLayout" },
 ];
 
 export default function StorybookContent() {
@@ -854,6 +856,79 @@ export default function StorybookContent() {
             className=&quot;storybook-example&quot; を付与（DOM で確認可能）
           </p>
         </Panel>
+      </section>
+
+      {/* === 18. ToolDetailLayout === */}
+      <section id="tool-detail-layout" className={styles.section}>
+        <h2 className={styles.sectionTitle}>18. ToolDetailLayout</h2>
+        {/*
+         * DESIGN.md §4: ToolDetailLayout は内部で Panel を 1 枚使用する。
+         * Storybook ではラッパー Panel を省き、ToolDetailLayout 自体を直接表示する。
+         * tile-and-detail-design.md §3 #4: Panel 階層 + 子コンポーネント差し込みのラッパー検証レベル
+         */}
+
+        <h3 className={styles.subsectionTitle} style={{ marginTop: 0 }}>
+          バリアント 1: 基本構成（ToolInputArea + AccordionItem children）
+        </h3>
+        <ToolDetailLayout
+          meta={{
+            slug: "keigo-reference",
+            name: "敬語リファレンス",
+            nameEn: "Keigo Reference",
+            description:
+              "動詞の敬語（尊敬語・謙譲語・丁寧語）をブラウザ内だけで素早く調べられるツール",
+            shortDescription:
+              "動詞の敬語をすぐに調べられるブラウザ内完結ツール",
+            keywords: ["敬語", "尊敬語", "謙譲語", "丁寧語"],
+            category: "text",
+            relatedSlugs: [],
+            publishedAt: "2026-01-15T09:00:00+09:00",
+            updatedAt: "2026-05-01T12:00:00+09:00",
+            howItWorks:
+              "ブラウザ内に内蔵した60件の動詞データを検索します。\n入力内容は外部サーバーに送信されません。",
+          }}
+        >
+          <ToolInputArea>
+            <Input
+              type="search"
+              placeholder="動詞を入力（例: する、いく）"
+              aria-label="動詞検索"
+            />
+            <Button variant="primary">検索</Button>
+          </ToolInputArea>
+          <AccordionItem title="よくある質問: このツールはオフラインで使えますか？">
+            <p>
+              はい。すべての動詞データはブラウザ内に内蔵されており、
+              インターネット接続なしでご利用いただけます。
+            </p>
+          </AccordionItem>
+        </ToolDetailLayout>
+
+        <h3 className={styles.subsectionTitle} style={{ marginTop: "2rem" }}>
+          バリアント 2: updatedAt なし / children なし
+        </h3>
+        <ToolDetailLayout
+          meta={{
+            slug: "char-count",
+            name: "文字カウンター",
+            nameEn: "Character Counter",
+            description: "テキストの文字数・バイト数を数えるツール",
+            shortDescription: "テキストの文字数をすぐに数えられるツール",
+            keywords: ["文字数", "文字カウント"],
+            category: "text",
+            relatedSlugs: [],
+            publishedAt: "2026-03-10T10:00:00+09:00",
+            howItWorks:
+              "入力したテキストの文字数をブラウザ内でリアルタイムに計算します。",
+          }}
+        >
+          <ToolInputArea>
+            <Input
+              placeholder="テキストを入力してください"
+              aria-label="テキスト入力"
+            />
+          </ToolInputArea>
+        </ToolDetailLayout>
       </section>
     </div>
   );
