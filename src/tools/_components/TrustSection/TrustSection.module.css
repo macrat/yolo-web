@@ -1,0 +1,33 @@
+/*
+ * TrustSection — ブラウザ内完結 + 動作原理 + 情報源開示のスタイル。
+ *
+ * DESIGN.md §1: パネルに収まった形で提供される（配置は ToolDetailLayout 側で制御）。
+ * DESIGN.md §2: --fg-soft でサブ情報として目立たせすぎない。
+ * DESIGN.md §3: フォントサイズは 16px 以上を基本。
+ * DESIGN.md §5: PrivacyBadge コンポーネントを内部使用。
+ */
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.privacyBadge {
+  /* PrivacyBadge は section の先頭に表示する。追加スタイルは不要。 */
+}
+
+.howItWorks {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--fg-soft);
+  margin: 0;
+}
+
+.source {
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: var(--fg-softer);
+  margin: 0;
+  /* 情報源は補足情報のため、本文より目立たせない */
+}
