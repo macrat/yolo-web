@@ -1,5 +1,4 @@
 import Breadcrumb from "@/components/common/Breadcrumb";
-import TrustLevelBadge from "@/components/common/TrustLevelBadge";
 import DailyFortuneCard from "@/play/fortune/_components/DailyFortuneCard";
 import RecommendedContent from "@/play/_components/RecommendedContent";
 import { generatePlayMetadata, generatePlayJsonLd } from "@/play/seo";
@@ -25,7 +24,6 @@ export default function DailyFortunePage() {
           { label: fortunePlayContentMeta.title },
         ]}
       />
-      <TrustLevelBadge level="generated" />
       <DailyFortuneCard />
       <RecommendedContent currentSlug="daily" />
     </div>

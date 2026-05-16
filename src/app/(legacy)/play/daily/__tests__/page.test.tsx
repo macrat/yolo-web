@@ -31,7 +31,6 @@ vi.mock("@/play/recommendation", () => ({
       accentColor: "#ff5733",
       keywords: ["漢字", "知識"],
       publishedAt: "2026-01-01T00:00:00+09:00",
-      trustLevel: "verified",
     },
   ],
 }));
@@ -96,13 +95,6 @@ describe("DailyFortunePage (/play/daily)", () => {
     const playLink = within(breadcrumb).getByRole("link", { name: "遊ぶ" });
     expect(homeLink).toHaveAttribute("href", "/");
     expect(playLink).toHaveAttribute("href", "/play");
-  });
-
-  it("renders the TrustLevelBadge", () => {
-    render(<DailyFortunePage />);
-    // TrustLevelBadge with "generated" level renders a badge element
-    const badge = document.querySelector('[class*="badge"]');
-    expect(badge).toBeInTheDocument();
   });
 
   it("renders RecommendedContent navigation for exit links", () => {

@@ -8,7 +8,6 @@ tags: ["ゲーム", "日本語", "新機能"]
 category: "japanese-culture"
 series: "japanese-culture"
 series_order: 5
-trust_level: "generated"
   - "19c988945c5"
   - "19c988c8659"
   - "19c988d4908"

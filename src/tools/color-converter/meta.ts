@@ -19,7 +19,6 @@ export const meta: ToolMeta = {
   publishedAt: "2026-02-14T07:34:58+09:00",
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
-  trustLevel: "verified",
   howItWorks:
     "HEX・RGB・HSLのいずれかの形式でカラーコードを入力すると、他の2形式への変換を即座に計算してブラウザ上に表示します。カラーピッカーからも色を選択できます。3桁のHEX短縮形式（#RGB）は自動的に6桁に展開して変換されます。",
   faq: [

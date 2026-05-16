@@ -25,7 +25,6 @@ export const meta: ToolMeta = {
   publishedAt: "2026-02-14T07:55:06+09:00",
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
-  trustLevel: "verified",
   howItWorks:
     "RFC 4180準拠のCSVパーサーを使用して入力データを解析し、選択した出力形式（CSV・TSV・JSON・Markdown表）に変換します。ダブルクォートで囲まれたフィールドや、フィールド内の改行・カンマも正しく処理されます。最大500,000文字まで対応し、すべての変換はブラウザ上で完結します。",
   faq: [

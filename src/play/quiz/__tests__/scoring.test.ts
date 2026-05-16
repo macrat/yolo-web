@@ -123,7 +123,6 @@ describe("determineResult", () => {
       accentColor: "#000",
       keywords: [],
       publishedAt: "2026-01-01",
-      trustLevel: "generated",
     },
     questions: knowledgeQuestions,
     results: [
@@ -174,7 +173,6 @@ describe("determineResult", () => {
       accentColor: "#000",
       keywords: [],
       publishedAt: "2026-01-01",
-      trustLevel: "generated",
     },
     questions: personalityQuestions,
     results: [

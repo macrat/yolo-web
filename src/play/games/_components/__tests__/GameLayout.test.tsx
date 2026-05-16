@@ -25,7 +25,6 @@ const mockMeta: GameMeta = {
   ogpSubtitle: "テスト",
   publishedAt: "2026-02-13",
   sitemap: { changeFrequency: "daily", priority: 0.8 },
-  trustLevel: "verified",
   seo: {
     title: "テストゲーム",
     description: "テスト用のゲームの説明です。",
@@ -37,7 +36,6 @@ const mockMeta: GameMeta = {
 
 const mockMetaFull: GameMeta = {
   ...mockMeta,
-  trustNote: "テストの信頼レベル注記です。",
   valueProposition: "テスト価値テキスト",
   usageExample: {
     input: "テスト入力",
@@ -81,25 +79,6 @@ test("GameLayout does not render h1 heading (avoids duplicate with GameContainer
     </GameLayout>,
   );
   expect(screen.queryByRole("heading", { level: 1 })).not.toBeInTheDocument();
-});
-
-test("GameLayout renders TrustLevelBadge", () => {
-  render(
-    <GameLayout meta={mockMeta}>
-      <div>Content</div>
-    </GameLayout>,
-  );
-  // TrustLevelBadge renders a summary element with the level label ("正確な処理" for verified)
-  expect(screen.getByText("正確な処理")).toBeInTheDocument();
-});
-
-test("GameLayout renders trust note when provided", () => {
-  render(
-    <GameLayout meta={mockMetaFull}>
-      <div>Content</div>
-    </GameLayout>,
-  );
-  expect(screen.getByText("テストの信頼レベル注記です。")).toBeInTheDocument();
 });
 
 test("GameLayout renders valueProposition when provided", () => {

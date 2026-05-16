@@ -39,9 +39,6 @@ const yojiPersonalityQuiz: QuizDefinition = {
       { label: "四字熟語辞典で詳しく見る", href: "/dictionary/yoji" },
       { label: "四字キメルで遊ぶ", href: "/play/yoji-kimeru" },
     ],
-    trustLevel: "generated",
-    trustNote:
-      "スコア計算は正確です。質問と結果はAIが創作しました。楽しみとしてお楽しみください。",
     seoTitle: "あなたを四字熟語に例えると? 無料・心理テスト | 四字熟語性格診断",
     faq: [
       {

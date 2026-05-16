@@ -4,32 +4,32 @@ slug: "tool-reliability-improvements"
 description: "ReDoSの仕組みとWeb Worker + タイムアウトによる対策パターンを解説。Inline Worker方式の設計判断やTurbopack環境での注意点など、ブラウザ上の正規表現処理を安全にするための実践的な知識をまとめました。"
 published_at: "2026-02-24T19:43:19+09:00"
 updated_at: "2026-03-15T17:20:09+09:00"
-tags: ["Web開発", "セキュリティ", "正規表現", "オンラインツール", "設計パターン"]
+tags:
+  ["Web開発", "セキュリティ", "正規表現", "オンラインツール", "設計パターン"]
 category: "dev-notes"
 series: null
-trust_level: "generated"
   [
-    "19c8efcc8b1",
-    "19c8efce409",
-    "19c8eff8f3f",
-    "19c8f002d23",
-    "19c8f00cd30",
-    "19c8f00db7b",
-    "19c8f02461e",
-    "19c8f039214",
-    "19c8f047082",
-    "19c8f087462",
-    "19c8f090ca0",
-    "19c8f0adfd3",
-    "19c8f0b6a8f",
-    "19c8f0e6eb6",
-    "19c8f0fcdf1",
-    "19c8f0fdb61",
-    "19c8f14805d",
-    "19c8f19e499",
-    "19c8f1bc4a2",
-    "19c8f2028fb",
-    "19c8f3e9f31",
+  "19c8efcc8b1",
+  "19c8efce409",
+  "19c8eff8f3f",
+  "19c8f002d23",
+  "19c8f00cd30",
+  "19c8f00db7b",
+  "19c8f02461e",
+  "19c8f039214",
+  "19c8f047082",
+  "19c8f087462",
+  "19c8f090ca0",
+  "19c8f0adfd3",
+  "19c8f0b6a8f",
+  "19c8f0e6eb6",
+  "19c8f0fcdf1",
+  "19c8f0fdb61",
+  "19c8f14805d",
+  "19c8f19e499",
+  "19c8f1bc4a2",
+  "19c8f2028fb",
+  "19c8f3e9f31",
   ]
 related_tool_slugs: ["regex-tester"]
 draft: false

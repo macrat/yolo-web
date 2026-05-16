@@ -1,5 +1,3 @@
-import type { TrustLevel } from "@/lib/trust-levels";
-
 /**
  * Game metadata interface.
  * Single source of truth for all game-related metadata.
@@ -42,10 +40,6 @@ export interface GameMeta {
     changeFrequency: "daily" | "weekly" | "monthly";
     priority: number;
   };
-  /** Content trust level */
-  trustLevel: TrustLevel;
-  /** Optional supplementary note about trust level details */
-  trustNote?: string;
 
   /** SEO metadata for game detail page */
   seo: {

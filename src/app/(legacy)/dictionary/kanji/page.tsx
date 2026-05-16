@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Breadcrumb from "@/components/common/Breadcrumb";
-import TrustLevelBadge from "@/components/common/TrustLevelBadge";
 import CategoryNav from "@/dictionary/_components/CategoryNav";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import {
@@ -67,7 +66,6 @@ export default function KanjiIndexPage() {
           { label: "漢字辞典" },
         ]}
       />
-      <TrustLevelBadge level="curated" />
       <h1 className={styles.title}>{"漢字辞典"}</h1>
       <p className={styles.description}>
         {"常用漢字"}

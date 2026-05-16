@@ -31,7 +31,6 @@ export const meta: CheatsheetMeta = {
     { id: "schema", title: "テーブル定義（DDL）" },
   ],
   publishedAt: "2026-03-02T09:10:04+09:00",
-  trustLevel: "curated",
   valueProposition: "よく使うSQL構文を用途別に整理。書き方をすぐ確認できる",
   usageExample: {
     input: "JOINの書き方を忘れたとき",

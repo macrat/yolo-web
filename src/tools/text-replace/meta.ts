@@ -26,7 +26,6 @@ export const meta: ToolMeta = {
   publishedAt: "2026-02-14T07:35:49+09:00",
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
-  trustLevel: "verified",
   howItWorks:
     "入力テキスト内の検索文字列を置換文字列に一括置換します。正規表現モードではJavaScriptの正規表現エンジンによる高度な置換が可能で、キャプチャグループ参照（$1など）も使用できます。大文字小文字の区別と全件/先頭のみの置換をオプションで切り替えられます。最大10万文字まで対応します。",
   faq: [

@@ -54,9 +54,6 @@ const wordSensePersonalityQuiz: QuizDefinition = {
       { label: "四字熟語性格診断を受ける", href: "/play/yoji-personality" },
       { label: "四字熟語力診断に挑戦", href: "/play/yoji-level" },
     ],
-    trustLevel: "generated",
-    trustNote:
-      "スコア計算は正確です。タイプ分類と診断結果はAIが創作したエンターテインメントです。",
     faq: [
       {
         question: "何問答えると結果が出ますか？",

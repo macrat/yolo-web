@@ -58,7 +58,6 @@ const mockQuiz: QuizDefinition = {
     accentColor: "#ff5733",
     keywords: ["テスト"],
     publishedAt: "2026-01-01T00:00:00+09:00",
-    trustLevel: "generated",
   },
   questions: [],
   results: [],

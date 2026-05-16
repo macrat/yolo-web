@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Breadcrumb from "@/components/common/Breadcrumb";
-import TrustLevelBadge from "@/components/common/TrustLevelBadge";
 import CategoryNav from "@/dictionary/_components/CategoryNav";
 import DictionaryCard from "@/dictionary/_components/DictionaryCard";
 import DictionaryGrid from "@/dictionary/_components/DictionaryGrid";
@@ -74,7 +73,6 @@ export default async function KanjiStrokePage({
           { label: `${count}画の漢字` },
         ]}
       />
-      <TrustLevelBadge level="curated" />
       <h1>
         {count}
         {"画の漢字"}

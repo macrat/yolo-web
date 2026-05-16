@@ -36,10 +36,6 @@ describe("getAllTileables", () => {
         item.publishedAt,
         `${item.contentKind}/${item.slug}: publishedAt`,
       ).toBeTruthy();
-      expect(
-        item.trustLevel,
-        `${item.contentKind}/${item.slug}: trustLevel`,
-      ).toBeTruthy();
     }
   });
 

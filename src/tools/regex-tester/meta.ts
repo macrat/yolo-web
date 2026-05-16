@@ -19,7 +19,6 @@ export const meta: ToolMeta = {
   publishedAt: "2026-02-13T19:03:42+09:00",
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
-  trustLevel: "verified",
   howItWorks:
     "JavaScriptの正規表現エンジンでパターンマッチを実行し、マッチした箇所をリアルタイムにハイライト表示します。g・i・m・sの各フラグに対応し、キャプチャグループ参照（$1など）を使った置換もリアルタイムで確認できます。テスト文字列は最大10,000文字、マッチ結果は最大1,000件まで対応します。",
   faq: [

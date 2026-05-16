@@ -19,7 +19,6 @@ export const meta: ToolMeta = {
   publishedAt: "2026-02-14T13:26:56+09:00",
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
-  trustLevel: "verified",
   howItWorks:
     "画像ファイル（PNG・JPEG・GIF・WebP、最大10MB）を読み込み、FileReader APIでBase64文字列に変換します。HTMLに直接埋め込めるData URI形式も出力します。逆変換ではBase64文字列またはData URIから画像をプレビュー表示してダウンロードできます。すべての処理はブラウザ上で完結します。",
   faq: [

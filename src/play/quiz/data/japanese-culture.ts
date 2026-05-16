@@ -60,9 +60,6 @@ const japaneseCultureQuiz: QuizDefinition = {
         href: "/play/animal-personality",
       },
     ],
-    trustLevel: "generated",
-    trustNote:
-      "スコア計算は正確です。文化タイプと診断結果はAIが創作したエンターテインメントです。実際の文化適性を保証するものではありません。",
     faq: [
       {
         question:

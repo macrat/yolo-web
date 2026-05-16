@@ -8,7 +8,6 @@ tags: ["Next.js", "TypeScript", "設計パターン"]
 category: "dev-notes"
 series: "nextjs-deep-dive"
 series_order: 4
-trust_level: "generated"
   - "19cac98d073"
   - "19cac9d53b9"
   - "19cac9f1a84"

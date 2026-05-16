@@ -51,7 +51,6 @@ function makePost(overrides: Partial<BlogPostMeta> = {}): BlogPostMeta {
     related_tool_slugs: [],
     draft: false,
     readingTime: 3,
-    trustLevel: "generated",
     ...overrides,
   };
 }

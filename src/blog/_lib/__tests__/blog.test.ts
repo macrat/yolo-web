@@ -139,7 +139,6 @@ describe("seriesPostsSortComparator (published_at のみによる昇順ソート
       related_tool_slugs: [],
       draft: false,
       readingTime: 1,
-      trustLevel: "generated",
       ...overrides,
     };
   }

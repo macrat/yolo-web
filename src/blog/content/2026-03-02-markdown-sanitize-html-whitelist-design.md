@@ -7,7 +7,6 @@ updated_at: "2026-03-02T14:32:56+09:00"
 tags: ["Web開発", "TypeScript", "セキュリティ", "設計パターン"]
 category: "dev-notes"
 series: null
-trust_level: "generated"
   - "19cac98d073"
   - "19cac9d53b9"
   - "19cac9f1a84"

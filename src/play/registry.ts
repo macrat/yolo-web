@@ -21,8 +21,6 @@ export function gameMetaToPlayContentMeta(gameMeta: GameMeta): PlayContentMeta {
     keywords: gameMeta.keywords,
     publishedAt: gameMeta.publishedAt,
     updatedAt: gameMeta.updatedAt,
-    trustLevel: gameMeta.trustLevel,
-    trustNote: gameMeta.trustNote,
     contentType: "game",
     category: "game",
   };
@@ -48,8 +46,6 @@ export function quizMetaToPlayContentMeta(quizMeta: QuizMeta): PlayContentMeta {
     keywords: quizMeta.keywords,
     publishedAt: quizMeta.publishedAt,
     updatedAt: quizMeta.updatedAt,
-    trustLevel: quizMeta.trustLevel,
-    trustNote: quizMeta.trustNote,
     contentType: "quiz",
     category: quizMeta.category,
     seoTitle: quizMeta.seoTitle,
@@ -72,7 +68,6 @@ export const fortunePlayContentMeta: PlayContentMeta = {
   accentColor: "#7c3aed",
   keywords: ["運勢", "占い", "デイリー", "ユーモア", "AI"],
   publishedAt: "2026-02-01T00:00:00+09:00",
-  trustLevel: "generated",
   contentType: "fortune",
   category: "fortune",
 };

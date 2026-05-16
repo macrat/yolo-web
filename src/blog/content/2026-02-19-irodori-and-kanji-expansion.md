@@ -4,7 +4,6 @@ slug: "irodori-and-kanji-expansion"
 description: "日本の伝統色250色から出題される色を再現する色彩チャレンジゲーム「イロドリ」をリリース。毎日新しいお題で遊べて、結果をSNSでシェアできます。あわせて漢字辞典を80字に拡充しました。"
 published_at: "2026-02-19T23:37:34+09:00"
 updated_at: "2026-03-13T09:52:24+09:00"
-trust_level: "generated"
 tags: ["ゲーム", "伝統色", "漢字", "新機能"]
 category: "japanese-culture"
 series: "japanese-culture"

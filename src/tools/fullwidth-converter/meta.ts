@@ -27,7 +27,6 @@ export const meta: ToolMeta = {
   publishedAt: "2026-02-14T07:35:44+09:00",
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
-  trustLevel: "verified",
   howItWorks:
     "Unicodeの文字コード変換を使って英数字・カタカナ・記号の全角半角をリアルタイムに変換します。英数字・カタカナ・記号の3種類を個別にオン・オフできるため、必要な文字種だけ変換できます。半角カタカナの濁点・半濁点も正しく結合されます。変換はブラウザ上で完結します。",
   faq: [
