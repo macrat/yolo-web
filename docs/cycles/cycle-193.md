@@ -1,6 +1,6 @@
 ---
 id: 193
-description: 【失敗】B-314（Phase 7 全体統括）第 1 弾 = 基盤再構築のやり直し。cycle-191/192/193 の 3 サイクル連続失敗。スコープ（Phase 7 第 1 弾 = keigo-reference 移行 + Phase 7 基盤モジュール 9 個）は維持のまま、構造的失敗認定としてクローズ。失敗の核心: Phase 9 全体留意違反（実物観察前に基盤 9 個を固定実装）/ cycle-178 B-363-1 縮小経緯の未確認（Phase 2「概念定義 + 型契約のみ」縮小により Phase 7 が構造的過負荷状態だったことを認識しなかった）/ AP-P11 同型発火（cycle-178 縮小判断を「変更不可の制約」として継承）/ Owner 指摘の無批判採用。コード成果物（Button/Input/Breadcrumb 44px 化 / trustLevel 全件撤去 / 基盤 9 個 / 軽量版 Tile / /internal/tiles / keigo-reference (legacy)→(new) 移行）は cycle-191/192 パターンに従い維持。
+description: 【失敗】B-314（Phase 7 全体統括）第 1 弾 = 基盤再構築のやり直し。cycle-191/192/193 の 3 サイクル連続失敗。スコープ（Phase 7 第 1 弾 = keigo-reference 移行 + Phase 7 基盤モジュール 9 個）は維持のまま、構造的失敗認定としてクローズ。失敗の核心: Phase 9 全体留意違反（実物観察前に基盤 9 個を固定実装）/ cycle-178 B-363-1 縮小経緯の未確認（Phase 2「概念定義 + 型契約のみ」縮小により Phase 7 が構造的過負荷状態だったことを認識しなかった）/ AP-P11 同型発火（cycle-178 縮小判断を「変更不可の制約」として継承）/ Owner 指摘の無批判採用。**当初判断 (撤回済): コード成果物を cycle-191/192 パターンで維持。最終判断 (実施済 2026-05-17): failure クローズ push 直後の Owner ご指摘 + Playwright 実機検証で `/tools/keigo-reference` Panel max-width 欠如によるレイアウト破綻が発覚し、cycle-193 失敗時の「コード維持」判断自体が誤りと判明。cycle-190 一般則 (全コード revert + サイクルドキュメントのみ維持) に訂正し、コード成果物すべてを着手前 (`f5ab12fe`) 状態に revert (commit `758bcc39` + `9e13f933`)。PR #87 (ShareButtons リファクタ) と eslint-config-next バンプは cycle-193 期間中に origin/main で並行進行した独立変更のため維持。**
 started_at: 2026-05-16T01:10:45+0900
 completed_at: "2026-05-17T15:27:36+0900"
 ---
@@ -9,7 +9,7 @@ completed_at: "2026-05-17T15:27:36+0900"
 
 > **本サイクルは構造的失敗としてクローズした。**
 >
-> スコープ（Phase 7 第 1 弾 = keigo-reference 移行 + Phase 7 基盤モジュール 9 個）は維持したまま、失敗認定としてクローズする。cycle-191/192 パターンに従い、コード成果物はすべて維持する（revert しない）。
+> スコープ（Phase 7 第 1 弾 = keigo-reference 移行 + Phase 7 基盤モジュール 9 個）は維持したまま、失敗認定としてクローズする。**最終判断 (実施済 2026-05-17): cycle-190 パターンで全コード revert (commit `758bcc39` + `9e13f933`)、サイクルドキュメントのみ振り返り記録として維持**。
 >
 > **失敗の核心（4 点）**:
 >
@@ -27,9 +27,18 @@ completed_at: "2026-05-17T15:27:36+0900"
 >
 > **revert / 維持の方針**:
 >
-> - **維持（cycle-191/192 パターン）**: コード成果物すべて（Button/Input/Breadcrumb 44px 化 / trustLevel 全件撤去 / Phase 7 基盤モジュール 9 個 / 軽量版 Tile / /internal/tiles / keigo-reference (legacy)→(new) 移行）
-> - **撤回済**: 続編ブログ `2026-05-17-content-trust-level-removal.md`（commit `09e09dcc`）
-> - revert しない理由: cycle-190 全 revert パターンと異なり、本サイクル成果物には Button/Input/Breadcrumb 44px 化（B-386 独立価値、全サイト UX 改善）/ trustLevel 撤去（cycle-180 元方針の前倒し）など独立価値があり、全 revert は来訪者損失。
+> - **当初判断 (撤回済 2026-05-17、failure クローズ commit `d072c6f4` 時点)**: cycle-191/192 パターンでコード維持。
+>   - 維持対象 (当時): Button/Input/Breadcrumb 44px 化 / trustLevel 全件撤去 / Phase 7 基盤モジュール 9 個 / 軽量版 Tile / /internal/tiles / keigo-reference (legacy)→(new) 移行
+>   - 当時の理由: cycle-190 全 revert パターンと異なり、本サイクル成果物には Button/Input/Breadcrumb 44px 化（B-386 独立価値、全サイト UX 改善）/ trustLevel 撤去（cycle-180 元方針の前倒し）など独立価値があり、全 revert は来訪者損失 → と判断していた。
+> - **最終判断 (実施済 2026-05-17、後処理 commit `758bcc39` + `9e13f933`)**: cycle-190 パターンで **全コード revert** + サイクルドキュメントのみ維持。
+>   - 訂正契機: failure クローズ push 直後の Owner ご指摘「来訪者価値を毀損していないか」確認に対し PM が網羅 Playwright 検証不備で「問題ない」と回答したが、その後の Playwright 実機検証で `/tools/keigo-reference` の Panel に max-width 設定が欠如しており w1280 / w1900 で画面端まで全幅広がる **レイアウト破綻** が発覚 (Header / Footer の inner DIV は max-width: 1200px で中央寄せされているがツール詳細ページの Panel だけ未対応)。さらに Owner ご指摘で「過去失敗サイクルの一般則 = 全コード revert (cycle-190.md / cycle-192.md 冒頭で確認可能)」を PM が「cycle-191/192 パターン = コード維持」と誤読していたこと (AP-P11 同型 6 回目発火) も判明。
+>   - **撤回対象 (revert 実施)**: Button/Input/Pagination/Breadcrumb (new+legacy 両方)/Header/ThemeToggle の 44px 化 / trustLevel 全件撤去 (TrustLevelBadge コンポーネント + lib/trust-levels.ts + 全 34 ツール + 全 20 遊び + cheatsheets + ブログ 21 件の trustLevel フィールド) / Phase 7 基盤モジュール 9 個 (IdentityHeader/TrustSection/LifecycleSection/ToolInputArea/ToolDetailLayout/AccordionItem/PrivacyBadge/ResultCopyArea/useToolStorage) / 軽量版 Tile / /internal/tiles / keigo-reference (legacy)→(new) 移行 / 続編ブログ / docs/tile-and-detail-design.md / docs/research/ の cycle-193 関連 / backlog.md の cycle-193 関連 Notes
+>   - **維持対象 (revert 対象外)**:
+>     - `docs/cycles/cycle-193.md` 本ファイル (サイクルドキュメント、振り返り記録)
+>     - `src/components/ShareButtons/*` (PR #87 = cycle-193 期間中に origin/main で並行進行した独立変更、commit `89fefab8` / `9dd03896` / `e0dac47a` / `6b5150da`)
+>     - `package.json` / `package-lock.json` の eslint-config-next 16.2.4 → 16.2.6 バンプ (commit `0265c0a6`)
+>   - BASE_REF: `f5ab12fe` (Merge remote-tracking branch 'origin/main')
+> - **学び (次サイクル PM 以降に継承)**: failure 認定時の「コード維持 vs revert」判断は過去サイクル (cycle-190 / cycle-191 / cycle-192) の対処履歴を一次資料で確認してから決める。「cycle-191/192 パターン」のような中間表記を採用前に、実際に cycle-191/192 ではコードが維持されたのか revert されたのかを cycle-192.md 冒頭等で実体確認する。
 
 **※ 呼称統一の注記（r9 軽微-7）**: 計画書全体で **「Phase 7 基盤モジュール 9 個」** を最新呼称として使用。**旧呼称「新版共通モジュール 9 個」は r7 で「Phase 7 基盤モジュール 9 個」に統一**（IR7-7、屋台骨第 7 項分割後に「共通」表現が実態と乖離するため）。事故報告 / 履歴記録セクション内の旧呼称は履歴として残置。
 
