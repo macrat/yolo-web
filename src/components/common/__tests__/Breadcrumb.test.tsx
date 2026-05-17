@@ -61,4 +61,13 @@ describe("Breadcrumb", () => {
     // Last item should not have an "item" property (no href)
     expect(jsonLd.itemListElement[2].item).toBeUndefined();
   });
+
+  test("リンク <a> にクラスが付与されている（44px タップターゲット用スタイル適用確認）", () => {
+    const { container } = render(<Breadcrumb items={items} />);
+    const links = container.querySelectorAll("a");
+    // 全リンク要素がクラスを持つこと（44px min-height等のスタイル適用の前提）
+    links.forEach((link) => {
+      expect(link.className).toBeTruthy();
+    });
+  });
 });
