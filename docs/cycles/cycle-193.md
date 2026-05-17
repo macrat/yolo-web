@@ -1,11 +1,35 @@
 ---
 id: 193
-description: B-314（Phase 7 全体統括）第 1 弾 = 基盤再構築のやり直し。cycle-191/192 の 2 サイクル連続失敗を受け、全コード成果物 revert 後のクリーンな状態から、Phase 7 基盤モジュール 9 個（コンポーネント 8 + Hook 1、r7 で呼称統一） / keigo-reference 用 1 軽量版タイル / keigo-reference 詳細ページの `ToolDetailLayout` ベース (legacy)→(new) 移行を、cycle-179 で確定済の Phase 2.1 #3 判断「(b) 1 対多採用 / (c) 複数バリエーション不採用 / variantId 系撤去」を継承する形で再設計・再実装する。Tile.large-full.tsx / TileVariant 4 値 union / 3 バリアント体系 / large=2×2・medium=2×1・small=1×1 literal サイズ規格 は採用しない。
+description: 【失敗】B-314（Phase 7 全体統括）第 1 弾 = 基盤再構築のやり直し。cycle-191/192/193 の 3 サイクル連続失敗。スコープ（Phase 7 第 1 弾 = keigo-reference 移行 + Phase 7 基盤モジュール 9 個）は維持のまま、構造的失敗認定としてクローズ。失敗の核心: Phase 9 全体留意違反（実物観察前に基盤 9 個を固定実装）/ cycle-178 B-363-1 縮小経緯の未確認（Phase 2「概念定義 + 型契約のみ」縮小により Phase 7 が構造的過負荷状態だったことを認識しなかった）/ AP-P11 同型発火（cycle-178 縮小判断を「変更不可の制約」として継承）/ Owner 指摘の無批判採用。コード成果物（Button/Input/Breadcrumb 44px 化 / trustLevel 全件撤去 / 基盤 9 個 / 軽量版 Tile / /internal/tiles / keigo-reference (legacy)→(new) 移行）は cycle-191/192 パターンに従い維持。
 started_at: 2026-05-16T01:10:45+0900
-completed_at: null
+completed_at: "2026-05-17T14:49:30+0900"
 ---
 
 # サイクル-193
+
+> **本サイクルは構造的失敗としてクローズした。**
+>
+> スコープ（Phase 7 第 1 弾 = keigo-reference 移行 + Phase 7 基盤モジュール 9 個）は維持したまま、失敗認定としてクローズする。cycle-191/192 パターンに従い、コード成果物はすべて維持する（revert しない）。
+>
+> **失敗の核心（4 点）**:
+>
+> **(a) Phase 9 全体留意違反**: `docs/design-migration-plan.md` L218-222「実物観察前にダッシュボード本体の形式を計画書で固定すれば、cycle-175 / 176 / 177 と同型の派生規則化を再生産する蓋然性がある」に対し、本サイクルは Phase 7 第 1 弾で「Phase 7 基盤モジュール 9 個」を実物観察前に固定実装した。
+>
+> **(b) cycle-178 縮小経緯の未確認**: 本サイクル運用R6「過去サイクル PM 判定の継承前に必ず実機検証」リストに `docs/design-migration-plan.md` Phase 2 / 7 / 8.2 / 9 全体留意 は含まれていたが、**cycle-178 B-363-1 commit（`82c7335e`）で Phase 2 が「概念定義 + 型契約のみ」に縮小書き換えされた経緯** を Read 対象に含めていなかった。Phase 2 縮小により、本来 Phase 2 で完了すべき基盤実装（Tile コンポーネント実装 / DnD / 編集モード切替 / localStorage 永続化 / hidden URL 検証）が削除され、Phase 7 各サイクルが構造的に過負荷状態になっていた。本サイクル PM はこの構造を認識せず「Phase 7 第 1 弾で基盤を作るしかない」と判断してスコープ肥大化を起こした。
+>
+> **(c) AP-P11 同型発火**: `docs/anti-patterns/planning.md` AP-P11「『前サイクルでAIがこう決めたから』という理由で変更を回避していないか？AIが決めた色・テキスト・レイアウト等が変更可能であることを認識しているか？」と同型。cycle-178 縮小判断を「変更不可の制約」として継承し、見直しの可能性を検討しなかった。**（新規 AP 追加はしない。AP-P11 が既存）**
+>
+> **(d) Owner 指摘の無批判採用**: 本サイクル中、Owner から「(b) はサイズ違い、軽量版概念は道具箱中核思想と矛盾」という指摘を受けた際、一次資料（Phase 2.2 L84 / Phase 2.1 #3 L78-81 / cycle-179 確定文）を確認せず即時受容して「失敗認定 + 部分 revert」案を出した。これは別種の無批判採用パターンだが、新規 AP 追加禁止の Owner 指示に従い、AP としては立てない。運用ルール（運用R6 の遵守徹底）として本ファイルに記録するに留める。
+>
+> **AP-P11 既存チェックがなぜバイパスされたかの調査**:
+>
+> 本サイクル運用R6（計画書 L374）の「過去サイクル PM 判定の継承前に必ず実機検証」リストに `docs/design-migration-plan.md` Phase 2 / 7 / 8.2 / 9 全体留意 は含まれていたが、「**過去サイクル PM が plan doc を改変した commit 履歴**」を確認する手順が無かった。結果として「Phase 2 = 概念定義 + 型契約のみ」という現在の plan doc 記述を「最初からそう設計されていた」と誤認（= AP-P11 発火）。**是正策の提案（次サイクル kickoff で参照）**: 「過去サイクル PM 判定の継承前検証」リストに、**plan doc セクションの直近改変 commit を `git log -- docs/design-migration-plan.md` で確認し、改変理由を当該サイクル md で Read する**手順を追加する。
+>
+> **revert / 維持の方針**:
+>
+> - **維持（cycle-191/192 パターン）**: コード成果物すべて（Button/Input/Breadcrumb 44px 化 / trustLevel 全件撤去 / Phase 7 基盤モジュール 9 個 / 軽量版 Tile / /internal/tiles / keigo-reference (legacy)→(new) 移行）
+> - **撤回済**: 続編ブログ `2026-05-17-content-trust-level-removal.md`（commit `09e09dcc`）
+> - revert しない理由: cycle-190 全 revert パターンと異なり、本サイクル成果物には Button/Input/Breadcrumb 44px 化（B-386 独立価値、全サイト UX 改善）/ trustLevel 撤去（cycle-180 元方針の前倒し）など独立価値があり、全 revert は来訪者損失。
 
 **※ 呼称統一の注記（r9 軽微-7）**: 計画書全体で **「Phase 7 基盤モジュール 9 個」** を最新呼称として使用。**旧呼称「新版共通モジュール 9 個」は r7 で「Phase 7 基盤モジュール 9 個」に統一**（IR7-7、屋台骨第 7 項分割後に「共通」表現が実態と乖離するため）。事故報告 / 履歴記録セクション内の旧呼称は履歴として残置。
 
