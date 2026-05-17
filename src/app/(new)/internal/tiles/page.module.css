@@ -1,0 +1,82 @@
+/**
+ * /internal/tiles 検証ページのスタイル
+ *
+ * 設計根拠:
+ * - tile-and-detail-design.md §7: タイル単体表示の検証場所
+ * - Tile 本体（Tile.module.css .container）が container-type: inline-size を持つため、
+ *   @container クエリはタイル内部の container を基準に動作する（案 5-C 確認済み）
+ * - w360 viewport で横はみ出しゼロを確認するためのシンプルなレイアウト
+ */
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.pageTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--fg);
+}
+
+.description {
+  font-size: 0.875rem;
+  color: var(--fg-soft);
+  margin: 0;
+  line-height: 1.6;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.sectionTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--fg);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.375rem;
+}
+
+.sectionNote {
+  font-size: 0.8125rem;
+  color: var(--fg-softer);
+  margin: 0;
+}
+
+/**
+ * tileWrapper: w360 相当のタイル表示幅を再現する外側ラッパー
+ *
+ * Tile 本体の Tile.module.css .container が container-type: inline-size を持つため、
+ * @container クエリ（280px / 300px 閾値）はタイル内部の container を基準に動作する。
+ * このラッパーへの container-type は不要（二重定義を避ける）。
+ *
+ * max-width: 360px にすることで w360 環境を模したタイル表示が確認できる。
+ * - 280px 以下閾値: カテゴリフィルタが縦積みに切り替わる（Tile.module.css L43）
+ * - 300px 以上閾値: keigoRow の align-items が center に切り替わる（Tile.module.css L89）
+ * - max-width 360px のこのラッパー内では両閾値をまたぐ表示を確認できる
+ *
+ * dnd-kit 互換性検証（SortableContext 内でのコンテナクエリ整合確認）は Phase 9 で本格実施。
+ * TOP_N=8 は暫定値（Tile.tsx L39）。T-視覚回帰での実機計測で確定する。
+ *
+ * data-testid="keigo-reference-tile-wrapper": T-視覚回帰の Playwright スクリプトが
+ * CSS Module ハッシュクラス名に依存せず安定したセレクタで取得できるようにする（I-2 対応）。
+ */
+.tileWrapper {
+  width: 100%;
+  max-width: 360px;
+}
+
+.loading {
+  font-size: 0.875rem;
+  color: var(--fg-softer);
+  padding: 1rem 0;
+}

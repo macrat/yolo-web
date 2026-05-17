@@ -80,8 +80,11 @@ const UNCATEGORISED_WHITELIST: ReadonlySet<string> = new Set([
   "/about",
   "/privacy",
   "/achievements",
-  // 開発者向け新デザインカタログ。noindex 設定済み。(new) Route Group 配下。
+  // 開発者向け noindex ページ。(new) Route Group 配下。
   "/storybook",
+  // タイル単体表示の内部検証ページ。robots: noindex 設定済み。(new) Route Group 配下。
+  // cycle-193 T-D で新設。Phase 9 着手時に道具箱本体グリッド検証へ発展予定。
+  "/internal/tiles",
 ]);
 
 // ---------------------------------------------------------------------------
