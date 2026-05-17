@@ -15,7 +15,7 @@
  * cycle-179 (b) 採用: 60 件全件ではなく上位 N 件のみ表示
  *
  * tile-loader.ts の dynamic({ ssr: false }) でロードされる前提。
- * TileVariant / variantId / trustLevel は一切参照しない。
+ * TileVariant / variantId は一切参照しない。
  */
 
 import { useCallback, useState, useEffect, useRef } from "react";
