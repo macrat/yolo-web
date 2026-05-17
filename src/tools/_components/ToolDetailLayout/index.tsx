@@ -2,6 +2,7 @@ import Panel from "@/components/Panel";
 import IdentityHeader from "@/tools/_components/IdentityHeader";
 import TrustSection from "@/tools/_components/TrustSection";
 import LifecycleSection from "@/tools/_components/LifecycleSection";
+import { categoryLabelMap } from "@/tools/_components/categoryLabels";
 import type { ToolMeta } from "@/tools/types";
 import styles from "./ToolDetailLayout.module.css";
 
@@ -44,10 +45,17 @@ function ToolDetailLayout({ meta, children }: ToolDetailLayoutProps) {
     <Panel as="article">
       <div className={styles.layout}>
         {/* 1. ファーストビュー上部: ツール名・説明・カテゴリ */}
+        {/* category は "text" 等の機械値から日本語ラベルに変換して渡す（軽微4 対応） */}
         <IdentityHeader
           name={meta.name}
           shortDescription={meta.shortDescription}
-          category={meta.category}
+          category={
+            meta.category
+              ? (categoryLabelMap[
+                  meta.category as keyof typeof categoryLabelMap
+                ] ?? meta.category)
+              : undefined
+          }
         />
 
         {/* 2. 入力・結果表示スロット（ToolInputArea / ResultCopyArea / AccordionItem 等） */}

@@ -1,14 +1,32 @@
 "use client";
 
-import { useState, useMemo, Fragment } from "react";
+/**
+ * KeigoReferenceComponent — 敬語早見表詳細ページの主要 UI コンポーネント。
+ *
+ * 設計方針:
+ * - Button / Input を使用（DESIGN.md §5 準拠 / src/components/ からのみ import）
+ * - useToolStorage で検索・カテゴリ・タブを localStorage に永続化（M1b likes 3）
+ * - AccordionItem で例文展開（キーボード操作対応 / aria 属性管理 / cycle-192 同型失敗防止）
+ * - CSS トークンは新体系（--bg / --fg / --border / --accent 等）のみ使用
+ * - 旧トークン（--color-border / --color-primary 等）は一切使わない
+ *
+ * @see docs/tile-and-detail-design.md §2 Core Intent
+ * @see docs/cycles/cycle-193.md 致命3 対応
+ */
+
+import { useMemo } from "react";
+import Button from "@/components/Button";
+import Input from "@/components/Input";
+import AccordionItem from "@/tools/_components/AccordionItem";
 import {
   filterEntries,
   getKeigoCategories,
-  getCommonMistakes,
+  COMMON_MISTAKES,
   type KeigoCategory,
   type KeigoEntry,
   type MistakeType,
 } from "./logic";
+import { useToolStorage } from "@/tools/_hooks/use-tool-storage";
 import styles from "./Component.module.css";
 
 type ActiveTab = "table" | "mistakes";
@@ -21,26 +39,12 @@ const MISTAKE_SECTIONS: { type: MistakeType; label: string }[] = [
   { type: "baito-keigo", label: "バイト敬語" },
 ];
 
-export default function KeigoReferenceTool() {
-  const [activeTab, setActiveTab] = useState<ActiveTab>("table");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<
-    KeigoCategory | "all"
-  >("all");
-  const [expandedEntryId, setExpandedEntryId] = useState<string | null>(null);
-
-  const filteredEntries = useMemo(
-    () => filterEntries(searchQuery, selectedCategory),
-    [searchQuery, selectedCategory],
-  );
-
-  const commonMistakes = useMemo(() => getCommonMistakes(), []);
-
-  const toggleEntry = (id: string) => {
-    setExpandedEntryId((prev) => (prev === id ? null : id));
-  };
-
-  const renderEntryExamples = (entry: KeigoEntry) => (
+/**
+ * 例文パネルコンポーネント（AccordionItem の children として使用）。
+ * 普通語 / 尊敬語 / 謙譲語の例文と補足説明を表示する。
+ */
+function EntryExamples({ entry }: { entry: KeigoEntry }) {
+  return (
     <div className={styles.examplePanel}>
       {entry.examples.map((ex, i) => (
         <div key={i} className={styles.exampleItem}>
@@ -62,80 +66,99 @@ export default function KeigoReferenceTool() {
       {entry.notes && <div className={styles.noteText}>{entry.notes}</div>}
     </div>
   );
+}
+
+export default function KeigoReferenceComponent() {
+  // --- localStorage 永続化（M1b likes 3）---
+  // key 命名規約: yolos-tool-<slug>-<purpose>
+  const [activeTab, setActiveTab] = useToolStorage<ActiveTab>(
+    "yolos-tool-keigo-reference-tab",
+    "table",
+  );
+  const [searchQuery, setSearchQuery] = useToolStorage<string>(
+    "yolos-tool-keigo-reference-search",
+    "",
+  );
+  const [selectedCategory, setSelectedCategory] = useToolStorage<
+    KeigoCategory | "all"
+  >("yolos-tool-keigo-reference-category-filter", "all");
+
+  const filteredEntries = useMemo(
+    () => filterEntries(searchQuery, selectedCategory),
+    [searchQuery, selectedCategory],
+  );
 
   return (
     <div className={styles.container}>
-      {/* Main tab switch */}
+      {/* タブ切替: 「敬語早見表」と「よくある間違い」の 2 タブ */}
+      {/* Button コンポーネントを使用（DESIGN.md §5 準拠）*/}
       <div className={styles.mainTabs} role="tablist" aria-label="表示切替">
-        <button
-          type="button"
+        <Button
           role="tab"
           aria-selected={activeTab === "table"}
-          className={`${styles.mainTab} ${activeTab === "table" ? styles.activeMainTab : ""}`}
+          variant={activeTab === "table" ? "primary" : "default"}
           onClick={() => setActiveTab("table")}
         >
           敬語早見表
-        </button>
-        <button
-          type="button"
+        </Button>
+        <Button
           role="tab"
           aria-selected={activeTab === "mistakes"}
-          className={`${styles.mainTab} ${activeTab === "mistakes" ? styles.activeMainTab : ""}`}
+          variant={activeTab === "mistakes" ? "primary" : "default"}
           onClick={() => setActiveTab("mistakes")}
         >
           よくある間違い
-        </button>
+        </Button>
       </div>
 
-      {/* Table tab content */}
+      {/* 敬語早見表タブ */}
       {activeTab === "table" && (
         <>
-          {/* Search and filter bar */}
+          {/* 検索バー: Input コンポーネントを使用（DESIGN.md §5 準拠）*/}
           <div className={styles.searchBar}>
-            <input
+            <Input
               type="search"
-              className={styles.searchInput}
               placeholder="動詞を検索..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               aria-label="敬語を検索"
+              className={styles.searchInput}
             />
-            <div
-              className={styles.filterButtons}
-              role="radiogroup"
-              aria-label="カテゴリフィルター"
+          </div>
+
+          {/* カテゴリフィルタ: Button コンポーネントを使用（Tile.tsx と同パターン）*/}
+          <div
+            className={styles.filterButtons}
+            role="group"
+            aria-label="カテゴリフィルター"
+          >
+            <Button
+              variant={selectedCategory === "all" ? "primary" : "default"}
+              aria-pressed={selectedCategory === "all"}
+              onClick={() => setSelectedCategory("all")}
             >
-              <button
-                type="button"
-                role="radio"
-                aria-checked={selectedCategory === "all"}
-                className={`${styles.filterButton} ${selectedCategory === "all" ? styles.activeFilter : ""}`}
-                onClick={() => setSelectedCategory("all")}
+              すべて
+            </Button>
+            {CATEGORIES.map((cat) => (
+              <Button
+                key={cat.id}
+                variant={selectedCategory === cat.id ? "primary" : "default"}
+                aria-pressed={selectedCategory === cat.id}
+                onClick={() => setSelectedCategory(cat.id)}
               >
-                すべて
-              </button>
-              {CATEGORIES.map((cat) => (
-                <button
-                  key={cat.id}
-                  type="button"
-                  role="radio"
-                  aria-checked={selectedCategory === cat.id}
-                  className={`${styles.filterButton} ${selectedCategory === cat.id ? styles.activeFilter : ""}`}
-                  onClick={() => setSelectedCategory(cat.id)}
-                >
-                  {cat.name}
-                </button>
-              ))}
-            </div>
+                {cat.name}
+              </Button>
+            ))}
           </div>
 
           <div className={styles.resultCount} aria-live="polite">
             {filteredEntries.length}件の動詞
           </div>
 
-          {/* Desktop table */}
+          {/* エントリ一覧 */}
           {filteredEntries.length > 0 ? (
             <>
+              {/* デスクトップ: テーブル + AccordionItem 展開行 */}
               <div className={styles.desktopTable}>
                 <table className={styles.table}>
                   <thead>
@@ -144,60 +167,51 @@ export default function KeigoReferenceTool() {
                       <th className={styles.th}>尊敬語</th>
                       <th className={styles.th}>謙譲語</th>
                       <th className={styles.th}>丁寧語</th>
+                      <th className={styles.th}>例文</th>
                     </tr>
                   </thead>
                   <tbody>
                     {filteredEntries.map((entry) => (
-                      <Fragment key={entry.id}>
-                        <tr
-                          className={styles.tableRow}
-                          onClick={() => toggleEntry(entry.id)}
-                          aria-expanded={expandedEntryId === entry.id}
-                        >
-                          <td className={`${styles.td} ${styles.casualCell}`}>
-                            {entry.casual}
-                          </td>
-                          <td className={styles.td}>{entry.sonkeigo}</td>
-                          <td className={styles.td}>{entry.kenjogo}</td>
-                          <td className={styles.td}>{entry.teineigo}</td>
-                        </tr>
-                        {expandedEntryId === entry.id && (
-                          <tr className={styles.examplePanelRow}>
-                            <td colSpan={4}>{renderEntryExamples(entry)}</td>
-                          </tr>
-                        )}
-                      </Fragment>
+                      <tr key={entry.id} className={styles.tableRow}>
+                        <td className={`${styles.td} ${styles.casualCell}`}>
+                          {entry.casual}
+                        </td>
+                        <td className={styles.td}>{entry.sonkeigo}</td>
+                        <td className={styles.td}>{entry.kenjogo}</td>
+                        <td className={styles.td}>{entry.teineigo}</td>
+                        <td className={styles.td}>
+                          {/* AccordionItem で例文展開（キーボード対応・aria 属性管理） */}
+                          <AccordionItem title="例文を見る">
+                            <EntryExamples entry={entry} />
+                          </AccordionItem>
+                        </td>
+                      </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
 
-              {/* Mobile card view */}
+              {/* モバイル: カード形式 + AccordionItem 展開 */}
               <div className={styles.mobileCards}>
                 {filteredEntries.map((entry) => (
-                  <div key={entry.id}>
-                    <div
-                      className={styles.mobileCard}
-                      onClick={() => toggleEntry(entry.id)}
-                      aria-expanded={expandedEntryId === entry.id}
-                    >
-                      <div className={styles.mobileCardTitle}>
-                        {entry.casual}
-                      </div>
-                      <div className={styles.mobileCardRow}>
-                        <span className={styles.mobileCardLabel}>尊敬語:</span>
-                        <span>{entry.sonkeigo}</span>
-                      </div>
-                      <div className={styles.mobileCardRow}>
-                        <span className={styles.mobileCardLabel}>謙譲語:</span>
-                        <span>{entry.kenjogo}</span>
-                      </div>
-                      <div className={styles.mobileCardRow}>
-                        <span className={styles.mobileCardLabel}>丁寧語:</span>
-                        <span>{entry.teineigo}</span>
-                      </div>
+                  <div key={entry.id} className={styles.mobileCard}>
+                    <div className={styles.mobileCardTitle}>{entry.casual}</div>
+                    <div className={styles.mobileCardRow}>
+                      <span className={styles.mobileCardLabel}>尊敬語:</span>
+                      <span>{entry.sonkeigo}</span>
                     </div>
-                    {expandedEntryId === entry.id && renderEntryExamples(entry)}
+                    <div className={styles.mobileCardRow}>
+                      <span className={styles.mobileCardLabel}>謙譲語:</span>
+                      <span>{entry.kenjogo}</span>
+                    </div>
+                    <div className={styles.mobileCardRow}>
+                      <span className={styles.mobileCardLabel}>丁寧語:</span>
+                      <span>{entry.teineigo}</span>
+                    </div>
+                    {/* AccordionItem で例文展開（キーボード対応・aria 属性管理） */}
+                    <AccordionItem title="例文を見る">
+                      <EntryExamples entry={entry} />
+                    </AccordionItem>
                   </div>
                 ))}
               </div>
@@ -210,11 +224,11 @@ export default function KeigoReferenceTool() {
         </>
       )}
 
-      {/* Mistakes tab content */}
+      {/* よくある間違いタブ */}
       {activeTab === "mistakes" && (
         <>
           {MISTAKE_SECTIONS.map((section) => {
-            const mistakes = commonMistakes.filter(
+            const mistakes = COMMON_MISTAKES.filter(
               (m) => m.mistakeType === section.type,
             );
             if (mistakes.length === 0) return null;

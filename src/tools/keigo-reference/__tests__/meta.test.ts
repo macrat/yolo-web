@@ -18,4 +18,18 @@ describe("meta.howItWorks codegen", () => {
     // codegen 化後は「40件以上」という固定文字列は使わない
     expect(meta.howItWorks).not.toContain("40件以上");
   });
+
+  test("howItWorks に含まれる件数は正規表現 /\\d+件/ にマッチする（堅牢化）", () => {
+    // 数値 + 「件」という形式でなければ codegen が機能していない
+    expect(meta.howItWorks).toMatch(/\d+件/);
+  });
+
+  test("faq[0].answer に含まれる件数も正規表現 /\\d+件/ にマッチする（堅牢化）", () => {
+    expect(meta.faq?.[0]?.answer).toMatch(/\d+件/);
+  });
+
+  test("KEIGO_ENTRIES.length が 50 以上である（データ件数の最低保証）", () => {
+    // logic.test.ts の「50件以上」チェックと同一の基準を meta 側でも確認
+    expect(KEIGO_ENTRIES.length).toBeGreaterThanOrEqual(50);
+  });
 });
