@@ -50,7 +50,7 @@ const KEIGO_CATEGORIES: KeigoCategoryInfo[] = [
 // Sources referenced: 文化庁「敬語の指針」, 各種敬語辞典
 // 尊敬語 = 相手の動作を高める, 謙譲語 = 自分の動作をへりくだる
 
-const KEIGO_ENTRIES: KeigoEntry[] = [
+export const KEIGO_ENTRIES: KeigoEntry[] = [
   // ===== 基本動詞 (basic) =====
   {
     id: "iku",
@@ -1064,7 +1064,7 @@ const KEIGO_ENTRIES: KeigoEntry[] = [
 
 // --- Common mistakes data ---
 
-const COMMON_MISTAKES: CommonMistake[] = [
+export const COMMON_MISTAKES: CommonMistake[] = [
   // 二重敬語
   {
     id: "double-ossharareru",
