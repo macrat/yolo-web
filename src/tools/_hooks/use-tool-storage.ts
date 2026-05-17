@@ -5,7 +5,7 @@
  *
  * 責務:
  * - key 命名規約: `yolos-tool-<slug>-<purpose>` 形式を想定（検証は呼び出し側の責務）
- * - key 変更時: 新 key で初期化し、旧 key エントリは放置
+ * - key 変更時: 新 key で初期化し、旧 key エントリは積極削除（案 17-A: 容量逼迫の構造的解消）
  * - JSON parse 失敗時: initialValue にフォールバック（エラーをスローしない）
  * - setItem 失敗時: silent fail（console.warn のみ、UI を壊さない）
  *
@@ -15,7 +15,7 @@
  * 参照: docs/knowledge/nextjs.md §4
  */
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
 /**
  * localStorage に値を永続化する汎用 Hook。
@@ -31,21 +31,41 @@ export function useToolStorage<T>(
   // SSR/Hydration 対応: 初期値で初期化し、useEffect 内で localStorage を読む
   const [storedValue, setStoredValue] = useState<T>(initialValue);
 
+  // 前回の key を記憶して key 変更時に旧 key を削除する（案 17-A）
+  const prevKeyRef = useRef<string | null>(null);
+
   useEffect(() => {
     // SSR/Hydration 対応として localStorage 読み込みは useEffect 内で行う必要がある。
     // 参照: docs/knowledge/nextjs.md §4
     // useEffect 内での setState は通常避けるべきだが、ここは外部システム（localStorage）
     // との同期が目的であり、このルールの想定するユースケースに合致する。
+
+    // (ii) key 変更時の旧 key 積極削除（案 17-A: 容量逼迫の構造的解消）
+    // 前回の key が存在し、かつ今回の key と異なる場合に旧 key を削除する
+    if (prevKeyRef.current !== null && prevKeyRef.current !== key) {
+      try {
+        localStorage.removeItem(prevKeyRef.current);
+      } catch {
+        // removeItem 失敗は silent fail（storage 書き込み禁止環境等）
+      }
+    }
+    prevKeyRef.current = key;
+
     // (iii) JSON parse 失敗時に initialValue にフォールバック
     try {
       const item = localStorage.getItem(key);
       if (item !== null) {
-        setStoredValue(JSON.parse(item) as T); // eslint-disable-line react-hooks/set-state-in-effect
+        setStoredValue(JSON.parse(item) as T);
+      } else {
+        // key が変わり新 key に値がない場合は initialValue にリセット
+        setStoredValue(initialValue);
       }
     } catch {
       // JSON parse 失敗 / localStorage アクセス不可 → initialValue のまま維持
     }
-    // key が変わったときに新 key で初期化する（旧 key の値は参照しない）
+    // key が変わったときに新 key で初期化する（旧 key の値は削除済み）
+    // initialValue は依存配列に含めない（参照安定性が保証されないため）
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key]);
 
   const setValue = useCallback(

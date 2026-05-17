@@ -89,8 +89,9 @@ describe("useToolStorage", () => {
     expect(result.current[0]).toBe("new value");
   });
 
-  // テスト 6: key 変更時の挙動（新 key で初期化、旧 key 放置）
-  test("6. key が変わったら新 key で初期化し、旧 key のエントリは放置する", async () => {
+  // テスト 6: key 変更時の挙動（新 key で初期化、旧 key は積極削除）
+  // 案 17-A r6: key 変更時は旧 key を removeItem で積極削除（容量逼迫の構造的解消）
+  test("6. key が変わったら新 key で初期化し、旧 key のエントリは積極削除される", async () => {
     // 旧 key に値をセット
     localStorage.setItem(
       "yolos-tool-old-tool-search",
@@ -115,10 +116,8 @@ describe("useToolStorage", () => {
     await act(async () => {});
     expect(result.current[0]).toBe("new value");
 
-    // 旧 key のエントリが残っていること（削除されていない）
-    expect(localStorage.getItem("yolos-tool-old-tool-search")).toBe(
-      JSON.stringify("old value"),
-    );
+    // 旧 key のエントリが削除されていること（案 17-A: 積極削除）
+    expect(localStorage.getItem("yolos-tool-old-tool-search")).toBeNull();
   });
 
   // テスト 7: localStorage が利用不可（例外スロー）でも initialValue にフォールバックする

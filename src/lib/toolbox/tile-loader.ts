@@ -88,10 +88,26 @@ export function getTileComponent(slug: string): TileComponentLoader {
   const cached = loaderCache.get(slug);
   if (cached) return cached;
 
+  // keigo-reference: 1 軽量版タイル（cycle-193 T-C, tile-and-detail-design.md §4）
+  // TileVariant / variantId / loaderCache キー変更なし（cycle-179 サブ判断 3-a 継承）
+  if (slug === "keigo-reference") {
+    const loader = dynamic(() => import("@/tools/keigo-reference/Tile"), {
+      ssr: false,
+    }) as TileComponentLoader;
+    loaderCache.set(slug, loader);
+    return loader;
+  }
+
   /**
    * Phase 2: 全 slug に対してフォールバックコンポーネントを返す。
    * Phase 7（B-314）で各 slug にタイル用コンポーネントが追加されたら、
    * 上記の拡張パターンのように if 分岐を追加して個別の loader を返す。
+   *
+   * 申し送り（Phase 7 第 2 弾以降）: 現在の cache 設計では「未知 slug →
+   * fallback → cache に保存」のため、後から if 分岐を追加した slug でも
+   * 一度 fallback が cache に入ると以降は fallback を返し続ける構造になる。
+   * Phase 7 第 2 弾以降で slug を追加する際は cache 設計の再評価が必要。
+   * （軽微-5 / cycle-193 T-C reviewer 指摘）
    */
   loaderCache.set(slug, FallbackTileComponent);
   return FallbackTileComponent;
