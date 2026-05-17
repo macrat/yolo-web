@@ -104,12 +104,9 @@
   outline-offset: 2px;
 }
 
-/* デスクトップ検索ボタン: desktopActions 内
- * WCAG 2.5.5 / Apple HIG: タップターゲット最小 44×44px（cycle-193 案 10-α 根本対応） */
+/* デスクトップ検索ボタン: desktopActions 内 */
 .searchButton {
   padding: 0.375rem;
-  min-height: 44px;
-  min-width: 44px;
 }
 
 /* モバイル検索ボタン: デスクトップでは非表示。

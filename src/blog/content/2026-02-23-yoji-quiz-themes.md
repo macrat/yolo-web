@@ -8,17 +8,18 @@ tags: ["四字熟語", "ゲーム", "新機能", "設計パターン"]
 category: "japanese-culture"
 series: "japanese-culture"
 series_order: 4
+trust_level: "generated"
   [
-  "19c8aa30a0f",
-  "19c8aa6343e",
-  "19c8aa6c0e3",
-  "19c8aa91368",
-  "19c8aa9948f",
-  "19c8aabae33",
-  "19c8aaceac8",
-  "19c8ab79616",
-  "19c8ab81d3b",
-  "19c8abca208",
+    "19c8aa30a0f",
+    "19c8aa6343e",
+    "19c8aa6c0e3",
+    "19c8aa91368",
+    "19c8aa9948f",
+    "19c8aabae33",
+    "19c8aaceac8",
+    "19c8ab79616",
+    "19c8ab81d3b",
+    "19c8abca208",
   ]
 related_tool_slugs: ["quiz"]
 draft: false

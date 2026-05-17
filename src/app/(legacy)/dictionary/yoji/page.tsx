@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Breadcrumb from "@/components/common/Breadcrumb";
+import TrustLevelBadge from "@/components/common/TrustLevelBadge";
 import CategoryNav from "@/dictionary/_components/CategoryNav";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { getAllYoji, getYojiCategories } from "@/dictionary/_lib/yoji";
@@ -45,6 +46,7 @@ export default function YojiIndexPage() {
           { label: "四字熟語辞典" },
         ]}
       />
+      <TrustLevelBadge level="curated" />
       <h1 className={styles.title}>四字熟語辞典</h1>
       <p className={styles.description}>
         よく使われる四字熟語{allYoji.length}

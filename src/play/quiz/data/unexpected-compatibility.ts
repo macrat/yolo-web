@@ -53,6 +53,9 @@ const unexpectedCompatibilityQuiz: QuizDefinition = {
         href: "/play/impossible-advice",
       },
     ],
+    trustLevel: "generated",
+    trustNote:
+      "スコア計算は正確です。質問と結果はAIが創作しました。楽しみとしてお楽しみください。",
     faq: [
       {
         question: "なぜ相性の結果が人間ではなく物や自然現象なのですか？",

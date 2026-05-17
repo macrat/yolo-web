@@ -8,17 +8,6 @@
 .link {
   color: var(--color-primary);
   text-decoration: none;
-  /*
-   * 44px タップターゲット: WCAG 2.5.5 / B-386 根本対応。
-   * display:inline-flex + min-height:44px でタップ可能領域を確保する。
-   * vertical-align:middle で周囲のテキスト（separator「/」・current span）と
-   * 整合するよう調整。
-   */
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  padding: 0 0.25em;
-  vertical-align: middle;
 }
 
 .link:hover {
@@ -32,12 +21,4 @@
 
 .current {
   color: var(--color-text);
-  /*
-   * 44px タップターゲット: .link と同様に min-height を揃えて垂直整列を維持。
-   */
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  padding: 0 0.25em;
-  vertical-align: middle;
 }

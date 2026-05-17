@@ -17,6 +17,7 @@ const toolMetaFixture: ToolMeta = {
   category: "developer",
   relatedSlugs: [],
   publishedAt: "2026-01-01T00:00:00+09:00",
+  trustLevel: "verified",
   howItWorks: "JSONをパースして整形します",
 };
 
@@ -30,6 +31,7 @@ const playContentMetaFixture: PlayContentMeta = {
   accentColor: "#c0392b",
   keywords: ["漢字", "かな"],
   publishedAt: "2026-01-15T00:00:00+09:00",
+  trustLevel: "curated",
   contentType: "game",
   category: "game",
 };
@@ -59,6 +61,11 @@ describe("toTileable", () => {
     test("publishedAt が正しく変換される", () => {
       const result = toTileable(toolMetaFixture, "tool");
       expect(result.publishedAt).toBe("2026-01-01T00:00:00+09:00");
+    });
+
+    test("trustLevel が正しく変換される", () => {
+      const result = toTileable(toolMetaFixture, "tool");
+      expect(result.trustLevel).toBe("verified");
     });
 
     test("icon が undefined になる（ToolMeta はアイコンフィールドを持たない）", () => {
@@ -108,6 +115,7 @@ describe("toTileable", () => {
       expect(result.shortDescription).toBeDefined();
       expect(result.contentKind).toBeDefined();
       expect(result.publishedAt).toBeDefined();
+      expect(result.trustLevel).toBeDefined();
     });
 
     test("PlayContentMeta からの変換結果が Tileable 型を満たす", () => {
@@ -139,6 +147,10 @@ describe("registry 全件 smoke test", () => {
           result.publishedAt,
           `tools/${meta.slug}: publishedAt`,
         ).toBeTruthy();
+        expect(
+          result.trustLevel,
+          `tools/${meta.slug}: trustLevel`,
+        ).toBeTruthy();
       }
     });
 
@@ -168,6 +180,7 @@ describe("registry 全件 smoke test", () => {
           result.publishedAt,
           `play/${meta.slug}: publishedAt`,
         ).toBeTruthy();
+        expect(result.trustLevel, `play/${meta.slug}: trustLevel`).toBeTruthy();
         // PlayContentMeta は icon / accentColor を必須で持つ
         expect(result.icon, `play/${meta.slug}: icon`).toBeTruthy();
         expect(

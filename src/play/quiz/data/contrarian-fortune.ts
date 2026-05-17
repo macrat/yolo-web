@@ -55,6 +55,9 @@ const contrarianFortuneQuiz: QuizDefinition = {
         href: "/play/unexpected-compatibility",
       },
     ],
+    trustLevel: "generated",
+    trustNote:
+      "スコア計算は正確です。質問と結果はAIが創作したユーモア占いです。楽しみとしてお楽しみください。",
     faq: [
       {
         question: "「逆張り」とはどういう意味ですか？",

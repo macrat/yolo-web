@@ -19,6 +19,7 @@ const FIXED_POSTS: BlogPostMeta[] = [
     related_tool_slugs: ["json-formatter"],
     draft: false,
     readingTime: 1,
+    trustLevel: "generated",
   },
   {
     title: "Shared Link Post",
@@ -31,6 +32,7 @@ const FIXED_POSTS: BlogPostMeta[] = [
     related_tool_slugs: ["kanji-kanaru"],
     draft: false,
     readingTime: 1,
+    trustLevel: "generated",
   },
   {
     title: "Tool Link Post",
@@ -43,6 +45,7 @@ const FIXED_POSTS: BlogPostMeta[] = [
     related_tool_slugs: ["json-formatter", "kanji-kanaru"],
     draft: false,
     readingTime: 1,
+    trustLevel: "generated",
   },
 ];
 

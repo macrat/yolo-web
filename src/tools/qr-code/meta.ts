@@ -19,6 +19,7 @@ export const meta: ToolMeta = {
   publishedAt: "2026-02-13T19:03:42+09:00",
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
+  trustLevel: "verified",
   howItWorks:
     "入力されたテキストやURLをQRコード規格でエンコードし、SVG形式でブラウザ上に高品質なQRコードを表示します。エラー訂正レベル（L/M/Q/H）を選択でき、PNG形式でダウンロードすることも可能です。生成処理はすべてブラウザ上で完結します。",
   faq: [

@@ -24,6 +24,7 @@ export const meta: ToolMeta = {
   publishedAt: "2026-02-14T07:36:09+09:00",
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
+  trustLevel: "verified",
   howItWorks:
     "GitHub Flavored Markdown（GFM）に対応したMarkdownパーサーで入力テキストを解析し、HTMLに変換してリアルタイムでプレビュー表示します。見出し・リスト・テーブル・コードブロック・チェックリストなどに対応し、scriptタグなどの危険なHTMLはホワイトリスト方式で除去されます。最大50,000文字まで入力できます。",
   faq: [

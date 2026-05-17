@@ -25,6 +25,7 @@ const mockTools: ToolMeta[] = [
     category: "text",
     relatedSlugs: [],
     publishedAt: "2026-01-01T00:00:00+09:00",
+    trustLevel: "verified",
     howItWorks: "ブラウザ上で処理します",
   },
   {
@@ -37,6 +38,7 @@ const mockTools: ToolMeta[] = [
     category: "encoding",
     relatedSlugs: [],
     publishedAt: "2026-01-01T00:00:00+09:00",
+    trustLevel: "verified",
     howItWorks: "ブラウザ上で処理します",
   },
   {
@@ -49,6 +51,7 @@ const mockTools: ToolMeta[] = [
     category: "developer",
     relatedSlugs: [],
     publishedAt: "2026-01-01T00:00:00+09:00",
+    trustLevel: "verified",
     howItWorks: "ブラウザ上で処理します",
   },
 ];
@@ -292,6 +295,7 @@ test("ツールは publishedAt 降順（新しい順）で表示される", () =
       category: "text",
       relatedSlugs: [],
       publishedAt: "2025-01-01T00:00:00+09:00",
+      trustLevel: "verified",
       howItWorks: "ブラウザ上で処理します",
     },
     {
@@ -304,6 +308,7 @@ test("ツールは publishedAt 降順（新しい順）で表示される", () =
       category: "text",
       relatedSlugs: [],
       publishedAt: "2026-03-01T00:00:00+09:00",
+      trustLevel: "verified",
       howItWorks: "ブラウザ上で処理します",
     },
     {
@@ -316,6 +321,7 @@ test("ツールは publishedAt 降順（新しい順）で表示される", () =
       category: "text",
       relatedSlugs: [],
       publishedAt: "2025-06-01T00:00:00+09:00",
+      trustLevel: "verified",
       howItWorks: "ブラウザ上で処理します",
     },
   ];

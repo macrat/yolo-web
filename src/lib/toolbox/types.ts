@@ -1,3 +1,4 @@
+import type { TrustLevel } from "@/lib/trust-levels";
 import type { ToolMeta } from "@/tools/types";
 import type { PlayContentMeta } from "@/play/types";
 
@@ -40,6 +41,8 @@ export interface Tileable {
   accentColor?: string;
   /** 公開日時（ISO 8601、タイムゾーン付き） */
   publishedAt: string;
+  /** コンテンツの信頼レベル */
+  trustLevel: TrustLevel;
 }
 
 /**
@@ -71,6 +74,7 @@ export function toTileable(
       shortDescription: toolMeta.shortDescription,
       contentKind,
       publishedAt: toolMeta.publishedAt,
+      trustLevel: toolMeta.trustLevel,
     };
   }
 
@@ -85,5 +89,6 @@ export function toTileable(
     icon: playMeta.icon,
     accentColor: playMeta.accentColor,
     publishedAt: playMeta.publishedAt,
+    trustLevel: playMeta.trustLevel,
   };
 }

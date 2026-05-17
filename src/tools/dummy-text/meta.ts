@@ -19,6 +19,7 @@ export const meta: ToolMeta = {
   publishedAt: "2026-02-14T07:55:07+09:00",
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
+  trustLevel: "verified",
   howItWorks:
     "Lorem Ipsum（英語）と日本語の2種類のダミーテキストを、指定した段落数・段落あたりの文数で生成します。日本語テキストは夏目漱石の「吾輩は猫である」冒頭と一般的な例文を組み合わせています。最大20段落×20文まで対応し、生成はブラウザ上で完結します。",
   faq: [

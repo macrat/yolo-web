@@ -13,6 +13,7 @@ function makeContent(slug: string, publishedAt: string): PlayContentMeta {
     accentColor: "#000000",
     keywords: [],
     publishedAt,
+    trustLevel: "verified",
     contentType: "game",
     category: "game",
   };

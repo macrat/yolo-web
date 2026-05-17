@@ -1,3 +1,5 @@
+import type { TrustLevel } from "@/lib/trust-levels";
+
 /** Quiz type: knowledge test or personality diagnosis */
 export type QuizType = "knowledge" | "personality";
 
@@ -300,6 +302,11 @@ export interface QuizMeta {
   /** ISO 8601 date-time with timezone. Set when main content is updated. */
   updatedAt?: string;
   relatedLinks?: Array<{ label: string; href: string }>;
+  /** Content trust level */
+  trustLevel: TrustLevel;
+  /** Optional supplementary note about trust level details */
+  trustNote?: string;
+
   /**
    * FAQ: Q&A形式の配列
    * B-024で実装済みのFAQPage JSON-LDのデータソースである。

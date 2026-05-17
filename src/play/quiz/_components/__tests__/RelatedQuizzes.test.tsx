@@ -18,6 +18,7 @@ vi.mock("@/play/registry", () => ({
           accentColor: "#ff5733",
           keywords: ["漢字"],
           publishedAt: "2026-01-01T00:00:00+09:00",
+          trustLevel: "verified",
         },
         {
           slug: "kotowaza-level",
@@ -32,6 +33,7 @@ vi.mock("@/play/registry", () => ({
           accentColor: "#33a1ff",
           keywords: ["ことわざ"],
           publishedAt: "2026-01-02T00:00:00+09:00",
+          trustLevel: "verified",
         },
         {
           slug: "yoji-level",
@@ -44,6 +46,7 @@ vi.mock("@/play/registry", () => ({
           accentColor: "#5733ff",
           keywords: ["四字熟語"],
           publishedAt: "2026-01-03T00:00:00+09:00",
+          trustLevel: "verified",
         },
         {
           slug: "traditional-color",
@@ -56,6 +59,7 @@ vi.mock("@/play/registry", () => ({
           accentColor: "#33ff57",
           keywords: ["伝統色"],
           publishedAt: "2026-01-04T00:00:00+09:00",
+          trustLevel: "verified",
         },
       ];
     }

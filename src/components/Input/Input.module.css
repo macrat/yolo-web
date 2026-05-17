@@ -10,8 +10,6 @@
   font-family: inherit;
   font-size: 14px;
   line-height: 1.5;
-  /* WCAG 2.5.5 / Apple HIG: タップターゲット最小 44px（cycle-193 案 10-α 根本対応） */
-  min-height: 44px;
   background: var(--bg);
   color: var(--fg);
   border: 1px solid var(--border-strong);

@@ -65,6 +65,10 @@ vi.mock("@/components/common/Breadcrumb", () => ({
   default: () => <nav>Breadcrumb</nav>,
 }));
 
+vi.mock("@/components/common/TrustLevelBadge", () => ({
+  default: () => <div>TrustLevelBadge</div>,
+}));
+
 vi.mock("@/humor-dict/_components/RecordPlay", () => ({
   default: () => null,
 }));

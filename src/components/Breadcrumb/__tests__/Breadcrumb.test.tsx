@@ -78,23 +78,6 @@ describe("Breadcrumb", () => {
     });
   });
 
-  test("リンク <a> に styles.link クラスが付与されている（44px タップターゲット用スタイル適用確認）", () => {
-    const { container } = render(<Breadcrumb items={items} />);
-    const links = container.querySelectorAll("a");
-    // 全リンク要素が styles.link クラス（CSS Modules で変換後）を持つこと
-    links.forEach((link) => {
-      expect(link.className).toBeTruthy();
-    });
-  });
-
-  test("現在位置 span に styles.current クラスが付与されている（44px タップターゲット用スタイル適用確認）", () => {
-    const { container } = render(<Breadcrumb items={items} />);
-    const currentSpan = container.querySelector("[aria-current='page']");
-    expect(currentSpan).not.toBeNull();
-    // current スパンはクラスを持つ
-    expect(currentSpan?.className).toBeTruthy();
-  });
-
   test("BreadcrumbList JSON-LD script が出力される", () => {
     const { container } = render(<Breadcrumb items={items} />);
     const script = container.querySelector(

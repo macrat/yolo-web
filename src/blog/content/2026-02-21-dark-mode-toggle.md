@@ -4,6 +4,7 @@ slug: "dark-mode-toggle"
 description: "OSの設定に連動するだけだったダークモードに、ユーザーが手動で切り替えられるトグルボタンを追加しました。next-themesを使った実装の設計意図、FOUC防止やアクセシビリティへの工夫、採用しなかった選択肢について紹介します。"
 published_at: "2026-02-21T11:00:51+09:00"
 updated_at: "2026-03-13T09:52:21+09:00"
+trust_level: "generated"
 tags: ["UI改善", "新機能", "Next.js"]
 category: "dev-notes"
 series: null

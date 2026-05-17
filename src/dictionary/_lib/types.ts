@@ -1,5 +1,7 @@
 /** Type definitions for dictionary data */
 
+import type { TrustLevel } from "@/lib/trust-levels";
+
 /** 辞典種別ごとのメタデータ（品質要素を含む） */
 export interface DictionaryMeta {
   /** 辞典識別子（例: "kanji", "yoji", "colors"） */
@@ -10,6 +12,8 @@ export interface DictionaryMeta {
   publishedAt: string;
   /** ISO 8601 date-time with timezone. Set when main content is updated. */
   updatedAt?: string;
+  /** コンテンツの信頼レベル */
+  trustLevel: TrustLevel;
   /** 一行価値テキスト（40字以内推奨） */
   valueProposition?: string;
   /**

@@ -3,16 +3,26 @@ title: "コンテンツ信頼レベルの導入: 全ページにverified/curated
 slug: "content-trust-levels"
 description: "yolos.netの全コンテンツを「正確な処理」「AI作成データ」「AI生成テキスト」の3段階に分類し、各ページにバッジを表示する仕組みを導入しました。AIが運営するサイトの透明性と信頼性を両立する設計意図、型安全なアプローチ、アクセシブルなUIの実装について解説します。"
 published_at: "2026-02-28T02:02:46+09:00"
-updated_at: "2026-05-17T13:08:40+0900"
+updated_at: "2026-03-01T18:58:43+0900"
 tags: ["UI改善", "TypeScript", "サイト運営", "新機能"]
 category: "site-updates"
 series: null
+  - "19c7f135782"
+  - "19c9f6adb7b"
+  - "19c9f6aebd1"
+  - "19c9f6b0872"
+  - "19c9f6b2630"
+  - "19c9f6b5332"
+  - "19c9fe340b7"
+  - "19c9fe3b24b"
+  - "19c9fe66569"
+  - "19c9fe6d8d2"
+  - "19c9fecf2c2"
+  - "19c9ff0133b"
+  - "19c9ff453ec"
 related_tool_slugs: []
 draft: false
 ---
-
-> [!NOTE]
-> **2026-05-17 追記**: この信頼度ラベルシステムは導入から約3ヶ月後の2026年5月17日に全件撤去された。サイト全体で表示は行わない。本記事は当時の判断記録として保持している。
 
 ## はじめに
 
@@ -190,3 +200,7 @@ interface ToolMeta {
 全コンテンツを「正確な処理」（verified）、「AI作成データ」（curated）、「AI生成テキスト」（generated）の3段階に分類し、各ページにバッジを表示することで、コンテンツの性質に応じた信頼性情報を訪問者に提供しています。TypeScriptの型安全性で設定漏れを防ぎ、details/summaryパターンでJavaScript不要のアクセシブルなUIを実現しました。
 
 ソースコードは[GitHubリポジトリ](https://github.com/macrat/yolo-web)で公開していますので、実装の詳細に興味がある方はぜひご覧ください。
+
+- [trust-levels.ts（GitHub）](https://github.com/macrat/yolo-web/blob/main/src/lib/trust-levels.ts)
+- [TrustLevelBadge.tsx（GitHub）](https://github.com/macrat/yolo-web/blob/main/src/components/common/TrustLevelBadge.tsx)
+- [TrustLevelBadge.module.css（GitHub）](https://github.com/macrat/yolo-web/blob/main/src/components/common/TrustLevelBadge.module.css)

@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Breadcrumb from "@/components/common/Breadcrumb";
+import TrustLevelBadge from "@/components/common/TrustLevelBadge";
 import CategoryNav from "@/dictionary/_components/CategoryNav";
 import DictionaryCard from "@/dictionary/_components/DictionaryCard";
 import DictionaryGrid from "@/dictionary/_components/DictionaryGrid";
@@ -73,6 +74,7 @@ export default async function KanjiRadicalPage({
           { label: `部首「${radical}」の漢字` },
         ]}
       />
+      <TrustLevelBadge level="curated" />
       <h1>{`部首「${radical}」の漢字`}</h1>
       <p>
         {kanjiList.length}

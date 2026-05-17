@@ -13,15 +13,15 @@ const headerCssPath = path.resolve(
   __dirname,
   "../../../../../components/Header/Header.module.css",
 );
-const buttonCssPath = path.resolve(
+const shareButtonsCssPath = path.resolve(
   __dirname,
-  "../../../../../components/Button/Button.module.css",
+  "../../../../../components/ShareButtons/ShareButtons.module.css",
 );
 const source = fs.readFileSync(pagePath, "utf-8");
 const css = fs.readFileSync(cssPath, "utf-8");
 const footerCss = fs.readFileSync(footerCssPath, "utf-8");
 const headerCss = fs.readFileSync(headerCssPath, "utf-8");
-const buttonCss = fs.readFileSync(buttonCssPath, "utf-8");
+const shareButtonsCss = fs.readFileSync(shareButtonsCssPath, "utf-8");
 
 describe("(new)/blog/[slug]/page", () => {
   describe("page module exports", () => {
@@ -195,13 +195,13 @@ describe("(new)/blog/[slug]/page", () => {
     });
   });
 
-  describe("WCAG 2.5.5: Button.module.css に min-height / min-width: 44px が定義されていること（cycle-193 案 10-α 根本対応）", () => {
-    it("Button.module.css に min-height: 44px ルールが存在する", () => {
-      expect(buttonCss).toMatch(/min-height:\s*44px/);
+  describe("WCAG 2.5.5: ShareButtons.module.css に min-height: 44px が定義されていること", () => {
+    it("ShareButtons.module.css に min-height: 44px ルールが存在する", () => {
+      expect(shareButtonsCss).toMatch(/min-height:\s*44px/);
     });
 
-    it("Button.module.css に min-width: 44px ルールが存在する", () => {
-      expect(buttonCss).toMatch(/min-width:\s*44px/);
+    it("ShareButtons.module.css に min-width: 44px ルールが存在する", () => {
+      expect(shareButtonsCss).toMatch(/min-width:\s*44px/);
     });
   });
 });

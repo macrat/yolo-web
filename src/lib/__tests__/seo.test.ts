@@ -322,6 +322,7 @@ describe("generateToolMetadata", () => {
     category: "developer" as const,
     relatedSlugs: [],
     publishedAt: "2026-01-01T00:00:00+09:00",
+    trustLevel: "verified" as const,
     howItWorks:
       "JSONテキストを入力すると、構文を検証し、インデント付きで整形します。",
   };
@@ -375,6 +376,7 @@ describe("generateToolJsonLd", () => {
     category: "developer" as const,
     relatedSlugs: [],
     publishedAt: "2026-01-01T00:00:00+09:00",
+    trustLevel: "verified" as const,
     howItWorks:
       "JSONテキストを入力すると、構文を検証し、インデント付きで整形します。",
   };
@@ -616,6 +618,7 @@ describe("factory functions include twitter metadata", () => {
       category: "text",
       relatedSlugs: [],
       publishedAt: "2026-02-15T10:00:00+09:00",
+      trustLevel: "generated",
       howItWorks: "テスト用の処理内容説明です。",
     });
 
@@ -696,6 +699,7 @@ describe("factory functions include twitter metadata", () => {
       relatedCheatsheetSlugs: [],
       sections: [],
       publishedAt: "2026-02-15T10:00:00+09:00",
+      trustLevel: "generated",
     });
 
     expect(result.twitter).toMatchObject({

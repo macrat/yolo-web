@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Breadcrumb from "@/components/common/Breadcrumb";
+import TrustLevelBadge from "@/components/common/TrustLevelBadge";
 import { generateHumorDictMetadata, safeJsonLdStringify } from "@/lib/seo";
 import { getAllEntries } from "@/humor-dict/data";
 import { humorDictMeta } from "@/humor-dict/meta";
@@ -47,6 +48,7 @@ export default function HumorDictIndexPage() {
           { label: "ユーモア辞典" },
         ]}
       />
+      <TrustLevelBadge level="generated" />
       <section className={styles.hero}>
         <h1 className={styles.heroTitle}>{humorDictMeta.title}</h1>
         <p className={styles.heroSubtext}>

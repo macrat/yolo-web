@@ -24,6 +24,7 @@ export const meta: ToolMeta = {
   publishedAt: "2026-02-14T07:56:40+09:00",
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
+  trustLevel: "verified",
   howItWorks:
     "入力値をBigIntで内部的に保持し、2進・8進・10進・16進すべての表示をリアルタイムに更新します。BigIntを使用することでJavaScript通常の数値範囲を超える大きな数値も正確に変換できます。2進数は4桁ごと、16進数は2桁ごとにスペースで区切って視認しやすく表示します。",
   faq: [

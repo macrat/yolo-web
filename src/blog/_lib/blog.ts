@@ -6,6 +6,8 @@ import {
   extractHeadings,
   estimateReadingTime,
 } from "@/lib/markdown";
+import type { TrustLevel } from "@/lib/trust-levels";
+
 const BLOG_DIR = path.join(process.cwd(), "src/blog/content");
 
 export type BlogCategory =
@@ -144,6 +146,8 @@ export interface BlogPostMeta {
   related_tool_slugs: string[];
   draft: boolean;
   readingTime: number;
+  /** Content trust level */
+  trustLevel: TrustLevel;
 }
 
 export interface BlogPost extends BlogPostMeta {
@@ -182,6 +186,7 @@ export function getAllBlogPosts(): BlogPostMeta[] {
         : [],
       draft: false,
       readingTime: estimateReadingTime(content),
+      trustLevel: "generated" as const,
     };
 
     if (data.series) {
@@ -235,6 +240,7 @@ export async function getBlogPostBySlug(
         : [],
       draft: false,
       readingTime: estimateReadingTime(content),
+      trustLevel: "generated" as const,
       contentHtml: await markdownToHtml(content),
       headings: extractHeadings(content),
     };

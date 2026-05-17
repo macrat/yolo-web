@@ -36,6 +36,7 @@ describe("gameMetaToPlayContentMeta", () => {
     expect(playMeta.accentColor).toBe(gameMeta.accentColor);
     expect(playMeta.keywords).toBe(gameMeta.keywords);
     expect(playMeta.publishedAt).toBe(gameMeta.publishedAt);
+    expect(playMeta.trustLevel).toBe(gameMeta.trustLevel);
   });
 
   test("sets contentType to 'game'", () => {
@@ -53,6 +54,13 @@ describe("gameMetaToPlayContentMeta", () => {
     expect(gameMeta).toBeDefined();
     const playMeta = gameMetaToPlayContentMeta(gameMeta!);
     expect(playMeta.updatedAt).toBe(gameMeta!.updatedAt);
+  });
+
+  test("preserves optional trustNote when present", () => {
+    const gameMeta = allGameMetas.find((m) => m.trustNote !== undefined);
+    expect(gameMeta).toBeDefined();
+    const playMeta = gameMetaToPlayContentMeta(gameMeta!);
+    expect(playMeta.trustNote).toBe(gameMeta!.trustNote);
   });
 
   test("description is the top-level description, not seo.description", () => {
@@ -86,6 +94,7 @@ describe("quizMetaToPlayContentMeta", () => {
     expect(playMeta.accentColor).toBe(quizMeta.accentColor);
     expect(playMeta.keywords).toBe(quizMeta.keywords);
     expect(playMeta.publishedAt).toBe(quizMeta.publishedAt);
+    expect(playMeta.trustLevel).toBe(quizMeta.trustLevel);
   });
 
   test("sets contentType to 'quiz'", () => {
@@ -134,6 +143,10 @@ describe("fortunePlayContentMeta", () => {
 
   test("has correct accentColor", () => {
     expect(fortunePlayContentMeta.accentColor).toBe("#7c3aed");
+  });
+
+  test("has trustLevel 'generated'", () => {
+    expect(fortunePlayContentMeta.trustLevel).toBe("generated");
   });
 });
 

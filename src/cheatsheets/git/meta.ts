@@ -30,6 +30,7 @@ export const meta: CheatsheetMeta = {
   ],
   publishedAt: "2026-02-19T09:25:57+09:00",
   updatedAt: "2026-02-28T08:10:50+09:00",
+  trustLevel: "curated",
   valueProposition:
     "よく使うGitコマンドを用途別に整理。コマンドをすぐ見つけられる",
   faq: [

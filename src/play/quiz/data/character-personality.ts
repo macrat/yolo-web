@@ -69,6 +69,9 @@ const characterPersonalityQuiz: QuizDefinition = {
         href: "/play/music-personality",
       },
     ],
+    trustLevel: "generated",
+    trustNote:
+      "スコア計算は正確です。キャラクターと診断結果はAIが創作したエンターテインメントです。",
     faq: [
       {
         question:

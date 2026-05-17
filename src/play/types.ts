@@ -1,3 +1,5 @@
+import type { TrustLevel } from "@/lib/trust-levels";
+
 /**
  * PlayContentMeta — /play セクションの一覧・レジストリ用共通ビュー型。
  *
@@ -30,6 +32,10 @@ export interface PlayContentMeta {
   publishedAt: string;
   /** 更新日時（ISO 8601、タイムゾーン付き）。メインコンテンツ更新時に設定 */
   updatedAt?: string;
+  /** コンテンツの信頼レベル */
+  trustLevel: TrustLevel;
+  /** 信頼レベルの補足注記（任意） */
+  trustNote?: string;
   /**
    * コンテンツ種別。
    * - "game": パズル・ゲーム系

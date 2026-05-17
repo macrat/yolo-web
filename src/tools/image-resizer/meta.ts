@@ -19,6 +19,7 @@ export const meta: ToolMeta = {
   publishedAt: "2026-02-14T22:39:14+09:00",
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
+  trustLevel: "verified",
   howItWorks:
     "画像ファイル（PNG・JPEG・GIF・WebP、最大20MB）をCanvas APIで読み込み、指定サイズにリサイズしてブラウザ上でダウンロードします。幅・高さの絶対値指定とパーセント指定に対応し、アスペクト比ロックで比率を維持したリサイズも可能です。画像データはサーバーに送信されません。",
   faq: [
