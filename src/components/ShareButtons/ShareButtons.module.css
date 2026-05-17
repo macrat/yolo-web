@@ -62,7 +62,7 @@
   background: #000000;
 }
 
-:root.dark .x {
+:global(:root.dark) .x {
   color: #000000;
   background: #ffffff;
 }
