@@ -264,7 +264,7 @@ describe("KeigoReferenceTile", () => {
 
     await waitFor(() => {
       expect(setItemSpy).toHaveBeenCalledWith(
-        "yolos-tool-keigo-reference-category",
+        "yolos-tool-keigo-reference-category-filter",
         JSON.stringify("basic"),
       );
     });
@@ -289,7 +289,7 @@ describe("KeigoReferenceTile", () => {
 
   test("localStorage にカテゴリがある場合、reload 後に復元される", async () => {
     window.localStorage.setItem(
-      "yolos-tool-keigo-reference-category",
+      "yolos-tool-keigo-reference-category-filter",
       JSON.stringify("basic"),
     );
 

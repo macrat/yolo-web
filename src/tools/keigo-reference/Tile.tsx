@@ -29,6 +29,7 @@ import {
   type KeigoEntry,
 } from "./logic";
 import { useToolStorage } from "@/tools/_hooks/use-tool-storage";
+import { STORAGE_KEY_SEARCH, STORAGE_KEY_CATEGORY } from "./storage-keys";
 import styles from "./Tile.module.css";
 
 /**
@@ -122,13 +123,10 @@ function CategoryButton({
  */
 export default function KeigoReferenceTile() {
   // --- localStorage 永続化（M1b likes 3） ---
-  // key 命名規約: yolos-tool-<slug>-<purpose>
-  const [search, setSearch] = useToolStorage<string>(
-    "yolos-tool-keigo-reference-search",
-    "",
-  );
+  // key 命名規約: yolos-tool-<slug>-<purpose>（storage-keys.ts 共有定数を使用）
+  const [search, setSearch] = useToolStorage<string>(STORAGE_KEY_SEARCH, "");
   const [category, setCategory] = useToolStorage<KeigoCategory | "all">(
-    "yolos-tool-keigo-reference-category",
+    STORAGE_KEY_CATEGORY,
     "all",
   );
 
