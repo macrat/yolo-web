@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import Breadcrumb from "@/components/common/Breadcrumb";
 import ShareButtons from "@/components/common/ShareButtons";
+import TrustLevelBadge from "@/components/common/TrustLevelBadge";
 import {
   generateHumorDictEntryMetadata,
   generateHumorDictJsonLd,
@@ -58,6 +59,7 @@ export default async function HumorDictEntryPage({
           { label: entry.word },
         ]}
       />
+      <TrustLevelBadge level="generated" />
       <RecordPlay />
       <article className={styles.article}>
         {/* ファーストビュー: 見出し語・よみがな・ユーモア定義文 */}

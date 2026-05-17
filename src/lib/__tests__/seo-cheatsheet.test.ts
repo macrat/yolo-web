@@ -14,6 +14,7 @@ const mockMeta: CheatsheetMeta = {
   relatedCheatsheetSlugs: ["git"],
   sections: [{ id: "basics", title: "基本" }],
   publishedAt: "2026-02-19T09:27:40+09:00",
+  trustLevel: "curated",
 };
 
 describe("generateCheatsheetMetadata", () => {

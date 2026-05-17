@@ -32,6 +32,8 @@ function makeContent(
     keywords: [],
     publishedAt: "2026-01-01T00:00:00+09:00",
     updatedAt: undefined,
+    trustLevel: "generated",
+    trustNote: undefined,
     contentType: "quiz",
     ...overrides,
   };

@@ -20,6 +20,7 @@ export const meta: ToolMeta = {
   publishedAt: "2026-02-14T22:39:14+09:00",
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
+  trustLevel: "verified",
   howItWorks:
     "BMI値は「体重(kg) ÷ 身長(m)²」の計算式で算出します。判定は日本肥満学会の基準（BMI 18.5未満：低体重、18.5以上25未満：普通体重、25以上：肥満）を採用しています。適正体重はBMI 22に相当する体重を身長から逆算して表示します。計算はすべてブラウザ上で完結します。",
   faq: [

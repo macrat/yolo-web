@@ -33,6 +33,7 @@ export const meta: CheatsheetMeta = {
     { id: "semantic-guide", title: "セマンティクス使い分けガイド" },
   ],
   publishedAt: "2026-03-02T09:10:04+09:00",
+  trustLevel: "curated",
   valueProposition:
     "約70のHTMLタグを用途別に整理。セマンティクスの使い分けもわかる",
   usageExample: {

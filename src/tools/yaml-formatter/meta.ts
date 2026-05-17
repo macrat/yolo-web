@@ -24,6 +24,7 @@ export const meta: ToolMeta = {
   publishedAt: "2026-02-14T13:25:20+09:00",
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
+  trustLevel: "verified",
   howItWorks:
     "YAMLパーサーで入力を解析し、整形表示・構文検証・YAML↔JSON変換を行います。整形では適切なインデント（2スペースまたは4スペース）を付与します。エラーがある場合はエラー内容と該当行番号を表示します。最大1,000,000文字まで対応し、すべての処理はブラウザ上で完結します。",
   faq: [

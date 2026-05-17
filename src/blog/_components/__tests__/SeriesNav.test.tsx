@@ -17,6 +17,7 @@ function makeMeta(
     draft: false,
     readingTime: 5,
     series: "test-series",
+    trustLevel: "generated" as const,
     ...overrides,
   };
 }

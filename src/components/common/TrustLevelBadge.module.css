@@ -1,0 +1,73 @@
+.wrapper {
+  display: inline-block;
+  margin: 0.25rem 0;
+}
+
+/* <details>/<summary> のデフォルトスタイルをリセット */
+.details {
+  display: inline;
+}
+
+.summary {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  list-style: none;
+}
+
+/* WebKit で三角マーカーを消す */
+.summary::-webkit-details-marker {
+  display: none;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.badge.verified {
+  color: var(--color-trust-verified);
+  background-color: var(--color-trust-verified-bg);
+}
+
+.badge.curated {
+  color: var(--color-trust-curated);
+  background-color: var(--color-trust-curated-bg);
+}
+
+.badge.generated {
+  color: var(--color-trust-generated);
+  background-color: var(--color-trust-generated-bg);
+}
+
+.icon {
+  font-style: normal;
+  line-height: 1;
+}
+
+.description {
+  display: block;
+  margin-top: 0.35rem;
+  padding: 0.5rem 0.625rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  line-height: 1.6;
+  color: var(--color-text-muted);
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+}
+
+.note {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.7rem;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}

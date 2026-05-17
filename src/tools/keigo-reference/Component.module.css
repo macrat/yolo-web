@@ -1,33 +1,41 @@
-/**
- * Component.module.css — 敬語早見表詳細ページの主要 UI スタイル
- *
- * CSS トークン: 新体系のみ使用（DESIGN.md §2 準拠）
- * - --bg / --bg-soft: 背景色
- * - --fg / --fg-soft / --fg-softer: テキスト色
- * - --border: ボーダー色
- * - --accent / --accent-soft: アクセント色
- * - --danger / --success: 誤正表示色
- * - --r-normal / --r-interactive: ボーダー半径
- *
- * 旧トークン（--color-border / --color-primary / --color-bg / --color-text / --color-text-muted
- * / --color-bg-secondary / --color-danger / --color-success）は一切使わない。
- * これらは (new) デザイン体系で定義されておらず、使用すると装飾全壊になる（cycle-193 致命1）。
- */
-
 .container {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-/* タブ切替エリア: Button コンポーネントを flex 横並びで配置 */
+/* Main tabs: table / mistakes */
 .mainTabs {
   display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
+  gap: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  width: fit-content;
 }
 
-/* 検索バー */
+.mainTab {
+  padding: 0.5rem 1.25rem;
+  border: none;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
+}
+
+.mainTab:not(:last-child) {
+  border-right: 1px solid var(--color-border);
+}
+
+.activeMainTab {
+  background-color: var(--color-primary);
+  color: #fff;
+}
+
+/* Search and filter bar */
 .searchBar {
   display: flex;
   gap: 0.75rem;
@@ -38,18 +46,53 @@
 .searchInput {
   flex: 1;
   min-width: 200px;
+  padding: 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  font-size: 0.95rem;
+  color: var(--color-text);
+  background-color: var(--color-bg);
 }
 
-/* カテゴリフィルタ: Button コンポーネントを flex 横並びで配置 */
+.searchInput:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -1px;
+  border-color: var(--color-primary);
+}
+
+/* Filter buttons (category tabs) */
 .filterButtons {
   display: flex;
-  gap: 0.375rem;
-  flex-wrap: wrap;
+  gap: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 0.375rem;
+  overflow: hidden;
+}
+
+.filterButton {
+  padding: 0.4rem 0.85rem;
+  border: none;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
+}
+
+.filterButton:not(:last-child) {
+  border-right: 1px solid var(--color-border);
+}
+
+.activeFilter {
+  background-color: var(--color-primary);
+  color: #fff;
 }
 
 .resultCount {
   font-size: 0.8rem;
-  color: var(--fg-softer);
+  color: var(--color-text-muted);
 }
 
 /* Table */
@@ -61,25 +104,27 @@
 .th {
   font-size: 0.85rem;
   font-weight: 600;
-  background-color: var(--bg-soft);
-  border-bottom: 2px solid var(--border);
+  background-color: var(--color-bg-secondary);
+  border-bottom: 2px solid var(--color-border);
   padding: 0.6rem 0.75rem;
   text-align: left;
-  color: var(--fg);
+  color: var(--color-text);
 }
 
 .tableRow {
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--color-border);
+  cursor: pointer;
+  transition: background-color 0.1s;
 }
 
 .tableRow:hover {
-  background-color: var(--bg-soft);
+  background-color: var(--color-bg-secondary);
 }
 
 .td {
   padding: 0.6rem 0.75rem;
   font-size: 0.9rem;
-  color: var(--fg);
+  color: var(--color-text);
   vertical-align: top;
 }
 
@@ -87,11 +132,19 @@
   font-weight: 600;
 }
 
-/* 例文パネル（AccordionItem の children として使用） */
+/* Example panel (accordion) */
 .examplePanel {
   padding: 0.75rem 1rem;
-  background-color: var(--bg-soft);
-  border-radius: var(--r-normal);
+  background-color: var(--color-bg-secondary);
+  border-radius: 0.375rem;
+}
+
+.examplePanelRow {
+  background-color: var(--color-bg-secondary);
+}
+
+.examplePanelRow td {
+  padding: 0 0.75rem 0.75rem;
 }
 
 .exampleItem {
@@ -105,31 +158,31 @@
 .exampleContext {
   font-size: 0.8rem;
   font-weight: 600;
-  color: var(--fg-soft);
+  color: var(--color-text-muted);
   margin-bottom: 0.25rem;
 }
 
 .exampleLine {
   font-size: 0.85rem;
-  color: var(--fg);
+  color: var(--color-text);
   line-height: 1.5;
 }
 
 .exampleLabel {
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--fg-soft);
+  color: var(--color-text-muted);
   margin-right: 0.4rem;
 }
 
 .noteText {
   font-size: 0.8rem;
-  color: var(--fg-soft);
+  color: var(--color-text-muted);
   font-style: italic;
   margin-top: 0.5rem;
 }
 
-/* よくある間違いタブ */
+/* Mistakes tab */
 .mistakeSection {
   margin-bottom: 1.5rem;
 }
@@ -137,28 +190,26 @@
 .mistakeSectionTitle {
   font-size: 1rem;
   font-weight: 600;
-  color: var(--fg);
+  color: var(--color-text);
   margin: 0 0 0.75rem;
 }
 
 .mistakeCard {
-  border: 1px solid var(--border);
-  border-radius: var(--r-normal);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
   padding: 0.75rem 1rem;
   margin-bottom: 0.5rem;
-  background-color: var(--bg);
+  background-color: var(--color-bg);
 }
 
-/* 誤表現: --danger トークン（globals.css で定義済み）*/
 .wrongText {
-  color: var(--danger);
+  color: var(--color-danger, #dc3545);
   font-weight: 600;
   font-size: 0.9rem;
 }
 
-/* 正表現: --success トークン（globals.css で定義済み）*/
 .correctText {
-  color: var(--success);
+  color: var(--color-success, #28a745);
   font-weight: 600;
   font-size: 0.9rem;
 }
@@ -166,34 +217,40 @@
 .mistakeLabel {
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--fg-soft);
+  color: var(--color-text-muted);
   margin-right: 0.4rem;
 }
 
 .explanationText {
   font-size: 0.85rem;
-  color: var(--fg-soft);
+  color: var(--color-text-muted);
   margin-top: 0.4rem;
   line-height: 1.5;
 }
 
-/* モバイル: デフォルトは非表示（デスクトップテーブルを表示） */
+/* Mobile card view for table */
 .mobileCards {
   display: none;
 }
 
 .mobileCard {
-  border: 1px solid var(--border);
-  border-radius: var(--r-normal);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
   padding: 0.75rem 1rem;
   margin-bottom: 0.5rem;
-  background-color: var(--bg-soft);
+  background-color: var(--color-bg);
+  cursor: pointer;
+  transition: background-color 0.1s;
+}
+
+.mobileCard:hover {
+  background-color: var(--color-bg-secondary);
 }
 
 .mobileCardTitle {
   font-weight: 600;
   font-size: 0.95rem;
-  color: var(--fg);
+  color: var(--color-text);
   margin-bottom: 0.4rem;
 }
 
@@ -201,21 +258,21 @@
   display: flex;
   gap: 0.4rem;
   font-size: 0.85rem;
-  color: var(--fg);
+  color: var(--color-text);
   line-height: 1.5;
 }
 
 .mobileCardLabel {
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--fg-soft);
+  color: var(--color-text-muted);
   min-width: 3.5rem;
   flex-shrink: 0;
 }
 
 .noResults {
   font-size: 0.9rem;
-  color: var(--fg-soft);
+  color: var(--color-text-muted);
   text-align: center;
   padding: 2rem 0;
 }
@@ -223,6 +280,13 @@
 @media (max-width: 768px) {
   .mainTabs {
     width: 100%;
+  }
+
+  .mainTab {
+    flex: 1;
+    text-align: center;
+    font-size: 0.8rem;
+    padding: 0.5rem 0.5rem;
   }
 
   .searchBar {
@@ -238,7 +302,12 @@
     width: 100%;
   }
 
-  /* モバイルでは desktopTable を非表示にして mobileCards を表示 */
+  .filterButton {
+    flex: 1;
+    text-align: center;
+  }
+
+  /* Hide desktop table, show mobile cards */
   .desktopTable {
     display: none;
   }

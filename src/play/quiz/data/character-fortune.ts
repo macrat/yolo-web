@@ -63,6 +63,9 @@ const characterFortuneQuiz: QuizDefinition = {
         href: "/play/contrarian-fortune",
       },
     ],
+    trustLevel: "generated",
+    trustNote:
+      "スコア計算は正確です。キャラクターと診断結果はAIが創作したエンターテインメントです。",
     faq: [
       {
         question: "何問答えると守護キャラがわかりますか？",

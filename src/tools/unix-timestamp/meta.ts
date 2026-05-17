@@ -19,6 +19,7 @@ export const meta: ToolMeta = {
   publishedAt: "2026-02-13T19:03:42+09:00",
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
+  trustLevel: "verified",
   howItWorks:
     "1970年1月1日 00:00:00 UTC（エポック）からの経過秒数（またはミリ秒数）を入力すると、ローカルタイムゾーンの日時に変換します。逆変換では年・月・日・時・分・秒を入力してUNIXタイムスタンプを取得できます。エポック秒（10桁）とミリ秒（13桁）の両方に対応し、変換はブラウザ上で完結します。",
   faq: [

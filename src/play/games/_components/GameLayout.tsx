@@ -2,6 +2,7 @@ import type { GameMeta } from "@/play/games/types";
 import Breadcrumb from "@/components/common/Breadcrumb";
 import FaqSection from "@/components/common/FaqSection";
 import ShareButtons from "@/components/common/ShareButtons";
+import TrustLevelBadge from "@/components/common/TrustLevelBadge";
 import RecommendedContent from "@/play/_components/RecommendedContent";
 import RelatedGames from "./RelatedGames";
 import RelatedBlogPosts from "./RelatedBlogPosts";
@@ -35,11 +36,12 @@ export default function GameLayout({
           { label: meta.title },
         ]}
       />
-      {meta.valueProposition && (
-        <header className={styles.header}>
+      <header className={styles.header}>
+        <TrustLevelBadge level={meta.trustLevel} note={meta.trustNote} />
+        {meta.valueProposition && (
           <p className={styles.valueProposition}>{meta.valueProposition}</p>
-        </header>
-      )}
+        )}
+      </header>
       {meta.usageExample && (
         <div className={styles.usageExample}>
           <p className={styles.usageExampleHeading}>こんなゲームです</p>

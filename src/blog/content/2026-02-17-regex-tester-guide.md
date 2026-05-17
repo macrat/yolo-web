@@ -9,6 +9,7 @@ category: "tool-guides"
 series: null
 related_tool_slugs: ["regex-tester", "text-replace"]
 draft: false
+trust_level: "generated"
 ---
 
 ## はじめに

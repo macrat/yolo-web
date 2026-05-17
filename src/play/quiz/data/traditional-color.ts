@@ -27,6 +27,9 @@ const traditionalColorQuiz: QuizDefinition = {
       { label: "日本の伝統色一覧", href: "/dictionary/colors" },
       { label: "伝統色辞典", href: "/dictionary/colors" },
     ],
+    trustLevel: "generated",
+    trustNote:
+      "スコア計算は正確です。質問と結果はAIが創作しました。楽しみとしてお楽しみください。",
     seoTitle: "日本の伝統色 心理テスト｜無料の性格診断で和の色を発見",
     faq: [
       {

@@ -32,6 +32,7 @@ function buildMeta(overrides: Partial<ToolMeta> = {}): ToolMeta {
     category: "developer",
     relatedSlugs: [],
     publishedAt: "2026-01-01T00:00:00+09:00",
+    trustLevel: "verified",
     howItWorks: "ブラウザ上で処理します",
     ...overrides,
   };

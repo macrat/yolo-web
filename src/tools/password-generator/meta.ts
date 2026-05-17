@@ -19,6 +19,7 @@ export const meta: ToolMeta = {
   publishedAt: "2026-02-13T19:03:42+09:00",
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
+  trustLevel: "verified",
   howItWorks:
     "ブラウザ標準の暗号学的乱数生成API（crypto.getRandomValues）を使用して安全なパスワードを生成します。大文字・小文字・数字・記号の組み合わせや、紛らわしい文字の除外をオプションで指定できます。8〜128文字に対応し、生成されたパスワードはサーバーに送信されません。",
   faq: [

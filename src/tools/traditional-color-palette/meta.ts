@@ -17,6 +17,7 @@ export const meta: ToolMeta = {
   relatedSlugs: ["color-converter"],
   publishedAt: "2026-02-28T14:03:07+09:00",
   structuredDataType: "WebApplication",
+  trustLevel: "verified",
   howItWorks:
     "日本の伝統色250色のHSLデータから、色相環上の位置を計算して色彩調和パレットを生成します。補色（対面の色）・類似色（±30度）・トライアド（120度間隔）・テトラド（90度間隔）・分裂補色（補色の両隣）の5種類の配色パターンを提供します。無彩色の場合は明度の異なる無彩色一覧を表示します。",
   faq: [

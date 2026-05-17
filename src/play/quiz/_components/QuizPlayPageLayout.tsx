@@ -1,6 +1,7 @@
 import Breadcrumb from "@/components/common/Breadcrumb";
 import FaqSection from "@/components/common/FaqSection";
 import ShareButtons from "@/components/common/ShareButtons";
+import TrustLevelBadge from "@/components/common/TrustLevelBadge";
 import QuizContainer from "@/play/quiz/_components/QuizContainer";
 import RelatedQuizzes from "@/play/quiz/_components/RelatedQuizzes";
 import RecommendedContent from "@/play/_components/RecommendedContent";
@@ -92,6 +93,10 @@ export default async function QuizPlayPageLayout({
           { label: "遊ぶ", href: "/play" },
           { label: quiz.meta.title },
         ]}
+      />
+      <TrustLevelBadge
+        level={quiz.meta.trustLevel}
+        note={quiz.meta.trustNote}
       />
       <QuizContainer
         quiz={quiz}

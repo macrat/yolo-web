@@ -42,6 +42,7 @@ function makeContent(
     accentColor: "#000000",
     keywords: [],
     publishedAt: "2026-01-01T00:00:00+09:00",
+    trustLevel: "verified",
     contentType: "quiz",
     category: "knowledge",
     ...overrides,

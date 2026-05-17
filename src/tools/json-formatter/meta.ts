@@ -25,6 +25,7 @@ export const meta: ToolMeta = {
   publishedAt: "2026-02-13T18:57:05+09:00",
   updatedAt: "2026-02-28T08:10:50+09:00",
   structuredDataType: "WebApplication",
+  trustLevel: "verified",
   howItWorks:
     "入力されたJSONをブラウザ上でパースし、インデントを付けた整形表示または不要な空白を除去した圧縮表示に変換します。JSON構文エラーがある場合はエラー内容を表示します。インデント幅は2スペース・4スペース・タブから選択できます。入力データはサーバーに送信されません。",
   faq: [

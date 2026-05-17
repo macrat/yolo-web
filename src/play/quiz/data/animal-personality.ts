@@ -67,6 +67,9 @@ const animalPersonalityQuiz: QuizDefinition = {
         href: "/play/character-fortune",
       },
     ],
+    trustLevel: "generated",
+    trustNote:
+      "スコア計算は正確です。動物タイプと診断結果はAIが創作したエンターテインメントです。動物の分類上の正確性を保証するものではありません。",
     faq: [
       {
         question: "何問答えると結果が出ますか？",

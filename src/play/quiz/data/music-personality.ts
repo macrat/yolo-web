@@ -55,6 +55,9 @@ const musicPersonalityQuiz: QuizDefinition = {
         href: "/play/unexpected-compatibility",
       },
     ],
+    trustLevel: "generated",
+    trustNote:
+      "スコア計算は正確です。質問と結果はAIが創作したユーモア診断です。楽しみとしてお楽しみください。",
     faq: [
       {
         question: "楽器を演奏する人と聴く専門の人では、結果に違いは出ますか？",

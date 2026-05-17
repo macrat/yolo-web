@@ -20,6 +20,7 @@ export const meta: ToolMeta = {
   publishedAt: "2026-02-14T22:39:14+09:00",
   updatedAt: "2026-03-02T09:10:04+09:00",
   structuredDataType: "WebApplication",
+  trustLevel: "verified",
   howItWorks:
     "生年月日と基準日（デフォルトは今日）を入力すると、年・月・日単位の正確な年齢をブラウザ上で計算します。和暦変換は明治（1868年）以降に対応し、干支は生まれた年の西暦から、星座は誕生月日から判定します。すべての計算はサーバーに送信されずブラウザ内で完結します。",
   faq: [

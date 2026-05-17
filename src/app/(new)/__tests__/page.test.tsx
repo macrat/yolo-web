@@ -35,6 +35,7 @@ vi.mock("@/blog/_lib/blog", () => ({
       related_tool_slugs: [],
       draft: false,
       readingTime: 5,
+      trustLevel: "generated",
     },
   ],
 }));

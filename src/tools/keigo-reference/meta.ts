@@ -1,5 +1,4 @@
 import type { ToolMeta } from "@/tools/types";
-import { KEIGO_ENTRIES } from "./logic";
 
 export const meta: ToolMeta = {
   slug: "keigo-reference",
@@ -21,12 +20,14 @@ export const meta: ToolMeta = {
   publishedAt: "2026-02-21T13:09:06+09:00",
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
-  // KEIGO_ENTRIES.length で件数を自動算出（案 13-A 経路 X codegen 化）
-  howItWorks: `基本動詞・ビジネス頻出・接客サービスの3カテゴリで${KEIGO_ENTRIES.length}件の動詞を内蔵しています。キーワード検索やカテゴリフィルターで絞り込み、各動詞の尊敬語・謙譲語・丁寧語を一覧で確認できます。動詞をクリックすると具体的な使用例が展開表示されます。「よくある間違い」タブでは誤用パターンと正しい表現も確認できます。`,
+  trustLevel: "curated",
+  howItWorks:
+    "基本動詞・ビジネス頻出・接客サービスの3カテゴリで40件以上の動詞を内蔵しています。キーワード検索やカテゴリフィルターで絞り込み、各動詞の尊敬語・謙譲語・丁寧語を一覧で確認できます。動詞をクリックすると具体的な使用例が展開表示されます。「よくある間違い」タブでは誤用パターンと正しい表現も確認できます。",
   faq: [
     {
       question: "掲載されている動詞は何件ですか？",
-      answer: `基本動詞・ビジネス頻出・接客サービスの3カテゴリで合計${KEIGO_ENTRIES.length}件の動詞を掲載しています。カテゴリフィルターやキーワード検索で絞り込むことができます。`,
+      answer:
+        "基本動詞・ビジネス頻出・接客サービスの3カテゴリで合計40件以上の動詞を掲載しています。カテゴリフィルターやキーワード検索で絞り込むことができます。",
     },
     {
       question: "用例や使い方の例文も確認できますか？",

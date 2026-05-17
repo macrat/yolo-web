@@ -16,6 +16,7 @@ describe("QuizMeta faq field", () => {
       accentColor: "#000000",
       keywords: ["test"],
       publishedAt: "2026-01-01T00:00:00+09:00",
+      trustLevel: "generated",
     };
     expect(meta.faq).toBeUndefined();
   });
@@ -34,6 +35,7 @@ describe("QuizMeta faq field", () => {
       accentColor: "#000000",
       keywords: ["test"],
       publishedAt: "2026-01-01T00:00:00+09:00",
+      trustLevel: "generated",
       faq: [
         {
           question: "このクイズは何問ありますか？",

@@ -52,17 +52,6 @@
 .link {
   color: var(--accent);
   text-decoration: none;
-  /*
-   * 44px タップターゲット: WCAG 2.5.5 / B-386 根本対応。
-   * display:inline-flex + min-height:44px でタップ可能領域を確保する。
-   * vertical-align:middle で周囲のテキスト（separator「/」・current span）と
-   * baseline が揃うよう調整。padding で左右に余白を設け、視覚的な詰まりを防ぐ。
-   */
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  padding: 0 0.25em;
-  vertical-align: middle;
 }
 
 .link:hover {
@@ -79,14 +68,4 @@
 .current {
   /* 現在位置はリンクではなく通常テキスト。より強調された文字色を使う */
   color: var(--fg);
-  /*
-   * 44px タップターゲット: .link と同様に min-height を揃える。
-   * current は操作要素ではないが、高さを揃えることでリンク要素との
-   * 垂直整列が自然になり、視覚的な一貫性を維持する。
-   */
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  padding: 0 0.25em;
-  vertical-align: middle;
 }

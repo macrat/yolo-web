@@ -5,6 +5,7 @@ import type { PlayContentMeta } from "@/play/types";
 import Breadcrumb from "@/components/common/Breadcrumb";
 import FaqSection from "@/components/common/FaqSection";
 import ShareButtons from "@/components/common/ShareButtons";
+import TrustLevelBadge from "@/components/common/TrustLevelBadge";
 import PlayRecommendBlock from "@/play/_components/PlayRecommendBlock";
 import styles from "./DictionaryDetailLayout.module.css";
 
@@ -27,7 +28,7 @@ interface DictionaryDetailLayoutProps {
 
 /**
  * 辞典詳細ページの共通レイアウトコンポーネント。
- * JSON-LD, Breadcrumb, valueProposition, Detail, FAQ, ShareButtons を
+ * JSON-LD, Breadcrumb, TrustLevelBadge, valueProposition, Detail, FAQ, ShareButtons を
  * 統一的な構造で出力する。ToolLayout/CheatsheetLayoutのパターンに準拠。
  *
  * Server Component として実装。ColorDetail のような "use client" コンポーネントは
@@ -66,7 +67,9 @@ export default function DictionaryDetailLayout({
       {/* Breadcrumb コンポーネントが内部で breadcrumb JSON-LD を自動出力する */}
       <Breadcrumb items={breadcrumbItems} />
 
-      {/* valueProposition: Breadcrumb の直後、children の前 */}
+      <TrustLevelBadge level={meta.trustLevel} />
+
+      {/* valueProposition: Breadcrumb + TrustLevelBadge の直後、children の前 */}
       {meta.valueProposition && (
         <p className={styles.valueProposition}>{meta.valueProposition}</p>
       )}

@@ -18,6 +18,8 @@ const gameEntries: GameMeta[] = [
     publishedAt: "2026-02-13T19:11:53+09:00",
     updatedAt: "2026-03-01T23:14:37+09:00",
     sitemap: { changeFrequency: "monthly", priority: 0.8 },
+    trustLevel: "curated",
+    trustNote: "ゲームの正解判定は正確です。パズルデータはAIが作成しています。",
     seo: {
       title: "漢字カナール - 毎日の漢字パズル",
       description:
@@ -77,6 +79,8 @@ const gameEntries: GameMeta[] = [
     publishedAt: "2026-02-14T12:45:55+09:00",
     updatedAt: "2026-03-01T23:14:37+09:00",
     sitemap: { changeFrequency: "monthly", priority: 0.8 },
+    trustLevel: "curated",
+    trustNote: "ゲームの正解判定は正確です。パズルデータはAIが作成しています。",
     seo: {
       title: "四字キメル - 毎日の四字熟語パズル",
       description:
@@ -138,6 +142,8 @@ const gameEntries: GameMeta[] = [
     publishedAt: "2026-02-14T23:00:07+09:00",
     updatedAt: "2026-02-21T22:10:47+09:00",
     sitemap: { changeFrequency: "monthly", priority: 0.8 },
+    trustLevel: "curated",
+    trustNote: "ゲームの正解判定は正確です。パズルデータはAIが作成しています。",
     seo: {
       title: "ナカマワケ - 毎日の仲間分けパズル",
       description:
@@ -199,6 +205,7 @@ const gameEntries: GameMeta[] = [
     publishedAt: "2026-02-19T23:22:13+09:00",
     updatedAt: "2026-03-01T23:14:37+09:00",
     sitemap: { changeFrequency: "monthly", priority: 0.8 },
+    trustLevel: "verified",
     seo: {
       title: "イロドリ - 毎日の色彩チャレンジ",
       description:
