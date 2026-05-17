@@ -27,6 +27,7 @@ import {
   type MistakeType,
 } from "./logic";
 import { useToolStorage } from "@/tools/_hooks/use-tool-storage";
+import { STORAGE_KEY_SEARCH, STORAGE_KEY_CATEGORY } from "./storage-keys";
 import styles from "./Component.module.css";
 
 type ActiveTab = "table" | "mistakes";
@@ -70,18 +71,18 @@ function EntryExamples({ entry }: { entry: KeigoEntry }) {
 
 export default function KeigoReferenceComponent() {
   // --- localStorage 永続化（M1b likes 3）---
-  // key 命名規約: yolos-tool-<slug>-<purpose>
+  // key 命名規約: yolos-tool-<slug>-<purpose>（storage-keys.ts 共有定数を使用）
   const [activeTab, setActiveTab] = useToolStorage<ActiveTab>(
     "yolos-tool-keigo-reference-tab",
     "table",
   );
   const [searchQuery, setSearchQuery] = useToolStorage<string>(
-    "yolos-tool-keigo-reference-search",
+    STORAGE_KEY_SEARCH,
     "",
   );
   const [selectedCategory, setSelectedCategory] = useToolStorage<
     KeigoCategory | "all"
-  >("yolos-tool-keigo-reference-category-filter", "all");
+  >(STORAGE_KEY_CATEGORY, "all");
 
   const filteredEntries = useMemo(
     () => filterEntries(searchQuery, selectedCategory),
