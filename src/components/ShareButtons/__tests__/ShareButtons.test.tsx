@@ -146,13 +146,15 @@ describe("ShareButtons", () => {
       expect(status).toHaveAttribute("aria-live", "polite");
     });
 
-    test("WCAG 2.5.5: ボタンは Button コンポーネントを使用していること", () => {
-      // Button 本体に min-height: 44px が設定されている（cycle-193 案 10-α）。
-      // variant="default" で Button を使用しているため data-variant 属性を確認する。
+    test("WCAG 2.5.5: 全ボタンに共通の .button クラスが付与されている（min-height: 44px の保証元）", () => {
+      // タップ領域 44×44px は ShareButtons.module.css の
+      // .button { min-height: 44px; min-width: 44px } で担保している。
+      // クラス付与の有無を確認することで、サイズ保証が外れる回帰を検出する。
       render(<ShareButtons url="/blog/test" title="テスト記事" />);
       const buttons = screen.getAllByRole("button");
       for (const btn of buttons) {
-        expect(btn).toHaveAttribute("data-variant", "default");
+        // CSS Modules によりクラス名はハッシュ化されるが、必ず "button" 文字列を含む
+        expect(btn.className).toMatch(/button/);
       }
     });
   });
