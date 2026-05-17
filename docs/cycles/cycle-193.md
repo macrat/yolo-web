@@ -1771,6 +1771,32 @@ r1-r9 累積 9 ラウンド + 計画 / T-A 設計 / T-B フェーズ A 反復で
 
 <!-- このサイクルで完了できなかった作業や、次のサイクルに持ち越す必要のある作業があれば、ここと /docs/backlog.md の両方に記載する。後送り項目は独立した B-XXX 起票（Notes 押し込めを避ける）。 -->
 
+### B-424: デザイン移行計画の見直し
+
+cycle-193 の構造的失敗を踏まえ、デザイン移行計画 (`docs/design-migration-plan.md`) 全体の再評価が次サイクル以降の前提として必要。
+
+**経緯**:
+
+- cycle-178 B-363-1 commit (`82c7335e`) で Phase 2 を「概念定義 + 型契約のみ」に縮小書き換えしたが、cycle-191/192/193 の 3 サイクル連続失敗で仮説が外れたことが確認された (cycle-178 PM 自身も「(a)〜(d) はすべて仮説段階」と明言、`docs/cycles/cycle-178.md` L180)
+- Phase 2 縮小により本来 Phase 2 で完了すべき基盤実装 (Tile / DnD / 編集モード / localStorage 永続化 / hidden URL 検証) が削除され、Phase 7 各サイクルが構造的過負荷状態になっていた
+- cycle-193 失敗の事後 Playwright 実機調査で `(new)/tools/keigo-reference` の Panel max-width 未設定によるレイアウト破綻も発覚 = Phase 7 移行手順の標準テンプレ自体に不備があった可能性
+
+**スコープ案 (次サイクル PM の判断対象)**:
+
+- (i) cycle-178 縮小経緯の再評価
+- (ii) Phase 2 を「道具箱基盤実装」として復元するか、新 Phase を立てるか、または現状維持かの判断
+- (iii) Phase 7 「1 ページ移行の標準手順」(L289-303) に Panel max-width 等の幅制約規定を加えるか
+- (iv) cycle-193 で実装してから revert した 9 個のコンポーネント (IdentityHeader / TrustSection / LifecycleSection / ToolInputArea / ToolDetailLayout / AccordionItem / PrivacyBadge / ResultCopyArea / useToolStorage) のうちどれが道具箱基盤 / どれがツール詳細専用 / どれが両方の境界かの判別
+
+**着手条件**: cycle-193 完全クローズ後 (本サイクル revert + push 完了後)。← 既に満たされている (commit `a61d851f` push 済)。
+
+**参照ドキュメント**:
+
+- `docs/design-migration-plan.md` (Phase 2 / 7 / 8.2 / 9 全体留意)
+- `docs/cycles/cycle-178.md` L180 (縮小経緯 + 仮説段階明示)
+- `docs/cycles/cycle-193.md` (失敗認定セクション + 事故報告 1/2/3、本ファイル)
+- `docs/cycles/cycle-191.md` / `cycle-192.md` (連続失敗の構造分析)
+
 ## 補足事項
 
 cycle-192 申し送りに含まれる「構造的歯止め 5 項目」「使わない運用 4 項目」「次サイクル PM が最初にやること 9 項目」は、本ファイル「## 作業計画」セクション内の **「全タスクに適用する運用ルール」（運用R1 〜 運用R14）に本格的に統合済**。補足事項に逃がさず、計画書本体の作業計画として位置づけている。
