@@ -2,7 +2,7 @@
 id: 193
 description: 【失敗】B-314（Phase 7 全体統括）第 1 弾 = 基盤再構築のやり直し。cycle-191/192/193 の 3 サイクル連続失敗。スコープ（Phase 7 第 1 弾 = keigo-reference 移行 + Phase 7 基盤モジュール 9 個）は維持のまま、構造的失敗認定としてクローズ。失敗の核心: Phase 9 全体留意違反（実物観察前に基盤 9 個を固定実装）/ cycle-178 B-363-1 縮小経緯の未確認（Phase 2「概念定義 + 型契約のみ」縮小により Phase 7 が構造的過負荷状態だったことを認識しなかった）/ AP-P11 同型発火（cycle-178 縮小判断を「変更不可の制約」として継承）/ Owner 指摘の無批判採用。**当初判断 (撤回済): コード成果物を cycle-191/192 パターンで維持。最終判断 (実施済 2026-05-17): failure クローズ push 直後の Owner ご指摘 + Playwright 実機検証で `/tools/keigo-reference` Panel max-width 欠如によるレイアウト破綻が発覚し、cycle-193 失敗時の「コード維持」判断自体が誤りと判明。cycle-190 一般則 (全コード revert + サイクルドキュメントのみ維持) に訂正し、コード成果物すべてを着手前 (`f5ab12fe`) 状態に revert (commit `758bcc39` + `9e13f933`)。PR #87 (ShareButtons リファクタ) と eslint-config-next バンプは cycle-193 期間中に origin/main で並行進行した独立変更のため維持。**
 started_at: 2026-05-16T01:10:45+0900
-completed_at: "2026-05-17T15:27:36+0900"
+completed_at: "2026-05-18T00:31:16+0900"
 ---
 
 # サイクル-193
