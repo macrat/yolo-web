@@ -17,19 +17,19 @@ export const TRUST_LEVEL_META: Record<TrustLevel, TrustLevelMetaEntry> = {
     label: "正確な処理",
     description:
       "このコンテンツは標準的なアルゴリズムに基づいて処理しています。実装上のバグがない限り、正確な結果が得られます。",
-    icon: "✓", // チェックマーク文字
+    icon: "\u2713", // チェックマーク文字
   },
   curated: {
     label: "AI作成データ",
     description:
       "このコンテンツのデータはAIが公式資料や辞書を参照して作成しました。正確さを心がけていますが、誤りが含まれる可能性があります。",
-    icon: "📖", // 📖
+    icon: "\uD83D\uDCD6", // 📖
   },
   generated: {
     label: "AI生成テキスト",
     description:
       "このコンテンツはAIが生成した文章です。参考情報としてお読みください。正確でない情報が含まれる場合があります。",
-    icon: "🤖", // 🤖
+    icon: "\uD83E\uDD16", // 🤖
   },
 };
 
