@@ -82,6 +82,11 @@ const UNCATEGORISED_WHITELIST: ReadonlySet<string> = new Set([
   "/achievements",
   // 開発者向け新デザインカタログ。noindex 設定済み。(new) Route Group 配下。
   "/storybook",
+  // 開発者向け hidden 検証ルート（cycle-195 / Phase 7.3 で新設）。
+  // metadata.robots = { index: false, follow: false } で noindex 化。
+  // app/robots.ts の disallow に /internal/ を追加して二重防御済み。
+  // (new) Route Group 配下に配置。
+  "/internal/tiles",
 ]);
 
 // ---------------------------------------------------------------------------

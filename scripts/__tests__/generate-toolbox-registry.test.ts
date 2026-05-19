@@ -169,6 +169,93 @@ describe("buildToolsRegistryContent", () => {
 });
 
 // ---------------------------------------------------------------------------
+// buildTileDefinitionsRegistryContent のテスト
+// ---------------------------------------------------------------------------
+
+import { buildTileDefinitionsRegistryContent } from "../generate-toolbox-registry";
+
+describe("buildTileDefinitionsRegistryContent", () => {
+  test("AUTO-GENERATED ヘッダコメントが含まれる", () => {
+    const content = buildTileDefinitionsRegistryContent([]);
+    expect(content).toContain("AUTO-GENERATED FILE — DO NOT EDIT MANUALLY");
+  });
+
+  test("タイル定義 0 件で空配列のエクスポートが生成される", () => {
+    const content = buildTileDefinitionsRegistryContent([]);
+    expect(content).toContain(
+      "export const allTileDefinitions: TileDefinition[] = []",
+    );
+  });
+
+  test("TileDefinition 型の import が含まれる", () => {
+    const content = buildTileDefinitionsRegistryContent([]);
+    expect(content).toContain("TileDefinition");
+  });
+
+  test("tool の tile.ts slug が含まれる", () => {
+    const tileSlugs = [
+      {
+        slug: "json-formatter",
+        contentPath: "src/tools/json-formatter/tile.ts",
+      },
+    ];
+    const content = buildTileDefinitionsRegistryContent(tileSlugs);
+    expect(content).toContain('from "@/tools/json-formatter/tile"');
+  });
+
+  test("play の tile.ts slug が含まれる", () => {
+    const tileSlugs = [
+      { slug: "irodori", contentPath: "src/play/games/irodori/tile.ts" },
+    ];
+    const content = buildTileDefinitionsRegistryContent(tileSlugs);
+    expect(content).toContain('from "@/play/games/irodori/tile"');
+  });
+
+  test("ハイフンはアンダースコアに変換されて import 名になる", () => {
+    const tileSlugs = [
+      {
+        slug: "json-formatter",
+        contentPath: "src/tools/json-formatter/tile.ts",
+      },
+    ];
+    const content = buildTileDefinitionsRegistryContent(tileSlugs);
+    expect(content).toContain("tile_json_formatter");
+    expect(content).not.toContain("tile_json-formatter");
+  });
+
+  test("新しい tile slug を追加すると生成コンテンツに追加される", () => {
+    const without = buildTileDefinitionsRegistryContent([]);
+    const with1 = buildTileDefinitionsRegistryContent([
+      {
+        slug: "json-formatter",
+        contentPath: "src/tools/json-formatter/tile.ts",
+      },
+    ]);
+    expect(without).not.toContain("json-formatter");
+    expect(with1).toContain("json-formatter");
+  });
+
+  test("tile slug を削除すると生成コンテンツから消える", () => {
+    const withSlug = buildTileDefinitionsRegistryContent([
+      { slug: "to-be-removed", contentPath: "src/tools/to-be-removed/tile.ts" },
+    ]);
+    const withoutSlug = buildTileDefinitionsRegistryContent([]);
+    expect(withSlug).toContain("to-be-removed");
+    expect(withoutSlug).not.toContain("to-be-removed");
+  });
+
+  test("件数コメントが含まれる", () => {
+    const content = buildTileDefinitionsRegistryContent([
+      {
+        slug: "json-formatter",
+        contentPath: "src/tools/json-formatter/tile.ts",
+      },
+    ]);
+    expect(content).toContain("tiles=1");
+  });
+});
+
+// ---------------------------------------------------------------------------
 // buildCheatsheetRegistryContent のテスト
 // ---------------------------------------------------------------------------
 
