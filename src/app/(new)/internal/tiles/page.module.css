@@ -1,0 +1,54 @@
+/* /internal/tiles — 開発者向けタイル定義一覧 */
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  /* 左右 1.25rem は Header/Footer と同じサイト共通値。 */
+  padding: 2rem 1.25rem 4rem;
+}
+
+.pageTitle {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.notice {
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-strong);
+  border-radius: var(--r-normal);
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  color: var(--fg-soft);
+}
+
+.empty {
+  color: var(--fg-soft);
+  font-size: 1rem;
+  margin-top: 1rem;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.table th,
+.table td {
+  border: 1px solid var(--border);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+.table th {
+  background: var(--bg-soft);
+  font-weight: 600;
+  color: var(--fg-soft);
+}
+
+.table td code {
+  font-family: ui-monospace, monospace;
+  font-size: 0.85rem;
+}

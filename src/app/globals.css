@@ -70,6 +70,13 @@
   --admonition-warning-bg: var(--warning-soft);
   --admonition-caution: var(--danger); /* 赤 */
   --admonition-caution-bg: var(--danger-soft);
+
+  /* タイルグリッドのサイズ枠規格 — 道具箱 (Phase 7.2)。
+   * TS 側の定義（相互参照）: src/lib/toolbox/tile-grid.ts
+   * Turbopack で CSS Module の :export / @value が未サポートのため、
+   * TS 定数と CSS Custom Properties を二重管理している。 */
+  --tile-cell-px: 128px; /* 1 セルの基本サイズ */
+  --tile-gap-px: 8px; /* セル間マージン */
 }
 
 /* ダークモード — next-themes が attribute="class" で <html class="dark"> を付与する */

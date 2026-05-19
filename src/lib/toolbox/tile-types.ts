@@ -64,3 +64,32 @@ export interface TileSize {
  * const MyTile: TileComponent = ({ slug }) => <div>{slug}</div>;
  */
 export type TileComponent = React.ComponentType<TileComponentProps>;
+
+/**
+ * TileDefinition — タイル定義ファイル（tile.ts）の export 形式。
+ *
+ * Phase 8 で各コンテンツディレクトリの `tile.ts` がこの型を満たす定義を export する。
+ * codegen（generate-toolbox-registry.ts）が自動収集し、
+ * `src/lib/toolbox/generated/tile-definitions-registry.ts` に集約される。
+ *
+ * 【最小フィールド設計方針（CRIT-5 対応）】
+ * Phase 8 各サイクルが満たすべき最低限のフィールドのみを定義する。
+ * 入出力 placeholder（タイル間連携フィールド）は Phase 10.4 で追加される。
+ *
+ * @example
+ * // src/tools/json-formatter/tile.ts
+ * import type { TileDefinition } from "@/lib/toolbox/tile-types";
+ * export const tileDef: TileDefinition = {
+ *   slug: "json-formatter",
+ *   displayName: "JSON フォーマッター",
+ *   size: { colSpan: 2, rowSpan: 2 },
+ * };
+ */
+export interface TileDefinition {
+  /** コンテンツ識別子（meta.ts の slug と一致する値）。 */
+  slug: string;
+  /** タイル上に表示される名称。 */
+  displayName: string;
+  /** タイルのセル単位サイズ（colSpan / rowSpan）。 */
+  size: TileSize;
+}

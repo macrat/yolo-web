@@ -2,6 +2,19 @@ import type { Tileable } from "./types";
 import { toolTileables, playTileables } from "./generated/toolbox-registry";
 
 /**
+ * 全タイル定義（TileDefinition[]）を返す。
+ *
+ * タイル定義は `src/tools/{slug}/tile.ts` / `src/play/{games|quiz|fortune}/{slug}/tile.ts`
+ * に配置された `tileDef: TileDefinition` const から codegen が自動収集する（Phase 7.3）。
+ *
+ * Phase 7.3 完了時点ではタイル実装がまだ存在しないため 0 件が正常。
+ * Phase 8 以降で個別タイルが追加されるたびに件数が増える。
+ *
+ * 0 件でも空配列を返す（エラーにならない）。
+ */
+export { allTileDefinitions } from "./generated/tile-definitions-registry";
+
+/**
  * 全コンテンツ（tool / play）を Tileable[] として返す統合 indexer。
  *
  * 内部実装は `generated/toolbox-registry.ts` に委譲する。
