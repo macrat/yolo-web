@@ -1,13 +1,96 @@
 ---
 id: 195
-description: B-426（P1、移行計画 Phase 7 = タイル基盤実装）に取り組む。タイル登録の型契約 / サイズ枠規格の定数化 / レジストリの仕組みと hidden 検証ルートを整備し、B-314（Phase 8）が安全に着手できる状態にする。来訪者から見える変化はない。
+description: B-426（P1、移行計画 Phase 7 = タイル基盤実装）に着手したが、完全な失敗サイクルとして閉じる。cycle-193（失敗サイクル）の屋台骨「1 軽量版タイル」「複数バリアント不採用」を AP-P11 警戒を形式化させて継承し、自分自身が立てた正本（design-migration-plan.md Phase 2.2 で 3 形態想定 + Phase 7.1 で入出力 placeholder 型枠要求）と矛盾する実装をした。さらに robots.txt に `/internal/` を追加して URL 漏洩リスクを生じさせる cycle-175 と同型の事故も発生。Owner 指示により本サイクル成果物のうち汚染部分はすべて revert。本サイクルドキュメントは経緯記録として保存する。
 started_at: 2026-05-19T16:30:48+0900
 completed_at: 2026-05-19T19:51:29+0900
+outcome: failed
 ---
 
-<!-- このファイルはサイクルドキュメントのテンプレートです。`<>`で囲まれた部分を適切な内容に置き換えて使用してください。内容は作業が進むごとに都度更新してください。 -->
+<!-- 失敗サイクルの記録。本サイクルで導入した汚染成果物は cycle-195 開始前 (commit d8850cf9) の状態に revert 済。詳細は冒頭の「事故報告」セクション参照。-->
 
-# サイクル-195
+# サイクル-195（失敗サイクル）
+
+## 事故報告（cycle-195 完了後の Owner 指摘を受けて追記）
+
+本サイクルは表面的には完了 commit `e71a3ae0` で全 T-1〜T-6 + サイクル終了時チェックリストを通過させたが、サイクル完了後の Owner 指摘により以下 3 件の構造的誤りが判明し、**完全な失敗サイクル**と認定した。Owner 指示により汚染成果物はすべて revert（commit `<以下この commit のハッシュ>` 参照）。本ドキュメントは経緯記録としてのみ保存する。
+
+### 失敗の核心 (a): cycle-193 屋台骨を所与として継承した
+
+cycle-195 計画書 L113 で「タイル = 1 詳細ページに対し 1 軽量版（cycle-179 (b)(c) の確定）」「variantId 系撤去」「複数バリアント体系を支える型を含めない」と書いた。しかし：
+
+- cycle-179 本文に「タイル = 1 軽量版」という定義文は存在しない。これは cycle-193 屋台骨 L266-282 が起点の定式化
+- cycle-193 は完全な失敗サイクル（全コード revert 済）であり、その屋台骨を所与として継承すること自体が誤り
+- cycle-193 中に Owner から「軽量版概念は道具箱中核思想と矛盾する」「(b) はサイズ違い」という指摘が事故報告 (d) として記録されていたが、本サイクル PM はこれを「PM 無批判受容の失敗パターン」という構造分類で読み、Owner 指摘の中身（軽量版概念の妥当性 / 複数バリアントの必要性）を再評価対象として開かなかった
+- 「cycle-194 が訂正しなかったから継承して良い」は責任逃避。失敗サイクルの屋台骨を継承するなら原典に立ち返って再構築すべきだった
+
+### 失敗の核心 (b): 自分自身が立てた正本を読み直さなかった
+
+`docs/design-migration-plan.md` Phase 2.2 L49（cycle-194 確定済の正本、本サイクル PM が承認した状態）には：
+
+> (a) 1 対 1（詳細ページ本体をそのままタイル化）/ **(b) 1 対多（タイル用の簡素な別 UI、すなわちスマートフォンの「アプリ本体（詳細ページ）」と「ホーム画面ウィジェット（タイル）」の関係性）** / (c) 複数バリエーション（用途別に複数タイル種類）の 3 形態が想定される
+
+と明記。Phase 8.1 #3 L141 も 3 形態のいずれかを採る設計。**自分自身の正本がすでに「1 ツール = 複数タイル」「複数バリエーション想定」を明示している**にもかかわらず、本サイクル PM はこれを読み直さず cycle-193 屋台骨経由の継承（1 軽量版 1 個）を独立に決定した。
+
+さらに正本の Phase 7.1 L104 には「（タイル用コンポーネント参照、推奨サイズ、**入出力 placeholder 等**）」が Phase 7.1 のフィールド要件として明記されていたが、本サイクル T-6a で「Phase 10.4 で追加」に書き換えて要求事項自体を消した。**正本書き換えによる自己判断の正当化**は AP-P11 違反系統の越権行為。
+
+### 失敗の核心 (c): yolos.net 自身が起こした事故（robots.txt）を確認せず再発させた
+
+`src/app/robots.ts` の `disallow` を `["/api/", "/internal/"]` に配列化して「meta + robots.txt の二重防御」と称した。しかし：
+
+- cycle-175 で同型の判断（`disallow: /toolbox-preview`）を行い、**同日内に「URL が公開ファイルから漏れる逆効果」を理由に削除**した経緯がある（commit `44f32754`、cycle-175.md L460 / L470）
+- 既存 `/storybook` 運用方針として「robots.txt には書かない、noindex meta のみ」が確立済
+- Google の挙動「robots.txt Disallow があると noindex を読めない」により、二重防御どころか noindex の効果すら打ち消すリスク
+- 本サイクル PM は web-researcher に外部 best practices を聞く前に **自分のサイトの過去事故を `git log` で確認しなかった**（1 コマンドで判明する事実）
+
+事後修正は本サイクル内で完了したが、根本原因（自サイト履歴を確認しない判断プロセス）の改修は完了していない。
+
+### Owner 指摘の本質
+
+Owner より受けた最終指摘：
+
+> 私（PM）の問題は Owner 指摘に従っていないことではなく、自分自身が立てたサイトコンセプト・計画書を無視していること。Owner はあなたが立てた計画との矛盾を指摘しているに過ぎない。
+
+3 件すべて、本サイクル PM が **自分自身の正本（design-migration-plan.md / cycle-175.md）を読み直していれば即座に防げた**事故。AP-P16（事実情報の自己確認）違反系統の構造的失敗。
+
+### 残されている成果物と削除されている成果物
+
+Owner の最終指示「**汚染された成果物が残っているとそれに引っ張られて誤りを加速させる**」に従い、本サイクルで導入した成果物は revert した。
+
+**保存（経緯記録 + クリーン部分）**:
+
+- `docs/cycles/cycle-195.md`（本ファイル、経緯記録）
+- `docs/research/2026-05-19-cycle-195-phase7-meta-types-survey.md`（既存メタ型構造の事実調査）
+- `docs/research/2026-05-19-robots-txt-disallow-security-information-leakage.md`（事後修正の判断根拠）
+- `src/lib/toolbox/tile-grid.ts`（物理定数: `TILE_CELL_PX=128` / `TILE_GAP_PX=8` / `tileSizeStyle`。cycle-194 確定済の Phase 7.2 規格と一致）
+- `src/lib/toolbox/__tests__/tile-grid.test.ts`
+- `src/app/globals.css` の `--tile-cell-px` / `--tile-gap-px`（物理定数の CSS Custom Properties）
+- `src/app/robots.ts` の cycle-175 事故防止コメント追加部分（事後修正で `disallow` 値は cycle-195 開始前と同じ `"/api/"`）
+
+**削除（汚染部分）**:
+
+- `src/lib/toolbox/tile-types.ts`（`TileDefinition` が 1 軽量版前提で汚染）
+- `src/lib/toolbox/generated/tile-definitions-registry.ts`（codegen 生成物、汚染）
+- `src/app/(new)/internal/tiles/` 配下全部（codegen + 表示ロジックが汚染部分に依存）
+- `scripts/generate-toolbox-registry.ts` の拡張部分（`{slug}/tile.ts` 単数形規約 = 1 タイル前提で汚染）
+- `scripts/__tests__/generate-toolbox-registry.test.ts` の追加分
+- `src/lib/toolbox/registry.ts` の `allTileDefinitions` export
+- `src/lib/toolbox/__tests__/registry.test.ts` の追加分
+- `src/__tests__/bundle-budget.test.ts` の `/internal/tiles` whitelist 追加
+- `docs/design-migration-plan.md` の T-6a 訂正全部（L104 / L142 「入出力 placeholder 等」削除、L110 配置先パス変更 + Turbopack 注記。**正本書き換えによる自己判断の正当化を撤回**）
+- `docs/research/2026-05-19-cycle-191-tile-foundation-analysis.md`（結論部分が 1 軽量版前提に誘導された依頼への回答）
+- `docs/research/2026-05-19-phase7-tile-foundation-best-practices.md`（§1「robots.txt + noindex 二重防御推奨」が cycle-175 既存方針と矛盾、§4「型契約最小化」が cycle-194 正本の 3 形態想定と矛盾）
+
+### 次サイクル PM への申し送り
+
+1. **cycle-195 の成果物を継承しない**: 本サイクル成果は失敗認定済。tile-grid.ts と robots.ts コメント以外の判断（型契約・codegen 規約・hidden ルート設計・正本書き換え）は再評価対象から外れ、**ゼロベースで再設計**する
+2. **cycle-193 屋台骨を引用しない**: 完全失敗サイクルの屋台骨を所与にすると本サイクル同型の失敗を起こす。「タイル = 1 軽量版」「複数バリアント不採用」を変更不可制約として継承しない
+3. **自分自身の正本を計画前に Read する**: `docs/design-migration-plan.md` の Phase 2.1 / 2.2 / 7.1 / 7.2 / 7.3 / 8.1 / 10.4、`docs/cycles/cycle-175.md` の 2.2.9 セクション、本サイクル md の事故報告（本セクション）を計画前に自分で Read する。サブエージェントに任せず PM 自身が読む
+4. **「失敗サイクルの所与継承」と「正本の Read 省略」の同型再発を防ぐ**: AP-P11 警戒は構造分類だけで終わらず、各継承元の中身（Owner 指摘・判定根拠・正本との整合）を能動的に再評価する責務
+5. **Phase 7 の入出力 placeholder 型枠は Phase 7.1 スコープに含める**: 「型枠 = Phase 7.1 / 実機構 = Phase 10.4」の責務分離は cycle-194 確定済正本に明記。後付け改修コストを Phase 10.4 に積まないために型枠の先行整備が必要
+
+---
+
+以下、cycle-195 当時の計画と実施記録（**失敗認定済の内容を含む**）。次サイクル PM はここから「何を継承すべきでないか」を確認するための参考資料として扱うこと。所与にしない。
 
 このサイクルでは B-426（P1、移行計画 **Phase 7 = タイル基盤実装**）に取り組む。`docs/design-migration-plan.md` の Phase 7 で定義された通り、(7.1) タイル登録の型契約、(7.2) サイズ枠規格の定数化（1 セル 128px × 128px + マージン 8px）、(7.3) レジストリの仕組み + hidden 検証ルート（`/internal/tiles` 等）の 3 サブタスクを完遂する。
 

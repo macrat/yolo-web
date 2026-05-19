@@ -1,11 +1,7 @@
 import { describe, expect, test } from "vitest";
 import { allToolMetas } from "@/tools/registry";
 import { allPlayContents } from "@/play/registry";
-import {
-  getAllTileables,
-  getTileableBySlug,
-  allTileDefinitions,
-} from "../registry";
+import { getAllTileables, getTileableBySlug } from "../registry";
 
 const EXPECTED_TOTAL = allToolMetas.length + allPlayContents.length;
 
@@ -177,27 +173,5 @@ describe("codegen 生成ファイルの件数確認", () => {
   test("playTileables が allPlayContents と同数である", async () => {
     const { playTileables } = await import("../generated/toolbox-registry");
     expect(playTileables).toHaveLength(allPlayContents.length);
-  });
-});
-
-// ---------------------------------------------------------------------------
-// allTileDefinitions のテスト（T-3: タイル定義レジストリ）
-// ---------------------------------------------------------------------------
-
-describe("allTileDefinitions", () => {
-  test("配列として export されている", () => {
-    expect(Array.isArray(allTileDefinitions)).toBe(true);
-  });
-
-  test("タイル定義 0 件の状態で空配列を返す（Phase 7.3 完了時点）", () => {
-    // Phase 8 で最初のタイル実装が追加されるまでは 0 件が正常
-    // この値が増えたら Phase 8 の進捗を示す
-    expect(allTileDefinitions).toHaveLength(0);
-  });
-
-  test("空配列でも allTileDefinitions が import できる（tsc 通過の補強）", async () => {
-    const { allTileDefinitions: imported } =
-      await import("../generated/tile-definitions-registry");
-    expect(Array.isArray(imported)).toBe(true);
   });
 });
