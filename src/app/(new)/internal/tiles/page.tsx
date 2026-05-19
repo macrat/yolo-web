@@ -6,7 +6,9 @@ import styles from "./page.module.css";
  * /internal/tiles — タイル定義レジストリの hidden 検証ルート（Phase 7.3）。
  *
  * 来訪者向けではなく開発者向けのデバッグ用ページ。
- * noindex で検索エンジンへの露出を防ぐ（robots.txt の Disallow: /internal/ と合わせて二重防御）。
+ * 隠蔽は noindex meta（`metadata.robots`）+ サイトナビ動線なしで実現する。
+ * robots.txt の disallow には書かない（URL が公開ファイルから漏れて
+ * 逆効果になるため。cycle-175 で同型事故が確認済 + /storybook 運用方針として確立済）。
  * Phase 8 で個別タイルが追加されるたびにレジストリに反映される。
  */
 export const metadata: Metadata = {
