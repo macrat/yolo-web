@@ -1117,6 +1117,49 @@ T-1〜T-4 のレビューで提示された Minor 指摘群は、いずれも本
 3. **cycle-191/192/193 失敗からの継承運用ルール（R1〜R8）は Phase 8 でも継続的に必要**: 詳細は本サイクル md の運用ルールセクション参照。AP-P11 / AP-P16 / AP-P17 / AP-P20 の能動発火を継続。
 4. **Phase 8 着手時に最初のタイル定義ファイル（`tile.ts`）が追加された段階で、Phase 8 第 1 弾サイクル PM が `scripts/generate-toolbox-registry.ts` に `assertMinCount(tileEntries, 1)` 同型のサニティチェックを追加する責務**: cycle-195 で 0 件許容としたため、Phase 8 で件数が増えた時に regression を検出できるようサニティチェックの追加が望ましい。
 
+## 事後修正: robots.txt 重大事故対応 (2026-05-19, cycle 完了後)
+
+サイクル完了後の Owner 指摘により、本サイクルで実装した `app/robots.ts` の `disallow: ["/api/", "/internal/"]` 配列化が **yolos.net 自身が cycle-175 で同型の事故を起こした上で確立した既存方針に違反していた** ことが判明。重大事故として本サイクル内で直ちに修正した。
+
+### 事故の核心
+
+cycle-175 で確立済の方針（`docs/cycles/cycle-175.md` L460 / L470 + commit `44f32754` 「cycle-175 2.2.9 /toolbox-preview の防御方針を /storybook 運用に統一」）:
+
+> robots.txt には不掲載: `disallow` に書くと URL が公開ファイルから漏れるため意図的に除外
+
+cycle-175 では当初 `disallow: /toolbox-preview` を robots.txt に書く「3 層防御」を実装したが、**同日のうちに「URL が公開ファイルから漏れる逆効果」を理由に削除し、`/storybook` 運用（noindex meta のみ）に統一**した経緯がある。
+
+本サイクル（cycle-195）はこの既存方針を確認せず、`disallow: ["/api/", "/internal/"]` を「二重防御」として導入。cycle-175 で確立した既存方針と矛盾する実装をしたうえ、Google の挙動「robots.txt Disallow があると noindex を読めない」により noindex 効果を打ち消すリスクすらあった。
+
+### 修正内容
+
+- `src/app/robots.ts`: `disallow` を `["/api/", "/internal/"]` から `"/api/"` に戻す。コメントで cycle-175 commit `44f32754` への参照と「URL が公開ファイルから漏れて逆効果」の理由を明記
+- `src/app/(new)/internal/tiles/page.tsx`: JSDoc コメントを「二重防御」から「noindex meta + サイトナビ動線なしで隠す（/storybook 運用方針）」に書き換え
+- `src/__tests__/bundle-budget.test.ts`: `UNCATEGORISED_WHITELIST` の `/internal/tiles` 周辺コメントを上記方針に同期
+
+### 実機検証
+
+`npm run build` 後の `.next/server/app/robots.txt.body` を実測:
+
+```
+User-Agent: *
+Allow: /
+Disallow: /api/
+
+Sitemap: https://yolos.net/sitemap.xml
+```
+
+`Disallow: /internal/` が含まれないことを確認済。`<meta name="robots" content="noindex, nofollow">` は `/internal/tiles` の HTML に引き続き含まれる。`lint / format:check / test (4414/4414) / build` 全成功。
+
+### 残課題（cycle-196 で対応する設計矛盾）
+
+本事故の調査過程で、Owner より以下 2 件の追加指摘を受けた。これらは robots.txt 事故より影響範囲が広いため、別サイクル（cycle-196）として起こして対応する：
+
+1. **`Tileable / TileComponent` 型契約が「1 軽量版 1 個」前提になっている**: `docs/design-migration-plan.md` Phase 2.2 L49 で 3 形態（(a) 1 対 1 / (b) 1 対多 / (c) 複数バリエーション）すべて想定可能と明記している正本と矛盾。cycle-195 で cycle-179 (b) を「1 軽量版 1 個」と誤解釈し、cycle-193 失敗サイクルの屋台骨を参照したことが原因
+2. **codegen が 1 コンテンツ 1 タイル前提になっている**: 上記と同根。Phase 8.1 #3 が (a)/(b)/(c) の中から選ぶ設計であることと矛盾
+
+これらは cycle-196 で型契約・codegen・検証ルートを「1 コンテンツが複数タイル（ホーム画面ウィジェット相当）を持てる構造」に再構築する。
+
 ## 補足事項
 
 cycle-191/192/193 の 3 連続失敗（全コード revert）の構造的原因が cycle-194 で「Phase 7 のスコープ過大化」と認定された経緯を踏まえ、本サイクルでは以下の歯止めを徹底する：
