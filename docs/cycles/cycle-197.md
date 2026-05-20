@@ -2,7 +2,7 @@
 id: 197
 description: B-386（P2、Button / Input コンポーネントの min-height 44px 対応）に着手。`Button.module.css` `.button` / `Input.module.css` `.input` に `min-height: 44px` を追加し WCAG 2.5.5 AAA に準拠させる。AP-I02 整理スコープは cycle-181 で Input 経由の `.searchInput` に個別上書きされた 3 件（Tools/Blog/Play FilterableList）のみ削除する。`src/{blog,tools,play}/_components/` の `min-height: 44px` ヒットは実効ルール 12 件（コメント行を除く）で、内訳は (i) 削除対象 = `.searchInput`×3、(ii) 独自実装で AP-I02 非該当 = `.filterButton`×3 / `.tagPill`×1 / `.tagLink`×1 / `.cheatsheetLink`×1 / `.tab`×1 / `.showMoreButton`×1 の計 8 件、(iii) Pagination 暫定残置 = `.paginationWrapper [class*="pageItem"]`×1。修正後の残存は (ii) + (iii) = 9 件。(ii) のうち `.tagLink`（BlogCard L139）は CSS コメントに「B-386 着手前の個別上書き」と記載されているため、cycle-197 整理済（Button コンポーネント非経由のため AP-I02 非該当として据え置き）の文言に書き換える 1 行コメント更新を T-4 サブタスクに含める。Pagination 上書き（BlogFilterableList L146）は B-388 着手時まで暫定残置。網羅 grep で Button 本番 0 件 / Input 本番 3 件、他の共有コンポーネント内部からの間接利用なしを確認済み。cycle-191/192/193/195 の 4 連敗から cycle-196 で脱却した流れを継ぎ、独立・低リスクで来訪者価値の高いタスク（特にモバイルでのタップ操作性）で成功を重ねる。
 started_at: 2026-05-20T19:07:28+0900
-completed_at: null
+completed_at: 2026-05-20T21:29:48+0900
 ---
 
 <!-- このファイルはサイクルドキュメントのテンプレートです。`<>`で囲まれた部分を適切な内容に置き換えて使用してください。内容は作業が進むごとに都度更新してください。 -->
@@ -797,6 +797,13 @@ builder 環境から GA4 MCP が呼び出せなかったため、PM が直接 `m
 
 ## 補足事項
 
+### ブログ化見送り判断（cycle-completion 手順 2）
+
+- cycle-197 の技術的成果（Button/Input min-height 44px、AP-I02 整理 `.searchInput`×3 削除、`.tagLink` コメント更新、Button small cascade 対処、Pagination コメント誤記述訂正）は単独サイクルとして記事 1 本に充てるには情報量が薄い。
+- 「Button small が CSS cascade で `.button` の min-height を継承する」は CSS の基本動作で、Webサイト製作を学びたいエンジニアにとって目新しさが乏しい。
+- cycle-181 の同型修正（`.searchInput` 44px の最初の上書き）もブログ化されていない過去判断と整合する。
+- B-388（Pagination 44px）/ B-393（Header 44px）/ B-428（全ツール独自 button/input 34 件 44px）が完了したタイミングで「WCAG タップターゲット対応の根本修正シリーズ」としてまとめれば密度が高い記事になりうる。本サイクルでは見送り。
+
 ### cycle-197 kickoff 時の判断記録
 
 - **B-386 選定理由**: cycle-196 で 4 連敗（cycle-191/192/193/195、Phase 7 タイル基盤）から脱却した直後で、いきなり B-426（タイル基盤再起票）に再挑戦するのはリスクが高い。cycle-196 の判断記録 L154「一度成功体験を取り戻してから立て直すほうが、4 連敗からの脱却としては筋がいい」を継承し、独立・低リスクで来訪者価値の高い P2 タスクで成功を継続する路線を取る。B-386 は (i) 全サイト規模の WCAG 2.5.8 違反で長期放置されていた構造的負債、(ii) cycle-181 の場当たり対処（AP-I02 抵触）の根本解消にもなる、(iii) 影響範囲が CSS の min-height 追加中心で cycle-196 と同じく独立・低リスクのパターン、という 3 点で選定。
@@ -826,10 +833,10 @@ builder 環境から GA4 MCP が呼び出せなかったため、PM が直接 `m
 
 - [x] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
 - [x] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
-- [ ] すべての変更がレビューされ、残存する指摘事項が無くなっている。
+- [x] すべての変更がレビューされ、残存する指摘事項が無くなっている。
 - [x] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
 - [x] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
-- [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
+- [x] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
 - [x] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
 
 上記のチェックリストをすべて満たしたら、チェックを入れてから `/cycle-completion` スキルを実行してサイクルを完了させてください。
