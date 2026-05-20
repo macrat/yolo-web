@@ -135,7 +135,7 @@
 .tagLink {
   display: inline-flex;
   align-items: center;
-  /* 44px タップターゲット確保（a11y 要件、B-386 着手前の個別上書き） */
+  /* 44px タップターゲット確保。Button コンポーネント非経由の独自 <a> 実装、B-386 で再評価済 (cycle-197)、共通化される時点で再検討。 */
   min-height: 44px;
   padding: 0 0.5rem;
   font-size: 0.75rem;

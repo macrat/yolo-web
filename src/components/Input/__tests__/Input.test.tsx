@@ -1,5 +1,7 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
+import { readFileSync } from "fs";
+import { resolve } from "path";
 import Input from "../index";
 
 describe("Input", () => {
@@ -72,5 +74,21 @@ describe("Input", () => {
     render(<Input data-testid="my-input" name="username" />);
     const input = screen.getByTestId("my-input");
     expect(input).toHaveAttribute("name", "username");
+  });
+
+  // WCAG 2.5.5 AAA タップターゲット保証
+  it(".input has min-height: 44px for WCAG 2.5.5 AAA tap target", () => {
+    const cssPath = resolve(__dirname, "../Input.module.css");
+    const css = readFileSync(cssPath, "utf-8");
+    const inputBlock = css.match(/\.input\s*\{[^}]+\}/)?.[0] ?? "";
+    expect(inputBlock).toContain("min-height: 44px");
+  });
+
+  // className マージ実装の回帰防止: props.className と無関係に .input クラスが常時付与される
+  it("Input always renders with .input class regardless of custom className", () => {
+    render(<Input className="custom-class" />);
+    const input = screen.getByRole("textbox");
+    // CSS Modules ハッシュ込みのクラス名に "input" が含まれることを確認
+    expect(input.className).toMatch(/input/);
   });
 });

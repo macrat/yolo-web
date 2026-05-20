@@ -8,7 +8,6 @@
   /* width は Input コンポーネント (display: block; width: 100%) で提供されるが、
    * wrapper コンテキスト内での幅を明示的に保証するために残す */
   width: 100%;
-  min-height: 44px;
   /* border, border-radius, background, color, focus-visible, placeholder は
    * Input コンポーネントの CSS (Input.module.css) が提供するため省略 */
 }

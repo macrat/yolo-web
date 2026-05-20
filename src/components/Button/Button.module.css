@@ -9,6 +9,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  min-height: 44px; /* WCAG 2.5.5 AAA タップターゲット推奨値 */
   padding: 9px 18px;
   font-size: 14px;
   font-family: inherit; /* body から system-ui を継承 */
@@ -70,7 +71,9 @@
 /* default size は .button ベースで定義済み (9px 18px / 14px) */
 
 /* small */
+/* 密集レイアウト限定。WCAG 2.5.5 タップターゲット (44px) 非準拠。本番採用時に再評価する。 */
 .sizeSmall {
+  min-height: unset; /* .button からの 44px 継承を切って密集レイアウト用の縮小高さを維持 */
   padding: 5px 11px;
   font-size: 12px;
 }
