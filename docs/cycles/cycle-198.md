@@ -1,11 +1,115 @@
 ---
 id: 198
-description: B-426（タイル基盤実装 / 移行計画 Phase 7）への再着手。cycle-191/192/193/195 の 4 連敗からの再挑戦で、Phase 8（B-314）の前提となる Phase 7 をやり切ることを目指す。
+description: B-426（タイル基盤実装 / 移行計画 Phase 7）への再着手を試みたが、cycle-191/192/193/195 で確立済の失敗パターン「過去失敗サイクルの成果物 / 解釈を所与継承」を 5 サイクル連続で再生産し、Owner 指摘により T-2 着手直後に失敗認定。本サイクルでは実装に至らず全 revert（cycle-198 で残された未追跡ファイル 2 つを削除）。
 started_at: 2026-05-20T23:07:39+0900
-completed_at: null
+completed_at: 2026-05-21T00:00:00+0900
 ---
 
 # サイクル-198
+
+## 事故報告（サイクル失敗認定）
+
+本サイクルは表面的には kickoff → planning（reviewer r1 Pass）まで通過し、`/cycle-execution` の T-2 builder 起動段階で Owner 指摘により **PM が cycle-191/192/193/195 と同型の失敗を犯していた** ことが判明し、**完全な失敗サイクル**と認定した。実装はコミット前に停止、未追跡ファイル 2 つ（`src/lib/toolbox/tile-definition.ts` / `src/lib/toolbox/__tests__/tile-definition.test.ts`）は削除済み。
+
+### A. 反したルール / 計画
+
+#### A-1. cycle-195 §D「次サイクル PM への申し送り」違反
+
+cycle-195 §D 申し送り L146 は明示している:
+
+> **本サイクル md 以下のすべてのコード設計判断（型契約・codegen 規約・hidden ルート設計・正本書き換え）を継承しない**: tile-grid.ts / globals.css の物理定数 / robots.ts コメントを除き、本サイクル成果物はすべて revert 済。次サイクル PM は **正本 `docs/design-migration-plan.md`（cycle-194 確定状態、本サイクル T-6a 訂正は撤回済）を Read で確認した上で、ゼロベースで再設計する**
+
+cycle-198 PM である自分は、この申し送りを Read したと自認しつつも、**「cycle-195 が残存判定した成果物」のうち `Tileable` 型 / `toTileable()` adapter / `tile-loader.ts` の `TileComponentProps` を「クリーン残存」として無条件に所与扱いした**。cycle-195 §C の「残存（クリーン部分）」リストは cycle-195 PM の判定で、cycle-195 自体が失敗認定済である以上、その判定も無条件には信用できない。本サイクル PM は cycle-195 §D 申し送りに「成果物すべて」が含意するスコープを限定的に解釈し、`Tileable` の妥当性を **原典との照合で再評価しなかった**。
+
+Owner からの指摘:
+
+> Tileable に手を入れないのはなぜですか？ なぜそれを所与としているのですか？
+> Tileable は失敗したサイクルで作られた間違った成果物であることに注意してください。これを所与としたということは、過去の失敗と全く同じ失敗をしたということです。
+
+このとおり、cycle-191/192/193/195 と同型の失敗を 5 サイクル目で再生産した。
+
+#### A-2. `docs/anti-patterns/planning.md` AP-P11「前サイクル判定の継承禁止」違反
+
+cycle-195 §A-2 で同型違反として明文化済の AP-P11 を、cycle-198 PM が同型再生産した:
+
+- cycle-191/192/193/195 はいずれも失敗サイクルで、そこで作られた `Tileable` 型 / `toTileable()` adapter / `tile-loader.ts` も「失敗サイクルの成果物」である
+- 本サイクル PM はこれを cycle-195 §D 申し送りの「except」条項（tile-grid.ts / globals.css / robots.ts コメント）と並列に置いて「残存使用可」とみなした
+- これは AP-P11 の最も巧妙な形態：「前サイクル判定（残存判定）を継承して、各継承元（Tileable の妥当性）の中身を Read で確認しなかった」
+
+#### A-3. `docs/anti-patterns/planning.md` AP-P17「3 案以上ゼロベース比較」違反
+
+本サイクルの計画書 §判断 A は「3 形態 ((a)/(b)/(c)) をどう型契約で表現するか」を 4 案比較した。しかしこの 4 案はいずれも **「既存 Tileable をそのまま保つ」前提に束縛** されていた:
+
+- A-1: 1 slug = 1 タイル（cycle-195 案）— Tileable に手を入れない
+- A-2: タイル ID で 1:N 表現（採用）— Tileable に手を入れない
+- A-3: variant 識別子内包型 — Tileable に手を入れない
+- A-4: union type で 3 形態を別型として分離 — Tileable に手を入れない
+
+含まれるべきだった案:
+
+- **案 Y**: 既存 Tileable を `ContentListItem` 等に改名し、原典 Phase 7.1 が言う「タイル」概念に Tileable の名前を譲る
+- **案 Z**: 既存 Tileable を捨てて、indexer 用途とタイル定義用途を統合した 1 型にする
+
+これらは「Tileable を改変する」案として最初から計画立案者の選択肢に入らず、reviewer も同じ前提で Pass にした。AP-P17 の典型的違反：**ゼロベース** を名乗りながら共通の所与に束縛された比較。
+
+#### A-4. CLAUDE.md「Verify facts before passing to sub-agents」違反
+
+cycle-195 §A-1 で中核違反として明文化済の CLAUDE.md ルールを、本サイクル PM が同型再生産した:
+
+- planner 起動時の briefing で `Tileable` の中身（`src/lib/toolbox/types.ts` L11-46 のフィールド構成）を PM 自身が Read していなかった
+- Read していれば「Tileable は実は `slug` / `displayName` / `shortDescription` / `contentKind` / `icon?` / `accentColor?` / `publishedAt` / `trustLevel` のみで、Phase 7.1 が要求する『タイル用コンポーネント参照』『推奨サイズ』『入出力 placeholder 等』を 1 つも持っていない」事実が判明し、「Tileable は名前が同じだが原典の『タイル』概念とは別物」という重要な前提を計画段階で言語化できた
+- 言語化していれば、判断 A の比較表に「Tileable に手を入れる案」が自然に登場した
+
+#### A-5. cycle-197 振り返りで PM 自身が確認した教訓の素通し
+
+cycle-197 振り返り（同 md §補足事項 §cycle-197 選定判断と B-428 取り下げの振り返り）で、本 PM の前任 PM は以下を明文化していた:
+
+> Owner に指摘されるまで PM 自身では気づけなかったこと自体が、自分が立てた計画への注意の弱さを示している。
+
+cycle-198 PM である自分は、これを Read しつつも cycle-197 と同じ「Owner 指摘で気付く」状態に陥った。教訓を継承したが中身を体得していない、cycle-195 §A-6「ルール R1-R7 の形式的発火」と同型の構造。
+
+### B. 失敗の構造（cycle-191/192/193/195 と共通）
+
+cycle-195 §B で明文化された共通原因「**ルール / 計画を継承したが、各継承元の中身を Read で確認しなかった**」を 5 サイクル目で再生産した。とくに本サイクルは:
+
+- cycle-195 §D 申し送りを Read で確認した
+- cycle-198 計画書冒頭の「必須前提 (i)〜(v)」に明記した
+- planner / reviewer 双方にも明示した
+- reviewer r1 で Pass を取った
+
+それでも `Tileable` 1 点の妥当性検証を「クリーン残存」として素通しした。**ルールの継承自体は形式として完璧だが、各ルールの中身を Read していない**という、cycle-195 §A-2 が AP-P11 の最も巧妙な形態として言語化した構造に、cycle-198 PM もまた落ちた。
+
+### C. 残されている成果物と削除した成果物
+
+本サイクル開始（commit `8b46b5cd cycle-198 開始`）以降のコード変更:
+
+- T-2 builder が新規追加した `src/lib/toolbox/tile-definition.ts` / `src/lib/toolbox/__tests__/tile-definition.test.ts`: 失敗認定に伴い **削除済み**（git untracked のまま rm）
+- 既存ファイル（`src/lib/toolbox/types.ts` / `tile-loader.ts` / `registry.ts` / `FallbackTile.tsx` / `tile-grid.ts` / `generated/` / `scripts/generate-toolbox-registry.ts` / `src/app/robots.ts` / `src/app/globals.css`）: **一切改変していない**
+
+ドキュメント:
+
+- `docs/backlog.md`: B-426 を Active へ移した変更が残存（次サイクル kickoff で Queued へ戻すか、新規 B-XXX を起票するかは次サイクル PM が判断）
+- `docs/cycles/cycle-198.md`（本ファイル）: 失敗記録として保存
+
+### D. 次サイクル PM への申し送り
+
+cycle-195 §D 申し送りの全 7 項目はそのまま有効。加えて本サイクル固有の教訓:
+
+1. **「失敗サイクルでクリーン残存と判定された成果物」も再評価対象に入れる**: cycle-198 PM は cycle-195 §C の残存リスト全体を所与にした。次サイクル PM は「失敗サイクル PM の残存判定」を所与にしない。`src/lib/toolbox/` 配下の **すべての既存ファイル**（`Tileable` 型を含む）を、`docs/design-migration-plan.md` Phase 2.2 / Phase 7.1 の要求事項と一次資料で照合してから、保存 / 改変 / 削除を判断する
+
+2. **計画書 §判断 N の 3 案比較で「既存実装をどう扱うか」も比較の論点に含める**: cycle-198 §判断 A は「3 形態をどう型契約で表現するか」を比較したが、すべて「既存 Tileable を保つ」前提だった。次サイクルでは「既存 X を保つ / 改名する / 統合する / 捨てる」を比較の論点として明示的に含めること
+
+3. **コンテキストリセット判断は CLAUDE.md 役割分担に従って PM 単独で決める**: 本サイクル PM は失敗認定の判断を述べたあと「進めて良いですか？」と Owner に承認を求める役割分担違反を犯した（Owner 指摘で訂正済）。判断のプロセスそのものに権限委譲のブレが出ないよう、次サイクル PM は CLAUDE.md「Roles and Responsibilities」を kickoff 段階で Read で再確認すること
+
+4. **本 cycle-198 md 以下のすべての設計判断（型契約スコープ・案 A-2 採用・案 B-1 採用・案 C-1 採用・案 D-1 採用・案 E-1 採用）を所与にしない**: 本サイクル成果物（reviewer r1 Pass を含む）は **完全に失敗認定済**。次サイクル PM は原典 `docs/design-migration-plan.md` を Read で確認した上で、ゼロベースで再設計する。本サイクル md は「何を継承すべきでないか」を確認するための参考資料として扱う
+
+5. **B-426 の再起票判断**: 次サイクル PM が backlog を見直し、B-426 を Queued に戻すか、新規 B-XXX として起票し直すかを判断する。本サイクルでは独断で判断しない（cycle-195 §D-7 と同方針）
+
+---
+
+以下、cycle-198 当時の kickoff / planning 記録（**失敗認定済の内容を含む**）。次サイクル PM はここから「何を継承すべきでないか」を確認するための参考資料として扱う。所与にしない。
+
+# サイクル-198（失敗認定済）
 
 このサイクルでは、`docs/design-migration-plan.md` の Phase 7（タイル基盤実装、B-426）に再着手する。cycle-191/192/193/195 で 4 連続失敗しており、cycle-197 の振り返りでも「cycle-198 は Phase 7 または Phase 8 に戻る」と方向確定している。Phase 8（B-314 = ツール・遊び詳細ページの新デザイン移行 + タイル化）はこの Phase 7 完了を前提としているため、ここをやり切らないと Phase 8 以降には進めない構造になっている。
 
