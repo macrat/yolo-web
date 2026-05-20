@@ -10,6 +10,7 @@
   font-family: inherit;
   font-size: 14px;
   line-height: 1.5;
+  min-height: 44px; /* WCAG 2.5.5 AAA タップターゲット推奨値 */
   background: var(--bg);
   color: var(--fg);
   border: 1px solid var(--border-strong);

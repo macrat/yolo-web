@@ -1,5 +1,7 @@
-import { expect, test, describe, vi } from "vitest";
+import { expect, test, describe, vi, it } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
+import { readFileSync } from "fs";
+import { resolve } from "path";
 import Button from "@/components/Button";
 
 describe("Button", () => {
@@ -88,5 +90,29 @@ describe("Button", () => {
   test("type='reset' を渡すと type='reset' になる", () => {
     render(<Button type="reset">リセット</Button>);
     expect(screen.getByRole("button")).toHaveAttribute("type", "reset");
+  });
+
+  // WCAG 2.5.5 AAA タップターゲット保証
+  it(".button has min-height: 44px for WCAG 2.5.5 AAA tap target", () => {
+    const cssPath = resolve(__dirname, "../Button.module.css");
+    const css = readFileSync(cssPath, "utf-8");
+    const buttonBlock = css.match(/\.button\s*\{[^}]+\}/)?.[0] ?? "";
+    expect(buttonBlock).toContain("min-height: 44px");
+  });
+
+  // small は密集レイアウト限定で WCAG 非準拠のまま据え置く設計意図の回帰防止
+  // .button からの cascade 継承（min-height: 44px）を unset で明示的に切ること
+  it(".sizeSmall does not enforce min-height: 44px (intentional: dense-layout-only variant)", () => {
+    const cssPath = resolve(__dirname, "../Button.module.css");
+    const css = readFileSync(cssPath, "utf-8");
+    const sizeSmallBlock = css.match(/\.sizeSmall\s*\{[^}]+\}/)?.[0] ?? "";
+    expect(sizeSmallBlock).not.toContain("min-height: 44px");
+  });
+
+  it(".sizeSmall explicitly sets min-height: unset to cut cascade from .button", () => {
+    const cssPath = resolve(__dirname, "../Button.module.css");
+    const css = readFileSync(cssPath, "utf-8");
+    const sizeSmallBlock = css.match(/\.sizeSmall\s*\{[^}]+\}/)?.[0] ?? "";
+    expect(sizeSmallBlock).toContain("min-height: unset");
   });
 });
