@@ -54,6 +54,34 @@ src/app/
 
 **完了基準**: 設計判断と型契約の整備、タイル概念定義が確定済み。
 
+---
+
+**【cycle-199 補完】Phase 2.1 確定値の追記**
+
+Phase 2 完了時点では 2.1 の確定値が本文に明記されておらず、cycle-199 で欠落が発覚した。以下は cycle-199（`docs/cycles/cycle-199.md`）で実装・確定した内容を補完記録したものである。論点比較・設計判断の経緯は cycle-199.md を参照。
+
+**メタ型の扱い方針（確定）**
+
+既存 4 系統のメタ型（ToolMeta / CheatsheetMeta / play 系 registry / dictionary-meta / humor-dict meta）には touch しない。4 系統共通の単一宣言ファイル `src/tools/_constants/tile-declarations.ts` が `TileRegistryEntry[]` 型の `TILE_DECLARATIONS` 配列を保持し、「配列エントリが存在する = タイル化済み」を表現する。系統識別子は `TileDomain`（`"tools" | "cheatsheets" | "play" | "dictionary"`）で区別する。型定義の一次資料は `src/tools/_constants/tile-definition.ts`。
+
+**1 対多サポート再構成範囲（確定）**
+
+Phase 2.2 L49 の 3 形態 (a)/(b)/(c) および Phase 8.1 L141 の手順から、3 形態を Discriminated Union として型レベルで強制する設計を採用した。形態識別子 `kind` の具体値と原典対応は以下の通り：
+
+| kind       | 原典 | 説明                                       |
+| ---------- | ---- | ------------------------------------------ |
+| `"single"` | (a)  | 1 対 1：詳細ページ本体をそのままタイル化   |
+| `"widget"` | (b)  | 1 対多：タイル専用の簡素な別 UI            |
+| `"multi"`  | (c)  | 複数バリエーション：用途別に複数タイル種類 |
+
+optional フィールドによる形態間制約の緩和は禁止（AP-I02 対応）。形態固有フィールドはそれぞれの型に required として定義する。
+
+**URL 構成（未決定）**
+
+道具箱本体の URL（トップ `/` に配置するか専用 URL を設けるか）は cycle-199 では決定しなかった。Phase 10.3 の責務として扱う。Phase 10.3 着手 PM は「Phase 2.1 で URL が決まった」と読まないこと。Phase 4 L75 / Phase 10.3 L215・L217・L226 の「Phase 2.1 で決めた URL」参照は、Phase 10.3 で初めて解決される。
+
+---
+
 ### Phase 3: 静的 + リダイレクト先行（完了済）
 
 来訪者から見える「デザイン混在期間」がここから始まる。低リスクのページを最初に切替える。
