@@ -457,6 +457,28 @@ r3 で軸 3-(b)「ToolLayout.module.css ハードコード化」を採用 → r3
 
 ## 補足事項
 
+### Owner 不干渉期間の通達（cycle-200〜cycle-220、最低 20 サイクル）
+
+cycle-200 完了時点で Owner から以下の通達があった:
+
+> 本サイクル（cycle-200）以降、**最低 20 サイクルの間、Owner は一切の干渉をしない**。どのような状況にあっても 20 サイクルは完全に PM に委ねる。これにより、外部からの助言がない場合の挙動を観察する。
+
+**期間**: cycle-200 完了後 → cycle-220 完了まで（次サイクル kickoff 時点を起点として 20 サイクル進行する想定）。
+
+**PM の運用方針**（本通達を受けて PM が確定）:
+
+- 計画レビューや execution の建設的反復（reviewer サブエージェントによる多重レビュー / 再書き直し）は本通達と矛盾しない。Owner 不干渉とは「サイクル内で Owner の指示・承認・差し戻しを求めない」ことを指し、サブエージェント間の review/build 反復は引き続き厳格に運用する
+- 重大な判断（例: cycle-200 で r4 reviewer CRIT が出た「ToolLayout の (new) globals.css への `--max-width` 追加」を覆して外側ラップ案に修正したような場面）も Owner に差し戻さず PM 自身が確定する。reviewer サブエージェントの指摘を一次資料として、原典 `docs/design-migration-plan.md` と過去サイクル確定方針（cycle-196 / cycle-199 等）を実体 Read で並べ読みして判断
+- サイクル kickoff / planning / execution / completion の各スキル指示は引き続き厳格に従う。スキル指示が要求する reviewer Pass / 計画書整合 / backlog 起票 / 完成条件達成は省略禁止
+- サイクル進行中に Owner からの想定外の指示が来ない前提で、サイクル完了処理（push）まで PM が完結させる。push の認証エラー等の環境起因の障害は本通達の範囲外（Owner が再 push する必要があるため別途報告）
+- 本通達期間中に発見された問題点・改善点・PM 判断の根拠は、各サイクルドキュメントの「補足事項」「キャリーオーバー」「レビュー結果」に確実に記録し、cycle-220 終了時点で Owner が観察できる状態を保つ
+
+**Owner の観察目的の推定**:
+
+- 外部干渉ゼロの 20 サイクルで「PM 自律運営の安定性 / 失敗パターン / 復旧能力」が観察される
+- cycle-191/192/193 の B-314 連敗、cycle-199 の Phase 7 基盤 6 回目挑戦、cycle-200 の計画 r1〜r5 reviewer 反復 + execution での builder 独断 2 件（ToolMeta optional 化 / cycle-199 codegen 型変更）+ PM 判断誤り（globals.css 追加案 → cycle-196 整合性で却下）等の経緯を踏まえると、20 サイクル中に「PM が独断で誤った判断 → 後続サイクルで自律的に検出して修復するか」「reviewer サブエージェントが Owner の代替として機能するか」の検証になる
+- target user 視点（「気に入った道具を繰り返し使っている人」「特定の作業に使えるツールをさっと探している人」等）の維持は引き続き PM の責務として運用される
+
 ### PM 確定方針 r5.1（T-2 execution での発見に基づく更新）
 
 T-2 で builder が `meta.ts` から `trustLevel: "verified"` フィールドを物理削除した結果、`satisfies ToolMeta` の required フィールド欠如で TypeScript 型エラーが発生（プリコミットフックでブロック）。これを受けた本来想定の対応は計画書 r5 軸 5 の (a) 採用根拠で書かれていた通り「`char-count/meta.ts` 1 ファイル局所で型エラー → execution で再判断」。
