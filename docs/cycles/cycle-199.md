@@ -14,7 +14,11 @@ cycle-191/192/193/195/198 で 5 サイクル連続失敗しているタスクの
 ## 実施する作業
 
 - [x] cycle-planning で作業計画を立案する（本ファイル「作業計画」セクションを埋める）
-- [ ] cycle-execution で計画に沿った実装を行う
+- [x] cycle-execution で計画に沿った実装を行う
+  - [x] T-2: サイズ枠規格の確定と定数化（commit 6a0a4fe3、reviewer Pass）
+  - [x] T-1: タイル登録の型契約整備（Discriminated Union）（commit 18217d12 → 修正 014c9d51、reviewer Pass）
+  - [x] T-3: レジストリ codegen + hidden 検証ルート整備（commit cb07e012 + 0c5b6708 → 修正 14f2637b、reviewer Pass）
+  - [x] T-4: Phase 2.1 確定値の原典追記（commit cc462b09、reviewer Pass）
 - [ ] cycle-completion でサイクルを完了させる
 
 ## 作業計画
