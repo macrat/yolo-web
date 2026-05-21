@@ -420,7 +420,17 @@ r3 で軸 3-(b)「ToolLayout.module.css ハードコード化」を採用 → r3
 
 ## 補足事項
 
-<追加で補足しておくべきことがあれば記載する。とくに無い場合は「なし」と記載する。>
+### T-1 で取得した baseline 値（T-4 比較用）
+
+- **既存テスト**: `src/tools/char-count/__tests__/logic.test.ts` 全 **24 件 pass**（`countChars` / `countCharsNoSpaces` / `countBytes` / `countWords` / `countLines` / `countParagraphs` / `analyzeText` の各 describe ブロック合計）。T-4 で同件数全件 pass を維持する
+- **移行前スクリーンショット**: `./tmp/screenshots/cycle-200/before/` 配下に 6 枚（w360/w1280/w1900 × ライト/ダーク、各 174–205KB）。T-4 で `./tmp/screenshots/cycle-200/after/` と視覚比較する
+- **char-count 統計項目数**: 6 項目（文字数 / 文字数（空白除く）/ バイト数（UTF-8）/ 単語数 / 行数 / 段落数）。詳細ページ Component.tsx は本サイクルで touch しない
+- **共通コンポーネントの旧トークン残存**（本サイクル対象外、別 backlog 起票候補）: `var(--max-width)` 3 ファイル（ToolLayout / Header / Footer の各 module.css）/ `var(--color-*)` 12 ファイル（RelatedBlogPosts / RelatedTools / ToolLayout / Breadcrumb / FaqSection / ShareButtons / Footer / Header / TrustLevelBadge / MobileNav / Pagination / ThemeToggle）
+- **TrustLevelBadge の現状**: `src/tools/_components/ToolLayout.tsx` 全 68 行内に TrustLevelBadge の import / JSX 使用は **存在しない**。T-2 step 7「TrustLevelBadge JSX/import 撤去」は撤去対象が無いため `meta.ts` の trustLevel フィールド物理削除のみ実施
+- **Next.js metadata robots merge**: shallow merge（子で `robots: { index: false, follow: false }` を定義すると親の `"max-image-preview": "large"` は失われる）。T-3 の新動的ルートで `noindex,nofollow` 出力する目的としては問題なし
+- **`sharedMetadata` robots 親値**: `src/lib/site-metadata.ts` L32-36 で `{ index: true, follow: true, "max-image-preview": "large" }`
+
+なし
 
 ## サイクル終了時のチェックリスト
 

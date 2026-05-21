@@ -7,27 +7,27 @@
 .label {
   font-weight: 600;
   font-size: 0.95rem;
-  color: var(--color-text);
+  color: var(--fg);
 }
 
 .textarea {
   width: 100%;
   min-height: 200px;
   padding: 0.75rem;
-  border: 1px solid var(--color-border);
-  border-radius: 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--r-interactive);
   font-family: inherit;
   font-size: 0.95rem;
   line-height: 1.6;
   resize: vertical;
-  color: var(--color-text);
-  background-color: var(--color-bg);
+  color: var(--fg);
+  background-color: var(--bg);
 }
 
 .textarea:focus {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid var(--accent);
   outline-offset: -1px;
-  border-color: var(--color-primary);
+  border-color: var(--accent);
 }
 
 .results {
@@ -41,20 +41,20 @@
   flex-direction: column;
   gap: 0.25rem;
   padding: 0.75rem;
-  border: 1px solid var(--color-border);
-  border-radius: 0.5rem;
-  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--r-normal);
+  background-color: var(--bg-soft);
 }
 
 .statLabel {
   font-size: 0.8rem;
-  color: var(--color-text-muted);
+  color: var(--fg-soft);
 }
 
 .statValue {
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--color-text);
+  color: var(--fg);
   font-variant-numeric: tabular-nums;
 }
 
