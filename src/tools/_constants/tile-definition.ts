@@ -24,6 +24,8 @@
  * cols / rows は正の整数。実ピクセルは calcTilePixels(cols, rows) で取得できる。
  */
 
+import type { ComponentType } from "react";
+
 /**
  * タイルの推奨サイズ（グリッドセル数）。
  * 1 × 1 が最小。cols / rows とも正の整数を期待する。
@@ -42,20 +44,21 @@ export interface TileSize {
  * TileDefinitionSingle / TileDefinitionWidget / TileDefinitionMulti の
  * intersection として構成される（interface で extends する形で使用）。
  *
- * - tileComponent: タイル用 React コンポーネントへの参照（型は unknown、
- *   実際には React.ComponentType 相当。型引数は Phase 8 で確定する）
+ * - tileComponent: タイル用 React コンポーネントへの参照（型は ComponentType<Record<string, any>>。
+ *   props 具体型は Phase 8 で確定）
  * - recommendedSize: 推奨表示サイズ（TILE_CELL_PX / TILE_GAP_PX ベース）
  * - inputPlaceholder: 入力欄のプレースホルダ文字列（入力なしの場合は空文字）
  * - outputPlaceholder: 出力欄のプレースホルダ文字列（出力なしの場合は空文字）
+ * - detailPath: 詳細ページへの正規 URL パス（3 形態すべてに共通）
  */
 interface TileDefinitionBase {
   /**
    * タイルとして表示する React コンポーネント参照。
-   * Phase 8 で各タイル実装時に具体的な props 型を持つコンポーネントを渡す。
+   * 型は ComponentType<Record<string, any>>。props 具体型は Phase 8 で確定。
    * any は Phase 8 確定までの型引数プレースホルダ。
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  tileComponent: React.ComponentType<Record<string, any>>;
+  tileComponent: ComponentType<Record<string, any>>;
   /**
    * 推奨表示サイズ（グリッドセル単位）。
    * TILE_CELL_PX = 128px, TILE_GAP_PX = 8px を基準とし、
@@ -72,6 +75,12 @@ interface TileDefinitionBase {
    * 原典 L104「入出力 placeholder」相当。
    */
   outputPlaceholder: string;
+  /**
+   * 詳細ページへの正規 URL パス。来訪者がタイルから詳細ページへ遷移する際に使用。
+   * 3 形態すべてに共通するフィールドとして TileDefinitionBase に定義。
+   * 形態ごとの詳細な意味は各 interface のコメントを参照。
+   */
+  detailPath: string;
 }
 
 /**
@@ -80,15 +89,12 @@ interface TileDefinitionBase {
  * 詳細ページ本体をそのままタイルとして流用する形態。
  * タイル専用コンポーネントは不要で、詳細ページコンポーネントを
  * tileComponent に指定する。
+ * detailPath は TileDefinitionBase に共通定義（形態 A では詳細ページ本体を
+ * タイル化するため、URL と tileComponent が同一ページを指す）。
  */
 export interface TileDefinitionSingle extends TileDefinitionBase {
   /** 形態識別子: 1 対 1（詳細ページ本体と同一 UI） */
   kind: "single";
-  /**
-   * 詳細ページへの正規 URL パス（来訪者がタイルから詳細ページへ遷移する際に使用）。
-   * 形態 A では詳細ページ本体をタイル化するため、URL の明示が必要。
-   */
-  detailPath: string;
 }
 
 /**
@@ -97,18 +103,16 @@ export interface TileDefinitionSingle extends TileDefinitionBase {
  * タイル専用の簡素な別 UI（ウィジェット）を新設する形態。
  * スマートフォンの「アプリ本体（詳細ページ）」と
  * 「ホーム画面ウィジェット（タイル）」の関係性に相当。
+ * detailPath は TileDefinitionBase に共通定義（タイル UI は簡素に絞り、
+ * 詳細は detailPath 先で提供する設計）。
  */
 export interface TileDefinitionWidget extends TileDefinitionBase {
   /** 形態識別子: 1 対多（タイル専用の別 UI） */
   kind: "widget";
   /**
-   * 詳細ページへの正規 URL パス（詳細ページへの遷移動線として使用）。
-   * タイル UI は簡素に絞り、詳細は detailPath 先で提供する設計。
-   */
-  detailPath: string;
-  /**
    * タイル UI のサマリー説明（来訪者に「このタイルで何ができるか」を伝える文字列）。
    * 詳細ページの description より短く（30 字以内推奨）、タイル内に収まる粒度。
+   * 形態 B 固有フィールド（形態 A の TileDefinitionSingle には存在しない）。
    */
   widgetSummary: string;
 }
@@ -118,6 +122,8 @@ export interface TileDefinitionWidget extends TileDefinitionBase {
  *
  * 1 つのコンテンツに対して用途別の複数タイル種類を提供する形態。
  * variantLabel で各バリエーションを区別する。
+ * detailPath は TileDefinitionBase に共通定義（複数バリエーションが存在しても
+ * 詳細ページへの動線は 1 つであるため、各バリエーション定義で共通 URL を指定）。
  */
 export interface TileDefinitionMulti extends TileDefinitionBase {
   /** 形態識別子: 複数バリエーション */
@@ -125,14 +131,9 @@ export interface TileDefinitionMulti extends TileDefinitionBase {
   /**
    * バリエーション識別ラベル（同一コンテンツの複数タイル種類を区別するための文字列）。
    * 例: "compact" / "full" / "input-only" など。
+   * 形態 C 固有フィールド（形態 A / B には存在しない）。
    */
   variantLabel: string;
-  /**
-   * 詳細ページへの正規 URL パス（オプション的に見えるが、形態 C は必須）。
-   * 複数バリエーションが存在しても詳細ページへの動線は 1 つであるため
-   * このフィールドは各バリエーション定義で共通の URL を指定する。
-   */
-  detailPath: string;
 }
 
 /**
@@ -148,9 +149,3 @@ export type TileDefinition =
   | TileDefinitionSingle
   | TileDefinitionWidget
   | TileDefinitionMulti;
-
-/**
- * 系統識別子。4 系統それぞれを区別するための literal type。
- * Phase 7.3 レジストリのエントリで使用する。
- */
-export type TileSystemKind = "tools" | "cheatsheets" | "play" | "dictionary";

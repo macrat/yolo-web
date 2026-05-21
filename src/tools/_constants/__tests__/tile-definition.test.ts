@@ -137,16 +137,73 @@ describe("TileDefinition (Discriminated Union 親型)", () => {
     expect(multi.kind).toBe("multi");
   });
 
-  it("負例: kind='single' で widgetSummary（形態 B 固有フィールド）を混ぜると型エラー", () => {
-    // expectTypeOf を使って「TileDefinitionSingle が widgetSummary を持たない」ことを確認する。
-    // TileDefinitionSingle には widgetSummary キーが存在しないことを型レベルで検証。
-    expectTypeOf<TileDefinitionSingle>().not.toHaveProperty("widgetSummary");
+  it("負例 @ts-expect-error: kind='single' で widgetSummary（形態 B 固有フィールド）を混ぜると型エラー", () => {
+    // Discriminated Union 契約: kind="single" では widgetSummary は許容されない。
+    // satisfies を使うと @ts-expect-error が問題プロパティ行を直接捕捉できる。
+    const bad1 = {
+      kind: "single" as const,
+      tileComponent: DummyComponent,
+      recommendedSize: { cols: 1, rows: 1 },
+      inputPlaceholder: "",
+      outputPlaceholder: "",
+      detailPath: "/x",
+      // @ts-expect-error - widgetSummary は kind="single" (TileDefinitionSingle) では許容されない
+      widgetSummary: "違反: single に widgetSummary は存在しない",
+    } satisfies TileDefinition;
+    void bad1;
     expect(true).toBe(true);
   });
 
-  it("負例: kind='single' で variantLabel（形態 C 固有フィールド）を混ぜると型エラー", () => {
-    // TileDefinitionSingle には variantLabel キーが存在しないことを型レベルで検証。
-    expectTypeOf<TileDefinitionSingle>().not.toHaveProperty("variantLabel");
+  it("負例 @ts-expect-error: kind='single' で variantLabel（形態 C 固有フィールド）を混ぜると型エラー", () => {
+    // Discriminated Union 契約: kind="single" では variantLabel は許容されない。
+    const bad2 = {
+      kind: "single" as const,
+      tileComponent: DummyComponent,
+      recommendedSize: { cols: 1, rows: 1 },
+      inputPlaceholder: "",
+      outputPlaceholder: "",
+      detailPath: "/x",
+      // @ts-expect-error - variantLabel は kind="single" (TileDefinitionSingle) では許容されない
+      variantLabel: "違反: single に variantLabel は存在しない",
+    } satisfies TileDefinition;
+    void bad2;
+    expect(true).toBe(true);
+  });
+
+  it("負例 @ts-expect-error: kind='widget' で variantLabel（形態 C 固有フィールド）を混ぜると型エラー", () => {
+    // Discriminated Union 契約: kind="widget" では variantLabel は許容されない。
+    const bad3 = {
+      kind: "widget" as const,
+      tileComponent: DummyComponent,
+      recommendedSize: { cols: 1, rows: 1 },
+      inputPlaceholder: "",
+      outputPlaceholder: "",
+      detailPath: "/x",
+      widgetSummary: "正常フィールド",
+      // @ts-expect-error - variantLabel は kind="widget" (TileDefinitionWidget) では許容されない
+      variantLabel: "違反: widget に variantLabel は存在しない",
+    } satisfies TileDefinition;
+    void bad3;
+    expect(true).toBe(true);
+  });
+
+  it("負例 @ts-expect-error: TileDefinitionWidget で widgetSummary が欠落すると型エラー", () => {
+    // 形態 B 固有フィールド widgetSummary は required。欠落は型エラー。
+    // prettier-ignore + @ts-expect-error で1行を維持し、satisfies のエラーを捕捉する。
+    // prettier-ignore
+    // @ts-expect-error - widgetSummary 必須フィールドが欠落している
+    const bad4 = { kind: "widget" as const, tileComponent: DummyComponent, recommendedSize: { cols: 1, rows: 1 }, inputPlaceholder: "", outputPlaceholder: "", detailPath: "/x" } satisfies TileDefinitionWidget;
+    void bad4;
+    expect(true).toBe(true);
+  });
+
+  it("負例 @ts-expect-error: TileDefinitionMulti で variantLabel が欠落すると型エラー", () => {
+    // 形態 C 固有フィールド variantLabel は required。欠落は型エラー。
+    // prettier-ignore + @ts-expect-error で1行を維持し、satisfies のエラーを捕捉する。
+    // prettier-ignore
+    // @ts-expect-error - variantLabel 必須フィールドが欠落している
+    const bad5 = { kind: "multi" as const, tileComponent: DummyComponent, recommendedSize: { cols: 1, rows: 1 }, inputPlaceholder: "", outputPlaceholder: "", detailPath: "/x" } satisfies TileDefinitionMulti;
+    void bad5;
     expect(true).toBe(true);
   });
 
