@@ -22,12 +22,7 @@ export interface ToolMeta {
   /** ISO 8601 date-time with timezone. Set when main content is updated. */
   updatedAt?: string;
   structuredDataType?: string; // JSON-LD @type (e.g., "WebApplication")
-  /**
-   * @deprecated Phase 8.1 全 34 ツール完了時に型・テスト・実装ごと削除予定（backlog B-xxx Priority P2）。
-   * cycle-200 T-2 で char-count の meta.ts から物理削除済み。他 33 ツールも順次削除。
-   * optional 化は根本解決ではないが、型削除は Phase 8.1 全件完了後の一括処理のため暫定措置として optional にする。
-   */
-  trustLevel?: TrustLevel;
+  trustLevel: TrustLevel;
 
   /** 処理内容の説明テキスト。ゾーン3「このツールについて」セクションに表示する */
   howItWorks: string;
