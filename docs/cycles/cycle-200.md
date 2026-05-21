@@ -420,6 +420,25 @@ r3 で軸 3-(b)「ToolLayout.module.css ハードコード化」を採用 → r3
 
 ## 補足事項
 
+### PM 確定方針 r5.1（T-2 execution での発見に基づく更新）
+
+T-2 で builder が `meta.ts` から `trustLevel: "verified"` フィールドを物理削除した結果、`satisfies ToolMeta` の required フィールド欠如で TypeScript 型エラーが発生（プリコミットフックでブロック）。これを受けた本来想定の対応は計画書 r5 軸 5 の (a) 採用根拠で書かれていた通り「`char-count/meta.ts` 1 ファイル局所で型エラー → execution で再判断」。
+
+PM r5.1 確定方針: **本サイクルでは `meta.ts` の `trustLevel: "verified"` フィールドを維持する**（削除しない）。
+
+根拠:
+
+- 原典 L309 の「`meta.ts` の `trustLevel` フィールドも削除する」指示は、TrustLevelBadge JSX 使用がある場合の手順。本サイクル T-1 baseline で確認済の通り、`ToolLayout.tsx` から TrustLevelBadge は既に未 import 状態であり、原典 L309 後半の前提条件（badge 使用あり）が既に成立していない
+- `meta.ts` の `trustLevel` を維持すれば `ToolMeta` 型 (required) との整合が保たれ、型 optional 化を回避できる（計画書方針 4 完全準拠、AP-I02 違反回避）
+- 来訪者影響ゼロ（TrustLevelBadge は既に視覚的に表示されていない）
+- 残り 33 ツールの `trustLevel: "verified"` 一括削除と `ToolMeta.trustLevel` 型完全削除は Phase 8.1 全 34 件完了時の backlog 17-(b)（P2）で一括実施（漸進削除ではなく一括完全削除）
+
+この方針更新により以下を変更:
+
+- 計画書 T-2 step 6「meta.ts の trustLevel 撤去」→ **「meta.ts の trustLevel フィールドはそのまま維持、ToolMeta 型も touch しない」**
+- 計画書 軸 5 採用案 (a) → **「meta.ts の trustLevel フィールドは維持、Phase 8.1 全件完了時に一括削除」**
+- 計画書 完成条件 11「`trustLevel` フィールド物理削除」→ **「`trustLevel: "verified"` は本サイクル維持、Phase 8.1 完了時に backlog 17-(b) で一括削除」**
+
 ### T-1 で取得した baseline 値（T-4 比較用）
 
 - **既存テスト**: `src/tools/char-count/__tests__/logic.test.ts` 全 **24 件 pass**（`countChars` / `countCharsNoSpaces` / `countBytes` / `countWords` / `countLines` / `countParagraphs` / `analyzeText` の各 describe ブロック合計）。T-4 で同件数全件 pass を維持する
