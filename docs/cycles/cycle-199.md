@@ -2,7 +2,7 @@
 id: 199
 description: B-426（タイル基盤実装 / 移行計画 Phase 7）への 6 回目挑戦。cycle-191/192/193/195/198 の 5 連敗を経てコードベース汚染除去まで完了した状態から、原典 `docs/design-migration-plan.md` Phase 7 を一次資料としてゼロベースで設計判断する。
 started_at: 2026-05-21T09:51:18+0900
-completed_at: null
+completed_at: 2026-05-21T14:36:59+0900
 ---
 
 # サイクル-199
@@ -275,7 +275,58 @@ PM への提言: execution 開始前に「事前 briefing 必須項目」表（L
 
 ## キャリーオーバー
 
-<!-- このサイクルで完了できなかった作業や、次のサイクルに持ち越す必要のある作業があれば、ここと /docs/backlog.md の両方に記載する -->
+### 本サイクル成果物の独立削除単位（6 回目失敗時の除去対象、Phase 8 で実用されなかった場合の clean up リスト）
+
+T-3 計画書 L107-117「6 回目失敗時の除去対象事前想定」表で予告した想定対象の実体配置:
+
+| 区分              | 実際に配置されたファイル                                                                                         | 独立性                                                         |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| T-1               | `src/tools/_constants/tile-definition.ts` + `src/tools/_constants/__tests__/tile-definition.test.ts`             | 独立ファイル単位                                               |
+| T-2               | `src/tools/_constants/tile-grid.ts` + `src/tools/_constants/__tests__/tile-grid.test.ts`                         | 独立ファイル単位                                               |
+| T-3 codegen       | `scripts/generate-tiles-registry.ts` + `scripts/__tests__/generate-tiles-registry.test.ts`                       | 独立ファイル単位（既存 `generate-toolbox-registry.ts` 無変更） |
+| T-3 宣言ファイル  | `src/tools/_constants/tile-declarations.ts`                                                                      | 独立ファイル単位                                               |
+| T-3 生成ファイル  | `src/tools/generated/tiles-registry.ts`                                                                          | codegen 副産物、git 管理対象                                   |
+| T-3 hidden ルート | `src/app/(new)/internal/tiles/page.tsx`                                                                          | 独立ファイル単位                                               |
+| T-3 副作用        | `src/__tests__/bundle-budget.test.ts` の `UNCATEGORISED_WHITELIST` に `/internal/tiles` 追加 1 行                | 1 行修正、容易に revert 可                                     |
+| T-3 副作用        | `package.json` の `generate:tiles-registry` script エントリ + `prebuild` / `predev` / `pretest` 内の呼び出し追加 | 行単位修正、容易に revert 可                                   |
+| T-4 原典追記      | `docs/design-migration-plan.md` Phase 2 セクション L57-L84 への 28 行追記                                        | git diff で対象識別可                                          |
+| 副産物            | `docs/anti-patterns/implementation.md` への AP-I09（commit 順序原則）追記                                        | T-3 修正 commit `14f2637b` に同梱、副産物として残置許容        |
+
+### 次サイクル PM への申し送り（Phase 8.1 / B-314 着手時）
+
+**Phase 8.1 第 1 タイル化サイクルが Phase 7 成果物の有効性を初めて実物で検証する位置付け** になる（計画書 L237-238「自己批判」明記済）。第 1 タイル化サイクルでは:
+
+1. 対象コンテンツ（GA4 PV 高い順 + 構造単純な順で 1 件選定）に対し、`tile-declarations.ts` に `{ domain, slug, kind, ...TileDefinition }` を 1 件追加する
+2. `kind` の選択（"single" / "widget" / "multi"）が型契約により `widgetSummary` / `variantLabel` 等の形態固有 required フィールドを強制することを実装で確認する
+3. タイル React コンポーネント本体は本サイクル成果物に含まれないため、Phase 8.1 で新規実装する
+4. hidden 検証ルート `/internal/tiles` で件数が `0` → `1` に変わることを Playwright で確認
+5. lint / format / test / build 全件緑
+
+ここで Phase 7 成果物の **実用性**（builder の認知負荷、型契約の使いやすさ、registry 操作モデルの自然さ）が初めて検証される。問題があれば本サイクル成果物の修正サイクルが必要になりうる。
+
+### Phase 8 全体の着手判断
+
+backlog `B-314` の進行に依存。Phase 8.1 = 34 ツール、Phase 8.2 = 20 遊び（result ページ含む）。GA4 PV 高い順 + 構造単純な順で 1 件ずつ着手する（原典 L132）。第 1 弾の選定は次サイクル PM の判断。
+
+### ブログ化見送り判断（手順 2）
+
+本サイクル成果は target user S1（AI agent / orchestration）/ S3（Web 製作）にとって興味の可能性ある内容（5 連敗 → 6 回目で完結 + 計画レビュー r1/r2/r3 のメタアンチパターン化と簡素化による脱出 + Discriminated Union による型契約強制 + registry SSoT 接続）だが、Phase 8.1 で型契約の **実用性** が実証されない段階でブログ化すると target user M2 dislikes「未検証の解決策」に直撃する。cycle-178 → B-364 と同型の判断。
+
+**再評価条件**: Phase 8.1 第 1 タイル化サイクル完了時点で「Phase 7 型契約 + registry 方式が Phase 8 開発者にとって実用に堪えた」を判定後、再評価する。具体的な再評価 backlog は別途追加（後述）。
+
+### r1〜r3 メタアンチパターン化からの脱出経験（次サイクル以降への学び）
+
+本サイクルの計画レビュー r1 → r2 → r3 で「形式的修正が AP-WF09 階層転写を生む」「計画書が 521 行に肥大化して本質が不可視化」というメタアンチパターン化を経験。脱出手段は「計画書根本簡素化（544 → 285 行）」で、reviewer に通る計画書ではなく builder が execution できる計画書を優先する方針に切替。同型の状況が次サイクル以降に発生した場合の参考として:
+
+- レビュー反復で計画書が肥大化し始めた時点で警戒
+- 「判断軸を立てた」が「用語を変えて同じ構造」を作っていないか自己診断
+- 必要なら計画書を根本簡素化し、判断履歴は git に保存
+
+これは本サイクル固有経験のためアンチパターン集（AP-W 等）には起票しない（特定状況依存と判断、AP の「個別事例化しない」原則と整合）。次回類似状況での参考として本キャリーオーバーに記録のみ。
+
+### backlog への追加項目
+
+- **B-XXX（新規）**: 「cycle-199 Phase 7 完結と Phase 8.1 型契約有効性検証後のブログ化検討」（B-364 と同型）。着手条件: Phase 8.1 第 1 タイル化サイクル完了。キャンセル条件: Phase 8.1 で本サイクル成果物に大幅修正が必要になり、6 回目失敗扱いになった場合
 
 ## 補足事項
 
