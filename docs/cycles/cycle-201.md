@@ -1,6 +1,6 @@
 ---
 id: 201
-description: B-314 Phase 8.1 第 2 弾——cycle-200 で確立した標準パターンに沿い、次のツール詳細ページを新デザイン移行 + タイル化する。
+description: B-314 Phase 8.1 第 2 弾——byte-counter を cycle-200 標準パターンに沿って (new) 配下移行 + kind=widget タイル化。
 started_at: 2026-05-21T22:47:13+0900
 completed_at: null
 ---
@@ -14,7 +14,11 @@ B-314 Phase 8.1 の第 2 弾。cycle-200 で char-count を皮切りに確立し
 ## 実施する作業
 
 - [x] cycle-planning で作業計画を立案する（本ファイル「作業計画」セクションを埋める）
-- [ ] cycle-execution で計画に沿った実装を行う
+- [x] cycle-execution で計画に沿った実装を行う
+  - [x] T-1: 現状把握と移行前 baseline 取得（テスト 29 件 Pass、スクリーンショット 3 枚取得）
+  - [x] T-2: 詳細ページの (new) 配下移行（git mv + page.module.css 新設 + トークン置換 + ビルド確認）
+  - [x] T-3: タイル定義（ByteCounterTile.tsx 新規 + TILE_DECLARATIONS 追加 + codegen + テスト 6 件）
+  - [x] T-4: 検証と統合確認（Playwright 実機検証 + lint/format/test(4383件)/build 全 Pass）
 - [ ] cycle-completion でサイクルを完了させる
 
 ## 作業計画
@@ -133,13 +137,18 @@ cycle-200 char-count で確立した標準パターンを踏襲する:
 
 **R2**: 全修正確認 + 全体再レビュー → **Pass**。実ファイルとの整合性・AP チェックともに問題なし。
 
+### 実装レビュー
+
+**R1**: 全 9 ファイルを実読み + Playwright 実機検証（4 viewport パターン）+ AP チェック（AP-I01/I02/I03/I08/I09）→ **Pass**。指摘事項なし。
+
 ## キャリーオーバー
 
-- <このサイクルで完了できなかった作業や、次のサイクルに持ち越す必要のある作業があれば、ここと /docs/backlog.md の両方に記載する。例えば、「XXXの機能にバグを見つけたが、本サイクルのスコープ外なので次回以降のサイクルで修正する予定。backlog.mdにも記載済み。」など。>
+- なし（すべてのタスクが完了）
 
 ## 補足事項
 
-<追加で補足しておくべきことがあれば記載する。とくに無い場合は「なし」と記載する。>
+- byte-counter は char-count と構造が類似しており、標準パターンの 2 回目の適用として順調に完了した。3 回目以降（hash-generator、base64 等）も同じパターンで進められる見込み。
+- タイルテスト（ByteCounterTile.test.tsx: 6 件）は char-count のテスト（4 件）より充実しており、CJK バイト数の検証も含む。後続サイクルのタイルテストの参考になる。
 
 ## サイクル終了時のチェックリスト
 

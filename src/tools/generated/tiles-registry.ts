@@ -29,6 +29,7 @@ type TileRegistrySerializedEntry = Pick<
 >;
 export const tilesRegistry: TileRegistrySerializedEntry[] = [
   { domain: "tools", slug: "char-count", kind: "widget" },
+  { domain: "tools", slug: "byte-counter", kind: "widget" },
 ];
 
-// Count at generation time: tilesCount=1
+// Count at generation time: tilesCount=2
