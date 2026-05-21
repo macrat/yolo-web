@@ -94,14 +94,26 @@ export function buildTilesRegistryContent(
     " * 4 系統横断タイルレジストリ（Phase 7.3）。",
     " * tools / cheatsheets / play / dictionary の全タイル化済エントリを収録する。",
     " * Phase 7 時点では全エントリ 0 件（タイル定義がまだ存在しないため）。",
+    " *",
+    " * domain / slug / kind のシリアライズ可能な 3 フィールドのみを収録する。",
+    " * tileComponent（React コンポーネント参照）等は serialization 不可のため含まれない。",
+    " * 実行時に tileComponent を使用するコードは tile-declarations.ts を直接 import する。",
     " */",
   ];
 
+  // 型エイリアスを生成ファイルに埋め込む（型のみのエイリアス）
+  const typeAlias =
+    'type TileRegistrySerializedEntry = Pick<TileRegistryEntry, "domain" | "slug" | "kind">;';
+
   if (entries.length === 0) {
     // Empty array: Prettier formats as inline `[]`
-    lines.push("export const tilesRegistry: TileRegistryEntry[] = [];");
+    lines.push(typeAlias);
+    lines.push(
+      "export const tilesRegistry: TileRegistrySerializedEntry[] = [];",
+    );
   } else {
-    lines.push("export const tilesRegistry: TileRegistryEntry[] = [");
+    lines.push(typeAlias);
+    lines.push("export const tilesRegistry: TileRegistrySerializedEntry[] = [");
     for (const entry of entries) {
       lines.push(
         `  { domain: "${entry.domain}", slug: "${entry.slug}", kind: "${entry.kind}" },`,
