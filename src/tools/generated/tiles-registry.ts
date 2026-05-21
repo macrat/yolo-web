@@ -6,8 +6,10 @@
  *
  * 4 系統横断タイルレジストリ（Phase 7.3）。
  * 宣言元: src/tools/_constants/tile-declarations.ts
- * Phase 8 で各コンテンツがタイル定義を埋めるたびに、
- * tile-declarations.ts にエントリを追加 → regenerate で自動反映される。
+ * Phase 8 で各コンテンツがタイル定義（TileDefinition & { domain; slug }）を
+ * tile-declarations.ts の TILE_DECLARATIONS 配列に追加 → regenerate で自動反映される。
+ * tileComponent は本ファイルには含まれない（関数参照のため serialization 不可）。
+ * 実行時に tileComponent を使用するコードは tile-declarations.ts を直接 import する。
  */
 
 import type { TileRegistryEntry } from "@/tools/_constants/tile-declarations";

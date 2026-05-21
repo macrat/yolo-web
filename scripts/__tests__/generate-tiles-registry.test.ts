@@ -1,47 +1,88 @@
 /**
- * tiles registry codegen ロジックの単体テスト（Phase 7.3）
+ * tiles registry codegen ロジックの単体テスト（Phase 7.3 → R-CRIT-1 修正後）
  *
  * buildTilesRegistryContent() を直接呼び出し、
  * TileRegistryEntry 配列の増減が生成コンテンツに正しく反映されることを確認する。
  *
+ * R-CRIT-1 修正により TileRegistryEntry = TileDefinition & { domain; slug } となったため、
+ * テスト入力に tileComponent / recommendedSize / inputPlaceholder / outputPlaceholder /
+ * detailPath も含む必要がある。形態固有フィールド（widgetSummary / variantLabel）も同様。
+ *
  * テストケース:
  *   (a) 空集合（tile 定義 0 件）入力 → 空 registry が生成される
- *   (b) 1 件（tile 定義 1 件）入力 → 1 件の registry が生成される
+ *   (b) 1 件（tile 定義 1 件、single 形態）入力 → 1 件の registry が生成される
  *   (c) 複数件（tile 定義 3 件以上）入力 → 全件が registry に出力される
  *   (d) 3 形態混在入力（single + widget + multi の組み合わせ）→ 全件が型契約を満たして出力される
+ *       widget 形態は widgetSummary が required、multi 形態は variantLabel が required であることを型レベルで確認
  */
 import { describe, expect, test } from "vitest";
 import { buildTilesRegistryContent } from "../generate-tiles-registry";
-import type { TileRegistryInput } from "../generate-tiles-registry";
+import type { TileRegistryEntry } from "@/tools/_constants/tile-declarations";
+
+// ---------------------------------------------------------------------------
+// テスト用モックコンポーネント
+// tileComponent は ComponentType<Record<string, any>> を満たす関数参照。
+// テストは生成コンテンツ（文字列）の検証のみ行うため、実際の描画は不要。
+// ---------------------------------------------------------------------------
+const MockComponentA = () => null;
+const MockComponentB = () => null;
+const MockComponentC = () => null;
+const MockComponentD = () => null;
 
 // ---------------------------------------------------------------------------
 // buildTilesRegistryContent のテスト
 // ---------------------------------------------------------------------------
 
 describe("buildTilesRegistryContent", () => {
-  // テスト用入力データ（系統 × slug × kind の組み合わせ）
-  const singleEntry: TileRegistryInput = {
+  // テスト用入力データ（TileRegistryEntry = TileDefinition & { domain; slug }）
+  // 形態 A: single — TileDefinitionSingle & { domain; slug }
+  const singleEntry: TileRegistryEntry = {
     domain: "tools",
     slug: "json-formatter",
     kind: "single",
+    tileComponent: MockComponentA,
+    recommendedSize: { cols: 2, rows: 2 },
+    inputPlaceholder: "JSON を入力",
+    outputPlaceholder: "整形結果",
+    detailPath: "/tools/json-formatter",
   };
 
-  const widgetEntry: TileRegistryInput = {
+  // 形態 B: widget — TileDefinitionWidget & { domain; slug } (widgetSummary が required)
+  const widgetEntry: TileRegistryEntry = {
     domain: "play",
     slug: "irodori",
     kind: "widget",
+    tileComponent: MockComponentB,
+    recommendedSize: { cols: 2, rows: 2 },
+    inputPlaceholder: "",
+    outputPlaceholder: "",
+    detailPath: "/play/irodori",
+    widgetSummary: "色彩パレット生成",
   };
 
-  const multiEntry: TileRegistryInput = {
+  // 形態 C: multi — TileDefinitionMulti & { domain; slug } (variantLabel が required)
+  const multiEntry: TileRegistryEntry = {
     domain: "dictionary",
     slug: "kanji",
     kind: "multi",
+    tileComponent: MockComponentC,
+    recommendedSize: { cols: 2, rows: 1 },
+    inputPlaceholder: "漢字を入力",
+    outputPlaceholder: "",
+    detailPath: "/dictionary/kanji",
+    variantLabel: "compact",
   };
 
-  const cheatsheetEntry: TileRegistryInput = {
+  // 形態 A: single（cheatsheets 系統）
+  const cheatsheetEntry: TileRegistryEntry = {
     domain: "cheatsheets",
     slug: "git",
     kind: "single",
+    tileComponent: MockComponentD,
+    recommendedSize: { cols: 3, rows: 2 },
+    inputPlaceholder: "",
+    outputPlaceholder: "",
+    detailPath: "/cheatsheets/git",
   };
 
   // (a) 空集合 → 空 registry が生成される
@@ -62,7 +103,7 @@ describe("buildTilesRegistryContent", () => {
   });
 
   // (b) 1 件 → 1 件の registry が生成される
-  test("(b) 1 件入力: 1 件のエントリが生成される", () => {
+  test("(b) 1 件入力: 1 件のエントリが生成される（domain / slug / kind が出力される）", () => {
     const content = buildTilesRegistryContent([singleEntry]);
     expect(content).toContain("tilesCount=1");
     expect(content).toContain('"tools"');
