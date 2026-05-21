@@ -37,6 +37,7 @@
 
 import type { TileDefinition } from "@/tools/_constants/tile-definition";
 import CharCountTile from "@/tools/char-count/CharCountTile";
+import ByteCounterTile from "@/tools/byte-counter/ByteCounterTile";
 
 /**
  * 系統識別子の型（4 系統）— SSoT: このファイルのみで定義する。
@@ -108,5 +109,16 @@ export const TILE_DECLARATIONS: TileRegistryEntry[] = [
     outputPlaceholder: "",
     detailPath: "/tools/char-count",
     widgetSummary: "文字数を素早く数える",
+  },
+  {
+    domain: "tools",
+    slug: "byte-counter",
+    kind: "widget",
+    tileComponent: ByteCounterTile,
+    recommendedSize: { cols: 3, rows: 2 },
+    inputPlaceholder: "テキストを入力するとバイト数を数えます",
+    outputPlaceholder: "",
+    detailPath: "/tools/byte-counter",
+    widgetSummary: "テキストのバイト数を素早く数える",
   },
 ];
