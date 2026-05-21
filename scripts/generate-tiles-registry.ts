@@ -34,6 +34,19 @@
 import fs from "node:fs";
 import path from "node:path";
 
+// TileDomain と TileRegistryEntry の SSoT は src/tools/_constants/tile-declarations.ts。
+// scripts/ → src/ の方向の import は tsx 実行環境で可能であり、
+// このファイル自身が dynamic import で src/ ファイルを参照していることがその証左。
+// 静的 import type は型消去されるためランタイムに影響しない。
+import type {
+  TileDomain,
+  TileRegistryEntry,
+} from "../src/tools/_constants/tile-declarations";
+
+// TileDomain を re-export して外部（テスト等）から参照できるようにする。
+// 実体は src/tools/_constants/tile-declarations.ts にある（二重定義ではなく re-export）。
+export type { TileDomain, TileRegistryEntry };
+
 const ROOT = path.resolve(process.cwd());
 const TILES_OUTPUT_FILE = path.join(
   ROOT,
@@ -45,38 +58,20 @@ const TILE_DECLARATIONS_FILE = path.join(
 );
 
 /**
- * 系統識別子の型（4 系統）。
- * tools / cheatsheets / play / dictionary の 4 値。
- */
-export type TileDomain = "tools" | "cheatsheets" | "play" | "dictionary";
-
-/**
- * tiles-registry 生成関数への入力型。
- * 各エントリは「系統識別子 + slug + kind（形態識別子）」を持つ。
- * TileDefinition の全フィールド（tileComponent 等）は実行時に tile-declarations.ts から参照する。
- * この入力型は codegen の単体テスト用に軽量な構造にしている。
- */
-export interface TileRegistryInput {
-  /** 系統識別子: 4 系統のいずれか */
-  domain: TileDomain;
-  /** コンテンツの slug（URL 用のケバブケース文字列） */
-  slug: string;
-  /** 形態識別子: Discriminated Union の discriminant（AP-I02 回避） */
-  kind: "single" | "widget" | "multi";
-}
-
-/**
  * Generate the TypeScript source content for src/tools/generated/tiles-registry.ts.
  *
  * Exported as a pure function so it can be unit-tested in-memory (no file I/O).
  * This is the independently deletable export unit for T-3 (Phase 7.3).
  * If Phase 7 is reverted, delete this file along with the callers listed above.
  *
- * @param entries - tile registry entries (0 entries is valid at Phase 7 time)
+ * @param entries - tile registry entries (TileRegistryEntry = TileDefinition & { domain; slug })
+ *   0 entries is valid at Phase 7 time.
+ *   tileComponent フィールドはコンポーネント参照のため出力ファイルには書き出さない。
+ *   出力には domain / slug / kind のシリアライズ可能なフィールドのみを含む。
  * @returns TypeScript source string (without trailing newline — caller adds it)
  */
 export function buildTilesRegistryContent(
-  entries: TileRegistryInput[],
+  entries: TileRegistryEntry[],
 ): string {
   const lines: string[] = [
     "/**",
@@ -87,8 +82,10 @@ export function buildTilesRegistryContent(
     " *",
     " * 4 系統横断タイルレジストリ（Phase 7.3）。",
     " * 宣言元: src/tools/_constants/tile-declarations.ts",
-    " * Phase 8 で各コンテンツがタイル定義を埋めるたびに、",
-    " * tile-declarations.ts にエントリを追加 → regenerate で自動反映される。",
+    " * Phase 8 で各コンテンツがタイル定義（TileDefinition & { domain; slug }）を",
+    " * tile-declarations.ts の TILE_DECLARATIONS 配列に追加 → regenerate で自動反映される。",
+    " * tileComponent は本ファイルには含まれない（関数参照のため serialization 不可）。",
+    " * 実行時に tileComponent を使用するコードは tile-declarations.ts を直接 import する。",
     " */",
     "",
     'import type { TileRegistryEntry } from "@/tools/_constants/tile-declarations";',
@@ -123,11 +120,15 @@ async function main(): Promise<void> {
 
   // tile-declarations.ts から entries を読み込む
   // ファイルが存在しない場合は空配列で動作する（Phase 7 初期状態）
-  let entries: TileRegistryInput[] = [];
+  let entries: TileRegistryEntry[] = [];
   if (fs.existsSync(TILE_DECLARATIONS_FILE)) {
-    // dynamic import で tile-declarations.ts の宣言配列を読み込む
+    // dynamic import で tile-declarations.ts の宣言配列を読み込む。
+    // TILE_DECLARATIONS の実体型は TileRegistryEntry[] = TileDefinition & { domain; slug }。
+    // tileComponent（ComponentType）を含むため型アサーションが必要だが、
+    // SSoT 型（TileRegistryEntry）を使用することで型の整合は tile-declarations.ts 側の
+    // 型注釈 `TILE_DECLARATIONS: TileRegistryEntry[]` によってコンパイル時に保証される。
     const mod = (await import(TILE_DECLARATIONS_FILE)) as {
-      TILE_DECLARATIONS?: TileRegistryInput[];
+      TILE_DECLARATIONS?: TileRegistryEntry[];
     };
     if (mod.TILE_DECLARATIONS && Array.isArray(mod.TILE_DECLARATIONS)) {
       entries = mod.TILE_DECLARATIONS;
