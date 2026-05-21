@@ -102,8 +102,13 @@ export function buildTilesRegistryContent(
   ];
 
   // 型エイリアスを生成ファイルに埋め込む（型のみのエイリアス）
-  const typeAlias =
-    'type TileRegistrySerializedEntry = Pick<TileRegistryEntry, "domain" | "slug" | "kind">;';
+  // Prettier printWidth=80 を超えるため折り返し済みの形式で生成する
+  const typeAlias = [
+    "type TileRegistrySerializedEntry = Pick<",
+    "  TileRegistryEntry,",
+    '  "domain" | "slug" | "kind"',
+    ">;",
+  ].join("\n");
 
   if (entries.length === 0) {
     // Empty array: Prettier formats as inline `[]`
