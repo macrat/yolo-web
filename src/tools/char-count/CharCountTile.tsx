@@ -15,6 +15,12 @@ import { countChars } from "./logic";
  * tsx による codegen (generate-tiles-registry.ts) が CSS Module を解釈できないため、
  * tile-declarations.ts から import する本コンポーネントは CSS Module を使用しない。
  *
+ * 【8px について】
+ * 本ファイル内の "8px" はすべてタイル内部の flex gap / padding 余白であり、
+ * tile-grid.ts の TILE_GAP_PX（タイル間の外側マージン 8px）とは別概念。
+ * TILE_GAP_PX はダッシュボードのグリッドレイアウトが使用する定数で、
+ * 本コンポーネントの UI レイアウトには関係しない。
+ *
  * Phase 8.1 cycle-200 T-3
  */
 export default function CharCountTile() {
@@ -52,7 +58,8 @@ export default function CharCountTile() {
           flex: 1,
           width: "100%",
           resize: "none",
-          border: "1px solid var(--fg)",
+          // --fg-soft: placeholder が浮き上がりすぎず、入力テキストとの視覚差を自然に確保
+          border: "1px solid var(--fg-soft)",
           borderRadius: "4px",
           padding: "6px 8px",
           fontSize: "0.875rem",
@@ -60,7 +67,7 @@ export default function CharCountTile() {
           color: "var(--fg)",
           boxSizing: "border-box",
           fontFamily: "inherit",
-          opacity: 0.9,
+          // opacity 削除: textarea 全体を薄くすると placeholder も入力テキストも判別困難になるため
         }}
         value={text}
         onChange={(e) => setText(e.target.value)}
