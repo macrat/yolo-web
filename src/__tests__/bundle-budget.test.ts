@@ -84,6 +84,8 @@ const UNCATEGORISED_WHITELIST: ReadonlySet<string> = new Set([
   "/storybook",
   // Phase 7.3 hidden 検証ルート。registry 件数を返す最小骨格。noindex 設定済み。
   "/internal/tiles",
+  // Phase 8.1 単独レンダリング検証ルート。タイルを推奨サイズで単独表示する hidden ルート。noindex 設定済み。
+  "/internal/tiles/preview/[domain]/[slug]",
 ]);
 
 // ---------------------------------------------------------------------------

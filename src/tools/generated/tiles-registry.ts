@@ -18,7 +18,17 @@ import type { TileRegistryEntry } from "@/tools/_constants/tile-declarations";
  * 4 系統横断タイルレジストリ（Phase 7.3）。
  * tools / cheatsheets / play / dictionary の全タイル化済エントリを収録する。
  * Phase 7 時点では全エントリ 0 件（タイル定義がまだ存在しないため）。
+ *
+ * domain / slug / kind のシリアライズ可能な 3 フィールドのみを収録する。
+ * tileComponent（React コンポーネント参照）等は serialization 不可のため含まれない。
+ * 実行時に tileComponent を使用するコードは tile-declarations.ts を直接 import する。
  */
-export const tilesRegistry: TileRegistryEntry[] = [];
+type TileRegistrySerializedEntry = Pick<
+  TileRegistryEntry,
+  "domain" | "slug" | "kind"
+>;
+export const tilesRegistry: TileRegistrySerializedEntry[] = [
+  { domain: "tools", slug: "char-count", kind: "widget" },
+];
 
-// Count at generation time: tilesCount=0
+// Count at generation time: tilesCount=1

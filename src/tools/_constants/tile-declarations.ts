@@ -36,6 +36,7 @@
  */
 
 import type { TileDefinition } from "@/tools/_constants/tile-definition";
+import CharCountTile from "@/tools/char-count/CharCountTile";
 
 /**
  * 系統識別子の型（4 系統）— SSoT: このファイルのみで定義する。
@@ -97,4 +98,15 @@ export type TileRegistryEntry = TileDefinition & {
  */
 export const TILE_DECLARATIONS: TileRegistryEntry[] = [
   // Phase 8 実装者がエントリをここに追加する
+  {
+    domain: "tools",
+    slug: "char-count",
+    kind: "widget",
+    tileComponent: CharCountTile,
+    recommendedSize: { cols: 3, rows: 2 },
+    inputPlaceholder: "文字を入力すると数えます",
+    outputPlaceholder: "",
+    detailPath: "/tools/char-count",
+    widgetSummary: "文字数を素早く数える",
+  },
 ];
