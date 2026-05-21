@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "prebuild": "npm run generate:toolbox-registry && npm run generate:static-assets",
-    "predev": "npm run generate:toolbox-registry && npm run generate:static-assets",
-    "pretest": "npm run generate:toolbox-registry && npm run generate:static-assets",
+    "prebuild": "npm run generate:toolbox-registry && npm run generate:tiles-registry && npm run generate:static-assets",
+    "predev": "npm run generate:toolbox-registry && npm run generate:tiles-registry && npm run generate:static-assets",
+    "pretest": "npm run generate:toolbox-registry && npm run generate:tiles-registry && npm run generate:static-assets",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -18,7 +18,8 @@
     "analyze": "next experimental-analyze --output",
     "format:check": "prettier --check .",
     "generate:static-assets": "tsx scripts/build-search-index.ts",
-    "generate:toolbox-registry": "tsx scripts/generate-toolbox-registry.ts"
+    "generate:toolbox-registry": "tsx scripts/generate-toolbox-registry.ts",
+    "generate:tiles-registry": "tsx scripts/generate-tiles-registry.ts"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
