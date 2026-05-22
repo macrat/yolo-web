@@ -7,7 +7,7 @@
 .modeSwitch {
   display: flex;
   gap: 0;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--border);
   border-radius: 0.5rem;
   overflow: hidden;
   width: fit-content;
@@ -16,8 +16,8 @@
 .modeButton {
   padding: 0.5rem 1.25rem;
   border: none;
-  background-color: var(--color-bg);
-  color: var(--color-text);
+  background-color: var(--bg);
+  color: var(--fg);
   font-size: 0.9rem;
   cursor: pointer;
   transition:
@@ -26,11 +26,11 @@
 }
 
 .modeButton:not(:last-child) {
-  border-right: 1px solid var(--color-border);
+  border-right: 1px solid var(--border);
 }
 
 .modeButton.active {
-  background-color: var(--color-primary);
+  background-color: var(--accent);
   color: #fff;
 }
 
@@ -45,12 +45,12 @@
   align-items: center;
   gap: 0.3rem;
   font-size: 0.85rem;
-  color: var(--color-text);
+  color: var(--fg);
   cursor: pointer;
 }
 
 .checkbox input[type="checkbox"] {
-  accent-color: var(--color-primary);
+  accent-color: var(--accent);
 }
 
 .field {
@@ -62,7 +62,7 @@
 .label {
   font-size: 0.85rem;
   font-weight: 600;
-  color: var(--color-text-muted);
+  color: var(--fg-soft);
 }
 
 .outputHeader {
@@ -74,33 +74,33 @@
 .textarea {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--border);
   border-radius: 0.5rem;
   font-family: var(--font-mono);
   font-size: 0.85rem;
   line-height: 1.5;
   resize: vertical;
-  color: var(--color-text);
-  background-color: var(--color-bg);
+  color: var(--fg);
+  background-color: var(--bg);
 }
 
 .textarea:focus {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid var(--accent);
   outline-offset: -1px;
-  border-color: var(--color-primary);
+  border-color: var(--accent);
 }
 
 .copyButton {
   padding: 0.25rem 0.6rem;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--border);
   border-radius: 0.375rem;
-  background-color: var(--color-bg);
-  color: var(--color-text);
+  background-color: var(--bg);
+  color: var(--fg);
   font-size: 0.8rem;
   cursor: pointer;
   transition: border-color 0.15s;
 }
 
 .copyButton:hover {
-  border-color: var(--color-primary);
+  border-color: var(--accent);
 }
