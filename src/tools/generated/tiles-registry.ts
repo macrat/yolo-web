@@ -32,6 +32,7 @@ export const tilesRegistry: TileRegistrySerializedEntry[] = [
   { domain: "tools", slug: "byte-counter", kind: "widget" },
   { domain: "tools", slug: "url-encode", kind: "widget" },
   { domain: "tools", slug: "base64", kind: "widget" },
+  { domain: "tools", slug: "html-entity", kind: "widget" },
 ];
 
-// Count at generation time: tilesCount=4
+// Count at generation time: tilesCount=5
