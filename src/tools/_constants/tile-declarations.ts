@@ -41,6 +41,7 @@ import ByteCounterTile from "@/tools/byte-counter/ByteCounterTile";
 import UrlEncodeTile from "@/tools/url-encode/UrlEncodeTile";
 import Base64Tile from "@/tools/base64/Base64Tile";
 import HtmlEntityTile from "@/tools/html-entity/HtmlEntityTile";
+import HashGeneratorTile from "@/tools/hash-generator/HashGeneratorTile";
 
 /**
  * 系統識別子の型（4 系統）— SSoT: このファイルのみで定義する。
@@ -158,5 +159,17 @@ export const TILE_DECLARATIONS: TileRegistryEntry[] = [
     detailPath: "/tools/html-entity",
     widgetSummary:
       "HTML エンティティの エスケープ／アンエスケープを素早く確認する",
+  },
+  {
+    domain: "tools",
+    slug: "hash-generator",
+    kind: "widget",
+    tileComponent: HashGeneratorTile,
+    recommendedSize: { cols: 3, rows: 2 },
+    inputPlaceholder: "テキストを入力するとハッシュ値を計算します",
+    outputPlaceholder: "",
+    detailPath: "/tools/hash-generator",
+    widgetSummary:
+      "SHA-1 / SHA-256 / SHA-384 / SHA-512 ハッシュ値を素早く計算する",
   },
 ];
