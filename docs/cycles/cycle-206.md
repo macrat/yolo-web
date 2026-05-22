@@ -2,7 +2,7 @@
 id: 206
 description: B-314 Phase 8.1 第 7 弾として fullwidth-converter（全角半角変換）のタイル化と (new)/tools/ 配下への詳細ページ移行を行う。cycle-205 で hash-generator が非同期パターン初挑戦を完了したため、本サイクルは標準パターン通常運用フェーズに復帰し、双方向 textarea×2 + 同期処理 + 結果膨張ゼロ型 + オプション複数（英数字 / カタカナ / 記号）という構造的差分を 7 回目の通常運用で確認する。
 started_at: 2026-05-22T23:37:11+0900
-completed_at: null
+completed_at: 2026-05-23T01:01:59+0900
 ---
 
 # サイクル-206
@@ -13,10 +13,10 @@ completed_at: null
 
 ## 実施する作業
 
-- [ ] T-1: 現状把握と移行前 baseline 取得（fullwidth-converter のファイル構成 / 旧トークン 17 箇所・5 種 / `logic.ts` export 5 / 既存テスト 16 + 6 / `TILE_DECLARATIONS` 件数 6 を grep 実測で確認、Playwright で baseline 計 8 枚撮影、既存テスト 22 件が緑であることの確認）
-- [ ] T-2: 詳細ページの `(new)/tools/fullwidth-converter/` 配下への移行（`page.tsx` / `opengraph-image.tsx` / `twitter-image.tsx` の 3 ファイルを `git mv` で移動 + `page.module.css` 新設 / 1200px max-width 標準パターン / `Component.module.css` の旧トークン 17 箇所・5 種 + `accent-color` 1 行を新トークンに置換）
-- [ ] T-3: タイル定義（`src/tools/fullwidth-converter/FullwidthConverterTile.tsx` などタイル UI 一式を新規実装、`kind=widget` / cols=3 rows=2 / セグメントコントロール 2 状態（半角 / 全角）+ オプション省略全 ON 固定 / AP-P21 役割分担パターン / `TILE_DECLARATIONS` へのエントリ追加 / `npm run generate:tiles-registry` 再生成 / タイル用テスト 6 件以上）
-- [ ] T-4: 検証と統合確認（Playwright 視覚回帰 + AP-P21 textarea 高さ計測 4 ケース + AP-WF16 reviewer 独立再実行 / baseline 8 枚 + tiles-preview 4 枚 + after 6 枚 = 計 18 枚 / `lint` / `format:check` / `test` / `build` の 4 コマンド全件 reviewer 独立再実行）
+- [x] T-1: 現状把握と移行前 baseline 取得（fullwidth-converter のファイル構成 / 旧トークン 17 箇所・5 種 / `logic.ts` export 5 / 既存テスト 16 + 6 / `TILE_DECLARATIONS` 件数 6 を grep 実測で確認、Playwright で baseline 計 8 枚撮影、既存テスト 22 件が緑であることの確認）
+- [x] T-2: 詳細ページの `(new)/tools/fullwidth-converter/` 配下への移行（`page.tsx` / `opengraph-image.tsx` / `twitter-image.tsx` の 3 ファイルを `git mv` で移動 + `page.module.css` 新設 / 1200px max-width 標準パターン / `Component.module.css` の旧トークン 17 箇所・5 種 + `accent-color` 1 行を新トークンに置換）
+- [x] T-3: タイル定義（`src/tools/fullwidth-converter/FullwidthConverterTile.tsx` などタイル UI 一式を新規実装、`kind=widget` / cols=3 rows=2 / セグメントコントロール 2 状態（半角 / 全角）+ オプション省略全 ON 固定 / AP-P21 役割分担パターン / `TILE_DECLARATIONS` へのエントリ追加 / `npm run generate:tiles-registry` 再生成 / タイル用テスト 6 件以上）
+- [x] T-4: 検証と統合確認（Playwright 視覚回帰 + AP-P21 textarea 高さ計測 4 ケース + AP-WF16 reviewer 独立再実行 / baseline 8 枚 + tiles-preview 4 枚 + after 6 枚 = 計 18 枚 / `lint` / `format:check` / `test` / `build` の 4 コマンド全件 reviewer 独立再実行）
 
 ## 作業計画
 
@@ -235,20 +235,20 @@ fullwidth-converter は **実質膨張ゼロ型**（半角 1 文字 ↔ 全角 1
 
 ### 完成条件（サイクル全体）
 
-- [ ] `Component.module.css` の旧トークン置換完了（`grep -c -- "--color-" src/tools/fullwidth-converter/Component.module.css` → `0`）
-- [ ] `(legacy)/tools/fullwidth-converter/` のファイルが残存していない（3 ファイル全件 (new) 配下に移動済）
-- [ ] `src/app/(new)/tools/fullwidth-converter/page.module.css` 新設、`.page` ラッパーで 1200px max-width 適用
-- [ ] `TILE_DECLARATIONS` に fullwidth-converter エントリ追加（kind=widget / cols=3 rows=2 / 詳細パス `/tools/fullwidth-converter`）
-- [ ] `npm run generate:tiles-registry` で `tilesCount=7` に更新
-- [ ] `FullwidthConverterTile.tsx` 新規実装（モード切替セグメント / オプション全 ON 固定 / リアルタイム反映 / AP-P21 役割分担 / `role="status" aria-live="polite"`）
-- [ ] タイル用テスト **6 件以上**が緑（観点 (i) モード切替 → 入力保持 / (ii) toHalfwidth 全 ON / (iii) toFullwidth 全 ON / (iv) 濁音カタカナの toHalfwidth / (v) 半濁音カタカナの toHalfwidth / (vi) 空入力 をすべて含む）
-- [ ] 既存テスト 22 件（logic 16 + meta 6）が引き続き緑
-- [ ] `/internal/tiles/preview/tools/fullwidth-converter` で 4 viewport（w1200 / w375 × light / dark）表示確認
-- [ ] AP-P21 textarea 高さ 4 ケース全件で下限 40px 以上 / 相互差 ≤ 2px（cycle-205 実測値 4 ケース全件 46px・相互差 0px との一致を確認）
-- [ ] Playwright スクショ baseline 8 + tiles-preview 4 + after 6 = **計 18 枚** が `tmp/cycle-206/` 配下に保存
-- [ ] `npm run lint` / `npm run format:check` / `npm run test` / `npm run build` 全件 PASS
-- [ ] T-3 / T-4 で reviewer が 4 コマンドすべて独立再実行して出力一致を確認（AP-WF16）
-- [ ] AP-WF05 dark mode 撮影が baseline / tiles-preview / after の各段階で実施されている
+- [x] `Component.module.css` の旧トークン置換完了（`grep -c -- "--color-" src/tools/fullwidth-converter/Component.module.css` → `0`）
+- [x] `(legacy)/tools/fullwidth-converter/` のファイルが残存していない（3 ファイル全件 (new) 配下に移動済）
+- [x] `src/app/(new)/tools/fullwidth-converter/page.module.css` 新設、`.page` ラッパーで 1200px max-width 適用
+- [x] `TILE_DECLARATIONS` に fullwidth-converter エントリ追加（kind=widget / cols=3 rows=2 / 詳細パス `/tools/fullwidth-converter`）
+- [x] `npm run generate:tiles-registry` で `tilesCount=7` に更新
+- [x] `FullwidthConverterTile.tsx` 新規実装（モード切替セグメント / オプション全 ON 固定 / リアルタイム反映 / AP-P21 役割分担 / `role="status" aria-live="polite"`）
+- [x] タイル用テスト **6 件以上**が緑（観点 (i) モード切替 → 入力保持 / (ii) toHalfwidth 全 ON / (iii) toFullwidth 全 ON / (iv) 濁音カタカナの toHalfwidth / (v) 半濁音カタカナの toHalfwidth / (vi) 空入力 をすべて含む）
+- [x] 既存テスト 22 件（logic 16 + meta 6）が引き続き緑
+- [x] `/internal/tiles/preview/tools/fullwidth-converter` で 4 viewport（w1200 / w375 × light / dark）表示確認
+- [x] AP-P21 textarea 高さ 4 ケース全件で下限 40px 以上 / 相互差 ≤ 2px（cycle-205 実測値 4 ケース全件 46px・相互差 0px との一致を確認）
+- [x] Playwright スクショ baseline 8 + tiles-preview 4 + after 6 = **計 18 枚** が `tmp/cycle-206/` 配下に保存
+- [x] `npm run lint` / `npm run format:check` / `npm run test` / `npm run build` 全件 PASS
+- [x] T-3 / T-4 で reviewer が 4 コマンドすべて独立再実行して出力一致を確認（AP-WF16）
+- [x] AP-WF05 dark mode 撮影が baseline / tiles-preview / after の各段階で実施されている
 
 ### 本サイクル外として認識する事項
 
@@ -282,7 +282,35 @@ cycle-205 完了時点での残ツール約 28 件のうち、以下を比較し
 
 ## キャリーオーバー
 
-（サイクル進行中に随時記入。次サイクル以降への申し送りがあれば本欄と `docs/backlog.md` の両方に記載する。）
+### B-314 親タスク継続
+
+Phase 8.1 全 34 ツールのうち本サイクルで第 7 弾 = fullwidth-converter が完了。**残り約 27 ツール + 20 遊び**（Phase 8.1 内ツール）。次サイクル候補:
+
+- **(b1) qr-code 生成 / image-base64 / image-resizer**（cycle-205 で確立した非同期パターン SSoT の 2 件目応用。とくに qr-code は「日本語フォールバック + cleanup フラグ + loading 非表示」の直接波及候補）
+- **(c) kana-converter**（fullwidth-converter と構造類似 / 膨張ゼロ型 3 件目候補 / 標準パターン通常運用の自然な続き）
+- **(d) 単純構造ツール 1 件継続**（線形進行で確実）
+
+### AP-P21 膨張ゼロ型サンプル 2 件目の定量記録
+
+T-4 Playwright 計測で 4 ケース全件 textarea 高さ = **46.00px・相互差 0.00px**、結果欄 `overflowY: auto` を確認。cycle-205 hash-generator（膨張ゼロ型 1 件目 / 4 ケース全件 46px・相互差 0px）と完全同水準で 2 サンプル一致。kana-converter 等 3 件目以降の比較基準値として 2 サンプルが確定した。
+
+### 標準パターン通常運用フェーズ初回の油断ゼロ完遂
+
+§補足事項で明文化した 3 点の油断打ち消し策（AP-WF16 reviewer 独立再実行 / AP-WF05 dark mode 撮影 / AP-P21 計測の維持）が本サイクルで functional に機能した:
+
+- **AP-WF16**: lint / format:check / test（4420 件）/ build（3895 ページ）の 4 コマンド全件 reviewer 独立再実行を T-3 / T-4 で履行。cycle-203 T-3 R1 の format:check 虚偽 PASS 同型事故は本サイクルでも再発なし。
+- **AP-WF05**: T-1 着手前に baseline 8 枚（ベース 6 枚 + 結果表示済み 2 枚）を dark mode 含めて撮影済。tiles-preview 4 枚 / after 6 枚でも dark mode 必須を履行。
+- **AP-P21**: 膨張ゼロ型でも役割分担パターン継続採用 + 4 ケース計測を維持。「膨張ゼロ型だから省略」というショートカット判断（AP-WF09 同型）は発生しなかった。
+
+次回以降の標準パターン通常運用に継承する。
+
+### 観察事項（cycle-205 R1 同型事象の再発有無）
+
+cycle-205 T-4 R1 で観測された「reviewer 長時間応答停止」は本サイクルでは **再発なし**。1 件目の観測サンプルにとどまる。AP 化は引き続き見送り。
+
+### 新規 AP 起票なし
+
+本サイクルは標準パターン通常運用フェーズ初回として位置づけ、AP 新規追加は不要。cycle-203〜205 で確立した既存 AP 運用形（AP-WF16 / AP-WF05 / AP-P21 / AP-WF09）がすべて遵守された。
 
 ## 補足事項
 
@@ -296,13 +324,13 @@ cycle-205 完了時点での残ツール約 28 件のうち、以下を比較し
 
 ## サイクル終了時のチェックリスト
 
-- [ ] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
-- [ ] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
-- [ ] すべての変更がレビューされ、残存する指摘事項が無くなっている。
-- [ ] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
-- [ ] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
-- [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
-- [ ] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
+- [x] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
+- [x] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
+- [x] すべての変更がレビューされ、残存する指摘事項が無くなっている（T-1〜T-3 R1 Pass、T-4 R1 で MINOR-1/2 のみ指摘 → 本作業で解消）。
+- [x] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
+- [x] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
+- [x] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
+- [x] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
 
 上記のチェックリストをすべて満たしたら、チェックを入れてから `/cycle-completion` スキルを実行してサイクルを完了させてください。
 なお、「環境起因」「今回の変更と無関係」「既知の問題」「次回対応」などの **例外は一切認めません** 。必ずすべての項目を完全に満してください。

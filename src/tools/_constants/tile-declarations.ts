@@ -42,6 +42,7 @@ import UrlEncodeTile from "@/tools/url-encode/UrlEncodeTile";
 import Base64Tile from "@/tools/base64/Base64Tile";
 import HtmlEntityTile from "@/tools/html-entity/HtmlEntityTile";
 import HashGeneratorTile from "@/tools/hash-generator/HashGeneratorTile";
+import FullwidthConverterTile from "@/tools/fullwidth-converter/FullwidthConverterTile";
 
 /**
  * 系統識別子の型（4 系統）— SSoT: このファイルのみで定義する。
@@ -171,5 +172,16 @@ export const TILE_DECLARATIONS: TileRegistryEntry[] = [
     detailPath: "/tools/hash-generator",
     widgetSummary:
       "SHA-1 / SHA-256 / SHA-384 / SHA-512 ハッシュ値を素早く計算する",
+  },
+  {
+    domain: "tools",
+    slug: "fullwidth-converter",
+    kind: "widget",
+    tileComponent: FullwidthConverterTile,
+    recommendedSize: { cols: 3, rows: 2 },
+    inputPlaceholder: "全角テキストを入力すると半角に変換します",
+    outputPlaceholder: "",
+    detailPath: "/tools/fullwidth-converter",
+    widgetSummary: "全角半角を素早く相互変換する",
   },
 ];
