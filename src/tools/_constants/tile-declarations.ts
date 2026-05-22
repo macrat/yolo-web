@@ -38,6 +38,7 @@
 import type { TileDefinition } from "@/tools/_constants/tile-definition";
 import CharCountTile from "@/tools/char-count/CharCountTile";
 import ByteCounterTile from "@/tools/byte-counter/ByteCounterTile";
+import UrlEncodeTile from "@/tools/url-encode/UrlEncodeTile";
 
 /**
  * 系統識別子の型（4 系統）— SSoT: このファイルのみで定義する。
@@ -120,5 +121,16 @@ export const TILE_DECLARATIONS: TileRegistryEntry[] = [
     outputPlaceholder: "",
     detailPath: "/tools/byte-counter",
     widgetSummary: "テキストのバイト数を素早く数える",
+  },
+  {
+    domain: "tools",
+    slug: "url-encode",
+    kind: "widget",
+    tileComponent: UrlEncodeTile,
+    recommendedSize: { cols: 3, rows: 2 },
+    inputPlaceholder: "テキストを入力すると URL エンコードします",
+    outputPlaceholder: "",
+    detailPath: "/tools/url-encode",
+    widgetSummary: "URL エンコード／デコードを素早く確認する",
   },
 ];
