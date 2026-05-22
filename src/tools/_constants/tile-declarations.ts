@@ -40,6 +40,7 @@ import CharCountTile from "@/tools/char-count/CharCountTile";
 import ByteCounterTile from "@/tools/byte-counter/ByteCounterTile";
 import UrlEncodeTile from "@/tools/url-encode/UrlEncodeTile";
 import Base64Tile from "@/tools/base64/Base64Tile";
+import HtmlEntityTile from "@/tools/html-entity/HtmlEntityTile";
 
 /**
  * 系統識別子の型（4 系統）— SSoT: このファイルのみで定義する。
@@ -144,5 +145,18 @@ export const TILE_DECLARATIONS: TileRegistryEntry[] = [
     outputPlaceholder: "",
     detailPath: "/tools/base64",
     widgetSummary: "Base64 エンコード／デコードを素早く確認する",
+  },
+  {
+    domain: "tools",
+    slug: "html-entity",
+    kind: "widget",
+    tileComponent: HtmlEntityTile,
+    recommendedSize: { cols: 3, rows: 2 },
+    inputPlaceholder:
+      "テキストを入力すると HTML エンティティにエスケープします",
+    outputPlaceholder: "",
+    detailPath: "/tools/html-entity",
+    widgetSummary:
+      "HTML エンティティの エスケープ／アンエスケープを素早く確認する",
   },
 ];
