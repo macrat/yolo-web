@@ -39,6 +39,7 @@ import type { TileDefinition } from "@/tools/_constants/tile-definition";
 import CharCountTile from "@/tools/char-count/CharCountTile";
 import ByteCounterTile from "@/tools/byte-counter/ByteCounterTile";
 import UrlEncodeTile from "@/tools/url-encode/UrlEncodeTile";
+import Base64Tile from "@/tools/base64/Base64Tile";
 
 /**
  * 系統識別子の型（4 系統）— SSoT: このファイルのみで定義する。
@@ -132,5 +133,16 @@ export const TILE_DECLARATIONS: TileRegistryEntry[] = [
     outputPlaceholder: "",
     detailPath: "/tools/url-encode",
     widgetSummary: "URL エンコード／デコードを素早く確認する",
+  },
+  {
+    domain: "tools",
+    slug: "base64",
+    kind: "widget",
+    tileComponent: Base64Tile,
+    recommendedSize: { cols: 3, rows: 2 },
+    inputPlaceholder: "テキストを入力すると Base64 エンコードします",
+    outputPlaceholder: "",
+    detailPath: "/tools/base64",
+    widgetSummary: "Base64 エンコード／デコードを素早く確認する",
   },
 ];
