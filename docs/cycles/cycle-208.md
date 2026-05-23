@@ -19,8 +19,8 @@ completed_at: null
 
 ## 実施する作業
 
-- [ ] T-1: 現状把握と移行前 baseline 取得（kana-converter のファイル構成 / 旧トークン箇所 / `logic.ts` export / 既存テスト / `TILE_DECLARATIONS` 件数を grep 実測で確認、Playwright で baseline 撮影、既存テストが緑であることの確認）
-- [ ] T-2: 詳細ページの `(new)/tools/kana-converter/` 配下への移行（`page.tsx` / `opengraph-image.tsx` / `twitter-image.tsx` の 3 ファイルを `git mv` で移動 + `page.module.css` 新設 / 1200px max-width 標準パターン / `Component.module.css` の旧トークンを新トークンに置換 / T1 yaml の search_intents 棚卸し）
+- [x] T-1: 現状把握と移行前 baseline 取得（kana-converter のファイル構成 / 旧トークン箇所 / `logic.ts` export / 既存テスト / `TILE_DECLARATIONS` 件数を grep 実測で確認、Playwright で baseline 撮影、既存テストが緑であることの確認）
+- [x] T-2: 詳細ページの `(new)/tools/kana-converter/` 配下への移行（`page.tsx` / `opengraph-image.tsx` / `twitter-image.tsx` の 3 ファイルを `git mv` で移動 + `page.module.css` 新設 / 1200px max-width 標準パターン / `Component.module.css` の旧トークンを新トークンに置換 / T1 yaml の search_intents 棚卸し）
 - [ ] T-3: タイル定義（`src/tools/kana-converter/KanaConverterTile.tsx` などタイル UI 一式を新規実装、`kind=widget` / rows=2 標準形 / 方向セグメント / AP-P21 役割分担 / `TILE_DECLARATIONS` へのエントリ追加 / `npm run generate:tiles-registry` 再生成 / タイル用テスト追加）
 - [ ] T-4: 検証と統合確認（Playwright 視覚回帰 + AP-P21 textarea 高さ 4 ケース計測 + AP-WF16 reviewer 独立再実行 / baseline + tiles-preview + after の各種スクリーンショット / `lint` / `format:check` / `test` / `build` の 4 コマンド全件 reviewer 独立再実行）
 
