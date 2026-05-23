@@ -21,7 +21,7 @@ completed_at: null
 
 - [x] T-1: 現状把握と移行前 baseline 取得（qr-code のファイル構成 / 旧トークン箇所 / `logic.ts` export / 既存テスト / `TILE_DECLARATIONS` 件数を grep 実測で確認、Playwright で baseline 撮影、既存テストが緑であることの確認）
 - [x] T-2: 詳細ページの `(new)/tools/qr-code/` 配下への移行 + GIF/PNG ミスラベル修正 (案 Y 確定) + **詳細ページの debounce 300ms リアルタイム化 + 「QRコード生成」ボタン削除** (T-2 セクション C 案 a 採択) + T1 yaml の search_intents への「QRコード」3 語追加（`page.tsx` / `opengraph-image.tsx` / `twitter-image.tsx` の 3 ファイルを `git mv` で移動 + `page.module.css` 新設 / 1200px max-width 標準パターン / `Component.module.css` の旧トークンを新トークンに置換 / `logic.ts` を案 Y で PNG 化 + `logic.test.ts:14` の MIME 期待値更新 / Component.tsx の debounce 化 + ボタン削除 / T1 yaml に「QRコード」「QRコード 作成」「QRコード 生成」を追加）
-- [ ] T-3: タイル定義（`src/tools/qr-code/QrCodeTile.tsx` などタイル UI 一式を新規実装、`kind=widget` / **cols=3 rows=3 確定（論点 0 案 C）** / 誤り訂正レベル M 固定（論点 1 案 B）/ debounce 300ms リアルタイム化（論点 2 案 C）/ **タイル下端に独立 DL ボタン配置（論点 0-b 案 A）** / AP-P21 画像出力型適応役割分担 / `TILE_DECLARATIONS` へのエントリ追加 / `npm run generate:tiles-registry` 再生成 / タイル用テスト追加）
+- [x] T-3: タイル定義（`src/tools/qr-code/QrCodeTile.tsx` などタイル UI 一式を新規実装、`kind=widget` / **cols=3 rows=3 確定（論点 0 案 C）** / 誤り訂正レベル M 固定（論点 1 案 B）/ debounce 300ms リアルタイム化（論点 2 案 C）/ **タイル下端に独立 DL ボタン配置（論点 0-b 案 A）** / AP-P21 画像出力型適応役割分担 / `TILE_DECLARATIONS` へのエントリ追加 / `npm run generate:tiles-registry` 再生成 / タイル用テスト追加）
 - [ ] T-4: 検証と統合確認（Playwright 視覚回帰 + 画像プレビューエリア計測 + AP-WF16 reviewer 独立再実行 / baseline + tiles-preview + after の各種スクリーンショット / `lint` / `format:check` / `test` / `build` の 4 コマンド全件 reviewer 独立再実行）
 
 詳細なタスク分解と作業計画は `/cycle-planning` フェーズで具体化する。

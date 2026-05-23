@@ -43,6 +43,7 @@ import Base64Tile from "@/tools/base64/Base64Tile";
 import HtmlEntityTile from "@/tools/html-entity/HtmlEntityTile";
 import HashGeneratorTile from "@/tools/hash-generator/HashGeneratorTile";
 import FullwidthConverterTile from "@/tools/fullwidth-converter/FullwidthConverterTile";
+import QrCodeTile from "@/tools/qr-code/QrCodeTile";
 
 /**
  * 系統識別子の型（4 系統）— SSoT: このファイルのみで定義する。
@@ -183,5 +184,17 @@ export const TILE_DECLARATIONS: TileRegistryEntry[] = [
     outputPlaceholder: "",
     detailPath: "/tools/fullwidth-converter",
     widgetSummary: "全角半角を素早く相互変換する",
+  },
+  {
+    domain: "tools",
+    slug: "qr-code",
+    kind: "widget",
+    tileComponent: QrCodeTile,
+    recommendedSize: { cols: 3, rows: 3 },
+    inputPlaceholder: "URL またはテキストを入力すると QR が自動生成されます",
+    outputPlaceholder: "",
+    detailPath: "/tools/qr-code",
+    widgetSummary:
+      "URL やテキストから QR コードを素早く生成してダウンロードする",
   },
 ];
