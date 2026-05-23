@@ -140,8 +140,11 @@ export default function QrCodeTile() {
       />
 
       {/* SVG プレビューコンテナ（AP-P21 画像出力型適応）
-           flex: 1 で残り高さを占有し、aspect-ratio: 1 で正方形を強制する。
-           最小高さ 150px（QR 読み取り可能な物理 2cm 相当）、最大高さ 272px（試算上限）。
+           flex: "0 0 auto" + height: "auto" + aspectRatio: 1 で正方形を維持する。
+           flex: 1 では height がフレックス残余スペースで膨張し aspect-ratio が無効化されるため採用不可。
+           maxWidth: 226px はタイル 400px から他要素（title 20 + textarea 46 + button 31 + link 20 +
+           padding 24 + gap 32）を差し引いた上限（≈ 227px）から逆算し、全要素がタイル内に収まる設定。
+           最小高さ 150px（QR 読み取り可能な物理 2cm 相当）を保持。
            背景 #fff 固定: QR は白背景が読み取り精度要件。
            aria-live="polite" で SVG 更新を支援技術に通知する。
            入力なし時: 「入力を待っています」の文言を表示。 */}
@@ -150,10 +153,18 @@ export default function QrCodeTile() {
         aria-live="polite"
         aria-label={previewAriaLabel}
         style={{
-          flex: 1,
-          minHeight: "150px",
-          maxHeight: "272px",
+          // aspect-ratio: 1 で正方形を維持する（AP-P21 画像出力型適応判定基準 iv）。
+          // flex: 1 を使うと height がフレックス残余スペースで膨張し aspect-ratio が無効化される
+          // ため、flex: "0 0 auto" + height: "auto" にして幅から高さを aspect-ratio で導出する。
+          // maxWidth: 226px はタイル内の他要素（title/textarea/button/link + gap/padding）と
+          // 合計で 400px タイル高さに収まる上限（400 - 24(padding) - 32(gap) - 20(title)
+          // - 46(textarea) - 31(button) - 20(link) ≈ 227px）から逆算。
+          flex: "0 0 auto",
+          height: "auto",
           aspectRatio: "1",
+          width: "100%",
+          maxWidth: "226px",
+          minHeight: "150px",
           backgroundColor: "#fff",
           borderRadius: "4px",
           display: "flex",
@@ -161,8 +172,6 @@ export default function QrCodeTile() {
           justifyContent: "center",
           overflow: "hidden",
           alignSelf: "center",
-          width: "100%",
-          maxWidth: "272px",
           boxSizing: "border-box",
         }}
       >
