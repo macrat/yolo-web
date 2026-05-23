@@ -44,6 +44,7 @@ import HtmlEntityTile from "@/tools/html-entity/HtmlEntityTile";
 import HashGeneratorTile from "@/tools/hash-generator/HashGeneratorTile";
 import FullwidthConverterTile from "@/tools/fullwidth-converter/FullwidthConverterTile";
 import QrCodeTile from "@/tools/qr-code/QrCodeTile";
+import KanaConverterTile from "@/tools/kana-converter/KanaConverterTile";
 
 /**
  * 系統識別子の型（4 系統）— SSoT: このファイルのみで定義する。
@@ -196,5 +197,16 @@ export const TILE_DECLARATIONS: TileRegistryEntry[] = [
     detailPath: "/tools/qr-code",
     widgetSummary:
       "URL やテキストから QR コードを素早く生成してダウンロードする",
+  },
+  {
+    domain: "tools",
+    slug: "kana-converter",
+    kind: "widget",
+    tileComponent: KanaConverterTile,
+    recommendedSize: { cols: 3, rows: 2 },
+    inputPlaceholder: "テキストを入力すると変換します",
+    outputPlaceholder: "",
+    detailPath: "/tools/kana-converter",
+    widgetSummary: "ひらがな・カタカナを素早く相互変換する",
   },
 ];
