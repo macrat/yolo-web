@@ -2,7 +2,7 @@
 id: 210
 description: B-314 Phase 8.1 第 11 弾 = text-replace 新デザイン移行 + タイル化 + 複合入力型タイル初回
 started_at: 2026-05-26T09:12:38+0900
-completed_at: null
+completed_at: 2026-05-27T00:50:37+0900
 ---
 
 # サイクル-210
