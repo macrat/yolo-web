@@ -46,6 +46,7 @@ import FullwidthConverterTile from "@/tools/fullwidth-converter/FullwidthConvert
 import QrCodeTile from "@/tools/qr-code/QrCodeTile";
 import KanaConverterTile from "@/tools/kana-converter/KanaConverterTile";
 import LineBreakRemoverTile from "@/tools/line-break-remover/LineBreakRemoverTile";
+import TextReplaceTile from "@/tools/text-replace/TextReplaceTile";
 
 /**
  * 系統識別子の型（4 系統）— SSoT: このファイルのみで定義する。
@@ -220,5 +221,16 @@ export const TILE_DECLARATIONS: TileRegistryEntry[] = [
     outputPlaceholder: "",
     detailPath: "/tools/line-break-remover",
     widgetSummary: "改行を素早く削除・スペース置換する（PDF コピペにも対応）",
+  },
+  {
+    domain: "tools",
+    slug: "text-replace",
+    kind: "widget",
+    tileComponent: TextReplaceTile,
+    recommendedSize: { cols: 3, rows: 3 },
+    inputPlaceholder: "テキストを入力すると文字列を置換します",
+    outputPlaceholder: "",
+    detailPath: "/tools/text-replace",
+    widgetSummary: "テキストの文字列を素早く一括置換する",
   },
 ];

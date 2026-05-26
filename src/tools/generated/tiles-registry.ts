@@ -38,6 +38,7 @@ export const tilesRegistry: TileRegistrySerializedEntry[] = [
   { domain: "tools", slug: "qr-code", kind: "widget" },
   { domain: "tools", slug: "kana-converter", kind: "widget" },
   { domain: "tools", slug: "line-break-remover", kind: "widget" },
+  { domain: "tools", slug: "text-replace", kind: "widget" },
 ];
 
-// Count at generation time: tilesCount=10
+// Count at generation time: tilesCount=11
