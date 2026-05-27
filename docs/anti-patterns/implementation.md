@@ -32,3 +32,9 @@
 
 - AP-I09: 複数ファイルを同一変更セットとして commit する際、「依存される側 → 依存する側」の commit 順序になっているか？
   → 例えば whitelist に route を追加する commit が、その route の page.tsx を追加する commit より先に存在すると、中間コミット時点でビルドが壊れる。依存される側（ページファイル等の実体）を先に commit し、依存する側（whitelist / bundle-budget 等の参照先設定）を後に commit する。または 1 commit にまとめる。（cycle-199で実際に発生）
+
+- AP-I10: インラインスタイルで `animation: "spin 0.6s linear infinite"` のように `@keyframes` 名を参照するとき、その `@keyframes` が `globals.css` に定義されているか確認しているか？
+  → CSS Modules（`.module.css`）内の `@keyframes` はそのモジュールのスコープに局所化されるため、インラインスタイルからは参照できない。インラインスタイルが参照する `@keyframes` は必ず `globals.css`（グローバルスコープ）に定義すること。確認せずに実装するとアニメーションが無音で無効化されブラウザに表示されない。（cycle-212で実際に発生）
+
+- AP-I11: `setTimeout` / `setInterval` を発火させたとき、その ID を `useRef` で保持し、`useEffect` の cleanup（返却する関数）で `clearTimeout` / `clearInterval` しているか？
+  → ID を ref に保持せずに `useEffect` cleanup を省略すると、コンポーネント unmount 後もタイマーが走り続け、発火時に `setState` が呼ばれてメモリリークや警告の原因になる。特に「DL 完了後 N 秒でボタン文言を戻す」「スピナー遅延表示」のような UI フィードバック用タイマーは unmount タイミングと競合しやすい。（cycle-212で実際に発生）

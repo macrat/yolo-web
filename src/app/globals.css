@@ -308,3 +308,16 @@ hr {
 .markdown-alert-caution .markdown-alert-title {
   color: var(--admonition-caution);
 }
+
+/* インラインスタイルから参照するグローバルアニメーション
+   CSS Modules は局所スコープのため、インラインスタイルの animation: "spin ..."
+   は globals.css に定義した @keyframes が必要（AP-I10 参照）。
+   使用箇所: ImageResizerTile.tsx スピナー */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
