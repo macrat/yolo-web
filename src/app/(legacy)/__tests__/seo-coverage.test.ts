@@ -374,6 +374,8 @@ describe("動的metadataページのSEO検証", () => {
 
   // -- 追加: 未カバー動的ページ7件のSEOテスト --
 
+  // タイムアウトを 60000ms に延長: generateMetadata 内で getBlogPostBySlug → markdownToHtml(Shiki) を
+  // 呼び出すため、Shiki の初回初期化で 15 秒を超えることがある。本テストに限り長めのタイムアウトを設定。
   test("/blog/[slug]: SEO必須項目が存在する", async () => {
     const { getAllBlogSlugs } = await import("@/blog/_lib/blog");
     const slugs = getAllBlogSlugs();
@@ -385,7 +387,7 @@ describe("動的metadataページのSEO検証", () => {
       params: Promise.resolve({ slug }),
     });
     assertSeoMetadata(meta, `/blog/${slug}`, "/blog/[slug]");
-  });
+  }, 60000);
 
   test("/play/[slug]: SEO必須項目が存在する", async () => {
     const { getAllQuizSlugs } = await import("@/play/quiz/registry");

@@ -49,6 +49,7 @@ import LineBreakRemoverTile from "@/tools/line-break-remover/LineBreakRemoverTil
 import TextReplaceTile from "@/tools/text-replace/TextReplaceTile";
 import ImageBase64Tile from "@/tools/image-base64/ImageBase64Tile";
 import ImageResizerTile from "@/tools/image-resizer/ImageResizerTile";
+import PasswordGeneratorTile from "@/tools/password-generator/PasswordGeneratorTile";
 
 /**
  * 系統識別子の型（4 系統）— SSoT: このファイルのみで定義する。
@@ -256,5 +257,17 @@ export const TILE_DECLARATIONS: TileRegistryEntry[] = [
     outputPlaceholder: "",
     detailPath: "/tools/image-resizer",
     widgetSummary: "画像を指定サイズにリサイズしてダウンロードする",
+  },
+  {
+    domain: "tools",
+    slug: "password-generator",
+    kind: "widget",
+    tileComponent: PasswordGeneratorTile,
+    recommendedSize: { cols: 3, rows: 2 },
+    inputPlaceholder: "",
+    outputPlaceholder: "",
+    detailPath: "/tools/password-generator",
+    widgetSummary:
+      "ワンクリックで安全なパスワードを生成してコピーする（ブラウザ完結）",
   },
 ];
