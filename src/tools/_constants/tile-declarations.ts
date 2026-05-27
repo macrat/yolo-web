@@ -48,6 +48,7 @@ import KanaConverterTile from "@/tools/kana-converter/KanaConverterTile";
 import LineBreakRemoverTile from "@/tools/line-break-remover/LineBreakRemoverTile";
 import TextReplaceTile from "@/tools/text-replace/TextReplaceTile";
 import ImageBase64Tile from "@/tools/image-base64/ImageBase64Tile";
+import ImageResizerTile from "@/tools/image-resizer/ImageResizerTile";
 
 /**
  * 系統識別子の型（4 系統）— SSoT: このファイルのみで定義する。
@@ -244,5 +245,16 @@ export const TILE_DECLARATIONS: TileRegistryEntry[] = [
     outputPlaceholder: "",
     detailPath: "/tools/image-base64",
     widgetSummary: "画像を Base64 / Data URI に素早く変換する",
+  },
+  {
+    domain: "tools",
+    slug: "image-resizer",
+    kind: "widget",
+    tileComponent: ImageResizerTile,
+    recommendedSize: { cols: 3, rows: 3 },
+    inputPlaceholder: "",
+    outputPlaceholder: "",
+    detailPath: "/tools/image-resizer",
+    widgetSummary: "画像を指定サイズにリサイズしてダウンロードする",
   },
 ];
