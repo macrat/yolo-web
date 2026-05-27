@@ -47,6 +47,7 @@ import QrCodeTile from "@/tools/qr-code/QrCodeTile";
 import KanaConverterTile from "@/tools/kana-converter/KanaConverterTile";
 import LineBreakRemoverTile from "@/tools/line-break-remover/LineBreakRemoverTile";
 import TextReplaceTile from "@/tools/text-replace/TextReplaceTile";
+import ImageBase64Tile from "@/tools/image-base64/ImageBase64Tile";
 
 /**
  * 系統識別子の型（4 系統）— SSoT: このファイルのみで定義する。
@@ -232,5 +233,16 @@ export const TILE_DECLARATIONS: TileRegistryEntry[] = [
     outputPlaceholder: "",
     detailPath: "/tools/text-replace",
     widgetSummary: "テキストの文字列を素早く一括置換する",
+  },
+  {
+    domain: "tools",
+    slug: "image-base64",
+    kind: "widget",
+    tileComponent: ImageBase64Tile,
+    recommendedSize: { cols: 3, rows: 3 },
+    inputPlaceholder: "",
+    outputPlaceholder: "",
+    detailPath: "/tools/image-base64",
+    widgetSummary: "画像を Base64 / Data URI に素早く変換する",
   },
 ];
