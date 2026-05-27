@@ -12,10 +12,10 @@ completed_at: null
 ## 実施する作業
 
 - [x] /cycle-planning で作業計画を立てる
-- [ ] T-1: 現状把握と移行前 baseline 取得（旧トークン残存実測 / 既存テスト件数確認 / baseline スクリーンショット撮影）
-- [ ] T-2: 詳細ページ (new) 配下移行 + 旧トークン置換 + meta.ts 棚卸し + 既存 backlog 連動更新
-- [ ] T-3: PasswordGeneratorTile.tsx 新規実装 + Tile テスト追加 + TILE_DECLARATIONS 登録
-- [ ] T-4: 検証と統合確認（AP-P21 計測 + cycle-200〜212 SSoT 引用検証 + lint/format/test/build 全 PASS）
+- [x] T-1: 現状把握と移行前 baseline 取得（旧トークン残存実測 / 既存テスト件数確認 / baseline スクリーンショット撮影 / TILE_DECLARATIONS 実測値訂正 13 件確定 / reviewer PASS NIT-1 1 件は PM 即時編集で計画書修正済）
+- [x] T-2: 詳細ページ (new) 配下移行 + 旧トークン置換 + meta.ts 棚卸し + 既存 backlog 連動更新
+- [x] T-3: PasswordGeneratorTile.tsx 新規実装 + Tile テスト追加 + TILE_DECLARATIONS 登録（tilesCount: 13 → 14 / Tile テスト 13 件全件緑 / 論点 B 採択を `useState` 遅延初期化に進化 / reviewer r2 PASS）
+- [x] T-4: 検証と統合確認（AP-P21 計測 + cycle-200〜212 SSoT 引用検証 + lint/format/test/build 全 PASS）
 
 ## 作業計画
 
@@ -46,7 +46,7 @@ AP-WF05 網羅性ルールに従い、cycle-200〜212 と同型の **w375 / w120
 **本サイクル独自の重要リスク 3 点**（過去 13 サイクルに前例がない構造的新規性）:
 
 - **(本サイクル独自リスク 1) 「パスワードは秘密情報」配慮**: 生成されたパスワードは「秘密情報」であり、`role="status" aria-live="polite"` を付けると AT がパスワード文字列を読み上げる可能性がある（盗み聞きリスク）。後述 §論点 F でこの ARIA 設計を独立論点化する。これは過去 13 サイクルで前例のない**本サイクル独自の新規 SSoT 候補**。
-- **(本サイクル独自リスク 2) マウント時自動生成型タイル初出**: cycle-200〜212 のタイル 14 件すべて「ユーザー操作起点」だが、本サイクルは「マウント時自動生成」= タイル表示時点で副作用（`crypto.getRandomValues` 呼び出し）が発生する初の構造。React StrictMode 下の二重 mount / Hydration mismatch / SSR 静的生成との関係を T-1 で実体確認する。
+- **(本サイクル独自リスク 2) マウント時自動生成型タイル初出**: cycle-200〜212 のタイル 13 件すべて「ユーザー操作起点」だが、本サイクルは「マウント時自動生成」= タイル表示時点で副作用（`crypto.getRandomValues` 呼び出し）が発生する初の構造。React StrictMode 下の二重 mount / Hydration mismatch / SSR 静的生成との関係を T-1 で実体確認する。
 - **(本サイクル独自リスク 3) 強度バー = 固定高さ要素を操作側に配置**: 強度に応じて色が変わる要素は AP-P21 の役割分担パターン（操作側 `flexShrink:0` / 膨張側 `flex:1` + `overflowY:auto`）（cycle-210 L37 SSoT 引用 / 後述「AP-P21 役割分担」と表記）で「操作側 `flexShrink:0` 配下の固定高さ要素」として扱う必要がある。色変化は AP-P21 高さ計測には影響しない見込みだが計画段階で確認しておく。
 
 その他の油断ポイント:
@@ -87,13 +87,13 @@ AP-WF05 網羅性ルールに従い、cycle-200〜212 と同型の **w375 / w120
   - **Component.tsx 内 hex 直書き**: **4 箇所** = `strengthColors` の `#dc3545` (weak) / `#fd7e14` (fair) / `#28a745` (good) / `#007bff` (strong)（**実測値** = `src/tools/password-generator/Component.tsx:20-25` 引用）→ T-2 で `--danger` / `--warning` / `--success` / `--accent` への置換が必要
 - **logic.ts export 件数の実測** = **5 種** (`PasswordOptions` / `DEFAULT_OPTIONS` / `generatePassword` / `PasswordStrength` / `evaluateStrength`)（**実測値** = T-1 で `grep -c '^export ' src/tools/password-generator/logic.ts` で再実測 / survey L160-164 引用）
 - **DEFAULT_OPTIONS 仕様値**: length=16 / uppercase=true / lowercase=true / digits=true / symbols=true / excludeAmbiguous=false（**仕様値** = `logic.ts` 内 `DEFAULT_OPTIONS` 定義参照 / T-1 で行番号併記して再引用）
-- **TILE_DECLARATIONS 現状エントリ件数 = 14 件**（**実測値** / planner 段階で `grep -c "^\s*slug:" src/tools/_constants/tile-declarations.ts` → 14 確認済 / `grep -c "^\s*domain:" src/tools/_constants/tile-declarations.ts` → 14 でも一致 / コマンドは survey と統一 = `slug:` 採用 / cycle-212 完了時点 = image-resizer 含む）。本サイクル完了時に **15 件**（**実測値計算 = 14 + 1**）となる
+- **TILE_DECLARATIONS 現状エントリ件数 = 13 件**（**実測値** / T-1 builder 実測で確定 = `src/tools/generated/tiles-registry.ts:46` の `tilesCount=13` / `grep -c "^\s*slug:" src/tools/_constants/tile-declarations.ts` → 14 だが L82 `slug: string;` 型定義行が 1 件カウントされている / 実エントリは L115（char-count）〜L251（image-resizer）の 13 件 / コマンドは `src/tools/generated/tiles-registry.ts:46` の `tilesCount` を直接 Read するか `grep "domain:" src/tools/_constants/tile-declarations.ts | wc -l` = 13 に変更 / cycle-212 完了時点 = image-resizer 含む）。本サイクル完了時に **14 件**（**実測値計算 = 13 + 1**）となる
 - `meta.ts` の `relatedSlugs` = `["hash-generator", "qr-code", "email-validator"]` **3 件**（**実測値** = survey L51 引用）。全件実在を grep 実証
 - **既存 11 件 logic test の全件緑確認**: `npm run test -- password-generator` で **11 件**（**実測値**）全件緑（実測コマンド出力を引用付き報告）
 - **既存 Component.tsx の UI 構造実測**: 文字数スライダー（min=8 / max=128 / 仕様値 = `Component.tsx:68-69` 引用）+ 大文字 / 小文字 / 数字 / 記号 / 紛らわしい文字除外 の 5 チェックボックス + 強度バー（強度ラベル + 強度値 + 強度メーター width 25/50/75/100%）+ 「パスワード生成」ボタン + 結果表示（`<code>` + コピーボタン / コピー後「コピー済み」2 秒間表示）。**入力テキストエリアなし**（survey L191-192 引用）= ボタン押下型単純構造ツールの典型
 - **strengthLabels 文字列実測**: weak=「弱い」/ fair=「普通」/ good=「良い」/ strong=「強い」（**実測値** = `Component.tsx:13-18` 引用 / 各 2 字）
 - **競合調査結果の引用先確認**: `docs/research/2026-05-28-password-generator-competitor-analysis.md` が既に存在（**実測値** / `ls docs/research/2026-05-28-*` → 1 ファイル）。本サイクルは**この調査結果を一次資料**として参照する
-- **画像入力型タイル 2 件（image-base64 / image-resizer）+ ボタン押下型タイル件数の確認**: `grep -lE 'FileReader|type="file"' src/tools/*/[A-Z]*Tile.tsx` で画像入力型 **2 件**実測 / 残り **12 件**（**実測値計算 = 14 - 2**）はテキスト型 + ボタン押下型混在 / 本サイクル password-generator は「入力欄なし + ボタン押下型 + 自動生成」の単純構造としては 14 件中初のパターン（推定値 = T-1 で `grep` 確認）
+- **画像入力型タイル 2 件（image-base64 / image-resizer）+ ボタン押下型タイル件数の確認**: `grep -lE 'FileReader|type="file"' src/tools/*/[A-Z]*Tile.tsx` で画像入力型 **2 件**実測 / 残り **11 件**（**実測値計算 = 13 - 2**）はテキスト型 + ボタン押下型混在 / 本サイクル password-generator は「入力欄なし + ボタン押下型 + 自動生成」の単純構造としては 13 件中初のパターン（推定値 = T-1 で `grep` 確認）
 - **`src/app/globals.css` のトークン定義実測**（CRIT-1 対応 / planner 実測完了）: `grep -nE '^\s*--(danger|danger-soft|danger-strong|warning|warning-soft|warning-strong|success|success-soft|success-strong|accent|accent-strong|accent-soft|fg-invert|fg-invert-soft|bg|bg-soft|bg-softer|fg|fg-soft|fg-softer|border|border-strong)\b' src/app/globals.css` でライト `:root`（L9-73）+ ダーク `:root.dark`（L76-148）の両方に 12 種マッピング先（`--bg` / `--bg-soft` / `--border` / `--accent` / `--accent-strong` / `--fg` / `--fg-soft` / `--fg-invert` / `--danger` / `--warning` / `--success`）全件定義済を実測。T-1 builder が独立再実行し、0 件のトークンがあれば §論点 D / 強度色マッピング表 (T-2) を再検討する
 - **`evaluateStrength` 閾値の実装値確認**（MAJOR-5 対応 / planner 実測完了）: `grep -nE 'weak|fair|good|strong|entropy|40|60|80' src/tools/password-generator/logic.ts` で閾値を実測 = entropy < 40 → weak / < 60 → fair / < 80 → good / >= 80 → strong（**実装値** = `src/tools/password-generator/logic.ts:67-70` 引用）。DEFAULT_OPTIONS（length=16 / 4 文字種オン / charset = 26+26+10+26 = 88 文字）でのエントロピー = 16 × log2(88) ≈ **103.35**（**実測値計算** = `node -e 'console.log(16*Math.log2(88))'` → 103.3506...）→ 103.35 >= 80 → ラベル = **`strong`**（**実装値**）= 強度ラベル「強い」が DEFAULT_OPTIONS で確定。T-3 観点 (v) の assertion はこの実装値 `strong` を前提とする（planner 推定ではなく実装値に基づく）
 - Playwright で移行前のスクリーンショットを取得:
@@ -106,13 +106,13 @@ AP-WF05 網羅性ルールに従い、cycle-200〜212 と同型の **w375 / w120
 
 **完成条件**:
 
-- [ ] 移行前スクリーンショット **計 12 枚**（**実測値計算 = ベース 6 + 生成後 2 + コピー後 2 + オプション操作後 2 = 12**）が `tmp/cycle-213/baseline/` 配下に保存
-- [ ] 既存テスト全件緑 = `npm run test -- password-generator` の出力を引用付き報告（実測値 **11 件** と T-1 builder 報告値が一致 / 不一致時は実測値を計画書に書き戻し）
-- [ ] grep 数値が planner 実測値と一致（`--color-*` 残存数 16 / 7 種 / TILE_DECLARATIONS 14 件 / Component.test.tsx 不存在 / warning 系トークン 0 件 / CSS hex 1 箇所 / Component.tsx hex 4 箇所 / logic.ts export 5 種）
-- [ ] `meta.ts` `relatedSlugs` **3 件**全件実在
-- [ ] strengthColors の hex 4 種と CSS `#fff` 1 種の合計 **5 種類の hex 直書き**（**実測値計算 = 4 + 1**）の置換マッピング表が T-2 で完成
-- [ ] **12 種のマッピング先トークン**（`--bg` / `--bg-soft` / `--border` / `--accent` / `--accent-strong` / `--fg` / `--fg-soft` / `--fg-invert` / `--danger` / `--warning` / `--success`）が `src/app/globals.css` のライト `:root` + ダーク `:root.dark` 両方に全件定義済（CRIT-1 対応）
-- [ ] `evaluateStrength` 閾値の実装値（< 40 weak / < 60 fair / < 80 good / >= 80 strong）が `src/tools/password-generator/logic.ts:67-70` で確認済 + DEFAULT_OPTIONS でのラベル = `strong`（**実装値計算** = 16 × log2(88) ≈ 103.35）（MAJOR-5 対応）
+- [x] 移行前スクリーンショット **計 12 枚**（**実測値計算 = ベース 6 + 生成後 2 + コピー後 2 + オプション操作後 2 = 12**）が `tmp/cycle-213/baseline/` 配下に保存
+- [x] 既存テスト全件緑 = `npm run test -- password-generator` の出力を引用付き報告（実測値 **11 件** と T-1 builder 報告値が一致 / 不一致時は実測値を計画書に書き戻し）
+- [x] grep 数値が planner 実測値と一致（`--color-*` 残存数 16 / 7 種 / TILE_DECLARATIONS **13 件**（実測値訂正 / planner 当初の 14 件は型定義行 `slug: string;` 誤カウント / T-1 builder で実体確認）/ Component.test.tsx 不存在 / warning 系トークン 0 件 / CSS hex 1 箇所 / Component.tsx hex 4 箇所 / logic.ts export 5 種）
+- [x] `meta.ts` `relatedSlugs` **3 件**全件実在
+- [x] strengthColors の hex 4 種と CSS `#fff` 1 種の合計 **5 種類の hex 直書き**（**実測値計算 = 4 + 1**）の置換マッピング表が T-2 で完成
+- [x] **12 種のマッピング先トークン**（`--bg` / `--bg-soft` / `--border` / `--accent` / `--accent-strong` / `--fg` / `--fg-soft` / `--fg-invert` / `--danger` / `--warning` / `--success`）が `src/app/globals.css` のライト `:root` + ダーク `:root.dark` 両方に全件定義済（CRIT-1 対応）
+- [x] `evaluateStrength` 閾値の実装値（< 40 weak / < 60 fair / < 80 good / >= 80 strong）が `src/tools/password-generator/logic.ts:67-70` で確認済 + DEFAULT_OPTIONS でのラベル = `strong`（**実装値計算** = 16 × log2(88) ≈ 103.35）（MAJOR-5 対応）
 
 **T-1 検証手順（AP-WF16）**: builder が grep コマンド全件の出力を引用付き報告 / reviewer が最低 1 つ以上を独立再実行。
 
@@ -177,15 +177,15 @@ AP-WF05 網羅性ルールに従い、cycle-200〜212 と同型の **w375 / w120
 
 **完成条件**:
 
-- [ ] `/tools/password-generator` が (new) 配下で正常表示（HTTP 200 OK）
-- [ ] 旧 (legacy) パスにファイルが残存していない（3 ファイル全件 `git mv` 済）
-- [ ] w1200 / w1900 / w375 で表示崩れがない（T-4 視覚回帰で確認）
-- [ ] `Component.module.css` 内に `--color-*` 系旧トークンが残存しない: `grep -c "var(--color-" src/tools/password-generator/Component.module.css` → `0`
-- [ ] CSS `#fff` 1 箇所 + Component.tsx hex 4 箇所が新トークンに置換済: `grep -E '#fff|#dc3545|#fd7e14|#28a745|#007bff' src/tools/password-generator/{Component.tsx,Component.module.css}` → `0` 件
-- [ ] T1 yaml にパスワード生成系検索意図 **4 語**が追加されている（案 X 採択分）
-- [ ] **B-459**（planner 計画段階で空き番号確定 / `grep -oE "^\| B-[0-9]+" docs/backlog.md | sort -u | tail -1` → B-458 = 次は B-459） が `docs/backlog.md` Active セクションに追記されている
-- [ ] `meta.ts` `relatedSlugs` **3 件**全件実在の再確認（touch 不要）
-- [ ] **新規 4 種マッピング**（`#fff` / `#dc3545` / `#fd7e14` / `#28a745`）が §補足事項 (i) に SSoT として書き戻し
+- [x] `/tools/password-generator` が (new) 配下で正常表示（HTTP 200 OK）
+- [x] 旧 (legacy) パスにファイルが残存していない（3 ファイル全件削除済）
+- [x] w1200 / w1900 / w375 で表示崩れがない（T-4 視覚回帰で確認済 / after スクショ 15 枚で並べ読み比較 PASS）
+- [x] `Component.module.css` 内に `--color-*` 系旧トークンが残存しない: `grep -c "var(--color-" src/tools/password-generator/Component.module.css` → `0`
+- [x] CSS `#fff` 1 箇所 + Component.tsx hex 4 箇所が新トークンに置換済: `grep -E '#fff|#dc3545|#fd7e14|#28a745|#007bff' src/tools/password-generator/{Component.tsx,Component.module.css}` → `0` 件（コメント行のみ）
+- [x] T1 yaml にパスワード生成系検索意図 **4 語**が追加されている（案 X 採択分）
+- [x] **B-459**（`docs/backlog.md` Queued セクション L100 に追記済）
+- [x] `meta.ts` `relatedSlugs` **3 件**全件実在の再確認（touch 不要）
+- [x] **新規 4 種マッピング**（`#fff` / `#dc3545` / `#fd7e14` / `#28a745`）が §補足事項 (α) に SSoT として書き戻し済（T-4 完了）
 
 **T-2 検証手順（AP-WF16）**: builder が残存判定 grep / 200 OK 確認 / T1 yaml diff / backlog 更新箇所の grep を引用付き報告 / reviewer が最低 1 つ以上を独立再実行。
 
@@ -207,7 +207,7 @@ AP-WF05 網羅性ルールに従い、cycle-200〜212 と同型の **w375 / w120
   - 末尾「オプションを設定して生成 →」`<Link>` 配置（§論点 I 案 I1 採択 = 詳細リンクテキストは「オプションを設定して生成 →」）
   - **AP-I11 setTimeout cleanup**: コピーボタン文言復帰の 2 秒タイマー（cycle-205 / cycle-211 / cycle-212 SSoT 同型）= `useRef<NodeJS.Timeout | null>` + `useEffect` cleanup で React StrictMode 下二重実行に対応
 - `src/tools/_constants/tile-declarations.ts` の `TILE_DECLARATIONS` 配列末尾に password-generator のエントリ追加（**recommendedSize = §論点 A 採択 = 第一推奨 cols=3 rows=2 / T-3 Playwright 実機確認で最終確定**）
-- `npm run generate:tiles-registry` で codegen 実行（tilesCount: **14**（**実測値**）→ **15**（**実測値計算 = 14 + 1**））
+- `npm run generate:tiles-registry` で codegen 実行（tilesCount: **13**（**実測値** / T-1 で確定）→ **14**（**実測値計算 = 13 + 1**））
 
 **T-3 設計論点: タイル用テストの観点**
 
@@ -226,12 +226,12 @@ AP-WF05 網羅性ルールに従い、cycle-200〜212 と同型の **w375 / w120
 
 **完成条件**:
 
-- [ ] `TILE_DECLARATIONS` に password-generator が追加されている（**§論点 A 採択 = cols=3 rows=2 第一推奨 / T-3 実機確認で確定**）
-- [ ] codegen 成功し `tilesCount=15` になる（**実測値計算 = 14 + 1 = 15**）
-- [ ] `PasswordGeneratorTile.tsx` のテスト **10 件以上**（**経験的暫定値**）が緑（観点 (i)〜(x) を全て含む）
-- [ ] タイル UI 上で「マウント時自動生成 → コピー」のフローが観点 (i)(iii) で実証 + DOM 検証 PASS
-- [ ] 詳細ページ Component.tsx / Component.module.css が「hex / 強度色適用方法切替に伴う最小差分」以外で touch されていない（`git diff src/tools/password-generator/Component.tsx src/tools/password-generator/Component.module.css` が hex 関連の差分のみ = `strengthColors` Record 定義 + 参照箇所 + CSS 内 `#fff` + 強度色クラス追加（採用時のみ））
-- [ ] AP-I11 setTimeout cleanup 観点が PASS（観点 (x) / cycle-211 / cycle-212 SSoT 同型）
+- [x] `TILE_DECLARATIONS` に password-generator が追加されている（**§論点 A 採択 = cols=3 rows=2 第一推奨 / T-3 実機確認で確定**）
+- [x] codegen 成功し `tilesCount=14` になる（**実測値計算 = 13 + 1 = 14**）
+- [x] `PasswordGeneratorTile.tsx` のテスト **10 件以上**（**経験的暫定値**）が緑（観点 (i)〜(x) を全て含む / 実測 13 件全件緑）
+- [x] タイル UI 上で「マウント時自動生成 → コピー」のフローが観点 (i)(iii) で実証 + DOM 検証 PASS
+- [x] 詳細ページ Component.tsx / Component.module.css が「hex / 強度色適用方法切替に伴う最小差分」以外で touch されていない（`git diff src/tools/password-generator/Component.tsx src/tools/password-generator/Component.module.css` が hex 関連の差分のみ = `strengthColors` Record 定義 + 参照箇所 + CSS 内 `#fff` + 強度色クラス追加（採用時のみ））
+- [x] AP-I11 setTimeout cleanup 観点が PASS（観点 (x) / cycle-211 / cycle-212 SSoT 同型 / `vi.getTimerCount()` 直接検証で確認）
 
 **T-3 検証手順（AP-WF16）**: builder が `npm run lint` / `npm run format:check` / `npm run test` / `npm run build` の 4 コマンド全件の出力を引用付き報告 / reviewer が 4 コマンド全件を独立再実行。
 
@@ -275,16 +275,16 @@ AP-WF05 網羅性ルールに従い、cycle-200〜212 と同型の **w375 / w120
   - **(ε) ボタン押下型単純構造ツール経験的暫定値 ±10%**（cycle-205 / cycle-209 / 本サイクル）を §補足事項 (v) に SSoT として書き戻し
   - **(ζ) 秘密情報配慮 ARIA 設計**（§論点 F 採択結果 = `<code>` は `aria-live` なし / 強度側に `role="status"` 付与）を §補足事項 (vi) に**本サイクル独自の新規 SSoT 候補**として書き戻し
   - **(η) マウント時自動生成型タイル SSoT**（§論点 B 案 B1 採択結果 = マウント時自動生成パターン / 競合英語圏大手 3 社準拠）を §補足事項 (vii) に**本サイクル独自の新規 SSoT 候補**として書き戻し
-- **B-456（画像入力型タイル AP-P21 役割分担パターンの ±15% 経験的暫定値 = cycle-211 補足事項 (ii) SSoT の N≥3 件見直し）に関する記述**: 本サイクルは画像入力型ではないため進捗影響なし / §補足事項 (viii) に「N=2 据置き / 次回画像入力型サイクルで N=3 達成見込み」と明示
+- **B-456（画像入力型タイル AP-P21 役割分担パターンの ±15% 経験的暫定値 = cycle-211 補足事項 (ii) SSoT の N≥3 件見直し）に関する記述**: 本サイクルは画像入力型ではないため進捗影響なし / §補足事項 **(ι)** に「N=2 据置き / 次回画像入力型サイクルで N=3 達成見込み」と明示（T-4 時点で (θ) = コピーボタン文言変化 N=3 SSoT 拡張が追加されたため (ix) ではなく (ι) に繰り下げ）
 
 **完成条件**:
 
-- [ ] 全検証項目クリア。lint / format / test / build 全 4 コマンド exit code 0 で完了
-- [ ] Playwright スクショ枚数: baseline 12 + tiles-preview 4 + after 12 = **計 28 枚以上**（**実測値計算 = 12 + 4 + 12 = 28**）が `tmp/cycle-213/` 配下に保存
-- [ ] AP-P21 計測 (a)〜(d) **3〜4 系統独立**実測値が引用付き報告され、§補足事項に SSoT として書き戻し: (a) マウント時 / (b) 再生成後 / (c) コピー後 の **3 系統は必須** / (d) エラー時は「再現困難で打ち切り」 または 「再現可能で計測実施」 のいずれかを判断根拠（実測コマンド = `navigator.clipboard.writeText` を `throw` するモック設定 + Playwright 再現スクリプト）付きで報告（MINOR-1 対応 = 「3〜4 系統」表記の確定タイミングを T-4 builder 判断時点と明示）
-- [ ] `TILE_DECLARATIONS` の tilesCount が **14 → 15**（**実測値計算 = 14 + 1**）に増えたことを `src/tools/generated/tiles-registry.ts` で直接 Read 確認
-- [ ] ブラウザ API 確認 2 項目 PASS（Hydration warning 0 件 / `crypto.getRandomValues` 利用可能）
-- [ ] cycle-200〜212 SSoT 引用適用結果 (α)〜(ε) + 本サイクル独自の新規 SSoT 候補 (ζ)(η) + B-456 進捗 (θ) が §補足事項 に書き戻し
+- [x] 全検証項目クリア。lint / format / test / build 全 4 コマンド exit code 0 で完了（lint PASS / format:check PASS / test 4510 件全件緑 / build tilesCount=14 PASS）
+- [x] Playwright スクショ枚数: baseline 12 + tiles-preview 4 + after 12 = **計 28 枚以上**（**実測値計算 = 12 + 4 + 15 = 31 枚**）が `tmp/cycle-213/` 配下に保存（after-t4 = 15 枚 / 完成条件超過 PASS）
+- [x] AP-P21 計測 (a)〜(d) **4 系統独立**実測値が引用付き報告され、§補足事項に SSoT として書き戻し: (a) マウント時 / (b) 再生成後 / (c) コピー後 の 3 系統 PASS + (d) エラー時は「`navigator.clipboard.writeText` を `throw` するモック設定 + Playwright 再現スクリプト（`measure-error.mjs`）で再現可能、silent fail・構造変化なし確認」として計測実施（T-4-report.md §1 参照）
+- [x] `TILE_DECLARATIONS` の tilesCount が **13 → 14**（**実測値計算 = 13 + 1**）に増えたことを `src/tools/generated/tiles-registry.ts` で直接 Read 確認（L47: `// Count at generation time: tilesCount=14`）
+- [x] ブラウザ API 確認 2 項目 PASS（Hydration warning 0 件 / `crypto.getRandomValues` 利用可能）
+- [x] cycle-200〜212 SSoT 引用適用結果 (α)〜(ε) + 本サイクル独自の新規 SSoT 候補 (ζ)(η)(θ) + B-456 進捗 (ι) が §補足事項 に書き戻し（T-4 完了時 §補足事項 セクション全文記載済み）
 
 **T-4 検証手順（AP-WF16）**: builder が全実測値を引用付き報告 / reviewer が (i) 自動チェック 4 コマンド独立再実行、(ii) AP-P21 **3〜4 系統独立計測のうち最低 1 ケース**を独立再現、(iii) ブラウザ API 2 項目のうち最低 1 項目を独立再計測。
 
@@ -526,7 +526,7 @@ AP-WF05 網羅性ルールに従い、cycle-200〜212 と同型の **w375 / w120
 7. **CLAUDE.md / docs/constitution.md / docs/anti-patterns/**: AP-I10 / AP-I11 / AP-P16（強化 4 分類 + 生成元 literal 直近併記）/ AP-P17 / AP-P20 / AP-P21 / AP-WF03 / AP-WF05 / AP-WF12 / AP-WF16
 8. **docs/targets/**: M1a `特定の作業に使えるツールをさっと探している人.yaml`（`"パスワード生成"` 既登録の実測確認）/ M1b `気に入った道具を繰り返し使っている人.yaml` / S1 `Webサイト製作を学びたいエンジニア.yaml`
 9. **`src/tools/password-generator/`**: Component.tsx / Component.module.css / logic.ts / meta.ts / `__tests__/logic.test.ts` の Read による実測
-10. **`src/tools/_constants/tile-declarations.ts`**: 既存 **14 件**（**実測値** / cycle-212 完了時点）のタイル定義
+10. **`src/tools/_constants/tile-declarations.ts`**: 既存 **13 件**（**実測値** / T-1 builder 実測 = `tiles-registry.ts:46` `tilesCount=13` / cycle-212 完了時点）のタイル定義
 11. **`src/app/globals.css`**: `--danger` / `--warning` / `--success` / `--accent` / `--fg-invert` 等のデザイントークン定義の Read 確認（**実測値** = planner Read 完了 / ライト `:root` L9-73 / ダーク `:root.dark` L76-148 両方に 12 種マッピング先全件定義済 / 0 件のトークンが見つかった場合は §論点 D / 強度色マッピング (T-2) を再検討）
 
 ## レビュー結果
@@ -549,7 +549,37 @@ AP-WF05 網羅性ルールに従い、cycle-200〜212 と同型の **w375 / w120
 
 ### 実装レビュー
 
-<T-1 / T-2 / T-3 / T-4 各タスク完了後に reviewer がレビューし、結果をここに追記する>
+- **T-1 r1（実装レビュー）**: PASS（CRIT 0 / MAJOR 0 / MINOR 0 / NIT 1）
+  - NIT-1: TILE_DECLARATIONS 実エントリ数の計画書誤記（14 件 → 実測 13 件 / 型定義行 `slug: string;` 誤カウント）→ PM 即時編集経路 (AP-WF09 (b)) で計画書 L49 / L90 / L96 / L111 / L210 / L230 / L285 / L529 の 8 箇所を 13 / 14 に統一修正
+  - 独立検証: builder 報告の全実測値（行数 / テスト件数 / トークン残存 / hex 数 / globals.css 12 種トークン定義 / baseline スクショ 12 枚）が reviewer 独立計測で一致確認
+- **T-2 r1（実装レビュー）**: 改善指示（CRIT 0 / MAJOR 1 / MINOR 3 / NIT 2 = 計 6 件）
+  - MAJOR-1: backlog.md L106 B-460 が 4 列構造で他 Deferred 行（B-456/B-457 = 5 列）と不整合 → builder 修正
+  - MINOR-1: T-2 report 集計値に AP-P16 4 分類ラベル + 生成元併記欠落 → builder 修正
+  - MINOR-2: `.next/dev/types/validator.ts` stale cache 残存（build は PASS）→ T-2 report に注記追加
+  - MINOR-3: cycle-213.md L180-188 T-2 完成条件チェックボックス未付与 → builder 修正
+  - NIT-1: T-2 report 集計の分け方の表記揺れ → MINOR-1 と同時解消
+  - NIT-2: OGP 経路注記 → backlog B-460 / T-2 report 両方に追記
+- **T-2 r2（実装レビュー）**: PASS（CRIT 0 / MAJOR 0 / MINOR 0 / NIT 0 = 計 0 件）
+  - 前回 6 件すべて解消確認 / 新規問題の発生なし
+  - 独立検証: `var(--color-*)` 残存 0 / hex 0 / lint PASS / format:check PASS / vitest 4497 件全件緑 / (legacy) 削除確認 / backlog 列構造 6 pipes 統一確認
+- **T-3 r1（実装レビュー）**: 改善指示（CRIT 0 / MAJOR 1 / MINOR 2 / NIT 1 = 計 4 件）
+  - 論点 B「`useEffect` → `useState` 遅延初期化」変更を **reviewer 承認**（hydration 直後の空表示フリッカ回避 + lint エラー回避 + StrictMode 二重実行回避 = 来訪者価値向上 / SSoT (η) でも望ましい）
+  - MAJOR-1: 観点 (iii) 再生成テストが `expect(typeof before).toBe("string")` で意味のないアサーション → `expect(after).not.toBe(before)` + 連続 2 回押下検証に強化
+  - MINOR-1: 観点 (viii) AP-I11 cleanup が `console.error` 検証のみ（React 18 で警告削除済のため検出不能） → `vi.getTimerCount()` 直接検証に置換
+  - MINOR-2: `vi.useFakeTimers()` の対象限定推奨 → コメント追記
+  - NIT-1: PasswordGeneratorTile.tsx L22 コメントが `useEffect` のまま残存 → `useState 遅延初期化` に修正
+- **T-3 r2（実装レビュー）**: PASS（CRIT 0 / MAJOR 0 / MINOR 0 / NIT 0 = 計 0 件）
+  - 前回 4 件すべて解消確認 / 新規問題の発生なし
+  - **ミューテーション検出力の独立検証**: reviewer が実装側に意図的バグ混入 → 観点 (iii) (viii) が確実に赤化することを確認（他 12 件は緑のまま）
+  - 独立検証: vitest 13 件全件緑 / lint PASS / format:check PASS / build PASS（tilesCount=14）/ test 全体 4510 件 PASS / TILE_DECLARATIONS 登録確認
+- **T-4 r1（実装レビュー）**: 改善指示（CRIT 0 / MAJOR 0 / MINOR 1 / NIT 2 = 計 3 件）
+  - MINOR-1: §補足事項 (θ) ラベル二重定義（完成条件 L287 = B-456 進捗 / 本文 L660 = コピーボタン N=3）→ 完成条件を「(ζ)(η)(θ) + B-456 進捗 (ι)」に修正 + 本文 (ι) ラベル明示
+  - NIT-1: T-4 report AP-P21 集計表のラベル併記が一括方式 → 列ヘッダに `[実測値 / measure-precise.mjs]` 個別併記強化
+  - NIT-2: §補足事項 (α) 表の hex 値が Tailwind 系誤記（`#dc2626/#d97706/#16a34a/#2563eb`）→ Bootstrap 系実体（`#dc3545/#fd7e14/#28a745/#007bff` / Component.tsx:21 引用）に統一修正
+- **T-4 r2（実装レビュー）**: 改善指示（CRIT 0 / MAJOR 0 / MINOR 2 / NIT 0 = 計 2 件）
+  - MINOR-1: T-4 r1/r2 のレビュー履歴が §レビュー結果未追記 → 本セクションに追記（本コミット）
+  - MINOR-2: T-1/T-2/T-3 完成条件チェックボックスが多数 `[ ]` のまま → PM 即時編集 (AP-WF09 (b)) で T-1 6 件 / T-2 2 件 / T-3 6 件を [x] に更新
+- **T-4 r3（PM 即時編集後の整合確認）**: 最終 PASS 想定（builder/PM 運用記録の補完のみ / 実体 fact は r1/r2 で全件確認済）
 
 ## キャリーオーバー
 
@@ -558,7 +588,92 @@ AP-WF05 網羅性ルールに従い、cycle-200〜212 と同型の **w375 / w120
 
 ## 補足事項
 
-<追加で補足しておくべきことがあれば記載する。とくに無い場合は「なし」と記載する。>
+### cycle-200〜212 SSoT 引用適用結果 + 本サイクル独自新規 SSoT
+
+**(α) 9 種マッピング表 + 新規 4 種マッピング（T-2 確立 / §補足事項 (i)）**
+
+cycle-200〜212 で確立した 9 種マッピング（`--color-bg → --bg` / `--color-bg-secondary → --bg-soft` / `--color-border → --border` / `--color-primary → --accent` / `--color-primary-hover → --accent-strong` / `--color-text → --fg` / `--color-text-muted → --fg-soft` / `--color-error → --danger` / `--color-error-bg → --bg-soft`）を password-generator T-2 で全引用適用 PASS（16 箇所置換完了 / `var(--color-*)` 残存 0 件 / hex 4 箇所 + CSS `#fff` 1 箇所の計 5 箇所も置換）。本サイクルで新規 4 種マッピングを追加確立:
+
+| 旧表現（hex 直書き / **実測値** `Component.tsx:21` コメント行） | 新表現（CSS 変数） | 用途             |
+| --------------------------------------------------------------- | ------------------ | ---------------- |
+| `#dc3545`                                                       | `var(--danger)`    | 強度 weak の色   |
+| `#fd7e14`                                                       | `var(--warning)`   | 強度 fair の色   |
+| `#28a745`                                                       | `var(--success)`   | 強度 good の色   |
+| `#007bff`                                                       | `var(--accent)`    | 強度 strong の色 |
+
+これにより cycle-200〜213 通算マッピング種数 = **13 種確立**（9 種継承 + 4 種新規）。
+
+**(β) コピーボタン文言変化 AP-P21 適用外 N=3 確立（§補足事項 (ii)）**
+
+- cycle-211 (x): image-base64 コピーボタン文言幅 51→73px (+43%) = 操作側 `flexShrink:0` 配下の文言変化として AP-P21 適用外（SSoT N=1）
+- cycle-212 (x): image-resizer 同型引用適用 PASS（SSoT N=2）
+- cycle-213 (c): password-generator コピーボタン「コピー」→「コピー済み」文言変化 = 高さ変化 0px / AP-P21 適用外（SSoT N=3 = 確定 SSoT 化）
+
+**後続サイクル planner**: コピーボタン文言変化（height / width の変動）は AP-P21 系統内変化率 ±10% 判定の**適用外**として引用可（N=3 確立）。
+
+**(γ) 操作側 `flexShrink:0` / 膨張側 `flex:1` 二分類（§補足事項 (iii)）**
+
+- cycle-210 L37 SSoT: 複合入力型タイルでの役割分担パターン確立
+- cycle-212: spinner も flexShrink:0 配下に配置（画像入力型で再確認）
+- cycle-213: 強度バー（固定高さ 4px + ラベル 28.39px 合計）= 操作側 `flexShrink:0` 配下の固定高さ要素として配置 = 色変化のみで高さ不変（計測 PASS）
+
+**後続サイクル planner**: 操作側 `flexShrink:0` = タイトル / 操作 UI / 固定高さ情報要素 / ボタン / 詳細リンク / 強度バー。膨張側 `flex:1 + overflowY:auto` = 長さ可変な出力エリア（textarea / 出力欄等）。
+
+**(δ) AP-I11 setTimeout cleanup N=3 連続 SSoT 確立（§補足事項 (iv)）**
+
+- cycle-211: image-base64 コピーボタン 2秒タイマー（初出）
+- cycle-212: image-resizer spinner 遅延表示タイマー（N=2）
+- cycle-213: password-generator コピーボタン 2秒タイマー（N=3 = 確定 SSoT 化）
+
+**後続サイクル planner**: `setTimeout` / `setInterval` 発火時は必ず `useRef` で ID 保持 + `useEffect` cleanup で `clearTimeout` / `clearInterval`（AP-I11）。
+
+**(ε) ボタン押下型単純構造ツール経験的暫定値 ±10% 本サイクル実測値（§補足事項 (v)）**
+
+本サイクル AP-P21 計測結果（w1200 headless / tiles preview / light モード / **実測値 = `measure-precise.mjs` T-4**）:
+
+| 要素                     | (a) マウント時 h | (b) 再生成後 h | (c) コピー後 h | 系統内変化率 | 判定 |
+| ------------------------ | ---------------- | -------------- | -------------- | ------------ | ---- |
+| タイトル `<p>`           | 20.39px          | 20.39px        | 20.39px        | 0%           | PASS |
+| パスワード `<code>`      | 41.80px          | 41.80px        | 41.80px        | 0%           | PASS |
+| 強度バー `[role=status]` | 28.39px          | 28.39px        | 28.39px        | 0%           | PASS |
+| 再生成ボタン             | 32px             | 32px           | 32px           | 0%           | PASS |
+| コピーボタン             | 32px             | 32px           | 32px           | 0%           | PASS |
+| 詳細リンク               | 20.39px          | 20.39px        | 20.39px        | 0%           | PASS |
+
+系統内変化率 **全件 0% = ±10% 経験的暫定値を大幅に下回る PASS**。メインコンテンツ要素 `<code>` = 41.80px（≥40px 基準 PASS）。ボタン = 32px（単純操作系 UI は 40px 未満が許容される / cycle-211 コピーボタン 31px PASS と同型）。
+
+**(ζ) 秘密情報配慮 ARIA 設計（本サイクル独自の新規 SSoT N=1 / §補足事項 (vi)）**
+
+- パスワード表示 `<code>` 要素: **`aria-live` を意図的に付与しない**（盗み聞きリスク回避 = AT がパスワード文字列を自動読み上げするリスクを排除）
+- 強度ラベル `<div role="status" aria-live="polite">`: 強度テキスト「強い」「弱い」等（2〜3 字 = 秘密情報ではない）のみを AT に通知
+
+**後続サイクル planner**: OAuth token / API key generator 等の秘密情報を扱うツールのタイル実装で本パターンを引用可。N=1 暫定 SSoT として次サイクル以降で N≥2 による見直しを推奨。
+
+**(η) マウント時自動生成型タイル SSoT（本サイクル独自の新規 SSoT N=1 / §補足事項 (vii)）**
+
+- **採択経路**: `useState` 遅延初期化（initializer 関数）による同期呼び出し
+- `useEffect` 内での `setState` を回避 → `react-hooks/set-state-in-effect` lint エラー回避
+- React StrictMode 二重実行でも初回マウント時に 1 回だけ生成（二重生成なし）
+- Hydration mismatch 回避（SSR 時 `crypto.getRandomValues` は Node.js / Edge 両対応）
+- hydration 直後の空表示フリッカなし（`password` state が初期値から非空文字列で開始）
+
+```tsx
+const [password, setPassword] = useState<string>(() =>
+  generatePassword(DEFAULT_OPTIONS),
+);
+```
+
+**後続サイクル planner**: マウント時に同期 API で値を生成するタイル（dice roll / 乱数生成 / UUID 等）は `useEffect` ではなく `useState` 遅延初期化を使用（N=1 SSoT / cycle-213 T-3 reviewer 承認）。
+
+**(θ) コピーボタン文言変化 AP-P21 適用外 N=3 + role="status" SSoT 拡張（§補足事項 (viii)）**
+
+- cycle-211 (x) / cycle-212 (x) = コピーボタン文言変化 AP-P21 適用外（N=2 確立）
+- cycle-213 = 3 回目の引用適用で N=3 達成 → **正式 SSoT 化**（将来サイクルでの前例数 PASS）
+- `role="status"` 付与方針（cycle-212 (viii) γ 拡張）: 「強度ラベルのみに付与 / `<code>` パスワードには付与しない」= 秘密情報配慮 ARIA 設計 (ζ) と整合
+
+**(ι) B-456 進捗: 画像入力型タイル AP-P21 ±15% 経験的暫定値 N=2 据置き**
+
+本サイクルは画像入力型ではないため B-456 進捗なし。N=2 据置き。次回画像入力型サイクル（B-318 系 / regex-tester 等の後に来る画像入力型 3 件目）で N=3 達成見込み。
 
 ## サイクル終了時のチェックリスト
 

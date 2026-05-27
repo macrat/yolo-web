@@ -17,11 +17,14 @@ const strengthLabels: Record<PasswordStrength, string> = {
   strong: "強い",
 };
 
+// cycle-213 T-2: hex を CSS 変数文字列に置換。
+// weak=#dc3545→--danger / fair=#fd7e14→--warning / good=#28a745→--success / strong=#007bff→--accent
+// マッピング根拠: cycle-213 §T-2 置換マッピング表（本サイクル新規 4 種マッピング）
 const strengthColors: Record<PasswordStrength, string> = {
-  weak: "#dc3545",
-  fair: "#fd7e14",
-  good: "#28a745",
-  strong: "#007bff",
+  weak: "var(--danger)",
+  fair: "var(--warning)",
+  good: "var(--success)",
+  strong: "var(--accent)",
 };
 
 export default function PasswordGeneratorTool() {
