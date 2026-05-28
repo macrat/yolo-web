@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useMemo } from "react";
 import { computeDiff, hasDifferences, type DiffMode } from "./logic";
 import styles from "./Component.module.css";
 
@@ -8,14 +8,39 @@ export default function TextDiffTool() {
   const [oldText, setOldText] = useState("");
   const [newText, setNewText] = useState("");
   const [mode, setMode] = useState<DiffMode>("line");
-  const [showResult, setShowResult] = useState(false);
 
-  const diffParts = showResult ? computeDiff(oldText, newText, mode) : [];
+  // §論点 2-D 案 A 採択: 即時計算化（cycle-210 text-replace 同型 / useMemo で依存値変化に応じて派生計算）
+  const diffParts = useMemo(
+    () => computeDiff(oldText, newText, mode),
+    [oldText, newText, mode],
+  );
   const hasDiff = hasDifferences(diffParts);
 
-  const handleCompare = useCallback(() => {
-    setShowResult(true);
-  }, []);
+  // サマリ status 欄用のモード別単位文字列（§論点 MINOR-2 visitor + MINOR-1 impl r4 統合）
+  const modeUnit = useMemo(() => {
+    switch (mode) {
+      case "line":
+        return "行";
+      case "word":
+        return "単語";
+      case "char":
+        return "文字";
+    }
+  }, [mode]);
+
+  // 追加・削除件数を別カウント（計画書完成条件: (b) added 件数 + removed 件数を別カウント）
+  const addedCount = useMemo(
+    () => diffParts.filter((p) => p.added).length,
+    [diffParts],
+  );
+  const removedCount = useMemo(
+    () => diffParts.filter((p) => p.removed).length,
+    [diffParts],
+  );
+
+  const summaryText = hasDiff
+    ? `+${addedCount} ${modeUnit} / −${removedCount} ${modeUnit}`
+    : "差分なし";
 
   return (
     <div className={styles.container}>
@@ -28,7 +53,6 @@ export default function TextDiffTool() {
           value={mode}
           onChange={(e) => {
             setMode(e.target.value as DiffMode);
-            setShowResult(false);
           }}
           className={styles.select}
         >
@@ -48,7 +72,6 @@ export default function TextDiffTool() {
             value={oldText}
             onChange={(e) => {
               setOldText(e.target.value);
-              setShowResult(false);
             }}
             placeholder="変更前のテキストを入力..."
             rows={10}
@@ -65,7 +88,6 @@ export default function TextDiffTool() {
             value={newText}
             onChange={(e) => {
               setNewText(e.target.value);
-              setShowResult(false);
             }}
             placeholder="変更後のテキストを入力..."
             rows={10}
@@ -73,42 +95,43 @@ export default function TextDiffTool() {
           />
         </div>
       </div>
-      <button
-        type="button"
-        onClick={handleCompare}
-        className={styles.compareButton}
+      {/* サマリ status 欄: 短文 1 行のみ aria-live="polite" を付与（§論点 13 M1' / cycle-213 (ζ) 引用）
+       * 長文 <pre> 差分結果欄には aria-live を付けない（長文の連続アナウンス回避） */}
+      <div
+        role="status"
+        aria-live="polite"
+        aria-label="差分サマリ"
+        className={styles.summary}
       >
-        比較する
-      </button>
-      {showResult && (
-        <div className={styles.result}>
-          <h3 className={styles.resultHeading}>差分結果</h3>
-          {!hasDiff ? (
-            <p className={styles.noDiff}>テキストに差分はありません。</p>
-          ) : (
-            <pre
-              className={styles.diffOutput}
-              role="region"
-              aria-label="Diff result"
-            >
-              {diffParts.map((part, i) => (
-                <span
-                  key={i}
-                  className={
-                    part.added
-                      ? styles.added
-                      : part.removed
-                        ? styles.removed
-                        : styles.unchanged
-                  }
-                >
-                  {part.value}
-                </span>
-              ))}
-            </pre>
-          )}
-        </div>
-      )}
+        {summaryText}
+      </div>
+      <div className={styles.result}>
+        <h3 className={styles.resultHeading}>差分結果</h3>
+        {!hasDiff ? (
+          <p className={styles.noDiff}>テキストに差分はありません。</p>
+        ) : (
+          <pre
+            className={styles.diffOutput}
+            role="region"
+            aria-label="Diff result"
+          >
+            {diffParts.map((part, i) => (
+              <span
+                key={i}
+                className={
+                  part.added
+                    ? styles.added
+                    : part.removed
+                      ? styles.removed
+                      : styles.unchanged
+                }
+              >
+                {part.value}
+              </span>
+            ))}
+          </pre>
+        )}
+      </div>
     </div>
   );
 }
