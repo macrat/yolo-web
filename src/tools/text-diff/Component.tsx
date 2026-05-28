@@ -95,7 +95,7 @@ export default function TextDiffTool() {
           />
         </div>
       </div>
-      {/* サマリ status 欄: 短文 1 行のみ aria-live="polite" を付与（§論点 13 M1' / cycle-213 (ζ) 引用）
+      {/* サマリ status 欄: 短文 1 行のみ aria-live="polite" を付与（§論点 13 M1'' / cycle-213 (ζ) 引用）
        * 長文 <pre> 差分結果欄には aria-live を付けない（長文の連続アナウンス回避） */}
       <div
         role="status"
