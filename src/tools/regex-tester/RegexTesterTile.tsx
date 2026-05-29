@@ -487,7 +487,8 @@ export default function RegexTesterTile() {
       />
 
       {/* フラグチェックボックス群（操作側 = flexShrink: 0）
-           a11y: <label> + <input type="checkbox"> / c214-ζ 引用適用 */}
+           a11y: <label> + <input type="checkbox"> / c214-ζ 引用適用
+           AP-P21 (i) MAJOR-1: フラグ label に minHeight:40px + padding-block でタップ領域確保 */}
       <div
         style={{
           flexShrink: 0,
@@ -503,6 +504,7 @@ export default function RegexTesterTile() {
               display: "flex",
               alignItems: "center",
               gap: "3px",
+              minHeight: 40, // MAJOR-1: AP-P21 操作側下限 40px（cycle-210 SSoT (i) 引用適用）
               fontSize: "0.7rem",
               color: "var(--fg-soft)",
               cursor: "pointer",
@@ -710,12 +712,15 @@ export default function RegexTesterTile() {
         }}
       >
         {/* コピーボタン（マッチ一覧テキストをコピー / 論点 8 採択）
-             文言変化: 「コピー」→「コピー済み」（AP-I11 SSoT 同型）*/}
+             文言変化: 「コピー」→「コピー済み」（AP-I11 SSoT 同型）
+             AP-P21 (i) MAJOR-1: minHeight:40px でタップ領域確保 */}
         <button
           type="button"
           onClick={handleCopy}
           disabled={!copyText}
           style={{
+            minHeight: 40, // MAJOR-1: AP-P21 操作側下限 40px（cycle-210 SSoT (i) 引用適用）
+            boxSizing: "border-box",
             padding: "4px 8px",
             fontSize: "0.75rem",
             borderRadius: "4px",
@@ -727,16 +732,22 @@ export default function RegexTesterTile() {
             fontWeight: copied ? 600 : 400,
             opacity: copyText ? 1 : 0.4,
             transition: "background-color 0.15s, color 0.15s",
+            display: "flex",
+            alignItems: "center",
           }}
         >
           {copied ? "コピー済み" : "コピー"}
         </button>
 
         {/* 詳細リンク（MAJOR-1 訂正 / §論点 9 採択 案 B = 「フラグ切替・置換などの詳細機能を使う →」）
-             タイル UI はフラグ全件省略・置換不在のため、詳細ページに何があるかを具体的に伝える */}
+             タイル UI はフラグ全件省略・置換不在のため、詳細ページに何があるかを具体的に伝える
+             AP-P21 (i) MAJOR-1: minHeight:40px + paddingBlock でタップ領域確保・テキスト中央配置 */}
         <Link
           href="/tools/regex-tester"
           style={{
+            display: "flex",
+            alignItems: "center",
+            minHeight: 40, // MAJOR-1: AP-P21 操作側下限 40px（cycle-210 SSoT (i) 引用適用）
             fontSize: "0.7rem",
             color: "var(--accent)",
             textDecoration: "underline",

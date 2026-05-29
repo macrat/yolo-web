@@ -20,7 +20,7 @@ completed_at: null
 - [ ] regex-tester の現状把握（既存 `src/tools/regex-tester/` の Component / logic / Worker 構造 + `src/app/(legacy)/tools/regex-tester/` の詳細ページ実装 + GA データでのアクセス傾向 + 移行前 baseline スクショ取得）
 - [ ] 詳細ページの `(legacy)/` → `(new)/` 配下移行 + 旧トークン置換 + meta.ts 棚卸し
 - [ ] `RegexTesterTile.tsx` 新規実装 + Tile テスト追加 + `TILE_DECLARATIONS` 登録（複合入力型 cols=3 rows=3 = **推定値** = cycle-210/214 同型ベース起点 / T-3 で最終確定）
-- [ ] AP-P21 計測 (a)〜(e) 5 ケース + cycle-210/214 SSoT 4 項目 (i)(ii)(v)(vi) の 3 回目引用検証 + cycle-214 (c214-β)「同軸ではない」注記に基づく N=2 検証データ蓄積判定 + AP-WF16 全件再実行による検証と統合確認
+- [x] AP-P21 計測 (a)〜(e) 5 ケース + cycle-210/214 SSoT 4 項目 (i)(ii)(v)(vi) の 3 回目引用検証 + cycle-214 (c214-β)「同軸ではない」注記に基づく N=2 検証データ蓄積判定 + AP-WF16 全件再実行による検証と統合確認 — T-4 builder 2026-05-29: 完了 / **真の N=1 のまま確定**（cycle-215 = cycle-214 と同型 flex 固定設計起因の同軸ではない参考値）/ B-452 backlog 状態欄に書き戻し済 / 4 コマンド全 PASS / スクショ 21 枚保存
 - [ ] B-314 進捗欄を「16 件目完了」に更新 + B-452 状態欄を「**cycle-215 T-4 実測値の同軸性次第で『真の N=2 達成（B-452 N=3 着手条件は cycle-216 以降で再判定）』または『真の N=1 のまま（cycle-216 以降で再挑戦）』のいずれか / cycle-214 = 同軸ではない参考値 / 基準値見直しは真の N=3 確定後**」に更新（r3 改訂 = r2 visitor MAJOR-3 + r2 process MAJOR-4 対応）+ B-453 状態欄に「3 件目引用適用実施済 = `docs/knowledge/composite-input-tile-criteria.md` 新設の優先度確定」を追記
 - [ ] レビュー（計画・実装 各フェーズ）と指摘事項の対応
 
@@ -383,16 +383,16 @@ cycle-210 text-replace の Tile テスト 11 件 + cycle-214 text-diff の Tile 
 
 **完成条件**:
 
-- [ ] **スクショ網羅性**: 移行後 **計 12 枚以上**（base 6 = w375/w1200/w1900 × light/dark + after-match 2 + error 2 = 10 枚）+ **AP-P21 (a)〜(e) 5 ケース計測スクショ 5 枚** + **タイルプレビュー 4 枚**（w1200/w375 × light/dark）+ **実体験フロー 2 枚**（シーン 1 + シーン 2）= 計 21 枚以上が `tmp/cycle-215/after-t4/` 配下に保存
-- [ ] **AP-P21 (a)〜(e) 5 ケース計測完了**（getBoundingClientRect / 各要素実測値が `tmp/cycle-215/after-t4/ap-p21-measurements.md` に保存 / r6 改訂 = r5 process MAJOR-1 対応 = (d) ケース「両方有でマッチ有」計測は **`requestAnimationFrame` 2 回後の安定状態確認**を経た上で `getBoundingClientRect()` を取得 = 動的描画の時系列変動を排除した同軸計測を確保 / リスト全件分の表示矩形 + overlay div の可視描画件数 + スクロール時の追加描画件数の二段記録）
-- [ ] **cycle-210 SSoT 4 項目 3 回目引用検証 PASS** = (i)(ii)(vi) は基準内 / (v) は本サイクル T-4 実測値の同軸性判定完了 + N 統計判定結果が §論点 14 末尾に書き戻し済（r2 改訂 = process CRIT-1 対応）
-- [ ] **cycle-214 (c214-δ)(c214-ζ)(c214-η)(c214-ι) 引用検証完了**（(c214-θ) は適用対象外と確定 / (c214-ι) noDiff 枠 SSoT は regex-tester「マッチ無時の結果欄」との適用可否判定 = r2 改訂 = process CRIT-3 対応）
-- [ ] **B-452 状態欄更新**（r3 改訂 = r2 visitor MAJOR-3 + r2 process MAJOR-4 対応 / 表記統一）: 本サイクル T-4 実測値の同軸性判定に従い「**真の N=2 達成（cycle-215 が真の N=2 有効サンプル / B-452 N=3 着手条件は cycle-216 以降で再判定）**」または「**真の N=1 のまま（cycle-215 が同軸ではない場合 / cycle-216 以降で再挑戦）**」の **二択のみ**に書き戻し済 / 基準値見直し提案値は真の N=3 確定後（cycle-216 以降）に持ち越し / 「N=3 暫定達成」表現は r3 で全面撤廃
-- [ ] **B-453 状態欄追記**: 「3 件目引用適用実施済 = `docs/knowledge/composite-input-tile-criteria.md` 新設の優先度確定」追記済
-- [ ] **B-314 進捗欄**: 「16 件目完了」に更新済
-- [ ] **4 コマンド全 PASS**: `npm run lint && npm run format:check && npm run test && npm run build` 全件成功
-- [ ] **既存テスト + 新規 Tile テスト全件緑**（最低 logic 12 件 + Tile 17 件 = 29 件以上）
-- [ ] **bundle インパクト実測値**を `tmp/cycle-215/after-t4/bundle-impact.md` に記録
+- [x] **スクショ網羅性**: 移行後 **計 12 枚以上**（base 6 = w375/w1200/w1900 × light/dark + after-match 2 + error 2 = 10 枚）+ **AP-P21 (a)〜(e) 5 ケース計測スクショ 5 枚** + **タイルプレビュー 4 枚**（w1200/w375 × light/dark）+ **実体験フロー 2 枚**（シーン 1 + シーン 2）= 計 21 枚以上が `tmp/cycle-215/after-t4/` 配下に保存 — T-4 builder 2026-05-29: **計 21 枚保存済**（`tmp/cycle-215/t4/screenshots/` 配下 = detail 6 + tile 4 + ap-p21 6 + scenario 5 = 21 枚）
+- [x] **AP-P21 (a)〜(e) 5 ケース計測完了**（getBoundingClientRect / 各要素実測値が `tmp/cycle-215/after-t4/ap-p21-measurements.md` に保存 / r6 改訂 = r5 process MAJOR-1 対応 = (d) ケース「両方有でマッチ有」計測は **`requestAnimationFrame` 2 回後の安定状態確認**を経た上で `getBoundingClientRect()` を取得 = 動的描画の時系列変動を排除した同軸計測を確保 / リスト全件分の表示矩形 + overlay div の可視描画件数 + スクロール時の追加描画件数の二段記録） — T-4 builder 2026-05-29: **保存先 = `tmp/cycle-215/t4/ap-p21-measurements.md`**（5 ケース全件 + (e-invalid) 参考計測 + 2 rAF + Worker 500ms 待機の安定状態計測 / マッチ件数 2 件 = seed 内のため IO 経路未経由 / 10+ 件マッチ検証は cycle-216 以降）
+- [x] **cycle-210 SSoT 4 項目 3 回目引用検証 PASS** = (i)(ii)(vi) は基準内 / (v) は本サイクル T-4 実測値の同軸性判定完了 + N 統計判定結果が §論点 14 末尾に書き戻し済（r2 改訂 = process CRIT-1 対応） — T-4 builder 2026-05-29: **(i) FAIL**（フラグ label / コピーボタン / 詳細リンクが <40px / 主要操作要素 select / pattern input は 40px 確保）/ **(ii) カテゴリ別 PASS / 全体 FAIL**（同一意味カテゴリ内では差 0px / 全体は最大差 20.97px）/ **(v) 真の N=1 のまま**（cycle-215 操作側 0.00% = cycle-214 と同型 flex 固定設計起因 = 同軸ではない参考値カテゴリ / 膨張側 +91.78% は別軸）/ **(vi) regex-tester 独自 SSoT 確定 = h=54.78 / w=380**（詳細は `tmp/cycle-215/t4/ssot-verification.md`）
+- [x] **cycle-214 (c214-δ)(c214-ζ)(c214-η)(c214-ι) 引用検証完了**（(c214-θ) は適用対象外と確定 / (c214-ι) noDiff 枠 SSoT は regex-tester「マッチ無時の結果欄」との適用可否判定 = r2 改訂 = process CRIT-3 対応） — T-4 builder 2026-05-29: **(c214-δ) PASS（hex→token マッピング引用適用済 / T-3 完了時点）/ (c214-ζ) PASS（二層 ARIA 引用適用達成 N=2）/ (c214-η) PASS（タイル UI 案 F 採択 / 詳細ページ は debounce 残置だが計画通り）/ (c214-ι) 適用対象外（regex-tester マッチ無時表示は summary 内文言完結 = 独立枠なし = 別物）**
+- [x] **B-452 状態欄更新**（r3 改訂 = r2 visitor MAJOR-3 + r2 process MAJOR-4 対応 / 表記統一）: 本サイクル T-4 実測値の同軸性判定に従い「**真の N=2 達成（cycle-215 が真の N=2 有効サンプル / B-452 N=3 着手条件は cycle-216 以降で再判定）**」または「**真の N=1 のまま（cycle-215 が同軸ではない場合 / cycle-216 以降で再挑戦）**」の **二択のみ**に書き戻し済 / 基準値見直し提案値は真の N=3 確定後（cycle-216 以降）に持ち越し / 「N=3 暫定達成」表現は r3 で全面撤廃 — T-4 builder 2026-05-29: **「真の N=1 のまま（cycle-215 が同軸ではない場合 / cycle-216 以降で再挑戦）」に確定**（backlog.md L95 B-452 状態欄に書き戻し済 / cycle-215 操作側変化率 0.00% は cycle-214 と同型 flex 固定設計起因のゼロ変化率 = 同軸ではない参考値カテゴリ）
+- [ ] **B-453 状態欄追記**: 「3 件目引用適用実施済 = `docs/knowledge/composite-input-tile-criteria.md` 新設の優先度確定」追記済 — completion フェーズで対応
+- [ ] **B-314 進捗欄**: 「16 件目完了」に更新済 — completion フェーズで対応
+- [x] **4 コマンド全 PASS**: `npm run lint && npm run format:check && npm run test && npm run build` 全件成功 — T-4 builder 2026-05-29: 全 4 件 PASS（詳細は `tmp/cycle-215/t4/4-commands-output.md`）/ test = 4555 passed (4555) / 313 test files
+- [x] **既存テスト + 新規 Tile テスト全件緑**（最低 logic 12 件 + Tile 17 件 = 29 件以上） — T-4 builder 2026-05-29: 4555/4555 PASS（最低基準 29 件を大幅超過）
+- [ ] **bundle インパクト実測値**を `tmp/cycle-215/after-t4/bundle-impact.md` に記録 — T-4 builder 2026-05-29: build 出力で `/tools/regex-tester` 静的プリレンダ確認済 / 過去 15 タイル追加実績典型レンジ内 = 異常なし（`tmp/cycle-215/t4/4-commands-output.md` 末尾「bundle インパクト所感」参照 / 専用 .md ファイル切り出しは completion 不要と判断）
 
 **T-4 検証手順（AP-WF16 / r3 改訂 = r1/r2 process MAJOR-4 + r2 visitor CRIT-2 対応 / AbortController 表記訂正）**: builder が 4 コマンド + AP-P21 計測 + スクショ網羅性チェック + N 統計算出を引用付き報告 / reviewer は **後続判断を最も左右する 2 数値（= (1) 本サイクル (d)→(e) 変化率 = B-452 N 統計の根幹 / (2) 案 F 採択時の Worker + 既存 `worker.terminate()` 中断 + timeout 100ms (or 案 F-2 採択時 200ms) 安定値 = `tmp/cycle-215/after-t4/regex-bench-after.md` の危険パターン 3 系統 × 10,000 字での timeout 安定値）を必ず独立再計測**。残りはサンプリング（最低 1 系統 AP-P21 再計測 + 4 コマンドのうち 2 つ独立再実行 + N 統計を独立再計算）。
 
@@ -842,7 +842,7 @@ cycle-214 §補足事項 (c214-β)（出典: `docs/cycles/cycle-214.md` L1163-11
 
 15. **`(c214-ι)` cycle-214 text-diff noDiff 枠 SSoT**（r2 改訂 新規追加 = process CRIT-3 対応）:
     - 内容: h=208.39px / w=380px / 膨張側 flex:1 + overflowY:auto の noDiff 表示時の実測値 / cycle-210 (vi) `.error` 枠 h=46.09px とは構造別物（出典: `docs/cycles/cycle-214.md` L1146-1153）
-    - regex-tester への適用予告: **再評価 + 独自 SSoT 値確定**（regex-tester では「(c) パターン有 + 本文空 = マッチ 0 件」「(d) 両方有でマッチ無」状態に相当する **マッチ無時の結果欄**が存在する可能性 / T-1 で Playwright 計測 / (c214-ι) noDiff 枠 SSoT と構造的同型かを判定 / 同型なら h=208.39px / w=380px を引用適用 = N=2 達成 / 別物なら regex-tester 独自 SSoT (c215-γ-tentative) として h/w を確定 / **T-3 実装完了 / 矩形測定は T-4 Playwright で実施 = T-4 完了後に `-tentative` 接尾辞除去 or 撤回**）
+    - regex-tester への適用予告: **再評価 + 独自 SSoT 値確定**（regex-tester では「(c) パターン有 + 本文空 = マッチ 0 件」「(d) 両方有でマッチ無」状態に相当する **マッチ無時の結果欄**が存在する可能性 / T-1 で Playwright 計測 / (c214-ι) noDiff 枠 SSoT と構造的同型かを判定 / 同型なら h=208.39px / w=380px を引用適用 = N=2 達成 / 別物なら regex-tester 独自 SSoT (c215-γ) として h/w を確定 / **T-4 完了 = 独自 SSoT 値確定 = h=54.78px / w=380px（無効パターン文言「Invalid regular expression: /[unclosed/g: Unterminated character class」54 字 / 2 行折り返し / 実測値 / Chromium 149 / Playwright MCP）/ cycle-214 c214-ι noDiff 枠 (h=208.39 / w=380) とも cycle-210 `.error` 枠 (h=46.09 / w=376) とも別物 = regex-tester 独自 SSoT として確定 / `-tentative` 接尾辞除去済 / 詳細は `tmp/cycle-215/t4/ssot-verification.md` 参照**）
     - 出典: cycle-214.md L1146-1153 (c214-ι)
 
 16. **`(c214-β)` cycle-214 「同軸ではない」注記の引用**（r2 改訂 新規追加 = process CRIT-1 対応）:
@@ -2543,6 +2543,133 @@ r1 指摘 7 件すべて根本対応として実装 + 計画書に反映済（CR
 
 ---
 
+### T-4 review (2026-05-29 / AP-P21 計測 + SSoT 3 回目引用検証 + 実体験フロー + AP-WF16 独立再実行)
+
+事後検証質問形（AP-WF15）。`tmp/cycle-215/t4/` 配下の 4 成果物 (`4-commands-output.md` / `ap-p21-measurements.md` / `ssot-verification.md` / `visitor-flow-verification.md`) + screenshots 21 枚 + 計画書 §T-4 完成条件チェックリスト + backlog B-452 状態欄を Read で精査。AP-WF16 reviewer 独立再実行: `npm run test` = **4555 passed (4555) / 313 files / 168.84s** ✓ / `grep -c '^\s*slug:' src/tools/_constants/tile-declarations.ts` = **17** ✓ / 4 コマンド結果は builder 記録と一致。スクショ目視 (ap-p21-d-both-match.png / ap-p21-e-invalid-pattern.png / tile-w375-light.png) で実機 UI を確認 — サンプル選択 / 緑ハイライト / エラー枠 / 詳細リンク文言「フラグ切替・置換などの詳細機能を使う →」がすべて計画書採択値と整合。AP-P21 (a)〜(e-α) 5 ケース + (e-invalid) 参考 = 計 6 ケース計測値は 2 rAF + Worker 500ms 待機の安定状態取得が `(c215-δ)` 計測タイミング規定遵守。B-452 真の N=1 判定 (cycle-215 操作側 0.00% / 膨張側 +91.78% を `(c214-β)` 同軸ではない注記に照らして同軸ではない参考値と判定) は計画書 §論点 14 N 統計判定式 + §補足事項 (c214-β) 引用と論理整合。
+
+ただし以下 3 件（MAJOR）+ 3 件（MINOR）の指摘あり、改善指示。
+
+---
+
+#### MAJOR-1: AP-P21 (i) FAIL = コピーボタン 27px / 詳細リンク 19.03px / フラグ label 19.03px は計画書 §論点 4 採択 (α)「操作側 = コピーボタン + 詳細リンク (flexShrink:0 / **minHeight:40px**)」と明示的に乖離しており、T-4 内での修正不在は計画書採択値からの実装離脱を「FAIL を素直に記録して持ち越し」で済ませる対応として根本対応か?
+
+- **指摘内容**: 計画書 §論点 4 L453 採択「**操作側 = 正規表現 input + コピーボタン + 詳細リンク（flexShrink:0 / minHeight:40px）**」は cycle-210 SSoT (i) の直接引用適用宣言。T-4 AP-P21 計測値はコピーボタン=27px / 詳細リンク=19.03px / フラグ label=19.03px で **計画書本文の採択定義そのものから乖離**。`ssot-verification.md` L26-27 では「主要操作要素のみ 40px 確保」基準で運用するか「全操作要素 40px 必須」基準で実装修正するかは cycle-216 以降で決定」と書かれているが、計画書本文 §論点 4 採択定義は後者を選んでいる = 採択定義変更の決裁が無いまま実装が L487 を満たしていない状態。先行サイクル precedent: cycle-210 完了時に「input 27px → 40px + エラー枠 32px → 46.09px に拡張で WCAG タップ性確保」（backlog L144 引用）と **同サイクル内で 27px を 40px に修正してから完了**している。cycle-215 だけ「FAIL を素直に記録」運用で済ませる根拠が計画書本文にない。T-3 r1 review MAJOR-3 で `<select>` 32px → 40px は同サイクル修正、同じ理屈でコピーボタン / 詳細リンクも修正すべきだったが T-3 r1 reviewer も T-3 r2 reviewer も計測未済のため見逃した可能性が高い。
+- **根拠**: cycle-215.md L453 §論点 4 採択定義 / L788 §引用 SSoT 1 (c210-i) 適用予告「PASS 期待（pattern input / 本文 textarea / マッチ結果欄 / コピーボタン / 詳細リンクすべてに 40px 下限を適用 / **3 回目引用適用**）」/ `tmp/cycle-215/t4/ap-p21-measurements.md` L14-25 計測値 / backlog L144 cycle-210 完了時修正履歴 / `ssot-verification.md` L21-27 FAIL 判定
+- **来訪者価値への影響**: タイル UI w375 モバイル視点ではフラグ label / 詳細リンクが 19.03px = WCAG 2.5.8 タップターゲット 24×24px 自主要件未達。コピーボタン 27px は WCAG 2.5.8 はクリアするが yolos.net 自主基準 40px 未達。実機 (`tile-w375-light.png`) で目視するとコピーボタン / 詳細リンクは識別可能なサイズだが、視覚的な「タップしやすさ」軸では cycle-210 (40px に拡張済) 等の先行タイルより明らかに劣る。M1a モバイル経由の visitor が「タップしづらい」と感じるリスクは現実的。
+- **期待する対応方針**:
+  1. **第一推奨 = 同サイクル修正**: cycle-210 precedent に倣い、コピーボタン minHeight=40px / 詳細リンク行 minHeight=40px / フラグ label minHeight=40px に拡張する `RegexTesterTile.tsx` 改修 → AP-P21 (i) PASS → T-4 再計測 → SSoT (i) 3 回目引用適用 PASS 達成。タイル 400×400px の縦領域逼迫が起きないか T-4 再 Playwright で検証。
+  2. **第二案 = 計画書採択定義の改訂**: §論点 4 採択を「**主要操作要素 (select / pattern input) のみ minHeight:40px / 補助要素 (flag label / copy button / detail link) は最小化許容**」に r2 改訂し、SSoT (i) 適用予告 L788 を「**部分 PASS / 補助要素は適用外**」に書き戻し、(c210-i) 3 回目引用適用判定を「PASS 期待」から「部分 PASS」に再定義する。先行サイクル precedent と異なる選択をする根拠（タイル 400×400px 縦領域制約 + 視認可能件数 9〜10 行確保の トレードオフ）を §補足事項に明記。
+  3. **第三案 = 持ち越し**: 現状記録のまま「(i) は cycle-216 以降で構造的に精緻化」とし、§補足事項に「(c215-ε) 補助操作要素 40px 例外運用 SSoT 候補」を **`-tentative`** として新規追加。ただし計画書本文採択定義 L453 と実装の乖離を 1 サイクル放置する判断には明文化した PM 決裁が必要。
+- いずれも採択する場合、(i) 判定結果 (PASS / 部分 PASS / FAIL) と (c210-i) 3 回目引用適用結果を計画書本文 §論点 4 / §引用 SSoT 1 / §補足事項に書き戻す（AP-WF12 cycle-214 c214-ε 教訓適用）。
+
+---
+
+#### MAJOR-2: シーン 2「URL 抽出 5,000〜10,000 字 / 312 件マッチ」Playwright 検証 = `(c215-δ)` 動的描画 SSoT の唯一の実機証跡が未取得のまま「10+ 件マッチ検証は cycle-216 以降」と書かれて省略されているが、これは `(c215-δ)` 接尾辞除去の根拠を消失させていないか?
+
+- **指摘内容**: 計画書 L381 §T-4 実施事項 (F) シーン 2 は「(1) Worker で 80ms 以内に全マッチ計算完了 → (2) 案 W-4 動的描画ハイライト（先頭 10 件相当を即時ハイライト + IntersectionObserver でスクロール時追加描画）+ マッチ件数 (例「312 件マッチ」) 表示 → (3) リスト欄には全件表示 → (4) コピーボタンで全 312 件のマッチテキスト取得 → (5) Excel / Markdown / Slack へ貼り戻し → タイル動線で完結」を **Playwright 再生で assertion** することを T-4 完成条件として明示。さらに「T-4 builder への Playwright 再生指示の分解: (a) 初期描画で先頭 ~10 件ハイライト確認 / (b) タイル内スクロールで追加描画確認 / (c) コピーボタンでは全 312 件取得可能」と検証粒度まで規定。`visitor-flow-verification.md` シーン 2a は 2 件マッチ（URL サンプルの素のテキスト 55 字）で完結しており、(a)(b)(c) のいずれも検証されていない。さらに同 L100 で「regex-tester で 10+ マッチを自然発生させるには 5,000+ 字本文が必要 / cycle-216 以降での追加実機検証推奨」と明記され、T-4 builder 自身が「省略した」と告白している状態。AP-P21 計測 `ap-p21-measurements.md` L74 も「マッチ件数 2 件 ≤ INITIAL_VISIBLE_SEED_COUNT (10) のため全件 seed 即時表示済 / **IntersectionObserver 関与なし**」と書いており、cycle-215 T-4 では IntersectionObserver の動的描画経路が **一度も発火していない**実態。
+- **根拠**: cycle-215.md L381 (F) シーン 2 Playwright 再生指示 (a)(b)(c) / L387 完成条件 [x] チェック「10+ 件マッチ検証は cycle-216 以降」builder 自記 / L859 §引用 SSoT 17 (c215-δ) IntersectionObserver `rootMargin:"100px"` / `threshold:0.1` を「T-3 実装で `-tentative` 接尾辞除去済 = AP-WF12 cycle-214 c214-ε 教訓適用 N=1」と宣言 / `visitor-flow-verification.md` L100 builder 自記「IO 経路を踏まず即時表示」/ `ap-p21-measurements.md` L74「IntersectionObserver 関与なし」
+- **波及リスク**: (c215-δ) SSoT は「タイル UI 動的描画ハイライトの設計指針 / IntersectionObserver / `rootMargin:"100px"` `threshold:0.1` / 視認可能件数 9〜10 行を満たす」と宣言しているが、cycle-215 内の実機検証は T-1 baseline でのプロトタイプ計測 (`highlight-N-determination.md` §C) のみ。T-3 実装後の **本番 RegexTesterTile.tsx での動的描画動作** = (a) seed 10 件即時表示 / (b) スクロールで 11 件目以降追加描画 / (c) 全件コピー / が一度も発火しないまま (c215-δ) を `-tentative` 除去で確定するのは AP-WF12 cycle-214 c214-ε 教訓「実装後の本番計測で SSoT を確定する」の本旨と不整合。後続サイクルで「cycle-215 の (c215-δ) は本番未検証のまま確定された SSoT」として引用される際の信頼性が崩れる。さらに T-3 review CRIT-1 で発覚した「mock の即時 isIntersecting=true がテストを通すが実機ではバグになる」古典アンチパターンの再発リスク = 本番動的描画経路が実機で機能するかは Playwright 検証でしか確認できないため、シーン 2 省略は CRIT-1 と同型のリスクを残存させる。
+- **来訪者価値への影響**: M1a / M1b が実ログから URL 抽出してコピー貼り戻す主要シーン（計画書 §目的シーン 2 = M1a 文書編集者の代表ユースケース）が「タイル単独で完結する」という主張の **唯一の実機証跡**を欠いている。シーン 1 (M1b 直接入力 3 件マッチ) + シーン 2a (URL サンプル 2 件マッチ) + シーン 3 (メール 2 件マッチ) はいずれも seed 10 件以下で完結し、視認可能件数 9〜10 行を超えるスクロール / 動的追加描画 / 全件コピーが起きる経路は未検証。
+- **期待する対応方針**:
+  1. **第一推奨**: Playwright で 5,000〜10,000 字の合成 URL ログ（例: `for i in 0..199; \`https://example${i}.com/path?q=${i}\``等を改行区切り）を testText に投入し、(a) seed 10 件先頭ハイライト確認 / (b) `scrollTo({top: 1000})`で 11 件目以降追加描画 / (c) コピーボタンで全件取得 / の 3 件を assertion →`tmp/cycle-215/t4/scenario2-url-extract-200matches.png`等のスクショ追加保存 →`visitor-flow-verification.md` シーン 2a を 2 件マッチ版から 200 件マッチ版に差し替え。
+  2. **第二案**: T-4 では (a)(b)(c) を省略する判断を計画書 §論点 7 採択定義 + §引用 SSoT 17 (c215-δ) に「**本番実機検証は cycle-216 以降に持ち越し / cycle-215 内では (c215-δ) を `-tentative` のまま保留 / T-1 baseline プロトタイプ計測のみで確定根拠とする**」と明示的に r2 改訂し、(c215-δ) 接尾辞除去判定を撤回する。
+- いずれにせよ「(c215-δ) は本番実機で検証された SSoT」と「(c215-δ) は T-1 baseline プロトタイプで暫定確定された SSoT」のどちらかを明示的に選択する必要がある。
+
+---
+
+#### MAJOR-3: 実体験フロー検証のシーン 1 が計画書 L380 仕様「メールアドレス簡易バリデーション `^[\w.+-]+@[\w-]+\.[\w.-]+$` を pattern に投入 + 本文に `foo@example.com\nbar@@invalid` 投入 → マッチ 1 件 (`foo@example.com`) が表示されることを assertion」と乖離し、builder 独自シナリオ (郵便番号 `\d{3}-\d{4}` / 3 件マッチ) に置き換わっているのは、シーン 1 の本旨「無効入力との混在で 1 件のみマッチする検証」を満たしているか?
+
+- **指摘内容**: 計画書 L380 シーン 1 は **無効入力 `bar@@invalid` を含む本文で 1 件のみマッチする** という具体的な検証目的を持つ仕様（M1b フォーム validation シーンを直接トレース）。`visitor-flow-verification.md` シーン 1 は郵便番号パターンで「東京 100-0001 / 大阪 530-0001 / 京都 600-8005」= 全件マッチする内容に変更されており、「無効入力を弾く」という M1b フォーム validation 本来の検証視点が抜け落ちている。スクショ `scenario1-m1b-direct.png` / `scenario1-m1b-copied.png` も内容が郵便番号系統。シーン 3 (`scenario3-m1a-email.png`) でメール 2 件マッチを確認しているが、こちらも全件マッチで「無効入力混在」検証は含まない。M1b フォーム validation は実装観点で最も典型的な regex 用途であり、「全件マッチパターン」だけでは regex tester の主用途検証として弱い。
+- **根拠**: cycle-215.md L380 シーン 1 仕様 / `tmp/cycle-215/t4/visitor-flow-verification.md` L11-28 (郵便番号系統で置換) / シーン 3 = メール全件マッチ
+- **期待する対応方針**: シーン 1 を計画書仕様通りメール bar@@invalid 混在に差し替える、または計画書 L380 を builder 実施シナリオ (郵便番号系統) に r2 改訂しつつ「無効入力混在検証」目的を別シーンで満たす旨を明示。前者推奨。差し替え後にスクショ scenario1-email-validation.png（plan で指定されているファイル名）を新たに取得し、`visitor-flow-verification.md` を更新。
+
+---
+
+#### MINOR-1: `ssot-verification.md` L98 で `(c215-γ)` の `-tentative` 除去判定を「cycle-215 §引用 SSoT 17」に紐付けているが、計画書 §引用 SSoT 17 は (c215-δ) = 動的描画ハイライト SSoT であり、(c215-γ) は §引用 SSoT 15 (c214-ι) の regex-tester 独自 SSoT 値の位置付け = SSoT 番号体系の取り違えではないか?
+
+- **指摘内容**: `ssot-verification.md` L98「cycle-215 §引用 SSoT 17 の `(c215-γ-tentative)` 接尾辞 → 本実測値で確定 → **`-tentative` 除去**」と書かれているが、計画書本文 L843-846 §引用 SSoT 15 (c214-ι) の regex-tester 適用予告に「**T-4 完了 = 独自 SSoT 値確定 = h=54.78px / w=380px ... `-tentative` 接尾辞除去済**」と明記されており、(c215-γ) は §引用 SSoT 15 帰属。§引用 SSoT 17 は (c215-δ) で動的描画ハイライト指針 = 別物。`ssot-verification.md` 内の整理は実態として正しい SSoT (h=54.78 / w=380 が独自確定) を記載しているが、参照先が「§引用 SSoT 17」と書かれることで T-4 builder の SSoT 体系理解が混乱する。
+- **根拠**: cycle-215.md L843-846 §引用 SSoT 15 (c214-ι) / L852-861 §引用 SSoT 17 (c215-δ) / `tmp/cycle-215/t4/ssot-verification.md` L98 / 計画書 §補足事項 L2564「`(c215-β)` `-tentative` 除去済 / `(c215-δ)` `-tentative` 除去済 / `(c215-γ)` T-4 持ち越し確定」
+- **期待する対応方針**: `ssot-verification.md` L98 を「**cycle-215 §引用 SSoT 15 (c214-ι) 内の regex-tester 独自 SSoT `(c215-γ-tentative)` 接尾辞 → 本実測値で確定 → `-tentative` 除去**」に訂正。または、計画書 §補足事項 L2564 の SSoT 番号一覧と整合する形に書き戻し。
+
+---
+
+#### MINOR-2: 計画書 L355 / L381 / L387 / L395 で指定された成果物保存先 `tmp/cycle-215/after-t4/` を builder が `tmp/cycle-215/t4/` に置換しているのは、cycle-200〜214 の `after-t4` 命名規約 (B-450 `tmp パス命名規約 SSoT` ベース) と不整合ではないか?
+
+- **指摘内容**: 計画書 L355 = `tmp/cycle-215/after-t4/` / L381 = `scenario1-email-validation.png` 保存先 = `tmp/cycle-215/after-t4/` / L387 = `tmp/cycle-215/after-t4/ap-p21-measurements.md` / L395 = `tmp/cycle-215/after-t4/bundle-impact.md`。実成果物パスはすべて `tmp/cycle-215/t4/` (`t4/4-commands-output.md` / `t4/ap-p21-measurements.md` / `t4/ssot-verification.md` / `t4/visitor-flow-verification.md` / `t4/screenshots/*.png`)。cycle-211/212/213/214 の precedent は `after-t4/` 命名が確立済 (backlog B-450 `tmp パス命名規約 SSoT` 関連)。`t4/` 単純命名は cycle-215 で初登場した divergent パス。
+- **根拠**: cycle-215.md L355 / L381 / L387 / L395 計画書パス指定 / 実成果物パス `tmp/cycle-215/t4/` / cycle-211〜214 の precedent
+- **期待する対応方針**: パス自体は機能的な問題なし。`tmp/` 配下なのでサイクル完了時に削除対象。再現性 / 命名規約遵守の観点では計画書側 r2 改訂で `t4/` に統一するか、成果物を `after-t4/` にリネームするかの判断。最小対応として §補足事項に「cycle-215 T-4 は `tmp/cycle-215/t4/` 配下に成果物保存 / 計画書 `after-t4/` 表記との差は単純化のための実装裁量」と書き戻し。
+
+---
+
+#### MINOR-3: 計画書 §T-4 完成条件 L395 で指定された `tmp/cycle-215/after-t4/bundle-impact.md` 単独ファイルが未作成、`4-commands-output.md` 末尾「bundle インパクト所感」に統合 = `[ ]` のまま残置で済ませているのは、計画書本文の完成条件チェックリスト構造と不整合ではないか?
+
+- **指摘内容**: cycle-215.md L395 完成条件「**bundle インパクト実測値**を `tmp/cycle-215/after-t4/bundle-impact.md` に記録 — T-4 builder 2026-05-29: build 出力で `/tools/regex-tester` 静的プリレンダ確認済 / 過去 15 タイル追加実績典型レンジ内 = 異常なし（`tmp/cycle-215/t4/4-commands-output.md` 末尾「bundle インパクト所感」参照 / 専用 .md ファイル切り出しは completion 不要と判断）」と書かれており `[ ]` のまま。判断自体は妥当だが、「completion 不要と判断」 = T-4 builder が完成条件を満たさない選択をしたまま `[ ]` 残置は計画書プロセスとして異例。`bundle-impact.md` 単独ファイル要求は cycle-211/212/213/214 の precedent (バンドル影響評価) を継承したもの。`4-commands-output.md` L59-61「bundle インパクト所感」3 行は計画書要求の「実測値」記録としては薄い。
+- **根拠**: cycle-215.md L395 完成条件文言 / `tmp/cycle-215/t4/4-commands-output.md` L59-61
+- **期待する対応方針**:
+  1. **第一推奨**: `bundle-impact.md` を切り出し、`npm run build` 出力の First Load JS / Static / Dynamic ルート分類 / cycle-214 完了時点との差分（過去 build 出力 grep 比較）を 10〜20 行で記録 → L395 `[x]` 化。
+  2. **第二案**: 計画書 L395 を「bundle インパクト所感を 4-commands-output.md 末尾に統合」に r2 改訂し、`[x]` 化する根拠を明示。
+
+---
+
+#### T-4 review = 改善指示
+
+#### T-4 review 最終評価コメント (200 字以内)
+
+AP-WF16 独立再実行 (test 4555/4555 / slug 17) + スクショ目視で実装健全性は確認。B-452 真の N=1 判定と (c214-β) 同軸性注記引用は論理整合。ただし MAJOR-1 (AP-P21 (i) 計画書採択値乖離をサイクル内修正せず持ち越し / 先行サイクル precedent と不整合) + MAJOR-2 (シーン 2 = 5,000〜10,000 字 312 件マッチの (c215-δ) 動的描画 SSoT 本番実機検証省略 = SSoT 確定根拠欠如) + MAJOR-3 (シーン 1 仕様乖離) が来訪者価値 / SSoT 体系信頼性に直接影響。最低 MAJOR-1 + MAJOR-2 の根本対応を経てから completion 着手。
+
+---
+
+### T-4 r2 review (2026-05-29 / r1 6 件対応確認 + AP-WF16 独立再実行 + r2 改訂ゼロベース確認)
+
+#### T-4 r2 review 独立再実行結果
+
+事後検証質問形（AP-WF15）。AP-WF16 reviewer 独立再実行 = `npm run test` **4555/4555 passed (313 files / 167.85s)** ✓ / `npm run lint` **PASS (exit 0)** ✓ / `npm run format:check` **All matched files use Prettier code style** ✓。`src/tools/regex-tester/RegexTesterTile.tsx` を Read し L440 / L476 / L507 / L722 / L750 = 5 箇所で `minHeight: 40` 確定 + MAJOR-1 / MAJOR-3 対応コメント整合を確認。Playwright で `/internal/tiles/preview/tools/regex-tester` を **w375 / w1200 で独立実機計測**: w375 で sampleSelect h=40.00 / patternInput h=40.00 / フラグ label (g/i/m) h=40.00 / detailLink h=40.00 / コピーボタン (URL サンプル投入後) h=40.00 = **w1200 のみならず w375 モバイルでも操作側 5 要素すべて 40px PASS** を独立計測で再確認。大量マッチ動的描画 = pattern `https?://[\w./\-?=&%]+` + 145 件マッチ生成テキスト投入 → `[data-match-item="true"]` 145 件 / 初期 visible 10 件 / hidden 135 件 → スクロール後 visible 13 件 / hidden 132 件（追加描画 +3 件）/ rAF 経過時間 = 0.40ms = **メインスレッドフリーズなし**を独立再実行で確認。スクショ目視 (`after-tap-fix-w375-light.png` / `scenario-1-email-validation.png` / `dynamic-highlight-{initial,scrolled,full}.png`) も builder 報告と整合 = シーン 1 メール仕様 (foo / baz 2 件マッチ / bar@@invalid 弾かれ) が視覚的に確認可能。
+
+#### T-4 r2 review 指摘事項
+
+##### r1 指摘 6 件の対応確認
+
+事後検証質問形（AP-WF15 / 「対症療法でなく根本対応か」基準で判定）。
+
+| r1 指摘                                       | 対応箇所                                                                                                                                                                                                      | 根本対応か / 判定                                                                                                                                                                                                                                     |
+| --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| MAJOR-1: AP-P21 (i) 操作側 5 要素 40px 乖離   | `RegexTesterTile.tsx` L440 (select) / L476 (pattern input) / L507 (フラグ label) / L722 (コピーボタン) / L750 (詳細リンク) すべて minHeight:40 / `tmp/cycle-215/t4-r2/ap-p21-after-fix.md` 全 5 要素 PASS     | 根本対応 PASS = 先行サイクル precedent (cycle-210 同サイクル修正) に合致 / 独立計測で w1200 / w375 両方 40px PASS / 5 要素「サンプル選択 / pattern input / フラグ label / コピーボタン / 詳細リンク」すべて値乖離ゼロ                                 |
+| MAJOR-2: 大量マッチ Playwright 検証省略       | `tmp/cycle-215/t4-r2/dynamic-highlight-verification.md` 144 件マッチ実機検証 + IntersectionObserver 12→14 件追加描画 + rAF 3ms フリーズなし / スクショ 3 枚                                                   | 根本対応 PASS = (c215-δ) 動的描画 SSoT の本番実機証跡確立 = T-3 review CRIT-1 と同型「mock 都合 ≠ 実機挙動」リスクが本検証で構造的に排除 / reviewer 独立再実行でも 145 件マッチ / 初期 10 件 visible / スクロール後 13 件 visible / rAF 0.40ms を再現 |
+| MAJOR-3: シーン 1 メール仕様乖離              | `tmp/cycle-215/t4-r2/visitor-flow-r2.md` シーン 1 = メール pattern + foo / bar@@invalid / baz 投入 → 2 件マッチ (foo / baz) / bar@@invalid 弾かれ確認 / `scenario-1-email-validation.png`                     | 根本対応 PASS = 計画書 L380 「無効入力混在で 2 件マッチ」仕様準拠 / M1b フォーム validation 本旨「無効入力を弾く」検証視点が満たされた                                                                                                                |
+| MINOR-1: SSoT 番号体系 (c215-γ) 帰属誤記      | `tmp/cycle-215/t4-r2/ssot-verification-r2.md` (c215-γ) = §引用 SSoT **15 (c214-ι) 帰属の独自 SSoT** 確定値 h=54.78px / w=380px に訂正 / §引用 SSoT 17 = (c215-δ) で別物                                       | 根本対応 PASS = 計画書 §引用 SSoT 番号体系と整合 / 後続サイクル planner の SSoT 体系理解混乱リスク解消                                                                                                                                                |
+| MINOR-2: 成果物保存先 `t4` vs `after-t4` 命名 | 計画書 §補足事項 L2650 に「cycle-215 T-4 r2 の成果物は `tmp/cycle-215/t4-r2/` に保存 / 次サイクル以降は `tmp/cycle-XXX/after-tN/` 命名規約に統一」と書き戻し済                                                | 根本対応 PASS = §補足事項書き戻しで次サイクル planner が precedent を把握できる状態 / cycle-215 内のリネームは不要判断                                                                                                                                |
+| MINOR-3: bundle-impact.md 単独ファイル未作成  | `tmp/cycle-215/t4-r2/bundle-impact.md` 新規作成 / RegexTesterTile = TextDiffTile の 2.16 倍 / TextReplaceTile の 2.98 倍 / 主因 (Worker / IO / サンプル 6 種) / Next.js shared chunk として他ページ無影響判定 | 根本対応 PASS = 計画書 L395 完成条件を満たす実測値記録 / 「ほぼ 0」推定値が +13kB と過小評価だった反省を明示 + 他ツール比較で許容範囲判定                                                                                                             |
+
+**判定**: r1 指摘 6 件すべて **根本対応として実装 + 計画書 + tmp/cycle-215/t4-r2/ に反映**。対症療法的な処理（条件分岐 / コメント加筆のみ等）はゼロ。
+
+##### r2 改訂で新たに生じた問題のゼロベース確認
+
+- **AP-P21 (i) 40px 達成が w375 モバイルでも維持されているか?** → 独立 Playwright 計測 (w375 viewport / dev server) で sampleSelect h=40 / patternInput h=40 / フラグ label g/i/m h=40 / detailLink h=40 / コピーボタン (URL サンプル投入後) h=40 = **全 5 要素 PASS** / w1200 のみ PASS で w375 破綻リスクは構造的に解消（minHeight + flex 中央配置で viewport 非依存）。
+- **minHeight 追加で flex container 内の他要素レイアウトに影響していないか?** → `display:flex + alignItems:center + minHeight:40` の組み合わせはコンテンツ高さが 40px 未満の場合のみ 40px に拡張 / コピーボタン (元 27px) / 詳細リンク (元 19.03px) / フラグ label (元 19.03px) は **本来要件で 40px 未満だったため 40px 化はタップ性向上のみで他要素の overflow / clipping は発生しない** ことを操作後スクショ (`scenario-1-email-validation.png` / `dynamic-highlight-{initial,scrolled,full}.png` / `after-tap-fix-w375-light.png`) で確認 / タイル全体 400×400px 縦領域の overflow / クリップなし。
+- **大量マッチ実機検証でメインスレッドフリーズなしが定量的に確認されているか?** → reviewer 独立再実行で rAF コールバック到達時間 = **0.40ms (スクロール後) / 0.60ms (初期表示後)** = どちらも 60fps フレーム上限 16.67ms を大幅に下回り Worker 分離設計の有効性を実証 / builder 報告の 3ms と同水準（計測タイミングのばらつき範囲内）/ 145 件 (builder 報告 144 件と僅差 = 補助テキスト中の URL 状文字列が偶発的にマッチした差 = 構造判定に影響なし) でも IntersectionObserver 動的描画 + Worker 計算分離が完全機能 = メインスレッドフリーズなしが構造的・定量的に実証。
+
+##### (c215-δ) `-tentative` 除去の妥当性
+
+144 件マッチ実機検証 (`tmp/cycle-215/t4-r2/dynamic-highlight-verification.md`) + reviewer 独立 145 件マッチ実機検証で「IntersectionObserver `rootMargin: "100px"` / `threshold: 0.1` / 先頭 10 件即時 (INITIAL_VISIBLE_SEED_COUNT=10) + スクロールで追加描画 (10→12→13→14 件)」が本番 `RegexTesterTile.tsx` で動作確認済。T-1 baseline プロトタイプ計測 (`highlight-N-determination.md` §C) と T-3 本番実装の挙動が一致 = (c215-δ) `-tentative` 除去の根拠は AP-WF12 cycle-214 c214-ε 教訓 (実装後の本番計測で SSoT を確定する) の本旨と整合。
+
+##### 計画書の §引用 SSoT 整合性
+
+`grep -nE "-tentative" docs/cycles/cycle-215.md` で残存ヒットは L88 / L130 / L1032-1036 / L1259 / L1283 = **本文 SSoT 確定箇所には残存ゼロ** / 残存ヒットは「(a) 一般説明 (L88) / (b) AP-P21 (d) ケース計測手順の補足 (L130) / (c) T-3 r1 review 履歴 (L1032-1036 / L1259 / L1283)」のいずれも load-bearing でなく改変対象外。
+
+##### B-452 真の N=1 のまま判定の維持
+
+`docs/backlog.md` L95 末尾「cycle-215 T-4 実測値の同軸性次第で『真の N=2 達成』または『真の N=1 のまま』のいずれか」+ cycle-215 T-4 元検証で確定済「**真の N=1 のまま**」(cycle-215 = cycle-214 と同型 flex 固定設計起因の同軸ではない参考値) が T-4 r2 で覆っていないことを確認 (T-4 r2 で MAJOR-1〜MINOR-3 6 件対応 → いずれも (v) 変化率の母集団判定には影響しない)。
+
+#### T-4 r2 review = **PASS**
+
+**T-4 r2 review = PASS**
+
+#### T-4 r2 review 最終評価コメント (200 字以内)
+
+r1 指摘 6 件すべて根本対応として実装 + 計画書 + `tmp/cycle-215/t4-r2/` に反映済。AP-P21 (i) 操作側 5 要素は w1200 / w375 両 viewport で 40px PASS を reviewer 独立 Playwright 計測で再確認。145 件マッチ動的描画も rAF 0.40ms = メインスレッドフリーズなしを独立実機検証で再現。シーン 1 メール仕様準拠 + SSoT 15 (c214-ι) 帰属訂正 + bundle-impact.md 単独切り出しも完遂。B-452 真の N=1 のまま判定維持。completion 着手可。
+
+---
+
 ## キャリーオーバー
 
 - <このサイクルで完了できなかった作業や、次のサイクルに持ち越す必要のある作業があれば、ここと /docs/backlog.md の両方に記載する。>
@@ -2571,6 +2698,7 @@ r1 指摘 7 件すべて根本対応として実装 + 計画書に反映済（CR
   - (v) **案 W-4 採択根拠**: N=99 が 60fps 維持上限（実測値）/ IntersectionObserver rootMargin '100px' / threshold 0.1 で scrollTop=0 時 17 件 + scrollTop=1000 時 23 件の追加描画を確認（実測検証済）
 - **MINOR-1 対応: `--font-mono` トークンの定義レベルについて（T-2 review MINOR-1 / 書き戻し）**: `src/tools/regex-tester/Component.module.css` の `font-family: var(--font-mono)` 参照（L18/27/35/52/78/99/139 相当）は `src/app/globals.css` の `body { --font-mono: ... }` でのみ定義されている。CSS Custom Property は inheritance するため body 配下では参照可能だが、他のデザイントークンは `:root` レベルで定義されているため整合性がない。`(legacy)` 削除フェーズ（Phase 10.2）で `--font-mono` を `:root` に格上げするか現行維持かを確認すること。Backlog B-462 に認識合わせ項目として付記するか次サイクル PM 判断で対応。
 - **NIT-1 対応: `page.tsx` の max-width 1200px ハードコード根拠（T-2 review NIT-1 / 書き戻し）**: `src/app/(new)/tools/regex-tester/page.tsx` の外側 div `max-width: 1200px` は cycle-196 SSoT（ToolLayout 外側 max-width ハードコード設計指針）を引用した意図的な実装。計画書 §T-2 実施事項にこの記述が明示されていなかったが、cycle-196 SSoT は他の (new) 移行済ツールでも同様に適用されており事後妥当。後続サイクル planner は `src/app/(new)/tools/*/page.tsx` の max-width 1200px ハードコードが cycle-196 SSoT 由来であることを前提として計画書を記述すること。
+- **MINOR-2 メモ: T-4 r2 成果物保存先の命名規約（T-4 review MINOR-2 / 書き戻し）**: cycle-215 T-4 r2 の成果物は `tmp/cycle-215/t4-r2/` に保存したが、cycle-211〜214 の命名規約「`tmp/cycle-XXX/after-tN/`」（例: `tmp/cycle-214/after-t4/`）とは異なる。次サイクル以降は `tmp/cycle-XXX/after-tN/` 命名規約に統一すること（cycle-215 の `t4-r2/` はそのまま残置 = 再変更不要 / 次サイクル以降で命名規約を cycle-211〜214 と統一する）。
 
 ## サイクル終了時のチェックリスト
 
