@@ -1,5 +1,63 @@
 import type { ToolMeta } from "@/tools/types";
 
+/** 正規表現テスターのサンプル入力。
+ * タイル UI と詳細ページの両方から参照する単一 SSoT として定義（T-2 論点 15 案 D-改 1）。
+ * cycle-215 で 6 種定義。
+ */
+export interface RegexSampleInput {
+  /** ドロップダウンに表示するラベル */
+  label: string;
+  /** 正規表現パターン文字列 */
+  pattern: string;
+  /** フラグ文字列 (例: "g", "gi") */
+  flags: string;
+  /** サンプルテストテキスト */
+  testText: string;
+}
+
+/**
+ * 正規表現テスターのサンプル入力 6 種（論点 15 案 D-改 1 採択 / cycle-215 T-2）。
+ * タイル `<select>` 6 種 + 詳細ページドロップダウン 6 種で同一定数を参照する。
+ */
+export const REGEX_SAMPLE_INPUTS: RegexSampleInput[] = [
+  {
+    label: "メールアドレス",
+    pattern: "[\\w.-]+@[\\w.-]+\\.\\w+",
+    flags: "g",
+    testText: "お問い合わせ: support@example.com、admin@yolos.net",
+  },
+  {
+    label: "URL",
+    pattern: "https?://[\\w./\\-?=&%]+",
+    flags: "g",
+    testText: "参考: https://example.com/path?query=1 と http://yolos.net",
+  },
+  {
+    label: "電話番号（日本）",
+    pattern: "0\\d{1,4}-\\d{1,4}-\\d{4}",
+    flags: "g",
+    testText: "連絡先 03-1234-5678 / 携帯 090-1234-5678",
+  },
+  {
+    label: "郵便番号",
+    pattern: "\\d{3}-\\d{4}",
+    flags: "g",
+    testText: "〒100-0001 東京都千代田区",
+  },
+  {
+    label: "日付 (YYYY-MM-DD)",
+    pattern: "\\d{4}-\\d{2}-\\d{2}",
+    flags: "g",
+    testText: "日付: 2026-05-29 開始、2026-12-31 終了",
+  },
+  {
+    label: "HTML タグ",
+    pattern: "<[^>]+>",
+    flags: "g",
+    testText: "<p>テキスト</p><br>",
+  },
+];
+
 export const meta: ToolMeta = {
   slug: "regex-tester",
   name: "正規表現テスター",
