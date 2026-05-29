@@ -51,6 +51,7 @@ import ImageBase64Tile from "@/tools/image-base64/ImageBase64Tile";
 import ImageResizerTile from "@/tools/image-resizer/ImageResizerTile";
 import PasswordGeneratorTile from "@/tools/password-generator/PasswordGeneratorTile";
 import TextDiffTile from "@/tools/text-diff/TextDiffTile";
+import RegexTesterTile from "@/tools/regex-tester/RegexTesterTile";
 
 /**
  * 系統識別子の型（4 系統）— SSoT: このファイルのみで定義する。
@@ -281,5 +282,17 @@ export const TILE_DECLARATIONS: TileRegistryEntry[] = [
     outputPlaceholder: "",
     detailPath: "/tools/text-diff",
     widgetSummary: "2 つのテキストの差分を素早く可視化する",
+  },
+  {
+    domain: "tools",
+    slug: "regex-tester",
+    kind: "widget",
+    tileComponent: RegexTesterTile,
+    recommendedSize: { cols: 3, rows: 3 },
+    inputPlaceholder: "/* 例: \\d{4}-\\d{2}-\\d{2} */",
+    outputPlaceholder: "マッチ結果がここに表示されます",
+    detailPath: "/tools/regex-tester",
+    widgetSummary:
+      "正規表現を即時テスト。パターン + テキスト → マッチ位置と件数を表示。",
   },
 ];
