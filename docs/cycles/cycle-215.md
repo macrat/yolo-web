@@ -2497,6 +2497,52 @@ CRIT-1 はマッチ結果アイテム初期 display:none + IntersectionObserver 
 
 ---
 
+### T-3 r2 review (2026-05-29 / T-3 r1 review 7 件対応確認 + r2 改訂ゼロベース確認 + AP-WF16 reviewer 独立再実行)
+
+#### T-3 r2 review 独立再実行結果
+
+事後検証質問形（AP-WF15）。AP-WF16 reviewer 独立再実行: `npm run lint` = **PASS** (exit 0) / `npm run format:check` = **PASS**（All matched files use Prettier code style）/ `npm run test -- regex-tester` = **38 件全件緑**（Tile 26 + logic 12 / r1 時の 35 件から Tile 3 件追加 = CRIT-1 seed / display:none 廃止 / MAJOR-3 select minHeight = 40px の専用 assertion）。`src/tools/regex-tester/RegexTesterTile.tsx`（752 行）+ `src/tools/regex-tester/__tests__/RegexTesterTile.test.tsx`（644 行 / 26 件）+ `src/tools/_constants/tile-declarations.ts` L286-297 + `src/tools/regex-tester/meta.ts` REGEX_SAMPLE_INPUTS 6 種を Read で精査。スクショ `tmp/cycle-215/t3-r2/highlight-fix-w1200-{light,dark}.png` 2 枚で「URL サンプル選択 → 2 件マッチが緑背景 (`var(--success-soft)` × `var(--success-strong)`) で視認可能」を直接確認 = 実機ブラウザで CRIT-1 修正が機能していると判定。
+
+#### T-3 r2 review 指摘事項
+
+##### r1 指摘 7 件の対応確認
+
+事後検証質問形（AP-WF15 / 「対症療法でなく根本対応か」基準で判定）。
+
+| r1 指摘                                                                        | 対応箇所 (実装 + 計画書)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | 根本対応か / 判定                                                                                                                                                                   |
+| ------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| CRIT-1 動的ハイライト display:none + IO 致命的バグ                             | `RegexTesterTile.tsx` L123 `INITIAL_VISIBLE_SEED_COUNT=10` 定数 / L139-145 `createInitialVisibleIndices()` で先頭 10 件 seed / L175-177 `useState(createInitialVisibleIndices)` 初期値 / L643 `visibility: visibleIndices.has(i) ? "visible" : "hidden"`（display:none 完全廃止）/ L283-320 useEffect で `idx < INITIAL_VISIBLE_SEED_COUNT` をスキップして 11 件目以降のみ `observer.observe(el)` / L317-319 cleanup で `observers.forEach((o) => o.disconnect())` / 計画書 L24-27 採択仕様コメント反映 + `(c215-δ)` SSoT 確定 (`-tentative` 除去済 / L849) | 根本対応 PASS = 「display:none 要素は IO で観測不能」MDN/W3C 仕様に visibility:hidden + 初期 seed で構造的に対処 / スクショで実機視認確認済                                         |
+| MAJOR-1 詳細リンクテキスト乖離                                                 | L747「フラグ切替・置換などの詳細機能を使う →」/ L735 コメントも同期修正 / テスト L121-124 で `/フラグ切替/` assertion                                                                                                                                                                                                                                                                                                                                                                                                                                       | 根本対応 PASS = §論点 9 案 B 採択と完全一致                                                                                                                                         |
+| MAJOR-2 TILE_DECLARATIONS placeholder/summary 計画書未経由                     | 計画書 L296 で **案 B = 計画書を実装値に書き戻し** 採択明示（理由: 実装値の方が visitor 価値が高い = 入力例 `\d{4}-\d{2}-\d{2}` 明確 + output イメージ伝達）/ tile-declarations.ts L292-296 と完全整合                                                                                                                                                                                                                                                                                                                                                      | 根本対応 PASS = SSoT トレーサビリティ確立（採択判断 + 理由が明示されている）                                                                                                        |
+| MAJOR-3 select minHeight 32px が AP-P21 下限 40px 違反                         | L440 `minHeight: 40` (旧 32) + コメント「MAJOR-3 訂正: AP-P21 操作側下限 40px（cycle-210 SSoT (i) 引用適用）」/ テスト L195-202 で 40 以上 assertion                                                                                                                                                                                                                                                                                                                                                                                                        | 根本対応 PASS = SSoT 例外運用ではなく原則準拠で修正                                                                                                                                 |
+| MINOR-1 コメント L11 「Worker + debounce + replace + overlay highlight」誤情報 | L10「Worker + debounce + replace」に修正（overlay highlight 言及削除）= 詳細ページの現状と一致                                                                                                                                                                                                                                                                                                                                                                                                                                                              | 根本対応 PASS                                                                                                                                                                       |
+| MINOR-2 useMemo 同期 testRegex でメインスレッドフリーズ                        | useMemo 同期計算完全撤廃 / `grep -nE "testRegex\(" RegexTesterTile.tsx` = INLINE_WORKER_CODE 内部のみ 2 件 (Worker 内 self.addEventListener)、メインスレッド呼び出し 0 件 / `grep -nE "from.*logic" RegexTesterTile.tsx` = 0 件（logic.ts インポートなし）/ Worker 経由のみで結果取得 / コメント L12 / L18-23 で MINOR-2 対応を明示                                                                                                                                                                                                                         | 根本対応 PASS = 計画書 §論点 6 案 F「タイル + 詳細の両方で Worker 一貫化」の本来の意図と整合 / ReDoS パターン入力時もメインスレッドフリーズなし（Worker 内爆発 → terminate で対処） |
+| NIT-1 コメント「行内配置のため 32px」論証不明                                  | MAJOR-3 と同時解消（40px に修正済のため論証問題自体が消滅）                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | 根本対応 PASS                                                                                                                                                                       |
+
+**判定**: r1 指摘 7 件すべて **根本対応として実装 + 計画書に反映**。対症療法的な処理（条件分岐の追加 / コメント加筆だけ等）はゼロ。
+
+##### r2 改訂で新たに生じた問題のゼロベース確認
+
+- **useMemo 撤廃 + Worker 専用化で初期表示時 (pattern 未入力) のレンダリングに問題ないか?** → L213-217 で `if (!pattern || !testText)` 早期 return + `setTimeout(() => setMatchResult(null), 0)` で空マウント時に setState を effect 直接実行から外す（lint `react-hooks/set-state-in-effect` 回避）= 初期表示時の summary は L329-336 で `if (!pattern) return "パターンを入力してください"` を返す = 問題なし。
+- **Worker postMessage の race condition (古い pattern 結果が新しい pattern 結果を上書きする) 対策**: L262-266 cleanup で `done = true; clearTimeout; worker?.terminate()` を毎エフェクトサイクル実行 / `worker` は L219 で `let` ローカル束縛のため各サイクル独立 / `worker.terminate()` 呼び出し後は Web Worker spec に従い旧 worker からの onmessage は発火しない = race condition 構造的に排除済。
+- **IntersectionObserver cleanup (unmount 時の disconnect)**: L317-319 で `observers.forEach((o) => o.disconnect())` を useEffect return 関数で実装 = unmount 時 / 依存更新時の両方で disconnect 確実 = リーク防止 PASS。
+- **動的ハイライト useState 初期値 [0..9] が 10 件未満マッチでもエラーにならないか?** → `Set.prototype.has(i)` は要素不在時 `false` を返すのみで例外なし / 余分なインデックス (Set に含まれるが DOM 要素が存在しない 2..9) はレンダリング側で参照されない（`matchResult.matches.map((m, i) => ...)` が件数分しかループしない）= エラーなし、無害。
+
+##### 計画書との整合性
+
+- §論点 6 案 F (Worker + worker.terminate() + timeout 100ms / 文字数制限なし) → 実装 L72 `WORKER_TIMEOUT_MS = 100` + L246-252 setTimeout で `worker?.terminate()` + setTimedOut = 完全実現
+- §論点 7 案 W-4 (動的ハイライト IntersectionObserver / 先頭 10 件 seed) → 実装 L123 `INITIAL_VISIBLE_SEED_COUNT = 10` + L283-320 IO useEffect / `IO_ROOT_MARGIN="100px"` / `IO_THRESHOLD=0.1` = T-1 実測値を採用 = 完全実現
+- §論点 15 案 D-改 1 (タイル + 詳細ともサンプル選択 UI / 6 種) → `meta.ts` `REGEX_SAMPLE_INPUTS` 6 種 (メール / URL / 電話 / 郵便 / 日付 / HTML タグ) / タイル L433-458 `<select>` 配置 / `handleSampleSelect` で pattern + flags + testText 自動入力 = 完全実現
+- §引用 SSoT `c215-γ-tentative` (errorBox SSoT) は **T-4 持ち越し確定** 注記済（L337 / L2518 サマリ / 計画書 §引用 SSoT 末尾）= 適切
+
+#### T-3 r2 review = **PASS**
+
+#### T-3 r2 review 最終評価コメント (200 字以内)
+
+r1 指摘 7 件すべて根本対応として実装 + 計画書に反映済（CRIT-1 = visibility:hidden + 先頭 10 件 seed + IO cleanup 実装 + 実機スクショで緑ハイライト視認確認 / MAJOR-1〜3 = 計画書採択値と完全一致 / MINOR-1〜2 + NIT-1 = 同時解消）。AP-WF16 独立再実行 = lint/format:check PASS + 38 件全件緑（r1 比 +3 件 = CRIT-1/MAJOR-3 専用 assertion 追加）。Race condition / IO リーク / 初期 seed 例外 すべて構造的に排除済。T-4 着手可能。
+
+---
+
 ## キャリーオーバー
 
 - <このサイクルで完了できなかった作業や、次のサイクルに持ち越す必要のある作業があれば、ここと /docs/backlog.md の両方に記載する。>
