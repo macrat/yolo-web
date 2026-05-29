@@ -136,3 +136,21 @@ Next.js 16 系（本プロジェクトでは 16.2.4）から `next build` のデ
 - 比較が必須でない場合は `.next/static/chunks/` 合計サイズなどの粗いメトリクスで代替する
 
 出典: cycle-185
+
+---
+
+## 10. next-themes（attribute=class）環境での Playwright ダークモード撮影
+
+next-themes を `attribute="class"` + `enableSystem` で使うサイト（`<html class="dark">` でダーク適用）では、Playwright の `page.emulateMedia({ colorScheme: 'dark' })` **単独**ではダークテーマが確実に適用されない。
+
+**原因**: next-themes はハイドレーション後に `localStorage['theme']` を読んでクラスを付与する。`emulateMedia` は OS の `prefers-color-scheme` を変えるだけなので、`defaultTheme="system"` 時はページロード順や Next.js のキャッシュ最適化によって silent-light（見た目は light なのにファイル名だけ dark）になる場合がある。
+
+**確実な dark 撮影手順**:
+
+1. `context.addInitScript(() => { localStorage.setItem('theme', 'dark'); })` を `browser.newContext()` 直後（`page.goto` より前）に呼んで、localStorage を事前注入する
+2. `page.emulateMedia({ colorScheme: 'dark' })` を `page.goto` より前に呼ぶ（保険）
+3. `page.goto` 後に `page.waitForFunction(() => document.documentElement.classList.contains('dark'))` で `<html class="dark">` の付与を確認してから撮影する
+
+**失敗検知の二重化**: `waitForFunction` がタイムアウトした場合は、ファイル名を `_dark-FAILED` にして保存し、かつ `process.exit(1)` で非ゼロ終了する。これにより「ログを見落とした silent-light」を構造的に防げる。
+
+出典: cycle-216 B-463（T-2 レビュー派生 / NIT-1・NIT-2）
