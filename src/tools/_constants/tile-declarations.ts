@@ -52,6 +52,7 @@ import ImageResizerTile from "@/tools/image-resizer/ImageResizerTile";
 import PasswordGeneratorTile from "@/tools/password-generator/PasswordGeneratorTile";
 import TextDiffTile from "@/tools/text-diff/TextDiffTile";
 import RegexTesterTile from "@/tools/regex-tester/RegexTesterTile";
+import KeigoReferenceTile from "@/tools/keigo-reference/KeigoReferenceTile";
 
 /**
  * 系統識別子の型（4 系統）— SSoT: このファイルのみで定義する。
@@ -294,5 +295,17 @@ export const TILE_DECLARATIONS: TileRegistryEntry[] = [
     detailPath: "/tools/regex-tester",
     widgetSummary:
       "正規表現を即時テスト。パターン + テキスト → マッチ位置と件数を表示。",
+  },
+  {
+    domain: "tools",
+    slug: "keigo-reference",
+    kind: "widget",
+    tileComponent: KeigoReferenceTile,
+    recommendedSize: { cols: 3, rows: 3 },
+    inputPlaceholder: "動詞を検索（例: 行く）",
+    outputPlaceholder: "",
+    detailPath: "/tools/keigo-reference",
+    widgetSummary:
+      "敬語（尊敬語・謙譲語）を即時検索。60語を逆引き対応でコピーまで最短到達。",
   },
 ];
