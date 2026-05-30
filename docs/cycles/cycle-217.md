@@ -14,7 +14,7 @@ completed_at: null
 ## 実施する作業
 
 - [x] **T-1 ベースライン撮影 + 実測 + 引用採否 + 系統論言語化**: legacy 詳細ページの Playwright baseline スクショ（w360 / w1280 × light / dark + 固有状態）、旧トークン/hex の grep 実測内訳確定（後述の PM 実測値を builder が独立再実測して照合）、テスト件数・`Component.test.tsx` 不存在確認、色データ件数（伝統色 250 色 / 有彩色・無彩色の内訳）、`tilesCount` 実測、legacy 詳細ページ位置確認、**先行 SSoT 引用採否の機能カテゴリ並べ読み表（AP-WF14）**作成（cycle-216 c216-α〜δ = 参照・検索型 / cycle-213 SSoT η = マウント時自動生成型 が「色選択→配色生成型」に引用適用可能か独立確認）、**「色選択→配色生成型」AP-P21 計測ケース定義のドラフト**と**系統論の言語化**（第 5 の新アーキタイプである旨・反転構造の有無・(v) 変化率の適用可否見立て）。
-- [x] **T-2 詳細ページ `(legacy)`→`(new)` 移行 + デザイン適用**: 3 ファイル（page.tsx / opengraph-image.tsx / twitter-image.tsx）の git mv、import パス修正、`page.module.css` 標準パターン新設（`max-width:1200px;margin:0 auto` をハードコード）、`Component.module.css` の旧トークン置換（T-1 実測マッピング表ベース / フォールバック形式の漏れに注意）、TrustLevelBadge 撤去 + `meta.ts` の `trustLevel:"verified"` 削除、視覚確認（移行前後 w360/w1280 × light/dark）。
+- [x] **T-2 詳細ページ `(legacy)`→`(new)` 移行 + デザイン適用**: 3 ファイル（page.tsx / opengraph-image.tsx / twitter-image.tsx）の git mv、import パス修正、`page.module.css` 標準パターン新設（`max-width:1200px;margin:0 auto` をハードコード）、`Component.module.css` の旧トークン置換（T-1 実測マッピング表ベース / フォールバック形式の漏れに注意）、視覚確認（移行前後 w360/w1280 × light/dark）。**【T-2 レビュー r1 訂正】`trustLevel` は `ToolMeta` の必須フィールド（types.ts:25）で全 34 ツールが保持しており、per-tool 削除の前例はゼロ。完全削除は B-432 で Phase 8.1 全 34 ツール完了後に一括実施するのが標準（漸進削除は AP-I02 抵触）。TrustLevelBadge は全コードベースで未レンダリング（ToolLayout.test.tsx:115 に非表示テストあり）＝撤去対象は実体として存在しない。したがって本サイクルでは trustLevel 保持・据え置きが正しい。**
 - [ ] **T-3 `TraditionalColorPaletteTile.tsx` 新規実装 + テスト + 型契約 + 登録**: タイル中核機能（おまかせ初期表示 = cycle-213 SSoT η 引用 / 操作側・膨張側の役割分担 = AP-P21 / 論点 B・C の採択案 / 配色 5 タイプの平易補足 / HEX デフォルト + RGB/HSL + インプレースコピー FB）の実装、`TraditionalColorPaletteTile.test.tsx` 新設、meta/registry の型契約記入（tileComponent 参照 / recommendedSize / inputPlaceholder / outputPlaceholder / detailPath / kind="widget" / widgetSummary）、`TILE_DECLARATIONS` 登録 + `generate:tiles-registry` 実行 + tilesCount 確認、タイル単独レンダリング検証（`/internal/tiles/preview/...` を w360/w1280 × light/dark）。
 - [ ] **T-4 AP-P21 実機計測 + SSoT 書き戻し + 起票 + 完了**: 「色選択→配色生成型」5 ケース計測（初期おまかせ / 別色選択後 / 無彩色分岐 / 配色タイプ切替 / コピー後）、操作側 40px 下限 + 配色カード群の収納安定 + コピー文言変化の AP-P21 適用外引用（cycle-211 (x)）+ (v) 変化率の適用可否確定、SSoT を §補足事項に書き戻し、新規 B 番号起票 2 件（(i) Component テスト基盤 P4 / (ii) 色選択→配色生成型 AP-P21 基準値 N≥3 見直し P3）、4 コマンド（lint / format:check / test / build）全 PASS、スクショ整理。
 - [ ] 各タスクのレビュー（計画・実装 各フェーズ）と指摘事項の対応。
@@ -37,7 +37,7 @@ completed_at: null
 1. **新デザイン詳細ページ移行（来訪者価値）**: 詳細ページは現状 `(legacy)` 配下にあり（**実測値** = `src/app/(legacy)/tools/traditional-color-palette/` の存在を `ls` 確認）、新トークン体系・ダークモード・新フォントの恩恵が来訪者にまだ届いていない。`Component.module.css` の旧トークンを新トークン体系へ移行する。
 2. **タイル動線による最短 UX = M1a 需要への直接応答**: 「タイルを開く → 基準色を選ぶ → HEX/RGB/HSL をコピーして元の作業に戻る」という最短往復を、yolos.net トップから 1 タップで起動できるタイルとして提供する。とくに **おまかせ初期表示**（開いた瞬間に有彩色 1 色が選択済みで配色が生成・表示済み）が M1a の「空っぽ画面を避け即価値」needs に直撃する。
 3. **「色選択→配色生成型」タイルの設計指針確立（B-314 への波及効果）**: 全 34 ツール中 18 件目（17 件完了 / 直近 cycle-216 = keigo-reference）。既存 17 件は変換・生成系（cycle-216 で参照・検索型を追加）であり、本ツールは「**1 色選択 → 補色/類似色/トライアド/テトラド/分裂補色の 5 種配色を一括生成**」という第 5 の新アーキタイプ。ここで設計指針と AP-P21 計測系統を確立できれば、残る色・生成系ツールの移行にも効く。
-4. **品質・信頼性配慮（憲法 rule 4）**: TrustLevelBadge 撤去 + `meta.ts` の `trustLevel:"verified"` 削除（移行済みツールの標準）を行い、配色 5 タイプの専門用語に一行の平易な補足を添えて、配色理論を知らない M1a でも安心して使えるようにする。
+4. **品質・信頼性配慮（憲法 rule 4）**: 配色 5 タイプの専門用語に一行の平易な補足を添えて、配色理論を知らない M1a でも安心して使えるようにする。なお `trustLevel` は本サイクルでは据え置く（**【T-2 レビュー r1 訂正】**必須フィールドで全 34 ツール保持 / 完全削除は B-432 で全完了後に一括 / TrustLevelBadge は元々未レンダリング）。
 
 #### 数値 literal の 4 分類ラベルと生成元併記の徹底（AP-P16）
 
@@ -64,7 +64,7 @@ completed_at: null
 - `page.module.css` を標準パターンで新設し、`max-width:1200px;margin:0 auto` を**ハードコード**する（`var(--max-width)` は (new) 未定義のため使えない）。
 - `Component.module.css` の旧トークン 40 箇所/5 種 + `#fff`×2 を新トークンへ置換する（T-1 実測マッピング表ベース / フォールバック形式・hex 単体の漏れに注意 / `#fff`→`var(--fg-invert, var(--bg))`）。詳細ページ Component.tsx 自体はトークン置換以外変更しない。
 - **`var(--font-mono)` は置換対象外**: `Component.module.css`（**実装値** = L245）に `var(--font-mono)` が 1 箇所あるが、`--font-mono` は新デザインの `src/app/globals.css`（**実装値** = L189）にも定義済みで (new) でも有効。**40 箇所/5 種の置換内訳には含めない**（builder が漏れと誤認したり機械的 sed で巻き込んだりしないこと）。
-- **TrustLevelBadge 撤去** + `meta.ts` の `trustLevel:"verified"` 削除（移行済みツールの標準 / 詳細ページからバッジ表示を除去）。
+- **`trustLevel` は据え置く（削除しない）**【T-2 レビュー r1 訂正】: `trustLevel` は `ToolMeta` の必須フィールド（`src/tools/types.ts:25`）で全 34 ツールが保持しており、直近移行済みの keigo-reference も `trustLevel:"curated"` を保持。per-tool 削除の前例はゼロで、完全削除は B-432 にて Phase 8.1 全 34 ツール完了後に一括実施するのが標準（漸進削除は「型は optional / 実体は verified」の壊れた中間状態を生み AP-I02 抵触）。TrustLevelBadge は全コードベースで未レンダリング（`ToolLayout.test.tsx:115` に非表示テストあり）＝撤去対象は実体として存在しない。
 - 視覚確認: take-screenshot スキルで移行前後を w360/w1280 × light/dark で撮影し、デザイン適用とダークモード新規対応を実機目視する。
 
 #### T-3: `TraditionalColorPaletteTile.tsx` 新規実装 + テスト + 型契約 + 登録
@@ -188,6 +188,14 @@ AP-P17 に従い、設計判断が分かれる 3 論点（A/B/C）について 3
 - **r2（承認 / 指摘なし PASS）**: 前回指摘3件の正確な反映を実測照合（引用行番号 `logic.ts:170/174` / `globals.css:189` / `Component.module.css:245` すべて一致）。新たな不整合（数値二重管理・文言矛盾）なし。計画全体（M1a最短UX・AP-P17 3案比較・AP-P21系統論・タスク分割・完成条件）を再点検し新たな問題なし。実装フェーズ着手可。
 
 実装フェーズの各タスク完了時のレビュー結果は本セクションに追記する。
+
+### 実装レビュー
+
+- **T-1（承認 / 指摘なし PASS）**: 全実測値（旧トークン40箇所5種+#fff×2 / テスト43件 / 色データ総250・achromatic 10・有彩色240 / tilesCount 17 / legacy 3ファイル）を reviewer が独立再実測し全件一致。dark スクショ silent-light なし（B-463修正有効）を目視確認。先行SSoT引用採否並べ読み表（AP-WF14）と系統論ドラフトも各原文と照合し妥当。後続の土台として十分。
+- **T-2（承認 / r1 NIT-1 → r2 指摘なし PASS）**:
+  - r1: 実装承認。トークン置換残存ゼロ（--font-mono保持 / #fff→var(--fg-invert,var(--bg))）、page.tsx が keigo-reference と構造一致、light/dark 視覚良好（#fff→--fg-invert は dark 可読性改善でもある）、tsc/lint PASS、URL不変。**NIT-1**: 計画書の「trustLevel削除（移行済みツールの標準）」が事実誤認 — trustLevel は ToolMeta 必須フィールド（types.ts:25）で全34ツール保持、完全削除は B-432 で全完了後に一括（漸進削除は AP-I02 抵触）、TrustLevelBadge は未レンダリング（ToolLayout.test.tsx:115）。builder が計画に盲従せず trustLevel を保持した判断が正しい。
+  - 対応: 計画書 L17/L40/L67 を「trustLevel は据え置く / 削除は B-432 で一括」へ訂正（残り16ツールへの誤指示伝播を防止）。
+  - r2: 訂正3箇所の事実正確性を一次情報で照合し全一致、T-2全体（実装不変）を再点検し見落としなし。承認。
 
 ## キャリーオーバー
 
