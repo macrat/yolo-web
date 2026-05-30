@@ -53,6 +53,7 @@ import PasswordGeneratorTile from "@/tools/password-generator/PasswordGeneratorT
 import TextDiffTile from "@/tools/text-diff/TextDiffTile";
 import RegexTesterTile from "@/tools/regex-tester/RegexTesterTile";
 import KeigoReferenceTile from "@/tools/keigo-reference/KeigoReferenceTile";
+import TraditionalColorPaletteTile from "@/tools/traditional-color-palette/TraditionalColorPaletteTile";
 
 /**
  * 系統識別子の型（4 系統）— SSoT: このファイルのみで定義する。
@@ -307,5 +308,20 @@ export const TILE_DECLARATIONS: TileRegistryEntry[] = [
     detailPath: "/tools/keigo-reference",
     widgetSummary:
       "敬語（尊敬語・謙譲語）を即時検索。60語を逆引き対応でコピーまで最短到達。",
+  },
+  {
+    domain: "tools",
+    slug: "traditional-color-palette",
+    kind: "widget",
+    tileComponent: TraditionalColorPaletteTile,
+    // recommendedSize: cols=3, rows=3（400×400）/ 論点 A 採択
+    // 根拠: 操作側（カテゴリタブ+スウォッチ+配色タイプ5タブ+コピー形式行）+
+    //       膨張側（配色カード群 2〜4件）を二分しても各配色と HEX/RGB/HSL が読める縦余白を確保。
+    // tile-grid 定数（TILE_CELL_PX=128 / TILE_GAP_PX=8）経由: calcTilePixels(3,3) = 400×400px
+    recommendedSize: { cols: 3, rows: 3 },
+    inputPlaceholder: "",
+    outputPlaceholder: "",
+    detailPath: "/tools/traditional-color-palette",
+    widgetSummary: "和の伝統色から配色を即生成。HEX/RGB/HSL をコピー。",
   },
 ];
