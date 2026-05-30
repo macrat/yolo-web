@@ -2,7 +2,7 @@
 id: 217
 description: ツール詳細ページの新デザイン移行 + タイル化（移行計画 Phase 8.1 第 18 弾 / traditional-color-palette）
 started_at: 2026-05-30T11:17:39+0900
-completed_at: null
+completed_at: 2026-05-30T14:01:20+0900
 ---
 
 # サイクル-217
@@ -204,7 +204,12 @@ AP-P17 に従い、設計判断が分かれる 3 論点（A/B/C）について 3
 
 ## キャリーオーバー
 
-- <このサイクルで完了できなかった作業や、次のサイクルに持ち越す必要のある作業があれば、ここと /docs/backlog.md の両方に記載する。>
+- 本サイクルのスコープ（traditional-color-palette の詳細ページ移行 + タイル化）は T-1〜T-4 すべて完了。未完了の持ち越し作業はなし。
+- 派生して以下を `docs/backlog.md` に起票済み（キャリーオーバーとして登録済み）:
+  - **B-467**（traditional-color-palette Component テスト基盤整備 / P4 / 着手条件なし）: Component.test.tsx 不存在（logic 43件のみ / Tile は16件追加済）。SSR 固定初期色テストの jsdom 限界メモ付き。
+  - **B-468**（「色選択→配色生成型」タイル AP-P21 基準値 N≥3 見直し / P3 / 着手条件 = 本系統 N≥3 蓄積）: 本サイクルで N=1 SSoT (c217-α)(c217-β) を確立。(c217-γ)(v)変化率N/Aは対象外。
+  - **B-469**（マウント時自動生成型タイルの hydration 不整合是正 = SSoT η 見直し / P2 / 着手条件なし）: T-3 CRIT-1 由来。password-generator タイルの同修正 + 他タイル点検 + cycle-213 SSoT η 記述更新をスコープ。本番タイルグリッド配線前の是正が必要。
+- **dev サーバ起因の pre-commit typecheck 破損**: T-4 コミット時、dev サーバ停止に伴う `.next/dev/types/validator.ts` の書き込み途中破損を tsconfig の `.next/dev/types/**/*.ts` include が拾い tsc が失敗。`.next/dev` 除去で解消（コード健全 / `npm run build` は PASS 済）。再発防止の知見化は下記「補足事項」参照。
 
 ## 補足事項
 
@@ -286,15 +291,23 @@ AP-P17 に従い、設計判断が分かれる 3 論点（A/B/C）について 3
 | B-452 / B-456 / B-464（各系統 N≥3）              | 適用対象外・別系統           | 本系統は B-468 で独立管理                                         |
 | B-433（localStorage 前回値保持）                 | 適用対象外（本サイクル外）   | B-433 で別途対応予定                                              |
 
+### ブログ判断（cycle-completion Step 2）
+
+本サイクルの最有力ブログ題材は T-3 CRIT-1 で発覚した「`useState(初期化関数)` が SSR でも実行され hydration mismatch する」落とし穴だが、**既存記事 `src/blog/content/2026-03-02-nextjs-hydration-mismatch-seeded-random.md`（シリーズ nextjs-deep-dive 第4回）が同一の根本原因（サーバ/クライアントで異なる非決定的値 → hydration 不整合）と useEffect/決定論的解決を網羅済み**。今回の事例も同記事の学びがそのまま当てはまり、新規記事は重複となるため**ブログは書かない**と判断（来訪者価値最優先 / 重複記事は読者価値が薄い）。タイル UX（250色を400pxに収める横ストリップ設計）は道具箱が未公開（Phase 10）で読者が体験・検証できず現時点では題材価値が限定的。道具箱公開時にタイル設計の振り返り記事を別途検討する余地あり（B-314 / Phase 10）。
+
+### 知見メモ（再発防止 / docs/knowledge 候補）
+
+dev サーバ起動中にスクショ撮影し、その後コミットすると、dev サーバ停止に伴い書き込み途中で千切れた `.next/dev/types/validator.ts` を tsconfig の `include: [".next/dev/types/**/*.ts"]` が拾い、pre-commit の `tsc --noEmit` が構文エラーで失敗することがある。コードは健全（`npm run build` は通る）。**対処**: コミット前に dev サーバを停止し `rm -rf .next/dev` してから typecheck/commit する。移行サイクルは毎回 dev サーバでスクショを撮るため再発しやすい。knowledge への正式追記は次サイクルで検討（本サイクルでは cycle ドキュメントに記録）。
+
 ## サイクル終了時のチェックリスト
 
-- [ ] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
-- [ ] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
-- [ ] すべての変更がレビューされ、残存する指摘事項が無くなっている。
-- [ ] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
-- [ ] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
-- [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
-- [ ] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
+- [x] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
+- [x] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。（B-314 は複数サイクルにまたがる傘タスクで、第18弾 = cycle-217 分は完了。Target Cycle を 218 に更新済み）
+- [x] すべての変更がレビューされ、残存する指摘事項が無くなっている。（計画 r2 / T-1 / T-2 r2 / T-3 r2 / T-4 すべて PASS）
+- [x] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。（T-4 レビューで reviewer が実機確認: test 4599 件 / build 3906 ページ）
+- [x] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
+- [x] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
+- [x] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。（B-467/B-468/B-469 + dev サーバ起因 validator.ts 知見）
 
 上記のチェックリストをすべて満たしたら、チェックを入れてから `/cycle-completion` スキルを実行してサイクルを完了させてください。
 なお、「環境起因」「今回の変更と無関係」「既知の問題」「次回対応」などの **例外は一切認めません** 。必ずすべての項目を完全に満してください。
