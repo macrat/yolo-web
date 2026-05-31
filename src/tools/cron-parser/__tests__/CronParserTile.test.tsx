@@ -72,26 +72,35 @@ describe("CronParserTile", () => {
   // -------------------------------------------------------
   // 観点 (ii): 次回実行のマウント後表示（論点 F / hydration 安全）
   // -------------------------------------------------------
-  it("(ii) 次回実行: useEffect 後に次回実行リストが表示される", async () => {
+  it("(ii) 次回実行: useEffect 後に next-executions コンテナが表示される", async () => {
     await act(async () => {
       render(<CronParserTile />);
     });
-    // 次回実行データが表示されているか（data-testid="next-executions" または関連テキスト）
-    // マウント後に次回実行を差し込む実装であることを確認
+    // マウント後に次回実行コンテナが存在すること
     const nextExecEl = document.querySelector(
       "[data-testid='next-executions']",
     );
     expect(nextExecEl).toBeInTheDocument();
   });
 
-  it("(ii) 次回実行: 日付パターンが含まれる（年月日の数字形式）", async () => {
+  it("(ii) 次回実行: マウント後に next-executions 内に実日時の行が ≥1 件表示される（論点 F 核心）", async () => {
     await act(async () => {
       render(<CronParserTile />);
     });
-    // 次回実行には日付が含まれる（例: 2026年 や 2026-XX-XX 形式）
-    const bodyText = document.body.textContent ?? "";
-    // 4桁年が含まれること（2026 または 2027 等）
-    expect(/\d{4}/.test(bodyText)).toBe(true);
+    // 論点 F: useEffect でマウント後に差し込まれた次回実行が実際に描画されていること
+    // HH:MM パターン（時刻表示）が next-executions コンテナ内に存在することを直接検証する
+    const nextExecEl = document.querySelector(
+      "[data-testid='next-executions']",
+    );
+    expect(nextExecEl).toBeInTheDocument();
+    const containerText = nextExecEl?.textContent ?? "";
+    // 時刻パターン（00:00 〜 23:59 の HH:MM）が含まれること
+    expect(/\d{2}:\d{2}/.test(containerText)).toBe(true);
+    // さらに日付行（div 子要素）が 1 件以上描画されていること
+    // プレースホルダ（—）ではなく実日時が出ていることを子ノード数で確認
+    const rows = nextExecEl?.querySelectorAll("div") ?? [];
+    // 「次回実行（お使いの環境の時刻）」ラベル行 1 + 実行日時行 ≥1 = 合計 ≥2
+    expect(rows.length).toBeGreaterThanOrEqual(2);
   });
 
   // -------------------------------------------------------
