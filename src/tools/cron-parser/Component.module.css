@@ -7,7 +7,7 @@
 .tabs {
   display: flex;
   gap: 0;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--border);
   border-radius: 0.5rem;
   overflow: hidden;
   width: fit-content;
@@ -16,8 +16,8 @@
 .tab {
   padding: 0.5rem 1.25rem;
   border: none;
-  background-color: var(--color-bg);
-  color: var(--color-text);
+  background-color: var(--bg);
+  color: var(--fg);
   font-size: 0.9rem;
   cursor: pointer;
   transition:
@@ -26,12 +26,13 @@
 }
 
 .tab:not(:last-child) {
-  border-right: 1px solid var(--color-border);
+  border-right: 1px solid var(--border);
 }
 
 .tabActive {
-  background-color: var(--color-primary);
-  color: #fff;
+  background-color: var(--accent);
+  /* cycle-218 T-2: #fff → var(--fg-invert, var(--bg)) / --accent 背景上テキスト / dark 可読性改善 */
+  color: var(--fg-invert, var(--bg));
 }
 
 .section {
@@ -39,14 +40,14 @@
   flex-direction: column;
   gap: 0.75rem;
   padding: 1rem;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--border);
   border-radius: 0.5rem;
 }
 
 .sectionTitle {
   font-size: 1rem;
   font-weight: 600;
-  color: var(--color-text);
+  color: var(--fg);
 }
 
 .row {
@@ -60,27 +61,28 @@
   flex: 1;
   min-width: 200px;
   padding: 0.6rem 0.75rem;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--border);
   border-radius: 0.375rem;
   font-family: var(--font-mono);
   font-size: 1.1rem;
-  color: var(--color-text);
-  background-color: var(--color-bg);
+  color: var(--fg);
+  background-color: var(--bg);
   letter-spacing: 0.05em;
 }
 
 .cronInput:focus {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid var(--accent);
   outline-offset: -1px;
-  border-color: var(--color-primary);
+  border-color: var(--accent);
 }
 
 .button {
   padding: 0.5rem 1rem;
-  border: 1px solid var(--color-primary);
+  border: 1px solid var(--accent);
   border-radius: 0.375rem;
-  background-color: var(--color-primary);
-  color: #fff;
+  background-color: var(--accent);
+  /* cycle-218 T-2: #fff → var(--fg-invert, var(--bg)) / --accent 背景上テキスト / dark 可読性改善 */
+  color: var(--fg-invert, var(--bg));
   font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
@@ -89,15 +91,15 @@
 }
 
 .button:hover {
-  background-color: var(--color-primary-hover);
+  background-color: var(--accent-strong);
 }
 
 .buttonSecondary {
   padding: 0.5rem 1rem;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--border);
   border-radius: 0.375rem;
-  background-color: var(--color-bg);
-  color: var(--color-text);
+  background-color: var(--bg);
+  color: var(--fg);
   font-size: 0.9rem;
   cursor: pointer;
   transition: border-color 0.15s;
@@ -105,7 +107,7 @@
 }
 
 .buttonSecondary:hover {
-  border-color: var(--color-primary);
+  border-color: var(--accent);
 }
 
 .fieldGrid {
@@ -117,25 +119,25 @@
 .fieldLabel {
   font-size: 0.8rem;
   font-weight: 600;
-  color: var(--color-text-muted);
+  color: var(--fg-soft);
   margin-bottom: 0.25rem;
 }
 
 .fieldInput {
   width: 100%;
   padding: 0.4rem 0.5rem;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--border);
   border-radius: 0.375rem;
   font-family: var(--font-mono);
   font-size: 0.9rem;
-  color: var(--color-text);
-  background-color: var(--color-bg);
+  color: var(--fg);
+  background-color: var(--bg);
 }
 
 .fieldInput:focus {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid var(--accent);
   outline-offset: -1px;
-  border-color: var(--color-primary);
+  border-color: var(--accent);
 }
 
 .presetRow {
@@ -146,10 +148,10 @@
 
 .presetButton {
   padding: 0.3rem 0.6rem;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--border);
   border-radius: 0.25rem;
-  background-color: var(--color-bg-secondary);
-  color: var(--color-text);
+  background-color: var(--bg-soft);
+  color: var(--fg);
   font-size: 0.8rem;
   cursor: pointer;
   transition: border-color 0.15s;
@@ -157,18 +159,18 @@
 }
 
 .presetButton:hover {
-  border-color: var(--color-primary);
-  color: var(--color-primary);
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 .description {
   padding: 0.75rem 1rem;
-  border: 1px solid var(--color-primary);
+  border: 1px solid var(--accent);
   border-radius: 0.5rem;
-  background-color: var(--color-bg-secondary);
+  background-color: var(--bg-soft);
   font-size: 1rem;
   font-weight: 600;
-  color: var(--color-primary);
+  color: var(--accent);
 }
 
 .resultTable {
@@ -182,7 +184,7 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.5rem 0.75rem;
-  background-color: var(--color-bg-secondary);
+  background-color: var(--bg-soft);
   border-radius: 0.375rem;
   flex-wrap: wrap;
 }
@@ -190,14 +192,14 @@
 .resultLabel {
   font-weight: 600;
   font-size: 0.85rem;
-  color: var(--color-text-muted);
+  color: var(--fg-soft);
   min-width: 70px;
 }
 
 .resultValue {
   font-family: var(--font-mono);
   font-size: 0.85rem;
-  color: var(--color-text);
+  color: var(--fg);
 }
 
 .executionList {
@@ -214,19 +216,19 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.4rem 0.75rem;
-  background-color: var(--color-bg-secondary);
+  background-color: var(--bg-soft);
   border-radius: 0.375rem;
   font-family: var(--font-mono);
   font-size: 0.85rem;
-  color: var(--color-text);
+  color: var(--fg);
 }
 
 .error {
   padding: 0.75rem;
-  border: 1px solid var(--color-error);
+  border: 1px solid var(--danger);
   border-radius: 0.5rem;
-  background-color: var(--color-error-bg);
-  color: var(--color-error);
+  background-color: var(--danger-soft);
+  color: var(--danger);
   font-size: 0.85rem;
 }
 
