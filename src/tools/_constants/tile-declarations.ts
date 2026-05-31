@@ -54,6 +54,7 @@ import TextDiffTile from "@/tools/text-diff/TextDiffTile";
 import RegexTesterTile from "@/tools/regex-tester/RegexTesterTile";
 import KeigoReferenceTile from "@/tools/keigo-reference/KeigoReferenceTile";
 import TraditionalColorPaletteTile from "@/tools/traditional-color-palette/TraditionalColorPaletteTile";
+import CronParserTile from "@/tools/cron-parser/CronParserTile";
 
 /**
  * 系統識別子の型（4 系統）— SSoT: このファイルのみで定義する。
@@ -323,5 +324,22 @@ export const TILE_DECLARATIONS: TileRegistryEntry[] = [
     outputPlaceholder: "",
     detailPath: "/tools/traditional-color-palette",
     widgetSummary: "和の伝統色から配色を即生成。HEX/RGB/HSL をコピー。",
+  },
+  {
+    domain: "tools",
+    slug: "cron-parser",
+    kind: "widget",
+    tileComponent: CronParserTile,
+    // recommendedSize: cols=3, rows=3（400×400）/ 論点 A 採択
+    // 根拠: 操作側（式入力欄+コピーボタン+プリセット行+折りたたみトグル）+
+    //       膨張側（description+次回実行5件+フィールド詳細）を二分しても
+    //       description と次回実行が読める縦余白を確保。
+    // tile-grid 定数（TILE_CELL_PX=128 / TILE_GAP_PX=8）経由: calcTilePixels(3,3) = 400×400px
+    // 実機計測は T-4 で確定し §補足事項に書き戻す（AP-P20）
+    recommendedSize: { cols: 3, rows: 3 },
+    inputPlaceholder: "cron式を入力（例: 0 9 * * 1-5）",
+    outputPlaceholder: "",
+    detailPath: "/tools/cron-parser",
+    widgetSummary: "cron式を即解析。人間可読スケジュールと次回実行を表示。",
   },
 ];
