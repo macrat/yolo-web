@@ -422,7 +422,7 @@ export default function CronParserTile() {
         {/* フィールド詳細（折りたたみ / 論点 C 採択） */}
         {parseResult.valid && (
           <div style={{ flexShrink: 0 }}>
-            {/* 折りたたみトグルボタン（操作側要素だが膨張側内部に配置） */}
+            {/* 折りたたみトグルボタン（操作側要素だが膨張側内部に配置 / AP-P21 (C): minHeight 40px） */}
             <button
               type="button"
               data-testid="details-toggle"
@@ -432,6 +432,7 @@ export default function CronParserTile() {
                 width: "100%",
                 textAlign: "left",
                 padding: "4px 6px",
+                minHeight: "40px",
                 fontSize: "0.6rem",
                 borderRadius: "4px",
                 border: "1px solid var(--border, var(--fg-soft))",
@@ -617,7 +618,7 @@ export default function CronParserTile() {
           display: "flex",
           alignItems: "center",
           justifyContent: "flex-end",
-          minHeight: 40,
+          minHeight: "40px",
         }}
       >
         <Link
@@ -630,7 +631,7 @@ export default function CronParserTile() {
             whiteSpace: "nowrap",
             display: "flex",
             alignItems: "center",
-            minHeight: 40,
+            minHeight: "40px",
           }}
         >
           詳細 →
