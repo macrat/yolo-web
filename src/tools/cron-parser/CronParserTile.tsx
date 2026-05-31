@@ -610,14 +610,14 @@ export default function CronParserTile() {
         )}
       </div>
 
-      {/* === フッター行（操作側 = flexShrink: 0）=== */}
+      {/* === フッター行（操作側 = flexShrink: 0 / AP-P21 (C): minHeight 40px）=== */}
       <div
         style={{
           flexShrink: 0,
           display: "flex",
           alignItems: "center",
           justifyContent: "flex-end",
-          minHeight: 32,
+          minHeight: 40,
         }}
       >
         <Link
@@ -630,7 +630,7 @@ export default function CronParserTile() {
             whiteSpace: "nowrap",
             display: "flex",
             alignItems: "center",
-            minHeight: 32,
+            minHeight: 40,
           }}
         >
           詳細 →
