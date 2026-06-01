@@ -47,6 +47,7 @@ export const tilesRegistry: TileRegistrySerializedEntry[] = [
   { domain: "tools", slug: "keigo-reference", kind: "widget" },
   { domain: "tools", slug: "traditional-color-palette", kind: "widget" },
   { domain: "tools", slug: "cron-parser", kind: "widget" },
+  { domain: "tools", slug: "email-validator", kind: "widget" },
 ];
 
-// Count at generation time: tilesCount=19
+// Count at generation time: tilesCount=20

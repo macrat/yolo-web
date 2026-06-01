@@ -55,6 +55,7 @@ import RegexTesterTile from "@/tools/regex-tester/RegexTesterTile";
 import KeigoReferenceTile from "@/tools/keigo-reference/KeigoReferenceTile";
 import TraditionalColorPaletteTile from "@/tools/traditional-color-palette/TraditionalColorPaletteTile";
 import CronParserTile from "@/tools/cron-parser/CronParserTile";
+import EmailValidatorTile from "@/tools/email-validator/EmailValidatorTile";
 
 /**
  * 系統識別子の型（4 系統）— SSoT: このファイルのみで定義する。
@@ -341,5 +342,24 @@ export const TILE_DECLARATIONS: TileRegistryEntry[] = [
     outputPlaceholder: "",
     detailPath: "/tools/cron-parser",
     widgetSummary: "cron式を即解析。人間可読スケジュールと次回実行を表示。",
+  },
+  {
+    domain: "tools",
+    slug: "email-validator",
+    kind: "widget",
+    tileComponent: EmailValidatorTile,
+    // recommendedSize: cols=3, rows=3（400×400）/ 論点 A 採択
+    // 根拠: 操作側（メール入力欄+提案採用ボタン+提案コピーボタン+折りたたみトグル）+
+    //       膨張側（判定バッジ+タイポ提案+エラー/警告理由+パーツ内訳）を二分しても
+    //       タイポ例の有効+警告+提案+内訳が折りたたみ閉時に収まる縦余白を確保。
+    //       cron-parser（c218-β / 同型規模）の実績に整合。
+    // tile-grid 定数（TILE_CELL_PX=128 / TILE_GAP_PX=8）経由: calcTilePixels(3,3) = 400×400px
+    // 実機計測は T-4 で確定し §補足事項に書き戻す（AP-P20）
+    recommendedSize: { cols: 3, rows: 3 },
+    inputPlaceholder: "メールアドレスを入力",
+    outputPlaceholder: "",
+    detailPath: "/tools/email-validator",
+    widgetSummary:
+      "メールアドレスを即検証。有効/無効判定・タイポ修正提案・パーツ内訳を表示。",
   },
 ];
