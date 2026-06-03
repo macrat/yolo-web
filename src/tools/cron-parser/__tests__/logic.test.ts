@@ -189,6 +189,105 @@ describe("parseCron", () => {
     expect(result.valid).toBe(true);
     expect(result.description).toContain("または");
   });
+
+  // B-486 regression: range/list/step/composite in hour/minute must not collapse to "X時Y分"
+  it("B-486: range hour '0 9-17 * * *' does not produce '9時0分'", () => {
+    const result = parseCron("0 9-17 * * *");
+    expect(result.valid).toBe(true);
+    // Must not be the collapsed wrong form
+    expect(result.description).not.toContain("9時0分");
+    // Must contain the range description
+    expect(result.description).toContain("9時から17時");
+    // Must contain the minute description
+    expect(result.description).toContain("0分");
+    // Must not claim to fire only once at a single time that contradicts next executions
+    // Verify next executions span multiple hours (9-17)
+    const from = new Date(2026, 0, 1, 0, 0, 0);
+    const nexts = getNextExecutions("0 9-17 * * *", 9, from);
+    const hours = nexts.map((d) => d.getHours());
+    expect(hours).toContain(9);
+    expect(hours).toContain(17);
+  });
+
+  it("B-486: list hour '0 9,12,15 * * *' does not produce '9時0分'", () => {
+    const result = parseCron("0 9,12,15 * * *");
+    expect(result.valid).toBe(true);
+    // Must not be the collapsed wrong form
+    expect(result.description).not.toContain("9時0分");
+    // Must reference all three hours
+    expect(result.description).toContain("9時");
+    expect(result.description).toContain("12時");
+    expect(result.description).toContain("15時");
+    // Verify next executions cover all three hours
+    const from = new Date(2026, 0, 1, 0, 0, 0);
+    const nexts = getNextExecutions("0 9,12,15 * * *", 6, from);
+    const hours = nexts.map((d) => d.getHours());
+    expect(hours).toContain(9);
+    expect(hours).toContain(12);
+    expect(hours).toContain(15);
+  });
+
+  it("B-486: range-step minute '0-30/5 9 * * *' does not produce '9時0分'", () => {
+    const result = parseCron("0-30/5 9 * * *");
+    expect(result.valid).toBe(true);
+    // Must not be the collapsed wrong form (would show "9時0分" only)
+    expect(result.description).not.toBe("毎日 9時0分 に実行");
+    // Must contain step description for minute
+    expect(result.description).toContain("0分から30分まで5分ごと");
+    // Verify next executions cover multiple minutes (0,5,10,15,20,25,30)
+    const from = new Date(2026, 0, 1, 0, 0, 0);
+    const nexts = getNextExecutions("0-30/5 9 * * *", 7, from);
+    const minutes = nexts.map((d) => d.getMinutes());
+    expect(minutes).toContain(0);
+    expect(minutes).toContain(5);
+    expect(minutes).toContain(30);
+  });
+
+  it("B-486: wildcard-step minute '*/15 9 * * *' description is already correct and stays correct", () => {
+    // */15 already works (parseInt("*/15")=NaN avoids the bug), verify it stays correct
+    const result = parseCron("*/15 9 * * *");
+    expect(result.valid).toBe(true);
+    expect(result.description).not.toContain("9時0分");
+    expect(result.description).toContain("15分ごと");
+    // Verify next executions fire at 0,15,30,45 minutes
+    const from = new Date(2026, 0, 1, 0, 0, 0);
+    const nexts = getNextExecutions("*/15 9 * * *", 4, from);
+    const minutes = nexts.map((d) => d.getMinutes());
+    expect(minutes).toContain(0);
+    expect(minutes).toContain(15);
+    expect(minutes).toContain(30);
+    expect(minutes).toContain(45);
+  });
+
+  it("B-486: composite hour '0 9-17,20 * * *' does not produce '9時0分'", () => {
+    const result = parseCron("0 9-17,20 * * *");
+    expect(result.valid).toBe(true);
+    // Must not be the collapsed wrong form
+    expect(result.description).not.toContain("9時0分");
+    // Must reference hour 20 in the description (冗長だが正確な全展開)
+    expect(result.description).toContain("20時");
+    // Verify next executions include hour 20
+    const from = new Date(2026, 0, 1, 0, 0, 0);
+    const nexts = getNextExecutions("0 9-17,20 * * *", 10, from);
+    const hours = nexts.map((d) => d.getHours());
+    expect(hours).toContain(9);
+    expect(hours).toContain(20);
+  });
+
+  // B-486 regression: zero-padded single values must be normalized (not rendered as raw strings)
+  it("B-486: zero-padded hour '0 09 * * *' renders as '9時0分' not '09時0分'", () => {
+    const result = parseCron("0 09 * * *");
+    expect(result.valid).toBe(true);
+    expect(result.description).toContain("9時0分");
+    expect(result.description).not.toContain("09時");
+  });
+
+  it("B-486: zero-padded minute '017 9 * * *' renders as '9時17分' not '9時017分'", () => {
+    const result = parseCron("017 9 * * *");
+    expect(result.valid).toBe(true);
+    expect(result.description).toContain("9時17分");
+    expect(result.description).not.toContain("017分");
+  });
 });
 
 describe("getNextExecutions", () => {
