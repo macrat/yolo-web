@@ -267,12 +267,20 @@ function buildFullDescription(
       parts.push(`毎時${minute.description}`);
     }
   } else {
-    // Specific hour and minute (24-hour format)
-    const minuteVal = parseInt(minute.raw, 10);
-    const hourVal = parseInt(hour.raw, 10);
-    if (!isNaN(minuteVal) && !isNaN(hourVal)) {
-      parts.push(`${hourVal}時${minuteVal}分`);
+    // Specific hour and minute (24-hour format).
+    // Use "X時Y分" shorthand only when BOTH fields are a single integer (e.g. "9", "0").
+    // Ranges ("9-17"), lists ("9,12,15"), steps ("0-30/5"), and composites ("9-17,20")
+    // must fall through to describeCronField output to avoid parseInt misreading
+    // "9-17" as 9 and producing a factually wrong "9時0分"-style description.
+    const minuteIsSingleNumber = /^\d+$/.test(minute.raw);
+    const hourIsSingleNumber = /^\d+$/.test(hour.raw);
+    if (minuteIsSingleNumber && hourIsSingleNumber) {
+      // Both are plain integers: safe to render as "X時Y分".
+      // Use parseInt to normalize zero-padded values ("09" → 9, "017" → 17)
+      // so that e.g. "0 09 * * *" shows "9時0分" not "09時0分".
+      parts.push(`${parseInt(hour.raw, 10)}時${parseInt(minute.raw, 10)}分`);
     } else {
+      // At least one field is a range/list/step/composite: use the descriptive form
       parts.push(`${hour.description}の${minute.description}`);
     }
   }

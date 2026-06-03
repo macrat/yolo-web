@@ -1,3 +1,13 @@
+// 文字数・単語数・行数・バイト数の共通実装を SSoT モジュールから import する。
+// char-count も同一の SSoT を参照するため、両ツールは同一環境で必ず同一結果を返す。
+import {
+  countChars,
+  countCharsNoSpaces,
+  countWords,
+  countLines,
+  countBytes,
+} from "@/lib/text-counting";
+
 export interface ByteCountResult {
   byteLength: number;
   charCount: number;
@@ -11,29 +21,8 @@ export interface ByteCountResult {
   fourByteChars: number; // 4-byte (emoji, rare CJK)
 }
 
-export function countBytes(text: string): number {
-  return new TextEncoder().encode(text).byteLength;
-}
-
-export function countChars(text: string): number {
-  // Use Array.from to handle surrogate pairs correctly
-  return Array.from(text).length;
-}
-
-export function countCharsNoSpaces(text: string): number {
-  return Array.from(text.replace(/\s/g, "")).length;
-}
-
-export function countLines(text: string): number {
-  if (text === "") return 0;
-  return text.split("\n").length;
-}
-
-export function countWords(text: string): number {
-  if (text.trim() === "") return 0;
-  // Simple space-based word count
-  return text.trim().split(/\s+/).length;
-}
+// 共通関数を re-export する（ByteCounterTile.tsx 等が直接 import できるよう維持）
+export { countChars, countCharsNoSpaces, countWords, countLines, countBytes };
 
 // Analyze byte distribution per character
 export function analyzeByteDistribution(
