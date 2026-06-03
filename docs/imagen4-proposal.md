@@ -212,7 +212,7 @@ MCPサーバーが利用できない場合:
 
 MCPサーバーはプロセスが継続動作するため、インメモリでカウンターを管理できる。サーバー再起動時にカウントを引き継ぐため、JSONファイルへの永続化も行う。
 
-- カウンターファイル: `tmp/.image-gen-counter.json`
+- カウンターファイル: `tmp/.image-gen-counter.json`（**注意: この設計は実装時に変更が必要。`tmp/` は git 管理外で消失するため、カウンターの永続化先は git 管理下のパス（例: `.mcp/image-gen-counter.json` や `config/image-gen-counter.json`）に変更すること。B-219 で実装する際には必ずこの修正を行うこと。**）
 - 記録内容:
   ```json
   {

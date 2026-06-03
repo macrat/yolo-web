@@ -525,4 +525,4 @@ v9 / v10 で記載していた「§4 改定対象判定表」「§4 改定対象
 引用が「適用範囲外」列の状況に該当する場合は **誤読**。誤読発見時の取り扱い:
 
 1. PM 指示済みの再判断（瞬間 2 / 37 / 36）: 採用 UI/UX を訂正し、引用を削除または書き換え、訂正経緯を「採用根拠（v10 訂正）」セクションに明記する
-2. PM 指示外で planner / reviewer が誤読疑いを発見した場合: 該当行に `<!-- PM-REVIEW v10: dislike 引用範囲外の疑い。理由: ... -->` 形式のコメントを並記し、`/mnt/data/yolo-web/tmp/cycle-177-pm-review-candidates.md` の要請一覧に追加する。planner / reviewer は独自に書き換えない。
+2. PM 指示外で planner / reviewer が誤読疑いを発見した場合: 該当行に `<!-- PM-REVIEW v10: dislike 引用範囲外の疑い。理由: ... -->` 形式のコメントを並記し、PM に要請を伝える。planner / reviewer は独自に書き換えない。
