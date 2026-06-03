@@ -69,7 +69,7 @@
 7. **Header actions slot（修正版 v2）**: ⚠️ 当初レポートで「移行前: なし / 移行後: 追加」と記述したが、これは画像と実体の照合誤りだった。実際の経緯は: **(legacy)/layout.tsx は `common/Header.tsx` を使い SearchTrigger を直接 import して常時表示** していた。一方 **(new) Header は `onSearchOpen` prop が未渡しで検索ボタンが消失** していた。reviewer 指摘で 2 段階の暫定対処を実施:
    - **修正 v1 (commit `356db26a`)**: `(new)/layout.tsx` の actions スロットに `<SearchTrigger />` を直接配置 → デスクトップ w1280 では検索ボタン復活、しかしモバイル w360 では `actions` がデスクトップ専用設計のため検索ボタン消失が残存
    - **修正 v2 (commit `ef4bbeec`)**: `src/app/(new)/_components/HeaderWithSearch.tsx`（Client Component）を新規作成し、`useState` で SearchModal の open/close を管理、`onSearchOpen` を Header に渡すことで **`mobileSearchButton` が自動生成**。モバイル w360 でもヘッダー中央（ロゴとハンバーガーの間）に検索アイコンが復活
-   - 修正後撮影 (`tmp/cycle-185-screenshots/after-search-fix-v2/`) で w360 / w1280 × light / dark の 4 パターンすべてで検索ボタンの可視性を確認
+   - 修正後に w360 / w1280 × light / dark の 4 パターンすべてで検索ボタンの可視性をスクリーンショット撮影で確認（当時 `tmp/cycle-185-screenshots/after-search-fix-v2/` に撮影、現在消失）
    - **結果として Header actions slot 観点では desktop/mobile 両方で「同等」を達成**。Phase 5 (B-331) で `HeaderWithSearch.tsx` を丸ごと削除し新検索コンポーネントに置き換える申し送りをコメントで明示済み
 
 ## AP-I01 補強の 3 軸評価（移行前後の対照記述）
@@ -140,11 +140,9 @@ DESIGN.md §6 が定義するトークン体系（`--bg`/`--fg`/`--accent`）が
 
 ## 関連ファイル
 
-> 注: 以下のうち `tmp/` 配下のファイル（スクショ・撮影スクリプト）は `.gitignore` 対象でコミット対象外。サイクル完了後に失われる可能性がある。本レポート本文に対照記述の要点を残してあるため、画像実体が無くなっても判断根拠は追跡可能。
+> 注: 本レポートの判断根拠（対照記述・観察結果の要点）は本文に保全されている。当時 `tmp/` に作成したスクリーンショットおよび撮影スクリプトは git 管理外のため消失しているが、判断の追跡に支障はない。
 
-- 撮影スクショ移行前: `tmp/cycle-185-screenshots/before/top_{light,dark}_w{1280,360}.jpg`
-- 撮影スクショ移行後: `tmp/cycle-185-screenshots/top_{light,dark}_w{1280,360}.jpg`
-- OGP/Twitter: `tmp/cycle-185-screenshots/{opengraph,twitter}.png`
-- 撮影スクリプト: `tmp/cycle-185-screenshot.ts`（移行後用） / `tmp/cycle-185-screenshot-pre.ts`（移行前用）
+- 撮影スクショ: cycle-185 作業当時に `tmp/cycle-185-screenshots/` 配下に撮影（移行前後・OGP/Twitter 計12枚）。本文の視覚差分セクションに要点を記録済み。
+- 撮影スクリプト: cycle-185 作業当時に `tmp/` 配下に作成（移行後用・移行前用の2ファイル）。
 - レビュー対象 commit: `d0ad7538`（B-334-4-4 修正後）
 - 移行前 commit: `2a53f933`（cycle-185 kickoff、(legacy)/page.tsx 配信状態）
