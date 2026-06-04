@@ -8,7 +8,7 @@ import {
 } from "@/lib/seo";
 import ToolPageLayout from "@/tools/_components/ToolPageLayout";
 import ToolErrorBoundary from "@/tools/_components/ErrorBoundary";
-import CharCountComponent from "@/tools/char-count/Component";
+import CharCountTool from "@/tools/char-count/CharCountPage";
 const SLUG = "char-count";
 const tool = toolsBySlug.get(SLUG);
 
@@ -26,7 +26,7 @@ export default function CharCountPage() {
         }}
       />
       <ToolErrorBoundary>
-        <CharCountComponent />
+        <CharCountTool />
       </ToolErrorBoundary>
     </ToolPageLayout>
   );

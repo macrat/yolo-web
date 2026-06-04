@@ -8,7 +8,7 @@ import {
 } from "@/lib/seo";
 import ToolPageLayout from "@/tools/_components/ToolPageLayout";
 import ToolErrorBoundary from "@/tools/_components/ErrorBoundary";
-import HtmlEntityComponent from "@/tools/html-entity/Component";
+import HtmlEntityTool from "@/tools/html-entity/HtmlEntityPage";
 const SLUG = "html-entity";
 const tool = toolsBySlug.get(SLUG);
 
@@ -26,7 +26,7 @@ export default function HtmlEntityPage() {
         }}
       />
       <ToolErrorBoundary>
-        <HtmlEntityComponent />
+        <HtmlEntityTool />
       </ToolErrorBoundary>
     </ToolPageLayout>
   );

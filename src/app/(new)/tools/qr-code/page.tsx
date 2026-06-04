@@ -8,13 +8,13 @@ import {
 } from "@/lib/seo";
 import ToolPageLayout from "@/tools/_components/ToolPageLayout";
 import ToolErrorBoundary from "@/tools/_components/ErrorBoundary";
-import QrCodeComponent from "@/tools/qr-code/Component";
+import QrCodePage from "@/tools/qr-code/QrCodePage";
 const SLUG = "qr-code";
 const tool = toolsBySlug.get(SLUG);
 
 export const metadata: Metadata = tool ? generateToolMetadata(tool.meta) : {};
 
-export default function QrCodePage() {
+export default function QrCodePageRoute() {
   if (!tool) notFound();
 
   return (
@@ -26,7 +26,7 @@ export default function QrCodePage() {
         }}
       />
       <ToolErrorBoundary>
-        <QrCodeComponent />
+        <QrCodePage />
       </ToolErrorBoundary>
     </ToolPageLayout>
   );

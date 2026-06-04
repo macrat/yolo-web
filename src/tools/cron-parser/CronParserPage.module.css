@@ -1,0 +1,184 @@
+/*
+ * CronParserPage のスタイル（cycle-225 T-6 単一実装）
+ *
+ * DESIGN.md 準拠:
+ * - B-1: var(--color-*) 旧トークン使用禁止 → 使用なし
+ * - B-2: フォーカス: outline: 2px solid var(--accent); outline-offset: 2px;
+ * - B-3: 選択ON状態の塗りは --bg-invert / --fg-invert ペア（--accent 直塗り禁止）
+ * - B-4: font-weight: 700 使用禁止 → 使用なし（600 まで）
+ * - B-5: インタラクティブ要素 --r-interactive (8px)、非インタラクティブ --r-normal (2px)
+ * - B-6: ボタン以外に box-shadow 追加禁止
+ * - B-7: フォーム要素境界は --border-strong
+ * - B-8: 定義済み色トークンのみ使用
+ */
+
+/* ページ全体コンテナ */
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* セクション */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--r-normal);
+}
+
+/* セクションタイトル */
+.sectionTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--fg);
+}
+
+/* 横並び行レイアウト */
+.row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* Cron式入力欄（Input コンポーネントを使用するが、幅制御のみ） */
+.cronInputWrapper {
+  flex: 1;
+  min-width: 200px;
+}
+
+/* プリセットボタン行
+ * ボタン自体は共通 Button コンポーネント（variant="default" size="small"）を使用。
+ * B-3: background-color: var(--accent) の直塗りを廃止し、
+ *       --bg-soft（default）/ --bg-invert（primary）の共通トークンで統一する。
+ * 手書き .parseButton / .presetButton は削除済み。 */
+.presetRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+/* 結果説明ボックス（フル説明文） */
+.description {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--r-normal);
+  background-color: var(--bg-soft);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--fg);
+}
+
+/* フィールド詳細テーブル */
+.resultTable {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.resultRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  background-color: var(--bg-soft);
+  border-radius: var(--r-normal);
+  flex-wrap: wrap;
+}
+
+.resultLabel {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--fg-soft);
+  min-width: 70px;
+}
+
+.resultValue {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--fg);
+}
+
+/* 次回実行リスト */
+.executionList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.executionItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.75rem;
+  background-color: var(--bg-soft);
+  border-radius: var(--r-normal);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--fg);
+}
+
+/* ビルダー：フィールドグリッド */
+.fieldGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem;
+}
+
+.fieldLabel {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--fg-soft);
+  margin-bottom: 0.25rem;
+}
+
+/* 生成されたCron式表示 */
+.builtExpressionRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.builtExpression {
+  flex: 1;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--border-strong);
+  /* B-5: 非インタラクティブ要素（読み取り専用の表示ボックス）は --r-normal (2px) を使う。
+   * 他の表示ボックス（.description / .resultRow / .executionItem）と一貫性を持たせる。 */
+  border-radius: var(--r-normal);
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  color: var(--fg);
+  background-color: var(--bg);
+  letter-spacing: 0.05em;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+
+/* スクリーンリーダー向け status（実テキストノードのサマリ） */
+.liveRegion {
+  /* C-3: role="status" aria-live="polite" で実テキストノードを保持するため
+   * textarea ラップは不可。このdivが実テキストを直接持つ。
+   * 視覚的には非表示にしない（情報を示すサマリとして表示する） */
+  font-size: 0.875rem;
+  color: var(--fg-soft);
+  min-height: 1.2em;
+}
+
+@media (max-width: 640px) {
+  .fieldGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .builtExpression {
+    font-size: 0.95rem;
+  }
+}

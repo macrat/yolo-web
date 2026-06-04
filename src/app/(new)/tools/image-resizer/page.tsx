@@ -8,13 +8,14 @@ import {
 } from "@/lib/seo";
 import ToolPageLayout from "@/tools/_components/ToolPageLayout";
 import ToolErrorBoundary from "@/tools/_components/ErrorBoundary";
-import ImageResizerComponent from "@/tools/image-resizer/Component";
+import ImageResizerPage from "@/tools/image-resizer/ImageResizerPage";
+
 const SLUG = "image-resizer";
 const tool = toolsBySlug.get(SLUG);
 
 export const metadata: Metadata = tool ? generateToolMetadata(tool.meta) : {};
 
-export default function ImageResizerPage() {
+export default function ImageResizerPageRoute() {
   if (!tool) notFound();
 
   return (
@@ -26,7 +27,7 @@ export default function ImageResizerPage() {
         }}
       />
       <ToolErrorBoundary>
-        <ImageResizerComponent />
+        <ImageResizerPage />
       </ToolErrorBoundary>
     </ToolPageLayout>
   );

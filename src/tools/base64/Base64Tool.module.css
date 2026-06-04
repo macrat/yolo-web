@@ -1,0 +1,49 @@
+/* Base64Tool のスタイル。
+ * DESIGN.md のトークンのみを使用し、旧 --color-* 系は一切使わない。
+ * フォーム要素のボーダー: --border-strong
+ * 角丸 インタラクティブ: --r-interactive / 非インタラクティブ: --r-normal
+ */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.label {
+  font-size: 0.875rem;
+  color: var(--fg-soft);
+}
+
+.outputHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* URL-safe オプション行 */
+.optionRow {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.optionDesc {
+  font-size: 0.8rem;
+  color: var(--fg-soft);
+  line-height: 1.5;
+}
+
+/* C-3 ライブリージョン: 視覚的には小さく目立たないが SR が読み上げる */
+.liveRegion {
+  font-size: 0.75rem;
+  color: var(--fg-soft);
+  min-height: 1em;
+}

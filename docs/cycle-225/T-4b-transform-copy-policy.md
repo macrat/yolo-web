@@ -49,7 +49,11 @@ B群にも持ち帰り対象の変換・整形ツールが含まれるため、A
 ## 適用範囲の補足（A群の非変換系・②-15 既決分）
 
 - ②-15 で既にコピー撤去が確定済み（知る対象）: cron-parser・text-diff・email-validator・regex-tester・keigo-reference（本サイクルでも撤去を維持）。
-- A群の上記以外（hash-generator・password-generator・traditional-color-palette 等）は、出力が「持ち帰り対象」（ハッシュ値・パスワード・色コード）であるため従来どおりコピーあり。download 主体のツール（qr-code・image-resizer）はコピーではなくダウンロードが持ち帰り手段。各 builder は②-16 判定軸に従い、迷う場合は本方針に追記して PM 確認を得る（自己判断で新規にばらつかせない）。
+- A群でコピー「あり」（持ち帰り対象・②-15 でも現状維持と確定）: hash-generator（ハッシュ値）・password-generator（パスワード）・image-base64（Base64/DataURI＝カナリアで確定済み）。※cycle-220 ②-15 L359「password-generator / hash-generator / image-base64 はコピーが主目的のため現状維持」。
+- A群でコピー「なし」（知る対象・②-15 で削除確定）: cron-parser・email-validator・text-diff・regex-tester・keigo-reference・**traditional-color-palette**（短いコード・色を選ぶ/見るのが目的＝知る対象。cycle-220 ②-15 L348 の削除対象に明記）。
+- A群でコピー「なし」（カウント＝知る対象）: byte-counter・char-count（出力はバイト数/文字数等のカウント＝その場で読んで知る対象）。
+- download 主体のツール（qr-code・image-resizer）はコピーではなくダウンロードが持ち帰り手段（コピーボタンは付けない）。
+- 以上で A群20本・B群14本の全34本のコピー可否が確定。各 builder はこの確定に機械適用し、自己判断で新規にばらつかせない。万一ここに明記の無いケースが出た場合のみ②-16 判定軸で判断し本方針に追記して PM 確認を得る。
 
 ## 実装上の取り決め（各 builder への指示）
 

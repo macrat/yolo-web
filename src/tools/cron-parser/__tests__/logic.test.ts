@@ -201,10 +201,10 @@ describe("parseCron", () => {
     // Must contain the minute description
     expect(result.description).toContain("0分");
     // Must not claim to fire only once at a single time that contradicts next executions
-    // Verify next executions span multiple hours (9-17)
-    const from = new Date(2026, 0, 1, 0, 0, 0);
+    // Verify next executions span multiple hours (9-17) in JST
+    const from = new Date(Date.UTC(2025, 11, 31, 15, 0, 0)); // JST 2026-01-01 00:00
     const nexts = getNextExecutions("0 9-17 * * *", 9, from);
-    const hours = nexts.map((d) => d.getHours());
+    const hours = nexts.map((d) => getJstHour(d));
     expect(hours).toContain(9);
     expect(hours).toContain(17);
   });
@@ -218,10 +218,10 @@ describe("parseCron", () => {
     expect(result.description).toContain("9時");
     expect(result.description).toContain("12時");
     expect(result.description).toContain("15時");
-    // Verify next executions cover all three hours
-    const from = new Date(2026, 0, 1, 0, 0, 0);
+    // Verify next executions cover all three hours in JST
+    const from = new Date(Date.UTC(2025, 11, 31, 15, 0, 0)); // JST 2026-01-01 00:00
     const nexts = getNextExecutions("0 9,12,15 * * *", 6, from);
-    const hours = nexts.map((d) => d.getHours());
+    const hours = nexts.map((d) => getJstHour(d));
     expect(hours).toContain(9);
     expect(hours).toContain(12);
     expect(hours).toContain(15);
@@ -235,9 +235,10 @@ describe("parseCron", () => {
     // Must contain step description for minute
     expect(result.description).toContain("0分から30分まで5分ごと");
     // Verify next executions cover multiple minutes (0,5,10,15,20,25,30)
-    const from = new Date(2026, 0, 1, 0, 0, 0);
+    // 分は JST/UTC どちらで読んでも同じ値
+    const from = new Date(Date.UTC(2025, 11, 31, 15, 0, 0)); // JST 2026-01-01 00:00
     const nexts = getNextExecutions("0-30/5 9 * * *", 7, from);
-    const minutes = nexts.map((d) => d.getMinutes());
+    const minutes = nexts.map((d) => getJstMinute(d));
     expect(minutes).toContain(0);
     expect(minutes).toContain(5);
     expect(minutes).toContain(30);
@@ -249,10 +250,10 @@ describe("parseCron", () => {
     expect(result.valid).toBe(true);
     expect(result.description).not.toContain("9時0分");
     expect(result.description).toContain("15分ごと");
-    // Verify next executions fire at 0,15,30,45 minutes
-    const from = new Date(2026, 0, 1, 0, 0, 0);
+    // Verify next executions fire at 0,15,30,45 minutes (分はJST/UTC同値)
+    const from = new Date(Date.UTC(2025, 11, 31, 15, 0, 0)); // JST 2026-01-01 00:00
     const nexts = getNextExecutions("*/15 9 * * *", 4, from);
-    const minutes = nexts.map((d) => d.getMinutes());
+    const minutes = nexts.map((d) => getJstMinute(d));
     expect(minutes).toContain(0);
     expect(minutes).toContain(15);
     expect(minutes).toContain(30);
@@ -266,10 +267,10 @@ describe("parseCron", () => {
     expect(result.description).not.toContain("9時0分");
     // Must reference hour 20 in the description (冗長だが正確な全展開)
     expect(result.description).toContain("20時");
-    // Verify next executions include hour 20
-    const from = new Date(2026, 0, 1, 0, 0, 0);
+    // Verify next executions include hour 20 in JST
+    const from = new Date(Date.UTC(2025, 11, 31, 15, 0, 0)); // JST 2026-01-01 00:00
     const nexts = getNextExecutions("0 9-17,20 * * *", 10, from);
-    const hours = nexts.map((d) => d.getHours());
+    const hours = nexts.map((d) => getJstHour(d));
     expect(hours).toContain(9);
     expect(hours).toContain(20);
   });
@@ -290,28 +291,82 @@ describe("parseCron", () => {
   });
 });
 
+// JST壁時計の時刻を取得するヘルパー（テスト用）
+// Date オブジェクトが何TZの環境でも JST の値を返す
+function getJstHour(date: Date): number {
+  return parseInt(
+    new Intl.DateTimeFormat("en-US", {
+      timeZone: "Asia/Tokyo",
+      hour: "numeric",
+      hour12: false,
+    }).format(date),
+    10,
+  );
+}
+function getJstMinute(date: Date): number {
+  return parseInt(
+    new Intl.DateTimeFormat("en-US", {
+      timeZone: "Asia/Tokyo",
+      minute: "numeric",
+    }).format(date),
+    10,
+  );
+}
+function getJstDay(date: Date): number {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "Asia/Tokyo",
+    weekday: "short",
+  })
+    .format(date)
+    .toLowerCase();
+  const map: Record<string, number> = {
+    sun: 0,
+    mon: 1,
+    tue: 2,
+    wed: 3,
+    thu: 4,
+    fri: 5,
+    sat: 6,
+  };
+  return map[parts.slice(0, 3)] ?? -1;
+}
+function getJstDate(date: Date): number {
+  return parseInt(
+    new Intl.DateTimeFormat("en-US", {
+      timeZone: "Asia/Tokyo",
+      day: "numeric",
+    }).format(date),
+    10,
+  );
+}
+
 describe("getNextExecutions", () => {
   it("returns correct number of executions", () => {
-    const from = new Date(2026, 0, 1, 0, 0, 0);
+    // from は JST 2026-01-01 09:00 に相当する UTC 時刻（UTC+9の00:00=UTC前日15:00）
+    // 単純に「fromの1分後から検索する」テストなので絶対時刻は問わない
+    const from = new Date(Date.UTC(2025, 11, 31, 15, 0, 0)); // JST 2026-01-01 00:00:00
     const results = getNextExecutions("0 9 * * *", 3, from);
     expect(results).toHaveLength(3);
   });
 
-  it("returns executions at the right time for daily at 9:00", () => {
-    const from = new Date(2026, 0, 1, 0, 0, 0);
+  it("returns executions at the right time for daily at 9:00 (JST)", () => {
+    // from = JST 2026-01-01 00:00 (UTC 2025-12-31 15:00)
+    const from = new Date(Date.UTC(2025, 11, 31, 15, 0, 0));
     const results = getNextExecutions("0 9 * * *", 3, from);
     for (const date of results) {
-      expect(date.getHours()).toBe(9);
-      expect(date.getMinutes()).toBe(0);
+      // JST壁時計の時:分を確認する（B-472 JST固定化の核心）
+      expect(getJstHour(date)).toBe(9);
+      expect(getJstMinute(date)).toBe(0);
     }
   });
 
   it("returns executions every 5 minutes", () => {
-    const from = new Date(2026, 0, 1, 0, 0, 0);
+    const from = new Date(Date.UTC(2025, 11, 31, 15, 0, 0)); // JST 2026-01-01 00:00
     const results = getNextExecutions("*/5 * * * *", 5, from);
     expect(results).toHaveLength(5);
     for (const date of results) {
-      expect(date.getMinutes() % 5).toBe(0);
+      // 分は JST でも UTC でも同じ（±9時間は分に影響しない）
+      expect(getJstMinute(date) % 5).toBe(0);
     }
   });
 
@@ -320,18 +375,19 @@ describe("getNextExecutions", () => {
     expect(results).toEqual([]);
   });
 
-  it("returns only weekday executions for '0 9 * * 1-5'", () => {
-    const from = new Date(2026, 0, 1, 0, 0, 0);
+  it("returns only weekday executions for '0 9 * * 1-5' (JST)", () => {
+    const from = new Date(Date.UTC(2025, 11, 31, 15, 0, 0)); // JST 2026-01-01 00:00
     const results = getNextExecutions("0 9 * * 1-5", 5, from);
     for (const date of results) {
-      const dow = date.getDay();
+      // JSTの曜日が月〜金であることを確認する（B-472 JST固定化）
+      const dow = getJstDay(date);
       expect(dow).toBeGreaterThanOrEqual(1);
       expect(dow).toBeLessThanOrEqual(5);
     }
   });
 
   it("returns dates in ascending order", () => {
-    const from = new Date(2026, 0, 1, 0, 0, 0);
+    const from = new Date(Date.UTC(2025, 11, 31, 15, 0, 0)); // JST 2026-01-01 00:00
     const results = getNextExecutions("0 * * * *", 5, from);
     for (let i = 1; i < results.length; i++) {
       expect(results[i].getTime()).toBeGreaterThan(results[i - 1].getTime());
@@ -340,78 +396,161 @@ describe("getNextExecutions", () => {
 
   // Fix 3: DOM/DOW OR logic tests
   it("applies OR logic when both DOM and DOW are specified (0 0 1 * 1)", () => {
-    const from = new Date(2026, 0, 1, 0, 0, 0);
+    // from = JST 2026-01-01 00:00 (UTC 2025-12-31 15:00)
+    const from = new Date(Date.UTC(2025, 11, 31, 15, 0, 0));
     const results = getNextExecutions("0 0 1 * 1", 10, from);
     expect(results.length).toBe(10);
-    // Results should include both 1st of month AND Mondays
-    const hasFirstOfMonth = results.some((d) => d.getDate() === 1);
-    const hasMonday = results.some((d) => d.getDay() === 1);
+    // Results should include both 1st of month AND Mondays (JST壁時計基準)
+    const hasFirstOfMonth = results.some((d) => getJstDate(d) === 1);
+    const hasMonday = results.some((d) => getJstDay(d) === 1);
     expect(hasFirstOfMonth).toBe(true);
     expect(hasMonday).toBe(true);
   });
 
   it("applies OR logic when both DOM=15 and DOW=5 (0 0 15 * 5)", () => {
-    const from = new Date(2026, 0, 1, 0, 0, 0);
+    const from = new Date(Date.UTC(2025, 11, 31, 15, 0, 0)); // JST 2026-01-01 00:00
     const results = getNextExecutions("0 0 15 * 5", 10, from);
     expect(results.length).toBe(10);
-    const has15th = results.some((d) => d.getDate() === 15);
-    const hasFriday = results.some((d) => d.getDay() === 5);
+    const has15th = results.some((d) => getJstDate(d) === 15);
+    const hasFriday = results.some((d) => getJstDay(d) === 5);
     expect(has15th).toBe(true);
     expect(hasFriday).toBe(true);
   });
 
   it("keeps AND logic when only DOM is specified (DOW=*)", () => {
-    const from = new Date(2026, 0, 1, 0, 0, 0);
+    const from = new Date(Date.UTC(2025, 11, 31, 15, 0, 0)); // JST 2026-01-01 00:00
     const results = getNextExecutions("0 0 1 * *", 5, from);
     expect(results.length).toBe(5);
     for (const d of results) {
-      expect(d.getDate()).toBe(1);
+      expect(getJstDate(d)).toBe(1);
     }
   });
 
   it("keeps AND logic when only DOW is specified (DOM=*)", () => {
-    const from = new Date(2026, 0, 1, 0, 0, 0);
+    const from = new Date(Date.UTC(2025, 11, 31, 15, 0, 0)); // JST 2026-01-01 00:00
     const results = getNextExecutions("0 0 * * 1", 5, from);
     expect(results.length).toBe(5);
     for (const d of results) {
-      expect(d.getDay()).toBe(1);
+      expect(getJstDay(d)).toBe(1);
     }
   });
 
   it("applies OR logic with step wildcard */2 for DOM (0 0 */2 * 1)", () => {
-    const from = new Date(2026, 0, 1, 0, 0, 0);
+    const from = new Date(Date.UTC(2025, 11, 31, 15, 0, 0)); // JST 2026-01-01 00:00
     const results = getNextExecutions("0 0 */2 * 1", 10, from);
     expect(results.length).toBe(10);
     // */2 produces odd days (1,3,5,...,31) since dayOfMonth range starts at 1
-    // Results should include both odd-day dates AND Mondays
+    // Results should include both odd-day dates AND Mondays (JST壁時計基準)
     const hasOddDay = results.some(
-      (d) => d.getDate() % 2 === 1 && d.getDay() !== 1,
+      (d) => getJstDate(d) % 2 === 1 && getJstDay(d) !== 1,
     );
-    const hasMonday = results.some((d) => d.getDay() === 1);
+    const hasMonday = results.some((d) => getJstDay(d) === 1);
     expect(hasOddDay).toBe(true);
     expect(hasMonday).toBe(true);
   });
 
   // Fix 4: Multi-year search window tests
   it("returns 3 results for yearly execution (0 0 1 1 *)", () => {
-    const from = new Date(2026, 0, 1, 0, 0, 0);
+    const from = new Date(Date.UTC(2025, 11, 31, 15, 0, 0)); // JST 2026-01-01 00:00
     const results = getNextExecutions("0 0 1 1 *", 3, from);
     expect(results).toHaveLength(3);
-    // All should be January 1st
+    // All should be January 1st in JST
     for (const d of results) {
-      expect(d.getMonth()).toBe(0); // January
-      expect(d.getDate()).toBe(1);
+      // JSTの月を Intl で取得する
+      const jstMonth = parseInt(
+        new Intl.DateTimeFormat("en-US", {
+          timeZone: "Asia/Tokyo",
+          month: "numeric",
+        }).format(d),
+        10,
+      );
+      expect(jstMonth).toBe(1); // January
+      expect(getJstDate(d)).toBe(1);
     }
   });
 
   it("returns 2 results for leap year execution (0 0 29 2 *)", () => {
-    const from = new Date(2026, 0, 1, 0, 0, 0);
+    const from = new Date(Date.UTC(2025, 11, 31, 15, 0, 0)); // JST 2026-01-01 00:00
     const results = getNextExecutions("0 0 29 2 *", 2, from);
     expect(results).toHaveLength(2);
-    // All should be Feb 29th
+    // All should be Feb 29th in JST
     for (const d of results) {
-      expect(d.getMonth()).toBe(1); // February
-      expect(d.getDate()).toBe(29);
+      const jstMonth = parseInt(
+        new Intl.DateTimeFormat("en-US", {
+          timeZone: "Asia/Tokyo",
+          month: "numeric",
+        }).format(d),
+        10,
+      );
+      expect(jstMonth).toBe(2); // February
+      expect(getJstDate(d)).toBe(29);
+    }
+  });
+});
+
+// =========================================================
+// JST固定化テスト（B-472 真のJST固定化）
+// TZ=UTC 環境でも cron 式の時刻がJST壁時計として正しくマッチすることを確認する。
+// これが「表示フォーマットのみのJST化」との本質的な違い。
+// =========================================================
+describe("getNextExecutions - JST固定化（B-472 真のJST固定化）", () => {
+  it("TZ=UTC環境でcron '0 9 * * *' の次回実行がJST 09:00 を返す（虚偽表示の防止）", () => {
+    // JST 2026-01-01 00:00 を UTC 時刻として指定
+    const from = new Date(Date.UTC(2025, 11, 31, 15, 0, 0));
+    const results = getNextExecutions("0 9 * * *", 3, from);
+    expect(results).toHaveLength(3);
+    for (const date of results) {
+      // JST壁時計の時刻が 9:00 であること（真のJST固定化の核心）
+      // TZ=UTC 環境で "表示フォーマットのみのJST化" だと getHours()=9 はUTC 09:00 を指すが、
+      // JST に変換すると 18:00 になる（虚偽表示）。真のJST固定化はこれを防ぐ。
+      expect(getJstHour(date)).toBe(9);
+      expect(getJstMinute(date)).toBe(0);
+    }
+  });
+
+  it("TZ=UTC環境でcron '30 23 * * *' の次回実行がJST 23:30 を返す（深夜境界）", () => {
+    const from = new Date(Date.UTC(2025, 11, 31, 15, 0, 0)); // JST 2026-01-01 00:00
+    const results = getNextExecutions("30 23 * * *", 2, from);
+    expect(results).toHaveLength(2);
+    for (const date of results) {
+      expect(getJstHour(date)).toBe(23);
+      expect(getJstMinute(date)).toBe(30);
+    }
+  });
+
+  it("TZ=UTC環境でcron '0 0 * * *' の次回実行がJST 00:00 を返す（深夜0時）", () => {
+    const from = new Date(Date.UTC(2025, 11, 31, 15, 30, 0)); // JST 2026-01-01 00:30
+    const results = getNextExecutions("0 0 * * *", 1, from);
+    expect(results).toHaveLength(1);
+    // JSTの 2026-01-02 00:00 に相当する UTC 時刻
+    expect(getJstHour(results[0])).toBe(0);
+    expect(getJstMinute(results[0])).toBe(0);
+    // JSTの日付が 2 (1月2日)
+    expect(getJstDate(results[0])).toBe(2);
+  });
+
+  it("TZ=UTC環境でcron '0 9 * * 1-5'（平日）の次回実行がJSTの月〜金 09:00 を返す", () => {
+    const from = new Date(Date.UTC(2025, 11, 31, 15, 0, 0)); // JST 2026-01-01 00:00（木曜）
+    const results = getNextExecutions("0 9 * * 1-5", 5, from);
+    expect(results).toHaveLength(5);
+    for (const date of results) {
+      const jstDow = getJstDay(date);
+      expect(jstDow).toBeGreaterThanOrEqual(1);
+      expect(jstDow).toBeLessThanOrEqual(5);
+      expect(getJstHour(date)).toBe(9);
+    }
+  });
+
+  it("TZ=UTC環境でcron '0 0 1 * *' の次回実行がJSTの毎月1日 00:00 を返す（日付境界）", () => {
+    const from = new Date(Date.UTC(2025, 11, 31, 15, 0, 0)); // JST 2026-01-01 00:00
+    const results = getNextExecutions("0 0 1 * *", 3, from);
+    expect(results).toHaveLength(3);
+    for (const date of results) {
+      // JSTの日付が 1 (毎月1日)
+      expect(getJstDate(date)).toBe(1);
+      // JSTの時刻が 00:00
+      expect(getJstHour(date)).toBe(0);
+      expect(getJstMinute(date)).toBe(0);
     }
   });
 });

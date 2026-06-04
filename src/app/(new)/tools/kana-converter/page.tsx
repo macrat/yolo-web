@@ -8,7 +8,7 @@ import {
 } from "@/lib/seo";
 import ToolPageLayout from "@/tools/_components/ToolPageLayout";
 import ToolErrorBoundary from "@/tools/_components/ErrorBoundary";
-import KanaConverterComponent from "@/tools/kana-converter/Component";
+import KanaConverterTool from "@/tools/kana-converter/KanaConverterPage";
 const SLUG = "kana-converter";
 const tool = toolsBySlug.get(SLUG);
 
@@ -26,7 +26,7 @@ export default function KanaConverterPage() {
         }}
       />
       <ToolErrorBoundary>
-        <KanaConverterComponent />
+        <KanaConverterTool />
       </ToolErrorBoundary>
     </ToolPageLayout>
   );

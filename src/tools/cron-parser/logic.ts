@@ -403,6 +403,43 @@ export function parseCron(expression: string): ParsedCron {
   };
 }
 
+/**
+ * JST（Asia/Tokyo, UTC+9）の壁時計値を UTC ミリ秒から高速に取得するヘルパー群。
+ *
+ * なぜ Intl.DateTimeFormat を使わないか:
+ *   getNextExecutions は1分ごとにマッチングを繰り返す（最大 count*4*366*24*60 回）。
+ *   Intl.DateTimeFormat は初回呼び出しに相対的に重く、ループ内で毎回呼ぶと
+ *   パフォーマンスが問題になる可能性がある。
+ *   JST は UTC+9 の固定オフセット（サマータイムなし）なので、
+ *   UTC_ms + 9*3600*1000 を UTC getter で読む方が高速かつ正確。
+ *
+ * これが「真のJST固定化（B-472 内包）」の実体:
+ *   旧実装は current.getHours() 等のローカルTZ getter を使っていた。
+ *   TZ=JST の環境では偶然正しいが、TZ=UTC の環境では
+ *   UTC 09:00（=JST 18:00）にマッチし、表示すると「18時」となる虚偽表示を生む。
+ *   本実装は UTC_ms に+9h して getUTC* で読むことで
+ *   環境 TZ によらず常に JST 壁時計でマッチングする。
+ */
+const JST_OFFSET_MS = 9 * 60 * 60 * 1000; // 32400000
+
+function getJstField(utcMs: number): {
+  minute: number;
+  hour: number;
+  date: number;
+  month: number; // 1-12
+  day: number; // 0=Sunday
+} {
+  const jstMs = utcMs + JST_OFFSET_MS;
+  const d = new Date(jstMs);
+  return {
+    minute: d.getUTCMinutes(),
+    hour: d.getUTCHours(),
+    date: d.getUTCDate(),
+    month: d.getUTCMonth() + 1,
+    day: d.getUTCDay(),
+  };
+}
+
 export function getNextExecutions(
   expression: string,
   count: number,
@@ -412,31 +449,29 @@ export function getNextExecutions(
   if (!parsed.valid) return [];
 
   const results: Date[] = [];
-  const start = from ? new Date(from) : new Date();
-  // Move to next minute boundary
-  start.setSeconds(0, 0);
-  start.setMinutes(start.getMinutes() + 1);
 
-  const current = new Date(start);
+  // 開始時刻を「次の分の境界」に設定する（UTC基準で秒以下を切り捨て、1分進める）
+  const startMs = from
+    ? Math.floor(from.getTime() / 60000) * 60000 + 60000
+    : Math.floor(Date.now() / 60000) * 60000 + 60000;
+
   // Scale search window by count to handle yearly/leap-year cron expressions
   // Use 4-year base to cover leap year gaps (Feb 29 occurs every 4 years)
   const MAX_ITERATIONS = count * 4 * 366 * 24 * 60;
   let iterations = 0;
+  let currentMs = startMs;
 
   while (results.length < count && iterations < MAX_ITERATIONS) {
     iterations++;
 
-    const m = current.getMinutes();
-    const h = current.getHours();
-    const dom = current.getDate();
-    const mon = current.getMonth() + 1;
-    const dow = current.getDay(); // 0=Sunday
+    // JST壁時計値（UTC+9固定）でマッチングする（B-472 真のJST固定化）
+    const jst = getJstField(currentMs);
 
-    const minuteMatch = parsed.minute.values.includes(m);
-    const hourMatch = parsed.hour.values.includes(h);
-    const domMatch = parsed.dayOfMonth.values.includes(dom);
-    const monMatch = parsed.month.values.includes(mon);
-    const dowMatch = parsed.dayOfWeek.values.includes(dow);
+    const minuteMatch = parsed.minute.values.includes(jst.minute);
+    const hourMatch = parsed.hour.values.includes(jst.hour);
+    const domMatch = parsed.dayOfMonth.values.includes(jst.date);
+    const monMatch = parsed.month.values.includes(jst.month);
+    const dowMatch = parsed.dayOfWeek.values.includes(jst.day);
 
     // DOM/DOW OR logic: when both are restricted (non-"*"), use OR per Vixie cron spec
     const bothRestricted =
@@ -446,10 +481,10 @@ export function getNextExecutions(
       : domMatch && dowMatch;
 
     if (minuteMatch && hourMatch && dayMatch && monMatch) {
-      results.push(new Date(current));
+      results.push(new Date(currentMs));
     }
 
-    current.setMinutes(current.getMinutes() + 1);
+    currentMs += 60000; // 1分進める
   }
 
   return results;

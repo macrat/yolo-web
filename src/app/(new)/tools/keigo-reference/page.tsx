@@ -8,7 +8,7 @@ import {
 } from "@/lib/seo";
 import ToolPageLayout from "@/tools/_components/ToolPageLayout";
 import ToolErrorBoundary from "@/tools/_components/ErrorBoundary";
-import KeigoReferenceComponent from "@/tools/keigo-reference/Component";
+import KeigoReferencePageContent from "@/tools/keigo-reference/KeigoReferencePage";
 const SLUG = "keigo-reference";
 const tool = toolsBySlug.get(SLUG);
 
@@ -26,7 +26,7 @@ export default function KeigoReferencePage() {
         }}
       />
       <ToolErrorBoundary>
-        <KeigoReferenceComponent />
+        <KeigoReferencePageContent />
       </ToolErrorBoundary>
     </ToolPageLayout>
   );

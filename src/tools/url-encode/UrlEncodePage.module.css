@@ -1,0 +1,57 @@
+/* url-encode 単一実装スタイル
+ * DESIGN トークン準拠（--color-* 旧トークン不使用・bold禁止・
+ * --r-interactive / --r-normal 使用・--border-strong 使用）
+ */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* コントロール行: SegmentedControl + Select を横並びに */
+.controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* モード選択行 */
+.modeRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.modeLabel {
+  font-size: 0.85rem;
+  color: var(--fg-soft);
+  white-space: nowrap;
+}
+
+/* 入力/出力フィールド */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.fieldLabel {
+  font-size: 0.85rem;
+  color: var(--fg-soft);
+}
+
+/* 出力ヘッダー: ラベルとコピーボタンを横並び */
+.outputHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ライブリージョン（C-3 準拠: 実テキストノードのサマリ） */
+.statusSummary {
+  font-size: 0.8rem;
+  color: var(--fg-soft);
+  min-height: 1.2em;
+}

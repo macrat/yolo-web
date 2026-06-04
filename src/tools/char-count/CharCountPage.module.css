@@ -1,0 +1,65 @@
+/*
+ * CharCountPage — 単一実装のスタイル
+ * DESIGN.md §5: インタラクティブ要素には --r-interactive、非インタラクティブには --r-normal
+ * DESIGN.md §2: フォーカスは outline: 2px solid var(--accent); outline-offset: 2px;
+ * 禁止: --color-* 旧トークン / 太すぎる font-weight / --accent 直塗り（背景・文字色）/ box-shadow（ボタン以外）
+ */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.inputLabel {
+  font-size: 0.9rem;
+  color: var(--fg-soft);
+}
+
+/* 統計グリッド（文字数・行数・単語数等）*/
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 0.75rem;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--r-normal);
+  background-color: var(--bg-soft);
+}
+
+.statLabel {
+  font-size: 0.8rem;
+  color: var(--fg-soft);
+}
+
+.statValue {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--fg);
+  font-variant-numeric: tabular-nums;
+}
+
+/* スクリーンリーダー向けサマリテキスト（C-3 要件: 実テキストノード） */
+.srSummary {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 640px) {
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

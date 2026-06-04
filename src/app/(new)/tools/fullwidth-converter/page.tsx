@@ -8,13 +8,13 @@ import {
 } from "@/lib/seo";
 import ToolPageLayout from "@/tools/_components/ToolPageLayout";
 import ToolErrorBoundary from "@/tools/_components/ErrorBoundary";
-import FullwidthConverterComponent from "@/tools/fullwidth-converter/Component";
+import FullwidthConverterPage from "@/tools/fullwidth-converter/FullwidthConverterPage";
 const SLUG = "fullwidth-converter";
 const tool = toolsBySlug.get(SLUG);
 
 export const metadata: Metadata = tool ? generateToolMetadata(tool.meta) : {};
 
-export default function FullwidthConverterPage() {
+export default function FullwidthConverterPageRoute() {
   if (!tool) notFound();
 
   return (
@@ -26,7 +26,7 @@ export default function FullwidthConverterPage() {
         }}
       />
       <ToolErrorBoundary>
-        <FullwidthConverterComponent />
+        <FullwidthConverterPage />
       </ToolErrorBoundary>
     </ToolPageLayout>
   );
