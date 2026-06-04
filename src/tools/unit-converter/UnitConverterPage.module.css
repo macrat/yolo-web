@@ -1,0 +1,172 @@
+/* unit-converter 単一実装スタイル
+ * DESIGN.md 準拠:
+ * - インタラクティブ要素: --r-interactive (8px)
+ * - 非インタラクティブ要素: --r-normal (2px)
+ * - フォーカス: outline: 2px solid var(--accent); outline-offset: 2px;
+ * - 選択状態: --bg-invert / --fg-invert ペア（--accent 直塗り禁止）
+ * - font-weight: 700 禁止 → 使用しない
+ * - 通常要素への box-shadow 禁止
+ * - フォーム境界線: --border-strong
+ * - 旧 --color-* トークン不使用
+ */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* カテゴリ選択セクション */
+.categorySection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.sectionLabel {
+  font-size: 0.85rem;
+  color: var(--fg-soft);
+  margin: 0;
+}
+
+/* 変換パネル: 変換元・スワップ・変換先を横並び */
+.converterPanel {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* 変換元・変換先グループ */
+.unitGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+  min-width: 200px;
+}
+
+.groupLabel {
+  font-size: 0.85rem;
+  color: var(--fg-soft);
+  margin: 0;
+}
+
+/* 結果表示欄（readOnly の代わりに div で実装、aria-live で通知） */
+.resultDisplay {
+  display: flex;
+  align-items: center;
+  min-height: 44px; /* WCAG 2.5.5 推奨タッチターゲット高さ */
+  padding: 0.625rem 0.75rem;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-interactive);
+  background-color: var(--bg-soft);
+  font-size: 0.95rem;
+  font-family: var(--font-mono, monospace);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.resultValue {
+  color: var(--fg);
+}
+
+.resultPlaceholder {
+  color: var(--fg-softer);
+  opacity: 0.5;
+}
+
+/* スワップボタン */
+.swapButton {
+  padding: 0.625rem 0.875rem;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-interactive);
+  background-color: var(--bg-soft);
+  color: var(--fg);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.15s;
+  flex-shrink: 0;
+  min-height: 44px;
+  align-self: flex-end;
+}
+
+.swapButton:hover {
+  background-color: var(--bg-softer);
+}
+
+.swapButton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* 全単位変換結果エリア */
+.allResults {
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--r-normal);
+  background-color: var(--bg-soft);
+}
+
+.allResultsTitle {
+  font-size: 0.85rem;
+  color: var(--fg-soft);
+  margin: 0 0 0.75rem;
+}
+
+.resultGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.5rem;
+}
+
+.resultItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--r-normal);
+  background-color: var(--bg);
+}
+
+.resultItemValue {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.95rem;
+  color: var(--fg);
+}
+
+.resultItemUnit {
+  font-size: 0.75rem;
+  color: var(--fg-soft);
+}
+
+/* 空入力時の予告ヒント（opacity で控えめに表示） */
+.emptyHint {
+  font-size: 0.85rem;
+  color: var(--fg-softer);
+  margin: 0;
+  opacity: 0.6;
+  text-align: center;
+}
+
+/* レスポンシブ: 小画面での縦並び */
+@media (max-width: 640px) {
+  .converterPanel {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .swapButton {
+    align-self: center;
+  }
+
+  .unitGroup {
+    min-width: unset;
+  }
+
+  .resultGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

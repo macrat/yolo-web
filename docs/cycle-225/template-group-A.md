@@ -102,7 +102,7 @@ builder はこの手順書に加えて、以下3点を**着手前に必ず読む
 ### 2-3. アクセシビリティ（WCAG AA）
 
 - `SegmentedControl` を使う箇所には必ず `aria-label` または `aria-labelledby` を渡す
-- 出力結果欄に `role="status" aria-live="polite"` を付与する
+- 出力結果欄に `role="status" aria-live="polite"` を付与し、ライブリージョン内には**実テキストノードのサマリ**（例: 「整形しました」「3件マッチ」）を入れること。`readOnly` な `textarea` を `role="status"` でラップするだけでは不可（C-3 参照）
 - アイコンのみのボタンには `aria-label` を付与する
 - `SegmentedControl` の初期 `value` を必ず `options` 配列内のいずれかに設定する（N-A2）
 - キーボード操作（←→ で選択移動）が正常に動作することを確認する
@@ -253,16 +253,26 @@ builder はこの手順書に加えて、以下3点を**着手前に必ず読む
 
 reviewer はこれらの記述の実質性を確認し、定型文・コピー&ペーストと判断した場合は差し戻す。
 
-### 7-3. 自動チェックの実行
+### 7-3. 自己検証コマンドの実行（builder の義務）
+
+報告前に builder は以下の3コマンドを**必ず実行し**、各コマンドの実出力（要約でよい）を成果報告に添付すること。
 
 ```
-npm run lint
+# (a) lint がクリーンか
+npx eslint src/tools/<slug>
+
+# (b) prettier 整形済みか（--write で整形してから check が通ること）
+npx prettier --write src/tools/<slug>
 npm run format:check
-npm run test
-npm run build
+
+# (c) scoped テストがグリーンか
+npx vitest run src/tools/<slug>
 ```
 
-すべて通ることを確認する。FAIL があれば修正してから reviewer に提出する。
+- 型エラー（未使用 `@ts-expect-error` 等）も lint/型チェックで検出されるため見落とさないこと
+- **全体の `npm test`／`npm run build` は codegen レース回避のため PM が T-10 で独立実行する。builder は実行しない**（lint / format:check / scoped test までが builder の責務）
+
+FAIL があれば修正してから reviewer に提出する。
 
 ### 7-4. 成果物の提出
 
@@ -271,7 +281,7 @@ npm run build
 1. 変更ファイル一覧（追加・変更・削除したファイル）
 2. 収束チェックリスト申告（A〜E 群の各項目、F-1・F-2 の実質記述）
 3. 個別論点の解消状況（工程5で解消した論点と対応するコードの説明）
-4. 自動チェック（lint / format / test / build）の PASS 確認
+4. **自己検証コマンドの実出力（lint / format:check / scoped test の要約）**
 
 ---
 
@@ -288,6 +298,7 @@ builder は以下を行ってはならない。
 | `src/app/sitemap.ts`・`src/app/globals.css`・`/DESIGN.md` の編集      | 共有ファイル                                                                                          |
 | 他スラッグのディレクトリの編集                                        | AP-WF13（builder のスコープ越境抑止）                                                                 |
 | 他ツールの実装を参照・流用                                            | cycle-220 破綻根因（独立評価の省略）の再発防止                                                        |
+| 自ツールディレクトリ外（特にリポジトリ直下）への作業用ファイル残置    | 一時ファイルが必要なら `tmp/` 以下に置き、報告前に不要物を削除すること                                |
 
 詳細は `docs/cycle-225/parallel-conflict-policy.md` を参照。
 

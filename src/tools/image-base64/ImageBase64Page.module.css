@@ -1,0 +1,102 @@
+/* ImageBase64Page — 画像Base64変換ツールのスタイル
+ * DESIGN.md 準拠:
+ *   §2: フォーカスは outline: 2px solid var(--accent); outline-offset: 2px;
+ *   §3: 行間は原則 1.7 / font-weight は 400 or 500 のみ（700 禁止）
+ *   §4: 通常要素に box-shadow 追加禁止
+ *   §5: インタラクティブ要素 border-radius: var(--r-interactive)
+ *       非インタラクティブ要素 border-radius: var(--r-normal)
+ * WCAG AA:
+ *   タッチターゲット min-height: 44px (Button コンポーネントで保証)
+ *   エンコード結果: 独立した role="status" aria-live="polite" div に実テキストサマリ配置（C-3）
+ */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* エンコード / デコード パネル */
+.encodePanel,
+.decodePanel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* 結果エリア */
+.resultArea {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* 画像プレビュー
+ * border-radius は var(--r-normal)（非インタラクティブ要素）
+ * box-shadow は使わない（DESIGN.md §4） */
+.preview {
+  max-width: 100%;
+  max-height: 300px;
+  object-fit: contain;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-normal);
+  background-color: var(--bg-soft);
+  align-self: flex-start;
+}
+
+/* ファイル情報（MIMEタイプ・サイズ）*/
+.fileInfo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-size: 0.8rem;
+  color: var(--fg-soft);
+  line-height: 1.7;
+}
+
+/* 出力グループ（ラベル + コピーボタン + テキストエリア） */
+.outputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+/* 出力グループヘッダー（ラベル + コピーボタン） */
+.outputHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* 出力ラベル */
+.outputLabel {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--fg-soft);
+  line-height: 1.7;
+}
+
+/* プレビューボタン行（デコードモード） */
+.previewButtonRow {
+  display: flex;
+}
+
+@media (max-width: 640px) {
+  .fileInfo {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+}
+
+/* C-3: スクリーンリーダー専用サマリ領域。視覚的には非表示だが SR には読み上げられる。 */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

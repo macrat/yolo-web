@@ -8,13 +8,13 @@ import {
 } from "@/lib/seo";
 import ToolPageLayout from "@/tools/_components/ToolPageLayout";
 import ToolErrorBoundary from "@/tools/_components/ErrorBoundary";
-import RegexTesterComponent from "@/tools/regex-tester/Component";
+import RegexTesterPageContent from "@/tools/regex-tester/RegexTesterPage";
 const SLUG = "regex-tester";
 const tool = toolsBySlug.get(SLUG);
 
 export const metadata: Metadata = tool ? generateToolMetadata(tool.meta) : {};
 
-export default function RegexTesterPage() {
+export default function RegexTesterRoute() {
   if (!tool) notFound();
 
   return (
@@ -26,7 +26,7 @@ export default function RegexTesterPage() {
         }}
       />
       <ToolErrorBoundary>
-        <RegexTesterComponent />
+        <RegexTesterPageContent />
       </ToolErrorBoundary>
     </ToolPageLayout>
   );

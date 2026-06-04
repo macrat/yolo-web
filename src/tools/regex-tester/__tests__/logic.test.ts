@@ -41,6 +41,24 @@ describe("testRegex", () => {
     expect(result.error).toBeDefined();
   });
 
+  test("エラーメッセージが日本語で、英語の例外原文を含まない", () => {
+    // 構文エラーのケース
+    const result1 = testRegex("[unclosed", "g", "test");
+    expect(result1.success).toBe(false);
+    expect(result1.error).toBeDefined();
+    expect(result1.error).not.toMatch(/Invalid regular expression/);
+    expect(result1.error).not.toMatch(/Invalid regex pattern/);
+    expect(result1.error).toMatch(/正規表現/);
+
+    // 無効なフラグのケース
+    const result2 = testRegex("abc", "z", "test");
+    expect(result2.success).toBe(false);
+    expect(result2.error).toBeDefined();
+    expect(result2.error).not.toMatch(/Invalid flags/);
+    expect(result2.error).not.toMatch(/Invalid regex pattern/);
+    expect(result2.error).toMatch(/正規表現/);
+  });
+
   test("rejects input longer than 10000 chars", () => {
     const longString = "a".repeat(10001);
     const result = testRegex("a", "g", longString);
@@ -85,5 +103,14 @@ describe("replaceWithRegex", () => {
     const result = replaceWithRegex("[invalid", "g", "test", "x");
     expect(result.success).toBe(false);
     expect(result.error).toBeDefined();
+  });
+
+  test("エラーメッセージが日本語で、英語の例外原文を含まない", () => {
+    const result = replaceWithRegex("[unclosed", "g", "test", "x");
+    expect(result.success).toBe(false);
+    expect(result.error).toBeDefined();
+    expect(result.error).not.toMatch(/Invalid regular expression/);
+    expect(result.error).not.toMatch(/Invalid regex pattern/);
+    expect(result.error).toMatch(/正規表現/);
   });
 });

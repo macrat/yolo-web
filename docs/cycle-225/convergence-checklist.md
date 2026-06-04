@@ -34,7 +34,7 @@
 - [ ] A-1: このツールで**テキスト入力欄**が必要な箇所に `Textarea`（`@/components/Textarea`）を使っているか。
 - [ ] A-2: このツールで**セレクトボックス**が必要な箇所に `Select`（`@/components/Select`）を使っているか。
 - [ ] A-3: このツールで**モード切替・選択**が必要な箇所に `SegmentedControl`（`@/components/SegmentedControl`）を使っているか。旧 `role="group"` + `aria-pressed` パターンが残っていないか。
-- [ ] A-4: このツールで**エラー表示**が必要な箇所に `ErrorMessage`（`@/components/ErrorMessage`）を使っているか。英語の生エラー文字列を直接 `<p>` 等で露出していないか。
+- [ ] A-4: このツールで**エラー表示**が必要な箇所に `ErrorMessage`（`@/components/ErrorMessage`）を使っているか。英語の生エラー文字列を直接 `<p>` 等で露出していないか。**`ErrorMessage` に渡す `message` は必ず日本語であること**。`JSON.parse`・`RegExp`・各種 API が返す英語の例外メッセージをそのまま渡さず、日本語メッセージに変換してから渡すこと（`ErrorMessage` の既定フォールバックは `message` 未指定時のみ適用されるため、`message` を渡す場合は必ず日本語化する）。
 - [ ] A-5: このツールで**ファイルのドロップ・選択**が必要な箇所（image 系など）に `FileDropZone`（`@/components/FileDropZone`）を使っているか。
 - [ ] A-6: このツールで**クリップボードコピー**が必要な場合、`useCopyToClipboard` フック（`@/components/hooks/useCopyToClipboard`）を使い、コピー成功時の表示文言に `COPIED_LABEL`（同モジュールからエクスポート）を使っているか。
 - [ ] A-7: このツールで**日付入力**が必要な箇所に `Input`（`@/components/Input`、`type="date"`）を使っているか。
@@ -59,7 +59,7 @@
 
 - [ ] C-1: 操作要素のタッチターゲット高さが**共通部品の規定サイズをそのまま維持しているか**（Button/Input/Select は min-height:44px・WCAG 2.5.5 AAA 推奨値、SegmentedControl は min-height:36px・B-489 出荷済み規定値）。共通部品を使っていれば個別確認は不要。やむを得ず操作要素を新規自作する場合も**共通部品の出荷済み最小値（現状 36px）を下回らない**こととし、WCAG 根拠は AA=2.5.8（最小24px）／AAA=2.5.5（44px 推奨）のみを引く。SegmentedControl の 36px は規定値であり builder が「不合格」と判定すべき対象ではない。
 - [ ] C-2: `SegmentedControl` を使う箇所で `aria-label` または `aria-labelledby` を渡しているか（どちらか一方が必須）。
-- [ ] C-3: 出力結果を表示する欄に `role="status" aria-live="polite"` が付与されているか（スクリーンリーダーへの動的通知）。
+- [ ] C-3: 出力結果を表示する欄に `role="status" aria-live="polite"` が付与されているか（スクリーンリーダーへの動的通知）。**ライブリージョンには実テキストノードのサマリ**（例: 「整形しました」「3件マッチ」「正しいJSONです」）を入れること。`readOnly` な `<textarea>` 等のフォーム要素を `role="status"` でラップするだけでは、フォーム値の変化はスクリーンリーダーに読み上げられないため不可。出力が `textarea` の場合は、別途短いサマリのテキストノードをライブリージョンに置くか（`<div role="status" aria-live="polite">{summaryText}</div>`）、`textarea` をライブリージョンの外に出してサマリで通知する設計にすること。正しい実装例: regex-tester（マッチ件数サマリを `div[role=status]` に実テキストで配置）・unit-converter（`span`/`h2` を `role="status"` 内に配置し `aria-atomic` 併用）。
 - [ ] C-4: アイコンのみのボタン（ラベルテキストのないボタン）に `aria-label` を付与しているか。
 - [ ] C-5: `SegmentedControl` の初期 `value` が必ず `options` 配列内のいずれかの値になっているか（N-A2: `value` が `options` に存在しない場合、どの項目も選択されていない状態が生まれる）。
 - [ ] C-6: 実際の組み込み文脈（ページとして開いた状態）で WCAG AA のコントラスト比を確認したか（N-C1: 孤立したコンポーネント単体で OK でも、背景との組み合わせで不合格になることがある）。
@@ -87,7 +87,7 @@
 - [ ] E-2: **入力→結果更新**：入力値が変化したとき結果が正しく更新されることを確認するテスト。
 - [ ] E-3: **空入力**：入力が空のとき（または未入力初期状態）の挙動（エラー非表示・空結果・opacity:0 の予告ヒント等）を確認するテスト。
 - [ ] E-4: **変換ロジックの正確性**：代表的な入力値で期待する出力が得られることを確認するテスト（logic.ts のテストと重複不可避でも UI 経由で確認する）。
-- [ ] E-5: **ARIA**：`role`・`aria-*` 属性が正しく付与されていることを確認するテスト（特に `SegmentedControl` の `role="radiogroup"` / `aria-label`・出力欄の `role="status"` / `aria-live="polite"`）。
+- [ ] E-5: **ARIA**：`role`・`aria-*` 属性が正しく付与されていることを確認するテスト（特に `SegmentedControl` の `role="radiogroup"` / `aria-label`・出力欄の `role="status"` / `aria-live="polite"`）。出力が `textarea` の場合は、サマリテキストを持つ別の `role="status"` 要素も存在することを確認すること（C-3 の実テキストノード要件と対応）。
 - [ ] E-6: **コピー文言変化**：コピーボタンがある場合、コピー前と `COPIED_LABEL` 表示中で文言が切り替わることを確認するテスト。
 - [ ] E-7: **コピー disabled 状態**：結果が空のとき（または無効状態のとき）コピーボタンが disabled になることを確認するテスト（該当ツールにコピーボタンがある場合）。
 - [ ] E-8: **clipboard 不在時の silent fail**：`navigator.clipboard` が存在しない環境でコピーが失敗しても例外を投げないことを確認するテスト（`useCopyToClipboard` フックが内包する挙動だが UI 経由で確認）。

@@ -76,7 +76,8 @@ function testRegex(pattern, flags, testString) {
     return {
       success: false,
       matches: [],
-      error: e instanceof Error ? e.message : 'Invalid regex pattern'
+      // A-4: 英語の例外メッセージをそのまま渡さず日本語に変換する
+      error: '正規表現の構文が正しくありません'
     };
   }
 }
@@ -100,7 +101,8 @@ function replaceWithRegex(pattern, flags, testString, replacement) {
     return {
       success: false,
       output: '',
-      error: e instanceof Error ? e.message : 'Invalid regex pattern'
+      // A-4: 英語の例外メッセージをそのまま渡さず日本語に変換する
+      error: '正規表現の構文が正しくありません'
     };
   }
 }

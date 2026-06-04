@@ -6,20 +6,20 @@ import {
   generateToolJsonLd,
   safeJsonLdStringify,
 } from "@/lib/seo";
-import ToolLayout from "@/tools/_components/ToolLayout";
+import ToolPageLayout from "@/tools/_components/ToolPageLayout";
 import ToolErrorBoundary from "@/tools/_components/ErrorBoundary";
-import JsonFormatterComponent from "@/tools/json-formatter/Component";
+import JsonFormatterPage from "@/tools/json-formatter/JsonFormatterPage";
 
 const SLUG = "json-formatter";
 const tool = toolsBySlug.get(SLUG);
 
 export const metadata: Metadata = tool ? generateToolMetadata(tool.meta) : {};
 
-export default function JsonFormatterPage() {
+export default function Page() {
   if (!tool) notFound();
 
   return (
-    <ToolLayout meta={tool.meta}>
+    <ToolPageLayout meta={tool.meta}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -27,8 +27,8 @@ export default function JsonFormatterPage() {
         }}
       />
       <ToolErrorBoundary>
-        <JsonFormatterComponent />
+        <JsonFormatterPage />
       </ToolErrorBoundary>
-    </ToolLayout>
+    </ToolPageLayout>
   );
 }

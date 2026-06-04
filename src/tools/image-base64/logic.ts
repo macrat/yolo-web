@@ -12,7 +12,7 @@ export interface ParsedImage {
   base64: string;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- kept for future Component use
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- 将来の拡張（MIME タイプ検証強化）用に保持
 const SUPPORTED_MIME_TYPES = [
   "image/png",
   "image/jpeg",
