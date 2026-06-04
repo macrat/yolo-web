@@ -1,0 +1,125 @@
+/* DateCalculatorPage スタイル
+ * DESIGN.md トークン準拠: --border-strong, --r-interactive, --r-normal, --bg-soft
+ * --color-* 旧トークン不使用 / font-weight 700 不使用 / --accent 直塗り不使用
+ */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-normal);
+}
+
+.sectionTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--fg);
+  margin: 0;
+}
+
+.subSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.subLabel {
+  font-size: 0.9rem;
+  color: var(--fg-soft);
+  margin: 0;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.separator {
+  font-size: 0.875rem;
+  color: var(--fg-soft);
+  white-space: nowrap;
+}
+
+.unit {
+  font-size: 0.875rem;
+  color: var(--fg-soft);
+  white-space: nowrap;
+}
+
+.numberInput {
+  width: 100px;
+}
+
+.shortNumberInput {
+  width: 72px;
+}
+
+.warekiInputs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/* 結果テーブル */
+.resultTable {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.resultRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  background-color: var(--bg-soft);
+  border-radius: var(--r-normal);
+  flex-wrap: wrap;
+}
+
+.resultLabel {
+  font-size: 0.85rem;
+  color: var(--fg-soft);
+  min-width: 80px;
+  flex-shrink: 0;
+}
+
+.resultValue {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  color: var(--fg);
+}
+
+/* スクリーンリーダー専用（視覚的に非表示だがアクセシブルに存在する） */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 640px) {
+  .numberInput {
+    width: 80px;
+  }
+
+  .shortNumberInput {
+    width: 60px;
+  }
+}
