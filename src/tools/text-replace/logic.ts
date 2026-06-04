@@ -98,7 +98,10 @@ export function replaceText(
       success: false,
       output: "",
       count: 0,
-      error: e instanceof Error ? e.message : "Replace failed",
+      error:
+        e instanceof Error
+          ? e.message
+          : "置換処理に失敗しました。入力内容を確認してください。",
     };
   }
 }

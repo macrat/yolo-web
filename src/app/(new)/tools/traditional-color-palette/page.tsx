@@ -8,13 +8,13 @@ import {
 } from "@/lib/seo";
 import ToolPageLayout from "@/tools/_components/ToolPageLayout";
 import ToolErrorBoundary from "@/tools/_components/ErrorBoundary";
-import TraditionalColorPaletteComponent from "@/tools/traditional-color-palette/Component";
+import TraditionalColorPaletteBody from "@/tools/traditional-color-palette/TraditionalColorPalettePage";
 const SLUG = "traditional-color-palette";
 const tool = toolsBySlug.get(SLUG);
 
 export const metadata: Metadata = tool ? generateToolMetadata(tool.meta) : {};
 
-export default function TraditionalColorPalettePage() {
+export default function TraditionalColorPalettePageRoute() {
   if (!tool) notFound();
 
   return (
@@ -26,7 +26,7 @@ export default function TraditionalColorPalettePage() {
         }}
       />
       <ToolErrorBoundary>
-        <TraditionalColorPaletteComponent />
+        <TraditionalColorPaletteBody />
       </ToolErrorBoundary>
     </ToolPageLayout>
   );

@@ -1,0 +1,104 @@
+/* TextDiffPage — text-diff 単一実装スタイル
+ * DESIGN.md §§2,3,4,5 準拠。
+ * フォーカス可視・旧トークン不使用・accent 直塗り禁止・bold 禁止。
+ */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* 比較モードコントロール行 */
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.controlLabel {
+  font-size: 0.9rem;
+  color: var(--fg);
+}
+
+/* 2つの入力パネルを横並びで配置 */
+.panels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.panelLabel {
+  font-size: 0.85rem;
+  color: var(--fg-soft);
+}
+
+/* サマリ status 欄（C-3: 実テキストノードのサマリ・短文 1 行）
+ * aria-live="polite" に対応する可視要素（SR が読み上げる実テキストを含む） */
+.summary {
+  font-size: 0.85rem;
+  color: var(--fg-soft);
+  min-height: 1.25rem; /* ちらつき防止 */
+}
+
+/* 差分結果エリア */
+.result {
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-normal);
+  padding: 1rem;
+}
+
+.resultHeading {
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+  color: var(--fg);
+}
+
+/* 差分なしメッセージ */
+.noDiff {
+  color: var(--success);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+/* 差分出力 pre */
+.diffOutput {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-all;
+  overflow-x: auto;
+  margin: 0;
+}
+
+/* 追加部分: 背景色 + 下線 + 色（D4採択: 色覚多様性対応） */
+.added {
+  background-color: var(--success-soft);
+  color: var(--success-strong);
+  text-decoration: underline;
+}
+
+/* 削除部分: 背景色 + 取り消し線 + 色（D4採択: 色覚多様性対応） */
+.removed {
+  background-color: var(--danger-soft);
+  color: var(--danger-strong);
+  text-decoration: line-through;
+}
+
+.unchanged {
+  color: var(--fg);
+}
+
+/* モバイル対応: 縦並びに切り替え */
+@media (max-width: 768px) {
+  .panels {
+    grid-template-columns: 1fr;
+  }
+}

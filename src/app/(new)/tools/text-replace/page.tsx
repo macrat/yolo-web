@@ -8,13 +8,13 @@ import {
 } from "@/lib/seo";
 import ToolPageLayout from "@/tools/_components/ToolPageLayout";
 import ToolErrorBoundary from "@/tools/_components/ErrorBoundary";
-import TextReplaceComponent from "@/tools/text-replace/Component";
+import TextReplacePage from "@/tools/text-replace/TextReplacePage";
 const SLUG = "text-replace";
 const tool = toolsBySlug.get(SLUG);
 
 export const metadata: Metadata = tool ? generateToolMetadata(tool.meta) : {};
 
-export default function TextReplacePage() {
+export default function TextReplacePageRoute() {
   if (!tool) notFound();
 
   return (
@@ -26,7 +26,7 @@ export default function TextReplacePage() {
         }}
       />
       <ToolErrorBoundary>
-        <TextReplaceComponent />
+        <TextReplacePage />
       </ToolErrorBoundary>
     </ToolPageLayout>
   );

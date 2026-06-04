@@ -6,6 +6,10 @@ export interface DiffPart {
   value: string;
   added: boolean;
   removed: boolean;
+  /** diff ライブラリが返す要素数（単語数・文字数・行数）。
+   *  word/char モードでの正確なカウント計算に使用（①-2 件数・ラベル一致）。
+   *  undefined の場合は value から計算する。 */
+  count?: number;
 }
 
 export function computeDiff(
@@ -30,6 +34,8 @@ export function computeDiff(
     value: change.value,
     added: change.added ?? false,
     removed: change.removed ?? false,
+    // diff ライブラリの count を保持する（word/char モードの正確なカウントに使用）
+    count: change.count,
   }));
 }
 

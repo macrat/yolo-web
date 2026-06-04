@@ -1,0 +1,78 @@
+/* HashGenerator ページ本体スタイル
+ * DESIGN.md トークン準拠: bg-invert/fg-invert, border-strong, r-interactive, r-normal
+ * font-weight 700 禁止 / 旧トークン禁止
+ */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.label {
+  font-size: 0.9rem;
+  color: var(--fg);
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.formatControl {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.controlLabel {
+  font-size: 0.9rem;
+  color: var(--fg);
+}
+
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.resultRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-normal);
+  background-color: var(--bg-soft);
+}
+
+.algoLabel {
+  font-size: 0.85rem;
+  color: var(--accent);
+  min-width: 70px;
+  flex-shrink: 0;
+}
+
+.hashValue {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--fg);
+  word-break: break-all;
+  flex: 1;
+}
+
+@media (max-width: 640px) {
+  .resultRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+  }
+}

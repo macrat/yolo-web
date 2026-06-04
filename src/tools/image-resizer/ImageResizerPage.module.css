@@ -1,0 +1,262 @@
+/* ImageResizerPage — ページ本体のスタイル
+ * DESIGN.md 準拠:
+ * - 旧トークン (--color-*) 使用禁止
+ * - --accent は直塗り禁止（選択状態は --bg-invert / --fg-invert ペア）
+ * - bold (太字数値) 禁止
+ * - インタラクティブ要素: border-radius: var(--r-interactive)
+ * - 非インタラクティブ要素: border-radius: var(--r-normal)
+ * - フォーカス: outline: 2px solid var(--accent); outline-offset: 2px
+ * - フォーム要素境界線: --border-strong
+ */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ===== セクション ===== */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--r-normal);
+}
+
+.sectionTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--fg);
+  margin: 0;
+}
+
+/* ===== 元画像情報 ===== */
+.imagePreview {
+  max-width: 100%;
+  max-height: 300px;
+  object-fit: contain;
+  border: 1px solid var(--border);
+  border-radius: var(--r-normal);
+  background-color: var(--bg-soft);
+  align-self: flex-start;
+}
+
+.infoGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--fg-soft);
+}
+
+.gifWarningBox {
+  padding: 0.75rem;
+  border: 1px solid var(--warning);
+  border-radius: var(--r-normal);
+  background-color: var(--warning-soft);
+  color: var(--warning-strong);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+/* ===== コントロール行 ===== */
+.row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--fg-soft);
+  white-space: nowrap;
+}
+
+/* 数値入力欄の幅制限ラッパー（Input 共通部品は width:100% のため外枠で制限） */
+.numberInputWrapper {
+  width: 110px;
+  flex-shrink: 0;
+}
+
+.rangeInput {
+  width: 100%;
+  max-width: 200px;
+  accent-color: var(--accent);
+}
+
+/* ===== アスペクト比ロックボタン ===== */
+.lockButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  min-height: 40px;
+  padding: 0;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-interactive);
+  background-color: var(--bg);
+  color: var(--fg);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: border-color 0.15s;
+  flex-shrink: 0;
+}
+
+.lockButton:hover {
+  border-color: var(--accent);
+}
+
+.lockButton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ロック中: --bg-invert / --fg-invert ペアで塗る（--accent 直塗り禁止） */
+.lockButtonActive {
+  border-color: var(--bg-invert);
+  background-color: var(--bg-invert);
+  color: var(--fg-invert);
+}
+
+/* ===== リサイズボタン ===== */
+.resizeButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  padding: 0.5rem 1.25rem;
+  border: 1px solid var(--bg-invert);
+  border-radius: var(--r-interactive);
+  background-color: var(--bg-invert);
+  color: var(--fg-invert);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s;
+  min-height: 44px;
+}
+
+.resizeButton:hover {
+  background-color: var(--bg-invert-soft);
+  border-color: var(--bg-invert-soft);
+}
+
+.resizeButton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.resizeButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ===== 結果セクション ===== */
+.resultTable {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.resultRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  background-color: var(--bg-soft);
+  border-radius: var(--r-normal);
+  flex-wrap: wrap;
+}
+
+.resultLabel {
+  font-weight: 500;
+  font-size: 0.85rem;
+  color: var(--fg-soft);
+  min-width: 140px;
+}
+
+.resultValue {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--fg);
+}
+
+/* ===== ダウンロードボタン ===== */
+.downloadButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  padding: 0.5rem 1.25rem;
+  border: 1px solid var(--bg-invert);
+  border-radius: var(--r-interactive);
+  background-color: var(--bg-invert);
+  color: var(--fg-invert);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s;
+  min-height: 44px;
+}
+
+.downloadButton:hover {
+  background-color: var(--bg-invert-soft);
+  border-color: var(--bg-invert-soft);
+}
+
+.downloadButton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ===== ライブリージョン（サマリ） ===== */
+.liveRegion {
+  font-size: 0.875rem;
+  color: var(--fg-soft);
+  padding: 0.5rem 0;
+}
+
+/* ===== プライバシーノート ===== */
+.privacy {
+  font-size: 0.8rem;
+  font-style: italic;
+  color: var(--fg-soft);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ===== セグメントコントロールラッパー ===== */
+.modeRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.modeLabel {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--fg-soft);
+  white-space: nowrap;
+}
+
+/* ===== レスポンシブ ===== */
+@media (max-width: 640px) {
+  .numberInputWrapper {
+    width: 90px;
+  }
+
+  .infoGrid {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .resultLabel {
+    min-width: 120px;
+  }
+}

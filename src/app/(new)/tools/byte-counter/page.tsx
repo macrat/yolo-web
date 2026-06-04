@@ -8,7 +8,7 @@ import {
 } from "@/lib/seo";
 import ToolPageLayout from "@/tools/_components/ToolPageLayout";
 import ToolErrorBoundary from "@/tools/_components/ErrorBoundary";
-import ByteCounterComponent from "@/tools/byte-counter/Component";
+import ByteCounterTool from "@/tools/byte-counter/ByteCounterPage";
 const SLUG = "byte-counter";
 const tool = toolsBySlug.get(SLUG);
 
@@ -26,7 +26,7 @@ export default function ByteCounterPage() {
         }}
       />
       <ToolErrorBoundary>
-        <ByteCounterComponent />
+        <ByteCounterTool />
       </ToolErrorBoundary>
     </ToolPageLayout>
   );

@@ -8,7 +8,7 @@ import {
 } from "@/lib/seo";
 import ToolPageLayout from "@/tools/_components/ToolPageLayout";
 import ToolErrorBoundary from "@/tools/_components/ErrorBoundary";
-import CronParserComponent from "@/tools/cron-parser/Component";
+import CronParserPageContent from "@/tools/cron-parser/CronParserPage";
 const SLUG = "cron-parser";
 const tool = toolsBySlug.get(SLUG);
 
@@ -26,7 +26,7 @@ export default function CronParserPage() {
         }}
       />
       <ToolErrorBoundary>
-        <CronParserComponent />
+        <CronParserPageContent />
       </ToolErrorBoundary>
     </ToolPageLayout>
   );

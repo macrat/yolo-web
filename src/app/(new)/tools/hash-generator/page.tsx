@@ -8,7 +8,7 @@ import {
 } from "@/lib/seo";
 import ToolPageLayout from "@/tools/_components/ToolPageLayout";
 import ToolErrorBoundary from "@/tools/_components/ErrorBoundary";
-import HashGeneratorComponent from "@/tools/hash-generator/Component";
+import HashGeneratorComponent from "@/tools/hash-generator/HashGeneratorPage";
 const SLUG = "hash-generator";
 const tool = toolsBySlug.get(SLUG);
 

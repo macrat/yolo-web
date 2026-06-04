@@ -1,0 +1,71 @@
+/* TextReplacePage — テキスト置換ツール ページ本体スタイル
+ * DESIGN トークン準拠。旧 --color-* トークン不使用。
+ * bold 不使用（DESIGN.md §3: font-weight は 400/600 のみ）
+ * --accent 直塗り不使用（ON 状態は --bg-invert / --fg-invert ペア使用）
+ */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--fg-soft);
+}
+
+/* 検索文字列と置換文字列を横並び（B-7: --border-strong は Input 内で適用済み） */
+.searchRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 640px) {
+  .searchRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* オプション（ToggleSwitch）の横並び */
+.optionsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+}
+
+/* 正規表現モード時の注意文 */
+.warning {
+  padding: 0.75rem;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-normal);
+  background-color: var(--bg-soft);
+  color: var(--fg-soft);
+  font-size: 0.875rem;
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* 出力欄のヘッダー（ラベル + コピーボタン） */
+.outputHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* C-3 ライブリージョン: サマリテキストを保持するが視覚的に小さく表示 */
+.statusRegion {
+  font-size: 0.875rem;
+  color: var(--fg-soft);
+  min-height: 1.4em;
+  line-height: 1.4;
+}
