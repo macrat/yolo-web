@@ -213,14 +213,6 @@ describe("ToolPageLayout", () => {
     const allElements = container.querySelectorAll(
       "nav[aria-label='パンくずリスト'], h1, [data-testid='tool-body'], [data-section='howItWorks']",
     );
-    const tags = Array.from(allElements).map(
-      (el) =>
-        el.tagName.toLowerCase() +
-        (el.getAttribute("data-testid") ??
-          el.getAttribute("data-section") ??
-          el.getAttribute("aria-label") ??
-          ""),
-    );
 
     // パンくず → h1 → ツール本体 → howItWorks の順
     const breadcrumbIdx = Array.from(allElements).findIndex(

@@ -9,8 +9,6 @@ import {
 import ToolPageLayout from "@/tools/_components/ToolPageLayout";
 import ToolErrorBoundary from "@/tools/_components/ErrorBoundary";
 import LineBreakRemoverComponent from "@/tools/line-break-remover/Component";
-import styles from "./page.module.css";
-
 const SLUG = "line-break-remover";
 const tool = toolsBySlug.get(SLUG);
 
@@ -20,20 +18,16 @@ export default function LineBreakRemoverPage() {
   if (!tool) notFound();
 
   return (
-    /* (new) globals.css に --max-width 未定義のため、ToolLayout の max-width: var(--max-width) は
-     * none に解決される。外側コンテナで 1200px を直接指定することで幅を制約する。 */
-    <div className={styles.page}>
-      <ToolPageLayout meta={tool.meta}>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: safeJsonLdStringify(generateToolJsonLd(tool.meta)),
-          }}
-        />
-        <ToolErrorBoundary>
-          <LineBreakRemoverComponent />
-        </ToolErrorBoundary>
-      </ToolPageLayout>
-    </div>
+    <ToolPageLayout meta={tool.meta}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: safeJsonLdStringify(generateToolJsonLd(tool.meta)),
+        }}
+      />
+      <ToolErrorBoundary>
+        <LineBreakRemoverComponent />
+      </ToolErrorBoundary>
+    </ToolPageLayout>
   );
 }
