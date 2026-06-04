@@ -78,11 +78,12 @@ export function testRegex(
     }
 
     return { success: true, matches };
-  } catch (e) {
+  } catch {
     return {
       success: false,
       matches: [],
-      error: e instanceof Error ? e.message : "Invalid regex pattern",
+      // A-4: 英語の例外メッセージをそのまま渡さず日本語に変換する
+      error: "正規表現の構文が正しくありません",
     };
   }
 }
@@ -109,11 +110,12 @@ export function replaceWithRegex(
     const regex = new RegExp(pattern, flags);
     const output = testString.replace(regex, replacement);
     return { success: true, output };
-  } catch (e) {
+  } catch {
     return {
       success: false,
       output: "",
-      error: e instanceof Error ? e.message : "Invalid regex pattern",
+      // A-4: 英語の例外メッセージをそのまま渡さず日本語に変換する
+      error: "正規表現の構文が正しくありません",
     };
   }
 }
