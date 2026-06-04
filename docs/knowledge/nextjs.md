@@ -154,3 +154,32 @@ next-themes を `attribute="class"` + `enableSystem` で使うサイト（`<html
 **失敗検知の二重化**: `waitForFunction` がタイムアウトした場合は、ファイル名を `_dark-FAILED` にして保存し、かつ `process.exit(1)` で非ゼロ終了する。これにより「ログを見落とした silent-light」を構造的に防げる。
 
 出典: cycle-216 B-463（T-2 レビュー派生 / NIT-1・NIT-2）
+
+---
+
+## 11. `"use client"` から server 専用部品（推移的に node:fs を掴むもの）を import するとビルドが壊れる
+
+`"use client"` なコンポーネントが、サーバー専用処理（`fs`・DB・Node 組み込み）を **推移的に** 掴むモジュールを import すると、Turbopack がそれをクライアントバンドルのモジュールグラフに含めようとして失敗する。エラーは `the chunking context (unknown) does not support external modules (request: node:fs)`。
+
+非自明な肝は **トップレベル副作用** にある。import 先のユーティリティがモジュールのトップレベルで `fs` 読み込み等を実行していると、その関数を一度も呼ばなくても（コンポーネントを描画するだけ・値として import するだけで）`fs` 依存が確定してグラフに載る。型のみの `import type` はトランスパイル時に消去されるので載らない（「関数を呼ぶつもりがない値 import」と「型としてしか使わない import」は別物で、前者は載り後者は載らない）。セクション2（巨大データの静的インポート）はバンドル「サイズ」の問題だが、本項は client バンドルが Node 組み込みを解決できずビルド「可否」として落ちる点が異なる。
+
+**実例（cycle-224）**: `"use client"` の storybook（`StorybookContent.tsx`）が `RelatedBlogPosts` を import → `@/lib/cross-links`（トップレベルで `getAllBlogPosts()` を実行）→ `@/blog/_lib/blog`（`node:fs` でマークダウンを読む）。
+
+**対処**: サーバー専用部品は Server Component（親）で描画し、Client Component には `ReactNode`（children/props）として注入する（Next.js 公式 "Interleaving Server and Client Components"）。注入された ReactNode は親（server）側で評価されるので client バンドルに載らない。
+
+```tsx
+// page.tsx (Server Component)
+export default function Page() {
+  return <ClientShell serverSlot={<ServerOnlyComponent />} />;
+}
+// ClientShell.tsx ("use client") — ServerOnlyComponent を import せず prop で受ける
+function ClientShell({ serverSlot }: { serverSlot: React.ReactNode }) {
+  return <div>{serverSlot}</div>;
+}
+```
+
+**予防**: サーバー専用モジュールの先頭に `import "server-only"` を置くと、client から（間接的にでも）import された瞬間に明確なビルドエラーで弾ける。難解な `node:fs` エラーより早く・正確に検出できる。
+
+**検証タイミングの教訓**: この種のバグは型チェック・単体テストでは表面化せず `next build` で初めて落ちる。storybook 等の開発者向けページ（noindex）でも client/server 境界は本番ビルドに効く。ページやコンポーネントを追加したら、早い段階で `npm run build` を一度通して潜在バグを最短で顕在化させること（cycle-224 では build 確認が後回しになり、storybook 追加時に混入した本バグが数セッション潜在した）。
+
+出典: cycle-224
