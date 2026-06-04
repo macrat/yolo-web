@@ -6,7 +6,7 @@ import {
   generateToolJsonLd,
   safeJsonLdStringify,
 } from "@/lib/seo";
-import ToolLayout from "@/tools/_components/ToolLayout";
+import ToolPageLayout from "@/tools/_components/ToolPageLayout";
 import ToolErrorBoundary from "@/tools/_components/ErrorBoundary";
 import CharCountComponent from "@/tools/char-count/Component";
 import styles from "./page.module.css";
@@ -24,7 +24,7 @@ export default function CharCountPage() {
      * (new) globals.css に --max-width 未定義のため ToolLayout の max-width: var(--max-width) は
      * none に解決される。外側コンテナで制約をかけることで ToolLayout は内側で 1200px に収まる。 */
     <div className={styles.page}>
-      <ToolLayout meta={tool.meta}>
+      <ToolPageLayout meta={tool.meta}>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -34,7 +34,7 @@ export default function CharCountPage() {
         <ToolErrorBoundary>
           <CharCountComponent />
         </ToolErrorBoundary>
-      </ToolLayout>
+      </ToolPageLayout>
     </div>
   );
 }
