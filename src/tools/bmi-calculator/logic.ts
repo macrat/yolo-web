@@ -66,3 +66,13 @@ export function getTargetWeight(heightCm: number, targetBmi: number): number {
   const heightM = heightCm / 100;
   return Math.round(targetBmi * heightM * heightM * 10) / 10;
 }
+
+/**
+ * BMI 値をメーター上のパーセント位置（0–100）に変換する。
+ * メーターは BMI 10〜50 の範囲を 0〜100% に線形マッピングする。
+ * 範囲外の値はクランプする。
+ */
+export function getMeterPercent(bmi: number): number {
+  const clamped = Math.max(10, Math.min(50, bmi));
+  return ((clamped - 10) / 40) * 100;
+}

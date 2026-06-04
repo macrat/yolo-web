@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { calculateBmi, getTargetWeight } from "../logic";
+import { calculateBmi, getTargetWeight, getMeterPercent } from "../logic";
 
 describe("calculateBmi", () => {
   it("returns null for zero height", () => {
@@ -154,6 +154,53 @@ describe("calculateBmi", () => {
     const result = calculateBmi(300, 500);
     expect(result).not.toBeNull();
     expect(result!.bmi).toBe(55.6);
+  });
+});
+
+// ---- getMeterPercent: BMI値→メーターパーセント位置の整合 ----
+describe("getMeterPercent", () => {
+  // メーターは BMI 10〜50 の範囲を 0〜100% にマッピングする
+  // 式: (bmi - 10) / 40 * 100
+
+  it("BMI 10 (最小端) → 0%", () => {
+    expect(getMeterPercent(10)).toBe(0);
+  });
+
+  it("BMI 50 (最大端) → 100%", () => {
+    expect(getMeterPercent(50)).toBe(100);
+  });
+
+  it("BMI 18.5 → 21.25%（低体重/普通体重の境界）", () => {
+    // (18.5 - 10) / 40 * 100 = 8.5 / 40 * 100 = 21.25
+    expect(getMeterPercent(18.5)).toBe(21.25);
+  });
+
+  it("BMI 25 → 37.5%（普通体重/肥満の境界）", () => {
+    // (25 - 10) / 40 * 100 = 15 / 40 * 100 = 37.5
+    expect(getMeterPercent(25)).toBe(37.5);
+  });
+
+  it("BMI 30 → 50%（肥満1度/2度の境界）", () => {
+    // (30 - 10) / 40 * 100 = 20 / 40 * 100 = 50
+    expect(getMeterPercent(30)).toBe(50);
+  });
+
+  it("BMI 40 → 75%（肥満3度/4度の境界）", () => {
+    // (40 - 10) / 40 * 100 = 30 / 40 * 100 = 75
+    expect(getMeterPercent(40)).toBe(75);
+  });
+
+  it("BMI 22 → 30%（普通体重の中央付近）", () => {
+    // (22 - 10) / 40 * 100 = 12 / 40 * 100 = 30
+    expect(getMeterPercent(22)).toBe(30);
+  });
+
+  it("BMI 9 (下限未満) はクランプされて 0% になる", () => {
+    expect(getMeterPercent(9)).toBe(0);
+  });
+
+  it("BMI 55 (上限超) はクランプされて 100% になる", () => {
+    expect(getMeterPercent(55)).toBe(100);
   });
 });
 

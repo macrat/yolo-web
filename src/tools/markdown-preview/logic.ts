@@ -193,11 +193,12 @@ export function renderMarkdown(input: string): MarkdownResult {
     const rawHtml = marked.parse(input, markedOptions) as string;
     const html = sanitizeHtml(rawHtml);
     return { success: true, html };
-  } catch (e) {
+  } catch {
+    // A-4: 英語の例外メッセージをそのまま渡さず、日本語メッセージに変換する
     return {
       success: false,
       html: "",
-      error: e instanceof Error ? e.message : "Markdown parsing failed",
+      error: "Markdownのレンダリングに失敗しました",
     };
   }
 }
