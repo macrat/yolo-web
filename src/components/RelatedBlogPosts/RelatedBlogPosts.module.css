@@ -1,0 +1,64 @@
+/**
+ * RelatedBlogPosts — 関連ブログ記事セクション
+ * new デザイン体系のみ使用（DESIGN.md §2, globals.css 参照）。
+ * 旧カラートークン系は使用しない。
+ */
+
+.section {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.title {
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+  color: var(--fg);
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.item {
+  margin-bottom: 0.25rem;
+}
+
+.link {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  text-decoration: none;
+  color: var(--fg);
+  font-size: 0.9rem;
+  padding: 0.4rem 0.5rem;
+  border-radius: var(--r-normal);
+  transition: background-color 0.15s ease;
+}
+
+.link:hover {
+  background-color: var(--bg-soft);
+}
+
+.link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.postTitle {
+  color: var(--accent);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.date {
+  font-size: 0.8rem;
+  color: var(--fg-soft);
+  flex-shrink: 0;
+}

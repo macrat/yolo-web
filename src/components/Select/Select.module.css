@@ -1,0 +1,64 @@
+/* Select コンポーネントのスタイル
+ * DESIGN.md §5: 操作可能要素には --r-interactive を使う
+ * DESIGN.md §2: フォーカスは outline: 2px solid var(--accent); outline-offset: 2px;
+ * --border-strong: --border よりコントラストが高く、フォームの輪郭を視認しやすくする
+ * 影なし（DESIGN.md §5）
+ */
+
+.wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.select {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+  min-height: 44px; /* WCAG 2.5.5 AAA タップターゲット推奨値 */
+  background: var(--bg);
+  color: var(--fg);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-interactive);
+  /* 右側にアイコン分のパディングを確保 */
+  padding: 9px 36px 9px 12px;
+  outline: none;
+  transition: border-color 0.15s;
+  /* ブラウザ既定の矢印を非表示にしてカスタムアイコンに差し替える */
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+
+/* フォーカス: DESIGN.md §2 に従い outline を使う */
+.select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* disabled: 操作不可を示す視覚的手がかり */
+.select:disabled {
+  background: var(--bg-soft);
+  color: var(--fg-softer);
+  cursor: not-allowed;
+}
+
+/* ChevronDown アイコンをセレクトボックス右端に配置 */
+.icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none; /* アイコンへのクリックを select に通す */
+  color: var(--fg-soft);
+  display: flex;
+  align-items: center;
+}
+
+/* disabled 時はアイコンも薄くする */
+.wrapper:has(.select:disabled) .icon {
+  color: var(--fg-softer);
+}

@@ -1,0 +1,50 @@
+/* Textarea コンポーネントのスタイル
+ * DESIGN.md §5: 操作可能要素には --r-interactive を使う
+ * DESIGN.md §2: フォーカスは outline: 2px solid var(--accent); outline-offset: 2px;
+ * --border-strong: --border よりコントラストが高く、フォームの輪郭を視認しやすくする
+ */
+.textarea {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.7;
+  background: var(--bg);
+  color: var(--fg);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-interactive);
+  padding: 9px 12px;
+  outline: none;
+  resize: vertical;
+  transition: border-color 0.15s;
+}
+
+.textarea::placeholder {
+  color: var(--fg-softer);
+}
+
+/* フォーカス: DESIGN.md §2 に従い outline を使う */
+.textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* disabled: 操作不可を示す視覚的手がかり */
+.textarea:disabled {
+  background: var(--bg-soft);
+  color: var(--fg-softer);
+  cursor: not-allowed;
+  resize: none;
+}
+
+/* readOnly: 出力専用 textarea の視覚的区別 */
+.textarea:read-only {
+  background: var(--bg-soft);
+  cursor: default;
+}
+
+/* mono バリアント: コード・技術系テキストに等幅フォントを使う */
+.mono {
+  font-family: var(--font-mono);
+}

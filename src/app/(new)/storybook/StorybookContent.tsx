@@ -4,10 +4,22 @@ import { useState } from "react";
 import Panel from "@/components/Panel";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
+import Textarea from "@/components/Textarea";
+import Select from "@/components/Select";
+import SegmentedControl from "@/components/SegmentedControl";
+import ErrorMessage from "@/components/ErrorMessage";
+import FileDropZone from "@/components/FileDropZone";
+import {
+  useCopyToClipboard,
+  COPIED_LABEL,
+} from "@/components/hooks/useCopyToClipboard";
 import Breadcrumb from "@/components/Breadcrumb";
 import ToggleSwitch from "@/components/ToggleSwitch";
 import Pagination from "@/components/Pagination";
 import ShareButtons from "@/components/ShareButtons";
+import FaqSection from "@/components/FaqSection";
+import RelatedTools from "@/components/RelatedTools";
+import RelatedBlogPosts from "@/components/RelatedBlogPosts";
 import styles from "./page.module.css";
 
 // カラースウォッチの定義
@@ -77,6 +89,20 @@ const BREADCRUMB_3 = [
 
 const BREADCRUMB_1 = [{ label: "ホーム" }];
 
+// FaqSection サンプルデータ
+const SAMPLE_FAQ = [
+  {
+    question: "このツールはどのように動作しますか？",
+    answer:
+      "ブラウザ上で動作します。入力データがサーバーに送信されることはありません。",
+  },
+  {
+    question: "対応しているファイル形式は何ですか？",
+    answer:
+      "テキスト形式（.txt）および UTF-8 エンコードのファイルに対応しています。",
+  },
+];
+
 // 目次アイテム（Header/Footer はページ上下に実物が表示されるためプレビューセクション不要）
 const TOC_ITEMS = [
   { id: "overview", label: "1. 概要" },
@@ -89,6 +115,16 @@ const TOC_ITEMS = [
   { id: "toggle-switch", label: "8. ToggleSwitch" },
   { id: "pagination", label: "9. Pagination" },
   { id: "share-buttons", label: "10. ShareButtons" },
+  { id: "textarea", label: "11. Textarea" },
+  { id: "select", label: "12. Select" },
+  { id: "segmented-control", label: "13. SegmentedControl" },
+  { id: "error-message", label: "14. ErrorMessage" },
+  { id: "file-drop-zone", label: "15. FileDropZone" },
+  { id: "use-copy-to-clipboard", label: "16. useCopyToClipboard" },
+  { id: "input-date", label: "17. Input (type=date)" },
+  { id: "faq-section", label: "18. FaqSection" },
+  { id: "related-tools", label: "19. RelatedTools" },
+  { id: "related-blog-posts", label: "20. RelatedBlogPosts" },
 ];
 
 export default function StorybookContent() {
@@ -96,6 +132,10 @@ export default function StorybookContent() {
   const [toggleOn, setToggleOn] = useState(false);
   // Controlled input state
   const [controlledText, setControlledText] = useState("controlled value");
+  // SegmentedControl controlled state
+  const [segmentValue, setSegmentValue] = useState("option-a");
+  // useCopyToClipboard demo
+  const { copy, copiedKey } = useCopyToClipboard();
 
   return (
     <div className={styles.container}>
@@ -594,6 +634,335 @@ export default function StorybookContent() {
             title="サンプル記事 | yolos.net"
             sns={["copy"]}
           />
+        </Panel>
+      </section>
+
+      {/* === 11. Textarea === */}
+      <section id="textarea" className={styles.section}>
+        <h2 className={styles.sectionTitle}>11. Textarea</h2>
+        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        <Panel as="div">
+          <span className={styles.previewLabel}>Preview: Textarea</span>
+
+          <h3 className={styles.subsectionTitle} style={{ marginTop: 0 }}>
+            variant
+          </h3>
+          <div className={styles.inputGrid}>
+            <div className={styles.inputItem}>
+              <div className={styles.inputItemLabel}>
+                variant=&quot;default&quot;
+              </div>
+              <Textarea
+                variant="default"
+                rows={3}
+                placeholder="通常テキスト入力（システムフォント）"
+                aria-label="default variant のテキストエリア"
+              />
+            </div>
+            <div className={styles.inputItem}>
+              <div className={styles.inputItemLabel}>
+                variant=&quot;mono&quot;
+              </div>
+              <Textarea
+                variant="mono"
+                rows={3}
+                placeholder="等幅フォント（コード・技術系テキスト）"
+                aria-label="mono variant のテキストエリア"
+                spellCheck={false}
+              />
+            </div>
+          </div>
+
+          <h3 className={styles.subsectionTitle}>特殊状態</h3>
+          <div className={styles.inputGrid}>
+            <div className={styles.inputItem}>
+              <div className={styles.inputItemLabel}>readOnly</div>
+              <Textarea
+                value="読み取り専用の出力テキスト。多くのツールが入力欄と並べて出力を表示するパターンで使用する。"
+                readOnly
+                rows={3}
+                aria-label="読み取り専用のテキストエリア"
+              />
+            </div>
+            <div className={styles.inputItem}>
+              <div className={styles.inputItemLabel}>disabled</div>
+              <Textarea
+                value="無効状態のテキストエリア"
+                disabled
+                rows={3}
+                aria-label="無効状態のテキストエリア"
+              />
+            </div>
+          </div>
+        </Panel>
+      </section>
+
+      {/* === 12. Select === */}
+      <section id="select" className={styles.section}>
+        <h2 className={styles.sectionTitle}>12. Select</h2>
+        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        <Panel as="div">
+          <span className={styles.previewLabel}>Preview: Select</span>
+
+          <h3 className={styles.subsectionTitle} style={{ marginTop: 0 }}>
+            通常
+          </h3>
+          <div className={styles.inputGrid}>
+            <div className={styles.inputItem}>
+              <div className={styles.inputItemLabel}>
+                children で option を受ける（uncontrolled）
+              </div>
+              <Select defaultValue="ja" aria-label="言語の選択">
+                <option value="ja">日本語</option>
+                <option value="en">英語</option>
+                <option value="zh">中国語</option>
+              </Select>
+            </div>
+            <div className={styles.inputItem}>
+              <div className={styles.inputItemLabel}>disabled</div>
+              <Select disabled aria-label="無効状態のセレクト">
+                <option value="a">選択肢 A</option>
+                <option value="b">選択肢 B</option>
+              </Select>
+            </div>
+          </div>
+        </Panel>
+      </section>
+
+      {/* === 13. SegmentedControl === */}
+      <section id="segmented-control" className={styles.section}>
+        <h2 className={styles.sectionTitle}>13. SegmentedControl</h2>
+        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        <Panel as="div">
+          <span className={styles.previewLabel}>Preview: SegmentedControl</span>
+
+          <h3 className={styles.subsectionTitle} style={{ marginTop: 0 }}>
+            controlled（value + onChange）
+          </h3>
+          <SegmentedControl
+            options={[
+              { label: "選択肢 A", value: "option-a" },
+              { label: "選択肢 B", value: "option-b" },
+              { label: "選択肢 C", value: "option-c" },
+            ]}
+            value={segmentValue}
+            onChange={setSegmentValue}
+            aria-label="サンプル選択"
+          />
+          <div
+            style={{
+              fontSize: "0.8rem",
+              color: "var(--fg-soft)",
+              marginTop: "0.5rem",
+            }}
+          >
+            現在の値: {segmentValue}
+          </div>
+
+          <h3 className={styles.subsectionTitle}>2 択パターン</h3>
+          <SegmentedControl
+            options={[
+              { label: "削除", value: "remove" },
+              { label: "スペースに置換", value: "replace-space" },
+            ]}
+            value="remove"
+            onChange={() => {}}
+            aria-label="改行処理モード"
+          />
+        </Panel>
+      </section>
+
+      {/* === 14. ErrorMessage === */}
+      <section id="error-message" className={styles.section}>
+        <h2 className={styles.sectionTitle}>14. ErrorMessage</h2>
+        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        <Panel as="div">
+          <span className={styles.previewLabel}>Preview: ErrorMessage</span>
+
+          <h3 className={styles.subsectionTitle} style={{ marginTop: 0 }}>
+            既定フォールバック（props 未指定）
+          </h3>
+          <ErrorMessage />
+
+          <h3 className={styles.subsectionTitle}>message 指定</h3>
+          <ErrorMessage message="ファイル形式が正しくありません。PNG・JPEG・GIF・WebP のみ対応しています。" />
+
+          <h3 className={styles.subsectionTitle}>children（JSX）指定</h3>
+          <ErrorMessage>
+            変換に失敗しました。入力内容を確認してください。
+          </ErrorMessage>
+        </Panel>
+      </section>
+
+      {/* === 15. FileDropZone === */}
+      <section id="file-drop-zone" className={styles.section}>
+        <h2 className={styles.sectionTitle}>15. FileDropZone</h2>
+        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        <Panel as="div">
+          <span className={styles.previewLabel}>Preview: FileDropZone</span>
+
+          <h3 className={styles.subsectionTitle} style={{ marginTop: 0 }}>
+            基本（accept + maxSizeBytes + description）
+          </h3>
+          <FileDropZone
+            onFileSelect={(file) => console.log("selected:", file.name)}
+            accept="image/*"
+            maxSizeBytes={10 * 1024 * 1024}
+            description="PNG, JPEG, GIF, WebP 対応（最大 10MB）"
+          />
+
+          <h3 className={styles.subsectionTitle}>制限なし</h3>
+          <FileDropZone
+            onFileSelect={(file) => console.log("selected:", file.name)}
+          />
+        </Panel>
+      </section>
+
+      {/* === 16. useCopyToClipboard === */}
+      <section id="use-copy-to-clipboard" className={styles.section}>
+        <h2 className={styles.sectionTitle}>16. useCopyToClipboard</h2>
+        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        <Panel as="div">
+          <span className={styles.previewLabel}>
+            Preview: useCopyToClipboard
+          </span>
+
+          <h3 className={styles.subsectionTitle} style={{ marginTop: 0 }}>
+            単一ターゲット（key 省略）
+          </h3>
+          <div
+            style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}
+          >
+            <Button
+              variant="default"
+              onClick={() => copy("クリップボードにコピーされるテキスト")}
+            >
+              {copiedKey ? COPIED_LABEL : "コピー"}
+            </Button>
+            <span
+              aria-live="polite"
+              style={{ fontSize: "0.85rem", color: "var(--fg-soft)" }}
+            >
+              {copiedKey ? COPIED_LABEL : ""}
+            </span>
+          </div>
+          <div
+            style={{
+              fontSize: "0.8rem",
+              color: "var(--fg-soft)",
+              marginTop: "0.5rem",
+            }}
+          >
+            コピー内容: &quot;クリップボードにコピーされるテキスト&quot;（2
+            秒後にリセット）
+          </div>
+        </Panel>
+      </section>
+
+      {/* === 17. Input (type=date) === */}
+      <section id="input-date" className={styles.section}>
+        <h2 className={styles.sectionTitle}>17. Input (type=date)</h2>
+        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        <Panel as="div">
+          <span className={styles.previewLabel}>
+            Preview: Input (type=date)
+          </span>
+
+          <div className={styles.inputGrid}>
+            <div className={styles.inputItem}>
+              <div className={styles.inputItemLabel}>type=&quot;date&quot;</div>
+              <Input
+                type="date"
+                defaultValue="2026-06-04"
+                aria-label="日付入力欄"
+              />
+            </div>
+            <div className={styles.inputItem}>
+              <div className={styles.inputItemLabel}>
+                type=&quot;date&quot; disabled
+              </div>
+              <Input
+                type="date"
+                value="2026-06-04"
+                disabled
+                readOnly
+                aria-label="無効状態の日付入力欄"
+              />
+            </div>
+          </div>
+        </Panel>
+      </section>
+
+      {/* === 18. FaqSection === */}
+      <section id="faq-section" className={styles.section}>
+        <h2 className={styles.sectionTitle}>18. FaqSection</h2>
+        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        <Panel as="div">
+          <span className={styles.previewLabel}>Preview: FaqSection</span>
+
+          <h3 className={styles.subsectionTitle} style={{ marginTop: 0 }}>
+            faq あり（2 件）
+          </h3>
+          <FaqSection faq={SAMPLE_FAQ} />
+
+          <h3 className={styles.subsectionTitle}>
+            faq が空配列のとき（null を返す）
+          </h3>
+          <div style={{ fontSize: "0.85rem", color: "var(--fg-soft)" }}>
+            （空配列を渡すと何も表示されない）
+          </div>
+          <FaqSection faq={[]} />
+        </Panel>
+      </section>
+
+      {/* === 19. RelatedTools === */}
+      <section id="related-tools" className={styles.section}>
+        <h2 className={styles.sectionTitle}>19. RelatedTools</h2>
+        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        <Panel as="div">
+          <span className={styles.previewLabel}>Preview: RelatedTools</span>
+
+          <h3 className={styles.subsectionTitle} style={{ marginTop: 0 }}>
+            currentSlug=&quot;char-count&quot; / relatedSlugs に実在スラッグ 2
+            件
+          </h3>
+          <RelatedTools
+            currentSlug="char-count"
+            relatedSlugs={["byte-counter", "text-diff"]}
+          />
+
+          <h3 className={styles.subsectionTitle}>
+            一致なし（relatedSlugs が存在しないスラッグのとき null を返す）
+          </h3>
+          <div style={{ fontSize: "0.85rem", color: "var(--fg-soft)" }}>
+            （一致なしのとき何も表示されない）
+          </div>
+          <RelatedTools
+            currentSlug="char-count"
+            relatedSlugs={["nonexistent-tool"]}
+          />
+        </Panel>
+      </section>
+
+      {/* === 20. RelatedBlogPosts === */}
+      <section id="related-blog-posts" className={styles.section}>
+        <h2 className={styles.sectionTitle}>20. RelatedBlogPosts</h2>
+        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        <Panel as="div">
+          <span className={styles.previewLabel}>Preview: RelatedBlogPosts</span>
+
+          <h3 className={styles.subsectionTitle} style={{ marginTop: 0 }}>
+            toolSlug=&quot;business-email&quot;（関連記事あり）
+          </h3>
+          <RelatedBlogPosts toolSlug="business-email" />
+
+          <h3 className={styles.subsectionTitle}>
+            toolSlug=&quot;char-count&quot;（関連記事なし → null を返す）
+          </h3>
+          <div style={{ fontSize: "0.85rem", color: "var(--fg-soft)" }}>
+            （関連記事なしのとき何も表示されない）
+          </div>
+          <RelatedBlogPosts toolSlug="char-count" />
         </Panel>
       </section>
     </div>
