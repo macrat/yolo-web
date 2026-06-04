@@ -120,11 +120,31 @@
   color: var(--fg-soft);
 }
 
+/*
+ * number スピナーの抑止 (unix-timestamp スコープ限定)
+ * 理由: w360 などの狭い画面では、ブラウザデフォルトの number スピナー矢印が
+ * フィールド内の文字領域を圧迫し、4桁の年(例: "2026")が末尾1桁欠けて表示される。
+ * 共通 Input コンポーネント(33 本に影響)を変更しないよう、当ツールのスコープ CSS で抑止する。
+ *
+ * Input コンポーネントは className を <input> 要素に直接付与するため、
+ * .dateInput クラスは <input type="number"> 要素そのものに適用される。
+ * よって疑似要素は .dateInput::-webkit-* で直接参照できる。
+ * Webkit: スピナーを非表示。Firefox: appearance: textfield で対応。
+ */
 /* 共通 Input コンポーネントに幅調整を付与するためのクラス */
 /* スタイルは Input.module.css に委ねる */
 .dateInput {
   width: 80px;
   font-family: var(--font-mono);
+  /* Firefox: number スピナーを非表示にして文字領域を確保する */
+  appearance: textfield;
+}
+
+.dateInput::-webkit-outer-spin-button,
+.dateInput::-webkit-inner-spin-button {
+  /* Webkit: number スピナーを非表示にして文字領域を確保する */
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 /* ---- ボタン行 ---- */
@@ -149,7 +169,12 @@
 }
 
 @media (max-width: 640px) {
+  /*
+   * w360 対応: スピナー抑止後も余裕を持った幅を確保する。
+   * 4桁年(例: 2026)はフォント 14px × mono で約 32px + 左右 padding 24px = 56px 必要。
+   * モバイルでは 72px にして1〜4桁すべてのフィールドを余裕を持って表示する。
+   */
   .dateInput {
-    width: 65px;
+    width: 72px;
   }
 }
