@@ -1,9 +1,0 @@
-/* traditional-color-palette 詳細ページの最上位コンテナ。
- * cycle-196 (B-425) 正準パターン: ToolLayout の外側で max-width をハードコード。
- * var(--max-width) は (new) globals.css に未定義のため使用不可。1200px をリテラルで書く。
- * 詳細は docs/design-migration-plan.md 参照。 */
-.page {
-  max-width: 1200px;
-  margin: 0 auto;
-  width: 100%;
-}

@@ -19,7 +19,6 @@ import Pagination from "@/components/Pagination";
 import ShareButtons from "@/components/ShareButtons";
 import FaqSection from "@/components/FaqSection";
 import RelatedTools from "@/components/RelatedTools";
-import RelatedBlogPosts from "@/components/RelatedBlogPosts";
 import styles from "./page.module.css";
 
 // カラースウォッチの定義
@@ -127,7 +126,17 @@ const TOC_ITEMS = [
   { id: "related-blog-posts", label: "20. RelatedBlogPosts" },
 ];
 
-export default function StorybookContent() {
+interface StorybookContentProps {
+  /** RelatedBlogPosts（fs 依存のサーバー専用）の描画結果。server の page.tsx で
+   * 描画して渡す。client component から直接 import できないため prop 化している。 */
+  relatedBlogPostsWithPosts: React.ReactNode;
+  relatedBlogPostsEmpty: React.ReactNode;
+}
+
+export default function StorybookContent({
+  relatedBlogPostsWithPosts,
+  relatedBlogPostsEmpty,
+}: StorybookContentProps) {
   // ToggleSwitch controlled state
   const [toggleOn, setToggleOn] = useState(false);
   // Controlled input state
@@ -954,7 +963,7 @@ export default function StorybookContent() {
           <h3 className={styles.subsectionTitle} style={{ marginTop: 0 }}>
             toolSlug=&quot;business-email&quot;（関連記事あり）
           </h3>
-          <RelatedBlogPosts toolSlug="business-email" />
+          {relatedBlogPostsWithPosts}
 
           <h3 className={styles.subsectionTitle}>
             toolSlug=&quot;char-count&quot;（関連記事なし → null を返す）
@@ -962,7 +971,7 @@ export default function StorybookContent() {
           <div style={{ fontSize: "0.85rem", color: "var(--fg-soft)" }}>
             （関連記事なしのとき何も表示されない）
           </div>
-          <RelatedBlogPosts toolSlug="char-count" />
+          {relatedBlogPostsEmpty}
         </Panel>
       </section>
     </div>
