@@ -1,0 +1,59 @@
+/* FileDropZone コンポーネントのスタイル
+ * DESIGN.md §5: 操作可能要素には --r-interactive を使う
+ * DESIGN.md §2: フォーカスは outline: 2px solid var(--accent); outline-offset: 2px;
+ *              --accent はリンク/フォーカス用。塗りには使わない。
+ * DESIGN.md §4: 影・ドラッグ視覚表現ルールは DESIGN.md §4 を参照
+ * border: 2px dashed --border（通常）/ --accent（ドラッグ中・ホバー）
+ */
+
+.dropZone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  border: 2px dashed var(--border);
+  border-radius: var(--r-interactive);
+  background-color: var(--bg-soft);
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+/* ホバー時: border 色を --accent に変化（塗りは変えない。DESIGN.md §2 準拠） */
+.dropZone:hover {
+  border-color: var(--accent);
+}
+
+/* フォーカス時: DESIGN.md §2 に従い outline を使う */
+.dropZone:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ドラッグアクティブ時: border 色を --accent に変化のみ（shadow/opacity 変化は DESIGN.md 禁止） */
+.dropZoneActive {
+  border-color: var(--accent);
+}
+
+.dropText {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--fg);
+}
+
+.dropDescription {
+  margin: 0.25rem 0 0;
+  font-size: 0.8rem;
+  color: var(--fg-soft);
+}
+
+/* hidden file input — クリックで programmatic open するための隠しインプット */
+.fileInput {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .dropZone {
+    padding: 1.5rem;
+  }
+}

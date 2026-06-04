@@ -8,7 +8,8 @@ type InputType =
   | "password"
   | "search"
   | "tel"
-  | "url";
+  | "url"
+  | "date";
 
 interface InputOwnProps {
   /** input の type 属性（デフォルト: "text"） */
@@ -32,7 +33,7 @@ type InputProps = InputOwnProps &
  *   React 標準の挙動どおり `value` が優先され、開発モードでは警告が出る
  *   ので、どちらか一方を選んで使うこと。
  * - **`type`**: デフォルト `"text"`。サポートする値は text/email/number/
- *   password/search/tel/url の 7 種。
+ *   password/search/tel/url/date の 8 種。
  * - **`error`**: true のとき border を `--danger` に変えてエラー表示にし、
  *   `aria-invalid="true"` を付与してスクリーンリーダーにも伝える。
  * - **読み取り専用**: `readOnly` または `disabled` を渡すと、`onChange`

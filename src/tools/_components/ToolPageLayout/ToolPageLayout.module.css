@@ -1,0 +1,116 @@
+/*
+ * ToolPageLayout.module.css
+ *
+ * 新デザインのツールページの器。確定提示方式（タイル＝主役・ファーストビュー）を実装。
+ * 新トークンのみ使用。旧 --color-* は使用しない。
+ * DESIGN.md: 1200px ページ幅 / 720px 長文テキスト制限 / 影なし / bold 不使用
+ */
+
+/* ページ全体のラッパー。最大 1200px でセンタリング */
+.layout {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* === ゾーン1: 文脈確認（パンくず・h1・短説明）=== */
+
+/* コンパクトな h1 + shortDescription のまとまり。
+ * ファーストビューを占有しないよう margin を絞る */
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+/* h1: SEO 用に保持しつつ視覚的に小さく。bold は不使用（DESIGN.md §3） */
+.title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--fg);
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* shortDescription: 1〜2文のコンパクトな短説明 */
+.shortDescription {
+  font-size: 0.9rem;
+  color: var(--fg-soft);
+  line-height: 1.7;
+  margin: 0;
+  /* 長くなる文章は 720px に制限（DESIGN.md §4） */
+  max-width: 720px;
+}
+
+/* === ゾーン2: ツール本体（主役・ファーストビュー）=== */
+
+/* children（ツール本体）: 広い幅可（最大 1200px まで使える） */
+.content {
+  /* 本体は広い幅をフルに使えるよう制限しない */
+  width: 100%;
+}
+
+/* === ゾーン3: 補助情報（本体より下に二次配置）=== */
+
+/* howItWorks セクション */
+.howItWorksSection {
+  max-width: 720px;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.howItWorksHeading {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--fg);
+  margin: 0 0 0.5rem;
+}
+
+.howItWorksText {
+  font-size: 0.9rem;
+  color: var(--fg-soft);
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* プライバシーノート */
+.privacyNote {
+  max-width: 720px;
+  background-color: var(--bg-soft);
+  color: var(--fg-soft);
+  font-size: 0.8rem;
+  border-radius: var(--r-normal);
+  padding: 0.5rem 0.75rem;
+  text-align: center;
+  margin: 0;
+}
+
+/* シェアセクション */
+.shareSection {
+  max-width: 720px;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.shareSectionTitle {
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-align: center;
+  margin: 0 0 0.75rem;
+  color: var(--fg-soft);
+}
+
+/* モバイル対応 */
+@media (max-width: 768px) {
+  .layout {
+    padding: 1rem 0.75rem;
+    gap: 1rem;
+  }
+
+  .title {
+    font-size: 1.1rem;
+  }
+}

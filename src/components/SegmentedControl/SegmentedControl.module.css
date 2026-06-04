@@ -1,0 +1,64 @@
+/* SegmentedControl — radiogroup 型のモード切替コンポーネント
+ * DESIGN.md §2: 選択中塗りは --bg-invert (背景) / --fg-invert (文字)。AA 実証済みペア（ライト17.4:1・ダーク15.2:1）。
+ * DESIGN.md §2: --accent は塗りに使わない。フォーカスのみに使う。
+ * DESIGN.md §5: 角丸は --r-interactive（操作可能要素）。
+ * DESIGN.md §2: フォーカスは outline: 2px solid var(--accent); outline-offset: 2px;
+ * WAI-ARIA: role="radiogroup" + role="radio" + aria-checked + ロービング tabindex。
+ */
+
+/* コンテナ: 選択肢を横並びにする */
+.root {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px;
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: var(--r-interactive);
+}
+
+/* 各選択肢ボタン */
+.option {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px; /* タップターゲット確保 */
+  padding: 6px 14px;
+  font-size: 14px;
+  font-family: inherit;
+  background: transparent;
+  color: var(--fg);
+  border: 1px solid transparent;
+  border-radius: calc(
+    var(--r-interactive) - 2px
+  ); /* コンテナより 2px 小さく内側へ収める */
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+  /* リセット: ブラウザ標準のボタンスタイルを除去 */
+  appearance: none;
+  -webkit-appearance: none;
+  text-align: center;
+  line-height: 1;
+}
+
+/* フォーカス */
+.option:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* 選択中の状態: --bg-invert 地 + --fg-invert 文字（AA 実証済みペア）
+ * DESIGN.md §2: --accent を塗りに使わない（①-16 を部品レベルで根絶）。 */
+.option[aria-checked="true"] {
+  background: var(--bg-invert);
+  color: var(--fg-invert);
+  border-color: var(--bg-invert);
+}
+
+/* 非選択ホバー */
+.option:hover:not([aria-checked="true"]) {
+  background: var(--bg-softer);
+}

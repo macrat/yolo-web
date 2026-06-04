@@ -1,0 +1,15 @@
+/* ErrorMessage コンポーネントのスタイル
+ * DESIGN.md §2: --danger-soft 背景 + --danger-strong ボーダーの作法
+ * DESIGN.md §5: --r-normal (2px) — インタラクティブ要素ではないため
+ * role="alert" が assertive を暗黙指定するため aria-live の二重指定はしない
+ */
+.errorMessage {
+  display: block;
+  padding: 0.75rem 1rem;
+  background-color: var(--danger-soft);
+  border: 1px solid var(--danger-strong);
+  border-radius: var(--r-normal);
+  color: var(--danger-strong);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
