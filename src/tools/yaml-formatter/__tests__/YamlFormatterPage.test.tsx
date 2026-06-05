@@ -223,6 +223,20 @@ describe("YamlFormatterPage", () => {
     });
   });
 
+  // G-1: .controlLabel に white-space: nowrap があるか（ラベル折返し防止）
+  // U-16 fresh 再ゲート指摘: w1280・w360 でもラベルが2行折返しになる問題
+  test("CSS .controlLabel has white-space: nowrap to prevent label wrapping", () => {
+    const cssPath = join(
+      process.cwd(),
+      "src/tools/yaml-formatter/YamlFormatterPage.module.css",
+    );
+    const css = readFileSync(cssPath, "utf-8");
+    // .controlLabel ブロックに white-space: nowrap が含まれることを確認
+    const controlLabelBlock = css.match(/\.controlLabel\s*\{([\s\S]*?)\}/);
+    expect(controlLabelBlock).not.toBeNull();
+    expect(controlLabelBlock![1]).toMatch(/white-space\s*:\s*nowrap/);
+  });
+
   // E-12: CSS トークン検証
   test("CSS does not use deprecated --color-* tokens or --accent direct fill or font-weight 700", () => {
     const cssPath = join(

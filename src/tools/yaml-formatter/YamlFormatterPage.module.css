@@ -34,6 +34,7 @@
 .controlLabel {
   font-size: 0.9rem;
   color: var(--fg);
+  white-space: nowrap;
 }
 
 .buttons {

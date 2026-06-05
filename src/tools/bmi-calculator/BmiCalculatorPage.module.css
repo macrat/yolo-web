@@ -170,8 +170,10 @@
 }
 
 /* 判定カテゴリ色（BMI レベルに応じた意味色） */
+/* DESIGN.md §2: --accent 系はリンク・フォーカス専用のため、低体重テキストには中立色を使う
+ * メーター帯 .meterZoneLow が --bg-softer（中立）を使うことと整合する */
 .categoryLow {
-  color: var(--accent-strong);
+  color: var(--fg-soft);
 }
 
 .categoryNormal {

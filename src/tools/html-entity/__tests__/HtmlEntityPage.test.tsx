@@ -35,7 +35,7 @@ describe("E-1: 基本レンダリング", () => {
     // 入力欄が存在すること（label で識別）
     expect(screen.getByLabelText("テキスト入力")).toBeInTheDocument();
     // 出力欄が存在すること
-    expect(screen.getByLabelText("エスケープ結果")).toBeInTheDocument();
+    expect(screen.getByLabelText("エンコード結果")).toBeInTheDocument();
     // status ライブリージョンが存在すること
     expect(screen.getByRole("status")).toBeInTheDocument();
   });
@@ -47,7 +47,7 @@ describe("E-2: 入力→結果更新 (リアルタイム変換)", () => {
     const inputTextarea = screen.getByLabelText("テキスト入力");
     fireEvent.change(inputTextarea, { target: { value: "<b>bold</b>" } });
     // 出力 textarea に変換結果が表示される
-    const outputTextarea = screen.getByLabelText("エスケープ結果");
+    const outputTextarea = screen.getByLabelText("エンコード結果");
     expect(outputTextarea).toHaveValue("&lt;b&gt;bold&lt;/b&gt;");
   });
 
@@ -66,7 +66,7 @@ describe("E-2: 入力→結果更新 (リアルタイム変換)", () => {
 describe("E-3: 空入力の挙動", () => {
   it("初期状態では結果欄が空で、エラーも表示されない", () => {
     render(<HtmlEntityPage />);
-    const outputTextarea = screen.getByLabelText("エスケープ結果");
+    const outputTextarea = screen.getByLabelText("エンコード結果");
     expect(outputTextarea).toHaveValue("");
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
   });
@@ -78,7 +78,7 @@ describe("E-4: 変換ロジックの正確性 (UI 経由)", () => {
     fireEvent.change(screen.getByLabelText("テキスト入力"), {
       target: { value: '<script>alert("xss")&foo</script>' },
     });
-    expect(screen.getByLabelText("エスケープ結果")).toHaveValue(
+    expect(screen.getByLabelText("エンコード結果")).toHaveValue(
       "&lt;script&gt;alert(&quot;xss&quot;)&amp;foo&lt;/script&gt;",
     );
   });
@@ -111,7 +111,7 @@ describe("E-4: 変換ロジックの正確性 (UI 経由)", () => {
     });
     // encode 結果を取得
     const encodedOutput = (
-      screen.getByLabelText("エスケープ結果") as HTMLTextAreaElement
+      screen.getByLabelText("エンコード結果") as HTMLTextAreaElement
     ).value;
 
     // decode モードに切り替え、encode 結果を入力
@@ -236,7 +236,7 @@ describe("E-11: 既存 logic.ts テストが PASS 維持", () => {
     fireEvent.change(screen.getByLabelText("テキスト入力"), {
       target: { value: '<script>alert("xss")</script>' },
     });
-    expect(screen.getByLabelText("エスケープ結果")).toHaveValue(
+    expect(screen.getByLabelText("エンコード結果")).toHaveValue(
       "&lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt;",
     );
   });
