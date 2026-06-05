@@ -36,6 +36,8 @@
 .controlLabel {
   font-size: 0.9rem;
   color: var(--fg);
+  /* ux-gate-findings 低指摘: 狭幅でラベルが折り返されないよう nowrap を設定する */
+  white-space: nowrap;
 }
 
 .result {

@@ -46,29 +46,41 @@ export default function CharCountPage() {
         onChange={(e) => setText(e.target.value)}
         placeholder="ここにテキストを入力してください..."
         rows={10}
-        aria-describedby="char-count-status"
+        aria-describedby="char-count-live-summary"
       />
 
       {/*
        * C-3: ライブリージョン（role="status" aria-live="polite"）
-       * 実テキストノードのサマリを含む（readOnly textarea ラップ禁止）。
-       * 主要な統計情報をこのリージョン内に直接配置し、SR が変化を検知できるようにする。
+       * サマリテキストのみを置く。aria-atomic は付けない（付けると全テキストが毎回読み上げられる）。
+       * 詳細統計はこのリージョンの外に配置する（byte-counter と同じ設計）。
+       * visually-hidden で視覚的には非表示だが SR には読み上げられる。
        */}
       <div
-        id="char-count-status"
+        id="char-count-live-summary"
         role="status"
         aria-live="polite"
-        aria-atomic="true"
+        className={styles.srOnly}
       >
-        {/* スクリーンリーダー向けサマリ（視覚的に非表示・SR には読み上げ） */}
-        <span className={styles.srSummary}>{summaryText}</span>
+        {summaryText}
+      </div>
 
-        {/* 統計グリッド（全6統計） */}
+      {/*
+       * 詳細統計パネル（ライブリージョン外の通常エリア）
+       * SR にはフォーカス時に読まれるが、入力変化のたびに自動読み上げはされない。
+       */}
+      <div
+        role="region"
+        aria-label="文字数カウント結果"
+        className={styles.statsPanel}
+      >
+        {/* プライマリ統計（文字数・大きく表示・byte-counter の「バイト数」主役表示と一貫） */}
+        <div className={styles.primaryStat}>
+          <span className={styles.primaryStatLabel}>文字数</span>
+          <span className={styles.primaryStatValue}>{result.chars}</span>
+        </div>
+
+        {/* 統計グリッド（文字数以外の5統計） */}
         <div className={styles.statsGrid}>
-          <div className={styles.stat}>
-            <span className={styles.statLabel}>文字数</span>
-            <span className={styles.statValue}>{result.chars}</span>
-          </div>
           <div className={styles.stat}>
             <span className={styles.statLabel}>文字数（空白除く）</span>
             <span className={styles.statValue}>{result.charsNoSpaces}</span>

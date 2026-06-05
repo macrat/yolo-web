@@ -3,6 +3,7 @@ import {
   calculateAge,
   toWareki,
   getZodiac,
+  getZodiacWithReading,
   getConstellation,
   formatDate,
   parseDate,
@@ -216,6 +217,61 @@ describe("getZodiac", () => {
   it("cycles correctly for historical year", () => {
     // 12-year cycle: 2020 = 子, so 2008 = 子
     expect(getZodiac(2008)).toBe("子");
+  });
+});
+
+describe("getZodiacWithReading", () => {
+  it("returns kanji with reading for 子 (2020)", () => {
+    expect(getZodiacWithReading(2020)).toBe("子（ね）");
+  });
+
+  it("returns kanji with reading for 丑 (2021)", () => {
+    expect(getZodiacWithReading(2021)).toBe("丑（うし）");
+  });
+
+  it("returns kanji with reading for 寅 (2022)", () => {
+    expect(getZodiacWithReading(2022)).toBe("寅（とら）");
+  });
+
+  it("returns kanji with reading for 卯 (2023)", () => {
+    expect(getZodiacWithReading(2023)).toBe("卯（う）");
+  });
+
+  it("returns kanji with reading for 辰 (2024)", () => {
+    expect(getZodiacWithReading(2024)).toBe("辰（たつ）");
+  });
+
+  it("returns kanji with reading for 巳 (2025)", () => {
+    expect(getZodiacWithReading(2025)).toBe("巳（み）");
+  });
+
+  it("returns kanji with reading for 午 (2026)", () => {
+    expect(getZodiacWithReading(2026)).toBe("午（うま）");
+  });
+
+  it("returns kanji with reading for 未 (2027)", () => {
+    expect(getZodiacWithReading(2027)).toBe("未（ひつじ）");
+  });
+
+  it("returns kanji with reading for 申 (2028)", () => {
+    expect(getZodiacWithReading(2028)).toBe("申（さる）");
+  });
+
+  it("returns kanji with reading for 酉 (2029)", () => {
+    expect(getZodiacWithReading(2029)).toBe("酉（とり）");
+  });
+
+  it("returns kanji with reading for 戌 (2030)", () => {
+    expect(getZodiacWithReading(2030)).toBe("戌（いぬ）");
+  });
+
+  it("returns kanji with reading for 亥 (2019)", () => {
+    expect(getZodiacWithReading(2019)).toBe("亥（い）");
+  });
+
+  it("cycles correctly across 12-year boundary", () => {
+    // 2020 = 子（ね）, 2032 should also be 子（ね）
+    expect(getZodiacWithReading(2032)).toBe("子（ね）");
   });
 });
 

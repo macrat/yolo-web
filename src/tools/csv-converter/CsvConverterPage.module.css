@@ -35,6 +35,8 @@
 .fieldLabel {
   font-size: 0.875rem;
   color: var(--fg-soft);
+  /* ux-gate-findings.md: ラベルが狭い幅で折り返さないよう固定 */
+  white-space: nowrap;
 }
 
 .convertButtonWrapper {
@@ -58,6 +60,8 @@
 .panelLabel {
   font-size: 0.875rem;
   color: var(--fg-soft);
+  /* ux-gate-findings.md: ラベルが狭い幅で折り返さないよう固定 */
+  white-space: nowrap;
 }
 
 .outputHeader {

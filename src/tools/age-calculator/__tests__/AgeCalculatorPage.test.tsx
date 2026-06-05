@@ -73,16 +73,28 @@ describe("AgeCalculatorPage", () => {
     expect(screen.getByText(/平成12年/)).toBeInTheDocument();
   });
 
-  // E-4: 干支が表示される
-  test("shows zodiac for birth year", () => {
+  // E-4: 干支が読み仮名付きで表示される
+  test("shows zodiac with reading for birth year", () => {
     render(<AgeCalculatorPage />);
     const birthInput = screen.getByLabelText("生年月日");
     const targetInput = screen.getByLabelText("基準日");
     fireEvent.change(birthInput, { target: { value: "2000-01-01" } });
     fireEvent.change(targetInput, { target: { value: "2026-01-01" } });
     fireEvent.click(screen.getByRole("button", { name: "計算" }));
-    // 2000年 = 辰年
-    expect(screen.getByText(/辰/)).toBeInTheDocument();
+    // 2000年 = 辰（たつ）年 — 読み仮名が括弧付きで表示される
+    expect(screen.getByText(/辰（たつ）/)).toBeInTheDocument();
+  });
+
+  // E-4: 干支の読み仮名が別の年でも正しく表示される（午年）
+  test("shows zodiac with reading 午（うま）for 2026", () => {
+    render(<AgeCalculatorPage />);
+    const birthInput = screen.getByLabelText("生年月日");
+    const targetInput = screen.getByLabelText("基準日");
+    fireEvent.change(birthInput, { target: { value: "2026-01-01" } });
+    fireEvent.change(targetInput, { target: { value: "2030-01-01" } });
+    fireEvent.click(screen.getByRole("button", { name: "計算" }));
+    // 2026年 = 午（うま）年
+    expect(screen.getByText(/午（うま）/)).toBeInTheDocument();
   });
 
   // E-4: 星座が表示される
@@ -164,6 +176,24 @@ describe("AgeCalculatorPage", () => {
     render(<AgeCalculatorPage />);
     expect(screen.getByLabelText("生年月日")).toBeInTheDocument();
     expect(screen.getByLabelText("基準日")).toBeInTheDocument();
+  });
+
+  // E-5: ライブリージョン(role=status)が srOnly クラスで視覚的に隠されていること
+  // (major 指摘: 画面上に重複表示されないよう sr-only が必要)
+  test("live region has srOnly class to hide it visually", () => {
+    render(<AgeCalculatorPage />);
+    const statusEl = screen.getByRole("status");
+    // クラス名が srOnly を含むこと（CSS Modules のため実際のクラス名は変換される）
+    expect(statusEl.className).toMatch(/srOnly/);
+  });
+
+  // E-12: CSS に .srOnly 定義があること
+  test("CSS defines .srOnly class for visually-hidden live region", () => {
+    const cssPath = resolve(__dirname, "../AgeCalculatorPage.module.css");
+    const css = readFileSync(cssPath, "utf-8");
+    // .srOnly の position:absolute が定義されていること
+    expect(css).toMatch(/\.srOnly/);
+    expect(css).toMatch(/position\s*:\s*absolute/);
   });
 
   // E-12: CSS トークン検証

@@ -5,13 +5,13 @@ export const meta: ToolMeta = {
   name: "HTMLエンティティ変換",
   nameEn: "HTML Entity Encoder/Decoder",
   description:
-    "HTMLエンティティ変換ツール。HTML特殊文字のエスケープ・アンエスケープに対応。XSS対策やHTMLソースの確認に便利。登録不要・無料で使えるオンラインツールです。",
-  shortDescription: "HTML特殊文字のエスケープ・アンエスケープ",
+    "HTMLエンティティ変換ツール。HTML特殊文字のエンコード・デコードに対応。XSS対策やHTMLソースの確認に便利。登録不要・無料で使えるオンラインツールです。",
+  shortDescription: "HTML特殊文字のエンコード・デコード",
   keywords: [
     "HTMLエンティティ変換",
     "HTML特殊文字 エスケープ",
     "HTMLエスケープ",
-    "HTMLアンエスケープ",
+    "HTMLデコード",
     "HTML文字参照",
   ],
   category: "encoding",
@@ -21,7 +21,7 @@ export const meta: ToolMeta = {
   structuredDataType: "WebApplication",
   trustLevel: "verified",
   howItWorks:
-    "エスケープモードでは &・<・>・\"・' の5文字をHTMLエンティティ（&amp;・&lt;・&gt;・&quot;・&#39;）に変換します。アンエスケープモードでは名前付きエンティティ・10進数参照・16進数参照をすべて元の文字に戻します。変換はブラウザ上で完結します。",
+    "エンコードモードでは &・<・>・\"・' の5文字をHTMLエンティティ（&amp;・&lt;・&gt;・&quot;・&#39;）に変換します。デコードモードでは名前付きエンティティ・10進数参照・16進数参照をすべて元の文字に戻します。変換はブラウザ上で完結します。",
   faq: [
     {
       question: "どの文字がエスケープ対象ですか？",

@@ -202,6 +202,17 @@ describe("QrCodePage", () => {
     expect(css).not.toMatch(/font-weight\s*:\s*700/);
   });
 
+  // E-12 拡張: .controlLabel に white-space: nowrap があるか（ラベル折返し防止）
+  // ux-gate-findings.md 低指摘: セレクトのラベル折返し（狭幅でラベルが折り返される問題）
+  test("CSS .controlLabel has white-space: nowrap to prevent label wrapping", () => {
+    const cssPath = resolve(__dirname, "../QrCodePage.module.css");
+    const css = readFileSync(cssPath, "utf-8");
+    // .controlLabel ブロックに white-space: nowrap が含まれることを確認
+    const controlLabelBlock = css.match(/\.controlLabel\s*\{([\s\S]*?)\}/);
+    expect(controlLabelBlock).not.toBeNull();
+    expect(controlLabelBlock![1]).toMatch(/white-space\s*:\s*nowrap/);
+  });
+
   // E-12 拡張: CSS 内の全 var(--token) が globals.css 定義トークンに解決するか検証
   // reviewer 指摘（cycle-225 T-6）: 未定義トークンのタイポ（--fg-muted 等）は
   // --color-* 旧トークン検査だけでは検出できないため、全トークン存在確認を追加する

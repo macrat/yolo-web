@@ -90,25 +90,34 @@ export function toWareki(date: Date): WarekiInfo | null {
 
 // --- Zodiac (干支) ---
 
-const ZODIAC_ANIMALS = [
-  "子",
-  "丑",
-  "寅",
-  "卯",
-  "辰",
-  "巳",
-  "午",
-  "未",
-  "申",
-  "酉",
-  "戌",
-  "亥",
-];
+// 十二支の漢字と読み仮名のペア。FAQの順序（子〜亥）と一致させる。
+const ZODIAC_ENTRIES: ReadonlyArray<{ kanji: string; reading: string }> = [
+  { kanji: "子", reading: "ね" },
+  { kanji: "丑", reading: "うし" },
+  { kanji: "寅", reading: "とら" },
+  { kanji: "卯", reading: "う" },
+  { kanji: "辰", reading: "たつ" },
+  { kanji: "巳", reading: "み" },
+  { kanji: "午", reading: "うま" },
+  { kanji: "未", reading: "ひつじ" },
+  { kanji: "申", reading: "さる" },
+  { kanji: "酉", reading: "とり" },
+  { kanji: "戌", reading: "いぬ" },
+  { kanji: "亥", reading: "い" },
+] as const;
 
+/** 生まれ年の西暦から干支の漢字一字を返す（後方互換・内部用）。 */
 export function getZodiac(year: number): string {
   // 2020 = 子 (Rat). 2020 % 12 = 4, so offset is 4 for 子 (index 0)
   const index = (((year - 2020) % 12) + 12) % 12;
-  return ZODIAC_ANIMALS[index];
+  return ZODIAC_ENTRIES[index].kanji;
+}
+
+/** 生まれ年の西暦から干支の漢字に読み仮名を括弧付きで付与した文字列を返す（例: 「午（うま）」）。 */
+export function getZodiacWithReading(year: number): string {
+  const index = (((year - 2020) % 12) + 12) % 12;
+  const { kanji, reading } = ZODIAC_ENTRIES[index];
+  return `${kanji}（${reading}）`;
 }
 
 // --- Constellation (星座) ---

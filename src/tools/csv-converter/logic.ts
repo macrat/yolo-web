@@ -168,7 +168,7 @@ export function toMarkdown(rows: string[][]): string {
 export function parseJson(input: string): string[][] {
   const data = JSON.parse(input);
   if (!Array.isArray(data)) {
-    throw new Error("JSONは配列である必要があります");
+    throw new Error("JSONは配列である必要があります。");
   }
   if (data.length === 0) return [];
 
@@ -192,7 +192,8 @@ export function parseJson(input: string): string[][] {
 export function parseMarkdown(input: string): string[][] {
   const lines = input.trim().split("\n");
   if (lines.length < 2) {
-    throw new Error("Markdown表には少なくともヘッダー行と区切り行が必要です");
+    // ux-gate-findings.md: エラー文言の句点統一（parseJson のエラーと同様に末尾句点で統一）
+    throw new Error("Markdown表には少なくともヘッダー行と区切り行が必要です。");
   }
 
   const parseLine = (line: string): string[] => {

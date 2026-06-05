@@ -6,7 +6,8 @@ export const meta: ToolMeta = {
   nameEn: "JSON Formatter & Validator",
   description:
     "JSONデータの整形・圧縮・検証ができるオンラインツール。インデント幅の設定やエラー位置の表示に対応。登録不要・無料で使えます。",
-  shortDescription: "JSONの整形・圧縮・バリデーション",
+  shortDescription:
+    "JSONを改行・字下げして読みやすく整形します。構文チェックや圧縮にも対応",
   keywords: [
     "JSON整形",
     "JSONフォーマット",

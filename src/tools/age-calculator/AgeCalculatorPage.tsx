@@ -7,7 +7,7 @@ import ErrorMessage from "@/components/ErrorMessage";
 import {
   calculateAge,
   toWareki,
-  getZodiac,
+  getZodiacWithReading,
   getConstellation,
   formatDate,
   parseDate,
@@ -67,7 +67,7 @@ export default function AgeCalculatorPage() {
     const wareki = toWareki(birthDate);
     setWarekiInfo(wareki);
 
-    setZodiac(getZodiac(birthDate.getFullYear()));
+    setZodiac(getZodiacWithReading(birthDate.getFullYear()));
     setConstellation(
       getConstellation(birthDate.getMonth() + 1, birthDate.getDate()),
     );
@@ -127,8 +127,14 @@ export default function AgeCalculatorPage() {
       {/* エラー表示（A-4: 共通部品 ErrorMessage・日本語メッセージ） */}
       {errorMsg && <ErrorMessage message={errorMsg} />}
 
-      {/* C-3: ライブリージョン — 実テキストノードのサマリを持つ */}
-      <div role="status" aria-live="polite" aria-atomic="true">
+      {/* C-3: ライブリージョン — 実テキストノードのサマリを持つ
+           srOnly でスクリーンリーダーにのみ読み上げ・画面上の重複表示を防ぐ */}
+      <div
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        className={styles.srOnly}
+      >
         {statusSummary}
       </div>
 

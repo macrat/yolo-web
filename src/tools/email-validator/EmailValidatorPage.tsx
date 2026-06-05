@@ -85,7 +85,7 @@ export default function EmailValidatorPage() {
         {email.trim() && (
           <>
             {/*
-             * 判定バッジのテキスト「✓ 有効」等がライブリージョン内の
+             * 判定バッジのテキスト「有効」「有効（要確認）」「無効」がライブリージョン内の
              * 実テキストノードとして機能し、C-3 要件を満たす。
              */}
             <div
@@ -97,12 +97,51 @@ export default function EmailValidatorPage() {
                   : styles.badgeInvalid
               }
             >
+              {/*
+               * Lucide スタイル SVG アイコン（aria-hidden="true" で装飾専用宣言）。
+               * DESIGN.md §3「絵文字不可・必要なら Lucide 線画アイコン」に準拠。
+               * スクリーンリーダーはバッジのテキスト（「有効」「無効」等）のみを読み上げる。
+               */}
+              {result.valid ? (
+                /* CheckCircle2 相当: 円 + チェックマーク（有効 / 有効（要確認）） */
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M8 12l3 3 5-5" />
+                </svg>
+              ) : (
+                /* XCircle 相当: 円 + バツ印（無効） */
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M15 9l-6 6" />
+                  <path d="M9 9l6 6" />
+                </svg>
+              )}
               <span>
                 {result.valid
                   ? hasSuggestion
-                    ? "✓ 有効（要確認）"
-                    : "✓ 有効"
-                  : "✗ 無効"}
+                    ? "有効（要確認）"
+                    : "有効"
+                  : "無効"}
               </span>
             </div>
 
