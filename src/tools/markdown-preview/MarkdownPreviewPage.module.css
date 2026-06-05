@@ -32,6 +32,14 @@
   gap: 0.4rem;
 }
 
+/* パネルヘッダー: ラベルとコピーボタンを横並びに配置 */
+.panelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
 .panelLabel {
   font-size: 0.85rem;
   font-weight: 600;

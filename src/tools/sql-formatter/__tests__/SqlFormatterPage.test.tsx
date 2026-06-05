@@ -102,11 +102,11 @@ describe("SqlFormatterPage", () => {
     expect(andLine!.startsWith("    ")).toBe(true);
   });
 
-  // E-4: キーワード大文字チェックボックスで小文字切り替え
-  test("lowercases keywords when uppercase checkbox is unchecked", () => {
+  // E-4: キーワード大文字トグルスイッチで小文字切り替え
+  test("lowercases keywords when uppercase toggle is turned off", () => {
     render(<SqlFormatterPage />);
-    const checkbox = screen.getByLabelText("キーワードを大文字にする");
-    fireEvent.click(checkbox); // toggle off
+    const toggle = screen.getByRole("switch", { name: "キーワード大文字" });
+    fireEvent.click(toggle); // toggle off
     const input = screen.getByLabelText("SQL入力");
     fireEvent.change(input, {
       target: { value: "SELECT id FROM users" },
@@ -226,9 +226,9 @@ describe("SqlFormatterPage", () => {
     expect(css).not.toMatch(/var\(--color-/);
 
     // background や color プロパティに --accent が直接使われていないこと
-    // （accent-color は checkbox チェック色のために意図的に使用するため除外）
+    // ToggleSwitch に移行後、SqlFormatterPage.module.css 内に accent-color 宣言は不要
     const accentDirectUse = css.match(
-      /(?<!accent-)(?:background|color)\s*:\s*var\(--accent\)/g,
+      /(?:background|color|accent-color)\s*:\s*var\(--accent\)/g,
     );
     expect(accentDirectUse).toBeNull();
 

@@ -6,7 +6,7 @@ export const meta: ToolMeta = {
   nameEn: "SQL Formatter",
   description:
     "SQL整形ツール。SQLクエリを自動整形してインデント・改行・キーワード大文字化。MySQL・PostgreSQL・SQLite対応。登録不要・無料で使えるオンラインツールです。",
-  shortDescription: "SQLクエリの自動整形・インデント",
+  shortDescription: "SQLクエリを改行・字下げして読みやすく整形します",
   keywords: [
     "SQL 整形",
     "SQL フォーマッター",
@@ -21,7 +21,7 @@ export const meta: ToolMeta = {
   structuredDataType: "WebApplication",
   trustLevel: "verified",
   howItWorks:
-    "SQLクエリを解析し、キーワードの大文字化・適切なインデント・改行を追加して読みやすく整形します。「圧縮」ボタンで不要な空白と改行を除去した1行形式にも変換できます。MySQL・PostgreSQL・SQLiteなど一般的なSQLに対応し、すべての処理はブラウザ上で完結します。",
+    "SQLクエリを解析し、改行・字下げ（インデント）・キーワードの大文字化を加えて読みやすく整形します。「圧縮」ボタンで不要な空白と改行を除去した1行形式にも変換できます。MySQL・PostgreSQL・SQLiteなど一般的なSQLに対応し、すべての処理はブラウザ上で完結します。",
   faq: [
     {
       question: "どのSQLデータベースに対応していますか？",
@@ -31,7 +31,7 @@ export const meta: ToolMeta = {
     {
       question: "キーワードの大文字・小文字は切り替えられますか？",
       answer:
-        "はい。「キーワード大文字」チェックボックスで切り替えられます。オンにするとSELECTやFROMなどのキーワードが大文字に、オフにすると小文字になります。",
+        "はい。「キーワード大文字」スイッチで切り替えられます。オンにするとSELECTやFROMなどのキーワードが大文字に、オフにすると小文字になります。",
     },
     {
       question: "SQL圧縮（minify）機能はどのように動作しますか？",
