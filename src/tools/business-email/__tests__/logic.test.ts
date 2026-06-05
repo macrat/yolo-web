@@ -198,4 +198,60 @@ describe("generateEmail", () => {
       }
     }
   });
+
+  /**
+   * 是正テスト(E-4拡張): 12テンプレート全て、placeholder フォールバックで初期表示した際に
+   * 破綻文(同語二重・前置きフレーズ重複・連体終止+体言の組合せ)が生成されないことを検証する。
+   * これはレビュアー指摘(critical: thanks-visit の二重「について」・decline-proposalの前置き重複、
+   * major: apology-mistake の「あったの件」不自然接続)に対応した恒久的な回帰テスト。
+   */
+  test("all templates: initial preview with placeholder fallback produces no broken Japanese text", () => {
+    const templates = getAllTemplates();
+    for (const template of templates) {
+      // 初期表示と同等: placeholder フォールバックで全フィールドを埋める
+      const values: Record<string, string> = {};
+      for (const field of template.fields) {
+        values[field.key] = field.defaultValue ?? field.placeholder;
+      }
+      const result = generateEmail(template, values);
+      const body = result.body;
+
+      // パターン1: 同一語が2回連続する破綻パターン
+      // 「について」「ましたが、」等が連続するケースを検出
+      // 同じ4文字以上の日本語フレーズが直後にもう1回繰り返されるパターン
+      const doublePhrase = /(.{4,})\1/;
+      expect(body).not.toMatch(
+        doublePhrase,
+        // テンプレート名をエラーメッセージに含める
+      );
+
+      // パターン2: 「について」が連続する具体的なケース
+      expect(body).not.toContain("についてについて");
+
+      // パターン3: 「社内で慎重に検討いたしましたが、社内で慎重に」のような前置きフレーズ重複
+      const lines = body.split("\n");
+      for (const line of lines) {
+        // 1行内で「ましたが、」の後に「ましたが、」が再出現しないこと
+        const searchPhrase = "ましたが、";
+        const firstIdx = line.indexOf(searchPhrase);
+        if (firstIdx !== -1) {
+          const secondIdx = line.indexOf(
+            searchPhrase,
+            firstIdx + searchPhrase.length,
+          );
+          expect(secondIdx).toBe(
+            -1,
+            // テンプレート ID をエラーに含める
+          );
+        }
+      }
+
+      // パターン4: 連体終止形(「〜た」「〜な」「〜い」)+「の件」の不自然な接続
+      // 例: 「誤りがあったの件」「難しい状況の件」
+      // 注: 文語体では「あったの件」より「あったことの件」「誤りの件」が自然
+      expect(body).not.toMatch(/た(?:こと)?の件/);
+      expect(body).not.toMatch(/い(?:こと)?の件/);
+      expect(body).not.toMatch(/な(?:こと)?の件/);
+    }
+  });
 });

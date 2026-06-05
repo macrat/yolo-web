@@ -398,6 +398,85 @@ describe("ImageResizerPage", () => {
   });
 
   // -------------------------------------------------------
+  // アスペクト比ロックボタン — DESIGN.md §3 絵文字禁止 是正テスト
+  // -------------------------------------------------------
+  it("DESIGN §3 是正: アスペクト比ロックボタンが可視テキストラベルを持ち絵文字を含まない", async () => {
+    render(<ImageResizerPage />);
+
+    const fileInput = document.querySelector(
+      'input[type="file"]',
+    ) as HTMLInputElement;
+    const file = new File(["dummy"], "img.png", { type: "image/png" });
+
+    await selectFileAndWaitImageLoad(fileInput, file);
+
+    // ロックボタン（aria-label から取得）
+    const lockButton = screen.getByRole("button", {
+      name: /アスペクト比/i,
+    });
+    expect(lockButton).toBeInTheDocument();
+
+    // 可視テキストが存在する（aria-hidden="true" の SVG 以外のテキスト）
+    // textContent から non-breaking space 以外のテキストが取れること
+    const visibleText = lockButton.textContent?.trim() ?? "";
+    expect(visibleText.length).toBeGreaterThan(0);
+
+    // 絵文字コードポイント（U+1F512=🔒 U+1F513=🔓）が存在しないこと
+    expect(visibleText).not.toMatch(/[\u{1F512}\u{1F513}]/u);
+  });
+
+  it("DESIGN §3 是正: アスペクト比ロックボタンは SVG 線画アイコンを含む（Lucide スタイル）", async () => {
+    render(<ImageResizerPage />);
+
+    const fileInput = document.querySelector(
+      'input[type="file"]',
+    ) as HTMLInputElement;
+    const file = new File(["dummy"], "img.png", { type: "image/png" });
+
+    await selectFileAndWaitImageLoad(fileInput, file);
+
+    const lockButton = screen.getByRole("button", {
+      name: /アスペクト比/i,
+    });
+
+    // SVG が含まれること
+    const svg = lockButton.querySelector("svg");
+    expect(svg).not.toBeNull();
+    // DESIGN.md §3: Lucide スタイル — fill="none", stroke="currentColor"
+    expect(svg?.getAttribute("fill")).toBe("none");
+    expect(svg?.getAttribute("stroke")).toBe("currentColor");
+    // aria-hidden で SR から隠されていること（テキストラベルで補う）
+    expect(svg?.getAttribute("aria-hidden")).toBe("true");
+  });
+
+  it("DESIGN §3 是正: アスペクト比ロック状態トグルで可視テキストが切り替わる", async () => {
+    render(<ImageResizerPage />);
+
+    const fileInput = document.querySelector(
+      'input[type="file"]',
+    ) as HTMLInputElement;
+    const file = new File(["dummy"], "img.png", { type: "image/png" });
+
+    await selectFileAndWaitImageLoad(fileInput, file);
+
+    const lockButton = screen.getByRole("button", {
+      name: /アスペクト比/i,
+    });
+
+    // 初期状態（ロック中）のテキストを取得
+    const initialText = lockButton.textContent?.trim() ?? "";
+
+    // ボタンをクリックして状態を切り替える
+    fireEvent.click(lockButton);
+
+    // 切り替え後のテキストを取得
+    const toggledText = lockButton.textContent?.trim() ?? "";
+
+    // テキストが変わること（状態変化が可視になっていること）
+    expect(toggledText).not.toBe(initialText);
+  });
+
+  // -------------------------------------------------------
   // E-12: CSSトークン検証
   // -------------------------------------------------------
   it("E-12: CSS に --color-* 旧トークンが存在しない", () => {

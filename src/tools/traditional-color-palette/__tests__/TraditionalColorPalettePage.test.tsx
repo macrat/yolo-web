@@ -1,8 +1,9 @@
 /**
- * TraditionalColorPalettePage 単一実装の回帰テスト（cycle-225 T-6）
+ * TraditionalColorPalettePage 単一実装の回帰テスト（cycle-225 T-6 / U-8 是正）
  *
  * 収束チェックリスト E-1〜E-12 に対応。
- * コピーボタンは T-4b 確定で「なし」（②-15 削除対象）。
+ * コピーボタンは T-4b U-8 PM 判断で「あり」に更新（hex/rgb/hsl 各値をコピー可能）。
+ * color-converter との一貫性・FAQ の「ワンクリックでコピーできます」の約束を実現。
  */
 
 import { readFileSync } from "fs";
@@ -221,23 +222,130 @@ describe("ARIA 属性（E-5）", () => {
 });
 
 // =========================================================
-// E-6, E-7, E-8: コピーボタンは T-4b で「なし」
+// E-6: コピー文言変化（T-4b U-8 更新：あり）
 // =========================================================
-describe("コピーボタン（T-4b なし確定）", () => {
-  it("コピーボタンが存在しない（②-15）", async () => {
+describe("コピー文言変化（E-6）", () => {
+  it("色選択後、HEX コピーボタンが表示される", async () => {
     render(<TraditionalColorPalettePage />);
-    // 色を選んでパレット結果を表示させる
     const swatches = document.querySelectorAll("[data-swatch-slug]");
-    if (swatches.length > 0) {
-      await act(async () => {
-        fireEvent.click(swatches[0] as HTMLElement);
-      });
-    }
-    // コピーボタンが存在しないこと
+    await act(async () => {
+      fireEvent.click(swatches[0] as HTMLElement);
+    });
+    // HEX コピーボタンが表示されている
+    const hexCopyButtons = screen.getAllByRole("button", {
+      name: /HEX.*コピー/,
+    });
+    expect(hexCopyButtons.length).toBeGreaterThan(0);
+  });
+
+  it("コピーボタンをクリックすると COPIED_LABEL に文言が変わる", async () => {
+    vi.useFakeTimers();
+    render(<TraditionalColorPalettePage />);
+    const swatches = document.querySelectorAll("[data-swatch-slug]");
+    await act(async () => {
+      fireEvent.click(swatches[0] as HTMLElement);
+    });
+
+    // HEX コピーボタンをクリック
+    const hexCopyButtons = screen.getAllByRole("button", {
+      name: /HEX.*コピー/,
+    });
+    await act(async () => {
+      fireEvent.click(hexCopyButtons[0]);
+    });
+
+    // COPIED_LABEL「コピーしました」に変化
+    expect(
+      screen.getByRole("button", { name: /コピーしました/ }),
+    ).toBeInTheDocument();
+  });
+});
+
+// =========================================================
+// E-7: コピー disabled 状態（未選択時はコピーボタン自体が表示されない）
+//      reviewer 指摘: Button コンポーネント採用後は「カード描画時には必ず
+//      有効な aria-label が付く」ことを保証する観点のテストを追加
+// =========================================================
+describe("コピー disabled 状態（E-7）", () => {
+  it("色未選択時はコピーボタンが存在しない", () => {
+    render(<TraditionalColorPalettePage />);
     const copyButtons = screen.queryAllByRole("button", {
       name: /コピー/,
     });
     expect(copyButtons).toHaveLength(0);
+  });
+
+  it("カード描画時、コピーボタンは共通 Button コンポーネント(size=small)を使っている", async () => {
+    // reviewer 指摘: 素の <button> + 自作 CSS でなく Button コンポーネントを使う
+    // data-size='small' 属性で Button コンポーネントの採用を検証する
+    render(<TraditionalColorPalettePage />);
+    const swatches = document.querySelectorAll("[data-swatch-slug]");
+    await act(async () => {
+      fireEvent.click(swatches[0] as HTMLElement);
+    });
+    // パレット結果が表示されている
+    const paletteResults = document.querySelector(
+      "[data-testid='palette-results']",
+    );
+    expect(paletteResults).toBeInTheDocument();
+    // Button コンポーネント(size=small)が使われていることを data-size 属性で確認
+    const smallButtons = document.querySelectorAll("[data-size='small']");
+    expect(smallButtons.length).toBeGreaterThan(0);
+  });
+
+  it("カード描画時、各コピーボタンに有効な aria-label が付いている", async () => {
+    // reviewer 指摘: カード描画時には常に値が存在するため disabled の概念は不要だが、
+    // aria-label が正しく付与されて a11y が担保されていることを確認する
+    render(<TraditionalColorPalettePage />);
+    const swatches = document.querySelectorAll("[data-swatch-slug]");
+    await act(async () => {
+      fireEvent.click(swatches[0] as HTMLElement);
+    });
+    // HEX / RGB / HSL 各コピーボタンに有効な aria-label が付いている
+    const hexButtons = screen.queryAllByRole("button", {
+      name: /HEX.*コピー|HEXをコピー/,
+    });
+    const rgbButtons = screen.queryAllByRole("button", {
+      name: /RGB.*コピー|RGBをコピー/,
+    });
+    const hslButtons = screen.queryAllByRole("button", {
+      name: /HSL.*コピー|HSLをコピー/,
+    });
+    expect(hexButtons.length).toBeGreaterThan(0);
+    expect(rgbButtons.length).toBeGreaterThan(0);
+    expect(hslButtons.length).toBeGreaterThan(0);
+    // 全コピーボタンが aria-label を持つ
+    [...hexButtons, ...rgbButtons, ...hslButtons].forEach((btn) => {
+      expect(btn).toHaveAttribute("aria-label");
+      expect(btn.getAttribute("aria-label")).not.toBe("");
+    });
+  });
+});
+
+// =========================================================
+// E-8: clipboard 不在時の silent fail
+// =========================================================
+describe("clipboard 不在時の silent fail（E-8）", () => {
+  it("navigator.clipboard が存在しない環境でもエラーが発生しない", async () => {
+    vi.stubGlobal("navigator", {
+      clipboard: undefined,
+    });
+    render(<TraditionalColorPalettePage />);
+    const swatches = document.querySelectorAll("[data-swatch-slug]");
+    await act(async () => {
+      fireEvent.click(swatches[0] as HTMLElement);
+    });
+    const hexCopyButtons = screen.queryAllByRole("button", {
+      name: /HEX.*コピー/,
+    });
+    // clipboard がなくてもクラッシュしない
+    if (hexCopyButtons.length > 0) {
+      await expect(
+        act(async () => {
+          fireEvent.click(hexCopyButtons[0]);
+        }),
+      ).resolves.not.toThrow();
+    }
   });
 });
 

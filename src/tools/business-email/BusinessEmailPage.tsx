@@ -77,11 +77,19 @@ export default function BusinessEmailPage() {
   );
 
   const generated = useMemo(() => {
-    // フィールド値が未入力の場合はデフォルト値にフォールバック
+    // フィールド値が未入力の場合のフォールバック優先順位:
+    //   1. ユーザー入力値 (fieldValues[field.key])
+    //   2. テンプレートのデフォルト値 (field.defaultValue)
+    //   3. プレースホルダー (field.placeholder) ← 空文字にしないための是正 (U-2)
+    //      空文字で差し込むと「様/です。/について」等の破綻文になるため、
+    //      初期状態でも一貫した見本メールを表示できるようにする。
     const mergedValues: Record<string, string> = {};
     for (const field of selectedTemplate.fields) {
+      const userVal = fieldValues[field.key];
       mergedValues[field.key] =
-        fieldValues[field.key] ?? field.defaultValue ?? "";
+        userVal !== undefined && userVal !== ""
+          ? userVal
+          : (field.defaultValue ?? field.placeholder);
     }
     return generateEmail(selectedTemplate, mergedValues);
   }, [selectedTemplate, fieldValues]);

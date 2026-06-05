@@ -116,21 +116,14 @@ describe("E-1: 基本レンダリング", () => {
 // E-3: 空入力（初期状態: パスワード未生成）
 // =========================================================
 describe("E-3: 空入力・初期状態", () => {
-  it("初期状態ではコピーボタンが disabled になっている（useEffect 前＝パスワード未生成）", async () => {
-    // jsdom では useEffect は render 直後に同期的に実行されるため、
-    // マウント後すぐに useEffect（初回生成）が走ってパスワードが生成される。
-    // ただし Button コンポーネントの disabled props は
-    // password が空文字列（""）のときのみ disabled になる仕様のため、
-    // useEffect 前の render 初期状態を確認するため
-    // StrictMode 外でテストする必要がある。
-    // 現実的な方法: 強制的に空状態を維持する mock を使わず、
-    // 生成ボタンを押す前の確認をあえてしない（useEffect が走るため）。
-    //
-    // 実際には初期パスワードが生成されると disabled=false になるが、
-    // SSR 文脈では初期 HTML では disabled=true の状態が正しいため、
-    // E-7 のテストに統合して確認する。
-    //
-    // E-3 では「全チェックを OFF にして空の charset を作るとき」の挙動を確認する。
+  it("全文字種を OFF にするとコピーボタンが disabled になっている（UX是正対応: 生成ボタン無効化により空生成を防ぐ）", async () => {
+    // UX是正（ux-gate-findings.md U-10）後の動作:
+    // 全文字種OFFになると生成ボタンが無効化されるため、
+    // ユーザーは空パスワードを生成できない。
+    // パスワードが既に生成済みの状態で全文字種をOFFにしても、
+    // 既存パスワードは残るがコピーボタンは引き続き有効のまま（正しい挙動）。
+    // E-3 では「全文字種OFFのとき生成ボタンが無効化される」確認をUX是正テストに委譲し、
+    // ここでは「全文字種OFF状態では常にエラーメッセージが表示される」ことを確認する。
     render(<PasswordGeneratorPage />);
     // 全トグルを OFF にしてすべての文字種を無効化
     const uppercaseToggle = screen.getByRole("switch", { name: /大文字/ });
@@ -143,14 +136,12 @@ describe("E-3: 空入力・初期状態", () => {
     fireEvent.click(digitsToggle);
     fireEvent.click(symbolsToggle);
 
-    // 生成ボタンを押すと charset が空なので generatePassword が "" を返す
-    await act(async () => {
-      fireEvent.click(screen.getByRole("button", { name: /パスワード生成/ }));
-    });
-
-    // コピーボタンが disabled になること（E-7 と同様の観点）
-    const copyBtn = screen.getByRole("button", { name: /コピー/ });
-    expect(copyBtn).toBeDisabled();
+    // 全文字種OFFではエラーメッセージが表示される（UX是正）
+    expect(screen.getByRole("alert")).toBeInTheDocument();
+    // 生成ボタンが無効化される（UX是正）
+    expect(
+      screen.getByRole("button", { name: /パスワード生成/ }),
+    ).toBeDisabled();
   });
 
   it("初期状態では role='status' の要素が存在する", () => {
@@ -300,10 +291,12 @@ describe("E-6: コピー文言変化", () => {
 // E-7: コピー disabled 状態
 // =========================================================
 describe("E-7: コピー disabled 状態", () => {
-  it("全文字種を OFF にして生成→空パスワード時にコピーボタンが disabled", async () => {
-    // jsdom では useEffect が同期実行されマウント時にパスワードが生成されるため、
-    // 「初期状態で disabled」のテストは useEffect 後の状態になる。
-    // 代わりに「charset が空になるオプションで生成→空文字列→disabled」を確認する。
+  it("全文字種を OFF にすると生成ボタンが disabled になり空パスワード生成を防ぐ（UX是正対応）", async () => {
+    // UX是正（ux-gate-findings.md U-10）後の動作:
+    // 全文字種OFFになると生成ボタン自体が無効化されるため、
+    // charset=空の generatePassword が呼ばれることを防ぐ。
+    // これにより「空パスワードが生成される→コピーボタンが disabled」という
+    // 間接的な検証より、直接「生成ボタンが disabled」を確認する。
     render(<PasswordGeneratorPage />);
 
     // 全文字種を OFF にする
@@ -312,14 +305,9 @@ describe("E-7: コピー disabled 状態", () => {
     fireEvent.click(screen.getByRole("switch", { name: /数字/ }));
     fireEvent.click(screen.getByRole("switch", { name: /記号/ }));
 
-    // 生成ボタンを押すと空文字列が生成される（charset が空のため）
-    await act(async () => {
-      fireEvent.click(screen.getByRole("button", { name: /パスワード生成/ }));
-    });
-
-    // パスワードが空なのでコピーボタンが disabled になる
-    const copyBtn = screen.getByRole("button", { name: /コピー/ });
-    expect(copyBtn).toBeDisabled();
+    // 全文字種OFFのとき生成ボタンが無効化されること（UX是正）
+    const generateBtn = screen.getByRole("button", { name: /パスワード生成/ });
+    expect(generateBtn).toBeDisabled();
   });
 
   it("パスワード生成後はコピーボタンが有効になる（デフォルト設定）", async () => {
@@ -417,6 +405,99 @@ describe("②-11: チェックボックス→トグル", () => {
 });
 
 // =========================================================
+// UX是正: 全文字種OFFのエラー状態（ux-gate-findings.md U-10）
+// =========================================================
+describe("UX是正: 全文字種OFFのエラーフィードバック", () => {
+  it("全文字種をOFFにするとエラーメッセージが表示される", () => {
+    render(<PasswordGeneratorPage />);
+
+    fireEvent.click(screen.getByRole("switch", { name: /大文字/ }));
+    fireEvent.click(screen.getByRole("switch", { name: /小文字/ }));
+    fireEvent.click(screen.getByRole("switch", { name: /数字/ }));
+    fireEvent.click(screen.getByRole("switch", { name: /記号/ }));
+
+    // ErrorMessage が「使用する文字の種類を 1 つ以上選んでください」を表示する
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "使用する文字の種類を 1 つ以上選んでください",
+    );
+  });
+
+  it("全文字種をOFFにすると生成ボタンが無効化される", () => {
+    render(<PasswordGeneratorPage />);
+
+    fireEvent.click(screen.getByRole("switch", { name: /大文字/ }));
+    fireEvent.click(screen.getByRole("switch", { name: /小文字/ }));
+    fireEvent.click(screen.getByRole("switch", { name: /数字/ }));
+    fireEvent.click(screen.getByRole("switch", { name: /記号/ }));
+
+    const generateBtn = screen.getByRole("button", { name: /パスワード生成/ });
+    expect(generateBtn).toBeDisabled();
+  });
+
+  it("全文字種をOFFにすると強度バーが「—」表示になる", () => {
+    render(<PasswordGeneratorPage />);
+
+    fireEvent.click(screen.getByRole("switch", { name: /大文字/ }));
+    fireEvent.click(screen.getByRole("switch", { name: /小文字/ }));
+    fireEvent.click(screen.getByRole("switch", { name: /数字/ }));
+    fireEvent.click(screen.getByRole("switch", { name: /記号/ }));
+
+    // 強度バーが「—」表示になること
+    const statusEl = screen.getByRole("status");
+    expect(statusEl.textContent).toContain("—");
+  });
+
+  it("いずれか1つ以上の文字種をONにするとエラーメッセージが消える", () => {
+    render(<PasswordGeneratorPage />);
+
+    // 全OFF
+    fireEvent.click(screen.getByRole("switch", { name: /大文字/ }));
+    fireEvent.click(screen.getByRole("switch", { name: /小文字/ }));
+    fireEvent.click(screen.getByRole("switch", { name: /数字/ }));
+    fireEvent.click(screen.getByRole("switch", { name: /記号/ }));
+
+    // エラーが出ていることを確認
+    expect(screen.getByRole("alert")).toBeInTheDocument();
+
+    // 大文字だけONに戻す
+    fireEvent.click(screen.getByRole("switch", { name: /大文字/ }));
+
+    // エラーが消えること
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+  });
+
+  it("いずれか1つ以上の文字種をONにすると生成ボタンが有効になる", () => {
+    render(<PasswordGeneratorPage />);
+
+    // 全OFF
+    fireEvent.click(screen.getByRole("switch", { name: /大文字/ }));
+    fireEvent.click(screen.getByRole("switch", { name: /小文字/ }));
+    fireEvent.click(screen.getByRole("switch", { name: /数字/ }));
+    fireEvent.click(screen.getByRole("switch", { name: /記号/ }));
+
+    // 無効を確認
+    expect(
+      screen.getByRole("button", { name: /パスワード生成/ }),
+    ).toBeDisabled();
+
+    // 大文字だけONに戻す
+    fireEvent.click(screen.getByRole("switch", { name: /大文字/ }));
+
+    // 有効になること
+    expect(
+      screen.getByRole("button", { name: /パスワード生成/ }),
+    ).not.toBeDisabled();
+  });
+
+  it("文字種が有効な状態では強度バーが「—」表示にならない", () => {
+    render(<PasswordGeneratorPage />);
+    // デフォルト状態（全文字種ON）では強度バーが「弱い」「普通」「良い」「強い」のいずれかを表示
+    const statusEl = screen.getByRole("status");
+    expect(statusEl.textContent).not.toContain("—");
+  });
+});
+
+// =========================================================
 // ①-6: 強度バーの動的更新
 // =========================================================
 describe("①-6: 強度バーの動的更新", () => {
@@ -427,7 +508,11 @@ describe("①-6: 強度バーの動的更新", () => {
     expect(statusEl.textContent).toContain("強い");
   });
 
-  it("全文字種を OFF にすると強度が弱いになる（charset=空）", () => {
+  it("全文字種を OFF にすると強度バーが「—」表示になる（UX是正: 「弱い」誤表示を防ぐ）", () => {
+    // UX是正（ux-gate-findings.md U-10）後の動作:
+    // 全文字種OFFのとき evaluateStrength は "weak" を返すが、
+    // 「弱い」と表示するのは誤解を招く（文字種未選択のエラー状態なのに強度判定「弱い」と見せる）。
+    // UX是正後は「—」を表示してエラー状態を明示する。
     render(<PasswordGeneratorPage />);
 
     // 全文字種を OFF にする（charset が空になる）
@@ -436,10 +521,9 @@ describe("①-6: 強度バーの動的更新", () => {
     fireEvent.click(screen.getByRole("switch", { name: /数字/ }));
     fireEvent.click(screen.getByRole("switch", { name: /記号/ }));
 
-    // 強度が変化することを確認（charset=空 → evaluateStrength は "weak" を返す）
+    // 強度バーが「—」表示になること（UX是正）
     const statusEl = screen.getByRole("status");
-    // charset が空のとき evaluateStrength は "weak" を返す（logic.ts 仕様）
-    expect(statusEl.textContent).toContain("弱い");
+    expect(statusEl.textContent).toContain("—");
   });
 
   it("数字のみ・8文字では強度が weak になる", () => {

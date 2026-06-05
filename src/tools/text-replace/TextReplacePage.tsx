@@ -157,11 +157,18 @@ export default function TextReplacePage() {
         />
       </div>
 
-      {/* 正規表現モード時の注意 */}
+      {/* 正規表現モード時の補足説明 */}
       {options.useRegex && (
-        <p className={styles.warning} role="note">
-          複雑な正規表現パターンはブラウザのパフォーマンスに影響する場合があります。
-        </p>
+        <div className={styles.warning} role="note" data-testid="regex-hint">
+          <p className={styles.warningLine}>
+            正規表現モードがオンです。分からなければオフのまま通常置換できます。
+          </p>
+          <p className={styles.warningLine}>
+            よく使うパターン例：<code>\d+</code>（数字の連続）、<code>\s+</code>
+            （空白・タブ）、<code>[A-Za-z]+</code>（英字）。 置換文字列で{" "}
+            <code>$1</code> と書くと括弧内（キャプチャグループ）を参照できます。
+          </p>
+        </div>
       )}
 
       {/* エラー表示（A-4: ErrorMessage 使用・日本語化済み） */}

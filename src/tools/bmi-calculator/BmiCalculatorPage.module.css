@@ -60,10 +60,11 @@
   overflow: hidden;
 }
 
-/* BMI 10-18.5: 低体重ゾーン (8.5/40 = 21.25%) */
+/* BMI 10-18.5: 低体重ゾーン (8.5/40 = 21.25%)
+ * 中立色（--bg-softer）を使う。--accent-soft は DESIGN.md §2 でフォーカス専用のため誤用にあたる */
 .meterZoneLow {
   flex: 0 0 21.25%;
-  background-color: var(--accent-soft);
+  background-color: var(--bg-softer);
 }
 
 /* BMI 18.5-25: 普通体重ゾーン (6.5/40 = 16.25%) */
@@ -72,10 +73,18 @@
   background-color: var(--success);
 }
 
-/* BMI 25-50: 肥満ゾーン (25/40 = 62.5%) */
-.meterZoneHigh {
+/* BMI 25-35: 肥満1〜2度ゾーン (10/40 = 25%)
+ * DESIGN.md §6 Don't「グラデーション禁止」: linear-gradient を廃止し --warning でソリッドに */
+.meterZoneWarning {
+  flex: 0 0 25%;
+  background-color: var(--warning);
+}
+
+/* BMI 35-50: 肥満3〜4度ゾーン (15/40 = 37.5%)
+ * ソリッドな --danger で危険レベルを明確に示す */
+.meterZoneDanger {
   flex: 1;
-  background: linear-gradient(to right, var(--warning), var(--danger));
+  background-color: var(--danger);
 }
 
 .meterIndicator {

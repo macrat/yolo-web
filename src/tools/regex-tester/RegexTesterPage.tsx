@@ -13,6 +13,12 @@
  * - ②-4: 置換機能復元 → showReplace トグル + replacement 入力 + 置換結果表示
  * - ②-15: コピーボタン撤去確認 → regex-tester は「知る対象」のためコピーボタンなし
  *
+ * UX是正（cycle-225 UXゲート指摘）:
+ * - (a): meta.ts description を実態（マッチ一覧表示）に合わせる（meta.ts 側で対処）
+ * - (b): REGEX_SAMPLE_INPUTS のサンプル投入機能を復元（機能後退是正）
+ * - (c): フラグ説明を title ツールチップだけでなく常時表示テキストに変更
+ * - (低): エラーメッセージに修正方法を添える（logic.ts 側で対処）
+ *
  * タイマー AP-I11 準拠:
  * - debounceIdRef / timeoutIdRef / activeWorkerRef を useRef で保持
  * - useEffect cleanup で clearTimeout / worker.terminate を呼ぶ
@@ -23,18 +29,41 @@
  * - エラー表示: ErrorMessage（role="alert" 内包）
  */
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Textarea from "@/components/Textarea";
+import Select from "@/components/Select";
+import Input from "@/components/Input";
 import ErrorMessage from "@/components/ErrorMessage";
 import { useRegexWorker } from "./useRegexWorker";
+import { REGEX_SAMPLE_INPUTS } from "./meta";
 import styles from "./RegexTesterPage.module.css";
 
-/** フラグ4種の定義（Component.tsx から継承） */
+/**
+ * フラグ4種の定義。
+ * description は title ツールチップのみでなく、チェックボックスの下に常時表示する（UX是正(c)）。
+ * タッチ端末では title ツールチップは発動しないため、常時表示の平易な説明が必要。
+ */
 const FLAG_OPTIONS = [
-  { flag: "g", label: "g (全体)", description: "全てのマッチを検索" },
-  { flag: "i", label: "i (大小無視)", description: "大文字小文字を区別しない" },
-  { flag: "m", label: "m (複数行)", description: "^/$を各行に適用" },
-  { flag: "s", label: "s (dotAll)", description: ".が改行にもマッチ" },
+  {
+    flag: "g",
+    label: "g",
+    description: "全てのマッチを検索（グローバル）",
+  },
+  {
+    flag: "i",
+    label: "i",
+    description: "大文字小文字を区別しない",
+  },
+  {
+    flag: "m",
+    label: "m",
+    description: "^ / $ を各行の先頭・末尾に適用",
+  },
+  {
+    flag: "s",
+    label: "s",
+    description: ". が改行を含む全文字にマッチ（dotAll）",
+  },
 ] as const;
 
 /** デフォルトフラグ: g フラグのみ ON */
@@ -51,6 +80,16 @@ export default function RegexTesterPage() {
   const [replacement, setReplacement] = useState("");
   /** 置換セクション表示フラグ */
   const [showReplace, setShowReplace] = useState(false);
+  /** サンプル選択告知テキスト（aria-live で読み上げ） */
+  const [sampleAnnounce, setSampleAnnounce] = useState("");
+  /**
+   * 告知テキスト連番（指摘3対応）
+   * 同一サンプルを連続で選び直したとき、state 文字列が同一になって
+   * React が再レンダーをスキップし、aria-live が反応しなくなる問題を防ぐ。
+   * 告知テキストに末尾不可視連番を付与することで毎回 state が変化する。
+   * useRef で保持し、cleanup 不要（整数インクリメントのみ）。
+   */
+  const sampleAnnounceCounterRef = useRef(0);
 
   const { matchResult, replaceResult, isProcessing } = useRegexWorker({
     pattern,
@@ -67,51 +106,117 @@ export default function RegexTesterPage() {
     );
   };
 
+  /**
+   * サンプル選択ハンドラ（UX是正(b): REGEX_SAMPLE_INPUTS を UI から参照）
+   * 選択されたサンプルのパターン・フラグ・テスト文字列を各入力欄に投入する。
+   * reviewer指摘3: 選択行為のフィードバックとして aria-live でサンプル名を告知する。
+   */
+  const handleSampleSelect = (indexStr: string) => {
+    if (indexStr === "") return;
+    const idx = parseInt(indexStr, 10);
+    const sample = REGEX_SAMPLE_INPUTS[idx];
+    if (!sample) return;
+    setPattern(sample.pattern);
+    setFlags(sample.flags);
+    setTestString(sample.testText);
+    // 指摘3: 連番を付与して同一サンプル連続選択でも aria-live が毎回反応するようにする。
+    // 末尾の連番は視覚的に表示されるが、.srOnly で非表示のため来訪者の目には触れない。
+    sampleAnnounceCounterRef.current += 1;
+    setSampleAnnounce(
+      `「${sample.label}」のサンプルを投入しました ${sampleAnnounceCounterRef.current}`,
+    );
+  };
+
   return (
     <div className={styles.container}>
+      {/* === サンプル選択（UX是正(b): REGEX_SAMPLE_INPUTS 投入機能復元） ===
+          REGEX_SAMPLE_INPUTS（6種）を Select で選択するとパターン・フラグ・テスト文字列を一括投入。
+          meta.ts の SSoT を UI から直接参照し、デッドコード状態を解消する。 */}
+      <div className={styles.field}>
+        <label htmlFor="regex-sample-select" className={styles.label}>
+          サンプルを試す
+        </label>
+        <Select
+          id="regex-sample-select"
+          aria-label="サンプルを選択"
+          value=""
+          onChange={(e) => handleSampleSelect(e.target.value)}
+        >
+          <option value="">— サンプルを選択 —</option>
+          {REGEX_SAMPLE_INPUTS.map((sample, i) => (
+            <option key={i} value={String(i)}>
+              {sample.label}
+            </option>
+          ))}
+        </Select>
+        {/* reviewer指摘3: サンプル選択フィードバック — 使い捨て投入設計でも SR ユーザーに
+            「どのサンプルを投入したか」を aria-live="polite" で一度だけ告知する。
+            視覚的には select が「— サンプルを選択 —」に戻るため、告知テキストは
+            スクリーンリーダー専用に sr-only で非表示にする。 */}
+        {/* aria-live のみ（role="status" は付与しない）。
+            ページ内に role="status" は1つ（マッチ件数サマリ）に統一し、
+            既存テストの getByRole("status") が複数ヒットしないようにする。
+            aria-live="polite" だけでも SR は読み上げる。 */}
+        <span
+          data-testid="sample-announce"
+          aria-live="polite"
+          aria-atomic="true"
+          className={styles.srOnly}
+        >
+          {sampleAnnounce}
+        </span>
+      </div>
+
       {/* === 正規表現パターン入力行（スラッシュ装飾 + フラグ表示） ===
           ②-9 outline:none 解消: patternRow コンテナの :focus-within でフォーカスリングを提供。
           patternInput 自体は outline:none（コンテナが代理）。この設計はコンテナ全体に
           フォーカスリングを表示する正規表現エディタの慣習的 UX である。 */}
-      <div className={styles.patternRow}>
-        <span className={styles.slash} aria-hidden="true">
-          /
-        </span>
-        <input
-          type="text"
-          className={styles.patternInput}
-          value={pattern}
-          onChange={(e) => setPattern(e.target.value)}
-          placeholder="正規表現パターン"
-          spellCheck={false}
-          aria-label="正規表現パターン"
-        />
-        <span className={styles.slash} aria-hidden="true">
-          /
-        </span>
-        <span className={styles.flagsDisplay} aria-hidden="true">
-          {flags}
-        </span>
+      <div className={styles.field}>
+        <label htmlFor="regex-pattern" className={styles.label}>
+          正規表現パターン
+        </label>
+        <div className={styles.patternRow}>
+          <span className={styles.slash} aria-hidden="true">
+            /
+          </span>
+          <input
+            id="regex-pattern"
+            type="text"
+            className={styles.patternInput}
+            value={pattern}
+            onChange={(e) => setPattern(e.target.value)}
+            placeholder="パターンを入力（例: \\d+）"
+            spellCheck={false}
+            aria-label="正規表現パターン"
+          />
+          <span className={styles.slash} aria-hidden="true">
+            /
+          </span>
+          <span className={styles.flagsDisplay} aria-hidden="true">
+            {flags}
+          </span>
+        </div>
       </div>
 
-      {/* === フラグチェックボックス群 === */}
-      <div className={styles.flagsRow} role="group" aria-label="正規表現フラグ">
-        {FLAG_OPTIONS.map((opt) => (
-          <label
-            key={opt.flag}
-            className={styles.flagLabel}
-            title={opt.description}
-          >
-            <input
-              type="checkbox"
-              checked={flags.includes(opt.flag)}
-              onChange={() => toggleFlag(opt.flag)}
-              aria-label={opt.flag}
-            />
-            {opt.label}
-          </label>
-        ))}
-      </div>
+      {/* === フラグチェックボックス群（UX是正(c): 説明を常時表示） ===
+          title ツールチップはタッチ端末で発動しないため、各フラグの説明を
+          チェックボックスの下に常時表示テキストとして配置する。 */}
+      <fieldset className={styles.flagsFieldset}>
+        <legend className={styles.flagsLegend}>フラグ</legend>
+        <div className={styles.flagsRow}>
+          {FLAG_OPTIONS.map((opt) => (
+            <label key={opt.flag} className={styles.flagLabel}>
+              <input
+                type="checkbox"
+                checked={flags.includes(opt.flag)}
+                onChange={() => toggleFlag(opt.flag)}
+              />
+              <span className={styles.flagCode}>{opt.label}</span>
+              <span className={styles.flagDesc}>{opt.description}</span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
 
       {/* === テスト文字列入力（Textarea 共通部品使用） === */}
       <div className={styles.field}>
@@ -207,22 +312,34 @@ export default function RegexTesterPage() {
               <label htmlFor="regex-replacement" className={styles.label}>
                 置換文字列
               </label>
-              <input
+              {/* 指摘2: 自作 <input> → Input 共通部品に置換。
+                  border-radius/border色/focus outline/min-height(44px) が
+                  DESIGN トークン準拠で自動的に揃う。
+                  replaceInput に独自装飾要件がないため、共通部品で完全代替可能。 */}
+              <Input
                 id="regex-replacement"
                 type="text"
                 value={replacement}
                 onChange={(e) => setReplacement(e.target.value)}
                 placeholder="置換後の文字列（$1 などのグループ参照可）"
                 spellCheck={false}
-                className={styles.replaceInput}
               />
             </div>
 
-            {/* 置換成功時: 置換結果 */}
+            {/* 置換成功時: 置換結果
+                reviewer指摘1: ラベル <span> に id を付与し、<pre> に aria-labelledby で
+                紐付ける。フォームの他要素（パターン/テスト文字列/置換文字列）は
+                <label htmlFor> で紐付けられており、置換「結果」だけが無関連になっていた
+                整合性の問題を解消する。 */}
             {!isProcessing && replaceResult?.success && (
               <div className={styles.field}>
-                <span className={styles.label}>置換結果</span>
-                <pre className={styles.replaceOutput}>
+                <span id="replace-result-label" className={styles.label}>
+                  置換結果
+                </span>
+                <pre
+                  className={styles.replaceOutput}
+                  aria-labelledby="replace-result-label"
+                >
                   {replaceResult.output}
                 </pre>
               </div>

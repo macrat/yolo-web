@@ -51,7 +51,8 @@
   padding: 0 0.25rem;
   /* フォーカスは patternRow の :focus-within で管理 */
   outline: none;
-  min-height: 2rem;
+  /* C-1 準拠: 共通部品の出荷済み最小値 36px (2.25rem) 以上に揃える */
+  min-height: 2.25rem;
 }
 
 .flagsDisplay {
@@ -63,28 +64,67 @@
   flex-shrink: 0;
 }
 
+/* フラグ fieldset（UX是正(c): 常時表示の説明テキストを含む） */
+.flagsFieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.flagsLegend {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--fg-soft);
+  margin-bottom: 0.5rem;
+  padding: 0;
+}
+
 /* フラグチェックボックス群 */
 .flagsRow {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: 0.75rem 1.25rem;
 }
 
+/* 各フラグラベル: チェックボックス + コード + 説明テキストを縦並び */
 .flagLabel {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto;
+  column-gap: 0.4rem;
+  row-gap: 0.15rem;
   align-items: center;
-  gap: 0.4rem;
-  font-size: 0.875rem;
-  color: var(--fg);
   cursor: pointer;
-  min-height: 2rem;
 }
 
 .flagLabel input[type="checkbox"] {
+  grid-row: 1;
+  grid-column: 1;
   accent-color: var(--accent);
   cursor: pointer;
   width: 1rem;
   height: 1rem;
+  margin: 0;
+}
+
+/* フラグ文字（g / i / m / s） */
+.flagCode {
+  grid-row: 1;
+  grid-column: 2;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--fg);
+  line-height: 1;
+}
+
+/* 常時表示の説明テキスト（タッチ端末で title ツールチップが使えない問題を解消） */
+.flagDesc {
+  grid-row: 2;
+  grid-column: 2;
+  font-size: 0.75rem;
+  color: var(--fg-soft);
+  line-height: 1.3;
 }
 
 /* フォームフィールド共通 */
@@ -213,26 +253,18 @@
   outline-offset: 2px;
 }
 
-/* 置換文字列入力欄 */
-.replaceInput {
-  flex: 1;
-  border: 1px solid var(--border-strong);
-  border-radius: var(--r-interactive);
-  font-family: var(--font-mono);
-  font-size: 0.95rem;
-  color: var(--fg);
-  background-color: var(--bg);
-  padding: 0.5rem 0.75rem;
-  /* フォーカス: DESIGN.md §2 */
-  outline: none;
-  min-height: 2.75rem;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.replaceInput:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+/* スクリーンリーダー専用非表示（視覚的には非表示・SR には読み上げられる）
+   reviewer指摘3: サンプル選択告知テキストに適用 */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 /* 置換結果表示 */

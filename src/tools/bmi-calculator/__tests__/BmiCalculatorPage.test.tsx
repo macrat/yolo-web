@@ -357,4 +357,21 @@ describe("E-12: CSS トークン検証", () => {
       expect(meterTrackMatch[0]).not.toMatch(/--r-interactive/);
     }
   });
+
+  // DESIGN.md §6 Don't: グラデーションを使わない
+  // .meterZoneHigh の linear-gradient は DESIGN.md §6「カラフルな背景やグラデーションを使わない」に違反
+  test("linear-gradient が CSS に存在しない（DESIGN.md §6: グラデーション禁止）", () => {
+    const cssWithoutComments = css.replace(/\/\*[\s\S]*?\*\//g, "");
+    expect(cssWithoutComments).not.toMatch(/linear-gradient/);
+  });
+
+  // DESIGN.md §2: --accent はリンクやフォーカス専用。--accent-soft も同様に
+  // 低体重ゾーン（.meterZoneLow）に --accent-soft を背景色として使うのは意味色の誤用
+  // 低体重は中立色（--bg-softer 等）で表現するべき
+  test("--accent-soft を background-color に使っていない（§2: --accent はフォーカス専用）", () => {
+    const cssWithoutComments = css.replace(/\/\*[\s\S]*?\*\//g, "");
+    expect(cssWithoutComments).not.toMatch(
+      /background(-color)?[^;]*var\(--accent-soft\)/,
+    );
+  });
 });

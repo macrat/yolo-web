@@ -3,7 +3,12 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { readFileSync } from "fs";
 import { join } from "path";
 import BusinessEmailPage from "../BusinessEmailPage";
-import { getCategories, getTemplatesByCategory, generateEmail } from "../logic";
+import {
+  getCategories,
+  getTemplatesByCategory,
+  generateEmail,
+  getAllTemplates,
+} from "../logic";
 
 // vi.hoisted でモック変数をホイストして動的に copiedKey を制御できるようにする
 const mockHook = vi.hoisted(() => ({
@@ -168,6 +173,98 @@ describe("BusinessEmailPage", () => {
     expect(() => {
       render(<BusinessEmailPage />);
     }).not.toThrow();
+  });
+
+  // 是正: 初期表示（全フィールド空）でプレビューが破綻しないこと
+  // 空フィールドは placeholder にフォールバックして差し込まれるため、
+  // 「様」「です。」「について」等の孤立した助詞・語尾が出ないこと
+  test("initial preview uses placeholders so text is not broken (e.g. no '様' orphan)", () => {
+    render(<BusinessEmailPage />);
+    const bodyPreview = screen.getByLabelText(
+      "本文プレビュー",
+    ) as HTMLTextAreaElement;
+    const body = bodyPreview.value;
+    // 「 様」や「。」の前に空文字が入る破綻パターンを検出:
+    // 破綻パターン: 行頭が「 様」になるか、改行直後に「 様」が来る
+    expect(body).not.toMatch(/^\s*様\b/m);
+    // 本文に何らかのプレースホルダー相当テキストが入ること（空差し込みでなく）
+    // デフォルトテンプレートでは recipientCompany の placeholder="株式会社〇〇" が使われること
+    expect(body).toContain("株式会社〇〇");
+    // デフォルトテンプレート(thanks-visit)の二重「について」が発生しないこと
+    expect(body).not.toContain("についてについて");
+    // 宛名行「山田太郎 様」が正しく表示されること（「 様」単独行にならないこと）
+    expect(body).toContain("山田太郎 様");
+  });
+
+  // 是正(E-4拡張): 12テンプレート全体をplaceholderフォールバックで生成し破綻文が出ないことを確認
+  // UIレベルでなくlogic関数経由で検証する（UIでは全12切替が困難なため）
+  // logic.test.tsの同等テストとUI側の回帰テストの二重防衛として機能する
+  test("all 12 templates produce non-broken text with placeholder fallback (regression)", () => {
+    const templates = getAllTemplates();
+    expect(templates).toHaveLength(12);
+
+    for (const template of templates) {
+      // 初期表示と同等: placeholder フォールバックで全フィールドを埋める
+      const values: Record<string, string> = {};
+      for (const field of template.fields) {
+        values[field.key] = field.defaultValue ?? field.placeholder;
+      }
+      const result = generateEmail(template, values);
+      const body = result.body;
+
+      // 二重「について」(thanks-visitで発見された破綻パターン)
+      expect(body).not.toContain("についてについて");
+
+      // 「ましたが、」の二重(decline-proposalで発見された前置きフレーズ重複)
+      const searchPhrase = "ましたが、";
+      const firstIdx = body.indexOf(searchPhrase);
+      if (firstIdx !== -1) {
+        const secondIdx = body.indexOf(
+          searchPhrase,
+          firstIdx + searchPhrase.length,
+        );
+        expect(secondIdx).toBe(-1);
+      }
+
+      // 連体終止形+「の件」の不自然な接続(apology-mistakeで発見されたパターン)
+      expect(body).not.toMatch(/た(?:こと)?の件/);
+    }
+  });
+
+  // 是正: 初期表示で件名コピー・本文コピーボタンが有効であること
+  // （プレースホルダーで埋めた見本メールは disabled でないこと）
+  test("copy buttons are enabled on initial render because preview has placeholder content", () => {
+    render(<BusinessEmailPage />);
+    const subjectCopyBtn = screen.getByRole("button", {
+      name: /件名をコピー/,
+    });
+    const bodyCopyBtn = screen.getByRole("button", {
+      name: /本文をコピー/,
+    });
+    expect(subjectCopyBtn).not.toBeDisabled();
+    expect(bodyCopyBtn).not.toBeDisabled();
+  });
+
+  // 是正: 初期状態でメール全文コピーボタンが有効であること
+  test("全文コピーボタンが初期状態で有効", () => {
+    render(<BusinessEmailPage />);
+    const copyAllBtn = screen.getByRole("button", {
+      name: /メール全文をコピー/,
+    });
+    expect(copyAllBtn).not.toBeDisabled();
+  });
+
+  // 是正: ユーザーが入力したときプレースホルダー値が上書きされること
+  test("user input overrides placeholder fallback in preview", () => {
+    render(<BusinessEmailPage />);
+    const companyInput = screen.getByLabelText(/相手先会社名/);
+    fireEvent.change(companyInput, { target: { value: "実際株式会社" } });
+    const bodyPreview = screen.getByLabelText(
+      "本文プレビュー",
+    ) as HTMLTextAreaElement;
+    expect(bodyPreview.value).toContain("実際株式会社");
+    // 旧プレースホルダーは使われないこと
+    expect(bodyPreview.value).not.toContain("株式会社〇〇");
   });
 
   // E-10: meta 由来の表示 — 確定提示方式でカテゴリと入力欄が即座に表示される

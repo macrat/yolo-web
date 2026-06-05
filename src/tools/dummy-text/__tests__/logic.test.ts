@@ -3,6 +3,7 @@ import {
   generateText,
   countGeneratedWords,
   countGeneratedChars,
+  countSentences,
 } from "../logic";
 
 describe("generateText", () => {
@@ -110,5 +111,28 @@ describe("countGeneratedChars", () => {
 
   test("counts Japanese characters", () => {
     expect(countGeneratedChars("日本語")).toBe(3);
+  });
+});
+
+describe("countSentences", () => {
+  test("counts Japanese sentences ending with 。", () => {
+    // Japanese sentences end with 。
+    expect(countSentences("吾輩は猫である。名前はまだない。")).toBe(2);
+  });
+
+  test("counts lorem ipsum sentences ending with .", () => {
+    expect(
+      countSentences("Lorem ipsum dolor sit amet. Sed do eiusmod tempor."),
+    ).toBe(2);
+  });
+
+  test("returns 0 for empty string", () => {
+    expect(countSentences("")).toBe(0);
+  });
+
+  test("counts sentences in multi-sentence Japanese text", () => {
+    // 直接文字列で確認（generateText の pool 依存を避ける）
+    const text = "文一。文二。文三。\n\n文四。文五。文六。";
+    expect(countSentences(text)).toBe(6);
   });
 });

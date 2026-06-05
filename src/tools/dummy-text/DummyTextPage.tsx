@@ -59,10 +59,17 @@ export default function DummyTextPage() {
 
   const wordCount = useMemo(() => countGeneratedWords(output), [output]);
   const charCount = useMemo(() => countGeneratedChars(output), [output]);
+  // 注意: countSentences は日本語 pool に「吾輩は猫である。名前はまだない。」のように
+  // 複数の文末記号を含む1エントリが存在するため、paragraphs×sentencesPerParagraph と
+  // カウント結果が常にずれる。UI での「文数」表示は廃止し「文字数のみ」に統一する。
 
   // C-3: スクリーンリーダーへ通知する統計サマリ（実テキストノード）
-  // 段落数・文字数・単語数を人間可読テキストとして role="status" 領域に配置する
-  const statusSummary = `${paragraphs}段落・${charCount.toLocaleString()}文字・${wordCount.toLocaleString()}単語`;
+  // 日本語モードでは文字数のみ（文数は pool[0] の2文問題で入力値と一致せず廃止）
+  // Lorem モードでは「単語数」を表示（英語はスペース区切りで単語数が有意味）
+  const statusSummary =
+    language === "japanese"
+      ? `${paragraphs}段落・${charCount.toLocaleString()}文字`
+      : `${paragraphs}段落・${charCount.toLocaleString()}文字・${wordCount.toLocaleString()}単語`;
 
   const handleLanguageChange = (value: string) => {
     setLanguage(value as TextLanguage);
@@ -143,11 +150,17 @@ export default function DummyTextPage() {
         {statusSummary}
       </div>
 
-      {/* 統計バー（視覚的な補助情報） */}
+      {/* 統計バー（視覚的な補助情報）
+          日本語モードでは文字数のみを表示する（文数は廃止）。
+          日本語 pool に複数の文末記号を含む1エントリが存在し、
+          countSentences 結果が paragraphs×sentencesPerParagraph と常にずれるため。
+          Lorem モードでは単語数を表示（英語はスペース区切りで有意味）。 */}
       <div className={styles.statsBar} aria-hidden="true">
         <span>{paragraphs}段落</span>
         <span>{charCount.toLocaleString()}文字</span>
-        <span>{wordCount.toLocaleString()}単語</span>
+        {language !== "japanese" && (
+          <span>{wordCount.toLocaleString()}単語</span>
+        )}
       </div>
 
       {/* 出力欄 */}

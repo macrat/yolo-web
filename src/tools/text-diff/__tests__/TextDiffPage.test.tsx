@@ -383,6 +383,56 @@ describe("reviewer 指摘: +/− 記号が差分本文に付与されている",
 });
 
 // ===========================================================
+// U-7 是正: 末尾改行アーティファクト修正（E-4 拡張）
+// ===========================================================
+describe("U-7 是正: line モードの末尾改行アーティファクト解消", () => {
+  it("末尾改行の有無だけが異なるテキストは差分なしとして扱われる（もも→もも\\n）", () => {
+    render(<TextDiffPage />);
+
+    const oldTextarea = screen.getByLabelText("変更前テキスト");
+    const newTextarea = screen.getByLabelText("変更後テキスト");
+
+    // 末尾改行だけ異なる（実質同一内容）
+    fireEvent.change(oldTextarea, { target: { value: "もも" } });
+    fireEvent.change(newTextarea, { target: { value: "もも\n" } });
+
+    // 差分なしとして表示されるべき（末尾改行アーティファクトを誤検知しない）
+    const statusEl = screen.getByRole("status");
+    expect(statusEl).toHaveTextContent("差分なし");
+  });
+
+  it("末尾改行だけ異なるとき差分結果欄に +/- のスパンが表示されない", () => {
+    render(<TextDiffPage />);
+
+    const oldTextarea = screen.getByLabelText("変更前テキスト");
+    const newTextarea = screen.getByLabelText("変更後テキスト");
+
+    fireEvent.change(oldTextarea, { target: { value: "line1\nline2" } });
+    fireEvent.change(newTextarea, { target: { value: "line1\nline2\n" } });
+
+    // 差分なし -> 差分結果欄に "差分はありません" が表示される
+    const noDiffMsg = screen.getByText("テキストに差分はありません。");
+    expect(noDiffMsg).toBeInTheDocument();
+  });
+
+  it("サマリ件数が過剰にならない（末尾改行アーティファクトで +1行/-1行 が出ない）", () => {
+    render(<TextDiffPage />);
+
+    const oldTextarea = screen.getByLabelText("変更前テキスト");
+    const newTextarea = screen.getByLabelText("変更後テキスト");
+
+    // 末尾改行だけ異なるとき、過去のバグでは +1 行 / −1 行 と表示されていた
+    fireEvent.change(oldTextarea, { target: { value: "もも" } });
+    fireEvent.change(newTextarea, { target: { value: "もも\n" } });
+
+    const statusEl = screen.getByRole("status");
+    // サマリに数値が含まれない（差分なしのみ表示）
+    expect(statusEl.textContent).not.toMatch(/\+\d+/);
+    expect(statusEl.textContent).not.toMatch(/−\d+/);
+  });
+});
+
+// ===========================================================
 // E-12: CSS トークン検証（readFileSync）
 // ===========================================================
 describe("E-12: CSSトークン検証", () => {

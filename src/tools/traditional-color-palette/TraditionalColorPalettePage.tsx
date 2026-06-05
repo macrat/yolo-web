@@ -1,26 +1,34 @@
 "use client";
 
 /**
- * TraditionalColorPalettePage — 伝統色カラーパレット単一実装（cycle-225 T-6）
+ * TraditionalColorPalettePage — 伝統色カラーパレット単一実装（cycle-225 T-6 / U-8 是正）
  *
  * Component.tsx のフル機能を共通部品で組み直した単一実装。
  * page.tsx が直接このコンポーネントを描画する（ToolPageLayout の children）。
  *
- * 個別論点（cycle-225 ②-13 / ②-15）:
- * - 規定外 box-shadow 是正: swatch.selected の box-shadow を outline に置換
- * - コピーボタン削除: T-4b 確定「なし」（短いコード・色を選ぶ/見るのが目的 = 知る対象）
+ * 個別論点（cycle-225 ②-13 / U-8）:
+ * - 規定外 box-shadow 是正: swatch.selected の box-shadow を outline に置換（T-6 済み）
+ * - コピーボタン追加: T-4b U-8 PM 判断で「あり」に更新
+ *   hex/rgb/hsl の各値を useCopyToClipboard + COPIED_LABEL でコピー可能にする。
+ *   color-converter との一貫性・FAQ の「ワンクリックでコピーできます」の約束を実現。
  *
  * 共通部品の使用:
  * - A-2: Select → N/A（カテゴリフィルタは SegmentedControl が適切）
  * - A-3: SegmentedControl → カテゴリフィルタ・配色パターン選択
+ * - A-6: useCopyToClipboard + COPIED_LABEL → 各色コードのコピーボタン
  * - A-8: ToolPageLayout → page.tsx 側
- * その他 A-1(Textarea)・A-5(FileDropZone)・A-6(useCopyToClipboard)・A-7(Input date) は N/A
+ * その他 A-1(Textarea)・A-5(FileDropZone)・A-7(Input date) は N/A
  */
 
 import { useState, useMemo, useCallback } from "react";
 import Link from "next/link";
+import Button from "@/components/Button";
 import Input from "@/components/Input";
 import SegmentedControl from "@/components/SegmentedControl";
+import {
+  useCopyToClipboard,
+  COPIED_LABEL,
+} from "@/components/hooks/useCopyToClipboard";
 import { getAllColors } from "@/dictionary/_lib/colors";
 import { COLOR_CATEGORY_LABELS } from "@/dictionary/_lib/types";
 import type { ColorEntry, ColorCategory } from "@/dictionary/_lib/types";
@@ -81,6 +89,10 @@ export default function TraditionalColorPalettePage() {
     "all",
   );
 
+  // A-6: クリップボードコピーフック（hex/rgb/hsl の各色コードをコピー可能にする）
+  // 複数カード・複数コードタイプを "slug-codeType" キーで識別する
+  const { copy, copiedKey } = useCopyToClipboard();
+
   // カテゴリフィルタと検索でスウォッチを絞り込む
   const filteredColors = useMemo(() => {
     const byCategory = filterByCategory(categoryFilter, allColors);
@@ -130,6 +142,11 @@ export default function TraditionalColorPalettePage() {
     const hslValue = formatHsl(color.hsl);
     const cardKey = `${color.slug}-${index}`;
 
+    // コピーキー: "slug-codeType" で複数カード・複数コードタイプを識別
+    const hexKey = `${color.slug}-hex`;
+    const rgbKey = `${color.slug}-rgb`;
+    const hslKey = `${color.slug}-hsl`;
+
     return (
       <div key={cardKey} className={styles.paletteCard}>
         {/* 色見本 */}
@@ -150,22 +167,55 @@ export default function TraditionalColorPalettePage() {
         </div>
         <div className={styles.paletteColorRomaji}>{color.romaji}</div>
 
-        {/* HEX（コピーボタンなし：T-4b ②-15 削除確定） */}
+        {/* HEX コピーボタン付き（T-4b U-8: 持ち帰り対象のため「あり」）
+            共通 Button(size=small) を使用し color-converter と一貫した UX を実現。
+            aria-label はコピー前後で変化させてスクリーンリーダーに通知する。
+            カード描画時は常に hexValue が存在するため disabled は不要。 */}
         <div className={styles.colorCodeRow}>
           <span className={styles.colorCodeLabel}>HEX</span>
           <span className={styles.colorCodeValue}>{hexValue}</span>
+          <Button
+            size="small"
+            variant="default"
+            onClick={() => void copy(hexValue, hexKey)}
+            aria-label={
+              copiedKey === hexKey ? COPIED_LABEL : `HEX ${hexValue} をコピー`
+            }
+          >
+            {copiedKey === hexKey ? COPIED_LABEL : "コピー"}
+          </Button>
         </div>
 
         {/* RGB */}
         <div className={styles.colorCodeRow}>
           <span className={styles.colorCodeLabel}>RGB</span>
           <span className={styles.colorCodeValue}>{rgbValue}</span>
+          <Button
+            size="small"
+            variant="default"
+            onClick={() => void copy(rgbValue, rgbKey)}
+            aria-label={
+              copiedKey === rgbKey ? COPIED_LABEL : `RGB ${rgbValue} をコピー`
+            }
+          >
+            {copiedKey === rgbKey ? COPIED_LABEL : "コピー"}
+          </Button>
         </div>
 
         {/* HSL */}
         <div className={styles.colorCodeRow}>
           <span className={styles.colorCodeLabel}>HSL</span>
           <span className={styles.colorCodeValue}>{hslValue}</span>
+          <Button
+            size="small"
+            variant="default"
+            onClick={() => void copy(hslValue, hslKey)}
+            aria-label={
+              copiedKey === hslKey ? COPIED_LABEL : `HSL ${hslValue} をコピー`
+            }
+          >
+            {copiedKey === hslKey ? COPIED_LABEL : "コピー"}
+          </Button>
         </div>
       </div>
     );

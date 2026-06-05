@@ -169,6 +169,93 @@ describe("DummyTextPage", () => {
     expect(screen.getByLabelText("段落あたりの文数")).toBeInTheDocument();
   });
 
+  // 日本語モードでは「単語数」を表示しない（日本語はスペース区切りがなく単語数が無意味）
+  test("does not show 単語 label in Japanese mode stats bar", () => {
+    render(<DummyTextPage />);
+    // 日本語モードに切り替え
+    const jpButton = screen.getByRole("radio", { name: "日本語" });
+    fireEvent.click(jpButton);
+    // 視覚上の statsBar（aria-hidden=true）に「単語」が出ないこと
+    // getAllByText は aria-hidden 要素も対象にするため、直接テキスト検索で確認
+    const allText = document.body.textContent ?? "";
+    // 「単語」という文字列が存在しないこと
+    expect(allText).not.toContain("単語");
+  });
+
+  // 日本語モードでは「文字数」を表示する（文数は廃止: pool[0]の2文問題による整合性破綻を防ぐ）
+  test("shows 文字 stat in Japanese mode", () => {
+    render(<DummyTextPage />);
+    const jpButton = screen.getByRole("radio", { name: "日本語" });
+    fireEvent.click(jpButton);
+    const allText = document.body.textContent ?? "";
+    expect(allText).toContain("文字");
+  });
+
+  // 日本語モードでは「文」（文数）という単独のラベルを表示しない
+  // ※是正方針(a): 日本語モードは「文字数のみ」に寄せる
+  // pool[0]「吾輩は猫である。名前はまだない。」が2文を含むため
+  // paragraphs×sentencesPerParagraphとcountSentences結果が必ずずれる問題を根本解消する
+  test("does not show 文 label in Japanese mode stats", () => {
+    render(<DummyTextPage />);
+    const jpButton = screen.getByRole("radio", { name: "日本語" });
+    fireEvent.click(jpButton);
+    // 統計バーに「N文」という表示がないこと
+    // 「文字」は許可、単独の「文」のみが問題（「段落」「文字」は残す）
+    const statsBar = document.querySelector("[aria-hidden='true']");
+    const statsText = statsBar?.textContent ?? "";
+    // 「文字」は許可するが「N文」（数字+文）は存在しないこと
+    expect(statsText).not.toMatch(/\d+文(?!字)/);
+  });
+
+  // 日本語モードでは statusSummary（SR 用）に「単語」も「文」カウントも含まない
+  test("statusSummary does not contain 単語 or 文カウント in Japanese mode", () => {
+    render(<DummyTextPage />);
+    const jpButton = screen.getByRole("radio", { name: "日本語" });
+    fireEvent.click(jpButton);
+    const statusRegions = screen.getAllByRole("status");
+    const statusText = statusRegions.map((r) => r.textContent).join(" ");
+    expect(statusText).not.toContain("単語");
+    // 「文字」は許可するが「N文」（数字+文）という表現がないこと
+    expect(statusText).not.toMatch(/\d+文(?!字)/);
+    expect(statusText).toContain("文字");
+  });
+
+  // G-5/数値整合性: 日本語モードで paragraphs×sentencesPerParagraph と統計の整合性
+  // 文字数は生成されたテキストの実際の文字数と一致するべき（入力値との整合は文字数のみ）
+  test("char count in statusSummary matches actual output length in Japanese mode", () => {
+    render(<DummyTextPage />);
+    const jpButton = screen.getByRole("radio", { name: "日本語" });
+    fireEvent.click(jpButton);
+    // 出力テキストを取得
+    const output = screen.getByLabelText("生成結果") as HTMLTextAreaElement;
+    const actualLength = output.value.length;
+    // SR サマリに実際の文字数が含まれていること
+    const statusRegions = screen.getAllByRole("status");
+    const statusText = statusRegions.map((r) => r.textContent).join(" ");
+    // actualLength をロケール表示した文字列がサマリに含まれること
+    expect(statusText).toContain(actualLength.toLocaleString());
+  });
+
+  // G-5/数値整合性: Lorem Ipsum モードで paragraphs 設定値がサマリと一致する
+  test("paragraph count in statusSummary matches input value in lorem mode", () => {
+    render(<DummyTextPage />);
+    // 段落数を変更
+    const paragraphInput = screen.getByLabelText("段落数") as HTMLInputElement;
+    fireEvent.change(paragraphInput, { target: { value: "5" } });
+    // SR サマリに「5段落」が含まれること
+    const statusRegions = screen.getAllByRole("status");
+    const statusText = statusRegions.map((r) => r.textContent).join(" ");
+    expect(statusText).toContain("5段落");
+  });
+
+  // Lorem Ipsum モードでは「単語数」が表示される（英語は単語数が有意味）
+  test("shows 単語 stat in lorem mode", () => {
+    render(<DummyTextPage />);
+    // デフォルトは Lorem Ipsum モード
+    const allText = document.body.textContent ?? "";
+    expect(allText).toContain("単語");
+  });
+
   // E-12: CSS トークン検証
   test("CSS does not use deprecated --color-* tokens or --accent direct fill or font-weight 700", () => {
     const cssPath = join(
