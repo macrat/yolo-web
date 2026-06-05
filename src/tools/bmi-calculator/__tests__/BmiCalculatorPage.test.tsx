@@ -374,4 +374,20 @@ describe("E-12: CSS トークン検証", () => {
       /background(-color)?[^;]*var\(--accent-soft\)/,
     );
   });
+
+  // DESIGN.md §2: --accent 系は「リンク・フォーカス」専用の意味色
+  // 判定テキスト .categoryLow に color: var(--accent-strong) を使うと
+  // 初見ユーザーに「リンクっぽいが押せない」認知的摩擦を生む（U-16 指摘）
+  // 低体重判定テキストは中立色（--fg-soft 等）で表現するべき
+  test(".categoryLow の color が --accent 系を使っていない（DESIGN.md §2: --accent はリンク専用）", () => {
+    const cssWithoutComments = css.replace(/\/\*[\s\S]*?\*\//g, "");
+    // .categoryLow ブロックを抽出して検査
+    const categoryLowMatch = cssWithoutComments.match(
+      /\.categoryLow\s*\{[^}]*\}/,
+    );
+    expect(categoryLowMatch).not.toBeNull();
+    if (categoryLowMatch) {
+      expect(categoryLowMatch[0]).not.toMatch(/var\(--accent/);
+    }
+  });
 });

@@ -88,7 +88,7 @@ export default function HtmlEntityPage() {
           onChange={(e) => setInput(e.target.value)}
           placeholder={
             mode === "encode"
-              ? "エスケープするテキストを入力..."
+              ? "エンコードするテキストを入力..."
               : "デコードするHTMLエンティティを入力..."
           }
           rows={6}
@@ -107,7 +107,7 @@ export default function HtmlEntityPage() {
       <div className={styles.field}>
         <div className={styles.outputRow}>
           <label htmlFor="html-entity-output" className={styles.label}>
-            {mode === "encode" ? "エスケープ結果" : "デコード結果"}
+            {mode === "encode" ? "エンコード結果" : "デコード結果"}
           </label>
           {/* コピーボタン（T-4b: 変換系はコピーあり）*/}
           <Button

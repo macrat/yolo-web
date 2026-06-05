@@ -180,7 +180,13 @@ export default function ColorConverterPage() {
             id="color-text-input"
             type="text"
             value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
+            onChange={(e) => {
+              setInputText(e.target.value);
+              // G-1: 入力内容を書き換えたとき、エラー状態だけクリアする。
+              // 来訪者が「直した」操作に即座に応えるために必要。
+              // 成功結果は次の「変換」まで保持する（過剰なクリアを防ぐ）。
+              if (result && !result.success) setResult(null);
+            }}
             placeholder={inputPlaceholder}
             spellCheck={false}
             aria-label={inputLabel}

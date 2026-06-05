@@ -10,6 +10,7 @@ import { readFileSync } from "fs";
 import { resolve } from "path";
 import HashGeneratorPage from "../HashGeneratorPage";
 import { COPIED_LABEL } from "@/components/hooks/useCopyToClipboard";
+import { meta } from "../meta";
 
 // Mock the meta for ToolPageLayout - not needed since we test the page content directly
 // HashGeneratorPage is the inner tool, not the full page with layout
@@ -242,5 +243,29 @@ describe("HashGeneratorPage", () => {
     const cssPath = resolve(__dirname, "../HashGeneratorPage.module.css");
     const css = readFileSync(cssPath, "utf-8");
     expect(css).not.toMatch(/font-weight\s*:\s*700/);
+  });
+});
+
+// G-2 / G-4: meta.ts の文字列整合テスト
+describe("meta.ts content validation", () => {
+  // G-2: howItWorks冒頭に「ハッシュとは何か・何に使うか」の平易な導入文が存在する
+  test("howItWorks contains intro explaining what a hash is and its uses", () => {
+    // 「ハッシュ値」「改ざん検知」「一方向」の3キーワードすべてを含む導入文があること
+    expect(meta.howItWorks).toMatch(/ハッシュ値/);
+    expect(meta.howItWorks).toMatch(/改ざん検知/);
+    expect(meta.howItWorks).toMatch(/一方向/);
+  });
+
+  // G-4: shortDescription が4種類すべてのアルゴリズムを含む（SHA-384の省略是正）
+  test("shortDescription includes SHA-384", () => {
+    expect(meta.shortDescription).toMatch(/SHA-384/);
+  });
+
+  // G-4: shortDescription がSHA-1/SHA-256/SHA-512も含む
+  test("shortDescription includes all four algorithms", () => {
+    expect(meta.shortDescription).toMatch(/SHA-1/);
+    expect(meta.shortDescription).toMatch(/SHA-256/);
+    expect(meta.shortDescription).toMatch(/SHA-384/);
+    expect(meta.shortDescription).toMatch(/SHA-512/);
   });
 });

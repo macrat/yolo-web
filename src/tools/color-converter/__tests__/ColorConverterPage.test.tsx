@@ -266,6 +266,41 @@ describe("E-11: 既存 logic.ts テストが PASS 維持", () => {
   });
 });
 
+describe("G-1: 入力修正時のエラー状態クリア", () => {
+  it("不正入力→変換→入力修正でエラーバナーが消える", () => {
+    render(<ColorConverterPage />);
+    const input = screen.getByLabelText(/HEX値/);
+
+    // 不正値を入力して変換
+    fireEvent.change(input, { target: { value: "invalid" } });
+    fireEvent.click(screen.getByRole("button", { name: "変換" }));
+    // エラーバナーが表示されることを確認
+    expect(screen.getByRole("alert")).toBeInTheDocument();
+
+    // 入力を正しい値に書き換える（変換ボタンは押さない）
+    fireEvent.change(input, { target: { value: "#FF0000" } });
+    // エラーバナーが消えることを確認
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+  });
+
+  it("成功結果が表示されている状態で入力を変えてもエラーでは消えない（過剰クリアしない）", () => {
+    render(<ColorConverterPage />);
+    const input = screen.getByLabelText(/HEX値/);
+
+    // 正しい値を入力して変換
+    fireEvent.change(input, { target: { value: "#ffffff" } });
+    fireEvent.click(screen.getByRole("button", { name: "変換" }));
+    // 成功結果が表示されることを確認
+    expect(screen.getByText("rgb(255, 255, 255)")).toBeInTheDocument();
+
+    // 入力を別の値に変更（変換ボタンは押さない）
+    fireEvent.change(input, { target: { value: "#000000" } });
+    // 成功結果が消えていないことを確認（エラーではないのでクリアしない）
+    expect(screen.getByText("rgb(255, 255, 255)")).toBeInTheDocument();
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+  });
+});
+
 describe("E-12: CSS トークン検証", () => {
   const cssPath = path.resolve(__dirname, "../ColorConverterPage.module.css");
 

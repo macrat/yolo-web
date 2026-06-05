@@ -6,7 +6,7 @@ export const meta: ToolMeta = {
   nameEn: "Hash Generator",
   description:
     "テキストからSHA-1、SHA-256、SHA-384、SHA-512のハッシュ値を生成するツール。ブラウザの暗号化機能を使った安全なハッシュ計算。登録不要・無料。",
-  shortDescription: "SHA-1/SHA-256/SHA-512のハッシュ値を生成",
+  shortDescription: "SHA-1/SHA-256/SHA-384/SHA-512のハッシュ値を生成",
   keywords: ["ハッシュ生成", "SHA-256", "SHA-512", "SHA-1", "ハッシュ値計算"],
   category: "security",
   relatedSlugs: ["base64", "password-generator", "image-base64"],
@@ -15,7 +15,7 @@ export const meta: ToolMeta = {
   structuredDataType: "WebApplication",
   trustLevel: "verified",
   howItWorks:
-    "ブラウザの暗号化機能を使ってSHA-1・SHA-256・SHA-384・SHA-512の4種類のハッシュ値を一度に生成します。出力形式は16進数（Hex）とBase64から選択できます。入力テキストはサーバーに送信されず、ブラウザ内でのみ処理されます。",
+    "テキストから固定長の英数字列（ハッシュ値）を計算します。同じ入力からは常に同じハッシュ値が得られるため、データの改ざん検知やパスワードの照合などに使われます。元のテキストには逆算できません（一方向）。ブラウザの暗号化機能を使ってSHA-1・SHA-256・SHA-384・SHA-512の4種類のハッシュ値を一度に生成します。出力形式は16進数（Hex）とBase64から選択できます。入力テキストはサーバーに送信されず、ブラウザ内でのみ処理されます。",
   faq: [
     {
       question: "対応しているハッシュアルゴリズムは何ですか？",

@@ -237,6 +237,20 @@ describe("JsonFormatterPage", () => {
     });
   });
 
+  // G-1: .controlLabel に white-space: nowrap があるか（ラベル折返し防止）
+  // cycle-225 U-16 再ゲート指摘: w1280/w360 で「インデント」ラベルが2行折返し
+  test("CSS .controlLabel has white-space: nowrap to prevent label wrapping", () => {
+    const cssPath = join(
+      process.cwd(),
+      "src/tools/json-formatter/JsonFormatterPage.module.css",
+    );
+    const css = readFileSync(cssPath, "utf-8");
+    // .controlLabel ブロックに white-space: nowrap が含まれることを確認
+    const controlLabelBlock = css.match(/\.controlLabel\s*\{([\s\S]*?)\}/);
+    expect(controlLabelBlock).not.toBeNull();
+    expect(controlLabelBlock![1]).toMatch(/white-space\s*:\s*nowrap/);
+  });
+
   // E-12: CSS トークン検証
   test("CSS does not use deprecated --color-* tokens or --accent direct fill or font-weight 700", () => {
     const cssPath = join(
