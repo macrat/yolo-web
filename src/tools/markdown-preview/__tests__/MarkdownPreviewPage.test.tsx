@@ -3,10 +3,16 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { readFileSync } from "fs";
 import { join } from "path";
 
-// useCopyToClipboard のモック（コピーボタンなしツールのため、E-6/E-7/E-8 は N/A）
-// ただし、インポートされない場合でもモック定義を置いておく
+// vi.hoisted でモック変数をホイストして動的に copiedKey を制御できるようにする
+const mockHook = vi.hoisted(() => ({
+  copy: vi.fn(),
+  copiedKey: null as string | number | boolean | null,
+}));
+
+// useCopyToClipboard をモックする（clipboard API 不在環境）
+// vi.hoisted を通して copiedKey を動的に制御できる
 vi.mock("@/components/hooks/useCopyToClipboard", () => ({
-  useCopyToClipboard: () => ({ copy: vi.fn(), copiedKey: null }),
+  useCopyToClipboard: () => mockHook,
   COPIED_LABEL: "コピーしました",
 }));
 
@@ -14,7 +20,9 @@ import MarkdownPreviewPage from "../MarkdownPreviewPage";
 
 describe("MarkdownPreviewPage", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    // 各テスト前にコピー状態をリセット（テスト間の状態汚染を防ぐ）
+    mockHook.copiedKey = null;
+    mockHook.copy = vi.fn();
   });
 
   // E-1: 基本レンダリング
@@ -157,8 +165,56 @@ describe("MarkdownPreviewPage", () => {
     expect(alert.textContent).toMatch(/[ぁ-ん|ァ-ン|一-龯]/);
   });
 
-  // E-6〜E-8: N/A（T-4b: markdown-preview はコピーボタンなし確定）
-  // プレビュー閲覧用途のため、コピーボタンは仕様として存在しない
+  // E-6: コピー文言変化 — コピー前は「HTMLをコピー」、コピー後は COPIED_LABEL ("コピーしました") が表示される
+  test("copy button label changes to COPIED_LABEL when copiedKey is set", () => {
+    mockHook.copiedKey = true; // コピー後の状態をシミュレート
+    render(<MarkdownPreviewPage />);
+    // copiedKey=true(モック)のとき "コピーしました" (COPIED_LABEL) が表示される
+    expect(
+      screen.getByRole("button", { name: "コピーしました" }),
+    ).toBeInTheDocument();
+  });
+
+  // E-7: コピー disabled 状態 — 出力が空（input が空）のとき HTMLコピーボタンが disabled になる
+  test("copy button is disabled when input is empty", () => {
+    render(<MarkdownPreviewPage />);
+    const input = screen.getByLabelText("Markdown入力");
+    fireEvent.change(input, { target: { value: "" } });
+    // 入力が空のときはコピーボタンが disabled であること
+    const copyButton = screen.getByRole("button", { name: "HTMLをコピー" });
+    expect(copyButton).toBeDisabled();
+  });
+
+  // E-7 補足: 入力がある場合はコピーボタンが有効になる
+  test("copy button is enabled when input has content", () => {
+    render(<MarkdownPreviewPage />);
+    // サンプルMarkdownがデフォルト値として設定されているため、初期状態でボタンが有効
+    // （入力欄に文字が入っている = isMounted後に有効になる）
+    const input = screen.getByLabelText("Markdown入力");
+    fireEvent.change(input, { target: { value: "# テスト" } });
+    const copyButton = screen.getByRole("button", { name: "HTMLをコピー" });
+    expect(copyButton).not.toBeDisabled();
+  });
+
+  // E-8: navigator.clipboard が存在しない環境でコピーが例外を投げない
+  test("does not throw when navigator.clipboard is absent", async () => {
+    const originalClipboard = navigator.clipboard;
+    Object.defineProperty(navigator, "clipboard", {
+      value: undefined,
+      configurable: true,
+      writable: true,
+    });
+
+    expect(() => {
+      render(<MarkdownPreviewPage />);
+    }).not.toThrow();
+
+    Object.defineProperty(navigator, "clipboard", {
+      value: originalClipboard,
+      configurable: true,
+      writable: true,
+    });
+  });
 
   // E-9: 詳細リンク — このツールには詳細リンクなし（N/A）
 

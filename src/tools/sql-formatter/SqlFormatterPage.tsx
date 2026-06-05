@@ -10,6 +10,7 @@ import Textarea from "@/components/Textarea";
 import Select from "@/components/Select";
 import ErrorMessage from "@/components/ErrorMessage";
 import Button from "@/components/Button";
+import ToggleSwitch from "@/components/ToggleSwitch";
 import styles from "./SqlFormatterPage.module.css";
 
 type IndentType = "2" | "4" | "tab";
@@ -55,7 +56,7 @@ function toJapaneseSqlError(rawError: string): string {
  *
  * 機能:
  * - SQL 整形（インデント: 2スペース / 4スペース / タブ）
- * - キーワード大文字化オプション
+ * - キーワード大文字化オプション（ToggleSwitch: DESIGN.md §5 「ON/OFF はトグル」準拠）
  * - SQL 圧縮（minify）
  * - 出力コピー（useCopyToClipboard）
  * - エラー表示（ErrorMessage、日本語化）
@@ -147,16 +148,12 @@ export default function SqlFormatterPage() {
               <option value="tab">タブ</option>
             </Select>
           </div>
-          <label className={styles.checkboxLabel}>
-            <input
-              type="checkbox"
-              checked={uppercase}
-              onChange={(e) => setUppercase(e.target.checked)}
-              className={styles.checkbox}
-              aria-label="キーワードを大文字にする"
-            />
-            キーワード大文字
-          </label>
+          {/* DESIGN.md §5: 単一 ON/OFF はトグルスイッチで統一（U-5 是正） */}
+          <ToggleSwitch
+            label="キーワード大文字"
+            checked={uppercase}
+            onChange={(e) => setUppercase(e.target.checked)}
+          />
         </div>
         <div className={styles.buttons}>
           <Button onClick={handleFormat} type="button" variant="primary">

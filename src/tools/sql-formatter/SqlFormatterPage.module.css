@@ -44,23 +44,6 @@
   white-space: nowrap;
 }
 
-.checkboxLabel {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: 0.9rem;
-  color: var(--fg);
-  cursor: pointer;
-}
-
-.checkbox {
-  width: 1rem;
-  height: 1rem;
-  cursor: pointer;
-  /* B-3: accent-color で checkbox チェック時の塗りをデザイントークンに揃える */
-  accent-color: var(--accent);
-}
-
 .buttons {
   display: flex;
   gap: 0.5rem;

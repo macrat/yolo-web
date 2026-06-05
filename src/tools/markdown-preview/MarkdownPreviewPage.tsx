@@ -4,6 +4,11 @@ import { useState, useMemo, useSyncExternalStore } from "react";
 import { renderMarkdown } from "./logic";
 import Textarea from "@/components/Textarea";
 import ErrorMessage from "@/components/ErrorMessage";
+import Button from "@/components/Button";
+import {
+  useCopyToClipboard,
+  COPIED_LABEL,
+} from "@/components/hooks/useCopyToClipboard";
 import styles from "./MarkdownPreviewPage.module.css";
 
 /** サンプルMarkdown: ツールを初めて開いたときに機能を把握しやすいデフォルト値 */
@@ -51,10 +56,11 @@ function useMounted(): boolean {
  * - GFM（GitHub Flavored Markdown）対応: 見出し・リスト・テーブル・コードブロック等
  * - サニタイズ済みHTML出力（XSS防止: script等の危険タグをホワイトリスト方式で除去）
  * - エラー表示（ErrorMessage: 入力超過時に日本語メッセージ）
+ * - HTMLコピーボタン（T-4b: markdown-preview は HTML コピーあり確定・持ち帰り対象）
  *
  * 設計方針:
  * - 確定提示方式: サンプルMarkdownを初期値として入力欄にセット済み
- * - T-4b: markdown-preview はコピーボタンなし確定（プレビュー閲覧用途）
+ * - T-4b: markdown-preview は「HTMLをコピー」ボタンを提供（subtitle/keywords/FAQ の「HTML変換」の約束と実態の整合）
  * - SSR/hydration安全: logic.ts の sanitizeHtml は DOMParser（ブラウザ専用API）を使うため
  *   SSR環境（Node.js）では動作しない。useSyncExternalStore を使った useMounted() で
  *   マウント後にのみレンダリングを実行し、SSR/CSR の初期状態を対称に保つ。
@@ -68,6 +74,10 @@ export default function MarkdownPreviewPage() {
   const [input, setInput] = useState(SAMPLE_MARKDOWN);
   // SSR/hydration安全: useSyncExternalStore でマウント後フラグを取得（useEffect不要）
   const isMounted = useMounted();
+
+  // T-4b: HTMLコピーボタン（持ち帰り対象・useCopyToClipboard フック使用）
+  // AP-I11: タイマー管理は useCopyToClipboard フック内で実施済み
+  const { copy, copiedKey } = useCopyToClipboard();
 
   // リアルタイム変換: マウント後かつ入力が変わるたびに即座にレンダリング
   const result = useMemo(() => {
@@ -83,6 +93,9 @@ export default function MarkdownPreviewPage() {
     isMounted && !result.error && input.trim()
       ? "プレビューを更新しました"
       : "";
+
+  // コピーできる条件: マウント済み・エラーなし・入力が空でない
+  const canCopy = isMounted && !result.error && input.trim().length > 0;
 
   return (
     <div className={styles.container}>
@@ -106,7 +119,18 @@ export default function MarkdownPreviewPage() {
 
         {/* 右パネル: プレビュー表示 */}
         <div className={styles.panel}>
-          <span className={styles.panelLabel}>プレビュー</span>
+          <div className={styles.panelHeader}>
+            <span className={styles.panelLabel}>プレビュー</span>
+            {/* T-4b: HTMLコピーボタン。出力が空のときは disabled（E-7準拠） */}
+            <Button
+              size="small"
+              disabled={!canCopy}
+              onClick={() => copy(result.html)}
+              aria-label={copiedKey ? COPIED_LABEL : "HTMLをコピー"}
+            >
+              {copiedKey ? COPIED_LABEL : "HTMLをコピー"}
+            </Button>
+          </div>
 
           {/* C-3: role="status" にはサマリのみ配置（視覚上は非表示）。
               プレビュー本体はこの外に配置することで、スクリーンリーダーが
