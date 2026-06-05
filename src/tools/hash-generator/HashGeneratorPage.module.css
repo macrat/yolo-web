@@ -36,6 +36,8 @@
 .controlLabel {
   font-size: 0.9rem;
   color: var(--fg);
+  /* 狭幅でもラベルが折り返さないようにする */
+  white-space: nowrap;
 }
 
 .results {
@@ -59,6 +61,8 @@
   color: var(--accent);
   min-width: 70px;
   flex-shrink: 0;
+  /* アルゴリズム名（SHA-256 等）が折り返さないようにする */
+  white-space: nowrap;
 }
 
 .hashValue {

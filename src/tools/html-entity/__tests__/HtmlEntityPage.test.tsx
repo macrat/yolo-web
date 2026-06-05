@@ -58,7 +58,7 @@ describe("E-2: 入力→結果更新 (リアルタイム変換)", () => {
     fireEvent.click(decodeOption);
     const inputTextarea = screen.getByLabelText("HTMLエンティティ入力");
     fireEvent.change(inputTextarea, { target: { value: "&lt;b&gt;" } });
-    const outputTextarea = screen.getByLabelText("アンエスケープ結果");
+    const outputTextarea = screen.getByLabelText("デコード結果");
     expect(outputTextarea).toHaveValue("<b>");
   });
 });
@@ -90,7 +90,7 @@ describe("E-4: 変換ロジックの正確性 (UI 経由)", () => {
     fireEvent.change(screen.getByLabelText("HTMLエンティティ入力"), {
       target: { value: "&copy; &reg; &trade;" },
     });
-    expect(screen.getByLabelText("アンエスケープ結果")).toHaveValue("© ® ™");
+    expect(screen.getByLabelText("デコード結果")).toHaveValue("© ® ™");
   });
 
   it("decode: 数値参照 (10進・16進) が正しく変換される", () => {
@@ -100,7 +100,7 @@ describe("E-4: 変換ロジックの正確性 (UI 経由)", () => {
     fireEvent.change(screen.getByLabelText("HTMLエンティティ入力"), {
       target: { value: "&#65;&#x42;&#67;" },
     });
-    expect(screen.getByLabelText("アンエスケープ結果")).toHaveValue("ABC");
+    expect(screen.getByLabelText("デコード結果")).toHaveValue("ABC");
   });
 
   it("encode→decode の対称性: エンコードした文字列をデコードすると元に戻る", () => {
@@ -121,7 +121,7 @@ describe("E-4: 変換ロジックの正確性 (UI 経由)", () => {
       target: { value: encodedOutput },
     });
     const decoded = (
-      screen.getByLabelText("アンエスケープ結果") as HTMLTextAreaElement
+      screen.getByLabelText("デコード結果") as HTMLTextAreaElement
     ).value;
     expect(decoded).toBe(inputStr);
   });

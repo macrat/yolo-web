@@ -166,6 +166,15 @@ describe("parseJson", () => {
     expect(() => parseJson('{"key":"value"}')).toThrow();
   });
 
+  // エラー文言の句点統一: ux-gate-findings.md の指摘「JSONは配列である必要があります」の末尾句点欠落を統一
+  // toJapaneseConvertError が日本語文字を含む場合はそのまま通すため、
+  // logic.ts 側で句点を付与して統一感を持たせる。
+  test("non-array JSON error message ends with 句点", () => {
+    expect(() => parseJson('{"key":"value"}')).toThrow(
+      "JSONは配列である必要があります。",
+    );
+  });
+
   test("handles empty array", () => {
     expect(parseJson("[]")).toEqual([]);
   });
@@ -183,6 +192,13 @@ describe("parseMarkdown", () => {
 
   test("throws on invalid table", () => {
     expect(() => parseMarkdown("not a table")).toThrow();
+  });
+
+  // ux-gate-findings.md: エラー文言の句点統一（parseJson と同様に末尾句点で統一）
+  test("invalid markdown table error message ends with 句点", () => {
+    expect(() => parseMarkdown("not a markdown table")).toThrow(
+      "Markdown表には少なくともヘッダー行と区切り行が必要です。",
+    );
   });
 });
 

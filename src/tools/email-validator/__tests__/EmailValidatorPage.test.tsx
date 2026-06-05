@@ -303,6 +303,40 @@ describe("E-10: meta由来の表示", () => {
 // ===========================================================
 // E-12: CSS トークン検証（readFileSync）
 // ===========================================================
+// バッジアイコン: SVG アイコンが aria-hidden で装飾目的を宣言しているか
+// ===========================================================
+describe("バッジアイコンのアクセシビリティ", () => {
+  it("有効バッジの SVG アイコンが aria-hidden='true' を持つ（記号の不要な読み上げを回避）", async () => {
+    render(<EmailValidatorPage />);
+    const input = screen.getByRole("textbox");
+
+    await act(async () => {
+      fireEvent.change(input, { target: { value: "user@example.com" } });
+    });
+
+    // バッジ内の SVG が aria-hidden="true" を持つことを確認
+    const svgElements = document.querySelectorAll(
+      "[role='status'] svg[aria-hidden='true']",
+    );
+    expect(svgElements.length).toBeGreaterThan(0);
+  });
+
+  it("無効バッジの SVG アイコンが aria-hidden='true' を持つ", async () => {
+    render(<EmailValidatorPage />);
+    const input = screen.getByRole("textbox");
+
+    await act(async () => {
+      fireEvent.change(input, { target: { value: "notanemail" } });
+    });
+
+    const svgElements = document.querySelectorAll(
+      "[role='status'] svg[aria-hidden='true']",
+    );
+    expect(svgElements.length).toBeGreaterThan(0);
+  });
+});
+
+// ===========================================================
 describe("E-12: CSSトークン検証", () => {
   const cssPath = join(
     process.cwd(),

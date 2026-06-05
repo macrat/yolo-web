@@ -154,6 +154,33 @@ describe("CharCountPage", () => {
     const oneElements = screen.getAllByText("1");
     expect(oneElements.length).toBeGreaterThan(0);
   });
+
+  // 文字数のプライマリ統計（大きく表示）と残り統計グリッドの構成確認
+  // byte-counter が「バイト数」を主役表示するのと一貫した設計
+  it("shows char count as primary stat and has a results region", () => {
+    render(<CharCountPage />);
+    // 「文字数カウント結果」role="region" が存在すること
+    const region = screen.getByRole("region", { name: "文字数カウント結果" });
+    expect(region).toBeInTheDocument();
+
+    // 「文字数」ラベルがプライマリ統計として存在すること（テキストラベルで確認）
+    // ※ getByText は完全一致するテキストノードを返す（「文字数（空白除く）」は別のラベル）
+    const charCountLabel = screen.getByText("文字数", { exact: true });
+    expect(charCountLabel).toBeInTheDocument();
+  });
+
+  // E-5: ARIA - ライブリージョンは詳細統計グリッドの外に独立すること（C-3 設計確認）
+  it("status role is separate from the stats panel region", () => {
+    render(<CharCountPage />);
+    const statusRegion = screen.getByRole("status");
+    const statsRegion = screen.getByRole("region", {
+      name: "文字数カウント結果",
+    });
+    // status と stats region は別要素であること
+    expect(statusRegion).not.toBe(statsRegion);
+    // status は詳細統計グリッドを含まないこと（プライマリ統計は region 側）
+    expect(statusRegion).not.toContainElement(statsRegion as HTMLElement);
+  });
 });
 
 // E-12: CSS トークン検証（readFileSync パターン）

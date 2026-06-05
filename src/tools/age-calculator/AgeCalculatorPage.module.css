@@ -3,6 +3,21 @@
  * --color-* 旧トークン不使用 / font-weight 700 不使用 / --accent 直塗り不使用
  */
 
+/* スクリーンリーダー専用: ライブリージョン等を視覚的に非表示にするユーティリティ
+ * (C-3: role=status aria-live 要素は sr-only で隠し、画面上に重複表示させない)
+ */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .container {
   display: flex;
   flex-direction: column;

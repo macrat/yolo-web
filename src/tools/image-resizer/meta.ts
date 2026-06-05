@@ -21,7 +21,7 @@ export const meta: ToolMeta = {
   structuredDataType: "WebApplication",
   trustLevel: "verified",
   howItWorks:
-    "画像ファイル（PNG・JPEG・GIF・WebP、最大20MB）をCanvas APIで読み込み、指定サイズにリサイズしてブラウザ上でダウンロードします。幅・高さの絶対値指定とパーセント指定に対応し、アスペクト比ロックで比率を維持したリサイズも可能です。画像データはサーバーに送信されません。",
+    "画像ファイル（PNG・JPEG・GIF・WebP、最大20MB）をブラウザ内で読み込み、指定サイズにリサイズしてダウンロードします。幅・高さの絶対値指定とパーセント指定に対応し、アスペクト比ロックで比率を維持したリサイズも可能です。画像データはサーバーに送信されません。",
   faq: [
     {
       question: "対応している画像形式と最大ファイルサイズは？",
