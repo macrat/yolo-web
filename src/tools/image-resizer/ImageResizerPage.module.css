@@ -88,23 +88,28 @@
   accent-color: var(--accent);
 }
 
-/* ===== アスペクト比ロックボタン ===== */
+/* ===== アスペクト比ロックボタン =====
+ * DESIGN.md §3: 絵文字禁止 → SVG 線画アイコン + 可視テキストラベルで状態を表示。
+ * 幅は固定せず auto にして「固定中」「固定解除」ラベルを収める。
+ */
 .lockButton {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
+  gap: 0.25rem;
+  width: auto;
   height: 40px;
   min-height: 40px;
-  padding: 0;
+  padding: 0 0.625rem;
   border: 1px solid var(--border-strong);
   border-radius: var(--r-interactive);
   background-color: var(--bg);
   color: var(--fg);
-  font-size: 1rem;
+  font-size: 0.8125rem;
   cursor: pointer;
   transition: border-color 0.15s;
   flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .lockButton:hover {
@@ -121,6 +126,13 @@
   border-color: var(--bg-invert);
   background-color: var(--bg-invert);
   color: var(--fg-invert);
+}
+
+/* ロックボタン内の可視テキストラベル */
+.lockLabel {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1;
 }
 
 /* ===== リサイズボタン ===== */

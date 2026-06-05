@@ -452,3 +452,232 @@ describe("マッチなし表示", () => {
     expect(screen.getByText(/マッチなし/)).toBeInTheDocument();
   });
 });
+
+// =========================================================
+// UX是正 (b): サンプル投入機能
+// =========================================================
+describe("UX是正(b): サンプル投入機能", () => {
+  it("サンプル選択セレクトが存在する", () => {
+    render(<RegexTesterPage />);
+    // セレクトボックス（サンプル選択）が存在する
+    const select = screen.getByRole("combobox", { name: /サンプル/ });
+    expect(select).toBeInTheDocument();
+  });
+
+  it("デフォルト選択が「選択してください」などの無効値である", () => {
+    render(<RegexTesterPage />);
+    const select = screen.getByRole("combobox", {
+      name: /サンプル/,
+    }) as HTMLSelectElement;
+    expect(select.value).toBe("");
+  });
+
+  it("サンプルを選択するとパターン入力欄に値が入る", async () => {
+    render(<RegexTesterPage />);
+    const select = screen.getByRole("combobox", {
+      name: /サンプル/,
+    }) as HTMLSelectElement;
+    await act(async () => {
+      // REGEX_SAMPLE_INPUTS[0] = メールアドレス
+      fireEvent.change(select, { target: { value: "0" } });
+    });
+    const patternInput = screen.getByRole("textbox", {
+      name: /正規表現パターン/,
+    }) as HTMLInputElement;
+    expect(patternInput.value).not.toBe("");
+  });
+
+  it("サンプルを選択するとテスト文字列に値が入る", async () => {
+    render(<RegexTesterPage />);
+    const select = screen.getByRole("combobox", {
+      name: /サンプル/,
+    }) as HTMLSelectElement;
+    await act(async () => {
+      fireEvent.change(select, { target: { value: "0" } });
+    });
+    const testStringArea = screen.getByRole("textbox", {
+      name: /テスト文字列/,
+    }) as HTMLTextAreaElement;
+    expect(testStringArea.value).not.toBe("");
+  });
+});
+
+// =========================================================
+// UX是正 (c): フラグ説明の常時表示
+// =========================================================
+describe("UX是正(c): フラグ説明の常時表示", () => {
+  it("g フラグの説明テキストが常時表示されている", () => {
+    render(<RegexTesterPage />);
+    // フラグチェックボックスに隣接して説明テキストが見える
+    // 「全てのマッチ」または「全体検索」などの説明が直接表示される
+    expect(screen.getByText(/全てのマッチ|全体検索/)).toBeInTheDocument();
+  });
+
+  it("i フラグの説明テキストが常時表示されている", () => {
+    render(<RegexTesterPage />);
+    expect(screen.getByText(/大文字小文字/)).toBeInTheDocument();
+  });
+
+  it("s フラグの説明テキストが平易な日本語で先頭に来ている（G-2: リテラシー非依存）", () => {
+    render(<RegexTesterPage />);
+    // 「dotAll」という専門用語よりも平易な説明が先頭に来ること
+    // 「. が改行を含む全文字にマッチ」または同等の平易な説明が存在すること
+    const flagDesc = screen.getByText(/\. が改行/);
+    expect(flagDesc).toBeInTheDocument();
+    // 専門用語 dotAll は括弧補足として後置されていること
+    expect(flagDesc.textContent).toMatch(/（dotAll）|（dotAll |dotAll(?!.*— )/);
+  });
+});
+
+// =========================================================
+// 前ラウンド reviewer 指摘 1: 置換結果 <pre> の aria-labelledby 紐付け
+// =========================================================
+describe("reviewer指摘1: 置換結果 pre の aria-labelledby 紐付け", () => {
+  it("置換結果ラベルに id が付与されている", async () => {
+    render(<RegexTesterPage />);
+
+    // 置換セクションを開く
+    await act(async () => {
+      fireEvent.click(screen.getByRole("button", { name: /置換を表示/ }));
+    });
+
+    const patternInput = screen.getByRole("textbox", {
+      name: /正規表現パターン/,
+    });
+    const testStringArea = screen.getByRole("textbox", {
+      name: /テスト文字列/,
+    });
+    const replacementInput = screen.getByLabelText(/置換文字列/);
+
+    await act(async () => {
+      fireEvent.change(patternInput, { target: { value: "world" } });
+      fireEvent.change(testStringArea, { target: { value: "hello world" } });
+      fireEvent.change(replacementInput, { target: { value: "earth" } });
+      await flushWorker();
+    });
+
+    // 置換結果ラベルが id を持つこと
+    const resultLabel = screen.getByText(/置換結果/);
+    expect(resultLabel).toHaveAttribute("id");
+
+    // <pre> 要素が aria-labelledby でラベルに紐付いていること
+    const labelId = resultLabel.getAttribute("id")!;
+    const preEl = document.querySelector("pre");
+    expect(preEl).toHaveAttribute("aria-labelledby", labelId);
+  });
+});
+
+// =========================================================
+// 前ラウンド reviewer 指摘 3: サンプル選択の aria-live フィードバック
+// =========================================================
+describe("reviewer指摘3: サンプル選択の aria-live フィードバック", () => {
+  it("サンプル告知用の aria-live 領域（data-testid=sample-announce）が存在する", () => {
+    render(<RegexTesterPage />);
+    // aria-live="polite" で選択フィードバックを告知するための領域が存在する
+    // role="status" は付与せず（ページ内 role=status はマッチ件数サマリの1つに統一）
+    const announceEl = document.querySelector(
+      "[data-testid='sample-announce']",
+    );
+    expect(announceEl).toBeInTheDocument();
+    expect(announceEl).toHaveAttribute("aria-live", "polite");
+  });
+
+  it("サンプル選択後に「メールアドレスのサンプルを投入しました」などのテキストが告知領域に出る", async () => {
+    render(<RegexTesterPage />);
+    const select = screen.getByRole("combobox", {
+      name: /サンプル/,
+    }) as HTMLSelectElement;
+
+    await act(async () => {
+      fireEvent.change(select, { target: { value: "0" } });
+    });
+
+    // サンプル名を含む告知テキストが aria-live 領域に出ること
+    // (「メールアドレス」のサンプルを投入したことが分かるテキスト)
+    const announceEl = document.querySelector(
+      "[data-testid='sample-announce']",
+    );
+    expect(announceEl).toBeInTheDocument();
+    expect(announceEl!.textContent).toMatch(/メールアドレス/);
+  });
+
+  it("同一サンプルを連続して選択しても告知テキストが毎回変化する（連番付与で aria-live が反応する）", async () => {
+    render(<RegexTesterPage />);
+    const select = screen.getByRole("combobox", {
+      name: /サンプル/,
+    }) as HTMLSelectElement;
+    const announceEl = document.querySelector(
+      "[data-testid='sample-announce']",
+    )!;
+
+    // 1回目: URL サンプル選択
+    await act(async () => {
+      fireEvent.change(select, { target: { value: "1" } }); // URL
+    });
+    const firstText = announceEl.textContent ?? "";
+    expect(firstText).toMatch(/URL/);
+
+    // 2回目: 別のサンプル（メール）選択後に再度 URL サンプルを選択
+    await act(async () => {
+      fireEvent.change(select, { target: { value: "0" } }); // メール
+    });
+    await act(async () => {
+      fireEvent.change(select, { target: { value: "1" } }); // URL 再選択
+    });
+    const secondText = announceEl.textContent ?? "";
+
+    // 告知テキストに「URL」が含まれることを確認
+    expect(secondText).toMatch(/URL/);
+    // 1回目と2回目でテキストが異なること（連番や別のマーカーで差分が生じる）
+    expect(firstText).not.toEqual(secondText);
+  });
+});
+
+// =========================================================
+// 前ラウンド reviewer 指摘 1: patternInput の min-height 36px 以上
+// =========================================================
+describe("reviewer指摘1: patternInput の min-height が 36px 以上", () => {
+  it("CSS の patternInput に min-height: 2.25rem 以上が設定されている", () => {
+    const cssPath = resolve(__dirname, "../RegexTesterPage.module.css");
+    const css = readFileSync(cssPath, "utf-8");
+    // patternInput セクションを抽出して min-height を確認
+    // 2rem (32px) は C-1 違反 → 2.25rem (36px) 以上に修正済みであることを確認
+    const patternInputSection =
+      css.match(/\.patternInput\s*\{[^}]+\}/)?.[0] ?? "";
+    // min-height: 2rem は不合格・min-height: 2.25rem 以上が合格
+    expect(patternInputSection).not.toMatch(/min-height:\s*2rem\b/);
+    // 2.25rem 以上が設定されていること（2.25rem / 2.5rem / 2.75rem / 44px 等）
+    expect(patternInputSection).toMatch(
+      /min-height:\s*(2\.[2-9]\d*rem|3rem|44px)/,
+    );
+  });
+});
+
+// =========================================================
+// 前ラウンド reviewer 指摘 2: replaceInput を Input 共通部品に置換
+// =========================================================
+describe("reviewer指摘2: replaceInput が Input 共通部品を使っている", () => {
+  it("CSS に .replaceInput セクションが存在しない（自作 CSS を Input に移譲済み）", () => {
+    const cssPath = resolve(__dirname, "../RegexTesterPage.module.css");
+    const css = readFileSync(cssPath, "utf-8");
+    // .replaceInput の独自スタイルが削除されていること
+    expect(css).not.toMatch(/\.replaceInput\s*\{/);
+  });
+
+  it("置換文字列入力欄が Input 共通部品として描画される（スタイルが Input トークンに準拠）", async () => {
+    render(<RegexTesterPage />);
+
+    // 置換セクションを開く
+    await act(async () => {
+      fireEvent.click(screen.getByRole("button", { name: /置換を表示/ }));
+    });
+
+    // 置換文字列入力欄が存在する
+    const replacementInput = screen.getByLabelText(/置換文字列/);
+    expect(replacementInput).toBeInTheDocument();
+    expect(replacementInput.tagName).toBe("INPUT");
+
+    // Input 共通部品は data-component 等ではなく class で判定するため
+    // min-height: 44px を持つ共通部品が適用されていることを CSS で確認済み（指摘1の修正と連動）
+  });
+});

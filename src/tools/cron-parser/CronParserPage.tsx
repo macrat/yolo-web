@@ -4,6 +4,7 @@
  * CronParserPage — cron-parser の単一実装（フル機能のページ本体）
  *
  * cycle-225 T-6: Component.tsx のフル機能を共通部品で組み直した単一実装。
+ * cycle-225 U-4: UXゲート是正（stale liveSummary リセット・ビルダーコピー・エラーヒント・ビルダー次回実行）。
  *
  * 個別論点の解消:
  * 1. ビルダー復元（②-4 致命）: Component.tsx にあったビルダーモードを完全復元する。
@@ -16,22 +17,29 @@
  *    UTC getter で読むことで環境 TZ によらず常に JST 壁時計でマッチングする。
  *    詳細は logic.ts の getJstField および JST_OFFSET_MS のコメントを参照。
  *
- * 3. コピーボタン削除（②-15）: T-4b 方針でcron-parserはコピーボタンなし（知る対象）。
+ * 3. コピーボタン方針（T-4b 更新）:
+ *    - 解析結果: コピーなし（知る対象）
+ *    - ビルダー生成式: コピーあり（別システムに貼る持ち帰り対象・T-4b 補足で確定）
  *
  * 4. B-3準拠: 解析ボタン・プリセットボタンを共通 Button コンポーネントへ置換。
  *    手書き .parseButton に background-color: var(--accent) を使っていた B-3 違反を解消。
  *    共通 Button の primary バリアントは --bg-invert / --fg-invert ペアを使う。
  *
+ * 5. U-4 是正(a): モード切替時に liveSummary をリセットして stale 表示を防止する。
+ *
+ * 6. U-4 低指摘: エラーメッセージに修正ヒント（範囲説明）を添える。
+ *    ビルダーモードにも次回実行予定を表示する。
+ *
  * 共通部品の使用:
- * - Button: 解析ボタン（primary）・プリセットボタン（default/small）（B-3解消）
+ * - Button: 解析ボタン（primary）・プリセットボタン（default/small）・コピーボタン（B-3解消）
  * - SegmentedControl: 解析/ビルダーモード切替（A-3）
  * - ErrorMessage: エラー表示（A-4・文言は日本語）
  * - Input: Cron式テキスト入力・ビルダー各フィールド入力（A-7に準拠、type=text）
+ * - useCopyToClipboard: ビルダー出力のコピー（A-6・T-4b 更新方針）
  * - ToolPageLayout: ページ全体の器（A-8 - page.tsx で使用済み）
  * ※ Textarea: テキスト変換ではないため不要（N/A）
  * ※ Select: セレクトボックス不要（N/A）
  * ※ FileDropZone: ファイル操作なし（N/A）
- * ※ useCopyToClipboard: コピーボタンなし（T-4b、N/A）
  * ※ Input(type=date): 日付入力なし（N/A）
  *
  * C-3 ライブリージョン: role="status" aria-live="polite" に実テキストノードのサマリを配置。
@@ -40,9 +48,10 @@
  *
  * A-4 エラー文言: ErrorMessage に渡す message は日本語化済み（英語例外メッセージをそのまま渡さない）。
  *
- * AP-I11 タイマー: setTimeout を使う箇所はなし（コピーボタン削除済み）。
+ * AP-I11 タイマー: useCopyToClipboard フックが内部で setTimeout を管理するため、
+ * コンポーネント側でタイマー管理は不要。
  *
- * D-4: setTimeout/setInterval なし。タイマー管理不要。
+ * D-4: 直接 setTimeout/setInterval は使わない（useCopyToClipboard に委譲）。
  */
 
 import { useState, useCallback } from "react";
@@ -50,6 +59,10 @@ import SegmentedControl from "@/components/SegmentedControl";
 import ErrorMessage from "@/components/ErrorMessage";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
+import {
+  useCopyToClipboard,
+  COPIED_LABEL,
+} from "@/components/hooks/useCopyToClipboard";
 import {
   parseCron,
   getNextExecutions,
@@ -101,15 +114,35 @@ function formatDateJst(date: Date): string {
 }
 
 /**
- * parseCron が返す英語または混在エラーメッセージを日本語に確認・整形する（A-4）。
- * logic.ts の parseCron はすでに日本語エラーを返すが、将来の変更に備えて
- * 明示的にチェックし、未定義・空文字の場合は日本語フォールバックを返す。
+ * parseCron が返すエラーメッセージを日本語に確認・整形し、修正ヒントを添える（A-4 + U-4 低指摘）。
+ *
+ * logic.ts の parseCron はすでに日本語エラーを返すが、
+ * U-4 低指摘対応として「どうすればよいか」の範囲説明を追記する。
+ * 例: 「分フィールドが無効です: 60」→「分フィールドが無効です: 60（0〜59 で指定してください）」
  */
 function toJapaneseError(error: string | undefined): string {
   if (!error || error.trim() === "") {
     return "無効なCron式です。入力内容を確認してください。";
   }
-  return error; // logic.ts は日本語エラーを返す
+
+  // フィールドごとの正しい範囲ヒントを追記する（修正方法の明示）
+  if (error.startsWith("分フィールドが無効です")) {
+    return `${error}（0〜59 で指定してください）`;
+  }
+  if (error.startsWith("時フィールドが無効です")) {
+    return `${error}（0〜23 で指定してください）`;
+  }
+  if (error.startsWith("日フィールドが無効です")) {
+    return `${error}（1〜31 で指定してください）`;
+  }
+  if (error.startsWith("月フィールドが無効です")) {
+    return `${error}（1〜12 で指定してください）`;
+  }
+  if (error.startsWith("曜日フィールドが無効です")) {
+    return `${error}（0〜7 で指定してください。0 と 7 は日曜日）`;
+  }
+
+  return error; // logic.ts は日本語エラーを返す（上記以外はそのまま返す）
 }
 
 export default function CronParserPage() {
@@ -123,6 +156,9 @@ export default function CronParserPage() {
   const [nextExecs, setNextExecs] = useState<Date[]>([]);
   /** C-3 ライブリージョン用サマリテキスト */
   const [liveSummary, setLiveSummary] = useState("");
+
+  /** A-6: ビルダー出力のコピー用フック（T-4b 更新: ビルダー生成式は持ち帰り対象） */
+  const { copy, copiedKey } = useCopyToClipboard();
 
   // --- ビルダーモード ---
   const [bMinute, setBMinute] = useState("*");
@@ -233,12 +269,19 @@ export default function CronParserPage() {
       </div>
 
       {/* モード切替（A-3: SegmentedControl 使用・C-2: aria-label 付与）
+       * U-4 是正(a): モード切替時に liveSummary をリセットして stale 表示を防止する。
+       * 解析モードでエラーが残った状態でビルダーへ切り替えると「入力エラーがあります」が
+       * ライブリージョンに残ってしまう問題を修正。
        * MODE_OPTIONS は { label: string; value: string }[] 型で宣言しているため
        * as unknown as キャストは不要（型安全）。 */}
       <SegmentedControl
         options={MODE_OPTIONS}
         value={mode}
-        onChange={(v) => setMode(v as TabMode)}
+        onChange={(v) => {
+          setMode(v as TabMode);
+          // U-4 是正(a): モード切替でliveSummaryをリセット（stale 表示防止）
+          setLiveSummary("");
+        }}
         aria-label="モード切替"
       />
 
@@ -466,6 +509,9 @@ export default function CronParserPage() {
           {/* 生成されたCron式 */}
           <section className={styles.section}>
             <h3 className={styles.sectionTitle}>生成されたCron式</h3>
+            {/* A-6: コピーボタン（T-4b 更新方針: ビルダー生成式は持ち帰り対象）
+             * useCopyToClipboard フック + COPIED_LABEL で統一実装。
+             * 生成式が無効（バリデーション失敗）のときはコピーボタンを disabled にする（E-7）。 */}
             <div className={styles.builtExpressionRow}>
               <code
                 className={styles.builtExpression}
@@ -473,6 +519,17 @@ export default function CronParserPage() {
               >
                 {builtExpression}
               </code>
+              {/* aria-label をコピー状態に合わせて動的に変える（スクリーンリーダーに正確な状態を伝える）。
+               * コピー前: 「コピー」、コピー後: COPIED_LABEL（「コピーしました」）。
+               * テキストと aria-label を一致させることで視覚的・音声的に一貫した UX を実現する。 */}
+              <Button
+                variant="default"
+                onClick={() => copy(builtExpression)}
+                disabled={!builtResult.valid}
+                aria-label={copiedKey ? COPIED_LABEL : "コピー"}
+              >
+                {copiedKey ? COPIED_LABEL : "コピー"}
+              </Button>
             </div>
             {/* 生成式の説明 */}
             {builtResult.valid && (
@@ -485,6 +542,28 @@ export default function CronParserPage() {
               <ErrorMessage message={toJapaneseError(builtResult.error)} />
             )}
           </section>
+
+          {/* U-4 低指摘: ビルダーにも次回実行予定を表示する（JST固定表示）
+           * 解析モードと同様に、有効な式の場合のみ次回実行を表示する。 */}
+          {builtResult.valid &&
+            (() => {
+              const builtNextExecs = getNextExecutions(builtExpression, 5);
+              return builtNextExecs.length > 0 ? (
+                <section className={styles.section}>
+                  <h3 className={styles.sectionTitle}>次回実行予定（JST）</h3>
+                  <ul
+                    className={styles.executionList}
+                    aria-label="ビルダー次回実行予定一覧"
+                  >
+                    {builtNextExecs.map((date, i) => (
+                      <li key={i} className={styles.executionItem}>
+                        {formatDateJst(date)}
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              ) : null;
+            })()}
         </>
       )}
     </div>

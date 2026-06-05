@@ -225,13 +225,82 @@ describe("CronParserPage - ARIA（E-5）", () => {
 });
 
 describe("CronParserPage - コピーボタン（E-6/E-7/E-8）", () => {
-  it("コピーボタンが存在しない（T-4b 方針: cron-parserはコピーなし）", async () => {
+  it("解析モードにコピーボタンが存在しない（T-4b 方針: cron-parser 解析結果はコピーなし）", async () => {
     await act(async () => {
       render(<CronParserPage />);
     });
-    // コピー系のボタンが存在しないこと
+    // 解析モード（初期）ではコピーボタンが存在しないこと
     const copyBtn = screen.queryByRole("button", { name: /コピー/i });
     expect(copyBtn).toBeNull();
+  });
+
+  it("ビルダーモードにコピーボタンが存在する（T-4b 方針: ビルダー出力はコピーあり）", async () => {
+    await act(async () => {
+      render(<CronParserPage />);
+    });
+    // ビルダーモードへ切替
+    const builderTab = screen.getByRole("radio", { name: "ビルダー" });
+    await act(async () => {
+      fireEvent.click(builderTab);
+    });
+    // コピーボタンが存在すること
+    const copyBtn = screen.queryByRole("button", { name: /コピー/i });
+    expect(copyBtn).toBeInTheDocument();
+  });
+
+  it("ビルダーモードのコピーボタンをクリックすると COPIED_LABEL に変わる（E-6）", async () => {
+    await act(async () => {
+      render(<CronParserPage />);
+    });
+    const builderTab = screen.getByRole("radio", { name: "ビルダー" });
+    await act(async () => {
+      fireEvent.click(builderTab);
+    });
+    const copyBtn = screen.getByRole("button", { name: /コピー/i });
+    await act(async () => {
+      fireEvent.click(copyBtn);
+    });
+    // COPIED_LABEL「コピーしました」に変わること
+    await waitFor(() => {
+      expect(
+        screen.queryByRole("button", { name: /コピーしました/i }),
+      ).toBeInTheDocument();
+    });
+  });
+
+  it("ビルダーモードのコピーボタンが有効な式があるとき disabled でない（E-7）", async () => {
+    await act(async () => {
+      render(<CronParserPage />);
+    });
+    const builderTab = screen.getByRole("radio", { name: "ビルダー" });
+    await act(async () => {
+      fireEvent.click(builderTab);
+    });
+    // デフォルト式 * * * * * は有効なのでコピーボタンが有効
+    const copyBtn = screen.getByRole("button", { name: /コピー/i });
+    expect(copyBtn).not.toBeDisabled();
+  });
+
+  it("navigator.clipboard が存在しない環境でコピーしても例外を投げない（E-8）", async () => {
+    // clipboard を削除してクリップボード非対応環境をシミュレート
+    vi.stubGlobal("navigator", {
+      ...navigator,
+      clipboard: undefined,
+    });
+    await act(async () => {
+      render(<CronParserPage />);
+    });
+    const builderTab = screen.getByRole("radio", { name: "ビルダー" });
+    await act(async () => {
+      fireEvent.click(builderTab);
+    });
+    const copyBtn = screen.getByRole("button", { name: /コピー/i });
+    // 例外が投げられないこと
+    await expect(
+      act(async () => {
+        fireEvent.click(copyBtn);
+      }),
+    ).resolves.not.toThrow();
   });
 });
 
@@ -431,5 +500,143 @@ describe("CronParserPage - フィールド詳細（フル機能確認）", () =>
     expect(bodyText.includes("分")).toBe(true);
     expect(bodyText.includes("時")).toBe(true);
     expect(bodyText.includes("曜日")).toBe(true);
+  });
+});
+
+describe("CronParserPage - staleサマリリセット（U-4 是正(a)）", () => {
+  it("解析エラー後にモード切替するとliveSummaryが空になる", async () => {
+    await act(async () => {
+      render(<CronParserPage />);
+    });
+    // 無効な式を入力して解析
+    const input = screen.getByLabelText(/cron式入力/i);
+    await act(async () => {
+      fireEvent.change(input, { target: { value: "invalid" } });
+    });
+    const parseBtn = screen.getByRole("button", { name: /^解析$/ });
+    await act(async () => {
+      fireEvent.click(parseBtn);
+    });
+    // エラー後はliveSummaryに「入力エラーがあります」が表示されている
+    const statusEl = document.querySelector(
+      '[role="status"][aria-live="polite"]',
+    );
+    expect(statusEl?.textContent).toBeTruthy();
+
+    // ビルダーモードへ切替
+    const builderTab = screen.getByRole("radio", { name: "ビルダー" });
+    await act(async () => {
+      fireEvent.click(builderTab);
+    });
+    // モード切替後にliveSummaryがリセット（空）されていること
+    const statusElAfter = document.querySelector(
+      '[role="status"][aria-live="polite"]',
+    );
+    expect(statusElAfter?.textContent?.trim()).toBe("");
+  });
+
+  it("解析エラー後に解析モードへ戻ってもliveSummaryがリセットされる", async () => {
+    await act(async () => {
+      render(<CronParserPage />);
+    });
+    // 無効な式を入力して解析
+    const input = screen.getByLabelText(/cron式入力/i);
+    await act(async () => {
+      fireEvent.change(input, { target: { value: "invalid" } });
+    });
+    const parseBtn = screen.getByRole("button", { name: /^解析$/ });
+    await act(async () => {
+      fireEvent.click(parseBtn);
+    });
+    // ビルダーモードへ切替
+    const builderTab = screen.getByRole("radio", { name: "ビルダー" });
+    await act(async () => {
+      fireEvent.click(builderTab);
+    });
+    // 解析モードへ戻す
+    const parserTab = screen.getByRole("radio", { name: "解析" });
+    await act(async () => {
+      fireEvent.click(parserTab);
+    });
+    // 解析モードへ戻したあともliveSummaryがリセットされていること
+    const statusEl = document.querySelector(
+      '[role="status"][aria-live="polite"]',
+    );
+    expect(statusEl?.textContent?.trim()).toBe("");
+  });
+});
+
+describe("CronParserPage - エラーに修正方法を添える（U-4 低指摘）", () => {
+  it("分フィールドが無効なエラーに範囲説明が含まれる", async () => {
+    await act(async () => {
+      render(<CronParserPage />);
+    });
+    const input = screen.getByLabelText(/cron式入力/i);
+    // 分フィールドを無効な値に（60は0-59の範囲外）
+    await act(async () => {
+      fireEvent.change(input, { target: { value: "60 * * * *" } });
+    });
+    const parseBtn = screen.getByRole("button", { name: /^解析$/ });
+    await act(async () => {
+      fireEvent.click(parseBtn);
+    });
+    const bodyText = document.body.textContent ?? "";
+    // エラーに「0〜59」または「0-59」などの範囲説明が含まれること
+    expect(bodyText).toMatch(/0[〜~-]59/);
+  });
+
+  it("時フィールドが無効なエラーに範囲説明が含まれる", async () => {
+    await act(async () => {
+      render(<CronParserPage />);
+    });
+    const input = screen.getByLabelText(/cron式入力/i);
+    // 時フィールドを無効な値に（24は0-23の範囲外）
+    await act(async () => {
+      fireEvent.change(input, { target: { value: "0 24 * * *" } });
+    });
+    const parseBtn = screen.getByRole("button", { name: /^解析$/ });
+    await act(async () => {
+      fireEvent.click(parseBtn);
+    });
+    const bodyText = document.body.textContent ?? "";
+    // エラーに「0〜23」または「0-23」などの範囲説明が含まれること
+    expect(bodyText).toMatch(/0[〜~-]23/);
+  });
+});
+
+describe("CronParserPage - ビルダー次回実行表示（U-4 低指摘）", () => {
+  it("ビルダーモードで有効な式の次回実行が表示される", async () => {
+    await act(async () => {
+      render(<CronParserPage />);
+    });
+    const builderTab = screen.getByRole("radio", { name: "ビルダー" });
+    await act(async () => {
+      fireEvent.click(builderTab);
+    });
+    // デフォルト式（* * * * *）は有効なので次回実行が表示されること
+    const bodyText = document.body.textContent ?? "";
+    expect(bodyText.includes("次回") || bodyText.includes("実行予定")).toBe(
+      true,
+    );
+  });
+
+  it("ビルダーモードのプリセット「毎日9時」を選ぶと次回実行が表示される", async () => {
+    await act(async () => {
+      render(<CronParserPage />);
+    });
+    const builderTab = screen.getByRole("radio", { name: "ビルダー" });
+    await act(async () => {
+      fireEvent.click(builderTab);
+    });
+    const presetBtn = screen.getByRole("button", {
+      name: /プリセット.*毎日9時/i,
+    });
+    await act(async () => {
+      fireEvent.click(presetBtn);
+    });
+    const bodyText = document.body.textContent ?? "";
+    expect(bodyText.includes("次回") || bodyText.includes("実行予定")).toBe(
+      true,
+    );
   });
 });

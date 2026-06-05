@@ -77,7 +77,7 @@ export function generateText(options: GenerateOptions): string {
   return result.join("\n\n");
 }
 
-// Count words in generated text
+// Count words in generated text (meaningful only for Latin/space-delimited text)
 export function countGeneratedWords(text: string): number {
   if (!text.trim()) return 0;
   return text.trim().split(/\s+/).length;
@@ -86,4 +86,17 @@ export function countGeneratedWords(text: string): number {
 // Count characters
 export function countGeneratedChars(text: string): number {
   return text.length;
+}
+
+/**
+ * 文数をカウントする。
+ * - 日本語の句点「。」または英語のピリオド「.」を文末記号として数える。
+ * - 日本語モードで「単語数」の代わりに表示する（日本語はスペース区切りがなく
+ *   countGeneratedWords の結果が「段落数と同じ」になり無意味なため）。
+ */
+export function countSentences(text: string): number {
+  if (!text.trim()) return 0;
+  // 「。」または「.」を文末とみなして数える（連続する区切り記号は考慮しない）
+  const matches = text.match(/[。.]/g);
+  return matches ? matches.length : 0;
 }

@@ -183,6 +183,19 @@ describe("E-5: ARIA 属性", () => {
     expect(swapButton).toBeInTheDocument();
   });
 
+  test("スワップボタンが生グリフ「⇄」を含まず SVG アイコンを使う", () => {
+    render(<UnitConverterPage />);
+    const swapButton = screen.getByLabelText("変換元と変換先の単位を入れ替え");
+    // 生グリフが含まれていないことを確認
+    expect(swapButton.textContent).not.toContain("⇄");
+    // SVG アイコンが含まれていることを確認
+    const svgEl = swapButton.querySelector("svg");
+    expect(svgEl).toBeInTheDocument();
+    // Lucide スタイル（stroke="currentColor", fill="none"）であることを確認
+    expect(svgEl).toHaveAttribute("stroke", "currentColor");
+    expect(svgEl).toHaveAttribute("fill", "none");
+  });
+
   test("初期値で長さカテゴリのラジオボタンが選択状態になっている", () => {
     render(<UnitConverterPage />);
     const lengthRadio = screen.getByRole("radio", { name: "長さ" });

@@ -130,7 +130,8 @@ export default function BmiCalculatorPage() {
               <div className={styles.meterTrack}>
                 <div className={styles.meterZoneLow} />
                 <div className={styles.meterZoneNormal} />
-                <div className={styles.meterZoneHigh} />
+                <div className={styles.meterZoneWarning} />
+                <div className={styles.meterZoneDanger} />
               </div>
               <div
                 className={styles.meterIndicator}

@@ -131,14 +131,32 @@ export default function UnitConverterPage() {
           </Select>
         </div>
 
-        {/* スワップボタン */}
+        {/* スワップボタン — Lucide スタイル ArrowLeftRight (stroke 1.5px / 20px) */}
         <button
           type="button"
           className={styles.swapButton}
           onClick={handleSwap}
           aria-label="変換元と変換先の単位を入れ替え"
         >
-          ⇄
+          {/* DESIGN.md §3: Lucide スタイル線画アイコン、生グリフ・絵文字禁止 */}
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            {/* 左向き矢印（上段）: 右端 → 左端 */}
+            <path d="M21 7H3" />
+            <path d="M6 4l-3 3 3 3" />
+            {/* 右向き矢印（下段）: 左端 → 右端 */}
+            <path d="M3 17h18" />
+            <path d="M18 14l3 3-3 3" />
+          </svg>
         </button>
 
         {/* 変換先 */}

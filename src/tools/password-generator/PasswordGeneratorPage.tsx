@@ -31,6 +31,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import Button from "@/components/Button";
+import ErrorMessage from "@/components/ErrorMessage";
 import ToggleSwitch from "@/components/ToggleSwitch";
 import {
   useCopyToClipboard,
@@ -60,6 +61,16 @@ const STRENGTH_BAR_WIDTH: Record<PasswordStrength, string> = {
   good: "75%",
   strong: "100%",
 };
+
+/** 文字種が1種類も選択されていないかどうかを判定する */
+function isNoCharsetSelected(options: PasswordOptions): boolean {
+  return (
+    !options.uppercase &&
+    !options.lowercase &&
+    !options.digits &&
+    !options.symbols
+  );
+}
 
 /** 強度ラベルの CSS クラス名マッピング */
 const strengthLabelClassMap: Record<PasswordStrength, string> = {
@@ -120,6 +131,13 @@ export default function PasswordGeneratorPage() {
    * Component.tsx では `evaluateStrength(options)` を使っており、これを継承する。
    */
   const strength = evaluateStrength(options);
+
+  /**
+   * UX是正 (ux-gate-findings.md U-10):
+   * 全文字種が OFF のとき「文字の種類を1つ以上選んでください」エラーを表示する。
+   * charset が空の状態で生成ボタンを押すことを防ぐため生成ボタンも無効化する。
+   */
+  const noCharset = isNoCharsetSelected(options);
 
   /** パスワード生成ハンドラ */
   const handleGenerate = useCallback(() => {
@@ -194,28 +212,42 @@ export default function PasswordGeneratorPage() {
         </div>
       </div>
 
+      {/* UX是正: 全文字種OFFのエラーフィードバック (ux-gate-findings.md U-10)
+       * A-4: ErrorMessage コンポーネント使用 */}
+      {noCharset && (
+        <ErrorMessage message="使用する文字の種類を 1 つ以上選んでください" />
+      )}
+
       {/* 強度バー
        * C-3: role="status" aria-live="polite" に実テキストノードのサマリを配置
        * ①-6: evaluateStrength(options) により options 変更で動的に更新される
-       * 秘密情報配慮: パスワード <code> ではなく強度ラベル側のみに role="status" を付与 */}
+       * 秘密情報配慮: パスワード <code> ではなく強度ラベル側のみに role="status" を付与
+       * UX是正: 全文字種OFFのとき「—」を表示し「弱い」誤表示を防ぐ */}
       <div role="status" aria-live="polite" className={styles.strengthSection}>
         <div className={styles.strengthLabelRow}>
           <span>強度:</span>
-          <span className={strengthLabelClassMap[strength]}>
-            {STRENGTH_LABELS[strength]}
-          </span>
+          {noCharset ? (
+            <span className={styles.strengthValueDisabled}>—</span>
+          ) : (
+            <span className={strengthLabelClassMap[strength]}>
+              {STRENGTH_LABELS[strength]}
+            </span>
+          )}
         </div>
-        <div className={styles.strengthMeterTrack}>
-          <div
-            className={`${styles.strengthMeterFill} ${strengthFillClassMap[strength]}`}
-            style={{ width: STRENGTH_BAR_WIDTH[strength] }}
-          />
-        </div>
+        {!noCharset && (
+          <div className={styles.strengthMeterTrack}>
+            <div
+              className={`${styles.strengthMeterFill} ${strengthFillClassMap[strength]}`}
+              style={{ width: STRENGTH_BAR_WIDTH[strength] }}
+            />
+          </div>
+        )}
       </div>
 
-      {/* 生成ボタン (B-489 Button コンポーネント使用) */}
+      {/* 生成ボタン (B-489 Button コンポーネント使用)
+       * UX是正: 全文字種OFFのとき無効化（charset=空の生成を防ぐ） */}
       <div className={styles.generateButton}>
-        <Button variant="primary" onClick={handleGenerate}>
+        <Button variant="primary" onClick={handleGenerate} disabled={noCharset}>
           パスワード生成
         </Button>
       </div>

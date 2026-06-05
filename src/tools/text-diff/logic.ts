@@ -20,7 +20,10 @@ export function computeDiff(
   let changes: Change[];
   switch (mode) {
     case "line":
-      changes = diffLines(oldText, newText);
+      // ignoreNewlineAtEof: true で末尾改行の有無だけの差を「変更なし」として扱う。
+      // 修正前は末尾改行の有無のみが異なる場合に不変行が +/- の無意味な差分として
+      // 表示され、サマリ件数も過剰になるバグがあった（U-7 是正）。
+      changes = diffLines(oldText, newText, { ignoreNewlineAtEof: true });
       break;
     case "word":
       changes = diffWords(oldText, newText);

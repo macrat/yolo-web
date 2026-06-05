@@ -266,6 +266,36 @@ describe("TextReplacePage", () => {
     expect(screen.queryByText("Invalid regular expression")).toBeNull();
   });
 
+  // G-2: 正規表現スイッチON時に平易な補足説明が表示される
+  it("G-2: 正規表現スイッチON時に「分からなければオフのまま通常置換できます」が表示される", () => {
+    render(<TextReplacePage />);
+
+    // 初期状態（オフ）では補足説明が表示されない
+    expect(
+      screen.queryByText(/分からなければオフのまま/),
+    ).not.toBeInTheDocument();
+
+    // 正規表現スイッチをONにする
+    const regexToggle = screen.getByRole("switch", { name: "正規表現" });
+    fireEvent.click(regexToggle);
+
+    // 補足説明が表示される
+    expect(screen.getByText(/分からなければオフのまま/)).toBeInTheDocument();
+  });
+
+  it("G-2: 正規表現スイッチON時に\\d+や$1の平易な説明が表示される", () => {
+    render(<TextReplacePage />);
+
+    const regexToggle = screen.getByRole("switch", { name: "正規表現" });
+    fireEvent.click(regexToggle);
+
+    // \d+ や $1 などの説明が表示されている（正規表現の平易な補足）
+    const regexHint = screen.getByTestId("regex-hint");
+    expect(regexHint).toBeInTheDocument();
+    // キャプチャグループ参照の説明
+    expect(regexHint.textContent).toMatch(/\$1/);
+  });
+
   // 追加テスト: オプション（大文字小文字区別・全置換）のトグル動作
   it("大文字小文字区別トグルをOFFにすると大文字小文字を無視して置換する", () => {
     render(<TextReplacePage />);

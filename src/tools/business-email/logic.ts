@@ -119,7 +119,8 @@ const TEMPLATES: EmailTemplate[] = [
         label: "打ち合わせ内容",
         type: "textarea",
         required: true,
-        placeholder: "新サービスのご提案について",
+        // bodyTemplate「{{topic}}について」と接続するため、末尾に「について」を含まない体言句にする
+        placeholder: "新サービスのご提案",
       },
       senderNameField,
     ],
@@ -289,7 +290,9 @@ const TEMPLATES: EmailTemplate[] = [
         label: "ミスの内容",
         type: "textarea",
         required: true,
-        placeholder: "請求書の金額に誤りがあった",
+        // bodyTemplate「{{mistakeDetail}}の件につきまして」と接続するため、
+        // 連体終止形(〜あった)より体言句(名詞・体言止め)にする
+        placeholder: "請求書の金額誤り",
       },
       {
         key: "countermeasure",
@@ -489,8 +492,9 @@ const TEMPLATES: EmailTemplate[] = [
         label: "お断りの理由",
         type: "textarea",
         required: true,
-        placeholder:
-          "社内で慎重に検討いたしましたが、現時点では予算の確保が難しい状況",
+        // bodyTemplate「社内で慎重に検討いたしましたが、{{reason}}のため」と接続するため、
+        // 前置きフレーズ「社内で慎重に〜が、」を含まない端的な理由句にする
+        placeholder: "現時点では予算の確保が難しい状況",
       },
       senderNameField,
     ],

@@ -172,7 +172,7 @@
   color: var(--fg-soft);
 }
 
-/* 色コード行（コピーボタンなし：T-4b ②-15 削除確定） */
+/* 色コード行（コピーボタン付き：T-4b U-8 PM 判断で「あり」） */
 .colorCodeRow {
   display: flex;
   align-items: center;
@@ -192,6 +192,7 @@
   font-size: 0.75rem;
   color: var(--fg);
   word-break: break-all;
+  flex: 1;
 }
 
 /* --- レスポンシブ --- */
