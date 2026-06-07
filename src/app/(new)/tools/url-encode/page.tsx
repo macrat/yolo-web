@@ -8,7 +8,7 @@ import {
 } from "@/lib/seo";
 import ToolPageLayout from "@/tools/_components/ToolPageLayout";
 import ToolErrorBoundary from "@/tools/_components/ErrorBoundary";
-import UrlEncodePageContent from "@/tools/url-encode/UrlEncodePage";
+import UrlEncodeTile from "@/tools/url-encode/UrlEncodeTile";
 const SLUG = "url-encode";
 const tool = toolsBySlug.get(SLUG);
 
@@ -26,7 +26,7 @@ export default function UrlEncodePage() {
         }}
       />
       <ToolErrorBoundary>
-        <UrlEncodePageContent />
+        <UrlEncodeTile variant="full" />
       </ToolErrorBoundary>
     </ToolPageLayout>
   );
