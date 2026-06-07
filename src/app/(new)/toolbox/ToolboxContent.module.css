@@ -1,0 +1,80 @@
+/* ToolboxContent — 道具箱プレビューのスタイル
+ * cycle-226 T-2
+ * DESIGN トークン準拠: --bg / --fg / --fg-soft / --border / --r-normal
+ */
+
+/* ページ全体のレイアウト */
+.page {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ヘッダー部 */
+.header {
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin: 0 0 0.5rem 0;
+  color: var(--fg);
+}
+
+.description {
+  color: var(--fg-soft);
+  margin: 0;
+  line-height: 1.6;
+}
+
+.note {
+  font-size: 0.8rem;
+  color: var(--fg-softer, var(--fg-soft));
+}
+
+/* 道具箱グリッド: タイルを横並びに折り返して配置
+ * flex-wrap で折り返し、gap は tile-grid.ts の TILE_GAP_PX=8px に合わせる */
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px; /* tile-grid.ts TILE_GAP_PX と揃える */
+  align-items: flex-start;
+}
+
+/* タイルラッパー: 寸法を style prop から受け取る
+ * height は minHeight にして、タイルが 128px 離散規格を超えてもオーバーフローを許容。
+ * （規格見直しは T-4 実機確認後に判断する） */
+.tileWrapper {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 生きたタイル（UrlEncodeTile）: ラッパーの高さに追従 */
+.liveTile {
+  flex: 1;
+}
+
+/* ダミータイル: プレースホルダ表示 */
+.dummyTile {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* パネル本来の背景に加えてドット模様で「準備中」を視覚的に示す */
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 4px,
+    color-mix(in srgb, var(--border) 40%, transparent) 4px,
+    color-mix(in srgb, var(--border) 40%, transparent) 5px
+  );
+}
+
+.dummyLabel {
+  font-size: 0.8rem;
+  color: var(--fg-softer, var(--fg-soft));
+  text-align: center;
+  padding: 0.5rem;
+}
