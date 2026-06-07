@@ -43,10 +43,11 @@
 }
 
 /* タイルラッパー: 寸法を style prop から受け取る
- * height は minHeight にして、タイルが 128px 離散規格を超えてもオーバーフローを許容。
- * （規格見直しは T-4 実機確認後に判断する） */
+ * maxWidth: style prop でデスクトップ上限（tile-grid 規格）を指定。
+ * width: 100% で親（グリッドコンテナ）に追従し、狭い画面でビューポートを超えない。
+ * height は minHeight にして、タイルが 128px 離散規格を超えてもオーバーフローを許容。 */
 .tileWrapper {
-  flex-shrink: 0;
+  width: 100%;
   display: flex;
   flex-direction: column;
 }
