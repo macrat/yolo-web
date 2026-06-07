@@ -89,6 +89,26 @@
 - `padding="normal"` （デフォルト）: 1.5rem — 通常のパネル
 - `padding="comfortable"`: 2rem — 長文読み物用の広めのパディング（ブログ記事本文等に使用）
 
+### Tile コンポーネント
+
+`src/components/Tile` はツールページの本体を包む器。内部で必ず `<Panel>` をラップするため、`<Tile>` を使えばルート要素が自動的に Panel（§1 のパネル要件）になることを機構として保証する。タイルはパネルの一種であり、パネルが「矩形のデザイン要素」を担うのに対し、タイルはさらに道具箱用の DnD・リサイズ機能を持つ（将来実装）。
+
+**ツールページの本体は必ず `<Tile mode="page">` で包む。** これが §1「すべてのコンテンツはパネルに収まった形で提供される」を守る恒久要件である。今後追加されるツールページも例外なくこの規則に従うこと。
+
+```tsx
+// ツールページ本体の例
+<Tile mode="page" as="section" aria-label="ツール名">
+  <MyToolContent />
+</Tile>
+```
+
+`mode` prop:
+
+- `mode="page"` (デフォルト): Panel 同等。ツールページの本体を包む器として使う。
+- `mode="toolbox-view"` / `mode="toolbox-edit"`: 将来の道具箱ダッシュボード（B-312）用の予約 stub。現時点は Panel ラップのみ（DnD / リサイズ UI 未実装）。
+
+Panel の `as`・`className`・`padding`・aria-\* 等の props はすべて透過される。
+
 ### 角丸
 
 - `--r-normal` (2px): デフォルトの角丸。パネル・カード・タグ・モーダル等すべての要素に使う。
