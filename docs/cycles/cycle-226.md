@@ -27,11 +27,11 @@ completed_at: null
 
 ## 実施する作業
 
-- [ ] **T-1 タイル抽象と url-encode タイルの実装**。共有エンジン（`src/tools/url-encode/logic.ts`・既存 `encodeUrl`/`decodeUrl`）を唯一のロジック源とし、現行の自己完結機能コンポーネント `UrlEncodePage.tsx` を、**Panel をルートに持つ単一の正典タイル**（例: `UrlEncodeTile`）へ作り直す（飾りの外部ラッパーではなく、タイル＝ツール実装そのもののルートが Panel）。**url-encode の UI を描くコンポーネントはこのタイル1つだけにする**（別の「ページ本体」実装を残さない＝分裂の余地を構造的に消す）。**1ツール n タイル**は同一コンポーネントの `variant`（`full`/`encode`/`decode`）で表現（同一実装の別設定＝分裂ゼロ。`encode`/`decode` は方向固定＋方向トグル非表示）。タイルは ToolPageLayout 非依存で単独動作する。**複数インスタンスが1ページに同居するため、現状ハードコードの DOM id（`url-encode-input` 等）を `useId` ベースのインスタンス一意 id へ移行する**（重複 id・label 誤結合の回避）。**当初の誤った成果物（`src/components/Tile/` の Panel ラッパー Tile ＋ DESIGN.md §5 の誤った Tile 節）は git（a472637f）に保全済みなので作業ツリーからは削除する**（誤設計を体現する誤解を招く dead code/doc を残さない）。ユニットテスト（variant 各値の動作・id 一意性）。
-- [ ] **T-2 本物の道具箱（noindex プレビュー）を新設**。`(new)` 配下に noindex ルートを追加し、url-encode の3タイル（full/encode/decode）を**生きたまま（その場で入力・変換・コピーできる状態で）インライン描画**する（リンクカードにしない）。複数タイルの同居を示すため**静的なダミータイル**（本物と同じ Panel ルート・同じ寸法枠だが中身はプレースホルダ）も1–2枚並べる（＝Owner 原案のダミー方式を本物のタイルと混在させて正しく実現。ダミーは「n タイルが各々動く」検証の対象外と明記）。配置は `tile-grid.ts` の寸法規格を参照し、**url-encode タイルが何セル（n×m）相当で textarea2つ＋コントロールが破綻なく収まるかを実測する**。128px 離散規格に収まらない場合は**タイルの機能を削らず**、規格側の見直しを backlog 起票する（cycle-220『機能を枠に合わせて削る』の轍を踏まない）。DnD/永続化は非目標。T-1 依存。
-- [ ] **T-3 詳細ページを同じタイルで描画**。`src/app/(new)/tools/url-encode/page.tsx` を、T-1 の `full` タイル（道具箱が描くのと同一コンポーネント）をヒーローに描くよう変更。ToolPageLayout の文脈（パンくず・howItWorks・FAQ・関連）は維持。これで「タイル＝詳細ページの本体」が同一コンポーネントとして成立。T-1 依存。
-- [ ] **T-4 同一性・インライン動作のフォアグラウンド検証**。**`npm run build` 済みの本番ビルド**（または `.next` をクリアした状態）に対し Playwright（MCP・フォアグラウンド）で、(a) 道具箱でタイル内の encode/decode が**ページ遷移なしに**動く（**`page.url()` 不変・full reload/`framenavigated` 無発生を network requests で機械的に確認**）、(b) 詳細ページのヒーローが同じタイルで同じ動作、(c) full/encode/decode の n タイルが各々正しく動く（ダミー除く）、(d) タイルのルートが Panel（背景 `--bg`・角丸 `--r-normal`・影なし）、(e) ライト/ダーク・w360/w1280、(f) hydration エラーゼロ・**DOM id 重複ゼロ**、を実物で確認。指摘ゼロまで修正ループ。T-2・T-3 依存。
-- [ ] **T-5 PM 独立検証＋パターン文書化＋計画書の訂正**。PM が `npm run lint && npm run format:check && npm run test && npm run build` を独立再実行（AP-WF16）。動いた縦スライスを一次資料に、(i) タイル/道具箱/詳細ページの確立パターン（タイル＝ツール実装の単一正典コンポーネント／詳細ページと道具箱は同一エクスポートを描く／1ツール n タイルは variant／道具箱はタイルを生きたまま埋め込む）を `docs/knowledge/` に記録（作業ログは `tmp/cycle-226/` に置く＝doc-directory 規約準拠）、(ii) `design-migration-plan.md` の逸脱箇所（道具箱を Phase 10 へ後回しにした順序反転・cycle-220 の n タイル廃止）を**動いている実物に設計を合わせる形で**原設計へ訂正する。**この訂正が cycle-178/194/220 の原罪（机上で逸脱を正典化する独断書き換え）と異なることの担保は、〔a〕訂正の向きが原典（site-concept.md）へ戻す方向であること・〔b〕動いた実物に基づくこと・〔c〕fresh reviewer が原典忠実性を敵対的に検証すること**（過去の失敗は向きが原典から離れ・根拠が机上だった。本訂正は向きと根拠が逆。判断は PM が負う＝CLAUDE.md。Owner は監督者・助言者）。(iii) 後続の道筋（DnD/永続化/公開/残り33ツール/タイルレジストリ・型契約の再構築）を backlog 起票。T-4 依存。
+- [x] **T-1 タイル抽象と url-encode タイルの実装**（完了・commit f078a91b）。共有エンジン（`src/tools/url-encode/logic.ts`・既存 `encodeUrl`/`decodeUrl`）を唯一のロジック源とし、現行の自己完結機能コンポーネント `UrlEncodePage.tsx` を、**Panel をルートに持つ単一の正典タイル**（例: `UrlEncodeTile`）へ作り直す（飾りの外部ラッパーではなく、タイル＝ツール実装そのもののルートが Panel）。**url-encode の UI を描くコンポーネントはこのタイル1つだけにする**（別の「ページ本体」実装を残さない＝分裂の余地を構造的に消す）。**1ツール n タイル**は同一コンポーネントの `variant`（`full`/`encode`/`decode`）で表現（同一実装の別設定＝分裂ゼロ。`encode`/`decode` は方向固定＋方向トグル非表示）。タイルは ToolPageLayout 非依存で単独動作する。**複数インスタンスが1ページに同居するため、現状ハードコードの DOM id（`url-encode-input` 等）を `useId` ベースのインスタンス一意 id へ移行する**（重複 id・label 誤結合の回避）。**当初の誤った成果物（`src/components/Tile/` の Panel ラッパー Tile ＋ DESIGN.md §5 の誤った Tile 節）は git（a472637f）に保全済みなので作業ツリーからは削除する**（誤設計を体現する誤解を招く dead code/doc を残さない）。ユニットテスト（variant 各値の動作・id 一意性）。
+- [x] **T-2 本物の道具箱（noindex プレビュー）を新設**（完了・commit 2e871e8b）。`(new)` 配下に noindex ルートを追加し、url-encode の3タイル（full/encode/decode）を**生きたまま（その場で入力・変換・コピーできる状態で）インライン描画**する（リンクカードにしない）。複数タイルの同居を示すため**静的なダミータイル**（本物と同じ Panel ルート・同じ寸法枠だが中身はプレースホルダ）も1–2枚並べる（＝Owner 原案のダミー方式を本物のタイルと混在させて正しく実現。ダミーは「n タイルが各々動く」検証の対象外と明記）。配置は `tile-grid.ts` の寸法規格を参照し、**url-encode タイルが何セル（n×m）相当で textarea2つ＋コントロールが破綻なく収まるかを実測する**。128px 離散規格に収まらない場合は**タイルの機能を削らず**、規格側の見直しを backlog 起票する（cycle-220『機能を枠に合わせて削る』の轍を踏まない）。DnD/永続化は非目標。T-1 依存。
+- [x] **T-3 詳細ページを同じタイルで描画**（完了＝T-1 で同一 import に差し替え済み・T-4 で同一動作実証）。`src/app/(new)/tools/url-encode/page.tsx` を、T-1 の `full` タイル（道具箱が描くのと同一コンポーネント）をヒーローに描くよう変更。ToolPageLayout の文脈（パンくず・howItWorks・FAQ・関連）は維持。これで「タイル＝詳細ページの本体」が同一コンポーネントとして成立。T-1 依存。
+- [x] **T-4 同一性・インライン動作のフォアグラウンド検証**（完了＝核を実物で実証・モバイル是正 commit 106be98d）。**`npm run build` 済みの本番ビルド**（または `.next` をクリアした状態）に対し Playwright（MCP・フォアグラウンド）で、(a) 道具箱でタイル内の encode/decode が**ページ遷移なしに**動く（**`page.url()` 不変・full reload/`framenavigated` 無発生を network requests で機械的に確認**）、(b) 詳細ページのヒーローが同じタイルで同じ動作、(c) full/encode/decode の n タイルが各々正しく動く（ダミー除く）、(d) タイルのルートが Panel（背景 `--bg`・角丸 `--r-normal`・影なし）、(e) ライト/ダーク・w360/w1280、(f) hydration エラーゼロ・**DOM id 重複ゼロ**、を実物で確認。指摘ゼロまで修正ループ。T-2・T-3 依存。
+- [~] **T-5 PM 独立検証＋パターン文書化＋計画書の訂正**（一部完了）。**完了**: PM 独立自動チェック全 green（lint=0／format=0／test 340 files 5416 passed／build=0＝AP-WF16）。確立パターンを `docs/knowledge/tile-architecture.md` に記録。後続を backlog 起票（B-501 計画書訂正・B-502 タイルレジストリ／型契約・B-497 残り33ツール継続）。**専用タスクへ re-scope（B-501）**: `design-migration-plan.md` の逸脱訂正は foundational doc の独断・机上書き換えこそが原罪だったため、この長大セッション末尾で急がず、動いた実物・knowledge 文書を根拠に**敵対的レビュー付きの専用タスク**として deliberate に行う（build-first・document-after を貫徹）。＝以下を独立再実行（AP-WF16）。動いた縦スライスを一次資料に、(i) タイル/道具箱/詳細ページの確立パターン（タイル＝ツール実装の単一正典コンポーネント／詳細ページと道具箱は同一エクスポートを描く／1ツール n タイルは variant／道具箱はタイルを生きたまま埋め込む）を `docs/knowledge/` に記録（作業ログは `tmp/cycle-226/` に置く＝doc-directory 規約準拠）、(ii) `design-migration-plan.md` の逸脱箇所（道具箱を Phase 10 へ後回しにした順序反転・cycle-220 の n タイル廃止）を**動いている実物に設計を合わせる形で**原設計へ訂正する。**この訂正が cycle-178/194/220 の原罪（机上で逸脱を正典化する独断書き換え）と異なることの担保は、〔a〕訂正の向きが原典（site-concept.md）へ戻す方向であること・〔b〕動いた実物に基づくこと・〔c〕fresh reviewer が原典忠実性を敵対的に検証すること**（過去の失敗は向きが原典から離れ・根拠が机上だった。本訂正は向きと根拠が逆。判断は PM が負う＝CLAUDE.md。Owner は監督者・助言者）。(iii) 後続の道筋（DnD/永続化/公開/残り33ツール/タイルレジストリ・型契約の再構築）を backlog 起票。T-4 依存。
 
 ## 作業計画
 
@@ -102,7 +102,23 @@ completed_at: null
 
 ## レビュー結果
 
-<作業完了後、別のサブエージェントにレビューさせ、改善項目が無くなるまで改善とレビューを繰り返す。>
+### 計画レビュー（立て直し計画）
+
+2観点（コンセプト実現・再発防止／実行可能性）の fresh reviewer で精査。1巡目で対応必須（同一性の構造保証の明文化・DOM id 一意化・孤児 Tile の始末・tile-grid 実測・遷移なしの機械確認・本番ビルド検証・作業記録の置き場・計画書訂正の歯止め）を反映。fresh 再レビューで指摘ゼロ承認。
+
+### 実装レビューと実機検証
+
+- **T-1**（UrlEncodeTile）: fresh reviewer 指摘ゼロ承認＋PM 独立 tsc=0。Panel ルート・単一実装（別実装ゼロ）・variant 設定差・useId 一意を一次資料で確認。
+- **T-2**（道具箱 /toolbox）: fresh reviewer 指摘ゼロ承認。リンク/カードゼロ・生きた同一タイルを埋め込み・noindex・既存無改変を確認。PM 本番ビルド後の pre-commit が build 出力依存の bundle-budget 失敗を捕捉→whitelist 修正。
+- **T-4 実機検証（核の実証・本番ビルド・フォアグラウンド Playwright）**:
+  - 道具箱で url-encode の3タイル（full/encode/decode）が**ページ遷移なしにその場で動く**（入力→`%E6%97%A5...` 等の変換出力・URL 不変・full reload 無発生）。n タイルが1エンジンから各 variant どおり動作（方向トグルは full のみ＝radiogroup 1）。
+  - **詳細ページのヒーローが同一 `UrlEncodeTile`** で同じく動作（同一 import＝構造的同一性）。
+  - タイルのルートが Panel（ライト bg `rgb(255,255,255)`／ダーク bg `rgb(54,54,52)`＝テーマ解決済み `--bg`・角丸 2px・影 none）。
+  - DOM id 一意（useId・重複ゼロ）・console error 0・hydration ゼロ（警告3件は Next.js CSS preload の定型・無害）。
+  - w360 でタイルがビューポートに収まり機能維持（モバイル横はみ出しを修正）・w1280 で規格幅維持。
+- **T-5 自動チェック（PM 独立・AP-WF16）**: lint=0／format:check=0／test 340 files 5416 passed／build=0。
+
+→ **約50サイクル一度も実現されなかった「道具箱に埋め込まれて動くタイルが、詳細ページと同一に、ページ遷移なしに動く」を、url-encode の縦スライスで実物として成立させた。**
 
 ## キャリーオーバー
 
