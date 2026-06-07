@@ -73,3 +73,25 @@ describe("TB-4: 3インスタンス同居時の DOM id 重複ゼロ", () => {
     expect(uniqueIds.size).toBe(allIds.length);
   });
 });
+
+// --- TB-5: レスポンシブ幅（横スクロール防止） ---
+// タイルラッパーは固定 width ではなく maxWidth を使い、
+// 親より広い場合のみ tile-grid 規格幅・狭い場合は親に収まる設計になっているか確認。
+// （実機での横スクロール有無は PM が Playwright で確認するが、
+//   DOM 構造として width 固定でないことをここで保証する）
+describe("TB-5: タイルラッパーがレスポンシブ幅（maxWidth）を使用している", () => {
+  it("タイルラッパーの style に width の固定値がなく maxWidth が設定されている", () => {
+    const { container } = render(<ToolboxContent />);
+    // tileWrapper クラスの要素を全件取得
+    const wrappers = container.querySelectorAll<HTMLElement>(
+      "[class*='tileWrapper']",
+    );
+    expect(wrappers.length).toBeGreaterThan(0);
+    wrappers.forEach((wrapper) => {
+      // width 固定がないこと（空文字 or 未設定）
+      expect(wrapper.style.width).toBeFalsy();
+      // maxWidth が設定されていること
+      expect(wrapper.style.maxWidth).toBeTruthy();
+    });
+  });
+});

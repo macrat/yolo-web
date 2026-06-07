@@ -66,10 +66,11 @@ export default function ToolboxContent() {
       <div className={styles.grid}>
         {/* ----- 生きたタイル: url-encode (full) ----- */}
         {/* variant="full": 方向トグル（エンコード/デコード切り替え）あり */}
+        {/* maxWidth: デスクトップでは tile-grid 規格幅を上限に、狭い画面では親に収まる */}
         <div
           className={styles.tileWrapper}
           style={{
-            width: FULL_TILE_SIZE.width,
+            maxWidth: FULL_TILE_SIZE.width,
             minHeight: FULL_TILE_SIZE.height,
           }}
         >
@@ -81,7 +82,7 @@ export default function ToolboxContent() {
         <div
           className={styles.tileWrapper}
           style={{
-            width: VARIANT_TILE_SIZE.width,
+            maxWidth: VARIANT_TILE_SIZE.width,
             minHeight: VARIANT_TILE_SIZE.height,
           }}
         >
@@ -97,7 +98,7 @@ export default function ToolboxContent() {
         <div
           className={styles.tileWrapper}
           style={{
-            width: VARIANT_TILE_SIZE.width,
+            maxWidth: VARIANT_TILE_SIZE.width,
             minHeight: VARIANT_TILE_SIZE.height,
           }}
         >
@@ -113,7 +114,7 @@ export default function ToolboxContent() {
         <div
           className={styles.tileWrapper}
           style={{
-            width: DUMMY_TILE_SIZE.width,
+            maxWidth: DUMMY_TILE_SIZE.width,
             minHeight: DUMMY_TILE_SIZE.height,
           }}
         >
@@ -125,7 +126,7 @@ export default function ToolboxContent() {
         <div
           className={styles.tileWrapper}
           style={{
-            width: DUMMY_TILE_SIZE.width,
+            maxWidth: DUMMY_TILE_SIZE.width,
             minHeight: DUMMY_TILE_SIZE.height,
           }}
         >
