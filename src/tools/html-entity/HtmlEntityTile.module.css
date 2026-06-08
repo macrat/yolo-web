@@ -1,0 +1,47 @@
+/* HtmlEntityTile スタイル
+ * cycle-227 T-1: HtmlEntityPage.module.css をタイル向けに継承・移植。
+ * DESIGN トークン準拠（--color-* 旧トークン不使用・bold禁止・
+ * --r-interactive / --r-normal 使用・--border-strong 使用）
+ *
+ * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
+ */
+
+/* コントロール行: SegmentedControl を格納する行 */
+.controls {
+  margin-bottom: 1rem;
+}
+
+/* 入力/出力フィールド */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  margin-bottom: 1rem;
+}
+
+.field:last-child {
+  margin-bottom: 0;
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--fg-soft);
+}
+
+/* 出力ヘッダー: ラベルとコピーボタンを横並び */
+.outputRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+/* ライブリージョン（C-3 準拠: 実テキストノードのサマリ）
+   HtmlEntityPage.module.css では sr-only だったが、UrlEncodeTile に揃えて
+   視覚的にも薄く表示する（情報は隠さない原則） */
+.statusSummary {
+  font-size: 0.8rem;
+  color: var(--fg-soft);
+  min-height: 1.2em;
+}

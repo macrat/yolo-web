@@ -8,7 +8,7 @@ import {
 } from "@/lib/seo";
 import ToolPageLayout from "@/tools/_components/ToolPageLayout";
 import ToolErrorBoundary from "@/tools/_components/ErrorBoundary";
-import Base64Tool from "@/tools/base64/Base64Tool";
+import Base64Tile from "@/tools/base64/Base64Tile";
 const SLUG = "base64";
 const tool = toolsBySlug.get(SLUG);
 
@@ -26,7 +26,7 @@ export default function Base64Page() {
         }}
       />
       <ToolErrorBoundary>
-        <Base64Tool />
+        <Base64Tile variant="full" />
       </ToolErrorBoundary>
     </ToolPageLayout>
   );
