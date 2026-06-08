@@ -52,30 +52,7 @@
   flex-direction: column;
 }
 
-/* 生きたタイル（UrlEncodeTile）: ラッパーの高さに追従 */
+/* 生きたタイル（url-encode / html-entity / base64 / fullwidth-converter）: ラッパーの高さに追従 */
 .liveTile {
   flex: 1;
-}
-
-/* ダミータイル: プレースホルダ表示 */
-.dummyTile {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /* パネル本来の背景に加えてドット模様で「準備中」を視覚的に示す */
-  background-image: repeating-linear-gradient(
-    45deg,
-    transparent,
-    transparent 4px,
-    color-mix(in srgb, var(--border) 40%, transparent) 4px,
-    color-mix(in srgb, var(--border) 40%, transparent) 5px
-  );
-}
-
-.dummyLabel {
-  font-size: 0.8rem;
-  color: var(--fg-softer, var(--fg-soft));
-  text-align: center;
-  padding: 0.5rem;
 }

@@ -17,11 +17,13 @@ completed_at: null
 
 ## 実施する作業
 
-- [ ] **T-1: html-entity を単一正典タイル化**（`HtmlEntityTile.tsx`＋CSS＋テスト・詳細ページ再配線・旧 `HtmlEntityPage.tsx` 削除）
-- [ ] **T-2: base64 を単一正典タイル化**（`Base64Tile.tsx`＋CSS＋テスト・詳細ページ再配線・旧 `Base64Tool.tsx` 削除）
-- [ ] **T-3: fullwidth-converter を単一正典タイル化**（`FullwidthConverterTile.tsx`＋CSS＋テスト・詳細ページ再配線・旧 `FullwidthConverterPage.tsx` 削除）
+- [x] **T-1: html-entity を単一正典タイル化**（`HtmlEntityTile.tsx`＋CSS＋テスト・詳細ページ再配線・旧 `HtmlEntityPage.tsx` 削除）。fresh reviewer 承認・指摘ゼロ。
+- [x] **T-2: base64 を単一正典タイル化**（`Base64Tile.tsx`＋CSS＋テスト・詳細ページ再配線・旧 `Base64Tool.tsx` 削除）。reviewer [major]1件（旧テスト振る舞い3件の移植漏れ）→修正→再レビュー承認。
+- [x] **T-3: fullwidth-converter を単一正典タイル化**（`FullwidthConverterTile.tsx`＋CSS＋テスト・詳細ページ再配線・旧 `FullwidthConverterPage.tsx` 削除）。fresh reviewer 承認・指摘ゼロ。
 - [ ] **T-4: 3 タイルを道具箱（`/toolbox`）へ統合**（`ToolboxContent.tsx` のダミー差し替え＋グリッド追加・道具箱テスト更新）。T-1〜T-3 完了後に直列で実施（共有ファイル競合回避）。
 - [ ] **T-5: 合格条件の実機 Playwright 検証＋最終ゲート**（同一タイルが道具箱と詳細ページの両方でページ遷移なしに同一動作・ライト/ダーク・w360/w1280・id 重複ゼロ／lint・format・test・build 全通過）。T-4 完了後。
+
+> 進捗メモ: T-1〜T-3 をコミット（a9b54698）。PM 独立全ゲート再実行＝tsc0 / lint0 / format0 / test5440 / build0。
 
 ## 作業計画
 
