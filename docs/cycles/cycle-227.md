@@ -20,8 +20,8 @@ completed_at: null
 - [x] **T-1: html-entity を単一正典タイル化**（`HtmlEntityTile.tsx`＋CSS＋テスト・詳細ページ再配線・旧 `HtmlEntityPage.tsx` 削除）。fresh reviewer 承認・指摘ゼロ。
 - [x] **T-2: base64 を単一正典タイル化**（`Base64Tile.tsx`＋CSS＋テスト・詳細ページ再配線・旧 `Base64Tool.tsx` 削除）。reviewer [major]1件（旧テスト振る舞い3件の移植漏れ）→修正→再レビュー承認。
 - [x] **T-3: fullwidth-converter を単一正典タイル化**（`FullwidthConverterTile.tsx`＋CSS＋テスト・詳細ページ再配線・旧 `FullwidthConverterPage.tsx` 削除）。fresh reviewer 承認・指摘ゼロ。
-- [ ] **T-4: 3 タイルを道具箱（`/toolbox`）へ統合**（`ToolboxContent.tsx` のダミー差し替え＋グリッド追加・道具箱テスト更新）。T-1〜T-3 完了後に直列で実施（共有ファイル競合回避）。
-- [ ] **T-5: 合格条件の実機 Playwright 検証＋最終ゲート**（同一タイルが道具箱と詳細ページの両方でページ遷移なしに同一動作・ライト/ダーク・w360/w1280・id 重複ゼロ／lint・format・test・build 全通過）。T-4 完了後。
+- [x] **T-4: 3 タイルを道具箱（`/toolbox`）へ統合**（`ToolboxContent.tsx` のダミー差し替え＋グリッド追加・道具箱テスト更新）。fresh reviewer 再レビュー承認（[minor] CSS デッドコード除去後）。コミット 2fb68034。
+- [x] **T-5: 合格条件の実機 Playwright 検証＋最終ゲート**（PM がフォアグラウンド Playwright で本番ビルドを一次確認）。下記「レビュー結果／T-5 実機検証エビデンス」参照。
 
 > 進捗メモ: T-1〜T-3 をコミット（a9b54698）。PM 独立全ゲート再実行＝tsc0 / lint0 / format0 / test5440 / build0。
 
@@ -101,7 +101,45 @@ completed_at: null
 
 ## レビュー結果
 
-<作業完了後に記載。>
+### 各タスクのレビュー
+
+- **計画**: 3観点の敵対的レビュー2巡（計7指摘）→ fresh reviewer 承認（指摘ゼロ）。
+- **T-1 html-entity**: fresh reviewer 承認・指摘ゼロ。
+- **T-2 base64**: fresh reviewer [major]1件（旧テストの振る舞い検証3件＝エラー時ライブリージョン「変換エラー」表示・エラー時コピー disabled・clipboard 不在 silent fail の移植漏れ）→ builder がテスト3件追加 → 再レビュー承認。
+- **T-3 fullwidth-converter**: fresh reviewer 承認・指摘ゼロ。
+- **T-4 道具箱統合**: fresh reviewer [minor]1件（ダミー全廃後の `.dummyTile`/`.dummyLabel` CSS デッドコード残置）→ 除去 → 再レビュー承認。
+
+### T-5 実機検証エビデンス（PM フォアグラウンド Playwright・本番ビルド `npm run build` → `npm start`）
+
+**合格条件①: 同じタイルが道具箱と詳細ページの両方でページ遷移なしに同一動作**
+
+- 道具箱（`/toolbox`）9タイルすべてで、タイル内入力 → その場で出力更新を確認。**URL 不変＋ window マーカー残存（フルナビゲーション無発生）を機械的に確認**。実変換: url-encode `a b`→`a%20b`、base64 `Hello`→`SGVsbG8=`、html-entity `q=a b&x`→`q=a b&amp;x`、fullwidth `ＡＢ１２`→`AB12`。
+- 詳細ページ（`/tools/base64`・`/tools/html-entity`・`/tools/fullwidth-converter`）でも**同一エクスポートのタイル**がヒーロー描画され、ページ遷移なしにその場で動作（URL 不変＋マーカー残存）。実変換: base64 `Café`→`Q2Fmw6k=`（UTF-8）、html-entity `<div class="x">&'</div>`→全特殊文字エンコード、fullwidth `ＡＢ１２！`→`AB12!`。
+
+**合格条件②: n タイル（variant）が各々正しく動く**
+
+- 道具箱に full＋方向固定 variant を実機展示。full 4枚＝方向トグル（radiogroup）あり、方向固定5枚＝トグルなしを確認。方向固定 variant も実機で正しく変換（url-encode encode/decode・html-entity encode・base64 encode・fullwidth toHalfwidth `ＡＢ１２３ｶﾞ`→`AB123ｶﾞ`）。
+
+**合格条件③: Panel ルート（テーマ解決済み）**
+
+- ライト: タイル bg=`rgb(255,255,255)`（`--bg`）・border-radius=`2px`（`--r-normal`）・box-shadow=`none`。
+- ダーク（html.dark）: タイル bg=`rgb(54,54,52)`（ダークの `--bg`・body `rgb(28,28,26)` と区別）・radius=`2px`・shadow=`none`。テーマ追従を確認。
+
+**合格条件④: 複数インスタンス健全性・レスポンシブ**
+
+- 道具箱9インスタンス同居で **DOM id 重複ゼロ**・**console error ゼロ**（残る warning は無害な CSS preload 警告のみ・hydration エラーなし）。
+- w360: **横はみ出しゼロ**（scrollWidth=clientWidth=360・viewport 超過タイルゼロ）、9タイルが1枚ずつ縦積みで各コントロール（SegmentedControl・モード Select・文字種 checkbox 群）が収まり操作可能。w1280: flex-wrap グリッドで破綻なし。
+
+**合格条件⑤: feature-preserving（タイル化前後の等価性・宣言でなく検証）**
+
+- **base64 `aria-describedby`**: URL-safe トグルの `aria-describedby` が実在の説明文要素（「（+ → -, / → \_。JWT や URL クエリ向け）」）に解決＝useId 化後も関連維持。詳細ページ実機で確認。
+- **fullwidth 文字種 checkbox group**: `role="group" aria-label="変換対象"`＋checkbox 3個、全 checkbox が `label[for]` で関連付け＝useId 化後も維持。道具箱の方向固定 variant・詳細ページの両方で確認。
+
+スクリーンショット（記録・`tmp/cycle-227/` のみ）: 道具箱デスクトップ（light/dark）・道具箱 w360。
+
+**最終ゲート（PM 独立再実行）**: `npm run lint`=0 / `npm run format:check`=clean / `npx vitest run`=**5446 passed (340 files)** / `npm run build`=成功（exit 0）。
+
+> サイクル本来の目的の独立照合（B-494 教訓#6）: 約50サイクル一度も実現していなかった「操作がタイル内で閉じ、ページ遷移を伴わない」を、3ツール×（道具箱＋詳細ページ）で**実物として確認**した。書類審査（Panel 存在）でなく実機の同一インライン動作で判定した。
 
 ## キャリーオーバー
 
