@@ -2,7 +2,7 @@
 id: 227
 description: 道具箱の本物のライブタイル化を継続する（B-497）。url-encode で実証した単一正典タイルのパターンで、簡単なツールの小バッチをライブタイル化し再現性を実証する。
 started_at: 2026-06-08T23:35:49+0900
-completed_at: null
+completed_at: 2026-06-11T00:16:12+0900
 ---
 
 # サイクル-227
@@ -23,7 +23,7 @@ completed_at: null
 - [x] **T-4: 3 タイルを道具箱（`/toolbox`）へ統合**（`ToolboxContent.tsx` のダミー差し替え＋グリッド追加・道具箱テスト更新）。fresh reviewer 再レビュー承認（[minor] CSS デッドコード除去後）。コミット 2fb68034。
 - [x] **T-5: 合格条件の実機 Playwright 検証＋最終ゲート**（PM がフォアグラウンド Playwright で本番ビルドを一次確認）。下記「レビュー結果／T-5 実機検証エビデンス」参照。
 
-> 進捗メモ: T-1〜T-3 をコミット（a9b54698）。PM 独立全ゲート再実行＝tsc0 / lint0 / format0 / test5440 / build0。
+> 進捗メモ: T-1〜T-3 をコミット（a9b54698）。PM 独立全ゲート再実行＝tsc0 / lint0 / format0 / test**5440**（この時点）/ build0。※ test 件数は T-4 の道具箱テスト再設計で +6 され、最終ゲート（T-5）では **5446** になる。
 
 ## 作業計画
 
@@ -107,7 +107,7 @@ completed_at: null
 - **T-1 html-entity**: fresh reviewer 承認・指摘ゼロ。
 - **T-2 base64**: fresh reviewer [major]1件（旧テストの振る舞い検証3件＝エラー時ライブリージョン「変換エラー」表示・エラー時コピー disabled・clipboard 不在 silent fail の移植漏れ）→ builder がテスト3件追加 → 再レビュー承認。
 - **T-3 fullwidth-converter**: fresh reviewer 承認・指摘ゼロ。
-- **T-4 道具箱統合**: fresh reviewer [minor]1件（ダミー全廃後の `.dummyTile`/`.dummyLabel` CSS デッドコード残置）→ 除去 → 再レビュー承認。
+- **T-4 道具箱統合**: fresh reviewer [minor]1件（ダミー全廃後の `.dummyTile`/`.dummyLabel` CSS デッドコード残置）→ 除去 → 再レビュー承認。**PM 独立再実行（T-4 ラウンド単独・コミット 2fb68034 前）**: `npx vitest run src/app/(new)/toolbox`=14 passed・`npx tsc --noEmit`=0・`npm run lint`=0・`npm run format:check`=clean（共有ファイル ToolboxContent.tsx 改変＝回帰リスク高のため単独ラウンドで独立確認）。
 
 ### T-5 実機検証エビデンス（PM フォアグラウンド Playwright・本番ビルド `npm run build` → `npm start`）
 
@@ -143,21 +143,25 @@ completed_at: null
 
 ## キャリーオーバー
 
-<このサイクルで完了できなかった作業があれば、ここと /docs/backlog.md の両方に記載する。>
+- **B-497 継続（ライブタイル化の残り）**: 34ツール中 4 完了（url-encode＝cycle-226、html-entity／base64／fullwidth-converter＝cycle-227）。残り 30 ツール。B-497 は Active から Queued に戻し、進捗（4/34）と「次は別形へ」を Notes に反映済み。
+- **別形ツールの横展開（次サイクル候補）**: 今サイクルは url-encode 同形（方向変換系）に限定した。次は**異なる形**を1つずつ de-risk する: kana-converter（4モード＋横2カラムレイアウト・SegmentedControl 4択のモバイル幅検証）、char-count（統計グリッド・コピーなし・variant の意味が「表示情報量」）。各々独立した variant 設計が要る。B-497 の Notes に記載。
+- **道具箱の variant キュレーション（B-502 で扱う）**: 現状は新ツールを full＋方向固定1枚で展示。ツールが増えると道具箱が縦に長大化する（w360 で9タイル＝約7000px）。全ツール展開時の「どの variant をいくつ並べるか」「タイル追加 UI・絞り込み」は道具箱本公開（B-336）/ダッシュボード（B-312）/レジストリ（B-502）の設計で扱う。
+- スコープ外として明示的に送り出した B-501（計画書訂正）・B-502（型契約/レジストリ）は backlog の Queued に既存。
 
 ## 補足事項
 
 - B-501（design-migration-plan.md の原設計訂正）は今サイクルのスコープ外。事故報告書が「foundational doc のため deliberate に・敵対的レビュー必須」と明記しており、build-first（動いた実物を増やす）を先行させてから独立サイクルで実施する。
 - B-502（タイルレジストリ／型契約の再設計）も今サイクルのスコープ外。ライブタイル化の横展開で型契約の必要性が顕在化した時点で着手する。
+- **ブログ非執筆の判断**: 今サイクルは内部アーキテクチャ（タイル化）の継続で、3ツールの来訪者向け挙動は feature-preserving のため不変。道具箱は noindex で未公開のため end user に見える出荷機能はまだない。「単一正典タイル」パターンはエンジニア向けに興味を持たれうるが、cycle-225 で同種のタイル化ブログを「達成コスト比較が成立しない有害な内容」として取り下げた経緯があり、約50サイクルの事故からの立て直し途上で技術的成果として書くのは時期尚早。立て直し物語のブログ化は B-364（複数サイクルで有効性が検証された後に PM が独立判断）が既に追跡している。よって今サイクルはブログ非執筆と判断。
 
 ## サイクル終了時のチェックリスト
 
-- [ ] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
-- [ ] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
-- [ ] すべての変更がレビューされ、残存する指摘事項が無くなっている。
-- [ ] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
-- [ ] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
-- [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
-- [ ] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
+- [x] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
+- [x] `/docs/backlog.md` のActiveセクションに未完了のタスクがない（B-497 を Queued に戻し進捗反映）。
+- [x] すべての変更がレビューされ、残存する指摘事項が無くなっている（計画・T-1〜T-5 全て fresh reviewer 承認・指摘ゼロまで改善）。
+- [x] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する（PM 独立再実行＝lint0 / format0 / test5446 / build0）。
+- [x] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
+- [x] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
+- [x] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
 
 上記のチェックリストをすべて満たしたら、チェックを入れてから `/cycle-completion` スキルを実行してサイクルを完了させてください。
