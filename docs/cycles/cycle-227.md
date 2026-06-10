@@ -108,6 +108,8 @@ completed_at: 2026-06-11T00:16:12+0900
 - **T-2 base64**: fresh reviewer [major]1件（旧テストの振る舞い検証3件＝エラー時ライブリージョン「変換エラー」表示・エラー時コピー disabled・clipboard 不在 silent fail の移植漏れ）→ builder がテスト3件追加 → 再レビュー承認。
 - **T-3 fullwidth-converter**: fresh reviewer 承認・指摘ゼロ。
 - **T-4 道具箱統合**: fresh reviewer [minor]1件（ダミー全廃後の `.dummyTile`/`.dummyLabel` CSS デッドコード残置）→ 除去 → 再レビュー承認。**PM 独立再実行（T-4 ラウンド単独・コミット 2fb68034 前）**: `npx vitest run src/app/(new)/toolbox`=14 passed・`npx tsc --noEmit`=0・`npm run lint`=0・`npm run format:check`=clean（共有ファイル ToolboxContent.tsx 改変＝回帰リスク高のため単独ラウンドで独立確認）。
+- **サイクル全体の最終独立検証（fresh reviewer）**: 承認・指摘なし・サイクル目的達成。詳細ページ3つと道具箱が**同一エクスポート import**（分裂ゼロ）・UI 実装は各 `<Name>Tile.tsx` 1つ・道具箱にリンク/カード/誘導なし・variant は設定差を実コードで確認。安全な同期 Playwright（本番ビルド）で in-place 動作（fullwidth `ＡＢＣ１２３`→`ABC123`・base64 `Café`→`Q2Fmw6k=`・URL 不変＋マーカー残存）・id 重複0・console error 0・radiogroup 4・aria-describedby/checkbox group 実機解決を再現。品質ゲート独立再実行＝lint0/format0/**test5446(340 files)**/build0。
+  - 補足: 最初に起動した全体検証 reviewer は Playwright で無限待機する JS を実行して約2日フリーズし Owner が停止（結果は不採用）。再発防止に `docs/knowledge/playwright-mcp.md` を新設し `docs/anti-patterns/workflow.md` AP-WF18 候補を N=2 に更新。再実行はハング防止指示付きで安全に完走。
 
 ### T-5 実機検証エビデンス（PM フォアグラウンド Playwright・本番ビルド `npm run build` → `npm start`）
 
