@@ -7,7 +7,7 @@ import {
   safeJsonLdStringify,
 } from "@/lib/seo";
 import ToolPageLayout from "@/tools/_components/ToolPageLayout";
-import UnixTimestampPage from "@/tools/unix-timestamp/UnixTimestampPage";
+import UnixTimestampTile from "@/tools/unix-timestamp/UnixTimestampTile";
 
 const SLUG = "unix-timestamp";
 const tool = toolsBySlug.get(SLUG);
@@ -25,7 +25,7 @@ export default function Page() {
           __html: safeJsonLdStringify(generateToolJsonLd(tool.meta)),
         }}
       />
-      <UnixTimestampPage />
+      <UnixTimestampTile variant="full" />
     </ToolPageLayout>
   );
 }

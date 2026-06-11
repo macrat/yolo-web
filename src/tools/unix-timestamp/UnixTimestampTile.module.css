@@ -1,21 +1,17 @@
 /*
- * UnixTimestampPage.module.css
- * DESIGN.md 準拠:
- * - 旧 --color-* トークン不使用
- * - --accent 直塗り禁止（フォーカスの outline のみ許可）
- * - font-weight: 700 禁止
- * - インタラクティブ要素: --r-interactive (8px)
- * - 非インタラクティブ要素: --r-normal (2px)
- * - フォーカス: outline: 2px solid var(--accent); outline-offset: 2px;
- * - フォーム境界線: --border-strong
- * - box-shadow: 通常要素には使わない
+ * UnixTimestampTile.module.css
+ * cycle-228 T-22: UnixTimestampPage.module.css をタイル向けに移植。
+ * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
+ *
+ * DESIGN トークン準拠:
+ * - [B-1] 旧 --color-* トークン不使用
+ * - [B-2] フォーカス: outline: 2px solid var(--accent); outline-offset: 2px;
+ * - [B-3] --accent 直塗り禁止（フォーカス outline のみ許可）
+ * - [B-4] font-weight: 700 禁止
+ * - [B-5] インタラクティブ --r-interactive / 非インタラクティブ --r-normal
+ * - [B-6] Panel 以外に box-shadow 追加禁止
+ * - [B-7] フォーム要素境界線は --border-strong
  */
-
-.container {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
 
 /* ---- 現在タイムスタンプ表示バー ---- */
 .currentBar {
@@ -27,6 +23,7 @@
   border-radius: var(--r-normal);
   background-color: var(--bg-soft);
   flex-wrap: wrap;
+  margin-bottom: 1.5rem;
 }
 
 .currentLabel {
@@ -46,6 +43,11 @@
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.section:last-child {
+  margin-bottom: 0;
 }
 
 .sectionTitle {
@@ -63,7 +65,6 @@
 }
 
 /* 共通 Input コンポーネントにレイアウト上の flex 伸縮を付与するためのラッパークラス */
-/* スタイルは Input.module.css に委ねる（独自ボーダー・フォーカス・カラーは不要） */
 .tsInput {
   flex: 1;
   min-width: 180px;
@@ -124,15 +125,8 @@
  * number スピナーの抑止 (unix-timestamp スコープ限定)
  * 理由: w360 などの狭い画面では、ブラウザデフォルトの number スピナー矢印が
  * フィールド内の文字領域を圧迫し、4桁の年(例: "2026")が末尾1桁欠けて表示される。
- * 共通 Input コンポーネント(33 本に影響)を変更しないよう、当ツールのスコープ CSS で抑止する。
- *
- * Input コンポーネントは className を <input> 要素に直接付与するため、
- * .dateInput クラスは <input type="number"> 要素そのものに適用される。
- * よって疑似要素は .dateInput::-webkit-* で直接参照できる。
  * Webkit: スピナーを非表示。Firefox: appearance: textfield で対応。
  */
-/* 共通 Input コンポーネントに幅調整を付与するためのクラス */
-/* スタイルは Input.module.css に委ねる */
 .dateInput {
   width: 80px;
   font-family: var(--font-mono);

@@ -8,7 +8,7 @@ import {
 } from "@/lib/seo";
 import ToolPageLayout from "@/tools/_components/ToolPageLayout";
 import ToolErrorBoundary from "@/tools/_components/ErrorBoundary";
-import DateCalculatorPageContent from "@/tools/date-calculator/DateCalculatorPage";
+import DateCalculatorTile from "@/tools/date-calculator/DateCalculatorTile";
 
 const SLUG = "date-calculator";
 const tool = toolsBySlug.get(SLUG);
@@ -27,7 +27,7 @@ export default function DateCalculatorPage() {
         }}
       />
       <ToolErrorBoundary>
-        <DateCalculatorPageContent />
+        <DateCalculatorTile variant="full" />
       </ToolErrorBoundary>
     </ToolPageLayout>
   );

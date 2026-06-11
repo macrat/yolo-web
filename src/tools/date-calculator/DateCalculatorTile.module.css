@@ -1,14 +1,13 @@
-/* DateCalculatorPage スタイル
- * DESIGN.md トークン準拠: --border-strong, --r-interactive, --r-normal, --bg-soft
- * --color-* 旧トークン不使用 / font-weight 700 不使用 / --accent 直塗り不使用
+/* DateCalculatorTile スタイル
+ * cycle-228 T-21: DateCalculatorPage.module.css をタイル向けに移植。
+ * DESIGN トークン準拠:
+ *   --border-strong, --r-interactive(8px), --r-normal(2px), --bg-soft
+ *   --color-* 旧トークン不使用 / font-weight 700 不使用 / --accent 直塗り不使用
+ *
+ * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  */
 
-.container {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
+/* セクション: 各機能ブロックを視覚的に区切る */
 .section {
   display: flex;
   flex-direction: column;
@@ -16,6 +15,11 @@
   padding: 1rem;
   border: 1px solid var(--border-strong);
   border-radius: var(--r-normal);
+}
+
+/* Panel 内に複数 section が並ぶ場合の gap */
+.section + .section {
+  margin-top: 1.25rem;
 }
 
 .sectionTitle {
@@ -56,14 +60,19 @@
   white-space: nowrap;
 }
 
+/* 日数入力（加算・減算セクション） */
 .numberInput {
-  width: 100px;
+  max-width: 100px;
+  width: 100%;
 }
 
+/* 元号年・月・日の短い数値入力 */
 .shortNumberInput {
-  width: 72px;
+  max-width: 72px;
+  width: 100%;
 }
 
+/* 和暦入力欄: flex wrap */
 .warekiInputs {
   display: flex;
   flex-wrap: wrap;
@@ -116,10 +125,10 @@
 
 @media (max-width: 640px) {
   .numberInput {
-    width: 80px;
+    max-width: 80px;
   }
 
   .shortNumberInput {
-    width: 60px;
+    max-width: 60px;
   }
 }

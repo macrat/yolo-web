@@ -1,25 +1,30 @@
-/* KeigoReferencePage.module.css
- * DESIGN.md トークン準拠:
- * - --color-* 旧トークン不使用
- * - --accent 直塗り不使用（選択状態は SegmentedControl の --bg-invert/--fg-invert ペアに委任）
- * - font-weight 700 は使用しない（600 まで）
+/* KeigoReferenceTile.module.css
+ * cycle-228 T-18: KeigoReferencePage.module.css をタイル向けに移植。
+ * Panel がルート要素のため .container クラスは不要（Panel.module.css に委譲）。
+ *
+ * DESIGN トークン準拠:
+ * - --color-* 旧トークン不使用（B-1）
+ * - --accent 直塗り不使用（B-3）
+ * - font-weight の最大値は 600（B-4 禁止: 700以上）
  * - インタラクティブ要素: --r-interactive (8px)
  * - 非インタラクティブ要素: --r-normal (2px)
- * - フォーム境界線: --border-strong
+ * - フォーム境界線: --border-strong (B-7)
  */
 
-.container {
+/* タイル内レイアウト（Panel のパディング内側） */
+.inner {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-/* 検索バー: 検索入力 + カテゴリフィルター */
+/* 検索バー: 操作側 flexShrink:0・膨張側 flex:1（AP-P21 スクロール競合防止） */
 .searchBar {
   display: flex;
   gap: 0.75rem;
   align-items: flex-start;
   flex-wrap: wrap;
+  flex-shrink: 0;
 }
 
 .searchInputWrapper {
@@ -37,6 +42,7 @@
   font-size: 0.875rem;
   color: var(--fg-soft);
   min-height: 1.25rem;
+  flex-shrink: 0;
 }
 
 /* デスクトップテーブル */
@@ -85,10 +91,10 @@
 }
 
 /*
- * reviewer指摘1対応: <tr> に role="button" を付ける代わりに
  * <th scope="row"> 内の実 <button> にインタラクションを持たせる。
- * ボタンはテキストとして見えるように外観をリセットし、行全体ではなく
- * セル内クリックで展開できる。
+ * ボタンはテキストとして見えるように外観をリセット。
+ * <tr> に role="button" を付けると ARIA in HTML 仕様に違反するため
+ * この設計を採用（cycle-225 reviewer指摘1対応）。
  */
 .expandButton {
   background: none;

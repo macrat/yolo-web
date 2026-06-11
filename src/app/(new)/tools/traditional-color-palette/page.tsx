@@ -8,7 +8,7 @@ import {
 } from "@/lib/seo";
 import ToolPageLayout from "@/tools/_components/ToolPageLayout";
 import ToolErrorBoundary from "@/tools/_components/ErrorBoundary";
-import TraditionalColorPaletteBody from "@/tools/traditional-color-palette/TraditionalColorPalettePage";
+import TraditionalColorPaletteTile from "@/tools/traditional-color-palette/TraditionalColorPaletteTile";
 const SLUG = "traditional-color-palette";
 const tool = toolsBySlug.get(SLUG);
 
@@ -26,7 +26,7 @@ export default function TraditionalColorPalettePageRoute() {
         }}
       />
       <ToolErrorBoundary>
-        <TraditionalColorPaletteBody />
+        <TraditionalColorPaletteTile variant="full" />
       </ToolErrorBoundary>
     </ToolPageLayout>
   );

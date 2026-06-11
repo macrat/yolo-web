@@ -1,13 +1,22 @@
-/* TraditionalColorPalettePage.module.css
- * cycle-225 T-6 単一実装スタイル
- * DESIGN.md 準拠: 旧 --color-* トークン不使用、太字(font-weight bold)不使用
- * 規定外 box-shadow 不使用（②-13 是正）
+/* TraditionalColorPaletteTile.module.css
+ * cycle-228 T-19: 単一正典タイル化
+ * DESIGN.md 準拠:
+ * - B-1: 旧 --color-* トークン不使用
+ * - B-3: --accent を background に直接使わない（スウォッチの動的実色は機能なので対象外）
+ * - B-4: 太字（700）不使用
+ * - B-5: インタラクティブ --r-interactive、非インタラクティブ --r-normal
+ * - B-6: Panel 以外に box-shadow なし
+ * - B-7: フォーム要素境界線は --border-strong
+ * Panel がルート要素なので container クラスは不要（Panel.module.css に委譲）
  */
 
-.container {
+/* コンテンツ縦並び */
+.inner {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  max-width: 100%;
+  width: 100%;
 }
 
 /* --- 検索フィールド --- */
@@ -50,6 +59,8 @@
   position: relative;
   background: transparent;
   padding: 0;
+  /* C-1: タッチターゲット確保（スウォッチは aspect-ratio=1 で自動サイズ） */
+  min-height: 28px;
 }
 
 .swatch:hover {
@@ -57,10 +68,15 @@
   z-index: 1;
 }
 
-/* 選択済みスウォッチ: box-shadow は使わず outline で代替（②-13 是正） */
+/* 選択済みスウォッチ: box-shadow は使わず outline で代替（B-6 準拠） */
 .swatchSelected {
   outline: 3px solid var(--accent);
   outline-offset: 1px;
+}
+
+.swatch:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .swatchTooltip {
@@ -172,7 +188,7 @@
   color: var(--fg-soft);
 }
 
-/* 色コード行（コピーボタン付き：T-4b U-8 PM 判断で「あり」） */
+/* 色コード行（コピーボタン付き） */
 .colorCodeRow {
   display: flex;
   align-items: center;
