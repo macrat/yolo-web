@@ -71,12 +71,12 @@ completed_at: null
 
 ### バッチ5: ファイルI/O＋プレビュー系（High）
 
-- [ ] T-23: text-diff をライブタイル化（line/word/char 差分・外部 diff ライブラリ）
-- [ ] T-24: markdown-preview をライブタイル化（useSyncExternalStore＋dangerouslySetInnerHTML＋sanitizeHtml 維持必須・DOMParser・SSR 安全性）
-- [ ] T-25: qr-code をライブタイル化（dangerouslySetInnerHTML(SVG)・debounce 300ms・外部ライブラリ）
-- [ ] T-26: image-base64 をライブタイル化（FileReader 非同期・FileDropZone・画像プレビュー・DL）
-- [ ] T-27: image-resizer をライブタイル化（Canvas 直接操作・FileReader・Image()・jsdom モック必須・最高リスク）
-- [ ] バッチ5ゲート＋中間 Playwright 検証（代表1〜2ツール）
+- [x] T-23: text-diff をライブタイル化（full＋line/word/char・承認〔「コピーボタン廃止」は B-490 確定済み設計と一次資料で確定＝機能後退でない〕・43テスト）
+- [x] T-24: markdown-preview をライブタイル化（full のみ・useSyncExternalStore SSR 安全＋sanitizeHtml 全経路維持・承認・25テスト）
+- [x] T-25: qr-code をライブタイル化（full のみ・debounceRef cleanup・承認・20テスト）
+- [x] T-26: image-base64 をライブタイル化（full＋encode〔道具箱代表〕/decode・generationRef 世代ガード・承認・34テスト）
+- [x] T-27: image-resizer をライブタイル化（full のみ・最高リスク559行・Canvas ref 管理＋isMounted＋processId/resizeId 二重世代ガード・承認＋追加差分再レビュー承認・28テスト）
+- [x] バッチ5ゲート: PM 独立 tsc0/lint0/format0/差分テスト250件通過＋中間 Playwright（新本番ビルド・**markdown-preview の XSS サニタイズを実機確認**〔script/onerror 除去・xssFired=false・正当 Markdown は描画〕・qr-code debounce 後 SVG 生成＋aria-label・両者遷移なし）。
 
 ### バッチ6: 2モード複合UI系（High）
 

@@ -1,15 +1,20 @@
-/* ImageResizerPage — ページ本体のスタイル
+/* ImageResizerTile — 単一正典タイルのスタイル
+ * cycle-228 T-27: ImageResizerPage.module.css をタイル向けに移植。
  * DESIGN.md 準拠:
  * - 旧トークン (--color-*) 使用禁止
  * - --accent は直塗り禁止（選択状態は --bg-invert / --fg-invert ペア）
- * - bold (太字数値) 禁止
+ * - bold (太字) 禁止
  * - インタラクティブ要素: border-radius: var(--r-interactive)
  * - 非インタラクティブ要素: border-radius: var(--r-normal)
  * - フォーカス: outline: 2px solid var(--accent); outline-offset: 2px
  * - フォーム要素境界線: --border-strong
+ *
+ * Panel がルート要素のため、container クラスは不要（Panel.module.css に委譲）。
+ * Panel 内部のレイアウトは flex column で管理する。
  */
 
-.container {
+/* ===== 内側コンテナ（Panel 内のコンテンツ垂直積み） ===== */
+.inner {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -51,6 +56,7 @@
   color: var(--fg-soft);
 }
 
+/* ===== GIF 警告ボックス ===== */
 .gifWarningBox {
   padding: 0.75rem;
   border: 1px solid var(--warning);

@@ -1,19 +1,18 @@
-/* ImageBase64Page — 画像Base64変換ツールのスタイル
- * DESIGN.md 準拠:
- *   §2: フォーカスは outline: 2px solid var(--accent); outline-offset: 2px;
- *   §3: 行間は原則 1.7 / font-weight は 400 or 500 のみ（700 禁止）
- *   §4: 通常要素に box-shadow 追加禁止
- *   §5: インタラクティブ要素 border-radius: var(--r-interactive)
- *       非インタラクティブ要素 border-radius: var(--r-normal)
- * WCAG AA:
- *   タッチターゲット min-height: 44px (Button コンポーネントで保証)
- *   エンコード結果: 独立した role="status" aria-live="polite" div に実テキストサマリ配置（C-3）
+/* ImageBase64Tile スタイル
+ * cycle-228 T-26: ImageBase64Page.module.css をタイル向けに移植。
+ * DESIGN トークン準拠（--color-* 旧トークン不使用・bold禁止・
+ * --r-interactive / --r-normal 使用・--border-strong 使用）
+ *
+ * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  */
 
-.container {
+/* コントロール行: SegmentedControl */
+.controls {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  flex-wrap: wrap;
   gap: 1rem;
+  margin-bottom: 1rem;
 }
 
 /* エンコード / デコード パネル */
@@ -81,14 +80,8 @@
   display: flex;
 }
 
-@media (max-width: 640px) {
-  .fileInfo {
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-}
-
-/* C-3: スクリーンリーダー専用サマリ領域。視覚的には非表示だが SR には読み上げられる。 */
+/* ライブリージョン（C-3 準拠: 実テキストノードのサマリ）
+ * 視覚的には非表示だが SR には読み上げられる。 */
 .srOnly {
   position: absolute;
   width: 1px;
@@ -99,4 +92,11 @@
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+@media (max-width: 640px) {
+  .fileInfo {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
 }

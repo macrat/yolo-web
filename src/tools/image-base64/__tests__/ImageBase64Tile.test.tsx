@@ -1,3 +1,5 @@
+import { readFileSync } from "fs";
+import { join } from "path";
 import {
   render,
   screen,
@@ -6,7 +8,7 @@ import {
   waitFor,
 } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import ImageBase64Page from "../ImageBase64Page";
+import ImageBase64Tile from "../ImageBase64Tile";
 
 // =========================================================
 // FileReader モック
@@ -55,7 +57,7 @@ Object.defineProperty(navigator, "clipboard", {
   configurable: true,
 });
 
-describe("ImageBase64Page", () => {
+describe("ImageBase64Tile", () => {
   beforeEach(() => {
     mockWriteText.mockClear();
     vi.stubGlobal("FileReader", makeMockFileReaderClass());
@@ -66,23 +68,68 @@ describe("ImageBase64Page", () => {
   });
 
   // -------------------------------------------------------
-  // E-1: 基本レンダリング
+  // A-1: アーキテクチャ — ルート要素が Panel
   // -------------------------------------------------------
-  it("E-1: 基本レンダリング — ToolPageLayout なしでコンポーネントが正常に描画される", () => {
-    render(<ImageBase64Page />);
+  it("A-1: ルート要素が Panel (section) でレンダリングされる", () => {
+    const { container } = render(<ImageBase64Tile />);
+    // Panel はデフォルトで section をレンダリングする
+    const section = container.querySelector("section");
+    expect(section).toBeInTheDocument();
+    // ルート要素のタグが section
+    expect(container.firstChild?.nodeName).toBe("SECTION");
+  });
+
+  it("A-1: as='div' を渡すとルートが div になる", () => {
+    const { container } = render(<ImageBase64Tile as="div" />);
+    expect(container.firstChild?.nodeName).toBe("DIV");
+  });
+
+  // -------------------------------------------------------
+  // E-1: 基本レンダリング (variant="full")
+  // -------------------------------------------------------
+  it("E-1: variant=full — ToolPageLayout なしでコンポーネントが正常に描画される", () => {
+    render(<ImageBase64Tile variant="full" />);
     // SegmentedControl（モード切替）が存在する
     expect(screen.getByRole("radiogroup")).toBeInTheDocument();
-    // FileDropZone が存在する（FileDropZone のラベルは "クリックまたはドラッグ&ドロップでファイルを選択"）
+    // FileDropZone が存在する
     expect(
       screen.getByRole("button", { name: /クリックまたはドラッグ/i }),
     ).toBeInTheDocument();
   });
 
   // -------------------------------------------------------
-  // E-2: 入力→結果更新
+  // variant=encode: 固定モードのレンダリング
+  // -------------------------------------------------------
+  it("variant=encode — SegmentedControl が非表示、FileDropZone が表示される", () => {
+    render(<ImageBase64Tile variant="encode" />);
+    // SegmentedControl が表示されない
+    expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();
+    // FileDropZone が表示される
+    expect(
+      screen.getByRole("button", { name: /クリックまたはドラッグ/i }),
+    ).toBeInTheDocument();
+  });
+
+  // -------------------------------------------------------
+  // variant=decode: 固定モードのレンダリング
+  // -------------------------------------------------------
+  it("variant=decode — SegmentedControl が非表示、Base64 入力欄が表示される", () => {
+    render(<ImageBase64Tile variant="decode" />);
+    // SegmentedControl が表示されない
+    expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();
+    // Base64 テキストエリアが表示される
+    expect(screen.getByPlaceholderText(/data:image/i)).toBeInTheDocument();
+    // プレビューボタンが表示される
+    expect(
+      screen.getByRole("button", { name: "プレビュー" }),
+    ).toBeInTheDocument();
+  });
+
+  // -------------------------------------------------------
+  // E-2: ファイル選択後の結果表示 (variant=full / encode)
   // -------------------------------------------------------
   it("E-2: ファイル選択後にBase64出力欄とData URI出力欄が表示される", async () => {
-    render(<ImageBase64Page />);
+    render(<ImageBase64Tile variant="full" />);
 
     const fileInput = document.querySelector(
       'input[type="file"]',
@@ -99,11 +146,28 @@ describe("ImageBase64Page", () => {
     expect(screen.getByLabelText("Data URI")).toBeInTheDocument();
   });
 
+  it("variant=encode — ファイル選択後にBase64出力欄が表示される", async () => {
+    render(<ImageBase64Tile variant="encode" />);
+
+    const fileInput = document.querySelector(
+      'input[type="file"]',
+    ) as HTMLInputElement;
+    const file = new File(["dummy"], "img.png", { type: "image/png" });
+
+    await act(async () => {
+      fireEvent.change(fileInput, { target: { files: [file] } });
+    });
+
+    await waitFor(() => {
+      expect(screen.getByLabelText("Base64")).toBeInTheDocument();
+    });
+  });
+
   // -------------------------------------------------------
   // E-3: 空入力
   // -------------------------------------------------------
   it("E-3: 初期状態でエラーは表示されない・出力欄は存在しない", () => {
-    render(<ImageBase64Page />);
+    render(<ImageBase64Tile />);
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
     expect(screen.queryByLabelText("Base64")).not.toBeInTheDocument();
   });
@@ -112,7 +176,7 @@ describe("ImageBase64Page", () => {
   // E-4: 変換ロジックの正確性
   // -------------------------------------------------------
   it("E-4: エンコード後のBase64値が出力欄に表示される", async () => {
-    render(<ImageBase64Page />);
+    render(<ImageBase64Tile />);
 
     const fileInput = document.querySelector(
       'input[type="file"]',
@@ -130,7 +194,7 @@ describe("ImageBase64Page", () => {
   });
 
   it("E-4: デコードモードでBase64文字列から画像プレビューが表示される", async () => {
-    render(<ImageBase64Page />);
+    render(<ImageBase64Tile variant="full" />);
 
     // デコードモードに切り替え
     const decodeOption = screen.getByRole("radio", { name: /Base64 → 画像/i });
@@ -152,17 +216,34 @@ describe("ImageBase64Page", () => {
     });
   });
 
+  it("variant=decode — Base64文字列から画像プレビューが表示される", async () => {
+    render(<ImageBase64Tile variant="decode" />);
+
+    const textarea = screen.getByPlaceholderText(/data:image/i);
+    fireEvent.change(textarea, {
+      target: { value: "data:image/png;base64,iVBORw0KGgo=" },
+    });
+
+    const previewButton = screen.getByRole("button", { name: "プレビュー" });
+    fireEvent.click(previewButton);
+
+    await waitFor(() => {
+      const img = screen.getByAltText("デコード結果プレビュー");
+      expect(img).toBeInTheDocument();
+    });
+  });
+
   // -------------------------------------------------------
   // E-5: ARIA
   // -------------------------------------------------------
   it("E-5: SegmentedControlがrole=radiogroupとaria-labelを持つ", () => {
-    render(<ImageBase64Page />);
+    render(<ImageBase64Tile variant="full" />);
     const radiogroup = screen.getByRole("radiogroup");
     expect(radiogroup).toHaveAttribute("aria-label", "変換モード");
   });
 
   it("E-5: エンコード結果欄に実テキストを持つ独立した role=status 要素が存在する（C-3 準拠）", async () => {
-    render(<ImageBase64Page />);
+    render(<ImageBase64Tile variant="full" />);
 
     const fileInput = document.querySelector(
       'input[type="file"]',
@@ -197,7 +278,7 @@ describe("ImageBase64Page", () => {
   // E-6: コピー文言変化
   // -------------------------------------------------------
   it("E-6: コピーボタン押下後に「コピーしました」に文言が変化する", async () => {
-    render(<ImageBase64Page />);
+    render(<ImageBase64Tile />);
 
     const fileInput = document.querySelector(
       'input[type="file"]',
@@ -227,7 +308,7 @@ describe("ImageBase64Page", () => {
   // E-7: コピー disabled 状態
   // -------------------------------------------------------
   it("E-7: 結果が空のときコピーボタンが存在しない（disabled ではなく非表示）", () => {
-    render(<ImageBase64Page />);
+    render(<ImageBase64Tile />);
     // エンコード結果がない状態ではコピーボタンは存在しない
     expect(
       screen.queryByRole("button", { name: "コピー" }),
@@ -247,7 +328,7 @@ describe("ImageBase64Page", () => {
       configurable: true,
     });
 
-    render(<ImageBase64Page />);
+    render(<ImageBase64Tile />);
 
     const fileInput = document.querySelector(
       'input[type="file"]',
@@ -279,24 +360,28 @@ describe("ImageBase64Page", () => {
   });
 
   // -------------------------------------------------------
-  // E-9: 詳細リンク（このコンポーネントはページ自体なので N/A）
+  // 複数インスタンス: useId による DOM id 一意性
   // -------------------------------------------------------
-
-  // -------------------------------------------------------
-  // E-10: meta 由来の表示
-  // -------------------------------------------------------
-  it("E-10: ツール名が画面に描画される（SegmentedControlのラベルで確認）", () => {
-    render(<ImageBase64Page />);
-    // SegmentedControl のラベルとして「変換モード」が aria-label に存在
-    const radiogroup = screen.getByRole("radiogroup", { name: "変換モード" });
-    expect(radiogroup).toBeInTheDocument();
+  it("複数インスタンス同居時に DOM id が重複しない（useId 一意化）", () => {
+    render(
+      <div>
+        <ImageBase64Tile variant="encode" />
+        <ImageBase64Tile variant="decode" />
+      </div>,
+    );
+    // すべての id を収集
+    const allIds = Array.from(document.querySelectorAll("[id]")).map(
+      (el) => el.id,
+    );
+    const uniqueIds = new Set(allIds);
+    expect(allIds.length).toBe(uniqueIds.size);
   });
 
   // -------------------------------------------------------
   // エラー表示テスト
   // -------------------------------------------------------
   it("エラー: 10MB超のファイルでエラーが表示される", async () => {
-    render(<ImageBase64Page />);
+    render(<ImageBase64Tile />);
 
     const fileInput = document.querySelector(
       'input[type="file"]',
@@ -314,7 +399,7 @@ describe("ImageBase64Page", () => {
   });
 
   it("エラー: 非画像ファイルでエラーが表示される", async () => {
-    render(<ImageBase64Page />);
+    render(<ImageBase64Tile />);
 
     const fileInput = document.querySelector(
       'input[type="file"]',
@@ -336,7 +421,7 @@ describe("ImageBase64Page", () => {
       makeMockFileReaderClass("data:image/png;base64,abc", true),
     );
 
-    render(<ImageBase64Page />);
+    render(<ImageBase64Tile />);
 
     const fileInput = document.querySelector(
       'input[type="file"]',
@@ -358,7 +443,7 @@ describe("ImageBase64Page", () => {
   // デコードモード テスト
   // -------------------------------------------------------
   it("デコード: 空入力でプレビューボタン押下時にエラーが表示される", () => {
-    render(<ImageBase64Page />);
+    render(<ImageBase64Tile variant="full" />);
 
     const decodeOption = screen.getByRole("radio", { name: /Base64 → 画像/i });
     fireEvent.click(decodeOption);
@@ -371,8 +456,19 @@ describe("ImageBase64Page", () => {
     ).toBeInTheDocument();
   });
 
+  it("デコード(variant=decode): 空入力でプレビューボタン押下時にエラーが表示される", () => {
+    render(<ImageBase64Tile variant="decode" />);
+
+    const previewButton = screen.getByRole("button", { name: "プレビュー" });
+    fireEvent.click(previewButton);
+
+    expect(
+      screen.getByText("Base64文字列を入力してください"),
+    ).toBeInTheDocument();
+  });
+
   it("デコード: 無効なBase64入力でエラーが表示される", () => {
-    render(<ImageBase64Page />);
+    render(<ImageBase64Tile variant="full" />);
 
     const decodeOption = screen.getByRole("radio", { name: /Base64 → 画像/i });
     fireEvent.click(decodeOption);
@@ -389,7 +485,7 @@ describe("ImageBase64Page", () => {
   });
 
   it("デコード: SVGデータURIを拒否してエラーが表示される", () => {
-    render(<ImageBase64Page />);
+    render(<ImageBase64Tile variant="full" />);
 
     const decodeOption = screen.getByRole("radio", { name: /Base64 → 画像/i });
     fireEvent.click(decodeOption);
@@ -408,8 +504,7 @@ describe("ImageBase64Page", () => {
   });
 
   it("デコード: プレビュー後に共通Buttonのダウンロードボタンが表示される", async () => {
-    // ダウンロードボタンが <a> ではなく Button コンポーネントで描画されることを確認 (reviewer 指摘対応)
-    render(<ImageBase64Page />);
+    render(<ImageBase64Tile variant="full" />);
 
     const decodeOption = screen.getByRole("radio", { name: /Base64 → 画像/i });
     fireEvent.click(decodeOption);
@@ -423,7 +518,6 @@ describe("ImageBase64Page", () => {
     fireEvent.click(previewButton);
 
     await waitFor(() => {
-      // ダウンロードボタンが <button> 要素として描画される（<a> ではない）
       const downloadButton = screen.getByRole("button", {
         name: "ダウンロード",
       });
@@ -433,9 +527,6 @@ describe("ImageBase64Page", () => {
   });
 
   it("デコード: ダウンロードボタン押下時に <a> 動的生成でダウンロードが実行される", async () => {
-    // qr-code と同じ動的 <a> 生成パターンの回帰テスト
-    // vi.spyOn で createElement をモックすると fallback が再帰になるため、
-    // 元の実装をあらかじめ変数に保存してから使う。
     const originalCreateElement = document.createElement.bind(document);
     const clickSpy = vi.fn();
     const mockAnchor = {
@@ -450,7 +541,7 @@ describe("ImageBase64Page", () => {
         return originalCreateElement(tagName);
       });
 
-    render(<ImageBase64Page />);
+    render(<ImageBase64Tile variant="full" />);
 
     const decodeOption = screen.getByRole("radio", { name: /Base64 → 画像/i });
     fireEvent.click(decodeOption);
@@ -482,80 +573,10 @@ describe("ImageBase64Page", () => {
   });
 
   // -------------------------------------------------------
-  // E-12: CSS トークン検証 (readFileSync パターン)
-  // -------------------------------------------------------
-  it("E-12: CSS に旧トークン --color-* が存在しない", async () => {
-    const { readFileSync } = await import("fs");
-    const { join } = await import("path");
-    const css = readFileSync(
-      join(process.cwd(), "src/tools/image-base64/ImageBase64Page.module.css"),
-      "utf-8",
-    );
-    expect(css).not.toMatch(/var\(--color-/);
-  });
-
-  it("E-12: CSS に --accent 直塗りが存在しない", async () => {
-    const { readFileSync } = await import("fs");
-    const { join } = await import("path");
-    const css = readFileSync(
-      join(process.cwd(), "src/tools/image-base64/ImageBase64Page.module.css"),
-      "utf-8",
-    );
-    // background や background-color に直接 var(--accent) を使っていないか確認
-    // ただし border-color や outline には使えるので行コンテキストで判断
-    const lines = css.split("\n");
-    const violations = lines.filter((line) => {
-      const trimmed = line.trim();
-      // background または color プロパティに --accent を直塗りしている行を検出
-      return /^(background|background-color|color)\s*:.*var\(--accent\)/.test(
-        trimmed,
-      );
-    });
-    expect(violations).toHaveLength(0);
-  });
-
-  it("E-12: CSS に font-weight: 700 が存在しない", async () => {
-    const { readFileSync } = await import("fs");
-    const { join } = await import("path");
-    const css = readFileSync(
-      join(process.cwd(), "src/tools/image-base64/ImageBase64Page.module.css"),
-      "utf-8",
-    );
-    expect(css).not.toMatch(/font-weight\s*:\s*700/);
-  });
-
-  // -------------------------------------------------------
-  // サイズ情報テスト (①-10)
-  // -------------------------------------------------------
-  it("サイズ情報: ファイル選択後にMIMEタイプ・元サイズ・Base64サイズが表示される", async () => {
-    render(<ImageBase64Page />);
-
-    const fileInput = document.querySelector(
-      'input[type="file"]',
-    ) as HTMLInputElement;
-    const file = new File(["dummy"], "img.png", { type: "image/png" });
-
-    await act(async () => {
-      fireEvent.change(fileInput, { target: { files: [file] } });
-    });
-
-    await waitFor(() => {
-      // サマリ div（srOnly）と fileInfo span の両方に "MIMEタイプ" が含まれるため getAllByText を使用
-      expect(screen.getAllByText(/MIMEタイプ/).length).toBeGreaterThanOrEqual(
-        1,
-      );
-      expect(screen.getAllByText(/元サイズ/).length).toBeGreaterThanOrEqual(1);
-      expect(screen.getAllByText(/Base64サイズ/).length).toBeGreaterThanOrEqual(
-        1,
-      );
-    });
-  });
-
-  // -------------------------------------------------------
   // モード切り替えテスト
   // -------------------------------------------------------
   it("モード切替: デコードモードに切り替えるとBase64入力テキストエリアが表示される", () => {
-    render(<ImageBase64Page />);
+    render(<ImageBase64Tile variant="full" />);
 
     const decodeOption = screen.getByRole("radio", { name: /Base64 → 画像/i });
     fireEvent.click(decodeOption);
@@ -567,7 +588,7 @@ describe("ImageBase64Page", () => {
   });
 
   it("モード切替: エンコードモードに戻るとFileDropZoneが表示される", () => {
-    render(<ImageBase64Page />);
+    render(<ImageBase64Tile variant="full" />);
 
     // デコードに切り替え
     const decodeOption = screen.getByRole("radio", { name: /Base64 → 画像/i });
@@ -580,5 +601,137 @@ describe("ImageBase64Page", () => {
     expect(
       screen.getByRole("button", { name: /クリックまたはドラッグ/i }),
     ).toBeInTheDocument();
+  });
+
+  it("モード切替: モード切替後に古い結果が残らない (G-1 準拠)", async () => {
+    render(<ImageBase64Tile variant="full" />);
+
+    // ファイルを選択してエンコード結果を表示
+    const fileInput = document.querySelector(
+      'input[type="file"]',
+    ) as HTMLInputElement;
+    const file = new File(["dummy"], "img.png", { type: "image/png" });
+
+    await act(async () => {
+      fireEvent.change(fileInput, { target: { files: [file] } });
+    });
+
+    await waitFor(() => {
+      expect(screen.getByLabelText("Base64")).toBeInTheDocument();
+    });
+
+    // デコードモードに切り替え
+    const decodeOption = screen.getByRole("radio", { name: /Base64 → 画像/i });
+    fireEvent.click(decodeOption);
+
+    // エンコード結果が消えている
+    expect(screen.queryByLabelText("Base64")).not.toBeInTheDocument();
+  });
+
+  // -------------------------------------------------------
+  // サイズ情報テスト
+  // -------------------------------------------------------
+  it("サイズ情報: ファイル選択後にMIMEタイプ・元サイズ・Base64サイズが表示される", async () => {
+    render(<ImageBase64Tile />);
+
+    const fileInput = document.querySelector(
+      'input[type="file"]',
+    ) as HTMLInputElement;
+    const file = new File(["dummy"], "img.png", { type: "image/png" });
+
+    await act(async () => {
+      fireEvent.change(fileInput, { target: { files: [file] } });
+    });
+
+    await waitFor(() => {
+      expect(screen.getAllByText(/MIMEタイプ/).length).toBeGreaterThanOrEqual(
+        1,
+      );
+      expect(screen.getAllByText(/元サイズ/).length).toBeGreaterThanOrEqual(1);
+      expect(screen.getAllByText(/Base64サイズ/).length).toBeGreaterThanOrEqual(
+        1,
+      );
+    });
+  });
+
+  // -------------------------------------------------------
+  // D-4: アンマウント後 setState 防止（世代ガード）
+  // -------------------------------------------------------
+  it("D-4: アンマウント後に setState が呼ばれてもクラッシュしない", async () => {
+    // FileReader の onload を遅延させてアンマウント後に発火させる
+    let resolveLoad: (() => void) | null = null;
+    class DelayedFileReader {
+      onload: ((event: ProgressEvent<FileReader>) => void) | null = null;
+      onerror: ((event: ProgressEvent<FileReader>) => void) | null = null;
+      result: string | null = null;
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      readAsDataURL = vi.fn((_file: File) => {
+        new Promise<void>((resolve) => {
+          resolveLoad = resolve;
+        }).then(() => {
+          this.result = "data:image/png;base64,abc123";
+          if (this.onload) {
+            this.onload({} as ProgressEvent<FileReader>);
+          }
+        });
+      });
+    }
+    vi.stubGlobal("FileReader", () => new DelayedFileReader());
+
+    const { unmount } = render(<ImageBase64Tile variant="encode" />);
+
+    const fileInput = document.querySelector(
+      'input[type="file"]',
+    ) as HTMLInputElement;
+    const file = new File(["dummy"], "img.png", { type: "image/png" });
+
+    // ファイルを選択（FileReader が起動するが onload はまだ呼ばれない）
+    fireEvent.change(fileInput, { target: { files: [file] } });
+
+    // アンマウント
+    unmount();
+
+    // アンマウント後に onload を発火（世代ガードが機能していればクラッシュしない）
+    await expect(
+      act(async () => {
+        resolveLoad?.();
+        await Promise.resolve();
+      }),
+    ).resolves.not.toThrow();
+  });
+
+  // -------------------------------------------------------
+  // CSS トークン検証 (readFileSync パターン)
+  // -------------------------------------------------------
+  it("CSS: 旧トークン --color-* が存在しない (B-1)", () => {
+    const css = readFileSync(
+      join(process.cwd(), "src/tools/image-base64/ImageBase64Tile.module.css"),
+      "utf-8",
+    );
+    expect(css).not.toMatch(/var\(--color-/);
+  });
+
+  it("CSS: --accent 直塗りが存在しない (B-3)", () => {
+    const css = readFileSync(
+      join(process.cwd(), "src/tools/image-base64/ImageBase64Tile.module.css"),
+      "utf-8",
+    );
+    const lines = css.split("\n");
+    const violations = lines.filter((line) => {
+      const trimmed = line.trim();
+      return /^(background|background-color|color)\s*:.*var\(--accent\)/.test(
+        trimmed,
+      );
+    });
+    expect(violations).toHaveLength(0);
+  });
+
+  it("CSS: font-weight: 700 が存在しない (B-4)", () => {
+    const css = readFileSync(
+      join(process.cwd(), "src/tools/image-base64/ImageBase64Tile.module.css"),
+      "utf-8",
+    );
+    expect(css).not.toMatch(/font-weight\s*:\s*700/);
   });
 });

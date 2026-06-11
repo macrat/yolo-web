@@ -8,7 +8,7 @@ import {
 } from "@/lib/seo";
 import ToolPageLayout from "@/tools/_components/ToolPageLayout";
 import ToolErrorBoundary from "@/tools/_components/ErrorBoundary";
-import QrCodePage from "@/tools/qr-code/QrCodePage";
+import QrCodeTile from "@/tools/qr-code/QrCodeTile";
 const SLUG = "qr-code";
 const tool = toolsBySlug.get(SLUG);
 
@@ -26,7 +26,7 @@ export default function QrCodePageRoute() {
         }}
       />
       <ToolErrorBoundary>
-        <QrCodePage />
+        <QrCodeTile variant="full" />
       </ToolErrorBoundary>
     </ToolPageLayout>
   );

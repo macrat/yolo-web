@@ -1,19 +1,18 @@
-/* TextDiffPage — text-diff 単一実装スタイル
- * DESIGN.md §§2,3,4,5 準拠。
- * フォーカス可視・旧トークン不使用・accent 直塗り禁止・bold 禁止。
+/* TextDiffTile — text-diff 単一正典タイルスタイル
+ * cycle-228 T-23: TextDiffPage.module.css をタイル向けに継承・移植。
+ * DESIGN トークン準拠（--color-* 旧トークン不使用・bold禁止・
+ * --r-interactive / --r-normal 使用・--border-strong 使用）
+ *
+ * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
+ * box-shadow を追加しない（A-7/B-6 要件）。
  */
-
-.container {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
 
 /* 比較モードコントロール行 */
 .controls {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .controlLabel {
@@ -26,6 +25,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
+  margin-bottom: 1rem;
 }
 
 .panel {
@@ -45,6 +45,7 @@
   font-size: 0.85rem;
   color: var(--fg-soft);
   min-height: 1.25rem; /* ちらつき防止 */
+  margin-bottom: 1rem;
 }
 
 /* 差分結果エリア */
@@ -78,7 +79,8 @@
   margin: 0;
 }
 
-/* 追加部分: 背景色 + 下線 + 色（D4採択: 色覚多様性対応） */
+/* 追加部分: 背景色 + 下線 + 色（D4採択: 色覚多様性対応）
+ * B-3 要件: --accent 直塗り禁止。旧実装のトークンを踏襲。 */
 .added {
   background-color: var(--success-soft);
   color: var(--success-strong);
@@ -96,7 +98,7 @@
   color: var(--fg);
 }
 
-/* モバイル対応: 縦並びに切り替え */
+/* モバイル対応: 縦並びに切り替え（G-1: w360 横はみ出しなし） */
 @media (max-width: 768px) {
   .panels {
     grid-template-columns: 1fr;

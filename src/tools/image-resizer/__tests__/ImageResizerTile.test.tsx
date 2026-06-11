@@ -1,15 +1,32 @@
 /**
- * ImageResizerPage 単一実装の回帰テスト
+ * ImageResizerTile 単一正典タイル回帰テスト
  *
- * 収束チェックリスト E-1〜E-12 の観点を網羅する。
- * E-6/E-7/E-8: コピーボタンなし（T-4b 方針: image-resizer は download 主体）
+ * cycle-228 T-27: ImageResizerPage.tsx を Panel ルートのタイルへ移行。
+ * 旧 ImageResizerPage.test.tsx の全振る舞いを移植・拡張。
+ *
+ * テスト観点:
+ * - E-1: 基本レンダリング（ドロップゾーン存在・Panel ルート）
+ * - E-2: ファイル選択後のリサイズコントロール表示
+ * - E-3: 初期状態
+ * - E-4: ファイル選択後の幅/高さ設定・Canvas drawImage 呼び出し
+ * - E-5: ARIA属性（SegmentedControl・ライブリージョン）
+ * - E-6/E-7/E-8: コピーボタンなし（download 主体）
+ * - E-12: CSSトークン検証
+ * - A-1: Panel ルート確認
+ * - A-6: useId ベースのインスタンス一意 id（複数インスタンス同居）
+ * - 個別論点①-5: GIF警告
+ * - エラーハンドリング
+ * - モード切替（dimensions/percent）
+ * - アスペクト比ロック
+ * - ダウンロード機能
+ * - D-4: 非同期処理アンマウント後 setState 防止
  */
 
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { render, screen, fireEvent, act } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import ImageResizerPage from "../ImageResizerPage";
+import ImageResizerTile from "../ImageResizerTile";
 
 // =========================================================
 // Canvas モック
@@ -24,7 +41,6 @@ const mockCanvasContext = {
 const mockCanvas = {
   width: 0,
   height: 0,
-  // null を返すケース（Canvas処理失敗テスト）も許容するため戻り値型を明示
   getContext: vi.fn<() => typeof mockCanvasContext | null>(
     () => mockCanvasContext,
   ),
@@ -134,7 +150,7 @@ async function selectFileAndWaitImageLoad(
   });
 }
 
-describe("ImageResizerPage", () => {
+describe("ImageResizerTile", () => {
   beforeEach(() => {
     mockCanvas.getContext.mockImplementation(() => mockCanvasContext);
     mockCanvas.toDataURL.mockReturnValue(
@@ -150,11 +166,26 @@ describe("ImageResizerPage", () => {
   });
 
   // -------------------------------------------------------
+  // A-1: Panel ルート確認
+  // -------------------------------------------------------
+  it("A-1: ルート要素が Panel（section タグ）であること", () => {
+    const { container } = render(<ImageResizerTile />);
+    // Panel は section タグでレンダリングされる
+    const root = container.firstChild as HTMLElement;
+    expect(root.tagName.toLowerCase()).toBe("section");
+  });
+
+  it("A-1: as='div' を渡すと div タグになること", () => {
+    const { container } = render(<ImageResizerTile as="div" />);
+    const root = container.firstChild as HTMLElement;
+    expect(root.tagName.toLowerCase()).toBe("div");
+  });
+
+  // -------------------------------------------------------
   // E-1: 基本レンダリング
   // -------------------------------------------------------
   it("E-1: 初期描画でドロップゾーンが存在する", () => {
-    render(<ImageResizerPage />);
-    // FileDropZone の role="button" が描画される
+    render(<ImageResizerTile />);
     expect(
       screen.getByRole("button", { name: /クリックまたはドラッグ/i }),
     ).toBeInTheDocument();
@@ -164,10 +195,8 @@ describe("ImageResizerPage", () => {
   // E-3: 空入力・初期状態の挙動
   // -------------------------------------------------------
   it("E-3: 初期状態でエラーは非表示、リサイズコントロールは未表示", () => {
-    render(<ImageResizerPage />);
-    // エラー要素がない
+    render(<ImageResizerTile />);
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
-    // リサイズボタンがない
     expect(
       screen.queryByRole("button", { name: /リサイズ/ }),
     ).not.toBeInTheDocument();
@@ -177,7 +206,7 @@ describe("ImageResizerPage", () => {
   // E-2: 入力→結果更新
   // -------------------------------------------------------
   it("E-2: ファイル選択後にリサイズコントロールが表示される", async () => {
-    render(<ImageResizerPage />);
+    render(<ImageResizerTile />);
 
     const fileInput = document.querySelector(
       'input[type="file"]',
@@ -186,7 +215,6 @@ describe("ImageResizerPage", () => {
 
     await selectFileAndWaitImageLoad(fileInput, file);
 
-    // リサイズボタンが出現
     expect(
       screen.getByRole("button", { name: "リサイズ" }),
     ).toBeInTheDocument();
@@ -196,7 +224,7 @@ describe("ImageResizerPage", () => {
   // E-4: 変換ロジックの正確性（UI経由）
   // -------------------------------------------------------
   it("E-4: ファイル選択後に幅入力に元画像幅がセットされる", async () => {
-    render(<ImageResizerPage />);
+    render(<ImageResizerTile />);
 
     const fileInput = document.querySelector(
       'input[type="file"]',
@@ -205,13 +233,12 @@ describe("ImageResizerPage", () => {
 
     await selectFileAndWaitImageLoad(fileInput, file);
 
-    // 幅入力欄に IMAGE_WIDTH がセットされている
     const widthInput = screen.getByLabelText("幅") as HTMLInputElement;
     expect(widthInput.value).toBe(String(IMAGE_WIDTH));
   });
 
   it("E-4b: リサイズ実行で Canvas drawImage が呼ばれる", async () => {
-    render(<ImageResizerPage />);
+    render(<ImageResizerTile />);
 
     const fileInput = document.querySelector(
       'input[type="file"]',
@@ -233,8 +260,8 @@ describe("ImageResizerPage", () => {
   // -------------------------------------------------------
   // E-5: ARIA属性
   // -------------------------------------------------------
-  it("E-5: SegmentedControl に role=radiogroup と aria-labelledby が付与されている", async () => {
-    render(<ImageResizerPage />);
+  it("E-5: SegmentedControl に role=radiogroup と aria-label/labelledby が付与されている", async () => {
+    render(<ImageResizerTile />);
 
     const fileInput = document.querySelector(
       'input[type="file"]',
@@ -244,15 +271,14 @@ describe("ImageResizerPage", () => {
     await selectFileAndWaitImageLoad(fileInput, file);
 
     const radiogroup = screen.getByRole("radiogroup");
-    // aria-labelledby か aria-label のどちらかが付与されていること（C-2）
     const hasLabel =
       radiogroup.hasAttribute("aria-labelledby") ||
       radiogroup.hasAttribute("aria-label");
     expect(hasLabel).toBe(true);
   });
 
-  it("E-5b: リサイズ後に role=status aria-live=polite の要素が存在する", async () => {
-    render(<ImageResizerPage />);
+  it("E-5b: リサイズ後に role=status aria-live=polite の要素が存在しサマリテキストを含む", async () => {
+    render(<ImageResizerTile />);
 
     const fileInput = document.querySelector(
       'input[type="file"]',
@@ -268,38 +294,55 @@ describe("ImageResizerPage", () => {
       await Promise.resolve();
     });
 
-    const statusEl = screen.getByRole("status");
-    expect(statusEl).toHaveAttribute("aria-live", "polite");
-    // C-3: サマリテキストノードが存在する（実テキストを含む）
-    expect(statusEl.textContent).not.toBe("");
+    // GIF警告の role=status と競合する場合があるため、aria-atomic で絞る
+    const statusEls = screen.getAllByRole("status");
+    // リサイズ完了後のサマリを含む status 要素が存在する
+    const summaryEl = statusEls.find(
+      (el) => el.textContent && el.textContent.trim() !== "",
+    );
+    expect(summaryEl).toBeDefined();
+    expect(summaryEl).toHaveAttribute("aria-live", "polite");
+    expect(summaryEl!.textContent).not.toBe("");
   });
 
   // -------------------------------------------------------
   // E-6/E-7/E-8: コピーボタンなし（T-4b: image-resizer は download 主体）
   // -------------------------------------------------------
   it("E-6/E-7/E-8: N/A - image-resizer はコピーボタンを持たない（download 主体）", () => {
-    render(<ImageResizerPage />);
+    render(<ImageResizerTile />);
     expect(
       screen.queryByRole("button", { name: /コピー/i }),
     ).not.toBeInTheDocument();
   });
 
   // -------------------------------------------------------
-  // E-9: meta 由来の表示
+  // A-6: 複数インスタンス id 一意性テスト
   // -------------------------------------------------------
-  it("E-10: meta.name から派生する表示 (ToolPageLayout の children が描画される)", () => {
-    render(<ImageResizerPage />);
-    // FileDropZone が children として描画されている
-    expect(
-      screen.getByRole("button", { name: /クリックまたはドラッグ/i }),
-    ).toBeInTheDocument();
+  it("A-6: 複数インスタンスを同居させたとき id が重複しない", async () => {
+    const { container } = render(
+      <div>
+        <ImageResizerTile />
+        <ImageResizerTile />
+      </div>,
+    );
+
+    // ファイルを両方のインスタンスに選択する
+    const fileInputs = container.querySelectorAll('input[type="file"]');
+    expect(fileInputs.length).toBe(2);
+
+    // id を持つ要素を全て収集して重複確認
+    const allIds = Array.from(container.querySelectorAll("[id]")).map(
+      (el) => el.id,
+    );
+    const uniqueIds = new Set(allIds);
+    expect(allIds.length).toBe(uniqueIds.size);
   });
 
   // -------------------------------------------------------
   // 個別論点: GIF誤誘導解消（①-5）
   // -------------------------------------------------------
   it("GIF個別論点①-5: GIF/アニメーション画像に警告メッセージを表示する", async () => {
-    render(<ImageResizerPage />);
+    render(<ImageResizerTile />);
 
     const fileInput = document.querySelector(
       'input[type="file"]',
@@ -310,12 +353,9 @@ describe("ImageResizerPage", () => {
       fireEvent.change(fileInput, { target: { files: [gifFile] } });
     });
 
-    // GIF警告は advisory（注意）なので role="status"（polite）であること
-    // (エラーでない処理継続可能な注意 → role="alert" は過剰なため修正)
     const gifWarning = screen.getByTestId("gif-warning");
     expect(gifWarning).toBeInTheDocument();
     expect(gifWarning).toHaveAttribute("role", "status");
-    // 警告テキストにGIF関連の説明が含まれる
     expect(gifWarning.textContent).toMatch(/GIF|アニメ/);
   });
 
@@ -323,7 +363,7 @@ describe("ImageResizerPage", () => {
   // エラーハンドリング
   // -------------------------------------------------------
   it("エラー: 20MB超のファイルでエラーメッセージが表示される", async () => {
-    render(<ImageResizerPage />);
+    render(<ImageResizerTile />);
 
     const fileInput = document.querySelector(
       'input[type="file"]',
@@ -340,7 +380,7 @@ describe("ImageResizerPage", () => {
   });
 
   it("エラー: 非画像ファイルでエラーメッセージが表示される", async () => {
-    render(<ImageResizerPage />);
+    render(<ImageResizerTile />);
 
     const fileInput = document.querySelector(
       'input[type="file"]',
@@ -356,10 +396,9 @@ describe("ImageResizerPage", () => {
   });
 
   it("エラー: Canvas処理失敗でエラーメッセージが表示される", async () => {
-    // getContext が null を返すとエラーになる
     mockCanvas.getContext.mockReturnValue(null);
 
-    render(<ImageResizerPage />);
+    render(<ImageResizerTile />);
 
     const fileInput = document.querySelector(
       'input[type="file"]',
@@ -381,7 +420,7 @@ describe("ImageResizerPage", () => {
   // モード切替（dimensions/percent）
   // -------------------------------------------------------
   it("モード切替: パーセントモードに切り替えると倍率入力欄が表示される", async () => {
-    render(<ImageResizerPage />);
+    render(<ImageResizerTile />);
 
     const fileInput = document.querySelector(
       'input[type="file"]',
@@ -390,10 +429,8 @@ describe("ImageResizerPage", () => {
 
     await selectFileAndWaitImageLoad(fileInput, file);
 
-    // パーセント指定ボタンをクリック
     fireEvent.click(screen.getByRole("radio", { name: "パーセント指定" }));
 
-    // 倍率入力欄が表示される
     expect(screen.getByLabelText("倍率")).toBeInTheDocument();
   });
 
@@ -401,7 +438,7 @@ describe("ImageResizerPage", () => {
   // アスペクト比ロックボタン — DESIGN.md §3 絵文字禁止 是正テスト
   // -------------------------------------------------------
   it("DESIGN §3 是正: アスペクト比ロックボタンが可視テキストラベルを持ち絵文字を含まない", async () => {
-    render(<ImageResizerPage />);
+    render(<ImageResizerTile />);
 
     const fileInput = document.querySelector(
       'input[type="file"]',
@@ -410,23 +447,18 @@ describe("ImageResizerPage", () => {
 
     await selectFileAndWaitImageLoad(fileInput, file);
 
-    // ロックボタン（aria-label から取得）
     const lockButton = screen.getByRole("button", {
       name: /アスペクト比/i,
     });
     expect(lockButton).toBeInTheDocument();
 
-    // 可視テキストが存在する（aria-hidden="true" の SVG 以外のテキスト）
-    // textContent から non-breaking space 以外のテキストが取れること
     const visibleText = lockButton.textContent?.trim() ?? "";
     expect(visibleText.length).toBeGreaterThan(0);
-
-    // 絵文字コードポイント（U+1F512=🔒 U+1F513=🔓）が存在しないこと
     expect(visibleText).not.toMatch(/[\u{1F512}\u{1F513}]/u);
   });
 
   it("DESIGN §3 是正: アスペクト比ロックボタンは SVG 線画アイコンを含む（Lucide スタイル）", async () => {
-    render(<ImageResizerPage />);
+    render(<ImageResizerTile />);
 
     const fileInput = document.querySelector(
       'input[type="file"]',
@@ -439,18 +471,15 @@ describe("ImageResizerPage", () => {
       name: /アスペクト比/i,
     });
 
-    // SVG が含まれること
     const svg = lockButton.querySelector("svg");
     expect(svg).not.toBeNull();
-    // DESIGN.md §3: Lucide スタイル — fill="none", stroke="currentColor"
     expect(svg?.getAttribute("fill")).toBe("none");
     expect(svg?.getAttribute("stroke")).toBe("currentColor");
-    // aria-hidden で SR から隠されていること（テキストラベルで補う）
     expect(svg?.getAttribute("aria-hidden")).toBe("true");
   });
 
   it("DESIGN §3 是正: アスペクト比ロック状態トグルで可視テキストが切り替わる", async () => {
-    render(<ImageResizerPage />);
+    render(<ImageResizerTile />);
 
     const fileInput = document.querySelector(
       'input[type="file"]',
@@ -463,61 +492,17 @@ describe("ImageResizerPage", () => {
       name: /アスペクト比/i,
     });
 
-    // 初期状態（ロック中）のテキストを取得
     const initialText = lockButton.textContent?.trim() ?? "";
-
-    // ボタンをクリックして状態を切り替える
     fireEvent.click(lockButton);
-
-    // 切り替え後のテキストを取得
     const toggledText = lockButton.textContent?.trim() ?? "";
-
-    // テキストが変わること（状態変化が可視になっていること）
     expect(toggledText).not.toBe(initialText);
-  });
-
-  // -------------------------------------------------------
-  // E-12: CSSトークン検証
-  // -------------------------------------------------------
-  it("E-12: CSS に --color-* 旧トークンが存在しない", () => {
-    const cssPath = resolve(__dirname, "../ImageResizerPage.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).not.toMatch(/var\(--color-/);
-  });
-
-  it("E-12: CSS に --accent 直塗り (background.*--accent) が存在しない", () => {
-    const cssPath = resolve(__dirname, "../ImageResizerPage.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    // background-color: var(--accent) のようなパターンを検出
-    expect(css).not.toMatch(/background(?:-color)?:\s*var\(--accent\)/);
-  });
-
-  it("E-12: CSS に font-weight: 700 が存在しない", () => {
-    const cssPath = resolve(__dirname, "../ImageResizerPage.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).not.toMatch(/font-weight:\s*700/);
-  });
-
-  it("E-12: CSS にハードコードhex色値 (#xxxxxx) が存在しない (B-8準拠)", () => {
-    // B-8: DESIGN.md と SKILL.md で定義されたトークン以外のハードコード色値禁止
-    // var(--token, #fallback) のようなフォールバックhexも禁止（到達不能デッドコード＋ダークテーマ誤色リスク）
-    const cssPath = resolve(__dirname, "../ImageResizerPage.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    // #xxx または #xxxxxx 形式のhex色を検出
-    expect(css).not.toMatch(/#[0-9a-fA-F]{3,8}\b/);
-  });
-
-  it("E-12: CSS にハードコードrgb/rgba色値が存在しない (B-8準拠)", () => {
-    const cssPath = resolve(__dirname, "../ImageResizerPage.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).not.toMatch(/\brgba?\s*\(/);
   });
 
   // -------------------------------------------------------
   // ダウンロード機能
   // -------------------------------------------------------
-  it("ダウンロード: リサイズ後にダウンロードボタンが表示され、クリックするとダウンロードが始まる", async () => {
-    render(<ImageResizerPage />);
+  it("ダウンロード: リサイズ後にダウンロードボタンが表示される", async () => {
+    render(<ImageResizerTile />);
 
     const fileInput = document.querySelector(
       'input[type="file"]',
@@ -533,7 +518,6 @@ describe("ImageResizerPage", () => {
       await Promise.resolve();
     });
 
-    // ダウンロードボタンが出現する
     expect(
       screen.getByRole("button", { name: "ダウンロード" }),
     ).toBeInTheDocument();
@@ -543,7 +527,7 @@ describe("ImageResizerPage", () => {
   // 出力形式セレクト
   // -------------------------------------------------------
   it("出力形式セレクトボックスが正しく動作する", async () => {
-    render(<ImageResizerPage />);
+    render(<ImageResizerTile />);
 
     const fileInput = document.querySelector(
       'input[type="file"]',
@@ -552,9 +536,142 @@ describe("ImageResizerPage", () => {
 
     await selectFileAndWaitImageLoad(fileInput, file);
 
-    // 出力形式のセレクトが存在する
     const formatSelect = screen.getByRole("combobox") as HTMLSelectElement;
     expect(formatSelect).toBeInTheDocument();
+  });
+
+  // -------------------------------------------------------
+  // E-12: CSSトークン検証（新タイルの CSS を対象とする）
+  // -------------------------------------------------------
+  it("E-12: CSS に --color-* 旧トークンが存在しない", () => {
+    const cssPath = resolve(__dirname, "../ImageResizerTile.module.css");
+    const css = readFileSync(cssPath, "utf-8");
+    expect(css).not.toMatch(/var\(--color-/);
+  });
+
+  it("E-12: CSS に --accent 直塗り (background.*--accent) が存在しない", () => {
+    const cssPath = resolve(__dirname, "../ImageResizerTile.module.css");
+    const css = readFileSync(cssPath, "utf-8");
+    expect(css).not.toMatch(/background(?:-color)?:\s*var\(--accent\)/);
+  });
+
+  it("E-12: CSS に font-weight: 700 が存在しない", () => {
+    const cssPath = resolve(__dirname, "../ImageResizerTile.module.css");
+    const css = readFileSync(cssPath, "utf-8");
+    expect(css).not.toMatch(/font-weight:\s*700/);
+  });
+
+  it("E-12: CSS にハードコードhex色値 (#xxxxxx) が存在しない", () => {
+    const cssPath = resolve(__dirname, "../ImageResizerTile.module.css");
+    const css = readFileSync(cssPath, "utf-8");
+    expect(css).not.toMatch(/#[0-9a-fA-F]{3,8}\b/);
+  });
+
+  it("E-12: CSS にハードコードrgb/rgba色値が存在しない", () => {
+    const cssPath = resolve(__dirname, "../ImageResizerTile.module.css");
+    const css = readFileSync(cssPath, "utf-8");
+    expect(css).not.toMatch(/\brgba?\s*\(/);
+  });
+
+  // -------------------------------------------------------
+  // D-4 実証: handleResize の連続実行で古い結果が新しい結果を上書きしない
+  // -------------------------------------------------------
+  it("D-4 実証: handleResize 連続実行で stale な古い結果が最新結果を上書きしない（resizeIdRef ガード）", async () => {
+    render(<ImageResizerTile />);
+
+    const fileInput = document.querySelector(
+      'input[type="file"]',
+    ) as HTMLInputElement;
+    const file = new File(["dummy"], "img.png", { type: "image/png" });
+
+    // ファイル読み込みは通常モック（MockImage が即時 onload）で完了させる
+    await selectFileAndWaitImageLoad(fileInput, file);
+
+    // リサイズボタンが表示されたことを確認
+    expect(
+      screen.getByRole("button", { name: "リサイズ" }),
+    ).toBeInTheDocument();
+
+    // toDataURL が返す値を 1回目・2回目で変えて「どちらの結果か」を区別できるようにする
+    // ライブリージョン（resultSummary）にはファイルサイズ推定値が含まれるため
+    // toDataURL の base64 長さが違えばサマリテキストが変わる
+    let toDataURLCallCount = 0;
+    const FIRST_DATAURL = "data:image/png;base64,FIRST"; // 1回目（stale）
+    const SECOND_DATAURL = "data:image/png;base64,SECONDRESULT"; // 2回目（新しい・正しい）
+
+    mockCanvas.toDataURL.mockImplementation(() => {
+      toDataURLCallCount++;
+      return toDataURLCallCount === 1 ? FIRST_DATAURL : SECOND_DATAURL;
+    });
+
+    // ここから handleResize 内の Image 生成を手動制御モックに切り替える
+    // （ファイル読み込み完了後のためファイル読み込みフローには影響しない）
+    const onloadCallbacks: Array<() => void> = [];
+
+    vi.stubGlobal("Image", function () {
+      const instance = {
+        onload: null as (() => void) | null,
+        onerror: null as (() => void) | null,
+        naturalWidth: IMAGE_WIDTH,
+        naturalHeight: IMAGE_HEIGHT,
+        _src: "",
+        get src() {
+          return this._src;
+        },
+        set src(value: string) {
+          this._src = value;
+          // onload を即時発火せず、手動で呼べるよう配列に追加
+          const self = instance;
+          onloadCallbacks.push(() => {
+            if (self.onload) self.onload();
+          });
+        },
+      };
+      return instance;
+    });
+
+    // 1回目のリサイズ開始（Image.onload はまだ発火しない）
+    await act(async () => {
+      fireEvent.click(screen.getByRole("button", { name: "リサイズ" }));
+    });
+
+    expect(onloadCallbacks.length).toBe(1); // 1回目の Image.src セット済み
+
+    // 2回目のリサイズ開始（1回目の onload より後に追加される）
+    await act(async () => {
+      fireEvent.click(screen.getByRole("button", { name: "リサイズ" }));
+    });
+
+    expect(onloadCallbacks.length).toBe(2); // 2回目の Image.src セット済み
+
+    // 2回目の onload を先に発火（最新 resizeId → toDataURL は 2回目の呼び出し → SECOND_DATAURL）
+    await act(async () => {
+      onloadCallbacks[1]();
+      await Promise.resolve();
+    });
+
+    // ライブリージョンに 2回目の結果サマリが表示される
+    const liveRegion = document.querySelector(
+      "[role='status'][aria-atomic='true']",
+    );
+    const summaryAfterSecond = liveRegion?.textContent ?? "";
+    expect(summaryAfterSecond).not.toBe(""); // 何らかのサマリが表示されている
+
+    // 1回目の onload を後から発火（stale resizeId → ガードにより setResult は呼ばれないはず）
+    await act(async () => {
+      onloadCallbacks[0]();
+      await Promise.resolve();
+    });
+
+    // stale な1回目の結果でライブリージョンが書き換えられていないことを確認
+    const summaryAfterStale = liveRegion?.textContent ?? "";
+    // ガードが機能していれば、stale onload は setResultSummary を呼ばないため同じ値のまま
+    expect(summaryAfterStale).toBe(summaryAfterSecond);
+
+    // Image グローバルを元に戻す
+    vi.stubGlobal("Image", function () {
+      return new MockImage();
+    });
   });
 
   // -------------------------------------------------------
