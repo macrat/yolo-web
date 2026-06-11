@@ -1,0 +1,109 @@
+/*
+ * AgeCalculatorTile スタイル
+ * cycle-228 T-7: AgeCalculatorPage.module.css をタイル向けに移植。
+ *
+ * DESIGN トークン準拠:
+ * - --color-* 旧トークン不使用
+ * - font-weight は 600 まで（それ以上は禁止）
+ * - --accent を背景色・文字色に直塗り禁止
+ * - インタラクティブ要素: --r-interactive（8px）
+ * - 非インタラクティブ要素: --r-normal（2px）
+ * - フォーム要素境界: --border-strong
+ * - フォーカス: outline: 2px solid var(--accent); outline-offset: 2px;
+ * - box-shadow はパネル以外に追加しない（A-7）
+ *
+ * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
+ */
+
+/* 入力フォームエリア */
+.formArea {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+/* 各フィールド（ラベル + 入力欄） */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+/* フィールドラベル */
+.label {
+  font-size: 0.9rem;
+  color: var(--fg-soft);
+}
+
+/* 基準日行: 入力欄 + 今日に設定ボタンを横並び */
+.targetDateRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* 計算ボタン行 */
+.actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* 結果セクション */
+.resultSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* 結果行（ラベル + 値のペア） */
+.resultRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  background-color: var(--bg-soft);
+  border-radius: var(--r-normal);
+  flex-wrap: wrap;
+}
+
+/* 結果ラベル（左側の説明テキスト） */
+.resultLabel {
+  font-size: 0.85rem;
+  color: var(--fg-soft);
+  min-width: 120px;
+  flex-shrink: 0;
+}
+
+/* 結果値（右側の計算結果） */
+.resultValue {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  color: var(--fg);
+}
+
+/* スクリーンリーダー専用（C-3 要件: 実テキストノードのサマリを視覚的に非表示） */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 640px) {
+  .targetDateRow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .resultLabel {
+    min-width: 100px;
+  }
+}

@@ -1,6 +1,42 @@
 "use client";
 
-import { useState, useCallback } from "react";
+/**
+ * AgeCalculatorTile — 年齢計算の単一正典タイル
+ *
+ * cycle-228 T-7: AgeCalculatorPage.tsx を Panel ルートのタイルへ作り直したもの。
+ *
+ * ## 設計原則
+ *
+ * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>。外部ラッパーなし。
+ * - **variant は full のみ**: 生年月日入力のロジックは独立モードを持たないため、
+ *   フルモード（生年月日+基準日+全結果）の1バリエーションのみ。
+ * - **id インスタンス一意化**: useId ベースで生成し、複数インスタンスが同一ページに
+ *   同居しても id 重複・label 誤結合が起きない。
+ * - **ToolPageLayout 非依存**: タイル単体で機能が完結する。
+ * - **logic.ts 共有エンジン**: calculateAge/toWareki/getZodiacWithReading/getConstellation
+ *   が唯一のロジック源。改変禁止。
+ *
+ * ## variant
+ *
+ * - `"full"` (デフォルト・唯一の値): 生年月日+基準日入力と年齢・和暦・干支・星座等の全結果を表示。
+ *   ロジックに独立モードがないため、full のみで良い。
+ *
+ * ## 使い方
+ *
+ * ```tsx
+ * // 道具箱や詳細ページから同一エクスポートを描画する（同一性の構造的保証）
+ * <AgeCalculatorTile variant="full" />
+ * ```
+ *
+ * ## アクセシビリティ（C-3 準拠）
+ *
+ * - role="status" aria-live="polite" の div にサマリテキストを置く
+ * - サマリは srOnly で視覚的には非表示にしてスクリーンリーダーへ通知する
+ * - フォーム値は live region の外に出し、サマリで通知する設計とする
+ */
+
+import { useId, useState, useCallback } from "react";
+import Panel from "@/components/Panel";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
 import ErrorMessage from "@/components/ErrorMessage";
@@ -14,19 +50,35 @@ import {
   type AgeResult,
   type WarekiInfo,
 } from "./logic";
-import styles from "./AgeCalculatorPage.module.css";
+import styles from "./AgeCalculatorTile.module.css";
 
-/**
- * AgeCalculatorPage — 年齢計算ツール本体（単一実装）。
- *
- * 生年月日と基準日から年齢（年・月・日）、通算日数・月数、和暦、干支、星座を計算する。
- * 出力は読んで知る答えのため、T-4b 方針によりコピーボタンなし。
- *
- * C-3 準拠: live region（role="status" aria-live="polite"）には
- * 実テキストノードのサマリ（「XX歳 を計算しました」等）を配置する。
- * フォーム値は live region の外に出し、サマリで通知する設計とする。
- */
-export default function AgeCalculatorPage() {
+/** variant prop: 表示バリエーションの設定差。別実装ではない。 */
+export type AgeCalculatorTileVariant = "full";
+
+export interface AgeCalculatorTileProps {
+  /**
+   * 表示バリエーション（デフォルト: "full"）
+   * - "full": 生年月日+基準日入力と年齢・和暦・干支・星座等の全結果を表示
+   *   ロジックに独立モードがないため、full のみで良い。
+   */
+  variant?: AgeCalculatorTileVariant;
+  /** Panel の as prop に透過される HTML タグ（デフォルト: "section"） */
+  as?: "section" | "div" | "article" | "aside";
+  /** 追加クラス */
+  className?: string;
+}
+
+export default function AgeCalculatorTile({
+  variant = "full",
+  as = "section",
+  className,
+}: AgeCalculatorTileProps = {}) {
+  // ---------- id インスタンス一意化（複数同居時の重複 id・label 誤結合防止） ----------
+  const uid = useId();
+  const birthDateId = `${uid}-birth-date`;
+  const targetDateId = `${uid}-target-date`;
+
+  // ---------- State ----------
   const [birthDateStr, setBirthDateStr] = useState("");
   const [targetDateStr, setTargetDateStr] = useState(formatDate(new Date()));
   const [ageResult, setAgeResult] = useState<AgeResult | null>(null);
@@ -37,6 +89,10 @@ export default function AgeCalculatorPage() {
   // C-3: ライブリージョン用サマリテキスト（実テキストノード）
   const [statusSummary, setStatusSummary] = useState("");
 
+  // variant は現在 full のみだが、将来の拡張に備えて参照しておく
+  void variant;
+
+  // ---------- ハンドラ ----------
   const handleCalculate = useCallback(() => {
     setErrorMsg("");
     setAgeResult(null);
@@ -82,16 +138,18 @@ export default function AgeCalculatorPage() {
     setTargetDateStr(formatDate(new Date()));
   }, []);
 
+  // ---------- Render ----------
+  // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）
   return (
-    <div className={styles.container}>
+    <Panel as={as} className={className}>
       {/* 入力エリア */}
       <div className={styles.formArea}>
         <div className={styles.field}>
-          <label htmlFor="birth-date" className={styles.label}>
+          <label htmlFor={birthDateId} className={styles.label}>
             生年月日
           </label>
           <Input
-            id="birth-date"
+            id={birthDateId}
             type="date"
             value={birthDateStr}
             onChange={(e) => setBirthDateStr(e.target.value)}
@@ -100,12 +158,12 @@ export default function AgeCalculatorPage() {
           />
         </div>
         <div className={styles.field}>
-          <label htmlFor="target-date" className={styles.label}>
+          <label htmlFor={targetDateId} className={styles.label}>
             基準日
           </label>
           <div className={styles.targetDateRow}>
             <Input
-              id="target-date"
+              id={targetDateId}
               type="date"
               value={targetDateStr}
               onChange={(e) => setTargetDateStr(e.target.value)}
@@ -179,6 +237,6 @@ export default function AgeCalculatorPage() {
           )}
         </section>
       )}
-    </div>
+    </Panel>
   );
 }
