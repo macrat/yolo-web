@@ -1,60 +1,56 @@
 "use client";
 
 /**
- * CronParserPage — cron-parser の単一実装（フル機能のページ本体）
+ * CronParserTile — cron-parser の単一正典タイル
  *
- * cycle-225 T-6: Component.tsx のフル機能を共通部品で組み直した単一実装。
- * cycle-225 U-4: UXゲート是正（stale liveSummary リセット・ビルダーコピー・エラーヒント・ビルダー次回実行）。
+ * cycle-228 T-28: CronParserPage.tsx（571行）を Panel ルートのタイルへ移植。
  *
- * 個別論点の解消:
- * 1. ビルダー復元（②-4 致命）: Component.tsx にあったビルダーモードを完全復元する。
- *    各フィールドを個別入力してcron式を生成する機能を共通 Input 部品で実装。
+ * ## 設計原則
  *
- * 2. JST固定化（B-472 真の実装）: JST 固定化の主体は logic.ts の getJstField にある。
- *    getNextExecutions のマッチングループ自体が JST 壁時計で計算される。
- *    旧実装はローカルTZ getter（getHours 等）を使っており、TZ=JST 環境では偶然正しいが
- *    TZ=UTC 等の環境では誤ったマッチングが発生していた。現在の実装は UTC+9 固定オフセットを
- *    UTC getter で読むことで環境 TZ によらず常に JST 壁時計でマッチングする。
- *    詳細は logic.ts の getJstField および JST_OFFSET_MS のコメントを参照。
+ * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>。外部ラッパーなし。
+ * - **1ツール n タイル = variant**: full / parser / builder は同一コンポーネントの
+ *   設定差で表現。別実装を作らない（分裂ゼロ）。
+ * - **id インスタンス一意化**: useId ベースで生成し、複数インスタンスが同一ページに
+ *   同居しても id 重複・label 誤結合が起きない。
+ * - **ToolPageLayout 非依存**: タイル単体で機能が完結する。
+ * - **logic.ts 共有エンジン**: parseCron/getNextExecutions/buildCronExpression/
+ *   describeCronField が唯一のロジック源。不可触。
  *
- * 3. コピーボタン方針（T-4b 更新）:
- *    - 解析結果: コピーなし（知る対象）
- *    - ビルダー生成式: コピーあり（別システムに貼る持ち帰り対象・T-4b 補足で確定）
+ * ## variant
  *
- * 4. B-3準拠: 解析ボタン・プリセットボタンを共通 Button コンポーネントへ置換。
- *    手書き .parseButton に background-color: var(--accent) を使っていた B-3 違反を解消。
- *    共通 Button の primary バリアントは --bg-invert / --fg-invert ペアを使う。
+ * - `"full"` (デフォルト): SegmentedControl でモード切替（parser/builder）が可能。
+ * - `"parser"`: 解析モードに固定。SegmentedControl 非表示。
+ * - `"builder"`: ビルダーモードに固定。SegmentedControl 非表示。
  *
- * 5. U-4 是正(a): モード切替時に liveSummary をリセットして stale 表示を防止する。
+ * ## 機能（feature-preserving）
  *
- * 6. U-4 低指摘: エラーメッセージに修正ヒント（範囲説明）を添える。
- *    ビルダーモードにも次回実行予定を表示する。
+ * - 解析モード: cron式入力→解説+フィールド詳細+次回実行リスト（JST）+プリセット5個
+ * - ビルダーモード: 5フィールド入力→式生成+コピー+次回実行リスト（JST）+プリセット5個
  *
- * 共通部品の使用:
- * - Button: 解析ボタン（primary）・プリセットボタン（default/small）・コピーボタン（B-3解消）
- * - SegmentedControl: 解析/ビルダーモード切替（A-3）
- * - ErrorMessage: エラー表示（A-4・文言は日本語）
- * - Input: Cron式テキスト入力・ビルダー各フィールド入力（A-7に準拠、type=text）
- * - useCopyToClipboard: ビルダー出力のコピー（A-6・T-4b 更新方針）
- * - ToolPageLayout: ページ全体の器（A-8 - page.tsx で使用済み）
- * ※ Textarea: テキスト変換ではないため不要（N/A）
- * ※ Select: セレクトボックス不要（N/A）
- * ※ FileDropZone: ファイル操作なし（N/A）
- * ※ Input(type=date): 日付入力なし（N/A）
+ * ## アクセシビリティ
  *
- * C-3 ライブリージョン: role="status" aria-live="polite" に実テキストノードのサマリを配置。
- * readOnly textarea をラップするだけでは不可。
- * 解析モード・ビルダーモード両方で出力変化時にサマリを更新する。
+ * - C-2: SegmentedControl に aria-label="モード切替"
+ * - C-3: role="status" aria-live="polite" のライブリージョン+実テキストサマリ
+ * - A-4: エラーは ErrorMessage コンポーネント+日本語文言
+ * - A-6: 全 DOM id と htmlFor は useId ベースで一意化
+ * - タッチターゲット: Button/Input min-height 44px（共通部品準拠）
  *
- * A-4 エラー文言: ErrorMessage に渡す message は日本語化済み（英語例外メッセージをそのまま渡さない）。
+ * ## 共通部品
  *
- * AP-I11 タイマー: useCopyToClipboard フックが内部で setTimeout を管理するため、
- * コンポーネント側でタイマー管理は不要。
+ * - Panel: タイルのルート
+ * - SegmentedControl: モード切替（full のみ）
+ * - ErrorMessage: エラー表示
+ * - Input: cron式入力・ビルダー各フィールド
+ * - Button: 解析・プリセット・コピー
+ * - useCopyToClipboard: ビルダー出力のコピー
+ *
+ * ## タイマー
  *
  * D-4: 直接 setTimeout/setInterval は使わない（useCopyToClipboard に委譲）。
  */
 
-import { useState, useCallback } from "react";
+import { useId, useState, useCallback } from "react";
+import Panel from "@/components/Panel";
 import SegmentedControl from "@/components/SegmentedControl";
 import ErrorMessage from "@/components/ErrorMessage";
 import Input from "@/components/Input";
@@ -69,9 +65,34 @@ import {
   buildCronExpression,
   describeCronField,
 } from "./logic";
-import styles from "./CronParserPage.module.css";
+import styles from "./CronParserTile.module.css";
+
+// =========================================================
+// 型定義
+// =========================================================
 
 type TabMode = "parser" | "builder";
+
+/** variant prop: 表示バリエーションの設定差。別実装ではない。 */
+export type CronParserTileVariant = "full" | "parser" | "builder";
+
+export interface CronParserTileProps {
+  /**
+   * 表示バリエーション（デフォルト: "full"）
+   * - "full": SegmentedControl でモード切替可能
+   * - "parser": 解析モードに固定、SegmentedControl 非表示
+   * - "builder": ビルダーモードに固定、SegmentedControl 非表示
+   */
+  variant?: CronParserTileVariant;
+  /** Panel の as prop に透過される HTML タグ（デフォルト: "section"） */
+  as?: "section" | "div" | "article" | "aside";
+  /** 追加クラス */
+  className?: string;
+}
+
+// =========================================================
+// 定数
+// =========================================================
 
 interface Preset {
   label: string;
@@ -86,20 +107,23 @@ const PRESETS: Preset[] = [
   { label: "毎月1日", expression: "0 0 1 * *" },
 ];
 
-// SegmentedControl の options 型に合わせて直接 { label: string; value: string }[] で宣言する。
+// SegmentedControl の options 型に合わせて { label: string; value: string }[] で宣言。
 // as const を使うと readonly リテラル型になり unknown 経由のキャストが必要になるため、
-// ここでは型アノテーションで { label: string; value: string }[] を付与する（型安全性維持）。
+// 型アノテーションで { label: string; value: string }[] を付与する（型安全性維持）。
 const MODE_OPTIONS: { label: string; value: string }[] = [
   { label: "解析", value: "parser" },
   { label: "ビルダー", value: "builder" },
 ];
 
+// =========================================================
+// ユーティリティ
+// =========================================================
+
 /**
- * 次回実行日時をJST（Asia/Tokyo）固定でフォーマットする（B-472 内包）。
+ * 次回実行日時を JST（Asia/Tokyo）固定でフォーマットする（B-472 内包）。
  *
- * ブラウザのローカルTZによらず常にJSTで表示するため、
+ * ブラウザのローカル TZ によらず常に JST で表示するため、
  * Intl.DateTimeFormat に timeZone: "Asia/Tokyo" を明示する。
- * これにより海外タイムゾーンのユーザーにも正しいJST時刻を表示できる。
  */
 function formatDateJst(date: Date): string {
   return new Intl.DateTimeFormat("ja-JP", {
@@ -118,14 +142,12 @@ function formatDateJst(date: Date): string {
  *
  * logic.ts の parseCron はすでに日本語エラーを返すが、
  * U-4 低指摘対応として「どうすればよいか」の範囲説明を追記する。
- * 例: 「分フィールドが無効です: 60」→「分フィールドが無効です: 60（0〜59 で指定してください）」
  */
 function toJapaneseError(error: string | undefined): string {
   if (!error || error.trim() === "") {
     return "無効なCron式です。入力内容を確認してください。";
   }
 
-  // フィールドごとの正しい範囲ヒントを追記する（修正方法の明示）
   if (error.startsWith("分フィールドが無効です")) {
     return `${error}（0〜59 で指定してください）`;
   }
@@ -145,8 +167,35 @@ function toJapaneseError(error: string | undefined): string {
   return error; // logic.ts は日本語エラーを返す（上記以外はそのまま返す）
 }
 
-export default function CronParserPage() {
-  const [mode, setMode] = useState<TabMode>("parser");
+// =========================================================
+// コンポーネント
+// =========================================================
+
+export default function CronParserTile({
+  variant = "full",
+  as = "section",
+  className,
+}: CronParserTileProps = {}) {
+  // ---------- id インスタンス一意化（複数同居時の重複 id・label 誤結合防止）----------
+  const uid = useId();
+  const cronInputId = `${uid}-cron-input`;
+  const minuteId = `${uid}-minute`;
+  const hourId = `${uid}-hour`;
+  const dayOfMonthId = `${uid}-day-of-month`;
+  const monthId = `${uid}-month`;
+  const dayOfWeekId = `${uid}-day-of-week`;
+
+  // ---------- variant から固定モードを決定 ----------
+  // "full" は SegmentedControl でユーザーが切り替え可能。
+  // "parser" / "builder" は固定（SegmentedControl 非表示）。
+  const fixedMode: TabMode | null =
+    variant === "parser" ? "parser" : variant === "builder" ? "builder" : null;
+
+  // ---------- State ----------
+  const [dynamicMode, setDynamicMode] = useState<TabMode>("parser");
+
+  // 実際に使うモード: fixedMode があればそれを使い、なければ state を使う
+  const mode = fixedMode ?? dynamicMode;
 
   // --- 解析モード ---
   const [cronInput, setCronInput] = useState("* * * * *");
@@ -154,10 +203,11 @@ export default function CronParserPage() {
     typeof parseCron
   > | null>(null);
   const [nextExecs, setNextExecs] = useState<Date[]>([]);
+
   /** C-3 ライブリージョン用サマリテキスト */
   const [liveSummary, setLiveSummary] = useState("");
 
-  /** A-6: ビルダー出力のコピー用フック（T-4b 更新: ビルダー生成式は持ち帰り対象） */
+  /** ビルダー出力のコピー用フック（T-4b 更新: ビルダー生成式は持ち帰り対象） */
   const { copy, copiedKey } = useCopyToClipboard();
 
   // --- ビルダーモード ---
@@ -167,7 +217,7 @@ export default function CronParserPage() {
   const [bMonth, setBMonth] = useState("*");
   const [bDayOfWeek, setBDayOfWeek] = useState("*");
 
-  /** 解析実行 */
+  // ---------- 解析実行 ----------
   const handleParse = useCallback(() => {
     const result = parseCron(cronInput);
     setParseResult(result);
@@ -181,7 +231,7 @@ export default function CronParserPage() {
     }
   }, [cronInput]);
 
-  /** プリセット選択（解析モード） */
+  // ---------- プリセット選択（解析モード）----------
   const handlePreset = useCallback((expression: string) => {
     setCronInput(expression);
     const result = parseCron(expression);
@@ -196,7 +246,7 @@ export default function CronParserPage() {
     }
   }, []);
 
-  /** ビルダーモード用プリセット選択 */
+  // ---------- ビルダーモード用プリセット選択 ----------
   const handleBuilderPreset = useCallback((expression: string) => {
     const fields = expression.split(" ");
     if (fields.length === 5) {
@@ -213,7 +263,8 @@ export default function CronParserPage() {
     }
   }, []);
 
-  /** ビルダーモードフィールド変更ハンドラ（C-3: 出力変化をライブリージョンに反映） */
+  // ---------- ビルダーモードフィールド変更ハンドラ ----------
+  // C-3: 出力変化をライブリージョンに反映
   const handleBuilderFieldChange = useCallback(
     (
       setter: (v: string) => void,
@@ -245,7 +296,7 @@ export default function CronParserPage() {
     [],
   );
 
-  /** ビルダーの生成式 */
+  // ---------- ビルダーの生成式 ----------
   const builtExpression = buildCronExpression(
     bMinute,
     bHour,
@@ -255,8 +306,10 @@ export default function CronParserPage() {
   );
   const builtResult = parseCron(builtExpression);
 
+  // ---------- Render ----------
+  // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）
   return (
-    <div className={styles.container}>
+    <Panel as={as} className={className}>
       {/* C-3: role="status" aria-live="polite" で実テキストサマリを提供。
        * 解析モード・ビルダーモード両方での出力変化をスクリーンリーダーに通知する。 */}
       <div
@@ -268,22 +321,21 @@ export default function CronParserPage() {
         {liveSummary}
       </div>
 
-      {/* モード切替（A-3: SegmentedControl 使用・C-2: aria-label 付与）
+      {/* モード切替（variant=full のみ表示・C-2: aria-label 付与）
        * U-4 是正(a): モード切替時に liveSummary をリセットして stale 表示を防止する。
-       * 解析モードでエラーが残った状態でビルダーへ切り替えると「入力エラーがあります」が
-       * ライブリージョンに残ってしまう問題を修正。
-       * MODE_OPTIONS は { label: string; value: string }[] 型で宣言しているため
-       * as unknown as キャストは不要（型安全）。 */}
-      <SegmentedControl
-        options={MODE_OPTIONS}
-        value={mode}
-        onChange={(v) => {
-          setMode(v as TabMode);
-          // U-4 是正(a): モード切替でliveSummaryをリセット（stale 表示防止）
-          setLiveSummary("");
-        }}
-        aria-label="モード切替"
-      />
+       * fixedMode がある（parser/builder）場合は非表示。 */}
+      {fixedMode === null && (
+        <SegmentedControl
+          options={MODE_OPTIONS}
+          value={dynamicMode}
+          onChange={(v) => {
+            setDynamicMode(v as TabMode);
+            // U-4 是正(a): モード切替で liveSummary をリセット（stale 表示防止）
+            setLiveSummary("");
+          }}
+          aria-label="モード切替"
+        />
+      )}
 
       {/* ===== 解析モード ===== */}
       {mode === "parser" && (
@@ -292,8 +344,9 @@ export default function CronParserPage() {
             <h3 className={styles.sectionTitle}>Cron式を入力</h3>
             <div className={styles.row}>
               <div className={styles.cronInputWrapper}>
-                {/* A-1 の範疇: Cron式はテキスト1行入力のため Input コンポーネントを使用 */}
+                {/* A-6: useId で一意化した id を label に結合 */}
                 <Input
+                  id={cronInputId}
                   type="text"
                   value={cronInput}
                   onChange={(e) => setCronInput(e.target.value)}
@@ -305,16 +358,14 @@ export default function CronParserPage() {
                   error={parseResult !== null && !parseResult.valid}
                 />
               </div>
-              {/* 共通 Button primary バリアント: --bg-invert/--fg-invert ペアで塗る（B-3準拠）。
-               * 手書き .parseButton の background-color: var(--accent) を廃止した根本解決。 */}
+              {/* 共通 Button primary バリアント: --bg-invert/--fg-invert ペアで塗る（B-3準拠）。*/}
               <Button variant="primary" onClick={handleParse}>
                 解析
               </Button>
             </div>
             <div className={styles.presetRow}>
               {PRESETS.map((preset) => (
-                /* 共通 Button default/small バリアント: --bg-soft 背景（B-3準拠）。
-                 * 手書き .presetButton を廃止し一貫性を確保する。 */
+                /* 共通 Button default/small バリアント（B-3準拠）。*/
                 <Button
                   key={preset.expression}
                   variant="default"
@@ -400,13 +451,14 @@ export default function CronParserPage() {
               ))}
             </div>
             <div className={styles.fieldGrid}>
-              {/* 分フィールド */}
+              {/* 分フィールド（A-6: useId ベース id）*/}
               <div>
-                <div className={styles.fieldLabel}>
+                <label htmlFor={minuteId} className={styles.fieldLabel}>
                   分 (0-59){" "}
                   <span>- {describeCronField(bMinute, "minute")}</span>
-                </div>
+                </label>
                 <Input
+                  id={minuteId}
                   type="text"
                   value={bMinute}
                   onChange={(e) =>
@@ -423,10 +475,11 @@ export default function CronParserPage() {
               </div>
               {/* 時フィールド */}
               <div>
-                <div className={styles.fieldLabel}>
+                <label htmlFor={hourId} className={styles.fieldLabel}>
                   時 (0-23) <span>- {describeCronField(bHour, "hour")}</span>
-                </div>
+                </label>
                 <Input
+                  id={hourId}
                   type="text"
                   value={bHour}
                   onChange={(e) =>
@@ -443,11 +496,12 @@ export default function CronParserPage() {
               </div>
               {/* 日フィールド */}
               <div>
-                <div className={styles.fieldLabel}>
+                <label htmlFor={dayOfMonthId} className={styles.fieldLabel}>
                   日 (1-31){" "}
                   <span>- {describeCronField(bDayOfMonth, "dayOfMonth")}</span>
-                </div>
+                </label>
                 <Input
+                  id={dayOfMonthId}
                   type="text"
                   value={bDayOfMonth}
                   onChange={(e) =>
@@ -464,10 +518,11 @@ export default function CronParserPage() {
               </div>
               {/* 月フィールド */}
               <div>
-                <div className={styles.fieldLabel}>
+                <label htmlFor={monthId} className={styles.fieldLabel}>
                   月 (1-12) <span>- {describeCronField(bMonth, "month")}</span>
-                </div>
+                </label>
                 <Input
+                  id={monthId}
                   type="text"
                   value={bMonth}
                   onChange={(e) =>
@@ -484,11 +539,12 @@ export default function CronParserPage() {
               </div>
               {/* 曜日フィールド */}
               <div>
-                <div className={styles.fieldLabel}>
+                <label htmlFor={dayOfWeekId} className={styles.fieldLabel}>
                   曜日 (0-7){" "}
                   <span>- {describeCronField(bDayOfWeek, "dayOfWeek")}</span>
-                </div>
+                </label>
                 <Input
+                  id={dayOfWeekId}
                   type="text"
                   value={bDayOfWeek}
                   onChange={(e) =>
@@ -511,7 +567,7 @@ export default function CronParserPage() {
             <h3 className={styles.sectionTitle}>生成されたCron式</h3>
             {/* A-6: コピーボタン（T-4b 更新方針: ビルダー生成式は持ち帰り対象）
              * useCopyToClipboard フック + COPIED_LABEL で統一実装。
-             * 生成式が無効（バリデーション失敗）のときはコピーボタンを disabled にする（E-7）。 */}
+             * 生成式が無効（バリデーション失敗）のときはコピーボタンを disabled にする（E-7）。*/}
             <div className={styles.builtExpressionRow}>
               <code
                 className={styles.builtExpression}
@@ -519,9 +575,7 @@ export default function CronParserPage() {
               >
                 {builtExpression}
               </code>
-              {/* aria-label をコピー状態に合わせて動的に変える（スクリーンリーダーに正確な状態を伝える）。
-               * コピー前: 「コピー」、コピー後: COPIED_LABEL（「コピーしました」）。
-               * テキストと aria-label を一致させることで視覚的・音声的に一貫した UX を実現する。 */}
+              {/* aria-label をコピー状態に合わせて動的に変える（スクリーンリーダーに正確な状態を伝える）。*/}
               <Button
                 variant="default"
                 onClick={() => copy(builtExpression)}
@@ -544,7 +598,7 @@ export default function CronParserPage() {
           </section>
 
           {/* U-4 低指摘: ビルダーにも次回実行予定を表示する（JST固定表示）
-           * 解析モードと同様に、有効な式の場合のみ次回実行を表示する。 */}
+           * 解析モードと同様に、有効な式の場合のみ次回実行を表示する。*/}
           {builtResult.valid &&
             (() => {
               const builtNextExecs = getNextExecutions(builtExpression, 5);
@@ -566,6 +620,6 @@ export default function CronParserPage() {
             })()}
         </>
       )}
-    </div>
+    </Panel>
   );
 }

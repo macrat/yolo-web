@@ -80,10 +80,11 @@ completed_at: null
 
 ### バッチ6: 2モード複合UI系（High）
 
-- [ ] T-28: cron-parser をライブタイル化（最大規模 571 行・parser/builder の2UI 同居・JST 処理・プリセット多数）
-- [ ] T-29: regex-tester をライブタイル化（Web Worker(BlobURL inline)・ReDoS タイムアウト・複数インスタンス同居の Worker 干渉確認・jsdom モック必須）
-- [ ] T-30: business-email をライブタイル化（5カテゴリ＋テンプレート選択＋動的フィールド群・コピー3ターゲット）
-- [ ] バッチ6ゲート＋中間 Playwright 検証（代表1〜2ツール）
+- [x] T-28: cron-parser をライブタイル化（full＋parser/builder・レビュー2巡承認〔must-fix: PM 指示の事実誤認による プリセット5→8拡張＝feature-preserving 逸脱→旧実装と完全等価に復元・拡充案は B-503 起票〕・43テスト）
+- [x] T-29: regex-tester をライブタイル化（full のみ・Worker 独立性〔モジュールスコープ定数のみ・useRef インスタンススコープ・terminate/clearTimeout cleanup〕・承認・指摘ゼロ・32テスト）
+- [x] T-30: business-email をライブタイル化（full のみ・動的フィールド `${uid}-field-${key}` useId 化・承認・26テスト）
+- [x] バッチ6ゲート: PM 独立 tsc0/lint0/format0/差分テスト217件通過＋中間 Playwright（新本番ビルド・cron-parser をプリセットクリック/手入力＋Enter/不正入力エラーの3経路で実機確認・`*/15 * * * *`→「解析完了: 15分ごと に実行」＋次回実行リスト・全工程遷移なし・id 重複0）。
+  - 通知喪失事故（2回目）: バッチ6レビュー2件の完了通知が届かず Owner 指摘で発覚。transcript 確認で両者とも完了・承認済みだったため再起動不要と判断し一次資料から判定を回収した。
 
 ### 統合・最終検証（全タイル完了後・直列）
 

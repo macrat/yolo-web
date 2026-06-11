@@ -8,7 +8,7 @@ import {
 } from "@/lib/seo";
 import ToolPageLayout from "@/tools/_components/ToolPageLayout";
 import ToolErrorBoundary from "@/tools/_components/ErrorBoundary";
-import BusinessEmailPage from "@/tools/business-email/BusinessEmailPage";
+import BusinessEmailTile from "@/tools/business-email/BusinessEmailTile";
 
 const SLUG = "business-email";
 const tool = toolsBySlug.get(SLUG);
@@ -27,7 +27,7 @@ export default function Page() {
         }}
       />
       <ToolErrorBoundary>
-        <BusinessEmailPage />
+        <BusinessEmailTile variant="full" />
       </ToolErrorBoundary>
     </ToolPageLayout>
   );
