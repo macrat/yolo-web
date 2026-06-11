@@ -62,12 +62,12 @@ completed_at: null
 
 ### バッチ4: 参照・検索系＋複合計算系（Medium〜High）
 
-- [ ] T-18: keigo-reference をライブタイル化（検索＋アコーディオン・コピーなし）
-- [ ] T-19: traditional-color-palette をライブタイル化（スウォッチグリッド・ハーモニー・外部辞書）
-- [ ] T-20: unit-converter をライブタイル化（カテゴリ・from/to Select・useId 一部既使用）
-- [ ] T-21: date-calculator をライブタイル化（日付差/加減算/和暦の3セクション・useId 8個超）
-- [ ] T-22: unix-timestamp をライブタイル化（setInterval 1秒更新・hydration 安全パターン保持・タイマー cleanup）
-- [ ] バッチ4ゲート＋中間 Playwright 検証（代表1〜2ツール）
+- [x] T-18: keigo-reference をライブタイル化（full のみ・レビュー2巡承認〔should-fix: as="div" の例外化→統一〕・35テスト）
+- [x] T-19: traditional-color-palette をライブタイル化（full のみ・承認・nit の .srOnly デッドコードは builder 対応済み・31テスト）
+- [x] T-20: unit-converter をライブタイル化（full のみ・承認・reviewer が実機 Playwright も実施・33テスト）
+- [x] T-21: date-calculator をライブタイル化（full＋diff/add/wareki・承認〔指摘ゼロ・useId 9個移行の関連完全性を1対1確認〕・26テスト）
+- [x] T-22: unix-timestamp をライブタイル化（full のみ・hydration 安全＋intervalRef cleanup＋ライブ時計 aria-live 除外・承認・nit のテスト見出し1語は PM 即時修正・34テスト）
+- [x] バッチ4ゲート: PM 独立 tsc0/lint0/format0/差分テスト301件通過＋中間 Playwright（新本番ビルド・unix-timestamp ライブ時計実進行＋0→1970 正答・keigo-reference「言う」→おっしゃる/申す＋status「1件の動詞が一致しました」・両者遷移なし・id 重複0）。
 
 ### バッチ5: ファイルI/O＋プレビュー系（High）
 

@@ -8,7 +8,7 @@ import {
 } from "@/lib/seo";
 import ToolPageLayout from "@/tools/_components/ToolPageLayout";
 import ToolErrorBoundary from "@/tools/_components/ErrorBoundary";
-import UnitConverterPage from "@/tools/unit-converter/UnitConverterPage";
+import UnitConverterTile from "@/tools/unit-converter/UnitConverterTile";
 
 const SLUG = "unit-converter";
 const tool = toolsBySlug.get(SLUG);
@@ -27,7 +27,7 @@ export default function Page() {
         }}
       />
       <ToolErrorBoundary>
-        <UnitConverterPage />
+        <UnitConverterTile variant="full" />
       </ToolErrorBoundary>
     </ToolPageLayout>
   );

@@ -1,21 +1,73 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+/**
+ * UnixTimestampTile — UNIXタイムスタンプと日時の相互変換の単一正典タイル
+ *
+ * cycle-228 T-22: UnixTimestampPage.tsx を Panel ルートのタイルへ作り直したもの。
+ *
+ * ## 設計原則
+ *
+ * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>。外部ラッパーなし。
+ * - **variant は full のみ**: 3セクション（ライブ表示/TS→日付/日付→TS）すべてを持つ
+ *   フルモードの1バリエーションのみ。ロジックに独立モードがないため。
+ * - **id インスタンス一意化**: useId ベースで生成し、複数インスタンスが同一ページに
+ *   同居しても id 重複・label 誤結合が起きない。
+ * - **ToolPageLayout 非依存**: タイル単体で機能が完結する。
+ * - **logic.ts 共有エンジン**: getCurrentTimestamp/timestampToDate/dateToTimestamp
+ *   が唯一のロジック源。改変禁止。
+ *
+ * ## 機能
+ *
+ * - 現在のUNIXタイムスタンプの1秒ごとリアルタイム表示 + コピー
+ * - タイムスタンプ → 日時変換（秒/ミリ秒切り替え）
+ * - 日時 → タイムスタンプ変換
+ * - 各結果のコピー（useCopyToClipboard）
+ * - エラー表示（ErrorMessage）
+ *
+ * ## Hydration 安全パターン
+ *
+ * SSR/CSR で Date.now() が異なるため、現在時刻は useEffect 内でのみ初期化。
+ * useState(0) で固定初期値、useEffect 内で実値を設定するパターンを必ず保持する。
+ *
+ * ## タイマー管理 (D-4)
+ *
+ * setInterval のタイマー ID を useRef で保持し、useEffect cleanup で clearInterval を呼ぶ。
+ * アンマウント後の setState が起きない。
+ *
+ * ## ARIA (C-3)
+ *
+ * - ライブ時計部分は aria-live 対象外（1秒毎読み上げ防止）
+ * - 変換結果に role="status" aria-live="polite" のライブリージョン + 実テキストサマリ
+ *
+ * ## variant
+ *
+ * - `"full"` (デフォルト・唯一の値): 3セクション全部。詳細ページ・道具箱ともに同一。
+ *
+ * ## 使い方
+ *
+ * ```tsx
+ * // 道具箱や詳細ページから同一エクスポートを描画する（同一性の構造的保証）
+ * <UnixTimestampTile variant="full" />
+ * ```
+ */
+
+import { useId, useState, useEffect, useCallback, useRef } from "react";
+import Panel from "@/components/Panel";
+import Button from "@/components/Button";
+import ErrorMessage from "@/components/ErrorMessage";
+import Input from "@/components/Input";
+import SegmentedControl from "@/components/SegmentedControl";
+import {
+  useCopyToClipboard,
+  COPIED_LABEL,
+} from "@/components/hooks/useCopyToClipboard";
 import {
   getCurrentTimestamp,
   timestampToDate,
   dateToTimestamp,
   type TimestampConversion,
 } from "./logic";
-import {
-  useCopyToClipboard,
-  COPIED_LABEL,
-} from "@/components/hooks/useCopyToClipboard";
-import Button from "@/components/Button";
-import ErrorMessage from "@/components/ErrorMessage";
-import Input from "@/components/Input";
-import SegmentedControl from "@/components/SegmentedControl";
-import styles from "./UnixTimestampPage.module.css";
+import styles from "./UnixTimestampTile.module.css";
 
 /** タイムスタンプ単位の選択肢 */
 const UNIT_OPTIONS = [
@@ -23,37 +75,53 @@ const UNIT_OPTIONS = [
   { label: "ミリ秒", value: "milliseconds" },
 ];
 
-/**
- * UnixTimestampPage — UNIXタイムスタンプと日時の相互変換の単一実装。
- *
- * 機能:
- * - 現在のUNIXタイムスタンプの1秒ごとリアルタイム表示 + コピー
- * - タイムスタンプ → 日時変換（秒/ミリ秒切り替え）
- * - 日時 → タイムスタンプ変換
- * - 各結果のコピー（useCopyToClipboard）
- * - エラー表示（ErrorMessage）
- *
- * 設計方針:
- * - Hydration一致: SSR/CSR で Date.now() が異なるため、現在時刻は useEffect 内でのみ初期化
- *   (AP-I11対応: タイマーIDをuseRefで保持し、cleanup で clearInterval)
- * - ARIA C-3: role="status" aria-live="polite" の実テキストサマリで動的通知
- * - T-4b: unix-timestamp はコピーボタンあり確定
- * - SegmentedControl で秒/ミリ秒を切り替え（旧チェックボックスを置き換え）
- */
-export default function UnixTimestampPage() {
-  // hydration一致のため初期値は0。useEffect内で実値を設定する
+/** variant prop: 表示バリエーションの設定差。別実装ではない。 */
+export type UnixTimestampTileVariant = "full";
+
+export interface UnixTimestampTileProps {
+  /**
+   * 表示バリエーション（デフォルト: "full"）
+   * - "full": 3セクション全部（ライブ表示・TS→日付・日付→TS）
+   *   ロジックに独立モードがないため、full のみで良い。
+   */
+  variant?: UnixTimestampTileVariant;
+  /** Panel の as prop に透過される HTML タグ（デフォルト: "section"） */
+  as?: "section" | "div" | "article" | "aside";
+  /** 追加クラス */
+  className?: string;
+}
+
+export default function UnixTimestampTile({
+  variant = "full",
+  as = "section",
+  className,
+}: UnixTimestampTileProps = {}) {
+  // ---------- id インスタンス一意化（複数同居時の重複 id・label 誤結合防止） ----------
+  const uid = useId();
+  const yearId = `${uid}-year`;
+  const monthId = `${uid}-month`;
+  const dayId = `${uid}-day`;
+  const hoursId = `${uid}-hours`;
+  const minutesId = `${uid}-minutes`;
+  const secondsId = `${uid}-seconds`;
+
+  // variant は現在 full のみだが、将来の拡張に備えて参照しておく
+  void variant;
+
+  // ---------- ライブ表示 State ----------
+  // hydration 一致のため初期値は 0。useEffect 内で実値を設定する（AP-I11対応）
   const [currentTs, setCurrentTs] = useState(0);
   const [mounted, setMounted] = useState(false);
 
-  // タイムスタンプ → 日時
+  // ---------- タイムスタンプ → 日時 State ----------
   const [tsInput, setTsInput] = useState("");
   const [tsUnit, setTsUnit] = useState<"seconds" | "milliseconds">("seconds");
   const [tsResult, setTsResult] = useState<TimestampConversion | null>(null);
   const [tsError, setTsError] = useState("");
   const [tsStatusSummary, setTsStatusSummary] = useState("");
 
-  // 日時 → タイムスタンプ
-  // hydration一致のため初期値は固定値。useEffect 内でマウント後に現在日時を設定
+  // ---------- 日時 → タイムスタンプ State ----------
+  // hydration 一致のため初期値は固定値。useEffect 内でマウント後に現在日時を設定
   const [year, setYear] = useState(2000);
   const [month, setMonth] = useState(1);
   const [day, setDay] = useState(1);
@@ -66,22 +134,21 @@ export default function UnixTimestampPage() {
   } | null>(null);
   const [dateStatusSummary, setDateStatusSummary] = useState("");
 
-  // AP-I11: タイマーIDをrefで保持
+  // D-4: タイマーIDを useRef で保持（cleanup で clearInterval するため）
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // T-4b: コピーあり確定。useCopyToClipboard フックを使用（独自実装しない）
+  // T-4b: コピーあり確定。useCopyToClipboard フックを使用
   const { copy, copiedKey } = useCopyToClipboard();
 
   // マウント後に現在時刻を設定し、1秒ごとに更新
-  // AP-I11: useEffect のcleanup でclearIntervalを呼ぶ
-  // docs/knowledge/nextjs.md §4 OK パターン: 空依存 = マウント時1回の外部システム読み取り
+  // D-4: useEffect のcleanup で clearInterval を呼ぶ
+  // hydration 安全パターン: SSR/CSR の Date.now() 不一致を防ぐため useEffect 内でのみ読み取る
   useEffect(() => {
-    // SSR/CSR の hydration 一致のため、Date.now() は useEffect 内でのみ読み取る
     /* eslint-disable react-hooks/set-state-in-effect */
     setCurrentTs(getCurrentTimestamp());
     setMounted(true);
 
-    // 日時 → タイムスタンプの初期値を現在日時で設定（hydration一致のためここで設定）
+    // 日時 → タイムスタンプの初期値を現在日時で設定（hydration 一致のためここで設定）
     const now = new Date();
     setYear(now.getFullYear());
     setMonth(now.getMonth() + 1);
@@ -145,14 +212,17 @@ export default function UnixTimestampPage() {
     }
   }, [year, month, day, hours, minutes, seconds]);
 
+  // ---------- Render ----------
+  // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）
   return (
-    <div className={styles.container}>
-      {/* 現在のUNIXタイムスタンプ（ライブ表示） */}
+    <Panel as={as} className={className}>
+      {/* 現在のUNIXタイムスタンプ（ライブ表示）
+          C-3: ライブ時計は aria-live 対象外（1秒毎読み上げ防止） */}
       <div className={styles.currentBar}>
         <span className={styles.currentLabel}>現在のUNIXタイムスタンプ:</span>
-        {/* mounted前は空白を表示してhydrationを一致させる */}
+        {/* mounted 前は空文字を表示して hydration を一致させる */}
         <code className={styles.currentValue}>{mounted ? currentTs : ""}</code>
-        {/* T-4b: コピーボタンあり。現在タイムスタンプをコピー */}
+        {/* 現在タイムスタンプをコピー */}
         <Button
           size="small"
           disabled={!mounted || currentTs === 0}
@@ -199,7 +269,8 @@ export default function UnixTimestampPage() {
         {/* エラー表示 */}
         {tsError && <ErrorMessage message={tsError} />}
 
-        {/* C-3: スクリーンリーダー向けサマリ（実テキストノード） */}
+        {/* C-3: スクリーンリーダー向けサマリ（実テキストノード）
+            ライブ時計の1秒更新とは別の領域 */}
         <div
           role="status"
           aria-live="polite"
@@ -292,11 +363,11 @@ export default function UnixTimestampPage() {
 
         <div className={styles.dateInputs}>
           <div className={styles.dateField}>
-            <label htmlFor="ts-year" className={styles.dateFieldLabel}>
+            <label htmlFor={yearId} className={styles.dateFieldLabel}>
               年
             </label>
             <Input
-              id="ts-year"
+              id={yearId}
               type="number"
               className={styles.dateInput}
               value={year}
@@ -305,11 +376,11 @@ export default function UnixTimestampPage() {
             />
           </div>
           <div className={styles.dateField}>
-            <label htmlFor="ts-month" className={styles.dateFieldLabel}>
+            <label htmlFor={monthId} className={styles.dateFieldLabel}>
               月
             </label>
             <Input
-              id="ts-month"
+              id={monthId}
               type="number"
               className={styles.dateInput}
               value={month}
@@ -320,11 +391,11 @@ export default function UnixTimestampPage() {
             />
           </div>
           <div className={styles.dateField}>
-            <label htmlFor="ts-day" className={styles.dateFieldLabel}>
+            <label htmlFor={dayId} className={styles.dateFieldLabel}>
               日
             </label>
             <Input
-              id="ts-day"
+              id={dayId}
               type="number"
               className={styles.dateInput}
               value={day}
@@ -335,11 +406,11 @@ export default function UnixTimestampPage() {
             />
           </div>
           <div className={styles.dateField}>
-            <label htmlFor="ts-hours" className={styles.dateFieldLabel}>
+            <label htmlFor={hoursId} className={styles.dateFieldLabel}>
               時
             </label>
             <Input
-              id="ts-hours"
+              id={hoursId}
               type="number"
               className={styles.dateInput}
               value={hours}
@@ -350,11 +421,11 @@ export default function UnixTimestampPage() {
             />
           </div>
           <div className={styles.dateField}>
-            <label htmlFor="ts-minutes" className={styles.dateFieldLabel}>
+            <label htmlFor={minutesId} className={styles.dateFieldLabel}>
               分
             </label>
             <Input
-              id="ts-minutes"
+              id={minutesId}
               type="number"
               className={styles.dateInput}
               value={minutes}
@@ -365,11 +436,11 @@ export default function UnixTimestampPage() {
             />
           </div>
           <div className={styles.dateField}>
-            <label htmlFor="ts-seconds" className={styles.dateFieldLabel}>
+            <label htmlFor={secondsId} className={styles.dateFieldLabel}>
               秒
             </label>
             <Input
-              id="ts-seconds"
+              id={secondsId}
               type="number"
               className={styles.dateInput}
               value={seconds}
@@ -433,6 +504,6 @@ export default function UnixTimestampPage() {
           </div>
         )}
       </section>
-    </div>
+    </Panel>
   );
 }
