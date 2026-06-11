@@ -8,7 +8,7 @@ import {
 } from "@/lib/seo";
 import ToolPageLayout from "@/tools/_components/ToolPageLayout";
 import ToolErrorBoundary from "@/tools/_components/ErrorBoundary";
-import LineBreakRemoverTool from "@/tools/line-break-remover/LineBreakRemoverPage";
+import LineBreakRemoverTile from "@/tools/line-break-remover/LineBreakRemoverTile";
 const SLUG = "line-break-remover";
 const tool = toolsBySlug.get(SLUG);
 
@@ -26,7 +26,7 @@ export default function LineBreakRemoverPage() {
         }}
       />
       <ToolErrorBoundary>
-        <LineBreakRemoverTool />
+        <LineBreakRemoverTile variant="full" />
       </ToolErrorBoundary>
     </ToolPageLayout>
   );
