@@ -1,23 +1,64 @@
 "use client";
 
-import { useState, useCallback } from "react";
-import { convert, type DataFormat } from "./logic";
+/**
+ * CsvConverterTile — CSV/TSV/JSON/Markdown表の相互変換ツールの単一正典タイル
+ *
+ * cycle-228 T-16: CsvConverterPage.tsx をタイル化したもの。
+ *
+ * ## 設計原則
+ *
+ * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>（A-1）。
+ * - **1ツール1実装**: この CsvConverterTile.tsx のみが UI を描く（A-3）。
+ * - **"use client" で自己完結**: ToolPageLayout に機能依存しない（A-2）。
+ * - **共有エンジン logic.ts**: convert() が唯一のロジック源。再実装・改変禁止。
+ * - **id インスタンス一意化**: useId ベースで複数インスタンス同居でも重複しない（A-6）。
+ *
+ * ## variant
+ *
+ * - `"full"` (デフォルト): 入力形式・出力形式 Select + 変換ボタン + 2ペイン。
+ *   道具箱でも詳細ページでも同一インスタンスとして動作する。
+ *
+ * ## アクセシビリティ
+ *
+ * - C-3: role="status" aria-live="polite" + 実テキストサマリで SR に通知。
+ * - C-4: コピーボタンの aria-label。
+ * - A-6: 全 DOM id は useId ベースのインスタンス一意 id。
+ */
+
+import { useId, useState, useCallback } from "react";
+import Panel from "@/components/Panel";
+import Button from "@/components/Button";
+import Select from "@/components/Select";
+import Textarea from "@/components/Textarea";
+import ErrorMessage from "@/components/ErrorMessage";
 import {
   useCopyToClipboard,
   COPIED_LABEL,
 } from "@/components/hooks/useCopyToClipboard";
-import Textarea from "@/components/Textarea";
-import Select from "@/components/Select";
-import ErrorMessage from "@/components/ErrorMessage";
-import Button from "@/components/Button";
-import styles from "./CsvConverterPage.module.css";
+import { convert, type DataFormat } from "./logic";
+import styles from "./CsvConverterTile.module.css";
+
+/** variant prop: 表示バリエーションの設定差。別実装ではない。 */
+export type CsvConverterTileVariant = "full";
+
+export interface CsvConverterTileProps {
+  /**
+   * 表示バリエーション（デフォルト: "full"）
+   * - "full": 入力形式・出力形式 Select + 変換ボタン + 2ペイン
+   */
+  variant?: CsvConverterTileVariant;
+  /** Panel の as prop に透過される HTML タグ（デフォルト: "section"） */
+  as?: "section" | "div" | "article" | "aside";
+  /** 追加クラス */
+  className?: string;
+}
 
 /**
  * logic.ts が返す英語エラーメッセージを日本語に変換する。
  *
  * parseJson や parseMarkdown は英語エラーを投げることがある（例: JSON.parse の
  * "Unexpected token..." 等）。日本語サイトとして、生の英語エラーを来訪者に
- * 露出しないよう、変換後に日本語メッセージに整形する。
+ * 露出しないよう、変換後に日本語メッセージに整形する（G-2 準拠）。
  */
 function toJapaneseConvertError(rawError: string): string {
   // "JSONは配列である必要があります" のようにすでに日本語のメッセージはそのまま使う
@@ -58,23 +99,19 @@ const SAMPLE_CSV = `名前,年齢,都市
 佐藤花子,25,大阪
 "鈴木, 一郎",40,名古屋`;
 
-/**
- * CsvConverterPage — CSV/TSV/JSON/Markdown表の相互変換ツールの単一実装。
- *
- * 機能:
- * - 入力形式・出力形式を Select で選択
- * - 変換ボタンで変換実行
- * - 出力コピー（useCopyToClipboard）
- * - エラー表示（ErrorMessage）
- *
- * 設計方針:
- * - 確定提示方式: 入力欄・出力欄を最初から表示
- * - AP-I11: タイマーは useCopyToClipboard フック内で useRef+useEffect cleanup 済み
- * - ARIA C-3: 出力結果は role="status" aria-live="polite" + 実テキストサマリで SR に通知
- * - T-4b: csv-converter はコピーボタンあり確定
- * - A-4: エラーは toJapaneseConvertError で日本語化して ErrorMessage に渡す
- */
-export default function CsvConverterPage() {
+export default function CsvConverterTile({
+  variant = "full",
+  as = "section",
+  className,
+}: CsvConverterTileProps = {}) {
+  // ---------- id インスタンス一意化（複数同居時の重複 id・label 誤結合防止） ----------
+  const uid = useId();
+  const fromFormatId = `${uid}-from-format`;
+  const toFormatId = `${uid}-to-format`;
+  const inputId = `${uid}-input`;
+  const outputId = `${uid}-output`;
+
+  // ---------- State ----------
   const [input, setInput] = useState(SAMPLE_CSV);
   const [fromFormat, setFromFormat] = useState<DataFormat>("csv");
   const [toFormat, setToFormat] = useState<DataFormat>("json");
@@ -86,6 +123,7 @@ export default function CsvConverterPage() {
   // T-4b: コピーあり確定。useCopyToClipboard フックを使用（独自実装しない）
   const { copy, copiedKey } = useCopyToClipboard();
 
+  // ---------- ハンドラ ----------
   const handleConvert = useCallback(() => {
     setError("");
     setStatusSummary("");
@@ -99,7 +137,7 @@ export default function CsvConverterPage() {
       // C-3: 変換成功サマリを role="status" 領域に実テキストとして配置
       setStatusSummary("変換しました");
     } else {
-      // A-4: logic.ts が返すエラーを日本語に変換して表示
+      // G-2: logic.ts が返すエラーを日本語に変換して表示
       const rawMsg = result.error ?? "";
       setError(toJapaneseConvertError(rawMsg));
       setOutput("");
@@ -111,16 +149,21 @@ export default function CsvConverterPage() {
     await copy(output);
   }, [output, copy]);
 
+  // ---------- Render ----------
+  // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）
+  // variant は現在 "full" のみだが、将来の拡張に備えて prop は保持する
+  void variant; // unused variable suppression（将来の variant 分岐を意図した受け口）
+
   return (
-    <div className={styles.container}>
+    <Panel as={as} className={className}>
       {/* フォーマット選択行 */}
       <div className={styles.formatRow}>
         <div className={styles.field}>
-          <label htmlFor="csv-from-format" className={styles.fieldLabel}>
+          <label htmlFor={fromFormatId} className={styles.fieldLabel}>
             入力形式
           </label>
           <Select
-            id="csv-from-format"
+            id={fromFormatId}
             aria-label="入力形式"
             value={fromFormat}
             onChange={(e) => setFromFormat(e.target.value as DataFormat)}
@@ -133,11 +176,11 @@ export default function CsvConverterPage() {
           </Select>
         </div>
         <div className={styles.field}>
-          <label htmlFor="csv-to-format" className={styles.fieldLabel}>
+          <label htmlFor={toFormatId} className={styles.fieldLabel}>
             出力形式
           </label>
           <Select
-            id="csv-to-format"
+            id={toFormatId}
             aria-label="出力形式"
             value={toFormat}
             onChange={(e) => setToFormat(e.target.value as DataFormat)}
@@ -160,11 +203,11 @@ export default function CsvConverterPage() {
       <div className={styles.panels}>
         {/* 入力欄 */}
         <div className={styles.panel}>
-          <label htmlFor="csv-input" className={styles.panelLabel}>
+          <label htmlFor={inputId} className={styles.panelLabel}>
             入力データ
           </label>
           <Textarea
-            id="csv-input"
+            id={inputId}
             aria-label="入力データ"
             variant="mono"
             value={input}
@@ -178,7 +221,7 @@ export default function CsvConverterPage() {
         {/* 出力欄 */}
         <div className={styles.panel}>
           <div className={styles.outputHeader}>
-            <label htmlFor="csv-output" className={styles.panelLabel}>
+            <label htmlFor={outputId} className={styles.panelLabel}>
               変換結果
             </label>
             {/* T-4b: コピーボタンあり確定。出力が空のとき disabled */}
@@ -204,7 +247,7 @@ export default function CsvConverterPage() {
             {statusSummary}
           </div>
           <Textarea
-            id="csv-output"
+            id={outputId}
             aria-label="変換結果"
             variant="mono"
             value={output}
@@ -215,8 +258,8 @@ export default function CsvConverterPage() {
         </div>
       </div>
 
-      {/* エラー表示: A-4 ErrorMessage を使用。空のときは非表示 */}
+      {/* エラー表示: G-2 ErrorMessage を使用。空のときは非表示 */}
       {error && <ErrorMessage message={error} />}
-    </div>
+    </Panel>
   );
 }

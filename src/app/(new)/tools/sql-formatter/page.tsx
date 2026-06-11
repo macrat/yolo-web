@@ -8,7 +8,7 @@ import {
 } from "@/lib/seo";
 import ToolPageLayout from "@/tools/_components/ToolPageLayout";
 import ToolErrorBoundary from "@/tools/_components/ErrorBoundary";
-import SqlFormatterPage from "@/tools/sql-formatter/SqlFormatterPage";
+import SqlFormatterTile from "@/tools/sql-formatter/SqlFormatterTile";
 
 const SLUG = "sql-formatter";
 const tool = toolsBySlug.get(SLUG);
@@ -27,7 +27,7 @@ export default function Page() {
         }}
       />
       <ToolErrorBoundary>
-        <SqlFormatterPage />
+        <SqlFormatterTile variant="full" />
       </ToolErrorBoundary>
     </ToolPageLayout>
   );

@@ -8,7 +8,7 @@ import {
 } from "@/lib/seo";
 import ToolPageLayout from "@/tools/_components/ToolPageLayout";
 import ToolErrorBoundary from "@/tools/_components/ErrorBoundary";
-import JsonFormatterPage from "@/tools/json-formatter/JsonFormatterPage";
+import JsonFormatterTile from "@/tools/json-formatter/JsonFormatterTile";
 
 const SLUG = "json-formatter";
 const tool = toolsBySlug.get(SLUG);
@@ -27,7 +27,7 @@ export default function Page() {
         }}
       />
       <ToolErrorBoundary>
-        <JsonFormatterPage />
+        <JsonFormatterTile variant="full" />
       </ToolErrorBoundary>
     </ToolPageLayout>
   );

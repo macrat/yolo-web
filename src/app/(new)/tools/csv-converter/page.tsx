@@ -8,7 +8,7 @@ import {
 } from "@/lib/seo";
 import ToolPageLayout from "@/tools/_components/ToolPageLayout";
 import ToolErrorBoundary from "@/tools/_components/ErrorBoundary";
-import CsvConverterPage from "@/tools/csv-converter/CsvConverterPage";
+import CsvConverterTile from "@/tools/csv-converter/CsvConverterTile";
 
 const SLUG = "csv-converter";
 const tool = toolsBySlug.get(SLUG);
@@ -27,7 +27,7 @@ export default function Page() {
         }}
       />
       <ToolErrorBoundary>
-        <CsvConverterPage />
+        <CsvConverterTile variant="full" />
       </ToolErrorBoundary>
     </ToolPageLayout>
   );

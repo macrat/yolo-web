@@ -21,7 +21,7 @@ export const meta: ToolMeta = {
   structuredDataType: "WebApplication",
   trustLevel: "verified",
   howItWorks:
-    "HEX・RGB・HSLのいずれかの形式でカラーコードを入力すると、他の2形式への変換を即座に計算してブラウザ上に表示します。カラーピッカーからも色を選択できます。3桁のHEX短縮形式（#RGB）は自動的に6桁に展開して変換されます。",
+    "HEX・RGB・HSLのいずれかの形式でカラーコードを入力して変換ボタンを押すと、他の2形式への変換結果がブラウザ上に表示されます。カラーピッカーから色を選ぶと即座に変換されます。3桁のHEX短縮形式（#RGB）は自動的に6桁に展開して変換されます。",
   faq: [
     {
       question: "3桁の短縮HEXコードにも対応していますか？",

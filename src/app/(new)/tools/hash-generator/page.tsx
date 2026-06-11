@@ -8,7 +8,8 @@ import {
 } from "@/lib/seo";
 import ToolPageLayout from "@/tools/_components/ToolPageLayout";
 import ToolErrorBoundary from "@/tools/_components/ErrorBoundary";
-import HashGeneratorComponent from "@/tools/hash-generator/HashGeneratorPage";
+import HashGeneratorTile from "@/tools/hash-generator/HashGeneratorTile";
+
 const SLUG = "hash-generator";
 const tool = toolsBySlug.get(SLUG);
 
@@ -26,7 +27,8 @@ export default function HashGeneratorPage() {
         }}
       />
       <ToolErrorBoundary>
-        <HashGeneratorComponent />
+        {/* A-4: ToolPageLayout 内に HashGeneratorTile variant="full" を描く */}
+        <HashGeneratorTile variant="full" />
       </ToolErrorBoundary>
     </ToolPageLayout>
   );

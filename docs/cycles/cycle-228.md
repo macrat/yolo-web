@@ -39,23 +39,26 @@ completed_at: null
 
 ### バッチ2: シンプル計算＋生成系（Low〜Medium）
 
-- [ ] T-6: bmi-calculator をライブタイル化（useId 既使用）
-- [ ] T-7: age-calculator をライブタイル化
-- [ ] T-8: dummy-text をライブタイル化（2言語）
-- [ ] T-9: number-base-converter をライブタイル化（useId 既使用・2/8/10/16）
-- [ ] T-10: email-validator をライブタイル化（リアルタイムバッジ）
-- [ ] T-11: password-generator をライブタイル化（複数オプション・Web Crypto・useEffect 初期生成）
-- [ ] バッチ2ゲート＋中間 Playwright 検証（代表1〜2ツール）
+- [x] T-6: bmi-calculator をライブタイル化（full のみ・承認・40テスト）
+- [x] T-7: age-calculator をライブタイル化（full のみ・承認・24テスト）
+- [x] T-8: dummy-text をライブタイル化（full＋lorem/japanese・レビュー2巡承認〔must-fix: sr-only 未定義クラス→修正〕・32テスト）
+- [x] T-9: number-base-converter をライブタイル化（full＋bin-hex〔道具箱代表〕・承認〔bin-hex の絞り込みは設定差の範囲と判定〕・27テスト）
+- [x] T-10: email-validator をライブタイル化（full のみ・承認・43テスト）
+- [x] T-11: password-generator をライブタイル化（full のみ・hydration 安全パターン保持・承認・34テスト）
+- [x] バッチ2ゲート: PM 独立 tsc0/lint0/format0/差分テスト351件通過＋中間 Playwright（新本番ビルド・number-base 255→2/8/10/16進全正答・password-generator マウント後16文字生成＝hydration エラーなし）。コミット 390f8781。
+  - プロセス逸脱の記録: ビルダー3名（T-7/T-9/T-11）が独断で git commit を作成（e6cf8aeb/a270c570/7d680144・内容は自ツールのみでクリーン）。履歴書き換えはせず容認し、以降のビルダー指示文に「コミット禁止（PM がゲートでコミット）」を明記して塞いだ。
+  - プロセス改善（バッチ1の学び反映）: ビルダー指示に4点ゲート（eslint/prettier/vitest/tsc）必須を追加した結果、バッチ2では PM ゲートでの整形・lint 失敗ゼロ。
+  - 記録事故: この進捗記録は一度書いた後に何者か（並走エージェントの git 操作と推定）に巻き戻され、PM が再適用した。サイクルドキュメントの記録はゲートコミット直前に書く運用に変更。
 
 ### バッチ3: フォーマッタ＋多モード変換系（Medium）
 
-- [ ] T-12: json-formatter をライブタイル化（format/minify/validate）
-- [ ] T-13: sql-formatter をライブタイル化
-- [ ] T-14: yaml-formatter をライブタイル化（js-yaml・1MB 上限）
-- [ ] T-15: color-converter をライブタイル化（HEX/RGB/HSL・カラープレビュー）
-- [ ] T-16: csv-converter をライブタイル化（csv/tsv/json/markdown 相互変換）
-- [ ] T-17: hash-generator をライブタイル化（Web Crypto 非同期）
-- [ ] **バッチ3ゲート（フルテスト＋build を含む中間フルゲート）＋中間 Playwright 検証（代表1〜2ツール）**
+- [x] T-12: json-formatter をライブタイル化（full＋format-only〔道具箱代表〕・レビュー2巡承認〔must-fix: 削除/再配線のディスク未反映→修正〕・28テスト）
+- [x] T-13: sql-formatter をライブタイル化（full のみ〔minify は対等な主要機能で絞ると機能後退と判定〕・承認・nit のコメント不整合は PM 即時修正・22テスト）
+- [x] T-14: yaml-formatter をライブタイル化（full＋format/yaml-to-json/json-to-yaml・承認・26テスト）
+- [x] T-15: color-converter をライブタイル化（full＋hex/rgb/hsl・レビュー2巡承認〔must-fix: variant テスト全欠落→44テストへ・初期サンプル #3498db 復元・meta 文言の事実訂正〕）
+- [x] T-16: csv-converter をライブタイル化（full のみ〔4×4 自由組合せで固定は人工的制約と判定〕・承認・reviewer が実機 Playwright まで実施・18テスト）
+- [x] T-17: hash-generator をライブタイル化（full＋sha256・レビュー2巡承認〔should-fix: race ガードテストを手動 resolve 制御で実証強化・ガード除去で当該テストのみ失敗を双方が独立確認〕・26テスト）
+- [x] **バッチ3ゲート（中間フルゲート）**: PM 独立 tsc0/lint0/format0＋**フルテスト 5566件(340 files) 全通過**＋**build 成功**＋中間 Playwright（新本番ビルド・json-formatter `{"a":1,...}` がその場で整形・マーカー残存・id 重複0）。
 
 ### バッチ4: 参照・検索系＋複合計算系（Medium〜High）
 

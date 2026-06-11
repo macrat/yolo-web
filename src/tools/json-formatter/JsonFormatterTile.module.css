@@ -1,0 +1,86 @@
+/* JsonFormatterTile スタイル
+ * cycle-228 T-12: JsonFormatterPage.module.css をタイル向けに移植。
+ * DESIGN トークン準拠（--color-* 旧トークン不使用・bold禁止・
+ * --r-interactive / --r-normal 使用・--border-strong 使用）
+ *
+ * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
+ */
+
+/* コントロール行: インデント選択 + 操作ボタンを横並びに */
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+/* インデント選択行 */
+.indentControl {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* インデントラベル */
+.controlLabel {
+  font-size: 0.85rem;
+  color: var(--fg-soft);
+  white-space: nowrap;
+}
+
+/* 操作ボタン群 */
+.buttons {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* 入出力フィールド: 2カラムグリッド（≥641px）/ 1カラム（≤640px） */
+.panels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+/* 各フィールドのコンテナ */
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+/* フィールドラベル */
+.panelLabel {
+  font-size: 0.85rem;
+  color: var(--fg-soft);
+}
+
+/* 出力ヘッダー: ラベルとコピーボタンを横並び */
+.outputHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 1.5rem;
+}
+
+/* C-3 準拠: ライブリージョン（実テキストノードのサマリ）
+ * 視覚上は小さく配置し、スクリーンリーダーが読み上げられるようにする。
+ * sr-only で完全非表示にしないのは、操作後の結果サマリを見えるテキストとして置くため。 */
+.statusSummary {
+  font-size: 0.8rem;
+  color: var(--fg-soft);
+  min-height: 1.2em;
+}
+
+@media (max-width: 640px) {
+  .panels {
+    grid-template-columns: 1fr;
+  }
+
+  .controls {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

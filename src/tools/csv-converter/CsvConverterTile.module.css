@@ -1,27 +1,25 @@
-/*
- * CsvConverterPage.module.css
- * DESIGN.md 準拠:
- * - 旧 --color-* トークン不使用
- * - --accent 直塗り禁止（フォーカスの outline のみ許可）
- * - font-weight: 700 禁止
- * - インタラクティブ要素: --r-interactive (8px)
- * - 非インタラクティブ要素: --r-normal (2px)
- * - フォーカス: outline: 2px solid var(--accent); outline-offset: 2px;
- * - フォーム境界線: --border-strong
- * - box-shadow: 通常要素には使わない
+/* CsvConverterTile.module.css
+ * cycle-228 T-16: CsvConverterPage.module.css をタイル向けに移植。
+ *
+ * DESIGN トークン準拠:
+ * - 旧 --color-* トークン不使用（B-1）
+ * - --accent 直塗り禁止（フォーカス outline のみ許可）（B-2/B-3）
+ * - font-weight: 700 禁止（B-4）
+ * - インタラクティブ要素: --r-interactive (8px)（B-5）
+ * - 非インタラクティブ要素: --r-normal (2px)（B-5）
+ * - フォーカス: outline: 2px solid var(--accent); outline-offset: 2px;（B-2）
+ * - フォーム境界線: --border-strong（B-7）
+ * - box-shadow: Panel 以外には使わない（B-6）
+ *
+ * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  */
-
-.container {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
 
 .formatRow {
   display: flex;
   align-items: flex-end;
   gap: 0.75rem;
   flex-wrap: wrap;
+  margin-bottom: 1rem;
 }
 
 .field {
@@ -35,7 +33,7 @@
 .fieldLabel {
   font-size: 0.875rem;
   color: var(--fg-soft);
-  /* ux-gate-findings.md: ラベルが狭い幅で折り返さないよう固定 */
+  /* ラベルが狭い幅で折り返さないよう固定 */
   white-space: nowrap;
 }
 
@@ -49,6 +47,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
+  margin-bottom: 1rem;
 }
 
 .panel {
@@ -60,7 +59,7 @@
 .panelLabel {
   font-size: 0.875rem;
   color: var(--fg-soft);
-  /* ux-gate-findings.md: ラベルが狭い幅で折り返さないよう固定 */
+  /* ラベルが狭い幅で折り返さないよう固定 */
   white-space: nowrap;
 }
 

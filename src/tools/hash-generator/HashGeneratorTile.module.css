@@ -1,0 +1,105 @@
+/* HashGeneratorTile スタイル
+ * cycle-228 T-17: HashGeneratorPage.module.css をタイル向けに統合・移植。
+ * DESIGN トークン準拠:
+ *   - --color-* 旧トークン不使用 (B-1)
+ *   - font-weight 700 禁止 (B-4)
+ *   - --r-interactive (8px) / --r-normal (2px) (B-5)
+ *   - --border-strong (B-7)
+ *   - パネル外への影付けなし (B-6 / A-7)
+ *   - --accent を背景塗りに使わない (B-3)
+ *
+ * Panel がルート要素のため .container クラス不要（Panel.module.css に委譲）。
+ */
+
+/* コントロール行: フォーマット Select + 生成ボタンを横並びに */
+.controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* フォーマット選択行 */
+.formatControl {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.formatLabel {
+  font-size: 0.85rem;
+  color: var(--fg-soft);
+  /* 狭幅でもラベルが折り返さないようにする */
+  white-space: nowrap;
+}
+
+/* 入力フィールド */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.field:last-child {
+  margin-bottom: 0;
+}
+
+.fieldLabel {
+  font-size: 0.85rem;
+  color: var(--fg-soft);
+}
+
+/* ライブリージョン（C-3 準拠: 実テキストノードのサマリ） */
+.statusSummary {
+  font-size: 0.8rem;
+  color: var(--fg-soft);
+  min-height: 1.2em;
+  margin-bottom: 0.5rem;
+}
+
+/* ハッシュ結果一覧 */
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* 各ハッシュ結果行 */
+.resultRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-normal);
+  background-color: var(--bg-soft);
+}
+
+/* アルゴリズム名ラベル（SHA-1 / SHA-256 等） */
+.algoLabel {
+  font-size: 0.85rem;
+  color: var(--fg-soft);
+  min-width: 70px;
+  flex-shrink: 0;
+  /* アルゴリズム名が折り返さないようにする */
+  white-space: nowrap;
+}
+
+/* ハッシュ値表示欄 */
+.hashValue {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--fg);
+  word-break: break-all;
+  flex: 1;
+}
+
+@media (max-width: 640px) {
+  .resultRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+  }
+}

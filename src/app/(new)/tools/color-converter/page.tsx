@@ -8,7 +8,7 @@ import {
 } from "@/lib/seo";
 import ToolPageLayout from "@/tools/_components/ToolPageLayout";
 import ToolErrorBoundary from "@/tools/_components/ErrorBoundary";
-import ColorConverterTool from "@/tools/color-converter/ColorConverterPage";
+import ColorConverterTile from "@/tools/color-converter/ColorConverterTile";
 
 const SLUG = "color-converter";
 const tool = toolsBySlug.get(SLUG);
@@ -27,7 +27,7 @@ export default function ColorConverterPage() {
         }}
       />
       <ToolErrorBoundary>
-        <ColorConverterTool />
+        <ColorConverterTile variant="full" defaultInput="#3498db" />
       </ToolErrorBoundary>
     </ToolPageLayout>
   );
