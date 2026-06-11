@@ -52,7 +52,24 @@
   flex-direction: column;
 }
 
-/* 生きたタイル（url-encode / html-entity / base64 / fullwidth-converter）: ラッパーの高さに追従 */
+/* 生きたタイル: ラッパーの高さに追従 */
 .liveTile {
   flex: 1;
+}
+
+/* カテゴリセクション: 見出し + グリッドのブロック */
+.category {
+  margin-bottom: 2rem;
+}
+
+/* カテゴリ見出し: ToolMeta.category をそのまま表示する暫定整理（B-312/B-502 で置換可能） */
+.categoryHeading {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--fg-soft);
+  margin: 0 0 0.75rem 0;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid var(--border);
+  text-transform: lowercase;
+  letter-spacing: 0.05em;
 }
