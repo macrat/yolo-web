@@ -8,7 +8,7 @@ import {
 } from "@/lib/seo";
 import ToolPageLayout from "@/tools/_components/ToolPageLayout";
 import ToolErrorBoundary from "@/tools/_components/ErrorBoundary";
-import RegexTesterPageContent from "@/tools/regex-tester/RegexTesterPage";
+import RegexTesterTile from "@/tools/regex-tester/RegexTesterTile";
 const SLUG = "regex-tester";
 const tool = toolsBySlug.get(SLUG);
 
@@ -26,7 +26,7 @@ export default function RegexTesterRoute() {
         }}
       />
       <ToolErrorBoundary>
-        <RegexTesterPageContent />
+        <RegexTesterTile variant="full" />
       </ToolErrorBoundary>
     </ToolPageLayout>
   );

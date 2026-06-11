@@ -1,6 +1,44 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+/**
+ * BusinessEmailTile — ビジネスメール作成の単一正典タイル
+ *
+ * cycle-228 T-30: BusinessEmailPage.tsx を Panel ルートのタイルへ作り直したもの。
+ *
+ * ## 設計原則
+ *
+ * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>（A-1）。
+ * - **1ツール 1タイル = variant**: full のみ（カテゴリ固定バリエーションは不要）。
+ * - **id インスタンス一意化**: useId ベースで生成し、動的フィールド（field-${key}）も
+ *   ${uid}-field-${key} 形式にして複数インスタンスが同居しても id 重複・label 誤結合が起きない（A-6）。
+ * - **ToolPageLayout 非依存**: タイル単体で機能が完結する（A-2）。
+ * - **logic.ts 共有エンジン**: generateEmail/getCategories/getTemplatesByCategory/fillTemplate
+ *   が唯一のロジック源（D-3）。
+ *
+ * ## variant
+ *
+ * - `"full"` (デフォルト): SegmentedControl 5カテゴリ + テンプレート Select + 動的フィールド
+ *   + プレビュー + コピー3ターゲット（件名/本文/全体）。
+ *
+ * ## アクセシビリティ（C-3 準拠）
+ *
+ * - SegmentedControl に aria-label="メールカテゴリ"（C-2）
+ * - role="status" aria-live="polite" の div にサマリテキストを置く（C-3）
+ *   （readOnly textarea は値変化をスクリーンリーダーが読み上げないため）
+ * - 動的フィールドの label↔input 関連: htmlFor={`${uid}-field-${key}`} ←→ id={`${uid}-field-${key}`}
+ */
+
+import { useId, useState, useMemo, useCallback } from "react";
+import Panel from "@/components/Panel";
+import Button from "@/components/Button";
+import SegmentedControl from "@/components/SegmentedControl";
+import Select from "@/components/Select";
+import Input from "@/components/Input";
+import Textarea from "@/components/Textarea";
+import {
+  useCopyToClipboard,
+  COPIED_LABEL,
+} from "@/components/hooks/useCopyToClipboard";
 import {
   getCategories,
   getTemplatesByCategory,
@@ -8,17 +46,9 @@ import {
   COMMON_FIELD_KEYS,
   type EmailCategory,
 } from "./logic";
-import {
-  useCopyToClipboard,
-  COPIED_LABEL,
-} from "@/components/hooks/useCopyToClipboard";
-import SegmentedControl from "@/components/SegmentedControl";
-import Select from "@/components/Select";
-import Input from "@/components/Input";
-import Textarea from "@/components/Textarea";
-import Button from "@/components/Button";
-import styles from "./BusinessEmailPage.module.css";
+import styles from "./BusinessEmailTile.module.css";
 
+// カテゴリ一覧（モジュールレベルで一度だけ取得）
 const categories = getCategories();
 
 // SegmentedControl の options 配列（EmailCategory の文字列値を使用）
@@ -27,31 +57,41 @@ const categoryOptions = categories.map((cat) => ({
   value: cat.id,
 }));
 
-// コピーターゲットのキー
+// コピーターゲットのキー（T-4b: 3ターゲット確定）
 const COPY_KEY_SUBJECT = "subject";
 const COPY_KEY_BODY = "body";
 const COPY_KEY_ALL = "all";
 
-/**
- * BusinessEmailPage — ビジネスメール作成の単一実装。
- *
- * 機能:
- * - カテゴリ選択（5種: お礼/お詫び/依頼/お断り/挨拶）
- * - テンプレート選択（計12種）
- * - 入力フィールド（テキスト・テキストエリア）
- * - 件名・本文プレビュー（readOnly）
- * - コピーボタン（件名・本文・全文）
- * - ARIA: C-3 準拠（role="status" に実テキストサマリ）
- * - カテゴリ/テンプレート変更時に共通フィールド値を保持（U-01）
- *
- * 設計方針:
- * - T-4b: business-email はコピーボタンあり確定（メール本文＝持ち帰り対象）
- * - AP-I11: setTimeout は useCopyToClipboard フック内で useRef+cleanup 済み
- * - C-3: readOnly textarea をラップするだけでは SR に読み上げられないため、
- *   別途 role="status" 領域に実テキストサマリを配置する
- * - A-3: SegmentedControl でカテゴリ切替（旧 role="tablist" パターンを排除）
- */
-export default function BusinessEmailPage() {
+/** variant prop: 表示バリエーションの設定差。別実装ではない。 */
+export type BusinessEmailTileVariant = "full";
+
+export interface BusinessEmailTileProps {
+  /**
+   * 表示バリエーション（デフォルト: "full"）
+   * - "full": SegmentedControl 5カテゴリ + テンプレート Select + 動的フィールド
+   *   + プレビュー + コピー3ターゲット
+   */
+  variant?: BusinessEmailTileVariant;
+  /** Panel の as prop に透過される HTML タグ（デフォルト: "section"） */
+  as?: "section" | "div" | "article" | "aside";
+  /** 追加クラス */
+  className?: string;
+}
+
+export default function BusinessEmailTile({
+  // variant は現在 "full" のみ。将来バリエーションを追加するときに使う（A-5）。
+  variant: _variant = "full", // eslint-disable-line @typescript-eslint/no-unused-vars
+  as = "section",
+  className,
+}: BusinessEmailTileProps = {}) {
+  // ---------- id インスタンス一意化（複数同居時の重複 id・label 誤結合防止） ----------
+  // A-6: 全ての DOM id と htmlFor は useId ベースで一意化（動的 field-${key} 含む）
+  const uid = useId();
+  const templateSelectId = `${uid}-template-select`;
+  const previewSubjectId = `${uid}-preview-subject`;
+  const previewBodyId = `${uid}-preview-body`;
+
+  // ---------- State ----------
   const [selectedCategory, setSelectedCategory] =
     useState<EmailCategory>("thanks");
   const [selectedTemplateId, setSelectedTemplateId] = useState(
@@ -64,6 +104,7 @@ export default function BusinessEmailPage() {
   // T-4b: コピーあり確定。key-based tracking で3つのコピーターゲットを識別する
   const { copy, copiedKey } = useCopyToClipboard();
 
+  // ---------- 派生状態 ----------
   const templatesInCategory = useMemo(
     () => getTemplatesByCategory(selectedCategory),
     [selectedCategory],
@@ -96,7 +137,7 @@ export default function BusinessEmailPage() {
 
   const bodyCharCount = generated.body.length;
 
-  /** U-01: 共通フィールドの値を保持して返す */
+  // ---------- U-01: 共通フィールドの値を保持して返す ----------
   const preserveCommonFields = useCallback(
     (currentFieldValues: Record<string, string>): Record<string, string> => {
       const preserved: Record<string, string> = {};
@@ -110,6 +151,7 @@ export default function BusinessEmailPage() {
     [],
   );
 
+  // ---------- ハンドラ ----------
   const handleCategoryChange = useCallback(
     (category: string) => {
       setSelectedCategory(category as EmailCategory);
@@ -156,8 +198,10 @@ export default function BusinessEmailPage() {
     setStatusSummary("メール全文をコピーしました");
   }, [generated.subject, generated.body, copy]);
 
+  // ---------- Render ----------
+  // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）（A-1）
   return (
-    <div className={styles.container}>
+    <Panel as={as} className={className}>
       {/* C-3: role="status" aria-live="polite" — 実テキストノードのサマリを置く。
           readOnly textarea をラップするだけでは SR に読み上げられないため分離する。 */}
       <div
@@ -170,21 +214,23 @@ export default function BusinessEmailPage() {
       </div>
 
       {/* A-3: SegmentedControl でカテゴリ切替（C-2: aria-label 必須） */}
-      <SegmentedControl
-        options={categoryOptions}
-        value={selectedCategory}
-        onChange={handleCategoryChange}
-        aria-label="メールカテゴリ"
-      />
+      <div className={styles.categorySection}>
+        <SegmentedControl
+          options={categoryOptions}
+          value={selectedCategory}
+          onChange={handleCategoryChange}
+          aria-label="メールカテゴリ"
+        />
+      </div>
 
       {/* テンプレート選択 */}
       <div className={styles.templateSection}>
-        <label htmlFor="template-select" className={styles.label}>
+        <label htmlFor={templateSelectId} className={styles.label}>
           テンプレート
         </label>
-        {/* A-2: Select コンポーネント使用 */}
+        {/* 共通部品 Select コンポーネント再利用 */}
         <Select
-          id="template-select"
+          id={templateSelectId}
           value={selectedTemplateId}
           onChange={(e) => handleTemplateChange(e.target.value)}
           aria-label="テンプレート"
@@ -211,7 +257,11 @@ export default function BusinessEmailPage() {
                 : styles.fieldGroup
             }
           >
-            <label htmlFor={`field-${field.key}`} className={styles.label}>
+            {/* A-6: 動的フィールドの htmlFor を ${uid}-field-${key} で一意化 */}
+            <label
+              htmlFor={`${uid}-field-${field.key}`}
+              className={styles.label}
+            >
               {field.label}
               {field.required && (
                 <span className={styles.required} aria-hidden="true">
@@ -221,9 +271,9 @@ export default function BusinessEmailPage() {
               )}
             </label>
             {field.type === "textarea" ? (
-              // A-1: Textarea コンポーネント使用
+              // 共通部品 Textarea コンポーネント再利用
               <Textarea
-                id={`field-${field.key}`}
+                id={`${uid}-field-${field.key}`}
                 value={fieldValues[field.key] ?? field.defaultValue ?? ""}
                 onChange={(e) => handleFieldChange(field.key, e.target.value)}
                 placeholder={field.placeholder}
@@ -231,9 +281,9 @@ export default function BusinessEmailPage() {
                 rows={3}
               />
             ) : (
-              // A-7: Input コンポーネント使用（text フィールド）
+              // 共通部品 Input コンポーネント再利用
               <Input
-                id={`field-${field.key}`}
+                id={`${uid}-field-${field.key}`}
                 type="text"
                 value={fieldValues[field.key] ?? field.defaultValue ?? ""}
                 onChange={(e) => handleFieldChange(field.key, e.target.value)}
@@ -250,7 +300,7 @@ export default function BusinessEmailPage() {
         {/* 件名プレビュー */}
         <div className={styles.previewRow}>
           <div className={styles.previewHeader}>
-            <label htmlFor="preview-subject" className={styles.label}>
+            <label htmlFor={previewSubjectId} className={styles.label}>
               件名プレビュー
             </label>
             {/* T-4b: 件名コピーボタン — 空のとき disabled */}
@@ -266,7 +316,7 @@ export default function BusinessEmailPage() {
             </Button>
           </div>
           <Input
-            id="preview-subject"
+            id={previewSubjectId}
             type="text"
             value={generated.subject}
             readOnly
@@ -278,7 +328,7 @@ export default function BusinessEmailPage() {
         {/* 本文プレビュー */}
         <div className={styles.previewRow}>
           <div className={styles.previewHeader}>
-            <label htmlFor="preview-body" className={styles.label}>
+            <label htmlFor={previewBodyId} className={styles.label}>
               本文プレビュー
             </label>
             {/* T-4b: 本文コピーボタン — 空のとき disabled */}
@@ -293,9 +343,9 @@ export default function BusinessEmailPage() {
               {copiedKey === COPY_KEY_BODY ? COPIED_LABEL : "コピー"}
             </Button>
           </div>
-          {/* A-1: Textarea コンポーネント使用（readOnly 出力欄） */}
+          {/* 共通部品 Textarea コンポーネント再利用（readOnly 出力欄） */}
           <Textarea
-            id="preview-body"
+            id={previewBodyId}
             value={generated.body}
             readOnly
             aria-label="本文プレビュー"
@@ -316,6 +366,6 @@ export default function BusinessEmailPage() {
           {copiedKey === COPY_KEY_ALL ? COPIED_LABEL : "メール全文をコピー"}
         </Button>
       </div>
-    </div>
+    </Panel>
   );
 }

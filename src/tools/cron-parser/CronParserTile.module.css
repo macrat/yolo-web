@@ -1,5 +1,8 @@
 /*
- * CronParserPage のスタイル（cycle-225 T-6 単一実装）
+ * CronParserTile のスタイル（cycle-228 T-28 単一正典タイル化）
+ *
+ * CronParserPage.module.css から移植。Panel がルートのため
+ * .container は不要（Panel.module.css に委譲）。
  *
  * DESIGN.md 準拠:
  * - B-1: var(--color-*) 旧トークン使用禁止 → 使用なし
@@ -7,17 +10,10 @@
  * - B-3: 選択ON状態の塗りは --bg-invert / --fg-invert ペア（--accent 直塗り禁止）
  * - B-4: font-weight: 700 使用禁止 → 使用なし（600 まで）
  * - B-5: インタラクティブ要素 --r-interactive (8px)、非インタラクティブ --r-normal (2px)
- * - B-6: ボタン以外に box-shadow 追加禁止
+ * - B-6: Panel 以外に box-shadow 追加禁止
  * - B-7: フォーム要素境界は --border-strong
  * - B-8: 定義済み色トークンのみ使用
  */
-
-/* ページ全体コンテナ */
-.container {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
 
 /* セクション */
 .section {
@@ -53,8 +49,7 @@
 /* プリセットボタン行
  * ボタン自体は共通 Button コンポーネント（variant="default" size="small"）を使用。
  * B-3: background-color: var(--accent) の直塗りを廃止し、
- *       --bg-soft（default）/ --bg-invert（primary）の共通トークンで統一する。
- * 手書き .parseButton / .presetButton は削除済み。 */
+ *       --bg-soft（default）/ --bg-invert（primary）の共通トークンで統一する。 */
 .presetRow {
   display: flex;
   flex-wrap: wrap;
@@ -132,6 +127,7 @@
 }
 
 .fieldLabel {
+  display: block;
   font-size: 0.8rem;
   font-weight: 600;
   color: var(--fg-soft);
@@ -166,7 +162,7 @@
 /* スクリーンリーダー向け status（実テキストノードのサマリ） */
 .liveRegion {
   /* C-3: role="status" aria-live="polite" で実テキストノードを保持するため
-   * textarea ラップは不可。このdivが実テキストを直接持つ。
+   * readOnly textarea ラップは不可。この div が実テキストを直接持つ。
    * 視覚的には非表示にしない（情報を示すサマリとして表示する） */
   font-size: 0.875rem;
   color: var(--fg-soft);

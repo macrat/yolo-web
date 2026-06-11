@@ -1,5 +1,7 @@
 /*
- * RegexTesterPage スタイル（DESIGN.md 準拠）
+ * RegexTesterTile スタイル（DESIGN.md 準拠）
+ *
+ * cycle-228 T-29: RegexTesterPage → RegexTesterTile 正典化
  *
  * - 旧 --color-* トークン: ゼロ
  * - フォーカス: outline: 2px solid var(--accent); outline-offset: 2px;
@@ -8,10 +10,11 @@
  * - インタラクティブ要素: border-radius: var(--r-interactive)
  * - 非インタラクティブ要素: border-radius: var(--r-normal)
  * - フォーム境界線: --border-strong
- * - box-shadow: ボタン以外の通常要素には追加しない
+ * - box-shadow: Panel 以外には追加しない（A-7・B-6）
  */
 
-.container {
+/* タイル内コンテンツの縦スタック */
+.content {
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -51,7 +54,7 @@
   padding: 0 0.25rem;
   /* フォーカスは patternRow の :focus-within で管理 */
   outline: none;
-  /* C-1 準拠: 共通部品の出荷済み最小値 36px (2.25rem) 以上に揃える */
+  /* C-1 準拠: min-height 2.25rem (36px) 以上 */
   min-height: 2.25rem;
 }
 
@@ -253,8 +256,7 @@
   outline-offset: 2px;
 }
 
-/* スクリーンリーダー専用非表示（視覚的には非表示・SR には読み上げられる）
-   reviewer指摘3: サンプル選択告知テキストに適用 */
+/* スクリーンリーダー専用非表示（視覚的には非表示・SR には読み上げられる）*/
 .srOnly {
   position: absolute;
   width: 1px;
