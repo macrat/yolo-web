@@ -1,18 +1,70 @@
 "use client";
 
-import { useState, useCallback } from "react";
-import { formatYaml, validateYaml, yamlToJson, jsonToYaml } from "./logic";
+/**
+ * YamlFormatterTile — YAML整形・検証・JSON相互変換の単一正典タイル
+ *
+ * cycle-228 T-14: YamlFormatterPage.tsx を Panel ルートのタイルへ作り直したもの。
+ *
+ * ## 設計原則
+ *
+ * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>（A-1）
+ * - **1ツール n タイル = variant**: full / format / yaml-to-json / json-to-yaml は
+ *   同一コンポーネントの設定差で表現。別実装を作らない（A-5）。
+ * - **id インスタンス一意化**: useId ベースで生成し、複数インスタンスが同一ページに
+ *   同居しても id 重複・label 誤結合が起きない（A-6）。
+ * - **ToolPageLayout 非依存**: タイル単体で機能が完結する（A-2）。
+ * - **logic.ts 共有エンジン**: formatYaml/validateYaml/yamlToJson/jsonToYaml が唯一のロジック源。
+ *
+ * ## variant
+ *
+ * - `"full"` (デフォルト): モード Select（format/yaml-to-json/json-to-yaml）＋インデント Select を表示。
+ * - `"format"`: モードを整形に固定し、モード Select を非表示にする。
+ * - `"yaml-to-json"`: モードを YAML→JSON に固定し、モード Select を非表示にする。
+ * - `"json-to-yaml"`: モードを JSON→YAML に固定し、モード Select を非表示にする。
+ *
+ * ## アクセシビリティ（C-3 準拠）
+ *
+ * - 出力 textarea は readOnly で表示専用
+ * - role="status" aria-live="polite" の div にサマリテキストを置く
+ *   （readOnly textarea は値変化をスクリーンリーダーが読み上げないため）
+ */
+
+import { useId, useState, useCallback } from "react";
+import Panel from "@/components/Panel";
+import Button from "@/components/Button";
+import Select from "@/components/Select";
+import Textarea from "@/components/Textarea";
+import ErrorMessage from "@/components/ErrorMessage";
 import {
   useCopyToClipboard,
   COPIED_LABEL,
 } from "@/components/hooks/useCopyToClipboard";
-import Textarea from "@/components/Textarea";
-import Select from "@/components/Select";
-import ErrorMessage from "@/components/ErrorMessage";
-import Button from "@/components/Button";
-import styles from "./YamlFormatterPage.module.css";
+import { formatYaml, validateYaml, yamlToJson, jsonToYaml } from "./logic";
+import styles from "./YamlFormatterTile.module.css";
 
 type Mode = "format" | "yaml-to-json" | "json-to-yaml";
+
+/** variant prop: 表示バリエーションの設定差。別実装ではない。 */
+export type YamlFormatterTileVariant =
+  | "full"
+  | "format"
+  | "yaml-to-json"
+  | "json-to-yaml";
+
+export interface YamlFormatterTileProps {
+  /**
+   * 表示バリエーション（デフォルト: "full"）
+   * - "full": モード Select を表示し、ユーザーがモードを切り替えられる。
+   * - "format": モードを YAML整形に固定し、モード Select を非表示にする。
+   * - "yaml-to-json": モードを YAML→JSON に固定し、モード Select を非表示にする。
+   * - "json-to-yaml": モードを JSON→YAML に固定し、モード Select を非表示にする。
+   */
+  variant?: YamlFormatterTileVariant;
+  /** Panel の as prop に透過される HTML タグ（デフォルト: "section"） */
+  as?: "section" | "div" | "article" | "aside";
+  /** 追加クラス */
+  className?: string;
+}
 
 /**
  * js-yaml / JSON.parse が返す英語エラーメッセージを日本語に変換する。
@@ -69,37 +121,37 @@ function toJapaneseJsonError(rawError: string): string {
   return "JSONの形式が正しくありません。";
 }
 
-/**
- * YamlFormatterPage — YAML整形・検証・JSON相互変換の単一実装。
- *
- * 機能:
- * - YAML 整形（インデント: 2スペース / 4スペース）
- * - YAML 検証（validate）
- * - YAML → JSON 変換
- * - JSON → YAML 変換
- * - 出力コピー（useCopyToClipboard）
- * - エラー表示（ErrorMessage）
- *
- * 設計方針:
- * - 確定提示方式: 入力欄を最初から表示
- * - AP-I11: setTimeout は useCopyToClipboard フック内で useRef+useEffect cleanup 済み
- * - ARIA: 出力欄に role="status" aria-live="polite" + 実テキストサマリ（C-3）
- * - T-4b: yaml-formatter はコピーボタンあり確定（設定ファイルに貼る＝持ち帰り対象）
- * - A-4: 英語の生パーサーエラー（js-yaml/JSON.parse）を日本語に変換して表示
- */
-export default function YamlFormatterPage() {
+export default function YamlFormatterTile({
+  variant = "full",
+  as = "section",
+  className,
+}: YamlFormatterTileProps = {}) {
+  // ---------- id インスタンス一意化（複数同居時の重複 id・label 誤結合防止）(A-6) ----------
+  const uid = useId();
+  const inputId = `${uid}-input`;
+  const outputId = `${uid}-output`;
+  const modeId = `${uid}-mode`;
+  const indentId = `${uid}-indent`;
+
+  // ---------- variant から固定モードを決定 ----------
+  // "full" の場合は null（ユーザーが選択可能）、それ以外は固定
+  const fixedMode: Mode | null = variant === "full" ? null : (variant as Mode);
+
+  // ---------- State ----------
+  const [dynamicMode, setDynamicMode] = useState<Mode>("format");
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
   const [error, setError] = useState("");
-  const [mode, setMode] = useState<Mode>("format");
   const [indent, setIndent] = useState<2 | 4>(2);
   // C-3: スクリーンリーダーへ通知するための短いサマリテキスト
-  // role="status" aria-live="polite" 領域に実テキストとして配置する
   const [statusSummary, setStatusSummary] = useState("");
 
-  // T-4b: コピーあり確定。useCopyToClipboard フックを使用（独自実装しない）
   const { copy, copiedKey } = useCopyToClipboard();
 
+  // 実際に使うモード: fixed があればそれを使い、なければ state を使う
+  const mode = fixedMode ?? dynamicMode;
+
+  // ---------- ハンドラ ----------
   const handleExecute = useCallback(() => {
     setError("");
     setStatusSummary("");
@@ -112,21 +164,18 @@ export default function YamlFormatterPage() {
         case "format": {
           const formatted = formatYaml(input, indent);
           setOutput(formatted);
-          // C-3: 整形成功サマリを role="status" 領域に実テキストとして配置
           setStatusSummary("整形しました");
           break;
         }
         case "yaml-to-json": {
           const json = yamlToJson(input, indent);
           setOutput(json);
-          // C-3: 変換成功サマリを role="status" 領域に実テキストとして配置
           setStatusSummary("JSONに変換しました");
           break;
         }
         case "json-to-yaml": {
           const yamlResult = jsonToYaml(input, indent);
           setOutput(yamlResult);
-          // C-3: 変換成功サマリを role="status" 領域に実テキストとして配置
           setStatusSummary("YAMLに変換しました");
           break;
         }
@@ -154,7 +203,6 @@ export default function YamlFormatterPage() {
     if (result.valid) {
       // 検証成功は日本語メッセージで表示（"Valid YAML" 等の英語は使わない）
       setOutput("有効なYAMLです");
-      // C-3: 検証成功サマリを role="status" 領域に実テキストとして配置
       setStatusSummary("有効なYAMLです");
     } else {
       // validateYaml の result.error は英語の生パーサーエラーなので日本語に変換
@@ -187,36 +235,41 @@ export default function YamlFormatterPage() {
     }
   };
 
+  // ---------- Render ----------
+  // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）(A-1)
   return (
-    <div className={styles.container}>
-      {/* コントロール行: モード選択 + インデント選択 + 操作ボタン */}
+    <Panel as={as} className={className}>
+      {/* コントロール行: モード選択（fullのみ）+ インデント選択 + 操作ボタン */}
       <div className={styles.controls}>
+        {/* variant=full のみモード Select を表示。その他は固定のため非表示。(A-5) */}
+        {fixedMode === null && (
+          <div className={styles.controlGroup}>
+            <label htmlFor={modeId} className={styles.controlLabel}>
+              モード
+            </label>
+            <Select
+              id={modeId}
+              aria-label="モード"
+              value={dynamicMode}
+              onChange={(e) => {
+                setDynamicMode(e.target.value as Mode);
+                setOutput("");
+                setError("");
+                setStatusSummary("");
+              }}
+            >
+              <option value="format">YAML整形</option>
+              <option value="yaml-to-json">YAML → JSON</option>
+              <option value="json-to-yaml">JSON → YAML</option>
+            </Select>
+          </div>
+        )}
         <div className={styles.controlGroup}>
-          <label htmlFor="yaml-mode-select" className={styles.controlLabel}>
-            モード
-          </label>
-          <Select
-            id="yaml-mode-select"
-            aria-label="モード"
-            value={mode}
-            onChange={(e) => {
-              setMode(e.target.value as Mode);
-              setOutput("");
-              setError("");
-              setStatusSummary("");
-            }}
-          >
-            <option value="format">YAML整形</option>
-            <option value="yaml-to-json">YAML → JSON</option>
-            <option value="json-to-yaml">JSON → YAML</option>
-          </Select>
-        </div>
-        <div className={styles.controlGroup}>
-          <label htmlFor="yaml-indent-select" className={styles.controlLabel}>
+          <label htmlFor={indentId} className={styles.controlLabel}>
             インデント
           </label>
           <Select
-            id="yaml-indent-select"
+            id={indentId}
             aria-label="インデント"
             value={indent}
             onChange={(e) => setIndent(Number(e.target.value) as 2 | 4)}
@@ -239,11 +292,11 @@ export default function YamlFormatterPage() {
       <div className={styles.panels}>
         {/* 入力欄 */}
         <div className={styles.panel}>
-          <label htmlFor="yaml-input" className={styles.panelLabel}>
+          <label htmlFor={inputId} className={styles.panelLabel}>
             入力
           </label>
           <Textarea
-            id="yaml-input"
+            id={inputId}
             aria-label="入力"
             variant="mono"
             value={input}
@@ -257,10 +310,10 @@ export default function YamlFormatterPage() {
         {/* 出力欄 */}
         <div className={styles.panel}>
           <div className={styles.outputHeader}>
-            <label htmlFor="yaml-output" className={styles.panelLabel}>
+            <label htmlFor={outputId} className={styles.panelLabel}>
               出力
             </label>
-            {/* T-4b: コピーボタンあり確定。出力が空のとき disabled */}
+            {/* コピーボタン。出力が空のとき disabled。 */}
             <Button
               onClick={handleCopy}
               type="button"
@@ -283,7 +336,7 @@ export default function YamlFormatterPage() {
             {statusSummary}
           </div>
           <Textarea
-            id="yaml-output"
+            id={outputId}
             aria-label="出力"
             variant="mono"
             value={output}
@@ -294,8 +347,8 @@ export default function YamlFormatterPage() {
         </div>
       </div>
 
-      {/* エラー表示: A-4 ErrorMessage を使用。空のときは非表示 */}
+      {/* エラー表示: ErrorMessage を使用。空のときは非表示 */}
       {error && <ErrorMessage message={error} />}
-    </div>
+    </Panel>
   );
 }

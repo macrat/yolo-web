@@ -8,7 +8,7 @@ import {
 } from "@/lib/seo";
 import ToolPageLayout from "@/tools/_components/ToolPageLayout";
 import ToolErrorBoundary from "@/tools/_components/ErrorBoundary";
-import YamlFormatterPage from "@/tools/yaml-formatter/YamlFormatterPage";
+import YamlFormatterTile from "@/tools/yaml-formatter/YamlFormatterTile";
 
 const SLUG = "yaml-formatter";
 const tool = toolsBySlug.get(SLUG);
@@ -27,7 +27,7 @@ export default function Page() {
         }}
       />
       <ToolErrorBoundary>
-        <YamlFormatterPage />
+        <YamlFormatterTile variant="full" />
       </ToolErrorBoundary>
     </ToolPageLayout>
   );

@@ -1,0 +1,105 @@
+/*
+ * SqlFormatterTile.module.css
+ * cycle-228 T-13: 単一正典タイル化
+ *
+ * DESIGN トークン準拠:
+ * - 旧 --color-* トークン不使用 (B-1)
+ * - --accent 直塗り禁止（フォーカスの outline のみ許可）(B-3)
+ * - font-weight: 700 禁止 (B-4)
+ * - インタラクティブ要素: --r-interactive (8px) (B-5)
+ * - 非インタラクティブ要素: --r-normal (2px) (B-5)
+ * - フォーカス: outline: 2px solid var(--accent); outline-offset: 2px; (B-2)
+ * - フォーム境界線: --border-strong (B-7)
+ * - box-shadow: Panel 以外に使わない (B-6)
+ *
+ * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
+ */
+
+/* コントロール行: インデント Select + ToggleSwitch + ボタン群を横並びに */
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+/* オプション群（左側）: インデント Select + ToggleSwitch */
+.options {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* インデント選択行 */
+.indentControl {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.controlLabel {
+  font-size: 0.875rem;
+  color: var(--fg-soft);
+  white-space: nowrap;
+}
+
+/* ボタン群（右側）*/
+.buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* 入出力パネル: 2列グリッド */
+.panels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.panelLabel {
+  font-size: 0.875rem;
+  color: var(--fg-soft);
+}
+
+/* 出力ヘッダー: ラベルとコピーボタンを横並び */
+.outputHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 1.5rem;
+}
+
+/* C-3 準拠: ライブリージョン。視覚的には非表示だが SR には読み上げられる。 */
+.statusSummary {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* モバイル対応: 640px 以下で1列 */
+@media (max-width: 640px) {
+  .panels {
+    grid-template-columns: 1fr;
+  }
+
+  .controls {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

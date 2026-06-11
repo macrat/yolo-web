@@ -1,0 +1,98 @@
+/*
+ * YamlFormatterTile.module.css
+ * cycle-228 T-14: YamlFormatterPage.module.css をタイル向けに移植・再設計。
+ *
+ * DESIGN トークン準拠:
+ * - 旧 --color-* トークン不使用 (B-1)
+ * - --accent 直塗り禁止（フォーカスの outline のみ許可）(B-3)
+ * - font-weight: 700 禁止 (B-4)
+ * - インタラクティブ要素: --r-interactive (8px) (B-5)
+ * - 非インタラクティブ要素: --r-normal (2px) (B-5)
+ * - フォーム境界線: --border-strong (B-7)
+ * - box-shadow: Panel 以外に追加しない (B-6, A-7)
+ *
+ * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
+ */
+
+/* コントロール行: モード選択 + インデント選択 + ボタン類を横並びに */
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.controlGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* ラベル折返し防止 (G-1: w360でも折れない) */
+.controlLabel {
+  font-size: 0.9rem;
+  color: var(--fg);
+  white-space: nowrap;
+}
+
+.buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* 入出力パネル: 2カラムグリッド（モバイルで1カラム） */
+.panels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.panels:last-child {
+  margin-bottom: 0;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.panelLabel {
+  font-size: 0.875rem;
+  color: var(--fg-soft);
+}
+
+/* 出力ヘッダー: ラベルとコピーボタンを横並び */
+.outputHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 1.5rem;
+}
+
+/* C-3: role="status" ライブリージョン（視覚的非表示・SR読み上げ対象） */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 640px) {
+  .panels {
+    grid-template-columns: 1fr;
+  }
+
+  .controls {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

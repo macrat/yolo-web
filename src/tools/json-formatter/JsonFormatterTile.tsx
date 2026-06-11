@@ -1,16 +1,56 @@
 "use client";
 
-import { useState, useCallback } from "react";
-import { formatJson, minifyJson, validateJson, type IndentType } from "./logic";
+/**
+ * JsonFormatterTile — JSON 整形・圧縮・検証の単一正典タイル
+ *
+ * cycle-228 T-12 で JsonFormatterPage.tsx を Panel ルートのタイルへ作り直したもの。
+ *
+ * ## 設計原則
+ *
+ * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>。外部ラッパーなし。
+ * - **1ツール n タイル = variant**: full / format-only は同一コンポーネントの
+ *   設定差で表現。別実装を作らない（分裂ゼロ）。
+ * - **id インスタンス一意化**: useId ベースで生成し、複数インスタンスが同一ページに
+ *   同居しても id 重複・label 誤結合が起きない。
+ * - **ToolPageLayout 非依存**: タイル単体で機能が完結する。
+ * - **logic.ts 共有エンジン**: formatJson / minifyJson / validateJson が唯一のロジック源。
+ *
+ * ## variant
+ *
+ * - `"full"` (デフォルト): 整形・圧縮・検証の3操作 + インデント Select + コピー
+ * - `"format-only"`: 整形操作に絞る（T-31 道具箱恒久展示用）。
+ *   インデント Select は維持。「JSON を整形する道具」として一目で分かる丁寧な作り。
+ *
+ * ## 使い方
+ *
+ * ```tsx
+ * // 道具箱や詳細ページから同一エクスポートを描画する（同一性の構造的保証）
+ * <JsonFormatterTile variant="full" />
+ * <JsonFormatterTile variant="format-only" />
+ * ```
+ *
+ * ## アクセシビリティ（C-3 準拠）
+ *
+ * - 出力 textarea は readOnly で表示専用
+ * - role="status" aria-live="polite" の div にサマリテキストを置く
+ *   （readOnly textarea は値変化をスクリーンリーダーが読み上げないため）
+ */
+
+import { useId, useState, useCallback } from "react";
+import Panel from "@/components/Panel";
+import Button from "@/components/Button";
+import Select from "@/components/Select";
+import Textarea from "@/components/Textarea";
+import ErrorMessage from "@/components/ErrorMessage";
 import {
   useCopyToClipboard,
   COPIED_LABEL,
 } from "@/components/hooks/useCopyToClipboard";
-import Textarea from "@/components/Textarea";
-import Select from "@/components/Select";
-import ErrorMessage from "@/components/ErrorMessage";
-import Button from "@/components/Button";
-import styles from "./JsonFormatterPage.module.css";
+import { formatJson, minifyJson, validateJson, type IndentType } from "./logic";
+import styles from "./JsonFormatterTile.module.css";
+
+/** variant prop: 表示バリエーションの設定差。別実装ではない。 */
+export type JsonFormatterTileVariant = "full" | "format-only";
 
 /**
  * JSON パーサーが返す英語エラーメッセージを日本語に変換する。
@@ -43,24 +83,31 @@ function toJapaneseJsonError(rawError: string): string {
   return "JSONの形式が正しくありません。";
 }
 
-/**
- * JsonFormatterPage — JSON整形・圧縮・検証の単一実装。
- *
- * 機能:
- * - JSON 整形（インデント: 2スペース / 4スペース / タブ）
- * - JSON 圧縮（minify）
- * - JSON 検証（validate）
- * - 出力コピー（useCopyToClipboard）
- * - エラー表示（ErrorMessage）
- *
- * 設計方針:
- * - 確定提示方式: 入力欄を最初から表示
- * - AP-I11: setTimeout は useCopyToClipboard フック内で useRef+useEffect cleanup 済み
- * - ARIA: 出力欄に role="status" aria-live="polite"
- * - T-4b: json-formatter はコピーボタンあり確定
- * - エラー日本語化: 英語の生パーサーエラーを来訪者に露出しない（toJapaneseJsonError で変換）
- */
-export default function JsonFormatterPage() {
+export interface JsonFormatterTileProps {
+  /**
+   * 表示バリエーション（デフォルト: "full"）
+   * - "full": 整形・圧縮・検証の3操作 + インデント Select + コピー
+   * - "format-only": 整形操作のみ（道具箱恒久展示用）。インデント Select は維持。
+   */
+  variant?: JsonFormatterTileVariant;
+  /** Panel の as prop に透過される HTML タグ（デフォルト: "section"） */
+  as?: "section" | "div" | "article" | "aside";
+  /** 追加クラス */
+  className?: string;
+}
+
+export default function JsonFormatterTile({
+  variant = "full",
+  as = "section",
+  className,
+}: JsonFormatterTileProps = {}) {
+  // ---------- id インスタンス一意化（複数同居時の重複 id・label 誤結合防止） ----------
+  const uid = useId();
+  const inputId = `${uid}-input`;
+  const outputId = `${uid}-output`;
+  const indentId = `${uid}-indent`;
+
+  // ---------- State ----------
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
   const [error, setError] = useState("");
@@ -71,6 +118,8 @@ export default function JsonFormatterPage() {
 
   // T-4b: コピーあり確定。useCopyToClipboard フックを使用（独自実装しない）
   const { copy, copiedKey } = useCopyToClipboard();
+
+  // ---------- ハンドラ ----------
 
   const handleFormat = useCallback(() => {
     setError("");
@@ -138,16 +187,19 @@ export default function JsonFormatterPage() {
     await copy(output);
   }, [output, copy]);
 
+  // ---------- Render ----------
+  // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）
   return (
-    <div className={styles.container}>
+    <Panel as={as} className={className}>
       {/* コントロール行: インデント選択 + 操作ボタン */}
       <div className={styles.controls}>
+        {/* インデント選択（full・format-only 両方に表示） */}
         <div className={styles.indentControl}>
-          <label htmlFor="indent-select" className={styles.controlLabel}>
+          <label htmlFor={indentId} className={styles.controlLabel}>
             インデント
           </label>
           <Select
-            id="indent-select"
+            id={indentId}
             aria-label="インデント"
             value={indent}
             onChange={(e) => setIndent(e.target.value as IndentType)}
@@ -157,28 +209,35 @@ export default function JsonFormatterPage() {
             <option value="tab">タブ</option>
           </Select>
         </div>
+
+        {/* 操作ボタン群 */}
         <div className={styles.buttons}>
           <Button onClick={handleFormat} type="button" variant="primary">
             整形
           </Button>
-          <Button onClick={handleMinify} type="button">
-            圧縮
-          </Button>
-          <Button onClick={handleValidate} type="button">
-            検証
-          </Button>
+          {/* variant="full" のみ圧縮・検証ボタンを表示 */}
+          {variant === "full" && (
+            <>
+              <Button onClick={handleMinify} type="button">
+                圧縮
+              </Button>
+              <Button onClick={handleValidate} type="button">
+                検証
+              </Button>
+            </>
+          )}
         </div>
       </div>
 
-      {/* 入出力パネル */}
+      {/* 入出力パネル（2カラムグリッド） */}
       <div className={styles.panels}>
         {/* 入力欄 */}
         <div className={styles.panel}>
-          <label htmlFor="json-input" className={styles.panelLabel}>
+          <label htmlFor={inputId} className={styles.panelLabel}>
             入力
           </label>
           <Textarea
-            id="json-input"
+            id={inputId}
             aria-label="入力"
             variant="mono"
             value={input}
@@ -192,12 +251,12 @@ export default function JsonFormatterPage() {
         {/* 出力欄 */}
         <div className={styles.panel}>
           <div className={styles.outputHeader}>
-            <label htmlFor="json-output" className={styles.panelLabel}>
+            <label htmlFor={outputId} className={styles.panelLabel}>
               出力
             </label>
-            {/* T-4b: コピーボタンあり確定。出力が空のとき disabled */}
+            {/* コピーボタン: 出力が空のとき disabled */}
             <Button
-              onClick={handleCopy}
+              onClick={() => void handleCopy()}
               type="button"
               size="small"
               disabled={!output}
@@ -212,13 +271,13 @@ export default function JsonFormatterPage() {
           <div
             role="status"
             aria-live="polite"
-            aria-label="操作結果サマリ"
-            className={styles.srOnly}
+            aria-atomic="true"
+            className={styles.statusSummary}
           >
             {statusSummary}
           </div>
           <Textarea
-            id="json-output"
+            id={outputId}
             aria-label="出力"
             variant="mono"
             value={output}
@@ -231,6 +290,6 @@ export default function JsonFormatterPage() {
 
       {/* エラー表示: A-4 ErrorMessage を使用。空のときは非表示 */}
       {error && <ErrorMessage message={error} />}
-    </div>
+    </Panel>
   );
 }
