@@ -8,7 +8,7 @@ import {
 } from "@/lib/seo";
 import ToolPageLayout from "@/tools/_components/ToolPageLayout";
 import ToolErrorBoundary from "@/tools/_components/ErrorBoundary";
-import TextDiffTool from "@/tools/text-diff/TextDiffPage";
+import TextDiffTile from "@/tools/text-diff/TextDiffTile";
 const SLUG = "text-diff";
 const tool = toolsBySlug.get(SLUG);
 
@@ -26,7 +26,7 @@ export default function TextDiffPage() {
         }}
       />
       <ToolErrorBoundary>
-        <TextDiffTool />
+        <TextDiffTile variant="full" />
       </ToolErrorBoundary>
     </ToolPageLayout>
   );

@@ -8,7 +8,7 @@ import {
 } from "@/lib/seo";
 import ToolPageLayout from "@/tools/_components/ToolPageLayout";
 import ToolErrorBoundary from "@/tools/_components/ErrorBoundary";
-import MarkdownPreviewPage from "@/tools/markdown-preview/MarkdownPreviewPage";
+import MarkdownPreviewTile from "@/tools/markdown-preview/MarkdownPreviewTile";
 
 const SLUG = "markdown-preview";
 const tool = toolsBySlug.get(SLUG);
@@ -27,7 +27,7 @@ export default function Page() {
         }}
       />
       <ToolErrorBoundary>
-        <MarkdownPreviewPage />
+        <MarkdownPreviewTile variant="full" />
       </ToolErrorBoundary>
     </ToolPageLayout>
   );

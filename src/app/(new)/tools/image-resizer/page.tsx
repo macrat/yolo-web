@@ -8,7 +8,7 @@ import {
 } from "@/lib/seo";
 import ToolPageLayout from "@/tools/_components/ToolPageLayout";
 import ToolErrorBoundary from "@/tools/_components/ErrorBoundary";
-import ImageResizerPage from "@/tools/image-resizer/ImageResizerPage";
+import ImageResizerTile from "@/tools/image-resizer/ImageResizerTile";
 
 const SLUG = "image-resizer";
 const tool = toolsBySlug.get(SLUG);
@@ -27,7 +27,7 @@ export default function ImageResizerPageRoute() {
         }}
       />
       <ToolErrorBoundary>
-        <ImageResizerPage />
+        <ImageResizerTile variant="full" />
       </ToolErrorBoundary>
     </ToolPageLayout>
   );

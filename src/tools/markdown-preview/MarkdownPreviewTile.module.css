@@ -1,31 +1,30 @@
-/* MarkdownPreviewPage.module.css
-   DESIGN.md §準拠:
-   - 旧 --color-* トークン不使用
-   - --bg / --fg / --accent / --border-strong 等の新トークンを使用
-   - インタラクティブ要素の角丸: --r-interactive（8px）
-   - 非インタラクティブ要素の角丸: --r-normal（2px）
-   - font-weight: 700 不使用
-   - box-shadow 不使用
-*/
+/* MarkdownPreviewTile.module.css
+ * cycle-228 T-24: MarkdownPreviewPage.module.css を正典タイル向けに継承・移植。
+ * DESIGN トークン準拠:
+ * - 旧 --color-* トークン不使用（B-1）
+ * - font-weight: 700 不使用（B-4）
+ * - 角丸: インタラクティブ --r-interactive（8px）、非インタラクティブ --r-normal（2px）（B-5）
+ * - box-shadow 不使用（B-6・B-7）
+ * - フォーム境界線は --border-strong（B-7）
+ *
+ * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
+ */
 
-.container {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
+/* 2ペインレイアウト: 入力 textarea ＋ プレビュー（G-1） */
 .panels {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
 }
 
+/* w360 対応: 縦積み（G-1） */
 @media (max-width: 768px) {
   .panels {
     grid-template-columns: 1fr;
   }
 }
 
+/* 個別パネル（入力 or プレビュー） */
 .panel {
   display: flex;
   flex-direction: column;
@@ -40,13 +39,14 @@
   gap: 0.5rem;
 }
 
+/* ラベル */
 .panelLabel {
   font-size: 0.85rem;
   font-weight: 600;
   color: var(--fg-soft);
 }
 
-/* プレビューラッパー: role="status" 領域（C-3 対応） */
+/* プレビューラッパー: 最小高さ確保 */
 .previewWrapper {
   display: flex;
   flex-direction: column;

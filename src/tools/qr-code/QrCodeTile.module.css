@@ -1,23 +1,25 @@
-/* QrCodePage ページ本体スタイル
- * DESIGN.md トークン準拠: bg-invert/fg-invert, border-strong, r-interactive, r-normal
- * font-weight 700 禁止 / 旧 --color-* トークン禁止 / --accent 直塗り禁止
+/* QrCodeTile スタイル
+ * cycle-228 T-25: QrCodePage.module.css をタイル向けに継承・移植。
+ * DESIGN トークン準拠（--color-* 旧トークン不使用・bold禁止・
+ * --r-interactive / --r-normal 使用・--border-strong 使用）
+ *
+ * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  */
-
-.container {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
 
 .field {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.field:last-child {
+  margin-bottom: 0;
 }
 
 .label {
   font-size: 0.9rem;
-  color: var(--fg);
+  color: var(--fg-soft);
 }
 
 .controls {
@@ -25,6 +27,7 @@
   align-items: center;
   gap: 1rem;
   flex-wrap: wrap;
+  margin-bottom: 1rem;
 }
 
 .ecControl {
@@ -35,7 +38,7 @@
 
 .controlLabel {
   font-size: 0.9rem;
-  color: var(--fg);
+  color: var(--fg-soft);
   /* ux-gate-findings 低指摘: 狭幅でラベルが折り返されないよう nowrap を設定する */
   white-space: nowrap;
 }
