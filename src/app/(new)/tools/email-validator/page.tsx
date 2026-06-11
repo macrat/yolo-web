@@ -8,7 +8,7 @@ import {
 } from "@/lib/seo";
 import ToolPageLayout from "@/tools/_components/ToolPageLayout";
 import ToolErrorBoundary from "@/tools/_components/ErrorBoundary";
-import EmailValidatorTool from "@/tools/email-validator/EmailValidatorPage";
+import EmailValidatorTile from "@/tools/email-validator/EmailValidatorTile";
 const SLUG = "email-validator";
 const tool = toolsBySlug.get(SLUG);
 
@@ -26,7 +26,7 @@ export default function EmailValidatorPage() {
         }}
       />
       <ToolErrorBoundary>
-        <EmailValidatorTool />
+        <EmailValidatorTile variant="full" />
       </ToolErrorBoundary>
     </ToolPageLayout>
   );

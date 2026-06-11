@@ -1,0 +1,78 @@
+/* DummyTextTile スタイル
+ * cycle-228 T-8: DummyTextPage.module.css をタイル向けに移植。
+ * DESIGN トークン準拠（--color-* 旧トークン不使用・bold禁止・
+ * --r-interactive / --r-normal 使用・--border-strong 使用）
+ *
+ * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
+ */
+
+/* 言語選択と設定エリア（variant="full" のみ言語選択が上部に来る） */
+.settingsRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.numberField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  /* width: fit-content で子の Input（width:100%）が親幅まで広がるのを防ぎ、
+     コンパクトな数値入力欄を確実に維持する */
+  width: fit-content;
+}
+
+.numberLabel {
+  font-size: 0.875rem;
+  color: var(--fg-soft);
+}
+
+/* number input の幅のみを指定する。
+   border/padding/min-height/color/background/border-radius は共通 Input が提供する。
+   :focus-visible も共通 Input.module.css が担う（重複定義しない）。
+   親 .numberField が width:fit-content のため Input の width:100% は親幅に収まる。 */
+.numberInput {
+  width: 5rem;
+}
+
+/* 統計バー（段落数・文字数・単語数） */
+.statsBar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-size: 0.875rem;
+  color: var(--fg-soft);
+  margin-bottom: 1rem;
+}
+
+/* 出力エリア */
+.outputSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.outputHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.outputLabel {
+  font-size: 0.875rem;
+  color: var(--fg-soft);
+}
+
+/* ライブリージョン（C-3 準拠: 実テキストノードのサマリ） */
+.statusSummary {
+  font-size: 0.8rem;
+  color: var(--fg-soft);
+  min-height: 1.2em;
+}
+
+/* 言語 SegmentedControl のラッパー（variant="full" のみ表示） */
+.languageControl {
+  margin-bottom: 1rem;
+}

@@ -1,20 +1,16 @@
-/* bmi-calculator 単一実装スタイル
- * DESIGN.md 準拠:
- * - インタラクティブ要素: --r-interactive (8px)
- * - 非インタラクティブ要素: --r-normal (2px)
- * - フォーカス: outline: 2px solid var(--accent); outline-offset: 2px;
- * - 選択状態: --bg-invert / --fg-invert ペア（--accent 直塗り禁止）
- * - font-weight: 700 禁止 → 使用しない
- * - 通常要素への box-shadow 禁止
- * - フォーム境界線: --border-strong
- * - 旧 --color-* トークン不使用
+/* BmiCalculatorTile スタイル
+ * cycle-228 T-6: BmiCalculatorPage.module.css をタイル向けに移植。
+ *
+ * DESIGN トークン準拠（B-1〜B-9）:
+ * - 旧 color トークン不使用（B-1）
+ * - font-weight 700 禁止（B-4）
+ * - インタラクティブ要素: --r-interactive（8px）（B-5）
+ * - 非インタラクティブ要素: --r-normal（2px）（B-5）
+ * - フォーム要素境界: --border-strong（B-7）
+ * - box-shadow はパネル以外に追加しない（A-7, B-6）
+ *
+ * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  */
-
-.container {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
 
 /* 入力セクション */
 .inputSection {

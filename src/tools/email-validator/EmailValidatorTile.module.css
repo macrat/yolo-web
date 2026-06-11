@@ -1,25 +1,24 @@
-/* EmailValidatorPage.module.css
- * cycle-225 T-6 単一実装スタイル
+/* EmailValidatorTile.module.css
+ * cycle-228 T-10: EmailValidatorPage.module.css をタイル向けに移植。
+ *
+ * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  *
  * DESIGN.md 準拠:
  * - §2 フォーカスはアクセントカラーの outline を使用（Input コンポーネント内蔵）
- * - §4 ボタン以外に box-shadow 不使用
+ * - §4 Panel 以外に box-shadow 不使用
  * - §5 インタラクティブ要素: var(--r-interactive) / 非インタラクティブ: var(--r-normal)
  * - フォーム境界線: --border-strong
- * - font-weight は 600 以下を使用
+ * - font-weight は 600 以下を使用（700 禁止）
+ * - --color-* 旧トークン不使用
+ * - --accent 直塗りなし（--bg-invert/--fg-invert ペアのみ）
  */
-
-.container {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
 
 /* 入力グループ */
 .inputGroup {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
+  margin-bottom: 1rem;
 }
 
 .label {

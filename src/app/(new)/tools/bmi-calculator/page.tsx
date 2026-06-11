@@ -7,7 +7,7 @@ import {
   safeJsonLdStringify,
 } from "@/lib/seo";
 import ToolPageLayout from "@/tools/_components/ToolPageLayout";
-import BmiCalculatorPage from "@/tools/bmi-calculator/BmiCalculatorPage";
+import BmiCalculatorTile from "@/tools/bmi-calculator/BmiCalculatorTile";
 
 const SLUG = "bmi-calculator";
 const tool = toolsBySlug.get(SLUG);
@@ -25,7 +25,7 @@ export default function BmiCalculatorPageRoute() {
           __html: safeJsonLdStringify(generateToolJsonLd(tool.meta)),
         }}
       />
-      <BmiCalculatorPage />
+      <BmiCalculatorTile variant="full" />
     </ToolPageLayout>
   );
 }
