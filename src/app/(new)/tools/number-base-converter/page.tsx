@@ -7,7 +7,7 @@ import {
   safeJsonLdStringify,
 } from "@/lib/seo";
 import ToolPageLayout from "@/tools/_components/ToolPageLayout";
-import NumberBaseConverterPage from "@/tools/number-base-converter/NumberBaseConverterPage";
+import NumberBaseConverterTile from "@/tools/number-base-converter/NumberBaseConverterTile";
 
 const SLUG = "number-base-converter";
 const tool = toolsBySlug.get(SLUG);
@@ -25,7 +25,7 @@ export default function NumberBaseConverterToolPage() {
           __html: safeJsonLdStringify(generateToolJsonLd(tool.meta)),
         }}
       />
-      <NumberBaseConverterPage />
+      <NumberBaseConverterTile variant="full" />
     </ToolPageLayout>
   );
 }
