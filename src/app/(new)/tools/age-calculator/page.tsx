@@ -8,7 +8,7 @@ import {
 } from "@/lib/seo";
 import ToolPageLayout from "@/tools/_components/ToolPageLayout";
 import ToolErrorBoundary from "@/tools/_components/ErrorBoundary";
-import AgeCalculatorPageContent from "@/tools/age-calculator/AgeCalculatorPage";
+import AgeCalculatorTile from "@/tools/age-calculator/AgeCalculatorTile";
 
 const SLUG = "age-calculator";
 const tool = toolsBySlug.get(SLUG);
@@ -27,7 +27,7 @@ export default function AgeCalculatorPage() {
         }}
       />
       <ToolErrorBoundary>
-        <AgeCalculatorPageContent />
+        <AgeCalculatorTile variant="full" />
       </ToolErrorBoundary>
     </ToolPageLayout>
   );
