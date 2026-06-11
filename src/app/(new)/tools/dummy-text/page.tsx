@@ -8,7 +8,7 @@ import {
 } from "@/lib/seo";
 import ToolPageLayout from "@/tools/_components/ToolPageLayout";
 import ToolErrorBoundary from "@/tools/_components/ErrorBoundary";
-import DummyTextPage from "@/tools/dummy-text/DummyTextPage";
+import DummyTextTile from "@/tools/dummy-text/DummyTextTile";
 
 const SLUG = "dummy-text";
 const tool = toolsBySlug.get(SLUG);
@@ -27,7 +27,7 @@ export default function Page() {
         }}
       />
       <ToolErrorBoundary>
-        <DummyTextPage />
+        <DummyTextTile variant="full" />
       </ToolErrorBoundary>
     </ToolPageLayout>
   );

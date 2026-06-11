@@ -1,19 +1,23 @@
 /**
- * EmailValidatorPage の回帰テスト（単一実装 / cycle-225 T-6）
+ * EmailValidatorTile の回帰テスト（単一正典タイル / cycle-228 T-10）
+ *
+ * 旧 EmailValidatorPage.test.tsx の全振る舞いを移植・拡張。
  *
  * 観点:
- *   E-1: 基本レンダリング
+ *   E-1: 基本レンダリング（Panel ルート確認）
  *   E-2: 入力→結果更新
  *   E-3: 空入力の挙動
  *   E-4: バリデーションロジックの正確性（UI経由）
  *   E-5: ARIA（role="status" aria-live="polite" / ライブリージョン実テキストノード）
- *   E-6: N/A（コピーボタンなし。email-validator は②-15 で削除確定）
+ *   E-6: N/A（コピーボタンなし：②-15 確定）
  *   E-7: N/A（コピーボタンなし）
  *   E-8: N/A（コピーボタンなし）
  *   E-9: N/A（詳細ページリンクなし。ページ本体のため不要）
  *   E-10: meta 由来の表示
  *   E-11: logic.ts テスト PASS 維持（別ファイル）
  *   E-12: CSS トークン検証（readFileSync）
+ *   E-13: 複数インスタンス id 一意性（道具箱複数同居時 id 重複なし）
+ *   E-14: Panel ルート確認（[A-1]）
  *
  * 個別論点:
  *   ①-4: 緑「有効」とタイポ提案の矛盾シグナル解消
@@ -25,7 +29,7 @@ import { render, screen, fireEvent, act } from "@testing-library/react";
 import { describe, it, expect, afterEach } from "vitest";
 import { readFileSync } from "fs";
 import { join } from "path";
-import EmailValidatorPage from "../EmailValidatorPage";
+import EmailValidatorTile from "../EmailValidatorTile";
 
 afterEach(() => {
   document.body.innerHTML = "";
@@ -36,16 +40,20 @@ afterEach(() => {
 // ===========================================================
 describe("E-1: 基本レンダリング", () => {
   it("コンポーネントが正常にレンダリングされる", () => {
-    render(<EmailValidatorPage />);
+    render(<EmailValidatorTile />);
     // メールアドレス入力欄が存在する
     expect(screen.getByRole("textbox")).toBeInTheDocument();
   });
 
   it("入力欄のラベルが存在する", () => {
-    render(<EmailValidatorPage />);
-    // aria-label または label 要素が存在する
+    render(<EmailValidatorTile />);
     const input = screen.getByRole("textbox");
     expect(input).toBeInTheDocument();
+  });
+
+  it("variant='full' を指定してもレンダリングされる", () => {
+    render(<EmailValidatorTile variant="full" />);
+    expect(screen.getByRole("textbox")).toBeInTheDocument();
   });
 });
 
@@ -54,7 +62,7 @@ describe("E-1: 基本レンダリング", () => {
 // ===========================================================
 describe("E-2: 入力→結果更新", () => {
   it("有効なメールアドレスを入力すると有効バッジが表示される", async () => {
-    render(<EmailValidatorPage />);
+    render(<EmailValidatorTile />);
     const input = screen.getByRole("textbox");
 
     await act(async () => {
@@ -66,7 +74,7 @@ describe("E-2: 入力→結果更新", () => {
   });
 
   it("無効なメールアドレスを入力すると無効バッジが表示される", async () => {
-    render(<EmailValidatorPage />);
+    render(<EmailValidatorTile />);
     const input = screen.getByRole("textbox");
 
     await act(async () => {
@@ -78,7 +86,7 @@ describe("E-2: 入力→結果更新", () => {
   });
 
   it("入力値が変わると結果が更新される", async () => {
-    render(<EmailValidatorPage />);
+    render(<EmailValidatorTile />);
     const input = screen.getByRole("textbox");
 
     await act(async () => {
@@ -100,7 +108,7 @@ describe("E-2: 入力→結果更新", () => {
 // ===========================================================
 describe("E-3: 空入力の挙動", () => {
   it("空入力時にエラーボックスが表示されない", async () => {
-    render(<EmailValidatorPage />);
+    render(<EmailValidatorTile />);
     const input = screen.getByRole("textbox");
 
     await act(async () => {
@@ -113,7 +121,7 @@ describe("E-3: 空入力の挙動", () => {
   });
 
   it("空入力時に入力欄が正常に表示される", async () => {
-    render(<EmailValidatorPage />);
+    render(<EmailValidatorTile />);
     const input = screen.getByRole("textbox");
 
     await act(async () => {
@@ -130,7 +138,7 @@ describe("E-3: 空入力の挙動", () => {
 // ===========================================================
 describe("E-4: バリデーションロジックの正確性", () => {
   it("user@example.com は有効として判定される", async () => {
-    render(<EmailValidatorPage />);
+    render(<EmailValidatorTile />);
     const input = screen.getByRole("textbox");
 
     await act(async () => {
@@ -145,7 +153,7 @@ describe("E-4: バリデーションロジックの正確性", () => {
   });
 
   it("notanemail は無効として判定される（@なし）", async () => {
-    render(<EmailValidatorPage />);
+    render(<EmailValidatorTile />);
     const input = screen.getByRole("textbox");
 
     await act(async () => {
@@ -159,7 +167,7 @@ describe("E-4: バリデーションロジックの正確性", () => {
   });
 
   it("タイポドメイン(gmial.com)では提案が表示される", async () => {
-    render(<EmailValidatorPage />);
+    render(<EmailValidatorTile />);
     const input = screen.getByRole("textbox");
 
     await act(async () => {
@@ -177,7 +185,7 @@ describe("E-4: バリデーションロジックの正確性", () => {
 // ===========================================================
 describe("①-4: 緑「有効」とタイポ提案の矛盾シグナル解消", () => {
   it("タイポドメイン(gmial.com)では有効でもタイポ提案が優先表示される", async () => {
-    render(<EmailValidatorPage />);
+    render(<EmailValidatorTile />);
     const input = screen.getByRole("textbox");
 
     await act(async () => {
@@ -191,7 +199,7 @@ describe("①-4: 緑「有効」とタイポ提案の矛盾シグナル解消", 
   });
 
   it("タイポなし有効アドレスでは提案なしの純粋な有効バッジが表示される", async () => {
-    render(<EmailValidatorPage />);
+    render(<EmailValidatorTile />);
     const input = screen.getByRole("textbox");
 
     await act(async () => {
@@ -211,7 +219,7 @@ describe("①-4: 緑「有効」とタイポ提案の矛盾シグナル解消", 
 // ===========================================================
 describe("②-15: コピーボタン削除確認", () => {
   it("コピーボタンが存在しない（知る対象のため）", async () => {
-    render(<EmailValidatorPage />);
+    render(<EmailValidatorTile />);
     const input = screen.getByRole("textbox");
 
     await act(async () => {
@@ -231,7 +239,7 @@ describe("②-15: コピーボタン削除確認", () => {
 // ===========================================================
 describe("E-5: ARIA属性の確認", () => {
   it("出力結果欄に role='status' aria-live='polite' が付与されている", async () => {
-    render(<EmailValidatorPage />);
+    render(<EmailValidatorTile />);
     const input = screen.getByRole("textbox");
 
     await act(async () => {
@@ -245,7 +253,7 @@ describe("E-5: ARIA属性の確認", () => {
   });
 
   it("ライブリージョンに実テキストノードのサマリが含まれる", async () => {
-    render(<EmailValidatorPage />);
+    render(<EmailValidatorTile />);
     const input = screen.getByRole("textbox");
 
     await act(async () => {
@@ -261,7 +269,7 @@ describe("E-5: ARIA属性の確認", () => {
   });
 
   it("ライブリージョンはreadOnly textareaをラップするだけでなく実テキストノードを持つ", async () => {
-    render(<EmailValidatorPage />);
+    render(<EmailValidatorTile />);
     const input = screen.getByRole("textbox");
 
     await act(async () => {
@@ -290,24 +298,65 @@ describe("E-5: ARIA属性の確認", () => {
 });
 
 // ===========================================================
-// E-10: meta 由来の表示
+// E-13: 複数インスタンス id 一意性（道具箱複数同居時 id 重複なし）
 // ===========================================================
-describe("E-10: meta由来の表示", () => {
-  it("ToolPageLayoutのchildren（ツール本体）が描画される", () => {
-    render(<EmailValidatorPage />);
-    // ページ本体の入力欄が描画されている
-    expect(screen.getByRole("textbox")).toBeInTheDocument();
+describe("E-13: 複数インスタンス id 一意性", () => {
+  it("2インスタンスを同時レンダリングしても id が重複しない", () => {
+    const { container: c1 } = render(<EmailValidatorTile />);
+    const { container: c2 } = render(<EmailValidatorTile />);
+
+    // 両インスタンスの input の id を取得
+    const input1 = c1.querySelector("input");
+    const input2 = c2.querySelector("input");
+
+    expect(input1).toBeInTheDocument();
+    expect(input2).toBeInTheDocument();
+
+    // id が異なる（重複していない）
+    expect(input1?.id).not.toBe(input2?.id);
+    expect(input1?.id).not.toBe("");
+    expect(input2?.id).not.toBe("");
+  });
+
+  it("2インスタンスで label の htmlFor が対応する input.id と一致する", () => {
+    const { container: c1 } = render(<EmailValidatorTile />);
+    const { container: c2 } = render(<EmailValidatorTile />);
+
+    const input1 = c1.querySelector("input");
+    const input2 = c2.querySelector("input");
+    const label1 = c1.querySelector("label");
+    const label2 = c2.querySelector("label");
+
+    expect(label1?.htmlFor).toBe(input1?.id);
+    expect(label2?.htmlFor).toBe(input2?.id);
+    // 相互に混線していない
+    expect(label1?.htmlFor).not.toBe(input2?.id);
   });
 });
 
 // ===========================================================
-// E-12: CSS トークン検証（readFileSync）
+// E-14: Panel ルート確認（[A-1]）
 // ===========================================================
-// バッジアイコン: SVG アイコンが aria-hidden で装飾目的を宣言しているか
+describe("E-14: Panel ルート確認", () => {
+  it("ルート要素が section タグ（Panel のデフォルト）である", () => {
+    const { container } = render(<EmailValidatorTile />);
+    const root = container.firstElementChild;
+    expect(root?.tagName.toLowerCase()).toBe("section");
+  });
+
+  it("as='div' を指定すると div タグがルートになる", () => {
+    const { container } = render(<EmailValidatorTile as="div" />);
+    const root = container.firstElementChild;
+    expect(root?.tagName.toLowerCase()).toBe("div");
+  });
+});
+
+// ===========================================================
+// バッジアイコンのアクセシビリティ
 // ===========================================================
 describe("バッジアイコンのアクセシビリティ", () => {
   it("有効バッジの SVG アイコンが aria-hidden='true' を持つ（記号の不要な読み上げを回避）", async () => {
-    render(<EmailValidatorPage />);
+    render(<EmailValidatorTile />);
     const input = screen.getByRole("textbox");
 
     await act(async () => {
@@ -322,7 +371,7 @@ describe("バッジアイコンのアクセシビリティ", () => {
   });
 
   it("無効バッジの SVG アイコンが aria-hidden='true' を持つ", async () => {
-    render(<EmailValidatorPage />);
+    render(<EmailValidatorTile />);
     const input = screen.getByRole("textbox");
 
     await act(async () => {
@@ -337,10 +386,22 @@ describe("バッジアイコンのアクセシビリティ", () => {
 });
 
 // ===========================================================
+// E-10: meta 由来の表示
+// ===========================================================
+describe("E-10: meta由来の表示", () => {
+  it("ツール本体の入力欄が描画される", () => {
+    render(<EmailValidatorTile />);
+    expect(screen.getByRole("textbox")).toBeInTheDocument();
+  });
+});
+
+// ===========================================================
+// E-12: CSS トークン検証（readFileSync）
+// ===========================================================
 describe("E-12: CSSトークン検証", () => {
   const cssPath = join(
     process.cwd(),
-    "src/tools/email-validator/EmailValidatorPage.module.css",
+    "src/tools/email-validator/EmailValidatorTile.module.css",
   );
 
   it("--color-* 旧トークンが存在しない", () => {

@@ -1,11 +1,47 @@
 "use client";
 
+/**
+ * BmiCalculatorTile — BMI計算の単一正典タイル
+ *
+ * cycle-228 T-6: BmiCalculatorPage.tsx を Panel ルートのタイルへ作り直したもの。
+ *
+ * ## 設計原則
+ *
+ * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>。外部ラッパーなし。
+ * - **1ツール 1 タイル = variant full のみ**: BMI計算は独立した compact モードが
+ *   成立しないため、full のみの variant 設計とする（作業指示 §3 に従う）。
+ * - **id インスタンス一意化**: useId ベースで生成し、複数インスタンスが同一ページに
+ *   同居しても id 重複・label 誤結合が起きない。
+ * - **ToolPageLayout 非依存**: タイル単体で機能が完結する。
+ * - **logic.ts 共有エンジン**: calculateBmi / getMeterPercent / getTargetWeight が
+ *   唯一のロジック源。改変禁止。
+ *
+ * ## variant
+ *
+ * - `"full"` (デフォルト・唯一): 身長・体重入力 + BMI値 + メーター + カテゴリ + 目標体重の全機能。
+ *   BMI計算は独立した compact モードが成立しないため、full のみとする。
+ *
+ * ## 使い方
+ *
+ * ```tsx
+ * // 道具箱や詳細ページから同一エクスポートを描画する（同一性の構造的保証）
+ * <BmiCalculatorTile variant="full" />
+ * ```
+ *
+ * ## アクセシビリティ（C-3 準拠）
+ *
+ * - role="status" aria-live="polite" の div にサマリテキストを置く
+ *   （計算結果はライブリージョン内に配置してスクリーンリーダーに通知）
+ * - BMI メーターには role="img" + aria-label を付与
+ */
+
 import { useState, useCallback, useId } from "react";
+import Panel from "@/components/Panel";
 import { calculateBmi, getMeterPercent, type BmiResult } from "./logic";
 import Input from "@/components/Input";
 import ErrorMessage from "@/components/ErrorMessage";
 import Button from "@/components/Button";
-import styles from "./BmiCalculatorPage.module.css";
+import styles from "./BmiCalculatorTile.module.css";
 
 /** BMI レベルに応じた CSS クラスのマッピング */
 const CATEGORY_CLASS_MAP: Record<number, string> = {
@@ -17,15 +53,40 @@ const CATEGORY_CLASS_MAP: Record<number, string> = {
   5: styles.categoryHigh4,
 };
 
+/** variant prop: 表示バリエーションの設定差。別実装ではない。 */
+export type BmiCalculatorTileVariant = "full";
+
+export interface BmiCalculatorTileProps {
+  /**
+   * 表示バリエーション（デフォルト: "full"）
+   * - "full": 身長・体重入力 + BMI値 + メーター + カテゴリ + 目標体重の全機能
+   *   BMI計算はコンパクトモードが成立しないため full のみ。
+   */
+  variant?: BmiCalculatorTileVariant;
+  /** Panel の as prop に透過される HTML タグ（デフォルト: "section"） */
+  as?: "section" | "div" | "article" | "aside";
+  /** 追加クラス */
+  className?: string;
+}
+
 /**
- * BmiCalculatorPage — BMI計算ツールの単一実装（フル機能のページ本体）。
+ * BmiCalculatorTile — BMI計算ツールの単一実装（全機能のタイル）。
  *
  * コピーボタン: なし（T-4b 確定: BMI値・判定区分は読んで知る対象）
  * ライブリージョン: role="status" aria-live="polite" + 実テキストノードのサマリ（C-3 準拠）
  */
-export default function BmiCalculatorPage() {
-  const heightId = useId();
-  const weightId = useId();
+export default function BmiCalculatorTile({
+  variant = "full",
+  as = "section",
+  className,
+}: BmiCalculatorTileProps = {}) {
+  // ---------- id インスタンス一意化（複数同居時の重複 id・label 誤結合防止） ----------
+  const uid = useId();
+  const heightId = `${uid}-height`;
+  const weightId = `${uid}-weight`;
+
+  // variant は将来の拡張に備えて受け取るが、現在は full のみ
+  void variant;
 
   const [height, setHeight] = useState<string>("");
   const [weight, setWeight] = useState<string>("");
@@ -58,8 +119,10 @@ export default function BmiCalculatorPage() {
   /** ライブリージョンに入れる実テキストノードのサマリ（C-3 準拠） */
   const liveSummary = result ? `BMI ${result.bmi}（${result.category}）` : "";
 
+  // ---------- Render ----------
+  // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）
   return (
-    <div className={styles.container}>
+    <Panel as={as} className={className}>
       {/* 入力フォーム */}
       <div className={styles.inputSection}>
         {/* 身長入力 */}
@@ -214,6 +277,6 @@ export default function BmiCalculatorPage() {
         ※
         この結果は参考値です。医学的なアドバイスではありません。健康に関する判断は医療専門家にご相談ください。
       </p>
-    </div>
+    </Panel>
   );
 }

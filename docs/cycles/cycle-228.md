@@ -28,12 +28,14 @@ completed_at: null
 
 ### バッチ1: 統計表示＋単純テキスト変換系（Low）
 
-- [ ] T-1: char-count をライブタイル化（統計グリッド・コピーなし・variant＝表示情報量）
-- [ ] T-2: byte-counter をライブタイル化（統計グリッド・コピーなし）
-- [ ] T-3: kana-converter をライブタイル化（4モード＋横2カラム・SegmentedControl 4択のモバイル幅検証）
-- [ ] T-4: line-break-remover をライブタイル化（3モード＋ToggleSwitch）
-- [ ] T-5: text-replace をライブタイル化（検索/置換＋3 ToggleSwitch）
-- [ ] バッチ1ゲート（PM 独立 tsc/lint/format/差分テスト）＋中間 Playwright 検証（代表1〜2ツール）
+- [x] T-1: char-count をライブタイル化（full/compact・レビュー2巡承認・75テスト）
+- [x] T-2: byte-counter をライブタイル化（full/compact・レビュー2巡承認・50テスト）
+- [x] T-3: kana-converter をライブタイル化（full＋4モード固定 variant・レビュー2巡承認・53テスト）
+- [x] T-4: line-break-remover をライブタイル化（full＋3モード固定 variant・レビュー3巡承認・74テスト）
+- [x] T-5: text-replace をライブタイル化（full のみ〔logic 単一関数のため・reviewer 妥当判定〕・レビュー1巡承認・41テスト）
+- [x] バッチ1ゲート: PM 独立 tsc0/lint0/format0/差分テスト293件通過＋中間 Playwright（本番ビルド・kana-converter「こんにちは、せかい」→「コンニチハ、セカイ」・char-count 15文字/21バイト/2行/3単語・マーカー残存＝遷移なし・id 重複0）。コミット 8631a2c1。
+  - ゲートが捕捉した品質問題: format:check 失敗2ファイル（KanaConverterTile.tsx・TextReplaceTile.test.tsx）→ PM 即時整形（prettier --write・判断を伴わない機械的修正のため即時編集経路を使用）。byte-counter の整形も同経路。B-494 知見#1（並列 builder のゲートすり抜け）が実証された形。
+  - 環境事故: バッチ1レビュー中に background サブエージェント4体が一斉停止（08:47-08:49・Owner 指摘で発覚）→ SendMessage で transcript から再開し全件完走。古い next-server がポート3000を占有し中間検証で stale chunk 404 → 旧サーバ停止で解消。
 
 ### バッチ2: シンプル計算＋生成系（Low〜Medium）
 
