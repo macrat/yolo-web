@@ -1,35 +1,38 @@
 "use client";
 
 /**
- * PasswordGeneratorPage — password-generator ツールのフル機能単一実装
+ * PasswordGeneratorTile — パスワード生成の単一正典タイル
  *
- * 収束チェックリスト適合:
- * - A-6: useCopyToClipboard + COPIED_LABEL 使用
- * - A-8: ToolPageLayout は page.tsx 側で使用（本コンポーネントは children 相当）
- * - B-1〜B-8: DESIGN トークン準拠（PasswordGeneratorPage.module.css 参照）
- * - C-3: role="status" aria-live="polite" に実テキストノードのサマリを配置
- *         パスワード <code> 要素への aria-live は秘密情報配慮のため不付与
- * - D-4: AP-I11 — useCopyToClipboard フック内で setTimeout cleanup 済み
+ * cycle-228 T-11 で PasswordGeneratorPage.tsx をタイルへ作り直したもの。
  *
- * 個別論点の解消:
- * - ①-6: 強度バーが options 変更に応じて動的に更新される（evaluateStrength(options) を呼ぶ）
- * - ①-15/B-469: hydration 不整合の是正
- *   useState の初期値を空文字列にし、useEffect でクライアントのみ generatePassword を呼ぶ。
- *   これにより SSR と CSR の初期 HTML が一致し hydration エラーが発生しない。
- * - ②-11: チェックボックス → ToggleSwitch コンポーネントへ切り替え
- *   DESIGN.md §5「ON/OFF を切り替えるフォーム要素は原則としてトグルスイッチを使う」に準拠
+ * ## 設計原則
  *
- * コピーボタン方針:
- * T-4b 確定: password-generator はコピー「あり」（持ち帰り対象）
- * 出力が空のときは disabled、非空のときは有効。
+ * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>（DESIGN.md §1 準拠）。
+ * - **1ツール 1 タイル = variant="full" のみ**: password-generator はロジックに
+ *   独立モード（encode/decode 等）がないため full のみ。variant を無理に増やさない。
+ * - **id インスタンス一意化**: useId ベースで生成し、複数インスタンスが同一ページに
+ *   同居しても id 重複・label 誤結合が起きない（[A-6] 準拠）。
+ * - **ToolPageLayout 非依存**: タイル単体で機能が完結する（[A-2] 準拠）。
+ * - **logic.ts 共有エンジン**: generatePassword / evaluateStrength が唯一のロジック源。
+ *   再実装・改変禁止。
  *
- * 秘密情報配慮の ARIA 設計:
+ * ## hydration 安全性
+ *
+ * crypto.getRandomValues() は SSR とクライアントで異なる値を返すため、
+ * useState の初期値を "" にし、useEffect（クライアントのみ）でマウント後に生成する。
+ * これにより SSR と CSR の初期 HTML が一致し hydration エラーが防がれる。
+ * 道具箱で複数インスタンスが同居する場合も、各インスタンスが独立した useEffect を持つ
+ * ためそれぞれ独立に生成される。
+ *
+ * ## 秘密情報配慮の ARIA 設計
+ *
  * - パスワード <code> 要素に aria-live を付与しない（盗み聞きリスク回避）
  * - 強度ラベル側にのみ role="status" aria-live="polite" を付与
  *   （「強い」「弱い」等は秘密情報ではない）
  */
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useId } from "react";
+import Panel from "@/components/Panel";
 import Button from "@/components/Button";
 import ErrorMessage from "@/components/ErrorMessage";
 import ToggleSwitch from "@/components/ToggleSwitch";
@@ -44,7 +47,7 @@ import {
   type PasswordOptions,
   type PasswordStrength,
 } from "./logic";
-import styles from "./PasswordGeneratorPage.module.css";
+import styles from "./PasswordGeneratorTile.module.css";
 
 /** 強度ラベル日本語表記 */
 const STRENGTH_LABELS: Record<PasswordStrength, string> = {
@@ -88,9 +91,36 @@ const strengthFillClassMap: Record<PasswordStrength, string> = {
   strong: styles.strengthMeterFillStrong,
 };
 
-export default function PasswordGeneratorPage() {
+/** variant prop: 表示バリエーション（全機能を持つ full のみ）*/
+export type PasswordGeneratorTileVariant = "full";
+
+export interface PasswordGeneratorTileProps {
   /**
-   * ①-15/B-469 hydration 不整合の是正:
+   * 表示バリエーション（デフォルト: "full"）
+   * - "full": 長さスライダー・4文字種ToggleSwitch・強度メーター・生成・コピーの全機能
+   * logic に独立モードがないため full のみ（variant を無理にひねり出さない）
+   */
+  variant?: PasswordGeneratorTileVariant;
+  /** Panel の as prop に透過される HTML タグ（デフォルト: "section"） */
+  as?: "section" | "div" | "article" | "aside";
+  /** 追加クラス */
+  className?: string;
+}
+
+export default function PasswordGeneratorTile({
+  // variant は現状 "full" のみ。将来バリエーションを追加する際に利用。
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  variant = "full",
+  as = "section",
+  className,
+}: PasswordGeneratorTileProps = {}) {
+  // ---------- id インスタンス一意化（複数同居時の重複 id・label 誤結合防止）[A-6] ----------
+  const uid = useId();
+  const lengthSliderId = `${uid}-length`;
+
+  // ---------- State ----------
+  /**
+   * hydration 安全性:
    * useState の初期値を空文字列にする。
    * generatePassword は crypto.getRandomValues を使うため SSR と CSR で異なる値を返す。
    * useEffect（クライアントのみで実行）でマウント後に自動生成することで
@@ -99,19 +129,11 @@ export default function PasswordGeneratorPage() {
   const [password, setPassword] = useState<string>("");
   const [options, setOptions] = useState<PasswordOptions>(DEFAULT_OPTIONS);
 
-  /**
-   * AP-I11: タイマー ID を useRef で保持し unmount 時に clearTimeout する。
-   * ただし useCopyToClipboard フックが内部で AP-I11 を実装済みのため、
-   * コピータイマーの管理はフックに委譲する。
-   * ここでは「マウント後自動生成」の実装には useEffect のみ使用。
-   */
-
-  // ①-15 クライアントのみ: マウント後に初回パスワードを自動生成
-  // useEffect内でのsetStateは通常避けるべきだが、
-  // crypto.getRandomValues()はSSRとCSRで異なる値を返すため
-  // 初期値をuseStateの遅延初期化で設定するとhydration不整合が発生する。
-  // useEffect内での初期化（クライアントのみで実行）が唯一の安全な方法。
-  // 参考: docs/knowledge/nextjs.md §4 OK パターン（空依存 = マウント時1回）
+  // クライアントのみ: マウント後に初回パスワードを自動生成
+  // useEffect 内での setState は通常避けるべきだが、
+  // crypto.getRandomValues() は SSR と CSR で異なる値を返すため
+  // 初期値を useState の遅延初期化で設定すると hydration 不整合が発生する。
+  // useEffect 内での初期化（クライアントのみで実行）が唯一の安全な方法。
   const initialGenRef = useRef(false);
   useEffect(() => {
     if (!initialGenRef.current) {
@@ -121,22 +143,14 @@ export default function PasswordGeneratorPage() {
     }
   }, []);
 
-  // A-6: useCopyToClipboard フック使用
+  // useCopyToClipboard フック（AP-I11: タイマー cleanup はフック内で実装済み）
   const { copy, copiedKey } = useCopyToClipboard();
   const isCopied = Boolean(copiedKey);
 
-  /**
-   * ①-6 強度バーの動的更新:
-   * evaluateStrength(options) を呼ぶことで、オプション変更のたびに強度が動的に再計算される。
-   * Component.tsx では `evaluateStrength(options)` を使っており、これを継承する。
-   */
+  // 強度: options 変更のたびに動的に再計算（全文字種 OFF 時も正しく weak を返す）
   const strength = evaluateStrength(options);
 
-  /**
-   * UX是正 (ux-gate-findings.md U-10):
-   * 全文字種が OFF のとき「文字の種類を1つ以上選んでください」エラーを表示する。
-   * charset が空の状態で生成ボタンを押すことを防ぐため生成ボタンも無効化する。
-   */
+  // 全文字種 OFF の判定（UX是正: charset=空の生成を防ぐ・エラー表示）
   const noCharset = isNoCharsetSelected(options);
 
   /** パスワード生成ハンドラ */
@@ -145,7 +159,7 @@ export default function PasswordGeneratorPage() {
     setPassword(pw);
   }, [options]);
 
-  /** コピーハンドラ (A-6) */
+  /** コピーハンドラ */
   const handleCopy = useCallback(async () => {
     if (!password) return;
     await copy(password);
@@ -159,17 +173,19 @@ export default function PasswordGeneratorPage() {
     [],
   );
 
+  // ---------- Render ----------
+  // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）[A-1]
   return (
-    <div className={styles.container}>
+    <Panel as={as} className={className}>
       {/* オプション群 */}
       <div className={styles.optionsSection}>
         {/* 文字数スライダー */}
         <div className={styles.lengthControl}>
-          <label htmlFor="pg-length" className={styles.lengthLabel}>
+          <label htmlFor={lengthSliderId} className={styles.lengthLabel}>
             文字数: {options.length}
           </label>
           <input
-            id="pg-length"
+            id={lengthSliderId}
             type="range"
             min={8}
             max={128}
@@ -181,8 +197,7 @@ export default function PasswordGeneratorPage() {
           />
         </div>
 
-        {/* ②-11: チェックボックス → ToggleSwitch
-         * DESIGN.md §5「ON/OFF を切り替えるフォーム要素は原則としてトグルスイッチを使う」 */}
+        {/* DESIGN.md §5: ON/OFF を切り替えるフォーム要素は原則としてトグルスイッチを使う */}
         <div className={styles.toggleGroup}>
           <ToggleSwitch
             label="大文字 (A-Z)"
@@ -212,15 +227,14 @@ export default function PasswordGeneratorPage() {
         </div>
       </div>
 
-      {/* UX是正: 全文字種OFFのエラーフィードバック (ux-gate-findings.md U-10)
-       * A-4: ErrorMessage コンポーネント使用 */}
+      {/* UX是正: 全文字種OFFのエラーフィードバック */}
       {noCharset && (
         <ErrorMessage message="使用する文字の種類を 1 つ以上選んでください" />
       )}
 
       {/* 強度バー
-       * C-3: role="status" aria-live="polite" に実テキストノードのサマリを配置
-       * ①-6: evaluateStrength(options) により options 変更で動的に更新される
+       * [C-3]: role="status" aria-live="polite" に実テキストノードのサマリを配置
+       * evaluateStrength(options) により options 変更で動的に更新される
        * 秘密情報配慮: パスワード <code> ではなく強度ラベル側のみに role="status" を付与
        * UX是正: 全文字種OFFのとき「—」を表示し「弱い」誤表示を防ぐ */}
       <div role="status" aria-live="polite" className={styles.strengthSection}>
@@ -244,7 +258,7 @@ export default function PasswordGeneratorPage() {
         )}
       </div>
 
-      {/* 生成ボタン (B-489 Button コンポーネント使用)
+      {/* 生成ボタン
        * UX是正: 全文字種OFFのとき無効化（charset=空の生成を防ぐ） */}
       <div className={styles.generateButton}>
         <Button variant="primary" onClick={handleGenerate} disabled={noCharset}>
@@ -253,8 +267,8 @@ export default function PasswordGeneratorPage() {
       </div>
 
       {/* 結果表示
-       * T-4b: コピーボタンあり（持ち帰り対象）
-       * E-7: password が空のとき コピーボタンを disabled にする */}
+       * コピーボタンあり（持ち帰り対象）
+       * password が空のとき コピーボタンを disabled にする */}
       <div className={styles.resultSection}>
         <div className={styles.resultDisplay}>
           {/* 秘密情報配慮: aria-live は付与しない */}
@@ -272,6 +286,6 @@ export default function PasswordGeneratorPage() {
           </div>
         </div>
       </div>
-    </div>
+    </Panel>
   );
 }

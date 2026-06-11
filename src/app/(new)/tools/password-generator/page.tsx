@@ -8,7 +8,7 @@ import {
 } from "@/lib/seo";
 import ToolPageLayout from "@/tools/_components/ToolPageLayout";
 import ToolErrorBoundary from "@/tools/_components/ErrorBoundary";
-import PasswordGeneratorPageContent from "@/tools/password-generator/PasswordGeneratorPage";
+import PasswordGeneratorTile from "@/tools/password-generator/PasswordGeneratorTile";
 
 const SLUG = "password-generator";
 const tool = toolsBySlug.get(SLUG);
@@ -27,7 +27,7 @@ export default function PasswordGeneratorPage() {
         }}
       />
       <ToolErrorBoundary>
-        <PasswordGeneratorPageContent />
+        <PasswordGeneratorTile variant="full" />
       </ToolErrorBoundary>
     </ToolPageLayout>
   );
