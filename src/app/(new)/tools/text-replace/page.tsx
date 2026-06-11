@@ -8,7 +8,7 @@ import {
 } from "@/lib/seo";
 import ToolPageLayout from "@/tools/_components/ToolPageLayout";
 import ToolErrorBoundary from "@/tools/_components/ErrorBoundary";
-import TextReplacePage from "@/tools/text-replace/TextReplacePage";
+import TextReplaceTile from "@/tools/text-replace/TextReplaceTile";
 const SLUG = "text-replace";
 const tool = toolsBySlug.get(SLUG);
 
@@ -26,7 +26,7 @@ export default function TextReplacePageRoute() {
         }}
       />
       <ToolErrorBoundary>
-        <TextReplacePage />
+        <TextReplaceTile variant="full" />
       </ToolErrorBoundary>
     </ToolPageLayout>
   );
