@@ -1,12 +1,14 @@
 /* ToolboxContent — 道具箱プレビューのスタイル
- * cycle-226 T-2
+ * cycle-226 T-2 / cycle-230 T-5（追加・削除 UI とドリフト是正）
  * DESIGN トークン準拠: --bg / --fg / --fg-soft / --border / --r-normal
  */
 
-/* ページ全体のレイアウト */
+/* ページ全体のレイアウト
+ * max-width は DESIGN.md §4「画面幅は最大1200px」に従う
+ * （cycle-230 T-2 で発見した 1400px ドリフトを是正） */
 .page {
   padding: 2rem;
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -50,6 +52,14 @@
   width: 100%;
   display: flex;
   flex-direction: column;
+  gap: 4px; /* 操作列（外す）とタイル本体の間隔 */
+}
+
+/* タイル上部の操作列（「外す」ボタンを右寄せで置く）。
+ * タイル本体（XxxTile / Panel）には手を入れず、ラッパー側に置く。 */
+.tileToolbar {
+  display: flex;
+  justify-content: flex-end;
 }
 
 /* 生きたタイル: ラッパーの高さに追従 */
@@ -72,4 +82,89 @@
   border-bottom: 1px solid var(--border);
   text-transform: lowercase;
   letter-spacing: 0.05em;
+}
+
+/* ================================================================
+   cycle-230 T-5: タイルの追加・リセット UI / 空状態
+   ================================================================ */
+
+/* 道具箱が空（全タイルを外した）ときの案内パネル */
+.emptyPanel {
+  margin-bottom: 2rem;
+}
+
+.emptyMessage {
+  margin: 0;
+  color: var(--fg-soft);
+  line-height: 1.7;
+}
+
+/* 「タイルを追加」セクション（カテゴリセクションと同じリズムで置く） */
+.manageSection {
+  margin-bottom: 2rem;
+}
+
+.manageEmptyMessage {
+  margin: 0;
+  color: var(--fg-soft);
+  line-height: 1.7;
+}
+
+/* 道具箱にないタイルの一覧（displayLabel ＋ 追加ボタン） */
+.availableList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.availableItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.availableItem:first-child {
+  padding-top: 0;
+}
+
+.availableItem:last-child {
+  border-bottom: none;
+}
+
+.availableLabel {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  color: var(--fg);
+  line-height: 1.7;
+}
+
+/* 追加リスト内のカテゴリ表記（カテゴリ見出しと同じトーンの補足情報） */
+.availableCategory {
+  font-size: 0.8rem;
+  color: var(--fg-soft);
+  text-transform: lowercase;
+  letter-spacing: 0.05em;
+}
+
+/* リセット行（外しすぎたときに最初の状態へ戻す唯一の手段） */
+.resetRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.resetNote {
+  font-size: 0.85rem;
+  color: var(--fg-soft);
+  line-height: 1.7;
 }

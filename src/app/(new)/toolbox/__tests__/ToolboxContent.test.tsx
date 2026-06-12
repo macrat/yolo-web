@@ -1,5 +1,6 @@
 /**
- * ToolboxContent のユニットテスト（cycle-228 T-32 で34ツール規模に再設計）
+ * ToolboxContent のユニットテスト（cycle-228 T-32 で34ツール規模に再設計、
+ * cycle-230 T-6 で中核機構＝追加・削除・永続化の検証を追加）
  *
  * 設計原則:
  * - 「数合わせの空洞化」を排除: 「タイル数=39」だけのアサーションでなく、
@@ -8,6 +9,9 @@
  * - 34種の full タイル × 各1個 + 恒久配置の固定 variant 5枚 = 合計39枚を検証。
  * - 39タイルの render は重い（実測約20秒）ため、全アサーションを1回の render で完了させる。
  *   describe はグルーピングのみ。全 it が独立した render を呼ぶと合計60秒超になる。
+ *   cycle-230 の追加・削除・リセット操作（TB-8）も同一 render 内で連続検証する。
+ *   保存構成の復元（TB-9）はマウント前に localStorage を仕込む必要があるため
+ *   のみ別 render とする（初回レンダーは常にデフォルト39枚なのでこれも重い）。
  *
  * 検証観点:
  * - TB-1: 全34ツールの full タイルが各1枚描画されている
@@ -18,10 +22,21 @@
  * - TB-5: ダミータイルが存在しない
  * - TB-6: 39インスタンス同居時の DOM id 重複ゼロ（useId 一意化の検証）
  * - TB-7: タイルラッパーがレスポンシブ幅（maxWidth）を使用している
+ * - TB-8: タイルの削除・追加・リセットが動き、構成が localStorage に反映される
+ * - TB-9: 保存済み構成（未知 id 除去込み）がマウント後に適用される
  */
-import { render, screen } from "@testing-library/react";
-import { it, expect } from "vitest";
+import { fireEvent, render, screen } from "@testing-library/react";
+import { beforeEach, it, expect } from "vitest";
 import ToolboxContent from "../ToolboxContent";
+import { DEFAULT_TOOLBOX_ITEM_IDS } from "../toolbox-catalog";
+import {
+  TOOLBOX_SCHEMA_VERSION,
+  TOOLBOX_STORAGE_KEY,
+} from "../toolbox-storage";
+
+beforeEach(() => {
+  window.localStorage.clear();
+});
 
 /**
  * 全検証を1回の render で完了する単一テスト。
@@ -255,4 +270,103 @@ it("ToolboxContent: 全34ツール full タイル + 固定 variant 5枚 + 構造
     expect(wrapper.style.width).toBeFalsy();
     expect(wrapper.style.maxWidth).toBeTruthy();
   });
-}, 60000); // タイムアウト: 39タイルの render は 約20秒、余裕を持って 60秒
+
+  // =========================================================================
+  // TB-8: タイルの削除・追加・リセット（cycle-230 中核機構）
+  // 39タイルの再 render コストを抑えるため、同一 render 内で操作フローを
+  // 「外す → 追加で復帰 → 外す → リセット」と連続検証する。
+  // =========================================================================
+
+  const countTiles = (): number =>
+    container.querySelectorAll("[class*='tileWrapper']").length;
+  const readStored = (): { version: number; items: string[] } =>
+    JSON.parse(window.localStorage.getItem(TOOLBOX_STORAGE_KEY) as string) as {
+      version: number;
+      items: string[];
+    };
+
+  // 操作対象: url-encode の固定 variant（displayLabel で full と区別できる）
+  const removeLabel =
+    "URLエンコード・デコード（エンコード専用）を道具箱から外す";
+  const addLabel = "URLエンコード・デコード（エンコード専用）を道具箱に追加";
+
+  // デフォルト構成では: 全39枚が道具箱にあり「追加」候補は無く、リセットは無効
+  expect(screen.queryByRole("button", { name: addLabel })).toBeNull();
+  expect(
+    screen.getByRole("button", { name: "最初の状態に戻す" }),
+  ).toBeDisabled();
+  // 各タイルに「外す」操作がある（39枚ぶん）
+  expect(
+    screen.getAllByRole("button", { name: /を道具箱から外す$/ }),
+  ).toHaveLength(39);
+
+  // --- 外す: 枚数が減り、localStorage に反映され、「追加」候補に現れる ---
+  fireEvent.click(screen.getByRole("button", { name: removeLabel }));
+  expect(countTiles()).toBe(38);
+  const afterRemove = readStored();
+  expect(afterRemove.version).toBe(TOOLBOX_SCHEMA_VERSION);
+  expect(afterRemove.items).toHaveLength(38);
+  expect(afterRemove.items).not.toContain("url-encode:encode");
+  expect(screen.queryByRole("button", { name: removeLabel })).toBeNull();
+  expect(screen.getByRole("button", { name: addLabel })).toBeTruthy();
+
+  // --- 追加で復帰: カタログ定義順の位置（＝デフォルトと同一の並び）に戻る ---
+  fireEvent.click(screen.getByRole("button", { name: addLabel }));
+  expect(countTiles()).toBe(39);
+  expect(readStored().items).toEqual([...DEFAULT_TOOLBOX_ITEM_IDS]);
+  expect(screen.getByRole("button", { name: removeLabel })).toBeTruthy();
+
+  // --- リセット: 外した後に「最初の状態に戻す」でデフォルト復帰し、保存が消える ---
+  fireEvent.click(screen.getByRole("button", { name: removeLabel }));
+  expect(countTiles()).toBe(38);
+  fireEvent.click(screen.getByRole("button", { name: "最初の状態に戻す" }));
+  expect(countTiles()).toBe(39);
+  expect(window.localStorage.getItem(TOOLBOX_STORAGE_KEY)).toBeNull();
+  expect(
+    screen.getByRole("button", { name: "最初の状態に戻す" }),
+  ).toBeDisabled();
+}, 120000); // タイムアウト: 39タイルの render 約20秒 + TB-8 の再 render を考慮して 120秒
+
+/**
+ * TB-9: 保存済み構成の復元（cycle-230 中核機構の永続化側）。
+ *
+ * マウント前に localStorage を仕込む必要があるため別 render とする。
+ * hydration 安全設計により初回レンダーは常にデフォルト39枚 →
+ * マウント後の useEffect で保存構成（2枚）へ縮退することを検証する。
+ * 未知 id が混入していても黙って除去される（ツール削除後の再訪問を想定）。
+ */
+it("ToolboxContent: 保存済み構成（未知 id 除去込み）がマウント後に適用される", () => {
+  window.localStorage.setItem(
+    TOOLBOX_STORAGE_KEY,
+    JSON.stringify({
+      version: TOOLBOX_SCHEMA_VERSION,
+      items: ["char-count:full", "retired-tool:full", "qr-code:full"],
+    }),
+  );
+
+  const { container } = render(<ToolboxContent />);
+
+  // 保存構成の2枚だけが残る（未知 id "retired-tool:full" は除去）
+  expect(container.querySelectorAll("[class*='tileWrapper']")).toHaveLength(2);
+  expect(
+    screen.getByRole("region", { name: "文字数カウント結果" }),
+  ).toBeTruthy();
+  expect(
+    screen.getByRole("textbox", { name: "テキストまたはURL" }),
+  ).toBeTruthy();
+
+  // カテゴリ見出しは中身のあるカテゴリ（text / generator）のみ表示される
+  expect(screen.getByRole("heading", { name: "text" })).toBeTruthy();
+  expect(screen.getByRole("heading", { name: "generator" })).toBeTruthy();
+  expect(screen.queryByRole("heading", { name: "developer" })).toBeNull();
+  expect(screen.queryByRole("heading", { name: "encoding" })).toBeNull();
+  expect(screen.queryByRole("heading", { name: "security" })).toBeNull();
+
+  // 外した37枚は「追加」候補に並び、リセットは有効になっている
+  expect(
+    screen.getAllByRole("button", { name: /を道具箱に追加$/ }),
+  ).toHaveLength(37);
+  expect(
+    screen.getByRole("button", { name: "最初の状態に戻す" }),
+  ).toBeEnabled();
+}, 120000); // タイムアウト: 初回レンダーはデフォルト39枚のため重い
