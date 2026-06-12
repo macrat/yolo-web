@@ -2,7 +2,7 @@
 id: 234
 description: B-509 道具箱・ツールタイルの利用計測（GA イベント）整備 — トップ=道具箱の構成操作とタイル実利用を観測可能にし、Phase 10.4/10.5 の着手判断と Phase 10.3 の成否判定の前提を作る
 started_at: 2026-06-12T21:36:45+0900
-completed_at: null
+completed_at: 2026-06-12T23:17:05+0900
 ---
 
 # サイクル-234
@@ -18,10 +18,10 @@ cycle-232 でトップを道具箱に置き換えて本公開したが、kickoff
 - [x] T-3: ToolboxContent の構成操作（タイル追加・削除・リセット・プリセット選択）への計測組み込み — entry.slug/entry.variant は別フィールドで実在（toolbox-catalog.tsx:80-104）。プリセット適用は applyPreset 共通経路を新設し即時適用と確認後適用の両方を計測・確認のみ/「やめる」では不送信
 - [x] T-4: タイル実利用（first interaction）計測 — 道具箱側: `renderTileWrapper` 内でタイル本体のみを `.tileBody` で包み capture phase 捕捉（tileToolbar「外す」は構造的に除外）。送信済み記録は ToolboxContent の useRef（entry.id 単位）で remount 重複も防止。39 タイル〔34 ツール full + 固定 variant 5 枚。実装値: toolbox-catalog.test.ts:37-41〕の個別改修なし。道具箱側は full 含め常に variant を送る（設計「道具箱側でのみ variant を付与」の帰結・BigQuery で full と固定 variant の区別が残る）
 - [x] T-5: タイル実利用計測 — 詳細ページ側: ToolPageLayout の「3. ツール本体」section 自体をクライアント境界 TileInteractionTracker が描画する方式で DOM 構造・スタイル完全同一のまま捕捉。item_id は既存 prop の meta.slug で呼び出し側 34 ファイル改修ゼロ。ToolPageLayout の使用はツール詳細 34 ページのみと grep 確認済み
-- [ ] T-6: 実機検証（Playwright で実際の操作により dataLayer / gtag 呼び出しにイベントが積まれることを確認。w360/w1280 の操作で UI 退行がないことも確認）
-- [ ] T-7: fresh reviewer による完了前レビュー
-- [ ] T-8: ブログ記事化の要否判断（読者価値の観点で独立判断。書く場合は blog-writer に依頼し contents-review を実施）
-- [ ] T-9: 4 ゲート確認（`npm run lint && npm run format:check && npm run test && npm run build`）
+- [x] T-6: 実機検証（Playwright で実際の操作により dataLayer / gtag 呼び出しにイベントが積まれることを確認。w360/w1280 の操作で UI 退行がないことも確認）— 本番ビルド（NEXT_PUBLIC_GA_TRACKING_ID=ダミー値）で PM が実施。全 5 イベントの送信・パラメータ・不送信条件（toolbar 操作／確認キャンセル／同一タイル 2 回目）・入力内容カナリアの dataLayer 不在を確認。**視覚検証（AP-WF05・workflow チェック指摘 1 を受けて成果物化）**: UI 変更対象 2 ページ × {w360, w1280} × {light, dark} = 8 枚を撮影し PM が全枚目視確認——トップ `/`（道具箱・`.tileBody` 追加）4 枚 = tmp/cycle-234/screenshot-{w360,w1280}-{light,dark}.png、ツール詳細（ToolPageLayout 変更の代表 /tools/char-count）4 枚 = tmp/cycle-234/screenshot-detail-{w360,w1280}-{light,dark}.png。全 8 枚で崩れ・はみ出し・テーマ不整合なし。w360 横はみ出しは両ページとも実測 0（docOverflowX 0・右端超過要素 0 件）。着手前撮影は実施していないが、本変更は視覚不変を意図した計測追加であり、前後対照に相当する検証は (a) fresh reviewer による詳細ページ DOM/class/aria-label の従来同一の実機検証、(b) `.tileBody` の flex チェーン透過の構造検証、(c) cycle-230 確立の回帰項目「w360 横はみ出し 0」の充足、の 3 点で構成した
+- [x] T-7: fresh reviewer による完了前レビュー — **承認（指摘ゼロ）**。設計突合・コード品質（AP-I 全 11 項目照合）・プライバシー（カナリア独立検証）・退行リスク（DOM/aria/flex チェーン）・4 ゲート独立再実行（GA 無効環境ビルド含む）・実機イベント独立検証・ドキュメント正確性（カタログ 39/固定 variant 5/ToolPageLayout 使用 34 箇所の grep 再実測）すべて確認済み
+- [x] T-8: ブログ記事化の要否判断 — **書かない**と判断。理由: (1) 読者が持ち帰れる核心（計測で何が分かったか）がまだ存在しない——成果はデータが貯まり Phase 10.4/10.5 を判断する時に出る。その時に「計測を整備して分かったこと」として書く方が一つの完結した学びになる。(2) cycle-233 で計測・データ読みテーマの記事を公開したばかりで、来訪者に見えない運営内部の変更の話が連続する。(3) 計測自体は来訪者に見えない変更でツールガイド等の読者向け価値もない
+- [x] T-9: 4 ゲート確認（`npm run lint && npm run format:check && npm run test && npm run build`）— 全通過（test 5608 passed + 8 skipped → skip は bundle-budget.test.ts の `describe.skipIf(!buildExists)` によるもので、ゲート実行順上 test 時点でビルド不在のため。build 完了後に個別再実行し 8 passed＝計測コード込みでバンドルバジェット合格・実質 5616 全件成功）
 
 ## 作業計画
 
@@ -81,24 +81,48 @@ cycle-232 でトップを道具箱に置き換えて本公開したが、kickoff
 - docs/cycles/cycle-232.md / cycle-233.md
 - src/lib/analytics.ts（既存計測パターン）
 
+## レビュー結果
+
+### 計画レビュー（T-1・reviewer・3 ラウンド）
+
+- r1: 改善指示（must-fix 2 / should-fix 2 / nit 1）。M-1: T-4 の「34 タイル」はタイル数として不正確（実数 39 = 34 full + 固定 variant 5。reviewer がテストコードから独立検出）。M-2: tile_first_interaction の item_id 粒度（slug か entry.id か）が未定義で BigQuery 分析可能性に直結。S-1: GA4 カスタムディメンション登録が遡及しない罠（BigQuery 前提の明示で回避）。S-2: 「閲覧のみ層」の層別設計が素案で未扱い。N-1: 命名方針の明文化。→ PM が全件反映。
+- r2: **承認**（5 件全件の解消を確認・nit 2 件は実装時回収条件付き: N-2 比較表の旧数値・N-3 add イベント説明文）。
+- T-1 確定版: **承認**。キャンセル不送信が 3 層層別に穴を開けないこと・variant 別パラメータ分離で BigQuery の JOIN/GROUP BY が後処理なしに書けることを reviewer が独立検証。N-2/N-3 の回収も確認。
+
+### 実装レビュー（T-7・fresh reviewer・1 ラウンド）
+
+- **承認（指摘ゼロ）**。設計 SSoT との突合（5 イベント・slug 共通軸・確認キャンセル不送信・toolbar 構造的除外・マウントごと 1 回）、コード品質（AP-I 全 11 項目照合・該当なし）、プライバシー（カナリア値の dataLayer 不在を独立実機検証）、退行リスク（詳細ページ DOM/class/aria 同一・道具箱 flex チェーン透過）、4 ゲート独立再実行（GA 無効環境での build 成功含む）、ドキュメント正確性（カタログ 39・固定 variant 5・ToolPageLayout 使用 34 箇所を grep 再実測）をすべて確認。
+
+### コンテンツレビュー
+
+- 該当なし（T-8 でブログを書かないと判断。判断理由は「実施する作業」T-8 参照）。
+
+### ワークフロー AP チェック（cycle-completion 手順 4・reviewer・2 ラウンド）
+
+- r1: 改善指示 2 件（AP-WF01〜04・06・08〜16 は逐条確認で該当なし）。指摘 1（AP-WF05）: 視覚検証の成果物化が不足——記述だけでなく実体にも穴があった（トップ 4 枚中 2 枚のみ目視・詳細ページ未撮影）。PM が残り 2 枚の目視確認＋詳細ページ 4 枚の撮影・目視確認・w360 横はみ出し実測を追加実施し、T-6 に枚数・保存パス・着手前撮影なしの代替検証構成を成果物化。指摘 2（AP-WF07）: アサイン単位がドキュメントから検証不能——実態は T-3+T-4 を同一 builder に直列一括依頼（同一ファイル並行なし）・T-5 のみ並行（変更ファイル素集合・越境禁止明記）で適合しており、補足事項に明記。
+- r2: **承認**。reviewer がスクショ 8 枚の実在・パス一致・代表ページの妥当性（/tools/char-count が ToolPageLayout 実使用）・画像の実体観察・T-3/T-4/T-5 変更ファイルの素集合（`comm` 確認)を独立検証。AP-WF01〜16 全項目該当なし。
+
 ## キャリーオーバー
 
-- なし（サイクル完了時に更新する）
+- B-510「道具箱利用計測データの初回分析と Phase 10.4/10.5 着手判断（＋計測整備のブログ化判断）」を backlog Deferred に起票。本サイクルで整備した計測のデータが貯まった時点で、(1) 来訪者 3 層の層別実測、(2) B-324（連携）/ B-313（シェア）の着手価値判断、(3) 「計測を整備して分かったこと」としてのブログ化判断（T-8 で「データなしでは書かない」と判断した記事の再判断）を行う。着手条件: 本番デプロイから 2 週間経過（2026-06-26 目安）。サイト全体が週 50〜100 PV 規模のためサンプル蓄積が遅い場合はさらに待つ。
 
 ## 補足事項
 
 - kickoff 時の backlog 整理: Deferred → Queued の移動該当なし。B-500 の着手条件「`<Tile>` 新設・Tile toolbox モード着工」は実コード確認で未達（`<Tile>` 共通コンポーネントは存在せず、`find src -name "Tile*"` で tile-grid.ts のみ）。その他の Deferred 項目は cycle-233 kickoff 時から状況変化なし（cycle-233 はコード変更なしの調査サイクルのため）。Queued → Deferred の移動該当なし。B-509 を新規起票し Active へ。
-- 本サイクルの計測整備後、1〜2 週間の GA 実測を経てから Phase 10.4/10.5 の着手判断を行う想定（サイト全体が週 50〜100 PV 規模のため、判断に足るサンプルが貯まるまでの期間は実測を見て調整する）。
+- 本サイクルの計測整備後、1〜2 週間の GA 実測を経てから Phase 10.4/10.5 の着手判断を行う想定（サイト全体が週 50〜100 PV 規模のため、判断に足るサンプルが貯まるまでの期間は実測を見て調整する）。この判断は B-510 として backlog Deferred に起票し、B-324/B-313 の Notes にも「着手前に B-510 の判断を経ること」を追記した。
+- 完了時の backlog 整理: B-509 を Active → Done へ移動。Done の「直近 5 サイクル」ルールに従い cycle-229 の 3 行（B-501/B-492/B-365）を削除。
+- 検証用ビルド（NEXT_PUBLIC_GA_TRACKING_ID=ダミー値）は T-9 で `rm -rf .next` 後に素の環境で再ビルドし、デプロイ成果物に検証用設定が混入しない状態に戻した。
+- **実装のアサイン単位（AP-WF07・workflow チェック指摘 2 を受けて明記）**: T-2（analytics.ts）→ 完了後に T-3+T-4（ともに ToolboxContent.tsx を変更するため**同一ファイル並行不能と判断し同一 builder に 1 タスクとして直列で一括依頼**）と T-5（ToolPageLayout 配下のみ・T-3/T-4 と変更ファイル素集合）の 2 エージェントを並行。T-5 の指示には「ToolboxContent.tsx・toolbox-catalog.tsx を編集しない（読むのは可）」の越境禁止を明記し、T-5 builder は完了報告で toolbox 配下無変更を自己申告・PM が git status で確認済み。
 
 ## サイクル終了時のチェックリスト
 
-- [ ] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
-- [ ] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
-- [ ] すべての変更がレビューされ、残存する指摘事項が無くなっている。
-- [ ] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
-- [ ] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
-- [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
-- [ ] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
+- [x] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
+- [x] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
+- [x] すべての変更がレビューされ、残存する指摘事項が無くなっている。
+- [x] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
+- [x] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
+- [x] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
+- [x] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
 
 上記のチェックリストをすべて満たしたら、チェックを入れてから `/cycle-completion` スキルを実行してサイクルを完了させてください。
 なお、「環境起因」「今回の変更と無関係」「既知の問題」「次回対応」などの **例外は一切認めません** 。必ずすべての項目を完全に満してください。
