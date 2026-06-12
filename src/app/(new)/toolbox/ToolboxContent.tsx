@@ -54,12 +54,32 @@
  * カタログはセル数（cols × rows）のみを保持し、px 換算は calcTilePixels に委譲。
  * maxWidth + width:100% でレスポンシブ（固定 width 禁止 = w360 横はみ出し防止）。
  * 規格に収まらない場合は機能を削らずに minHeight でオーバーフローを許容する。
+ *
+ * ## GA4 計測（cycle-234。設計は docs/cycles/cycle-234.md「作業内容」）
+ *
+ * - 構成操作: 追加 / 外す / リセット / プリセット適用をハンドラ内で送信する。
+ *   プリセットはインライン確認を経て**実際に適用されたときだけ**送る
+ *   （確認を出しただけ・「やめる」では送らない）。
+ * - タイル実利用（tile_first_interaction）: タイル本体だけを包む capture
+ *   リスナーで、マウント中タイルごとに最初の 1 回だけ送信する。
+ *   39 タイルの実装（src/tools 配下）には一切手を入れない。
+ * - item_id はツール slug（entry.slug）・variant は別パラメータ（entry.variant）。
+ *   詳細ページ側（surface:"detail"）との比較や trackShare との JOIN を slug
+ *   軸で成立させるため、variant 込みの entry.id は GA に送らない。
+ * - 入力内容・出力内容は一切送らない（プライバシー方針）。
  */
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import Button from "@/components/Button";
 import Panel from "@/components/Panel";
+import {
+  trackTileFirstInteraction,
+  trackToolboxPresetSelect,
+  trackToolboxReset,
+  trackToolboxTileAdd,
+  trackToolboxTileRemove,
+} from "@/lib/analytics";
 import { calcTilePixels } from "@/tools/_constants/tile-grid";
 
 import {
@@ -96,6 +116,13 @@ export default function ToolboxContent() {
     null,
   );
 
+  // tile_first_interaction 送信済みのカタログエントリ id（entry.id 単位）。
+  // 「マウント中 1 回だけ」の記録を ToolboxContent の ref に置くことで、
+  // 外す→戻す等でタイル要素が unmount/remount されても訪問中の重複送信を防ぐ
+  // （モジュールスコープに置かないのは、ページ再マウント = 新しい訪問観測で
+  // 再送するのが意図どおりのため）
+  const firstInteractionSentIds = useRef<Set<string>>(new Set());
+
   // マウント後に保存構成を適用する。保存構成がデフォルトと同一なら同じ参照を
   // 返して再レンダーを回避する。
   // hydration 安全パターン: SSR/初回レンダーは常にデフォルト構成を描画し、
@@ -121,12 +148,20 @@ export default function ToolboxContent() {
 
   function handleRemove(id: string): void {
     applyItems(itemIds.filter((itemId) => itemId !== id));
+    const entry = TOOLBOX_CATALOG_BY_ID.get(id);
+    if (entry) {
+      trackToolboxTileRemove({ item_id: entry.slug, variant: entry.variant });
+    }
   }
 
   function handleAdd(id: string): void {
     // 末尾に追加する（理由は冒頭「並び順・表示モデル」を参照）
     if (itemIds.includes(id)) return;
     applyItems([...itemIds, id]);
+    const entry = TOOLBOX_CATALOG_BY_ID.get(id);
+    if (entry) {
+      trackToolboxTileAdd({ item_id: entry.slug, variant: entry.variant });
+    }
   }
 
   function handleReset(): void {
@@ -134,6 +169,17 @@ export default function ToolboxContent() {
     clearToolboxItems();
     setConfirmingPresetId(null);
     setItemIds(DEFAULT_TOOLBOX_ITEM_IDS);
+    trackToolboxReset();
+  }
+
+  /**
+   * プリセットを実際に適用する（即時適用とインライン確認後の「適用する」の
+   * 共通経路）。toolbox_preset_select は適用が実行されたここでだけ送る
+   * （確認を出しただけ・「やめる」では送らない。設計は cycle-234 T-1）
+   */
+  function applyPreset(preset: ToolboxPreset): void {
+    applyItems(preset.itemIds);
+    trackToolboxPresetSelect({ preset_id: preset.id });
   }
 
   /**
@@ -146,7 +192,22 @@ export default function ToolboxContent() {
       setConfirmingPresetId(preset.id);
       return;
     }
-    applyItems(preset.itemIds);
+    applyPreset(preset);
+  }
+
+  /**
+   * タイル実利用（tile_first_interaction）。マウント中、同一タイル
+   * （entry 単位）につき最初のポインタ／キーボード操作で 1 回だけ送る。
+   * 入力内容は送らない（操作があった事実だけを観測する）
+   */
+  function handleTileFirstInteraction(entry: ToolboxCatalogEntry): void {
+    if (firstInteractionSentIds.current.has(entry.id)) return;
+    firstInteractionSentIds.current.add(entry.id);
+    trackTileFirstInteraction({
+      item_id: entry.slug,
+      surface: "toolbox",
+      variant: entry.variant,
+    });
   }
 
   const isDefaultConfig = sameItemIds(itemIds, DEFAULT_TOOLBOX_ITEM_IDS);
@@ -187,7 +248,16 @@ export default function ToolboxContent() {
             外す
           </Button>
         </div>
-        {entry.renderTile(styles.liveTile)}
+        {/* タイル実利用の捕捉領域: タイル本体だけを包む capture リスナー。
+            操作列（「外す」）を first interaction に含めないことを、
+            イベント発生元の判定でなく listener の設置場所で構造的に保証する */}
+        <div
+          className={styles.tileBody}
+          onPointerDownCapture={() => handleTileFirstInteraction(entry)}
+          onKeyDownCapture={() => handleTileFirstInteraction(entry)}
+        >
+          {entry.renderTile(styles.liveTile)}
+        </div>
       </div>
     );
   }
@@ -244,7 +314,7 @@ export default function ToolboxContent() {
                 </p>
                 <div className={styles.presetConfirmActions}>
                   <Button
-                    onClick={() => applyItems(confirmingPreset.itemIds)}
+                    onClick={() => applyPreset(confirmingPreset)}
                     aria-label={`プリセット「${confirmingPreset.name}」を適用する`}
                   >
                     適用する

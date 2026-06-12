@@ -13,11 +13,11 @@ cycle-232 でトップを道具箱に置き換えて本公開したが、kickoff
 
 ## 実施する作業
 
-- [ ] T-1: イベント設計の確定（イベント名・パラメータ・送信タイミング・プライバシー方針〔入力内容は送らない〕を文書化し、reviewer の計画レビューを受ける）
-- [ ] T-2: `src/lib/analytics.ts` に道具箱用 track 関数を追加（既存 sendGaEvent パターンに従う）＋ユニットテスト
-- [ ] T-3: ToolboxContent の構成操作（タイル追加・削除・リセット・プリセット選択）への計測組み込み
-- [ ] T-4: タイル実利用（first interaction）計測 — 道具箱側: `renderTileWrapper` の共通ラッパー 1 箇所で捕捉（34 タイル個別改修はしない）
-- [ ] T-5: タイル実利用計測 — 詳細ページ側: ToolPageLayout の children スロット周辺の共通 1 箇所で捕捉（道具箱 vs 詳細ページの利用比較を可能にする。共通 1 箇所で済まないと実装時に判明した場合は道具箱優先・詳細ページ側はキャリーオーバー可）
+- [x] T-1: イベント設計の確定（イベント名・パラメータ・送信タイミング・プライバシー方針〔入力内容は送らない〕を文書化し、reviewer の計画レビューを受ける）— 計画レビュー r1（must-fix 2/should-fix 2/nit 1 → 全反映）・r2（承認）・T-1 確定版レビュー（承認）。確定内容は「作業内容」参照
+- [x] T-2: `src/lib/analytics.ts` に道具箱用 track 関数を追加（既存 sendGaEvent パターンに従う）＋ユニットテスト — 5 関数追加・テスト 14 件追加（計 35 passed）・variant 未指定時はキーごと省略を構造的に保証（buildTileParams）
+- [x] T-3: ToolboxContent の構成操作（タイル追加・削除・リセット・プリセット選択）への計測組み込み — entry.slug/entry.variant は別フィールドで実在（toolbox-catalog.tsx:80-104）。プリセット適用は applyPreset 共通経路を新設し即時適用と確認後適用の両方を計測・確認のみ/「やめる」では不送信
+- [x] T-4: タイル実利用（first interaction）計測 — 道具箱側: `renderTileWrapper` 内でタイル本体のみを `.tileBody` で包み capture phase 捕捉（tileToolbar「外す」は構造的に除外）。送信済み記録は ToolboxContent の useRef（entry.id 単位）で remount 重複も防止。39 タイル〔34 ツール full + 固定 variant 5 枚。実装値: toolbox-catalog.test.ts:37-41〕の個別改修なし。道具箱側は full 含め常に variant を送る（設計「道具箱側でのみ variant を付与」の帰結・BigQuery で full と固定 variant の区別が残る）
+- [x] T-5: タイル実利用計測 — 詳細ページ側: ToolPageLayout の「3. ツール本体」section 自体をクライアント境界 TileInteractionTracker が描画する方式で DOM 構造・スタイル完全同一のまま捕捉。item_id は既存 prop の meta.slug で呼び出し側 34 ファイル改修ゼロ。ToolPageLayout の使用はツール詳細 34 ページのみと grep 確認済み
 - [ ] T-6: 実機検証（Playwright で実際の操作により dataLayer / gtag 呼び出しにイベントが積まれることを確認。w360/w1280 の操作で UI 退行がないことも確認）
 - [ ] T-7: fresh reviewer による完了前レビュー
 - [ ] T-8: ブログ記事化の要否判断（読者価値の観点で独立判断。書く場合は blog-writer に依頼し contents-review を実施）
@@ -31,17 +31,25 @@ cycle-232 でトップを道具箱に置き換えて本公開したが、kickoff
 
 ### 作業内容
 
-イベント設計の素案（確定は T-1。reviewer レビューで変更可）:
+イベント設計（T-1 確定版。計画レビュー r1/r2 を経て確定）:
 
-- `toolbox_tile_add` { item_id } — 「タイルを追加」パネルからの追加
-- `toolbox_tile_remove` { item_id } — 「外す」操作
+- `toolbox_tile_add` { item_id, variant? } — 道具箱に無いタイルの追加（カタログからの新規追加と「外す」後に戻す操作を含む。両者は実装上同一の `handleAdd` を通る同一操作であり区別しない・計画レビュー r2 N-3）
+- `toolbox_tile_remove` { item_id, variant? } — 「外す」操作
 - `toolbox_reset` — リセット操作
-- `toolbox_preset_select` { preset_id } — プリセット選択（インライン確認を経た適用のみ。確認キャンセルを別イベントにするかは T-1 で判断）
-- `tile_first_interaction` { item_id, surface: "toolbox" | "detail" } — タイル内の最初のポインタ／キーボード操作をマウントごと 1 回だけ送信
+- `toolbox_preset_select` { preset_id } — プリセット適用（インライン確認を経た適用のみ。**確認キャンセル〔「やめる」〕はイベントを送らない**: 知りたいのは「プリセットが使われるか」であり、キャンセル率の分析が必要になる状況〔確認 UI の摩擦評価〕は現在の規模では分析に足るサンプルが集まらない。イベントは最小限とし、必要が観測されたら追加する）
+- `tile_first_interaction` { item_id, surface: "toolbox" | "detail", variant? } — タイル内の最初のポインタ／キーボード操作をマウントごと 1 回だけ送信
 
-プライバシー方針: イベントパラメータは操作種別・item_id（ツール slug）・preset_id のみ。**タイルへの入力内容・出力内容は一切送らない**（coding-rules「ユーザーを危険にさらさない」）。
+**item_id の粒度（T-1 確定・計画レビュー r1 M-2）**: 道具箱カタログは 39 エントリ = 34 ツール slug + 固定 variant 5 枚であり、`renderTileWrapper(entry)` で手に入る `entry.id` は variant 込みの ID。一方、詳細ページ側（surface:"detail"）には variant 概念がなく slug しかない。**item_id = ツール slug を両 surface 共通の主軸**とし（道具箱 vs 詳細ページ比較・既存 `trackShare` の item_id との JOIN を成立させるため）、道具箱側でのみ variant を別パラメータで付与する（構成操作イベントも同じ規則。タイルを特定する全イベントで item_id/variant の意味を統一する）。
 
-実装方式: 既存の `src/lib/analytics.ts`（sendGaEvent + track 関数 + `__tests__`）のパターンに従う。タイル実利用は共通ラッパーでのイベント捕捉（capture phase）で実現し、34 ツールのタイル実装には手を入れない。ToolPageLayout はサーバーコンポーネントの可能性があるため、詳細ページ側は小さなクライアント境界コンポーネントの追加が必要になる見込み（実装時に確定）。
+**分析設計の前提（計画レビュー r1 S-2）**: 来訪者を 3 層——(1) 構成操作層（`toolbox_*` 発火）、(2) 構成は触らずタイルを使う層（`tile_first_interaction` のみ。デフォルト 6 枚をそのまま使う人を含む）、(3) 閲覧のみ層（page_view のみ）——に層別できることを設計の合格条件とする。`toolbox_view` のような起点イベントは page_view（page_path = `/`）と重複するため設けない。
+
+**分析経路の前提（計画レビュー r1 S-1）**: 分析は BigQuery raw export 前提とする（イベントパラメータはカスタムディメンション未登録でも BigQuery には全件入る）。GA4 探索/レポート UI でパラメータを見るにはカスタムディメンション登録が必要で**登録は遡及しない**が、本プロジェクトの分析標準は analyze-bigquery スキル（BigQuery）であり UI 依存はない。UI 分析が必要になった時点で登録を判断する。
+
+プライバシー方針: イベントパラメータは操作種別・item_id（ツール slug）・variant・preset_id・surface のみ。**タイルへの入力内容・出力内容は一切送らない**（coding-rules「ユーザーを危険にさらさない」）。
+
+命名方針: 既存計測は GA4 推奨イベント名の流用（`level_start`・`search`・`share` 等）だが、今回は対応する推奨イベントが存在しないため独自命名とする（snake_case・40 字以内・予約プレフィックスなしの規約適合は計画レビュー r1 で確認済み）。
+
+実装方式: 既存の `src/lib/analytics.ts`（sendGaEvent + track 関数 + `__tests__`）のパターンに従う。タイル実利用は共通ラッパーでのイベント捕捉（capture phase）で実現し、39 タイルの実装には手を入れない。ToolPageLayout はサーバーコンポーネント（"use client" なし・計画レビュー r1 で確認済み）のため、詳細ページ側は小さなクライアント境界コンポーネントの追加が必要になる見込み（実装時に確定）。
 
 ### 検討した他の選択肢と判断理由
 
@@ -59,8 +67,8 @@ cycle-232 でトップを道具箱に置き換えて本公開したが、kickoff
 
 | 案        | 内容                                                                            | 判断                                                                                                   |
 | --------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| a（採用） | 共通ラッパー 1 箇所での first-interaction 捕捉＋構成操作ハンドラへの track 追加 | 34 タイル無改修・一貫性が構造で保証される。`renderTileWrapper`（ToolboxContent.tsx）の実在を確認済み。 |
-| b         | 34 タイル各実装に計測呼び出しを個別追加                                         | 改修範囲が大きく、タイルごとの計測粒度のばらつき・追加漏れが構造的に発生する。                         |
+| a（採用） | 共通ラッパー 1 箇所での first-interaction 捕捉＋構成操作ハンドラへの track 追加 | 39 タイル無改修・一貫性が構造で保証される。`renderTileWrapper`（ToolboxContent.tsx）の実在を確認済み。 |
+| b         | 39 タイル各実装に計測呼び出しを個別追加                                         | 改修範囲が大きく、タイルごとの計測粒度のばらつき・追加漏れが構造的に発生する。                         |
 | c         | GTM 等の管理画面側設定で計測                                                    | コード外の設定はリポジトリで追跡できず SSoT を失う。既存計測（analytics.ts）とも分裂する。             |
 
 ### 計画にあたって参考にした情報

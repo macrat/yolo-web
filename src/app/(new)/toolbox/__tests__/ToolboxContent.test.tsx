@@ -28,9 +28,21 @@
  *   デフォルト構成の定義変更（daily-life 化）に影響されない
  * - TB-10: プリセット選択（適用・保存・設計順どおりの表示・「適用中」表示・
  *   手作業構成の上書き確認・既存の追加/削除/リセットとの相互作用）
+ * - TB-11: GA4 構成操作イベント（追加・削除・リセット・プリセット適用。
+ *   item_id = slug / variant 分離、確認キャンセルの不送信。cycle-234 T-3）
+ * - TB-12: GA4 tile_first_interaction（タイル本体操作で送信・toolbar 操作は
+ *   不送信・マウント中はタイルごとに 1 回だけ＝remount 後も再送しない。
+ *   cycle-234 T-4）
  */
 import { fireEvent, render, screen } from "@testing-library/react";
-import { beforeEach, it, expect } from "vitest";
+import { beforeEach, it, expect, vi } from "vitest";
+import {
+  trackTileFirstInteraction,
+  trackToolboxPresetSelect,
+  trackToolboxReset,
+  trackToolboxTileAdd,
+  trackToolboxTileRemove,
+} from "@/lib/analytics";
 import ToolboxContent from "../ToolboxContent";
 import {
   TOOLBOX_CATALOG,
@@ -47,8 +59,29 @@ import {
   TOOLBOX_STORAGE_KEY,
 } from "../toolbox-storage";
 
+// GA4 計測（cycle-234）のモック。track 関数だけ差し替え、他のエクスポートは
+// 実体のまま残す（タイル等が将来 analytics の別関数を import しても壊れない）
+vi.mock("@/lib/analytics", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/analytics")>();
+  return {
+    ...actual,
+    trackTileFirstInteraction: vi.fn(),
+    trackToolboxPresetSelect: vi.fn(),
+    trackToolboxReset: vi.fn(),
+    trackToolboxTileAdd: vi.fn(),
+    trackToolboxTileRemove: vi.fn(),
+  };
+});
+
+const mockTileFirstInteraction = vi.mocked(trackTileFirstInteraction);
+const mockPresetSelect = vi.mocked(trackToolboxPresetSelect);
+const mockReset = vi.mocked(trackToolboxReset);
+const mockTileAdd = vi.mocked(trackToolboxTileAdd);
+const mockTileRemove = vi.mocked(trackToolboxTileRemove);
+
 beforeEach(() => {
   window.localStorage.clear();
+  vi.clearAllMocks();
 });
 
 /** 道具箱に並ぶタイルの「外す」ボタンの aria-label を DOM 順で返す（表示順の検証用） */
@@ -673,4 +706,147 @@ it("ToolboxContent: プリセット選択（適用・保存・上書き確認・
       name: `プリセット「${DEFAULT_TOOLBOX_PRESET.name}」を道具箱に適用`,
     }),
   ).toBeNull();
+}, 60000);
+
+/**
+ * TB-11: GA4 構成操作イベント（cycle-234 T-3）。
+ *
+ * - 追加 / 削除: item_id はツール slug・variant は別パラメータ
+ *   （variant 込みの entry.id を送らない。固定 variant タイルで分離を検証）
+ * - リセット: パラメータなしの toolbox_reset
+ * - プリセット: 即時適用と確認経由の適用で送信し、確認を出しただけ・
+ *   「やめる」では送らない
+ */
+it("ToolboxContent: 構成操作で GA4 イベントが送信される（slug/variant 分離・確認キャンセル不送信）", () => {
+  render(<ToolboxContent />);
+
+  // --- 削除（外す）: qr-code:full → slug "qr-code" + variant "full" に分離 ---
+  fireEvent.click(
+    screen.getByRole("button", { name: "QRコード生成を道具箱から外す" }),
+  );
+  expect(mockTileRemove).toHaveBeenCalledTimes(1);
+  expect(mockTileRemove).toHaveBeenCalledWith({
+    item_id: "qr-code",
+    variant: "full",
+  });
+
+  // --- 追加: 固定 variant タイル url-encode:encode → variant "encode" ---
+  fireEvent.click(
+    screen.getByRole("button", {
+      name: "URLエンコード・デコード（エンコード専用）を道具箱に追加",
+    }),
+  );
+  expect(mockTileAdd).toHaveBeenCalledTimes(1);
+  expect(mockTileAdd).toHaveBeenCalledWith({
+    item_id: "url-encode",
+    variant: "encode",
+  });
+
+  // --- リセット ---
+  fireEvent.click(screen.getByRole("button", { name: "最初の状態に戻す" }));
+  expect(mockReset).toHaveBeenCalledTimes(1);
+
+  // --- プリセット即時適用（デフォルト構成から = 確認なし） ---
+  const writing = TOOLBOX_PRESETS[0];
+  fireEvent.click(
+    screen.getByRole("button", {
+      name: `プリセット「${writing.name}」を道具箱に適用`,
+    }),
+  );
+  expect(mockPresetSelect).toHaveBeenCalledTimes(1);
+  expect(mockPresetSelect).toHaveBeenCalledWith({ preset_id: writing.id });
+
+  // --- 手作業構成を作って上書き確認を出す: 確認表示だけでは送らない ---
+  const removeLabel = `${TOOLBOX_CATALOG_BY_ID.get(writing.itemIds[0])?.displayLabel}を道具箱から外す`;
+  fireEvent.click(screen.getByRole("button", { name: removeLabel }));
+  const development = TOOLBOX_PRESETS[1];
+  fireEvent.click(
+    screen.getByRole("button", {
+      name: `プリセット「${development.name}」を道具箱に適用`,
+    }),
+  );
+  expect(screen.getByText(/いまの構成は失われます/)).toBeTruthy();
+  expect(mockPresetSelect).toHaveBeenCalledTimes(1);
+
+  // --- 確認キャンセル（「やめる」）: 送らない ---
+  fireEvent.click(screen.getByRole("button", { name: "やめる" }));
+  expect(mockPresetSelect).toHaveBeenCalledTimes(1);
+
+  // --- 確認を経た適用（「適用する」）: ここで初めて送る ---
+  fireEvent.click(
+    screen.getByRole("button", {
+      name: `プリセット「${development.name}」を道具箱に適用`,
+    }),
+  );
+  fireEvent.click(
+    screen.getByRole("button", {
+      name: `プリセット「${development.name}」を適用する`,
+    }),
+  );
+  expect(mockPresetSelect).toHaveBeenCalledTimes(2);
+  expect(mockPresetSelect).toHaveBeenLastCalledWith({
+    preset_id: development.id,
+  });
+
+  // --- プリセット適用・リセットを構成差分の add/remove として二重送信しない ---
+  expect(mockTileAdd).toHaveBeenCalledTimes(1);
+  expect(mockTileRemove).toHaveBeenCalledTimes(2); // qr-code + 手作業化の1枚のみ
+}, 60000);
+
+/**
+ * TB-12: GA4 tile_first_interaction（cycle-234 T-4）。
+ *
+ * - タイル本体（renderTile の描画領域）への最初のポインタ/キーボード操作で
+ *   1 回だけ送る（同一タイルへの2回目は送らない）
+ * - wrapper 内の操作列（「外す」ボタン）への操作は「タイルを使った」に
+ *   含めない（capture リスナーをタイル本体だけに置く構造的除外の検証）
+ * - 外す→戻すで要素が remount しても、マウント中の送信は entry につき 1 回
+ *   （送信済み記録は ToolboxContent の ref が保持する）
+ */
+it("ToolboxContent: タイル本体の最初の操作で tile_first_interaction を1回だけ送信する", () => {
+  render(<ToolboxContent />);
+
+  // --- toolbar（「外す」ボタン）へのポインタ操作では送らない ---
+  fireEvent.pointerDown(
+    screen.getByRole("button", { name: "QRコード生成を道具箱から外す" }),
+  );
+  expect(mockTileFirstInteraction).not.toHaveBeenCalled();
+
+  // --- タイル本体（qr-code の入力欄）へのポインタ操作で送る ---
+  const qrInput = screen.getByRole("textbox", { name: "テキストまたはURL" });
+  fireEvent.pointerDown(qrInput);
+  expect(mockTileFirstInteraction).toHaveBeenCalledTimes(1);
+  expect(mockTileFirstInteraction).toHaveBeenCalledWith({
+    item_id: "qr-code",
+    surface: "toolbox",
+    variant: "full",
+  });
+
+  // --- 同一タイルへの2回目の操作（ポインタ・キーボードとも）は送らない ---
+  fireEvent.pointerDown(qrInput);
+  fireEvent.keyDown(qrInput, { key: "a" });
+  expect(mockTileFirstInteraction).toHaveBeenCalledTimes(1);
+
+  // --- 別タイル（unit-converter）はキーボード操作でも送る（タイル単位で1回） ---
+  fireEvent.keyDown(screen.getByRole("spinbutton", { name: "変換する値" }), {
+    key: "ArrowUp",
+  });
+  expect(mockTileFirstInteraction).toHaveBeenCalledTimes(2);
+  expect(mockTileFirstInteraction).toHaveBeenLastCalledWith({
+    item_id: "unit-converter",
+    surface: "toolbox",
+    variant: "full",
+  });
+
+  // --- 外す→戻す（remount）後の再操作でも、マウント中は再送しない ---
+  fireEvent.click(
+    screen.getByRole("button", { name: "QRコード生成を道具箱から外す" }),
+  );
+  fireEvent.click(
+    screen.getByRole("button", { name: "QRコード生成を道具箱に追加" }),
+  );
+  fireEvent.pointerDown(
+    screen.getByRole("textbox", { name: "テキストまたはURL" }),
+  );
+  expect(mockTileFirstInteraction).toHaveBeenCalledTimes(2);
 }, 60000);
