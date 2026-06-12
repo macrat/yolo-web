@@ -11,19 +11,20 @@ test("metadata includes twitter card configuration", () => {
   );
 });
 
-test("layout.tsx keywords reflect 占い・診断パーク concept (no tool-related keywords)", () => {
+test("layout.tsx keywords reflect 新コンセプト「日常の傍にある道具」(占い・診断系キーワードの根絶)", () => {
+  // cycle-232 T-2 決定: サイト共通 keywords は全ページに継承される自己定義で
+  // あり、トップの道具箱化（Phase 10.3）と同時にツール系へ刷新した。
+  // (legacy) Route Group も sharedMetadata を共有するため同じ keywords になる
   const keywords = metadata.keywords as string[];
   expect(keywords).toBeDefined();
-  // 旧コンセプトのキーワードが含まれていないこと
-  expect(keywords).not.toContain("JSON整形");
-  expect(keywords).not.toContain("Base64変換");
-  expect(keywords).not.toContain("パスワード生成");
-  expect(keywords).not.toContain("オンラインツール");
-  expect(keywords).not.toContain("Web開発ツール");
-  // 新コンセプトのキーワードが含まれていること
-  expect(keywords).toContain("占い");
-  expect(keywords).toContain("性格診断");
-  expect(keywords).toContain("無料診断");
+  // 旧コンセプト（占い・診断パーク）のキーワードが含まれていないこと
+  expect(keywords).not.toContain("占い");
+  expect(keywords).not.toContain("性格診断");
+  expect(keywords).not.toContain("無料診断");
+  expect(keywords).not.toContain("AI占い");
+  // 新コンセプト（ツール）のキーワードが含まれていること
+  expect(keywords).toContain("オンラインツール");
+  expect(keywords).toContain("道具箱");
 });
 
 test("metadata includes openGraph configuration", () => {

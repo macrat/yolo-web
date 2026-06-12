@@ -83,6 +83,18 @@ const nextConfig: NextConfig = {
       },
     ];
 
+    // Redirect /toolbox preview URL to the top page (308 permanent)
+    // cycle-232 (B-336 Phase 10.3): 道具箱はトップ `/` として本公開された。
+    // 旧 noindex プレビュー URL からの再訪者・ブックマークをトップへ恒久誘導する。
+    // localStorage はオリジン単位のため、保存済みの道具箱構成はそのまま引き継がれる。
+    const toolboxRedirects = [
+      {
+        source: "/toolbox",
+        destination: "/",
+        permanent: true,
+      },
+    ];
+
     // Redirect old /fortune URLs to /play (301 permanent)
     // Migrated in cycle-102 (B-206): fortune section is now under /play
     const fortuneRedirects = [
@@ -148,6 +160,7 @@ const nextConfig: NextConfig = {
       ...paginationRedirects,
       ...gamesRedirects,
       ...quizRedirects,
+      ...toolboxRedirects,
       ...fortuneRedirects,
       ...colorsRedirects,
       ...blogCategoryRedirects,

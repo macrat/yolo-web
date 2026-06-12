@@ -46,17 +46,8 @@ describe("StarRating", () => {
     expect(span?.textContent).toContain("☆☆");
   });
 
-  test("accepts variant prop 'purple' without errors", () => {
-    expect(() =>
-      render(<StarRating rating={4} variant="purple" />),
-    ).not.toThrow();
-  });
-
-  test("accepts variant prop 'gold' without errors", () => {
-    expect(() =>
-      render(<StarRating rating={4} variant="gold" />),
-    ).not.toThrow();
-  });
+  // variant prop（purple/gold）は cycle-232 T-6 r1 で削除した
+  // （FortunePreview 削除により金色1種で足りるため）
 
   test("renders correctly with rating 1.0 (1 full star, 4 empty)", () => {
     const { container } = render(<StarRating rating={1} />);

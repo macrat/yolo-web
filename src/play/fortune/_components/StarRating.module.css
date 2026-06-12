@@ -1,26 +1,8 @@
-/* ===== StarRating — 共通の星評価コンポーネント ===== */
-
-/*
- * CSS カスタムプロパティで色を制御する。
- * variant prop によって data-variant 属性が付与され、色が切り替わる。
- * - purple (FortunePreview用): #7c3aed
- * - gold (DailyFortuneCard用): #f59e0b
- */
+/* ===== StarRating — 星評価コンポーネント（DailyFortuneCard の金色表示用） =====
+ * 旧 FortunePreview 用の purple variant は cycle-232 T-6 r1 で削除した。
+ * 金色の設定値は元の DailyFortuneCard.module.css に合わせたもの */
 
 .stars {
-  /* デフォルト色は gold (DailyFortuneCard の元の色) */
-  color: #f59e0b;
-}
-
-/* FortunePreview 用の紫カラー: 元の FortunePreview.module.css に合わせた設定 */
-.stars[data-variant="purple"] {
-  font-size: 1.2rem;
-  color: #7c3aed;
-  letter-spacing: 0.05em;
-}
-
-/* DailyFortuneCard 用の金色カラー: 元の DailyFortuneCard.module.css に合わせた設定 */
-.stars[data-variant="gold"] {
   font-size: 1.25rem;
   color: #f59e0b;
   letter-spacing: 2px;

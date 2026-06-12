@@ -28,7 +28,7 @@
 
 - ツールの単一実装は `src/tools/<slug>/<Name>Tile.tsx`（例 `UrlEncodeTile`）。ルートが `<Panel>`。`"use client"` で自己完結（ToolPageLayout に**機能依存しない**＝道具箱に置いても単独で動く）。**そのツールの UI を描くコンポーネントはこれ1つだけ**にする（別の「ページ本体」実装を残さない＝分裂の構造的排除。grep で別実装ゼロを確認できる状態を保つ）。
 - 詳細ページ（`src/app/(new)/tools/<slug>/page.tsx`）は `ToolPageLayout` の中で `<XxxTile variant="full" />` をヒーローに描く。
-- 道具箱（`src/app/(new)/toolbox/`）は**同一の `XxxTile` を import** して `variant` 違いの**生きたインスタンス**として並べる。**リンク・カード・詳細ページへの誘導を作らない**（リンク集は cycle-175 の失敗）。
+- 道具箱（実装は `src/app/(new)/toolbox/` のモジュール群。cycle-232 = Phase 10.3 の本公開でトップ `/` のページ本体になり、旧 `/toolbox` は `/` へ permanent redirect）は**同一の `XxxTile` を import** して `variant` 違いの**生きたインスタンス**として並べる。**リンク・カード・詳細ページへの誘導を作らない**（リンク集は cycle-175 の失敗）。
 - **複数インスタンス同居**: 道具箱は同一タイルを複数並べるため、タイル内の DOM id は `useId` ベースのインスタンス一意 id にする（ハードコード id は重複・label 誤結合を起こす）。
 - **道具箱のタイル寸法**: `src/tools/_constants/tile-grid.ts`（1セル128px・n×m・`calcTilePixels`）を**推奨幅の上限**として使い、`maxWidth`＋親追従（`width:100%`）でレスポンシブにする。固定 `width` にするとモバイル（w360）で横はみ出しする。**機能を枠に合わせて削らない**（cycle-220 の轍）。タイルが規格に収まらない場合は規格側の見直しを起票する。
 

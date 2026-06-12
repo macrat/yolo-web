@@ -8,17 +8,17 @@
  *   構成される・プリセット内に id 重複なし
  * - 設計の不変条件: 同一ツール（slug）の full と固定 variant が
  *   同じプリセットに同居しない（「似たタイルが並んで迷わせる」の構造的防止）
+ * - デフォルト構成（cycle-232 T-2 決定）: DEFAULT_TOOLBOX_ITEM_IDS が
+ *   daily-life プリセットの定義参照である（重複保持しない）こと
  * - 選択ロジックの純関数: sameItemIds / findAppliedPreset / isHandCraftedConfig
  *   （UI 側の上書き確認の要否はこの判定に委譲されるため、ここで網羅する）
  */
 import { describe, expect, it } from "vitest";
 
+import { TOOLBOX_CATALOG_BY_ID, TOOLBOX_CATALOG_IDS } from "../toolbox-catalog";
 import {
   DEFAULT_TOOLBOX_ITEM_IDS,
-  TOOLBOX_CATALOG_BY_ID,
-  TOOLBOX_CATALOG_IDS,
-} from "../toolbox-catalog";
-import {
+  DEFAULT_TOOLBOX_PRESET,
   findAppliedPreset,
   isHandCraftedConfig,
   sameItemIds,
@@ -89,9 +89,30 @@ describe("toolbox-presets: カタログとの整合", () => {
       expect(new Set(slugs).size, preset.id).toBe(slugs.length);
     }
   });
+});
 
-  it("どのプリセットもデフォルト構成（全39枚）と一致しない（全部入りはリセット導線が担う）", () => {
+describe("toolbox-presets: デフォルト構成（cycle-232 T-2 決定 = daily-life）", () => {
+  it("DEFAULT_TOOLBOX_PRESET は daily-life で、選択 UI のプリセット一覧にも並ぶ", () => {
+    expect(DEFAULT_TOOLBOX_PRESET.id).toBe("daily-life");
+    expect(TOOLBOX_PRESETS).toContain(DEFAULT_TOOLBOX_PRESET);
+  });
+
+  it("DEFAULT_TOOLBOX_ITEM_IDS はプリセット定義への同一参照（構成を重複保持しない）", () => {
+    expect(DEFAULT_TOOLBOX_ITEM_IDS).toBe(DEFAULT_TOOLBOX_PRESET.itemIds);
+  });
+
+  it("デフォルト構成の全 id はカタログに実在し、重複がない", () => {
+    for (const id of DEFAULT_TOOLBOX_ITEM_IDS) {
+      expect(TOOLBOX_CATALOG_IDS.has(id), id).toBe(true);
+    }
+    expect(new Set(DEFAULT_TOOLBOX_ITEM_IDS).size).toBe(
+      DEFAULT_TOOLBOX_ITEM_IDS.length,
+    );
+  });
+
+  it("daily-life 以外のプリセットはデフォルト構成と一致しない", () => {
     for (const preset of TOOLBOX_PRESETS) {
+      if (preset.id === DEFAULT_TOOLBOX_PRESET.id) continue;
       expect(
         sameItemIds(preset.itemIds, DEFAULT_TOOLBOX_ITEM_IDS),
         preset.id,
@@ -118,8 +139,13 @@ describe("toolbox-presets: findAppliedPreset（「適用中」判定）", () => 
     }
   });
 
-  it("デフォルト構成・並び替え・一部削除の構成では undefined を返す", () => {
-    expect(findAppliedPreset(DEFAULT_TOOLBOX_ITEM_IDS)).toBeUndefined();
+  it("デフォルト構成では daily-life を返す（デフォルト = daily-life プリセット）", () => {
+    expect(findAppliedPreset(DEFAULT_TOOLBOX_ITEM_IDS)).toBe(
+      DEFAULT_TOOLBOX_PRESET,
+    );
+  });
+
+  it("空・並び替え・一部削除の構成では undefined を返す", () => {
     expect(findAppliedPreset([])).toBeUndefined();
 
     const writing = TOOLBOX_PRESETS[0];

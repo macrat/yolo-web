@@ -80,7 +80,7 @@ export const fortunePlayContentMeta: PlayContentMeta = {
 /**
  * 毎日新しい問題/結果が生成されるデイリー更新コンテンツのslug一覧。
  * これらのカードには「毎日更新」バッジを表示してリピート訪問を促す。
- * /play ページとトップページの両方から参照される共有定数。
+ * /play 配下の一覧・レイアウトコンポーネントから参照される共有定数。
  */
 export const DAILY_UPDATE_SLUGS: ReadonlySet<string> = new Set([
   "daily",
@@ -116,66 +116,15 @@ export function getAllPlaySlugs(): string[] {
 
 /**
  * slug → questionCount のルックアップマップ（クイズの問数表示用）。
- * /play ページとトップページの両方から参照される共有マップ。
+ * /play 配下の一覧・レイアウトコンポーネントから参照される共有マップ。
  */
 export const quizQuestionCountBySlug: Map<string, number> = new Map(
   allQuizMetas.map((q) => [q.slug, q.questionCount]),
 );
 
-/**
- * ヒーローセクションのピックアップ3件を自動選出する。
- *
- * 選出ルール:
- * - fortune カテゴリ（daily）は除外
- * - personality, knowledge, game の3カテゴリから各1件ずつ、計3件を選出
- * - 各カテゴリ内の選出基準は publishedAt の新しい順
- */
-export function getHeroPickupContents(): PlayContentMeta[] {
-  const categories: PlayContentMeta["category"][] = [
-    "personality",
-    "knowledge",
-    "game",
-  ];
-  return categories.flatMap((cat) => {
-    const items = getPlayContentsByCategory(cat);
-    const sorted = [...items].sort((a, b) =>
-      b.publishedAt.localeCompare(a.publishedAt),
-    );
-    return sorted.length > 0 ? [sorted[0]] : [];
-  });
-}
-
-/**
- * 「すべて」タブのデフォルト6件を選出する。
- *
- * 選出ルール:
- * - fortune カテゴリ（daily）は除外
- * - 各カテゴリから最低1件を確保: personality 4件 + knowledge 1件 + game 1件
- * - 各カテゴリ内は publishedAt 新しい順
- */
-export function getDefaultTabContents(): PlayContentMeta[] {
-  const config: { category: PlayContentMeta["category"]; count: number }[] = [
-    { category: "personality", count: 4 },
-    { category: "knowledge", count: 1 },
-    { category: "game", count: 1 },
-  ];
-  return config.flatMap(({ category, count }) => {
-    const items = getPlayContentsByCategory(category);
-    const sorted = [...items].sort((a, b) =>
-      b.publishedAt.localeCompare(a.publishedAt),
-    );
-    return sorted.slice(0, count);
-  });
-}
-
-/**
- * タブUI用に fortune を除く全コンテンツを返す（19件）。
- *
- * fortune カテゴリは FortunePreview セクションで別途表示するため除外する。
- */
-export function getNonFortuneContents(): PlayContentMeta[] {
-  return allPlayContents.filter((c) => c.category !== "fortune");
-}
+// 旧トップページ専用だった getHeroPickupContents / getDefaultTabContents /
+// getNonFortuneContents は cycle-232（トップの道具箱化・Phase 10.3）で
+// 旧トップとともに削除した。
 
 /**
  * /play ページの「イチオシ」セクションに表示するコンテンツとおすすめ理由のペア。

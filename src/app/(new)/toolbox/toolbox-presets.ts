@@ -1,11 +1,12 @@
 /**
- * toolbox-presets — ペルソナ別の道具箱プリセット（構築済みテンプレート）
+ * toolbox-presets — ペルソナ別の道具箱プリセット（構築済みテンプレート）と
+ * デフォルト構成（default content）
  *
- * 全39枚の一括表示から1枚ずつ「外す」を繰り返さなくても、来訪者が自分に
- * 近い道具箱からワンアクションで使い始められるようにするための出発点。
- * Phase 10.3（本公開）では default content（初期表示の道具箱構成）として
- * このデータをそのまま再利用する前提のため、UI（ToolboxContent）から
- * 独立した純データ＋純関数のモジュールとして定義する。
+ * 来訪者が自分に近い場面の道具箱からワンアクションで使い始められるように
+ * するための出発点。Phase 10.3（本公開・cycle-232）からは daily-life
+ * プリセットが default content（保存構成がない来訪者の初期表示）を兼ねる
+ * （DEFAULT_TOOLBOX_PRESET / DEFAULT_TOOLBOX_ITEM_IDS 参照）。
+ * UI（ToolboxContent）から独立した純データ＋純関数のモジュールとして定義する。
  *
  * ## データ形式
  *
@@ -39,6 +40,26 @@ export interface ToolboxPreset {
   /** カタログエントリ id（`${slug}:${variant}`）の順序付き配列 = 道具箱の構成 */
   itemIds: readonly string[];
 }
+
+/**
+ * daily-life プリセット。デフォルト構成（DEFAULT_TOOLBOX_ITEM_IDS）からも
+ * 参照されるため名前付き定数として定義する。選択 UI には TOOLBOX_PRESETS
+ * 経由で他のプリセットと同じ並び位置（4番目）に並ぶ。
+ */
+const DAILY_LIFE_PRESET: ToolboxPreset = {
+  id: "daily-life",
+  name: "暮らし",
+  description:
+    "単位の換算、年齢やBMIの計算、パスワードの作成など、暮らしの場面で使う道具を集めました。",
+  itemIds: [
+    "unit-converter:full",
+    "age-calculator:full",
+    "bmi-calculator:full",
+    "password-generator:full",
+    "qr-code:full",
+    "image-resizer:full",
+  ],
+};
 
 /** ペルソナ別プリセットの一覧（選択 UI にこの順で並ぶ） */
 export const TOOLBOX_PRESETS: readonly ToolboxPreset[] = [
@@ -86,20 +107,7 @@ export const TOOLBOX_PRESETS: readonly ToolboxPreset[] = [
       "qr-code:full",
     ],
   },
-  {
-    id: "daily-life",
-    name: "暮らし",
-    description:
-      "単位の換算、年齢やBMIの計算、パスワードの作成など、暮らしの場面で使う道具を集めました。",
-    itemIds: [
-      "unit-converter:full",
-      "age-calculator:full",
-      "bmi-calculator:full",
-      "password-generator:full",
-      "qr-code:full",
-      "image-resizer:full",
-    ],
-  },
+  DAILY_LIFE_PRESET,
   {
     id: "design",
     name: "デザイン・Web制作",
@@ -115,6 +123,26 @@ export const TOOLBOX_PRESETS: readonly ToolboxPreset[] = [
     ],
   },
 ];
+
+/**
+ * デフォルトプリセット（保存構成がない来訪者の初期道具箱）= daily-life。
+ *
+ * cycle-232 T-2 決定（Phase 10.3 本公開）: トップ `/` の道具箱は、初回
+ * 来訪者にカタログ全39枚ではなく「暮らし」6枚を見せる。6枚中5枚がターゲット
+ * 定義（docs/targets/）の検索需要に直接該当し、職業など特定の作業文脈を
+ * 仮定しないため、全来訪者の入口であるトップの初期構成に最も適する。
+ * 全39枚（カタログ）への到達は「タイルを追加」パネルが専任で担い、
+ * リセット（最初の状態に戻す）の戻り先もこのプリセットになる。
+ */
+export const DEFAULT_TOOLBOX_PRESET: ToolboxPreset = DAILY_LIFE_PRESET;
+
+/**
+ * デフォルト構成のエントリ id 列。プリセット定義への参照であり、構成を
+ * 重複保持しない（同一参照であることは __tests__/toolbox-presets.test.ts が
+ * 機械検証する）。
+ */
+export const DEFAULT_TOOLBOX_ITEM_IDS: readonly string[] =
+  DAILY_LIFE_PRESET.itemIds;
 
 /** 2つの構成（順序付き id 配列）が同一かを判定する */
 export function sameItemIds(

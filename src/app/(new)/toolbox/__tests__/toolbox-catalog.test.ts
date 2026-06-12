@@ -18,7 +18,6 @@ import { describe, expect, it } from "vitest";
 import { getAllToolSlugs, toolsBySlug } from "@/tools/registry";
 
 import {
-  DEFAULT_TOOLBOX_ITEM_IDS,
   TOOLBOX_CATALOG,
   TOOLBOX_CATALOG_BY_ID,
   TOOLBOX_CATALOG_IDS,
@@ -64,10 +63,10 @@ describe("toolbox-catalog: エントリ数と id", () => {
     }
   });
 
-  it("派生エクスポート（索引・id 集合・デフォルト構成）がカタログと一致する", () => {
-    expect(DEFAULT_TOOLBOX_ITEM_IDS).toEqual(
-      TOOLBOX_CATALOG.map((entry) => entry.id),
-    );
+  it("派生エクスポート（索引・id 集合）がカタログと一致する", () => {
+    // デフォルト構成は cycle-232 からカタログ全量ではなく daily-life
+    // プリセット（toolbox-presets.ts）になった。デフォルト構成の整合検証は
+    // toolbox-presets.test.ts の「デフォルト構成」describe が担う
     expect(TOOLBOX_CATALOG_IDS.size).toBe(TOOLBOX_CATALOG.length);
     for (const entry of TOOLBOX_CATALOG) {
       expect(TOOLBOX_CATALOG_BY_ID.get(entry.id)).toBe(entry);

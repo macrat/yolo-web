@@ -24,8 +24,7 @@ function formatDate(dateStr: string): string {
  * Uses localStorage-based user seed + JST date to deterministically
  * select a fortune entry. Records play for the achievement system.
  *
- * ストアのキャッシュ・購読ロジックは fortuneStore モジュールに集約し、
- * FortunePreview と実装を共有する。
+ * ストアのキャッシュ・購読ロジックは fortuneStore モジュールに集約する。
  */
 export default function DailyFortuneCard() {
   const { recordPlay } = useAchievements();

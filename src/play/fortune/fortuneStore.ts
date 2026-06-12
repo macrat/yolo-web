@@ -1,9 +1,9 @@
 /**
  * Shared store for the daily fortune feature.
  *
- * Provides a useSyncExternalStore-compatible interface so that both
- * FortunePreview and DailyFortuneCard can share a single cache and
- * avoid duplicating store logic.
+ * Provides a useSyncExternalStore-compatible interface so that consumers
+ * (currently DailyFortuneCard) can share a single cache and avoid
+ * duplicating store logic.
  *
  * Cache invalidation strategy:
  * - The cache stores the date it was computed for.
