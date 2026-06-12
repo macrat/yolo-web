@@ -1,371 +1,47 @@
-.main {
+/* トップページ（道具箱）のスタイル — cycle-232 T-3（Phase 10.3 本公開）
+ * DESIGN トークン準拠: --fg / --fg-soft
+ * 旧トップ（占い・診断パークのヒーロー等）のスタイルは cycle-232 で全廃した
+ */
+
+/* ページ全体のレイアウト。max-width は DESIGN.md §4「画面幅は最大1200px」 */
+.page {
+  padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
-  /* 左右 1.25rem は Header/Footer と同じサイト共通値。 */
-  padding: 0 1.25rem 2rem;
-  width: 100%;
 }
 
-/* ===== Hero ===== */
-/* /play ページのヒーローバナーと視覚的に統一したグラデーション背景 */
-/* Minor-1: border-radius / グラデーション / box-shadow は旧コンセプト（占い・診断パーク）由来の Hero 装飾。
- * DESIGN.md §6 Do/Don't（グラデーション非推奨）に抵触するが、Phase 9.2（B-336）で
- * 新コンセプト切替・コピー書き換えと同時に再設計予定のため暫定温存。 */
-.hero {
-  text-align: center;
-  padding: 3rem 1.5rem 2.5rem;
-  /* ヒーローと「まずはここから」セクションの間に十分な余白を確保 */
-  margin-bottom: 1.5rem;
-  /* 占い・診断テーマ: 紫→青→シアン系グラデーション（Phase 9.2 で再設計予定） */
-  /* 終点色 #0a7080: 白テキストとのコントラスト比5.0:1以上を確保するため暗いシアンを使用 (WCAG AA: 4.5:1必要) */
-  background: linear-gradient(135deg, #6c3bea 0%, #4466dd 40%, #0a7080 100%);
-  /* border-radius: Phase 9.2 で再設計予定（旧コンセプト由来の Hero 装飾、新トークン体系に未対応） */
-  border-radius: 0.75rem;
-  /* 装飾絵文字の配置基準 */
-  position: relative;
-  overflow: hidden;
+/* 冒頭のサイト説明 Panel（一行コンセプト・AI 運営の明示・発見導線）。
+ * 背景・境界線・内側余白は Panel コンポーネントが提供する（DESIGN.md §1。
+ * T-6 r1 SF-1 で Panel 収容に変更） */
+.intro {
+  margin-bottom: 2rem;
 }
 
-/* 装飾絵文字の共通スタイル（背景に散らして半透明に） */
-.heroDeco1,
-.heroDeco2,
-.heroDeco3,
-.heroDeco4 {
-  position: absolute;
-  font-size: 3rem;
-  opacity: 0.25;
-  pointer-events: none;
-  user-select: none;
-}
-
-.heroDeco1 {
-  top: 10%;
-  left: 5%;
-  transform: rotate(-15deg);
-}
-
-.heroDeco2 {
-  top: 15%;
-  right: 8%;
-  transform: rotate(10deg);
-}
-
-.heroDeco3 {
-  bottom: 10%;
-  left: 8%;
-  transform: rotate(5deg);
-}
-
-.heroDeco4 {
-  bottom: 15%;
-  right: 5%;
-  transform: rotate(-10deg);
-}
-
-.heroTitle {
-  /* サイト名はナビゲーション目的のため控えめなサイズに（来訪者には無意味なため） */
-  font-size: 1.75rem;
-  font-weight: 800;
-  /* 白文字でグラデーション背景との対比を確保 */
-  color: #ffffff;
-  margin-bottom: 0.5rem;
-  position: relative;
-  z-index: 1;
-}
-
-.heroSubtitle {
-  /* サイトのコンセプトを伝える重要な要素 */
+/* ページ見出し（h1）。about・ブログ詳細の先例に合わせて Panel 外に置く */
+.title {
   font-size: 1.5rem;
-  /* 白の半透明でサブタイトルを柔らかく表示 */
-  color: rgba(255, 255, 255, 0.95);
-  margin-bottom: 0.75rem;
-  font-weight: 600;
-  position: relative;
-  z-index: 1;
-}
-
-/* AI運営透明性テキスト（constitution.md Rule 3 準拠） */
-.heroAiNotice {
-  font-size: 0.85rem;
-  /* color: #fff に変更 — グラデーション中央付近でコントラスト比4.5:1を確保するため */
-  color: #fff;
-  margin-bottom: 1.5rem;
-  position: relative;
-  z-index: 1;
-}
-
-/* メインCTA ボタン（Phase 9.2 で再設計予定: box-shadow / transform は旧コンセプト由来の Hero 装飾）
- * border-radius は Major-1 対応で --r-interactive に統一済み */
-.heroCta {
-  display: inline-block;
-  padding: 0.75rem 2rem;
-  font-size: 1rem;
-  font-weight: 700;
-  color: #4c1d95;
-  background-color: #ffffff;
-  border-radius: var(--r-interactive);
-  text-decoration: none;
-  position: relative;
-  z-index: 1;
-  transition:
-    background-color 0.2s,
-    transform 0.2s,
-    box-shadow 0.2s;
-  /* box-shadow / transform: Phase 9.2 で再設計予定（旧コンセプト由来の Hero 装飾） */
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
-  margin-bottom: 1.5rem;
-}
-
-.heroCta:hover {
-  background-color: #f5f3ff;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-}
-
-/* ===== Hero featured list ===== */
-/* CTAボタン直下に3件のおすすめコンテンツをコンパクト表示 */
-/* グラデーション背景との対比を確保するため白系の半透明スタイルを採用 */
-.heroFeaturedList {
-  display: flex;
-  justify-content: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-  list-style: none;
-  padding: 0;
-  margin: 0 0 1.25rem;
-  position: relative;
-  z-index: 1;
-}
-
-/* アイコン+タイトルの横並びリンク */
-.heroFeaturedItem {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.4rem 0.9rem;
-  background-color: rgba(255, 255, 255, 0.18);
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  border-radius: var(--r-normal);
-  text-decoration: none;
-  color: #fff;
-  font-size: 0.85rem;
   font-weight: 500;
-  transition:
-    background-color 0.2s,
-    border-color 0.2s;
-}
-
-.heroFeaturedItem:hover {
-  background-color: rgba(255, 255, 255, 0.3);
-  border-color: rgba(255, 255, 255, 0.55);
-}
-
-/* アイコンをコンパクト表示: バッジサイズに合わせて 1rem */
-.heroFeaturedIcon {
-  font-size: 1rem;
-  line-height: 1;
-}
-
-.heroFeaturedTitle {
-  /* タイトルは1行で表示し、はみ出しを省略記号で防止 */
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* ===== Badges ===== */
-/* グラデーション背景の上に白ベースのバッジを配置 */
-.badges {
-  display: flex;
-  justify-content: center;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-  position: relative;
-  z-index: 1;
-}
-
-/* 静的バッジ（リンクなし: ヒーローバッジは全件静的span） */
-.badgeStatic {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.4rem 0.9rem;
-  background-color: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: var(--r-normal);
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: #fff;
-}
-
-.badgeIcon {
-  font-size: 1rem;
-}
-
-/* ===== Section ===== */
-.section {
-  padding: 2.5rem 0 1.5rem;
-  border-top: 1px solid var(--border);
-}
-
-/* section で使用するセクションタイトルと説明 */
-/* featuredSection（PlayContentTabs wrapper）は page.tsx 内の .section を使用 */
-.sectionTitle {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-  text-align: center;
-}
-
-.sectionDescription {
-  text-align: center;
-  color: var(--fg-soft);
-  font-size: 0.95rem;
-  margin-bottom: 1.5rem;
-}
-
-/* ===== Blog cards ===== */
-.blogList {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-/* 素朴な3行カード（h3 + time + description）— BlogCard は流用しない（PM判断 X10） */
-.blogCard {
-  display: block;
-  padding: 1.25rem;
-  border: 1px solid var(--border);
-  border-radius: var(--r-normal);
-  text-decoration: none;
-  color: inherit;
-  transition:
-    border-color 0.2s,
-    box-shadow 0.2s;
-}
-
-.blogCard:hover {
-  border-color: var(--accent);
-}
-
-.blogDate {
-  font-size: 0.8rem;
-  color: var(--fg-soft);
-}
-
-.blogTitle {
-  font-size: 1.05rem;
-  font-weight: 600;
-  margin: 0.25rem 0;
+  margin: 0 0 0.75rem 0;
   color: var(--fg);
 }
 
-.blogExcerpt {
-  font-size: 0.85rem;
+/* 一行コンセプト（基本の文字色で主文として見せる） */
+.lead {
+  margin: 0 0 0.25rem 0;
+  color: var(--fg);
+  line-height: 1.7;
+}
+
+/* AI 運営の明示（constitution rule 3）。補足のトーンだが 16px を維持する */
+.aiNotice {
+  margin: 0 0 0.25rem 0;
   color: var(--fg-soft);
-  line-height: 1.6;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  line-height: 1.7;
 }
 
-/* ===== See all link ===== */
-.seeAll {
-  text-align: center;
-  margin-top: 1.25rem;
-}
-
-/* padding縦を0.6remに増やして高さ44px以上のタップターゲットを確保 */
-.seeAllLink {
-  display: inline-block;
-  padding: 0.6rem 1.5rem;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--accent);
-  border: 1px solid var(--accent);
-  border-radius: var(--r-interactive);
-  text-decoration: none;
-  transition:
-    background-color 0.2s,
-    color 0.2s;
-}
-
-.seeAllLink:hover {
-  background-color: var(--accent);
-  color: var(--fg-invert);
-}
-
-/* キーボードナビゲーション時のフォーカスリング: 一貫したアクセシビリティを確保 */
-.seeAllLink:focus-visible,
-.blogCard:focus-visible,
-.heroCta:focus-visible,
-.heroFeaturedItem:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-/* ===== Dark mode ===== */
-/* ダークモード時はヒーローを暗めのグラデーションに（占い・診断パーク: Phase 9.2まで温存） */
-:global(:root.dark) .hero {
-  background: linear-gradient(135deg, #3d1e8f 0%, #1e3a8a 40%, #0e6b7a 100%);
-}
-
-/* ===== Responsive ===== */
-@media (max-width: 640px) {
-  /* モバイルヒーローpaddingを縮小してコンテンツ表示エリアを拡張 */
-  .hero {
-    padding: 2rem 1.5rem 1.5rem;
-  }
-
-  /* モバイルでもデスクトップと同様の視覚階層: h1控えめ・サブタイトル強調 */
-  .heroTitle {
-    font-size: 1.5rem;
-  }
-
-  .heroSubtitle {
-    font-size: 1.2rem;
-  }
-
-  .heroCta {
-    /* min-height: 44px でWCAG 2.5.5タップターゲットサイズを確保 */
-    min-height: 44px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0.65rem 1.75rem;
-    font-size: 0.95rem;
-  }
-
-  /* モバイルでのヒーローフィーチャーリスト: アイテムが小さくなるので余白を詰める */
-  .heroFeaturedList {
-    gap: 0.4rem;
-    margin-bottom: 1rem;
-  }
-
-  .heroFeaturedItem {
-    /* min-height: 44px でWCAG 2.5.5タップターゲットサイズを確保 */
-    min-height: 44px;
-    font-size: 0.8rem;
-    padding: 0.35rem 0.75rem;
-  }
-
-  .badges {
-    gap: 0.5rem;
-  }
-
-  .heroDeco1,
-  .heroDeco2,
-  .heroDeco3,
-  .heroDeco4 {
-    font-size: 2rem;
-    opacity: 0.15;
-  }
-}
-
-/* 320px以下の極小画面ではセクションタイトルをさらに縮小して折り返しを抑制 */
-@media (max-width: 320px) {
-  .sectionTitle {
-    font-size: 1.25rem;
-  }
+/* 道具箱の使い方と /tools への発見導線 */
+.discover {
+  margin: 0;
+  color: var(--fg-soft);
+  line-height: 1.7;
 }

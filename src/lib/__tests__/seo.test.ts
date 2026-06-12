@@ -140,13 +140,16 @@ describe("generateWebSiteJsonLd", () => {
     });
   });
 
-  test("description reflects 占い・診断パーク concept (no tool-related description)", () => {
+  test("description reflects 新コンセプト「日常の傍にある道具」(占い・診断パーク文言の根絶)", () => {
+    // cycle-232 T-2 決定: WebSite JSON-LD は全ページに注入されるサイト自己定義
+    // であり、トップの道具箱化（Phase 10.3）と同時に新コンセプトへ刷新した
     const result = generateWebSiteJsonLd() as Record<string, unknown>;
     const description = result.description as string;
-    // 旧コンセプトの記述が含まれていないこと
-    expect(description).not.toContain("オンラインツール");
-    // 新コンセプト（占い・診断パーク）の記述が含まれていること
-    expect(description).toMatch(/占い|診断/);
+    // 旧コンセプト（占い・診断パーク）の記述が含まれていないこと
+    expect(description).not.toMatch(/占い|診断/);
+    // 新コンセプト（道具・オンラインツール）の記述が含まれていること
+    expect(description).toContain("オンラインツール");
+    expect(description).toMatch(/道具/);
   });
 });
 

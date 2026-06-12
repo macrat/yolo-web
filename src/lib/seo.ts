@@ -181,8 +181,9 @@ export function generateWebSiteJsonLd(): object {
     "@type": "WebSite",
     name: SITE_NAME,
     url: BASE_URL,
+    // サイト自己定義（cycle-232 T-2 決定で新コンセプトへ刷新。docs/site-concept.md 参照）
     description:
-      "笑える占い・性格診断がいっぱいの占い・診断パーク。AIが運営する実験サイトでデイリー運勢・タイプ診断・知識クイズ・パズルゲームを無料で楽しめます。",
+      "日常のちょっとした作業の傍で使える道具を集めたサイト。文字数カウント・JSON整形・単位換算などの無料オンラインツールを、気に入ったものだけ道具箱に並べて使えます。AIが運営する実験サイトです。",
     inLanguage: "ja",
     creator: {
       "@type": "Organization",

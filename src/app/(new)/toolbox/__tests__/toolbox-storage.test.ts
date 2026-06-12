@@ -63,6 +63,17 @@ describe("loadToolboxItems: 復元", () => {
     expect(loadToolboxItems(DEFAULT_ITEMS, VALID_IDS)).toEqual([]);
   });
 
+  it("保存済み構成はデフォルト構成の定義変更に影響されない（保存があればデフォルトを使わない）", () => {
+    // cycle-232（Phase 10.3）でデフォルトが全39枚 → daily-life 6枚に変わった。
+    // デフォルト変更が影響してよいのは「保存がない人」だけであることを、
+    // 異なる defaultItems を渡しても保存構成がそのまま返ることで検証する
+    saveToolboxItems(["delta:encode", "alpha:full"]);
+    const beforeChange = loadToolboxItems(DEFAULT_ITEMS, VALID_IDS);
+    const afterChange = loadToolboxItems(["beta:full"], VALID_IDS);
+    expect(beforeChange).toEqual(["delta:encode", "alpha:full"]);
+    expect(afterChange).toEqual(beforeChange);
+  });
+
   it("破損 JSON はデフォルト構成にフォールバックする", () => {
     window.localStorage.setItem(TOOLBOX_STORAGE_KEY, "{not-json!!");
     expect(loadToolboxItems(DEFAULT_ITEMS, VALID_IDS)).toEqual([

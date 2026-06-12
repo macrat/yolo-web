@@ -76,15 +76,15 @@ const BUDGETS = {
  * the uncategorisedMax budget.
  */
 const UNCATEGORISED_WHITELIST: ReadonlySet<string> = new Set([
+  // トップ = 道具箱（cycle-232 B-336 Phase 10.3 で本公開）。生きたタイルを
+  // 並べる道具箱のクライアント JS を含む。旧 /toolbox は `/` へ redirect 化
+  // されルートとしては消滅した（next.config.ts 参照）。
   "/",
   "/about",
   "/privacy",
   "/achievements",
   // 開発者向け新デザインカタログ。noindex 設定済み。(new) Route Group 配下。
   "/storybook",
-  // 道具箱プレビュー（cycle-226 縦スライス）。生きたタイルを並べる本物の道具箱の
-  // 最初の実体。noindex 設定済み。(new) Route Group 配下。公開は後続サイクル。
-  "/toolbox",
 ]);
 
 // ---------------------------------------------------------------------------

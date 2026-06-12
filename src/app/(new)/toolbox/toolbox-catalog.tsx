@@ -16,7 +16,7 @@
  * 表示名は各ツールの ToolMeta.name と同一文字列のリテラルとして保持する。
  * `@/tools/registry` を import すると全34ツールの meta（description / howItWorks /
  * faq 等の SEO 長文、合計約85KB）がクライアントバンドルへ取り込まれてしまうため
- * （AP-I03、bundle-budget.test.ts の /toolbox 50KB 上限）、クライアントには
+ * （AP-I03、bundle-budget.test.ts のトップ `/` 50KB 上限）、クライアントには
  * name のみを埋め込む。ToolMeta.name / category との一致は
  * __tests__/toolbox-catalog.test.ts がレジストリと突き合わせて機械的に検証する
  * （手書きドリフトの構造的防止）。
@@ -103,7 +103,12 @@ export interface ToolboxCatalogEntry {
   renderTile: (tileClassName: string) => ReactElement;
 }
 
-/** カテゴリ見出しの表示順（現行 /toolbox の暫定整理。B-312/B-502 で置換可能） */
+/**
+ * カタログ定義のカテゴリ順。カタログの並び（カテゴリ単位でまとまっている
+ * こと）の機械検証に使う。cycle-232（Phase 10.3 本公開）でデフォルト構成が
+ * daily-life プリセットになって以降、道具箱の表示にカテゴリ見出しは
+ * 使われない（表示モデルは ToolboxContent.tsx 冒頭コメント参照）。
+ */
 export const TOOLBOX_CATEGORY_ORDER: readonly ToolCategory[] = [
   "developer",
   "text",
@@ -126,11 +131,13 @@ function defineEntry(
 }
 
 /**
- * 道具箱カタログ（カタログ定義順 = デフォルト構成の並び順）。
+ * 道具箱カタログ（カタログ定義順 = 「タイルを追加」パネルの表示順）。
  *
  * 順序はカテゴリ単位（TOOLBOX_CATEGORY_ORDER）でまとまっており、
  * 固定 variant は対応する full タイルの直後に置く
  * （「同じツールの別の見せ方」であることが来訪者に分かるようにする）。
+ * デフォルト構成（保存構成がない来訪者の初期道具箱）はカタログではなく
+ * toolbox-presets.ts の DEFAULT_TOOLBOX_ITEM_IDS（daily-life プリセット）。
  */
 export const TOOLBOX_CATALOG: readonly ToolboxCatalogEntry[] = [
   // =========================================================================
@@ -588,12 +595,4 @@ export const TOOLBOX_CATALOG_BY_ID: ReadonlyMap<string, ToolboxCatalogEntry> =
 /** カタログに実在する id の集合（永続化データの未知 id 除去に使う） */
 export const TOOLBOX_CATALOG_IDS: ReadonlySet<string> = new Set(
   TOOLBOX_CATALOG.map((entry) => entry.id),
-);
-
-/**
- * デフォルト構成（未保存時の道具箱）: カタログ全39枚をカタログ定義順で並べる。
- * Phase 10.2/10.3 の default content（プリセット）が後からこれを置換する。
- */
-export const DEFAULT_TOOLBOX_ITEM_IDS: readonly string[] = TOOLBOX_CATALOG.map(
-  (entry) => entry.id,
 );
