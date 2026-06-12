@@ -5,26 +5,28 @@
  *
  * cycle-228 T-31: 全34ツールの full variant 各1枚 +
  *   形ファミリー代表の固定 variant 5枚 = 合計39枚の生きたタイル。
+ * cycle-230 T-3〜T-5: 中核機構（タイルの追加・削除＋構成の localStorage 永続化）。
+ *   タイル一覧は toolbox-catalog.tsx（39エントリ）、永続化は toolbox-storage.ts。
  *
- * ## タイル配置（計39枚）
+ * ## 来訪者ができること
  *
- * カテゴリ別セクション見出し（ToolMeta.category をそのまま表示する暫定整理。
- * 新たな分類体系・フィルタ UI・状態は導入しない。B-312/B-502 で置換可能）:
- *   1. developer (12ツール × full 各1)
- *   2. text      (9ツール × full 各1)
- *   3. generator (7ツール × full 各1)
- *   4. encoding  (4ツール × full 各1)
- *   5. security  (2ツール × full 各1)
+ * - 各タイルの「外す」で道具箱からタイルを外す
+ * - ページ末尾の「タイルを追加」パネルで、外したタイルを道具箱に戻す
+ * - 「最初の状態に戻す」でデフォルト構成（カタログ全39枚）に戻す
+ * - 構成は localStorage に保存され、リロード・再訪問後も残る
  *
- * 固定 variant 5枚（形ファミリー代表・全カテゴリの末尾にまとめて配置）:
- *   - url-encode `encode`        （方向変換系代表）
- *   - kana-converter `hiragana-to-katakana` （テキスト変換系代表）
- *   - number-base-converter `bin-hex`        （多モード変換系代表）
- *   - json-formatter `format-only`           （フォーマッタ系代表）
- *   - image-base64 `encode`                  （ファイルI/O系代表）
+ * ## hydration 安全（PM 決定）
  *
- * 固定 variant は対応する full タイルのすぐ隣に配置し、
- * 「同じツールの別の見せ方」であることが来訪者に分かるようにする。
+ * SSR/初回レンダーは常にデフォルト構成を描画し、マウント後の useEffect で
+ * 保存構成を適用する（hydration mismatch の構造的排除）。
+ * 保存構成適用までの一瞬のデフォルト表示は許容。
+ *
+ * ## 並び順モデル（PM 決定の選択肢から builder が選定・テストで固定）
+ *
+ * 「追加されたタイルはカタログ定義順で当該カテゴリ位置に戻る」を採用。
+ * 道具箱はカテゴリ見出しで整理されており、末尾追加だと追加タイルが
+ * 自分のカテゴリから離れた場所に出てしまい不自然なため。
+ * （DnD 並べ替えは後続サイクル。編集モード・モーダル・Undo は作らない）
  *
  * ## 重要: リンク/カードではない（cycle-175 の失敗を繰り返さない）
  *
@@ -34,597 +36,210 @@
  *
  * ## タイル寸法（tile-grid.ts 規格: TILE_CELL_PX=128 / TILE_GAP_PX=8）
  *
- * calcTilePixels(cols, rows) = { width: 136*cols - 8, height: 136*rows - 8 }
+ * カタログはセル数（cols × rows）のみを保持し、px 換算は calcTilePixels に委譲。
  * maxWidth + width:100% でレスポンシブ（固定 width 禁止 = w360 横はみ出し防止）。
  * 規格に収まらない場合は機能を削らずに minHeight でオーバーフローを許容する。
  */
 
-// --- developer カテゴリ ---
-import ColorConverterTile from "@/tools/color-converter/ColorConverterTile";
-import CronParserTile from "@/tools/cron-parser/CronParserTile";
-import CsvConverterTile from "@/tools/csv-converter/CsvConverterTile";
-import DateCalculatorTile from "@/tools/date-calculator/DateCalculatorTile";
-import EmailValidatorTile from "@/tools/email-validator/EmailValidatorTile";
-import JsonFormatterTile from "@/tools/json-formatter/JsonFormatterTile";
-import MarkdownPreviewTile from "@/tools/markdown-preview/MarkdownPreviewTile";
-import NumberBaseConverterTile from "@/tools/number-base-converter/NumberBaseConverterTile";
-import RegexTesterTile from "@/tools/regex-tester/RegexTesterTile";
-import SqlFormatterTile from "@/tools/sql-formatter/SqlFormatterTile";
-import UnixTimestampTile from "@/tools/unix-timestamp/UnixTimestampTile";
-import YamlFormatterTile from "@/tools/yaml-formatter/YamlFormatterTile";
-// --- text カテゴリ ---
-import BusinessEmailTile from "@/tools/business-email/BusinessEmailTile";
-import ByteCounterTile from "@/tools/byte-counter/ByteCounterTile";
-import CharCountTile from "@/tools/char-count/CharCountTile";
-import FullwidthConverterTile from "@/tools/fullwidth-converter/FullwidthConverterTile";
-import KanaConverterTile from "@/tools/kana-converter/KanaConverterTile";
-import KeigoReferenceTile from "@/tools/keigo-reference/KeigoReferenceTile";
-import LineBreakRemoverTile from "@/tools/line-break-remover/LineBreakRemoverTile";
-import TextDiffTile from "@/tools/text-diff/TextDiffTile";
-import TextReplaceTile from "@/tools/text-replace/TextReplaceTile";
-// --- generator カテゴリ ---
-import AgeCalculatorTile from "@/tools/age-calculator/AgeCalculatorTile";
-import BmiCalculatorTile from "@/tools/bmi-calculator/BmiCalculatorTile";
-import DummyTextTile from "@/tools/dummy-text/DummyTextTile";
-import ImageResizerTile from "@/tools/image-resizer/ImageResizerTile";
-import QrCodeTile from "@/tools/qr-code/QrCodeTile";
-import TraditionalColorPaletteTile from "@/tools/traditional-color-palette/TraditionalColorPaletteTile";
-import UnitConverterTile from "@/tools/unit-converter/UnitConverterTile";
-// --- encoding カテゴリ ---
-import Base64Tile from "@/tools/base64/Base64Tile";
-import HtmlEntityTile from "@/tools/html-entity/HtmlEntityTile";
-import ImageBase64Tile from "@/tools/image-base64/ImageBase64Tile";
-import UrlEncodeTile from "@/tools/url-encode/UrlEncodeTile";
-// --- security カテゴリ ---
-import HashGeneratorTile from "@/tools/hash-generator/HashGeneratorTile";
-import PasswordGeneratorTile from "@/tools/password-generator/PasswordGeneratorTile";
+import { useEffect, useState } from "react";
 
+import Button from "@/components/Button";
+import Panel from "@/components/Panel";
 import { calcTilePixels } from "@/tools/_constants/tile-grid";
+
+import {
+  DEFAULT_TOOLBOX_ITEM_IDS,
+  TOOLBOX_CATALOG,
+  TOOLBOX_CATALOG_BY_ID,
+  TOOLBOX_CATALOG_IDS,
+  TOOLBOX_CATEGORY_ORDER,
+  type ToolboxCatalogEntry,
+} from "./toolbox-catalog";
+import {
+  clearToolboxItems,
+  loadToolboxItems,
+  saveToolboxItems,
+} from "./toolbox-storage";
 import styles from "./ToolboxContent.module.css";
 
-// ---------------------------------------------------------------------------
-// タイル寸法を tile-grid.ts 規格から計算（推奨幅の上限として使用）
-// ---------------------------------------------------------------------------
+/** カタログ内の定義位置の索引（追加タイルを「当該カテゴリ位置」へ戻すために使う） */
+const catalogIndexById: ReadonlyMap<string, number> = new Map(
+  TOOLBOX_CATALOG.map((entry, index) => [entry.id, index]),
+);
 
-/** 4×4 = 536×536px: 標準的な full タイルの上限サイズ */
-const S4x4 = calcTilePixels(4, 4);
+/** 2つの構成（順序付き id 配列）が同一かを判定する */
+function sameItemIds(a: readonly string[], b: readonly string[]): boolean {
+  return a.length === b.length && a.every((id, index) => id === b[index]);
+}
 
-/** 4×5 = 536×672px: fullwidth-converter・kana-converter など縦長タイルの上限 */
-const S4x5 = calcTilePixels(4, 5);
-
-/** 4×6 = 536×808px: cron-parser・regex-tester など複合UIタイルの上限 */
-const S4x6 = calcTilePixels(4, 6);
-
-/** 5×4 = 672×536px: color-converter・text-diff など横幅が必要なタイルの上限 */
-const S5x4 = calcTilePixels(5, 4);
-
-/** 5×5 = 672×672px: keigo-reference・traditional-color-palette など広いタイルの上限 */
-const S5x5 = calcTilePixels(5, 5);
-
-/** 5×6 = 672×808px: markdown-preview・image-resizer など大型タイルの上限 */
-const S5x6 = calcTilePixels(5, 6);
-
-/** 3×4 = 400×536px: url-encode encode/decode など方向固定の variant タイルの上限 */
-const S3x4 = calcTilePixels(3, 4);
+/**
+ * 追加するエントリをカタログ定義順の位置に挿入する。
+ * 現在の並びの中で「カタログ上の定義位置が追加対象より後ろ」になる
+ * 最初の要素の手前に入れることで、カテゴリのまとまりを保つ。
+ */
+function insertAtCatalogPosition(
+  items: readonly string[],
+  id: string,
+): string[] {
+  if (items.includes(id)) return [...items];
+  const orderOf = (itemId: string): number =>
+    catalogIndexById.get(itemId) ?? Number.MAX_SAFE_INTEGER;
+  const insertIndex = items.findIndex(
+    (itemId) => orderOf(itemId) > orderOf(id),
+  );
+  if (insertIndex === -1) return [...items, id];
+  return [...items.slice(0, insertIndex), id, ...items.slice(insertIndex)];
+}
 
 export default function ToolboxContent() {
+  // SSR/初回レンダーは常にデフォルト構成（hydration mismatch の構造的排除）
+  const [itemIds, setItemIds] = useState<readonly string[]>(
+    DEFAULT_TOOLBOX_ITEM_IDS,
+  );
+
+  // マウント後に保存構成を適用する。保存構成がデフォルトと同一なら同じ参照を
+  // 返して再レンダーを回避する（39タイルの再レンダーは重い）。
+  // hydration 安全パターン: SSR/初回レンダーは常にデフォルト構成を描画し、
+  // localStorage はマウント後の effect でのみ読む（unix-timestamp 等と同じ作法）
+  useEffect(() => {
+    const stored = loadToolboxItems(
+      DEFAULT_TOOLBOX_ITEM_IDS,
+      TOOLBOX_CATALOG_IDS,
+    );
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- localStorage はマウント後にしか読めないため、ここでの setState が唯一の適用点
+    setItemIds((current) => (sameItemIds(stored, current) ? current : stored));
+  }, []);
+
+  /** 構成を更新して localStorage に保存する（追加・削除の共通処理） */
+  function applyItems(next: readonly string[]): void {
+    setItemIds(next);
+    saveToolboxItems(next);
+  }
+
+  function handleRemove(id: string): void {
+    applyItems(itemIds.filter((itemId) => itemId !== id));
+  }
+
+  function handleAdd(id: string): void {
+    applyItems(insertAtCatalogPosition(itemIds, id));
+  }
+
+  function handleReset(): void {
+    // 保存構成をキーごと削除する理由は toolbox-storage.ts の clearToolboxItems を参照
+    clearToolboxItems();
+    setItemIds(DEFAULT_TOOLBOX_ITEM_IDS);
+  }
+
+  const isDefaultConfig = sameItemIds(itemIds, DEFAULT_TOOLBOX_ITEM_IDS);
+
+  // 道具箱にないカタログエントリ（=「タイルを追加」パネルの選択肢）
+  const itemIdSet = new Set(itemIds);
+  const availableEntries = TOOLBOX_CATALOG.filter(
+    (entry) => !itemIdSet.has(entry.id),
+  );
+
+  // itemIds（順序付き）をカテゴリ見出しの下にグループ化する。
+  // 空になったカテゴリは見出しごと表示しない。
+  const sections = TOOLBOX_CATEGORY_ORDER.map((category) => ({
+    category,
+    entries: itemIds
+      .map((id) => TOOLBOX_CATALOG_BY_ID.get(id))
+      .filter(
+        (entry): entry is ToolboxCatalogEntry =>
+          entry !== undefined && entry.category === category,
+      ),
+  })).filter((section) => section.entries.length > 0);
+
   return (
     <div className={styles.page}>
       <div className={styles.header}>
         <h1 className={styles.title}>道具箱プレビュー</h1>
         <p className={styles.description}>
           タイルを並べる道具箱のプレビューです。各タイルはこのページを離れずにその場で機能します。
+          「外す」と「追加」で気に入ったツールだけを残せます。構成はこのブラウザに保存され、次回訪問時も残ります。
           <br />
           <small className={styles.note}>
-            （このページは開発プレビューです。DnD・永続化・公開は後続で追加予定）
+            （このページは開発プレビューです。タイルの追加・削除と構成の保存に対応済み。ドラッグでの並べ替えと正式公開は後続で追加予定）
           </small>
         </p>
       </div>
 
-      {/* ===================================================================
-          カテゴリ: developer（12ツール）
-          ツール件数最多。開発・フォーマット・変換・計算系。
-          =================================================================== */}
-      <section className={styles.category}>
-        <h2 className={styles.categoryHeading}>developer</h2>
-        <div className={styles.grid}>
-          {/* color-converter (full) */}
-          <div
-            className={styles.tileWrapper}
-            style={{ maxWidth: S5x4.width, minHeight: S5x4.height }}
-          >
-            <ColorConverterTile
-              variant="full"
-              as="div"
-              className={styles.liveTile}
-            />
-          </div>
+      {/* 全タイルを外したときの空状態（追加パネルへの導線を案内する） */}
+      {sections.length === 0 && (
+        <Panel as="div" className={styles.emptyPanel}>
+          <p className={styles.emptyMessage}>
+            道具箱が空です。下の「タイルを追加」から、好きなツールを道具箱に戻せます。
+          </p>
+        </Panel>
+      )}
 
-          {/* cron-parser (full) */}
-          <div
-            className={styles.tileWrapper}
-            style={{ maxWidth: S4x6.width, minHeight: S4x6.height }}
-          >
-            <CronParserTile
-              variant="full"
-              as="div"
-              className={styles.liveTile}
-            />
+      {sections.map((section) => (
+        <section key={section.category} className={styles.category}>
+          <h2 className={styles.categoryHeading}>{section.category}</h2>
+          <div className={styles.grid}>
+            {section.entries.map((entry) => {
+              const tilePx = calcTilePixels(entry.cols, entry.rows);
+              return (
+                <div
+                  key={entry.id}
+                  className={styles.tileWrapper}
+                  style={{ maxWidth: tilePx.width, minHeight: tilePx.height }}
+                >
+                  {/* タイル上部の操作列。タイル本体（XxxTile）には手を入れない */}
+                  <div className={styles.tileToolbar}>
+                    <Button
+                      onClick={() => handleRemove(entry.id)}
+                      aria-label={`${entry.displayLabel}を道具箱から外す`}
+                    >
+                      外す
+                    </Button>
+                  </div>
+                  {entry.renderTile(styles.liveTile)}
+                </div>
+              );
+            })}
           </div>
+        </section>
+      ))}
 
-          {/* csv-converter (full) */}
-          <div
-            className={styles.tileWrapper}
-            style={{ maxWidth: S5x5.width, minHeight: S5x5.height }}
-          >
-            <CsvConverterTile
-              variant="full"
-              as="div"
-              className={styles.liveTile}
-            />
+      {/* タイルの追加・リセット（編集モード・モーダル・DnD は作らない） */}
+      <section className={styles.manageSection}>
+        <h2 className={styles.categoryHeading}>タイルを追加</h2>
+        <Panel as="div">
+          {availableEntries.length === 0 ? (
+            <p className={styles.manageEmptyMessage}>
+              すべてのタイルが道具箱に並んでいます。タイルの「外す」で外したものがここに表示され、いつでも戻せます。
+            </p>
+          ) : (
+            <ul className={styles.availableList}>
+              {availableEntries.map((entry) => (
+                <li key={entry.id} className={styles.availableItem}>
+                  <span className={styles.availableLabel}>
+                    {entry.displayLabel}
+                    <span className={styles.availableCategory}>
+                      {entry.category}
+                    </span>
+                  </span>
+                  <Button
+                    onClick={() => handleAdd(entry.id)}
+                    aria-label={`${entry.displayLabel}を道具箱に追加`}
+                  >
+                    追加
+                  </Button>
+                </li>
+              ))}
+            </ul>
+          )}
+          <div className={styles.resetRow}>
+            <Button onClick={handleReset} disabled={isDefaultConfig}>
+              最初の状態に戻す
+            </Button>
+            <span className={styles.resetNote}>
+              道具箱をデフォルト構成（全{TOOLBOX_CATALOG.length}
+              枚）に戻します。
+            </span>
           </div>
-
-          {/* date-calculator (full) */}
-          <div
-            className={styles.tileWrapper}
-            style={{ maxWidth: S4x6.width, minHeight: S4x6.height }}
-          >
-            <DateCalculatorTile
-              variant="full"
-              as="div"
-              className={styles.liveTile}
-            />
-          </div>
-
-          {/* email-validator (full) */}
-          <div
-            className={styles.tileWrapper}
-            style={{ maxWidth: S4x4.width, minHeight: S4x4.height }}
-          >
-            <EmailValidatorTile
-              variant="full"
-              as="div"
-              className={styles.liveTile}
-            />
-          </div>
-
-          {/* json-formatter (full) + format-only 固定 variant（フォーマッタ系代表）*/}
-          <div
-            className={styles.tileWrapper}
-            style={{ maxWidth: S4x5.width, minHeight: S4x5.height }}
-          >
-            <JsonFormatterTile
-              variant="full"
-              as="div"
-              className={styles.liveTile}
-            />
-          </div>
-
-          {/* json-formatter (format-only): 固定 variant ─ フォーマッタ系ファミリー代表
-              full と並べて「同じツールの別の見せ方」であることを示す */}
-          <div
-            className={styles.tileWrapper}
-            style={{ maxWidth: S4x5.width, minHeight: S4x5.height }}
-          >
-            <JsonFormatterTile
-              variant="format-only"
-              as="div"
-              className={styles.liveTile}
-            />
-          </div>
-
-          {/* markdown-preview (full) */}
-          <div
-            className={styles.tileWrapper}
-            style={{ maxWidth: S5x6.width, minHeight: S5x6.height }}
-          >
-            <MarkdownPreviewTile
-              variant="full"
-              as="div"
-              className={styles.liveTile}
-            />
-          </div>
-
-          {/* number-base-converter (full) + bin-hex 固定 variant（多モード変換系代表）*/}
-          <div
-            className={styles.tileWrapper}
-            style={{ maxWidth: S4x4.width, minHeight: S4x4.height }}
-          >
-            <NumberBaseConverterTile
-              variant="full"
-              as="div"
-              className={styles.liveTile}
-            />
-          </div>
-
-          {/* number-base-converter (bin-hex): 固定 variant ─ 多モード変換系ファミリー代表
-              full と並べて「同じツールの別の見せ方」（2進→16進固定）であることを示す */}
-          <div
-            className={styles.tileWrapper}
-            style={{ maxWidth: S4x4.width, minHeight: S4x4.height }}
-          >
-            <NumberBaseConverterTile
-              variant="bin-hex"
-              as="div"
-              className={styles.liveTile}
-            />
-          </div>
-
-          {/* regex-tester (full) */}
-          <div
-            className={styles.tileWrapper}
-            style={{ maxWidth: S5x6.width, minHeight: S5x6.height }}
-          >
-            <RegexTesterTile
-              variant="full"
-              as="div"
-              className={styles.liveTile}
-            />
-          </div>
-
-          {/* sql-formatter (full) */}
-          <div
-            className={styles.tileWrapper}
-            style={{ maxWidth: S4x5.width, minHeight: S4x5.height }}
-          >
-            <SqlFormatterTile
-              variant="full"
-              as="div"
-              className={styles.liveTile}
-            />
-          </div>
-
-          {/* unix-timestamp (full) */}
-          <div
-            className={styles.tileWrapper}
-            style={{ maxWidth: S4x5.width, minHeight: S4x5.height }}
-          >
-            <UnixTimestampTile
-              variant="full"
-              as="div"
-              className={styles.liveTile}
-            />
-          </div>
-
-          {/* yaml-formatter (full) */}
-          <div
-            className={styles.tileWrapper}
-            style={{ maxWidth: S4x5.width, minHeight: S4x5.height }}
-          >
-            <YamlFormatterTile
-              variant="full"
-              as="div"
-              className={styles.liveTile}
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* ===================================================================
-          カテゴリ: text（9ツール）
-          文字列処理・テキスト変換・文書作成支援系。
-          =================================================================== */}
-      <section className={styles.category}>
-        <h2 className={styles.categoryHeading}>text</h2>
-        <div className={styles.grid}>
-          {/* business-email (full) */}
-          <div
-            className={styles.tileWrapper}
-            style={{ maxWidth: S5x6.width, minHeight: S5x6.height }}
-          >
-            <BusinessEmailTile
-              variant="full"
-              as="div"
-              className={styles.liveTile}
-            />
-          </div>
-
-          {/* byte-counter (full) */}
-          <div
-            className={styles.tileWrapper}
-            style={{ maxWidth: S4x5.width, minHeight: S4x5.height }}
-          >
-            <ByteCounterTile
-              variant="full"
-              as="div"
-              className={styles.liveTile}
-            />
-          </div>
-
-          {/* char-count (full) */}
-          <div
-            className={styles.tileWrapper}
-            style={{ maxWidth: S4x5.width, minHeight: S4x5.height }}
-          >
-            <CharCountTile
-              variant="full"
-              as="div"
-              className={styles.liveTile}
-            />
-          </div>
-
-          {/* fullwidth-converter (full) */}
-          <div
-            className={styles.tileWrapper}
-            style={{ maxWidth: S4x5.width, minHeight: S4x5.height }}
-          >
-            <FullwidthConverterTile
-              variant="full"
-              as="div"
-              className={styles.liveTile}
-            />
-          </div>
-
-          {/* kana-converter (full) + hiragana-to-katakana 固定 variant（テキスト変換系代表）*/}
-          <div
-            className={styles.tileWrapper}
-            style={{ maxWidth: S4x5.width, minHeight: S4x5.height }}
-          >
-            <KanaConverterTile
-              variant="full"
-              as="div"
-              className={styles.liveTile}
-            />
-          </div>
-
-          {/* kana-converter (hiragana-to-katakana): 固定 variant ─ テキスト変換系ファミリー代表
-              full と並べて「同じツールの別の見せ方」（ひらがな→カタカナ固定）であることを示す */}
-          <div
-            className={styles.tileWrapper}
-            style={{ maxWidth: S4x5.width, minHeight: S4x5.height }}
-          >
-            <KanaConverterTile
-              variant="hiragana-to-katakana"
-              as="div"
-              className={styles.liveTile}
-            />
-          </div>
-
-          {/* keigo-reference (full) */}
-          <div
-            className={styles.tileWrapper}
-            style={{ maxWidth: S5x5.width, minHeight: S5x5.height }}
-          >
-            <KeigoReferenceTile
-              variant="full"
-              as="div"
-              className={styles.liveTile}
-            />
-          </div>
-
-          {/* line-break-remover (full) */}
-          <div
-            className={styles.tileWrapper}
-            style={{ maxWidth: S4x5.width, minHeight: S4x5.height }}
-          >
-            <LineBreakRemoverTile
-              variant="full"
-              as="div"
-              className={styles.liveTile}
-            />
-          </div>
-
-          {/* text-diff (full) */}
-          <div
-            className={styles.tileWrapper}
-            style={{ maxWidth: S5x6.width, minHeight: S5x6.height }}
-          >
-            <TextDiffTile variant="full" as="div" className={styles.liveTile} />
-          </div>
-
-          {/* text-replace (full) */}
-          <div
-            className={styles.tileWrapper}
-            style={{ maxWidth: S4x5.width, minHeight: S4x5.height }}
-          >
-            <TextReplaceTile
-              variant="full"
-              as="div"
-              className={styles.liveTile}
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* ===================================================================
-          カテゴリ: generator（7ツール）
-          画像・QR・テキスト生成・単位変換・計算系。
-          =================================================================== */}
-      <section className={styles.category}>
-        <h2 className={styles.categoryHeading}>generator</h2>
-        <div className={styles.grid}>
-          {/* age-calculator (full) */}
-          <div
-            className={styles.tileWrapper}
-            style={{ maxWidth: S4x4.width, minHeight: S4x4.height }}
-          >
-            <AgeCalculatorTile
-              variant="full"
-              as="div"
-              className={styles.liveTile}
-            />
-          </div>
-
-          {/* bmi-calculator (full) */}
-          <div
-            className={styles.tileWrapper}
-            style={{ maxWidth: S4x4.width, minHeight: S4x4.height }}
-          >
-            <BmiCalculatorTile
-              variant="full"
-              as="div"
-              className={styles.liveTile}
-            />
-          </div>
-
-          {/* dummy-text (full) */}
-          <div
-            className={styles.tileWrapper}
-            style={{ maxWidth: S4x5.width, minHeight: S4x5.height }}
-          >
-            <DummyTextTile
-              variant="full"
-              as="div"
-              className={styles.liveTile}
-            />
-          </div>
-
-          {/* image-resizer (full) */}
-          <div
-            className={styles.tileWrapper}
-            style={{ maxWidth: S5x6.width, minHeight: S5x6.height }}
-          >
-            <ImageResizerTile
-              variant="full"
-              as="div"
-              className={styles.liveTile}
-            />
-          </div>
-
-          {/* qr-code (full) */}
-          <div
-            className={styles.tileWrapper}
-            style={{ maxWidth: S4x5.width, minHeight: S4x5.height }}
-          >
-            <QrCodeTile variant="full" as="div" className={styles.liveTile} />
-          </div>
-
-          {/* traditional-color-palette (full) */}
-          <div
-            className={styles.tileWrapper}
-            style={{ maxWidth: S5x5.width, minHeight: S5x5.height }}
-          >
-            <TraditionalColorPaletteTile
-              variant="full"
-              as="div"
-              className={styles.liveTile}
-            />
-          </div>
-
-          {/* unit-converter (full) */}
-          <div
-            className={styles.tileWrapper}
-            style={{ maxWidth: S4x5.width, minHeight: S4x5.height }}
-          >
-            <UnitConverterTile
-              variant="full"
-              as="div"
-              className={styles.liveTile}
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* ===================================================================
-          カテゴリ: encoding（4ツール）
-          URL・HTML・Base64・画像のエンコード/デコード系。
-          =================================================================== */}
-      <section className={styles.category}>
-        <h2 className={styles.categoryHeading}>encoding</h2>
-        <div className={styles.grid}>
-          {/* base64 (full) */}
-          <div
-            className={styles.tileWrapper}
-            style={{ maxWidth: S4x4.width, minHeight: S4x4.height }}
-          >
-            <Base64Tile variant="full" as="div" className={styles.liveTile} />
-          </div>
-
-          {/* html-entity (full) */}
-          <div
-            className={styles.tileWrapper}
-            style={{ maxWidth: S4x4.width, minHeight: S4x4.height }}
-          >
-            <HtmlEntityTile
-              variant="full"
-              as="div"
-              className={styles.liveTile}
-            />
-          </div>
-
-          {/* image-base64 (full) + encode 固定 variant（ファイルI/O系代表）*/}
-          <div
-            className={styles.tileWrapper}
-            style={{ maxWidth: S4x5.width, minHeight: S4x5.height }}
-          >
-            <ImageBase64Tile
-              variant="full"
-              as="div"
-              className={styles.liveTile}
-            />
-          </div>
-
-          {/* image-base64 (encode): 固定 variant ─ ファイルI/O系ファミリー代表
-              full と並べて「同じツールの別の見せ方」（エンコード固定）であることを示す */}
-          <div
-            className={styles.tileWrapper}
-            style={{ maxWidth: S4x5.width, minHeight: S4x5.height }}
-          >
-            <ImageBase64Tile
-              variant="encode"
-              as="div"
-              className={styles.liveTile}
-            />
-          </div>
-
-          {/* url-encode (full) + encode 固定 variant（方向変換系代表）*/}
-          <div
-            className={styles.tileWrapper}
-            style={{ maxWidth: S4x4.width, minHeight: S4x4.height }}
-          >
-            <UrlEncodeTile
-              variant="full"
-              as="div"
-              className={styles.liveTile}
-            />
-          </div>
-
-          {/* url-encode (encode): 固定 variant ─ 方向変換系ファミリー代表
-              full と並べて「同じツールの別の見せ方」（エンコード固定）であることを示す */}
-          <div
-            className={styles.tileWrapper}
-            style={{ maxWidth: S3x4.width, minHeight: S3x4.height }}
-          >
-            <UrlEncodeTile
-              variant="encode"
-              as="div"
-              className={styles.liveTile}
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* ===================================================================
-          カテゴリ: security（2ツール）
-          ハッシュ生成・パスワード生成系。
-          =================================================================== */}
-      <section className={styles.category}>
-        <h2 className={styles.categoryHeading}>security</h2>
-        <div className={styles.grid}>
-          {/* hash-generator (full) */}
-          <div
-            className={styles.tileWrapper}
-            style={{ maxWidth: S4x4.width, minHeight: S4x4.height }}
-          >
-            <HashGeneratorTile
-              variant="full"
-              as="div"
-              className={styles.liveTile}
-            />
-          </div>
-
-          {/* password-generator (full) */}
-          <div
-            className={styles.tileWrapper}
-            style={{ maxWidth: S4x4.width, minHeight: S4x4.height }}
-          >
-            <PasswordGeneratorTile
-              variant="full"
-              as="div"
-              className={styles.liveTile}
-            />
-          </div>
-        </div>
+        </Panel>
       </section>
     </div>
   );

@@ -8,7 +8,8 @@ import ToolboxContent from "./ToolboxContent";
  *
  * ## 設計原則
  *
- * - **noindex**: 来訪者への公開対象外のプレビュー。DnD/永続化/公開は後続サイクル。
+ * - **noindex**: 来訪者への公開対象外のプレビュー。タイルの追加・削除と構成の
+ *   localStorage 保存は cycle-230 で実装済み。DnD 並べ替え/正式公開は後続サイクル。
  * - **server page → client content**: タイルは "use client" のため、
  *   ToolboxContent に閉じ込めて server component を汚染しない（storybook と同じ作法）。
  * - **リンクカードではない**: タイルは詳細ページへの誘導ではなく、
