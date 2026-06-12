@@ -33,6 +33,16 @@
   justify-content: flex-end;
 }
 
+/* タイル本体の実利用（tile_first_interaction）捕捉領域。
+ * 「外す」ボタン（tileToolbar）を構造的に除外するため、タイル本体だけを包む。
+ * レイアウトは透過: tileWrapper（縦 flex）の残り高さを占め、
+ * 内側の liveTile（flex: 1）がそのまま高さに追従する。 */
+.tileBody {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
 /* 生きたタイル: ラッパーの高さに追従 */
 .liveTile {
   flex: 1;

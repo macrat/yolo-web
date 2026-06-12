@@ -163,3 +163,124 @@ export function trackSearchAbandoned({
 }: SearchAbandonedParams): void {
   sendGaEvent("search_abandoned", { had_query });
 }
+
+// ── Toolbox tracking (cycle-234) ─────────────────────────────────────────────
+//
+// Identity convention shared by every event that identifies a tile:
+// - item_id is always the tool slug WITHOUT the variant suffix, so it can be
+//   joined with detail-page events and the existing share event's item_id.
+// - variant is a separate, optional parameter. When a tile has no variant the
+//   parameter is omitted entirely (never sent as undefined/null).
+// Privacy: these events carry only operation kind, item_id, variant, preset_id
+// and surface. Tile input/output content is never sent.
+
+/**
+ * Where a tile interaction happened:
+ * - "toolbox": the tile dashboard on the top page `/`
+ * - "detail": the tool's own detail page
+ */
+export type TileSurface = "toolbox" | "detail";
+
+/** Parameters identifying a toolbox tile (used by add/remove events). */
+interface ToolboxTileParams {
+  /** Tool slug (variant excluded). */
+  item_id: string;
+  /** Tile variant. Omit when the tile has no variant. */
+  variant?: string;
+}
+
+/** Parameters for trackToolboxPresetSelect. */
+interface ToolboxPresetSelectParams {
+  /** ID of the preset the visitor applied. */
+  preset_id: string;
+}
+
+/** Parameters for trackTileFirstInteraction. */
+interface TileFirstInteractionParams {
+  /** Tool slug (variant excluded). */
+  item_id: string;
+  /** Where the interaction happened (toolbox dashboard vs tool detail page). */
+  surface: TileSurface;
+  /** Tile variant. Omit when the tile has no variant (always omitted for "detail"). */
+  variant?: string;
+}
+
+/**
+ * Build tile-identifying GA params, omitting the variant key entirely
+ * when no variant is given (GA must never receive variant: undefined).
+ */
+function buildTileParams(item_id: string, variant?: string): Gtag.CustomParams {
+  return variant === undefined ? { item_id } : { item_id, variant };
+}
+
+/**
+ * Send a toolbox_tile_add event.
+ *
+ * Meaning: the visitor added a tile that was not in their toolbox at that
+ * moment. This covers both adding from the catalog for the first time and
+ * re-adding a previously removed tile — the two are intentionally not
+ * distinguished (they are the same operation for the visitor).
+ */
+export function trackToolboxTileAdd({
+  item_id,
+  variant,
+}: ToolboxTileParams): void {
+  sendGaEvent("toolbox_tile_add", buildTileParams(item_id, variant));
+}
+
+/**
+ * Send a toolbox_tile_remove event.
+ *
+ * Meaning: the visitor removed a tile from their toolbox (the "外す"
+ * operation). A later re-add appears as toolbox_tile_add, not here.
+ */
+export function trackToolboxTileRemove({
+  item_id,
+  variant,
+}: ToolboxTileParams): void {
+  sendGaEvent("toolbox_tile_remove", buildTileParams(item_id, variant));
+}
+
+/**
+ * Send a toolbox_reset event.
+ *
+ * Meaning: the visitor reset their toolbox composition back to the default.
+ * No parameters: the resulting composition is always the default set, and the
+ * pre-reset composition is intentionally not reported.
+ */
+export function trackToolboxReset(): void {
+  sendGaEvent("toolbox_reset");
+}
+
+/**
+ * Send a toolbox_preset_select event.
+ *
+ * Meaning: the visitor applied a persona preset to their toolbox, after
+ * passing the inline confirmation. Cancelled confirmations ("やめる") send
+ * nothing, so this event counts applied presets only.
+ */
+export function trackToolboxPresetSelect({
+  preset_id,
+}: ToolboxPresetSelectParams): void {
+  sendGaEvent("toolbox_preset_select", { preset_id });
+}
+
+/**
+ * Send a tile_first_interaction event.
+ *
+ * Meaning: the visitor's first pointer/keyboard interaction inside a tool's
+ * UI for the current mount — i.e. the tool was actually used, not merely
+ * viewed. One event per tool per mount; deduplication is the caller's
+ * responsibility (this function only sends). surface distinguishes usage on
+ * the toolbox dashboard ("toolbox") from the tool's detail page ("detail").
+ */
+export function trackTileFirstInteraction({
+  item_id,
+  surface,
+  variant,
+}: TileFirstInteractionParams): void {
+  sendGaEvent("tile_first_interaction", {
+    ...buildTileParams(item_id, variant),
+    surface,
+  });
+}

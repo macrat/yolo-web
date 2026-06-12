@@ -4,6 +4,7 @@ import FaqSection from "@/components/FaqSection";
 import ShareButtons from "@/components/ShareButtons";
 import RelatedTools from "@/components/RelatedTools";
 import RelatedBlogPosts from "@/components/RelatedBlogPosts";
+import TileInteractionTracker from "./TileInteractionTracker";
 import styles from "./ToolPageLayout.module.css";
 
 interface ToolPageLayoutProps {
@@ -57,10 +58,17 @@ export default function ToolPageLayout({
 
       {/* 3. ツール本体（children＝主役・ファーストビュー）
        *    N-2: children が null/空でも <section> 自体は残るが、
-       *    後続セクションのレイアウトは影響を受けない */}
-      <section className={styles.content} aria-label={`${meta.name}ツール`}>
+       *    後続セクションのレイアウトは影響を受けない。
+       *    TileInteractionTracker が同一の <section> を描画しつつ
+       *    「最初の操作」計測（tile_first_interaction, surface:"detail"）を
+       *    担う（cycle-234）。DOM 構造は従来と同一 */}
+      <TileInteractionTracker
+        itemId={meta.slug}
+        className={styles.content}
+        ariaLabel={`${meta.name}ツール`}
+      >
         {children}
-      </section>
+      </TileInteractionTracker>
 
       {/* 4. howItWorks — 二次的補助情報 */}
       <section
