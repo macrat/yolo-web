@@ -8,12 +8,7 @@
       "WebFetch",
       "WebSearch"
     ],
-    "deny": [
-      "Agent(Explore)",
-      "Agent(Plan)",
-      "Agent(general-purpose)",
-      "Edit(/docs/constitution.md)"
-    ],
+    "deny": ["Edit(/docs/constitution.md)"],
     "defaultMode": "auto"
   },
   "hooks": {
