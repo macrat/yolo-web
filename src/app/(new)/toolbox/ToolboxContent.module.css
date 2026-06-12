@@ -85,6 +85,107 @@
 }
 
 /* ================================================================
+   プリセット選択（オンボーディング動線）
+   ================================================================ */
+
+/* カテゴリセクションと同じリズムで道具箱の手前に置く */
+.presetSection {
+  margin-bottom: 2rem;
+}
+
+.presetIntro {
+  margin: 0 0 1rem 0;
+  color: var(--fg-soft);
+  line-height: 1.7;
+}
+
+/* プリセット一覧（「タイルを追加」リストと同じ罫線区切りの行リスト） */
+.presetList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.presetItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.presetItem:first-child {
+  padding-top: 0;
+}
+
+.presetItem:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+/* 名前と説明の縦組み。flex-basis を持たせて狭い画面ではボタンが下へ折り返す */
+.presetLabel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1 1 16rem;
+}
+
+.presetName {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  color: var(--fg);
+  line-height: 1.7;
+}
+
+/* 収録枚数の補足（追加リストのカテゴリ表記と同じトーン） */
+.presetCount {
+  font-size: 0.8rem;
+  color: var(--fg-soft);
+}
+
+.presetDescription {
+  color: var(--fg-soft);
+  line-height: 1.7;
+}
+
+/* 適用中の状態表示（ボタンと同じ行高に揃えて列のリズムを保つ） */
+.presetApplied {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--fg-soft);
+  white-space: nowrap;
+}
+
+/* 手作業構成の上書き確認ブロック。
+ * 注意を示す機能色として --warning-soft 背景 + 同系統 --warning-strong の
+ * 縁取りを使う（DESIGN.md §2 の -soft/-strong の組み合わせ規定） */
+.presetConfirm {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: var(--warning-soft);
+  border: 1px solid var(--warning-strong);
+  border-radius: var(--r-normal);
+}
+
+.presetConfirmMessage {
+  margin: 0 0 0.75rem 0;
+  color: var(--fg);
+  line-height: 1.7;
+}
+
+.presetConfirmActions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* ================================================================
    cycle-230 T-5: タイルの追加・リセット UI / 空状態
    ================================================================ */
 
