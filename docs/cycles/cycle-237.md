@@ -11,12 +11,22 @@ completed_at: null
 
 ## 実施する作業
 
-- [ ] git チートシート（`src/cheatsheets/git/Component.tsx`・`meta.ts`）の内容を精読し、記事に転換する素材を整理する
-- [ ] blog-writer サブエージェントに依頼し、git コマンドの用途別リファレンス記事を執筆・公開する（`src/blog/content/2026-06-13-git-command-reference.md` 想定）
-- [ ] 記事を contents-review でレビューし、指摘に対応する
-- [ ] 記事の frontmatter・カテゴリ・タグ・slug がガイドラインに適合していることを確認する
-- [ ] 4 ゲート（lint / format:check / test / build）を通す
-- [ ] backlog の B-343 を Done へ、Phase 9.2 の重複知見（cron/regex/http の既存ガイド）を関連タスクに注記する
+- [x] git チートシート（`src/cheatsheets/git/Component.tsx`・`meta.ts`）の内容を精読し、記事に転換する素材を整理する
+- [x] blog-writer サブエージェントに依頼し、git コマンドの用途別リファレンス記事を執筆・公開する（`src/blog/content/2026-06-13-git-command-reference.md`）
+- [x] 記事を reviewer（contents-review）でレビューし、指摘に対応する
+- [x] 記事の frontmatter・カテゴリ・タグ・slug がガイドラインに適合していることを確認する
+- [x] 4 ゲート（lint / format:check / test / build）を通す
+- [x] backlog の B-343 を Done へ、Phase 9.2 の重複知見（cron/regex/http の既存ガイド）を関連タスクに注記する
+
+## レビュー結果
+
+reviewer（fresh）による contents-review を 2 ラウンド実施。
+
+- 1st: 重大1件（switch/restore の出典記述が公式の実態と食い違う＝公式が「分かりやすい代替として案内」とは書いておらず、むしろ長く EXPERIMENTAL 注記付きだった）、推奨2件（内部リンク皆無/co=checkout の緊張）、推奨3（reflog 保持期間の補足）、nit2件（早見表セルのコピペ事故/擬似SHAの不正16進）。
+- 対応: 重大1・co=checkout・reflog補足・nit2件を修正。内部リンク追加は見送り（この記事は Phase 9.2.h で当の git チートシートを置き換え・撤去先へのリダイレクト対象であり、リンクすると循環/デッドリンクになる。related_tool_slugs も git に対応ツール無く `[]` が正）。
+- 2nd: 全修正の的確性・見送り判断の妥当性・記事全体の fresh 再確認を経て承認。残存指摘なし。
+
+4 ゲート全通過: lint OK / format:check OK / test 334ファイル・5507件 OK / build OK（記事は `/blog/git-command-reference` として OGP/Twitter 画像込みで prerender 済み）。
 
 ## 作業計画
 
