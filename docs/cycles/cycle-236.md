@@ -13,13 +13,13 @@ completed_at: null
 
 ## 実施する作業
 
-- [ ] T-1: 撤去スコープの最終確認（kickoff 時に grep で実測済み・cycle-235 SSoT と一致を確認済み）と builder への指示書作成
-- [ ] T-2: 撤去の実施（builder へ委任）— 詳細は「作業内容」参照。本体削除＋全組み込み解除＋fortuneStore 張り替え＋関連テスト整理
-- [ ] T-3: 残存参照ゼロの検証（grep: achievements / recordPlay / StreakBadge / trackAchievementUnlock / yolos-achievements）と 4 ゲート（lint / format:check / test / build）
-- [ ] T-4: Playwright 実機検証（本番ビルドをローカル起動）— トップ・Header/Footer に実績の痕跡なし・`/achievements` が標準 404・ゲーム 1 件と運勢・クイズ・ユーモア辞典の動作確認（recordPlay 解除の影響なし）
+- [x] T-1: 撤去スコープの最終確認（kickoff 時に grep で実測済み・cycle-235 SSoT と一致を確認）と builder への指示書作成 — (new)/(legacy) で Header/Footer が別実装（new=`@/components/Header`/`Footer` index、legacy=`@/components/common/`）と判明。StreakBadge は (new) layout actions と legacy common/Header の 2 箇所。humor-dict RecordPlay は (legacy)/dictionary/humor/[slug]/page.tsx で使用。すべて SSoT と一致
+- [x] T-2: 撤去の実施（builder へ委任）— 削除 38 ファイル・編集 24 ファイル。本体削除＋全組み込み解除＋recordPlay 解除 7 ファイル（GA level_end 等の併存機能は保持）＋fortuneStore 張り替え＋関連テスト整理。陳腐化コメント 2 件（about/page.tsx・global-not-found.js）も解消
+- [x] T-3: 残存参照ゼロの検証と 4 ゲート — grep1（lib/achievements / StreakBadge / AchievementProvider / useAchievements / recordPlay / trackAchievementUnlock / unlock_achievement / yolos-achievements）= **0 件**。grep2（/achievements・実績）はブログ本文の「track record」用法・データ辞書のみで実績システム参照ゼロ。4 ゲート全通過（lint OK・format OK・test 333 ファイル 5498 件 passed・build EXIT=0・/achievements ルートなし・sitemap.xml に achievements 0 件）
+- [x] T-4: Playwright 実機検証（本番ビルドをローカル起動）— 全項目 OK: トップ Header に実績バッジなし・レイアウト無崩れ／新旧 Footer に「実績」リンクなし／`/achievements` 標準 404（curl でも 404 確認）／nakamawake ゲーム正常（カード操作可・コンソールエラー 0）／運勢カード正常表示（fortuneStore 張り替えの破損なし）。スクショは tmp/cycle-236/
 - [ ] T-5: reviewer によるレビュー（撤去の網羅性・非対象コードの無傷性・実機検証の独立確認）
 - [ ] T-6: ブログ記事化の判断と執筆 — cycle-235 T-6 で「B-338 完了時に『作った→測った→消した』の完結した学びとして書く方が読者価値が大きい」と判断済み。blog-writer に依頼し contents-review を通す（最終的な公開可否は読者価値で独立判断）
-- [ ] T-7: ドキュメント反映 — design-migration-plan.md Phase 9.1 完了注記・backlog（B-338 → Done・B-432 Notes 更新・B-341 の着手条件達成確認）
+- [x] T-7: ドキュメント反映 — design-migration-plan.md Phase 9.1 に完了注記・backlog（B-338 → Done・Active 空・最古 Done〔cycle-231 B-312〕削除・B-432 Notes に /achievements エントリ削除済みを追記・B-341 を着手条件達成で Deferred → Queued 移動）
 - [ ] T-8: 4 ゲート最終確認と /cycle-completion
 
 ## 作業計画
