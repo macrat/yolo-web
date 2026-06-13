@@ -4,7 +4,6 @@
  * DailyFortuneCard is a Client Component that:
  * - Shows a loading state on SSR (state is null initially via server snapshot)
  * - Shows fortune data (title, description, luckyItem, luckyAction) after mount
- * - Records play via useAchievements after state is set
  *
  * Hydration Error prevention:
  * - useSyncExternalStore is used with a server snapshot that returns null
@@ -31,15 +30,9 @@ vi.mock("@/play/fortune/logic", () => ({
   }),
 }));
 
-// Mock date utility
-vi.mock("@/lib/achievements/date", () => ({
+// Mock date utility (fortuneStore reads getTodayJst from crossGameProgress)
+vi.mock("@/play/games/shared/_lib/crossGameProgress", () => ({
   getTodayJst: () => "2026-03-28",
-}));
-
-// Mock useAchievements
-const mockRecordPlay = vi.fn();
-vi.mock("@/lib/achievements/useAchievements", () => ({
-  useAchievements: () => ({ recordPlay: mockRecordPlay }),
 }));
 
 // Mock ShareButtons to avoid complex dependencies
@@ -106,22 +99,6 @@ describe("DailyFortuneCard", () => {
     expect(
       screen.getByText("明日も来てね! 毎日運勢が変わります"),
     ).toBeInTheDocument();
-  });
-
-  it("calls recordPlay after fortune state is set", async () => {
-    await act(async () => {
-      render(<DailyFortuneCard />);
-    });
-    expect(mockRecordPlay).toHaveBeenCalledWith("fortune-daily");
-    expect(mockRecordPlay).toHaveBeenCalledTimes(1);
-  });
-
-  it("does not call recordPlay more than once on re-render", async () => {
-    const { rerender } = await act(async () => render(<DailyFortuneCard />));
-    await act(async () => {
-      rerender(<DailyFortuneCard />);
-    });
-    expect(mockRecordPlay).toHaveBeenCalledTimes(1);
   });
 });
 

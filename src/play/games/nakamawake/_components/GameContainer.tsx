@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useCallback, useEffect, useRef } from "react";
-import { useAchievements } from "@/lib/achievements/useAchievements";
 import { trackContentEnd } from "@/lib/analytics";
 import type {
   NakamawakeGameState,
@@ -59,8 +58,6 @@ export default function GameContainer({
   dateDisplayString,
   crossCategoryItems,
 }: GameContainerProps) {
-  const { recordPlay } = useAchievements();
-
   // Track whether client-side shuffle has completed to prevent
   // showing the deterministic sort order before shuffle.
   const [isReady, setIsReady] = useState(false);
@@ -162,7 +159,7 @@ export default function GameContainer({
     prevStatusRef.current = gameState.status;
   }, [gameState.status]);
 
-  // Record play for achievement system when game ends (won or lost).
+  // Track game completion (GA level_end) once when the game ends (won or lost).
   // Uses its own prevStatusForRecordRef to avoid sharing prevStatusRef with
   // the modal useEffect above (React runs useEffects in declaration order,
   // so a shared ref would already be updated before this effect runs).
@@ -176,12 +173,11 @@ export default function GameContainer({
       prevStatusForRecordRef.current === "playing" &&
       (gameState.status === "won" || gameState.status === "lost")
     ) {
-      recordPlay("nakamawake");
       trackContentEnd("nakamawake", "game", gameState.status === "won");
       hasRecordedPlayRef.current = true;
     }
     prevStatusForRecordRef.current = gameState.status;
-  }, [gameState.status, recordPlay]);
+  }, [gameState.status]);
 
   /**
    * Toggle word selection (max 4).

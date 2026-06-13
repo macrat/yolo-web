@@ -1,6 +1,5 @@
 "use client";
 
-import { useAchievements } from "@/lib/achievements/useAchievements";
 import { trackContentEnd } from "@/lib/analytics";
 import { useState, useCallback, useEffect, useMemo, useRef } from "react";
 import type {
@@ -62,8 +61,6 @@ export default function GameContainer({
   dateDisplayString,
   crossCategoryItems,
 }: GameContainerProps) {
-  const { recordPlay } = useAchievements();
-
   const initialSliderValues = useMemo(
     () => getInitialSliderValues(todayStr, ROUNDS_PER_GAME),
     [todayStr],
@@ -178,7 +175,7 @@ export default function GameContainer({
     prevStatusRef.current = gameState.status;
   }, [gameState.status]);
 
-  // Record play for achievement system when game is completed.
+  // Track game completion (GA level_end) once per game.
   // Uses its own prevStatusForRecordRef to avoid sharing prevStatusRef with
   // the modal useEffect above (React runs useEffects in declaration order,
   // so a shared ref would already be updated before this effect runs).
@@ -192,12 +189,11 @@ export default function GameContainer({
       prevStatusForRecordRef.current === "playing" &&
       gameState.status === "completed"
     ) {
-      recordPlay("irodori");
       trackContentEnd("irodori", "game", true);
       hasRecordedPlayRef.current = true;
     }
     prevStatusForRecordRef.current = gameState.status;
-  }, [gameState.status, recordPlay]);
+  }, [gameState.status]);
 
   /**
    * Submit the current slider values as the answer for the current round.

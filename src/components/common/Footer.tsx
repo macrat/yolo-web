@@ -42,7 +42,6 @@ export default function Footer({
       heading: "その他",
       links: [
         { href: "/blog", label: "ブログ" },
-        { href: "/achievements", label: "実績" },
         { href: "/about", label: "このサイトについて" },
         { href: "/privacy", label: "プライバシーポリシー" },
       ],

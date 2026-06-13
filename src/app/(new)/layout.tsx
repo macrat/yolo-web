@@ -8,8 +8,6 @@ import Footer from "@/components/Footer";
 import ThemeProvider from "@/components/ThemeProvider";
 import ThemeToggle from "@/components/ThemeToggle";
 import GoogleAnalytics from "@/components/common/GoogleAnalytics";
-import AchievementProvider from "@/lib/achievements/AchievementProvider";
-import StreakBadge from "@/lib/achievements/StreakBadge";
 import { generateWebSiteJsonLd, safeJsonLdStringify } from "@/lib/seo";
 import { sharedMetadata } from "@/lib/site-metadata";
 
@@ -35,19 +33,10 @@ export default function NewRootLayout({
           }}
         />
         <ThemeProvider>
-          <AchievementProvider>
-            <GoogleAnalytics />
-            <Header
-              actions={
-                <>
-                  <StreakBadge />
-                  <ThemeToggle />
-                </>
-              }
-            />
-            <main style={{ flex: 1 }}>{children}</main>
-            <Footer />
-          </AchievementProvider>
+          <GoogleAnalytics />
+          <Header actions={<ThemeToggle />} />
+          <main style={{ flex: 1 }}>{children}</main>
+          <Footer />
         </ThemeProvider>
       </body>
     </html>

@@ -2,7 +2,6 @@ import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import {
   trackContentStart,
   trackContentEnd,
-  trackAchievementUnlock,
   trackSearch,
   trackShare,
   trackSearchModalOpen,
@@ -91,16 +90,6 @@ describe("analytics", () => {
         success: true,
         content_type: "diagnosis",
         content_id: "quiz-personality-test",
-      });
-    });
-  });
-
-  describe("trackAchievementUnlock", () => {
-    it("sends unlock_achievement event", () => {
-      trackAchievementUnlock("streak-7");
-
-      expect(mockGtag).toHaveBeenCalledWith("event", "unlock_achievement", {
-        achievement_id: "streak-7",
       });
     });
   });
@@ -361,7 +350,6 @@ describe("analytics", () => {
 
       expect(() => trackContentStart("irodori", "game")).not.toThrow();
       expect(() => trackContentEnd("irodori", "game", true)).not.toThrow();
-      expect(() => trackAchievementUnlock("streak-7")).not.toThrow();
       expect(() => trackSearch("test")).not.toThrow();
       expect(() => trackShare("twitter", "game", "irodori")).not.toThrow();
       expect(() => trackSearchModalOpen()).not.toThrow();

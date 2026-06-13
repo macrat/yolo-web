@@ -13,7 +13,7 @@
  */
 
 import { getUserSeed, selectFortune } from "@/play/fortune/logic";
-import { getTodayJst } from "@/lib/achievements/date";
+import { getTodayJst } from "@/play/games/shared/_lib/crossGameProgress";
 import type { DailyFortuneEntry } from "@/play/fortune/types";
 
 export type FortuneState = { fortune: DailyFortuneEntry; today: string } | null;

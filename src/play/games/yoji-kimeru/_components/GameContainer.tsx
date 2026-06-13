@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useCallback, useEffect, useMemo, useRef } from "react";
-import { useAchievements } from "@/lib/achievements/useAchievements";
 import { trackContentEnd } from "@/lib/analytics";
 import type {
   Difficulty,
@@ -123,8 +122,6 @@ interface GameContainerProps {
 export default function GameContainer({
   crossCategoryItems,
 }: GameContainerProps) {
-  const { recordPlay } = useAchievements();
-
   // Run migration once on mount to preserve existing players' data
   useEffect(() => {
     migrateToV2();
@@ -274,7 +271,7 @@ export default function GameContainer({
     prevStatusRef.current = gameState.status;
   }, [gameState.status]);
 
-  // Record play for achievement system when game ends (won or lost).
+  // Track game completion (GA level_end) once when the game ends (won or lost).
   const prevStatusForRecordRef = useRef(gameState.status);
   const hasRecordedPlayRef = useRef(false);
   useEffect(() => {
@@ -283,12 +280,11 @@ export default function GameContainer({
       prevStatusForRecordRef.current === "playing" &&
       (gameState.status === "won" || gameState.status === "lost")
     ) {
-      recordPlay("yoji-kimeru");
       trackContentEnd("yoji-kimeru", "game", gameState.status === "won");
       hasRecordedPlayRef.current = true;
     }
     prevStatusForRecordRef.current = gameState.status;
-  }, [gameState.status, recordPlay]);
+  }, [gameState.status]);
 
   /**
    * Handle a guess submission.

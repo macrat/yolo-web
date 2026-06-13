@@ -82,7 +82,6 @@ const UNCATEGORISED_WHITELIST: ReadonlySet<string> = new Set([
   "/",
   "/about",
   "/privacy",
-  "/achievements",
   // 開発者向け新デザインカタログ。noindex 設定済み。(new) Route Group 配下。
   "/storybook",
 ]);
