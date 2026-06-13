@@ -2,7 +2,7 @@
 id: 238
 description: 移行計画 Phase 9.2.g — SQL チートシートを「記述順と実行順」を軸にした学習記事へ転換する（B-348）
 started_at: 2026-06-13T18:45:40+0900
-completed_at: null
+completed_at: 2026-06-13T19:10:40+0900
 ---
 
 # サイクル-238
@@ -11,12 +11,20 @@ completed_at: null
 
 ## 実施する作業
 
-- [ ] T-1: 記事の構成案を確定する（読者・得られる価値・H2 ストーリー・「なぜ」の軸＝記述順と実行順）
-- [ ] T-2: blog-writer サブエージェントに SQL ブログ記事の執筆を依頼する（`src/blog/content/2026-06-13-<slug>.md`）
-- [ ] T-3: 記事を reviewer サブエージェントにレビュー依頼し、有効な指摘をすべて反映する
-- [ ] T-4: 記事を contents-review スキル観点でセルフレビュー（PM 一次確認）し、ターゲット適合・約束回収・固有用語混入なしを確認する
-- [ ] T-5: 4ゲート（lint / format:check / test / build）を通す
-- [ ] T-6: `/cycle-completion` でサイクルを完了する
+- [x] T-1: 記事の構成案を確定する（読者・得られる価値・H2 ストーリー・「なぜ」の軸＝記述順と実行順）
+- [x] T-2: blog-writer サブエージェントに SQL ブログ記事の執筆を依頼する（`src/blog/content/2026-06-13-sql-execution-order-guide.md`）
+- [x] T-3: 記事を reviewer サブエージェントにレビュー依頼し、有効な指摘をすべて反映する
+- [x] T-4: 記事を contents-review スキル観点でセルフレビュー（PM 一次確認）し、ターゲット適合・約束回収・固有用語混入なしを確認する
+- [x] T-5: 4ゲート（lint / format:check / test / build）を通す
+- [x] T-6: `/cycle-completion` でサイクルを完了する
+
+## レビュー結果
+
+- blog-writer が記事執筆（`sql-execution-order-guide`・本文約8,000字・実行順を軸に7つの躓きポイントを「なぜ」から解説）。
+- PM 一次確認: 実行順の論理処理順序・別名スコープ・GROUP BY 非集計列・UPSERT の DBMS 構文差を素材および標準 SQL の挙動と照合し整合を確認。冒頭の約束7項目の全回収・固有用語混入なし・太字不使用を確認。
+- reviewer レビュー: 「承認」。重大指摘ゼロ。事実面は MySQL 8.0.19+ の行エイリアス構文・論理処理順を一次情報で裏取り済みで誤りなし。ヘッジの質は素材より高いと評価。
+- 推奨/nit の判断（PM）: いずれも対応不要と判断。①タグ「失敗と学び」は同 Phase の git 記事と一貫し WHERE 忘れ事故セクションが実在するため維持（推奨リストに SQL 学習直結の代替なし）。②related_tool_slugs=[] は当該 cheatsheet が Phase 9.2.h（B-349）で撤去・リダイレクト予定のためリンクするとデッドリンク化する→ cycle-237 git 記事と同じく空配列が正。
+- 4ゲート全通過（lint / format:check / test 334ファイル・5507件 / build prerender `/blog/sql-execution-order-guide` 確認）。
 
 ## 作業計画
 
@@ -56,7 +64,7 @@ completed_at: null
 
 ## キャリーオーバー
 
-- なし（着手時に追記）。
+- なし。本サイクルのスコープ（SQL 記事化）は完結。旧 cheatsheet URL のリダイレクト・`src/cheatsheets/` 撤去は Phase 9.2.h（B-349）の責務として既存 backlog に登録済み（着手条件: B-342〜B-348 全完了）。
 
 ## 補足事項
 
@@ -64,10 +72,10 @@ completed_at: null
 
 ## サイクル終了時のチェックリスト
 
-- [ ] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
-- [ ] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
-- [ ] すべての変更がレビューされ、残存する指摘事項が無くなっている。
-- [ ] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
-- [ ] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
-- [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
-- [ ] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
+- [x] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
+- [x] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
+- [x] すべての変更がレビューされ、残存する指摘事項が無くなっている。
+- [x] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
+- [x] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
+- [x] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
+- [x] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
