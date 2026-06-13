@@ -1,7 +1,6 @@
 "use client";
 
-import { useSyncExternalStore, useEffect, useRef } from "react";
-import { useAchievements } from "@/lib/achievements/useAchievements";
+import { useSyncExternalStore } from "react";
 import {
   subscribeFortuneStore,
   getFortuneSnapshot,
@@ -22,13 +21,11 @@ function formatDate(dateStr: string): string {
  * Client-side daily fortune card.
  *
  * Uses localStorage-based user seed + JST date to deterministically
- * select a fortune entry. Records play for the achievement system.
+ * select a fortune entry.
  *
  * ストアのキャッシュ・購読ロジックは fortuneStore モジュールに集約する。
  */
 export default function DailyFortuneCard() {
-  const { recordPlay } = useAchievements();
-
   // useSyncExternalStore を使い Hydration Error を防ぐ。
   // server snapshot (getFortuneServerSnapshot) により SSR 時は null が返り、
   // クライアント初回レンダリングでも最初は null からスタートするため
@@ -41,15 +38,6 @@ export default function DailyFortuneCard() {
     getFortuneSnapshot, // client snapshot
     getFortuneServerSnapshot, // server snapshot (SSR時はnull)
   );
-
-  const hasRecorded = useRef(false);
-
-  useEffect(() => {
-    if (state && !hasRecorded.current) {
-      hasRecorded.current = true;
-      recordPlay("fortune-daily");
-    }
-  }, [state, recordPlay]);
 
   if (!state) {
     return (

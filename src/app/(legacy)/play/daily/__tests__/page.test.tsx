@@ -4,17 +4,6 @@ import DailyFortunePage from "../page";
 import { fortunePlayContentMeta } from "@/play/registry";
 import { generatePlayMetadata, generatePlayJsonLd } from "@/play/seo";
 
-// DailyFortuneCard uses useAchievements which requires AchievementProvider.
-// Mock the hook to avoid the provider requirement in unit tests.
-vi.mock("@/lib/achievements/useAchievements", () => ({
-  useAchievements: () => ({
-    store: null,
-    recordPlay: vi.fn(),
-    newlyUnlocked: [],
-    dismissNotifications: vi.fn(),
-  }),
-}));
-
 // RecommendedContent uses getRecommendedContents.
 // Mock it to avoid dependency on full registry in unit tests.
 vi.mock("@/play/recommendation", () => ({

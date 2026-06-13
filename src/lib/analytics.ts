@@ -50,13 +50,6 @@ export function trackContentEnd(
   });
 }
 
-/** Send an unlock_achievement event when a badge is earned. */
-export function trackAchievementUnlock(achievementId: string): void {
-  sendGaEvent("unlock_achievement", {
-    achievement_id: achievementId,
-  });
-}
-
 /** Send a search event. Empty/whitespace-only terms are ignored. */
 export function trackSearch(searchTerm: string): void {
   const trimmed = searchTerm.trim();

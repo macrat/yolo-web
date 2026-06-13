@@ -25,7 +25,7 @@ vi.mock("@/play/fortune/logic", () => ({
 
 // date mock — controlled per test
 const mockGetTodayJst = vi.fn(() => "2026-03-28");
-vi.mock("@/lib/achievements/date", () => ({
+vi.mock("@/play/games/shared/_lib/crossGameProgress", () => ({
   getTodayJst: () => mockGetTodayJst(),
 }));
 

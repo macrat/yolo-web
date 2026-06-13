@@ -21,7 +21,6 @@ import { allGameMetas, getGamePath } from "@/play/games/registry";
 import { allCheatsheetMetas } from "@/cheatsheets/registry";
 // (legacy) Route Group 配下に移動したページのメタ情報は @/ エイリアスで参照する
 import { ABOUT_LAST_MODIFIED } from "@/app/(new)/about/meta";
-import { ACHIEVEMENTS_LAST_MODIFIED } from "@/app/(legacy)/achievements/meta";
 import { PRIVACY_LAST_MODIFIED } from "@/app/(new)/privacy/meta";
 import { DAILY_FORTUNE_LAST_MODIFIED } from "@/app/(legacy)/play/daily/meta";
 
@@ -127,11 +126,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "privacy/meta.ts",
   );
 
-  const achievementsLastModified = parseRequiredDate(
-    ACHIEVEMENTS_LAST_MODIFIED,
-    "achievements/meta.ts",
-  );
-
   const homepageDate = getLatestDate(
     [
       latestBlogDate,
@@ -142,7 +136,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       latestCheatsheetDate,
       latestDictionaryDate,
       aboutLastModified,
-      achievementsLastModified,
       privacyLastModified,
     ],
     (date) => date,
@@ -211,12 +204,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: aboutLastModified,
       changeFrequency: "monthly",
       priority: 0.6,
-    },
-    {
-      url: `${BASE_URL}/achievements`,
-      lastModified: achievementsLastModified,
-      changeFrequency: "monthly",
-      priority: 0.5,
     },
     {
       url: `${BASE_URL}/privacy`,

@@ -12,10 +12,8 @@
  *   404 から戻った先のページとの視覚不一致が生じるため。
  * - GoogleAnalytics 採用: 404 着地は外部リンク切れの定量把握に直接価値があり、
  *   Search Console / GA で 404 発生 URL を追跡できないと改善の起点が失われる。
- * - AchievementProvider/StreakBadge/JSON-LD は不採用:
- *   404 にバッジ表示も実績記録も無く、SEO 上 noindex で JSON-LD も不要。
+ * - JSON-LD は不採用: 404 は SEO 上 noindex のため不要。
  * - Header の actions プロップには ThemeToggle のみ渡す。
- *   StreakBadge は AchievementProvider 不在のため除外。
  *
  * B-333-7 (cycle-180) / R1 Major-2 修正で ThemeProvider と GoogleAnalytics を追加
  */
