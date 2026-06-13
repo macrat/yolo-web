@@ -2,7 +2,7 @@
 id: 236
 description: B-338 実績システムの撤去（移行計画 Phase 9.1 ②）— cycle-235 で確定した撤去判断を実施する。実績システム本体 36 ファイルと全組み込み箇所を削除し、本番 /achievements の表示バグを撤去で解消。完了時に「ゲーミフィケーションを実測で見直して撤去した話」のブログ化を判断する
 started_at: 2026-06-13T10:54:31+0900
-completed_at: 2026-06-13T14:07:17+0900
+completed_at: 2026-06-13T14:13:34+0900
 ---
 
 # サイクル-236
@@ -66,6 +66,20 @@ completed_at: 2026-06-13T14:07:17+0900
 - docs/design-migration-plan.md Phase 9.1（② 撤去採用の完了注記・旧 URL 標準 404）
 - kickoff 時の grep/find 実測（2026-06-13）: `src/lib/achievements/` 17 ファイル・`(legacy)/achievements/` 19 ファイル・recordPlay 呼び出し元・sitemap.ts L24/130/216・trust-levels.ts L41・bundle-budget.test.ts L85・analytics.ts L54・achievements を import する非撤去対象（fortuneStore ほか）——すべて cycle-235 の棚卸しと一致
 - docs/backlog.md（B-338 Notes: スコープ SSoT・早期着手推奨・ブログ化判断の引き継ぎ）
+
+## レビュー結果
+
+### 撤去レビュー（T-5・reviewer・1 ラウンド）
+
+- **承認（must-fix / should-fix / nit すべて 0 件）**。reviewer が依頼 5 観点をすべて実体確認: (1) 撤去網羅性 — 独立 grep で `lib/achievements|StreakBadge|AchievementProvider|useAchievements|recordPlay|trackAchievementUnlock|unlock_achievement|yolos-achievements` が 0 件・`/achievements` も 0 件（残存は無関係なブログ語義・データ辞書のみ）・sitemap/trust-levels/bundle-budget のエントリ消失を確認。(2) 非対象コードの無傷性 — fortuneStore の import 張り替え先（crossGameProgress）が削除した date.ts の re-export 元で挙動同一、4 GameContainer・QuizContainer で recordPlay のみ除去し trackContentEnd・モーダル制御・依存配列を保持（過不足なし）、両 layout のラップ解除後の配置を本番ビルド実機（console error 0）で確認。(3) 方針遵守 — 標準 404（curl 404）・localStorage 掃除コード不追加・StatsModal/crossGameProgress 本体不変・feature-preserving（追加 0・無関係リファクタなし）。(4) ドキュメント三者間整合（migration-plan / backlog / cycle doc と実 diff の一致）。(5) テスト — 独立再実行で 333 ファイル 5498 件 passed・残り 3 ゲートも全通過。
+
+### コンテンツレビュー（T-6・reviewer・contents-review・1 ラウンド）
+
+- **公開可（指摘ゼロ）**。記事 `2026-06-13-gamification-built-measured-removed.md` を contents-review 手順 + blog-writing 規約 + AP-W01〜12 + SEO ガイドラインで確認。事実は一次資料（cycle-235.md / cycle-236.md）と一件ずつ突合し創作・誇張・推測の事実化なし（17週6PV・97件中96件自動付与・ストリーク到達1人・対象20コンテンツ全て遊び系・削除38/編集24 など全一致。74日と17週の 2 集計期間を取り違えず使い分けている点も確認）。読者価値（作業報告に終始せず一般化された教訓に接続・内部用語の漏れなし）、frontmatter・AI 免責・だ/である調・太字不使用・冒頭の約束の回収・H2 ストーリー性、タイトル長 43 字超過は一覧で切れず好奇心ギャップ優先で実害なし、「ゲーミフィケーションは無意味」への過度な一般化なし——をすべて確認。ASCII バーチャートの整列表示も実機確認。
+
+### ワークフロー AP チェック（cycle-completion 手順 4・fresh reviewer・1 ラウンド）
+
+- **承認（AP-WF01〜16 逐条チェックで該当事項なし・修正不要）**。reviewer が独立検証（grep 再現・test 独立再実行・diff・ファイル実在確認）を伴って各項目を判定。要点: 実施＝builder／検証＝PM 独立 grep・4 ゲート／撤去レビュー＝別 reviewer／AP チェック＝fresh reviewer の三層分離で自作自演レビューなし（AP-WF08）。撤去を builder 1 名へ単一委任した点は「engine を消せば呼び出し元が壊れる」相互依存のアトミック変更ゆえ妥当で、むしろ共有ファイル（両 layout・analytics・sitemap）への複数並行アサインの方が AP-WF07 後段に抵触すると確認。ドキュメントの記述（grep 0 件・両ディレクトリ削除・fortuneStore 直参照・recordPlay のみ除去で trackContentEnd 保持・標準 404・sitemap/trust-levels/bundle-budget クリーン）は実プロダクト状態と一致し帳尻合わせなし。なお reviewer は HEAD のテストを独立再実行し全 pass（exit 0）を確認（333 passed + 1 skipped = 334 ファイル・5498 passed + 8 skipped = 5506 件＝本 doc の記録と同一。最終ゲートはブログ公開コミット後に実行済み）。
 
 ## キャリーオーバー
 
