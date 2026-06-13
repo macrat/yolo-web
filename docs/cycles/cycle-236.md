@@ -17,8 +17,8 @@ completed_at: null
 - [x] T-2: 撤去の実施（builder へ委任）— 削除 38 ファイル・編集 24 ファイル。本体削除＋全組み込み解除＋recordPlay 解除 7 ファイル（GA level_end 等の併存機能は保持）＋fortuneStore 張り替え＋関連テスト整理。陳腐化コメント 2 件（about/page.tsx・global-not-found.js）も解消
 - [x] T-3: 残存参照ゼロの検証と 4 ゲート — grep1（lib/achievements / StreakBadge / AchievementProvider / useAchievements / recordPlay / trackAchievementUnlock / unlock_achievement / yolos-achievements）= **0 件**。grep2（/achievements・実績）はブログ本文の「track record」用法・データ辞書のみで実績システム参照ゼロ。4 ゲート全通過（lint OK・format OK・test 333 ファイル 5498 件 passed・build EXIT=0・/achievements ルートなし・sitemap.xml に achievements 0 件）
 - [x] T-4: Playwright 実機検証（本番ビルドをローカル起動）— 全項目 OK: トップ Header に実績バッジなし・レイアウト無崩れ／新旧 Footer に「実績」リンクなし／`/achievements` 標準 404（curl でも 404 確認）／nakamawake ゲーム正常（カード操作可・コンソールエラー 0）／運勢カード正常表示（fortuneStore 張り替えの破損なし）。スクショは tmp/cycle-236/
-- [ ] T-5: reviewer によるレビュー（撤去の網羅性・非対象コードの無傷性・実機検証の独立確認）
-- [ ] T-6: ブログ記事化の判断と執筆 — cycle-235 T-6 で「B-338 完了時に『作った→測った→消した』の完結した学びとして書く方が読者価値が大きい」と判断済み。blog-writer に依頼し contents-review を通す（最終的な公開可否は読者価値で独立判断）
+- [x] T-5: reviewer によるレビュー — **承認（指摘ゼロ）**。reviewer が 5 観点を実体確認: 撤去網羅性（独立 grep で 0 件・sitemap/trust-levels/bundle-budget の残存なし）、非対象コードの無傷性（fortuneStore 張り替えの挙動同一性・各 GameContainer で recordPlay のみ除去し trackContentEnd 等を保持・依存配列の過不足なし・layout のラップ解除後の配置を実機確認）、方針遵守（標準 404・localStorage 掃除コード不追加・StatsModal 不変・feature-preserving）、ドキュメント三者間整合、テスト（独立再実行で 333 ファイル 5498 件 passed・4 ゲート全通過）
+- [x] T-6: ブログ記事化の判断と執筆 — **書くと判断し公開**。物語が「作った→測った→消した」で完結した今、具体データ（17週6PV・バッジ97件中96件が初回自動付与・ストリーク到達1人）を伴う「ゲーミフィケーションを入れれば使われる、という通説への実測の反証」は読者の持ち帰りが大きい。記事 `src/blog/content/2026-06-13-gamification-built-measured-removed.md`（dev-notes・想定読者=機能追加を迷う個人開発者）。blog-writer 執筆 → contents-review（reviewer が一次資料突合・AP-W チェック・実機確認で「公開可」・指摘ゼロ）→ PM 自身も読後に読者価値を独立判断し公開決定。published_at は実時刻で設定
 - [x] T-7: ドキュメント反映 — design-migration-plan.md Phase 9.1 に完了注記・backlog（B-338 → Done・Active 空・最古 Done〔cycle-231 B-312〕削除・B-432 Notes に /achievements エントリ削除済みを追記・B-341 を着手条件達成で Deferred → Queued 移動）
 - [ ] T-8: 4 ゲート最終確認と /cycle-completion
 
