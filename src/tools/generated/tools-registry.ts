@@ -45,6 +45,7 @@ import { meta as unit_converter } from "@/tools/unit-converter/meta";
 import { meta as unix_timestamp } from "@/tools/unix-timestamp/meta";
 import { meta as url_encode } from "@/tools/url-encode/meta";
 import { meta as yaml_formatter } from "@/tools/yaml-formatter/meta";
+import { meta as yoji_search } from "@/tools/yoji-search/meta";
 
 const toolEntries: ToolDefinition[] = [
   { meta: age_calculator },
@@ -81,6 +82,7 @@ const toolEntries: ToolDefinition[] = [
   { meta: unix_timestamp },
   { meta: url_encode },
   { meta: yaml_formatter },
+  { meta: yoji_search },
 ];
 
 // Indexed by slug for O(1) lookup
@@ -96,4 +98,4 @@ export function getAllToolSlugs(): string[] {
   return toolEntries.map((e) => e.meta.slug);
 }
 
-// Count at generation time: tools=34
+// Count at generation time: tools=35

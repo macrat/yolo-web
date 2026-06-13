@@ -2,7 +2,7 @@
  * toolbox-catalog の整合テスト（cycle-230 T-6）
  *
  * 検証観点:
- * - エントリ39件（34ツール full ＋ 形ファミリー代表の固定 variant 5枚）
+ * - エントリ40件（35ツール full ＋ 形ファミリー代表の固定 variant 5枚）
  * - id の一意性と `${slug}:${variant}` 形式
  * - セル数（cols/rows）が正の整数
  * - 全エントリにコンポーネントが結線されている（renderTile が有効な要素を返す）
@@ -34,17 +34,17 @@ const FIXED_VARIANT_IDS = [
 ];
 
 describe("toolbox-catalog: エントリ数と id", () => {
-  it("エントリは39件（34ツール full ＋ 固定 variant 5枚）", () => {
-    expect(TOOLBOX_CATALOG).toHaveLength(39);
+  it("エントリは40件（35ツール full ＋ 固定 variant 5枚）", () => {
+    expect(TOOLBOX_CATALOG).toHaveLength(40);
     expect(
       TOOLBOX_CATALOG.filter((entry) => entry.variant === "full"),
-    ).toHaveLength(34);
+    ).toHaveLength(35);
     for (const id of FIXED_VARIANT_IDS) {
       expect(TOOLBOX_CATALOG_IDS.has(id)).toBe(true);
     }
   });
 
-  it("全34ツール（レジストリの全 slug）の full エントリが存在する", () => {
+  it("全35ツール（レジストリの全 slug）の full エントリが存在する", () => {
     const fullSlugs = new Set(
       TOOLBOX_CATALOG.filter((entry) => entry.variant === "full").map(
         (entry) => entry.slug,

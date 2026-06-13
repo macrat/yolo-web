@@ -1,5 +1,5 @@
 /**
- * toolbox-catalog — 道具箱に並べられるタイルのカタログ（全39エントリ）
+ * toolbox-catalog — 道具箱に並べられるタイルのカタログ（全40エントリ）
  *
  * cycle-230 T-3: ToolboxContent.tsx に JSX としてハードコードされていた39枚
  * （34ツールの full variant 各1 ＋ 形ファミリー代表の固定 variant 5枚）を、
@@ -57,6 +57,7 @@ import FullwidthConverterTile from "@/tools/fullwidth-converter/FullwidthConvert
 import KanaConverterTile from "@/tools/kana-converter/KanaConverterTile";
 import KeigoReferenceTile from "@/tools/keigo-reference/KeigoReferenceTile";
 import LineBreakRemoverTile from "@/tools/line-break-remover/LineBreakRemoverTile";
+import YojiSearchTile from "@/tools/yoji-search/YojiSearchTile";
 import TextDiffTile from "@/tools/text-diff/TextDiffTile";
 import TextReplaceTile from "@/tools/text-replace/TextReplaceTile";
 // --- generator カテゴリ ---
@@ -301,7 +302,7 @@ export const TOOLBOX_CATALOG: readonly ToolboxCatalogEntry[] = [
   }),
 
   // =========================================================================
-  // text（9ツール × full ＋ 固定 variant 1枚）
+  // text（10ツール × full ＋ 固定 variant 1枚）
   // =========================================================================
   defineEntry({
     slug: "business-email",
@@ -383,6 +384,15 @@ export const TOOLBOX_CATALOG: readonly ToolboxCatalogEntry[] = [
     renderTile: (c) => (
       <KeigoReferenceTile variant="full" as="div" className={c} />
     ),
+  }),
+  defineEntry({
+    slug: "yoji-search",
+    variant: "full",
+    name: "四字熟語検索",
+    category: "text",
+    cols: 5,
+    rows: 5,
+    renderTile: (c) => <YojiSearchTile variant="full" as="div" className={c} />,
   }),
   defineEntry({
     slug: "line-break-remover",
