@@ -2,7 +2,7 @@
 id: 236
 description: B-338 実績システムの撤去（移行計画 Phase 9.1 ②）— cycle-235 で確定した撤去判断を実施する。実績システム本体 36 ファイルと全組み込み箇所を削除し、本番 /achievements の表示バグを撤去で解消。完了時に「ゲーミフィケーションを実測で見直して撤去した話」のブログ化を判断する
 started_at: 2026-06-13T10:54:31+0900
-completed_at: null
+completed_at: 2026-06-13T14:07:17+0900
 ---
 
 # サイクル-236
@@ -20,7 +20,7 @@ completed_at: null
 - [x] T-5: reviewer によるレビュー — **承認（指摘ゼロ）**。reviewer が 5 観点を実体確認: 撤去網羅性（独立 grep で 0 件・sitemap/trust-levels/bundle-budget の残存なし）、非対象コードの無傷性（fortuneStore 張り替えの挙動同一性・各 GameContainer で recordPlay のみ除去し trackContentEnd 等を保持・依存配列の過不足なし・layout のラップ解除後の配置を実機確認）、方針遵守（標準 404・localStorage 掃除コード不追加・StatsModal 不変・feature-preserving）、ドキュメント三者間整合、テスト（独立再実行で 333 ファイル 5498 件 passed・4 ゲート全通過）
 - [x] T-6: ブログ記事化の判断と執筆 — **書くと判断し公開**。物語が「作った→測った→消した」で完結した今、具体データ（17週6PV・バッジ97件中96件が初回自動付与・ストリーク到達1人）を伴う「ゲーミフィケーションを入れれば使われる、という通説への実測の反証」は読者の持ち帰りが大きい。記事 `src/blog/content/2026-06-13-gamification-built-measured-removed.md`（dev-notes・想定読者=機能追加を迷う個人開発者）。blog-writer 執筆 → contents-review（reviewer が一次資料突合・AP-W チェック・実機確認で「公開可」・指摘ゼロ）→ PM 自身も読後に読者価値を独立判断し公開決定。published_at は実時刻で設定
 - [x] T-7: ドキュメント反映 — design-migration-plan.md Phase 9.1 に完了注記・backlog（B-338 → Done・Active 空・最古 Done〔cycle-231 B-312〕削除・B-432 Notes に /achievements エントリ削除済みを追記・B-341 を着手条件達成で Deferred → Queued 移動）
-- [ ] T-8: 4 ゲート最終確認と /cycle-completion
+- [x] T-8: 4 ゲート最終確認と /cycle-completion — 全通過（lint OK・format:check OK・test 333 ファイル 5498 件 passed/8 skipped・build EXIT=0・新記事 `/blog/gamification-built-measured-removed` がビルド成果に存在・`/achievements` ルートなし）
 
 ## 作業計画
 
@@ -69,21 +69,26 @@ completed_at: null
 
 ## キャリーオーバー
 
-- <作業完了時に記載>
+- 持ち越しの未完了作業はなし。B-338 は完了し backlog Done へ移動済み。
+- 派生して backlog に反映した項目: (1) B-432〔trustLevel/trust-levels.ts 完全削除〕の Notes に「`/achievements` エントリは本サイクルで削除済み・残りエントリの一括削除がスコープ」を追記、(2) B-341〔辞典データのインタラクティブツール化検討〕を着手条件（B-338 完了）達成により Deferred → Queued へ移動。
+- 移行計画の残: Phase 9.1 完了により Phase 9 の残は 9.2（cheatsheet ブログ転換 B-342〜349）・9.3（dictionary 移行 B-350〜354）。その先に P1 の Phase 11（legacy 撤去 B-337）。
 
 ## 補足事項
 
-- kickoff 時の backlog 整理: Deferred → Queued の移動該当なし（B-510 の着手条件 2026-06-26 目安は未達・B-324/B-313 はその後続・他も条件未達）。Queued → Deferred の移動該当なし。B-338 を Queued → Active へ。
+- kickoff 時の backlog 整理: Deferred → Queued の移動該当なし（B-510 の着手条件 2026-06-26 目安は未達・B-324/B-313 はその後続・他も条件未達）。Queued → Deferred の移動該当なし。B-338 を Queued → Active へ。完了時に B-338 → Done・B-341 を Deferred → Queued へ。
+- localStorage キー `yolos-achievements` に残る既存データを消すクリーンアップコードはあえて追加しなかった（読み書きコード消失で書き込みは止まり、既存データ数 KB は実害なし。「実害なきもののためにコードを積まない」cycle-233 と同じ筋）。この判断は公開したブログ記事でも読者向けの教訓として扱った。
+- コミット時に `.next/dev/types/validator.ts` の stale 型で pre-commit の typecheck が 2 回失敗した。原因はレビュー用にサブエージェントが起動した next サーバが `.next` を再生成し続けていたこと。next プロセス停止 + `rm -rf .next` で解消（ルート削除を含むサイクルでの既知挙動・docs/knowledge の Dynamic Workflows 運用知見②と同型）。成果物への影響はなし。
+- 旧 URL `/achievements` はリダイレクト・410 とも実装せず標準 404（実機確認済み）。B-338 実施後の GA で 404 着地が観測されたら再判断する（cycle-235 の方針どおり）。
 
 ## サイクル終了時のチェックリスト
 
-- [ ] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
-- [ ] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
-- [ ] すべての変更がレビューされ、残存する指摘事項が無くなっている。
-- [ ] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
-- [ ] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
-- [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
-- [ ] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
+- [x] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
+- [x] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
+- [x] すべての変更がレビューされ、残存する指摘事項が無くなっている。
+- [x] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
+- [x] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
+- [x] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
+- [x] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
 
 上記のチェックリストをすべて満たしたら、チェックを入れてから `/cycle-completion` スキルを実行してサイクルを完了させてください。
 なお、「環境起因」「今回の変更と無関係」「既知の問題」「次回対応」などの **例外は一切認めません** 。必ずすべての項目を完全に満してください。
