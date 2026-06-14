@@ -1,7 +1,7 @@
 /**
- * codegen ロジックの回帰テスト（案 a: in-memory テスト）
+ * codegen ロジックの回帰テスト（in-memory テスト）
  *
- * 各 buildXxxRegistryContent() を直接呼び出し、slugs 配列の増減が
+ * buildToolsRegistryContent() を直接呼び出し、slugs 配列の増減が
  * 生成コンテンツに正しく反映されることを確認する。
  * これにより「dummy を追加すれば含まれる / 削除すれば消える」が
  * CI で自動検証される。
