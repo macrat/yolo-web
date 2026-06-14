@@ -2,7 +2,7 @@
 id: 241
 description: B-344 移行計画 Phase 9.2.c — html-tags チートシートを「意味で選ぶ HTML（なぜそのタグを選ぶか）」のセマンティック使い分けガイド記事に転換する
 started_at: 2026-06-14T12:01:46+0900
-completed_at: null
+completed_at: 2026-06-14T12:57:10+0900
 ---
 
 # サイクル-241
@@ -18,7 +18,7 @@ completed_at: null
 - [x] T-3: contents-review でレビューし、有効な指摘をすべて反映（読者視点。重大ゼロ。推奨「section/article 章の実害描写を厚く」＋nit「dl 実害」「背骨宣言のトーン」を反映）
 - [x] T-4: reviewer サブエージェントでサイクル全体（記事・フロントマター・移行整合・事実裏取り）をレビュー（重大1〔aria-status 内部リンクのアンカーテキストが事実と正反対〕＋推奨〔main MUST NOT 出典リンク〕を修正、再レビューで承認）
 - [x] T-5: 4ゲート通過（lint / format:check / test / build。`/blog/choosing-html-tags-by-meaning` と OGP 画像 prerender 確認）
-- [ ] T-6: `/cycle-completion` でサイクルを完了
+- [x] T-6: `/cycle-completion` でサイクルを完了
 
 ## 作業計画
 
@@ -106,6 +106,37 @@ CLAUDE.md のルールに従い、記事執筆は blog-writer サブエージェ
 - ブログ記事の grep 実測（`aria|html|tag|semantic|accessib|a11y|seo` で該当3件＝いずれも dev-notes の失敗談/実装記事でカニバリ低・うち2件は内部リンク候補。計画レビュー M-1 で grep クエリを拡張して是正）
 - `src/tools/` 実測（html-tags 正対ツールなし・隣接は `html-entity` のみ＝R-3 対応）
 
+## レビュー結果
+
+### 計画レビュー（R1 改善指示 → R2 承認）
+
+reviewer が重大1件・推奨3件を指摘:
+
+- M-1（重大）: SEO カニバリ検証が grep クエリ（`html|tag|semantic`）の取りこぼしで `2026-05-28-aria-status-implicit-aria-live.md` を見落としていた（AP-P06/AP-P16）→ クエリを `aria|html|tag|semantic|accessib|a11y|seo` に拡張して再実測。該当3件（sanitize-html / nextjs-seo-metadata / aria-status、いずれも dev-notes の失敗談/実装）を表で列挙し主題・検索意図の違いを明記。本記事はアクセシビリティ・SEO を背骨にするため、aria-status / seo-metadata を内部リンク候補として T-1 に追加。
+- R-1（推奨）: フラットなタグ表回帰の歯止めが精神論寄り → T-1 に「症状（実害）→なぜ→どう選ぶ」の3層を必須構造要件として明文化し「症状＝実害を1行で終わらせない」具体指示を追加。
+- R-2（推奨）: 循環依存キャリーオーバーの網羅性検証の前提 → 「畳み込み前に既存ガイドの網羅性検証を先に置く」をキャリーオーバーと backlog B-349 注記に追記。
+- R-3（推奨）: related_tool_slugs の判断が曖昧 → PM が `src/tools/` を実測（正対ツールなし・隣接 html-entity のみ）し、本文で `<`/`>`/`&` エスケープに触れる場合のみ html-entity を設定する条件付き方針に変更。
+
+→ 修正後の R2 で承認（新3記事のフロントマターを実体照合・重大ゼロ・過剰修正なし）。
+
+### 記事レビュー（contents-review 読者視点 + reviewer サイクル全体）
+
+- contents-review（読者視点）: 重大ゼロ。差別化軸（意味で選ぶ HTML）達成・フラットなタグ表に堕ちていない・MDN 一次情報と全断定一致を確認。推奨1〔section/article 章の実害描写を div/strong 章と同程度に厚く〕＋nit〔dl 実害の薄さ・冒頭の背骨宣言トーンずれ〕を反映。
+- reviewer（サイクル全体・R1 改善指示 → R2 承認）: 重大1〔記事末尾の aria-status 内部リンクのアンカーテキストが「読み上げが起きない」と事実と正反対。リンク先の実主題は「暗黙の aria-live で読み上げが暴走した」事故〕→ アンカーテキストを実主題に即して修正。推奨〔main の MUST NOT 制約に出典リンクなし〕→ MDN main 要素リンクを追加。section/article・dl 章の本文断定が MDN/WHATWG/W3C WAI と一致することを抜き取り検証。移行スコープ厳守（記事追加のみ・チートシート本体/ルーティング不変）を git で確認。→ R2 で承認。
+
+### インシデント（Owner 指摘）: frontmatter 時刻偽装
+
+- 当初 PM が blog-writer に `published_at: 12:30`・`updated_at: 13:10`（13:10 はコミット時点より未来）という実時刻に基づかない具体時刻を渡していた。これは sitemap テスト（lastModified < now）の失敗で検知され、Owner からも致命的（検索エンジンのペナルティ直結）と指摘。
+- 是正: `date` 実測値（2026-06-14T12:41:49+09:00）に published_at/updated_at を統一（新規記事は両者同一）。git log と直近8記事を照合し、markdown 記事（cycle-240）も published(23:04:24)≠updated(23:12:37) の新規記事ルール違反だったため updated_at を published_at に揃えて是正（他記事は問題なし・未来時刻はコミット済みに無し）。
+- 再発防止: アンチパターン AP-W13 を `docs/anti-patterns/writing.md` に追加。
+
+### 4ゲート
+
+- lint: OK（クリーン）
+- format:check: OK
+- test: 336ファイル・5525件全通過（時刻是正前は sitemap テスト2件が未来 updated_at で失敗→是正で解消）
+- build: exit 0。`/blog/choosing-html-tags-by-meaning` と OGP 画像（opengraph/twitter）prerender 確認。
+
 ## キャリーオーバー
 
 - **B-342/345/347 と B-349 の循環依存**: cron / http-status / regex は「既存ガイドへの統合＋リダイレクト」に再スコープ済みだが、リダイレクト自体は B-349（Phase 9.2.h）の責務とされており、一方 B-349 の着手条件は「B-342〜B-348 全完了」。これら3件には独立した content 成果物が（既存ガイドが内容を網羅していれば）残っておらず、現状のままでは互いを待ち合う循環になる。本サイクル（B-344）完了後、Phase 9.2 で残るのはこの3件のみになるため、次回以降のキックオフで「B-342/345/347 を B-349 に畳み込む（既存ガイドへのリダイレクト先記録＋撤去を一括実施）」方向の再スコープを検討すべき。**ただし畳み込みの判断の前に、3つのチートシート（cron/http-status/regex）の内容が既存ガイド記事で本当に網羅されているかの網羅性検証を先に置くこと**（網羅されていなければ補筆が必要で単純な畳み込みにはならない＝この網羅性は現時点で未検証）。backlog.md にも反映する。
@@ -118,13 +149,13 @@ CLAUDE.md のルールに従い、記事執筆は blog-writer サブエージェ
 
 ## サイクル終了時のチェックリスト
 
-- [ ] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
-- [ ] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
-- [ ] すべての変更がレビューされ、残存する指摘事項が無くなっている。
-- [ ] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
-- [ ] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
-- [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
-- [ ] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
+- [x] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
+- [x] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
+- [x] すべての変更がレビューされ、残存する指摘事項が無くなっている。
+- [x] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
+- [x] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
+- [x] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
+- [x] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
 
 上記のチェックリストをすべて満たしたら、チェックを入れてから `/cycle-completion` スキルを実行してサイクルを完了させてください。
 なお、「環境起因」「今回の変更と無関係」「既知の問題」「次回対応」などの **例外は一切認めません** 。必ずすべての項目を完全に満してください。
