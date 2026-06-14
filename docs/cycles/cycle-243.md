@@ -2,7 +2,7 @@
 id: 243
 description: "移行計画 Phase 9.2.h（B-349）。チートシート機能を完全撤去し、7チートシート全URL + index を統合先ブログ記事へ 301 リダイレクト。主題が矛盾する cheatsheets-introduction 記事を「チートシートから深掘り記事への転換」という完結した事例記事に書き換え。"
 started_at: "2026-06-14T16:37:56+0900"
-completed_at: "2026-06-14T19:08:16+0900"
+completed_at: "2026-06-14T19:14:51+0900"
 ---
 
 # サイクル-243
@@ -83,6 +83,20 @@ completed_at: "2026-06-14T19:08:16+0900"
 - 一次資料確認: 各統合先記事 frontmatter の slug・`git log`（git-command-reference は cycle-237 B-343）・backlog Done 記録。
 - `next.config.ts` 既存 redirects() パターン（colors/games/quiz/blogCategory）。
 - AP-I02（一括撤去）・B-494（`.next` stale 対策・PM の commit 前 tsc/build 検証）・AP-W13（updated_at の date 実測・未来時刻禁止）。
+
+## レビュー結果
+
+### 計画レビュー（reviewer・改善指示 → 反映）
+
+重大0・推奨4・nit1。重大ゼロだが、推奨はいずれも「撤去後に誤誘導テキスト・stale 参照が残る」性質で本サイクルの目的に直結するため全件を計画へ反映した: (1) `src/blog/_lib/blog.ts` の「チートシート」タグ説明文が「多数提供」と謳う誤誘導→T-9b 新設、(2) `FaqSection.tsx`・`DictionaryDetailLayout.tsx`・`GameLayout.tsx` の JSDoc 内 `CheatsheetLayout` stale コメント→T-10 を「コメントも参照として是正」に明確化、(3) intro 記事のリンク本数の数え漏れ（index リンク1本）→T-11(b) を「計7本」に訂正、(4 nit) `ToolsListView.module.css` の孤立クラス除去→T-8 に追記。リダイレクトマップ8本・index 先 `/blog/category/tool-guides` の実在・markdown/git の取り違え是正は計画どおりで問題なしと確認された。
+
+### インフラ撤去レビュー（reviewer・承認・重大ゼロ）
+
+重大0・推奨0・nit1。残存参照ゼロ（残りは middleware の別 slug・スクリプトの経緯コメント・タグ名・blog/content の .md のみ）・リダイレクト8本の正確性（先 slug 実在・permanent・index 完全一致が `/cheatsheets/:slug` と衝突しない）・生成スクリプト tools 専用化（削除済み registry 再生成経路の消滅＝ビルド破壊バグの解消）・テスト整合（data-driven のため stale 総数アサーションなし）・stale コメント是正を全件裏取りで確認し承認。nit（テストファイル冒頭コメントの複数形陳腐化）は PM 即時編集で対応。
+
+### 記事レビュー（reviewer・承認・重大ゼロ）
+
+重大0・推奨0・nit2。読者価値（需要でなく独自性で選ぶ／集約系は正典に勝ちにくい、という transferable な学びが骨格・プロジェクト用語の混入ゼロ）・冒頭の約束3項目の全回収・事実整合（GA 実数 90 日 PV6 と「数えるほど・全て検索経由」が完全整合・推測は推測と明示）・リンク7本の実在（markdown は正しく `markdown-not-rendering-as-expected`）・frontmatter（title29字/description91字/裸配列残骸除去/updated_at 実測）・規約遵守（一人称/だ・である調/AI注記/太字ゼロ/展望で撤去機能を約束しない）を裏取り確認し公開承認。nit-1（末尾誘導文の語感が tool-guides カテゴリと微ずれ）は PM 即時編集で reviewer 指定どおり是正し updated_at を再更新。nit-2（trust_level 死フィールドの全記事残存）は本記事固有でなく既存事象のためキャリーオーバーへ。
 
 ## キャリーオーバー
 
