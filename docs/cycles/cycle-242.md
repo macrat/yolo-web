@@ -1,83 +1,83 @@
 ---
 id: 242
-description: 移行計画 Phase 9.2 完結 — cheatsheet infrastructure 撤去と旧 URL→記事リダイレクト統合（B-349 に B-342/345/347 を畳み込み）。網羅性検証をゲートとする。
+description: 移行計画 Phase 9.2 — cron/regex/http-status チートシートの内容を既存ガイド記事へ統合（補筆）し、リダイレクト撤去（B-349）に備える。網羅性検証ゲートの結果、http-status は補筆必須・cron/regex は補筆推奨と判明し、本サイクルを「統合・補筆」にスコープ確定。
 started_at: 2026-06-14T13:20:57+0900
 completed_at: null
 ---
 
 # サイクル-242
 
-このサイクルでは、デザイン移行計画の **Phase 9.2（cheatsheets を blog 記事として再編）を完結**させる。
+このサイクルでは、デザイン移行計画 Phase 9.2 の B-342（cron）/ B-345（http-status）/ B-347（regex）の **「既存ガイドへの統合（補筆）」** を行う。
 
-現状、7 つのチートシート（cron / git / html-tags / http-status-codes / markdown / regex / sql）は依然 `(legacy)/cheatsheets/` 配下で生きており、`src/cheatsheets/` も残っている。一方で git / sql / markdown / html-tags は cycle-237〜241 で記事化済みであり、**チートシートと記事の重複コンテンツが現在公開中**という SEO カニバリ状態にある。cron / http-status / regex は既存ガイド記事が先行して存在する。
+## 経緯（スコープ確定の根拠）
 
-本サイクルは B-349（Phase 9.2.h: `src/cheatsheets/` と `(legacy)/cheatsheets/` 撤去 + 旧 URL→記事リダイレクト）を主タスクとし、循環待ち合いになっていた B-342 / B-345 / B-347（cron / http-status / regex の再スコープ済み「既存ガイドへの統合＋リダイレクト」）を畳み込む。
+当初は B-349（cheatsheet infrastructure 撤去 + リダイレクト）を主タスクに B-342/345/347 を畳み込む計画だったが、kickoff の **網羅性検証（T-1 ゲート）** とレビューにより、1 サイクルでの完遂は質を損なうと判断し、本サイクルを「統合・補筆」に確定、B-349（リダイレクト＋撤去）を次サイクルへ分離した。
 
-**重要な前提**: 撤去前に、cron / http-status / regex の 3 チートシートの内容が既存ガイド記事で網羅されているかを検証する（T-1 ゲート）。網羅されていないのにリダイレクトすると、リファレンスを探しに来た来訪者が手ぶらで帰ることになる。未網羅が見つかれば補筆するか、補筆規模が大きければスコープを再判断する。
+### 網羅性検証の結果（3 チートシート別エージェント）
+
+- **http-status: 重大な欠落（補筆必須）**。既存ガイド `http-status-code-guide-for-rest-api.md` は 401/403・400/422・301/302/307/308・200/201/204 の **約 11 コードの「使い分け」**に絞られている。一方チートシートは **1xx〜5xx 約 34 コードの逆引き早見表**を持つ。**5xx 全部（500/502/503/504）・404/405/408/409/410/413/415/418/429/451・1xx（100/101/103）・2xx（202/206）・3xx（303/304）が記事に皆無**。「502とは」「503 意味」「404 意味」は HTTP で最も太い検索流入層（meta.ts キーワードにも `500 エラー`・`404 意味`）。無補筆リダイレクトはこの層を手ぶらで帰す。
+- **cron: 軽微な欠落（補筆推奨）**。中核（基本構文・特殊文字・環境差・DOM/DOW・タイムゾーン・トラブルシュート）は既存ガイド + pitfalls 記事でむしろ充実。欠落は (1) 特殊文字列ショートカット表（`@yearly`/`@monthly`/`@weekly`/`@daily`/`@hourly`/`@reboot`）が両記事に完全欠落、(2) 「よく使う式」リファレンス密度（`*/15`・`*/30`・`0 */6`・週末 `6,0`・月水金 `1,3,5` 等）、(3) Quartz/Spring 秒フィールド（任意）。
+- **regex: 軽微〜中の欠落（補筆推奨）**。ReDoS は記事の方が充実。欠落は (1) メタ文字早見表（10 種）が散文化で表として不在、(2) 文字クラス否定形 `\D`/`\W`/`\S` と同等表記、(3) 先読み・後読み全 4 種（`(?=)`/`(?!)`/`(?<=)`/`(?<!)`）、(4)（任意）後方参照 `\1`/`\2`・量指定子 `{n,}`・アンカー `\B`・フラグ `u`/`y`・全角マッチ FAQ。
+
+### B-349（次サイクル）へ送る根拠
+
+計画レビューで撤去スコープに重大欠落 6 件（検索インデックス `src/lib/search/*`、リダイレクト先記事の自己参照リンク、紹介記事 `cheatsheets-introduction.md` の主題矛盾、Footer 2 系統 + ToolsListView、テスト 7 本超、`src/lib/seo.ts` の cheatsheet ヘルパー）が判明。これらの正しい撤去は単独で 1 サイクル規模であり、補筆と同時実施は質を損なう。よって B-349 は補筆完了を前提に次サイクルへ分離する（詳細は backlog B-349 に反映済み）。
 
 ## 実施する作業
 
-- [ ] **T-1（ゲート）網羅性検証**: cron / http-status / regex の 3 チートシート本体（`src/cheatsheets/{slug}/Component.tsx` + `meta.ts`）の内容が、対応する既存ガイド記事で網羅されているかを 3 つのサブエージェントで個別に検証する。
-  - [ ] cron: `src/cheatsheets/cron/` vs `2026-02-17-cron-parser-guide.md`（+ 補助記事 `2026-03-02-cron-expression-pitfalls-dom-dow-parseint.md`）
-  - [ ] http-status: `src/cheatsheets/http-status-codes/` vs `2026-03-01-http-status-code-guide-for-rest-api.md`
-  - [ ] regex: `src/cheatsheets/regex/` vs `2026-02-17-regex-tester-guide.md`
-  - [ ] 各検証で「チートシートにあって記事にない来訪者価値のある情報」を具体的に列挙し、補筆要否を PM が判断
-- [ ] **T-2（条件付き）補筆**: T-1 で重大な未網羅が見つかった場合、対象ガイド記事に補筆する（補筆規模が記事1本分を超える場合はスコープ再判断しキャリーオーバー）
-- [ ] **T-3 リダイレクトマッピング確定**: 7 チートシート全 URL（+ index `/cheatsheets`）→ リダイレクト先記事 URL の対応表を確定
-- [ ] **T-4 リダイレクト実装**: `next.config.ts` の `redirects()` に cheatsheet 群を追加（既存パターン踏襲・301 permanent）
-- [ ] **T-5 撤去**: `src/cheatsheets/` ディレクトリ・`(legacy)/cheatsheets/` ディレクトリ・関連テスト・sitemap エントリ・内部リンク・registry 生成物・bundle-budget 等の残参照を一括撤去（AP-I02 回避＝漸進削除禁止、grep 0 件まで）
-- [ ] **T-6 移行計画書の更新**: `docs/design-migration-plan.md` の Phase 9.2 を完了マークし、9.2.h の完了注記を追記
-- [ ] **T-7 検証**: `npm run lint && npm run format:check && npm run test && npm run build` の 4 ゲート通過。旧 URL→記事のリダイレクトを実機（Playwright）で確認。撤去対象 URL が 404/リダイレクトになり、記事側が正常表示されることを確認
-- [ ] **T-8 レビュー**: 計画レビュー・実装レビューを reviewer サブエージェントに依頼し、指摘に対応
+- [ ] **T-1（完了）網羅性検証** — 上記の通り 3 チートシート別エージェントで完了。結果を本ドキュメントに記録済み。
+- [ ] **T-2 http-status ガイドへの統合（補筆・必須）**: `src/blog/content/2026-03-01-http-status-code-guide-for-rest-api.md` に「HTTPステータスコード一覧（早見表）」セクションを新設。
+  - [ ] 1xx〜5xx の約 34 コードを「コード / 名前 / 意味 / 主な使用場面」表で収録（5xx 全部・404/405/408/409/410/413/415/418/429/451・1xx 100/101/103・2xx 202/206・3xx 303/304 を必ず含む）
+  - [ ] 429 の Retry-After / X-RateLimit-\* 補足
+  - [ ] 本文 L51・L312 の `/cheatsheets/http-status-codes`（自己参照）・`/cheatsheets/cron` リンクを、新設早見表セクションへのアンカー／cron ガイド記事への張り替え or 除去（「全一覧はチートシートで」を「下記早見表で」に整合）
+  - [ ] frontmatter `updated_at` を `date` 実測値に更新（`published_at` は不変・AP-W13 遵守）
+- [ ] **T-3 cron ガイドへの統合（補筆・推奨）**: `src/blog/content/2026-02-17-cron-parser-guide.md` に補筆。
+  - [ ] 特殊文字列ショートカット表（`@yearly`/`@annually`/`@monthly`/`@weekly`/`@daily`/`@midnight`/`@hourly`/`@reboot` と等価式・説明）
+  - [ ] 「よく使う cron 式」表の拡充（`*/15`・`*/30`・`0 */6 * * *`・週末 `6,0`・月水金 `1,3,5` 等）
+  - [ ] frontmatter `updated_at` を `date` 実測値に更新（AP-W13）
+- [ ] **T-4 regex ガイドへの統合（補筆・推奨）**: `src/blog/content/2026-02-17-regex-tester-guide.md` に補筆。
+  - [ ] メタ文字早見表（`.`/`^`/`$`/`*`/`+`/`?`/`\`/`|`/`[]`/`()` の意味・例）
+  - [ ] 文字クラス否定形 `\D`/`\W`/`\S` と同等表記
+  - [ ] 先読み・後読み全 4 種（`(?=)`/`(?!)`/`(?<=)`/`(?<!)`）の表と例
+  - [ ] frontmatter `updated_at` を `date` 実測値に更新（AP-W13）
+- [ ] **T-5 レビュー**: 各記事を contents-review（読者視点）+ reviewer に掛け、指摘に対応（記事ごとに個別エージェント）。「使い分けガイドにリファレンスを足したことで散漫になっていないか」「断定が一次情報と一致するか（MDN/RFC 等）」を重点確認。
+- [ ] **T-6 検証**: `npm run lint && npm run format:check && npm run test && npm run build` の 4 ゲート通過。3 記事が正常 prerender されることを確認。
 
 ## 作業計画
 
 ### 目的
 
-デザイン移行計画 Phase 9.2 を完結させ、(1) チートシートと記事の重複公開（SEO カニバリ）を解消し、(2) `src/cheatsheets/` / `(legacy)/cheatsheets/` を撤去して legacy 撤去（Phase 11）と辞典移行（Phase 9.3）への道を開く。来訪者にとっては、旧チートシート URL でも記事に着地して情報を得られる状態を保証する。
+cron / regex / http-status の各チートシートが持つ「リファレンス引き」の価値を、対応する既存ガイド記事へ統合し、チートシート撤去（次サイクル B-349）後も来訪者が必要な情報を失わない状態を作る。特に http-status は「コード番号で引きに来る最大流入層」を救うため補筆が必須。これは来訪者価値を直接高める作業であり、移行（撤去・リダイレクト）の前提条件でもある。
 
 ### 作業内容
 
-1. **網羅性検証（T-1, ゲート）**: cron / http-status / regex の各チートシートと既存ガイドを 1 対 1 でサブエージェントに比較させる。チートシートは「網羅リファレンス」、ガイドは「判断・なぜ」中心という性質差があるため、特に「全コード/全メタ文字/全フィールドの早見表」のような網羅リファレンス要素がガイドに欠けていないかを重点確認する。
-   - 例: http-status チートシート（444 行）は全ステータスコードの一覧を持つ可能性が高いが、ガイドは主要 10 コード前後の使い分けに絞っている。この差が「来訪者価値のある未網羅」かを判断する。
-2. **補筆要否判断（T-2）**: 未網羅が来訪者価値を伴う場合のみ補筆。記法カタログ化は記事の差別化を損なうため、ガイドの軸に沿った形で最小限に補う。補筆規模が大きい場合は別タスク化してリダイレクトを次サイクルに送る再判断も選択肢に含める。
-3. **リダイレクト実装（T-3, T-4）**: 確定マッピング（下記）を `next.config.ts` に追加。
-   - `/cheatsheets/cron` → `/blog/cron-parser-guide`
-   - `/cheatsheets/git` → `/blog/git-command-reference`
-   - `/cheatsheets/html-tags` → `/blog/choosing-html-tags-by-meaning`
-   - `/cheatsheets/http-status-codes` → `/blog/http-status-code-guide-for-rest-api`
-   - `/cheatsheets/markdown` → `/blog/markdown-not-rendering-as-expected`
-   - `/cheatsheets/regex` → `/blog/regex-tester-guide`
-   - `/cheatsheets/sql` → `/blog/sql-execution-order-guide`
-   - `/cheatsheets`（index）→ `/blog`（一覧 → ブログ一覧。要検討: カテゴリ tool-guides へ寄せるか）
-   - ※ 記事 slug は T-3 で実ファイルから再確認してから確定する（記憶に頼らない）
-4. **撤去（T-5）**: ディレクトリ削除 + registry 再生成 + sitemap・内部リンク・テスト・bundle-budget 等の残参照を grep 0 件まで除去。Next route 削除に伴う `.next/types` stale 化に注意（B-494 の知見: commit 前 `rm -rf .next`）。
-5. **計画書更新・検証・レビュー（T-6〜T-8）**。
+各記事 1 エージェント（blog-writer）で個別に補筆する（keep-small 原則）。補筆はチートシート Component.tsx を一次素材としつつ、記事の既存トーン（判断・なぜ中心）を壊さず「巻末リファレンス／早見表」として自然に統合する。記法カタログ化で記事の差別化軸を薄めないこと。全断定は一次情報（MDN / RFC 9110 / cron 実装ドキュメント等）で裏取りし、必要に応じ出典リンクを付す。
+
+http-status の早見表は記事末（まとめ前）に「HTTPステータスコード一覧（早見表）」セクションとして置き、冒頭（はじめに付近）に「コード番号で引きたい人は早見表へ」の導線を 1 文添えると lookup 流入に応えられる。
 
 ### 検討した他の選択肢と判断理由
 
-- **検証なしで即リダイレクト**: 却下。チートシートはリファレンス性が高く、ガイドが網羅していない早見表的価値を落とす恐れがある。キャリーオーバー（cycle-241）でも「畳み込み前に網羅性検証」が明示されている。
-- **本サイクルは網羅性検証のみ、リダイレクト/撤去は次サイクル**: 部分的に妥当だが、網羅が確認できればリダイレクト/撤去は機械的作業であり、重複公開を長く残す利点がない。よって「検証ゲート → 網羅なら同サイクルで完遂、重大な未網羅なら補筆 or 再スコープ」とする適応型計画を採用。
-- **index `/cheatsheets` を残す**: 却下。撤去対象であり、残すと記事化方針と矛盾。`/blog` へ誘導する。
+- **当初計画（B-349 主タスク + 畳み込みを 1 サイクル）**: 却下。網羅性検証で http-status 補筆必須・撤去スコープに重大 6 件が判明。1 サイクル詰め込みは憲法ルール 4（量より質）違反。
+- **補筆せず即リダイレクト**: 却下。http-status で最大流入層（5xx/404 等のコード逆引き）が情報を失う。
+- **cron/regex は補筆せず http-status のみ**: 却下ではないが不採用。cron のショートカット表・regex のメタ文字早見表は「リファレンスを引きに来た人」の実害に直結する欠落で、撤去前に統合しておくのが筋。ただし任意項目（Quartz 秒フィールド・全角 FAQ 等）は価値低として見送り可。
 
 ### 計画にあたって参考にした情報
 
-- `docs/cycles/cycle-241.md`（キャリーオーバー: 循環依存と網羅性検証の前置き）
-- `docs/design-migration-plan.md` Phase 9.2（L204-212）
-- `docs/backlog.md` B-349 / B-342 / B-345 / B-347
-- `next.config.ts`（既存リダイレクトパターン）
-- `src/cheatsheets/registry.ts`（生成物の SSoT は `npm run generate:toolbox-registry`）
-- 既存ガイド 3 記事の frontmatter・見出し構成（本サイクル kickoff で確認）
-- `docs/cycles/cycle-225.md` B-494 知見（Next route 削除時の `.next` stale 対策・AP-I02 一括削除）
+- kickoff の網羅性検証 3 エージェント結果（本ドキュメントに記録）
+- 計画レビュー reviewer 指摘（撤去スコープ重大 6 件 → B-349 backlog に反映）
+- `docs/cycles/cycle-241.md` キャリーオーバー（網羅性検証を畳み込み前に置く）
+- 各チートシート Component.tsx / meta.ts、各ガイド記事
+- `docs/anti-patterns/writing.md` AP-W13（frontmatter 時刻）
 
 ## キャリーオーバー
 
+- **B-349（Phase 9.2.h: リダイレクト + infra 撤去）を次サイクルへ**: 本サイクルの補筆完了が前提。撤去スコープはレビューで判明した重大 6 件（`src/lib/search/build-index.ts`・`types.ts`・該当テスト／リダイレクト先記事の自己参照リンク／`cheatsheets-introduction.md` の主題矛盾の扱い／`components/common/Footer.tsx` と `components/Footer/index.tsx` の 2 系統 + 各テスト + `ToolsListView` の cheatsheetBanner／`page-coverage.test.ts`・`seo-coverage.test.ts`・`sitemap.test.ts`・`seo-cheatsheet.test.ts`・registry/\_components テスト等 7 本超／`src/lib/seo.ts` の `generateCheatsheetMetadata`+JsonLd）を含める。index `/cheatsheets` のリダイレクト先は `/blog` か `/blog/category/tool-guides`（後者は `next.config.ts` の既存 category リダイレクト対象か実ファイル確認の上で確定）。AP-I02（一括撤去）・B-494（`.next` stale 対策）遵守。backlog B-349 に反映済み。
 - （サイクル進行中に追記）
 
 ## 補足事項
 
-- 記事側の本文（cron / http-status / regex ガイド）は移行で新規作成するものではなく、既に存在する独立記事である。本サイクルでの記事への変更は「網羅性補筆」が必要な場合に限る。
-- AP-W13（時刻偽装）に留意。補筆で frontmatter `updated_at` を更新する場合は `date` 実測値に基づくこと。
+- 本サイクルは既存記事の補筆であり新規記事作成ではない。チートシート本体・ルーティング・registry には触れない（撤去は B-349 の責務）。
+- 補筆で `updated_at` を更新するため AP-W13 を厳守（`date` 実測・未来時刻禁止・`published_at` は新規執筆時の値を保持）。
 
 ## サイクル終了時のチェックリスト
 
