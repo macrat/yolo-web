@@ -1,7 +1,6 @@
 /** Builds the search index from all content types */
 
 import { allToolMetas } from "@/tools/registry";
-import { allCheatsheetMetas } from "@/cheatsheets/registry";
 import { getAllKanji } from "@/dictionary/_lib/kanji";
 import { getAllYoji } from "@/dictionary/_lib/yoji";
 import { getAllColors } from "@/dictionary/_lib/colors";
@@ -37,20 +36,6 @@ export function buildSearchIndex(): SearchDocument[] {
       keywords: [...game.keywords],
       url: `/play/${game.slug}`,
       extra: game.difficulty,
-    });
-  }
-
-  // Cheatsheets
-  for (const cs of allCheatsheetMetas) {
-    documents.push({
-      id: `cheatsheet:${cs.slug}`,
-      type: "cheatsheet",
-      title: cs.name,
-      description: cs.shortDescription,
-      keywords: [...cs.keywords, cs.nameEn],
-      url: `/cheatsheets/${cs.slug}`,
-      category: cs.category,
-      extra: cs.sections.map((s) => s.title).join(" "),
     });
   }
 

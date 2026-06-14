@@ -12,7 +12,6 @@ import {
   generateKanjiPageMetadata,
   generateYojiPageMetadata,
   generateColorCategoryMetadata,
-  generateCheatsheetMetadata,
   generateFaqPageJsonLd,
   safeJsonLdStringify,
 } from "../seo";
@@ -686,29 +685,6 @@ describe("factory functions include twitter metadata", () => {
       card: "summary_large_image",
       title: expect.stringContaining("赤系"),
       description: expect.stringContaining("赤系"),
-    });
-  });
-
-  test("generateCheatsheetMetadata includes twitter", () => {
-    const result = generateCheatsheetMetadata({
-      slug: "test-cheatsheet",
-      name: "テストチートシート",
-      nameEn: "Test Cheatsheet",
-      description: "テストの説明",
-      shortDescription: "テスト用チートシート",
-      keywords: ["テスト"],
-      category: "developer",
-      relatedToolSlugs: [],
-      relatedCheatsheetSlugs: [],
-      sections: [],
-      publishedAt: "2026-02-15T10:00:00+09:00",
-      trustLevel: "generated",
-    });
-
-    expect(result.twitter).toMatchObject({
-      card: "summary_large_image",
-      title: "テストチートシート - チートシート",
-      description: "テストの説明",
     });
   });
 });

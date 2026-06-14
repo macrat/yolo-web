@@ -29,7 +29,7 @@ interface DictionaryDetailLayoutProps {
 /**
  * 辞典詳細ページの共通レイアウトコンポーネント。
  * JSON-LD, Breadcrumb, TrustLevelBadge, valueProposition, Detail, FAQ, ShareButtons を
- * 統一的な構造で出力する。ToolLayout/CheatsheetLayoutのパターンに準拠。
+ * 統一的な構造で出力する。ToolLayout のパターンに準拠。
  *
  * Server Component として実装。ColorDetail のような "use client" コンポーネントは
  * children として渡されるため問題なし。

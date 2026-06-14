@@ -22,13 +22,14 @@ completed_at: null
 - [ ] T-5: SEO から cheatsheet を除去する。`src/lib/seo.ts`（`CheatsheetMeta` import・`generateCheatsheetMetadata`・関連 JsonLd 関数）、`src/lib/__tests__/seo-cheatsheet.test.ts`（ファイル全削除）、`src/lib/__tests__/seo.test.ts`（cheatsheet テストケース）。
 - [ ] T-6: サイトマップから cheatsheet を除去する。`src/app/sitemap.ts`（registry import・`latestCheatsheetDate`・cheatsheet エントリ）、`src/app/(legacy)/__tests__/sitemap.test.ts`、`src/app/(legacy)/__tests__/seo-coverage.test.ts`。
 - [ ] T-7: Footer 2 系統から cheatsheet リンクを除去する。`src/components/common/Footer.tsx`、`src/components/Footer/index.tsx`、`src/components/common/__tests__/Footer.test.tsx`。
-- [ ] T-8: `src/tools/_components/ToolsListView.tsx` の cheatsheetBanner を除去する。
+- [ ] T-8: `src/tools/_components/ToolsListView.tsx` の cheatsheetBanner を除去する。あわせて `src/tools/_components/ToolsListView.module.css` の `.cheatsheetBanner`/`.cheatsheetLink` 系クラス（L29/35/45 付近）も孤立しないよう除去する（計画レビュー nit）。
 - [ ] T-9: `src/__tests__/bundle-budget.test.ts` の `/cheatsheets` バジェット行を除去する。
-- [ ] T-10: 残存参照ゼロの確認。`grep -rn "cheatsheet" src` を実行し、(a) `src/blog/content/` の本文リンク是正は T-11 の責務として除外、(b) 外部リンク（OWASP 等）は対象外、(c) それ以外のコード参照が残っていないことを確認。`FaqSection.tsx`・`DictionaryDetailLayout.tsx`・`GameLayout.tsx`・`src/__tests__/middleware-gone-slugs.test.ts`・`src/blog/content/2026-02-28-url-structure-reorganization.md`(L228 の記述的言及) が cheatsheet 機能に依存していないか個別確認し、依存していれば是正する。
+- [ ] T-9b: `src/blog/_lib/blog.ts`（L116-117）の「チートシート」タグ説明文を是正する。タグ自体は転換先記事が引き継ぐため残すが、「実用的なチートシートを多数提供しています」は撤去された機能を約束する誤誘導文になる。タグページで来た人を裏切らないよう、転換後の実態（用途別の開発リファレンス記事集）に整合した表現へ書き換える（計画レビュー推奨）。
+- [ ] T-10: 残存参照ゼロの確認とコメント・誤誘導テキストの是正。`grep -rn "cheatsheet" src` を実行し、(a) `src/blog/content/` の本文リンク是正は T-11 の責務として除外、(b) 外部リンク（OWASP 等）は対象外、(c) それ以外の **コード参照・コメント・説明テキスト** が残っていないことを確認。とくに `FaqSection.tsx`・`DictionaryDetailLayout.tsx`・`GameLayout.tsx` の JSDoc 内 `CheatsheetLayout` 言及は T-2 で削除されるコンポーネントを指す stale コメントになるため是正する（計画レビュー推奨。コメントも「参照」として扱う）。`src/__tests__/middleware-gone-slugs.test.ts` の `"html-sql-cheatsheets"` は cycle-89 撤去の別 slug で本件無関係（対象外）。`src/blog/content/2026-02-28-url-structure-reorganization.md`(L228) はリンクでなく記述テキストなら是正不要。
 
 ### 記事の書き換え（blog-writer。インフラとはファイルが互いに素なので並行可）
 
-- [ ] T-11: `src/blog/content/2026-02-19-cheatsheets-introduction.md` を書き換える。(a) 主題を「チートシートに賭け→計測→正典に勝てないと判断→差別化できる深掘り記事へ転換」という完結した事例に再構成、(b) 本文中の `/cheatsheets/*` リンク6箇所を統合先 `/blog/*` URL へ直接張り替え（リダイレクト頼みにしない）、(c) 「今後の展望」のチートシート拡充の約束を現実（記事への転換完了）に整合、(d) frontmatter の裸配列残骸（trust_level 直後の key なし `[...]` ＝ B-508 該当分）を除去、(e) 実質的な本文変更のため `updated_at` を `date` 実測値に更新（AP-W13 厳守・published_at は保持）。
+- [ ] T-11: `src/blog/content/2026-02-19-cheatsheets-introduction.md` を書き換える。(a) 主題を「チートシートに賭け→計測→正典に勝てないと判断→差別化できる深掘り記事へ転換」という完結した事例に再構成、(b) 本文中の `/cheatsheets/*` リンクを統合先 `/blog/*` URL へ直接張り替え（リダイレクト頼みにしない）。対象は slug リンク6本（regex×2・git×2・markdown×2）＋ index リンク1本（L130「チートシート一覧ページをブックマーク」→ 撤去機能の推奨文なので削除または現実に整合）＝ 計7本（計画レビューで index リンク取りこぼしを是正）、(c) 「今後の展望」のチートシート拡充の約束を現実（記事への転換完了）に整合、(d) frontmatter の裸配列残骸（trust_level 直後の key なし `[...]` ＝ B-508 該当分）を除去、(e) 実質的な本文変更のため `updated_at` を `date` 実測値に更新（AP-W13 厳守・published_at は保持）。
 
 ### 検証・レビュー
 

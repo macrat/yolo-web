@@ -55,7 +55,6 @@ const BUDGETS = {
    */
   categories: {
     "/tools": 60 * 1024, // 60 KB
-    "/cheatsheets": 15 * 1024, // 15 KB
     // /play includes games (4), quizzes (14), and fortune (1) = 19 total contents
     "/play": 140 * 1024, // 140 KB (yoji-data expanded to 402 entries)
     "/dictionary": 50 * 1024, // 50 KB

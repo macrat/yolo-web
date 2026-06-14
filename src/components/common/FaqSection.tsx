@@ -13,7 +13,7 @@ interface FaqSectionProps {
 /**
  * FAQ セクションコンポーネント。
  * details/summary タグによるアコーディオン形式で Q&A を表示する。
- * ToolLayout と CheatsheetLayout の両方で使用される共通コンポーネント。
+ * ToolLayout をはじめ、FAQ を表示する各レイアウトで使用される共通コンポーネント。
  *
  * B-024 で実装済みの FAQPage schema JSON-LD のデータソースである。
  * FAQPage JSON-LD は本コンポーネント内で自動生成・出力される。

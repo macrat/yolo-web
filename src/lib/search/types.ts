@@ -3,7 +3,6 @@
 export type ContentType =
   | "tool"
   | "game"
-  | "cheatsheet"
   | "kanji"
   | "yoji"
   | "color"
@@ -24,7 +23,6 @@ export type SearchDocument = {
 export const CONTENT_TYPE_LABELS: Record<ContentType, string> = {
   tool: "ツール",
   game: "ゲーム",
-  cheatsheet: "チートシート",
   kanji: "漢字",
   yoji: "四字熟語",
   color: "伝統色",
@@ -35,7 +33,6 @@ export const CONTENT_TYPE_LABELS: Record<ContentType, string> = {
 /** Display order for search result groups (by relevance/usage frequency) */
 export const CONTENT_TYPE_ORDER: ContentType[] = [
   "tool",
-  "cheatsheet",
   "game",
   "quiz",
   "blog",

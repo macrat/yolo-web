@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import Link from "next/link";
 import type { ToolMeta } from "@/tools/types";
 import Panel from "@/components/Panel";
 import ToolsFilterableList from "./ToolsFilterableList";
@@ -35,12 +34,6 @@ export default function ToolsListView({ tools }: ToolsListViewProps) {
       <Suspense>
         <ToolsFilterableList tools={tools} newSlugs={newSlugs} />
       </Suspense>
-      {/* ヘッダーナビからチートシートを除外した分の導線を補完 */}
-      <div className={styles.cheatsheetBanner}>
-        <Link href="/cheatsheets" className={styles.cheatsheetLink}>
-          正規表現・Git・Markdownなどのチートシートもチェック →
-        </Link>
-      </div>
     </div>
   );
 }

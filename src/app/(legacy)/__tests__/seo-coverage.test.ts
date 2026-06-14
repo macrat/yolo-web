@@ -153,13 +153,6 @@ const staticPages: Array<{
       import("@/app/(new)/play/page").then((m) => m.metadata as Metadata),
   },
   {
-    path: "/cheatsheets",
-    importMeta: () =>
-      import("@/app/(legacy)/cheatsheets/page").then(
-        (m) => m.metadata as Metadata,
-      ),
-  },
-  {
     path: "/dictionary",
     importMeta: () =>
       import("@/app/(legacy)/dictionary/page").then(
