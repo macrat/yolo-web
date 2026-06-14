@@ -55,7 +55,6 @@ const FOOTER_SECTIONS: {
   {
     title: "その他",
     links: [
-      { label: "チートシート", href: "/cheatsheets" },
       { label: "辞典", href: "/dictionary" },
       { label: "サイト紹介", href: "/about" },
       { label: "プライバシー", href: "/privacy" },

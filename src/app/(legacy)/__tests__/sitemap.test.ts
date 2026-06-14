@@ -3,7 +3,6 @@ import { describe, test, expect } from "vitest";
 import sitemap from "../../sitemap";
 import { allGameMetas } from "@/play/games/registry";
 import { allQuizMetas } from "@/play/quiz/registry";
-import { allCheatsheetMetas } from "@/cheatsheets/registry";
 import { BASE_URL } from "@/lib/constants";
 import { getAllBlogPosts } from "@/blog/_lib/blog";
 import { ABOUT_LAST_MODIFIED } from "@/app/(new)/about/meta";
@@ -127,21 +126,6 @@ describe("sitemap", () => {
     expect(urls).toContain(`${BASE_URL}/play/daily`);
   });
 
-  test("cheatsheet page lastModified matches each cheatsheet updatedAt or publishedAt", () => {
-    const entries = sitemap();
-    for (const meta of allCheatsheetMetas) {
-      const csEntry = entries.find(
-        (e) =>
-          typeof e.url === "string" &&
-          e.url.endsWith(`/cheatsheets/${meta.slug}`),
-      );
-      expect(csEntry).toBeDefined();
-      expect(csEntry?.lastModified).toEqual(
-        new Date(meta.updatedAt || meta.publishedAt),
-      );
-    }
-  });
-
   test("sitemap does not include quiz result pages", () => {
     const entries = sitemap();
     const resultEntries = entries.filter(
@@ -228,13 +212,7 @@ describe("sitemap", () => {
     const homepageTime = (homepageEntry!.lastModified as Date).getTime();
 
     // All content type list pages whose lastModified should be reflected in homepage
-    const contentListPaths = [
-      "/blog",
-      "/tools",
-      "/play",
-      "/cheatsheets",
-      "/dictionary",
-    ];
+    const contentListPaths = ["/blog", "/tools", "/play", "/dictionary"];
 
     for (const path of contentListPaths) {
       const listEntry = entries.find((e) => e.url === `${BASE_URL}${path}`);

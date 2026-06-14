@@ -4,7 +4,6 @@ import type { Metadata } from "next";
 // 参照してメタデータ生成関数を提供している。各フィーチャーにSEO関数を分散させると
 // サイト全体のSEO一貫性が損なわれるリスクがあるため、共有層に集約している。
 import type { ToolMeta } from "@/tools/types";
-import type { CheatsheetMeta } from "@/cheatsheets/types";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 
 export function generateToolMetadata(meta: ToolMeta): Metadata {
@@ -366,51 +365,6 @@ export function generateColorCategoryMetadata(
     },
     alternates: {
       canonical: `${BASE_URL}/dictionary/colors/category/${category}`,
-    },
-  };
-}
-
-// -- Cheatsheet SEO helpers --
-
-export function generateCheatsheetMetadata(meta: CheatsheetMeta): Metadata {
-  return {
-    title: `${meta.name} - チートシート | ${SITE_NAME}`,
-    description: meta.description,
-    keywords: meta.keywords,
-    openGraph: {
-      title: `${meta.name} - チートシート`,
-      description: meta.description,
-      type: "article",
-      url: `${BASE_URL}/cheatsheets/${meta.slug}`,
-      siteName: SITE_NAME,
-      publishedTime: meta.publishedAt,
-      modifiedTime: meta.updatedAt || meta.publishedAt,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: `${meta.name} - チートシート`,
-      description: meta.description,
-    },
-    alternates: {
-      canonical: `${BASE_URL}/cheatsheets/${meta.slug}`,
-    },
-  };
-}
-
-export function generateCheatsheetJsonLd(meta: CheatsheetMeta): object {
-  return {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    name: meta.name,
-    description: meta.description,
-    url: `${BASE_URL}/cheatsheets/${meta.slug}`,
-    articleSection: "チートシート",
-    datePublished: meta.publishedAt,
-    dateModified: meta.updatedAt || meta.publishedAt,
-    inLanguage: "ja",
-    author: {
-      "@type": "Organization",
-      name: "yolos.net (AI Experiment)",
     },
   };
 }

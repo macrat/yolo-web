@@ -155,6 +155,52 @@ const nextConfig: NextConfig = {
       ],
     );
 
+    // cycle-243 (B-349): cheatsheets removed, content migrated to blog articles.
+    // 7 個別チートシートとインデックスは統合先のブログ記事へ 301 恒久誘導する。
+    // index は転換先記事が全て tool-guides カテゴリのため category 一覧へ向ける。
+    const cheatsheetRedirects = [
+      {
+        source: "/cheatsheets/cron",
+        destination: "/blog/cron-parser-guide",
+        permanent: true,
+      },
+      {
+        source: "/cheatsheets/git",
+        destination: "/blog/git-command-reference",
+        permanent: true,
+      },
+      {
+        source: "/cheatsheets/html-tags",
+        destination: "/blog/choosing-html-tags-by-meaning",
+        permanent: true,
+      },
+      {
+        source: "/cheatsheets/http-status-codes",
+        destination: "/blog/http-status-code-guide-for-rest-api",
+        permanent: true,
+      },
+      {
+        source: "/cheatsheets/markdown",
+        destination: "/blog/markdown-not-rendering-as-expected",
+        permanent: true,
+      },
+      {
+        source: "/cheatsheets/regex",
+        destination: "/blog/regex-tester-guide",
+        permanent: true,
+      },
+      {
+        source: "/cheatsheets/sql",
+        destination: "/blog/sql-execution-order-guide",
+        permanent: true,
+      },
+      {
+        source: "/cheatsheets",
+        destination: "/blog/category/tool-guides",
+        permanent: true,
+      },
+    ];
+
     return [
       ...oldCategoryRedirects,
       ...paginationRedirects,
@@ -164,6 +210,7 @@ const nextConfig: NextConfig = {
       ...fortuneRedirects,
       ...colorsRedirects,
       ...blogCategoryRedirects,
+      ...cheatsheetRedirects,
     ];
   },
 };

@@ -17,7 +17,7 @@ interface GameLayoutProps {
 
 /**
  * ゲームページ共通レイアウト。
- * ToolLayout / CheatsheetLayout と同じ品質要素パターンを踏襲しつつ、
+ * ToolLayout と同じ品質要素パターンを踏襲しつつ、
  * ゲーム特有の要件（h1なし、max-width: 600px、attribution）に対応する。
  *
  * h1はGameContainer内部で表示されるため、重複を避けてheaderには含めない。

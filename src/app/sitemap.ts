@@ -18,7 +18,6 @@ import { getAllSlugs as getAllHumorSlugs } from "@/humor-dict/data";
 import { humorDictMeta } from "@/humor-dict/meta";
 import { allQuizMetas } from "@/play/quiz/registry";
 import { allGameMetas, getGamePath } from "@/play/games/registry";
-import { allCheatsheetMetas } from "@/cheatsheets/registry";
 // (legacy) Route Group 配下に移動したページのメタ情報は @/ エイリアスで参照する
 import { ABOUT_LAST_MODIFIED } from "@/app/(new)/about/meta";
 import { PRIVACY_LAST_MODIFIED } from "@/app/(new)/privacy/meta";
@@ -98,12 +97,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     (date) => date,
     "play content dates",
   );
-  const latestCheatsheetDate = getLatestDate(
-    allCheatsheetMetas,
-    (meta, index) =>
-      getLastModifiedDate(meta, `cheatsheets[${index}] (${meta.slug})`),
-    "cheatsheet metas",
-  );
 
   const latestDictionaryDate = getLatestDate(
     [
@@ -133,7 +126,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       latestGameDate,
       latestQuizDate,
       fortuneDate,
-      latestCheatsheetDate,
       latestDictionaryDate,
       aboutLastModified,
       privacyLastModified,
@@ -295,21 +287,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "daily" as const,
       priority: 0.8,
     },
-    {
-      url: `${BASE_URL}/cheatsheets`,
-      lastModified: latestCheatsheetDate,
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    ...allCheatsheetMetas.map((meta, index) => ({
-      url: `${BASE_URL}/cheatsheets/${meta.slug}`,
-      lastModified: getLastModifiedDate(
-        meta,
-        `cheatsheets[${index}] (${meta.slug})`,
-      ),
-      changeFrequency: "monthly" as const,
-      priority: 0.7,
-    })),
     ...ALL_CATEGORIES.flatMap((category) => {
       const categoryPosts = allPosts.filter(
         (post) => post.category === category,

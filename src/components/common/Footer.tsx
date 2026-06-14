@@ -23,10 +23,7 @@ export default function Footer({
     },
     {
       heading: "ツール",
-      links: [
-        { href: "/tools", label: "ツール一覧" },
-        { href: "/cheatsheets", label: "チートシート" },
-      ],
+      links: [{ href: "/tools", label: "ツール一覧" }],
     },
     {
       heading: "辞典",

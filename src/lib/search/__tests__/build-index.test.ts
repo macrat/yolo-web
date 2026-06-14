@@ -10,12 +10,11 @@ describe("buildSearchIndex", () => {
     expect(index.length).toBeGreaterThan(0);
   });
 
-  test("includes all 8 content types", () => {
+  test("includes all 7 content types", () => {
     const types = new Set(index.map((doc) => doc.type));
     const expectedTypes: ContentType[] = [
       "tool",
       "game",
-      "cheatsheet",
       "kanji",
       "yoji",
       "color",
@@ -51,9 +50,6 @@ describe("buildSearchIndex", () => {
           break;
         case "game":
           expect(doc.url).toMatch(/^\/play\//);
-          break;
-        case "cheatsheet":
-          expect(doc.url).toMatch(/^\/cheatsheets\//);
           break;
         case "kanji":
           expect(doc.url).toMatch(/^\/dictionary\/kanji\//);
