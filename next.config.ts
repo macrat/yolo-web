@@ -156,8 +156,10 @@ const nextConfig: NextConfig = {
     );
 
     // cycle-243 (B-349): cheatsheets removed, content migrated to blog articles.
-    // 7 個別チートシートとインデックスは統合先のブログ記事へ 301 恒久誘導する。
-    // index は転換先記事が全て tool-guides カテゴリのため category 一覧へ向ける。
+    // 7 個別チートシートは 1:1 の後継記事へ 301 恒久誘導する。
+    // index (/cheatsheets) は、チートシート集の旧ハブに来た訪問者の意図（「チートシートはどこへ行ったか」）に
+    // 最も正確に応える後継として、廃止経緯を説明し7記事すべてへリンクする記事へ向ける
+    // （category 一覧は無関係記事を含む上位集合で 1:1 の後継ではないため避ける）。
     const cheatsheetRedirects = [
       {
         source: "/cheatsheets/cron",
@@ -196,7 +198,7 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/cheatsheets",
-        destination: "/blog/category/tool-guides",
+        destination: "/blog/why-i-removed-the-cheatsheets",
         permanent: true,
       },
     ];

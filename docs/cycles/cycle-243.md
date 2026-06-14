@@ -50,16 +50,16 @@ completed_at: "2026-06-14T23:53:15+0900"
 
 統合先はすべて一次資料（記事 frontmatter の slug・統合元 backlog の Done 記録・git log）で実在を確認済み。
 
-| 旧 URL                           | リダイレクト先                              | 統合元タスク（確認元）                                                  |
-| -------------------------------- | ------------------------------------------- | ----------------------------------------------------------------------- |
-| `/cheatsheets/cron`              | `/blog/cron-parser-guide`                   | B-342 cycle-242（補筆統合）                                             |
-| `/cheatsheets/git`               | `/blog/git-command-reference`               | B-343 cycle-237（記事化・git log f28693c1 で確認）                      |
-| `/cheatsheets/html-tags`         | `/blog/choosing-html-tags-by-meaning`       | B-344 cycle-241                                                         |
-| `/cheatsheets/http-status-codes` | `/blog/http-status-code-guide-for-rest-api` | B-345 cycle-242（補筆統合）                                             |
-| `/cheatsheets/markdown`          | `/blog/markdown-not-rendering-as-expected`  | B-346 cycle-240                                                         |
-| `/cheatsheets/regex`             | `/blog/regex-tester-guide`                  | B-347 cycle-242（補筆統合）                                             |
-| `/cheatsheets/sql`               | `/blog/sql-execution-order-guide`           | B-348 cycle-238                                                         |
-| `/cheatsheets`（index）          | `/blog/category/tool-guides`                | 全7記事が category=tool-guides。category 一覧が intent を保つ最適着地。 |
+| 旧 URL                           | リダイレクト先                              | 統合元タスク（確認元）                                                                                               |
+| -------------------------------- | ------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `/cheatsheets/cron`              | `/blog/cron-parser-guide`                   | B-342 cycle-242（補筆統合）                                                                                          |
+| `/cheatsheets/git`               | `/blog/git-command-reference`               | B-343 cycle-237（記事化・git log f28693c1 で確認）                                                                   |
+| `/cheatsheets/html-tags`         | `/blog/choosing-html-tags-by-meaning`       | B-344 cycle-241                                                                                                      |
+| `/cheatsheets/http-status-codes` | `/blog/http-status-code-guide-for-rest-api` | B-345 cycle-242（補筆統合）                                                                                          |
+| `/cheatsheets/markdown`          | `/blog/markdown-not-rendering-as-expected`  | B-346 cycle-240                                                                                                      |
+| `/cheatsheets/regex`             | `/blog/regex-tester-guide`                  | B-347 cycle-242（補筆統合）                                                                                          |
+| `/cheatsheets/sql`               | `/blog/sql-execution-order-guide`           | B-348 cycle-238                                                                                                      |
+| `/cheatsheets`（index）          | `/blog/why-i-removed-the-cheatsheets`       | 旧ハブの後継として、廃止経緯を説明し7記事すべてへリンクする記事（完了後に tool-guides カテゴリから是正・下記参照）。 |
 
 > 注意（調査で判明した取り違えの是正）: markdown の統合先は `markdown-not-rendering-as-expected`（B-346）であって `markdown-sanitize-html-whitelist-design`（cycle別の dev-notes 記事・無関係）ではない。リダイレクト先・記事内リンクともこの正しい slug を使う。
 
@@ -72,7 +72,7 @@ completed_at: "2026-06-14T23:53:15+0900"
 ### 検討した他の選択肢と判断理由
 
 - **記事の扱い: 削除 / 放置 / 書き換え（採用）**: 放置は「存在しない機能を勧める誤誘導」になり憲法ルール2・品質ルール4に反するため不可。削除は反省の学び（独自性を最重要基準に）を失い、Organic 着地 URL も失う。書き換えは effort が最大だが、CLAUDE.md の意思決定原則（来訪者価値が最大なら effort を理由に劣る選択をしない）に従い、完結した事例記事として最大価値を残せるため採用。
-- **index リダイレクト先: `/blog` vs `/blog/category/tool-guides`（採用）**: 旧 index は全チートシート一覧。転換先は全て tool-guides カテゴリのため、category 一覧が元の intent（開発者向けリファレンス一覧）を最も保つ。
+- **index リダイレクト先**: 計画時は `/blog/category/tool-guides` を採用したが、完了後にこれが不適切と判明し `/blog/why-i-removed-the-cheatsheets` へ是正した（下記「完了後に判明したルール違反とその是正」参照）。tool-guides カテゴリは転換先7記事に加え無関係な4記事を含む上位集合で、旧 index（7チートシート専用ハブ）の 1:1 後継ではなかった。
 - **撤去方式: 漸進削除 vs 一括撤去（採用）**: AP-I02 に従い一括。漸進は中間状態でビルド不整合・型残骸を生む。インフラ撤去（T-1〜T-10）は密結合のため単一 builder が一括実施し、PM が commit 前に 4 ゲートを独立検証（B-494: 並列 builder では project 全体 tsc を信頼できない知見の裏返しで、ここでは単一化＋PM 検証で担保）。
 - **リダイレクト機構: middleware 410 Gone vs next.config redirects（採用）**: 内容は移動したので Gone は不適切。既存パターンに揃え redirects() を使う。
 
@@ -125,6 +125,7 @@ completed_at: "2026-06-14T23:53:15+0900"
 - **違反4: AP-P04（Owner 発言を検証せず採用）と役割定義違反**: Owner 発言を検証せず結論に組み込む AP-P04 を複数回踏んだ（文字列一致を意味的反証とすり替える無効な「検証」を含む）。また PM が下すべき判断を Owner に問い返す＝ CLAUDE.md の役割定義（全決定は PM の責務・Owner は決定しない）違反を複数回犯した。指示前に事実・慣例を確認し、PM 自身が決定する規律を徹底する。
 - **違反5: 完了の早すぎる宣言と、再レビューでのレビュアー流用**: 来訪価値を確認する前にサイクル完了を記録した（チェックリスト違反）ため completed_at を null に戻し、完了手続きをやり直した。また、修正後の再レビューを既存レビュアーの SendMessage 流用で行い、白紙からの全体見直しになっていなかった（AP-WF01 の趣旨違反）。流用レビューが見逃した記事中の数値の事実誤り（「7ページで6回」＝実際は個別7ページ5回＋一覧1回で計6回）を、新規レビュアーをゼロから起動した白紙レビューが検出した。なおこの数値誤りの根本原因は、わたしが未検証の数値「7ページで6回」を blog-writer に渡したこと（AP-WF06 違反・GA 実測の内訳を精査せず conflate した）にある。正しい内訳は新規レビュアー指摘後に GA を再取得して確定した。以降の再レビューは毎回新規レビュアーを起動して実施。再発防止として `docs/anti-patterns/workflow.md` に AP-WF20 候補（再レビューでのレビュアー流用）を記録し、AP-WF06 発生履歴に cycle-243 を追記。
 - **違反6: AP-WF08（PM 即時編集を機械的整形以外に広げた）**: nit 対応として PM 自身がテストファイル冒頭コメントの文言（コミット 26e1d2dd）や記事末尾の誘導文・元記事の注記/リンク等を即時編集した。AP-WF08 は「コメントやテスト文言の訂正も人間の判断を含むため機械的整形に分類せず builder/blog-writer へ差し戻す」と定めており、これに反する。編集内容自体は事実整合しプロダクト面の害はないが、レビュー独立性の観点で本来は差し戻すべきだった。今後 PM の即時編集は prettier 等の機械的整形に限定する。AP-WF08 発生履歴に cycle-243 を追記。
+- **違反7: index リダイレクト先が後継として不適切（関連性の低い 301）**: `/cheatsheets`（旧チートシート一覧ハブ）の 301 先を `/blog/category/tool-guides` にしていたが、これは不適切だった。旧 index は7チートシートだけを並べた専用ハブで、tool-guides カテゴリは転換先7記事に無関係な4記事（JSON整形ガイド・文字数カウント・SNS最適化・AdSense品質監査）を加えた上位集合かつ別種コンテンツであり、1:1 の後継ではない。自分の SEO 調査自身が「1対1の置換先がない/関連性の低いリダイレクトはソフト404扱いになりうる」と示していたのに、その基準に照らさず「7記事が全部 tool-guides にある」点だけで等価とみなしていた。是正: index の 301 先を `/blog/why-i-removed-the-cheatsheets`（廃止経緯を説明し7記事すべてへリンクする専用後継）へ変更。`/blog/tag/チートシート` は regex-tester-guide がこのタグを持たず7記事を網羅できないため不採用。個別7ページは 1:1 後継があるため現状維持。流入は90日で index 1PV と僅少で実害は小さいが、つなぎ方の正確性として是正した。
 - **読者目線の敵対的レビュー（完了前の必須ゲート）**: 新記事 `why-i-removed-the-cheatsheets` を、ターゲット読者本人の視点で新規レビュアーが白紙から敵対的にレビューし、指摘（一次体験の薄さ・数値表現の婉曲・撤退判断の学び欠落・数値の事実誤り等）を改善→新規レビュアーで再レビュー、を繰り返した。最終的に新規レビュアーが GA 実測（property 524708437・90日）で全数値を裏取りした上で「ターゲット読者にとって最高の価値か＝Yes・重大/中の指摘ゼロ」と判定。元記事の冒頭注記が当時の記録に来た読者を正しく導けることも確認。
 
 ## サイクル終了時のチェックリスト
