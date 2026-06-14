@@ -41,4 +41,16 @@
 
 ### 件数サニティチェック
 
-glob の誤設定や予期しないディレクトリ構造変化で件数が激減した場合に早期エラーを出す（`assertMinCount`）。現在の設定: tools ≥ 10、cheatsheets ≥ 3。
+glob の誤設定や予期しないディレクトリ構造変化で件数が激減した場合に早期エラーを出す（`assertMinCount`）。
+
+> 注（cycle-243）: cheatsheet 機能の撤去に伴い、生成元から cheatsheet の発見・生成を削除した。現行の生成対象は tools のみ（`assertMinCount` も tools ≥ 10 のみ）。本 §1 の cheatsheet 関連記述（`src/cheatsheets/*/meta.ts` の発見・`cheatsheetSlugs` 引数等）は歴史的経緯として残すが、現状には存在しない。
+
+---
+
+## 2. 落とし穴: 機能撤去時、codegen が削除済みファイルを蘇生させる
+
+prebuild/predev/pretest フックの codegen は、`src/` のソースを削除しただけでは止まらない。glob で発見した `meta.ts` を元に生成物を書き出すため、撤去した機能の生成物（registry 等）が prebuild のたびに再生成され、「削除済みモジュールを import する壊れたファイル」として蘇る。
+
+- 機能を撤去するときは、`src/` 配下だけでなく、生成元スクリプト（`scripts/generate-*.ts`）側の発見・書き出しロジックも撤去範囲に含まれる。
+- ツールチェーンの性質: 単独の `npx tsc --noEmit` は prebuild を回さないためこの再生成を検出できない。`.next` をクリーンした `next build`（prebuild → tsc を通す）でのみ型エラーとして顕在化する。
+- cycle-243 で cheatsheet 撤去時に実際に発生（生成元から cheatsheet 生成を撤去して解消）。

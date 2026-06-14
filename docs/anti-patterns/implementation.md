@@ -38,5 +38,3 @@
 
 - AP-I11: `setTimeout` / `setInterval` を発火させたとき、その ID を `useRef` で保持し、`useEffect` の cleanup（返却する関数）で `clearTimeout` / `clearInterval` しているか？
   → ID を ref に保持せずに `useEffect` cleanup を省略すると、コンポーネント unmount 後もタイマーが走り続け、発火時に `setState` が呼ばれてメモリリークや警告の原因になる。特に「DL 完了後 N 秒でボタン文言を戻す」「スピナー遅延表示」のような UI フィードバック用タイマーは unmount タイミングと競合しやすい。（cycle-212で実際に発生）
-
-- AP-I12: 機能を撤去するとき、その機能のファイルを `src/` から削除するだけで終わっていないか？ prebuild / codegen（`scripts/` 配下のジェネレータ等）がビルド時に生成するファイルは `src/` 削除だけでは消えず、prebuild が走るたびに「削除済みモジュールを import する生成物」として蘇る。撤去対象には生成元スクリプトと、それを呼ぶ npm script（prebuild/predev/pretest）も含めること。なお builder が単独で実行する `npx tsc --noEmit` は prebuild を回さないためこの再生成を検出できず、`.next` をクリーンした上での `next build`（prebuild → tsc を通す）で初めて顕在化する。PM は撤去サイクルの最終ゲートで必ず `.next` クリーン＋フルビルドを回す。（cycle-243 で実際に発生。`scripts/generate-toolbox-registry.ts` が削除済み `src/cheatsheets/` の registry を再生成し build の tsc を破壊した）
