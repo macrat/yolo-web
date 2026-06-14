@@ -2,7 +2,7 @@
 id: 243
 description: "移行計画 Phase 9.2.h（B-349）。チートシート機能を完全撤去し、7チートシート全URL + index を統合先ブログ記事へ 301 リダイレクト。主題が矛盾する cheatsheets-introduction 記事を「チートシートから深掘り記事への転換」という完結した事例記事に書き換え。"
 started_at: "2026-06-14T16:37:56+0900"
-completed_at: null
+completed_at: "2026-06-14T19:08:16+0900"
 ---
 
 # サイクル-243
@@ -15,28 +15,28 @@ completed_at: null
 
 ### 撤去・リダイレクト（インフラ — 単一 builder が一括で実施。AP-I02 一括撤去・B-494 .next stale 対策遵守）
 
-- [ ] T-1: `next.config.ts` の `redirects()` に cheatsheet リダイレクト群（7本 + index 1本 = 計8本・すべて `permanent: true`）を追加する。マッピングは下記「リダイレクトマップ」のとおり。
-- [ ] T-2: `src/cheatsheets/` ディレクトリを完全削除する（registry/types/\_components/generated/各チートシート/**tests** を含む全ファイル）。
-- [ ] T-3: `src/app/(legacy)/cheatsheets/` ディレクトリを完全削除する（layout/page/各 slug の page・opengraph-image・twitter-image・**tests** を含む全ファイル）。
-- [ ] T-4: 検索インデックスから cheatsheet を除去する。`src/lib/search/build-index.ts`（registry import と cheatsheet ループ）、`src/lib/search/types.ts`（`ContentType` から `"cheatsheet"`・`CONTENT_TYPE_LABELS`・`CONTENT_TYPE_ORDER` の該当エントリ）、`src/lib/search/__tests__/build-index.test.ts`（content types 件数・expectedTypes・cheatsheet URL パターン）。
-- [ ] T-5: SEO から cheatsheet を除去する。`src/lib/seo.ts`（`CheatsheetMeta` import・`generateCheatsheetMetadata`・関連 JsonLd 関数）、`src/lib/__tests__/seo-cheatsheet.test.ts`（ファイル全削除）、`src/lib/__tests__/seo.test.ts`（cheatsheet テストケース）。
-- [ ] T-6: サイトマップから cheatsheet を除去する。`src/app/sitemap.ts`（registry import・`latestCheatsheetDate`・cheatsheet エントリ）、`src/app/(legacy)/__tests__/sitemap.test.ts`、`src/app/(legacy)/__tests__/seo-coverage.test.ts`。
-- [ ] T-7: Footer 2 系統から cheatsheet リンクを除去する。`src/components/common/Footer.tsx`、`src/components/Footer/index.tsx`、`src/components/common/__tests__/Footer.test.tsx`。
-- [ ] T-8: `src/tools/_components/ToolsListView.tsx` の cheatsheetBanner を除去する。あわせて `src/tools/_components/ToolsListView.module.css` の `.cheatsheetBanner`/`.cheatsheetLink` 系クラス（L29/35/45 付近）も孤立しないよう除去する（計画レビュー nit）。
-- [ ] T-9: `src/__tests__/bundle-budget.test.ts` の `/cheatsheets` バジェット行を除去する。
-- [ ] T-9b: `src/blog/_lib/blog.ts`（L116-117）の「チートシート」タグ説明文を是正する。タグ自体は転換先記事が引き継ぐため残すが、「実用的なチートシートを多数提供しています」は撤去された機能を約束する誤誘導文になる。タグページで来た人を裏切らないよう、転換後の実態（用途別の開発リファレンス記事集）に整合した表現へ書き換える（計画レビュー推奨）。
-- [ ] T-10: 残存参照ゼロの確認とコメント・誤誘導テキストの是正。`grep -rn "cheatsheet" src` を実行し、(a) `src/blog/content/` の本文リンク是正は T-11 の責務として除外、(b) 外部リンク（OWASP 等）は対象外、(c) それ以外の **コード参照・コメント・説明テキスト** が残っていないことを確認。とくに `FaqSection.tsx`・`DictionaryDetailLayout.tsx`・`GameLayout.tsx` の JSDoc 内 `CheatsheetLayout` 言及は T-2 で削除されるコンポーネントを指す stale コメントになるため是正する（計画レビュー推奨。コメントも「参照」として扱う）。`src/__tests__/middleware-gone-slugs.test.ts` の `"html-sql-cheatsheets"` は cycle-89 撤去の別 slug で本件無関係（対象外）。`src/blog/content/2026-02-28-url-structure-reorganization.md`(L228) はリンクでなく記述テキストなら是正不要。
+- [x] T-1: `next.config.ts` の `redirects()` に cheatsheet リダイレクト群（7本 + index 1本 = 計8本・すべて `permanent: true`）を追加する。マッピングは下記「リダイレクトマップ」のとおり。
+- [x] T-2: `src/cheatsheets/` ディレクトリを完全削除する（registry/types/\_components/generated/各チートシート/**tests** を含む全ファイル）。
+- [x] T-3: `src/app/(legacy)/cheatsheets/` ディレクトリを完全削除する（layout/page/各 slug の page・opengraph-image・twitter-image・**tests** を含む全ファイル）。
+- [x] T-4: 検索インデックスから cheatsheet を除去する。`src/lib/search/build-index.ts`（registry import と cheatsheet ループ）、`src/lib/search/types.ts`（`ContentType` から `"cheatsheet"`・`CONTENT_TYPE_LABELS`・`CONTENT_TYPE_ORDER` の該当エントリ）、`src/lib/search/__tests__/build-index.test.ts`（content types 件数・expectedTypes・cheatsheet URL パターン）。
+- [x] T-5: SEO から cheatsheet を除去する。`src/lib/seo.ts`（`CheatsheetMeta` import・`generateCheatsheetMetadata`・関連 JsonLd 関数）、`src/lib/__tests__/seo-cheatsheet.test.ts`（ファイル全削除）、`src/lib/__tests__/seo.test.ts`（cheatsheet テストケース）。
+- [x] T-6: サイトマップから cheatsheet を除去する。`src/app/sitemap.ts`（registry import・`latestCheatsheetDate`・cheatsheet エントリ）、`src/app/(legacy)/__tests__/sitemap.test.ts`、`src/app/(legacy)/__tests__/seo-coverage.test.ts`。
+- [x] T-7: Footer 2 系統から cheatsheet リンクを除去する。`src/components/common/Footer.tsx`、`src/components/Footer/index.tsx`、`src/components/common/__tests__/Footer.test.tsx`。
+- [x] T-8: `src/tools/_components/ToolsListView.tsx` の cheatsheetBanner を除去する。あわせて `src/tools/_components/ToolsListView.module.css` の `.cheatsheetBanner`/`.cheatsheetLink` 系クラス（L29/35/45 付近）も孤立しないよう除去する（計画レビュー nit）。
+- [x] T-9: `src/__tests__/bundle-budget.test.ts` の `/cheatsheets` バジェット行を除去する。
+- [x] T-9b: `src/blog/_lib/blog.ts`（L116-117）の「チートシート」タグ説明文を是正する。タグ自体は転換先記事が引き継ぐため残すが、「実用的なチートシートを多数提供しています」は撤去された機能を約束する誤誘導文になる。タグページで来た人を裏切らないよう、転換後の実態（用途別の開発リファレンス記事集）に整合した表現へ書き換える（計画レビュー推奨）。
+- [x] T-10: 残存参照ゼロの確認とコメント・誤誘導テキストの是正。`grep -rn "cheatsheet" src` を実行し、(a) `src/blog/content/` の本文リンク是正は T-11 の責務として除外、(b) 外部リンク（OWASP 等）は対象外、(c) それ以外の **コード参照・コメント・説明テキスト** が残っていないことを確認。とくに `FaqSection.tsx`・`DictionaryDetailLayout.tsx`・`GameLayout.tsx` の JSDoc 内 `CheatsheetLayout` 言及は T-2 で削除されるコンポーネントを指す stale コメントになるため是正する（計画レビュー推奨。コメントも「参照」として扱う）。`src/__tests__/middleware-gone-slugs.test.ts` の `"html-sql-cheatsheets"` は cycle-89 撤去の別 slug で本件無関係（対象外）。`src/blog/content/2026-02-28-url-structure-reorganization.md`(L228) はリンクでなく記述テキストなら是正不要。
 
 ### 記事の書き換え（blog-writer。インフラとはファイルが互いに素なので並行可）
 
-- [ ] T-11: `src/blog/content/2026-02-19-cheatsheets-introduction.md` を書き換える。(a) 主題を「チートシートに賭け→計測→正典に勝てないと判断→差別化できる深掘り記事へ転換」という完結した事例に再構成、(b) 本文中の `/cheatsheets/*` リンクを統合先 `/blog/*` URL へ直接張り替え（リダイレクト頼みにしない）。対象は slug リンク6本（regex×2・git×2・markdown×2）＋ index リンク1本（L130「チートシート一覧ページをブックマーク」→ 撤去機能の推奨文なので削除または現実に整合）＝ 計7本（計画レビューで index リンク取りこぼしを是正）、(c) 「今後の展望」のチートシート拡充の約束を現実（記事への転換完了）に整合、(d) frontmatter の裸配列残骸（trust_level 直後の key なし `[...]` ＝ B-508 該当分）を除去、(e) 実質的な本文変更のため `updated_at` を `date` 実測値に更新（AP-W13 厳守・published_at は保持）。
+- [x] T-11: `src/blog/content/2026-02-19-cheatsheets-introduction.md` を書き換える。(a) 主題を「チートシートに賭け→計測→正典に勝てないと判断→差別化できる深掘り記事へ転換」という完結した事例に再構成、(b) 本文中の `/cheatsheets/*` リンクを統合先 `/blog/*` URL へ直接張り替え（リダイレクト頼みにしない）。対象は slug リンク6本（regex×2・git×2・markdown×2）＋ index リンク1本（L130「チートシート一覧ページをブックマーク」→ 撤去機能の推奨文なので削除または現実に整合）＝ 計7本（計画レビューで index リンク取りこぼしを是正）、(c) 「今後の展望」のチートシート拡充の約束を現実（記事への転換完了）に整合、(d) frontmatter の裸配列残骸（trust_level 直後の key なし `[...]` ＝ B-508 該当分）を除去、(e) 実質的な本文変更のため `updated_at` を `date` 実測値に更新（AP-W13 厳守・published_at は保持）。
 
 ### 検証・レビュー
 
-- [ ] T-12: 4 ゲート（`npm run lint && npm run format:check && npm run test && npm run build`）を PM がバッチ commit 前に実行（B-494: 並列でない単一 builder でも commit 前に PM が tsc/build を独立に回す）。`.next` を削除してから build（B-494 stale 対策）。リダイレクト8本・統合先記事のプリレンダリングを build 出力で確認。
-- [ ] T-13: reviewer によるインフラ撤去レビュー（残存参照・リダイレクトマップの正確性・テスト整合）。
-- [ ] T-14: contents-review + reviewer による記事レビュー（読者価値・事実整合・リンク先正確性・frontmatter）。
-- [ ] T-15: レビュー指摘の対応と再レビュー。
+- [x] T-12: 4 ゲート（`npm run lint && npm run format:check && npm run test && npm run build`）を PM がバッチ commit 前に実行（B-494: 並列でない単一 builder でも commit 前に PM が tsc/build を独立に回す）。`.next` を削除してから build（B-494 stale 対策）。リダイレクト8本・統合先記事のプリレンダリングを build 出力で確認。
+- [x] T-13: reviewer によるインフラ撤去レビュー（残存参照・リダイレクトマップの正確性・テスト整合）。
+- [x] T-14: contents-review + reviewer による記事レビュー（読者価値・事実整合・リンク先正確性・frontmatter）。
+- [x] T-15: レビュー指摘の対応と再レビュー。
 
 ## 作業計画
 
@@ -86,7 +86,13 @@ completed_at: null
 
 ## キャリーオーバー
 
-- （作業中に発生したら追記）
+- **B-349 完了**: チートシート機能を完全撤去（削除 61 ファイル・修正 23 ファイル・7414 行削除）。旧 URL 8 本を統合先記事へ 301 リダイレクト。インフラ reviewer 承認（重大0）・記事 reviewer 承認（重大0）・4 ゲート通過（lint/format/test 329 ファイル 5468 件/build）。これにより Phase 9.3（B-350 dictionary 移行〜）の着手条件が満たされた。
+- **B-508（frontmatter 裸配列残骸の一括除去）は継続**: 本サイクルでは `cheatsheets-introduction.md` 分のみ T-11 書き換えで解消。残り 4 記事（yoji-quiz-themes / tool-reliability-improvements / http-status-code-guide-for-rest-api / game-infrastructure-refactoring）は対象外で backlog に残置。
+- **記事レビュー nit-2（既存事象・本サイクル対象外）**: `trust_level` 死フィールドが 72 記事中 23 記事に残存（cycle-193 で trustLevel システム撤去後に読まれなくなったフィールド）。B-432（trustLevel 型撤去）と整合させた一括クリーンアップを将来検討する余地あり。本記事固有の問題ではないため起票は見送り（B-432 完了時に併せ判断）。
+
+## 作業中に得た知見（アンチパターン追加）
+
+- **AP-I12 を docs/anti-patterns/implementation.md に新設**: 機能撤去時、prebuild/codegen が生成するファイルは `src/` 削除だけでは消えず、prebuild が走るたびに「削除済みモジュールを import する生成物」として蘇る。本サイクルで `scripts/generate-toolbox-registry.ts` が削除済み `src/cheatsheets/` の registry を再生成し、`next build` の tsc を破壊した（builder 単独の `npx tsc --noEmit` は prebuild を回さず検出できず、PM の `.next` クリーン＋フルビルドで顕在化）。撤去対象に生成元スクリプトを含めること・撤去サイクルは必ず `.next` クリーン＋フルビルドで最終ゲートを回すこと、を明文化した。
 
 ## 補足事項
 
@@ -95,13 +101,13 @@ completed_at: null
 
 ## サイクル終了時のチェックリスト
 
-- [ ] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
-- [ ] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
-- [ ] すべての変更がレビューされ、残存する指摘事項が無くなっている。
-- [ ] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
-- [ ] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
-- [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
-- [ ] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
+- [x] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
+- [x] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
+- [x] すべての変更がレビューされ、残存する指摘事項が無くなっている。
+- [x] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
+- [x] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
+- [x] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
+- [x] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
 
 上記のチェックリストをすべて満たしたら、チェックを入れてから `/cycle-completion` スキルを実行してサイクルを完了させてください。
 なお、「環境起因」「今回の変更と無関係」「既知の問題」「次回対応」などの **例外は一切認めません** 。必ずすべての項目を完全に満してください。
