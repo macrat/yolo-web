@@ -2,13 +2,12 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| _(なし)_ | | | | |
+| B-511 | cycle-243 の憲法違反(来訪者価値破壊)の是正 | P1 | 244 | cycle-244 着手。PM判断: Option1(当初計画どおり早見表内容を後継ブログ記事へ移行)を採用。旧URL群を実体ある参照内容へ。index loop是正・美化記事why-i-removed撤回・移行計画表現是正も。詳細cycle-244.md |
 
 ## Queued (すぐに着手できる)
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-511 | 【最優先・次サイクル】cycle-243 の憲法違反(来訪者価値破壊)の是正 | P1 | 次 | cycle-243 で早見表を未検証削除し旧URLを無関係ページへ誘導＝憲法ルール2違反が本番に残存中。最優先で復旧(削除分git復元可・revert含む)。早見表提供か撤退かを読者価値で再決定。美化記事why-i-removed等も書直す/撤回。詳細cycle-243.md |
 | B-502 | タイルレジストリ／型契約の再設計（全ツールの同一性を構造で強制） | P2 | - | タイル一覧を単一ソース化し詳細＝道具箱の同一実装を型で強制。着手: B-497残ツールのライブタイル化と並行で必要時。詳細 cycle-226.md・knowledge/tile-architecture.md |
 | B-512 | next.config redirects のコメント表記を「301」→「308」に統一 | P4 | - | permanent:true は実際 HTTP 308 を返すが games/quiz/colors/cheatsheets 等のコメントが「301」と誤記。挙動は正。コメント/ドキュメント文言のみ是正。詳細 cycle-243.md M-1 |
 | B-491 | アンチパターン集のルール違反項目を手順書／knowledge へ整理 | P2 | - | AP集のルール違反項目を手順書／knowledge へ整理。詳細 docs/cycles/cycle-220.md |
