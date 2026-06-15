@@ -258,7 +258,7 @@ interface YojiMetaForSeo {
   sourceUrl: string;
 }
 
-/** description に任意追記する残余要素の上限。
+/** description に任意追記する残余要素（origin/structure）の上限。
  * 現行ラベル群はすべて 12 字以下のため事実上の上限はハードリミット
  * （{@link YOJI_DESCRIPTION_HARD_LIMIT}）のみが効く。25 という値は将来
  * ラベルを追加・差し替えた際に description が肥大化しないようにする予防的ガード。 */
@@ -266,6 +266,18 @@ const YOJI_DESCRIPTION_OPTIONAL_MAX = 25;
 
 /** description の絶対上限。これを超える場合は任意要素を採用しない。 */
 const YOJI_DESCRIPTION_HARD_LIMIT = 130;
+
+/**
+ * 当サイトの独自性（AI 視点の使用例を全件掲載）を description で伝える固定文言。
+ *
+ * 背景: cycle-117/118 で AI 視点 example を全件追加し、他辞典サイトに対する
+ * 独自付加価値（Google スパムポリシー対策）として確立している（docs/cycles/cycle-117.md,
+ * docs/research/2026-03-22-yoji-example-marketing-research.md 参照）。本文言は
+ * YojiDetail の「AIによる使用例」セクション（YojiDetail.tsx L151-154）に表示済みの
+ * 事実と整合する。「AI が書いた」を明示することで、実用例文を期待した来訪者の
+ * 直帰（AP-I04）を防ぎつつ、独自性をスニペット段階で伝える。
+ */
+const YOJI_AI_EXAMPLE_LABEL = "AIが書いた使用例も掲載。";
 
 /** YojiDetail と整合する成立地ラベル。`不明` は description で言及しない。 */
 const YOJI_ORIGIN_DESCRIPTION_LABEL: Record<
@@ -288,7 +300,7 @@ const YOJI_STRUCTURE_DESCRIPTION_LABEL: Record<
 };
 
 /**
- * description の残余要素を決定する。
+ * description の origin/structure suffix を決定する。
  *
  * 優先順位:
  * 1. origin が判明している場合（中国/日本）→ origin を採用
@@ -297,8 +309,8 @@ const YOJI_STRUCTURE_DESCRIPTION_LABEL: Record<
  * 採用しても上限 {@link YOJI_DESCRIPTION_HARD_LIMIT} を超える場合は採用しない。
  * `不明` の origin は誠実性のため description には載せない（本文表示に任せる）。
  */
-function buildYojiDescriptionSuffix(
-  baseLength: number,
+function buildYojiOriginOrStructureSuffix(
+  currentLength: number,
   structure: YojiMetaForSeo["structure"],
   origin: YojiMetaForSeo["origin"],
 ): string {
@@ -306,27 +318,34 @@ function buildYojiDescriptionSuffix(
     YOJI_ORIGIN_DESCRIPTION_LABEL[origin] ??
     YOJI_STRUCTURE_DESCRIPTION_LABEL[structure];
   if (candidate.length > YOJI_DESCRIPTION_OPTIONAL_MAX) return "";
-  if (baseLength + candidate.length > YOJI_DESCRIPTION_HARD_LIMIT) return "";
+  if (currentLength + candidate.length > YOJI_DESCRIPTION_HARD_LIMIT) return "";
   return candidate;
 }
 
 /**
  * 四字熟語ページの meta description を組み立てる。
  *
- * 設計（cycle-246 計画 由来）:
+ * 設計（cycle-246 是正版・案A 採用）:
  * - 読み方クエリ救済を最優先 → `「○○○○」(よみがな)` を前置
  * - meaning は必須
- * - 残余に余裕があれば structure か origin を 1 つだけ追加（両方は入れない）
- * - example / difficulty は意図的に含めない（AIユーモア例文は誇張になりうる・難易度は意味検索者に無関係）
+ * - AI 視点の独自 example を全件掲載している事実を独自性訴求として明示
+ *   （cycle-117/118 で確立した独自性戦略を スニペット段階でも活かす）
+ * - 余裕があれば origin/structure を 1 つだけ末尾に追加（両方は入れない）
+ * - difficulty は意味検索者に無関係のため含めない
+ * - 「使用例」単独だと実用例文と誤認されうるため「AIが書いた使用例」と明示する
+ *   （AP-I04 期待外れ直帰の予防）
  */
 function buildYojiDescription(yoji: YojiMetaForSeo): string {
   const base = `「${yoji.yoji}」(${yoji.reading})の意味は、${yoji.meaning}。`;
-  const suffix = buildYojiDescriptionSuffix(
-    base.length,
+  // AI 文言は独自性訴求の固定要素として常に付与する（base+AI で最大 89 字、
+  // 全 400 件で 130 字内に収まることを検算済み）。
+  const withAi = `${base}${YOJI_AI_EXAMPLE_LABEL}`;
+  const originOrStructure = buildYojiOriginOrStructureSuffix(
+    withAi.length,
     yoji.structure,
     yoji.origin,
   );
-  return suffix ? `${base}${suffix}` : base;
+  return originOrStructure ? `${withAi}${originOrStructure}` : withAi;
 }
 
 export function generateYojiPageMetadata(yoji: YojiMetaForSeo): Metadata {
@@ -358,6 +377,12 @@ export function generateYojiPageMetadata(yoji: YojiMetaForSeo): Metadata {
 }
 
 export function generateYojiJsonLd(yoji: YojiMetaForSeo): object {
+  // sameAs は意図的に含めない（cycle-246 是正）。
+  // schema.org 上 sameAs は「そのアイテムの同一性を曖昧さなく示す参照ページ」を意味し、
+  // コトバンク等の外部辞書ページを sameAs に置くと「うちのページとコトバンクは同じものを指す」
+  // と機械可読に宣言する構造になる。過去サイクル (cycle-117/118) で AI 視点 example による
+  // 独自性確立戦略を取っているサイトでは、この sameAs は独自性主張を打ち消す方向。
+  // 出典 URL は YojiDetail 本文の外部リンクで来訪者には届くため、JSON-LD からは外す。
   return {
     "@context": "https://schema.org",
     "@type": "DefinedTerm",
@@ -372,9 +397,6 @@ export function generateYojiJsonLd(yoji: YojiMetaForSeo): object {
       name: "四字熟語辞典",
       url: `${BASE_URL}/dictionary/yoji`,
     },
-    // sameAs: 出典外部辞書ページ。schema.org の DefinedTerm は Thing から sameAs を継承する一方、
-    // citation は CreativeWork 固有プロパティで DefinedTerm では非対応のため、sameAs を採用する。
-    sameAs: yoji.sourceUrl,
     inLanguage: "ja",
   };
 }

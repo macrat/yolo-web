@@ -567,15 +567,27 @@ describe("generateYojiPageMetadata", () => {
     expect(description.length).toBeLessThanOrEqual(130);
   });
 
-  // 将来 meaning に AI 例文や "difficulty=..." のような文字列が混入しても
-  // スニペット（description）に漏れないことを保証する防御的アサーション。
-  // 現状は型レベルで example/difficulty を受け取らないため絶対に混入し得ないが、
-  // データ供給側の事故（meaning に例文を混入させる等）を検出する戒めとして残す。
-  test("descriptionにexample（AIユーモア例文）とdifficultyを含まない", () => {
+  // cycle-246 是正で独自性訴求として「AIが書いた使用例も掲載」を末尾に追加した。
+  // ただし「実用例文」を匂わせる文言（「用例:」「例文:」「例えば」「たとえば」など
+  // 単独で実用例文を期待させる表現）は依然として禁止（AP-I04 期待外れ直帰の予防）。
+  // また difficulty は意味検索者に無関係のため含めない。
+  test("descriptionに実用例文を匂わせる文言とdifficultyを含まない", () => {
     const result = generateYojiPageMetadata(yojiData);
     const description = result.description as string;
-    expect(description).not.toMatch(/例[:：]|例えば|たとえば/);
+    // 「AIが書いた使用例」というフレーズは許容するが、それ以外の例関連表現は禁止。
+    expect(description).not.toMatch(/用例[:：]/);
+    expect(description).not.toMatch(/例文[:：]/);
+    expect(description).not.toMatch(/例えば|たとえば/);
     expect(description).not.toContain("難易度");
+  });
+
+  test("descriptionに独自性訴求の「AIが書いた使用例」が含まれる（cycle-246 是正）", () => {
+    // cycle-117/118 で確立した AI 視点 example 全件掲載の独自性戦略を
+    // スニペット段階でも活かす。YojiDetail の「AIによる使用例」セクションが
+    // ページに表示済みの事実と整合する。
+    const result = generateYojiPageMetadata(yojiData);
+    const description = result.description as string;
+    expect(description).toContain("AIが書いた使用例");
   });
 
   test("origin が判明している場合は description に origin の説明が含まれる", () => {
@@ -661,9 +673,30 @@ describe("generateYojiJsonLd", () => {
     expect(result.alternateName).toBe("いちごいちえ");
   });
 
-  test("sameAs に sourceUrl が設定される", () => {
+  test("sameAs は含まれない（cycle-246 是正: 独自性主張保護）", () => {
+    // schema.org の sameAs は「同一性を曖昧さなく示す参照ページ」を意味するため、
+    // コトバンク等の外部辞書ページを sameAs に置くと「うちのページとコトバンクは
+    // 同じものを指す」と機械可読に宣言する構造になる。cycle-117/118 で確立した
+    // AI 視点 example による独自性戦略を打ち消す方向のため、sameAs は撤去した。
     const result = generateYojiJsonLd(yojiData) as Record<string, unknown>;
-    expect(result.sameAs).toBe("https://kotobank.jp/word/test");
+    expect(result.sameAs).toBeUndefined();
+  });
+
+  test("JSON-LD のキーが想定セットに限定される（sameAs を含まない網羅確認）", () => {
+    const result = generateYojiJsonLd(yojiData) as Record<string, unknown>;
+    const keys = Object.keys(result).sort();
+    expect(keys).toEqual(
+      [
+        "@context",
+        "@type",
+        "alternateName",
+        "description",
+        "inDefinedTermSet",
+        "inLanguage",
+        "name",
+        "url",
+      ].sort(),
+    );
   });
 
   test("inDefinedTermSet が四字熟語辞典を指す", () => {
