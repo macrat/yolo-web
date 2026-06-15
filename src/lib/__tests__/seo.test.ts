@@ -527,6 +527,9 @@ describe("generateYojiPageMetadata", () => {
     reading: "いちごいちえ",
     meaning: "一生に一度の出会い",
     category: "life",
+    structure: "因果" as const,
+    origin: "中国" as const,
+    sourceUrl: "https://kotobank.jp/word/test",
   };
 
   test("titleに四字熟語とサイト名を含む", () => {
@@ -669,6 +672,9 @@ describe("factory functions include twitter metadata", () => {
       reading: "いちごいちえ",
       meaning: "一生に一度の出会い",
       category: "life",
+      structure: "因果",
+      origin: "中国",
+      sourceUrl: "https://kotobank.jp/word/test",
     });
 
     expect(result.twitter).toMatchObject({

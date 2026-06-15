@@ -253,6 +253,9 @@ interface YojiMetaForSeo {
   reading: string;
   meaning: string;
   category: string;
+  structure: "対句" | "組合せ" | "因果";
+  origin: "中国" | "日本" | "不明";
+  sourceUrl: string;
 }
 
 export function generateYojiPageMetadata(yoji: YojiMetaForSeo): Metadata {

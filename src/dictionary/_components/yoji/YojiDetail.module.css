@@ -122,6 +122,58 @@
   text-decoration: underline;
 }
 
+/* 成立と出典セクション: 定義リスト形式で 3 行を縦並びに */
+.metaList {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.metaItem {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  align-items: baseline;
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.metaTerm {
+  flex: 0 0 4.5rem;
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+}
+
+.metaDesc {
+  margin: 0;
+  color: var(--color-text);
+}
+
+/* 出典の外部リンク。Footer の externalIcon パターンに準拠 */
+.externalLink {
+  color: var(--color-primary);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.2em;
+}
+
+.externalLink:hover {
+  text-decoration: underline;
+}
+
+.externalLink:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.externalIcon {
+  font-size: 0.7em;
+  opacity: 0.8;
+}
+
 /* 使用例文の引用スタイル */
 .exampleQuote {
   margin: 0;
