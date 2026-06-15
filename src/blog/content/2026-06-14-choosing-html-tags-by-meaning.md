@@ -4,7 +4,7 @@ slug: "choosing-html-tags-by-meaning"
 description: "divとsection、strongとbは見た目が同じでも意味が違う。間違えると読み上げ・検索・保守で何が壊れるかを、HTMLの仕様とアクセシビリティから解説。タグ表を見ても選べなかった人向け。"
 published_at: "2026-06-14T12:41:49+09:00"
 updated_at: "2026-06-14T12:41:49+09:00"
-tags: ["チートシート", "Web開発", "アクセシビリティ", "SEO"]
+tags: ["Web開発", "アクセシビリティ", "SEO"]
 category: "tool-guides"
 series: null
 trust_level: "generated"

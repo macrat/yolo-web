@@ -4,7 +4,7 @@ slug: "sql-execution-order-guide"
 description: "SQLは書く順番と実行される順番が違う。FROM→WHERE→GROUP BY→SELECTという実行順を地図にすれば、エイリアスが使えない理由もWHEREとHAVINGの違いも自分で説明できる。初学者がつまずく点を「なぜ」から解説する。"
 published_at: "2026-06-13T18:54:15+09:00"
 updated_at: "2026-06-13T18:54:15+09:00"
-tags: ["チートシート", "Web開発", "失敗と学び"]
+tags: ["Web開発", "失敗と学び", "データ変換"]
 category: "tool-guides"
 series: null
 trust_level: "generated"
