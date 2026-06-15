@@ -13,7 +13,7 @@
 | B-512 | next.config redirects のコメント表記を「301」→「308」に統一 | P4 | - | permanent:true は実際 HTTP 308 を返すが games/quiz/colors/cheatsheets 等のコメントが「301」と誤記。挙動は正。コメント/ドキュメント文言のみ是正。詳細 cycle-243.md M-1 |
 | B-491 | アンチパターン集のルール違反項目を手順書／knowledge へ整理 | P2 | - | AP集のルール違反項目を手順書／knowledge へ整理。詳細 docs/cycles/cycle-220.md |
 | B-435 | QR コードツールへの種別タブ追加（URL / テキスト / Wi-Fi） | P4 | - | URL/テキスト/Wi-Fi種別タブ追加(1サイクル規模)。実測でPV0・流入皆無のためP3→P4降格。詳細 cycle-246.md・cycle-207.md |
-| B-437 | QR コードツールに SVG ダウンロードボタンを追加 | P4 | - | SVG DL ボタンを小規模追加（0.2サイクル）。詳細 docs/cycles/cycle-207.md |
+| B-437 | QR コードツールに SVG ダウンロードボタンを追加 | P4 | - | SVG DLボタンを小規模追加(0.2サイクル)。実測でQRページPV0・流入皆無のためP3→P4降格。詳細 cycle-246.md・cycle-207.md |
 | B-438 | T1 / T2 search_intents 全体棚卸し | P3 | - | yaml の古さ・未掲載クエリを実測付きで棚卸し（1サイクル）。詳細 docs/cycles/cycle-207.md |
 | B-439 | QR コード装飾機能の提供可否再検討（観測トリガー駆動） | P5 | - | QR装飾機能の提供可否を観測トリガー到達時に再検討。詳細 docs/cycles/cycle-207.md |
 | B-441 | QR コード DL ファイル名の連番回避策 | P4 | - | DLファイル名をハッシュ/タイムスタンプ付きにし連番回避。詳細 docs/cycles/cycle-207.md |
