@@ -76,7 +76,7 @@
 - title: `「至誠通天」の意味・読み方 - 四字熟語辞典 | yolos.net`
 - description: `四字熟語「至誠通天」（しせいつうてん）の意味: 誠を尽くせば天に通じること`
 
-データ `src/data/yoji-data.json`（400 件）は yoji / reading / meaning / category / origin / structure / example を保持している。
+データ `src/data/yoji-data.json`（400 件）は yoji / reading / meaning / difficulty / category / origin / structure / sourceUrl / example を保持している（cycle-246 計画時に sourceUrl/difficulty の列挙抜けを訂正）。
 
 ## 留意点・限界
 

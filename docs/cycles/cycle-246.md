@@ -11,11 +11,11 @@ completed_at: null
 
 ## 実施する作業
 
-- [ ] 競合（コトバンク等の四字熟語辞典）の検索結果スニペット・タイトルを調査し、当サイトとの差分を具体化（読み方・出典・漢字分解・用例の見せ方の差）。計画の根幹仮説「スニそのものが薄くて選ばれない」を一次確認する
-- [ ] **保有データの未表示解消**: `origin`（出典: 中国/日本/不明）と `structure`（構成: 対句/組合せ/因果）を YojiDetail のページ本文に表示する（データはあるのに未表示。`不明` の扱いを含めエッジケース対応）。スニペットで謳う情報がページ実体に存在する状態を先に作る
-- [ ] `generateYojiPageMetadata` の title / description を、取りこぼし検索意図（「○○ 意味」「○○ 読み方」「○○ とは」「○○ 単体」）を満たす要件で改善。**ページ実体に存在する情報のみ**（読み方・意味・構成漢字・出典/構成）で構成し、実用例文の存在を示唆しない（`example` は「AIによる使用例」のユーモア創作のため／B1）。具体文案は実装に委ね、計画では満たすべき要件のみ規定（N1）
-- [ ] description の文字数制約を実装要件に明記: 日本語スニペットは全角約 50 字前後で切れる。最重要情報（読み方→意味）を前置し、`meaning`（最大 55 字）で溢れる前提で語順を設計（N2）
-- [ ] `generateYojiJsonLd` の構造化データを、保有データで正直に埋められる範囲で強化検討（DefinedTerm の追加プロパティ等）
+- [ ] 競合スニペットの**再確認**（前回レビュー時に予備確認済み: 競合は読み方・出典・漢字分解・用例を密に提示、当サイトは意味 1 文で見劣り）。本サイクルでは取りこぼしクエリ 2〜3 件（「至誠通天 意味」「冷汗三斗 意味」等）で実検索 → スクショ保存し、予備確認の結論が変わらないことの確認のみ行う（範囲を絞る／M-2）
+- [ ] **保有データの未表示解消**: `origin`（成立地: 中国/日本/不明）、`structure`（構成: 対句/組合せ/因果）、**`sourceUrl`（出典 URL: 400/400 件埋まっており、87% がコトバンク・他に jitenon / weblio 等）** を YojiDetail のページ本文に表示する（いずれも未表示）。`sourceUrl` 表示は外部リンク 1 行（`rel="noopener noreferrer"` + 外部リンクであることが視覚的に分かる形）で、コストは小さく無名ドメインの信頼性を補う効果が大きいと判断（M-1）。`不明`（origin 11 件）は「成立地: 不明」と正直に表示し、隠さない（憲法 2: 来訪者を sad にしない／誠実）。`structure` の値は `"対句"/"組合せ"/"因果"` のみで `不明` は存在しない（型上保証・エッジ範囲を origin だけに絞る／N-3）。
+- [ ] `generateYojiPageMetadata` の title / description を、取りこぼし検索意図（「○○ 意味」「○○ 読み方」「○○ とは」「○○ 単体」）を満たす要件で改善。**ページ実体に存在する情報のみ**で構成し、実用例文の存在は示唆しない（`example` は「AIによる使用例」のユーモア創作のため／B1）。`difficulty` は学習動機系で「意味/読み方」検索者の動機にはなりにくいため description 対象外（N-2）。具体文案は実装に委ね、計画では満たすべき要件のみ規定（N1）
+- [ ] **description の構成要素優先順位を明示**（M-3）: 日本語スニペットは全角約 50 字前後で切れる。**必須＝読み方＋意味**（`「○○」(よみがな) 意味…` で 16 字＋最大 55 字、これだけで枠を超過しうる）。**残余に余裕があれば任意で構成（structure: 対句/組合せ/因果）か出典（origin: 中国/日本）を 1 つ**。構成漢字・sourceUrl はページ本文で詳しく示すので description には入れない。`meaning` が長い場合は **意味を切らずに残余を省く**（重要情報を保護）
+- [ ] `generateYojiJsonLd` の構造化データを保有データで正直に強化。候補プロパティ（N-4）: `alternateName` = reading（読み方）、`sameAs` = sourceUrl（出典 URL の明示）、必要に応じて `description` を meta と差別化（現在は内容重複）。schema.org/DefinedTerm 仕様に照らし採用可否を判断
 - [ ] 改善後のメタ・表示が全カテゴリ/難易度/出典（`不明` 含む）のデータで破綻しないことを確認（reading 欠落等のエッジケース、文字数、データ駆動の崩れ）
 - [ ] ビルド・テスト・lint・format:check の通過確認
 - [ ] 改善前後のレンダリング結果（実際の `<title>`/`<meta>` とページ表示）を確認し、競合スニペットと並べて「期待整合した上で選ばれる」かを検証（take-screenshot）
@@ -33,10 +33,10 @@ completed_at: null
 
 ### 作業内容
 
-1. **競合スニペット調査**（根幹仮説の一次確認）: 「至誠通天 意味」「冷汗三斗 意味」等の実取りこぼしクエリで検索し、上位辞典の title/description の見せ方を把握。レビュー時の予備確認では競合は読み方・出典（物語的由来）・漢字分解・用例を密に提示し、当サイトは意味 1 文のみで明確に見劣りすることを確認済み。この差分を具体化し、メタ改善の要件に落とす。
-2. **保有データの未表示解消（ページ実体の充実）**: `origin`（中国/日本/不明）と `structure`（対句/組合せ/因果）は `YojiDetail` に未表示（バッジはカテゴリ・難易度のみ、構成漢字と「AIによる使用例」は表示済み）。出典・構成をページ本文に表示し、検索者が求める「読み方・意味・成り立ち」に正直に応える状態を作る。`不明`（11 件）は表示省略等で自然に扱う。
-3. **title / description の改善（要件レベル）**: 検索意図（意味/読み方/とは/単体）を満たし、読み方を前置。**ページに実在する情報（読み方・意味・構成漢字・出典/構成）のみ**で構成し、実用例文の存在は示唆しない（`example` は「AIによる使用例」のユーモア創作のため／B1）。文字数は日本語スニペット約 50 字で切れる前提で語順設計（`meaning` 最大 55 字／N2）。具体的な文面は実装フェーズで builder が決定（N1）。
-4. **構造化データの強化検討**: `generateYojiJsonLd`（DefinedTerm）に、保有データで正直に埋められる範囲のプロパティを追加検討。
+1. **競合スニペットの再確認**: 予備確認で結論済み（競合は読み方・出典・漢字分解・用例を密に提示、当サイトは意味 1 文で見劣り）。本サイクルは取りこぼしクエリ 2〜3 件での再確認のみ（M-2）。結論が覆れば §補足事項 のリスクとして対処方針を更新する。
+2. **保有データの未表示解消（ページ実体の充実）**: `origin`（成立地: 中国/日本/不明）、`structure`（構成: 対句/組合せ/因果）、`sourceUrl`（出典 URL: 400/400 件埋まっており 87% がコトバンク）を `YojiDetail` に表示する（いずれも未表示／M-1）。`origin: 不明`（11 件）は隠さず正直に表示。`structure` は型上 3 値のみで `不明` 不在（N-3）。`sourceUrl` は外部リンクとして表示し、無名ドメインの権威性を一次情報への導線で補う。
+3. **title / description の改善（要件レベル）**: 検索意図（意味/読み方/とは/単体）を満たし、読み方を前置。description の優先順位は **必須 = 読み方＋意味、残余 = 任意で structure か origin を 1 つ**（M-3）。構成漢字・sourceUrl は本文表示に任せ description には入れない。`example` は description に取り込まない（B1）。`difficulty` も description 対象外（N-2）。日本語スニペット約 50 字制約のもと、`meaning` を切らずに残余を省く方針で語順設計。文案は builder（N1）。
+4. **`generateYojiJsonLd` の強化**: DefinedTerm に保有データで正直に埋められる範囲のプロパティを追加。具体候補（N-4）: `alternateName` = reading（読み方）、`sameAs` = sourceUrl、`description` を meta と差別化（現在ほぼ重複）。schema.org/DefinedTerm 仕様に照らし採用可否を判断。
 5. **検証**: 全カテゴリ/難易度/出典（`不明` 含む）のデータでメタ・表示が破綻しないか確認。実レンダリングの title/meta とページ表示を確認し、競合スニペットと並べて「期待整合した上で選ばれるか」を評価（take-screenshot）。
 
 ### 検討した他の選択肢と判断理由
@@ -51,7 +51,7 @@ completed_at: null
 
 - `docs/research/2026-06-15-search-traffic-priority-reassessment.md`（本サイクルのための実測。GA4 / SC の 3 本の分析を統合）
 - `src/lib/seo.ts`（`generateYojiPageMetadata` / `generateYojiJsonLd`）
-- `src/data/yoji-data.json`（四字熟語 400 件、yoji / reading / meaning / category / origin / structure / example）
+- `src/data/yoji-data.json`（四字熟語 400 件、yoji / reading / meaning / difficulty / category / origin / structure / **sourceUrl** / example。sourceUrl は 400/400 件埋まり 87% コトバンク・他に jitenon / weblio / idiom-encyclopedia / yoji-jukugo）
 - `src/dictionary/_lib/types.ts`（`YojiEntry` 型定義）
 
 ## キャリーオーバー
@@ -68,7 +68,7 @@ completed_at: null
 
 ### cycle-246 のプロセス上の振り返り（恒久記録）
 
-- **AP-WF21 / B-514 の取り下げ**: 本サイクル冒頭、Owner の指摘「フックのバグを bash 迂回で回避するのは安全策の無効化＝ハッキング」を受けて、PostToolUse 整形フック（`jq -r '.tool_input.file_path' \| xargs npx prettier --write`）の挙動を実測再現した。prettier 3.8.3 + 現フック + `.prettierignore: docs/backlog.md` の組み合わせで、絶対パス指定でも `docs/backlog.md` は ignore が尊重され整形されない（`prettier --debug-check` で対象外・`--write` でも差分ゼロを確認）。AP-WF21 が主張する「ignore 貫通」は再現せず、cycle-245 の commit ブロック事故は **Notes の文字数超過が真因**の可能性が極めて高いと判断、AP-WF21 を取り下げ、B-514 を取り下げた（B-505 と同じ誤診パターン）。
+- **AP-WF21 / B-514 の取り下げ**: 本サイクル冒頭、Owner の指摘「フックのバグを bash 迂回で回避するのは安全策の無効化＝ハッキング」を受けて、PostToolUse 整形フック（`jq -r '.tool_input.file_path' | xargs npx prettier --write`）の挙動を実測再現した。prettier 3.8.3 + 現フック + `.prettierignore: docs/backlog.md` の組み合わせで、絶対パス指定でも `docs/backlog.md` は ignore が尊重され整形されない（`prettier --debug-check` で対象外・`--write` でも差分ゼロを確認）。AP-WF21 が主張する「ignore 貫通」は再現せず、cycle-245 の commit ブロック事故は **Notes の文字数超過が真因**の可能性が極めて高いと判断、AP-WF21 を取り下げ、B-514 を取り下げた（B-505 と同じ誤診パターン）。
 - **私（PM）が踏んだ本当の失敗**: (a) cycle-245 で AP-WF21 の対症療法案を採用し、Edit を経由せず `git show HEAD:docs/backlog.md` + bash heredoc で書き戻した。これは PostToolUse 整形・将来追加されるあらゆるツール起動フックを意図的に迂回する操作であり、CLAUDE.md「Improve work and process」「事故時はアンチパターン確認」の精神に反する。(b) cycle-246 でも当初同じ罠に向かったが、本サイクルで Owner の差し戻しを受けて是正できた。
 - **ファイル編集の原則（再確認・遵守事項）**: `.prettierignore` 対象/対象外を問わず、ファイル編集には常に Edit / Write ツールを使う。bash で直接書き戻すのは安全策の迂回であり禁止。フックが不当にブロックする疑いがある場合は、対症療法ではなく実測（`prettier --debug-check` / `--write` 差分確認）で原因を切り分け、必要ならフック側を直す。
 - **AP-WF22 候補（残骸タグ混入）**: 本サイクルで 2 ファイル発生・追加（`anti-patterns/workflow.md`）。grep でのみ検出可能、prettier では検出不能。長文 Write 直後と commit 前の grep 点検を徹底する。
