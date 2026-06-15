@@ -2,7 +2,7 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-515 | 四字熟語辞書ページの CTR 改善（タイトル/説明/構造化データの検索意図最適化） | P2 | 246 | 四字熟語が検索露出の約40.8%を占めるがCTR0.42%・1ページ目でクリック0=スニペット問題。generateYojiPageMetadata改善。詳細 cycle-246.md |
+| _(なし)_ | | | | |
 
 ## Queued (すぐに着手できる)
 
@@ -124,10 +124,10 @@
 
 | ID | Title | Completed Cycle | Notes |
 | --- | --- | --- | --- |
+| B-515 | 四字熟語辞書ページの CTR 改善（出典/構成データ表示＋メタ・JSON-LD改善） | 246 | YojiDetailにorigin/structure/sourceUrl表示・description読み方前置・JSON-LD alternateName/sameAs。最終reviewer重大ゼロ。詳細 cycle-246.md |
 | B-513 | ガイド→早見表の逆方向相互リンク追加 | 245 | cycle-244で復元した早見表6本に対し、対のガイド6本から早見表への逆リンクを追加し相互リンクを完成。各ガイド本文1行＋updated_at更新で主題は不変。2 reviewer重大ゼロ。cycle-245 |
 | B-511 | cycle-243 の憲法違反(来訪者価値破壊)の是正 | 244 | 早見表6記事を/blogに復元・旧/cheatsheets/Xを早見表へ向け直し・indexは/blog/tag/早見表へ。why-i-removed削除・記録誠実化・誤分類2本是正。cycle-244 |
 | B-345 | 移行計画 Phase 9.2.d: cheatsheet `http-status-codes` を既存ガイドへ統合（補筆） | 242 | http-status-code-guide-for-rest-api.md末に33コード早見表(1xx〜5xx)新設・自己参照リンク是正・RFC/MDN裏取り。撤去はB-349。cycle-242 |
 | B-342 | 移行計画 Phase 9.2.a: cheatsheet `cron` を既存ガイドへ統合（補筆） | 242 | cron-parser-guide.mdに特殊文字列ショートカット表(@yearly〜@reboot)と「よく使うcron式」拡充を追加。man裏取り。撤去はB-349。cycle-242.md |
 | B-347 | 移行計画 Phase 9.2.f: cheatsheet `regex` を既存ガイドへ統合（補筆） | 242 | 網羅性検証で軽微〜中の欠落。regex-tester-guide.md にメタ文字早見表(10種)・文字クラス否定形・先読み後読み全4種の表を追加。MDN裏取り・敬体統一。撤去はB-349。詳細 cycle-242.md |
 | B-344 | 移行計画 Phase 9.2.c: cheatsheet `html-tags` をブログ記事に転換 | 241 | html-tags(1285行)を記事 choosing-html-tags-by-meaning(tool-guides)へ再構成し公開。MDN裏取り。AP-W13新設。撤去はB-349。cycle-241 |
-| B-346 | 移行計画 Phase 9.2.e: cheatsheet `markdown` をブログ記事に転換 | 240 | Markdownチートシート(656行)を記事 markdown-not-rendering-as-expected へ転換し公開。CommonMark/GFM裏取り。撤去はB-349。cycle-240 |
