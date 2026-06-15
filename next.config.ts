@@ -155,49 +155,51 @@ const nextConfig: NextConfig = {
       ],
     );
 
-    // cycle-243 (B-349): cheatsheets removed. 7 個別チートシートは 1:1 の後継記事へ 301 恒久誘導する。
-    // index (/cheatsheets) は当面、選定経緯の記録 cheatsheets-introduction（live・正直な歴史記録）へ向ける。
-    // 当初は why-i-removed-the-cheatsheets へ向けたが、同記事は美化（AI Slop）のため draft 化・公開停止した。
-    // 早見表の去就と誠実な後継記事は B-511 で再決定する（cycle-243.md「前提の誤り」参照）。
+    // cycle-244 (B-511): 7 トピックの早見表記事へ 301 恒久誘導する。
+    // 6 トピック（regex/cron/git/sql/markdown/html-tags）は専用の早見表記事へ。
+    // http-status は既存ガイドに網羅的な早見表セクションがあるため、その早見表アンカーへ誘導する
+    // （独立記事を作らず重複/カニバリを避ける。アンカーは既存ガイド内リンクで実証済み）。
+    // index (/cheatsheets) は早見表タグページ /blog/tag/早見表 へ向ける。
     const cheatsheetRedirects = [
       {
         source: "/cheatsheets/cron",
-        destination: "/blog/cron-parser-guide",
+        destination: "/blog/cron-cheatsheet",
         permanent: true,
       },
       {
         source: "/cheatsheets/git",
-        destination: "/blog/git-command-reference",
+        destination: "/blog/git-command-cheatsheet",
         permanent: true,
       },
       {
         source: "/cheatsheets/html-tags",
-        destination: "/blog/choosing-html-tags-by-meaning",
+        destination: "/blog/html-tags-cheatsheet",
         permanent: true,
       },
       {
         source: "/cheatsheets/http-status-codes",
-        destination: "/blog/http-status-code-guide-for-rest-api",
+        destination:
+          "/blog/http-status-code-guide-for-rest-api#httpステータスコード一覧早見表",
         permanent: true,
       },
       {
         source: "/cheatsheets/markdown",
-        destination: "/blog/markdown-not-rendering-as-expected",
+        destination: "/blog/markdown-cheatsheet",
         permanent: true,
       },
       {
         source: "/cheatsheets/regex",
-        destination: "/blog/regex-tester-guide",
+        destination: "/blog/regex-cheatsheet",
         permanent: true,
       },
       {
         source: "/cheatsheets/sql",
-        destination: "/blog/sql-execution-order-guide",
+        destination: "/blog/sql-cheatsheet",
         permanent: true,
       },
       {
         source: "/cheatsheets",
-        destination: "/blog/cheatsheets-introduction",
+        destination: "/blog/tag/早見表",
         permanent: true,
       },
     ];

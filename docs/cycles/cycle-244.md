@@ -49,34 +49,34 @@ completed_at: null
 
 ### 早見表記事の復元（1記事につき blog-writer 1人・一次資料で裏取り。原本は `dec41f39^` から復元）
 
-- [ ] T-3: regex 早見表記事を復元（メタ文字/量指定子/グループ/先読み後読み/フラグ/パターン例／MDN 裏取り）。
-- [ ] T-4: cron 早見表記事を復元（フィールド値域/特殊文字/拡張記号/よく使う式／crontab(5)・AWS 裏取り）。
-- [ ] T-5: git 早見表記事を復元（初期設定/基本/ブランチ/リモート/タグ/高度の用途別コマンド一覧／Pro Git 裏取り）。
-- [ ] T-6: sql 早見表記事を復元（演算子/集計関数/集合演算/DML・DDL/データ型の構文一覧／MySQL・PostgreSQL 裏取り）。
-- [ ] T-7: markdown 早見表記事を復元（見出し/強調/リンク/引用/コード/表/GFM の基本記法一覧／CommonMark・GFM 裏取り）。
-- [ ] T-8: html-tags 早見表記事を復元（用途別の約70タグ一覧／MDN・WHATWG 裏取り）。
-- [ ] T-9: http-status は独立記事を作らない（既存ガイドに全32コードの早見表が網羅済みのため重複回避）。`/cheatsheets/http-status-codes` を既存ガイドの早見表アンカーへ向ける（T-11 で実施）。
+- [x] T-3: regex 早見表記事を復元（`regex-cheatsheet`）。MDN で再検証し原本の誤り（`\s` の Unicode 空白・集合差の JS 非対応・フラグ ES バージョン）を修正。reviewer 承認（重大ゼロ）。
+- [x] T-4: cron 早見表記事を復元（`cron-cheatsheet`）。一次資料で原本の誤り（AWS の L/W/# 対応・Quartz/AWS の曜日番号・GitHub Actions の TZ・@midnight 非標準）を修正。改善指示→対応→新規レビュアーで再承認（重大ゼロ）。
+- [x] T-5: git 早見表記事を復元（`git-command-cheatsheet`）。Pro Git/man で再検証。既存ガイドとの棲み分け（取り消し系は1行＋ガイドの実アンカーへ相互リンク）を reviewer がアンカー解決まで確認し承認（重大ゼロ）。
+- [x] T-6: sql 早見表記事を復元（`sql-cheatsheet`）。MySQL/PostgreSQL で方言差（UPSERT・FULL OUTER JOIN・INTERSECT/EXCEPT・FETCH・VALUES() 非推奨）を各行に明記。reviewer 承認（重大ゼロ）。
+- [x] T-7: markdown 早見表記事を復元（`markdown-cheatsheet`）。CommonMark/GFM で「標準/GFM拡張/サービス依存」の別を各行に明示。reviewer 承認（重大ゼロ）。
+- [x] T-8: html-tags 早見表記事を復元（`html-tags-cheatsheet`・用途別の約90タグ）。MDN/WHATWG で再検証。タグ数の誤り（約70→実数91で約90）を改善指示で是正→新規レビュアーで再承認（重大ゼロ）。
+- [x] T-9: http-status は独立記事を作らず、`/cheatsheets/http-status-codes` を既存ガイドの早見表アンカーへ向けた（T-11 で実施・重複回避）。
 
-### frontmatter のデータ破損是正（T-2 で発見）
+### frontmatter のデータ破損是正
 
-- [ ] T-10b: http-status-code-guide-for-rest-api / sns-optimization-guide / adsense-content-quality-audit-methodology の frontmatter に混入したキー名なしの裸配列（B-508 同種・YAML 破損）を除去する。早見表移行・カテゴリ変更のコミットには混ぜない。B-508 の残対象とも整合させる。
+- [x] T-10b: http-status-code-guide-for-rest-api / sns-optimization-guide / adsense-content-quality-audit-methodology の frontmatter のキー名なし裸配列（mfeed 系IDの残骸・YAML 破損）を除去（各22/17/96行）。正規キーは不変・updated_at 不変。frontmatter スキーマテスト通過で確認。
 
 ### 分類の是正
 
-- [ ] T-10: `tool-guides` カテゴリの誤分類を是正する。監査の結果、再分類対象は2本: sns-optimization-guide → dev-notes（シェアボタン/OGP のサイト運営・実装メモ）、adsense-content-quality-audit-methodology → ai-workflow（運営の品質監査ワークフロー）。残り9本（早見表後継7＋json-formatter＋character-counting）は tool-guides 維持が妥当。広範なタクソノミ再設計（B-391）には踏み込まず、誤分類の是正に限定する。再分類による内部リンク・カテゴリページ・sitemap への影響を確認する。
+- [x] T-10: tool-guides 誤分類を是正。sns-optimization-guide → dev-notes、adsense-content-quality-audit-methodology → ai-workflow（category のみ・updated_at 不変）。
 
 ### インフラ・ドキュメント
 
-- [ ] T-11: `next.config.ts` のリダイレクトを是正する。(a) 個別 `/cheatsheets/X`（7本）を、現状のガイド向き先から復元した X 早見表記事へ向け直す（引きに来た読者を早見表へ）。(b) index `/cheatsheets`（現状は `cheatsheets-introduction` への自己ループ）を、早見表記事のコレクション（T-2b で決める tag/category 等）へ是正。コメントも更新。向き先は T-2b の設計に従う。
-- [ ] T-12: 美化記事 `2026-06-14-why-i-removed-the-cheatsheets.md`（draft・AP-W04 の AI Slop・かつ「戦略的撤退」という前提自体が誤り）を撤回＝削除し、残存参照がないことを確認する。
-- [ ] T-13: `cheatsheets-introduction.md` の日付注記を、実態（早見表内容を後継ブログ記事へ移行した）に整合する表現へ更新する（本文は当時の記録として不変・注記のみ更新）。
-- [ ] T-14: `design-migration-plan.md` Phase 9.2 の「再編／転換」表現に、フォーマット撤退と内容移行の経緯（前サイクルの逸脱と本サイクルでの是正）を誠実に注記する。
+- [x] T-11: `next.config.ts` のリダイレクトを是正。個別7本を各早見表記事へ、http-status は既存ガイドの早見表アンカー（フラグメント付き）へ、index `/cheatsheets` を `/blog/tag/早見表` へ。本番ビルド＋実機 curl で全リダイレクトの Location（http-status のフラグメント保持含む）と tag ページ/記事の 200 を確認。
+- [x] T-12: 美化記事 `2026-06-14-why-i-removed-the-cheatsheets.md`（draft）を削除。残存参照ゼロを確認。
+- [x] T-13: `cheatsheets-introduction.md` の日付注記を、早見表をブログ記事として作り直して再提供している実態に更新（本文は不変・注記のみ・`/blog/tag/早見表` への誘導付き）。reviewer へ依頼済み。
+- [x] T-14: `design-migration-plan.md` Phase 9.2 に経緯注記（当初計画→cycle-243 の逸脱→cycle-244 で早見表記事として復元・是正）を追記（既存記述は不変）。
 
 ### 検証・レビュー
 
-- [ ] T-15: 4ゲート（lint/format:check/test/build）を `.next` クリーンビルドで実行。リダイレクト動作を build 出力で確認。
-- [ ] T-16: 各記事を contents-review + reviewer でレビュー。infra/分類是正を reviewer でレビュー。
-- [ ] T-17: レビュー指摘に対応し、再レビューは毎回新規レビュアーをゼロ起動して実施（AP-WF20 遵守）。
+- [x] T-15: 4ゲート通過（lint・format:check クリーン／test 5468 件 pass／`.next` クリーン build 成功）。リダイレクト8本・早見表記事6本・`/blog/tag/早見表` のプリレンダリングと実機リダイレクトを確認。
+- [x] T-16: 早見表6記事を1記事1 reviewer でレビュー（一次資料での事実検証含む）。infra/分類/frontmatter は builder 完了報告＋テストで確認。
+- [x] T-17: 改善指示（cron・html-tags）に対応し、再レビューは新規レビュアーをゼロ起動して実施（AP-WF20 遵守）。全6記事が重大ゼロ。
 
 ## 作業計画
 
@@ -86,8 +86,8 @@ completed_at: null
 
 ### 検討した他の選択肢と判断理由
 
-- **早見表内容を別の参照専用記事として新設する vs 既存後継記事に統合（統合を採用）**: 別記事新設はトピックごとに「ガイド」と「参照」の2記事を生み、cycle-243 が解消しようとした自己カニバリ（同一主題2ページ）を再発させる。1トピック1記事に早見表を統合する方が正典が一意になり、リダイレクト先も単純。最終的な統合方法は T-2 の planner 設計で各トピックごとに確定する。
-- **index リダイレクト先**: `/blog`（汎用・ただし関連性が薄い）／`cheatsheets-introduction`（現状・自己ループ）／整理後 `tool-guides`（採用）。カテゴリを誤分類から整理すれば、tool-guides は7後継＋ツール系ガイドの一貫したコレクションになり、早見表を求めて来た人に最も近い集合を返せる。
+- **早見表を既存ガイドに統合 vs 独立記事として復元（独立記事を採用・初版から方針転換）**: 当初は「1記事統合」を設計したが、これは誤りだった。避けるべきは「同一トピックの重複」ではなく「読者意図のミスマッチ」で、早見表を引く読者とガイドで理解する読者は別人。1記事に詰めると双方を損なう（8つのミスマッチ例で確認）。早見表とガイドは異なる意図に応える別物（MDN のリファレンス記事とガイド記事の関係）であり、並存はカニバリではない。よって早見表を独立記事として復元し、ガイドは維持、旧URLは早見表へ向け、相互リンクする方針に転換した。
+- **index リダイレクト先**: `/blog`（汎用・関連薄）／`cheatsheets-introduction`（自己ループ）／`tool-guides`（誤分類で濁る）を退け、早見表記事に共通タグ「早見表」を付け `/blog/tag/早見表`（採用）。早見表記事だけの一貫したコレクションを返せる。cycle-243 が撤去した「チートシート」タグ（ガイドを早見表と偽る有害ラベル）と違い、本物の早見表記事に付く正確なタグなので導入は妥当。
 - **why-i-removed 記事を誠実に書き直す vs 撤回（撤回を採用）**: 同記事の「自分で評価して戦略的に撤退した」という骨格は、Owner が明らかにしたとおり事実に反する（実態は計画無視による未移行＋放置）。さらに本サイクルで早見表は撤退ではなくブログへ移行されるため、「撤去の記録」という主題自体が成立しなくなる。学びは既に `cheatsheets-introduction` の教訓節に存在する。draft のため削除に来訪者への害はなく、git に履歴は残る。
 
 ### 計画にあたって参考にした情報
@@ -99,7 +99,10 @@ completed_at: null
 
 ## キャリーオーバー
 
-（サイクル進行に応じて記載）
+- **ガイド→早見表の逆方向相互リンク（新規 backlog 項目）**: 早見表→ガイドのリンクは全6記事で設置済みだが、既存ガイド側から対の早見表への逆リンクが無い。複数の reviewer が回遊性向上の推奨として挙げた。設計 §5 で「任意の別タスク」として切り出した方針どおり、本サイクルでは見送り backlog 化する（既存ガイド6本の本文に1行追加＋updated_at 更新が必要）。
+- **B-508（frontmatter 裸配列残骸）**: 本サイクルの T-10b で http-status-code-guide-for-rest-api 分を除去した（B-508 のリスト掲載分）。残りの対象（yoji-quiz/tool-reliability/game-infrastructure-refactoring 等）は B-508 として継続。sns-optimization-guide・adsense も同種で本サイクルで除去済み。
+- **B-512（next.config コメントの 301→308 表記）**: 本サイクルで追加した cheatsheet リダイレクトも `permanent: true`（実 HTTP 308）。サイト全体のコメント表記是正は引き続き B-512。
+- **「早見表」タグの恒久運用**: `TAG_DESCRIPTIONS` と推奨タグリストに追加済み。将来の早見表記事はこのタグを付ける。
 
 ## 補足事項
 
