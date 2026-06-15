@@ -155,11 +155,10 @@ const nextConfig: NextConfig = {
       ],
     );
 
-    // cycle-243 (B-349): cheatsheets removed, content migrated to blog articles.
-    // 7 個別チートシートは 1:1 の後継記事へ 301 恒久誘導する。
-    // index (/cheatsheets) は、チートシート集の旧ハブに来た訪問者の意図（「チートシートはどこへ行ったか」）に
-    // 最も正確に応える後継として、廃止経緯を説明し7記事すべてへリンクする記事へ向ける
-    // （category 一覧は無関係記事を含む上位集合で 1:1 の後継ではないため避ける）。
+    // cycle-243 (B-349): cheatsheets removed. 7 個別チートシートは 1:1 の後継記事へ 301 恒久誘導する。
+    // index (/cheatsheets) は当面、選定経緯の記録 cheatsheets-introduction（live・正直な歴史記録）へ向ける。
+    // 当初は why-i-removed-the-cheatsheets へ向けたが、同記事は美化（AI Slop）のため draft 化・公開停止した。
+    // 早見表の去就と誠実な後継記事は B-511 で再決定する（cycle-243.md「前提の誤り」参照）。
     const cheatsheetRedirects = [
       {
         source: "/cheatsheets/cron",
@@ -198,7 +197,7 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/cheatsheets",
-        destination: "/blog/why-i-removed-the-cheatsheets",
+        destination: "/blog/cheatsheets-introduction",
         permanent: true,
       },
     ];
