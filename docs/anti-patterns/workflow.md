@@ -92,12 +92,12 @@
 - **発生件数**: N=1（cycle-243）/ N≥3 で AP-WF20 として新設検討。
 - **対症療法案**: 再レビューは既存レビュアーの SendMessage 継続でなく新規エージェントを起動し、対象ファイルと観点のみを渡して（前回指摘は渡さず）白紙で全体を見直させる。
 
-### AP-WF21 候補: `.prettierignore` 対象ファイルを Edit/Write ツールで編集し、PostToolUse の自動整形が ignore を貫通して別の制約（行長フック等）を破っていないか
+### ~~AP-WF21 候補~~: 取り下げ（cycle-246 で実測再現せず・誤診と確定）
 
-- **概要**: PostToolUse の自動整形フックがツールの渡す絶対パスを `prettier --write <絶対パス>` で整形する構成だと、`.prettierignore` は相対パターンで書かれているため絶対パス指定にマッチせず無視され、ignore したはずのファイルが整形されてしまう。整形（テーブル桁揃え等）の結果が別の制約（コミット前の行長チェックフック等）に抵触し、コミットが直前でブロックされる。`npm run format`（相対 glob 経由）では ignore が効くため `format:check` は通り、問題が完了処理の最後まで顕在化しない。
-  - **cycle-245 事例**: `.prettierignore` に登録済みの `docs/backlog.md` を Edit ツールで編集したところ、PostToolUse の `prettier --write <絶対パス>` がテーブルを桁揃えパディングして 1 行 200 文字制限（`backlog-line-length-check.sh`）を多数の行で超過させ、完了コミットがブロックされた。`git show <rev>:<path>` で素の内容を取り出して bash で書き戻す（Edit/Write を経由しない）ことで回避した。
-- **発生件数**: N=1（cycle-245）/ N≥3 で AP-WF21 として新設検討。
-- **対症療法案**: `.prettierignore` 対象ファイル（現状 `docs/backlog.md`）は Edit/Write ツールで編集しない。編集が必要なときは `git show HEAD:<path>` 等で素の内容を取り出し bash 経由で変更し、コミット前に行長チェック（`perl -CSD -ne 'length>200'` 相当）で違反ゼロを確認する。あるいは PostToolUse 整形フックを ignore 尊重（相対パス化や `prettier --ignore-path` の明示）に直すことを別タスクとして起票する。
+- **取り下げ理由（cycle-246, 2026-06-15 実測検証）**: 「PostToolUse の `prettier --write <絶対パス>` が `.prettierignore` を貫通する」という前提は、現環境（prettier 3.8.3、フック `jq -r '.tool_input.file_path' | xargs npx prettier --write`、`.prettierignore` に `docs/backlog.md` 登録）で**再現しない**ことを確認した。較正テストとして通常ファイルは `prettier --debug-check` で処理対象として出力される一方、`docs/backlog.md` は絶対パス指定でも処理対象に出ず、`prettier --write` を実際に流しても差分ゼロ（ignore が尊重されている）。
+- **重要な反パターン記録**: 取り下げ前の「対症療法案」が示していた「Edit/Write を使わず `git show` + bash で書き戻す」運用は、**安全策（PostToolUse 整形・PreToolUse の行長チェックを除く各種フック）を回避するハッキングであり、絶対に採ってはならない**。ファイル編集は常に Edit/Write を使うこと。`cycle-245` の事故は、Notes 記述の文字数超過が真因の可能性が高い（事故時の元の長さを後から再現できないため断定はできないが、現環境では「ignore 貫通」の挙動を再現できないため、元記述は誤診と扱う）。AP-WF21 を信じて bash 迂回をすると、フックで防ぐべき問題（整形漏れ・行長超過・将来追加されるチェック）を黙って素通しさせる。
+- **正しい運用**: `docs/backlog.md` 等は通常通り Edit ツールで編集する。コミット時に `backlog-line-length-check.sh` でブロックされた場合は、整形が悪いのではなく自分の記述が長すぎる可能性をまず疑い、要約＋参照先（cycle 番号等）の形に削る。フックの挙動に疑いがある場合は、対症療法ではなく実測（`prettier --debug-check` / `--write` 差分確認）で再現性を取ってから判断する。
+- 残骸となった事象記録は `docs/cycles/cycle-245.md` / `cycle-246.md` 参照。
 
 ### AP-WF22 候補: 長文を Write ツールで新規作成した後、ファイル末尾に残骸タグ（`</content>` 等）が混入していないか確認したか
 
