@@ -91,3 +91,10 @@
   - **cycle-243 事例**: 流用での再レビューが見逃した記事中の数値の事実誤り（「7ページで6回」＝実際は個別7ページ5回＋一覧1回）を、新規レビュアーが白紙のレビューで検出した。
 - **発生件数**: N=1（cycle-243）/ N≥3 で AP-WF20 として新設検討。
 - **対症療法案**: 再レビューは既存レビュアーの SendMessage 継続でなく新規エージェントを起動し、対象ファイルと観点のみを渡して（前回指摘は渡さず）白紙で全体を見直させる。
+
+### AP-WF21 候補: `.prettierignore` 対象ファイルを Edit/Write ツールで編集し、PostToolUse の自動整形が ignore を貫通して別の制約（行長フック等）を破っていないか
+
+- **概要**: PostToolUse の自動整形フックがツールの渡す絶対パスを `prettier --write <絶対パス>` で整形する構成だと、`.prettierignore` は相対パターンで書かれているため絶対パス指定にマッチせず無視され、ignore したはずのファイルが整形されてしまう。整形（テーブル桁揃え等）の結果が別の制約（コミット前の行長チェックフック等）に抵触し、コミットが直前でブロックされる。`npm run format`（相対 glob 経由）では ignore が効くため `format:check` は通り、問題が完了処理の最後まで顕在化しない。
+  - **cycle-245 事例**: `.prettierignore` に登録済みの `docs/backlog.md` を Edit ツールで編集したところ、PostToolUse の `prettier --write <絶対パス>` がテーブルを桁揃えパディングして 1 行 200 文字制限（`backlog-line-length-check.sh`）を多数の行で超過させ、完了コミットがブロックされた。`git show <rev>:<path>` で素の内容を取り出して bash で書き戻す（Edit/Write を経由しない）ことで回避した。
+- **発生件数**: N=1（cycle-245）/ N≥3 で AP-WF21 として新設検討。
+- **対症療法案**: `.prettierignore` 対象ファイル（現状 `docs/backlog.md`）は Edit/Write ツールで編集しない。編集が必要なときは `git show HEAD:<path>` 等で素の内容を取り出し bash 経由で変更し、コミット前に行長チェック（`perl -CSD -ne 'length>200'` 相当）で違反ゼロを確認する。あるいは PostToolUse 整形フックを ignore 尊重（相対パス化や `prettier --ignore-path` の明示）に直すことを別タスクとして起票する。
