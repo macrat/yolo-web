@@ -3,7 +3,7 @@ title: "cron式の書き方ガイド: 環境別の違いと限界を徹底解説
 slug: "cron-parser-guide"
 description: "cron式の基本から、Linux・GitHub Actions・AWS EventBridge・Google Cloud Scheduler・Kubernetes CronJobの環境別互換性比較、cron式の限界と回避策、systemd timerとの使い分けまで体系的に解説します。"
 published_at: "2026-02-17T15:26:00+09:00"
-updated_at: "2026-06-14T13:45:35+09:00"
+updated_at: "2026-06-15T17:40:44+09:00"
 tags: ["スケジュール", "オンラインツール", "Web開発"]
 category: "tool-guides"
 series: null
@@ -23,6 +23,8 @@ draft: false
 - cron式でできないことと、その回避策
 - systemd timerとの使い分け
 - よくある間違いとトラブルシューティング
+
+この記事は、環境差や限界、なぜそうなるのかまで踏み込んで理解したい読者に向けたものです。構文だけをすばやく引きたい場合は、[Cron式 早見表](/blog/cron-cheatsheet)にフィールド・特殊文字・実用パターンを一覧でまとめてあります。
 
 ## cronの基礎
 
