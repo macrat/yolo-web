@@ -567,9 +567,11 @@ describe("generateYojiPageMetadata", () => {
     expect(description.length).toBeLessThanOrEqual(130);
   });
 
+  // 将来 meaning に AI 例文や "difficulty=..." のような文字列が混入しても
+  // スニペット（description）に漏れないことを保証する防御的アサーション。
+  // 現状は型レベルで example/difficulty を受け取らないため絶対に混入し得ないが、
+  // データ供給側の事故（meaning に例文を混入させる等）を検出する戒めとして残す。
   test("descriptionにexample（AIユーモア例文）とdifficultyを含まない", () => {
-    // example/difficulty は YojiMetaForSeo に渡さない設計だが、防御的に
-    // 「例」「難易度」といったキーワードがメタに混入していないことを確認する。
     const result = generateYojiPageMetadata(yojiData);
     const description = result.description as string;
     expect(description).not.toMatch(/例[:：]|例えば|たとえば/);
@@ -659,9 +661,9 @@ describe("generateYojiJsonLd", () => {
     expect(result.alternateName).toBe("いちごいちえ");
   });
 
-  test("citation に sourceUrl が設定される", () => {
+  test("sameAs に sourceUrl が設定される", () => {
     const result = generateYojiJsonLd(yojiData) as Record<string, unknown>;
-    expect(result.citation).toBe("https://kotobank.jp/word/test");
+    expect(result.sameAs).toBe("https://kotobank.jp/word/test");
   });
 
   test("inDefinedTermSet が四字熟語辞典を指す", () => {
