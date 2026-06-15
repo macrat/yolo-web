@@ -98,3 +98,10 @@
   - **cycle-245 事例**: `.prettierignore` に登録済みの `docs/backlog.md` を Edit ツールで編集したところ、PostToolUse の `prettier --write <絶対パス>` がテーブルを桁揃えパディングして 1 行 200 文字制限（`backlog-line-length-check.sh`）を多数の行で超過させ、完了コミットがブロックされた。`git show <rev>:<path>` で素の内容を取り出して bash で書き戻す（Edit/Write を経由しない）ことで回避した。
 - **発生件数**: N=1（cycle-245）/ N≥3 で AP-WF21 として新設検討。
 - **対症療法案**: `.prettierignore` 対象ファイル（現状 `docs/backlog.md`）は Edit/Write ツールで編集しない。編集が必要なときは `git show HEAD:<path>` 等で素の内容を取り出し bash 経由で変更し、コミット前に行長チェック（`perl -CSD -ne 'length>200'` 相当）で違反ゼロを確認する。あるいは PostToolUse 整形フックを ignore 尊重（相対パス化や `prettier --ignore-path` の明示）に直すことを別タスクとして起票する。
+
+### AP-WF22 候補: 長文を Write ツールで新規作成した後、ファイル末尾に残骸タグ（`</content>` 等）が混入していないか確認したか
+
+- **概要**: 長文の Markdown を Write ツールで新規作成すると、ファイル末尾に `</content>` のような不要な行が混入することがある。`prettier --check` / `format:check` は整形上妥当な行と見なして通過するため検出できず、そのまま commit まで到達しうる。grep でのみ検出可能で、検出後の除去は可能（回復可能なアンチパターン）。
+  - **cycle-246 事例**: 2 ファイルで末尾に `</content>` が混入。1 つは混入したまま開始コミットに到達し、後から除去コミットを要した。原因（Write の content シリアライズ起因か生成側か）は未確定だが、短いファイルでは未観測で長文時に起きやすい傾向（推定）。
+- **発生件数**: N=2（cycle-246）/ N≥3 で AP-WF22 として新設検討。
+- **対症療法案**: 長文を Write した直後と、ドキュメント変更を commit する前に `grep -nE "</content>|</invoke>|</parameter>" <path>` で残骸タグの有無を点検する。`prettier` / `format:check` の通過を「混入なし」の根拠にしない。既存ファイルへの追記は Write より Edit を優先する。
