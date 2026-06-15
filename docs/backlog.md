@@ -2,12 +2,13 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-511 | cycle-243 の憲法違反(来訪者価値破壊)の是正 | P1 | 244 | cycle-244 着手。PM判断: Option1(当初計画どおり早見表内容を後継ブログ記事へ移行)を採用。旧URL群を実体ある参照内容へ。index loop是正・美化記事why-i-removed撤回・移行計画表現是正も。詳細cycle-244.md |
+| _(なし)_ | | | | |
 
 ## Queued (すぐに着手できる)
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-513 | ガイド→早見表の逆方向相互リンク追加 | P4 | - | 既存ガイド6本から対の早見表への逆リンクが無い(早見表→ガイドは設置済)。回遊性向上で複数reviewer推奨。各ガイド本文1行追加+updated_at更新。詳細cycle-244.md §5 |
 | B-502 | タイルレジストリ／型契約の再設計（全ツールの同一性を構造で強制） | P2 | - | タイル一覧を単一ソース化し詳細＝道具箱の同一実装を型で強制。着手: B-497残ツールのライブタイル化と並行で必要時。詳細 cycle-226.md・knowledge/tile-architecture.md |
 | B-512 | next.config redirects のコメント表記を「301」→「308」に統一 | P4 | - | permanent:true は実際 HTTP 308 を返すが games/quiz/colors/cheatsheets 等のコメントが「301」と誤記。挙動は正。コメント/ドキュメント文言のみ是正。詳細 cycle-243.md M-1 |
 | B-491 | アンチパターン集のルール違反項目を手順書／knowledge へ整理 | P2 | - | AP集のルール違反項目を手順書／knowledge へ整理。詳細 docs/cycles/cycle-220.md |
@@ -123,10 +124,9 @@
 
 | ID | Title | Completed Cycle | Notes |
 | --- | --- | --- | --- |
-| B-349 | 移行計画 Phase 9.2.h: cheatsheets infrastructure 撤去 + 旧 URL リダイレクト | 243 | cheatsheet完全撤去・旧URL8本を301・検索/SEO/sitemap/Footer/テスト除去。是正: 撤去過程を新記事 why-i-removed-the-cheatsheets に分離。cycle-243 |
+| B-511 | cycle-243 の憲法違反(来訪者価値破壊)の是正 | 244 | 早見表6記事を/blogに復元・旧/cheatsheets/Xを早見表へ向け直し・indexは/blog/tag/早見表へ。why-i-removed削除・記録誠実化・誤分類2本是正。cycle-244 |
 | B-345 | 移行計画 Phase 9.2.d: cheatsheet `http-status-codes` を既存ガイドへ統合（補筆） | 242 | http-status-code-guide-for-rest-api.md末に33コード早見表(1xx〜5xx)新設・自己参照リンク是正・RFC/MDN裏取り。撤去はB-349。cycle-242 |
 | B-342 | 移行計画 Phase 9.2.a: cheatsheet `cron` を既存ガイドへ統合（補筆） | 242 | cron-parser-guide.mdに特殊文字列ショートカット表(@yearly〜@reboot)と「よく使うcron式」拡充を追加。man裏取り。撤去はB-349。cycle-242.md |
 | B-347 | 移行計画 Phase 9.2.f: cheatsheet `regex` を既存ガイドへ統合（補筆） | 242 | 網羅性検証で軽微〜中の欠落。regex-tester-guide.md にメタ文字早見表(10種)・文字クラス否定形・先読み後読み全4種の表を追加。MDN裏取り・敬体統一。撤去はB-349。詳細 cycle-242.md |
 | B-344 | 移行計画 Phase 9.2.c: cheatsheet `html-tags` をブログ記事に転換 | 241 | html-tags(1285行)を記事 choosing-html-tags-by-meaning(tool-guides)へ再構成し公開。MDN裏取り。AP-W13新設。撤去はB-349。cycle-241 |
 | B-346 | 移行計画 Phase 9.2.e: cheatsheet `markdown` をブログ記事に転換 | 240 | Markdownチートシート(656行)を記事 markdown-not-rendering-as-expected へ転換し公開。CommonMark/GFM裏取り。撤去はB-349。cycle-240 |
-| B-341 | 辞典データのインタラクティブツール化検討 | 239 | 四字熟語クエリ700超imp/CTRほぼ0%を受けyoji-data.json(400語)で検索ツール /tools/yoji-search を実装(テキスト/カテゴリ/難易度/出典で絞込)。cycle-239 |
