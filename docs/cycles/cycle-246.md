@@ -12,10 +12,13 @@ completed_at: null
 ## 実施する作業
 
 - [ ] 競合スニペットの**再確認**（前回レビュー時に予備確認済み: 競合は読み方・出典・漢字分解・用例を密に提示、当サイトは意味 1 文で見劣り）。本サイクルでは取りこぼしクエリ 2〜3 件（「至誠通天 意味」「冷汗三斗 意味」等）で実検索 → スクショ保存し、予備確認の結論が変わらないことの確認のみ行う（範囲を絞る／M-2）
-- [ ] **保有データの未表示解消**: `origin`（成立地: 中国/日本/不明）、`structure`（構成: 対句/組合せ/因果）、**`sourceUrl`（出典 URL: 400/400 件埋まっており、87% がコトバンク・他に jitenon / weblio 等）** を YojiDetail のページ本文に表示する（いずれも未表示）。`sourceUrl` 表示は外部リンク 1 行（`rel="noopener noreferrer"` + 外部リンクであることが視覚的に分かる形）で、コストは小さく無名ドメインの信頼性を補う効果が大きいと判断（M-1）。`不明`（origin 11 件）は「成立地: 不明」と正直に表示し、隠さない（憲法 2: 来訪者を sad にしない／誠実）。`structure` の値は `"対句"/"組合せ"/"因果"` のみで `不明` は存在しない（型上保証・エッジ範囲を origin だけに絞る／N-3）。
+- [ ] **保有データの未表示解消**: `origin`（成立地: 中国/日本/不明）、`structure`（構成: 対句/組合せ/因果。実分布: 組合せ 238/対句 152/**因果 10** で因果は希少）、**`sourceUrl`（400/400 件: コトバンク 349/jitenon 19/idiom-encyclopedia 14/weblio 11 ほか）** を YojiDetail のページ本文に表示する（いずれも未表示）。`origin: 不明`（11 件）は隠さず「成立地: 不明（出典資料でも特定されていない）」のように補足表示し、不在を価値ある情報として伝える（憲法 2／N-3）。`structure` は型上 3 値で `不明` 不在（エッジは origin のみ）。データ実分布の固定 fact sheet を `tmp/cycle-246/yoji-data-fact-sheet.txt` に保存済み（AP-WF19）。
+- [ ] **sourceUrl 外部リンクの仕様（既存パターン準拠／M-1）**: `src/components/Footer/index.tsx` の external link 実装（`target="_blank"` + `rel="noopener noreferrer"` + `externalIcon` 視覚アイコン）を準拠先とし、サイト内 UX 一貫性を保つ。表示文言はホスト名→表示名の辞書で「出典: コトバンク」「出典: 故事・ことわざ辞典」「出典: weblio」等に正規化（ホスト判定不能時は URL のホスト名そのまま）。SR 向け補助は `externalIcon` 既存実装のラベリングに揃える。
+- [ ] **`YojiMetaForSeo` 型の拡張と呼び出し側・テストの一括更新（B-1）**: 現行 `YojiMetaForSeo`（seo.ts 251-256 行）は `yoji/reading/meaning/category` のみ。`structure`/`origin`/`sourceUrl` を追加。`(legacy)/dictionary/yoji/[yoji]/page.tsx` の `generateYojiPageMetadata(yoji)` / `generateYojiJsonLd(yoji)` は `YojiEntry` を直接渡しており、型拡張で必要フィールドが渡る（YojiEntry はこれらを既に持つ）。`src/lib/__tests__/seo.test.ts:524-679` の `yojiData` モックと既存アサーション、`src/dictionary/_components/__tests__/YojiDetail.test.tsx` の新表示要素（origin/structure/sourceUrl）アサーションを同一サイクルで更新する。
 - [ ] `generateYojiPageMetadata` の title / description を、取りこぼし検索意図（「○○ 意味」「○○ 読み方」「○○ とは」「○○ 単体」）を満たす要件で改善。**ページ実体に存在する情報のみ**で構成し、実用例文の存在は示唆しない（`example` は「AIによる使用例」のユーモア創作のため／B1）。`difficulty` は学習動機系で「意味/読み方」検索者の動機にはなりにくいため description 対象外（N-2）。具体文案は実装に委ね、計画では満たすべき要件のみ規定（N1）
-- [ ] **description の構成要素優先順位を明示**（M-3）: 日本語スニペットは全角約 50 字前後で切れる。**必須＝読み方＋意味**（`「○○」(よみがな) 意味…` で 16 字＋最大 55 字、これだけで枠を超過しうる）。**残余に余裕があれば任意で構成（structure: 対句/組合せ/因果）か出典（origin: 中国/日本）を 1 つ**。構成漢字・sourceUrl はページ本文で詳しく示すので description には入れない。`meaning` が長い場合は **意味を切らずに残余を省く**（重要情報を保護）
-- [ ] `generateYojiJsonLd` の構造化データを保有データで正直に強化。候補プロパティ（N-4）: `alternateName` = reading（読み方）、`sameAs` = sourceUrl（出典 URL の明示）、必要に応じて `description` を meta と差別化（現在は内容重複）。schema.org/DefinedTerm 仕様に照らし採用可否を判断
+- [ ] **description の構成要素優先順位と文字数閾値を明示**（M-3 旧／M-2 新）: モバイル SERP は全角約 50 字前後で切れる前提のもと、**読み方を前置**して「読み方が見えて意味の末尾が切れる」を是とする（読み方検索クエリの取りこぼしを止めるため／実測「至誠通天 読み方 平均 4.2 位 CTR 0%」を直接救う）。**meta description 全体の目標 110 字 / 上限 130 字**（Google の英語基準だが日本語でも有効長の目安）。**必須＝読み方＋意味（`「○○」(よみがな) 意味…`、16 字＋最大 55 字）**、残余に余裕があれば任意で structure（`構成: 対句/組合せ`。因果 10 件は希少で必要時のみ）か origin（`中国伝来/日本由来`、`不明` は不採用）を 1 つだけ。構成漢字・sourceUrl は本文表示に任せ description に入れない。`meaning` が長い場合は意味を切らず残余を省く。**OG / Twitter description は meta と同一文字列で構成**（実装シンプル化・SNS シェアでも検索意図と同じ訴求を保つ）。
+- [ ] **canonical / 日本語 URL 正規化の一次確認**（M-3 新）: 「canonical は個別 URL 自己参照で重複問題なし」を断言するために、本サイクル内で SC URL Inspection を 2〜3 件（至誠通天/冷汗三斗）で実施しスクショを `tmp/cycle-246/canonical-inspection/` に保存。`encodeURIComponent` 版と生日本語表記が同一 URL として正規化されていることを確認する（AP-WF12 回避）。
+- [ ] **`generateYojiJsonLd` の強化**（M-4 で PM 判断確定）: 採用プロパティを以下に確定。(a) `alternateName` = reading（読み方の代替表記として spec 合致）。(b) **出典 URL は `citation` を採用**（schema.org/DefinedTerm 仕様: `citation` は「a citation or reference to another creative work, such as another publication, web page, etc.」で、外部辞書ページを「定義の参照元」として記述するのに最も意味的に合致。`sameAs` は同一物の別表現を含意し semantic mismatch のため不採用、`isBasedOn` は派生関係を含意し当データが kotobank に基づくわけではないため不採用）。(c) `description` は meta description と現状ほぼ重複なので、JSON-LD では meaning のみ / meta では読み方前置と差別化を検討（実装で判断）。
 - [ ] 改善後のメタ・表示が全カテゴリ/難易度/出典（`不明` 含む）のデータで破綻しないことを確認（reading 欠落等のエッジケース、文字数、データ駆動の崩れ）
 - [ ] ビルド・テスト・lint・format:check の通過確認
 - [ ] 改善前後のレンダリング結果（実際の `<title>`/`<meta>` とページ表示）を確認し、競合スニペットと並べて「期待整合した上で選ばれる」かを検証（take-screenshot）
@@ -34,10 +37,12 @@ completed_at: null
 ### 作業内容
 
 1. **競合スニペットの再確認**: 予備確認で結論済み（競合は読み方・出典・漢字分解・用例を密に提示、当サイトは意味 1 文で見劣り）。本サイクルは取りこぼしクエリ 2〜3 件での再確認のみ（M-2）。結論が覆れば §補足事項 のリスクとして対処方針を更新する。
-2. **保有データの未表示解消（ページ実体の充実）**: `origin`（成立地: 中国/日本/不明）、`structure`（構成: 対句/組合せ/因果）、`sourceUrl`（出典 URL: 400/400 件埋まっており 87% がコトバンク）を `YojiDetail` に表示する（いずれも未表示／M-1）。`origin: 不明`（11 件）は隠さず正直に表示。`structure` は型上 3 値のみで `不明` 不在（N-3）。`sourceUrl` は外部リンクとして表示し、無名ドメインの権威性を一次情報への導線で補う。
-3. **title / description の改善（要件レベル）**: 検索意図（意味/読み方/とは/単体）を満たし、読み方を前置。description の優先順位は **必須 = 読み方＋意味、残余 = 任意で structure か origin を 1 つ**（M-3）。構成漢字・sourceUrl は本文表示に任せ description には入れない。`example` は description に取り込まない（B1）。`difficulty` も description 対象外（N-2）。日本語スニペット約 50 字制約のもと、`meaning` を切らずに残余を省く方針で語順設計。文案は builder（N1）。
-4. **`generateYojiJsonLd` の強化**: DefinedTerm に保有データで正直に埋められる範囲のプロパティを追加。具体候補（N-4）: `alternateName` = reading（読み方）、`sameAs` = sourceUrl、`description` を meta と差別化（現在ほぼ重複）。schema.org/DefinedTerm 仕様に照らし採用可否を判断。
-5. **検証**: 全カテゴリ/難易度/出典（`不明` 含む）のデータでメタ・表示が破綻しないか確認。実レンダリングの title/meta とページ表示を確認し、競合スニペットと並べて「期待整合した上で選ばれるか」を評価（take-screenshot）。
+2. **保有データの未表示解消（ページ実体の充実）**: `origin`（成立地）、`structure`（構成、分布: 組合せ 238/対句 152/因果 10）、`sourceUrl`（出典 URL、400/400 件: コトバンク 349 ほか jitenon/idiom-encyclopedia/weblio 等）を `YojiDetail` に表示。外部リンクは `src/components/Footer/index.tsx` の external link パターン（`target="_blank"` + `rel="noopener noreferrer"` + `externalIcon`）に準拠し UX 一貫性を保つ。表示文言は「出典: コトバンク」等のホスト名→表示名辞書で正規化。`origin: 不明`（11 件）は誠実に表示、`structure: 不明` は型上不在。
+3. **`YojiMetaForSeo` 型と呼び出し側・テストの同サイクル更新（B-1）**: 型に `structure`/`origin`/`sourceUrl` 追加、page.tsx は既に `YojiEntry` を渡しているため呼び出しは無変更で済む。`src/lib/__tests__/seo.test.ts:524-679` の `yojiData` モックと既存 / 新規アサーション、`YojiDetail.test.tsx` の新表示要素テストを同一サイクルで更新する。
+4. **title / description の改善（要件レベル）**: 検索意図（意味/読み方/とは/単体）を満たし読み方を前置（読み方クエリ救済が最優先）。必須 = 読み方＋意味、残余余裕時に任意で structure か origin を 1 つ。文字数目標 110 字 / 上限 130 字、モバイル切り順位は読み方優先＋意味の末尾切れを是とする（M-2）。OG/Twitter は meta と同一文字列。`example`/`difficulty`/`sourceUrl`/構成漢字 は description に入れない。文案は builder（N1）。
+5. **`generateYojiJsonLd` の強化**: `alternateName` = reading、**出典 URL は `citation`**（`sameAs` / `isBasedOn` は不採用、判断理由は M-4 で確定）、`description` は meta と差別化検討。
+6. **canonical / 日本語 URL 正規化の一次確認**（M-3）: SC URL Inspection スクショ 2〜3 件で確認・記録（AP-WF12 回避）。
+7. **検証**: 全カテゴリ/難易度/出典（`不明` 含む）のデータでメタ・表示が破綻しないか確認。実レンダリングの title/meta とページ表示を確認し、競合スニペットと並べて「期待整合した上で選ばれるか」を評価（take-screenshot）。
 
 ### 検討した他の選択肢と判断理由
 
@@ -61,6 +66,7 @@ completed_at: null
 ## 補足事項
 
 - メタ改善の SEO 効果は遅効性（再クロール待ち）であり、来週の SC データでは確認できない。効果検証は数週間後（次の四字熟語 SC 実測サイクルで確認）。本サイクルでは「変更の質（検索意図への正直な適合・ページ実体の充実・競合との差別化）」を確認することで妥当性を担保する。
+- **事後観測項目（N-4）**: sourceUrl 外部リンク追加で一定数の外部離脱が発生しうる。来訪者本来の目的（出典で意味を確認）に応える正当な離脱であり問題ではないが、診断系（/play/yoji-level）の内部回遊と競合する可能性は残る。次サイクルの SC/GA 実測時に「外部離脱率」「診断系クリック数の前後比較」を観測し、B-323 残スコープ（強コンテンツを伸ばす方向の sitemap/KW 再設計）の判断材料に加える。
 - **AP-I04 回避（最重要）**: CTR は手段であって目的ではない。スニペットはページ実体（読み方・意味・構成漢字・出典/構成）に存在する情報のみで構成し、実用例文（`example` はユーモア創作）など実体と乖離する訴求でクリックを釣らない。期待外れの直帰は憲法 2（visitor を sad にしない）違反。
 - **sitemap 整合（M2）**: `src/app/sitemap.ts` は四字熟語個別ページを「独自性が低い」として除外しているが、これは「発見性（クロール誘導）」の方針であり、本サイクルが扱う「既にインデックスされ 1 ページ目に出ているページの CTR」とは別レイヤー。個別ページは既に 4,798 impr を獲得済みで除外は CTR のボトルネックではないため、本サイクルでは sitemap 方針を変更しない。将来 origin/structure 表示で独自性が高まった段階で sitemap 収録の再検討余地あり（backlog 候補）。canonical は個別 URL 自己参照で重複問題なし（確認済み）。
 - 診断系（/play/yoji-level）は唯一クリックが立っている成功パターン（CTR 2.0〜3.5%）。辞書ページの高 impression を診断クリックへ転換する内部導線強化は、効果が見込めるが本サイクルのスコープ外とし、二次施策として backlog（B-323 残スコープ）に残す。
