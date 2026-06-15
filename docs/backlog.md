@@ -88,7 +88,7 @@
 | B-496 | 収束チェックリスト A-7（共通 Input 利用）の対応型拡張＋数値入力ツールの統一 | P3 | - | A-7をnumber/email/password等全種に拡張し対象を共通Inputに統一(dummy-textのraw input等が不統一)。詳細 cycle-225.md |
 | B-498 | PM の指示文プロセス改善（DESIGN.md 恒久要件のサイクル翻訳機構） | P2 | - | DESIGN.md恒久要件が指示書から滑り落ちる失敗の予防。AP-P22明文化済。残: cycle-planning SKILLに逐条翻訳step追加等。詳細 cycle-225.md |
 | B-503 | cron-parser のプリセット拡充（5→8個） | P4 | - | 現行5個に毎週月曜/6時間ごと/年1回の3個を追加し8個に。着手時 meta.ts の FAQ/howItWorks との整合確認要。cycle-228 タイル化で feature-preserving 原則により見送り |
-| B-505 | Dependabot 脆弱性アラート #48（moderate）の調査と対応 | P3 | - | dependabot/48(moderate)を確認し更新 or 影響なし判定。ローカルgh が Bad credentials のため認証更新後に確認可。cycle-229 push 時報告 |
+| B-505 | Dependabot 脆弱性アラートの調査と対応 | P3 | - | gh は正常動作(2026-06-15確認)、旧「Bad credentials」記録は誤り。開3件: #60 esbuild high・#59 esbuild low(→0.28.1)・#48 postcss medium(→8.5.10)。全て推移依存でビルド時のみ・露出低。次サイクル着手可 |
 | B-506 | 道具箱タイル「外す」操作後のフォーカス管理（キーボード利用者の位置喪失対策） | P4 | - | タイルを外すとフォーカスが body に落ちる。着手時 隣接タイル操作ボタン or 追加パネルへ移動を検討。cycle-230 T-7 nit-3。詳細 docs/cycles/cycle-230.md |
 | B-364 | cycle-175〜178 連続事故と回復のブログ化再判断 | P3 | - | cycle-178 で取下げ。B-497完了で材料が揃い Queued 化。着手時 PM が読者価値で独立判断。詳細 docs/cycles/cycle-178.md |
 | B-507 | DESIGN.md §3 への補足ラベル（小さめフォント）の許容条件の明文化 | P4 | - | 0.8rem級の補足ラベルと§3「16px以上を基本」の整合の許容条件（補足メタ限定等）を DESIGN.md に明文化。詳細 docs/cycles/cycle-231.md |
