@@ -13,7 +13,9 @@ completed_at: null
 
 当初のデザイン移行計画（design-migration-plan.md Phase 9.2）の方針は「チートシートの**内容をブログへ移行**し、移行が終わったらチートシートページを削除する」だった。しかし前サイクルのPMはこの計画を実質的に無視し、**早見表の内容をブログへ移していないにもかかわらずチートシートページ（7本）を削除**し、旧URLを内容の異なる解説記事へリダイレクトしたまま放置した。
 
-ここが要点であり、わたしが最初に誤解していた点でもある。後継の解説記事（regex-tester-guide・choosing-html-tags-by-meaning 等）は、チートシートの早見表内容そのものではなく、**別の切り口で書かれた差別化記事**である。cycle-237〜242 で各記事に部分的な表は追記されたが（例: regex の現行は表26行に対し削除前チートシート原本は683行・網羅）、早見表という**コンテンツの実体は移行されていない**。つまり「正規表現の早見表」を求めて `/cheatsheets/regex` に来た来訪者は、求めた網羅的な早見表を得られない。これは憲法ルール2（来訪者を悲しませない）違反であり、本番に残存している。
+ここが要点であり、わたしが最初に誤解していた点でもある。後継の解説記事（regex-tester-guide・choosing-html-tags-by-meaning 等）は、チートシートの早見表内容そのものではなく、**別の切り口で書かれた差別化記事**である。cycle-237〜242 の移行は不完全かつ不均一だった。原本と後継を項目レベルで突き合わせて検証した結果、http-status（全32コード）と cron は早見表が実質移行済みだった一方、git（初期設定・基本操作・ブランチ・リモート・タグ・高度操作が丸ごと欠落）と html-tags（約80タグ中15前後しか残らず、フォーム/テーブル/メディア/メタ系の約50タグが皆無）には大きな欠落があり、sql・markdown は中程度、regex はわずかな欠落だった。つまり多くのトピックで「早見表を求めて来た来訪者が、求めた網羅的な早見表を得られない」状態が残っている。これは憲法ルール2（来訪者を悲しませない）違反であり、本番に残存している。
+
+当初わたしは「後継の表26行に対し原本683行」という行数比でギャップを把握しようとしたが、これは原本（JSX のコード行）と後継（Markdown の表行）の単位が異なる無効な比較だった。各原本と後継を実読して項目レベルで突き合わせ、上記の実体ギャップを確定した。表面の行数や「表が残っている」だけで判断しないことが、前サイクルの轍を踏まないための要点である。
 
 さらに、ツールガイドではない記事が `tool-guides` カテゴリに誤分類されていることを、カテゴリ監査で確認した（非draft の tool-guides 11本中、sns-optimization-guide・adsense-content-quality-audit-methodology は運用・方法論系で「ツール／技術の使い方ガイド」の定義に合わない）。これも前サイクル期の整理不足の一部であり、本サイクルで監査・是正する。
 
@@ -27,7 +29,7 @@ completed_at: null
 
 ### Option 1 を採る根拠（データと内容検証）
 
-- **早見表内容は実際に失われている（内容検証）。** 後継記事の表は原本チートシートの部分集合にすぎない（regex: 現行26行 / 原本683行、git: 現行12行 / 原本506行、html-tags: 現行0行 / 原本1285行 など）。「表が残っている＝移行済み」は誤りだった。
+- **早見表内容は多くのトピックで未完成のまま残っている（内容検証）。** 原本と後継を項目レベルで突き合わせた結果、移行は不均一で、git・html-tags は早見表の主要部が欠落、sql・markdown は中程度、regex は軽微な欠落、cron・http-status は実質移行済みだった。「表が残っている＝移行済み」と表面で判断するのは誤りで、トピックごとに網羅性を実読確認する必要があった。
 - **撤退ではなく移行が正しい（移行計画との整合）。** 当初計画は最初から「ブログへ移行」。Option 1 はその忠実な完遂であり、コンテンツの住処（ブログ）に早見表を置く。
 - **検索流入は是正の判断材料にならない（実測）。** 「チートシート/早見表」を含む検索クエリは取得可能な全期間で計7 impressions・0 clicks、後継7記事も合計22 imp・0 click。フォーマット（早見表 vs 解説）は流入のボトルネックではなく、ドメイン評価・露出が要因。よって「SEOで勝てないから早見表を提供しない」という理屈は成り立たない。一方、憲法は PV より来訪者価値を優先する（CLAUDE.md 意思決定原則）。リダイレクトやブックマークで実際に辿り着いた来訪者には、求めた早見表を渡すべきである。
 
@@ -35,22 +37,26 @@ completed_at: null
 
 ### 計画フェーズ
 
-- [ ] T-1: 戦略判断（Option 1）の確定と根拠記録（本ドキュメント）。
-- [ ] T-2: planner + reviewer によるコンテンツ設計の確定。7トピック各々について、削除前チートシート原文（`git show dec41f39^:src/cheatsheets/<topic>/Component.tsx`）と現行後継記事を差分し、移行すべき早見表内容を特定する。各記事への「クイックリファレンス」統合方針（1トピック1記事＝カニバリ回避／choosing-html-tags の「一覧表ではない」という記事の主張との両立／cron・html-tags 等の巨大参照のスキャン性確保）を決める。
+- [x] T-1: 戦略判断（Option 1）の確定と根拠記録（本ドキュメント）。
+- [x] T-2: planner + reviewer によるコンテンツ設計の確定。設計は `tmp/cycle-244/integration-plan.md`。7トピックの原本（`dec41f39^`）と後継記事を実読差分し、トピックごとの移行内容・統合方法を確定。reviewer 2回（うち1回は新規レビュアーによる白紙再レビュー）で重大ゼロ・実行可。要点: http-status は移行済みで作業不要、git・html-tags が最大、html-tags は本文33行目の宣言改稿が必須・早見表は「網羅性」でなく「用途別整理」として収録、markdown は冒頭の約束の回収として追加。
 
-### コンテンツ移行（1記事につき blog-writer 1人・一次資料で裏取り）
+### コンテンツ移行（1記事につき blog-writer 1人・一次資料で裏取り。差分規模は T-2 の検証で確定済み）
 
-- [ ] T-3: regex → regex-tester-guide に早見表内容を統合（MDN 裏取り）。
-- [ ] T-4: cron → cron-parser-guide に早見表内容を統合（man/crontab 裏取り）。
-- [ ] T-5: http-status-codes → http-status-code-guide-for-rest-api に早見表内容を統合（RFC/MDN 裏取り）。
-- [ ] T-6: git → git-command-reference に早見表内容を統合（Pro Git 裏取り）。
-- [ ] T-7: sql → sql-execution-order-guide に早見表内容を統合（一次資料裏取り）。
-- [ ] T-8: markdown → markdown-not-rendering-as-expected に早見表内容を統合（CommonMark/GFM 裏取り）。
-- [ ] T-9: html-tags → choosing-html-tags-by-meaning に早見表内容を統合（MDN/WHATWG 裏取り・記事の主張と両立する形で）。
+- [ ] T-3: html-tags → choosing-html-tags-by-meaning に用途別タグ一覧を統合（最大・約50タグ欠落／記事の「一覧表ではない」主張と両立するフレーミング必須／MDN・WHATWG 裏取り）。
+- [ ] T-4: git → git-command-reference に巻末コマンド早見表を新設統合（大・初期設定/基本/ブランチ/リモート/タグ/高度が欠落／Pro Git 裏取り）。
+- [ ] T-5: sql → sql-execution-order-guide に巻末構文クイックリファレンスを統合（中・演算子/集計関数/集合演算/DML・DDL/データ型／MySQL・PostgreSQL 裏取り）。
+- [ ] T-6: markdown → markdown-not-rendering-as-expected に基本記法クイックリファレンスを統合（中・見出し/強調/リンク/引用等／主張と両立するフレーミング／CommonMark・GFM 裏取り）。
+- [ ] T-7: regex → regex-tester-guide に小欠落を追補（小・グループ表/貪欲怠惰対比/`\B`/フラグ u,y／MDN 裏取り）。
+- [ ] T-8: cron → cron-parser-guide に軽微追補（小・値域表/`? L W #` 定義表／crontab(5)・AWS 裏取り）。
+- [ ] T-9: http-status-codes → 早見表は既に完全統合済み。コンテンツ移行作業は不要（T-2 検証で確認）。
 
-### 分類の是正（Owner 補足）
+### frontmatter のデータ破損是正（T-2 で発見）
 
-- [ ] T-10: `tool-guides` カテゴリ11記事を監査し、「ツール／技術の使い方ガイド・学習記事」でない記事（カテゴリ監査で確認済みの sns-optimization-guide・adsense-content-quality-audit-methodology 等）を正しいカテゴリへ是正する。広範なタクソノミ再設計（B-391）には踏み込まず、誤分類の是正に限定する。
+- [ ] T-10b: http-status-code-guide-for-rest-api / sns-optimization-guide / adsense-content-quality-audit-methodology の frontmatter に混入したキー名なしの裸配列（B-508 同種・YAML 破損）を除去する。早見表移行・カテゴリ変更のコミットには混ぜない。B-508 の残対象とも整合させる。
+
+### 分類の是正
+
+- [ ] T-10: `tool-guides` カテゴリの誤分類を是正する。監査の結果、再分類対象は2本: sns-optimization-guide → dev-notes（シェアボタン/OGP のサイト運営・実装メモ）、adsense-content-quality-audit-methodology → ai-workflow（運営の品質監査ワークフロー）。残り9本（早見表後継7＋json-formatter＋character-counting）は tool-guides 維持が妥当。広範なタクソノミ再設計（B-391）には踏み込まず、誤分類の是正に限定する。再分類による内部リンク・カテゴリページ・sitemap への影響を確認する。
 
 ### インフラ・ドキュメント
 
