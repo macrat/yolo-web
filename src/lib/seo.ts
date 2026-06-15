@@ -258,22 +258,98 @@ interface YojiMetaForSeo {
   sourceUrl: string;
 }
 
+/** description に任意追記する残余要素の上限。
+ * 目標110字 / 上限130字（cycle-246 計画）に対し、必須部の最大想定
+ * （「○○○○」(よみがな最大15)の意味は、{meaning(55)}。= 約 84字）を踏まえ、
+ * 任意追記は安全マージンを取り 25字以下に制限する。 */
+const YOJI_DESCRIPTION_OPTIONAL_MAX = 25;
+
+/** description の絶対上限。これを超える場合は任意要素を採用しない。 */
+const YOJI_DESCRIPTION_HARD_LIMIT = 130;
+
+/** YojiDetail と整合する成立地ラベル。`不明` は description で言及しない。 */
+const YOJI_ORIGIN_DESCRIPTION_LABEL: Record<
+  YojiMetaForSeo["origin"],
+  string | null
+> = {
+  中国: "中国伝来の四字熟語。",
+  日本: "日本由来の四字熟語。",
+  不明: null,
+};
+
+/** YojiDetail と整合する構成ラベル。 */
+const YOJI_STRUCTURE_DESCRIPTION_LABEL: Record<
+  YojiMetaForSeo["structure"],
+  string
+> = {
+  対句: "対句構造の四字熟語。",
+  組合せ: "組合せ構造の四字熟語。",
+  因果: "因果関係を表す四字熟語。",
+};
+
+/**
+ * description の残余要素を決定する。
+ *
+ * 優先順位:
+ * 1. origin が判明している場合（中国/日本）→ origin を採用
+ * 2. それ以外 → structure を採用
+ *
+ * 採用しても上限 {@link YOJI_DESCRIPTION_HARD_LIMIT} を超える場合は採用しない。
+ * `不明` の origin は誠実性のため description には載せない（本文表示に任せる）。
+ */
+function buildYojiDescriptionSuffix(
+  baseLength: number,
+  structure: YojiMetaForSeo["structure"],
+  origin: YojiMetaForSeo["origin"],
+): string {
+  const candidate =
+    YOJI_ORIGIN_DESCRIPTION_LABEL[origin] ??
+    YOJI_STRUCTURE_DESCRIPTION_LABEL[structure];
+  if (candidate.length > YOJI_DESCRIPTION_OPTIONAL_MAX) return "";
+  if (baseLength + candidate.length > YOJI_DESCRIPTION_HARD_LIMIT) return "";
+  return candidate;
+}
+
+/**
+ * 四字熟語ページの meta description を組み立てる。
+ *
+ * 設計（cycle-246 計画 由来）:
+ * - 読み方クエリ救済を最優先 → `「○○○○」(よみがな)` を前置
+ * - meaning は必須
+ * - 残余に余裕があれば structure か origin を 1 つだけ追加（両方は入れない）
+ * - example / difficulty は意図的に含めない（AIユーモア例文は誇張になりうる・難易度は意味検索者に無関係）
+ */
+function buildYojiDescription(yoji: YojiMetaForSeo): string {
+  const base = `「${yoji.yoji}」(${yoji.reading})の意味は、${yoji.meaning}。`;
+  const suffix = buildYojiDescriptionSuffix(
+    base.length,
+    yoji.structure,
+    yoji.origin,
+  );
+  return suffix ? `${base}${suffix}` : base;
+}
+
 export function generateYojiPageMetadata(yoji: YojiMetaForSeo): Metadata {
+  // 読み方クエリ救済のため title にも (よみがな) を前置（cycle-246 計画）。
+  const title = `「${yoji.yoji}」(${yoji.reading})の意味・読み方 - 四字熟語辞典 | ${SITE_NAME}`;
+  const ogTitle = `「${yoji.yoji}」(${yoji.reading})の意味・読み方 - 四字熟語辞典`;
+  // OG/Twitter description は meta description と同一文字列とする（cycle-246 計画で確定）。
+  const description = buildYojiDescription(yoji);
   return {
-    title: `「${yoji.yoji}」の意味・読み方 - 四字熟語辞典 | ${SITE_NAME}`,
-    description: `四字熟語「${yoji.yoji}」（${yoji.reading}）の意味: ${yoji.meaning}`,
+    title,
+    description,
     keywords: [yoji.yoji, yoji.reading, "四字熟語", "意味", "読み方"],
     openGraph: {
-      title: `「${yoji.yoji}」の意味・読み方 - 四字熟語辞典`,
-      description: `四字熟語「${yoji.yoji}」（${yoji.reading}）: ${yoji.meaning}`,
+      title: ogTitle,
+      description,
       type: "website",
       url: `${BASE_URL}/dictionary/yoji/${encodeURIComponent(yoji.yoji)}`,
       siteName: SITE_NAME,
     },
     twitter: {
       card: "summary_large_image",
-      title: `「${yoji.yoji}」の意味・読み方 - 四字熟語辞典`,
-      description: `四字熟語「${yoji.yoji}」（${yoji.reading}）: ${yoji.meaning}`,
+      title: ogTitle,
+      description,
     },
     alternates: {
       canonical: `${BASE_URL}/dictionary/yoji/${encodeURIComponent(yoji.yoji)}`,
@@ -286,13 +362,18 @@ export function generateYojiJsonLd(yoji: YojiMetaForSeo): object {
     "@context": "https://schema.org",
     "@type": "DefinedTerm",
     name: yoji.yoji,
-    description: `${yoji.reading}: ${yoji.meaning}`,
+    // alternateName: 読み方を代替表記として明示（schema.org/DefinedTerm 仕様適合）。
+    alternateName: yoji.reading,
+    // JSON-LD 側は構造化情報として meaning のみ簡潔に格納（meta との差別化）。
+    description: yoji.meaning,
     url: `${BASE_URL}/dictionary/yoji/${encodeURIComponent(yoji.yoji)}`,
     inDefinedTermSet: {
       "@type": "DefinedTermSet",
       name: "四字熟語辞典",
       url: `${BASE_URL}/dictionary/yoji`,
     },
+    // citation: 出典 URL を「定義の参照元」として記述する（sameAs/isBasedOn は semantic mismatch のため不採用）。
+    citation: yoji.sourceUrl,
     inLanguage: "ja",
   };
 }
