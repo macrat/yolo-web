@@ -5,3 +5,8 @@ node_modules
 pnpm-lock.yaml
 package-lock.json
 memo
+
+# backlog.md は prettier のテーブル整列パディングで行が極端に長くなり、
+# 「1行200文字以内」(.claude/hooks/backlog-line-length-check.sh) と両立しないため
+# 整列対象外にする。各行はコンパクトな「要約＋参照先」で手書き管理する。
+docs/backlog.md

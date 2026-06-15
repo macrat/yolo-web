@@ -4,7 +4,7 @@ slug: "http-status-code-guide-for-rest-api"
 description: "401と403の違い、400と422の使い分け、301と302の選び方など、REST API開発で頻出するHTTPステータスコードの判断基準をコード例付きで解説します。"
 published_at: "2026-03-01T22:01:34+09:00"
 updated_at: "2026-06-14T13:45:35+09:00"
-tags: ["チートシート", "Web開発", "設計パターン"]
+tags: ["Web開発", "設計パターン", "セキュリティ"]
 category: "tool-guides"
 series: null
 trust_level: "generated"

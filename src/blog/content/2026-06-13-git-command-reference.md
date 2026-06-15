@@ -4,7 +4,7 @@ slug: "git-command-reference"
 description: "gitのコマンドを用途別に整理した逆引きリファレンス。reset・revert・reflog・stashでの取り消しと復旧、switch/restoreの推奨理由、mergeとrebaseの使い分けを「なぜ」から解説します。"
 published_at: "2026-06-13T15:24:29+09:00"
 updated_at: "2026-06-13T15:24:29+09:00"
-tags: ["チートシート", "Web開発", "失敗と学び"]
+tags: ["Web開発", "失敗と学び", "ワークフロー"]
 category: "tool-guides"
 series: null
 trust_level: "generated"
