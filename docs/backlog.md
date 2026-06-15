@@ -2,7 +2,7 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| _(なし)_ | | | | |
+| B-515 | 四字熟語辞書ページの CTR 改善（タイトル/説明/構造化データの検索意図最適化） | P2 | 246 | 四字熟語が検索露出の約40.8%を占めるがCTR0.42%・1ページ目でクリック0=スニペット問題。generateYojiPageMetadata改善。詳細 cycle-246.md |
 
 ## Queued (すぐに着手できる)
 
@@ -12,14 +12,14 @@
 | B-502 | タイルレジストリ／型契約の再設計（全ツールの同一性を構造で強制） | P2 | - | タイル一覧を単一ソース化し詳細＝道具箱の同一実装を型で強制。着手: B-497残ツールのライブタイル化と並行で必要時。詳細 cycle-226.md・knowledge/tile-architecture.md |
 | B-512 | next.config redirects のコメント表記を「301」→「308」に統一 | P4 | - | permanent:true は実際 HTTP 308 を返すが games/quiz/colors/cheatsheets 等のコメントが「301」と誤記。挙動は正。コメント/ドキュメント文言のみ是正。詳細 cycle-243.md M-1 |
 | B-491 | アンチパターン集のルール違反項目を手順書／knowledge へ整理 | P2 | - | AP集のルール違反項目を手順書／knowledge へ整理。詳細 docs/cycles/cycle-220.md |
-| B-435 | QR コードツールへの種別タブ追加（URL / テキスト / Wi-Fi） | P3 | - | 詳細ページに URL/テキスト/Wi-Fi の種別タブと入力UI切替を追加（1サイクル規模）。詳細 docs/cycles/cycle-207.md |
+| B-435 | QR コードツールへの種別タブ追加（URL / テキスト / Wi-Fi） | P4 | - | URL/テキスト/Wi-Fi種別タブ追加(1サイクル規模)。実測でPV0・流入皆無のためP3→P4降格。詳細 cycle-246.md・cycle-207.md |
 | B-437 | QR コードツールに SVG ダウンロードボタンを追加 | P4 | - | SVG DL ボタンを小規模追加（0.2サイクル）。詳細 docs/cycles/cycle-207.md |
 | B-438 | T1 / T2 search_intents 全体棚卸し | P3 | - | yaml の古さ・未掲載クエリを実測付きで棚卸し（1サイクル）。詳細 docs/cycles/cycle-207.md |
 | B-439 | QR コード装飾機能の提供可否再検討（観測トリガー駆動） | P5 | - | QR装飾機能の提供可否を観測トリガー到達時に再検討。詳細 docs/cycles/cycle-207.md |
 | B-441 | QR コード DL ファイル名の連番回避策 | P4 | - | DLファイル名をハッシュ/タイムスタンプ付きにし連番回避。詳細 docs/cycles/cycle-207.md |
 | B-385 | about ページの OGP 画像新規作成 | P4 | - | /about の OGP 画像（opengraph-image/twitter-image.tsx）を新規作成。privacy パターン参照。着手条件なし |
 | B-387 | 一覧ページの OGP 画像棚卸し・新規作成 | P4 | - | 一覧系4ルート（/play・/tools・/blog・/）の OGP 画像未整備を新規作成。詳細 docs/cycles/cycle-182.md |
-| B-388 | Pagination コンポーネント本体の 44px タップターゲット化 | P3 | - | Pagination 本体の .pageItem を 44px にし a11y 基準達成。詳細 docs/cycles/cycle-183.md |
+| B-388 | Pagination コンポーネント本体の 44px タップターゲット化 | P4 | - | .pageItemを44px化しa11y達成。実測で2ページ目到達0PV・ほぼ未使用のためP3→P4降格(a11y価値は残る)。詳細 cycle-246.md・cycle-183.md |
 | B-390 | AP 集全項目のガイド混入監査と事後検証質問形への統一 | P3 | - | docs/anti-patterns/ 全項目のガイド混入（命令形等）を事後検証質問形に統一。詳細 docs/cycles/cycle-183.md §B-390 |
 | B-316 | サイト全体の URL 構成の見直し | P2 | - | /play 等の旧コンセプト URL を新コンセプト「道具と息抜き」に再設計 |
 | B-317 | 時間関係ツールの追加 | P2 | - | 時間管理・計測ツール群（タイマー・ストップウォッチ等）を追加。詳細 docs/tools-idea.md |
@@ -27,7 +27,7 @@
 | B-319 | 動画/音声を共有用に整えるワークフローツール | P3 | - | 動画・音声を共有しやすく整える1ページWF（AI風ツール調査2026-05-05起票）。詳細 docs/tools-idea.md |
 | B-320 | 計算・変換関係ツールの追加 | P2 | - | 計算・単位変換ツール群（パーセント計算・通貨換算等）を追加。詳細 docs/tools-idea.md |
 | B-321 | テキスト・文章関係ツールの追加 | P2 | - | 文章作成向けテキスト系ツール群（読了時間推定・原稿用紙換算等）を追加。詳細 docs/tools-idea.md |
-| B-323 | SEO・サイトマップの更新 | P2 | - | 占い/診断系→ツール系へキーワード戦略刷新・sitemap更新。要再検証: 着手時GA実測で前提再検証(SC実測で診断系が強い流入)。詳細 cycle-240.md |
+| B-323 | SEO・サイトマップの更新 | P2 | - | 実測再検証(2026-06-15)で旧前提「ツール系へ刷新」は逆転、診断/四字熟語/色系が強い。四字熟語CTRは B-515 へ分離。残: 強コンテンツを伸ばすsitemap/KW再設計。詳細 research/2026-06-15-search-traffic-priority-reassessment.md |
 | B-301 | Trustworthiness 基盤整備 | P3 | - | About・プライバシーポリシー・免責事項の整備。詳細 docs/cycles/cycle-163.md |
 | B-163 | ツール・チートシート追加用スキャフォールドスクリプト | P3 | - | 追加用スクリプト（npm run new-tool -- slug-name）を実装。出典 cycle-61 B-159 |
 | B-322 | ブログの位置づけ更新 | P3 | - | ブログのコピー更新・カテゴリ体系（開発の学び/AIの日記）整理・3日ルール仕組み化 |
@@ -41,7 +41,7 @@
 | B-123 | フィーチャーディレクトリの features/ 集約（将来検討） | P4 | - | src/直下のフィーチャーDirが20超になった時点で features/ 集約を検討。出典 nextjs-directory-architecture 記事 |
 | B-105 | プライバシー注記の拡張（ツール固有情報の表示） | P4 | - | ツール固有プライバシー情報（localStorage使用有無等）表示を ToolMeta に追加。出典 tool-reliability-improvements |
 | B-121 | パンくずリストへのシリーズ情報追加 | P4 | - | ブログのパンくずにシリーズ名を表示しシリーズ内位置を明確化。出典 series-navigation-ui 記事 |
-| B-088 | ビジネスメールテンプレート・敬語早見表の拡充 | P4 | - | メールテンプレ追加と敬語早見表の収録動詞拡充（データ追加のみ低コスト）。出典 business-email-and-keigo-tools 記事 |
+| B-088 | ビジネスメールテンプレート・敬語早見表の拡充 | P4 | - | メールテンプレ追加と敬語動詞拡充。実測で課題は収録量でなく検索露出の不在(敬語クエリimpression実質0)、着手時は露出獲得策とセットで再設計。詳細 research/2026-06-15-search-traffic-priority-reassessment.md |
 | B-155 | QR コード入力上限・UI ブロッキング対策 | P4 | - | 入力長チェックなしのメインスレッド同期実行(#28)。上限定義と Worker 化を検討 |
 | B-278 | 検索モーダルの予期しない開閉に関する UX 調査 | P4 | - | 自動化テスト中に検索モーダルが予期せず開く事象のキーボード/SR利用者影響を調査。詳細 docs/cycles/cycle-148.md |
 | B-056 | i18n（多言語対応）実装 | P4 | - | サイトの多言語対応。cycle-167 で Owner が無期限延期を解除、任意のタイミングで着手可能 |
