@@ -84,3 +84,48 @@ test("AI example section appears after kanji section and before related yoji sec
   expect(kanjiIndex).toBeLessThan(exampleIndex);
   expect(exampleIndex).toBeLessThan(relatedIndex);
 });
+
+test("renders origin label for 中国 as '中国伝来'", () => {
+  const chinaYoji: YojiEntry = { ...mockYoji, origin: "中国" };
+  render(<YojiDetail yoji={chinaYoji} />);
+  expect(screen.getByText("成立と出典")).toBeInTheDocument();
+  expect(screen.getByText("中国伝来")).toBeInTheDocument();
+});
+
+test("renders structure label for 対句 as '対句構造'", () => {
+  const tsuikuYoji: YojiEntry = { ...mockYoji, structure: "対句" };
+  render(<YojiDetail yoji={tsuikuYoji} />);
+  expect(screen.getByText("対句構造")).toBeInTheDocument();
+});
+
+test("renders kotobank source URL as external link with safe rel and target", () => {
+  render(<YojiDetail yoji={mockYoji} />);
+  const link = screen.getByRole("link", { name: /コトバンク.*外部サイト/ });
+  expect(link).toHaveAttribute(
+    "href",
+    "https://kotobank.jp/word/%E4%B8%80%E6%9C%9F%E4%B8%80%E4%BC%9A-433299",
+  );
+  expect(link).toHaveAttribute("target", "_blank");
+  const rel = link.getAttribute("rel") ?? "";
+  expect(rel).toContain("noopener");
+  expect(rel).toContain("noreferrer");
+});
+
+test("falls back to hostname for unknown source host", () => {
+  const unknownHostYoji: YojiEntry = {
+    ...mockYoji,
+    sourceUrl: "https://unknown.example.com/some/path",
+  };
+  render(<YojiDetail yoji={unknownHostYoji} />);
+  const link = screen.getByRole("link", {
+    name: /unknown\.example\.com.*外部サイト/,
+  });
+  expect(link).toHaveAttribute("href", "https://unknown.example.com/some/path");
+});
+
+test("renders origin '不明' honestly without hiding", () => {
+  const unknownOriginYoji: YojiEntry = { ...mockYoji, origin: "不明" };
+  render(<YojiDetail yoji={unknownOriginYoji} />);
+  // 「不明」は隠さず誠実に提示する（憲法 Rule 2 / N-3）
+  expect(screen.getByText(/不明/)).toBeInTheDocument();
+});
