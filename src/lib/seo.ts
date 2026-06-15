@@ -259,9 +259,9 @@ interface YojiMetaForSeo {
 }
 
 /** description に任意追記する残余要素の上限。
- * 目標110字 / 上限130字（cycle-246 計画）に対し、必須部の最大想定
- * （「○○○○」(よみがな最大15)の意味は、{meaning(55)}。= 約 84字）を踏まえ、
- * 任意追記は安全マージンを取り 25字以下に制限する。 */
+ * 現行ラベル群はすべて 12 字以下のため事実上の上限はハードリミット
+ * （{@link YOJI_DESCRIPTION_HARD_LIMIT}）のみが効く。25 という値は将来
+ * ラベルを追加・差し替えた際に description が肥大化しないようにする予防的ガード。 */
 const YOJI_DESCRIPTION_OPTIONAL_MAX = 25;
 
 /** description の絶対上限。これを超える場合は任意要素を採用しない。 */
@@ -372,8 +372,9 @@ export function generateYojiJsonLd(yoji: YojiMetaForSeo): object {
       name: "四字熟語辞典",
       url: `${BASE_URL}/dictionary/yoji`,
     },
-    // citation: 出典 URL を「定義の参照元」として記述する（sameAs/isBasedOn は semantic mismatch のため不採用）。
-    citation: yoji.sourceUrl,
+    // sameAs: 出典外部辞書ページ。schema.org の DefinedTerm は Thing から sameAs を継承する一方、
+    // citation は CreativeWork 固有プロパティで DefinedTerm では非対応のため、sameAs を採用する。
+    sameAs: yoji.sourceUrl,
     inLanguage: "ja",
   };
 }
