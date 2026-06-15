@@ -71,4 +71,3 @@ completed_at: null
 - [ ] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
 - [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
 - [ ] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
-      </content>
