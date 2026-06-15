@@ -11,6 +11,7 @@ import {
   generateBlogPostMetadata,
   generateKanjiPageMetadata,
   generateYojiPageMetadata,
+  generateYojiJsonLd,
   generateColorCategoryMetadata,
   generateFaqPageJsonLd,
   safeJsonLdStringify,
@@ -532,10 +533,73 @@ describe("generateYojiPageMetadata", () => {
     sourceUrl: "https://kotobank.jp/word/test",
   };
 
+  // origin が「不明」のケース。description で origin を出さず structure にフォールバックすることを確認する。
+  const yojiDataUnknownOrigin = {
+    yoji: "曖昧模糊",
+    reading: "あいまいもこ",
+    meaning: "物事がぼんやりしてはっきりしないさま",
+    category: "life",
+    structure: "対句" as const,
+    origin: "不明" as const,
+    sourceUrl: "https://kotobank.jp/word/test2",
+  };
+
   test("titleに四字熟語とサイト名を含む", () => {
     const result = generateYojiPageMetadata(yojiData);
     expect(result.title).toContain("一期一会");
     expect(result.title).toContain("yolos.net");
+  });
+
+  test("titleに読み方（よみがな）が含まれる（読み方クエリ救済）", () => {
+    const result = generateYojiPageMetadata(yojiData);
+    expect(result.title).toContain("いちごいちえ");
+  });
+
+  test("descriptionが読み方を前置する（「○○○○」直後に reading が現れる）", () => {
+    const result = generateYojiPageMetadata(yojiData);
+    const description = result.description as string;
+    expect(description).toMatch(/^「一期一会」\(いちごいちえ\)/);
+  });
+
+  test("descriptionが130字以下である", () => {
+    const result = generateYojiPageMetadata(yojiData);
+    const description = result.description as string;
+    expect(description.length).toBeLessThanOrEqual(130);
+  });
+
+  test("descriptionにexample（AIユーモア例文）とdifficultyを含まない", () => {
+    // example/difficulty は YojiMetaForSeo に渡さない設計だが、防御的に
+    // 「例」「難易度」といったキーワードがメタに混入していないことを確認する。
+    const result = generateYojiPageMetadata(yojiData);
+    const description = result.description as string;
+    expect(description).not.toMatch(/例[:：]|例えば|たとえば/);
+    expect(description).not.toContain("難易度");
+  });
+
+  test("origin が判明している場合は description に origin の説明が含まれる", () => {
+    const result = generateYojiPageMetadata(yojiData);
+    const description = result.description as string;
+    expect(description).toContain("中国伝来");
+  });
+
+  test("origin が不明の場合は description に '不明' を含めず structure を採用する", () => {
+    const result = generateYojiPageMetadata(yojiDataUnknownOrigin);
+    const description = result.description as string;
+    expect(description).not.toContain("不明");
+    // structure: 対句 → 対句構造の四字熟語。
+    expect(description).toContain("対句構造");
+  });
+
+  test("OG description が meta description と同一文字列である", () => {
+    const result = generateYojiPageMetadata(yojiData);
+    const og = result.openGraph as Record<string, unknown> | undefined;
+    expect(og?.description).toBe(result.description);
+  });
+
+  test("Twitter description が meta description と同一文字列である", () => {
+    const result = generateYojiPageMetadata(yojiData);
+    const twitter = result.twitter as Record<string, unknown> | undefined;
+    expect(twitter?.description).toBe(result.description);
   });
 
   test("canonical URLが絶対URLでエンコード済みパスを含む", () => {
@@ -568,6 +632,52 @@ describe("generateYojiPageMetadata", () => {
     const result = generateYojiPageMetadata(yojiData);
     const og = result.openGraph as Record<string, unknown> | undefined;
     expect(og?.siteName).toBe("yolos.net");
+  });
+});
+
+describe("generateYojiJsonLd", () => {
+  const yojiData = {
+    yoji: "一期一会",
+    reading: "いちごいちえ",
+    meaning: "一生に一度の出会い",
+    category: "life",
+    structure: "因果" as const,
+    origin: "中国" as const,
+    sourceUrl: "https://kotobank.jp/word/test",
+  };
+
+  test("DefinedTerm 型で基本プロパティが揃っている", () => {
+    const result = generateYojiJsonLd(yojiData) as Record<string, unknown>;
+    expect(result["@context"]).toBe("https://schema.org");
+    expect(result["@type"]).toBe("DefinedTerm");
+    expect(result.name).toBe("一期一会");
+    expect(result.inLanguage).toBe("ja");
+  });
+
+  test("alternateName に reading が設定される", () => {
+    const result = generateYojiJsonLd(yojiData) as Record<string, unknown>;
+    expect(result.alternateName).toBe("いちごいちえ");
+  });
+
+  test("citation に sourceUrl が設定される", () => {
+    const result = generateYojiJsonLd(yojiData) as Record<string, unknown>;
+    expect(result.citation).toBe("https://kotobank.jp/word/test");
+  });
+
+  test("inDefinedTermSet が四字熟語辞典を指す", () => {
+    const result = generateYojiJsonLd(yojiData) as Record<string, unknown>;
+    expect(result.inDefinedTermSet).toMatchObject({
+      "@type": "DefinedTermSet",
+      name: "四字熟語辞典",
+    });
+  });
+
+  test("url が canonical 形式（encodeURIComponent 済み）である", () => {
+    const result = generateYojiJsonLd(yojiData) as Record<string, unknown>;
+    const url = result.url as string;
+    expect(url).toMatch(/^https:\/\//);
+    expect(url).toContain("/dictionary/yoji/");
+    expect(url).toContain(encodeURIComponent("一期一会"));
   });
 });
 
