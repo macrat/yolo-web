@@ -2,7 +2,7 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| _(なし)_ | | | | |
+| B-323 | SEO・サイトマップの更新 | P2 | 247 | cycle-247で着手。実測(2026-06-15)で勝っている診断/四字熟語/色を伸ばす。四字熟語CTRはB-515(cycle-246)で対応済のため本サイクルは対象外。残スコープから「今サイクルで伸ばす単一レバー」を最新GA4/SC＋発見性・SEO監査で確定し実装。詳細 cycle-247.md |
 
 ## Queued (すぐに着手できる)
 
@@ -27,7 +27,6 @@
 | B-319 | 動画/音声を共有用に整えるワークフローツール | P3 | - | 動画・音声を共有しやすく整える1ページWF（AI風ツール調査2026-05-05起票）。詳細 docs/tools-idea.md |
 | B-320 | 計算・変換関係ツールの追加 | P2 | - | 計算・単位変換ツール群（パーセント計算・通貨換算等）を追加。詳細 docs/tools-idea.md |
 | B-321 | テキスト・文章関係ツールの追加 | P2 | - | 文章作成向けテキスト系ツール群（読了時間推定・原稿用紙換算等）を追加。詳細 docs/tools-idea.md |
-| B-323 | SEO・サイトマップの更新 | P2 | - | 実測再検証(2026-06-15)で旧前提「ツール系へ刷新」は逆転、診断/四字熟語/色系が強い。四字熟語CTRは B-515 へ分離。残: 強コンテンツを伸ばすsitemap/KW再設計。詳細 research/2026-06-15-search-traffic-priority-reassessment.md |
 | B-301 | Trustworthiness 基盤整備 | P3 | - | About・プライバシーポリシー・免責事項の整備。詳細 docs/cycles/cycle-163.md |
 | B-163 | ツール・チートシート追加用スキャフォールドスクリプト | P3 | - | 追加用スクリプト（npm run new-tool -- slug-name）を実装。出典 cycle-61 B-159 |
 | B-322 | ブログの位置づけ更新 | P3 | - | ブログのコピー更新・カテゴリ体系（開発の学び/AIの日記）整理・3日ルール仕組み化 |
@@ -130,4 +129,3 @@
 | B-345 | 移行計画 Phase 9.2.d: cheatsheet `http-status-codes` を既存ガイドへ統合（補筆） | 242 | http-status-code-guide-for-rest-api.md末に33コード早見表(1xx〜5xx)新設・自己参照リンク是正・RFC/MDN裏取り。撤去はB-349。cycle-242 |
 | B-342 | 移行計画 Phase 9.2.a: cheatsheet `cron` を既存ガイドへ統合（補筆） | 242 | cron-parser-guide.mdに特殊文字列ショートカット表(@yearly〜@reboot)と「よく使うcron式」拡充を追加。man裏取り。撤去はB-349。cycle-242.md |
 | B-347 | 移行計画 Phase 9.2.f: cheatsheet `regex` を既存ガイドへ統合（補筆） | 242 | 網羅性検証で軽微〜中の欠落。regex-tester-guide.md にメタ文字早見表(10種)・文字クラス否定形・先読み後読み全4種の表を追加。MDN裏取り・敬体統一。撤去はB-349。詳細 cycle-242.md |
-| B-344 | 移行計画 Phase 9.2.c: cheatsheet `html-tags` をブログ記事に転換 | 241 | html-tags(1285行)を記事 choosing-html-tags-by-meaning(tool-guides)へ再構成し公開。MDN裏取り。AP-W13新設。撤去はB-349。cycle-241 |
