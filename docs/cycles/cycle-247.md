@@ -74,6 +74,15 @@ completed_at: null
 - **L-1【軽微・許容】warm-empathy↔gentle-indirect で「語尾調整」モチーフ近接**: 各タイプの核（癒し vs 角を立てない間接表現）は明確に差別化されており、reviewer も「公開に値する水準」と評価。許容。
 - 内容実質（価値・タイプ固有性・声・第三者整合）は reviewer が観点1〜4で「問題なし」。B-259 的な「誰向け取り違え」の再発なし。
 
+### 完了率・到達経路の検証（Owner 指摘で後追い実施 / BigQuery GA4 `analytics_524708437`, 2026-03-28〜06-15 ≈80日）
+
+当初、結果ページの価値を「人気（CTR14%＝検索→診断トップへの到達）」だけで判断し、**実際に最後までプレイして結果を見た人の割合を測っていなかった**。Owner 指摘で検証。`tmp/cycle-247/result-page-funnel.md`。
+
+- **クイズ結果は同一 URL `/play/<slug>` 上にインライン描画される**（`QuizContainer` の useState フェーズマシン intro→playing→result）。`/play/<slug>/result/<id>` への遷移はなく、その URL は**シェア用**。よって「`/result/*` PV ÷ トップ PV」は完了率ではない。完了率は `level_start`/`level_end` イベントで測る（`src/lib/analytics.ts`）。
+- **word-sense-personality の完了率 ≈ 72%（開始50→完了36, 80日・実数）**。character-personality ≈ 69%（32→22）。診断全体の相場は完了率 50〜70%台。→ **detailedContent は「80日で約36人」の完了者にインライン結果（ResultCard 汎用パス）で確実に届く**。word-sense はカスタム結果コンポーネントを持たず汎用 `renderDetailedContent` を通るため、resultPageLabels 見出しもインラインに反映。完了率は良好で、本サイクルの来訪者価値（完了者の結果体験向上）は妥当と確認できた。
+- **静的 `/result/*` ページの実 PV はほぼゼロ**（word-sense 8PV・うち organic 検索0・サイト内遷移0、character 0PV）。→ sitemap 掲載・index 化による**第三者集客は現状未発現**。これは「デメリットのない副次効果」（cycle-136）の範囲であり、価値は今後の検索流入の伸び次第。**現時点で測れる価値は完了者へのインライン体験向上に限られる**ことを正直に記録する。
+- 留意: 実数が小さく（最大開始50）標準誤差大。比率の傾向は信頼できるが±十数%前提。
+
 ### 学び（恒久化候補）
 
 - **標準形式 detailedContent クイズには resultPageLabels が必須規約**（差別化・三人称見出し。第三者向けタイプ解説ページのため）。`result-page-labels.test.ts` が明文化。新規の標準形式診断を作る際はセット。
