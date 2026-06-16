@@ -10,12 +10,15 @@ import {
   generateToolJsonLd,
   generateBlogPostMetadata,
   generateKanjiPageMetadata,
+  generateKanjiJsonLd,
   generateYojiPageMetadata,
   generateYojiJsonLd,
   generateColorCategoryMetadata,
   generateFaqPageJsonLd,
+  generateHumorDictJsonLd,
   safeJsonLdStringify,
 } from "../seo";
+import { BASE_URL } from "@/lib/constants";
 import yojiData from "@/data/yoji-data.json";
 import type { YojiEntry } from "@/dictionary/_lib/types";
 
@@ -992,5 +995,237 @@ describe("generateFaqPageJsonLd", () => {
     const result = generateFaqPageJsonLd([]) as Record<string, unknown>;
     const entities = result.mainEntity as Array<Record<string, unknown>>;
     expect(entities).toHaveLength(0);
+  });
+});
+
+describe("JSON-LD external sameAs/isBasedOn/citation guard (cycle-246 再発防止)", () => {
+  // cycle-246 で `generateYojiJsonLd` に外部辞書 URL (コトバンク) を sameAs で一旦採用した
+  // 失敗の構造的再発防止。schema.org の sameAs / isBasedOn / citation は
+  // 「うちのページと当該 URL が同一実体・派生関係・参照関係にある」と機械可読に主張する
+  // プロパティで、外部 URL（自サイト以外）を入れることは「外部の独自付加価値を持つページに
+  // 自サイトを紐付ける＝サイトの目的（PV 獲得＝来訪者に最高の価値）と矛盾する」構造になる。
+  // 教訓を振り返りに書くだけでは「絶対にありえない選択肢」の再発を防げないため、
+  // テストで CI に強制させる。
+
+  /**
+   * 規制対象プロパティ。意味論的に「同一性宣言・派生関係宣言・参照宣言」をまとめて扱う。
+   * - sameAs: 同一実体の別 URL を宣言する
+   * - isBasedOn: 派生元の URL を宣言する
+   * - citation: 参照先の URL を宣言する
+   * 規制対象を勝手に拡大しないこと（cycle-246 仕様）。
+   */
+  const RESTRICTED_PROPS = ["sameAs", "isBasedOn", "citation"] as const;
+
+  /**
+   * オブジェクトを再帰的に走査し、規制対象プロパティに自サイト以外の絶対 URL が入っていれば違反として返す。
+   * 自サイト URL（BASE_URL で始まる絶対 URL）は将来 Wikipedia/Wikidata のような真の同一実体を
+   * 扱うときの土台として許容する（schema.org が想定する正しい用法）。
+   */
+  function findExternalRefViolations(obj: unknown, path = ""): string[] {
+    const violations: string[] = [];
+    if (obj === null || typeof obj !== "object") return violations;
+    if (Array.isArray(obj)) {
+      obj.forEach((item, idx) => {
+        violations.push(...findExternalRefViolations(item, `${path}[${idx}]`));
+      });
+      return violations;
+    }
+    for (const [key, val] of Object.entries(obj as Record<string, unknown>)) {
+      const here = path ? `${path}.${key}` : key;
+      if ((RESTRICTED_PROPS as readonly string[]).includes(key)) {
+        const urls = Array.isArray(val) ? val : [val];
+        for (const url of urls) {
+          if (typeof url === "string" && /^https?:\/\//.test(url)) {
+            if (!url.startsWith(BASE_URL)) {
+              violations.push(`${here}: 外部URL "${url}" は禁止`);
+            }
+          }
+        }
+      } else if (val !== null && typeof val === "object") {
+        violations.push(...findExternalRefViolations(val, here));
+      }
+    }
+    return violations;
+  }
+
+  // ヘルパー自体の機能テスト（境界: 違反系）。実装が壊れて常に空配列を返すような退化を防ぐ。
+  test("ヘルパー: 規制対象プロパティに外部 URL があれば違反として検出する", () => {
+    const violations = findExternalRefViolations({
+      "@type": "DefinedTerm",
+      sameAs: "https://kotobank.jp/word/test",
+    });
+    expect(violations.length).toBeGreaterThan(0);
+    expect(violations[0]).toContain("sameAs");
+    expect(violations[0]).toContain("kotobank.jp");
+  });
+
+  // ヘルパー自体の機能テスト（境界: 正常系）。自サイト URL は許容することを確認。
+  // 将来 Wikipedia/Wikidata のような真の同一実体を扱うときに self-URL を許容するための土台。
+  test("ヘルパー: 規制対象プロパティに自サイト URL のみが入っていれば違反としない", () => {
+    const violations = findExternalRefViolations({
+      "@type": "DefinedTerm",
+      sameAs: `${BASE_URL}/dictionary/yoji/test`,
+    });
+    expect(violations).toEqual([]);
+  });
+
+  // ヘルパー自体の機能テスト（境界: 配列形式）。
+  test("ヘルパー: 配列形式の sameAs でも各要素を検査する", () => {
+    const violations = findExternalRefViolations({
+      sameAs: [
+        `${BASE_URL}/ok`,
+        "https://kotobank.jp/word/test",
+        "https://ja.wikipedia.org/wiki/test",
+      ],
+    });
+    // 外部 2 件が検出されること
+    expect(violations).toHaveLength(2);
+  });
+
+  // ヘルパー自体の機能テスト（境界: isBasedOn / citation も対象）。
+  test("ヘルパー: isBasedOn / citation も規制対象として扱う", () => {
+    const violationsIsBasedOn = findExternalRefViolations({
+      isBasedOn: "https://kotobank.jp/word/test",
+    });
+    expect(violationsIsBasedOn.length).toBeGreaterThan(0);
+    const violationsCitation = findExternalRefViolations({
+      citation: "https://kotobank.jp/word/test",
+    });
+    expect(violationsCitation.length).toBeGreaterThan(0);
+  });
+
+  // ヘルパー自体の機能テスト（境界: 規制対象外プロパティに外部 URL があっても無視）。
+  // 例: blog 記事の `image` に外部 URL を入れるのは別の話で、規制対象外。
+  test("ヘルパー: 規制対象外プロパティの外部 URL は無視する", () => {
+    const violations = findExternalRefViolations({
+      "@type": "BlogPosting",
+      image: "https://example.com/image.png",
+      url: "https://example.com/external-page",
+    });
+    expect(violations).toEqual([]);
+  });
+
+  // -- 全 JSON-LD 関数の代表サンプルで違反ゼロ --
+
+  test("generateToolJsonLd: 代表サンプルで違反ゼロ", () => {
+    const result = generateToolJsonLd({
+      slug: "json-formatter",
+      name: "JSON整形",
+      nameEn: "JSON Formatter",
+      description: "JSONを整形・検証するツールです。",
+      shortDescription: "JSON整形",
+      keywords: ["JSON"],
+      category: "developer",
+      relatedSlugs: [],
+      publishedAt: "2026-01-01T00:00:00+09:00",
+      trustLevel: "verified",
+      howItWorks: "テスト用の処理内容説明です。",
+    });
+    expect(findExternalRefViolations(result)).toEqual([]);
+  });
+
+  test("generateBlogPostJsonLd: 代表サンプルで違反ゼロ", () => {
+    const result = generateBlogPostJsonLd({
+      title: "テスト記事",
+      slug: "test-article",
+      description: "テスト記事の説明",
+      published_at: "2026-02-15T10:00:00+09:00",
+      updated_at: "2026-02-15T10:00:00+09:00",
+      tags: ["テスト"],
+    });
+    expect(findExternalRefViolations(result)).toEqual([]);
+  });
+
+  test("generateGameJsonLd: 代表サンプルで違反ゼロ", () => {
+    const result = generateGameJsonLd({
+      name: "漢字カナール",
+      description: "毎日の漢字パズル",
+      url: "/play/kanji-kanaru",
+      genre: "Puzzle",
+      inLanguage: "ja",
+      numberOfPlayers: "1",
+      publishedAt: "2026-02-13T19:11:53+09:00",
+    });
+    expect(findExternalRefViolations(result)).toEqual([]);
+  });
+
+  test("generateBreadcrumbJsonLd: 代表サンプルで違反ゼロ", () => {
+    const result = generateBreadcrumbJsonLd([
+      { label: "ホーム", href: "/" },
+      { label: "ツール", href: "/tools" },
+      { label: "テスト" },
+    ]);
+    expect(findExternalRefViolations(result)).toEqual([]);
+  });
+
+  test("generateWebSiteJsonLd: 違反ゼロ", () => {
+    const result = generateWebSiteJsonLd();
+    expect(findExternalRefViolations(result)).toEqual([]);
+  });
+
+  test("generateKanjiJsonLd: 代表サンプルで違反ゼロ", () => {
+    const result = generateKanjiJsonLd({
+      character: "山",
+      meanings: ["やま", "mountain"],
+      onYomi: ["サン"],
+      kunYomi: ["やま"],
+    });
+    expect(findExternalRefViolations(result)).toEqual([]);
+  });
+
+  test("generateYojiJsonLd: 代表サンプルで違反ゼロ", () => {
+    const result = generateYojiJsonLd({
+      yoji: "一期一会",
+      reading: "いちごいちえ",
+      meaning: "一生に一度の出会い",
+      category: "life",
+      structure: "因果",
+      origin: "中国",
+      sourceUrl: "https://kotobank.jp/word/test",
+    });
+    expect(findExternalRefViolations(result)).toEqual([]);
+  });
+
+  test("generateColorJsonLd: 代表サンプルで違反ゼロ", () => {
+    const result = generateColorJsonLd({
+      slug: "nadeshiko",
+      name: "撫子",
+      romaji: "nadeshiko",
+      hex: "#dc9fb4",
+      category: "red",
+    });
+    expect(findExternalRefViolations(result)).toEqual([]);
+  });
+
+  test("generateHumorDictJsonLd: 代表サンプルで違反ゼロ", () => {
+    const result = generateHumorDictJsonLd({
+      slug: "test-word",
+      word: "テスト",
+      reading: "てすと",
+      definition: "試験的な何か。",
+    });
+    expect(findExternalRefViolations(result)).toEqual([]);
+  });
+
+  test("generateFaqPageJsonLd: 代表サンプルで違反ゼロ", () => {
+    const result = generateFaqPageJsonLd([
+      { question: "Q1?", answer: "A1." },
+      { question: "Q2?", answer: "A2." },
+    ]);
+    expect(findExternalRefViolations(result)).toEqual([]);
+  });
+
+  // -- 真の再発防止: yoji-data 全 400 件で違反ゼロ --
+  // cycle-246 の失敗は `generateYojiJsonLd` に sourceUrl (コトバンク) を sameAs として
+  // 注入したこと。実データ全件で sourceUrl が JSON-LD に漏れていないことを構造的に保証する。
+  test("generateYojiJsonLd: yoji-data.json 全 400 件で違反ゼロ", () => {
+    const entries = yojiData as YojiEntry[];
+    expect(entries.length).toBeGreaterThanOrEqual(400);
+    for (const entry of entries) {
+      const result = generateYojiJsonLd(entry);
+      const violations = findExternalRefViolations(result);
+      // 失敗時にどの yoji の何が違反したかを特定しやすくする。
+      expect(violations, `${entry.yoji}: ${violations.join(", ")}`).toEqual([]);
+    }
   });
 });
