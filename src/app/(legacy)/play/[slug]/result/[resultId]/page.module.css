@@ -95,7 +95,10 @@
   line-height: 1.6;
   color: var(--color-text);
   padding: 0.5rem 0.75rem;
-  background: var(--color-surface, #f8f8f8);
+  /* --color-surface は未定義のため --color-bg-secondary を使用（テーマ対応）。
+     旧 var(--color-surface, #f8f8f8) はフォールバックの明色に固定され、
+     ダークモードで薄灰文字×明背景となり判読不能だった（cycle-247 reviewer S-1）。 */
+  background: var(--color-bg-secondary);
   border-radius: 6px;
   /* bullet代わりの絵文字 */
   display: flex;

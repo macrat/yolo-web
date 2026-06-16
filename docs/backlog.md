@@ -2,7 +2,7 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-323 | SEO・サイトマップの更新 | P2 | 247 | cycle-247で着手。実測(2026-06-15)で勝っている診断/四字熟語/色を伸ばす。四字熟語CTRはB-515(cycle-246)で対応済のため本サイクルは対象外。残スコープから「今サイクルで伸ばす単一レバー」を最新GA4/SC＋発見性・SEO監査で確定し実装。詳細 cycle-247.md |
+| B-323 | SEO・サイトマップの更新 | P2 | 247 | cycle-247で word-sense-personality 結果8タイプに detailedContent 執筆(結果体験向上)。残スコープは継続。詳細 cycle-247.md |
 
 ## Queued (すぐに着手できる)
 
@@ -92,6 +92,7 @@
 | B-364 | cycle-175〜178 連続事故と回復のブログ化再判断 | P3 | - | cycle-178 で取下げ。B-497完了で材料が揃い Queued 化。着手時 PM が読者価値で独立判断。詳細 docs/cycles/cycle-178.md |
 | B-507 | DESIGN.md §3 への補足ラベル（小さめフォント）の許容条件の明文化 | P4 | - | 0.8rem級の補足ラベルと§3「16px以上を基本」の整合の許容条件（補足メタ限定等）を DESIGN.md に明文化。詳細 docs/cycles/cycle-231.md |
 | B-508 | ブログ記事 frontmatter の裸配列残骸（cycle-193 撤去フィールドの残り）一括除去 | P4 | - | trust_level直後の裸配列残骸を除去。残り4本: yoji-quiz/tool-reliability/http-status/game-infra-refactoring。B-432と整合注意 |
+| B-516 | 診断結果ページからの「他のタイプ回遊」導線の設計 | P3 | - | 同一診断の他タイプ結果ページへの回遊導線を来訪者価値起点で設計(全診断共通ResultPageShell影響・24タイプ診断の見せ方)。cycle-247でSEO動機の実装を撤回し起票。詳細 cycle-247.md |
 
 ## Deferred (すぐに着手できない)
 

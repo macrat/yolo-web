@@ -36,17 +36,21 @@
  */
 import { describe, it, expect } from "vitest";
 import animalPersonalityQuiz from "../animal-personality";
+import wordSensePersonalityQuiz from "../word-sense-personality";
 
 // contrarian-fortune, character-fortune, music-personality, traditional-color, yoji-personality,
 // character-personality, unexpected-compatibility, and impossible-advice are excluded:
 // they use variant-specific DetailedContent formats with dedicated result components
-// that do not use resultPageLabels
+// that do not use resultPageLabels.
+// word-sense-personality は標準形式 detailedContent（cycle-247 で 8 結果に付与）を使うため
+// この規約（差別化・三人称の resultPageLabels）の対象に含める。
 const quizzesWithDetailedContent = [
   { quiz: animalPersonalityQuiz, name: "animal-personality" },
+  { quiz: wordSensePersonalityQuiz, name: "word-sense-personality" },
 ];
 
 describe("resultPageLabels for quizzes with detailedContent", () => {
-  it("all 1 standard-format quizzes have resultPageLabels defined", () => {
+  it("all standard-format quizzes have resultPageLabels defined", () => {
     for (const { quiz, name } of quizzesWithDetailedContent) {
       expect(
         quiz.meta.resultPageLabels,
@@ -127,37 +131,37 @@ describe("resultPageLabels for quizzes with detailedContent", () => {
     }
   });
 
-  it("all 1 quizzes have unique traitsHeadings (no two quizzes share the same label)", () => {
+  it("all quizzes have unique traitsHeadings (no two quizzes share the same label)", () => {
     const traitsHeadings = quizzesWithDetailedContent.map(
       ({ quiz }) => quiz.meta.resultPageLabels!.traitsHeading!,
     );
     const uniqueHeadings = new Set(traitsHeadings);
     expect(
       uniqueHeadings.size,
-      `all 1 traitsHeadings must be unique, but found duplicates: [${traitsHeadings.join(", ")}]`,
-    ).toBe(1);
+      `all traitsHeadings must be unique, but found duplicates: [${traitsHeadings.join(", ")}]`,
+    ).toBe(quizzesWithDetailedContent.length);
   });
 
-  it("all 1 quizzes have unique behaviorsHeadings (no two quizzes share the same label)", () => {
+  it("all quizzes have unique behaviorsHeadings (no two quizzes share the same label)", () => {
     const behaviorsHeadings = quizzesWithDetailedContent.map(
       ({ quiz }) => quiz.meta.resultPageLabels!.behaviorsHeading!,
     );
     const uniqueHeadings = new Set(behaviorsHeadings);
     expect(
       uniqueHeadings.size,
-      `all 1 behaviorsHeadings must be unique, but found duplicates: [${behaviorsHeadings.join(", ")}]`,
-    ).toBe(1);
+      `all behaviorsHeadings must be unique, but found duplicates: [${behaviorsHeadings.join(", ")}]`,
+    ).toBe(quizzesWithDetailedContent.length);
   });
 
-  it("all 1 quizzes have unique adviceHeadings (no two quizzes share the same label)", () => {
+  it("all quizzes have unique adviceHeadings (no two quizzes share the same label)", () => {
     const adviceHeadings = quizzesWithDetailedContent.map(
       ({ quiz }) => quiz.meta.resultPageLabels!.adviceHeading!,
     );
     const uniqueHeadings = new Set(adviceHeadings);
     expect(
       uniqueHeadings.size,
-      `all 1 adviceHeadings must be unique, but found duplicates: [${adviceHeadings.join(", ")}]`,
-    ).toBe(1);
+      `all adviceHeadings must be unique, but found duplicates: [${adviceHeadings.join(", ")}]`,
+    ).toBe(quizzesWithDetailedContent.length);
   });
 
   it("animal-personality adviceHeading should not be '生息地からのメッセージ' (advice content is unrelated to habitat)", () => {
@@ -173,7 +177,7 @@ describe("resultPageLabels for quizzes with detailedContent", () => {
    * A quiz is considered "differentiated" if at least 2 of its 3 headings
    * do NOT follow the common "この〇〇タイプ" template.
    */
-  it("at least 1 of 1 quizzes have differentiated headings (not generic 'タイプの特徴/あるある/ひとこと' pattern)", () => {
+  it("all standard-format quizzes have differentiated headings (not generic 'タイプの特徴/あるある/ひとこと' pattern)", () => {
     const genericPatterns = [
       "のあるある",
       "タイプの特徴",
@@ -198,9 +202,11 @@ describe("resultPageLabels for quizzes with detailedContent", () => {
       },
     ).length;
 
+    // 標準形式 detailedContent を持つ全クイズが差別化見出しを持つことを要求する
+    // （汎用見出しの「画一的」問題を防ぐ）。
     expect(
       differentiatedCount,
-      `at least 1 of 1 quizzes should have differentiated headings, but only ${differentiatedCount} do`,
-    ).toBeGreaterThanOrEqual(1);
+      `all ${quizzesWithDetailedContent.length} quizzes should have differentiated headings, but only ${differentiatedCount} do`,
+    ).toBe(quizzesWithDetailedContent.length);
   });
 });

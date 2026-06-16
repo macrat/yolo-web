@@ -16,7 +16,7 @@ import {
 } from "@/dictionary/_lib/dictionary-meta";
 import { getAllSlugs as getAllHumorSlugs } from "@/humor-dict/data";
 import { humorDictMeta } from "@/humor-dict/meta";
-import { allQuizMetas } from "@/play/quiz/registry";
+import { allQuizMetas, quizBySlug } from "@/play/quiz/registry";
 import { allGameMetas, getGamePath } from "@/play/games/registry";
 // (legacy) Route Group 配下に移動したページのメタ情報は @/ エイリアスで参照する
 import { ABOUT_LAST_MODIFIED } from "@/app/(new)/about/meta";
@@ -281,6 +281,28 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly" as const,
       priority: 0.8,
     })),
+    // 診断の結果ページ（/play/:slug/result/:id）のうち index 対象のものを掲載する。
+    // 結果ページは detailedContent（独立した読み物価値）を持つ場合のみ robots:index になる
+    // （result/[resultId]/page.tsx の shouldIndex = hasDetailedContent && !compatFriendTypeId）。
+    // detailedContent を持たない結果は noindex のため sitemap に載せない（robots と整合させる）。
+    // cycle-136 で確立した「実体的価値を備えた結果ページの index 化は副次効果」に沿い、
+    // 価値を持つに至ったページを発見可能にする（UX には不可視・無害な発見補助）。
+    ...allQuizMetas.flatMap((meta, index) => {
+      const quiz = quizBySlug.get(meta.slug);
+      if (!quiz) return [];
+      const lastModified = getLastModifiedDate(
+        meta,
+        `quiz[${index}] (${meta.slug}) result pages`,
+      );
+      return quiz.results
+        .filter((result) => Boolean(result.detailedContent))
+        .map((result) => ({
+          url: `${BASE_URL}/play/${meta.slug}/result/${result.id}`,
+          lastModified,
+          changeFrequency: "monthly" as const,
+          priority: 0.6,
+        }));
+    }),
     {
       url: `${BASE_URL}/play/daily`,
       lastModified: fortuneDate,

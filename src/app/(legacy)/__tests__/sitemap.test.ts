@@ -2,7 +2,7 @@ import { describe, test, expect } from "vitest";
 // sitemap.ts は src/app/ 直下に残る（メタファイルのため移動対象外）
 import sitemap from "../../sitemap";
 import { allGameMetas } from "@/play/games/registry";
-import { allQuizMetas } from "@/play/quiz/registry";
+import { allQuizMetas, quizBySlug } from "@/play/quiz/registry";
 import { BASE_URL } from "@/lib/constants";
 import { getAllBlogPosts } from "@/blog/_lib/blog";
 import { ABOUT_LAST_MODIFIED } from "@/app/(new)/about/meta";
@@ -126,15 +126,57 @@ describe("sitemap", () => {
     expect(urls).toContain(`${BASE_URL}/play/daily`);
   });
 
-  test("sitemap does not include quiz result pages", () => {
+  // 結果ページ（/play/:slug/result/:id）は detailedContent を持つ場合のみ
+  // robots:index になる（result/[resultId]/page.tsx の shouldIndex）。
+  // sitemap は index 対象（= detailedContent あり）の結果ページだけを掲載し、
+  // noindex の結果は掲載しない（robots と整合）。
+  test("sitemap includes only indexable (detailedContent) quiz result pages", () => {
     const entries = sitemap();
-    const resultEntries = entries.filter(
-      (e) =>
-        typeof e.url === "string" &&
-        e.url.includes("/play/") &&
-        e.url.includes("/result/"),
+    const resultUrls = entries
+      .map((e) => e.url)
+      .filter(
+        (url): url is string =>
+          typeof url === "string" &&
+          url.includes("/play/") &&
+          url.includes("/result/"),
+      );
+
+    // 期待される結果ページ URL（detailedContent を持つ結果のみ）を registry から算出。
+    const expectedUrls = allQuizMetas.flatMap((meta) => {
+      const quiz = quizBySlug.get(meta.slug);
+      if (!quiz) return [];
+      return quiz.results
+        .filter((result) => Boolean(result.detailedContent))
+        .map((result) => `${BASE_URL}/play/${meta.slug}/result/${result.id}`);
+    });
+
+    // index 対象の結果ページが存在し、sitemap の結果ページ集合が期待集合と完全一致すること。
+    expect(expectedUrls.length).toBeGreaterThan(0);
+    expect(new Set(resultUrls)).toEqual(new Set(expectedUrls));
+
+    // noindex の結果（detailedContent なし）は1件も含まれないこと。
+    const noindexUrls = allQuizMetas.flatMap((meta) => {
+      const quiz = quizBySlug.get(meta.slug);
+      if (!quiz) return [];
+      return quiz.results
+        .filter((result) => !result.detailedContent)
+        .map((result) => `${BASE_URL}/play/${meta.slug}/result/${result.id}`);
+    });
+    for (const noindexUrl of noindexUrls) {
+      expect(resultUrls).not.toContain(noindexUrl);
+    }
+  });
+
+  test("sitemap includes word-sense-personality result pages (un-noindex後)", () => {
+    const entries = sitemap();
+    const urls = entries.map((e) => e.url);
+    // cycle-247: word-sense の8結果に detailedContent を付与し index 可能化した。
+    expect(urls).toContain(
+      `${BASE_URL}/play/word-sense-personality/result/elegant-precise`,
     );
-    expect(resultEntries).toHaveLength(0);
+    expect(urls).toContain(
+      `${BASE_URL}/play/word-sense-personality/result/gentle-indirect`,
+    );
   });
 
   test("sitemap does not include kanji detail pages", () => {
