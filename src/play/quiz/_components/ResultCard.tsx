@@ -11,7 +11,6 @@
  * つまり「本人向け = ResultCard（このファイル）」「第三者向けシェア/検索ランディング =
  *  /play/[slug]/result/[resultId] ルート（ResultPageShell 側）」と役割が分かれている。
  * 本人向けの結果体験を変えたいときは必ずこちら（ResultCard）を編集すること。
- * cycle-247 でこの本人向け/第三者向けの取り違えが再発した。docs/anti-patterns/planning.md 参照。
  */
 import type React from "react";
 import Link from "next/link";

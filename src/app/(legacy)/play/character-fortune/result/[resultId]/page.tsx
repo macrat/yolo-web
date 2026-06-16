@@ -7,8 +7,6 @@
  * 遷移しない（この URL はシェア用に生成される）。文言・構造・メタ・OGP は
  * 「診断をやっていない第三者が初めて見る」前提で設計すること。本人向け結果体験は
  * `src/play/quiz/_components/ResultCard.tsx` 側で編集する。
- * cycle-247 で本人向け/第三者向けの取り違えが再発し重大事故となった。
- * docs/anti-patterns/planning.md 参照。
  */
 
 /**

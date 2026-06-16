@@ -5,9 +5,6 @@
  * 使われる。これらは【第三者向けのシェア／検索ランディング専用ページ】であり、診断を遊んだ
  * 本人には表示されない。本人は完了時に `/play/[slug]` 上のインライン `ResultCard` で結果を見る。
  * 本人向けの結果表示を変えたい場合は ResultPageShell ではなく `ResultCard.tsx` を編集すること。
- *
- * cycle-247 で本人向け結果と第三者向けシェアページの取り違えが再発し重大事故となった。
- * docs/anti-patterns/planning.md 参照。
  */
 import Breadcrumb from "@/components/common/Breadcrumb";
 import ShareButtons from "@/play/quiz/_components/ShareButtons";

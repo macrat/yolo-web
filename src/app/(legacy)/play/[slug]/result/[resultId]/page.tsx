@@ -10,9 +10,6 @@
  * したがって、このページの文言・構造・メタ・JSON-LD は「診断をやっていない第三者が
  * 初めて見る」ことを前提に設計すること。本人向けの結果体験を変えたい場合は
  * `src/play/quiz/_components/ResultCard.tsx` 側を編集する。
- *
- * cycle-247 で、この「本人向け結果」と「第三者向けシェアページ」の取り違えが
- * （事前警告にもかかわらず）再発し重大事故となった。docs/anti-patterns/planning.md 参照。
  */
 import type { Metadata } from "next";
 import Link from "next/link";
