@@ -1,5 +1,18 @@
 "use client";
 
+/**
+ * ℹ️ ResultCard は「受検者本人向け」のインライン結果表示です。
+ *
+ * 診断を完了した本人は、`/play/[slug]` 上でこの ResultCard を通して結果を見ます
+ * （`QuizContainer` の intro→playing→result フェーズ遷移。variant ごとの結果コンポーネント
+ *  への dispatch もここで行う）。本人はこの後 `/play/[slug]/result/[resultId]` へは遷移せず、
+ *  その `/result/<id>` URL はシェア用にここで生成される（→ 第三者が開く静的ページ）。
+ *
+ * つまり「本人向け = ResultCard（このファイル）」「第三者向けシェア/検索ランディング =
+ *  /play/[slug]/result/[resultId] ルート（ResultPageShell 側）」と役割が分かれている。
+ * 本人向けの結果体験を変えたいときは必ずこちら（ResultCard）を編集すること。
+ * cycle-247 でこの本人向け/第三者向けの取り違えが再発した。docs/anti-patterns/planning.md 参照。
+ */
 import type React from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";

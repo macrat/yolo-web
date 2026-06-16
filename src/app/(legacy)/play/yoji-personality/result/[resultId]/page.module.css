@@ -1,4 +1,10 @@
 /*
+ * ⚠️ 結果ページルート /play/[slug]/result/[resultId] のスタイル。
+ * このページは第三者向けのシェア／検索ランディング専用で、受検者本人には表示されない
+ * （本人は /play/[slug] 上のインライン結果＝ResultCard 経由で見る）。
+ * cycle-247 で本人向け/第三者向けの取り違えが再発（docs/anti-patterns/planning.md 参照）。
+ */
+/*
  * yoji-personality 専用結果ページのスタイル。
  * /play/yoji-personality/result/[resultId] 専用ルートのスタイル。
  *
