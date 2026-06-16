@@ -268,16 +268,23 @@ const YOJI_DESCRIPTION_OPTIONAL_MAX = 25;
 const YOJI_DESCRIPTION_HARD_LIMIT = 130;
 
 /**
- * 当サイトの独自性（AI 視点の使用例を全件掲載）を description で伝える固定文言。
+ * 当サイトの独自性（AI 視点の例文を全件掲載）を description で伝える固定文言。
  *
  * 背景: cycle-117/118 で AI 視点 example を全件追加し、他辞典サイトに対する
  * 独自付加価値（Google スパムポリシー対策）として確立している（docs/cycles/cycle-117.md,
  * docs/research/2026-03-22-yoji-example-marketing-research.md 参照）。本文言は
  * YojiDetail の「AIによる使用例」セクション（YojiDetail.tsx L151-154）に表示済みの
- * 事実と整合する。「AI が書いた」を明示することで、実用例文を期待した来訪者の
- * 直帰（AP-I04）を防ぎつつ、独自性をスニペット段階で伝える。
+ * 事実と整合する。
+ *
+ * 表現の意図（cycle-246 PM 最終判断）:
+ * - 「AIが見た」は研究資料が抽出した核心「AI が人間を観察している視点」と直接整合する
+ *   平易な表現。「視点」のような抽象語ではなく、観察主体としての AI を動詞で示す。
+ * - 「人間のひとコマ」は例文の実体（観察された人間の小編）と一致し、スニペット予告と
+ *   ページ着地の期待整合を保つ（AP-I04 回避）。
+ * - 「使用例」「掲載」のような実用と誤読されうる語彙は意図的に排し、「ひとコマ」で
+ *   場面のスケッチであることを示唆する（実用例文を期待した直帰の予防）。
  */
-const YOJI_AI_EXAMPLE_LABEL = "AIが書いた使用例も掲載。";
+const YOJI_AI_EXAMPLE_LABEL = "AIが見た人間のひとコマも。";
 
 /** YojiDetail と整合する成立地ラベル。`不明` は description で言及しない。 */
 const YOJI_ORIGIN_DESCRIPTION_LABEL: Record<
@@ -325,19 +332,19 @@ function buildYojiOriginOrStructureSuffix(
 /**
  * 四字熟語ページの meta description を組み立てる。
  *
- * 設計（cycle-246 是正版・案A 採用）:
+ * 設計（cycle-246 PM 最終判断版）:
  * - 読み方クエリ救済を最優先 → `「○○○○」(よみがな)` を前置
  * - meaning は必須
  * - AI 視点の独自 example を全件掲載している事実を独自性訴求として明示
- *   （cycle-117/118 で確立した独自性戦略を スニペット段階でも活かす）
+ *   （cycle-117/118 で確立した独自性戦略をスニペット段階でも活かす）
  * - 余裕があれば origin/structure を 1 つだけ末尾に追加（両方は入れない）
  * - difficulty は意味検索者に無関係のため含めない
- * - 「使用例」単独だと実用例文と誤認されうるため「AIが書いた使用例」と明示する
- *   （AP-I04 期待外れ直帰の予防）
+ * - 「使用例」「掲載」のような実用辞典を匂わせる語彙は避け、「AIが見た人間のひとコマ」
+ *   という観察視点の表現に統一する（AP-I04 期待外れ直帰の予防）。
  */
 function buildYojiDescription(yoji: YojiMetaForSeo): string {
   const base = `「${yoji.yoji}」(${yoji.reading})の意味は、${yoji.meaning}。`;
-  // AI 文言は独自性訴求の固定要素として常に付与する（base+AI で最大 89 字、
+  // AI 文言は独自性訴求の固定要素として常に付与する（base+AI で最大 ~99 字、
   // 全 400 件で 130 字内に収まることを検算済み）。
   const withAi = `${base}${YOJI_AI_EXAMPLE_LABEL}`;
   const originOrStructure = buildYojiOriginOrStructureSuffix(
@@ -378,10 +385,16 @@ export function generateYojiPageMetadata(yoji: YojiMetaForSeo): Metadata {
 
 export function generateYojiJsonLd(yoji: YojiMetaForSeo): object {
   // sameAs は意図的に含めない（cycle-246 是正）。
-  // schema.org 上 sameAs は「そのアイテムの同一性を曖昧さなく示す参照ページ」を意味し、
-  // コトバンク等の外部辞書ページを sameAs に置くと「うちのページとコトバンクは同じものを指す」
-  // と機械可読に宣言する構造になる。過去サイクル (cycle-117/118) で AI 視点 example による
-  // 独自性確立戦略を取っているサイトでは、この sameAs は独自性主張を打ち消す方向。
+  // 理由（当サイトの独自性戦略上の判断）:
+  //   schema.org 上 sameAs は「そのアイテムの同一性を曖昧さなく示す参照ページ」を意味する
+  //   （典型例: Wikipedia / Wikidata / 公式サイト）。コトバンク等の外部辞書ページを sameAs に
+  //   置くと、当サイトのページと権威辞書を「同じ概念について同じ参照を持つもの」として機械可読
+  //   に並列宣言する読みが成立しうる。過去サイクル (cycle-117/118) で AI 視点 example による
+  //   独自性確立戦略を取っているサイトでは、この sameAs は独自性主張を弱める方向と PM 判断した。
+  // 重要な但し書き:
+  //   `sameAs` を外部辞書ページに置くことを Google が公式に「スパム認定」と明言してはいない
+  //   （spam-policies 一次確認、本サイクルで確認済）。撤去は当サイト固有の独自性戦略上の優先順位
+  //   判断であって、他サイトで一律に sameAs を撤去すべき・置くべきの根拠にはならない。
   // 出典 URL は YojiDetail 本文の外部リンクで来訪者には届くため、JSON-LD からは外す。
   return {
     "@context": "https://schema.org",
