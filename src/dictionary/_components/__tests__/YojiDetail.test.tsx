@@ -61,14 +61,14 @@ test("renders constituent kanji section", () => {
 
 test("renders AI example section when example is present", () => {
   render(<YojiDetail yoji={mockYoji} />);
-  expect(screen.getByText("AIによる使用例")).toBeInTheDocument();
+  expect(screen.getByText("AIが見た人間のひとコマ")).toBeInTheDocument();
   expect(screen.getByText("テスト用の例文です。")).toBeInTheDocument();
 });
 
 test("does not render AI example section when example is empty string", () => {
   const yojiWithoutExample: YojiEntry = { ...mockYoji, example: "" };
   render(<YojiDetail yoji={yojiWithoutExample} />);
-  expect(screen.queryByText("AIによる使用例")).not.toBeInTheDocument();
+  expect(screen.queryByText("AIが見た人間のひとコマ")).not.toBeInTheDocument();
 });
 
 test("AI example section appears after kanji section and before related yoji section", () => {
@@ -77,7 +77,9 @@ test("AI example section appears after kanji section and before related yoji sec
     .getAllByRole("heading", { level: 2 })
     .map((h) => h.textContent);
   const kanjiIndex = headings.findIndex((h) => h === "構成漢字");
-  const exampleIndex = headings.findIndex((h) => h === "AIによる使用例");
+  const exampleIndex = headings.findIndex(
+    (h) => h === "AIが見た人間のひとコマ",
+  );
   const relatedIndex = headings.findIndex((h) =>
     h?.includes("同じカテゴリの四字熟語"),
   );

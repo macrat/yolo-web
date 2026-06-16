@@ -273,8 +273,8 @@ const YOJI_DESCRIPTION_HARD_LIMIT = 130;
  * 背景: cycle-117/118 で AI 視点 example を全件追加し、他辞典サイトに対する
  * 独自付加価値（Google スパムポリシー対策）として確立している（docs/cycles/cycle-117.md,
  * docs/research/2026-03-22-yoji-example-marketing-research.md 参照）。本文言は
- * YojiDetail の「AIによる使用例」セクション（YojiDetail.tsx L151-154）に表示済みの
- * 事実と整合する。
+ * YojiDetail の「AIが見た人間のひとコマ」セクション（cycle-246 M-1 是正で h2 を
+ * 「AIによる使用例」から変更し description と語彙統一）に表示済みの事実と整合する。
  *
  * 表現の意図（cycle-246 PM 最終判断）:
  * - 「AIが見た」は研究資料が抽出した核心「AI が人間を観察している視点」と直接整合する
@@ -344,8 +344,10 @@ function buildYojiOriginOrStructureSuffix(
  */
 function buildYojiDescription(yoji: YojiMetaForSeo): string {
   const base = `「${yoji.yoji}」(${yoji.reading})の意味は、${yoji.meaning}。`;
-  // AI 文言は独自性訴求の固定要素として常に付与する（base+AI で最大 ~99 字、
-  // 全 400 件で 130 字内に収まることを検算済み）。
+  // AI 文言は独自性訴求の固定要素として常に付与する。
+  // 全 400 件で実測（src/data/yoji-data.json をループして算出）:
+  //   base+AI で最大 90 字、suffix まで含めて description 最大 100 字
+  //   （上限 {@link YOJI_DESCRIPTION_HARD_LIMIT}=130 字に対し 30 字の余裕）。
   const withAi = `${base}${YOJI_AI_EXAMPLE_LABEL}`;
   const originOrStructure = buildYojiOriginOrStructureSuffix(
     withAi.length,
@@ -385,16 +387,22 @@ export function generateYojiPageMetadata(yoji: YojiMetaForSeo): Metadata {
 
 export function generateYojiJsonLd(yoji: YojiMetaForSeo): object {
   // sameAs は意図的に含めない（cycle-246 是正）。
-  // 理由（当サイトの独自性戦略上の判断）:
-  //   schema.org 上 sameAs は「そのアイテムの同一性を曖昧さなく示す参照ページ」を意味する
-  //   （典型例: Wikipedia / Wikidata / 公式サイト）。コトバンク等の外部辞書ページを sameAs に
-  //   置くと、当サイトのページと権威辞書を「同じ概念について同じ参照を持つもの」として機械可読
-  //   に並列宣言する読みが成立しうる。過去サイクル (cycle-117/118) で AI 視点 example による
-  //   独自性確立戦略を取っているサイトでは、この sameAs は独自性主張を弱める方向と PM 判断した。
-  // 重要な但し書き:
-  //   `sameAs` を外部辞書ページに置くことを Google が公式に「スパム認定」と明言してはいない
-  //   （spam-policies 一次確認、本サイクルで確認済）。撤去は当サイト固有の独自性戦略上の優先順位
-  //   判断であって、他サイトで一律に sameAs を撤去すべき・置くべきの根拠にはならない。
+  // 理由:
+  //   schema.org の sameAs は「the URL of a reference Web page that unambiguously indicates
+  //   the item's identity」、すなわち「同じ実体・同じコンテンツの別 URL である」と機械可読に
+  //   宣言するプロパティ。Google spam-policies は「他サイトのコンテンツを独自付加価値なく再公開
+  //   する＝コピー」を明確に禁じている。当サイトの個別 yoji ページは過去サイクル (cycle-117/118)
+  //   で AI 視点 example を全件追加して独自付加価値を確立しており、コトバンク等の外部辞書とは
+  //   「同じコンテンツ」ではない。にもかかわらず外部辞書 URL を sameAs に置く行為は、機械可読の
+  //   層で「うちは外部辞書と同じコンテンツです」と宣言する構造で、spam-policies の禁止対象
+  //   （コピー）に該当しうる自己申告となる構造で、撤去すべきと判断した（Google 公式が「sameAs=
+  //   スパム認定」と明示しているわけではなく、sameAs の含意 × spam-policies × 当サイトの
+  //   独自付加価値の三点からの論理的導出である）。
+  // 撤去の射程（重要）:
+  //   本撤去は「独自付加価値を確立しているコンテンツに、別の独自付加価値を持つ他サイトを sameAs
+  //   で指す」誤運用の是正に限定される。Wikipedia / Wikidata / 公式サイトのように当該アイテムの
+  //   真の同一実体を指す sameAs は schema.org が想定する正しい用法で、Google も Knowledge Graph
+  //   構築に活用する。次任 PM が本撤去を一般化して真の同一実体への sameAs まで一律撤去しないこと。
   // 出典 URL は YojiDetail 本文の外部リンクで来訪者には届くため、JSON-LD からは外す。
   return {
     "@context": "https://schema.org",

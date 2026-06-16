@@ -16,6 +16,8 @@ import {
   generateFaqPageJsonLd,
   safeJsonLdStringify,
 } from "../seo";
+import yojiData from "@/data/yoji-data.json";
+import type { YojiEntry } from "@/dictionary/_lib/types";
 
 describe("generateGameJsonLd", () => {
   test("returns VideoGame JSON-LD with correct properties", () => {
@@ -567,7 +569,7 @@ describe("generateYojiPageMetadata", () => {
     expect(description.length).toBeLessThanOrEqual(130);
   });
 
-  // cycle-246 PM 最終判断で独自性訴求文言を「AIが見た人間のひとコマも。」（13字）に変更。
+  // cycle-246 PM 最終判断で独自性訴求文言を「AIが見た人間のひとコマも。」（14字、句点含む）に変更。
   // 「実用例文」を匂わせる文言（「用例:」「例文:」「例えば」「たとえば」「使用例」「掲載」
   // など実用と誤読されうる表現）は禁止（AP-I04 期待外れ直帰の予防）。
   // また difficulty は意味検索者に無関係のため含めない。
@@ -586,10 +588,32 @@ describe("generateYojiPageMetadata", () => {
     // cycle-117/118 で確立した AI 視点 example 全件掲載の独自性戦略を
     // スニペット段階でも活かす。研究資料が抽出した核心「AI が人間を観察している」
     // を平易な表現「AIが見た人間のひとコマ」で反映する。YojiDetail の
-    // 「AIによる使用例」セクションがページに表示済みの事実と整合する。
+    // 「AIが見た人間のひとコマ」セクション（cycle-246 M-1 是正で h2 を統一）が
+    // ページに表示済みの事実と整合する。
     const result = generateYojiPageMetadata(yojiData);
     const description = result.description as string;
     expect(description).toContain("AIが見た人間のひとコマ");
+  });
+
+  test("AI 文言は meaning 句点の直後に連接し、末尾に句点を伴う完全一致である", () => {
+    // 「。AIが見た人間のひとコマも。」の完全一致で次の 3 点を一括検証する:
+    // (1) meaning 句点と AI 文言の連接（間に他要素が挟まらない）
+    // (2) AI 文言の語形（途中で切れていない・「人間のひとコマ」が崩れていない）
+    // (3) AI 文言末尾の句点（後続要素との読点 / 句点境界の保護）
+    const result = generateYojiPageMetadata(yojiData);
+    const description = result.description as string;
+    expect(description).toContain("。AIが見た人間のひとコマも。");
+  });
+
+  test("AI 文言の直後は origin/structure suffix または description 終端である（位置検証）", () => {
+    // base → AI → (任意の origin/structure suffix) → 終端、の順序を正規表現で固定する。
+    // AI 文言と suffix の間に他要素が混入する変更（例: 「使用例も。」のような実用語彙の
+    // 不用意な復活）を構造的に検出する。
+    const result = generateYojiPageMetadata(yojiData);
+    const description = result.description as string;
+    expect(description).toMatch(
+      /。AIが見た人間のひとコマも。(?:中国伝来|日本由来|対句構造|組合せ構造|因果関係|$)/,
+    );
   });
 
   test("origin が判明している場合は description に origin の説明が含まれる", () => {
@@ -648,6 +672,44 @@ describe("generateYojiPageMetadata", () => {
     const result = generateYojiPageMetadata(yojiData);
     const og = result.openGraph as Record<string, unknown> | undefined;
     expect(og?.siteName).toBe("yolos.net");
+  });
+});
+
+describe("generateYojiPageMetadata - all yoji-data entries (integration)", () => {
+  // yoji-data.json の本物の 400 件全件で description ≤ 130 字を構造的に保証する。
+  // YOJI_AI_EXAMPLE_LABEL / origin・structure ラベル / meaning の長さが変動しても、
+  // 来訪者が SERP で description が切れて意味の主要部を失うリスクを CI で予防する。
+  // 個別の代表ケース（短い・長い・origin=不明）は上の describe で網羅済み。この
+  // ブロックは「全件が上限を破らない」という構造的保証に特化する。
+  const entries = yojiData as YojiEntry[];
+
+  test("yoji-data.json は 400 件以上含む（前提の固定）", () => {
+    // 件数が前提を満たすことを明示することで、以下のループテストが
+    // 意図せず空配列で pass してしまう退化を防ぐ。
+    expect(entries.length).toBeGreaterThanOrEqual(400);
+  });
+
+  test("全 400 件の description が 130 字以内である", () => {
+    // 参考: 現時点の実測上限は base+AI で最大 90 字 / description 最大 100 字
+    //   （上限 130 字に対し 30 字の余裕）— src/lib/seo.ts L348-350 のコメントと整合。
+    //   本テストは上限 130 を直接アサートし、将来のラベル変更で余裕が削られた
+    //   場合でも来訪者影響（SERP 末尾切れ）の最後の砦として機能する。
+    let maxLength = 0;
+    let maxYoji = "";
+    for (const entry of entries) {
+      const metadata = generateYojiPageMetadata(entry);
+      const descriptionLength = (metadata.description as string).length;
+      expect(descriptionLength).toBeLessThanOrEqual(130);
+      if (descriptionLength > maxLength) {
+        maxLength = descriptionLength;
+        maxYoji = entry.yoji;
+      }
+    }
+    // 実測上限を expect で表面化する（assertion 失敗時に最長エントリの特定を容易にする）。
+    // 上限 130 字に対する余裕は seo.ts コメント（30 字）を超えない想定。
+    expect(maxLength).toBeLessThanOrEqual(130);
+    // maxYoji は失敗時のデバッグ補助。常に文字列であることのみ最小確認。
+    expect(typeof maxYoji).toBe("string");
   });
 });
 

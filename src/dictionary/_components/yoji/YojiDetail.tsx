@@ -150,7 +150,7 @@ export default function YojiDetail({ yoji }: YojiDetailProps) {
       {/* フッターにAI運営の旨が記載されているため、セクション単位の注記は不要 */}
       {yoji.example && (
         <section className={styles.section}>
-          <h2>AIによる使用例</h2>
+          <h2>AIが見た人間のひとコマ</h2>
           <p className={styles.exampleQuote}>{yoji.example}</p>
         </section>
       )}
