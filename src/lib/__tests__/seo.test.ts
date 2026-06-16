@@ -567,27 +567,29 @@ describe("generateYojiPageMetadata", () => {
     expect(description.length).toBeLessThanOrEqual(130);
   });
 
-  // cycle-246 是正で独自性訴求として「AIが書いた使用例も掲載」を末尾に追加した。
-  // ただし「実用例文」を匂わせる文言（「用例:」「例文:」「例えば」「たとえば」など
-  // 単独で実用例文を期待させる表現）は依然として禁止（AP-I04 期待外れ直帰の予防）。
+  // cycle-246 PM 最終判断で独自性訴求文言を「AIが見た人間のひとコマも。」（13字）に変更。
+  // 「実用例文」を匂わせる文言（「用例:」「例文:」「例えば」「たとえば」「使用例」「掲載」
+  // など実用と誤読されうる表現）は禁止（AP-I04 期待外れ直帰の予防）。
   // また difficulty は意味検索者に無関係のため含めない。
   test("descriptionに実用例文を匂わせる文言とdifficultyを含まない", () => {
     const result = generateYojiPageMetadata(yojiData);
     const description = result.description as string;
-    // 「AIが書いた使用例」というフレーズは許容するが、それ以外の例関連表現は禁止。
     expect(description).not.toMatch(/用例[:：]/);
     expect(description).not.toMatch(/例文[:：]/);
     expect(description).not.toMatch(/例えば|たとえば/);
+    expect(description).not.toContain("使用例");
+    expect(description).not.toContain("掲載");
     expect(description).not.toContain("難易度");
   });
 
-  test("descriptionに独自性訴求の「AIが書いた使用例」が含まれる（cycle-246 是正）", () => {
+  test("descriptionに独自性訴求の「AIが見た人間のひとコマ」が含まれる（cycle-246 PM 最終判断）", () => {
     // cycle-117/118 で確立した AI 視点 example 全件掲載の独自性戦略を
-    // スニペット段階でも活かす。YojiDetail の「AIによる使用例」セクションが
-    // ページに表示済みの事実と整合する。
+    // スニペット段階でも活かす。研究資料が抽出した核心「AI が人間を観察している」
+    // を平易な表現「AIが見た人間のひとコマ」で反映する。YojiDetail の
+    // 「AIによる使用例」セクションがページに表示済みの事実と整合する。
     const result = generateYojiPageMetadata(yojiData);
     const description = result.description as string;
-    expect(description).toContain("AIが書いた使用例");
+    expect(description).toContain("AIが見た人間のひとコマ");
   });
 
   test("origin が判明している場合は description に origin の説明が含まれる", () => {
