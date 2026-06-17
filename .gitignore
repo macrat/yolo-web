@@ -39,3 +39,9 @@ tmp/*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# 画像ファイルはリポジトリ肥大化防止のためコミット禁止。
+# 公開目的で画像ファイルが必要な場合は、公開用の public ディレクトリを作って
+# そのディレクトリだけ ignore から除外する（!public/ など）形で許可してもよい。
+*.jpg
+*.png
