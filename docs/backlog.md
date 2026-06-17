@@ -2,7 +2,8 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| _(なし)_ | | | | |
+| B-491 | アンチパターン集のルール違反項目を手順書／knowledge へ整理 | P1 | 248 | AP集の手順混入・事例混入を手順書/knowledge/cycle docへ整理。cycle-248でplanning.md/workflow.mdに着手(残りはB-390)。詳細 cycle-246.md・cycle-248.md |
+| B-392 | アンチパターン集の整理（手順書化・特定サイクル詳細混入の解消） | P1 | 248 | AP本体の手順記述除去・問掛け形統一。cycle-248でplanning.md/workflow.mdに着手。詳細 cycle-184.md・cycle-246.md・cycle-248.md |
 
 ## Queued (すぐに着手できる)
 
@@ -12,7 +13,6 @@
 | ~~B-514~~ | ~~PostToolUse整形フックが .prettierignore を貫通する恒久修正~~ | - | - | 取り下げ(cycle-246実測): 現環境で ignore は尊重され backlog.md は整形されない=AP-WF21 誤診。詳細 cycle-246.md |
 | B-502 | タイルレジストリ／型契約の再設計（全ツールの同一性を構造で強制） | P2 | - | タイル一覧を単一ソース化し詳細＝道具箱の同一実装を型で強制。着手: B-497残ツールのライブタイル化と並行で必要時。詳細 cycle-226.md・knowledge/tile-architecture.md |
 | B-512 | next.config redirects のコメント表記を「301」→「308」に統一 | P4 | - | permanent:true は実際 HTTP 308 を返すが games/quiz/colors/cheatsheets 等のコメントが「301」と誤記。挙動は正。コメント/ドキュメント文言のみ是正。詳細 cycle-243.md M-1 |
-| B-491 | アンチパターン集のルール違反項目を手順書／knowledge へ整理 | P1 | - | AP集のルール違反項目(事例混入・手順混入)を手順書／knowledge／サイクルドキュメントへ整理。cycle-246でAP-P24/P25追加時に同種違反を再発・優先度P2→P1引き上げ。詳細 cycle-220.md・cycle-246.md |
 | B-435 | QR コードツールへの種別タブ追加（URL / テキスト / Wi-Fi） | P4 | - | URL/テキスト/Wi-Fi種別タブ追加(1サイクル規模)。実測でPV0・流入皆無のためP3→P4降格。詳細 cycle-246.md・cycle-207.md |
 | B-437 | QR コードツールに SVG ダウンロードボタンを追加 | P4 | - | SVG DLボタンを小規模追加(0.2サイクル)。実測でQRページPV0・流入皆無のためP3→P4降格。詳細 cycle-246.md・cycle-207.md |
 | B-438 | T1 / T2 search_intents 全体棚卸し | P3 | - | yaml の古さ・未掲載クエリを実測付きで棚卸し（1サイクル）。詳細 docs/cycles/cycle-207.md |
@@ -21,7 +21,7 @@
 | B-385 | about ページの OGP 画像新規作成 | P4 | - | /about の OGP 画像（opengraph-image/twitter-image.tsx）を新規作成。privacy パターン参照。着手条件なし |
 | B-387 | 一覧ページの OGP 画像棚卸し・新規作成 | P4 | - | 一覧系4ルート（/play・/tools・/blog・/）の OGP 画像未整備を新規作成。詳細 docs/cycles/cycle-182.md |
 | B-388 | Pagination コンポーネント本体の 44px タップターゲット化 | P4 | - | .pageItemを44px化しa11y達成。実測で2ページ目到達0PV・ほぼ未使用のためP3→P4降格(a11y価値は残る)。詳細 cycle-246.md・cycle-183.md |
-| B-390 | AP 集全項目のガイド混入監査と事後検証質問形への統一 | P3 | - | docs/anti-patterns/ 全項目のガイド混入（命令形等）を事後検証質問形に統一。詳細 docs/cycles/cycle-183.md §B-390 |
+| B-390 | AP 集全項目のガイド混入監査と事後検証質問形への統一 | P3 | - | 全項目のガイド混入を問掛け形へ統一。cycle-248でplanning/workflowをB-491/B-392が処理。残りimplementation.md(AP-I07/I09/I10/I11に手順混入確認)とwriting.md。詳細 cycle-183.md・cycle-248.md |
 | B-316 | サイト全体の URL 構成の見直し | P2 | - | /play 等の旧コンセプト URL を新コンセプト「道具と息抜き」に再設計 |
 | B-317 | 時間関係ツールの追加 | P2 | - | 時間管理・計測ツール群（タイマー・ストップウォッチ等）を追加。詳細 docs/tools-idea.md |
 | B-318 | 画像を共有用に整えるワークフローツール | P3 | - | 写真をSNS/LINE共有前に安全・見栄え良く整える1ページWF（AI風ツール調査2026-05-05起票）。詳細 docs/tools-idea.md |
@@ -61,7 +61,6 @@
 | B-382 | 既存の日付ツールに自然言語入力を追加 | P3 | - | 日付ツール群に「来週の火曜14時」等の自然言語入力を追加（AI風ツール調査2026-05-05起票）。詳細 docs/tools-idea.md |
 | B-383 | BPM 検出ツール | P4 | - | 音声/音楽から BPM を自動検出（AI風ツール調査2026-05-05起票）。詳細 docs/tools-idea.md |
 | B-384 | お絵かき認識ゲーム | P4 | - | キャンバスの絵をリアルタイム認識して当てるミニゲーム（AI風ツール調査2026-05-05起票）。詳細 docs/tools-idea.md |
-| B-392 | アンチパターン集の整理（手順書化・特定サイクル詳細混入の解消） | P1 | - | cycle-183/184 以前のAP 8項目(AP-P16/WF03/05/09/11/12等)から手順書記述除去・問掛け形式に統一。cycle-246でAP-P19/P21に同種違反放置を確認・優先度P3→P1引き上げ。詳細 cycle-184.md・cycle-246.md |
 | B-393 | Header actions slot のタップターゲット 44px 対応 | P3 | - | ThemeToggleとHeader検索ボタンがWCAG2.5.5推奨44px未達。詳細 cycle-185.md・archive/2026-05-11-cycle-185-a11y-review.md |
 | B-398 | ブログ詳細ページ等の grep ベーステストの必要性再評価 | P3 | - | grep ベーステスト群を訪問者価値の観点で再評価し削除か置換かを判断。詳細 docs/cycles/cycle-189.md §B-398 |
 | B-310 | ヘッダーナビゲーション体系の再設計（旧: トップページ・ナビゲーションの再設計） | P2 | - | トップ再設計はcycle-232で実施済。残: ヘッダーナビ体系再設計(NAV_ITEMS/道具箱項目要否/遊び位置づけ/Footer整合)。詳細 cycle-186.md・cycle-232.md |
