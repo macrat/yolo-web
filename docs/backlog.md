@@ -2,7 +2,7 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-519 | 漢字辞書詳細ページの「部首・画数」検索向け CTR 改善（SEOメタ表層） | P2 | 251 | B-323切り出し。漢字詳細が高impression・ほぼ0クリックで部首クエリ来訪なのにtitle/metaに部首・画数皆無。既存データ(部首/画数)をSEO表層に前置。詳細 cycle-251.md |
+| _(なし)_ | | | | |
 
 ## Queued (すぐに着手できる)
 
@@ -92,6 +92,7 @@
 | B-364 | cycle-175〜178 連続事故と回復のブログ化再判断 | P3 | - | cycle-178 で取下げ。B-497完了で材料が揃い Queued 化。着手時 PM が読者価値で独立判断。詳細 docs/cycles/cycle-178.md |
 | B-507 | DESIGN.md §3 への補足ラベル（小さめフォント）の許容条件の明文化 | P4 | - | 0.8rem級の補足ラベルと§3「16px以上を基本」の整合の許容条件（補足メタ限定等）を DESIGN.md に明文化。詳細 docs/cycles/cycle-231.md |
 | B-508 | ブログ記事 frontmatter の裸配列残骸（cycle-193 撤去フィールドの残り）一括除去 | P4 | - | trust_level直後の裸配列残骸を除去。残り4本: yoji-quiz/tool-reliability/http-status/game-infra-refactoring。B-432と整合注意 |
+| B-520 | kanji-data.json の kunYomi 重複データのクレンジング | P4 | - | 元データで kunYomi に重複読みがある字が119件（例「生」うまれる/なま各2回）。詳細ページ本文(KanjiDetail)にも重複表示。cycle-251はメタ側を表示層で重複除去済、本文含む根治は本データ修正。詳細 cycle-251.md |
 
 ## Deferred (すぐに着手できない)
 
@@ -123,8 +124,8 @@
 
 | ID | Title | Completed Cycle | Notes |
 | --- | --- | --- | --- |
+| B-519 | 漢字辞書詳細ページの「部首・画数」検索向け CTR 改善（SEOメタ表層） | 251 | 漢字詳細ページの title/description/OG/JSON-LD に部首・画数を前置（B-323切り出し）。英語meanings除去し読み＋使用例で語義担保。読み重複は表示層dedup。元データ重複はB-520。詳細 cycle-251.md |
 | B-518 | 理系思考タイプ診断（science-thinking）の結果体験強化（detailedContent 追加） | 250 | 10タイプに detailedContent 追加。本人 ResultCard にも traits 表示を追加（影響は word-sense/science-thinking のみ）。詳細 cycle-250.md |
 | B-516 | 診断結果ページからの「他のタイプ回遊」導線の設計 | 249 | word-sense-personality(全タイプ回遊が唯一欠落の標準形式診断)向けに共有 OtherTypesNav を新設し本人ResultCardと静的結果ページの両surfaceに導線追加。8 variant共通化はB-517。詳細 cycle-249.md |
 | B-491 | アンチパターン集のルール違反項目を手順書／knowledge へ整理 | 248 | planning.md/workflow.md本体の手順混入・事例混入・命令形を除去し問掛け形へ整理、保持価値ある3件を手順書/knowledgeへ移設。残りファイルはB-390。詳細 cycle-248.md |
 | B-392 | アンチパターン集の整理（手順書化・特定サイクル詳細混入の解消） | 248 | B-491と同一作業として一括処理（planning.md/workflow.md本体のDo/Don't是正）。詳細 cycle-248.md |
-| B-515 | 四字熟語辞書ページの CTR 改善（出典/構成データ表示＋メタ・JSON-LD改善） | 246 | YojiDetailにorigin/structure/sourceUrl表示・descは読み方前置+独自性訴求・JSON-LD alternateName。sameAsは当初採用→cycle-117独自性戦略との衝突で撤去。詳細 cycle-246.md |

@@ -2,7 +2,7 @@
 id: 251
 description: 漢字辞書の詳細ページ（/dictionary/kanji/[char]）が「<漢字> 部首」等の検索で高 impression なのにほぼ 0 クリックという Search Console 実測の取りこぼしを是正する。既存の正確なデータ（部首文字・画数・読み）を SEO タイトル / メタディスクリプション / OG / JSON-LD に前置し、検索結果のスニペットで「ここに部首・画数の答えがある」と伝わるようにする（B-519、B-323の具体化）。
 started_at: "2026-06-18T21:34:50+0900"
-completed_at: null
+completed_at: "2026-06-18T22:24:46+0900"
 ---
 
 # サイクル-251
@@ -45,15 +45,16 @@ impression の生の数字だけ見れば四字熟語の方が大きい（冷汗
 
 ## 実施する作業
 
-- [ ] **変更前スニペット確認の記録**: 現行 `generateKanjiPageMetadata` の出力（代表3字: 袋・詩・執 のタイトル/description）を `tmp/cycle-251/before.md` に記録。部首・画数が含まれないことを明示。
-- [ ] **メタ仕様の確定**: 部首・画数を前置した新 title / description / OG / JSON-LD の文面ルールを `tmp/cycle-251/spec.md` に確定（後述「メタ文面の方針」）。Google の現行ガイダンス（簡潔・記述的・キーワード詰め込み回避・ブランド控えめ）と整合させる。
-- [ ] **型拡張**: `KanjiMetaForSeo` に `radical: string` と `strokeCount: number` を追加（`KanjiEntry` がスーパーセットなので呼び出し側は無改修で通る）。
-- [ ] **`generateKanjiPageMetadata` の改修**: title/description/OG/twitter/keywords に部首・画数を前置。読みは維持。
-- [ ] **`generateKanjiJsonLd` の改修**: `DefinedTerm` の description に部首・画数を含める（過剰なプロパティ追加はしない・既存構造を尊重）。
-- [ ] **テスト追加/更新**: `src/lib/seo` のテスト（または新規 `__tests__`）で、生成 title に「部首」、description に部首文字と「画数」「<n>画」が含まれること・読み/意味が落ちていないこと・代表字（袋=衣/11画 等）を検証。既存 SEO テストの退行確認。
-- [ ] **（任意・スコープ内で判断）radical-index ページ**: 「同じ部首」クエリ（装 襟 袋 同じ部首）の受け皿 `/dictionary/kanji/radical/[radical]` のメタも部首を前置できるか確認し、低コストなら同時是正。コスト/リスクが大きければ B-519 残作業として backlog 化。
-- [ ] **品質ゲート**: `npm run lint && npm run format:check && npm run test && npm run build` を一括実行し全緑。
-- [ ] **レビュー**: reviewer に依頼（SEO 文面の妥当性・型拡張の安全性・退行有無）。指摘を是正し再レビューで承認。
+- [x] **変更前スニペット確認の記録**: 現行 `generateKanjiPageMetadata` の出力（代表3字: 袋・詩・執 のタイトル/description）を `tmp/cycle-251/before.md` に記録。部首・画数が含まれないこと・meanings が全件英語であることを明示。
+- [x] **メタ仕様の確定**: 部首・画数を前置した新 title / description / OG / JSON-LD の文面ルールを `tmp/cycle-251/spec.md` に確定。Google の現行ガイダンス（簡潔・記述的・キーワード詰め込み回避・ブランド控えめ）と整合させた。
+- [x] **型拡張**: `KanjiMetaForSeo` に `radical: string` / `strokeCount: number` / `examples: string[]` を追加（`KanjiEntry` がスーパーセットなので呼び出し側 `[char]/page.tsx` は無改修で通過）。
+- [x] **`generateKanjiPageMetadata` の改修**: title/og:title/description/twitter/keywords に部首・画数を前置。読みは維持。英語 meanings は可視 description/keywords から除去し、訓読み＋使用例（日本語）で語義を担保。
+- [x] **`generateKanjiJsonLd` の改修**: `DefinedTerm` の description に部首・画数を追加（英語 meanings は機械可読データとして JSON-LD に残す・既存構造は維持）。
+- [x] **テスト追加/更新**: `src/lib/__tests__/seo.test.ts` の kanji モック3箇所に新フィールド追加。title への部首/画数前置・description 冒頭の部首/画数回答・読み方/使用例の包含・英語不羅列・keywords の部首/画数を新規アサート。seo.test.ts 111件 pass。
+- [x] **radical-index ページ確認**: `/dictionary/kanji/radical/[radical]` は既に title `部首「衣」の漢字一覧 - 漢字辞典 | yolos.net`・description で部首を前置済みのため**変更不要**と確認（「同じ部首」クエリの受け皿として十分）。
+- [x] **【レビュー後対応】重複読みの表示層除去**: reviewer の NIT-1（文字＝部首124字の keywords 重複）＋データ品質指摘（kunYomi 重複119字・例「生」）を受け、`uniqueReadings`（出現順保持）＋ keywords の `new Set` で description/keywords/JSON-LD の重複読みを除去。元データ自体のクレンジング（本文 KanjiDetail にも波及）は B-520 として backlog 化。回帰テスト（「生」）を追加。
+- [x] **品質ゲート**: `npm run lint && npm run format:check && npm run test && npm run build` を一括実行し全緑（GATE EXIT 0・test 332ファイル/5540件・build exit 0）。
+- [x] **レビュー**: reviewer に依頼。初回＝承認（NIT-1 のみ）＋データ品質指摘。表示層 dedup で対応し再レビューで承認（残指摘なし）。
 
 ## 作業計画
 
@@ -90,10 +91,29 @@ impression の生の数字だけ見れば四字熟語の方が大きい（冷汗
 - `docs/cycles/cycle-246.md`（B-515）: yoji 詳細スニペット最適化の先行手法（読みの title 前置・description 冒頭で直接回答）。本サイクルで漢字側に適用する。
 - **外部仕様への依存**: 本計画は SEO の普遍的な仕組み（`<title>` / meta description / og:title / Schema.org `DefinedTerm`）にのみ依存し、廃止リスクのある特定のリッチリザルト機能や第三者プラットフォーム機能には依存しない。Google 公式ガイダンス（[title-link](https://developers.google.com/search/docs/appearance/title-link)・2026-06-18 確認）で、title 要素・og:title・見出し等から title link が生成され、「簡潔・記述的・キーワード詰め込み回避・ブランドは控えめ」が現行指針であることを確認。本サイクルの文面方針（部首・画数を前置しつつ詰め込まない・ブランド末尾）はこれと整合する。
 
+### レビュー記録
+
+**reviewer（型安全性・データ整合・SEO 文面・退行・憲法整合）**: 初回＝承認（NIT 1件）、再レビュー＝承認（残指摘なし）。
+
+- 型拡張: `KanjiEntry` が radical/strokeCount/examples を実際に保持する構造的スーパーセットであることを確認。呼び出し元は `[char]/page.tsx` の1箇所のみ・`KanjiEntry` 全体を渡すため無改修。`tsc --noEmit` クリーン。全2136件で radical/strokeCount 欠落 0 を実測。
+- SEO 文面: title は常に32文字固定（簡潔・ブランド末尾）。description は最長122→（dedup後）110文字。英語 meanings 除去は妥当（全2136件 ASCII のみを実測）。
+- 退行: 空配列フォールバックを実データ（空 examples=栃／空 kunYomi=王／空 onYomi=畑）で検証し句読点の宙ぶらりんなし。onYomi と kunYomi が両方空の字は0件。誇大表示なし（本文 KanjiDetail が部首・画数を実際に表示）。
+- NIT-1（keywords 重複・文字＝部首124字）＋データ品質指摘（kunYomi 重複119字）→ 表示層 dedup で対応。再レビューで「**全2136字で音読み∩訓読み=0**」を実測確認し、結合 dedup が正当な on/kun 読みを誤って潰す事故は構造的に起き得ないことを保証。出現順保持で読みの意味も損なわれず。回帰テスト（「生」）も評価。
+
 ## キャリーオーバー
 
-- （計画時点の見込み）部首の読み（ころもへん等198部首の読みマップ）の新設と on-page / メタへの反映は、本サイクルの表層改善後の Search Console CTR 反応を見て要否を判断する。必要と判断した場合は B-519 の残作業として backlog 化する（誤読を出さないための出典付き作成＋レビューを前提とする）。
-- radical-index ページ（`/dictionary/kanji/radical/[radical]`、「同じ部首」クエリの受け皿）のメタ改善は、本サイクルでコスト・リスクを見て同時是正するか backlog 化するかを判断する。
+- **部首の読み（ころもへん等）**: 198部首の読みマップ新設と on-page/メタへの反映は、本サイクルの表層改善後の Search Console CTR 反応を見て要否を判断する。必要と判断した場合は誤読を出さないための出典付き作成＋レビューを前提に着手（現時点では backlog 未登録・CTR 観測後に判断）。
+- **B-520（kanji-data.json の kunYomi 重複クレンジング）**: 元データに kunYomi 重複が119字（例「生」）。本サイクルはメタ側を表示層で dedup したが、本文 KanjiDetail の読み方表示にも重複が出るため、根治は元データ修正。backlog に B-520 として登録済（P4）。
+- radical-index ページは既に部首を前置済みで変更不要と確認したため、持ち越しなし。
+
+### ブログ記事の判断 → 今サイクルは書かない
+
+完了処理で「Webサイト製作を学びたいエンジニア」向けに、本サイクルの SEO 改善（高 impression・0 クリックの辞書ページ／on-page にはある答えがスニペットに無い問題／英語 meanings の発見）をケーススタディ化できるか検討した。**結論: 今サイクルは書かない。**
+
+- **効果が未観測**: 本サイクルの変更は「検索意図に答えるメタへの是正」までで、CTR が実際に改善したかは Search Console にデータが溜まる数週間後まで分からない。今書けるのは「問題の診断と仮説」止まりで、検証済みの before/after ケーススタディにはならない。
+- **核の教訓が既知寄り**: 「検索される属性（部首・画数）を title/meta に出す」は対象読者には基本に近い。on-page≠スニペットの乖離や impression-高/CTR-0 の診断法には学びがあるが、効果を示せないまま出すと「サイクルごとにブログを捻出する」失敗（cycle-250 で取り下げた記事と同じ轍）に陥る。
+- **直近2サイクルの教訓**: cycle-250 はブログを自明として取り下げ、cycle-249 のブログは逸話がボット流入と判明し公開停止。トラフィックデータの逸話を過大評価する失敗が続いており、ここは抑制的に判断する。
+- **将来候補**: 数週間後に Search Console の CTR が実際に動いたかを確認し、動いた（または動かなかった）なら「部首をスニペットに出したら辞書ページの CTR は変わったか」という data-backed before/after 記事に再挑戦する価値がある。これは効果観測を前提とする条件付き候補で、現時点では backlog 化しない（観測トリガー到達時に PM が読者価値で独立判断）。
 
 ## 補足事項
 
@@ -102,10 +122,10 @@ impression の生の数字だけ見れば四字熟語の方が大きい（冷汗
 
 ## サイクル終了時のチェックリスト
 
-- [ ] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
-- [ ] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
-- [ ] すべての変更がレビューされ、残存する指摘事項が無くなっている。
-- [ ] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
-- [ ] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
-- [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
-- [ ] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
+- [x] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
+- [x] `/docs/backlog.md` のActiveセクションに未完了のタスクがない（B-519 を Done へ移動・Active は空にする）。
+- [x] すべての変更がレビューされ、残存する指摘事項が無くなっている（初回＋再レビューとも承認）。
+- [x] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する（GATE EXIT 0）。
+- [x] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
+- [x] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
+- [x] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている（B-520 登録・部首読みは CTR 観測後判断）。

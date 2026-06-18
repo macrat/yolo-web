@@ -195,36 +195,77 @@ export function generateWebSiteJsonLd(): object {
 
 interface KanjiMetaForSeo {
   character: string;
+  /** 部首文字（例: 衣）。「<漢字> 部首」検索の直接の答えとして title/description に前置する（cycle-251）。 */
+  radical: string;
+  /** 画数。「<漢字> 画数」検索意図に答えるため description に含める（cycle-251）。 */
+  strokeCount: number;
   meanings: string[];
   onYomi: string[];
   kunYomi: string[];
+  /** 熟語などの使用例。meanings が全件英語のため、日本語の語義は使用例で補う（cycle-251）。 */
+  examples: string[];
+}
+
+// cycle-251: 検索意図「<漢字> 部首/画数/読み方」を title 先頭に前置する共通文字列。
+// og:title は yoji と同様にサイト名を落とす。
+function buildKanjiTitleBody(character: string): string {
+  return `「${character}」の部首・画数・読み方 - 漢字辞典`;
+}
+
+// cycle-251: 元データ src/data/kanji-data.json の kunYomi には重複が混入している字がある
+// （実測119字。例「生」に「うまれる」「なま」が各2回）。スニペット・JSON-LD・keywords に
+// 重複読みをそのまま出すと冗長で品質を損なうため、表示層で重複を除去する（出現順は保持）。
+// 元データ自体のクレンジングは別タスク（backlog B-520、本文表示にも波及するため）。
+function uniqueReadings(readings: string[]): string[] {
+  return [...new Set(readings)];
+}
+
+// cycle-251: スニペット冒頭で部首・画数に直接答え、続けて読み方・使用例を示す。
+// meanings は全2136字が英語（ASCII）のみ（src/data/kanji-data.json 実測）なので、
+// 日本語の検索者向けの可視 description には英語を羅列せず、訓読みと使用例で語義を担わせる。
+function buildKanjiDescription(kanji: KanjiMetaForSeo): string {
+  const head = `漢字「${kanji.character}」の部首は「${kanji.radical}」、画数は${kanji.strokeCount}画です。`;
+  const onYomi = uniqueReadings(kanji.onYomi);
+  const kunYomi = uniqueReadings(kanji.kunYomi);
+  const readingParts: string[] = [];
+  if (onYomi.length > 0) readingParts.push(`音読み「${onYomi.join("・")}」`);
+  if (kunYomi.length > 0) readingParts.push(`訓読み「${kunYomi.join("・")}」`);
+  const reading =
+    readingParts.length > 0 ? `読み方は${readingParts.join("、")}。` : "";
+  const examples =
+    kanji.examples.length > 0 ? `使用例: ${kanji.examples.join("・")}。` : "";
+  return `${head}${reading}${examples}`;
 }
 
 export function generateKanjiPageMetadata(kanji: KanjiMetaForSeo): Metadata {
-  const meaningText = kanji.meanings.join("、");
-  const readingText = [...kanji.onYomi, ...kanji.kunYomi].join("・");
+  const titleBody = buildKanjiTitleBody(kanji.character);
+  const description = buildKanjiDescription(kanji);
   return {
-    title: `「${kanji.character}」の漢字情報 - 漢字辞典 | ${SITE_NAME}`,
-    description: `漢字「${kanji.character}」の読み方・意味・使い方。読み: ${readingText}。意味: ${meaningText}。`,
+    title: `${titleBody} | ${SITE_NAME}`,
+    description,
     keywords: [
-      kanji.character,
-      "漢字",
-      "読み方",
-      ...kanji.onYomi,
-      ...kanji.kunYomi,
-      ...kanji.meanings,
+      ...new Set([
+        kanji.character,
+        "部首",
+        kanji.radical,
+        "画数",
+        "漢字",
+        "読み方",
+        ...kanji.onYomi,
+        ...kanji.kunYomi,
+      ]),
     ],
     openGraph: {
-      title: `「${kanji.character}」の漢字情報 - 漢字辞典`,
-      description: `漢字「${kanji.character}」の読み方・意味・使い方。読み: ${readingText}。`,
+      title: titleBody,
+      description,
       type: "website",
       url: `${BASE_URL}/dictionary/kanji/${encodeURIComponent(kanji.character)}`,
       siteName: SITE_NAME,
     },
     twitter: {
       card: "summary_large_image",
-      title: `「${kanji.character}」の漢字情報 - 漢字辞典`,
-      description: `漢字「${kanji.character}」の読み方・意味・使い方。読み: ${readingText}。`,
+      title: titleBody,
+      description,
     },
     alternates: {
       canonical: `${BASE_URL}/dictionary/kanji/${encodeURIComponent(kanji.character)}`,
@@ -237,7 +278,7 @@ export function generateKanjiJsonLd(kanji: KanjiMetaForSeo): object {
     "@context": "https://schema.org",
     "@type": "DefinedTerm",
     name: kanji.character,
-    description: `読み: ${[...kanji.onYomi, ...kanji.kunYomi].join("・")}。意味: ${kanji.meanings.join("、")}`,
+    description: `部首: ${kanji.radical}／画数: ${kanji.strokeCount}画／読み: ${uniqueReadings([...kanji.onYomi, ...kanji.kunYomi]).join("・")}／意味: ${kanji.meanings.join("、")}`,
     url: `${BASE_URL}/dictionary/kanji/${encodeURIComponent(kanji.character)}`,
     inDefinedTermSet: {
       "@type": "DefinedTermSet",
