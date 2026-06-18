@@ -8,8 +8,16 @@ tags: ["UI改善", "サイト運営", "設計パターン", "失敗と学び"]
 category: "ai-workflow"
 series: null
 related_tool_slugs: ["quiz"]
-draft: false
+draft: true
 ---
+
+<!-- 公開停止（2026-06-18）: 本記事の核となる逸話「人がURLを手で書き換えて別タイプ結果へ移った」は、
+     owner の指摘を受けた GA4 生データの再検証で、能動的な人間の閲覧ではなく、ほぼ自動 page_view
+     （プリフェッチ／プレビュー生成等のボット相当）だったと判明した。根拠: 当該セッションに
+     user_engagement / engagement_time_msec が皆無・クイズプレイ操作も皆無・結果URLへ直接着地・
+     内部タイプID(bold-impact)は人間には知り得ずサイトマップ経由で機械が発見可能。
+     需要シグナルという前提が成立しないため draft:true で公開停止。詳細は cycle-249.md の
+     「### 事後訂正2」を参照。記事の再構成可否は別途判断する。 -->
 
 ## はじめに
 
