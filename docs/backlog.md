@@ -2,7 +2,7 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| _(なし)_ | | | | |
+| B-516 | 診断結果ページからの「他のタイプ回遊」導線の設計 | P3 | 249 | cycle-249で着手。受検者本人が見るResultCard起点で「他のタイプも見たい」を受け止める導線を来訪者価値起点で再設計。撤回版(SEO動機・静的ページ)との違いは「人がいる場所(ResultCard・完了率72%)に置く」こと。詳細 cycle-247.md・cycle-249.md |
 
 ## Queued (すぐに着手できる)
 
@@ -91,7 +91,6 @@
 | B-364 | cycle-175〜178 連続事故と回復のブログ化再判断 | P3 | - | cycle-178 で取下げ。B-497完了で材料が揃い Queued 化。着手時 PM が読者価値で独立判断。詳細 docs/cycles/cycle-178.md |
 | B-507 | DESIGN.md §3 への補足ラベル（小さめフォント）の許容条件の明文化 | P4 | - | 0.8rem級の補足ラベルと§3「16px以上を基本」の整合の許容条件（補足メタ限定等）を DESIGN.md に明文化。詳細 docs/cycles/cycle-231.md |
 | B-508 | ブログ記事 frontmatter の裸配列残骸（cycle-193 撤去フィールドの残り）一括除去 | P4 | - | trust_level直後の裸配列残骸を除去。残り4本: yoji-quiz/tool-reliability/http-status/game-infra-refactoring。B-432と整合注意 |
-| B-516 | 診断結果ページからの「他のタイプ回遊」導線の設計 | P3 | - | 同一診断の他タイプ結果ページへの回遊導線を来訪者価値起点で設計(全診断共通ResultPageShell影響・24タイプ診断の見せ方)。cycle-247でSEO動機の実装を撤回し起票。詳細 cycle-247.md |
 
 ## Deferred (すぐに着手できない)
 
