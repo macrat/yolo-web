@@ -459,6 +459,120 @@ describe("ResultCard - Standard variant", () => {
   });
 });
 
+describe("ResultCard - Standard variant 他のタイプ回遊ナビ", () => {
+  // 標準形式（variant なし）診断（word-sense-personality）でも、variant 診断と同様に
+  // 「他のタイプも見てみよう」回遊ナビを提供する（cycle-249 / B-516）。
+  const standardContent: QuizResultDetailedContent = {
+    traits: ["特徴1"],
+    behaviors: ["あるある1"],
+    advice: "アドバイス",
+  };
+  const currentResult: QuizResult = {
+    id: "type-a",
+    title: "タイプA",
+    description: "タイプAの説明です。",
+    icon: "🅰️",
+  };
+  const allTypes: QuizResult[] = [
+    {
+      id: "type-a",
+      title: "タイプA",
+      description: "タイプAの説明",
+      icon: "🅰️",
+    },
+    {
+      id: "type-b",
+      title: "タイプB",
+      description: "タイプBの説明",
+      icon: "🅱️",
+    },
+    {
+      id: "type-c",
+      title: "タイプC",
+      description: "タイプCの説明",
+      icon: "🌟",
+    },
+  ];
+
+  test("allResults が複数あるとき『他のタイプも見てみよう』ナビが表示されること", () => {
+    render(
+      <ResultCard
+        {...defaultProps}
+        result={currentResult}
+        detailedContent={standardContent}
+        allResults={allTypes}
+      />,
+    );
+    expect(screen.getByText("他のタイプも見てみよう")).toBeInTheDocument();
+  });
+
+  test("自タイプ以外は同一診断の結果ページへのリンクになること", () => {
+    render(
+      <ResultCard
+        {...defaultProps}
+        result={currentResult}
+        detailedContent={standardContent}
+        allResults={allTypes}
+      />,
+    );
+    expect(screen.getByText("タイプB").closest("a")).toHaveAttribute(
+      "href",
+      "/play/test-quiz/result/type-b",
+    );
+    expect(screen.getByText("タイプC").closest("a")).toHaveAttribute(
+      "href",
+      "/play/test-quiz/result/type-c",
+    );
+  });
+
+  test("現在の自タイプはリンクにせず aria-current=page のハイライトで示すこと", () => {
+    const { container } = render(
+      <ResultCard
+        {...defaultProps}
+        result={currentResult}
+        detailedContent={standardContent}
+        allResults={allTypes}
+      />,
+    );
+    const current = container.querySelector('[aria-current="page"]');
+    expect(current).not.toBeNull();
+    // 自タイプは <a> ではなく <span>（リンクにしない）
+    expect(current?.tagName).toBe("SPAN");
+    expect(current?.textContent).toContain("タイプA");
+    // 自タイプの結果ページへのリンクは存在しないこと
+    expect(
+      container.querySelector('a[href="/play/test-quiz/result/type-a"]'),
+    ).toBeNull();
+  });
+
+  test("allResults が未指定の場合はナビが表示されないこと", () => {
+    render(
+      <ResultCard
+        {...defaultProps}
+        result={currentResult}
+        detailedContent={standardContent}
+      />,
+    );
+    expect(
+      screen.queryByText("他のタイプも見てみよう"),
+    ).not.toBeInTheDocument();
+  });
+
+  test("allResults が1件のみの場合はナビが表示されないこと", () => {
+    render(
+      <ResultCard
+        {...defaultProps}
+        result={currentResult}
+        detailedContent={standardContent}
+        allResults={[allTypes[0]]}
+      />,
+    );
+    expect(
+      screen.queryByText("他のタイプも見てみよう"),
+    ).not.toBeInTheDocument();
+  });
+});
+
 describe("ResultCard - contrarian-fortune variant", () => {
   const contrarianContent: ContrarianFortuneDetailedContent = {
     variant: "contrarian-fortune",

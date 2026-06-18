@@ -31,6 +31,7 @@ import animalPersonalityQuiz from "@/play/quiz/data/animal-personality";
 import CompatibilitySection from "./CompatibilitySection";
 import InviteFriendButton from "./InviteFriendButton";
 import ShareButtons from "./ShareButtons";
+import OtherTypesNav from "./OtherTypesNav";
 import styles from "./ResultCard.module.css";
 
 // dynamic importにより、これらのコンポーネントとデータファイル（計120KB以上）を
@@ -105,6 +106,9 @@ function renderStandardContent(
   content: QuizResultDetailedContent,
   labels?: QuizMeta["resultPageLabels"],
   accentColor?: string,
+  allResults?: QuizResult[],
+  quizSlug?: string,
+  resultId?: string,
 ): React.ReactNode {
   const behaviorsHeading = labels?.behaviorsHeading ?? "このタイプのあるある";
   const adviceHeading = labels?.adviceHeading ?? "このタイプの人へのアドバイス";
@@ -138,6 +142,13 @@ function renderStandardContent(
       >
         {content.advice}
       </div>
+      {allResults && quizSlug && resultId && (
+        <OtherTypesNav
+          quizSlug={quizSlug}
+          currentResultId={resultId}
+          results={allResults}
+        />
+      )}
     </>
   );
 }
@@ -241,7 +252,14 @@ function renderDetailedContent(
 ): React.ReactNode {
   // Standard variant (variant === undefined)
   if (!content.variant) {
-    return renderStandardContent(content, labels, accentColor);
+    return renderStandardContent(
+      content,
+      labels,
+      accentColor,
+      allResults,
+      quizSlug,
+      resultId,
+    );
   }
   switch (content.variant) {
     case "contrarian-fortune":

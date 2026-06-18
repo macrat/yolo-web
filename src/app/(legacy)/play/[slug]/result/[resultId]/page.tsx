@@ -26,6 +26,7 @@ import CompatibilityDisplay from "./CompatibilityDisplay";
 import { extractWithParam } from "./extractWithParam";
 import DescriptionExpander from "./DescriptionExpander";
 import ResultPageShell from "@/play/quiz/_components/ResultPageShell";
+import OtherTypesNav from "@/play/quiz/_components/OtherTypesNav";
 import styles from "./page.module.css";
 
 type Props = {
@@ -288,6 +289,15 @@ export default async function PlayQuizResultPage({
           >
             {detailedContent.advice}
           </div>
+
+          {/* 他のタイプ回遊（受検者本人の ResultCard と同じ導線を、検索/シェアで
+              この結果ページに流入した第三者にも提供する。cycle-249 / B-516）。 */}
+          <OtherTypesNav
+            quizSlug={slug}
+            currentResultId={result.id}
+            results={quiz.results}
+            headingLevel={2}
+          />
 
           {/* CTA2: detailedContent読了者向けのテキストリンク形式CTA */}
           <div className={styles.cta2Section}>

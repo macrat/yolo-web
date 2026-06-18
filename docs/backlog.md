@@ -2,12 +2,13 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-516 | 診断結果ページからの「他のタイプ回遊」導線の設計 | P3 | 249 | cycle-249で着手。受検者本人が見るResultCard起点で「他のタイプも見たい」を受け止める導線を来訪者価値起点で再設計。撤回版(SEO動機・静的ページ)との違いは「人がいる場所(ResultCard・完了率72%)に置く」こと。詳細 cycle-247.md・cycle-249.md |
+| _(なし)_ | | | | |
 
 ## Queued (すぐに着手できる)
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-517 | 「全タイプ回遊」実装9箇所の共通コンポーネント統一（SSoT） | P3 | - | cycle-249のOtherTypesNavへ8 variant診断の独自全タイプセクションを寄せ単一化。現在タイプ表現の差異統一含む。8コンポーネント横断でリスク中。詳細 cycle-249.md |
 | B-323 | SEO・サイトマップの更新 | P2 | - | cycle-247で word-sense-personality 結果8タイプの detailedContent 執筆(結果体験向上=完了者72%に到達)を実施。残スコープ(他の強コンテンツの結果体験/sitemap/KW)は継続。詳細 cycle-247.md |
 | ~~B-514~~ | ~~PostToolUse整形フックが .prettierignore を貫通する恒久修正~~ | - | - | 取り下げ(cycle-246実測): 現環境で ignore は尊重され backlog.md は整形されない=AP-WF21 誤診。詳細 cycle-246.md |
 | B-502 | タイルレジストリ／型契約の再設計（全ツールの同一性を構造で強制） | P2 | - | タイル一覧を単一ソース化し詳細＝道具箱の同一実装を型で強制。着手: B-497残ツールのライブタイル化と並行で必要時。詳細 cycle-226.md・knowledge/tile-architecture.md |
@@ -122,6 +123,7 @@
 
 | ID | Title | Completed Cycle | Notes |
 | --- | --- | --- | --- |
+| B-516 | 診断結果ページからの「他のタイプ回遊」導線の設計 | 249 | word-sense-personality(全タイプ回遊が唯一欠落の標準形式診断)向けに共有 OtherTypesNav を新設し本人ResultCardと静的結果ページの両surfaceに導線追加。8 variant共通化はB-517。詳細 cycle-249.md |
 | B-491 | アンチパターン集のルール違反項目を手順書／knowledge へ整理 | 248 | planning.md/workflow.md本体の手順混入・事例混入・命令形を除去し問掛け形へ整理、保持価値ある3件を手順書/knowledgeへ移設。残りファイルはB-390。詳細 cycle-248.md |
 | B-392 | アンチパターン集の整理（手順書化・特定サイクル詳細混入の解消） | 248 | B-491と同一作業として一括処理（planning.md/workflow.md本体のDo/Don't是正）。詳細 cycle-248.md |
 | B-515 | 四字熟語辞書ページの CTR 改善（出典/構成データ表示＋メタ・JSON-LD改善） | 246 | YojiDetailにorigin/structure/sourceUrl表示・descは読み方前置+独自性訴求・JSON-LD alternateName。sameAsは当初採用→cycle-117独自性戦略との衝突で撤去。詳細 cycle-246.md |
