@@ -2,8 +2,7 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-491 | アンチパターン集のルール違反項目を手順書／knowledge へ整理 | P1 | 248 | AP集の手順混入・事例混入を手順書/knowledge/cycle docへ整理。cycle-248でplanning.md/workflow.mdに着手(残りはB-390)。詳細 cycle-246.md・cycle-248.md |
-| B-392 | アンチパターン集の整理（手順書化・特定サイクル詳細混入の解消） | P1 | 248 | AP本体の手順記述除去・問掛け形統一。cycle-248でplanning.md/workflow.mdに着手。詳細 cycle-184.md・cycle-246.md・cycle-248.md |
+| _(なし)_ | | | | |
 
 ## Queued (すぐに着手できる)
 
@@ -124,9 +123,8 @@
 
 | ID | Title | Completed Cycle | Notes |
 | --- | --- | --- | --- |
+| B-491 | アンチパターン集のルール違反項目を手順書／knowledge へ整理 | 248 | planning.md/workflow.md本体の手順混入・事例混入・命令形を除去し問掛け形へ整理、保持価値ある3件を手順書/knowledgeへ移設。残りファイルはB-390。詳細 cycle-248.md |
+| B-392 | アンチパターン集の整理（手順書化・特定サイクル詳細混入の解消） | 248 | B-491と同一作業として一括処理（planning.md/workflow.md本体のDo/Don't是正）。詳細 cycle-248.md |
 | B-515 | 四字熟語辞書ページの CTR 改善（出典/構成データ表示＋メタ・JSON-LD改善） | 246 | YojiDetailにorigin/structure/sourceUrl表示・descは読み方前置+独自性訴求・JSON-LD alternateName。sameAsは当初採用→cycle-117独自性戦略との衝突で撤去。詳細 cycle-246.md |
 | B-513 | ガイド→早見表の逆方向相互リンク追加 | 245 | cycle-244で復元した早見表6本に対し、対のガイド6本から早見表への逆リンクを追加し相互リンクを完成。各ガイド本文1行＋updated_at更新で主題は不変。2 reviewer重大ゼロ。cycle-245 |
 | B-511 | cycle-243 の憲法違反(来訪者価値破壊)の是正 | 244 | 早見表6記事を/blogに復元・旧/cheatsheets/Xを早見表へ向け直し・indexは/blog/tag/早見表へ。why-i-removed削除・記録誠実化・誤分類2本是正。cycle-244 |
-| B-345 | 移行計画 Phase 9.2.d: cheatsheet `http-status-codes` を既存ガイドへ統合（補筆） | 242 | http-status-code-guide-for-rest-api.md末に33コード早見表(1xx〜5xx)新設・自己参照リンク是正・RFC/MDN裏取り。撤去はB-349。cycle-242 |
-| B-342 | 移行計画 Phase 9.2.a: cheatsheet `cron` を既存ガイドへ統合（補筆） | 242 | cron-parser-guide.mdに特殊文字列ショートカット表(@yearly〜@reboot)と「よく使うcron式」拡充を追加。man裏取り。撤去はB-349。cycle-242.md |
-| B-347 | 移行計画 Phase 9.2.f: cheatsheet `regex` を既存ガイドへ統合（補筆） | 242 | 網羅性検証で軽微〜中の欠落。regex-tester-guide.md にメタ文字早見表(10種)・文字クラス否定形・先読み後読み全4種の表を追加。MDN裏取り・敬体統一。撤去はB-349。詳細 cycle-242.md |
