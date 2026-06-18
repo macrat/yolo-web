@@ -99,6 +99,36 @@
   border-left: 4px solid currentColor;
 }
 
+/* traits（持ち味）リスト。静的結果ページ（page.module.css .traitsItem）と
+   見た目を揃え、本人向け ResultCard でも持ち味を表示する（cycle-250）。 */
+.traitsList {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.traitsItem {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--color-text);
+  padding: 0.5rem 0.75rem;
+  background: var(--color-bg-secondary);
+  border-radius: 6px;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.traitsItem::before {
+  content: "✓";
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 0.05rem;
+}
+
 /* behaviors リスト */
 .behaviorsList {
   list-style: none;

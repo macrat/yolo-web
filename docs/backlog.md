@@ -2,7 +2,7 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-518 | 理系思考タイプ診断（science-thinking）の結果体験強化（detailedContent 追加） | P2 | 250 | 10タイプに標準形式 detailedContent を追加し ResultCard・OtherTypesNav回遊・静的結果ページを厚くする。B-323の具体化。詳細 cycle-250.md |
+| _(なし)_ | | | | |
 
 ## Queued (すぐに着手できる)
 
@@ -123,9 +123,8 @@
 
 | ID | Title | Completed Cycle | Notes |
 | --- | --- | --- | --- |
+| B-518 | 理系思考タイプ診断（science-thinking）の結果体験強化（detailedContent 追加） | 250 | 10タイプに detailedContent 追加。本人 ResultCard にも traits 表示を追加（影響は word-sense/science-thinking のみ）。詳細 cycle-250.md |
 | B-516 | 診断結果ページからの「他のタイプ回遊」導線の設計 | 249 | word-sense-personality(全タイプ回遊が唯一欠落の標準形式診断)向けに共有 OtherTypesNav を新設し本人ResultCardと静的結果ページの両surfaceに導線追加。8 variant共通化はB-517。詳細 cycle-249.md |
 | B-491 | アンチパターン集のルール違反項目を手順書／knowledge へ整理 | 248 | planning.md/workflow.md本体の手順混入・事例混入・命令形を除去し問掛け形へ整理、保持価値ある3件を手順書/knowledgeへ移設。残りファイルはB-390。詳細 cycle-248.md |
 | B-392 | アンチパターン集の整理（手順書化・特定サイクル詳細混入の解消） | 248 | B-491と同一作業として一括処理（planning.md/workflow.md本体のDo/Don't是正）。詳細 cycle-248.md |
 | B-515 | 四字熟語辞書ページの CTR 改善（出典/構成データ表示＋メタ・JSON-LD改善） | 246 | YojiDetailにorigin/structure/sourceUrl表示・descは読み方前置+独自性訴求・JSON-LD alternateName。sameAsは当初採用→cycle-117独自性戦略との衝突で撤去。詳細 cycle-246.md |
-| B-513 | ガイド→早見表の逆方向相互リンク追加 | 245 | cycle-244で復元した早見表6本に対し、対のガイド6本から早見表への逆リンクを追加し相互リンクを完成。各ガイド本文1行＋updated_at更新で主題は不変。2 reviewer重大ゼロ。cycle-245 |
-| B-511 | cycle-243 の憲法違反(来訪者価値破壊)の是正 | 244 | 早見表6記事を/blogに復元・旧/cheatsheets/Xを早見表へ向け直し・indexは/blog/tag/早見表へ。why-i-removed削除・記録誠実化・誤分類2本是正。cycle-244 |

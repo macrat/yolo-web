@@ -110,11 +110,27 @@ function renderStandardContent(
   quizSlug?: string,
   resultId?: string,
 ): React.ReactNode {
+  const traitsHeading = labels?.traitsHeading ?? "このタイプの特徴";
   const behaviorsHeading = labels?.behaviorsHeading ?? "このタイプのあるある";
   const adviceHeading = labels?.adviceHeading ?? "このタイプの人へのアドバイス";
 
   return (
     <>
+      {/* traits（持ち味）。診断を遊んだ本人にも持ち味を届けるため、
+          静的結果ページと同じく behaviors の前に表示する（cycle-250）。 */}
+      <h3
+        className={styles.detailedHeading}
+        style={accentColor ? { color: accentColor } : undefined}
+      >
+        {traitsHeading}
+      </h3>
+      <ul className={styles.traitsList}>
+        {content.traits.map((t, i) => (
+          <li key={i} className={styles.traitsItem}>
+            {t}
+          </li>
+        ))}
+      </ul>
       <h3
         className={styles.detailedHeading}
         style={accentColor ? { color: accentColor } : undefined}

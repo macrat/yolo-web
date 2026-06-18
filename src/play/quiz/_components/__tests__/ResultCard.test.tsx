@@ -428,11 +428,14 @@ describe("ResultCard - Standard variant", () => {
     ).toBeInTheDocument();
   });
 
-  test("traitsが表示されないこと", () => {
+  test("traits（持ち味）が表示されること", () => {
     render(<ResultCard {...defaultProps} detailedContent={standardContent} />);
-    // Standard variantでtraitsは表示しない
-    expect(screen.queryByText("特徴1")).not.toBeInTheDocument();
-    expect(screen.queryByText("特徴2")).not.toBeInTheDocument();
+    // cycle-146 は traits が第三者向け分析文体（体言止め）だったため本人向け ResultCard では
+    // 非表示としていた（「本人文体へ書き換え後に表示追加」を将来作業として明記）。
+    // cycle-250 で標準形式診断（word-sense / science-thinking）の traits が本人向け文体で
+    // 揃ったため、静的結果ページと同じく ResultCard でも持ち味を表示する（本人＝完了者の所在）。
+    expect(screen.getByText("特徴1")).toBeInTheDocument();
+    expect(screen.getByText("特徴2")).toBeInTheDocument();
   });
 
   test("カスタムresultPageLabelsの見出しが使われること", () => {
