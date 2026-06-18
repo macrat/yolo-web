@@ -2,14 +2,14 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| _(なし)_ | | | | |
+| B-518 | 理系思考タイプ診断（science-thinking）の結果体験強化（detailedContent 追加） | P2 | 250 | 10タイプに標準形式 detailedContent を追加し ResultCard・OtherTypesNav回遊・静的結果ページを厚くする。B-323の具体化。詳細 cycle-250.md |
 
 ## Queued (すぐに着手できる)
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
 | B-517 | 「全タイプ回遊」実装9箇所の共通コンポーネント統一（SSoT） | P3 | - | cycle-249のOtherTypesNavへ8 variant診断の独自全タイプセクションを寄せ単一化。現在タイプ表現の差異統一含む。8コンポーネント横断でリスク中。詳細 cycle-249.md |
-| B-323 | SEO・サイトマップの更新 | P2 | - | cycle-247で word-sense-personality 結果8タイプの detailedContent 執筆(結果体験向上=完了者72%に到達)を実施。残スコープ(他の強コンテンツの結果体験/sitemap/KW)は継続。詳細 cycle-247.md |
+| B-323 | SEO・サイトマップの更新 | P2 | - | cycle-247で word-sense の結果体験強化を実施。cycle-250で science-thinking を B-518 へ切り出し。残(他診断の結果体験/sitemap/KW)継続。詳細 cycle-247.md・cycle-250.md |
 | ~~B-514~~ | ~~PostToolUse整形フックが .prettierignore を貫通する恒久修正~~ | - | - | 取り下げ(cycle-246実測): 現環境で ignore は尊重され backlog.md は整形されない=AP-WF21 誤診。詳細 cycle-246.md |
 | B-502 | タイルレジストリ／型契約の再設計（全ツールの同一性を構造で強制） | P2 | - | タイル一覧を単一ソース化し詳細＝道具箱の同一実装を型で強制。着手: B-497残ツールのライブタイル化と並行で必要時。詳細 cycle-226.md・knowledge/tile-architecture.md |
 | B-512 | next.config redirects のコメント表記を「301」→「308」に統一 | P4 | - | permanent:true は実際 HTTP 308 を返すが games/quiz/colors/cheatsheets 等のコメントが「301」と誤記。挙動は正。コメント/ドキュメント文言のみ是正。詳細 cycle-243.md M-1 |
