@@ -2,13 +2,12 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| _(なし)_ | | | | |
+| B-522 | 遊び群の (new)/ デザイン移行（Phase 8.2） | P1 | 253 | cycle-253でクイズ共通プレイ画面＋トークンブリッジ。残（結果群・ゲーム・daily・本格再設計・タイル化）は継続。詳細 cycle-253.md |
 
 ## Queued (すぐに着手できる)
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-522 | 遊び群の (new)/ デザイン移行（Phase 8.2） | P1 | - | play配下20ルートを移行。流入順に着手。B-493と統合。詳細 design-migration-plan.md・cycle-252.md |
 | B-350 | 移行計画 Phase 9.3.a: dictionary トップ移行 | P1 | - | /dictionary を (new)/ に移行。B-522完了後に着手。P2→P1昇格。詳細 design-migration-plan.md |
 | B-493 | 遊び（ゲーム）の単一タイル化（GameLayout 系） | P1 | - | 全ゲームをタイル再構築。B-522の一環。P2→P1昇格。詳細 cycle-225.md |
 | B-432 | trustLevel フィールド・関連型・テストの完全削除 | P2 | - | 一括完全削除（漸進禁止=AP-I02）。詳細 cycle-200.md |
