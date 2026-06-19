@@ -304,13 +304,16 @@ it("ToolboxContent: 全40枚の保存構成で全35ツール full + 固定 varia
   // text-replace: aria-label="検索文字列" の textbox（text-replace 固有）
   expect(screen.getByRole("textbox", { name: "検索文字列" })).toBeTruthy();
 
-  // --- generator カテゴリ (7ツール) ---
+  // --- generator カテゴリ (8ツール) ---
 
   // age-calculator: aria-label="生年月日" の type="date" input（age-calculator 固有）
   expect(screen.getByLabelText("生年月日")).toBeTruthy();
 
   // bmi-calculator: aria-label="身長（cm）" の spinbutton
   expect(screen.getByRole("spinbutton", { name: "身長（cm）" })).toBeTruthy();
+
+  // percent-calculator: aria-label="計算パターン" の radiogroup
+  expect(screen.getByRole("radiogroup", { name: "計算パターン" })).toBeTruthy();
 
   // dummy-text: aria-label="テキスト言語" の radiogroup
   expect(screen.getByRole("radiogroup", { name: "テキスト言語" })).toBeTruthy();

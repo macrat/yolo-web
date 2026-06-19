@@ -1,5 +1,5 @@
 /**
- * toolbox-catalog — 道具箱に並べられるタイルのカタログ（全40エントリ）
+ * toolbox-catalog — 道具箱に並べられるタイルのカタログ（全41エントリ）
  *
  * cycle-230 T-3: ToolboxContent.tsx に JSX としてハードコードされていた39枚
  * （34ツールの full variant 各1 ＋ 形ファミリー代表の固定 variant 5枚）を、
@@ -67,6 +67,7 @@ import DummyTextTile from "@/tools/dummy-text/DummyTextTile";
 import ImageResizerTile from "@/tools/image-resizer/ImageResizerTile";
 import QrCodeTile from "@/tools/qr-code/QrCodeTile";
 import TraditionalColorPaletteTile from "@/tools/traditional-color-palette/TraditionalColorPaletteTile";
+import PercentCalculatorTile from "@/tools/percent-calculator/PercentCalculatorTile";
 import UnitConverterTile from "@/tools/unit-converter/UnitConverterTile";
 // --- encoding カテゴリ ---
 import Base64Tile from "@/tools/base64/Base64Tile";
@@ -469,6 +470,17 @@ export const TOOLBOX_CATALOG: readonly ToolboxCatalogEntry[] = [
     rows: 6,
     renderTile: (c) => (
       <ImageResizerTile variant="full" as="div" className={c} />
+    ),
+  }),
+  defineEntry({
+    slug: "percent-calculator",
+    variant: "full",
+    name: "パーセント計算",
+    category: "generator",
+    cols: 4,
+    rows: 5,
+    renderTile: (c) => (
+      <PercentCalculatorTile variant="full" as="div" className={c} />
     ),
   }),
   defineEntry({

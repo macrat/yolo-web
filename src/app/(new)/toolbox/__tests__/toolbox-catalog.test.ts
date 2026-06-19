@@ -34,17 +34,17 @@ const FIXED_VARIANT_IDS = [
 ];
 
 describe("toolbox-catalog: エントリ数と id", () => {
-  it("エントリは40件（35ツール full ＋ 固定 variant 5枚）", () => {
-    expect(TOOLBOX_CATALOG).toHaveLength(40);
+  it("エントリは41件（36ツール full ＋ 固定 variant 5枚）", () => {
+    expect(TOOLBOX_CATALOG).toHaveLength(41);
     expect(
       TOOLBOX_CATALOG.filter((entry) => entry.variant === "full"),
-    ).toHaveLength(35);
+    ).toHaveLength(36);
     for (const id of FIXED_VARIANT_IDS) {
       expect(TOOLBOX_CATALOG_IDS.has(id)).toBe(true);
     }
   });
 
-  it("全35ツール（レジストリの全 slug）の full エントリが存在する", () => {
+  it("全36ツール（レジストリの全 slug）の full エントリが存在する", () => {
     const fullSlugs = new Set(
       TOOLBOX_CATALOG.filter((entry) => entry.variant === "full").map(
         (entry) => entry.slug,

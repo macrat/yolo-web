@@ -1,0 +1,75 @@
+/* PercentCalculatorTile スタイル
+ *
+ * DESIGN.md 準拠:
+ * - 旧 color トークン不使用
+ * - font-weight 700 禁止
+ * - インタラクティブ要素: --r-interactive
+ * - 非インタラクティブ要素: --r-normal
+ * - box-shadow はパネル以外に追加しない
+ */
+
+/* モードの説明テキスト */
+.description {
+  font-size: 0.9rem;
+  color: var(--fg-soft);
+  margin: 0.75rem 0;
+}
+
+/* 入力エリア */
+.inputArea {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.label {
+  font-size: 0.875rem;
+  color: var(--fg-soft);
+}
+
+/* 増減モードの方向切替 */
+.directionControl {
+  margin-top: 0.25rem;
+}
+
+/* 計算結果エリア */
+.resultArea {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: var(--bg-soft);
+  border-radius: var(--r-normal);
+}
+
+.resultValue {
+  font-family: var(--font-mono, monospace);
+  font-size: 1.5rem;
+  color: var(--fg);
+  line-height: 1.4;
+}
+
+/* 計算式の表示 */
+.formula {
+  margin-top: 0.5rem;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.85rem;
+  color: var(--fg-soft);
+}
+
+/* スクリーンリーダー専用 */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}

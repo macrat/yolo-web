@@ -35,6 +35,7 @@ import { meta as line_break_remover } from "@/tools/line-break-remover/meta";
 import { meta as markdown_preview } from "@/tools/markdown-preview/meta";
 import { meta as number_base_converter } from "@/tools/number-base-converter/meta";
 import { meta as password_generator } from "@/tools/password-generator/meta";
+import { meta as percent_calculator } from "@/tools/percent-calculator/meta";
 import { meta as qr_code } from "@/tools/qr-code/meta";
 import { meta as regex_tester } from "@/tools/regex-tester/meta";
 import { meta as sql_formatter } from "@/tools/sql-formatter/meta";
@@ -72,6 +73,7 @@ const toolEntries: ToolDefinition[] = [
   { meta: markdown_preview },
   { meta: number_base_converter },
   { meta: password_generator },
+  { meta: percent_calculator },
   { meta: qr_code },
   { meta: regex_tester },
   { meta: sql_formatter },
@@ -98,4 +100,4 @@ export function getAllToolSlugs(): string[] {
   return toolEntries.map((e) => e.meta.slug);
 }
 
-// Count at generation time: tools=35
+// Count at generation time: tools=36

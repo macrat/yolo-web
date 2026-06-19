@@ -17,18 +17,18 @@ GA4（直近4週間）を見ると、ツール系でOrganic流入があるのは
 
 ## 実施する作業
 
-- [ ] パーセント計算機の設計（計算タイプ、UI構成の決定）
-- [ ] logic.ts の実装（4種類のパーセント計算ロジック）
-- [ ] logic.ts のユニットテスト作成
-- [ ] meta.ts の作成（SEOメタ、FAQ、howItWorks）
-- [ ] PercentCalculatorTile.tsx の実装（タイルUI）
-- [ ] PercentCalculatorTile.module.css の作成
-- [ ] PercentCalculatorTile のコンポーネントテスト作成
-- [ ] ページルート（page.tsx）の作成
-- [ ] OGP画像（opengraph-image.tsx / twitter-image.tsx）の作成
-- [ ] レジストリ再生成と動作確認
-- [ ] Playwright によるビジュアルテスト
-- [ ] backlog.md の更新
+- [x] パーセント計算機の設計（計算タイプ、UI構成の決定）
+- [x] logic.ts の実装（4種類のパーセント計算ロジック）
+- [x] logic.ts のユニットテスト作成
+- [x] meta.ts の作成（SEOメタ、FAQ、howItWorks）
+- [x] PercentCalculatorTile.tsx の実装（タイルUI）
+- [x] PercentCalculatorTile.module.css の作成
+- [x] PercentCalculatorTile のコンポーネントテスト作成
+- [x] ページルート（page.tsx）の作成
+- [x] OGP画像（opengraph-image.tsx / twitter-image.tsx）の作成
+- [x] レジストリ再生成と動作確認
+- [x] Playwright によるビジュアルテスト
+- [x] backlog.md の更新
 
 ## 作業計画
 
