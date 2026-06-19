@@ -2,7 +2,7 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-522 | 遊び群の (new)/ デザイン移行（Phase 8.2） | P1 | 253 | cycle-253でクイズ共通プレイ画面をゼロベース本格再設計。残: インライン結果の絵文字等legacy質感・結果ページ群・ゲーム・daily・タイル化。詳細 cycle-253.md |
+| B-522 | 遊び群の (new)/ デザイン移行（Phase 8.2） | P1 | 254 | cycle-253でプレイ共通画面を本格再設計移行。cycle-254でインライン結果の variant 別本文8本(*Content)+OtherTypesNav を新化。残: 静的結果ページ群移行・ゲーム・daily・タイル化。詳細 cycle-254.md |
 
 ## Queued (すぐに着手できる)
 
