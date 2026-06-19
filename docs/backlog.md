@@ -2,7 +2,7 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-320 | 計算・変換関係ツールの追加（パーセント計算機） | P2 | 252 | cycle-252ではパーセント計算機のみ実施。残りの計算ツールはQueued継続。 |
+| _(なし)_ | | | | |
 
 ## Queued (すぐに着手できる)
 
@@ -125,8 +125,7 @@
 
 | ID | Title | Completed Cycle | Notes |
 | --- | --- | --- | --- |
+| B-320 | 計算・変換関係ツールの追加（パーセント計算機） | 252 | B-320の第一弾としてパーセント計算機を新規追加。4種類の計算パターン（XのY%・何%・増減率・変化率）をリアルタイム計算。残りの計算ツール（比率・ローン返済等）はQueued継続。詳細 cycle-252.md |
 | B-519 | 漢字辞書詳細ページの「部首・画数」検索向け CTR 改善（SEOメタ表層） | 251 | 漢字詳細ページの title/description/OG/JSON-LD に部首・画数を前置（B-323切り出し）。英語meanings除去し読み＋使用例で語義担保。読み重複は表示層dedup。元データ重複はB-520。詳細 cycle-251.md |
 | B-518 | 理系思考タイプ診断（science-thinking）の結果体験強化（detailedContent 追加） | 250 | 10タイプに detailedContent 追加。本人 ResultCard にも traits 表示を追加（影響は word-sense/science-thinking のみ）。詳細 cycle-250.md |
 | B-516 | 診断結果ページからの「他のタイプ回遊」導線の設計 | 249 | word-sense-personality(全タイプ回遊が唯一欠落の標準形式診断)向けに共有 OtherTypesNav を新設し本人ResultCardと静的結果ページの両surfaceに導線追加。8 variant共通化はB-517。詳細 cycle-249.md |
-| B-491 | アンチパターン集のルール違反項目を手順書／knowledge へ整理 | 248 | planning.md/workflow.md本体の手順混入・事例混入・命令形を除去し問掛け形へ整理、保持価値ある3件を手順書/knowledgeへ移設。残りファイルはB-390。詳細 cycle-248.md |
-| B-392 | アンチパターン集の整理（手順書化・特定サイクル詳細混入の解消） | 248 | B-491と同一作業として一括処理（planning.md/workflow.md本体のDo/Don't是正）。詳細 cycle-248.md |
