@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useMemo } from "react";
+import Button from "@/components/Button";
 import type { QuizChoice, QuizQuestion, QuizType } from "@/play/quiz/types";
 import { isCorrectChoice } from "@/play/quiz/scoring";
 import styles from "./QuestionCard.module.css";
@@ -18,7 +19,6 @@ function shuffleArray<T>(array: readonly T[]): T[] {
 type QuestionCardProps = {
   question: QuizQuestion;
   quizType: QuizType;
-  accentColor: string;
   onAnswer: (choiceId: string) => void;
   onNext: () => void;
 };
@@ -26,7 +26,6 @@ type QuestionCardProps = {
 export default function QuestionCard({
   question,
   quizType,
-  accentColor,
   onAnswer,
   onNext,
 }: QuestionCardProps) {
@@ -90,14 +89,13 @@ export default function QuestionCard({
           {question.explanation && (
             <div className={styles.explanation}>{question.explanation}</div>
           )}
-          <button
-            type="button"
+          <Button
+            variant="primary"
             className={styles.nextButton}
-            style={{ backgroundColor: accentColor }}
             onClick={onNext}
           >
             次へ
-          </button>
+          </Button>
         </>
       )}
     </div>

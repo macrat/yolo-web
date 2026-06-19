@@ -139,7 +139,7 @@ describe("music-personality 専用プレイページ: generateMetadata", () => {
 describe("music-personality 専用プレイページ: 動的ルートとの共存", () => {
   it("動的ルートの generateStaticParams に music-personality が含まれること（Next.jsのファイルシステムルーティングが自動的に専用ルートを優先するため除外不要）", async () => {
     const { generateStaticParams: dynamicGenerateStaticParams } =
-      await import("@/app/(legacy)/play/[slug]/page");
+      await import("@/app/(new)/play/[slug]/page");
     const params = await dynamicGenerateStaticParams();
     const slugs = params.map((p: { slug: string }) => p.slug);
     expect(slugs).toContain("music-personality");

@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * ℹ️ ResultCard は「受検者本人向け」のインライン結果表示です。
+ * ResultCard は「受検者本人向け」のインライン結果表示です。
  *
  * 診断を完了した本人は、`/play/[slug]` 上でこの ResultCard を通して結果を見ます
  * （`QuizContainer` の intro→playing→result フェーズ遷移。variant ごとの結果コンポーネント
@@ -114,16 +114,16 @@ function renderStandardContent(
   const behaviorsHeading = labels?.behaviorsHeading ?? "このタイプのあるある";
   const adviceHeading = labels?.adviceHeading ?? "このタイプの人へのアドバイス";
 
+  // 標準 variant の見出し・アドバイスは新デザイン体系の共通アクセント（--accent）に
+  // 統一する（クイズごとの派手色を使わない）。accentColor は variant 別サブ
+  // コンポーネント（legacy 結果コンテンツ）でのみ引き続き使用する。
+  void accentColor;
+
   return (
     <>
       {/* traits（持ち味）。診断を遊んだ本人にも持ち味を届けるため、
           静的結果ページと同じく behaviors の前に表示する（cycle-250）。 */}
-      <h3
-        className={styles.detailedHeading}
-        style={accentColor ? { color: accentColor } : undefined}
-      >
-        {traitsHeading}
-      </h3>
+      <h3 className={styles.detailedHeading}>{traitsHeading}</h3>
       <ul className={styles.traitsList}>
         {content.traits.map((t, i) => (
           <li key={i} className={styles.traitsItem}>
@@ -131,12 +131,7 @@ function renderStandardContent(
           </li>
         ))}
       </ul>
-      <h3
-        className={styles.detailedHeading}
-        style={accentColor ? { color: accentColor } : undefined}
-      >
-        {behaviorsHeading}
-      </h3>
+      <h3 className={styles.detailedHeading}>{behaviorsHeading}</h3>
       <ul className={styles.behaviorsList}>
         {content.behaviors.map((b, i) => (
           <li key={i} className={styles.behaviorsItem}>
@@ -144,20 +139,8 @@ function renderStandardContent(
           </li>
         ))}
       </ul>
-      <h3
-        className={styles.detailedHeading}
-        style={accentColor ? { color: accentColor } : undefined}
-      >
-        {adviceHeading}
-      </h3>
-      <div
-        className={styles.adviceCard}
-        style={
-          accentColor ? { backgroundColor: `${accentColor}18` } : undefined
-        }
-      >
-        {content.advice}
-      </div>
+      <h3 className={styles.detailedHeading}>{adviceHeading}</h3>
+      <div className={styles.adviceCard}>{content.advice}</div>
       {allResults && quizSlug && resultId && (
         <OtherTypesNav
           quizSlug={quizSlug}
@@ -415,24 +398,6 @@ export default function ResultCard({
     "contrarian-fortune",
   ] as const;
 
-  // catchphrase 装飾線の色（--catchphrase-accent-color）を variant ごとに宣言的に管理する。
-  // - animal-personality: CSSファイルのフォールバック値（緑）を使用するため null
-  // - music-personality: 紫固定色（クイズのブランドカラー）
-  // - traditional-color / yoji-personality: タイプ固有の色（result.color）
-  const CATCHPHRASE_ACCENT_COLOR: Record<
-    (typeof CATCHPHRASE_VARIANTS)[number],
-    string | null
-  > = {
-    "animal-personality": null,
-    "music-personality": "#7c3aed",
-    "traditional-color": result.color ?? null,
-    "yoji-personality": result.color ?? null,
-    "character-personality": result.color ?? null,
-    "unexpected-compatibility": result.color ?? null,
-    "impossible-advice": result.color ?? null,
-    "contrarian-fortune": result.color ?? null,
-  };
-
   const catchphrase =
     detailedContent &&
     CATCHPHRASE_VARIANTS.includes(
@@ -446,19 +411,10 @@ export default function ResultCard({
         ).catchphrase
       : null;
 
-  const catchphraseAccentColor =
-    detailedContent?.variant &&
-    CATCHPHRASE_VARIANTS.includes(
-      detailedContent.variant as (typeof CATCHPHRASE_VARIANTS)[number],
-    )
-      ? CATCHPHRASE_ACCENT_COLOR[
-          detailedContent.variant as (typeof CATCHPHRASE_VARIANTS)[number]
-        ]
-      : null;
-
   return (
     <div className={styles.card}>
-      {result.icon && <div className={styles.icon}>{result.icon}</div>}
+      {/* 結果ラベル（小見出し）。絵文字アイコンは新デザイン体系で撤去（DESIGN.md §3） */}
+      <p className={styles.resultLabel}>あなたの結果</p>
       <h2 className={styles.title}>{result.title}</h2>
       {quizType === "knowledge" &&
         score !== undefined &&
@@ -467,22 +423,10 @@ export default function ResultCard({
             {totalQuestions}問中{score}問正解
           </p>
         )}
-      {/* catchphrase を description の前に表示する。
-          装飾線の色は CSS変数 --catchphrase-accent-color で制御する。
-          各 variant の色は CATCHPHRASE_ACCENT_COLOR で宣言的に管理している。 */}
+      {/* catchphrase を description の前に静かなリード文として表示する。
+          新デザイン体系では variant 別の派手な装飾色は使わない（DESIGN.md §2.4）。 */}
       {catchphrase && (
-        <p
-          className={styles.catchphraseBeforeDescription}
-          style={
-            catchphraseAccentColor
-              ? ({
-                  "--catchphrase-accent-color": catchphraseAccentColor,
-                } as React.CSSProperties)
-              : undefined
-          }
-        >
-          {catchphrase}
-        </p>
+        <p className={styles.catchphraseBeforeDescription}>{catchphrase}</p>
       )}
       <p className={styles.description}>{result.description}</p>
       {result.recommendation && result.recommendationLink && (

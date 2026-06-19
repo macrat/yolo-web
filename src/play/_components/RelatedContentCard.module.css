@@ -1,18 +1,21 @@
 /* 関連コンテンツカード（主要回遊導線）の共通スタイル。
- * RelatedQuizzes / RelatedGames の両コンポーネントで使用する。
- * 補助的回遊導線である RecommendedContent.module.css とは別ファイルとして管理する。
+ * RelatedQuizzes（新デザイン再設計済み・絵文字なし）/ RelatedGames（legacy 残存・
+ * 移行までは .icon を使用）の両方で共有する。
+ *
+ * 新デザイン体系（DESIGN.md）。移行済みツール詳細の「関連ツール」カードに倣う。
+ * 新トークンのみ使用（legacy 側でも old-globals.css の過渡定義で解決される）。
+ * bold 不使用。角丸は --r-normal（2px・カード規範）。
  */
 .related {
   margin-top: 2rem;
   padding-top: 1.5rem;
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid var(--border);
 }
 
 .heading {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 0.75rem;
-  color: var(--color-text);
+  font-size: 1rem;
+  margin: 0 0 0.75rem;
+  color: var(--fg);
 }
 
 .list {
@@ -20,6 +23,8 @@
   flex-wrap: wrap;
   gap: 0.75rem;
   list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .list li {
@@ -33,29 +38,38 @@
   flex-direction: column;
   gap: 0.25rem;
   padding: 0.75rem 1rem;
-  border: 1px solid var(--color-border);
-  border-radius: 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--r-normal);
   text-decoration: none;
-  transition: border-color 0.15s;
+  background-color: var(--bg);
+  transition: border-color 0.15s ease;
   height: 100%;
 }
 
 .link:hover {
-  border-color: var(--color-primary);
+  border-color: var(--accent);
 }
 
+.link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* legacy RelatedGames がまだ絵文字アイコンを描画するため定義を残す。
+ * RelatedQuizzes（新デザイン）は icon を描画しない。 */
 .icon {
   font-size: 1.25rem;
   margin-bottom: 0.125rem;
 }
 
 .name {
-  font-weight: 600;
-  color: var(--color-primary);
-  font-size: 0.95rem;
+  color: var(--accent);
+  font-size: 0.9375rem;
+  line-height: 1.4;
 }
 
 .description {
-  font-size: 0.8rem;
-  color: var(--color-text-muted);
+  font-size: 0.8125rem;
+  color: var(--fg-soft);
+  line-height: 1.5;
 }

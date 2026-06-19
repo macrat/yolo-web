@@ -29,16 +29,13 @@ export default function RecommendedContent({
         {recommended.map((content) => (
           <li key={content.slug}>
             <Link href={getContentPath(content)} className={styles.link}>
-              <span className={styles.icon} aria-hidden="true">
-                {content.icon}
-              </span>
               <span className={styles.name}>
                 {content.shortTitle ?? content.title}
               </span>
               <span className={styles.description}>
                 {content.shortDescription}
               </span>
-              <span className={styles.badge} data-category={content.category}>
+              <span className={styles.badge}>
                 {resolveDisplayCategory(content)}
               </span>
             </Link>

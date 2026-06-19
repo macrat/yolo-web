@@ -3,8 +3,9 @@ import { render, screen } from "@testing-library/react";
 import QuizPlayPageLayout from "../QuizPlayPageLayout";
 import type { QuizDefinition } from "../../types";
 
-// Server Componentの依存コンポーネントをモックする
-vi.mock("@/components/common/Breadcrumb", () => ({
+// Server Componentの依存コンポーネントをモックする。
+// 新デザイン体系では @/components/* の新版を使う（@/components/common/* ではない）。
+vi.mock("@/components/Breadcrumb", () => ({
   default: ({ items }: { items: Array<{ label: string; href?: string }> }) => (
     <nav aria-label="パンくずリスト">
       {items.map((item) => (
@@ -14,9 +15,9 @@ vi.mock("@/components/common/Breadcrumb", () => ({
   ),
 }));
 
-vi.mock("@/components/common/TrustLevelBadge", () => ({
-  default: ({ level }: { level: string }) => (
-    <div data-testid="trust-level-badge" data-level={level} />
+vi.mock("@/components/Panel", () => ({
+  default: ({ children }: { children: React.ReactNode }) => (
+    <section>{children}</section>
   ),
 }));
 
@@ -36,11 +37,11 @@ vi.mock("@/play/quiz/_components/QuizContainer", () => ({
   ),
 }));
 
-vi.mock("@/components/common/FaqSection", () => ({
+vi.mock("@/components/FaqSection", () => ({
   default: () => <div data-testid="faq-section" />,
 }));
 
-vi.mock("@/components/common/ShareButtons", () => ({
+vi.mock("@/components/ShareButtons", () => ({
   default: ({ url, title }: { url: string; title: string }) => (
     <div data-testid="share-buttons" data-url={url} data-title={title} />
   ),
@@ -131,14 +132,15 @@ test("QuizPlayPageLayout renders breadcrumb with correct items", async () => {
   expect(breadcrumb).toHaveTextContent("テストクイズ");
 });
 
-test("QuizPlayPageLayout renders TrustLevelBadge", async () => {
+test("QuizPlayPageLayout does not render TrustLevelBadge (撤去済み・cycle-253)", async () => {
   const component = await QuizPlayPageLayout({
     quiz: mockQuiz,
     slug: "test-quiz",
   });
   render(component);
 
-  expect(screen.getByTestId("trust-level-badge")).toBeInTheDocument();
+  // 新デザイン体系では TrustLevelBadge を撤去している（meta.trustLevel フィールドは保持）
+  expect(screen.queryByTestId("trust-level-badge")).not.toBeInTheDocument();
 });
 
 test("QuizPlayPageLayout renders QuizContainer with quiz and referrerTypeId", async () => {

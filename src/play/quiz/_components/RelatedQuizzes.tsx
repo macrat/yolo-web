@@ -37,9 +37,6 @@ export default function RelatedQuizzes({
         {relatedContents.map((content) => (
           <li key={content.slug}>
             <Link href={getPlayPath(content.slug)} className={styles.link}>
-              <span className={styles.icon} aria-hidden="true">
-                {content.icon}
-              </span>
               <span className={styles.name}>
                 {content.shortTitle ?? content.title}
               </span>

@@ -11,7 +11,6 @@ export interface ResultNextContentItem {
   slug: string;
   title: string;
   shortTitle?: string;
-  icon: string;
   category: string;
   /** getContentPath() の結果（例: "/play/kanji-level"） */
   contentPath: string;
@@ -46,18 +45,13 @@ export default function ResultNextContent({
         {contents.map((content) => (
           <li key={content.slug}>
             <Link href={content.contentPath} className={styles.link}>
-              <span className={styles.icon} aria-hidden="true">
-                {content.icon}
+              <span className={styles.title}>
+                {content.shortTitle ?? content.title}
               </span>
-              <div className={styles.info}>
-                <span className={styles.title}>
-                  {content.shortTitle ?? content.title}
-                </span>
+              <span className={styles.metaRow}>
+                <span className={styles.badge}>{content.categoryLabel}</span>
                 <span className={styles.meta}>{content.metaText}</span>
-                <span className={styles.badge} data-category={content.category}>
-                  {content.categoryLabel}
-                </span>
-              </div>
+              </span>
             </Link>
           </li>
         ))}

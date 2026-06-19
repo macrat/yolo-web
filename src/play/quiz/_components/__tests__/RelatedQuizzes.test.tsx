@@ -121,11 +121,12 @@ test("RelatedQuizzes renders shortDescription for each item", () => {
   expect(screen.getByText("四字熟語の知識を確認")).toBeInTheDocument();
 });
 
-test("RelatedQuizzes renders icon for each item", () => {
+test("RelatedQuizzes does not render emoji icons (新デザイン体系・cycle-253)", () => {
   render(<RelatedQuizzes currentSlug="kanji-level" category="knowledge" />);
 
-  expect(screen.getByText("📖")).toBeInTheDocument();
-  expect(screen.getByText("🈵")).toBeInTheDocument();
+  // DESIGN.md §3: 絵文字は使わない。回遊カードから絵文字アイコンを撤去した。
+  expect(screen.queryByText("📖")).not.toBeInTheDocument();
+  expect(screen.queryByText("🈵")).not.toBeInTheDocument();
 });
 
 test("RelatedQuizzes prefers shortTitle over title when shortTitle is set", () => {

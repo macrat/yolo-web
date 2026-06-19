@@ -1,120 +1,134 @@
 ---
 id: 253
-description: デザイン移行 Phase 8.2 の第一弾として、クイズ共通プレイ画面（共通動的ルート [slug] + music-personality）を (new)/ デザインへ移行する。流入上位の診断・クイズが着地するプレイ画面を新デザインの枠組みに揃え、cycle-252 で放置されていた「診断から来た来訪者が回遊するとデザインが割れる」体験を、最も見られている面から解消する。あわせて遊び群の共有コンポーネント web を破綻なく段階移行するための旧→新トークンブリッジを確立する。
+description: デザイン移行 Phase 8.2 の第一弾として、流入最上位のクイズ共通プレイ画面を (new)/ デザインへ「ゼロベースで本格再設計」して移行する。色やコンポーネントを差し替えるだけの上塗りではなく、サイトコンセプト「日常の傍にある道具（と息抜き）」の世界観の中に息抜き（クイズ）をどう置くかを問い直し、新デザイン体系を genuine に表現する形でプレイ画面の UI/UX を作り直す。cycle-252 で放置されていた「診断から来た来訪者が回遊するとデザインが割れる」体験を、最も見られている面から本質的に解消する。
 started_at: "2026-06-19T19:24:53+0900"
-completed_at: null
+completed_at: "2026-06-19T21:42:59+0900"
 ---
 
 # サイクル-253
 
-このサイクルでは、デザイン移行計画 **Phase 8.2（遊び群の (new)/ デザイン移行）の第一弾**として、**クイズの共通プレイ画面**を新デザインへ移行する。
+このサイクルでは、デザイン移行計画 **Phase 8.2（遊び群の (new)/ デザイン移行）の第一弾**として、**クイズの共通プレイ画面**を新デザインへ**ゼロベースで本格再設計して**移行する。
 
-cycle-252 の振り返りで明確になったとおり、このサイトの流入の大部分は `(legacy)/play/` 配下の診断・クイズが占めている。実測（GA4 直近28日）でも `/play/character-personality`(47)・`/play/word-sense-personality`(26)・`/play/traditional-color`(15)・`/play/yoji-level`(10) と、上位はすべて遊び群。これらはいずれも自前の `page.tsx` を持たず、**共通動的ルート `/play/[slug]` → `QuizPlayPageLayout` がプレイ画面を描画している**。つまり共通プレイ画面を1つ移行すれば、流入が着地する面を一度にすべて新デザインに揃えられる。これ以上レバレッジの高い起点はない。
+## 【重要】方針の修正記録（cycle-253 途中）
+
+当初このサイクルは「旧→新トークンの互換ブリッジを globals.css に置き、523箇所のトークン書き換えや共有コンポーネントの再設計を避けて、プレイ画面ルートを (new) へ移す」という計画で着手し、builder 実装まで進めた。しかしこの方式は **CLAUDE.md 意思決定原則と constitution.md に違反していた**（工数・規模・リスクを理由に来訪者価値の劣る UX を選んでいた）。オーナーがこの違反を指摘したことで判明し、是正した。是正の義務の源はオーナーの指示ではなくプロジェクトのルール（constitution / CLAUDE.md）であり、オーナーはそれに反していることを指差した。
+
+- デザインシステム移行は、カラーパレット変更やコンポーネント差し替えのような単純作業ではない。**サイトコンセプトの根本と、サイト全体に共通させるメタファーを丸ごと入れ替える質的変更**である。色を変えただけでは達成できない。
+- トークン互換レイヤーで「色だけ新化した旧 UI」を出すのは、**工数・規模・リスクを理由に来訪者価値の劣る UX を選ぶ判断**であり、CLAUDE.md 意思決定原則と constitution.md が明確に禁じている。移行計画の標準手順 step5「トークン置換だけでは新デザインにならない／必要なら構造そのものを変える」にも反する。
+- PM（私）は計画段階でこの緊張（規模・リスク vs 本質的品質）に気づきながら、規模・リスクを理由に握りつぶした。これが失敗の核心。
+
+**対応**: ブリッジ方式の未コミット実装を撤回（stash 退避）。アンチパターン AP-P28 に登録。本サイクルを「ゼロベース本格再設計」へ計画変更した（本ドキュメントはその修正後の計画）。
 
 ## なぜやるか（来訪者の所在）
 
-検索から `/play/character-personality` 等に直接着地した来訪者は、いま旧デザインのプレイ画面を最初に目にする。そこからヘッダー経由で道具箱（トップ）・ツール・ブログ（すべて新デザイン）へ回遊すると、ヘッダー・フッター・色・角丸が突然切り替わる。来訪者にとってこれは「同じサイトなのに途中で見た目が変わる＝壊れている／信頼できない」という体験で、cycle-252 の振り返りが「放置した実害」と記録したものそのものだ。
+検索から `/play/character-personality`(47PV/28日) 等に直接着地する来訪者は、いま旧デザインのプレイ画面を最初に目にする。そこからヘッダー経由で道具箱（トップ）・ツール・ブログ（すべて新デザイン）へ回遊すると、世界観が突然切り替わる。これは「同じサイトなのに途中で別物になる＝壊れている／信頼できない」という体験で、cycle-252 の振り返りが「放置した実害」と記録したものそのもの。
 
-最も多く見られているプレイ画面の枠組みを新デザインに揃えることで、検索着地の第一印象を新デザインに統一し、回遊時のデザイン断裂を上流から減らす。
+流入上位（character-personality / word-sense-personality / traditional-color / yoji-level 等）はすべて自前 page.tsx を持たず、**共通動的ルート `/play/[slug]` → `QuizPlayPageLayout` → `QuizContainer` がプレイ画面を描画している**。つまりこの共通プレイ体験を1つ本格再設計すれば、流入が着地する面すべてを一度に新デザインの世界観へ引き上げられる。最もレバレッジが高く、最も見られている面である。
 
 ## 実施する作業
 
-- [ ] 移行戦略の確定と文書化（トークンブリッジ方式・共有コンポーネント web の段階移行方針）
-- [ ] 旧→新トークンブリッジを `globals.css`（(new) 側）に追加（遊び群共有コンポーネントが使う旧 `--color-*` を DESIGN.md のトークン対応表に従って新トークン値へエイリアス。`:root` と `:root.dark` 両方）
-- [ ] ブリッジが Phase 11.5「旧トークン互換 全撤去」の対象であることをコメントで明記
-- [ ] ルートグループ分割の事前ビルド検証（`(new)/play/[slug]/page.tsx` と `(legacy)/play/[slug]/result/` の共存がビルド可能か最初に確認）
-- [ ] `(legacy)/play/[slug]/` のプレイ画面ファイル（`page.tsx`・`opengraph-image.tsx`・`page.module.css`）を `(new)/play/[slug]/` へ移動（`result/` サブツリーは legacy に残す）
-- [ ] `(legacy)/play/music-personality/` のプレイ画面ファイルを `(new)/play/music-personality/` へ移動（`result/` サブツリーは legacy に残す。QuizPlayPageLayout を共有するため [slug] と同時移行が必須）
-- [ ] `QuizPlayPageLayout` の新デザイン化：`@/components/common/{Breadcrumb,FaqSection,ShareButtons}` を `@/components/*`（新版）へ差し替え
-- [ ] `QuizPlayPageLayout` から `TrustLevelBadge` の import と JSX を撤去（`meta.trustLevel` フィールド自体は B-432 の一括削除方針に従い本サイクルでは削除しない）
-- [ ] `QuizPlayPageLayout` / `[slug]/page.module.css` を DESIGN.md 準拠で再設計（Panel に収める・最上位コンテナに `max-width: 1200px; margin: 0 auto` をハードコード・余白・タイポ・a11y）
-- [ ] `page.module.css` の import パスを新ディレクトリ参照へ修正
-- [ ] テスト調整（移動したルートのテストパス・import 修正、`QuizPlayPageLayout` テストの追従）
-- [ ] Playwright 視覚確認：移行したプレイ画面を主要クイズ複数（character-personality / word-sense-personality / traditional-color / music-personality 等）で w360・w1280 × light・dark 撮影し、移行前と「同等以上」かを評価
-- [ ] Playwright 退行確認：legacy に残る結果ページ・ゲーム・daily がブリッジ追加により破綻していないことを確認（共有コンポーネントの旧トークンは old-globals.css 側で従来どおり解決されるため不変のはずだが実機確認する）
-- [ ] レビュー依頼と指摘対応
-- [ ] backlog.md 更新（キャリーオーバーの登録）
+- [x] 視覚的グラウンディング：現状の legacy クイズプレイ画面と、移行済み新デザインの基準ページ（道具箱・移行済みツール詳細）を実機スクショで観察し、新デザインの世界観・メタファー・余白/タイポ/角丸/ボタン言語を言語化する
+- [x] クイズ（息抜き）が道具箱の世界観の中でどう在るべきかの設計方針を定める（intro / 設問 / 進捗 / 選択肢 / ナビ / 結果ハンドオフ の各局面）
+- [x] `QuizPlayPageLayout` をゼロベース再設計（Panel 構成・章立て・余白・導線・新共通コンポーネント `@/components/{Breadcrumb,FaqSection,ShareButtons}` 採用・TrustLevelBadge 撤去・max-width 1200px ハードコード）
+- [x] `QuizContainer` および配下（`ProgressBar`/`QuestionCard`/`ResultNextContent` 等、プレイ画面で描画される範囲）を新デザイン体系へ genuine に再設計（CSS Module を新トークンへ実置換＋構造も必要に応じ変更。色エイリアスで誤魔化さない）
+- [x] 共有コンポーネントの過渡的整合：genuine 再設計した共有コンポーネントが legacy 残存ページ（結果・ゲーム・daily）でも破綻しないよう、必要な新トークンを old-globals.css 側に「定義として」用意する（＝移行済み側の品質は一切落とさず、未移行 legacy 側を過渡的に生かす正当な手段。Phase 11.2/11.5 撤去対象として明記）。「旧トークンを新値にエイリアスして旧 UI を温存する」前回の誤った方式とは目的・方向が逆であることに注意
+- [x] ルートグループ分割のビルド検証（`(new)/play/[slug]/page.tsx` と `(legacy)/play/[slug]/result/` の共存）
+- [x] プレイ画面ルートの移動（`[slug]` プレイ層 + `music-personality` プレイ層を (new) へ。`result/` は legacy 残置。QuizPlayPageLayout 共有のため両者同時移動が必須）
+- [x] テスト調整（移動・再設計に伴うパス/assertion 追従。安易な skip 禁止）
+- [x] Playwright 実機の視覚確認：再設計プレイ画面を主要クイズ複数で w360・w1280 × light・dark 撮影し、新デザインの世界観に genuine に到達しているか（旧の上塗りでないか）を評価
+- [x] Playwright 退行確認：legacy 残存ページ（結果・ゲーム・daily）が破綻していないこと
+- [x] レビュー依頼（reviewer に「色だけの上塗りになっていないか」「道具箱の世界観と整合するか」を重点観点として明示）と指摘対応
+- [x] backlog.md 更新（キャリーオーバー登録）
 
 ## 作業計画
 
 ### 目的
 
-デザイン移行 Phase 8.2 の第一弾として、流入が着地するクイズ共通プレイ画面を (new)/ デザインへ移行し、検索着地〜回遊のデザイン断裂を最も見られている面から解消する。あわせて、遊び群の共有コンポーネント web を後続サイクルで破綻なく段階移行するための基盤（トークンブリッジ）を確立する。
+流入が着地するクイズ共通プレイ画面を、新デザイン体系を genuine に表現する形でゼロベース再設計して (new)/ へ移行する。検索着地〜回遊の世界観断裂を最も見られている面から本質的に解消し、後続の遊び群移行（結果・ゲーム・daily）の品質基準となる「本格再設計の参照実装」を確立する。
 
-### 作業内容
+### アーキテクチャ上の前提（調査で確定）
 
-#### アーキテクチャ上の前提（調査で確定した事実）
+- プレイ画面は共通動的ルート `(legacy)/play/[slug]/page.tsx` → `QuizPlayPageLayout`（`src/play/quiz/_components/`）→ `QuizContainer`（intro/playing/result の全フェーズを管理する client 心臓部）。流入上位はすべてこの共通ルート経由で自前 page.tsx を持たない。
+- `QuizPlayPageLayout` の消費者は `[slug]/page.tsx` と `music-personality/page.tsx` の2つだけ。共有レイアウトのため両者を同時に (new) へ移す必要がある。
+- `QuizContainer`/`RelatedQuizzes`/`RecommendedContent`/`ResultNextContent`/`ResultPageShell` 等は legacy 残存の結果・ゲーム・daily からも共有される。genuine 再設計するとこれら共有コンポーネントは新トークンを使うため、legacy レイアウト下で新トークンが解決できないと破綻する。→ 過渡的に new トークンを old-globals.css にも定義して生かす（前述の正当な手段）。これにより移行済み側は full の genuine 再設計、legacy 側は「新コンポーネントが旧チャームの中に出る過渡状態」（壊れてはおらず、むしろ改善）。別実装（旧 UI 用と新 UI 用の二重実装）は作らない（AP 回避）。
+- ルートグループ分割の実績：現在すでに `(new)/play/page.tsx`（一覧）と `(legacy)/play/[slug]/...` が共存しビルドできている。本サイクルの分割はその一段深い適用（ビルドで事前確認する）。
 
-- プレイ画面は共通動的ルート `(legacy)/play/[slug]/page.tsx` が描画し、`QuizPlayPageLayout`（`src/play/quiz/_components/QuizPlayPageLayout.tsx`）を呼ぶ。流入上位の character-personality / word-sense-personality / traditional-color / yoji-level 等は**すべてこの共通ルート経由**で、自前 `page.tsx` を持たない。
-- `QuizPlayPageLayout` の消費者は2つだけ：`[slug]/page.tsx` と `music-personality/page.tsx`。後者は専用 `page.tsx` を持つが同じ共有レイアウトを使うため、レイアウト移行時に同時移動が必須（片方を legacy に残すと共有コンポーネントが (new) トークンを参照できず／逆も成立せず破綻する）。
-- プレイ画面サブツリー（`QuizContainer`・`RelatedQuizzes`・`RecommendedContent`・`ResultNextContent`）と `ResultPageShell` は、**legacy に残る結果ページ・ゲーム・daily からも広く共有されている**。特に `RecommendedContent` は遊び群ほぼ全ルートの普遍的依存。これらを (new) トークンへ書き換えると legacy 残存ページが一斉に破綻する。→ これが「プレイ画面だけを綺麗に切り出せない」根本理由であり、B-295 が「B-522 の過程で方針再検討」と注記して見越していた問題。
-- ルートグループ分割の実績：現在すでに `(new)/play/page.tsx`（一覧）と `(legacy)/play/[slug]/...` がルートグループをまたいで共存しビルドできている。`(new)/play/[slug]/page.tsx` を足し `(legacy)/play/[slug]/result/` を残す分割は、この一段深い適用にあたる（ただしビルドで事前確認する）。
+### 設計の指針（息抜きを道具箱の世界観に置く）
 
-#### 採用する移行戦略：旧→新トークンブリッジ
+サイトコンセプト（`docs/site-concept.md`）はコアを「日常の傍にある道具」とし、クイズ・診断は小さな割合の「息抜き」と位置づける。プレイ画面は「よく考えられた道具」と同じ落ち着いた質感（クリーンなパネル・抑制されたアクセント・新デザインのタイポ/余白/角丸）の中で、息抜きとしての軽やかさ・楽しさを表現する。`DESIGN.md` と `/frontend-design` を一次規範とし、旧 UI の構造を温存せず、各局面（intro・設問・進捗・選択肢・ナビ・結果ハンドオフ）を新体系で作り直す。具体の設計判断は実装段階で実機スクショを観察したうえで builder が行う（PM は過度に literal な指示をしない＝AP-WF 回避）。
 
-523箇所の旧 `--color-*` 参照を本サイクルで全置換するのは過大で、共有コンポーネントの破綻リスクも高い。代わりに **`globals.css`（(new) 側）に旧 `--color-*` トークンを新デザイン値のエイリアスとして定義する**。これにより：
+### スコープ外（後続サイクルへ・すべて B-522 傘下）
 
-- 共有コンポーネントは旧トークンのまま (new) 配下で**新デザインの色値**で正しく描画される（legacy 側は old-globals.css の従来定義で不変）。
-- 移行を「ルートが (new) 配下に来る」と「コンポーネントを本格再設計する」に分離でき、後続サイクルで遊び群を段階移行できる。
-- 移行計画 Phase 11.5 は「旧トークン互換が残っていれば全撤去」と明記しており、この過渡的ブリッジは計画が想定済みの手段。コメントで Phase 11.5 撤去対象と明記する。
-
-旧→新の対応は **DESIGN.md のトークン対応表を一次資料**とする（Explore の概算ではなく DESIGN.md を確認して各旧トークンに正しい新トークンを割り当てる。例：`--color-text-muted` の移行先は新側に `--fg-muted` が存在しないため `--fg-soft`/`--fg-softer` のいずれが適切か DESIGN.md で確認する）。
-
-#### 本サイクルで本格再設計する範囲 / ブリッジに委ねる範囲
-
-- **本格再設計**：ページ章立て＝`QuizPlayPageLayout` のチャーム（共通コンポーネントの新版差し替え・TrustLevelBadge 撤去・Panel/max-width/余白/a11y）と `[slug]/page.module.css`。
-- **ブリッジに委ねる（本サイクルは色のみ新化）**：`QuizContainer` 等の内側サブツリー。本格的な構造再設計（角丸・ボタン状態・スペーシングの DESIGN.md 完全準拠）は後続サイクルへ。ただしレビューで「移行前と同等以上／新チャームと内側が著しく不整合」と判断されたら本サイクルで内側も是正する。
-
-#### 本サイクルのスコープ外（明示的に後続へ）
-
-- 結果ページ群（共通 `[slug]/result` ＋ Type C 専用結果8本）の移行 → `ResultPageShell` 共有のため別サイクル。
-- ゲーム4種（`GameLayout`）・daily の移行。
-- 共有コンポーネントの本格再設計（構造レベルの DESIGN.md 準拠）。
-- **タイル化**：遊びのタイル化方針は B-295（GameLayout 等ゼロベース再設計）/B-493（ゲーム単一タイル化）で未確定であり、道具箱（日常の道具のダッシュボード）に多段フローの診断タイルを置く是非は独立した設計判断を要する。Phase 8.2 の「タイル化に馴染まないコンテンツは詳細ページのデザイン移行のみ」に倣い、本サイクルはデザイン移行のみ行いタイル定義は付けない。タイル化方針の決定は後続サイクルで扱う。
+- 結果ページ群（共通 `[slug]/result` ＋ Type C 専用結果8本）・ゲーム4種・daily の (new)/ 移行。
+- 遊びコンテンツのタイル化方針の決定（B-295/B-493 と統合。道具箱に息抜きをどう組み込むかの設計判断を要するため独立サイクル）。
+- 過渡的トークン定義（old-globals.css 側）の撤去（Phase 11.2/11.5）。
 
 ### 検討した他の選択肢と判断理由
 
-1. **遊び群を一括移行する案** — 共有コンポーネント web が破綻なく動くには魅力的だが、20ルート・60 CSS ファイル・523トークン・15+コンポーネントを1サイクルで触ることになり「タスクは小さく」に反し、検証面も過大。却下。
-2. **523トークンを本サイクルで全置換する案** — 本格的だが過大かつ高リスク。ブリッジで色を新化しつつ段階的に本格再設計する方が、来訪者価値（プレイ画面の新チャーム化）を早く・安全に届けられる。却下。
-3. **プレイ画面と結果ページを同時移行（1クイズ完結）する案** — 来訪者の旅程を完全に揃えられるが、プレイ画面は共通 `[slug]` 共有・結果は `ResultPageShell` 共有のため、結果まで含めると全クイズ・ゲームへ連鎖し一括移行と同義になる。却下。
-4. **新ツール追加など別系統の作業** — cycle-252 の判断ミス（進行中の移行を放置して新機能に飛んだ）を繰り返すことになる。却下。
+1. **トークン互換ブリッジで色だけ新化（当初案・撤回）** — 工数を理由に来訪者価値の劣る UX を選ぶ判断で、constitution/CLAUDE.md 違反。AP-P28 として記録。却下。
+2. **遊び群を一括で本格再設計** — 共有コンポーネント web を一度に作り直せるが、20ルート規模で1サイクルに収まらず「タスクは小さく」に反し検証も過大。却下。本格再設計は「品質を落とさずサイクルを適切に分割」する形で段階実施する。
+3. **プレイと結果を同時に本格再設計（1クイズ完結）** — 旅程を完全に揃えられるが、結果は `ResultPageShell` 共有で全クイズ・ゲームへ連鎖し一括と同義になる。却下（結果は後続）。
+4. **新ツール追加等の別系統** — cycle-252 の判断ミス（進行中の移行放置）の再発。却下。
 
 ### 計画にあたって参考にした情報
 
-- `docs/cycles/cycle-252.md`「サイクル完了後の振り返り — タスク選択の判断ミス」：流入上位が legacy 遊び群に集中し、回遊でデザインが割れる実害を放置した記録。本サイクルの起点。
-- GA4 実測（プロパティ 524708437・2026-05-22〜2026-06-18・28日間）：`/play/` 配下 PV 上位＝character-personality(47)・word-sense-personality(26)・traditional-color(15)・yoji-level(10)・kotowaza-level(6)・science-thinking(6)。上位はすべて共通 `[slug]` 経由のクイズ。
-- `docs/design-migration-plan.md`：Phase 8.2 のスコープ・「1ページ移行の標準手順」・Phase 11.5「旧トークン互換 全撤去」。
-- コード調査：`QuizPlayPageLayout`/`ResultPageShell`/`QuizContainer`/`RecommendedContent` 等の消費者 grep により共有関係を確定。`globals.css`・`old-globals.css` に既存ブリッジが無いことを確認。
-- `docs/knowledge/css-modules.md`（`:root.dark` の `:global` 化）、`docs/knowledge/tile-architecture.md`（タイル化の確立パターン・本サイクルは未適用）。
+- `docs/cycles/cycle-252.md` 振り返り（流入上位の legacy 遊び群放置による回遊時断裂）。
+- オーナー指摘（cycle-253 途中）：デザイン移行＝メタファーの質的入れ替え／工数を理由に UX を妥協してはならない。
+- `docs/site-concept.md`：コア「日常の傍にある道具」・クイズ等は「息抜き」（1割以下・将来整理対象）。
+- `DESIGN.md`・`.claude/skills/frontend-design/SKILL.md`：新デザイン体系の一次規範。
+- GA4 実測（プロパティ 524708437・2026-05-22〜2026-06-18）：/play/ PV 上位＝character-personality(47)・word-sense-personality(26)・traditional-color(15)・yoji-level(10)。上位はすべて共通 [slug] 経由。
+- コード調査：`QuizPlayPageLayout`/`QuizContainer`/`ResultPageShell` 等の共有関係を grep で確定。globals.css・old-globals.css に既存ブリッジ無し。
+- `docs/knowledge/css-modules.md`（`:root.dark` の `:global` 化）、`docs/anti-patterns/planning.md` AP-P28。
 
 #### 外部仕様への依存
 
-本サイクルの判断は外部仕様（外部の当事者が変更可能な SEO 機能・Schema.org・サードパーティプラットフォーム等）には依存しない。依拠するのは Next.js Route Group のフレームワーク挙動と CSS 標準のみで、ルートグループ分割の可否は計画段階の WebFetch ではなく実機ビルドで検証する（実施作業の最初のチェック項目）。
+本サイクルの判断は外部仕様に依存しない（Next.js Route Group のフレームワーク挙動と CSS 標準のみ）。ルートグループ分割の可否は実機ビルドで検証する。
+
+## レビュー結果
+
+### 計画レビュー（constitution / CLAUDE.md 違反の是正）
+
+当初計画（トークン互換ブリッジで色だけ新化）は、constitution Goal（来訪者価値の最大化）と CLAUDE.md 意思決定原則（実装コストは UX で劣る方式を選ぶ理由にならない）に反していた。デザイン移行はメタファーの質的入れ替えであり色置換では達成されないという点も移行計画 step5 に反する。オーナーがこの違反を指摘。対応：近道実装を撤回（stash）、AP-P28 登録、計画を「ゼロベース本格再設計」へ変更、design-migration-plan.md step5 に AP-P28 厳守注記を追記。
+
+### 実装レビュー（reviewer・承認）
+
+reviewer が DESIGN.md・移行計画・実機（Playwright で intro/playing/result・light/dark・w360/w1280、基準 percent-calculator との質感比較、legacy 残存ページの非破損）・ゲート自己再実行・全アンチパターンを点検。
+
+- **総合判定: 承認**。色だけの上塗りではなく新デザイン世界観へ genuine に到達（AP-P28 再発なし）。intro は中央寄せ・絵文字・派手色を脱却し左寄せ・Panel 基調・抑制された青アクセント。playing は ProgressBar を `--accent` 統一・選択肢ヘアライン枠＋focus。結果の ResultCard 自身の chrome（`ResultCard.module.css`：traits のアクセント縦線マーカー・`--accent-soft`/`--accent-strong` の advice ブロック等）は新化済み。**ただし ResultCard の内側に描画される variant 別の結果本文（`CharacterPersonalityContent` 等 8 本の `*Content.tsx`）は本サイクル未変更で、旧 accentColor 由来の赤・マゼンタ系背景＋絵文字が残る＝次サイクル送り**（下記キャリーオーバー参照）。新化済みの境界は「ResultCard の枠・共通構造まで／variant 別本文は未」。
+- **過渡的整合の正当性: 合格**。old-globals.css への新トークン「実定義」追加は globals.css と全項目同値で照合済み・旧トークンのエイリアス温存なし（前回失敗と方向が逆）・別実装の二重化なし・Phase 11.2/11.5 撤去コメント明記。legacy 残存ページ（結果・irodori・daily）非破損を実機確認。
+- **技術: 合格**。ルートグループ分割正しい（[slug]/music-personality プレイ層は (new)・result/ は legacy 残置）。`trustLevel` フィールド保持（撤去は import/JSX のみ・B-432 整合）。テストは安易な skip でなく正当に追従。ゲート4種を reviewer 自身が再実行し全通過（test 334ファイル/5584件）。
+- **要判定だったインライン結果の絵文字: 次サイクル送りが妥当（ブロッカーでない）と判定**。variant 結果本文（`*Content.tsx` 8本）と OtherTypesNav は legacy 静的結果ページと共有され、先食いすると legacy へ新デザインが漏れる／結果ページ群の同時移行が必要になり「タスクは小さく」に反する。検索着地の第一面（intro）と主操作（playing）は完全新化済み。**条件**：backlog B-522 とキャリーオーバーに具体名で登録すること（cycle-252「放置」再発防止）→ 対応済み。
+- 軽微：`ResultCard.tsx` doc コメントの絵文字 → PM が本サイクルで除去済み。
+
+reviewer の承認条件（インライン結果残存の具体登録）を満たしたため、有効な未対応指摘は残っていない。
+
+### ブログレビュー（reviewer・要修正→対応済み）
+
+「開発の学び」記事 `src/blog/content/2026-06-19-design-migration-is-not-color-swap.md` を執筆・レビュー。reviewer が B1（コード例のトークン値が実コードと食い違い＝`#1f3a5f`/`#f4f4f5` を捏造。記事の核「実値を同値で定義する」を内側から崩す）をブロッカー指摘。対応：実値 `oklch(0.62 0.22 264)`/`#f4f4f1` へ修正し「藍系」→「落ち着いた青」へ実体整合（PM が globals.css と照合確認）。推奨 R1（トークン/エイリアスの初出説明）・R2（プレイ画面等の内部前提を一般化）も対応済み。
 
 ## キャリーオーバー
 
-（実施・レビュー後に確定。想定される後続作業は以下。すべて B-522 の傘下として継続）
+レビューで確定。すべて B-522 傘下。
 
-- 結果ページ群（共通 `[slug]/result` ＋ Type C 専用結果8本）の (new)/ 移行。
-- ゲーム4種（`GameLayout`）・daily の (new)/ 移行。
-- 遊び群共有コンポーネント（`QuizContainer`・`RecommendedContent` 等）の構造レベル本格再設計（現状はトークンブリッジで色のみ新化）。
-- 遊びコンテンツのタイル化方針の決定（B-295/B-493 と統合）。
-- 旧→新トークンブリッジの撤去（Phase 11.5）。
+- **インライン結果に legacy 質感が残存（最重要・次サイクル必須）**: 移行済みプレイルート上で12問完了後に表示されるインライン結果のうち、variant 別結果本文（`CharacterPersonalityContent` 等 8 本の `*Content.tsx`）と `OtherTypesNav`（「他のキャラ/タイプも見てみよう」）に、絵文字（`r.icon` 由来等）・本文太字・中央寄せ・色付き左罫線見出しといった旧デザイン質感が残る。これらは legacy 静的結果ページ `(legacy)/play/<slug>/result/[resultId]/page.tsx` と共有されており、本サイクルで先食いすると legacy 結果ページへ新デザインが漏れる／結果ページ群（共通結果＋Type C 専用8本）の同時移行が必要になり「タスクは小さく」に反するため、結果ページ移行サイクルで一括是正する。ResultCard 自身の chrome は本サイクルで新化済み。
+- 結果ページ群（共通 `[slug]/result` ＋ Type C 専用結果8本）・ゲーム4種・daily の (new)/ 本格再設計移行。`RelatedGames` 等ゲーム回遊コンポーネントの絵文字除去も同梱。
+- 遊びコンテンツのタイル化方針の決定（B-295/B-493 統合）。
+- 過渡的トークン定義（old-globals.css 側の新トークン実定義）の撤去（Phase 11.2/11.5）。
 
 ## 補足事項
 
-- 移行は「1ページ移行の標準手順」（design-migration-plan.md）に従う。ステップ6（TrustLevelBadge 撤去）は import/JSX 撤去のみ行い、`trustLevel` フィールド削除は B-432 の一括方針に従い本サイクルでは行わない。
-- 作業は適切な粒度でサブエージェントに委譲し、作業後は必ず reviewer のレビューを受ける。
+- 移行は design-migration-plan.md「1ページ移行の標準手順」に従う。step6（TrustLevelBadge）は import/JSX 撤去のみ。`trustLevel` フィールド削除は B-432 の一括方針に従い本サイクルでは行わない。
+- 作業は適切な粒度でサブエージェントに委譲し、作業後は必ず reviewer のレビューを受ける。reviewer には「色だけの上塗りでないか／道具箱の世界観と整合するか」を重点観点として渡す。
 
 ## サイクル終了時のチェックリスト
 
-- [ ] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
-- [ ] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
-- [ ] すべての変更がレビューされ、残存する指摘事項が無くなっている。
-- [ ] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
-- [ ] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
-- [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
-- [ ] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
+- [x] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
+- [x] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
+- [x] すべての変更がレビューされ、残存する指摘事項が無くなっている。
+- [x] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
+- [x] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
+- [x] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
+- [x] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
 
 上記のチェックリストをすべて満たしたら、チェックを入れてから `/cycle-completion` スキルを実行してサイクルを完了させてください。
 なお、「環境起因」「今回の変更と無関係」「既知の問題」「次回対応」などの **例外は一切認めません** 。必ずすべての項目を完全に満してください。

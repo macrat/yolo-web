@@ -955,7 +955,7 @@ describe("ResultCard - catchphrase装飾線のCSS変数（variant別色出し分
     }
   });
 
-  test("music-personality: catchphraseBeforeDescription に --catchphrase-accent-color が紫色で設定されること", () => {
+  test("music-personality: catchphraseBeforeDescription に装飾色のCSS変数を設定しないこと（新デザイン体系・cycle-253）", () => {
     const { container } = render(
       <ResultCard
         result={musicResult}
@@ -973,10 +973,8 @@ describe("ResultCard - catchphrase装飾線のCSS変数（variant別色出し分
     expect(catchphraseEl).not.toBeNull();
     if (catchphraseEl) {
       const el = catchphraseEl as HTMLElement;
-      // music-personalityでは紫色のCSS変数が設定されること
-      expect(el.style.getPropertyValue("--catchphrase-accent-color")).toBe(
-        "#7c3aed",
-      );
+      // DESIGN.md §2.4: 色は機能のためだけに使う。variant 別の装飾色は廃止した。
+      expect(el.style.getPropertyValue("--catchphrase-accent-color")).toBe("");
     }
   });
 });
@@ -1132,10 +1130,8 @@ describe("ResultCard - traditional-color variant", () => {
     expect(catchphraseEl).not.toBeNull();
     if (catchphraseEl) {
       const el = catchphraseEl as HTMLElement;
-      // traditional-colorでは result.color が CSS変数に設定される
-      expect(el.style.getPropertyValue("--catchphrase-accent-color")).toBe(
-        "#1e3a5f",
-      );
+      // DESIGN.md §2.4: variant 別の装飾色は廃止（新デザイン体系・cycle-253）
+      expect(el.style.getPropertyValue("--catchphrase-accent-color")).toBe("");
     }
   });
 
@@ -1207,10 +1203,8 @@ describe("ResultCard - yoji-personality variant", () => {
     expect(catchphraseEl).not.toBeNull();
     if (catchphraseEl) {
       const el = catchphraseEl as HTMLElement;
-      // yoji-personality では result.color が CSS変数に設定される
-      expect(el.style.getPropertyValue("--catchphrase-accent-color")).toBe(
-        "#8b5cf6",
-      );
+      // DESIGN.md §2.4: variant 別の装飾色は廃止（新デザイン体系・cycle-253）
+      expect(el.style.getPropertyValue("--catchphrase-accent-color")).toBe("");
     }
   });
 
@@ -1308,10 +1302,8 @@ describe("ResultCard - unexpected-compatibility variant", () => {
     expect(catchphraseEl).not.toBeNull();
     if (catchphraseEl) {
       const el = catchphraseEl as HTMLElement;
-      // unexpected-compatibility では result.color が CSS変数に設定される
-      expect(el.style.getPropertyValue("--catchphrase-accent-color")).toBe(
-        "#0891b2",
-      );
+      // DESIGN.md §2.4: variant 別の装飾色は廃止（新デザイン体系・cycle-253）
+      expect(el.style.getPropertyValue("--catchphrase-accent-color")).toBe("");
     }
   });
 });
@@ -1460,10 +1452,8 @@ describe("ResultCard - impossible-advice variant", () => {
     expect(catchphraseEl).not.toBeNull();
     if (catchphraseEl) {
       const el = catchphraseEl as HTMLElement;
-      // impossible-advice では result.color が CSS変数に設定される
-      expect(el.style.getPropertyValue("--catchphrase-accent-color")).toBe(
-        "#7c3aed",
-      );
+      // DESIGN.md §2.4: variant 別の装飾色は廃止（新デザイン体系・cycle-253）
+      expect(el.style.getPropertyValue("--catchphrase-accent-color")).toBe("");
     }
   });
 });

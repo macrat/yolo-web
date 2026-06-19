@@ -1,61 +1,85 @@
+/*
+ * 結果カードのシェアボタン群。新デザイン体系（DESIGN.md）。
+ * サービス識別という機能目的でブランドカラーを使う（§2.4 の範囲内）。
+ * 角丸は操作要素の規範 --r-interactive（8px）。フォーカスは --accent。
+ * タップターゲット 44px を min-height で確保（WCAG 2.5.5）。
+ * 新トークンのみ使用（旧 --color-* は使わない）。
+ */
+
 .wrapper {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.5rem;
-  margin: 1rem 0;
+  margin: 1.5rem 0 0.5rem;
 }
 
 .buttons {
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
-  justify-content: center;
 }
 
 .shareButton {
-  padding: 0.625rem 1.25rem;
-  border: none;
-  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.5rem 1.1rem;
+  border: 1px solid transparent;
+  border-radius: var(--r-interactive);
+  box-shadow: var(--shadow-button);
   font-size: 0.875rem;
-  font-weight: 600;
+  font-family: inherit;
   cursor: pointer;
-  transition: opacity 0.2s ease;
-  color: white;
+  color: #ffffff;
+  transition:
+    filter 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
-.shareButton:hover {
-  opacity: 0.85;
+.shareButton:hover:not(:disabled) {
+  filter: brightness(1.1);
 }
 
+.shareButton:active:not(:disabled) {
+  filter: brightness(0.92);
+  box-shadow: none;
+}
+
+.shareButton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Web Share API（モバイル）— サービス非依存のため共通アクセント面（藍） */
 .webShare {
-  background-color: var(--color-primary);
+  background-color: var(--accent);
 }
 
+/* X（旧 Twitter）— 公式ブランドカラー。ダークでは反転（白背景・黒文字）で視認性確保 */
 .twitter {
   background-color: #000000;
 }
 
+:global(:root.dark) .twitter {
+  color: #000000;
+  background-color: #ffffff;
+}
+
+/* LINE — 公式ブランドカラー */
 .line {
   background-color: #06c755;
 }
 
+/* コピー — サービスではないためニュートラル反転トークン */
 .copy {
-  background-color: #6b7280;
+  color: var(--fg-invert);
+  background-color: var(--bg-invert);
 }
 
 .copiedMessage {
-  font-size: 0.75rem;
-  color: var(--color-success);
+  font-size: 0.8rem;
+  color: var(--success);
   min-height: 1.25rem;
-}
-
-@media (prefers-color-scheme: dark) {
-  .twitter {
-    background-color: #333333;
-  }
-}
-
-:global([data-theme="dark"]) .twitter {
-  background-color: #333333;
 }

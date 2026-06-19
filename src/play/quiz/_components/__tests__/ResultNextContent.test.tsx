@@ -3,13 +3,13 @@ import { render, screen } from "@testing-library/react";
 import ResultNextContent from "../ResultNextContent";
 import type { ResultNextContentItem } from "../ResultNextContent";
 
-// テスト用コンテンツデータ（事前計算済みの ResultNextContentItem 形式）
+// テスト用コンテンツデータ（事前計算済みの ResultNextContentItem 形式）。
+// 新デザイン体系では絵文字アイコンを表示しないため icon フィールドは持たない。
 const mockItems: ResultNextContentItem[] = [
   {
     slug: "animal-personality",
     title: "動物性格診断",
     shortTitle: "動物診断",
-    icon: "🐻",
     category: "personality",
     contentPath: "/play/animal-personality",
     metaText: "全12問",
@@ -18,7 +18,6 @@ const mockItems: ResultNextContentItem[] = [
   {
     slug: "kanji-level",
     title: "漢字レベル診断",
-    icon: "📝",
     category: "knowledge",
     contentPath: "/play/kanji-level",
     metaText: "全10問",
@@ -27,7 +26,6 @@ const mockItems: ResultNextContentItem[] = [
   {
     slug: "kanji-kanaru",
     title: "漢字カナール",
-    icon: "🀄",
     category: "game",
     contentPath: "/play/kanji-kanaru",
     metaText: "毎日更新",
@@ -65,14 +63,6 @@ describe("ResultNextContent — 基本レンダリング", () => {
 });
 
 describe("ResultNextContent — カード内容", () => {
-  test("各カードにアイコンが表示されること", () => {
-    render(<ResultNextContent contents={mockItems} />);
-
-    expect(screen.getByText("🐻")).toBeInTheDocument();
-    expect(screen.getByText("📝")).toBeInTheDocument();
-    expect(screen.getByText("🀄")).toBeInTheDocument();
-  });
-
   test("shortTitleがある場合はshortTitleが表示されること", () => {
     render(<ResultNextContent contents={mockItems} />);
 
@@ -105,20 +95,6 @@ describe("ResultNextContent — カード内容", () => {
     expect(screen.getByText("知識テスト")).toBeInTheDocument();
     expect(screen.getByText("パズル")).toBeInTheDocument();
   });
-
-  test("data-category属性がカテゴリバッジに設定されていること", () => {
-    render(<ResultNextContent contents={mockItems} />);
-
-    // バッジ要素に data-category 属性が設定される
-    const diagnosisBadge = screen.getByText("診断");
-    expect(diagnosisBadge).toHaveAttribute("data-category", "personality");
-
-    const knowledgeBadge = screen.getByText("知識テスト");
-    expect(knowledgeBadge).toHaveAttribute("data-category", "knowledge");
-
-    const gameBadge = screen.getByText("パズル");
-    expect(gameBadge).toHaveAttribute("data-category", "game");
-  });
 });
 
 describe("ResultNextContent — リンクとアクセシビリティ", () => {
@@ -136,13 +112,6 @@ describe("ResultNextContent — リンクとアクセシビリティ", () => {
     const section = screen.getByRole("region", { name: "次のおすすめ" });
     expect(section).toHaveAttribute("aria-label", "次のおすすめ");
   });
-
-  test("アイコン絵文字にaria-hidden=trueが設定されていること", () => {
-    render(<ResultNextContent contents={mockItems} />);
-
-    const bearIcon = screen.getByText("🐻");
-    expect(bearIcon).toHaveAttribute("aria-hidden", "true");
-  });
 });
 
 describe("ResultNextContent — fortuneコンテンツ", () => {
@@ -150,7 +119,6 @@ describe("ResultNextContent — fortuneコンテンツ", () => {
     const fortuneItem: ResultNextContentItem = {
       slug: "daily",
       title: "今日のユーモア運勢",
-      icon: "🔮",
       category: "fortune",
       contentPath: "/play/daily",
       metaText: "毎日更新",
@@ -161,7 +129,6 @@ describe("ResultNextContent — fortuneコンテンツ", () => {
 
     expect(screen.getByText("今日のユーモア運勢")).toBeInTheDocument();
     expect(screen.getByText("毎日更新")).toBeInTheDocument();
-    const badge = screen.getByText("運勢");
-    expect(badge).toHaveAttribute("data-category", "fortune");
+    expect(screen.getByText("運勢")).toBeInTheDocument();
   });
 });

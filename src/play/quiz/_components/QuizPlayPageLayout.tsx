@@ -1,7 +1,6 @@
-import Breadcrumb from "@/components/common/Breadcrumb";
-import FaqSection from "@/components/common/FaqSection";
-import ShareButtons from "@/components/common/ShareButtons";
-import TrustLevelBadge from "@/components/common/TrustLevelBadge";
+import Breadcrumb from "@/components/Breadcrumb";
+import FaqSection from "@/components/FaqSection";
+import ShareButtons from "@/components/ShareButtons";
 import QuizContainer from "@/play/quiz/_components/QuizContainer";
 import RelatedQuizzes from "@/play/quiz/_components/RelatedQuizzes";
 import RecommendedContent from "@/play/_components/RecommendedContent";
@@ -17,8 +16,8 @@ import { getContentPath } from "@/play/paths";
 import type { PlayContentMeta } from "@/play/types";
 import type { ResultNextContentItem } from "@/play/quiz/_components/ResultNextContent";
 import type { QuizDefinition } from "@/play/quiz/types";
-// (legacy) Route Group 配下に移動したページのスタイルを参照する
-import styles from "@/app/(legacy)/play/[slug]/page.module.css";
+// (new) Route Group 配下に移動したプレイ層のスタイルを参照する
+import styles from "@/app/(new)/play/[slug]/page.module.css";
 
 interface QuizPlayPageLayoutProps {
   quiz: QuizDefinition;
@@ -52,7 +51,23 @@ function buildMetaText(slug: string, content: PlayContentMeta): string {
  *
  * 動的ルート（/play/[slug]/page.tsx）と専用ルート（/play/music-personality/page.tsx 等）
  * で共通して使用するレイアウトを提供する。
- * 将来的に他のクイズも専用ルートに移行する際に、最小限のコードで済むよう設計されている。
+ *
+ * 新デザイン体系（DESIGN.md）に従った左寄せ・パネル構成の章立て。
+ * 「日常の傍にある道具（と息抜き）」の静かな世界観の中に、息抜きとしての
+ * クイズを置き直す。ToolPageLayout（移行済みツール詳細の器）と同じ
+ * 「文脈確認 → 本体（主役）→ 二次情報」の並びを踏襲する。
+ *
+ * 並び順:
+ *   1. パンくず（Breadcrumb。BreadcrumbList JSON-LD 内蔵）
+ *   2. コンパクトな h1（quiz.meta.title）+ 短説明（quiz.meta.description）
+ *   3. クイズ本体（QuizContainer＝主役。Panel に収める）
+ *   4. FAQ（FaqSection。FAQPage JSON-LD 内蔵）
+ *   5. シェア（ShareButtons）
+ *   6. 関連クイズ・診断（RelatedQuizzes）
+ *   7. 他ジャンルのおすすめ（RecommendedContent）
+ *
+ * 過渡注記: TrustLevelBadge の import / JSX は撤去済み（cycle-253）。
+ *   quiz.meta.trustLevel フィールド自体は B-432 の一括方針に従い保持する。
  */
 export default async function QuizPlayPageLayout({
   quiz,
@@ -71,7 +86,6 @@ export default async function QuizPlayPageLayout({
       slug: content.slug,
       title: content.title,
       shortTitle: content.shortTitle,
-      icon: content.icon,
       category: content.category,
       contentPath: getContentPath(content),
       metaText: buildMetaText(content.slug, content),
@@ -80,13 +94,15 @@ export default async function QuizPlayPageLayout({
   );
 
   return (
-    <div className={styles.wrapper}>
+    <article className={styles.layout}>
       {jsonLd && (
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: safeJsonLdStringify(jsonLd) }}
         />
       )}
+
+      {/* 1. パンくず（BreadcrumbList JSON-LD 内蔵） */}
       <Breadcrumb
         items={[
           { label: "ホーム", href: "/" },
@@ -94,16 +110,24 @@ export default async function QuizPlayPageLayout({
           { label: quiz.meta.title },
         ]}
       />
-      <TrustLevelBadge
-        level={quiz.meta.trustLevel}
-        note={quiz.meta.trustNote}
-      />
+
+      {/* 2. コンパクトな h1 + 短説明（ファーストビューを占有しない） */}
+      <header className={styles.header}>
+        <h1 className={styles.title}>{quiz.meta.title}</h1>
+        <p className={styles.shortDescription}>{quiz.meta.description}</p>
+      </header>
+
+      {/* 3. クイズ本体（主役）。Panel に収める（DESIGN.md §1） */}
       <QuizContainer
         quiz={quiz}
         referrerTypeId={referrerTypeId}
         recommendedContents={resultNextContents}
       />
+
+      {/* 4. FAQ（FAQPage JSON-LD 内蔵）。faq が空のとき FaqSection は null を返す */}
       <FaqSection faq={quiz.meta.faq} />
+
+      {/* 5. シェア */}
       <section className={styles.shareSection}>
         <h2 className={styles.shareSectionTitle}>
           この診断が楽しかったらシェア
@@ -116,8 +140,12 @@ export default async function QuizPlayPageLayout({
           contentId={slug}
         />
       </section>
+
+      {/* 6. 関連クイズ・診断 */}
       {meta && <RelatedQuizzes currentSlug={slug} category={meta.category} />}
+
+      {/* 7. 他ジャンルのおすすめ */}
       <RecommendedContent currentSlug={slug} />
-    </div>
+    </article>
   );
 }

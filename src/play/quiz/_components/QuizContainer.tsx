@@ -3,6 +3,8 @@
 import { useState, useCallback } from "react";
 import { trackContentStart, trackContentEnd } from "@/lib/analytics";
 import Link from "next/link";
+import Panel from "@/components/Panel";
+import Button from "@/components/Button";
 import type { QuizDefinition, QuizAnswer, QuizPhase } from "@/play/quiz/types";
 import { determineResult, calculateKnowledgeScore } from "@/play/quiz/scoring";
 import { determineScienceThinkingResult } from "@/play/quiz/data/science-thinking";
@@ -94,32 +96,34 @@ export default function QuizContainer({
     const questionCount = quiz.meta.questionCount;
     const resultTypeCount = quiz.results.length;
     const estimatedTime = getEstimatedTime(questionCount);
+    const typeLabel = quiz.meta.type === "knowledge" ? "知識クイズ" : "診断";
 
+    // h1 と説明はページ章立て（QuizPlayPageLayout の header）が担うため、
+    // ここでは「これから始める道具」としての所要情報と開始操作だけを静かに置く。
     return (
-      <div className={styles.container}>
+      <Panel className={styles.panel}>
         <div className={styles.intro}>
-          <div className={styles.introIcon}>{quiz.meta.icon}</div>
-          <h1 className={styles.introTitle}>{quiz.meta.title}</h1>
-          <p className={styles.introDescription}>{quiz.meta.description}</p>
-          <p className={styles.introMeta}>
-            {quiz.meta.type === "knowledge" ? "知識クイズ" : "診断"}
-          </p>
-          {/* ミニマル情報バッジ: 問題数・所要時間・結果タイプ数を1行で表示 */}
+          {/* 所要情報を一行のタグ列で淡く示す（賑やかさではなく整然さ） */}
           <div className={styles.introBadges}>
+            <span className={styles.introBadge}>{typeLabel}</span>
             <span className={styles.introBadge}>全{questionCount}問</span>
             <span className={styles.introBadge}>{estimatedTime}</span>
             {quiz.meta.type === "personality" && resultTypeCount > 0 && (
               <span className={styles.introBadge}>{resultTypeCount}タイプ</span>
             )}
           </div>
-          <button
-            type="button"
+          <p className={styles.introLead}>
+            {quiz.meta.type === "knowledge"
+              ? "準備ができたら始めましょう。"
+              : "気軽に答えていくと、結果が出ます。"}
+          </p>
+          <Button
+            variant="primary"
             className={styles.startButton}
-            style={{ backgroundColor: quiz.meta.accentColor }}
             onClick={handleStart}
           >
-            スタート
-          </button>
+            はじめる
+          </Button>
           {quiz.meta.relatedLinks && quiz.meta.relatedLinks.length > 0 && (
             <div className={styles.relatedLinks}>
               {quiz.meta.relatedLinks.map((link) => (
@@ -134,28 +138,23 @@ export default function QuizContainer({
             </div>
           )}
         </div>
-      </div>
+      </Panel>
     );
   }
 
   if (phase === "playing") {
     const question = quiz.questions[currentIndex];
     return (
-      <div className={styles.container}>
-        <ProgressBar
-          current={currentIndex + 1}
-          total={quiz.questions.length}
-          accentColor={quiz.meta.accentColor}
-        />
+      <Panel className={styles.panel}>
+        <ProgressBar current={currentIndex + 1} total={quiz.questions.length} />
         <QuestionCard
           key={question.id}
           question={question}
           quizType={quiz.meta.type}
-          accentColor={quiz.meta.accentColor}
           onAnswer={handleAnswer}
           onNext={handleNext}
         />
-      </div>
+      </Panel>
     );
   }
 
@@ -170,23 +169,30 @@ export default function QuizContainer({
       : undefined;
 
   return (
-    <div className={styles.container}>
-      <ResultCard
-        result={result}
-        quizType={quiz.meta.type}
-        quizTitle={quiz.meta.title}
-        quizSlug={quiz.meta.slug}
-        score={score}
-        totalQuestions={
-          quiz.meta.type === "knowledge" ? quiz.questions.length : undefined
-        }
-        onRetry={handleRetry}
-        detailedContent={result.detailedContent}
-        resultPageLabels={quiz.meta.resultPageLabels}
-        accentColor={quiz.meta.accentColor}
-        referrerTypeId={referrerTypeId}
-        allResults={quiz.results}
-      />
+    <div className={styles.resultPhase}>
+      {/* 結果本体（主役）を Panel に収める（DESIGN.md §1）。
+       * detailedContent の variant 別サブコンポーネント（legacy 結果コンテンツ）は
+       * 引き続き quiz.meta.accentColor を受け取るが、ResultCard 自身の chrome
+       * （見出し・標準セクション・ボタン）は新トークン --accent に統一されている。 */}
+      <Panel className={styles.panel}>
+        <ResultCard
+          result={result}
+          quizType={quiz.meta.type}
+          quizTitle={quiz.meta.title}
+          quizSlug={quiz.meta.slug}
+          score={score}
+          totalQuestions={
+            quiz.meta.type === "knowledge" ? quiz.questions.length : undefined
+          }
+          onRetry={handleRetry}
+          detailedContent={result.detailedContent}
+          resultPageLabels={quiz.meta.resultPageLabels}
+          accentColor={quiz.meta.accentColor}
+          referrerTypeId={referrerTypeId}
+          allResults={quiz.results}
+        />
+      </Panel>
+      {/* 回遊導線・追加コンテンツは本体パネルの外に二次配置（パネル入れ子回避） */}
       {recommendedContents && recommendedContents.length > 0 && (
         <ResultNextContent contents={recommendedContents} />
       )}

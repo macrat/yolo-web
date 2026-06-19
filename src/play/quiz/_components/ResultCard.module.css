@@ -1,81 +1,109 @@
+/*
+ * 結果カード（受検者本人向けインライン結果）。新デザイン体系（DESIGN.md）。
+ * 左寄せ・新トークンのみ・bold 不使用・絵文字なし・影なし。
+ * クイズごとの派手色ではなく共通アクセント（--accent）に統一する。
+ * 角丸はカード/ブロック = --r-normal（2px）、操作要素 = --r-interactive（8px）。
+ */
+
 .card {
-  text-align: center;
-  padding: 2rem 1rem;
-  animation: fadeIn 0.5s ease;
+  text-align: left;
+  animation: fadeIn 0.4s ease;
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: scale(0.95);
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
-    transform: scale(1);
+    transform: translateY(0);
   }
 }
 
-.icon {
-  font-size: 3rem;
-  margin-bottom: 0.5rem;
+/* 「あなたの結果」ラベル（小見出し） */
+.resultLabel {
+  font-size: 0.8rem;
+  color: var(--fg-soft);
+  margin: 0 0 0.25rem;
 }
 
 .title {
-  font-size: 1.75rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--fg);
+  margin: 0 0 0.5rem;
+  line-height: 1.4;
 }
 
 .score {
-  font-size: 1rem;
-  color: var(--color-text-muted);
-  margin-bottom: 1rem;
+  font-size: 0.95rem;
+  color: var(--fg-soft);
+  margin: 0 0 1rem;
 }
 
 .description {
   font-size: 1rem;
-  line-height: 1.7;
-  margin-bottom: 1.5rem;
-  color: var(--color-text);
+  line-height: 1.8;
+  margin: 0 0 1.5rem;
+  color: var(--fg);
+  max-width: 720px;
 }
 
+/* おすすめリンク（任意）。操作要素 → --r-interactive */
 .recommendation {
   display: inline-block;
   margin-bottom: 1.5rem;
-  padding: 0.75rem 1.25rem;
-  background-color: var(--color-bg-secondary);
-  border-radius: 8px;
-  color: var(--color-primary);
+  padding: 0.625rem 1.1rem;
+  background-color: var(--bg-soft);
+  border-radius: var(--r-interactive);
+  color: var(--accent);
   text-decoration: none;
-  font-size: 0.875rem;
-  transition: opacity 0.2s ease;
+  font-size: 0.9rem;
+  transition: background-color 0.15s ease;
 }
 
 .recommendation:hover {
-  opacity: 0.8;
+  background-color: var(--bg-softer);
 }
 
+.recommendation:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* もう一度挑戦ボタン。操作要素 → --r-interactive。default ボタン相当 */
 .retryButton {
-  display: block;
-  width: 100%;
-  max-width: 300px;
-  margin: 1rem auto 0;
-  padding: 0.75rem;
-  border: 2px solid var(--color-border);
-  border-radius: 8px;
-  background-color: var(--color-bg);
-  color: var(--color-text);
-  font-size: 1rem;
-  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  margin-top: 0.5rem;
+  padding: 0.5rem 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: var(--r-interactive);
+  background-color: var(--bg-soft);
+  color: var(--fg);
+  font-size: 0.9rem;
+  font-family: inherit;
+  box-shadow: var(--shadow-button);
   cursor: pointer;
   transition:
-    border-color 0.2s ease,
-    background-color 0.2s ease;
+    background-color 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
 .retryButton:hover {
-  border-color: var(--color-primary);
-  background-color: var(--color-bg-secondary);
+  background-color: var(--bg-softer);
+}
+
+.retryButton:active {
+  box-shadow: none;
+}
+
+.retryButton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -84,23 +112,23 @@
   }
 }
 
-/* detailedContent セクション（全variant共通の親コンテナ） */
+/* detailedContent セクション（全 variant 共通の親コンテナ） */
 .detailedSection {
   margin-top: 1.5rem;
   text-align: left;
 }
 
-/* セクション見出し（accentColorをinline styleで適用） */
+/* セクション見出し。共通アクセントの左罫線で静かに区切る */
 .detailedHeading {
-  font-size: 1.1rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--fg);
+  margin: 0 0 1rem;
   padding-left: 0.75rem;
-  border-left: 4px solid currentColor;
+  border-left: 3px solid var(--accent);
 }
 
-/* traits（持ち味）リスト。静的結果ページ（page.module.css .traitsItem）と
-   見た目を揃え、本人向け ResultCard でも持ち味を表示する（cycle-250）。 */
+/* traits（持ち味）リスト */
 .traitsList {
   list-style: none;
   padding: 0;
@@ -112,21 +140,24 @@
 
 .traitsItem {
   font-size: 0.95rem;
-  line-height: 1.6;
-  color: var(--color-text);
-  padding: 0.5rem 0.75rem;
-  background: var(--color-bg-secondary);
-  border-radius: 6px;
+  line-height: 1.7;
+  color: var(--fg);
+  padding: 0.625rem 0.875rem;
+  background: var(--bg-soft);
+  border-radius: var(--r-normal);
   display: flex;
   align-items: flex-start;
-  gap: 0.5rem;
+  gap: 0.625rem;
 }
 
+/* 絵文字を使わない静かなマーカー（アクセントの短い縦線） */
 .traitsItem::before {
-  content: "✓";
-  font-weight: 700;
+  content: "";
   flex-shrink: 0;
-  margin-top: 0.05rem;
+  width: 2px;
+  align-self: stretch;
+  background: var(--accent);
+  border-radius: var(--r-normal);
 }
 
 /* behaviors リスト */
@@ -141,84 +172,44 @@
 
 .behaviorsItem {
   font-size: 0.95rem;
-  line-height: 1.6;
-  color: var(--color-text);
-  padding: 0.75rem 1rem;
-  border-radius: 8px;
-  border: 1px solid var(--color-border);
-  display: flex;
-  align-items: flex-start;
-  gap: 0.625rem;
-}
-
-.behaviorsItem::before {
-  content: "💡";
-  flex-shrink: 0;
-}
-
-/* advice カード（Standard variant） */
-.adviceCard {
-  padding: 1.25rem 1.5rem;
-  border-radius: 10px;
-  font-size: 1rem;
   line-height: 1.7;
-  font-weight: 500;
-  color: var(--color-text);
+  color: var(--fg);
+  padding: 0.75rem 1rem;
+  border-radius: var(--r-normal);
+  border: 1px solid var(--border);
+}
+
+/* advice カード（標準 variant）。共通アクセントの淡い面に置く */
+.adviceCard {
+  padding: 1.1rem 1.25rem;
+  border-radius: var(--r-normal);
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--fg);
   margin-bottom: 0;
-  text-align: center;
-  /* accentColorの透過背景はinline styleで設定。未設定時のフォールバック */
-  background: rgba(0, 0, 0, 0.04);
+  text-align: left;
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-strong);
 }
 
-/* ダークモード: rgba(0,0,0,0.04)はダーク背景でほぼ透明になるため白ベースに変更 */
-:global(.dark) .adviceCard {
-  background: rgba(255, 255, 255, 0.06);
-}
-
-/* catchphrase（contrarian-fortune detailedSection内） */
+/* catchphrase（contrarian-fortune detailedSection 内） */
 .catchphrase {
   font-size: 1rem;
   font-style: italic;
-  color: var(--color-text-muted);
-  text-align: center;
+  color: var(--fg-soft);
+  text-align: left;
   margin-bottom: 1.5rem;
-  line-height: 1.6;
+  line-height: 1.7;
 }
 
-/* catchphraseBeforeDescription（animal-personality: descriptionの前に表示） */
+/* catchphraseBeforeDescription（description の前に表示する一言）。
+ * variant 別の派手な装飾線は廃し、静かなリード文として左寄せで置く。 */
 .catchphraseBeforeDescription {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: var(--color-text);
-  text-align: center;
-  margin-bottom: 1rem;
-  line-height: 1.6;
-  padding: 0 0.5rem;
-  /* accentColorを使った左右の装飾線でワクワク感を演出 */
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.catchphraseBeforeDescription::before,
-.catchphraseBeforeDescription::after {
-  content: "";
-  flex: 1;
-  height: 2px;
-  /* CSS変数 --catchphrase-accent-color を参照し、variant別に色を切り替える。
-     フォールバック値 #15803d は animal-personality（緑）のライトモード標準色。
-     music-personality では ResultCard.tsx の inline style で #7c3aed（紫）を上書きする。 */
-  background: var(--catchphrase-accent-color, #15803d);
-  opacity: 0.4;
-  border-radius: 1px;
-}
-
-/* ダークモード: ライトモード用のフォールバック #15803d はコントラスト不足のため明るい緑に変更。
-   music-personalityは inline style で CSS変数を指定するため、ダーク時も紫が維持される。 */
-:global(.dark) .catchphraseBeforeDescription::before,
-:global(.dark) .catchphraseBeforeDescription::after {
-  background: var(--catchphrase-accent-color, #4ade80);
-  opacity: 0.5;
+  font-size: 1.1rem;
+  color: var(--fg-soft);
+  text-align: left;
+  margin: 0 0 1rem;
+  line-height: 1.7;
 }
 
 /* humorMetrics テーブル（contrarian-fortune） */
@@ -232,41 +223,33 @@
 .humorMetricsTable th,
 .humorMetricsTable td {
   padding: 0.5rem 0.75rem;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--border);
   text-align: left;
 }
 
 .humorMetricsTable th {
-  /* --color-surface は未定義のため --color-bg-secondary を使用 */
-  background: var(--color-bg-secondary);
+  background: var(--bg-soft);
   font-weight: 600;
   width: 50%;
 }
 
-/* characterIntro（character-fortune） */
+/* characterIntro（character-fortune）。淡い面に置く */
 .characterIntro {
   font-size: 1rem;
   line-height: 1.8;
-  text-align: center;
-  color: var(--color-text);
+  text-align: left;
+  color: var(--fg);
   margin-bottom: 1.5rem;
-  padding: 1.25rem 1.5rem;
-  border-radius: 10px;
-  /* accentColorの透過背景はinline styleで設定。未設定時のフォールバック */
-  background: rgba(0, 0, 0, 0.04);
-}
-
-/* ダークモード: rgba(0,0,0,0.04)はダーク背景でほぼ透明になるため白ベースに変更 */
-:global(.dark) .characterIntro {
-  background: rgba(255, 255, 255, 0.06);
+  padding: 1.1rem 1.25rem;
+  border-radius: var(--r-normal);
+  background: var(--bg-soft);
 }
 
 /* characterMessage（character-fortune） */
 .characterMessage {
   font-size: 0.95rem;
   line-height: 1.9;
-  color: var(--color-text);
+  color: var(--fg);
   text-align: left;
   margin-bottom: 0;
-  padding: 0 0.25rem;
 }

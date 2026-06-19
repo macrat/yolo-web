@@ -388,8 +388,7 @@ describe("動的metadataページのSEO検証", () => {
     if (slugs.length === 0) return; // データがなければスキップ
     const slug = slugs[0];
 
-    const { generateMetadata } =
-      await import("@/app/(legacy)/play/[slug]/page");
+    const { generateMetadata } = await import("@/app/(new)/play/[slug]/page");
     const meta = await generateMetadata({
       params: Promise.resolve({ slug }),
       searchParams: Promise.resolve({}),
