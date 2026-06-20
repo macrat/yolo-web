@@ -7,8 +7,8 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-523 | 静的結果ページ枠(ResultPageShell)新デザイン移行（B-522 第三弾） | P1 | - | (legacy)/play/[slug]/result/* の枠(ResultPageShell)新化＋(new)へルート移動。実測流入は28日7PV/全クイズと僅少だが、B-522完遂のため必須。詳細 cycle-254.md |
-| B-524 | *Content の allTypesLayout 公開型 "list"\|"pill" を "vertical"\|"grid" に整理 | P3 | - | cycle-254で内部マッピング(pill→grid)した dead literal を、page.tsx caller と合わせて意味通りの命名へ。詳細 cycle-254.md |
+| B-523 | 静的結果ページ枠(ResultPageShell)新デザイン移行（B-522 第三弾） | P1 | - | (legacy)/play/[slug]/result/* の枠(ResultPageShell)新化＋(new)へルート移動。実測流入は28日7PV/全クイズと僅少だが、B-522完遂のため必須。B-524と同時実施推奨。詳細 cycle-254.md |
+| B-524 | *Content の allTypesLayout 公開型を意味通り命名へ整理 | P1 | - | cycle-254のpill→grid内部マップでdead literal化。AP-I02。B-523と同時実施推奨。詳細 cycle-254.md |
 | B-350 | 移行計画 Phase 9.3.a: dictionary トップ移行 | P1 | - | /dictionary を (new)/ に移行。B-522完了後に着手。P2→P1昇格。詳細 design-migration-plan.md |
 | B-493 | 遊び（ゲーム）の単一タイル化（GameLayout 系） | P1 | - | 全ゲームをタイル再構築。B-522の一環。P2→P1昇格。詳細 cycle-225.md |
 | B-432 | trustLevel フィールド・関連型・テストの完全削除 | P2 | - | 一括完全削除（漸進禁止=AP-I02）。詳細 cycle-200.md |

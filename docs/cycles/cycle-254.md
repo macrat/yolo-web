@@ -2,7 +2,7 @@
 id: 254
 description: デザイン移行 Phase 8.2 の第二弾として、最も見られている旅程の終点である「クイズのインライン結果本文」を (new)/ デザインへゼロベースで本格再設計する。cycle-253 で枠（ResultCard）まで新化済みのインライン結果の中身——variant 別結果本文8本（*Content.tsx + *.module.css）と OtherTypesNav に残る絵文字・派手な type-color 罫線・中央寄せ・旧トークンを、ResultCard の新デザイン言語へ genuine に統一する。検索着地の主経路（プレイ画面内で完結するインライン結果。静的結果ページURLへの流入は実測7PV/28日と僅少）の質感断裂を本質的に解消する。
 started_at: "2026-06-20T08:16:23+0900"
-completed_at: "2026-06-20T11:01:31+09:00"
+completed_at: "2026-06-20T11:15:01+09:00"
 ---
 
 # サイクル-254
@@ -121,16 +121,29 @@ reviewer の振り返り推奨（任意・本サイクル PM の AP-WF 抵触の
 すべて B-522 傘下。
 
 - **B-523（次サイクル必須）**: 静的結果ページ群の枠 `ResultPageShell` の新デザイン移行＋ルート移動（`(legacy)→(new)`）。共通結果ページ `[slug]/result/[resultId]` の枠を新化し、Type C 専用結果8本の page.tsx／opengraph-image.tsx を (new) へ。本サイクルで本文が新化されたため「過渡的整合（新本文 in 旧枠）」を解消する後続。
-- **B-524（次サイクル送り・低優先）**: `*Content.tsx` の public props 型 `allTypesLayout: "list" | "pill"` を `"vertical" | "grid"`（または `"list" | "grid"`）の意味通り命名へ整理し、`"pill"` の dead literal を撤去。page.tsx caller も合わせて置換。
+- **B-524（次サイクル必須・B-523 と同時実施推奨）**: `*Content.tsx` の public props 型 `allTypesLayout: "list" | "pill"` を `"vertical" | "grid"`（または `"list" | "grid"`）の意味通り命名へ整理し、`"pill"` の dead literal を撤去。page.tsx caller も合わせて置換。なお page.tsx caller の現状は不揃い（yoji-personality だけ `"list"` で他7本は `"pill"`→grid。静的 surface での質感不揃いは本サイクル以前から存在）。B-523/B-524 同時実施で全 caller 一斉整理する。
 - ゲーム4種・daily の (new)/ 移行（`RelatedGames` 等の絵文字除去同梱）— B-522 残り。
 - 遊びコンテンツのタイル化方針の決定（B-295/B-493 統合）— B-522 残り。
 - 過渡的トークン定義（old-globals.css 側）の撤去（Phase 11.2/11.5）— Phase 11 一括対応。
 
 ### 本サイクルで PM が抵触したアンチパターン（記録）
 
-新規 AP は乱立させず、既存への再発として記録する。今サイクルで PM が抵触したのは:
+新規 AP は乱立させず、既存への再発として記録する。今サイクルで PM が抵触したのは（cycle-completion フェーズの workflow AP 点検 reviewer が指摘した分も含む）:
 
-- **AP-WF（PM の責務範囲）**: 「`*Content` の `"pill"` 値を内部で grid にマップ」という方針を全 8 本に適用するとき、page.tsx caller のみ確認し ResultCard.tsx caller を見落とした。「prop 値→内部マッピング」を方針として降ろす前に、全 caller を grep で網羅して通読すべき。reviewer がブロッカーとして検出してくれたが、本来は計画段階で気づくべきだった。後続 PM へ：**prop 値の意味を変える変更は、その prop が登場する全 caller を必ず確認する。dead literal 化や内部マッピングは特に注意（caller 側で何が起きるか変わる）**。
+- **AP-WF03（過度に literal な指示・上流原因）**: builder 指示書（cycle-254 中盤の pill→grid 統一フェーズ）で、PM が「`"pill"` を内部で grid にマップ」「クラス名は `allTypesGrid` で参照実装と完全に揃える」と**実装表現の単位**まで literal で確定した。本来は「OtherTypesNav 系の縦リスト統一」のような抽象方針だけ渡し、内部マッピング設計と全 caller 確認を builder の判断に委ねるべきだった。literal 指示は builder の caller 監査機会を奪い、下記 AP-WF12/WF（caller 漏れ）の上流原因となった。
+- **AP-WF12 射程拡張（内部仕様の実体確認漏れ）**: AP-WF12 はもともと外部仕様確認が射程だが、**他タスクの状態・フレームワーク API の挙動・他コードベース内部の prop 全 caller 集合**も「自ら参照すべき事実情報」として射程に含むべき。本サイクルでは `allTypesLayout` の値域変更を方針として降ろす前に `grep -r "allTypesLayout" src/` を実行すべきだった。後続 PM へ：**prop 値の意味を変える方針判断の前に、その prop が登場する全 caller を grep で網羅して通読する**。
+- **AP-WF（PM の責務範囲）**: 上記の派生。page.tsx caller のみ確認し ResultCard.tsx（インライン caller）を見落とした結果、インライン surface で 5 variant が grid に倒れる質感断裂を生んだ。最終一括レビューが reviewer ブロッカーとして検出して根治。
+- **AP-WF23（チェックリスト記録の漏れ）**: 第1回ゲート再実行（test 5586件）と第2回（最終修正後 5588件）の独立再走を PM が実行していたが、cycle-doc に明示記録していなかった。**完了処理フェーズの AP 点検 reviewer 指摘により、最終 HEAD `f448962b` で 4 ゲートを独立再走し下記に記録**。
+
+### 完了処理フェーズの追加対応（AP 点検 reviewer 指摘の反映）
+
+- **最終 HEAD `f448962b` での独立ゲート再走（AP-WF23 解消）**:
+  - `npm run lint`: clean
+  - `npm run format:check`: All matched files use Prettier code style
+  - `npm run test`: 334 ファイル / 5588 件 pass（duration ~197s）
+  - `npm run build`: 完走（Static/SSG/Dynamic 全形態のルートを正常プリレンダリング）
+- **AP-WF07 隣接（並列水平展開時の質感統一）— 後続 PM への申し送り**: 並列水平展開（参照実装→7本展開）では、最終一括レビューだけに質感統一の検証を依存すると、reviewer ブロッカー検出は幸運にすぎず再現可能な仕組みでない。本サイクルの教訓として、**並列展開後、最終レビュー前に PM が「参照実装＋各並列成果物」を並べ読みして質感の揃いを独立確認**するチェックを入れることを推奨。
+- **AP-I02 観点での B-524 残置の根拠**: 本サイクル修正後、`*Content.tsx` の public props 型 `allTypesLayout: "list" | "pill"` は dead literal 化（`"pill"` が page.tsx で grid・ResultCard.tsx で list を意味する曖昧状態）。本サイクル内で根治するには、全 8 本の型を `"vertical" | "grid"` 系へ変更し、page.tsx 全 8 本＋ResultCard.tsx の caller を一斉置換、テストも追従する必要があり、**B-523（静的結果ページの枠とルート移動）と一緒にやる方が caller 全体を一度に整理できて綺麗**。よって本サイクルでは残置するが、**B-524 を低優先から「次サイクル必須（B-523 と同時実施）」に昇格**して根拠を明記する（backlog 更新済み）。実行時の挙動は正しく、実プロダクトへの影響はない。
 
 ## 補足事項
 
