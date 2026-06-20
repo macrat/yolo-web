@@ -7,6 +7,7 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-525 | 来訪者価値の継続的計測基盤の設計と実装 | P1 | - | サイト変更前後で来訪者指標(直帰率/エンゲージメント時間/回遊/遷移率等)を測る仕組み。A/B振り分けと事後コホート比較の両案検討。詳細 cycle-254.md(Owner提案cycle-254末) |
 | B-523 | 静的結果ページ枠(ResultPageShell)新デザイン移行（B-522 第三弾） | P1 | - | (legacy)/play/[slug]/result/* の枠(ResultPageShell)新化＋(new)へルート移動。実測流入は28日7PV/全クイズと僅少だが、B-522完遂のため必須。B-524と同時実施推奨。詳細 cycle-254.md |
 | B-524 | *Content の allTypesLayout 公開型を意味通り命名へ整理 | P1 | - | cycle-254のpill→grid内部マップでdead literal化。AP-I02。B-523と同時実施推奨。詳細 cycle-254.md |
 | B-350 | 移行計画 Phase 9.3.a: dictionary トップ移行 | P1 | - | /dictionary を (new)/ に移行。B-522完了後に着手。P2→P1昇格。詳細 design-migration-plan.md |
