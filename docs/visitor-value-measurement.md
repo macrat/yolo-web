@@ -157,7 +157,7 @@
   - `variant`: arm ラベル。**衝突回避が必須** — 既存 `variant` キーは toolbox タイル専用（`src/lib/analytics.ts` の `buildTileParams`）。同名で意味が二重化するのを避けるため、**A/B 用は `ab_variant` を新設**することを推奨（`variant` は toolbox の意味で温存）。値は `"A"`/`"B"`。
   - `release`: リリース識別子（後述）。全イベントに載せると後付けで「いつ・どのデプロイで効果が変わったか」を BigQuery で切れる。
 - **どのイベントに付けるか**:
-  - **`ab_variant` / `experiment_id`**: A/B の効果に関わる**主要イベントに限定**して付与する。第一実験では `level_end`（結果到達＝介入が効く地点）に必ず付与。可能なら `level_start`（到達率の分母）にも付与し、到達率を arm 別に出せるようにする。`share`/`content_rating` も結果由来なら付ける。全イベント無差別付与はしない（結果を見ていないセッションに arm を載せても主 KPI のノイズになるだけ）。
+  - **`ab_variant` / `experiment_id`**: A/B の効果に関わる**主要イベントに限定**して付与する。第一実験では `level_end`（結果到達＝介入が効く地点）に必ず付与・`level_start`（到達率の分母）にも付与し到達率を arm 別に出せるようにする。`analytics.ts` の `trackShare` / `trackContentRating` も同様の optional `ab` 引数を受ける API として実装してあるが、**本サイクル(255)では caller 側（`ShareButtons.tsx` 等）に arm を伝播していない＝意図的に範囲外**。理由は (1) 副イベントの単発発火数は実測で極小（`docs/research/2026-06-visitor-metrics-baseline.md` 参照）で arm 別比較の検出力に寄与しない、(2) 主 KPI は「結果到達後のエンゲージ時間」（連続量・SECTION 3）でありこれは `level_end` 側で完結する、(3) 範囲を絞ることで本実験の最初の運用学習を単純化する、の3点。将来 share/rating を arm 別に見たくなったときに caller 側で `ab` を渡せば即対応可能（analytics.ts 側は実装済み）。全イベント無差別付与はしない（結果を見ていないセッションに arm を載せても主 KPI のノイズになるだけ）。
   - **`release`**: 可能なら**全イベント共通**に付与（リリース横断比較の土台。下記 config 注入が最も低コスト）。
 - **送り方**: `gtag('config', GA_ID, { release: '<id>' })` で**全イベントに自動付与**できる（GoogleAnalytics.tsx の config 呼び出し）。`ab_variant`/`experiment_id` はイベント単位なので `src/lib/analytics.ts` の該当 track 関数（`trackContentEnd` 等）が arm を引数で受けて params に載せる。
 
@@ -255,6 +255,20 @@ GROUP BY ab_variant ORDER BY ab_variant;
 
 - word-sense-personality・yoji-level 等の高流入クイズは**名前付きディレクトリでなく `play/[slug]` 動的ルート**で配信。retro 切替は `ResultCard`/`*Content` 共通描画系に一様に効くので**ルート形態に依存せずプール可能**（論点2の「共通スタイル＝1 A/B」前提と一致）。対象選定はディレクトリ構成でなく実トラフィック表を根拠にすること。
 
+### 実験範囲の明示（介入対象 vs 非対象）
+
+**介入対象（arm に応じて retro/current が出し分けられる）**: `QuizContainer` → `ResultCard` 経由で描画される**インラインクイズ結果**のみ。具体的には専用 `*Content` を持つ personality 系 8 variant の本文と、`OtherTypesNav`（共有部品）、および `renderStandardContent` 経路の共有装飾。
+
+**介入対象外（arm 非依存・常に current 固定）**:
+
+- **静的結果ページ `/play/[slug]/result/[resultId]`（`src/app/(legacy)/play/...`）**: SNS シェア等から直接着地する第三者向け結果ページ。本サイクルでは route group に手出ししない方針（論点2 整合の論拠 #1）であり、ResultCard 経由のインライン結果とは異なる route のため、**arm 解決の介在点（`QuizContainer`/`useAbVariant`）が呼ばれない**。実測流入も全クイズ合計 28日7PV と僅少（`docs/research/2026-06-visitor-metrics-baseline.md`）で、独立 retro を起こす来訪者価値レバレッジが低い。**SQL 集計では `level_end` が発火しないセッション（静的結果着地のみのセッション）は `ab_variant IS NOT NULL` フィルタを通らず混入しない**。
+- **knowledge 系クイズの結果ページ**: `quiz.meta.type === "personality"` ゲート（`QuizContainer`）で `ab` 非付与＋`resultVisualArm=null` を渡し常に current 描画（論点4・実装側 BL-1 解消）。
+- **ResultNextContent**: cycle-254 で剥ぎ落とし対象外。retro/current 差なし。
+- **TraditionalColor の色見本**: arm 非依存で保持（論点2 例外規定）。
+- **`allTypesLayout`**: 両 arm `"list"` 固定（論点2 例外規定）。
+
+この範囲分離により、本実験の独立変数は「インラインクイズ結果の絵文字/カラフル/中央寄せ/太字 vs ミニマル左寄せ」のみに絞られる。
+
 ---
 
 ## 論点7. 本サイクル(255)のスコープ分割
@@ -288,3 +302,72 @@ GROUP BY ab_variant ORDER BY ab_variant;
 | コーディング原則#2（外部API/DB/認証なし・サーバー追跡なし） | arm は localStorage 端末内完結。外部 DB なし。集計は既存 GA4→BigQuery の読取のみ。                                                                                          |
 | コーディング原則#3（関心の分離）                            | 割当 util（`src/lib/ab/`）／記録（analytics.ts）／release 生成（codegen）／集計（SQL）を疎結合に分離。                                                                      |
 | design-migration-plan 整合                                  | retro は `_experiments/` 隔離・終了時にディレクトリ削除＋`ResultCard.tsx` の arm 分岐撤去で原状復帰（現行 `*Content` 本体は不触）。route group（legacy/new）に非侵襲。      |
+
+---
+
+## 論点8. 運用接続（基盤を「継続的計測」の実体にする）
+
+本基盤は cycle-255 で組み終わるが、**実体は本サイクル以降の運用**にある。基盤を一度作って放置すれば、結果は誰にも読まれず、次の変更は再びブラインドで切り替わる。それを避けるため、運用手順を以下に固定する。
+
+### 8.1 毎月の読み方（A/B always-on 観測）
+
+実験は出してから走り続けるので、判定閾値に達するまで読み続ける。
+
+- **タイミング**: 月次（毎月1回・サイクル開始時に直近28日窓で実行）。`docs/sql/ab-value-metrics.sql` を `_TABLE_SUFFIX BETWEEN '<from>' AND '<to>'` をデプロイ後の累積窓に置換して実行。
+- **判定閾値（事前固定・サイクル中に動かさない）**:
+  - **最小観測数**: 各 arm が `level_end` セッション ≥ 50（合計 ≥ 100）に達するまで結論は出さない。それ未満は「保留・継続」。
+  - **連続量主 KPI（結果到達後のエンゲージ時間 / log変換）**: `P(平均_B > 平均_A) ≥ 0.95` または `≤ 0.05` で「方向の示唆あり」。SECTION 3 のベイズ計算手順に従う。
+  - **副 KPI（回遊・到達率）**: 主 KPI の方向と整合するときに「補強」として扱い、主 KPI 単独では結論を出さない（multiple testing による誤検出防止）。
+- **読みの記録**: 各回の集計結果（n_A/n_B・mean_A/mean_B・P(B>A)・継続/終了判定）を該当サイクルドキュメントに3行で残す（恒久クエリは SQL 側 SSoT・読みは cycle-doc）。
+- **結論時**: 勝者を恒久採用 → 撤去手順（後述 8.4）へ。引き分け（数ヶ月走らせて閾値到達せず差も縮小）→ 効果量の小ささを記録し、勝者を「実害なし方を採用」のルールで決める（デザイン移行計画の方針＝新デザインに倒す等の独立基準）。
+
+### 8.2 残る B-522 移行の A/B 適用判断基準
+
+cycle-254 時点で残っていた B-522 傘下のタスクへの A/B 適用是非。**ブラインド全面移行は採らない**ことを既定とし、各タスクで A/B するか否かを以下の基準で判断する（基準は工数でなく来訪者価値）。
+
+| タスク                                                           | A/B 適用判断                                                                                                                                                                                                                                                                            |
+| ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **B-523**（静的結果ページ枠 `ResultPageShell` の新デザイン移行） | 適用可否要検討。静的結果ページの実測流入は 28日7PV と僅少だが、enjoyable の柱への変更点として「中央寄せ → 左寄せ」が含まれるなら適用。検出力が出ないことが見えていたら「期間延長」または「インライン結果と同一の `experiment_id` の傘下に乗せて結合観測」（同一独立変数のため）を検討。 |
+| **ゲーム4種・daily の (new)/ 移行**                              | enjoyable の柱への変更が含まれるなら A/B 必須。視覚差分のないトークン置換のみで終わる移行なら不要（変更そのものが介入になっていない）。ゲームごとに判断。`RelatedGames` 等の絵文字除去は本サイクルと同質の介入なので、可能なら同 experiment にプールするか別 experiment で併走する。    |
+| **タイル化（B-295 / B-493）**                                    | タイル化は機能変更を伴うため、視覚 A/B でなく**機能 A/B**（タイル経由 vs 個別ページ）として設計。設計時に本基盤の `useAbVariant` を再利用可能（`experiment_id` を別名で）。検出力が出にくいので最初の対象は流入の大きいツールに絞る。                                                   |
+| **過渡的トークン定義の撤去（Phase 11.2/11.5）**                  | A/B 不能（来訪者から見える差分が無い）。本基盤の **release 識別子による before/after コホート比較**（補完経路）で回帰検出。`docs/sql/ab-value-metrics.sql` の SECTION 2（release 別）を撤去前後 N 日窓で実行し、価値指標4種の連続性を確認。                                             |
+| **legacy 撤去（Phase 11）**                                      | 同上（A/B 不能・release 別で回帰検出）。撤去サイクル前後の release 切替点を `docs/sql/ab-value-metrics.sql` SECTION 2 で観測。                                                                                                                                                          |
+
+### 8.3 既移行高リスク面の retro A/B 判断基準
+
+最初の retro A/B（インラインクイズ結果）の結果が出るまでは、追加の retro A/B は走らせない（基盤の経験を1つ積んでから次へ）。最初の結論が出た後、以下の優先順位で次の候補を検討する。
+
+| 候補                                          | 来訪者価値リスク                       | トラフィック       | 判断                                                                                                                    |
+| --------------------------------------------- | -------------------------------------- | ------------------ | ----------------------------------------------------------------------------------------------------------------------- |
+| **静的結果ページの中央寄せ廃止**（cycle-253） | enjoyable の柱の質感差・中程度         | 7PV/28日と僅少     | 7PV では検出力ゼロ。インライン結果実験と同じ独立変数なので、結果が出れば static 側にも適用可と判断（個別 retro は不要） |
+| **ゲーム/daily の絵文字除去**（同質の介入）   | enjoyable の柱の質感差・中-大          | 月数十〜（要実測） | インライン結果の結論が「絵文字あり優位」なら retro 復活を検討。「ミニマル優位」or 差なしなら復活不要                    |
+| **道具系ツールの簡素化**                      | 「日常の傍にある道具」と整合・低リスク | 中程度             | 来訪者価値リスクが低く retro 対象外（既定）。具体的な懸念データが出てきた時点で個別判断                                 |
+
+判断は実測リスク×トラフィック×インライン結果の retro A/B の学びで行う。**工数を理由に却下しない**（憲法の意思決定原則）。
+
+### 8.4 実験終了時の撤去手順（二段網羅・原状復帰）
+
+撤去対象は **(a) `_experiments/legacy-result/` ディレクトリ配下の全ファイル**（retro バリアントの本体・テスト・モジュール CSS）と **(b) 既存コードに混入した実験フック**（`QuizContainer`・`ResultCard` の arm 分岐／`useAbVariant`／retro dynamic import／GA への `ab` 引数渡し）の2系統に分かれる。前者はディレクトリ削除で一括撤去、後者は `EXPERIMENT: quiz_result_visual_v1` マーカー（既存コード側に集中して付与・現状 28 マーカー / 9 ファイル）の grep で撤去箇所を列挙する。`_experiments/` 配下の全ファイルにマーカーは付けていない（マーカーで網羅するのでなく**ディレクトリ削除で一括処理する**設計）。
+
+実験 `quiz_result_visual_v1` 終了時：
+
+1. **勝者の確定**: 8.1 の判定閾値に従い勝者を確定。
+2. **既存コード側の撤去対象を列挙**: `grep -rn "EXPERIMENT: quiz_result_visual_v1" src/` で全マーカーを列挙（現状 28 件・**9 ファイル = 既存コード側 3 + retro 側 6**：（既存）`QuizContainer.tsx` / `ResultCard.tsx` / `_components/__tests__/QuizContainer.test.tsx` ＋（retro 側で arm 分岐を持つ実装）`_experiments/legacy-result/{CharacterPersonality,ContrarianFortune,ImpossibleAdvice,MusicPersonality}Content.tsx` / `OtherTypesNavAb.tsx` / `__tests__/OtherTypesNavAb.test.tsx`）。各マーカー箇所のコメントブロック・arm 分岐・retro import・`ab` 引数・`resultVisualArm` prop を削除し、勝者側のロジックだけ残す。
+3. **`_experiments/` ディレクトリ削除**: `rm -rf src/play/quiz/_components/_experiments/legacy-result/` で retro バリアント本体・テスト・モジュール CSS を一括削除（マーカー有無に関わらず全ファイル）。負け側＝retro 採用となった場合は、勝った retro 版を `_components/` 直下へ昇格させてから残りを削除する。
+4. **実験定義の撤去**: `src/lib/ab/experiments.ts` から `QUIZ_RESULT_VISUAL_V1` を削除。`QuizContainer` から `useAbVariant`/`AbEventContext` 関連を削除。
+5. **SQL は維持**: `docs/sql/ab-value-metrics.sql` は次の実験でも使うので残す。`ab_variant IS NOT NULL` 行のコメントを新実験用に更新するだけ。
+6. **完了確認（二段の独立検証）**:
+   - (a) `grep -rn "EXPERIMENT: quiz_result_visual_v1" src/` が **0 件**（既存コード側のフック撤去確認）
+   - (b) `find src/play/quiz/_components/_experiments -type f` が **0 件**もしくはディレクトリ不在（retro 本体撤去確認）
+   - (c) `grep -rn "_experiments/legacy-result" src/` が 0 件（残存 import なし）
+   - 全テスト green / `npm run build` 完走
+
+撤去サイクル後の cycle-doc に判定結果（勝者・P(B>A)・採用根拠）を3-5行で記録する。
+
+### 8.5 design-migration-plan との順序
+
+本 retro は `(legacy)/play/` route group には触れないが、将来の Phase 11.2（legacy 撤去）時に retro が `_experiments/` に残ったままだと撤去計画にノイズが入る。**実験終了を Phase 11.2 着手より前に完了**することを移行計画側の依存として記録する。Phase 11.2 着手 PM は本書を読み、実験が走っているなら結論を待つか撤去手順を移行に同期させる（PM 判断）。
+
+### 8.6 計測基盤の自己適用（メタ確認）
+
+本基盤の `release` 識別子は全イベントに乗るので、本サイクル(255)のデプロイ自体が release 切替点として観測可能。デプロイ後7-14日で SECTION 2 を実行し、価値指標4種が**基盤導入前と連続している**ことを確認する（基盤導入によるパフォーマンス回帰・JS バンドル肥大化による直帰増等の検出）。これが「計測基盤を計測基盤自身で検証する」最初の応用。

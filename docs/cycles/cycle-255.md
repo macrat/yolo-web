@@ -37,12 +37,12 @@ completed_at: null
 - [x] **最小実装2（リリース識別子）**: `release` を `VERCEL_GIT_COMMIT_SHA → git → unknown` フォールバックで解決する codegen を実装し `gtag('config', ..., { release })` で全イベント自動付与(10件テスト・dc7cd510)
 - [x] **最小実装3（反復可能な比較クエリ）**: `docs/sql/ab-value-metrics.sql` を確定(variant別/release別/ベイズ素データ。実BigQueryでベースライン完全一致・dc7cd510)
 - [x] **最小実装1b（analytics.ts へ arm 注入経路追加）**: trackContentStart/End/Share/Rating に optional `ab` 引数追加(44件テスト・72535f79)。release二重付与なし・toolbox variant と衝突なし・undefined送信なし
-- [x] **波3（最初の実 A/B 仕込み）**: retro バリアント（旧 `*Content` 8本＋`OtherTypesNav`）を `d804b5d1` から `src/play/quiz/_components/_experiments/legacy-result/` へ隔離複製。ResultCard の 3 系統（`renderDetailedContent` の 8 case ＋`renderStandardContent` 経路＋共有 `OtherTypesNav`）に arm 切替を通し、`QuizContainer` で `useAbVariant("quiz_result_visual_v1")` を 1 か所だけ呼んで GA `level_start`/`level_end` に `ab_variant`/`experiment_id` を付与。**personality 系のみ実験対象化**（knowledge クイズは視覚差分 0px ゆえ ab 非付与＝独立変数の純度確保）。`OtherTypesNavAb` は arm を props で受ける純粋コンポーネント。`allTypesLayout` は両 arm `"list"` に固定（pill/list 差は独立変数の外）。撤去用 `EXPERIMENT: quiz_result_visual_v1` マーカーを 8 ファイルに付与（`grep -rn` で網羅）。設計書 `docs/visitor-value-measurement.md` 論点2 に例外規定追記、`docs/sql/ab-value-metrics.sql` に `level_start`/`level_end` 非対称コメント追加
-- [ ] **運用接続**: 残る B-522 移行（B-523・ゲーム・daily・タイル化）と既移行高リスク面に A/B をどう適用するかの手順を文書化。最初の実 A/B（上記選定）の段取りと、既移行面の retro A/B を来訪者価値レバレッジで判断する基準を明記
-- [ ] **視覚/動作確認**: バリアント割当と `release`／`variant` パラメータが本番ビルドの GA4 イベントに実際に乗ることを実機（Playwright で gtag/dataLayer 観測）で確認。両バリアントが w360/w1280 light/dark で破綻しないこと
-- [ ] **テスト**: バリアント割当ロジック・リリース識別子生成・GA4 記録のユニットテスト追加（既存 analytics.test / GoogleAnalytics.test の流儀。安易な skip なし）
-- [ ] **レビュー依頼と指摘対応**: 設計判断書（A/B が本線として誠実に設計され、retro A/B を含み、工数回避が混入していないか）と実装の両方を reviewer に依頼し、有効な指摘をすべて対応
-- [ ] **backlog 更新**: B-525 完了処理、キャリーオーバー（最初の実 A/B のデプロイと N 日後の結果読み取り、既移行面の retro A/B 判断、A/B 機構の拡張）を起票
+- [x] **波3（最初の実 A/B 仕込み）**: retro バリアント（旧 `*Content` 8本＋`OtherTypesNav`）を `d804b5d1` から `src/play/quiz/_components/_experiments/legacy-result/` へ隔離複製（21 ファイル）。ResultCard の 3 系統（`renderDetailedContent` の 8 case ＋`renderStandardContent` 経路＋共有 `OtherTypesNav`）に arm 切替を通し、`QuizContainer` で `useAbVariant("quiz_result_visual_v1")` を 1 か所だけ呼んで GA `level_start`/`level_end` に `ab_variant`/`experiment_id` を付与。**personality 系のみ実験対象化**（knowledge クイズは視覚差分 0px ゆえ ab 非付与＝独立変数の純度確保）。`OtherTypesNavAb` は arm を props で受ける純粋コンポーネント。`allTypesLayout` は両 arm `"list"` に固定（pill/list 差は独立変数の外）。**撤去マーカー `EXPERIMENT: quiz_result_visual_v1` は 28 件 / 9 ファイル**（`QuizContainer` / `ResultCard` / QuizContainer テスト ＋ retro 側で arm 分岐を持つ 5 ファイル）に付与。`_experiments/` 配下の全ファイルにはマーカーを付けていない＝マーカー網羅でなくディレクトリ削除で一括撤去する二段網羅方式（設計書論点8.4）。設計書 `docs/visitor-value-measurement.md` 論点2 に例外規定追記、`docs/sql/ab-value-metrics.sql` に `level_start`/`level_end` 非対称コメント追加
+- [x] **運用接続**: `docs/visitor-value-measurement.md` 論点8 に確定。毎月の読み方(判定閾値・最小観測数50/arm)、残B-522移行のA/B適用基準、既移行高リスク面のretro A/B判断基準、grep駆動の撤去手順、design-migration-planとの順序、計測基盤の自己適用を明文化
+- [x] **視覚/動作確認**: 本番ビルド(`npm run build`完走)+Playwright実機でcharacter-personality w360/w1280×light/darkの arm=A/B 4枚撮影しPM自身で目視確認。armA=retro(絵文字🎭・type-color罫線・中央寄せ復活)・armB=current(ミニマル・本変更前と質感同一)・a11y等価・knowledge(yoji-level)は ab_variant非付与・personalityは ab_variant/experiment_id付与・release="05f0334-20260620"全イベント付与を観測
+- [x] **テスト**: 全実装サイクルを通じて単体テスト+62件追加(ab 20+release codegen 10+analytics 44→+9+ResultCardArm 25+OtherTypesNavAb 5+QuizContainer gate 4)、サイクル全体で5662件 green・skip/骨抜きなし
+- [ ] **最終レビュー(サイクル全体)**: 設計判断書(A/Bが本線として誠実か・retro A/B含むか・工数回避混入なしか)＋実装3波の総体＋運用接続論点8＋backlog更新の一式を新規reviewerに白紙で点検依頼(AP-WF20)
+- [ ] **backlog 更新**: B-525 完了処理、キャリーオーバー(最初の実 A/B のデプロイ後 N 日読み取り・基盤の自己適用回帰確認・残B-522移行へのA/B適用)を起票
 
 ## 作業計画
 
@@ -93,7 +93,14 @@ completed_at: null
 
 ## キャリーオーバー
 
-（サイクル進行に応じて更新。最低限、最初の実 A/B のデプロイと N 日後の結果読み取りはテストの時間的性質上キャリーオーバーになる見込み。）
+すべて B-525 完了後の運用フェーズ。実体は `docs/visitor-value-measurement.md` 論点8。
+
+- **B-528（次サイクル目安・2026-06-28〜07-05 / 着手条件: デプロイ後 7-14 日）**: 計測基盤の自己適用回帰確認。本サイクルのデプロイを `release` 切替点として `docs/sql/ab-value-metrics.sql` SECTION 2 を実行し、価値指標4種が基盤導入前後で連続していることを確認。**同時に release 値が本番イベントに `<7桁SHA>-<YYYYMMDD>` 形式で乗っていること**を BigQuery で確認（codegen の Vercel 環境でのフォールバック解決が実環境で正しく効いているかの初検証）。基盤導入によるパフォーマンス回帰（JS バンドル肥大化による直帰増等）が起きていないかの最初の検証も兼ねる。論点8.6。
+- **B-526（運用継続・着手条件: 2026-07-21 目安〜結論到達まで月次継続）**: 最初の実 A/B `quiz_result_visual_v1` の月次読み。判定閾値（各 arm `level_end` ≥ 50・`P(平均_B > 平均_A) ≥ 0.95` or `≤ 0.05`）は事前固定でサイクル中に動かさない。SECTION 3（ベイズ素データ）で実行。論点8.1。
+- **B-527（結論到達時・着手条件: B-526 で判定閾値到達）**: 撤去サイクル。`grep -rn 'EXPERIMENT: quiz_result_visual_v1' src/` で全 28 マーカーを列挙して撤去し、`_experiments/legacy-result/` ディレクトリ削除、`QUIZ_RESULT_VISUAL_V1` 実験定義削除、テスト追従、勝者ロジック残し。撤去後の cycle-doc に判定結果（勝者・P(B>A)・採用根拠）を 3-5 行で記録。論点8.4。
+- **残 B-522 移行への A/B 適用（B-523/ゲーム/daily/タイル化）**: 本基盤を再利用して個別判断。論点8.2。
+- **既移行高リスク面の retro A/B 判断**: 最初の実 A/B の結論が出てから次の候補を検討（経験を1つ積んでから）。論点8.3。
+- **AP-WF24/AP-P28 への記録**: 本サイクル PM が抵触した「工数回避を構造的制約に見せかける（計画初稿）」「是正の駆動源を Owner に帰属（コミット文・計画書の言い回し）」を、cycle-completion で `docs/anti-patterns/` に再発記録として反映。
 
 ## 補足事項
 

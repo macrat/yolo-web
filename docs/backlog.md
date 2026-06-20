@@ -2,14 +2,13 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-525 | 来訪者価値を測りながら変えるA/Bテスト基盤の設計と最小実装 | P1 | 255 | デザイン変更を旧/新で振り分け来訪者指標を比べる基盤。A/Bを本線(前方+既移行高リスク面のretro A/B)、before/after+release識別子は補完。詳細 cycle-255.md |
 
 ## Queued (すぐに着手できる)
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-523 | 静的結果ページ枠(ResultPageShell)新デザイン移行（B-522 第三弾） | P1 | - | (legacy)/play/[slug]/result/* の枠(ResultPageShell)新化＋(new)へルート移動。実測流入は28日7PV/全クイズと僅少だが、B-522完遂のため必須。B-524と同時実施推奨。詳細 cycle-254.md |
-| B-524 | *Content の allTypesLayout 公開型を意味通り命名へ整理 | P1 | - | cycle-254のpill→grid内部マップでdead literal化。AP-I02。B-523と同時実施推奨。詳細 cycle-254.md |
+| B-523 | 静的結果ページ枠(ResultPageShell)新デザイン移行（B-522 第三弾） | P1 | - | B-525基盤で適用可否を判断。B-524と同時実施推奨。詳細 cycle-254.md / visitor-value-measurement.md 論点8.2 |
+| B-524 | *Content の allTypesLayout 公開型を意味通り命名へ整理 | P1 | - | cycle-254のpill→grid内部マップでdead literal化。AP-I02。retro側(_experiments/)の整理にも注意。詳細 cycle-254.md / cycle-255.md |
 | B-350 | 移行計画 Phase 9.3.a: dictionary トップ移行 | P1 | - | /dictionary を (new)/ に移行。B-522完了後に着手。P2→P1昇格。詳細 design-migration-plan.md |
 | B-493 | 遊び（ゲーム）の単一タイル化（GameLayout 系） | P1 | - | 全ゲームをタイル再構築。B-522の一環。P2→P1昇格。詳細 cycle-225.md |
 | B-432 | trustLevel フィールド・関連型・テストの完全削除 | P2 | - | 一括完全削除（漸進禁止=AP-I02）。詳細 cycle-200.md |
@@ -99,6 +98,9 @@
 
 | ID | Title | Priority | Notes |
 | --- | --- | --- | --- |
+| B-528 | cycle-255 計測基盤の自己適用(release別 before/after 回帰確認) | P1 | 着手: 2026-06-28〜2026-07-05目安(デプロイ後7-14日)。詳細 visitor-value-measurement.md 論点8.6 |
+| B-526 | 最初の実A/B(quiz_result_visual_v1) 月次読み | P1 | 着手: 2026-07-21目安〜結論到達まで月次継続。詳細 visitor-value-measurement.md 論点8.1 |
+| B-527 | 最初の実A/B 結論到達時の撤去サイクル化 | P1 | 着手: B-526で判定閾値到達時。詳細 visitor-value-measurement.md 論点8.4 |
 | B-521 | cycle-251 漢字辞書CTR改善の効果検証 | P2 | 着手: 2026-07-16目安。詳細 cycle-251.md |
 | B-510 | 道具箱利用計測データの初回分析 | P2 | 着手: 2026-06-26目安。詳細 cycle-234.md |
 | B-324 | ダッシュボード: ツール間連携（Phase 10.4） | P2 | 着手: B-510完了後。詳細 cycle-235.md |
@@ -126,8 +128,8 @@
 
 | ID | Title | Completed Cycle | Notes |
 | --- | --- | --- | --- |
+| B-525 | 来訪者価値を測りながら変えるA/Bテスト基盤の設計と最小実装 | 255 | A/B割当・release識別子・BigQuery比較SQL・最初の実A/B(quiz_result_visual_v1)仕込み済。結果読みはB-526/527/528へ。詳細 cycle-255.md / visitor-value-measurement.md |
 | B-522 (partial) | クイズのインライン結果本文の (new) デザイン移行 | 254 | variant 別本文8本(*Content)+OtherTypesNav を ResultCard 言語へ genuine 統一。最も見られている旅程の終点の質感断裂を解消。B-522傘下の残作業は B-523/ゲーム/daily/タイル化。詳細 cycle-254.md |
 | B-320 | 計算・変換関係ツールの追加（パーセント計算機） | 252 | パーセント計算機を新規追加。残りはQueued継続。詳細 cycle-252.md |
 | B-519 | 漢字辞書詳細ページのCTR改善（SEOメタ表層） | 251 | title/description/OG/JSON-LDに部首・画数を前置。詳細 cycle-251.md |
 | B-518 | science-thinking の結果体験強化 | 250 | 10タイプに detailedContent 追加。詳細 cycle-250.md |
-| B-516 | 診断結果ページからの「他のタイプ回遊」導線 | 249 | OtherTypesNav新設。詳細 cycle-249.md |
