@@ -1,17 +1,23 @@
 /**
  * AnimalPersonalityContent - animal-personality variant の共通コンテンツコンポーネント。
  *
- * ResultCard.tsx（受検者向け）と page.tsx（第三者向け）の両方から使用される。
- * Server Component（"use client" なし）: 純粋なプレゼンテーションコンポーネント。
+ * ResultCard.tsx（受検者向けインライン結果）と
+ * (legacy)/play/animal-personality/result/[resultId]/page.tsx（第三者向け静的結果ページ）の
+ * 両方から使用される。Server Component（"use client" なし）: 純粋なプレゼンテーション。
  *
  * 共通化対象:
- * - strengths / weaknesses / behaviors / todayAction / 全タイプ一覧 の5セクション
- * - CSS変数によるダークモード対応（--animal-accent-color, --animal-accent-bg）
+ * - strengths / weaknesses / behaviors / todayAction / 全タイプ一覧 の 5 セクション
  *
  * 共通化しないもの（呼び出し側の責務）:
  * - catchphrase の表示（ResultCard/page.tsx でスタイル・配置が異なる）
  * - 相性セクション / CTA（afterTodayAction スロットとして注入）
  * - ShareButtons / もう一度挑戦するボタン
+ *
+ * デザイン方針（cycle-254 で新デザイン体系に再設計）:
+ * - 旧版は強み (✨ 緑ティント) / 弱み (😅 オレンジティント) / 行動 (💡) の 3 セクションを
+ *   絵文字マーカーと色ティントで分けていたが、新デザインでは「色ではなく言葉で立てる」方針に
+ *   従い、3 セクションともカード質感を統一する（差別化は見出しと本文で行う）。
+ * - 全タイプ一覧の絵文字アイコン（r.icon）も描画しない。
  */
 
 import type React from "react";
@@ -44,49 +50,54 @@ export default function AnimalPersonalityContent({
   // headingLevel に応じて h2 または h3 タグを動的に切り替える
   const Heading = `h${headingLevel}` as "h2" | "h3";
 
+  // public props の "pill" は caller 互換のため受け取り続けるが、
+  // 新デザイン言語ではピル型は廃止し、Character/Music/Yoji 等と質感をそろえるため
+  // 内部で grid（2列、480px以上で3列）にマップする。クラス名は参照実装と完全に揃える。
   const allTypesListClass =
     allTypesLayout === "pill"
-      ? styles.allTypesListPill
+      ? styles.allTypesGrid
       : styles.allTypesListVertical;
 
   return (
-    // wrapperクラスで --animal-accent-color / --animal-accent-bg を定義。
-    // ライトモード: #15803d（WCAG準拠）、ダークモード: #4ade80（WCAG AA準拠）。
-    // CSS変数はCSSファイル側で管理し、inline styleは使用しない。
+    // 新デザインではタイプごとのアクセント色（旧 --animal-accent-color）を撤廃し、
+    // wrapper は左寄せ宣言のみ持つ。装飾は共通 --accent / --accent-soft / --accent-strong に統一。
     <div className={styles.wrapper}>
-      {/* strengths セクション */}
+      {/* strengths セクション: 旧版は ✨ 絵文字＋緑ティントだったが、
+          新デザインでは他リストと同じ「アクセント縦線マーカー＋枠線カード」に統一する。 */}
       <Heading className={styles.sectionHeading}>このタイプの強み</Heading>
-      <ul className={styles.strengthsList}>
+      <ul className={styles.itemList}>
         {content.strengths.map((s, i) => (
-          <li key={i} className={styles.strengthsItem}>
+          <li key={i} className={styles.item}>
             {s}
           </li>
         ))}
       </ul>
 
-      {/* weaknesses セクション */}
+      {/* weaknesses セクション: 旧版は 😅 絵文字＋クリームティントだったが、
+          新デザインでは他リストと同質感に統一する。 */}
       <Heading className={styles.sectionHeading}>このタイプの弱み</Heading>
-      <ul className={styles.weaknessesList}>
+      <ul className={styles.itemList}>
         {content.weaknesses.map((w, i) => (
-          <li key={i} className={styles.weaknessesItem}>
+          <li key={i} className={styles.item}>
             {w}
           </li>
         ))}
       </ul>
 
-      {/* behaviors セクション */}
+      {/* behaviors セクション: 旧版は 💡 絵文字だったが、絵文字は撤去。 */}
       <Heading className={styles.sectionHeading}>
         この動物に似た行動パターン
       </Heading>
-      <ul className={styles.behaviorsList}>
+      <ul className={styles.itemList}>
         {content.behaviors.map((b, i) => (
-          <li key={i} className={styles.behaviorsItem}>
+          <li key={i} className={styles.item}>
             {b}
           </li>
         ))}
       </ul>
 
-      {/* todayAction セクション */}
+      {/* todayAction セクション: ResultCard adviceCard 相当の淡いアクセント面で
+          「呼びかけ」のトーンを静かに強調する（中央寄せはしない）。 */}
       <Heading className={styles.sectionHeading}>今日試してほしいこと</Heading>
       <div className={styles.todayActionCard}>{content.todayAction}</div>
 
@@ -106,8 +117,12 @@ export default function AnimalPersonalityContent({
                   : styles.allTypesItem
               }
             >
-              <Link href={`/play/${quiz.meta.slug}/result/${r.id}`}>
-                {r.icon && <span>{r.icon}</span>}
+              <Link
+                href={`/play/${quiz.meta.slug}/result/${r.id}`}
+                aria-current={r.id === resultId ? "page" : undefined}
+              >
+                {/* 新デザインでは絵文字アイコン（r.icon: 🐵🦊🐿️ 等）を描画しない
+                    （DESIGN.md: 絵文字を使わない）。各タイプの区別はタイトル文言で行う。 */}
                 <span>{r.title}</span>
               </Link>
             </li>

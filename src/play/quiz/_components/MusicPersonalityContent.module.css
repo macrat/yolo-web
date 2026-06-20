@@ -1,125 +1,52 @@
 /*
- * MusicPersonalityContent 共通コンポーネントのスタイル。
- * ResultCard.tsx（受検者向け）と page.tsx（第三者向け）の両方から使用される。
+ * MusicPersonalityContent 共通コンポーネントのスタイル。新デザイン体系（DESIGN.md）。
+ * ResultCard.tsx（受検者向けインライン結果）と page.tsx（第三者向け静的結果ページ）の両方から使用される。
  *
- * AnimalPersonalityContent.module.css を基準にスタイルを統一する。
- * - strengthsItem: "🎵" マーカー、薄い紫背景（border なし）
- * - weaknessesItem: "😅" マーカー、薄いオレンジ背景（border なし）
- * - behaviorsItem: "🎤" マーカー、border付き
- * - allTypesList: "list"（縦並び）と "pill"（ピル型横wrap）の2レイアウト
+ * 設計方針（ResultCard.module.css / CharacterPersonalityContent.module.css /
+ * AnimalPersonalityContent.module.css を一次規範として語彙をそろえる）:
+ * - 左寄せ・新トークンのみ・font-weight は最大 600・絵文字なし・影なし。
+ * - 旧版は strengths (🎵 紫ティント) / weaknesses (😅 クリームティント) / behaviors (🎤) /
+ *   todayAction (中央寄せ＋紫ティント) の各セクションを絵文字マーカーと色ティントで分けていたが、
+ *   新デザインでは「色ではなく構造と言葉で立てる」方針に従い、3 セクション（strengths/weaknesses/
+ *   behaviors）ともカード質感を統一する。差別化は見出しと本文表現で行う。
+ * - クイズタイプごとのアクセント色（旧 --music-accent-color / --music-accent-bg 独自トークン）は
+ *   全廃。共通 --accent / --accent-soft / --accent-strong に統一する。
+ * - 全タイプ一覧の旧 pill 型（横wrap・999px角丸）は新デザイン言語に含まれないため廃止。
+ *   8 クイズ間で質感を揃えるため、page.tsx 側の "pill" 指定も内部で CharacterPersonalityContent と
+ *   同じ allTypesGrid（2-3列グリッド）にマップする。public props は "list" | "pill" のまま維持する。
+ * - 角丸はカード/ブロック = --r-normal、操作要素（リンク） = --r-interactive。
  */
 
 /* ============================================================
-   CSS変数: アクセントカラー（ダークモード対応）
-   ライトモード: #6d28d9（music-personalityのaccentColor近似、WCAG準拠）
-   ダークモード: #a78bfa（WCAG AA準拠のより明るい紫）
+   wrapper: caller signature 互換のために残す。
+   旧版は --music-accent-color / --music-accent-bg を独自定義し、:global(.dark) で
+   ダークモード値を差し替えていたが、これらは色装飾と一体だったため本リファクタで全廃した
+   （共通アクセントに統一）。
    ============================================================ */
 .wrapper {
-  --music-accent-color: #6d28d9;
-  /* アクセントカラー18%透過背景（todayActionCardで使用） */
-  --music-accent-bg: rgba(109, 40, 217, 0.094);
-}
-
-/* ダーク背景 #1a1a2e に対してWCAG AA準拠（コントラスト比 4.5:1以上）の紫 */
-:global(.dark) .wrapper {
-  --music-accent-color: #a78bfa;
-  /* ダークモード用透過背景: ライトに比べ視認性を高める */
-  --music-accent-bg: rgba(167, 139, 250, 0.12);
+  text-align: left;
 }
 
 /* ============================================================
-   セクション見出し
+   セクション見出し（ResultCard detailedHeading に倣う）
+   headingLevel に応じて h2 または h3 が生成される。
    ============================================================ */
-
-/* headingLevel に応じて h2 または h3 が生成される */
 .sectionHeading {
-  font-size: 1.1rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--fg);
+  margin: 0 0 1rem;
   padding-left: 0.75rem;
-  border-left: 4px solid currentColor;
-  /* 色はCSS変数で制御（wrapperクラスで --music-accent-color を定義） */
-  color: var(--music-accent-color);
+  border-left: 3px solid var(--accent);
 }
 
 /* ============================================================
-   strengths リスト
+   strengths / weaknesses / behaviors リスト
+   3 セクションとも同じ「アクセント縦線マーカー＋枠線カード」の質感に統一する。
+   旧版で使っていたティント差（紫/クリーム）と絵文字マーカー（🎵/😅/🎤）は捨て、
+   見出し文言と本文で区別する。
    ============================================================ */
-.strengthsList {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 2rem 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.strengthsItem {
-  font-size: 0.95rem;
-  line-height: 1.6;
-  color: var(--color-text);
-  padding: 0.625rem 0.875rem;
-  border-radius: 8px;
-  /* 強みは薄い紫背景で視覚的に強調 */
-  background: rgba(109, 40, 217, 0.06);
-  display: flex;
-  align-items: flex-start;
-  gap: 0.5rem;
-}
-
-/* ダークモード: 背景の不透明度を上げてライト時と同等の視覚的差別化を実現 */
-:global(.dark) .strengthsItem {
-  background: rgba(109, 40, 217, 0.14);
-}
-
-.strengthsItem::before {
-  content: "🎵";
-  font-weight: 700;
-  flex-shrink: 0;
-  margin-top: 0.05rem;
-}
-
-/* ============================================================
-   weaknesses リスト
-   ============================================================ */
-.weaknessesList {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 2rem 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.weaknessesItem {
-  font-size: 0.95rem;
-  line-height: 1.6;
-  color: var(--color-text);
-  padding: 0.625rem 0.875rem;
-  border-radius: 8px;
-  /* 弱みは薄いオレンジ背景で視覚的に差別化 */
-  background: rgba(245, 158, 11, 0.06);
-  display: flex;
-  align-items: flex-start;
-  gap: 0.5rem;
-}
-
-/* ダークモード: 背景の不透明度を上げてライト時と同等の視覚的差別化を実現 */
-:global(.dark) .weaknessesItem {
-  background: rgba(245, 158, 11, 0.14);
-}
-
-.weaknessesItem::before {
-  content: "😅";
-  font-weight: 700;
-  flex-shrink: 0;
-  margin-top: 0.05rem;
-}
-
-/* ============================================================
-   behaviors リスト
-   ============================================================ */
-.behaviorsList {
+.itemList {
   list-style: none;
   padding: 0;
   margin: 0 0 2rem 0;
@@ -128,37 +55,45 @@
   gap: 0.625rem;
 }
 
-.behaviorsItem {
+.item {
   font-size: 0.95rem;
-  line-height: 1.6;
-  color: var(--color-text);
+  line-height: 1.7;
+  color: var(--fg);
   padding: 0.75rem 1rem;
-  border-radius: 8px;
-  border: 1px solid var(--color-border);
+  border-radius: var(--r-normal);
+  border: 1px solid var(--border);
   display: flex;
   align-items: flex-start;
   gap: 0.625rem;
 }
 
-.behaviorsItem::before {
-  content: "🎤";
+/* 絵文字を使わない静かなマーカー（ResultCard traitsItem::before と同じアクセントの短い縦線） */
+.item::before {
+  content: "";
   flex-shrink: 0;
+  width: 2px;
+  align-self: stretch;
+  background: var(--accent);
+  border-radius: var(--r-normal);
 }
 
 /* ============================================================
-   todayAction カード
+   todayAction カード: 「今日の音楽ライフのヒント」
+   セクション内で最も呼びかけの強いブロック。ResultCard adviceCard 相当の
+   淡いアクセント面（--accent-soft + --accent-strong 枠）で静かに強調する。
+   旧版は中央寄せ＋font-weight 500＋紫ティント（--music-accent-bg）で目立たせていたが、
+   左寄せ・600 以下・共通アクセントに揃える。
    ============================================================ */
 .todayActionCard {
-  padding: 1.25rem 1.5rem;
-  border-radius: 10px;
+  padding: 1.1rem 1.25rem;
+  border-radius: var(--r-normal);
   font-size: 1rem;
-  line-height: 1.7;
-  font-weight: 500;
-  color: var(--color-text);
+  line-height: 1.8;
+  color: var(--fg);
   margin-bottom: 2rem;
-  text-align: center;
-  /* CSS変数 --music-accent-bg はwrapperクラスで定義（ライト/ダーク両対応） */
-  background: var(--music-accent-bg);
+  text-align: left;
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-strong);
 }
 
 /* ============================================================
@@ -167,59 +102,68 @@
 .allTypesSection {
   margin-top: 2rem;
   padding-top: 1.5rem;
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid var(--border);
 }
 
-/* 全タイプ見出し: シンプルにセクション案内として機能させる */
+/* 全タイプ見出し: ResultCard detailedHeading 言語に合わせ、左寄せ・左罫線で区切る */
 .allTypesCta {
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 600;
-  text-align: center;
-  color: var(--color-text);
-  margin-bottom: 1rem;
-  margin-top: 0;
+  color: var(--fg);
+  margin: 0 0 1rem;
+  padding-left: 0.75rem;
+  border-left: 3px solid var(--accent);
 }
 
-/* ピル型横wrap レイアウト（page.tsx版） */
-.allTypesListPill {
+/* グリッドレイアウト（page.tsx 版＝旧 "pill" の置換先）:
+   music-personality は 8 タイプあり、CharacterPersonalityContent と同じ 2-3 列グリッドで
+   8 クイズ間の質感を揃える。旧 pill 型（横wrap・999px 角丸・font-weight 700）は廃止。 */
+.allTypesGrid {
   list-style: none;
   padding: 0;
   margin: 0 0 1.5rem 0;
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 0.5rem;
 }
 
-.allTypesListPill .allTypesItem a,
-.allTypesListPill .allTypesItemCurrent a {
+@media (min-width: 480px) {
+  .allTypesGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.allTypesGrid .allTypesItem a,
+.allTypesGrid .allTypesItemCurrent a {
   display: flex;
   align-items: center;
   gap: 0.375rem;
-  padding: 0.4rem 0.875rem;
-  border-radius: 999px;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--r-interactive);
   font-size: 0.875rem;
   text-decoration: none;
-  transition: opacity 0.2s ease;
+  transition: background-color 0.15s ease;
+  width: 100%;
 }
 
-.allTypesListPill .allTypesItem a {
-  color: var(--color-text);
-  border: 1.5px solid var(--color-border);
+.allTypesGrid .allTypesItem a {
+  color: var(--fg);
+  border: 1px solid var(--border);
   background: transparent;
 }
 
-.allTypesListPill .allTypesItem a:hover {
-  opacity: 0.7;
+.allTypesGrid .allTypesItem a:hover {
+  background-color: var(--bg-soft);
 }
 
-.allTypesListPill .allTypesItemCurrent a {
-  color: var(--color-text);
-  border: 2px solid currentColor;
-  background: var(--color-bg-secondary);
-  font-weight: 700;
+/* 現在のタイプ: アクセント枠＋淡い面で「今ここ」を静かに示す（font-weight は上げない） */
+.allTypesGrid .allTypesItemCurrent a {
+  color: var(--fg);
+  border: 1px solid var(--accent);
+  background: var(--accent-soft);
 }
 
-/* 縦並びリスト レイアウト（ResultCard版） */
+/* 縦並びリスト レイアウト（ResultCard 版） */
 .allTypesListVertical {
   list-style: none;
   padding: 0;
@@ -235,19 +179,22 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 0.75rem;
-  border-radius: 6px;
+  /* 現在タイプの枠線と高さをそろえるため、非現在項目も透明枠を持たせる */
+  border: 1px solid transparent;
+  border-radius: var(--r-interactive);
   font-size: 0.9rem;
-  color: var(--color-text);
+  color: var(--fg);
   text-decoration: none;
   transition: background-color 0.15s ease;
 }
 
 .allTypesListVertical .allTypesItem a:hover {
-  background-color: var(--color-bg-secondary);
+  background-color: var(--bg-soft);
 }
 
+/* 現在のタイプ: アクセント枠＋淡い面で「今ここ」を示す（font-weight は上げない） */
 .allTypesListVertical .allTypesItemCurrent a {
-  background-color: var(--color-bg-secondary);
-  font-weight: 700;
+  border: 1px solid var(--accent);
+  background-color: var(--accent-soft);
   pointer-events: none;
 }

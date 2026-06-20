@@ -4,9 +4,9 @@
  * テスト対象:
  * - coreSentence / behaviors / persona / thirdPartyNote の4セクション表示
  * - humorMetrics テーブル（存在する場合のみ表示）
- * - 全タイプ一覧（pill レイアウト）
+ * - 全タイプ一覧（"pill" は caller 互換用ラベルで、新デザインでは内部で grid にマップされる）
  * - headingLevel prop（h2/h3）
- * - resultColor の CSS変数注入（--type-color）
+ * - resultColor の CSS変数注入（--type-color。caller 互換のため受け取りのみ）
  * - afterThirdPartyNote スロット
  * - 現在タイプのハイライト（aria-current）
  */
@@ -264,7 +264,12 @@ describe("ContrarianFortuneContent - headingLevel prop", () => {
 });
 
 describe("ContrarianFortuneContent - allTypesLayout prop", () => {
-  it("allTypesLayout='pill' の場合、ピル型レイアウトクラスが適用されること", () => {
+  // 新デザインでは旧 "pill"（角丸999px・派手色枠）レイアウトは廃止された。
+  // public props "pill" は caller signature 互換のため維持しているが、
+  // 内部実装では Character/Yoji と同じ allTypesGrid（2-3列）にマップされる。
+  // テストの本来の意図（「指定したレイアウトに対応する CSS クラスが付く」）は保ち、
+  // 新クラス名 allTypesGrid を検証する。
+  it("allTypesLayout='pill' の場合、新デザインの allTypesGrid レイアウトクラスが適用されること", () => {
     const { container } = render(
       <ContrarianFortuneContent
         quizSlug={sampleQuizSlug}
@@ -276,8 +281,39 @@ describe("ContrarianFortuneContent - allTypesLayout prop", () => {
         resultColor={sampleColor}
       />,
     );
+    const gridList = container.querySelector("[class*='allTypesGrid']");
+    expect(gridList).not.toBeNull();
+    // 旧 pill レイアウトクラスは撤去されたことも確認する
     const pillList = container.querySelector("[class*='allTypesListPill']");
-    expect(pillList).not.toBeNull();
+    expect(pillList).toBeNull();
+    // "pill" と "list" は別レイアウトとして担保したいので縦リストクラスは付かない
+    const verticalList = container.querySelector(
+      "[class*='allTypesListVertical']",
+    );
+    expect(verticalList).toBeNull();
+  });
+
+  // ResultCard（インライン）経路は "list" を渡し、Character/Animal と同じ
+  // 縦リスト（allTypesListVertical）で表示する。8 variant 共通で
+  // インライン側の「他のタイプも見てみよう」を縦リストに揃えるための分岐。
+  it("allTypesLayout='list' の場合、allTypesListVertical レイアウトクラスが適用され allTypesGrid は付かないこと", () => {
+    const { container } = render(
+      <ContrarianFortuneContent
+        quizSlug={sampleQuizSlug}
+        resultId="antitrend"
+        detailedContent={sampleContent}
+        allResults={sampleAllResults}
+        headingLevel={3}
+        allTypesLayout="list"
+        resultColor={sampleColor}
+      />,
+    );
+    const verticalList = container.querySelector(
+      "[class*='allTypesListVertical']",
+    );
+    expect(verticalList).not.toBeNull();
+    const gridList = container.querySelector("[class*='allTypesGrid']");
+    expect(gridList).toBeNull();
   });
 });
 

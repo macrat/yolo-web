@@ -6,13 +6,18 @@
  *
  * 共通化対象:
  * - entityEssence / whyCompatible / behaviors / lifeAdvice / 全タイプ一覧 の5セクション
- * - CSS変数 --type-color をインラインスタイルで注入（タイプごとに色が異なるため）
- * - ダークモード対応（color-mix() による明度調整。YojiPersonalityContent と同じパターン）
+ * - 全タイプ一覧の現在タイプハイライト
  *
  * 共通化しないもの（呼び出し側の責務）:
  * - catchphrase の表示（ResultCard/page.tsx でスタイル・配置が異なる）
  * - CTA（afterLifeAdvice スロットとして注入）
  * - ShareButtons / もう一度挑戦するボタン
+ *
+ * 新デザイン体系（DESIGN.md / ResultCard.module.css）への移行ポイント:
+ * - 装飾としての --type-color 参照は撤去し、共通アクセント（--accent 系）に統一。
+ * - 絵文字マーカー（CSS ::before "✨"）・絵文字アイコン（r.icon 描画）を撤去。
+ * - 中央寄せ・font-weight 700・旧トークン・角丸ハードコードを廃止。
+ * - public props signature は caller 互換のためすべて維持する。
  */
 
 import type React from "react";
@@ -32,9 +37,20 @@ interface UnexpectedCompatibilityContentProps {
   allResults: QuizResult[];
   /** 見出しタグのレベル。page.tsxではh2（h1の次）、ResultCard内ではh3（h2の次） */
   headingLevel: 2 | 3;
-  /** 全タイプ一覧のレイアウト。"pill"（ピル型横wrap）| "list"（縦並び）| "grid"（グリッド） */
+  /**
+   * 全タイプ一覧のレイアウト。
+   * "list": ResultCard 内で使用する縦並びリスト形式。
+   * "grid": 結果ページで使用する2-3列グリッド形式。
+   * "pill": 旧名の互換ラベル。新デザインでは pill 型（角丸999px・派手色枠・font-weight 700）をやめ、
+   *   "grid" と同じグリッド形式に内部マップする。public props signature を壊さないため
+   *   呼び出し側はそのまま "pill" を渡してよい。
+   */
   allTypesLayout: "pill" | "list" | "grid";
-  /** 結果タイプのテーマカラー（--type-color CSS変数に注入） */
+  /**
+   * 結果タイプのテーマカラー（--type-color CSS変数に注入）。
+   * 新デザインでは装飾には参照しないが、caller signature 互換のため受け取りは残す
+   * （page.tsx / ResultCard の引数を壊さないための dead 注入）。
+   */
   resultColor: string;
   /** lifeAdvice後・全タイプ一覧前にページ固有要素（CTA等）を挿入するスロット */
   afterLifeAdvice?: React.ReactNode;
@@ -53,28 +69,29 @@ export default function UnexpectedCompatibilityContent({
   // headingLevel に応じて h2 または h3 タグを動的に切り替える
   const Heading = `h${headingLevel}` as "h2" | "h3";
 
+  // 新デザインでは旧 "pill"（派手色枠＋角丸999px＋font-weight 700）をやめ、
+  // CharacterPersonalityContent / Yoji と同じ allTypesGrid に統一する。
+  // "pill" は caller 互換のため受け取りだけ残し、"grid" と同じクラスにマップする。
   const allTypesListClass =
-    allTypesLayout === "pill"
-      ? styles.allTypesListPill
-      : allTypesLayout === "grid"
-        ? styles.allTypesListGrid
-        : styles.allTypesListVertical;
+    allTypesLayout === "list"
+      ? styles.allTypesListVertical
+      : styles.allTypesGrid;
 
   return (
-    // wrapperクラスで --type-color をインラインスタイルで注入。
-    // タイプごとに固有の色があるため、CSS変数ファイルではなくpropsから渡す。
-    // ダークモード時のコントラスト調整はCSSファイル側で行う。
+    // 新デザインでは --type-color を装飾に使わない（共通アクセントに統一）。
+    // ただし page.tsx / ResultCard など caller の signature 互換を壊さないため、
+    // resultColor の受け取りと --type-color の注入自体は残す（dead 注入だが互換目的）。
     <div
       className={styles.wrapper}
       style={{ "--type-color": resultColor } as React.CSSProperties}
     >
-      {/* entityEssence セクション: 存在の本質を哲学的・ユーモラスに解説 */}
+      {/* entityEssence セクション: 存在の本質を哲学的・ユーモラスに解説（中心解説） */}
       <Heading className={styles.sectionHeading}>この存在の本質</Heading>
       <div className={styles.entityEssenceCard}>
         {detailedContent.entityEssence}
       </div>
 
-      {/* whyCompatible セクション: なぜこの存在と相性が良いかの核心 */}
+      {/* whyCompatible セクション: なぜこの存在と相性が良いかの核心解説 */}
       <Heading className={styles.sectionHeading}>なぜ相性が良いのか</Heading>
       <div className={styles.whyCompatibleCard}>
         {detailedContent.whyCompatible}
@@ -120,7 +137,8 @@ export default function UnexpectedCompatibilityContent({
                 href={`/play/${quizSlug}/result/${r.id}`}
                 aria-current={r.id === resultId ? "page" : undefined}
               >
-                {r.icon && <span>{r.icon}</span>}
+                {/* 新デザインでは絵文字アイコン（r.icon）を描画しない（DESIGN.md: 絵文字を使わない）。
+                    各タイプの区別はタイトル文言で行う。 */}
                 <span>{r.title}</span>
               </Link>
             </li>

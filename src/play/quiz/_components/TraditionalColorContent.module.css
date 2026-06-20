@@ -1,156 +1,98 @@
 /*
- * TraditionalColorContent 共通コンポーネントのスタイル。
- * ResultCard.tsx（受検者向け）と page.tsx（第三者向け）の両方から使用される。
+ * TraditionalColorContent 共通コンポーネントのスタイル。新デザイン体系（DESIGN.md）。
+ * ResultCard.tsx（受検者向けインライン結果）と page.tsx（第三者向け静的結果ページ）の両方から使用される。
  *
- * AnimalPersonalityContent.module.css / MusicPersonalityContent.module.css を基準にスタイルを統一する。
+ * 設計方針（ResultCard.module.css を一次規範として語彙をそろえる）:
+ * - 左寄せ・新トークンのみ・font-weight は最大 600・絵文字なし・影なし。
+ * - 装飾としての色使い（見出し罫線・カード薄敷き・seasonTag 等）はタイプごとの派手色（--type-color）から外し、
+ *   共通アクセント（--accent / --bg-soft / --accent-soft / --accent-strong）に統一する。
+ *   各タイプの個性は「色そのもの（色見本）」と「言葉（本文）」で立てる。
+ * - 角丸はカード/ブロック = --r-normal、操作要素（リンク） = --r-interactive。
  *
- * 設計方針:
- * - --type-color をpropsからインラインスタイルで注入（タイプごとに色が異なるため）
- * - ダークモード時は opacity/border 調整で汎用的にコントラストを確保
- * - colorMeaning は色を薄く敷いたカード形式
- * - ダークモード時、暗い色の背景が見えにくくなる問題に対して border 表現に切り替え
- * - WCAG AA準拠のコントラスト比を意識
+ * color-as-content の例外:
+ * - 「他の色も見てみよう」の色ドット（.colorDot）は伝統色そのものを表示することが診断の核なので、
+ *   TSX 側で r.color を inline backgroundColor として直接注入する。dark でも元色を保持する。
+ * - --type-color インラインプロパティ自体は caller signature 互換のため wrapper で受け取り続けるが、
+ *   装飾用途では参照しない（dead 注入だが互換目的）。
  */
 
 /* ============================================================
-   wrapper: --type-color CSS変数の受け取り口
-   インラインスタイルで注入された --type-color を子要素が参照できるようにする。
-   ライトモードでは --type-color をそのまま使用。
-   ダークモードでは --type-color-dark を 明度調整して自動生成するのが理想だが、
-   CSS単体では難しいため、opacity制御と border フォールバックで対応する。
+   wrapper: caller 互換のため --type-color の受け取り口を残す。
+   装飾では参照しないが、page.tsx / ResultCard の caller signature を壊さないため維持する。
    ============================================================ */
 .wrapper {
-  /* --type-color はインラインスタイルで注入される */
+  text-align: left;
 }
 
 /* ============================================================
-   セクション見出し
+   セクション見出し（ResultCard detailedHeading に倣う）
+   headingLevel に応じて h2 または h3 が生成される。
+   タイプ固有の派手色（--type-color）ではなく共通アクセント（--accent）の左罫線で静かに区切る。
    ============================================================ */
-
-/* headingLevel に応じて h2 または h3 が生成される */
 .sectionHeading {
-  font-size: 1.1rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--fg);
+  margin: 0 0 1rem;
   padding-left: 0.75rem;
-  border-left: 4px solid var(--type-color);
-  color: var(--type-color);
-}
-
-/* ダークモード: color-mix で白を30%混ぜることで明度を上げる。
-   filter: brightness() と異なり、明るい色（桜色 #fedfe1 等）が白飛びしない。
-   暗い色（藍色 #0d5661 等）は白寄りになって視認性が確保される。 */
-:global(.dark) .sectionHeading {
-  color: color-mix(in srgb, var(--type-color) 70%, white);
-  border-left-color: color-mix(in srgb, var(--type-color) 70%, white);
-}
-
-/* color-mix 非対応ブラウザ向けフォールバック: saturate で彩度を落として明度補正 */
-@supports not (color: color-mix(in srgb, red 70%, white)) {
-  :global(.dark) .sectionHeading {
-    filter: brightness(1.5) saturate(0.85);
-  }
+  border-left: 3px solid var(--accent);
 }
 
 /* ============================================================
-   colorMeaning カード: 色の文化的背景
-   色をバックグラウンドに薄く敷いたカード形式
+   colorMeaning カード: 色の文化的背景。
+   旧デザインではタイプ色を全面に薄敷きしていたが、
+   新デザインでは ResultCard adviceCard 相当の淡いアクセント面（--accent-soft + --accent-strong 枠）に統一する。
+   色見本としての役目はカード背景ではなく、ページ全体の色ヒーロー・色ドットが担う。
    ============================================================ */
 .colorMeaningCard {
-  padding: 1.25rem 1.5rem;
-  border-radius: 10px;
+  padding: 1.1rem 1.25rem;
+  border-radius: var(--r-normal);
   font-size: 0.95rem;
   line-height: 1.8;
-  color: var(--color-text);
+  color: var(--fg);
   margin-bottom: 2rem;
-  /* --type-color を非常に薄い透過背景として使用 */
-  background: color-mix(in srgb, var(--type-color) 8%, transparent);
-  border-left: 3px solid var(--type-color);
-}
-
-/* ダークモード: 暗い色の背景が見えにくくなる問題に対して border 表現を強調 */
-:global(.dark) .colorMeaningCard {
-  /* 背景を少し濃くして視認性を確保 */
-  background: color-mix(in srgb, var(--type-color) 16%, transparent);
-  /* ボーダーで色の存在を表現する（極端に暗い色でも識別可能） */
-  border-left-width: 4px;
-}
-
-/* color-mix 非対応ブラウザ向けフォールバック */
-@supports not (background: color-mix(in srgb, red 10%, transparent)) {
-  .colorMeaningCard {
-    background: rgba(0, 0, 0, 0.04);
-    border: 1px solid var(--color-border);
-    border-left: 3px solid var(--type-color);
-  }
-
-  :global(.dark) .colorMeaningCard {
-    background: rgba(255, 255, 255, 0.06);
-  }
+  text-align: left;
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-strong);
 }
 
 /* ============================================================
-   scenery + season セクション: 視覚的イメージ喚起
+   scenery + season セクション: 視覚的イメージ喚起。
+   中立の --bg-soft 面で落ち着いた語りトーンに。
    ============================================================ */
 .sceneryCard {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  padding: 1.25rem 1.5rem;
-  border-radius: 10px;
+  padding: 1.1rem 1.25rem;
+  border-radius: var(--r-normal);
   margin-bottom: 2rem;
-  background: var(--color-bg-secondary);
-  border: 1px solid var(--color-border);
+  background: var(--bg-soft);
 }
 
+/* 季節タグ: タイプ色のピルではなく、共通アクセント枠＋淡い面の静かなバッジ。
+   自身のサイズに収まるよう align-self で寄せる。 */
 .seasonTag {
   display: inline-flex;
   align-items: center;
-  padding: 0.2rem 0.75rem;
-  border-radius: 999px;
-  font-size: 0.8rem;
-  font-weight: 700;
-  /* タイプカラーをアクセントに使ったバッジ */
-  background: color-mix(in srgb, var(--type-color) 12%, transparent);
-  color: var(--type-color);
-  border: 1.5px solid var(--type-color);
-  /* 自身のサイズに収まるよう inline-flex */
   align-self: flex-start;
-}
-
-/* ダークモード: color-mix で白を30%混ぜることで明度を上げる。
-   filter: brightness() と異なり、明るい色（山吹色 #f8b400 等）が白飛びしない。 */
-:global(.dark) .seasonTag {
-  background: color-mix(in srgb, var(--type-color) 20%, transparent);
-  color: color-mix(in srgb, var(--type-color) 70%, white);
-  border-color: color-mix(in srgb, var(--type-color) 70%, white);
-}
-
-/* color-mix 非対応ブラウザ向けフォールバック */
-@supports not (color: color-mix(in srgb, red 70%, white)) {
-  :global(.dark) .seasonTag {
-    filter: brightness(1.4);
-  }
-}
-
-/* color-mix 非対応ブラウザ向けフォールバック */
-@supports not (background: color-mix(in srgb, red 10%, transparent)) {
-  .seasonTag {
-    background: var(--color-bg-secondary);
-    color: var(--type-color);
-  }
+  padding: 0.2rem 0.75rem;
+  border-radius: var(--r-interactive);
+  font-size: 0.8rem;
+  color: var(--fg);
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-strong);
 }
 
 .sceneryText {
   font-size: 0.95rem;
   line-height: 1.7;
-  color: var(--color-text);
+  color: var(--fg);
   margin: 0;
-  font-style: italic;
 }
 
 /* ============================================================
-   behaviors リスト: あるある
+   behaviors リスト: あるある（この色が現れる場面）
    ============================================================ */
 .behaviorsList {
   list-style: none;
@@ -163,47 +105,41 @@
 
 .behaviorsItem {
   font-size: 0.95rem;
-  line-height: 1.6;
-  color: var(--color-text);
+  line-height: 1.7;
+  color: var(--fg);
   padding: 0.75rem 1rem;
-  border-radius: 8px;
-  border: 1px solid var(--color-border);
+  border-radius: var(--r-normal);
+  border: 1px solid var(--border);
   display: flex;
   align-items: flex-start;
   gap: 0.625rem;
 }
 
+/* 絵文字を使わない静かなマーカー（ResultCard traitsItem::before と同じアクセントの短い縦線）。
+   旧デザインの 🎨 ::before は撤去。 */
 .behaviorsItem::before {
-  content: "🎨";
+  content: "";
   flex-shrink: 0;
-  margin-top: 0.05rem;
+  width: 2px;
+  align-self: stretch;
+  background: var(--accent);
+  border-radius: var(--r-normal);
 }
 
 /* ============================================================
-   colorAdvice カード: 締めのメッセージ
+   colorAdvice カード: 締めのメッセージ（この色からのひとこと）。
+   ResultCard adviceCard と同じ淡いアクセント面で静かに強調する。
    ============================================================ */
 .colorAdviceCard {
-  padding: 1.25rem 1.5rem;
-  border-radius: 10px;
+  padding: 1.1rem 1.25rem;
+  border-radius: var(--r-normal);
   font-size: 1rem;
-  line-height: 1.7;
-  font-weight: 500;
-  color: var(--color-text);
+  line-height: 1.8;
+  color: var(--fg);
   margin-bottom: 2rem;
-  text-align: center;
-  /* タイプカラーの薄い透過背景 */
-  background: color-mix(in srgb, var(--type-color) 8%, transparent);
-}
-
-:global(.dark) .colorAdviceCard {
-  background: color-mix(in srgb, var(--type-color) 16%, transparent);
-}
-
-/* color-mix 非対応ブラウザ向けフォールバック */
-@supports not (background: color-mix(in srgb, red 10%, transparent)) {
-  .colorAdviceCard {
-    background: var(--color-bg-secondary);
-  }
+  text-align: left;
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-strong);
 }
 
 /* ============================================================
@@ -212,74 +148,93 @@
 .allTypesSection {
   margin-top: 2rem;
   padding-top: 1.5rem;
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid var(--border);
 }
 
-/* 全タイプ見出し: シンプルにセクション案内として機能させる */
+/* 全タイプ見出し: ResultCard detailedHeading 言語に合わせ、左寄せ・左罫線で区切る */
 .allTypesCta {
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 600;
-  text-align: center;
-  color: var(--color-text);
-  margin-bottom: 1rem;
-  margin-top: 0;
+  color: var(--fg);
+  margin: 0 0 1rem;
+  padding-left: 0.75rem;
+  border-left: 3px solid var(--accent);
 }
 
-/* 各タイプのカラードット */
+/* ============================================================
+   色ドット（color-as-content の例外）。
+   TSX 側で r.color を inline backgroundColor として注入する。
+   桜色等の極淡色がリスト背景に溶け込まないよう、light/dark それぞれで控えめな枠線を入れる。
+   dark でも元の伝統色を保持する（色見本は装飾ではなく診断内容）。
+   ============================================================ */
 .colorDot {
   display: inline-block;
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
   flex-shrink: 0;
-  /* 非常に薄い色（桜色等）のドットが背景に溶け込まないよう枠線を付ける */
-  border: 1px solid rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--border);
 }
 
-:global(.dark) .colorDot {
-  border-color: rgba(255, 255, 255, 0.2);
-}
-
-/* ピル型横wrap レイアウト（page.tsx版） */
-.allTypesListPill {
+/* ============================================================
+   グリッドレイアウト（page.tsx版）。
+   旧: ピル型横wrap（.allTypesListPill）を撤去し、参照実装 CharacterPersonalityContent.module.css の
+   .allTypesGrid と完全に同じパターン（2列、480px 以上で 3列、--r-interactive 角丸、現在タイプは
+   --accent 枠＋--accent-soft 面）に統一する。これにより 8 クイズ間で「他のタイプも見てみよう」
+   セクションの質感が揃う。Traditional は 48 タイプあるが、grid 2-3列のほうが pill 横wrap と
+   同等以下の縦長さに収まる。
+   color-as-content の例外: 各セル内に「色ドット + 色名」を flex で並べ、色ドットは引き続き
+   r.color の inline backgroundColor で実色を表示する（上記 .colorDot 参照）。
+   ============================================================ */
+.allTypesGrid {
   list-style: none;
   padding: 0;
   margin: 0 0 1.5rem 0;
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 0.5rem;
 }
 
-.allTypesListPill .allTypesItem a,
-.allTypesListPill .allTypesItemCurrent a {
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-  padding: 0.4rem 0.875rem;
-  border-radius: 999px;
-  font-size: 0.875rem;
-  text-decoration: none;
-  transition: opacity 0.2s ease;
+@media (min-width: 480px) {
+  .allTypesGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
-.allTypesListPill .allTypesItem a {
-  color: var(--color-text);
-  border: 1.5px solid var(--color-border);
+.allTypesGrid .allTypesItem a,
+.allTypesGrid .allTypesItemCurrent a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--r-interactive);
+  font-size: 0.875rem;
+  text-decoration: none;
+  transition: background-color 0.15s ease;
+  width: 100%;
+}
+
+.allTypesGrid .allTypesItem a {
+  color: var(--fg);
+  border: 1px solid var(--border);
   background: transparent;
 }
 
-.allTypesListPill .allTypesItem a:hover {
-  opacity: 0.7;
+.allTypesGrid .allTypesItem a:hover {
+  background-color: var(--bg-soft);
 }
 
-.allTypesListPill .allTypesItemCurrent a {
-  color: var(--color-text);
-  border: 2px solid var(--type-color);
-  background: var(--color-bg-secondary);
-  font-weight: 700;
+/* 現在のタイプ: 色ではなくアクセント枠＋淡い面で「今ここ」を静かに示す */
+.allTypesGrid .allTypesItemCurrent a {
+  color: var(--fg);
+  border: 1px solid var(--accent);
+  background: var(--accent-soft);
+  pointer-events: none;
 }
 
-/* 縦並びリスト レイアウト（ResultCard版） */
+/* ============================================================
+   縦並びリスト レイアウト（ResultCard版）
+   ============================================================ */
 .allTypesListVertical {
   list-style: none;
   padding: 0;
@@ -295,19 +250,22 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 0.75rem;
-  border-radius: 6px;
+  /* 現在タイプの枠線と高さをそろえるため、非現在項目も透明枠を持たせる */
+  border: 1px solid transparent;
+  border-radius: var(--r-interactive);
   font-size: 0.9rem;
-  color: var(--color-text);
+  color: var(--fg);
   text-decoration: none;
   transition: background-color 0.15s ease;
 }
 
 .allTypesListVertical .allTypesItem a:hover {
-  background-color: var(--color-bg-secondary);
+  background-color: var(--bg-soft);
 }
 
+/* 現在のタイプ: アクセント枠＋淡い面で「今ここ」を示す（font-weight は上げない） */
 .allTypesListVertical .allTypesItemCurrent a {
-  background-color: var(--color-bg-secondary);
-  font-weight: 700;
+  border: 1px solid var(--accent);
+  background-color: var(--accent-soft);
   pointer-events: none;
 }

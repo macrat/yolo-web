@@ -48,15 +48,22 @@ export default function TraditionalColorContent({
   // headingLevel に応じて h2 または h3 タグを動的に切り替える
   const Heading = `h${headingLevel}` as "h2" | "h3";
 
+  // public props の allTypesLayout は caller 互換のため "list" | "pill" を維持するが、
+  // PM 判断（cycle-254 バッチ2）で「pill 型は新デザイン言語に含めず、8 クイズ間で質感を揃えるため
+  // 内部実装で grid に倒す」を統一適用するため、"pill" は内部で grid レイアウト（.allTypesGrid）に
+  // マップする。caller 側 API は壊さない。色ドット（color-as-content）は grid 各セル内の flex で
+  // 「色ドット + 色名」として引き続き並ぶ。
   const allTypesListClass =
     allTypesLayout === "pill"
-      ? styles.allTypesListPill
+      ? styles.allTypesGrid
       : styles.allTypesListVertical;
 
   return (
-    // wrapperクラスで --type-color をインラインスタイルで注入。
-    // タイプごとに固有の色があるため、CSS変数ファイルではなくpropsから渡す。
-    // ダークモード時のコントラスト調整はCSSファイル側で行う。
+    // 新デザインでは装飾としてのタイプ色（--type-color）は使わず、共通アクセント（--accent 系）に統一する。
+    // ただし caller signature 互換のため wrapper では --type-color の受け取り口を引き続き残す
+    // （dead 注入だが page.tsx / ResultCard 側の caller を壊さないため維持）。
+    // color-as-content（色そのものが診断内容）の例外は「他の色も見てみよう」リストの色ドットのみで、
+    // そちらは下記 r.color を inline backgroundColor として直接注入することで dark でも元色を保持する。
     <div
       className={styles.wrapper}
       style={{ "--type-color": resultColor } as React.CSSProperties}
@@ -106,7 +113,9 @@ export default function TraditionalColorContent({
                 href={`/play/${quiz.meta.slug}/result/${r.id}`}
                 aria-current={r.id === resultId ? "page" : undefined}
               >
-                {/* 各タイプの固有色をカラードットで表示 */}
+                {/* color-as-content の例外: 各伝統色そのものを色ドットで表示する。
+                    新デザインでは装飾色は --accent に寄せるが、ここは「色＝診断内容」なので
+                    r.color を inline backgroundColor として直接注入し、dark でも元の伝統色を保持する。 */}
                 {r.color && (
                   <span
                     className={styles.colorDot}

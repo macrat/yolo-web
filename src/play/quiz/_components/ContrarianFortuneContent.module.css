@@ -1,94 +1,61 @@
 /*
- * ContrarianFortuneContent 共通コンポーネントのスタイル。
- * ResultCard.tsx（受検者向け）と page.tsx（第三者向け）の両方から使用される。
+ * ContrarianFortuneContent 共通コンポーネントのスタイル。新デザイン体系（DESIGN.md）。
+ * ResultCard.tsx（受検者向けインライン結果）と page.tsx（第三者向け静的結果ページ）の両方から使用される。
  *
- * ImpossibleAdviceContent.module.css と同じ設計パターンを踏襲する。
+ * 設計方針（ResultCard.module.css / CharacterPersonalityContent.module.css /
+ * YojiPersonalityContent.module.css を一次規範として語彙をそろえる）:
+ * - 左寄せ・新トークンのみ・font-weight は最大 600・絵文字なし・影なし。
+ * - タイプごとの派手色（--type-color）は装飾から外し、共通アクセント（--accent 系）に統一する。
+ *   各タイプの個性は色ではなく言葉（本文）で立てる。
+ * - 角丸はカード/ブロック = --r-normal、操作要素（リンク） = --r-interactive。
  *
- * 設計方針:
- * - --type-color をpropsからインラインスタイルで注入（タイプごとに色が異なるため）
- * - ダークモード時は color-mix() で明度調整（ImpossibleAdviceContent と同じパターン）
- * - coreSentence は色付きカード形式（背景に --type-color を薄く敷く + 左ボーダー）
- * - behaviors は左揃え箇条書き（装飾アイコン付きリスト項目）
- * - persona / thirdPartyNote は散文セクション（見出し付きシンプルカード）
- * - humorMetrics は縞模様テーブル形式
- * - CSSカスタムプロパティには必ずフォールバック値を付ける
- * - WCAG AA準拠のコントラスト比を意識
+ * なお wrapper は caller 互換のため --type-color の注入を引き続き受け取るが、
+ * 装飾としては参照しない（color-as-content ではないため）。
  */
 
 /* ============================================================
-   wrapper: --type-color CSS変数の受け取り口
-   インラインスタイルで注入された --type-color を子要素が参照できるようにする。
+   wrapper: caller 互換のため --type-color の受け取り口を残す。
+   装飾では参照しないが、page.tsx / ResultCard の caller signature を壊さないため維持する。
    ============================================================ */
 .wrapper {
-  /* --type-color はインラインスタイルで注入される */
+  text-align: left;
 }
 
 /* ============================================================
-   セクション見出し
+   セクション見出し（ResultCard detailedHeading に倣う）
+   headingLevel に応じて h2 または h3 が生成される。
    ============================================================ */
-
-/* headingLevel に応じて h2 または h3 が生成される */
 .sectionHeading {
-  font-size: 1.1rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--fg);
+  margin: 0 0 1rem;
   padding-left: 0.75rem;
-  border-left: 4px solid var(--type-color, #374151);
-  color: var(--type-color, #374151);
-}
-
-/* ダークモード: color-mix で白を30%混ぜることで明度を上げる。
-   filter: brightness() と異なり、明るい色が白飛びしない。
-   暗い色は白寄りになって視認性が確保される。 */
-:global(.dark) .sectionHeading {
-  color: color-mix(in srgb, var(--type-color, #374151) 70%, white);
-  border-left-color: color-mix(in srgb, var(--type-color, #374151) 70%, white);
-}
-
-/* color-mix 非対応ブラウザ向けフォールバック */
-@supports not (color: color-mix(in srgb, red 70%, white)) {
-  :global(.dark) .sectionHeading {
-    filter: brightness(1.5) saturate(0.85);
-  }
+  border-left: 3px solid var(--accent);
 }
 
 /* ============================================================
-   coreSentence カード: 逆張りフレームの核心一文
-   --type-color を非常に薄い透過背景として使用したカード形式
+   coreSentence カード: 逆張りフレームの「核心一文」。
+   このタイプの読み解きの中心となる解説ブロックなので、ResultCard adviceCard /
+   CharacterPersonalityContent archetypeBreakdownCard と同じく
+   淡いアクセント面（--accent-soft + --accent-strong 枠）で静かに強調する。
+   旧版の color-mix(--type-color, ...) ティント＋type-color 左罫線は新デザイン語彙に
+   そぐわないため撤去し、装飾としての --type-color 参照は捨てる。
    ============================================================ */
 .coreSentenceCard {
-  padding: 1.25rem 1.5rem;
-  border-radius: 10px;
+  padding: 1.1rem 1.25rem;
+  border-radius: var(--r-normal);
   font-size: 0.95rem;
   line-height: 1.8;
-  color: var(--color-text);
+  color: var(--fg);
   margin-bottom: 2rem;
-  /* --type-color を非常に薄い透過背景として使用 */
-  background: color-mix(in srgb, var(--type-color, #374151) 8%, transparent);
-  border-left: 3px solid var(--type-color, #374151);
-}
-
-/* ダークモード: 背景を少し濃くして視認性を確保 */
-:global(.dark) .coreSentenceCard {
-  background: color-mix(in srgb, var(--type-color, #374151) 16%, transparent);
-  border-left-width: 4px;
-}
-
-/* color-mix 非対応ブラウザ向けフォールバック */
-@supports not (background: color-mix(in srgb, red 10%, transparent)) {
-  .coreSentenceCard {
-    background: rgba(0, 0, 0, 0.04);
-    border: 1px solid var(--color-border);
-    border-left: 3px solid var(--type-color, #374151);
-  }
-
-  :global(.dark) .coreSentenceCard {
-    background: rgba(255, 255, 255, 0.06);
-  }
+  text-align: left;
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-strong);
 }
 
 /* ============================================================
-   behaviors リスト: あるある行動
+   behaviors リスト: 逆張りタイプの「あるある行動」
    ============================================================ */
 .behaviorsList {
   list-style: none;
@@ -101,72 +68,64 @@
 
 .behaviorsItem {
   font-size: 0.95rem;
-  line-height: 1.6;
-  color: var(--color-text);
+  line-height: 1.7;
+  color: var(--fg);
   padding: 0.75rem 1rem;
-  border-radius: 8px;
-  border: 1px solid var(--color-border);
+  border-radius: var(--r-normal);
+  border: 1px solid var(--border);
   display: flex;
   align-items: flex-start;
   gap: 0.625rem;
 }
 
-/* 逆張りを表すアイコンで行動パターン項目を装飾 */
+/* 絵文字を使わない静かなマーカー（ResultCard traitsItem::before と同じアクセントの短い縦線）。
+   旧版の絵文字マーカー（"🔄"）は新デザイン方針に従い撤去。 */
 .behaviorsItem::before {
-  content: "🔄";
+  content: "";
   flex-shrink: 0;
-  margin-top: 0.05rem;
+  width: 2px;
+  align-self: stretch;
+  background: var(--accent);
+  border-radius: var(--r-normal);
 }
 
 /* ============================================================
-   persona カード: タイプの人物像（散文セクション）
+   persona カード: タイプの人物像（散文セクション）。
+   coreSentence（核心一文）のあとに置く「掘り下げの語り」なので、
+   中立の --bg-soft 面に置いてアクセント面と質感を分け、落ち着いたトーンにする。
    ============================================================ */
 .personaCard {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  padding: 1.25rem 1.5rem;
-  border-radius: 10px;
-  margin-bottom: 2rem;
-  background: var(--color-bg-secondary);
-  border: 1px solid var(--color-border);
+  padding: 1.1rem 1.25rem;
+  border-radius: var(--r-normal);
   font-size: 0.95rem;
-  line-height: 1.7;
-  color: var(--color-text);
+  line-height: 1.8;
+  color: var(--fg);
+  margin-bottom: 2rem;
+  text-align: left;
+  background: var(--bg-soft);
 }
 
 /* ============================================================
-   thirdPartyNote カード: 第三者視点のシーン描写
-   personaCardとは視覚的に区別するため左ボーダーを追加
+   thirdPartyNote カード: 第三者視点のシーン描写。
+   persona と同質の散文セクション。同じ --bg-soft 面で揃え、
+   見出し（sectionHeading）で意味的に区別する。
    ============================================================ */
 .thirdPartyNoteCard {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  padding: 1.25rem 1.5rem;
-  border-radius: 10px;
-  margin-bottom: 2rem;
-  background: color-mix(in srgb, var(--type-color, #374151) 5%, transparent);
-  border: 1px solid var(--color-border);
+  padding: 1.1rem 1.25rem;
+  border-radius: var(--r-normal);
   font-size: 0.95rem;
-  line-height: 1.7;
-  color: var(--color-text);
-}
-
-/* ダークモード: 背景を少し濃くして視認性を確保 */
-:global(.dark) .thirdPartyNoteCard {
-  background: color-mix(in srgb, var(--type-color, #374151) 10%, transparent);
-}
-
-/* color-mix 非対応ブラウザ向けフォールバック */
-@supports not (background: color-mix(in srgb, red 10%, transparent)) {
-  .thirdPartyNoteCard {
-    background: var(--color-bg-secondary);
-  }
+  line-height: 1.8;
+  color: var(--fg);
+  margin-bottom: 2rem;
+  text-align: left;
+  background: var(--bg-soft);
 }
 
 /* ============================================================
-   humorMetrics テーブル: 笑い指標（省略可）
+   humorMetrics テーブル（省略可）: 笑い指標。
+   ResultCard.module.css の humorMetricsTable と質感をそろえ、
+   --bg-soft のラベルセル + --border の罫線で素直なテーブルに見せる。
+   旧版の type-color ティント縞や font-weight 700 は撤去。
    ============================================================ */
 .humorMetricsSection {
   margin-bottom: 2rem;
@@ -178,34 +137,24 @@
   font-size: 0.9rem;
 }
 
-.humorMetricsTable tr:nth-child(odd) {
-  background: color-mix(in srgb, var(--type-color, #374151) 6%, transparent);
-}
-
-:global(.dark) .humorMetricsTable tr:nth-child(odd) {
-  background: color-mix(in srgb, var(--type-color, #374151) 12%, transparent);
-}
-
-/* color-mix 非対応ブラウザ向けフォールバック */
-@supports not (background: color-mix(in srgb, red 10%, transparent)) {
-  .humorMetricsTable tr:nth-child(odd) {
-    background: var(--color-bg-secondary);
-  }
+.humorMetricsTable td {
+  padding: 0.625rem 0.875rem;
+  border: 1px solid var(--border);
+  text-align: left;
+  color: var(--fg);
+  vertical-align: top;
+  line-height: 1.6;
 }
 
 .humorMetricsLabel {
-  padding: 0.625rem 1rem;
-  color: var(--color-text-secondary, #6b7280);
-  font-weight: 500;
+  background: var(--bg-soft);
+  color: var(--fg);
+  font-weight: 600;
   width: 50%;
-  vertical-align: top;
 }
 
 .humorMetricsValue {
-  padding: 0.625rem 1rem;
-  color: var(--color-text);
-  font-weight: 700;
-  text-align: right;
+  color: var(--fg);
 }
 
 /* ============================================================
@@ -214,54 +163,107 @@
 .allTypesSection {
   margin-top: 2rem;
   padding-top: 1.5rem;
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid var(--border);
 }
 
-/* 全タイプ見出し: シンプルにセクション案内として機能させる */
+/* 全タイプ見出し: ResultCard detailedHeading 言語に合わせ、左寄せ・左罫線で区切る。
+   旧版の「中央寄せ・font-weight 600 のみ」を sectionHeading と同じ語彙へ統一。 */
 .allTypesCta {
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 600;
-  text-align: center;
-  color: var(--color-text);
-  margin-bottom: 1rem;
-  margin-top: 0;
+  color: var(--fg);
+  margin: 0 0 1rem;
+  padding-left: 0.75rem;
+  border-left: 3px solid var(--accent);
 }
 
-/* ピル型横wrap レイアウト */
-.allTypesListPill {
+/* グリッドレイアウト: 2-3列で全タイプを視覚的にまとめて表示。
+   旧版の「pill 型横wrap（角丸999px・font-weight 700・派手色 type-color 枠）」は
+   新デザイン語彙に含まれないため撤去し、Character/Yoji と同じ allTypesGrid に統一する。
+   public props "pill" は caller 互換のため TSX 側で受け取り、内部で本クラスへマップする。 */
+.allTypesGrid {
   list-style: none;
   padding: 0;
   margin: 0 0 1.5rem 0;
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 0.5rem;
 }
 
-.allTypesListPill .allTypesItem a,
-.allTypesListPill .allTypesItemCurrent a {
+@media (min-width: 480px) {
+  .allTypesGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.allTypesGrid .allTypesItem a,
+.allTypesGrid .allTypesItemCurrent a {
   display: flex;
   align-items: center;
   gap: 0.375rem;
-  padding: 0.4rem 0.875rem;
-  border-radius: 999px;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--r-interactive);
   font-size: 0.875rem;
   text-decoration: none;
-  transition: opacity 0.2s ease;
+  transition: background-color 0.15s ease;
+  width: 100%;
 }
 
-.allTypesListPill .allTypesItem a {
-  color: var(--color-text);
-  border: 1.5px solid var(--color-border);
+.allTypesGrid .allTypesItem a {
+  color: var(--fg);
+  border: 1px solid var(--border);
   background: transparent;
 }
 
-.allTypesListPill .allTypesItem a:hover {
-  opacity: 0.7;
+.allTypesGrid .allTypesItem a:hover {
+  background-color: var(--bg-soft);
 }
 
-.allTypesListPill .allTypesItemCurrent a {
-  color: var(--color-text);
-  border: 2px solid var(--type-color, #374151);
-  background: var(--color-bg-secondary);
-  font-weight: 700;
+/* 現在のタイプ: 色ではなくアクセント枠＋淡い面で「今ここ」を静かに示す */
+.allTypesGrid .allTypesItemCurrent a {
+  color: var(--fg);
+  border: 1px solid var(--accent);
+  background: var(--accent-soft);
+  pointer-events: none;
+}
+
+/* ============================================================
+   縦並びリスト レイアウト（ResultCard インライン経路）
+   インライン経路は 8 variant 共通で縦リストに揃え、Character/Animal と同質感にする。
+   page.tsx 側（grid）と語彙を分けることで surface ごとの「他のタイプも見てみよう」の
+   見た目が surface 内で揃う。
+   ============================================================ */
+.allTypesListVertical {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.allTypesListVertical .allTypesItem a,
+.allTypesListVertical .allTypesItemCurrent a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  /* 現在タイプの枠線と高さをそろえるため、非現在項目も透明枠を持たせる */
+  border: 1px solid transparent;
+  border-radius: var(--r-interactive);
+  font-size: 0.9rem;
+  color: var(--fg);
+  text-decoration: none;
+  transition: background-color 0.15s ease;
+}
+
+.allTypesListVertical .allTypesItem a:hover {
+  background-color: var(--bg-soft);
+}
+
+/* 現在のタイプ: アクセント枠＋淡い面で「今ここ」を示す（font-weight は上げない） */
+.allTypesListVertical .allTypesItemCurrent a {
+  border: 1px solid var(--accent);
+  background-color: var(--accent-soft);
+  pointer-events: none;
 }

@@ -58,8 +58,11 @@ const sampleContent: MusicPersonalityDetailedContent = {
   todayAction: "今日の音楽ライフのヒントテキスト",
 };
 
+// cycle-254 で新デザインへ移行: 旧版にあった絵文字マーカー（🎵/🎧/🎤/🎶/🎹）と
+// 紫/クリームの色ティント差別化は撤去された。テスト側も絵文字なしの見出し文言と、
+// 新クラス名（allTypesGrid / itemList）に追従させる。
 describe("MusicPersonalityContent - 基本レンダリング", () => {
-  it("strengthsセクションが表示されること", () => {
+  it("strengthsセクションが表示されること（絵文字なし見出し）", () => {
     render(
       <MusicPersonalityContent
         content={sampleContent}
@@ -68,12 +71,12 @@ describe("MusicPersonalityContent - 基本レンダリング", () => {
         allTypesLayout="pill"
       />,
     );
-    expect(screen.getByText("🎵 このタイプの音楽的な強み")).toBeInTheDocument();
+    expect(screen.getByText("このタイプの音楽的な強み")).toBeInTheDocument();
     expect(screen.getByText("音楽的な強み1")).toBeInTheDocument();
     expect(screen.getByText("音楽的な強み2")).toBeInTheDocument();
   });
 
-  it("weaknessesセクションが表示されること（計画通りの絵文字🎧）", () => {
+  it("weaknessesセクションが表示されること（絵文字なし見出し）", () => {
     render(
       <MusicPersonalityContent
         content={sampleContent}
@@ -82,12 +85,12 @@ describe("MusicPersonalityContent - 基本レンダリング", () => {
         allTypesLayout="pill"
       />,
     );
-    expect(screen.getByText("🎧 このタイプの音楽的な弱み")).toBeInTheDocument();
+    expect(screen.getByText("このタイプの音楽的な弱み")).toBeInTheDocument();
     expect(screen.getByText("音楽的な弱み1")).toBeInTheDocument();
     expect(screen.getByText("音楽的な弱み2")).toBeInTheDocument();
   });
 
-  it("behaviorsセクションが表示されること（計画通りの絵文字🎤）", () => {
+  it("behaviorsセクションが表示されること（絵文字なし見出し）", () => {
     render(
       <MusicPersonalityContent
         content={sampleContent}
@@ -96,12 +99,12 @@ describe("MusicPersonalityContent - 基本レンダリング", () => {
         allTypesLayout="pill"
       />,
     );
-    expect(screen.getByText("🎤 このタイプの音楽あるある")).toBeInTheDocument();
+    expect(screen.getByText("このタイプの音楽あるある")).toBeInTheDocument();
     expect(screen.getByText("音楽あるある1")).toBeInTheDocument();
     expect(screen.getByText("音楽あるある4")).toBeInTheDocument();
   });
 
-  it("todayActionセクションが表示されること（計画通りの絵文字🎶）", () => {
+  it("todayActionセクションが表示されること（絵文字なし見出し）", () => {
     render(
       <MusicPersonalityContent
         content={sampleContent}
@@ -110,13 +113,13 @@ describe("MusicPersonalityContent - 基本レンダリング", () => {
         allTypesLayout="pill"
       />,
     );
-    expect(screen.getByText("🎶 今日の音楽ライフのヒント")).toBeInTheDocument();
+    expect(screen.getByText("今日の音楽ライフのヒント")).toBeInTheDocument();
     expect(
       screen.getByText("今日の音楽ライフのヒントテキスト"),
     ).toBeInTheDocument();
   });
 
-  it("全タイプ一覧が表示されること（計画通りの絵文字🎹）", () => {
+  it("全タイプ一覧が表示されること（絵文字なし見出し）", () => {
     render(
       <MusicPersonalityContent
         content={sampleContent}
@@ -125,7 +128,7 @@ describe("MusicPersonalityContent - 基本レンダリング", () => {
         allTypesLayout="pill"
       />,
     );
-    expect(screen.getByText("🎹 他のタイプも見てみよう")).toBeInTheDocument();
+    expect(screen.getByText("他のタイプも見てみよう")).toBeInTheDocument();
     expect(screen.getByText("フェス一番乗り族")).toBeInTheDocument();
     expect(screen.getByText("プレイリスト伝道師")).toBeInTheDocument();
   });
@@ -164,8 +167,11 @@ describe("MusicPersonalityContent - headingLevel prop", () => {
   });
 });
 
+// 新デザインでは旧 "pill"（横wrap・999px 角丸）を廃止し、内部で allTypesGrid に
+// マップしている。public props 型 "list" | "pill" は caller 互換のため維持する。
+// テストでは「"pill" で grid 系クラスが付く」「"list" で別系クラスが付く」「両者は別物」を担保する。
 describe("MusicPersonalityContent - allTypesLayout prop", () => {
-  it("allTypesLayout='pill' の場合、ピル型レイアウトクラスが適用されること", () => {
+  it("allTypesLayout='pill' の場合、グリッド型レイアウトクラスが適用されること", () => {
     const { container } = render(
       <MusicPersonalityContent
         content={sampleContent}
@@ -174,8 +180,11 @@ describe("MusicPersonalityContent - allTypesLayout prop", () => {
         allTypesLayout="pill"
       />,
     );
-    const pillList = container.querySelector("[class*='allTypesListPill']");
-    expect(pillList).not.toBeNull();
+    const gridList = container.querySelector("[class*='allTypesGrid']");
+    expect(gridList).not.toBeNull();
+    // 縦並びリストクラスは "pill" のときは存在しない
+    const listEl = container.querySelector("[class*='allTypesListVertical']");
+    expect(listEl).toBeNull();
   });
 
   it("allTypesLayout='list' の場合、リスト型レイアウトクラスが適用されること", () => {
@@ -189,6 +198,9 @@ describe("MusicPersonalityContent - allTypesLayout prop", () => {
     );
     const listEl = container.querySelector("[class*='allTypesListVertical']");
     expect(listEl).not.toBeNull();
+    // グリッドクラスは "list" のときは存在しない
+    const gridList = container.querySelector("[class*='allTypesGrid']");
+    expect(gridList).toBeNull();
   });
 });
 
@@ -242,7 +254,7 @@ describe("MusicPersonalityContent - 現在のタイプのハイライト", () =>
 });
 
 describe("MusicPersonalityContent - wrapper クラス", () => {
-  it("wrapperクラスを持つ最外層要素が存在すること（CSS変数定義のため）", () => {
+  it("wrapperクラスを持つ最外層要素が存在すること", () => {
     const { container } = render(
       <MusicPersonalityContent
         content={sampleContent}
@@ -256,7 +268,9 @@ describe("MusicPersonalityContent - wrapper クラス", () => {
   });
 });
 
-describe("MusicPersonalityContent - インラインスタイル不使用（CSS変数管理）", () => {
+// 新デザインでは独自トークン --music-accent-color / --music-accent-bg を全廃し、
+// インラインスタイルでの色注入も行わない。CSS は共通 --accent 系のみを参照する。
+describe("MusicPersonalityContent - インラインスタイル不使用", () => {
   it("sectionHeadingにインラインスタイルが設定されていないこと", () => {
     const { container } = render(
       <MusicPersonalityContent
@@ -301,5 +315,20 @@ describe("MusicPersonalityContent - 全タイプリンク", () => {
       "a[href*='/play/music-personality/result/']",
     );
     expect(links.length).toBeGreaterThanOrEqual(2);
+  });
+
+  it("全タイプ一覧の絵文字アイコン（r.icon）が描画されないこと", () => {
+    // 新デザインでは r.icon の描画を撤去。各タイプの区別はタイトル文言で行う。
+    render(
+      <MusicPersonalityContent
+        content={sampleContent}
+        resultId="festival-pioneer"
+        headingLevel={2}
+        allTypesLayout="pill"
+      />,
+    );
+    // モックデータの icon: "🎪" / "📢" がリスト中に出ないこと
+    expect(screen.queryByText("🎪")).toBeNull();
+    expect(screen.queryByText("📢")).toBeNull();
   });
 });

@@ -195,7 +195,11 @@ describe("ImpossibleAdviceContent - headingLevel prop", () => {
 });
 
 describe("ImpossibleAdviceContent - allTypesLayout prop", () => {
-  it("allTypesLayout='pill' の場合、ピル型レイアウトクラスが適用されること", () => {
+  // 新デザインでは旧 pill 型（角丸999px・派手色枠・font-weight 700）をやめ、
+  // CharacterPersonalityContent / YojiPersonalityContent と同じ allTypesGrid（2-3列）に
+  // 内部マッピングしている。public props "pill" を渡したときに所定のレイアウトクラスが
+  // 付くというテスト意図は保ったまま、新クラス名 allTypesGrid を検証する。
+  it("allTypesLayout='pill' の場合、全タイプ一覧のレイアウトクラスが適用されること", () => {
     const { container } = render(
       <ImpossibleAdviceContent
         quizSlug={sampleQuizSlug}
@@ -207,8 +211,36 @@ describe("ImpossibleAdviceContent - allTypesLayout prop", () => {
         resultColor={sampleColor}
       />,
     );
-    const pillList = container.querySelector("[class*='allTypesListPill']");
-    expect(pillList).not.toBeNull();
+    const gridList = container.querySelector("[class*='allTypesGrid']");
+    expect(gridList).not.toBeNull();
+    // "pill" と "list" は別レイアウトとして担保したいので縦リストクラスは付かない
+    const verticalList = container.querySelector(
+      "[class*='allTypesListVertical']",
+    );
+    expect(verticalList).toBeNull();
+  });
+
+  // ResultCard（インライン）経路は "list" を渡し、Character/Animal と同じ
+  // 縦リスト（allTypesListVertical）で表示する。8 variant 共通で
+  // インライン側の「他のタイプも見てみよう」を縦リストに揃えるための分岐。
+  it("allTypesLayout='list' の場合、allTypesListVertical レイアウトクラスが適用され allTypesGrid は付かないこと", () => {
+    const { container } = render(
+      <ImpossibleAdviceContent
+        quizSlug={sampleQuizSlug}
+        resultId="perfectionist"
+        detailedContent={sampleContent}
+        allResults={sampleAllResults}
+        headingLevel={3}
+        allTypesLayout="list"
+        resultColor={sampleColor}
+      />,
+    );
+    const verticalList = container.querySelector(
+      "[class*='allTypesListVertical']",
+    );
+    expect(verticalList).not.toBeNull();
+    const gridList = container.querySelector("[class*='allTypesGrid']");
+    expect(gridList).toBeNull();
   });
 });
 

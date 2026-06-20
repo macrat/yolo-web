@@ -224,7 +224,10 @@ describe("UnexpectedCompatibilityContent - headingLevel prop", () => {
 });
 
 describe("UnexpectedCompatibilityContent - allTypesLayout prop", () => {
-  it("allTypesLayout='pill' の場合、ピル型レイアウトクラスが適用されること", () => {
+  it("allTypesLayout='pill' の場合、新デザインでは pill 型を廃しグリッドにマップされること", () => {
+    // 新デザイン体系（cycle-254）では pill 型横並びチップは語彙にない。
+    // public props の "pill" は caller 互換のため受け取りは残すが、
+    // 内部実装では "grid" と同じ allTypesGrid クラスに倒される。
     const { container } = render(
       <UnexpectedCompatibilityContent
         quizSlug={sampleQuizSlug}
@@ -236,8 +239,11 @@ describe("UnexpectedCompatibilityContent - allTypesLayout prop", () => {
         resultColor={sampleColor}
       />,
     );
+    const gridEl = container.querySelector("[class*='allTypesGrid']");
+    expect(gridEl).not.toBeNull();
+    // 旧 pill クラスは存在しないこと（語彙ごと撤去された証跡）
     const pillList = container.querySelector("[class*='allTypesListPill']");
-    expect(pillList).not.toBeNull();
+    expect(pillList).toBeNull();
   });
 
   it("allTypesLayout='list' の場合、リスト型レイアウトクラスが適用されること", () => {
@@ -268,7 +274,8 @@ describe("UnexpectedCompatibilityContent - allTypesLayout prop", () => {
         resultColor={sampleColor}
       />,
     );
-    const gridEl = container.querySelector("[class*='allTypesListGrid']");
+    // 新デザインでは参照実装（Yoji / CharacterPersonality）と同名の allTypesGrid を使う
+    const gridEl = container.querySelector("[class*='allTypesGrid']");
     expect(gridEl).not.toBeNull();
   });
 });

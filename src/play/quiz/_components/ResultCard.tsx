@@ -269,7 +269,10 @@ function renderDetailedContent(
           detailedContent={content}
           allResults={allResults ?? []}
           headingLevel={3}
-          allTypesLayout="pill"
+          // ResultCard（インライン）経路は 8 variant 共通で縦リスト統一。
+          // page.tsx 側は "pill"（内部 grid）で揃える。surface ごとに別語彙にして
+          // 「他のタイプも見てみよう」の質感をそれぞれの面で揃える。
+          allTypesLayout="list"
           resultColor={resultColor ?? ""}
         />
       );
@@ -294,7 +297,8 @@ function renderDetailedContent(
           content={content}
           resultId={resultId}
           headingLevel={3}
-          allTypesLayout="pill"
+          // インライン経路は縦リスト統一（surface 内の質感を揃えるため）
+          allTypesLayout="list"
           referrerTypeId={referrerTypeId}
         />
       );
@@ -316,7 +320,8 @@ function renderDetailedContent(
           resultId={resultId}
           resultColor={resultColor ?? ""}
           headingLevel={3}
-          allTypesLayout="pill"
+          // インライン経路は縦リスト統一（surface 内の質感を揃えるため）
+          allTypesLayout="list"
         />
       );
     case "character-personality":
@@ -338,7 +343,8 @@ function renderDetailedContent(
           detailedContent={content}
           allResults={allResults ?? []}
           headingLevel={3}
-          allTypesLayout="pill"
+          // インライン経路は縦リスト統一（surface 内の質感を揃えるため）
+          allTypesLayout="list"
           resultColor={resultColor ?? ""}
           // ResultCard内では afterLifeAdvice スロットは不要（一人完結型のため）
         />
@@ -351,7 +357,8 @@ function renderDetailedContent(
           detailedContent={content}
           allResults={allResults ?? []}
           headingLevel={3}
-          allTypesLayout="pill"
+          // インライン経路は縦リスト統一（surface 内の質感を揃えるため）
+          allTypesLayout="list"
           resultColor={resultColor ?? ""}
           // ResultCard内では afterPracticalTip スロットは不要
         />

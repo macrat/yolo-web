@@ -162,7 +162,9 @@ describe("AnimalPersonalityContent - headingLevel prop", () => {
 });
 
 describe("AnimalPersonalityContent - allTypesLayout prop", () => {
-  it("allTypesLayout='pill' の場合、ピル型レイアウトクラスが適用されること", () => {
+  // 新デザイン言語ではピル型は廃止し、"pill" は内部で grid にマップする（caller 互換のため
+  // public props の文字列値自体は維持）。Character/Music/Yoji 等と質感を揃える方針。
+  it("allTypesLayout='pill' の場合、grid レイアウトクラスにマップされること", () => {
     const { container } = render(
       <AnimalPersonalityContent
         content={sampleContent}
@@ -171,12 +173,20 @@ describe("AnimalPersonalityContent - allTypesLayout prop", () => {
         allTypesLayout="pill"
       />,
     );
-    // pillクラスを持つul要素が存在すること
+    // gridクラスを持つul要素が存在すること
+    const gridList = container.querySelector("[class*='allTypesGrid']");
+    expect(gridList).not.toBeNull();
+    // 旧 pill クラスは撤去済みであるべき（撤去の証跡）
     const pillList = container.querySelector("[class*='allTypesListPill']");
-    expect(pillList).not.toBeNull();
+    expect(pillList).toBeNull();
+    // list（縦並び）レイアウトとは別物であること
+    const verticalList = container.querySelector(
+      "[class*='allTypesListVertical']",
+    );
+    expect(verticalList).toBeNull();
   });
 
-  it("allTypesLayout='list' の場合、リスト型レイアウトクラスが適用されること", () => {
+  it("allTypesLayout='list' の場合、縦並びリスト型レイアウトクラスが適用されること", () => {
     const { container } = render(
       <AnimalPersonalityContent
         content={sampleContent}
@@ -188,6 +198,9 @@ describe("AnimalPersonalityContent - allTypesLayout prop", () => {
     // listクラスを持つul要素が存在すること
     const listEl = container.querySelector("[class*='allTypesListVertical']");
     expect(listEl).not.toBeNull();
+    // grid とは別物であること
+    const gridList = container.querySelector("[class*='allTypesGrid']");
+    expect(gridList).toBeNull();
   });
 });
 

@@ -1,19 +1,34 @@
-/* 「他のタイプも見てみよう」回遊ナビ。
-   タイプ名が長い診断（word-sense-personality は furigana 付きで長い）でも崩れないよう、
-   全幅の縦リスト行レイアウトを採る（pill だと長ラベルが不揃いに折り返すため）。
-   character/animal などラベルの長い多タイプ診断が使う縦リストと同系統。 */
+/*
+ * OtherTypesNav: 「他のタイプも見てみよう」回遊ナビ。新デザイン体系（DESIGN.md）。
+ * ResultCard（インライン結果）と (legacy)/play/[slug]/result/[resultId]/page.tsx（静的結果ページ）の
+ * 両方から共有される。
+ *
+ * 設計方針（cycle-254 / CharacterPersonalityContent.module.css の allTypesListVertical を参照実装とする）:
+ * - 左寄せ・新トークンのみ・font-weight は最大 600・絵文字なし・影なし。
+ * - 旧トークン（--color-text / --color-border / --color-bg-secondary / --color-primary）は廃止し
+ *   新トークン（--fg / --border / --bg-soft / --accent 系）へ寄せる。
+ * - タイプごとの派手色（--type-color）を装飾から外し、現在タイプは共通アクセント枠＋淡い面で示す。
+ *   個性は「色」ではなく「タイトル文言」で立てる（絵文字も TSX 側で描画しない）。
+ * - 角丸は操作要素 = --r-interactive。
+ *
+ * タイプ名が長い診断（word-sense-personality は furigana 付きで長い）でも崩れないよう、
+ * 全幅の縦リスト行レイアウトを採る（pill だと長ラベルが不揃いに折り返すため）。
+ */
+
 .section {
   margin-top: 2rem;
   padding-top: 1.5rem;
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid var(--border);
 }
 
+/* 見出し: ResultCard detailedHeading 言語に倣う（左罫線＋左寄せ、font-weight 600） */
 .heading {
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 600;
-  text-align: center;
-  color: var(--color-text);
+  color: var(--fg);
   margin: 0 0 1rem;
+  padding-left: 0.75rem;
+  border-left: 3px solid var(--accent);
 }
 
 .list {
@@ -25,18 +40,21 @@
   gap: 0.5rem;
 }
 
-/* 行はリンク/現在 span ともに同じ寸法。縦パディングを広めに取り、
-   モバイルでもタップしやすい行高（約44px）を確保する。 */
+/* 行はリンク / 現在 span ともに同じ寸法。縦パディングを広めに取り、
+   モバイルでもタップしやすい行高（約44px）を確保する。
+   現在タイプの枠線（1px solid --accent）と高さをそろえるため、
+   非現在項目側にも透明枠を持たせる（参照: CharacterPersonalityContent allTypesListVertical）。 */
 .item > a,
 .itemCurrent > span {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.625rem 0.875rem;
-  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid transparent;
+  border-radius: var(--r-interactive);
   font-size: 0.9rem;
   line-height: 1.4;
-  color: var(--color-text);
+  color: var(--fg);
   text-decoration: none;
   transition: background-color 0.15s ease;
   /* タイプ名は「柔和温順（にゅうわおんじゅん）タイプ」のように長い。狭い幅で折り返す際に
@@ -46,20 +64,18 @@
   overflow-wrap: anywhere;
 }
 
-.item > a {
-  border: 1px solid var(--color-border);
-}
-
 .item > a:hover {
-  background-color: var(--color-bg-secondary);
+  background-color: var(--bg-soft);
 }
 
-/* 現在の自タイプ: 背景＋太字に加え、左端にタイプ色のアクセントバーを出す。
-   背景フィルが薄いライトモードでも「自分のタイプ」が一目で分かるようにするため、
-   識別をタイプ色の枠に依存させる。 */
+.item > a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* 現在のタイプ: 色ではなくアクセント枠＋淡い面で「今ここ」を静かに示す。
+   font-weight は上げない（700 は使わない）。 */
 .itemCurrent > span {
-  background-color: var(--color-bg-secondary);
-  font-weight: 700;
-  border: 1px solid var(--color-border);
-  border-left: 3px solid var(--type-color, var(--color-primary));
+  border: 1px solid var(--accent);
+  background-color: var(--accent-soft);
 }

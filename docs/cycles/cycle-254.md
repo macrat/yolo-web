@@ -2,7 +2,7 @@
 id: 254
 description: デザイン移行 Phase 8.2 の第二弾として、最も見られている旅程の終点である「クイズのインライン結果本文」を (new)/ デザインへゼロベースで本格再設計する。cycle-253 で枠（ResultCard）まで新化済みのインライン結果の中身——variant 別結果本文8本（*Content.tsx + *.module.css）と OtherTypesNav に残る絵文字・派手な type-color 罫線・中央寄せ・旧トークンを、ResultCard の新デザイン言語へ genuine に統一する。検索着地の主経路（プレイ画面内で完結するインライン結果。静的結果ページURLへの流入は実測7PV/28日と僅少）の質感断裂を本質的に解消する。
 started_at: "2026-06-20T08:16:23+0900"
-completed_at: null
+completed_at: "2026-06-20T11:01:31+09:00"
 ---
 
 # サイクル-254
@@ -19,16 +19,17 @@ cycle-253 でインライン結果の**枠**（`ResultCard`）は新化した（
 
 ## 実施する作業
 
-- [ ] 視覚的グラウンディング：移行済みプレイルート上で主要クイズ（character-personality / traditional-color / yoji-personality / animal-personality 等、`*Content` を持つもの）を実機で12問完了させ、インライン結果の「新化済みの枠（ResultCard chrome）」と「旧質感の本文（\*Content）」の境界を実機スクショで観察・言語化する
-- [ ] 新化の共通方針シートを作成（`tmp/`）：ResultCard.module.css の新デザイン言語（左寄せ・新トークン・絵文字なし・共通アクセント統一・角丸 2px/8px・bold 不使用）への、旧質感（絵文字 ::before / type-color 罫線 / 中央寄せ / 旧トークン / 角丸 10px）からの対応方針。`--type-color` は装飾（罫線・見出し色・薄敷き背景）としての使用をやめ共通 `--accent` に寄せる。ただし**色そのものが診断内容である traditional-color の色見本**は内容として保持する旨を明記
-- [ ] 参照実装の確立：流入最上位かつ代表構造（archetypeBreakdown＋behaviors＋characterMessage＋allTypes）を持つ `CharacterPersonalityContent`（.tsx + .module.css）を builder が genuine 新化 → reviewer 承認を得て残りの基準とする
-- [ ] 残り7本の `*Content`（Animal / Contrarian / ImpossibleAdvice / Music / TraditionalColor / UnexpectedCompatibility / YojiPersonality）を参照実装基準で genuine 新化（各1サブエージェント。1本ずつ委譲しトレーサビリティを確保）
-- [ ] `OtherTypesNav.module.css` を新化（中央寄せ見出し・`--type-color` 左罫線・旧トークンを ResultCard 言語へ）
-- [ ] 実機の視覚確認：新化した全8クイズのインライン結果を w360・w1280 × light・dark で撮影し、新デザイン世界観に genuine に到達しているか（色だけの上塗りでないか＝AP-P28）を評価
-- [ ] 退行確認：本文を共有する静的結果ページ（`(legacy)/play/<slug>/result/[resultId]`）が破綻していないこと（過渡的整合：新本文が旧枠の中に出る状態が「壊れておらず、むしろ改善」であることを実機確認）
-- [ ] テスト調整（再設計に伴う assertion 追従。安易な skip 禁止）
-- [ ] レビュー依頼（reviewer に「色だけの上塗りになっていないか」「ResultCard の新デザイン言語と整合するか」「8本のクイズ間で質感が割れていないか」を重点観点として明示）と指摘対応
-- [ ] backlog.md 更新（キャリーオーバー登録）
+- [x] 視覚的グラウンディング：移行済みプレイルート上で主要クイズ（character-personality / traditional-color / animal-personality）を実機で12問完答させ、インライン結果の「新化済みの枠（ResultCard chrome）」と「旧質感の本文（\*Content）」の境界を実機スクショで観察・言語化（`tmp/grounding-*-w360-{light,dark}-*.png`）
+- [x] 新化の共通方針シートを作成（`tmp/content-newdesign-spec.md`）：ResultCard 言語への変換指針、AP-P28 回避基準、color-as-content 例外条項を明文化
+- [x] 参照実装の確立：流入最上位 `CharacterPersonalityContent`（.tsx + .module.css）を builder が genuine 新化 → reviewer 承認（7本展開の基準として確定）
+- [x] 残り7本の `*Content`（Animal / Contrarian / ImpossibleAdvice / Music / TraditionalColor / UnexpectedCompatibility / YojiPersonality）を参照実装基準で genuine 新化（バッチ1: 4並列＋バッチ2: 4並列）
+- [x] `OtherTypesNav.module.css` / `.tsx` を新化（中央寄せ撤去・絵文字描画除去・現在タイプを `--accent` 枠＋`--accent-soft` 面へ）
+- [x] **pill→grid の統一**：page.tsx caller の `"pill"` 値を内部で grid にマップ。最終レビューで ResultCard インライン経路の 5 variant が grid に倒れていた不整合（質感断裂）が発覚し、ResultCard caller を全 8 variant 縦リスト統一に修正（reviewer ブロッカー対応）
+- [x] 実機の視覚確認：8 variant のインライン結果と静的結果ページを w360 light/dark で撮影し、新デザイン世界観への genuine 到達、絵文字撤去、色飛びなしを評価（`tmp/ref-*-after-*.png`）
+- [x] 退行確認：本文を共有する静的結果ページ（`(legacy)/play/<slug>/result/[resultId]`）が破綻していないことを実機確認（過渡的整合：新本文が旧枠の中に出る状態が「壊れておらず、むしろ改善」）
+- [x] テスト調整（pill→grid 追従・絵文字除去・layout 排他 assert 追加。安易な skip なし。5586→5588 件 pass）
+- [x] レビュー依頼と指摘対応（参照実装承認 → 最終一括レビューでブロッカー検出 → 修正 → 再レビュー承認）
+- [x] backlog.md 更新（B-522 partial 完了、B-523/B-524 を Queued 追加）
 
 ## 作業計画
 
@@ -77,11 +78,59 @@ cycle-253 でインライン結果の**枠**（`ResultCard`）は新化した（
 
 ## レビュー結果
 
-（実装後に記入）
+### 参照実装レビュー（reviewer 承認・基準確立）
+
+最頻出 character-personality（62PV/28日）の本格再設計を builder が完了後、reviewer が DESIGN.md / 方針シート / 実機（Playwright で w360 light/dark）/ ResultCard 言語との地続き性 / caller 互換 / dead code 整理 を点検。
+
+- **総合判定: 承認（7本展開の基準として採用可）**。色だけの上塗りではなく構造ごと作り直し（AP-P28 回避）：CSS `::before` の 🎭 と TSX の `r.icon` 描画を完全撤去。type-color 注入は caller 互換のため受け取りだけ残し装飾では参照しない方針。見出しは ResultCard `detailedHeading` 言語、リストはアクセント縦線マーカー、archetypeBreakdownCard は `--accent-soft`＋`--accent-strong`、characterMessageCard は中立 `--bg-soft` でトーンを使い分け。実機 dark で本文 `rgb(232,232,229)` がダーク面に乗り十分なコントラスト。
+- **申し送り**: マーカー有無を各 \*Content の元構造に応じ明示的に揃える／`--type-color` は traditional-color のみ実消費・他は caller 互換で残置。
+
+### 最終一括レビュー（ブロッカー検出 → 修正 → 承認）
+
+8本＋OtherTypesNav の全変更を reviewer が一括点検。
+
+#### 第1回（ブロッカー検出）
+
+- 残7本＋OtherTypesNav は genuine に新デザイン言語へ統一されている（絵文字・旧トークン・独自トークン `--animal-accent-*`/`--music-accent-*`・`font-weight: 700`・`text-align: center`・ハードコード色をすべて撤去。tests も pill→grid 追従＋排他 assert 追加で意図を骨抜きにせず保持）。
+- **ブロッカー指摘**: PM の「`*Content` の `"pill"` を内部で grid にマップ」判断は page.tsx caller までしか追っておらず、**`ResultCard.tsx`（インライン caller）でも 5 variant（Music/Yoji/Contrarian/Unexpected/Impossible）に `"pill"` を渡していたため、インラインで Animal/Color/Character は縦リスト、他5本は grid 2列に割れた**。完了基準 #5「8 クイズ間で質感が揃う」に正面から反する。AP-WF（caller 監査の漏れ）。
+
+#### 修正（builder）
+
+- `ResultCard.tsx` の 5 か所を `allTypesLayout="pill"` → `"list"` に変更。
+- ContrarianFortune と ImpossibleAdvice は型が `"pill"` 単一だったため、`"list" | "pill"` に拡張し `.allTypesListVertical` クラスを参照実装と同型で追加し、内部マップを `"pill"→allTypesGrid` / `"list"→allTypesListVertical` に。
+- テストに排他 assert を追加（`"list"` で vertical が付き grid が付かない／`"pill"` で逆、を両方向で）。
+
+#### 第2回（再レビュー・承認）
+
+- インライン経路で 8 variant 全て `allTypesListVertical` に統一されたことを実機確認（Character / Animal / Yoji / Music / TraditionalColor / Unexpected / Contrarian / Impossible いずれも縦リスト・flex column）。静的結果ページ caller は `"pill"`→grid のまま無変更で動く（実機で contrarian-fortune の grid 2列維持を確認）。
+- ContrarianFortune / Impossible の `.allTypesListVertical` は CharacterPersonalityContent 169-202 行と完全同型（flex column / gap 0.5rem / 透明枠で高さ整合 / `--r-interactive` 角丸 / 現在タイプ `--accent` 枠＋`--accent-soft` 面）。
+- 過渡的整合（ResultPageShell の旧枠の中に新本文が出る状態）は実機で各クイズの静的結果ページを確認し「破綻ではなく改善」を満たすことを確認。
+- **総合判定: 承認**。ゲート4種（lint / format / test 334ファイル 5588件 / build）すべて clean。完了基準 #5 がインライン surface・page surface 両方で達成。
+
+reviewer の振り返り推奨（任意・本サイクル PM の AP-WF 抵触の具体化）:
+
+1. **caller 監査の漏れ**: prop 値の内部マッピング方針変更時は、**全 caller（grep 等で網羅）を必ず一度通読**してから判断を確定する。今回 PM は page.tsx caller のみ確認し ResultCard caller を見落とした。
+2. **surface ごとの語彙分離**: `"list" / "pill"` という public 型は dead literal 状態でやや誤解を招く（B-524 で整理）。
+
+### ブログ（書かない判断）
+
+本サイクルの経験＝「CSS Module 移行で内部マッピングを判断したが caller 監査が漏れて UI 質感が割れ、reviewer 指摘で根治した」は、サイト来訪者にとっての価値が薄い（オーケストレーション読者には平凡、Web 製作読者には固有構成依存、日記読者には他サイクルと差別化できない）。AP-W12（誰に向けた何の一文かを確定せず素材ありきで書きにいかない）に従い書かない。
 
 ## キャリーオーバー
 
-（実装後に確定。想定される後続：静的結果ページ群の枠＝ResultPageShell 新化とルート移行、ゲーム・daily 移行、タイル化方針決定、過渡的トークン定義の撤去。すべて B-522 傘下で backlog にも記載する。）
+すべて B-522 傘下。
+
+- **B-523（次サイクル必須）**: 静的結果ページ群の枠 `ResultPageShell` の新デザイン移行＋ルート移動（`(legacy)→(new)`）。共通結果ページ `[slug]/result/[resultId]` の枠を新化し、Type C 専用結果8本の page.tsx／opengraph-image.tsx を (new) へ。本サイクルで本文が新化されたため「過渡的整合（新本文 in 旧枠）」を解消する後続。
+- **B-524（次サイクル送り・低優先）**: `*Content.tsx` の public props 型 `allTypesLayout: "list" | "pill"` を `"vertical" | "grid"`（または `"list" | "grid"`）の意味通り命名へ整理し、`"pill"` の dead literal を撤去。page.tsx caller も合わせて置換。
+- ゲーム4種・daily の (new)/ 移行（`RelatedGames` 等の絵文字除去同梱）— B-522 残り。
+- 遊びコンテンツのタイル化方針の決定（B-295/B-493 統合）— B-522 残り。
+- 過渡的トークン定義（old-globals.css 側）の撤去（Phase 11.2/11.5）— Phase 11 一括対応。
+
+### 本サイクルで PM が抵触したアンチパターン（記録）
+
+新規 AP は乱立させず、既存への再発として記録する。今サイクルで PM が抵触したのは:
+
+- **AP-WF（PM の責務範囲）**: 「`*Content` の `"pill"` 値を内部で grid にマップ」という方針を全 8 本に適用するとき、page.tsx caller のみ確認し ResultCard.tsx caller を見落とした。「prop 値→内部マッピング」を方針として降ろす前に、全 caller を grep で網羅して通読すべき。reviewer がブロッカーとして検出してくれたが、本来は計画段階で気づくべきだった。後続 PM へ：**prop 値の意味を変える変更は、その prop が登場する全 caller を必ず確認する。dead literal 化や内部マッピングは特に注意（caller 側で何が起きるか変わる）**。
 
 ## 補足事項
 
@@ -91,13 +140,13 @@ cycle-253 でインライン結果の**枠**（`ResultCard`）は新化した（
 
 ## サイクル終了時のチェックリスト
 
-- [ ] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
-- [ ] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
-- [ ] すべての変更がレビューされ、残存する指摘事項が無くなっている。
-- [ ] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
-- [ ] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
-- [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
-- [ ] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
+- [x] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
+- [x] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
+- [x] すべての変更がレビューされ、残存する指摘事項が無くなっている。
+- [x] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
+- [x] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
+- [x] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
+- [x] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
 
 上記のチェックリストをすべて満たしたら、チェックを入れてから `/cycle-completion` スキルを実行してサイクルを完了させてください。
 なお、「環境起因」「今回の変更と無関係」「既知の問題」「次回対応」などの **例外は一切認めません** 。必ずすべての項目を完全に満してください。

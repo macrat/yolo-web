@@ -191,7 +191,12 @@ describe("YojiPersonalityContent - headingLevel prop", () => {
 });
 
 describe("YojiPersonalityContent - allTypesLayout prop", () => {
-  it("allTypesLayout='pill' の場合、ピル型レイアウトクラスが適用されること", () => {
+  // 新デザイン体系（cycle-254）で、旧 "pill"（角丸999px ピル＋--type-color 枠）を廃し、
+  // CharacterPersonalityContent と同じ allTypesGrid（2-3列グリッド）に統一した。
+  // 一方 public props signature 互換のため `allTypesLayout: "list" | "pill"` の型は維持し、
+  // 内部実装で "pill" を allTypesGrid クラスへマップしている。
+  // テストは pill / list で **別物の** レイアウトクラスが付くことを担保する。
+  it("allTypesLayout='pill' の場合、グリッド型レイアウトクラスが適用されること（pill は新デザインで grid へマップ）", () => {
     const { container } = render(
       <YojiPersonalityContent
         content={sampleContent}
@@ -201,11 +206,17 @@ describe("YojiPersonalityContent - allTypesLayout prop", () => {
         allTypesLayout="pill"
       />,
     );
-    const pillList = container.querySelector("[class*='allTypesListPill']");
-    expect(pillList).not.toBeNull();
+    // pill 指定時はグリッドクラスが付く
+    const gridList = container.querySelector("[class*='allTypesGrid']");
+    expect(gridList).not.toBeNull();
+    // 同時に list 用の縦並びクラスは付かない（pill/list で別物のレイアウトであることの担保）
+    const verticalList = container.querySelector(
+      "[class*='allTypesListVertical']",
+    );
+    expect(verticalList).toBeNull();
   });
 
-  it("allTypesLayout='list' の場合、リスト型レイアウトクラスが適用されること", () => {
+  it("allTypesLayout='list' の場合、縦並びリスト型レイアウトクラスが適用されること", () => {
     const { container } = render(
       <YojiPersonalityContent
         content={sampleContent}
@@ -217,6 +228,9 @@ describe("YojiPersonalityContent - allTypesLayout prop", () => {
     );
     const listEl = container.querySelector("[class*='allTypesListVertical']");
     expect(listEl).not.toBeNull();
+    // 同時に grid クラスは付かない（pill/list で別物のレイアウトであることの担保）
+    const gridList = container.querySelector("[class*='allTypesGrid']");
+    expect(gridList).toBeNull();
   });
 });
 

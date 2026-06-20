@@ -46,18 +46,19 @@ export default function OtherTypesNav({
       <ul className={styles.list}>
         {results.map((r) => {
           const isCurrent = r.id === currentResultId;
-          const label = (
-            <>
-              {r.icon && <span aria-hidden="true">{r.icon}</span>}
-              <span>{r.title}</span>
-            </>
-          );
+          // 新デザインでは絵文字アイコン（r.icon）を描画しない（DESIGN.md: 絵文字は使わない）。
+          // 各タイプの区別はタイトル文言で行う。caller 互換のため OtherTypesNavResult 型からは
+          // icon を削らず受け取りだけ残す（静的結果ページ・ResultCard の signature を壊さないため）。
+          const label = <span>{r.title}</span>;
           return (
             <li
               key={r.id}
               className={isCurrent ? styles.itemCurrent : styles.item}
             >
               {isCurrent ? (
+                // r.color（タイプ色）は新デザインでは装飾に使わないが、
+                // 既存テストおよび caller 互換のため --type-color の CSS 変数注入は維持する
+                // （CSS 側では参照しないため装飾としては無効。dead 注入だが互換目的で残す）。
                 <span
                   aria-current="page"
                   style={

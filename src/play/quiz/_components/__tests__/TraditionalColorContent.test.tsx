@@ -183,7 +183,9 @@ describe("TraditionalColorContent - headingLevel prop", () => {
 });
 
 describe("TraditionalColorContent - allTypesLayout prop", () => {
-  it("allTypesLayout='pill' の場合、ピル型レイアウトクラスが適用されること", () => {
+  // cycle-254 バッチ2: public props "pill" は維持しつつ、内部実装は 8 クイズ間で質感を揃えるため
+  // grid レイアウト（.allTypesGrid、参照実装 CharacterPersonalityContent と同パターン）にマップされる。
+  it("allTypesLayout='pill' の場合、内部でグリッドレイアウトクラス（.allTypesGrid）に倒されること", () => {
     const { container } = render(
       <TraditionalColorContent
         content={sampleContent}
@@ -193,8 +195,18 @@ describe("TraditionalColorContent - allTypesLayout prop", () => {
         allTypesLayout="pill"
       />,
     );
-    const pillList = container.querySelector("[class*='allTypesListPill']");
-    expect(pillList).not.toBeNull();
+    const gridList = container.querySelector("[class*='allTypesGrid']");
+    expect(gridList).not.toBeNull();
+    // 旧 pill クラスが残っていないこと（pill 撤去の証跡）
+    const legacyPillList = container.querySelector(
+      "[class*='allTypesListPill']",
+    );
+    expect(legacyPillList).toBeNull();
+    // レイアウトは vertical list とは別物であること（'list' レイアウトとの差を維持）
+    const verticalList = container.querySelector(
+      "[class*='allTypesListVertical']",
+    );
+    expect(verticalList).toBeNull();
   });
 
   it("allTypesLayout='list' の場合、リスト型レイアウトクラスが適用されること", () => {
@@ -209,6 +221,9 @@ describe("TraditionalColorContent - allTypesLayout prop", () => {
     );
     const listEl = container.querySelector("[class*='allTypesListVertical']");
     expect(listEl).not.toBeNull();
+    // grid とは別物であること（layout 切り替えが効いていることの証跡）
+    const gridList = container.querySelector("[class*='allTypesGrid']");
+    expect(gridList).toBeNull();
   });
 });
 
@@ -312,6 +327,31 @@ describe("TraditionalColorContent - 全タイプ一覧の色ドット", () => {
     const colorDots = container.querySelectorAll("[class*='colorDot']");
     // モックには3タイプあるので3つのドットが存在すること
     expect(colorDots.length).toBe(3);
+  });
+
+  // color-as-content: pill→grid 移行後も grid 各セル内に色ドットが描画されつづけること、
+  // 各ドットが伝統色を inline backgroundColor として実色保持していることを担保する。
+  it("grid レイアウト下でも各セル内に色ドットが描画され、r.color が実色として注入されていること", () => {
+    const { container } = render(
+      <TraditionalColorContent
+        content={sampleContent}
+        resultId="ai"
+        resultColor={sampleColor}
+        headingLevel={2}
+        allTypesLayout="pill"
+      />,
+    );
+    const gridList = container.querySelector("[class*='allTypesGrid']");
+    expect(gridList).not.toBeNull();
+    // grid 配下の色ドットがモックのタイプ数（3）と一致すること
+    const dotsInGrid = gridList?.querySelectorAll(
+      "[class*='colorDot']",
+    ) as NodeListOf<HTMLElement>;
+    expect(dotsInGrid.length).toBe(3);
+    // 各色ドットに inline backgroundColor が注入されていること（dark でも実色保持の根拠）
+    dotsInGrid.forEach((dot) => {
+      expect(dot.style.backgroundColor).not.toBe("");
+    });
   });
 });
 
