@@ -36,7 +36,8 @@ completed_at: null
 - [x] **最小実装1a（A/B バリアント割当 util）**: `src/lib/ab/` に SSR セーフな端末内乱択割当を実装(20件テスト・dc7cd510)。記録経路(analytics.ts への arm 注入)は波2で実施
 - [x] **最小実装2（リリース識別子）**: `release` を `VERCEL_GIT_COMMIT_SHA → git → unknown` フォールバックで解決する codegen を実装し `gtag('config', ..., { release })` で全イベント自動付与(10件テスト・dc7cd510)
 - [x] **最小実装3（反復可能な比較クエリ）**: `docs/sql/ab-value-metrics.sql` を確定(variant別/release別/ベイズ素データ。実BigQueryでベースライン完全一致・dc7cd510)
-- [ ] **最小実装1b（analytics.ts へ arm 注入経路追加）**: `trackContentStart`/`trackContentEnd` に `ab_variant`/`experiment_id` を載せる経路を追加。波1の `getAbArm` を caller から受けて GA に渡す。`release` は GA config 経由で自動付与済みのため二重付与しない
+- [x] **最小実装1b（analytics.ts へ arm 注入経路追加）**: trackContentStart/End/Share/Rating に optional `ab` 引数追加(44件テスト・72535f79)。release二重付与なし・toolbox variant と衝突なし・undefined送信なし
+- [x] **波3（最初の実 A/B 仕込み）**: retro バリアント（旧 `*Content` 8本＋`OtherTypesNav`）を `d804b5d1` から `src/play/quiz/_components/_experiments/legacy-result/` へ隔離複製。ResultCard の 3 系統（`renderDetailedContent` の 8 case ＋`renderStandardContent` 経路＋共有 `OtherTypesNav`）に arm 切替を通し、`QuizContainer` で `useAbVariant("quiz_result_visual_v1")` を 1 か所だけ呼んで GA `level_start`/`level_end` に `ab_variant`/`experiment_id` を付与。**personality 系のみ実験対象化**（knowledge クイズは視覚差分 0px ゆえ ab 非付与＝独立変数の純度確保）。`OtherTypesNavAb` は arm を props で受ける純粋コンポーネント。`allTypesLayout` は両 arm `"list"` に固定（pill/list 差は独立変数の外）。撤去用 `EXPERIMENT: quiz_result_visual_v1` マーカーを 8 ファイルに付与（`grep -rn` で網羅）。設計書 `docs/visitor-value-measurement.md` 論点2 に例外規定追記、`docs/sql/ab-value-metrics.sql` に `level_start`/`level_end` 非対称コメント追加
 - [ ] **運用接続**: 残る B-522 移行（B-523・ゲーム・daily・タイル化）と既移行高リスク面に A/B をどう適用するかの手順を文書化。最初の実 A/B（上記選定）の段取りと、既移行面の retro A/B を来訪者価値レバレッジで判断する基準を明記
 - [ ] **視覚/動作確認**: バリアント割当と `release`／`variant` パラメータが本番ビルドの GA4 イベントに実際に乗ることを実機（Playwright で gtag/dataLayer 観測）で確認。両バリアントが w360/w1280 light/dark で破綻しないこと
 - [ ] **テスト**: バリアント割当ロジック・リリース識別子生成・GA4 記録のユニットテスト追加（既存 analytics.test / GoogleAnalytics.test の流儀。安易な skip なし）

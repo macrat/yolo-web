@@ -85,6 +85,7 @@
 - 剥ぎ落としは**共通のデザイン言語の置換**（絵文字/カラフル/中央寄せ → アクセント縦線・左罫線見出し・左寄せ）であり、個別クイズ固有のロジックではない。`ResultCard` + `*Content` + `OtherTypesNav` という共通描画系に一様に効く。
 - したがって「旧デザイン言語 vs 新デザイン言語」を**全クイズのインライン結果に一括適用**し、観測を横断プールして **1つの A/B 実験**として読むのが正しい（論点3の検出力要件とも整合。単一クイズでは量が足りない）。
 - 例外: `TraditionalColor` の色見本（`r.color` 色ドット）は cycle-254 でも color-as-content 例外として保持された。旧バリアント復活でも**この例外は arm によらず共通**に保つ（旧/新で機能差を作らない＝公平な比較のため）。
+- 例外（追記・cycle-255 波3 builder 知見）: `allTypesLayout`（「他のタイプも見てみよう」の **pill / list** レイアウト差）は cycle-254 で全 variant 縦リスト統一されたため、本実験では **arm 非依存（両 arm 共通で `"list"`）を例外として固定**する。これは独立変数を「絵文字/カラフル vs ミニマル」に集中させ、`pill`（grid 2列）vs `list`（縦列）という layout 差が A/B の効果量を希釈するのを防ぐため。位置づけは `TraditionalColor` の色見本例外と同じ（公平な比較のため arm 間で機能差を作らない）。retro 側の `ContrarianFortuneContent` / `ImpossibleAdviceContent` は当時 (d804b5d1) `"pill"` 単一だったため、`_experiments/legacy-result/` 配下の同 CSS Module に `.allTypesListVertical` クラスを追加し、prop 型を `"pill" | "list"` に広げる最小改修を入れた（独立変数の保護が retro の「完全コピー」原則に優先する場面）。
 
 ### 撤去予定コードの一時復活と `design-migration-plan.md` との整合（矛盾しない置き方）
 

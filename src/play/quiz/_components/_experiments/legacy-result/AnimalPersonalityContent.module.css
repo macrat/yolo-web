@@ -1,0 +1,253 @@
+/*
+ * AnimalPersonalityContent 共通コンポーネントのスタイル。
+ * ResultCard.tsx（受検者向け）と page.tsx（第三者向け）の両方から使用される。
+ *
+ * page.tsx版（UI/UXレビュー済み）を基準にスタイルを統一する。
+ * - strengthsItem: "✨" マーカー、薄い緑背景（border なし）
+ * - weaknessesItem: "😅" マーカー、薄いオレンジ背景（border なし）
+ * - behaviorsItem: "💡" マーカー、border付き
+ * - allTypesList: "list"（縦並び）と "pill"（ピル型横wrap）の2レイアウト
+ */
+
+/* ============================================================
+   CSS変数: アクセントカラー（ダークモード対応）
+   ライトモード: #15803d（animal-personalityのaccentColorと同値）
+   ダークモード: #4ade80（WCAG AA準拠のより明るい緑）
+   ============================================================ */
+.wrapper {
+  --animal-accent-color: #15803d;
+  /* アクセントカラー18%透過背景（todayActionCardで使用） */
+  --animal-accent-bg: rgba(21, 128, 61, 0.094);
+}
+
+/* ダーク背景 #1a1a2e に対してWCAG AA準拠（コントラスト比 4.5:1以上）の緑 */
+:global(.dark) .wrapper {
+  --animal-accent-color: #4ade80;
+  /* ダークモード用透過背景: ライトに比べ視認性を高める */
+  --animal-accent-bg: rgba(74, 222, 128, 0.12);
+}
+
+/* ============================================================
+   セクション見出し
+   ============================================================ */
+
+/* headingLevel に応じて h2 または h3 が生成される */
+.sectionHeading {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  padding-left: 0.75rem;
+  border-left: 4px solid currentColor;
+  /* 色はCSS変数で制御（wrapperクラスで --animal-accent-color を定義） */
+  color: var(--animal-accent-color);
+}
+
+/* ============================================================
+   strengths リスト
+   ============================================================ */
+.strengthsList {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.strengthsItem {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--color-text);
+  padding: 0.625rem 0.875rem;
+  border-radius: 8px;
+  /* 強みは薄い緑背景で視覚的に強調 */
+  background: rgba(22, 163, 74, 0.06);
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+/* ダークモード: 背景の不透明度を上げてライト時と同等の視覚的差別化を実現 */
+:global(.dark) .strengthsItem {
+  background: rgba(22, 163, 74, 0.14);
+}
+
+.strengthsItem::before {
+  content: "✨";
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 0.05rem;
+}
+
+/* ============================================================
+   weaknesses リスト
+   ============================================================ */
+.weaknessesList {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.weaknessesItem {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--color-text);
+  padding: 0.625rem 0.875rem;
+  border-radius: 8px;
+  /* 弱みは薄いオレンジ背景で視覚的に差別化 */
+  background: rgba(245, 158, 11, 0.06);
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+/* ダークモード: 背景の不透明度を上げてライト時と同等の視覚的差別化を実現 */
+:global(.dark) .weaknessesItem {
+  background: rgba(245, 158, 11, 0.14);
+}
+
+.weaknessesItem::before {
+  content: "😅";
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 0.05rem;
+}
+
+/* ============================================================
+   behaviors リスト
+   ============================================================ */
+.behaviorsList {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.behaviorsItem {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--color-text);
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+}
+
+.behaviorsItem::before {
+  content: "💡";
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   todayAction カード
+   ============================================================ */
+.todayActionCard {
+  padding: 1.25rem 1.5rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  line-height: 1.7;
+  font-weight: 500;
+  color: var(--color-text);
+  margin-bottom: 2rem;
+  text-align: center;
+  /* CSS変数 --animal-accent-bg はwrapperクラスで定義（ライト/ダーク両対応） */
+  background: var(--animal-accent-bg);
+}
+
+/* ============================================================
+   全タイプ一覧セクション
+   ============================================================ */
+.allTypesSection {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border);
+}
+
+/* 全タイプ見出し: シンプルにセクション案内として機能させる */
+.allTypesCta {
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  color: var(--color-text);
+  margin-bottom: 1rem;
+  margin-top: 0;
+}
+
+/* ピル型横wrap レイアウト（page.tsx版） */
+.allTypesListPill {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.allTypesListPill .allTypesItem a,
+.allTypesListPill .allTypesItemCurrent a {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.4rem 0.875rem;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.allTypesListPill .allTypesItem a {
+  color: var(--color-text);
+  border: 1.5px solid var(--color-border);
+  background: transparent;
+}
+
+.allTypesListPill .allTypesItem a:hover {
+  opacity: 0.7;
+}
+
+.allTypesListPill .allTypesItemCurrent a {
+  color: var(--color-text);
+  border: 2px solid currentColor;
+  background: var(--color-bg-secondary);
+  font-weight: 700;
+}
+
+/* 縦並びリスト レイアウト（ResultCard版） */
+.allTypesListVertical {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.allTypesListVertical .allTypesItem a,
+.allTypesListVertical .allTypesItemCurrent a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: var(--color-text);
+  text-decoration: none;
+  transition: background-color 0.15s ease;
+}
+
+.allTypesListVertical .allTypesItem a:hover {
+  background-color: var(--color-bg-secondary);
+}
+
+.allTypesListVertical .allTypesItemCurrent a {
+  background-color: var(--color-bg-secondary);
+  font-weight: 700;
+  pointer-events: none;
+}

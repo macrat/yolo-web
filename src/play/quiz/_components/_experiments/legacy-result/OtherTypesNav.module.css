@@ -1,0 +1,65 @@
+/* 「他のタイプも見てみよう」回遊ナビ。
+   タイプ名が長い診断（word-sense-personality は furigana 付きで長い）でも崩れないよう、
+   全幅の縦リスト行レイアウトを採る（pill だと長ラベルが不揃いに折り返すため）。
+   character/animal などラベルの長い多タイプ診断が使う縦リストと同系統。 */
+.section {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.heading {
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  color: var(--color-text);
+  margin: 0 0 1rem;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* 行はリンク/現在 span ともに同じ寸法。縦パディングを広めに取り、
+   モバイルでもタップしやすい行高（約44px）を確保する。 */
+.item > a,
+.itemCurrent > span {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 0.875rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: var(--color-text);
+  text-decoration: none;
+  transition: background-color 0.15s ease;
+  /* タイプ名は「柔和温順（にゅうわおんじゅん）タイプ」のように長い。狭い幅で折り返す際に
+     「タイプ」が「タイ／プ」と語中で割れないよう、CJK 対応の keep-all で語の途中改行を抑制し、
+     どうしても収まらない場合のみ overflow-wrap: anywhere で破断を許す。 */
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+.item > a {
+  border: 1px solid var(--color-border);
+}
+
+.item > a:hover {
+  background-color: var(--color-bg-secondary);
+}
+
+/* 現在の自タイプ: 背景＋太字に加え、左端にタイプ色のアクセントバーを出す。
+   背景フィルが薄いライトモードでも「自分のタイプ」が一目で分かるようにするため、
+   識別をタイプ色の枠に依存させる。 */
+.itemCurrent > span {
+  background-color: var(--color-bg-secondary);
+  font-weight: 700;
+  border: 1px solid var(--color-border);
+  border-left: 3px solid var(--type-color, var(--color-primary));
+}

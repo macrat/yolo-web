@@ -103,6 +103,13 @@ SELECT
   ROUND(AVG(pv),2)                                         AS pages_per_session,
   COUNTIF(reached_results>0)                               AS sessions_reached_results
 FROM sess
+-- 注: `level_start` は arm 確定前（useAbVariant の useEffect 内で
+-- 確定するため、useEffect 連鎖の順序によっては）発火しうる best-effort。
+-- `level_end` は arm 確定後で必ず arm が乗る。`sess` の代表 arm 抽出は
+-- `ARRAY_AGG(ab_variant IGNORE NULLS ORDER BY event_timestamp LIMIT 1)` で
+-- 非対称を吸収している（start に arm が無くても end の arm でセッション代表が
+-- 決まる）。また personality 系クイズ以外（knowledge: yoji-level など）には
+-- QuizContainer 側で arm を載せない設計のため、ここでは混入しない。
 WHERE ab_variant IS NOT NULL          -- 実験対象セッションに限定。【release 別集計時 or 検証時は、この行を削除する】
 GROUP BY ab_variant                   -- ← release 別にするなら release_id
 ORDER BY ab_variant;                  -- ← release 別にするなら release_id

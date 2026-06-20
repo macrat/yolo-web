@@ -1,10 +1,16 @@
 "use client";
 
-import { useState, useCallback } from "react";
-import { trackContentStart, trackContentEnd } from "@/lib/analytics";
+import { useState, useCallback, useMemo } from "react";
+import {
+  trackContentStart,
+  trackContentEnd,
+  type AbEventContext,
+} from "@/lib/analytics";
 import Link from "next/link";
 import Panel from "@/components/Panel";
 import Button from "@/components/Button";
+// EXPERIMENT: quiz_result_visual_v1 — import を撤去すれば arm 関連ロジックも消える。
+import { QUIZ_RESULT_VISUAL_V1, useAbVariant } from "@/lib/ab";
 import type { QuizDefinition, QuizAnswer, QuizPhase } from "@/play/quiz/types";
 import { determineResult, calculateKnowledgeScore } from "@/play/quiz/scoring";
 import { determineScienceThinkingResult } from "@/play/quiz/data/science-thinking";
@@ -46,12 +52,64 @@ export default function QuizContainer({
   const contentType = quiz.meta.type === "personality" ? "diagnosis" : "quiz";
   const contentId = "quiz-" + quiz.meta.slug;
 
+  // EXPERIMENT: quiz_result_visual_v1
+  //
+  // 本ファイルが arm の唯一の真実の源（single source of truth）。
+  // ResultCard も OtherTypesNavAb も `useAbVariant` を呼ばず、ここで解決した
+  // arm を props 経由で受け取る（関心の分離・原則#3）。
+  //
+  // - SSR / 初期 client render では null（hydration safe）
+  // - その後、localStorage から persisted arm を読むかランダム割当で確定する
+  //
+  // arm は (1) ResultCard 経由のディスパッチ（retro vs current コンポーネント
+  // 選択 / OtherTypesNavAb への伝播）と (2) GA `level_start` / `level_end` への
+  // ab_variant / experiment_id 付与の両方で使う。
+  //
+  // 実験終了時は本ブロック・関連 import・ResultCard への resultVisualArm prop
+  // 付与・trackContent* の ab 引数を削除すれば原状復帰できる
+  // （grep -rn 'EXPERIMENT: quiz_result_visual_v1' src/ で全撤去ポイント網羅）。
+  const resultArm = useAbVariant(QUIZ_RESULT_VISUAL_V1.id);
+
+  // EXPERIMENT: quiz_result_visual_v1 — 実験対象セッションの限定（独立変数の純度確保）。
+  //
+  // arm を GA に乗せるのは「retro/current の視覚差分が実際に発生する」セッションだけ。
+  // 本実験で介入を受けるのは personality 系クイズのインライン結果のみ
+  // （ResultCard の `pickVariantComponent` 対応表に並んだ 8 variant ＋ 標準 variant の
+  //  OtherTypesNav）— これらはすべて personality タイプに属する。
+  //
+  // knowledge 系クイズ（yoji-level / kanji-level / kotowaza-level 等）は専用 retro
+  // *Content を持たず視覚差分が 1px も発生しない。ここで `ab` を載せると、介入ゼロの
+  // セッションが両 arm を均等に薄め、`docs/sql/ab-value-metrics.sql` の
+  // `WHERE ab_variant IS NOT NULL` を通過して KPI を希釈する。よって knowledge では
+  // `ab === undefined` を維持し analytics.ts 側でキー自体を payload から省く。
+  //
+  // arm 自体の localStorage 永続化は knowledge 来訪者にも発生してよい（個人識別なし・
+  // 実害なし）。これは「コミットされたが GA には乗らない」状態で問題ない。
+  //
+  // useMemo で resultArm / quiz.meta.type が変わったときだけ参照を更新し、track* 系の
+  // useCallback が無駄に再生成されないようにする（react-hooks/exhaustive-deps 警告対策）。
+  const isExperimentSubject = quiz.meta.type === "personality";
+  const ab: AbEventContext | undefined = useMemo(
+    () =>
+      isExperimentSubject && resultArm !== null
+        ? { experimentId: QUIZ_RESULT_VISUAL_V1.id, variant: resultArm }
+        : undefined,
+    [isExperimentSubject, resultArm],
+  );
+
   const handleStart = useCallback(() => {
     setPhase("playing");
     setCurrentIndex(0);
     setAnswers([]);
-    trackContentStart(contentId, contentType);
-  }, [contentId, contentType]);
+    // EXPERIMENT: quiz_result_visual_v1
+    // arm は useAbVariant の useEffect 内で確定するため、useEffect 連鎖の順序に
+    // よっては arm 未確定（ab === undefined）のまま start イベントが発火する
+    // 可能性が理論上ある（実機で観測されている事故報告は無し）。これは到達率の
+    // 分母を arm 別に出すための best-effort で、結果到達率の主指標は arm が
+    // 必ず乗る `level_end` 側で算出する設計（docs/visitor-value-measurement.md
+    // 論点4: level_end は介入が効く地点ゆえ arm 必須、level_start は補助）。
+    trackContentStart(contentId, contentType, ab);
+  }, [contentId, contentType, ab]);
 
   const handleAnswer = useCallback(
     (choiceId: string) => {
@@ -67,24 +125,26 @@ export default function QuizContainer({
       if (quiz.meta.type === "personality") {
         if (currentIndex + 1 >= quiz.questions.length) {
           setPhase("result");
-          trackContentEnd(contentId, contentType, true);
+          // EXPERIMENT: quiz_result_visual_v1 — 主要 KPI 発火点。
+          trackContentEnd(contentId, contentType, true, ab);
         } else {
           setCurrentIndex((prev) => prev + 1);
         }
       }
     },
-    [answers, currentIndex, quiz, contentId, contentType],
+    [answers, currentIndex, quiz, contentId, contentType, ab],
   );
 
   const handleNext = useCallback(() => {
     // knowledge type: advance to next question or show result
     if (currentIndex + 1 >= quiz.questions.length) {
       setPhase("result");
-      trackContentEnd(contentId, contentType, true);
+      // EXPERIMENT: quiz_result_visual_v1 — 主要 KPI 発火点。
+      trackContentEnd(contentId, contentType, true, ab);
     } else {
       setCurrentIndex((prev) => prev + 1);
     }
-  }, [currentIndex, quiz.questions.length, contentId, contentType]);
+  }, [currentIndex, quiz.questions.length, contentId, contentType, ab]);
 
   const handleRetry = useCallback(() => {
     setPhase("intro");
@@ -190,6 +250,15 @@ export default function QuizContainer({
           accentColor={quiz.meta.accentColor}
           referrerTypeId={referrerTypeId}
           allResults={quiz.results}
+          // EXPERIMENT: quiz_result_visual_v1
+          // A/B 実験 arm を ResultCard に伝播し、variant 別 *Content の
+          // retro/current 出し分けと OtherTypesNavAb の出し分けに使う。
+          //
+          // 実験対象外（knowledge クイズ）には `null` を渡して常に current 描画と
+          // する。これは GA 非付与（上述 `ab` ゲート）と対応する視覚側の手当て：
+          // knowledge ユーザに retro 装飾を見せないことで「介入を受けない実験対象外
+          // セッション」の純度を視覚・記録の両面で揃える。
+          resultVisualArm={isExperimentSubject ? resultArm : null}
         />
       </Panel>
       {/* 回遊導線・追加コンテンツは本体パネルの外に二次配置（パネル入れ子回避） */}
