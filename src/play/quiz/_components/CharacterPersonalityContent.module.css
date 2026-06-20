@@ -1,87 +1,53 @@
 /*
- * CharacterPersonalityContent 共通コンポーネントのスタイル。
- * ResultCard.tsx（受検者向け）と page.tsx（第三者向け）の両方から使用される。
+ * CharacterPersonalityContent 共通コンポーネントのスタイル。新デザイン体系（DESIGN.md）。
+ * ResultCard.tsx（受検者向けインライン結果）と page.tsx（第三者向け静的結果ページ）の両方から使用される。
  *
- * YojiPersonalityContent.module.css を基準にスタイルを統一する。
+ * 設計方針（ResultCard.module.css を一次規範として語彙をそろえる）:
+ * - 左寄せ・新トークンのみ・font-weight は最大 600・絵文字なし・影なし。
+ * - タイプごとの派手色（--type-color）は装飾から外し、共通アクセント（--accent 系）に統一する。
+ *   各タイプの個性は色ではなく言葉（本文）で立てる。
+ * - 角丸はカード/ブロック = --r-normal、操作要素（リンク） = --r-interactive。
  *
- * 設計方針:
- * - --type-color をpropsからインラインスタイルで注入（タイプごとに色が異なるため）
- * - ダークモード時は color-mix() で明度調整（YojiPersonalityContent と同じパターン）
- * - archetypeBreakdown は色付きカード形式（背景に --type-color を薄く敷く）
- * - テキスト色は var(--color-text)（WCAG AA コントラスト保証）
- * - WCAG AA準拠のコントラスト比を意識
+ * なお wrapper は caller 互換のため --type-color の注入を引き続き受け取るが、
+ * 装飾としては参照しない（color-as-content ではないため）。
  */
 
 /* ============================================================
-   wrapper: --type-color CSS変数の受け取り口
-   インラインスタイルで注入された --type-color を子要素が参照できるようにする。
+   wrapper: caller 互換のため --type-color の受け取り口を残す。
+   装飾では参照しないが、page.tsx / ResultCard の caller signature を壊さないため維持する。
    ============================================================ */
 .wrapper {
-  /* --type-color はインラインスタイルで注入される */
+  text-align: left;
 }
 
 /* ============================================================
-   セクション見出し
+   セクション見出し（ResultCard detailedHeading に倣う）
+   headingLevel に応じて h2 または h3 が生成される。
    ============================================================ */
-
-/* headingLevel に応じて h2 または h3 が生成される */
 .sectionHeading {
-  font-size: 1.1rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--fg);
+  margin: 0 0 1rem;
   padding-left: 0.75rem;
-  border-left: 4px solid var(--type-color, #374151);
-  color: var(--type-color, #374151);
-}
-
-/* ダークモード: color-mix で白を30%混ぜることで明度を上げる。
-   filter: brightness() と異なり、明るい色が白飛びしない。
-   暗い色は白寄りになって視認性が確保される。 */
-:global(.dark) .sectionHeading {
-  color: color-mix(in srgb, var(--type-color) 70%, white);
-  border-left-color: color-mix(in srgb, var(--type-color) 70%, white);
-}
-
-/* color-mix 非対応ブラウザ向けフォールバック */
-@supports not (color: color-mix(in srgb, red 70%, white)) {
-  :global(.dark) .sectionHeading {
-    filter: brightness(1.5) saturate(0.85);
-  }
+  border-left: 3px solid var(--accent);
 }
 
 /* ============================================================
-   archetypeBreakdown カード: 2つのアーキタイプの融合解説
-   色をバックグラウンドに薄く敷いたキャラクター性解説カード
+   archetypeBreakdown カード: 2つのアーキタイプの融合解説。
+   キャラの成り立ちを語る中心的な解説ブロックなので、ResultCard adviceCard 相当の
+   淡いアクセント面（--accent-soft + --accent-strong 枠）で静かに強調する。
    ============================================================ */
 .archetypeBreakdownCard {
-  padding: 1.25rem 1.5rem;
-  border-radius: 10px;
+  padding: 1.1rem 1.25rem;
+  border-radius: var(--r-normal);
   font-size: 0.95rem;
   line-height: 1.8;
-  color: var(--color-text);
+  color: var(--fg);
   margin-bottom: 2rem;
-  /* --type-color を非常に薄い透過背景として使用 */
-  background: color-mix(in srgb, var(--type-color) 8%, transparent);
-  border-left: 3px solid var(--type-color, #374151);
-}
-
-/* ダークモード: 背景を少し濃くして視認性を確保 */
-:global(.dark) .archetypeBreakdownCard {
-  background: color-mix(in srgb, var(--type-color) 16%, transparent);
-  border-left-width: 4px;
-}
-
-/* color-mix 非対応ブラウザ向けフォールバック */
-@supports not (background: color-mix(in srgb, red 10%, transparent)) {
-  .archetypeBreakdownCard {
-    background: rgba(0, 0, 0, 0.04);
-    border: 1px solid var(--color-border);
-    border-left: 3px solid var(--type-color, #374151);
-  }
-
-  :global(.dark) .archetypeBreakdownCard {
-    background: rgba(255, 255, 255, 0.06);
-  }
+  text-align: left;
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-strong);
 }
 
 /* ============================================================
@@ -98,48 +64,40 @@
 
 .behaviorsItem {
   font-size: 0.95rem;
-  line-height: 1.6;
-  color: var(--color-text);
+  line-height: 1.7;
+  color: var(--fg);
   padding: 0.75rem 1rem;
-  border-radius: 8px;
-  border: 1px solid var(--color-border);
+  border-radius: var(--r-normal);
+  border: 1px solid var(--border);
   display: flex;
   align-items: flex-start;
   gap: 0.625rem;
 }
 
-/* キャラクター世界観に合った絵文字マーカーで行動パターン項目を装飾 */
+/* 絵文字を使わない静かなマーカー（ResultCard traitsItem::before と同じアクセントの短い縦線） */
 .behaviorsItem::before {
-  content: "🎭";
+  content: "";
   flex-shrink: 0;
-  margin-top: 0.05rem;
+  width: 2px;
+  align-self: stretch;
+  background: var(--accent);
+  border-radius: var(--r-normal);
 }
 
 /* ============================================================
-   characterMessage カード: キャラからのメッセージ（締め）
+   characterMessage カード: キャラからのメッセージ（締め）。
+   中立の --bg-soft 面に左寄せで置く（archetypeBreakdown のアクセント面と質感を分け、
+   締めの語りとして落ち着いたトーンにする）。
    ============================================================ */
 .characterMessageCard {
-  padding: 1.25rem 1.5rem;
-  border-radius: 10px;
+  padding: 1.1rem 1.25rem;
+  border-radius: var(--r-normal);
   font-size: 1rem;
-  line-height: 1.7;
-  font-weight: 500;
-  color: var(--color-text);
+  line-height: 1.8;
+  color: var(--fg);
   margin-bottom: 2rem;
-  text-align: center;
-  /* タイプカラーの薄い透過背景 */
-  background: color-mix(in srgb, var(--type-color) 8%, transparent);
-}
-
-:global(.dark) .characterMessageCard {
-  background: color-mix(in srgb, var(--type-color) 16%, transparent);
-}
-
-/* color-mix 非対応ブラウザ向けフォールバック */
-@supports not (background: color-mix(in srgb, red 10%, transparent)) {
-  .characterMessageCard {
-    background: var(--color-bg-secondary);
-  }
+  text-align: left;
+  background: var(--bg-soft);
 }
 
 /* ============================================================
@@ -148,20 +106,20 @@
 .allTypesSection {
   margin-top: 2rem;
   padding-top: 1.5rem;
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid var(--border);
 }
 
-/* 全タイプ見出し: シンプルにセクション案内として機能させる */
+/* 全タイプ見出し: ResultCard detailedHeading 言語に合わせ、左寄せ・左罫線で区切る */
 .allTypesCta {
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 600;
-  text-align: center;
-  color: var(--color-text);
-  margin-bottom: 1rem;
-  margin-top: 0;
+  color: var(--fg);
+  margin: 0 0 1rem;
+  padding-left: 0.75rem;
+  border-left: 3px solid var(--accent);
 }
 
-/* グリッドレイアウト（page.tsx版）: 2-3列で全24タイプを視覚的にまとめて表示 */
+/* グリッドレイアウト（page.tsx版）: 2-3列で全タイプを視覚的にまとめて表示 */
 .allTypesGrid {
   list-style: none;
   padding: 0;
@@ -183,7 +141,7 @@
   align-items: center;
   gap: 0.375rem;
   padding: 0.5rem 0.75rem;
-  border-radius: 8px;
+  border-radius: var(--r-interactive);
   font-size: 0.875rem;
   text-decoration: none;
   transition: background-color 0.15s ease;
@@ -191,20 +149,20 @@
 }
 
 .allTypesGrid .allTypesItem a {
-  color: var(--color-text);
-  border: 1.5px solid var(--color-border);
+  color: var(--fg);
+  border: 1px solid var(--border);
   background: transparent;
 }
 
 .allTypesGrid .allTypesItem a:hover {
-  background-color: var(--color-bg-secondary);
+  background-color: var(--bg-soft);
 }
 
+/* 現在のタイプ: 色ではなくアクセント枠＋淡い面で「今ここ」を静かに示す */
 .allTypesGrid .allTypesItemCurrent a {
-  color: var(--color-text);
-  border: 2px solid var(--type-color, #374151);
-  background: var(--color-bg-secondary);
-  font-weight: 700;
+  color: var(--fg);
+  border: 1px solid var(--accent);
+  background: var(--accent-soft);
 }
 
 /* 縦並びリスト レイアウト（ResultCard版） */
@@ -223,19 +181,22 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 0.75rem;
-  border-radius: 6px;
+  /* 現在タイプの枠線と高さをそろえるため、非現在項目も透明枠を持たせる */
+  border: 1px solid transparent;
+  border-radius: var(--r-interactive);
   font-size: 0.9rem;
-  color: var(--color-text);
+  color: var(--fg);
   text-decoration: none;
   transition: background-color 0.15s ease;
 }
 
 .allTypesListVertical .allTypesItem a:hover {
-  background-color: var(--color-bg-secondary);
+  background-color: var(--bg-soft);
 }
 
+/* 現在のタイプ: アクセント枠＋淡い面で「今ここ」を示す（font-weight は上げない） */
 .allTypesListVertical .allTypesItemCurrent a {
-  background-color: var(--color-bg-secondary);
-  font-weight: 700;
+  border: 1px solid var(--accent);
+  background-color: var(--accent-soft);
   pointer-events: none;
 }

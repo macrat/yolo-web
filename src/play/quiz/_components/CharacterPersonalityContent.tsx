@@ -206,9 +206,9 @@ export default function CharacterPersonalityContent({
     );
 
   return (
-    // wrapperクラスで --type-color をインラインスタイルで注入。
-    // タイプごとに固有の色があるため、CSS変数ファイルではなくpropsから渡す。
-    // ダークモード時のコントラスト調整はCSSファイル側で行う。
+    // 新デザインでは --type-color を装飾に使わない（共通アクセントに統一）。
+    // ただし page.tsx / ResultCard など caller の signature 互換を壊さないため、
+    // resultColor の受け取りと --type-color の注入自体は残す（dead 注入だが互換目的）。
     <div
       className={styles.wrapper}
       style={{ "--type-color": resultColor } as React.CSSProperties}
@@ -260,7 +260,8 @@ export default function CharacterPersonalityContent({
                   href={`/play/${QUIZ_SLUG}/result/${result.id}`}
                   aria-current={result.id === resultId ? "page" : undefined}
                 >
-                  {result.icon && <span>{result.icon}</span>}
+                  {/* 新デザインでは絵文字アイコン（result.icon）を描画しない（DESIGN.md: 絵文字を使わない）。
+                      各タイプの区別はタイトル文言で行う。 */}
                   <span>{result.title}</span>
                 </Link>
               </li>
