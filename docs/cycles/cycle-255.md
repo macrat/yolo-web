@@ -2,7 +2,7 @@
 id: 255
 description: 来訪者価値を測りながらデザインを変えるための A/B テスト基盤（B-525）の設計と最小実装。憲法の意思決定原則（実装コストは劣る手段を選ぶ理由にならない）と憲法ルール2（helpful or enjoyable）に従い、デザイン変更を旧/新で振り分けて来訪者価値指標（直帰率/エンゲージ時間/回遊/遷移率）を実比較する A/B を本線として基盤化する。成果物は (1) 静的/サーバーレス・憲法ルール2と両立する A/B バリアント割当＋GA4 記録の最小実装（前方 A/B＝これからの変更を出しながら測る、と retro A/B＝既にブラインド移行した高リスク面の旧デザインを git 履歴から復活させて測る、の両方を支える）、(2) 来訪者価値指標の定義 SSoT と BigQuery でのアーム間比較クエリ、(3) 残る B-522 移行と既移行高リスク面への適用方針。最初の実 A/B 候補は 7PV の静的結果ページでなく、最大流入の既移行インラインクイズ結果（旧 絵文字/カラフル vs 新 シンプル）。before/after コホート比較とリリース識別子は A/B が原理的に組めない全体変更のための補完であって A/B の代替ではない。
 started_at: "2026-06-20T16:05:31+0900"
-completed_at: null
+completed_at: "2026-06-21T05:28:34+0900"
 ---
 
 # サイクル-255
@@ -41,8 +41,8 @@ completed_at: null
 - [x] **運用接続**: `docs/visitor-value-measurement.md` 論点8 に確定。毎月の読み方(判定閾値・最小観測数50/arm)、残B-522移行のA/B適用基準、既移行高リスク面のretro A/B判断基準、grep駆動の撤去手順、design-migration-planとの順序、計測基盤の自己適用を明文化
 - [x] **視覚/動作確認**: 本番ビルド(`npm run build`完走)+Playwright実機でcharacter-personality w360/w1280×light/darkの arm=A/B 4枚撮影しPM自身で目視確認。armA=retro(絵文字🎭・type-color罫線・中央寄せ復活)・armB=current(ミニマル・本変更前と質感同一)・a11y等価・knowledge(yoji-level)は ab_variant非付与・personalityは ab_variant/experiment_id付与・release="05f0334-20260620"全イベント付与を観測
 - [x] **テスト**: 全実装サイクルを通じて単体テスト+62件追加(ab 20+release codegen 10+analytics 44→+9+ResultCardArm 25+OtherTypesNavAb 5+QuizContainer gate 4)、サイクル全体で5662件 green・skip/骨抜きなし
-- [ ] **最終レビュー(サイクル全体)**: 設計判断書(A/Bが本線として誠実か・retro A/B含むか・工数回避混入なしか)＋実装3波の総体＋運用接続論点8＋backlog更新の一式を新規reviewerに白紙で点検依頼(AP-WF20)
-- [ ] **backlog 更新**: B-525 完了処理、キャリーオーバー(最初の実 A/B のデプロイ後 N 日読み取り・基盤の自己適用回帰確認・残B-522移行へのA/B適用)を起票
+- [x] **最終レビュー(サイクル全体)**: 白紙reviewerが2ラウンド点検(改善指示=事実記述3件→是正→白紙再レビュー=投入可承認)。AP-P28是正貫徹・退行ゼロ・独立変数の純度・二重付与なし・撤去容易性すべて実コードで実証
+- [x] **backlog 更新**: B-525をDoneへ、B-526(月次読み)/B-527(撤去サイクル化)/B-528(基盤自己適用回帰確認)をDeferredへ起票。B-523/B-524は本基盤前提でNotes更新。Done最古5本ルールでcycle-249分を削除
 
 ## 作業計画
 
@@ -91,6 +91,34 @@ completed_at: null
 - **GA4 BigQuery エクスポートは未登録のイベントパラメータも `event_params` RECORD に全取得する**（カスタムディメンション登録は GA4 UI 探索参照時のみ必要）。確認: https://support.google.com/analytics/answer/7029846 （2026-06-20 WebFetch）。→ `experiment_id`/`variant`/`release` を GA4 イベントに付けるだけで GA4 UI 登録なしに BigQuery でアーム分割できる根拠。
 - **GA4 のイベントレベルデータ保持はデフォルト2ヶ月・最大14ヶ月。これは GA4 UI 探索の制限で BigQuery エクスポートは対象外（無期限保持）**。確認: WebSearch（2026-06-20。複数二次情報一致／一次原則は support.google.com data-retention ヘルプ）。→ 継続比較の土台を GA4 UI でなく BigQuery に置く根拠。
 
+## レビュー結果
+
+本サイクルでは複数のレビューラウンドを経た。トレーサビリティのため要点を以下に記録する（詳細は各 tmp ファイルおよび git ログ）。
+
+### 計画フェーズ
+
+- 計画初稿で PM は「既移行は撤去済みだから A/B できない／before/after コホート比較が現実解」と組み立てた。Owner 介入により「それは旧デザイン復活の工数回避を構造的制約に見せかけたもの＝AP-P28 再発」と指摘され、コミット `226f1957` で A/B を本線へ全面立て直し（前方 A/B＋retro A/B）。**判断の駆動源は Owner 帰属でなく憲法の意思決定原則とルール2** と明示し直した。
+
+### 設計判断書（`docs/visitor-value-measurement.md`）
+
+- 初稿: ブロッカー1件＋事実誤り3件（B-1 release 注入方式の不正確な根拠／F-1 剥ぎ落としコミット本数の二重計上／F-2 retro 複製対象集合の未明示／F-3 arm 分岐を「1か所」とした楽観）。`git show --stat` 等で実体確認のうえ修正。
+- 配置の rules 準拠調整: 設計判断書は提案性のため `docs/research/` → `docs/visitor-value-measurement.md` へ。計測在庫は `tmp/` → `docs/research/2026-06-visitor-metrics-baseline.md` へ恒久化。
+
+### 実装フェーズ
+
+- **波1（割当 util／release codegen／比較 SQL）**: 改善指示3件（GoogleAnalytics の inline `<script>` 文字列リテラル素埋め込み→`JSON.stringify` 安全化／テスト固定 mock 化／SQL SECTION 2 解釈ノート）→修正→白紙再レビューで生成物 untracked のブロッカー1件発見（codegen ヘッダコメント宣言と実態の齟齬）→`git add` で是正→承認（コミット `dc7cd510`）。
+- **波2（analytics.ts への arm 注入経路）**: 一発承認。`release` 二重付与なし／`ab_variant` 命名衝突回避／undefined 送信なし／関心の分離維持を実装とテストで担保（コミット `72535f79`）。
+- **波3（retro 仕込み＋ResultCard arm 切替）**: 初稿でブロッカー1件（contrarian/impossible の `allTypesLayout` 差が独立変数を汚染）＋要対応2件（arm 解決源の二重化／level_start の timing コメント）＋ N1-N3 → 修正→白紙再レビューで BL-1 発見（knowledge クイズへの arm 付与が独立変数の純度を破る）→`quiz.meta.type === "personality"` ゲートで根治→ Playwright 実機で knowledge は arm 非付与・personality は付与を実証→コミット `05f0334c`。
+
+### 最終レビュー（サイクル全体・白紙）
+
+- 初回: ブロッカー3件（事実記述の不整合：B-1 マーカー数と網羅方式／B-2 share/rating の範囲外明示／B-3 静的結果ページの扱い明示）＋R-3（B-528 に release 形式確認追記）。来訪者投入の害ではなく**運用基盤の信頼性の核**（grep 網羅・設計と実装の一致）の不整合。
+- 是正後の白紙再レビュー: 投入可（承認）。退行ゼロ・独立変数の純度・二重付与なし・撤去容易性・憲法整合すべて実コードで実証（コミット `5fc097db`）。
+
+### PM 自身による独立確認
+
+- 本番ビルドを実機起動し、`/play/character-personality` の arm=A/B を w360/w1280 × light/dark で4枚撮影。arm=A は絵文字（🎭✨😅💡）・type-color 罫線・中央寄せが復活、arm=B はミニマル質感が変更前と同一。`/play/yoji-level`（knowledge）の `level_end` payload に `ab_variant`/`experiment_id` が乗らないこと、`/play/character-personality`（personality）には乗ること、`release="05f0334-20260620"` が config 経由で全イベントに乗ることを開発者ツールで観測。
+
 ## キャリーオーバー
 
 すべて B-525 完了後の運用フェーズ。実体は `docs/visitor-value-measurement.md` 論点8。
@@ -108,6 +136,7 @@ completed_at: null
 - 設計サブエージェントには「A/B を本線（採用前提）として、静的/サーバーレス・憲法ルール2 と両立する形でどう成立させるかを設計せよ。retro A/B（旧デザインを git 履歴から復活させて測る）を含めよ。トラフィックの小ささは A/B 却下の理由でなく期間/対象選定の入力。工数を理由に選択肢を狭めない」ことを明示的に渡す。
 - 実装は静的配信・憲法ルール2（外部API/DB/認証を作らない）を破らない範囲に限る。A/B 割当は端末内乱択で DB 不要。リリース識別子は git SHA ＋日付のみで PII を含まない。
 - 本サイクルで PM が抵触したアンチパターン（AP-P28 同型の工数回避を計画初稿で繰り返した／是正の駆動源を Owner に帰属させる AP-WF24）を、完了処理で `docs/anti-patterns/` への再発記録として反映する。
+- 本サイクルの経験「PM が二度同じ判断の歪みに落ちて立て直した」を AI日記＋AIエージェント興味エンジニア向けブログ記事として執筆（`src/blog/content/2026-06-21-measuring-without-measuring-ab-foundation.md`）。blog-writer 作成→ 2回の白紙再レビュー（改善指示→修正→改善指示→修正→承認）を経て公開可。
 
 ## サイクル終了時のチェックリスト
 
