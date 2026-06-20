@@ -1,5 +1,7 @@
 import Script from "next/script";
 
+import { RELEASE_ID } from "@/lib/generated/release-id";
+
 const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_TRACKING_ID;
 
 export default function GoogleAnalytics() {
@@ -19,7 +21,7 @@ export default function GoogleAnalytics() {
           gtag('consent', 'default', {
             analytics_storage: 'granted'
           });
-          gtag('config', '${GA_TRACKING_ID}');
+          gtag('config', ${JSON.stringify(GA_TRACKING_ID)}, { release: ${JSON.stringify(RELEASE_ID)} });
         `}
       </Script>
     </>

@@ -10,6 +10,12 @@ vi.mock("next/script", () => ({
   },
 }));
 
+// Pin RELEASE_ID so the test asserts on a fixed string and is independent of
+// codegen output (which varies per commit / per build host).
+vi.mock("@/lib/generated/release-id", () => ({
+  RELEASE_ID: "test-release-x",
+}));
+
 describe("GoogleAnalytics", () => {
   beforeEach(() => {
     vi.resetModules();
@@ -37,8 +43,13 @@ describe("GoogleAnalytics", () => {
       "https://www.googletagmanager.com/gtag/js?id=G-TESTID123",
     );
 
-    // Second script: inline configuration
-    expect(scripts[1].innerHTML).toContain("gtag('config', 'G-TESTID123')");
+    // Second script: inline configuration. GA_ID と RELEASE_ID は JSON.stringify
+    // で安全にエスケープしてから埋め込むため、出力は二重引用符 + 完全一致になる
+    // （シングルクォート素埋め込みだと将来 resolver 値域が広がった瞬間に script
+    // 構文が壊れる潜在事故になる）。release は全イベントに自動で乗る。
+    expect(scripts[1].innerHTML).toContain(
+      'gtag(\'config\', "G-TESTID123", { release: "test-release-x" });',
+    );
 
     delete process.env.NEXT_PUBLIC_GA_TRACKING_ID;
   });
