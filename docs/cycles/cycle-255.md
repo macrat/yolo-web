@@ -33,9 +33,10 @@ completed_at: null
 - [x] **設計（検出力・期間）**: 論点3 に確定。8.7セッション/日・プールでも月数十のため固定nは非現実→連続量(エンゲージ時間)主KPI＋ベイズ常時観測＋事前固定閾値。大効果は数ヶ月で判定可・小効果は判定不能と正直に明記（reviewer が誠実さ確認）
 - [x] **設計（最初の実 A/B の選定）**: 論点6 に確定。最大流入の既移行インラインクイズ結果（旧 絵文字/カラフル vs 新 ミニマル、全クイズプール）。`level_end` 最大量の終点・質感差が大きく低トラフィックで唯一現実的に結論が出うる。実測トラフィック表で裏付け
 - [x] **指標定義の SSoT 化**: 論点5 に確定。価値指標4種を SQL(SSoT) で variant 別・release 別に算出する構造を設計（`docs/sql/ab-value-metrics.sql` として後続実装）
-- [ ] **最小実装1（A/B バリアント割当＋記録）**: 設計で選定した方式で、来訪者を旧/新バリアントに振り分け、その割当を GA4 イベントへ付与する再利用可能な機構を最小実装。1つの実ケースで動作確認。憲法ルール2/3 遵守（割当は端末内乱択・DB なし・PII なし・AI 実験の開示は既存サイト全体表示で充足）
-- [ ] **最小実装2（リリース識別子・補完）**: ビルド時の git short SHA ＋日付を `release` として GA4 イベントへ付与（既存 `generate:*` prebuild パターンに倣う）。A/B が原理的に組めない全体変更や配信中ビルドの追跡に使う補完（A/B の代替ではない）
-- [ ] **最小実装3（反復可能な比較クエリ）**: 指標定義に基づく BigQuery SQL を variant 比較・release 比較の両方でパラメータ化してリポジトリ保存し、毎回1コマンドで A/B 差分（および before/after）を出せる継続的計測の実体にする
+- [x] **最小実装1a（A/B バリアント割当 util）**: `src/lib/ab/` に SSR セーフな端末内乱択割当を実装(20件テスト・dc7cd510)。記録経路(analytics.ts への arm 注入)は波2で実施
+- [x] **最小実装2（リリース識別子）**: `release` を `VERCEL_GIT_COMMIT_SHA → git → unknown` フォールバックで解決する codegen を実装し `gtag('config', ..., { release })` で全イベント自動付与(10件テスト・dc7cd510)
+- [x] **最小実装3（反復可能な比較クエリ）**: `docs/sql/ab-value-metrics.sql` を確定(variant別/release別/ベイズ素データ。実BigQueryでベースライン完全一致・dc7cd510)
+- [ ] **最小実装1b（analytics.ts へ arm 注入経路追加）**: `trackContentStart`/`trackContentEnd` に `ab_variant`/`experiment_id` を載せる経路を追加。波1の `getAbArm` を caller から受けて GA に渡す。`release` は GA config 経由で自動付与済みのため二重付与しない
 - [ ] **運用接続**: 残る B-522 移行（B-523・ゲーム・daily・タイル化）と既移行高リスク面に A/B をどう適用するかの手順を文書化。最初の実 A/B（上記選定）の段取りと、既移行面の retro A/B を来訪者価値レバレッジで判断する基準を明記
 - [ ] **視覚/動作確認**: バリアント割当と `release`／`variant` パラメータが本番ビルドの GA4 イベントに実際に乗ることを実機（Playwright で gtag/dataLayer 観測）で確認。両バリアントが w360/w1280 light/dark で破綻しないこと
 - [ ] **テスト**: バリアント割当ロジック・リリース識別子生成・GA4 記録のユニットテスト追加（既存 analytics.test / GoogleAnalytics.test の流儀。安易な skip なし）

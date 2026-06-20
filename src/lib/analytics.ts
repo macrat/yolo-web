@@ -12,6 +12,56 @@
 type GaContentType = "game" | "quiz" | "diagnosis" | "fortune";
 
 /**
+ * A/B experiment arm label. Mirrors `AbArm` in `src/lib/ab/experiments.ts`
+ * but is declared locally to keep `analytics.ts` decoupled from the
+ * assignment module (docs/visitor-value-measurement.md 論点1/4: 関心の分離 —
+ * caller decides the arm, analytics only forwards it to GA).
+ */
+export type AbVariant = "A" | "B";
+
+/**
+ * A/B experiment context passed by the caller to a track* function.
+ *
+ * The track* function never imports `src/lib/ab/`; instead the calling
+ * component reads the arm (via `useAbVariant` or `getAbArm`) and passes
+ * it in. When the arm is null/undefined (SSR before mount, no
+ * localStorage, or this session is not part of the experiment) the
+ * caller simply omits this argument and the params are sent without
+ * `ab_variant`/`experiment_id` keys — never as `undefined` values
+ * (same discipline as `buildTileParams`: GA must not receive
+ * undefined-valued params).
+ */
+export interface AbEventContext {
+  /** Experiment id — sent to GA4 as `experiment_id`. */
+  experimentId: string;
+  /** Resolved arm — sent to GA4 as `ab_variant`. */
+  variant: AbVariant;
+}
+
+/**
+ * Merge A/B context into an event's params.
+ *
+ * Returns `params` untouched when `ab` is undefined, so the
+ * `experiment_id`/`ab_variant` keys are entirely absent from the
+ * outgoing payload (GA must never receive `key: undefined`). This is
+ * the same discipline as `buildTileParams` for the toolbox `variant`
+ * key and is required by docs/visitor-value-measurement.md 論点4 to
+ * avoid polluting the main KPI with arm-tagged events from sessions
+ * that never reached the experiment surface.
+ */
+function withAbContext(
+  params: Gtag.CustomParams,
+  ab?: AbEventContext,
+): Gtag.CustomParams {
+  if (ab === undefined) return params;
+  return {
+    ...params,
+    ab_variant: ab.variant,
+    experiment_id: ab.experimentId,
+  };
+}
+
+/**
  * Internal helper that guards against SSR and missing gtag,
  * then delegates to window.gtag.
  */
@@ -24,30 +74,57 @@ function sendGaEvent(
   window.gtag("event", eventName, params);
 }
 
-/** Send a level_start event for game/quiz/diagnosis content. */
+/**
+ * Send a level_start event for game/quiz/diagnosis content.
+ *
+ * Pass `ab` only when this start is part of an A/B experiment surface
+ * (e.g. inline quiz result) — it adds `ab_variant`/`experiment_id` so
+ * arm-level reach can be computed alongside `trackContentEnd`.
+ */
 export function trackContentStart(
   contentId: string,
   contentType: GaContentType,
+  ab?: AbEventContext,
 ): void {
-  sendGaEvent("level_start", {
-    level_name: contentId,
-    content_type: contentType,
-    content_id: contentId,
-  });
+  sendGaEvent(
+    "level_start",
+    withAbContext(
+      {
+        level_name: contentId,
+        content_type: contentType,
+        content_id: contentId,
+      },
+      ab,
+    ),
+  );
 }
 
-/** Send a level_end event for game/quiz/diagnosis content. */
+/**
+ * Send a level_end event for game/quiz/diagnosis content.
+ *
+ * Pass `ab` when this end-event is the moment the A/B-tested surface is
+ * shown (inline quiz result reach) — `ab_variant`/`experiment_id` are
+ * required on the primary KPI event per
+ * docs/visitor-value-measurement.md 論点4.
+ */
 export function trackContentEnd(
   contentId: string,
   contentType: GaContentType,
   success: boolean,
+  ab?: AbEventContext,
 ): void {
-  sendGaEvent("level_end", {
-    level_name: contentId,
-    success,
-    content_type: contentType,
-    content_id: contentId,
-  });
+  sendGaEvent(
+    "level_end",
+    withAbContext(
+      {
+        level_name: contentId,
+        success,
+        content_type: contentType,
+        content_id: contentId,
+      },
+      ab,
+    ),
+  );
 }
 
 /** Send a search event. Empty/whitespace-only terms are ignored. */
@@ -59,22 +136,48 @@ export function trackSearch(searchTerm: string): void {
   });
 }
 
-/** Send a share event for social sharing actions. */
+/**
+ * Send a share event for social sharing actions.
+ *
+ * Pass `ab` only when the share originates from an A/B-tested surface
+ * (e.g. a share button rendered on the inline quiz result). For shares
+ * that fire from arm-independent surfaces, omit `ab` so the event stays
+ * out of the experiment's funnel.
+ */
 export function trackShare(
   method: "twitter" | "line" | "web_share" | "clipboard" | "hatena",
   contentType: string,
   itemId: string,
+  ab?: AbEventContext,
 ): void {
-  sendGaEvent("share", {
-    method,
-    content_type: contentType,
-    item_id: itemId,
-  });
+  sendGaEvent(
+    "share",
+    withAbContext(
+      {
+        method,
+        content_type: contentType,
+        item_id: itemId,
+      },
+      ab,
+    ),
+  );
 }
 
-/** Send a content_rating event when a user rates content as interesting/funny. */
-export function trackContentRating(): void {
-  sendGaEvent("content_rating");
+/**
+ * Send a content_rating event when a user rates content as interesting/funny.
+ *
+ * Pass `ab` only when the rating UI is part of an A/B-tested surface
+ * (same rule as `trackShare`).
+ */
+export function trackContentRating(ab?: AbEventContext): void {
+  if (ab === undefined) {
+    sendGaEvent("content_rating");
+    return;
+  }
+  sendGaEvent("content_rating", {
+    ab_variant: ab.variant,
+    experiment_id: ab.experimentId,
+  });
 }
 
 // ── Search modal tracking ────────────────────────────────────────────────────

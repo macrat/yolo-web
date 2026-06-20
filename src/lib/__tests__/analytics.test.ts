@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import {
   trackContentStart,
   trackContentEnd,
+  trackContentRating,
   trackSearch,
   trackShare,
   trackSearchModalOpen,
@@ -57,6 +58,29 @@ describe("analytics", () => {
         content_id: "quiz-kanji-level",
       });
     });
+
+    it("omits ab_variant/experiment_id when ab is not given", () => {
+      trackContentStart("quiz-kanji-level", "quiz");
+
+      const params = mockGtag.mock.calls[0][2] as Record<string, unknown>;
+      expect("ab_variant" in params).toBe(false);
+      expect("experiment_id" in params).toBe(false);
+    });
+
+    it("sends ab_variant and experiment_id when ab is given", () => {
+      trackContentStart("character-personality", "quiz", {
+        experimentId: "quiz_result_visual_v1",
+        variant: "A",
+      });
+
+      expect(mockGtag).toHaveBeenCalledWith("event", "level_start", {
+        level_name: "character-personality",
+        content_type: "quiz",
+        content_id: "character-personality",
+        ab_variant: "A",
+        experiment_id: "quiz_result_visual_v1",
+      });
+    });
   });
 
   describe("trackContentEnd", () => {
@@ -91,6 +115,40 @@ describe("analytics", () => {
         content_type: "diagnosis",
         content_id: "quiz-personality-test",
       });
+    });
+
+    it("omits ab_variant/experiment_id when ab is not given", () => {
+      trackContentEnd("irodori", "game", true);
+
+      const params = mockGtag.mock.calls[0][2] as Record<string, unknown>;
+      expect("ab_variant" in params).toBe(false);
+      expect("experiment_id" in params).toBe(false);
+    });
+
+    it("sends ab_variant and experiment_id when ab is given", () => {
+      trackContentEnd("character-personality", "quiz", true, {
+        experimentId: "quiz_result_visual_v1",
+        variant: "B",
+      });
+
+      expect(mockGtag).toHaveBeenCalledWith("event", "level_end", {
+        level_name: "character-personality",
+        success: true,
+        content_type: "quiz",
+        content_id: "character-personality",
+        ab_variant: "B",
+        experiment_id: "quiz_result_visual_v1",
+      });
+    });
+
+    it("does not send ab_variant: undefined when ab is omitted", () => {
+      // Explicit guard: GA must never receive a key whose value is undefined
+      // (same discipline as buildTileParams for the toolbox `variant` key).
+      trackContentEnd("irodori", "game", true);
+
+      const params = mockGtag.mock.calls[0][2] as Record<string, unknown>;
+      expect(params.ab_variant).toBeUndefined();
+      expect("ab_variant" in params).toBe(false);
     });
   });
 
@@ -144,6 +202,53 @@ describe("analytics", () => {
         method: "hatena",
         content_type: "blog",
         item_id: "my-post",
+      });
+    });
+
+    it("omits ab_variant/experiment_id when ab is not given", () => {
+      trackShare("twitter", "quiz", "quiz-kanji-level");
+
+      const params = mockGtag.mock.calls[0][2] as Record<string, unknown>;
+      expect("ab_variant" in params).toBe(false);
+      expect("experiment_id" in params).toBe(false);
+    });
+
+    it("sends ab_variant and experiment_id when ab is given", () => {
+      trackShare("twitter", "quiz", "character-personality", {
+        experimentId: "quiz_result_visual_v1",
+        variant: "A",
+      });
+
+      expect(mockGtag).toHaveBeenCalledWith("event", "share", {
+        method: "twitter",
+        content_type: "quiz",
+        item_id: "character-personality",
+        ab_variant: "A",
+        experiment_id: "quiz_result_visual_v1",
+      });
+    });
+  });
+
+  describe("trackContentRating", () => {
+    it("sends content_rating event with no parameters when ab is not given", () => {
+      trackContentRating();
+
+      expect(mockGtag).toHaveBeenCalledWith(
+        "event",
+        "content_rating",
+        undefined,
+      );
+    });
+
+    it("sends ab_variant and experiment_id when ab is given", () => {
+      trackContentRating({
+        experimentId: "quiz_result_visual_v1",
+        variant: "B",
+      });
+
+      expect(mockGtag).toHaveBeenCalledWith("event", "content_rating", {
+        ab_variant: "B",
+        experiment_id: "quiz_result_visual_v1",
       });
     });
   });
@@ -242,6 +347,19 @@ describe("analytics", () => {
         item_id: "unit-converter",
         variant: "length",
       });
+    });
+
+    it("does not send the new ab_variant/experiment_id keys (toolbox variant unaffected)", () => {
+      // Regression guard for the cycle-255 A/B context addition:
+      // the toolbox-specific `variant` key must remain a separate concept
+      // from `ab_variant`/`experiment_id`. Adding A/B context to other
+      // track* functions must not leak these keys into toolbox events.
+      trackToolboxTileAdd({ item_id: "unit-converter", variant: "length" });
+
+      const params = mockGtag.mock.calls[0][2] as Record<string, unknown>;
+      expect("ab_variant" in params).toBe(false);
+      expect("experiment_id" in params).toBe(false);
+      expect(params.variant).toBe("length");
     });
 
     it("omits the variant key entirely when variant is not given", () => {
@@ -349,9 +467,34 @@ describe("analytics", () => {
       });
 
       expect(() => trackContentStart("irodori", "game")).not.toThrow();
+      expect(() =>
+        trackContentStart("character-personality", "quiz", {
+          experimentId: "quiz_result_visual_v1",
+          variant: "A",
+        }),
+      ).not.toThrow();
       expect(() => trackContentEnd("irodori", "game", true)).not.toThrow();
+      expect(() =>
+        trackContentEnd("character-personality", "quiz", true, {
+          experimentId: "quiz_result_visual_v1",
+          variant: "B",
+        }),
+      ).not.toThrow();
       expect(() => trackSearch("test")).not.toThrow();
       expect(() => trackShare("twitter", "game", "irodori")).not.toThrow();
+      expect(() =>
+        trackShare("twitter", "quiz", "character-personality", {
+          experimentId: "quiz_result_visual_v1",
+          variant: "A",
+        }),
+      ).not.toThrow();
+      expect(() => trackContentRating()).not.toThrow();
+      expect(() =>
+        trackContentRating({
+          experimentId: "quiz_result_visual_v1",
+          variant: "A",
+        }),
+      ).not.toThrow();
       expect(() => trackSearchModalOpen()).not.toThrow();
       expect(() =>
         trackSearchModalClose({ close_reason: "escape" }),
