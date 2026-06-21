@@ -2,7 +2,7 @@
 id: 255
 description: 来訪者価値を測りながらデザインを変えるための A/B テスト基盤（B-525）の設計と最小実装。憲法の意思決定原則（実装コストは劣る手段を選ぶ理由にならない）と憲法ルール2（helpful or enjoyable）に従い、デザイン変更を旧/新で振り分けて来訪者価値指標（直帰率/エンゲージ時間/回遊/遷移率）を実比較する A/B を本線として基盤化する。成果物は (1) 静的/サーバーレス・憲法ルール2と両立する A/B バリアント割当＋GA4 記録の最小実装（前方 A/B＝これからの変更を出しながら測る、と retro A/B＝既にブラインド移行した高リスク面の旧デザインを git 履歴から復活させて測る、の両方を支える）、(2) 来訪者価値指標の定義 SSoT と BigQuery でのアーム間比較クエリ、(3) 残る B-522 移行と既移行高リスク面への適用方針。最初の実 A/B 候補は 7PV の静的結果ページでなく、最大流入の既移行インラインクイズ結果（旧 絵文字/カラフル vs 新 シンプル）。before/after コホート比較とリリース識別子は A/B が原理的に組めない全体変更のための補完であって A/B の代替ではない。
 started_at: "2026-06-20T16:05:31+0900"
-completed_at: "2026-06-21T05:28:34+0900"
+completed_at: null
 ---
 
 # サイクル-255
@@ -27,22 +27,22 @@ completed_at: "2026-06-21T05:28:34+0900"
 
 ## 実施する作業
 
-- [x] **足場固め1（現状計測の棚卸し）**: GA4（MCP）と BigQuery で、現在どのイベント・パラメータが取得でき、来訪者価値指標（直帰/エンゲージ時間/回遊/遷移率）が算出可能かを実測で確認（`tmp/measurement-inventory.md`。価値指標4種すべて算出可・release/experiment 識別子は皆無を確認）
-- [x] **足場固め2（実トラフィック量の確定）**: 主要サーフェスの直近28日セッション数を実測（同上。サイト全体約8.7セッション/日・最大流入 character-personality でも A/B 1アーム月約20セッション＝単一クイズ固定nは非現実→プール化/連続量/逐次評価が必須とデータが規定）
-- [x] **設計（A/B 基盤アーキテクチャ）**: `docs/visitor-value-measurement.md` 論点1-2 に確定。クライアント端末内乱択（localStorage・SSR セーフ）でバリアント割当→憲法ルール2準拠・インライン結果はクライアント描画ゆえ FOUC/重複コンテンツ問題が原理的に非発生。retro A/B は旧バリアントを `d804b5d1` から `_experiments/` へ隔離復元。reviewer 検証済み
-- [x] **設計（検出力・期間）**: 論点3 に確定。8.7セッション/日・プールでも月数十のため固定nは非現実→連続量(エンゲージ時間)主KPI＋ベイズ常時観測＋事前固定閾値。大効果は数ヶ月で判定可・小効果は判定不能と正直に明記（reviewer が誠実さ確認）
-- [x] **設計（最初の実 A/B の選定）**: 論点6 に確定。最大流入の既移行インラインクイズ結果（旧 絵文字/カラフル vs 新 ミニマル、全クイズプール）。`level_end` 最大量の終点・質感差が大きく低トラフィックで唯一現実的に結論が出うる。実測トラフィック表で裏付け
-- [x] **指標定義の SSoT 化**: 論点5 に確定。価値指標4種を SQL(SSoT) で variant 別・release 別に算出する構造を設計（`docs/sql/ab-value-metrics.sql` として後続実装）
-- [x] **最小実装1a（A/B バリアント割当 util）**: `src/lib/ab/` に SSR セーフな端末内乱択割当を実装(20件テスト・dc7cd510)。記録経路(analytics.ts への arm 注入)は波2で実施
-- [x] **最小実装2（リリース識別子）**: `release` を `VERCEL_GIT_COMMIT_SHA → git → unknown` フォールバックで解決する codegen を実装し `gtag('config', ..., { release })` で全イベント自動付与(10件テスト・dc7cd510)
-- [x] **最小実装3（反復可能な比較クエリ）**: `docs/sql/ab-value-metrics.sql` を確定(variant別/release別/ベイズ素データ。実BigQueryでベースライン完全一致・dc7cd510)
-- [x] **最小実装1b（analytics.ts へ arm 注入経路追加）**: trackContentStart/End/Share/Rating に optional `ab` 引数追加(44件テスト・72535f79)。release二重付与なし・toolbox variant と衝突なし・undefined送信なし
-- [x] **波3（最初の実 A/B 仕込み）**: retro バリアント（旧 `*Content` 8本＋`OtherTypesNav`）を `d804b5d1` から `src/play/quiz/_components/_experiments/legacy-result/` へ隔離複製（21 ファイル）。ResultCard の 3 系統（`renderDetailedContent` の 8 case ＋`renderStandardContent` 経路＋共有 `OtherTypesNav`）に arm 切替を通し、`QuizContainer` で `useAbVariant("quiz_result_visual_v1")` を 1 か所だけ呼んで GA `level_start`/`level_end` に `ab_variant`/`experiment_id` を付与。**personality 系のみ実験対象化**（knowledge クイズは視覚差分 0px ゆえ ab 非付与＝独立変数の純度確保）。`OtherTypesNavAb` は arm を props で受ける純粋コンポーネント。`allTypesLayout` は両 arm `"list"` に固定（pill/list 差は独立変数の外）。**撤去マーカー `EXPERIMENT: quiz_result_visual_v1` は 28 件 / 9 ファイル**（`QuizContainer` / `ResultCard` / QuizContainer テスト ＋ retro 側で arm 分岐を持つ 5 ファイル）に付与。`_experiments/` 配下の全ファイルにはマーカーを付けていない＝マーカー網羅でなくディレクトリ削除で一括撤去する二段網羅方式（設計書論点8.4）。設計書 `docs/visitor-value-measurement.md` 論点2 に例外規定追記、`docs/sql/ab-value-metrics.sql` に `level_start`/`level_end` 非対称コメント追加
-- [x] **運用接続**: `docs/visitor-value-measurement.md` 論点8 に確定。毎月の読み方(判定閾値・最小観測数50/arm)、残B-522移行のA/B適用基準、既移行高リスク面のretro A/B判断基準、grep駆動の撤去手順、design-migration-planとの順序、計測基盤の自己適用を明文化
-- [x] **視覚/動作確認**: 本番ビルド(`npm run build`完走)+Playwright実機でcharacter-personality w360/w1280×light/darkの arm=A/B 4枚撮影しPM自身で目視確認。armA=retro(絵文字🎭・type-color罫線・中央寄せ復活)・armB=current(ミニマル・本変更前と質感同一)・a11y等価・knowledge(yoji-level)は ab_variant非付与・personalityは ab_variant/experiment_id付与・release="05f0334-20260620"全イベント付与を観測
-- [x] **テスト**: 全実装サイクルを通じて単体テスト+62件追加(ab 20+release codegen 10+analytics 44→+9+ResultCardArm 25+OtherTypesNavAb 5+QuizContainer gate 4)、サイクル全体で5662件 green・skip/骨抜きなし
-- [x] **最終レビュー(サイクル全体)**: 白紙reviewerが2ラウンド点検(改善指示=事実記述3件→是正→白紙再レビュー=投入可承認)。AP-P28是正貫徹・退行ゼロ・独立変数の純度・二重付与なし・撤去容易性すべて実コードで実証
-- [x] **backlog 更新**: B-525をDoneへ、B-526(月次読み)/B-527(撤去サイクル化)/B-528(基盤自己適用回帰確認)をDeferredへ起票。B-523/B-524は本基盤前提でNotes更新。Done最古5本ルールでcycle-249分を削除
+- [ ] **足場固め1（現状計測の棚卸し）**: GA4（MCP）と BigQuery で、現在どのイベント・パラメータが取得でき、来訪者価値指標（直帰/エンゲージ時間/回遊/遷移率）が算出可能かを実測で確認（`tmp/measurement-inventory.md`。価値指標4種すべて算出可・release/experiment 識別子は皆無を確認）
+- [ ] **足場固め2（実トラフィック量の確定）**: 主要サーフェスの直近28日セッション数を実測（同上。サイト全体約8.7セッション/日・最大流入 character-personality でも A/B 1アーム月約20セッション＝単一クイズ固定nは非現実→プール化/連続量/逐次評価が必須とデータが規定）
+- [ ] **設計（A/B 基盤アーキテクチャ）**: `docs/visitor-value-measurement.md` 論点1-2 に確定。クライアント端末内乱択（localStorage・SSR セーフ）でバリアント割当→憲法ルール2準拠・インライン結果はクライアント描画ゆえ FOUC/重複コンテンツ問題が原理的に非発生。retro A/B は旧バリアントを `d804b5d1` から `_experiments/` へ隔離復元。reviewer 検証済み
+- [ ] **設計（検出力・期間）**: 論点3 に確定。8.7セッション/日・プールでも月数十のため固定nは非現実→連続量(エンゲージ時間)主KPI＋ベイズ常時観測＋事前固定閾値。大効果は数ヶ月で判定可・小効果は判定不能と正直に明記（reviewer が誠実さ確認）
+- [ ] **設計（最初の実 A/B の選定）**: 論点6 に確定。最大流入の既移行インラインクイズ結果（旧 絵文字/カラフル vs 新 ミニマル、全クイズプール）。`level_end` 最大量の終点・質感差が大きく低トラフィックで唯一現実的に結論が出うる。実測トラフィック表で裏付け
+- [ ] **指標定義の SSoT 化**: 論点5 に確定。価値指標4種を SQL(SSoT) で variant 別・release 別に算出する構造を設計（`docs/sql/ab-value-metrics.sql` として後続実装）
+- [ ] **最小実装1a（A/B バリアント割当 util）**: `src/lib/ab/` に SSR セーフな端末内乱択割当を実装(20件テスト・dc7cd510)。記録経路(analytics.ts への arm 注入)は波2で実施
+- [ ] **最小実装2（リリース識別子）**: `release` を `VERCEL_GIT_COMMIT_SHA → git → unknown` フォールバックで解決する codegen を実装し `gtag('config', ..., { release })` で全イベント自動付与(10件テスト・dc7cd510)
+- [ ] **最小実装3（反復可能な比較クエリ）**: `docs/sql/ab-value-metrics.sql` を確定(variant別/release別/ベイズ素データ。実BigQueryでベースライン完全一致・dc7cd510)
+- [ ] **最小実装1b（analytics.ts へ arm 注入経路追加）**: trackContentStart/End/Share/Rating に optional `ab` 引数追加(44件テスト・72535f79)。release二重付与なし・toolbox variant と衝突なし・undefined送信なし
+- [ ] **波3（最初の実 A/B 仕込み）**: retro バリアント（旧 `*Content` 8本＋`OtherTypesNav`）を `d804b5d1` から `src/play/quiz/_components/_experiments/legacy-result/` へ隔離複製（21 ファイル）。ResultCard の 3 系統（`renderDetailedContent` の 8 case ＋`renderStandardContent` 経路＋共有 `OtherTypesNav`）に arm 切替を通し、`QuizContainer` で `useAbVariant("quiz_result_visual_v1")` を 1 か所だけ呼んで GA `level_start`/`level_end` に `ab_variant`/`experiment_id` を付与。**personality 系のみ実験対象化**（knowledge クイズは視覚差分 0px ゆえ ab 非付与＝独立変数の純度確保）。`OtherTypesNavAb` は arm を props で受ける純粋コンポーネント。`allTypesLayout` は両 arm `"list"` に固定（pill/list 差は独立変数の外）。**撤去マーカー `EXPERIMENT: quiz_result_visual_v1` は 28 件 / 9 ファイル**（`QuizContainer` / `ResultCard` / QuizContainer テスト ＋ retro 側で arm 分岐を持つ 5 ファイル）に付与。`_experiments/` 配下の全ファイルにはマーカーを付けていない＝マーカー網羅でなくディレクトリ削除で一括撤去する二段網羅方式（設計書論点8.4）。設計書 `docs/visitor-value-measurement.md` 論点2 に例外規定追記、`docs/sql/ab-value-metrics.sql` に `level_start`/`level_end` 非対称コメント追加
+- [ ] **運用接続**: `docs/visitor-value-measurement.md` 論点8 に確定。毎月の読み方(判定閾値・最小観測数50/arm)、残B-522移行のA/B適用基準、既移行高リスク面のretro A/B判断基準、grep駆動の撤去手順、design-migration-planとの順序、計測基盤の自己適用を明文化
+- [ ] **視覚/動作確認**: 本番ビルド(`npm run build`完走)+Playwright実機でcharacter-personality w360/w1280×light/darkの arm=A/B 4枚撮影しPM自身で目視確認。armA=retro(絵文字🎭・type-color罫線・中央寄せ復活)・armB=current(ミニマル・本変更前と質感同一)・a11y等価・knowledge(yoji-level)は ab_variant非付与・personalityは ab_variant/experiment_id付与・release="05f0334-20260620"全イベント付与を観測
+- [ ] **テスト**: 全実装サイクルを通じて単体テスト+62件追加(ab 20+release codegen 10+analytics 44→+9+ResultCardArm 25+OtherTypesNavAb 5+QuizContainer gate 4)、サイクル全体で5662件 green・skip/骨抜きなし
+- [ ] **最終レビュー(サイクル全体)**: 白紙reviewerが2ラウンド点検(改善指示=事実記述3件→是正→白紙再レビュー=投入可承認)。AP-P28是正貫徹・退行ゼロ・独立変数の純度・二重付与なし・撤去容易性すべて実コードで実証
+- [ ] **backlog 更新**: B-525をDoneへ、B-526(月次読み)/B-527(撤去サイクル化)/B-528(基盤自己適用回帰確認)をDeferredへ起票。B-523/B-524は本基盤前提でNotes更新。Done最古5本ルールでcycle-249分を削除
 
 ## 作業計画
 

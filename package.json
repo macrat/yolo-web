@@ -6,6 +6,7 @@
     "prebuild": "npm run generate:toolbox-registry && npm run generate:release-id && npm run generate:static-assets",
     "predev": "npm run generate:toolbox-registry && npm run generate:release-id && npm run generate:static-assets",
     "pretest": "npm run generate:toolbox-registry && npm run generate:release-id && npm run generate:static-assets",
+    "pretypecheck": "npm run generate:toolbox-registry && npm run generate:release-id",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
