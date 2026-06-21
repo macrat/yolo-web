@@ -2,7 +2,7 @@
 id: 256
 description: 立て直しサイクル。当初「診断の共有導線(バイラルの環)の改善(B-532)」を計画しビルドまで進めたが、(1) 本人が結果(detailedContent)を読む前に共有ボタンを差し込む配置はダークパターン(cycle-145 / AP-I04 の再演)、(2) 流入の約7割が単独の検索来訪者で社会的シェアの文脈を持たず共有最適化は「種なき畑」(cycle-167)、と判明し撤回。原因は研究・計画・ビルドを一度もレビューに通さず(Review always 違反 / AP-WF01)、AP-I04・cycle-145 前例の照合が走らなかったこと。本サイクルではダークパターンを撤回し、AP集(AP-I04/WF01/WF02/WF24)に再発を記録し、Search Console 実測で来訪者価値の源泉(クリック後にしか得られない固有体験＝診断)と次の正しい方向を特定して次サイクルの土台とした。
 started_at: "2026-06-21T13:38:52+0900"
-completed_at: null
+completed_at: "2026-06-21T15:26:16+0900"
 ---
 
 # サイクル-256（立て直しサイクル）
@@ -29,7 +29,7 @@ completed_at: null
 - [x] **backlog 更新**: B-532 を中止（共有導線最適化は AP-I04／種なき畑と判明）。Search Console 実測から来訪者価値起点の方向を Queued に起票（B-533/B-534）。
 - [x] **レビュー（Review always の励行）**: 本サイクルの立て直し全体（撤回・AP記録・実測の解釈・次方向の起票）を reviewer に依頼。判定=承認（Critical/Major ゼロ・任意 Minor 3件）。撤回の完全性・doc の誠実性・AP記録・research の非指標いじり・backlog 整合を実体確認済。
 - [x] **再発防止の仕組み化（reviewer 任意指摘#1 対応）**: AP-WF01(レビュー省略)は11回目の再発で「記録のみ」では止まらないため、`cycle-kickoff` SKILL に「ビルド着手前の計画レビュー必須ゲート」を追加（記録でなく手順上のゲート化）。
-- [ ] **完了処理**: 残存指摘ゼロを確認し `/cycle-completion`。
+- [x] **完了処理**: 残存指摘ゼロを確認し `/cycle-completion` を実行。
 
 ## 作業計画
 
@@ -73,14 +73,35 @@ completed_at: null
 - 当初計画の「変更前」スクリーンショット（tmp/screenshots/before-\*）は撮影済だが、変更は撤回したため before/after 比較は不要。
 - ブログ判断: 書かない。題材（PM の判断の歪みと撤回）は cycle-255 で同種記事を「自己美化に転化する」として削除済で、誠実に書ける枠組みが未確立（AP-W12/W08）。再発防止の実体は AP集と本doc・research に記録済。
 
+## レビュー結果
+
+### 立て直し全体のレビュー（reviewer・Review always の励行）
+
+判定: **承認**（Critical/Major ゼロ・任意 Minor 3件）。6観点を実体確認:
+
+1. 撤回の完全性 — OK。`git diff aaec26de HEAD -- ResultCard.{tsx,module.css},test` が0行（完全一致）。wip 由来の `shareTop`/`shareTopLabel`/上部配置の残骸ゼロ（grep 確認）。本番未到達。
+2. cycle-256.md の誠実性 — OK。自己美化なし・駆動源の Owner 帰属(AP-WF24)なし・責任の曖昧化なし。根本原因を自分の Review always 省略に正しく帰している。
+3. AP記録の正しさ — OK。AP-I04/WF01/WF02/WF24 に 256 追記、AP-WF24 発生件数 56→57 整合。記録すべき AP の漏れなし。
+4. research の妥当性 — OK。データ限界明記・事実/解釈分離・算術整合。**次方向が AP-I04(指標いじり)に再陥していないこと**を二重明記で確認。
+5. backlog 整合 — OK。Active 空・B-532 中止・B-533/534 来訪者価値起点・B-523 Deferred。
+6. CLAUDE.md 遵守 — OK（Check AP on failure / Review always / Roles / Improve process）。
+
+対応必須: なし。
+
+任意 Minor と対応:
+
+- #1（AP-WF01 が11回目の再発で「記録のみ」では止まらない→レビューをビルド前ゲートに）: **対応済**。`cycle-kickoff` SKILL に「ビルド着手前の計画レビュー必須ゲート」を新設（手順上のゲート化）。
+- #2（research 候補A の「CTRほぼ0%」起点表現が指標起点に見えうる→planner 具体化時に来訪者体験起点へ翻訳）: 次サイクルで B-533 具体化時に留意（research 自体は修正不要。B-533 注記に AP-I04 禁止を明記済）。
+- #3（tmp の before スクショ）: tmp 配下・git 非追跡で放置可。対応不要。
+
 ## サイクル終了時のチェックリスト
 
-- [ ] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
-- [ ] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
-- [ ] すべての変更がレビューされ、残存する指摘事項が無くなっている。
-- [ ] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
-- [ ] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
-- [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
-- [ ] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
+- [x] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
+- [x] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
+- [x] すべての変更がレビューされ、残存する指摘事項が無くなっている。
+- [x] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
+- [x] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
+- [x] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
+- [x] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
 
 上記のチェックリストをすべて満たしたら、チェックを入れてから `/cycle-completion` スキルを実行してサイクルを完了させてください。
