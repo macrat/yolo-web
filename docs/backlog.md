@@ -10,6 +10,10 @@
 | --- | --- | --- | --- | --- |
 | B-350 | 移行計画 Phase 9.3.a: dictionary トップ移行 | P1 | - | /dictionary を (new)/ に移行。**B-535コンセプト判定後に要否確認**（道具箱コンセプト継続が前提のタスクのため）。詳細 design-migration-plan.md |
 | B-533 | 辞典に固有の深掘り価値を足す/露出を診断へ橋渡し | P2 | - | 移行完了後＋B-535判定後に着手(AP-P27)。四字熟語に由来の物語+使い方を足す方向。詳細 cycle-257.md |
+| B-538 | site-concept.md 改訂（道具箱-core→診断中心）と下流タスク再編 | P1 | - | B-535判定の実行。改訂前にAP-P27点検・トップ`/`位置づけ再設計・白紙新規reviewer再レビュー。詳細 cycle-257.md |
+| B-537 | 診断流入増(character-personality)の追計測と回遊強化 | P2 | - | 06-21〜25追計測で定着確認後に投資。煽り/押し付け禁止(cycle-256)・単発質を損なわない回遊。詳細 cycle-257.md |
+| B-536 | 辞典FAQ件数の是正（四字熟語101→400・漢字80→2139） | P3 | - | dictionary-meta.tsが古く来訪者に誤情報。cycle-257調査で発見。詳細 cycle-257.md |
+| B-539 | デザインシステム(DESIGN.md)の診断中心コンセプトへの再適合 | P1 | - | 道具箱向けミニマルは診断/ゲームと相性が悪い疑い。A/B(旧カラフル vs 新ミニマル)で計測駆動。B-538と一体。詳細 cycle-257.md |
 | B-534 | 学年×画数の漢字一覧ページの実用性向上(「2画の漢字 小学生」需要) | P3 | - | stroke/N一覧は平均39位で露出が露出で終わる。束ねた学習需要。yoji/kanji移行(9.3.d/e)後が筋。詳細 research/2026-06-21-search-console-unmet-demand.md |
 | B-524 | *Content の allTypesLayout 公開型を意味通り命名へ整理 | P1 | - | cycle-254のpill→grid内部マップでdead literal化。AP-I02。retro側(_experiments/)の整理にも注意。詳細 cycle-254.md / cycle-255.md |
 | B-493 | 遊び（ゲーム）の単一タイル化（GameLayout 系） | P1 | - | 全ゲームをタイル再構築。B-522の一環。P2→P1昇格。詳細 cycle-225.md |
