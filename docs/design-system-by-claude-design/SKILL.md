@@ -4,6 +4,8 @@ description: Use this skill to generate well-branded interfaces and assets for y
 user-invocable: true
 ---
 
+> **【コンセプト更新の注記（cycle-259 / B-538）】** このスキルの説明文と README.md の「プロダクト概要」は旧コンセプト「道具箱-as-core」を前提にしている。サイトコンセプトは cycle-257（B-535）の実測に基づき**診断中心**へ再センタリングされた（`docs/site-concept.md` 改訂済）。デザイントークンと UI コンポーネントの規約は概念中立で引き続き有効だが、「サイトのコアは道具・診断は息抜き1割」という位置づけは現状と異なる。UI 設計の判断根拠にしないこと。本格的な再適合は B-539 で扱う。
+
 Read `README.md` in this skill folder for the full design system. Explore `colors_and_type.css` for tokens and `ui_kits/` for components.
 
 If creating visual artifacts (slides, mocks, throwaway prototypes, etc), copy assets out and create static HTML files for the user to view. If working on production code, you can copy assets and read the rules here to become an expert in designing with this brand.
