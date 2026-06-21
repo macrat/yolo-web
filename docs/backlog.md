@@ -2,12 +2,13 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-532 | 診断の共有導線（バイラルの環）の改善 | P1 | 256 | 結果到達(level_end)94件/28日に対しshareイベント2件(2.1%)・共有結果ページ外部流入ほぼ0。共有導線が長い詳細本文の最下部にあり感情のピーク(結果上部)から遠い。全診断共通のResultCard上部に共有導線を出す。詳細 cycle-256.md |
 
 ## Queued (すぐに着手できる)
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-533 | 辞典に固有の深掘り価値を足す/露出を診断へ橋渡し | P2 | - | Search Console実測: 辞典は表示79%だがCTR~0.1%のコモディティ検索、診断はCTR5.92%で価値実証。指標いじり禁止(AP-I04)。詳細 research/2026-06-21-search-console-unmet-demand.md |
+| B-534 | 学年×画数の漢字一覧ページの実用性向上(「2画の漢字 小学生」需要) | P3 | - | stroke/N一覧は平均39位で露出が露出で終わる。束ねた学習需要。詳細 research/2026-06-21-search-console-unmet-demand.md |
 | B-524 | *Content の allTypesLayout 公開型を意味通り命名へ整理 | P1 | - | cycle-254のpill→grid内部マップでdead literal化。AP-I02。retro側(_experiments/)の整理にも注意。詳細 cycle-254.md / cycle-255.md |
 | B-350 | 移行計画 Phase 9.3.a: dictionary トップ移行 | P1 | - | /dictionary を (new)/ に移行。B-522完了後に着手。P2→P1昇格。詳細 design-migration-plan.md |
 | B-493 | 遊び（ゲーム）の単一タイル化（GameLayout 系） | P1 | - | 全ゲームをタイル再構築。B-522の一環。P2→P1昇格。詳細 cycle-225.md |
@@ -132,8 +133,8 @@
 
 | ID | Title | Completed Cycle | Notes |
 | --- | --- | --- | --- |
+| B-532 | 診断の共有導線（バイラルの環）の改善 | 256 | **中止**。本人が結果を読む前に共有を迫る配置はダークパターン(AP-I04/cycle-145再演)、流入7割が検索来訪者で共有最適化は種なき畑と判明し撤回。実測の次方向はB-533/534へ。詳細 cycle-256.md |
 | B-525 | 来訪者価値を測りながら変えるA/Bテスト基盤の設計と最小実装 | 255 | A/B割当・release識別子・BigQuery比較SQL・最初の実A/B(quiz_result_visual_v1)仕込み済。結果読みはB-526/527/528へ。詳細 cycle-255.md / visitor-value-measurement.md |
 | B-522 (partial) | クイズのインライン結果本文の (new) デザイン移行 | 254 | variant 別本文8本(*Content)+OtherTypesNav を ResultCard 言語へ genuine 統一。最も見られている旅程の終点の質感断裂を解消。B-522傘下の残作業は B-523/ゲーム/daily/タイル化。詳細 cycle-254.md |
 | B-320 | 計算・変換関係ツールの追加（パーセント計算機） | 252 | パーセント計算機を新規追加。残りはQueued継続。詳細 cycle-252.md |
 | B-519 | 漢字辞書詳細ページのCTR改善（SEOメタ表層） | 251 | title/description/OG/JSON-LDに部首・画数を前置。詳細 cycle-251.md |
-| B-518 | science-thinking の結果体験強化 | 250 | 10タイプに detailedContent 追加。詳細 cycle-250.md |
