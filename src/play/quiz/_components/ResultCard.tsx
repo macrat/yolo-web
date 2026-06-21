@@ -609,6 +609,24 @@ export default function ResultCard({
           {result.recommendation}
         </Link>
       )}
+      {/*
+        結果到達直後の感情のピークに結果固有の共有導線を置く（共有率改善・cycle-256）。
+        従来は共有導線がカード最下部（最大24タイプの詳細本文の後）にしかなく、
+        結果を見た瞬間の位置から遠かった。ここは A/B 独立変数
+        （renderDetailedContent）の呼び出しより前＝両 arm で同一に描画される
+        arm 中立の chrome 領域なので、実験 quiz_result_visual_v1 を汚染しない。
+        実験対象外のため EXPERIMENT マーカーは付けない。
+      */}
+      <div className={styles.shareTop}>
+        <p className={styles.shareTopLabel}>結果をシェア</p>
+        <ShareButtons
+          shareText={shareText}
+          shareUrl={shareUrl}
+          quizTitle={quizTitle}
+          contentType={quizType === "personality" ? "diagnosis" : "quiz"}
+          contentId={`quiz-${quizSlug}`}
+        />
+      </div>
       {detailedContent && (
         <div className={styles.detailedSection}>
           {renderDetailedContent(

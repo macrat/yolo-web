@@ -669,7 +669,7 @@ describe("ResultCard - character-fortune variant", () => {
 });
 
 describe("ResultCard - DOM順序", () => {
-  test("detailedSection が ShareButtons より先に表示されること", () => {
+  test("detailedSection が 下部 ShareButtons より先に表示されること", () => {
     const domOrderContent: QuizResultDetailedContent = {
       traits: ["特徴1"],
       behaviors: ["あるある1"],
@@ -680,20 +680,128 @@ describe("ResultCard - DOM順序", () => {
       <ResultCard {...defaultProps} detailedContent={domOrderContent} />,
     );
 
-    const shareButtons = container.querySelector(
+    // cycle-256 で上部にも ShareButtons を追加したため、ShareButtons は
+    // 上部・下部の2か所に存在する。ここで検証したいのは「詳細本文が
+    // 下部 ShareButtons より前にある」ことなので、最後の ShareButtons
+    // （= 下部）を対象にする。
+    const allShareButtons = container.querySelectorAll(
       "[data-testid='share-buttons']",
     );
+    const bottomShareButtons = allShareButtons[allShareButtons.length - 1];
     const behaviorsItem = screen.getByText("あるある1").closest("li");
 
-    expect(shareButtons).toBeInTheDocument();
+    expect(bottomShareButtons).toBeInTheDocument();
     expect(behaviorsItem).toBeInTheDocument();
 
-    if (shareButtons && behaviorsItem) {
-      // behaviorsItemがshareButtonsより前に現れることを確認
-      const position = shareButtons.compareDocumentPosition(behaviorsItem);
-      // Node.DOCUMENT_POSITION_PRECEDING = 2 (behaviorsItemがshareButtonsより前)
+    if (bottomShareButtons && behaviorsItem) {
+      // behaviorsItemがbottomShareButtonsより前に現れることを確認
+      const position =
+        bottomShareButtons.compareDocumentPosition(behaviorsItem);
+      // Node.DOCUMENT_POSITION_PRECEDING = 2 (behaviorsItemがbottomShareButtonsより前)
       expect(position & Node.DOCUMENT_POSITION_PRECEDING).toBeTruthy();
     }
+  });
+});
+
+describe("ResultCard - 上部共有セクション（cycle-256）", () => {
+  // CSS modules はテスト環境ではハッシュ付きクラス名になるため、
+  // 既存テスト（catchphraseBeforeDescription 等）と同様に部分一致セレクタで参照する。
+  const SHARE_TOP = "[class*='shareTop']";
+  const SHARE_TOP_LABEL = "[class*='shareTopLabel']";
+
+  test("結果到達直後（上部）の共有リード文と共有ボタンが描画されること", () => {
+    const { container } = render(<ResultCard {...defaultProps} />);
+
+    // 上部共有セクションのリード文（ResultCard 本体が描画する実 DOM）
+    const shareTopLabel = container.querySelector(SHARE_TOP_LABEL);
+    expect(shareTopLabel).toBeInTheDocument();
+    expect(shareTopLabel).toHaveTextContent("結果をシェア");
+
+    // 上部セクション wrapper 内に ShareButtons が含まれること
+    const shareTop = container.querySelector(SHARE_TOP);
+    expect(shareTop).toBeInTheDocument();
+    expect(
+      shareTop?.querySelector("[data-testid='share-buttons']"),
+    ).toBeInTheDocument();
+  });
+
+  test("上部共有セクションが詳細本文（detailedSection）より前に描画されること", () => {
+    const domOrderContent: QuizResultDetailedContent = {
+      traits: ["特徴1"],
+      behaviors: ["あるある1"],
+      advice: "アドバイス",
+    };
+    const { container } = render(
+      <ResultCard {...defaultProps} detailedContent={domOrderContent} />,
+    );
+
+    const shareTop = container.querySelector(SHARE_TOP);
+    const detailedSection = container.querySelector(
+      "[class*='detailedSection']",
+    );
+    expect(shareTop).toBeInTheDocument();
+    expect(detailedSection).toBeInTheDocument();
+
+    if (shareTop && detailedSection) {
+      // shareTop が detailedSection（= renderDetailedContent の出力）より前に現れること。
+      // これにより上部共有セクションが A/B 独立変数の外＝arm 中立 chrome にあると保証される。
+      const position = shareTop.compareDocumentPosition(detailedSection);
+      // DOCUMENT_POSITION_FOLLOWING = 4 (detailedSection が shareTop より後)
+      expect(position & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    }
+  });
+
+  test.each<["A" | "B"]>([["A"], ["B"]])(
+    "arm中立: resultVisualArm=%s でも上部共有セクションが同一に描画されること",
+    (arm) => {
+      const detailedContent: QuizResultDetailedContent = {
+        traits: ["特徴1"],
+        behaviors: ["あるある1"],
+        advice: "アドバイス",
+      };
+      const { container } = render(
+        <ResultCard
+          {...defaultProps}
+          detailedContent={detailedContent}
+          resultVisualArm={arm}
+        />,
+      );
+
+      const shareTop = container.querySelector(SHARE_TOP);
+      expect(shareTop).toBeInTheDocument();
+      // 上部共有セクションは renderDetailedContent（A/B独立変数）の外側にあるため、
+      // arm を切り替えても上部のリード文・共有ボタンは常に同一に描画される。
+      expect(shareTop?.querySelector(SHARE_TOP_LABEL)).toHaveTextContent(
+        "結果をシェア",
+      );
+      expect(
+        shareTop?.querySelector("[data-testid='share-buttons']"),
+      ).toBeInTheDocument();
+    },
+  );
+
+  test("上部・下部の両方に ShareButtons が存在すること（共有導線が複数）", () => {
+    const detailedContent: QuizResultDetailedContent = {
+      traits: ["特徴1"],
+      behaviors: ["あるある1"],
+      advice: "アドバイス",
+    };
+    const { container } = render(
+      <ResultCard {...defaultProps} detailedContent={detailedContent} />,
+    );
+
+    const allShareButtons = container.querySelectorAll(
+      "[data-testid='share-buttons']",
+    );
+    // 上部（cycle-256 追加分）+ 下部（既存）で 2 つ以上存在する
+    expect(allShareButtons.length).toBeGreaterThanOrEqual(2);
+
+    // 1 つ目は上部共有セクション内、最後の 1 つは上部セクションの外（下部）にある
+    const shareTop = container.querySelector(SHARE_TOP);
+    expect(shareTop?.contains(allShareButtons[0])).toBe(true);
+    expect(
+      shareTop?.contains(allShareButtons[allShareButtons.length - 1]),
+    ).toBe(false);
   });
 });
 
