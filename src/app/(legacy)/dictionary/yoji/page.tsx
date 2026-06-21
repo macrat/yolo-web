@@ -8,14 +8,15 @@ import { YOJI_CATEGORY_LABELS } from "@/dictionary/_lib/types";
 import YojiIndexClient from "./YojiIndexClient";
 import styles from "./page.module.css";
 
+const yojiCount = getAllYoji().length;
+
 export const metadata: Metadata = {
   title: `四字熟語辞典 | ${SITE_NAME}`,
-  description:
-    "よく使われる四字熟語101語の読み方・意味を収録。カテゴリ・難易度別に整理された四字熟語辞典です。",
+  description: `よく使われる四字熟語${yojiCount}語の読み方・意味を収録。カテゴリ・難易度別に整理された四字熟語辞典です。`,
   keywords: ["四字熟語辞典", "四字熟語", "読み方", "意味", "カテゴリ"],
   openGraph: {
     title: `四字熟語辞典 | ${SITE_NAME}`,
-    description: "四字熟語101語の読み方・意味を収録。",
+    description: `四字熟語${yojiCount}語の読み方・意味を収録。`,
     type: "website",
     url: `${BASE_URL}/dictionary/yoji`,
     siteName: SITE_NAME,
@@ -23,7 +24,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: `四字熟語辞典 | ${SITE_NAME}`,
-    description: "四字熟語101語の読み方・意味を収録。",
+    description: `四字熟語${yojiCount}語の読み方・意味を収録。`,
   },
   alternates: {
     canonical: `${BASE_URL}/dictionary/yoji`,

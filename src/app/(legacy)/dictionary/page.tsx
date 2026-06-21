@@ -8,10 +8,16 @@ import { getAllColors } from "@/dictionary/_lib/colors";
 import { getAllEntries as getAllHumorEntries } from "@/humor-dict/data";
 import styles from "./page.module.css";
 
+const kanjiCount = getAllKanji().length;
+const yojiCount = getAllYoji().length;
+const colorCount = getAllColors().length;
+const humorCount = getAllHumorEntries().length;
+
+const summaryText = `漢字・四字熟語・日本の伝統色・ユーモア辞典を楽しめるオンライン辞典。漢字${kanjiCount}字、四字熟語${yojiCount}語、伝統色${colorCount}色、ユーモア定義${humorCount}語を収録。`;
+
 export const metadata: Metadata = {
   title: `辞典 | ${SITE_NAME}`,
-  description:
-    "漢字・四字熟語・日本の伝統色・ユーモア辞典を楽しめるオンライン辞典。漢字80字、四字熟語101語、伝統色250色、ユーモア定義30語を収録。",
+  description: summaryText,
   keywords: [
     "辞典",
     "漢字辞典",
@@ -24,8 +30,7 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: `辞典 | ${SITE_NAME}`,
-    description:
-      "漢字・四字熟語・日本の伝統色・ユーモア辞典を楽しめるオンライン辞典。漢字80字、四字熟語101語、伝統色250色、ユーモア定義30語を収録。",
+    description: summaryText,
     type: "website",
     url: `${BASE_URL}/dictionary`,
     siteName: SITE_NAME,
@@ -33,8 +38,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: `辞典 | ${SITE_NAME}`,
-    description:
-      "漢字・四字熟語・日本の伝統色・ユーモア辞典を楽しめるオンライン辞典。漢字80字、四字熟語101語、伝統色250色、ユーモア定義30語を収録。",
+    description: summaryText,
   },
   alternates: {
     canonical: `${BASE_URL}/dictionary`,
@@ -42,11 +46,6 @@ export const metadata: Metadata = {
 };
 
 export default function DictionaryPage() {
-  const kanjiCount = getAllKanji().length;
-  const yojiCount = getAllYoji().length;
-  const colorCount = getAllColors().length;
-  const humorCount = getAllHumorEntries().length;
-
   return (
     <>
       <Breadcrumb items={[{ label: "ホーム", href: "/" }, { label: "辞典" }]} />
@@ -63,7 +62,7 @@ export default function DictionaryPage() {
           <span className={styles.sectionIcon}>漢</span>
           <h2 className={styles.sectionTitle}>漢字辞典</h2>
           <p className={styles.sectionDesc}>
-            小学1年生で学ぶ基本漢字の読み方・意味・部首・画数などの情報をまとめています。
+            常用漢字の読み方・意味・部首・画数などの情報をまとめています。
           </p>
           <p className={styles.sectionCount}>{kanjiCount}字収録</p>
         </Link>

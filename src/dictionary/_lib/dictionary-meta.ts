@@ -1,4 +1,9 @@
 import type { DictionaryMeta } from "./types";
+import { getAllKanji } from "./kanji";
+import { getAllYoji } from "./yoji";
+
+const kanjiCount = getAllKanji().length;
+const yojiCount = getAllYoji().length;
 
 export const KANJI_DICTIONARY_META: DictionaryMeta = {
   slug: "kanji",
@@ -6,12 +11,11 @@ export const KANJI_DICTIONARY_META: DictionaryMeta = {
   updatedAt: "2026-02-24T13:50:51+09:00",
   name: "漢字辞典",
   trustLevel: "curated",
-  valueProposition: "小学校で習う漢字の読み・画数・用例をすぐに確認できる",
+  valueProposition: "常用漢字の読み・画数・用例をすぐに確認できる",
   faq: [
     {
       question: "この漢字辞典にはどんな漢字が収録されていますか？",
-      answer:
-        "小学校で学習する教育漢字を中心に80字を収録しています。各漢字について音読み・訓読み・画数・部首・用例を掲載しています。",
+      answer: `常用漢字${kanjiCount}字を収録しています。各漢字について音読み・訓読み・画数・部首・用例を掲載しています。`,
     },
     {
       question: "漢字のデータはどこから来ていますか？",
@@ -41,8 +45,7 @@ export const YOJI_DICTIONARY_META: DictionaryMeta = {
     },
     {
       question: "四字熟語は全部で何語収録されていますか？",
-      answer:
-        "現在101語を収録しています。努力・感情・自然・社会など10のカテゴリに分類されており、カテゴリから探すこともできます。",
+      answer: `現在${yojiCount}語を収録しています。努力・感情・自然・社会など10のカテゴリに分類されており、カテゴリから探すこともできます。`,
     },
     {
       question: "四字熟語のデータは正確ですか？",
