@@ -9,4 +9,4 @@
  * coding-rules #2).
  */
 
-export const RELEASE_ID = "a1e809c-20260621";
+export const RELEASE_ID = "93bb6ae-20260621";
