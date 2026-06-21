@@ -112,23 +112,6 @@
   }
 }
 
-/*
- * 上部共有セクション（結果到達直後の感情のピーク位置・cycle-256）。
- * description / recommendation の直後、詳細本文の前に静かに置く。
- * 派手な装飾はせず、上下の余白と淡い区切り線で自然に区切る。
- */
-.shareTop {
-  margin: 0 0 1.5rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border);
-}
-
-.shareTopLabel {
-  font-size: 0.8rem;
-  color: var(--fg-soft);
-  margin: 0 0 0.5rem;
-}
-
 /* detailedContent セクション（全 variant 共通の親コンテナ） */
 .detailedSection {
   margin-top: 1.5rem;
