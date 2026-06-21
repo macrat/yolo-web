@@ -2,17 +2,18 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-536 | 辞典FAQ件数の是正（漢字80→2136・四字熟語101→400） | P1 | 258 | cycle-258で着手。本番の確定誤情報(FAQ＋メタ description)を`.length`算出に是正。本文/一覧は既に動的で正常、メタとFAQ回答のみ取り残し。詳細 cycle-258.md |
 
 ## Queued (すぐに着手できる)
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-541 | 現状正しい辞典収録数ハードコードの予防的`.length`化 | P4 | - | colors系「250色」等。現状正しいがB-409/B-536と同型の再発予兆。詳細 cycle-258.md |
 | B-350 | 移行計画 Phase 9.3.a: dictionary トップ移行 | P1 | - | /dictionary を (new)/ に移行。**B-535コンセプト判定後に要否確認**（道具箱コンセプト継続が前提のタスクのため）。詳細 design-migration-plan.md |
 | B-533 | 辞典に固有の深掘り価値を足す/露出を診断へ橋渡し | P2 | - | 移行完了後＋B-535判定後に着手(AP-P27)。四字熟語に由来の物語+使い方を足す方向。詳細 cycle-257.md |
 | B-538 | site-concept.md 改訂（道具箱-core→診断中心）と下流タスク再編 | P1 | - | B-535判定の実行。改訂前にAP-P27点検・トップ`/`位置づけ再設計・白紙新規reviewer再レビュー。詳細 cycle-257.md |
 | B-540 | アンチパターン集の規約準拠クリーンアップ | P1 | - | directory規約違反を是正(手順→knowledge・具体事例→cycle-doc・発生記録→番号のみ)。教訓は移送・要レビュー。詳細 cycle-257.md キャリーオーバー |
 | B-537 | 診断流入増(character-personality)の追計測と回遊強化 | P2 | - | 06-21〜25追計測で定着確認後に投資。煽り/押し付け禁止(cycle-256)・単発質を損なわない回遊。詳細 cycle-257.md |
-| B-536 | 辞典FAQ件数の是正（漢字80→2136・四字熟語101→400） | P1 | 258 | **本番に確定誤情報**(全辞典ページ本文＋FAQPage JSON-LD)・**次サイクル冒頭で着手**。ハードコードでなくデータ長(.length)から算出（grep2139≠配列2136の轍/B-409と同型）。cycle-257調査で発見。詳細 cycle-257.md |
 | B-539 | デザインシステム(DESIGN.md)の診断中心コンセプトへの再適合 | P1 | - | 道具箱向けミニマルは診断/ゲームと相性が悪い疑い。A/B(旧カラフル vs 新ミニマル)で計測駆動。B-538と一体。詳細 cycle-257.md |
 | B-534 | 学年×画数の漢字一覧ページの実用性向上(「2画の漢字 小学生」需要) | P3 | - | stroke/N一覧は平均39位で露出が露出で終わる。束ねた学習需要。yoji/kanji移行(9.3.d/e)後が筋。詳細 research/2026-06-21-search-console-unmet-demand.md |
 | B-524 | *Content の allTypesLayout 公開型を意味通り命名へ整理 | P1 | - | cycle-254のpill→grid内部マップでdead literal化。AP-I02。retro側(_experiments/)の整理にも注意。詳細 cycle-254.md / cycle-255.md |
