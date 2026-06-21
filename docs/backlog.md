@@ -2,15 +2,16 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-535 | 道具箱コンセプトの来訪者価値整合性の計測と方向判断（コンセプト立て直し） | P1 | 257 | 横断計測で価値の在り処を測りコンセプト継続/修正/再設計を判定。B-510取り込み。詳細 cycle-257.md |
 
 ## Queued (すぐに着手できる)
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-533 | 辞典に固有の深掘り価値を足す/露出を診断へ橋渡し | P2 | - | Search Console実測: 辞典は表示79%だがCTR~0.1%のコモディティ検索、診断はCTR5.92%で価値実証。指標いじり禁止(AP-I04)。詳細 research/2026-06-21-search-console-unmet-demand.md |
-| B-534 | 学年×画数の漢字一覧ページの実用性向上(「2画の漢字 小学生」需要) | P3 | - | stroke/N一覧は平均39位で露出が露出で終わる。束ねた学習需要。詳細 research/2026-06-21-search-console-unmet-demand.md |
+| B-350 | 移行計画 Phase 9.3.a: dictionary トップ移行 | P1 | - | /dictionary を (new)/ に移行。**B-535コンセプト判定後に要否確認**（道具箱コンセプト継続が前提のタスクのため）。詳細 design-migration-plan.md |
+| B-533 | 辞典に固有の深掘り価値を足す/露出を診断へ橋渡し | P2 | - | 移行完了後＋B-535判定後に着手(AP-P27)。四字熟語に由来の物語+使い方を足す方向。詳細 cycle-257.md |
+| B-534 | 学年×画数の漢字一覧ページの実用性向上(「2画の漢字 小学生」需要) | P3 | - | stroke/N一覧は平均39位で露出が露出で終わる。束ねた学習需要。yoji/kanji移行(9.3.d/e)後が筋。詳細 research/2026-06-21-search-console-unmet-demand.md |
 | B-524 | *Content の allTypesLayout 公開型を意味通り命名へ整理 | P1 | - | cycle-254のpill→grid内部マップでdead literal化。AP-I02。retro側(_experiments/)の整理にも注意。詳細 cycle-254.md / cycle-255.md |
-| B-350 | 移行計画 Phase 9.3.a: dictionary トップ移行 | P1 | - | /dictionary を (new)/ に移行。B-522完了後に着手。P2→P1昇格。詳細 design-migration-plan.md |
 | B-493 | 遊び（ゲーム）の単一タイル化（GameLayout 系） | P1 | - | 全ゲームをタイル再構築。B-522の一環。P2→P1昇格。詳細 cycle-225.md |
 | B-432 | trustLevel フィールド・関連型・テストの完全削除 | P2 | - | 一括完全削除（漸進禁止=AP-I02）。詳細 cycle-200.md |
 | B-505 | Dependabot 脆弱性アラートの調査と対応 | P3 | - | 開3件: esbuild high/low・postcss medium。全て推移依存でビルド時のみ。詳細 cycle-246.md |
@@ -107,7 +108,7 @@
 | B-526 | 最初の実A/B(quiz_result_visual_v1) 月次読み | P1 | 着手: 2026-07-21目安〜結論到達まで月次継続。詳細 visitor-value-measurement.md 論点8.1 |
 | B-527 | 最初の実A/B 結論到達時の撤去サイクル化 | P1 | 着手: B-526で判定閾値到達時。詳細 visitor-value-measurement.md 論点8.4 |
 | B-521 | cycle-251 漢字辞書CTR改善の効果検証 | P2 | 着手: 2026-07-16目安。詳細 cycle-251.md |
-| B-510 | 道具箱利用計測データの初回分析 | P2 | 着手: 2026-06-26目安。詳細 cycle-234.md |
+| B-510 | 道具箱利用計測データの初回分析 | P2 | **cycle-257/B-535に取り込み**（コンセプト判定の入力として初回分析を実施。着手目安2026-06-26より早いためサンプル十分性を明示）。詳細 cycle-234.md |
 | B-324 | ダッシュボード: ツール間連携（Phase 10.4） | P2 | 着手: B-510完了後。詳細 cycle-235.md |
 | B-313 | ダッシュボード: シェア機能（Phase 10.5） | P2 | 着手: B-510完了後。詳細 cycle-235.md |
 | B-379 | セマンティック検索メモ帳 | P3 | 着手: B-378完了後。詳細 tools-idea.md |
