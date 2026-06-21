@@ -2,12 +2,12 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-532 | 診断の共有導線（バイラルの環）の改善 | P1 | 256 | 結果到達(level_end)94件/28日に対しshareイベント2件(2.1%)・共有結果ページ外部流入ほぼ0。共有導線が長い詳細本文の最下部にあり感情のピーク(結果上部)から遠い。全診断共通のResultCard上部に共有導線を出す。詳細 cycle-256.md |
 
 ## Queued (すぐに着手できる)
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-523 | 静的結果ページ枠(ResultPageShell)新デザイン移行（B-522 第三弾） | P1 | - | B-525基盤で適用可否を判断。B-524と同時実施推奨。詳細 cycle-254.md / visitor-value-measurement.md 論点8.2 |
 | B-524 | *Content の allTypesLayout 公開型を意味通り命名へ整理 | P1 | - | cycle-254のpill→grid内部マップでdead literal化。AP-I02。retro側(_experiments/)の整理にも注意。詳細 cycle-254.md / cycle-255.md |
 | B-350 | 移行計画 Phase 9.3.a: dictionary トップ移行 | P1 | - | /dictionary を (new)/ に移行。B-522完了後に着手。P2→P1昇格。詳細 design-migration-plan.md |
 | B-493 | 遊び（ゲーム）の単一タイル化（GameLayout 系） | P1 | - | 全ゲームをタイル再構築。B-522の一環。P2→P1昇格。詳細 cycle-225.md |
@@ -101,6 +101,7 @@
 
 | ID | Title | Priority | Notes |
 | --- | --- | --- | --- |
+| B-523 | 静的結果ページ枠(ResultPageShell)新デザイン移行（B-522 第三弾） | P1 | 着手: B-526(インライン結果A/B)結論到達後。理由: 走行中A/Bと同一独立変数のため今ブラインド移行はA/B汚染。cycle-256でQueued→Deferred訂正。詳細 cycle-256.md / 論点8.2/8.3 |
 | B-528 | cycle-255 計測基盤の自己適用(release別 before/after 回帰確認) | P1 | 着手: 2026-06-28〜2026-07-05目安(デプロイ後7-14日)。詳細 visitor-value-measurement.md 論点8.6 |
 | B-526 | 最初の実A/B(quiz_result_visual_v1) 月次読み | P1 | 着手: 2026-07-21目安〜結論到達まで月次継続。詳細 visitor-value-measurement.md 論点8.1 |
 | B-527 | 最初の実A/B 結論到達時の撤去サイクル化 | P1 | 着手: B-526で判定閾値到達時。詳細 visitor-value-measurement.md 論点8.4 |
