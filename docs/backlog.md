@@ -2,15 +2,14 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-350 | 移行計画 Phase 9.3.a: dictionary トップ移行 | P1 | 262 | /dictionary を (new)/ に移行。要否確認済(cycle-259)=実施。B-539完了で着手可。詳細 cycle-262.md |
 
 ## Queued (すぐに着手できる)
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
 | B-541 | 現状正しい辞典収録数ハードコードの予防的`.length`化 | P4 | - | colors系「250色」等。現状正しいがB-409/B-536と同型の再発予兆。詳細 cycle-258.md |
-| B-350 | 移行計画 Phase 9.3.a: dictionary トップ移行 | P1 | - | /dictionary を (new)/ に移行。**要否確認済(cycle-259)=実施**(辞典は残す文化系・移行は概念非依存)。詳細 design-migration-plan.md / cycle-259.md |
 | B-540 | アンチパターン集の規約準拠クリーンアップ | P1 | - | directory規約違反を是正(手順→knowledge・具体事例→cycle-doc・発生記録→番号のみ)。教訓は移送・要レビュー。詳細 cycle-257.md キャリーオーバー |
-| B-534 | 学年×画数の漢字一覧ページの実用性向上(「2画の漢字 小学生」需要) | P3 | - | stroke/N一覧は平均39位で露出が露出で終わる。束ねた学習需要。yoji/kanji移行(9.3.d/e)後が筋。詳細 research/2026-06-21-search-console-unmet-demand.md |
 | B-524 | *Content の allTypesLayout 公開型を意味通り命名へ整理 | P1 | - | cycle-254のpill→grid内部マップでdead literal化。AP-I02。retro側(_experiments/)の整理にも注意。詳細 cycle-254.md / cycle-255.md |
 | B-493 | 遊び（ゲーム）の単一タイル化（GameLayout 系） | P3 | - | **P1→P3降格(cycle-259)**: タイル化は道具箱パラダイム・道具箱-core降格で全面タイル化の必要性低下。デザイン移行(8.2)とは別扱い。詳細 cycle-225.md / cycle-259.md |
 | B-432 | trustLevel フィールド・関連型・テストの完全削除 | P2 | - | 一括完全削除（漸進禁止=AP-I02）。詳細 cycle-200.md |
@@ -114,6 +113,7 @@
 | B-510 | 道具箱利用計測データの初回分析 | P2 | **cycle-257/B-535に取り込み済(完了)**。詳細 cycle-234.md / cycle-257.md |
 | B-324 | ダッシュボード: ツール間連携（Phase 10.4） | P3 | **保留(cycle-259/B-538)**: 道具箱-as-core降格＋中核機能利用ゼロのため、道具箱拡充投資は道具箱トラクションがデータで示されるまで行わない。P2→P3降格。詳細 cycle-235.md / cycle-259.md |
 | B-313 | ダッシュボード: シェア機能（Phase 10.5） | P3 | **保留(cycle-259/B-538)**: 同上（道具箱拡充投資はデータでトラクション確認後）。P2→P3降格。詳細 cycle-235.md / cycle-259.md |
+| B-534 | 学年×画数の漢字一覧ページの実用性向上(「2画の漢字 小学生」需要) | P3 | 着手: kanji/yoji辞典移行(9.3.d/e=B-353/B-354)後が筋。詳細 research/2026-06-21-search-console-unmet-demand.md |
 | B-379 | セマンティック検索メモ帳 | P3 | 着手: B-378完了後。詳細 tools-idea.md |
 | B-460 | 秘密情報UIのSNS/スクショリスク対策SSoT化 | P3 | 着手: 同種ツール2件目登場時。詳細 cycle-213.md |
 | B-500 | ToolCard fake PanelのTile/Panelベース整理 | P4 | 着手: 道具箱Tile着工時。詳細 cycle-226.md |
