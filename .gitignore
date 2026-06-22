@@ -32,6 +32,10 @@ tmp/*
 # generated build artifacts
 .generated/
 /public/search-index.json
+# RELEASE_ID = 短縮git SHA + 日付。コミット毎に必ずドリフトするため追跡しない。
+# prebuild/predev/pretest/pretypecheck の generate:release-id で常に再生成される
+# （デプロイは npm run build → prebuild で再生成＝本番の値は正しい）。
+src/lib/generated/release-id.ts
 
 # playwright MCP logs
 .playwright-mcp/
