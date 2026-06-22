@@ -2,11 +2,14 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-351 | Phase 9.3.b: dictionary colors系移行（トップ+詳細+category） | P1 | 263 | B-350完了で解放。共有_componentsを(new)用フォーク＋色見本は本文維持・診断拡張不適用(austere)。詳細 cycle-263.md |
 
 ## Queued (すぐに着手できる)
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-352 | Phase 9.3.c: dictionary humor系移行（トップ+詳細） | P1 | - | B-350完了で解放。B-351で(new)化する共有_components（DetailLayout等）を再利用。詳細 design-migration-plan.md 9.3.c |
+| B-353 | Phase 9.3.d: dictionary kanji系移行（トップ+動的サブルート+詳細） | P1 | - | B-350完了で解放。kanji-kanaru↔kanji辞典の双方向クロスリンク維持。B-351共有_components再利用。詳細 design-migration-plan.md 9.3.d |
 | B-541 | 現状正しい辞典収録数ハードコードの予防的`.length`化 | P4 | - | colors系「250色」等。現状正しいがB-409/B-536と同型の再発予兆。詳細 cycle-258.md |
 | B-540 | アンチパターン集の規約準拠クリーンアップ | P1 | - | directory規約違反を是正(手順→knowledge・具体事例→cycle-doc・発生記録→番号のみ)。教訓は移送・要レビュー。詳細 cycle-257.md キャリーオーバー |
 | B-524 | *Content の allTypesLayout 公開型を意味通り命名へ整理 | P1 | - | cycle-254のpill→grid内部マップでdead literal化。AP-I02。retro側(_experiments/)の整理にも注意。詳細 cycle-254.md / cycle-255.md |
@@ -125,10 +128,7 @@
 | B-091 | テーマ間の横断的なおすすめ機能 | P4 | 着手: ダッシュボードが包含しない場合 |
 | B-219 | AI 画像生成 MCP サーバーの実装 | P2 | 着手: 必要性確認時。詳細 imagen4-proposal.md |
 | B-337 | legacy撤去・統合（Phase 11） | P1 | 着手: Phase10全完了後。詳細 design-migration-plan.md |
-| B-351 | Phase 9.3.b: dictionary colors系移行 | P1 | 着手: B-350完了後。P2→P1昇格 |
-| B-352 | Phase 9.3.c: dictionary humor系移行 | P1 | 着手: B-350完了後。P2→P1昇格 |
-| B-353 | Phase 9.3.d: dictionary kanji系移行 | P1 | 着手: B-350完了後。P2→P1昇格 |
-| B-354 | Phase 9.3.e: dictionary yoji系移行 | P1 | 着手: B-350+B-353完了後。P2→P1昇格 |
+| B-354 | Phase 9.3.e: dictionary yoji系移行 | P1 | 着手: B-353完了後（B-350は完了済）。yoji詳細→kanji詳細の内部リンク維持。P2→P1昇格 |
 
 ## Done (完了)
 
