@@ -2,6 +2,7 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-543 | ターゲット定義(docs/targets/)の診断中心コンセプトへの再定義 | P1 | 260 | cycle-259で発見。現行5件は道具箱-core前提で診断来訪者ターゲット欠落・M1b反復利用前提が不成立。診断ターゲット追加・前提見直し。詳細 cycle-259.md / cycle-260.md |
 
 ## Queued (すぐに着手できる)
 
@@ -11,7 +12,6 @@
 | B-350 | 移行計画 Phase 9.3.a: dictionary トップ移行 | P1 | - | /dictionary を (new)/ に移行。**要否確認済(cycle-259)=実施**(辞典は残す文化系・移行は概念非依存)。詳細 design-migration-plan.md / cycle-259.md |
 | B-533 | 辞典に固有の深掘り価値を足す/露出を診断へ橋渡し | P2 | - | 要否確認済(cycle-259/B-538)=実施方向(辞典は残す文化系の支え)。着手は辞典移行(B-350系)完了後(AP-P27)。四字熟語に由来の物語+使い方を足す＋診断クラスタへの橋渡しを意識。詳細 cycle-257.md / cycle-259.md |
 | B-540 | アンチパターン集の規約準拠クリーンアップ | P1 | - | directory規約違反を是正(手順→knowledge・具体事例→cycle-doc・発生記録→番号のみ)。教訓は移送・要レビュー。詳細 cycle-257.md キャリーオーバー |
-| B-543 | ターゲット定義(docs/targets/)の診断中心コンセプトへの再定義 | P1 | - | cycle-259で発見。現行5件は道具箱-core前提で診断来訪者ターゲット欠落・M1b反復利用前提が不成立。診断ターゲット追加・前提見直し。詳細 cycle-259.md |
 | B-539 | デザインシステムの診断中心コンセプトへの再適合 | P1 | - | 対象=DESIGN.md＋design-system/frontend-design Skill(一体)。コンセプト起点で視覚言語を実デザイン探索→計測検証(A/Bは入力で決定者でない)。クイズ結果面出荷のみB-526と協調。詳細 cycle-259.md |
 | B-534 | 学年×画数の漢字一覧ページの実用性向上(「2画の漢字 小学生」需要) | P3 | - | stroke/N一覧は平均39位で露出が露出で終わる。束ねた学習需要。yoji/kanji移行(9.3.d/e)後が筋。詳細 research/2026-06-21-search-console-unmet-demand.md |
 | B-524 | *Content の allTypesLayout 公開型を意味通り命名へ整理 | P1 | - | cycle-254のpill→grid内部マップでdead literal化。AP-I02。retro側(_experiments/)の整理にも注意。詳細 cycle-254.md / cycle-255.md |
