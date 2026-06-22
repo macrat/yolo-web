@@ -155,9 +155,7 @@ const staticPages: Array<{
   {
     path: "/dictionary",
     importMeta: () =>
-      import("@/app/(legacy)/dictionary/page").then(
-        (m) => m.metadata as Metadata,
-      ),
+      import("@/app/(new)/dictionary/page").then((m) => m.metadata as Metadata),
   },
   {
     path: "/dictionary/kanji",

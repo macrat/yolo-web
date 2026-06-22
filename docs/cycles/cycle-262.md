@@ -2,7 +2,7 @@
 id: 262
 description: B-350 デザイン移行計画 Phase 9.3.a「dictionary トップ `/dictionary` の (new) デザイン体系への移行」。cycle-261（B-539）でデザインシステムを診断中心へ再適合し B-350 の前提が整ったため、辞典トップを標準1ページ移行手順で (new)/ へ移す。辞典は診断を支える「文化層」だが、移行対象はトップ index ページであり、cycle-261 の方向決定（拡張は診断タッチポイントに限定・辞典本文/道具の austere 基調は維持）に従い、診断の視覚言語拡張（結果固有色・象徴絵文字）は適用せず標準の (new) austere 基調で移行する。本サイクルはトップ1ページのみ（colors/humor/kanji/yoji 系統は B-351〜354 で後続）。
 started_at: 2026-06-22T22:59:57+0900
-completed_at: null
+completed_at: 2026-06-23T00:08:11+0900
 ---
 
 # サイクル-262
@@ -28,22 +28,22 @@ completed_at: null
 
 ## 実施する作業
 
-- [ ] **1. 接地（現状の来訪者体験の把握）**
-  - [ ] 1a. GA で `/dictionary` トップおよび辞典各系統の流入・回遊を確認（来訪者が辞典トップをどう使っているか。直接着地か回遊起点か）。foreground サブエージェントで実施
-  - [ ] 1b. 現状 `/dictionary` トップを Playwright でスクショ（w360/w1280・light/dark）。移行前の基準として保存
-- [ ] **2. 移行設計の確定**
-  - [ ] 2a. 参照パターン確認: 移行済み index ページ（`/tools`・`/blog`）の (new) 実装・`/frontend-design` SKILL・`DESIGN.md`（特に index/カードのパターン・BreadcrumbList 構造化データの既存パターン）を確認
-  - [ ] 2b. austere 基調での移行方針を確定（診断拡張は不適用・glyph アイコンの扱い＝絵文字不使用方針との整合・Panel/カードの新パターンへの再設計）
-- [ ] **3. 移行実装（builder サブエージェント）**
-  - [ ] 3a. `git mv (legacy)/dictionary/page.tsx (new)/dictionary/page.tsx`＋`page.module.css`。import パス `@/components/common/Breadcrumb`→`@/components/Breadcrumb`（新版存在確認）
-  - [ ] 3b. CSS Module トークン置換（旧 `--color-*`→新トークン・`:root.dark`→`:global(:root.dark)`）＋ DESIGN.md に従いデザイン適用（Panel/カード・タイポ・Lucide・絵文字不使用・角丸規約・a11y: 44px/focus-visible/aria-current/コントラスト4.5:1・max-width 1200px 自前ラッパー）
-  - [ ] 3c. 構造化データ確認（BreadcrumbList JSON-LD を既存移行済みページと同パターンで担保）。metadata は sharedMetadata 整合
-- [ ] **4. 検証**
-  - [ ] 4a. `npm run lint && npm run format:check && npm run test && npm run build` が全て成功
-  - [ ] 4b. Playwright で移行後 `/dictionary` を w360/w1280・light/dark でスクショし移行前と比較（同等以上）。合格条件: 旧 `components/common` 由来ハッシュ class 不在・コントラスト4.5:1・タップ44px・focus-visible・aria-current・w1900 で main 直下幅<1300px
-  - [ ] 4c. 段階移行の整合性: 未移行サブ系統（colors/humor/kanji/yoji）が legacy のまま破損しない・4枚カードのリンク先が動く・Header/Footer 動線・戻る/進むで破綻なし
-- [ ] **5. レビュー（白紙 reviewer）**
-  - [ ] 5a. 成果物レビュー（移行の同等以上・austere 基調遵守＝診断拡張の誤混入が無い・段階移行整合・a11y・構造化データ）。指摘対応
+- [x] **1. 接地（現状の来訪者体験の把握）**
+  - [x] 1a. GA で `/dictionary` トップおよび辞典各系統の流入・回遊を確認＝**トップは検索の入口ではなく回遊ハブ**（4ヶ月で PV39/延べ13人・直近28日は着地ゼロ・流入の主動線は Organic が系統トップ/詳細に直接着地〔colors/yoji 中心〕・モバイル/デスクトップ拮抗）。価値は4枚ナビカードの明快さと渡しやすさと判断
+  - [x] 1b. 現状 `/dictionary` トップを Playwright でスクショ（w360/w1280・light/dark）。`tmp/cycle-262/before/` に保存
+- [x] **2. 移行設計の確定**
+  - [x] 2a. 参照パターン確認: 移行済み index ページ（`/tools`・`/blog`）の (new) 実装・`/frontend-design` SKILL・`DESIGN.md`・BreadcrumbList 構造化データの既存パターンを確認
+  - [x] 2b. austere 基調での移行方針を確定（診断拡張は不適用・glyph は無彩タイポとして維持・Panel/カードの新パターンへ再設計）
+- [x] **3. 移行実装（builder サブエージェント）**
+  - [x] 3a. `git mv` で page.tsx＋page.module.css を (new)/dictionary/ へ。import パス `@/components/common/Breadcrumb`→`@/components/Breadcrumb`（common 残参照ゼロを grep 確認）
+  - [x] 3b. CSS Module トークン置換（旧 `--color-*`→新トークン・影/`:root.dark` 規則は影撤去で削除）＋ DESIGN.md に従いデザイン適用（カード罫線分離・情報密度向上・タイポ・絵文字不使用・角丸2px・a11y: 44px/focus-visible/aria-current/コントラスト4.5:1・max-width 1200px 自前ラッパー）
+  - [x] 3c. 構造化データ: Breadcrumb コンポーネントが BreadcrumbList JSON-LD を出力（tools/blog と同パターン・ビルド成果物で確認）。metadata は現状維持・収録数 `.length` 維持
+- [x] **4. 検証**
+  - [x] 4a. `npm run lint && npm run format:check && npm run test && npm run build` が全て成功（PM 再実行で exit 0×4 を確認）
+  - [x] 4b. Playwright で移行後 `/dictionary` を w360/w1280・light/dark でスクショし移行前と比較＝同等以上。合格条件 (a)〜(h) 全 pass（旧 common 由来クラス不在・コントラスト 4.5:1 以上・タップ44px以上・focus-visible・aria-current・w1900 で main 直下幅1200px<1300px）。`tmp/cycle-262/after/` に保存
+  - [x] 4c. 段階移行の整合性: 未移行サブ系統（colors/humor/kanji/yoji）は legacy 残置で 200・破損なし・4枚カードのリンク先 URL 不変で遷移確認・戻る/進む破綻なし
+- [x] **5. レビュー（白紙 reviewer）**
+  - [x] 5a. 成果物レビュー（白紙 reviewer・移行後ビルド配信を確認のうえ全6観点を逐条検証）＝**must/should/nit すべてゼロで承認**。austere 歯止め遵守（診断拡張の混入なし）・段階移行整合・a11y・構造化データ・スコープ厳守を確認。指摘なしのため対応事項なし
 - [ ] **6. 完了処理（`/cycle-completion`）**
 
 ## 作業計画
@@ -79,21 +79,33 @@ completed_at: null
 
 **外部仕様への依存**: 本サイクルの主作業（既存 index ページの (new) 移行）は内部デザインシステムに閉じる。唯一の外部仕様接点は BreadcrumbList JSON-LD（Schema.org / Google 構造化データ仕様）と OGP/Twitter カードだが、いずれも既に移行済みページ（blog/tools/トップ）で確立済みのパターンを**踏襲するのみ**で、新規の外部仕様依存判断を導入しない。OGP は `sharedMetadata` 経由で一元化済み。よって一次資料の新規事前確認は不要と判断する（新規の構造化データを設計する場合のみ既存パターン準拠を確認する）。
 
+## レビュー結果
+
+本サイクルは「接地→移行設計→実装→検証→レビュー」の各段で独立したサブエージェントに委譲し、最終成果物は白紙 reviewer に独立検証させた。
+
+- **接地（GA・foreground）**: `/dictionary` トップは検索の入口ではなく回遊ハブと判明（実測）。移行の評価軸を「新規流入獲得」ではなく「辞典内来訪者の回遊性を austere デザインで損なわず改善」に設定。
+- **移行前後比較（Playwright・foreground）**: 移行後は機能・情報（hero＋4カードのタイトル/説明/収録数）の欠落なし、カード分離・情報密度・タイポが新デザイン体系で改善＝同等以上。合格条件 (a)〜(h) 全 pass。検証中に :3100 が前日の stale `next start`（移行前ビルド）を配信していた事故を検出し、再ビルド＋再起動して移行後ビルドで全再計測（知見は補足事項へ）。
+- **成果物レビュー（白紙 reviewer）**: 全6観点（標準移行手順・デザイン体系適合・austere 歯止め厳守・スコープ厳守・段階移行整合・コード品質）を逐条検証し、`--color-` 残ゼロ・common 残参照ゼロ・診断拡張の混入なし・ルート衝突なし・収録数 `.length` 維持・seo-coverage.test.ts 追従の過不足なしを確認、**must/should/nit すべてゼロで承認**。
+- 参考メモ（指摘ではない・既存事項）: hero 直下の説明文が4枚目「ユーモア辞典」に言及していないが、これは移行前 legacy と同一文言で本サイクル起因ではない（metadata の summaryText 側は4系統網羅）。将来の辞典系コピー見直しの備忘に留め、本移行の承認可否には影響しない。
+
+有効な指摘はなく、対応事項・残置事項なし。
+
 ## キャリーオーバー
 
-- （計画時点）なし。辞典4系統（colors/humor/kanji/yoji）の移行は本サイクルのスコープ外の既存下流タスク（B-351〜354・Deferred）であり、本タスク完了で着手条件が解放される。
+- なし。辞典4系統（colors/humor/kanji/yoji）の移行は本サイクルのスコープ外の既存下流タスク（B-351〜354・Deferred）であり、本タスク完了で着手条件が解放される。
 
 ## 補足事項
 
-- ブログ判断: 本サイクルでは原則不執筆の方向。1ページのデザイン移行は来訪者に見える変化が局所的で、読者にとっての学び・楽しさになりにくい（過去の移行サイクルも同様に不執筆）。完了後に読者価値があるか再判断する。
+- ブログ判断: 不執筆。1ページのデザイン移行は来訪者に見える変化が局所的で、読者にとっての学び・楽しさになりにくい（過去の移行サイクルも同様に不執筆）。辞典系統移行が一通り進んだ段階で読者価値があるか再判断する。
 - 本サイクルは設計拡張ではなく既存方針（移行計画 Phase 9.3.a）の実行。新規の設計判断は最小限（austere 基調の遵守確認のみ）。
+- **検証環境の知見（事故と是正）**: 移行後の Playwright 検証時、`:3100` で前日から `next start`（移行前ビルド）が稼働し続けており、`git mv`＋編集後も移行前ページを配信していた。dev 起動が EADDRINUSE で失敗していたことに気づかず初回スクショ・初回 (a) チェックが移行前を写した。再ビルド＋古いプロセス停止＋再起動で是正し全再計測。教訓＝**移行系の視覚検証では、配信中サーバが「移行後ビルドか」を新クラスの有無等で先に確認してから撮る**。reviewer 指示にもこの確認を前置きした。
 
 ## サイクル終了時のチェックリスト
 
-- [ ] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
-- [ ] `/docs/backlog.md` のActiveセクションに未完了のタスクがない（B-350 は本サイクル完了で Done へ移動）。
-- [ ] すべての変更がレビューされ、残存する指摘事項が無くなっている。
-- [ ] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
-- [ ] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
-- [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
-- [ ] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
+- [x] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている（6 完了処理を実行中）。
+- [x] `/docs/backlog.md` のActiveセクションに未完了のタスクがない（B-350 は本サイクル完了で Done へ移動）。
+- [x] すべての変更がレビューされ、残存する指摘事項が無くなっている（白紙 reviewer で must/should/nit ゼロ承認）。
+- [x] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する（PM 再実行で exit 0×4 を確認）。
+- [x] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
+- [x] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
+- [x] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている（キャリーオーバーなし）。
