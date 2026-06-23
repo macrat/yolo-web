@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
-import Breadcrumb from "@/components/common/Breadcrumb";
-import TrustLevelBadge from "@/components/common/TrustLevelBadge";
-import CategoryNav from "@/dictionary/_components/CategoryNav";
+import Breadcrumb from "@/components/Breadcrumb";
+import CategoryNav from "@/dictionary/_components/new/CategoryNav";
 import ColorCard from "@/dictionary/_components/color/ColorCard";
 import DictionaryGrid from "@/dictionary/_components/DictionaryGrid";
 import {
@@ -57,7 +56,7 @@ export default async function ColorCategoryPage({
   ]);
 
   return (
-    <>
+    <div className={styles.container}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -72,7 +71,6 @@ export default async function ColorCategoryPage({
           { label: `${categoryLabel}の伝統色` },
         ]}
       />
-      <TrustLevelBadge level="curated" />
       <h1 className={styles.title}>{categoryLabel}の伝統色</h1>
       <p className={styles.count}>{colorList.length}色収録</p>
 
@@ -97,6 +95,6 @@ export default async function ColorCategoryPage({
           </div>
         ))}
       </DictionaryGrid>
-    </>
+    </div>
   );
 }

@@ -2,7 +2,7 @@
 id: 263
 description: B-351 デザイン移行計画 Phase 9.3.b「dictionary colors 系（伝統色辞典: トップ + 250 色の詳細 + category）の (new) デザイン体系への移行」。B-350（cycle-262・辞典トップ移行）完了で着手条件が解放された。colors 系は cycle-262 のトップと異なり共有 `_components`（DictionaryDetailLayout / CategoryNav / SearchBox / DictionaryGrid）を使い、これらは未移行の kanji/yoji 系統も共有する。新 globals.css に旧 `--color-*` トークンが存在しないため、共有部品をそのまま (new) 配下へ持ち込むと崩れ、逆に共有部品を新デザイン化すると未移行系統を巻き込む。よって段階移行の整合を保つには colors が使う共有部品を (new) 用にフォークする。色見本そのものは辞典の本文コンテンツ（伝統色がどんな色かを見せる核機能）として維持し、cycle-261 の方向決定に従い診断の視覚言語拡張（結果固有色アイデンティティ・象徴絵文字）は適用せず austere 基調で移行する。本サイクルは colors 系のみ（humor/kanji/yoji は B-352〜354 で後続）。
 started_at: 2026-06-23T00:27:37+0900
-completed_at: null
+completed_at: 2026-06-23T09:43:46+0900
 ---
 
 # サイクル-263
@@ -31,24 +31,24 @@ completed_at: null
 
 ## 実施する作業
 
-- [ ] **1. 接地（現状の来訪者体験の把握）**
-  - [ ] 1a. GA/BigQuery で colors 系（トップ index・`[slug]` 詳細・category）の流入・回遊・デバイス比を確認し、移行の評価軸（新規流入獲得ではなく「主着地点の回遊性を austere で損なわず改善」）を設定
-  - [ ] 1b. 現状の colors index・代表的な `[slug]` 詳細・category ページを Playwright でスクショ（w360/w1280・light/dark）。`tmp/cycle-263/before/` に保存
-- [ ] **2. 移行設計の確定（Plan エージェント → reviewer）**
-  - [ ] 2a. フォーク戦略の最終確定: (new) 共有部品（DictionaryDetailLayout/CategoryNav/SearchBox/DictionaryGrid）の配置・命名・トークン置換マップ（旧6トークン→ `--fg`/`--fg-soft`/`--border`/`--bg`/`--bg-soft`/`--accent` 等）。フォーク vs トークン橋渡しを「kanji/yoji が視覚・挙動とも不変（段階移行整合）」「重複/集約負債最小」の基準で評価し決定
-  - [ ] 2b. TrustLevelBadge の (new) での扱い・「250色」→`.length` 化・診断拡張を持ち込まない austere 歯止めの線引き（色見本は本文として維持）を確定
-  - [ ] 2c. 計画レビュー（白紙 reviewer）。指摘を反映
-- [ ] **3. 移行実装（builder サブエージェント・小さく分割）**
-  - [ ] 3a. (new) 共有部品のフォーク作成（DictionaryDetailLayout/CategoryNav/SearchBox/DictionaryGrid）＝新トークン・austere 構造・a11y
-  - [ ] 3b. colors index 移行（`page.tsx`+`ColorsIndexClient.tsx`+`ColorCard`+`SearchBox`+`CategoryNav`+`page.module.css`）。`git mv` ベース・common→(new) Breadcrumb・metadata `.length` 化
-  - [ ] 3c. colors 詳細 `[slug]` 移行（`page.tsx`+`ColorDetail`、(new) DictionaryDetailLayout 経由）。250色 `generateStaticParams` 維持・share/playRecommendations/JSON-LD 維持
-  - [ ] 3d. colors category 移行（`category/[category]/page.tsx`+`page.module.css`）。CategoryNav/ColorCard/DictionaryGrid 経由
-- [ ] **4. 検証**
-  - [ ] 4a. `npm run lint && npm run format:check && npm run test && npm run build` が全て成功（PM 再実行で exit 0×4 を確認。配信サーバが「移行後ビルド」かを新クラス有無で先に確認＝cycle-262 の stale サーバ事故の教訓）
-  - [ ] 4b. Playwright で移行後 colors index・代表 `[slug]`・category を w360/w1280・light/dark でスクショし移行前と比較＝同等以上。合格条件（旧 `--color-*` 由来不在・色見本の正確な再現・コントラスト 4.5:1・タップ44px・focus-visible・aria-current・max-width 1200px）。`tmp/cycle-263/after/`
-  - [ ] 4c. 段階移行の整合性: 未移行 kanji/yoji（共有 legacy 部品を使用）が**視覚・挙動とも不変**で 200・破損なしを実機確認。colors 詳細の内部リンク（playRecommendations 等）と category↔index 遷移・戻る/進むの非破綻を確認
-- [ ] **5. レビュー（白紙 reviewer）**
-  - [ ] 5a. 成果物レビュー（移行後ビルド配信を確認のうえ全観点を逐条検証）。must/should をゼロにして承認
+- [x] **1. 接地（現状の来訪者体験の把握）**
+  - [x] 1a. GA で colors 系を確認＝**index が最大の着地玄関 兼 回遊ハブ**（90日 PV88/47人・ほぼ全量 Organic〔Bing/Google〕直接着地・詳細はロングテール〔人気の単色なし〕・利用者ベース PC64%/モバイル36%）。評価軸は「数値KPI」ではなく「index⇄詳細の相互リンク回遊性と体験を austere で同等以上に保つ」（母数小さく数値比較不可）
+  - [x] 1b. 移行前スクショ24枚（index・代表4色 mizuasagi/kurenai/haizakura/edomurasaki・category/blue × w360/w1280 × light/dark）を `tmp/cycle-263/before/` に保存。保つべき価値の核を記録（色面 w1280≈700×200px・色コード3種+コピー・関連色列=回遊の生命線・250色色相順グリッド+CategoryNav+検索・AIバッジ）
+- [x] **2. 移行設計の確定（Plan エージェント → reviewer）**
+  - [x] 2a. フォーク戦略を確定（Plan）＝**フォーク採用**。`src/dictionary/_components/new/` に DictionaryDetailLayout/CategoryNav/SearchBox/PlayRecommendBlock をフォーク（DictionaryGrid はトークン非参照で共用＝フォーク不要）。トークン置換マップ（旧6種→`--fg`/`--fg-soft`/`--border`/`--bg`/`--bg-soft`、`--color-primary` は用途別: リンク/focus=`--accent`・hover罫=`--border-strong`・active pill=`--bg-invert`/`--fg-invert`）。設計は `tmp/cycle-263/design.md`
+  - [x] 2b. TrustLevelBadge は (new) 撤去（AI注記は Footer 担保・型/meta値は legacy 使用中で残す）・「250色」→`getAllColors().length`・色見本(HEX)は本文コンテンツとして維持し chrome のみトークン化・診断拡張(結果固有色/象徴絵文字/にじみグラデ)は不適用、を確定
+  - [x] 2c. 計画レビュー（白紙 reviewer・2巡）＝**承認（指摘ゼロ・着手可）**。M-1/S-1〜S-4/N-1/N-2 を全反映
+- [x] **3. 移行実装（builder サブエージェント・小さく分割）**
+  - [x] 3a. T1=(new) 共有部品フォーク4種（DictionaryDetailLayout/CategoryNav/SearchBox/PlayRecommendBlock）＋(new) Layout テスト12 passed・DictionaryGrid 共用＝legacy 未編集確認。T2=colors 専用部品 in-place 新トークン化（ColorCard/ColorDetail・色面HEX保持）
+  - [x] 3b. T3=index 移行（`page.tsx`/`ColorsIndexClient.tsx`/`page.module.css` を git mv・Breadcrumb差替・TrustLevelBadge撤去・hero gradient撤去・metadata `getAllColors().length` 化・`.container`付与）
+  - [x] 3c. T4=詳細 `[slug]` 移行（git mv・new DictionaryDetailLayout 経由・250色 generateStaticParams/Color JSON-LD/share/playRecommendations 全維持）
+  - [x] 3d. T4=category 移行（git mv・new CategoryNav・TrustLevelBadge撤去・`.container`付与・page.module.css 新トークン化）。+ T5=seo-coverage の colors 3 import を (new) 化
+- [x] **4. 検証**
+  - [x] 4a. `npm run lint && npm run format:check && npm run test && npm run build` exit 0×4（テスト 342ファイル/5674件全通過・build成功・250色完全prerender）。本番ビルド(`npm start`)で配信確認＝stale 事故なし（`.container` クラス出現・TrustLevelBadge 痕跡ゼロ・title 動的算出）。全体ゲート grep: 旧 `--color-*` 残ゼロ・legacy 共有部品変更行ゼロ・`(legacy)/dictionary/colors/` 空
+  - [x] 4b. Playwright で colors after 24枚を `tmp/cycle-263/after/`、評価軸全 pass（色面寸法/HEX 保全・getComputedStyle で `#66bab7` 一致・情報保全・回遊リンク維持/向上・austere化〔hero gradient/影/transform/旧トークン痕跡ゼロ〕・aria-current="page" 付与・active pill `--bg-invert`/`--fg-invert` テーマ追従・AI注記 Footer 経由保全）
+  - [x] 4c. 未移行 kanji/yoji/humor を 12枚 `tmp/cycle-263/legacy-unchanged/` で実機確認＝legacy デザイン pixel 同等で不変。回遊リンク（詳細→index/category/関連色/play/tools）非破綻・実機 200×3
+- [x] **5. レビュー（白紙 reviewer）**
+  - [x] 5a. 成果物レビュー（白紙 reviewer・本番ビルド配信確認のうえ6観点逐条検証）＝**指摘なし（must/should/nit すべてゼロ）・完了処理可**。標準移行手順/デザイン体系適合/austere 歯止め/スコープ厳守/段階移行整合（legacy 共有部品変更行ゼロ・既存テスト13/13 passing）/コード品質を確認。視覚検証は別 reviewer が承認済（24+12 枚で評価軸全 pass）
 - [ ] **6. 完了処理（`/cycle-completion`）**
 
 ## 作業計画
@@ -87,21 +87,35 @@ completed_at: null
 
 **外部仕様への依存**: 本サイクルの主作業（既存 index/詳細/category の (new) 移行）は内部デザインシステムに閉じる。外部仕様接点は Color JSON-LD（Schema.org）・BreadcrumbList JSON-LD・OGP/Twitter カードだが、いずれも既存の移行済みページ（cycle-262 トップ・blog/tools）で確立済みのパターンを**踏襲するのみ**で、新規の外部仕様依存判断を導入しない（OGP は `sharedMetadata` 経由で一元化済み）。よって一次資料の新規事前確認は不要と判断する（新規の構造化データを設計する場合のみ既存パターン準拠を確認）。
 
+## レビュー結果
+
+本サイクルは「接地→移行設計→実装→検証→レビュー」の各段で独立したサブエージェントに委譲し、最終成果物は白紙 reviewer に独立検証させた。
+
+- **接地（GA・foreground）**: colors 系は **index が最大の着地玄関 兼 回遊ハブ**（90日 PV88/47人・ほぼ全量 Organic 直接着地・詳細はロングテール）と判明。母数が小さく数値比較は無理なため、移行の評価軸を「数値KPI」ではなく「**index⇄詳細の相互リンク回遊性と体験を austere で同等以上に保つ**」に設定。利用者ベース PC64%/モバイル36% で両幅検証。
+- **移行設計（Plan → reviewer 2巡）**: 共有部品の (new) フォーク戦略を確定（`src/dictionary/_components/new/` に DictionaryDetailLayout/CategoryNav/SearchBox/PlayRecommendBlock の4種をフォーク・DictionaryGrid はトークン非参照で共用＝フォーク不要）。トークン置換マップ（`--color-*` 6種→新トークン、`--color-primary` は用途別: リンク/focus=`--accent`・hover罫=`--border-strong`・active pill=`--bg-invert`/`--fg-invert`）と austere 歯止めの線引き（色面 HEX は本文コンテンツとして維持・chrome のみトークン化・診断視覚言語拡張は不適用）を確定。reviewer 指摘 M-1/S-1〜S-4/N-1/N-2 を全反映して**承認（指摘ゼロ・着手可）**。
+- **実装（builder T1〜T5・小さく分割）**: T1=(new)共有部品フォーク4種＋(new)Layout テスト12 passed・legacy 未編集確認、T2=ColorCard/ColorDetail in-place 新トークン化（色面HEX保持）、T3=index 移行（hero gradient 撤去・metadata `.length` 化）、T4=詳細 [slug] と category 移行（付随要素全維持）、T5=seo-coverage の colors 3 import を (new) 化。builder の独自判断（ShareButtons 実ラベル「URLをコピー」・PlayRecommendBlock hover を二層構造で `--bg-softer` 採用）はいずれも根拠付きで妥当。
+- **移行前後比較（Playwright・foreground・本番ビルド配信）**: colors after 24枚+未移行 kanji/yoji/humor 12枚で評価軸全 pass。色面寸法/HEX 保全（getComputedStyle で `#66bab7` 一致確認）・情報保全・回遊リンク維持/向上（category カードに「青系」リンク追加）・austere 化（hero gradient/影/transform/旧トークン痕跡ゼロ）・aria-current="page" 付与・active pill `--bg-invert`/`--fg-invert` でテーマ追従・AI注記 Footer 経由保全。未移行系統は legacy デザイン pixel 同等で不変確認＝段階移行整合 OK。配信は本番ビルド `npm start` で行い `.container` クラス出現・TrustLevelBadge 痕跡ゼロ・title 動的算出を先確認＝cycle-262 stale サーバ事故の再発なし。
+- **成果物レビュー（白紙 reviewer）**: 6観点（標準移行手順・デザイン体系適合・austere 歯止め・スコープ厳守・段階移行整合・コード品質）を逐条検証し、`grep -rE '\-\-color-'` 残ゼロ・`common/` 残参照ゼロ・診断拡張の混入なし・型/meta 値の legacy 残置・`getAllColors().length` 動的化（B-541 colors 分回収完了）・250色完全 prerender・**legacy 共有部品変更行ゼロ**（git diff --stat で確認）・既存テスト13/13 passing を確認し、**must/should/nit すべてゼロで承認**。
+
+有効な指摘はなく、対応事項・残置事項なし。
+
 ## キャリーオーバー
 
-- （実施中に更新）
+- なし。後続の辞典移行（humor=B-352・kanji=B-353・yoji=B-354）は本サイクルのスコープ外の既存下流タスク（Queued）であり、本サイクルが整備した (new) 共有部品（`src/dictionary/_components/new/` の4種）と DictionaryGrid 共用パターンをそのまま再利用する基盤になる。
 
 ## 補足事項
 
-- ブログ判断: 完了後に reader-perspective で再判断（後続辞典系の進捗段階で学び・楽しさの有無を見る）。「共有部品をフォークして段階移行する」設計判断は読者価値が出る余地があるため、完了時に独立判断する。
-- 本サイクルは設計拡張ではなく既存方針（移行計画 Phase 9.3.b）の実行。新規設計判断は最小限（共有部品フォーク戦略・austere 歯止めの線引き）。
+- **ブログ判断: 不執筆**。「共有部品をフォークして段階移行する」設計判断は技術的に意義あるが、(a) cycle-262 と同じく1〜数ページのデザイン移行は来訪者に見える変化が局所的、(b) フォークそのものは中間成果物で読者の生活には届かない、(c) B-352〜354 完了で legacy が撤去された段階で「段階移行を完走した」物語として再評価する方が読者価値が出やすい。後続辞典系移行が一通り進んだ段階で読者価値を再判断する（cycle-262 と同方針）。
+- 本サイクルは設計拡張ではなく既存方針（移行計画 Phase 9.3.b）の実行。新規設計判断は (new) 共有部品の **フォーク採用・配置（`_components/new/`）・austere 歯止めの線引き（色面=本文コンテンツ／chrome=トークン）** の3点に集約され、いずれも段階移行整合と DESIGN.md §7 に従って確定。
+- **検証環境の知見（活用）**: cycle-262 で得た「移行系の視覚検証では、配信中サーバが移行後ビルドかを新クラス等で先確認してから撮る」教訓を本サイクルでも適用（本番 `npm start` 配信 + `.container` クラス/TrustLevelBadge 痕跡ゼロ/title 動的算出の3点先確認）し、stale 事故ゼロで完了。
+- **B-541 の進捗**: colors の「250色」ハードコードを `getAllColors().length` に置換して **colors 分を回収**。他系統（kanji/yoji 等）の `.length` 化は B-541 に残存。
 
 ## サイクル終了時のチェックリスト
 
-- [ ] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
-- [ ] `/docs/backlog.md` のActiveセクションに未完了のタスクがない（B-351 は本サイクル完了で Done へ移動）。
-- [ ] すべての変更がレビューされ、残存する指摘事項が無くなっている。
-- [ ] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
-- [ ] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
-- [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
-- [ ] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
+- [x] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている（6 完了処理を実行中）。
+- [x] `/docs/backlog.md` のActiveセクションに未完了のタスクがない（B-351 は本サイクル完了で Done へ移動）。
+- [x] すべての変更がレビューされ、残存する指摘事項が無くなっている（白紙 reviewer 6観点逐条で must/should/nit ゼロ承認・視覚検証も別 reviewer 承認済）。
+- [x] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する（PM 再実行で exit 0×4 を確認・テスト 342ファイル/5674件全通過）。
+- [x] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
+- [x] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
+- [x] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている（キャリーオーバーなし・B-541 colors 分回収済の進捗を補足事項に明記）。

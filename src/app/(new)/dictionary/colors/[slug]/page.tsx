@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import DictionaryDetailLayout from "@/dictionary/_components/DictionaryDetailLayout";
+import DictionaryDetailLayout from "@/dictionary/_components/new/DictionaryDetailLayout";
 import { COLOR_DICTIONARY_META } from "@/dictionary/_lib/dictionary-meta";
 import ColorDetail from "@/dictionary/_components/color/ColorDetail";
 import { generateColorPageMetadata, generateColorJsonLd } from "@/lib/seo";

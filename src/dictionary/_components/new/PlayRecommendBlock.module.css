@@ -1,0 +1,93 @@
+/* 記事・辞典ページ向けの関連コンテンツ推薦ブロック（(new) デザイン体系版）。
+ * legacy 版（src/play/_components/PlayRecommendBlock.module.css）からのフォーク。
+ * トークンを (new) 体系へ置換し、austere 構造化（影・transform 撤去）。
+ * accentColor 左ボーダー・絵文字 icon の視覚仕様は legacy と同一（診断タッチポイント側・
+ * design.md §1.4）。
+ */
+
+.container {
+  margin-top: 2rem;
+  background-color: var(--bg-soft);
+  border-radius: var(--r-normal);
+  padding: 1.25rem;
+  border-top: none;
+}
+
+.heading {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: var(--fg);
+}
+
+.subtext {
+  font-size: 0.85rem;
+  color: var(--fg-soft);
+  margin-bottom: 0.75rem;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  border-left: 3px solid transparent;
+  /* container が bg-soft のため、カード自体は bg で差別化する */
+  background-color: var(--bg);
+  border-radius: var(--r-normal);
+  text-decoration: none;
+  transition: background-color 0.15s;
+}
+
+.card:hover {
+  /* container(--bg-soft) と card(--bg) の上で知覚可能な hover 差を保つため、
+   * container より一段濃い --bg-softer を使う（影撤去後の hover は面の濃度差で示す）。 */
+  background-color: var(--bg-softer);
+}
+
+.icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.title {
+  font-weight: 600;
+  color: var(--fg);
+  font-size: 0.95rem;
+}
+
+.meta {
+  font-size: 0.75rem;
+  color: var(--fg-soft);
+}
+
+.description {
+  font-size: 0.85rem;
+  color: var(--fg-soft);
+  line-height: 1.4;
+}
+
+.cta {
+  display: inline-block;
+  font-size: 0.85rem;
+  color: var(--accent);
+  font-weight: 500;
+  margin-top: 0.25rem;
+}

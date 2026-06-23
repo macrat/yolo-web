@@ -1,0 +1,33 @@
+/* 伝統色辞典トップ。austere（無彩）基調の index 面。
+ * 診断の視覚言語（にじみ/ラジアルグラデ・結果固有色・象徴）は持ち込まない（DESIGN.md §7・§3.3）。 */
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  /* 左右 1.25rem は Header/Footer と同じサイト共通値。縦は独自に 2rem。
+   * （new）配下に var(--max-width) は未定義のためハードコード 1200px が正準
+   * （(new)/dictionary/page.module.css の .container と同一方針）。 */
+  padding: 2rem 1.25rem;
+}
+
+/* hero は無地。旧 linear-gradient（にじみ＝診断拡張）を撤去し、
+ * 余白と 1px の下罫のみで本文との区切りを示す（austere・§3.3）。 */
+.hero {
+  text-align: center;
+  padding: 0 1rem 2rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.heroTitle {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--fg);
+  margin-bottom: 0.5rem;
+}
+
+.heroSubtext {
+  font-size: 0.95rem;
+  color: var(--fg-soft);
+  line-height: 1.6;
+}

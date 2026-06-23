@@ -5,7 +5,7 @@ import type { ColorEntry } from "@/dictionary/_lib/types";
 import { COLOR_CATEGORY_LABELS } from "@/dictionary/_lib/types";
 import ColorCard from "@/dictionary/_components/color/ColorCard";
 import DictionaryGrid from "@/dictionary/_components/DictionaryGrid";
-import SearchBox from "@/dictionary/_components/SearchBox";
+import SearchBox from "@/dictionary/_components/new/SearchBox";
 
 interface ColorsIndexClientProps {
   allColors: ColorEntry[];
@@ -58,7 +58,7 @@ export default function ColorsIndexClient({
         <p
           style={{
             textAlign: "center",
-            color: "var(--color-text-muted)",
+            color: "var(--fg-soft)",
             marginTop: "2rem",
           }}
         >

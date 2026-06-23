@@ -1,0 +1,32 @@
+/*
+ * DictionaryDetailLayout CSS（(new) デザイン体系版）
+ *
+ * legacy 版からのフォーク。トークンを (new) 体系へ置換し、austere 構造化。
+ *
+ * .container: colors には layout が無く、親 layout の var(--max-width) も (new) では
+ * 未定義のため、ここでページ枠 1200px を自前で持たせる（(new)/dictionary の .container と
+ * 同一方針）。要素を増やさないよう、新規 div ではなく既存の最上位 <article> に付与する
+ * （article 三重ネスト回避・design.md §4.4 S-3 対応）。本文 700px（ColorDetail .detail）は
+ * 別レイヤーとして children 側で維持される。
+ */
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem;
+}
+
+.valueProposition {
+  margin-top: 0.75rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--fg);
+  line-height: 1.6;
+}
+
+.shareSection {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}

@@ -174,7 +174,7 @@ const staticPages: Array<{
   {
     path: "/dictionary/colors",
     importMeta: () =>
-      import("@/app/(legacy)/dictionary/colors/page").then(
+      import("@/app/(new)/dictionary/colors/page").then(
         (m) => m.metadata as Metadata,
       ),
   },
@@ -401,7 +401,7 @@ describe("動的metadataページのSEO検証", () => {
     const slug = slugs[0];
 
     const { generateMetadata } =
-      await import("@/app/(legacy)/dictionary/colors/[slug]/page");
+      await import("@/app/(new)/dictionary/colors/[slug]/page");
     const meta = await generateMetadata({
       params: Promise.resolve({ slug }),
     });
@@ -419,7 +419,7 @@ describe("動的metadataページのSEO検証", () => {
     const category = categories[0];
 
     const { generateMetadata } =
-      await import("@/app/(legacy)/dictionary/colors/category/[category]/page");
+      await import("@/app/(new)/dictionary/colors/category/[category]/page");
     const meta = await generateMetadata({
       params: Promise.resolve({ category }),
     });
