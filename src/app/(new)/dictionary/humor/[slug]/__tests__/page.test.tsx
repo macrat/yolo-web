@@ -36,7 +36,7 @@ vi.mock("next/navigation", () => ({
 }));
 
 // Mock ShareButtons
-vi.mock("@/components/common/ShareButtons", () => ({
+vi.mock("@/components/ShareButtons", () => ({
   default: ({
     url,
     title,
@@ -61,16 +61,8 @@ vi.mock("@/components/common/ShareButtons", () => ({
 }));
 
 // Mock common components
-vi.mock("@/components/common/Breadcrumb", () => ({
+vi.mock("@/components/Breadcrumb", () => ({
   default: () => <nav>Breadcrumb</nav>,
-}));
-
-vi.mock("@/components/common/TrustLevelBadge", () => ({
-  default: () => <div>TrustLevelBadge</div>,
-}));
-
-vi.mock("@/humor-dict/_components/RecordPlay", () => ({
-  default: () => null,
 }));
 
 // Mock EntryRatingButton

@@ -2,7 +2,6 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-352 | Phase 9.3.c: dictionary humor系移行（トップ+詳細） | P1 | 264 | B-351完了で解放。humorは自前CSS完結(共有_components不使用=cycle-262トップ移行型)。austere基調・診断拡張不適用。詳細 cycle-264.md |
 
 ## Queued (すぐに着手できる)
 
@@ -135,8 +134,8 @@
 
 | ID | Title | Completed Cycle | Notes |
 | --- | --- | --- | --- |
+| B-352 | 移行計画 Phase 9.3.c: dictionary humor系移行（トップ+詳細） | 264 | humor系(index+30語詳細)を(new)austere基調へ移行。自前CSS完結(共有_components不使用=cycle-262型)でDictionaryDetailLayout不採用。😂評価ボタン無改修。詳細 cycle-264.md |
 | B-351 | 移行計画 Phase 9.3.b: dictionary colors系移行（トップ+詳細+category） | 263 | colors系を(new)austere基調へ移行。共有_componentsを`_components/new/`にフォーク(後続B-352〜354の基盤)。色見本HEXは本文維持・B-541のcolors分回収。詳細 cycle-263.md |
 | B-350 | 移行計画 Phase 9.3.a: dictionary トップ移行 | 262 | `/dictionary` トップを (new) austere 基調へ移行(診断拡張は不適用)。サブルートは legacy 残置で B-351〜354 解放。詳細 cycle-262.md |
 | B-539 | デザインシステムの診断中心コンセプトへの再適合 | 261 | 設計3文書を接地→実デザイン探索3案→方向決定で診断中心へ再適合。決定=B案(伝統色で結果アイデンティティ+辞典橋渡し)主軸+C完結した一枚+A規律。DESIGN.md §7新設・診断面限定で色/絵文字拡張+コントラスト方針。出荷B-542/B-523。白紙reviewer全承認。詳細 cycle-261.md |
 | B-543 | ターゲット定義(docs/targets/)の診断中心コンセプトへの再定義 | 260 | 旧道具箱-core前提を是正し診断中心3層へ再定義(診断メイン新設/M1b削除/文化層追加)。市場・競合調査でAP-P13是正し主軸を外部需要でも裏付け・SWOT明示。白紙reviewer3名承認。詳細 cycle-260.md |
-| B-538 | site-concept改訂(道具箱-core→診断中心)と下流再編 | 259 | B-535判定を実行。site-concept全面改訂・下流再編・道具箱-core前提の生きた文書6件を注記/是正・診断ターゲット欠落でB-543起票。白紙reviewer③承認。詳細 cycle-259.md |

@@ -2,7 +2,7 @@
 id: 264
 description: B-352 デザイン移行計画 Phase 9.3.c「dictionary humor 系（ユーモア語辞典: トップ index + 詳細 [slug]）の (new) デザイン体系への移行」。B-351（cycle-263・colors 系移行）完了で着手条件が解放された。humor 系は colors と異なり共有 `_components`（DictionaryDetailLayout / CategoryNav / SearchBox / DictionaryGrid）を一切使わず、自前の `page.module.css` で完結する（cycle-262 のトップ移行に近い「self-contained」型）。よって本サイクルは共有部品のフォークを必要とせず、index/詳細の自前 CSS を in-place で新トークン化し、common→(new) の Breadcrumb/ShareButtons へ差し替え、TrustLevelBadge を撤去する。humor 専用 client 部品 EntryRatingButton の CSS は旧 `--color-*` トークンを参照していない（grep 確認済）が移行後の見た目整合を検証する。cycle-261 の方向決定（DESIGN.md §7）に従い診断の視覚言語拡張（結果固有色アイデンティティ・象徴絵文字）は適用せず austere 基調で移行する。詳細ページに (new) DictionaryDetailLayout を採用するか自前レイアウトを温存するかは Plan エージェントで判断する。本サイクルは humor 系のみ（kanji=B-353・yoji=B-354 は後続）。
 started_at: 2026-06-23T16:01:48+0900
-completed_at: null
+completed_at: 2026-06-23T21:37:02+0900
 ---
 
 # サイクル-264
@@ -36,24 +36,24 @@ completed_at: null
 
 ## 実施する作業
 
-- [ ] **1. 接地（現状の来訪者体験の把握）**
-  - [ ] 1a. GA で humor 系の着地・回遊を確認（index/詳細の PV・流入経路・デバイス比）。母数が小さい場合は数値KPIではなく「index⇄詳細の回遊性と体験を austere で同等以上に保つ」を評価軸に据える（cycle-263 と同方針）
-  - [ ] 1b. 移行前スクショを `tmp/cycle-264/before/` に保存（index・代表数語の詳細 × w360/w1280 × light/dark）。保つべき価値の核を記録（五十音順の見出し語一覧・語釈・ShareButtons・EntryRatingButton・AIバッジの扱い・回遊リンク）
-- [ ] **2. 移行設計の確定（Plan エージェント → reviewer）**
-  - [ ] 2a. 詳細ページのレイアウト方針を確定（Plan）= 自前レイアウト温存 in-place トークン化 か (new) DictionaryDetailLayout 採用か。トークン置換マップ（cycle-263 踏襲）・TrustLevelBadge 撤去/ShareButtons (new) 化・EntryRatingButton の着色整合方針を文書化（`tmp/cycle-264/design.md`）
-  - [ ] 2b. austere 歯止めの線引き（診断視覚言語拡張は不適用・辞典本文は維持）を確定
-  - [ ] 2c. 計画レビュー（白紙 reviewer）= 承認を得てから実装着手（Review always）
-- [ ] **3. 移行実装（builder サブエージェント・小さく分割）**
-  - [ ] 3a. index 移行（`page.tsx`/`page.module.css` を git mv・Breadcrumb 差替・TrustLevelBadge 撤去・新トークン化・`.container` 付与・収録数 `entries.length` 維持）
-  - [ ] 3b. 詳細 `[slug]` 移行（git mv・(new) Breadcrumb/ShareButtons・TrustLevelBadge 撤去・EntryRatingButton 整合・新トークン化・generateStaticParams/JSON-LD/OGP/Twitter 全維持・`__tests__` 追従）
-  - [ ] 3c. seo-coverage 等で humor を import している箇所があれば (new) パスへ追従（grep 確認）
+- [x] **1. 接地（現状の来訪者体験の把握）**
+  - [x] 1a. GA 接地完了（`tmp/cycle-264/grounding-ga.md`）= humor は**超低PV**（GA4 4ヶ月17PV/3人・SC index 61impr 順位42/詳細は順位7〜11のロングテール）・**直接着地ゼロ＝サイト内回遊の終点**・**mobile 100%**・全30語・支配的slugなし。評価軸＝数値比較放棄し「index⇄詳細・関連語の回遊性を austere で同等以上」「mobile最優先」「全30slug均等」「順位良好な詳細のSEO構造保全」
+  - [x] 1b. 移行前スクショ16枚を `tmp/cycle-264/before/`（index＋詳細3語 morning/meeting/coffee × w360/w1280 × light/dark）。保つべき核を記録＝五十音順見出し一覧（見出し【よみ】＋短語釈の1行カード）・語釈の読みやすさ（定義カード→解説→用例→関連語）・😂評価ボタン(EntryRatingButton)・4種ShareButtons・🤖AIバッジ＋Footer注意帯・関連語チップ/パンくず/「一覧へ」の回遊導線
+- [x] **2. 移行設計の確定（Plan エージェント → reviewer）**
+  - [x] 2a. 詳細レイアウト方針を確定（Plan）= **自前レイアウト温存 + in-place トークン化（DictionaryDetailLayout 不採用）**。根拠＝評価ボタンのスロット欠如・DOM順テスト衝突・meta型不一致・Share 4種→3種劣化・playReco空で採用は機能同等性をむしろ下げる。self-contained 移行（cycle-262型）。トークン置換表/TrustLevelBadge 撤去/ShareButtons (new) 既定4種維持/EntryRatingButton 無改修を `tmp/cycle-264/design.md` に確定
+  - [x] 2b. austere 歯止め確定（にじみグラデ撤去・診断拡張不適用・辞典本文＋😂評価CTAは維持）
+  - [x] 2c. 計画レビュー（白紙 reviewer・2巡）= S-1（.definition罫を accent→border-strong）/S-2（角丸を var(--r-normal) 化）/S-3（grep表に sitemap.test.ts）/N-1 を全反映し**再レビューで指摘なし・着手可**
+- [x] **3. 移行実装（builder サブエージェント・小さく分割）**
+  - [x] 3a. index 移行（builder-A）= `page.tsx`/`page.module.css` を git mv・Breadcrumb 差替・TrustLevelBadge 撤去・新トークン化（hero gradient 撤去・角丸 `var(--r-normal)`）・`.container` 付与・`entries.length` 維持・DefinedTermSet JSON-LD 維持。逸脱なし
+  - [x] 3b. 詳細 `[slug]` 移行（builder-B）= ディレクトリ git mv・(new) Breadcrumb/ShareButtons（既定4種維持）・TrustLevelBadge 撤去・`.definition`=`--border-strong`（S-1）・新トークン化・`.container` ラッパー・EntryRatingButton 無改修・generateStaticParams/JSON-LD/OGP/Twitter 全維持・`__tests__` 追従（23 tests passed）
+  - [x] 3c. Task C（PM）= seo-coverage.test.ts の humor 2 dynamic import を `(new)` パスへ差替
 - [ ] **4. 検証**
-  - [ ] 4a. `npm run lint && npm run format:check && npm run test && npm run build` exit 0×4。本番ビルド（`npm start`）で配信確認（cycle-262 stale 事故対策＝`.container` 出現・TrustLevelBadge 痕跡ゼロを先確認）。全体ゲート grep: 旧 `--color-*` 残ゼロ・`(legacy)/dictionary/humor/` 空
-  - [ ] 4b. Playwright で humor after スクショを `tmp/cycle-264/after/`、評価軸全 pass（情報保全・回遊リンク維持/向上・austere 化〔hero gradient/影/transform/旧トークン痕跡ゼロ〕・EntryRatingButton 挙動・AI 注記 Footer 経由保全）
-  - [ ] 4c. 未移行 kanji/yoji を実機確認（legacy デザイン不変＝段階移行整合・回遊リンク非破綻）
-- [ ] **5. レビュー（白紙 reviewer）**
-  - [ ] 5a. 成果物レビュー（白紙 reviewer・本番ビルド配信確認のうえ逐条検証）= 指摘ゼロまで対応
-- [ ] **6. 完了処理（`/cycle-completion`）**
+  - [x] 4a. `npm run lint && npm run format:check && npm run test && npm run build` **exit 0×4**（テスト 342ファイル/5674件全通過・build 成功・`/dictionary/humor` static + `[slug]` SSG 30語 prerender + OGP/twitter 生成）。全体ゲート grep: 旧 `--color-*` 残ゼロ・common 残参照ゼロ・`.definition`=`--border-strong`・`(legacy)/dictionary/humor/` 空
+  - [x] 4b. humor after 16枚を `tmp/cycle-264/after/`、**評価軸6項目全 pass**（情報保全・回遊リンク実クリック全周回・mobile w360 破綻なし/タップ44px・😂評価ボタン状態変化+localStorage+アンバー視認・austere化〔にじみグラデ/影/大角丸/AIバッジ撤去〕・AI注記 Footer 担保/TrustLevelBadge 痕跡ゼロを DOM 実測）
+  - [x] 4c. 未移行 kanji/yoji を実機確認＝**legacy デザイン不変**（legacy ヘッダ/AIバッジ/影付き推薦カード保持・回遊リンク機能・巻き込み事故なし）。`tmp/cycle-264/legacy-unchanged/` に4枚
+- [x] **5. レビュー（白紙 reviewer）**
+  - [x] 5a. 成果物レビュー（白紙 reviewer・本番ビルド配信確認のうえ6観点逐条検証）= **指摘なし・完了可**（標準移行手順/デザイン体系適合〔.definition=border-strong・角丸 var(--r-normal) を本番配信CSSで確認〕/austere 歯止め/スコープ厳守/段階移行整合〔共有部品・EntryRatingButton・kanji/yoji diff ゼロ〕/コード品質〔RecordPlay デッドモック除去・OGP/canonical/JSON-LD 全保全〕）。nit=空ディレクトリ残存は git 非追跡・Phase 11.2 で消却＝対応不要
+- [x] **6. 完了処理（`/cycle-completion`）**
 
 ## 作業計画
 
@@ -91,21 +91,35 @@ completed_at: null
 
 **外部仕様への依存**: 本サイクルの主作業（既存 index/詳細の (new) 移行）は内部デザインシステムに閉じる。外部仕様接点は humor-dict の JSON-LD（Schema.org）・OGP/Twitter カードだが、いずれも既存の移行済みページ（cycle-262/263・blog/tools）で確立済みのパターンを**踏襲するのみ**で、新規の外部仕様依存判断を導入しない。よって一次資料の新規事前確認は不要と判断する（新規の構造化データを設計する場合のみ既存パターン準拠を確認）。
 
+## レビュー結果
+
+本サイクルは「接地→移行設計→実装→検証→レビュー」の各段で独立したサブエージェントに委譲し、最終成果物は白紙 reviewer に独立検証させた。
+
+- **接地（GA・Playwright・foreground）**: humor 系は **超低PV**（GA4 4ヶ月17PV/3人・直接着地ゼロ＝サイト内回遊の終点・**mobile 100%**・全30語・支配的slugなし・SC では index 順位42/詳細は順位7〜11のロングテール）と判明。母数が小さく数値比較は不可のため、評価軸を「数値KPI」ではなく「**index⇄詳細・関連語の回遊性を austere で同等以上に保つ・mobile 最優先・全30slug均等・順位良好な詳細の SEO 構造保全**」に設定。移行前スクショ16枚を保存し保つべき核（五十音順見出し一覧・語釈・😂評価ボタン・4種ShareButtons・AIバッジ・回遊導線）を記録。
+- **移行設計（Plan → reviewer 2巡）**: 最重要の設計判断＝詳細ページは **(new) DictionaryDetailLayout を不採用**とし自前レイアウト温存 + in-place トークン化（self-contained 移行＝cycle-262型）。根拠は実コード読解（評価ボタン用スロット欠如・DOM順テスト page.test.tsx との衝突・meta 型不一致〔HumorDictMeta／DictionaryMeta〕・Share 4種→3種への劣化・playRecommendations 空）で、採用はむしろ機能同等性を下げる。トークン置換表（cycle-263 マップ準拠）と austere 歯止めを確定。reviewer 初回指摘 S-1（`.definition` 強調罫は `--accent` でなく `--border-strong`＝accent はリンク/focus 専用で評価CTAと二重立ち回避）・S-2（角丸は `var(--r-normal)` トークン参照）・S-3（grep 網羅表に sitemap.test.ts 追記）・N-1（絵文字 §3 整合の先例補強）を全反映し、**再レビューで指摘なし・着手可**。
+- **実装（builder A/B + Task C・小さく分割）**: A=index 移行（git mv・Breadcrumb 差替・TrustLevelBadge 撤去・hero gradient 撤去・角丸 `var(--r-normal)`・`.container`・`entries.length` 維持）、B=詳細 [slug] 移行（ディレクトリ git mv・(new) Breadcrumb/ShareButtons〔既定4種維持〕・`.definition`=`--border-strong`〔S-1〕・EntryRatingButton 無改修・generateStaticParams/JSON-LD/OGP/Twitter 全維持・テスト追従で 23 tests passed・**RecordPlay デッドモック除去**）、C=seo-coverage.test.ts の humor 2 dynamic import を (new) パスへ。いずれも設計逸脱なし。
+- **検証（4ゲート + 視覚・foreground 本番ビルド配信）**: `lint/format/test/build` **exit 0×4**（テスト 342ファイル/5674件全通過・`/dictionary/humor` static + `[slug]` SSG 30語 prerender + OGP/twitter 生成）。本番ビルド `npm start` 配信で `.container` 出現・TrustLevelBadge 痕跡ゼロを**先確認**（cycle-262 stale 事故の再発なし）。Playwright 視覚検証は **評価軸6項目すべて pass**（情報保全・回遊リンクを実クリックで全周回・mobile w360 破綻なし/タップ44px・😂評価ボタン状態変化+localStorage+アンバー視認・austere化〔にじみグラデ/影/大角丸/AIバッジ撤去〕・AI注記 Footer 担保を DOM 実測）。未移行 kanji/yoji は legacy デザイン pixel 不変・回遊リンク機能で**巻き込み事故なし**。
+- **成果物レビュー（白紙 reviewer）**: 6観点（標準移行手順・デザイン体系適合・austere 歯止め・スコープ厳守・段階移行整合・コード品質）を逐条検証。`grep -rE '\-\-color-'` 残ゼロ・common 残参照ゼロ・`(legacy)/dictionary/humor/` 空・`.definition`=`--border-strong`/角丸 `var(--r-normal)` を**本番配信 CSS** で確認・共有部品と EntryRatingButton の **diff ゼロ**・kanji/yoji diff ゼロ・JSON-LD/canonical/OGP 全保全を確認し、**must/should/nit すべてゼロで承認**。
+
+有効な指摘はすべて対応済みで、残存する指摘・対応事項はない。
+
 ## キャリーオーバー
 
-- 現時点でなし。後続の辞典移行（kanji=B-353・yoji=B-354）は本サイクルのスコープ外の既存下流タスク（Queued）。
+- なし。後続の辞典移行（kanji=B-353・yoji=B-354）は本サイクルのスコープ外の既存下流タスク（Queued/Deferred）であり、本サイクルが触れていない共有部品・legacy 系統をそのまま引き継ぐ。
 
 ## 補足事項
 
-- ブログ判断は完了時に reader-perspective で再判断する（cycle-263 と同方針）。
-- 本サイクルは設計拡張ではなく既存方針（移行計画 Phase 9.3.c）の実行。新規設計判断は詳細ページのレイアウト方針（DictionaryDetailLayout 採用要否）に集約され、Plan → reviewer で確定する。
+- **ブログ判断: 不執筆**。reader-perspective で真剣に検討した結論。(a) cycle-262/263 と同じく1〜2ページのデザイン移行は来訪者に見える変化が局所的、(b) 本サイクルの新規設計判断（DictionaryDetailLayout 不採用＝self-contained 移行）は技術的に意義あるが中間成果物で読者の生活に届かない、(c) ターゲットユーザー（診断/文化/道具を求めて来る来訪者）の学び・楽しさに直結しない。辞典4系統移行（B-351〜354）を完走し legacy が撤去された段階で「段階移行を完走した」物語として再評価する方が読者価値が出やすい（cycle-263 と同方針）。
+- 本サイクルは設計拡張ではなく既存方針（移行計画 Phase 9.3.c）の実行。新規設計判断は詳細ページのレイアウト方針（**DictionaryDetailLayout 不採用・自前レイアウト温存**）に集約され、Plan → reviewer 2巡で確定した。
+- **検証環境の知見（活用）**: cycle-262/263 の「移行系の視覚検証では配信中サーバが移行後ビルドかを新クラス等で先確認してから撮る」教訓を本サイクルでも適用（本番 `npm start` 配信 + `.container` 出現/TrustLevelBadge 痕跡ゼロの先確認）し、stale 事故ゼロで完了。
+- **コード品質の副次改善**: 詳細テストが mock していた実体なしの `RecordPlay` デッドモックを除去（reviewer 評価）。
 
 ## サイクル終了時のチェックリスト
 
-- [ ] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
-- [ ] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
-- [ ] すべての変更がレビューされ、残存する指摘事項が無くなっている。
-- [ ] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
-- [ ] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
-- [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
-- [ ] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
+- [x] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
+- [x] `/docs/backlog.md` のActiveセクションに未完了のタスクがない（B-352 は本サイクル完了で Done へ移動）。
+- [x] すべての変更がレビューされ、残存する指摘事項が無くなっている（白紙 reviewer 6観点で must/should/nit ゼロ承認・計画 reviewer 2巡承認・視覚検証6軸 pass）。
+- [x] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する（exit 0×4・テスト 342ファイル/5674件全通過）。
+- [x] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
+- [x] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
+- [x] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている（キャリーオーバーなし）。

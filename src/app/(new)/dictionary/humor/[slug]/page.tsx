@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import Breadcrumb from "@/components/common/Breadcrumb";
-import ShareButtons from "@/components/common/ShareButtons";
-import TrustLevelBadge from "@/components/common/TrustLevelBadge";
+import Breadcrumb from "@/components/Breadcrumb";
+import ShareButtons from "@/components/ShareButtons";
 import {
   generateHumorDictEntryMetadata,
   generateHumorDictJsonLd,
@@ -45,7 +44,7 @@ export default async function HumorDictEntryPage({
     .filter((e): e is NonNullable<typeof e> => e !== undefined);
 
   return (
-    <>
+    <div className={styles.container}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: safeJsonLdStringify(jsonLd) }}
@@ -58,7 +57,6 @@ export default async function HumorDictEntryPage({
           { label: entry.word },
         ]}
       />
-      <TrustLevelBadge level="generated" />
       <article className={styles.article}>
         {/* ファーストビュー: 見出し語・よみがな・ユーモア定義文 */}
         <header className={styles.header}>
@@ -123,6 +121,6 @@ export default async function HumorDictEntryPage({
           <Link href="/dictionary/humor">← ユーモア辞典一覧へ</Link>
         </div>
       </article>
-    </>
+    </div>
   );
 }

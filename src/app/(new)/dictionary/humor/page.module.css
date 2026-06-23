@@ -1,14 +1,22 @@
+/* ユーモア辞典トップ。austere（無彩）基調の index 面。
+ * 診断の視覚言語（にじみ/グラデ・結果固有色・象徴）は持ち込まない（DESIGN.md §7・§3.3）。 */
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  /* 左右 1.25rem は Header/Footer と同じサイト共通値。縦は独自に 2rem。
+   * （new）配下に var(--max-width) は未定義のためハードコード 1200px が正準
+   * （colors index の .container と同一方針）。 */
+  padding: 2rem 1.25rem;
+}
+
+/* hero は無地。旧 linear-gradient（にじみ＝診断拡張）と角丸・border を撤去し、
+ * 余白と 1px の下罫のみで本文との区切りを示す（austere・§3.3）。 */
 .hero {
   text-align: center;
-  padding: 2rem 1rem;
+  padding: 0 1rem 2rem;
   margin-bottom: 2rem;
-  background: linear-gradient(
-    135deg,
-    var(--color-bg-secondary),
-    var(--color-bg)
-  );
-  border-radius: 0.75rem;
-  border: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--border);
 }
 
 .heroTitle {
@@ -19,7 +27,7 @@
 
 .heroSubtext {
   font-size: 0.95rem;
-  color: var(--color-text-muted);
+  color: var(--fg-soft);
   line-height: 1.6;
 }
 
@@ -33,14 +41,14 @@
 }
 
 .entryItem {
-  border: 1px solid var(--color-border);
-  border-radius: 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--r-normal);
   overflow: hidden;
   transition: border-color 0.2s;
 }
 
 .entryItem:hover {
-  border-color: var(--color-primary);
+  border-color: var(--border-strong);
 }
 
 .entryLink {
@@ -51,30 +59,30 @@
   padding: 0.875rem 1rem;
   text-decoration: none;
   color: inherit;
-  background-color: var(--color-bg);
+  background-color: var(--bg);
   transition: background-color 0.2s;
 }
 
 .entryLink:hover {
-  background-color: var(--color-bg-secondary);
+  background-color: var(--bg-soft);
 }
 
 .entryWord {
   font-size: 1.1rem;
   font-weight: 700;
-  color: var(--color-text);
+  color: var(--fg);
   flex-shrink: 0;
 }
 
 .entryReading {
   font-size: 0.8rem;
-  color: var(--color-text-muted);
+  color: var(--fg-soft);
   flex-shrink: 0;
 }
 
 .entryPreview {
   font-size: 0.875rem;
-  color: var(--color-text-muted);
+  color: var(--fg-soft);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

@@ -181,7 +181,7 @@ const staticPages: Array<{
   {
     path: "/dictionary/humor",
     importMeta: () =>
-      import("@/app/(legacy)/dictionary/humor/page").then(
+      import("@/app/(new)/dictionary/humor/page").then(
         (m) => m.metadata as Metadata,
       ),
   },
@@ -475,7 +475,7 @@ describe("動的metadataページのSEO検証", () => {
     const slug = slugs[0];
 
     const { generateMetadata } =
-      await import("@/app/(legacy)/dictionary/humor/[slug]/page");
+      await import("@/app/(new)/dictionary/humor/[slug]/page");
     const meta = await generateMetadata({
       params: Promise.resolve({ slug }),
     });
