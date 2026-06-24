@@ -2,12 +2,12 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-353 | Phase 9.3.d: dictionary kanji系移行（トップ+動的サブルート+詳細） | P1 | 265 | B-350完了で解放。kanji-kanaru↔kanji辞典の双方向クロスリンク維持。B-351共有_components再利用。詳細 design-migration-plan.md 9.3.d / cycle-265.md |
 
 ## Queued (すぐに着手できる)
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-353 | Phase 9.3.d: dictionary kanji系移行（トップ+動的サブルート+詳細） | P1 | - | B-350完了で解放。kanji-kanaru↔kanji辞典の双方向クロスリンク維持。B-351共有_components再利用。詳細 design-migration-plan.md 9.3.d |
 | B-541 | 現状正しい辞典収録数ハードコードの予防的`.length`化 | P4 | - | colors系「250色」等。現状正しいがB-409/B-536と同型の再発予兆。詳細 cycle-258.md |
 | B-540 | アンチパターン集の規約準拠クリーンアップ | P1 | - | directory規約違反を是正(手順→knowledge・具体事例→cycle-doc・発生記録→番号のみ)。教訓は移送・要レビュー。詳細 cycle-257.md キャリーオーバー |
 | B-524 | *Content の allTypesLayout 公開型を意味通り命名へ整理 | P1 | - | cycle-254のpill→grid内部マップでdead literal化。AP-I02。retro側(_experiments/)の整理にも注意。詳細 cycle-254.md / cycle-255.md |
