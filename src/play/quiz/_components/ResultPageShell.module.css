@@ -5,8 +5,10 @@
   width: 100%;
 }
 
+/* 左寄せに統一（インライン ResultCard と同じトーン・ResultCard.module.css L8-9）。
+ * 旧デザインの中央寄せ（icon/h1/quizName/children 全体）は撤去した。 */
 .card {
-  text-align: center;
+  text-align: left;
   padding: 2rem 1rem;
 }
 
@@ -24,13 +26,13 @@
 /* クイズのshortDescription: 第三者が診断内容を即座に把握するためのコンテキスト */
 .quizName {
   font-size: 0.875rem;
-  color: var(--color-text-muted);
+  color: var(--fg-soft);
   margin-bottom: 0.25rem;
 }
 
 .quizContext {
   font-size: 0.8rem;
-  color: var(--color-text-muted);
+  color: var(--fg-soft);
   margin-bottom: 1.25rem;
   line-height: 1.5;
 }
@@ -38,5 +40,5 @@
 .shareSection {
   margin-top: 1.5rem;
   padding-top: 1.5rem;
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid var(--border);
 }

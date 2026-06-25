@@ -2,7 +2,6 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-523 | 診断デザイン移行の再開: 単独結果ページ枠(ResultPageShell系)を(new)へ移行 | P1 | 267 | 主軸診断のクライマックス(単独結果ページ10ルート)が旧デザインで放置。A/B凍結は倒錯(cycle-256→257/259で否定)。詳細 cycle-267.md |
 
 ## Queued (すぐに着手できる)
 
@@ -104,6 +103,7 @@
 
 | ID | Title | Priority | Notes |
 | --- | --- | --- | --- |
+| B-544 | 結果ページ§7フルクライマックス化＋catchphrase見せ方統一(N-1) | P2 | 着手: インラインA/B(quiz_result_visual_v1)結論後にB-526協調。固有色/勲章感/伝統色対応＋単独ページ内のcatchphrase囲み統一。詳細 cycle-267.md |
 | B-528 | cycle-255 計測基盤の自己適用(release別 before/after 回帰確認) | P1 | 着手: 2026-06-28〜2026-07-05目安(デプロイ後7-14日)。詳細 visitor-value-measurement.md 論点8.6 |
 | B-526 | 最初の実A/B(quiz_result_visual_v1) 月次読み | P1 | 着手: 2026-07-21目安〜結論到達まで月次継続。詳細 visitor-value-measurement.md 論点8.1 |
 | B-527 | 最初の実A/B 結論到達時の撤去サイクル化 | P1 | 着手: B-526で判定閾値到達時。詳細 visitor-value-measurement.md 論点8.4 |
@@ -132,8 +132,8 @@
 
 | ID | Title | Completed Cycle | Notes |
 | --- | --- | --- | --- |
+| B-523 | 診断単独結果ページ10ルートを(new)デザインへ移行 | 267 | 主軸診断のクライマックス。A/B凍結の倒錯を是正(単独ページはarm非受領で交絡せず)・旧要素撤去しインライン結果とトーン統一。詳細 cycle-267.md |
 | B-354 | 移行計画 Phase 9.3.e: dictionary yoji系移行（トップ+category+詳細） | 266 | yoji系を(new)austereへ移行＝辞典4系統移行(Phase 9.3)完走。h1欠落是正(kanji/color同型)・クロスリンク維持。詳細 cycle-266.md |
 | B-353 | 移行計画 Phase 9.3.d: dictionary kanji系移行 | 265 | kanji系(トップ+grade/radical/stroke+詳細)を(new)へ移行。`new/DictionaryCard`フォーク新設・kanji-kanaru双方向リンク維持・SEO構造保全。詳細 cycle-265.md |
 | B-352 | 移行計画 Phase 9.3.c: dictionary humor系移行（トップ+詳細） | 264 | humor系(index+30語詳細)を(new)austere基調へ移行。自前CSS完結(共有_components不使用=cycle-262型)でDictionaryDetailLayout不採用。😂評価ボタン無改修。詳細 cycle-264.md |
 | B-351 | 移行計画 Phase 9.3.b: dictionary colors系移行（トップ+詳細+category） | 263 | colors系を(new)austere基調へ移行。共有_componentsを`_components/new/`にフォーク(後続B-352〜354の基盤)。色見本HEXは本文維持・B-541のcolors分回収。詳細 cycle-263.md |
-| B-350 | 移行計画 Phase 9.3.a: dictionary トップ移行 | 262 | `/dictionary` トップを (new) austere 基調へ移行(診断拡張は不適用)。サブルートは legacy 残置で B-351〜354 解放。詳細 cycle-262.md |

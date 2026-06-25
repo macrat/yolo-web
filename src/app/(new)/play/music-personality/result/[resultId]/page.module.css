@@ -1,0 +1,133 @@
+/*
+ * 結果ページルート /play/[slug]/result/[resultId] のスタイル（新デザイン体系・DESIGN.md）。
+ * このページは第三者向けのシェア／検索ランディング専用で、受検者本人には表示されない
+ * （本人は /play/[slug] 上のインライン結果＝ResultCard 経由で見る）。
+ *
+ * インライン結果（ResultCard）とトーン統一する: 無彩・左寄せ・絵文字マーカーなし・
+ * クイズごとの派手色（旧 --music-accent-color の紫）を使わず共通 --accent / --bg-invert に
+ * 寄せる。新トークンのみ使用。
+ *
+ * 共通コンテンツセクション（強み〜全タイプ一覧）のスタイルは
+ * MusicPersonalityContent.module.css に集約されている。
+ * このファイルは page.tsx 固有の要素（catchphrase, trySection, detailedSection, cta2）のみを管理する。
+ */
+
+/* detailedContent セクションの外側コンテナ */
+.detailedSection {
+  margin-top: 2rem;
+  text-align: left;
+}
+
+/* ============================================================
+   music-personality 結果ページ固有スタイル（ページ構造要素）
+   ============================================================ */
+
+.trySection {
+  margin-bottom: 0;
+}
+
+/* 主要 CTA。src/components/Button の primary バリアントと同じ語彙
+ * （--bg-invert 面・--fg-invert 文字・--r-interactive・--shadow-button）に寄せ、
+ * クイズごとの派手色（旧 --music-accent-color の紫背景）を撤去して共通トーンに統一した。 */
+.tryButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.625rem 1.5rem;
+  border: 1px solid var(--bg-invert);
+  border-radius: var(--r-interactive);
+  background: var(--bg-invert);
+  color: var(--fg-invert);
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: inherit;
+  box-shadow: var(--shadow-button);
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.tryButton:hover {
+  background: var(--bg-invert-soft);
+  border-color: var(--bg-invert-soft);
+}
+
+.tryButton:active {
+  box-shadow: none;
+}
+
+.tryButton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.tryCost {
+  font-size: 0.8rem;
+  color: var(--fg-soft);
+  margin-top: 0.5rem;
+  margin-bottom: 0;
+}
+
+/* ============================================================
+   music-personality variant 固有スタイル（ページ固有）
+   ============================================================ */
+
+/* キャッチコピー: descriptionの前に表示、第一印象を強調。
+ * 旧デザインの中央寄せは撤去し左寄せに統一。淡い面（--bg-soft）に置く。 */
+.catchphrase {
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.7;
+  text-align: left;
+  color: var(--fg);
+  margin-bottom: 1.25rem;
+  padding: 1rem 1.25rem;
+  border-radius: var(--r-normal);
+  background: var(--bg-soft);
+  letter-spacing: 0.02em;
+}
+
+/* CTA2: detailedContent読了者向けのテキストリンク形式CTA */
+.cta2Section {
+  margin-top: 1.5rem;
+  text-align: left;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+/* CTA1より控えめなテキストリンク形式（default ボタン相当） */
+.cta2Link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.5rem 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: var(--r-interactive);
+  background: var(--bg-soft);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--fg);
+  text-decoration: none;
+  box-shadow: var(--shadow-button);
+  transition:
+    background 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.cta2Link:hover {
+  background: var(--bg-softer);
+}
+
+.cta2Link:active {
+  box-shadow: none;
+}
+
+.cta2Link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}

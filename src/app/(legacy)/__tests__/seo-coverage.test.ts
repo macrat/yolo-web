@@ -352,7 +352,7 @@ describe("動的metadataページのSEO検証", () => {
     const resultId = resultIds[0];
 
     const { generateMetadata } =
-      await import("@/app/(legacy)/play/[slug]/result/[resultId]/page");
+      await import("@/app/(new)/play/[slug]/result/[resultId]/page");
     const meta = await generateMetadata({
       params: Promise.resolve({ slug, resultId }),
     });

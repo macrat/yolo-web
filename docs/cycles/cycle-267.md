@@ -2,7 +2,7 @@
 id: 267
 description: 診断デザイン移行の再開（B-523）。主軸診断のクライマックスである「単独結果ページ」/play/[slug]/result/[resultId] 10ルートが旧(legacy)デザインのまま放置されていた状態を是正し、既に新デザイン化済みのインライン結果とトーン統一する。A/B `quiz_result_visual_v1` はインライン経路のみで走り単独結果ページは arm 非受領＝移行はA/B交絡と無関係（cycle-256の「交絡するから凍結」は事実誤認）であることをコードで確認のうえ実施。
 started_at: 2026-06-25T13:11:49+0900
-completed_at: null
+completed_at: 2026-06-25T15:54:23+0900
 ---
 
 # サイクル-267（診断デザイン移行の再開：単独結果ページ群の新デザイン化）
@@ -24,11 +24,11 @@ completed_at: null
 
 ## 実施する作業
 
-- [ ] **T0: 共通枠 ResultPageShell の (new) 移行** — `src/play/quiz/_components/ResultPageShell.{tsx,module.css}` の legacy 依存（`@/components/common/Breadcrumb` → `@/components/Breadcrumb`、旧トークン `--color-border`/`--color-text-muted` → 新トークン）を是正。**さらに `.card` の `text-align: center`（中央寄せの支配的発生源＝icon/h1/quizName/children 全体に効く・M3）を撤去し、インライン `ResultCard`（左寄せ `ResultCard.module.css` L9）にトーンを揃える**。**`.wrapper` の `max-width: 600px` 読みカラムは意図的設計のため維持し、1ページ移行標準手順の `max-width:1200px` ハードコードは shell に適用しない（M4: 1200px は横広リスト/グリッド系前提・当てると結果カードが意図に反し全幅化）**。Shell は全10ルートの共通枠なので最初に整える。Shell が描画する h1・ShareButtons・RelatedQuizzes・RecommendedContent の動作・SEO 構造を非破壊で保つ。
-- [ ] **T1: 汎用ルート `/play/[slug]/result/[resultId]` 移行** — `git mv (legacy) → (new)`。page.tsx（312行・標準 variant の traits/behaviors/advice をインライン描画）と page.module.css の旧デザイン要素（💡/✓ 絵文字マーカーの `::before` 注入撤去・advice カードの中央寄せ撤去→左寄せ）を、インライン結果（ResultCard/\*Content・新トークン済み・無彩左寄せ）と**トーン統一**。**加えて page.tsx 側の per-quiz `style={{ backgroundColor: quiz.meta.accentColor }}` インライン注入（CTA/カードの派手色源）を撤去し共通 `--accent` に寄せる（M1: 色の不統一源は架空の `--color-primary` ではなく accentColor 注入。インライン `ResultCard` も accentColor を意図的に捨て `--accent` に統一済み＝`ResultCard.tsx` L204-207。よって本サイクルは page.tsx も触る＝「枠と CSS だけ」ではない）**。metadata/JSON-LD/canonical/パンくず/ShareButtons/関連診断は無改修で保全。テスト追従。
-- [ ] **T2: 専用ルート9系統の移行** — animal-personality / character-fortune / character-personality / contrarian-fortune / impossible-advice / music-personality / traditional-color / unexpected-compatibility / yoji-personality の各 `result/[resultId]/page.tsx` + `page.module.css` + テストを (new) へ移行（診断ごとにサブエージェント分割＝1エージェント1〜数診断・小さく保つ）。各ページの派手色（accentColor 注入）・絵文字マーカー・中央寄せを撤去しインライン結果とトーン統一。**ただし内訳は均一でない（M2）**: 8種は shared `*Content`（新トークン済み）を import するため触るのは page 枠と page.module.css 中心。**character-fortune だけは shared `*Content` を import せず本文（characterIntro/behaviorsList/characterMessage/thirdPartySection/compatibility/allTypesList）を page.tsx にインラインし、固有の page.module.css（💡 L87・複数の中央寄せ・旧 `--color-*`）に本文ごと旧デザインを抱える＝本文の新デザイン化を含む重い移行**。character-fortune は単独サブエージェント（重め扱い）で分離する（AP-P29＝先例同型の想像でスコープ確定の再発回避・cycle-completion で記録要否判断）。
-- [ ] **検証** — 4ゲート（lint/format:check/test/build）+ typecheck + grep ゲート（(legacy)/play/.../result 空・旧 `--color-*` 残ゼロ・`@/components/common` 残参照ゼロ・絵文字マーカー 💡/✓ 残ゼロ〔実在は character-fortune と汎用 [slug] のみ・N2〕・単独結果ページの page.tsx に `accentColor` インライン注入が残っていないこと）+ **A/B 非破壊確認**（`EXPERIMENT: quiz_result_visual_v1` マーカー 9ファイル・インライン `ResultCard`/`QuizContainer`/`_experiments/legacy-result/` の arm 分岐に一切触れていないこと＝単独ページ移行が走行中 A/B に影響しないこと）+ Playwright 視覚検証（mobile 360px 最優先 + desktop・light/dark・**インライン結果（本人面）と単独結果ページ（第三者面）の視覚トーンが統一されていること**＝DESIGN.md §143・**shell と本文がともに左寄せで割れていないこと**・console error 0・シェア/検索着地の SEO 要素保全）。
-- [ ] **レビュー** — 計画 reviewer（A/B 非交絡の事実確認・スコープ妥当性・§7 適用範囲の判定）→ 実装後に白紙 reviewer で成果物独立検証。
+- [x] **T0: 共通枠 ResultPageShell の (new) 移行** — `src/play/quiz/_components/ResultPageShell.{tsx,module.css}` の legacy 依存（`@/components/common/Breadcrumb` → `@/components/Breadcrumb`、旧トークン `--color-border`/`--color-text-muted` → 新トークン）を是正。**さらに `.card` の `text-align: center`（中央寄せの支配的発生源＝icon/h1/quizName/children 全体に効く・M3）を撤去し、インライン `ResultCard`（左寄せ `ResultCard.module.css` L9）にトーンを揃える**。**`.wrapper` の `max-width: 600px` 読みカラムは意図的設計のため維持し、1ページ移行標準手順の `max-width:1200px` ハードコードは shell に適用しない（M4: 1200px は横広リスト/グリッド系前提・当てると結果カードが意図に反し全幅化）**。Shell は全10ルートの共通枠なので最初に整える。Shell が描画する h1・ShareButtons・RelatedQuizzes・RecommendedContent の動作・SEO 構造を非破壊で保つ。
+- [x] **T1: 汎用ルート `/play/[slug]/result/[resultId]` 移行** — `git mv (legacy) → (new)`。page.tsx（312行・標準 variant の traits/behaviors/advice をインライン描画）と page.module.css の旧デザイン要素（💡/✓ 絵文字マーカーの `::before` 注入撤去・advice カードの中央寄せ撤去→左寄せ）を、インライン結果（ResultCard/\*Content・新トークン済み・無彩左寄せ）と**トーン統一**。**加えて page.tsx 側の per-quiz `style={{ backgroundColor: quiz.meta.accentColor }}` インライン注入（CTA/カードの派手色源）を撤去し共通 `--accent` に寄せる（M1: 色の不統一源は架空の `--color-primary` ではなく accentColor 注入。インライン `ResultCard` も accentColor を意図的に捨て `--accent` に統一済み＝`ResultCard.tsx` L204-207。よって本サイクルは page.tsx も触る＝「枠と CSS だけ」ではない）**。metadata/JSON-LD/canonical/パンくず/ShareButtons/関連診断は無改修で保全。テスト追従。
+- [x] **T2: 専用ルート9系統の移行** — animal-personality / character-fortune / character-personality / contrarian-fortune / impossible-advice / music-personality / traditional-color / unexpected-compatibility / yoji-personality の各 `result/[resultId]/page.tsx` + `page.module.css` + テストを (new) へ移行（診断ごとにサブエージェント分割＝1エージェント1〜数診断・小さく保つ）。各ページの派手色（accentColor 注入）・絵文字マーカー・中央寄せを撤去しインライン結果とトーン統一。**ただし内訳は均一でない（M2）**: 8種は shared `*Content`（新トークン済み）を import するため触るのは page 枠と page.module.css 中心。**character-fortune だけは shared `*Content` を import せず本文（characterIntro/behaviorsList/characterMessage/thirdPartySection/compatibility/allTypesList）を page.tsx にインラインし、固有の page.module.css（💡 L87・複数の中央寄せ・旧 `--color-*`）に本文ごと旧デザインを抱える＝本文の新デザイン化を含む重い移行**。character-fortune は単独サブエージェント（重め扱い）で分離する（AP-P29＝先例同型の想像でスコープ確定の再発回避・cycle-completion で記録要否判断）。
+- [x] **検証** — 4ゲート（lint/format:check/test/build）+ typecheck + grep ゲート（(legacy)/play/.../result 空・旧 `--color-*` 残ゼロ・`@/components/common` 残参照ゼロ・絵文字マーカー 💡/✓ 残ゼロ〔実在は character-fortune と汎用 [slug] のみ・N2〕・単独結果ページの page.tsx に `accentColor` インライン注入が残っていないこと）+ **A/B 非破壊確認**（`EXPERIMENT: quiz_result_visual_v1` マーカー 9ファイル・インライン `ResultCard`/`QuizContainer`/`_experiments/legacy-result/` の arm 分岐に一切触れていないこと＝単独ページ移行が走行中 A/B に影響しないこと）+ Playwright 視覚検証（mobile 360px 最優先 + desktop・light/dark・**インライン結果（本人面）と単独結果ページ（第三者面）の視覚トーンが統一されていること**＝DESIGN.md §143・**shell と本文がともに左寄せで割れていないこと**・console error 0・シェア/検索着地の SEO 要素保全）。
+- [x] **レビュー** — 計画 reviewer（A/B 非交絡の事実確認・スコープ妥当性・§7 適用範囲の判定）→ 実装後に白紙 reviewer で成果物独立検証。
 
 ## 作業計画
 
@@ -85,20 +85,40 @@ completed_at: null
 
 **外部仕様への依存**: 本サイクルは単独結果ページの (new) 移行で内部デザインシステムに閉じる。結果ページの JSON-LD（Schema.org）・OGP/Twitter カードは既存の移行済みパターンを踏襲するのみで新規の外部仕様依存判断を導入しない（metadata 生成は無改修）。一次資料の新規事前確認は不要と判断。
 
+## レビュー結果
+
+本サイクルは「接地→計画→計画レビュー→実装（小さく分割）→集約検証→視覚レビュー→白紙レビュー」の各段を独立サブエージェントに委譲し、3段のレビューすべてを通過した。
+
+- **接地②（コード精読 + Playwright）**: 「結果ページ」は2系統（インライン結果=新デザイン済み／単独結果ページ=legacy 残存10ルート）と判明。**単独結果ページは A/B `quiz_result_visual_v1` の arm を受け取らず current を直接描画＝移行は A/B 交絡と物理的に無関係**（cycle-256「交絡で凍結」が事実誤認だったことを裏付け）。旧で割れるのは枠・絵文字💡/✓・派手色（accentColor 注入）・中央寄せのみで、本文 `*Content` は新トークン済み・両系統共有。
+- **計画 reviewer（must 4件 → 反映後 must ゼロ承認）**: A/B 非交絡の土台を実コードで確認したうえで、(M1) 架空の青CTA `--color-primary` を真の不統一源 `accentColor` インライン注入へ訂正、(M2) character-fortune が本文 page.tsx インライン型で重い移行であることの分離（AP-P29 再発回避）、(M3) 中央寄せの支配的発生源が共通枠 `ResultPageShell.module.css` `.card` であること、(M4) shell の 600px 読みカラムへ 1200px を機械転用しないこと、を指摘。全反映＋nice N3/N4/N5 も計画に織り込み、再レビューで承認。
+- **実装（builder A〜E・小さく分割・1エージェント1〜数ルート）**: T0+T1（builder-A）で基盤とパターン確立（`git mv` 後 `rm -rf .next`・CSS 新語彙テンプレ〔border-left 見出し／縦線マーカー／accent-soft カード／bg-invert CTA〕・共有部品 import の結合知見）。T2 専用9ルートを4 builder 並列（character-fortune 単独重め・personality 系3・fortune/advice 系3・music/compat 2）。N3 dead prop 保全・N4 music の `--music-accent-color` 撤去・N5 テスト import 追従。全 builder 自己検証 pass・A/B レッドライン非接触。
+- **PM 集約検証**: 4ゲート + typecheck 全通過（typecheck/lint/format:check exit 0・test 342ファイル**5658件 pass**・build 成功）。grep ゲート全合格（(legacy)/play 配下の result 消滅・旧 `--color-*`/`@/components/common`/絵文字/可視 accentColor 残ゼロ・A/B 非接触）。陳腐化した traditional-color のコントラスト計算テスト（撤去した colorHero/--type-color を検証）を削除し生きたテスト（generateStaticParams/variant/メタデータ）を保持。
+- **視覚 reviewer（ローカル本番ビルド・mobile 360px 最優先 + desktop・light/dark）**: 全10ルート PASS。旧要素撤去・無彩左寄せ・shell と本文の左寄せ揃い・**インライン結果とのトーン統一**（character-fortune を実完走して比較）・console error 0・SEO/色見本保全・360px 破綻なし。**M-1（PM のサーバー運用ミス）**: build の exit を確認せず tail 出力だけで `npm start` を起動したため、build 最終処理（BUILD_ID 書込）完了前の stale サーバーを掴み3ルートが 500。disk build 自体は正常で、:3000 を現行ビルドで再起動し全ルート 200 を確認して解消（コード不変）。
+- **白紙 reviewer（成果物の独立検証・9観点）**: must ゼロ承認。スコープ厳守・A/B レッドライン非接触・10ルート移行完全性・「トークン置換だけの上塗りでない質的入れ替え」・N3/N4/N5・SEO/metadata/JSON-LD/canonical/パンくず保全・traditional-color テスト改変の妥当性・4ゲート整合をすべて裏取り。nice N-1（catchphrase の囲み有無が単独ページ群内部で2系統に割れ・クラス名 colorHero/catchphraseCard 不統一）はキャリーオーバーへ。
+
+有効な指摘はすべて対応済みで、残存する指摘・対応事項はない。
+
 ## キャリーオーバー
 
-（実装後に記載）
+- **N-1（catchphrase の囲み有無の内部不統一・白紙 reviewer 指摘）**: 単独結果ページ群のうち yoji/character-personality は catchphrase を左寄せリード文に、unexpected-compatibility/contrarian/impossible/traditional-color は `--accent-soft` の淡い囲みカードに、と見せ方が2系統に割れている（クラス名も colorHero/catchphraseCard で不統一）。本サイクルのゴール（インライン結果=current ミニマルとのトーン統一）は全ルート達成済みで来訪者 UX は損なわないが、§7 フルのクライマックス化（固有色・勲章感）をインライン側 A/B 結論後に両系統同時適用する後続サイクルで揃える。backlog に追記。
+- **結果ページの §7 フルクライマックス化**: 固有色を主役にした勲章感・伝統色対応は、インライン結果（A/B current）の結論後に両系統同時適用（B-526 協調・後続）。本サイクルは current ミニマルとの統一に限定（§156 と本スコープの差は計画 §7 節に明示済み）。
+- **ゲーム本体5ルート（B-493・P1）**: kanji-kanaru/nakamawake/irodori/yoji-kimeru/daily の (new) デザイン移行は後続サイクル。本サイクル完了で `(legacy)/play/` 配下の残存はこのゲーム本体5つのみ（result は全消滅）。これが完了すれば Phase 8.2 完結。
+- **M-1 の教訓（PM 運用）**: build 後にローカルサーバーを起動して検証する際は、build の exit code 完了を確認してから start する（tail 出力の途中で起動しない）。視覚検証前に稼働サーバーの BUILD_ID が disk `.next/BUILD_ID` と一致するか確認する。anti-pattern/knowledge への追記要否は cycle-completion で判断。
 
 ## 補足事項
 
-（実装後に記載）
+- **本サイクルは当初 B-533（辞典に物語を足す）で開始したが、Owner の指摘により診断デザイン移行（B-523）へ切替えた**。経緯と事故の詳細は冒頭「事故記録」セクション。最悪の来訪者 UX（主軸診断のクライマックスが旧デザイン）を放置して無関係タスクに着手しようとした事故と、A/B 交絡を口実にした凍結（cycle-256 の倒錯の再演・かつコード上は単独ページが arm 非受領で交絡しない事実誤認）を記録した。
+- **AP-P29（先例同型の想像でスコープを確定し、踏襲元の実構造を確認しない）の再発を計画 reviewer が捕捉**。当初計画は「9種すべて \*Content 新済みで枠だけ移行」と一般化したが、character-fortune だけは本文 page.tsx インライン型で本文ごと旧デザインだった。cycle-266（h1 欠落の一般化）に続く同型のため、anti-pattern 強化の要否を cycle-completion で判断する。
+- **traditional-color の陳腐化テスト削除**: 本サイクルで撤去した colorHero/--type-color 着色の WCAG コントラスト計算テストを削除し、生きたテスト（generateStaticParams/variant/メタデータ）を保持した。撤去した設計を検証するテストを残すと「その設計が生きている」と将来誤読される（cycle-258/259 の誠実性原則）。新デザインの色は共通トークンで DESIGN.md §2 がコントラストを保証するため、個別タイプ色の計算テストは役割を終えた。
+- **ブログ判断＝不執筆**。reader-perspective で検討した結論。本サイクルは「主軸診断のクライマックス（結果ページ）が新デザインに揃った」という来訪者体験の実改善だが、1系統のデザイン移行は cycle-263/265 同様、読者の生活に届く物語性が薄い（結果ページが austere になっただけ）。Phase 8.2 全完了（ゲーム本体移行）または legacy 撤去（Phase 11）で「診断面・サイト全体のデザインを統一しきった」物語として再評価する方が読者価値が出やすい。
+- 本番 UI は本サイクルのコミット・デプロイで初めて新デザインに切り替わる（検証はローカル本番ビルドで実施済み）。
 
 ## サイクル終了時のチェックリスト
 
-- [ ] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
-- [ ] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
-- [ ] すべての変更がレビューされ、残存する指摘事項が無くなっている。
-- [ ] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
-- [ ] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
-- [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
-- [ ] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
+- [x] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
+- [x] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
+- [x] すべての変更がレビューされ、残存する指摘事項が無くなっている。
+- [x] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
+- [x] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
+- [x] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
+- [x] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。

@@ -6,7 +6,7 @@
  * 本人には表示されない。本人は完了時に `/play/[slug]` 上のインライン `ResultCard` で結果を見る。
  * 本人向けの結果表示を変えたい場合は ResultPageShell ではなく `ResultCard.tsx` を編集すること。
  */
-import Breadcrumb from "@/components/common/Breadcrumb";
+import Breadcrumb from "@/components/Breadcrumb";
 import ShareButtons from "@/play/quiz/_components/ShareButtons";
 import RelatedQuizzes from "@/play/quiz/_components/RelatedQuizzes";
 import RecommendedContent from "@/play/_components/RecommendedContent";

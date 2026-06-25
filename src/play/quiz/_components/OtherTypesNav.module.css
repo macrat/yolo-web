@@ -1,6 +1,6 @@
 /*
  * OtherTypesNav: 「他のタイプも見てみよう」回遊ナビ。新デザイン体系（DESIGN.md）。
- * ResultCard（インライン結果）と (legacy)/play/[slug]/result/[resultId]/page.tsx（静的結果ページ）の
+ * ResultCard（インライン結果）と (new)/play/[slug]/result/[resultId]/page.tsx（静的結果ページ）の
  * 両方から共有される。
  *
  * 設計方針（cycle-254 / CharacterPersonalityContent.module.css の allTypesListVertical を参照実装とする）:
