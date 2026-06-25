@@ -7,7 +7,8 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-493 | 遊びゲーム本体の(new)デザイン移行（残: nakamawake/irodori/yoji-kimeru/daily） | P1 | - | §8.2「各1サイクル」。268=kanji-kanaru完了。残4は`_components/new`再利用。yoji-kimeru移行時にaria-label escapeバグ(AP-I12)是正。詳細 cycle-268.md |
+| B-493 | 遊びゲーム本体の(new)デザイン移行（残: nakamawake/irodori/yoji-kimeru/daily） | P1 | - | §8.2「各1サイクル」。268完了(kanji-kanaru)。残4は`_components/new`再利用。escapeバグ(AP-I12)是正。A/B検証=B-545。詳細 cycle-268.md |
+| B-545 | (new)デザインの来訪者価値をA/Bで検証(信仰で出さない) | P1 | - | 268でkanji-kanaruをA/B無しで(new)出荷。不採用理由(コスト/ノイズ/前後比較/現状追認=AP-P25/28/30/31)は唯一基準=来訪者価値に反し無効。低流入でこそ旧/新を同時提示し個々の反応を観る。移行全体の信仰出荷を再検討。詳細 cycle-268.md |
 | B-537 | 診断流入増(character-personality)の追計測と回遊強化 | P2 | - | 着手可(2026-06-25到達=追計測開始可)。煽り/押し付け禁止(cycle-256)・単発質を損なわない回遊。定着確認後に投資。詳細 cycle-257.md |
 | B-534 | 学年×画数の漢字一覧ページの実用性向上(「2画の漢字 小学生」需要) | P3 | - | 辞典移行(9.3.d/e=B-353/B-354)完走で解放。詳細 research/2026-06-21-search-console-unmet-demand.md |
 | B-541 | 現状正しい辞典収録数ハードコードの予防的`.length`化 | P4 | - | colors系「250色」等。現状正しいがB-409/B-536と同型の再発予兆。詳細 cycle-258.md |
@@ -104,7 +105,7 @@
 | ID | Title | Priority | Notes |
 | --- | --- | --- | --- |
 | B-544 | 結果ページ§7フルクライマックス化＋catchphrase見せ方統一(N-1) | P2 | 着手: インラインA/B(quiz_result_visual_v1)結論後にB-526協調。固有色/勲章感/伝統色対応＋単独ページ内のcatchphrase囲み統一。詳細 cycle-267.md |
-| B-528 | (new)移行効果のサイト全体before/after計測(計測基盤の自己適用) | P1 | 着手: 2026-06-28〜目安。(new)は未検証仮説。A/B(quiz_result_visual_v1)が主因果検証・本基盤はサイト全体集計before/afterで補強(per-page=参考)。詳細 visitor-value-measurement.md 論点8.6 |
+| B-528 | cycle-255 計測基盤の自己適用(release別 before/after 回帰確認) | P1 | 注: 前後比較はGoogleインデックス/評価変動が支配的で本サイト規模では成立しない=前提が誤り。B-545で再検討。詳細 visitor-value-measurement.md 訂正ノート |
 | B-526 | 最初の実A/B(quiz_result_visual_v1) 月次読み | P1 | 着手: 2026-07-21目安〜結論到達まで月次継続。詳細 visitor-value-measurement.md 論点8.1 |
 | B-527 | 最初の実A/B 結論到達時の撤去サイクル化 | P1 | 着手: B-526で判定閾値到達時。詳細 visitor-value-measurement.md 論点8.4 |
 | B-542 | トップ`/`の位置づけ再設計（道具箱→診断中心の新着地構造） | P2 | 着手: 設計＋A/Bまたは追計測駆動。organic集客ほぼ0の道具箱トップを診断から見た構造へ(煽らず単発質維持)。設計前提=cycle-261/B-539(DESIGN.md §7)。詳細 cycle-257.md / cycle-259.md / cycle-261.md |
