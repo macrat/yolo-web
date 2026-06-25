@@ -1,9 +1,8 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import Breadcrumb from "@/components/common/Breadcrumb";
-import TrustLevelBadge from "@/components/common/TrustLevelBadge";
-import CategoryNav from "@/dictionary/_components/CategoryNav";
-import DictionaryCard from "@/dictionary/_components/DictionaryCard";
+import Breadcrumb from "@/components/Breadcrumb";
+import CategoryNav from "@/dictionary/_components/new/CategoryNav";
+import DictionaryCard from "@/dictionary/_components/new/DictionaryCard";
 import DictionaryGrid from "@/dictionary/_components/DictionaryGrid";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import {
@@ -11,6 +10,7 @@ import {
   getKanjiStrokeCounts,
 } from "@/dictionary/_lib/kanji";
 import { KANJI_GRADE_LABELS } from "@/dictionary/_lib/types";
+import styles from "./page.module.css";
 
 export function generateStaticParams() {
   return getKanjiStrokeCounts().map((c) => ({ count: String(c) }));
@@ -65,7 +65,7 @@ export default async function KanjiStrokePage({
   }));
 
   return (
-    <>
+    <div className={styles.container}>
       <Breadcrumb
         items={[
           { label: "ホーム", href: "/" },
@@ -74,7 +74,6 @@ export default async function KanjiStrokePage({
           { label: `${count}画の漢字` },
         ]}
       />
-      <TrustLevelBadge level="curated" />
       <h1>
         {count}
         {"画の漢字"}
@@ -105,6 +104,6 @@ export default async function KanjiStrokePage({
           </div>
         ))}
       </DictionaryGrid>
-    </>
+    </div>
   );
 }

@@ -3,9 +3,9 @@
 import { useState, useCallback } from "react";
 import type { KanjiEntry } from "@/dictionary/_lib/types";
 import { KANJI_GRADE_LABELS } from "@/dictionary/_lib/types";
-import DictionaryCard from "@/dictionary/_components/DictionaryCard";
+import DictionaryCard from "@/dictionary/_components/new/DictionaryCard";
 import DictionaryGrid from "@/dictionary/_components/DictionaryGrid";
-import SearchBox from "@/dictionary/_components/SearchBox";
+import SearchBox from "@/dictionary/_components/new/SearchBox";
 
 interface KanjiIndexClientProps {
   allKanji: KanjiEntry[];
@@ -58,7 +58,7 @@ export default function KanjiIndexClient({ allKanji }: KanjiIndexClientProps) {
         <p
           style={{
             textAlign: "center",
-            color: "var(--color-text-muted)",
+            color: "var(--fg-soft)",
             marginTop: "2rem",
           }}
         >

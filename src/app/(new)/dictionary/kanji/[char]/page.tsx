@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import DictionaryDetailLayout from "@/dictionary/_components/DictionaryDetailLayout";
+import DictionaryDetailLayout from "@/dictionary/_components/new/DictionaryDetailLayout";
 import { KANJI_DICTIONARY_META } from "@/dictionary/_lib/dictionary-meta";
 import KanjiDetail from "@/dictionary/_components/kanji/KanjiDetail";
 import { generateKanjiPageMetadata, generateKanjiJsonLd } from "@/lib/seo";

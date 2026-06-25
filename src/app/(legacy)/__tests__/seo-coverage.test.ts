@@ -160,7 +160,7 @@ const staticPages: Array<{
   {
     path: "/dictionary/kanji",
     importMeta: () =>
-      import("@/app/(legacy)/dictionary/kanji/page").then(
+      import("@/app/(new)/dictionary/kanji/page").then(
         (m) => m.metadata as Metadata,
       ),
   },
@@ -275,7 +275,7 @@ describe("動的metadataページのSEO検証", () => {
     const grade = grades[0];
 
     const { generateMetadata } =
-      await import("@/app/(legacy)/dictionary/kanji/grade/[grade]/page");
+      await import("@/app/(new)/dictionary/kanji/grade/[grade]/page");
     const meta = await generateMetadata({
       params: Promise.resolve({ grade }),
     });
@@ -293,7 +293,7 @@ describe("動的metadataページのSEO検証", () => {
     const radical = radicals[0];
 
     const { generateMetadata } =
-      await import("@/app/(legacy)/dictionary/kanji/radical/[radical]/page");
+      await import("@/app/(new)/dictionary/kanji/radical/[radical]/page");
     const meta = await generateMetadata({
       params: Promise.resolve({ radical }),
     });
@@ -311,7 +311,7 @@ describe("動的metadataページのSEO検証", () => {
     const count = String(counts[0]);
 
     const { generateMetadata } =
-      await import("@/app/(legacy)/dictionary/kanji/stroke/[count]/page");
+      await import("@/app/(new)/dictionary/kanji/stroke/[count]/page");
     const meta = await generateMetadata({
       params: Promise.resolve({ count }),
     });
@@ -437,7 +437,7 @@ describe("動的metadataページのSEO検証", () => {
     const char = chars[0];
 
     const { generateMetadata } =
-      await import("@/app/(legacy)/dictionary/kanji/[char]/page");
+      await import("@/app/(new)/dictionary/kanji/[char]/page");
     const meta = await generateMetadata({
       params: Promise.resolve({ char }),
     });
