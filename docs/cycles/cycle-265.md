@@ -2,7 +2,7 @@
 id: 265
 description: B-353 デザイン移行計画 Phase 9.3.d「dictionary kanji 系（漢字辞典: トップ index + 動的サブルート grade/radical/stroke + 詳細 [char]）の (new) デザイン体系への移行」。B-352（cycle-264・humor 系）完了で辞典移行チェーン（B-350→351→352→353→354）の4番目に着手する。kanji は humor の self-contained 型と異なり共有 `_components`（CategoryNav / DictionaryGrid / SearchBox / DictionaryDetailLayout）を多用する colors 型。cycle-263（colors）が `src/dictionary/_components/new/` にフォーク済みの CategoryNav / SearchBox / DictionaryDetailLayout を再利用し、DictionaryGrid は colors の先例どおりデザイン中立な legacy 版を直接再利用する（要・旧トークン非依存の確認）。対象は index（page.tsx + KanjiIndexClient.tsx）・3 動的サブルート（grade/[grade]・radical/[radical]・stroke/[count]）・詳細 [char]（DictionaryDetailLayout で KanjiDetail を包む）。共有部品差し替え（common→(new) Breadcrumb・TrustLevelBadge 撤去・_components/*→_components/new/*）と page.module.css の旧トークン置換（`--color-text-muted`×2 のみ）が要点。kanji-kanaru ↔ kanji 辞典の双方向クロスリンク（KanjiDetail.tsx 内 /play/kanji-kanaru）を維持する。cycle-261 の方向決定（DESIGN.md §7）に従い診断の視覚言語拡張は不適用・austere 基調で移行する。本サイクルは kanji 系のみ（yoji=B-354 は後続）。
 started_at: 2026-06-25T08:47:02+0900
-completed_at: null
+completed_at: 2026-06-25T10:09:15+0900
 ---
 
 # サイクル-265
@@ -40,25 +40,26 @@ completed_at: null
 
 ## 実施する作業
 
-- [ ] **1. 接地（現状の来訪者体験の把握）**
-  - [ ] 1a. GA/SC 接地（foreground sub-agent・GA4 MCP + BigQuery/Search Console）= kanji 系の PV・流入経路・着地比率・mobile 比率・サブルート（grade/radical/stroke）別の需要・順位良好な詳細/サブルートの特定。humor と異なり実流入があり得るので**順位良好なページの SEO 構造保全**を評価軸に置く。`tmp/cycle-265/grounding-ga.md` に記録
-  - [ ] 1b. 移行前スクショ（foreground・take-screenshot/Playwright）= index + 3サブルート各1 + 詳細1〜2字 × mobile(w360)/desktop(w1280) × light/dark。保つべき核（検索ボックス・漢字グリッド・サブルート導線 CategoryNav・詳細の読み・kanji-kanaru クロスリンク・パンくず）を記録。`tmp/cycle-265/before/`
-- [ ] **2. 移行設計の確定（Plan エージェント → reviewer）**
-  - [ ] 2a. 設計判断3点を確定（Plan）= ①DictionaryGrid legacy 直接再利用の可否（旧トークン非依存 grep 確認）②KanjiDetail 新トークン化の波及範囲（legacy 共用有無）③トークン置換表（cycle-263 マップ準拠・kanji 全 module.css の旧トークン全数）。`tmp/cycle-265/design.md` に確定
-  - [ ] 2b. austere 歯止め確定（にじみグラデ撤去・診断拡張不適用・辞典本文＋kanji-kanaru クロスリンクは維持・TrustLevelBadge 撤去）
-  - [ ] 2c. 計画レビュー（白紙 reviewer）= 指摘を全反映し再レビューで着手可
-- [ ] **3. 移行実装（builder サブエージェント・小さく分割）**
-  - [ ] 3a. index 移行（builder）= `page.tsx`/`KanjiIndexClient.tsx`/`page.module.css` を git mv・Breadcrumb/CategoryNav/SearchBox を (new) へ差替・TrustLevelBadge 撤去・新トークン化・DictionaryGrid 再利用・JSON-LD/収録数維持
-  - [ ] 3b. 3動的サブルート移行（builder・grade/radical/stroke を分割 or 同型一括）= ディレクトリ git mv・Breadcrumb/CategoryNav/DictionaryGrid 差替・TrustLevelBadge 撤去・新トークン化・generateStaticParams/JSON-LD 維持
-  - [ ] 3c. 詳細 [char] 移行（builder）= ディレクトリ git mv・(new) DictionaryDetailLayout 差替・KanjiDetail 新トークン化（波及確認済の範囲）・kanji-kanaru クロスリンク無改修維持・OGP/Twitter/JSON-LD/generateStaticParams 維持・`__tests__` 追従
-  - [ ] 3d. テスト/参照追従（PM or builder）= seo-coverage.test.ts 等の kanji dynamic import を (new) パスへ差替・kanji-kanaru ゲーム側からの辞典リンク参照の整合
-- [ ] **4. 検証**
-  - [ ] 4a. `npm run lint && npm run format:check && npm run test && npm run build` exit 0×4。全体ゲート grep: 旧 `--color-*` 残ゼロ・common 残参照ゼロ・`(legacy)/dictionary/kanji/` 空
-  - [ ] 4b. 視覚・回遊検証（foreground・本番ビルド配信で先確認）= after スクショ・回遊リンク実クリック（index⇄サブルート⇄詳細・kanji-kanaru 往復）・mobile 破綻なし/タップ44px・austere 化・AI 注記 Footer 担保/TrustLevelBadge 痕跡ゼロを DOM 実測。`tmp/cycle-265/after/`
-  - [ ] 4c. 未移行 yoji を実機確認＝legacy デザイン不変（巻き込み事故なし）。kanji-kanaru ゲーム側からの辞典リンクが新パスへ正しく解決することを確認
-- [ ] **5. レビュー（白紙 reviewer）**
-  - [ ] 5a. 成果物レビュー（白紙 reviewer・本番ビルド配信確認のうえ逐条検証）= 標準移行手順/デザイン体系適合/austere 歯止め/スコープ厳守/段階移行整合（共有部品・KanjiDetail・yoji diff・クロスリンク）/コード品質
-- [ ] **6. 完了処理（`/cycle-completion`）**
+- [x] **1. 接地（現状の来訪者体験の把握）**
+  - [x] 1a. GA/SC 接地完了（`tmp/cycle-265/grounding-ga.md`）= kanji は humor と桁違いの実流入＝**SC 15,798 impressions・organic 直接着地あり・mobile/desktop 拮抗**（mobile 42%/desktop 40%/tablet 17%）。「○○ 部首」クエリ支配的で radical サブルート需要が実在。上位10位以内の高 impression ページ多数（袋/込/詩 等）。**数値KPIが意味を持つ水準＝順位良好ページの SEO 構造保全が最重要**を評価軸に確定
+  - [x] 1b. 移行前スクショ20枚を `tmp/cycle-265/before/`（index + grade/1 + radical/一 + stroke/1 + 詳細「一」× w360/w1280 × light/dark）。保つべき核を `NOTES.md` に記録＝SearchBox・DictionaryGrid・学年/部首/画数 CategoryNav・詳細の読み/画数/部首/学年/用例・同部首リスト・kanji-kanaru クロスリンク・FAQ・ShareButtons・パンくず
+- [x] **2. 移行設計の確定（Plan エージェント → reviewer）**
+  - [x] 2a. 設計判断3点を確定（Plan・`tmp/cycle-265/design.md`）= ①**DictionaryGrid は legacy 直接再利用**（`--color-*` 非依存を grep 確認・colors 先例）②**KanjiDetail は in-place 新トークン化で安全**（importer は [char]/page.tsx とテストのみ＝kanji 専用・yoji 非共用）③トークン置換表を全 module.css 全数で確定。さらに**新発見=DictionaryCard は kanji/yoji 共用＋旧トークン7箇所＋austere 違反のため `new/DictionaryCard` へフォーク必須**（in-place は yoji 巻き込み）
+  - [x] 2b. austere 歯止め確定（影/大角丸/transform/TrustLevelBadge 撤去・診断拡張不適用・辞典本文＋kanji-kanaru クロスリンクは維持）
+  - [x] 2c. 計画レビュー（白紙 reviewer）= **must ゼロで承認**。should 2件（S-1 インライン style 含む `--color-` 全消し確認の明記・S-2 `new/DictionaryCard.test.tsx` を必須化）・nit 2件（N-1 valueProposition 増減・N-2 relatedLink 呼称＝検証観察項目）を builder タスクへ織り込み（設計の根本変更なしのため計画再レビューは回さず最終成果物レビューで履行確認）
+- [x] **3. 移行実装（builder サブエージェント・小さく分割）**
+  - [x] 3-0. グループ0=`new/DictionaryCard` フォーク新設（builder T0）= legacy をコピーし §3-d で新トークン化・austere 化（border 1px・radius 2px・影/transform 削除）・kanji/yoji 両分岐維持（B-354 再利用基盤）・legacy 不変・`new/__tests__/DictionaryCard.test.tsx` 追加（S-2 達成・4 tests pass）
+  - [x] 3a. index 移行（builder T1）= `page.tsx`/`KanjiIndexClient.tsx`/`page.module.css` を git mv・Breadcrumb→(new)・CategoryNav/SearchBox/DictionaryCard→new/・TrustLevelBadge 撤去・新トークン化（インライン style 含む S-1 達成）・`.container` 付与・DictionaryGrid legacy 再利用・JSON-LD/収録数維持
+  - [x] 3b. 3動的サブルート移行（builder T2・同型一括）= grade/radical/stroke を git mv・Breadcrumb/CategoryNav/DictionaryCard 差替・DictionaryGrid legacy 維持・TrustLevelBadge 撤去・各サブルートに `.container` の page.module.css 新設・generateStaticParams/metadata/収録数維持
+  - [x] 3c. 詳細 [char] 移行（builder T3）= ディレクトリ git mv・(new) DictionaryDetailLayout 差替（唯一の import 変更）・KanjiDetail.module.css を §3-c で in-place 新トークン化（tsx 無改修）・kanji-kanaru クロスリンク無改修維持・OGP/Twitter/JSON-LD/generateStaticParams 全維持・付随要素（FAQ/Share/同部首リスト）保全
+  - [x] 3d. テスト/参照追従（PM）= seo-coverage.test.ts の kanji 5 dynamic import を (new) パスへ差替（kanji-kanaru ゲーム本体 import は legacy 据え置き・非改変）
+- [x] **4. 検証**
+  - [x] 4a. `npm run lint && npm run format:check && npm run test && npm run build` **exit 0×4**（テスト 343ファイル/5678件全通過・kanji 全ルート: トップ static + [char]/grade/radical/stroke SSG prerender）。typecheck も exit 0。全体 grep ゲート: 旧 `--color-*` 残ゼロ・common 残参照ゼロ・`(legacy)/dictionary/kanji/` 空・new/DictionaryCard 採用4件・legacy 共有部品 diff 空・クロスリンク維持。**知見**: route の git mv で stale 化する `.next/dev/types/validator.ts` が pre-commit typecheck を壊す→`rm -rf .next/dev` で解消（docs/knowledge/nextjs.md §12 に記録）
+  - [x] 4b. 視覚・回遊検証（foreground・本番 `npm start` 配信で `.container`/AIバッジ DOM ゼロを先確認）= after 20枚 `tmp/cycle-265/after/`・**全評価軸 PASS**（情報保全・回遊リンク実クリック全周回・kanji-kanaru 双方向往復成功・mobile w360 横スクロールなし・austere 化を computed style 実測〔radius 2px/border 1px/影 none/transform none〕・AI 注記 Footer 担保/TrustLevelBadge DOM ゼロ・light/dark 破綻なし・console error 0）
+  - [x] 4c. 未移行 yoji を実機確認＝**legacy デザイン不変**（TrustLevelBadge/影付きカード継続・巻き込み事故なし）。`tmp/cycle-265/legacy-unchanged/`。kanji-kanaru ゲーム→辞典戻りリンクが新 (new) パスへ解決確認
+- [x] **5. レビュー（白紙 reviewer）**
+  - [x] 5a. 成果物レビュー（白紙 reviewer・本番ビルド配信確認＋自前 lint/test/build exit 0 のうえ9観点逐条検証）= **must/should ゼロで承認・完了可**（標準移行手順/デザイン体系適合〔用途別トークン判定〕/austere 歯止め/スコープ厳守〔legacy 共有部品 diff 空・yoji 巻き込みなし・new/DictionaryCard yoji 分岐は B-354 再利用＝非死蔵〕/SEO 構造保全〔JSON-LD・generateStaticParams・canonical/OGP・収録数 不変〕/kanji-kanaru 双方向維持/S-1・S-2 履行/テスト追従）
+- [x] **6. 完了処理（`/cycle-completion`）**
 
 ## 作業計画
 
@@ -94,21 +95,36 @@ completed_at: null
 
 **外部仕様への依存**: 本サイクルの主作業（既存 index/サブルート/詳細の (new) 移行）は内部デザインシステムに閉じる。外部仕様接点は kanji-dict の JSON-LD（Schema.org）・OGP/Twitter カードだが、いずれも既存の移行済みページ（cycle-262/263/264・blog/tools）で確立済みのパターンを**踏襲するのみ**で、新規の外部仕様依存判断を導入しない。よって一次資料の新規事前確認は不要と判断する（新規の構造化データを設計する場合のみ既存パターン準拠を確認）。
 
+## レビュー結果
+
+本サイクルは「接地→移行設計→実装→検証→レビュー」の各段で独立したサブエージェントに委譲し、最終成果物は白紙 reviewer に独立検証させた。
+
+- **接地（GA/SC・Playwright・foreground）**: kanji 系は humor（cycle-264）と桁違いの実流入＝**SC 15,798 impressions・organic 直接着地あり・mobile/desktop 拮抗**と判明。「○○ 部首」クエリ支配的で radical サブルートの需要が実在。よって評価軸を「数値比較放棄」ではなく「**順位良好ページの SEO 構造（JSON-LD・h1・canonical・内部リンク）保全・mobile/desktop 双方検証・回遊維持**」に設定。移行前 20枚と保つべき核（SearchBox・グリッド・CategoryNav 3種・詳細の読み/画数/部首/学年/用例・同部首リスト・kanji-kanaru クロスリンク・FAQ・ShareButtons）を記録。
+- **移行設計（Plan → reviewer・must ゼロ承認）**: kanji は colors 型（共有 `_components` 依存）。cycle-263 フォーク済みの `new/CategoryNav`・`new/SearchBox`・`new/DictionaryDetailLayout` を再利用。設計判断＝①**DictionaryGrid は legacy 直接再利用**（旧トークン非依存を grep 確認・colors 先例）②**KanjiDetail は in-place 新トークン化で安全**（importer は [char]/page.tsx とテストのみ＝kanji 専用）③**新発見＝DictionaryCard は kanji/yoji 共用＋旧トークン7箇所＋austere 違反のため `new/DictionaryCard` へフォーク必須**（in-place は未移行 yoji を巻き込む）。reviewer は must ゼロで承認し should（S-1 インライン style 含む全消し確認の明記・S-2 new DictionaryCard テスト必須化）を builder タスクへ反映。
+- **実装（builder T0〜T3 + Task T4・小さく分割）**: T0=`new/DictionaryCard` フォーク（austere 化・kanji/yoji 両分岐維持＝B-354 再利用基盤・テスト追加で S-2 達成・legacy 不変）、T1=index 移行（git mv・Breadcrumb/CategoryNav/SearchBox/DictionaryCard を (new)/new/ へ・TrustLevelBadge 撤去・インライン style 含む新トークン化で S-1 達成・`.container` 付与・DictionaryGrid legacy 再利用）、T2=3サブルート移行（同型一括・各 `.container` page.module.css 新設）、T3=詳細 [char] 移行（(new) DictionaryDetailLayout 差替・KanjiDetail.module.css in-place 新トークン化・tsx 無改修・kanji-kanaru クロスリンク維持・付随要素保全）、T4=seo-coverage.test.ts の kanji 5 import を (new) へ追従（ゲーム本体 import は据え置き）。いずれも設計逸脱なし。
+- **検証（4ゲート + typecheck + 視覚・foreground 本番配信）**: `lint/format/test/build` **exit 0×4**（テスト 343ファイル/5678件全通過・kanji 全ルート SSG prerender）＋ typecheck exit 0。全体 grep ゲート全合格（旧 `--color-*` 残ゼロ・common 残参照ゼロ・legacy/kanji 空・new/DictionaryCard 採用4件・legacy 共有部品 diff 空・クロスリンク維持）。本番 `npm start` 配信で `.container` 出現・TrustLevelBadge DOM ゼロを**先確認**（stale 事故の再発なし）。Playwright 視覚検証は**全評価軸 PASS**（情報保全・回遊全周回・kanji-kanaru 双方向往復成功・mobile w360 横スクロールなし・austere 化を computed style 実測・AI 注記 Footer 担保・light/dark 破綻なし・console error 0）。未移行 yoji は legacy デザイン不変で巻き込み事故なし。
+- **成果物レビュー（白紙 reviewer・must/should ゼロ承認）**: 9観点（標準移行手順・デザイン体系適合・austere 歯止め・スコープ厳守・段階移行整合・SEO 構造保全・クロスリンク・S-1/S-2 履行・ビルド健全性）を git diff/grep/自前ビルドで逐条検証。legacy 共有部品 diff 空・yoji 巻き込みなし・`new/DictionaryCard` yoji 分岐は B-354 再利用で非死蔵・[char]/page.tsx の実変更は import 1行のみで metadata/JSON-LD 不変・kanji-kanaru href 無改修を確認し、**must/should ゼロで承認**。
+
+有効な指摘はすべて対応済みで、残存する指摘・対応事項はない。
+
 ## キャリーオーバー
 
-- （サイクル進行中に追記）
+- なし。後続の辞典移行（yoji=B-354）は本サイクルのスコープ外の既存下流タスク（Deferred）であり、本サイクルで新設した `new/DictionaryCard`（kanji/yoji 両分岐維持）が B-354 の再利用基盤になる。kanji-kanaru ゲーム本体（`/play/kanji-kanaru`）は URL 不変で legacy 残置のまま正常（Phase 11 で扱う）。
+- **観測項目（既知・本移行と無関係）**: mobile w360 で CategoryNav チップ 35px・SearchBox 39px と 44px 未満だが、これは legacy から不変の密配置仕様で本移行による悪化なし（B-393/B-388 系の既存タップターゲット課題）。本移行のスコープ外。
 
 ## 補足事項
 
-- 本サイクルは設計拡張ではなく既存方針（移行計画 Phase 9.3.d）の実行。新規設計判断は ①DictionaryGrid 再利用方式 ②KanjiDetail 新トークン化の波及範囲 に集約され、Plan → reviewer で確定する。
-- **検証環境の知見（活用）**: cycle-262/263/264 の「移行系の視覚検証では配信中サーバが移行後ビルドかを新クラス等で先確認してから撮る」教訓を本サイクルでも適用する（本番 `npm start` 配信 + 新クラス出現/TrustLevelBadge 痕跡ゼロの先確認）。
+- 本サイクルは設計拡張ではなく既存方針（移行計画 Phase 9.3.d）の実行。新規設計判断は ①DictionaryGrid 再利用方式（legacy 直接）②KanjiDetail in-place の安全性 ③**DictionaryCard の new/ フォーク必須（kanji/yoji 共用部品の巻き込み回避）** に集約され、Plan → reviewer で確定した。③は colors（ColorCard 使用で DictionaryCard 不使用）では顕在化しなかった kanji 固有の論点。
+- **新知見の記録**: route ファイルを `git mv` すると stale 化する `.next/dev/types/validator.ts` が pre-commit の typecheck を壊す（build は通るのに commit 不可）。`rm -rf .next/dev` で解消。後続の辞典移行（B-354）や Phase 11 でも再発するため `docs/knowledge/nextjs.md` §12 に記録した。
+- **検証環境の知見（活用）**: cycle-262/263/264 の「移行系の視覚検証では配信中サーバが移行後ビルドかを新クラス等で先確認してから撮る」教訓を本サイクルでも適用し、stale 事故ゼロで完了。
+- **ブログ判断: 不執筆**。reader-perspective で検討した結論。cycle-263/264 と同じく1系統のデザイン移行は来訪者に見える変化が局所的で、新設計判断（DictionaryCard フォーク・段階移行機構）は中間成果物として読者の生活に届かない。辞典4系統移行（B-351〜354）を完走し legacy 撤去が見えた段階で「段階移行を完走した」物語として再評価する方が読者価値が出やすい（cycle-263/264 と同方針）。残るは yoji=B-354 の1系統。
 
 ## サイクル終了時のチェックリスト
 
-- [ ] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
-- [ ] `/docs/backlog.md` のActiveセクションに未完了のタスクがない（B-353 は本サイクル完了で Done へ移動）。
-- [ ] すべての変更がレビューされ、残存する指摘事項が無くなっている。
-- [ ] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
-- [ ] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
-- [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
-- [ ] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
+- [x] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
+- [x] `/docs/backlog.md` のActiveセクションに未完了のタスクがない（B-353 は本サイクル完了で Done へ移動）。
+- [x] すべての変更がレビューされ、残存する指摘事項が無くなっている（計画 reviewer must ゼロ承認・視覚検証全軸 PASS・成果物 reviewer must/should ゼロ承認）。
+- [x] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する（exit 0×4・テスト 343ファイル/5678件全通過）。
+- [x] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
+- [x] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
+- [x] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。

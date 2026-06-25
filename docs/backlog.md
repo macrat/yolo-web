@@ -2,12 +2,12 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-353 | Phase 9.3.d: dictionary kanji系移行（トップ+動的サブルート+詳細） | P1 | 265 | B-350完了で解放。kanji-kanaru↔kanji辞典の双方向クロスリンク維持。B-351共有_components再利用。詳細 design-migration-plan.md 9.3.d / cycle-265.md |
 
 ## Queued (すぐに着手できる)
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-354 | Phase 9.3.e: dictionary yoji系移行（トップ+category+詳細） | P1 | - | **B-353完了で解放**。辞典移行最終系統。`new/DictionaryCard`再利用・yoji→kanji詳細リンク維持。詳細 design-migration-plan.md 9.3.e / cycle-265.md |
 | B-541 | 現状正しい辞典収録数ハードコードの予防的`.length`化 | P4 | - | colors系「250色」等。現状正しいがB-409/B-536と同型の再発予兆。詳細 cycle-258.md |
 | B-540 | アンチパターン集の規約準拠クリーンアップ | P1 | - | directory規約違反を是正(手順→knowledge・具体事例→cycle-doc・発生記録→番号のみ)。教訓は移送・要レビュー。詳細 cycle-257.md キャリーオーバー |
 | B-524 | *Content の allTypesLayout 公開型を意味通り命名へ整理 | P1 | - | cycle-254のpill→grid内部マップでdead literal化。AP-I02。retro側(_experiments/)の整理にも注意。詳細 cycle-254.md / cycle-255.md |
@@ -126,7 +126,6 @@
 | B-091 | テーマ間の横断的なおすすめ機能 | P4 | 着手: ダッシュボードが包含しない場合 |
 | B-219 | AI 画像生成 MCP サーバーの実装 | P2 | 着手: 必要性確認時。詳細 imagen4-proposal.md |
 | B-337 | legacy撤去・統合（Phase 11） | P1 | 着手: Phase10全完了後。詳細 design-migration-plan.md |
-| B-354 | Phase 9.3.e: dictionary yoji系移行 | P1 | 着手: B-353完了後（B-350は完了済）。yoji詳細→kanji詳細の内部リンク維持。P2→P1昇格 |
 
 ## Done (完了)
 
@@ -134,8 +133,8 @@
 
 | ID | Title | Completed Cycle | Notes |
 | --- | --- | --- | --- |
+| B-353 | 移行計画 Phase 9.3.d: dictionary kanji系移行 | 265 | kanji系(トップ+grade/radical/stroke+詳細)を(new)へ移行。`new/DictionaryCard`フォーク新設・kanji-kanaru双方向リンク維持・SEO構造保全。詳細 cycle-265.md |
 | B-352 | 移行計画 Phase 9.3.c: dictionary humor系移行（トップ+詳細） | 264 | humor系(index+30語詳細)を(new)austere基調へ移行。自前CSS完結(共有_components不使用=cycle-262型)でDictionaryDetailLayout不採用。😂評価ボタン無改修。詳細 cycle-264.md |
 | B-351 | 移行計画 Phase 9.3.b: dictionary colors系移行（トップ+詳細+category） | 263 | colors系を(new)austere基調へ移行。共有_componentsを`_components/new/`にフォーク(後続B-352〜354の基盤)。色見本HEXは本文維持・B-541のcolors分回収。詳細 cycle-263.md |
 | B-350 | 移行計画 Phase 9.3.a: dictionary トップ移行 | 262 | `/dictionary` トップを (new) austere 基調へ移行(診断拡張は不適用)。サブルートは legacy 残置で B-351〜354 解放。詳細 cycle-262.md |
 | B-539 | デザインシステムの診断中心コンセプトへの再適合 | 261 | 設計3文書を接地→実デザイン探索3案→方向決定で診断中心へ再適合。決定=B案(伝統色で結果アイデンティティ+辞典橋渡し)主軸+C完結した一枚+A規律。DESIGN.md §7新設・診断面限定で色/絵文字拡張+コントラスト方針。出荷B-542/B-523。白紙reviewer全承認。詳細 cycle-261.md |
-| B-543 | ターゲット定義(docs/targets/)の診断中心コンセプトへの再定義 | 260 | 旧道具箱-core前提を是正し診断中心3層へ再定義(診断メイン新設/M1b削除/文化層追加)。市場・競合調査でAP-P13是正し主軸を外部需要でも裏付け・SWOT明示。白紙reviewer3名承認。詳細 cycle-260.md |

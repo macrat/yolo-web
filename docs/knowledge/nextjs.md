@@ -183,3 +183,17 @@ function ClientShell({ serverSlot }: { serverSlot: React.ReactNode }) {
 **検証タイミングの教訓**: この種のバグは型チェック・単体テストでは表面化せず `next build` で初めて落ちる。storybook 等の開発者向けページ（noindex）でも client/server 境界は本番ビルドに効く。ページやコンポーネントを追加したら、早い段階で `npm run build` を一度通して潜在バグを最短で顕在化させること（cycle-224 では build 確認が後回しになり、storybook 追加時に混入した本バグが数セッション潜在した）。
 
 出典: cycle-224
+
+---
+
+## 12. ルートファイルを `git mv` した後、stale な `.next/dev/types/validator.ts` が pre-commit の typecheck を壊す
+
+`tsconfig.json` の `include` には `.next/dev/types/**/*.ts` が含まれる。`next dev` を実行すると Next.js が `.next/dev/types/validator.ts` を生成し、これが**その時点の全ルートファイルへの相対 import を持つ**。デザイン移行などでルートの `page.tsx` を `git mv`（例: `(legacy)/dictionary/kanji/` → `(new)/dictionary/kanji/`）すると、この validator.ts が**移動前の旧パスを参照したまま残り**、`tsc --noEmit` が `TS2307: Cannot find module '.../(legacy)/.../page.js'` で落ちる。
+
+**影響**: `npm run build` は `.next/types/`（dev とは別系統）を再生成して通るのに、pre-commit フック（`tsc --noEmit`）だけが stale な `.next/dev/types/validator.ts` を拾って失敗する。「build は通るのに commit できない」という一見矛盾した状態になる。`.next/` は git 管理外なので git status にも出ず原因が見えにくい。
+
+**対処**: `rm -rf .next/dev` で stale な dev 型キャッシュを削除してから typecheck/commit する（次回 `next dev` 起動時に正しいパスで再生成される）。`.next/dev/types/**` は include の glob なので、ファイルが無ければマッチゼロでエラーにならない。
+
+**予防**: ルート（`app/` 配下の `page.tsx`/`layout.tsx` 等）を移動・リネームしたら、視覚検証で `next dev` を使った後は `rm -rf .next/dev` を挟んでから commit する。辞典移行（cycle-262〜265）のように route group をまたぐ `git mv` を伴う作業では定常的に発生する。
+
+出典: cycle-265
