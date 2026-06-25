@@ -2,15 +2,18 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-523 | 診断デザイン移行の再開: 単独結果ページ枠(ResultPageShell系)を(new)へ移行 | P1 | 267 | 主軸診断のクライマックス(単独結果ページ10ルート)が旧デザインで放置。A/B凍結は倒錯(cycle-256→257/259で否定)。詳細 cycle-267.md |
 
 ## Queued (すぐに着手できる)
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-493 | 遊び（ゲーム本体5ルート kanji-kanaru/nakamawake/irodori/yoji-kimeru/daily）の(new)デザイン移行 | P1 | - | デザイン移行とタイル化を分離(タイル化はP3据置)。旧デザイン放置=主軸UX断裂。A/B無関係。B-523の後続。詳細 cycle-267.md/design-migration-plan §8.2 |
+| B-533 | 辞典に固有の深掘り価値を足す/露出を診断へ橋渡し | P2 | - | 辞典移行完走で着手可だが、診断系デザイン移行(B-523/B-493)を来訪者UX優先で先行。移行完了後に再開。詳細 cycle-257.md / cycle-259.md |
+| B-534 | 学年×画数の漢字一覧ページの実用性向上(「2画の漢字 小学生」需要) | P3 | - | 辞典移行(9.3.d/e=B-353/B-354)完走で解放。詳細 research/2026-06-21-search-console-unmet-demand.md |
 | B-541 | 現状正しい辞典収録数ハードコードの予防的`.length`化 | P4 | - | colors系「250色」等。現状正しいがB-409/B-536と同型の再発予兆。詳細 cycle-258.md |
 | B-540 | アンチパターン集の規約準拠クリーンアップ | P1 | - | directory規約違反を是正(手順→knowledge・具体事例→cycle-doc・発生記録→番号のみ)。教訓は移送・要レビュー。詳細 cycle-257.md キャリーオーバー |
 | B-524 | *Content の allTypesLayout 公開型を意味通り命名へ整理 | P1 | - | cycle-254のpill→grid内部マップでdead literal化。AP-I02。retro側(_experiments/)の整理にも注意。詳細 cycle-254.md / cycle-255.md |
-| B-493 | 遊び（ゲーム）の単一タイル化（GameLayout 系） | P3 | - | **P1→P3降格(cycle-259)**: タイル化は道具箱パラダイム・道具箱-core降格で全面タイル化の必要性低下。デザイン移行(8.2)とは別扱い。詳細 cycle-225.md / cycle-259.md |
 | B-432 | trustLevel フィールド・関連型・テストの完全削除 | P2 | - | 一括完全削除（漸進禁止=AP-I02）。詳細 cycle-200.md |
 | B-505 | Dependabot 脆弱性アラートの調査と対応 | P3 | - | 開3件: esbuild high/low・postcss medium。全て推移依存でビルド時のみ。詳細 cycle-246.md |
 | B-517 | 「全タイプ回遊」実装9箇所の共通コンポーネント統一 | P3 | - | OtherTypesNavへ8 variant診断の独自セクションを寄せ単一化。詳細 cycle-249.md |
@@ -101,18 +104,15 @@
 
 | ID | Title | Priority | Notes |
 | --- | --- | --- | --- |
-| B-523 | 静的結果ページ枠(ResultPageShell)新デザイン移行（B-522 第三弾） | P1 | 着手: B-526結論到達後(同一独立変数でブラインド移行はA/B汚染)。設計前提=cycle-261/B-539(DESIGN.md §7診断の視覚言語)。詳細 cycle-256.md / cycle-261.md |
 | B-528 | cycle-255 計測基盤の自己適用(release別 before/after 回帰確認) | P1 | 着手: 2026-06-28〜2026-07-05目安(デプロイ後7-14日)。詳細 visitor-value-measurement.md 論点8.6 |
 | B-526 | 最初の実A/B(quiz_result_visual_v1) 月次読み | P1 | 着手: 2026-07-21目安〜結論到達まで月次継続。詳細 visitor-value-measurement.md 論点8.1 |
 | B-527 | 最初の実A/B 結論到達時の撤去サイクル化 | P1 | 着手: B-526で判定閾値到達時。詳細 visitor-value-measurement.md 論点8.4 |
 | B-542 | トップ`/`の位置づけ再設計（道具箱→診断中心の新着地構造） | P2 | 着手: 設計＋A/Bまたは追計測駆動。organic集客ほぼ0の道具箱トップを診断から見た構造へ(煽らず単発質維持)。設計前提=cycle-261/B-539(DESIGN.md §7)。詳細 cycle-257.md / cycle-259.md / cycle-261.md |
 | B-521 | cycle-251 漢字辞書CTR改善の効果検証 | P2 | 着手: 2026-07-16目安。詳細 cycle-251.md |
 | B-537 | 診断流入増(character-personality)の追計測と回遊強化 | P2 | 着手: 2026-06-25以降の追計測で定着確認後に投資。煽り/押し付け禁止(cycle-256)・単発質を損なわない回遊。詳細 cycle-257.md |
-| B-533 | 辞典に固有の深掘り価値を足す/露出を診断へ橋渡し | P2 | 着手: 辞典移行(B-350系)完了後(AP-P27)。要否確認済(cycle-259/B-538)=実施方向(辞典は残す文化系の支え)。四字熟語に由来の物語+使い方を足す＋診断クラスタへの橋渡し。詳細 cycle-257.md / cycle-259.md |
 | B-510 | 道具箱利用計測データの初回分析 | P2 | **cycle-257/B-535に取り込み済(完了)**。詳細 cycle-234.md / cycle-257.md |
 | B-324 | ダッシュボード: ツール間連携（Phase 10.4） | P3 | **保留(cycle-259/B-538)**: 道具箱-as-core降格＋中核機能利用ゼロのため、道具箱拡充投資は道具箱トラクションがデータで示されるまで行わない。P2→P3降格。詳細 cycle-235.md / cycle-259.md |
 | B-313 | ダッシュボード: シェア機能（Phase 10.5） | P3 | **保留(cycle-259/B-538)**: 同上（道具箱拡充投資はデータでトラクション確認後）。P2→P3降格。詳細 cycle-235.md / cycle-259.md |
-| B-534 | 学年×画数の漢字一覧ページの実用性向上(「2画の漢字 小学生」需要) | P3 | 着手: kanji/yoji辞典移行(9.3.d/e=B-353/B-354)後が筋。詳細 research/2026-06-21-search-console-unmet-demand.md |
 | B-379 | セマンティック検索メモ帳 | P3 | 着手: B-378完了後。詳細 tools-idea.md |
 | B-460 | 秘密情報UIのSNS/スクショリスク対策SSoT化 | P3 | 着手: 同種ツール2件目登場時。詳細 cycle-213.md |
 | B-500 | ToolCard fake PanelのTile/Panelベース整理 | P4 | 着手: 道具箱Tile着工時。詳細 cycle-226.md |
