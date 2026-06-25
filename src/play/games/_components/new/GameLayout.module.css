@@ -1,0 +1,124 @@
+/* (new) デザイン体系版 GameLayout スタイル（cycle-268 フォーク）。
+ * legacy `../GameLayout.module.css` を新トークン + austere 構造へ質的入れ替え:
+ * 旧 --color-* → 新トークン、角丸は §6 規則（カード/パネル=--r-normal）、
+ * 影撤去・中央寄せ撤去（左寄せ統一）。
+ * 読みカラム設計の max-width:600px は GameLayout 設計として維持する
+ * （cycle-267 result と同様に 1200px を機械転用しない）。 */
+
+.layout {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 1rem 0.5rem;
+  width: 100%;
+}
+
+.header {
+  margin-bottom: 1rem;
+}
+
+.valueProposition {
+  margin-top: 0.75rem;
+  font-size: 0.95rem;
+  color: var(--fg);
+  line-height: 1.6;
+}
+
+.usageExample {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: var(--r-normal);
+}
+
+.usageExampleHeading {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--fg-soft);
+  margin-bottom: 0.75rem;
+}
+
+.usageExampleContent {
+  display: flex;
+  align-items: stretch;
+  gap: 0.75rem;
+}
+
+.usageExampleBox {
+  flex: 1;
+  padding: 0.625rem 0.75rem;
+  background-color: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--r-normal);
+}
+
+.usageExampleLabel {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--fg-soft);
+  margin-bottom: 0.25rem;
+}
+
+.usageExampleText {
+  font-size: 0.9rem;
+  color: var(--fg);
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.usageExampleArrow {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  color: var(--fg-soft);
+  font-size: 1.25rem;
+}
+
+.usageExampleDescription {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--fg-soft);
+  line-height: 1.5;
+}
+
+.content {
+  margin-bottom: 0;
+}
+
+.attribution {
+  padding: 1rem 0;
+  margin-top: 1rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.75rem;
+  color: var(--fg-soft);
+}
+
+.attribution a {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.shareSection {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.shareSectionTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: var(--fg-soft);
+}
+
+@media (max-width: 768px) {
+  .usageExampleContent {
+    flex-direction: column;
+  }
+
+  .usageExampleArrow {
+    justify-content: center;
+    transform: rotate(90deg);
+  }
+}

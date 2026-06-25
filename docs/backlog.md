@@ -2,12 +2,12 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-493 | 遊びゲーム本体5ルートの(new)デザイン移行 | P1 | 268〜 | §8.2「各1サイクル」。268=kanji-kanaru（最大流入・最複雑）。残: nakamawake/irodori/yoji-kimeru/daily。タイル化P3据置。詳細 cycle-268.md |
 
 ## Queued (すぐに着手できる)
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-493 | 遊びゲーム本体の(new)デザイン移行（残: nakamawake/irodori/yoji-kimeru/daily） | P1 | - | §8.2「各1サイクル」。268=kanji-kanaru完了。残4は`_components/new`再利用。yoji-kimeru移行時にaria-label escapeバグ(AP-I12)是正。詳細 cycle-268.md |
 | B-537 | 診断流入増(character-personality)の追計測と回遊強化 | P2 | - | 着手可(2026-06-25到達=追計測開始可)。煽り/押し付け禁止(cycle-256)・単発質を損なわない回遊。定着確認後に投資。詳細 cycle-257.md |
 | B-534 | 学年×画数の漢字一覧ページの実用性向上(「2画の漢字 小学生」需要) | P3 | - | 辞典移行(9.3.d/e=B-353/B-354)完走で解放。詳細 research/2026-06-21-search-console-unmet-demand.md |
 | B-541 | 現状正しい辞典収録数ハードコードの予防的`.length`化 | P4 | - | colors系「250色」等。現状正しいがB-409/B-536と同型の再発予兆。詳細 cycle-258.md |

@@ -1,0 +1,55 @@
+/* (new) デザイン体系版 CrossCategoryBanner スタイル（cycle-268 フォーク）。
+ * 旧 --color-* → 新トークン、角丸を新トークン化、ラベル中央寄せ撤去（左寄せ）、
+ * カテゴリ別ハードコード派手色（紫/桃/青）を撤去し無彩の austere バッジへ。 */
+
+.crossCategory {
+  margin: 12px 0;
+  padding: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--fg-soft);
+  margin: 0 0 8px;
+}
+
+.linkList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: var(--r-normal);
+  background: var(--bg-soft);
+  text-decoration: none;
+  color: var(--fg);
+  transition: background 0.15s;
+}
+
+.link:hover {
+  background: var(--bg-softer);
+}
+
+.title {
+  flex: 1;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: var(--r-normal);
+  flex-shrink: 0;
+  background: var(--bg);
+  color: var(--fg-soft);
+  border: 1px solid var(--border);
+}

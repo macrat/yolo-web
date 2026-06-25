@@ -1,0 +1,60 @@
+/* (new) デザイン体系版 NextGameBanner スタイル（cycle-268 フォーク）。
+ * 旧 --color-* → 新トークン、角丸を新トークン化、中央寄せ撤去（左寄せ）、
+ * 未プレイ強調の青ボタン（--color-primary + #fff）を無彩 austere
+ * （--bg-invert / --fg-invert）へ置換。 */
+
+.container {
+  margin: 12px 0;
+  padding: 12px;
+  border-radius: var(--r-normal);
+  background: var(--bg-soft);
+}
+
+.progress {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--fg);
+  margin-bottom: 8px;
+}
+
+.gameList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.gameLink {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: var(--r-interactive);
+  text-decoration: none;
+  transition: background 0.15s;
+}
+
+.gameLink:hover {
+  opacity: 0.85;
+}
+
+/* 未プレイ: 暗い反転面で「次にやるべき」を austere に強調 */
+.unplayed {
+  background: var(--bg-invert);
+  color: var(--fg-invert);
+}
+
+/* クリア済: 控えめなニュートラル面 */
+.played {
+  background: var(--bg);
+  color: var(--fg-soft);
+  border: 1px solid var(--border);
+}
+
+.gameTitle {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.gameStatus {
+  font-size: 0.8rem;
+}

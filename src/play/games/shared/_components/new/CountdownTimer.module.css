@@ -1,0 +1,21 @@
+/* (new) デザイン体系版 CountdownTimer スタイル（cycle-268 フォーク）。
+ * 中央寄せ撤去（左寄せ）、旧 --color-* → 新トークン。 */
+
+.container {
+  padding: 12px 0;
+  margin: 8px 0;
+}
+
+.label {
+  font-size: 0.85rem;
+  color: var(--fg-soft);
+  margin-bottom: 4px;
+}
+
+.time {
+  font-size: 1.5rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--fg);
+  letter-spacing: 0.05em;
+}

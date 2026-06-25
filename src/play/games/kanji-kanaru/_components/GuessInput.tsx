@@ -89,7 +89,7 @@ export default function GuessInput({
               ? "\u9001\u4FE1\u4E2D..."
               : "\u6F22\u5B57\u3092\u5165\u529B"
           }
-          aria-label="\u6F22\u5B57\u3092\u5165\u529B"
+          aria-label={"\u6F22\u5B57\u3092\u5165\u529B"}
           autoComplete="off"
           autoCorrect="off"
           spellCheck={false}

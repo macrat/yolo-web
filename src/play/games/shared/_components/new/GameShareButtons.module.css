@@ -1,0 +1,73 @@
+/* (new) デザイン体系版 GameShareButtons スタイル（cycle-268 フォーク・NICE-1）。
+ *
+ * GameShareButtons は `shareGameResult`（ゲーム結果テキスト整形）に依存し、
+ * 汎用 ShareButtons へ単純置換できない機能差があるため austere トーンで保持する
+ * （機能を劣後させない）。
+ *
+ * 色の線引き（DESIGN.md §2 機能色 vs 装飾色）:
+ * - 「結果をコピー」「シェア」「画像を保存」は SNS ではない一般操作ボタン＝
+ *   装飾色（緑 #6aaa64 / 紫 #8a5a9a）を撤去し無彩の austere ボタンへ。
+ * - 「Xでシェア」は SNS 識別色（黒）＝どの SNS かを伝える機能色として保持する。
+ * 角丸はボタン規則 --r-interactive(8px)、配置は左寄せ統一。 */
+
+.shareArea {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.75rem;
+}
+
+.shareButton {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  border-radius: var(--r-interactive);
+  cursor: pointer;
+}
+
+/* 一般操作ボタン（SNS ではない）＝無彩の austere */
+.shareButtonCopy {
+  composes: shareButton;
+  background-color: var(--bg-invert);
+  color: var(--fg-invert);
+  border-color: var(--bg-invert);
+}
+
+.shareButtonCopy:hover {
+  opacity: 0.9;
+}
+
+/* X（SNS 識別色＝黒を機能色として保持） */
+.shareButtonX {
+  composes: shareButton;
+  background-color: #000000;
+  color: #ffffff;
+  border-color: #000000;
+}
+
+.shareButtonX:hover {
+  opacity: 0.9;
+}
+
+/* 画像保存（SNS ではない）＝無彩の austere 控えめボタン */
+.shareButtonImage {
+  composes: shareButton;
+  background-color: var(--bg);
+  color: var(--fg);
+}
+
+.shareButtonImage:hover {
+  background-color: var(--bg-soft);
+}
+
+.copiedMessage {
+  font-size: 0.8rem;
+  color: var(--fg-soft);
+  margin-top: 0.25rem;
+  min-height: 1.2em;
+}
+
+:global([data-theme="dark"]) .shareButtonX {
+  background-color: #333333;
+}

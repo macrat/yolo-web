@@ -1,0 +1,38 @@
+/* (new) デザイン体系版 GameDialog スタイル（cycle-268 フォーク）。
+ * 角丸 12px→--r-normal(2px)、ボタン 6px→--r-interactive(8px)、影撤去、
+ * タイトル中央寄せ撤去（左寄せ）、旧 --color-* → 新トークン。 */
+
+.modal {
+  border: 1px solid var(--border);
+  border-radius: var(--r-normal);
+  padding: 1.5rem;
+  max-width: 90vw;
+  background-color: var(--bg);
+  color: var(--fg);
+}
+
+.modal::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modalTitle {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.modalClose {
+  display: block;
+  margin: 1rem 0 0;
+  padding: 0.5rem 2rem;
+  font-size: 0.95rem;
+  border: 1px solid var(--border);
+  border-radius: var(--r-interactive);
+  background-color: var(--bg);
+  color: var(--fg);
+  cursor: pointer;
+}
+
+.modalClose:hover {
+  background-color: var(--bg-soft);
+}

@@ -1,6 +1,6 @@
 "use client";
 
-import GameDialog from "@/play/games/shared/_components/GameDialog";
+import GameDialog from "@/play/games/shared/_components/new/GameDialog";
 import styles from "./styles/KanjiKanaru.module.css";
 
 interface HowToPlayModalProps {
@@ -18,7 +18,7 @@ export default function HowToPlayModal({ open, onClose }: HowToPlayModalProps) {
       open={open}
       onClose={onClose}
       titleId="kanji-kanaru-howtoplay-title"
-      title="\u904A\u3073\u65B9"
+      title={"\u904A\u3073\u65B9"}
     >
       <div className={styles.howToPlayContent}>
         <p>
@@ -33,13 +33,25 @@ export default function HowToPlayModal({ open, onClose }: HowToPlayModalProps) {
         </p>
         <ul className={styles.feedbackLegend}>
           <li>
-            {"\u{1F7E9}"} = {"\u4E00\u81F4"}
+            <span
+              className={`${styles.legendChip} ${styles.legendChipCorrect}`}
+              aria-hidden="true"
+            />{" "}
+            = {"\u4E00\u81F4"}
           </li>
           <li>
-            {"\u{1F7E8}"} = {"\u8FD1\u3044"}
+            <span
+              className={`${styles.legendChip} ${styles.legendChipClose}`}
+              aria-hidden="true"
+            />{" "}
+            = {"\u8FD1\u3044"}
           </li>
           <li>
-            {"\u2B1C"} = {"\u4E0D\u4E00\u81F4"}
+            <span
+              className={`${styles.legendChip} ${styles.legendChipWrong}`}
+              aria-hidden="true"
+            />{" "}
+            = {"\u4E0D\u4E00\u81F4"}
           </li>
         </ul>
         <p className={styles.attributeList}>

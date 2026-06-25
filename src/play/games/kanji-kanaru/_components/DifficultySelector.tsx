@@ -25,7 +25,7 @@ export default function DifficultySelector({
     <div
       className={styles.difficultySelector}
       role="group"
-      aria-label="\u96E3\u6613\u5EA6"
+      aria-label={"\u96E3\u6613\u5EA6"}
     >
       {DIFFICULTY_OPTIONS.map((opt) => (
         <button

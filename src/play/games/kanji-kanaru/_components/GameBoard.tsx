@@ -34,7 +34,7 @@ export default function GameBoard({ guesses, maxGuesses }: GameBoardProps) {
       <div
         className={styles.board}
         role="grid"
-        aria-label="\u63A8\u6E2C\u7D50\u679C"
+        aria-label={"\u63A8\u6E2C\u7D50\u679C"}
       >
         <div className={styles.columnHeaders} role="row">
           {COLUMN_HEADERS.map((header, i) => (

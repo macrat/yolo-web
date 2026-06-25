@@ -1,7 +1,7 @@
 "use client";
 
 import type { GameStats } from "@/play/games/kanji-kanaru/_lib/types";
-import GameDialog from "@/play/games/shared/_components/GameDialog";
+import GameDialog from "@/play/games/shared/_components/new/GameDialog";
 import styles from "./styles/KanjiKanaru.module.css";
 
 interface StatsModalProps {

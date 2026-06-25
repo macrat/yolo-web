@@ -21,7 +21,7 @@ export default function HintBar({
     <div
       className={styles.hintBar}
       role="status"
-      aria-label="\u30D2\u30F3\u30C8"
+      aria-label={"\u30D2\u30F3\u30C8"}
     >
       <span className={styles.hintLabel}>{"\u30D2\u30F3\u30C8:"}</span>
       <span className={styles.hintValue}>

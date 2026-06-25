@@ -1,6 +1,8 @@
 "use client";
 
 import type { Difficulty } from "@/play/games/kanji-kanaru/_lib/types";
+import BarChart from "@/components/icons/BarChart";
+import HelpCircle from "@/components/icons/HelpCircle";
 import DifficultySelector from "./DifficultySelector";
 import styles from "./styles/KanjiKanaru.module.css";
 
@@ -34,18 +36,18 @@ export default function GameHeader({
           <button
             className={styles.iconButton}
             onClick={onHelpClick}
-            aria-label="\u904A\u3073\u65B9"
+            aria-label={"\u904A\u3073\u65B9"}
             type="button"
           >
-            ?
+            <HelpCircle />
           </button>
           <button
             className={styles.iconButton}
             onClick={onStatsClick}
-            aria-label="\u7D71\u8A08"
+            aria-label={"\u7D71\u8A08"}
             type="button"
           >
-            {"\u{1F4CA}"}
+            <BarChart />
           </button>
         </div>
       </div>

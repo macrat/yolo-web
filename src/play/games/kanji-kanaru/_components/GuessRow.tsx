@@ -36,7 +36,7 @@ export default function GuessRow({ feedback }: GuessRowProps) {
         <div
           className={styles.guessKanjiEmpty}
           role="cell"
-          aria-label="\u7A7A\u6B04"
+          aria-label={"\u7A7A\u6B04"}
         />
         {COLUMN_LABELS.map((label) => (
           <div
@@ -64,7 +64,7 @@ export default function GuessRow({ feedback }: GuessRowProps) {
       <div
         className={styles.guessKanji}
         role="cell"
-        aria-label="\u63A8\u6E2C\u3057\u305F\u6F22\u5B57"
+        aria-label={"\u63A8\u6E2C\u3057\u305F\u6F22\u5B57"}
       >
         {feedback.guess}
       </div>

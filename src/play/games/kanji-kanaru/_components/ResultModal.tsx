@@ -6,12 +6,12 @@ import type {
   GameState,
 } from "@/play/games/kanji-kanaru/_lib/types";
 import { generateShareText } from "@/play/games/kanji-kanaru/_lib/share";
-import GameDialog from "@/play/games/shared/_components/GameDialog";
-import GameShareButtons from "@/play/games/shared/_components/GameShareButtons";
-import CountdownTimer from "@/play/games/shared/_components/CountdownTimer";
-import NextGameBanner from "@/play/games/shared/_components/NextGameBanner";
-import { CrossCategoryBanner } from "@/play/games/shared/_components/CrossCategoryBanner";
-import type { CrossCategoryItem } from "@/play/games/shared/_components/CrossCategoryBanner";
+import GameDialog from "@/play/games/shared/_components/new/GameDialog";
+import GameShareButtons from "@/play/games/shared/_components/new/GameShareButtons";
+import CountdownTimer from "@/play/games/shared/_components/new/CountdownTimer";
+import NextGameBanner from "@/play/games/shared/_components/new/NextGameBanner";
+import { CrossCategoryBanner } from "@/play/games/shared/_components/new/CrossCategoryBanner";
+import type { CrossCategoryItem } from "@/play/games/shared/_components/new/CrossCategoryBanner";
 import styles from "./styles/KanjiKanaru.module.css";
 
 interface ResultModalProps {
@@ -56,11 +56,6 @@ export default function ResultModal({
       onClose={onClose}
       titleId="kanji-kanaru-result-title"
       title={isWon ? "\u6B63\u89E3!" : "\u6B8B\u5FF5..."}
-      headerContent={
-        <div className={styles.resultEmoji}>
-          {isWon ? "\u{1F389}" : "\u{1F614}"}
-        </div>
-      }
       footer={
         <button
           className={styles.statsButton}

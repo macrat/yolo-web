@@ -1,0 +1,102 @@
+"use client";
+
+import { useSyncExternalStore } from "react";
+import Link from "next/link";
+import {
+  getAllGameStatus,
+  ALL_GAMES,
+  type GamePlayStatus,
+} from "@/play/games/shared/_lib/crossGameProgress";
+import styles from "./NextGameBanner.module.css";
+
+interface NextGameBannerProps {
+  currentGameSlug: string;
+}
+
+/**
+ * External store for game play statuses.
+ * Reads from localStorage once on mount; does not auto-refresh.
+ */
+let cachedStatuses: GamePlayStatus[] = [];
+let statusListeners: Array<() => void> = [];
+let initialized = false;
+
+function subscribeStatuses(callback: () => void): () => void {
+  statusListeners.push(callback);
+  if (!initialized) {
+    initialized = true;
+    cachedStatuses = getAllGameStatus();
+    for (const listener of statusListeners) {
+      listener();
+    }
+  }
+  return () => {
+    statusListeners = statusListeners.filter((l) => l !== callback);
+    if (statusListeners.length === 0) {
+      initialized = false;
+    }
+  };
+}
+
+function getStatusSnapshot(): GamePlayStatus[] {
+  return cachedStatuses;
+}
+
+function getStatusServerSnapshot(): GamePlayStatus[] {
+  return [];
+}
+
+/**
+ * Banner showing other game suggestions after completing a game
+ * （(new) デザイン体系版・cycle-268 フォーク）.
+ * Highlights unplayed games and shows daily progress.
+ *
+ * legacy `../NextGameBanner` との差分は CSS のみ:
+ * 未プレイ強調の青ボタン（--color-primary + #fff）を無彩の austere
+ * （--bg-invert / --fg-invert）へ、中央寄せ撤去、新トークン化。ロジックは不変。
+ */
+export default function NextGameBanner({
+  currentGameSlug,
+}: NextGameBannerProps) {
+  const statuses = useSyncExternalStore(
+    subscribeStatuses,
+    getStatusSnapshot,
+    getStatusServerSnapshot,
+  );
+
+  if (statuses.length === 0) return null;
+
+  const otherGames = statuses.filter((s) => s.game.slug !== currentGameSlug);
+  const playedCount = statuses.filter((s) => s.playedToday).length;
+  // デイリーゲームの総数（ランダム出題型ゲームは含まない）
+  const totalCount = ALL_GAMES.length;
+  const allComplete = playedCount === totalCount;
+
+  return (
+    <div className={styles.container}>
+      <div className={styles.progress}>
+        {allComplete
+          ? "今日のパズル 完全制覇!"
+          : `今日のパズル ${playedCount}/${totalCount} クリア`}
+      </div>
+      {!allComplete && (
+        <div className={styles.gameList}>
+          {otherGames.map(({ game, playedToday }) => (
+            <Link
+              key={game.slug}
+              href={game.path}
+              className={`${styles.gameLink} ${
+                playedToday ? styles.played : styles.unplayed
+              }`}
+            >
+              <span className={styles.gameTitle}>{game.title}</span>
+              <span className={styles.gameStatus}>
+                {playedToday ? "クリア済" : "未プレイ"}
+              </span>
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}

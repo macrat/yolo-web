@@ -2,7 +2,7 @@
 id: 268
 description: 診断デザイン移行の続行（B-493・Phase 8.2 最初のゲーム本体移行）。遊び群で最大流入（11PV/90日）かつ最も複雑なゲーム「kanji-kanaru」本体ページを (legacy) デザインから (new) austere デザインへ移行する。全4ゲーム共通の枠 GameLayout と shared/_components は、未移行3ゲーム（irodori/nakamawake/yoji-kimeru）に構造変更を波及させない段階移行整合のため、cycle-263 辞典と同型で `_components/new/` へフォークする。A/B `quiz_result_visual_v1` はクイズ結果インライン経路専用でゲームと完全分離＝非干渉（接地でコード確認済み）。
 started_at: 2026-06-25T20:42:47+0900
-completed_at: null
+completed_at: 2026-06-25T22:36:23+0900
 ---
 
 # サイクル-268（診断デザイン移行の続行：ゲーム本体 kanji-kanaru の (new) 移行）
@@ -13,24 +13,27 @@ design-migration-plan §8.2 は「ゲーム各1サイクル」と定める。ゲ
 
 ## 実施する作業
 
-- [ ] **T0: 共有枠の (new) フォーク作成** — kanji-kanaru の import グラフから到達する共有コンポーネントのみを `src/play/games/_components/new/` および `src/play/games/shared/_components/new/` へフォークする（cycle-263 辞典 `_components/new/` と同型の確立パターン）。**over-fork 禁止＝実際に (new) kanji-kanaru ページから到達するものだけ**。対象（接地 §1-C・§2.3 で確定）: `_components/new/GameLayout.{tsx,module.css}`・`new/RelatedGames.tsx`・`new/RelatedBlogPosts.{tsx,module.css}`、`shared/_components/new/` に GameDialog / CrossCategoryBanner / CountdownTimer / NextGameBanner / GameShareButtons（kanji-kanaru の各 Modal が import する分のみ）。フォーク時の質的入れ替え:
+- [x] **T0: 共有枠の (new) フォーク作成** — kanji-kanaru の import グラフから到達する共有コンポーネントのみを `src/play/games/_components/new/` および `src/play/games/shared/_components/new/` へフォークする（cycle-263 辞典 `_components/new/` と同型の確立パターン）。**over-fork 禁止＝実際に (new) kanji-kanaru ページから到達するものだけ**。対象（接地 §1-C・§2.3 で確定）: `_components/new/GameLayout.{tsx,module.css}`・`new/RelatedGames.tsx`・`new/RelatedBlogPosts.{tsx,module.css}`、`shared/_components/new/` に GameDialog / CrossCategoryBanner / CountdownTimer / NextGameBanner / GameShareButtons（kanji-kanaru の各 Modal が import する分のみ）。
+  - **フォーク閉包から除外する依存を明示（計画 reviewer MUST-2）**: `@/play/_components/RecommendedContent`（と `RecommendedContent.module.css`）・`@/play/_components/RelatedContentCard.module.css` は既に (new) トークンのみで移行済みクイズ面（ResultPageShell/QuizPlayPageLayout 等）が現用共有中＝**フォークせずそのまま参照する**（フォークすると移行済み面と二重定義に分岐＝事故）。RelatedGames フォーク版も `RelatedContentCard.module.css` を共有参照のまま使う。
+  - フォーク時の質的入れ替え:
   - 旧トークン `--color-*` → 新トークン（`--fg`/`--bg`/`--border`/`--accent`/`--fg-soft`/`--bg-soft` 等）。
   - `@/components/common/{Breadcrumb,FaqSection,ShareButtons}` → (new) 版 `@/components/{Breadcrumb,FaqSection,ShareButtons}` へ差替。
   - **`TrustLevelBadge` は (new) 版が存在しないため撤去**（import + GameLayout.tsx L40 JSX 削除）。AI注記は Footer/about が担保（cycle-263/267 と同方針）。`GameMeta.trustLevel`/`trustNote` フィールドは **B-432 一括削除の責務＝本サイクルでは meta から消さない**（legacy GameLayout がまだ使用・AP-I02 漸進削除回避）。
   - 角丸は DESIGN.md §6 規則へ（パネル/カード/タグ=2px=`--r-normal`、ボタン/入力=8px=`--r-interactive`）。影撤去。
   - **中央寄せ（GameLayout.module.css L84/106・shared 各所 `text-align:center`）を撤去し左寄せ統一**（盤面など機能上中央が要る箇所は除く）。
   - CrossCategoryBanner のハードコード派手色（紫/桃/青）・NextGameBanner の青ボタン（`--color-primary`+`#fff`）を `--accent`/`--bg-invert` 系の無彩・austere へ。
-  - GameShareButtons のブランド色直書きは、ResultModal 内のシェアは (new) `@/components/ShareButtons`（GameLayout が既に採用する (new)版）への寄せを第一候補に検討。困難なら austere トーンで保持。
+  - **RelatedGames のカード絵文字アイコンの質的入れ替え（計画 reviewer MUST-1）**: `RelatedGames.tsx` L29-30 が `game.icon`（registry の 📚🎯🧩🎨）を装飾アイコンとして描画＝DESIGN.md §3「絵文字は UI 装飾・ナビには使わない」違反。(new) フォーク版で**撤去または Lucide 線画へ置換**（cycle-263 辞典カードの扱いに準拠）。registry の `icon` フィールドは他面（legacy 共有）も使うため meta からは消さず、(new) フォーク側で非表示化/置換する。
+  - GameShareButtons のブランド色直書きは、ResultModal 内のシェアは (new) `@/components/ShareButtons`（GameLayout が既に採用する (new)版）への寄せを第一候補に検討。ただし `GameShareButtons` は `shareGameResult`（ゲーム結果テキスト整形）に依存し機能差があるため、寄せが困難なら austere トーンで保持＝**機能を劣後させない**。SNS 識別色（緑/黒/紫等）は機能色（どの SNS か識別する情報）として残してよく、それ以外の装飾色を austere 化する（§2 機能色 vs 装飾色の線引きを本コンポーネントにも適用）。
   - GameLayout の最上位コンテナに 1ページ移行標準手順の外枠（main 直下 `<1300px`）を満たす構造を確認（既存 max-width:600px 読みカラムは GameLayout 設計として維持し、cycle-267 result と同じく 1200px を機械転用しない）。
-- [ ] **T1: ゲーム固有 CSS/TSX の (new) 化（その場・他ゲーム非共有）** — `src/play/games/kanji-kanaru/_components/` 配下を新デザインへ。
-  - `styles/KanjiKanaru.module.css`（旧トークン35・最大の改修）: 旧トークン→新トークン、角丸再編、中央寄せ（タイトル/結果テキスト）の左寄せ化、`#ffffff` 直書き→`--fg-invert` 等、過剰な太字の見直し。
+- [x] **T1: ゲーム固有 CSS/TSX の (new) 化（その場・他ゲーム非共有）** — `src/play/games/kanji-kanaru/_components/` 配下を新デザインへ。
+  - `styles/KanjiKanaru.module.css`（旧トークン35・最大の改修）: 旧トークン→新トークン、角丸再編、中央寄せ（タイトル/結果テキスト）の左寄せ化、`#ffffff` 直書き→`--fg-invert` 等、過剰な太字の見直し。**ただし機能色セル（`--kk-color-*`）上の文字色はトークン化せずコントラスト確保を優先**（`--fg-invert` は dark で暗色になり機能色セル上で可読性が落ちうる・計画 reviewer NICE-2。視覚検証 dark で要確認）。`--bg-invert` 上の文字のみ `--fg-invert` で正しい。
   - `GameContainer.module.css`（旧トークン8）: 新トークン化 + retryButton の角丸 `--r-interactive` 化。
   - **絵文字の質的入れ替え**: GameHeader.tsx L48 📊（統計）→ Lucide 線画 + `aria-label` 維持・L40 `?`→`HelpCircle` 検討、ResultModal.tsx L61 🎉/😔 → austere（テキスト/Lucide）、HowToPlayModal.tsx L36/39 🟩🟨 → 実色チップ（背景色 span）へ。
   - **ゲーム判定色 `--kk-color-correct/close/wrong/empty`（Wordle 風 green/yellow/grey）は保持**＝Wordle 系パズルの判定情報そのもの＝機能色（DESIGN.md §2「色は機能を伝えるためだけに使う」に合致。cycle-263「色面＝本文」の本ゲーム版）。無彩化しすぎない。chrome（ヘッダー/難易度/input/submit/モーダル枠/余白/角丸）のみ austere 体系へ。
-- [ ] **T2: ルートの git mv と import 差替** — `git mv src/app/(legacy)/play/kanji-kanaru/{page.tsx,layout.tsx,opengraph-image.tsx,__tests__/*} → (new)/play/kanji-kanaru/`。page.tsx の `GameLayout` import を (new) フォーク版へ差替。kanji-kanaru 固有 Modal（ResultModal/StatsModal/HowToPlayModal）が shared (new) フォークを参照するよう import 差替。metadata/JSON-LD/crossCategoryItems/opengraph-image は無改修保全。
-- [ ] **T3: (new) GameLayout 用テストの整備** — フォーク版 GameLayout 用に `_components/new/__tests__/GameLayout.test.tsx` を新設（legacy テストを基に TrustLevelBadge アサーション〔L86-94「正確な処理」〕を除外・h1 非保持契約は維持）。legacy `GameLayout.test.tsx` は3ゲームが使う限り**不変で残す**。git mv した kanji-kanaru の3テスト（page/GameBoard/GuessInput）は import パス追従のみ。
-- [ ] **検証** — `rm -rf .next/dev`（git mv 後の stale 型対策・knowledge §12）→ 4ゲート（lint/format:check/test/build）+ typecheck + grep ゲート（(legacy)/play/kanji-kanaru 空・(new) kanji-kanaru 配下と (new) フォークに旧 `--color-*`/`@/components/common` 残ゼロ・UI絵文字 📊🎉😔🟩🟨 残ゼロ・派手色ハードコード残ゼロ）+ **A/B 非破壊確認**（kanji-kanaru/GameLayout/shared に `EXPERIMENT:`/`useAbVariant` 不在の維持＝そもそも 0 件）+ **段階移行整合の確認**（未移行3ゲーム irodori/nakamawake/yoji-kimeru が legacy 版共有を使い続け pixel 不変であること）+ Playwright 視覚検証（mobile 360px 最優先 + desktop・light/dark・盤面/難易度/ヒント/入力/各モーダルの機能保全・KANJIDIC2 帰属と漢字辞典リンクの回遊保全・console error 0・ベースライン §7 と「同等以上」）。
-- [ ] **レビュー** — 計画 reviewer（フォーク方針・段階移行整合・スコープ妥当性・A/B 非干渉の確認）→ 実装後に白紙 reviewer で成果物独立検証。
+- [x] **T2: ルートの git mv と import 差替** — `git mv src/app/(legacy)/play/kanji-kanaru/{page.tsx,layout.tsx,opengraph-image.tsx,__tests__/*} → (new)/play/kanji-kanaru/`。page.tsx の `GameLayout` import を (new) フォーク版へ差替。kanji-kanaru 固有 Modal（ResultModal/StatsModal/HowToPlayModal）が shared (new) フォークを参照するよう import 差替。metadata/JSON-LD/crossCategoryItems/opengraph-image は無改修保全。
+- [x] **T3: (new) GameLayout 用テストの整備** — フォーク版 GameLayout 用に `_components/new/__tests__/GameLayout.test.tsx` を新設（legacy テストを基に TrustLevelBadge アサーション〔L86-94「正確な処理」〕を除外・**trustNote アサーション〔L96-103〕も TrustLevelBadge 経由なら同時に除外**＝帰属を確認・計画 reviewer NICE-3・h1 非保持契約は維持）。legacy `GameLayout.test.tsx` は3ゲームが使う限り**不変で残す**。git mv した kanji-kanaru の3テスト（page/GameBoard/GuessInput）は import パス追従のみ。
+- [x] **検証** — `rm -rf .next/dev`（git mv 後の stale 型対策・knowledge §12）→ 4ゲート（lint/format:check/test/build）+ typecheck + grep ゲート（(legacy)/play/kanji-kanaru 空・(new) kanji-kanaru 配下と (new) フォークに旧 `--color-*`/`@/components/common` 残ゼロ・UI絵文字 📊🎉😔🟩🟨 残ゼロ・**RelatedGames カードの registry 絵文字 📚🎯🧩🎨 が (new) kanji-kanaru 到達 DOM〔関連ゲーム欄含む〕に残ゼロ**・派手色ハードコード残ゼロ）+ **A/B 非破壊確認**（kanji-kanaru/GameLayout/shared に `EXPERIMENT:`/`useAbVariant` 不在の維持＝そもそも 0 件）+ **段階移行整合の確認**（未移行3ゲーム irodori/nakamawake/yoji-kimeru が legacy 版共有を使い続け pixel 不変であること）+ Playwright 視覚検証（mobile 360px 最優先 + desktop・light/dark・盤面/難易度/ヒント/入力/各モーダルの機能保全・KANJIDIC2 帰属と漢字辞典リンクの回遊保全・console error 0・ベースライン §7 と「同等以上」）。
+- [x] **レビュー** — 計画 reviewer（フォーク方針・段階移行整合・スコープ妥当性・A/B 非干渉の確認）→ 実装後に白紙 reviewer で成果物独立検証。
 
 ## 作業計画
 
@@ -87,21 +90,40 @@ design-migration-plan §8.2 は「ゲーム各1サイクル」と定める。ゲ
 
 **外部仕様への依存**: 本サイクルは kanji-kanaru の (new) 移行で内部デザインシステムに閉じる。JSON-LD（Schema.org VideoGame）・OGP は既存の移行済みパターンを踏襲するのみ（metadata 生成は無改修）。新規の外部仕様依存判断を導入しないため、一次資料の新規事前確認は不要と判断。
 
+## レビュー結果
+
+本サイクルは「接地→計画→計画レビュー→実装（小さく分割）→集約検証→視覚レビュー→白紙レビュー」の各段を独立サブエージェントに委譲し、すべて通過した。
+
+- **接地（コード精読 + Playwright 本番 + GA4）**: 移行対象約21ファイル。共有 GameLayout・shared はフォーク推奨（段階移行整合＝in-place だと構造変更が未移行3ゲームに波及）。A/B 非干渉（マーカー0件）。SEO 無改修保全。視覚ベースライン5枚取得（console error 0）。`tmp/cycle-268-grounding.md`。
+- **計画 reviewer（must 2件 → 反映後 must 0 で承認）**: (M1) RelatedGames カードの registry 絵文字 📚🎯🧩🎨（RelatedGames.tsx L29-30）が DESIGN.md §3 違反で質的入れ替え対象かつ検証ゲートから漏れていた→ T0 と grep ゲートに反映。(M2) フォーク粒度を CSS 依存まで降ろし、既 new 共有の RecommendedContent/RelatedContentCard.module.css をフォーク対象外と明示（二重定義回避）。nice N1〔GameShareButtons の SNS 識別色は機能色保持〕/N2〔機能色セル上文字のコントラスト優先〕/N3〔trustNote アサーション帰属確認〕も反映。
+- **実装（builder A/B/C・小さく分割）**: A=T0 共有フォーク（`_components/new/` GameLayout/RelatedGames/RelatedBlogPosts ＋ `shared/_components/new/` GameDialog/CrossCategoryBanner/CountdownTimer/NextGameBanner/GameShareButtons）+ T3 (new) テスト新設。B=T1 ゲーム固有（KanjiKanaru.module.css 旧トークン35全廃・GameContainer.module.css・絵文字3箇所〔📊→BarChart SVG・?→HelpCircle SVG・🎉😔撤去→テキスト見出し・🟩🟨→実色チップ〕・機能色 `--kk-color-*` 保持）。C=T2 git mv（route 6ファイル）+ import 再配線（page.tsx と各 Modal を (new) フォークへ）+ 空ディレクトリ掃除 + seo-coverage.test.ts の import 追従。新規アイコンは `src/components/icons/`（BarChart/HelpCircle・inline SVG・新規 npm 依存なし）。
+- **PM 集約検証**: 4ゲート + typecheck 全通過（typecheck/lint/format:check exit 0・test 344ファイル**5680件 pass**・build 成功・`/play/kanji-kanaru` Static 化・API は legacy のまま URL 不変）。grep ゲート全合格（(legacy)/play/kanji-kanaru 消滅・旧 `--color-*`/`@/components/common`/UI絵文字/registry絵文字/派手色 残ゼロ・A/B 非接触）。
+- **視覚 reviewer（ローカル本番ビルド・mobile 360px 最優先 + desktop・light/dark）**: 全項目 PASS（旧要素撤去・austere 化・SVGアイコン置換・凡例実色チップ・ResultModal テキスト見出し化）。機能保全（盤面/難易度/ヒント/入力/3モーダル/evaluate・hints API）・**ゲーム判定色保持**・**dark モードの機能色セル上文字コントラスト判読可（NICE-2 充足）**・KANJIDIC2 帰属と漢字辞典回遊保全・console error 0。**段階移行整合 PASS**（irodori/nakamawake/yoji-kimeru が legacy のまま完全不変を実機確認）。
+  - **検出バグ M-2/M-1（修正済み）**: HowToPlay モーダルのタイトルと9箇所の `aria-label/title` が **JSX 属性の文字列リテラル `"\u..."` で `\u` 未解釈**＝可視リテラル表示／スクリーンリーダーに無意味な読み上げ名（M-2 はユーザー可視・M-1 は本サイクルでアイコンのみ化により a11y 悪化）。brace 形 `={"\u..."}`（JS文字列リテラルで `\u` が解釈される・ファイル既存の convention に整合）へ9箇所修正。再ビルド後の視覚再検証で「遊び方」「統計」等が正しく描画・退行なし・console error 0 を確認。
+- **白紙 reviewer（成果物の独立検証・11観点・must 0 で承認）**: スコープ厳守・フォーク過不足なし（import 閉包一致・除外依存正しい）・**段階移行整合（legacy 原本 git diff 0行＝不変）**・A/B レッドライン非接触・AP-P28 質的入れ替え・機能色保持＋コントラスト・SEO 無改修保全・TrustLevelBadge 撤去と meta フィールド温存（AP-I02 整合）・テスト整合・属性エスケープ修正の妥当性をすべて裏取り。nice 2件（escape 修正の cycle-doc 記録・未移行 yoji-kimeru に残る同種 a11y バグの backlog 化）はキャリーオーバーへ。
+
+有効な指摘はすべて対応済みで、残存する指摘・対応事項はない。
+
 ## キャリーオーバー
 
-（サイクル進行中に記録）
+- **未移行 yoji-kimeru の同種 a11y バグ（白紙 reviewer NICE-2）**: `src/play/games/yoji-kimeru/_components/DifficultySelector.tsx` に `aria-label="\u..."`（JSX属性リテラルで未解釈）が1件残存。本サイクルのスコープ外（kanji-kanaru のみ）のため未修正が正しい。yoji-kimeru 移行サイクル（B-493 残）で同時是正する。backlog の B-493 注記に含意。
+- **ゲーム本体移行の残り（B-493・P1）**: nakamawake/irodori/yoji-kimeru/daily の (new) 移行は後続サイクル（各1サイクル）。本サイクルで確立したフォーク機構（`_components/new/`・`shared/_components/new/`）を再利用する。これら完了で `(legacy)/play/` 配下のゲームが全消滅し Phase 8.2 完結。
+- **属性エスケープバグの anti-pattern 化（白紙 reviewer NICE-1）**: 「JSX 属性のダブルクォート値内では `\u` エスケープが未解釈＝リテラル表示。brace 形 `={"\u..."}` で初めて JS 文字列として解釈される」という JSX 挙動を、cycle-completion で **AP-I12 として `docs/anti-patterns/implementation.md` に追加済み**（grep `="\u'` 相当で機械検出する旨も明記）。残りのゲーム移行サイクルで再発防止に使う。
 
 ## 補足事項
 
 - 本サイクル完了後、`(legacy)/play/` 配下の残存はゲーム本体4つ（nakamawake/irodori/yoji-kimeru/daily）。B-493 は umbrella として Active のまま、各ゲーム1サイクルで継続。
-- character-fortune/music-personality/unexpected-compatibility の `(legacy)/play/` 配下空ディレクトリ（cycle-267 の `git mv` 残骸）は本サイクルで掃除する。
+- character-fortune/music-personality/unexpected-compatibility の `(legacy)/play/` 配下空ディレクトリ（cycle-267 の `git mv` 残骸）は本サイクルで掃除済み。
+- **共有枠フォークによるゲーム移行パターンを確立**: 最初のゲーム移行を最複雑な kanji-kanaru で行い、cycle-263 辞典と同型のフォーク機構をゲームにも適用した。後続3ゲームはこのフォークを再利用できる。
+- **ブログ判断＝不執筆**。reader-perspective で検討した結論。1ゲームのデザイン移行は cycle-263/265/267 同様、読者の生活に届く物語性が薄い。Phase 8.2 全完了（ゲーム本体移行）または legacy 撤去（Phase 11）で「診断/遊び面・サイト全体のデザインを統一しきった」物語として再評価する方が読者価値が出やすい。
+- 本番 UI は本サイクルのコミット・デプロイで初めて kanji-kanaru が新デザインに切り替わる（検証はローカル本番ビルドで実施済み）。
 
 ## サイクル終了時のチェックリスト
 
-- [ ] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
-- [ ] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
-- [ ] すべての変更がレビューされ、残存する指摘事項が無くなっている。
-- [ ] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
-- [ ] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
-- [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
-- [ ] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
+- [x] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
+- [x] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
+- [x] すべての変更がレビューされ、残存する指摘事項が無くなっている。
+- [x] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
+- [x] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
+- [x] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
+- [x] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
