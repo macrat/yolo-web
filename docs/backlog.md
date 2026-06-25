@@ -104,7 +104,7 @@
 | ID | Title | Priority | Notes |
 | --- | --- | --- | --- |
 | B-544 | 結果ページ§7フルクライマックス化＋catchphrase見せ方統一(N-1) | P2 | 着手: インラインA/B(quiz_result_visual_v1)結論後にB-526協調。固有色/勲章感/伝統色対応＋単独ページ内のcatchphrase囲み統一。詳細 cycle-267.md |
-| B-528 | cycle-255 計測基盤の自己適用(release別 before/after 回帰確認) | P1 | 着手: 2026-06-28〜2026-07-05目安(デプロイ後7-14日)。詳細 visitor-value-measurement.md 論点8.6 |
+| B-528 | (new)移行効果のサイト全体before/after計測(計測基盤の自己適用) | P1 | 着手: 2026-06-28〜目安。(new)は未検証仮説。A/B(quiz_result_visual_v1)が主因果検証・本基盤はサイト全体集計before/afterで補強(per-page=参考)。詳細 visitor-value-measurement.md 論点8.6 |
 | B-526 | 最初の実A/B(quiz_result_visual_v1) 月次読み | P1 | 着手: 2026-07-21目安〜結論到達まで月次継続。詳細 visitor-value-measurement.md 論点8.1 |
 | B-527 | 最初の実A/B 結論到達時の撤去サイクル化 | P1 | 着手: B-526で判定閾値到達時。詳細 visitor-value-measurement.md 論点8.4 |
 | B-542 | トップ`/`の位置づけ再設計（道具箱→診断中心の新着地構造） | P2 | 着手: 設計＋A/Bまたは追計測駆動。organic集客ほぼ0の道具箱トップを診断から見た構造へ(煽らず単発質維持)。設計前提=cycle-261/B-539(DESIGN.md §7)。詳細 cycle-257.md / cycle-259.md / cycle-261.md |
