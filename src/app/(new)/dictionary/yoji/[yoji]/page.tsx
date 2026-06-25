@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import DictionaryDetailLayout from "@/dictionary/_components/DictionaryDetailLayout";
+import DictionaryDetailLayout from "@/dictionary/_components/new/DictionaryDetailLayout";
 import { YOJI_DICTIONARY_META } from "@/dictionary/_lib/dictionary-meta";
 import YojiDetail from "@/dictionary/_components/yoji/YojiDetail";
 import { generateYojiPageMetadata, generateYojiJsonLd } from "@/lib/seo";

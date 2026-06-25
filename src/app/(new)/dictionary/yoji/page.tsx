@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import Breadcrumb from "@/components/common/Breadcrumb";
-import TrustLevelBadge from "@/components/common/TrustLevelBadge";
-import CategoryNav from "@/dictionary/_components/CategoryNav";
+import Breadcrumb from "@/components/Breadcrumb";
+import CategoryNav from "@/dictionary/_components/new/CategoryNav";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { getAllYoji, getYojiCategories } from "@/dictionary/_lib/yoji";
 import { YOJI_CATEGORY_LABELS } from "@/dictionary/_lib/types";
@@ -39,7 +38,7 @@ export default function YojiIndexPage() {
   }));
 
   return (
-    <>
+    <div className={styles.container}>
       <Breadcrumb
         items={[
           { label: "ホーム", href: "/" },
@@ -47,7 +46,6 @@ export default function YojiIndexPage() {
           { label: "四字熟語辞典" },
         ]}
       />
-      <TrustLevelBadge level="curated" />
       <h1 className={styles.title}>四字熟語辞典</h1>
       <p className={styles.description}>
         よく使われる四字熟語{allYoji.length}
@@ -60,6 +58,6 @@ export default function YojiIndexPage() {
         allHref="/dictionary/yoji"
       />
       <YojiIndexClient allYoji={allYoji} />
-    </>
+    </div>
   );
 }

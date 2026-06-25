@@ -74,6 +74,7 @@ export default function YojiDetail({ yoji }: YojiDetailProps) {
     <article className={styles.detail} data-testid="yoji-detail">
       <div className={styles.header}>
         <span className={styles.character}>{yoji.yoji}</span>
+        <h1 className={styles.title}>四字熟語「{yoji.yoji}」</h1>
         <p className={styles.reading}>{yoji.reading}</p>
         <p className={styles.meaning}>{yoji.meaning}</p>
         <div className={styles.badges}>

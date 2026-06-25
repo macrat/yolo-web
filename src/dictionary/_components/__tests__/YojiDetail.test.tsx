@@ -25,6 +25,14 @@ test("renders yoji prominently", () => {
   ).toBeInTheDocument();
 });
 
+test("renders the yoji as the page h1 (DictionaryDetailLayout 設計契約: h1 は Detail 内部で管理)", () => {
+  render(<YojiDetail yoji={mockYoji} />);
+  const h1 = screen.getByRole("heading", { level: 1 });
+  expect(h1).toHaveTextContent("四字熟語「一期一会」");
+  // h1 はページに1個だけ（kanji/color と同型の見出し階層）
+  expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
+});
+
 test("renders reading and meaning", () => {
   render(<YojiDetail yoji={mockYoji} />);
   expect(screen.getByText("いちごいちえ")).toBeInTheDocument();

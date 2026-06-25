@@ -167,7 +167,7 @@ const staticPages: Array<{
   {
     path: "/dictionary/yoji",
     importMeta: () =>
-      import("@/app/(legacy)/dictionary/yoji/page").then(
+      import("@/app/(new)/dictionary/yoji/page").then(
         (m) => m.metadata as Metadata,
       ),
   },
@@ -329,7 +329,7 @@ describe("動的metadataページのSEO検証", () => {
     const category = categories[0];
 
     const { generateMetadata } =
-      await import("@/app/(legacy)/dictionary/yoji/category/[category]/page");
+      await import("@/app/(new)/dictionary/yoji/category/[category]/page");
     const meta = await generateMetadata({
       params: Promise.resolve({ category }),
     });
@@ -456,7 +456,7 @@ describe("動的metadataページのSEO検証", () => {
     const yoji = ids[0];
 
     const { generateMetadata } =
-      await import("@/app/(legacy)/dictionary/yoji/[yoji]/page");
+      await import("@/app/(new)/dictionary/yoji/[yoji]/page");
     const meta = await generateMetadata({
       params: Promise.resolve({ yoji }),
     });

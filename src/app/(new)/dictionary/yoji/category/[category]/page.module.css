@@ -1,0 +1,20 @@
+/* category ページ枠。yoji には layout が無く var(--max-width) も (new) では未定義のため、
+ * トップ（(new)/dictionary/yoji/page.module.css .container）と同じ 1200px 外枠を自前付与する。 */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--fg);
+  margin-bottom: 0.5rem;
+}
+
+.count {
+  font-size: 0.9rem;
+  color: var(--fg-soft);
+  margin-bottom: 1.5rem;
+}

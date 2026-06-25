@@ -6,9 +6,9 @@ import {
   YOJI_CATEGORY_LABELS,
   YOJI_DIFFICULTY_LABELS,
 } from "@/dictionary/_lib/types";
-import DictionaryCard from "@/dictionary/_components/DictionaryCard";
+import DictionaryCard from "@/dictionary/_components/new/DictionaryCard";
 import DictionaryGrid from "@/dictionary/_components/DictionaryGrid";
-import SearchBox from "@/dictionary/_components/SearchBox";
+import SearchBox from "@/dictionary/_components/new/SearchBox";
 
 interface YojiIndexClientProps {
   allYoji: YojiEntry[];
@@ -60,7 +60,7 @@ export default function YojiIndexClient({ allYoji }: YojiIndexClientProps) {
         <p
           style={{
             textAlign: "center",
-            color: "var(--color-text-muted)",
+            color: "var(--fg-soft)",
             marginTop: "2rem",
           }}
         >
