@@ -7,6 +7,7 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-545 | (new)移行の検証を面単位で(a)移行/(b)A/B混ぜ判断・(b)面実装 | P1 | - | cycle-269の保留も全面一律(b)も誤り(自己点検)。per-item判断:道具/辞典=(a)受容・クイズ/ゲーム=(b)A/B・保留(c)不可。(b)はSSR(middleware稼働)配信。詳細 cycle-269.md/§8.7 |
 | B-537 | 診断流入増(character-personality)の追計測と回遊強化 | P2 | - | 着手可(2026-06-25到達=追計測開始可)。煽り/押し付け禁止(cycle-256)・単発質を損なわない回遊。定着確認後に投資。詳細 cycle-257.md |
 | B-534 | 学年×画数の漢字一覧ページの実用性向上(「2画の漢字 小学生」需要) | P3 | - | 辞典移行(9.3.d/e=B-353/B-354)完走で解放。詳細 research/2026-06-21-search-console-unmet-demand.md |
 | B-541 | 現状正しい辞典収録数ハードコードの予防的`.length`化 | P4 | - | colors系「250色」等。現状正しいがB-409/B-536と同型の再発予兆。詳細 cycle-258.md |
@@ -102,9 +103,9 @@
 
 | ID | Title | Priority | Notes |
 | --- | --- | --- | --- |
-| B-493 | 遊びゲーム本体の(new)デザイン移行（残: nakamawake/irodori/yoji-kimeru/daily） | P1 | 着手: クイズ実験の判断点(2026-10-21以降の月次読み)で(new)採用が確定後(B-545/§8.7)。確定時はtransferで一括移行。aria-label escape(AP-I12)是正。詳細 cycle-269.md |
+| B-493 | 遊びゲーム本体の(new)デザイン移行（残: nakamawake/irodori/yoji-kimeru/daily） | P1 | 保留不可(=最悪手). enjoyable面=体験が価値ゆえ(b)A/Bに混ぜ移行(legacyをretroアームに残しnew arm構築). aria-label是正(AP-I12). 詳細 cycle-269.md |
 | B-544 | 結果ページ§7フルクライマックス化＋catchphrase見せ方統一(N-1) | P2 | 着手: インラインA/B(quiz_result_visual_v1)結論後にB-526協調。固有色/勲章感/伝統色対応＋単独ページ内のcatchphrase囲み統一。詳細 cycle-267.md |
-| B-526 | 最初の実A/B(quiz_result_visual_v1) 月次読み | P1 | 着手: 2026-07-21目安〜判断点まで月次継続。読み窓は非重複の独立30日コホート・判断点2026-10-21・未確認1窓シグナルは独立1窓延期(B-545/§8.7で再フレーミング)。詳細 visitor-value-measurement.md §8.7 |
+| B-526 | 最初の実A/B(quiz_result_visual_v1) 月次読み | P1 | 着手: 2026-07-21目安〜。読み窓は非重複の独立30日コホート・大シグナルtripwire(§8.7再フレーミング維持)。B-545の全面A/Bが立てばそこへ統合/拡張。詳細 §8.7 |
 | B-527 | 最初の実A/B 結論到達時の撤去サイクル化 | P1 | 着手: B-526の判断点(§8.7・2026-10-21以降)で結論到達時。詳細 visitor-value-measurement.md §8.4/§8.7 |
 | B-542 | トップ`/`の位置づけ再設計（道具箱→診断中心の新着地構造） | P2 | 着手: 設計＋A/Bまたは追計測駆動。organic集客ほぼ0の道具箱トップを診断から見た構造へ(煽らず単発質維持)。設計前提=cycle-261/B-539(DESIGN.md §7)。詳細 cycle-257.md / cycle-259.md / cycle-261.md |
 | B-521 | cycle-251 漢字辞書CTR改善の効果検証 | P2 | 着手: 2026-07-16目安。詳細 cycle-251.md |
@@ -131,7 +132,6 @@
 
 | ID | Title | Completed Cycle | Notes |
 | --- | --- | --- | --- |
-| B-545 | (new)移行の来訪者価値検証方針の決定 | 269 | 全面1本A/Bを退け三段方針(enjoyable=クイズ観察/ゲーム=transfer/SSG=測定不能の告白)に確定。§8.1ゲートを独立窓再現tripwire+有界判断点へ再フレーミング。詳細 cycle-269.md/§8.7 |
 | B-528 | cycle-255 計測基盤の自己適用(release別 before/after 回帰確認) | 268(中止) | before/afterは本サイト規模で成立せず前提が無効(cycle-269で再確認)。詳細 cycle-268.md |
 | B-523 | 診断単独結果ページ10ルートを(new)デザインへ移行 | 267 | 主軸診断のクライマックス。A/B凍結の倒錯を是正(単独ページはarm非受領で交絡せず)・旧要素撤去しインライン結果とトーン統一。詳細 cycle-267.md |
 | B-354 | 移行計画 Phase 9.3.e: dictionary yoji系移行（トップ+category+詳細） | 266 | yoji系を(new)austereへ移行＝辞典4系統移行(Phase 9.3)完走。h1欠落是正(kanji/color同型)・クロスリンク維持。詳細 cycle-266.md |
