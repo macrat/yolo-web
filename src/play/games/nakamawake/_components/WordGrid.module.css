@@ -8,10 +8,10 @@
 
 .wordButton {
   padding: 0.75rem 0.25rem;
-  border: 2px solid var(--color-border);
-  border-radius: 0.5rem;
-  background: var(--color-bg);
-  color: var(--color-text);
+  border: 2px solid var(--border);
+  border-radius: var(--r-interactive);
+  background: var(--bg);
+  color: var(--fg);
   font-size: 0.95rem;
   font-weight: 500;
   cursor: pointer;
@@ -22,8 +22,8 @@
 }
 
 .wordButton:hover:not(:disabled) {
-  border-color: var(--color-primary);
-  background: var(--color-bg-secondary);
+  border-color: var(--border-strong);
+  background: var(--bg-soft);
 }
 
 .wordButton:disabled {
@@ -32,13 +32,13 @@
 }
 
 .selected {
-  background: var(--color-primary);
-  color: #fff;
-  border-color: var(--color-primary);
+  background: var(--bg-invert);
+  color: var(--fg-invert);
+  border-color: var(--bg-invert);
 }
 
 .selected:hover:not(:disabled) {
-  background: var(--color-primary-hover);
+  background: var(--bg-invert-soft);
 }
 
 @media (max-width: 480px) {

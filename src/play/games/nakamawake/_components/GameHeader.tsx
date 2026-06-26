@@ -1,3 +1,5 @@
+import BarChart from "@/components/icons/BarChart";
+import HelpCircle from "@/components/icons/HelpCircle";
 import styles from "./GameHeader.module.css";
 
 interface Props {
@@ -30,7 +32,7 @@ export default function GameHeader({
           aria-label={"\u904A\u3073\u65B9"}
           type="button"
         >
-          ?
+          <HelpCircle />
         </button>
         <button
           onClick={onStatsClick}
@@ -38,7 +40,7 @@ export default function GameHeader({
           aria-label={"\u7D71\u8A08"}
           type="button"
         >
-          {"\u{1F4CA}"}
+          <BarChart />
         </button>
       </div>
     </header>

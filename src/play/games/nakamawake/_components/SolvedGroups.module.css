@@ -1,3 +1,29 @@
+/*
+ * 難易度4色の SSoT（Single Source of Truth）。
+ * 黄=易 / 緑=普 / 青=難 / 紫=超難 を符号化する「機能色」（DESIGN.md §2）であり、
+ * austere 化後も色相を保持する。ResultModal / HowToPlayModal もこの変数を参照する
+ * （SolvedGroups は GameContainer から常時 import されるため :root 定義が必ず読み込まれる）。
+ *
+ * 各色に乗せるテキスト色は WCAG AA（通常テキスト 4.5:1）を満たすよう選定:
+ *   light: 黒文字 — 黄15.80 / 緑10.45 / 青11.99 / 紫7.03（紫は旧・白文字2.99 が AA 不足だったため黒へ是正）
+ *   dark : 白文字 — 黄5.29 / 緑5.09 / 青6.46 / 紫6.62（黄は旧 #a08a28 が白文字3.41 で AA 不足のため #7e6a1f へ濃度是正）
+ */
+:root {
+  --nw-difficulty-yellow: #f9df6d;
+  --nw-difficulty-green: #a0c35a;
+  --nw-difficulty-blue: #b0c4ef;
+  --nw-difficulty-purple: #ba81c5;
+  --nw-difficulty-fg: #000000;
+}
+
+:global(:root.dark) {
+  --nw-difficulty-yellow: #7e6a1f;
+  --nw-difficulty-green: #4d7a25;
+  --nw-difficulty-blue: #3f5f90;
+  --nw-difficulty-purple: #7a4a8a;
+  --nw-difficulty-fg: #ffffff;
+}
+
 .container {
   display: flex;
   flex-direction: column;
@@ -8,7 +34,7 @@
 
 .group {
   padding: 0.75rem;
-  border-radius: 0.5rem;
+  border-radius: var(--r-normal);
   text-align: center;
 }
 
@@ -23,41 +49,21 @@
 }
 
 .yellow {
-  background: #f9df6d;
-  color: #000;
+  background: var(--nw-difficulty-yellow);
+  color: var(--nw-difficulty-fg);
 }
 
 .green {
-  background: #a0c35a;
-  color: #000;
+  background: var(--nw-difficulty-green);
+  color: var(--nw-difficulty-fg);
 }
 
 .blue {
-  background: #b0c4ef;
-  color: #000;
+  background: var(--nw-difficulty-blue);
+  color: var(--nw-difficulty-fg);
 }
 
 .purple {
-  background: #ba81c5;
-  color: #fff;
-}
-
-:global(:root.dark) .yellow {
-  background: #a08a28;
-  color: #fff;
-}
-
-:global(:root.dark) .green {
-  background: #4d7a25;
-  color: #fff;
-}
-
-:global(:root.dark) .blue {
-  background: #3f5f90;
-  color: #fff;
-}
-
-:global(:root.dark) .purple {
-  background: #7a4a8a;
-  color: #fff;
+  background: var(--nw-difficulty-purple);
+  color: var(--nw-difficulty-fg);
 }

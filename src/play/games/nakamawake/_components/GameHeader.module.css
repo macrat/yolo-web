@@ -13,13 +13,13 @@
 }
 
 .number {
-  color: var(--color-primary);
+  color: var(--fg-soft);
   font-weight: 400;
 }
 
 .date {
   font-size: 0.8rem;
-  color: var(--color-text-muted);
+  color: var(--fg-soft);
 }
 
 .buttons {
@@ -27,20 +27,23 @@
   gap: 0.5rem;
 }
 
+/* Lucide 線画アイコン（20px）を内包する操作ボタン。kanji-kanaru(new) の
+ * iconButton に合わせ、枠線なし・--r-interactive・hover で --bg-soft。
+ * 44px の最小タップターゲットを確保し、アイコンを中央に配置する。 */
 .iconButton {
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-  border: 1px solid var(--color-border);
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border-radius: var(--r-interactive);
+  border: none;
   background: transparent;
   cursor: pointer;
-  font-size: 0.9rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-text);
+  color: var(--fg);
 }
 
 .iconButton:hover {
-  background-color: var(--color-bg-secondary);
+  background-color: var(--bg-soft);
 }

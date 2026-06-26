@@ -124,7 +124,7 @@ const staticPages: Array<{
   {
     path: "/play/nakamawake",
     importMeta: () =>
-      import("@/app/(legacy)/play/nakamawake/page").then(
+      import("@/app/(new)/play/nakamawake/page").then(
         (m) => m.metadata as Metadata,
       ),
   },

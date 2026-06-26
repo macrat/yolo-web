@@ -16,7 +16,7 @@
 
 .statLabel {
   font-size: 0.8rem;
-  color: var(--color-text-muted);
+  color: var(--fg-soft);
 }
 
 .distributionTitle {
@@ -42,7 +42,7 @@
 .distributionBar {
   height: 1.2rem;
   background-color: #787c7e;
-  border-radius: 2px;
+  border-radius: var(--r-normal);
   min-width: 1.5rem;
   display: flex;
   align-items: center;
@@ -50,7 +50,13 @@
   padding-right: 0.35rem;
   font-size: 0.75rem;
   font-weight: 600;
-  color: #ffffff;
+  /*
+   * 黒文字。バー背景はテーマ非依存の固定色（灰 #787c7e / 緑 #6aaa64）であり、
+   * 白文字では WCAG AA 未満だった（#787c7e×白=4.21 / #6aaa64×白=2.78）。
+   * 黒文字なら #787c7e×黒=4.98 / #6aaa64×黒=7.55 で通常テキスト AA(4.5:1)を満たす。
+   * .distributionBarHighlight は composes でこの色を継承する。
+   */
+  color: #000000;
 }
 
 .distributionBarHighlight {

@@ -21,6 +21,12 @@ let cachedStatuses: GamePlayStatus[] = [];
 let statusListeners: Array<() => void> = [];
 let initialized = false;
 
+// Stable empty reference for the server snapshot. useSyncExternalStore requires
+// getServerSnapshot to return a cached (referentially stable) value; a fresh `[]`
+// literal each call trips React's "getServerSnapshot should be cached to avoid an
+// infinite loop" warning. See React docs on useSyncExternalStore server snapshots.
+const EMPTY_STATUSES: GamePlayStatus[] = [];
+
 function subscribeStatuses(callback: () => void): () => void {
   statusListeners.push(callback);
   if (!initialized) {
@@ -43,7 +49,7 @@ function getStatusSnapshot(): GamePlayStatus[] {
 }
 
 function getStatusServerSnapshot(): GamePlayStatus[] {
-  return [];
+  return EMPTY_STATUSES;
 }
 
 /**

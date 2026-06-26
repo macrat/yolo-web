@@ -2,12 +2,14 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-545 | (new)移行の来訪者価値の検証方針の決定 | P1 | 271 | cycle-271で「A/B方式の決定(=三度の罠)」をやめ、申し送りの道で決着：旧配信中の4ゲームのうちGA4最多1本を最高の体験にして全員へ届ける(デザイン判断+視覚レビュー)。詳細 cycle-271.md / cycle-270.md「自己点検」 |
 
 ## Queued (すぐに着手できる)
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-547 | 残ゲーム(irodori/yoji-kimeru/daily)を(new)へ＝最高にして全員へ | P2 | - | cycle-271の方法(面ごとデザイン判断+視覚レビュー+全員配信)で1本ずつ。daily=2PV9秒で成立性も実機確認。完走でlegacy撤去(B-337)。詳細 cycle-271.md |
+| B-548 | kanji-kanaru統計分布バーのコントラスト是正(AA未満) | P3 | - | nakamawakeはcycle-271で是正済。kanji-kanaru側の同型バーが残存。色をフィードバックセル(白文字が機能的)と共有しdarkテーマ依存のため分布バー限定で是正要(一括置換不可)。詳細 cycle-271.md |
+| B-549 | middleware→proxy 移行(Next.js16非推奨) | P4 | - | dev "1 Issue"=`middleware`規約非推奨警告(全ページ・出荷物には影響なし)。`proxy`へ移行で解消。cycle-271接地で確認。 |
 | B-537 | 診断流入増(character-personality)の追計測と回遊強化 | P2 | - | 着手可(2026-06-25到達=追計測開始可)。煽り/押し付け禁止(cycle-256)・単発質を損なわない回遊。定着確認後に投資。詳細 cycle-257.md |
 | B-534 | 学年×画数の漢字一覧ページの実用性向上(「2画の漢字 小学生」需要) | P3 | - | 辞典移行(9.3.d/e=B-353/B-354)完走で解放。詳細 research/2026-06-21-search-console-unmet-demand.md |
 | B-541 | 現状正しい辞典収録数ハードコードの予防的`.length`化 | P4 | - | colors系「250色」等。現状正しいがB-409/B-536と同型の再発予兆。詳細 cycle-258.md |
@@ -72,7 +74,7 @@
 | B-382 | 既存日付ツールに自然言語入力を追加 | P3 | - | 詳細 tools-idea.md |
 | B-383 | BPM 検出ツール | P4 | - | 詳細 tools-idea.md |
 | B-384 | お絵かき認識ゲーム | P4 | - | 詳細 tools-idea.md |
-| B-393 | Header actions slot の 44px タップターゲット対応 | P3 | - | 詳細 cycle-185.md |
+| B-393 | Header actions slot の 44px タップターゲット対応 | P3 | - | nakamawakeゲームヘッダーのアイコンボタンはcycle-271で44px達成済(kanji-kanaru等は約30pxで未達)。残: 共通Header actions slot・他ゲームヘッダー。詳細 cycle-185.md / cycle-271.md |
 | B-398 | grep ベーステストの必要性再評価 | P3 | - | 訪問者価値の観点で再評価。詳細 cycle-189.md |
 | B-409 | keigo-reference 動詞件数を実データから算出 | P3 | - | ハードコード→KEIGO_ENTRIES.length |
 | B-410 | keigo-reference の機能重複整理 | P4 | - | getEntriesByCategory と filterEntries |
@@ -123,7 +125,7 @@
 | B-229 | GameContainer loadDifficulty の予防的修正 | P4 | 着手: 該当ゲーム残存時。詳細 cycle-127.md |
 | B-091 | テーマ間の横断的なおすすめ機能 | P4 | 着手: ダッシュボードが包含しない場合 |
 | B-219 | AI 画像生成 MCP サーバーの実装 | P2 | 着手: 必要性確認時。詳細 imagen4-proposal.md |
-| B-337 | legacy撤去・統合（Phase 11） | P1 | 着手: Phase10全完了後。詳細 design-migration-plan.md |
+| B-337 | legacy撤去・統合（Phase 11） | P1 | 着手: Phase10全完了後。検証方法はcycle-271で決着(A/B不要・デザイン判断+視覚レビュー+全員配信)。legacyゲームはB-547で移行後に撤去。詳細 design-migration-plan.md / cycle-271.md |
 
 ## Done (完了)
 
@@ -131,9 +133,7 @@
 
 | ID | Title | Completed Cycle | Notes |
 | --- | --- | --- | --- |
+| B-545 | (new)移行の来訪者価値の検証方針の決定 | 271 | 三度失敗を断ち決着。検証方法はA/Bでなくデザイン判断+視覚レビュー+全員配信(VVM§8.2訂正)。nakamawake移行で実証。残ゲームB-547。詳細 cycle-271.md |
 | B-528 | cycle-255 計測基盤の自己適用(release別 before/after 回帰確認) | 268(中止) | before/afterは本サイト規模で成立せず前提が無効。全面A/B(B-545)が代替。詳細 cycle-268.md |
 | B-523 | 診断単独結果ページ10ルートを(new)デザインへ移行 | 267 | 主軸診断のクライマックス。A/B凍結の倒錯を是正(単独ページはarm非受領で交絡せず)・旧要素撤去しインライン結果とトーン統一。詳細 cycle-267.md |
 | B-354 | 移行計画 Phase 9.3.e: dictionary yoji系移行（トップ+category+詳細） | 266 | yoji系を(new)austereへ移行＝辞典4系統移行(Phase 9.3)完走。h1欠落是正(kanji/color同型)・クロスリンク維持。詳細 cycle-266.md |
-| B-353 | 移行計画 Phase 9.3.d: dictionary kanji系移行 | 265 | kanji系(トップ+grade/radical/stroke+詳細)を(new)へ移行。`new/DictionaryCard`フォーク新設・kanji-kanaru双方向リンク維持・SEO構造保全。詳細 cycle-265.md |
-| B-352 | 移行計画 Phase 9.3.c: dictionary humor系移行（トップ+詳細） | 264 | humor系(index+30語詳細)を(new)austere基調へ移行。自前CSS完結(共有_components不使用=cycle-262型)でDictionaryDetailLayout不採用。😂評価ボタン無改修。詳細 cycle-264.md |
-| B-351 | 移行計画 Phase 9.3.b: dictionary colors系移行（トップ+詳細+category） | 263 | colors系を(new)austere基調へ移行。共有_componentsを`_components/new/`にフォーク(後続B-352〜354の基盤)。色見本HEXは本文維持・B-541のcolors分回収。詳細 cycle-263.md |

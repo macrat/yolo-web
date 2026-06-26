@@ -21,23 +21,24 @@
   display: inline-block;
   width: 1rem;
   height: 1rem;
-  border-radius: 3px;
+  border-radius: var(--r-normal);
   vertical-align: middle;
   margin-right: 0.35rem;
 }
 
+/* 難易度4色は SolvedGroups.module.css の :root SSoT を参照（DESIGN.md §2 機能色）。 */
 .swatchYellow {
-  background: #f9df6d;
+  background: var(--nw-difficulty-yellow);
 }
 
 .swatchGreen {
-  background: #a0c35a;
+  background: var(--nw-difficulty-green);
 }
 
 .swatchBlue {
-  background: #b0c4ef;
+  background: var(--nw-difficulty-blue);
 }
 
 .swatchPurple {
-  background: #ba81c5;
+  background: var(--nw-difficulty-purple);
 }
