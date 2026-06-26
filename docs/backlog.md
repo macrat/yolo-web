@@ -2,13 +2,12 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-545 | (new)移行の来訪者価値検証方針の決定（全面A/Bの実現可能性精査） | P1 | 269 | cycle-268自己点検の帰結を決着。自己点検の核を活かす実行可能な検証方針を決める。B-493/B-337/Phase11が従属。詳細 cycle-269.md |
 
 ## Queued (すぐに着手できる)
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-493 | 遊びゲーム本体の(new)デザイン移行（残: nakamawake/irodori/yoji-kimeru/daily） | P1 | - | 各1サイクルで`_components/new`再利用。yoji-kimeru時にaria-label escape(AP-I12)是正。A/B方針はB-545。詳細 cycle-268.md |
-| B-545 | (new)移行の来訪者価値を全面1本のlegacy-vs-new A/Bで検証する(設計+実装) | P1 | - | 端末単位で全ページを旧/新に割当し全トラフィックを1実験に集約。詳細 cycle-268.md |
 | B-537 | 診断流入増(character-personality)の追計測と回遊強化 | P2 | - | 着手可(2026-06-25到達=追計測開始可)。煽り/押し付け禁止(cycle-256)・単発質を損なわない回遊。定着確認後に投資。詳細 cycle-257.md |
 | B-534 | 学年×画数の漢字一覧ページの実用性向上(「2画の漢字 小学生」需要) | P3 | - | 辞典移行(9.3.d/e=B-353/B-354)完走で解放。詳細 research/2026-06-21-search-console-unmet-demand.md |
 | B-541 | 現状正しい辞典収録数ハードコードの予防的`.length`化 | P4 | - | colors系「250色」等。現状正しいがB-409/B-536と同型の再発予兆。詳細 cycle-258.md |
@@ -104,6 +103,7 @@
 
 | ID | Title | Priority | Notes |
 | --- | --- | --- | --- |
+| B-493 | 遊びゲーム本体の(new)デザイン移行（残: nakamawake/irodori/yoji-kimeru/daily） | P1 | 着手: B-545でA/B方針確定後（移行はlegacy削除で対照喪失＝衝突・cycle-268自己点検）。aria-label escape(AP-I12)是正。詳細 cycle-268.md |
 | B-544 | 結果ページ§7フルクライマックス化＋catchphrase見せ方統一(N-1) | P2 | 着手: インラインA/B(quiz_result_visual_v1)結論後にB-526協調。固有色/勲章感/伝統色対応＋単独ページ内のcatchphrase囲み統一。詳細 cycle-267.md |
 | B-526 | 最初の実A/B(quiz_result_visual_v1) 月次読み | P1 | 着手: 2026-07-21目安〜結論到達まで月次継続。詳細 visitor-value-measurement.md 論点8.1 |
 | B-527 | 最初の実A/B 結論到達時の撤去サイクル化 | P1 | 着手: B-526で判定閾値到達時。詳細 visitor-value-measurement.md 論点8.4 |
