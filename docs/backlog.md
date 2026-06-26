@@ -7,8 +7,7 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-493 | 残4ゲームの(new)移行を(b)A/Bで実施 | P1 | - | cycle-270決定=4本とも(b)。各サイクル別ゲームを(new)=new arm/現ライブ=legacy armで設計言語A/Bにプール・結論待たず着手(待ち=AP-P27)。§8.4にゲーム側追加/yoji時AP-I12。詳細 cycle-270.md |
-| B-546 | A/B統計フレーミング(論点3/§8.1)の全面再設計 | P1 | - | §8.1有意性ゲート(各arm≥50等)は訂正ノートが否認・有効な結論ゲート無し→プール実験が結論不能でlegacy撤去ブロック。B-526/527/337のブロッキング前提。cycle-269で着手し失敗。詳細 cycle-270.md |
+| B-545 | (new)移行の来訪者価値の検証方針の決定 | P1 | - | cycle-268/269/270で三度失敗・判断未了。三度ともA/Bや基準を「来訪者に最高の体験を全員へ届ける」義務の代替に使った。次PMはまずcycle-270.md「自己点検(3度目の失敗)」を読むこと。詳細 cycle-270.md |
 | B-537 | 診断流入増(character-personality)の追計測と回遊強化 | P2 | - | 着手可(2026-06-25到達=追計測開始可)。煽り/押し付け禁止(cycle-256)・単発質を損なわない回遊。定着確認後に投資。詳細 cycle-257.md |
 | B-534 | 学年×画数の漢字一覧ページの実用性向上(「2画の漢字 小学生」需要) | P3 | - | 辞典移行(9.3.d/e=B-353/B-354)完走で解放。詳細 research/2026-06-21-search-console-unmet-demand.md |
 | B-541 | 現状正しい辞典収録数ハードコードの予防的`.length`化 | P4 | - | colors系「250色」等。現状正しいがB-409/B-536と同型の再発予兆。詳細 cycle-258.md |
@@ -124,7 +123,7 @@
 | B-229 | GameContainer loadDifficulty の予防的修正 | P4 | 着手: 該当ゲーム残存時。詳細 cycle-127.md |
 | B-091 | テーマ間の横断的なおすすめ機能 | P4 | 着手: ダッシュボードが包含しない場合 |
 | B-219 | AI 画像生成 MCP サーバーの実装 | P2 | 着手: 必要性確認時。詳細 imagen4-proposal.md |
-| B-337 | legacy撤去・統合（Phase 11） | P1 | 着手: Phase10全完了後。設計言語A/B結論(B-546)前は4ゲームのlegacy armを保全。詳細 design-migration-plan.md |
+| B-337 | legacy撤去・統合（Phase 11） | P1 | 着手: Phase10全完了後。詳細 design-migration-plan.md |
 
 ## Done (完了)
 
@@ -132,8 +131,9 @@
 
 | ID | Title | Completed Cycle | Notes |
 | --- | --- | --- | --- |
-| B-545 | (new)移行の来訪者価値の検証方針の決定 | 270 | 残4ゲームを面ごと接地し4本とも(b)A/Bと実分類(§8.2)。AP-P31でプール・結論待たず移行。実装はB-493。§8.1再設計はB-546へ分離。詳細 cycle-270.md |
 | B-528 | cycle-255 計測基盤の自己適用(release別 before/after 回帰確認) | 268(中止) | before/afterは本サイト規模で成立せず前提が無効。全面A/B(B-545)が代替。詳細 cycle-268.md |
 | B-523 | 診断単独結果ページ10ルートを(new)デザインへ移行 | 267 | 主軸診断のクライマックス。A/B凍結の倒錯を是正(単独ページはarm非受領で交絡せず)・旧要素撤去しインライン結果とトーン統一。詳細 cycle-267.md |
 | B-354 | 移行計画 Phase 9.3.e: dictionary yoji系移行（トップ+category+詳細） | 266 | yoji系を(new)austereへ移行＝辞典4系統移行(Phase 9.3)完走。h1欠落是正(kanji/color同型)・クロスリンク維持。詳細 cycle-266.md |
 | B-353 | 移行計画 Phase 9.3.d: dictionary kanji系移行 | 265 | kanji系(トップ+grade/radical/stroke+詳細)を(new)へ移行。`new/DictionaryCard`フォーク新設・kanji-kanaru双方向リンク維持・SEO構造保全。詳細 cycle-265.md |
+| B-352 | 移行計画 Phase 9.3.c: dictionary humor系移行（トップ+詳細） | 264 | humor系(index+30語詳細)を(new)austere基調へ移行。自前CSS完結(共有_components不使用=cycle-262型)でDictionaryDetailLayout不採用。😂評価ボタン無改修。詳細 cycle-264.md |
+| B-351 | 移行計画 Phase 9.3.b: dictionary colors系移行（トップ+詳細+category） | 263 | colors系を(new)austere基調へ移行。共有_componentsを`_components/new/`にフォーク(後続B-352〜354の基盤)。色見本HEXは本文維持・B-541のcolors分回収。詳細 cycle-263.md |
