@@ -2,15 +2,14 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-550 | shareイベント枯渇の調査と是正(28日2件・PV成長エンジン不在) | P2 | 273 | cycle-273着手。**本サイクルは一次接地+原因仮説まで・実装は次サイクル以降**。詳細 cycle-273.md |
 
 ## Queued (すぐに着手できる)
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-547 | 残ゲーム(irodori/yoji-kimeru/daily)の(new)移行 | P3 | - | **B-545従属**(cycle-272でも未解決・B-526月次読みの結論到達まで停止)。daily=2PV9秒で成立性も要検討。詳細 cycle-271.md / cycle-272.md |
 | B-548 | kanji-kanaru統計分布バーのコントラスト是正(AA未満) | P3 | - | nakamawakeはcycle-271で是正済。kanji-kanaru側の同型バーが残存。色をフィードバックセル(白文字が機能的)と共有しdarkテーマ依存のため分布バー限定で是正要(一括置換不可)。詳細 cycle-271.md |
 | B-549 | middleware→proxy 移行(Next.js16非推奨) | P4 | - | dev "1 Issue"=`middleware`規約非推奨警告(全ページ・出荷物には影響なし)。`proxy`へ移行で解消。cycle-271接地で確認。 |
-| B-550 | shareイベント枯渇の調査と是正(28日2件・PV成長エンジン不在) | P2 | - | 診断サイトの成長エンジンであるシェアが実測 28日2件。B-545とは別系統だがGoal直撃の重大課題。何が起きているか(UI不可視/コピー優位/モバイル意図ズレ等)の一次接地から。詳細 cycle-272.md。 |
 | B-537 | 診断流入増(character-personality)の追計測と回遊強化 | P2 | - | 着手可(2026-06-25到達=追計測開始可)。煽り/押し付け禁止(cycle-256)・単発質を損なわない回遊。定着確認後に投資。詳細 cycle-257.md |
 | B-534 | 学年×画数の漢字一覧ページの実用性向上(「2画の漢字 小学生」需要) | P3 | - | 辞典移行(9.3.d/e=B-353/B-354)完走で解放。詳細 research/2026-06-21-search-console-unmet-demand.md |
 | B-541 | 現状正しい辞典収録数ハードコードの予防的`.length`化 | P4 | - | colors系「250色」等。現状正しいがB-409/B-536と同型の再発予兆。詳細 cycle-258.md |
@@ -107,6 +106,7 @@
 | ID | Title | Priority | Notes |
 | --- | --- | --- | --- |
 | B-545 | どのデザインが来訪者に最高の価値を提供するかを検証 | P1 | 着手: cycle-272で答えの仕組みを誠実化・B-526月次読み結論到達まで待機。詳細 cycle-272.md |
+| B-547 | 残ゲーム(irodori/yoji-kimeru/daily)の(new)移行 | P3 | 着手: B-545結論到達まで停止。daily=2PV9秒で成立性も要検討。詳細 cycle-271.md / cycle-272.md |
 | B-544 | 結果ページ§7フルクライマックス化＋catchphrase見せ方統一(N-1) | P2 | 着手: インラインA/B(quiz_result_visual_v1)結論後にB-526協調。固有色/勲章感/伝統色対応＋単独ページ内のcatchphrase囲み統一。詳細 cycle-267.md |
 | B-526 | 最初の実A/B(quiz_result_visual_v1) 月次読み | P1 | 着手: 2026-07-21目安〜結論到達まで月次継続。詳細 visitor-value-measurement.md 論点8.1 |
 | B-527 | 最初の実A/B 結論到達時の撤去サイクル化 | P1 | 着手: B-526で判定閾値到達時。詳細 visitor-value-measurement.md 論点8.4 |
