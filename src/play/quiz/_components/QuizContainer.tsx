@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback } from "react";
 import {
   trackContentStart,
   trackContentEnd,
@@ -10,7 +10,7 @@ import Link from "next/link";
 import Panel from "@/components/Panel";
 import Button from "@/components/Button";
 // EXPERIMENT: quiz_result_visual_v1 — import を撤去すれば arm 関連ロジックも消える。
-import { QUIZ_RESULT_VISUAL_V1, useAbVariant } from "@/lib/ab";
+import { QUIZ_RESULT_VISUAL_V1, useAbVariant, getAbArm } from "@/lib/ab";
 import type { QuizDefinition, QuizAnswer, QuizPhase } from "@/play/quiz/types";
 import { determineResult, calculateKnowledgeScore } from "@/play/quiz/scoring";
 import { determineScienceThinkingResult } from "@/play/quiz/data/science-thinking";
@@ -85,31 +85,30 @@ export default function QuizContainer({
   //
   // arm 自体の localStorage 永続化は knowledge 来訪者にも発生してよい（個人識別なし・
   // 実害なし）。これは「コミットされたが GA には乗らない」状態で問題ない。
-  //
-  // useMemo で resultArm / quiz.meta.type が変わったときだけ参照を更新し、track* 系の
-  // useCallback が無駄に再生成されないようにする（react-hooks/exhaustive-deps 警告対策）。
   const isExperimentSubject = quiz.meta.type === "personality";
-  const ab: AbEventContext | undefined = useMemo(
-    () =>
-      isExperimentSubject && resultArm !== null
-        ? { experimentId: QUIZ_RESULT_VISUAL_V1.id, variant: resultArm }
-        : undefined,
-    [isExperimentSubject, resultArm],
-  );
+
+  // EXPERIMENT: quiz_result_visual_v1
+  // GA 送信用の arm は、useAbVariant の useEffect→setState→re-render を待たず
+  // 命令的に getAbArm() で最新値を取る。useAbVariant のヘッダコメントが推奨する
+  // event handler 経路（"For non-React call sites (event handlers, imperative
+  // code), call getAbArm(experimentId) from ./assign directly instead."）。
+  // 視覚表示は引き続き useAbVariant 経由（hydration safe）で、getAbArm は同じ
+  // localStorage/in-memory ソースを参照するので決定論的に同じ arm を返し、
+  // 表示と記録は乖離しない。cycle-272 T1 で BQ 実測 23% の null-arm 漏れを
+  // 確認したのを受け、検出力（B-526 結論到達期間）を削らないよう是正。
+  const resolveAb = useCallback((): AbEventContext | undefined => {
+    if (!isExperimentSubject) return undefined;
+    const arm = getAbArm(QUIZ_RESULT_VISUAL_V1.id);
+    if (arm === null) return undefined;
+    return { experimentId: QUIZ_RESULT_VISUAL_V1.id, variant: arm };
+  }, [isExperimentSubject]);
 
   const handleStart = useCallback(() => {
     setPhase("playing");
     setCurrentIndex(0);
     setAnswers([]);
-    // EXPERIMENT: quiz_result_visual_v1
-    // arm は useAbVariant の useEffect 内で確定するため、useEffect 連鎖の順序に
-    // よっては arm 未確定（ab === undefined）のまま start イベントが発火する
-    // 可能性が理論上ある（実機で観測されている事故報告は無し）。これは到達率の
-    // 分母を arm 別に出すための best-effort で、結果到達率の主指標は arm が
-    // 必ず乗る `level_end` 側で算出する設計（docs/visitor-value-measurement.md
-    // 論点4: level_end は介入が効く地点ゆえ arm 必須、level_start は補助）。
-    trackContentStart(contentId, contentType, ab);
-  }, [contentId, contentType, ab]);
+    trackContentStart(contentId, contentType, resolveAb());
+  }, [contentId, contentType, resolveAb]);
 
   const handleAnswer = useCallback(
     (choiceId: string) => {
@@ -126,13 +125,14 @@ export default function QuizContainer({
         if (currentIndex + 1 >= quiz.questions.length) {
           setPhase("result");
           // EXPERIMENT: quiz_result_visual_v1 — 主要 KPI 発火点。
-          trackContentEnd(contentId, contentType, true, ab);
+          // arm は resolveAb() で命令的に取る（上の resolveAb 解説参照）。
+          trackContentEnd(contentId, contentType, true, resolveAb());
         } else {
           setCurrentIndex((prev) => prev + 1);
         }
       }
     },
-    [answers, currentIndex, quiz, contentId, contentType, ab],
+    [answers, currentIndex, quiz, contentId, contentType, resolveAb],
   );
 
   const handleNext = useCallback(() => {
@@ -140,11 +140,12 @@ export default function QuizContainer({
     if (currentIndex + 1 >= quiz.questions.length) {
       setPhase("result");
       // EXPERIMENT: quiz_result_visual_v1 — 主要 KPI 発火点。
-      trackContentEnd(contentId, contentType, true, ab);
+      // arm は resolveAb() で命令的に取る（上の resolveAb 解説参照）。
+      trackContentEnd(contentId, contentType, true, resolveAb());
     } else {
       setCurrentIndex((prev) => prev + 1);
     }
-  }, [currentIndex, quiz.questions.length, contentId, contentType, ab]);
+  }, [currentIndex, quiz.questions.length, contentId, contentType, resolveAb]);
 
   const handleRetry = useCallback(() => {
     setPhase("intro");

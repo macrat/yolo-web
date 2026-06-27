@@ -206,4 +206,27 @@ describe("QuizContainer — 実験対象セッションの限定（BL-1）", () 
     expect("ab_variant" in payload).toBe(false);
     expect("experiment_id" in payload).toBe(false);
   });
+
+  // EXPERIMENT: quiz_result_visual_v1 — cycle-272 T1b 修正の回帰防止
+  //
+  // BQ 実測（tmp/cycle-272-ab-recording.md）で診断対象 level_end の 20.8% が
+  // null-arm 漏れ（useAbVariant の useEffect→setState→re-render 完了前に
+  // level_end が発火）と判明し、QuizContainer は event handler 内で
+  // `getAbArm()` を命令的に呼んで arm を解決する経路に修正した。
+  //
+  // 本テストは「localStorage 未設定（＝useAbVariant が null を返す状態）でも
+  // personality クイズの level_end には ab_variant/experiment_id が乗る」を
+  // 直接検証する。将来 `resolveAb` が useState/useMemo（再render 前提）経由
+  // に書き戻されれば、このテストが落ちて回帰を捕まえる。
+  //
+  // getAbArm は localStorage が空のとき新規ランダム割当（"A"/"B" 50/50）して
+  // localStorage に書き戻すので、ab_variant は具体値ではなく集合で検証する。
+  test("personality クイズ: arm 未確定（localStorage 未設定）でも level_end に ab_variant/experiment_id が乗る（cycle-272 null-arm 漏れ是正）", async () => {
+    // localStorage は beforeEach で clear 済み。useAbVariant は最初 null を返す。
+    const payload = await playToLevelEnd(makePersonalityQuiz());
+    expect("ab_variant" in payload).toBe(true);
+    expect("experiment_id" in payload).toBe(true);
+    expect(["A", "B"]).toContain(payload.ab_variant);
+    expect(payload.experiment_id).toBe("quiz_result_visual_v1");
+  });
 });
