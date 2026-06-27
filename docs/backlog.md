@@ -2,14 +2,15 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-550 | shareイベント枯渇の調査と是正(28日2件・PV成長エンジン不在) | P2 | 273 | cycle-273着手。**本サイクルは一次接地+原因仮説まで・実装は次サイクル以降**。詳細 cycle-273.md |
 
 ## Queued (すぐに着手できる)
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-550 | shareイベント枯渇の是正(原因仮説H1+H2の最小検証) | P2 | - | cycle-273で原因仮説確定(H1:ResultCard発火0/90日・シェアボタン位置)。次サイクルは結果タイトル直下シェア導線+catchphrase結合介入を4週間。詳細 cycle-273.md |
 | B-548 | kanji-kanaru統計分布バーのコントラスト是正(AA未満) | P3 | - | nakamawakeはcycle-271で是正済。kanji-kanaru側の同型バーが残存。色をフィードバックセル(白文字が機能的)と共有しdarkテーマ依存のため分布バー限定で是正要(一括置換不可)。詳細 cycle-271.md |
 | B-549 | middleware→proxy 移行(Next.js16非推奨) | P4 | - | dev "1 Issue"=`middleware`規約非推奨警告(全ページ・出荷物には影響なし)。`proxy`へ移行で解消。cycle-271接地で確認。 |
+| B-551 | level_end/share の content_id 接頭辞不一致是正(漏斗分析の前提) | P3 | - | `quiz-`接頭辞有無で発火元(ResultCard vs 診断トップ)を弁別する暗黙設計をSSoT化。B-550改修着手前提。詳細 cycle-273.md |
 | B-537 | 診断流入増(character-personality)の追計測と回遊強化 | P2 | - | 着手可(2026-06-25到達=追計測開始可)。煽り/押し付け禁止(cycle-256)・単発質を損なわない回遊。定着確認後に投資。詳細 cycle-257.md |
 | B-534 | 学年×画数の漢字一覧ページの実用性向上(「2画の漢字 小学生」需要) | P3 | - | 辞典移行(9.3.d/e=B-353/B-354)完走で解放。詳細 research/2026-06-21-search-console-unmet-demand.md |
 | B-541 | 現状正しい辞典収録数ハードコードの予防的`.length`化 | P4 | - | colors系「250色」等。現状正しいがB-409/B-536と同型の再発予兆。詳細 cycle-258.md |
