@@ -2,7 +2,7 @@
 id: 273
 description: B-550（cycle-272 で起票したGoal直撃の重大課題：診断サイトの成長エンジンであるシェアが28日2件＝ほぼゼロ）の一次接地と原因仮説。**本サイクルは調査までで実装はしない**——「一次接地→具体的な原因仮説に到達」までを narrow なゴールとし、cycle-270 型の「測定の実演で問いを駐車」とは明確に分けるため、原因仮説を踏まえた改善着手を次サイクル以降に明示的にコミットメント化する。スコープ: (1) ShareButtons / webShare / trackShare の計測契機をコードから正確に把握（特に Web Share API の resolve/reject と GA 発火タイミングの一致）、(2) GA4+BQ で share イベントを arm別/メソッド別(web_share/twitter/line/clipboard)/contentType別/日別に切り分け、(3) 実画面接地（PC＋モバイル）で結果到達からシェアまでの体験を見る、(4) Web Share API 仕様の一次確認、(5) 原因仮説を tmp に記録、(6) reviewer。cycle-272 申し送りに従い PM 自己検証ノートの駆動源帰属を「ルール」に戻す書き方を運用化する。
 started_at: 2026-06-27T19:51:57+0900
-completed_at: 2026-06-27T20:41:32+0900
+completed_at: 2026-06-28T01:51:09+0900
 ---
 
 # サイクル-273
