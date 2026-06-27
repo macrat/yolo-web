@@ -158,7 +158,7 @@
 > **【cycle-272 の前提更新ノート（数値の出所と限界）】** 上記入力（月40〜50セッション）は 2026-06 ベースライン。cycle-272 着手時の実測:
 >
 > - **直近28日 `level_end` = 132**（28日窓・GA4 property 524708437 を `run_report` で取得・月換算 ≈141）。
-> - **7日サンプル（2026-06-20〜26・`tmp/cycle-272-ab-recording.md`）**: 全 level_end = 54、診断対象 = 48 件（88.9%）、うち `experiment_id`/`ab_variant` タグ付き = 38（捕捉率 79.2%）。残り 10 件が cycle-272 T1 で発見した null-arm 漏れ。
+> - **7日サンプル（2026-06-20〜26・`docs/research/2026-06-27-ab-arm-recording-verification.md`）**: 全 level_end = 54、診断対象 = 48 件（88.9%）、うち `experiment_id`/`ab_variant` タグ付き = 38（捕捉率 79.2%）。残り 10 件が cycle-272 T1 で発見した null-arm 漏れ。
 >
 > 数値の外挿（小サンプル・期間混在を承知の上での粗い見立て）:
 >
