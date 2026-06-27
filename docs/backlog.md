@@ -7,7 +7,7 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-550 | shareイベント枯渇の是正(原因仮説H1+H2の最小検証) | P2 | - | cycle-273で原因仮説確定(H1:ResultCard発火0/90日・シェアボタン位置)。次サイクルは結果タイトル直下シェア導線+catchphrase結合介入を4週間。詳細 cycle-273.md |
+| B-550 | shareイベント枯渇(B-545と表裏一体) | P2 | - | cycle-273のH1(シェアボタン位置)は撤回。B-545の下で扱う。詳細 cycle-273.md自己点検 |
 | B-548 | kanji-kanaru統計分布バーのコントラスト是正(AA未満) | P3 | - | nakamawakeはcycle-271で是正済。kanji-kanaru側の同型バーが残存。色をフィードバックセル(白文字が機能的)と共有しdarkテーマ依存のため分布バー限定で是正要(一括置換不可)。詳細 cycle-271.md |
 | B-549 | middleware→proxy 移行(Next.js16非推奨) | P4 | - | dev "1 Issue"=`middleware`規約非推奨警告(全ページ・出荷物には影響なし)。`proxy`へ移行で解消。cycle-271接地で確認。 |
 | B-551 | level_end/share の content_id 接頭辞不一致是正(漏斗分析の前提) | P3 | - | `quiz-`接頭辞有無で発火元(ResultCard vs 診断トップ)を弁別する暗黙設計をSSoT化。B-550改修着手前提。詳細 cycle-273.md |
@@ -106,7 +106,7 @@
 
 | ID | Title | Priority | Notes |
 | --- | --- | --- | --- |
-| B-545 | どのデザインが来訪者に最高の価値を提供するかを検証 | P1 | 着手: cycle-272で答えの仕組みを誠実化・B-526月次読み結論到達まで待機。詳細 cycle-272.md |
+| B-545 | 診断結果体験を来訪者に最高の価値にする(Goal直結) | P1 | 着手: 次サイクル。結果体験の中身そのものに取り組む。詳細 cycle-273.md自己点検 |
 | B-547 | 残ゲーム(irodori/yoji-kimeru/daily)の(new)移行 | P3 | 着手: B-545結論到達まで停止。daily=2PV9秒で成立性も要検討。詳細 cycle-271.md / cycle-272.md |
 | B-544 | 結果ページ§7フルクライマックス化＋catchphrase見せ方統一(N-1) | P2 | 着手: インラインA/B(quiz_result_visual_v1)結論後にB-526協調。固有色/勲章感/伝統色対応＋単独ページ内のcatchphrase囲み統一。詳細 cycle-267.md |
 | B-526 | 最初の実A/B(quiz_result_visual_v1) 月次読み | P1 | 着手: 2026-07-21目安〜結論到達まで月次継続。詳細 visitor-value-measurement.md 論点8.1 |
