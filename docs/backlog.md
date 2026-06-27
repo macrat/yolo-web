@@ -7,7 +7,8 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-547 | 残ゲーム(irodori/yoji-kimeru/daily)を(new)へ＝最高にして全員へ | P2 | - | cycle-271の方法(面ごとデザイン判断+視覚レビュー+全員配信)で1本ずつ。daily=2PV9秒で成立性も実機確認。完走でlegacy撤去(B-337)。詳細 cycle-271.md |
+| B-545 | どのデザインが来訪者に最高の価値を提供するかを検証 | P1 | - | 四度失敗(268/269/270/271)・未了。Goal由来の核心。新デザイン(austere=未検証パッチ)は未検証で診断面はブラインド移行のまま。既存方向を肯定せず核心の不確実性を検証から免除しないこと。詳細cycle-271.md自己点検(4度目の失敗)。 |
+| B-547 | 残ゲーム(irodori/yoji-kimeru/daily)の(new)移行 | P3 | - | **B-545従属**。cycle-271の「検証済みの方法」は撤回。未検証方向へ更にコンテンツを移すのはB-545に向き合う前にやることでない。B-545結論後に再判断。daily=2PV9秒で成立性も要検討。詳細 cycle-271.md |
 | B-548 | kanji-kanaru統計分布バーのコントラスト是正(AA未満) | P3 | - | nakamawakeはcycle-271で是正済。kanji-kanaru側の同型バーが残存。色をフィードバックセル(白文字が機能的)と共有しdarkテーマ依存のため分布バー限定で是正要(一括置換不可)。詳細 cycle-271.md |
 | B-549 | middleware→proxy 移行(Next.js16非推奨) | P4 | - | dev "1 Issue"=`middleware`規約非推奨警告(全ページ・出荷物には影響なし)。`proxy`へ移行で解消。cycle-271接地で確認。 |
 | B-537 | 診断流入増(character-personality)の追計測と回遊強化 | P2 | - | 着手可(2026-06-25到達=追計測開始可)。煽り/押し付け禁止(cycle-256)・単発質を損なわない回遊。定着確認後に投資。詳細 cycle-257.md |
@@ -125,7 +126,7 @@
 | B-229 | GameContainer loadDifficulty の予防的修正 | P4 | 着手: 該当ゲーム残存時。詳細 cycle-127.md |
 | B-091 | テーマ間の横断的なおすすめ機能 | P4 | 着手: ダッシュボードが包含しない場合 |
 | B-219 | AI 画像生成 MCP サーバーの実装 | P2 | 着手: 必要性確認時。詳細 imagen4-proposal.md |
-| B-337 | legacy撤去・統合（Phase 11） | P1 | 着手: Phase10全完了後。検証方法はcycle-271で決着(A/B不要・デザイン判断+視覚レビュー+全員配信)。legacyゲームはB-547で移行後に撤去。詳細 design-migration-plan.md / cycle-271.md |
+| B-337 | legacy撤去・統合（Phase 11） | P1 | 着手: Phase10全完了後。前提注意: 新デザイン方向は未検証(B-545・四度失敗)。legacy撤去は新方向を不可逆確定させるためB-545の価値検証を経ずに進めない。詳細 design-migration-plan.md / cycle-271.md |
 
 ## Done (完了)
 
@@ -133,7 +134,6 @@
 
 | ID | Title | Completed Cycle | Notes |
 | --- | --- | --- | --- |
-| B-545 | (new)移行の来訪者価値の検証方針の決定 | 271 | 三度失敗を断ち決着。検証方法はA/Bでなくデザイン判断+視覚レビュー+全員配信(VVM§8.2訂正)。nakamawake移行で実証。残ゲームB-547。詳細 cycle-271.md |
 | B-528 | cycle-255 計測基盤の自己適用(release別 before/after 回帰確認) | 268(中止) | before/afterは本サイト規模で成立せず前提が無効。全面A/B(B-545)が代替。詳細 cycle-268.md |
 | B-523 | 診断単独結果ページ10ルートを(new)デザインへ移行 | 267 | 主軸診断のクライマックス。A/B凍結の倒錯を是正(単独ページはarm非受領で交絡せず)・旧要素撤去しインライン結果とトーン統一。詳細 cycle-267.md |
 | B-354 | 移行計画 Phase 9.3.e: dictionary yoji系移行（トップ+category+詳細） | 266 | yoji系を(new)austereへ移行＝辞典4系統移行(Phase 9.3)完走。h1欠落是正(kanji/color同型)・クロスリンク維持。詳細 cycle-266.md |
