@@ -2,6 +2,7 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-545 | 診断結果体験を来訪者に最高の価値にする(Goal直結) | P1 | 274 | cycle-274着手。結果体験そのものの価値(楽しい/自分が分かる/見せたくなる)に正面から取り組む。機械的すり替え(ボタン位置/装飾A/B/計測確認)禁止=cycle-268〜273で6度回避してきた本丸。詳細 cycle-273.md自己点検 |
 
 ## Queued (すぐに着手できる)
 
@@ -106,7 +107,6 @@
 
 | ID | Title | Priority | Notes |
 | --- | --- | --- | --- |
-| B-545 | 診断結果体験を来訪者に最高の価値にする(Goal直結) | P1 | 着手: 次サイクル。結果体験の中身そのものに取り組む。詳細 cycle-273.md自己点検 |
 | B-547 | 残ゲーム(irodori/yoji-kimeru/daily)の(new)移行 | P3 | 着手: B-545結論到達まで停止。daily=2PV9秒で成立性も要検討。詳細 cycle-271.md / cycle-272.md |
 | B-544 | 結果ページ§7フルクライマックス化＋catchphrase見せ方統一(N-1) | P2 | 着手: インラインA/B(quiz_result_visual_v1)結論後にB-526協調。固有色/勲章感/伝統色対応＋単独ページ内のcatchphrase囲み統一。詳細 cycle-267.md |
 | B-526 | 最初の実A/B(quiz_result_visual_v1) 月次読み | P1 | 着手: 2026-07-21目安〜結論到達まで月次継続。詳細 visitor-value-measurement.md 論点8.1 |
