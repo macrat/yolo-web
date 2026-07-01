@@ -112,10 +112,12 @@
   outline-offset: 2px;
 }
 
-/* カテゴリラベル。色だけに情報を持たせない（テキストで種別を明記） */
+/* カテゴリラベル。色だけに情報を持たせない（テキストで種別を明記）。
+   色は --accent-strong（ライト白背景で 6.36:1 = WCAG AA 4.5:1 通過。
+   --accent は 3.88:1 で小テキスト AA 未達のため使わない。cycle-276 視覚検証） */
 .cardCategory {
   font-size: 0.8125rem;
-  color: var(--accent);
+  color: var(--accent-strong);
 }
 
 .cardTitle {
@@ -142,7 +144,8 @@
   display: inline-flex;
   align-items: center;
   min-height: 44px;
-  color: var(--accent);
+  /* AA 通過のリンク色（--accent-strong=6.36:1。--accent は 3.88:1 で AA 未達） */
+  color: var(--accent-strong);
   text-decoration: none;
   line-height: 1.7;
 }
@@ -182,7 +185,8 @@
   display: inline-flex;
   align-items: center;
   min-height: 44px;
-  color: var(--accent);
+  /* AA 通過のリンク色（--accent-strong=6.36:1。--accent は 3.88:1 で AA 未達） */
+  color: var(--accent-strong);
   text-decoration: none;
 }
 
