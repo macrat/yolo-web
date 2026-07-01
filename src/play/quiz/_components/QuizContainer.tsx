@@ -77,8 +77,11 @@ export default function QuizContainer({
         block: "start",
       });
     }
-    // tabIndex={-1} の region へプログラム的にフォーカスを移す
-    region.focus();
+    // tabIndex={-1} の region へプログラム的にフォーカスを移す。
+    // N1: preventScroll で focus() 既定のスクロールを抑止し、見え方を上の
+    // scrollIntoView（smooth）に委ねる。preventScroll なしだと focus() の即時
+    // スクロールが smooth を打ち消してジャンプに化ける。
+    region.focus({ preventScroll: true });
   }, [phase]);
 
   const contentType = quiz.meta.type === "personality" ? "diagnosis" : "quiz";
@@ -261,6 +264,12 @@ export default function QuizContainer({
       ? calculateKnowledgeScore(quiz.questions, answers)
       : undefined;
 
+  // N2: result region の読み上げラベルは quizType で出し分ける。この wrapper は
+  // 全 quizType 共通のため固定文言だと knowledge クイズでも「診断結果」と読まれて
+  // しまう（知識クイズは「診断」でなく「クイズ」）。
+  const resultRegionLabel =
+    quiz.meta.type === "personality" ? "診断結果" : "クイズ結果";
+
   return (
     <div
       className={styles.resultPhase}
@@ -269,7 +278,7 @@ export default function QuizContainer({
       ref={resultRegionRef}
       tabIndex={-1}
       role="region"
-      aria-label="診断結果"
+      aria-label={resultRegionLabel}
     >
       {/* 結果本体（主役）を Panel に収める（DESIGN.md §1）。
        * detailedContent の variant 別サブコンポーネント（legacy 結果コンテンツ）は

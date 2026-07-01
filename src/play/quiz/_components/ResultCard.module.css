@@ -52,12 +52,19 @@
   gap: 0.5rem;
 }
 
-/* 「診断完了」バッジ。固有色ではなく成功系の落ち着いた面で静かに承認する */
+/* 「診断完了」バッジ。固有色ではなく成功系の落ち着いた面で静かに承認する。
+ * M1（a11y）: 文字色は「--success-strong そのまま」だと --success-soft 面上で
+ *   light 4.32:1 と WCAG AA（通常テキスト 4.5:1、0.75rem は「大きい文字」非該当）
+ *   未達だった。グローバル --success-* は他所（regex/text-diff 等）で横展開されるため
+ *   触らず、ここでローカルに是正する。--success-strong を --fg 方向へ寄せて濃度を上げる
+ *   （--fg は各モードで面と反対方向＝light は暗色・dark は明色なので、両モードでコントラスト
+ *    が上がる）。実測: light 6.42:1 / dark 11.02:1 でともに 4.5:1 以上。緑の「完了」感は
+ *   背景ティントと文字の緑寄りで保つ（§7 の上品さを維持）。 */
 .medalLabelDone {
   padding: 0.1rem 0.45rem;
   border-radius: var(--r-normal);
   background: var(--success-soft);
-  color: var(--success-strong);
+  color: color-mix(in srgb, var(--success-strong) 70%, var(--fg));
   font-size: 0.75rem;
 }
 

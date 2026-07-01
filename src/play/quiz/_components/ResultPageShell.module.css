@@ -17,6 +17,47 @@
   margin-bottom: 0.5rem;
 }
 
+/* === 勲章ヘッダ（MUST-2：§7 トーン統一・personality 型のみ） ===
+ * インライン ResultCard の勲章（ResultCard.module.css の .medal / .medalIcon /
+ * .medalTitle）と「同じ視覚」に揃えるためのクラス。単独結果ページ /result/[id] に
+ * 着地した第三者にも同じ結果体験を返すのが目的（DESIGN.md §7）。
+ * なぜ値を揃えるか: 象徴タイルのサイズ・面/罫のアルファ・タイトルの級数が両面で一致して
+ * いないと「同じ結果」なのに印象が割れる。以下の数値は ResultCard.module.css の対応する
+ * 値と意図的に一致させている（片方だけ変えると統一が崩れるので両方同時に直すこと）。
+ * 単独ページには「診断完了」バッジは置かない（第三者は完走していない＝偽の完了主張になる）。 */
+.medal {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin: 0 0 0.75rem;
+}
+
+/* 象徴タイル。固有色（--medal-color）は面（低アルファのティント）と罫にのみ使い、
+ * テキストには使わない（§2/§7）。値はインライン .medalIcon と一致。 */
+.medalIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  font-size: 2.25rem;
+  line-height: 1;
+  border-radius: var(--r-normal);
+  background: color-mix(in srgb, var(--medal-color) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--medal-color) 45%, transparent);
+}
+
+/* 固有名（勲章の核）。--fg を維持しサイズで際立たせる。ここは単独ページの主見出し
+ * （h1）なので、インライン .medalTitle（h2・1.75rem/600）と同じ級数に揃える。 */
+.medalTitle {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--fg);
+  margin: 0 0 0.75rem;
+  line-height: 1.35;
+}
+
 .title {
   font-size: 1.75rem;
   font-weight: 700;

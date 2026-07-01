@@ -16,7 +16,7 @@
  * 実験終了時は本ファイルごと削除する。
  */
 
-import { describe, test, expect, vi, beforeEach } from "vitest";
+import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, act } from "@testing-library/react";
 import QuizContainer from "../QuizContainer";
 import type {
@@ -228,5 +228,67 @@ describe("QuizContainer — 実験対象セッションの限定（BL-1）", () 
     expect("experiment_id" in payload).toBe(true);
     expect(["A", "B"]).toContain(payload.ab_variant);
     expect(payload.experiment_id).toBe("quiz_result_visual_v1");
+  });
+});
+
+// NICE-1: 結果リビール（完走→結果で注意を誘導する a11y 挙動）の回帰ガード。
+//
+// ⚠️ この describe は A/B 実験 quiz_result_visual_v1 とは独立した恒久テスト。
+//    ファイル冒頭の注記どおり実験終了で本ファイルを削除する際は、この describe を
+//    別ファイル（例: QuizContainer.reveal.test.tsx）へ退避すること。
+//
+// jsdom で検証可能な範囲に絞る:
+// - 完走（result phase 到達）で result region に role="region" / tabIndex=-1 /
+//   種別別の aria-label（personality→「診断結果」・knowledge→「クイズ結果」）が付く
+// - scrollIntoView が呼ばれ、focus が preventScroll: true 付きで呼ばれる（N1）
+describe("QuizContainer — 結果リビール（NICE-1: a11y 回帰ガード）", () => {
+  let scrollIntoViewSpy: ReturnType<typeof vi.fn>;
+  let focusSpy: ReturnType<typeof vi.spyOn>;
+  // jsdom に元から scrollIntoView が無い場合の復元用（元記述子を退避）。
+  let originalScrollIntoView: PropertyDescriptor | undefined;
+
+  beforeEach(() => {
+    originalScrollIntoView = Object.getOwnPropertyDescriptor(
+      window.HTMLElement.prototype,
+      "scrollIntoView",
+    );
+    // jsdom は scrollIntoView 未実装なので関数を差し込んで spy 化する。
+    // vi.fn() の汎用モック型は DOM メソッドのシグネチャに直接代入できないため、
+    // テストのスタブとして該当メソッド型へ局所的にアサートする（any/ts-expect-error は使わない）。
+    scrollIntoViewSpy = vi.fn();
+    window.HTMLElement.prototype.scrollIntoView =
+      scrollIntoViewSpy as unknown as HTMLElement["scrollIntoView"];
+    focusSpy = vi.spyOn(window.HTMLElement.prototype, "focus");
+  });
+
+  afterEach(() => {
+    focusSpy.mockRestore();
+    if (originalScrollIntoView) {
+      Object.defineProperty(
+        window.HTMLElement.prototype,
+        "scrollIntoView",
+        originalScrollIntoView,
+      );
+    } else {
+      // 元々存在しなかったので削除して環境を元に戻す（delete 演算子の型制約回避）。
+      Reflect.deleteProperty(window.HTMLElement.prototype, "scrollIntoView");
+    }
+  });
+
+  test("personality 完走: result region に role/tabIndex/aria-label=診断結果 が付き、scrollIntoView と focus(preventScroll) が呼ばれる", async () => {
+    // playToLevelEnd は render→完走までを行う（GA payload は本テストでは使わない）。
+    await playToLevelEnd(makePersonalityQuiz());
+    const region = screen.getByRole("region");
+    expect(region).toHaveAttribute("tabindex", "-1");
+    expect(region).toHaveAttribute("aria-label", "診断結果");
+    expect(scrollIntoViewSpy).toHaveBeenCalled();
+    // N1: focus は既定スクロール抑止（preventScroll: true）で呼ばれる。
+    expect(focusSpy).toHaveBeenCalledWith({ preventScroll: true });
+  });
+
+  test("knowledge 完走: result region の aria-label が「クイズ結果」になる（N2）", async () => {
+    await playToLevelEnd(makeKnowledgeQuiz());
+    const region = screen.getByRole("region");
+    expect(region).toHaveAttribute("aria-label", "クイズ結果");
   });
 });

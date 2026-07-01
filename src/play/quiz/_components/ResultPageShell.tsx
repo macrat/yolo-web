@@ -42,6 +42,19 @@ export default function ResultPageShell({
 }: ResultPageShellProps) {
   const slug = quiz.meta.slug;
 
+  // MUST-2（§7 トーン統一）: 単独結果ページのヘッダを、インライン ResultCard の
+  // 勲章と同じ視覚（象徴タイル＋固有名）に揃える。シェア/検索で着地した第三者にも
+  // 「結果＝勲章」の印象を割らずに届ける（DESIGN.md §7「インライン結果と単独結果
+  //  ページの視覚トーンを統一」）。
+  // 適用条件はインラインと同じ「personality 型 かつ result.icon・result.color が両方存在」。
+  // それ以外（knowledge 型・欠落）は現行の素の icon+title にフォールバックする。
+  // 重要: 単独ページには「診断完了」バッジを付けない。第三者は診断を完走していないため、
+  //   完了主張は偽になる。単独ページの勲章＝(象徴タイル＋固有名) のみ。
+  const showMedal =
+    quiz.meta.type === "personality" &&
+    Boolean(result.icon) &&
+    Boolean(result.color);
+
   return (
     <div className={styles.wrapper}>
       <Breadcrumb
@@ -57,8 +70,29 @@ export default function ResultPageShell({
         <p className={styles.quizName}>{quiz.meta.title}の結果</p>
         <p className={styles.quizContext}>{quiz.meta.shortDescription}</p>
 
-        {result.icon && <div className={styles.icon}>{result.icon}</div>}
-        <h1 className={styles.title}>{result.title}</h1>
+        {showMedal ? (
+          // 勲章ヘッダ（§7：無彩の土台に結果固有色が一点効く構図）。
+          // 固有色は象徴タイルの面（低アルファのティント）と罫にのみ使い、全面は塗らない。
+          // タイトルは固有名を勲章の核として際立たせ、色は --fg を維持する（WCAG 1.4.1・
+          // 固有色はテキストに使わない）。h1 は SEO/見出し構造のため維持する。
+          <div className={styles.medal}>
+            {/* 象徴（icon）を主役に。結果固有色を CSS 変数で渡し面のティントと罫に使う
+                （テキスト色には使わない）。情報は下のタイトルが担うため装飾として aria-hidden。 */}
+            <div
+              className={styles.medalIcon}
+              style={{ "--medal-color": result.color } as React.CSSProperties}
+              aria-hidden="true"
+            >
+              {result.icon}
+            </div>
+            <h1 className={styles.medalTitle}>{result.title}</h1>
+          </div>
+        ) : (
+          <>
+            {result.icon && <div className={styles.icon}>{result.icon}</div>}
+            <h1 className={styles.title}>{result.title}</h1>
+          </>
+        )}
 
         {children}
 
