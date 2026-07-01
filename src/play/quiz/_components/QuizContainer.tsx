@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import {
   trackContentStart,
   trackContentEnd,
@@ -48,6 +48,38 @@ export default function QuizContainer({
   const [phase, setPhase] = useState<QuizPhase>("intro");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<QuizAnswer[]>([]);
+
+  // 結果リビール（A：完走→結果で注意を誘導する / a11y）。
+  // result phase の外側 wrapper への参照。phase が "result" になった時に
+  // ここへスクロール＋フォーカスを移し、視界を「遊ぶ前の h1・説明文」から
+  // 「自分の結果」へ移す。ResultCard 自体は自動スクロール副作用で汚さない
+  // （ResultCard 単体テスト・他文脈の安定のため／タスク指示 A）。
+  const resultRegionRef = useRef<HTMLDivElement>(null);
+
+  // A：result phase 到達時に結果領域へスクロールし、フォーカスを移す。
+  // - phase 依存の useEffect。result phase は完走時のみ到達するため直リンク誤発火はしない。
+  // - prefers-reduced-motion: reduce では smooth を使わず即時スクロールする。
+  // - フォーカス移動により、スクリーンリーダ利用者にも結果到達（region）が伝わる。
+  // - jsdom 等 scrollIntoView / matchMedia 未定義環境ではガードして no-op にする。
+  useEffect(() => {
+    if (phase !== "result") return;
+    const region = resultRegionRef.current;
+    if (!region) return;
+
+    const prefersReducedMotion =
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (typeof region.scrollIntoView === "function") {
+      region.scrollIntoView({
+        // reduce 指定時は即時（"auto"）、それ以外は穏当な smooth
+        behavior: prefersReducedMotion ? "auto" : "smooth",
+        block: "start",
+      });
+    }
+    // tabIndex={-1} の region へプログラム的にフォーカスを移す
+    region.focus();
+  }, [phase]);
 
   const contentType = quiz.meta.type === "personality" ? "diagnosis" : "quiz";
   const contentId = "quiz-" + quiz.meta.slug;
@@ -230,7 +262,15 @@ export default function QuizContainer({
       : undefined;
 
   return (
-    <div className={styles.resultPhase}>
+    <div
+      className={styles.resultPhase}
+      // A：完走→結果のリビール対象領域。プログラム的フォーカスの受け皿
+      // （tabIndex={-1}）＋スクリーンリーダ向けに結果領域であることを伝える。
+      ref={resultRegionRef}
+      tabIndex={-1}
+      role="region"
+      aria-label="診断結果"
+    >
       {/* 結果本体（主役）を Panel に収める（DESIGN.md §1）。
        * detailedContent の variant 別サブコンポーネント（legacy 結果コンテンツ）は
        * 引き続き quiz.meta.accentColor を受け取るが、ResultCard 自身の chrome

@@ -399,6 +399,59 @@ const defaultProps = {
   onRetry: vi.fn(),
 };
 
+describe("ResultCard - 勲章ヘッダ（B：§7・personality 型のみ）", () => {
+  // 適用条件: quizType === "personality" かつ result.icon と result.color が両方存在。
+  const medalResult: QuizResult = {
+    id: "type-a",
+    title: "勲章タイプ",
+    description: "勲章の説明です。",
+    icon: "🦊",
+    color: "#c0392b",
+  };
+
+  test("personality + icon + color のとき勲章ヘッダ（診断完了ラベル・象徴・タイプ名）が表示される", () => {
+    const { container } = render(
+      <ResultCard {...defaultProps} result={medalResult} />,
+    );
+    // 到達の承認ラベル（勲章時のみ）
+    expect(screen.getByText("診断完了")).toBeInTheDocument();
+    // 象徴アイコンが主役として表示される
+    expect(screen.getByText("🦊")).toBeInTheDocument();
+    // タイプ名は勲章の核として表示される
+    expect(screen.getByText("勲章タイプ")).toBeInTheDocument();
+    // 固有色は CSS 変数として象徴の面/罫に渡される（テキスト色には使わない）
+    const medalIcon = container.querySelector("[class*='medalIcon']");
+    expect(medalIcon).not.toBeNull();
+    expect(
+      (medalIcon as HTMLElement).style.getPropertyValue("--medal-color"),
+    ).toBe("#c0392b");
+  });
+
+  test("color 欠落時は抑制ヘッダにフォールバック（診断完了ラベル・象徴を出さない）", () => {
+    // baseResult は icon はあるが color なし
+    render(<ResultCard {...defaultProps} />);
+    expect(screen.queryByText("診断完了")).not.toBeInTheDocument();
+    // フォールバック時は象徴アイコンを出さない
+    expect(screen.queryByText("🧪")).not.toBeInTheDocument();
+    // タイプ名と「あなたの結果」ラベルは従来どおり表示される
+    expect(screen.getByText("テスト結果")).toBeInTheDocument();
+    expect(screen.getByText("あなたの結果")).toBeInTheDocument();
+  });
+
+  test("knowledge 型は icon/color があっても勲章を出さずフォールバックする（§7 の方針）", () => {
+    render(
+      <ResultCard
+        {...defaultProps}
+        quizType="knowledge"
+        result={medalResult}
+      />,
+    );
+    expect(screen.queryByText("診断完了")).not.toBeInTheDocument();
+    expect(screen.getByText("勲章タイプ")).toBeInTheDocument();
+    expect(screen.getByText("あなたの結果")).toBeInTheDocument();
+  });
+});
+
 describe("ResultCard - detailedContent未設定", () => {
   test("detailedContentがundefinedの場合、detailedSectionが表示されないこと", () => {
     const { container } = render(<ResultCard {...defaultProps} />);

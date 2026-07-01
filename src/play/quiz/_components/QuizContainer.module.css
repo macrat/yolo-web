@@ -85,3 +85,11 @@
   flex-direction: column;
   gap: 1.5rem;
 }
+
+/* A：結果リビールで領域へプログラム的にフォーカスを移す（tabIndex=-1）。
+ * これはキーボードでタブ到達できる操作要素ではなく、スクリーンリーダに
+ * 結果到達を伝えるためのフォーカス受け皿。領域全体を囲む outline は不要な
+ * ので抑制する（内側の各操作要素は個別に focus outline を持つ）。 */
+.resultPhase:focus {
+  outline: none;
+}

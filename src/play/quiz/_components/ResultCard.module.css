@@ -28,6 +28,74 @@
   margin: 0 0 0.25rem;
 }
 
+/* === 勲章ヘッダ（B/C：§7・personality 型のみ） ===
+ * 無彩の土台の上に結果固有色（--medal-color）が象徴の面・罫として一点効く構図。
+ * 固有色はテキストには使わず（AA 不足回避）、面（低アルファのティント）と罫のみに使う。 */
+.medal {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin: 0 0 0.75rem;
+  /* C：穏当なリビール。opacity 中心＋わずかな立ち上がり。合計 500ms 未満
+   *（.card 全体の fadeIn 0.4s の上に、勲章部だけ僅かに遅らせて立ち上げる）。 */
+  animation: medalReveal 0.45s ease both;
+}
+
+/* 到達の承認ラベル（静かな達成感。煽らない） */
+.medalLabel {
+  font-size: 0.8rem;
+  color: var(--fg-soft);
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* 「診断完了」バッジ。固有色ではなく成功系の落ち着いた面で静かに承認する */
+.medalLabelDone {
+  padding: 0.1rem 0.45rem;
+  border-radius: var(--r-normal);
+  background: var(--success-soft);
+  color: var(--success-strong);
+  font-size: 0.75rem;
+}
+
+/* 象徴アイコン（絵文字）。固有色は背景面（低アルファ）と罫にのみ使う（§2/§7）。
+ * color-mix で固有色を薄く敷き（面）、やや濃いめの固有色を罫に使う。 */
+.medalIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  font-size: 2.25rem;
+  line-height: 1;
+  border-radius: var(--r-normal);
+  background: color-mix(in srgb, var(--medal-color) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--medal-color) 45%, transparent);
+}
+
+/* タイプ名（勲章の核）。--fg を維持し、サイズで際立たせる（bold 多用は避ける） */
+.medalTitle {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--fg);
+  margin: 0;
+  line-height: 1.35;
+}
+
+@keyframes medalReveal {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .title {
   font-size: 1.5rem;
   font-weight: 600;
@@ -108,6 +176,11 @@
 
 @media (prefers-reduced-motion: reduce) {
   .card {
+    animation: none;
+  }
+
+  /* C：reduce 指定時は勲章の動きを無効化（既存 .card と同じ方針） */
+  .medal {
     animation: none;
   }
 }

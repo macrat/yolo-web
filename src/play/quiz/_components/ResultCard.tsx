@@ -583,11 +583,47 @@ export default function ResultCard({
         ).catchphrase
       : null;
 
+  // 勲章 first-view（B：§7 / personality 型のみ）。
+  // 適用条件は「personality 型 かつ 結果自身の象徴 icon と固有色 color が両方存在」。
+  // これ以外（knowledge 型、icon/color 欠落）は現行の抑制ヘッダにフォールバックする
+  // （§7 は knowledge 系に勲章を一律適用しない方針。ResultCard は複数の personality
+  //  診断で共有されるため、特定診断に依存しない汎用の文言・構造にする）。
+  const showMedal =
+    quizType === "personality" && Boolean(result.icon) && Boolean(result.color);
+
   return (
     <div className={styles.card}>
-      {/* 結果ラベル（小見出し）。絵文字アイコンは新デザイン体系で撤去（DESIGN.md §3） */}
-      <p className={styles.resultLabel}>あなたの結果</p>
-      <h2 className={styles.title}>{result.title}</h2>
+      {showMedal ? (
+        // 勲章ヘッダ（§7：無彩の土台に結果固有色が一点効く構図）。
+        // 固有色は象徴の背景面（低アルファのティント）と罫にのみ使い、全面は塗らない。
+        // タイプ名テキストは常に併記し（WCAG 1.4.1・色だけで伝えない）、色は --fg を維持する
+        // （多くの固有色はテキスト色として AA 不足のため固有色をテキストに使わない・DESIGN.md §2/§7）。
+        <div className={styles.medal}>
+          {/* 到達の承認を兼ねた静かなラベル（煽らない・けばけばしくしない） */}
+          <p className={styles.medalLabel}>
+            <span className={styles.medalLabelDone}>診断完了</span>
+            あなたの結果
+          </p>
+          {/* 象徴（icon）を勲章の主役として表示。結果固有色を CSS 変数として渡し、
+              面のティントと罫の色に使う（テキスト色には使わない）。
+              情報はタイプ名テキストが担うため、象徴自体は装飾として aria-hidden。 */}
+          <div
+            className={styles.medalIcon}
+            style={{ "--medal-color": result.color } as React.CSSProperties}
+            aria-hidden="true"
+          >
+            {result.icon}
+          </div>
+          {/* タイプ名は勲章の核。--fg を維持しサイズで際立たせる（bold 多用は避ける・DESIGN.md §3） */}
+          <h2 className={styles.medalTitle}>{result.title}</h2>
+        </div>
+      ) : (
+        <>
+          {/* 抑制ヘッダ（フォールバック）。絵文字アイコンは新デザイン体系で撤去（DESIGN.md §3） */}
+          <p className={styles.resultLabel}>あなたの結果</p>
+          <h2 className={styles.title}>{result.title}</h2>
+        </>
+      )}
       {quizType === "knowledge" &&
         score !== undefined &&
         totalQuestions !== undefined && (
