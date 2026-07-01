@@ -109,9 +109,9 @@
 | ID | Title | Priority | Notes |
 | --- | --- | --- | --- |
 | B-547 | 残ゲーム(irodori/yoji-kimeru/daily)の(new)移行 | P3 | 着手: B-545結論到達まで停止。daily=2PV9秒で成立性も要検討。詳細 cycle-271.md / cycle-272.md |
-| B-544 | 結果ページ§7フルクライマックス化＋catchphrase見せ方統一(N-1) | P2 | cycle-274決定によりA/Bゲート解除。B-545 Finding A(リビール)の一部として判断主導で着手。固有色/勲章感/伝統色対応＋catchphrase囲み統一。詳細 cycle-267.md / cycle-274.md引き継ぎ |
-| B-526 | ~~最初の実A/B 月次読み~~ → cycle-274決定で撤回 | P3 | cycle-274「A/Bで決めない・判断主導」決定によりA/B月次読みは廃止。計測は学習用(GA行動フロー)に転用。詳細 cycle-274.md引き継ぎ |
-| B-527 | 進行中A/B(quiz_result_visual_v1)の撤去 | P1 | cycle-274決定により即撤去(決定を生めず希少な観客を分断)。撤去実装を次サイクルで行う。詳細 cycle-274.md引き継ぎ |
+| B-544 | 結果ページ§7フルクライマックス化＋catchphrase見せ方統一(N-1) | P2 | 着手: インラインA/B(quiz_result_visual_v1)結論後にB-526協調。固有色/勲章感/伝統色対応＋単独ページ内のcatchphrase囲み統一。詳細 cycle-267.md |
+| B-526 | 最初の実A/B(quiz_result_visual_v1) 月次読み | P1 | 着手: 2026-07-21目安〜結論到達まで月次継続。詳細 visitor-value-measurement.md 論点8.1 |
+| B-527 | 最初の実A/B 結論到達時の撤去サイクル化 | P1 | 着手: B-526で判定閾値到達時。詳細 visitor-value-measurement.md 論点8.4 |
 | B-542 | トップ`/`の位置づけ再設計（道具箱→診断中心の新着地構造） | P2 | 着手: 設計＋A/Bまたは追計測駆動。organic集客ほぼ0の道具箱トップを診断から見た構造へ(煽らず単発質維持)。設計前提=cycle-261/B-539(DESIGN.md §7)。詳細 cycle-257.md / cycle-259.md / cycle-261.md |
 | B-521 | cycle-251 漢字辞書CTR改善の効果検証 | P2 | 着手: 2026-07-16目安。詳細 cycle-251.md |
 | B-510 | 道具箱利用計測データの初回分析 | P2 | **cycle-257/B-535に取り込み済(完了)**。詳細 cycle-234.md / cycle-257.md |
