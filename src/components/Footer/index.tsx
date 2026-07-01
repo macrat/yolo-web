@@ -26,6 +26,9 @@ const FOOTER_SECTIONS: {
     title: "ツール",
     links: [
       { label: "ツール一覧", href: "/tools" },
+      // 道具箱 = 実用層（cycle-276 決定(a)で `/` から /toolbox へ降格）。
+      // index 可能な実ページのため footer からも発見できるようにする（N5 是正）。
+      { label: "道具箱", href: "/toolbox" },
       { label: "文字カウンター", href: "/tools/char-count" },
       { label: "JSON 整形", href: "/tools/json-formatter" },
       { label: "色変換", href: "/tools/color-converter" },

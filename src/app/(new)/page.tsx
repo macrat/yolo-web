@@ -64,12 +64,19 @@ export const metadata: Metadata = {
  *
  * 選定根拠（cycle-276 接地）:
  * - 実測で単独最大 PV のキャラ診断（character-personality・全 PV の約34%）を先頭に。
- * - 性格診断（personality）から発見の楽しさが立つものを数件。
- * - 占い（fortune 系）を混ぜて体験の幅を見せる。
- * - traditional-color は「文化 × 診断」（伝統色）で辞典層への橋渡しも兼ねる。
+ * - 主体は性格・キャラ診断（category=personality＝サイト最強カテゴリ・カード上は
+ *   「あなたはどのタイプ？」ラベル）。ただし title は character/animal/music/color と
+ *   話題が異なり、来訪者には話題の幅が見える。
+ * - traditional-color は伝統色で自分を表す診断（category は personality だが、結果色が
+ *   辞典＝伝統色への橋渡しを兼ねる文化的な切り口）。
+ * - daily（category=fortune・ラベル「今日の運勢」）を1枠入れ、性格診断以外の切り口も添える。
+ * - 注記: カテゴリラベルの反復（personality が5枠で同一ラベル）は、結果ごとの固有色・象徴で
+ *   カード自体を見分けやすくする視覚差＝§7 の基調化（cycle-277）で解く。本サイクルは austere 基調。
  *
  * 全リストの複製はしない（/play が担う）。コピー（title/説明/カテゴリ）は
  * レジストリ（単一情報源）から描画時に引くため、ここでは slug のみ持つ。
+ * FEATURED_SLUGS は全て実在 slug（存在検証はテスト src/app/(new)/__tests__/page.test.tsx
+ * が「厳選枠と同数の h3 が描画される」で担保。タイポで slug が握り潰されると数が減り落ちる）。
  */
 const FEATURED_SLUGS = [
   "character-personality",

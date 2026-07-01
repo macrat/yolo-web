@@ -53,9 +53,11 @@ test("厳選した診断カードが /play/<slug> へリンクする（最大の
 test("診断カードの見出しは h3（h1/セクション h2 の下位）", () => {
   render(<Home />);
   const h3s = screen.getAllByRole("heading", { level: 3 });
-  // 厳選カードぶんの h3 が存在する（全リストの複製ではない少数）
-  expect(h3s.length).toBeGreaterThanOrEqual(3);
-  expect(h3s.length).toBeLessThanOrEqual(8);
+  // 厳選カードは FEATURED_SLUGS と同数（現行6枚）を厳密に検証する。
+  // 不正 slug が混入すると page.tsx 側で握り潰されカード数が減るため、
+  // 厳密一致にしてタイポ・レジストリ変更を回帰で検出する（cycle-276 N2 是正）。
+  // 全リスト（20種）の複製ではない少数であることも同時に担保。
+  expect(h3s.length).toBe(6);
 });
 
 test("「すべての診断・占い・ゲームを見る」→ /play への明確な導線がある", () => {

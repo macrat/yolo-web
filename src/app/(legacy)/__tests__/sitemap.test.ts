@@ -20,6 +20,14 @@ describe("sitemap", () => {
     expect(urls).not.toContain(`${BASE_URL}/games`);
   });
 
+  // cycle-276 B-545 決定(a): 道具箱をトップ `/` から実用層 /toolbox へ降格し
+  // index 可能な実ページ化した。sitemap 掲載の回帰ガード（N3 是正）。
+  test("sitemap includes /toolbox", () => {
+    const entries = sitemap();
+    const urls = entries.map((e) => e.url);
+    expect(urls).toContain(`${BASE_URL}/toolbox`);
+  });
+
   test("sitemap includes /play/kanji-kanaru with monthly frequency", () => {
     const entries = sitemap();
     const kanjiEntry = entries.find((e) =>

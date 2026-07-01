@@ -1,7 +1,9 @@
 "use client";
 
 /**
- * ToolboxContent — トップページ（道具箱）のインタラクティブ部分
+ * ToolboxContent — 道具箱ページ `/toolbox` のインタラクティブ部分
+ * （cycle-276 決定(a)でトップ `/` から実用層 /toolbox へ降格。旧コメントの
+ *  「トップページ」は cycle-232〜275 の位置づけで、現在は最上位ページではない）
  *
  * cycle-228 T-31: 全34ツールの full variant 各1枚 +
  *   形ファミリー代表の固定 variant 5枚 = 合計39枚の生きたタイル。
