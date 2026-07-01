@@ -145,16 +145,16 @@ describe("generateWebSiteJsonLd", () => {
     });
   });
 
-  test("description reflects 新コンセプト「日常の傍にある道具」(占い・診断パーク文言の根絶)", () => {
-    // cycle-232 T-2 決定: WebSite JSON-LD は全ページに注入されるサイト自己定義
-    // であり、トップの道具箱化（Phase 10.3）と同時に新コンセプトへ刷新した
+  test("description reflects 診断中心コンセプト (cycle-276 決定(a))", () => {
+    // cycle-276 決定(a): WebSite JSON-LD は全ページに注入されるサイト自己定義
+    // であり、道具箱中心から診断中心（自分を知り、楽しむ）へ一本化した。
     const result = generateWebSiteJsonLd() as Record<string, unknown>;
     const description = result.description as string;
-    // 旧コンセプト（占い・診断パーク）の記述が含まれていないこと
-    expect(description).not.toMatch(/占い|診断/);
-    // 新コンセプト（道具・オンラインツール）の記述が含まれていること
-    expect(description).toContain("オンラインツール");
-    expect(description).toMatch(/道具/);
+    // 中心＝自分を知り、楽しむ体験（診断・占い）が含まれていること
+    expect(description).toMatch(/診断/);
+    expect(description).toContain("自分を知り");
+    // constitution rule 3: AI が運営する実験である旨の明示を必ず残す
+    expect(description).toMatch(/AI.*実験/);
   });
 });
 

@@ -1,20 +1,18 @@
-/* トップページ（道具箱）のスタイル — cycle-232 T-3（Phase 10.3 本公開）
- * DESIGN トークン準拠: --fg / --fg-soft
- * 旧トップ（占い・診断パークのヒーロー等）のスタイルは cycle-232 で全廃した
+/* トップページ（診断中心の着地面）のスタイル — cycle-276 / B-545 決定(a)・B-542
+ *
+ * cycle-232 の道具箱ダッシュボードのスタイルは、道具箱を /toolbox へ降ろした
+ * のに伴い全廃した。ここは診断への発見導線を正面に据える基調面。
+ * DESIGN.md §7 の結果固有色・象徴を主役にした視覚実装（austere 降格・基調化）は
+ * cycle-277 で行う。本ファイルは austere 基調のまま導線を組み替えた第一版。
+ * DESIGN トークン準拠: --fg / --fg-soft / --accent / --border / --r-normal
  */
 
-/* ページ全体のレイアウト。max-width は DESIGN.md §4「画面幅は最大1200px」 */
+/* ページ全体のレイアウト。max-width は DESIGN.md §4「画面幅は最大1200px」
+ * （(new) では --max-width 未定義のためハードコード。blog/tools/play と同様） */
 .page {
   padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
-}
-
-/* 冒頭のサイト説明 Panel（一行コンセプト・AI 運営の明示・発見導線）。
- * 背景・境界線・内側余白は Panel コンポーネントが提供する（DESIGN.md §1。
- * T-6 r1 SF-1 で Panel 収容に変更） */
-.intro {
-  margin-bottom: 2rem;
 }
 
 /* ページ見出し（h1）。about・ブログ詳細の先例に合わせて Panel 外に置く */
@@ -23,6 +21,12 @@
   font-weight: 500;
   margin: 0 0 0.75rem 0;
   color: var(--fg);
+}
+
+/* 冒頭のコンセプト Panel（一行コンセプト・AI 運営の明示）。
+ * 背景・境界線・内側余白は Panel コンポーネントが提供する（DESIGN.md §1） */
+.intro {
+  margin-bottom: 2rem;
 }
 
 /* 一行コンセプト（基本の文字色で主文として見せる） */
@@ -34,14 +38,163 @@
 
 /* AI 運営の明示（constitution rule 3）。補足のトーンだが 16px を維持する */
 .aiNotice {
-  margin: 0 0 0.25rem 0;
+  margin: 0;
   color: var(--fg-soft);
   line-height: 1.7;
 }
 
-/* 道具箱の使い方と /tools への発見導線 */
-.discover {
+/* 主役セクション（自分を発見する体験への導線） */
+.featured {
+  margin-bottom: 2.5rem;
+}
+
+/* セクション見出し + リード文のまとまり */
+.sectionHead {
+  margin-bottom: 1rem;
+}
+
+.sectionTitle {
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin: 0;
+  color: var(--fg);
+}
+
+/* §7「入口ファーストビュー」の意図（何が分かって・どれくらい手軽か）を
+ * 一目で伝えるリード。煽らず簡潔に（DESIGN.md §7 レッドライン） */
+.sectionLead {
+  margin: 0.5rem 0 0 0;
+  color: var(--fg-soft);
+  line-height: 1.7;
+}
+
+/* 診断カードのグリッド。ブレークポイントを増やさず auto-fill で自然に折り返す
+ * （DESIGN.md §4「どの画面幅でも自然に見えるレイアウトを優先」） */
+.cardGrid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+/* grid item を等高にして、内部の card の height:100% を効かせる */
+.cardItem {
+  display: flex;
+}
+
+/* 診断カード。PlayCard（/play 一覧）と同等の Panel ベース見た目に揃える。
+ * カード全体をリンク化し、動詞 CTA・記号を足さない（DESIGN.md §7・cycle-181）。
+ * height:100% で行内のカードを等高にする */
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: var(--r-normal);
+  text-decoration: none;
+  background-color: var(--bg);
+  transition: background-color 0.15s;
+  box-sizing: border-box;
+  /* タップターゲット確保（a11y）。カードは十分大きいが下限を明示 */
+  min-height: 44px;
+}
+
+.card:hover {
+  background-color: var(--bg-soft);
+}
+
+.card:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* カテゴリラベル。色だけに情報を持たせない（テキストで種別を明記） */
+.cardCategory {
+  font-size: 0.8125rem;
+  color: var(--accent);
+}
+
+.cardTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--fg);
+  line-height: 1.5;
+}
+
+.cardDesc {
+  font-size: 0.875rem;
   margin: 0;
   color: var(--fg-soft);
   line-height: 1.7;
+}
+
+/* 「すべての診断・占い・ゲームを見る」→ /play への明確な導線 */
+.allLink {
+  margin: 1.25rem 0 0 0;
+}
+
+.allLinkAnchor {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--accent);
+  text-decoration: none;
+  line-height: 1.7;
+}
+
+.allLinkAnchor:hover {
+  text-decoration: underline;
+}
+
+.allLinkAnchor:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* 二次導線（実用・文化層）。主役にしない控えめな発見リンク */
+.more {
+  margin-bottom: 0;
+}
+
+.moreList {
+  list-style: none;
+  margin: 1rem 0 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.moreItem {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+  line-height: 1.7;
+}
+
+.moreLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.moreLink:hover {
+  text-decoration: underline;
+}
+
+.moreLink:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.moreDesc {
+  color: var(--fg-soft);
 }
