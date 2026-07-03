@@ -3,7 +3,7 @@ import { calcTilePixels } from "../tile-grid";
 
 /**
  * タイルグリッド定数のヘルパー関数境界値テスト。
- * 原典 docs/design-migration-plan.md L106-110 の式を検証する:
+ * 原典 docs/archive/design-migration-plan.md Phase 7.2 の式を検証する:
  *   実サイズ = (128n + 8(n-1))px × (128m + 8(m-1))px
  */
 describe("calcTilePixels", () => {

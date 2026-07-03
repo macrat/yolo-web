@@ -1,7 +1,7 @@
 /**
  * タイルグリッド寸法定数。
  *
- * 原典: docs/design-migration-plan.md L106-110 (Phase 7.2)
+ * 原典: docs/archive/design-migration-plan.md Phase 7.2（cycle-277 アーカイブ・規格は現役）
  *   基本セルサイズ: 1 セル 128px × 128px
  *   セル間マージン: 8px
  *   n × m タイルの実ピクセル: (128n + 8(n-1))px × (128m + 8(m-1))px

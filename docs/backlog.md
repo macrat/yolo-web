@@ -132,7 +132,7 @@
 | B-229 | GameContainer loadDifficulty の予防的修正 | P4 | 着手: 該当ゲーム残存時。詳細 cycle-127.md |
 | B-091 | テーマ間の横断的なおすすめ機能 | P4 | 着手: ダッシュボードが包含しない場合 |
 | B-219 | AI 画像生成 MCP サーバーの実装 | P2 | 着手: 必要性確認時。詳細 imagen4-proposal.md |
-| B-337 | legacy撤去・統合（Phase 11） | P1 | 着手: Phase10全完了後。前提注意: 新デザイン方向は未検証(B-545・四度失敗)。legacy撤去は新方向を不可逆確定させるためB-545の価値検証を経ずに進めない。詳細 design-migration-plan.md / cycle-271.md |
+| B-337 | legacy撤去・統合（Phase 11） | P1 | 着手: Phase10全完了後。前提注意: 新デザイン方向は未検証(B-545・四度失敗)。legacy撤去は新方向を不可逆確定させるためB-545の価値検証を経ずに進めない。詳細 site-unification-plan.md M2 / cycle-271.md |
 
 ## Done (完了)
 

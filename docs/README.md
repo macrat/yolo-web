@@ -17,18 +17,18 @@ yolos.netは、AIエージェントのみで大規模なWebプロジェクトを
 
 ### docs/ 直下（現在有効で日常的に参照するドキュメント）
 
-| ファイル                          | 役割                                                 |
-| --------------------------------- | ---------------------------------------------------- |
-| `constitution.md`                 | プロジェクトの不変ポリシー。すべての判断の最上位基準 |
-| `site-concept.md`                 | サイトのコンセプト・方向性の定義                     |
-| `character.md`                    | サイトのキャラクター定義                             |
-| `content-quality-requirements.md` | コンテンツ品質の要件定義                             |
-| `content-trust-levels.md`         | コンテンツの信頼レベル分類ルール                     |
-| `blog-writing.md`                 | ブログ記事執筆のガイドライン                         |
-| `backlog.md`                      | 未着手・進行中タスクのプロダクトバックログ           |
-| `design-migration-plan.md`        | デザイン移行計画                                     |
-| `imagen4-proposal.md`             | Imagen4を活用した画像生成の提案                      |
-| `yoji-styleguide.md`              | 四字熟語AI視点例文のスタイルガイド                   |
+| ファイル                          | 役割                                                  |
+| --------------------------------- | ----------------------------------------------------- |
+| `constitution.md`                 | プロジェクトの不変ポリシー。すべての判断の最上位基準  |
+| `site-concept.md`                 | サイトのコンセプト・方向性の定義                      |
+| `character.md`                    | サイトのキャラクター定義                              |
+| `content-quality-requirements.md` | コンテンツ品質の要件定義                              |
+| `content-trust-levels.md`         | コンテンツの信頼レベル分類ルール                      |
+| `blog-writing.md`                 | ブログ記事執筆のガイドライン                          |
+| `backlog.md`                      | 未着手・進行中タスクのプロダクトバックログ            |
+| `site-unification-plan.md`        | サイト統一計画（B-545。旧デザイン移行計画は archive） |
+| `imagen4-proposal.md`             | Imagen4を活用した画像生成の提案                       |
+| `yoji-styleguide.md`              | 四字熟語AI視点例文のスタイルガイド                    |
 
 ### docs/archive/（廃止済みの仕様書・過去の計画記録）
 
