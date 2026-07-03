@@ -4,7 +4,7 @@ description: Use this skill to generate well-branded interfaces and assets for y
 user-invocable: true
 ---
 
-> **【コンセプトと再適合（cycle-261 / B-539）】** サイトコンセプトは cycle-257（B-535）の実測に基づき **「自分を知り、楽しむ。そのための場所」（診断中心）** に再センタリングされ（`docs/site-concept.md`）、cycle-261 で本スキル・README.md・`/DESIGN.md`・`.claude/skills/frontend-design/SKILL.md` を一体で診断中心へ再適合した。デザイントークンと UI コンポーネントの抑制された規約は概念中立の基盤として引き続き有効。そのうえで**診断のタッチポイント（診断入口・結果面）に限り**、結果固有色・象徴アイコンを主役にした表現を許す（単一情報源は `/DESIGN.md` §7「診断の視覚言語」）。下記 Quick rules はこの診断例外を織り込み済み（rule 6・10）。確定方向と根拠は `docs/cycles/cycle-261.md`。
+> **【基調の再定義（cycle-277 / B-545）】** サイトの根幹コンセプトは cycle-277 で外部検証を経て **「自分を知り、楽しむ。そのための場所」（診断中心）** に統一確定し（`docs/site-concept.md`・`docs/site-unification-plan.md`）、`/DESIGN.md` は「中心体験の視覚言語＝基調（§7）／実用の領域＝純粋な抑制／austere＝品質バー」へ再構成された。デザイントークンと UI コンポーネントの規約は概念中立の基盤として引き続き有効。中心体験の面（サイトの顔=トップ・診断入口・結果面）では結果固有色・象徴を主役にした表現が基調（単一情報源は `/DESIGN.md` §7「中心体験の視覚言語」・害防止レッドライン含む）。下記 Quick rules の「診断例外」（rule 6・10）は「中心体験の基調」と読み替える。探索根拠 cycle-261.md・決定 cycle-277.md。
 
 Read `README.md` in this skill folder for the full design system. Explore `colors_and_type.css` for tokens and `ui_kits/` for components.
 
