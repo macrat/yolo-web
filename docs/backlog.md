@@ -2,7 +2,6 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-545 | サイトの根幹を統一する(本丸・cycle-277で完了必須) | P1 | 277 | **最終サイクル(バッファ消費済)**。cycle-276は土台無しで断裂出荷→revert済。cycle-277はまずマーケット調査で決定(a)検証→計画破棄再構築(パッチ禁止)・トップ再設計(旧B-542)含め本質統一。詳細cycle-276.md |
 
 ## Queued (すぐに着手できる)
 
@@ -112,6 +111,7 @@
 
 | ID | Title | Priority | Notes |
 | --- | --- | --- | --- |
+| B-558 | cycle-277根幹統一の効果観測 | P2 | 着手: 2026-07-22目安(B-554と同期)。トップ直帰/遷移・診断開始率・TW-1基線(記名診断クエリ147clicks/28日・play URL 218/28日・窓06-05〜06-30)との比較・/toolbox利用。双方向ガード=因果断定禁止。詳細 cycle-277.md T9 |
 | B-547 | 残ゲーム(irodori/yoji-kimeru/daily)の(new)移行 | P3 | 着手: B-545結論到達まで停止。daily=2PV9秒で成立性も要検討。詳細 cycle-271.md / cycle-272.md |
 | B-544 | 結果ページ§7フルクライマックス化＋catchphrase見せ方統一(N-1) | P2 | 着手: インラインA/B(quiz_result_visual_v1)結論後にB-526協調。固有色/勲章感/伝統色対応＋単独ページ内のcatchphrase囲み統一。詳細 cycle-267.md |
 | B-526 | 最初の実A/B(quiz_result_visual_v1) 月次読み | P1 | 着手: 2026-07-21目安〜結論到達まで月次継続。詳細 visitor-value-measurement.md 論点8.1 |
@@ -141,6 +141,4 @@
 
 | ID | Title | Completed Cycle | Notes |
 | --- | --- | --- | --- |
-| B-528 | cycle-255 計測基盤の自己適用(release別 before/after 回帰確認) | 268(中止) | before/afterは本サイト規模で成立せず前提が無効。全面A/B(B-545)が代替。詳細 cycle-268.md |
-| B-523 | 診断単独結果ページ10ルートを(new)デザインへ移行 | 267 | 主軸診断のクライマックス。A/B凍結の倒錯を是正(単独ページはarm非受領で交絡せず)・旧要素撤去しインライン結果とトーン統一。詳細 cycle-267.md |
-| B-354 | 移行計画 Phase 9.3.e: dictionary yoji系移行（トップ+category+詳細） | 266 | yoji系を(new)austereへ移行＝辞典4系統移行(Phase 9.3)完走。h1欠落是正(kanji/color同型)・クロスリンク維持。詳細 cycle-266.md |
+| B-545 | サイトの根幹を統一する(本丸) | 277 | 決定(a)=診断中心を外部検証+4巡レビューで確定し、計画(site-unification-plan.md新規)・DESIGN.md(§7基調化)・自己定義・トップ(§7視覚と一体)・道具箱/toolbox降格・ナビを統一出荷。B-542(トップ再設計)を包含。効果観測はB-558。詳細 cycle-277.md |
