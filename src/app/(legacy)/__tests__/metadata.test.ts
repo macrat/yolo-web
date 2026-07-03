@@ -11,21 +11,20 @@ test("metadata includes twitter card configuration", () => {
   );
 });
 
-test("layout.tsx keywords reflect 診断中心コンセプト (cycle-276 決定(a))", () => {
-  // cycle-276 決定(a): サイト共通 keywords は全ページに継承される自己定義であり、
-  // 道具箱中心から診断中心（自分を知り、楽しむ）へ刷新した。
-  // (legacy) Route Group も sharedMetadata を共有するため同じ keywords になる。
+test("layout.tsx keywords reflect 新コンセプト「日常の傍にある道具」(占い・診断系キーワードの根絶)", () => {
+  // cycle-232 T-2 決定: サイト共通 keywords は全ページに継承される自己定義で
+  // あり、トップの道具箱化（Phase 10.3）と同時にツール系へ刷新した。
+  // (legacy) Route Group も sharedMetadata を共有するため同じ keywords になる
   const keywords = metadata.keywords as string[];
   expect(keywords).toBeDefined();
-  // 新コンセプト（自己発見系）のキーワードが上位に含まれていること
-  expect(keywords).toContain("性格診断");
-  expect(keywords).toContain("占い");
-  // 辞典系（文化コンテンツ）のキーワードも含まれていること
-  expect(keywords).toContain("漢字");
-  // 実用層のオンライン道具にも少数だけ触れていること
+  // 旧コンセプト（占い・診断パーク）のキーワードが含まれていないこと
+  expect(keywords).not.toContain("占い");
+  expect(keywords).not.toContain("性格診断");
+  expect(keywords).not.toContain("無料診断");
+  expect(keywords).not.toContain("AI占い");
+  // 新コンセプト（ツール）のキーワードが含まれていること
   expect(keywords).toContain("オンラインツール");
-  // 旧自己定義の核（道具箱-as-core）を象徴する語は上位から降ろしたこと
-  expect(keywords).not.toContain("道具箱");
+  expect(keywords).toContain("道具箱");
 });
 
 test("metadata includes openGraph configuration", () => {

@@ -9,45 +9,35 @@ test("About page renders heading", () => {
   ).toBeInTheDocument();
 });
 
-test("About page describes the diagnosis-centered concept (know yourself, enjoy)", () => {
-  // cycle-276 決定(a): 自己定義を道具箱中心から「自分を知り、楽しむ場所」へ是正
+test("About page describes the new concept (tools beside daily work)", () => {
   render(<AboutPage />);
   expect(
-    screen.getByText(/「自分を知り、楽しむ」ための場所/),
+    screen.getByText(/日常のちょっとした作業の傍で使える道具を集めたサイト/),
   ).toBeInTheDocument();
 });
 
-test("About page highlights diagnoses and games as the heart", () => {
+test("About page explains the toolbox (in-place tiles and browser persistence)", () => {
   render(<AboutPage />);
   expect(
-    screen.getByRole("heading", { name: /診断とゲームを楽しむ/ }),
+    screen.getByRole("heading", { name: /道具箱（トップページ）の使い方/ }),
   ).toBeInTheDocument();
-  expect(screen.getByText(/性格診断・キャラクター診断/)).toBeInTheDocument();
+  expect(
+    screen.getByText(/各タイルはページを離れずにその場で動きます/),
+  ).toBeInTheDocument();
+  expect(screen.getByText(/お使いのブラウザに保存され/)).toBeInTheDocument();
 });
 
-test("About page keeps tools as a practical layer (dictionary and toolbox mentioned)", () => {
-  render(<AboutPage />);
-  // 「実用的なオンライン道具」は概要と歩き方の2箇所で触れる（実用層として存続）
-  expect(screen.getAllByText(/実用的なオンライン道具/).length).toBeGreaterThan(
-    0,
-  );
-});
-
-test("About page does not define the site as merely a toolbox / online tools collection", () => {
+test("About page does not contain the old concept catchphrase", () => {
   const { container } = render(<AboutPage />);
-  // 旧自己定義（道具箱-as-core）のキャッチフレーズが残っていないこと
-  expect(container.textContent).not.toMatch(
-    /日常のちょっとした作業の傍で使える道具を集めたサイト/,
-  );
-  expect(container.textContent).not.toMatch(/道具箱（トップページ）の使い方/);
+  expect(container.textContent).not.toMatch(/占い・診断の遊園地/);
+  expect(container.textContent).not.toMatch(/占い・診断パーク/);
 });
 
 test("About page links to toolbox, tools, blog, and play", () => {
   render(<AboutPage />);
-  // cycle-276 決定(a): 道具箱はトップ `/` から実用層 /toolbox へ降格
   expect(screen.getByRole("link", { name: "道具箱" })).toHaveAttribute(
     "href",
-    "/toolbox",
+    "/",
   );
   expect(screen.getByRole("link", { name: "ツール一覧" })).toHaveAttribute(
     "href",
@@ -75,11 +65,7 @@ test("About page renders AI disclaimer section", () => {
 test("About page renders disclaimer section", () => {
   render(<AboutPage />);
   expect(
-    screen.getByText(/正確性、完全性、有用性を保証するものではありません/),
-  ).toBeInTheDocument();
-  // 診断・占いの結果は娯楽であり根拠を示すものではない旨の免責（診断中心化に伴い追加）
-  expect(
-    screen.getByText(/娯楽としてお楽しみいただくためのもの/),
+    screen.getByText(/正確性、完全性、有用性に関する保証はいたしません/),
   ).toBeInTheDocument();
 });
 
@@ -91,12 +77,10 @@ test("About page renders GitHub link", () => {
   expect(link).toHaveAttribute("rel", "noopener noreferrer");
 });
 
-test("metadata reflects the diagnosis-centered concept (cycle-276 決定(a))", () => {
+test("metadata reflects the new concept and has no fortune-telling wording", () => {
   const description = metadata.description ?? "";
-  // 新コンセプト: 自分を知り、楽しむ（診断中心）
-  expect(description).toContain("診断");
-  expect(description).toContain("自分を知り");
-  // 実用層の道具にも触れつつ、AI 実験の明示（constitution rule 3）を保つ
-  expect(description).toContain("AI");
+  expect(description).toContain("道具");
+  expect(description).not.toContain("占い");
+  expect(description).not.toContain("診断");
   expect(metadata.title).toBe("このサイトについて | yolos.net");
 });

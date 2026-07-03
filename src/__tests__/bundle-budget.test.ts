@@ -75,12 +75,10 @@ const BUDGETS = {
  * the uncategorisedMax budget.
  */
 const UNCATEGORISED_WHITELIST: ReadonlySet<string> = new Set([
-  // トップ `/` = 診断中心の着地面（cycle-276 B-545 決定(a)）。厳選診断カード＋
-  // 導線のみの軽量ページ（道具箱ダッシュボードは /toolbox へ降格した）。
+  // トップ = 道具箱（cycle-232 B-336 Phase 10.3 で本公開）。生きたタイルを
+  // 並べる道具箱のクライアント JS を含む。旧 /toolbox は `/` へ redirect 化
+  // されルートとしては消滅した（next.config.ts 参照）。
   "/",
-  // 道具箱（cycle-276 B-545 決定(a)で `/` から実用層 /toolbox へ降格）。生きた
-  // タイルを並べる道具箱のクライアント JS を含む（旧トップ `/` が持っていた重み）。
-  "/toolbox",
   "/about",
   "/privacy",
   // 開発者向け新デザインカタログ。noindex 設定済み。(new) Route Group 配下。
