@@ -10,7 +10,8 @@
  * cycle-231: ペルソナ別プリセット5本（toolbox-presets.ts）と選択 UI。
  * cycle-232 T-3（Phase 10.3 本公開）: /toolbox プレビューからトップ `/` へ移設。
  *   デフォルト構成をカタログ全39枚から daily-life プリセット（6枚）へ変更。
- *   ページ見出し・サイト説明はトップページ（(new)/page.tsx）側が持つ。
+ * cycle-277 T6-b（B-545 決定(a)）: トップから /toolbox へ降格・再移設。
+ *   ページ見出し（h1「道具箱」）・metadata は toolbox/page.tsx 側が持つ。
  *
  * ## 来訪者ができること
  *

@@ -1,8 +1,8 @@
-/* ToolboxContent — 道具箱（トップページ本体）のスタイル
+/* ToolboxContent — 道具箱ページ（/toolbox）本体のスタイル
  * cycle-226 T-2 / cycle-230 T-5（追加・削除 UI とドリフト是正）/
- * cycle-232 T-3（Phase 10.3 本公開: ページ枠・見出しはトップページ側へ移管）
+ * cycle-277 T6-b（道具箱を /toolbox へ降格: ページ枠・見出しは toolbox/page.tsx 側）
  * DESIGN トークン準拠: --bg / --fg / --fg-soft / --border / --r-normal
- * ページ全体の max-width 1200px（DESIGN.md §4）は (new)/page.module.css が持つ
+ * ページ全体の max-width 1200px（DESIGN.md §4）は toolbox/page.module.css が持つ
  */
 
 /* 道具箱グリッド: タイルを横並びに折り返して配置
