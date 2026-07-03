@@ -1,25 +1,32 @@
 /**
- * トップページ（道具箱）のテスト — cycle-232 T-3（Phase 10.3 本公開）
+ * トップページ（診断中心の着地面）のテスト — cycle-277 T6-c / B-545 決定(a)
  *
  * 検証観点:
- * - intro: h1 がページに1つ（サイト名）・一行コンセプト・AI 運営の明示
- *   （constitution rule 3）・/tools への発見導線
- * - 道具箱本体: デフォルト構成（daily-life プリセット6枚）が描画される
- *   （空状態を見せない）。道具箱の操作系の網羅検証は
- *   toolbox/__tests__/ToolboxContent.test.tsx が担う
- * - DESIGN.md 準拠: 絵文字なし（旧トップの絵文字装飾を持ち込まない）
- * - metadata: 新コンセプトの description / OGP / twitter / canonical。
- *   旧コンセプト（占い・診断パーク）文言の根絶と noindex の不在
+ * - intro: h1 がページに1つ（サイト名）・自己定義「自分を知り、楽しむ」・
+ *   AI 運営の明示（constitution rule 3）
+ * - 主役セクション: 厳選診断カード（件数・先頭 character-personality・
+ *   全 slug がレジストリに実在・personality/fortune 系に絞る・href が正規パス）と
+ *   /play への全リンク導線
+ * - 二次セクション: 辞典 /dictionary・ツール /tools・道具箱 /toolbox の控えめな導線
+ * - DESIGN.md §3: 絵文字を持ち込まない（象徴絵文字は診断結果面の専用）
+ * - metadata: 診断中心の description / OGP / twitter / canonical・noindex の不在
  */
-import { beforeEach, expect, test } from "vitest";
+import { expect, test } from "vitest";
 import { render, screen } from "@testing-library/react";
 import Home, { metadata } from "../page";
-import { DEFAULT_TOOLBOX_ITEM_IDS } from "../toolbox/toolbox-presets";
+import { playContentBySlug } from "@/play/registry";
+import { getContentPath } from "@/play/paths";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 
-beforeEach(() => {
-  window.localStorage.clear();
-});
+/** 主役セクションに並ぶ厳選診断の slug（page.tsx の FEATURED_SLUGS と同期）。 */
+const EXPECTED_FEATURED_SLUGS = [
+  "character-personality",
+  "word-sense-personality",
+  "animal-personality",
+  "traditional-color",
+  "unexpected-compatibility",
+  "contrarian-fortune",
+];
 
 // ===== intro（サイト説明） =====
 
@@ -30,66 +37,107 @@ test("h1 はページに1つで、サイト名を表示する", () => {
   expect(h1s[0]).toHaveTextContent(SITE_NAME);
 });
 
-test("一行コンセプト（日常の傍にある道具）と AI 運営の明示（rule 3）がある", () => {
+test("自己定義（自分を知り、楽しむ）と AI 運営の明示（rule 3）がある", () => {
   render(<Home />);
   expect(
-    screen.getByText(/日常のちょっとした作業の傍で使える道具/),
+    screen.getByText(/自分を知り、楽しむ。そのための場所。/),
   ).toBeInTheDocument();
   expect(
     screen.getByText(/AIが企画・運営する実験的なサイトです/),
   ).toBeInTheDocument();
 });
 
-test("/tools（すべての道具の一覧）への発見導線がある", () => {
-  render(<Home />);
-  const toolsLink = screen.getByRole("link", { name: "ツール一覧" });
-  expect(toolsLink).toHaveAttribute("href", "/tools");
+// ===== 主役セクション（厳選診断カード） =====
+
+test("厳選診断カードは想定した件数・順序で、全 slug がレジストリに実在する", () => {
+  // page.tsx が参照する EXPECTED_FEATURED_SLUGS がレジストリ（単一情報源）に
+  // すべて存在することを保証する（存在しない slug は描画時に静かに脱落するため）。
+  for (const slug of EXPECTED_FEATURED_SLUGS) {
+    expect(
+      playContentBySlug.get(slug),
+      `"${slug}" がレジストリに存在しない`,
+    ).toBeDefined();
+  }
+  // 先頭は実測集客首位の character-personality（site-unification-plan U1）。
+  expect(EXPECTED_FEATURED_SLUGS[0]).toBe("character-personality");
+  expect(EXPECTED_FEATURED_SLUGS).toHaveLength(6);
 });
 
-// ===== 道具箱本体（デフォルト構成） =====
+test("厳選診断はすべて personality/fortune 系（知識クイズを混ぜない・§7）", () => {
+  // §7: 固有色・象徴を主役にする表現は性格・キャラ診断系で最も効き、知識
+  // クイズ系には一律適用しない。主役カードは診断系に絞る。
+  for (const slug of EXPECTED_FEATURED_SLUGS) {
+    const content = playContentBySlug.get(slug);
+    expect(content?.category).not.toBe("knowledge");
+    expect(content?.category).not.toBe("game");
+  }
+});
 
-test("初回来訪者（localStorage なし）はデフォルト構成（daily-life 6枚）の道具箱を見る", () => {
+test("各診断カードは正規パスへのリンクと、レジストリ由来のタイトルを持つ", () => {
   const { container } = render(<Home />);
-  const tiles = container.querySelectorAll("[class*='tileWrapper']");
-  expect(tiles).toHaveLength(DEFAULT_TOOLBOX_ITEM_IDS.length);
-  // 空状態の案内が出ていない（移行計画 10.3「初回来訪者に空状態を見せない」）
-  expect(screen.queryByText(/道具箱が空です/)).not.toBeInTheDocument();
-  // 道具箱のセクション（プリセット・追加）が h2 として存在し h1 と衝突しない
-  expect(
-    screen.getByRole("heading", { level: 2, name: "プリセットから始める" }),
-  ).toBeInTheDocument();
-  expect(
-    screen.getByRole("heading", { level: 2, name: "タイルを追加" }),
-  ).toBeInTheDocument();
+  for (const slug of EXPECTED_FEATURED_SLUGS) {
+    const content = playContentBySlug.get(slug);
+    if (content === undefined) continue;
+    // href（正規パス = 単一情報源 paths.ts 由来）でカードリンクを特定し、
+    // タイトルがレジストリ由来で描画されていることを併せて確認する。
+    const link = container.querySelector<HTMLAnchorElement>(
+      `a[href="${getContentPath(content)}"]`,
+    );
+    expect(link, `"${slug}" のカードリンクが見つからない`).not.toBeNull();
+    expect(link?.textContent ?? "").toContain(content.title);
+  }
 });
 
-// ===== DESIGN.md 準拠（旧トップの絵文字装飾を持ち込まない） =====
+test("「すべての診断・占い・ゲームを見る」→ /play への導線がある", () => {
+  render(<Home />);
+  const allLink = screen.getByRole("link", {
+    name: "すべての診断・占い・ゲームを見る",
+  });
+  expect(allLink).toHaveAttribute("href", "/play");
+});
+
+// ===== 二次セクション（支え層・道具層への控えめな導線） =====
+
+test("辞典・ツール・道具箱への二次導線がある", () => {
+  render(<Home />);
+  const cases: [string, string][] = [
+    ["辞典", "/dictionary"],
+    ["ツール", "/tools"],
+    ["道具箱", "/toolbox"],
+  ];
+  for (const [label, href] of cases) {
+    const link = screen.getByRole("link", { name: label });
+    expect(link).toHaveAttribute("href", href);
+  }
+});
+
+// ===== DESIGN.md 準拠（トップに絵文字を持ち込まない） =====
 
 test("ページに絵文字を含まない（DESIGN.md §3）", () => {
   const { container } = render(<Home />);
   expect(container.textContent ?? "").not.toMatch(/\p{Extended_Pictographic}/u);
 });
 
-// ===== metadata（新コンセプトへの全面刷新） =====
+// ===== metadata（診断中心） =====
 
 test("metadata title はサイト名そのもの", () => {
   expect(metadata.title).toBe(SITE_NAME);
 });
 
-test("metadata description は新コンセプト（ツール・道具箱）で、占い・診断パーク文言を含まない", () => {
+test("metadata description は診断中心で、旧・道具箱中心の自己定義ではない", () => {
   const description = metadata.description as string;
-  expect(description).toMatch(/ツール/);
-  expect(description).toMatch(/道具箱/);
-  expect(description).not.toMatch(/占い|診断/);
+  expect(description).toMatch(/診断/);
+  expect(description).toMatch(/自分を知り、楽しむ/);
+  // 旧トップの「無料のオンラインツールを集めたサイト」型の自己定義に戻っていない
+  expect(description).not.toMatch(/ツールを集めたサイト/);
 });
 
-test("OGP / twitter description も新コンセプトで、占い・診断パーク文言を含まない", () => {
+test("OGP / twitter description も診断中心で、canonical はサイトルート", () => {
   const og = metadata.openGraph as Record<string, unknown>;
   const twitter = metadata.twitter as Record<string, unknown>;
   for (const description of [og.description, twitter.description]) {
     expect(description).toBeDefined();
-    expect(description as string).toMatch(/ツール/);
-    expect(description as string).not.toMatch(/占い|診断/);
+    expect(description as string).toMatch(/診断/);
   }
   expect(og.url).toBe(BASE_URL);
   expect(og.siteName).toBe(SITE_NAME);
@@ -98,7 +146,5 @@ test("OGP / twitter description も新コンセプトで、占い・診断パー
 
 test("canonical はサイトルートで、noindex（robots）が紛れ込んでいない", () => {
   expect(metadata.alternates?.canonical).toBe(BASE_URL);
-  // 旧 /toolbox プレビューの noindex はページごと消えた。トップは index 可能
-  // （robots 指定なし = (new)/layout.tsx の sharedMetadata で index: true を継承）
   expect(metadata.robots).toBeUndefined();
 });

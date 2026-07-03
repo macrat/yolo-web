@@ -9,11 +9,13 @@ import styles from "./Header.module.css";
 /** サイト全体で固定のナビゲーション項目。
  * 全ページ共通とし、ページごとに差し替える要件はない。
  * 追加・削除は本ファイルを編集する形で行う。
- * 「ツール」を先頭に（cycle-167 コンセプト「日常の傍にある道具」の主軸を視覚的に表現）。
+ * 「遊び」を先頭に（cycle-277 決定(a)＝診断中心への統一。サイトの主軸＝
+ * 自分を知り、楽しむ体験〔/play〕をナビ先頭で表現する。旧「ツール」先頭は
+ * 撤回した道具箱-as-core〔cycle-167〕の名残だった）。
  * 「サイト紹介」は信頼形成のため Header に動線を確保。 */
 const NAV_ITEMS: { label: string; href: string }[] = [
-  { label: "ツール", href: "/tools" },
   { label: "遊び", href: "/play" },
+  { label: "ツール", href: "/tools" },
   { label: "ブログ", href: "/blog" },
   { label: "サイト紹介", href: "/about" },
 ];

@@ -1,23 +1,26 @@
-/* トップページ（道具箱）のスタイル — cycle-232 T-3（Phase 10.3 本公開）
- * DESIGN トークン準拠: --fg / --fg-soft
- * 旧トップ（占い・診断パークのヒーロー等）のスタイルは cycle-232 で全廃した
+/* トップページ（診断中心の着地面）— cycle-277 T6-c / B-545 決定(a)
+ *
+ * DESIGN.md §7「中心体験の視覚言語」を伴う基調面。旧・道具箱ダッシュボードの
+ * スタイルは道具箱を /toolbox へ降ろした際に全廃し（cycle-277）、ここは
+ * 診断への発見導線を正面に据える面へ作り直した。
+ *
+ * §7 の視覚言語: 無彩の土台の上に、各診断カードへ自身の固有色（--card-accent）を
+ * 「淡い色の気配」として最小限だけ効かせる——面（ごく薄いにじみ背景）と
+ * 一点（タイトル上の短い色帯）の2点に集中させ、全面は塗らず、カード群で色が
+ * 氾濫しないよう彩度・面積を絞る（§2 色の使用ルール・§7 レッドライン）。
+ * austere（§1〜§6 の抑制）は「品質バー」として保つ。
+ * DESIGN トークン準拠: --fg / --fg-soft / --accent-strong / --border / --bg / --r-normal
  */
 
-/* ページ全体のレイアウト。max-width は DESIGN.md §4「画面幅は最大1200px」 */
+/* ページ全体のレイアウト。max-width は DESIGN.md §4「画面幅は最大1200px」
+ * （(new) では --max-width 未定義のためハードコード。blog/tools/play と同様） */
 .page {
   padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
 }
 
-/* 冒頭のサイト説明 Panel（一行コンセプト・AI 運営の明示・発見導線）。
- * 背景・境界線・内側余白は Panel コンポーネントが提供する（DESIGN.md §1。
- * T-6 r1 SF-1 で Panel 収容に変更） */
-.intro {
-  margin-bottom: 2rem;
-}
-
-/* ページ見出し（h1）。about・ブログ詳細の先例に合わせて Panel 外に置く */
+/* ページ見出し（h1）。about・ブログ詳細・道具箱の先例に合わせて Panel 外に置く */
 .title {
   font-size: 1.5rem;
   font-weight: 500;
@@ -25,7 +28,13 @@
   color: var(--fg);
 }
 
-/* 一行コンセプト（基本の文字色で主文として見せる） */
+/* 冒頭のコンセプト Panel（自己定義・AI 運営の明示）。
+ * 背景・境界線・内側余白は Panel コンポーネントが提供する（DESIGN.md §1） */
+.intro {
+  margin-bottom: 2rem;
+}
+
+/* 自己定義（基本の文字色で主文として見せる。DESIGN.md §7「最上部で正直に」） */
 .lead {
   margin: 0 0 0.25rem 0;
   color: var(--fg);
@@ -34,14 +43,180 @@
 
 /* AI 運営の明示（constitution rule 3）。補足のトーンだが 16px を維持する */
 .aiNotice {
-  margin: 0 0 0.25rem 0;
+  margin: 0;
   color: var(--fg-soft);
   line-height: 1.7;
 }
 
-/* 道具箱の使い方と /tools への発見導線 */
-.discover {
+/* 主役セクション（自分を発見する体験への導線） */
+.featured {
+  margin-bottom: 2.5rem;
+}
+
+.sectionHead {
+  margin-bottom: 1.25rem;
+}
+
+.sectionTitle {
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin: 0;
+  color: var(--fg);
+}
+
+/* §7「入口ファーストビュー」の意図（何が分かって・どれくらい手軽か）を
+ * 一目で伝えるリード。煽らず簡潔に（DESIGN.md §7 レッドライン） */
+.sectionLead {
+  margin: 0.5rem 0 0 0;
+  color: var(--fg-soft);
+  line-height: 1.7;
+}
+
+/* 診断カードのグリッド。ブレークポイントを増やさず auto-fill で自然に折り返す
+ * （DESIGN.md §4「どの画面幅でも自然に見えるレイアウトを優先」） */
+.cardGrid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+/* grid item を等高にして、内部の card の height:100% を効かせる */
+.cardItem {
+  display: flex;
+}
+
+/* 診断カード。各診断の固有色 --card-accent（page.tsx がインラインで注入）を
+ * §7 の「淡い色の気配」として効かせる。色は面（背景のにじみ）と一点（::before の
+ * 短い色帯）の2点のみに集中させ、テキストには固有色を使わない（AA 担保のため）。
+ * height:100% で行内のカードを等高にする。 */
+.card {
+  /* ダークで暗い固有色が埋もれる場合に備えた帯用の色。既定は固有色そのまま。 */
+  --card-accent-visible: var(--card-accent);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+  height: 100%;
+  padding: 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: var(--r-normal);
+  text-decoration: none;
+  /* 面: 固有色をごく薄く混ぜたにじみ。surface トークン(--bg)と混ぜるため
+   * ライト/ダークそれぞれで自然な淡さになる（§7 全面を塗らない）。 */
+  background-color: color-mix(in oklab, var(--card-accent) 6%, var(--bg));
+  transition: background-color 0.15s;
+  box-sizing: border-box;
+  /* タップターゲット確保（a11y）。カードは十分大きいが下限を明示 */
+  min-height: 44px;
+}
+
+/* ダークテーマでは暗い固有色（例: 伝統色 #0d5661）が暗い面に埋もれるため、
+ * 帯（装飾のみ・情報はテキストが担う）の色を白側へ寄せて視認性を確保する。 */
+:global(:root.dark) .card {
+  --card-accent-visible: color-mix(in oklab, var(--card-accent) 78%, #ffffff);
+}
+
+/* 色の「一点」= タイトル上の短い色帯。純粋な装飾（情報はカテゴリではなく
+ * タイトル文言が担うため、色だけに意味を持たせていない）。 */
+.card::before {
+  content: "";
+  width: 32px;
+  height: 3px;
+  border-radius: var(--r-normal);
+  background-color: var(--card-accent-visible);
+}
+
+.card:hover {
+  background-color: color-mix(in oklab, var(--card-accent) 11%, var(--bg));
+}
+
+.card:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.cardTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--fg);
+  line-height: 1.5;
+}
+
+.cardDesc {
+  font-size: 0.875rem;
   margin: 0;
   color: var(--fg-soft);
   line-height: 1.7;
+}
+
+/* 「すべての診断・占い・ゲームを見る」→ /play への明確な導線。
+ * リンク色は --accent-strong を使う（ライトの --accent は白背景 3.88:1 で
+ * AA 未達=B-556。cycle-276 T6 の教訓）。 */
+.allLink {
+  margin: 1.25rem 0 0 0;
+}
+
+.allLinkAnchor {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--accent-strong);
+  text-decoration: none;
+  line-height: 1.7;
+}
+
+.allLinkAnchor:hover {
+  text-decoration: underline;
+}
+
+.allLinkAnchor:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* 二次導線（支え層=辞典・道具層=ツール/道具箱）。主役を食わない控えめさで置く。 */
+.more {
+  margin-bottom: 0;
+}
+
+.moreList {
+  list-style: none;
+  margin: 1rem 0 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.moreItem {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+  line-height: 1.7;
+}
+
+.moreLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--accent-strong);
+  text-decoration: none;
+}
+
+.moreLink:hover {
+  text-decoration: underline;
+}
+
+.moreLink:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.moreDesc {
+  color: var(--fg-soft);
 }
