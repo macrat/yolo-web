@@ -113,7 +113,7 @@
 | ID | Title | Priority | Notes |
 | --- | --- | --- | --- |
 | B-558 | cycle-277根幹統一の効果観測 | P2 | 着手: 2026-07-22目安(B-554と同期)。トップ直帰/遷移・診断開始率・TW-1基線(記名診断クエリ147clicks/28日・play URL 218/28日・窓06-05〜06-30)との比較・/toolbox利用。双方向ガード=因果断定禁止。詳細 cycle-277.md T9 |
-| B-547 | 残ゲーム(irodori/yoji-kimeru/daily)の(new)移行 | P3 | 着手: B-545結論到達まで停止。daily=2PV9秒で成立性も要検討。詳細 cycle-271.md / cycle-272.md |
+| B-547 | 残ゲーム(irodori/yoji-kimeru/daily)の(new)移行 | P3 | 着手条件: A/B検証方針(cycle-268発端の問い)をsite-unification-plan M1へ明文化してから。daily=2PV9秒で成立性も要検討。詳細 cycle-271.md / cycle-272.md |
 | B-544 | 結果ページ§7フルクライマックス化＋catchphrase見せ方統一(N-1) | P2 | 着手: インラインA/B(quiz_result_visual_v1)結論後にB-526協調。固有色/勲章感/伝統色対応＋単独ページ内のcatchphrase囲み統一。詳細 cycle-267.md |
 | B-526 | 最初の実A/B(quiz_result_visual_v1) 月次読み | P1 | 着手: 2026-07-21目安〜結論到達まで月次継続。詳細 visitor-value-measurement.md 論点8.1 |
 | B-527 | 最初の実A/B 結論到達時の撤去サイクル化 | P1 | 着手: B-526で判定閾値到達時。詳細 visitor-value-measurement.md 論点8.4 |
