@@ -75,9 +75,13 @@ const BUDGETS = {
  * the uncategorisedMax budget.
  */
 const UNCATEGORISED_WHITELIST: ReadonlySet<string> = new Set([
-  // トップ = 道具箱（cycle-232 B-336 Phase 10.3 で本公開）。生きたタイルを
-  // 並べる道具箱のクライアント JS を含む。旧 /toolbox は `/` へ redirect 化
-  // されルートとしては消滅した（next.config.ts 参照）。
+  // 道具箱（cycle-277 B-545 決定(a)で `/` から実用層 /toolbox へ降格・実ページ化）。
+  // 生きたタイルを並べる道具箱のクライアント JS を含む。
+  "/toolbox",
+  // トップ `/`。cycle-277 T6-a/b の時点ではトップの作り直しが別タスクのため、
+  // トップも道具箱（ToolboxContent）を描画しており重みは /toolbox と同じ。
+  // 別タスクで診断中心の着地面へ置き換わったら、軽量化に応じて whitelist から
+  // 外すか判断する（現時点では道具箱を含むため据え置く）。
   "/",
   "/about",
   "/privacy",

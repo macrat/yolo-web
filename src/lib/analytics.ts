@@ -272,7 +272,8 @@ export function trackSearchAbandoned({
 
 /**
  * Where a tile interaction happened:
- * - "toolbox": the tile dashboard on the top page `/`
+ * - "toolbox": the tile dashboard at /toolbox (moved from the top page `/`
+ *   to the utility layer in cycle-277 / B-545 decision(a))
  * - "detail": the tool's own detail page
  */
 export type TileSurface = "toolbox" | "detail";

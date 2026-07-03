@@ -26,6 +26,9 @@ const FOOTER_SECTIONS: {
     title: "ツール",
     links: [
       { label: "ツール一覧", href: "/tools" },
+      // cycle-277 決定(a): 道具箱をトップ `/` から実用層 /toolbox へ降格した際、
+      // 発見導線を保つためフッターに掲載する（機能した道具箱を埋没させない）。
+      { label: "道具箱", href: "/toolbox" },
       { label: "文字カウンター", href: "/tools/char-count" },
       { label: "JSON 整形", href: "/tools/json-formatter" },
       { label: "色変換", href: "/tools/color-converter" },

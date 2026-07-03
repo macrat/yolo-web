@@ -180,9 +180,14 @@ export function generateWebSiteJsonLd(): object {
     "@type": "WebSite",
     name: SITE_NAME,
     url: BASE_URL,
-    // サイト自己定義（cycle-232 T-2 決定で新コンセプトへ刷新。docs/site-concept.md 参照）
+    // サイト自己定義（cycle-277 決定(a)で道具箱中心から診断中心へ一本化。
+    // 中心=自分を知り、楽しむ体験（性格・キャラ診断／占い／ちょっとしたゲーム）。
+    // 文化コンテンツ（辞典）と実用的なオンライン道具は支え・実用層として簡潔に触れる。
+    // 診断は娯楽であり科学的根拠を主張しない（害防止・DESIGN.md §7 レッドライン）。
+    // AI 実験の明示は constitution rule 3 として必ず残す。
+    // docs/research/2026-07-03-market-research-b545.md 決定(a)・docs/site-concept.md 参照）
     description:
-      "日常のちょっとした作業の傍で使える道具を集めたサイト。文字数カウント・JSON整形・単位換算などの無料オンラインツールを、気に入ったものだけ道具箱に並べて使えます。AIが運営する実験サイトです。",
+      "性格診断やキャラクター診断、占い、ちょっとしたゲームを通じて「自分を知り、楽しむ」ためのサイト。漢字・四字熟語・伝統色といった日本語や文化を楽しむ辞典や、文字数カウントなどの実用的なオンライン道具も添えています。AIが運営する実験サイトです。",
     inLanguage: "ja",
     creator: {
       "@type": "Organization",

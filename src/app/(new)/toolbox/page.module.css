@@ -1,0 +1,42 @@
+/* 道具箱ページのスタイル — cycle-277 / B-545 決定(a)
+ *
+ * cycle-232 でトップ `/` にあった道具箱を /toolbox へ降ろした際に、
+ * ページ枠（見出し・intro）のスタイルをこちらへ移した。道具箱本体の
+ * スタイルは ToolboxContent.module.css が持つ。
+ * DESIGN トークン準拠: --fg / --fg-soft
+ */
+
+/* ページ全体のレイアウト。max-width は DESIGN.md §4「画面幅は最大1200px」
+ * （(new) では --max-width 未定義のためハードコード。blog/tools/play と同様） */
+.page {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ページ見出し（h1）。トップ・about・辞典の先例に合わせて Panel 外に置く */
+.title {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin: 0 0 0.75rem 0;
+  color: var(--fg);
+}
+
+/* 冒頭の道具箱説明 Panel。背景・境界線・内側余白は Panel が提供する（DESIGN.md §1） */
+.intro {
+  margin-bottom: 2rem;
+}
+
+/* 道具箱の一行説明（基本の文字色で主文として見せる） */
+.lead {
+  margin: 0 0 0.25rem 0;
+  color: var(--fg);
+  line-height: 1.7;
+}
+
+/* 道具箱の使い方の補足 */
+.discover {
+  margin: 0;
+  color: var(--fg-soft);
+  line-height: 1.7;
+}
