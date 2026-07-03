@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * ToolboxContent — トップページ（道具箱）のインタラクティブ部分
+ * ToolboxContent — 道具箱ページ（/toolbox）のインタラクティブ部分
  *
  * cycle-228 T-31: 全34ツールの full variant 各1枚 +
  *   形ファミリー代表の固定 variant 5枚 = 合計39枚の生きたタイル。

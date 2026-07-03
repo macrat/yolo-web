@@ -20,9 +20,7 @@ import styles from "./page.module.css";
  * - localStorage はオリジン単位のため、旧トップで保存した道具箱構成はそのまま
  *   引き継がれる（/toolbox → / の旧 redirect 撤去後も互換）。
  *
- * 注記（cycle-277 T6-a/b の一時状態）: トップ `/` の作り直しは別タスクのため、
- * このタスク時点ではトップも道具箱を描画する。/toolbox が道具箱の正準 URL で、
- * トップは別タスクで診断中心の着地面へ置き換わる。
+ * /toolbox が道具箱の正準 URL（トップ `/` は cycle-277 T6-c で診断中心の着地面へ置き換え済み）。
  */
 
 const TOOLBOX_DESCRIPTION =

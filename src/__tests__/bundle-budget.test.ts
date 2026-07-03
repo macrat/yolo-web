@@ -78,10 +78,9 @@ const UNCATEGORISED_WHITELIST: ReadonlySet<string> = new Set([
   // 道具箱（cycle-277 B-545 決定(a)で `/` から実用層 /toolbox へ降格・実ページ化）。
   // 生きたタイルを並べる道具箱のクライアント JS を含む。
   "/toolbox",
-  // トップ `/`。cycle-277 T6-a/b の時点ではトップの作り直しが別タスクのため、
-  // トップも道具箱（ToolboxContent）を描画しており重みは /toolbox と同じ。
-  // 別タスクで診断中心の着地面へ置き換わったら、軽量化に応じて whitelist から
-  // 外すか判断する（現時点では道具箱を含むため据え置く）。
+  // トップ `/`。診断中心の軽量な着地面（cycle-277 T6-c で道具箱ダッシュボード
+  // から置き換え済み）。ルートはカテゴリに属さないため未分類 whitelist に残す
+  // （予算免除ではなく uncategorisedMax 50KB の対象＝軽量であることをこのテストが担保する）。
   "/",
   "/about",
   "/privacy",
