@@ -22,7 +22,7 @@
 | B-540 | アンチパターン集の規約準拠クリーンアップ | P1 | - | docs/anti-patterns/全体の規約違反(手順・具体事例の混入)を一般化『やってはいけないこと』+発生番号のみへ是正。手順→knowledge/skill・具体事例→cycle-doc。cycle-269で広範な違反を再確認(例AP-P28/P31)。要レビュー。詳細 cycle-257.md |
 | B-524 | *Content の allTypesLayout 公開型を意味通り命名へ整理 | P1 | - | cycle-254のpill→grid内部マップでdead literal化。AP-I02。retro側(_experiments/)の整理にも注意。詳細 cycle-254.md / cycle-255.md |
 | B-432 | trustLevel フィールド・関連型・テストの完全削除 | P2 | - | 一括完全削除（漸進禁止=AP-I02）。詳細 cycle-200.md |
-| B-505 | Dependabot 脆弱性アラートの調査と対応 | P3 | - | 開3件: esbuild high/low・postcss medium。全て推移依存でビルド時のみ。詳細 cycle-246.md |
+| B-505 | Dependabot 脆弱性アラートの調査と対応 | P2 | - | cycle-277 push時に19件(high3/moderate9/low7)へ増加を確認(cycle-246時点は3件)。増分の調査・対応要。P3→P2昇格。詳細 cycle-246.md |
 | B-517 | 「全タイプ回遊」実装9箇所の共通コンポーネント統一 | P3 | - | OtherTypesNavへ8 variant診断の独自セクションを寄せ単一化。詳細 cycle-249.md |
 | B-323 | SEO・サイトマップの更新 | P3 | - | 残(他診断の結果体験/sitemap/KW)継続。P2→P3降格。詳細 cycle-247.md |
 | B-502 | タイルレジストリ／型契約の再設計 | P3 | - | 全ツールの同一性を構造で強制。P2→P3降格。詳細 cycle-226.md |
