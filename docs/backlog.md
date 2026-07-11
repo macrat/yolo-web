@@ -8,7 +8,7 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-561 | フェーズR: 全ページ一斉デザイン切替(workflow) | P1 | 279 | R-1撤去(道具箱/タイル完全破棄・0クリックツールのプルーニング・旧実験打ち切り記録)→R-2切替(全ルート「店構え」化・route group解消・ナビ/IA・コピー書き直し・T5必達申し送り)→R-3観測開始(EXP-002)。正典 docs/rebuild-plan.md §2 |
+| B-561 | フェーズR: 全ページ一斉デザイン切替(workflow) | P1 | 279 | R-1撤去→R-2全ルート「店構え」化→R-3観測開始。完了時にブログ再判断(cycle-278 T8)。正典 docs/rebuild-plan.md §2・申し送りは cycle-278.md キャリーオーバー |
 | B-494 | Dynamic Workflows 運用知見の knowledge 恒久化 | P2 | 279 | **フェーズR(workflow一斉切替)の前提整備として昇格**。6点の知見をknowledge化。詳細 cycle-225.md |
 | B-540 | アンチパターン集の規約準拠クリーンアップ | P2 | - | docs/anti-patterns/全体の規約違反を一般化+発生番号のみへ是正。詳細 cycle-257.md |
 | B-505 | Dependabot 脆弱性アラートの調査と対応 | P2 | - | cycle-277 push時に19件(high3)。増分の調査・対応要。詳細 cycle-246.md |
