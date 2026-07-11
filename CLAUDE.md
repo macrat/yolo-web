@@ -25,7 +25,7 @@ When multiple approaches exist, always choose the one that maximizes value for t
 
 ## Notes
 
-- **`(legacy)` / `(new)` ディレクトリの意味**: `src/app/(legacy)/` と `src/app/(new)/` の Route Group は、**コンテンツの新旧ではなくデザインシステムの新旧**を表す。`(legacy)/` 配下のコンテンツは現役で運用中であり、デザイン移行の対象になっているだけ。詳細は `docs/site-unification-plan.md`（残移行 M1/M2）参照（旧 `design-migration-plan.md` は cycle-277 でアーカイブ）。M2 ステップ2（legacy 撤去）で `(legacy)/` ディレクトリ削除と同時に**この項目も CLAUDE.md から削除する**こと。
+- **`(legacy)` / `(new)` ディレクトリの意味**: `src/app/(legacy)/` と `src/app/(new)/` の Route Group は、**コンテンツの新旧ではなくデザインシステムの新旧**を表す（`(legacy)/` 配下のコンテンツも現役）。この二分は `docs/rebuild-plan.md` フェーズ R（全ページ一斉切替）で**解消される予定**——切替完了時に Route Group を単一化し、同時に**この項目も CLAUDE.md から削除する**こと。漸進移行の旧計画（site-unification-plan）は cycle-278 でオーナー指示により破棄済み。
 
 ## Roles and Responsibilities
 

@@ -13,7 +13,7 @@ import styles from "./page.module.css";
  *
  * cycle-277 の決定(a)で、サイトの根幹を「自分を知り、楽しむ場所（診断中心）」へ
  * 一本化した（外部マーケット検証つき。docs/research/2026-07-03-market-research-b545.md・
- * docs/site-unification-plan.md U1）。これに伴い、cycle-232 でトップに据えられて
+ * cycle-277 決定）。これに伴い、cycle-232 でトップに据えられて
  * いた道具箱ダッシュボードは実用層として /toolbox へ降ろし（削除ではなく降格）、
  * ここは価値の中心＝診断をサイトの顔に据える基調面へ作り直した。
  *
@@ -63,11 +63,11 @@ export const metadata: Metadata = {
  *
  * 選定根拠:
  * - character-personality: 実測で集客首位（直近4週 organic 着地 146 セッション・
- *   サイト全クリックの過半）。先頭固定（DESIGN.md §7 / site-unification-plan U1）。
+ *   サイト全クリックの過半）。先頭固定（cycle-277 時点の判断。rebuild-plan フェーズ R で再設計予定）。
  * - word-sense-personality: 実測で次点。四字熟語8タイプ＝文化層（辞典）への橋渡し。
  * - animal-personality: 日本固有の動物という題材で発見の幅と色（緑）を足す。
  * - traditional-color: 「文化×診断」＝差別化レーンの体現（伝統色・辞典への橋渡し。
- *   docs/site-concept.md・site-unification-plan U4）。
+ *   docs/site-concept.md）。
  * - unexpected-compatibility: 相性という切り口で「楽しむ／人に見せたくなる」幅を足す。
  * - contrarian-fortune: 占い枠で体験の幅を見せる。
  *

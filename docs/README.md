@@ -17,18 +17,21 @@ yolos.netは、AIエージェントのみで大規模なWebプロジェクトを
 
 ### docs/ 直下（現在有効で日常的に参照するドキュメント）
 
-| ファイル                          | 役割                                                  |
-| --------------------------------- | ----------------------------------------------------- |
-| `constitution.md`                 | プロジェクトの不変ポリシー。すべての判断の最上位基準  |
-| `site-concept.md`                 | サイトのコンセプト・方向性の定義                      |
-| `character.md`                    | サイトのキャラクター定義                              |
-| `content-quality-requirements.md` | コンテンツ品質の要件定義                              |
-| `content-trust-levels.md`         | コンテンツの信頼レベル分類ルール                      |
-| `blog-writing.md`                 | ブログ記事執筆のガイドライン                          |
-| `backlog.md`                      | 未着手・進行中タスクのプロダクトバックログ            |
-| `site-unification-plan.md`        | サイト統一計画（B-545。旧デザイン移行計画は archive） |
-| `imagen4-proposal.md`             | Imagen4を活用した画像生成の提案                       |
-| `yoji-styleguide.md`              | 四字熟語AI視点例文のスタイルガイド                    |
+| ファイル                          | 役割                                                                              |
+| --------------------------------- | --------------------------------------------------------------------------------- |
+| `constitution.md`                 | プロジェクトの不変ポリシー。すべての判断の最上位基準                              |
+| `site-concept.md`                 | サイトのコンセプト・方向性の定義                                                  |
+| `character.md`                    | サイトのキャラクター定義                                                          |
+| `content-quality-requirements.md` | コンテンツ品質の要件定義                                                          |
+| `content-trust-levels.md`         | コンテンツの信頼レベル分類ルール                                                  |
+| `blog-writing.md`                 | ブログ記事執筆のガイドライン                                                      |
+| `backlog.md`                      | 未着手・進行中タスクのプロダクトバックログ                                        |
+| `rebuild-plan.md`                 | サイト作り直し計画（cycle-278 策定・フェーズR=一斉切替/フェーズC=コンセプト適合） |
+| `experiments.md`                  | 実験台帳（仮説→賭け→観測→記録の唯一の台帳）                                       |
+| `japanese-ai-slop.md`             | 日本語のAI臭チェックリスト（文章品質・DESIGN.md §6 と対）                         |
+| `yoji-styleguide.md`              | 四字熟語AI視点例文のスタイルガイド                                                |
+
+ルート直下の `DESIGN.md`（デザインシステム「店構え」）と `docs/site-concept.md` が判断の正典（いずれも cycle-278 でゼロから再導出）。
 
 ### docs/archive/（廃止済みの仕様書・過去の計画記録）
 
@@ -65,7 +68,6 @@ yolos.netは、AIエージェントのみで大規模なWebプロジェクトを
 - `2026-03-16-ai-agent-communication.md` — エージェント間コミュニケーション設計の知見
 - `codegen-patterns.md` — コード生成パターンの知見
 - `css-modules.md` — CSS Modulesに関する知見
-- `dnd-kit.md` — dnd-kitライブラリに関する知見
 - `nextjs.md` — Next.jsに関する知見
 
 ### docs/research/（調査レポート）
@@ -86,17 +88,9 @@ yolos.netは、AIエージェントのみで大規模なWebプロジェクトを
 - `target-user-and-market-research.md` — ターゲットユーザーとマーケット調査
 - `claude-md-context-position-analysis.md` — CLAUDE.mdのコンテキスト配置に関する分析
 
-### docs/targets/（ターゲットユーザー定義）
+### ターゲット定義について（廃止・cycle-278）
 
-サイトのターゲットユーザー像をYAML形式で定義する。コンテンツ制作・サイト設計の判断基準として日常的に参照する。
-
-- `README.md` — ターゲット定義の概要と使い方
-- `自分に似たキャラや自分の性格を知りたい人.yaml`（メイン・診断来訪者）
-- `特定の作業に使えるツールをさっと探している人.yaml`（道具層）
-- `言葉や色の意味をじっくり知りたい人.yaml`（文化層）
-- `AIエージェントやオーケストレーションに興味があるエンジニア.yaml`（ブログ読者）
-- `AIの日記を読み物として楽しむ人.yaml`（ブログ読者）
-- `Webサイト製作を学びたいエンジニア.yaml`（ブログ読者）
+ターゲットユーザー定義の仕組み（旧 docs/targets/）はオーナー指示で廃止した（定義の言葉に頼って実際の利用者の推論を止める傾向が出たため）。来訪者が誰か・市場がどの程度かは、**毎サイクルの中でその都度調査・検討し直す**（docs/rebuild-plan.md §4）。旧定義は docs/archive/targets/ に保存。
 
 ## ライセンス
 

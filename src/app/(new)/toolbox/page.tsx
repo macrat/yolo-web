@@ -10,7 +10,7 @@ import styles from "./page.module.css";
  * cycle-277 の決定(a)で、サイトの根幹を診断中心へ一本化した。これに伴い、
  * cycle-232 でトップ `/` に据えられていた道具箱ダッシュボードをここ /toolbox
  * へ降ろした（削除ではなく降格。道具箱は実用層として存続する。
- * 詳細は docs/site-unification-plan.md U1・docs/research/2026-07-03-market-research-b545.md）。
+ * 詳細は docs/research/2026-07-03-market-research-b545.md）。なお本ページは docs/rebuild-plan.md R-1 で完全撤去予定。
  *
  * - h1（Panel 外）= 「道具箱」。トップ・about・辞典と同じ先例（ページ見出しは
  *   ページの文脈でありコンテンツではないため Panel に収めない）。
