@@ -1,7 +1,7 @@
 # デザイン調査: AI slop アンチパターンと「よろず屋」の視覚言語（cycle-278 T5）
 
 - 目的: 新デザインシステムをゼロから導出する前提調査（オーナー指示: AI slop 的デザインの徹底調査を先行させる）。
-- 調査員3名（英語圏の AI slop / 日本語圏の AI 臭さと信頼要因 / ポジティブ方向=よろずの一貫性）。詳細レポートは tmp/cycle-278/t5-{a,b,c}-\*.md（全出典 URL 付き）。本書はその要点と代表出典の恒久記録。
+- 調査員3名（英語圏の AI slop / 日本語圏の AI 臭さと信頼要因 / ポジティブ方向=よろずの一貫性）。**本書がその恒久記録**（調査員の詳細レポートはサイクル作業ファイルで揮発するため、要点と代表出典をここに引き上げてある。代表出典は本文中に URL で記載）。
 - 注記（記録の誠実さ）: 各レポートの「アクセス日 2026-07-12」は PM が指示文に書いた日付の誤りで、実際のアクセスは 2026-07-11 夜（JST）。
 - 出典の性格: 多くはデザイナー/スタジオの批評記事であり査読研究ではない。「パターンが存在し批評されている事実」は信頼できるが、個別の統計値は参考値。
 
@@ -13,7 +13,7 @@
 - **名指しされる単一の元凶**: Tailwind の `bg-indigo-500` 既定（2019）が無数のチュートリアル/OSS に複製され、学習データを「紫=モダン」で汚染（作者本人が冗談で謝罪）。shadcn/ui は「AI エージェントによるコピペ前提」の設計で既定スタイルの漏出を増幅。
 - 含意: **「良いデザインにして」という言葉の指示は無力。回避は機械的制約（正確な値・ネガティブ指示・検査可能なルール）でモデルの選択肢を畳むことでしか成立しない**。
 
-### 名指しできる主要アンチパターン（禁止として書ける形・出典は t5-a に完備）
+### 名指しできる主要アンチパターン（禁止として書ける形・出典は本書末尾）
 
 - **タイポ**: Inter/Roboto/Open Sans 等の既定 sans を無検討で本文に／見出し1語だけセリフ・イタリック／all-caps ラベル多用／本文モノスペース。
 - **色**: 紫〜青グラデを主役に／全面グラデーション／色付きグロー・色付き box-shadow／意図なき恒常ダーク+中グレー本文／ダークで AA 未達。
@@ -50,3 +50,37 @@
 3. **視覚言語は「店」から引く**: のれん（店号+一本罫）・品書き（罫区切りの一覧——カード乱発の対極）・棚・値札（メタ情報ラベル）・包み（結果成果物）。和モダンの翻訳は枠・罫・語彙まで。
 4. **組版=最大の差別化層**: 日本語の自然なコピー・約物処理・和欧混植・ベタ組み基調・明朝×ゴシックの編集的コントラスト。
 5. **信頼の設計**: 結果を出し惜しみしない・煽らない・広告（AdSense 前提）と本文の分離を最初から設計・AA コントラストとタップ品質を品質バーに。
+
+## 5. 代表出典（実アクセスは 2026-07-11 夜 JST）
+
+**英語圏 AI slop（§1）**
+
+- 925studios "AI Slop Web Design: Complete Guide (2026)" https://www.925studios.co/blog/ai-slop-web-design-guide
+- prg.sh "Why Your AI Keeps Building the Same Purple Gradient Website" https://prg.sh/ramblings/Why-Your-AI-Keeps-Building-the-Same-Purple-Gradient-Website
+- solodesign.cc "AI design slop: the tells, and how I built a tool to catch them" https://solodesign.cc/blog/ai-design-slop-the-tells/
+- freedesignmd "The shadcn trap" https://freedesignmd.com/blog/shadcn-looks-generic
+- dev.to (Alan West) "Why Every AI-Built Website Looks the Same (Blame Tailwind's Indigo-500)" https://dev.to/alanwest/why-every-ai-built-website-looks-the-same-blame-tailwinds-indigo-500-3h2p
+- MindStudio "How to Avoid AI Slop When Using Claude Design" https://www.mindstudio.ai/blog/claude-design-avoid-ai-slop-design-system
+- developersdigest "AI Design Slop: 16 Patterns" https://www.developersdigest.tech/blog/ai-design-slop-and-how-to-spot-it
+- superdesign.dev "Why AI Design Looks Generic (and How to Fix It)" https://superdesign.dev/blog/why-ai-design-looks-generic
+- Wikipedia "Corporate Memphis" https://en.wikipedia.org/wiki/Corporate_Memphis ／ AIGA Eye on Design https://eyeondesign.aiga.org/what-the-think-pieces-about-corporate-memphis-tell-us-about-the-state-of-illustration/
+
+**日本語圏（§2）**
+
+- Web担当者Forum「このサイト怪しいと思う瞬間1位は？」（デザポケ調べ300名） https://webtan.impress.co.jp/n/2025/11/20/50449
+- note nikki「AIで作ったWebサイトがAIっぽく見える理由」 https://note.com/nikki_r2d2/n/ndf9325b559c5
+- zenn「生成AIっぽい文章の特徴をまとめる」 https://zenn.dev/fibujrsl/articles/4958a844214709 ／ malna https://malna.co.jp/blog/why_genai_writing_feels_off/
+- 知識屋「占いアフィリの実態」 https://chishikiya.blog/2025/11/08/fortune-telling-affiliate/
+- ICS MEDIA「Noto Sans JP 最新実装ガイド」 https://ics.media/entry/250718/ ／ Undercurrent「定番Noto Sans JPを改めて考える」 https://udct.co.jp/little-press/rethinking-noto-sans-jp/
+- プレスマン「約物半角＆文字詰めをCSSのみで」 https://www.pressman.ne.jp/archives/24005 ／ FONTPLUS「chws/vchw」 https://fontplus.jp/usage/services/chws-vchw ／ opus-i「palt」 https://opus-i.com/font-feature-settings-palt/
+- SANKOU! https://sankoudesign.com/about/ ／ MUUUUU.ORG https://muuuuu.org/
+
+**ポジティブ方向（§3）**
+
+- Creately "Design System Components" https://creately.com/guides/design-system-components/
+- Azura "Magazine Page Layout: Grid Systems" https://azuramagazine.com/articles/magazine-page-layout-how-to-create-grid-systems ／ Stills https://www.stills.com/articles/design-layout-and-grid-systems/
+- UXPin "Best Design System Examples"（Uber Base／Atlassian／BuzzFeed Solid） https://www.uxpin.com/studio/blog/best-design-system-examples/
+- Figma "Web Design Trends" https://www.figma.com/resource-library/web-design-trends/ ／ Fireart https://fireart.studio/blog/the-best-web-design-trends/
+- yasuhisa.com「コンテンツデザインとラベル」 https://yasuhisa.com/could/article/content-design-process-2/
+- UhiyamaLab「pyftsubset フォント最適化」 https://uhiyama-lab.com/en/blog/webdev/optimize-subset-fonttools/ ／ assist-all「日本語Webフォント比較」 https://lifestyle.assist-all.co.jp/japanese-web-font-comparison-guide/
+- MDN text-decoration https://developer.mozilla.org/en-US/docs/Web/CSS/text-decoration
