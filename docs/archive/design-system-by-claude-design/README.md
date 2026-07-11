@@ -1,3 +1,5 @@
+> **【アーカイブ（cycle-278）】** この文書群は旧デザインシステム（タイル・パネル・austere 世代）の資料であり、cycle-278 のゼロベース再構成（新 `DESIGN.md`「店構え」）に伴い運用を終了した。歴史的参照のためにのみ保存する。
+
 # yolos.net Design System
 
 > **【基調の再定義（cycle-277 / B-545）】** サイトの根幹コンセプトは cycle-277 で外部検証を経て **「自分を知り、楽しむ。そのための場所」（診断中心）** に統一確定した（`docs/site-concept.md`・`docs/site-unification-plan.md`）。`/DESIGN.md` はこれを受けて「austere 基調＋診断限定の例外」から再構成された:
