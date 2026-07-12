@@ -52,9 +52,13 @@ describe("(new)/blog/[slug]/page", () => {
       expect(source).toContain('@/components/ShareButtons"');
     });
 
-    it("page.tsx に <Panel JSX タグが存在すること（コメントのみのマッチを除外）", () => {
-      // "Panel" 文字列ではなく <Panel JSX 開始タグで検証する
-      expect(source).toMatch(/<Panel\b/);
+    // DESIGN.md フェーズ R（C5・cycle-279）: 読み物本文を Panel の矩形コンテナから
+    // 解放し、読む幅 --measure に絞ったテキスト列として直接置く構造へ変換した。
+    // SeriesNav・TOC 等の区画は各コンポーネント自身が罫囲みを持つため、
+    // page.tsx から Panel への依存はなくなった。
+    it("page.tsx は Panel を使わないこと（読み物は矩形パネルに包まない・§4）", () => {
+      expect(source).not.toMatch(/<Panel\b/);
+      expect(source).not.toContain('@/components/Panel"');
     });
 
     it("page.tsx does NOT import TrustLevelBadge", () => {
@@ -160,17 +164,18 @@ describe("(new)/blog/[slug]/page", () => {
 
   // cycle-188/189 の右端ズレ退行防止ガード。cycle-279 フェーズR で のれん/Footer(chrome) は
   // 新デザイン（横パディング=var(--space-16)=§4 の 8px スケール・--max-width）へ移行済み。
-  // blog 本文カラム（下の 1200px/1.25rem）はまだ旧デザインのため、chrome↔本文の完全整列は
-  // C5（blog 移行）で新デザイン基準（中央寄せの --measure 読み幅 or --max-width）に再定義する。
-  // それまでは (a) blog 本文の現状値と (b) chrome の新デザイン値を、別々に guard する。
-  describe("グローバルヘッダー/フッターと本文カラムの横幅整列（cycle-188/189 退行防止・cycle-279で chrome を新デザインへ移行）", () => {
-    it(".contentColumn に max-width: 1200px が定義されていること（旧デザイン・C5で新基準へ）", () => {
-      expect(css).toMatch(/\.contentColumn[^{]*\{[^}]*max-width:\s*1200px/);
+  // C5（blog 移行・本テスト更新時点）で blog 本文カラムも新デザイン基準（--max-width・
+  // --space スケール）へ揃えた。
+  describe("グローバルヘッダー/フッターと本文カラムの横幅整列（cycle-188/189 退行防止・C5で本文も新デザインへ移行）", () => {
+    it(".contentColumn に max-width: var(--max-width) が定義されていること（新デザイン・操作面の最大幅）", () => {
+      expect(css).toMatch(
+        /\.contentColumn[^{]*\{[^}]*max-width:\s*var\(--max-width\)/,
+      );
     });
 
-    it(".contentColumn に padding: 2rem 1.25rem が定義されていること（旧デザイン・C5で新基準へ）", () => {
+    it(".contentColumn の横パディングが var(--space-24) であること（新デザインの 8px スケール）", () => {
       expect(css).toMatch(
-        /\.contentColumn[^{]*\{[^}]*padding:\s*2rem\s+1\.25rem/,
+        /\.contentColumn[^{]*\{[^}]*padding:[^;}]*var\(--space-24\)/,
       );
     });
 
@@ -193,14 +198,17 @@ describe("(new)/blog/[slug]/page", () => {
     });
   });
 
-  describe("page.module.css — ダーク pre 背景色", () => {
-    it("ダーク時の prose pre に --bg-softer（body と異なる）背景が定義されていること", () => {
-      // :global(.dark) .prose pre ルールが存在し、--bg-softer を使うこと
-      expect(css).toMatch(
-        /dark[\s\S]*?prose[\s\S]*?pre|prose[\s\S]*?pre[\s\S]*?dark/,
-      );
-      // --bg-softer（body と同色の --bg-soft ではない）が使われていること
-      expect(css).toContain("--bg-softer");
+  describe("page.module.css — 読む幅とコードブロックの背景", () => {
+    it(".prose が --measure（読む幅）に絞られていること（DESIGN.md §4「本文幅と操作幅」）", () => {
+      expect(css).toMatch(/\.prose[^{]*\{[^}]*max-width:\s*var\(--measure\)/);
+    });
+
+    it("prose pre のフォールバック背景に --paper-2（一段沈む面・light/dark 両対応）が使われていること", () => {
+      expect(css).toMatch(/\.prose pre[^{]*\{[^}]*var\(--paper-2\)/);
+    });
+
+    it("Shiki dual-theme 切替（:global(.dark) .shiki）は維持されていること", () => {
+      expect(css).toMatch(/:global\(\.dark\)\s*\.prose\s*:global\(\.shiki\)/);
     });
   });
 

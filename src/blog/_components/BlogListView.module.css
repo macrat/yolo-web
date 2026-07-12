@@ -1,41 +1,54 @@
-.container {
-  max-width: 1200px;
+/*
+ * ブログ一覧ページのビュー — DESIGN.md フェーズ R「店構え」へ変換。
+ * Panel（旧トークン --fg/--bg/--border 依存の矩形パネル）を廃し、
+ * 他の C2/C3 変換済みトップ面（/tools, /dictionary/humor 等）と同じ
+ * 「.page（--max-width）+ .intro（--measure）」の型へ揃えた。全トークン経由・直書きなし（§10）。
+ */
+
+/* ページ全体: 操作面の最大幅 --max-width(960px)。中央寄せは器の配置で、本文は左揃え（§4）。 */
+.page {
+  max-width: var(--max-width);
   margin: 0 auto;
-  /* 左右 1.25rem は Header/Footer と同じサイト共通値。縦は独自に 2rem。 */
-  padding: 2rem 1.25rem;
+  padding: var(--space-32) var(--space-24) var(--space-64);
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: var(--space-32);
 }
 
-/* Panel が基本スタイルを提供するので追加は最小限（.header への追加が必要な場合はここに書く） */
+/* 名乗り（読む面）: 一行の長さを --measure(約42rem) に絞る（§3）。 */
+.intro {
+  max-width: var(--measure);
+}
 
+/* 店号（h1）。サイズ・明朝・詰めは globals.css の見出し基層が与える。ここは余白のみ調整。 */
 .title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--fg);
-  margin-bottom: 0.5rem;
+  margin: 0 0 var(--space-16);
+  color: var(--ink);
 }
 
+/* 説明: 文章として読ませるので 16px / line-height 1.9（§3）。 */
 .description {
-  font-size: 1rem;
-  color: var(--fg-soft);
-  line-height: 1.7;
+  margin: 0;
+  color: var(--ink);
+  line-height: 1.9;
 }
 
-/* タグページのパンくずナビ */
+/* タグページの疑似パンくず（visible な Breadcrumb コンポーネントは使わず、
+ * 「ブログ / タグ」の軽い導入テキストのみ・JSON-LD は route 側で維持） */
 .tagBreadcrumb {
+  margin: 0 0 var(--space-8);
+  font-family: var(--font-gothic);
   font-size: 0.875rem;
-  color: var(--fg-soft);
-  margin-bottom: 0.5rem;
+  color: var(--ink-2);
 }
 
 .tagBreadcrumb a {
-  color: var(--fg-soft);
+  color: var(--ink-2);
   text-decoration: none;
 }
 
 .tagBreadcrumb a:hover {
   color: var(--accent);
   text-decoration: underline;
+  text-underline-offset: 0.15em;
 }

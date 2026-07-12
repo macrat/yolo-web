@@ -1,46 +1,48 @@
 /*
- * Pagination — ページナビゲーション
- * DESIGN.md §5: border-radius: var(--r-interactive)
- * DESIGN.md §2: フォーカスは outline: 2px solid var(--accent); outline-offset: 2px;
- * DESIGN.md §2: --accent でアクティブ、--fg-soft で非アクティブ
+ * Pagination — ページナビゲーション（DESIGN.md フェーズ R「店構え」へ変換）。
+ *
+ * §4「ページネーションは店構え（罫・文字・現在地朱・ピル禁止）」に従い、塗りの
+ * ボタン・box-shadow・8px 角丸を撤去した。各ページ番号は罫（--rule）で囲んだ
+ * 素の文字。現在地は Header/Footer の nav と同じ流儀で朱の文字色のみ（塗りにしない・
+ * §2「現在地は朱」）。角丸は 0px 基調（--radius）。全トークン経由・直書きなし。
  */
 
 .pagination {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.25rem;
+  gap: var(--space-8);
   flex-wrap: wrap;
-  margin-top: 2rem;
-  padding: 1rem 0;
+  margin-top: var(--space-32);
+  padding: var(--space-16) 0;
 }
 
-/* ページアイテム（link / button 共通ベース） */
+/* ページアイテム（link / button 共通ベース）。タップターゲット 44px を高さで確保（§10）。 */
 .pageItem {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 2.25rem;
-  height: 2.25rem;
-  padding: 0 0.5rem;
-  border: 1px solid var(--border);
-  border-radius: var(--r-interactive);
+  min-width: 2.75rem;
+  height: 2.75rem;
+  padding: 0 var(--space-8);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  font-family: var(--font-gothic);
   font-size: 0.875rem;
-  font-family: inherit;
   line-height: 1;
-  color: var(--fg);
-  background: var(--bg-soft);
+  color: var(--ink);
+  background: transparent;
   text-decoration: none;
   cursor: pointer;
-  box-shadow: var(--shadow-button);
   transition:
-    background 0.15s ease,
+    color 0.15s ease,
     border-color 0.15s ease;
   white-space: nowrap;
 }
 
 .pageItem:hover:not(.disabled):not(.active) {
-  background: var(--bg-softer);
+  color: var(--accent);
+  border-color: var(--accent);
 }
 
 /* フォーカス */
@@ -49,24 +51,23 @@
   outline-offset: 2px;
 }
 
-/* アクティブ（現在ページ） */
+/* アクティブ（現在ページ）: 現在地は朱の文字色のみ（塗りにしない・§2）。 */
 .active {
-  background: var(--accent);
-  color: var(--bg);
+  color: var(--accent);
   border-color: var(--accent);
+  font-weight: 600;
   pointer-events: none;
   cursor: default;
-  box-shadow: none;
 }
 
 /* 無効（prev/next の端点） */
 .disabled {
-  color: var(--fg-softer);
+  color: var(--ink-2);
   background: transparent;
-  border-color: var(--border);
+  border-color: var(--rule);
+  opacity: 0.6;
   cursor: not-allowed;
   pointer-events: none;
-  box-shadow: none;
 }
 
 /* 省略記号 */
@@ -74,10 +75,11 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 2.25rem;
-  height: 2.25rem;
+  min-width: 2.75rem;
+  height: 2.75rem;
+  font-family: var(--font-gothic);
   font-size: 0.875rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   user-select: none;
 }
 
@@ -85,15 +87,17 @@
 .pageNumbers {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: var(--space-8);
 }
 
-/* モバイル: "現在ページ / 総ページ" インジケータ（非表示） */
+/* モバイル: "現在ページ / 総ページ" インジケータ（非表示）。tabular 数字で桁を揃える（§3）。 */
 .mobileIndicator {
   display: none;
+  font-family: var(--font-number);
+  font-variant-numeric: tabular-nums;
   font-size: 0.875rem;
-  color: var(--fg-soft);
-  padding: 0 0.5rem;
+  color: var(--ink-2);
+  padding: 0 var(--space-8);
 }
 
 /* レスポンシブ: モバイルではページ番号を隠してインジケータを表示 */

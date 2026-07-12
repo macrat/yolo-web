@@ -19,7 +19,6 @@ import { BASE_URL } from "@/lib/constants";
 import { formatDate } from "@/lib/date";
 import Breadcrumb from "@/components/Breadcrumb";
 import ShareButtons from "@/components/ShareButtons";
-import Panel from "@/components/Panel";
 import CollapsibleTOC from "@/blog/_components/CollapsibleTOC";
 import TagList from "@/blog/_components/TagList";
 import SeriesNav from "@/blog/_components/SeriesNav";
@@ -114,28 +113,24 @@ export default async function BlogPostPage({ params }: Props) {
         )}
 
         <div className={styles.articleMain}>
-          {/* DESIGN.md §4「パネル入れ子禁止」対応で本文 Panel の外に並列配置 */}
           {post.series && (
-            <Panel className={styles.seriesNavPanel}>
-              <SeriesNav
-                seriesId={post.series}
-                currentSlug={post.slug}
-                seriesPosts={getSeriesPosts(post.series)}
-              />
-            </Panel>
+            <SeriesNav
+              seriesId={post.series}
+              currentSlug={post.slug}
+              seriesPosts={getSeriesPosts(post.series)}
+            />
           )}
 
           {/*
-           * 本文 Panel は as="div"。外側 <article> がブログ記事のセマンティック境界
-           * を提供しているため、<section> にすると AT で「ラベル無しの region」として
-           * 冗長に読み上げられる。
+           * 本文（読み物の店構え・DESIGN.md §3/§4）。Panel の矩形コンテナには包まず、
+           * 読む幅 --measure に絞ったテキスト列として直接置く（§4「本文幅と操作幅」）。
+           * globals.css の `.prose` ユーティリティ（line-height 1.9）と、この
+           * page.module.css の `.prose`（色・幅・要素別組版）を併用する。
            */}
-          <Panel as="div" padding="comfortable">
-            <div
-              className={styles.prose}
-              dangerouslySetInnerHTML={{ __html: post.contentHtml }} // markdownToHtml() 内部で sanitize 済み
-            />
-          </Panel>
+          <div
+            className={`prose ${styles.prose}`}
+            dangerouslySetInnerHTML={{ __html: post.contentHtml }} // markdownToHtml() 内部で sanitize 済み
+          />
 
           <MermaidRenderer />
         </div>
@@ -153,7 +148,7 @@ export default async function BlogPostPage({ params }: Props) {
           />
         </section>
 
-        {/* 関連記事（DESIGN.md §4: 本文 Panel 外の並列配置） */}
+        {/* 関連記事（品書き・DESIGN.md §4） */}
         <RelatedArticles posts={relatedPosts} />
 
         {/*

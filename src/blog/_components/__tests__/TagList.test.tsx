@@ -60,19 +60,22 @@ describe("TagList", () => {
   });
 });
 
-describe("TagList.module.css — 新デザイントークン確認", () => {
-  test("旧トークン（--color-*）が TagList.module.css に残っていないこと", () => {
+describe("TagList.module.css — 新デザイントークン確認（DESIGN.md フェーズ R）", () => {
+  test("旧トークン（--color-* / --fg / --bg / --border / --r-*）が残っていないこと", () => {
     const cssPath = path.resolve(__dirname, "../TagList.module.css");
     const css = fs.readFileSync(cssPath, "utf-8");
-    // legacy トークンが残っていないことを確認
     expect(css).not.toContain("var(--color-");
+    expect(css).not.toMatch(/var\(--fg\b/);
+    expect(css).not.toMatch(/var\(--bg\b/);
+    expect(css).not.toMatch(/var\(--border\b/);
+    expect(css).not.toMatch(/var\(--r-(normal|interactive)\)/);
   });
 
-  test("新トークン（--bg-soft / --fg-soft / --accent 等）が使われていること", () => {
+  test("新トークン（--ink-2 / --rule / --accent 等）が使われていること", () => {
     const cssPath = path.resolve(__dirname, "../TagList.module.css");
     const css = fs.readFileSync(cssPath, "utf-8");
-    // 新デザイントークンが使われていること（背景・文字色・ホバー色）
-    expect(css).toMatch(/var\(--(bg|fg|accent|border)/);
+    // 新デザイントークンが使われていること（文字色・罫・ホバー色）
+    expect(css).toMatch(/var\(--(ink|rule|accent)/);
   });
 });
 

@@ -1,29 +1,33 @@
 /*
- * CollapsibleTOC — 開閉可能な目次のスタイル。
+ * CollapsibleTOC — 開閉可能な目次のスタイル（DESIGN.md フェーズ R「店構え」へ変換）。
  *
  * <details> の summary をクリック領域として、シェブロンで開閉状態を示す。
  * 折りたたまれた状態では、親 .articleBody の :has() ルールにより
  * Grid 列幅が `1fr auto` に切り替わり TOC が縮んで本文が広がる。
+ *
+ * 区画としての罫囲みはこのコンポーネント自身が持つ（§2「一段沈む面」= --paper-2 +
+ * --rule の一本罫。角丸は 0px 基調）。全トークン経由・直書きなし（§10）。
  */
 
 .tocDetails {
-  border: 1px solid var(--border);
-  border-radius: var(--r-normal);
-  padding: 1rem 1.25rem;
-  background: var(--bg-soft);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: var(--space-16) var(--space-24);
+  background: var(--paper-2);
 }
 
 .tocSummary {
-  font-size: 0.9rem;
+  font-family: var(--font-gothic);
+  font-size: 0.9375rem;
   font-weight: 700;
   cursor: pointer;
-  color: var(--fg);
+  color: var(--ink);
   /* デフォルト三角マーカーを消し、自作シェブロンで状態を表現する */
   list-style: none;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-8);
 }
 
 /* Safari/WebKit でも三角マーカー非表示 */
@@ -38,7 +42,7 @@
 
 .tocChevron {
   flex-shrink: 0;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   transition: transform 0.2s ease;
 }
 

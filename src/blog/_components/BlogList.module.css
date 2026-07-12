@@ -1,0 +1,88 @@
+/*
+ * ブログ記事一覧 — 品書き（DESIGN.md フェーズ R「店構え」・§4「一覧の既定は品書き」）。
+ * 罫区切りのリスト（カードのグリッド・box-shadow・角丸装飾は使わない）。
+ * 区切りの主役は --rule の一本罫。全トークン経由・直書きなし（§10）。
+ */
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--rule);
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  padding: var(--space-16) 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+/*
+ * 品名（タイトル）。h2 要素で意味的な見出しを持たせつつ（各行=1記事のアウトライン）、
+ * サイズはリスト行に合わせて縮める（globals.css の見出し基層は h2=31px 既定のため上書き）。
+ */
+.title {
+  margin: 0;
+  font-size: 1.125rem; /* 18px 目安（品書きの品名サイズ） */
+  letter-spacing: 0.01em;
+}
+
+/* 品名リンク: 静止時は墨、hover で朱＋下線（下線はリンク専有・§3）。 */
+.titleLink {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.titleLink:hover {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.titleLink:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* NEW マーク: 塗りバッジではなく朱の文字のみ（器は静か・§2 アクセントは朱の1色）。 */
+.newMark {
+  margin-right: var(--space-8);
+  color: var(--accent);
+  font-family: var(--font-gothic);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+/* ひとこと（description）: 補足の墨。文章として読ませるため 16px/行間で組む（§3）。3行でクランプ。 */
+.description {
+  margin: 0;
+  color: var(--ink-2);
+  font-family: var(--font-gothic);
+  font-size: 1rem;
+  line-height: 1.7;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* 値札（カテゴリ・読了時間）+ 右端メタ（公開日）を横並びに。 */
+.metaRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-8);
+}
+
+.date {
+  flex: 0 0 auto;
+  color: var(--ink-2);
+  font-family: var(--font-number);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.875rem;
+  white-space: nowrap;
+}

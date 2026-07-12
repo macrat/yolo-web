@@ -1,22 +1,28 @@
 /*
- * グローバルヘッダー/フッターの .inner と同じ max-width・padding で
- * サイト上から下まで左右端が揃う。
+ * ブログ記事 — 読み物の店構え（DESIGN.md フェーズ R・§3/§4）。
+ *
+ * Panel（旧トークン依存の矩形パネル）を全廃し、罫と組版だけで組む。本文は読む幅
+ * --measure(約42rem) に絞り、操作面（記事全体の外枠）は --max-width(960px)。
+ * 全トークン経由・直書きなし（§10）。
+ *
+ * グローバルヘッダー/フッターの .inner と同じ左右パディング基調（--space-16 系）に
+ * 揃えるため、横パディングは --space-24 を採用する。
  */
 .contentColumn {
-  max-width: 1200px;
+  max-width: var(--max-width);
   margin: 0 auto;
-  padding: 2rem 1.25rem;
+  padding: var(--space-32) var(--space-24) var(--space-64);
 }
 
 .articleHeader {
-  margin-bottom: 2rem;
+  margin-bottom: var(--space-32);
 }
 
 /* モバイルでは単一カラム、≥1024px で grid に切り替わる（下のメディアクエリ参照） */
 .articleBody {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: var(--space-32);
 }
 
 .articleMain {
@@ -24,94 +30,91 @@
 }
 
 .articleFooter {
-  margin-top: 2rem;
+  margin-top: var(--space-32);
+  max-width: var(--measure);
 }
 
 .title {
-  font-size: 1.75rem;
-  font-weight: 700;
-  line-height: 1.3;
-  color: var(--fg);
-  margin-bottom: 0.75rem;
+  margin: 0 0 var(--space-16);
+  color: var(--ink);
+  max-width: var(--measure);
 }
 
 /*
- * メタ情報: color(--fg-soft) + size(0.8rem) + 余白(margin-bottom) の組み合わせで
- * タイトルとの階層を表現。
+ * メタ情報: --ink-2 + 補助情報の字サイズ（§3）の組み合わせでタイトルとの階層を表現。
  */
 .meta {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  font-size: 0.8rem;
-  color: var(--fg-soft);
+  gap: var(--space-16);
+  font-family: var(--font-gothic);
+  font-size: 0.875rem;
+  color: var(--ink-2);
   flex-wrap: wrap;
-  margin-bottom: 0.75rem;
+  margin-bottom: var(--space-16);
 }
 
+/* カテゴリは色付きピルバッジではなく朱の文字リンク（§2 アクセントは朱の1色・§8 ピル禁止）。 */
 .category {
-  background-color: var(--accent);
-  color: #fff;
-  padding: 0.15rem 0.5rem;
-  border-radius: var(--r-normal);
-  font-size: 0.75rem;
-  font-weight: 600;
+  color: var(--accent);
   text-decoration: none;
 }
 
 .category:hover {
-  background-color: var(--accent-strong);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
 }
 
-/* SeriesNav を包む Panel のマージン調整 */
-.seriesNavPanel {
-  margin-bottom: 1.5rem;
+.category:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 /* articleAside（TOC サイドバー）の幅は Grid によって自動制御されるため個別指定不要 */
 
-/* 本文 prose スタイル。line-height 1.8 は DESIGN.md §3 長文読み物許容値。 */
+/*
+ * 本文 prose スタイル。globals.css の `.prose` ユーティリティ（line-height 1.9）と併用する。
+ * 読む幅 --measure に絞る（§4「本文幅と操作幅」）。
+ */
 .prose {
-  line-height: 1.8;
-  color: var(--fg);
+  max-width: var(--measure);
+  color: var(--ink);
 }
 
+/*
+ * 見出しの font-family/weight/line-height/palt は globals.css の基層（h1〜h6）が
+ * 1.25 倍スケールで既に与える（§3）。ここでは余白と区切り罫だけを足す。
+ */
 .prose h2 {
-  font-size: 1.35rem;
-  font-weight: 700;
-  margin-top: 2rem;
-  margin-bottom: 0.75rem;
-  padding-bottom: 0.25rem;
-  border-bottom: 1px solid var(--border);
-  color: var(--fg);
+  margin-top: var(--space-32);
+  margin-bottom: var(--space-16);
+  padding-bottom: var(--space-8);
+  border-bottom: 1px solid var(--rule);
 }
 
 .prose h3 {
-  font-size: 1.15rem;
-  font-weight: 700;
-  margin-top: 1.5rem;
-  margin-bottom: 0.5rem;
-  color: var(--fg);
+  margin-top: var(--space-24);
+  margin-bottom: var(--space-8);
 }
 
 .prose p {
-  margin-bottom: 1rem;
+  margin: 0 0 var(--space-16);
 }
 
 .prose ul,
 .prose ol {
-  margin-bottom: 1rem;
-  padding-left: 1.5rem;
+  margin: 0 0 var(--space-16);
+  padding-left: var(--space-24);
 }
 
 .prose li {
-  margin-bottom: 0.25rem;
+  margin-bottom: var(--space-8);
 }
 
 .prose code {
-  background-color: var(--bg-soft);
-  padding: 0.15rem 0.35rem;
-  border-radius: var(--r-normal);
+  background-color: var(--paper-2);
+  padding: 0.15em 0.35em;
+  border-radius: var(--radius-sm);
   font-family: var(--font-mono);
   font-size: 0.85em;
 }
@@ -124,20 +127,17 @@
  * テーマ作者が決めた配色と背景色の関係を尊重したほうが、トークンの可読性が高い。
  *
  * `<pre>` 直下に shiki クラスが付かないケース（ハイライト未対応など）の
- * フォールバックとして `--bg-soft` / `--bg-softer` を残す。
+ * フォールバックとして --paper-2（一段沈む面・§2）を使う。--paper-2 は light/dark
+ * 双方で「地より一段沈む」値を持つため、旧実装のような :global(.dark) 個別上書きが
+ * 不要になった（トークン自体がテーマを吸収する）。
  */
 .prose pre {
-  background-color: var(--bg-soft);
-  border: 1px solid var(--border);
-  border-radius: var(--r-normal);
-  padding: 1rem;
+  background-color: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: var(--space-16);
   overflow-x: auto;
-  margin-bottom: 1rem;
-}
-
-/* ダーク時の非ハイライトブロック用フォールバック */
-:global(.dark) .prose pre {
-  background-color: var(--bg-softer);
+  margin: 0 0 var(--space-16);
 }
 
 .prose pre code {
@@ -165,30 +165,33 @@
   text-decoration: var(--shiki-dark-text-decoration) !important;
 }
 
+/*
+ * 引用: 色付きカードにせず、墨の濃淡＋罫で副次情報であることを示す
+ * （§2「副次的な要素は色の不在——墨の濃淡・罫で表す」）。
+ */
 .prose blockquote {
-  border-left: 3px solid var(--accent);
-  padding-left: 1rem;
-  margin-left: 0;
-  margin-bottom: 1rem;
-  color: var(--fg-soft);
+  border-left: 2px solid var(--rule-strong);
+  padding-left: var(--space-16);
+  margin: 0 0 var(--space-16);
+  color: var(--ink-2);
 }
 
 .prose table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 1rem;
+  margin: 0 0 var(--space-16);
 }
 
 .prose th,
 .prose td {
-  border: 1px solid var(--border);
-  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--rule);
+  padding: var(--space-8) var(--space-16);
   text-align: left;
-  font-size: 0.9rem;
+  font-size: 0.9375rem;
 }
 
 .prose th {
-  background-color: var(--bg-soft);
+  background-color: var(--paper-2);
   font-weight: 600;
 }
 
@@ -196,19 +199,12 @@
   font-weight: 700;
 }
 
-.prose a {
-  color: var(--accent);
-  text-decoration: underline;
-}
-
-.prose a:hover {
-  color: var(--accent-strong);
-}
+/* リンクの色・下線は globals.css の要素セレクタ `a` が既に与える（§3 下線はリンク専有）。 */
 
 /* mermaid ラッパー: block にして overflow-x: auto を flex に依存せず機能させる */
 .prose :global(.mermaid) {
   display: block;
-  margin: 1.5rem 0;
+  margin: var(--space-24) 0;
   overflow-x: auto;
 }
 
@@ -221,26 +217,26 @@
 
 /* シェアセクション */
 .shareSection {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--border);
+  max-width: var(--measure);
+  margin-top: var(--space-32);
+  padding-top: var(--space-24);
+  border-top: 1px solid var(--rule);
 }
 
 .shareSectionTitle {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--fg-soft);
-  margin-bottom: 0.75rem;
+  margin: 0 0 var(--space-16);
+  color: var(--ink);
+  font-size: 1.125rem; /* globals.css h2 既定(31px)より縮小。明朝・palt は基層から継承 */
 }
 
 /* 前後ナビゲーション（時系列順。シリーズ記事でも常時表示し最終回でも動線を確保。aria-label で時系列順を SR 向けに明示） */
 .postNav {
   display: flex;
   justify-content: space-between;
-  gap: 1rem;
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--border);
+  gap: var(--space-16);
+  margin-top: var(--space-32);
+  padding-top: var(--space-24);
+  border-top: 1px solid var(--rule);
 }
 
 .prevPost,
@@ -248,7 +244,7 @@
   display: flex;
   flex-direction: column;
   text-decoration: none;
-  color: var(--fg);
+  color: var(--ink);
   max-width: 48%;
 }
 
@@ -257,20 +253,29 @@
   margin-left: auto;
 }
 
+.prevPost:focus-visible,
+.nextPost:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
 .navLabel {
+  font-family: var(--font-gothic);
   font-size: 0.75rem;
-  color: var(--fg-soft);
-  margin-bottom: 0.25rem;
+  color: var(--ink-2);
+  margin-bottom: var(--space-8);
 }
 
 .navTitle {
-  font-size: 0.9rem;
+  font-family: var(--font-mincho);
+  font-size: 0.9375rem;
   font-weight: 600;
   color: var(--accent);
 }
 
 .navTitle:hover {
   text-decoration: underline;
+  text-underline-offset: 0.15em;
 }
 
 /*
@@ -288,7 +293,7 @@
   .articleBody {
     display: grid;
     grid-template-columns: 1fr 220px;
-    gap: 2rem;
+    gap: var(--space-32);
     align-items: start;
   }
 
@@ -317,23 +322,19 @@
     grid-column: 2;
     grid-row: 1;
     position: sticky;
-    top: 1rem;
+    top: var(--space-16);
     align-self: start;
   }
 }
 
 /*
  * モバイルブレークポイント 720px はサイト共通値（Header.module.css / Footer.module.css）。
- * 縦方向 padding のみ縮小し、左右は 1.25rem を維持して
+ * 縦方向 padding のみ縮小し、左右は --space-24 を維持して
  * Header/Footer/本文の左右位置を上から下まで揃える。
  */
 @media (max-width: 720px) {
   .contentColumn {
-    padding: 1.5rem 1.25rem;
-  }
-
-  .title {
-    font-size: 1.4rem;
+    padding: var(--space-24) var(--space-24) var(--space-48);
   }
 
   .postNav {

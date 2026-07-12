@@ -20,6 +20,12 @@ export interface ShinagakiItem {
   tags?: string[];
   /** 行右端に添える短いメタ（更新日・件数など）。任意——空なら描画しない。 */
   meta?: string;
+  /**
+   * `meta` が日付のとき、その機械可読な datetime 値（ISO 8601）。任意——
+   * 与えられると右端メタを `<time dateTime={metaDateTime}>` で包み、意味的な日付にする。
+   * 件数など日付でないメタのときは渡さない（プレーンな `<span>` のまま）。
+   */
+  metaDateTime?: string;
 }
 
 export interface ShinagakiProps {
@@ -74,7 +80,13 @@ export default function Shinagaki({
               {item.tags ? <NefudaGroup labels={item.tags} /> : null}
             </div>
             {item.meta && item.meta.trim() !== "" ? (
-              <span className={styles.meta}>{item.meta}</span>
+              item.metaDateTime ? (
+                <time className={styles.meta} dateTime={item.metaDateTime}>
+                  {item.meta}
+                </time>
+              ) : (
+                <span className={styles.meta}>{item.meta}</span>
+              )
             ) : null}
           </li>
         ))}

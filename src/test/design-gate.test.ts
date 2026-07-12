@@ -104,6 +104,20 @@ const NEW_DESIGN_CSS = [
   "src/app/\\(new\\)/play/page.module.css",
   "src/app/\\(new\\)/about/page.module.css",
   "src/app/\\(new\\)/privacy/page.module.css",
+  // ブログクラスタ（フェーズR・C5 変換済み）。一覧=品書き・記事=読み物の店構えへ一貫変換。
+  // 記事詳細（[slug] は * で受ける）。
+  "src/app/\\(new\\)/blog/*/page.module.css",
+  // 一覧系共有部品（6 ルートすべてから呼ばれる）。
+  "src/blog/_components/BlogListView.module.css",
+  "src/blog/_components/BlogFilterableList.module.css",
+  "src/blog/_components/BlogList.module.css", // 品書き化された記事一覧（旧 BlogGrid+BlogCard を統合）
+  // 記事詳細の共有部品（タグ値札・シリーズナビ・目次）。
+  "src/blog/_components/TagList.module.css",
+  "src/blog/_components/SeriesNav.module.css",
+  "src/blog/_components/CollapsibleTOC.module.css",
+  "src/blog/_components/TableOfContents.module.css",
+  // ページネーション（一覧系共有・店構え変換済み。/storybook からも参照されるが対象外）。
+  "src/components/Pagination/**/*.module.css",
 ];
 const NEW_DESIGN_TSX = [
   "src/app/\\(new\\)/page.tsx", // トップ（店構え・C2 変換）。インライン style の禁止を検査
@@ -149,6 +163,26 @@ const NEW_DESIGN_TSX = [
   "src/app/\\(new\\)/play/page.tsx",
   "src/app/\\(new\\)/about/page.tsx",
   "src/app/\\(new\\)/privacy/page.tsx",
+  // ブログクラスタ（フェーズR・C5 変換済み）。一覧 6 route + 記事詳細。インライン style の禁止を検査。
+  "src/app/\\(new\\)/blog/page.tsx",
+  "src/app/\\(new\\)/blog/page/*/page.tsx",
+  "src/app/\\(new\\)/blog/category/*/page.tsx",
+  "src/app/\\(new\\)/blog/category/*/page/*/page.tsx",
+  "src/app/\\(new\\)/blog/tag/*/page.tsx",
+  "src/app/\\(new\\)/blog/tag/*/page/*/page.tsx",
+  "src/app/\\(new\\)/blog/*/page.tsx", // 記事詳細（[slug] は * で受ける）
+  // 一覧系共有部品。
+  "src/blog/_components/BlogListView.tsx",
+  "src/blog/_components/BlogFilterableList.tsx",
+  "src/blog/_components/BlogList.tsx", // 品書き化された記事一覧（旧 BlogGrid+BlogCard を統合）
+  // 記事詳細の共有部品（タグ値札・シリーズナビ・目次・関連記事）。
+  "src/blog/_components/TagList.tsx",
+  "src/blog/_components/SeriesNav.tsx",
+  "src/blog/_components/CollapsibleTOC.tsx",
+  "src/blog/_components/TableOfContents.tsx",
+  "src/blog/_components/RelatedArticles.tsx", // 専用 CSS なし。共有 Shinagaki（品書き）に統合済み
+  // ページネーション（一覧系共有・店構え変換済み。/storybook からも参照されるが対象外）。
+  "src/components/Pagination/**/*.tsx",
 ];
 // テストコードは走査対象外（テスト文字列に禁止語が入るため）。
 const IGNORE = ["**/__tests__/**", "**/*.test.ts", "**/*.test.tsx"];

@@ -88,6 +88,33 @@ describe("Shinagaki", () => {
     expect(container.querySelectorAll("li span")).toHaveLength(0);
   });
 
+  test("metaDateTime を与えると右端メタが <time dateTime> で描画される", () => {
+    const { container } = render(
+      <Shinagaki
+        items={[
+          {
+            name: "日付付きの項目",
+            href: "/x",
+            meta: "2026-07-12",
+            metaDateTime: "2026-07-12T09:00:00+09:00",
+          },
+        ]}
+      />,
+    );
+    const time = container.querySelector("li time");
+    expect(time).not.toBeNull();
+    expect(time).toHaveAttribute("dateTime", "2026-07-12T09:00:00+09:00");
+    expect(time).toHaveTextContent("2026-07-12");
+  });
+
+  test("metaDateTime が無い meta はプレーンな <span>（<time> にしない）", () => {
+    const { container } = render(
+      <Shinagaki items={[{ name: "件数の項目", href: "/x", meta: "12件" }]} />,
+    );
+    expect(container.querySelector("li time")).toBeNull();
+    expect(container.querySelector("li span")).toHaveTextContent("12件");
+  });
+
   test("heading を与えると既定でレベル 2 の見出しになる", () => {
     render(<Shinagaki items={items} heading="道具" />);
     const h = screen.getByRole("heading", { level: 2, name: "道具" });

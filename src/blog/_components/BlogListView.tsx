@@ -1,6 +1,5 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import Panel from "@/components/Panel";
 import type { BlogPostMeta, BlogCategory } from "@/blog/_lib/blog";
 import {
   CATEGORY_DESCRIPTIONS,
@@ -96,8 +95,8 @@ export default function BlogListView({
   }));
 
   return (
-    <div className={styles.container}>
-      <Panel as="section" className={styles.header}>
+    <div className={styles.page}>
+      <div className={styles.intro}>
         {tagHeader ? (
           <>
             <p className={styles.tagBreadcrumb}>
@@ -114,7 +113,7 @@ export default function BlogListView({
             <p className={styles.description}>{headerDescription}</p>
           </>
         )}
-      </Panel>
+      </div>
 
       <Suspense>
         <BlogFilterableList

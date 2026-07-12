@@ -6,7 +6,7 @@ import Link from "next/link";
 import type { BlogPostMeta, BlogCategory } from "@/blog/_lib/blog";
 import Input from "@/components/Input";
 import Pagination from "@/components/Pagination";
-import BlogGrid from "./BlogGrid";
+import BlogList from "./BlogList";
 import { filterPostsByKeyword } from "./searchFilter";
 import styles from "./BlogFilterableList.module.css";
 
@@ -68,7 +68,7 @@ interface BlogFilterableListProps {
   seriesLabels: Record<string, string>;
   /**
    * タグページが存在するタグの集合（getTagsWithMinPosts(3) の結果）。
-   * BlogGrid → BlogCard に流してタグ表示をフィルタする。
+   * BlogList（内部で TagList）に流してタグ表示をフィルタする。
    * node:fs 依存のため Server Component（BlogListView）で計算して渡す。
    * // TODO(cycle-184/B-389): X1 採用時に削除（タグ UI 完全廃止）
    */
@@ -274,7 +274,7 @@ export default function BlogFilterableList({
               <Link
                 key={tag}
                 href={buildTagHref(tag, keyword)}
-                className={styles.tagPill}
+                className={styles.tagChip}
               >
                 {tag}
               </Link>
@@ -290,9 +290,9 @@ export default function BlogFilterableList({
         </p>
       )}
 
-      {/* 記事グリッド / 空状態 */}
+      {/* 記事一覧（品書き） / 空状態 */}
       {displayPosts.length > 0 ? (
-        <BlogGrid
+        <BlogList
           posts={displayPosts}
           newSlugs={newSlugs}
           categoryLabels={categoryLabels}
@@ -310,16 +310,13 @@ export default function BlogFilterableList({
         </p>
       )}
 
-      {/* ページネーション（キーワード検索中は非表示） */}
-      {/* paginationWrapper: Pagination pageItem の 44px タップターゲット上書き用 */}
+      {/* ページネーション（キーワード検索中は非表示）。Pagination 本体が 44px タップターゲットを持つ（B-388）。 */}
       {!isSearching && (
-        <div className={styles.paginationWrapper}>
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            basePath={basePath}
-          />
-        </div>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          basePath={basePath}
+        />
       )}
     </div>
   );

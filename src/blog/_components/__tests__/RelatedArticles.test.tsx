@@ -42,32 +42,46 @@ const mockPosts: BlogPostMeta[] = [
   }),
 ];
 
+// DESIGN.md フェーズ R: RelatedArticles は共有の Shinagaki（品書き）へ統合された。
+// 品名=タイトル・値札=カテゴリ名・右端メタ=公開日という Shinagaki の型で検証する。
 describe("RelatedArticles", () => {
   test("「関連記事」見出しが表示されること", () => {
     render(<RelatedArticles posts={mockPosts} />);
-    expect(screen.getByText("関連記事")).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { level: 2, name: "関連記事" }),
+    ).toBeInTheDocument();
   });
 
   test("各記事タイトルがリンクとして表示されること", () => {
     render(<RelatedArticles posts={mockPosts} />);
-    const firstPostLinks = screen.getAllByRole("link", { name: /First Post/ });
-    expect(firstPostLinks.length).toBeGreaterThanOrEqual(1);
-    // リンクが正しいパスに向いていること
-    expect(firstPostLinks[0]).toHaveAttribute("href", "/blog/post-1");
+    const firstPostLink = screen.getByRole("link", { name: "First Post" });
+    expect(firstPostLink).toHaveAttribute("href", "/blog/post-1");
   });
 
-  test("各記事のカテゴリバッジが表示されること", () => {
+  test("各記事のカテゴリ値札が表示されること", () => {
     render(<RelatedArticles posts={mockPosts} />);
     expect(screen.getByText("開発ノート")).toBeInTheDocument();
     expect(screen.getByText("AIワークフロー")).toBeInTheDocument();
     expect(screen.getByText("ツールガイド")).toBeInTheDocument();
   });
 
-  test("各記事の公開日が表示されること", () => {
+  test("各記事の公開日（右端メタ）が表示されること", () => {
     render(<RelatedArticles posts={mockPosts} />);
-    // formatDate で変換された日付が存在すること（time要素のdateTime属性で確認）
-    const timeElements = document.querySelectorAll("time");
+    // formatDate("2026-01-10T00:00:00Z") -> "2026-01-10"（JST基準）
+    expect(screen.getByText("2026-01-10")).toBeInTheDocument();
+    expect(screen.getByText("2026-01-20")).toBeInTheDocument();
+    expect(screen.getByText("2026-01-30")).toBeInTheDocument();
+  });
+
+  test("公開日が機械可読な <time dateTime> 要素として描画されること（意味的日付の退行防止）", () => {
+    render(<RelatedArticles posts={mockPosts} />);
+    // Shinagaki 統合後も各記事の日付は <time> で包まれ dateTime に生の値を持つこと。
+    const timeElements = Array.from(document.querySelectorAll("time"));
     expect(timeElements.length).toBeGreaterThanOrEqual(3);
+    const dateTimes = timeElements.map((el) => el.getAttribute("dateTime"));
+    expect(dateTimes).toContain("2026-01-10T00:00:00Z");
+    expect(dateTimes).toContain("2026-01-20T00:00:00Z");
+    expect(dateTimes).toContain("2026-01-30T00:00:00Z");
   });
 
   test("posts が空配列のとき何も描画されないこと", () => {
@@ -77,11 +91,11 @@ describe("RelatedArticles", () => {
 
   test("全記事へのリンクが正しいhrefを持つこと", () => {
     render(<RelatedArticles posts={mockPosts} />);
-    expect(screen.getByRole("link", { name: /Second Post/ })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Second Post" })).toHaveAttribute(
       "href",
       "/blog/post-2",
     );
-    expect(screen.getByRole("link", { name: /Third Post/ })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Third Post" })).toHaveAttribute(
       "href",
       "/blog/post-3",
     );

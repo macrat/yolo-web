@@ -1,31 +1,44 @@
+/*
+ * 記事タグ（値札）— DESIGN.md フェーズ R「店構え」へ変換。
+ * §4「値札は罫囲みの静かな器」に従い、背景ベタ塗り・ピル角丸を撤去し
+ * Nefuda と同じ視覚言語（罫囲み・--ink-2・角丸 2px）へ揃えた。
+ * 全トークン経由・直書きなし（§10）。
+ */
 .tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
+  gap: var(--space-8);
   list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .tag {
-  /* タグチップの背景: --bg-soft（パネル背景より一段引いた面） */
-  background-color: var(--bg-soft);
-  border-radius: var(--r-normal);
 }
 
 .tagLink {
-  display: block;
-  /* 補足テキストと同等の控えめな文字色 */
-  color: var(--fg-soft);
-  padding: 0.15rem 0.5rem;
-  font-size: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  /* タップターゲット 44px（§10・タグはリンクのため Nefuda 静的ラベルより広い高さを取る） */
+  min-height: 44px;
+  color: var(--ink-2);
+  font-family: var(--font-gothic);
+  padding: 0.15em 0.6em;
+  font-size: 0.8125rem; /* 13px 補助情報 */
   text-decoration: none;
-  border-radius: var(--r-normal);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-sm);
   transition:
-    background-color 0.15s ease,
-    color 0.15s ease;
+    color 0.15s ease,
+    border-color 0.15s ease;
 }
 
 .tagLink:hover {
-  /* ホバー時はアクセントカラーで反転（--accent 背景、反転文字色） */
-  background-color: var(--accent);
-  color: var(--fg-invert);
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.tagLink:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
