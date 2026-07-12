@@ -10,14 +10,11 @@
  *
  * ── 対象（新デザイン面のみ）──────────────────────────────────────────────
  *   新デザイン（紙・墨・朱 / トークン --paper/--ink/--rule/--accent 等）を採用済みの面だけを
- *   検査する。フェーズ R は C0（基層整備）の段階で、実際に新デザインへ変換済みなのは
- *   globals.css の基層タイポ層と、のれん（Header）・店構え（Footer）の chrome だけ
- *   （`grep -l 新トークン` で実測して確認済み）。旧デザイン資産（--bg / --fg / --r- 系 / --shadow- 系 /
- *   青紫 accent を使う 200 超の module.css・old-globals.css・components/common 配下 等）は
- *   C1 で削除予定であり、いま検査対象に入れると誤検知で正当な移行作業を止めるため除外する。
- *
- *   → C1 以降、コンポーネントを新デザインへ変換したら NEW_DESIGN_CSS / NEW_DESIGN_TSX に
- *     その glob を追記していく（このリストの拡張が「新デザイン面の拡大」と同義になる）。
+ *   検査する。cycle-279 C1 で (legacy)/ 一式・old-globals.css・旧デザイントークン定義
+ *   （--bg / --fg / --r- 系 / --shadow- 系 / status 系 / --admonition-* 等）を完全削除し、
+ *   src/ 全体が新トークン体系のみになった。NEW_DESIGN_CSS / NEW_DESIGN_TSX はその時点で
+ *   実在するすべての面を列挙しているが、リスト方式自体は今後も維持する
+ *   （新規ページ追加時にここへの追記漏れが起きないよう、空振り検出テストが担保する）。
  *
  * ── 機械検査する項目（§8 の番号付き）──────────────────────────────────────
  *   §8-1  紫〜青（indigo/violet）のアクセント: 色関数 oklch/lch/hsl/hwb で hue≈250〜320。
@@ -41,8 +38,6 @@
  *   すべての検査は「標準 CSS プロパティ宣言」に対して行い、`--*` のカスタムプロパティ定義
  *   （＝トークン定義）は検査しない。理由: §10 はトークン経由での色指定を原則とし、パレット自体は
  *   DESIGN.md §2 が正典で数も小さく視覚レビュー管轄。ゲートは「面でトークンをどう使うか」を見張る。
- *   これにより globals.css に併存する旧トークン定義（--admonition-important の紫 hue290 等、C1 で除去予定の
- *   ブログ GFM Alert 用 legacy）を誤検知しない（タスク要件「globals.css のトークン定義自体は除外」と一致）。
  *
  * ── 機械検査「できない」ので視覚レビュー工程へ回す項目（§8 の二層担保の下層）──────────
  *   §8-3  カード上端/左端だけの色付きボーダー（構図依存・判定は目視）。
@@ -67,7 +62,9 @@ const PROJECT_ROOT = path.resolve(__dirname, "../..");
 // パーレンは `\(new\)` とエスケープし、`[param]` は `*`（単一階層ワイルドカード）で受ける。
 // 空振りは下の「空振り検出」テストが各 glob 単位で fail させる。
 const NEW_DESIGN_CSS = [
-  "src/app/globals.css", // 新トークン定義 + 基層タイポ層（§2/§3/§4）
+  "src/app/globals.css", // 新トークン定義 + 基層タイポ層（§2/§3/§4・markdown-alert 再設計を含む）
+  "src/app/global-not-found.module.css", // グローバル 404（公開面・cycle-279 C1 変換）
+  "src/app/\\(new\\)/storybook/page.module.css", // storybook（開発者向けカタログ・cycle-279 C1 変換）
   "src/app/\\(new\\)/page.module.css", // トップ（店構え・§1/§4 の参照実装・C2 変換）
   "src/components/Header/**/*.module.css", // のれん（§4）
   "src/components/Footer/**/*.module.css", // 店構え（§4）
@@ -203,6 +200,9 @@ const NEW_DESIGN_CSS = [
   "src/play/_components/RelatedContentCard.module.css",
 ];
 const NEW_DESIGN_TSX = [
+  "src/app/global-not-found.js", // グローバル 404 ルート（公開面・cycle-279 C1 変換）
+  "src/app/global-not-found-content.tsx", // グローバル 404 の本文コンポーネント
+  "src/app/\\(new\\)/storybook/StorybookContent.tsx", // storybook（開発者向けカタログ・cycle-279 C1 変換）
   "src/app/\\(new\\)/page.tsx", // トップ（店構え・C2 変換）。インライン style の禁止を検査
   "src/components/Header/**/*.tsx",
   "src/components/Footer/**/*.tsx",
@@ -344,15 +344,11 @@ const NEW_DESIGN_TSX = [
 const IGNORE = ["**/__tests__/**", "**/*.test.ts", "**/*.test.tsx"];
 
 /**
- * 旧資産の明示的許容（C1 で除去予定の legacy carryover・新デザイン面ではない）。
- * globals.css の .markdown-alert は old-globals.css からの移植（ブログ GFM Alert）で、
- * border-radius: 0 4px 4px 0 は §8-5 に触れるが legacy として C1 で新デザインへ再設計する。
+ * 旧資産の明示的許容（新デザイン面の物理的メタファーによる例外）。
+ * globals.css の .markdown-alert は cycle-279 C1 で新トークン（--rule/--paper-2/--accent）へ
+ * 再設計済み（border-radius も var(--radius) の 0px に統一したため、旧 legacy 許容は不要）。
  */
 const ALLOWLIST: { fileEndsWith: string; declaration: string }[] = [
-  {
-    fileEndsWith: "src/app/globals.css",
-    declaration: "border-radius: 0 4px 4px 0",
-  },
   // ToggleSwitch のトラック（横長楕円）とサム（丸いつまみ）は、操作系コンポーネントの
   // 物理的な型（スイッチのメタファー）であり、§8-5 が禁じる「ピル形状のボタン」
   // （装飾目的の一律角丸）には当たらない。値札/入力欄と同様の明示的な例外として許容する。

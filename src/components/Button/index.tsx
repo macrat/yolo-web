@@ -2,11 +2,9 @@ import type { ComponentPropsWithoutRef } from "react";
 import styles from "./Button.module.css";
 
 /**
- * ボタンのバリアント:
- * - "primary": 目立つボタン。`--bg-invert` 背景（ダーク面）。アクションの主要な選択肢に使う。
- * - "default": 標準ボタン。`--bg-soft` 背景。補助的なアクションや通常操作に使う。
- *   ※ 旧 "ghost" バリアントは "default" に統合済み（cycle-171 T4）。
- *      旧 "default"（`--bg` 背景・border あり）は廃止。
+ * ボタンのバリアント（DESIGN.md §2「紙・墨・朱」）:
+ * - "primary": 主ボタン。`--accent`（朱）地×`--paper`（紙）文字。アクションの主要な選択肢に使う。
+ * - "default": 副ボタン。地は`--paper`のまま罫（`--rule`）で輪郭を示す線画。補助的なアクションに使う。
  */
 type ButtonVariant = "primary" | "default";
 type ButtonSize = "default" | "small";
@@ -38,8 +36,8 @@ const sizeClassMap: Record<ButtonSize, string | undefined> = {
 /**
  * Button — クリック操作のボタン。
  *
- * DESIGN.md §5: ボタンやフォームなどの UI コンポーネントは src/components/ のものを使う。
- * DESIGN.md §5: border-radius は var(--r-interactive)、shadow は var(--shadow-button) を使う。
+ * DESIGN.md §4: 角丸は var(--radius)（0px 基調）・box-shadow は使わない（詳細は
+ * Button.module.css 冒頭コメント参照）。
  */
 function Button({
   variant = "default",

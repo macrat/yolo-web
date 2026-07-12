@@ -21,58 +21,40 @@ import FaqSection from "@/components/FaqSection";
 import RelatedTools from "@/components/RelatedTools";
 import styles from "./page.module.css";
 
-// カラースウォッチの定義
+// カラースウォッチの定義（DESIGN.md §2「紙・墨・朱」の新トークン体系・cycle-279 C1）
 const COLOR_SECTIONS = [
   {
-    title: "表面色 (Surface)",
+    title: "地 (Paper)",
     swatches: [
-      { token: "--bg", role: "パネルの基本背景色" },
-      { token: "--bg-soft", role: "画面全体の背景 / 標準ボタン色" },
-      { token: "--bg-softer", role: "標準ボタンのホバー色" },
-      { token: "--bg-invert", role: "primary ボタン色" },
-      { token: "--bg-invert-soft", role: "primary ボタンのホバー色" },
-    ],
-  },
-  {
-    title: "文字色 (Text)",
-    swatches: [
-      { token: "--fg", role: "基本の文字色" },
-      { token: "--fg-soft", role: "目立たない文字色（補足説明など）" },
-      { token: "--fg-softer", role: "さらに目立たない（無効状態など）" },
-      { token: "--fg-invert", role: "primary ボタンの文字色" },
-      { token: "--fg-invert-soft", role: "primary ボタンのホバー文字色" },
-    ],
-  },
-  {
-    title: "境界線 (Border)",
-    swatches: [
-      { token: "--border", role: "基本の罫線色" },
-      { token: "--border-strong", role: "フォーム要素の明示的な境界線" },
-    ],
-  },
-  {
-    title: "アクセント (Accent)",
-    swatches: [
-      { token: "--accent", role: "リンク・フォーカスのアクセントカラー" },
-      { token: "--accent-strong", role: "アクセントの強いバージョン" },
+      { token: "--paper", role: "地。生成りの紙 / 墨の帳面" },
       {
-        token: "--accent-soft",
-        role: "アクセントの柔らかいバージョン（背景）",
+        token: "--paper-2",
+        role: "一段沈む面（区画・コード・広告区画）",
       },
     ],
   },
   {
-    title: "ステータス (Status)",
+    title: "文字 (Ink)",
     swatches: [
-      { token: "--success", role: "成功・完了を示す色" },
-      { token: "--success-strong", role: "success の強いバージョン" },
-      { token: "--success-soft", role: "success の柔らかいバージョン（背景）" },
-      { token: "--warning", role: "注意・警告を示す色" },
-      { token: "--warning-strong", role: "warning の強いバージョン" },
-      { token: "--warning-soft", role: "warning の柔らかいバージョン（背景）" },
-      { token: "--danger", role: "危険・エラーを示す色" },
-      { token: "--danger-strong", role: "danger の強いバージョン" },
-      { token: "--danger-soft", role: "danger の柔らかいバージョン（背景）" },
+      { token: "--ink", role: "本文・見出し" },
+      { token: "--ink-2", role: "補足・値札の文字・キャプション" },
+    ],
+  },
+  {
+    title: "罫 (Rule)",
+    swatches: [
+      { token: "--rule", role: "罫線（構造の主役）" },
+      { token: "--rule-strong", role: "強い罫（のれん罫・区切りの主格）" },
+    ],
+  },
+  {
+    title: "朱 (Accent)",
+    swatches: [
+      { token: "--accent", role: "朱。リンク・主ボタン・現在地・記入印" },
+      {
+        token: "--accent-weak",
+        role: "朱の気配。hover/selected の座布団にのみ可",
+      },
     ],
   },
 ];
@@ -106,7 +88,7 @@ const SAMPLE_FAQ = [
 const TOC_ITEMS = [
   { id: "overview", label: "1. 概要" },
   { id: "colors", label: "2. カラーパレット" },
-  { id: "radius-elevation", label: "3. 角丸・影" },
+  { id: "radius-elevation", label: "3. 角丸" },
   { id: "panel", label: "4. Panel" },
   { id: "button", label: "5. Button" },
   { id: "input", label: "6. Input" },
@@ -188,7 +170,7 @@ export default function StorybookContent({
           <p
             style={{
               fontSize: "0.85rem",
-              color: "var(--fg-soft)",
+              color: "var(--ink-2)",
               marginBottom: "1.5rem",
             }}
           >
@@ -216,12 +198,14 @@ export default function StorybookContent({
         </Panel>
       </section>
 
-      {/* === 3. 角丸・影 === */}
+      {/* === 3. 角丸 === */}
+      {/* DESIGN.md §4: 影（box-shadow）は原則使わないため影トークン自体が存在しない
+       * （旧 --shadow-button/--shadow-dragging は cycle-279 C1 で廃止）。角丸のみ展示する。 */}
       <section id="radius-elevation" className={styles.section}>
-        <h2 className={styles.sectionTitle}>3. 角丸 / 影</h2>
+        <h2 className={styles.sectionTitle}>3. 角丸</h2>
         {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
         <Panel as="div">
-          <span className={styles.previewLabel}>Preview: 角丸・影</span>
+          <span className={styles.previewLabel}>Preview: 角丸</span>
 
           <h3 className={styles.subsectionTitle} style={{ marginTop: 0 }}>
             角丸（Border Radius）
@@ -230,57 +214,25 @@ export default function StorybookContent({
             <div>
               <div
                 className={styles.radiusSample}
-                style={{ borderRadius: "var(--r-normal)" }}
+                style={{ borderRadius: "var(--radius)" }}
               >
                 サンプルテキスト
               </div>
-              <div className={styles.radiusSampleLabel}>--r-normal (2px)</div>
-              <div style={{ fontSize: "0.7rem", color: "var(--fg-softer)" }}>
-                パネル・カード・タグ・モーダル等
+              <div className={styles.radiusSampleLabel}>--radius (0px)</div>
+              <div style={{ fontSize: "0.7rem", color: "var(--ink-2)" }}>
+                0px 基調。パネル・カード・タグ・モーダル等すべて
               </div>
             </div>
             <div>
               <div
                 className={styles.radiusSample}
-                style={{ borderRadius: "var(--r-interactive)" }}
+                style={{ borderRadius: "var(--radius-sm)" }}
               >
                 サンプルテキスト
               </div>
-              <div className={styles.radiusSampleLabel}>
-                --r-interactive (8px)
-              </div>
-              <div style={{ fontSize: "0.7rem", color: "var(--fg-softer)" }}>
-                ボタン・入力欄・セレクト等
-              </div>
-            </div>
-          </div>
-
-          <h3 className={styles.subsectionTitle}>
-            影 / エレベーション（Shadow）
-          </h3>
-          <div className={styles.shadowRow}>
-            <div>
-              <div
-                className={styles.shadowSample}
-                style={{ boxShadow: "var(--shadow-button)" }}
-              >
-                ボタンの影
-              </div>
-              <div className={styles.shadowSampleLabel}>--shadow-button</div>
-              <div style={{ fontSize: "0.7rem", color: "var(--fg-softer)" }}>
-                ボタンに適用
-              </div>
-            </div>
-            <div>
-              <div
-                className={styles.shadowSample}
-                style={{ boxShadow: "var(--shadow-dragging)" }}
-              >
-                ドラッグ中の影
-              </div>
-              <div className={styles.shadowSampleLabel}>--shadow-dragging</div>
-              <div style={{ fontSize: "0.7rem", color: "var(--fg-softer)" }}>
-                ドラッグ中の要素に適用
+              <div className={styles.radiusSampleLabel}>--radius-sm (2px)</div>
+              <div style={{ fontSize: "0.7rem", color: "var(--ink-2)" }}>
+                例外は値札ラベルと入力欄のみ
               </div>
             </div>
           </div>
@@ -303,7 +255,7 @@ export default function StorybookContent({
           >
             <Panel>
               <p>as=&quot;section&quot;（デフォルト）: 汎用コンテナパネル</p>
-              <p style={{ color: "var(--fg-soft)", fontSize: "0.9rem" }}>
+              <p style={{ color: "var(--ink-2)", fontSize: "0.9rem" }}>
                 DESIGN.md §4 準拠。パネルは入れ子にせず、影をつけない。
               </p>
             </Panel>
@@ -469,7 +421,7 @@ export default function StorybookContent({
                 onChange={(e) => setControlledText(e.target.value)}
                 aria-label="controlled 入力欄"
               />
-              <div style={{ fontSize: "0.8rem", color: "var(--fg-soft)" }}>
+              <div style={{ fontSize: "0.8rem", color: "var(--ink-2)" }}>
                 現在の値: {controlledText}
               </div>
             </div>
@@ -607,7 +559,7 @@ export default function StorybookContent({
             <Pagination currentPage={5} totalPages={10} basePath="/blog" />
 
             <div className={styles.inputItemLabel}>1 ページのみ（非表示）</div>
-            <div style={{ color: "var(--fg-soft)", fontSize: "0.85rem" }}>
+            <div style={{ color: "var(--ink-2)", fontSize: "0.85rem" }}>
               （totalPages=1 のとき null が返るため何も表示されない）
             </div>
             <Pagination currentPage={1} totalPages={1} basePath="/blog" />
@@ -761,7 +713,7 @@ export default function StorybookContent({
           <div
             style={{
               fontSize: "0.8rem",
-              color: "var(--fg-soft)",
+              color: "var(--ink-2)",
               marginTop: "0.5rem",
             }}
           >
@@ -850,7 +802,7 @@ export default function StorybookContent({
             </Button>
             <span
               aria-live="polite"
-              style={{ fontSize: "0.85rem", color: "var(--fg-soft)" }}
+              style={{ fontSize: "0.85rem", color: "var(--ink-2)" }}
             >
               {copiedKey ? COPIED_LABEL : ""}
             </span>
@@ -858,7 +810,7 @@ export default function StorybookContent({
           <div
             style={{
               fontSize: "0.8rem",
-              color: "var(--fg-soft)",
+              color: "var(--ink-2)",
               marginTop: "0.5rem",
             }}
           >
@@ -917,7 +869,7 @@ export default function StorybookContent({
           <h3 className={styles.subsectionTitle}>
             faq が空配列のとき（null を返す）
           </h3>
-          <div style={{ fontSize: "0.85rem", color: "var(--fg-soft)" }}>
+          <div style={{ fontSize: "0.85rem", color: "var(--ink-2)" }}>
             （空配列を渡すと何も表示されない）
           </div>
           <FaqSection faq={[]} />
@@ -943,7 +895,7 @@ export default function StorybookContent({
           <h3 className={styles.subsectionTitle}>
             一致なし（relatedSlugs が存在しないスラッグのとき null を返す）
           </h3>
-          <div style={{ fontSize: "0.85rem", color: "var(--fg-soft)" }}>
+          <div style={{ fontSize: "0.85rem", color: "var(--ink-2)" }}>
             （一致なしのとき何も表示されない）
           </div>
           <RelatedTools
@@ -968,7 +920,7 @@ export default function StorybookContent({
           <h3 className={styles.subsectionTitle}>
             toolSlug=&quot;char-count&quot;（関連記事なし → null を返す）
           </h3>
-          <div style={{ fontSize: "0.85rem", color: "var(--fg-soft)" }}>
+          <div style={{ fontSize: "0.85rem", color: "var(--ink-2)" }}>
             （関連記事なしのとき何も表示されない）
           </div>
           {relatedBlogPostsEmpty}

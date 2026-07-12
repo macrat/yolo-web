@@ -14,15 +14,16 @@
   margin-bottom: 0.5rem;
 }
 
-/* 注記 */
+/* 注記 — 静的な区画なので朱の気配（--accent-weak）は使わない（§2: hover/selected 専用）。
+ * 地は --paper-2・枠は --rule の中立な注記ボックス。 */
 .notice {
-  background: var(--accent-soft);
-  border: 1px solid var(--accent-strong);
-  border-radius: var(--r-normal);
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
   padding: 0.75rem 1rem;
   margin-bottom: 1.5rem;
   font-size: 0.9rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
 }
 
 .notice p {
@@ -39,9 +40,9 @@
 
 /* 目次 */
 .toc {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: var(--r-normal);
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
   padding: 1rem 1.25rem;
   margin-bottom: 2.5rem;
 }
@@ -49,7 +50,7 @@
 .tocTitle {
   font-size: 0.85rem;
   font-weight: 600;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-bottom: 0.5rem;
@@ -71,7 +72,7 @@
 }
 
 .tocList li a:hover {
-  color: var(--accent-strong);
+  color: var(--accent);
   text-decoration: underline;
 }
 
@@ -85,14 +86,14 @@
   font-weight: 600;
   margin-bottom: 1.25rem;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--rule);
 }
 
 .subsectionTitle {
   font-size: 1rem;
   font-weight: 600;
   margin: 1.25rem 0 0.75rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
 }
 
 /* カラースウォッチ */
@@ -107,8 +108,8 @@
 }
 
 .swatch {
-  border: 1px solid var(--border);
-  border-radius: var(--r-normal);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
   overflow: hidden;
   /* align-items: stretch により同行の最大高さに伸びる。
      flexbox 縦方向にして swatchInfo が下端まで伸びるようにする */
@@ -123,7 +124,7 @@
 
 .swatchInfo {
   padding: 0.5rem 0.6rem;
-  background: var(--bg);
+  background: var(--paper);
   /* flex: 1 で残りの高さを埋める。swatchRole に min-height で 2 行分を確保し、
      1 行の説明文でも高さが揃うようにする */
   flex: 1;
@@ -132,10 +133,10 @@
 }
 
 .swatchToken {
-  font-family: ui-monospace, monospace;
+  font-family: var(--font-mono);
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--fg);
+  color: var(--ink);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -143,7 +144,7 @@
 
 .swatchRole {
   font-size: 0.7rem;
-  color: var(--fg-softer);
+  color: var(--ink-2);
   margin-top: 2px;
   line-height: 1.3;
   /* 説明文が 1 行でも 2 行分の最低高さを確保し、カード高さを揃える。
@@ -152,7 +153,7 @@
   min-height: 2.6em;
 }
 
-/* 角丸・影サンプル */
+/* 角丸サンプル（DESIGN.md §4: 影は原則使わないため影トークン自体を廃止・角丸のみ展示） */
 .radiusRow {
   display: flex;
   gap: 1rem;
@@ -161,39 +162,17 @@
 }
 
 .radiusSample {
-  background: var(--bg);
-  border: 1px solid var(--border);
+  background: var(--paper);
+  border: 1px solid var(--rule);
   padding: 1.25rem 1.75rem;
   min-width: 180px;
   text-align: center;
 }
 
 .radiusSampleLabel {
-  font-family: ui-monospace, monospace;
+  font-family: var(--font-mono);
   font-size: 0.8rem;
-  color: var(--fg-soft);
-  margin-top: 0.5rem;
-}
-
-.shadowRow {
-  display: flex;
-  gap: 1.5rem;
-  flex-wrap: wrap;
-  margin-bottom: 1rem;
-}
-
-.shadowSample {
-  background: var(--bg);
-  padding: 1.25rem 1.75rem;
-  border-radius: var(--r-normal);
-  min-width: 180px;
-  text-align: center;
-}
-
-.shadowSampleLabel {
-  font-family: ui-monospace, monospace;
-  font-size: 0.8rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   margin-top: 0.5rem;
 }
 
@@ -201,8 +180,8 @@
 .previewLabel {
   display: block;
   font-size: 0.7rem;
-  color: var(--fg-soft);
-  font-family: ui-monospace, monospace;
+  color: var(--ink-2);
+  font-family: var(--font-mono);
   margin-bottom: 1rem;
 }
 
@@ -223,8 +202,8 @@
 
 .buttonGroupLabel {
   font-size: 0.75rem;
-  color: var(--fg-softer);
-  font-family: ui-monospace, monospace;
+  color: var(--ink-2);
+  font-family: var(--font-mono);
   margin-bottom: 0.25rem;
 }
 
@@ -244,8 +223,8 @@
 
 .inputItemLabel {
   font-size: 0.75rem;
-  color: var(--fg-softer);
-  font-family: ui-monospace, monospace;
+  color: var(--ink-2);
+  font-family: var(--font-mono);
 }
 
 /* Breadcrumb サンプル */
@@ -270,13 +249,13 @@
 
 .toggleItemLabel {
   font-size: 0.75rem;
-  color: var(--fg-softer);
-  font-family: ui-monospace, monospace;
+  color: var(--ink-2);
+  font-family: var(--font-mono);
 }
 
 .toggleStatus {
   font-size: 0.8rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   margin-top: 0.25rem;
 }
 
@@ -289,7 +268,7 @@
 
 .asPropLabel {
   font-size: 0.7rem;
-  color: var(--fg-softer);
-  font-family: ui-monospace, monospace;
+  color: var(--ink-2);
+  font-family: var(--font-mono);
   margin-bottom: 0.5rem;
 }
