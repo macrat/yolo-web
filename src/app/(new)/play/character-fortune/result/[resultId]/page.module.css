@@ -5,7 +5,7 @@
  *
  * character-fortune 専用結果ページのスタイル。
  * インライン結果（ResultCard）とトーン統一する: 無彩・左寄せ・絵文字マーカーなし・
- * クイズごとの派手色（accentColor）を使わず共通 --accent / --accent-soft に寄せる。
+ * クイズごとの派手色（accentColor）を使わず共通 --accent / --accent-weak に寄せる。
  * 新トークンのみ使用（旧 --color-* は撤去）。
  */
 
@@ -17,38 +17,27 @@
   margin-bottom: 0;
 }
 
-/* 主要 CTA。src/components/Button の primary バリアントと同じ語彙
- * （--bg-invert 面・--fg-invert 文字・--r-interactive・--shadow-button）に寄せ、
- * クイズごとの accentColor インライン注入を撤去した。 */
+/* 主要 CTA: 罫の線画（トップページ .heroLink と同じ語彙・ピル/塗り/影禁止）。
+ * クイズごとの accentColor インライン注入は撤去済み。 */
 .tryButton {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-height: 44px;
-  padding: 0.625rem 1.5rem;
-  border: 1px solid var(--bg-invert);
-  border-radius: var(--r-interactive);
-  background: var(--bg-invert);
-  color: var(--fg-invert);
-  font-size: 0.95rem;
-  font-weight: 600;
-  font-family: inherit;
-  box-shadow: var(--shadow-button);
+  padding: 0 1.5rem;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--paper);
+  color: var(--accent);
+  font-family: var(--font-mincho);
+  font-size: 1.0625rem;
   cursor: pointer;
   text-decoration: none;
-  transition:
-    background 0.15s ease,
-    border-color 0.15s ease,
-    box-shadow 0.15s ease;
+  transition: background-color 0.15s ease;
 }
 
 .tryButton:hover {
-  background: var(--bg-invert-soft);
-  border-color: var(--bg-invert-soft);
-}
-
-.tryButton:active {
-  box-shadow: none;
+  background-color: var(--accent-weak);
 }
 
 .tryButton:focus-visible {
@@ -58,7 +47,7 @@
 
 .tryCost {
   font-size: 0.8rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   margin-top: 0.5rem;
   margin-bottom: 0;
 }
@@ -77,7 +66,7 @@
 .detailedSectionHeading {
   font-size: 1.05rem;
   font-weight: 600;
-  color: var(--fg);
+  color: var(--ink);
   margin: 0 0 1rem;
   padding-left: 0.75rem;
   border-left: 3px solid var(--accent);
@@ -97,35 +86,34 @@
 .behaviorsItem {
   font-size: 0.95rem;
   line-height: 1.7;
-  color: var(--fg);
+  color: var(--ink);
   padding: 0.75rem 1rem;
-  border-radius: var(--r-normal);
-  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  border: 1px solid var(--rule);
 }
 
 /* ============================================================
    character-fortune variant 固有ブロック
    ============================================================ */
 
-/* (a) キャラクターの自己紹介。advice カードと同じ語彙
- * （--accent-soft の淡い面 + --accent-strong の罫線）・左寄せ。 */
+/* (a) キャラクターの自己紹介。DESIGN.md §2 是正（cycle-278 C4）: --accent-weak は
+ * 操作・選択状態のハイライトにのみ可で区画の地には不可のため、--paper-2 に統一する。 */
 .characterIntro {
   font-size: 1rem;
   line-height: 1.8;
   text-align: left;
-  color: var(--fg);
+  color: var(--ink);
   margin-bottom: 1.5rem;
   padding: 1.25rem 1.5rem;
-  border-radius: var(--r-normal);
-  background: var(--accent-soft);
-  border: 1px solid var(--accent-strong);
+  border-radius: var(--radius);
+  background: var(--paper-2);
 }
 
 /* (c) キャラの本音（散文） */
 .characterMessage {
   font-size: 0.95rem;
   line-height: 1.9;
-  color: var(--fg);
+  color: var(--ink);
   text-align: left;
   margin-bottom: 2rem;
   padding: 0 0.25rem;
@@ -135,14 +123,14 @@
 .compatibilitySection {
   margin-bottom: 2rem;
   padding: 1.5rem 0;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--rule);
   text-align: left;
 }
 
 .compatibilityPrompt {
   font-size: 0.95rem;
   line-height: 1.6;
-  color: var(--fg);
+  color: var(--ink);
   margin-bottom: 1rem;
 }
 
@@ -150,21 +138,21 @@
 .midShareSection {
   margin: 1.5rem 0;
   padding: 1.5rem 0;
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
 }
 
 /* (d) 第三者専用セクション */
 .thirdPartySection {
   margin-bottom: 2rem;
   padding-top: 1.5rem;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--rule);
 }
 
 .thirdPartyHeading {
   font-size: 1.05rem;
   font-weight: 600;
-  color: var(--fg);
+  color: var(--ink);
   margin: 0 0 0.875rem;
   padding-left: 0.75rem;
   border-left: 3px solid var(--accent);
@@ -173,25 +161,40 @@
 .thirdPartyNote {
   font-size: 0.95rem;
   line-height: 1.9;
-  color: var(--fg);
+  color: var(--ink);
   text-align: left;
   margin: 0;
 }
 
-/* (f) 全タイプ一覧セクション */
+/* (f) 全タイプ一覧セクション。
+ * DESIGN.md §4/§8-4 是正（cycle-278 C4）: 旧来のチップ風横wrap（個々にカード状の全周枠）は
+ * 「同型カードのグリッド」に近い質感で §4 の禁止対象に触れるため、他クイズ（例:
+ * CharacterPersonalityContent.module.css .allTypesGrid）と同じ罫の升目索引に統一する。
+ * 個々のセルはカード化せず、border-bottom の罫だけで区切る。現在地は面を朱で塗らず、
+ * 文字色+下罫の朱だけで示す（--accent-weak 不使用）。 */
 .allTypesSection {
   margin-top: 2rem;
   padding-top: 1.5rem;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--rule);
 }
 
 .allTypesList {
   list-style: none;
   padding: 0;
   margin: 0 0 1.5rem 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+  columns: 2;
+  column-gap: 1.5rem;
+}
+
+@media (min-width: 480px) {
+  .allTypesList {
+    columns: 3;
+  }
+}
+
+.allTypesItem,
+.allTypesItemCurrent {
+  break-inside: avoid;
 }
 
 .allTypesItem a,
@@ -199,37 +202,35 @@
   display: flex;
   align-items: center;
   gap: 0.375rem;
-  padding: 0.4rem 0.875rem;
-  border-radius: 999px;
+  min-height: 44px;
+  padding: 0.4rem 0.25rem;
+  border-bottom: 1px solid var(--rule);
   font-size: 0.875rem;
   text-decoration: none;
-  transition:
-    background 0.15s ease,
-    border-color 0.15s ease;
+  transition: background-color 0.15s ease;
+  width: 100%;
 }
 
 .allTypesItem a {
-  color: var(--fg);
-  border: 1px solid var(--border);
-  background: transparent;
+  color: var(--ink);
 }
 
 .allTypesItem a:hover {
-  background: var(--bg-soft);
+  background-color: var(--paper-2);
 }
 
-/* 現在表示中のタイプをハイライト（共通アクセントの淡い面で静かに示す）。 */
+/* 現在表示中のタイプ: 面を朱で塗らず、文字色+下罫の朱だけで静かに示す。 */
 .allTypesItemCurrent a {
-  color: var(--fg);
-  border: 1px solid var(--accent-strong);
-  background: var(--accent-soft);
-  font-weight: 700;
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+  font-weight: 600;
+  pointer-events: none;
 }
 
 .allTypesCta {
   font-size: 1rem;
   font-weight: 600;
   text-align: left;
-  color: var(--fg);
+  color: var(--ink);
   margin-bottom: 1rem;
 }

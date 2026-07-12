@@ -10,6 +10,7 @@ import {
 import scienceThinkingQuiz from "@/play/quiz/data/science-thinking";
 import RadarChart from "./RadarChart";
 import InviteFriendButton from "./InviteFriendButton";
+import { pickResultWairoColor } from "./resultVisual";
 import styles from "./ScienceThinkingResultExtra.module.css";
 
 /** Human-readable Japanese labels for each axis */
@@ -74,7 +75,9 @@ function ScienceThinkingResultExtra({
 
   const scores = getAxisScores(quiz.questions, answers);
   const maxScores = getMaxAxisScores(quiz.questions);
-  const themeColor = myResult.color ?? quiz.meta.accentColor;
+  // 成果物パレット（和色8色）は id から決定的に選ぶ。quiz データの任意 hex
+  // （result.color / meta.accentColor）は使わない（DESIGN.md §2）。
+  const wairoColor = pickResultWairoColor(myResult.id);
 
   // Build axes data for RadarChart
   const chartAxes = AXIS_IDS.map((axisId) => ({
@@ -84,11 +87,11 @@ function ScienceThinkingResultExtra({
   }));
 
   return (
-    <div className={styles.wrapper}>
+    <div className={styles.wrapper} data-color={wairoColor}>
       {/* Radar chart */}
       <div className={styles.chartSection}>
         <p className={styles.chartTitle}>あなたの思考プロフィール</p>
-        <RadarChart axes={chartAxes} color={themeColor} />
+        <RadarChart axes={chartAxes} color={wairoColor} />
       </div>
 
       {/* Score bars */}
@@ -106,13 +109,7 @@ function ScienceThinkingResultExtra({
                 </span>
               </div>
               <div className={styles.barTrack}>
-                <div
-                  className={styles.barFill}
-                  style={{
-                    width: `${pct}%`,
-                    backgroundColor: themeColor,
-                  }}
-                />
+                <div className={styles.barFill} style={{ width: `${pct}%` }} />
               </div>
             </div>
           );

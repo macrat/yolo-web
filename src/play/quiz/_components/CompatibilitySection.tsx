@@ -45,18 +45,14 @@ export default function CompatibilitySection({
   return (
     <div className={styles.section}>
       <p className={styles.heading}>友達との相性結果</p>
+      {/* 新デザイン体系では絵文字（icon）を装飾に使わない（DESIGN.md §8-6）。
+          各タイプの区別はタイトル文言だけで行う。 */}
       <div className={styles.typeIcons}>
         <div className={styles.typeBox}>
-          {myType.icon && (
-            <span className={styles.typeIcon}>{myType.icon}</span>
-          )}
           <span className={styles.typeName}>{myType.title}</span>
         </div>
         <span className={styles.separator}>&times;</span>
         <div className={styles.typeBox}>
-          {friendType.icon && (
-            <span className={styles.typeIcon}>{friendType.icon}</span>
-          )}
           <span className={styles.typeName}>{friendType.title}</span>
         </div>
       </div>

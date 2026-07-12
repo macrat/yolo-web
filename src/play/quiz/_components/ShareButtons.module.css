@@ -1,9 +1,9 @@
 /*
- * 結果カードのシェアボタン群。新デザイン体系（DESIGN.md）。
- * サービス識別という機能目的でブランドカラーを使う（§2.4 の範囲内）。
- * 角丸は操作要素の規範 --r-interactive（8px）。フォーカスは --accent。
- * タップターゲット 44px を min-height で確保（WCAG 2.5.5）。
- * 新トークンのみ使用（旧 --color-* は使わない）。
+ * 結果カードのシェアボタン群。DESIGN.md §4「札」/§8。
+ * 「文字＋罫の線画ボタン」（src/components/ShareButtons と同じ語彙）——地は紙、
+ * --rule の一本罫で囲み、文字は墨、hover で朱枠＋朱文字。ブランド色ベタ塗り・
+ * ロゴ・絵文字・ピル・box-shadow は使わない（§2「アクセントは朱の1色」/§8）。
+ * サービスは文言で識別する。タップターゲット 44px・focus 可視・全トークン経由。
  */
 
 .wrapper {
@@ -25,26 +25,24 @@
   align-items: center;
   justify-content: center;
   min-height: 44px;
-  padding: 0.5rem 1.1rem;
-  border: 1px solid transparent;
-  border-radius: var(--r-interactive);
-  box-shadow: var(--shadow-button);
-  font-size: 0.875rem;
+  padding: 0 1.1rem;
   font-family: inherit;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  white-space: nowrap;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
   cursor: pointer;
-  color: #ffffff;
   transition:
-    filter 0.15s ease,
-    box-shadow 0.15s ease;
+    color 0.15s ease,
+    border-color 0.15s ease;
 }
 
-.shareButton:hover:not(:disabled) {
-  filter: brightness(1.1);
-}
-
-.shareButton:active:not(:disabled) {
-  filter: brightness(0.92);
-  box-shadow: none;
+.shareButton:hover {
+  color: var(--accent);
+  border-color: var(--accent);
 }
 
 .shareButton:focus-visible {
@@ -52,34 +50,8 @@
   outline-offset: 2px;
 }
 
-/* Web Share API（モバイル）— サービス非依存のため共通アクセント面（藍） */
-.webShare {
-  background-color: var(--accent);
-}
-
-/* X（旧 Twitter）— 公式ブランドカラー。ダークでは反転（白背景・黒文字）で視認性確保 */
-.twitter {
-  background-color: #000000;
-}
-
-:global(:root.dark) .twitter {
-  color: #000000;
-  background-color: #ffffff;
-}
-
-/* LINE — 公式ブランドカラー */
-.line {
-  background-color: #06c755;
-}
-
-/* コピー — サービスではないためニュートラル反転トークン */
-.copy {
-  color: var(--fg-invert);
-  background-color: var(--bg-invert);
-}
-
 .copiedMessage {
   font-size: 0.8rem;
-  color: var(--success);
+  color: var(--accent);
   min-height: 1.25rem;
 }

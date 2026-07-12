@@ -19,8 +19,8 @@ const yojiPersonalityQuiz: QuizDefinition = {
     title: "あなたを四字熟語に例えると?",
     shortTitle: "四字熟語で性格診断",
     description:
-      "8つの質問に答えて、あなたの性格にぴったりの四字熟語を見つけましょう。努力家?自由人?リーダー?あなたの本質を四字熟語が教えてくれます。",
-    shortDescription: "性格診断であなたにぴったりの四字熟語を発見",
+      "8つの質問に答えて、あなたの性格に一致する四字熟語を判定します。努力家?自由人?リーダー?8タイプの中から1つが決まります。",
+    shortDescription: "8問の性格診断で、あなたの四字熟語を判定",
     type: "personality",
     category: "personality",
     questionCount: 8,

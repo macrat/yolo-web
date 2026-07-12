@@ -1,15 +1,15 @@
 /*
  * クイズ共通プレイ画面（/play/[slug]・/play/music-personality）の章立てスタイル。
  *
- * 新デザイン体系（DESIGN.md）。移行済みツール詳細の器 ToolPageLayout と同じ
- * 「文脈確認 → 本体（主役）→ 二次情報」の左寄せ・パネル構成を踏襲する。
- * 新トークンのみ使用（旧 --color-* は使わない）。bold 不使用・影なし。
+ * DESIGN.md（紙・墨・朱の店構え）。「文脈確認 → 本体（主役）→ 二次情報」の
+ * 左寄せ構成。器（背景・囲み）は持たず、地（--paper）にそのまま置く（§4 器は静か）。
+ * 新トークンのみ使用。bold 不使用・影なし・角丸0基調。
  */
 
-/* ページ全体のラッパー。最大 1200px でセンタリング（DESIGN.md §4。
- * var(--max-width) は (new) に未定義のため 1200px をハードコード）。 */
+/* ページ全体のラッパー。最大 --max-width(960px) でセンタリングしない
+ * （§4「本文・品書きは左揃え基調」）。左寄せの読み幅で運用する。 */
 .layout {
-  max-width: 1200px;
+  max-width: var(--max-width);
   margin: 0 auto;
   padding: 1.5rem 1rem;
   display: flex;
@@ -25,39 +25,37 @@
   gap: 0.25rem;
 }
 
-/* h1: SEO 用に保持しつつ視覚的に小さく。bold は不使用（DESIGN.md §3） */
+/* h1: SEO 用に保持しつつ視覚的に小さく。bold は明朝の 600 一本（DESIGN.md §3） */
 .title {
   font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--fg);
+  color: var(--ink);
   margin: 0;
   line-height: 1.4;
 }
 
-/* 短説明: 1〜2 文。長文は 720px に制限（DESIGN.md §4） */
+/* 短説明: 1〜2 文。読む面は --measure に絞る（DESIGN.md §4） */
 .shortDescription {
   font-size: 0.9rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   line-height: 1.7;
   margin: 0;
-  max-width: 720px;
+  max-width: var(--measure);
 }
 
 /* === ゾーン3: 補助情報（本体より下に二次配置）=== */
 
 /* シェアセクション */
 .shareSection {
-  max-width: 720px;
+  max-width: var(--measure);
   padding-top: 1.5rem;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--rule);
 }
 
 .shareSectionTitle {
   font-size: 0.95rem;
   font-weight: 600;
-  text-align: center;
   margin: 0 0 0.75rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
 }
 
 /* モバイル対応 */

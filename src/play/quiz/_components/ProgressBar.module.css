@@ -1,4 +1,7 @@
-/* クイズ設問の進捗バー。新デザイン体系（DESIGN.md）。新トークンのみ使用。 */
+/*
+ * クイズ設問の進捗バー。DESIGN.md §4「進捗=罫/朱の細バー（色ベタ禁止）」。
+ * トラックは罫線の器、塗りは朱一色の細いバー（面を色で塗り込めない・薄い機能表示に限る）。
+ */
 
 .wrapper {
   display: flex;
@@ -9,22 +12,23 @@
 
 .label {
   font-size: 0.875rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
 }
 
-/* トラックは淡い面。角丸は --r-normal（2px・装飾要素の規範。DESIGN.md §5） */
+/* トラックは罫で組んだ細い器。角丸0基調（--radius）。 */
 .track {
   flex: 1;
   height: 6px;
-  background-color: var(--bg-soft);
-  border: 1px solid var(--border);
-  border-radius: var(--r-normal);
+  background-color: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
   overflow: hidden;
 }
 
-/* 塗りは共通アクセント（藍）に統一 */
+/* 塗りは共通アクセント（朱）に統一 */
 .fill {
   height: 100%;
   background-color: var(--accent);

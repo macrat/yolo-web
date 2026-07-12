@@ -10,11 +10,12 @@
  *   新デザインでは「色ではなく構造と言葉で立てる」方針に従い、3 セクション（strengths/weaknesses/
  *   behaviors）ともカード質感を統一する。差別化は見出しと本文表現で行う。
  * - クイズタイプごとのアクセント色（旧 --music-accent-color / --music-accent-bg 独自トークン）は
- *   全廃。共通 --accent / --accent-soft / --accent-strong に統一する。
+ *   全廃。共通 --accent / --accent-weak に統一する。
  * - 全タイプ一覧の旧 pill 型（横wrap・999px角丸）は新デザイン言語に含まれないため廃止。
  *   8 クイズ間で質感を揃えるため、page.tsx 側の "pill" 指定も内部で CharacterPersonalityContent と
  *   同じ allTypesGrid（2-3列グリッド）にマップする。public props は "list" | "pill" のまま維持する。
- * - 角丸はカード/ブロック = --r-normal、操作要素（リンク） = --r-interactive。
+ * - 角丸は一律 0px（--radius）。新体系に操作専用の角丸はなく、カードもリンクも直角。
+ *   例外の 2px（--radius-sm）は値札ラベル・入力欄専用で、ここでは使わない。
  */
 
 /* ============================================================
@@ -34,7 +35,7 @@
 .sectionHeading {
   font-size: 1.05rem;
   font-weight: 600;
-  color: var(--fg);
+  color: var(--ink);
   margin: 0 0 1rem;
   padding-left: 0.75rem;
   border-left: 3px solid var(--accent);
@@ -58,10 +59,10 @@
 .item {
   font-size: 0.95rem;
   line-height: 1.7;
-  color: var(--fg);
+  color: var(--ink);
   padding: 0.75rem 1rem;
-  border-radius: var(--r-normal);
-  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  border: 1px solid var(--rule);
   display: flex;
   align-items: flex-start;
   gap: 0.625rem;
@@ -74,26 +75,25 @@
   width: 2px;
   align-self: stretch;
   background: var(--accent);
-  border-radius: var(--r-normal);
+  border-radius: var(--radius);
 }
 
 /* ============================================================
    todayAction カード: 「今日の音楽ライフのヒント」
-   セクション内で最も呼びかけの強いブロック。ResultCard adviceCard 相当の
-   淡いアクセント面（--accent-soft + --accent-strong 枠）で静かに強調する。
+   DESIGN.md §2 是正（cycle-278 C4）: --accent-weak は操作・選択状態のハイライトにのみ可で
+   区画の地には不可のため、静的な区画の地は --paper-2（一段沈む面）に統一する。
    旧版は中央寄せ＋font-weight 500＋紫ティント（--music-accent-bg）で目立たせていたが、
    左寄せ・600 以下・共通アクセントに揃える。
    ============================================================ */
 .todayActionCard {
   padding: 1.1rem 1.25rem;
-  border-radius: var(--r-normal);
+  border-radius: var(--radius);
   font-size: 1rem;
   line-height: 1.8;
-  color: var(--fg);
+  color: var(--ink);
   margin-bottom: 2rem;
   text-align: left;
-  background: var(--accent-soft);
-  border: 1px solid var(--accent-strong);
+  background: var(--paper-2);
 }
 
 /* ============================================================
@@ -102,44 +102,51 @@
 .allTypesSection {
   margin-top: 2rem;
   padding-top: 1.5rem;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--rule);
 }
 
 /* 全タイプ見出し: ResultCard detailedHeading 言語に合わせ、左寄せ・左罫線で区切る */
 .allTypesCta {
   font-size: 1.05rem;
   font-weight: 600;
-  color: var(--fg);
+  color: var(--ink);
   margin: 0 0 1rem;
   padding-left: 0.75rem;
   border-left: 3px solid var(--accent);
 }
 
-/* グリッドレイアウト（page.tsx 版＝旧 "pill" の置換先）:
-   music-personality は 8 タイプあり、CharacterPersonalityContent と同じ 2-3 列グリッドで
-   8 クイズ間の質感を揃える。旧 pill 型（横wrap・999px 角丸・font-weight 700）は廃止。 */
+/* 罫の升目索引（page.tsx 版＝旧 "pill" の置換先・DESIGN.md §4/§8-4 是正 cycle-278 C4）:
+   「同型アイコンカードの3枚組」等のカードグリッドは §4 の禁止対象であり、一覧の既定は
+   罫区切りであるべきなので、辞典の部首索引の流儀（罫で仕切った升目に複数列で流す）に組む。
+   セル個々はカード化しない（背景・全周枠を持たない）——列内の行は border-bottom の罫だけで
+   区切る。現在地は面を朱で塗らず、文字色+下罫の朱だけで静かに示す（--accent-weak 不使用）。 */
 .allTypesGrid {
   list-style: none;
   padding: 0;
   margin: 0 0 1.5rem 0;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.5rem;
+  columns: 2;
+  column-gap: 1.5rem;
 }
 
 @media (min-width: 480px) {
   .allTypesGrid {
-    grid-template-columns: repeat(3, 1fr);
+    columns: 3;
   }
+}
+
+.allTypesGrid .allTypesItem,
+.allTypesGrid .allTypesItemCurrent {
+  break-inside: avoid;
 }
 
 .allTypesGrid .allTypesItem a,
 .allTypesGrid .allTypesItemCurrent a {
   display: flex;
   align-items: center;
+  min-height: 44px;
   gap: 0.375rem;
-  padding: 0.5rem 0.75rem;
-  border-radius: var(--r-interactive);
+  padding: 0.5rem 0.25rem;
+  border-bottom: 1px solid var(--rule);
   font-size: 0.875rem;
   text-decoration: none;
   transition: background-color 0.15s ease;
@@ -147,20 +154,19 @@
 }
 
 .allTypesGrid .allTypesItem a {
-  color: var(--fg);
-  border: 1px solid var(--border);
-  background: transparent;
+  color: var(--ink);
 }
 
 .allTypesGrid .allTypesItem a:hover {
-  background-color: var(--bg-soft);
+  background-color: var(--paper-2);
 }
 
-/* 現在のタイプ: アクセント枠＋淡い面で「今ここ」を静かに示す（font-weight は上げない） */
+/* 現在のタイプ: 面を朱で塗らず、文字色+下罫の朱だけで「今ここ」を静かに示す */
 .allTypesGrid .allTypesItemCurrent a {
-  color: var(--fg);
-  border: 1px solid var(--accent);
-  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 600;
+  border-bottom-color: var(--accent);
+  pointer-events: none;
 }
 
 /* 縦並びリスト レイアウト（ResultCard 版） */
@@ -177,24 +183,25 @@
 .allTypesListVertical .allTypesItemCurrent a {
   display: flex;
   align-items: center;
+  min-height: 44px;
   gap: 0.5rem;
   padding: 0.5rem 0.75rem;
   /* 現在タイプの枠線と高さをそろえるため、非現在項目も透明枠を持たせる */
   border: 1px solid transparent;
-  border-radius: var(--r-interactive);
+  border-radius: var(--radius);
   font-size: 0.9rem;
-  color: var(--fg);
+  color: var(--ink);
   text-decoration: none;
   transition: background-color 0.15s ease;
 }
 
 .allTypesListVertical .allTypesItem a:hover {
-  background-color: var(--bg-soft);
+  background-color: var(--paper-2);
 }
 
 /* 現在のタイプ: アクセント枠＋淡い面で「今ここ」を示す（font-weight は上げない） */
 .allTypesListVertical .allTypesItemCurrent a {
   border: 1px solid var(--accent);
-  background-color: var(--accent-soft);
+  background-color: var(--accent-weak);
   pointer-events: none;
 }

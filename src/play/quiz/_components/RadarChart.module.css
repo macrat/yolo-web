@@ -1,4 +1,9 @@
-/* Animation for the data polygon and score display */
+/*
+ * レーダーチャート（結果の成果物内のデータ可視化・DESIGN.md §7「非テキスト要素も AA」）。
+ * グリッド・軸・ラベルは墨（--rule/--ink/--ink-2）。データ系列だけが和色8色の1色
+ * （data-color 経由の --radar-fill）を持つ。色付きグロー・グラデーションは使わない（§8-2）。
+ * リビールは 1 回・300ms 程度（§5 上限内）・prefers-reduced-motion 尊重。
+ */
 .chart {
   display: block;
   margin: 0 auto;
@@ -9,7 +14,7 @@
 .dataGroup {
   opacity: 0;
   transform-origin: center;
-  animation: fadeScaleIn 0.6s ease-out 0.3s forwards;
+  animation: fadeScaleIn 0.3s ease-out forwards;
 }
 
 @keyframes fadeScaleIn {
@@ -21,4 +26,37 @@
     opacity: 1;
     transform: scale(1);
   }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dataGroup {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+/* data-color → 和色トークン（Tsutsumi と同じ8色。テキスト色ではなくデータ系列の色）。 */
+.chart[data-color="kurenai"] {
+  --radar-fill: var(--wairo-kurenai);
+}
+.chart[data-color="kaki"] {
+  --radar-fill: var(--wairo-kaki);
+}
+.chart[data-color="yamabuki"] {
+  --radar-fill: var(--wairo-yamabuki);
+}
+.chart[data-color="moegi"] {
+  --radar-fill: var(--wairo-moegi);
+}
+.chart[data-color="tokiwa"] {
+  --radar-fill: var(--wairo-tokiwa);
+}
+.chart[data-color="ai"] {
+  --radar-fill: var(--wairo-ai);
+}
+.chart[data-color="fuji"] {
+  --radar-fill: var(--wairo-fuji);
+}
+.chart[data-color="suou"] {
+  --radar-fill: var(--wairo-suou);
 }

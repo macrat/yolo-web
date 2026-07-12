@@ -1,8 +1,9 @@
 /*
- * 結果カード（受検者本人向けインライン結果）。新デザイン体系（DESIGN.md）。
+ * 結果カード（受検者本人向けインライン結果）。DESIGN.md（紙・墨・朱の店構え）。
  * 左寄せ・新トークンのみ・bold 不使用・絵文字なし・影なし。
- * クイズごとの派手色ではなく共通アクセント（--accent）に統一する。
- * 角丸はカード/ブロック = --r-normal（2px）、操作要素 = --r-interactive（8px）。
+ * personality 型・icon/color 両方あるタイプは結果を包み（Tsutsumi）で見せる（§4/§7）。
+ * 角丸は 0px 基調（--radius）。値札的な小ラベルのみ例外で --radius-sm。
+ * リビールは 1 回・400ms 以下・prefers-reduced-motion 尊重（§5）。
  */
 
 .card {
@@ -21,76 +22,126 @@
   }
 }
 
-/* 「あなたの結果」ラベル（小見出し） */
+/* 「あなたの結果」ラベル（小見出し・フォールバック用） */
 .resultLabel {
   font-size: 0.8rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   margin: 0 0 0.25rem;
 }
 
-/* === 勲章ヘッダ（B/C：§7・personality 型のみ） ===
- * 無彩の土台の上に結果固有色（--medal-color）が象徴の面・罫として一点効く構図。
- * 固有色はテキストには使わず（AA 不足回避）、面（低アルファのティント）と罫のみに使う。 */
-.medal {
+/* === 結果を包みで見せる（§7・personality 型のみ） ===
+ * この見出し部（器）は静かな到達ラベルだけを持つ。結果そのものは Tsutsumi（罫で
+ * 明確に包まれた独立ビジュアル）が主役——器は賑やかにしない（§4）。 */
+.medalWrap {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 0.5rem;
-  margin: 0 0 0.75rem;
-  /* C：穏当なリビール。opacity 中心＋わずかな立ち上がり。合計 500ms 未満
-   *（.card 全体の fadeIn 0.4s の上に、勲章部だけ僅かに遅らせて立ち上げる）。 */
-  animation: medalReveal 0.45s ease both;
+  gap: 0.75rem;
+  margin: 0 0 1rem;
+  /* リビールは 1 回・450ms 以下（§5 の上限内）。opacity 中心＋わずかな立ち上がり。 */
+  animation: medalReveal 0.4s ease both;
 }
 
 /* 到達の承認ラベル（静かな達成感。煽らない） */
 .medalLabel {
   font-size: 0.8rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   margin: 0;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
 }
 
-/* 「診断完了」バッジ。固有色ではなく成功系の落ち着いた面で静かに承認する。
- * M1（a11y）: 文字色は「--success-strong そのまま」だと --success-soft 面上で
- *   light 4.32:1 と WCAG AA（通常テキスト 4.5:1、0.75rem は「大きい文字」非該当）
- *   未達だった。グローバル --success-* は他所（regex/text-diff 等）で横展開されるため
- *   触らず、ここでローカルに是正する。--success-strong を --fg 方向へ寄せて濃度を上げる
- *   （--fg は各モードで面と反対方向＝light は暗色・dark は明色なので、両モードでコントラスト
- *    が上がる）。コントラスト比 light 約6.4:1 / dark 約11.0:1（計測法で 6.39〜6.45:1）で
- *    ともに AA 4.5:1 を余裕でクリア。緑の「完了」感は
- *   背景ティントと文字の緑寄りで保つ（§7 の上品さを維持）。 */
+/* 「診断完了」バッジ。DESIGN.md §2 是正（cycle-278 C4）: --accent-weak は
+ * 操作・選択状態のハイライトにのみ可で静的なラベル地には不可のため、
+ * 値札（メタ情報ラベル・§4）の語彙——--rule 罫囲み + --ink-2 の文字に統一する
+ * （値札ラベルに準じ --radius-sm を例外適用）。 */
 .medalLabelDone {
   padding: 0.1rem 0.45rem;
-  border-radius: var(--r-normal);
-  background: var(--success-soft);
-  color: color-mix(in srgb, var(--success-strong) 70%, var(--fg));
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--rule);
+  color: var(--ink-2);
   font-size: 0.75rem;
 }
 
-/* 象徴アイコン（絵文字）。固有色は背景面（低アルファ）と罫にのみ使う（§2/§7）。
- * color-mix で固有色を薄く敷き（面）、やや濃いめの固有色を罫に使う。 */
-.medalIcon {
+.title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0 0 0.5rem;
+  line-height: 1.4;
+}
+
+.score {
+  font-size: 0.95rem;
+  color: var(--ink-2);
+  margin: 0 0 1rem;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+.description {
+  font-size: 1rem;
+  line-height: 1.8;
+  margin: 0 0 1.5rem;
+  color: var(--ink);
+  max-width: 720px;
+}
+
+/* おすすめリンク（任意）。罫の線画（トップページ .heroLink と同じ語彙・ピル禁止）。 */
+.recommendation {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-bottom: 1.5rem;
+  padding: 0 1.1rem;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: background-color 0.15s ease;
+}
+
+.recommendation:hover {
+  background-color: var(--accent-weak);
+}
+
+.recommendation:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* もう一度挑戦ボタン。罫の線画ボタン（ブランド色・影なし・角丸0）。 */
+.retryButton {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 4rem;
-  height: 4rem;
-  font-size: 2.25rem;
-  line-height: 1;
-  border-radius: var(--r-normal);
-  background: color-mix(in srgb, var(--medal-color) 12%, transparent);
-  border: 1px solid color-mix(in srgb, var(--medal-color) 45%, transparent);
+  min-height: 44px;
+  margin-top: 0.5rem;
+  padding: 0 1.25rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
+  background-color: var(--paper);
+  color: var(--ink);
+  font-size: 0.9rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
 }
 
-/* タイプ名（勲章の核）。--fg を維持し、サイズで際立たせる（bold 多用は避ける） */
-.medalTitle {
-  font-size: 1.75rem;
-  font-weight: 600;
-  color: var(--fg);
-  margin: 0;
-  line-height: 1.35;
+.retryButton:hover {
+  background-color: var(--accent-weak);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.retryButton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 @keyframes medalReveal {
@@ -104,91 +155,12 @@
   }
 }
 
-.title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--fg);
-  margin: 0 0 0.5rem;
-  line-height: 1.4;
-}
-
-.score {
-  font-size: 0.95rem;
-  color: var(--fg-soft);
-  margin: 0 0 1rem;
-}
-
-.description {
-  font-size: 1rem;
-  line-height: 1.8;
-  margin: 0 0 1.5rem;
-  color: var(--fg);
-  max-width: 720px;
-}
-
-/* おすすめリンク（任意）。操作要素 → --r-interactive */
-.recommendation {
-  display: inline-block;
-  margin-bottom: 1.5rem;
-  padding: 0.625rem 1.1rem;
-  background-color: var(--bg-soft);
-  border-radius: var(--r-interactive);
-  color: var(--accent);
-  text-decoration: none;
-  font-size: 0.9rem;
-  transition: background-color 0.15s ease;
-}
-
-.recommendation:hover {
-  background-color: var(--bg-softer);
-}
-
-.recommendation:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-/* もう一度挑戦ボタン。操作要素 → --r-interactive。default ボタン相当 */
-.retryButton {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 44px;
-  margin-top: 0.5rem;
-  padding: 0.5rem 1.25rem;
-  border: 1px solid var(--border);
-  border-radius: var(--r-interactive);
-  background-color: var(--bg-soft);
-  color: var(--fg);
-  font-size: 0.9rem;
-  font-family: inherit;
-  box-shadow: var(--shadow-button);
-  cursor: pointer;
-  transition:
-    background-color 0.15s ease,
-    box-shadow 0.15s ease;
-}
-
-.retryButton:hover {
-  background-color: var(--bg-softer);
-}
-
-.retryButton:active {
-  box-shadow: none;
-}
-
-.retryButton:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .card {
     animation: none;
   }
 
-  /* C：reduce 指定時は勲章の動きを無効化（既存 .card と同じ方針） */
-  .medal {
+  .medalWrap {
     animation: none;
   }
 }
@@ -203,7 +175,7 @@
 .detailedHeading {
   font-size: 1.05rem;
   font-weight: 600;
-  color: var(--fg);
+  color: var(--ink);
   margin: 0 0 1rem;
   padding-left: 0.75rem;
   border-left: 3px solid var(--accent);
@@ -222,10 +194,10 @@
 .traitsItem {
   font-size: 0.95rem;
   line-height: 1.7;
-  color: var(--fg);
+  color: var(--ink);
   padding: 0.625rem 0.875rem;
-  background: var(--bg-soft);
-  border-radius: var(--r-normal);
+  background: var(--paper-2);
+  border-radius: var(--radius);
   display: flex;
   align-items: flex-start;
   gap: 0.625rem;
@@ -238,7 +210,7 @@
   width: 2px;
   align-self: stretch;
   background: var(--accent);
-  border-radius: var(--r-normal);
+  border-radius: var(--radius);
 }
 
 /* behaviors リスト */
@@ -254,30 +226,31 @@
 .behaviorsItem {
   font-size: 0.95rem;
   line-height: 1.7;
-  color: var(--fg);
+  color: var(--ink);
   padding: 0.75rem 1rem;
-  border-radius: var(--r-normal);
-  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  border: 1px solid var(--rule);
 }
 
-/* advice カード（標準 variant）。共通アクセントの淡い面に置く */
+/* advice カード（標準 variant）。DESIGN.md §2 是正（cycle-278 C4）: --accent-weak は
+ * 操作・選択状態のハイライトにのみ可で区画の地には不可のため、
+ * characterIntro と同じ --paper-2（一段沈む面）に統一する。 */
 .adviceCard {
   padding: 1.1rem 1.25rem;
-  border-radius: var(--r-normal);
+  border-radius: var(--radius);
   font-size: 1rem;
   line-height: 1.8;
-  color: var(--fg);
+  color: var(--ink);
   margin-bottom: 0;
   text-align: left;
-  background: var(--accent-soft);
-  border: 1px solid var(--accent-strong);
+  background: var(--paper-2);
 }
 
 /* catchphrase（contrarian-fortune detailedSection 内） */
 .catchphrase {
   font-size: 1rem;
   font-style: italic;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   text-align: left;
   margin-bottom: 1.5rem;
   line-height: 1.7;
@@ -287,7 +260,7 @@
  * variant 別の派手な装飾線は廃し、静かなリード文として左寄せで置く。 */
 .catchphraseBeforeDescription {
   font-size: 1.1rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   text-align: left;
   margin: 0 0 1rem;
   line-height: 1.7;
@@ -304,12 +277,12 @@
 .humorMetricsTable th,
 .humorMetricsTable td {
   padding: 0.5rem 0.75rem;
-  border: 1px solid var(--border);
+  border: 1px solid var(--rule);
   text-align: left;
 }
 
 .humorMetricsTable th {
-  background: var(--bg-soft);
+  background: var(--paper-2);
   font-weight: 600;
   width: 50%;
 }
@@ -319,18 +292,18 @@
   font-size: 1rem;
   line-height: 1.8;
   text-align: left;
-  color: var(--fg);
+  color: var(--ink);
   margin-bottom: 1.5rem;
   padding: 1.1rem 1.25rem;
-  border-radius: var(--r-normal);
-  background: var(--bg-soft);
+  border-radius: var(--radius);
+  background: var(--paper-2);
 }
 
 /* characterMessage（character-fortune） */
 .characterMessage {
   font-size: 0.95rem;
   line-height: 1.9;
-  color: var(--fg);
+  color: var(--ink);
   text-align: left;
   margin-bottom: 0;
 }

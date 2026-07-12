@@ -7,7 +7,7 @@
  * - 左寄せ・新トークンのみ・font-weight は最大 600・絵文字なし・影なし。
  * - タイプごとの派手色（--type-color）は装飾から外し、共通アクセント（--accent 系）に統一する。
  *   各タイプの個性は色ではなく言葉（本文）で立てる。
- * - 角丸はカード/ブロック = --r-normal、操作要素（リンク） = --r-interactive。
+ * - 角丸は一律 --radius（0px・角ばり）。新体系に操作要素専用の角丸はない。
  *
  * なお wrapper は caller 互換のため --type-color の注入を引き続き受け取るが、
  * 装飾としては参照しない（color-as-content ではないため）。
@@ -28,7 +28,7 @@
 .sectionHeading {
   font-size: 1.05rem;
   font-weight: 600;
-  color: var(--fg);
+  color: var(--ink);
   margin: 0 0 1rem;
   padding-left: 0.75rem;
   border-left: 3px solid var(--accent);
@@ -36,22 +36,20 @@
 
 /* ============================================================
    coreSentence カード: 逆張りフレームの「核心一文」。
-   このタイプの読み解きの中心となる解説ブロックなので、ResultCard adviceCard /
-   CharacterPersonalityContent archetypeBreakdownCard と同じく
-   淡いアクセント面（--accent-soft + --accent-strong 枠）で静かに強調する。
+   DESIGN.md §2 是正（cycle-278 C4）: --accent-weak は操作・選択状態のハイライトにのみ可で
+   区画の地には不可のため、静的な区画の地は persona/thirdPartyNote と同じ --paper-2 に統一する。
    旧版の color-mix(--type-color, ...) ティント＋type-color 左罫線は新デザイン語彙に
    そぐわないため撤去し、装飾としての --type-color 参照は捨てる。
    ============================================================ */
 .coreSentenceCard {
   padding: 1.1rem 1.25rem;
-  border-radius: var(--r-normal);
+  border-radius: var(--radius);
   font-size: 0.95rem;
   line-height: 1.8;
-  color: var(--fg);
+  color: var(--ink);
   margin-bottom: 2rem;
   text-align: left;
-  background: var(--accent-soft);
-  border: 1px solid var(--accent-strong);
+  background: var(--paper-2);
 }
 
 /* ============================================================
@@ -69,10 +67,10 @@
 .behaviorsItem {
   font-size: 0.95rem;
   line-height: 1.7;
-  color: var(--fg);
+  color: var(--ink);
   padding: 0.75rem 1rem;
-  border-radius: var(--r-normal);
-  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  border: 1px solid var(--rule);
   display: flex;
   align-items: flex-start;
   gap: 0.625rem;
@@ -86,45 +84,45 @@
   width: 2px;
   align-self: stretch;
   background: var(--accent);
-  border-radius: var(--r-normal);
+  border-radius: var(--radius);
 }
 
 /* ============================================================
    persona カード: タイプの人物像（散文セクション）。
    coreSentence（核心一文）のあとに置く「掘り下げの語り」なので、
-   中立の --bg-soft 面に置いてアクセント面と質感を分け、落ち着いたトーンにする。
+   中立の --paper-2 面に置いてアクセント面と質感を分け、落ち着いたトーンにする。
    ============================================================ */
 .personaCard {
   padding: 1.1rem 1.25rem;
-  border-radius: var(--r-normal);
+  border-radius: var(--radius);
   font-size: 0.95rem;
   line-height: 1.8;
-  color: var(--fg);
+  color: var(--ink);
   margin-bottom: 2rem;
   text-align: left;
-  background: var(--bg-soft);
+  background: var(--paper-2);
 }
 
 /* ============================================================
    thirdPartyNote カード: 第三者視点のシーン描写。
-   persona と同質の散文セクション。同じ --bg-soft 面で揃え、
+   persona と同質の散文セクション。同じ --paper-2 面で揃え、
    見出し（sectionHeading）で意味的に区別する。
    ============================================================ */
 .thirdPartyNoteCard {
   padding: 1.1rem 1.25rem;
-  border-radius: var(--r-normal);
+  border-radius: var(--radius);
   font-size: 0.95rem;
   line-height: 1.8;
-  color: var(--fg);
+  color: var(--ink);
   margin-bottom: 2rem;
   text-align: left;
-  background: var(--bg-soft);
+  background: var(--paper-2);
 }
 
 /* ============================================================
    humorMetrics テーブル（省略可）: 笑い指標。
    ResultCard.module.css の humorMetricsTable と質感をそろえ、
-   --bg-soft のラベルセル + --border の罫線で素直なテーブルに見せる。
+   --paper-2 のラベルセル + --rule の罫線で素直なテーブルに見せる。
    旧版の type-color ティント縞や font-weight 700 は撤去。
    ============================================================ */
 .humorMetricsSection {
@@ -139,22 +137,22 @@
 
 .humorMetricsTable td {
   padding: 0.625rem 0.875rem;
-  border: 1px solid var(--border);
+  border: 1px solid var(--rule);
   text-align: left;
-  color: var(--fg);
+  color: var(--ink);
   vertical-align: top;
   line-height: 1.6;
 }
 
 .humorMetricsLabel {
-  background: var(--bg-soft);
-  color: var(--fg);
+  background: var(--paper-2);
+  color: var(--ink);
   font-weight: 600;
   width: 50%;
 }
 
 .humorMetricsValue {
-  color: var(--fg);
+  color: var(--ink);
 }
 
 /* ============================================================
@@ -163,7 +161,7 @@
 .allTypesSection {
   margin-top: 2rem;
   padding-top: 1.5rem;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--rule);
 }
 
 /* 全タイプ見出し: ResultCard detailedHeading 言語に合わせ、左寄せ・左罫線で区切る。
@@ -171,38 +169,45 @@
 .allTypesCta {
   font-size: 1.05rem;
   font-weight: 600;
-  color: var(--fg);
+  color: var(--ink);
   margin: 0 0 1rem;
   padding-left: 0.75rem;
   border-left: 3px solid var(--accent);
 }
 
-/* グリッドレイアウト: 2-3列で全タイプを視覚的にまとめて表示。
-   旧版の「pill 型横wrap（角丸999px・font-weight 700・派手色 type-color 枠）」は
-   新デザイン語彙に含まれないため撤去し、Character/Yoji と同じ allTypesGrid に統一する。
+/* 罫の升目索引（DESIGN.md §4/§8-4 是正 cycle-278 C4）:
+   「同型アイコンカードの3枚組」等のカードグリッドは §4 の禁止対象であり、一覧の既定は
+   罫区切りであるべきなので、辞典の部首索引の流儀（罫で仕切った升目に複数列で流す）に組む。
+   セル個々はカード化しない（背景・全周枠を持たない）——列内の行は border-bottom の罫だけで
+   区切る。現在地は面を朱で塗らず、文字色+下罫の朱だけで静かに示す（--accent-weak 不使用）。
    public props "pill" は caller 互換のため TSX 側で受け取り、内部で本クラスへマップする。 */
 .allTypesGrid {
   list-style: none;
   padding: 0;
   margin: 0 0 1.5rem 0;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.5rem;
+  columns: 2;
+  column-gap: 1.5rem;
 }
 
 @media (min-width: 480px) {
   .allTypesGrid {
-    grid-template-columns: repeat(3, 1fr);
+    columns: 3;
   }
+}
+
+.allTypesGrid .allTypesItem,
+.allTypesGrid .allTypesItemCurrent {
+  break-inside: avoid;
 }
 
 .allTypesGrid .allTypesItem a,
 .allTypesGrid .allTypesItemCurrent a {
+  min-height: 44px; /* WCAG 2.5.5 / DESIGN.md §10: タップターゲット 44px 以上 */
   display: flex;
   align-items: center;
   gap: 0.375rem;
-  padding: 0.5rem 0.75rem;
-  border-radius: var(--r-interactive);
+  padding: 0.5rem 0.25rem;
+  border-bottom: 1px solid var(--rule);
   font-size: 0.875rem;
   text-decoration: none;
   transition: background-color 0.15s ease;
@@ -210,20 +215,18 @@
 }
 
 .allTypesGrid .allTypesItem a {
-  color: var(--fg);
-  border: 1px solid var(--border);
-  background: transparent;
+  color: var(--ink);
 }
 
 .allTypesGrid .allTypesItem a:hover {
-  background-color: var(--bg-soft);
+  background-color: var(--paper-2);
 }
 
-/* 現在のタイプ: 色ではなくアクセント枠＋淡い面で「今ここ」を静かに示す */
+/* 現在のタイプ: 面を朱で塗らず、文字色+下罫の朱だけで「今ここ」を静かに示す */
 .allTypesGrid .allTypesItemCurrent a {
-  color: var(--fg);
-  border: 1px solid var(--accent);
-  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 600;
+  border-bottom-color: var(--accent);
   pointer-events: none;
 }
 
@@ -244,26 +247,27 @@
 
 .allTypesListVertical .allTypesItem a,
 .allTypesListVertical .allTypesItemCurrent a {
+  min-height: 44px; /* WCAG 2.5.5 / DESIGN.md §10: タップターゲット 44px 以上 */
   display: flex;
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 0.75rem;
   /* 現在タイプの枠線と高さをそろえるため、非現在項目も透明枠を持たせる */
   border: 1px solid transparent;
-  border-radius: var(--r-interactive);
+  border-radius: var(--radius);
   font-size: 0.9rem;
-  color: var(--fg);
+  color: var(--ink);
   text-decoration: none;
   transition: background-color 0.15s ease;
 }
 
 .allTypesListVertical .allTypesItem a:hover {
-  background-color: var(--bg-soft);
+  background-color: var(--paper-2);
 }
 
 /* 現在のタイプ: アクセント枠＋淡い面で「今ここ」を示す（font-weight は上げない） */
 .allTypesListVertical .allTypesItemCurrent a {
   border: 1px solid var(--accent);
-  background-color: var(--accent-soft);
+  background-color: var(--accent-weak);
   pointer-events: none;
 }

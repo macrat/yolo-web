@@ -1,5 +1,6 @@
 "use client";
 
+import type { WairoColor } from "@/components/Tsutsumi";
 import styles from "./RadarChart.module.css";
 
 interface RadarChartAxis {
@@ -11,8 +12,12 @@ interface RadarChartAxis {
 interface RadarChartProps {
   /** Array of axis data to display (labels, values, maximums) */
   axes: RadarChartAxis[];
-  /** Theme color for the data polygon (hex) */
-  color: string;
+  /**
+   * データ多角形の色。RadarChart は結果の成果物（包み）の中に置くデータ可視化なので、
+   * 任意 hex ではなく和色8色（DESIGN.md §2「成果物パレット」）から選ぶ。グリッド・軸・
+   * ラベルは墨（--rule / --ink-2）で組み、データ系列だけがこの和色を持つ。
+   */
+  color: WairoColor;
   /** Chart size in pixels (used for viewBox, responsive via CSS) */
   size?: number;
 }
@@ -123,19 +128,19 @@ export default function RadarChart({
   return (
     <svg
       className={styles.chart}
+      data-color={color}
       viewBox={`0 0 ${size} ${size}`}
       role="img"
       aria-label="レーダーチャート"
     >
-      {/* Background grid */}
+      {/* Background grid: 墨の罫（--rule）で組む。装飾の色付きグローは使わない（§8-2）。 */}
       {gridPolygons.map((points, i) => (
         <polygon
           key={`grid-${i}`}
           points={points}
           fill="none"
-          stroke="#d1d5db"
+          stroke="var(--rule)"
           strokeWidth={i === GRID_LEVELS - 1 ? 1.5 : 0.7}
-          opacity={0.6}
         />
       ))}
 
@@ -147,29 +152,30 @@ export default function RadarChart({
           y1={line.y1}
           x2={line.x2}
           y2={line.y2}
-          stroke="#d1d5db"
+          stroke="var(--rule)"
           strokeWidth={0.7}
-          opacity={0.6}
         />
       ))}
 
-      {/* Data polygon with animation */}
+      {/* Data polygon with animation。色は和色8色のいずれか（--radar-fill・data-color 経由）。 */}
       <g className={styles.dataGroup}>
         {/* Filled area */}
         <polygon
           points={dataPoints}
-          fill={color}
+          fill="var(--radar-fill)"
           fillOpacity={0.25}
-          stroke={color}
+          stroke="var(--radar-fill)"
           strokeWidth={2}
         />
         {/* Vertex dots */}
-        {dots.map(([x, y], i) => (
-          <circle key={`dot-${i}`} cx={x} cy={y} r={DOT_RADIUS} fill={color} />
-        ))}
+        <g fill="var(--radar-fill)">
+          {dots.map(([x, y], i) => (
+            <circle key={`dot-${i}`} cx={x} cy={y} r={DOT_RADIUS} />
+          ))}
+        </g>
       </g>
 
-      {/* Axis labels and score percentages */}
+      {/* Axis labels and score percentages。文字は墨（--ink / --ink-2）・tabular 数値（§10 AA）。 */}
       {labels.map((item, i) => {
         // Adjust text-anchor based on horizontal position
         const anchorX = item.x - cx;
@@ -185,8 +191,8 @@ export default function RadarChart({
               textAnchor={textAnchor}
               dominantBaseline="middle"
               fontSize={13}
-              fontWeight="bold"
-              fill="#374151"
+              fontWeight={600}
+              fill="var(--ink)"
             >
               {item.label}
             </text>
@@ -196,7 +202,8 @@ export default function RadarChart({
               textAnchor={textAnchor}
               dominantBaseline="middle"
               fontSize={11}
-              fill="#6b7280"
+              fill="var(--ink-2)"
+              fontFamily="var(--font-number)"
             >
               {item.pct}%
             </text>

@@ -4,7 +4,7 @@
  * （本人は /play/[slug] 上のインライン結果＝ResultCard 経由で見る）。
  *
  * インライン結果（ResultCard）とトーン統一する: 無彩・左寄せ・絵文字マーカーなし・
- * クイズごとの派手色（旧 --music-accent-color の紫）を使わず共通 --accent / --bg-invert に
+ * クイズごとの派手色（旧 --music-accent-color の紫）を使わず共通 --accent / --accent に
  * 寄せる。新トークンのみ使用。
  *
  * 共通コンテンツセクション（強み〜全タイプ一覧）のスタイルは
@@ -26,38 +26,27 @@
   margin-bottom: 0;
 }
 
-/* 主要 CTA。src/components/Button の primary バリアントと同じ語彙
- * （--bg-invert 面・--fg-invert 文字・--r-interactive・--shadow-button）に寄せ、
- * クイズごとの派手色（旧 --music-accent-color の紫背景）を撤去して共通トーンに統一した。 */
+/* 主要 CTA: 罫の線画（トップページ .heroLink と同じ語彙・ピル/塗り/影禁止）。
+ * クイズごとの accentColor インライン注入は撤去済み。 */
 .tryButton {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-height: 44px;
-  padding: 0.625rem 1.5rem;
-  border: 1px solid var(--bg-invert);
-  border-radius: var(--r-interactive);
-  background: var(--bg-invert);
-  color: var(--fg-invert);
-  font-size: 0.95rem;
-  font-weight: 600;
-  font-family: inherit;
-  box-shadow: var(--shadow-button);
+  padding: 0 1.5rem;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--paper);
+  color: var(--accent);
+  font-family: var(--font-mincho);
+  font-size: 1.0625rem;
   cursor: pointer;
   text-decoration: none;
-  transition:
-    background 0.15s ease,
-    border-color 0.15s ease,
-    box-shadow 0.15s ease;
+  transition: background-color 0.15s ease;
 }
 
 .tryButton:hover {
-  background: var(--bg-invert-soft);
-  border-color: var(--bg-invert-soft);
-}
-
-.tryButton:active {
-  box-shadow: none;
+  background-color: var(--accent-weak);
 }
 
 .tryButton:focus-visible {
@@ -67,7 +56,7 @@
 
 .tryCost {
   font-size: 0.8rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   margin-top: 0.5rem;
   margin-bottom: 0;
 }
@@ -77,17 +66,17 @@
    ============================================================ */
 
 /* キャッチコピー: descriptionの前に表示、第一印象を強調。
- * 旧デザインの中央寄せは撤去し左寄せに統一。淡い面（--bg-soft）に置く。 */
+ * 旧デザインの中央寄せは撤去し左寄せに統一。淡い面（--paper-2）に置く。 */
 .catchphrase {
   font-size: 1.1rem;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1.7;
   text-align: left;
-  color: var(--fg);
+  color: var(--ink);
   margin-bottom: 1.25rem;
   padding: 1rem 1.25rem;
-  border-radius: var(--r-normal);
-  background: var(--bg-soft);
+  border-radius: var(--radius);
+  background: var(--paper-2);
   letter-spacing: 0.02em;
 }
 
@@ -96,35 +85,27 @@
   margin-top: 1.5rem;
   text-align: left;
   padding-top: 1.5rem;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--rule);
 }
 
-/* CTA1より控えめなテキストリンク形式（default ボタン相当） */
+/* CTA2: CTA1より控えめな罫の線画（墨文字・淡い面）。 */
 .cta2Link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-height: 44px;
-  padding: 0.5rem 1.25rem;
-  border: 1px solid var(--border);
-  border-radius: var(--r-interactive);
-  background: var(--bg-soft);
+  padding: 0 1.25rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
+  background: var(--paper-2);
   font-size: 0.9375rem;
-  font-weight: 600;
-  color: var(--fg);
+  color: var(--ink);
   text-decoration: none;
-  box-shadow: var(--shadow-button);
-  transition:
-    background 0.15s ease,
-    box-shadow 0.15s ease;
+  transition: background-color 0.15s ease;
 }
 
 .cta2Link:hover {
-  background: var(--bg-softer);
-}
-
-.cta2Link:active {
-  box-shadow: none;
+  background-color: var(--accent-weak);
 }
 
 .cta2Link:focus-visible {

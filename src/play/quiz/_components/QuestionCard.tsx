@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useCallback, useMemo } from "react";
-import Button from "@/components/Button";
 import type { QuizChoice, QuizQuestion, QuizType } from "@/play/quiz/types";
 import { isCorrectChoice } from "@/play/quiz/scoring";
 import styles from "./QuestionCard.module.css";
@@ -68,34 +67,45 @@ export default function QuestionCard({
     return styles.choiceButton;
   };
 
+  // 正誤は色だけで伝えない（WCAG 1.4.1）。色に加えて短い文字ラベルを添える。
+  const getFeedbackTag = (choiceId: string): string | null => {
+    if (!answered || quizType !== "knowledge") return null;
+    const correct = isCorrectChoice(question, choiceId);
+    if (correct) return "正解";
+    if (choiceId === selectedId) return "あなたの回答";
+    return null;
+  };
+
   return (
     <div className={styles.card} key={question.id}>
       <p className={styles.questionText}>{question.text}</p>
       <div className={styles.choices}>
-        {shuffledChoices.map((choice) => (
-          <button
-            key={choice.id}
-            type="button"
-            className={getChoiceClassName(choice.id)}
-            onClick={() => handleSelect(choice.id)}
-            disabled={answered}
-          >
-            {choice.text}
-          </button>
-        ))}
+        {shuffledChoices.map((choice) => {
+          const feedbackTag = getFeedbackTag(choice.id);
+          return (
+            <button
+              key={choice.id}
+              type="button"
+              className={getChoiceClassName(choice.id)}
+              onClick={() => handleSelect(choice.id)}
+              disabled={answered}
+            >
+              <span>{choice.text}</span>
+              {feedbackTag && (
+                <span className={styles.feedbackTag}>{feedbackTag}</span>
+              )}
+            </button>
+          );
+        })}
       </div>
       {answered && quizType === "knowledge" && (
         <>
           {question.explanation && (
             <div className={styles.explanation}>{question.explanation}</div>
           )}
-          <Button
-            variant="primary"
-            className={styles.nextButton}
-            onClick={onNext}
-          >
+          <button type="button" className={styles.nextButton} onClick={onNext}>
             次へ
-          </Button>
+          </button>
         </>
       )}
     </div>

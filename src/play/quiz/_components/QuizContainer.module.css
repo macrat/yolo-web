@@ -1,14 +1,12 @@
 /*
- * クイズ本体（intro / playing / result）の新デザインスタイル。
- *
- * 新デザイン体系（DESIGN.md）。賑やかさ・絵文字ではなく、整然とした
- * 道具の質感の中に軽やかさを宿す。左寄せ・新トークンのみ・bold 不使用。
- * パネルは QuizContainer.tsx 側の <Panel> が担うため、ここでは中身を組む。
+ * クイズ本体（intro / playing / result）。DESIGN.md（紙・墨・朱の店構え）。
+ * 賑やかさ・絵文字ではなく、整然とした道具の質感の中に軽やかさを宿す。
+ * 左寄せ・新トークンのみ・bold 不使用・影なし。器（Panel 相当の囲み）は持たず、
+ * ページの地（--paper）にそのまま置く——器は静かに（§4）。
  */
 
-/* 本体パネルの内側レイアウト（intro / playing 共通の余白基盤） */
-.panel {
-  /* Panel が背景・境界・角丸・パディングを持つ。中身は縦積み */
+/* intro / playing / result 共通の縦積み基盤（囲みなし）。 */
+.stage {
   display: flex;
   flex-direction: column;
 }
@@ -22,36 +20,40 @@
   gap: 1rem;
 }
 
-/* 所要情報のタグ列（問題数・所要時間・タイプ数）。
- * 角丸は --r-normal（2px・タグ規範。DESIGN.md §5）。淡い面に置く。 */
-.introBadges {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.introBadge {
-  display: inline-block;
-  padding: 0.25rem 0.625rem;
-  border-radius: var(--r-normal);
-  font-size: 0.8rem;
-  background-color: var(--bg-soft);
-  color: var(--fg-soft);
-  white-space: nowrap;
-}
-
 /* 開始前の一言（補足）。目立たせない */
 .introLead {
   font-size: 0.95rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   line-height: 1.7;
   margin: 0;
 }
 
-/* 開始ボタンは src/components/Button（primary）。横幅をやや広げる */
+/* 開始ボタン: 罫の線画（トップページ .heroLink と同じ語彙・ピル/ブランド色禁止）。 */
 .startButton {
-  margin-top: 0.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
   min-width: 12rem;
+  margin-top: 0.25rem;
+  padding: 0 1.5rem;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--paper);
+  color: var(--accent);
+  font-family: var(--font-mincho);
+  font-size: 1.0625rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.startButton:hover {
+  background-color: var(--accent-weak);
+}
+
+.startButton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 /* intro 下部の関連リンク（任意） */

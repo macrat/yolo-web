@@ -119,16 +119,9 @@ export default async function UnexpectedCompatibilityResultPage({
     >
       {/* unexpected-compatibility固有のJSX */}
       <div className={styles.detailedSection}>
-        {/*
-         * キャッチコピーヒーローエリア:
-         * 旧デザインのタイプ固有色（--type-color）注入は撤去し、共通アクセントの淡い面
-         * （--accent-soft）に統一してインライン結果とトーンを揃える。
-         * 負のmarginでカードのpadding分を打ち消し、カード上端まで背景色を広げる。
-         */}
-        <div className={styles.colorHero}>
-          {/* キャッチコピー: 結果のコアメッセージ */}
-          <p className={styles.catchphrase}>{ucDc.catchphrase}</p>
-        </div>
+        {/* キャッチコピー: 結果のコアメッセージ。静かなリード文として置く（器は静か・§4）。
+         * 旧デザインの全面塗り「カラーヒーロー」（--accent-weak 背景バンド）は撤去した。 */}
+        <p className={styles.catchphrase}>{ucDc.catchphrase}</p>
 
         {/* DescriptionExpander: 長いdescriptionは折りたたみ */}
         <DescriptionExpander

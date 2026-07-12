@@ -104,8 +104,8 @@ test("ResultPageShell renders result title as h1", () => {
   expect(h1).toHaveTextContent("テスト結果タイトル");
 });
 
-test("ResultPageShell renders result icon when provided", () => {
-  render(
+test("ResultPageShell renders the result as a Tsutsumi wrapping when icon+color are provided (no emoji)", () => {
+  const { container } = render(
     <ResultPageShell
       quiz={mockQuiz}
       result={mockResult}
@@ -116,13 +116,16 @@ test("ResultPageShell renders result icon when provided", () => {
     </ResultPageShell>,
   );
 
-  expect(screen.getByText("🎯")).toBeInTheDocument();
+  // 結果は Tsutsumi（figure[data-color]）で包まれる（DESIGN.md §4/§7）
+  expect(container.querySelector("figure[data-color]")).not.toBeNull();
+  // 絵文字（result.icon）は装飾として描画しない（§8-6 絵文字禁止）
+  expect(screen.queryByText("🎯")).not.toBeInTheDocument();
 });
 
-test("ResultPageShell does not render icon when result.icon is undefined", () => {
+test("ResultPageShell does not render Tsutsumi when result.icon is undefined (fallback header)", () => {
   const resultWithoutIcon: QuizResult = { ...mockResult, icon: undefined };
 
-  render(
+  const { container } = render(
     <ResultPageShell
       quiz={mockQuiz}
       result={resultWithoutIcon}
@@ -133,7 +136,7 @@ test("ResultPageShell does not render icon when result.icon is undefined", () =>
     </ResultPageShell>,
   );
 
-  // アイコン要素が存在しないことを確認（🎯が表示されない）
+  expect(container.querySelector("figure[data-color]")).toBeNull();
   expect(screen.queryByText("🎯")).not.toBeInTheDocument();
 });
 

@@ -80,33 +80,33 @@ export default function ShareButtons({
         {canWebShare ? (
           <button
             type="button"
-            className={`${styles.shareButton} ${styles.webShare}`}
+            className={styles.shareButton}
             onClick={handleWebShare}
           >
-            結果をシェア
+            この結果をシェア
           </button>
         ) : (
           <>
             <button
               type="button"
-              className={`${styles.shareButton} ${styles.twitter}`}
+              className={styles.shareButton}
               onClick={handleTwitter}
             >
               Xでシェア
             </button>
             <button
               type="button"
-              className={`${styles.shareButton} ${styles.line}`}
+              className={styles.shareButton}
               onClick={handleLine}
             >
               LINEでシェア
             </button>
             <button
               type="button"
-              className={`${styles.shareButton} ${styles.copy}`}
+              className={styles.shareButton}
               onClick={handleCopy}
             >
-              コピー
+              結果をコピー
             </button>
           </>
         )}

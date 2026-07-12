@@ -399,7 +399,7 @@ const defaultProps = {
   onRetry: vi.fn(),
 };
 
-describe("ResultCard - 勲章ヘッダ（B：§7・personality 型のみ）", () => {
+describe("ResultCard - 結果を包み（Tsutsumi）で見せる（§7・personality 型のみ）", () => {
   // 適用条件: quizType === "personality" かつ result.icon と result.color が両方存在。
   const medalResult: QuizResult = {
     id: "type-a",
@@ -409,22 +409,29 @@ describe("ResultCard - 勲章ヘッダ（B：§7・personality 型のみ）", ()
     color: "#c0392b",
   };
 
-  test("personality + icon + color のとき勲章ヘッダ（診断完了ラベル・象徴・タイプ名）が表示される", () => {
+  test("personality + icon + color のとき結果が包み（Tsutsumi）で表示される（診断完了ラベル・タイプ名・絵文字なし）", () => {
     const { container } = render(
       <ResultCard {...defaultProps} result={medalResult} />,
     );
-    // 到達の承認ラベル（勲章時のみ）
+    // 到達の承認ラベル（包み表示時のみ）
     expect(screen.getByText("診断完了")).toBeInTheDocument();
-    // 象徴アイコンが主役として表示される
-    expect(screen.getByText("🦊")).toBeInTheDocument();
-    // タイプ名は勲章の核として表示される
-    expect(screen.getByText("勲章タイプ")).toBeInTheDocument();
-    // 固有色は CSS 変数として象徴の面/罫に渡される（テキスト色には使わない）
-    const medalIcon = container.querySelector("[class*='medalIcon']");
-    expect(medalIcon).not.toBeNull();
-    expect(
-      (medalIcon as HTMLElement).style.getPropertyValue("--medal-color"),
-    ).toBe("#c0392b");
+    // タイプ名は包みの核として表示される（複数箇所に出現しうるため queryAllByText で存在だけ確認）
+    expect(screen.queryAllByText("勲章タイプ").length).toBeGreaterThan(0);
+    // Tsutsumi（包み）が figure として描画され、和色8色のいずれかに決定的に写像される
+    const tsutsumi = container.querySelector("figure[data-color]");
+    expect(tsutsumi).not.toBeNull();
+    expect([
+      "kurenai",
+      "kaki",
+      "yamabuki",
+      "moegi",
+      "tokiwa",
+      "ai",
+      "fuji",
+      "suou",
+    ]).toContain(tsutsumi?.getAttribute("data-color"));
+    // 絵文字（result.icon）は装飾として描画しない（DESIGN.md §8-6 絵文字禁止）
+    expect(screen.queryByText("🦊")).not.toBeInTheDocument();
   });
 
   test("color 欠落時は抑制ヘッダにフォールバック（診断完了ラベル・象徴を出さない）", () => {
@@ -1175,17 +1182,20 @@ describe("ResultCard - traditional-color variant", () => {
     expect(position & Node.DOCUMENT_POSITION_PRECEDING).toBeTruthy();
   });
 
-  test("catchphraseBeforeDescription に result.color が --catchphrase-accent-color として設定されること", () => {
+  test("結果は包み（Tsutsumi）で表示され、--catchphrase-accent-color のような variant 別装飾色は一切注入されないこと", () => {
     const { container } = render(<ResultCard {...traditionalColorProps} />);
-    const catchphraseEl = container.querySelector(
-      "[class*='catchphraseBeforeDescription']",
+    // catchphrase は Tsutsumi の word として包みの中に表示される（標準ヘッダの
+    // catchphraseBeforeDescription は showMedal=true の間は使わない・重複防止）。
+    const tsutsumi = container.querySelector("figure[data-color]");
+    expect(tsutsumi).not.toBeNull();
+    // DESIGN.md §2: variant 別の任意 hex 装飾色は廃止（和色8色に決定的に写像するのみ）。
+    // コンテナ全体を通じて --catchphrase-accent-color 系の注入が存在しないことを確認する。
+    const anyLegacyColorVar = Array.from(
+      container.querySelectorAll<HTMLElement>("*"),
+    ).some(
+      (el) => el.style.getPropertyValue("--catchphrase-accent-color") !== "",
     );
-    expect(catchphraseEl).not.toBeNull();
-    if (catchphraseEl) {
-      const el = catchphraseEl as HTMLElement;
-      // DESIGN.md §2.4: variant 別の装飾色は廃止（新デザイン体系・cycle-253）
-      expect(el.style.getPropertyValue("--catchphrase-accent-color")).toBe("");
-    }
+    expect(anyLegacyColorVar).toBe(false);
   });
 
   test("全タイプ一覧が表示されること", () => {
@@ -1248,17 +1258,20 @@ describe("ResultCard - yoji-personality variant", () => {
     expect(position & Node.DOCUMENT_POSITION_PRECEDING).toBeTruthy();
   });
 
-  test("catchphraseBeforeDescription に result.color が --catchphrase-accent-color として設定されること", () => {
+  test("結果は包み（Tsutsumi）で表示され、--catchphrase-accent-color のような variant 別装飾色は一切注入されないこと", () => {
     const { container } = render(<ResultCard {...yojiProps} />);
-    const catchphraseEl = container.querySelector(
-      "[class*='catchphraseBeforeDescription']",
+    // catchphrase は Tsutsumi の word として包みの中に表示される（標準ヘッダの
+    // catchphraseBeforeDescription は showMedal=true の間は使わない・重複防止）。
+    const tsutsumi = container.querySelector("figure[data-color]");
+    expect(tsutsumi).not.toBeNull();
+    // DESIGN.md §2: variant 別の任意 hex 装飾色は廃止（和色8色に決定的に写像するのみ）。
+    // コンテナ全体を通じて --catchphrase-accent-color 系の注入が存在しないことを確認する。
+    const anyLegacyColorVar = Array.from(
+      container.querySelectorAll<HTMLElement>("*"),
+    ).some(
+      (el) => el.style.getPropertyValue("--catchphrase-accent-color") !== "",
     );
-    expect(catchphraseEl).not.toBeNull();
-    if (catchphraseEl) {
-      const el = catchphraseEl as HTMLElement;
-      // DESIGN.md §2.4: variant 別の装飾色は廃止（新デザイン体系・cycle-253）
-      expect(el.style.getPropertyValue("--catchphrase-accent-color")).toBe("");
-    }
+    expect(anyLegacyColorVar).toBe(false);
   });
 
   test("result.color が未設定の場合、catchphraseBeforeDescription に --catchphrase-accent-color が設定されないこと", () => {
@@ -1347,17 +1360,20 @@ describe("ResultCard - unexpected-compatibility variant", () => {
     expect(position & Node.DOCUMENT_POSITION_PRECEDING).toBeTruthy();
   });
 
-  test("catchphraseBeforeDescription に result.color が --catchphrase-accent-color として設定されること", () => {
+  test("結果は包み（Tsutsumi）で表示され、--catchphrase-accent-color のような variant 別装飾色は一切注入されないこと", () => {
     const { container } = render(<ResultCard {...unexpectedProps} />);
-    const catchphraseEl = container.querySelector(
-      "[class*='catchphraseBeforeDescription']",
+    // catchphrase は Tsutsumi の word として包みの中に表示される（標準ヘッダの
+    // catchphraseBeforeDescription は showMedal=true の間は使わない・重複防止）。
+    const tsutsumi = container.querySelector("figure[data-color]");
+    expect(tsutsumi).not.toBeNull();
+    // DESIGN.md §2: variant 別の任意 hex 装飾色は廃止（和色8色に決定的に写像するのみ）。
+    // コンテナ全体を通じて --catchphrase-accent-color 系の注入が存在しないことを確認する。
+    const anyLegacyColorVar = Array.from(
+      container.querySelectorAll<HTMLElement>("*"),
+    ).some(
+      (el) => el.style.getPropertyValue("--catchphrase-accent-color") !== "",
     );
-    expect(catchphraseEl).not.toBeNull();
-    if (catchphraseEl) {
-      const el = catchphraseEl as HTMLElement;
-      // DESIGN.md §2.4: variant 別の装飾色は廃止（新デザイン体系・cycle-253）
-      expect(el.style.getPropertyValue("--catchphrase-accent-color")).toBe("");
-    }
+    expect(anyLegacyColorVar).toBe(false);
   });
 });
 
@@ -1497,16 +1513,19 @@ describe("ResultCard - impossible-advice variant", () => {
     expect(position & Node.DOCUMENT_POSITION_PRECEDING).toBeTruthy();
   });
 
-  test("catchphraseBeforeDescription に result.color が --catchphrase-accent-color として設定されること", () => {
+  test("結果は包み（Tsutsumi）で表示され、--catchphrase-accent-color のような variant 別装飾色は一切注入されないこと", () => {
     const { container } = render(<ResultCard {...impossibleProps} />);
-    const catchphraseEl = container.querySelector(
-      "[class*='catchphraseBeforeDescription']",
+    // catchphrase は Tsutsumi の word として包みの中に表示される（標準ヘッダの
+    // catchphraseBeforeDescription は showMedal=true の間は使わない・重複防止）。
+    const tsutsumi = container.querySelector("figure[data-color]");
+    expect(tsutsumi).not.toBeNull();
+    // DESIGN.md §2: variant 別の任意 hex 装飾色は廃止（和色8色に決定的に写像するのみ）。
+    // コンテナ全体を通じて --catchphrase-accent-color 系の注入が存在しないことを確認する。
+    const anyLegacyColorVar = Array.from(
+      container.querySelectorAll<HTMLElement>("*"),
+    ).some(
+      (el) => el.style.getPropertyValue("--catchphrase-accent-color") !== "",
     );
-    expect(catchphraseEl).not.toBeNull();
-    if (catchphraseEl) {
-      const el = catchphraseEl as HTMLElement;
-      // DESIGN.md §2.4: variant 別の装飾色は廃止（新デザイン体系・cycle-253）
-      expect(el.style.getPropertyValue("--catchphrase-accent-color")).toBe("");
-    }
+    expect(anyLegacyColorVar).toBe(false);
   });
 });

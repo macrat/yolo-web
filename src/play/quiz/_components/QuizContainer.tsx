@@ -7,8 +7,7 @@ import {
   type AbEventContext,
 } from "@/lib/analytics";
 import Link from "next/link";
-import Panel from "@/components/Panel";
-import Button from "@/components/Button";
+import { NefudaGroup } from "@/components/Nefuda";
 // EXPERIMENT: quiz_result_visual_v1 — import を撤去すれば arm 関連ロジックも消える。
 import { QUIZ_RESULT_VISUAL_V1, useAbVariant, getAbArm } from "@/lib/ab";
 import type { QuizDefinition, QuizAnswer, QuizPhase } from "@/play/quiz/types";
@@ -196,30 +195,31 @@ export default function QuizContainer({
 
     // h1 と説明はページ章立て（QuizPlayPageLayout の header）が担うため、
     // ここでは「これから始める道具」としての所要情報と開始操作だけを静かに置く。
+    // 所要情報は値札（Nefuda）——種別・所要時間などの「情報のあるラベル」（DESIGN.md §4）。
+    const introBadgeLabels = [
+      typeLabel,
+      `全${questionCount}問`,
+      estimatedTime,
+      quiz.meta.type === "personality" && resultTypeCount > 0
+        ? `${resultTypeCount}タイプ`
+        : "",
+    ];
     return (
-      <Panel className={styles.panel}>
+      <div className={styles.stage}>
         <div className={styles.intro}>
-          {/* 所要情報を一行のタグ列で淡く示す（賑やかさではなく整然さ） */}
-          <div className={styles.introBadges}>
-            <span className={styles.introBadge}>{typeLabel}</span>
-            <span className={styles.introBadge}>全{questionCount}問</span>
-            <span className={styles.introBadge}>{estimatedTime}</span>
-            {quiz.meta.type === "personality" && resultTypeCount > 0 && (
-              <span className={styles.introBadge}>{resultTypeCount}タイプ</span>
-            )}
-          </div>
+          <NefudaGroup labels={introBadgeLabels} />
           <p className={styles.introLead}>
             {quiz.meta.type === "knowledge"
               ? "準備ができたら始めましょう。"
               : "気軽に答えていくと、結果が出ます。"}
           </p>
-          <Button
-            variant="primary"
+          <button
+            type="button"
             className={styles.startButton}
             onClick={handleStart}
           >
             はじめる
-          </Button>
+          </button>
           {quiz.meta.relatedLinks && quiz.meta.relatedLinks.length > 0 && (
             <div className={styles.relatedLinks}>
               {quiz.meta.relatedLinks.map((link) => (
@@ -234,14 +234,14 @@ export default function QuizContainer({
             </div>
           )}
         </div>
-      </Panel>
+      </div>
     );
   }
 
   if (phase === "playing") {
     const question = quiz.questions[currentIndex];
     return (
-      <Panel className={styles.panel}>
+      <div className={styles.stage}>
         <ProgressBar current={currentIndex + 1} total={quiz.questions.length} />
         <QuestionCard
           key={question.id}
@@ -250,7 +250,7 @@ export default function QuizContainer({
           onAnswer={handleAnswer}
           onNext={handleNext}
         />
-      </Panel>
+      </div>
     );
   }
 
@@ -280,11 +280,11 @@ export default function QuizContainer({
       role="region"
       aria-label={resultRegionLabel}
     >
-      {/* 結果本体（主役）を Panel に収める（DESIGN.md §1）。
+      {/* 結果本体（主役）。器は静かに、成果物（ResultCard内の Tsutsumi）だけが主役（§4）。
        * detailedContent の variant 別サブコンポーネント（legacy 結果コンテンツ）は
        * 引き続き quiz.meta.accentColor を受け取るが、ResultCard 自身の chrome
        * （見出し・標準セクション・ボタン）は新トークン --accent に統一されている。 */}
-      <Panel className={styles.panel}>
+      <div className={styles.stage}>
         <ResultCard
           result={result}
           quizType={quiz.meta.type}
@@ -310,8 +310,8 @@ export default function QuizContainer({
           // セッション」の純度を視覚・記録の両面で揃える。
           resultVisualArm={isExperimentSubject ? resultArm : null}
         />
-      </Panel>
-      {/* 回遊導線・追加コンテンツは本体パネルの外に二次配置（パネル入れ子回避） */}
+      </div>
+      {/* 回遊導線・追加コンテンツは本体の外に二次配置（入れ子回避） */}
       {recommendedContents && recommendedContents.length > 0 && (
         <ResultNextContent contents={recommendedContents} />
       )}

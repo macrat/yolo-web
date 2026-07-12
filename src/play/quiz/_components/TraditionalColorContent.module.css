@@ -5,9 +5,10 @@
  * 設計方針（ResultCard.module.css を一次規範として語彙をそろえる）:
  * - 左寄せ・新トークンのみ・font-weight は最大 600・絵文字なし・影なし。
  * - 装飾としての色使い（見出し罫線・カード薄敷き・seasonTag 等）はタイプごとの派手色（--type-color）から外し、
- *   共通アクセント（--accent / --bg-soft / --accent-soft / --accent-strong）に統一する。
+ *   共通アクセント（--accent / --paper-2 / --accent-weak）に統一する。
  *   各タイプの個性は「色そのもの（色見本）」と「言葉（本文）」で立てる。
- * - 角丸はカード/ブロック = --r-normal、操作要素（リンク） = --r-interactive。
+ * - 角丸は一律 0px（--radius）。新体系に操作専用の角丸はなく、カードもリンクも直角。
+ *   例外の 2px（--radius-sm）は値札ラベル・入力欄専用で、ここでは使わない。
  *
  * color-as-content の例外:
  * - 「他の色も見てみよう」の色ドット（.colorDot）は伝統色そのものを表示することが診断の核なので、
@@ -32,7 +33,7 @@
 .sectionHeading {
   font-size: 1.05rem;
   font-weight: 600;
-  color: var(--fg);
+  color: var(--ink);
   margin: 0 0 1rem;
   padding-left: 0.75rem;
   border-left: 3px solid var(--accent);
@@ -40,54 +41,52 @@
 
 /* ============================================================
    colorMeaning カード: 色の文化的背景。
-   旧デザインではタイプ色を全面に薄敷きしていたが、
-   新デザインでは ResultCard adviceCard 相当の淡いアクセント面（--accent-soft + --accent-strong 枠）に統一する。
-   色見本としての役目はカード背景ではなく、ページ全体の色ヒーロー・色ドットが担う。
+   DESIGN.md §2 是正（cycle-278 C4）: --accent-weak は操作・選択状態のハイライトにのみ可で
+   区画の地には不可のため、静的な区画の地は sceneryCard と同じ --paper-2 に統一する。
+   色見本としての役目はカード背景ではなく、色ドット（.colorDot）が担う。
    ============================================================ */
 .colorMeaningCard {
   padding: 1.1rem 1.25rem;
-  border-radius: var(--r-normal);
+  border-radius: var(--radius);
   font-size: 0.95rem;
   line-height: 1.8;
-  color: var(--fg);
+  color: var(--ink);
   margin-bottom: 2rem;
   text-align: left;
-  background: var(--accent-soft);
-  border: 1px solid var(--accent-strong);
+  background: var(--paper-2);
 }
 
 /* ============================================================
    scenery + season セクション: 視覚的イメージ喚起。
-   中立の --bg-soft 面で落ち着いた語りトーンに。
+   中立の --paper-2 面で落ち着いた語りトーンに。
    ============================================================ */
 .sceneryCard {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
   padding: 1.1rem 1.25rem;
-  border-radius: var(--r-normal);
+  border-radius: var(--radius);
   margin-bottom: 2rem;
-  background: var(--bg-soft);
+  background: var(--paper-2);
 }
 
-/* 季節タグ: タイプ色のピルではなく、共通アクセント枠＋淡い面の静かなバッジ。
-   自身のサイズに収まるよう align-self で寄せる。 */
+/* 季節タグ: DESIGN.md §2 是正（cycle-278 C4）——タイプ色のピルでも accent-weak の静的な
+   面でもなく、値札（メタ情報ラベル・§4）の語彙に統一する: --rule 罫囲み + --ink-2 の文字。 */
 .seasonTag {
   display: inline-flex;
   align-items: center;
   align-self: flex-start;
   padding: 0.2rem 0.75rem;
-  border-radius: var(--r-interactive);
+  border-radius: var(--radius);
   font-size: 0.8rem;
-  color: var(--fg);
-  background: var(--accent-soft);
-  border: 1px solid var(--accent-strong);
+  color: var(--ink-2);
+  border: 1px solid var(--rule);
 }
 
 .sceneryText {
   font-size: 0.95rem;
   line-height: 1.7;
-  color: var(--fg);
+  color: var(--ink);
   margin: 0;
 }
 
@@ -106,10 +105,10 @@
 .behaviorsItem {
   font-size: 0.95rem;
   line-height: 1.7;
-  color: var(--fg);
+  color: var(--ink);
   padding: 0.75rem 1rem;
-  border-radius: var(--r-normal);
-  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  border: 1px solid var(--rule);
   display: flex;
   align-items: flex-start;
   gap: 0.625rem;
@@ -123,23 +122,23 @@
   width: 2px;
   align-self: stretch;
   background: var(--accent);
-  border-radius: var(--r-normal);
+  border-radius: var(--radius);
 }
 
 /* ============================================================
    colorAdvice カード: 締めのメッセージ（この色からのひとこと）。
-   ResultCard adviceCard と同じ淡いアクセント面で静かに強調する。
+   DESIGN.md §2 是正（cycle-278 C4）: --accent-weak は操作・選択状態のハイライトにのみ可で
+   区画の地には不可のため、静的な区画の地は --paper-2 に統一する。
    ============================================================ */
 .colorAdviceCard {
   padding: 1.1rem 1.25rem;
-  border-radius: var(--r-normal);
+  border-radius: var(--radius);
   font-size: 1rem;
   line-height: 1.8;
-  color: var(--fg);
+  color: var(--ink);
   margin-bottom: 2rem;
   text-align: left;
-  background: var(--accent-soft);
-  border: 1px solid var(--accent-strong);
+  background: var(--paper-2);
 }
 
 /* ============================================================
@@ -148,14 +147,14 @@
 .allTypesSection {
   margin-top: 2rem;
   padding-top: 1.5rem;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--rule);
 }
 
 /* 全タイプ見出し: ResultCard detailedHeading 言語に合わせ、左寄せ・左罫線で区切る */
 .allTypesCta {
   font-size: 1.05rem;
   font-weight: 600;
-  color: var(--fg);
+  color: var(--ink);
   margin: 0 0 1rem;
   padding-left: 0.75rem;
   border-left: 3px solid var(--accent);
@@ -171,18 +170,18 @@
   display: inline-block;
   width: 12px;
   height: 12px;
-  border-radius: 50%;
+  border-radius: var(--radius);
   flex-shrink: 0;
-  border: 1px solid var(--border);
+  border: 1px solid var(--rule);
 }
 
 /* ============================================================
-   グリッドレイアウト（page.tsx版）。
-   旧: ピル型横wrap（.allTypesListPill）を撤去し、参照実装 CharacterPersonalityContent.module.css の
-   .allTypesGrid と完全に同じパターン（2列、480px 以上で 3列、--r-interactive 角丸、現在タイプは
-   --accent 枠＋--accent-soft 面）に統一する。これにより 8 クイズ間で「他のタイプも見てみよう」
-   セクションの質感が揃う。Traditional は 48 タイプあるが、grid 2-3列のほうが pill 横wrap と
-   同等以下の縦長さに収まる。
+   罫の升目索引（page.tsx版・DESIGN.md §4/§8-4 是正 cycle-278 C4）。
+   「同型アイコンカードの3枚組」等のカードグリッドは §4 の禁止対象であり、一覧の既定は
+   罫区切りであるべきなので、辞典の部首索引の流儀（罫で仕切った升目に複数列で流す）に組む。
+   セル個々はカード化しない（背景・全周枠を持たない）——列内の行は border-bottom の罫だけで
+   区切る。現在地は面を朱で塗らず、文字色+下罫の朱だけで静かに示す（--accent-weak 不使用）。
+   Traditional は 48 タイプあるが、複数列に流すことで縦長さを抑える。
    color-as-content の例外: 各セル内に「色ドット + 色名」を flex で並べ、色ドットは引き続き
    r.color の inline backgroundColor で実色を表示する（上記 .colorDot 参照）。
    ============================================================ */
@@ -190,24 +189,29 @@
   list-style: none;
   padding: 0;
   margin: 0 0 1.5rem 0;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.5rem;
+  columns: 2;
+  column-gap: 1.5rem;
 }
 
 @media (min-width: 480px) {
   .allTypesGrid {
-    grid-template-columns: repeat(3, 1fr);
+    columns: 3;
   }
+}
+
+.allTypesGrid .allTypesItem,
+.allTypesGrid .allTypesItemCurrent {
+  break-inside: avoid;
 }
 
 .allTypesGrid .allTypesItem a,
 .allTypesGrid .allTypesItemCurrent a {
   display: flex;
   align-items: center;
+  min-height: 44px;
   gap: 0.5rem;
-  padding: 0.5rem 0.75rem;
-  border-radius: var(--r-interactive);
+  padding: 0.5rem 0.25rem;
+  border-bottom: 1px solid var(--rule);
   font-size: 0.875rem;
   text-decoration: none;
   transition: background-color 0.15s ease;
@@ -215,20 +219,18 @@
 }
 
 .allTypesGrid .allTypesItem a {
-  color: var(--fg);
-  border: 1px solid var(--border);
-  background: transparent;
+  color: var(--ink);
 }
 
 .allTypesGrid .allTypesItem a:hover {
-  background-color: var(--bg-soft);
+  background-color: var(--paper-2);
 }
 
-/* 現在のタイプ: 色ではなくアクセント枠＋淡い面で「今ここ」を静かに示す */
+/* 現在のタイプ: 面を朱で塗らず、文字色+下罫の朱だけで「今ここ」を静かに示す */
 .allTypesGrid .allTypesItemCurrent a {
-  color: var(--fg);
-  border: 1px solid var(--accent);
-  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 600;
+  border-bottom-color: var(--accent);
   pointer-events: none;
 }
 
@@ -248,24 +250,25 @@
 .allTypesListVertical .allTypesItemCurrent a {
   display: flex;
   align-items: center;
+  min-height: 44px;
   gap: 0.5rem;
   padding: 0.5rem 0.75rem;
   /* 現在タイプの枠線と高さをそろえるため、非現在項目も透明枠を持たせる */
   border: 1px solid transparent;
-  border-radius: var(--r-interactive);
+  border-radius: var(--radius);
   font-size: 0.9rem;
-  color: var(--fg);
+  color: var(--ink);
   text-decoration: none;
   transition: background-color 0.15s ease;
 }
 
 .allTypesListVertical .allTypesItem a:hover {
-  background-color: var(--bg-soft);
+  background-color: var(--paper-2);
 }
 
 /* 現在のタイプ: アクセント枠＋淡い面で「今ここ」を示す（font-weight は上げない） */
 .allTypesListVertical .allTypesItemCurrent a {
   border: 1px solid var(--accent);
-  background-color: var(--accent-soft);
+  background-color: var(--accent-weak);
   pointer-events: none;
 }

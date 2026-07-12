@@ -15,6 +15,7 @@
 import type React from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
+import Tsutsumi from "@/components/Tsutsumi";
 import type {
   QuizResult,
   QuizType,
@@ -31,6 +32,7 @@ import animalPersonalityQuiz from "@/play/quiz/data/animal-personality";
 import CompatibilitySection from "./CompatibilitySection";
 import InviteFriendButton from "./InviteFriendButton";
 import ShareButtons from "./ShareButtons";
+import { pickResultWairoColor, pickResultSymbol } from "./resultVisual";
 // EXPERIMENT: quiz_result_visual_v1
 // OtherTypesNav の選択（current / retro）は OtherTypesNavAb 内部で行う。
 // 実験終了時は import を `./OtherTypesNav` に戻し、`_experiments/` ディレクトリ
@@ -293,24 +295,14 @@ function buildAnimalPersonalityAfterTodayAction(
 
 function renderCharacterFortuneContent(
   content: CharacterFortuneDetailedContent,
-  accentColor?: string,
 ): React.ReactNode {
+  // 新デザイン体系ではクイズごとの任意 hex（accentColor）を器/成果物の色に使わない
+  // （DESIGN.md §2「成果物パレットは和色8色に限る・直書き禁止」）。見出し・面はすべて
+  // 標準トークン（--accent・--paper-2）に統一する。
   return (
     <>
-      <p
-        className={styles.characterIntro}
-        style={
-          accentColor ? { backgroundColor: `${accentColor}18` } : undefined
-        }
-      >
-        {content.characterIntro}
-      </p>
-      <h3
-        className={styles.detailedHeading}
-        style={accentColor ? { color: accentColor } : undefined}
-      >
-        {content.behaviorsHeading}
-      </h3>
+      <p className={styles.characterIntro}>{content.characterIntro}</p>
+      <h3 className={styles.detailedHeading}>{content.behaviorsHeading}</h3>
       <ul className={styles.behaviorsList}>
         {content.behaviors.map((b, i) => (
           <li key={i} className={styles.behaviorsItem}>
@@ -318,10 +310,7 @@ function renderCharacterFortuneContent(
           </li>
         ))}
       </ul>
-      <h3
-        className={styles.detailedHeading}
-        style={accentColor ? { color: accentColor } : undefined}
-      >
+      <h3 className={styles.detailedHeading}>
         {content.characterMessageHeading}
       </h3>
       <p className={styles.characterMessage}>{content.characterMessage}</p>
@@ -392,7 +381,7 @@ function renderDetailedContent(
       // character-fortune は cycle-254 の剥ぎ落とし対象外（専用 *Content を持たない）。
       // arm に関係なく同じ renderCharacterFortuneContent を描画する
       // （docs/visitor-value-measurement.md 論点2 除外規定）。
-      return renderCharacterFortuneContent(content, accentColor);
+      return renderCharacterFortuneContent(content);
     case "animal-personality": {
       const Comp = pickVariantComponent(
         arm ?? null,
@@ -594,47 +583,44 @@ export default function ResultCard({
   return (
     <div className={styles.card}>
       {showMedal ? (
-        // 勲章ヘッダ（§7：無彩の土台に結果固有色が一点効く構図）。
-        // 固有色は象徴の背景面（低アルファのティント）と罫にのみ使い、全面は塗らない。
-        // タイプ名テキストは常に併記し（WCAG 1.4.1・色だけで伝えない）、色は --fg を維持する
-        // （多くの固有色はテキスト色として AA 不足のため固有色をテキストに使わない・DESIGN.md §2/§7）。
-        <div className={styles.medal}>
+        // 結果を包み（Tsutsumi）で見せる（DESIGN.md §4「包み」/§7「見せたくなる結果」）。
+        // 器（この見出し部）は静かな到達ラベルだけを持ち、結果そのものは罫で明確に
+        // 包まれた独立ビジュアル（Tsutsumi）が主役になる。固有色は quiz データの任意
+        // hex を捨て、id から和色8色へ決定的に写像する（§2「成果物パレットは8色に限る」）。
+        // symbol は絵文字（result.icon）ではなくタイプ名の先頭1字（§8-6 絵文字禁止）。
+        <div className={styles.medalWrap}>
           {/* 到達の承認を兼ねた静かなラベル（煽らない・けばけばしくしない） */}
           <p className={styles.medalLabel}>
             <span className={styles.medalLabelDone}>診断完了</span>
             あなたの結果
           </p>
-          {/* 象徴（icon）を勲章の主役として表示。結果固有色を CSS 変数として渡し、
-              面のティントと罫の色に使う（テキスト色には使わない）。
-              情報はタイプ名テキストが担うため、象徴自体は装飾として aria-hidden。 */}
-          <div
-            className={styles.medalIcon}
-            style={{ "--medal-color": result.color } as React.CSSProperties}
-            aria-hidden="true"
-          >
-            {result.icon}
-          </div>
-          {/* タイプ名は勲章の核。--fg を維持しサイズで際立たせる（bold 多用は避ける・DESIGN.md §3） */}
-          <h2 className={styles.medalTitle}>{result.title}</h2>
+          <Tsutsumi
+            typeName={result.title}
+            word={catchphrase ?? undefined}
+            symbol={pickResultSymbol(result.title)}
+            color={pickResultWairoColor(result.id)}
+            productName={quizTitle}
+            seal="診"
+          />
         </div>
       ) : (
         <>
           {/* 抑制ヘッダ（フォールバック）。絵文字アイコンは新デザイン体系で撤去（DESIGN.md §3） */}
           <p className={styles.resultLabel}>あなたの結果</p>
           <h2 className={styles.title}>{result.title}</h2>
+          {quizType === "knowledge" &&
+            score !== undefined &&
+            totalQuestions !== undefined && (
+              <p className={styles.score}>
+                {totalQuestions}問中{score}問正解
+              </p>
+            )}
+          {/* catchphrase を description の前に静かなリード文として表示する。Tsutsumi 内に
+              既に word として表示している場合（showMedal=true）はここでは重複させない。 */}
+          {catchphrase && (
+            <p className={styles.catchphraseBeforeDescription}>{catchphrase}</p>
+          )}
         </>
-      )}
-      {quizType === "knowledge" &&
-        score !== undefined &&
-        totalQuestions !== undefined && (
-          <p className={styles.score}>
-            {totalQuestions}問中{score}問正解
-          </p>
-        )}
-      {/* catchphrase を description の前に静かなリード文として表示する。
-          新デザイン体系では variant 別の派手な装飾色は使わない（DESIGN.md §2.4）。 */}
-      {catchphrase && (
-        <p className={styles.catchphraseBeforeDescription}>{catchphrase}</p>
       )}
       <p className={styles.description}>{result.description}</p>
       {result.recommendation && result.recommendationLink && (

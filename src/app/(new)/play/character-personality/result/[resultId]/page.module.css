@@ -27,7 +27,7 @@
  * variant 別の派手色・中央寄せ・ヒーロー面は廃し、静かな左寄せのリード文として置く。 */
 .catchphrase {
   font-size: 1.1rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   text-align: left;
   line-height: 1.7;
   margin: 0 0 1rem;
@@ -41,37 +41,27 @@
   margin-bottom: 0;
 }
 
-/* 主要 CTA。src/components/Button の primary バリアントと同じ語彙
- * （--bg-invert 面・--fg-invert 文字・--r-interactive・--shadow-button）に寄せ、
- * クイズごとのタイプ色（--type-color）注入を撤去した。 */
+/* 主要 CTA: 罫の線画（トップページ .heroLink と同じ語彙・ピル/塗り/影禁止）。
+ * クイズごとの accentColor インライン注入は撤去済み。 */
 .tryButton {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-height: 44px;
-  padding: 0.625rem 1.5rem;
-  border: 1px solid var(--bg-invert);
-  border-radius: var(--r-interactive);
-  background: var(--bg-invert);
-  color: var(--fg-invert);
-  font-size: 0.95rem;
-  font-family: inherit;
-  box-shadow: var(--shadow-button);
+  padding: 0 1.5rem;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--paper);
+  color: var(--accent);
+  font-family: var(--font-mincho);
+  font-size: 1.0625rem;
   cursor: pointer;
   text-decoration: none;
-  transition:
-    background 0.15s ease,
-    border-color 0.15s ease,
-    box-shadow 0.15s ease;
+  transition: background-color 0.15s ease;
 }
 
 .tryButton:hover {
-  background: var(--bg-invert-soft);
-  border-color: var(--bg-invert-soft);
-}
-
-.tryButton:active {
-  box-shadow: none;
+  background-color: var(--accent-weak);
 }
 
 .tryButton:focus-visible {
@@ -81,7 +71,7 @@
 
 .tryCost {
   font-size: 0.8rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   margin-top: 0.5rem;
   margin-bottom: 0;
 }
@@ -94,34 +84,27 @@
   margin-top: 1.5rem;
   text-align: left;
   padding-top: 1.5rem;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--rule);
 }
 
-/* CTA1より控えめなテキストリンク形式（default ボタン相当） */
+/* CTA2: CTA1より控えめな罫の線画（墨文字・淡い面）。 */
 .cta2Link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-height: 44px;
-  padding: 0.5rem 1.25rem;
-  border: 1px solid var(--border);
-  border-radius: var(--r-interactive);
-  background: var(--bg-soft);
+  padding: 0 1.25rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
+  background: var(--paper-2);
   font-size: 0.9375rem;
-  color: var(--fg);
+  color: var(--ink);
   text-decoration: none;
-  box-shadow: var(--shadow-button);
-  transition:
-    background 0.15s ease,
-    box-shadow 0.15s ease;
+  transition: background-color 0.15s ease;
 }
 
 .cta2Link:hover {
-  background: var(--bg-softer);
-}
-
-.cta2Link:active {
-  box-shadow: none;
+  background-color: var(--accent-weak);
 }
 
 .cta2Link:focus-visible {

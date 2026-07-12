@@ -99,10 +99,10 @@ export default async function CharacterFortuneResultPage({ params }: Props) {
     >
       {/* character-fortune固有のJSX。
           旧デザインの per-quiz accentColor インライン注入（自己紹介の面・CTA の背景・
-          見出しの文字色）は全撤去し、共通アクセント（CSS 側 --accent / --accent-soft）へ
+          見出しの文字色）は全撤去し、共通アクセント（CSS 側 --accent / --accent-weak）へ
           寄せてインライン結果（ResultCard）とトーン統一した。 */}
       <div className={styles.detailedSection}>
-        {/* (a) キャラクターの自己紹介。共通アクセントの淡い面（--accent-soft）に左寄せで置く。 */}
+        {/* (a) キャラクターの自己紹介。共通アクセントの淡い面（--accent-weak）に左寄せで置く。 */}
         <p className={styles.characterIntro}>{cf.characterIntro}</p>
 
         {/* CTA1 */}
@@ -170,8 +170,9 @@ export default async function CharacterFortuneResultPage({ params }: Props) {
                     : styles.allTypesItem
                 }
               >
+                {/* 新デザインでは絵文字（icon）を装飾に使わない（DESIGN.md §8-6）。
+                    各タイプの区別はタイトル文言だけで行う。 */}
                 <Link href={`/play/${SLUG}/result/${r.id}`}>
-                  {r.icon && <span>{r.icon}</span>}
                   <span>{r.title}</span>
                 </Link>
               </li>

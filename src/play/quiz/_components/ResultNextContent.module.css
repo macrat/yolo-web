@@ -1,18 +1,18 @@
-/* クイズ結果直下の「次のおすすめ」回遊導線。
- * 新デザイン体系（DESIGN.md）。移行済みツール詳細の「関連ツール」カードに倣う。
- * 新トークンのみ・絵文字なし・bold 不使用。角丸は --r-normal（2px・カード規範）。
+/*
+ * クイズ結果直下の「次のおすすめ」回遊導線。DESIGN.md（紙・墨・朱の店構え）。
+ * 新トークンのみ・絵文字なし・bold 不使用・角丸0基調。
  */
 
 .section {
   padding-top: 1.5rem;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--rule);
 }
 
 .heading {
   font-size: 1rem;
   font-weight: 600;
   margin: 0 0 0.75rem;
-  color: var(--fg);
+  color: var(--ink);
 }
 
 .list {
@@ -35,9 +35,9 @@
   gap: 0.375rem;
   height: 100%;
   padding: 0.75rem 1rem;
-  border: 1px solid var(--border);
-  border-radius: var(--r-normal);
-  background-color: var(--bg);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background-color: var(--paper);
   text-decoration: none;
   transition: border-color 0.15s ease;
 }
@@ -63,17 +63,18 @@
   gap: 0.5rem;
 }
 
-/* カテゴリバッジ（診断/クイズ/パズル等）。淡い面の静かなタグ */
+/* カテゴリ値札（診断/クイズ/パズル等・DESIGN.md §4「値札」語彙・radius-sm 例外）。 */
 .badge {
   font-size: 0.7rem;
-  background-color: var(--bg-soft);
+  background-color: var(--paper);
+  border: 1px solid var(--rule);
   padding: 0.125rem 0.5rem;
-  border-radius: var(--r-normal);
-  color: var(--fg-soft);
+  border-radius: var(--radius-sm);
+  color: var(--ink-2);
   white-space: nowrap;
 }
 
 .meta {
   font-size: 0.75rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
 }

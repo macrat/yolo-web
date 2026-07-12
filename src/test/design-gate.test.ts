@@ -31,6 +31,12 @@
  *   §8-6  all-caps（text-transform: uppercase）= WARNING（§8 注記どおり多用の判定は視覚レビュー）。
  *   §10   色の直書き（トークン非経由の hex / rgb() / hsl() / oklch() 等を色プロパティに直書き）= ERROR。
  *          中性のスクリム（rgba(0,0,0,α) / rgba(255,255,255,α) 等のオーバーレイ幕）は慣例的例外として許容。
+ *   §2    是正ゲート（cycle-278 C4・結果面(quiz)の系統的違反を受けて追加）: `--accent-weak` /
+ *          `--wairo-*` は DESIGN.md §2「操作・選択状態のハイライト（hover/selected の座布団）
+ *          にのみ可。区画の地には不可」。background/background-color にこれらが使われている
+ *          宣言のうち、そのルールのセレクタが「状態セレクタ」（下の STATE_SELECTOR_RE 参照:
+ *          :hover/:focus/:active/:checked・[aria-current] 等・Current/Selected/Active/Correct
+ *          命名）を一切含まない場合は、静的な区画/箱の地への誤用の疑いとして ERROR にする。
  *
  *   すべての検査は「標準 CSS プロパティ宣言」に対して行い、`--*` のカスタムプロパティ定義
  *   （＝トークン定義）は検査しない。理由: §10 はトークン経由での色指定を原則とし、パレット自体は
@@ -118,6 +124,37 @@ const NEW_DESIGN_CSS = [
   "src/blog/_components/TableOfContents.module.css",
   // ページネーション（一覧系共有・店構え変換済み。/storybook からも参照されるが対象外）。
   "src/components/Pagination/**/*.module.css",
+  // クイズエンジン・結果面（フェーズR・C4 変換済み）。設問フロー(器)・結果面(見せ場・Tsutsumi)。
+  // _experiments/legacy-result/** は A/B 実験 quiz_result_visual_v1 の意図的な旧デザイン
+  // ホールドアウト（arm A 用）であり対象外（変換すると実験の前提が壊れる）。
+  "src/play/quiz/_components/QuizContainer.module.css",
+  "src/play/quiz/_components/QuestionCard.module.css",
+  "src/play/quiz/_components/ProgressBar.module.css",
+  "src/play/quiz/_components/ResultCard.module.css",
+  "src/play/quiz/_components/ResultPageShell.module.css",
+  "src/play/quiz/_components/ResultNextContent.module.css",
+  "src/play/quiz/_components/RadarChart.module.css",
+  "src/play/quiz/_components/ScienceThinkingResultExtra.module.css",
+  "src/play/quiz/_components/CompatibilitySection.module.css",
+  "src/play/quiz/_components/OtherTypesNav.module.css",
+  "src/play/quiz/_components/InviteFriendButton.module.css",
+  "src/play/quiz/_components/RelatedQuizzes.module.css",
+  "src/play/quiz/_components/ShareButtons.module.css",
+  "src/play/quiz/_components/AnimalPersonalityContent.module.css",
+  "src/play/quiz/_components/MusicPersonalityContent.module.css",
+  "src/play/quiz/_components/TraditionalColorContent.module.css",
+  "src/play/quiz/_components/YojiPersonalityContent.module.css",
+  "src/play/quiz/_components/CharacterPersonalityContent.module.css",
+  "src/play/quiz/_components/ContrarianFortuneContent.module.css",
+  "src/play/quiz/_components/UnexpectedCompatibilityContent.module.css",
+  "src/play/quiz/_components/ImpossibleAdviceContent.module.css",
+  // クイズ設問フロー・結果ページ（route 側。[slug]/[resultId] は * で受ける）。
+  // このグロブは動的ルート /play/[slug]/... と、Next.js のファイルシステム
+  // ルーティングがそれより優先する variant 別の専用結果ルート
+  // （/play/animal-personality/result/[resultId] 等・9 ルート）の両方に一致する。
+  "src/app/\\(new\\)/play/*/page.module.css",
+  "src/app/\\(new\\)/play/*/result/*/page.module.css",
+  "src/app/\\(new\\)/play/*/result/*/DescriptionExpander.module.css",
 ];
 const NEW_DESIGN_TSX = [
   "src/app/\\(new\\)/page.tsx", // トップ（店構え・C2 変換）。インライン style の禁止を検査
@@ -183,6 +220,44 @@ const NEW_DESIGN_TSX = [
   "src/blog/_components/RelatedArticles.tsx", // 専用 CSS なし。共有 Shinagaki（品書き）に統合済み
   // ページネーション（一覧系共有・店構え変換済み。/storybook からも参照されるが対象外）。
   "src/components/Pagination/**/*.tsx",
+  // クイズエンジン・結果面（フェーズR・C4 変換済み）。インライン style の禁止を検査。
+  // _experiments/legacy-result/** は A/B 実験 quiz_result_visual_v1 の意図的な旧デザイン
+  // ホールドアウト（arm A 用）であり対象外（変換すると実験の前提が壊れる）。
+  "src/play/quiz/_components/QuizContainer.tsx",
+  "src/play/quiz/_components/QuizPlayPageLayout.tsx",
+  "src/play/quiz/_components/QuestionCard.tsx",
+  "src/play/quiz/_components/ProgressBar.tsx",
+  "src/play/quiz/_components/ResultCard.tsx",
+  "src/play/quiz/_components/ResultPageShell.tsx",
+  "src/play/quiz/_components/ResultNextContent.tsx",
+  "src/play/quiz/_components/RadarChart.tsx",
+  "src/play/quiz/_components/ScienceThinkingResultExtra.tsx",
+  "src/play/quiz/_components/CharacterFortuneResultExtra.tsx",
+  "src/play/quiz/_components/JapaneseCultureResultExtra.tsx",
+  "src/play/quiz/_components/CompatibilitySection.tsx",
+  "src/play/quiz/_components/OtherTypesNav.tsx",
+  "src/play/quiz/_components/InviteFriendButton.tsx",
+  "src/play/quiz/_components/RelatedQuizzes.tsx",
+  "src/play/quiz/_components/ShareButtons.tsx",
+  "src/play/quiz/_components/AnimalPersonalityContent.tsx",
+  "src/play/quiz/_components/MusicPersonalityContent.tsx",
+  "src/play/quiz/_components/TraditionalColorContent.tsx",
+  "src/play/quiz/_components/YojiPersonalityContent.tsx",
+  "src/play/quiz/_components/CharacterPersonalityContent.tsx",
+  "src/play/quiz/_components/ContrarianFortuneContent.tsx",
+  "src/play/quiz/_components/UnexpectedCompatibilityContent.tsx",
+  "src/play/quiz/_components/ImpossibleAdviceContent.tsx",
+  // クイズ設問フロー・結果ページ（route 側）。
+  // 注意: play/ 配下には未変換のゲームエンジン（kanji-kanaru・nakamawake）も同居するため、
+  // ここは `play/*/page.tsx` のような広い glob にせず [slug] を明示的にエスケープして
+  // 対象を動的ルート＋music-personality 専用ルートだけに絞る（誤って games を巻き込まない）。
+  "src/app/\\(new\\)/play/\\[slug\\]/page.tsx",
+  "src/app/\\(new\\)/play/music-personality/page.tsx",
+  // result/[resultId] は動的ルート＋9 つの variant 別専用結果ルートに一致する
+  // （play/ 直下は上の2エントリのみに絞っているため、result/*/... は quiz 系のみが対象）。
+  "src/app/\\(new\\)/play/*/result/*/page.tsx",
+  "src/app/\\(new\\)/play/*/result/*/DescriptionExpander.tsx",
+  "src/app/\\(new\\)/play/*/result/*/CompatibilityDisplay.tsx",
 ];
 // テストコードは走査対象外（テスト文字列に禁止語が入るため）。
 const IGNORE = ["**/__tests__/**", "**/*.test.ts", "**/*.test.tsx"];
@@ -328,6 +403,77 @@ const ALLOWED_RADIUS_ATOMS = new Set([
 // §8-7: 本文書体に不可の欧文既定 sans。
 const BANNED_FONT_RE =
   /\b(inter|roboto|open\s*sans|lato|montserrat|poppins|nunito|source\s*sans)\b/i;
+
+/**
+ * ルール単位で { selector, prop, value } を抽出する（宣言が属するセレクタ文脈も保持する）。
+ * extractDeclarations と同じ「最内 {…} ブロックのみ拾う」正規表現方式を流用する。
+ * @media 等のラッパーは自然に読み飛ばされる——外側ブロックは内側にも `{` を含むため、
+ * `([^{}]*)\{([^{}]*)\}` の単発マッチは外側単独では成立せず、内側の `.foo { … }` だけが
+ * 正しく selector="​.foo" として抽出される（バックトラックにより外側の前置文字列は捨てられる）。
+ */
+function extractDeclarationsWithSelector(
+  css: string,
+): { selector: string; prop: string; value: string }[] {
+  const out: { selector: string; prop: string; value: string }[] = [];
+  const noComments = stripComments(css);
+  const ruleRe = /([^{}]*)\{([^{}]*)\}/g;
+  let m: RegExpExecArray | null;
+  while ((m = ruleRe.exec(noComments)) !== null) {
+    const selector = m[1].trim();
+    for (const part of m[2].split(";")) {
+      const idx = part.indexOf(":");
+      if (idx === -1) continue;
+      const prop = part.slice(0, idx).trim().toLowerCase();
+      const value = part.slice(idx + 1).trim();
+      if (!prop || !value) continue;
+      out.push({ selector, prop, value });
+    }
+  }
+  return out;
+}
+
+/**
+ * 状態セレクタの許可リスト（DESIGN.md §2 是正ゲート・cycle-278 C4）。
+ * これに一致するセレクタ内の --accent-weak / --wairo-* 背景は「操作・選択状態のハイライト」
+ * として正当なので誤検知しない。一致しない場合のみ「静的な区画の地への誤用」と判定する。
+ *   - 疑似クラス: :hover / :focus / :focus-visible / :focus-within / :active / :checked / ::selection
+ *   - ARIA/data 状態属性: [aria-current] [aria-selected] [aria-pressed] [aria-checked]
+ *     [data-selected] [data-current] [data-active] [data-state=...]
+ *   - 本コードベースの慣例的な状態クラス名（JS 側で条件付与される操作結果ハイライトで、
+ *     静的な区画の地ではない）: Current / Selected / Active / Correct
+ *     （例: .allTypesItemCurrent・.itemCurrent・.choiceCorrect）
+ * 迷ったときの既定は「静的背景＝誤用」（DESIGN.md §1「器は静か」）に倣い、このリストを
+ * 広げすぎない。判定に迷う新規パターンが出た場合はここへの追記ではなく実装側の見直しを優先する。
+ */
+const STATE_SELECTOR_RE =
+  /:hover\b|:focus(-visible|-within)?\b|:active\b|:checked\b|::selection\b|\[aria-(current|selected|pressed|checked)\b|\[data-(selected|current|active|state)\b|current|selected|active|correct/i;
+
+/**
+ * DESIGN.md §2 是正ゲート（cycle-278 C4）: --accent-weak / --wairo-* が background /
+ * background-color の値に使われ、かつそのルールのセレクタが STATE_SELECTOR_RE に一致しない
+ * 場合を検出する。結果面(quiz)で発生した「朱の気配を区画の地に静的に使う」系統的違反
+ * （§2「区画の地には不可」）の再発を機械的に検出するための追加ゲート。
+ */
+function analyzeStaticAccentBackground(css: string, file: string): Violation[] {
+  const v: Violation[] = [];
+  for (const { selector, prop, value } of extractDeclarationsWithSelector(
+    css,
+  )) {
+    if (prop !== "background" && prop !== "background-color") continue;
+    const usesAccentWeak = /var\(--accent-weak\)/.test(value);
+    const usesWairo = /var\(--wairo-[a-z]+\)/i.test(value);
+    if (!usesAccentWeak && !usesWairo) continue;
+    if (STATE_SELECTOR_RE.test(selector)) continue;
+    v.push({
+      file,
+      severity: "ERROR",
+      code: "§2",
+      message: `${usesAccentWeak ? "--accent-weak" : "--wairo-*"} が状態セレクタを含まないルールの ${prop} に使われている——静的な区画の地への誤用の疑い（DESIGN.md §2: hover/selected の座布団にのみ可）`,
+      declaration: `${selector} { ${prop}: ${value}; }`,
+    });
+  }
+  return v;
+}
 
 // ── CSS 解析 ─────────────────────────────────────────────────────────────
 
@@ -484,6 +630,8 @@ function analyzeCss(content: string, file: string): Violation[] {
       );
     }
   }
+  // §2 是正ゲート（cycle-278 C4）: --accent-weak/--wairo-* の静的背景誤用。
+  v.push(...analyzeStaticAccentBackground(content, file));
   return v;
 }
 
@@ -692,5 +840,55 @@ describe("§8 機械ゲートの検出力（合成入力）", () => {
       "synthetic.tsx",
     );
     expect(vs.some((x) => x.code === "§8-7")).toBe(true);
+  });
+
+  // §2 是正ゲート（cycle-278 C4）: --accent-weak/--wairo-* の静的背景誤用を検出する追加ゲート。
+  test("§2 静的セレクタの --accent-weak 背景（区画の地）を検出", () => {
+    const vs = analyzeCss(
+      `.todayActionCard { background: var(--accent-weak); }`,
+      "synthetic.css",
+    );
+    expect(vs.some((x) => x.code === "§2" && x.severity === "ERROR")).toBe(
+      true,
+    );
+  });
+  test("§2 :hover セレクタの --accent-weak 背景は許容（誤検知しない）", () => {
+    const vs = analyzeCss(
+      `.choiceButton:hover { background-color: var(--accent-weak); }`,
+      "synthetic.css",
+    );
+    expect(vs.filter((x) => x.code === "§2")).toEqual([]);
+  });
+  test("§2 [aria-current] セレクタの --accent-weak 背景は許容（誤検知しない）", () => {
+    const vs = analyzeCss(
+      `.item[aria-current="true"] { background: var(--accent-weak); }`,
+      "synthetic.css",
+    );
+    expect(vs.filter((x) => x.code === "§2")).toEqual([]);
+  });
+  test("§2 Current/Selected 命名クラスの --accent-weak 背景は許容（誤検知しない）", () => {
+    const vs = analyzeCss(
+      `.allTypesItemCurrent a { background-color: var(--accent-weak); }
+       .optionSelected { background: var(--accent-weak); }`,
+      "synthetic.css",
+    );
+    expect(vs.filter((x) => x.code === "§2")).toEqual([]);
+  });
+  test("§2 静的セレクタの --wairo-* 背景（区画の地）を検出", () => {
+    const vs = analyzeCss(
+      `.heroBanner { background: var(--wairo-kurenai); }`,
+      "synthetic.css",
+    );
+    expect(vs.some((x) => x.code === "§2" && x.severity === "ERROR")).toBe(
+      true,
+    );
+  });
+  test("§2 background 以外のプロパティに使う --wairo-* は対象外（誤検知しない・成果物中身の色）", () => {
+    const vs = analyzeCss(
+      `.barFill { background-color: var(--extra-fill); }
+       .wrapper[data-color="kurenai"] { --extra-fill: var(--wairo-kurenai); }`,
+      "synthetic.css",
+    );
+    expect(vs.filter((x) => x.code === "§2")).toEqual([]);
   });
 });

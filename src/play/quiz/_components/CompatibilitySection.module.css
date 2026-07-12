@@ -1,15 +1,20 @@
+/*
+ * 友達との相性結果。DESIGN.md（紙・墨・朱の店構え）。左寄せ・新トークンのみ・絵文字なし。
+ * 相性判定というもう一つの「見せたくなる結果」なので、罫で軽く区切って主結果と分ける
+ * （器は静か・§4/§7）。リビールは 1 回・400ms 以下・reduced-motion 尊重（§5）。
+ */
 .section {
   margin-top: 2rem;
   padding-top: 1.5rem;
-  border-top: 2px solid var(--color-border);
-  text-align: center;
-  animation: fadeIn 0.5s ease;
+  border-top: 1px solid var(--rule-strong);
+  text-align: left;
+  animation: fadeIn 0.4s ease;
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
@@ -19,7 +24,7 @@
 
 .heading {
   font-size: 0.875rem;
-  color: var(--color-text-muted);
+  color: var(--ink-2);
   margin-bottom: 0.75rem;
   font-weight: 600;
 }
@@ -27,7 +32,6 @@
 .typeIcons {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 0.75rem;
   margin-bottom: 1rem;
 }
@@ -35,36 +39,31 @@
 .typeBox {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.25rem;
 }
 
-.typeIcon {
-  font-size: 2rem;
-}
-
 .typeName {
-  font-size: 0.75rem;
-  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  color: var(--ink);
 }
 
 .separator {
-  font-size: 1.25rem;
-  color: var(--color-text-muted);
-  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--ink-2);
 }
 
 .label {
   font-size: 1.5rem;
-  font-weight: 700;
+  font-weight: 600;
   margin-bottom: 0.75rem;
-  color: var(--color-text);
+  color: var(--ink);
 }
 
 .description {
   font-size: 0.9375rem;
   line-height: 1.7;
-  color: var(--color-text);
+  color: var(--ink);
   margin-bottom: 1.5rem;
   text-align: left;
 }

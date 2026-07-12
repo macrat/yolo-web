@@ -7,10 +7,12 @@
  * 本人向けの結果表示を変えたい場合は ResultPageShell ではなく `ResultCard.tsx` を編集すること。
  */
 import Breadcrumb from "@/components/Breadcrumb";
+import Tsutsumi from "@/components/Tsutsumi";
 import ShareButtons from "@/play/quiz/_components/ShareButtons";
 import RelatedQuizzes from "@/play/quiz/_components/RelatedQuizzes";
 import RecommendedContent from "@/play/_components/RecommendedContent";
 import type { QuizDefinition, QuizResult } from "../types";
+import { pickResultWairoColor, pickResultSymbol } from "./resultVisual";
 import styles from "./ResultPageShell.module.css";
 
 interface ResultPageShellProps {
@@ -71,27 +73,24 @@ export default function ResultPageShell({
         <p className={styles.quizContext}>{quiz.meta.shortDescription}</p>
 
         {showMedal ? (
-          // 勲章ヘッダ（§7：無彩の土台に結果固有色が一点効く構図）。
-          // 固有色は象徴タイルの面（低アルファのティント）と罫にのみ使い、全面は塗らない。
-          // タイトルは固有名を勲章の核として際立たせ、色は --fg を維持する（WCAG 1.4.1・
-          // 固有色はテキストに使わない）。h1 は SEO/見出し構造のため維持する。
-          <div className={styles.medal}>
-            {/* 象徴（icon）を主役に。結果固有色を CSS 変数で渡し面のティントと罫に使う
-                （テキスト色には使わない）。情報は下のタイトルが担うため装飾として aria-hidden。 */}
-            <div
-              className={styles.medalIcon}
-              style={{ "--medal-color": result.color } as React.CSSProperties}
-              aria-hidden="true"
-            >
-              {result.icon}
-            </div>
-            <h1 className={styles.medalTitle}>{result.title}</h1>
+          // 結果を包み（Tsutsumi）で見せる（DESIGN.md §4「包み」/§7「見せたくなる結果」）。
+          // h1 は SEO/見出し構造のため維持するが控えめに（器は静か）。結果そのものは
+          // Tsutsumi が主役——第三者向けページでもインライン結果と同じ視覚トーンで届ける
+          // （§7 トーン統一）。固有色は quiz データの任意 hex を捨て、id から和色8色へ
+          // 決定的に写像する（§2）。symbol は絵文字ではなくタイプ名の先頭1字（§8-6）。
+          // 重要: 単独ページには「診断完了」の完了主張は付けない（第三者は完走していない）。
+          <div className={styles.medalWrap}>
+            <h1 className={styles.medalHeading}>{result.title}</h1>
+            <Tsutsumi
+              typeName={result.title}
+              symbol={pickResultSymbol(result.title)}
+              color={pickResultWairoColor(result.id)}
+              productName={quiz.meta.title}
+              seal="診"
+            />
           </div>
         ) : (
-          <>
-            {result.icon && <div className={styles.icon}>{result.icon}</div>}
-            <h1 className={styles.title}>{result.title}</h1>
-          </>
+          <h1 className={styles.title}>{result.title}</h1>
         )}
 
         {children}

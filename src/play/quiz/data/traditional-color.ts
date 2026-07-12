@@ -7,8 +7,8 @@ const traditionalColorQuiz: QuizDefinition = {
     // タイトルが16文字と長いためカード表示用の短縮タイトルを設定
     shortTitle: "日本の伝統色診断",
     description:
-      "8つの質問に答えて、あなたの性格にぴったりの日本の伝統色を見つけましょう。藍色、朱色、若草色など、美しい和の色があなたを待っています。",
-    shortDescription: "性格診断であなたにぴったりの伝統色を発見",
+      "8つの質問に答えて、あなたの性格に一致する日本の伝統色を判定します。藍色、朱色、若草色など、和の色から1色が決まります。",
+    shortDescription: "8問の性格診断で、あなたの伝統色を判定",
     type: "personality",
     category: "personality",
     questionCount: 8,
