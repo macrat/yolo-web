@@ -11,11 +11,11 @@
  *
  * Usage pattern for callers:
  *
- *   const arm = useAbVariant(QUIZ_RESULT_VISUAL_V1.id);
+ *   const arm = useAbVariant(SOME_EXPERIMENT.id);
  *   // arm === null  -> not yet determined (SSR / first render): render a
  *   //                   neutral/default variant, or nothing arm-specific.
- *   // arm === "A"    -> render retro variant
- *   // arm === "B"    -> render current variant
+ *   // arm === "A"    -> render this experiment's A variant
+ *   // arm === "B"    -> render this experiment's B variant
  *
  * For non-React call sites (event handlers, imperative code), call
  * `getAbArm(experimentId)` from ./assign directly instead.

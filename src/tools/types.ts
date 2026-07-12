@@ -1,5 +1,3 @@
-import type { TrustLevel } from "@/lib/trust-levels";
-
 export type ToolCategory =
   | "text"
   | "encoding"
@@ -22,7 +20,6 @@ export interface ToolMeta {
   /** ISO 8601 date-time with timezone. Set when main content is updated. */
   updatedAt?: string;
   structuredDataType?: string; // JSON-LD @type (e.g., "WebApplication")
-  trustLevel: TrustLevel;
 
   /** 処理内容の説明テキスト。ゾーン3「このツールについて」セクションに表示する */
   howItWorks: string;

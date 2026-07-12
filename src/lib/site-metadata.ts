@@ -1,17 +1,14 @@
 /**
  * サイト共通の Metadata オブジェクト。
  *
- * 移行期間中は (legacy)/layout.tsx と (new)/layout.tsx の両方から import して使う。
- * Phase 7 で app/layout.tsx に統合するタイミングで import 元が一本化される。
- *
- * 注意: どちらか片方の値を変更するときは、必ずここを更新して両 layout に反映させること。
- * 同じ値が二箇所に散らばることで起きる「片方だけ更新されて不整合」を防ぐ目的がある。
+ * (new)/layout.tsx から import して使う（cycle-279 C1 で (legacy)/layout.tsx は
+ * 削除済み・import元は本ファイルの一本のみ）。
  */
 
 import type { Metadata } from "next";
 import { BASE_URL, SITE_NAME } from "@/lib/constants";
 
-/** サイト共通の Metadata。(legacy)/layout.tsx と (new)/layout.tsx の両方で使う。 */
+/** サイト共通の Metadata。(new)/layout.tsx が使う。 */
 export const sharedMetadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: "yolos.net",

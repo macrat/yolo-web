@@ -13,7 +13,6 @@ const mockMeta: DictionaryMeta = {
   slug: "test-dict",
   name: "テスト辞典",
   publishedAt: "2026-02-19",
-  trustLevel: "curated",
   valueProposition: "テスト用の一行価値テキスト",
   faq: [
     { question: "テスト質問1？", answer: "テスト回答1。" },
@@ -84,7 +83,6 @@ test("DictionaryDetailLayout does not render FaqSection when faq is undefined", 
     slug: "no-faq",
     name: "FAQなし辞典",
     publishedAt: "2026-02-19",
-    trustLevel: "curated",
   };
   render(
     <DictionaryDetailLayout
@@ -120,7 +118,6 @@ test("DictionaryDetailLayout does not render valueProposition when undefined", (
     slug: "no-vp",
     name: "VP無し辞典",
     publishedAt: "2026-02-19",
-    trustLevel: "curated",
   };
   render(
     <DictionaryDetailLayout
@@ -211,7 +208,6 @@ const mockPlayRecommendations: PlayContentMeta[] = [
     accentColor: "#8B5CF6",
     keywords: ["占い", "テスト"],
     publishedAt: "2026-01-01T00:00:00+09:00",
-    trustLevel: "generated",
     contentType: "fortune",
     category: "fortune",
   },

@@ -1,18 +1,21 @@
+/* RoundResult（イロドリ）— 各ラウンドの結果（DESIGN.md フェーズ R・店構えへ変換）。
+ * 色見本の hex は成果物データ由来（お題/回答色そのもの）であり、器の色ではない。 */
+
 .resultArea {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 1rem 0;
-  padding: 1rem;
-  border-radius: 12px;
-  background: var(--color-bg-secondary);
+  margin: var(--space-16) 0;
+  padding: var(--space-16);
+  border-radius: var(--radius);
+  background: var(--paper-2);
 }
 
 .colorComparison {
   display: flex;
-  gap: 1rem;
+  gap: var(--space-16);
   align-items: center;
-  margin-bottom: 0.75rem;
+  margin-bottom: var(--space-8);
 }
 
 .colorColumn {
@@ -24,14 +27,14 @@
 
 .columnLabel {
   font-size: 0.75rem;
-  color: var(--color-text-muted);
+  color: var(--ink-2);
 }
 
 .colorPatch {
   width: 80px;
   height: 80px;
-  border-radius: 12px;
-  border: 2px solid var(--color-border);
+  border-radius: var(--radius);
+  border: 1px solid var(--rule);
 }
 
 @media (min-width: 480px) {
@@ -46,25 +49,28 @@
 }
 
 .scoreLine {
+  font-family: var(--font-number);
   font-size: 1.2rem;
   font-weight: 700;
-  margin-bottom: 0.25rem;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  margin-bottom: var(--space-8);
 }
 
 .deltaLine {
   font-size: 0.8rem;
-  color: var(--color-text-muted);
+  color: var(--ink-2);
 }
 
 .colorName {
-  margin-top: 0.5rem;
+  margin-top: var(--space-8);
   font-size: 0.9rem;
+  color: var(--ink);
   text-align: center;
 }
 
 .colorNameLink {
-  color: var(--color-primary);
-  text-decoration: underline;
+  color: var(--accent);
 }
 
 .colorNameLink:hover {

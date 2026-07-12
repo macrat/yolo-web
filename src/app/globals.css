@@ -2,8 +2,8 @@
  * サイクル171で作成したデザインシステムのグローバルスタイル。
  * リポジトリルートの DESIGN.md も参照。
  *
- * Route Group (new)/ 配下のページ専用。(legacy)/ 配下は old-globals.css を使う。
- * Route Group により両ファイルが同時に読まれることはないため、@layer は不要。
+ * app 全体で読み込まれる唯一のグローバルスタイル（cycle-279 C1 で (legacy)/ 一式・
+ * old-globals.css を削除済み。旧トークン移植の経緯は下記各所のコメント参照）。
  */
 
 :root {

@@ -1,9 +1,11 @@
+/* GameContainer（イロドリ）— 進捗・操作ボタン（DESIGN.md フェーズ R・店構えへ変換）。 */
+
 .progressBar {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  margin: 0.5rem 0;
+  gap: var(--space-8);
+  margin: var(--space-8) 0;
 }
 
 .progressDots {
@@ -15,43 +17,44 @@
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: var(--color-border);
+  background: var(--rule);
   transition: background-color 0.2s;
 }
 
+/* 完了は色の不在（墨）で示す。和色は「成果物中身」に限るため進捗チップ（器）には使わない
+ * （DESIGN.md §2）。現在地は --accent（操作・選択状態のハイライトとして正当）。 */
 .progressDotCompleted {
-  background: #6aaa64;
+  background: var(--ink);
 }
 
 .progressDotCurrent {
-  background: var(--color-primary);
-  box-shadow: 0 0 4px var(--color-primary);
+  background: var(--accent);
 }
 
 .progressText {
   font-size: 0.85rem;
   font-weight: 600;
-  color: var(--color-text-muted);
+  color: var(--ink-2);
 }
 
 .submitArea {
   display: flex;
   justify-content: center;
-  margin: 1rem 0;
+  margin: var(--space-16) 0;
 }
 
 .submitButton {
+  min-height: 44px;
   padding: 0.75rem 2.5rem;
   font-size: 1rem;
   font-weight: 700;
+  font-family: inherit;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius);
   cursor: pointer;
-  background: var(--color-primary);
-  color: #ffffff;
-  transition:
-    opacity 0.2s,
-    transform 0.1s;
+  background: var(--accent);
+  color: var(--paper);
+  transition: opacity 0.2s;
 }
 
 .submitButton:hover {
@@ -67,7 +70,13 @@
   cursor: not-allowed;
 }
 
+.submitButton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* 次の問題へボタンも操作系の器なので submitButton と同じ朱（--accent）を使う
+ * （和色は成果物中身に限る・器には漏らさない・DESIGN.md §2）。 */
 .nextButton {
   composes: submitButton;
-  background: #6aaa64;
 }

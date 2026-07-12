@@ -125,8 +125,8 @@ const NEW_DESIGN_CSS = [
   // ページネーション（一覧系共有・店構え変換済み。/storybook からも参照されるが対象外）。
   "src/components/Pagination/**/*.module.css",
   // クイズエンジン・結果面（フェーズR・C4 変換済み）。設問フロー(器)・結果面(見せ場・Tsutsumi)。
-  // _experiments/legacy-result/** は A/B 実験 quiz_result_visual_v1 の意図的な旧デザイン
-  // ホールドアウト（arm A 用）であり対象外（変換すると実験の前提が壊れる）。
+  // A/B 実験 quiz_result_visual_v1 の旧デザインホールドアウト（_experiments/legacy-result/**）
+  // は cycle-279 C1 で結果を読まずに撤去済み（ADR001）——ディレクトリごと存在しない。
   "src/play/quiz/_components/QuizContainer.module.css",
   "src/play/quiz/_components/QuestionCard.module.css",
   "src/play/quiz/_components/ProgressBar.module.css",
@@ -184,12 +184,18 @@ const NEW_DESIGN_CSS = [
   // shared 部品（CountdownTimer/CrossCategoryBanner/GameDialog/GameShareButtons/
   // NextGameBanner）・kanji-kanaru・nakamawake の器を店構えへ変換。ゲームの駒/結果
   // （kanji-kanaru の判定セル・nakamawake の難易度4色）は成果物中身のため和色使用可
-  // （irodori/yoji-kimeru は legacy GameLayout を使う未変換ゲームのため対象外）。
+  // （irodori/yoji-kimeru も cycle-279 C1 で新 GameLayout・shared/_components/new 経由へ
+  // 移行済み・legacy GameLayout は削除済み）。
   "src/play/games/_components/new/*.module.css",
   "src/play/games/shared/_components/new/*.module.css",
   "src/play/games/kanji-kanaru/_components/GameContainer.module.css",
   "src/play/games/kanji-kanaru/_components/styles/*.module.css",
   "src/play/games/nakamawake/_components/*.module.css",
+  "src/play/games/irodori/_components/*.module.css",
+  "src/play/games/yoji-kimeru/_components/styles/*.module.css",
+  // 占い（フェーズR・C1 変換済み。cycle-279 で (legacy) から移設）。結果は Tsutsumi（包み）で見せる。
+  "src/play/fortune/_components/*.module.css",
+  "src/app/\\(new\\)/play/daily/page.module.css",
   // /play 一覧・ゲーム/クイズ詳細から使う関連コンテンツ導線（フェーズR・C1/C4 変換済み）。
   // PlayFilterableList/PlayListView/PlayGrid/PlayCard は /play 品書き移行後に無参照と
   // なったため削除済み（対象外）。
@@ -261,8 +267,8 @@ const NEW_DESIGN_TSX = [
   // ページネーション（一覧系共有・店構え変換済み。/storybook からも参照されるが対象外）。
   "src/components/Pagination/**/*.tsx",
   // クイズエンジン・結果面（フェーズR・C4 変換済み）。インライン style の禁止を検査。
-  // _experiments/legacy-result/** は A/B 実験 quiz_result_visual_v1 の意図的な旧デザイン
-  // ホールドアウト（arm A 用）であり対象外（変換すると実験の前提が壊れる）。
+  // A/B 実験 quiz_result_visual_v1 の旧デザインホールドアウト（_experiments/legacy-result/**）
+  // は cycle-279 C1 で結果を読まずに撤去済み（ADR001）——ディレクトリごと存在しない。
   "src/play/quiz/_components/QuizContainer.tsx",
   "src/play/quiz/_components/QuizPlayPageLayout.tsx",
   "src/play/quiz/_components/QuestionCard.tsx",
@@ -320,11 +326,17 @@ const NEW_DESIGN_TSX = [
   // のれん（ヘッダ）の明暗トグル（フェーズR・C1/C4 変換済み）。
   "src/components/ThemeToggle/**/*.tsx",
   // あそびのゲーム（フェーズR・C1/C4 変換済み）。CSS 側と対にインライン style を検査する
-  // （irodori/yoji-kimeru は legacy GameLayout を使う未変換ゲームのため対象外）。
+  // （irodori/yoji-kimeru も cycle-279 C1 で新 GameLayout・shared/_components/new 経由へ
+  // 移行済み・legacy GameLayout は削除済み）。
   "src/play/games/_components/new/*.tsx",
   "src/play/games/shared/_components/new/*.tsx",
   "src/play/games/kanji-kanaru/_components/*.tsx",
   "src/play/games/nakamawake/_components/*.tsx",
+  "src/play/games/irodori/_components/*.tsx",
+  "src/play/games/yoji-kimeru/_components/*.tsx",
+  // 占い（フェーズR・C1 変換済み。cycle-279 で (legacy) から移設）。インライン style の禁止を検査。
+  "src/play/fortune/_components/*.tsx",
+  "src/app/\\(new\\)/play/daily/page.tsx",
   // /play 一覧・ゲーム/クイズ詳細から使う関連コンテンツ導線（フェーズR・C1/C4 変換済み）。
   "src/play/_components/RecommendedContent.tsx",
 ];
@@ -368,6 +380,24 @@ const ALLOWLIST: { fileEndsWith: string; declaration: string }[] = [
   {
     fileEndsWith:
       "src/play/games/kanji-kanaru/_components/GameContainer.module.css",
+    declaration: "border-radius: 50%",
+  },
+  // yoji-kimeru の同型ローディングスピナー（kanji-kanaru と同じ機能的な物理型）。
+  {
+    fileEndsWith:
+      "src/play/games/yoji-kimeru/_components/styles/GameContainer.module.css",
+    declaration: "border-radius: 50%",
+  },
+  // イロドリの進捗ドット: ToggleSwitch のサムと同じ「操作系メタファーの円形」に当たる
+  // （5問の進捗を丸ドットで示す物理的な型）。
+  {
+    fileEndsWith: "src/play/games/irodori/_components/GameContainer.module.css",
+    declaration: "border-radius: 50%",
+  },
+  // イロドリの HSL スライダーのつまみ（操作系プリミティブの円形・ToggleSwitch と同型）。
+  // webkit/moz 両ベンダープレフィックスで同一宣言が2箇所に出るが、宣言文字列は同一。
+  {
+    fileEndsWith: "src/play/games/irodori/_components/HslSliders.module.css",
     declaration: "border-radius: 50%",
   },
   // §2 是正ゲートの追加許容: --wairo-* はゲームの駒/結果など「成果物」の中身の色として
@@ -454,6 +484,27 @@ const ALLOWLIST: { fileEndsWith: string; declaration: string }[] = [
   },
   {
     fileEndsWith: "src/play/games/nakamawake/_components/StatsModal.module.css",
+    declaration:
+      ".distributionBarHighlight { background-color: var(--wairo-tokiwa); }",
+  },
+  // yoji-kimeru の判定フィードバック色（成果物＝ゲームの駒の中身）。cellCorrect/
+  // legendChipCorrect は selector 名に "Correct" を含み STATE_SELECTOR_RE で
+  // 自動許容されるが、cellPresent/legendChipPresent は "Present" のため個別許容する
+  // （kanji-kanaru の cellClose/legendChipClose と同じ理由）。
+  {
+    fileEndsWith:
+      "src/play/games/yoji-kimeru/_components/styles/YojiKimeru.module.css",
+    declaration: ".cellPresent { background-color: var(--wairo-yamabuki); }",
+  },
+  {
+    fileEndsWith:
+      "src/play/games/yoji-kimeru/_components/styles/YojiKimeru.module.css",
+    declaration:
+      ".legendChipPresent { background-color: var(--wairo-yamabuki); }",
+  },
+  {
+    fileEndsWith:
+      "src/play/games/yoji-kimeru/_components/styles/YojiKimeru.module.css",
     declaration:
       ".distributionBarHighlight { background-color: var(--wairo-tokiwa); }",
   },

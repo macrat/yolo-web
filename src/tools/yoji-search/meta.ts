@@ -21,7 +21,6 @@ export const meta: ToolMeta = {
   relatedSlugs: ["keigo-reference", "kana-converter", "char-count"],
   publishedAt: "2026-06-13T19:31:45+09:00",
   structuredDataType: "WebApplication",
-  trustLevel: "curated",
   howItWorks: `${YOJI_COUNT}語の四字熟語データベースから、テキスト入力・カテゴリ・難易度・出典で絞り込んで検索します。検索はブラウザ上で即座に処理され、入力した内容が外部に送信されることはありません。各四字熟語には読み・意味・例文・出典・構造パターンが収録されています。`,
   faq: [
     {

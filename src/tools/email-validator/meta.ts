@@ -19,7 +19,6 @@ export const meta: ToolMeta = {
   publishedAt: "2026-02-14T13:22:32+09:00",
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
-  trustLevel: "verified",
   howItWorks:
     "RFC準拠の構文チェックでメールアドレスのローカルパートとドメインを解析します。文字長さの超過・先頭末尾のドット・連続ドット・使用不可文字・TLDの欠落などを検出します。gmailやyahooなどのよくあるドメインのタイプミスも検出し、修正候補を提案します。",
   faq: [

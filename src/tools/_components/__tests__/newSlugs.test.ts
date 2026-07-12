@@ -13,7 +13,6 @@ function makeTool(slug: string, publishedAt: string): ToolMeta {
     category: "text",
     relatedSlugs: [],
     publishedAt,
-    trustLevel: "verified",
     howItWorks: "",
   };
 }

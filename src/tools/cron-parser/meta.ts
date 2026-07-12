@@ -19,7 +19,6 @@ export const meta: ToolMeta = {
   publishedAt: "2026-02-14T22:39:14+09:00",
   updatedAt: "2026-03-02T12:00:00+09:00",
   structuredDataType: "WebApplication",
-  trustLevel: "verified",
   howItWorks:
     "5フィールド形式（分・時・日・月・曜日）のCron式を解析し、ブラウザ上でわかりやすい日本語の説明に変換します。次回の実行予定日時も計算して表示します。ビルダー機能では各フィールドを個別に入力してCron式を生成することもできます。",
   faq: [

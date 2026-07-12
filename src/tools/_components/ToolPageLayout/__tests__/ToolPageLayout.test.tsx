@@ -19,7 +19,6 @@ vi.mock("@/tools/registry", () => ({
       relatedSlugs: ["char-count"],
       publishedAt: "2026-01-01T00:00:00+09:00",
       structuredDataType: "WebApplication",
-      trustLevel: "generated",
       howItWorks: "テスト用",
     },
     {
@@ -33,7 +32,6 @@ vi.mock("@/tools/registry", () => ({
       relatedSlugs: [],
       publishedAt: "2026-01-01T00:00:00+09:00",
       structuredDataType: "WebApplication",
-      trustLevel: "generated",
       howItWorks: "テスト用",
     },
   ],
@@ -82,7 +80,6 @@ const baseMeta: ToolMeta = {
   category: "encoding",
   relatedSlugs: ["char-count"],
   publishedAt: "2026-01-01T00:00:00+09:00",
-  trustLevel: "generated",
   howItWorks: "ブラウザ上でBase64のエンコード・デコードを処理します。",
   faq: [
     { question: "テスト質問1", answer: "テスト回答1" },

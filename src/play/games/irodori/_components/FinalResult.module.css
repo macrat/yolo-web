@@ -1,30 +1,46 @@
+/* FinalResult（イロドリ）— 最終結果（DESIGN.md フェーズ R・店構えへ変換）。
+ * 絵文字ランクは撤去し、tabular な数字＋文字だけの静かな到達表示にする。 */
+
 .finalResult {
   text-align: center;
 }
 
-.rankEmoji {
-  font-size: 2rem;
-  margin-bottom: 0.25rem;
-}
-
 .scoreHeading {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 0.25rem;
+  margin-bottom: var(--space-8);
 }
 
-.rankLabel {
+.scoreValue {
+  font-family: var(--font-number);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.scoreUnit {
   font-size: 1rem;
-  color: var(--color-text-muted);
-  margin-bottom: 1rem;
+  color: var(--ink-2);
+  margin-left: 0.125rem;
+}
+
+.rankLine {
+  font-size: 1rem;
+  color: var(--ink-2);
+  margin-bottom: var(--space-16);
+}
+
+.rankBadge {
+  font-weight: 700;
+  color: var(--accent);
+  margin-right: var(--space-8);
 }
 
 .roundsSummary {
   display: flex;
   justify-content: center;
-  gap: 0.5rem;
+  gap: var(--space-8);
   flex-wrap: wrap;
-  margin-bottom: 1rem;
+  margin-bottom: var(--space-16);
 }
 
 .roundItem {
@@ -42,17 +58,17 @@
 .miniPatch {
   width: 28px;
   height: 28px;
-  border-radius: 4px;
-  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  border: 1px solid var(--rule);
 }
 
 .roundScore {
   font-size: 0.7rem;
   font-weight: 600;
-  color: var(--color-text-muted);
+  color: var(--ink-2);
 }
 
 .roundLabel {
   font-size: 0.65rem;
-  color: var(--color-text-muted);
+  color: var(--ink-2);
 }

@@ -1,22 +1,25 @@
+/* ColorTarget（イロドリ）— お題の色見本（DESIGN.md フェーズ R・店構えへ変換）。
+ * 色見本の hex は成果物データ由来（色ゲームのお題そのもの）であり、器の色ではない。
+ * 角丸は 0 基調・影は付けない（§4/§8-5）。罫で囲むだけの静かな枠。 */
+
 .targetArea {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 1rem 0;
+  margin: var(--space-16) 0;
 }
 
 .label {
   font-size: 0.9rem;
-  color: var(--color-text-muted);
-  margin-bottom: 0.5rem;
+  color: var(--ink-2);
+  margin-bottom: var(--space-8);
 }
 
 .colorPatch {
   width: 120px;
   height: 120px;
-  border-radius: 16px;
-  border: 3px solid var(--color-border);
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  border-radius: var(--radius);
+  border: 1px solid var(--rule);
 }
 
 @media (min-width: 480px) {

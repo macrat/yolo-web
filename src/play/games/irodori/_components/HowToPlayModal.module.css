@@ -1,14 +1,16 @@
+/* HowToPlayModal（イロドリ）— 遊び方説明（DESIGN.md フェーズ R・店構えへ変換）。 */
+
 .content {
-  line-height: 1.7;
+  line-height: 1.9;
+  color: var(--ink);
 }
 
 .content p {
-  margin-bottom: 0.75rem;
+  margin-bottom: var(--space-8);
 }
 
 .note {
-  font-size: 0.8rem;
-  color: var(--color-text-muted);
-  margin-top: 0.5rem;
-  font-style: italic;
+  font-size: 0.8125rem;
+  color: var(--ink-2);
+  margin-top: var(--space-8);
 }

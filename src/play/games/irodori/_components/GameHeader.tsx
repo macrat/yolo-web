@@ -1,3 +1,5 @@
+import BarChart from "@/components/icons/BarChart";
+import HelpCircle from "@/components/icons/HelpCircle";
 import styles from "./GameHeader.module.css";
 
 interface Props {
@@ -19,26 +21,25 @@ export default function GameHeader({
   return (
     <header className={styles.header}>
       <h1 className={styles.title}>
-        {"\u30A4\u30ED\u30C9\u30EA"}{" "}
-        <span className={styles.number}>#{puzzleNumber}</span>
+        {"イロドリ"} <span className={styles.number}>#{puzzleNumber}</span>
       </h1>
       <p className={styles.date}>{dateString}</p>
       <div className={styles.buttons}>
         <button
           onClick={onHelpClick}
           className={styles.iconButton}
-          aria-label={"\u904A\u3073\u65B9"}
+          aria-label={"遊び方"}
           type="button"
         >
-          ?
+          <HelpCircle />
         </button>
         <button
           onClick={onStatsClick}
           className={styles.iconButton}
-          aria-label={"\u7D71\u8A08"}
+          aria-label={"統計"}
           type="button"
         >
-          {"\u{1F4CA}"}
+          <BarChart />
         </button>
       </div>
     </header>

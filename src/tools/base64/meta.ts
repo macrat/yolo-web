@@ -13,7 +13,6 @@ export const meta: ToolMeta = {
   publishedAt: "2026-02-13T18:57:05+09:00",
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
-  trustLevel: "verified",
   howItWorks:
     "テキストをUTF-8バイト列に変換し、3バイトを4文字のASCII文字列にマッピングするBase64エンコードをブラウザ上で実行します。デコードはその逆変換です。日本語などのマルチバイト文字も正しく処理されます。入力データはサーバーに送信されません。",
   faq: [

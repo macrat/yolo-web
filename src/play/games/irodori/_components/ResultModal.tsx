@@ -7,12 +7,12 @@ import {
   generateResultImage,
   downloadImage,
 } from "@/play/games/irodori/_lib/share";
-import GameDialog from "@/play/games/shared/_components/GameDialog";
-import GameShareButtons from "@/play/games/shared/_components/GameShareButtons";
-import CountdownTimer from "@/play/games/shared/_components/CountdownTimer";
-import NextGameBanner from "@/play/games/shared/_components/NextGameBanner";
-import { CrossCategoryBanner } from "@/play/games/shared/_components/CrossCategoryBanner";
-import type { CrossCategoryItem } from "@/play/games/shared/_components/CrossCategoryBanner";
+import GameDialog from "@/play/games/shared/_components/new/GameDialog";
+import GameShareButtons from "@/play/games/shared/_components/new/GameShareButtons";
+import CountdownTimer from "@/play/games/shared/_components/new/CountdownTimer";
+import NextGameBanner from "@/play/games/shared/_components/new/NextGameBanner";
+import { CrossCategoryBanner } from "@/play/games/shared/_components/new/CrossCategoryBanner";
+import type { CrossCategoryItem } from "@/play/games/shared/_components/new/CrossCategoryBanner";
 import FinalResult from "./FinalResult";
 import styles from "./ResultModal.module.css";
 

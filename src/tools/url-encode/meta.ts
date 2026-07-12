@@ -19,7 +19,6 @@ export const meta: ToolMeta = {
   publishedAt: "2026-02-13T19:03:42+09:00",
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
-  trustLevel: "verified",
   howItWorks:
     "コンポーネントモードでは、スラッシュやコロンを含むすべての特殊文字をパーセント記号と16進数の組み合わせ（%XX）に変換します。クエリパラメータの値など、URL の部品をエンコードするときに使います。URL全体モードでは、URL の構造（スキームやパス区切り）を保ったまま日本語などの特殊文字だけをエンコードします。いずれのモードでも、日本語などのマルチバイト文字は UTF-8 のバイト列に変換してからエンコードされます。",
   faq: [

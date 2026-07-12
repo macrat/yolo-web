@@ -25,7 +25,6 @@ const mockMeta: GameMeta = {
   ogpSubtitle: "テスト",
   publishedAt: "2026-02-13",
   sitemap: { changeFrequency: "daily", priority: 0.8 },
-  trustLevel: "verified",
   seo: {
     title: "テストゲーム",
     description: "テスト用のゲームの説明です。",
@@ -37,7 +36,6 @@ const mockMeta: GameMeta = {
 
 const mockMetaFull: GameMeta = {
   ...mockMeta,
-  trustNote: "テストの信頼レベル注記です。",
   valueProposition: "テスト価値テキスト",
   usageExample: {
     input: "テスト入力",

@@ -4,7 +4,7 @@ import ResultPageShell from "../ResultPageShell";
 import type { QuizDefinition, QuizResult } from "../../types";
 
 // 依存コンポーネントをモックしてテストを安定させる
-vi.mock("@/components/common/Breadcrumb", () => ({
+vi.mock("@/components/Breadcrumb", () => ({
   default: ({ items }: { items: Array<{ label: string; href?: string }> }) => (
     <nav aria-label="パンくずリスト">
       {items.map((item) => (
@@ -58,7 +58,6 @@ const mockQuiz: QuizDefinition = {
     accentColor: "#ff5733",
     keywords: ["テスト"],
     publishedAt: "2026-01-01T00:00:00+09:00",
-    trustLevel: "generated",
   },
   questions: [],
   results: [],

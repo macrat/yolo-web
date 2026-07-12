@@ -17,18 +17,17 @@ interface GameLayoutProps {
 /**
  * ゲームページ共通レイアウト（(new) デザイン体系版・cycle-268 フォーク）。
  *
- * legacy `../GameLayout` を (new) austere デザインへ質的に入れ替えたフォーク。
- * 未移行ゲーム（irodori/yoji-kimeru）は legacy 版を使い続けるため、
- * 構造変更（角丸・影撤去・左寄せ統一・TrustLevelBadge 撤去）が波及しない
- * （nakamawake は本コンポーネントを使用する・cycle-278 C1/C4 で shared 部品ごと店構えへ変換済み）。
+ * 全4ゲーム（kanji-kanaru・nakamawake・irodori・yoji-kimeru）が本コンポーネントを
+ * 使用する（cycle-279 C1 で irodori/yoji-kimeru も legacy 版から移行完了・
+ * legacy `../GameLayout` は削除済み）。
  *
- * legacy からの主な差分:
+ * legacy からの主な差分（歴史的経緯）:
  * - Breadcrumb/FaqSection/ShareButtons を (new) `@/components/*` 版に差替。
- * - TrustLevelBadge を撤去（(new) 版が存在しない。AI 注記は Footer/about が担保）。
- *   `meta.trustLevel`/`trustNote` フィールドは B-432 一括削除の責務のため触らない。
- * - RecommendedContent / RelatedContentCard.module.css（(new)/(legacy) RelatedGames が
- *   共有）はフォークせず従来パスで参照する（cycle-278 C1/C4 で両ファイルとも新トークンへ
- *   変換済み。RelatedQuizzes は別ファイル RelatedQuizzes.module.css を持ち非共有）。
+ * - TrustLevelBadge を撤去（cycle-279 C1 で trustLevel フィールド自体も型・データ・
+ *   コンポーネントごと一括削除済み・B-432 完了）。
+ * - RecommendedContent / RelatedContentCard.module.css（本コンポーネント配下の
+ *   RelatedGames が使用）は新トークンへ変換済み（cycle-278 C1/C4。RelatedQuizzes は
+ *   別ファイル RelatedQuizzes.module.css を持ち非共有）。
  *
  * h1 は GameContainer 内部で表示されるため、重複を避けて header には含めない。
  */

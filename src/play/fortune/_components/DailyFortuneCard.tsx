@@ -7,6 +7,11 @@ import {
   getFortuneServerSnapshot,
 } from "@/play/fortune/fortuneStore";
 import ShareButtons from "@/play/quiz/_components/ShareButtons";
+import Tsutsumi from "@/components/Tsutsumi";
+import {
+  pickResultWairoColor,
+  pickResultSymbol,
+} from "@/play/quiz/_components/resultVisual";
 import StarRating from "./StarRating";
 import styles from "./DailyFortuneCard.module.css";
 
@@ -24,6 +29,11 @@ function formatDate(dateStr: string): string {
  * select a fortune entry.
  *
  * ストアのキャッシュ・購読ロジックは fortuneStore モジュールに集約する。
+ *
+ * デザイン（DESIGN.md §4「包み」/§7「見せたくなる結果」）: 占いは診断・ゲームと同じく
+ * 見せたくなる側。結果は罫で明確に包んだ独立ビジュアル（Tsutsumi）を主役にし、
+ * 器（このカードの見出し部）は静かな到達ラベルだけを持つ（quiz ResultCard と同じ型）。
+ * 和色は結果 id から決定的に写像（同じ運勢は常に同じ色・§2「成果物パレットは8色に限る」）。
  */
 export default function DailyFortuneCard() {
   // useSyncExternalStore を使い Hydration Error を防ぐ。
@@ -58,22 +68,37 @@ export default function DailyFortuneCard() {
   return (
     <div className={styles.card}>
       <p className={styles.date}>{formatDate(today)}</p>
-      <h2 className={styles.title}>{fortune.title}</h2>
+
+      <div className={styles.medalWrap}>
+        <p className={styles.medalLabel}>
+          <span className={styles.medalLabelDone}>占い完了</span>
+          今日の結果
+        </p>
+        <Tsutsumi
+          typeName={fortune.title}
+          symbol={pickResultSymbol(fortune.title)}
+          color={pickResultWairoColor(fortune.id)}
+          productName="今日のユーモア運勢"
+          seal="占"
+        />
+      </div>
+
       <div className={styles.ratingRow}>
         <StarRating rating={fortune.rating} />
       </div>
+
       <p className={styles.description}>{fortune.description}</p>
 
-      <div className={styles.detailsGrid}>
+      <dl className={styles.detailsGrid}>
         <div className={styles.detailItem}>
-          <span className={styles.detailLabel}>ラッキーアイテム</span>
-          <span className={styles.detailValue}>{fortune.luckyItem}</span>
+          <dt className={styles.detailLabel}>ラッキーアイテム</dt>
+          <dd className={styles.detailValue}>{fortune.luckyItem}</dd>
         </div>
         <div className={styles.detailItem}>
-          <span className={styles.detailLabel}>今日のアクション</span>
-          <span className={styles.detailValue}>{fortune.luckyAction}</span>
+          <dt className={styles.detailLabel}>今日のアクション</dt>
+          <dd className={styles.detailValue}>{fortune.luckyAction}</dd>
         </div>
-      </div>
+      </dl>
 
       <ShareButtons
         shareText={shareText}

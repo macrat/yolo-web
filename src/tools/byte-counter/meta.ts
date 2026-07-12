@@ -19,7 +19,6 @@ export const meta: ToolMeta = {
   publishedAt: "2026-02-14T07:56:36+09:00",
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
-  trustLevel: "verified",
   howItWorks:
     "入力テキストをUTF-8エンコーディングでバイト列に変換し、バイト数をリアルタイムにカウントします。ASCII英数字は1バイト、日本語（ひらがな・カタカナ・漢字）は3バイト、絵文字は4バイトとして計算します。文字数・行数も同時にカウントし、すべての処理はブラウザ上で完結します。",
   faq: [

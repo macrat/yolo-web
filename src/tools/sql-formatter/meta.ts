@@ -19,7 +19,6 @@ export const meta: ToolMeta = {
   publishedAt: "2026-02-14T22:39:14+09:00",
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
-  trustLevel: "verified",
   howItWorks:
     "SQLクエリを解析し、改行・字下げ（インデント）・キーワードの大文字化を加えて読みやすく整形します。「圧縮」ボタンで不要な空白と改行を除去した1行形式にも変換できます。MySQL・PostgreSQL・SQLiteなど一般的なSQLに対応し、すべての処理はブラウザ上で完結します。",
   faq: [

@@ -23,7 +23,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ThemeProvider from "@/components/ThemeProvider";
 import ThemeToggle from "@/components/ThemeToggle";
-import GoogleAnalytics from "@/components/common/GoogleAnalytics";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
 import GlobalNotFoundContent from "@/app/global-not-found-content";
 import { SITE_NAME } from "@/lib/constants";
 

@@ -1,6 +1,6 @@
 "use client";
 
-import GameDialog from "@/play/games/shared/_components/GameDialog";
+import GameDialog from "@/play/games/shared/_components/new/GameDialog";
 import styles from "./styles/YojiKimeru.module.css";
 
 interface HowToPlayModalProps {
@@ -28,9 +28,27 @@ export default function HowToPlayModal({ open, onClose }: HowToPlayModalProps) {
           4文字の漢字を入力すると、各文字についてフィードバックが表示されます:
         </p>
         <ul className={styles.feedbackLegend}>
-          <li>{"\u{1F7E9}"} 緑 = 正しい位置</li>
-          <li>{"\u{1F7E8}"} 黄 = 別の位置に存在</li>
-          <li>{"\u2B1C"} 灰 = 含まれない</li>
+          <li>
+            <span
+              className={`${styles.legendChip} ${styles.legendChipCorrect}`}
+              aria-hidden="true"
+            />
+            正しい位置
+          </li>
+          <li>
+            <span
+              className={`${styles.legendChip} ${styles.legendChipPresent}`}
+              aria-hidden="true"
+            />
+            別の位置に存在
+          </li>
+          <li>
+            <span
+              className={`${styles.legendChip} ${styles.legendChipAbsent}`}
+              aria-hidden="true"
+            />
+            含まれない
+          </li>
         </ul>
         <p className={styles.howToPlaySection}>
           <strong>難易度について</strong>

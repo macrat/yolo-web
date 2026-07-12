@@ -2,7 +2,6 @@ import { describe, it, expect } from "vitest";
 import {
   AB_ARMS,
   AB_EXPERIMENTS,
-  QUIZ_RESULT_VISUAL_V1,
   getExperiment,
   type AbArm,
 } from "@/lib/ab/experiments";
@@ -12,29 +11,12 @@ describe("experiment registry", () => {
     expect(AB_ARMS).toEqual(["A", "B"]);
   });
 
-  it("registers quiz_result_visual_v1 with the expected id", () => {
-    expect(QUIZ_RESULT_VISUAL_V1.id).toBe("quiz_result_visual_v1");
-    expect(AB_EXPERIMENTS[QUIZ_RESULT_VISUAL_V1.id]).toBe(
-      QUIZ_RESULT_VISUAL_V1,
-    );
-  });
-
-  it("getExperiment returns the experiment for a known id", () => {
-    expect(getExperiment("quiz_result_visual_v1")).toBe(QUIZ_RESULT_VISUAL_V1);
-  });
-
   it("getExperiment returns undefined for an unknown id", () => {
     expect(getExperiment("does_not_exist")).toBeUndefined();
   });
 
-  it("quiz_result_visual_v1 has exactly the A and B arms", () => {
-    const labels = QUIZ_RESULT_VISUAL_V1.arms.map((arm) => arm.label);
-    expect(labels).toEqual(["A", "B"]);
-  });
-
-  it("quiz_result_visual_v1 is an even 50/50 split", () => {
-    const weights = QUIZ_RESULT_VISUAL_V1.arms.map((arm) => arm.weight);
-    expect(weights[0]).toBe(weights[1]);
+  it("has no registered experiments (quiz_result_visual_v1 removed in cycle-279 C1)", () => {
+    expect(Object.keys(AB_EXPERIMENTS)).toEqual([]);
   });
 
   it("every registered experiment is internally consistent", () => {

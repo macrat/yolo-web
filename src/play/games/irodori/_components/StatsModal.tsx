@@ -1,7 +1,7 @@
 "use client";
 
 import type { IrodoriGameStats } from "@/play/games/irodori/_lib/types";
-import GameDialog from "@/play/games/shared/_components/GameDialog";
+import GameDialog from "@/play/games/shared/_components/new/GameDialog";
 import styles from "./StatsModal.module.css";
 
 interface Props {

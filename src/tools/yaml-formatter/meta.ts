@@ -25,7 +25,6 @@ export const meta: ToolMeta = {
   publishedAt: "2026-02-14T13:25:20+09:00",
   updatedAt: "2026-02-28T13:00:40+09:00",
   structuredDataType: "WebApplication",
-  trustLevel: "verified",
   howItWorks:
     "入力したYAMLを読みやすく改行・字下げ（インデント）して整形します。「検証」ボタンで構文が正しいかをチェックでき、エラーがある場合は該当行番号とともに日本語で内容を表示します。「YAML → JSON」「JSON → YAML」モードで形式間の変換も可能。字下げ幅は2スペースまたは4スペースから選べます。すべての処理はブラウザ上で完結し、入力内容はサーバーに送信されません。最大1,000,000文字まで対応しています。",
   faq: [

@@ -49,11 +49,12 @@ describe("play/[slug]/page", () => {
     });
 
     it("FaqSection and ShareButtons are importable from expected paths", async () => {
-      // Verify the components exist and are importable (used by page.tsx)
-      const faqModule = await import("@/components/common/FaqSection");
+      // Verify the components exist and are importable
+      // (used by QuizPlayPageLayout, which page.tsx renders).
+      const faqModule = await import("@/components/FaqSection");
       expect(faqModule.default).toBeDefined();
 
-      const shareModule = await import("@/components/common/ShareButtons");
+      const shareModule = await import("@/components/ShareButtons");
       expect(shareModule.default).toBeDefined();
     });
   });

@@ -50,37 +50,15 @@ export interface AbExperiment {
 }
 
 /**
- * The first real experiment: inline quiz result visual language.
- * Arm A and Arm B are an even 50/50 split. The retro (emoji/colorful) vs
- * minimal mapping is documented in docs/visitor-value-measurement.md 論点6.
- */
-export const QUIZ_RESULT_VISUAL_V1: AbExperiment = {
-  id: "quiz_result_visual_v1",
-  description:
-    "Inline quiz result visual language: retro (emoji/colorful/centered) vs minimal.",
-  arms: [
-    {
-      label: "A",
-      weight: 1,
-      description:
-        "Retro visual language restored from d804b5d1 (emoji markers, type-color, centered, bold).",
-    },
-    {
-      label: "B",
-      weight: 1,
-      description:
-        "Current minimal visual language (accent rule, left-aligned headings).",
-    },
-  ],
-};
-
-/**
  * The experiment registry, keyed by experiment id. Add future experiments
  * here so that assignment and analysis share one source of truth.
+ *
+ * quiz_result_visual_v1（inline クイズ結果の視覚言語 retro vs minimal）は
+ * cycle-279 C1 でオーナー裁定により結果を読まずに撤去済み（旧々デザインと旧
+ * デザインの比較であり、デザイン刷新後はどちらの結果も使い道がないため。
+ * ADR001 参照）。現在登録済みの実験はない。
  */
-export const AB_EXPERIMENTS: Readonly<Record<string, AbExperiment>> = {
-  [QUIZ_RESULT_VISUAL_V1.id]: QUIZ_RESULT_VISUAL_V1,
-};
+export const AB_EXPERIMENTS: Readonly<Record<string, AbExperiment>> = {};
 
 /** Look up an experiment by id. Returns undefined if it is not registered. */
 export function getExperiment(experimentId: string): AbExperiment | undefined {

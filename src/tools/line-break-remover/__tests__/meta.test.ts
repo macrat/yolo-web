@@ -15,7 +15,6 @@ describe("line-break-remover meta", () => {
     expect(meta.category).toBeDefined();
     expect(meta.relatedSlugs).toBeDefined();
     expect(meta.publishedAt).toBeDefined();
-    expect(meta.trustLevel).toBeDefined();
     expect(meta.howItWorks).toBeDefined();
   });
 

@@ -1,7 +1,7 @@
 "use client";
 
 import type { YojiGameStats } from "@/play/games/yoji-kimeru/_lib/types";
-import GameDialog from "@/play/games/shared/_components/GameDialog";
+import GameDialog from "@/play/games/shared/_components/new/GameDialog";
 import styles from "./styles/YojiKimeru.module.css";
 
 interface StatsModalProps {

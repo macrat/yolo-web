@@ -18,7 +18,6 @@ export const meta: ToolMeta = {
   publishedAt: "2026-02-13T18:57:05+09:00",
   updatedAt: "2026-02-28T08:10:50+09:00",
   structuredDataType: "WebApplication",
-  trustLevel: "verified",
   howItWorks:
     "入力テキストをリアルタイムで解析し、文字数・バイト数（UTF-8）・単語数・行数を同時にカウントします。文字数は1文字ずつ数え、絵文字や記号なども1文字として扱います。改行も1文字としてカウントされます。すべての処理はブラウザ上で完結し、入力データはサーバーに送信されません。",
   faq: [

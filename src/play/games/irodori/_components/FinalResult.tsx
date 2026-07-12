@@ -11,16 +11,14 @@ interface Props {
   gameState: IrodoriGameState;
 }
 
-const RANK_EMOJIS: Record<string, string> = {
-  S: "\u{1F451}", // crown
-  A: "\u{1F31F}", // star
-  B: "\u{1F44D}", // thumbs up
-  C: "\u{1F60A}", // smile
-  D: "\u{1F4AA}", // muscle
-};
-
 /**
  * Shows the final result after all 5 rounds are completed.
+ *
+ * DESIGN.md フェーズR・店構えへ変換: ランクの絵文字表示は撤去し、tabular な数字と
+ * 文字だけの静かな到達表示にする（§6「見出し・ナビ・ボタンに絵文字を使わない」の
+ * 精神を結果面にも適用。ゲームの結果面は nakamawake/kanji-kanaru の ResultModal と
+ * 同じ「文字だけの結果サマリー」に揃え、Tsutsumi は使わない——両ゲームとも和色は
+ * 各ラウンドの色見本という「成果物データ」の中身にのみ使う）。
  */
 export default function FinalResult({ gameState }: Props) {
   const scores = gameState.rounds.map((r) => r.score ?? 0);
@@ -29,12 +27,14 @@ export default function FinalResult({ gameState }: Props) {
 
   return (
     <div className={styles.finalResult}>
-      <div className={styles.rankEmoji}>{RANK_EMOJIS[rank]}</div>
       <div className={styles.scoreHeading}>
-        {totalScore}/100 ({rank}
-        {"\u30E9\u30F3\u30AF"})
+        <span className={styles.scoreValue}>{totalScore}</span>
+        <span className={styles.scoreUnit}>/100</span>
       </div>
-      <div className={styles.rankLabel}>{getRankLabel(rank)}</div>
+      <div className={styles.rankLine}>
+        <span className={styles.rankBadge}>{rank}ランク</span>
+        {getRankLabel(rank)}
+      </div>
       <div className={styles.roundsSummary}>
         {gameState.rounds.map((round, i) => {
           const answerHex = round.answer
@@ -42,10 +42,7 @@ export default function FinalResult({ gameState }: Props) {
             : "#333333";
           return (
             <div key={i} className={styles.roundItem}>
-              <div className={styles.roundLabel}>
-                {"\u554F"}
-                {i + 1}
-              </div>
+              <div className={styles.roundLabel}>問{i + 1}</div>
               <div className={styles.roundPatches}>
                 <div
                   className={styles.miniPatch}
@@ -56,10 +53,7 @@ export default function FinalResult({ gameState }: Props) {
                   style={{ backgroundColor: answerHex }}
                 />
               </div>
-              <div className={styles.roundScore}>
-                {round.score ?? 0}
-                {"\u70B9"}
-              </div>
+              <div className={styles.roundScore}>{round.score ?? 0}点</div>
             </div>
           );
         })}

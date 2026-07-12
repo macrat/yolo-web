@@ -33,34 +33,13 @@ import CompatibilitySection from "./CompatibilitySection";
 import InviteFriendButton from "./InviteFriendButton";
 import ShareButtons from "./ShareButtons";
 import { pickResultWairoColor, pickResultSymbol } from "./resultVisual";
-// EXPERIMENT: quiz_result_visual_v1
-// OtherTypesNav の選択（current / retro）は OtherTypesNavAb 内部で行う。
-// 実験終了時は import を `./OtherTypesNav` に戻し、`_experiments/` ディレクトリ
-// ごと削除すれば原状復帰できる。撤去対象は本ファイル＋ QuizContainer.tsx 内の
-// `EXPERIMENT: quiz_result_visual_v1` マーカーを grep で一括検索のこと:
-//   grep -rn 'EXPERIMENT: quiz_result_visual_v1' src/
-import OtherTypesNav from "./_experiments/legacy-result/OtherTypesNavAb";
-import type { AbArm } from "@/lib/ab";
+import OtherTypesNav from "./OtherTypesNav";
 import styles from "./ResultCard.module.css";
 
-// EXPERIMENT: quiz_result_visual_v1
-//
 // dynamic importにより、これらのコンポーネントとデータファイル（計120KB以上）を
 // クイズページの初期バンドルから分離し、/play/[slug] の140KBバジェットを維持する。
-//
-// retro バリアントは `_experiments/legacy-result/*` から並走で読み込む。
-// arm === "A" のとき retro、それ以外（"B" / null / undefined）は current。
-// null（SSR/初期 render）は current を選ぶことで hydration mismatch を避ける
-// （docs/visitor-value-measurement.md 論点1）。
-//
-// 実験終了時はこの section の `*Retro` 群と pickVariantComponent をすべて削除し、
-// 各 switch case を「retro/current の分岐なし」に戻すだけで原状復帰できる。
 const AnimalPersonalityContent = dynamic(
   () => import("./AnimalPersonalityContent"),
-  { ssr: true },
-);
-const AnimalPersonalityContentRetro = dynamic(
-  () => import("./_experiments/legacy-result/AnimalPersonalityContent"),
   { ssr: true },
 );
 
@@ -68,17 +47,9 @@ const MusicPersonalityContent = dynamic(
   () => import("./MusicPersonalityContent"),
   { ssr: true },
 );
-const MusicPersonalityContentRetro = dynamic(
-  () => import("./_experiments/legacy-result/MusicPersonalityContent"),
-  { ssr: true },
-);
 
 const TraditionalColorContent = dynamic(
   () => import("./TraditionalColorContent"),
-  { ssr: true },
-);
-const TraditionalColorContentRetro = dynamic(
-  () => import("./_experiments/legacy-result/TraditionalColorContent"),
   { ssr: true },
 );
 
@@ -86,17 +57,9 @@ const YojiPersonalityContent = dynamic(
   () => import("./YojiPersonalityContent"),
   { ssr: true },
 );
-const YojiPersonalityContentRetro = dynamic(
-  () => import("./_experiments/legacy-result/YojiPersonalityContent"),
-  { ssr: true },
-);
 
 const CharacterPersonalityContent = dynamic(
   () => import("./CharacterPersonalityContent"),
-  { ssr: true },
-);
-const CharacterPersonalityContentRetro = dynamic(
-  () => import("./_experiments/legacy-result/CharacterPersonalityContent"),
   { ssr: true },
 );
 
@@ -104,17 +67,9 @@ const UnexpectedCompatibilityContent = dynamic(
   () => import("./UnexpectedCompatibilityContent"),
   { ssr: true },
 );
-const UnexpectedCompatibilityContentRetro = dynamic(
-  () => import("./_experiments/legacy-result/UnexpectedCompatibilityContent"),
-  { ssr: true },
-);
 
 const ImpossibleAdviceContent = dynamic(
   () => import("./ImpossibleAdviceContent"),
-  { ssr: true },
-);
-const ImpossibleAdviceContentRetro = dynamic(
-  () => import("./_experiments/legacy-result/ImpossibleAdviceContent"),
   { ssr: true },
 );
 
@@ -122,31 +77,6 @@ const ContrarianFortuneContent = dynamic(
   () => import("./ContrarianFortuneContent"),
   { ssr: true },
 );
-const ContrarianFortuneContentRetro = dynamic(
-  () => import("./_experiments/legacy-result/ContrarianFortuneContent"),
-  { ssr: true },
-);
-
-/**
- * EXPERIMENT: quiz_result_visual_v1
- *
- * variant → {retro, current} の選択ヘルパ。
- *
- * 各 variant の case で `pickVariantComponent(arm, Retro, Current)` を呼び、
- * 同じ props で展開する（props 差のため完全な集約は不可だが、arm 分岐の
- * 「if 階段」を避けて switch 各 case の見通しを保つ）。
- *
- * 注: `character-fortune` は cycle-254 の剥ぎ落とし対象外（専用 *Content を持たず
- *      ResultCard 内 `renderCharacterFortuneContent` で描画）、retro/current の差分が
- *      存在しないためテーブルに含めない（設計書 論点2 除外規定）。
- */
-function pickVariantComponent<TRetro, TCurrent>(
-  arm: AbArm | null,
-  retro: TRetro,
-  current: TCurrent,
-): TRetro | TCurrent {
-  return arm === "A" ? retro : current;
-}
 
 type ResultCardProps = {
   result: QuizResult;
@@ -172,20 +102,6 @@ type ResultCardProps = {
    * ResultCard 内で個別クイズデータをインポートする必要をなくし、バンドルサイズを削減する。
    */
   allResults?: QuizResult[];
-  /**
-   * EXPERIMENT: quiz_result_visual_v1
-   *
-   * A/B 実験 quiz_result_visual_v1 の arm（親 QuizContainer が `useAbVariant`
-   * で解決した結果を渡す）。`null` は SSR / 初期 render（未確定）を表す。
-   *
-   * 未指定（undefined）の場合は current 描画にフォールバックする。これは
-   * ResultCard 単体テストや静的結果ページ（実験対象外）からの呼び出しが
-   * arm を渡さずに済むようにするための後方互換動作。
-   *
-   * 実験終了時はこの prop ごと削除し、`renderDetailedContent` の arm 引数と
-   * `OtherTypesNavAb` 経由 import も外して原状復帰する。
-   */
-  resultVisualArm?: AbArm | null;
 };
 
 function renderStandardContent(
@@ -195,9 +111,6 @@ function renderStandardContent(
   allResults?: QuizResult[],
   quizSlug?: string,
   resultId?: string,
-  // EXPERIMENT: quiz_result_visual_v1
-  // arm を OtherTypesNavAb へ伝播するために受け取る。
-  arm?: AbArm | null,
 ): React.ReactNode {
   const traitsHeading = labels?.traitsHeading ?? "このタイプの特徴";
   const behaviorsHeading = labels?.behaviorsHeading ?? "このタイプのあるある";
@@ -231,13 +144,10 @@ function renderStandardContent(
       <h3 className={styles.detailedHeading}>{adviceHeading}</h3>
       <div className={styles.adviceCard}>{content.advice}</div>
       {allResults && quizSlug && resultId && (
-        // EXPERIMENT: quiz_result_visual_v1 — OtherTypesNavAb は arm を prop で受け、
-        // QuizContainer で解決した arm を1か所からそのまま渡す（関心の分離・原則#3）。
         <OtherTypesNav
           quizSlug={quizSlug}
           currentResultId={resultId}
           results={allResults}
-          arm={arm}
         />
       )}
     </>
@@ -327,11 +237,6 @@ function renderDetailedContent(
   referrerTypeId?: string,
   resultColor?: string,
   allResults?: QuizResult[],
-  // EXPERIMENT: quiz_result_visual_v1
-  // arm の意味: "A" → retro / "B" | null | undefined → current。
-  // null（SSR/初期 render）で current にフォールバックして hydration mismatch を
-  // 回避する（docs/visitor-value-measurement.md 論点1）。
-  arm?: AbArm | null,
 ): React.ReactNode {
   // Standard variant (variant === undefined)
   if (!content.variant) {
@@ -342,29 +247,13 @@ function renderDetailedContent(
       allResults,
       quizSlug,
       resultId,
-      arm,
     );
   }
-  // EXPERIMENT: quiz_result_visual_v1
-  // 各 variant の case で `pickVariantComponent(arm, Retro, Current)` により
-  // retro / current の出し分けを行う（character-fortune は剥ぎ落とし対象外で
-  // 分岐なし）。実験終了時はこの switch を「分岐なし」に戻すだけで済む。
   switch (content.variant) {
     case "contrarian-fortune": {
-      // EXPERIMENT: quiz_result_visual_v1
-      // ResultCard（インライン）経路は 8 variant 共通で縦リスト統一。
-      //
-      // `allTypesLayout` の pill/list 差は独立変数（絵文字/カラフル vs ミニマル）
-      // の外側にあるので、両 arm 共通で "list" を渡し A/B の効果量に layout 差を
-      // 混入させない。retro 側は当時 (d804b5d1) "pill" 単一だったが、
-      // `_experiments/legacy-result/ContrarianFortuneContent.module.css` に
-      // `.allTypesListVertical` を追加して "list" を許容している
-      // （docs/visitor-value-measurement.md 論点2 例外規定）。
-      const Comp = pickVariantComponent(
-        arm ?? null,
-        ContrarianFortuneContentRetro,
-        ContrarianFortuneContent,
-      );
+      // ResultCard（インライン）経路は 8 variant 共通で縦リスト統一
+      // （`allTypesLayout` の pill/list 差は独立変数の外側にあるため）。
+      const Comp = ContrarianFortuneContent;
       return (
         <Comp
           quizSlug={quizSlug}
@@ -378,16 +267,11 @@ function renderDetailedContent(
       );
     }
     case "character-fortune":
-      // character-fortune は cycle-254 の剥ぎ落とし対象外（専用 *Content を持たない）。
-      // arm に関係なく同じ renderCharacterFortuneContent を描画する
-      // （docs/visitor-value-measurement.md 論点2 除外規定）。
+      // character-fortune は専用 *Content を持たず、常に
+      // renderCharacterFortuneContent で描画する。
       return renderCharacterFortuneContent(content);
     case "animal-personality": {
-      const Comp = pickVariantComponent(
-        arm ?? null,
-        AnimalPersonalityContentRetro,
-        AnimalPersonalityContent,
-      );
+      const Comp = AnimalPersonalityContent;
       return (
         <Comp
           content={content}
@@ -402,11 +286,7 @@ function renderDetailedContent(
       );
     }
     case "music-personality": {
-      const Comp = pickVariantComponent(
-        arm ?? null,
-        MusicPersonalityContentRetro,
-        MusicPersonalityContent,
-      );
+      const Comp = MusicPersonalityContent;
       return (
         <Comp
           content={content}
@@ -419,11 +299,7 @@ function renderDetailedContent(
       );
     }
     case "traditional-color": {
-      const Comp = pickVariantComponent(
-        arm ?? null,
-        TraditionalColorContentRetro,
-        TraditionalColorContent,
-      );
+      const Comp = TraditionalColorContent;
       return (
         <Comp
           content={content}
@@ -432,18 +308,11 @@ function renderDetailedContent(
           headingLevel={3}
           allTypesLayout="list"
           // ResultCard内では相性データがないため afterColorAdvice は省略
-          //
-          // 色見本（r.color の色ドット）は retro/current 両方で同一仕様。
-          // resultColor は arm によらず常に同じ値を渡している（設計書論点2 例外）。
         />
       );
     }
     case "yoji-personality": {
-      const Comp = pickVariantComponent(
-        arm ?? null,
-        YojiPersonalityContentRetro,
-        YojiPersonalityContent,
-      );
+      const Comp = YojiPersonalityContent;
       return (
         <Comp
           content={content}
@@ -456,13 +325,7 @@ function renderDetailedContent(
       );
     }
     case "character-personality": {
-      const Comp = pickVariantComponent(
-        arm ?? null,
-        CharacterPersonalityContentRetro,
-        CharacterPersonalityContent,
-      );
-      // retro 版は allTypesLayout が "list" | "grid"、current 版は "list" | "grid"
-      // で互換。インライン経路は "list" 統一で問題ない。
+      const Comp = CharacterPersonalityContent;
       return (
         <Comp
           content={content}
@@ -475,11 +338,7 @@ function renderDetailedContent(
       );
     }
     case "unexpected-compatibility": {
-      const Comp = pickVariantComponent(
-        arm ?? null,
-        UnexpectedCompatibilityContentRetro,
-        UnexpectedCompatibilityContent,
-      );
+      const Comp = UnexpectedCompatibilityContent;
       return (
         <Comp
           quizSlug={quizSlug}
@@ -495,14 +354,7 @@ function renderDetailedContent(
       );
     }
     case "impossible-advice": {
-      // EXPERIMENT: quiz_result_visual_v1
-      // contrarian-fortune と同じく、両 arm 共通で "list" を渡して独立変数
-      // （絵文字/カラフル vs ミニマル）に layout 差を混入させない。
-      const Comp = pickVariantComponent(
-        arm ?? null,
-        ImpossibleAdviceContentRetro,
-        ImpossibleAdviceContent,
-      );
+      const Comp = ImpossibleAdviceContent;
       return (
         <Comp
           quizSlug={quizSlug}
@@ -537,7 +389,6 @@ export default function ResultCard({
   accentColor,
   referrerTypeId,
   allResults,
-  resultVisualArm,
 }: ResultCardProps) {
   const shareUrl =
     typeof window !== "undefined"
@@ -642,8 +493,6 @@ export default function ResultCard({
             referrerTypeId,
             result.color,
             allResults,
-            // EXPERIMENT: quiz_result_visual_v1
-            resultVisualArm,
           )}
         </div>
       )}

@@ -67,8 +67,8 @@ function buildMetaText(slug: string, content: PlayContentMeta): string {
  *   6. 関連クイズ・診断（RelatedQuizzes）
  *   7. 他ジャンルのおすすめ（RecommendedContent）
  *
- * 過渡注記: TrustLevelBadge の import / JSX は撤去済み（cycle-253）。
- *   quiz.meta.trustLevel フィールド自体は B-432 の一括方針に従い保持する。
+ * 過渡注記: TrustLevelBadge は cycle-253 で撤去済み。trustLevel フィールド自体も
+ *   cycle-279 C1 で型・データ・コンポーネントごと一括削除済み（B-432 完了）。
  */
 export default async function QuizPlayPageLayout({
   quiz,

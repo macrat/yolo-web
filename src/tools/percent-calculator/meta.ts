@@ -21,7 +21,6 @@ export const meta: ToolMeta = {
   relatedSlugs: ["bmi-calculator", "unit-converter", "number-base-converter"],
   publishedAt: "2026-06-19T13:08:48+09:00",
   structuredDataType: "WebApplication",
-  trustLevel: "verified",
   howItWorks:
     "4つの計算パターンを用意しています。「XのY%」は X × Y ÷ 100、「AはBの何%」は A ÷ B × 100、「増減率」は X × (1 ± Y/100)、「変化率」は (B − A) ÷ A × 100 で計算します。すべてブラウザ上で完結し、入力値がサーバーに送信されることはありません。",
   faq: [

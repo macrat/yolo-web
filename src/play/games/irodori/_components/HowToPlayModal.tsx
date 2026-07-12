@@ -1,6 +1,6 @@
 "use client";
 
-import GameDialog from "@/play/games/shared/_components/GameDialog";
+import GameDialog from "@/play/games/shared/_components/new/GameDialog";
 import styles from "./HowToPlayModal.module.css";
 
 interface Props {

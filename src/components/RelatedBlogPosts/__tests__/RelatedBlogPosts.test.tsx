@@ -32,7 +32,6 @@ describe("RelatedBlogPosts", () => {
         related_tool_slugs: ["test-tool"],
         draft: false,
         readingTime: 5,
-        trustLevel: "generated",
       },
     ]);
 
@@ -53,7 +52,6 @@ describe("RelatedBlogPosts", () => {
         related_tool_slugs: ["test-tool"],
         draft: false,
         readingTime: 5,
-        trustLevel: "generated",
       },
     ]);
 
@@ -74,7 +72,6 @@ describe("RelatedBlogPosts", () => {
         related_tool_slugs: ["test-tool"],
         draft: false,
         readingTime: 5,
-        trustLevel: "generated",
       },
     ]);
 
@@ -106,7 +103,6 @@ describe("RelatedBlogPosts", () => {
         related_tool_slugs: ["test-tool"],
         draft: false,
         readingTime: 5,
-        trustLevel: "generated",
       },
     ]);
 
@@ -128,7 +124,6 @@ describe("RelatedBlogPosts", () => {
         related_tool_slugs: ["test-tool"],
         draft: false,
         readingTime: 3,
-        trustLevel: "generated",
       },
       {
         slug: "post-2",
@@ -141,7 +136,6 @@ describe("RelatedBlogPosts", () => {
         related_tool_slugs: ["test-tool"],
         draft: false,
         readingTime: 4,
-        trustLevel: "generated",
       },
     ]);
 

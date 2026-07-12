@@ -21,7 +21,7 @@ import {
   saveHistory,
   loadTodayGame,
 } from "@/play/games/yoji-kimeru/_lib/storage";
-import type { CrossCategoryItem } from "@/play/games/shared/_components/CrossCategoryBanner";
+import type { CrossCategoryItem } from "@/play/games/shared/_components/new/CrossCategoryBanner";
 import GameHeader from "./GameHeader";
 import HintBar from "./HintBar";
 import GameBoard from "./GameBoard";

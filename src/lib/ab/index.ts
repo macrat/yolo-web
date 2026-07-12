@@ -10,11 +10,6 @@
  */
 
 export type { AbArm, AbArmDefinition, AbExperiment } from "./experiments";
-export {
-  AB_ARMS,
-  AB_EXPERIMENTS,
-  QUIZ_RESULT_VISUAL_V1,
-  getExperiment,
-} from "./experiments";
+export { AB_ARMS, AB_EXPERIMENTS, getExperiment } from "./experiments";
 export { AB_STORAGE_KEY, getAbArm } from "./assign";
 export { useAbVariant } from "./useAbVariant";

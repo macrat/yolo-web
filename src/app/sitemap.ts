@@ -18,10 +18,10 @@ import { getAllSlugs as getAllHumorSlugs } from "@/humor-dict/data";
 import { humorDictMeta } from "@/humor-dict/meta";
 import { allQuizMetas, quizBySlug } from "@/play/quiz/registry";
 import { allGameMetas, getGamePath } from "@/play/games/registry";
-// (legacy) Route Group 配下に移動したページのメタ情報は @/ エイリアスで参照する
+// Route Group 配下に移動したページのメタ情報は @/ エイリアスで参照する
 import { ABOUT_LAST_MODIFIED } from "@/app/(new)/about/meta";
 import { PRIVACY_LAST_MODIFIED } from "@/app/(new)/privacy/meta";
-import { DAILY_FORTUNE_LAST_MODIFIED } from "@/app/(legacy)/play/daily/meta";
+import { DAILY_FORTUNE_LAST_MODIFIED } from "@/app/(new)/play/daily/meta";
 
 type ContentMeta = {
   publishedAt: string;

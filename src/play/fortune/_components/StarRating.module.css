@@ -1,28 +1,24 @@
-/* ===== StarRating — 星評価コンポーネント（DailyFortuneCard の金色表示用） =====
- * 旧 FortunePreview 用の purple variant は cycle-232 T-6 r1 で削除した。
- * 金色の設定値は元の DailyFortuneCard.module.css に合わせたもの */
+/* ===== StarRating — 星評価コンポーネント（DailyFortuneCard の結果面補助表示）=====
+ * DESIGN.md フェーズR・店構えへ変換。星の色は成果物パレットの和色（--wairo-yamabuki=
+ * 山吹・金に近い暖色）を使う。結果カードの中身（成果物）としての使用であり、
+ * 器（ページ UI）へ和色を漏らすものではない（DESIGN.md §2）。
+ */
 
 .stars {
   font-size: 1.25rem;
-  color: #f59e0b;
+  color: var(--wairo-yamabuki);
   letter-spacing: 2px;
 }
 
-/* empty star と half star: filled star と色で区別するためのグレー */
+/* empty star と half star: filled star と色で区別するため墨の淡い色調を使う */
 .emptyStar {
-  color: #d1d5db;
+  color: var(--rule-strong);
 }
 
 .ratingNumber {
   font-size: 0.9rem;
-  color: var(--color-text-muted);
-  margin-left: 0.25rem;
+  color: var(--ink-2);
+  margin-left: var(--space-8);
   font-weight: 400;
   letter-spacing: normal;
-}
-
-/* ===== Dark mode ===== */
-/* ダークモードでは empty star を明るめのグレーに変更して視認性を確保 */
-:global(:root.dark) .emptyStar {
-  color: #6b7280;
 }

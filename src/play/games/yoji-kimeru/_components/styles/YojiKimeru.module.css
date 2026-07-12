@@ -1,27 +1,21 @@
-/* Yoji Kimeru Game Styles - Mobile-first responsive design */
-
-/* CSS Custom Properties for game-specific colors */
-:root {
-  --yk-color-correct: #6aaa64;
-  --yk-color-present: #c9b458;
-  --yk-color-absent: #787c7e;
-  --yk-color-empty: #d3d6da;
-}
-
-:global(:root.dark) {
-  --yk-color-correct: #538d4e;
-  --yk-color-present: #b59f3b;
-  --yk-color-absent: #3a3a3c;
-  --yk-color-empty: #3a3a3c;
-}
+/* Yoji Kimeru Game Styles（DESIGN.md フェーズ R・店構えへ変換）
+ *
+ * 判定フィードバック（正しい位置/別の位置に存在/含まれない）は成果物（ゲームの駒）に
+ * あたるため、§2 の例外規定により和色（--wairo-*）を使用してよい。
+ * - correct（正しい位置） = --wairo-tokiwa（常磐・緑）
+ * - present（別の位置）   = --wairo-yamabuki（山吹・黄）
+ * - absent（含まれない）  = 色の不在（--ink-2 の墨の濃淡。§2「副次的な要素は色の不在で表す」）
+ * どの状態も色だけでなく、セル内の文字＋aria-label（正しい位置/別の位置に存在/含まれない）で
+ * 判定できる（§2 games注記）。器（ヘッダー・入力欄・ボタン等）は新トークンのみ使用する。
+ */
 
 /* ===== Header ===== */
 .header {
   width: 100%;
   max-width: 600px;
   margin: 0 auto;
-  padding: 0.75rem 0.5rem;
-  border-bottom: 1px solid var(--color-border);
+  padding: var(--space-8) var(--space-8);
+  border-bottom: 1px solid var(--rule);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -37,10 +31,12 @@
 }
 
 .title {
+  font-family: var(--font-mincho);
   font-size: 1.4rem;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.05em;
-  text-align: center;
+  color: var(--ink);
+  font-feature-settings: "palt";
 }
 
 .headerButtons {
@@ -51,23 +47,33 @@
 }
 
 .iconButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
   background: none;
   border: none;
   cursor: pointer;
   padding: 0.35rem;
-  border-radius: 4px;
-  font-size: 1.1rem;
-  color: var(--color-text);
+  border-radius: var(--radius);
+  color: var(--ink-2);
   line-height: 1;
+  transition: color 0.15s ease;
 }
 
 .iconButton:hover {
-  background-color: var(--color-border);
+  color: var(--accent);
+}
+
+.iconButton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .headerSub {
-  font-size: 0.8rem;
-  color: var(--color-text-muted);
+  font-size: 0.8125rem;
+  color: var(--ink-2);
 }
 
 /* ===== Difficulty Selector ===== */
@@ -78,55 +84,68 @@
 }
 
 .difficultyButton {
-  padding: 0.2rem 0.6rem;
-  font-size: 0.75rem;
-  font-weight: 500;
-  border: 1px solid var(--color-border);
-  border-radius: 4px;
-  background-color: var(--color-bg);
-  color: var(--color-text-muted);
+  min-height: 44px;
+  padding: 0.2rem 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  font-family: inherit;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background-color: var(--paper);
+  color: var(--ink-2);
   cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease;
 }
 
 .difficultyButton:hover {
-  background-color: var(--color-bg-secondary);
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
+.difficultyButton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* 現在選択中の難易度: 朱の気配（--accent-weak）で選択状態を示す
+ * （DESIGN.md §2「操作・選択状態のハイライトにのみ可」・セレクタ名 Active が状態を表す）。 */
 .difficultyButtonActive {
   composes: difficultyButton;
-  background-color: var(--color-primary);
-  color: #ffffff;
-  border-color: var(--color-primary);
+  background-color: var(--accent-weak);
+  color: var(--accent);
+  border-color: var(--accent);
 }
 
 .difficultyButtonActive:hover {
-  background-color: var(--color-primary-hover);
+  filter: brightness(0.97);
 }
 
 /* ===== Hint Bar ===== */
 .hintBar {
   width: 100%;
   max-width: 600px;
-  padding: 0.5rem 1rem;
+  padding: var(--space-8) var(--space-16);
   text-align: center;
-  font-size: 0.9rem;
-  color: var(--color-text-muted);
-  border-bottom: 1px solid var(--color-border);
+  font-size: 0.9375rem;
+  color: var(--ink-2);
+  border-bottom: 1px solid var(--rule);
 }
 
 .hintLabel {
   font-weight: 600;
-  margin-right: 0.5rem;
+  margin-right: var(--space-8);
 }
 
 .hintValue {
-  margin-right: 1rem;
+  margin-right: var(--space-16);
 }
 
 /* ===== Game Board ===== */
 .boardWrapper {
   width: 100%;
-  padding: 0.75rem 0;
+  padding: var(--space-8) 0;
   display: flex;
   justify-content: center;
 }
@@ -152,28 +171,32 @@
   align-items: center;
   justify-content: center;
   min-height: 3.5rem;
-  border-radius: 4px;
+  border-radius: var(--radius);
   font-size: 1.5rem;
   font-weight: 700;
-  color: #ffffff;
   text-align: center;
   padding: 0.15rem;
   animation: flipIn 0.4s ease-out;
 }
 
+/* 成果物（ゲームの駒）の判定色 = 和色。文字色はそれぞれの -on トークンで確保する。 */
 .cellCorrect {
   composes: cell;
-  background-color: var(--yk-color-correct);
+  background-color: var(--wairo-tokiwa);
+  color: var(--wairo-tokiwa-on);
 }
 
 .cellPresent {
   composes: cell;
-  background-color: var(--yk-color-present);
+  background-color: var(--wairo-yamabuki);
+  color: var(--wairo-yamabuki-on);
 }
 
+/* 不一致 = 色の不在（墨の濃淡）。判定は色でなくセル内テキスト＋aria-label で示す。 */
 .cellAbsent {
   composes: cell;
-  background-color: var(--yk-color-absent);
+  background-color: var(--ink-2);
+  color: var(--paper);
 }
 
 .cellEmpty {
@@ -181,8 +204,8 @@
   align-items: center;
   justify-content: center;
   min-height: 3.5rem;
-  border-radius: 4px;
-  border: 2px solid var(--yk-color-empty);
+  border-radius: var(--radius);
+  border: 2px solid var(--rule);
   background-color: transparent;
 }
 
@@ -226,16 +249,16 @@
 .inputArea {
   width: 100%;
   max-width: 600px;
-  padding: 1rem 0.5rem;
+  padding: var(--space-16) var(--space-8);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-8);
 }
 
 .inputRow {
   display: flex;
-  gap: 0.5rem;
+  gap: var(--space-8);
   align-items: center;
   width: 100%;
   max-width: 300px;
@@ -245,16 +268,16 @@
   flex: 1;
   font-size: 1.5rem;
   text-align: center;
-  padding: 0.5rem;
-  border: 2px solid var(--color-border);
-  border-radius: 6px;
-  background-color: var(--color-bg);
-  color: var(--color-text);
+  padding: var(--space-8);
+  border: 2px solid var(--rule);
+  border-radius: var(--radius);
+  background-color: var(--paper);
+  color: var(--ink);
   outline: none;
 }
 
 .inputField:focus {
-  border-color: var(--color-primary);
+  border-color: var(--accent);
 }
 
 .inputField:disabled {
@@ -263,19 +286,30 @@
 }
 
 .submitButton {
-  padding: 0.5rem 1.25rem;
+  min-height: 44px;
+  padding: 9px 20px;
   font-size: 1rem;
   font-weight: 600;
-  border: none;
-  border-radius: 6px;
-  background-color: var(--color-primary);
-  color: #ffffff;
+  font-family: inherit;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  background-color: var(--accent);
+  color: var(--paper);
   cursor: pointer;
   white-space: nowrap;
 }
 
 .submitButton:hover:not(:disabled) {
-  background-color: var(--color-primary-hover);
+  filter: brightness(0.92);
+}
+
+.submitButton:active:not(:disabled) {
+  filter: brightness(0.85);
+}
+
+.submitButton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .submitButton:disabled {
@@ -283,72 +317,82 @@
   cursor: not-allowed;
 }
 
+/* エラーは色に頼らず朱+文字で示す */
 .errorMessage {
-  font-size: 0.85rem;
-  color: var(--color-error);
+  font-size: 0.875rem;
+  color: var(--accent);
+  font-weight: 600;
   text-align: center;
   min-height: 1.2em;
 }
 
 /* ===== Result Modal ===== */
-.resultEmoji {
-  text-align: center;
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
-}
-
 .resultAnswer {
+  font-family: var(--font-mincho);
   text-align: center;
   font-size: 2rem;
-  font-weight: 700;
+  font-weight: 600;
+  color: var(--ink);
   margin-bottom: 0.25rem;
   letter-spacing: 0.1em;
+  font-feature-settings: "palt";
 }
 
 .resultReading {
   text-align: center;
-  font-size: 0.95rem;
-  color: var(--color-text-muted);
+  font-size: 0.9375rem;
+  color: var(--ink-2);
   margin-bottom: 0.25rem;
 }
 
 .resultMeaning {
   text-align: center;
-  font-size: 0.9rem;
-  color: var(--color-text-muted);
-  margin-bottom: 0.75rem;
+  font-size: 0.9375rem;
+  color: var(--ink-2);
+  margin-bottom: var(--space-8);
 }
 
 .resultSummary {
   text-align: center;
   font-size: 1rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
+  color: var(--ink);
+  margin-bottom: var(--space-16);
 }
 
 /* ===== Stats Button (Result Modal) ===== */
 .statsButton {
   display: block;
-  margin: 0.75rem auto 0;
+  min-height: 44px;
+  margin: var(--space-16) auto 0;
   padding: 0.4rem 1.5rem;
-  font-size: 0.85rem;
-  border: 1px solid var(--color-border);
-  border-radius: 6px;
-  background-color: var(--color-bg);
-  color: var(--color-text);
+  font-size: 0.875rem;
+  font-family: inherit;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background-color: var(--paper);
+  color: var(--ink);
   cursor: pointer;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
 }
 
 .statsButton:hover {
-  background-color: var(--color-bg-secondary);
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.statsButton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 /* ===== Stats Modal ===== */
 .statsGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
+  gap: var(--space-16);
+  margin-bottom: var(--space-16);
 }
 
 .statItem {
@@ -356,19 +400,23 @@
 }
 
 .statValue {
+  font-family: var(--font-number);
   font-size: 1.5rem;
   font-weight: 700;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
 }
 
 .statLabel {
-  font-size: 0.8rem;
-  color: var(--color-text-muted);
+  font-size: 0.8125rem;
+  color: var(--ink-2);
 }
 
 .distributionTitle {
-  font-size: 0.9rem;
+  font-size: 0.9375rem;
   font-weight: 600;
-  margin-bottom: 0.5rem;
+  color: var(--ink);
+  margin-bottom: var(--space-8);
 }
 
 .distributionRow {
@@ -383,12 +431,14 @@
   text-align: right;
   font-size: 0.85rem;
   font-weight: 600;
+  color: var(--ink);
 }
 
+/* 既定（非ハイライト）のバー = 色の不在（墨の濃淡）。 */
 .distributionBar {
   height: 1.2rem;
-  background-color: var(--yk-color-absent);
-  border-radius: 2px;
+  background-color: var(--ink-2);
+  border-radius: var(--radius);
   min-width: 1.5rem;
   display: flex;
   align-items: center;
@@ -396,36 +446,65 @@
   padding-right: 0.35rem;
   font-size: 0.75rem;
   font-weight: 600;
-  color: #ffffff;
+  color: var(--paper);
 }
 
+/* 正解を出した回数のバー = 成果物内の和色ハイライト。 */
 .distributionBarHighlight {
   composes: distributionBar;
-  background-color: var(--yk-color-correct);
+  background-color: var(--wairo-tokiwa);
+  color: var(--wairo-tokiwa-on);
 }
 
 /* ===== How To Play Modal ===== */
 .howToPlayContent {
-  line-height: 1.7;
+  line-height: 1.9;
+  color: var(--ink);
 }
 
 .howToPlayContent p {
-  margin-bottom: 0.75rem;
+  margin-bottom: var(--space-8);
 }
 
 .howToPlaySection {
-  margin-top: 1rem;
+  margin-top: var(--space-16);
 }
 
 .feedbackLegend {
-  margin: 0.75rem 0;
+  margin: var(--space-8) 0;
   padding: 0;
   list-style: none;
 }
 
 .feedbackLegend li {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
   margin-bottom: 0.35rem;
-  font-size: 0.95rem;
+  font-size: 0.9375rem;
+  color: var(--ink);
+}
+
+/* フィードバック凡例の実色チップ（成果物の判定色をそのまま示す小さな四角）。
+ * 絵文字は環境依存で実際の判定色と一致しないため使わない。 */
+.legendChip {
+  display: inline-block;
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: var(--radius);
+  flex-shrink: 0;
+}
+
+.legendChipCorrect {
+  background-color: var(--wairo-tokiwa);
+}
+
+.legendChipPresent {
+  background-color: var(--wairo-yamabuki);
+}
+
+.legendChipAbsent {
+  background-color: var(--ink-2);
 }
 
 /* ===== Responsive ===== */
@@ -448,19 +527,19 @@
   }
 
   .header {
-    padding: 1rem 0.5rem;
+    padding: var(--space-16) var(--space-8);
   }
 }
 
 /* ===== Result Meta (origin & category) ===== */
 .resultMeta {
   text-align: center;
-  font-size: 0.8rem;
-  color: var(--color-text-muted);
-  margin-bottom: 0.75rem;
+  font-size: 0.8125rem;
+  color: var(--ink-2);
+  margin-bottom: var(--space-8);
 }
 
 .resultMetaSeparator {
-  margin: 0 0.5rem;
+  margin: 0 var(--space-8);
   opacity: 0.4;
 }

@@ -24,4 +24,15 @@ describe("(new)/layout.tsx の構造", () => {
     expect(headerJsx).not.toBeNull();
     expect(headerJsx![0]).not.toMatch(/onSearchOpen/);
   });
+
+  // cycle-279 C1 で (legacy)/__tests__/metadata.test.ts から移設。
+  // playLinks は Footer.tsx の DEFAULT_PLAY_LINKS をデフォルト値として使うため、
+  // layout.tsx 側で二重定義・prop 渡しをしないことを回帰ガードする。
+  test("layout.tsx does not define a local playLinks constant (no duplicate with Footer.tsx)", () => {
+    expect(layoutSrc).not.toMatch(/const\s+playLinks\s*=/);
+  });
+
+  test("layout.tsx passes no playLinks prop to Footer (uses Footer default)", () => {
+    expect(layoutSrc).not.toMatch(/<Footer\s[^>]*playLinks=/);
+  });
 });

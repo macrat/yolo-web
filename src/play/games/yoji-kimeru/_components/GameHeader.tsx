@@ -1,6 +1,8 @@
 "use client";
 
 import type { Difficulty } from "@/play/games/yoji-kimeru/_lib/types";
+import BarChart from "@/components/icons/BarChart";
+import HelpCircle from "@/components/icons/HelpCircle";
 import DifficultySelector from "./DifficultySelector";
 import styles from "./styles/YojiKimeru.module.css";
 
@@ -36,7 +38,7 @@ export default function GameHeader({
             aria-label="遊び方"
             type="button"
           >
-            ?
+            <HelpCircle />
           </button>
           <button
             className={styles.iconButton}
@@ -44,7 +46,7 @@ export default function GameHeader({
             aria-label="統計"
             type="button"
           >
-            {"\u{1F4CA}"}
+            <BarChart />
           </button>
         </div>
       </div>
