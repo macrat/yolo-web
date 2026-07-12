@@ -28,15 +28,16 @@
 /* ============================================================
    セクション見出し（ResultCard detailedHeading に倣う）
    headingLevel に応じて h2 または h3 が生成される。
-   タイプ固有の派手色（--type-color）ではなく共通アクセント（--accent）の左罫線で静かに区切る。
+   タイプ固有の派手色（--type-color）ではなく、サイト共通の罫下線（--rule）で静かに区切る
+   （朱の左罫は見出しの装飾に使わない・DESIGN.md §3/§4）。
    ============================================================ */
 .sectionHeading {
   font-size: 1.05rem;
   font-weight: 600;
   color: var(--ink);
   margin: 0 0 1rem;
-  padding-left: 0.75rem;
-  border-left: 3px solid var(--accent);
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--rule);
 }
 
 /* ============================================================
@@ -150,14 +151,15 @@
   border-top: 1px solid var(--rule);
 }
 
-/* 全タイプ見出し: ResultCard detailedHeading 言語に合わせ、左寄せ・左罫線で区切る */
+/* 全タイプ見出し: ResultCard detailedHeading 言語に合わせ、左寄せ・罫下線で区切る
+ * （サイト共通の見出し様式・DESIGN.md §3/§4。朱の左罫は見出しの装飾に使わない） */
 .allTypesCta {
   font-size: 1.05rem;
   font-weight: 600;
   color: var(--ink);
   margin: 0 0 1rem;
-  padding-left: 0.75rem;
-  border-left: 3px solid var(--accent);
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--rule);
 }
 
 /* ============================================================

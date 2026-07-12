@@ -1,17 +1,18 @@
 import type { BlogPostMeta } from "@/blog/_lib/blog";
 
 /**
- * NEW バッジを表示する日数閾値（ミリ秒）: 30日。
+ * 「新着」マークを表示する日数閾値（ミリ秒）: 30日。
  * 「最新」として来訪者が自然に受け取れる期間。30日を超えた記事に
- * NEW と表示されると、来訪者の「最新」の感覚とずれて信頼を損なう。
+ * 新着と表示されると、来訪者の「最新」の感覚とずれて信頼を損なう。
+ * （定数名 NEW_BADGE_THRESHOLD_MS は他面の newSlugsHelper.ts と揃えた識別子で維持）
  */
 export const NEW_BADGE_THRESHOLD_MS = 30 * 24 * 60 * 60 * 1000;
 
-/** NEW バッジを表示する記事の最大件数 */
+/** 「新着」マークを表示する記事の最大件数 */
 export const NEW_MAX_COUNT = 5;
 
 /**
- * NEW バッジを表示する記事のスラッグ集合を計算する。
+ * 「新着」マークを表示する記事のスラッグ集合を計算する。
  *
  * 条件（積集合）:
  * 1. published_at 降順でソートして上位 NEW_MAX_COUNT 件

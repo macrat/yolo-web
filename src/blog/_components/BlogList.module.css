@@ -46,14 +46,14 @@
   outline-offset: 2px;
 }
 
-/* NEW マーク: 塗りバッジではなく朱の文字のみ（器は静か・§2 アクセントは朱の1色）。 */
+/* 新着マーク: 塗りバッジではなく朱の文字のみ（器は静か・§2 アクセントは朱の1色）。
+ * 英字 all-caps「NEW」は §8-6 の禁止対象のため「新着」（日本語）に統一する。 */
 .newMark {
   margin-right: var(--space-8);
   color: var(--accent);
   font-family: var(--font-gothic);
   font-size: 0.75rem;
   font-weight: 700;
-  letter-spacing: 0.05em;
 }
 
 /* ひとこと（description）: 補足の墨。文章として読ませるため 16px/行間で組む（§3）。3行でクランプ。 */

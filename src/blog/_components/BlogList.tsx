@@ -17,7 +17,7 @@ interface BlogListPost {
 
 interface BlogListProps {
   posts: BlogListPost[];
-  /** NEW バッジを表示する記事のスラッグ集合 */
+  /** 「新着」マークを表示する記事のスラッグ集合 */
   newSlugs: ReadonlySet<string>;
   /**
    * カテゴリID → 表示名のマッピング。
@@ -58,7 +58,7 @@ export default function BlogList({
           <li key={post.slug} className={styles.row}>
             <h2 className={styles.title}>
               <Link href={`/blog/${post.slug}`} className={styles.titleLink}>
-                {isNew && <span className={styles.newMark}>NEW</span>}
+                {isNew && <span className={styles.newMark}>新着</span>}
                 {post.title}
               </Link>
             </h2>

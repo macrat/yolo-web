@@ -178,8 +178,8 @@ describe("BlogList linkableTags フィルタ", () => {
   });
 });
 
-describe("BlogList NEW バッジ", () => {
-  test("newSlugs に含まれるとき NEW バッジが表示される", () => {
+describe("BlogList 新着マーク", () => {
+  test("newSlugs に含まれるとき「新着」マークが表示される", () => {
     render(
       <BlogList
         posts={[makePost({ slug: "new-post" })]}
@@ -187,10 +187,10 @@ describe("BlogList NEW バッジ", () => {
         categoryLabels={categoryLabels}
       />,
     );
-    expect(screen.getByText("NEW")).toBeInTheDocument();
+    expect(screen.getByText("新着")).toBeInTheDocument();
   });
 
-  test("newSlugs に含まれないとき NEW バッジが表示されない", () => {
+  test("newSlugs に含まれないとき「新着」マークが表示されない", () => {
     render(
       <BlogList
         posts={[makePost({ slug: "old-post" })]}
@@ -198,6 +198,6 @@ describe("BlogList NEW バッジ", () => {
         categoryLabels={categoryLabels}
       />,
     );
-    expect(screen.queryByText("NEW")).not.toBeInTheDocument();
+    expect(screen.queryByText("新着")).not.toBeInTheDocument();
   });
 });

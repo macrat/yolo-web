@@ -32,8 +32,8 @@
   font-weight: 600;
   color: var(--ink);
   margin: 0 0 1rem;
-  padding-left: 0.75rem;
-  border-left: 3px solid var(--accent);
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--rule);
 }
 
 /* ============================================================
@@ -98,14 +98,15 @@
   border-top: 1px solid var(--rule);
 }
 
-/* 全タイプ見出し: ResultCard detailedHeading 言語に合わせ、左寄せ・左罫線で区切る */
+/* 全タイプ見出し: ResultCard detailedHeading 言語に合わせ、左寄せ・罫下線で区切る
+ * （サイト共通の見出し様式・DESIGN.md §3/§4。朱の左罫は見出しの装飾に使わない） */
 .allTypesCta {
   font-size: 1.05rem;
   font-weight: 600;
   color: var(--ink);
   margin: 0 0 1rem;
-  padding-left: 0.75rem;
-  border-left: 3px solid var(--accent);
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--rule);
 }
 
 /* 罫の升目索引（page.tsx版・DESIGN.md §4/§8-4 是正 cycle-278 C4）:

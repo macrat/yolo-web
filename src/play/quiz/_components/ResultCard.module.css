@@ -171,14 +171,15 @@
   text-align: left;
 }
 
-/* セクション見出し。共通アクセントの左罫線で静かに区切る */
+/* セクション見出し。サイト共通の罫下線で静かに区切る
+ * （DESIGN.md §3/§4。朱の左罫は見出しの装飾に使わない——朱はリンク/現在地/主ボタン/印に限る） */
 .detailedHeading {
   font-size: 1.05rem;
   font-weight: 600;
   color: var(--ink);
   margin: 0 0 1rem;
-  padding-left: 0.75rem;
-  border-left: 3px solid var(--accent);
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--rule);
 }
 
 /* traits（持ち味）リスト */

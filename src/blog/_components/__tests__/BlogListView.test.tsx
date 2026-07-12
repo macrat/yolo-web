@@ -89,8 +89,8 @@ describe("BlogListView 統合テスト", () => {
     expect(screen.getByText("記事C")).toBeInTheDocument();
   });
 
-  test("BlogFilterableList へ newSlugs が渡される（古い記事には NEW バッジなし）", () => {
-    // published_at が 2026-01-01（現在から約 126 日前）なので NEW バッジなし
+  test("BlogFilterableList へ newSlugs が渡される（古い記事には「新着」マークなし）", () => {
+    // published_at が 2026-01-01（現在から約 126 日前）なので「新着」マークなし
     render(
       <BlogListView
         posts={mockPosts}
@@ -100,10 +100,10 @@ describe("BlogListView 統合テスト", () => {
         allPosts={mockPosts}
       />,
     );
-    expect(screen.queryByText("NEW")).not.toBeInTheDocument();
+    expect(screen.queryByText("新着")).not.toBeInTheDocument();
   });
 
-  test("BlogFilterableList へ newSlugs が渡される（直近 30 日の記事には NEW バッジあり）", () => {
+  test("BlogFilterableList へ newSlugs が渡される（直近 30 日の記事には「新着」マークあり）", () => {
     const recentDate = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000)
       .toISOString()
       .slice(0, 10);
@@ -123,7 +123,7 @@ describe("BlogListView 統合テスト", () => {
         allPosts={recentPosts}
       />,
     );
-    expect(screen.getByText("NEW")).toBeInTheDocument();
+    expect(screen.getByText("新着")).toBeInTheDocument();
   });
 
   test("カテゴリナビゲーションが表示される（BlogFilterableList が正しく props を受け取っている）", () => {

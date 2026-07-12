@@ -19,14 +19,15 @@
   border-top: 1px solid var(--rule);
 }
 
-/* 見出し: ResultCard detailedHeading 語彙に倣う（左罫線＋左寄せ、font-weight 600） */
+/* 見出し: ResultCard detailedHeading 語彙に倣う（罫下線＋左寄せ、font-weight 600。
+ * サイト共通の見出し様式・DESIGN.md §3/§4。朱の左罫は見出しの装飾に使わない） */
 .heading {
   font-size: 1.05rem;
   font-weight: 600;
   color: var(--ink);
   margin: 0 0 1rem;
-  padding-left: 0.75rem;
-  border-left: 3px solid var(--accent);
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--rule);
 }
 
 .list {

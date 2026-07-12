@@ -74,7 +74,7 @@ export default function BlogListView({
 }: BlogListViewProps) {
   // eslint-disable-next-line react-hooks/purity
   const now = Date.now();
-  // NEW バッジ判定: allPosts 全件を対象（タグページでは posts を代替として使う）
+  // 「新着」マーク判定: allPosts 全件を対象（タグページでは posts を代替として使う）
   const newSlugsBase = allPosts.length > 0 ? allPosts : posts;
   const newSlugs = calculateNewSlugs(newSlugsBase, now);
 

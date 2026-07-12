@@ -46,7 +46,7 @@ interface BlogFilterableListProps {
    */
   tagHeader?: TagHeader;
   /**
-   * NEW バッジを表示する記事のスラッグ集合。
+   * 「新着」マークを表示する記事のスラッグ集合。
    * 呼び出し元の Server Component（BlogListView）で計算して渡す。
    * Date.now() は react-hooks/purity 制約により Client Component 内で使用できないため。
    */

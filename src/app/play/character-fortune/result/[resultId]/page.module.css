@@ -61,15 +61,15 @@
   text-align: left;
 }
 
-/* セクション見出し。共通アクセントの左罫線で静かに区切る
- * （インライン ResultCard の .detailedHeading と同じ語彙）。 */
+/* セクション見出し。サイト共通の罫下線で静かに区切る（インライン ResultCard の
+ * .detailedHeading と同じ語彙。朱の左罫は見出しの装飾に使わない・DESIGN.md §3/§4）。 */
 .detailedSectionHeading {
   font-size: 1.05rem;
   font-weight: 600;
   color: var(--ink);
   margin: 0 0 1rem;
-  padding-left: 0.75rem;
-  border-left: 3px solid var(--accent);
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--rule);
 }
 
 /* (b) 「あるある」リスト。旧 💡 絵文字マーカーは撤去。
@@ -154,8 +154,8 @@
   font-weight: 600;
   color: var(--ink);
   margin: 0 0 0.875rem;
-  padding-left: 0.75rem;
-  border-left: 3px solid var(--accent);
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--rule);
 }
 
 .thirdPartyNote {
