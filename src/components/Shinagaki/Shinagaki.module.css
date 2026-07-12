@@ -1,0 +1,103 @@
+/*
+ * 品書き（Shinagaki）— 一覧の既定形（DESIGN.md §4「品書き」）。
+ * 罫区切りのリスト（カードのグリッドではない）。区切りが構造の主役 = --rule の一本罫。
+ * カード装飾・影（box-shadow 禁止・§4/§8）・色地は使わない。全トークン経由・直書きなし。
+ */
+.shinagaki {
+  /* 幅は呼び出し側が決める（読む面 --measure / 操作面 --max-width を親で当てる）。 */
+  width: 100%;
+}
+
+/* 棚（区画）の見出し: 明朝・墨・詰め（palt）。§3 見出しの流儀。 */
+.heading {
+  margin: 0 0 var(--space-16);
+  color: var(--ink);
+  font-family: var(--font-mincho);
+  font-size: 1.375rem; /* 22px 目安（1.25 倍スケール帯） */
+  line-height: 1.4;
+  font-feature-settings: "palt";
+}
+
+/*
+ * リスト本体。上辺にも罫を引き、各行の下辺罫と合わせて全行を罫で囲う
+ * （区切りが構造の主役・§4）。list-style は消す。
+ */
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--rule);
+}
+
+/* 各行: 主内容（品名・ひとこと・値札）と右端メタを横に置く。左揃え基調。 */
+.row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-16);
+  padding: var(--space-16) 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+/* 主内容を縦に積む（品名 → ひとこと → 値札）。min-width:0 で長い語の溢れを防ぐ。 */
+.main {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+/*
+ * 品名: 一覧の主役。§4「品名（リンク・墨）」に従い既定は墨、明朝で組む。
+ * 下線はリンクの専有（§3）——静止時は下線を出さず、hover で朱＋下線を出す（Footer と同じ流儀）。
+ */
+.name {
+  display: inline-block;
+  align-self: flex-start;
+  color: var(--ink);
+  font-family: var(--font-mincho);
+  font-size: 1.125rem; /* 18px 目安 */
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+}
+
+.name:hover {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.name:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ひとこと: 補足の墨（--ink-2）。文章として読ませるため 16px/行間で組む（§3）。 */
+.note {
+  margin: 0;
+  color: var(--ink-2);
+  font-family: var(--font-gothic);
+  font-size: 1rem; /* 16px */
+  line-height: 1.7;
+}
+
+/* 右端メタ: 更新日・件数など。tabular 数字が映えるよう数字書体を優先（§3）。 */
+.meta {
+  flex: 0 0 auto;
+  color: var(--ink-2);
+  font-family: var(--font-number);
+  font-size: 0.875rem; /* 14px 補助情報 */
+  line-height: 1.4;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* モバイル先行（375）: タップターゲット 44px を品名リンクで確保する（§10）。 */
+@media (max-width: 720px) {
+  .name {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+}

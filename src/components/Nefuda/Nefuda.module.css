@@ -1,0 +1,32 @@
+/*
+ * 値札（Nefuda）— メタ情報の小ラベル（DESIGN.md §4「値札」・§3 補助情報の字サイズ）。
+ * 紙墨朱の器: 文字は --ink-2、囲みは --rule の一本罫のみ。背景色・影は持たない（器は静か）。
+ * 角丸は §4 の 2 例外の 1 つ（値札）= --radius-sm(2px)。全トークン経由・色/角丸の直書きなし。
+ */
+.nefuda {
+  display: inline-flex;
+  align-items: center;
+  /* §3: 補助情報は 13px 目安（文章として読ませる文は 16px を当てる。値札は補助情報） */
+  font-family: var(--font-gothic);
+  font-size: 0.8125rem; /* 13px */
+  line-height: 1.5;
+  color: var(--ink-2);
+  /* §4: 罫囲み（構造の主役は罫）。1px 実線の --rule。 */
+  border: 1px solid var(--rule);
+  /* §4: 角丸の例外は値札と入力欄の 2px のみ */
+  border-radius: var(--radius-sm);
+  padding: 0.15em 0.5em;
+  /* 「3分」など短語の値札を途中で折り返さない */
+  white-space: nowrap;
+}
+
+/*
+ * 値札群のラッパ: 横並び・折り返し可。gap はスペーシングトークン（8px）。
+ * 器の並べ替えだけを担い、装飾は足さない。
+ */
+.group {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-8);
+}
