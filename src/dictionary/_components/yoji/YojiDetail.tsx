@@ -10,6 +10,7 @@ import {
 } from "@/dictionary/_lib/types";
 import { getYojiByCategory } from "@/dictionary/_lib/yoji";
 import { getAllKanjiChars } from "@/dictionary/_lib/kanji";
+import Nefuda from "@/components/Nefuda";
 import styles from "./YojiDetail.module.css";
 
 interface YojiDetailProps {
@@ -77,14 +78,15 @@ export default function YojiDetail({ yoji }: YojiDetailProps) {
         <h1 className={styles.title}>四字熟語「{yoji.yoji}」</h1>
         <p className={styles.reading}>{yoji.reading}</p>
         <p className={styles.meaning}>{yoji.meaning}</p>
-        <div className={styles.badges}>
+        {/* 分類（値札・§4）: カテゴリは索引への導線、難易度は情報の値札。ピルにしない。 */}
+        <div className={styles.tags}>
           <Link
             href={`/dictionary/yoji/category/${yoji.category}`}
-            className={styles.badge}
+            className={styles.categoryTag}
           >
             {categoryLabel}
           </Link>
-          <span className={styles.badge}>{difficultyLabel}</span>
+          <Nefuda label={difficultyLabel} />
         </div>
       </div>
 

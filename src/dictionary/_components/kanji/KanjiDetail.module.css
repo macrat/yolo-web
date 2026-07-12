@@ -1,129 +1,167 @@
+/*
+ * 漢字詳細（1 字）— DESIGN.md フェーズ R・店構え（実務／参照・§7 実務側）。
+ * 見出しは対象の漢字を明朝で大字。情報は罫で組んだ定義リスト。数値は tabular 数字書体。
+ * 器は静か（紙墨朱・罫・組版のみ）。色付きカード・影・ピル・角丸装飾なし・全トークン経由（§10）。
+ */
+
+/* 読む面に絞る（§3 --measure）。左揃え基調（§4）。 */
 .detail {
-  max-width: 700px;
+  max-width: var(--measure);
   margin: 0 auto;
 }
 
 .header {
   display: flex;
   align-items: flex-start;
-  gap: 2rem;
-  margin-bottom: 2rem;
+  gap: var(--space-32);
+  margin-bottom: var(--space-32);
 }
 
+/* 大字: 対象の漢字を明朝で大きく（見出しの主役・§7 見出しの大字）。 */
 .character {
+  font-family: var(--font-mincho);
   font-size: 6rem;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1;
-  color: var(--fg);
+  color: var(--ink);
   flex-shrink: 0;
 }
 
 .headerInfo {
   flex: 1;
+  min-width: 0;
 }
 
+/* h1（語ラベル）: 基層見出し（明朝）に委ね、ここは大きさと余白だけを整える。 */
 .headerInfo h1 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
+  font-size: 1.5625rem; /* 25px */
+  margin-bottom: var(--space-8);
+  color: var(--ink);
 }
 
+/* 読み: 補助情報（墨の補・§2/§3）。 */
 .readings {
   margin-bottom: 0.25rem;
-  font-size: 0.95rem;
-  color: var(--fg-soft);
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--ink-2);
 }
 
 .readingLabel {
-  font-weight: 600;
-  color: var(--fg);
+  color: var(--ink);
 }
 
+/* 意味: 読ませる本文（16px・§3）。 */
 .meanings {
   font-size: 1rem;
-  color: var(--fg);
-  margin-bottom: 0.5rem;
+  line-height: 1.9;
+  color: var(--ink);
+  margin-top: var(--space-8);
 }
 
 .section {
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--space-32);
 }
 
+/* 小見出し: 明朝・墨・一本罫で仕切る（§3/§4）。 */
 .section h2 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 0.75rem;
-  padding-bottom: 0.25rem;
-  border-bottom: 1px solid var(--border);
+  font-size: 1.25rem; /* 20px */
+  margin-bottom: var(--space-16);
+  padding-bottom: var(--space-8);
+  border-bottom: 1px solid var(--rule);
+  color: var(--ink);
 }
 
-.infoGrid {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 0.5rem 1rem;
-  font-size: 0.95rem;
+/* 基本情報: 罫で区切った定義リスト（値札＝ラベル・値）。 */
+.infoList {
+  margin: 0;
+  border-top: 1px solid var(--rule);
 }
 
-.infoLabel {
-  font-weight: 600;
-  color: var(--fg-soft);
-}
-
-.examples {
+.infoRow {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+  align-items: baseline;
+  gap: var(--space-16);
+  padding: var(--space-16) 0;
+  border-bottom: 1px solid var(--rule);
 }
 
-.exampleTag {
-  font-size: 0.9rem;
-  padding: 0.2rem 0.6rem;
-  background-color: var(--bg-soft);
-  border: 1px solid var(--border);
-  border-radius: 2px;
+/* ラベル（値札の文言相当）: 墨の補・固定幅で値の頭を揃える。 */
+.infoTerm {
+  flex: 0 0 6rem;
+  margin: 0;
+  color: var(--ink-2);
+  font-size: 0.9375rem; /* 15px */
 }
 
+.infoDesc {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  color: var(--ink);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+/* 数値（画数・部首番号）: 桁が映える tabular 数字書体（§3）。 */
+.number {
+  font-family: var(--font-number);
+  font-feature-settings: "tnum";
+}
+
+/* 使用例: 読点で組んだ自然な一文（§4/§6）。 */
+.examples {
+  font-size: 1rem;
+  line-height: 1.9;
+  color: var(--ink);
+}
+
+/* 同じ部首の漢字: 単字リンクの索引（升目・§4）。カード/ピルではない。 */
 .relatedList {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: var(--space-8);
 }
 
+/* 索引リンク: 明朝・墨、静止時は下線なし、hover で朱＋下線。タップ面 44px（§10）。 */
 .relatedLink {
-  font-size: 1.2rem;
-  padding: 0.3rem 0.6rem;
-  border: 1px solid var(--border);
-  border-radius: 2px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 var(--space-8);
+  font-family: var(--font-mincho);
+  font-size: 1.375rem; /* 22px */
+  line-height: 1.2;
+  color: var(--ink);
   text-decoration: none;
-  color: var(--fg);
-  transition:
-    border-color 0.2s,
-    background-color 0.2s;
 }
 
 .relatedLink:hover {
-  border-color: var(--border-strong);
-  background-color: var(--bg-soft);
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
 }
 
+/* 関連ゲームへの導線: 朱のリンク（下線はリンクの専有・§3）。 */
 .crossLink {
   display: inline-block;
-  margin-top: 0.75rem;
-  font-size: 0.9rem;
+  margin-top: var(--space-8);
+  font-size: 1rem;
   color: var(--accent);
   text-decoration: none;
 }
 
 .crossLink:hover {
   text-decoration: underline;
+  text-underline-offset: 0.15em;
 }
 
+/* モバイル先行（375）: 大字を縦積みにして読みやすさを保つ。中央寄せはしない（左揃え基調・§4）。 */
 @media (max-width: 640px) {
   .header {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 1rem;
+    gap: var(--space-16);
   }
 
   .character {

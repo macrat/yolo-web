@@ -45,46 +45,52 @@ export default function KanjiDetail({ kanji }: KanjiDetailProps) {
 
       <section className={styles.section}>
         <h2>{"\u57FA\u672C\u60C5\u5831"}</h2>
-        <div className={styles.infoGrid}>
-          <span className={styles.infoLabel}>{"\u90E8\u9996"}</span>
-          <span>
-            <Link
-              href={`/dictionary/kanji/radical/${encodeURIComponent(kanji.radical)}`}
-            >
-              {kanji.radical}
-            </Link>
-          </span>
-          <span className={styles.infoLabel}>{"\u90E8\u9996\u756A\u53F7"}</span>
-          <span>{kanji.radicalGroup}</span>
-          <span className={styles.infoLabel}>{"\u753B\u6570"}</span>
-          <span>
-            <Link href={`/dictionary/kanji/stroke/${kanji.strokeCount}`}>
-              {kanji.strokeCount}
-              {"\u753B"}
-            </Link>
-          </span>
-          <span className={styles.infoLabel}>{"\u5B66\u5E74"}</span>
-          <span>
-            <Link href={`/dictionary/kanji/grade/${kanji.grade}`}>
-              {KANJI_GRADE_LABELS[kanji.grade] ??
-                (kanji.grade <= 6
-                  ? `${kanji.grade}\u5E74\u751F`
-                  : "\u4E2D\u5B66\u4EE5\u964D")}
-            </Link>
-          </span>
-        </div>
+        {/* \u7F6B\u3067\u533A\u5207\u3063\u305F\u5B9A\u7FA9\u30EA\u30B9\u30C8\uFF08\u5024\u672D\uFF1D\u30E9\u30D9\u30EB\u30FB\u5024\u30FB\u00A74\uFF09\u3002\u6570\u5024\u306F tabular \u6570\u5B57\u66F8\u4F53\uFF08\u00A73\uFF09\u3002 */}
+        <dl className={styles.infoList}>
+          <div className={styles.infoRow}>
+            <dt className={styles.infoTerm}>{"\u90E8\u9996"}</dt>
+            <dd className={styles.infoDesc}>
+              <Link
+                href={`/dictionary/kanji/radical/${encodeURIComponent(kanji.radical)}`}
+              >
+                {kanji.radical}
+              </Link>
+            </dd>
+          </div>
+          <div className={styles.infoRow}>
+            <dt className={styles.infoTerm}>{"\u90E8\u9996\u756A\u53F7"}</dt>
+            <dd className={styles.infoDesc}>
+              <span className={styles.number}>{kanji.radicalGroup}</span>
+            </dd>
+          </div>
+          <div className={styles.infoRow}>
+            <dt className={styles.infoTerm}>{"\u753B\u6570"}</dt>
+            <dd className={styles.infoDesc}>
+              <Link href={`/dictionary/kanji/stroke/${kanji.strokeCount}`}>
+                <span className={styles.number}>{kanji.strokeCount}</span>
+                {"\u753B"}
+              </Link>
+            </dd>
+          </div>
+          <div className={styles.infoRow}>
+            <dt className={styles.infoTerm}>{"\u5B66\u5E74"}</dt>
+            <dd className={styles.infoDesc}>
+              <Link href={`/dictionary/kanji/grade/${kanji.grade}`}>
+                {KANJI_GRADE_LABELS[kanji.grade] ??
+                  (kanji.grade <= 6
+                    ? `${kanji.grade}\u5E74\u751F`
+                    : "\u4E2D\u5B66\u4EE5\u964D")}
+              </Link>
+            </dd>
+          </div>
+        </dl>
       </section>
 
       {kanji.examples.length > 0 && (
         <section className={styles.section}>
           <h2>{"\u4F7F\u7528\u4F8B"}</h2>
-          <div className={styles.examples}>
-            {kanji.examples.map((ex) => (
-              <span key={ex} className={styles.exampleTag}>
-                {ex}
-              </span>
-            ))}
-          </div>
+          {/* \u4F7F\u7528\u4F8B\u306F\u719F\u8A9E\u306E\u5217\u6319\u3002\u30AB\u30FC\u30C9/\u30D4\u30EB\u3067\u306F\u306A\u304F\u8AAD\u70B9\u3067\u7D44\u3093\u3060\u81EA\u7136\u306A\u4E00\u6587\u3067\u898B\u305B\u308B\uFF08\u00A74/\u00A76\uFF09\u3002 */}
+          <p className={styles.examples}>{kanji.examples.join("\u3001")}</p>
         </section>
       )}
 

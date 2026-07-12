@@ -1,32 +1,37 @@
 /*
- * DictionaryDetailLayout CSS（(new) デザイン体系版）
+ * 辞典詳細ページの共通レイアウト（DESIGN.md フェーズ R・店構えへ変換）。
  *
- * legacy 版からのフォーク。トークンを (new) 体系へ置換し、austere 構造化。
- *
- * .container: colors には layout が無く、親 layout の var(--max-width) も (new) では
- * 未定義のため、ここでページ枠 1200px を自前で持たせる（(new)/dictionary の .container と
- * 同一方針）。要素を増やさないよう、新規 div ではなく既存の最上位 <article> に付与する
- * （article 三重ネスト回避・design.md §4.4 S-3 対応）。本文 700px（ColorDetail .detail）は
- * 別レイヤーとして children 側で維持される。
+ * 辞典詳細は「実務／参照」の店構え（§7 実務側・器は静か）。地は --paper（body に付与）のまま、
+ * 色付きカード・影・グラデーション・ピル・角丸装飾を持たない。構造は罫（--rule）と組版だけで組む。
+ * 色・角丸・書体・余白はすべてトークン経由（§10・直書き禁止）。旧トークン（--fg / --bg / --border /
+ * --r-* / box-shadow）は使わない。
  */
 
+/*
+ * ページ枠。詳細は参照＝操作面寄りのため最大幅は --max-width(960px)。本文は左揃え基調（§4）。
+ * 各 Detail の内側は読む面 --measure に絞られる（Detail 側 .detail で担保）。
+ */
 .container {
-  max-width: 1200px;
+  max-width: var(--max-width);
   margin: 0 auto;
-  padding: 2rem 1.25rem;
+  padding: var(--space-32) var(--space-24) var(--space-64);
 }
 
+/*
+ * 名乗り（一行の価値）: パンくずの直後に置く導入文。文章として読ませるので 16px・読む幅に絞り、
+ * 墨の補（--ink-2）で静かに置く（煽らない・§6）。
+ */
 .valueProposition {
-  margin-top: 0.75rem;
-  margin-bottom: 0.5rem;
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--fg);
-  line-height: 1.6;
+  max-width: var(--measure);
+  margin: var(--space-16) 0 var(--space-24);
+  color: var(--ink-2);
+  font-size: 1rem;
+  line-height: 1.7;
 }
 
+/* シェア区画: 本文と一本罫で仕切る（区切りは罫が主役・§4）。 */
 .shareSection {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--border);
+  margin-top: var(--space-48);
+  padding-top: var(--space-24);
+  border-top: 1px solid var(--rule);
 }

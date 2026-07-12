@@ -86,6 +86,14 @@ const NEW_DESIGN_CSS = [
   "src/app/\\(new\\)/dictionary/kanji/stroke/*/page.module.css",
   "src/app/\\(new\\)/dictionary/yoji/category/*/page.module.css",
   "src/app/\\(new\\)/dictionary/colors/category/*/page.module.css",
+  // 辞典詳細の共有レイアウト（実務／参照の店構え・§7 実務側・C3 変換済み）。
+  "src/dictionary/_components/new/DictionaryDetailLayout.module.css",
+  // 辞典詳細 4 種の Detail 表現（漢字/四字熟語/伝統色・C3 変換済み。色見本のデータ由来色は成果物内で可）。
+  "src/dictionary/_components/kanji/KanjiDetail.module.css",
+  "src/dictionary/_components/yoji/YojiDetail.module.css",
+  "src/dictionary/_components/color/ColorDetail.module.css",
+  // AI 造語（ユーモア辞典）詳細は自前ページ（共有レイアウト非経由）。[slug] は * で受ける。
+  "src/app/\\(new\\)/dictionary/humor/*/page.module.css",
 ];
 const NEW_DESIGN_TSX = [
   "src/app/\\(new\\)/page.tsx", // トップ（店構え・C2 変換）。インライン style の禁止を検査
@@ -112,6 +120,17 @@ const NEW_DESIGN_TSX = [
   "src/app/\\(new\\)/dictionary/kanji/stroke/*/page.tsx",
   "src/app/\\(new\\)/dictionary/yoji/category/*/page.tsx",
   "src/app/\\(new\\)/dictionary/colors/category/*/page.tsx",
+  // 辞典詳細の共有レイアウト＋4 種の Detail 表現（C3 変換済み）。インライン style の禁止を検査。
+  // ColorDetail の色見本インライン style は成果物中身＝変数由来（color.hex）で色直書きなし。
+  "src/dictionary/_components/new/DictionaryDetailLayout.tsx",
+  "src/dictionary/_components/kanji/KanjiDetail.tsx",
+  "src/dictionary/_components/yoji/YojiDetail.tsx",
+  "src/dictionary/_components/color/ColorDetail.tsx",
+  // 辞典詳細 4 route の page.tsx（漢字/四字熟語/伝統色は共有レイアウトへの配線・ユーモアは自前）。
+  "src/app/\\(new\\)/dictionary/kanji/*/page.tsx",
+  "src/app/\\(new\\)/dictionary/yoji/*/page.tsx",
+  "src/app/\\(new\\)/dictionary/colors/*/page.tsx",
+  "src/app/\\(new\\)/dictionary/humor/*/page.tsx",
 ];
 // テストコードは走査対象外（テスト文字列に禁止語が入るため）。
 const IGNORE = ["**/__tests__/**", "**/*.test.ts", "**/*.test.tsx"];

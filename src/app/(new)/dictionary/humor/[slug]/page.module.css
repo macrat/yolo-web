@@ -1,163 +1,158 @@
+/*
+ * AI 造語（ユーモア辞典）詳細 — DESIGN.md フェーズ R・店構え（実務／参照・§7 実務側・辞典）。
+ * 見出し語を明朝で大字、定義・解説・用例・関連語を罫と組版で組む。器は静か（紙墨朱・罫のみ）。
+ * 影・ピル・色付きカード・角丸装飾なし・全トークン経由（§10）。左揃え基調（§4）。
+ */
+
 .container {
-  max-width: 1200px;
+  max-width: var(--max-width);
   margin: 0 auto;
-  padding: 2rem 1.25rem;
+  padding: var(--space-32) var(--space-24) var(--space-64);
 }
 
+/* 読ませる面に絞る（§3 --measure）。 */
 .article {
-  max-width: 800px;
+  max-width: var(--measure);
   margin: 0 auto;
 }
 
-/* ファーストビュー: 見出し語・よみがな・定義文エリア */
+/* ファーストビュー: 見出し語・よみ・定義。強い罫で下を仕切る（区切りの主格・§4）。 */
 .header {
-  padding: 0 0 2rem;
-  margin-bottom: 2rem;
-  border-bottom: 1px solid var(--border);
+  padding: 0 0 var(--space-24);
+  margin-bottom: var(--space-32);
+  border-bottom: 1px solid var(--rule-strong);
 }
 
 .headingGroup {
   display: flex;
   align-items: baseline;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
+  gap: var(--space-16);
+  margin-bottom: var(--space-16);
   flex-wrap: wrap;
 }
 
+/* 大字: 見出し語を明朝で大きく（§7）。基層 h1（明朝）に委ね、大きさと余白だけ整える。 */
 .word {
-  font-size: 2rem;
-  font-weight: 700;
+  font-size: 2.4375rem; /* 39px */
   margin: 0;
   line-height: 1.2;
+  color: var(--ink);
 }
 
+/* よみ: 補助情報の墨（§2/§3）。 */
 .reading {
   font-size: 1rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
 }
 
-/* ユーモア定義文: 強調表示 */
+/*
+ * ユーモア定義文（造語のオチ・この辞典の主役の一文）: 強い一本罫の引用で示す（§4 罫で組む）。
+ * 色付きの座布団や角丸の包みは使わない（辞典は実務・器は静か・§7）。
+ */
 .definition {
   margin: 0;
-  padding: 1rem 1.25rem;
-  border-left: 4px solid var(--border-strong);
-  background-color: var(--bg);
-  border-radius: 0 var(--r-normal) var(--r-normal) 0;
-  font-size: 1.05rem;
-  line-height: 1.8;
-  color: var(--fg);
+  padding: var(--space-16) var(--space-24);
+  border-left: 3px solid var(--rule-strong);
+  font-size: 1rem;
+  line-height: 1.9;
+  color: var(--ink);
 }
 
 .definition p {
   margin: 0;
 }
 
-/* セクション共通 */
 .section {
-  margin-bottom: 2rem;
+  margin-bottom: var(--space-32);
 }
 
+/* 小見出し: 明朝・墨・一本罫で仕切る（§3/§4）。 */
 .sectionTitle {
-  font-size: 1.1rem;
-  font-weight: 700;
-  margin-bottom: 0.75rem;
-  padding-bottom: 0.375rem;
-  border-bottom: 2px solid var(--border);
-  color: var(--fg);
+  font-size: 1.25rem; /* 20px */
+  margin-bottom: var(--space-16);
+  padding-bottom: var(--space-8);
+  border-bottom: 1px solid var(--rule);
+  color: var(--ink);
 }
 
-/* 解説テキスト */
+/* 解説: 読ませる本文（16px・§3）。 */
 .explanation {
-  font-size: 0.95rem;
-  line-height: 1.8;
-  color: var(--fg);
+  font-size: 1rem;
+  line-height: 1.9;
+  color: var(--ink);
   margin: 0;
 }
 
-/* 用例 */
+/* 用例: 一本罫の引用（§4）。 */
 .example {
   margin: 0;
-  padding: 1rem 1.25rem;
-  border-left: 4px solid var(--border);
-  background-color: var(--bg-soft);
-  border-radius: 0 var(--r-normal) var(--r-normal) 0;
-  font-size: 0.95rem;
-  line-height: 1.8;
-  color: var(--fg-soft);
-  font-style: italic;
+  padding: var(--space-16) var(--space-24);
+  border-left: 3px solid var(--rule);
+  font-size: 1rem;
+  line-height: 1.9;
+  color: var(--ink-2);
 }
 
 .example p {
   margin: 0;
 }
 
-/* 関連語リスト */
+/* 関連語: 語リンクの索引。ピルにしない（静かな器）。 */
 .relatedList {
   list-style: none;
   padding: 0;
   margin: 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: var(--space-8) var(--space-16);
 }
 
 .relatedLink {
   display: inline-flex;
   align-items: baseline;
   gap: 0.375rem;
-  padding: 0.5rem 0.875rem;
-  border: 1px solid var(--border);
-  border-radius: var(--r-normal);
+  min-height: 44px;
   text-decoration: none;
-  color: inherit;
-  background-color: var(--bg);
-  transition:
-    border-color 0.2s,
-    background-color 0.2s;
+  color: var(--ink);
 }
 
-.relatedLink:hover {
-  border-color: var(--border-strong);
-  background-color: var(--bg-soft);
+.relatedLink:hover .relatedWord {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
 }
 
 .relatedWord {
-  font-weight: 600;
-  font-size: 0.95rem;
+  font-family: var(--font-mincho);
+  font-size: 1.125rem; /* 18px */
+  color: var(--ink);
 }
 
 .relatedReading {
-  font-size: 0.8rem;
-  color: var(--fg-soft);
+  font-size: 0.8125rem; /* 13px */
+  color: var(--ink-2);
 }
 
-/* 一覧へ戻るリンク */
+/* 一覧へ戻る導線: 本文と一本罫で仕切り、朱のリンクで示す（§3/§4）。 */
 .backLink {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--border);
+  margin-top: var(--space-32);
+  padding-top: var(--space-24);
+  border-top: 1px solid var(--rule);
 }
 
 .backLink a {
-  font-size: 0.9rem;
+  font-size: 1rem;
   color: var(--accent);
   text-decoration: none;
 }
 
 .backLink a:hover {
   text-decoration: underline;
+  text-underline-offset: 0.15em;
 }
 
 @media (max-width: 640px) {
-  .header {
-    padding: 0 0 1.5rem;
-  }
-
   .word {
-    font-size: 1.6rem;
-  }
-
-  .definition {
-    font-size: 0.95rem;
+    font-size: 1.9375rem; /* 31px */
   }
 }

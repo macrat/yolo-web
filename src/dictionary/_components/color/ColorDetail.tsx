@@ -90,22 +90,22 @@ export default function ColorDetail({ color }: ColorDetailProps) {
           <tbody>
             <tr>
               <th>HEX</th>
-              <td>{color.hex}</td>
-              <td>
+              <td className={styles.codeValue}>{color.hex}</td>
+              <td className={styles.codeAction}>
                 <CopyButton text={color.hex} />
               </td>
             </tr>
             <tr>
               <th>RGB</th>
-              <td>{rgbText}</td>
-              <td>
+              <td className={styles.codeValue}>{rgbText}</td>
+              <td className={styles.codeAction}>
                 <CopyButton text={rgbText} />
               </td>
             </tr>
             <tr>
               <th>HSL</th>
-              <td>{hslText}</td>
-              <td>
+              <td className={styles.codeValue}>{hslText}</td>
+              <td className={styles.codeAction}>
                 <CopyButton text={hslText} />
               </td>
             </tr>
