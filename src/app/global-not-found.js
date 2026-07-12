@@ -7,7 +7,7 @@
  *
  * - global-not-found は layout の import チェーンに乗らないため、
  *   globals.css と必要な Provider を冒頭で明示 import する。
- * - <html>/<body> を手動出力（(new)/layout.tsx の構造を再現）。
+ * - <html>/<body> を手動出力（src/app/layout.tsx の構造を再現）。
  * - ThemeProvider 採用: 404 着地時にダークモード設定が反映されないと、
  *   404 から戻った先のページとの視覚不一致が生じるため。
  * - GoogleAnalytics 採用: 404 着地は外部リンク切れの定量把握に直接価値があり、

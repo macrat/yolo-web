@@ -1,6 +1,6 @@
 /*
  * RelatedContentCard — 関連ゲームの共通スタイル（DESIGN.md フェーズ R・店構えへ変換）。
- * (new)/(legacy) 両方の RelatedGames（src/play/games/_components/RelatedGames.tsx と
+ * new/legacy 両方の RelatedGames（src/play/games/_components/RelatedGames.tsx と
  * _components/new/RelatedGames.tsx）で共有する（RelatedQuizzes は別ファイル
  * RelatedQuizzes.module.css を持ち、本ファイルとは共有していない）。
  * §4「品書き（一覧の既定形）」: カードのグリッドではなく罫区切りの一覧で組む

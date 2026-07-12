@@ -16,8 +16,8 @@ import { getContentPath } from "@/play/paths";
 import type { PlayContentMeta } from "@/play/types";
 import type { ResultNextContentItem } from "@/play/quiz/_components/ResultNextContent";
 import type { QuizDefinition } from "@/play/quiz/types";
-// (new) Route Group 配下に移動したプレイ層のスタイルを参照する
-import styles from "@/app/(new)/play/[slug]/page.module.css";
+// プレイ層のスタイルを参照する
+import styles from "@/app/play/[slug]/page.module.css";
 
 interface QuizPlayPageLayoutProps {
   quiz: QuizDefinition;

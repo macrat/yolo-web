@@ -56,16 +56,17 @@ import fg from "fast-glob";
 const PROJECT_ROOT = path.resolve(__dirname, "../..");
 
 // 新デザイン面（対象）。C1 で変換したコンポーネントの glob をここへ追記して面を広げる。
-// 注意（fast-glob のメタ文字）: Next.js の Route Group ディレクトリ `(new)` と動的
-// セグメント `[param]` は、そのまま書くと fast-glob に「extglob グループ」「文字クラス」
-// として解釈され、実ファイルに一致せず 0 件で黙って素通りする（＝ゲートが空振りする）。
-// パーレンは `\(new\)` とエスケープし、`[param]` は `*`（単一階層ワイルドカード）で受ける。
+// 注意（fast-glob のメタ文字）: 動的セグメント `[param]` は、そのまま書くと fast-glob に
+// 「文字クラス」として解釈され、実ファイルに一致せず 0 件で黙って素通りする（＝ゲートが
+// 空振りする）。`[param]` は `*`（単一階層ワイルドカード）で受ける
+//（旧 Route Group `(new)` はフェーズ R・C1 で src/app/ 直下へ平坦化済みのため、
+// パーレンのエスケープは不要になった）。
 // 空振りは下の「空振り検出」テストが各 glob 単位で fail させる。
 const NEW_DESIGN_CSS = [
   "src/app/globals.css", // 新トークン定義 + 基層タイポ層（§2/§3/§4・markdown-alert 再設計を含む）
   "src/app/global-not-found.module.css", // グローバル 404（公開面・cycle-279 C1 変換）
-  "src/app/\\(new\\)/storybook/page.module.css", // storybook（開発者向けカタログ・cycle-279 C1 変換）
-  "src/app/\\(new\\)/page.module.css", // トップ（店構え・§1/§4 の参照実装・C2 変換）
+  "src/app/storybook/page.module.css", // storybook（開発者向けカタログ・cycle-279 C1 変換）
+  "src/app/page.module.css", // トップ（店構え・§1/§4 の参照実装・C2 変換）
   "src/components/Header/**/*.module.css", // のれん（§4）
   "src/components/Footer/**/*.module.css", // 店構え（§4）
   "src/components/Shinagaki/**/*.module.css", // 品書き（§4 一覧の既定形）
@@ -73,10 +74,10 @@ const NEW_DESIGN_CSS = [
   "src/components/Tsutsumi/**/*.module.css", // 包み（§4/§7 結果カード・和色は中身のみ）
   "src/components/In/**/*.module.css", // 印（§4 厳密仕様・朱一色）
   // 辞典トップ 4 面（フェーズ R・C2/C3 変換済み。検索/閲覧を店構えへ一貫変換）。
-  "src/app/\\(new\\)/dictionary/kanji/page.module.css",
-  "src/app/\\(new\\)/dictionary/yoji/page.module.css",
-  "src/app/\\(new\\)/dictionary/colors/page.module.css",
-  "src/app/\\(new\\)/dictionary/humor/page.module.css",
+  "src/app/dictionary/kanji/page.module.css",
+  "src/app/dictionary/yoji/page.module.css",
+  "src/app/dictionary/colors/page.module.css",
+  "src/app/dictionary/humor/page.module.css",
   // 辞典共有の検索器（品書きで検索結果を出す器・§4/§8-4）。
   "src/dictionary/_components/DictionarySearch/**/*.module.css",
   // 辞典共有の品書き（一覧の既定形・検索結果とファセット絞り込みが共有・§4/§8-4）。
@@ -84,11 +85,11 @@ const NEW_DESIGN_CSS = [
   // 辞典共有のファセット索引（他ファセット値への導線・旧 CategoryNav の店構え版・§4/§8-5）。
   "src/dictionary/_components/FacetIndex/**/*.module.css",
   // 辞典ファセット面（学年/部首/画数/カテゴリ・C 変換済み。[param] は * で受ける）。
-  "src/app/\\(new\\)/dictionary/kanji/grade/*/page.module.css",
-  "src/app/\\(new\\)/dictionary/kanji/radical/*/page.module.css",
-  "src/app/\\(new\\)/dictionary/kanji/stroke/*/page.module.css",
-  "src/app/\\(new\\)/dictionary/yoji/category/*/page.module.css",
-  "src/app/\\(new\\)/dictionary/colors/category/*/page.module.css",
+  "src/app/dictionary/kanji/grade/*/page.module.css",
+  "src/app/dictionary/kanji/radical/*/page.module.css",
+  "src/app/dictionary/kanji/stroke/*/page.module.css",
+  "src/app/dictionary/yoji/category/*/page.module.css",
+  "src/app/dictionary/colors/category/*/page.module.css",
   // 辞典詳細の共有レイアウト（実務／参照の店構え・§7 実務側・C3 変換済み）。
   "src/dictionary/_components/new/DictionaryDetailLayout.module.css",
   // 辞典詳細 4 種の Detail 表現（漢字/四字熟語/伝統色・C3 変換済み。色見本のデータ由来色は成果物内で可）。
@@ -96,20 +97,20 @@ const NEW_DESIGN_CSS = [
   "src/dictionary/_components/yoji/YojiDetail.module.css",
   "src/dictionary/_components/color/ColorDetail.module.css",
   // AI 造語（ユーモア辞典）詳細は自前ページ（共有レイアウト非経由）。[slug] は * で受ける。
-  "src/app/\\(new\\)/dictionary/humor/*/page.module.css",
+  "src/app/dictionary/humor/*/page.module.css",
   // 多面共有の店構え部品（フェーズ R 変換済み）。辞典詳細・ブログ・結果面に出る。
   // 共有ボタン群（文字＋罫の線画ボタン・§4 札/§8）。
   "src/components/ShareButtons/**/*.module.css",
   // 関連コンテンツ回遊ブロック（品書き化・§4/§8-3）。
   "src/dictionary/_components/new/PlayRecommendBlock.module.css",
   // C2 独立IA/静的面（/tools /play 品書き・/about /privacy 読み物・店構え変換済み）。
-  "src/app/\\(new\\)/tools/page.module.css",
-  "src/app/\\(new\\)/play/page.module.css",
-  "src/app/\\(new\\)/about/page.module.css",
-  "src/app/\\(new\\)/privacy/page.module.css",
+  "src/app/tools/page.module.css",
+  "src/app/play/page.module.css",
+  "src/app/about/page.module.css",
+  "src/app/privacy/page.module.css",
   // ブログクラスタ（フェーズR・C5 変換済み）。一覧=品書き・記事=読み物の店構えへ一貫変換。
   // 記事詳細（[slug] は * で受ける）。
-  "src/app/\\(new\\)/blog/*/page.module.css",
+  "src/app/blog/*/page.module.css",
   // 一覧系共有部品（6 ルートすべてから呼ばれる）。
   "src/blog/_components/BlogListView.module.css",
   "src/blog/_components/BlogFilterableList.module.css",
@@ -149,9 +150,9 @@ const NEW_DESIGN_CSS = [
   // このグロブは動的ルート /play/[slug]/... と、Next.js のファイルシステム
   // ルーティングがそれより優先する variant 別の専用結果ルート
   // （/play/animal-personality/result/[resultId] 等・9 ルート）の両方に一致する。
-  "src/app/\\(new\\)/play/*/page.module.css",
-  "src/app/\\(new\\)/play/*/result/*/page.module.css",
-  "src/app/\\(new\\)/play/*/result/*/DescriptionExpander.module.css",
+  "src/app/play/*/page.module.css",
+  "src/app/play/*/result/*/page.module.css",
+  "src/app/play/*/result/*/DescriptionExpander.module.css",
   // ツール詳細クラスタ（フェーズR・C5 変換済み）。実務寄りの器（§7 実務側）。
   // 共有レイアウト（実質的な旧 ToolLayout。全 36 ツールが実際に使う唯一の器）。
   "src/tools/_components/ToolPageLayout/ToolPageLayout.module.css",
@@ -192,7 +193,7 @@ const NEW_DESIGN_CSS = [
   "src/play/games/yoji-kimeru/_components/styles/*.module.css",
   // 占い（フェーズR・C1 変換済み。cycle-279 で (legacy) から移設）。結果は Tsutsumi（包み）で見せる。
   "src/play/fortune/_components/*.module.css",
-  "src/app/\\(new\\)/play/daily/page.module.css",
+  "src/app/play/daily/page.module.css",
   // /play 一覧・ゲーム/クイズ詳細から使う関連コンテンツ導線（フェーズR・C1/C4 変換済み）。
   // PlayFilterableList/PlayListView/PlayGrid/PlayCard は /play 品書き移行後に無参照と
   // なったため削除済み（対象外）。
@@ -202,8 +203,8 @@ const NEW_DESIGN_CSS = [
 const NEW_DESIGN_TSX = [
   "src/app/global-not-found.js", // グローバル 404 ルート（公開面・cycle-279 C1 変換）
   "src/app/global-not-found-content.tsx", // グローバル 404 の本文コンポーネント
-  "src/app/\\(new\\)/storybook/StorybookContent.tsx", // storybook（開発者向けカタログ・cycle-279 C1 変換）
-  "src/app/\\(new\\)/page.tsx", // トップ（店構え・C2 変換）。インライン style の禁止を検査
+  "src/app/storybook/StorybookContent.tsx", // storybook（開発者向けカタログ・cycle-279 C1 変換）
+  "src/app/page.tsx", // トップ（店構え・C2 変換）。インライン style の禁止を検査
   "src/components/Header/**/*.tsx",
   "src/components/Footer/**/*.tsx",
   "src/components/Shinagaki/**/*.tsx",
@@ -211,10 +212,10 @@ const NEW_DESIGN_TSX = [
   "src/components/Tsutsumi/**/*.tsx",
   "src/components/In/**/*.tsx",
   // 辞典トップ 4 面（フェーズ R・C2/C3 変換済み）。インライン style の禁止を検査。
-  "src/app/\\(new\\)/dictionary/kanji/page.tsx",
-  "src/app/\\(new\\)/dictionary/yoji/page.tsx",
-  "src/app/\\(new\\)/dictionary/colors/page.tsx",
-  "src/app/\\(new\\)/dictionary/humor/page.tsx",
+  "src/app/dictionary/kanji/page.tsx",
+  "src/app/dictionary/yoji/page.tsx",
+  "src/app/dictionary/colors/page.tsx",
+  "src/app/dictionary/humor/page.tsx",
   // 辞典共有の検索器（色見本のインライン style は成果物中身＝変数由来で色直書きなし）。
   "src/dictionary/_components/DictionarySearch/**/*.tsx",
   // 辞典共有の品書き（色見本のインライン style は成果物中身＝変数由来で色直書きなし）。
@@ -222,11 +223,11 @@ const NEW_DESIGN_TSX = [
   // 辞典共有のファセット索引（旧 CategoryNav の店構え版）。
   "src/dictionary/_components/FacetIndex/**/*.tsx",
   // 辞典ファセット面（学年/部首/画数/カテゴリ・C 変換済み）。インライン style の禁止を検査。
-  "src/app/\\(new\\)/dictionary/kanji/grade/*/page.tsx",
-  "src/app/\\(new\\)/dictionary/kanji/radical/*/page.tsx",
-  "src/app/\\(new\\)/dictionary/kanji/stroke/*/page.tsx",
-  "src/app/\\(new\\)/dictionary/yoji/category/*/page.tsx",
-  "src/app/\\(new\\)/dictionary/colors/category/*/page.tsx",
+  "src/app/dictionary/kanji/grade/*/page.tsx",
+  "src/app/dictionary/kanji/radical/*/page.tsx",
+  "src/app/dictionary/kanji/stroke/*/page.tsx",
+  "src/app/dictionary/yoji/category/*/page.tsx",
+  "src/app/dictionary/colors/category/*/page.tsx",
   // 辞典詳細の共有レイアウト＋4 種の Detail 表現（C3 変換済み）。インライン style の禁止を検査。
   // ColorDetail の色見本インライン style は成果物中身＝変数由来（color.hex）で色直書きなし。
   "src/dictionary/_components/new/DictionaryDetailLayout.tsx",
@@ -234,26 +235,26 @@ const NEW_DESIGN_TSX = [
   "src/dictionary/_components/yoji/YojiDetail.tsx",
   "src/dictionary/_components/color/ColorDetail.tsx",
   // 辞典詳細 4 route の page.tsx（漢字/四字熟語/伝統色は共有レイアウトへの配線・ユーモアは自前）。
-  "src/app/\\(new\\)/dictionary/kanji/*/page.tsx",
-  "src/app/\\(new\\)/dictionary/yoji/*/page.tsx",
-  "src/app/\\(new\\)/dictionary/colors/*/page.tsx",
-  "src/app/\\(new\\)/dictionary/humor/*/page.tsx",
+  "src/app/dictionary/kanji/*/page.tsx",
+  "src/app/dictionary/yoji/*/page.tsx",
+  "src/app/dictionary/colors/*/page.tsx",
+  "src/app/dictionary/humor/*/page.tsx",
   // 多面共有の店構え部品（フェーズ R 変換済み）。インライン style の禁止を検査。
   "src/components/ShareButtons/**/*.tsx",
   "src/dictionary/_components/new/PlayRecommendBlock.tsx",
   // C2 独立IA/静的面（/tools /play /about /privacy・店構え変換済み）。
-  "src/app/\\(new\\)/tools/page.tsx",
-  "src/app/\\(new\\)/play/page.tsx",
-  "src/app/\\(new\\)/about/page.tsx",
-  "src/app/\\(new\\)/privacy/page.tsx",
+  "src/app/tools/page.tsx",
+  "src/app/play/page.tsx",
+  "src/app/about/page.tsx",
+  "src/app/privacy/page.tsx",
   // ブログクラスタ（フェーズR・C5 変換済み）。一覧 6 route + 記事詳細。インライン style の禁止を検査。
-  "src/app/\\(new\\)/blog/page.tsx",
-  "src/app/\\(new\\)/blog/page/*/page.tsx",
-  "src/app/\\(new\\)/blog/category/*/page.tsx",
-  "src/app/\\(new\\)/blog/category/*/page/*/page.tsx",
-  "src/app/\\(new\\)/blog/tag/*/page.tsx",
-  "src/app/\\(new\\)/blog/tag/*/page/*/page.tsx",
-  "src/app/\\(new\\)/blog/*/page.tsx", // 記事詳細（[slug] は * で受ける）
+  "src/app/blog/page.tsx",
+  "src/app/blog/page/*/page.tsx",
+  "src/app/blog/category/*/page.tsx",
+  "src/app/blog/category/*/page/*/page.tsx",
+  "src/app/blog/tag/*/page.tsx",
+  "src/app/blog/tag/*/page/*/page.tsx",
+  "src/app/blog/*/page.tsx", // 記事詳細（[slug] は * で受ける）
   // 一覧系共有部品。
   "src/blog/_components/BlogListView.tsx",
   "src/blog/_components/BlogFilterableList.tsx",
@@ -297,13 +298,13 @@ const NEW_DESIGN_TSX = [
   // 注意: play/ 配下には未変換のゲームエンジン（kanji-kanaru・nakamawake）も同居するため、
   // ここは `play/*/page.tsx` のような広い glob にせず [slug] を明示的にエスケープして
   // 対象を動的ルート＋music-personality 専用ルートだけに絞る（誤って games を巻き込まない）。
-  "src/app/\\(new\\)/play/\\[slug\\]/page.tsx",
-  "src/app/\\(new\\)/play/music-personality/page.tsx",
+  "src/app/play/\\[slug\\]/page.tsx",
+  "src/app/play/music-personality/page.tsx",
   // result/[resultId] は動的ルート＋9 つの variant 別専用結果ルートに一致する
   // （play/ 直下は上の2エントリのみに絞っているため、result/*/... は quiz 系のみが対象）。
-  "src/app/\\(new\\)/play/*/result/*/page.tsx",
-  "src/app/\\(new\\)/play/*/result/*/DescriptionExpander.tsx",
-  "src/app/\\(new\\)/play/*/result/*/CompatibilityDisplay.tsx",
+  "src/app/play/*/result/*/page.tsx",
+  "src/app/play/*/result/*/DescriptionExpander.tsx",
+  "src/app/play/*/result/*/CompatibilityDisplay.tsx",
   // ツール詳細クラスタ（フェーズR・C5 変換済み）。インライン style の禁止を検査。
   "src/tools/_components/ToolPageLayout/index.tsx",
   "src/tools/_components/ToolPageLayout/TileInteractionTracker.tsx",
@@ -336,7 +337,7 @@ const NEW_DESIGN_TSX = [
   "src/play/games/yoji-kimeru/_components/*.tsx",
   // 占い（フェーズR・C1 変換済み。cycle-279 で (legacy) から移設）。インライン style の禁止を検査。
   "src/play/fortune/_components/*.tsx",
-  "src/app/\\(new\\)/play/daily/page.tsx",
+  "src/app/play/daily/page.tsx",
   // /play 一覧・ゲーム/クイズ詳細から使う関連コンテンツ導線（フェーズR・C1/C4 変換済み）。
   "src/play/_components/RecommendedContent.tsx",
 ];
@@ -975,7 +976,7 @@ describe("DESIGN.md §8 機械ゲート（新デザイン面）", () => {
     expect(files).toContain("src/app/globals.css");
   });
 
-  // 各 glob が最低 1 ファイルに一致することを個別に検査する。fast-glob は `(new)`/`[param]` を
+  // 各 glob が最低 1 ファイルに一致することを個別に検査する。fast-glob は `[param]` を
   // メタ文字と誤解釈して 0 件で黙って素通りしやすい（過去、辞典トップ4面の glob が全て空振り
   // していた）。集合全体の length>0 では個々の空振りを検出できないため、glob 単位で担保する。
   test("各 glob が実ファイルに一致すること（空振り glob の検出）", () => {

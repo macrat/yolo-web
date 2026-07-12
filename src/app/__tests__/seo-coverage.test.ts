@@ -99,96 +99,83 @@ const staticPages: Array<{
 }> = [
   {
     path: "/",
-    importMeta: () =>
-      import("@/app/(new)/page").then((m) => m.metadata as Metadata),
+    importMeta: () => import("@/app/page").then((m) => m.metadata as Metadata),
   },
   {
     path: "/about",
     importMeta: () =>
-      import("@/app/(new)/about/page").then((m) => m.metadata as Metadata),
+      import("@/app/about/page").then((m) => m.metadata as Metadata),
   },
   {
     path: "/play/kanji-kanaru",
     importMeta: () =>
-      import("@/app/(new)/play/kanji-kanaru/page").then(
+      import("@/app/play/kanji-kanaru/page").then(
         (m) => m.metadata as Metadata,
       ),
   },
   {
     path: "/play/irodori",
     importMeta: () =>
-      import("@/app/(new)/play/irodori/page").then(
-        (m) => m.metadata as Metadata,
-      ),
+      import("@/app/play/irodori/page").then((m) => m.metadata as Metadata),
   },
   {
     path: "/play/nakamawake",
     importMeta: () =>
-      import("@/app/(new)/play/nakamawake/page").then(
-        (m) => m.metadata as Metadata,
-      ),
+      import("@/app/play/nakamawake/page").then((m) => m.metadata as Metadata),
   },
   {
     path: "/play/yoji-kimeru",
     importMeta: () =>
-      import("@/app/(new)/play/yoji-kimeru/page").then(
-        (m) => m.metadata as Metadata,
-      ),
+      import("@/app/play/yoji-kimeru/page").then((m) => m.metadata as Metadata),
   },
   {
     path: "/play/daily",
     importMeta: () =>
-      import("@/app/(new)/play/daily/page").then((m) => m.metadata as Metadata),
+      import("@/app/play/daily/page").then((m) => m.metadata as Metadata),
   },
   {
     path: "/tools",
     importMeta: () =>
-      import("@/app/(new)/tools/page").then(
+      import("@/app/tools/page").then(
         async (m) => (await m.generateMetadata()) as Metadata,
       ),
   },
   {
     path: "/blog",
     importMeta: () =>
-      import("@/app/(new)/blog/page").then((m) => m.metadata as Metadata),
+      import("@/app/blog/page").then((m) => m.metadata as Metadata),
   },
   {
     path: "/play",
     importMeta: () =>
-      import("@/app/(new)/play/page").then((m) => m.metadata as Metadata),
+      import("@/app/play/page").then((m) => m.metadata as Metadata),
   },
   {
     path: "/dictionary",
     importMeta: () =>
-      import("@/app/(new)/dictionary/page").then((m) => m.metadata as Metadata),
+      import("@/app/dictionary/page").then((m) => m.metadata as Metadata),
   },
   {
     path: "/dictionary/kanji",
     importMeta: () =>
-      import("@/app/(new)/dictionary/kanji/page").then(
-        (m) => m.metadata as Metadata,
-      ),
+      import("@/app/dictionary/kanji/page").then((m) => m.metadata as Metadata),
   },
   {
     path: "/dictionary/yoji",
     importMeta: () =>
-      import("@/app/(new)/dictionary/yoji/page").then(
-        (m) => m.metadata as Metadata,
-      ),
+      import("@/app/dictionary/yoji/page").then((m) => m.metadata as Metadata),
   },
   {
     path: "/dictionary/colors",
     importMeta: () =>
-      import("@/app/(new)/dictionary/colors/page").then(
+      import("@/app/dictionary/colors/page").then(
         (m) => m.metadata as Metadata,
       ),
   },
   {
     path: "/dictionary/humor",
     importMeta: () =>
-      import("@/app/(new)/dictionary/humor/page").then(
-        (m) => m.metadata as Metadata,
-      ),
+      import("@/app/dictionary/humor/page").then((m) => m.metadata as Metadata),
   },
 ];
 
@@ -214,8 +201,7 @@ describe("動的metadataページのSEO検証", () => {
     const { totalPages } = paginate(allPosts, 1, BLOG_POSTS_PER_PAGE);
     if (totalPages < 2) return; // 2ページ目がなければスキップ
 
-    const { generateMetadata } =
-      await import("@/app/(new)/blog/page/[page]/page");
+    const { generateMetadata } = await import("@/app/blog/page/[page]/page");
     const meta = await generateMetadata({
       params: Promise.resolve({ page: "2" }),
     });
@@ -228,7 +214,7 @@ describe("動的metadataページのSEO検証", () => {
     const category = ALL_CATEGORIES[0];
 
     const { generateMetadata } =
-      await import("@/app/(new)/blog/category/[category]/page");
+      await import("@/app/blog/category/[category]/page");
     const meta = await generateMetadata({
       params: Promise.resolve({ category }),
     });
@@ -258,7 +244,7 @@ describe("動的metadataページのSEO検証", () => {
     if (!targetCategory) return; // 2ページ以上のカテゴリがなければスキップ
 
     const { generateMetadata } =
-      await import("@/app/(new)/blog/category/[category]/page/[page]/page");
+      await import("@/app/blog/category/[category]/page/[page]/page");
     const meta = await generateMetadata({
       params: Promise.resolve({ category: targetCategory, page: "2" }),
     });
@@ -280,7 +266,7 @@ describe("動的metadataページのSEO検証", () => {
     const grade = grades[0];
 
     const { generateMetadata } =
-      await import("@/app/(new)/dictionary/kanji/grade/[grade]/page");
+      await import("@/app/dictionary/kanji/grade/[grade]/page");
     const meta = await generateMetadata({
       params: Promise.resolve({ grade }),
     });
@@ -298,7 +284,7 @@ describe("動的metadataページのSEO検証", () => {
     const radical = radicals[0];
 
     const { generateMetadata } =
-      await import("@/app/(new)/dictionary/kanji/radical/[radical]/page");
+      await import("@/app/dictionary/kanji/radical/[radical]/page");
     const meta = await generateMetadata({
       params: Promise.resolve({ radical }),
     });
@@ -316,7 +302,7 @@ describe("動的metadataページのSEO検証", () => {
     const count = String(counts[0]);
 
     const { generateMetadata } =
-      await import("@/app/(new)/dictionary/kanji/stroke/[count]/page");
+      await import("@/app/dictionary/kanji/stroke/[count]/page");
     const meta = await generateMetadata({
       params: Promise.resolve({ count }),
     });
@@ -334,7 +320,7 @@ describe("動的metadataページのSEO検証", () => {
     const category = categories[0];
 
     const { generateMetadata } =
-      await import("@/app/(new)/dictionary/yoji/category/[category]/page");
+      await import("@/app/dictionary/yoji/category/[category]/page");
     const meta = await generateMetadata({
       params: Promise.resolve({ category }),
     });
@@ -357,7 +343,7 @@ describe("動的metadataページのSEO検証", () => {
     const resultId = resultIds[0];
 
     const { generateMetadata } =
-      await import("@/app/(new)/play/[slug]/result/[resultId]/page");
+      await import("@/app/play/[slug]/result/[resultId]/page");
     const meta = await generateMetadata({
       params: Promise.resolve({ slug, resultId }),
     });
@@ -378,7 +364,7 @@ describe("動的metadataページのSEO検証", () => {
     if (slugs.length === 0) return; // データがなければスキップ
     const slug = slugs[0];
 
-    const { generateMetadata } = await import("@/app/(new)/blog/[slug]/page");
+    const { generateMetadata } = await import("@/app/blog/[slug]/page");
     const meta = await generateMetadata({
       params: Promise.resolve({ slug }),
     });
@@ -391,7 +377,7 @@ describe("動的metadataページのSEO検証", () => {
     if (slugs.length === 0) return; // データがなければスキップ
     const slug = slugs[0];
 
-    const { generateMetadata } = await import("@/app/(new)/play/[slug]/page");
+    const { generateMetadata } = await import("@/app/play/[slug]/page");
     const meta = await generateMetadata({
       params: Promise.resolve({ slug }),
       searchParams: Promise.resolve({}),
@@ -406,7 +392,7 @@ describe("動的metadataページのSEO検証", () => {
     const slug = slugs[0];
 
     const { generateMetadata } =
-      await import("@/app/(new)/dictionary/colors/[slug]/page");
+      await import("@/app/dictionary/colors/[slug]/page");
     const meta = await generateMetadata({
       params: Promise.resolve({ slug }),
     });
@@ -424,7 +410,7 @@ describe("動的metadataページのSEO検証", () => {
     const category = categories[0];
 
     const { generateMetadata } =
-      await import("@/app/(new)/dictionary/colors/category/[category]/page");
+      await import("@/app/dictionary/colors/category/[category]/page");
     const meta = await generateMetadata({
       params: Promise.resolve({ category }),
     });
@@ -442,7 +428,7 @@ describe("動的metadataページのSEO検証", () => {
     const char = chars[0];
 
     const { generateMetadata } =
-      await import("@/app/(new)/dictionary/kanji/[char]/page");
+      await import("@/app/dictionary/kanji/[char]/page");
     const meta = await generateMetadata({
       params: Promise.resolve({ char }),
     });
@@ -461,7 +447,7 @@ describe("動的metadataページのSEO検証", () => {
     const yoji = ids[0];
 
     const { generateMetadata } =
-      await import("@/app/(new)/dictionary/yoji/[yoji]/page");
+      await import("@/app/dictionary/yoji/[yoji]/page");
     const meta = await generateMetadata({
       params: Promise.resolve({ yoji }),
     });
@@ -480,7 +466,7 @@ describe("動的metadataページのSEO検証", () => {
     const slug = slugs[0];
 
     const { generateMetadata } =
-      await import("@/app/(new)/dictionary/humor/[slug]/page");
+      await import("@/app/dictionary/humor/[slug]/page");
     const meta = await generateMetadata({
       params: Promise.resolve({ slug }),
     });

@@ -2,7 +2,7 @@
  * AnimalPersonalityContent - animal-personality variant の共通コンテンツコンポーネント。
  *
  * ResultCard.tsx（受検者向けインライン結果）と
- * (new)/play/animal-personality/result/[resultId]/page.tsx（第三者向け静的結果ページ）の
+ * app/play/animal-personality/result/[resultId]/page.tsx（第三者向け静的結果ページ）の
  * 両方から使用される。Server Component（"use client" なし）: 純粋なプレゼンテーション。
  *
  * 共通化対象:

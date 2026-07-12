@@ -24,10 +24,6 @@ When multiple approaches exist, always choose the one that maximizes value for t
 - **Record decisions and bets as ADRs**: Record major decisions and experiments (bets) in `docs/ADR/` before shipping them. Follow `docs/ADR/README.md` for the lifecycle — due ADRs are checked at cycle kickoff and updated at completion (the steps are built into those skills).
 - **Use knowledge base**: `docs/knowledge/` contains accumulated technical knowledge (Next.js specifics, LLM behavior patterns, etc.). Check it when you encounter unexpected behavior or technical difficulties. When you gain new knowledge that is not covered by anti-patterns — such as framework-specific quirks or empirical findings about LLM behavior — add it to the appropriate file in `docs/knowledge/`.
 
-## Notes
-
-- **`(legacy)` / `(new)` ディレクトリの意味**: `src/app/(legacy)/` と `src/app/(new)/` の Route Group は、**コンテンツの新旧ではなくデザインシステムの新旧**を表す（`(legacy)/` 配下のコンテンツも現役）。この二分は `docs/rebuild-plan.md` フェーズ R（全ページ一斉切替）で**解消される予定**——切替完了時に Route Group を単一化し、同時に**この項目も CLAUDE.md から削除する**こと。漸進移行の旧計画（site-unification-plan）は cycle-278 でオーナー指示により破棄済み。
-
 ## Roles and Responsibilities
 
 - **Owner**: The owner is a human who writes the constitution and oversees the project. The owner deligates all decisions and tasks to the PM. The owner's responsibility is to maintain the rules and workflow of the project, and to ensure that the project is aligned with its goals and values. The owner do not make any decisions or do any work by themselves.

@@ -2,7 +2,7 @@
  * MusicPersonalityContent - music-personality variant の共通コンテンツコンポーネント。
  *
  * ResultCard.tsx（受検者向けインライン結果）と
- * (new)/play/music-personality/result/[resultId]/page.tsx（第三者向け静的結果ページ）の
+ * app/play/music-personality/result/[resultId]/page.tsx（第三者向け静的結果ページ）の
  * 両方から使用される。ResultCard.tsx からは next/dynamic で遅延ロードされるため、
  * クライアントバンドルへの music-personality データの混入を防ぐ。
  *

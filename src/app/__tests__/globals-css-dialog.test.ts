@@ -3,7 +3,7 @@ import { readFileSync } from "fs";
 import { resolve } from "path";
 
 // cycle-279 C1 で (legacy)/__tests__/globals-css-dialog.test.ts から移設。
-// 対象を old-globals.css（削除済み）から (new) 専用の globals.css へ切替える。
+// 対象を old-globals.css（削除済み）から src/app/globals.css へ切替える。
 test("globals.css contains dialog { margin: auto } to prevent wildcard reset from breaking dialog centering", () => {
   const cssPath = resolve(__dirname, "../globals.css");
   const cssContent = readFileSync(cssPath, "utf-8");

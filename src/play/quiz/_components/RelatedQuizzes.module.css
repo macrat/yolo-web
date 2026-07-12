@@ -3,7 +3,7 @@
  * カード型（罫囲み・角丸0基調）。絵文字なし・影なし・全トークン経由。
  *
  * 注: src/play/_components/RelatedContentCard.module.css は legacy RelatedGames /
- * (new) RelatedGames と共有されており旧世代トークン（--fg/--bg/--border）のままのため、
+ * new RelatedGames と共有されており旧世代トークン（--fg/--bg/--border）のままのため、
  * ここではクイズ専用の新トークン版を別途持つ（共有ファイルを触ると legacy 側の解決に
  * 影響しうるため・要 CLAUDE.md「共有は要確認」）。
  */

@@ -82,7 +82,7 @@ const UNCATEGORISED_WHITELIST: ReadonlySet<string> = new Set([
   "/",
   "/about",
   "/privacy",
-  // 開発者向け新デザインカタログ。noindex 設定済み。(new) Route Group 配下。
+  // 開発者向け新デザインカタログ。noindex 設定済み。
   "/storybook",
 ]);
 
@@ -290,10 +290,11 @@ function getLargeChunks(threshold: number): ChunkInfo[] {
 
 /**
  * Route Group プレフィックスを除去して正規化されたルートを返す。
- * Next.js App Router の Route Group (例: (legacy), (new)) はビルド出力パスに
+ * Next.js App Router の Route Group (例: (legacy), (marketing)) はビルド出力パスに
  * そのまま現れるため、カテゴリ判定・ホワイトリスト照合の前に除去する。
  * 例: /(legacy)/tools/slug -> /tools/slug
- *     /(new)/storybook -> /storybook
+ * フェーズ R・C1 で唯一の Route Group だった (new) も src/app/ 直下へ平坦化済みのため、
+ * 現時点で本リポジトリに Route Group は存在しない（将来の再導入に備えた防御的コード）。
  */
 function normaliseRoute(route: string): string {
   const parts = route.split("/").filter(Boolean);
@@ -412,7 +413,7 @@ describe.skipIf(!buildExists)("Bundle budget", () => {
     const unknownUncategorised: RouteSize[] = [];
 
     for (const rs of uncategorised) {
-      // Route Group プレフィックス (例: /(legacy)/, /(new)/) を除去して照合する
+      // Route Group プレフィックス (例: /(legacy)/) を除去して照合する
       if (UNCATEGORISED_WHITELIST.has(normaliseRoute(rs.route))) {
         knownUncategorised.push(rs);
       } else {
