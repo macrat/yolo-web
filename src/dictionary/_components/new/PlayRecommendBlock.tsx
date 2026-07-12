@@ -3,6 +3,7 @@ import type { PlayContentMeta } from "@/play/types";
 import { getContentPath } from "@/play/paths";
 import { resolveDisplayCategory } from "@/play/seo";
 import { quizQuestionCountBySlug, DAILY_UPDATE_SLUGS } from "@/play/registry";
+import { NefudaGroup } from "@/components/Nefuda";
 import styles from "./PlayRecommendBlock.module.css";
 
 interface PlayRecommendBlockProps {
@@ -38,7 +39,7 @@ function getCtaText(category: PlayContentMeta["category"]): string {
 }
 
 /**
- * カードに表示するコスト感情報を返す。
+ * 値札に表示するコスト感情報を返す。
  *
  * 評価順序:
  * 1. DAILY_UPDATE_SLUGS に含まれる → 「毎日更新」
@@ -59,17 +60,16 @@ function getMetaText(content: PlayContentMeta): string {
 }
 
 /**
- * 記事・辞典ページ向けの関連コンテンツ推薦ブロック（Server Component / (new) デザイン体系版）。
+ * 記事・辞典ページ向けの関連コンテンツ回遊ブロック（Server Component / (new) デザイン体系版）。
  *
- * legacy 版（src/play/_components/PlayRecommendBlock.tsx）からのフォーク。
- * TSX ロジックは legacy と完全同一で、CSS import 行のみ (new) 版へ差し替え。
- * これは /play 回遊導線（診断タッチポイント）側の表現であり、絵文字 icon・accentColor
- * 左ボーダーの視覚仕様は legacy と同一に保つ（austere 歯止めの対象外・design.md §1.4）。
+ * フェーズ R で「色付き左罫のカード＋絵文字アイコン」（§8-3 違反）を撤去し、DESIGN.md §4 の
+ * 「品書き（罫区切りのリスト）」の流儀へ変換した。各行 = 品名（明朝リンク）＋ひとこと＋
+ * 値札（毎日更新／全X問など・{@link NefudaGroup} 再利用）＋「遊んでみる →」等の朱リンク文言。
+ * 器は静かに保ち（背景色・カード装飾なし）、見出し「こちらもおすすめ」は明朝・墨（§3）。
  *
  * - 推薦リストが空の場合は null を返す
- * - 各カードに accentColor を左ボーダーとして使用し、視覚的なアクセントを加える
- * - heading prop で呼び出し元に応じた見出しテキストを設定できる
- * - subtext prop で呼び出し元に応じたサブテキストを設定できる
+ * - 行全体を 1 本のリンクにして大きいタップ領域を確保する（重複リンクを避ける）
+ * - heading / subtext prop で呼び出し元に応じたテキストを設定できる
  */
 export default function PlayRecommendBlock({
   recommendations,
@@ -84,27 +84,21 @@ export default function PlayRecommendBlock({
       <p className={styles.subtext}>{subtext}</p>
       <ul className={styles.list}>
         {recommendations.map((content) => (
-          <li key={content.slug}>
-            <Link
-              href={getContentPath(content)}
-              className={styles.card}
-              style={{ borderLeftColor: content.accentColor }}
-            >
-              <span className={styles.icon} aria-hidden="true">
-                {content.icon}
-              </span>
-              <div className={styles.cardBody}>
+          <li key={content.slug} className={styles.row}>
+            <Link href={getContentPath(content)} className={styles.card}>
+              <span className={styles.head}>
                 <span className={styles.title}>
                   {content.shortTitle ?? content.title}
                 </span>
-                <span className={styles.meta}>{getMetaText(content)}</span>
-                <span className={styles.description}>
-                  {content.shortDescription}
-                </span>
-                <span className={styles.cta}>
-                  {getCtaText(content.category)} →
-                </span>
-              </div>
+                {/* 値札（毎日更新／全X問など）。getMetaText は常に非空を返す。 */}
+                <NefudaGroup labels={[getMetaText(content)]} />
+              </span>
+              <span className={styles.description}>
+                {content.shortDescription}
+              </span>
+              <span className={styles.cta}>
+                {getCtaText(content.category)} →
+              </span>
             </Link>
           </li>
         ))}

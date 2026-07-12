@@ -1,93 +1,94 @@
-/* 記事・辞典ページ向けの関連コンテンツ推薦ブロック（(new) デザイン体系版）。
- * legacy 版（src/play/_components/PlayRecommendBlock.module.css）からのフォーク。
- * トークンを (new) 体系へ置換し、austere 構造化（影・transform 撤去）。
- * accentColor 左ボーダー・絵文字 icon の視覚仕様は legacy と同一（診断タッチポイント側・
- * design.md §1.4）。
+/*
+ * 記事・辞典ページ向けの関連コンテンツ回遊ブロック（(new) デザイン体系版）。
+ * DESIGN.md §4「品書き」の流儀: 罫区切りのリスト（カードのグリッド・色付き左罫・絵文字は使わない）。
+ * 器は静か——背景色・box-shadow・角丸カードなし。区切りの主役は --rule の一本罫。
+ * 全トークン経由・色/角丸の直書きなし（§8/§10）。値札は Nefuda を再利用する。
  */
 
 .container {
-  margin-top: 2rem;
-  background-color: var(--bg-soft);
-  border-radius: var(--r-normal);
-  padding: 1.25rem;
-  border-top: none;
+  margin-top: var(--space-32);
 }
 
+/* 見出し「こちらもおすすめ」: 明朝・墨・詰め（§3 見出しの流儀）。 */
 .heading {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 0.25rem;
-  color: var(--fg);
+  margin: 0 0 var(--space-8);
+  color: var(--ink);
+  font-family: var(--font-mincho);
+  font-size: 1.375rem; /* 22px 目安（1.25 倍スケール帯） */
+  line-height: 1.4;
+  font-feature-settings: "palt";
 }
 
+/* サブテキスト: 補足の墨（§3 補助情報の字サイズ）。 */
 .subtext {
-  font-size: 0.85rem;
-  color: var(--fg-soft);
-  margin-bottom: 0.75rem;
+  margin: 0 0 var(--space-16);
+  color: var(--ink-2);
+  font-family: var(--font-gothic);
+  font-size: 0.875rem; /* 14px 補助情報 */
+  line-height: 1.6;
 }
 
+/* 品書き本体: 上辺にも罫を引き、各行の下辺罫と合わせて全行を罫で囲う（§4）。 */
 .list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
   list-style: none;
-  padding: 0;
   margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--rule);
 }
 
+.row {
+  border-bottom: 1px solid var(--rule);
+}
+
+/* 各行は 1 本のリンク: 品名 → ひとこと → CTA を縦に積む。カード装飾・影・色地なし。 */
 .card {
   display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-  padding: 0.875rem 1rem;
-  border-left: 3px solid transparent;
-  /* container が bg-soft のため、カード自体は bg で差別化する */
-  background-color: var(--bg);
-  border-radius: var(--r-normal);
-  text-decoration: none;
-  transition: background-color 0.15s;
-}
-
-.card:hover {
-  /* container(--bg-soft) と card(--bg) の上で知覚可能な hover 差を保つため、
-   * container より一段濃い --bg-softer を使う（影撤去後の hover は面の濃度差で示す）。 */
-  background-color: var(--bg-softer);
-}
-
-.icon {
-  font-size: 1.5rem;
-  flex-shrink: 0;
-  line-height: 1;
-}
-
-.cardBody {
-  display: flex;
   flex-direction: column;
-  gap: 0.25rem;
-  min-width: 0;
+  gap: var(--space-8);
+  padding: var(--space-16) 0;
+  text-decoration: none;
 }
 
+.card:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* 品名と値札を横並び（折り返し可）で置く。 */
+.head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+}
+
+/* 品名: 一覧の主役。§4「品名（明朝リンク・墨）」——静止は墨、hover で朱＋下線（§3 リンク専有）。 */
 .title {
-  font-weight: 600;
-  color: var(--fg);
-  font-size: 0.95rem;
-}
-
-.meta {
-  font-size: 0.75rem;
-  color: var(--fg-soft);
-}
-
-.description {
-  font-size: 0.85rem;
-  color: var(--fg-soft);
+  color: var(--ink);
+  font-family: var(--font-mincho);
+  font-size: 1.125rem; /* 18px 目安 */
   line-height: 1.4;
+  letter-spacing: 0.01em;
 }
 
-.cta {
-  display: inline-block;
-  font-size: 0.85rem;
+.card:hover .title {
   color: var(--accent);
-  font-weight: 500;
-  margin-top: 0.25rem;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+/* ひとこと: 補足の墨。文章として読ませるため 16px/行間で組む（§3）。 */
+.description {
+  color: var(--ink-2);
+  font-family: var(--font-gothic);
+  font-size: 1rem; /* 16px */
+  line-height: 1.7;
+}
+
+/* CTA: 朱の誘い文言（「遊んでみる →」）。§2 アクセントは朱の1色。 */
+.cta {
+  color: var(--accent);
+  font-family: var(--font-gothic);
+  font-size: 0.9375rem; /* 15px */
+  line-height: 1.4;
 }

@@ -94,6 +94,11 @@ const NEW_DESIGN_CSS = [
   "src/dictionary/_components/color/ColorDetail.module.css",
   // AI 造語（ユーモア辞典）詳細は自前ページ（共有レイアウト非経由）。[slug] は * で受ける。
   "src/app/\\(new\\)/dictionary/humor/*/page.module.css",
+  // 多面共有の店構え部品（フェーズ R 変換済み）。辞典詳細・ブログ・結果面に出る。
+  // 共有ボタン群（文字＋罫の線画ボタン・§4 札/§8）。
+  "src/components/ShareButtons/**/*.module.css",
+  // 関連コンテンツ回遊ブロック（品書き化・§4/§8-3）。
+  "src/dictionary/_components/new/PlayRecommendBlock.module.css",
 ];
 const NEW_DESIGN_TSX = [
   "src/app/\\(new\\)/page.tsx", // トップ（店構え・C2 変換）。インライン style の禁止を検査
@@ -131,6 +136,9 @@ const NEW_DESIGN_TSX = [
   "src/app/\\(new\\)/dictionary/yoji/*/page.tsx",
   "src/app/\\(new\\)/dictionary/colors/*/page.tsx",
   "src/app/\\(new\\)/dictionary/humor/*/page.tsx",
+  // 多面共有の店構え部品（フェーズ R 変換済み）。インライン style の禁止を検査。
+  "src/components/ShareButtons/**/*.tsx",
+  "src/dictionary/_components/new/PlayRecommendBlock.tsx",
 ];
 // テストコードは走査対象外（テスト文字列に禁止語が入るため）。
 const IGNORE = ["**/__tests__/**", "**/*.test.ts", "**/*.test.tsx"];
