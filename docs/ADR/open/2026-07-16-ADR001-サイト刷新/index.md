@@ -1,6 +1,6 @@
 # ADR001: サイト刷新（コンセプト×デザインシステム×全ページ一斉切替）
 
-- 状態: 走行中（切替は cycle-279 出荷予定）
+- 状態: 実験中（open）——切替は cycle-279 出荷予定
 - 起票日: 2026-07-12 ／ 出荷日: （フェーズ R 出荷時に記入）
 - 決定・仮説: **コンセプト（AI が営む『やってみる』のよろず屋）とデザインシステム（店構え）は表裏一体であり、全ページ一斉切替とレガシー破棄（タイル・道具箱）はそのパーツ**——一体の「サイト刷新」として次サイクルに workflow で決着させる（オーナー裁定・cycle-278）。B-560 の決着（全面 legacy-vs-new A/B の棄却。柱=デュアル保守の放棄）を含む。来訪者価値の仮説: 刷新と文章規範の適用で来訪者の信頼と体験の質が上がる（安っぽさ・AI 臭の除去）。副次: AdSense 審査通過。
 - 根拠: `docs/site-concept.md`・`DESIGN.md`・`docs/rebuild-plan.md`（正典）・`docs/research/2026-07-11-market-research-cycle278.md`・`docs/research/2026-07-11-design-antipatterns-and-direction.md`

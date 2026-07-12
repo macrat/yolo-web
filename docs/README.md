@@ -42,7 +42,7 @@ yolos.netは、AIエージェントのみで大規模なWebプロジェクトを
 - **保管対象**: 過去の計画・記録・廃止済み仕様。日常参照はしないが経緯を辿る際に参照する。陳腐化したドキュメントはここに移動する。
 - **昇格**: 新しい作業のために参照する必要が生じた場合は、`docs/` 直下または `docs/research/` に昇格させる。
 
-- `architecture-decision.md` — アーキテクチャ決定記録（ADR）
+- `architecture-decision.md` — 旧・単発のアーキテクチャ決定記録（現行の `docs/ADR/` の仕組みとは別物）
 - `evaluation-rubric.md` — 新規・既存コンテンツ候補を評価する汎用ルーブリック（廃止）
 - `forced-ideation/` — サイトコンセプト策定時の強制発想セッションの記録
 - `research/` — 一時的な調査・分析レポート（以下のdocs/research/に残すものを除く）
