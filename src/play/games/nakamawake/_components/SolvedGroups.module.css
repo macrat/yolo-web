@@ -1,69 +1,55 @@
 /*
- * 難易度4色の SSoT（Single Source of Truth）。
- * 黄=易 / 緑=普 / 青=難 / 紫=超難 を符号化する「機能色」（DESIGN.md §2）であり、
- * austere 化後も色相を保持する。ResultModal / HowToPlayModal もこの変数を参照する
- * （SolvedGroups は GameContainer から常時 import されるため :root 定義が必ず読み込まれる）。
+ * SolvedGroups（なかまわけ）— 解けたグループの表示（DESIGN.md フェーズ R・店構えへ変換）。
  *
- * 各色に乗せるテキスト色は WCAG AA（通常テキスト 4.5:1）を満たすよう選定:
- *   light: 黒文字 — 黄15.80 / 緑10.45 / 青11.99 / 紫7.03（紫は旧・白文字2.99 が AA 不足だったため黒へ是正）
- *   dark : 白文字 — 黄5.29 / 緑5.09 / 青6.46 / 紫6.62（黄は旧 #a08a28 が白文字3.41 で AA 不足のため #7e6a1f へ濃度是正）
+ * 難易度4色（黄=易 / 緑=普 / 青=難 / 紫=超難）はゲームの駒＝成果物にあたるため、
+ * §2 の例外規定により和色（--wairo-*）を使用する（各色 light/dark の AA 検証済みの
+ * -on トークンとセットで使う）:
+ *   黄 = --wairo-yamabuki（山吹）/ 緑 = --wairo-moegi（萌黄）/
+ *   青 = --wairo-ai（藍）/ 紫 = --wairo-fuji（藤）
+ * ResultModal / HowToPlayModal も同じ wairo トークンを直接参照する（旧 --nw-difficulty-*
+ * ローカル SSoT は撤去——グローバルトークン自体が単一の色源になったため不要）。
  */
-:root {
-  --nw-difficulty-yellow: #f9df6d;
-  --nw-difficulty-green: #a0c35a;
-  --nw-difficulty-blue: #b0c4ef;
-  --nw-difficulty-purple: #ba81c5;
-  --nw-difficulty-fg: #000000;
-}
-
-:global(:root.dark) {
-  --nw-difficulty-yellow: #7e6a1f;
-  --nw-difficulty-green: #4d7a25;
-  --nw-difficulty-blue: #3f5f90;
-  --nw-difficulty-purple: #7a4a8a;
-  --nw-difficulty-fg: #ffffff;
-}
 
 .container {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--space-8);
   max-width: 500px;
-  margin: 0 auto 0.5rem;
+  margin: 0 auto var(--space-8);
 }
 
 .group {
-  padding: 0.75rem;
-  border-radius: var(--r-normal);
+  padding: var(--space-16);
+  border-radius: var(--radius);
   text-align: center;
 }
 
 .groupName {
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 0.9375rem;
   margin-bottom: 0.25rem;
 }
 
 .groupWords {
-  font-size: 0.85rem;
+  font-size: 0.875rem;
 }
 
 .yellow {
-  background: var(--nw-difficulty-yellow);
-  color: var(--nw-difficulty-fg);
+  background: var(--wairo-yamabuki);
+  color: var(--wairo-yamabuki-on);
 }
 
 .green {
-  background: var(--nw-difficulty-green);
-  color: var(--nw-difficulty-fg);
+  background: var(--wairo-moegi);
+  color: var(--wairo-moegi-on);
 }
 
 .blue {
-  background: var(--nw-difficulty-blue);
-  color: var(--nw-difficulty-fg);
+  background: var(--wairo-ai);
+  color: var(--wairo-ai-on);
 }
 
 .purple {
-  background: var(--nw-difficulty-purple);
-  color: var(--nw-difficulty-fg);
+  background: var(--wairo-fuji);
+  color: var(--wairo-fuji-on);
 }

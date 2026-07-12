@@ -1,8 +1,12 @@
+/* StatsModal（なかまわけ）— 統計表示（DESIGN.md フェーズ R・店構えへ変換）。
+ * 分布バーは成果物（結果の可視化）にあたるため、ハイライトのみ和色を使う
+ * （既定バー=色の不在の墨、ハイライト=--wairo-tokiwa。kanji-kanaru の StatsModal と同方針）。 */
+
 .statsGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
+  gap: var(--space-16);
+  margin-bottom: var(--space-16);
 }
 
 .statItem {
@@ -10,19 +14,23 @@
 }
 
 .statValue {
+  font-family: var(--font-number);
   font-size: 1.5rem;
   font-weight: 700;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
 }
 
 .statLabel {
-  font-size: 0.8rem;
-  color: var(--fg-soft);
+  font-size: 0.8125rem;
+  color: var(--ink-2);
 }
 
 .distributionTitle {
-  font-size: 0.9rem;
+  font-size: 0.9375rem;
   font-weight: 600;
-  margin-bottom: 0.5rem;
+  color: var(--ink);
+  margin-bottom: var(--space-8);
 }
 
 .distributionRow {
@@ -37,12 +45,13 @@
   text-align: right;
   font-size: 0.85rem;
   font-weight: 600;
+  color: var(--ink);
 }
 
 .distributionBar {
   height: 1.2rem;
-  background-color: #787c7e;
-  border-radius: var(--r-normal);
+  background-color: var(--ink-2);
+  border-radius: var(--radius);
   min-width: 1.5rem;
   display: flex;
   align-items: center;
@@ -50,16 +59,11 @@
   padding-right: 0.35rem;
   font-size: 0.75rem;
   font-weight: 600;
-  /*
-   * 黒文字。バー背景はテーマ非依存の固定色（灰 #787c7e / 緑 #6aaa64）であり、
-   * 白文字では WCAG AA 未満だった（#787c7e×白=4.21 / #6aaa64×白=2.78）。
-   * 黒文字なら #787c7e×黒=4.98 / #6aaa64×黒=7.55 で通常テキスト AA(4.5:1)を満たす。
-   * .distributionBarHighlight は composes でこの色を継承する。
-   */
-  color: #000000;
+  color: var(--paper);
 }
 
 .distributionBarHighlight {
   composes: distributionBar;
-  background-color: #6aaa64;
+  background-color: var(--wairo-tokiwa);
+  color: var(--wairo-tokiwa-on);
 }

@@ -1,21 +1,22 @@
-/* (new) デザイン体系版 CountdownTimer スタイル（cycle-268 フォーク）。
- * 中央寄せ撤去（左寄せ）、旧 --color-* → 新トークン。 */
+/* CountdownTimer — 次の問題までの残り時間表示（DESIGN.md フェーズ R・店構えへ変換）。
+ * 数字は tabular-nums で桁を揃える（§7 実務側の見た目）。装飾なし・新トークンのみ。 */
 
 .container {
-  padding: 12px 0;
-  margin: 8px 0;
+  padding: var(--space-8) 0;
+  margin: var(--space-8) 0;
 }
 
 .label {
-  font-size: 0.85rem;
-  color: var(--fg-soft);
-  margin-bottom: 4px;
+  font-size: 0.8125rem;
+  color: var(--ink-2);
+  margin-bottom: 0.25rem;
 }
 
 .time {
+  font-family: var(--font-number);
   font-size: 1.5rem;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
-  color: var(--fg);
+  color: var(--ink);
   letter-spacing: 0.05em;
 }

@@ -178,6 +178,23 @@ const NEW_DESIGN_CSS = [
   "src/components/ErrorMessage/**/*.module.css",
   "src/components/SegmentedControl/**/*.module.css",
   "src/components/FileDropZone/**/*.module.css",
+  // のれん（ヘッダ）の明暗トグル（フェーズR・C1/C4 変換済み）。
+  "src/components/ThemeToggle/**/*.module.css",
+  // あそびのゲーム（フェーズR・C1/C4 変換済み）。共有 GameLayout/RelatedBlogPosts・
+  // shared 部品（CountdownTimer/CrossCategoryBanner/GameDialog/GameShareButtons/
+  // NextGameBanner）・kanji-kanaru・nakamawake の器を店構えへ変換。ゲームの駒/結果
+  // （kanji-kanaru の判定セル・nakamawake の難易度4色）は成果物中身のため和色使用可
+  // （irodori/yoji-kimeru は legacy GameLayout を使う未変換ゲームのため対象外）。
+  "src/play/games/_components/new/*.module.css",
+  "src/play/games/shared/_components/new/*.module.css",
+  "src/play/games/kanji-kanaru/_components/GameContainer.module.css",
+  "src/play/games/kanji-kanaru/_components/styles/*.module.css",
+  "src/play/games/nakamawake/_components/*.module.css",
+  // /play 一覧・ゲーム/クイズ詳細から使う関連コンテンツ導線（フェーズR・C1/C4 変換済み）。
+  // PlayFilterableList/PlayListView/PlayGrid/PlayCard は /play 品書き移行後に無参照と
+  // なったため削除済み（対象外）。
+  "src/play/_components/RecommendedContent.module.css",
+  "src/play/_components/RelatedContentCard.module.css",
 ];
 const NEW_DESIGN_TSX = [
   "src/app/\\(new\\)/page.tsx", // トップ（店構え・C2 変換）。インライン style の禁止を検査
@@ -300,6 +317,16 @@ const NEW_DESIGN_TSX = [
   "src/components/ErrorMessage/**/*.tsx",
   "src/components/SegmentedControl/**/*.tsx",
   "src/components/FileDropZone/**/*.tsx",
+  // のれん（ヘッダ）の明暗トグル（フェーズR・C1/C4 変換済み）。
+  "src/components/ThemeToggle/**/*.tsx",
+  // あそびのゲーム（フェーズR・C1/C4 変換済み）。CSS 側と対にインライン style を検査する
+  // （irodori/yoji-kimeru は legacy GameLayout を使う未変換ゲームのため対象外）。
+  "src/play/games/_components/new/*.tsx",
+  "src/play/games/shared/_components/new/*.tsx",
+  "src/play/games/kanji-kanaru/_components/*.tsx",
+  "src/play/games/nakamawake/_components/*.tsx",
+  // /play 一覧・ゲーム/クイズ詳細から使う関連コンテンツ導線（フェーズR・C1/C4 変換済み）。
+  "src/play/_components/RecommendedContent.tsx",
 ];
 // テストコードは走査対象外（テスト文字列に禁止語が入るため）。
 const IGNORE = ["**/__tests__/**", "**/*.test.ts", "**/*.test.tsx"];
@@ -324,6 +351,111 @@ const ALLOWLIST: { fileEndsWith: string; declaration: string }[] = [
   {
     fileEndsWith: "src/components/ToggleSwitch/ToggleSwitch.module.css",
     declaration: "border-radius: 50%",
+  },
+  // ThemeToggle も ToggleSwitch と同じ操作系メタファー（トラック=横長楕円・サム=円形の
+  // つまみ）であり、§8-5 が禁じる装飾目的の一律角丸には当たらない。
+  {
+    fileEndsWith: "src/components/ThemeToggle/ThemeToggle.module.css",
+    declaration: "border-radius: 999px",
+  },
+  {
+    fileEndsWith: "src/components/ThemeToggle/ThemeToggle.module.css",
+    declaration: "border-radius: 50%",
+  },
+  // kanji-kanaru のローディングスピナー: 円形の回転リングは機能的なローディング表示の
+  // 物理的な型（ToggleSwitch のサムと同様の円形）であり、§8-5 の装飾目的の一律角丸には
+  // 当たらない。
+  {
+    fileEndsWith:
+      "src/play/games/kanji-kanaru/_components/GameContainer.module.css",
+    declaration: "border-radius: 50%",
+  },
+  // §2 是正ゲートの追加許容: --wairo-* はゲームの駒/結果など「成果物」の中身の色として
+  // DESIGN.md §2「成果物パレット（中身の色・唯一の例外）」が明示的に認めている。
+  // STATE_SELECTOR_RE は「hover/selected の座布団」用の許容のみを機械判定するため、
+  // 状態セレクタ名を持たない成果物カラーの静的宣言はここで個別に許容する
+  // （器＝ページ UI の静的背景には和色を使わない・§2 の原則自体は変えない）。
+  {
+    fileEndsWith:
+      "src/play/games/kanji-kanaru/_components/styles/KanjiKanaru.module.css",
+    declaration: ".cellClose { background-color: var(--wairo-yamabuki); }",
+  },
+  {
+    fileEndsWith:
+      "src/play/games/kanji-kanaru/_components/styles/KanjiKanaru.module.css",
+    declaration:
+      ".distributionBarHighlight { background-color: var(--wairo-tokiwa); }",
+  },
+  {
+    fileEndsWith:
+      "src/play/games/kanji-kanaru/_components/styles/KanjiKanaru.module.css",
+    declaration:
+      ".legendChipClose { background-color: var(--wairo-yamabuki); }",
+  },
+  {
+    fileEndsWith:
+      "src/play/games/nakamawake/_components/SolvedGroups.module.css",
+    declaration: ".yellow { background: var(--wairo-yamabuki); }",
+  },
+  {
+    fileEndsWith:
+      "src/play/games/nakamawake/_components/SolvedGroups.module.css",
+    declaration: ".green { background: var(--wairo-moegi); }",
+  },
+  {
+    fileEndsWith:
+      "src/play/games/nakamawake/_components/SolvedGroups.module.css",
+    declaration: ".blue { background: var(--wairo-ai); }",
+  },
+  {
+    fileEndsWith:
+      "src/play/games/nakamawake/_components/SolvedGroups.module.css",
+    declaration: ".purple { background: var(--wairo-fuji); }",
+  },
+  {
+    fileEndsWith:
+      "src/play/games/nakamawake/_components/ResultModal.module.css",
+    declaration: ".yellow { background: var(--wairo-yamabuki); }",
+  },
+  {
+    fileEndsWith:
+      "src/play/games/nakamawake/_components/ResultModal.module.css",
+    declaration: ".green { background: var(--wairo-moegi); }",
+  },
+  {
+    fileEndsWith:
+      "src/play/games/nakamawake/_components/ResultModal.module.css",
+    declaration: ".blue { background: var(--wairo-ai); }",
+  },
+  {
+    fileEndsWith:
+      "src/play/games/nakamawake/_components/ResultModal.module.css",
+    declaration: ".purple { background: var(--wairo-fuji); }",
+  },
+  {
+    fileEndsWith:
+      "src/play/games/nakamawake/_components/HowToPlayModal.module.css",
+    declaration: ".swatchYellow { background: var(--wairo-yamabuki); }",
+  },
+  {
+    fileEndsWith:
+      "src/play/games/nakamawake/_components/HowToPlayModal.module.css",
+    declaration: ".swatchGreen { background: var(--wairo-moegi); }",
+  },
+  {
+    fileEndsWith:
+      "src/play/games/nakamawake/_components/HowToPlayModal.module.css",
+    declaration: ".swatchBlue { background: var(--wairo-ai); }",
+  },
+  {
+    fileEndsWith:
+      "src/play/games/nakamawake/_components/HowToPlayModal.module.css",
+    declaration: ".swatchPurple { background: var(--wairo-fuji); }",
+  },
+  {
+    fileEndsWith: "src/play/games/nakamawake/_components/StatsModal.module.css",
+    declaration:
+      ".distributionBarHighlight { background-color: var(--wairo-tokiwa); }",
   },
 ];
 

@@ -1,73 +1,63 @@
-/* (new) デザイン体系版 GameShareButtons スタイル（cycle-268 フォーク・NICE-1）。
+/*
+ * GameShareButtons — ゲーム結果の共有ボタン群（DESIGN.md フェーズ R・店構えへ変換）。
  *
  * GameShareButtons は `shareGameResult`（ゲーム結果テキスト整形）に依存し、
- * 汎用 ShareButtons へ単純置換できない機能差があるため austere トーンで保持する
- * （機能を劣後させない）。
- *
- * 色の線引き（DESIGN.md §2 機能色 vs 装飾色）:
- * - 「結果をコピー」「シェア」「画像を保存」は SNS ではない一般操作ボタン＝
- *   装飾色（緑 #6aaa64 / 紫 #8a5a9a）を撤去し無彩の austere ボタンへ。
- * - 「Xでシェア」は SNS 識別色（黒）＝どの SNS かを伝える機能色として保持する。
- * 角丸はボタン規則 --r-interactive(8px)、配置は左寄せ統一。 */
+ * 汎用 ShareButtons へ単純置換できない機能差があるため機能はそのまま保持する。
+ * 見た目は src/components/ShareButtons と同じ語彙に統一する（「文字＋罫の線画ボタン」）:
+ * 地は紙・--rule の一本罫囲み・文字は墨・hover は朱枠＋朱文字。
+ * ブランド色ベタ塗り（旧: X=黒地・コピー=反転面）は撤去し、全ボタンを同型にする
+ * （§2「アクセントは朱の1色」・§8 ブランドロゴ/色塗りボタン禁止）。サービスは文言で識別する。
+ * タップターゲット 44px・focus 可視・全トークン経由。
+ */
 
 .shareArea {
   display: flex;
-  gap: 0.5rem;
+  gap: var(--space-8);
   flex-wrap: wrap;
-  margin-top: 0.75rem;
+  margin-top: var(--space-8);
 }
 
 .shareButton {
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 var(--space-16);
+  font-family: inherit;
+  font-size: 0.9375rem;
   font-weight: 600;
-  border: 1px solid var(--border);
-  border-radius: var(--r-interactive);
+  line-height: 1.4;
+  white-space: nowrap;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
   cursor: pointer;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
 }
 
-/* 一般操作ボタン（SNS ではない）＝無彩の austere */
-.shareButtonCopy {
-  composes: shareButton;
-  background-color: var(--bg-invert);
-  color: var(--fg-invert);
-  border-color: var(--bg-invert);
+.shareButton:hover {
+  color: var(--accent);
+  border-color: var(--accent);
 }
 
-.shareButtonCopy:hover {
-  opacity: 0.9;
+.shareButton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
-/* X（SNS 識別色＝黒を機能色として保持） */
-.shareButtonX {
-  composes: shareButton;
-  background-color: #000000;
-  color: #ffffff;
-  border-color: #000000;
-}
-
-.shareButtonX:hover {
-  opacity: 0.9;
-}
-
-/* 画像保存（SNS ではない）＝無彩の austere 控えめボタン */
+/* すべてのボタンを同一の線画スタイルにする（コピー/X/画像保存の区別は文言のみ）。 */
+.shareButtonCopy,
+.shareButtonX,
 .shareButtonImage {
   composes: shareButton;
-  background-color: var(--bg);
-  color: var(--fg);
-}
-
-.shareButtonImage:hover {
-  background-color: var(--bg-soft);
 }
 
 .copiedMessage {
-  font-size: 0.8rem;
-  color: var(--fg-soft);
+  font-size: 0.8125rem;
+  color: var(--accent);
   margin-top: 0.25rem;
   min-height: 1.2em;
-}
-
-:global([data-theme="dark"]) .shareButtonX {
-  background-color: #333333;
 }

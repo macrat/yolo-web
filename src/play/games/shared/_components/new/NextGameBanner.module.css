@@ -1,60 +1,65 @@
-/* (new) デザイン体系版 NextGameBanner スタイル（cycle-268 フォーク）。
- * 旧 --color-* → 新トークン、角丸を新トークン化、中央寄せ撤去（左寄せ）、
- * 未プレイ強調の青ボタン（--color-primary + #fff）を無彩 austere
- * （--bg-invert / --fg-invert）へ置換。 */
+/*
+ * NextGameBanner — 他ゲームへの導線（DESIGN.md フェーズ R・店構えへ変換）。
+ * 未プレイ/クリア済の区別は罫色+文字ラベルで示す（色のみに頼らない）。
+ * --accent-weak は静的な区画の地には使えない（§2）ため、未プレイの強調は
+ * 朱の罫+朱文字（テキストラベル併記）で行う（背景色は塗らない）。
+ */
 
 .container {
-  margin: 12px 0;
-  padding: 12px;
-  border-radius: var(--r-normal);
-  background: var(--bg-soft);
+  margin: var(--space-16) 0;
+  padding: var(--space-16);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--paper-2);
 }
 
 .progress {
   font-weight: 600;
-  font-size: 0.95rem;
-  color: var(--fg);
-  margin-bottom: 8px;
+  font-size: 0.9375rem;
+  color: var(--ink);
+  margin-bottom: var(--space-8);
 }
 
 .gameList {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: var(--space-8);
 }
 
 .gameLink {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 12px;
-  border-radius: var(--r-interactive);
+  padding: var(--space-8) var(--space-16);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--paper);
   text-decoration: none;
-  transition: background 0.15s;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease;
 }
 
-.gameLink:hover {
-  opacity: 0.85;
-}
-
-/* 未プレイ: 暗い反転面で「次にやるべき」を austere に強調 */
+/* 未プレイ: 朱の罫+朱文字で「次にやるべき」を示す（背景は塗らない・§2） */
 .unplayed {
-  background: var(--bg-invert);
-  color: var(--fg-invert);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.unplayed:hover {
+  filter: brightness(0.92);
 }
 
 /* クリア済: 控えめなニュートラル面 */
 .played {
-  background: var(--bg);
-  color: var(--fg-soft);
-  border: 1px solid var(--border);
+  color: var(--ink-2);
 }
 
 .gameTitle {
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.9375rem;
 }
 
 .gameStatus {
-  font-size: 0.8rem;
+  font-size: 0.8125rem;
 }

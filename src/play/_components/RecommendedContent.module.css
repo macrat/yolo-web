@@ -1,53 +1,43 @@
-/* おすすめコンテンツ（カテゴリ横断の補助的回遊導線）のスタイル。
- * RelatedContentCard.module.css が主要導線（RelatedQuizzes/RelatedGames）の共通スタイルを担う。
- * このコンポーネントは補助的な位置づけ。
- *
- * 新デザイン体系（DESIGN.md）。移行済みツール詳細の「関連ツール」カードに倣う。
- * 新トークンのみ使用（legacy 側でも old-globals.css の過渡定義で解決される）。
- * 絵文字なし・bold 不使用。角丸は --r-normal（2px・カード規範）。
+/*
+ * RecommendedContent — 他カテゴリのおすすめ（DESIGN.md フェーズ R・店構えへ変換）。
+ * §4「品書き（一覧の既定形）」: カードのグリッドではなく罫区切りの一覧で組む
+ * （RelatedTools/RelatedBlogPosts と同型）。器は静か——背景色・box-shadow・カード角丸なし。
+ * 品名は明朝、hover で朱＋下線（下線はリンク専有・§3）。カテゴリは値札（Nefuda 風の小ラベル）で示す。
  */
+
 .related {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--border);
+  margin-top: var(--space-32);
+  padding-top: var(--space-24);
+  border-top: 1px solid var(--rule);
 }
 
 .heading {
-  font-size: 1rem;
-  margin: 0 0 0.75rem;
-  color: var(--fg);
+  font-family: var(--font-mincho);
+  font-size: 1.25rem;
+  line-height: 1.4;
+  font-feature-settings: "palt";
+  margin: 0 0 var(--space-16);
+  color: var(--ink);
 }
 
 .list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
   list-style: none;
   margin: 0;
   padding: 0;
+  border-top: 1px solid var(--rule);
 }
 
 .list li {
-  flex: 1 1 0;
-  min-width: 200px;
-  max-width: calc(50% - 0.375rem);
+  border-bottom: 1px solid var(--rule);
 }
 
 .link {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
-  padding: 0.75rem 1rem;
-  border: 1px solid var(--border);
-  background-color: var(--bg);
-  border-radius: var(--r-normal);
+  align-items: flex-start;
+  gap: var(--space-8);
+  padding: var(--space-16) 0;
   text-decoration: none;
-  transition: border-color 0.15s ease;
-  height: 100%;
-}
-
-.link:hover {
-  border-color: var(--accent);
 }
 
 .link:focus-visible {
@@ -56,22 +46,33 @@
 }
 
 .name {
-  color: var(--accent);
-  font-size: 0.9375rem;
+  color: var(--ink);
+  font-family: var(--font-mincho);
+  font-size: 1.0625rem;
   line-height: 1.4;
 }
 
-.description {
-  font-size: 0.8125rem;
-  color: var(--fg-soft);
-  line-height: 1.5;
+.link:hover .name {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
 }
 
+.description {
+  font-family: var(--font-gothic);
+  font-size: 0.9375rem;
+  color: var(--ink-2);
+  line-height: 1.6;
+}
+
+/* カテゴリの値札（DESIGN.md §4「値札」）。中身のある情報として添える。 */
 .badge {
-  font-size: 0.7rem;
-  background-color: var(--bg-soft);
-  padding: 0.125rem 0.5rem;
-  border-radius: var(--r-normal);
-  color: var(--fg-soft);
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.8125rem;
+  color: var(--ink-2);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-sm);
+  padding: 0.15em 0.5em;
   width: fit-content;
 }

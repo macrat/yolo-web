@@ -1,29 +1,42 @@
+/* WordGrid（なかまわけ）— 単語盤面（DESIGN.md フェーズ R・店構えへ変換）。
+ * 選択状態は朱の気配（--accent-weak）を使ってよい（DESIGN.md §2「操作・選択状態の
+ * ハイライトにのみ可」・.selected は状態セレクタ）。色だけでなく罫色も変えて示す。 */
+
 .grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 0.5rem;
+  gap: var(--space-8);
   max-width: 500px;
   margin: 0 auto;
 }
 
 .wordButton {
-  padding: 0.75rem 0.25rem;
-  border: 2px solid var(--border);
-  border-radius: var(--r-interactive);
-  background: var(--bg);
-  color: var(--fg);
-  font-size: 0.95rem;
+  padding: var(--space-16) 0.25rem;
+  border: 2px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 0.9375rem;
   font-weight: 500;
+  font-family: inherit;
   cursor: pointer;
-  transition: all 0.15s;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease,
+    color 0.15s ease;
   text-align: center;
   min-height: 3rem;
   word-break: break-all;
 }
 
 .wordButton:hover:not(:disabled) {
-  border-color: var(--border-strong);
-  background: var(--bg-soft);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.wordButton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .wordButton:disabled {
@@ -32,13 +45,13 @@
 }
 
 .selected {
-  background: var(--bg-invert);
-  color: var(--fg-invert);
-  border-color: var(--bg-invert);
+  background: var(--accent-weak);
+  color: var(--accent);
+  border-color: var(--accent);
 }
 
 .selected:hover:not(:disabled) {
-  background: var(--bg-invert-soft);
+  filter: brightness(0.97);
 }
 
 @media (max-width: 480px) {
@@ -48,7 +61,7 @@
 
   .wordButton {
     font-size: 0.85rem;
-    padding: 0.5rem 0.25rem;
+    padding: var(--space-8) 0.25rem;
     min-height: 2.5rem;
   }
 }

@@ -128,12 +128,16 @@ export default function ThemeToggle() {
       {/* トラック: 横長の楕円。左に太陽アイコン、右に月アイコンを配置。
           サム（丸いつまみ）が現在状態側（ライト=左、ダーク=右）に移動する。 */}
       <span className={styles.track} aria-hidden="true">
-        {/* 左端: 太陽アイコン（ライト側） */}
-        <span className={styles.iconLeft}>
+        {/* 左端: 太陽アイコン（ライト側）。選択中は iconActive で濃い墨色にする。 */}
+        <span
+          className={`${styles.iconLeft} ${!isDark ? styles.iconActive : ""}`}
+        >
           <SunIcon />
         </span>
-        {/* 右端: 月アイコン（ダーク側） */}
-        <span className={styles.iconRight}>
+        {/* 右端: 月アイコン（ダーク側）。選択中は iconActive で濃い墨色にする。 */}
+        <span
+          className={`${styles.iconRight} ${isDark ? styles.iconActive : ""}`}
+        >
           <MoonIcon />
         </span>
         {/* サム: isDark のとき右側（月側）へ移動する */}

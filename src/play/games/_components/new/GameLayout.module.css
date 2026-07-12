@@ -1,69 +1,75 @@
-/* (new) デザイン体系版 GameLayout スタイル（cycle-268 フォーク）。
- * legacy `../GameLayout.module.css` を新トークン + austere 構造へ質的入れ替え:
- * 旧 --color-* → 新トークン、角丸は §6 規則（カード/パネル=--r-normal）、
- * 影撤去・中央寄せ撤去（左寄せ統一）。
- * 読みカラム設計の max-width:600px は GameLayout 設計として維持する
- * （cycle-267 result と同様に 1200px を機械転用しない）。 */
+/* GameLayout — ゲームページ共通の器（DESIGN.md フェーズ R・店構えへ変換）。
+ * パンくず・のれん下の紹介文・遊び方の説明・ゲーム本体・シェア・関連導線を
+ * 紙墨朱の器へ統一する。読みカラム設計の max-width:600px は GameLayout 設計として
+ * 維持する（ToolPageLayout の --max-width 960px を機械転用しない・盤面は狭い方が遊びやすい）。
+ * 影・一律角丸なし。角丸は --radius（0px 基調）のみ使用。 */
 
 .layout {
   max-width: 600px;
   margin: 0 auto;
-  padding: 1rem 0.5rem;
+  padding: var(--space-16) var(--space-8);
   width: 100%;
 }
 
 .header {
-  margin-bottom: 1rem;
+  margin-bottom: var(--space-16);
 }
 
 .valueProposition {
-  margin-top: 0.75rem;
-  font-size: 0.95rem;
-  color: var(--fg);
-  line-height: 1.6;
+  margin-top: var(--space-8);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.9;
 }
 
+/* 「こんなゲームです」の説明区画: 一段沈む面（--paper-2）+ 罫囲み（ToolPageLayout の
+ * howItWorksSection/privacyNote と同型）。 */
 .usageExample {
-  margin-bottom: 1.5rem;
-  padding: 1rem;
-  background-color: var(--bg-soft);
-  border: 1px solid var(--border);
-  border-radius: var(--r-normal);
+  margin-bottom: var(--space-24);
+  padding: var(--space-16);
+  background-color: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
 }
 
 .usageExampleHeading {
-  font-size: 0.85rem;
+  font-family: var(--font-mincho);
+  font-size: 0.9375rem;
   font-weight: 600;
-  color: var(--fg-soft);
-  margin-bottom: 0.75rem;
+  color: var(--ink);
+  margin-bottom: var(--space-8);
+  line-height: 1.4;
+  font-feature-settings: "palt";
 }
 
 .usageExampleContent {
   display: flex;
   align-items: stretch;
-  gap: 0.75rem;
+  gap: var(--space-8);
 }
 
+/* 遊び方/体験の各ボックス: 地は --paper（親の --paper-2 との対比で輪郭を示す）。 */
 .usageExampleBox {
   flex: 1;
-  padding: 0.625rem 0.75rem;
-  background-color: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: var(--r-normal);
+  padding: var(--space-8) var(--space-16);
+  background-color: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
 }
 
 .usageExampleLabel {
   display: block;
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   margin-bottom: 0.25rem;
 }
 
 .usageExampleText {
-  font-size: 0.9rem;
-  color: var(--fg);
-  line-height: 1.5;
+  font-size: 0.9375rem;
+  color: var(--ink);
+  line-height: 1.7;
   word-break: break-word;
 }
 
@@ -71,15 +77,15 @@
   display: flex;
   align-items: center;
   flex-shrink: 0;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   font-size: 1.25rem;
 }
 
 .usageExampleDescription {
-  margin-top: 0.5rem;
-  font-size: 0.8rem;
-  color: var(--fg-soft);
-  line-height: 1.5;
+  margin-top: var(--space-8);
+  font-size: 0.8125rem;
+  color: var(--ink-2);
+  line-height: 1.7;
 }
 
 .content {
@@ -87,11 +93,11 @@
 }
 
 .attribution {
-  padding: 1rem 0;
-  margin-top: 1rem;
-  border-top: 1px solid var(--border);
+  padding: var(--space-16) 0;
+  margin-top: var(--space-16);
+  border-top: 1px solid var(--rule);
   font-size: 0.75rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
 }
 
 .attribution a {
@@ -100,16 +106,19 @@
 }
 
 .shareSection {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--border);
+  margin-top: var(--space-32);
+  padding-top: var(--space-24);
+  border-top: 1px solid var(--rule);
 }
 
 .shareSectionTitle {
-  font-size: 1rem;
+  font-family: var(--font-mincho);
+  font-size: 1.09375rem;
   font-weight: 600;
-  margin-bottom: 0.75rem;
-  color: var(--fg-soft);
+  margin-bottom: var(--space-8);
+  color: var(--ink);
+  line-height: 1.4;
+  font-feature-settings: "palt";
 }
 
 @media (max-width: 768px) {

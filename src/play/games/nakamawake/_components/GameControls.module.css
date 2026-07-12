@@ -1,26 +1,41 @@
+/* GameControls（なかまわけ）— 操作ボタン（DESIGN.md フェーズ R・店構えへ変換）。
+ * primaryButton = Button の primary variant と同型（朱地×紙文字）。
+ * secondaryButton = Button の default variant と同型（罫の線画・hover で朱枠+朱文字）。 */
+
 .controls {
   display: flex;
-  gap: 0.5rem;
+  gap: var(--space-8);
   justify-content: center;
   flex-wrap: wrap;
   max-width: 500px;
-  margin: 0.5rem auto;
+  margin: var(--space-8) auto;
 }
 
 .primaryButton {
-  padding: 0.5rem 1.5rem;
-  border-radius: var(--r-interactive);
-  background: var(--bg-invert);
-  color: var(--fg-invert);
-  border: none;
-  font-size: 0.9rem;
+  min-height: 44px;
+  padding: 9px 24px;
+  border-radius: var(--radius);
+  background: var(--accent);
+  color: var(--paper);
+  border: 1px solid var(--accent);
+  font-size: 0.9375rem;
   font-weight: 600;
+  font-family: inherit;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: filter 0.15s ease;
 }
 
 .primaryButton:hover:not(:disabled) {
-  background: var(--bg-invert-soft);
+  filter: brightness(0.92);
+}
+
+.primaryButton:active:not(:disabled) {
+  filter: brightness(0.85);
+}
+
+.primaryButton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .primaryButton:disabled {
@@ -29,17 +44,28 @@
 }
 
 .secondaryButton {
-  padding: 0.5rem 1rem;
-  border-radius: var(--r-interactive);
-  border: 1px solid var(--border-strong);
-  background: transparent;
-  color: var(--fg);
-  font-size: 0.85rem;
+  min-height: 44px;
+  padding: 9px 16px;
+  border-radius: var(--radius);
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 0.875rem;
+  font-family: inherit;
   cursor: pointer;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
 }
 
 .secondaryButton:hover:not(:disabled) {
-  background: var(--bg-soft);
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.secondaryButton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .secondaryButton:disabled {

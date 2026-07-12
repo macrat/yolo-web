@@ -1,44 +1,49 @@
+/* HowToPlayModal（なかまわけ）— 遊び方説明（DESIGN.md フェーズ R・店構えへ変換）。
+ * 難易度4色の凡例は SolvedGroups.module.css と同じ wairo トークンを直接参照する。 */
+
 .content {
-  line-height: 1.7;
+  line-height: 1.9;
+  color: var(--ink);
 }
 
 .content p {
-  margin-bottom: 0.75rem;
+  margin-bottom: var(--space-8);
 }
 
 .colorLegend {
-  margin: 0.75rem 0;
+  margin: var(--space-8) 0;
   padding: 0;
   list-style: none;
 }
 
 .colorLegend li {
   margin-bottom: 0.35rem;
-  font-size: 0.95rem;
+  font-size: 0.9375rem;
+  color: var(--ink);
 }
 
 .colorSwatch {
   display: inline-block;
   width: 1rem;
   height: 1rem;
-  border-radius: var(--r-normal);
+  border-radius: var(--radius);
   vertical-align: middle;
   margin-right: 0.35rem;
 }
 
-/* 難易度4色は SolvedGroups.module.css の :root SSoT を参照（DESIGN.md §2 機能色）。 */
+/* 難易度4色は SolvedGroups.module.css と同じ wairo トークンを直接参照する（DESIGN.md §2 成果物色）。 */
 .swatchYellow {
-  background: var(--nw-difficulty-yellow);
+  background: var(--wairo-yamabuki);
 }
 
 .swatchGreen {
-  background: var(--nw-difficulty-green);
+  background: var(--wairo-moegi);
 }
 
 .swatchBlue {
-  background: var(--nw-difficulty-blue);
+  background: var(--wairo-ai);
 }
 
 .swatchPurple {
-  background: var(--nw-difficulty-purple);
+  background: var(--wairo-fuji);
 }

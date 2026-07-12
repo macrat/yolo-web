@@ -1,23 +1,35 @@
+/* GameContainer（なかまわけ）— ミス表示・フィードバック帯（DESIGN.md フェーズ R・店構えへ変換） */
+
 .mistakeIndicator {
   text-align: center;
   font-size: 1rem;
-  margin: 0.5rem 0;
-  color: var(--fg-soft);
+  margin: var(--space-8) 0;
+  color: var(--ink-2);
 }
 
 .feedback {
   text-align: center;
   font-weight: 600;
-  padding: 0.5rem;
-  border-radius: var(--r-normal);
-  background: var(--bg-soft);
+  color: var(--ink);
+  padding: var(--space-8);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--paper-2);
 }
 
-/* Warning state when only 1 mistake remains before game over */
+/* 残りミス1回の警告状態。色（--danger 等）ではなく朱+文字で示す
+ * （DESIGN.md: ステータス色は緑/赤ベタでなく墨/朱＋文字＋罫）。
+ * 点滅は状態変化の強調のみに使い、prefers-reduced-motion では静止表示にする（§5）。 */
 .mistakeDanger {
-  color: var(--danger);
+  color: var(--accent);
   font-weight: 600;
   animation: mistakePulse 1.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mistakeDanger {
+    animation: none;
+  }
 }
 
 @keyframes mistakePulse {
