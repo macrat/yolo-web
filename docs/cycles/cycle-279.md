@@ -13,6 +13,10 @@ completed_at: null
 
 ## 進捗（コミット単位・随時更新）
 
+### フェーズR 実装完了（2026-07-13・コード上）——最終検証全緑
+
+全ページを新デザイン「店構え」へ移行し、旧デザインの痕跡ゼロ・Route Group廃止を達成。最終検証: **Route Group残存0・live旧トークン使用0・旧基盤(legacy/old-globals/components-common)全削除・trustLevel/quiz_result_visual_v1削除・clean build exit0・typecheck0・lint0・format:check0・full test 321ファイル5411件全pass・design-gate全面§8 ERROR 0**。視覚確認（light/dark×PC/モバイル）: トップ(顔)・辞典(トップ/検索/ファセット/詳細)・ブログ(一覧/記事)・ツール(一覧/タイル)・about・結果面・ゲーム・404・admonitionを実見し店構えを確認。観測設計はADR001へ出荷前登録済み。**残: 出荷(デプロイ)は部分出荷禁止を守り完了まで抱えた——完了定義充足につき出荷可能な状態（実デプロイは意図的な操作として別途）。**
+
 - ✅ **kickoff**（65a2dbc9）: プルーニング撤回(PM判断)・B-521読了・AP-WF24是正
 - ✅ **C0.1**（ac23c9da）: 新トークン層(紙墨朱・朱)＋Webフォント(明朝Noto Serif JP/数字Zilla Slab)。青紫排除を実測
 - ✅ **C0.2**（661bc6bc）: 基調タイポ＋のれん(Header)＋店構えFooter。視覚+全テスト検証
