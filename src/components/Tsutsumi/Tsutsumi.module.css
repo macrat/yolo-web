@@ -1,0 +1,178 @@
+/*
+ * 包み（Tsutsumi）— 「見せたくなる結果」の結果カード（DESIGN.md §4「包み」/§7）。
+ * 器（ページ地）は紙のまま・成果物が主役。罫で明確に包む（--rule-strong の一本罫・角丸 0）。
+ * 和色は「中身」= 記号面（.figure）の地にだけ使い、器へ漏らさない。影・グラデ・ピルは無し（§8）。
+ * 色/角丸/間隔は全てトークン経由・直書きなし。
+ */
+.tsutsumi {
+  position: relative;
+  /* 器＝カードの地は紙のまま（§4/§7）。和色は下の .figure の中だけ。 */
+  background: var(--paper);
+  /* 罫で明確に包む（構造の主役は罫）。角丸 0 基調。 */
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
+  padding: var(--space-24);
+  /* 札として持ち帰る想定の縦構図。モバイル 375 先行で横いっぱい〜読む面幅に収める。 */
+  inline-size: 100%;
+  max-inline-size: 22rem;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  margin: 0;
+}
+
+/* 見出し帯: 店号（出所）と品名（何の結果か）。札単体で出所が読めるように（§4「札」）。 */
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-8);
+  /* 店号帯を一本罫で下から仕切る（のれんの流儀・器は罫で組む）。 */
+  padding-bottom: var(--space-8);
+  border-bottom: 1px solid var(--rule);
+}
+
+.shop {
+  font-family: var(--font-gothic);
+  font-size: 0.8125rem; /* 13px 補助情報 */
+  letter-spacing: 0.04em;
+  color: var(--ink-2);
+}
+
+.product {
+  font-family: var(--font-mincho);
+  font-size: 0.9375rem; /* 15px */
+  color: var(--ink);
+}
+
+/*
+ * 印: 成果物に一つだけ・右上に捺す。§4「大きさは包み幅の 1/5 以下」。
+ * In へは size="100%" を渡し、この枠の幅（18% < 1/5）で実サイズを決める。
+ */
+.seal {
+  position: absolute;
+  top: var(--space-24);
+  right: var(--space-24);
+  inline-size: 18%;
+  max-inline-size: 64px;
+  /* 記号面に一部重なって「捺した」感を出す。z 順で最前に。 */
+  z-index: 1;
+}
+
+/*
+ * 記号面（和色の地・成果物の主役）: data-color から --fill/--on を受け取る。
+ * カスタムプロパティ宣言なので §8 色ゲートの検査対象外（トークン経由）。
+ */
+.figure {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--fill);
+  color: var(--on);
+  /* 大きな記号/数字がゆったり立つ最小の高さ。角丸 0。 */
+  min-block-size: 8.5rem;
+  padding: var(--space-24) var(--space-16);
+  border-radius: var(--radius);
+}
+
+/* 大きな数字（スコア等）: 数字書体・tabular で桁を揃える（§3/§7 実務にも見せたくにも効く）。 */
+.number {
+  margin: 0;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.15em;
+  font-family: var(--font-number);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+  line-height: 1;
+  color: var(--on);
+}
+
+.numberValue {
+  font-size: 4.5rem; /* 結果の主役として大きく */
+  font-weight: 600;
+}
+
+.unit {
+  font-family: var(--font-gothic);
+  font-size: 1.25rem;
+  color: var(--on);
+}
+
+/* 大きな記号（字の顔）: 明朝で大きく。数字が無いときの主役。 */
+.symbol {
+  margin: 0;
+  font-family: var(--font-mincho);
+  font-size: 4rem;
+  line-height: 1;
+  color: var(--on);
+  font-feature-settings: "palt";
+}
+
+/* 品名・結果の言葉（紙の上・墨）。器は静か。 */
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.typeName {
+  margin: 0;
+  font-family: var(--font-mincho);
+  font-size: 1.9375rem; /* 31px・結果の言葉の主役 */
+  line-height: 1.4;
+  color: var(--ink);
+  font-feature-settings: "palt";
+}
+
+.word {
+  margin: 0;
+  font-family: var(--font-gothic);
+  font-size: 1rem; /* 16px・読ませる一言 */
+  line-height: 1.9;
+  color: var(--ink-2);
+}
+
+.caption {
+  font-family: var(--font-gothic);
+  font-size: 0.8125rem; /* 13px 補助情報 */
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+/*
+ * data-color → 和色トークンの割り当て。--fill=地・--on=その色で AA を満たす文字色。
+ * これらはカスタムプロパティ宣言（--*）のため §8 ゲートは検査しない（トークン経由の使用）。
+ */
+.tsutsumi[data-color="kurenai"] {
+  --fill: var(--wairo-kurenai);
+  --on: var(--wairo-kurenai-on);
+}
+.tsutsumi[data-color="kaki"] {
+  --fill: var(--wairo-kaki);
+  --on: var(--wairo-kaki-on);
+}
+.tsutsumi[data-color="yamabuki"] {
+  --fill: var(--wairo-yamabuki);
+  --on: var(--wairo-yamabuki-on);
+}
+.tsutsumi[data-color="moegi"] {
+  --fill: var(--wairo-moegi);
+  --on: var(--wairo-moegi-on);
+}
+.tsutsumi[data-color="tokiwa"] {
+  --fill: var(--wairo-tokiwa);
+  --on: var(--wairo-tokiwa-on);
+}
+.tsutsumi[data-color="ai"] {
+  --fill: var(--wairo-ai);
+  --on: var(--wairo-ai-on);
+}
+.tsutsumi[data-color="fuji"] {
+  --fill: var(--wairo-fuji);
+  --on: var(--wairo-fuji-on);
+}
+.tsutsumi[data-color="suou"] {
+  --fill: var(--wairo-suou);
+  --on: var(--wairo-suou-on);
+}

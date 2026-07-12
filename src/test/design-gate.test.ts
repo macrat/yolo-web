@@ -62,6 +62,8 @@ const NEW_DESIGN_CSS = [
   "src/components/Footer/**/*.module.css", // 店構え（§4）
   "src/components/Shinagaki/**/*.module.css", // 品書き（§4 一覧の既定形）
   "src/components/Nefuda/**/*.module.css", // 値札（§4 メタ小ラベル）
+  "src/components/Tsutsumi/**/*.module.css", // 包み（§4/§7 結果カード・和色は中身のみ）
+  "src/components/In/**/*.module.css", // 印（§4 厳密仕様・朱一色）
 ];
 const NEW_DESIGN_TSX = [
   "src/app/(new)/page.tsx", // トップ（店構え・C2 変換）。インライン style の禁止を検査
@@ -69,6 +71,8 @@ const NEW_DESIGN_TSX = [
   "src/components/Footer/**/*.tsx",
   "src/components/Shinagaki/**/*.tsx",
   "src/components/Nefuda/**/*.tsx",
+  "src/components/Tsutsumi/**/*.tsx",
+  "src/components/In/**/*.tsx",
 ];
 // テストコードは走査対象外（テスト文字列に禁止語が入るため）。
 const IGNORE = ["**/__tests__/**", "**/*.test.ts", "**/*.test.tsx"];

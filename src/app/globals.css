@@ -112,6 +112,55 @@
   --font-gothic:
     "Hiragino Kaku Gothic ProN", "Yu Gothic Medium", "Noto Sans JP", sans-serif;
   --font-number: var(--font-number, "Zilla Slab", "Roboto Slab", serif);
+
+  /* ==========================================================================
+   * 成果物パレット「和色」（DESIGN.md §2「成果物パレット（中身の色・唯一の例外）」）。
+   *
+   * 使用範囲は「成果物の中だけ」——結果カード（包み/札）・スコア表示・生成物の内部に限る。
+   * 器（ページ UI・のれん・品書き・値札・地）には決して漏らさない（§2/§4/§7）。器は紙・墨・朱のまま。
+   *
+   * 全色を実在の伝統色名から選び 8 色以内で構成。各色に light/dark の oklch と、その色の上で
+   * AA（4.5:1）を満たす文字色（白 or 墨）を対にして持たせる。文字色は色ごとに 1 つで、両モードで
+   * 同じ白/墨が AA を満たすよう各モードの明度を調整済み（下の実測値参照）。
+   *
+   * AA 実測（2026-07-12・Chromium canvas 読み出し・DESIGN §2 の実測手法）:
+   *   色       文字  light   dark
+   *   紅       白    6.30    5.02
+   *   柿       墨    5.50    6.43
+   *   山吹     墨    8.88    9.48
+   *   萌黄     墨    8.76    9.33
+   *   常磐     白    5.95    5.00
+   *   藍       白    7.17    5.31
+   *   藤       墨    6.52    7.01
+   *   蘇芳     白    7.00    5.66
+   *   （全色 light/dark とも AA 4.5:1 を満たす。藤は hue300 の紫だが成果物専用のトークン定義で
+   *    §8-1 ゲート対象外——器には漏らさない運用でのみ許される。）
+   * トークン値を変更したら必ず再計測すること（DESIGN §2）。
+   * ========================================================================== */
+
+  /* 成果物の文字色（色相を持たない中性の白/墨・両モード共通）。 */
+  --wairo-ink-white: oklch(0.985 0 0);
+  --wairo-ink-sumi: oklch(0.235 0.008 80);
+
+  /* 和色 8 色（ライト・地の色）。 */
+  --wairo-kurenai: oklch(0.5 0.17 18); /* 紅 */
+  --wairo-kaki: oklch(0.68 0.15 55); /* 柿 */
+  --wairo-yamabuki: oklch(0.8 0.14 88); /* 山吹 */
+  --wairo-moegi: oklch(0.78 0.16 135); /* 萌黄 */
+  --wairo-tokiwa: oklch(0.48 0.11 155); /* 常磐 */
+  --wairo-ai: oklch(0.45 0.1 255); /* 藍 */
+  --wairo-fuji: oklch(0.72 0.09 300); /* 藤 */
+  --wairo-suou: oklch(0.47 0.13 0); /* 蘇芳 */
+
+  /* 各色の上で AA を満たす文字色（両モード共通・上表の実測に基づく）。 */
+  --wairo-kurenai-on: var(--wairo-ink-white);
+  --wairo-kaki-on: var(--wairo-ink-sumi);
+  --wairo-yamabuki-on: var(--wairo-ink-sumi);
+  --wairo-moegi-on: var(--wairo-ink-sumi);
+  --wairo-tokiwa-on: var(--wairo-ink-white);
+  --wairo-ai-on: var(--wairo-ink-white);
+  --wairo-fuji-on: var(--wairo-ink-sumi);
+  --wairo-suou-on: var(--wairo-ink-white);
 }
 
 /* ダークモード — next-themes が attribute="class" で <html class="dark"> を付与する */
@@ -201,6 +250,18 @@
   --accent-weak: oklch(
     0.7 0.14 32 / 0.16
   ); /* 朱の気配。hover/selected の座布団にのみ可 */
+
+  /* 成果物パレット「和色」（ダーク・地の色）。文字色（--wairo-*-on）は両モード共通のため
+   * :root 側の定義をそのまま使う（各色ダークでも同じ白/墨が AA を満たすよう明度調整済み・上表参照）。
+   * 中性の文字色（--wairo-ink-white/-sumi）もモード非依存。ここでは地の色だけ上書きする。 */
+  --wairo-kurenai: oklch(0.55 0.16 18); /* 紅 */
+  --wairo-kaki: oklch(0.72 0.14 55); /* 柿 */
+  --wairo-yamabuki: oklch(0.82 0.14 88); /* 山吹 */
+  --wairo-moegi: oklch(0.8 0.16 135); /* 萌黄 */
+  --wairo-tokiwa: oklch(0.52 0.11 155); /* 常磐 */
+  --wairo-ai: oklch(0.52 0.1 255); /* 藍 */
+  --wairo-fuji: oklch(0.74 0.09 300); /* 藤 */
+  --wairo-suou: oklch(0.52 0.13 0); /* 蘇芳 */
 }
 
 /* グローバルリセット — old-globals.css からの移植 */

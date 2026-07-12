@@ -1,10 +1,10 @@
 /*
- * トップページ（よろず屋の店構え）— DESIGN.md フェーズ R・C2 で新デザインへ変換。
+ * トップページ（よろず屋の店先）— DESIGN.md フェーズ R・作り直し版。
  *
- * 器は静か・成果物が主役（§1/§4）。トップは器なので賑やかにしない——
- * 背景はベタ塗りの地（--paper・globals.css で body に付与）のまま、色付きカード・影・
- * グラデーション・角丸装飾を持たない。構造は罫（Shinagaki の一本罫）と組版だけで組む。
- * 色・角丸・書体はすべてトークン経由（§10・直書き禁止）。見出し・リンクの基調は globals.css。
+ * 器は静か・焦点は目玉（§1/§4/§7）。器（背景）はベタ塗りの地のまま、色付きカード・影・
+ * グラデーション・角丸装飾を持たない。構造は罫と組版だけで組み、その中で「階層と焦点」を作る:
+ * 目玉（診断）を一段大きい明朝＋強い罫の一区画で立て、品書き（棚）はそれより静かに置く。
+ * 色・角丸・書体はすべてトークン経由（§10・直書き禁止）。box-shadow は使わない（§4/§8）。
  */
 
 /* ページ全体: 操作面の最大幅 --max-width(960px)。中央寄せは器の配置で、本文は左揃え（§4）。 */
@@ -14,31 +14,37 @@
   padding: var(--space-32) var(--space-24) var(--space-64);
 }
 
-/* 自己紹介（読む面）: 一行の長さを --measure(約42rem) に絞る（§3）。 */
+/* ── 名乗り（compact）───────────────────────────────────────────────────
+ * 店号＋一言だけの開幕。説明の羅列を置かず余白を効かせる（具体は目玉・品書きが担う）。
+ * 読む面なので一行の長さを --measure(約42rem) に絞る（§3）。 */
 .intro {
   max-width: var(--measure);
   margin: 0 0 var(--space-48);
 }
 
-/* 店号（h1）。サイズ・明朝・詰めは globals.css の見出し基層が与える。ここは余白のみ調整。 */
+/* 店号（h1）= のれん。明朝・詰めは globals.css の見出し基層が与える。ここは店の顔として、
+ * 見出し基層(39px)より 1.25 倍スケールで一段上げた 48px の見せ場にする（型スケールの次段・
+ * 店号だけの一回きりの表示サイズ）。line-height を詰めて塊として立たせ、余白で息を持たせる。 */
 .title {
   margin: 0 0 var(--space-16);
   color: var(--ink);
+  font-size: 3rem; /* 48px = 39px の 1.25 倍段・店号の見せ場 */
+  line-height: 1.25;
 }
 
-/* 名乗りの一言（site-concept の軸）。導入として本文よりやや大きく、墨で見せる。 */
+/* 名乗りの一言（site-concept の軸＋AI が営む個性）。導入として本文よりやや大きく、墨で見せる。
+ * text-wrap: balance で「AIが営む、よろず屋です。」が不自然な位置で割れないよう行を均す（§3）。 */
 .lead {
-  margin: 0 0 var(--space-16);
+  margin: 0 0 var(--space-24);
   color: var(--ink);
   font-size: 1.25rem; /* 20px */
   line-height: 1.7;
 }
 
-/* 自己紹介の本文: 文章として読ませるので 16px / line-height 1.9（§3）。 */
-.body {
-  margin: 0 0 var(--space-16);
-  color: var(--ink);
-  line-height: 1.9;
+/* 文節の塊。inline-block なので塊ごと折り返し、文節の途中で行が割れない（§3）。
+ * 各塊はモバイル 375px でも収まる長さ。塊間に空白を作らないため隣接配置する。 */
+.phrase {
+  display: inline-block;
 }
 
 /* AI 運営の明示（constitution rule 3）。補足のトーンだが読ませる文なので行間を保つ。 */
@@ -48,6 +54,134 @@
   line-height: 1.7;
 }
 
+/* ── 目玉（今日のためしどころ・焦点）─────────────────────────────────────
+ * 罫で囲った単一の独立区画。地は --paper（移行完了後の地と同値）、枠は構造の主格 --rule-strong
+ * （品書きの --rule ハイフェアラインより重く＝焦点）。影・色地・角丸・グラデ・ピルなし（§8）。
+ * 中は「誘い（左）＋結果見本（右）」の一対。モバイル 375 先行で縦積み、広い画面で横並びにする
+ * （§8-4 の同型カード3枚組ヒーローにはしない——これは誘い＋成果物の非対称な一対）。 */
+.hero {
+  margin: 0 0 var(--space-48);
+  padding: var(--space-32) var(--space-24);
+  background: var(--paper);
+  border: 1px solid var(--rule-strong);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-32);
+}
+
+/*
+ * 広い画面（48rem〜）で誘いと見本を横並びにする。誘い（左）を主・見本（右）を 22rem の定幅に
+ * 置き、上端を揃える（flex-start）ことで「まず読む→右で現物を見る」の視線の流れを作る。
+ * 区画のパディングも一段ゆったりさせ、目玉としての存在感と余白の律動を出す。
+ */
+@media (min-width: 48rem) {
+  .hero {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: var(--space-48);
+    padding: var(--space-48) var(--space-32);
+  }
+}
+
+/* 誘い側（左）: 可変幅で主役。min-width:0 で長い日本語が親の幅を押し広げないようにする。 */
+.heroInvite {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* 見本側（右）: 成果物（包み）と「見本」注記の縦組み。広い画面では 22rem の定幅で右に据える
+ * （Tsutsumi 自身が max 22rem のため、この定幅で包みがちょうど収まる）。 */
+.heroSample {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+@media (min-width: 48rem) {
+  .heroSample {
+    flex: 0 0 22rem;
+  }
+}
+
+/* 「見本」であることを正直に添える注記（来訪者自身の結果と誤認させない）。補助情報（13px・--ink-2）。 */
+.heroSampleNote {
+  margin: 0;
+  color: var(--ink-2);
+  font-family: var(--font-gothic);
+  font-size: 0.8125rem; /* 13px 補助情報（§3） */
+  line-height: 1.6;
+}
+
+/* 冠（今日のためしどころ）: 目玉を「店先の今日の目玉」と名指す小さな見出しラベル。 */
+.heroKicker {
+  margin: 0 0 var(--space-8);
+  color: var(--ink-2);
+  font-family: var(--font-gothic);
+  font-size: 0.8125rem; /* 13px 補助情報（§3） */
+  line-height: 1.5;
+  letter-spacing: 0.08em;
+}
+
+/* 目玉の品名（診断名）: 品書きより一段大きい明朝で、視線がまずここに落ちる（scale contrast）。
+ * h2 なので明朝・palt・31px は globals.css の見出し基層が与える。ここは余白・色のみ調整。 */
+.heroTitle {
+  margin: 0 0 var(--space-16);
+  color: var(--ink);
+  /* 日本語を文節単位で折る（「あなたに似た／キャラ診断」）。「キャラ」が途中で割れるのを防ぐ。
+   * 未対応ブラウザでは通常の折返しへ優雅に劣化する（§3 の組版）。 */
+  word-break: auto-phrase;
+}
+
+/* 目玉の説明: 何が得られるか＋「札にして持ち帰れる」を店先で伝える（§6 の自然な日本語・§7）。
+ * 文章として読ませるので 16px / line-height 1.9（§3）。 */
+.heroLede {
+  margin: 0 0 var(--space-16);
+  max-width: var(--measure);
+  color: var(--ink);
+  line-height: 1.9;
+}
+
+/* 値札（結果タイプ数など実情報の小ラベル）。見た目は Nefuda が持つ。ここは余白のみ。 */
+.heroTags {
+  margin: 0 0 var(--space-24);
+}
+
+/* 目玉の入口の器（余白のみ）。 */
+.heroAction {
+  margin: 0;
+}
+
+/*
+ * 朱の明快な入口（罫の線画ボタン）。ピルではない直角の罫囲み＋朱字＝店先の戸口（§4/§8）。
+ * 下線はリンク専有だが CTA ボタンは枠が輪郭を担うため下線を出さない（globals の a を上書き）。
+ * hover は朱の気配（--accent-weak・§2 で操作状態のハイライトに限り許可）。タップ 44px（§10）。
+ */
+.heroLink {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+  min-height: 44px;
+  padding: 0 var(--space-24);
+  color: var(--accent);
+  font-family: var(--font-mincho);
+  font-size: 1.125rem; /* 18px */
+  line-height: 1.4;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius); /* 0px 直角（ピル禁止・§8-5） */
+  text-decoration: none;
+}
+
+.heroLink:hover {
+  background: var(--accent-weak);
+  text-decoration: none;
+}
+
+.heroLink:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ── 品書き（よろず＝広さの棚）─────────────────────────────────────────── */
 /* 棚（区画）: 品書き（Shinagaki）+ 任意の「すべて見る」導線をひとまとまりにする。 */
 .shelf {
   margin: 0 0 var(--space-48);
