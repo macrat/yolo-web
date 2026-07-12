@@ -11,6 +11,26 @@ completed_at: null
 
 正典: `docs/rebuild-plan.md` §2(フェーズR)・`DESIGN.md`(店構え)・`docs/site-concept.md`・ADR001(`docs/ADR/open/`)。
 
+## 進捗（コミット単位・随時更新）
+
+- ✅ **kickoff**（65a2dbc9）: プルーニング撤回(PM判断)・B-521読了・AP-WF24是正
+- ✅ **C0.1**（ac23c9da）: 新トークン層(紙墨朱・朱)＋Webフォント(明朝Noto Serif JP/数字Zilla Slab)。青紫排除を実測
+- ✅ **C0.2**（661bc6bc）: 基調タイポ＋のれん(Header)＋店構えFooter。視覚+全テスト検証
+- ✅ **C0.3**（2bd86553）: 品書き(Shinagaki)/値札(Nefuda)＋§8機械ゲート(design-gate.test.ts)
+- ✅ **C1-道具箱**（4d6544f9）: toolboxダッシュボード破棄(全36ツールは保持)・/toolbox→/tools 308
+- ✅ **C2-トップ**（b0e6f0f7）: `/` を店構えへ変換＝**一斉変換の参照実装**。品書きの棚4つ・§6コピー・カード全廃。視覚(light/dark×360/1280)+全テスト検証
+- **実証済み変換レシピ**: (1)旧トークン/Panel/カード/禁止色を全廃 (2)器は静か・成果物が主役 (3)一覧=品書き・メタ=値札(中身あるもののみ) (4)コピーを§6へ書き直し (5)design-gateに面を追加し§8緑 (6)clean .nextでbuild/typecheck・full test・視覚確認
+
+### 残タスク（このレシピをworkflowで展開）
+
+- **C1残**: レガシーRoute Group単一化(3 legacy play移行→(legacy)/削除→components/common削除→old-globals.css削除)・trustLevel完全削除(B-432)・旧トークン残存ゼロ化(全移行後)
+- **C2残**: /tools・/play・/dictionary+各辞典トップ・ファセット一覧・/blog系一覧・/about・/privacy
+- **C3**: 辞典詳細(kanji/[char]・yoji/[yoji]・colors/[slug]・humor/[slug])
+- **C4**: あそび/結果面 + **結果面部品(包み/札/印/和色)をここで実結果の文脈で作る**・札の画像生成手段決定(T5)・hover合成色AA実測(T5)
+- **C5**: 全36ツール(共有ToolLayout)・blog/[slug](+contentColumn整列ガード再定義)
+- **横断**: R-3観測をADR001へ登録してから出荷・C0完成時の再見積もり
+- **既知の運用注意**: devサーバー稼働中は`.next/dev/types`が一過性に壊れtypecheckが落ちる→コミット前にdev停止＆`.next`クリーン＆build
+
 ## 実施する作業
 
 ### C0. 基盤(新築・後続クラスタのゲート。ここが固まるまで量産しない)
