@@ -3,14 +3,13 @@
  *
  * cycle-228 T-29: RegexTesterPage → RegexTesterTile 正典化
  *
- * - 旧 --color-* トークン: ゼロ
+ * DESIGN.md（店構え）準拠:
+ * - 色は紙・墨・朱トークン経由（--paper / --ink / --accent 系）
  * - フォーカス: outline: 2px solid var(--accent); outline-offset: 2px;
- * - 選択/ON 状態: --bg-invert / --fg-invert ペア（--accent 直接使用禁止）
  * - font-weight: 最大 600（DESIGN.md §3）
- * - インタラクティブ要素: border-radius: var(--r-interactive)
- * - 非インタラクティブ要素: border-radius: var(--r-normal)
- * - フォーム境界線: --border-strong
- * - box-shadow: Panel 以外には追加しない（A-7・B-6）
+ * - 角丸は var(--radius)（0）/ 入力欄相当のみ var(--radius-sm)（2px）
+ * - フォーム境界線: --rule-strong
+ * - box-shadow は使わない（§4）
  */
 
 /* タイル内コンテンツの縦スタック */
@@ -25,10 +24,11 @@
   display: flex;
   align-items: center;
   gap: 0;
-  border: 1px solid var(--border-strong);
-  border-radius: var(--r-interactive);
+  border: 1px solid var(--rule-strong);
+  /* この行そのものが入力欄の枠（内側 input は border:none）なので入力欄相当の 2px */
+  border-radius: var(--radius-sm);
   padding: 0.5rem 0.75rem;
-  background-color: var(--bg);
+  background-color: var(--paper);
   transition: border-color 0.15s;
 }
 
@@ -40,7 +40,7 @@
 .slash {
   font-family: var(--font-mono);
   font-size: 1rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   flex-shrink: 0;
 }
 
@@ -49,7 +49,7 @@
   border: none;
   font-family: var(--font-mono);
   font-size: 0.95rem;
-  color: var(--fg);
+  color: var(--ink);
   background-color: transparent;
   padding: 0 0.25rem;
   /* フォーカスは patternRow の :focus-within で管理 */
@@ -61,7 +61,7 @@
 .flagsDisplay {
   font-family: var(--font-mono);
   font-size: 0.9rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   font-weight: 500;
   min-width: 2rem;
   flex-shrink: 0;
@@ -77,7 +77,7 @@
 .flagsLegend {
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   margin-bottom: 0.5rem;
   padding: 0;
 }
@@ -117,7 +117,7 @@
   font-family: var(--font-mono);
   font-size: 0.9rem;
   font-weight: 500;
-  color: var(--fg);
+  color: var(--ink);
   line-height: 1;
 }
 
@@ -126,7 +126,7 @@
   grid-row: 2;
   grid-column: 2;
   font-size: 0.75rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   line-height: 1.3;
 }
 
@@ -140,7 +140,7 @@
 .label {
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--fg-soft);
+  color: var(--ink-2);
 }
 
 /* マッチ処理中インジケータ */
@@ -149,14 +149,14 @@
   align-items: center;
   gap: 0.5rem;
   font-size: 0.875rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   padding: 0.5rem 0;
 }
 
 /* マッチ結果ヘッダー */
 .matchInfo {
-  border: 1px solid var(--border);
-  border-radius: var(--r-normal);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
   padding: 1rem;
 }
 
@@ -164,7 +164,7 @@
   font-size: 0.95rem;
   font-weight: 500;
   margin-bottom: 0.75rem;
-  color: var(--fg);
+  color: var(--ink);
 }
 
 .matchList {
@@ -179,49 +179,52 @@
   gap: 0.5rem;
   flex-wrap: wrap;
   padding: 0.4rem 0.6rem;
-  background-color: var(--bg-soft);
-  border-radius: var(--r-normal);
+  background-color: var(--paper-2);
+  border-radius: var(--radius);
   font-size: 0.875rem;
 }
 
 .matchIndex {
   font-weight: 500;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   font-size: 0.8rem;
   flex-shrink: 0;
 }
 
+/* マッチ文字列: 色分けせず、地の紙 + 罫の囲みで「該当箇所」を静かに示す。
+ * 親 matchItem が --paper-2 のため、チップは一段浮く --paper + 罫で区別する。 */
 .matchText {
   font-family: var(--font-mono);
-  background-color: var(--success-soft);
+  background-color: var(--paper);
+  border: 1px solid var(--rule);
   padding: 0.1rem 0.3rem;
-  border-radius: var(--r-normal);
-  color: var(--success-strong);
+  border-radius: var(--radius-sm);
+  color: var(--ink);
   word-break: break-all;
 }
 
 .matchPos {
   font-size: 0.8rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   flex-shrink: 0;
 }
 
 .matchGroups {
   font-size: 0.8rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   font-family: var(--font-mono);
 }
 
 .truncated {
   font-size: 0.875rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   font-style: italic;
 }
 
 /* マッチなし表示 */
 .noMatch {
   font-size: 0.9rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
 }
 
 /* 置換セクション */
@@ -230,16 +233,16 @@
   flex-direction: column;
   gap: 0.75rem;
   padding-top: 0.5rem;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--rule);
 }
 
 /* 置換切替ボタン */
 .toggleButton {
   padding: 0.5rem 1rem;
-  border: 1px solid var(--border-strong);
-  border-radius: var(--r-interactive);
-  background-color: var(--bg);
-  color: var(--fg);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
+  background-color: var(--paper);
+  color: var(--ink);
   font-size: 0.875rem;
   cursor: pointer;
   width: fit-content;
@@ -272,13 +275,13 @@
 /* 置換結果表示 */
 .replaceOutput {
   padding: 0.75rem;
-  border: 1px solid var(--border);
-  border-radius: var(--r-normal);
-  background-color: var(--bg-soft);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background-color: var(--paper-2);
   font-family: var(--font-mono);
   font-size: 0.875rem;
   white-space: pre-wrap;
   word-break: break-all;
-  color: var(--fg);
+  color: var(--ink);
   line-height: 1.7;
 }

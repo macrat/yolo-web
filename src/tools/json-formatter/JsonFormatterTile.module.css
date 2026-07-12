@@ -1,7 +1,6 @@
 /* JsonFormatterTile スタイル
  * cycle-228 T-12: JsonFormatterPage.module.css をタイル向けに移植。
- * DESIGN トークン準拠（--color-* 旧トークン不使用・bold禁止・
- * --r-interactive / --r-normal 使用・--border-strong 使用）
+ * DESIGN トークン準拠（紙・墨・朱の新トークン。--ink-2 使用）
  *
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  */
@@ -26,7 +25,7 @@
 /* インデントラベル */
 .controlLabel {
   font-size: 0.85rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   white-space: nowrap;
 }
 
@@ -54,7 +53,7 @@
 /* フィールドラベル */
 .panelLabel {
   font-size: 0.85rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
 }
 
 /* 出力ヘッダー: ラベルとコピーボタンを横並び */
@@ -70,7 +69,7 @@
  * sr-only で完全非表示にしないのは、操作後の結果サマリを見えるテキストとして置くため。 */
 .statusSummary {
   font-size: 0.8rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   min-height: 1.2em;
 }
 

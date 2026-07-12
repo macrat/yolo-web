@@ -1,7 +1,8 @@
-/* Button — クリック操作のボタン
- * DESIGN.md §5: ボタンには border-radius: var(--r-interactive)、box-shadow: var(--shadow-button) を使う。
- * DESIGN.md §2: ホバー: --bg → --bg-soft、--bg-soft → --bg-softer、--bg-invert → --bg-invert-soft
- * SKILL.md L20: フォーカスは outline: 2px solid var(--accent); outline-offset: 2px; を使う。
+/* Button — クリック操作のボタン（DESIGN.md フェーズ R・店構えへ変換）。
+ * 主ボタン（primary）= 朱地×紙文字（§2 実測 AA 5.80:1/6.19:1）。
+ * 副ボタン（default）= 罫の線画（地は紙・罫は --rule・hover で朱枠+朱文字。ShareButtons と同型）。
+ * 角丸は 0px 基調（§4。ボタンは値札/入力欄の 2px 例外に含まれない）。box-shadow は廃止（§4/§8-2）。
+ * フォーカスは outline: 2px solid var(--accent); outline-offset: 2px。
  */
 
 .button {
@@ -12,18 +13,16 @@
   min-height: 44px; /* WCAG 2.5.5 AAA タップターゲット推奨値 */
   padding: 9px 18px;
   font-size: 14px;
-  font-family: inherit; /* body から system-ui を継承 */
-  border: 1px solid var(--border);
-  border-radius: var(--r-interactive);
-  box-shadow: var(--shadow-button);
+  font-family: inherit; /* body から日本語ゴシックスタックを継承 */
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
   /* background / color / border-color はバリアント側で上書きする */
   cursor: pointer;
   white-space: nowrap;
-  /* transition: background, border-color, box-shadow を一括管理 */
   transition:
+    color 0.15s ease,
     background 0.15s ease,
-    border-color 0.15s ease,
-    box-shadow 0.15s ease;
+    border-color 0.15s ease;
 }
 
 /* ---- フォーカス ---- */
@@ -32,36 +31,35 @@
   outline-offset: 2px;
 }
 
-/* ---- 押下中: 影を消す ---- */
-.button:active:not(:disabled) {
-  box-shadow: none;
-}
-
 /* ================================================================
    variant
    ================================================================ */
 
-/* default — 標準ボタン（旧 ghost を統合。--bg-soft 背景で目立たず自然）
- * cycle-171 T4: 旧 default（--bg 背景）はダークモードで ghost より目立たない逆転が起きていたため廃止。
- * 旧 ghost（--bg-soft 背景）を新 default として採用。 */
+/* default（副ボタン）— 罫の線画。地は紙のまま・罫で輪郭を示す（§4/§7 実務側）。
+ * hover は朱枠＋朱文字（色ベタにしない・ShareButtons の副ボタンと同型）。 */
 .variantDefault {
-  background: var(--bg-soft);
-  color: var(--fg);
-  border-color: var(--border);
+  background: var(--paper);
+  color: var(--ink);
+  border-color: var(--rule);
 }
 .variantDefault:hover:not(:disabled) {
-  background: var(--bg-softer);
+  color: var(--accent);
+  border-color: var(--accent);
 }
 
-/* primary — 目立つボタン */
+/* primary（主ボタン）— 朱地×紙文字。AA 実測済み（DESIGN.md §2）。
+ * hover/active は彩度・色相を変えず明度のみ filter で調整する
+ * （新トークンに accent の濃淡違いが無いため、色の直書きを避けて filter で表現）。 */
 .variantPrimary {
-  background: var(--bg-invert);
-  color: var(--fg-invert);
-  border-color: var(--bg-invert);
+  background: var(--accent);
+  color: var(--paper);
+  border-color: var(--accent);
 }
 .variantPrimary:hover:not(:disabled) {
-  background: var(--bg-invert-soft);
-  border-color: var(--bg-invert-soft);
+  filter: brightness(0.92);
+}
+.variantPrimary:active:not(:disabled) {
+  filter: brightness(0.85);
 }
 
 /* ================================================================
@@ -83,9 +81,8 @@
    ================================================================ */
 
 .button:disabled {
-  background: transparent;
-  color: var(--fg-softer);
-  border-color: var(--border);
+  background: var(--paper-2);
+  color: var(--ink-2);
+  border-color: var(--rule);
   cursor: not-allowed;
-  box-shadow: none;
 }

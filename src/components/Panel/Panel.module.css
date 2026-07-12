@@ -1,11 +1,14 @@
+/* Panel — 矩形コンテナの汎用ラッパー（DESIGN.md フェーズ R・店構えへ変換）。
+ * 地は紙 --paper・区画の境界は罫 --rule・角丸は 0px 基調（棚の直角・§4）。
+ * 影は付けない（§4「パネルには影をつけない」）。 */
 .panel {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: var(--r-normal);
-  padding: 1.5rem;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: var(--space-24);
 }
 
-/* 長文読み物用の広めのパディング（通常の 1.5rem より広い 2rem） */
+/* 長文読み物用の広めのパディング（通常の --space-24 より広い --space-32） */
 .paddingComfortable {
-  padding: 2rem;
+  padding: var(--space-32);
 }

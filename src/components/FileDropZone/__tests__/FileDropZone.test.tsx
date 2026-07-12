@@ -277,11 +277,11 @@ describe("FileDropZone", () => {
     expect(css).toContain("--accent");
   });
 
-  it(".dropZone は --r-interactive を border-radius に使う（CSS 規約）", () => {
+  it(".dropZone は --radius-sm を border-radius に使う（DESIGN.md §4: 入力欄の 2px 例外）", () => {
     const cssPath = resolve(__dirname, "../FileDropZone.module.css");
     const css = readFileSync(cssPath, "utf-8");
     const dropZoneBlock = css.match(/\.dropZone\s*\{[^}]+\}/)?.[0] ?? "";
-    expect(dropZoneBlock).toContain("--r-interactive");
+    expect(dropZoneBlock).toContain("--radius-sm");
   });
 
   it("font-weight: 700 を使っていない（CSS 規約）", () => {

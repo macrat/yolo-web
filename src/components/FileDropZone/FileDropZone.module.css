@@ -1,9 +1,8 @@
-/* FileDropZone コンポーネントのスタイル
- * DESIGN.md §5: 操作可能要素には --r-interactive を使う
- * DESIGN.md §2: フォーカスは outline: 2px solid var(--accent); outline-offset: 2px;
+/* FileDropZone コンポーネントのスタイル（DESIGN.md フェーズ R・店構えへ変換）。
+ * 入力欄扱い（ファイル取り込み口）として角丸 2px の例外を適用（§4）。
+ * フォーカスは outline: 2px solid var(--accent); outline-offset: 2px;
  *              --accent はリンク/フォーカス用。塗りには使わない。
- * DESIGN.md §4: 影・ドラッグ視覚表現ルールは DESIGN.md §4 を参照
- * border: 2px dashed --border（通常）/ --accent（ドラッグ中・ホバー）
+ * border: 2px dashed --rule-strong（通常）/ --accent（ドラッグ中・ホバー）
  */
 
 .dropZone {
@@ -12,9 +11,9 @@
   align-items: center;
   justify-content: center;
   padding: 2rem;
-  border: 2px dashed var(--border);
-  border-radius: var(--r-interactive);
-  background-color: var(--bg-soft);
+  border: 2px dashed var(--rule-strong);
+  border-radius: var(--radius-sm);
+  background-color: var(--paper-2);
   cursor: pointer;
   transition: border-color 0.15s;
 }
@@ -38,13 +37,13 @@
 .dropText {
   margin: 0;
   font-size: 0.95rem;
-  color: var(--fg);
+  color: var(--ink);
 }
 
 .dropDescription {
   margin: 0.25rem 0 0;
   font-size: 0.8rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
 }
 
 /* hidden file input — クリックで programmatic open するための隠しインプット */

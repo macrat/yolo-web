@@ -273,19 +273,22 @@ describe("SegmentedControl", () => {
 
   // ---- CSS 検証: --accent 直塗り禁止 ----
 
-  it("CSS: 選択中の背景に --accent を直接使っていない（--bg-invert を使う）", () => {
+  it("CSS: 選択中の背景に --accent を直接使っていない（--accent-weak の座布団を使う）", () => {
     const cssPath = resolve(__dirname, "../SegmentedControl.module.css");
     const css = readFileSync(cssPath, "utf-8");
     // 選択中スタイルブロックに background: var(--accent) が無いことを確認
+    // （DESIGN.md §2: --accent-weak は hover/selected の座布団にのみ可）
     expect(css).not.toMatch(/background:\s*var\(--accent\)/);
-    // --bg-invert が使われていることを確認
-    expect(css).toContain("--bg-invert");
+    // --accent-weak が使われていることを確認
+    expect(css).toContain("--accent-weak");
   });
 
-  it("CSS: 選択中の文字色に --fg-invert を使っている", () => {
+  it("CSS: 選択中の文字色に --accent を使っている", () => {
     const cssPath = resolve(__dirname, "../SegmentedControl.module.css");
     const css = readFileSync(cssPath, "utf-8");
-    expect(css).toContain("--fg-invert");
+    expect(css).toMatch(
+      /\[aria-checked="true"\]\s*\{[^}]*color:\s*var\(--accent\)/,
+    );
   });
 
   // ---- CSS 検証: フォーカスアウトライン ----
@@ -299,10 +302,10 @@ describe("SegmentedControl", () => {
 
   // ---- CSS 検証: 角丸 ----
 
-  it("CSS: 角丸に --r-interactive を使っている", () => {
+  it("CSS: 角丸に --radius を使っている（DESIGN.md §4: 0px 基調）", () => {
     const cssPath = resolve(__dirname, "../SegmentedControl.module.css");
     const css = readFileSync(cssPath, "utf-8");
-    expect(css).toContain("--r-interactive");
+    expect(css).toContain("var(--radius)");
   });
 
   // ---- CSS 検証: font-weight:700 不使用 ----

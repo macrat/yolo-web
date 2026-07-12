@@ -36,13 +36,17 @@
   pointer-events: none;
 }
 
-/* トラック（横長楕円の背景） — OFF 状態のデフォルト */
+/* トラック（横長楕円の背景） — OFF 状態のデフォルト。
+ * DESIGN.md フェーズ R・店構えへ変換。
+ * 角丸 999px/50% はトグルスイッチという操作系の物理的な型（つまみ）であり、
+ * §8-5 が禁じる「ピル形状のボタン」（装飾目的の一律角丸）には当たらない
+ * ——design-gate.test.ts の ALLOWLIST に個別許容として明記する。 */
 .track {
   display: inline-block;
   width: 36px;
   height: 20px;
   border-radius: 999px;
-  background: var(--bg-softer);
+  background: var(--rule);
   position: relative;
   flex-shrink: 0;
   transition: background 0.15s ease;
@@ -67,18 +71,20 @@
   cursor: not-allowed;
 }
 
-/* サム（丸いつまみ） — OFF 状態は左端 */
+/* サム（丸いつまみ） — OFF 状態は左端。影は付けない（§4）——
+ * トラックとサムの地の対比（--rule と --paper）+ 罫の縁取りだけで輪郭を示す
+ * （ダーク/ライトで明暗の向きが変わっても縁取りで常に視認できるようにする）。 */
 .thumb {
   position: absolute;
   top: 2px;
   left: 2px;
+  box-sizing: border-box;
   width: 16px;
   height: 16px;
+  border: 1px solid var(--rule);
   border-radius: 50%;
-  background: var(--bg);
+  background: var(--paper);
   transition: transform 0.15s ease;
-  /* サムの輪郭を示す微細な影（エレベーションではなく視認性のため） */
-  box-shadow: 0 1px 2px rgba(26, 26, 26, 0.15);
 }
 
 /* ON 状態: サムを右へ移動（トラック幅36px - サム幅16px - 左右余白2px*2 = 16px） */
@@ -89,30 +95,4 @@
 /* ラベルテキスト */
 .labelText {
   line-height: 1.4;
-}
-
-/* ダークモードの OFF 状態: surface 値の並び替えにより --bg-softer (#131311) が
- * body (#1c1c1a) より暗くなるため、トラック・サムを独立したトークンで上書きする。
- *
- * 実測コントラスト比（globals.css の :root.dark 値に基づく）:
- * - トラック (#555550) on body (#1c1c1a): 2.28:1 ≥ 1.5 (target)
- * - サム (#e8e8e5) on トラック (#555550): 6.11:1 ≥ 3.0 (target)
- */
-/* CSS Modules コンパイラはセレクタ内のクラス名をすべて hash する。
- * `:root.dark` の `.dark` は <html> に生で付くグローバルクラスなので hash させてはいけない。
- * `:global(:root.dark)` で包むことで `.dark` が hash されずにそのままコンパイルされる。
- * 参照: docs/knowledge/css-modules.md */
-:global(:root.dark) .track {
-  /* OFF 時: --border (#555550) は body (#1c1c1a) に対しコントラスト 2.28:1 で識別可能 */
-  background: var(--border);
-}
-
-:global(:root.dark) .input:checked ~ .track {
-  /* ON 時: --accent で上書き（ライト時と同じ振る舞い） */
-  background: var(--accent);
-}
-
-:global(:root.dark) .thumb {
-  /* --fg (#e8e8e5) は --border (#555550) に対しコントラスト 6.11:1 で浮いて見える */
-  background: var(--fg);
 }

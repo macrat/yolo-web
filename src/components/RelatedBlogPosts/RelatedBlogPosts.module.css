@@ -1,46 +1,41 @@
-/**
- * RelatedBlogPosts — 関連ブログ記事セクション
- * new デザイン体系のみ使用（DESIGN.md §2, globals.css 参照）。
- * 旧カラートークン系は使用しない。
+/*
+ * RelatedBlogPosts — 関連ブログ記事セクション（DESIGN.md フェーズ R・店構えへ変換）。
+ * §4「品書き（一覧の既定形）」: 罫区切りのリストで組む。器は静か——背景色・角丸装飾なし。
  */
 
 .section {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--border);
+  margin-top: var(--space-32);
+  padding-top: var(--space-24);
+  border-top: 1px solid var(--rule);
 }
 
 .title {
-  font-size: 1rem;
-  margin-bottom: 0.75rem;
-  color: var(--fg);
+  font-family: var(--font-mincho);
+  font-size: 1.25rem; /* 20px 目安 */
+  line-height: 1.4;
+  font-feature-settings: "palt";
+  margin: 0 0 var(--space-16);
+  color: var(--ink);
 }
 
 .list {
   list-style: none;
   margin: 0;
   padding: 0;
+  border-top: 1px solid var(--rule);
 }
 
 .item {
-  margin-bottom: 0.25rem;
+  border-bottom: 1px solid var(--rule);
 }
 
 .link {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: 0.75rem;
+  gap: var(--space-16);
   text-decoration: none;
-  color: var(--fg);
-  font-size: 0.9rem;
-  padding: 0.4rem 0.5rem;
-  border-radius: var(--r-normal);
-  transition: background-color 0.15s ease;
-}
-
-.link:hover {
-  background-color: var(--bg-soft);
+  padding: var(--space-16) 0;
 }
 
 .link:focus-visible {
@@ -49,7 +44,10 @@
 }
 
 .postTitle {
-  color: var(--accent);
+  color: var(--ink);
+  font-family: var(--font-mincho);
+  font-size: 1.0625rem; /* 17px 目安 */
+  line-height: 1.4;
   flex: 1;
   min-width: 0;
   overflow: hidden;
@@ -57,8 +55,15 @@
   white-space: nowrap;
 }
 
+.link:hover .postTitle {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
 .date {
-  font-size: 0.8rem;
-  color: var(--fg-soft);
+  font-family: var(--font-gothic);
+  font-size: 0.8125rem; /* 13px 補助情報 */
+  color: var(--ink-2);
   flex-shrink: 0;
 }

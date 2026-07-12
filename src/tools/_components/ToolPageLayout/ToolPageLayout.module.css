@@ -1,19 +1,19 @@
 /*
- * ToolPageLayout.module.css
+ * ToolPageLayout.module.css — 実務の器（DESIGN.md フェーズ R・店構えへ変換）。
  *
- * 新デザインのツールページの器。確定提示方式（タイル＝主役・ファーストビュー）を実装。
- * 新トークンのみ使用。旧 --color-* は使用しない。
- * DESIGN.md: 1200px ページ幅 / 720px 長文テキスト制限 / 影なし / bold 不使用
+ * ツール詳細の共有レイアウト。確定提示方式（タイル＝主役・ファーストビュー）を実装。
+ * ツールは§7実務側の典型——正確さ・使いやすさが価値、器は静か。新トークンのみ使用。
+ * DESIGN.md §4: 操作面の最大幅 --max-width(960px) / 読む面 --measure(42rem) / 影なし・角丸0基調。
  */
 
-/* ページ全体のラッパー。最大 1200px でセンタリング */
+/* ページ全体のラッパー。操作面の最大幅 --max-width(960px) でセンタリング（§4）。 */
 .layout {
-  max-width: 1200px;
+  max-width: var(--max-width);
   margin: 0 auto;
-  padding: 1.5rem 1rem;
+  padding: var(--space-24) var(--space-16);
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: var(--space-24);
 }
 
 /* === ゾーン1: 文脈確認（パンくず・h1・短説明）=== */
@@ -23,94 +23,102 @@
 .header {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: var(--space-8);
 }
 
-/* h1: SEO 用に保持しつつ視覚的に小さく。bold は不使用（DESIGN.md §3） */
+/* h1: ツール名は明朝見出し（§3）。SEO 用に保持しつつ視覚的にはコンパクトに。
+ * ウェイトは明朝 600 一本（globals.css の h1-h6 基層と同じ・上書きしない）。 */
 .title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--fg);
+  font-family: var(--font-mincho);
+  font-size: 1.5625rem; /* 25px（1.25 倍スケール帯） */
+  color: var(--ink);
   margin: 0;
   line-height: 1.4;
+  font-feature-settings: "palt";
 }
 
-/* shortDescription: 1〜2文のコンパクトな短説明 */
+/* shortDescription: 1〜2文のコンパクトな短説明。文章として読ませるため 16px/1.9（§3）。 */
 .shortDescription {
-  font-size: 0.9rem;
-  color: var(--fg-soft);
-  line-height: 1.7;
+  font-family: var(--font-gothic);
+  font-size: 1rem;
+  color: var(--ink-2);
+  line-height: 1.9;
   margin: 0;
-  /* 長くなる文章は 720px に制限（DESIGN.md §4） */
-  max-width: 720px;
+  /* 読む面は --measure に絞る（§4） */
+  max-width: var(--measure);
 }
 
 /* === ゾーン2: ツール本体（主役・ファーストビュー）=== */
 
-/* children（ツール本体）: 広い幅可（最大 1200px まで使える） */
+/* children（ツール本体）: 操作面をフルに使えるよう制限しない */
 .content {
-  /* 本体は広い幅をフルに使えるよう制限しない */
   width: 100%;
 }
 
 /* === ゾーン3: 補助情報（本体より下に二次配置）=== */
 
-/* howItWorks セクション */
+/* howItWorks セクション: 区切りは罫（--rule）が主役（§4）。 */
 .howItWorksSection {
-  max-width: 720px;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--border);
+  max-width: var(--measure);
+  padding-top: var(--space-24);
+  border-top: 1px solid var(--rule);
 }
 
 .howItWorksHeading {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--fg);
-  margin: 0 0 0.5rem;
+  font-family: var(--font-mincho);
+  font-size: 1.09375rem; /* 見出し階層の最小段（17.5px 目安） */
+  color: var(--ink);
+  margin: 0 0 var(--space-8);
+  line-height: 1.4;
+  font-feature-settings: "palt";
 }
 
 .howItWorksText {
-  font-size: 0.9rem;
-  color: var(--fg-soft);
-  line-height: 1.7;
+  font-family: var(--font-gothic);
+  font-size: 1rem;
+  color: var(--ink-2);
+  line-height: 1.9;
   margin: 0;
 }
 
-/* プライバシーノート */
+/* プライバシーノート: 区画は --paper-2 + 罫（色ベタの通知バーにしない）。 */
 .privacyNote {
-  max-width: 720px;
-  background-color: var(--bg-soft);
-  color: var(--fg-soft);
-  font-size: 0.8rem;
-  border-radius: var(--r-normal);
-  padding: 0.5rem 0.75rem;
+  max-width: var(--measure);
+  background-color: var(--paper-2);
+  border: 1px solid var(--rule);
+  color: var(--ink-2);
+  font-size: 0.8125rem;
+  border-radius: var(--radius);
+  padding: var(--space-8) var(--space-16);
   text-align: center;
   margin: 0;
 }
 
 /* シェアセクション */
 .shareSection {
-  max-width: 720px;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--border);
+  max-width: var(--measure);
+  padding-top: var(--space-24);
+  border-top: 1px solid var(--rule);
 }
 
 .shareSectionTitle {
-  font-size: 0.95rem;
-  font-weight: 600;
+  font-family: var(--font-mincho);
+  font-size: 1.09375rem;
   text-align: center;
-  margin: 0 0 0.75rem;
-  color: var(--fg-soft);
+  margin: 0 0 var(--space-16);
+  color: var(--ink);
+  line-height: 1.4;
+  font-feature-settings: "palt";
 }
 
-/* モバイル対応 */
+/* モバイル対応（375px 先行・§10） */
 @media (max-width: 768px) {
   .layout {
-    padding: 1rem 0.75rem;
-    gap: 1rem;
+    padding: var(--space-16) var(--space-16);
+    gap: var(--space-16);
   }
 
   .title {
-    font-size: 1.1rem;
+    font-size: 1.25rem;
   }
 }

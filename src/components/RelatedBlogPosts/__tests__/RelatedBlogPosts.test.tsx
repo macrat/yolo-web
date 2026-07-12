@@ -157,12 +157,12 @@ describe("RelatedBlogPosts", () => {
     expect(css).not.toMatch(/--color-/);
   });
 
-  // CSS規約チェック: 新トークンを使っていること
-  it("CSS が新トークン（--fg / --border / --accent 等）を使っている", () => {
+  // CSS規約チェック: 新トークンを使っていること（DESIGN.md フェーズ R・店構え）
+  it("CSS が新トークン（--ink / --rule / --accent 等）を使っている", () => {
     const cssPath = resolve(__dirname, "../RelatedBlogPosts.module.css");
     const css = readFileSync(cssPath, "utf-8");
-    // --fg, --border, --accent, --bg のいずれか一つ以上を参照していること
-    expect(css).toMatch(/var\(--(fg|border|accent|bg)/);
+    // --ink, --rule, --accent のいずれか一つ以上を参照していること
+    expect(css).toMatch(/var\(--(ink|rule|accent)/);
   });
 
   // CSS規約チェック: フォーカススタイルが DESIGN.md 準拠
@@ -173,10 +173,11 @@ describe("RelatedBlogPosts", () => {
     expect(css).toContain("outline-offset: 2px");
   });
 
-  // CSS規約チェック: 角丸が DESIGN.md 準拠（--r-normal または --r-interactive）
-  it("CSS が DESIGN.md 準拠の角丸トークンを使っている", () => {
+  // CSS規約チェック: 旧トークン（--r-normal / --r-interactive 等）を使っていないこと。
+  // §4「品書き」の行リンクはカードではないため角丸は不要（旧トークン痕跡の不在で確認する）。
+  it("CSS が旧角丸トークン（--r-normal / --r-interactive）を使っていない", () => {
     const cssPath = resolve(__dirname, "../RelatedBlogPosts.module.css");
     const css = readFileSync(cssPath, "utf-8");
-    expect(css).toMatch(/var\(--r-(normal|interactive)\)/);
+    expect(css).not.toMatch(/var\(--r-(normal|interactive)\)/);
   });
 });

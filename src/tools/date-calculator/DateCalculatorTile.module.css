@@ -1,8 +1,11 @@
 /* DateCalculatorTile スタイル
  * cycle-228 T-21: DateCalculatorPage.module.css をタイル向けに移植。
- * DESIGN トークン準拠:
- *   --border-strong, --r-interactive(8px), --r-normal(2px), --bg-soft
- *   --color-* 旧トークン不使用 / font-weight 700 不使用 / --accent 直塗り不使用
+ * フェーズR: 店構え（紙・墨・朱）トークンへ移行。
+ *
+ * DESIGN.md 準拠:
+ *   罫線 --rule / フォーム輪郭 --rule-strong / 沈む面 --paper-2 /
+ *   角丸は 0（--radius）基調・入力欄のみ --radius-sm (2px) /
+ *   影は使わない / font-weight 700 不使用 / --accent 直塗り不使用
  *
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  */
@@ -13,8 +16,8 @@
   flex-direction: column;
   gap: 0.75rem;
   padding: 1rem;
-  border: 1px solid var(--border-strong);
-  border-radius: var(--r-normal);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
 }
 
 /* Panel 内に複数 section が並ぶ場合の gap */
@@ -25,7 +28,7 @@
 .sectionTitle {
   font-size: 1rem;
   font-weight: 600;
-  color: var(--fg);
+  color: var(--ink);
   margin: 0;
 }
 
@@ -37,7 +40,7 @@
 
 .subLabel {
   font-size: 0.9rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   margin: 0;
 }
 
@@ -50,13 +53,13 @@
 
 .separator {
   font-size: 0.875rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   white-space: nowrap;
 }
 
 .unit {
   font-size: 0.875rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   white-space: nowrap;
 }
 
@@ -92,14 +95,14 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.5rem 0.75rem;
-  background-color: var(--bg-soft);
-  border-radius: var(--r-normal);
+  background-color: var(--paper-2);
+  border-radius: var(--radius);
   flex-wrap: wrap;
 }
 
 .resultLabel {
   font-size: 0.85rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   min-width: 80px;
   flex-shrink: 0;
 }
@@ -107,7 +110,7 @@
 .resultValue {
   font-family: var(--font-mono);
   font-size: 0.9rem;
-  color: var(--fg);
+  color: var(--ink);
 }
 
 /* スクリーンリーダー専用（視覚的に非表示だがアクセシブルに存在する） */

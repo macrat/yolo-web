@@ -1,17 +1,16 @@
 /* PercentCalculatorTile スタイル
  *
- * DESIGN.md 準拠:
- * - 旧 color トークン不使用
+ * DESIGN.md（店構え）準拠:
+ * - 色は紙・墨・朱トークン経由（--paper / --ink / --accent 系）
  * - font-weight 700 禁止
- * - インタラクティブ要素: --r-interactive
- * - 非インタラクティブ要素: --r-normal
- * - box-shadow はパネル以外に追加しない
+ * - 角丸は var(--radius)（0）/ var(--radius-sm)（2px）のみ
+ * - box-shadow は使わない（§4）
  */
 
 /* モードの説明テキスト */
 .description {
   font-size: 0.9rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   margin: 0.75rem 0;
 }
 
@@ -30,7 +29,7 @@
 
 .label {
   font-size: 0.875rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
 }
 
 /* 増減モードの方向切替 */
@@ -42,23 +41,23 @@
 .resultArea {
   margin-top: 1rem;
   padding: 1rem;
-  background-color: var(--bg-soft);
-  border-radius: var(--r-normal);
+  background-color: var(--paper-2);
+  border-radius: var(--radius);
 }
 
 .resultValue {
-  font-family: var(--font-mono, monospace);
+  font-family: var(--font-mono);
   font-size: 1.5rem;
-  color: var(--fg);
+  color: var(--ink);
   line-height: 1.4;
 }
 
 /* 計算式の表示 */
 .formula {
   margin-top: 0.5rem;
-  font-family: var(--font-mono, monospace);
+  font-family: var(--font-mono);
   font-size: 0.85rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
 }
 
 /* スクリーンリーダー専用 */

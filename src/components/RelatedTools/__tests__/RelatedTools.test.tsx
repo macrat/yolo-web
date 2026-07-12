@@ -142,17 +142,25 @@ describe("RelatedTools", () => {
     expect(css).not.toMatch(/--color-/);
   });
 
-  // CSS 規約: 新トークン（--fg, --fg-soft, --border, --bg, --accent）を使用
+  // CSS 規約（DESIGN.md フェーズ R・店構え）: 新トークン（--ink, --ink-2, --rule, --accent）を使用
   it("CSS に新デザイントークンが含まれている", () => {
     const cssPath = resolve(__dirname, "../RelatedTools.module.css");
     const css = readFileSync(cssPath, "utf-8");
     // いずれかの新トークンが使われていること
     const hasNewToken =
-      css.includes("--fg") ||
-      css.includes("--border") ||
-      css.includes("--bg") ||
+      css.includes("--ink") ||
+      css.includes("--rule") ||
       css.includes("--accent");
     expect(hasNewToken).toBe(true);
+  });
+
+  // CSS 規約: 旧トークン（--fg / --border / --bg 等）が残っていないこと
+  it("CSS に旧デザイントークンが含まれていない", () => {
+    const cssPath = resolve(__dirname, "../RelatedTools.module.css");
+    const css = readFileSync(cssPath, "utf-8");
+    expect(css).not.toMatch(
+      /--fg\b|--bg\b|--border\b|--r-normal|--r-interactive/,
+    );
   });
 
   // CSS 規約: カードリンクのフォーカス可視（WCAG 2.4.7）

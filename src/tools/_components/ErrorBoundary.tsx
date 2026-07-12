@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import styles from "./ErrorBoundary.module.css";
 
 interface ErrorBoundaryProps {
   children: React.ReactNode;
@@ -27,19 +28,11 @@ export default class ToolErrorBoundary extends React.Component<
   render() {
     if (this.state.hasError) {
       return (
-        <div
-          role="alert"
-          style={{
-            padding: "1.5rem",
-            border: "1px solid var(--color-error, #dc3545)",
-            borderRadius: "0.5rem",
-            backgroundColor: "var(--color-error-bg, #fff5f5)",
-          }}
-        >
-          <h2 style={{ fontSize: "1.1rem", marginBottom: "0.5rem" }}>
+        <div role="alert" className={styles.error}>
+          <h2 className={styles.heading}>
             ツールの読み込みでエラーが発生しました
           </h2>
-          <p style={{ fontSize: "0.9rem", color: "var(--color-text-muted)" }}>
+          <p className={styles.text}>
             ページを再読み込みしてください。問題が続く場合は、しばらく時間をおいてからお試しください。
           </p>
         </div>

@@ -1,12 +1,10 @@
 /* HashGeneratorTile スタイル
  * cycle-228 T-17: HashGeneratorPage.module.css をタイル向けに統合・移植。
- * DESIGN トークン準拠:
- *   - --color-* 旧トークン不使用 (B-1)
- *   - font-weight 700 禁止 (B-4)
- *   - --r-interactive (8px) / --r-normal (2px) (B-5)
- *   - --border-strong (B-7)
- *   - パネル外への影付けなし (B-6 / A-7)
- *   - --accent を背景塗りに使わない (B-3)
+ * DESIGN トークン準拠（紙・墨・朱の新トークン）:
+ *   - --ink / --ink-2 / --paper-2 / --rule-strong / --radius 使用
+ *   - font-weight 700 禁止
+ *   - パネル外への影付けなし
+ *   - --accent を背景塗りに使わない
  *
  * Panel がルート要素のため .container クラス不要（Panel.module.css に委譲）。
  */
@@ -29,7 +27,7 @@
 
 .formatLabel {
   font-size: 0.85rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   /* 狭幅でもラベルが折り返さないようにする */
   white-space: nowrap;
 }
@@ -48,13 +46,13 @@
 
 .fieldLabel {
   font-size: 0.85rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
 }
 
 /* ライブリージョン（C-3 準拠: 実テキストノードのサマリ） */
 .statusSummary {
   font-size: 0.8rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   min-height: 1.2em;
   margin-bottom: 0.5rem;
 }
@@ -72,15 +70,15 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem;
-  border: 1px solid var(--border-strong);
-  border-radius: var(--r-normal);
-  background-color: var(--bg-soft);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
+  background-color: var(--paper-2);
 }
 
 /* アルゴリズム名ラベル（SHA-1 / SHA-256 等） */
 .algoLabel {
   font-size: 0.85rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   min-width: 70px;
   flex-shrink: 0;
   /* アルゴリズム名が折り返さないようにする */
@@ -91,7 +89,7 @@
 .hashValue {
   font-family: var(--font-mono);
   font-size: 0.8rem;
-  color: var(--fg);
+  color: var(--ink);
   word-break: break-all;
   flex: 1;
 }

@@ -2,13 +2,13 @@
  * cycle-228 T-18: KeigoReferencePage.module.css をタイル向けに移植。
  * Panel がルート要素のため .container クラスは不要（Panel.module.css に委譲）。
  *
+ * フェーズR C5: 新デザイントークン（紙・墨・朱）へ移行。
  * DESIGN トークン準拠:
- * - --color-* 旧トークン不使用（B-1）
- * - --accent 直塗り不使用（B-3）
- * - font-weight の最大値は 600（B-4 禁止: 700以上）
- * - インタラクティブ要素: --r-interactive (8px)
- * - 非インタラクティブ要素: --r-normal (2px)
- * - フォーム境界線: --border-strong (B-7)
+ * - font-weight の最大値は 600（700以上は禁止）
+ * - 角丸は --radius（0）に統一・フォーム境界線は --rule-strong
+ * - 「よくある間違い」の 誤/正 は色分けしない。誤は墨（--ink）、
+ *   正は朱（--accent）で「持ち帰るべき正答」だけを強調する。
+ *   誤/正の区別は文言ラベル「誤:」「正:」が担う（DESIGN §2）。
  */
 
 /* タイル内レイアウト（Panel のパディング内側） */
@@ -40,7 +40,7 @@
 /* C-3: ライブリージョンサマリ */
 .resultCount {
   font-size: 0.875rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   min-height: 1.25rem;
   flex-shrink: 0;
 }
@@ -54,30 +54,30 @@
 .th {
   font-size: 0.875rem;
   font-weight: 600;
-  background-color: var(--bg-soft);
-  border-bottom: 2px solid var(--border-strong);
+  background-color: var(--paper-2);
+  border-bottom: 2px solid var(--rule-strong);
   padding: 0.6rem 0.75rem;
   text-align: left;
-  color: var(--fg);
+  color: var(--ink);
 }
 
 .tableRow {
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--rule);
   transition: background-color 0.15s;
 }
 
 .tableRow:hover {
-  background-color: var(--bg-soft);
+  background-color: var(--paper-2);
 }
 
 .tableRowExpanded {
-  background-color: var(--bg-soft);
+  background-color: var(--paper-2);
 }
 
 .td {
   padding: 0.6rem 0.75rem;
   font-size: 0.9rem;
-  color: var(--fg);
+  color: var(--ink);
   vertical-align: top;
 }
 
@@ -102,7 +102,7 @@
   padding: 0;
   font: inherit;
   font-weight: 600;
-  color: var(--fg);
+  color: var(--ink);
   cursor: pointer;
   text-align: left;
   width: 100%;
@@ -112,18 +112,18 @@
 .expandButton:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
-  border-radius: var(--r-normal);
+  border-radius: var(--radius);
 }
 
 /* 例文パネル（アコーディオン） */
 .examplePanel {
   padding: 0.75rem 1rem;
-  background-color: var(--bg-soft);
-  border-radius: var(--r-normal);
+  background-color: var(--paper-2);
+  border-radius: var(--radius);
 }
 
 .examplePanelRow {
-  background-color: var(--bg-soft);
+  background-color: var(--paper-2);
 }
 
 .examplePanelRow td {
@@ -141,26 +141,26 @@
 .exampleContext {
   font-size: 0.8rem;
   font-weight: 600;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   margin-bottom: 0.25rem;
 }
 
 .exampleLine {
   font-size: 0.875rem;
-  color: var(--fg);
+  color: var(--ink);
   line-height: 1.5;
 }
 
 .exampleLabel {
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   margin-right: 0.4rem;
 }
 
 .noteText {
   font-size: 0.8rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   font-style: italic;
   margin-top: 0.5rem;
 }
@@ -173,26 +173,26 @@
 .mistakeSectionTitle {
   font-size: 1rem;
   font-weight: 600;
-  color: var(--fg);
+  color: var(--ink);
   margin: 0 0 0.75rem;
 }
 
 .mistakeCard {
-  border: 1px solid var(--border-strong);
-  border-radius: var(--r-normal);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
   padding: 0.75rem 1rem;
   margin-bottom: 0.5rem;
-  background-color: var(--bg);
+  background-color: var(--paper);
 }
 
 .wrongText {
-  color: var(--danger);
+  color: var(--ink);
   font-weight: 600;
   font-size: 0.9rem;
 }
 
 .correctText {
-  color: var(--success);
+  color: var(--accent);
   font-weight: 600;
   font-size: 0.9rem;
 }
@@ -200,13 +200,13 @@
 .mistakeLabel {
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   margin-right: 0.4rem;
 }
 
 .explanationText {
   font-size: 0.875rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   margin-top: 0.4rem;
   line-height: 1.5;
 }
@@ -214,7 +214,7 @@
 /* 検索結果なし */
 .noResults {
   font-size: 0.9rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   text-align: center;
   padding: 2rem 0;
 }
@@ -225,17 +225,17 @@
 }
 
 .mobileCard {
-  border: 1px solid var(--border-strong);
-  border-radius: var(--r-interactive);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
   padding: 0.75rem 1rem;
   margin-bottom: 0.5rem;
-  background-color: var(--bg);
+  background-color: var(--paper);
   cursor: pointer;
   transition: background-color 0.1s;
 }
 
 .mobileCard:hover {
-  background-color: var(--bg-soft);
+  background-color: var(--paper-2);
 }
 
 .mobileCard:focus-visible {
@@ -246,7 +246,7 @@
 .mobileCardTitle {
   font-weight: 600;
   font-size: 0.95rem;
-  color: var(--fg);
+  color: var(--ink);
   margin-bottom: 0.4rem;
 }
 
@@ -254,14 +254,14 @@
   display: flex;
   gap: 0.4rem;
   font-size: 0.875rem;
-  color: var(--fg);
+  color: var(--ink);
   line-height: 1.5;
 }
 
 .mobileCardLabel {
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   min-width: 3.5rem;
   flex-shrink: 0;
 }

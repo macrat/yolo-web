@@ -2,15 +2,14 @@
  * AgeCalculatorTile スタイル
  * cycle-228 T-7: AgeCalculatorPage.module.css をタイル向けに移植。
  *
- * DESIGN トークン準拠:
- * - --color-* 旧トークン不使用
- * - font-weight は 600 まで（それ以上は禁止）
- * - --accent を背景色・文字色に直塗り禁止
- * - インタラクティブ要素: --r-interactive（8px）
- * - 非インタラクティブ要素: --r-normal（2px）
- * - フォーム要素境界: --border-strong
+ * DESIGN.md「店構え」準拠（紙 --paper/--paper-2・墨 --ink/--ink-2・罫 --rule/--rule-strong・
+ * 朱 --accent）:
+ * - 色は上記トークンのみ（--accent はリンク・現在地・フォーカスの参照に限り、地への直塗り禁止）
+ * - font-weight は 600 まで
+ * - 角丸は 0 基調 var(--radius)。例外は入力欄・値札の var(--radius-sm)=2px（本タイルは共有
+ *   Input を使うため入力欄自身の指定なし）
  * - フォーカス: outline: 2px solid var(--accent); outline-offset: 2px;
- * - box-shadow はパネル以外に追加しない（A-7）
+ * - 影（box-shadow）は使わない（DESIGN.md §4）
  *
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  */
@@ -33,7 +32,7 @@
 /* フィールドラベル */
 .label {
   font-size: 0.9rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
 }
 
 /* 基準日行: 入力欄 + 今日に設定ボタンを横並び */
@@ -64,15 +63,15 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.5rem 0.75rem;
-  background-color: var(--bg-soft);
-  border-radius: var(--r-normal);
+  background-color: var(--paper-2);
+  border-radius: var(--radius);
   flex-wrap: wrap;
 }
 
 /* 結果ラベル（左側の説明テキスト） */
 .resultLabel {
   font-size: 0.85rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   min-width: 120px;
   flex-shrink: 0;
 }
@@ -81,7 +80,7 @@
 .resultValue {
   font-family: var(--font-mono);
   font-size: 0.9rem;
-  color: var(--fg);
+  color: var(--ink);
 }
 
 /* スクリーンリーダー専用（C-3 要件: 実テキストノードのサマリを視覚的に非表示） */

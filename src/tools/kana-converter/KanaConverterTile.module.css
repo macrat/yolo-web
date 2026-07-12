@@ -1,7 +1,7 @@
 /* KanaConverterTile スタイル
  * cycle-228 T-3: KanaConverterPage.module.css をタイル向けに移植。
- * DESIGN トークン準拠（--color-* 旧トークン不使用・bold禁止・
- * --r-interactive / --r-normal 使用・--border-strong 使用）
+ * フェーズR C5: 新デザイントークン（紙・墨・朱）へ移行。
+ * 本ファイルは補足文字（--ink-2）のみ持つ軽量レイアウト。
  *
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  *
@@ -22,7 +22,7 @@
 
 .modeLabel {
   font-size: 0.875rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
 }
 
 /* 入力/出力フィールド */
@@ -40,7 +40,7 @@
 /* フィールドのラベル */
 .fieldLabel {
   font-size: 0.85rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
 }
 
 /* 出力ヘッダー: ラベルとコピーボタンを横並び */
@@ -53,6 +53,6 @@
 /* ライブリージョン（C-3 準拠: 実テキストノードのサマリ） */
 .statusSummary {
   font-size: 0.8rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   min-height: 1.2em;
 }

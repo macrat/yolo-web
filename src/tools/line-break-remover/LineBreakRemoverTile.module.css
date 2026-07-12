@@ -1,7 +1,7 @@
 /* LineBreakRemoverTile スタイル
  * cycle-228 T-4: LineBreakRemoverPage.module.css をタイル向けに移植。
- * DESIGN トークン準拠（--color-* 旧トークン不使用・bold禁止・
- * --r-interactive / --r-normal 使用・--border-strong 使用）
+ * フェーズR C5: 新デザイントークン（紙・墨・朱）へ移行。
+ * 本ファイルは補足文字（--ink-2）のみ持つ軽量レイアウト。
  *
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  */
@@ -16,7 +16,7 @@
 
 .modeLabel {
   font-size: 0.875rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
 }
 
 /* オプション行（remove/replace-space モード用トグル） */
@@ -36,7 +36,7 @@
 
 .optionLabel {
   font-size: 0.875rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
 }
 
 /* 入出力パネル: 2カラム（デスクトップ）/ 1カラム（モバイル） */
@@ -59,7 +59,7 @@
 
 .panelLabel {
   font-size: 0.875rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
 }
 
 /* 出力パネルのヘッダー（ラベル + コピーボタン） */
@@ -74,7 +74,7 @@
  * 変換完了通知をスクリーンリーダーへ届ける。視覚的には表示する（サマリテキスト）。 */
 .statusSummary {
   font-size: 0.8rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   min-height: 1.2em;
 }
 

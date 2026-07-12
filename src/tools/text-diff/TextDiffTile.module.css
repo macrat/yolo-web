@@ -1,10 +1,10 @@
 /* TextDiffTile — text-diff 単一正典タイルスタイル
  * cycle-228 T-23: TextDiffPage.module.css をタイル向けに継承・移植。
- * DESIGN トークン準拠（--color-* 旧トークン不使用・bold禁止・
- * --r-interactive / --r-normal 使用・--border-strong 使用）
+ * DESIGN.md（店構え）準拠（色は紙・墨・朱トークン経由・bold禁止・
+ * 角丸は var(--radius) / var(--radius-sm) のみ・罫は --rule-strong）
  *
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
- * box-shadow を追加しない（A-7/B-6 要件）。
+ * box-shadow は使わない（§4）。
  */
 
 /* 比較モードコントロール行 */
@@ -17,7 +17,7 @@
 
 .controlLabel {
   font-size: 0.9rem;
-  color: var(--fg);
+  color: var(--ink);
 }
 
 /* 2つの入力パネルを横並びで配置 */
@@ -36,34 +36,34 @@
 
 .panelLabel {
   font-size: 0.85rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
 }
 
 /* サマリ status 欄（C-3: 実テキストノードのサマリ・短文 1 行）
  * aria-live="polite" に対応する可視要素（SR が読み上げる実テキストを含む） */
 .summary {
   font-size: 0.85rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   min-height: 1.25rem; /* ちらつき防止 */
   margin-bottom: 1rem;
 }
 
 /* 差分結果エリア */
 .result {
-  border: 1px solid var(--border-strong);
-  border-radius: var(--r-normal);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
   padding: 1rem;
 }
 
 .resultHeading {
   font-size: 1rem;
   margin-bottom: 0.75rem;
-  color: var(--fg);
+  color: var(--ink);
 }
 
-/* 差分なしメッセージ */
+/* 差分なしメッセージ（色に頼らず文言で伝える） */
 .noDiff {
-  color: var(--success);
+  color: var(--ink);
   font-size: 0.9rem;
   margin: 0;
 }
@@ -79,23 +79,28 @@
   margin: 0;
 }
 
-/* 追加部分: 背景色 + 下線 + 色（D4採択: 色覚多様性対応）
- * B-3 要件: --accent 直塗り禁止。旧実装のトークンを踏襲。 */
+/* 差分ハイライト（店構え移行）:
+ * 旧実装は緑（追加）/赤（削除）の2色で区別していたが、店構えは緑/赤のベタを持たない。
+ * このファイルには --accent 直塗りを禁じる正典テスト（E-12）が残っているため、
+ * 朱も使わず、意味の区別は装飾（下線=追加 / 取り消し線=削除）だけで担保する。
+ * 装飾は色に依らないため色覚多様性下でも区別が保たれ、器は静かなまま。
+ *
+ * 追加部分: 墨文字 + 下線（沈んだ面 --paper-2） */
 .added {
-  background-color: var(--success-soft);
-  color: var(--success-strong);
+  background-color: var(--paper-2);
+  color: var(--ink);
   text-decoration: underline;
 }
 
-/* 削除部分: 背景色 + 取り消し線 + 色（D4採択: 色覚多様性対応） */
+/* 削除部分: 墨文字 + 取り消し線（沈んだ面 --paper-2） */
 .removed {
-  background-color: var(--danger-soft);
-  color: var(--danger-strong);
+  background-color: var(--paper-2);
+  color: var(--ink);
   text-decoration: line-through;
 }
 
 .unchanged {
-  color: var(--fg);
+  color: var(--ink);
 }
 
 /* モバイル対応: 縦並びに切り替え（G-1: w360 横はみ出しなし） */

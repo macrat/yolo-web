@@ -8,9 +8,9 @@
  * - [B-2] フォーカス: outline: 2px solid var(--accent); outline-offset: 2px;
  * - [B-3] --accent 直塗り禁止（フォーカス outline のみ許可）
  * - [B-4] font-weight: 700 禁止
- * - [B-5] インタラクティブ --r-interactive / 非インタラクティブ --r-normal
- * - [B-6] Panel 以外に box-shadow 追加禁止
- * - [B-7] フォーム要素境界線は --border-strong
+ * - [B-5] 角丸は var(--radius)
+ * - [B-6] box-shadow は使わない
+ * - [B-7] 罫線は var(--rule)
  */
 
 /* ---- 現在タイムスタンプ表示バー ---- */
@@ -19,22 +19,22 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem 1rem;
-  border: 1px solid var(--border);
-  border-radius: var(--r-normal);
-  background-color: var(--bg-soft);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background-color: var(--paper-2);
   flex-wrap: wrap;
   margin-bottom: 1.5rem;
 }
 
 .currentLabel {
   font-size: 0.9rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
 }
 
 .currentValue {
   font-family: var(--font-mono);
   font-size: 1.1rem;
-  color: var(--fg);
+  color: var(--ink);
   flex: 1;
 }
 
@@ -52,7 +52,7 @@
 
 .sectionTitle {
   font-size: 0.875rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   margin: 0;
 }
 
@@ -83,14 +83,14 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.5rem 0.75rem;
-  background-color: var(--bg-soft);
-  border-radius: var(--r-normal);
+  background-color: var(--paper-2);
+  border-radius: var(--radius);
   flex-wrap: wrap;
 }
 
 .resultLabel {
   font-size: 0.8rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   min-width: 90px;
   flex-shrink: 0;
 }
@@ -98,7 +98,7 @@
 .resultValue {
   font-family: var(--font-mono);
   font-size: 0.875rem;
-  color: var(--fg);
+  color: var(--ink);
   flex: 1;
   word-break: break-all;
 }
@@ -118,7 +118,7 @@
 
 .dateFieldLabel {
   font-size: 0.8rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
 }
 
 /*

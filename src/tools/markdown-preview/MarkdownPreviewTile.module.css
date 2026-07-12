@@ -1,11 +1,10 @@
 /* MarkdownPreviewTile.module.css
  * cycle-228 T-24: MarkdownPreviewPage.module.css を正典タイル向けに継承・移植。
+ * フェーズR C5: 新デザイントークン（紙・墨・朱）へ移行。
  * DESIGN トークン準拠:
- * - 旧 --color-* トークン不使用（B-1）
- * - font-weight: 700 不使用（B-4）
- * - 角丸: インタラクティブ --r-interactive（8px）、非インタラクティブ --r-normal（2px）（B-5）
- * - box-shadow 不使用（B-6・B-7）
- * - フォーム境界線は --border-strong（B-7）
+ * - font-weight: 700 不使用
+ * - 角丸は --radius（0）に統一・box-shadow 不使用（影は使わない）
+ * - プレビュー枠の境界線は --rule-strong
  *
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  */
@@ -43,7 +42,7 @@
 .panelLabel {
   font-size: 0.85rem;
   font-weight: 600;
-  color: var(--fg-soft);
+  color: var(--ink-2);
 }
 
 /* プレビューラッパー: 最小高さ確保 */
@@ -71,9 +70,9 @@
 .preview {
   min-height: 400px;
   padding: 0.75rem;
-  border: 1px solid var(--border-strong);
-  border-radius: var(--r-normal);
-  background-color: var(--bg);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
+  background-color: var(--paper);
   overflow-y: auto;
   line-height: 1.7;
 }
@@ -82,10 +81,10 @@
 .emptyHint {
   min-height: 400px;
   padding: 0.75rem;
-  border: 1px solid var(--border-strong);
-  border-radius: var(--r-normal);
-  background-color: var(--bg);
-  color: var(--fg-soft);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
+  background-color: var(--paper);
+  color: var(--ink-2);
   font-size: 0.875rem;
   display: flex;
   align-items: center;
@@ -98,7 +97,7 @@
   font-size: 1.5rem;
   font-weight: 600;
   margin: 0.5em 0;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--rule);
   padding-bottom: 0.3em;
 }
 
@@ -129,16 +128,16 @@
 }
 
 .preview code {
-  background-color: var(--bg-soft);
+  background-color: var(--paper-2);
   padding: 0.15em 0.3em;
-  border-radius: var(--r-normal);
+  border-radius: var(--radius);
   font-size: 0.85em;
 }
 
 .preview pre {
-  background-color: var(--bg-soft);
+  background-color: var(--paper-2);
   padding: 0.75rem;
-  border-radius: var(--r-normal);
+  border-radius: var(--radius);
   overflow-x: auto;
 }
 
@@ -148,9 +147,9 @@
 }
 
 .preview blockquote {
-  border-left: 3px solid var(--border-strong);
+  border-left: 3px solid var(--rule-strong);
   padding-left: 0.75rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   margin: 0.5em 0;
 }
 
@@ -162,13 +161,13 @@
 
 .preview th,
 .preview td {
-  border: 1px solid var(--border-strong);
+  border: 1px solid var(--rule-strong);
   padding: 0.4rem 0.6rem;
   text-align: left;
 }
 
 .preview th {
-  background-color: var(--bg-soft);
+  background-color: var(--paper-2);
   font-weight: 600;
 }
 
@@ -182,6 +181,6 @@
 
 .preview hr {
   border: none;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--rule);
   margin: 1em 0;
 }

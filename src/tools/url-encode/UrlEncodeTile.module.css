@@ -1,7 +1,7 @@
 /* UrlEncodeTile スタイル
  * cycle-226 T-1: UrlEncodePage.module.css をタイル向けに継承・移植。
- * DESIGN トークン準拠（--color-* 旧トークン不使用・bold禁止・
- * --r-interactive / --r-normal 使用・--border-strong 使用）
+ * DESIGN.md（店構え）トークン準拠（旧 --color-* 不使用・bold禁止・
+ * 角丸 var(--radius)・罫線 var(--rule) 使用。文字=墨 --ink/--ink-2）
  *
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  */
@@ -24,7 +24,7 @@
 
 .modeLabel {
   font-size: 0.85rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   white-space: nowrap;
 }
 
@@ -42,7 +42,7 @@
 
 .fieldLabel {
   font-size: 0.85rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
 }
 
 /* 出力ヘッダー: ラベルとコピーボタンを横並び */
@@ -55,6 +55,6 @@
 /* ライブリージョン（C-3 準拠: 実テキストノードのサマリ） */
 .statusSummary {
   font-size: 0.8rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   min-height: 1.2em;
 }

@@ -347,16 +347,16 @@ describe("ToolPageLayout", () => {
 
   // --- CSS 規約チェック ---
 
-  it("CSS: max-width 1200px が含まれる（ページ幅 DESIGN.md §4）", () => {
+  it("CSS: max-width が --max-width（操作面の最大幅 960px）を使う（DESIGN.md §4）", () => {
     const cssPath = resolve(__dirname, "../ToolPageLayout.module.css");
     const css = readFileSync(cssPath, "utf-8");
-    expect(css).toContain("1200px");
+    expect(css).toContain("var(--max-width)");
   });
 
-  it("CSS: 長文テキストに 720px 制限が含まれる（DESIGN.md §4）", () => {
+  it("CSS: 長文テキストに --measure（読む面 約42rem）制限が含まれる（DESIGN.md §4）", () => {
     const cssPath = resolve(__dirname, "../ToolPageLayout.module.css");
     const css = readFileSync(cssPath, "utf-8");
-    expect(css).toContain("720px");
+    expect(css).toContain("var(--measure)");
   });
 
   it("CSS: 旧 --color-* トークンを使用しない（新トークンのみ）", () => {

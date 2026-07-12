@@ -1,13 +1,13 @@
 /* ImageResizerTile — 単一正典タイルのスタイル
  * cycle-228 T-27: ImageResizerPage.module.css をタイル向けに移植。
- * DESIGN.md 準拠:
- * - 旧トークン (--color-*) 使用禁止
- * - --accent は直塗り禁止（選択状態は --bg-invert / --fg-invert ペア）
+ * DESIGN.md 準拠（紙・墨・朱の新トークン）:
+ * - --ink / --ink-2 / --paper-2 / --rule / --rule-strong / --accent / --accent-weak 使用
+ * - --accent は直塗り禁止（静的な地に使わない）。選択/固定中の状態セレクタ内でのみ
+ *   --accent-weak 座布団 + --accent 文字を使う
  * - bold (太字) 禁止
- * - インタラクティブ要素: border-radius: var(--r-interactive)
- * - 非インタラクティブ要素: border-radius: var(--r-normal)
+ * - border-radius は var(--radius)（=0）。入力欄相当のみ var(--radius-sm)
  * - フォーカス: outline: 2px solid var(--accent); outline-offset: 2px
- * - フォーム要素境界線: --border-strong
+ * - フォーム要素境界線: --rule-strong
  *
  * Panel がルート要素のため、container クラスは不要（Panel.module.css に委譲）。
  * Panel 内部のレイアウトは flex column で管理する。
@@ -26,14 +26,14 @@
   flex-direction: column;
   gap: 0.75rem;
   padding: 1rem;
-  border: 1px solid var(--border);
-  border-radius: var(--r-normal);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
 }
 
 .sectionTitle {
   font-size: 1rem;
   font-weight: 600;
-  color: var(--fg);
+  color: var(--ink);
   margin: 0;
 }
 
@@ -42,9 +42,9 @@
   max-width: 100%;
   max-height: 300px;
   object-fit: contain;
-  border: 1px solid var(--border);
-  border-radius: var(--r-normal);
-  background-color: var(--bg-soft);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background-color: var(--paper-2);
   align-self: flex-start;
 }
 
@@ -53,16 +53,17 @@
   flex-wrap: wrap;
   gap: 0.75rem;
   font-size: 0.85rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
 }
 
-/* ===== GIF 警告ボックス ===== */
+/* ===== GIF 警告ボックス =====
+ * §2: 色ベタの警告地にしない。地は中立の沈み（--paper-2）、意味は朱の罫と文字で伝える。 */
 .gifWarningBox {
   padding: 0.75rem;
-  border: 1px solid var(--warning);
-  border-radius: var(--r-normal);
-  background-color: var(--warning-soft);
-  color: var(--warning-strong);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  background-color: var(--paper-2);
+  color: var(--accent);
   font-size: 0.875rem;
   line-height: 1.5;
 }
@@ -78,7 +79,7 @@
 .label {
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   white-space: nowrap;
 }
 
@@ -107,10 +108,10 @@
   height: 40px;
   min-height: 40px;
   padding: 0 0.625rem;
-  border: 1px solid var(--border-strong);
-  border-radius: var(--r-interactive);
-  background-color: var(--bg);
-  color: var(--fg);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
+  background-color: var(--paper);
+  color: var(--ink);
   font-size: 0.8125rem;
   cursor: pointer;
   transition: border-color 0.15s;
@@ -127,11 +128,12 @@
   outline-offset: 2px;
 }
 
-/* ロック中: --bg-invert / --fg-invert ペアで塗る（--accent 直塗り禁止） */
+/* ロック中（選択状態）: 状態セレクタ相当のクラス名（Active）内でのみ
+ * --accent-weak 座布団 + --accent 枠・文字で「固定中」を示す（§2）。 */
 .lockButtonActive {
-  border-color: var(--bg-invert);
-  background-color: var(--bg-invert);
-  color: var(--fg-invert);
+  border-color: var(--accent);
+  background-color: var(--accent-weak);
+  color: var(--accent);
 }
 
 /* ロックボタン内の可視テキストラベル */
@@ -148,10 +150,10 @@
   justify-content: center;
   width: fit-content;
   padding: 0.5rem 1.25rem;
-  border: 1px solid var(--bg-invert);
-  border-radius: var(--r-interactive);
-  background-color: var(--bg-invert);
-  color: var(--fg-invert);
+  border: 1px solid var(--ink);
+  border-radius: var(--radius);
+  background-color: var(--ink);
+  color: var(--paper);
   font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
@@ -160,8 +162,8 @@
 }
 
 .resizeButton:hover {
-  background-color: var(--bg-invert-soft);
-  border-color: var(--bg-invert-soft);
+  background-color: var(--ink-2);
+  border-color: var(--ink-2);
 }
 
 .resizeButton:focus-visible {
@@ -186,22 +188,22 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.5rem 0.75rem;
-  background-color: var(--bg-soft);
-  border-radius: var(--r-normal);
+  background-color: var(--paper-2);
+  border-radius: var(--radius);
   flex-wrap: wrap;
 }
 
 .resultLabel {
   font-weight: 500;
   font-size: 0.85rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   min-width: 140px;
 }
 
 .resultValue {
   font-family: var(--font-mono);
   font-size: 0.85rem;
-  color: var(--fg);
+  color: var(--ink);
 }
 
 /* ===== ダウンロードボタン ===== */
@@ -211,10 +213,10 @@
   justify-content: center;
   width: fit-content;
   padding: 0.5rem 1.25rem;
-  border: 1px solid var(--bg-invert);
-  border-radius: var(--r-interactive);
-  background-color: var(--bg-invert);
-  color: var(--fg-invert);
+  border: 1px solid var(--ink);
+  border-radius: var(--radius);
+  background-color: var(--ink);
+  color: var(--paper);
   font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
@@ -223,8 +225,8 @@
 }
 
 .downloadButton:hover {
-  background-color: var(--bg-invert-soft);
-  border-color: var(--bg-invert-soft);
+  background-color: var(--ink-2);
+  border-color: var(--ink-2);
 }
 
 .downloadButton:focus-visible {
@@ -235,7 +237,7 @@
 /* ===== ライブリージョン（サマリ） ===== */
 .liveRegion {
   font-size: 0.875rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   padding: 0.5rem 0;
 }
 
@@ -243,7 +245,7 @@
 .privacy {
   font-size: 0.8rem;
   font-style: italic;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   line-height: 1.5;
   margin: 0;
 }
@@ -259,7 +261,7 @@
 .modeLabel {
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   white-space: nowrap;
 }
 

@@ -1,13 +1,13 @@
 /* BmiCalculatorTile スタイル
  * cycle-228 T-6: BmiCalculatorPage.module.css をタイル向けに移植。
  *
- * DESIGN トークン準拠（B-1〜B-9）:
- * - 旧 color トークン不使用（B-1）
- * - font-weight 700 禁止（B-4）
- * - インタラクティブ要素: --r-interactive（8px）（B-5）
- * - 非インタラクティブ要素: --r-normal（2px）（B-5）
- * - フォーム要素境界: --border-strong（B-7）
- * - box-shadow はパネル以外に追加しない（A-7, B-6）
+ * DESIGN.md「店構え」準拠（紙 --paper/--paper-2・墨 --ink/--ink-2・罫 --rule/--rule-strong・
+ * 朱 --accent）:
+ * - 色は上記トークンのみ（緑/橙/赤の信号色は使わない。§2「副次は色でなく墨の濃淡・罫で」）
+ * - font-weight は 600 まで
+ * - 角丸は 0 基調 var(--radius)。例外は入力欄・値札の var(--radius-sm)=2px（本タイルは共有
+ *   Input を使うため入力欄自身の指定なし）
+ * - 影（box-shadow）は使わない（DESIGN.md §4）
  *
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  */
@@ -28,13 +28,13 @@
 
 .inputLabel {
   font-size: 0.875rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   min-width: 3rem;
 }
 
 .unitLabel {
   font-size: 0.875rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
 }
 
 /* 入力欄のサイズ制御（Input コンポーネントを使うため、ラッパーで幅指定） */
@@ -48,48 +48,50 @@
   padding: 0.75rem 0 1.75rem;
 }
 
+/* 目盛りバー本体。旧デザインの緑→橙→赤の色帯をやめ、罫で囲った中立の帯にする
+ * （DESIGN.md §2 紙・墨・朱 / §4「構造の主役は罫」）。区分の境界は下の目盛りラベル
+ * （10/18.5/25/30/40/50）が示し、現在地は .meterIndicator（朱）が示す。 */
 .meterTrack {
   display: flex;
   height: 12px;
-  /* 非インタラクティブ装飾バー → --r-normal (DESIGN.md §5 角丸規約) */
-  border-radius: var(--r-normal);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background-color: var(--paper-2);
   overflow: hidden;
 }
 
-/* BMI 10-18.5: 低体重ゾーン (8.5/40 = 21.25%)
- * 中立色（--bg-softer）を使う。--accent-soft は DESIGN.md §2 でフォーカス専用のため誤用にあたる */
+/* 4 つの区分（低体重/普通/肥満1-2/肥満3-4）。DOM 構造は維持しつつ、地は中立の --paper-2 で
+ * 統一する（色で優劣を示さない——判定は結果テーブルの文言と .category* が伝える）。
+ * 幅の比率（線形スケール上の各区分の占有率）はそのまま保持する。 */
 .meterZoneLow {
   flex: 0 0 21.25%;
-  background-color: var(--bg-softer);
+  background-color: var(--paper-2);
 }
 
-/* BMI 18.5-25: 普通体重ゾーン (6.5/40 = 16.25%) */
 .meterZoneNormal {
   flex: 0 0 16.25%;
-  background-color: var(--success);
+  background-color: var(--paper-2);
 }
 
-/* BMI 25-35: 肥満1〜2度ゾーン (10/40 = 25%)
- * DESIGN.md §6 Don't「グラデーション禁止」: linear-gradient を廃止し --warning でソリッドに */
 .meterZoneWarning {
   flex: 0 0 25%;
-  background-color: var(--warning);
+  background-color: var(--paper-2);
 }
 
-/* BMI 35-50: 肥満3〜4度ゾーン (15/40 = 37.5%)
- * ソリッドな --danger で危険レベルを明確に示す */
 .meterZoneDanger {
   flex: 1;
-  background-color: var(--danger);
+  background-color: var(--paper-2);
 }
 
+/* 現在地マーカー: 墨（DESIGN.md §2）。中立の目盛りバー上で位置を示す。
+ * §7 実務側のため器は静かに——朱の強調は使わず、位置は墨のマーカーと目盛りラベルで読ませる。 */
 .meterIndicator {
   position: absolute;
   top: 0.375rem;
   width: 3px;
   height: 18px;
-  background-color: var(--fg);
-  /* 幅3pxの装飾マーカー: 角丸は視覚上不要なため除去（DESIGN.md §5 角丸規約準拠） */
+  background-color: var(--ink);
+  /* 幅3pxの装飾マーカー: 角丸は視覚上不要なため除去（DESIGN.md §4 角丸規約準拠） */
   transform: translateX(-50%);
   transition: left 0.3s ease;
 }
@@ -105,7 +107,7 @@
   /* 三角形は border トリック（width:0/height:0）で描画 → border-radius 不要 */
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
-  border-top: 5px solid var(--fg);
+  border-top: 5px solid var(--ink);
 }
 
 /* ラベルコンテナ: 線形スケールに対応した absolute 配置の基準コンテナ。
@@ -115,7 +117,7 @@
   height: 1.2em;
   margin-top: 0.25rem;
   font-size: 0.7rem;
-  color: var(--fg-softer);
+  color: var(--ink-2);
 }
 
 /* 左端ラベル (BMI 10): 左端基準、溢れなし */
@@ -148,55 +150,55 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.5rem 0.75rem;
-  background-color: var(--bg-soft);
-  border-radius: var(--r-normal);
+  background-color: var(--paper-2);
+  border-radius: var(--radius);
   flex-wrap: wrap;
 }
 
 .resultLabel {
   font-size: 0.85rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   min-width: 160px;
 }
 
 .resultValue {
-  font-family: var(--font-mono, monospace);
+  font-family: var(--font-mono);
   font-size: 0.85rem;
-  color: var(--fg);
+  color: var(--ink);
 }
 
-/* 判定カテゴリ色（BMI レベルに応じた意味色） */
-/* DESIGN.md §2: --accent 系はリンク・フォーカス専用のため、低体重テキストには中立色を使う
- * メーター帯 .meterZoneLow が --bg-softer（中立）を使うことと整合する */
+/* 判定カテゴリの文字色。信号色（緑/橙/赤）をやめ、意味は判定名の文言そのものが伝える
+ * （DESIGN.md §2「副次は色でなく墨の濃淡」/ §7 実務側は器を静かに）。低体重のみ一段沈めた
+ * --ink-2、それ以外は本文と同じ墨。区分の差は色ではなく判定テキストで読ませる。 */
 .categoryLow {
-  color: var(--fg-soft);
+  color: var(--ink-2);
 }
 
 .categoryNormal {
-  color: var(--success-strong);
+  color: var(--ink);
 }
 
 .categoryHigh1 {
-  color: var(--warning-strong);
+  color: var(--ink);
 }
 
 .categoryHigh2 {
-  color: var(--warning-strong);
+  color: var(--ink);
 }
 
 .categoryHigh3 {
-  color: var(--danger-strong);
+  color: var(--ink);
 }
 
 .categoryHigh4 {
-  color: var(--danger-strong);
+  color: var(--ink);
 }
 
 /* 計算結果ライブリージョン（サマリテキスト） */
 .resultSummary {
   display: block;
   font-size: 0.8rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   margin-bottom: 0.25rem;
   min-height: 1.2em;
 }
@@ -204,11 +206,11 @@
 /* 免責事項 */
 .disclaimer {
   padding: 0.75rem 1rem;
-  background-color: var(--bg-soft);
-  border-radius: var(--r-normal);
+  background-color: var(--paper-2);
+  border-radius: var(--radius);
   font-size: 0.8rem;
   font-style: italic;
-  color: var(--fg-softer);
+  color: var(--ink-2);
   line-height: 1.5;
 }
 

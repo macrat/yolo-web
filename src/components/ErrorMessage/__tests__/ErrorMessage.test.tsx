@@ -75,22 +75,28 @@ describe("ErrorMessage", () => {
 
   // --- CSS 規約検証 (readFileSync パターン) ---
 
-  it("CSS が --danger-soft を背景色として使用している", () => {
+  it("CSS が --paper-2 を背景色として使用している（DESIGN.md §2: エラーは色ベタでなく墨/朱+文字で示す）", () => {
     const cssPath = resolve(__dirname, "../ErrorMessage.module.css");
     const css = readFileSync(cssPath, "utf-8");
-    expect(css).toContain("--danger-soft");
+    expect(css).toContain("--paper-2");
   });
 
-  it("CSS が --danger-strong をボーダー色として使用している", () => {
+  it("CSS が --rule を中立のボーダー色として使用している（色付き片罫にしない）", () => {
     const cssPath = resolve(__dirname, "../ErrorMessage.module.css");
     const css = readFileSync(cssPath, "utf-8");
-    expect(css).toContain("--danger-strong");
+    expect(css).toContain("--rule");
   });
 
-  it("CSS が --r-normal を使用している（エラーメッセージはインタラクティブ要素ではないため）", () => {
+  it("CSS が --accent を文字色として使用している（DESIGN.md §2: 朱+文字でエラーを示す）", () => {
     const cssPath = resolve(__dirname, "../ErrorMessage.module.css");
     const css = readFileSync(cssPath, "utf-8");
-    expect(css).toContain("--r-normal");
+    expect(css).toContain("color: var(--accent)");
+  });
+
+  it("CSS が --radius を使用している（DESIGN.md §4: インタラクティブ要素・値札のいずれでもないため 0px 基調）", () => {
+    const cssPath = resolve(__dirname, "../ErrorMessage.module.css");
+    const css = readFileSync(cssPath, "utf-8");
+    expect(css).toContain("var(--radius)");
   });
 
   it("CSS に font-weight: 700 が存在しない（DESIGN.md §3 制約）", () => {

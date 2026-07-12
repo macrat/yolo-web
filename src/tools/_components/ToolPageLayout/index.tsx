@@ -33,7 +33,8 @@ interface ToolPageLayoutProps {
  * - WebApplication JSON-LD はこの器に入れない（page.tsx 側に残す）
  * - 道具箱への追加導線は作らない（Phase 10 の責務）
  * - N-2: children が null/空要素でも howItWorks 以降のレイアウトが破綻しない
- * - 旧 --color-* トークン不使用。bold 不使用（DESIGN.md §3）
+ * - DESIGN.md フェーズ R・店構えへ変換済み: 新トークンのみ使用（--paper/--ink/--rule/--accent 等）。
+ *   ツール名は明朝見出し（§3）。旧トークン（--fg/--bg/--border/--r-*）は使用しない。
  */
 export default function ToolPageLayout({
   meta,

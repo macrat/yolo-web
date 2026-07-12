@@ -95,16 +95,16 @@ describe("FaqSection", () => {
 
   // --- CSS 規約（DESIGN.md 準拠） ---
 
-  it(".section は --border トークンを使った border-top を持つ", () => {
+  it(".section は --rule トークンを使った border-top を持つ（DESIGN.md §4: 区切りは罫）", () => {
     const cssPath = resolve(__dirname, "../FaqSection.module.css");
     const css = readFileSync(cssPath, "utf-8");
-    expect(css).toContain("var(--border)");
+    expect(css).toContain("var(--rule)");
   });
 
-  it(".item は --r-normal を使った border-radius を持つ（DESIGN.md §5: パネル・カード等は --r-normal）", () => {
+  it(".item は --radius を使った border-radius を持つ（DESIGN.md §4: 角丸は 0px 基調）", () => {
     const cssPath = resolve(__dirname, "../FaqSection.module.css");
     const css = readFileSync(cssPath, "utf-8");
-    expect(css).toContain("var(--r-normal)");
+    expect(css).toContain("var(--radius)");
   });
 
   it("フォーカス可視: outline: 2px solid var(--accent) が含まれる（DESIGN.md §2）", () => {

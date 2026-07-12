@@ -2,15 +2,14 @@
  * SqlFormatterTile.module.css
  * cycle-228 T-13: 単一正典タイル化
  *
- * DESIGN トークン準拠:
- * - 旧 --color-* トークン不使用 (B-1)
- * - --accent 直塗り禁止（フォーカスの outline のみ許可）(B-3)
- * - font-weight: 700 禁止 (B-4)
- * - インタラクティブ要素: --r-interactive (8px) (B-5)
- * - 非インタラクティブ要素: --r-normal (2px) (B-5)
- * - フォーカス: outline: 2px solid var(--accent); outline-offset: 2px; (B-2)
- * - フォーム境界線: --border-strong (B-7)
- * - box-shadow: Panel 以外に使わない (B-6)
+ * DESIGN.md（店構え）準拠:
+ * - 色は紙・墨・朱トークン経由（--paper / --ink / --accent 系）
+ * - --accent 直塗り禁止（フォーカスの outline のみ許可）
+ * - font-weight: 700 禁止
+ * - 角丸は var(--radius)（0）/ var(--radius-sm)（2px）のみ
+ * - フォーカス: outline: 2px solid var(--accent); outline-offset: 2px;
+ * - フォーム境界線: --rule-strong
+ * - box-shadow は使わない（§4）
  *
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  */
@@ -42,7 +41,7 @@
 
 .controlLabel {
   font-size: 0.875rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   white-space: nowrap;
 }
 
@@ -68,7 +67,7 @@
 
 .panelLabel {
   font-size: 0.875rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
 }
 
 /* 出力ヘッダー: ラベルとコピーボタンを横並び */

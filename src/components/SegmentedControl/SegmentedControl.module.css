@@ -1,8 +1,8 @@
-/* SegmentedControl — radiogroup 型のモード切替コンポーネント
- * DESIGN.md §2: 選択中塗りは --bg-invert (背景) / --fg-invert (文字)。AA 実証済みペア（ライト17.4:1・ダーク15.2:1）。
- * DESIGN.md §2: --accent は塗りに使わない。フォーカスのみに使う。
- * DESIGN.md §5: 角丸は --r-interactive（操作可能要素）。
- * DESIGN.md §2: フォーカスは outline: 2px solid var(--accent); outline-offset: 2px;
+/* SegmentedControl — radiogroup 型のモード切替コンポーネント（DESIGN.md フェーズ R・店構えへ変換）。
+ * DESIGN.md §2: --accent-weak は「操作・選択状態のハイライト（hover/selected の座布団）」
+ * にのみ可——本コンポーネントの selected/hover はまさにその用途（[aria-checked]/:hover）。
+ * 選択中は --accent-weak 地 + --accent 文字・枠。§4: 角丸は 0px 基調（操作可能要素だが
+ * 値札/入力欄の例外には当たらない）。フォーカスは outline: 2px solid var(--accent); outline-offset: 2px。
  * WAI-ARIA: role="radiogroup" + role="radio" + aria-checked + ロービング tabindex。
  */
 
@@ -12,9 +12,9 @@
   flex-wrap: wrap;
   gap: 4px;
   padding: 4px;
-  background: var(--bg-soft);
-  border: 1px solid var(--border);
-  border-radius: var(--r-interactive);
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
 }
 
 /* 各選択肢ボタン */
@@ -27,11 +27,9 @@
   font-size: 14px;
   font-family: inherit;
   background: transparent;
-  color: var(--fg);
+  color: var(--ink);
   border: 1px solid transparent;
-  border-radius: calc(
-    var(--r-interactive) - 2px
-  ); /* コンテナより 2px 小さく内側へ収める */
+  border-radius: var(--radius);
   cursor: pointer;
   white-space: nowrap;
   transition:
@@ -50,15 +48,15 @@
   outline-offset: 2px;
 }
 
-/* 選択中の状態: --bg-invert 地 + --fg-invert 文字（AA 実証済みペア）
- * DESIGN.md §2: --accent を塗りに使わない（①-16 を部品レベルで根絶）。 */
+/* 選択中の状態: 朱の気配（--accent-weak）の座布団 + 朱文字・朱枠。
+ * DESIGN.md §2: 状態ハイライトなので --accent-weak を地に使ってよい（gate 許容: [aria-checked]）。 */
 .option[aria-checked="true"] {
-  background: var(--bg-invert);
-  color: var(--fg-invert);
-  border-color: var(--bg-invert);
+  background: var(--accent-weak);
+  color: var(--accent);
+  border-color: var(--accent);
 }
 
-/* 非選択ホバー */
+/* 非選択ホバー: 同じ座布団を弱く（gate 許容: :hover）。 */
 .option:hover:not([aria-checked="true"]) {
-  background: var(--bg-softer);
+  background: var(--accent-weak);
 }

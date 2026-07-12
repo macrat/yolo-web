@@ -117,18 +117,18 @@ describe("Select", () => {
     expect(select.className).toMatch(/custom-class/);
   });
 
-  // CSS 規約: --r-interactive の使用を確認
-  it("Select.module.css が --r-interactive を使っている", () => {
+  // CSS 規約（DESIGN.md §4: 入力欄は角丸 2px の例外）: --radius-sm の使用を確認
+  it("Select.module.css が --radius-sm を使っている", () => {
     const cssPath = resolve(__dirname, "../Select.module.css");
     const css = readFileSync(cssPath, "utf-8");
-    expect(css).toContain("var(--r-interactive)");
+    expect(css).toContain("var(--radius-sm)");
   });
 
-  // CSS 規約: --border-strong の使用を確認
-  it("Select.module.css が --border-strong を使っている", () => {
+  // CSS 規約: --rule-strong の使用を確認
+  it("Select.module.css が --rule-strong を使っている", () => {
     const cssPath = resolve(__dirname, "../Select.module.css");
     const css = readFileSync(cssPath, "utf-8");
-    expect(css).toContain("var(--border-strong)");
+    expect(css).toContain("var(--rule-strong)");
   });
 
   // CSS 規約: フォーカスに outline を使用し border-color を使わない

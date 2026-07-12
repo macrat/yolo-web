@@ -1,7 +1,6 @@
-/* Input コンポーネントのスタイル
- * DESIGN.md §5: 操作可能要素には --r-interactive を使う
- * DESIGN.md §2: フォーカスは outline: 2px solid var(--accent); outline-offset: 2px;
- * --border-strong: --border よりコントラストが高く、フォームの輪郭を視認しやすくする
+/* Input コンポーネントのスタイル（DESIGN.md フェーズ R・店構えへ変換）。
+ * 入力欄は罫囲み（--rule-strong）+ 角丸 2px（§4 の明示的な例外＝値札ラベルと入力欄）。
+ * フォーカスは outline: 2px solid var(--accent); outline-offset: 2px。
  */
 .input {
   display: block;
@@ -11,17 +10,17 @@
   font-size: 14px;
   line-height: 1.5;
   min-height: 44px; /* WCAG 2.5.5 AAA タップターゲット推奨値 */
-  background: var(--bg);
-  color: var(--fg);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--r-interactive);
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius-sm);
   padding: 9px 12px;
   outline: none;
   transition: border-color 0.15s;
 }
 
 .input::placeholder {
-  color: var(--fg-softer);
+  color: var(--ink-2);
 }
 
 /* フォーカス: DESIGN.md §2 に従い outline を使う */
@@ -30,14 +29,15 @@
   outline-offset: 2px;
 }
 
-/* エラー状態: border を --danger に変更して危険を伝える */
+/* エラー状態: border を --accent に変更して伝える（§2「緑/赤のベタでなく墨/朱＋文字で」）。
+ * 新トークンに専用の danger は無く、朱（唯一のアクセント）で代替する。 */
 .error {
-  border-color: var(--danger);
+  border-color: var(--accent);
 }
 
 /* disabled: 操作不可を示す視覚的手がかり */
 .input:disabled {
-  background: var(--bg-soft);
-  color: var(--fg-softer);
+  background: var(--paper-2);
+  color: var(--ink-2);
   cursor: not-allowed;
 }

@@ -2,15 +2,16 @@
  * ColorConverterTile.module.css
  *
  * cycle-228 T-15: ColorConverterPage.module.css をタイル向けに移植。
+ * フェーズR: 店構え（紙・墨・朱）トークンへ移行。
  *
  * DESIGN.md 準拠:
  * - §2: フォーカスは outline: 2px solid var(--accent); outline-offset: 2px;
- * - §2: 選択状態は --bg-invert / --fg-invert ペア（--accent 直塗り禁止）
  * - §3: line-height: 1.7（フォーム要素も含む）
- * - §4: Panel 以外への影追加禁止
- * - §5: インタラクティブ要素の角丸は --r-interactive、非インタラクティブは --r-normal
- * - フォーム要素の境界線は --border-strong
+ * - §4: 影は使わない・角丸は 0（--radius）基調、入力欄のみ --radius-sm (2px)
+ * - 罫線は --rule、フォーム要素の輪郭は --rule-strong
  * - font-weight: 600 まで（700 禁止）
+ * - 結果色見本（.colorPreview）に入る実際の色は成果物データのため TSX の
+ *   inline style で入れる（chrome ではないので直書き許容・§2 成果物パレット）。
  *
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  */
@@ -40,19 +41,19 @@
 .label {
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--fg-soft);
+  color: var(--ink-2);
 }
 
-/* カラーピッカー: native <input type="color"> */
+/* カラーピッカー: native <input type="color"> → 入力欄なので --radius-sm (2px) */
 .colorPicker {
   width: 3rem;
   height: 2.75rem;
   min-height: 44px;
   padding: 0.125rem;
-  border: 1px solid var(--border-strong);
-  border-radius: var(--r-interactive);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  background-color: var(--bg);
+  background-color: var(--paper);
 }
 
 .colorPicker:focus-visible {
@@ -65,12 +66,12 @@
   margin-bottom: 1rem;
 }
 
-/* カラープレビュー（変換結果の色見本） */
+/* カラープレビュー（変換結果の色見本）— 実際の色は TSX の inline style で入る */
 .colorPreview {
   width: 100%;
   height: 4rem;
-  border: 1px solid var(--border-strong);
-  border-radius: var(--r-normal);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
   margin-bottom: 1rem;
 }
 
@@ -86,15 +87,15 @@
   flex-direction: column;
   gap: 0.375rem;
   padding: 0.75rem;
-  border: 1px solid var(--border-strong);
-  border-radius: var(--r-normal);
-  background-color: var(--bg);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
+  background-color: var(--paper);
 }
 
 .resultCardLabel {
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -102,7 +103,7 @@
 .resultCardValue {
   font-family: var(--font-mono);
   font-size: 0.875rem;
-  color: var(--fg);
+  color: var(--ink);
   word-break: break-all;
   line-height: 1.5;
   flex: 1;

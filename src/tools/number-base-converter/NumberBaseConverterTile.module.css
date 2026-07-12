@@ -1,7 +1,7 @@
 /* NumberBaseConverterTile スタイル
  * cycle-228 T-9: NumberBaseConverterPage.module.css をタイル向けに移植。
- * DESIGN トークン準拠（--color-* 旧トークン不使用・bold禁止・
- * --r-interactive / --r-normal 使用・--border-strong 使用）
+ * フェーズR C5: 新デザイントークン（紙・墨・朱）へ移行。
+ * 結果カード＝沈む面（--paper-2）+ 罫（--rule）・角丸0（--radius）。
  *
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  *
@@ -32,7 +32,7 @@
 
 .fieldLabel {
   font-size: 0.875rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
 }
 
 /* 変換結果グリッド（variant=full 用: 2列×2行） */
@@ -48,20 +48,20 @@
   flex-direction: column;
   gap: 0.5rem;
   padding: 0.75rem;
-  border: 1px solid var(--border);
-  border-radius: var(--r-normal);
-  background-color: var(--bg-soft);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background-color: var(--paper-2);
 }
 
 .resultCardLabel {
   font-size: 0.75rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
 }
 
 .resultCardValue {
   font-family: var(--font-mono);
   font-size: 0.9rem;
-  color: var(--fg);
+  color: var(--ink);
   word-break: break-all;
   min-height: 1.3em;
 }
@@ -75,7 +75,7 @@
 /* variant=bin-hex 用: 方向ラベル（2進数 → 16進数） */
 .directionLabel {
   font-size: 0.875rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   margin-bottom: 0.75rem;
 }
 
@@ -85,9 +85,9 @@
   flex-direction: column;
   gap: 0.5rem;
   padding: 0.75rem;
-  border: 1px solid var(--border);
-  border-radius: var(--r-normal);
-  background-color: var(--bg-soft);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background-color: var(--paper-2);
   margin-bottom: 0.5rem;
 }
 
@@ -99,13 +99,13 @@
 
 .hexResultLabel {
   font-size: 0.75rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
 }
 
 .hexResultValue {
   font-family: var(--font-mono);
   font-size: 1rem;
-  color: var(--fg);
+  color: var(--ink);
   word-break: break-all;
   min-height: 1.5em;
 }

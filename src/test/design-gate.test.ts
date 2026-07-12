@@ -155,6 +155,29 @@ const NEW_DESIGN_CSS = [
   "src/app/\\(new\\)/play/*/page.module.css",
   "src/app/\\(new\\)/play/*/result/*/page.module.css",
   "src/app/\\(new\\)/play/*/result/*/DescriptionExpander.module.css",
+  // ツール詳細クラスタ（フェーズR・C5 変換済み）。実務寄りの器（§7 実務側）。
+  // 共有レイアウト（実質的な旧 ToolLayout。全 36 ツールが実際に使う唯一の器）。
+  "src/tools/_components/ToolPageLayout/ToolPageLayout.module.css",
+  "src/tools/_components/ErrorBoundary.module.css",
+  // 全 36 タイルの実装 CSS を広域で網羅（C5 変換済み。__tests__ は IGNORE で除外）。
+  "src/tools/**/*.module.css",
+  // ツール詳細から使う多面共有部品（Breadcrumb/FaqSection は辞典詳細等とも共有）。
+  "src/components/Breadcrumb/**/*.module.css",
+  "src/components/FaqSection/**/*.module.css",
+  "src/components/RelatedTools/**/*.module.css",
+  "src/components/RelatedBlogPosts/**/*.module.css",
+  // 36 タイルの実装土台となる操作系プリミティブ（入力欄・ボタン等）。
+  // ツールがほぼ唯一の消費者（Panel は /play 一覧、Input は blog/play の絞り込みからも
+  // 参照されるが、トークンは共通のため店構え化の副作用として恩恵を受ける）。
+  "src/components/Panel/**/*.module.css",
+  "src/components/Button/**/*.module.css",
+  "src/components/Textarea/**/*.module.css",
+  "src/components/Input/**/*.module.css",
+  "src/components/Select/**/*.module.css",
+  "src/components/ToggleSwitch/**/*.module.css",
+  "src/components/ErrorMessage/**/*.module.css",
+  "src/components/SegmentedControl/**/*.module.css",
+  "src/components/FileDropZone/**/*.module.css",
 ];
 const NEW_DESIGN_TSX = [
   "src/app/\\(new\\)/page.tsx", // トップ（店構え・C2 変換）。インライン style の禁止を検査
@@ -258,6 +281,25 @@ const NEW_DESIGN_TSX = [
   "src/app/\\(new\\)/play/*/result/*/page.tsx",
   "src/app/\\(new\\)/play/*/result/*/DescriptionExpander.tsx",
   "src/app/\\(new\\)/play/*/result/*/CompatibilityDisplay.tsx",
+  // ツール詳細クラスタ（フェーズR・C5 変換済み）。インライン style の禁止を検査。
+  "src/tools/_components/ToolPageLayout/index.tsx",
+  "src/tools/_components/ToolPageLayout/TileInteractionTracker.tsx",
+  "src/tools/_components/ErrorBoundary.tsx",
+  // 全 36 タイルの実装 TSX を広域で網羅（インライン style 禁止検査。__tests__ は IGNORE で除外）。
+  "src/tools/**/*.tsx",
+  "src/components/Breadcrumb/**/*.tsx",
+  "src/components/FaqSection/**/*.tsx",
+  "src/components/RelatedTools/**/*.tsx",
+  "src/components/RelatedBlogPosts/**/*.tsx",
+  "src/components/Panel/**/*.tsx",
+  "src/components/Button/**/*.tsx",
+  "src/components/Textarea/**/*.tsx",
+  "src/components/Input/**/*.tsx",
+  "src/components/Select/**/*.tsx",
+  "src/components/ToggleSwitch/**/*.tsx",
+  "src/components/ErrorMessage/**/*.tsx",
+  "src/components/SegmentedControl/**/*.tsx",
+  "src/components/FileDropZone/**/*.tsx",
 ];
 // テストコードは走査対象外（テスト文字列に禁止語が入るため）。
 const IGNORE = ["**/__tests__/**", "**/*.test.ts", "**/*.test.tsx"];
@@ -271,6 +313,17 @@ const ALLOWLIST: { fileEndsWith: string; declaration: string }[] = [
   {
     fileEndsWith: "src/app/globals.css",
     declaration: "border-radius: 0 4px 4px 0",
+  },
+  // ToggleSwitch のトラック（横長楕円）とサム（丸いつまみ）は、操作系コンポーネントの
+  // 物理的な型（スイッチのメタファー）であり、§8-5 が禁じる「ピル形状のボタン」
+  // （装飾目的の一律角丸）には当たらない。値札/入力欄と同様の明示的な例外として許容する。
+  {
+    fileEndsWith: "src/components/ToggleSwitch/ToggleSwitch.module.css",
+    declaration: "border-radius: 999px",
+  },
+  {
+    fileEndsWith: "src/components/ToggleSwitch/ToggleSwitch.module.css",
+    declaration: "border-radius: 50%",
   },
 ];
 

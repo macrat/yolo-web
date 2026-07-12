@@ -1,7 +1,8 @@
 /* DummyTextTile スタイル
  * cycle-228 T-8: DummyTextPage.module.css をタイル向けに移植。
- * DESIGN トークン準拠（--color-* 旧トークン不使用・bold禁止・
- * --r-interactive / --r-normal 使用・--border-strong 使用）
+ * フェーズR: 店構え（紙・墨・朱）トークンへ移行。
+ * DESIGN.md 準拠（補足文字は --ink-2・font-weight 700 禁止・
+ * 角丸 0（--radius）基調・入力欄は共通 Input が --radius-sm を提供）
  *
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  */
@@ -26,7 +27,7 @@
 
 .numberLabel {
   font-size: 0.875rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
 }
 
 /* number input の幅のみを指定する。
@@ -43,7 +44,7 @@
   flex-wrap: wrap;
   gap: 1rem;
   font-size: 0.875rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   margin-bottom: 1rem;
 }
 
@@ -62,13 +63,13 @@
 
 .outputLabel {
   font-size: 0.875rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
 }
 
 /* ライブリージョン（C-3 準拠: 実テキストノードのサマリ） */
 .statusSummary {
   font-size: 0.8rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   min-height: 1.2em;
 }
 

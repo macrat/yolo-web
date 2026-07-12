@@ -1,15 +1,17 @@
-/* ErrorMessage コンポーネントのスタイル
- * DESIGN.md §2: --danger-soft 背景 + --danger-strong ボーダーの作法
- * DESIGN.md §5: --r-normal (2px) — インタラクティブ要素ではないため
- * role="alert" が assertive を暗黙指定するため aria-live の二重指定はしない
+/* ErrorMessage コンポーネントのスタイル（DESIGN.md フェーズ R・店構えへ変換）。
+ * DESIGN.md §2: ステータス色（成功/エラー）が要る箇所は緑/赤のベタでなく墨/朱＋文字で
+ * 示す（器は静か・アクセントは朱の1色）——地は --paper-2（区画の沈み）に留め、
+ * 色の識別は文字（--accent）だけが担う。枠は中立の --rule のみ（色付き片罫にしない）。
+ * role="alert" が assertive を暗黙指定するため aria-live の二重指定はしない。
+ * 角丸は 0px 基調（インタラクティブ要素でも値札でもないため §4 の 2px 例外に含まれない）。
  */
 .errorMessage {
   display: block;
-  padding: 0.75rem 1rem;
-  background-color: var(--danger-soft);
-  border: 1px solid var(--danger-strong);
-  border-radius: var(--r-normal);
-  color: var(--danger-strong);
+  padding: var(--space-8) var(--space-16);
+  background-color: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  color: var(--accent);
   font-size: 0.9rem;
   line-height: 1.5;
 }

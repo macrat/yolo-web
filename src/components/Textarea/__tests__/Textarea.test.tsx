@@ -118,11 +118,11 @@ describe("Textarea", () => {
   });
 
   // --- CSS 規約検証（readFileSync パターン） ---
-  it(".textarea has border-radius: var(--r-interactive) (DESIGN §5)", () => {
+  it(".textarea has border-radius: var(--radius-sm) (DESIGN.md §4: 入力欄の 2px 例外)", () => {
     const cssPath = resolve(__dirname, "../Textarea.module.css");
     const css = readFileSync(cssPath, "utf-8");
     const textareaBlock = css.match(/\.textarea\s*\{[^}]+\}/)?.[0] ?? "";
-    expect(textareaBlock).toContain("var(--r-interactive)");
+    expect(textareaBlock).toContain("var(--radius-sm)");
   });
 
   it(".textarea:focus-visible has outline: 2px solid var(--accent) (DESIGN §2)", () => {
@@ -138,11 +138,11 @@ describe("Textarea", () => {
     expect(css).toContain("outline-offset: 2px");
   });
 
-  it(".textarea uses --border-strong (DESIGN §2)", () => {
+  it(".textarea uses --rule-strong (DESIGN.md §4)", () => {
     const cssPath = resolve(__dirname, "../Textarea.module.css");
     const css = readFileSync(cssPath, "utf-8");
     const textareaBlock = css.match(/\.textarea\s*\{[^}]+\}/)?.[0] ?? "";
-    expect(textareaBlock).toContain("var(--border-strong)");
+    expect(textareaBlock).toContain("var(--rule-strong)");
   });
 
   it(".textarea has resize: vertical", () => {

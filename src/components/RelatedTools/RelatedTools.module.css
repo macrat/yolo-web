@@ -1,65 +1,69 @@
-/**
- * RelatedTools — 関連ツール一覧コンポーネント。
- * new デザイン体系のみ使用（DESIGN.md §2, globals.css 参照）。
- * 旧デザイントークンは一切使用しない。
+/*
+ * RelatedTools — 関連ツール一覧（DESIGN.md フェーズ R・店構えへ変換）。
+ * §4「品書き（一覧の既定形）」: カードのグリッドではなく罫区切りのリストで組む
+ * （PlayRecommendBlock と同型）。器は静か——背景色・box-shadow・カード角丸なし。
+ * 区切りの主役は --rule の一本罫。品名は明朝、hover で朱＋下線（下線はリンク専有・§3）。
  */
 
 .related {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--border);
+  margin-top: var(--space-32);
+  padding-top: var(--space-24);
+  border-top: 1px solid var(--rule);
 }
 
 .heading {
-  font-size: 1rem;
-  /* DESIGN.md §3: 本文中での太字は原則として使わない */
-  margin-bottom: 0.75rem;
-  color: var(--fg);
+  font-family: var(--font-mincho);
+  font-size: 1.25rem; /* 見出しスケール帯（20px 目安） */
+  line-height: 1.4;
+  font-feature-settings: "palt";
+  margin: 0 0 var(--space-16);
+  color: var(--ink);
 }
 
+/* 品書き本体: 上辺にも罫を引き、各行の下辺罫と合わせて全行を罫で囲う。 */
 .list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
   list-style: none;
   margin: 0;
   padding: 0;
+  border-top: 1px solid var(--rule);
 }
 
+.row {
+  border-bottom: 1px solid var(--rule);
+}
+
+/* 各行は 1 本のリンク: 品名 → ひとこと を縦に積む。カード装飾・影・色地なし。 */
 .link {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
-  padding: 0.75rem 1rem;
-  border: 1px solid var(--border);
-  /* DESIGN.md §5: --r-normal (2px) — パネル・カード等すべての要素 */
-  border-radius: var(--r-normal);
+  gap: var(--space-8);
+  padding: var(--space-16) 0;
   text-decoration: none;
-  min-width: 200px;
-  /* 背景はパネルに合わせて --bg を使う */
-  background-color: var(--bg);
-  transition: border-color 0.15s;
 }
 
-.link:hover {
-  border-color: var(--accent);
-}
-
-/* WCAG 2.4.7: フォーカス可視性 */
 .link:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
+/* 品名: 一覧の主役（明朝・墨）。hover で朱＋下線（§3 リンク専有）。 */
 .name {
-  /* DESIGN.md §3: 本文中での太字は原則として使わない */
-  color: var(--accent);
-  font-size: 0.9375rem; /* 15px */
+  color: var(--ink);
+  font-family: var(--font-mincho);
+  font-size: 1.0625rem; /* 17px 目安 */
   line-height: 1.4;
 }
 
+.link:hover .name {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+/* ひとこと: 補足の墨（ゴシック）。 */
 .description {
-  font-size: 0.8125rem; /* 13px */
-  color: var(--fg-soft);
-  line-height: 1.5;
+  font-family: var(--font-gothic);
+  font-size: 0.9375rem; /* 15px */
+  color: var(--ink-2);
+  line-height: 1.6;
 }

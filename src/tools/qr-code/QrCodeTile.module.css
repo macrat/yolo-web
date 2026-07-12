@@ -1,7 +1,7 @@
 /* QrCodeTile スタイル
  * cycle-228 T-25: QrCodePage.module.css をタイル向けに継承・移植。
- * DESIGN トークン準拠（--color-* 旧トークン不使用・bold禁止・
- * --r-interactive / --r-normal 使用・--border-strong 使用）
+ * DESIGN.md（店構え）準拠（色は紙・墨・朱トークン経由・bold禁止・
+ * 角丸は var(--radius) / var(--radius-sm) のみ・罫は --rule-strong）
  *
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  */
@@ -19,7 +19,7 @@
 
 .label {
   font-size: 0.9rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
 }
 
 .controls {
@@ -38,7 +38,7 @@
 
 .controlLabel {
   font-size: 0.9rem;
-  color: var(--fg-soft);
+  color: var(--ink-2);
   /* ux-gate-findings 低指摘: 狭幅でラベルが折り返されないよう nowrap を設定する */
   white-space: nowrap;
 }
@@ -49,16 +49,19 @@
   align-items: center;
   gap: 1rem;
   padding: 1.5rem;
-  border: 1px solid var(--border-strong);
-  border-radius: var(--r-normal);
-  background-color: var(--bg-soft);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
+  background-color: var(--paper-2);
 }
 
-/* QR コードは白背景で読み取り精度を確保する */
+/* QR コードは白背景で読み取り精度を確保する。
+ * テーマ（明暗）に関わらず常に白でなければならない——QR は白地に暗いモジュール
+ * かつ周囲の quiet-zone が白であることを前提に読み取られるため。ゆえにトークン化
+ * せず CSS キーワード white を用いる（「常に白」という意図を正直に表す）。 */
 .qrImage {
-  background-color: #fff;
+  background-color: white;
   padding: 1rem;
-  border-radius: var(--r-normal);
+  border-radius: var(--radius);
 }
 
 .qrImage svg {
@@ -69,9 +72,8 @@
 
 .placeholder {
   font-size: 0.9rem;
-  /* --fg-softer は三次/キャプション用の定義済みトークン（globals.css 参照）。
-   * --fg-muted は未定義トークンのため使用禁止（B-8 違反）。 */
-  color: var(--fg-softer);
+  /* 新トークンに三段階目の文字色は無いため、キャプション相当は --ink-2 に統合する。 */
+  color: var(--ink-2);
   text-align: center;
   margin: 0;
 }
