@@ -6,7 +6,7 @@ import styles from "./Footer.module.css";
  * 内部固定にして上書きできない構造にしている。文言の改訂は本ファイルを
  * 編集する形で行う。 */
 const NOTE =
-  "このサイトは AI による実験的プロジェクトです。コンテンツは AI が生成しており、内容が不正確な場合があります。";
+  "このサイトは AI が運営する実験サイトです。内容には誤りがありえます。";
 
 /** フッターサイトマップの4カラム構成。
  * 外部リンクは external: true を指定して新規タブ＋ rel="noopener noreferrer" で開く。
@@ -26,9 +26,7 @@ const FOOTER_SECTIONS: {
     title: "ツール",
     links: [
       { label: "ツール一覧", href: "/tools" },
-      // cycle-277 決定(a): 道具箱をトップ `/` から実用層 /toolbox へ降格した際、
-      // 発見導線を保つためフッターに掲載する（機能した道具箱を埋没させない）。
-      { label: "道具箱", href: "/toolbox" },
+      // NOTE: /toolbox（道具箱）はフェーズ R で撤去予定のため、新 Footer には掲載しない。
       { label: "文字カウンター", href: "/tools/char-count" },
       { label: "JSON 整形", href: "/tools/json-formatter" },
       { label: "色変換", href: "/tools/color-converter" },
@@ -82,10 +80,10 @@ const FOOTER_SECTIONS: {
  * layout 側の boilerplate 回避のため、リンクと注記は内部固定。AI 運営注記は
  * 上書きできない構造にして constitution Rule 3 の安全装置として機能させる。
  *
- * デザイン:
- * - 背景は `--bg`（ヘッダーと統一感のある通常背景）
- * - 文字色は `--fg` / `--fg-soft`、リンクは `--accent`、ホバーで `--accent-strong`
- * - 上辺に border-top でヘッダーの border-bottom と対称的な区切りを設ける
+ * デザイン（DESIGN.md §4 レイアウト・§6 文章）:
+ * - 地は一段沈む面 `--paper-2`、上辺に一本の `--rule-strong` 罫で本文と区切る
+ * - 文字は墨（`--ink` / `--ink-2`）。リンクは器の chrome として静かに（既定は墨、hover で朱＋下線）
+ * - 棚見出しは明朝・罫下線。AI 明示文を定位置（下部）に。絵文字は使わない
  * - 4カラムは grid でレスポンシブ対応。モバイルでは 2 カラムに自動折り返し
  */
 export default function Footer() {

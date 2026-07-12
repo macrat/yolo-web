@@ -1,51 +1,50 @@
 /*
- * Footer — サイトフッター
- * cycle-171 T4: ヘッダーと統一感のある通常背景（--bg）に変更。
- * 旧 --bg-invert 設計ではダークモード時に明色背景になり「ライトモードのフッター」に見えた。
- * border-top でヘッダーの border-bottom と対称的な区切りを設ける。
- * cycle-171 T4 追加修正: 4カラムサイトマップへ拡張。
+ * Footer（店構え）— DESIGN.md §4 レイアウト・§6 文章。
+ * 紙墨朱・罫で区切る。地は一段沈む面 --paper-2。AI 明示を定位置（下部）に。絵文字なし。
+ * リンクは器の chrome として静かに扱う（器は静か・§4/§7）。角丸は 0 基調（--radius）。
  */
 .footer {
-  background: var(--bg);
-  color: var(--fg-soft);
-  border-top: 1px solid var(--border);
+  background: var(--paper-2);
+  color: var(--ink-2);
+  /* 本文との境界は「区切りの主格」= 強い罫（§4）。 */
+  border-top: 1px solid var(--rule-strong);
 }
 
 .inner {
-  max-width: 1200px;
+  max-width: var(--max-width);
   margin: 0 auto;
-  padding: 2rem 1.25rem;
+  padding: var(--space-48) var(--space-16);
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: var(--space-32);
 }
 
 /*
- * 4カラムサイトマップ。
- * DESIGN.md §4「ブレークポイントよりも自然な縮小」に従い auto-fit + minmax で
- * 画面幅に応じて自然に 4→2→1 カラムへ折り返す。
- * minmax の最小値 160px はカラムタイトルが折り返さない最小幅。
+ * 棚（区画）のグリッド。auto-fit + minmax で画面幅に応じて 4→2→1 カラムへ自然に折り返す。
+ * minmax の最小値 160px は棚見出しが折り返さない最小幅。
  */
 .sitemap {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 1.5rem 2rem;
+  gap: var(--space-24) var(--space-32);
 }
 
 .column {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--space-8);
 }
 
-/* カラムタイトルは --fg-soft の小さめフォント。DESIGN.md §3 に従い太字は使わない */
+/* 棚の見出し（品名の親）: 明朝・墨。罫下線で棚を仕切る。all-caps は使わない（§8-6）。 */
 .columnTitle {
-  color: var(--fg-soft);
-  font-size: 0.75rem;
-  font-weight: normal;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin: 0 0 0.25rem;
+  color: var(--ink);
+  font-family: var(--font-mincho);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  letter-spacing: 0.01em;
+  margin: 0 0 var(--space-8);
+  padding-bottom: var(--space-8);
+  border-bottom: 1px solid var(--rule);
 }
 
 .columnLinks {
@@ -54,21 +53,25 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: var(--space-8);
 }
 
-/* リンクは --accent で表示（仕様書より）、ホバーで --accent-strong */
+/* リンク: 器の chrome として静かに（§4/§7「器は静か」）。既定は墨、hover で朱＋下線。
+ * 下線はリンクの専有（§3）——静止時は下線を出さず、hover で操作可能を示す。 */
 .link {
-  color: var(--accent);
+  color: var(--ink-2);
   text-decoration: none;
   font-size: 0.875rem;
   display: inline-flex;
   align-items: center;
   gap: 0.2em;
+  transition: color 0.1s;
 }
 
 .link:hover {
-  color: var(--accent-strong);
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
 }
 
 .link:focus-visible {
@@ -76,38 +79,37 @@
   outline-offset: 2px;
 }
 
-/* 外部リンクの「↗」記号。DESIGN.md §3 に従いテキストより小さめのサイズ */
+/* 外部リンクの「↗」記号（テキスト記号・絵文字ではない）。本文より小さめ。 */
 .externalIcon {
   font-size: 0.7em;
   opacity: 0.8;
 }
 
-/* フッター下部: AI 運営注記と著作権 */
+/* 下部: AI 明示（定位置・§6/constitution rule3）と著作権。上を罫で区切る。 */
 .bottom {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: 0.5rem 2rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border);
+  gap: var(--space-8) var(--space-32);
+  padding-top: var(--space-24);
+  border-top: 1px solid var(--rule);
 }
 
 .note {
-  color: var(--fg-soft);
+  color: var(--ink-2);
   font-size: 0.8125rem;
-  /* DESIGN.md §3: 行間は原則1.7倍 */
   line-height: 1.7;
   flex: 1 1 auto;
   min-width: 0;
 }
 
 .copyright {
-  color: var(--fg-soft);
+  color: var(--ink-2);
   font-size: 0.875rem;
   white-space: nowrap;
 }
 
-/* モバイルでのタップターゲット 44px 確保。デスクトップではコンパクトな見た目を維持 */
+/* モバイルでのタップターゲット 44px 確保。デスクトップではコンパクトな見た目を維持。 */
 @media (max-width: 720px) {
   .link {
     min-height: 44px;

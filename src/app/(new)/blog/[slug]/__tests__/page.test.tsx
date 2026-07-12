@@ -158,23 +158,32 @@ describe("(new)/blog/[slug]/page", () => {
     });
   });
 
-  describe("contentColumn の幅・パディングがグローバルヘッダー/フッターと同期していること（cycle-188/189 で発生した右端ズレの退行防止）", () => {
-    it(".contentColumn に max-width: 1200px が定義されていること", () => {
+  // cycle-188/189 の右端ズレ退行防止ガード。cycle-279 フェーズR で のれん/Footer(chrome) は
+  // 新デザイン（横パディング=var(--space-16)=§4 の 8px スケール・--max-width）へ移行済み。
+  // blog 本文カラム（下の 1200px/1.25rem）はまだ旧デザインのため、chrome↔本文の完全整列は
+  // C5（blog 移行）で新デザイン基準（中央寄せの --measure 読み幅 or --max-width）に再定義する。
+  // それまでは (a) blog 本文の現状値と (b) chrome の新デザイン値を、別々に guard する。
+  describe("グローバルヘッダー/フッターと本文カラムの横幅整列（cycle-188/189 退行防止・cycle-279で chrome を新デザインへ移行）", () => {
+    it(".contentColumn に max-width: 1200px が定義されていること（旧デザイン・C5で新基準へ）", () => {
       expect(css).toMatch(/\.contentColumn[^{]*\{[^}]*max-width:\s*1200px/);
     });
 
-    it(".contentColumn に padding: 2rem 1.25rem が定義されていること（左右 1.25rem は Header/Footer .inner と同値）", () => {
+    it(".contentColumn に padding: 2rem 1.25rem が定義されていること（旧デザイン・C5で新基準へ）", () => {
       expect(css).toMatch(
         /\.contentColumn[^{]*\{[^}]*padding:\s*2rem\s+1\.25rem/,
       );
     });
 
-    it("Footer.module.css の .inner padding 横幅が 1.25rem であること（contentColumn と一致）", () => {
-      expect(footerCss).toMatch(/\.inner[^{]*\{[^}]*padding:[^;}]*1\.25rem/);
+    it("Footer.module.css の .inner 横パディングが var(--space-16) であること（新デザイン chrome の一貫性）", () => {
+      expect(footerCss).toMatch(
+        /\.inner[^{]*\{[^}]*padding:[^;}]*var\(--space-16\)/,
+      );
     });
 
-    it("Header.module.css の .inner padding 横幅が 1.25rem であること（contentColumn と一致）", () => {
-      expect(headerCss).toMatch(/\.inner[^{]*\{[^}]*padding:[^;}]*1\.25rem/);
+    it("Header.module.css の .inner 横パディングが var(--space-16) であること（新デザイン chrome の一貫性）", () => {
+      expect(headerCss).toMatch(
+        /\.inner[^{]*\{[^}]*padding:[^;}]*var\(--space-16\)/,
+      );
     });
 
     it("page.module.css の SP ブレークポイントは 720px（Header/Footer と一致）", () => {

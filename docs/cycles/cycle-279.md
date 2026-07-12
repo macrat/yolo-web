@@ -53,7 +53,7 @@ completed_at: null
 ### C5. 全36ツール(共有ToolLayout一律移行)+ブログ記事
 
 - [ ] 全36ツール(`src/tools/*/`)を新デザインへ一律移行。yoji-search/char-count/percent-calculator含む全て。
-- [ ] `/blog/[slug]` 記事本文。
+- [ ] `/blog/[slug]` 記事本文。**併せて**: contentColumn を新デザイン基準（中央寄せ --measure 読み幅 or --max-width・横 --space-16）へ移行し、C0.2 で保留した「chrome↔本文カラムの右端整列」退行ガード（cycle-188/189起源・blog page.test.tsx）を新基準で再定義する。
 
 ### 横断
 

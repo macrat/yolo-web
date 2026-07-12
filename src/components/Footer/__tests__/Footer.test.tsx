@@ -12,9 +12,11 @@ describe("Footer", () => {
   test("AI 運営の注記が描画される（constitution Rule 3 の安全装置）", () => {
     render(<Footer />);
     const footer = screen.getByRole("contentinfo");
-    // 内部固定の NOTE に「AI」と「不正確」が含まれることを保証
+    // 内部固定の NOTE（DESIGN.md §6 / constitution rule3 の定型文）に
+    // 「AI が運営する実験」であることと「誤りがありえる」旨が含まれることを保証。
     expect(footer.textContent).toContain("AI");
-    expect(footer.textContent).toContain("不正確");
+    expect(footer.textContent).toContain("実験");
+    expect(footer.textContent).toContain("誤り");
   });
 
   test("ブログカテゴリリンクの href が ALL_CATEGORIES と整合する（死リンク防止）", () => {

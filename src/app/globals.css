@@ -232,11 +232,10 @@ body {
 }
 
 body {
-  /* フォントスタック・スムージング — old-globals.css からの移植 */
-  font-family:
-    system-ui,
-    -apple-system,
-    sans-serif;
+  /* 本文・UI はシステム日本語ゴシック（DESIGN.md §3「本文・UI」）。--font-gothic は
+   * globals の :root で Hiragino/Yu Gothic/Noto Sans JP のスタックとして定義済み。
+   * 旧 system-ui スタックから置換し、(new)/ 配下の地の文をゴシックの手に統一する。 */
+  font-family: var(--font-gothic);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   /* --font-mono: old-globals.css L16 と同一値で (legacy)/(new) 混在期間中のフォント分裂を防ぐ。
@@ -256,6 +255,10 @@ body {
 
 a {
   color: var(--accent);
+  /* 下線はリンクの専有（DESIGN.md §3）。ナビ・店号など chrome のリンクは
+   * 各 module.css で text-decoration:none に上書きする。 */
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
 }
 a:hover {
   color: var(--accent-strong);
@@ -265,6 +268,67 @@ hr {
   border: none;
   border-top: 1px solid var(--border);
   margin: 1.5em 0;
+}
+
+/* ==========================================================================
+ * フェーズ R 基調タイポグラフィ（DESIGN.md §3）— C0.2 グローバル基層。
+ * (new)/ 配下の全ページに効く「器」の字組み。既存のリセット/admonition/keyframes/
+ * 旧トークンは変更せず、明朝の見出し・読み物の行間・数字ユーティリティ・フォーカス可視だけを足す。
+ * これらは要素・ユーティリティ選択子（低い詳細度）で書くため、個別コンポーネントの
+ * module.css（クラス選択子＝高い詳細度）が必要に応じて上書きできる。
+ * ========================================================================== */
+
+/* 見出し: 明朝の顔（DESIGN.md §3）。palt（詰め）は見出しのみ・line-height 1.4・
+ * 1.25 倍スケール（16/20/25/31/39px）。ウェイトは明朝 600（--font-mincho は 600 一本）。 */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-mincho);
+  font-weight: 600;
+  line-height: 1.4;
+  font-feature-settings: "palt";
+}
+h1 {
+  font-size: 2.4375rem; /* 39px */
+}
+h2 {
+  font-size: 1.9375rem; /* 31px */
+}
+h3 {
+  font-size: 1.5625rem; /* 25px */
+}
+h4 {
+  font-size: 1.25rem; /* 20px */
+}
+h5,
+h6 {
+  font-size: 1rem; /* 16px */
+}
+
+/* 読み物コンテナ: 文章として読ませる文は 16px / line-height 1.9・ベタ組み（DESIGN.md §3）。
+ * body 既定を一律 1.9 にすると UI（ナビ・ボタン・値札）が間延びするため、body 既定は
+ * 現行の 1.7 のまま維持し、読ませる本文だけ .prose / [data-prose] に 1.9 を当てる。
+ * 補助情報（キャプション・値札 13–14px）はこのコンテナの外で扱う。 */
+.prose,
+[data-prose] {
+  line-height: 1.9;
+  font-feature-settings: normal;
+}
+
+/* フォーカス可視（DESIGN.md §10 の基本形）。既存コンポーネント個別の :focus-visible と同値。 */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* 数字ユーティリティ: スコア・計測値・結果の主役に等幅数字（DESIGN.md §3）。 */
+.tabular,
+[data-number] {
+  font-family: var(--font-number);
+  font-feature-settings: "tnum";
 }
 
 /* アクセシビリティ — old-globals.css からの移植 */

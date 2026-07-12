@@ -1,56 +1,54 @@
 /**
- * Header コンポーネントのスタイル。
- * DESIGN.md の新体系トークンのみを使用する。
- * ロゴデザインは docs/design-system-by-claude-design/preview/logo.html を参照。
+ * Header（のれん）— DESIGN.md §4「のれん」。
+ * 店号（サイト名・明朝）+ 下に一本の --rule-strong 罫。ナビは文字のみ・現在地は朱。
+ * ヘッダに背景色・影は付けない（§4）。地は紙のまま。
+ * 角丸は 0 基調（--radius）。トークンは DESIGN.md（§2/§3/§4）が正典。
  */
 
 .header {
-  /* Header コンポーネント専用のローカルスコープ変数。
-   * .inner の height と .mobileOverlay の top が同じ値を参照するため、
-   * 一箇所で管理してマジックナンバーの重複を避ける。 */
+  /* .inner の height と .mobileOverlay の top が同じ値を参照するためローカル変数で一元化。 */
   --header-height: 3.5rem;
-  background: var(--bg);
-  border-bottom: 1px solid var(--border);
-  /* 横スクロールを防ぐ */
+  /* §4: 背景色・影を付けない。下辺に一本の強い罫（のれん罫）だけを引く。 */
+  background: transparent;
+  border-bottom: 1px solid var(--rule-strong);
   width: 100%;
 }
 
 .inner {
-  /* 最大幅 1200px で中央揃え */
-  max-width: 1200px;
+  /* 操作面の最大幅（§4）。 */
+  max-width: var(--max-width);
   margin: 0 auto;
-  padding: 0 1.25rem;
+  padding: 0 var(--space-16);
   height: var(--header-height);
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: var(--space-24);
 }
 
-/* ロゴ: "yolos.net" テキストロゴ */
+/* 店号: サイト名・明朝（§4）。ドット（"."）のみ朱。 */
 .logo {
-  /* リンクのデフォルト色を上書き */
-  color: var(--fg);
+  color: var(--ink);
   text-decoration: none;
-  /* 参考 logo.html は 28px だが、ヘッダー高さ 3.5rem (56px) に収めるには大きすぎる
-   * ため 1.1rem (≒17.6px) に縮小。font-weight / letter-spacing / dot=accent は再現 */
-  font-size: 1.1rem;
+  font-family: var(--font-mincho);
   font-weight: 600;
-  letter-spacing: -0.01em;
+  /* のれんの店号として本文より一段大きく、明朝の顔を立てる（§3 見出しスケール h4 相当）。 */
+  font-size: 1.375rem;
   line-height: 1;
+  letter-spacing: 0.01em;
   white-space: nowrap;
   flex-shrink: 0;
-  /* モバイルでのタップターゲット 44px 確保 */
+  /* モバイルのタップターゲット 44px 確保。 */
   min-height: 44px;
   display: inline-flex;
   align-items: center;
 }
 
 .logo:hover {
-  color: var(--fg);
+  color: var(--ink);
   text-decoration: none;
 }
 
-/* ドット（"."）のアクセントカラー */
+/* ドット（"."）の朱アクセント。 */
 .dot {
   color: var(--accent);
 }
@@ -59,24 +57,22 @@
    デスクトップ専用要素（デフォルト表示）
    ============================== */
 
-/* デスクトップ: ナビゲーションエリア（ロゴの右に配置し、残りのスペースを使う） */
 .desktopNav {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: var(--space-24);
   flex: 1;
 }
 
-/* デスクトップ: アクションスロット（右端） */
 .desktopActions {
   margin-left: auto;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-8);
   flex-shrink: 0;
 }
 
-/* 検索ボタン共通（デスクトップ・モバイル両方で使う見た目） */
+/* 検索ボタン（文字/線画のみ・装飾なし・角丸 0）。 */
 .searchButton,
 .mobileSearchButton {
   display: inline-flex;
@@ -85,17 +81,14 @@
   background: none;
   border: none;
   cursor: pointer;
-  color: var(--fg-soft);
-  border-radius: var(--r-interactive);
-  transition:
-    background-color 0.1s,
-    color 0.1s;
+  color: var(--ink-2);
+  border-radius: var(--radius);
+  transition: color 0.1s;
 }
 
 .searchButton:hover,
 .mobileSearchButton:hover {
-  background: var(--bg-soft);
-  color: var(--fg);
+  color: var(--ink);
 }
 
 .searchButton:focus-visible,
@@ -104,49 +97,44 @@
   outline-offset: 2px;
 }
 
-/* デスクトップ検索ボタン: desktopActions 内 */
 .searchButton {
-  padding: 0.375rem;
+  padding: var(--space-8);
 }
 
-/* モバイル検索ボタン: デスクトップでは非表示。
- * モバイル時はハンバーガーの左隣に配置（44px タップターゲット確保）。 */
+/* モバイル検索ボタン: デスクトップでは非表示。モバイルではハンバーガー左隣・44px。 */
 .mobileSearchButton {
   display: none;
-  padding: 0.625rem;
   min-width: 44px;
   min-height: 44px;
 }
 
-/* ハンバーガーボタン: デスクトップでは非表示 */
+/* ハンバーガー / モバイルメニュー: デスクトップでは非表示。 */
 .hamburger {
   display: none;
 }
 
-/* モバイルメニュー: デスクトップでは非表示 */
 .mobileMenu {
   display: none;
 }
 
 /* ==============================
-   ナビリンク（デスクトップ・モバイル共通スタイル）
+   ナビリンク（文字のみ・現在地は朱／§4）
    ============================== */
 
 .navLink {
-  color: var(--fg-soft);
+  color: var(--ink-2);
   text-decoration: none;
   font-size: 0.9375rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: var(--r-interactive);
+  padding: var(--space-8) 0;
   white-space: nowrap;
-  transition:
-    background-color 0.1s,
-    color 0.1s;
+  transition: color 0.1s;
 }
 
 .navLink:hover {
-  background: var(--bg-soft);
-  color: var(--fg);
+  color: var(--ink);
+  /* 下線はリンクの専有（§3）。ホバー時のみ下線で操作可能を示す。 */
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
 }
 
 .navLink:focus-visible {
@@ -154,30 +142,22 @@
   outline-offset: 2px;
 }
 
-/* アクティブページのリンクを強調 */
+/* 現在地は朱（§4）。usePathname 判定で aria-current="page" が付与される。 */
 .navLink[aria-current="page"] {
-  color: var(--fg);
-  background: var(--bg-soft);
+  color: var(--accent);
 }
 
 /* ==============================
    モバイルオーバーレイ（デフォルトは非表示）
    ============================== */
 
-/* menuOpen 時のみ描画されるオーバーレイ。ヘッダー下から画面下端を覆う半透明レイヤー。
- * デスクトップでは不要なため min-width: 721px で非表示。
- * ヘッダー自体は static なので fixed のこのオーバーレイが前面に出る。
- * ただし top: 3.5rem でヘッダー部分は覆わない視覚的オフセットを取る。
- * メニューパネル（z-index: 11）より下になる値 10 を割り当てる。 */
 .mobileOverlay {
   position: fixed;
-  /* ヘッダー高さ分だけ下から開始（.header の --header-height を継承）*/
   top: var(--header-height);
   left: 0;
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.4);
-  /* メニューパネル（z-index: 11）より下に置くことで、タップはメニューリンクに届く */
   z-index: 10;
 }
 
@@ -192,7 +172,6 @@
    ============================== */
 
 @media (max-width: 720px) {
-  /* デスクトップ専用要素を非表示 */
   .desktopNav {
     display: none;
   }
@@ -201,34 +180,29 @@
     display: none;
   }
 
-  /* モバイル検索ボタン: ハンバーガーの左隣に表示。
-   * ロゴとのスペースを margin-left: auto で確保する。 */
   .mobileSearchButton {
     display: inline-flex;
     margin-left: auto;
     flex-shrink: 0;
   }
 
-  /* ハンバーガーボタンを表示 */
   .hamburger {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    /* mobileSearchButton が表示されている場合は auto は不要だが、
-     * 検索ボタンがない場合（onSearchOpen=undefined）に hamburger が右端になるよう auto を維持。
-     * flex では最初の auto が全スペースを吸収するため、両方に auto があっても問題ない。 */
     margin-left: auto;
-    padding: 0.5rem;
+    min-width: 44px;
+    min-height: 44px;
     background: none;
     border: none;
     cursor: pointer;
-    color: var(--fg);
-    border-radius: var(--r-interactive);
+    color: var(--ink);
+    border-radius: var(--radius);
     flex-shrink: 0;
   }
 
   .hamburger:hover {
-    background: var(--bg-soft);
+    color: var(--accent);
   }
 
   .hamburger:focus-visible {
@@ -236,17 +210,15 @@
     outline-offset: 2px;
   }
 
-  /* モバイルメニューパネル */
+  /* モバイルメニュー: 店構えの流儀（紙地・強い罫・文字）。 */
   .mobileMenu {
     display: block;
-    background: var(--bg);
-    border-bottom: 1px solid var(--border);
-    padding: 1rem 1.25rem;
-    /* オーバーレイ（z-index: 10）より上に置き、リンクが最前面でタップ可能になるようにする。
-     * position: relative + z-index で同じスタッキングコンテキスト内での前後関係を制御する。 */
+    background: var(--paper);
+    border-bottom: 1px solid var(--rule-strong);
+    padding: var(--space-8) var(--space-16) var(--space-16);
     position: relative;
     z-index: 11;
-    /* 控えめな fade-in アニメーション */
+    /* 開閉の状態変化アニメ（§5 で許容。150ms 以下）。 */
     animation: menuFadeIn 0.15s ease;
   }
 
@@ -261,32 +233,33 @@
     }
   }
 
-  /* モバイルメニュー内のナビリスト */
+  /* 品書きの流儀: 各項目を罫で区切る。 */
   .mobileNavList {
     list-style: none;
     margin: 0;
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
   }
 
-  /* モバイルメニュー内のリンク（タップしやすい高さを確保） */
+  .mobileNavList li + li {
+    border-top: 1px solid var(--rule);
+  }
+
   .mobileNavLink {
-    display: block;
-    color: var(--fg-soft);
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--ink-2);
     text-decoration: none;
     font-size: 1rem;
-    padding: 0.625rem 0.5rem;
-    border-radius: var(--r-interactive);
-    transition:
-      background-color 0.1s,
-      color 0.1s;
+    transition: color 0.1s;
   }
 
   .mobileNavLink:hover {
-    background: var(--bg-soft);
-    color: var(--fg);
+    color: var(--ink);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
   }
 
   .mobileNavLink:focus-visible {
@@ -294,19 +267,24 @@
     outline-offset: 2px;
   }
 
-  /* アクティブページのモバイルリンクを強調 */
   .mobileNavLink[aria-current="page"] {
-    color: var(--fg);
-    background: var(--bg-soft);
+    color: var(--accent);
   }
 
-  /* actions スロット（テーマトグル等）: ナビの下に配置 */
+  /* actions スロット（テーマトグル等）: ナビの下に強い罫で区切って配置。 */
   .mobileActions {
-    margin-top: 0.75rem;
-    padding-top: 0.75rem;
-    border-top: 1px solid var(--border);
+    margin-top: var(--space-16);
+    padding-top: var(--space-16);
+    border-top: 1px solid var(--rule-strong);
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: var(--space-8);
+  }
+}
+
+/* §5: prefers-reduced-motion を尊重（開閉アニメを即時表示に置換）。 */
+@media (prefers-reduced-motion: reduce) {
+  .mobileMenu {
+    animation: none;
   }
 }
