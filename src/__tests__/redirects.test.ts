@@ -1,21 +1,25 @@
 /**
  * next.config.ts の redirects 設定の回帰テスト
  *
- * cycle-277 (B-545 決定(a)): 道具箱をトップ `/` から実用層 /toolbox へ
- * 降ろし、/toolbox を実ページ化した。これに伴い cycle-232 の
- * /toolbox → `/` permanent redirect を撤去した。redirect は Next.js の
- * 設定としてしか存在しない（ルートファイルが無い）ため、設定オブジェクトを
- * 直接検証して「redirect が残って実ページに到達できない」回帰を防ぐ。
+ * cycle-279 フェーズ R: 道具箱ダッシュボード（/toolbox）を完全撤去した。
+ * ツール本体は /tools 一覧と各詳細ページとして存続するため、/toolbox は
+ * 410 にせず最も近い生存面 /tools へ 308 恒久リダイレクトする。redirect は
+ * Next.js の設定としてしか存在しない（ルートファイルが無い）ため、設定
+ * オブジェクトを直接検証して「リダイレクトが欠落し死リンクになる」回帰を防ぐ。
  */
 import { describe, expect, it } from "vitest";
 
 import nextConfig from "../../next.config";
 
 describe("next.config redirects", () => {
-  it("/toolbox は redirect されない（実ページとして動く・cycle-277 で降格）", async () => {
+  it("/toolbox は /tools へ 308 恒久リダイレクトされる（cycle-279 で撤去）", async () => {
     expect(nextConfig.redirects).toBeDefined();
     const redirects = await nextConfig.redirects!();
     const toolboxRedirect = redirects.find((r) => r.source === "/toolbox");
-    expect(toolboxRedirect).toBeUndefined();
+    expect(toolboxRedirect).toBeDefined();
+    expect(toolboxRedirect!.destination).toBe("/tools");
+    // permanent: true = 308 Permanent Redirect（面の廃止だが被リンク・
+    // ブックマークの価値を保持し、関連する生存面へ確実に着地させる）
+    expect(toolboxRedirect!.permanent).toBe(true);
   });
 });

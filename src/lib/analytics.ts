@@ -260,45 +260,34 @@ export function trackSearchAbandoned({
   sendGaEvent("search_abandoned", { had_query });
 }
 
-// ── Toolbox tracking (cycle-234) ─────────────────────────────────────────────
+// ── Tile interaction tracking (cycle-234) ────────────────────────────────────
 //
 // Identity convention shared by every event that identifies a tile:
 // - item_id is always the tool slug WITHOUT the variant suffix, so it can be
-//   joined with detail-page events and the existing share event's item_id.
+//   joined with the existing share event's item_id.
 // - variant is a separate, optional parameter. When a tile has no variant the
 //   parameter is omitted entirely (never sent as undefined/null).
-// Privacy: these events carry only operation kind, item_id, variant, preset_id
-// and surface. Tile input/output content is never sent.
+// Privacy: these events carry only item_id, variant and surface. Tile input/
+// output content is never sent.
+//
+// The toolbox dashboard (/toolbox) and its add/remove/reset/preset events were
+// removed in the phase-R teardown (cycle-279). The only surviving surface that
+// uses a tile is the tool's own detail page.
 
 /**
- * Where a tile interaction happened:
- * - "toolbox": the tile dashboard at /toolbox (moved from the top page `/`
- *   to the utility layer in cycle-277 / B-545 decision(a))
- * - "detail": the tool's own detail page
+ * Where a tile interaction happened. Only the tool's detail page remains after
+ * the toolbox dashboard was removed (cycle-279); the field is kept so the GA
+ * event schema and any historical `toolbox` values remain interpretable.
  */
-export type TileSurface = "toolbox" | "detail";
-
-/** Parameters identifying a toolbox tile (used by add/remove events). */
-interface ToolboxTileParams {
-  /** Tool slug (variant excluded). */
-  item_id: string;
-  /** Tile variant. Omit when the tile has no variant. */
-  variant?: string;
-}
-
-/** Parameters for trackToolboxPresetSelect. */
-interface ToolboxPresetSelectParams {
-  /** ID of the preset the visitor applied. */
-  preset_id: string;
-}
+export type TileSurface = "detail";
 
 /** Parameters for trackTileFirstInteraction. */
 interface TileFirstInteractionParams {
   /** Tool slug (variant excluded). */
   item_id: string;
-  /** Where the interaction happened (toolbox dashboard vs tool detail page). */
+  /** Where the interaction happened (currently always the tool detail page). */
   surface: TileSurface;
-  /** Tile variant. Omit when the tile has no variant (always omitted for "detail"). */
+  /** Tile variant. Omit when the tile has no variant. */
   variant?: string;
 }
 
@@ -311,65 +300,12 @@ function buildTileParams(item_id: string, variant?: string): Gtag.CustomParams {
 }
 
 /**
- * Send a toolbox_tile_add event.
- *
- * Meaning: the visitor added a tile that was not in their toolbox at that
- * moment. This covers both adding from the catalog for the first time and
- * re-adding a previously removed tile — the two are intentionally not
- * distinguished (they are the same operation for the visitor).
- */
-export function trackToolboxTileAdd({
-  item_id,
-  variant,
-}: ToolboxTileParams): void {
-  sendGaEvent("toolbox_tile_add", buildTileParams(item_id, variant));
-}
-
-/**
- * Send a toolbox_tile_remove event.
- *
- * Meaning: the visitor removed a tile from their toolbox (the "外す"
- * operation). A later re-add appears as toolbox_tile_add, not here.
- */
-export function trackToolboxTileRemove({
-  item_id,
-  variant,
-}: ToolboxTileParams): void {
-  sendGaEvent("toolbox_tile_remove", buildTileParams(item_id, variant));
-}
-
-/**
- * Send a toolbox_reset event.
- *
- * Meaning: the visitor reset their toolbox composition back to the default.
- * No parameters: the resulting composition is always the default set, and the
- * pre-reset composition is intentionally not reported.
- */
-export function trackToolboxReset(): void {
-  sendGaEvent("toolbox_reset");
-}
-
-/**
- * Send a toolbox_preset_select event.
- *
- * Meaning: the visitor applied a persona preset to their toolbox, after
- * passing the inline confirmation. Cancelled confirmations ("やめる") send
- * nothing, so this event counts applied presets only.
- */
-export function trackToolboxPresetSelect({
-  preset_id,
-}: ToolboxPresetSelectParams): void {
-  sendGaEvent("toolbox_preset_select", { preset_id });
-}
-
-/**
  * Send a tile_first_interaction event.
  *
  * Meaning: the visitor's first pointer/keyboard interaction inside a tool's
  * UI for the current mount — i.e. the tool was actually used, not merely
  * viewed. One event per tool per mount; deduplication is the caller's
- * responsibility (this function only sends). surface distinguishes usage on
- * the toolbox dashboard ("toolbox") from the tool's detail page ("detail").
+ * responsibility (this function only sends).
  */
 export function trackTileFirstInteraction({
   item_id,

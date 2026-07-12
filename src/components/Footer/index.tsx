@@ -26,7 +26,6 @@ const FOOTER_SECTIONS: {
     title: "ツール",
     links: [
       { label: "ツール一覧", href: "/tools" },
-      // NOTE: /toolbox（道具箱）はフェーズ R で撤去予定のため、新 Footer には掲載しない。
       { label: "文字カウンター", href: "/tools/char-count" },
       { label: "JSON 整形", href: "/tools/json-formatter" },
       { label: "色変換", href: "/tools/color-converter" },

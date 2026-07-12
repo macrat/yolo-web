@@ -44,13 +44,12 @@ test("About page does not define the site as merely a toolbox / online tools col
   expect(container.textContent).not.toMatch(/道具箱（トップページ）の使い方/);
 });
 
-test("About page links to toolbox, tools, blog, and play", () => {
+test("About page links to tools, blog, and play", () => {
   render(<AboutPage />);
-  // cycle-277 決定(a): 道具箱はトップ `/` から実用層 /toolbox へ降格
-  expect(screen.getByRole("link", { name: "道具箱" })).toHaveAttribute(
-    "href",
-    "/toolbox",
-  );
+  // cycle-279 フェーズ R: 道具箱ダッシュボードは完全撤去。ツールは /tools 一覧へ。
+  expect(
+    screen.queryByRole("link", { name: "道具箱" }),
+  ).not.toBeInTheDocument();
   expect(screen.getByRole("link", { name: "ツール一覧" })).toHaveAttribute(
     "href",
     "/tools",

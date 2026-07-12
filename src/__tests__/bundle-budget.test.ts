@@ -75,11 +75,9 @@ const BUDGETS = {
  * the uncategorisedMax budget.
  */
 const UNCATEGORISED_WHITELIST: ReadonlySet<string> = new Set([
-  // 道具箱（cycle-277 B-545 決定(a)で `/` から実用層 /toolbox へ降格・実ページ化）。
-  // 生きたタイルを並べる道具箱のクライアント JS を含む。
-  "/toolbox",
   // トップ `/`。診断中心の軽量な着地面（cycle-277 T6-c で道具箱ダッシュボード
-  // から置き換え済み）。ルートはカテゴリに属さないため未分類 whitelist に残す
+  // から置き換え済み。道具箱自体は cycle-279 フェーズ R で完全撤去）。
+  // ルートはカテゴリに属さないため未分類 whitelist に残す
   // （予算免除ではなく uncategorisedMax 50KB の対象＝軽量であることをこのテストが担保する）。
   "/",
   "/about",

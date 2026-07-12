@@ -174,14 +174,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
-      // cycle-277 (B-545 決定(a)): 道具箱をトップ `/` から実用層 /toolbox へ
-      // 降格し実ページ化した。トップより低い優先度で掲載する（実用層）。
-      url: `${BASE_URL}/toolbox`,
-      lastModified: latestToolDate,
-      changeFrequency: "weekly",
-      priority: 0.6,
-    },
-    {
       url: `${BASE_URL}/blog`,
       lastModified: latestBlogDate,
       changeFrequency: "weekly",

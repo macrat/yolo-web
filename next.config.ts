@@ -83,11 +83,18 @@ const nextConfig: NextConfig = {
       },
     ];
 
-    // cycle-277 (B-545 決定(a)): 道具箱はトップ `/` から実用層 /toolbox へ
-    // 降ろされ、/toolbox が実ページとして動くようになった。cycle-232 の
-    // /toolbox → / permanent redirect はここで撤去する（redirect を残すと
-    // 実ページに到達できない）。localStorage はオリジン単位のため、旧トップ
-    // で保存した道具箱構成はそのまま引き継がれる。
+    // cycle-279 フェーズ R: 道具箱ダッシュボード（/toolbox）を完全撤去した。
+    // ツール本体（全36ツール）は /tools 一覧と各詳細ページとして存続するため、
+    // /toolbox は死ページ（410）にせず、最も近い生存面である /tools へ 308 恒久
+    // リダイレクトする。これによりブックマーク・被リンク・検索インデックスの価値を
+    // 失わず、訪問者を関連する生きた面（同じ道具の一覧）へ確実に着地させる。
+    const toolboxRedirects = [
+      {
+        source: "/toolbox",
+        destination: "/tools",
+        permanent: true,
+      },
+    ];
 
     // Redirect old /fortune URLs to /play (301 permanent)
     // Migrated in cycle-102 (B-206): fortune section is now under /play
@@ -207,6 +214,7 @@ const nextConfig: NextConfig = {
       ...colorsRedirects,
       ...blogCategoryRedirects,
       ...cheatsheetRedirects,
+      ...toolboxRedirects,
     ];
   },
 };

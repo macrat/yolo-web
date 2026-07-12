@@ -9,10 +9,6 @@ import {
   trackSearchModalClose,
   trackSearchResultClick,
   trackSearchAbandoned,
-  trackToolboxTileAdd,
-  trackToolboxTileRemove,
-  trackToolboxReset,
-  trackToolboxPresetSelect,
   trackTileFirstInteraction,
 } from "@/lib/analytics";
 import type { CloseReasonValue, TileSurface } from "@/lib/analytics";
@@ -339,87 +335,8 @@ describe("analytics", () => {
     });
   });
 
-  describe("trackToolboxTileAdd", () => {
-    it("sends toolbox_tile_add event with item_id and variant", () => {
-      trackToolboxTileAdd({ item_id: "unit-converter", variant: "length" });
-
-      expect(mockGtag).toHaveBeenCalledWith("event", "toolbox_tile_add", {
-        item_id: "unit-converter",
-        variant: "length",
-      });
-    });
-
-    it("does not send the new ab_variant/experiment_id keys (toolbox variant unaffected)", () => {
-      // Regression guard for the cycle-255 A/B context addition:
-      // the toolbox-specific `variant` key must remain a separate concept
-      // from `ab_variant`/`experiment_id`. Adding A/B context to other
-      // track* functions must not leak these keys into toolbox events.
-      trackToolboxTileAdd({ item_id: "unit-converter", variant: "length" });
-
-      const params = mockGtag.mock.calls[0][2] as Record<string, unknown>;
-      expect("ab_variant" in params).toBe(false);
-      expect("experiment_id" in params).toBe(false);
-      expect(params.variant).toBe("length");
-    });
-
-    it("omits the variant key entirely when variant is not given", () => {
-      trackToolboxTileAdd({ item_id: "color-picker" });
-
-      expect(mockGtag).toHaveBeenCalledWith("event", "toolbox_tile_add", {
-        item_id: "color-picker",
-      });
-      // toEqual-based matching ignores undefined properties, so explicitly
-      // assert the key itself is absent (gtag must not receive variant: undefined).
-      const params = mockGtag.mock.calls[0][2] as Record<string, unknown>;
-      expect("variant" in params).toBe(false);
-    });
-  });
-
-  describe("trackToolboxTileRemove", () => {
-    it("sends toolbox_tile_remove event with item_id and variant", () => {
-      trackToolboxTileRemove({ item_id: "unit-converter", variant: "weight" });
-
-      expect(mockGtag).toHaveBeenCalledWith("event", "toolbox_tile_remove", {
-        item_id: "unit-converter",
-        variant: "weight",
-      });
-    });
-
-    it("omits the variant key entirely when variant is not given", () => {
-      trackToolboxTileRemove({ item_id: "color-picker" });
-
-      expect(mockGtag).toHaveBeenCalledWith("event", "toolbox_tile_remove", {
-        item_id: "color-picker",
-      });
-      const params = mockGtag.mock.calls[0][2] as Record<string, unknown>;
-      expect("variant" in params).toBe(false);
-    });
-  });
-
-  describe("trackToolboxReset", () => {
-    it("sends toolbox_reset event with no parameters", () => {
-      trackToolboxReset();
-
-      expect(mockGtag).toHaveBeenCalledWith(
-        "event",
-        "toolbox_reset",
-        undefined,
-      );
-    });
-  });
-
-  describe("trackToolboxPresetSelect", () => {
-    it("sends toolbox_preset_select event with preset_id", () => {
-      trackToolboxPresetSelect({ preset_id: "daily-life" });
-
-      expect(mockGtag).toHaveBeenCalledWith("event", "toolbox_preset_select", {
-        preset_id: "daily-life",
-      });
-    });
-  });
-
   describe("trackTileFirstInteraction", () => {
-    const surfaces: TileSurface[] = ["toolbox", "detail"];
+    const surfaces: TileSurface[] = ["detail"];
 
     surfaces.forEach((surface) => {
       it(`sends tile_first_interaction event with surface="${surface}"`, () => {
@@ -439,13 +356,13 @@ describe("analytics", () => {
     it("sends variant alongside item_id and surface when given", () => {
       trackTileFirstInteraction({
         item_id: "unit-converter",
-        surface: "toolbox",
+        surface: "detail",
         variant: "length",
       });
 
       expect(mockGtag).toHaveBeenCalledWith("event", "tile_first_interaction", {
         item_id: "unit-converter",
-        surface: "toolbox",
+        surface: "detail",
         variant: "length",
       });
     });
@@ -507,19 +424,9 @@ describe("analytics", () => {
       ).not.toThrow();
       expect(() => trackSearchAbandoned({ had_query: false })).not.toThrow();
       expect(() =>
-        trackToolboxTileAdd({ item_id: "color-picker" }),
-      ).not.toThrow();
-      expect(() =>
-        trackToolboxTileRemove({ item_id: "color-picker", variant: "length" }),
-      ).not.toThrow();
-      expect(() => trackToolboxReset()).not.toThrow();
-      expect(() =>
-        trackToolboxPresetSelect({ preset_id: "daily-life" }),
-      ).not.toThrow();
-      expect(() =>
         trackTileFirstInteraction({
           item_id: "color-picker",
-          surface: "toolbox",
+          surface: "detail",
         }),
       ).not.toThrow();
     });

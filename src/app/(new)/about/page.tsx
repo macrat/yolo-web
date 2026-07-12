@@ -117,11 +117,7 @@ export default function AboutPage() {
                 ツール一覧
               </Link>
               :
-              文字数カウントや単位換算などの実用的なオンライン道具です。気に入った道具は
-              <Link href="/toolbox" className={styles.link}>
-                道具箱
-              </Link>
-              に並べて、いつでも同じ場所から使えます。
+              文字数カウントや単位換算などの実用的なオンライン道具です。ブラウザ上ですぐに使えます。
             </li>
             <li>
               <Link href="/blog" className={styles.link}>
