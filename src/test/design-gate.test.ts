@@ -64,6 +64,13 @@ const NEW_DESIGN_CSS = [
   "src/components/Nefuda/**/*.module.css", // 値札（§4 メタ小ラベル）
   "src/components/Tsutsumi/**/*.module.css", // 包み（§4/§7 結果カード・和色は中身のみ）
   "src/components/In/**/*.module.css", // 印（§4 厳密仕様・朱一色）
+  // 辞典トップ 4 面（フェーズ R・C2/C3 変換済み。検索/閲覧を店構えへ一貫変換）。
+  "src/app/(new)/dictionary/kanji/page.module.css",
+  "src/app/(new)/dictionary/yoji/page.module.css",
+  "src/app/(new)/dictionary/colors/page.module.css",
+  "src/app/(new)/dictionary/humor/page.module.css",
+  // 辞典共有の検索器（品書きで検索結果を出す器・§4/§8-4）。
+  "src/dictionary/_components/DictionarySearch/**/*.module.css",
 ];
 const NEW_DESIGN_TSX = [
   "src/app/(new)/page.tsx", // トップ（店構え・C2 変換）。インライン style の禁止を検査
@@ -73,6 +80,13 @@ const NEW_DESIGN_TSX = [
   "src/components/Nefuda/**/*.tsx",
   "src/components/Tsutsumi/**/*.tsx",
   "src/components/In/**/*.tsx",
+  // 辞典トップ 4 面（フェーズ R・C2/C3 変換済み）。インライン style の禁止を検査。
+  "src/app/(new)/dictionary/kanji/page.tsx",
+  "src/app/(new)/dictionary/yoji/page.tsx",
+  "src/app/(new)/dictionary/colors/page.tsx",
+  "src/app/(new)/dictionary/humor/page.tsx",
+  // 辞典共有の検索器（色見本のインライン style は成果物中身＝変数由来で色直書きなし）。
+  "src/dictionary/_components/DictionarySearch/**/*.tsx",
 ];
 // テストコードは走査対象外（テスト文字列に禁止語が入るため）。
 const IGNORE = ["**/__tests__/**", "**/*.test.ts", "**/*.test.tsx"];

@@ -1,13 +1,19 @@
 import type { Metadata } from "next";
 import Breadcrumb from "@/components/Breadcrumb";
 import Shinagaki, { type ShinagakiItem } from "@/components/Shinagaki";
+import DictionarySearch, {
+  type DictionarySearchItem,
+} from "@/dictionary/_components/DictionarySearch";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import {
   getAllYoji,
   getYojiByCategory,
   getYojiCategories,
 } from "@/dictionary/_lib/yoji";
-import { YOJI_CATEGORY_LABELS } from "@/dictionary/_lib/types";
+import {
+  YOJI_CATEGORY_LABELS,
+  YOJI_DIFFICULTY_LABELS,
+} from "@/dictionary/_lib/types";
 import type { YojiCategory } from "@/dictionary/_lib/types";
 import styles from "./page.module.css";
 
@@ -16,13 +22,14 @@ import styles from "./page.module.css";
  *
  * 旧トップ（400語をカードのグリッドで一気に並べ、クライアント検索を載せる YojiIndexClient +
  * 共有 DictionaryGrid/DictionaryCard/SearchBox・旧トークン）を、DESIGN.md の「店構え」へ
- * 作り直した。このページの役割は「カテゴリ導線と入口」——全語の一覧は各カテゴリページが
- * 担い、トップはカテゴリの品書き（罫区切りリスト・§4）に絞る。
+ * 作り直した。フェーズ R・C2/C3 で、共有の検索器（DictionarySearch）を使って「引く体験」を
+ * 復活させた——検索結果はカードでなく品書き（罫区切りリスト・§4/§8-4）で出す。
  *
- * 構成（§1「器は静か」/ §4「一覧の既定は品書き」/ §6 文章）:
+ * 構成（§1「器は静か」/ §4「一覧の既定は品書き」/ §6 文章 / §7「実務辞典は引く体験が主役」）:
  * - 自己紹介（器・Shinagaki 外）: 何の辞典か・何が読めるかを具体の日本語で（§6）。
- * - 「カテゴリから探す」棚（見出し付き品書き）: 各カテゴリ = 品名（カテゴリページへのリンク）
- *   + ひとこと（note）+ 収録数の値札（Nefuda・§4「件数は値札で」）。件数の多い順に並べる。
+ * - 検索（引く体験の主役・§7）: 共有の検索器を名乗りの直後に置く。
+ * - 「カテゴリから探す」棚（閲覧の導線・見出し付き品書き）: 各カテゴリ = 品名（カテゴリページへの
+ *   リンク）+ ひとこと（note）+ 収録数の値札（Nefuda・§4「件数は値札で」）。件数の多い順に並べる。
  *
  * カードのグリッドは使わない（§4/§8-4）。色・角丸・書体はすべてトークン経由（§10・直書き禁止）。
  * インライン style は使わない。
@@ -82,6 +89,21 @@ const categoryItems: ShinagakiItem[] = getYojiCategories()
     tags: [`${count}語`],
   }));
 
+// 検索器（共有の器）へ渡す正規化データ。表示は品名（四字熟語）＋読み＋意味＋カテゴリ/難易度の値札、
+// 検索対象（haystack）は語・読み・意味・例文を連結（旧 YojiIndexClient の検索範囲＝語/読み/意味を包含）。
+const searchItems: DictionarySearchItem[] = getAllYoji().map((y) => ({
+  key: y.yoji,
+  name: y.yoji,
+  href: `/dictionary/yoji/${encodeURIComponent(y.yoji)}`,
+  reading: y.reading,
+  note: y.meaning,
+  tags: [
+    YOJI_CATEGORY_LABELS[y.category],
+    YOJI_DIFFICULTY_LABELS[y.difficulty],
+  ],
+  haystack: [y.yoji, y.reading, y.meaning, y.example].join(" ").toLowerCase(),
+}));
+
 export default function YojiIndexPage() {
   return (
     <div className={styles.page}>
@@ -102,7 +124,17 @@ export default function YojiIndexPage() {
         </p>
       </div>
 
-      {/* カテゴリの品書き（カテゴリ導線）。件数は値札で（§4）。 */}
+      {/* 検索（引く体験の主役・§7 実務辞典）。語・読み・意味・例文を横断して引ける。 */}
+      <div className={styles.search}>
+        <DictionarySearch
+          heading="四字熟語を検索"
+          placeholder="四字熟語・読み・意味で検索..."
+          unit="四字熟語"
+          items={searchItems}
+        />
+      </div>
+
+      {/* カテゴリの品書き（閲覧の導線）。件数は値札で（§4）。 */}
       <div className={styles.directory}>
         <Shinagaki
           heading="カテゴリから探す"

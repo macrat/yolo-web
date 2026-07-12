@@ -41,6 +41,11 @@
   line-height: 1.9;
 }
 
+/* 検索器（引く体験の主役）の区画。カテゴリ品書きとの間にアキを取る。 */
+.search {
+  margin: 0 0 var(--space-48);
+}
+
 /* カテゴリの品書き（区画）。見出し・行・値札の見た目は Shinagaki/Nefuda が持つ。 */
 .directory {
   margin: 0;

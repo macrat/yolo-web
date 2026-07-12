@@ -8,7 +8,9 @@ import {
   type ColorCategory,
 } from "@/dictionary/_lib/types";
 import { generateBreadcrumbJsonLd, safeJsonLdStringify } from "@/lib/seo";
-import ColorsIndexClient from "./ColorsIndexClient";
+import DictionarySearch, {
+  type DictionarySearchItem,
+} from "@/dictionary/_components/DictionarySearch";
 import styles from "./page.module.css";
 
 // 収録色数はデータ層から動的に算出する（メタ文言の「250色」ハードコードを排し、
@@ -56,6 +58,18 @@ export default function ColorsIndexPage() {
       };
     });
 
+  // 検索器（共有の器）へ渡す正規化データ。表示は色名＋ローマ字＋色見本（成果物の中身＝和色・§2）＋
+  // カラーコード/色みの値札、検索対象（haystack）は色名・ローマ字・HEX を連結（旧 ColorsIndexClient と同じ範囲）。
+  const colorSearchItems: DictionarySearchItem[] = allColors.map((c) => ({
+    key: c.slug,
+    name: c.name,
+    href: `/dictionary/colors/${c.slug}`,
+    reading: c.romaji,
+    swatch: c.hex,
+    tags: [c.hex, COLOR_CATEGORY_LABELS[c.category]],
+    haystack: [c.name, c.romaji, c.hex].join(" ").toLowerCase(),
+  }));
+
   const breadcrumbJsonLd = generateBreadcrumbJsonLd([
     { label: "ホーム", href: "/" },
     { label: "辞典", href: "/dictionary" },
@@ -89,19 +103,23 @@ export default function ColorsIndexPage() {
         </p>
       </div>
 
-      {/* 棚1: 色みから探す（色相グループへの入口・品書き） */}
+      {/* 棚1: 色名・コードから探す（引く体験の主役・§7）。共有の検索器で品書き＋色見本を出す。 */}
+      <div className={styles.shelf}>
+        <DictionarySearch
+          heading="色名・コードから探す"
+          placeholder="色名・ローマ字・カラーコードで検索..."
+          unit="色"
+          items={colorSearchItems}
+        />
+      </div>
+
+      {/* 棚2: 色みから探す（閲覧の導線・色相グループへの入口・品書き） */}
       <div className={styles.shelf}>
         <Shinagaki
           heading="色みから探す"
           items={categoryItems}
           ariaLabel="色みのグループから探す品書き"
         />
-      </div>
-
-      {/* 棚2: 色名・コードから探す（検索と全色の一覧・ColorsIndexClient が担う） */}
-      <div className={styles.shelf}>
-        <h2 className={styles.shelfHeading}>色名・コードから探す</h2>
-        <ColorsIndexClient allColors={allColors} />
       </div>
     </div>
   );

@@ -49,16 +49,3 @@
 .shelf:last-child {
   margin-bottom: 0;
 }
-
-/*
- * 棚の見出し（Shinagaki を使わない棚＝検索＋一覧の頭）。
- * Shinagaki の .heading と同じ流儀（明朝・墨・詰め）で組み、棚どうしの見出しを揃える。
- */
-.shelfHeading {
-  margin: 0 0 var(--space-16);
-  color: var(--ink);
-  font-family: var(--font-mincho);
-  font-size: 1.375rem; /* 22px 目安（1.25 倍スケール帯） */
-  line-height: 1.4;
-  font-feature-settings: "palt";
-}

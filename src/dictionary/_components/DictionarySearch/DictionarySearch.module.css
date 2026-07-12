@@ -1,0 +1,159 @@
+/*
+ * 辞典の検索器（DictionarySearch）— 4 辞典トップ共有の「引く体験」の器（DESIGN.md フェーズ R）。
+ *
+ * 器は静か（§1）。入力欄は店構え（罫囲み・角丸は入力欄の例外 --radius-sm・ピル禁止・影なし・§4/§8-5）。
+ * 検索結果はカードのグリッドでなく品書き（罫区切りリスト・§4/§8-4）で出す——上辺＋各行の一本罫で囲い、
+ * カード装飾・box-shadow（§8-2）・色地を持たない。色見本（colors）だけは成果物の中身（和色）として
+ * 結果行に出してよい（§2）——器（入力欄・罫・見出し）には決して漏らさない。
+ * 色・角丸・書体・余白はすべてトークン経由（§10・直書き禁止）。ダーク/ライトはトークンが吸収する。
+ */
+
+.search {
+  width: 100%;
+}
+
+/* 棚見出し（明朝・墨・詰め）。他の棚見出しと同じ流儀で揃える（§3）。 */
+.heading {
+  margin: 0 0 var(--space-16);
+  color: var(--ink);
+  font-family: var(--font-mincho);
+  font-size: 1.375rem; /* 22px 目安（1.25 倍スケール帯） */
+  line-height: 1.4;
+  font-feature-settings: "palt";
+}
+
+/*
+ * 入力欄（店構え）。§4「角丸の例外は値札と入力欄のみ（--radius-sm=2px）」に従う。
+ * 罫囲み・地は紙・影なし・ピルにしない。タップ面 44px を min-height で確保（§10）。
+ */
+.input {
+  width: 100%;
+  min-height: 44px;
+  padding: var(--space-8) var(--space-16);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-sm);
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-gothic);
+  font-size: 1rem; /* 16px */
+  line-height: 1.5;
+}
+
+.input::placeholder {
+  color: var(--ink-2);
+}
+
+.input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-color: var(--accent);
+}
+
+/*
+ * 件数・注記（補助情報・--ink-2・13px）。値札に近い静かな文字で、検索結果の件数や引き方の一言を出す。
+ * aria-live で件数の変化をスクリーンリーダへ伝える（TSX 側）。
+ */
+.summary {
+  margin: var(--space-16) 0 0;
+  color: var(--ink-2);
+  font-family: var(--font-gothic);
+  font-size: 0.8125rem; /* 13px 補助情報 */
+  line-height: 1.6;
+}
+
+/* 件数の数字は tabular で桁を揃える（§3 数字の流儀）。 */
+.count {
+  font-family: var(--font-number);
+  font-variant-numeric: tabular-nums;
+}
+
+/*
+ * 検索結果の品書き（§4 一覧の既定形＝罫区切りリスト）。
+ * 上辺＋各行の下辺罫で全行を囲う（区切りが構造の主役・§4）。カード装飾・影・色地は使わない。
+ */
+.list {
+  list-style: none;
+  margin: var(--space-16) 0 0;
+  padding: 0;
+  border-top: 1px solid var(--rule);
+}
+
+.row {
+  border-bottom: 1px solid var(--rule);
+}
+
+/*
+ * 行全体をリンク面に（browsing の一覧なので広いタップ面が価値・§10 の 44px を縦 padding で確保）。
+ * 静止時は下線を出さず、hover で品名に朱＋下線（下線はリンクの専有・§3。Footer/Shinagaki と同じ流儀）。
+ */
+.itemLink {
+  display: block;
+  padding: var(--space-16) 0;
+  text-decoration: none;
+  color: var(--ink);
+}
+
+.itemLink:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* 品名＋よみ＋色見本を 1 行に（ベースライン揃え・狭幅では折り返す）。 */
+.headword {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+}
+
+/*
+ * 色見本（colors のみ）: 成果物の中身＝和色（§2 の唯一の例外）。罫で囲った小さな升として出し、
+ * 地色は TSX のインライン style（成果物パレット）で当てる。器には漏らさない。
+ */
+.swatch {
+  align-self: center;
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--rule);
+  border-radius: 0;
+}
+
+/* 品名: 一覧の主役。§4「品名（リンク・墨）」・§3 明朝で組む。 */
+.name {
+  color: var(--ink);
+  font-family: var(--font-mincho);
+  font-size: 1.125rem; /* 18px */
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+}
+
+.itemLink:hover .name {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+/* よみ: 品名に添える補助情報（§3 補助字 13px・--ink-2）。 */
+.reading {
+  color: var(--ink-2);
+  font-family: var(--font-gothic);
+  font-size: 0.8125rem; /* 13px */
+  line-height: 1.5;
+}
+
+/* ひとこと（意味・語義プレビュー）: 文章として読ませるので 16px / 行間を保つ（§3）。 */
+.note {
+  display: block;
+  margin: var(--space-8) 0 0;
+  color: var(--ink-2);
+  font-family: var(--font-gothic);
+  font-size: 1rem; /* 16px */
+  line-height: 1.7;
+}
+
+/* 値札群（種別・難易度・コード等）の上アキ。 */
+.tags {
+  display: block;
+  margin: var(--space-8) 0 0;
+}

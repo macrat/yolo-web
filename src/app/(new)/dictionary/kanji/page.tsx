@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Breadcrumb from "@/components/Breadcrumb";
+import DictionarySearch, {
+  type DictionarySearchItem,
+} from "@/dictionary/_components/DictionarySearch";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import {
   getAllKanji,
@@ -15,10 +18,13 @@ import styles from "./page.module.css";
  * 漢字辞典トップ = 引くための入口（DESIGN.md フェーズ R・新デザイン「店構え」へ変換）。
  *
  * 旧トップ（CategoryNav の pill 群 + 常用漢字2,136字を DictionaryCard で全件フラット列挙する
- * カードグリッド + 検索）を全廃し、DESIGN.md の店構えへ作り直した。
+ * カードグリッド + 検索）を全廃し、DESIGN.md の店構えへ作り直した。フェーズ R・C2/C3 で、
+ * 共有の検索器（DictionarySearch）を使って「引く体験」を復活させた——検索結果はカードでなく
+ * 品書き（罫区切りリスト・§4/§8-4）で出し、字・読み・意味・使用例を横断して引ける。
  *
- * 構成（§1「器は静か」/ §4「罫の建築」/ §6 文章 / site-concept「探索しやすく整理する」）:
+ * 構成（§1「器は静か」/ §4「罫の建築」/ §6 文章 / §7「実務辞典は引く体験が主役」）:
  * - 名乗り（読む面）: 何を収録し、どう引けるかを自然な日本語で（§6）。
+ * - 検索（引く体験の主役・§7）: 共有の検索器を名乗りの直後に置く。
  * - 学年・部首・画数の 3 つのファセットを、それぞれ見出し付きの「棚」= 罫で区切った区画に置き、
  *   区画の中はファセット値へのテキストリンクの索引にする。カードのグリッド（§8-4）も、
  *   2,136 字の全件フラット列挙もしない。全ての漢字は 3 ファセットのいずれかから到達できる。
@@ -95,7 +101,31 @@ function FacetShelf({ facet }: { facet: FacetIndex }) {
 }
 
 export default function KanjiIndexPage() {
-  const totalKanji = getAllKanji().length;
+  const allKanji = getAllKanji();
+  const totalKanji = allKanji.length;
+
+  // 検索器（共有の器）へ渡す正規化データ。表示は品名（字）＋読み＋意味＋学年の値札、
+  // 検索対象（haystack）は字・音訓・意味・使用例を連結（旧 KanjiIndexClient と同じ検索範囲を維持）。
+  const searchItems: DictionarySearchItem[] = allKanji.map((k) => {
+    const readings = [...k.onYomi, ...k.kunYomi];
+    return {
+      key: k.character,
+      name: k.character,
+      href: `/dictionary/kanji/${encodeURIComponent(k.character)}`,
+      reading: readings.join("・") || undefined,
+      note: k.meanings.join("・") || undefined,
+      tags: [KANJI_GRADE_LABELS[k.grade]],
+      haystack: [
+        k.character,
+        ...k.onYomi,
+        ...k.kunYomi,
+        ...k.meanings,
+        ...k.examples,
+      ]
+        .join(" ")
+        .toLowerCase(),
+    };
+  });
 
   const facets: FacetIndex[] = [
     {
@@ -149,6 +179,17 @@ export default function KanjiIndexPage() {
         }
       </p>
 
+      {/* 検索（引く体験の主役・§7 実務辞典）。字・読み・意味・使用例を横断して引ける。 */}
+      <div className={styles.search}>
+        <DictionarySearch
+          heading="漢字を検索"
+          placeholder="漢字・読み・意味で検索..."
+          unit="漢字"
+          items={searchItems}
+        />
+      </div>
+
+      {/* 閲覧の導線（学年・部首・画数のファセット索引）。 */}
       {facets.map((facet) => (
         <FacetShelf key={facet.basePath} facet={facet} />
       ))}
