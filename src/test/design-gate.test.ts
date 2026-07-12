@@ -57,12 +57,14 @@ const PROJECT_ROOT = path.resolve(__dirname, "../..");
 // 新デザイン面（対象）。C1 で変換したコンポーネントの glob をここへ追記して面を広げる。
 const NEW_DESIGN_CSS = [
   "src/app/globals.css", // 新トークン定義 + 基層タイポ層（§2/§3/§4）
+  "src/app/(new)/page.module.css", // トップ（店構え・§1/§4 の参照実装・C2 変換）
   "src/components/Header/**/*.module.css", // のれん（§4）
   "src/components/Footer/**/*.module.css", // 店構え（§4）
   "src/components/Shinagaki/**/*.module.css", // 品書き（§4 一覧の既定形）
   "src/components/Nefuda/**/*.module.css", // 値札（§4 メタ小ラベル）
 ];
 const NEW_DESIGN_TSX = [
+  "src/app/(new)/page.tsx", // トップ（店構え・C2 変換）。インライン style の禁止を検査
   "src/components/Header/**/*.tsx",
   "src/components/Footer/**/*.tsx",
   "src/components/Shinagaki/**/*.tsx",
