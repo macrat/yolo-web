@@ -10,6 +10,9 @@ import ThemeToggle from "@/components/ThemeToggle";
 import GoogleAnalytics from "@/components/common/GoogleAnalytics";
 import { generateWebSiteJsonLd, safeJsonLdStringify } from "@/lib/seo";
 import { sharedMetadata } from "@/lib/site-metadata";
+// フェーズ R の新デザイントークン層で使う Web フォント（見出し明朝・数字）を
+// CSS 変数（--font-mincho / --font-number）としてツリー全体に配線する（DESIGN.md §3）。
+import { mincho, number } from "@/lib/fonts";
 
 export const metadata: Metadata = sharedMetadata;
 
@@ -22,7 +25,11 @@ export default function NewRootLayout({
   return (
     // suppressHydrationWarning: next-themes がクライアント側で <html class="dark"> を付与するため、
     // サーバーとクライアントの class 不一致による hydration 警告を抑制する
-    <html lang="ja" suppressHydrationWarning>
+    <html
+      lang="ja"
+      suppressHydrationWarning
+      className={`${mincho.variable} ${number.variable}`}
+    >
       <body
         style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
       >

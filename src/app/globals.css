@@ -27,10 +27,13 @@
    * #a8a8a4 on body #f4f4f1 ≈ 1.96:1、on panel #fff ≈ 2.16:1 */
   --border-strong: #a8a8a4;
 
-  /* Accent — primary blue */
-  --accent: oklch(0.62 0.22 264);
-  --accent-strong: oklch(0.5 0.22 264);
-  --accent-soft: oklch(0.93 0.04 264);
+  /* Accent — 朱（DESIGN.md §2）。旧値の青紫 oklch(0.62 0.22 264) は §8-1 の禁止色のため
+   * フェーズ R で朱へ再定義する。--accent は新旧で名前が衝突する唯一のトークンで、
+   * ここで朱に統一することで旧ページからも青紫が消える。
+   * strong=やや濃い朱・soft=淡い朱背景（旧ページ利用の一貫性のため。装飾用途で本文 AA 対象外）。 */
+  --accent: oklch(0.51 0.16 32);
+  --accent-strong: oklch(0.44 0.16 32);
+  --accent-soft: oklch(0.94 0.03 32);
 
   /* Status */
   --success: oklch(0.62 0.16 162);
@@ -70,6 +73,45 @@
   --admonition-warning-bg: var(--warning-soft);
   --admonition-caution: var(--danger); /* 赤 */
   --admonition-caution-bg: var(--danger-soft);
+
+  /* ==========================================================================
+   * フェーズ R 新デザイントークン層（DESIGN.md §2 色・§3 タイポ・§4 レイアウト由来）。
+   * なぜ追加で共存させるか: 旧トークン（--bg / --fg / --border / --r- 系 / status 等）を
+   * 参照するファイルが多数残るため、各ページの移行が完了するまで新旧を併存させる。旧トークンは
+   * フェーズ R 移行完了時に残存ゼロ化する（C1）。値は DESIGN.md が正典・oklch のまま丸めない。
+   * ========================================================================== */
+
+  /* §2 色（ライト）— 紙・墨・朱 */
+  --paper: oklch(0.975 0.006 90); /* 地。生成りの紙 */
+  --paper-2: oklch(0.955 0.007 90); /* 一段沈む面（区画・コード・広告区画） */
+  --ink: oklch(0.235 0.008 80); /* 本文・見出し */
+  --ink-2: oklch(0.45 0.01 80); /* 補足・値札の文字・キャプション */
+  --rule: oklch(0.84 0.008 85); /* 罫線（構造の主役） */
+  --rule-strong: oklch(0.3 0.01 80); /* 強い罫（のれん罫・区切りの主格） */
+  /* 朱。§2 の --accent と同値（上の Accent ブロックで既存定義を朱へ置換済み） */
+  --accent-weak: oklch(
+    0.51 0.16 32 / 0.12
+  ); /* 朱の気配。hover/selected の座布団にのみ可 */
+
+  /* §4 レイアウト — スペーシング（8px スケール）・幅・角丸 */
+  --space-8: 8px;
+  --space-16: 16px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-48: 48px;
+  --space-64: 64px;
+  --measure: 42rem; /* 読む面の幅（全角38字前後の上限） */
+  --max-width: 960px; /* 操作面の最大幅 */
+  --radius: 0px; /* 角丸 0px 基調（帳面・棚の直角） */
+  --radius-sm: 2px; /* 例外は値札ラベルと入力欄のみ */
+
+  /* §3 フォント変数 — 見出し明朝・本文ゴシック・数字。
+   * next/font の変数（--font-mincho / --font-number）が未配線の環境でも壊れないよう
+   * システムフォールバックを var() の第2引数で持たせる。--font-mono は既存のまま。 */
+  --font-mincho: var(--font-mincho, "Hiragino Mincho ProN", "Yu Mincho", serif);
+  --font-gothic:
+    "Hiragino Kaku Gothic ProN", "Yu Gothic Medium", "Noto Sans JP", sans-serif;
+  --font-number: var(--font-number, "Zilla Slab", "Roboto Slab", serif);
 }
 
 /* ダークモード — next-themes が attribute="class" で <html class="dark"> を付与する */
@@ -112,11 +154,11 @@
   --shadow-dragging:
     0 8px 20px rgba(0, 0, 0, 0.6), 0 2px 4px rgba(0, 0, 0, 0.4);
 
-  /* Accent — ダーク背景上での視認性を高めるため lightness を上げる
-   * --accent on --bg (#131311): コントラスト比 ≈ 7.1:1 */
-  --accent: oklch(0.72 0.18 264);
-  --accent-strong: oklch(0.85 0.12 264);
-  --accent-soft: oklch(0.25 0.06 264);
+  /* Accent — 朱（DESIGN.md §2・ダーク）。旧値の青紫は §8-1 の禁止色のため朱へ再定義。
+   * strong=やや濃い朱・soft=淡い朱背景（旧ページ利用の一貫性のため。装飾用途で本文 AA 対象外）。 */
+  --accent: oklch(0.7 0.14 32);
+  --accent-strong: oklch(0.78 0.14 32);
+  --accent-soft: oklch(0.3 0.08 32);
 
   /* Status — 同様に lightness 調整でダーク背景上のコントラストを確保 */
   --success: oklch(0.72 0.14 162);
@@ -145,6 +187,20 @@
   --admonition-warning-bg: var(--warning-soft); /* oklch(0.25 0.05 80) */
   --admonition-caution: var(--danger); /* 赤 */
   --admonition-caution-bg: var(--danger-soft); /* oklch(0.25 0.06 35) */
+
+  /* フェーズ R 新デザイントークン層（DESIGN.md §2 色・ダーク）。§2 が正典・oklch のまま丸めない。
+   * 旧トークンはフェーズ R 移行完了時に残存ゼロ化する（C1）。レイアウト/フォントトークンは
+   * モード非依存のため :root（ライト）にのみ定義し、ここでは §2 の色トークンだけ上書きする。 */
+  --paper: oklch(0.215 0.008 80); /* 地。墨の帳面 */
+  --paper-2: oklch(0.245 0.008 80); /* 一段沈む面（区画・コード・広告区画） */
+  --ink: oklch(0.93 0.005 90); /* 本文・見出し */
+  --ink-2: oklch(0.72 0.008 85); /* 補足・値札の文字・キャプション */
+  --rule: oklch(0.36 0.008 80); /* 罫線（構造の主役） */
+  --rule-strong: oklch(0.88 0.005 90); /* 強い罫（のれん罫・区切りの主格） */
+  /* --accent の朱は上の Accent ブロックで再定義済み */
+  --accent-weak: oklch(
+    0.7 0.14 32 / 0.16
+  ); /* 朱の気配。hover/selected の座布団にのみ可 */
 }
 
 /* グローバルリセット — old-globals.css からの移植 */
