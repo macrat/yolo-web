@@ -1,78 +1,58 @@
-/* このサイトについて（cycle-232 T-4 で新コンセプトへ書き換え）。
- * 文章だけのページのため、DESIGN.md §4「文章等は必要に応じて720pxに制限」に
- * 従い本文コンテナを 720px に絞る（h1 と Panel の幅もこれに揃う）。 */
-.main {
-  max-width: 720px;
+/*
+ * サイト紹介（/about）— DESIGN.md フェーズR・店構え（§1/§4/§6 読み物）。
+ * 読み物ページのため、幅は --measure（読む面・約42rem）に絞り、中央寄せせず左揃え基調（§4）。
+ * 器は静か（紙墨朱・罫・組版のみ）。カード・影・色付き区画・角丸装飾は使わない（§8）。
+ * 全トークン経由（色・スペーシング・書体を直書きしない・§10）。旧トークン（--fg/--bg/--border/
+ * --r-*）・Panel は使わない。
+ */
+
+.page {
+  max-width: var(--measure);
   margin: 0 auto;
-  /* 左右 1.25rem は Header/Footer と同じサイト共通値。 */
-  padding: 2rem 1.25rem;
-  width: 100%;
+  padding: var(--space-32) var(--space-24) var(--space-64);
 }
 
 .title {
-  font-size: 2rem;
-  font-weight: 800;
-  margin-bottom: 2rem;
+  margin: 0 0 var(--space-24);
+  color: var(--ink);
+}
+
+/* 冒頭の一言（自己紹介の正典・docs/site-concept.md 参照）。本文よりやや大きく見せ場にする。 */
+.lead {
+  margin: 0 0 var(--space-32);
+  color: var(--ink);
+  font-size: 1.25rem; /* 20px */
+  line-height: 1.7;
 }
 
 .section {
-  margin-bottom: 2rem;
+  margin-bottom: var(--space-32);
 }
 
-/* Panel の padding と二重の余白にならないよう、最終セクションの下マージンは消す */
 .section:last-child {
   margin-bottom: 0;
 }
 
+/* 小見出し: 明朝・墨・一本罫で仕切る（§3/§4。dictionary/humor 詳細と同じ流儀で揃える）。 */
 .sectionTitle {
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin-bottom: 0.75rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border);
+  font-size: 1.25rem; /* 20px */
+  margin-bottom: var(--space-16);
+  padding-bottom: var(--space-8);
+  border-bottom: 1px solid var(--rule);
+  color: var(--ink);
 }
 
-/* 長文読み物ページのため行間 1.8（DESIGN.md §3 の許容上限）を使う */
-.section p {
-  margin-bottom: 0.75rem;
-  line-height: 1.8;
-  color: var(--fg);
+/* 読ませる本文: 16px / line-height 1.9（§3）。 */
+.text {
+  margin: 0 0 var(--space-16);
+  font-size: 1rem;
+  line-height: 1.9;
+  color: var(--ink);
 }
 
-.section p:last-child {
+.text:last-child {
   margin-bottom: 0;
 }
 
-/* 冒頭の一行コンセプト。DESIGN.md §3「本文中での太字は原則として使わない」に
- * 従い、太字ではなくサイズ差のみで強調する */
-.lead {
-  font-size: 1.3rem;
-  margin-bottom: 1rem;
-  line-height: 1.8;
-  color: var(--fg);
-}
-
-.list {
-  padding-left: 1.5rem;
-  margin-bottom: 0.75rem;
-}
-
-.list li {
-  margin-bottom: 0.5rem;
-  line-height: 1.8;
-  color: var(--fg);
-}
-
-.link {
-  color: var(--accent);
-  text-decoration: underline;
-}
-
-.link:hover {
-  color: var(--accent-strong);
-}
-
-.link:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
+/* 本文中のリンクは globals.css の既定 a{}（朱・下線・:hover/:focus-visible 済み）に委ねる
+ * （§3「下線はリンクの専有」。privacy 等ほかの読み物ページと同じ流儀で揃える）。 */

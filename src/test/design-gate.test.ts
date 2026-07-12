@@ -99,6 +99,11 @@ const NEW_DESIGN_CSS = [
   "src/components/ShareButtons/**/*.module.css",
   // 関連コンテンツ回遊ブロック（品書き化・§4/§8-3）。
   "src/dictionary/_components/new/PlayRecommendBlock.module.css",
+  // C2 独立IA/静的面（/tools /play 品書き・/about /privacy 読み物・店構え変換済み）。
+  "src/app/\\(new\\)/tools/page.module.css",
+  "src/app/\\(new\\)/play/page.module.css",
+  "src/app/\\(new\\)/about/page.module.css",
+  "src/app/\\(new\\)/privacy/page.module.css",
 ];
 const NEW_DESIGN_TSX = [
   "src/app/\\(new\\)/page.tsx", // トップ（店構え・C2 変換）。インライン style の禁止を検査
@@ -139,6 +144,11 @@ const NEW_DESIGN_TSX = [
   // 多面共有の店構え部品（フェーズ R 変換済み）。インライン style の禁止を検査。
   "src/components/ShareButtons/**/*.tsx",
   "src/dictionary/_components/new/PlayRecommendBlock.tsx",
+  // C2 独立IA/静的面（/tools /play /about /privacy・店構え変換済み）。
+  "src/app/\\(new\\)/tools/page.tsx",
+  "src/app/\\(new\\)/play/page.tsx",
+  "src/app/\\(new\\)/about/page.tsx",
+  "src/app/\\(new\\)/privacy/page.tsx",
 ];
 // テストコードは走査対象外（テスト文字列に禁止語が入るため）。
 const IGNORE = ["**/__tests__/**", "**/*.test.ts", "**/*.test.tsx"];

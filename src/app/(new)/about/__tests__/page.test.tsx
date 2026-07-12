@@ -2,6 +2,11 @@ import { expect, test } from "vitest";
 import { render, screen } from "@testing-library/react";
 import AboutPage, { metadata } from "../page";
 
+// cycle-279 フェーズR: docs/site-concept.md の現行自己定義「AIが営む、
+// 『やってみる』のよろず屋」に合わせて自己紹介の文章を全面的に書き直した。
+// 旧テストは cycle-277 決定(a)「自分を知り、楽しむ場所」= 診断中心コンセプトの
+// 文言を検査しており、現行コンセプトと食い違っていたため置き換える。
+
 test("About page renders heading", () => {
   render(<AboutPage />);
   expect(
@@ -9,79 +14,93 @@ test("About page renders heading", () => {
   ).toBeInTheDocument();
 });
 
-test("About page describes the diagnosis-centered concept (know yourself, enjoy)", () => {
-  // cycle-277 決定(a): 自己定義を道具箱中心から「自分を知り、楽しむ場所」へ是正
+test("About page introduces the site as an AI-run yorozuya (everything store)", () => {
   render(<AboutPage />);
-  expect(
-    screen.getByText(/「自分を知り、楽しむ」ための場所/),
-  ).toBeInTheDocument();
+  expect(screen.getByText(/「AIが営むよろず屋」です/)).toBeInTheDocument();
 });
 
-test("About page highlights diagnoses and games as the heart", () => {
+test("About page explains the name origin (YOLO x よろず)", () => {
   render(<AboutPage />);
   expect(
-    screen.getByRole("heading", { name: /診断とゲームを楽しむ/ }),
+    screen.getByRole("heading", { name: "名前の由来" }),
   ).toBeInTheDocument();
-  expect(screen.getByText(/性格診断・キャラクター診断/)).toBeInTheDocument();
+  expect(screen.getByText(/運営のすべてをAIに任せた実験/)).toBeInTheDocument();
 });
 
-test("About page frames diagnoses as entertainment, not psychological assessment", () => {
-  // 害防止（DESIGN.md §7 レッドライン）: 診断が娯楽であり心理検査でない旨を面で伝える
-  render(<AboutPage />);
-  expect(
-    screen.getByText(
-      /心理検査のように優劣や向き不向きを判定するものではありません/,
-    ),
-  ).toBeInTheDocument();
-});
-
-test("About page does not define the site as merely a toolbox / online tools collection", () => {
+test("About page does not define the site as diagnosis-centered (superseded concept)", () => {
   const { container } = render(<AboutPage />);
-  // 旧自己定義（道具箱-as-core）のキャッチフレーズが残っていないこと
-  expect(container.textContent).not.toMatch(
-    /日常のちょっとした作業の傍で使える道具を集めたサイト/,
-  );
-  expect(container.textContent).not.toMatch(/道具箱（トップページ）の使い方/);
+  // 旧コンセプトの正典フレーズが残っていないこと
+  expect(container.textContent).not.toMatch(/「自分を知り、楽しむ」ための場所/);
+  expect(
+    screen.queryByRole("heading", { name: "診断とゲームを楽しむ" }),
+  ).not.toBeInTheDocument();
 });
 
-test("About page links to tools, blog, and play", () => {
+test("About page links to play, dictionary, tools, and blog", () => {
   render(<AboutPage />);
-  // cycle-279 フェーズ R: 道具箱ダッシュボードは完全撤去。ツールは /tools 一覧へ。
   expect(
-    screen.queryByRole("link", { name: "道具箱" }),
-  ).not.toBeInTheDocument();
-  expect(screen.getByRole("link", { name: "ツール一覧" })).toHaveAttribute(
+    screen.getByRole("link", { name: "診断・占い・あそび" }),
+  ).toHaveAttribute("href", "/play");
+  expect(screen.getByRole("link", { name: "辞典" })).toHaveAttribute(
+    "href",
+    "/dictionary",
+  );
+  expect(screen.getByRole("link", { name: "道具" })).toHaveAttribute(
     "href",
     "/tools",
   );
-  // /blog へのリンクは「サイトの歩き方」と「AIによる運営について」の2箇所にある
   const blogLinks = screen.getAllByRole("link", { name: "ブログ" });
   expect(blogLinks.length).toBeGreaterThan(0);
   for (const blogLink of blogLinks) {
     expect(blogLink).toHaveAttribute("href", "/blog");
   }
-  expect(screen.getByRole("link", { name: "遊び" })).toHaveAttribute(
-    "href",
-    "/play",
-  );
 });
 
-test("About page renders AI disclaimer section", () => {
+test("About page renders an honest AI-operation disclosure", () => {
   render(<AboutPage />);
   expect(
-    screen.getByText(/AIエージェントが自律的に企画・開発・運営/),
+    screen.getByRole("heading", { name: "AIが運営しています" }),
+  ).toBeInTheDocument();
+  expect(
+    screen.getByText(
+      /AIエージェントが企画からデザイン、記事の執筆までをほぼひとりで手がけています/,
+    ),
+  ).toBeInTheDocument();
+  expect(
+    screen.getByText(
+      /内容に誤りがあったり、表示が崩れていたりすることがあります/,
+    ),
   ).toBeInTheDocument();
 });
 
-test("About page renders disclaimer section", () => {
+test("About page frames diagnoses/fortunes as entertainment, not psychological assessment", () => {
+  // 害防止（constitution rule 2 / DESIGN.md §7 レッドライン）
   render(<AboutPage />);
   expect(
-    screen.getByText(/正確性、完全性、有用性を保証するものではありません/),
+    screen.getByText(/心理学的な検査や専門的な鑑定ではない/),
   ).toBeInTheDocument();
-  // 診断・占いの結果は娯楽であり根拠を示すものではない旨の免責（診断中心化に伴い追加）
   expect(
-    screen.getByText(/娯楽としてお楽しみいただくためのもの/),
+    screen.getByText(/大切な決めごとの判断には使わないでください/),
   ).toBeInTheDocument();
+});
+
+test("About page disclaims tool result accuracy and liability", () => {
+  render(<AboutPage />);
+  expect(
+    screen.getByText(/間違いがないことを保証するものではありません/),
+  ).toBeInTheDocument();
+  expect(
+    screen.getByText(
+      /本サイトの利用によって生じた損害について、運営者は責任を負いません/,
+    ),
+  ).toBeInTheDocument();
+});
+
+test("About page links to the privacy policy", () => {
+  render(<AboutPage />);
+  expect(
+    screen.getByRole("link", { name: "プライバシーポリシー" }),
+  ).toHaveAttribute("href", "/privacy");
 });
 
 test("About page renders GitHub link", () => {
@@ -92,12 +111,9 @@ test("About page renders GitHub link", () => {
   expect(link).toHaveAttribute("rel", "noopener noreferrer");
 });
 
-test("metadata reflects the diagnosis-centered concept (cycle-277 決定(a))", () => {
+test("metadata reflects the yorozuya concept", () => {
   const description = metadata.description ?? "";
-  // 新コンセプト: 自分を知り、楽しむ（診断中心）
-  expect(description).toContain("診断");
-  expect(description).toContain("自分を知り");
-  // 実用層の道具にも触れつつ、AI 実験の明示（constitution rule 3）を保つ
+  expect(description).toContain("よろず屋");
   expect(description).toContain("AI");
-  expect(metadata.title).toBe("このサイトについて | yolos.net");
+  expect(metadata.title).toBe("サイト紹介 | yolos.net");
 });

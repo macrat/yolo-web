@@ -1,70 +1,83 @@
+/*
+ * プライバシーポリシー — DESIGN.md フェーズ R・店構え(cycle-279)。
+ * 純粋な読み物ページ(規約文)のため、器は罫と組版だけで組む静かな帳面にする。
+ * 見出しは globals.css の基層(明朝・palt・1.25 倍スケール)にまかせ、ここでは
+ * 読む面の幅(--measure)・余白(8px スケール)・区切りの罫・墨の濃淡だけを整える。
+ * 色付きカード・影・角丸装飾・旧トークン(--fg/--bg/--border/--r-*)は使わない(§2/§4/§8)。
+ */
+
 .main {
-  max-width: 1200px;
+  max-width: var(--measure);
   margin: 0 auto;
-  /* 左右 1.25rem は Header/Footer と同じサイト共通値。 */
-  padding: 2rem 1.25rem;
-  width: 100%;
+  padding: var(--space-32) var(--space-24) var(--space-64);
 }
 
+/* 表題: のれん罫(--rule-strong)で本文と区切り、規約文書としての起点を示す(§4)。 */
 .title {
-  font-size: 2rem;
-  font-weight: 800;
-  margin-bottom: 2rem;
+  margin: 0 0 var(--space-32);
+  padding-bottom: var(--space-16);
+  color: var(--ink);
+  border-bottom: 1px solid var(--rule-strong);
 }
 
 .section {
-  margin-bottom: 2rem;
+  margin-bottom: var(--space-32);
 }
 
+.section:last-of-type {
+  margin-bottom: 0;
+}
+
+/* 章見出し(h2): 一本罫(--rule)で仕切る。のれん罫より軽い区切りの主格(§4)。 */
 .sectionTitle {
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin-bottom: 0.75rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border);
+  margin: 0 0 var(--space-16);
+  padding-bottom: var(--space-8);
+  color: var(--ink);
+  border-bottom: 1px solid var(--rule);
 }
 
+/* 節見出し(h3): 罫なし・墨の色だけで一段静かに置く。 */
+.subheading {
+  margin: var(--space-24) 0 var(--space-8);
+  color: var(--ink);
+}
+
+.subheading:first-child {
+  margin-top: 0;
+}
+
+/* 読ませる本文: 16px / line-height 1.9(§3 の読み物既定)。globals.css の .prose を
+ * 併用してベタ組みを保つ(見出しの palt を継承しないよう normal に戻す)。 */
 .section p {
-  margin-bottom: 0.75rem;
-  line-height: 1.8;
-  color: var(--fg);
+  margin: 0 0 var(--space-16);
+  color: var(--ink);
+  line-height: 1.9;
+}
+
+.section p:last-child {
+  margin-bottom: 0;
 }
 
 .list {
-  padding-left: 1.5rem;
-  margin-bottom: 0.75rem;
+  margin: 0 0 var(--space-16);
+  padding-left: 1.5em;
 }
 
 .list li {
-  margin-bottom: 0.5rem;
-  line-height: 1.6;
-  color: var(--fg);
+  margin-bottom: var(--space-8);
+  color: var(--ink);
+  line-height: 1.9;
 }
 
-.link {
-  color: var(--accent);
-  text-decoration: underline;
+.list li:last-child {
+  margin-bottom: 0;
 }
 
-.link:hover {
-  color: var(--accent-strong);
-}
-
-.link:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-.subheading {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-top: 1rem;
-  margin-bottom: 0.5rem;
-  color: var(--fg);
-}
-
+/* 制定日: 補助情報の墨(--ink-2)で、本文と一本罫(--rule)で仕切る(§3/§4)。 */
 .enactmentDate {
-  margin-top: 2rem;
+  margin: var(--space-32) 0 0;
+  padding-top: var(--space-24);
+  color: var(--ink-2);
   text-align: right;
-  color: var(--fg-soft);
+  border-top: 1px solid var(--rule);
 }

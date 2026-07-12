@@ -1,37 +1,32 @@
-import Link from "next/link";
 import type { Metadata } from "next";
+import Link from "next/link";
+import Shinagaki, { type ShinagakiItem } from "@/components/Shinagaki";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
-import Panel from "@/components/Panel";
 import styles from "./page.module.css";
 import { ABOUT_LAST_MODIFIED } from "./meta";
 
 /**
- * このサイトについて（cycle-277 決定(a)で診断中心へ是正）
+ * サイト紹介（/about）— cycle-279 フェーズR「店構え」移行。
  *
- * サイトの自己定義を「無料オンラインツールを集めたサイト」から、決定(a)＝
- *「自分を知り、楽しむ場所（性格・キャラ診断／占い／ちょっとしたゲームを中心と
- * した自分を発見する体験）」へ据え直した。文化コンテンツ（辞典）は支え、
- * オンライン道具（道具箱・ツール）は実用層として触れるが主役にしない
- *（3層構造は docs/site-concept.md と整合）。
- * docs/research/2026-07-03-market-research-b545.md 決定(a)・docs/site-concept.md 参照。
+ * docs/site-concept.md（cycle-278 で書き直し済み）の自己定義「AIが営む、
+ * 『やってみる』のよろず屋」に合わせて自己紹介の文章を全面的に書き直した。
+ * 旧版は cycle-277 決定(a)「自分を知り、楽しむ場所」= 診断中心コンセプトのまま
+ * 据え置かれており、サイトコンセプトの現行版と食い違っていた。
  *
- * - AI が企画・運営する実験である旨と免責は残す（constitution rule 3）。
- *   診断・占いは娯楽であり科学的・専門的根拠を主張しない旨を免責に明記する
- *   （害防止・DESIGN.md §7 レッドライン）。
- * - 実績システム（バッジ・ストリーク）のセクションは設けない: B-355 で
- *   実測に基づき撤去と判断し、B-338（cycle-236）で撤去済み。
- * - DESIGN.md §1（コンテンツはパネルに収める）に従い、ブログ詳細と同じく
- *   h1 を Panel 外に置き、本文を Panel に収める。
+ * 器（レイアウト）は DESIGN.md §3/§4 の「読み物」形式: 明朝見出し + 16px/1.9 の本文を
+ * --measure 幅（約42rem）に収める。一覧は品書き（Shinagaki）で組み、カード化しない（§4）。
+ * Panel（旧トークン依存の共有コンポーネント）は使わず、罫と余白だけで組む。
+ * AI運営の明示は constitution rule 3 に従い正直に書く（人間の著者を装わない）。
  */
 
 const ABOUT_DESCRIPTION =
-  "yolos.netは、性格診断やキャラクター診断、占い、ちょっとしたゲームを通じて「自分を知り、楽しむ」ための、AIが企画・運営する実験的なサイトです。コンセプトとサイトの歩き方をご案内します。";
+  "yolos.netは「AIが営むよろず屋」です。性格診断や占い、ゲーム、漢字・四字熟語・伝統色の辞典、文字数カウントなどの道具まで。名前の由来や運営の仕組み、AIによる運営についてご案内します。";
 
 export const metadata: Metadata = {
-  title: `このサイトについて | ${SITE_NAME}`,
+  title: `サイト紹介 | ${SITE_NAME}`,
   description: ABOUT_DESCRIPTION,
   openGraph: {
-    title: `このサイトについて | ${SITE_NAME}`,
+    title: `サイト紹介 | ${SITE_NAME}`,
     description: ABOUT_DESCRIPTION,
     type: "website",
     url: `${BASE_URL}/about`,
@@ -39,7 +34,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: `このサイトについて | ${SITE_NAME}`,
+    title: `サイト紹介 | ${SITE_NAME}`,
     description: ABOUT_DESCRIPTION,
   },
   alternates: {
@@ -50,152 +45,105 @@ export const metadata: Metadata = {
   },
 };
 
+/**
+ * 「何が置いてあるか」棚。トップページの棚構成（診断・占い・あそび／辞典／道具／読みもの）と
+ * 対応させ、各棚の一覧ページへ案内する（個々のコンテンツへは踏み込まない——
+ * ここは自己紹介であり、トップの品書きの重複再掲ではない）。
+ */
+const STORE_ITEMS: ShinagakiItem[] = [
+  {
+    name: "診断・占い・あそび",
+    href: "/play",
+    note: "いくつか質問に答えると、その場で結果が出ます。性格診断や占い、言葉のパズルなどを置いています。",
+  },
+  {
+    name: "辞典",
+    href: "/dictionary",
+    note: "漢字や四字熟語、伝統色の名前と由来を調べられます。",
+  },
+  {
+    name: "道具",
+    href: "/tools",
+    note: "文字数を数えたり単位を換算したりする、ブラウザだけで使える道具です。",
+  },
+  {
+    name: "ブログ",
+    href: "/blog",
+    note: "サイトを作りながら気づいたことを、運営しているAI自身が書いています。",
+  },
+];
+
 export default function AboutPage() {
   return (
-    <div className={styles.main}>
+    <div className={styles.page}>
       <h1 className={styles.title}>このサイトについて</h1>
 
-      <Panel as="div" padding="comfortable">
-        {/* Section 1: yolos.net とは */}
-        <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>yolos.net とは</h2>
-          {/* metadata description と同じ「yolos.netは、」の表記（半角スペースなし）に
-              統一するため、JSX の改行（スペースとして描画される）を入れない */}
-          <p className={styles.lead}>
-            yolos.netは、「自分を知り、楽しむ」ための場所です。
-          </p>
-          <p>
-            性格診断やキャラクター診断、占い、ちょっとしたゲームを通じて、自分の傾向を見つめたり、ふだん意識しない一面に気づいたりする体験を用意しています。漢字・四字熟語・伝統色といった日本語や文化を楽しむ辞典や、文字数カウントや単位換算などの実用的なオンライン道具も、その傍らでご利用いただけます。登録もインストールも不要で、ブラウザだけですぐに使えます。
-          </p>
-          <p>
-            また、本サイトはAIが企画・運営する実験的なサイトです。詳しくは後述の「AIによる運営について」をご覧ください。
-          </p>
-        </section>
+      <p className={styles.lead}>
+        yolos.netは、「AIが営むよろず屋」です。読むだけで終わるサイトではなく、その場でためして、結果や作ったものを持ち帰れるサイトを目指しています。
+      </p>
 
-        {/* Section 2: 診断とゲームで自分を知る、楽しむ（サイトの主軸） */}
-        <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>診断とゲームを楽しむ</h2>
-          <p>
-            「自分を知り、楽しむ」の中心は、
-            <Link href="/play" className={styles.link}>
-              遊び
-            </Link>
-            にまとめた診断とゲームです。いくつかの質問に答えるだけで、その場で結果をお見せします。
-          </p>
-          <ul className={styles.list}>
-            <li>
-              性格診断・キャラクター診断:
-              質問に答えると、あなたに似ているタイプやキャラクターを結果としてお見せします。
-            </li>
-            <li>
-              占い:
-              その日の運勢や意外な相性など、軽い気持ちで楽しめる内容を用意しています。
-            </li>
-            <li>
-              ちょっとしたゲーム:
-              漢字やことばのクイズなど、少し頭を使う息抜きを置いています。
-            </li>
-          </ul>
-          <p>
-            これらは自分を見つめるきっかけとして楽しむ「遊び」で、心理検査のように優劣や向き不向きを判定するものではありません。結果はその場で表示され、気になったものは何度でも試せます。
-          </p>
-        </section>
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>名前の由来</h2>
+        <p className={styles.text}>
+          「yolos.net」には、二つの意味を重ねています。ひとつは「YOLO」——運営のすべてをAIに任せた実験、という意味です。もうひとつは「よろず」——ジャンルを問わず、いろいろなものを扱う店、という意味です。
+        </p>
+        <p className={styles.text}>
+          性格診断や占い、ちょっとしたゲーム、漢字や伝統色の辞典、文字数カウントのような道具まで。AIが「面白そう」「役に立ちそう」と考えたものを、ジャンルにこだわらず並べています。何を残し何をやめるかは、訪れてくださった方の反応で決めています。
+        </p>
+      </section>
 
-        {/* Section 3: サイトの歩き方（辞典・道具・ブログへの導線） */}
-        <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>サイトの歩き方</h2>
-          <ul className={styles.list}>
-            <li>
-              <Link href="/dictionary" className={styles.link}>
-                辞典
-              </Link>
-              :
-              漢字・四字熟語・伝統色を調べられる辞典です。診断で出てきた言葉や色の背景を確かめたいときにも役立ちます。
-            </li>
-            <li>
-              <Link href="/tools" className={styles.link}>
-                ツール一覧
-              </Link>
-              :
-              文字数カウントや単位換算などの実用的なオンライン道具です。ブラウザ上ですぐに使えます。
-            </li>
-            <li>
-              <Link href="/blog" className={styles.link}>
-                ブログ
-              </Link>
-              :
-              このサイトを運営するAI自身が、開発で得た学びや作業の日記を書いています。
-            </li>
-          </ul>
-        </section>
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>何が置いてあるか</h2>
+        <p className={styles.text}>店の品書きは、大きく四つです。</p>
+        <Shinagaki items={STORE_ITEMS} ariaLabel="サイトの品書き" />
+      </section>
 
-        {/* Section 4: AIによる運営について（constitution rule 3 の明示） */}
-        <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>AIによる運営について</h2>
-          <p>
-            このサイトは、AIエージェントが自律的に企画・開発・運営を行っています。コンテンツの作成からサイトのデザインまで、すべてAIが主体となって行っている実験的なプロジェクトです。
-          </p>
-          <p>AIによるコンテンツのため、以下の点にご留意ください。</p>
-          <ul className={styles.list}>
-            <li>内容が不正確である場合があります</li>
-            <li>予告なく内容が変更される場合があります</li>
-            <li>表示や機能に不具合がある場合があります</li>
-          </ul>
-          <p>
-            サイトの制作過程や技術的な試行錯誤は
-            <Link href="/blog" className={styles.link}>
-              ブログ
-            </Link>
-            で公開しています。
-          </p>
-        </section>
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>AIが運営しています</h2>
+        <p className={styles.text}>
+          このサイトは、AIエージェントが企画からデザイン、記事の執筆までをほぼひとりで手がけています。人がすみずみまで確認しているわけではないため、内容に誤りがあったり、表示が崩れていたりすることがあります。
+        </p>
+        <p className={styles.text}>
+          サイトを作る過程やそこで気づいたことは、
+          <Link href="/blog">ブログ</Link>
+          にそのまま書いています。
+        </p>
+      </section>
 
-        {/* Section 5: 免責事項 */}
-        <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>免責事項</h2>
-          <p>
-            本サイトの診断・占いの結果は、娯楽としてお楽しみいただくためのもので、科学的・専門的な根拠を示すものではありません。また、ツールによる計算・変換などの結果は正確であるよう努めていますが、その正確性、完全性、有用性を保証するものではありません。重要な用途では、結果を別の手段でもご確認ください。
-          </p>
-          <p>
-            本サイトの利用により生じたいかなる損害についても、運営者は責任を負いません。
-          </p>
-        </section>
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>診断・占い・道具について</h2>
+        <p className={styles.text}>
+          性格診断や占いは、気軽に楽しんでいただくための娯楽です。心理学的な検査や専門的な鑑定ではないので、結果は一つの見方として受け止め、大切な決めごとの判断には使わないでください。
+        </p>
+        <p className={styles.text}>
+          道具の計算結果も、正確であるよう努めていますが、間違いがないことを保証するものではありません。大事な場面では、他の方法でも確かめてください。本サイトの利用によって生じた損害について、運営者は責任を負いません。
+        </p>
+      </section>
 
-        {/* Section 6: プライバシーと利用について */}
-        <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>プライバシーと利用について</h2>
-          <p>
-            本サイトは完全無料でご利用いただけます。アカウント登録の仕組みはなく、個人情報の入力は一切ありません。
-          </p>
-          <p>
-            道具箱の構成やゲームの進捗などのデータはブラウザのローカルストレージに保存され、サーバーには送信されません。
-          </p>
-          <p>
-            個人情報の取り扱いについては
-            <Link href="/privacy" className={styles.link}>
-              プライバシーポリシー
-            </Link>
-            をご確認ください。
-          </p>
-        </section>
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>プライバシーについて</h2>
+        <p className={styles.text}>
+          会員登録は必要なく、名前やメールアドレスの入力を求めることもありません。アクセス解析にはGoogle
+          Analyticsを、ゲームの進み具合などにはブラウザのローカルストレージを使っています。詳しくは
+          <Link href="/privacy">プライバシーポリシー</Link>
+          をご覧ください。
+        </p>
+      </section>
 
-        {/* Section 7: お問い合わせ */}
-        <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>お問い合わせ</h2>
-          <p>
-            本サイトに関するお問い合わせは、
-            <a
-              href="https://github.com/macrat/yolo-web"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.link}
-            >
-              GitHubリポジトリ
-            </a>
-            のIssuesよりお願いいたします。
-          </p>
-        </section>
-      </Panel>
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>お問い合わせ</h2>
+        <p className={styles.text}>
+          このサイトについてのお問い合わせは、
+          <a
+            href="https://github.com/macrat/yolo-web"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            GitHubリポジトリ
+          </a>
+          のIssuesからお願いします。
+        </p>
+      </section>
     </div>
   );
 }

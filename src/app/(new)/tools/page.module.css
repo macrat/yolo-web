@@ -1,0 +1,41 @@
+/*
+ * ツール一覧トップ — DESIGN.md フェーズ R で新デザイン「店構え」へ変換。
+ *
+ * 器は静か（§1/§4）: 地は --paper（globals.css で body に付与）のまま、色付きカード・
+ * 同型アイコン・影・グラデーション・角丸装飾を持たない。構造は罫（Shinagaki の一本罫）と
+ * 組版だけで組む。色・書体・余白はすべてトークン経由（§10・直書き禁止）。
+ */
+
+/* ページ全体: 操作面の最大幅 --max-width(960px)。中央寄せは器の配置で、本文は左揃え（§4）。 */
+.page {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--space-32) var(--space-24) var(--space-64);
+}
+
+/* 名乗り（読む面）: 一行の長さを --measure(約42rem) に絞る（§3）。 */
+.intro {
+  max-width: var(--measure);
+  margin: var(--space-24) 0 var(--space-48);
+}
+
+/* 店号（h1）。サイズ・明朝・詰めは globals.css の見出し基層が与える。ここは余白のみ調整。 */
+.title {
+  margin: 0 0 var(--space-16);
+  color: var(--ink);
+}
+
+/* 説明: 文章として読ませるので 16px / line-height 1.9（§3）。 */
+.description {
+  margin: 0;
+  color: var(--ink);
+  line-height: 1.9;
+}
+
+/* 種別ごとの棚（見出し付き Shinagaki）の縦積み。棚同士の間隔は罫の有無で十分に判別できるため、
+ * 罫は Shinagaki 内部（各リストの上辺）に任せ、ここは余白のみで区切る。 */
+.shelves {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-48);
+}

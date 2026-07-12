@@ -42,9 +42,7 @@ export default function PrivacyPage() {
         </p>
         <p>
           本サイトは、AIエージェントによる実験的プロジェクトです。詳細は
-          <a href="/about" className={styles.link}>
-            このサイトについて
-          </a>
+          <a href="/about">このサイトについて</a>
           をご覧ください。
         </p>
       </section>
@@ -119,7 +117,6 @@ export default function PrivacyPage() {
             href="https://policies.google.com/privacy"
             target="_blank"
             rel="noopener noreferrer"
-            className={styles.link}
           >
             Googleのプライバシーポリシー
           </a>
@@ -129,7 +126,6 @@ export default function PrivacyPage() {
             href="https://tools.google.com/dlpage/gaoptout"
             target="_blank"
             rel="noopener noreferrer"
-            className={styles.link}
           >
             Googleアナリティクスオプトアウトアドオン
           </a>
@@ -150,7 +146,6 @@ export default function PrivacyPage() {
             href="https://www.google.com/settings/ads"
             target="_blank"
             rel="noopener noreferrer"
-            className={styles.link}
           >
             Googleの広告設定
           </a>
@@ -159,7 +154,6 @@ export default function PrivacyPage() {
             href="https://www.aboutads.info"
             target="_blank"
             rel="noopener noreferrer"
-            className={styles.link}
           >
             aboutads.info
           </a>
@@ -171,7 +165,6 @@ export default function PrivacyPage() {
             href="https://policies.google.com/technologies/partner-sites"
             target="_blank"
             rel="noopener noreferrer"
-            className={styles.link}
           >
             Googleのサービスを使用するサイトやアプリから収集した情報のGoogleによる使用
           </a>
@@ -219,7 +212,6 @@ export default function PrivacyPage() {
             href="https://github.com/macrat/yolo-web/issues"
             target="_blank"
             rel="noopener noreferrer"
-            className={styles.link}
           >
             GitHubリポジトリのIssues
           </a>
