@@ -31,6 +31,14 @@ completed_at: null
 - **横断**: R-3観測をADR001へ登録してから出荷・C0完成時の再見積もり
 - **既知の運用注意**: devサーバー稼働中は`.next/dev/types`が一過性に壊れtypecheckが落ちる→コミット前にdev停止＆`.next`クリーン＆build
 
+### 学び: 共有サブシステムは面ごとに並行変換できない（fan-out戦略の是正）
+
+C2で辞典一覧5面をworkflowで並行変換した際、各エージェントを「自分の2ファイルだけ」に閉じたため、**辞典が共有する検索/閲覧の器（`SearchBox`/`DictionaryGrid`/`DictionaryCard`/`CategoryNav`/各`*IndexClient`）が分断**された。結果: kanji/yojiで検索UXが脱落・colorsは旧検索クライアントを温存・`KanjiIndexClient`/`YojiIndexClient`が孤児化・ファセット面(radical/grade/stroke/category)は未変換のまま。**是正方針**: 共有サブシステム（辞典の検索/閲覧・ツールのToolLayout・quizエンジン・ブログ一覧/ページネーション等）は、**共有の器を先に店構えへ変換してから、それを使う面を展開する**。面単位のfan-outはサブシステムを共有しない独立ページに限る。
+
+### 追跡: 辞典サブシステムの一貫変換（出荷前必須・C2/C3にまたがる）
+
+現在の辞典トップ5面はWIP（コミット済みだが検索脱落・孤児あり）。出荷前に以下を一貫して行う: (1)共有の検索/閲覧を店構えへ変換し**結果表示を品書き（罫区切り）に**（カードグリッド廃止・§4/§8-4）、(2)**検索UXを4トップで一貫して復活**（検索の是非とUXを判断——facet導線＋検索の両立が既定）、(3)ファセット面(kanji radical/grade/stroke・yoji category・colors category)を変換、(4)孤児`KanjiIndexClient`/`YojiIndexClient`を削除or統合、(5)全辞典面をdesign-gateのglobへ追加して§8緑、(6)辞典詳細(C3)と合わせて視覚QA。
+
 ## 実施する作業
 
 ### C0. 基盤(新築・後続クラスタのゲート。ここが固まるまで量産しない)

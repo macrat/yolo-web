@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import Breadcrumb from "@/components/Breadcrumb";
-import CategoryNav from "@/dictionary/_components/new/CategoryNav";
+import Shinagaki, { type ShinagakiItem } from "@/components/Shinagaki";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { getAllColors, getColorCategories } from "@/dictionary/_lib/colors";
-import { COLOR_CATEGORY_LABELS } from "@/dictionary/_lib/types";
+import {
+  COLOR_CATEGORY_LABELS,
+  type ColorCategory,
+} from "@/dictionary/_lib/types";
 import { generateBreadcrumbJsonLd, safeJsonLdStringify } from "@/lib/seo";
 import ColorsIndexClient from "./ColorsIndexClient";
 import styles from "./page.module.css";
@@ -35,10 +38,23 @@ export const metadata: Metadata = {
 
 export default function ColorsIndexPage() {
   const allColors = getAllColors();
-  const categories = getColorCategories().map((c) => ({
-    slug: c,
-    label: COLOR_CATEGORY_LABELS[c],
-  }));
+
+  // 「色みから探す」棚（品書き）。色相のグループを入口として並べる。
+  // 並び順は虹の並び（COLOR_CATEGORY_LABELS の定義順＝赤→…→無彩色）を正準にする。
+  // getColorCategories() はアルファベット順にソートするため、そのまま使うと色相の並びが崩れる。
+  // 件数は値札（Nefuda）で各棚に添える（§4「メタは値札で・中身のあるものだけ」）。
+  const presentCategories = new Set<ColorCategory>(getColorCategories());
+  const categoryOrder = Object.keys(COLOR_CATEGORY_LABELS) as ColorCategory[];
+  const categoryItems: ShinagakiItem[] = categoryOrder
+    .filter((slug) => presentCategories.has(slug))
+    .map((slug) => {
+      const count = allColors.filter((c) => c.category === slug).length;
+      return {
+        name: COLOR_CATEGORY_LABELS[slug],
+        href: `/dictionary/colors/category/${slug}`,
+        tags: [`${count}色`],
+      };
+    });
 
   const breadcrumbJsonLd = generateBreadcrumbJsonLd([
     { label: "ホーム", href: "/" },
@@ -47,7 +63,7 @@ export default function ColorsIndexPage() {
   ]);
 
   return (
-    <div className={styles.container}>
+    <div className={styles.page}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -61,20 +77,32 @@ export default function ColorsIndexPage() {
           { label: "伝統色辞典" },
         ]}
       />
-      <section className={styles.hero}>
-        <h1 className={styles.heroTitle}>日本の伝統色</h1>
-        <p className={styles.heroSubtext}>
-          日本に伝わる美しい伝統色{allColors.length}
-          色を収録しています。色名やカラーコードで検索できます。
+
+      {/* 名乗り（読む面）。何が引けるかを具体で（§6）。器は静か・色見本は成果物側に置く（§2）。 */}
+      <div className={styles.intro}>
+        <h1 className={styles.title}>日本の伝統色</h1>
+        <p className={styles.lead}>
+          むかしから使われてきた和の色名を、{colorCount}色ぶん集めました。
         </p>
-      </section>
-      <CategoryNav
-        categories={categories}
-        basePath="/dictionary/colors/category"
-        allLabel="すべて"
-        allHref="/dictionary/colors"
-      />
-      <ColorsIndexClient allColors={allColors} />
+        <p className={styles.body}>
+          それぞれの色に、色名の読み方とカラーコード（HEX・RGB・HSL）を載せています。色みのグループからたどるか、色名やコードで検索して、目当ての色を探してください。
+        </p>
+      </div>
+
+      {/* 棚1: 色みから探す（色相グループへの入口・品書き） */}
+      <div className={styles.shelf}>
+        <Shinagaki
+          heading="色みから探す"
+          items={categoryItems}
+          ariaLabel="色みのグループから探す品書き"
+        />
+      </div>
+
+      {/* 棚2: 色名・コードから探す（検索と全色の一覧・ColorsIndexClient が担う） */}
+      <div className={styles.shelf}>
+        <h2 className={styles.shelfHeading}>色名・コードから探す</h2>
+        <ColorsIndexClient allColors={allColors} />
+      </div>
     </div>
   );
 }

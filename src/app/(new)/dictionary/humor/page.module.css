@@ -1,109 +1,114 @@
-/* ユーモア辞典トップ。austere（無彩）基調の index 面。
- * 中心体験の視覚言語（にじみ/グラデ・結果固有色・象徴）は持ち込まない（実用の領域・DESIGN.md §7・§3.3）。 */
+/*
+ * ユーモア辞典トップ — DESIGN.md フェーズ R「店構え」へ変換。
+ *
+ * 器は静か・見出し語が主役（§1/§4）。地はベタ塗りの --paper（globals.css で body に付与）のまま、
+ * 色付きカード・淡色地・box-shadow・角丸装飾・グラデーションを持たない。構造は罫（一本罫）と
+ * 組版だけで組む。色・角丸・書体はすべてトークン経由（§10・直書き禁止）。ダーク/ライトは
+ * トークンが吸収する。
+ */
 
-.container {
-  max-width: 1200px;
+/* ページ全体: 操作面の最大幅 --max-width(960px)。中央寄せは器の配置で、本文は左揃え（§4）。 */
+.page {
+  max-width: var(--max-width);
   margin: 0 auto;
-  /* 左右 1.25rem は Header/Footer と同じサイト共通値。縦は独自に 2rem。
-   * （new）配下に var(--max-width) は未定義のためハードコード 1200px が正準
-   * （colors index の .container と同一方針）。 */
-  padding: 2rem 1.25rem;
+  padding: var(--space-32) var(--space-24) var(--space-64);
 }
 
-/* hero は無地。旧 linear-gradient（にじみ＝診断拡張）と角丸・border を撤去し、
- * 余白と 1px の下罫のみで本文との区切りを示す（austere・§3.3）。 */
-.hero {
-  text-align: center;
-  padding: 0 1rem 2rem;
-  margin-bottom: 2rem;
-  border-bottom: 1px solid var(--border);
+/* 自己紹介（読む面）: 一行の長さを --measure(約42rem) に絞る（§3）。 */
+.intro {
+  max-width: var(--measure);
+  margin: var(--space-24) 0 var(--space-48);
 }
 
-.heroTitle {
-  font-size: 1.75rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
+/* 店号（h1）。サイズ・明朝・詰めは globals.css の見出し基層が与える。ここは余白のみ調整。 */
+.title {
+  margin: 0 0 var(--space-16);
+  color: var(--ink);
 }
 
-.heroSubtext {
-  font-size: 0.95rem;
-  color: var(--fg-soft);
-  line-height: 1.6;
+/* 名乗りの一言。導入として本文よりやや大きく、墨で見せる。 */
+.lead {
+  margin: 0 0 var(--space-16);
+  color: var(--ink);
+  font-size: 1.25rem; /* 20px */
+  line-height: 1.7;
 }
 
-.entryList {
-  list-style: none;
-  padding: 0;
+/* 自己紹介の本文: 文章として読ませるので 16px / line-height 1.9（§3）。 */
+.body {
   margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  color: var(--ink);
+  line-height: 1.9;
 }
 
-.entryItem {
-  border: 1px solid var(--border);
-  border-radius: var(--r-normal);
-  overflow: hidden;
-  transition: border-color 0.2s;
+/*
+ * 見出し語の品書き（§4 一覧の既定形＝罫区切りリスト）。
+ * 上辺にも罫を引き、各行の下辺罫と合わせて全行を罫で囲う。カード装飾・影・色地は使わない。
+ */
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--rule);
 }
 
-.entryItem:hover {
-  border-color: var(--border-strong);
+.row {
+  border-bottom: 1px solid var(--rule);
 }
 
+/*
+ * 行全体をリンクにする（browsing の一覧なので広いタップ面が価値・§10 の 44px を縦 padding で確保）。
+ * 静止時は下線を出さず、hover で見出し語に朱＋下線を出す（下線はリンクの専有・§3。Footer/Shinagaki と同じ流儀）。
+ */
 .entryLink {
-  display: grid;
-  grid-template-columns: auto auto 1fr;
-  align-items: baseline;
-  gap: 0.5rem;
-  padding: 0.875rem 1rem;
+  display: block;
+  padding: var(--space-16) 0;
   text-decoration: none;
-  color: inherit;
-  background-color: var(--bg);
-  transition: background-color 0.2s;
+  color: var(--ink);
 }
 
-.entryLink:hover {
-  background-color: var(--bg-soft);
+.entryLink:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
-.entryWord {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--fg);
-  flex-shrink: 0;
+/* 見出し語＋よみを 1 行に（ベースライン揃え・狭幅では折り返す）。 */
+.headword {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--space-8);
 }
 
-.entryReading {
-  font-size: 0.8rem;
-  color: var(--fg-soft);
-  flex-shrink: 0;
+/* 見出し語: 一覧の主役。§4「品名（リンク・墨）」に従い墨、§3 に従い明朝で組む。 */
+.word {
+  color: var(--ink);
+  font-family: var(--font-mincho);
+  font-size: 1.125rem; /* 18px */
+  line-height: 1.4;
+  letter-spacing: 0.01em;
 }
 
-.entryPreview {
-  font-size: 0.875rem;
-  color: var(--fg-soft);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.entryLink:hover .word {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
 }
 
-@media (max-width: 640px) {
-  .heroTitle {
-    font-size: 1.4rem;
-  }
+/* よみがな: 見出し語に添える補助情報（§3 の補助字サイズ 13px・--ink-2）。 */
+.reading {
+  color: var(--ink-2);
+  font-family: var(--font-gothic);
+  font-size: 0.8125rem; /* 13px */
+  line-height: 1.5;
+}
 
-  .entryLink {
-    grid-template-columns: auto auto;
-    grid-template-rows: auto auto;
-  }
-
-  .entryPreview {
-    grid-column: 1 / -1;
-    white-space: normal;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
+/* 語義プレビュー: 定義の最初の一文。文章として読ませるので 16px / 行間を保つ（§3）。 */
+.preview {
+  display: block;
+  margin: var(--space-8) 0 0;
+  color: var(--ink-2);
+  font-family: var(--font-gothic);
+  font-size: 1rem; /* 16px */
+  line-height: 1.7;
 }

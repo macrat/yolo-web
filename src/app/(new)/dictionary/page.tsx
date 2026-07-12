@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import Breadcrumb from "@/components/Breadcrumb";
+import Shinagaki, { type ShinagakiItem } from "@/components/Shinagaki";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { getAllKanji } from "@/dictionary/_lib/kanji";
 import { getAllYoji } from "@/dictionary/_lib/yoji";
@@ -46,78 +46,64 @@ export const metadata: Metadata = {
 };
 
 /**
- * 辞典トップ（回遊ハブ）。
+ * 辞典トップ（回遊ハブ）— DESIGN.md フェーズ R で新デザイン「店構え」へ変換。
  *
- * このページの役割は検索の入口ではなく、辞典内にいる来訪者が4系統
- * （漢字・四字熟語・伝統色・ユーモア）の間を渡る「回遊ハブ」。価値は
- * 4枚のナビカードの明快さと渡しやすさにある（cycle-262 接地）。
+ * このページの役割は、辞典内にいる来訪者が4系統（漢字・四字熟語・伝統色・ユーモア）の
+ * 間を渡る「回遊ハブ」。旧デザイン（同型グリフカード4枚のグリッド・--fg/--bg/--border/
+ * --r- 系の旧トークン・淡色地カード）を全廃し、DESIGN.md の店構えへ組み直した。
  *
- * デザイン方針: 実用の領域として無彩・抑制を維持する index 面。中心体験の視覚言語
- * （結果固有色・象徴絵文字・色チップ等）は持ち込まない（DESIGN.md §7 は
- * 診断のタッチポイント限定。辞典は文化層であり基調を純粋に保つ）。
- * 各カード冒頭の 漢/四/色/笑 は明朝系グリフで意味を担うため、絵文字ではなく
- * タイポグラフィとして無彩のまま残す。
+ * 構成（§1「器は静か」/ §4「一覧の既定は品書き」/ §6 文章）:
+ * - 名乗り（器・Shinagaki 外）: h1「辞典」と、4系統を具体で示す短い説明。
+ * - 4系統は品書き（Shinagaki）の罫区切りリスト1枚で渡す。カードのグリッド（§8-4）と
+ *   同型グリフアイコンは使わない。各行は品名（リンク）+ ひとこと（note）+ 収録数（meta）。
+ *   収録数は「中身のある実情報」なので右端メタとして tabular で添える（§4）。
  *
- * BreadcrumbList の構造化データは Breadcrumb コンポーネントが内部で
- * JSON-LD を出力する（tools/blog と同じ既存パターン）。
+ * BreadcrumbList の構造化データは Breadcrumb コンポーネントが内部で JSON-LD を出力する。
  */
-export default function DictionaryPage() {
-  const sections = [
-    {
-      href: "/dictionary/kanji",
-      glyph: "漢",
-      title: "漢字辞典",
-      desc: "常用漢字の読み方・意味・部首・画数などの情報をまとめています。",
-      count: `${kanjiCount}字収録`,
-    },
-    {
-      href: "/dictionary/yoji",
-      glyph: "四",
-      title: "四字熟語辞典",
-      desc: "よく使われる四字熟語の読み方と意味を、カテゴリ・難易度別に整理しています。",
-      count: `${yojiCount}語収録`,
-    },
-    {
-      href: "/dictionary/colors",
-      glyph: "色",
-      title: "伝統色辞典",
-      desc: "日本の伝統色の名前とカラーデータを一覧で確認できます。",
-      count: `${colorCount}色収録`,
-    },
-    {
-      href: "/dictionary/humor",
-      glyph: "笑",
-      title: "ユーモア辞典",
-      desc: "日常のあらゆる言葉をユーモラスに再定義。クスッと笑える新解釈で、言葉の別の側面を楽しもう。",
-      count: `${humorCount}語収録`,
-    },
-  ];
 
+/** 4系統の辞典。リンク先は実在ルートのみ。収録数は data から算出した実数（meta）。 */
+const DICTIONARY_ITEMS: ShinagakiItem[] = [
+  {
+    name: "漢字辞典",
+    href: "/dictionary/kanji",
+    note: "常用漢字を、読み・意味・画数・部首から引けます。",
+    meta: `${kanjiCount}字`,
+  },
+  {
+    name: "四字熟語辞典",
+    href: "/dictionary/yoji",
+    note: "よく使う四字熟語を、意味と使い方、カテゴリや難易度から探せます。",
+    meta: `${yojiCount}語`,
+  },
+  {
+    name: "伝統色辞典",
+    href: "/dictionary/colors",
+    note: "日本の伝統色の名前と色みを、由来つきで並べています。",
+    meta: `${colorCount}色`,
+  },
+  {
+    name: "ユーモア辞典",
+    href: "/dictionary/humor",
+    note: "日常の言葉を、AIがくすっと笑える形に言い換えた辞典。",
+    meta: `${humorCount}語`,
+  },
+];
+
+export default function DictionaryPage() {
   return (
-    <div className={styles.container}>
+    <div className={styles.page}>
       <Breadcrumb items={[{ label: "ホーム", href: "/" }, { label: "辞典" }]} />
 
-      <header className={styles.header}>
+      {/* 名乗り（器・読む面）。何を引けるかを具体で（§6）。 */}
+      <div className={styles.intro}>
         <h1 className={styles.title}>辞典</h1>
         <p className={styles.description}>
-          漢字・四字熟語・日本の伝統色を楽しく調べて学べる辞典です。気になる言葉や色をクリックして、読み方・意味・使い方を見てみましょう。
+          漢字・四字熟語・日本の伝統色、それにAIが作ったユーモア辞典。気になる言葉や色を引いて、読み方や意味、由来を確かめてください。
         </p>
-      </header>
+      </div>
 
-      <ul className={styles.sectionGrid}>
-        {sections.map((section) => (
-          <li key={section.href} className={styles.sectionItem}>
-            <Link href={section.href} className={styles.sectionCard}>
-              <span className={styles.sectionIcon} aria-hidden="true">
-                {section.glyph}
-              </span>
-              <h2 className={styles.sectionTitle}>{section.title}</h2>
-              <p className={styles.sectionDesc}>{section.desc}</p>
-              <p className={styles.sectionCount}>{section.count}</p>
-            </Link>
-          </li>
-        ))}
-      </ul>
+      {/* 4系統の品書き（罫区切りリスト1枚で渡す・§4） */}
+      <Shinagaki items={DICTIONARY_ITEMS} ariaLabel="辞典の品書き" />
     </div>
   );
 }
