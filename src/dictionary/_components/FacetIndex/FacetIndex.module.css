@@ -1,0 +1,71 @@
+/*
+ * ファセット索引（FacetIndex）— 他ファセット値への導線（DESIGN.md §4/§8-5）。
+ * 旧 CategoryNav（ピル群）の店構え版。罫で区切った区画に、折り返すテキストリンクの索引を置く。
+ * ピル・色地・角丸・影は使わない。色・書体・余白はすべてトークン経由（§10・直書き禁止）。
+ */
+
+/* 棚（区画）: 罫で仕切る（区切りが構造の主役・§4）。上辺に罫、区画の内側に padding。 */
+.facet {
+  margin: var(--space-32) 0 0;
+  padding: var(--space-32) 0 0;
+  border-top: 1px solid var(--rule);
+}
+
+/*
+ * 棚の見出し: 明朝・墨・詰め。品書き/検索器の棚見出し（22px）に揃える（§3 見出しの流儀）。
+ */
+.heading {
+  margin: 0 0 var(--space-16);
+  color: var(--ink);
+  font-family: var(--font-mincho);
+  font-size: 1.375rem; /* 22px */
+  line-height: 1.4;
+  font-feature-settings: "palt";
+}
+
+/*
+ * ファセット値の索引: 多数の短い入口を折り返して並べる。カードでもピルでもなくリンクの列挙。
+ */
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+}
+
+/*
+ * 索引のリンク: 品名と同じ流儀（墨・明朝、静止時は下線なし、hover で朱＋下線）。
+ * タップ面 44px 角を確保（§10）。単字（部首）は正方の升目、長い語はパディングで横に伸びる。
+ */
+.link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 var(--space-8);
+  color: var(--ink);
+  font-family: var(--font-mincho);
+  font-size: 1.125rem; /* 18px — 品名と同格 */
+  line-height: 1.4;
+  text-decoration: none;
+}
+
+.link:hover {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+/* 現在地は朱（§4 のれん「現在地は朱」）。今いる面なので下線は引かない。 */
+.active {
+  color: var(--accent);
+}
+
+.active:hover {
+  text-decoration: none;
+}
+
+/* フォーカス可視は globals.css の :focus-visible（朱の 2px アウトライン）に委ねる（§10）。 */

@@ -55,9 +55,14 @@ import fg from "fast-glob";
 const PROJECT_ROOT = path.resolve(__dirname, "../..");
 
 // 新デザイン面（対象）。C1 で変換したコンポーネントの glob をここへ追記して面を広げる。
+// 注意（fast-glob のメタ文字）: Next.js の Route Group ディレクトリ `(new)` と動的
+// セグメント `[param]` は、そのまま書くと fast-glob に「extglob グループ」「文字クラス」
+// として解釈され、実ファイルに一致せず 0 件で黙って素通りする（＝ゲートが空振りする）。
+// パーレンは `\(new\)` とエスケープし、`[param]` は `*`（単一階層ワイルドカード）で受ける。
+// 空振りは下の「空振り検出」テストが各 glob 単位で fail させる。
 const NEW_DESIGN_CSS = [
   "src/app/globals.css", // 新トークン定義 + 基層タイポ層（§2/§3/§4）
-  "src/app/(new)/page.module.css", // トップ（店構え・§1/§4 の参照実装・C2 変換）
+  "src/app/\\(new\\)/page.module.css", // トップ（店構え・§1/§4 の参照実装・C2 変換）
   "src/components/Header/**/*.module.css", // のれん（§4）
   "src/components/Footer/**/*.module.css", // 店構え（§4）
   "src/components/Shinagaki/**/*.module.css", // 品書き（§4 一覧の既定形）
@@ -65,15 +70,25 @@ const NEW_DESIGN_CSS = [
   "src/components/Tsutsumi/**/*.module.css", // 包み（§4/§7 結果カード・和色は中身のみ）
   "src/components/In/**/*.module.css", // 印（§4 厳密仕様・朱一色）
   // 辞典トップ 4 面（フェーズ R・C2/C3 変換済み。検索/閲覧を店構えへ一貫変換）。
-  "src/app/(new)/dictionary/kanji/page.module.css",
-  "src/app/(new)/dictionary/yoji/page.module.css",
-  "src/app/(new)/dictionary/colors/page.module.css",
-  "src/app/(new)/dictionary/humor/page.module.css",
+  "src/app/\\(new\\)/dictionary/kanji/page.module.css",
+  "src/app/\\(new\\)/dictionary/yoji/page.module.css",
+  "src/app/\\(new\\)/dictionary/colors/page.module.css",
+  "src/app/\\(new\\)/dictionary/humor/page.module.css",
   // 辞典共有の検索器（品書きで検索結果を出す器・§4/§8-4）。
   "src/dictionary/_components/DictionarySearch/**/*.module.css",
+  // 辞典共有の品書き（一覧の既定形・検索結果とファセット絞り込みが共有・§4/§8-4）。
+  "src/dictionary/_components/DictionaryEntryList/**/*.module.css",
+  // 辞典共有のファセット索引（他ファセット値への導線・旧 CategoryNav の店構え版・§4/§8-5）。
+  "src/dictionary/_components/FacetIndex/**/*.module.css",
+  // 辞典ファセット面（学年/部首/画数/カテゴリ・C 変換済み。[param] は * で受ける）。
+  "src/app/\\(new\\)/dictionary/kanji/grade/*/page.module.css",
+  "src/app/\\(new\\)/dictionary/kanji/radical/*/page.module.css",
+  "src/app/\\(new\\)/dictionary/kanji/stroke/*/page.module.css",
+  "src/app/\\(new\\)/dictionary/yoji/category/*/page.module.css",
+  "src/app/\\(new\\)/dictionary/colors/category/*/page.module.css",
 ];
 const NEW_DESIGN_TSX = [
-  "src/app/(new)/page.tsx", // トップ（店構え・C2 変換）。インライン style の禁止を検査
+  "src/app/\\(new\\)/page.tsx", // トップ（店構え・C2 変換）。インライン style の禁止を検査
   "src/components/Header/**/*.tsx",
   "src/components/Footer/**/*.tsx",
   "src/components/Shinagaki/**/*.tsx",
@@ -81,12 +96,22 @@ const NEW_DESIGN_TSX = [
   "src/components/Tsutsumi/**/*.tsx",
   "src/components/In/**/*.tsx",
   // 辞典トップ 4 面（フェーズ R・C2/C3 変換済み）。インライン style の禁止を検査。
-  "src/app/(new)/dictionary/kanji/page.tsx",
-  "src/app/(new)/dictionary/yoji/page.tsx",
-  "src/app/(new)/dictionary/colors/page.tsx",
-  "src/app/(new)/dictionary/humor/page.tsx",
+  "src/app/\\(new\\)/dictionary/kanji/page.tsx",
+  "src/app/\\(new\\)/dictionary/yoji/page.tsx",
+  "src/app/\\(new\\)/dictionary/colors/page.tsx",
+  "src/app/\\(new\\)/dictionary/humor/page.tsx",
   // 辞典共有の検索器（色見本のインライン style は成果物中身＝変数由来で色直書きなし）。
   "src/dictionary/_components/DictionarySearch/**/*.tsx",
+  // 辞典共有の品書き（色見本のインライン style は成果物中身＝変数由来で色直書きなし）。
+  "src/dictionary/_components/DictionaryEntryList/**/*.tsx",
+  // 辞典共有のファセット索引（旧 CategoryNav の店構え版）。
+  "src/dictionary/_components/FacetIndex/**/*.tsx",
+  // 辞典ファセット面（学年/部首/画数/カテゴリ・C 変換済み）。インライン style の禁止を検査。
+  "src/app/\\(new\\)/dictionary/kanji/grade/*/page.tsx",
+  "src/app/\\(new\\)/dictionary/kanji/radical/*/page.tsx",
+  "src/app/\\(new\\)/dictionary/kanji/stroke/*/page.tsx",
+  "src/app/\\(new\\)/dictionary/yoji/category/*/page.tsx",
+  "src/app/\\(new\\)/dictionary/colors/category/*/page.tsx",
 ];
 // テストコードは走査対象外（テスト文字列に禁止語が入るため）。
 const IGNORE = ["**/__tests__/**", "**/*.test.ts", "**/*.test.tsx"];
@@ -497,6 +522,19 @@ describe("DESIGN.md §8 機械ゲート（新デザイン面）", () => {
     });
     expect(files.length).toBeGreaterThan(0);
     expect(files).toContain("src/app/globals.css");
+  });
+
+  // 各 glob が最低 1 ファイルに一致することを個別に検査する。fast-glob は `(new)`/`[param]` を
+  // メタ文字と誤解釈して 0 件で黙って素通りしやすい（過去、辞典トップ4面の glob が全て空振り
+  // していた）。集合全体の length>0 では個々の空振りを検出できないため、glob 単位で担保する。
+  test("各 glob が実ファイルに一致すること（空振り glob の検出）", () => {
+    const empty = [...NEW_DESIGN_CSS, ...NEW_DESIGN_TSX].filter(
+      (g) => fg.sync(g, { cwd: PROJECT_ROOT, ignore: IGNORE }).length === 0,
+    );
+    expect(
+      empty,
+      `\n以下の glob が 0 件（記述ミス/メタ文字の誤解釈で素通り）:\n  ${empty.join("\n  ")}\n`,
+    ).toEqual([]);
   });
 
   test("新デザイン面の CSS に §8 違反（ERROR）が無いこと", () => {

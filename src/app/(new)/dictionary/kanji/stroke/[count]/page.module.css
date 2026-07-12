@@ -1,5 +1,33 @@
+/*
+ * 辞典ファセット面（絞り込み結果＋他値への索引） — DESIGN.md フェーズ R・新デザイン「店構え」。
+ * 器は静か（§1）。地は --paper のまま、カード・影・グラデ・角丸装飾を持たない。
+ * 構造は罫（品書き・索引の区画）と組版だけ。色・角丸・書体・余白は全てトークン経由（§10）。
+ */
+
+/* 操作面（絞り込み一覧＋索引）なので最大幅は --max-width(960px)。本文は左揃え基調（§4）。 */
 .container {
-  max-width: 1200px;
+  max-width: var(--max-width);
   margin: 0 auto;
-  padding: 2rem 1.25rem;
+  padding: var(--space-32) var(--space-24) var(--space-64);
+}
+
+/* 見出し（何で絞り込んだか）。サイズ・明朝・詰めは globals.css の見出し基層が与える。 */
+.title {
+  margin: var(--space-16) 0 var(--space-8);
+  color: var(--ink);
+}
+
+/* 件数（注記・補助情報・--ink-2・13px）。品書きとの間にアキを取る。 */
+.count {
+  margin: 0 0 var(--space-24);
+  color: var(--ink-2);
+  font-family: var(--font-gothic);
+  font-size: 0.8125rem; /* 13px 補助情報 */
+  line-height: 1.6;
+}
+
+/* 件数の数字は tabular で桁を揃える（§3 数字の流儀）。 */
+.countNum {
+  font-family: var(--font-number);
+  font-variant-numeric: tabular-nums;
 }
