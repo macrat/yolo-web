@@ -3,12 +3,12 @@
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
 | B-545 | サイトの根幹を統一する(本丸) | P1 | 279 | cycle-278(オーナー主導)でコンセプト(site-concept.md)・デザインシステム(DESIGN.md)・作り直し計画(rebuild-plan.md)を再導出済み。**完了=フェーズR(B-561)の出荷**。詳細 cycle-278.md |
+| B-561 | フェーズR: 全ページ一斉デザイン切替(workflow) | P1 | 279 | 全ルート・全36ツールを「店構え」へ一律移行・コンテンツ削除なし(プルーニング撤回→B-566)。正典 rebuild-plan §2・詳細 cycle-279.md |
 
 ## Queued (すぐに着手できる)
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-561 | フェーズR: 全ページ一斉デザイン切替(workflow) | P1 | 279 | R-1撤去→R-2全ルート「店構え」化→R-3観測開始。完了時にブログ再判断(cycle-278 T8)。正典 docs/rebuild-plan.md §2・申し送りは cycle-278.md キャリーオーバー |
 | B-494 | Dynamic Workflows 運用知見の knowledge 恒久化 | P2 | 279 | **フェーズR(workflow一斉切替)の前提整備として昇格**。6点の知見をknowledge化。詳細 cycle-225.md |
 | B-540 | アンチパターン集の規約準拠クリーンアップ | P2 | - | docs/anti-patterns/全体の規約違反を一般化+発生番号のみへ是正。詳細 cycle-257.md |
 | B-505 | Dependabot 脆弱性アラートの調査と対応 | P2 | - | cycle-277 push時に19件(high3)。増分の調査・対応要。詳細 cycle-246.md |
@@ -45,6 +45,7 @@
 | B-563 | フェーズC-b: 診断結果面の「共有できる記号」磨き込み | P2 | 着手: フェーズR完了後。札/印の実装はRで入る・記号の中身とA/Bはここ。詳細 rebuild-plan.md §3 |
 | B-564 | フェーズC-c: 辞典の処遇判断(体験化orプルーニング) | P2 | 着手: 検定エンジン検討(B-562)と同時。詳細 rebuild-plan.md §3 |
 | B-565 | 全面切替の観測(ADR001) | P2 | 着手: 切替+2週(読み始め)・結論は+3ヶ月窓。正典 ADR001(docs/ADR/open/)。双方向ガード |
+| B-566 | ツールの処遇判断(最高価値に磨いてから改善orプルーニング) | P2 | 着手: フェーズR完了後の専用取組。cycle-279でSC表示数による一律削除を撤回(rule4)。詳細 cycle-279.md・rebuild-plan §2 R-1 |
 | B-056 | i18n(多言語対応) | P4 | 着手: 将来オプション(site-concept 宿題処理=現段階不採用)。cycle-167でOwnerが無期限延期を解除 |
 | B-135 | iOS Safari スクロールロックのフォールバック | P4 | 着手: 実害確認時 |
 | B-219 | AI 画像生成 MCP サーバーの実装 | P2 | 着手: 必要性確認時。詳細 imagen4-proposal.md(archive) |
