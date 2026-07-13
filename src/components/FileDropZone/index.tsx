@@ -56,8 +56,8 @@ interface FileDropZoneProps {
  * - `ariaLabel` prop を渡すと `aria-label` で上書き（`aria-labelledby` は外れる）。
  *
  * ### デザイン (DESIGN.md 準拠)
- * - 角丸: `--r-interactive` (操作可能要素)
- * - border: 2px dashed `--border` (通常) / `--accent` (ドラッグ中・ホバー)
+ * - 角丸: `--radius-sm` (2px・入力欄扱いの例外)
+ * - border: 2px dashed `--rule-strong` (通常) / `--accent` (ドラッグ中・ホバー)
  * - フォーカス: `outline: 2px solid var(--accent); outline-offset: 2px`
  * - ドラッグ中の視覚表現は border 色変化のみ（影・opacity 変化等は禁止）
  *

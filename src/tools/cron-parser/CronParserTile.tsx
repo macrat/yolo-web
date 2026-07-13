@@ -358,7 +358,7 @@ export default function CronParserTile({
                   error={parseResult !== null && !parseResult.valid}
                 />
               </div>
-              {/* 共通 Button primary バリアント: --bg-invert/--fg-invert ペアで塗る（B-3準拠）。*/}
+              {/* 共通 Button primary バリアント: var(--accent) 地に var(--paper) 文字で塗る（B-3準拠）。*/}
               <Button variant="primary" onClick={handleParse}>
                 解析
               </Button>

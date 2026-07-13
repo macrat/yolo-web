@@ -2,10 +2,9 @@
  * 関連クイズ・診断の回遊導線。DESIGN.md（紙・墨・朱の店構え）。品書きの語彙に寄せた
  * カード型（罫囲み・角丸0基調）。絵文字なし・影なし・全トークン経由。
  *
- * 注: src/play/_components/RelatedContentCard.module.css は legacy RelatedGames /
- * new RelatedGames と共有されており旧世代トークン（--fg/--bg/--border）のままのため、
- * ここではクイズ専用の新トークン版を別途持つ（共有ファイルを触ると legacy 側の解決に
- * 影響しうるため・要 CLAUDE.md「共有は要確認」）。
+ * 注: 関連ゲーム側は src/play/_components/RelatedContentCard.module.css を使うが、
+ * クイズ側は表示語彙が異なるため本ファイルを別に持つ。両者とも店構えの新トークンで
+ * 統一済み（cycle-279）。
  */
 .related {
   margin-top: 2rem;

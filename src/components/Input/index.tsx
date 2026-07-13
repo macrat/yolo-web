@@ -14,7 +14,7 @@ type InputType =
 interface InputOwnProps {
   /** input の type 属性（デフォルト: "text"） */
   type?: InputType;
-  /** エラー状態。true のとき border を --danger にして aria-invalid を付与 */
+  /** エラー状態。true のとき border を --accent（朱）にして aria-invalid を付与 */
   error?: boolean;
 }
 
@@ -34,13 +34,13 @@ type InputProps = InputOwnProps &
  *   ので、どちらか一方を選んで使うこと。
  * - **`type`**: デフォルト `"text"`。サポートする値は text/email/number/
  *   password/search/tel/url/date の 8 種。
- * - **`error`**: true のとき border を `--danger` に変えてエラー表示にし、
+ * - **`error`**: true のとき border を `--accent`（朱・専用の danger トークンは無い）に変えてエラー表示にし、
  *   `aria-invalid="true"` を付与してスクリーンリーダーにも伝える。
  * - **読み取り専用**: `readOnly` または `disabled` を渡すと、`onChange`
  *   なしでも React の controlled 警告は出ない（ネイティブ `<input>` と同じ）。
  *
  * デザイン:
- * - DESIGN.md §5: インタラクティブ要素には `--r-interactive` を使う
+ * - DESIGN.md §4: 入力欄は角丸 `--radius-sm` (2px) の例外を適用
  * - DESIGN.md §2: フォーカスは `outline: 2px solid var(--accent); outline-offset: 2px;`
  *
  * @example

@@ -54,12 +54,14 @@ function getStatusServerSnapshot(): GamePlayStatus[] {
 
 /**
  * Banner showing other game suggestions after completing a game
- * （(new) デザイン体系版・cycle-268 フォーク）.
+ * （(new) デザイン体系版。legacy 版は廃止済みで、本ファイルが唯一の実装）.
  * Highlights unplayed games and shows daily progress.
  *
- * legacy `../NextGameBanner` との差分は CSS のみ:
- * 未プレイ強調の青ボタン（--color-primary + #fff）を無彩の austere
- * （--bg-invert / --fg-invert）へ、中央寄せ撤去、新トークン化。ロジックは不変。
+ * cycle-268 で legacy 版（廃止済み）から CSS のみ差し替え:
+ * 未プレイ強調の青ボタン（--color-primary + #fff）を無彩の austere（反転塗り）へ、
+ * 中央寄せ撤去、新トークン化。
+ * cycle-279 でさらに店構えへ再移行し、反転塗りも撤去——未プレイは
+ * var(--accent) の罫+文字のみで示す（背景は塗らない）。ロジックは不変。
  */
 export default function NextGameBanner({
   currentGameSlug,

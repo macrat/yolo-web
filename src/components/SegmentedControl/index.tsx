@@ -32,10 +32,10 @@ interface SegmentedControlProps {
  * - キーボード: ←→↑↓ で選択移動（端で折り返し）、Enter/Space で確定
  *
  * デザイン (DESIGN.md):
- * - 選択中塗り: --bg-invert 背景 + --fg-invert 文字（AA 実証済みペア）。
- *   --accent を塗りに使わない（①-16 を部品レベルで根絶）。
+ * - 選択中塗り: --accent-weak 背景 + --accent 文字・枠（状態ハイライトとして gate 許容）。
+ *   --accent をベタ塗りの地には使わない（①-16 を部品レベルで根絶）。
  * - フォーカス: outline: 2px solid var(--accent); outline-offset: 2px;
- * - 角丸: --r-interactive（操作可能要素）
+ * - 角丸: --radius（0px 基調・操作可能要素だが値札/入力欄の例外には当たらない）
  *
  * @example
  * <SegmentedControl

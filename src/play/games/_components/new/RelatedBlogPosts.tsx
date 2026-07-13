@@ -8,9 +8,9 @@ interface RelatedBlogPostsProps {
 }
 
 /**
- * 関連ブログ記事（(new) デザイン体系版・cycle-268 フォーク）。
- * legacy `../RelatedBlogPosts` を新トークン + austere（角丸 --r-normal）へ
- * 質的入れ替えしたもの。構造は不変。
+ * 関連ブログ記事（(new) デザイン体系版。legacy 版は廃止済みで、本ファイルが唯一の実装）。
+ * cycle-268 で legacy 版（廃止済み）から新トークンへ質的入れ替え、
+ * cycle-279 で店構え（背景色・角丸装飾なし、罫区切りの品書き）へ再移行。構造は不変。
  */
 export default function RelatedBlogPosts({ gameSlug }: RelatedBlogPostsProps) {
   const posts = getRelatedBlogPostsForGame(gameSlug);

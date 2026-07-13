@@ -33,7 +33,7 @@ type TextareaProps = TextareaOwnProps &
  *   コード・技術系テキストには "mono" を使う。デフォルトは "default"。
  *
  * デザイン:
- * - DESIGN.md §5: インタラクティブ要素には `--r-interactive` を使う
+ * - DESIGN.md §4: 入力欄は角丸 `--radius-sm` (2px) の例外を適用
  * - DESIGN.md §2: フォーカスは `outline: 2px solid var(--accent); outline-offset: 2px;`
  * - DESIGN.md §3: 行間は原則 1.7
  * - 影なし（DESIGN.md §4 パネルには影をつけない・フォーム要素も同様）

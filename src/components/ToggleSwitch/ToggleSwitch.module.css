@@ -16,6 +16,9 @@
   align-items: center;
   gap: 0.5rem;
   cursor: pointer;
+  /* DESIGN.md §10: タップ領域は最低 44px。トラックの見た目は 20px 高だが、
+   * ラベル全体を 44px 高にして指で確実に押せるようにする（モバイル誤タップ防止）。 */
+  min-height: 44px;
 }
 
 /* disabled 時はラッパーごと操作不可カーソルに */

@@ -322,7 +322,7 @@ export default function StorybookContent({
               </Button>
             </div>
 
-            {/* Default — --bg-soft 背景の標準ボタン */}
+            {/* Default — var(--paper) 地の標準ボタン */}
             <div className={styles.buttonGroup}>
               <div className={styles.buttonGroupLabel}>default</div>
               <Button

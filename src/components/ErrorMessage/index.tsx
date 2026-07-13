@@ -22,8 +22,8 @@ interface ErrorMessageProps {
  *   英語生エラーが来訪者に露出することを防ぐ（M-4）。
  *
  * デザイン:
- * - DESIGN.md §2: `--danger-soft` 背景 + `--danger-strong` ボーダーの作法
- * - DESIGN.md §5: `--r-normal` (2px) — インタラクティブ要素ではないため
+ * - DESIGN.md §2: `--paper-2` 背景 + `--rule` ボーダー、文字色は `--accent` の作法
+ * - DESIGN.md §5: `--radius` (0px) — インタラクティブ要素ではないため
  *
  * @example
  * // 既定フォールバック（ツールが文言を渡さなくても日本語が出る）

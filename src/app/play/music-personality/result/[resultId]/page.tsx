@@ -184,7 +184,7 @@ export default async function MusicPersonalityResultPage({
           isLong={isDescriptionLong}
         />
 
-        {/* CTA1: 共通トーン（--bg-invert primary ボタン語彙）。クイズ固有の派手色は撤去済み */}
+        {/* CTA1: 共通トーン（primary ボタン = --accent 地・--paper 文字）。クイズ固有の派手色は撤去済み */}
         <div className={styles.trySection}>
           <Link href={`/play/${SLUG}`} className={styles.tryButton}>
             {ctaText}

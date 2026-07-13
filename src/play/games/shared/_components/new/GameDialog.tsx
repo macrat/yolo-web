@@ -29,11 +29,14 @@ interface GameDialogProps {
 }
 
 /**
- * Shared dialog wrapper for all game modals ((new) デザイン体系版・cycle-268 フォーク).
+ * Shared dialog wrapper for all game modals ((new) デザイン体系版。legacy 版は廃止済みで、
+ * 本ファイルが唯一の実装).
  *
- * legacy `../GameDialog` を (new) austere へ質的入れ替えしたもの:
- * 角丸 12px→--r-normal(2px) / ボタン 6px→--r-interactive(8px)、影撤去、
+ * cycle-268 で legacy 版（廃止済み）から (new) austere へ質的入れ替え:
+ * 角丸 12px→2px相当 / ボタン 6px→8px相当のトークンに置換、影撤去、
  * タイトル中央寄せ撤去（左寄せ）、旧 --color-* → 新トークン。
+ * cycle-279 でさらに店構えへ再移行し、.modal / .modalClose とも
+ * var(--radius)（0px）に統一（角丸なし）。
  * 振る舞い・props・DOM 構造は不変。`useDialog` フックは共有のまま参照する。
  */
 export default function GameDialog({

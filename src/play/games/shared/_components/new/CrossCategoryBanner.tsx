@@ -27,18 +27,19 @@ interface CrossCategoryBannerProps {
 
 /**
  * ゲーム完了後のResultModal内で、他カテゴリ（診断・占い）への導線を表示するバナー
- * （(new) デザイン体系版・cycle-268 フォーク）。
+ * （(new) デザイン体系版。legacy 版は廃止済みで、本ファイルが唯一の実装）。
  *
- * legacy `../CrossCategoryBanner` との差分:
+ * cycle-268 での legacy 版（廃止済み）からの差分:
  * - バッジのハードコード派手色（紫/桃/青のカテゴリ別装飾色）を撤去し、無彩の
- *   `--bg-soft`/`--fg-soft`/`--border` に統一（DESIGN.md §2「色は機能のみ」）。
- *   カテゴリは categoryLabel テキストで識別できる。
+ *   var(--paper)（地）/ var(--ink-2)（文字）/ var(--rule)（罫）に統一
+ *   （DESIGN.md §2「色は機能のみ」）。カテゴリは categoryLabel テキストで識別できる。
  * - 装飾の絵文字アイコン（item.icon）を撤去（DESIGN.md §3「絵文字は UI 装飾・
  *   ナビには使わない」）。タイトルテキストで十分識別できる。
  * - ラベルの中央寄せを撤去（左寄せ）、角丸を新トークン化、旧 --color-* → 新トークン。
  *
  * CrossCategoryItem.icon フィールド自体は型・props を変えず保持する
- * （legacy 版や呼び出し側が参照するため）。描画しないだけ。
+ * （呼び出し側の computeCrossCategoryItems が PlayContentMeta から埋め続けるため）。
+ * 描画しないだけ。
  */
 export function CrossCategoryBanner({ items }: CrossCategoryBannerProps) {
   if (items.length === 0) return null;

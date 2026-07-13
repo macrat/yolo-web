@@ -131,7 +131,7 @@ export default async function ImpossibleAdviceResultPage({ params }: Props) {
           isLong={isDescriptionLong}
         />
 
-        {/* CTA1: 共通 --accent / --bg-invert ベースの主要 CTA（インライン結果とトーン統一） */}
+        {/* CTA1: 共通 primary ボタン（--accent 地・--paper 文字）ベースの主要 CTA（インライン結果とトーン統一） */}
         <div className={styles.trySection}>
           <Link href={`/play/${SLUG}`} className={styles.tryButton}>
             {ctaText}

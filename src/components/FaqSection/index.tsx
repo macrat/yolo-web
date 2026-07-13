@@ -17,7 +17,7 @@ interface FaqSectionProps {
  *
  * - <details>/<summary> によるアコーディオン形式で Q&A を表示する。
  * - FAQPage JSON-LD を <script type="application/ld+json"> で出力し SEO を維持する。
- * - 新デザイントークン（--fg / --fg-soft / --border / --r-normal 等）のみ使用。
+ * - 新デザイントークン（--ink / --ink-2 / --rule / --radius 等）のみ使用。
  * - 旧 src/components/common/FaqSection は cycle-279 C1 で (legacy) 一式ごと削除済み。
  */
 export default function FaqSection({ faq }: FaqSectionProps) {

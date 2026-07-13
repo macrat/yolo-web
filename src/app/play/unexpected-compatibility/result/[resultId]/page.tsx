@@ -129,7 +129,7 @@ export default async function UnexpectedCompatibilityResultPage({
           isLong={isDescriptionLong}
         />
 
-        {/* CTA1: 共通トーン（--bg-invert primary ボタン語彙）。タイプ固有色は撤去済み */}
+        {/* CTA1: 共通トーン（primary ボタン = --accent 地・--paper 文字）。タイプ固有色は撤去済み */}
         <div className={styles.trySection}>
           <Link href={`/play/${SLUG}`} className={styles.tryButton}>
             {ctaText}
