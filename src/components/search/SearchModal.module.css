@@ -1,4 +1,9 @@
-/* Native <dialog> element: the browser places it in the top layer,
+/*
+ * サイト内検索モーダル（DESIGN.md フェーズ R 是正・cycle-279 MUST-5）。
+ * 未定義の旧トークン（--color-border 等）から新トークンへ移行。Phase 5 で Header の
+ * onSearchOpen に結線予定の未接続機能（詳細は SearchInput.module.css 冒頭コメント参照）。
+ *
+ * Native <dialog> element: the browser places it in the top layer,
    so position/z-index are managed automatically.
    When closed, <dialog> has display:none by default; we must not
    override it unconditionally, so we scope the flex layout to [open]. */
@@ -7,10 +12,9 @@
   max-width: 600px;
   max-height: 70vh;
   margin: auto;
-  background-color: var(--color-bg);
-  border: 1px solid var(--color-border);
-  border-radius: 12px;
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+  background-color: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
   overflow: hidden;
   /* Reset browser default dialog padding */
   padding: 0;
@@ -64,9 +68,9 @@
   height: 32px;
   padding: 0;
   border: none;
-  border-radius: 6px;
+  border-radius: var(--radius);
   background: transparent;
-  color: var(--color-text-muted, #888);
+  color: var(--ink-2);
   font-size: 14px;
   cursor: pointer;
   transition:
@@ -75,8 +79,8 @@
 }
 
 .closeButton:hover {
-  background-color: var(--color-hover, rgba(0, 0, 0, 0.06));
-  color: var(--color-text, inherit);
+  background-color: var(--paper-2);
+  color: var(--ink);
 }
 
 @media (max-width: 768px) {

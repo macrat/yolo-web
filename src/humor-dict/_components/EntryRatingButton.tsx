@@ -17,12 +17,12 @@ interface EntryRatingButtonProps {
  * - Deliberately avoids `disabled` so the button remains accessible and
  *   focusable; duplicate actions are blocked via the `rated` guard in the
  *   click handler.
- * - The pop animation is gated behind `prefers-reduced-motion: no-preference`
- *   so it respects the user's motion preference.
+ * - Text-only label (no emoji, per DESIGN.md §8-6/§6: 見出し・ナビ・ボタンに絵文字を
+ *   使わない). The selected state is conveyed by --accent-weak (状態のみ・§2) and label
+ *   text change, not by decorative motion.
  */
 export default function EntryRatingButton({ slug }: EntryRatingButtonProps) {
   const [rated, setRated] = useState(false);
-  const [animating, setAnimating] = useState(false);
 
   // Restore rated state from localStorage on the client only.
   // Starting with `false` avoids a hydration mismatch on SSR.
@@ -41,29 +41,17 @@ export default function EntryRatingButton({ slug }: EntryRatingButtonProps) {
     markAsRated(slug);
     trackContentRating();
     setRated(true);
-    setAnimating(true);
   }, [rated, slug]);
-
-  const handleAnimationEnd = useCallback(() => {
-    setAnimating(false);
-  }, []);
 
   return (
     <div className={styles.wrapper}>
       <button
         type="button"
-        className={`${styles.button} ${rated ? styles.rated : ""}`}
+        className={styles.button}
         aria-pressed={rated}
         onClick={handleClick}
       >
-        <span
-          className={`${styles.emoji} ${animating ? styles.animating : ""}`}
-          aria-hidden="true"
-          onAnimationEnd={handleAnimationEnd}
-        >
-          😂
-        </span>
-        <span>{rated ? "おもしろかった!" : "おもしろかった"}</span>
+        {rated ? "おもしろかった!" : "おもしろかった"}
       </button>
     </div>
   );

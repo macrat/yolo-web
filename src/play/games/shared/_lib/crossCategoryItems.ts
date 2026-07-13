@@ -9,7 +9,7 @@ import { playContentBySlug, getPlayContentsByCategory } from "@/play/registry";
 import { getContentPath } from "@/play/paths";
 import { resolveDisplayCategory } from "@/play/seo";
 import type { PlayContentMeta } from "@/play/types";
-import type { CrossCategoryItem } from "@/play/games/shared/_components/CrossCategoryBanner";
+import type { CrossCategoryItem } from "@/play/games/shared/_components/new/CrossCategoryBanner";
 
 /**
  * 2つのkeywords配列の重複数を返す。

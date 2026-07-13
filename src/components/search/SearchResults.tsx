@@ -133,14 +133,14 @@ export default function SearchResults({
                   <HighlightedText
                     text={item.document.title}
                     indices={getMatchIndices(item.matches, "title")}
-                    className={styles.highlight}
+                    className={styles.matchActive}
                   />
                 </span>
                 <span className={styles.itemDescription}>
                   <HighlightedText
                     text={item.document.description}
                     indices={getMatchIndices(item.matches, "description")}
-                    className={styles.highlight}
+                    className={styles.matchActive}
                   />
                 </span>
                 <span className={styles.itemUrl}>{item.document.url}</span>

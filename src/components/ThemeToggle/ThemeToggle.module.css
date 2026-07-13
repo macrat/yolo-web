@@ -1,11 +1,11 @@
 /* ThemeToggle — トグルスイッチ風のライト/ダーク切替コンポーネント（のれんの明暗トグル）
  *
- * 設計（DESIGN.md フェーズ R・店構えへ変換）:
- * - 横長のトラック（太陽アイコン + 月アイコン）+ 丸いサム（つまみ）。
+ * 設計（DESIGN.md フェーズ R・店構えへ変換。cycle-279 最終レビュー NICE-6 是正）:
+ * - 横長のトラック（太陽アイコン + 月アイコン）+ 角のサム（つまみ）。
  * - ライト時: サムは左（太陽側）。ダーク時: サムは右（月側）。
- * - トラック/サムの pill/円形は操作系コンポーネントの物理的な型（スイッチのメタファー）
- *   であり、§8-5 が禁じる装飾目的の一律角丸には当たらない
- *   （ToggleSwitch と同型・design-gate.test.ts の ALLOWLIST に個別許容を追記済み）。
+ * - トラック/サムは pill（999px/50%）を撤去し、§4「角丸は0px基調・例外は値札/入力欄の2px」
+ *   に合わせてトラックは var(--radius)（0px）・サムは var(--radius-sm)（2px）にした
+ *   （スライドする「つまみ」の物理的な型は保ったまま、装飾目的の一律丸みだけを外す）。
  * - box-shadow は使わない（§4）。輪郭はトラック/サムそれぞれの --rule 罫で示す。
  * - 現在状態（選択側）は「サムの位置」を主たる手掛かりとし、アイコン色の濃淡
  *   （--ink=選択中 / --ink-2=非選択）を副次的な手掛かりとして添える（色のみに頼らない）。
@@ -39,7 +39,7 @@
   align-items: center;
   width: 52px;
   height: 28px;
-  border-radius: 999px;
+  border-radius: var(--radius);
   border: 1px solid var(--rule);
   background: var(--paper-2);
   transition: border-color 0.15s ease;
@@ -79,7 +79,8 @@
   color: var(--ink);
 }
 
-/* サム（丸いつまみ） — デフォルト: 左側（ライトモード）。影は付けず罫の縁取りで視認性を確保。 */
+/* サム（つまみ） — デフォルト: 左側（ライトモード）。影は付けず罫の縁取りで視認性を確保。
+ * 角丸は --radius-sm（2px・値札/入力欄と同じ例外）に抑え、ピル/円形にしない（§4/§8-5）。 */
 .thumb {
   position: absolute;
   left: 3px;
@@ -88,7 +89,7 @@
   box-sizing: border-box;
   width: 20px;
   height: 20px;
-  border-radius: 50%;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--rule);
   background: var(--paper);
   transition:

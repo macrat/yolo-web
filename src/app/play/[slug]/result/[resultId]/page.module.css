@@ -114,15 +114,12 @@
   gap: 0.625rem;
 }
 
-/* 絵文字を使わない静かなマーカー（アクセントの短い縦線）。
- * インライン ResultCard の .traitsItem::before と同じ語彙。 */
+/* 絵文字を使わない静かなマーカー。朱の縦バーは§8-3（罫箱＋色付き左罫）に抵触するため
+ * 中黒（墨・中立色）に置換。インライン ResultCard の .traitsItem::before と同じ語彙。 */
 .traitsItem::before {
-  content: "";
+  content: "・";
   flex-shrink: 0;
-  width: 2px;
-  align-self: stretch;
-  background: var(--accent);
-  border-radius: var(--radius);
+  color: var(--ink-2);
 }
 
 /* advice カード。DESIGN.md §2 是正（cycle-278 C4）: --accent-weak は操作・選択状態の

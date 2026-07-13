@@ -25,7 +25,7 @@ import {
   loadTodayGame,
   saveTodayGame,
 } from "@/play/games/irodori/_lib/storage";
-import type { CrossCategoryItem } from "@/play/games/shared/_components/CrossCategoryBanner";
+import type { CrossCategoryItem } from "@/play/games/shared/_components/new/CrossCategoryBanner";
 import GameHeader from "./GameHeader";
 import ProgressBar from "./ProgressBar";
 import ColorTarget from "./ColorTarget";

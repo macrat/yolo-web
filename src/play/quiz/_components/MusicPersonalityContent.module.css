@@ -68,14 +68,11 @@
   gap: 0.625rem;
 }
 
-/* 絵文字を使わない静かなマーカー（ResultCard traitsItem::before と同じアクセントの短い縦線） */
+/* 絵文字を使わない静かなマーカー。朱の縦バーは§8-3（罫箱＋色付き左罫）に抵触するため中黒（墨）に置換。 */
 .item::before {
-  content: "";
+  content: "・";
   flex-shrink: 0;
-  width: 2px;
-  align-self: stretch;
-  background: var(--accent);
-  border-radius: var(--radius);
+  color: var(--ink-2);
 }
 
 /* ============================================================

@@ -5,8 +5,10 @@
   width: 100%;
 }
 
+/* cycle-279 最終レビュー NICE-7 是正: 中央揃えを撤去し左揃え基調へ（DESIGN.md §4「中央揃えの
+ * 多用をしない——本文・品書きは左揃え基調」）。 */
 .hero {
-  text-align: center;
+  text-align: left;
   padding: 3rem 0 2rem;
 }
 
@@ -21,7 +23,7 @@
   font-size: 1rem;
   color: var(--ink-2);
   max-width: 600px;
-  margin: 0 auto;
+  margin: 0;
   line-height: 1.8;
 }
 
@@ -33,7 +35,7 @@
   font-size: 1.5rem;
   font-weight: 700;
   margin-bottom: 1.5rem;
-  text-align: center;
+  text-align: left;
 }
 
 .grid {

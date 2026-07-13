@@ -13,9 +13,14 @@
   border-top: 1px solid var(--rule);
 }
 
+/* 見出し: サイト共通の罫下線で静かに区切る（ResultCard .detailedHeading と同じ様式・
+ * DESIGN.md §3/§4。朱の左罫は見出しの装飾に使わない） */
 .heading {
   font-size: 1rem;
+  font-weight: 600;
   margin: 0 0 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--rule);
   color: var(--ink);
 }
 

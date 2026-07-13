@@ -8,13 +8,17 @@
  *
  * 正典: リポジトリルート DESIGN.md（§2 色 / §3 タイポ / §4 レイアウト / §8 禁止リスト / §10 品質バー）。
  *
- * ── 対象（新デザイン面のみ）──────────────────────────────────────────────
- *   新デザイン（紙・墨・朱 / トークン --paper/--ink/--rule/--accent 等）を採用済みの面だけを
- *   検査する。cycle-279 C1 で (legacy)/ 一式・old-globals.css・旧デザイントークン定義
+ * ── 対象（src 全体・広域 glob）──────────────────────────────────────────
+ *   cycle-279 C1 で (legacy)/ 一式・old-globals.css・旧デザイントークン定義
  *   （--bg / --fg / --r- 系 / --shadow- 系 / status 系 / --admonition-* 等）を完全削除し、
- *   src/ 全体が新トークン体系のみになった。NEW_DESIGN_CSS / NEW_DESIGN_TSX はその時点で
- *   実在するすべての面を列挙しているが、リスト方式自体は今後も維持する
- *   （新規ページ追加時にここへの追記漏れが起きないよう、空振り検出テストが担保する）。
+ *   src/ 全体が新トークン体系のみになった。フェーズR 最終レビュー是正（cycle-279 MUST-5）で、
+ *   個別列挙方式（新規ページ追加時に列挙漏れが起きると検査対象から漏れる）から
+ *   `src/**\/*.module.css` / `src/**\/*.tsx` の広域 glob へ切り替えた——src/ に live な
+ *   デザイン面が新規追加されても自動的に検査対象へ入る。除外は IGNORE のテスト/生成物・
+ *   ALLOWLIST の意図的な例外（円形トグル・成果物の和色等・理由付き）のみに限定する。
+ *   （OGP 画像生成 `opengraph-image.tsx`/`twitter-image.tsx`/`src/lib/ogp-image.tsx` は
+ *   実測の結果 style={{}} に色リテラルを直書きしないため無検査でも誤検知しない——
+ *   accentColor は関数引数として渡され JSX の style ブロック内には現れない。）
  *
  * ── 機械検査する項目（§8 の番号付き）──────────────────────────────────────
  *   §8-1  紫〜青（indigo/violet）のアクセント: 色関数 oklch/lch/hsl/hwb で hue≈250〜320。
@@ -63,286 +67,30 @@ const PROJECT_ROOT = path.resolve(__dirname, "../..");
 // パーレンのエスケープは不要になった）。
 // 空振りは下の「空振り検出」テストが各 glob 単位で fail させる。
 const NEW_DESIGN_CSS = [
-  "src/app/globals.css", // 新トークン定義 + 基層タイポ層（§2/§3/§4・markdown-alert 再設計を含む）
-  "src/app/global-not-found.module.css", // グローバル 404（公開面・cycle-279 C1 変換）
-  "src/app/storybook/page.module.css", // storybook（開発者向けカタログ・cycle-279 C1 変換）
-  "src/app/page.module.css", // トップ（店構え・§1/§4 の参照実装・C2 変換）
-  "src/components/Header/**/*.module.css", // のれん（§4）
-  "src/components/Footer/**/*.module.css", // 店構え（§4）
-  "src/components/Shinagaki/**/*.module.css", // 品書き（§4 一覧の既定形）
-  "src/components/Nefuda/**/*.module.css", // 値札（§4 メタ小ラベル）
-  "src/components/Tsutsumi/**/*.module.css", // 包み（§4/§7 結果カード・和色は中身のみ）
-  "src/components/In/**/*.module.css", // 印（§4 厳密仕様・朱一色）
-  // 辞典トップ 4 面（フェーズ R・C2/C3 変換済み。検索/閲覧を店構えへ一貫変換）。
-  "src/app/dictionary/kanji/page.module.css",
-  "src/app/dictionary/yoji/page.module.css",
-  "src/app/dictionary/colors/page.module.css",
-  "src/app/dictionary/humor/page.module.css",
-  // 辞典共有の検索器（品書きで検索結果を出す器・§4/§8-4）。
-  "src/dictionary/_components/DictionarySearch/**/*.module.css",
-  // 辞典共有の品書き（一覧の既定形・検索結果とファセット絞り込みが共有・§4/§8-4）。
-  "src/dictionary/_components/DictionaryEntryList/**/*.module.css",
-  // 辞典共有のファセット索引（他ファセット値への導線・旧 CategoryNav の店構え版・§4/§8-5）。
-  "src/dictionary/_components/FacetIndex/**/*.module.css",
-  // 辞典ファセット面（学年/部首/画数/カテゴリ・C 変換済み。[param] は * で受ける）。
-  "src/app/dictionary/kanji/grade/*/page.module.css",
-  "src/app/dictionary/kanji/radical/*/page.module.css",
-  "src/app/dictionary/kanji/stroke/*/page.module.css",
-  "src/app/dictionary/yoji/category/*/page.module.css",
-  "src/app/dictionary/colors/category/*/page.module.css",
-  // 辞典詳細の共有レイアウト（実務／参照の店構え・§7 実務側・C3 変換済み）。
-  "src/dictionary/_components/new/DictionaryDetailLayout.module.css",
-  // 辞典詳細 4 種の Detail 表現（漢字/四字熟語/伝統色・C3 変換済み。色見本のデータ由来色は成果物内で可）。
-  "src/dictionary/_components/kanji/KanjiDetail.module.css",
-  "src/dictionary/_components/yoji/YojiDetail.module.css",
-  "src/dictionary/_components/color/ColorDetail.module.css",
-  // AI 造語（ユーモア辞典）詳細は自前ページ（共有レイアウト非経由）。[slug] は * で受ける。
-  "src/app/dictionary/humor/*/page.module.css",
-  // 多面共有の店構え部品（フェーズ R 変換済み）。辞典詳細・ブログ・結果面に出る。
-  // 共有ボタン群（文字＋罫の線画ボタン・§4 札/§8）。
-  "src/components/ShareButtons/**/*.module.css",
-  // 関連コンテンツ回遊ブロック（品書き化・§4/§8-3）。
-  "src/dictionary/_components/new/PlayRecommendBlock.module.css",
-  // C2 独立IA/静的面（/tools /play 品書き・/about /privacy 読み物・店構え変換済み）。
-  "src/app/tools/page.module.css",
-  "src/app/play/page.module.css",
-  "src/app/about/page.module.css",
-  "src/app/privacy/page.module.css",
-  // ブログクラスタ（フェーズR・C5 変換済み）。一覧=品書き・記事=読み物の店構えへ一貫変換。
-  // 記事詳細（[slug] は * で受ける）。
-  "src/app/blog/*/page.module.css",
-  // 一覧系共有部品（6 ルートすべてから呼ばれる）。
-  "src/blog/_components/BlogListView.module.css",
-  "src/blog/_components/BlogFilterableList.module.css",
-  "src/blog/_components/BlogList.module.css", // 品書き化された記事一覧（旧 BlogGrid+BlogCard を統合）
-  // 記事詳細の共有部品（タグ値札・シリーズナビ・目次）。
-  "src/blog/_components/TagList.module.css",
-  "src/blog/_components/SeriesNav.module.css",
-  "src/blog/_components/CollapsibleTOC.module.css",
-  "src/blog/_components/TableOfContents.module.css",
-  // ページネーション（一覧系共有・店構え変換済み。/storybook からも参照されるが対象外）。
-  "src/components/Pagination/**/*.module.css",
-  // クイズエンジン・結果面（フェーズR・C4 変換済み）。設問フロー(器)・結果面(見せ場・Tsutsumi)。
-  // A/B 実験 quiz_result_visual_v1 の旧デザインホールドアウト（_experiments/legacy-result/**）
-  // は cycle-279 C1 で結果を読まずに撤去済み（ADR001）——ディレクトリごと存在しない。
-  "src/play/quiz/_components/QuizContainer.module.css",
-  "src/play/quiz/_components/QuestionCard.module.css",
-  "src/play/quiz/_components/ProgressBar.module.css",
-  "src/play/quiz/_components/ResultCard.module.css",
-  "src/play/quiz/_components/ResultPageShell.module.css",
-  "src/play/quiz/_components/ResultNextContent.module.css",
-  "src/play/quiz/_components/RadarChart.module.css",
-  "src/play/quiz/_components/ScienceThinkingResultExtra.module.css",
-  "src/play/quiz/_components/CompatibilitySection.module.css",
-  "src/play/quiz/_components/OtherTypesNav.module.css",
-  "src/play/quiz/_components/InviteFriendButton.module.css",
-  "src/play/quiz/_components/RelatedQuizzes.module.css",
-  "src/play/quiz/_components/ShareButtons.module.css",
-  "src/play/quiz/_components/AnimalPersonalityContent.module.css",
-  "src/play/quiz/_components/MusicPersonalityContent.module.css",
-  "src/play/quiz/_components/TraditionalColorContent.module.css",
-  "src/play/quiz/_components/YojiPersonalityContent.module.css",
-  "src/play/quiz/_components/CharacterPersonalityContent.module.css",
-  "src/play/quiz/_components/ContrarianFortuneContent.module.css",
-  "src/play/quiz/_components/UnexpectedCompatibilityContent.module.css",
-  "src/play/quiz/_components/ImpossibleAdviceContent.module.css",
-  // クイズ設問フロー・結果ページ（route 側。[slug]/[resultId] は * で受ける）。
-  // このグロブは動的ルート /play/[slug]/... と、Next.js のファイルシステム
-  // ルーティングがそれより優先する variant 別の専用結果ルート
-  // （/play/animal-personality/result/[resultId] 等・9 ルート）の両方に一致する。
-  "src/app/play/*/page.module.css",
-  "src/app/play/*/result/*/page.module.css",
-  "src/app/play/*/result/*/DescriptionExpander.module.css",
-  // ツール詳細クラスタ（フェーズR・C5 変換済み）。実務寄りの器（§7 実務側）。
-  // 共有レイアウト（実質的な旧 ToolLayout。全 36 ツールが実際に使う唯一の器）。
-  "src/tools/_components/ToolPageLayout/ToolPageLayout.module.css",
-  "src/tools/_components/ErrorBoundary.module.css",
-  // 全 36 タイルの実装 CSS を広域で網羅（C5 変換済み。__tests__ は IGNORE で除外）。
-  "src/tools/**/*.module.css",
-  // ツール詳細から使う多面共有部品（Breadcrumb/FaqSection は辞典詳細等とも共有）。
-  "src/components/Breadcrumb/**/*.module.css",
-  "src/components/FaqSection/**/*.module.css",
-  "src/components/RelatedTools/**/*.module.css",
-  "src/components/RelatedBlogPosts/**/*.module.css",
-  // 36 タイルの実装土台となる操作系プリミティブ（入力欄・ボタン等）。
-  // ツールがほぼ唯一の消費者（Panel は /play 一覧、Input は blog/play の絞り込みからも
-  // 参照されるが、トークンは共通のため店構え化の副作用として恩恵を受ける）。
-  "src/components/Panel/**/*.module.css",
-  "src/components/Button/**/*.module.css",
-  "src/components/Textarea/**/*.module.css",
-  "src/components/Input/**/*.module.css",
-  "src/components/Select/**/*.module.css",
-  "src/components/ToggleSwitch/**/*.module.css",
-  "src/components/ErrorMessage/**/*.module.css",
-  "src/components/SegmentedControl/**/*.module.css",
-  "src/components/FileDropZone/**/*.module.css",
-  // のれん（ヘッダ）の明暗トグル（フェーズR・C1/C4 変換済み）。
-  "src/components/ThemeToggle/**/*.module.css",
-  // あそびのゲーム（フェーズR・C1/C4 変換済み）。共有 GameLayout/RelatedBlogPosts・
-  // shared 部品（CountdownTimer/CrossCategoryBanner/GameDialog/GameShareButtons/
-  // NextGameBanner）・kanji-kanaru・nakamawake の器を店構えへ変換。ゲームの駒/結果
-  // （kanji-kanaru の判定セル・nakamawake の難易度4色）は成果物中身のため和色使用可
-  // （irodori/yoji-kimeru も cycle-279 C1 で新 GameLayout・shared/_components/new 経由へ
-  // 移行済み・legacy GameLayout は削除済み）。
-  "src/play/games/_components/new/*.module.css",
-  "src/play/games/shared/_components/new/*.module.css",
-  "src/play/games/kanji-kanaru/_components/GameContainer.module.css",
-  "src/play/games/kanji-kanaru/_components/styles/*.module.css",
-  "src/play/games/nakamawake/_components/*.module.css",
-  "src/play/games/irodori/_components/*.module.css",
-  "src/play/games/yoji-kimeru/_components/styles/*.module.css",
-  // 占い（フェーズR・C1 変換済み。cycle-279 で (legacy) から移設）。結果は Tsutsumi（包み）で見せる。
-  "src/play/fortune/_components/*.module.css",
-  "src/app/play/daily/page.module.css",
-  // /play 一覧・ゲーム/クイズ詳細から使う関連コンテンツ導線（フェーズR・C1/C4 変換済み）。
-  // PlayFilterableList/PlayListView/PlayGrid/PlayCard は /play 品書き移行後に無参照と
-  // なったため削除済み（対象外）。
-  "src/play/_components/RecommendedContent.module.css",
-  "src/play/_components/RelatedContentCard.module.css",
+  // src 全体の live な *.module.css を広域 glob で網羅する（cycle-279 MUST-5）。
+  // 新規ページ追加時の列挙漏れを構造的に防ぐ——除外は IGNORE（テスト）のみ。
+  "src/**/*.module.css",
+  // トークン定義本体（*.module.css ではないため上の glob に一致しない・明示的に追加）。
+  "src/app/globals.css",
 ];
 const NEW_DESIGN_TSX = [
-  "src/app/global-not-found.js", // グローバル 404 ルート（公開面・cycle-279 C1 変換）
-  "src/app/global-not-found-content.tsx", // グローバル 404 の本文コンポーネント
-  "src/app/storybook/StorybookContent.tsx", // storybook（開発者向けカタログ・cycle-279 C1 変換）
-  "src/app/page.tsx", // トップ（店構え・C2 変換）。インライン style の禁止を検査
-  "src/components/Header/**/*.tsx",
-  "src/components/Footer/**/*.tsx",
-  "src/components/Shinagaki/**/*.tsx",
-  "src/components/Nefuda/**/*.tsx",
-  "src/components/Tsutsumi/**/*.tsx",
-  "src/components/In/**/*.tsx",
-  // 辞典トップ 4 面（フェーズ R・C2/C3 変換済み）。インライン style の禁止を検査。
-  "src/app/dictionary/kanji/page.tsx",
-  "src/app/dictionary/yoji/page.tsx",
-  "src/app/dictionary/colors/page.tsx",
-  "src/app/dictionary/humor/page.tsx",
-  // 辞典共有の検索器（色見本のインライン style は成果物中身＝変数由来で色直書きなし）。
-  "src/dictionary/_components/DictionarySearch/**/*.tsx",
-  // 辞典共有の品書き（色見本のインライン style は成果物中身＝変数由来で色直書きなし）。
-  "src/dictionary/_components/DictionaryEntryList/**/*.tsx",
-  // 辞典共有のファセット索引（旧 CategoryNav の店構え版）。
-  "src/dictionary/_components/FacetIndex/**/*.tsx",
-  // 辞典ファセット面（学年/部首/画数/カテゴリ・C 変換済み）。インライン style の禁止を検査。
-  "src/app/dictionary/kanji/grade/*/page.tsx",
-  "src/app/dictionary/kanji/radical/*/page.tsx",
-  "src/app/dictionary/kanji/stroke/*/page.tsx",
-  "src/app/dictionary/yoji/category/*/page.tsx",
-  "src/app/dictionary/colors/category/*/page.tsx",
-  // 辞典詳細の共有レイアウト＋4 種の Detail 表現（C3 変換済み）。インライン style の禁止を検査。
-  // ColorDetail の色見本インライン style は成果物中身＝変数由来（color.hex）で色直書きなし。
-  "src/dictionary/_components/new/DictionaryDetailLayout.tsx",
-  "src/dictionary/_components/kanji/KanjiDetail.tsx",
-  "src/dictionary/_components/yoji/YojiDetail.tsx",
-  "src/dictionary/_components/color/ColorDetail.tsx",
-  // 辞典詳細 4 route の page.tsx（漢字/四字熟語/伝統色は共有レイアウトへの配線・ユーモアは自前）。
-  "src/app/dictionary/kanji/*/page.tsx",
-  "src/app/dictionary/yoji/*/page.tsx",
-  "src/app/dictionary/colors/*/page.tsx",
-  "src/app/dictionary/humor/*/page.tsx",
-  // 多面共有の店構え部品（フェーズ R 変換済み）。インライン style の禁止を検査。
-  "src/components/ShareButtons/**/*.tsx",
-  "src/dictionary/_components/new/PlayRecommendBlock.tsx",
-  // C2 独立IA/静的面（/tools /play /about /privacy・店構え変換済み）。
-  "src/app/tools/page.tsx",
-  "src/app/play/page.tsx",
-  "src/app/about/page.tsx",
-  "src/app/privacy/page.tsx",
-  // ブログクラスタ（フェーズR・C5 変換済み）。一覧 6 route + 記事詳細。インライン style の禁止を検査。
-  "src/app/blog/page.tsx",
-  "src/app/blog/page/*/page.tsx",
-  "src/app/blog/category/*/page.tsx",
-  "src/app/blog/category/*/page/*/page.tsx",
-  "src/app/blog/tag/*/page.tsx",
-  "src/app/blog/tag/*/page/*/page.tsx",
-  "src/app/blog/*/page.tsx", // 記事詳細（[slug] は * で受ける）
-  // 一覧系共有部品。
-  "src/blog/_components/BlogListView.tsx",
-  "src/blog/_components/BlogFilterableList.tsx",
-  "src/blog/_components/BlogList.tsx", // 品書き化された記事一覧（旧 BlogGrid+BlogCard を統合）
-  // 記事詳細の共有部品（タグ値札・シリーズナビ・目次・関連記事）。
-  "src/blog/_components/TagList.tsx",
-  "src/blog/_components/SeriesNav.tsx",
-  "src/blog/_components/CollapsibleTOC.tsx",
-  "src/blog/_components/TableOfContents.tsx",
-  "src/blog/_components/RelatedArticles.tsx", // 専用 CSS なし。共有 Shinagaki（品書き）に統合済み
-  // ページネーション（一覧系共有・店構え変換済み。/storybook からも参照されるが対象外）。
-  "src/components/Pagination/**/*.tsx",
-  // クイズエンジン・結果面（フェーズR・C4 変換済み）。インライン style の禁止を検査。
-  // A/B 実験 quiz_result_visual_v1 の旧デザインホールドアウト（_experiments/legacy-result/**）
-  // は cycle-279 C1 で結果を読まずに撤去済み（ADR001）——ディレクトリごと存在しない。
-  "src/play/quiz/_components/QuizContainer.tsx",
-  "src/play/quiz/_components/QuizPlayPageLayout.tsx",
-  "src/play/quiz/_components/QuestionCard.tsx",
-  "src/play/quiz/_components/ProgressBar.tsx",
-  "src/play/quiz/_components/ResultCard.tsx",
-  "src/play/quiz/_components/ResultPageShell.tsx",
-  "src/play/quiz/_components/ResultNextContent.tsx",
-  "src/play/quiz/_components/RadarChart.tsx",
-  "src/play/quiz/_components/ScienceThinkingResultExtra.tsx",
-  "src/play/quiz/_components/CharacterFortuneResultExtra.tsx",
-  "src/play/quiz/_components/JapaneseCultureResultExtra.tsx",
-  "src/play/quiz/_components/CompatibilitySection.tsx",
-  "src/play/quiz/_components/OtherTypesNav.tsx",
-  "src/play/quiz/_components/InviteFriendButton.tsx",
-  "src/play/quiz/_components/RelatedQuizzes.tsx",
-  "src/play/quiz/_components/ShareButtons.tsx",
-  "src/play/quiz/_components/AnimalPersonalityContent.tsx",
-  "src/play/quiz/_components/MusicPersonalityContent.tsx",
-  "src/play/quiz/_components/TraditionalColorContent.tsx",
-  "src/play/quiz/_components/YojiPersonalityContent.tsx",
-  "src/play/quiz/_components/CharacterPersonalityContent.tsx",
-  "src/play/quiz/_components/ContrarianFortuneContent.tsx",
-  "src/play/quiz/_components/UnexpectedCompatibilityContent.tsx",
-  "src/play/quiz/_components/ImpossibleAdviceContent.tsx",
-  // クイズ設問フロー・結果ページ（route 側）。
-  // 注意: play/ 配下には未変換のゲームエンジン（kanji-kanaru・nakamawake）も同居するため、
-  // ここは `play/*/page.tsx` のような広い glob にせず [slug] を明示的にエスケープして
-  // 対象を動的ルート＋music-personality 専用ルートだけに絞る（誤って games を巻き込まない）。
-  "src/app/play/\\[slug\\]/page.tsx",
-  "src/app/play/music-personality/page.tsx",
-  // result/[resultId] は動的ルート＋9 つの variant 別専用結果ルートに一致する
-  // （play/ 直下は上の2エントリのみに絞っているため、result/*/... は quiz 系のみが対象）。
-  "src/app/play/*/result/*/page.tsx",
-  "src/app/play/*/result/*/DescriptionExpander.tsx",
-  "src/app/play/*/result/*/CompatibilityDisplay.tsx",
-  // ツール詳細クラスタ（フェーズR・C5 変換済み）。インライン style の禁止を検査。
-  "src/tools/_components/ToolPageLayout/index.tsx",
-  "src/tools/_components/ToolPageLayout/TileInteractionTracker.tsx",
-  "src/tools/_components/ErrorBoundary.tsx",
-  // 全 36 タイルの実装 TSX を広域で網羅（インライン style 禁止検査。__tests__ は IGNORE で除外）。
-  "src/tools/**/*.tsx",
-  "src/components/Breadcrumb/**/*.tsx",
-  "src/components/FaqSection/**/*.tsx",
-  "src/components/RelatedTools/**/*.tsx",
-  "src/components/RelatedBlogPosts/**/*.tsx",
-  "src/components/Panel/**/*.tsx",
-  "src/components/Button/**/*.tsx",
-  "src/components/Textarea/**/*.tsx",
-  "src/components/Input/**/*.tsx",
-  "src/components/Select/**/*.tsx",
-  "src/components/ToggleSwitch/**/*.tsx",
-  "src/components/ErrorMessage/**/*.tsx",
-  "src/components/SegmentedControl/**/*.tsx",
-  "src/components/FileDropZone/**/*.tsx",
-  // のれん（ヘッダ）の明暗トグル（フェーズR・C1/C4 変換済み）。
-  "src/components/ThemeToggle/**/*.tsx",
-  // あそびのゲーム（フェーズR・C1/C4 変換済み）。CSS 側と対にインライン style を検査する
-  // （irodori/yoji-kimeru も cycle-279 C1 で新 GameLayout・shared/_components/new 経由へ
-  // 移行済み・legacy GameLayout は削除済み）。
-  "src/play/games/_components/new/*.tsx",
-  "src/play/games/shared/_components/new/*.tsx",
-  "src/play/games/kanji-kanaru/_components/*.tsx",
-  "src/play/games/nakamawake/_components/*.tsx",
-  "src/play/games/irodori/_components/*.tsx",
-  "src/play/games/yoji-kimeru/_components/*.tsx",
-  // 占い（フェーズR・C1 変換済み。cycle-279 で (legacy) から移設）。インライン style の禁止を検査。
-  "src/play/fortune/_components/*.tsx",
-  "src/app/play/daily/page.tsx",
-  // /play 一覧・ゲーム/クイズ詳細から使う関連コンテンツ導線（フェーズR・C1/C4 変換済み）。
-  "src/play/_components/RecommendedContent.tsx",
+  // src 全体の live な *.tsx を広域 glob で網羅する（cycle-279 MUST-5）。
+  // 新規ページ追加時の列挙漏れを構造的に防ぐ——除外は IGNORE（テスト/OGP 画像生成）のみ。
+  "src/**/*.tsx",
 ];
 // テストコードは走査対象外（テスト文字列に禁止語が入るため）。
-const IGNORE = ["**/__tests__/**", "**/*.test.ts", "**/*.test.tsx"];
+// opengraph-image.tsx / twitter-image.tsx / src/lib/ogp-image.tsx は @vercel/og の
+// ImageResponse で描画する「生成物」（OGP 画像・DOM/CSS カスケードを持たないレンダラ）で、
+// アクセントカラーは関数引数として渡り JSX の style ブロック内には literal で現れない
+// （実測: false positive 無し）。器（ページ UI）ではないため広域 glob の対象から明示的に除外する。
+const IGNORE = [
+  "**/__tests__/**",
+  "**/*.test.ts",
+  "**/*.test.tsx",
+  "**/opengraph-image.tsx",
+  "**/twitter-image.tsx",
+  "src/lib/ogp-image.tsx",
+];
 
 /**
  * 旧資産の明示的許容（新デザイン面の物理的メタファーによる例外）。
@@ -361,16 +109,8 @@ const ALLOWLIST: { fileEndsWith: string; declaration: string }[] = [
     fileEndsWith: "src/components/ToggleSwitch/ToggleSwitch.module.css",
     declaration: "border-radius: 50%",
   },
-  // ThemeToggle も ToggleSwitch と同じ操作系メタファー（トラック=横長楕円・サム=円形の
-  // つまみ）であり、§8-5 が禁じる装飾目的の一律角丸には当たらない。
-  {
-    fileEndsWith: "src/components/ThemeToggle/ThemeToggle.module.css",
-    declaration: "border-radius: 999px",
-  },
-  {
-    fileEndsWith: "src/components/ThemeToggle/ThemeToggle.module.css",
-    declaration: "border-radius: 50%",
-  },
+  // ThemeToggle は cycle-279 最終レビュー NICE-6 是正でピル/円形（999px/50%）を撤去し
+  // var(--radius)/var(--radius-sm) にしたため、この許容は不要（削除済み）。
   // kanji-kanaru のローディングスピナー: 円形の回転リングは機能的なローディング表示の
   // 物理的な型（ToggleSwitch のサムと同様の円形）であり、§8-5 の装飾目的の一律角丸には
   // 当たらない。
@@ -395,6 +135,13 @@ const ALLOWLIST: { fileEndsWith: string; declaration: string }[] = [
   // webkit/moz 両ベンダープレフィックスで同一宣言が2箇所に出るが、宣言文字列は同一。
   {
     fileEndsWith: "src/play/games/irodori/_components/HslSliders.module.css",
+    declaration: "border-radius: 50%",
+  },
+  // サイト内検索のローディングスピナー（cycle-279 MUST-5 でゲート対象に追加）。円形の
+  // 回転リングは機能的なローディング表示の物理的な型で、kanji-kanaru/yoji-kimeru の
+  // スピナーと同じ理由により §8-5 の装飾目的の一律角丸には当たらない。
+  {
+    fileEndsWith: "src/components/search/SearchInput.module.css",
     declaration: "border-radius: 50%",
   },
   // §2 是正ゲートの追加許容: --wairo-* はゲームの駒/結果など「成果物」の中身の色として

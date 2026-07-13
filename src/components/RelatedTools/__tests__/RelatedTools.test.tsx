@@ -17,7 +17,6 @@ vi.mock("@/tools/registry", () => ({
       relatedSlugs: [],
       publishedAt: "2026-01-01T00:00:00+09:00",
       structuredDataType: "WebApplication",
-      trustLevel: "high",
       howItWorks: "テスト用",
     },
     {
@@ -31,7 +30,6 @@ vi.mock("@/tools/registry", () => ({
       relatedSlugs: [],
       publishedAt: "2026-01-01T00:00:00+09:00",
       structuredDataType: "WebApplication",
-      trustLevel: "high",
       howItWorks: "テスト用",
     },
     {
@@ -45,7 +43,6 @@ vi.mock("@/tools/registry", () => ({
       relatedSlugs: [],
       publishedAt: "2026-01-01T00:00:00+09:00",
       structuredDataType: "WebApplication",
-      trustLevel: "high",
       howItWorks: "テスト用",
     },
   ],
