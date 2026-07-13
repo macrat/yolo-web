@@ -2,8 +2,6 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-563 | フェーズC-b: 診断結果の「共有できる記号」を実在させる | P2 | 280 | character-personality結果を持ち帰れる/共有できる札画像に。詳細 cycle-280.md・rebuild-plan §3 C-b |
-| B-551 | 共有/保存(札保存)計測の是正・実装(C-bの観測前提) | P3 | 280 | save未実装/share結合不能/接頭辞非統一/InviteFriend未計測を是正。C-bと密結合。詳細 cycle-280.md |
 
 ## Queued (すぐに着手できる)
 
@@ -90,6 +88,8 @@
 
 | ID | Title | Completed Cycle | Notes |
 | --- | --- | --- | --- |
+| B-563 | フェーズC-b: 診断結果の「共有できる記号」を実在させる | 280 | character-personality結果を持ち帰れる/共有できる札画像に(renderFudaImage・固定URL・FudaActions)。ADR002で観測。詳細 cycle-280.md |
+| B-551 | 共有/保存(札保存)計測の是正・実装 | 280 | trackSave新設・shareにcontent_id dual-write・contentIdForQuiz統一・ShareButtonsキャンセル誤計上是正・InviteFriend計測。詳細 cycle-280.md |
 | B-521 | cycle-251 漢字辞書CTR改善の効果検証 | 279 | cycle-279 kickoffで実施。cycle-251の部首・画数前置に帰属できるCTR改善は検出されず(「部首」表示7倍化もクリック0)。辞書全体CTR 0.08%=参照型の敗北兆候TW-A。ADR001記録・辞典処遇(B-564)の材料 |
 | B-545 | サイトの根幹を統一する(本丸) | 279 | 完了=フェーズR(B-561)の出荷。cycle-279 で店構えを全ページ一斉出荷。詳細 cycle-279.md |
 | B-561 | フェーズR: 全ページ一斉デザイン切替(workflow) | 279 | 全81ページ・全36ツールを「店構え」へ一律移行・レガシーRoute Group撤去・コンテンツ削除なし。レビュー4巡・出荷2026-07-13。詳細 cycle-279.md |
