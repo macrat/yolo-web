@@ -56,6 +56,17 @@ C2で辞典一覧5面をworkflowで並行変換した際、各エージェント
 
 現在の辞典トップ5面はWIP（コミット済みだが検索脱落・孤児あり）。出荷前に以下を一貫して行う: (1)共有の検索/閲覧を店構えへ変換し**結果表示を品書き（罫区切り）に**（カードグリッド廃止・§4/§8-4）、(2)**検索UXを4トップで一貫して復活**（検索の是非とUXを判断——facet導線＋検索の両立が既定）、(3)ファセット面(kanji radical/grade/stroke・yoji category・colors category)を変換、(4)孤児`KanjiIndexClient`/`YojiIndexClient`を削除or統合、(5)全辞典面をdesign-gateのglobへ追加して§8緑、(6)辞典詳細(C3)と合わせて視覚QA。
 
+### レビュー（2〜4巡）と完了前是正（2026-07-13）
+
+移行実装の完了後、レビュアーで達成状況を確認し、指摘を是正した（コミット 75dda3f9→6dd2d8e1→7052644b）。
+
+- **2巡目（視覚/機械）**: ToggleSwitch がピル/円形のまま（MUST）・RelatedContentCard に死んだ `.icon`＋偽コメント（NICE）。→ ToggleSwitch を矩形化（track `var(--radius)`・thumb `var(--radius-sm)`）、`.icon` 撤去。
+- **円形例外の自己正当化を一掃**: ToggleSwitch を起点に「操作メタファーの円形」を口実に連鎖していた例外（irodori 進捗ドット・HSL つまみ）を token 変換し、design-gate ALLOWLIST を**機能上不可避なスピナー3件のみ**へ縮小。各例外は ToggleSwitch に依存しない単独理由へ書き直し。
+- **3巡目（視覚/機械）**: (a) ToggleSwitch のタップ領域が22px＝§10違反（MUST）→ `.wrapper` に `min-height:44px`（実測9トグルで44px）。(b) 伝統色診断の関連リンク重複＝同一URL2件でReact key重複（MUST）→2件目を `/play/irodori` へ。(c) 死んだ旧トークン（`--r-interactive`/`--r-normal`/`--fg`/`--bg`/`--border`/`--danger`/`--bg-invert`/`--bg-soft`/`--fg-soft` 等）を「今使う仕様」として案内する誤ったコメントが約18ファイルに残存（MUST）→各コンポーネントの実CSSを読み、実在の新トークン名へ全面是正。現存を装う legacy 兄弟参照も「廃止済み」の歴史記述へ。
+- **記録済みの非ブロッキング判断**: 移行時代の `new/` コンポーネントディレクトリ3件（`dictionary/_components/new`・`play/games/_components/new`・`play/games/shared/_components/new`）の平坦化は、デザイン/UXに影響しないコード整理（約24 import）として **B-567 へ繰り延べ**。Route Group 撤去（明示マンデート）は完了済みであり、本サイクルの設計移行の焦点を保つ PM 判断（この判断の駆動源は PM 自身＝AP-WF24）。
+- **4巡目（視覚/機械・確認ラウンド）**: 両レビュアーとも **MUST なし・完了可**。独立再検証（typecheck clean・design-gate 19/19・全テスト全pass・lint clean）、タップ領域44pxを9トグル×3ページで実測、伝統色面のkey警告消滅、§8 違反なし、是正コメントが実CSSと厳密一致、live 旧トークン宣言ゼロを確認。
+- **学び**: コメント中の死んだトークン名は「機械ゲートに映らない旧デザインの痕跡」。ゲートは live 宣言を検査するがコメントは素通りする。移行完了の定義に「コメント・doc の記述が実トークンと一致」を含めないと、"最初から新デザインで作られていたような状態"に到達しない。サブエージェントに一括是正を頼む際は、対応表に列挙し漏れた旧トークン名（`--danger` 等）は PM 側の網羅グラップで拾う必要がある（AP-WF16）。
+
 ## 実施する作業
 
 ### C0. 基盤(新築・後続クラスタのゲート。ここが固まるまで量産しない)
