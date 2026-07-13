@@ -13,6 +13,7 @@ import RelatedQuizzes from "@/play/quiz/_components/RelatedQuizzes";
 import RecommendedContent from "@/play/_components/RecommendedContent";
 import type { QuizDefinition, QuizResult } from "../types";
 import { pickResultWairoColor, pickResultSymbol } from "./resultVisual";
+import { contentIdForQuiz } from "@/play/quiz/contentId";
 import styles from "./ResultPageShell.module.css";
 
 interface ResultPageShellProps {
@@ -103,7 +104,8 @@ export default function ResultPageShell({
             contentType={
               quiz.meta.type === "personality" ? "diagnosis" : "quiz"
             }
-            contentId={`quiz-${slug}`}
+            contentId={contentIdForQuiz(slug)}
+            surface="text"
           />
         </div>
         {afterShare}

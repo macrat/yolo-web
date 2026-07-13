@@ -12,6 +12,28 @@
 type GaContentType = "game" | "quiz" | "diagnosis" | "fortune";
 
 /**
+ * Where a share/save action originated. A closed union so the surface
+ * dimension stays interpretable when joining `share`/`save` with `level`.
+ *
+ * - `"fuda"`   — the take-home 札 (result card) save/share on character-personality.
+ * - `"invite"` — the compatibility invite button (InviteFriendButton).
+ * - `"text"`   — the text+URL share buttons on quiz results (ShareButtons).
+ *
+ * Arm-independent surfaces (games/fortune/dictionary) omit `surface` for now,
+ * so the main KPI is not polluted with a partially-populated dimension
+ * (cycle-280 design §4/NICE: closed union, surface optional).
+ */
+export type ShareSurface = "fuda" | "invite" | "text";
+
+/**
+ * How a result image was saved.
+ * - `"download"`        — anchor-download of the generated PNG (desktop/Android).
+ * - `"web_share_files"` — saved via `navigator.share({ files })` on platforms
+ *   where anchor-download is unavailable (notably iOS Safari).
+ */
+export type SaveMethod = "web_share_files" | "download";
+
+/**
  * A/B experiment arm label. Mirrors `AbArm` in `src/lib/ab/experiments.ts`
  * but is declared locally to keep `analytics.ts` decoupled from the
  * assignment module (docs/visitor-value-measurement.md 論点1/4: 関心の分離 —
@@ -59,6 +81,21 @@ function withAbContext(
     ab_variant: ab.variant,
     experiment_id: ab.experimentId,
   };
+}
+
+/**
+ * Merge an optional `surface` into an event's params.
+ *
+ * Returns `params` untouched when `surface` is undefined, so the `surface`
+ * key is entirely absent from the outgoing payload (GA must never receive
+ * `key: undefined` — same discipline as `withAbContext`/`buildTileParams`).
+ */
+function withOptionalSurface(
+  params: Gtag.CustomParams,
+  surface?: ShareSurface,
+): Gtag.CustomParams {
+  if (surface === undefined) return params;
+  return { ...params, surface };
 }
 
 /**
@@ -139,6 +176,14 @@ export function trackSearch(searchTerm: string): void {
 /**
  * Send a share event for social sharing actions.
  *
+ * `item_id` is preserved for continuity with existing dashboards, and the
+ * same value is dual-written to `content_id` (cycle-280 B-551 fix) so
+ * `share` can be joined with `level`/`save` on a single `content_id` key
+ * without breaking historical `item_id`-keyed data.
+ *
+ * Pass `surface` to tag which share surface fired (fuda/invite/text); omit
+ * it on arm-independent surfaces so the dimension is not partially filled.
+ *
  * Pass `ab` only when the share originates from an A/B-tested surface
  * (e.g. a share button rendered on the inline quiz result). For shares
  * that fire from arm-independent surfaces, omit `ab` so the event stays
@@ -148,16 +193,54 @@ export function trackShare(
   method: "twitter" | "line" | "web_share" | "clipboard" | "hatena",
   contentType: string,
   itemId: string,
+  surface?: ShareSurface,
   ab?: AbEventContext,
 ): void {
   sendGaEvent(
     "share",
     withAbContext(
-      {
-        method,
-        content_type: contentType,
-        item_id: itemId,
-      },
+      withOptionalSurface(
+        {
+          method,
+          content_type: contentType,
+          item_id: itemId,
+          content_id: itemId,
+        },
+        surface,
+      ),
+      ab,
+    ),
+  );
+}
+
+/**
+ * Send a save event when a visitor takes home a generated result image
+ * (e.g. the character-personality 札). New in cycle-280; there is no
+ * historical data, so `content_id` is the sole content key (no `item_id`
+ * dual-write needed) and it joins directly with `level`/`share`.
+ *
+ * Pass `surface` to tag where the save fired (currently "fuda"); omit it
+ * on surfaces without a defined surface dimension. Pass `ab` only when the
+ * save originates from an A/B-tested surface.
+ */
+export function trackSave(
+  contentId: string,
+  contentType: string,
+  method: SaveMethod,
+  surface?: ShareSurface,
+  ab?: AbEventContext,
+): void {
+  sendGaEvent(
+    "save",
+    withAbContext(
+      withOptionalSurface(
+        {
+          content_id: contentId,
+          content_type: contentType,
+          method,
+        },
+        surface,
+      ),
       ab,
     ),
   );

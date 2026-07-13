@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { trackShare } from "@/lib/analytics";
 import styles from "./InviteFriendButton.module.css";
 
 interface InviteFriendButtonProps {
@@ -10,6 +11,13 @@ interface InviteFriendButtonProps {
   resultTypeId: string;
   /** Invite text shown when sharing */
   inviteText: string;
+  /**
+   * Canonical content id (via `contentIdForQuiz`) for GA4 share tracking
+   * (cycle-280 B-551, surface="invite"). Optional and additive: callers that
+   * do not pass it keep the prior no-tracking behaviour, so wiring can be
+   * rolled out per surface without regressing untracked invite buttons.
+   */
+  contentId?: string;
 }
 
 /**
@@ -20,6 +28,7 @@ export default function InviteFriendButton({
   quizSlug,
   resultTypeId,
   inviteText,
+  contentId,
 }: InviteFriendButtonProps) {
   const [copied, setCopied] = useState(false);
 
@@ -34,6 +43,12 @@ export default function InviteFriendButton({
     if (typeof navigator !== "undefined" && navigator.share) {
       try {
         await navigator.share({ title: text, url });
+        // Count only a completed share, not a cancellation: navigator.share
+        // rejects when the user dismisses the sheet, so reaching this line
+        // means the share succeeded (B-551 success-only tracking).
+        if (contentId) {
+          trackShare("web_share", "diagnosis", contentId, "invite");
+        }
         return;
       } catch {
         // User cancelled or share failed; fall through to clipboard
@@ -44,10 +59,14 @@ export default function InviteFriendButton({
       await navigator.clipboard.writeText(`${text}\n${url}`);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
+      // Count only when the copy actually succeeded (writeText resolved).
+      if (contentId) {
+        trackShare("clipboard", "diagnosis", contentId, "invite");
+      }
     } catch {
       // Silently fail
     }
-  }, [quizSlug, resultTypeId, inviteText]);
+  }, [quizSlug, resultTypeId, inviteText, contentId]);
 
   return (
     <div className={styles.wrapper}>

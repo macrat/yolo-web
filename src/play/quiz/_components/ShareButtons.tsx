@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { useCanWebShare, shareGameResult } from "@/lib/webShare";
-import { trackShare } from "@/lib/analytics";
+import { trackShare, type ShareSurface } from "@/lib/analytics";
 import styles from "./ShareButtons.module.css";
 
 interface ShareButtonsProps {
@@ -13,6 +13,13 @@ interface ShareButtonsProps {
   contentType?: string;
   /** Content identifier for GA4 share event tracking. */
   contentId?: string;
+  /**
+   * Share surface tag for GA4 (cycle-280 B-551). Quiz/diagnosis text-share
+   * callers pass "text"; arm-independent surfaces (e.g. fortune's
+   * DailyFortuneCard) omit it so the `surface` dimension is not partially
+   * filled and the main KPI stays uninterpolated.
+   */
+  surface?: ShareSurface;
 }
 
 export default function ShareButtons({
@@ -21,20 +28,24 @@ export default function ShareButtons({
   quizTitle,
   contentType,
   contentId,
+  surface,
 }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false);
   const canWebShare = useCanWebShare();
 
   const handleWebShare = useCallback(async () => {
-    await shareGameResult({
+    // Only count a web_share when the share sheet actually completed
+    // (shareGameResult returns false on cancel/unsupported). Counting the
+    // unconditional call would inflate web_share with cancellations (B-551).
+    const shared = await shareGameResult({
       title: quizTitle,
       text: shareText,
       url: shareUrl,
     });
-    if (contentType && contentId) {
-      trackShare("web_share", contentType, contentId);
+    if (shared && contentType && contentId) {
+      trackShare("web_share", contentType, contentId, surface);
     }
-  }, [quizTitle, shareText, shareUrl, contentType, contentId]);
+  }, [quizTitle, shareText, shareUrl, contentType, contentId, surface]);
 
   const handleTwitter = useCallback(() => {
     const text = encodeURIComponent(shareText);
@@ -45,9 +56,9 @@ export default function ShareButtons({
       "noopener,noreferrer",
     );
     if (contentType && contentId) {
-      trackShare("twitter", contentType, contentId);
+      trackShare("twitter", contentType, contentId, surface);
     }
-  }, [shareText, shareUrl, contentType, contentId]);
+  }, [shareText, shareUrl, contentType, contentId, surface]);
 
   const handleLine = useCallback(() => {
     const text = encodeURIComponent(`${shareText}\n${shareUrl}`);
@@ -57,9 +68,9 @@ export default function ShareButtons({
       "noopener,noreferrer",
     );
     if (contentType && contentId) {
-      trackShare("line", contentType, contentId);
+      trackShare("line", contentType, contentId, surface);
     }
-  }, [shareText, shareUrl, contentType, contentId]);
+  }, [shareText, shareUrl, contentType, contentId, surface]);
 
   const handleCopy = useCallback(async () => {
     try {
@@ -67,12 +78,12 @@ export default function ShareButtons({
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
       if (contentType && contentId) {
-        trackShare("clipboard", contentType, contentId);
+        trackShare("clipboard", contentType, contentId, surface);
       }
     } catch {
       // Silently fail
     }
-  }, [shareText, shareUrl, contentType, contentId]);
+  }, [shareText, shareUrl, contentType, contentId, surface]);
 
   return (
     <div className={styles.wrapper}>

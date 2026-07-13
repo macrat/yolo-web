@@ -32,7 +32,9 @@ import animalPersonalityQuiz from "@/play/quiz/data/animal-personality";
 import CompatibilitySection from "./CompatibilitySection";
 import InviteFriendButton from "./InviteFriendButton";
 import ShareButtons from "./ShareButtons";
+import FudaActions from "./FudaActions";
 import { pickResultWairoColor, pickResultSymbol } from "./resultVisual";
+import { contentIdForQuiz } from "@/play/quiz/contentId";
 import OtherTypesNav from "./OtherTypesNav";
 import styles from "./ResultCard.module.css";
 
@@ -188,6 +190,7 @@ function buildAnimalPersonalityAfterTodayAction(
             quizSlug={quiz.meta.slug}
             resultTypeId={resultId}
             inviteText="日本の固有種診断で相性を調べよう!"
+            contentId={contentIdForQuiz(quiz.meta.slug)}
           />
         </>
       );
@@ -199,6 +202,7 @@ function buildAnimalPersonalityAfterTodayAction(
       quizSlug={quiz.meta.slug}
       resultTypeId={resultId}
       inviteText="日本の固有種診断で相性を調べよう!"
+      contentId={contentIdForQuiz(quiz.meta.slug)}
     />
   );
 }
@@ -453,6 +457,17 @@ export default function ResultCard({
             productName={quizTitle}
             seal="診"
           />
+          {/* 「札を持ち帰る」保存/共有アクション（cycle-280・§4札/§7）。
+              character-personality に限定する（PM判断5）。固定 URL の札画像 Route Handler
+              （/play/character-personality/result/<id>/fuda-image）が存在する面のみ。 */}
+          {detailedContent?.variant === "character-personality" && (
+            <FudaActions
+              resultId={result.id}
+              resultTitle={result.title}
+              quizTitle={quizTitle}
+              quizSlug={quizSlug}
+            />
+          )}
         </div>
       ) : (
         <>
@@ -501,7 +516,8 @@ export default function ResultCard({
         shareUrl={shareUrl}
         quizTitle={quizTitle}
         contentType={quizType === "personality" ? "diagnosis" : "quiz"}
-        contentId={`quiz-${quizSlug}`}
+        contentId={contentIdForQuiz(quizSlug)}
+        surface="text"
       />
       <button type="button" className={styles.retryButton} onClick={onRetry}>
         もう一度挑戦する

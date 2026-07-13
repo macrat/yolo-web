@@ -61,13 +61,14 @@ function isSatoriCompatibleFont(buffer: ArrayBuffer): boolean {
 }
 
 /**
- * Attempt to fetch Noto Sans JP using a single User-Agent string.
+ * Attempt to fetch a Google font using a single User-Agent string.
  * Returns an ArrayBuffer if a Satori-compatible font is obtained, otherwise null.
  */
 async function tryFetchWithUserAgent(
   userAgent: string,
+  cssUrl: string,
 ): Promise<ArrayBuffer | null> {
-  const cssResponse = await fetch(GOOGLE_FONTS_CSS_URL, {
+  const cssResponse = await fetch(cssUrl, {
     headers: { "User-Agent": userAgent },
   });
   if (!cssResponse.ok) return null;
@@ -103,20 +104,33 @@ async function tryFetchWithUserAgent(
 }
 
 /**
- * Fetch Noto Sans JP font data from Google Fonts CDN.
- * Tries multiple User-Agent strings in order to obtain a Satori-compatible
- * font format (WOFF or TTF). Returns null if all attempts fail.
+ * Fetch a Google font binary (Satori-compatible WOFF/TTF) for the given
+ * Google Fonts CSS URL. Tries multiple User-Agent strings in order so that
+ * Google serves a legacy single-file format (not the unicode-range split that
+ * WOFF2 uses). Returns null if all attempts fail.
+ *
+ * Exported so other Satori surfaces (e.g. the mincho font for the 札 image)
+ * can reuse the exact same UA fallback + magic-number validation logic.
  */
-async function fetchNotoSansJP(): Promise<ArrayBuffer | null> {
+export async function fetchGoogleFontData(
+  cssUrl: string,
+): Promise<ArrayBuffer | null> {
   for (const userAgent of FONT_FETCH_USER_AGENTS) {
     try {
-      const result = await tryFetchWithUserAgent(userAgent);
+      const result = await tryFetchWithUserAgent(userAgent, cssUrl);
       if (result !== null) return result;
     } catch {
       // Try next UA on any error
     }
   }
   return null;
+}
+
+/**
+ * Fetch Noto Sans JP (gothic body font) from Google Fonts CDN.
+ */
+async function fetchNotoSansJP(): Promise<ArrayBuffer | null> {
+  return fetchGoogleFontData(GOOGLE_FONTS_CSS_URL);
 }
 
 /** Cached font data promise (fetched once per build). */

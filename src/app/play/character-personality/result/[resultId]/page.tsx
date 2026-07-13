@@ -29,6 +29,7 @@ import DescriptionExpander from "@/app/play/[slug]/result/[resultId]/Description
 import CompatibilityDisplay from "@/app/play/[slug]/result/[resultId]/CompatibilityDisplay";
 import CharacterPersonalityContent from "@/play/quiz/_components/CharacterPersonalityContent";
 import InviteFriendButton from "@/play/quiz/_components/InviteFriendButton";
+import { contentIdForQuiz } from "@/play/quiz/contentId";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { countCharWidth } from "@/lib/countCharWidth";
 import { getResultIdsForQuiz } from "@/play/quiz/registry";
@@ -233,6 +234,7 @@ export default async function CharacterPersonalityResultPage({
                 quizSlug={SLUG}
                 resultTypeId={resultId}
                 inviteText={INVITE_TEXT}
+                contentId={contentIdForQuiz(SLUG)}
               />
               {/* CTA2: 全タイプ一覧の前に配置 — コンテンツを読み終えた時点での自然な誘導 */}
               <div className={styles.cta2Section}>

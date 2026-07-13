@@ -5,6 +5,7 @@ import {
   trackContentRating,
   trackSearch,
   trackShare,
+  trackSave,
   trackSearchModalOpen,
   trackSearchModalClose,
   trackSearchResultClick,
@@ -171,13 +172,14 @@ describe("analytics", () => {
   });
 
   describe("trackShare", () => {
-    it("sends share event for twitter", () => {
+    it("sends share event for twitter with dual-written content_id", () => {
       trackShare("twitter", "quiz", "quiz-kanji-level");
 
       expect(mockGtag).toHaveBeenCalledWith("event", "share", {
         method: "twitter",
         content_type: "quiz",
         item_id: "quiz-kanji-level",
+        content_id: "quiz-kanji-level",
       });
     });
 
@@ -188,6 +190,7 @@ describe("analytics", () => {
         method: "clipboard",
         content_type: "game",
         item_id: "irodori",
+        content_id: "irodori",
       });
     });
 
@@ -198,7 +201,39 @@ describe("analytics", () => {
         method: "hatena",
         content_type: "blog",
         item_id: "my-post",
+        content_id: "my-post",
       });
+    });
+
+    it("dual-writes content_id to equal item_id (single-key join)", () => {
+      trackShare("line", "quiz", "quiz-kanji-level");
+
+      const params = mockGtag.mock.calls[0][2] as Record<string, unknown>;
+      expect(params.content_id).toBe(params.item_id);
+    });
+
+    it("adds surface when given, and omits it when not given", () => {
+      trackShare(
+        "web_share",
+        "diagnosis",
+        "quiz-character-personality",
+        "text",
+      );
+
+      expect(mockGtag).toHaveBeenCalledWith("event", "share", {
+        method: "web_share",
+        content_type: "diagnosis",
+        item_id: "quiz-character-personality",
+        content_id: "quiz-character-personality",
+        surface: "text",
+      });
+    });
+
+    it("omits the surface key entirely when surface is not given", () => {
+      trackShare("twitter", "quiz", "quiz-kanji-level");
+
+      const params = mockGtag.mock.calls[0][2] as Record<string, unknown>;
+      expect("surface" in params).toBe(false);
     });
 
     it("omits ab_variant/experiment_id when ab is not given", () => {
@@ -209,8 +244,8 @@ describe("analytics", () => {
       expect("experiment_id" in params).toBe(false);
     });
 
-    it("sends ab_variant and experiment_id when ab is given", () => {
-      trackShare("twitter", "quiz", "character-personality", {
+    it("sends surface, ab_variant and experiment_id together when both are given", () => {
+      trackShare("twitter", "quiz", "character-personality", "fuda", {
         experimentId: "quiz_result_visual_v1",
         variant: "A",
       });
@@ -219,7 +254,88 @@ describe("analytics", () => {
         method: "twitter",
         content_type: "quiz",
         item_id: "character-personality",
+        content_id: "character-personality",
+        surface: "fuda",
         ab_variant: "A",
+        experiment_id: "quiz_result_visual_v1",
+      });
+    });
+
+    it("sends ab_variant/experiment_id with surface omitted when only ab is given", () => {
+      trackShare("twitter", "quiz", "character-personality", undefined, {
+        experimentId: "quiz_result_visual_v1",
+        variant: "A",
+      });
+
+      const params = mockGtag.mock.calls[0][2] as Record<string, unknown>;
+      expect("surface" in params).toBe(false);
+      expect(params.ab_variant).toBe("A");
+      expect(params.experiment_id).toBe("quiz_result_visual_v1");
+    });
+  });
+
+  describe("trackSave", () => {
+    it("sends save event with content_id, content_type and method", () => {
+      trackSave("quiz-character-personality", "diagnosis", "download");
+
+      expect(mockGtag).toHaveBeenCalledWith("event", "save", {
+        content_id: "quiz-character-personality",
+        content_type: "diagnosis",
+        method: "download",
+      });
+    });
+
+    it("supports the web_share_files method", () => {
+      trackSave("quiz-character-personality", "diagnosis", "web_share_files");
+
+      expect(mockGtag).toHaveBeenCalledWith("event", "save", {
+        content_id: "quiz-character-personality",
+        content_type: "diagnosis",
+        method: "web_share_files",
+      });
+    });
+
+    it("adds surface when given", () => {
+      trackSave("quiz-character-personality", "diagnosis", "download", "fuda");
+
+      expect(mockGtag).toHaveBeenCalledWith("event", "save", {
+        content_id: "quiz-character-personality",
+        content_type: "diagnosis",
+        method: "download",
+        surface: "fuda",
+      });
+    });
+
+    it("omits the surface key entirely when surface is not given", () => {
+      trackSave("quiz-character-personality", "diagnosis", "download");
+
+      const params = mockGtag.mock.calls[0][2] as Record<string, unknown>;
+      expect("surface" in params).toBe(false);
+    });
+
+    it("omits ab_variant/experiment_id when ab is not given", () => {
+      trackSave("quiz-character-personality", "diagnosis", "download");
+
+      const params = mockGtag.mock.calls[0][2] as Record<string, unknown>;
+      expect("ab_variant" in params).toBe(false);
+      expect("experiment_id" in params).toBe(false);
+    });
+
+    it("sends surface, ab_variant and experiment_id together when both are given", () => {
+      trackSave(
+        "quiz-character-personality",
+        "diagnosis",
+        "web_share_files",
+        "fuda",
+        { experimentId: "quiz_result_visual_v1", variant: "B" },
+      );
+
+      expect(mockGtag).toHaveBeenCalledWith("event", "save", {
+        content_id: "quiz-character-personality",
+        content_type: "diagnosis",
+        method: "web_share_files",
+        surface: "fuda",
+        ab_variant: "B",
         experiment_id: "quiz_result_visual_v1",
       });
     });
@@ -400,10 +516,22 @@ describe("analytics", () => {
       expect(() => trackSearch("test")).not.toThrow();
       expect(() => trackShare("twitter", "game", "irodori")).not.toThrow();
       expect(() =>
-        trackShare("twitter", "quiz", "character-personality", {
+        trackShare("twitter", "quiz", "character-personality", "fuda", {
           experimentId: "quiz_result_visual_v1",
           variant: "A",
         }),
+      ).not.toThrow();
+      expect(() =>
+        trackSave("quiz-character-personality", "diagnosis", "download"),
+      ).not.toThrow();
+      expect(() =>
+        trackSave(
+          "quiz-character-personality",
+          "diagnosis",
+          "web_share_files",
+          "fuda",
+          { experimentId: "quiz_result_visual_v1", variant: "B" },
+        ),
       ).not.toThrow();
       expect(() => trackContentRating()).not.toThrow();
       expect(() =>

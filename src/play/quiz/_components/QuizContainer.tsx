@@ -14,6 +14,7 @@ import ResultCard from "./ResultCard";
 import ResultNextContent from "./ResultNextContent";
 import type { ResultNextContentItem } from "./ResultNextContent";
 import ResultExtraLoader from "./ResultExtraLoader";
+import { contentIdForQuiz } from "@/play/quiz/contentId";
 import styles from "./QuizContainer.module.css";
 
 type QuizContainerProps = {
@@ -78,7 +79,7 @@ export default function QuizContainer({
   }, [phase]);
 
   const contentType = quiz.meta.type === "personality" ? "diagnosis" : "quiz";
-  const contentId = "quiz-" + quiz.meta.slug;
+  const contentId = contentIdForQuiz(quiz.meta.slug);
 
   const handleStart = useCallback(() => {
     setPhase("playing");

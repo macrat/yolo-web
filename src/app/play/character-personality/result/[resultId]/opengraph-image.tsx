@@ -9,30 +9,25 @@
  * `src/play/quiz/_components/ResultCard.tsx` 側で編集する。
  */
 /**
- * /play/character-personality/result/[resultId] 専用 OGP 画像。
- * character-personality 専用ルートの OGP 画像生成。
+ * /play/character-personality/result/[resultId] 専用 OGP 画像（＝札）。
  *
- * 重要: quiz.meta.accentColor ではなく result.color を使用する。
- * タイプごとに固有の色が異なるため、OGP画像でもその色を使用して
- * シェア時のビジュアルインパクトを最大化する。
- * yoji-personality の OGP パターンと同じ実装。
+ * 画像は「札（Tsutsumi の視覚言語）」で組む（DESIGN.md §4「札」/「印」・§2 和色・§8）。
+ * レンダラは {@link renderFudaImage} に共有化してあり、この **メタ用 og:image**（Next 自動配線）と、
+ * クライアントが決定的 URL で取得する Route Handler（`./fuda-image/route.ts`）が
+ * **同じレンダラを呼ぶ**——リンクプレビューと保存画像は単一の真実。
  *
- * テキストコントラスト:
- * createOgpImageResponse が accentColor の相対輝度を自動計算し、
- * WCAG AA 大文字テキスト基準 (コントラスト比 3:1 以上) を満たす
- * テキスト色を自動選択するため、ここでの指定は不要。
+ * 旧実装（全面ベタ塗り result.color ＋絵文字 icon ＋太字ゴシック）は §2 drift のため撤去した。
+ * 地色は result.color（任意 hex）ではなく、タイプ ID から決定的に選ぶ和色8色
+ * （`pickResultWairoColor`）。文字色は和色ごとに AA を満たす墨/白（`WAIRO_HEX`）。
  */
 
-import {
-  createOgpImageResponse,
-  ogpSize,
-  ogpContentType,
-} from "@/lib/ogp-image";
+import { renderFudaImage, fudaImageSize } from "@/lib/fuda-image";
+import { ogpContentType } from "@/lib/ogp-image";
 import { getResultIdsForQuiz } from "@/play/quiz/registry";
 import characterPersonalityQuiz from "@/play/quiz/data/character-personality";
 
-export const alt = "クイズ結果";
-export const size = ogpSize;
+export const alt = "診断結果の札";
+export const size = fudaImageSize;
 export const contentType = ogpContentType;
 
 const SLUG = "character-personality";
@@ -50,14 +45,9 @@ export default async function OpenGraphImage({ params }: Props) {
   const { resultId } = await params;
   const result = quiz.results.find((r) => r.id === resultId);
 
-  // result.color: タイプ固有の色。未設定の場合のみ accentColor にフォールバック。
-  // テキスト色は createOgpImageResponse が accentColor の輝度から自動判定する。
-  const accentColor = result?.color ?? quiz.meta.accentColor;
-
-  return createOgpImageResponse({
+  return renderFudaImage({
+    id: result?.id ?? resultId,
     title: result?.title ?? "結果",
-    subtitle: quiz.meta.title,
-    icon: result?.icon,
-    accentColor,
+    productName: quiz.meta.title,
   });
 }

@@ -2,6 +2,7 @@
 
 import type { CompatibilityEntry } from "@/play/quiz/types";
 import ShareButtons from "./ShareButtons";
+import { contentIdForQuiz } from "@/play/quiz/contentId";
 import styles from "./CompatibilitySection.module.css";
 
 interface TypeInfo {
@@ -63,7 +64,8 @@ export default function CompatibilitySection({
         shareUrl={shareUrl}
         quizTitle={quizTitle}
         contentType="diagnosis"
-        contentId={`quiz-${quizSlug}`}
+        contentId={contentIdForQuiz(quizSlug)}
+        surface="text"
       />
     </div>
   );

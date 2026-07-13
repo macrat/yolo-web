@@ -26,6 +26,7 @@ import ResultPageShell from "@/play/quiz/_components/ResultPageShell";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { countCharWidth } from "@/lib/countCharWidth";
 import { getResultIdsForQuiz } from "@/play/quiz/registry";
+import { contentIdForQuiz } from "@/play/quiz/contentId";
 import characterFortuneQuiz from "@/play/quiz/data/character-fortune";
 import styles from "./page.module.css";
 
@@ -132,7 +133,8 @@ export default async function CharacterFortuneResultPage({ params }: Props) {
             shareUrl={shareUrl}
             quizTitle={quiz.meta.title}
             contentType="diagnosis"
-            contentId={`quiz-${SLUG}`}
+            contentId={contentIdForQuiz(SLUG)}
+            surface="text"
           />
         </div>
 

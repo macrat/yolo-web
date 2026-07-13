@@ -33,14 +33,47 @@ export function pickResultWairoColor(id: string): WairoColor {
 }
 
 /**
+ * 記号面の先頭でスキップする開き括弧・引用符（「顔」にしない字）。
+ *
+ * character-personality のタイプ名には会話の引用で始まるもの（例: 「よし行くぞ！」…）が
+ * あり、そのまま先頭書記素を採ると記号面が孤立した開き鉤括弧「になってしまう。
+ * 開き括弧・引用符・空白類を飛ばして、最初の意味のある字（漢字/かな/英数）に着地させる。
+ */
+const SYMBOL_SKIP_CHARS: ReadonlySet<string> = new Set([
+  "「",
+  "『",
+  "（",
+  "(",
+  "【",
+  "〔",
+  "〈",
+  "《",
+  "｢",
+  "”",
+  "“",
+  '"',
+  "'",
+  "〝",
+]);
+
+/** 記号面の先頭からスキップする字か（開き括弧・引用符 or 空白類・全角/半角）。 */
+function isSkippableSymbolChar(grapheme: string): boolean {
+  return SYMBOL_SKIP_CHARS.has(grapheme) || /\s/u.test(grapheme);
+}
+
+/**
  * 結果タイプ名から、包み（Tsutsumi）の記号面に立てる1字を取り出す。
  *
  * DESIGN.md §4「包み」の symbol は「絵文字ではなく漢字/かな1字の『顔』になる字」。
  * クイズデータの `result.icon` は絵文字（§8-6 禁止）なので使わず、タイプ名の
- * 先頭1書記素（サロゲートペア対応）を使う。
+ * 先頭書記素（サロゲートペア対応）を使う。ただし開き括弧・引用符・空白類が先頭に
+ * ある場合はそれを飛ばし、最初の意味のある書記素に着地させる（画面 Tsutsumi と
+ * 札画像 fuda-image の共有ソース）。全字がスキップ対象という異常時は、空を返さず
+ * 従来どおり先頭書記素へフォールバックする。
  */
 export function pickResultSymbol(title: string): string {
-  const trimmed = title.trim();
-  if (trimmed === "") return "";
-  return [...trimmed][0];
+  const graphemes = [...title.trim()];
+  if (graphemes.length === 0) return "";
+  const meaningful = graphemes.find((g) => !isSkippableSymbolChar(g));
+  return meaningful ?? graphemes[0];
 }
