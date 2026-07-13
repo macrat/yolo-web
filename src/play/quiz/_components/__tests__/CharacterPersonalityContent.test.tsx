@@ -95,7 +95,7 @@ vi.mock("@/play/quiz/_components/InviteFriendButton", () => ({
 
 const sampleContent: CharacterPersonalityDetailedContent = {
   variant: "character-personality",
-  catchphrase: "締切3分前に本気出す炎の司令塔",
+  catchphrase: "追い込まれてから本当の俺が動き出すぜ",
   archetypeBreakdown:
     "commanderとdreamerの融合型。瞬発的なリーダーシップと直感的なビジョンを組み合わせ、土壇場で真価を発揮するタイプです。",
   behaviors: [

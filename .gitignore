@@ -49,3 +49,7 @@ next-env.d.ts
 # そのディレクトリだけ ignore から除外する（!public/ など）形で許可してもよい。
 *.jpg
 *.png
+
+# ブログ記事に埋め込む公開画像は追跡対象にする（記事本文から参照するため）。
+!public/blog/
+!public/blog/*.png
