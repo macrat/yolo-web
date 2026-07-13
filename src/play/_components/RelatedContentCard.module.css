@@ -48,15 +48,6 @@
   outline-offset: 2px;
 }
 
-/* legacy RelatedGames（(legacy) ルートの irodori/yoji-kimeru 用）が絵文字アイコンを
- * 描画するため定義を残す。新デザイン側（RelatedQuizzes・新 RelatedGames）は icon を
- * 描画しない（DESIGN.md §3「絵文字はナビ/見出しに使わない」・icon は色を持たないため
- * トークン変換の対象外）。 */
-.icon {
-  font-size: 1.25rem;
-  margin-bottom: 0.125rem;
-}
-
 .name {
   color: var(--ink);
   font-family: var(--font-mincho);

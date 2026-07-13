@@ -48,7 +48,7 @@
   appearance: none;
   width: 22px;
   height: 22px;
-  border-radius: 50%;
+  border-radius: var(--radius-sm);
   background: var(--paper);
   border: 2px solid var(--ink);
   cursor: pointer;
@@ -57,7 +57,7 @@
 .slider::-moz-range-thumb {
   width: 22px;
   height: 22px;
-  border-radius: 50%;
+  border-radius: var(--radius-sm);
   background: var(--paper);
   border: 2px solid var(--ink);
   cursor: pointer;

@@ -15,7 +15,7 @@
  *   個別列挙方式（新規ページ追加時に列挙漏れが起きると検査対象から漏れる）から
  *   `src/**\/*.module.css` / `src/**\/*.tsx` の広域 glob へ切り替えた——src/ に live な
  *   デザイン面が新規追加されても自動的に検査対象へ入る。除外は IGNORE のテスト/生成物・
- *   ALLOWLIST の意図的な例外（円形トグル・成果物の和色等・理由付き）のみに限定する。
+ *   ALLOWLIST の意図的な例外（スピナーの回転リング・成果物の和色等・理由付き）のみに限定する。
  *   （OGP 画像生成 `opengraph-image.tsx`/`twitter-image.tsx`/`src/lib/ogp-image.tsx` は
  *   実測の結果 style={{}} に色リテラルを直書きしないため無検査でも誤検知しない——
  *   accentColor は関数引数として渡され JSX の style ブロック内には現れない。）
@@ -98,48 +98,22 @@ const IGNORE = [
  * 再設計済み（border-radius も var(--radius) の 0px に統一したため、旧 legacy 許容は不要）。
  */
 const ALLOWLIST: { fileEndsWith: string; declaration: string }[] = [
-  // ToggleSwitch のトラック（横長楕円）とサム（丸いつまみ）は、操作系コンポーネントの
-  // 物理的な型（スイッチのメタファー）であり、§8-5 が禁じる「ピル形状のボタン」
-  // （装飾目的の一律角丸）には当たらない。値札/入力欄と同様の明示的な例外として許容する。
-  {
-    fileEndsWith: "src/components/ToggleSwitch/ToggleSwitch.module.css",
-    declaration: "border-radius: 999px",
-  },
-  {
-    fileEndsWith: "src/components/ToggleSwitch/ToggleSwitch.module.css",
-    declaration: "border-radius: 50%",
-  },
-  // ThemeToggle は cycle-279 最終レビュー NICE-6 是正でピル/円形（999px/50%）を撤去し
-  // var(--radius)/var(--radius-sm) にしたため、この許容は不要（削除済み）。
-  // kanji-kanaru のローディングスピナー: 円形の回転リングは機能的なローディング表示の
-  // 物理的な型（ToggleSwitch のサムと同様の円形）であり、§8-5 の装飾目的の一律角丸には
-  // 当たらない。
+  // 唯一の円形例外＝ローディングスピナーの回転リング。DESIGN.md §4「角丸 0px 基調」は
+  // 「回転で読み込み中を示すインジケータ」を想定していない——リングは円形でなければ回転が
+  // 視認できず機能を果たさない。装飾目的の一律角丸（§8-5）ではなく機能上不可避な形状として、
+  // この3ファイルのスピナーのみ個別許容する。トグル・スライダーのつまみ・進捗ドット等の
+  // 操作系は cycle-279 ですべて var(--radius)/var(--radius-sm) へ変換済みで、ここには含めない
+  // （「操作メタファーの円形」という自己正当化での横抜けを一切残さない）。
   {
     fileEndsWith:
       "src/play/games/kanji-kanaru/_components/GameContainer.module.css",
     declaration: "border-radius: 50%",
   },
-  // yoji-kimeru の同型ローディングスピナー（kanji-kanaru と同じ機能的な物理型）。
   {
     fileEndsWith:
       "src/play/games/yoji-kimeru/_components/styles/GameContainer.module.css",
     declaration: "border-radius: 50%",
   },
-  // イロドリの進捗ドット: ToggleSwitch のサムと同じ「操作系メタファーの円形」に当たる
-  // （5問の進捗を丸ドットで示す物理的な型）。
-  {
-    fileEndsWith: "src/play/games/irodori/_components/GameContainer.module.css",
-    declaration: "border-radius: 50%",
-  },
-  // イロドリの HSL スライダーのつまみ（操作系プリミティブの円形・ToggleSwitch と同型）。
-  // webkit/moz 両ベンダープレフィックスで同一宣言が2箇所に出るが、宣言文字列は同一。
-  {
-    fileEndsWith: "src/play/games/irodori/_components/HslSliders.module.css",
-    declaration: "border-radius: 50%",
-  },
-  // サイト内検索のローディングスピナー（cycle-279 MUST-5 でゲート対象に追加）。円形の
-  // 回転リングは機能的なローディング表示の物理的な型で、kanji-kanaru/yoji-kimeru の
-  // スピナーと同じ理由により §8-5 の装飾目的の一律角丸には当たらない。
   {
     fileEndsWith: "src/components/search/SearchInput.module.css",
     declaration: "border-radius: 50%",

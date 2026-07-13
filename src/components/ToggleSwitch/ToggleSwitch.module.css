@@ -36,16 +36,15 @@
   pointer-events: none;
 }
 
-/* トラック（横長楕円の背景） — OFF 状態のデフォルト。
- * DESIGN.md フェーズ R・店構えへ変換。
- * 角丸 999px/50% はトグルスイッチという操作系の物理的な型（つまみ）であり、
- * §8-5 が禁じる「ピル形状のボタン」（装飾目的の一律角丸）には当たらない
- * ——design-gate.test.ts の ALLOWLIST に個別許容として明記する。 */
+/* トラック（横長の背景） — OFF 状態のデフォルト。
+ * DESIGN.md §4「角丸 0px 基調」に従い、トラックも直角（--radius=0）で組む。
+ * ON/OFF は角丸ではなく地の色（--rule→--accent）とつまみの位置で示す
+ * ——ThemeToggle と同じ流儀（器は静かに・一律角丸を持ち込まない §8-5）。 */
 .track {
   display: inline-block;
   width: 36px;
   height: 20px;
-  border-radius: 999px;
+  border-radius: var(--radius);
   background: var(--rule);
   position: relative;
   flex-shrink: 0;
@@ -82,7 +81,7 @@
   width: 16px;
   height: 16px;
   border: 1px solid var(--rule);
-  border-radius: 50%;
+  border-radius: var(--radius-sm);
   background: var(--paper);
   transition: transform 0.15s ease;
 }

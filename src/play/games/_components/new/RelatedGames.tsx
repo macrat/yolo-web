@@ -15,9 +15,9 @@ interface RelatedGamesProps {
  * （game.icon = 📚🎯🧩🎨）を描画しないこと**（DESIGN.md §3「絵文字は UI 装飾・
  * ナビには使わない」準拠・MUST-1）。ゲーム名テキストで十分に識別できる。
  *
- * 共有 CSS `RelatedContentCard.module.css` は既に (new) トークンで移行済みクイズ面
- * （RelatedQuizzes 等）と共有中のためフォークせずそのまま参照する（MUST-2）。
- * 旧版が出していた `.icon` 関連 CSS は span を出さないだけで CSS には触れない。
+ * 共有 CSS `RelatedContentCard.module.css` は新デザイン（店構え）へ移行済みで、
+ * クイズ面（RelatedQuizzes 等）と共有する。絵文字アイコンを描画しないため `.icon`
+ * 関連の CSS は cycle-279 で削除済み（このコンポーネントは span を出さない）。
  * registry の icon フィールドは他面（PlayCard 等）が使うため変更しない。
  */
 export default function RelatedGames({
