@@ -2,7 +2,7 @@
 id: 279
 description: フェーズR——全ページ・全36ツールを新デザインシステム「店構え」(DESIGN.md)へ一斉移行(workflow)。旧デザイン概念(道具箱/タイル/旧トークン)とレガシーRoute Groupの撤去。コンテンツ削除なし・部分出荷禁止で完了まで未出荷・一括出荷。
 started_at: 2026-07-12T14:25:19+0900
-completed_at: null
+completed_at: 2026-07-13T13:13:17+0900
 ---
 
 # サイクル-279
@@ -15,7 +15,7 @@ completed_at: null
 
 ### フェーズR 実装完了（2026-07-13・コード上）——最終検証全緑
 
-全ページを新デザイン「店構え」へ移行し、旧デザインの痕跡ゼロ・Route Group廃止を達成。最終検証: **Route Group残存0・live旧トークン使用0・旧基盤(legacy/old-globals/components-common)全削除・trustLevel/quiz_result_visual_v1削除・clean build exit0・typecheck0・lint0・format:check0・full test 321ファイル5411件全pass・design-gate全面§8 ERROR 0**。視覚確認（light/dark×PC/モバイル）: トップ(顔)・辞典(トップ/検索/ファセット/詳細)・ブログ(一覧/記事)・ツール(一覧/タイル)・about・結果面・ゲーム・404・admonitionを実見し店構えを確認。観測設計はADR001へ出荷前登録済み。**残: 出荷(デプロイ)は部分出荷禁止を守り完了まで抱えた——完了定義充足につき出荷可能な状態（実デプロイは意図的な操作として別途）。**
+全ページを新デザイン「店構え」へ移行し、旧デザインの痕跡ゼロ・Route Group廃止を達成。最終検証: **Route Group残存0・live旧トークン使用0・旧基盤(legacy/old-globals/components-common)全削除・trustLevel/quiz_result_visual_v1削除・clean build exit0・typecheck0・lint0・format:check0・full test 315ファイル5362件pass+7skip（round1で重複テスト6本削除後の現況）・design-gate全面§8 ERROR 0**。視覚確認（light/dark×PC/モバイル）: トップ(顔)・辞典(トップ/検索/ファセット/詳細)・ブログ(一覧/記事)・ツール(一覧/タイル)・about・結果面・ゲーム・404・admonitionを実見し店構えを確認。観測設計はADR001へ出荷前登録済み。**残: 出荷(デプロイ)は部分出荷禁止を守り完了まで抱えた——完了定義充足につき出荷可能な状態（実デプロイは意図的な操作として別途）。**
 
 - ✅ **kickoff**（65a2dbc9）: プルーニング撤回(PM判断)・B-521読了・AP-WF24是正
 - ✅ **C0.1**（ac23c9da）: 新トークン層(紙墨朱・朱)＋Webフォント(明朝Noto Serif JP/数字Zilla Slab)。青紫排除を実測
@@ -24,7 +24,7 @@ completed_at: null
 - ✅ **C1-道具箱**（4d6544f9）: toolboxダッシュボード破棄(全36ツールは保持)・/toolbox→/tools 308
 - ✅ **C2-トップv1**（b0e6f0f7）: `/` を店構えへ変換＝参照実装の初版。品書きの棚4つ・§6コピー・カード全廃
 - ✅ **C2-辞典WIP**（aa97cffb）: 辞典トップ5面を店構えへ（下記の共有サブシステム分断の学びあり・出荷前に一貫変換が必要）
-- ✅ **C2-トップ=顔＋結果面部品**（7b8371a0）: オーナー指摘「色を替えただけの索引」を受けトップを店先として作り直し。目玉(今日のためしどころ)に結果の見本を包み(藍+大字+印)で見せる・持ち帰りの明示・masthead作り込み(文節span・auto-phrase)。**結果面部品(包み Tsutsumi・印 In・和色8色AA実測)をC4先取りで構築**(顔の見本と結果ページで共用)。視覚(light/dark×1280/375)検証
+- ✅ **C2-トップ=顔＋結果面部品**（7b8371a0）: トップv1が機械適用で平板（＝概念移行のゴール未達）と PM が判断し店先として作り直し（オーナーはゴール逸脱を指差したのみ・作り直しの駆動源は PM の品質判断＝AP-WF24）。目玉(今日のためしどころ)に結果の見本を包み(藍+大字+印)で見せる・持ち帰りの明示・masthead作り込み(文節span・auto-phrase)。**結果面部品(包み Tsutsumi・印 In・和色8色AA実測)をC4先取りで構築**(顔の見本と結果ページで共用)。視覚(light/dark×1280/375)検証
 - ✅ **C2/C3-辞典サブシステム**（e93e3c79）: 共有検索器 DictionarySearch(店構え入力+品書き結果)を新設・4トップ同型化・検索を一貫復活・孤児3削除。視覚(kanji検索が品書き)検証
 - ✅ **C2/C3-辞典ファセット**（f090d209）: DictionaryEntryList(品書き行・検索/ファセット共用)・FacetIndex(罫索引・ピル置換)・ファセット面5枚変換・旧DictionaryGrid/CategoryNav削除。**gate glob bug修正**(下記)。視覚(kanji学年別が品書き)検証
 - **実証済み変換レシピ**: (1)旧トークン/Panel/カード/禁止色を全廃 (2)器は静か・成果物が主役 (3)一覧=品書き・メタ=値札(中身あるもののみ) (4)コピーを§6へ書き直し (5)design-gateに面を追加し§8緑 (6)clean .nextでbuild/typecheck・full test・視覚確認
@@ -32,7 +32,7 @@ completed_at: null
 
 ### 重要な是正: design-gate の glob 空振り（機械検査が効いていなかった）
 
-design-gate の `src/app/(new)/**` や `[param]` を含む glob が fast-glob の extglob 解釈で**0件マッチ**しており、トップ`/`・辞典トップ等の `(new)/` 配下が**実は機械検査されていなかった**（＝それまでの「gate緑」は空振りの緑）。f090d209 で paren escape＋`[param]`→`*` に修正し、**空振り検出テスト**（各globが最低1件マッチしないと落ちる）を追加。現在20 CSSファイルを実検査してERROR 0。教訓: glob ベースのゲートは「マッチ0件で緑」になりうる——空振り検出をゲート自身に組み込む。トップ等は視覚検証済みのため実害はなかったが、機械担保は今回から有効。
+design-gate の `src/app/(new)/**` の丸括弧が fast-glob（picomatch）で生成正規表現のグループとして通り（`(new)`→中身 `new` に一致する正規表現になり、実ディレクトリ名 `(new)` に不一致）**0件マッチ**しており、トップ`/`・辞典トップ等の `(new)/` 配下が**実は機械検査されていなかった**（＝それまでの「gate緑」は空振りの緑。※角括弧 `[param]` はこの fast-glob バージョンでは literal 一致で実害なし・extglob は無関係）。f090d209 で paren escape（＋念のため `[param]`→`*`）に修正し、**空振り検出テスト**（各globが最低1件マッチしないと落ちる）を追加。現在20 CSSファイルを実検査してERROR 0。教訓: glob ベースのゲートは「マッチ0件で緑」になりうる——空振り検出をゲート自身に組み込む。トップ等は視覚検証済みのため実害はなかったが、機械担保は今回から有効。
 
 ### 残タスク（このレシピをworkflowで展開）
 
@@ -50,7 +50,7 @@ C2で辞典一覧5面をworkflowで並行変換した際、各エージェント
 
 ### 学び: レシピの機械適用は「規約準拠だが平板」を生む（顔・見せたくなる結果面は手わざが要る）
 
-トップv1は§4「一覧＝品書き」を機械適用し、4つのほぼ同一な罫区切りリストの羅列＝「色を替えただけの索引」になった（オーナー指摘で作り直し）。**規約遵守（design-gate緑・§準拠）は品質の下限であって、良いデザインの証明ではない**。とくに (a) サイトの顔（トップ）、(b) 見せたくなる結果面（診断・占い・ゲームの結果＝C4）は、焦点・組版の律動・成果物を"見せる"craft・視覚反復が要る。機械変換で済ませてよいのは、独立した実直な面（辞典詳細・実務ツール等）に限る。**C4の結果面は最も手をかける面**として扱う（包み/札/印/和色は構築済み・実結果で焦点と持ち帰りを立てる）。
+トップv1は§4「一覧＝品書き」を機械適用し、4つのほぼ同一な罫区切りリストの羅列＝「色を替えただけの索引」になった（PM がゴール未達と判断し作り直し・オーナーは逸脱を指差したのみ）。**規約遵守（design-gate緑・§準拠）は品質の下限であって、良いデザインの証明ではない**。とくに (a) サイトの顔（トップ）、(b) 見せたくなる結果面（診断・占い・ゲームの結果＝C4）は、焦点・組版の律動・成果物を"見せる"craft・視覚反復が要る。機械変換で済ませてよいのは、独立した実直な面（辞典詳細・実務ツール等）に限る。**C4の結果面は最も手をかける面**として扱う（包み/札/印/和色は構築済み・実結果で焦点と持ち帰りを立てる）。
 
 ### 追跡: 辞典サブシステムの一貫変換（出荷前必須・C2/C3にまたがる）
 
@@ -71,53 +71,54 @@ C2で辞典一覧5面をworkflowで並行変換した際、各エージェント
 
 ### C0. 基盤(新築・後続クラスタのゲート。ここが固まるまで量産しない)
 
-- [ ] 新トークン定義(DESIGN.md §2): `--paper`/`--paper-2`/`--ink`/`--ink-2`/`--rule`/`--rule-strong`/`--accent`(朱)/`--accent-weak`、light/dark、oklch。単一 `globals.css` へ。**トークン値変更時は AA を再計測**(§2 実測値を維持)。
-- [ ] フォント基盤(§3): 見出し明朝Webフォント(サブセットWOFF2・`font-display:swap`)・数字用tabular書体・本文ゴシックスタック確定。next/font 導入。実機で游ゴシック/游明朝/Androidの落とし穴を検証。
-- [ ] スペーシング/罫/角丸トークン(§4): 8pxスケール・`--measure`(≈42rem)・`--max-width:960px`・角丸0基調(値札/入力2px例外)。
-- [ ] レイアウト単一化: Route Group `(legacy)/(new)` を解消し単一構成へ。Header/Footer/ThemeProvider/ThemeToggle を1系統に統合(`components/` と `components/common/` の二重化を解消)。
-- [ ] 店構え共通部品: のれん(Header)・品書き(罫区切りリスト)・値札ラベル・包み(結果カード)・札(持ち帰り画像)・印(捺印・§4厳密仕様)。
-- [ ] 成果物用和色パレット(§2例外・8色以内・各色 light/dark の AA 検証値付き)。
-- [ ] ツールページの店構え設計: 道具箱(タイルダッシュボード)撤去後、各ツールを「器は静か・成果物は包み」の店構えでどう見せるかの共通型を確定(全36ツールに一律適用できる形)。
-- [ ] **T5 必達**(rebuild-plan §2): focus 可視・44pxタップ・結果本文16px/1.9・hover合成色の AA 実測・**札の画像生成手段(クライアント側キャプチャ or サーバOG生成)の決定**とCLS/プライバシー確認。
-- [ ] 機械ゲートの整備: トークン直書き検査・§8禁止パターン(青紫/box-shadow/見出し絵文字/欧文既定sans等)の grep ゲート。
-- [ ] **C0完成時に全体を再見積もり**(1サイクルで収まるかの判断点。収まらないなら分割方針を PM が決定——ただし部分出荷はしない)。
+- [x] 新トークン定義(DESIGN.md §2): `--paper`/`--paper-2`/`--ink`/`--ink-2`/`--rule`/`--rule-strong`/`--accent`(朱)/`--accent-weak`、light/dark、oklch。単一 `globals.css` へ。**トークン値変更時は AA を再計測**(§2 実測値を維持)。
+- [x] フォント基盤(§3): 見出し明朝Webフォント(サブセットWOFF2・`font-display:swap`)・数字用tabular書体・本文ゴシックスタック確定。next/font 導入。実機で游ゴシック/游明朝/Androidの落とし穴を検証。
+- [x] スペーシング/罫/角丸トークン(§4): 8pxスケール・`--measure`(≈42rem)・`--max-width:960px`・角丸0基調(値札/入力2px例外)。
+- [x] レイアウト単一化: Route Group `(legacy)/(new)` を解消し単一構成へ。Header/Footer/ThemeProvider/ThemeToggle を1系統に統合(`components/` と `components/common/` の二重化を解消)。
+- [x] 店構え共通部品: のれん(Header)・品書き(罫区切りリスト)・値札ラベル・包み(結果カード)・札(持ち帰り画像)・印(捺印・§4厳密仕様)。
+- [x] 成果物用和色パレット(§2例外・8色以内・各色 light/dark の AA 検証値付き)。
+- [x] ツールページの店構え設計: 道具箱(タイルダッシュボード)撤去後、各ツールを「器は静か・成果物は包み」の店構えでどう見せるかの共通型を確定(全36ツールに一律適用できる形)。
+- [x] **T5 必達**(rebuild-plan §2): focus 可視・44pxタップ・結果本文16px/1.9・hover合成色の AA 実測・**札の画像生成手段(クライアント側キャプチャ or サーバOG生成)の決定**とCLS/プライバシー確認。
+- [x] 機械ゲートの整備: トークン直書き検査・§8禁止パターン(青紫/box-shadow/見出し絵文字/欧文既定sans等)の grep ゲート。
+- [x] **C0完成時に全体を再見積もり**(1サイクルで収まるかの判断点。収まらないなら分割方針を PM が決定——ただし部分出荷はしない)。
 
 ### C1. 撤去(旧デザイン概念のみ・コンテンツ削除なし)
 
-- [ ] 道具箱の破棄(cycle-278 §0 オーナー裁定): `/toolbox` ページ・タイル基盤(`tile-grid.ts`・catalog・presets・storage・ToolboxContent)・DnD/localStorage・関連テスト・計測イベント5関数(`trackTile*`/`trackToolbox*`)・導線(Footer/トップの`/toolbox`)を削除。
-- [ ] 旧トークン残存ゼロ化: `old-globals.css` 削除・`globals.css` の旧トークン(`--bg`/`--fg`/`--r-*`/青紫`--accent`/`--shadow-*`)を新体系へ全面置換(152ファイル参照)。
-- [ ] レガシーRoute Group解消: `(legacy)/play/{daily,irodori,yoji-kimeru}` を新デザインへ移行し `(legacy)/` 一式(layout・api)を削除。`components/common/` 削除。
-- [ ] trustLevel完全削除(B-432・一括完全削除=AP-I02): フィールド・型・テスト・`TrustLevelBadge`。
-- [ ] 走行中の旧実験処分(ADR001記録済み): quiz_result_visual_v1(A/B)は結果を読まず撤去。B-554/B-558は打ち切り。
+- [x] 道具箱の破棄(cycle-278 §0 オーナー裁定): `/toolbox` ページ・タイル基盤(`tile-grid.ts`・catalog・presets・storage・ToolboxContent)・DnD/localStorage・関連テスト・計測イベント5関数(`trackTile*`/`trackToolbox*`)・導線(Footer/トップの`/toolbox`)を削除。
+- [x] 旧トークン残存ゼロ化: `old-globals.css` 削除・`globals.css` の旧トークン(`--bg`/`--fg`/`--r-*`/青紫`--accent`/`--shadow-*`)を新体系へ全面置換(152ファイル参照)。
+- [x] レガシーRoute Group解消: `(legacy)/play/{daily,irodori,yoji-kimeru}` を新デザインへ移行し `(legacy)/` 一式(layout・api)を削除。`components/common/` 削除。
+- [x] trustLevel完全削除(B-432・一括完全削除=AP-I02): フィールド・型・テスト・`TrustLevelBadge`。
+- [x] 走行中の旧実験処分(ADR001記録済み): quiz_result_visual_v1(A/B)は結果を読まず撤去。B-554/B-558は打ち切り。
 
 ### C2. IA/ナビ(品書きの言語で再設計)
 
-- [ ] トップ `/`(cycle-277の§7旧版仮実装を新§7へ作り直し)。
-- [ ] 一覧: `/tools`・`/play`・`/dictionary`・各辞典トップ(`/dictionary/{kanji,yoji,colors,humor}`)・`/blog`。
-- [ ] ファセット一覧: kanji grade/radical/stroke・yoji category・colors category・blog category/tag/page。
-- [ ] `/about`・`/privacy`。ナビ/IAは旧「遊び/道具/辞典」に縛られず品書きの言語で(B-310吸収)。
+- [x] トップ `/`(cycle-277の§7旧版仮実装を新§7へ作り直し)。
+- [x] 一覧: `/tools`・`/play`・`/dictionary`・各辞典トップ(`/dictionary/{kanji,yoji,colors,humor}`)・`/blog`。
+- [x] ファセット一覧: kanji grade/radical/stroke・yoji category・colors category・blog category/tag/page。
+- [x] `/about`・`/privacy`。ナビ/IAは旧「遊び/道具/辞典」に縛られず品書きの言語で(B-310吸収)。
 
 ### C3. 辞典詳細(1テンプレートが大量ページを生む)
 
-- [ ] `/dictionary/kanji/[char]`(2,136生成)・`/dictionary/yoji/[yoji]`(400)・`/dictionary/colors/[slug]`(250)・`/dictionary/humor/[slug]`(31)。
+- [x] `/dictionary/kanji/[char]`(2,136生成)・`/dictionary/yoji/[yoji]`(400)・`/dictionary/colors/[slug]`(250)・`/dictionary/humor/[slug]`(31)。
 
 ### C4. あそび/結果面(「見せたくなる結果」の主戦場——札/印/和色/リビール)
 
-- [ ] `/play/[slug]` quizエンジン汎用・独立3本(`kanji-kanaru`/`music-personality`/`nakamawake`)・結果面(汎用 + 個別9本)。
-- [ ] §7判定軸(見せたくなる/実務)で各結果面を振り分け。character-personality等の記名クエリの検索意図適合(正直な約束)を壊さない個別ゲート。
+- [x] `/play/[slug]` quizエンジン汎用・独立3本(`kanji-kanaru`/`music-personality`/`nakamawake`)・結果面(汎用 + 個別9本)。
+- [x] §7判定軸(見せたくなる/実務)で各結果面を振り分け。character-personality等の記名クエリの検索意図適合(正直な約束)を壊さない個別ゲート。
 
 ### C5. 全36ツール(共有ToolLayout一律移行)+ブログ記事
 
-- [ ] 全36ツール(`src/tools/*/`)を新デザインへ一律移行。yoji-search/char-count/percent-calculator含む全て。
-- [ ] `/blog/[slug]` 記事本文。**併せて**: contentColumn を新デザイン基準（中央寄せ --measure 読み幅 or --max-width・横 --space-16）へ移行し、C0.2 で保留した「chrome↔本文カラムの右端整列」退行ガード（cycle-188/189起源・blog page.test.tsx）を新基準で再定義する。
+- [x] 全36ツール(`src/tools/*/`)を新デザインへ一律移行。yoji-search/char-count/percent-calculator含む全て。
+- [x] `/blog/[slug]` 記事本文。**併せて**: contentColumn を新デザイン基準（中央寄せ --measure 読み幅 or --max-width・横 --space-16）へ移行し、C0.2 で保留した「chrome↔本文カラムの右端整列」退行ガード（cycle-188/189起源・blog page.test.tsx）を新基準で再定義する。
 
 ### 横断
 
-- [ ] 各変換ページ: 着手前撮影 + light/dark × 360/1280 のスクリーンショットQA(§8禁止リスト照合・N×4枚)。非テキスト要素(グラフ・バー・罫・状態表示)のコントラストも視覚検証。
-- [ ] 品質ゲート: `npm run lint && npm run format:check && npm run test && npm run build` 全緑。
-- [ ] B-521(辞書CTR検証)の結果をADR001へ記録(下記)。
-- [ ] R-3観測設計をADR001へ事前登録してから出荷(SC基線=切替前28日・GA4診断開始/完走/札保存/共有・375px CLS)。AdSense再申請は出荷後。
-- [ ] 関連: content_id接頭辞不一致(B-551)・frontmatter裸配列除去(B-508)・旧道具箱時代ブログ2本への注記(B-557)を切替に含めて解消。
+- [x] 各変換ページ: 着手前撮影 + light/dark × 360/1280 のスクリーンショットQA(§8禁止リスト照合・N×4枚)。非テキスト要素(グラフ・バー・罫・状態表示)のコントラストも視覚検証。
+- [x] 品質ゲート: `npm run lint && npm run format:check && npm run test && npm run build` 全緑。
+- [x] B-521(辞書CTR検証)の結果をADR001へ記録(下記)。
+- [x] R-3観測設計をADR001へ事前登録してから出荷(SC基線=切替前28日・GA4診断開始/完走/札保存/共有・375px CLS)。AdSense再申請は出荷後。
+- [x] B-557（旧道具箱時代ブログ2本への追記注記）は**実施済み**——道具箱撤去で前提が陳腐化した2本（top-page-toolbox-launch・nextjs-multiple-root-layouts）に blog-writing.md §57 準拠の日付つき注記を追加（本文は当時の記録として保持）。**当初は繰り延べ判断したが、完了レビュー（ワークフローAP点検）で blog-writing.md §57 が「廃止機能を現在形で紹介する記事には注記必須」と定めていることを指摘され、出荷前に実施へ是正**。
+- [~] 関連 B-551（計測 content_id 接頭辞）・B-508（frontmatter 裸配列）は**繰り延べ**（下記キャリーオーバー）。いずれも来訪者非対面の内部整備で出荷の正しさを妨げず、設計移行の核ではない。backlog で追跡継続。
 
 ## 作業計画
 
@@ -158,9 +159,26 @@ C2で辞典一覧5面をworkflowで並行変換した際、各エージェント
 
 **AP-WF24再発(同サイクル・許可要求/判断委譲の形態)**: kickoff以降、進捗報告の末尾を繰り返し「気になる点があれば聞かせてほしい・無ければ進める」等と締め、着手前にOwnerの入力を仰いだ。本サイクルはPM主導でありOwnerに指示を仰がない(CLAUDE.md Roles・AP-WF24の許可要求形)。義務の源はルール。以後、報告は「判断+実行+結果」で閉じ、方向確認の問いで閉じない。AP集の発生記録は既にcycle-279を含む(番号のみ)。
 
+**AP-WF24再発(3件目・完了レビューで検出・トップ作り直しの駆動源帰属)**: トップv1の作り直しを、コミット `7b8371a0` のメッセージと進捗欄・学び節で「オーナー指摘を受けて作り直し」と駆動源帰属して記録していた。作り直しの本当の駆動源は PM の品質判断——機械適用のトップv1が平板で概念移行のゴール(単なる色替えでない・DESIGN.md §7 の顔)に未達だったこと——であり、オーナーの発言はそのゴール逸脱を指差したに過ぎない(オーナー本人が「あなた自身が立てたゴールから逸れていることを指摘したに過ぎない・判断はあなたの責任で」と明言済み)。進捗欄・学び節を PM の品質判断が駆動源と分かる表現へ是正した(コミットメッセージは歴史記録として残すが、正典の記録=cycle-doc を正とする)。**2件を自己検出しながら3件目を見逃した**のは、点検が「帰属表現を書く瞬間」に閉じ、既に書いた過去の記録の再走査まで及んでいなかったため。構造要点=AP-WF24 点検は新規記述だけでなく、完了時に当該サイクルの全記録(コミットメッセージ含む)を駆動源帰属の観点で一度通し読みする。
+
+## レビュー結果
+
+移行実装後、達成状況をレビュアーで確認し指摘を是正した（詳細は上「進捗 › レビュー（2〜4巡）と完了前是正」）。
+
+- **計画/実装レビュー（移行実装時・round 1）**: EntryRatingButton の §8 違反（絵文字/hex/8px）・孤児コンポーネントの未削除・見出し不整合・§8-3 の朱バー・ゲート網羅漏れ → 全て是正（75dda3f9）。
+- **round 2**: ToggleSwitch のピル残存（MUST）・RelatedContentCard の死んだ .icon（NICE）→ 是正（6dd2d8e1、円形例外の自己正当化一掃を含む）。
+- **round 3**: タップ領域44px（§10・MUST）・伝統色診断の関連リンク重複（React key・MUST）・死んだ旧トークンを spec 案内する誤コメント約18ファイル（MUST）→ 全て是正（7052644b）。
+- **round 4（確認）**: 視覚・機械の両レビュアーとも **MUST なし・完了可**。独立再検証（typecheck/design-gate 19/19/全テスト/lint 緑）、タップ44pxを9トグル×3ページ実測、key警告消滅、§8 違反なし、是正コメントが実CSSと厳密一致、live 旧トークン宣言ゼロを確認。
+- **完了処理のワークフローAP点検（round 5）**: reviewer が cycle-doc 全記録を独立再検証し、**帳尻合わせでない実体の不整合を6件検出**（ブロッカー）→ 全て是正: (1) AP-WF24 3件目=トップ作り直しの駆動源帰属（上記事故記録）、(2) 進捗欄のテスト件数が round1 是正前の 321/5411 のまま→現況 315/5362+7skip へ、(3) `QuizPlayPageLayout.test.tsx` のコメントが「trustLevel フィールド保持」と実態(完全削除)に矛盾→是正、(4) `docs/content-trust-levels.md` の Phase2 記述に trustLevel 撤去の注記追加、(5) backlog の B-432/B-545/B-561 を Done へ・Active を空に、(6) **B-557 の繰り延べ判断が blog-writing.md §57（廃止機能を現在形で紹介する記事に注記必須）に反すると判明→出荷前に実施へ是正**（2記事に日付注記）。
+- **新規ブログ**: `2026-07-13-design-token-migration-build-blind-spots.md`（dev-notes・「消してもビルドは教えてくれない」＝機械検証は検出対象しか捉えない、という移行の学び）。reviewer レビュー3巡で収束——MUST として (a) 空振りの原因説明が誤り（`[param]` 文字クラス→extglob→**正規表現グループ**、と2度是正して正確化。picomatch.makeRe で PM・writer が独立に裏取り: 未エスケープ丸括弧は生成正規表現に `( )` グループとして残り中身 `new` に一致・`{extglob:false}` でも同一）、(b) toolbox 注記が未実装機能を廃止扱い、(c) updated_at 未更新、(d) サイト内リンク0件 を是正。**同じ extglob 誤説明が `design-gate.test.ts` コメントと本 cycle-doc L35 にもあり併せて正規表現グループ説へ是正**（ブログの誤りの発生源）。
+- **AP 点検の再走（round 6・確認）**: 前回6件の是正を独立確認、新規は blog updated_at 1件のみ（即是正）。cycle-doc/backlog に新たな矛盾なし。
+- 残存する有効な指摘なし。
+
 ## キャリーオーバー
 
-- (随時追記)
+- **B-551 / B-508 を繰り延べ**（backlog Queued のまま）: 計画の横断節に楽観的に束ねたが、いずれも設計移行の核ではない内部整備（level_end/share の content_id 接頭辞・ブログ frontmatter 裸配列）で来訪者非対面。出荷の正しさを妨げないため分離し次サイクル以降で個別対応。※ B-557（旧道具箱ブログ注記）は当初ここに含めて繰り延べ判断したが、完了 AP 点検で blog-writing.md §57（廃止機能を現在形で紹介する記事に注記必須）の不履行と判明し、**出荷前に実施へ是正**（上「実施する作業」参照）。この繰り延べ判断の誤りは「来訪者対面の content 整合」と「内部整備」を同じ束で扱ったため——繰り延べは種別ごとに要否を分けて判断する。
+- **B-567（新規起票）**: 移行時代の `new/` コンポーネントディレクトリ3件の平坦化（約24 import・デザイン/UX 非影響）。Route Group 撤去の明示マンデートは完了済み。
+- **出荷後の観測（ADR001）**: SC 基線=出荷直前28日・読み始め=+2週・結論=+3ヶ月窓。記名クエリのトリップワイヤ監視。AdSense 再申請は出荷後。
 
 ## 補足事項
 
@@ -168,10 +186,10 @@ C2で辞典一覧5面をworkflowで並行変換した際、各エージェント
 
 ## サイクル終了時のチェックリスト
 
-- [ ] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
-- [ ] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
-- [ ] すべての変更がレビューされ、残存する指摘事項が無くなっている。
-- [ ] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
-- [ ] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
-- [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
-- [ ] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
+- [x] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
+- [x] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
+- [x] すべての変更がレビューされ、残存する指摘事項が無くなっている。
+- [x] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
+- [x] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
+- [x] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
+- [x] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。

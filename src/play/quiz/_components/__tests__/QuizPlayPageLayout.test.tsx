@@ -137,7 +137,7 @@ test("QuizPlayPageLayout does not render TrustLevelBadge (撤去済み・cycle-2
   });
   render(component);
 
-  // 新デザイン体系では TrustLevelBadge を撤去している（meta.trustLevel フィールドは保持）
+  // 新デザイン体系では TrustLevelBadge を撤去している（trustLevel フィールド自体も cycle-279 C1 で型・データごと完全削除）
   expect(screen.queryByTestId("trust-level-badge")).not.toBeInTheDocument();
 });
 

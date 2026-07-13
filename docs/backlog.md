@@ -2,8 +2,6 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-545 | サイトの根幹を統一する(本丸) | P1 | 279 | cycle-278(オーナー主導)でコンセプト(site-concept.md)・デザインシステム(DESIGN.md)・作り直し計画(rebuild-plan.md)を再導出済み。**完了=フェーズR(B-561)の出荷**。詳細 cycle-278.md |
-| B-561 | フェーズR: 全ページ一斉デザイン切替(workflow) | P1 | 279 | 全ルート・全36ツールを「店構え」へ一律移行・コンテンツ削除なし(プルーニング撤回→B-566)。正典 rebuild-plan §2・詳細 cycle-279.md |
 
 ## Queued (すぐに着手できる)
 
@@ -12,8 +10,6 @@
 | B-494 | Dynamic Workflows 運用知見の knowledge 恒久化 | P2 | 279 | **フェーズR(workflow一斉切替)の前提整備として昇格**。6点の知見をknowledge化。詳細 cycle-225.md |
 | B-540 | アンチパターン集の規約準拠クリーンアップ | P2 | - | docs/anti-patterns/全体の規約違反を一般化+発生番号のみへ是正。詳細 cycle-257.md |
 | B-505 | Dependabot 脆弱性アラートの調査と対応 | P2 | - | cycle-277 push時に19件(high3)。増分の調査・対応要。詳細 cycle-246.md |
-| B-432 | trustLevel フィールド・関連型・テストの完全削除 | P2 | - | 一括完全削除(漸進禁止=AP-I02)。フェーズRと同時実施が効率的。詳細 cycle-200.md |
-| B-557 | 旧道具箱時代ブログ2本への編集注記 | P3 | 279 | 日記型のため追記型注記。フェーズRの道具箱撤去と同時に実施。詳細 cycle-277.md T8 |
 | B-551 | level_end/share の content_id 接頭辞不一致是正 | P3 | 279 | フェーズRの計測再設計(札保存/共有イベント新設)に含めて解消。詳細 cycle-273.md |
 | B-466 | tmp/ 配下 .ts の typecheck/build 破壊の根本解消 | P3 | - | tsconfig.json exclude "tmp" 追加。詳細 cycle-216.md |
 | B-390 | AP 集全項目のガイド混入監査 | P3 | - | 残り implementation.md と writing.md。詳細 cycle-248.md |
@@ -93,6 +89,10 @@
 
 | ID | Title | Completed Cycle | Notes |
 | --- | --- | --- | --- |
+| B-545 | サイトの根幹を統一する(本丸) | 279 | 完了=フェーズR(B-561)の出荷。cycle-279 で店構えを全ページ一斉出荷。詳細 cycle-279.md |
+| B-561 | フェーズR: 全ページ一斉デザイン切替(workflow) | 279 | 全81ページ・全36ツールを「店構え」へ一律移行・レガシーRoute Group撤去・コンテンツ削除なし。レビュー4巡・出荷2026-07-13。詳細 cycle-279.md |
+| B-432 | trustLevel フィールド・関連型・テストの完全削除 | 279 | フェーズRと同時に型・データ・テスト・バッジを一括完全削除(AP-I02)。詳細 cycle-279.md |
+| B-557 | 旧道具箱時代ブログ2本への編集注記 | 279 | toolbox-launch と multiple-root-layouts の2本に日付つき追記注記（廃止・リダイレクト・技術内容は有効の別）。blog-writing.md §57 準拠。詳細 cycle-279.md |
 | B-559 | デザインシステムのゼロベース導出 | 278 | 新 DESIGN.md「店構え」(レビュー4巡承認・試作5画面検証)。詳細 cycle-278.md T5 |
 | B-560 | 残移行/legacy撤去の検証方針の決着 | 278 | cycle-268結論を根拠付き棄却(棄却の柱=デュアル保守の放棄・以後は面単位インライン実験)。詳細 rebuild-plan.md §1 |
 | - | **バックログ大整理(cycle-278)** | 278 | rebuild-planによる無効化・包含で**55項目をクローズ**(下記)。当初91件としたがオーナー指摘でツール案36件の閉鎖を取り消しDeferredへ復帰(再検討条件付き)。経緯は cycle-278.md「バックログ整理の記録」 |
