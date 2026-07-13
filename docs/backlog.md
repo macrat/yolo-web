@@ -2,15 +2,19 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-563 | フェーズC-b: 診断結果の「共有できる記号」を実在させる | P2 | 280 | character-personality結果を持ち帰れる/共有できる札画像に。詳細 cycle-280.md・rebuild-plan §3 C-b |
+| B-551 | 共有/保存(札保存)計測の是正・実装(C-bの観測前提) | P3 | 280 | save未実装/share結合不能/接頭辞非統一/InviteFriend未計測を是正。C-bと密結合。詳細 cycle-280.md |
 
 ## Queued (すぐに着手できる)
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-562 | フェーズC-a: 新クラスタの立ち上げ | P1 | - | フェーズR(B-561)完了(cycle-279)で解禁。候補の正典=research/2026-07-11-market-research-cycle278.md T4節。着手時に個別裏取り+実験台帳へ事前登録。同時2クラスタ以下。詳細 rebuild-plan.md §3 |
+| B-564 | フェーズC-c: 辞典の処遇判断(体験化orプルーニング) | P2 | - | フェーズR完了で解禁。検定エンジン検討(B-562)と同時に判断。B-521で辞書CTR 0.08%=参照型の敗北兆候TW-Aと判明済(ADR001)。詳細 rebuild-plan.md §3 |
+| B-566 | ツールの処遇判断(最高価値に磨いてから改善orプルーニング) | P2 | - | フェーズR完了で解禁の専用取組。SC表示数による一律削除は撤回済(cycle-279・rule4)。詳細 cycle-279.md・rebuild-plan §2 R-1 |
 | B-494 | Dynamic Workflows 運用知見の knowledge 恒久化 | P2 | 279 | **フェーズR(workflow一斉切替)の前提整備として昇格**。6点の知見をknowledge化。詳細 cycle-225.md |
 | B-540 | アンチパターン集の規約準拠クリーンアップ | P2 | - | docs/anti-patterns/全体の規約違反を一般化+発生番号のみへ是正。詳細 cycle-257.md |
 | B-505 | Dependabot 脆弱性アラートの調査と対応 | P2 | - | cycle-277 push時に19件(high3)。増分の調査・対応要。詳細 cycle-246.md |
-| B-551 | level_end/share の content_id 接頭辞不一致是正 | P3 | 279 | フェーズRの計測再設計(札保存/共有イベント新設)に含めて解消。詳細 cycle-273.md |
 | B-466 | tmp/ 配下 .ts の typecheck/build 破壊の根本解消 | P3 | - | tsconfig.json exclude "tmp" 追加。詳細 cycle-216.md |
 | B-390 | AP 集全項目のガイド混入監査 | P3 | - | 残り implementation.md と writing.md。詳細 cycle-248.md |
 | B-398 | grep ベーステストの必要性再評価 | P3 | - | 訪問者価値の観点で再評価。詳細 cycle-189.md |
@@ -37,12 +41,7 @@
 
 | ID | Title | Priority | Notes |
 | --- | --- | --- | --- |
-| B-521 | cycle-251 漢字辞書CTR改善の効果検証 | P2 | 着手: 2026-07-16目安。**フェーズR切替前に読む**(切替後は交絡・ADR001)。詳細 cycle-251.md |
-| B-562 | フェーズC-a: 新クラスタの立ち上げ | P1 | 着手: フェーズR(B-561)完了後。候補の正典=research/2026-07-11-market-research-cycle278.md T4節。着手時に個別裏取り+実験台帳へ事前登録。同時2クラスタ以下。詳細 rebuild-plan.md §3 |
-| B-563 | フェーズC-b: 診断結果面の「共有できる記号」磨き込み | P2 | 着手: フェーズR完了後。札/印の実装はRで入る・記号の中身とA/Bはここ。詳細 rebuild-plan.md §3 |
-| B-564 | フェーズC-c: 辞典の処遇判断(体験化orプルーニング) | P2 | 着手: 検定エンジン検討(B-562)と同時。詳細 rebuild-plan.md §3 |
-| B-565 | 全面切替の観測(ADR001) | P2 | 着手: 切替+2週(読み始め)・結論は+3ヶ月窓。正典 ADR001(docs/ADR/open/)。双方向ガード |
-| B-566 | ツールの処遇判断(最高価値に磨いてから改善orプルーニング) | P2 | 着手: フェーズR完了後の専用取組。cycle-279でSC表示数による一律削除を撤回(rule4)。詳細 cycle-279.md・rebuild-plan §2 R-1 |
+| B-565 | 全面切替の観測(ADR001) | P2 | 着手: 切替+2週(読み始め=2026-07-27)・結論は+3ヶ月窓。正典 ADR001(docs/ADR/open/)。双方向ガード |
 | B-056 | i18n(多言語対応) | P4 | 着手: 将来オプション(site-concept 宿題処理=現段階不採用)。cycle-167でOwnerが無期限延期を解除 |
 | B-135 | iOS Safari スクロールロックのフォールバック | P4 | 着手: 実害確認時 |
 | B-219 | AI 画像生成 MCP サーバーの実装 | P2 | 着手: 必要性確認時。詳細 imagen4-proposal.md(archive) |
@@ -89,6 +88,7 @@
 
 | ID | Title | Completed Cycle | Notes |
 | --- | --- | --- | --- |
+| B-521 | cycle-251 漢字辞書CTR改善の効果検証 | 279 | cycle-279 kickoffで実施。cycle-251の部首・画数前置に帰属できるCTR改善は検出されず(「部首」表示7倍化もクリック0)。辞書全体CTR 0.08%=参照型の敗北兆候TW-A。ADR001記録・辞典処遇(B-564)の材料 |
 | B-545 | サイトの根幹を統一する(本丸) | 279 | 完了=フェーズR(B-561)の出荷。cycle-279 で店構えを全ページ一斉出荷。詳細 cycle-279.md |
 | B-561 | フェーズR: 全ページ一斉デザイン切替(workflow) | 279 | 全81ページ・全36ツールを「店構え」へ一律移行・レガシーRoute Group撤去・コンテンツ削除なし。レビュー4巡・出荷2026-07-13。詳細 cycle-279.md |
 | B-432 | trustLevel フィールド・関連型・テストの完全削除 | 279 | フェーズRと同時に型・データ・テスト・バッジを一括完全削除(AP-I02)。詳細 cycle-279.md |
