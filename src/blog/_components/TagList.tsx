@@ -11,13 +11,23 @@ interface TagListProps {
    * // TODO(cycle-184/B-389): X1 採用時に削除（タグ UI 完全廃止）
    */
   linkableTags?: ReadonlySet<string>;
+  /**
+   * 呼び出し側が根 `<ul>` に付与する追加クラス。任意。
+   * 例: BlogList が stretched-link の擬似要素より前面へタグを出すため
+   * z-index を持つクラスを渡す（cycle-281）。
+   */
+  className?: string;
 }
 
 /**
  * Renders a list of clickable tag links.
  * Each tag links to /blog/tag/[tag] for cross-category discovery.
  */
-export default function TagList({ tags, linkableTags }: TagListProps) {
+export default function TagList({
+  tags,
+  linkableTags,
+  className,
+}: TagListProps) {
   // TODO(cycle-184/B-389): X1 採用時に削除（タグ UI 完全廃止）
   // linkableTags が指定されている場合は含まれるタグのみ表示する（含まれないタグは DOM に出さない）
   const visibleTags = linkableTags
@@ -27,7 +37,10 @@ export default function TagList({ tags, linkableTags }: TagListProps) {
   if (visibleTags.length === 0) return null;
 
   return (
-    <ul className={styles.tags} aria-label="タグ">
+    <ul
+      className={className ? `${styles.tags} ${className}` : styles.tags}
+      aria-label="タグ"
+    >
       {visibleTags.map((tag) => (
         <li key={tag} className={styles.tag}>
           <Link href={`/blog/tag/${tag}`} className={styles.tagLink}>

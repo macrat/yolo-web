@@ -29,8 +29,13 @@
   border-top: 1px solid var(--rule);
 }
 
-/* 各行: 主内容（品名・ひとこと・値札）と右端メタを横に置く。左揃え基調。 */
+/*
+ * 各行: 主内容（品名・ひとこと・値札）と右端メタを横に置く。左揃え基調。
+ * position: relative は品名リンクの stretched-link 擬似要素（.name::after）の位置基準
+ * （行全体をクリック標的にするため・§4/§10・cycle-281）。
+ */
 .row {
+  position: relative;
   display: flex;
   align-items: baseline;
   gap: var(--space-16);
@@ -62,6 +67,22 @@
   text-decoration: none;
 }
 
+/*
+ * stretched-link: 品名リンクの擬似要素で、クリック/タップ標的だけを視覚単位（行）
+ * 全体に広げる（人は罫で囲まれた単位をクリック可能と認識するため・§4/§10・cycle-281）。
+ * DOM は不変なのでアクセシブル名は品名のみに保たれる（SR 良好・既存テスト保全）。
+ * 行内に対話要素は無い（note/値札/メタは非対話）ため ::after が行全体を覆って良い。
+ */
+.name::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+/*
+ * hover: 既存の要素自身の hover をそのまま使う。::after が行を覆うため、
+ * 行のどこをホバーしても発火する（.row:hover は足さない・§3 の流儀・cycle-281）。
+ */
 .name:hover {
   color: var(--accent);
   text-decoration: underline;

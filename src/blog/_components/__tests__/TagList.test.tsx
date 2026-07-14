@@ -58,6 +58,24 @@ describe("TagList", () => {
     render(<TagList tags={["Next.js"]} />);
     expect(screen.getByRole("list", { name: "タグ" })).toBeInTheDocument();
   });
+
+  test("className を渡すと根 ul に付与される（既存クラスと併存）", () => {
+    // BlogList が stretched-link より前面へタグを出すため z-index クラスを渡す用途（cycle-281）。
+    render(<TagList tags={["Next.js"]} className="custom-class" />);
+    const ul = screen.getByRole("list", { name: "タグ" });
+    expect(ul).toHaveClass("custom-class");
+    // 既存の styles.tags クラスも保持されていること（"tags undefined" のような破損もない）
+    expect(ul.className).not.toContain("undefined");
+    expect(ul.className.trim().split(/\s+/).length).toBeGreaterThanOrEqual(2);
+  });
+
+  test("className 未指定時は根 ul に追加クラスが付かない（後方互換）", () => {
+    render(<TagList tags={["Next.js"]} />);
+    const ul = screen.getByRole("list", { name: "タグ" });
+    // 単一クラス（styles.tags）のみ・"undefined" 文字列の混入もないこと
+    expect(ul.className).not.toContain("undefined");
+    expect(ul.className.trim().split(/\s+/).length).toBe(1);
+  });
 });
 
 describe("TagList.module.css — 新デザイントークン確認（DESIGN.md フェーズ R）", () => {

@@ -27,6 +27,22 @@ describe("Shinagaki", () => {
     expect(link2).toHaveAttribute("href", "/play/fortune");
   });
 
+  test("主リンクのアクセシブル名は品名のみ（note/値札/メタが連結されない・stretched-link 回帰テスト）", () => {
+    // stretched-link（.name::after で行全体を標的化）方式では DOM が不変のため、
+    // リンクのアクセシブル名は品名だけに保たれる。行全体を <a> で包む方式なら
+    // アクセシブル名が「品名＋ひとこと＋値札＋メタ」の連結になり、この取得は失敗する。
+    render(<Shinagaki items={items} />);
+    // note・tags・meta を持つ項目でも、品名だけで一意にリンクが取れる
+    const link = screen.getByRole("link", { name: "今日の運勢" });
+    expect(link).toHaveAttribute("href", "/play/fortune");
+    // アクセシブル名に note/値札/メタの文字列が混入していない
+    const accessibleName = link.textContent ?? "";
+    expect(accessibleName).toBe("今日の運勢");
+    expect(accessibleName).not.toContain("占います");
+    expect(accessibleName).not.toContain("診断");
+    expect(accessibleName).not.toContain("2026-07-12");
+  });
+
   test("ひとこと（説明）が表示される", () => {
     render(<Shinagaki items={items} />);
     expect(

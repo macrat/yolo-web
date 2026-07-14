@@ -2,7 +2,7 @@
 id: 281
 description: フェーズR移行で生じたUX回帰の是正。回遊の最上流（トップ/play/tools/dictionary/blog の一覧）でカードのクリック領域がタイトル文字列のみに劣化していたのを、下流に既存する良好型（行/カード全体クリック＋44px）へ統一する。根本原因＝DESIGN.mdがクリック領域＝視覚単位の全体を規定していなかった点を、デザインシステムに規定を追加して塞ぐ。
 started_at: 2026-07-14T10:19:11+0900
-completed_at: null
+completed_at: 2026-07-14T12:28:22+0900
 ---
 
 # サイクル-281
@@ -13,23 +13,24 @@ completed_at: null
 
 ## 実施する作業
 
-- [ ] **設計フェーズ（Plan エージェント＋レビュー）**
-  - [ ] 是正対象の確定（Shinagaki／BlogList／RelatedArticles＝Shinagaki 内包／色パレットタイルの採否）
-  - [ ] 全体クリック化の方式決定: 行内に対話要素が無い Shinagaki は行全体を単一 `<Link>` で包む。BlogList は `TagList` がタグページへのリンクを含みうる（`<a>` 入れ子不可）ため stretched-link（primary link の `::after` で行全体を覆い、タグリンクは `position:relative`+`z-index` で上に出す）方式で主リンクとタグリンクを両立させる。
-  - [ ] 44px タップ標的・focus 可視・キーボード操作・SR 読み上げ（見出し/リンク名）の担保方針
-  - [ ] DESIGN.md へのクリック領域規定の文面確定（「一覧/カードは視覚単位の全体をクリック可能にする」＋44px＋主/副リンク両立の指針）
-- [ ] **実装1: Shinagaki の行全体クリック化**（RelatedArticles を内包）
-  - [ ] 行全体を単一 `<Link>` に。note・値札・右端メタを含む視覚単位全体を標的化。44px 確保・focus 可視。
-  - [ ] 変更前/変更後のスクショ（take-screenshot・light/dark×375/1280）
-- [ ] **実装2: BlogList の行全体クリック化**
-  - [ ] stretched-link 方式で行全体を主リンク化しつつ、タグリンク（linkableTags）を独立クリック可能に維持。description・値札・公開日・新着マークを標的に含める。
-  - [ ] 変更前/変更後のスクショ
-- [ ] **実装3: DESIGN.md へのクリック領域規定の追加**（根本原因の予防）
-- [ ] **テスト**: 全体クリック化の契約（href が行全体に効く／タグリンクが独立に効く）・回帰なしを担保するテスト更新・追加
-- [ ] **視覚・操作の実見検証**（Playwright: 全体クリック・タップ標的・focus・キーボード・コントラスト、light/dark×375/1280）
-- [ ] **レビュー**（コード＋視覚。1タスク1レビュアー、必要なら分担）。有効指摘を全是正
-- [ ] **ブログ判断**: 読者視点で価値があるか判断（UX 回帰の是正は開発者視点の事情——安易に書かない）
-- [ ] **サイクル完了**: `/cycle-completion`
+- [x] **設計フェーズ（`tmp/cycle-281-design.md`・レビュー2巡で承認）**
+  - [x] 是正対象の確定（Shinagaki＝RelatedArticles 内包／BlogList。色パレットタイル＝コピー主体で対象外候補。DictionaryEntryList＝標的は既に行全体で回帰でなく対象外＋名前浄化を B-573 へ）
+  - [x] 方式決定を**両部品とも stretched-link に統一**（当初の「Shinagaki は行全体を単一 Link で包む」案は、アクセシブル名の汚染・既存テスト破壊のため不採用。主リンクは品名のまま `::after{inset:0}` でクリック標的だけを行全体へ拡張）。BlogList のタグは TagList への `className` 渡し＋z-index で独立クリック維持
+  - [x] 44px タップ標的・focus 可視（主リンク・WCAG 準拠）・キーボード操作・SR 読み上げ（アクセシブル名＝主リンク名のみ）の担保方針
+  - [x] DESIGN.md §4 は**原則（クリック標的＝視覚単位全体）**で記述、実装手段は `docs/knowledge/` へ。規定と既存イディオムの乖離を生まない形に確定
+- [x] **実装1: Shinagaki の行全体クリック化**（RelatedArticles を内包）
+  - [x] stretched-link で標的を視覚単位全体へ拡張（CSS のみ・DOM 不変＝アクセシブル名は品名のみ保全）。44px・focus 可視。
+  - [x] 変更前/変更後のスクショ（`tmp/shots-before`・`tmp/shots-after`。`/`・light/dark×360/1280 他。stretched-link は視覚不変が正しい姿＝before/after 同一で回帰なしを PM 実見）
+- [x] **実装2: BlogList の行全体クリック化**
+  - [x] stretched-link 方式で行全体を主リンク化しつつ、タグリンク（linkableTags）を独立クリック可能に維持（TagList への `className` 渡し＋`.tagRow` z-index）。description・値札・公開日・新着マークを標的に含める。
+  - [x] タグ右側デッドゾーン（レビュー NICE-1）を `.tagRow{width:fit-content;max-width:100%}` で是正（デスクトップは内容幅に縮めて右側を主リンク標的に残す／狭幅は利用幅で頭打ちになり折り返し維持・overflow なしを実見）
+  - [x] 変更前/変更後のスクショ
+- [x] **実装3: DESIGN.md へのクリック領域規定の追加**（根本原因の予防）: §4 に原則「クリック標的＝視覚単位の全体」を追加。実装手段（stretched-link レシピ・z-index・デッドゾーン）は `docs/knowledge/frontend.md` を新設して記述
+- [x] **テスト**: アクセシブル名＝品名のみ／タグ独立リンク／TagList className 付与・後方互換を固定。全 5444 passed（新規5）・既存全通過
+- [x] **視覚・操作の実見検証**（Playwright: 説明文/日付上クリックで遷移・タグは独立にタグページへ・focus outline 可視・hover でタイトル朱化/タグ上は墨のまま・375 で 44px・§8 準拠・console error 0）
+- [x] **レビュー**（コード＋視覚）: 設計2巡＋実装1巡＋デッドゾーン是正デルタ再検証1巡、いずれも承認。有効指摘を全是正・残存なし
+- [x] **ブログ判断**: 執筆・公開可（`2026-07-14-clickable-list-row-stretched-link.md`・dev-notes）。開発者の内輪話でなく、Web 制作者が自分の一覧に移植できる独立した技法（stretched-link＋副リンク共存＋fit-content でのデッドゾーン是正）として読者価値ありと判断。contents-review 2巡＋一語是正の最終サインオフで公開可
+- [x] **サイクル完了**: `/cycle-completion`
 
 ## 作業計画
 
@@ -68,9 +69,33 @@ completed_at: null
 - **コード裏取り（PM 実見）**: `src/components/Shinagaki/index.tsx:75`（`item.name` のみ `<Link>`・note/tags/meta はリンク外）、`src/blog/_components/BlogList.tsx:60`（titleLink のみ・description/metaRow/tags はリンク外）、`src/blog/_components/RelatedArticles.tsx`（Shinagaki に委譲＝劣化継承）、良好型 `src/dictionary/_components/new/PlayRecommendBlock.tsx:88`（行全体を単一 `<Link>`）を確認。cycle-280.md §152-159 の主張が正確であることを裏取り済み。
 - 正典: `docs/cycles/cycle-280.md`（回帰の発見記録）・`DESIGN.md` §4「品書き」/§10（タップ標的）・`docs/constitution.md` Rule 4。
 
+## 実装結果
+
+- **方式**: 当初案（Shinagaki を行全体で単一 `<Link>` に包む）は、アクセシブル名の汚染（品名＋note＋値札＋metaの連結を SR が読み上げる）・既存テスト破壊・BlogList では見出しアウトライン破壊/入れ子アンカー不正を招くため不採用。**両部品とも stretched-link に統一**——主リンク（品名）は `<a>` のまま残し、`.row{position:relative}` ＋ 主リンクの `::after{content:"";position:absolute;inset:0}` で**クリック/タップ標的だけ**を視覚単位（行）全体へ拡張。DOM 不変ゆえアクセシブル名は主リンク名のみに保たれる。
+- **Shinagaki**（`Shinagaki.module.css` のみ・`index.tsx` 不変。RelatedArticles を委譲で内包）: `.row` に position:relative、`.name::after` を追加。行内に対話要素が無いため hover は既存 `.name:hover`（`::after` 経由で行全体で発火）をそのまま使用。モバイル 44px 残置。
+- **BlogList**（`BlogList.tsx`／`BlogList.module.css`／`TagList.tsx`）: `.titleLink::after` で標的を行全体へ。タグリンクは `TagList` に汎用 `className?` プロップを新設して根 `<ul>` に `.tagRow`（`position:relative; z-index:1`）をマージし、`::after` の前面に維持して独立クリックを両立（`<div>` ラッパにすると空タグ行で余分な gap が出るため className 渡し）。hover はタグ上では発火しない（タグが `::after` の前面のため＝タイトル朱化しない）。
+- **タグ右側デッドゾーンの是正**: `.tagRow{width:fit-content; max-width:100%}` を追加。タグ帯を内容幅に絞り、右側の空きを主リンクの `::after`（記事遷移）に戻す。`fit-content=min(max-content,available)` により狭幅では利用幅で頭打ち＝折り返し維持・overflow なし。デスクトップでデッドゾーン解消、モバイル 375 でタグ12個強制でも3行折り返し・overflow ゼロを実機検証（設計時の「fit-content が折り返しを壊す」懸念は実測で否定）。
+- **根本原因の予防**: `DESIGN.md` §4 に原則「クリック標的＝視覚単位の全体」を追記（実装手段は書かない）。実装手段（stretched-link レシピ・z-index・デッドゾーン是正）は `docs/knowledge/frontend.md` を新設して記述。移行が最上流面で劣化型を選んだのは §4 がこの点に沈黙していたためで、SSoT に規定を足して再発を塞いだ。
+- **テスト**: アクセシブル名＝品名のみ／タグ独立リンク／TagList `className` 付与・後方互換を固定するテストを追加。品質ゲート lint / format:check / test（**5444 passed**・新規5・既存全通過）/ build すべて緑。
+- **視覚不変の確認**: stretched-link は挙動のみで見た目を変えないため、before/after（`tmp/shots-before`・`tmp/shots-after`・`/`・`/blog`・light/dark×6幅）が同一＝レイアウト回帰なしを PM 実見。
+- **副産物: 新タグページの品質補完**: 本サイクルのブログが「アクセシビリティ」タグを付けたことで同タグが3記事以上に達し `/blog/tag/アクセシビリティ` が実ページ化。tag-page テストが要求する `TAG_DESCRIPTIONS`（`src/blog/_lib/blog.ts`）のエントリ未定義を検出→説明文（121字・既存文体準拠）を追加。閾値超えでインデックス対象タグが増えるのは望ましい方向で、説明文を補って品質を担保した。
+
+## レビュー結果
+
+- **設計レビュー（2巡）**: 1巡目 MUST2件——(1) 辞典の主要一覧 `DictionaryEntryList`（行全体を単一 `<a>` で包む型＝イディオム2）の未認識と、規定を書くと既存が黙って違反になる §11 リスク→§4 を「特定イディオム」でなく**原則（標的＝視覚単位全体）**で記述し、イディオム2・3を準拠・イディオム1のみ違反とする形に是正＋イディオム2のアクセシブル名浄化を B-574 として起票。(2) BlogList のタグを常時 `<div>` で包むと空タグ行で gap 不整合→className 渡しに是正。NICE（hover の要素自身化・§4 は原則のみ・description 読む面確認）も反映。2巡目で**承認**。
+- **実装レビュー（コード＋Playwright 操作・1巡）**: コード（stretched-link・className マージ・z-index・§8/§10 準拠・テスト契約）適合。稼働 dev server で実操作検証——説明文/日付上クリックで記事遷移・タグは独立に `/blog/tag/...` へ・focus outline 朱2px 実描画・hover でタイトル朱化/タグ上は墨・375 で 44px・console error 0。**承認**（NICE-1 デッドゾーンの所見付き）。
+- **デッドゾーン是正のデルタ再レビュー（Playwright・1巡）**: `width:fit-content` 追加を実機検証——旧デッドゾーン座標が titleLink（::after）最前面になり記事遷移・タグ独立クリック維持・モバイルはタグ12個強制でも overflow ゼロで3行折り返し。**承認**。
+- **ブログのレビュー（contents-review・2巡＋最終サインオフ）**: 1巡目 MUST2件——(1) `fit-content` の式を MDN 定義として `min(max-content,available)` と断定（MDN の正確な式は `min(max-content, max(min-content, stretch))`・PM も一次確認）→正確な式を併記し簡略化である旨を明示、(2) 内部リンク0本（SEO規約2-3本）→文脈整合する既存3記事（aria-status/grid-column/design-token移行）へ具体アンカーで配置。2巡目で新規混入 MUST1件（偏愛語「手触り」＝japanese-ai-slop 名指し語）→PM が「同じ種類の落とし穴」へ一語是正し、その差分を**同じ contents-review レビュアー（独立）に差し戻して確認**→レビュアーが「公開可」とサインオフ（PM 自己承認ではない）。
+- **ワークフローAP点検（完了処理・reviewer）＋是正の独立再レビュー**: workflow.md 各項目を照合し MUST2件——(M-1/AP-WF08) PM 即時編集の来訪者可視文言に独立レビュー欠落（TAG_DESCRIPTIONS「アクセシビリティ」121字。※ブログ一語是正は独立 contents-review がサインオフ済で欠落は TAG のみ）／(M-2/AP-WF12) 本丸 B-545 が backlog で「完了」なのに scope 正当化は「本丸 open」に依拠する SSoT 不整合。→ M-1 は TAG 説明文＋ブログ最終状態を**白紙の新規レビュアーが独立レビューし承認**（実害なし・実記事コーパスと整合）。M-2 は **B-575 起票で本丸を SSoT に復帰**（皮=B-545 出荷済／中身=open）。いずれも独立再レビューで**該当なし・完了処理続行可**を確認。プロダクト実害なし。
+- **NICE（任意・未対応で記録）**: TAG 説明文の facet「フォーカス管理」は実コーパスで最も薄く、最厚テーマ「意味に沿ったマークアップ（セマンティックHTML）」が未反映——将来の磨き込み候補（現状は承認済み・許容範囲。ここで再編集すると AP-WF08 を再燃させるため据え置き）。B-573 a11y 掃討時に併せて見直す。
+- 残存する有効な指摘なし。
+
 ## キャリーオーバー
 
-（サイクル完了時に記載）
+- **B-574（新規起票）**: イディオム2（`DictionaryEntryList`・`PlayRecommendBlock`＝行全体を単一 `<a>` で包む型）のアクセシブル名浄化（stretched-link 化）。標的サイズは既に行全体で B-572 の回帰ではないため本サイクル対象外としたが、SR が「品名＋よみ＋説明＋値札」の連結を読み上げる冗長さを主リンク名のみへ揃える改善余地。B-573（a11y 全面掃討）の下位。backlog Deferred（回帰でないため低優先）。
+- **色パレットタイル（TraditionalColorPaletteTile）**: 設計時にコピー主体のツール結果グリッド（罫区切りナビ一覧ではない）と最終確認し、本サイクル対象外で確定（記録のみ・backlog 起票せず）。
+- **B-570・B-571（OGP 全面移行・移行漏れ横断点検）／B-573 残り**: 本サイクル未着手。Queued 据え置き。
+- **本丸トラッキングの是正（完了処理の AP 点検 M-2 で発覚・SSoT 不整合）**: 本サイクルはスコープ正当化で「本丸 B-545（結果体験そのものの価値）は開いたまま」に依拠したが、backlog では B-545 が「完了(279)」でしか存在せず、価値の中身を追える open タスクが無かった（cycle-280 §144 が自認していた開示済みの未達約束が SSoT に載っていない状態）。cycle-281 がこの約束に依拠した以上 reconcile 責任は本サイクルにあると判断し、**B-575「結果体験そのものの価値を最高にする(本丸の中身)」を Queued P1 に起票**（皮=B-545 出荷済／価値の中身=未達=open と注記・着手時は cycle-280 事故記録の構造的教訓を踏む）。これで本丸が SSoT から追跡可能になり、ソフトな本丸回避を構造的に防ぐ。
 
 ## 補足事項
 
@@ -79,10 +104,10 @@ completed_at: null
 
 ## サイクル終了時のチェックリスト
 
-- [ ] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
-- [ ] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
-- [ ] すべての変更がレビューされ、残存する指摘事項が無くなっている。
-- [ ] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
-- [ ] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
-- [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
-- [ ] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
+- [x] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
+- [x] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
+- [x] すべての変更がレビューされ、残存する指摘事項が無くなっている。
+- [x] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
+- [x] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
+- [x] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
+- [x] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。

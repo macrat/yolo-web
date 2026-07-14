@@ -2,12 +2,12 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-572 | カードのクリック領域劣化の是正(タイトルのみ→行全体) | P1 | 281 | **緊急・UX劣化**。Shinagaki(RelatedArticles内包)・BlogListを下流の良好型(全体クリック+44px)へ統一。DESIGN.mdクリック領域規定も追加。詳細cycle-281.md |
 
 ## Queued (すぐに着手できる)
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-575 | 結果体験そのものの価値を最高にする(本丸の中身) | P1 | - | 本丸。皮=フェーズR出荷済(B-545/279)だが価値の中身=未達open。cycle-268からの唯一の問い。着手時はcycle-280事故記録の構造的教訓を必ず踏む。詳細cycle-273/280.md |
 | B-570 | OGP画像をサイト全面で新デザイン(店構え)へ移行 | P1 | - | **緊急・移行漏れ**。共通OGP約50面が旧デザイン(絵文字+任意色+ゴシック)のまま・char-personality結果のみ札=不整合。design-gateのOGP除外も解除。詳細cycle-280.md |
 | B-571 | フェーズR移行漏れの横断点検 | P1 | - | **緊急**。OGP同様の未移行/ゲート除外面が他に無いか横断点検(twitter-image/RSS/エラー面/metadata等)。詳細cycle-280.md |
 | B-573 | UI/UX/アクセシビリティのベストプラクティス調査と全面適用 | P1 | - | **緊急**。移行が静的ゲートのみでUX未検証。cycle-281でクリック領域規定のスライスは処理済——残りは標的/アフォーダンス/キーボード/SR/focusの全面掃討+DESIGN/gateへのUX規定追加。詳細cycle-280.md |
@@ -45,6 +45,7 @@
 | ID | Title | Priority | Notes |
 | --- | --- | --- | --- |
 | B-568 | 面横断 content_id 接頭辞規約の全面統一 | P4 | 着手: ADR002観測窓終了後(既存item_id集計との断絶を伴う移行のため)。cycle-280でquiz面はcontentIdForQuizに統一済・ゲーム(素slug)/運勢(fortune-daily)は当面surface未指定・level不在で主指標非汚染。詳細 cycle-280.md |
+| B-574 | イディオム2一覧のアクセシブル名浄化(stretched-link化) | P4 | 着手: B-573のa11y全面掃討の一部。DictionaryEntryList/PlayRecommendBlockは行全体を単一<a>で包む型=標的は行全体(回帰でない)だがSRが品名+よみ+説明+値札の連結を読み上げる冗長さ。主リンク名のみへ。詳細 cycle-281.md |
 | B-565 | 全面切替の観測(ADR001) | P2 | 着手: 切替+2週(読み始め=2026-07-27)・結論は+3ヶ月窓。正典 ADR001(docs/ADR/open/)。双方向ガード |
 | B-056 | i18n(多言語対応) | P4 | 着手: 将来オプション(site-concept 宿題処理=現段階不採用)。cycle-167でOwnerが無期限延期を解除 |
 | B-135 | iOS Safari スクロールロックのフォールバック | P4 | 着手: 実害確認時 |
@@ -92,6 +93,7 @@
 
 | ID | Title | Completed Cycle | Notes |
 | --- | --- | --- | --- |
+| B-572 | カードのクリック領域劣化の是正(タイトルのみ→行全体) | 281 | Shinagaki・BlogListをstretched-link化。タグはz-index+fit-contentで独立クリック維持。DESIGN.md §4規定+knowledge新設。詳細 cycle-281.md |
 | B-563 | フェーズC-b: 診断結果の「共有できる記号」を実在させる | 280 | character-personality結果を持ち帰れる/共有できる札画像に(renderFudaImage・固定URL・FudaActions)。ADR002で観測。詳細 cycle-280.md |
 | B-551 | 共有/保存(札保存)計測の是正・実装 | 280 | trackSave新設・shareにcontent_id dual-write・contentIdForQuiz統一・ShareButtonsキャンセル誤計上是正・InviteFriend計測。詳細 cycle-280.md |
 | B-521 | cycle-251 漢字辞書CTR改善の効果検証 | 279 | cycle-279 kickoffで実施。cycle-251の部首・画数前置に帰属できるCTR改善は検出されず(「部首」表示7倍化もクリック0)。辞書全体CTR 0.08%=参照型の敗北兆候TW-A。ADR001記録・辞典処遇(B-564)の材料 |

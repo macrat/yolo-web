@@ -75,7 +75,18 @@ export default function BlogList({
             </div>
 
             {/* TODO(cycle-184/B-389): X1 採用時に削除（タグ UI 完全廃止）*/}
-            <TagList tags={post.tags} linkableTags={linkableTags} />
+            {/*
+             * タグは行全体を覆う stretched-link（.titleLink::after）より前面に置き
+             * （tagRow: z-index）、行遷移に飲まれず独立クリックできるようにする。
+             * ラッパ div でなく className 渡しなのは、TagList が可視タグ 0 件で null を
+             * 返すため——常時 div で包むと 0 件行に空要素が残り .row の gap を余計に
+             * 消費して行間が不揃いになる（設計 §3-2 MUST-2・cycle-281）。
+             */}
+            <TagList
+              tags={post.tags}
+              linkableTags={linkableTags}
+              className={styles.tagRow}
+            />
           </li>
         );
       })}

@@ -147,6 +147,43 @@ describe("BlogList 基本表示", () => {
     expect(tagLink.getAttribute("href")).toBe("/blog/tag/Claude Code");
   });
 
+  test("タイトルリンクのアクセシブル名は記事タイトルのみ（stretched-link 下でも行連結にならない）", () => {
+    // stretched-link（::after）は CSS のみで標的を広げる方式のため、
+    // アクセシブル名は品名だけに保たれ、description・値札・タグ名を巻き込まない。
+    render(
+      <BlogList
+        posts={[
+          makePost({
+            title: "テスト記事タイトル",
+            description: "巻き込まれてはいけない説明文",
+            tags: ["設計パターン"],
+          }),
+        ]}
+        newSlugs={new Set()}
+        categoryLabels={categoryLabels}
+      />,
+    );
+    const titleLink = screen.getByRole("link", { name: "テスト記事タイトル" });
+    expect(titleLink.getAttribute("href")).toBe("/blog/test-slug");
+  });
+
+  test("タグリンクは stretched-link 下でも独立したリンクとして取得できる", () => {
+    // stretched-link がタイトルの標的を行全体に広げても、
+    // タグは z-index で前面に維持され別リンクとして生きている契約。
+    render(
+      <BlogList
+        posts={[makePost({ tags: ["設計パターン", "Web開発"] })]}
+        newSlugs={new Set()}
+        categoryLabels={categoryLabels}
+      />,
+    );
+    const tagLink = screen.getByRole("link", { name: "設計パターン" });
+    expect(tagLink.getAttribute("href")).toBe("/blog/tag/設計パターン");
+    // タイトルリンクとは別要素であること
+    const titleLink = screen.getByRole("link", { name: "テスト記事タイトル" });
+    expect(tagLink).not.toBe(titleLink);
+  });
+
   test("複数記事が一覧としてレンダリングされる", () => {
     render(
       <BlogList
