@@ -15,19 +15,24 @@ completed_at: null
 
 ### B-571 横断点検（先行監査・是正範囲の確定）
 
-- [ ] フェーズR の移行漏れ／design-gate 除外面を横断点検する（OGP 以外の観点）。対象観点: `twitter-image`（現状 opengraph-image を再エクスポート）／RSS・feed／`error.tsx`・`not-found.tsx`・`global-error.tsx` 等のエラー面／`manifest`・favicon・`icon`／`robots`・`sitemap`／metadata の `themeColor`・`colorScheme` 等の色指定／その他 `src/` 内の旧トークン・旧デザイン残存。
-- [ ] 点検結果を本サイクルドキュメントに「点検結果」として記録。OGP 以外に是正が必要な漏れが見つかった場合は、規模が小さければ本サイクルで是正、大きければ backlog へ起票（範囲の明示付き）。
+- [x] フェーズR の移行漏れ／design-gate 除外面を横断点検する（OGP 以外の観点）。→ 下「点検結果」。
+- [x] 点検結果を本サイクルドキュメントに記録。OGP 以外の漏れ（410ページ・design-gate スコープ）は本サイクルで是正、favicon 等は backlog（B-576〜578）へ起票。
 
 ### B-570 OGP 店構え移行
 
-- [ ] **設計**: 札（`src/lib/fuda-image.tsx`）の視覚言語・export 済み器定数（`PAPER`/`INK`/`INK_2`/`RULE`/`RULE_STRONG`/`ACCENT`）を再利用し、非結果面（トップ・ブログ・ツール・索引）向けの店構え OGP テンプレートを設計する。「並べて別物に見えない」を満たすこと。`icon`（絵文字＝§8-6 違反）は廃止。`accentColor`（任意色ベタ）の扱いを決める（店構えは紙地＋和色/朱が基調のため任意色ベタは廃止方針）。印の一字・店号・品名/副題の組み方を決める。
-- [ ] **設計レビュー**: frontend-design 準拠でレビュー（DESIGN.md §2/§3/§4/§8/§10）。承認まで反映。
-- [ ] **生成器の書き換え**: `createOgpImageResponse`（`src/lib/ogp-image.tsx`）を新デザインへ。明朝フォント取得は札と同じ経路（`fetchGoogleFontData` + Noto Serif JP・ゴシックへフォールバック）を再利用。API 変更（`icon`/`accentColor` の廃止 or 無視）を型に反映。
-- [ ] **呼び出し側の是正**: `createOgpImageResponse` を呼ぶ 54 実面から絵文字・任意色の引数を除去（スライスで分割し、各スライスをサブエージェントへ委譲）。
-- [ ] **ゲートの是正**: `src/test/design-gate.test.ts` の OGP 除外（`IGNORE` の `opengraph-image.tsx`/`twitter-image.tsx`/`src/lib/ogp-image.tsx`）を解除し、OGP 生成物が新デザイン規約（§8 禁止パターン＝絵文字・任意色ベタ・青紫アクセント等）に準拠していることを機械検査でも担保する。除外を残す場合は理由を明記。
-- [ ] **テストの更新**: `src/lib/__tests__/ogp-image.test.tsx` を新デザインの契約に更新。器定数の globals.css 乖離ガード（fuda-image と同様の `wairoHex.test.ts` 系）が OGP にも適用されるか確認。
-- [ ] **視覚検証**: 代表面の OGP 画像を実生成して目視（トップ／ブログ・長短タイトル／ツール／索引／診断結果）。札と並べて視覚言語が一致し、店構えとして成立していることを PM が実見。before/after を `tmp/` に保存。
-- [ ] **実装レビュー**: reviewer による コード・ゲート・テストのレビュー。承認まで反映。
+- [x] **設計**: 札の視覚言語・器定数を再利用した店構え看板テンプレートを設計（`accentColor`/`icon` 廃止・印「試」・単一の店構え）。→「作業計画（B-570 設計の確定・PM 判断）」。
+- [x] **設計レビュー**: 設計提案の HTML モック（`tmp/cycle-282/mock.html`・`preview-full.png`）を PM 実見して承認。
+- [x] **生成器の書き換え**: `createOgpImageResponse` を店構えへ。器定数を中立モジュール `src/lib/utsuwaHex.ts` へ抽出し循環依存を回避。明朝 getter を ogp-image に一本化。`OgpImageConfig` から `icon`/`accentColor` を削除。
+- [x] **呼び出し側の是正**: 54 実面から絵文字・任意色を除去（root/blog/privacy・tools 36・play 15 の3スライスを別エージェントへ委譲。play の派生 accentColor 変数5面も掃除）。
+- [x] **ゲートの是正**: OGP 3系除外を解除。加えて `middleware.ts`/`global-not-found.js` を走査対象へ追加しバイナリ資産を目視チェックリスト化（B-571 で判明した構造的死角を塞ぐ）。除外解除で `dictionary/humor` の独自旧デザイン OGP を発見し共通レンダラへ是正。
+- [x] **テストの更新**: `ogp-image.test.tsx` を新契約へ・`@ts-expect-error` で余剰プロパティ拒否を型契約として固定。`wairoHex.test.ts` の乖離ガード import 元を utsuwaHex へ。
+- [x] **視覚検証**: 稼働本番サーバーで代表8面の OGP を Satori 実描画し PM 実見（`tmp/cycle-282/shots/`）。店構えと札が「並べて別物に見えない」ことを確認（短長タイトル・副題有無・折り返し・診断結果・札）。
+- [x] **実装レビュー**: reviewer 2名で分担レビュー→ MUST 是正→再レビュー。下「レビュー結果」。
+
+### B-571 で判明した追加是正（本サイクルに取り込み）
+
+- [x] **410ページ（middleware）店構え化**: `build410Html()` の旧デザイン（青#2563eb・8px角丸・📄絵文字・冷色スレート）を店構えへ。器色は utsuwaHex から import（SSoT・乖離ガード下）。契約テスト追加。
+- [x] **design-gate スコープ拡張**: `.tsx`/`.module.css` のみだった走査を `middleware.ts`/`global-not-found.js` へ拡張し、バイナリ資産を目視チェックリスト化（B-576 TODO 明記）。
 
 ## 作業計画
 
@@ -88,10 +93,20 @@ completed_at: null
 - **印の一字＝「試」で確定**（ためす＝「やってみる」＝実験的サイトの動詞・明朝で読みが濁らない）。店号はのれん帯の `yolos.net`。
 - **循環依存の回避**: 器定数(PAPER 等)は現在 fuda-image が export し fuda-image→ogp-image の依存があるため、ogp-image が import すると循環。中立モジュール `src/lib/utsuwaHex.ts` へ抽出し fuda-image・ogp-image・`wairoHex.test`（乖離ガード）の3者で共有。明朝 getter は ogp-image に一本化し fuda-image の私有コピーを import へ。
 
+## レビュー結果
+
+- **設計レビュー**: OGP 看板テンプレートの提案（HTML モック `tmp/cycle-282/mock.html`・`preview-full.png`）を PM 実見して承認（紙地・墨・のれん帯・明朝・朱の印「試」・札との視覚言語共有）。
+- **視覚検証（PM 実見）**: 稼働本番サーバーで代表8面を Satori 実描画（`tmp/cycle-282/shots/`）。トップ・ブログ・短長ツール名・診断索引・診断結果（店構え）と、character-personality の札を並べ、「同じ店の顔」＝並べて別物に見えないことを確認。是正した `dictionary/humor` 面も店構えで成立。
+- **実装レビュー（reviewer 2名で分担）**: 基盤（設計・循環依存・フォント統合・乖離ガード）と、移行漏れ是正・ゲート・呼び出し側を独立レビュー。MUST 2件——(1) middleware の器色 hex が第3複製で乖離ガード外＋正当化コメントが本コミットで事実誤り化 → utsuwaHex import へ統合し死んだコメントを是正、(2)「看板 OGP＝器面（和色不可・ただし店の印は持つ共有面）」の規定が正典 DESIGN.md に不在（将来レンダラが和色を足す編集はゲートをすり抜ける）→ DESIGN.md §4 に看板規定を追加し §71「器に印を捺さない」との非矛盾を明文化（cycle-280 でクリック領域を §4 に明文化したのと同じ再発防止）。NICE（@ts-expect-error での型契約固定・play テスト mock 掃除・interface 化）も対応。
+- **再レビュー（独立）**: MUST 2件の是正を確認（残存 MUST 0）。正典 DESIGN.md の新規テキストの § 参照精度に瑕疵2点（「§71」＝行番号混入・絵文字を §8-1 と誤引用）→ 安定参照「§4 の印規定」・「§8-6」へ是正。さらに同一クラスの既存瑕疵（`ogp-image.tsx` の「§4-1」＝見出しサイズ階層の正典は §3）を発見→是正。変更5ファイルの全 § 参照を掃引し 2桁行番号混入0件・全て有効節（§1〜§11／§8-N）であることを確認。最終レビューで **承認可（公開可）**・残存指摘なし。
+- 品質ゲート: `lint`／`format:check`／`test`（322 files・**5451 passed**）／`build`（3878 静的ページ生成）すべて緑（最終ツリーで確定）。
+
 ## キャリーオーバー
 
-- **B-576（favicon/apple-touch-icon 店構え化）** を backlog 起票（高・専用タスク）。
-- **B-577（theme-color/manifest 付与）**・**B-578（クイズデータ青hex クレンジング）** を backlog 起票（低）。
+- **B-576（favicon/apple-touch-icon 店構え化）** を backlog 起票（P2・専用タスク。16-32px の図像 craft のため拙速化を避け分離）。
+- **B-577（theme-color/manifest 付与）**・**B-578（クイズデータ青hex クレンジング）** を backlog 起票（P4）。
+- **410ページのダークモード追従（NICE・reviewer 指摘）**: 現状 410 はライト固定で、404（テーマ追従）とダーク時に不一致（旧実装も static のため回帰ではない）。middleware は Edge でテーマ SSR 判定不可のため、対応するなら `prefers-color-scheme` の inline style だが、ダーク器色 hex を middleware に直書きすると本サイクルが潰した乖離を再導入するため見送り。B-577（theme 系）と併せて検討。→ B-577 のノートに追記。
+- **印（seal）ジオメトリの重複（NICE・reviewer 指摘）**: `ogp-image.tsx` と `fuda-image.tsx` が印の寸法（width 100/top,right 44/r 47/stroke 2/rotate -6/fontSize 52）を独立に直書き。外部 SSoT（globals.css トークン）由来のドリフトではなく単なる DRY 案件で、共有化は結合を増やすため本サイクルは見送り（記録のみ）。将来まとめて触る際に共有定数化を検討。
 
 ## 補足事項
 

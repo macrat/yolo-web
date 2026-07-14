@@ -6,19 +6,21 @@ import { PAPER, INK, INK_2, RULE, RULE_STRONG, ACCENT } from "@/lib/utsuwaHex";
  *
  * 旧版（全面ベタ塗り＋絵文字アイコン＋ゴシック太字・既定色 青#2563eb）を廃し、札レンダラ
  * {@link import("./fuda-image").renderFudaImage} と同じ視覚言語で組む——紙地・墨・一本罫・のれん帯・
- * 明朝（Noto Serif JP）・朱の印。看板は「札から和色の記号面を取り去った器面」として組むため、
- * 和色はいっさい使わない（DESIGN §2/§4「和色は結果の包みに限る・器へ漏らさない」）。
+ * 明朝（Noto Serif JP）・朱の印。看板は札と器を共有する**共有面（看板・DESIGN §4）**であり、
+ * 和色の記号面は持たない（地は常に紙・文字は墨）が、店の印は持つ（単独で共有される1枚として
+ * 出所が読めるため・§4 の印規定「器＝ページ UI には捺さない」とは別カテゴリ）。和色はいっさい使わない
+ * （DESIGN §2/§4「和色は結果の包みに限る・器へ漏らさない」）。
  *
  * 廃止した引数（DESIGN §8 違反のため型から**削除**）:
  * - `icon`（絵文字）→ §8-6 違反。看板の顔は明朝の品名。図像は店の印 1 つだけ。
  * - `accentColor`（任意色ベタ背景）→ §2 違反。地は常に紙・文字は常に墨。朱は印専用。
  */
-export type OgpImageConfig = {
+export interface OgpImageConfig {
   /** 品名/ページ名（看板の顔・明朝で大きく組む）。 */
   title: string;
   /** 副題/説明/カテゴリ（省略可・ゴシック INK_2）。 */
   subtitle?: string;
-};
+}
 
 const OGP_SIZE = { width: 1200, height: 630 };
 
@@ -191,7 +193,9 @@ export const ogpSize = OGP_SIZE;
 export const ogpContentType = "image/png";
 
 /**
- * 品名の書記素数から見出しサイズを決める（札の `typeNameFontSize` に倣う・DESIGN §4-1）。
+ * 品名の書記素数から見出しサイズを決める（札の `typeNameFontSize` に倣う）。
+ * 見出しの書体・階層の考え方は DESIGN §3 タイポグラフィだが、看板は大判 1200×630 のため
+ * §3 の 16–39px スケールではなく、札に合わせた看板専用の大きめ段階値を用いる。
  * サロゲートペア対応のため呼び出し側で `[...title].length` を渡す。
  */
 function titleFontSize(graphemeCount: number): number {

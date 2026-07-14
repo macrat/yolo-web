@@ -280,4 +280,20 @@ describe("createOgpImageResponse — 店構え（看板）契約", () => {
       createOgpImageResponse({ title: "T", subtitle: "S" }),
     ).resolves.toBeDefined();
   });
+
+  test("旧 API の余剰プロパティ（icon/accentColor）はコンパイル時に弾かれる（@ts-expect-error で固定）", async () => {
+    const { createOgpImageResponse } = await getModule();
+    // コンパイル時契約: OgpImageConfig の余剰プロパティ検査が効くことを @ts-expect-error で
+    // 恒久固定する。将来 icon/accentColor を型に復活させると @ts-expect-error が未使用となり
+    // tsc（noUnusedLocals 相当の未使用ディレクティブ検査）が fail する——旧 API の静かな復活を
+    // 型レベルで検知する。実行時にはモックが余剰プロパティを無視して解決するだけなので await する。
+    await expect(
+      // @ts-expect-error icon は型から削除済み（§8-6・図像は店の印のみ）
+      createOgpImageResponse({ title: "T", icon: "🧪" }),
+    ).resolves.toBeDefined();
+    await expect(
+      // @ts-expect-error accentColor は型から削除済み（§2・地は常に紙）
+      createOgpImageResponse({ title: "T", accentColor: "#e74c3c" }),
+    ).resolves.toBeDefined();
+  });
 });

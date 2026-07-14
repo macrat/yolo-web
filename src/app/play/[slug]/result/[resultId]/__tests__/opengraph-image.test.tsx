@@ -3,12 +3,11 @@ import { expect, test, describe, vi, beforeEach } from "vitest";
 // Track calls to ImageResponse for assertions
 let imageResponseCalls: Array<{ element: unknown; options: unknown }> = [];
 
-// Track calls to createOgpImageResponse
+// Track calls to createOgpImageResponse。新契約は title/subtitle のみ
+// （cycle-282 で icon/accentColor は OgpImageConfig から削除済み）。
 let createOgpImageResponseCalls: Array<{
   title: string;
   subtitle?: string;
-  icon?: string;
-  accentColor?: string;
 }> = [];
 
 // Mock next/og ImageResponse as a class since it's invoked with `new`
@@ -29,12 +28,7 @@ vi.mock("@/lib/ogp-image", () => ({
   ogpSize: { width: 1200, height: 630 },
   ogpContentType: "image/png",
   createOgpImageResponse: vi.fn(
-    (config: {
-      title: string;
-      subtitle?: string;
-      icon?: string;
-      accentColor?: string;
-    }) => {
+    (config: { title: string; subtitle?: string }) => {
       createOgpImageResponseCalls.push(config);
       imageResponseCalls.push({
         element: { props: config },
@@ -51,15 +45,15 @@ vi.mock("@/play/quiz/registry", () => ({
     [
       "test-quiz",
       {
+        // OGP 生成が読むのは meta.title と result.title/id のみ。旧 API の名残（meta.accentColor/
+        // icon・result.icon）は OgpImageConfig から削除済みで call-site も渡さないため mock からも除く。
         meta: {
           slug: "test-quiz",
           title: "テストクイズ",
-          accentColor: "#e74c3c",
-          icon: "🧪",
         },
         results: [
-          { id: "result-a", title: "タイプA", icon: "🌟" },
-          { id: "result-b", title: "タイプB", icon: "💫" },
+          { id: "result-a", title: "タイプA" },
+          { id: "result-b", title: "タイプB" },
         ],
       },
     ],
