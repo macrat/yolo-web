@@ -2,6 +2,7 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-572 | カードのクリック領域劣化の是正(タイトルのみ→行全体) | P1 | 281 | **緊急・UX劣化**。Shinagaki(RelatedArticles内包)・BlogListを下流の良好型(全体クリック+44px)へ統一。DESIGN.mdクリック領域規定も追加。詳細cycle-281.md |
 
 ## Queued (すぐに着手できる)
 
@@ -9,8 +10,7 @@
 | --- | --- | --- | --- | --- |
 | B-570 | OGP画像をサイト全面で新デザイン(店構え)へ移行 | P1 | - | **緊急・移行漏れ**。共通OGP約50面が旧デザイン(絵文字+任意色+ゴシック)のまま・char-personality結果のみ札=不整合。design-gateのOGP除外も解除。詳細cycle-280.md |
 | B-571 | フェーズR移行漏れの横断点検 | P1 | - | **緊急**。OGP同様の未移行/ゲート除外面が他に無いか横断点検(twitter-image/RSS/エラー面/metadata等)。詳細cycle-280.md |
-| B-572 | カードのクリック領域劣化の是正(タイトルのみ→行全体) | P1 | - | **緊急・UX劣化**。Shinagaki(トップ/play/tools/dictionary/about)・BlogList(/blog全)・RelatedArticlesが品名のみクリック可。下流の良好型(全体クリック)に統一+44px。詳細cycle-280.md |
-| B-573 | UI/UX/アクセシビリティのベストプラクティス調査と全面適用 | P1 | - | **緊急**。移行が静的ゲートのみでUX未検証(クリック劣化/OGP漏れが素通り)。標的/アフォーダンス/キーボード/SR/focus調査+DESIGN/gateにUX規定追加。詳細cycle-280.md |
+| B-573 | UI/UX/アクセシビリティのベストプラクティス調査と全面適用 | P1 | - | **緊急**。移行が静的ゲートのみでUX未検証。cycle-281でクリック領域規定のスライスは処理済——残りは標的/アフォーダンス/キーボード/SR/focusの全面掃討+DESIGN/gateへのUX規定追加。詳細cycle-280.md |
 | B-562 | フェーズC-a: 新クラスタの立ち上げ | P1 | - | フェーズR(B-561)完了(cycle-279)で解禁。候補の正典=research/2026-07-11-market-research-cycle278.md T4節。着手時に個別裏取り+実験台帳へ事前登録。同時2クラスタ以下。詳細 rebuild-plan.md §3 |
 | B-564 | フェーズC-c: 辞典の処遇判断(体験化orプルーニング) | P2 | - | フェーズR完了で解禁。検定エンジン検討(B-562)と同時に判断。B-521で辞書CTR 0.08%=参照型の敗北兆候TW-Aと判明済(ADR001)。詳細 rebuild-plan.md §3 |
 | B-566 | ツールの処遇判断(最高価値に磨いてから改善orプルーニング) | P2 | - | フェーズR完了で解禁の専用取組。SC表示数による一律削除は撤回済(cycle-279・rule4)。詳細 cycle-279.md・rebuild-plan §2 R-1 |
