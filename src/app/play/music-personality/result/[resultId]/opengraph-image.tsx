@@ -43,7 +43,5 @@ export default async function OpenGraphImage({ params }: Props) {
   return createOgpImageResponse({
     title: result?.title ?? "結果",
     subtitle: quiz.meta.title,
-    icon: result?.icon,
-    accentColor: quiz.meta.accentColor,
   });
 }

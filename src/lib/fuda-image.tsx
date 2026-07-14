@@ -1,10 +1,11 @@
 import { ImageResponse } from "next/og";
 import {
   getFontData,
-  fetchGoogleFontData,
+  getMinchoFontData,
   ogpSize,
   ogpContentType,
 } from "@/lib/ogp-image";
+import { PAPER, INK, INK_2, RULE, RULE_STRONG, ACCENT } from "@/lib/utsuwaHex";
 import { WAIRO_HEX } from "@/lib/wairoHex";
 import {
   pickResultWairoColor,
@@ -31,19 +32,10 @@ import {
 const FUDA_SIZE = ogpSize;
 
 /**
- * 器の色（DESIGN §2・light の oklch を hex 化した値。Satori は oklch 不可のため hex 直書き）。
- *
- * 和色（{@link WAIRO_HEX}）と同じく、これらの器定数も globals.css の light トークンから
- * 生成した hex であり、export して乖離ガードテスト（`__tests__/wairoHex.test.ts`）で
- * globals.css の対応トークン（PAPER↔--paper 等）と一致することを検証する。globals.css の
- * light トークンを変えたのに本表を放置するとサイレント乖離するのを防ぐ。
+ * 器の色は中立モジュール {@link import("@/lib/utsuwaHex")} を単一の真実とする（PAPER/INK/… は
+ * そこから import）。乖離ガードテスト（`__tests__/wairoHex.test.ts`）は utsuwaHex を検査対象に、
+ * globals.css の light トークン（PAPER↔--paper 等）との一致を担保する。
  */
-export const PAPER = "#f8f7f2"; // --paper       oklch(0.975 0.006 90)
-export const INK = "#201e1a"; // --ink         oklch(0.235 0.008 80)
-export const INK_2 = "#58554f"; // --ink-2       oklch(0.45 0.01 80)
-export const RULE = "#cdcac5"; // --rule        oklch(0.84 0.008 85)
-export const RULE_STRONG = "#302d28"; // --rule-strong oklch(0.30 0.01 80)
-export const ACCENT = "#af3622"; // --accent      oklch(0.51 0.16 32)（朱・印専用）
 
 /** 店号（札単体で出所が読めるように・DESIGN §4「札」）。 */
 const SHOP_NAME = "yolos.net";
@@ -51,22 +43,6 @@ const SHOP_NAME = "yolos.net";
 const SEAL_CHAR = "診";
 /** 印の回転（§4「±8° 以内」）。手捺しのわずかな気配。 */
 const SEAL_ROTATE_DEG = -6;
-
-/**
- * Noto Serif JP（明朝・結果の言葉の顔）。weight 600 の見出し用。
- * ゴシック（本文）は {@link getFontData} が Noto Sans JP を返す。
- */
-const NOTO_SERIF_JP_CSS_URL =
-  "https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@600&display=swap";
-
-/** 明朝フォントデータ（ビルド/リクエストごとに一度だけ取得しキャッシュ）。 */
-let minchoFontPromise: Promise<ArrayBuffer | null> | null = null;
-function getMinchoFontData(): Promise<ArrayBuffer | null> {
-  if (!minchoFontPromise) {
-    minchoFontPromise = fetchGoogleFontData(NOTO_SERIF_JP_CSS_URL);
-  }
-  return minchoFontPromise;
-}
 
 /**
  * タイプ名の書記素数から見出しサイズを決める（長いタイプ名でも 2〜3 行に収める）。

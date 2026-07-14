@@ -72,6 +72,46 @@ describe("build410Html", () => {
     expect(html).toContain("<html");
     expect(html).toContain("</html>");
   });
+
+  // 店構え（DESIGN.md §2/§3/§4/§8）への移行を固定する契約テスト。
+  // 旧デザイン（青アクセント・冷色スレート・装飾絵文字・8px角丸）への逆戻りを機械的に防ぐ。
+  describe("店構えデザイン契約", () => {
+    const html = build410Html();
+
+    test("旧アクセント青（#2563eb / #1d4ed8）を含まない（§8-1）", () => {
+      expect(html).not.toContain("#2563eb");
+      expect(html).not.toContain("#1d4ed8");
+    });
+
+    test("冷色スレート地（#f8fafc / #1e293b）を含まない（§10）", () => {
+      expect(html).not.toContain("#f8fafc");
+      expect(html).not.toContain("#1e293b");
+    });
+
+    test("装飾絵文字（📄）を含まない（§8-6）", () => {
+      expect(html).not.toContain("📄");
+    });
+
+    test("紙・墨・朱の器の色を使う（§2）", () => {
+      expect(html).toContain("#f8f7f2"); // --paper
+      expect(html).toContain("#201e1a"); // --ink
+      expect(html).toContain("#af3622"); // --accent（朱）
+    });
+
+    test("見出しは明朝スタック（Noto Serif JP）で組む（§3）", () => {
+      expect(html).toContain("Noto Serif JP");
+    });
+
+    test("トップへの導線は朱の文字で表す（青ベタボタンでない・§4）", () => {
+      expect(html).toContain("href='/'");
+      // リンク色は朱（--accent）であり、背景ベタ塗りボタンではない
+      expect(html).toContain(`color:#af3622`);
+    });
+
+    test("角丸は0基調（8px角丸 0.5rem を含まない・§8-5）", () => {
+      expect(html).not.toContain("border-radius:0.5rem");
+    });
+  });
 });
 
 describe("middleware（統合テスト）", () => {

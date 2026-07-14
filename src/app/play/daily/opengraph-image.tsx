@@ -12,7 +12,5 @@ export const contentType = ogpContentType;
 export default function OpenGraphImage() {
   return createOgpImageResponse({
     title: "今日のユーモア運勢",
-    icon: "🔮",
-    accentColor: "#7c3aed",
   });
 }

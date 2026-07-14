@@ -1,4 +1,4 @@
-import { describe, expect, test, vi } from "vitest";
+import { describe, expect, test } from "vitest";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import {
@@ -8,14 +8,9 @@ import {
   type WairoHex,
 } from "../wairoHex";
 import { oklchToHex, parseOklch } from "../oklchToHex";
-
-// fuda-image.tsx は next/og を import するので、器定数を取り込むために ImageResponse を
-// new 可能なクラスとしてモックする（描画は行わない・定数の突き合わせだけが目的）。
-vi.mock("next/og", () => ({
-  ImageResponse: class MockImageResponse {},
-}));
-
-import { PAPER, INK, INK_2, RULE, RULE_STRONG, ACCENT } from "../fuda-image";
+// 器定数の SSoT は中立モジュール utsuwaHex（fuda-image / ogp-image / 本テストの3者が import）。
+// next/og に依存しない純粋な hex 定数なので ImageResponse のモックは不要。
+import { PAPER, INK, INK_2, RULE, RULE_STRONG, ACCENT } from "../utsuwaHex";
 
 /** WCAG 2.1 相対輝度・コントラスト比を hex から計算する（AA 再計測用・sRGB）。 */
 function hexToRgb(hex: string): [number, number, number] {
@@ -93,7 +88,7 @@ describe("oklchToHex — 正典 oklch との乖離ガード", () => {
     },
   );
 
-  // 器（札の紙・墨・罫・朱）の直書き hex 定数（fuda-image.tsx）も、和色と同じく
+  // 器（紙・墨・罫・朱）の直書き hex 定数（utsuwaHex.ts）も、和色と同じく
   // globals.css の light トークンから生成した値。トークン名との対応（PAPER↔--paper 等）を
   // globals.css の oklch から再変換して突き合わせ、サイレント乖離を検知する。
   const CONTAINER_TOKENS: ReadonlyArray<[hex: string, token: string]> = [

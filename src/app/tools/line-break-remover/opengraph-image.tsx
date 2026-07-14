@@ -16,7 +16,5 @@ export default async function OpenGraphImage() {
   return createOgpImageResponse({
     title,
     subtitle,
-    accentColor: "#0891b2",
-    icon: "↵",
   });
 }

@@ -15,7 +15,5 @@ export default async function OpenGraphImage() {
   return createOgpImageResponse({
     title: meta.title,
     subtitle: meta.ogpSubtitle,
-    accentColor: meta.accentColor,
-    icon: meta.icon,
   });
 }

@@ -14,11 +14,22 @@
  *   src/ 全体が新トークン体系のみになった。フェーズR 最終レビュー是正（cycle-279 MUST-5）で、
  *   個別列挙方式（新規ページ追加時に列挙漏れが起きると検査対象から漏れる）から
  *   `src/**\/*.module.css` / `src/**\/*.tsx` の広域 glob へ切り替えた——src/ に live な
- *   デザイン面が新規追加されても自動的に検査対象へ入る。除外は IGNORE のテスト/生成物・
+ *   デザイン面が新規追加されても自動的に検査対象へ入る。除外は IGNORE のテスト・
  *   ALLOWLIST の意図的な例外（スピナーの回転リング・成果物の和色等・理由付き）のみに限定する。
- *   （OGP 画像生成 `opengraph-image.tsx`/`twitter-image.tsx`/`src/lib/ogp-image.tsx` は
- *   実測の結果 style={{}} に色リテラルを直書きしないため無検査でも誤検知しない——
- *   accentColor は関数引数として渡され JSX の style ブロック内には現れない。）
+ *
+ *   OGP 画像生成（`opengraph-image.tsx`/`twitter-image.tsx`/`src/lib/ogp-image.tsx`）は
+ *   cycle-282 で新デザイン（店構え）化し共通レンダラの型から accentColor/icon を撤去したのに
+ *   合わせ、IGNORE からの除外を解除して §8 機械検査の対象へ戻した（cycle-282・フェーズR移行漏れ
+ *   の構造的死角を塞ぐ）——call-site は createOgpImageResponse を呼ぶだけで色リテラルを持たず、
+ *   共通レンダラ ogp-image.tsx も色は器 hex 定数（@/lib/utsuwaHex の PAPER/INK/… と朱 ACCENT）を
+ *   変数参照するため、JSX の style ブロック内に禁止色の literal は現れない（実測: false positive 無し）。
+ *
+ *   テンプレート文字列に CSS/HTML を埋め込む稼働デザイン面（Edge 実行等でトークンを import
+ *   できず hex を直書きせざるを得ない面）は analyzeCss/analyzeTsx が効かないため、専用の
+ *   analyzeEmbeddedDesign で「§8 が名指しで禁じる具体パターン」（旧ブランドの青紫 hex・非許容の
+ *   角丸・青紫 hue の色関数・絵文字）だけを生テキストへ的を絞って検査する。対象は
+ *   EMBEDDED_DESIGN_FILES（`src/middleware.ts` の 410 ページ・`src/app/global-not-found.js`）。
+ *   器の紙/墨/朱 hex は正当なので一般 hex 検査はしない（誤検知回避）。
  *
  * ── 機械検査する項目（§8 の番号付き）──────────────────────────────────────
  *   §8-1  紫〜青（indigo/violet）のアクセント: 色関数 oklch/lch/hsl/hwb で hue≈250〜320。
@@ -51,6 +62,14 @@
  *   §8-9  全要素一律の fade-in・スクロール登場アニメ（意図の有無は目視）。
  *   §8-11 結果の出し惜しみ・偽の限定・煽り LP 記号（文章/導線の意味は §6 と視覚/内容レビュー）。
  *   これらは take-screenshot / frontend-design スキルによる実見レビューが担保する。
+ *
+ * ── バイナリ資産（CSS/HTML を持たず機械検査「できない」・視覚レビューで担保）──────────
+ *   favicon / apple-touch-icon / OGP 画像の png 等のバイナリ画像は宣言テキストを持たず、この
+ *   ゲートでは検査できない。店構え（紙地・墨・朱の印）と揃っているかは take-screenshot 等の
+ *   視覚レビューで確認する。
+ *   TODO(B-576): `public/favicon.ico`・`public/apple-touch-icon.png` は cycle-282 の点検で旧ブランド
+ *   のまま残存していることが発覚済み（別タスク B-576 で是正予定）。ゲートは通すが、是正忘れ防止
+ *   のためここに明記する——是正後はこの TODO を削除すること。
  */
 import { describe, test, expect } from "vitest";
 import * as fs from "node:fs";
@@ -79,21 +98,26 @@ const NEW_DESIGN_CSS = [
 ];
 const NEW_DESIGN_TSX = [
   // src 全体の live な *.tsx を広域 glob で網羅する（cycle-279 MUST-5）。
-  // 新規ページ追加時の列挙漏れを構造的に防ぐ——除外は IGNORE（テスト/OGP 画像生成）のみ。
+  // 新規ページ追加時の列挙漏れを構造的に防ぐ——除外は IGNORE（テスト）のみ。
+  // OGP 生成物（opengraph-image/twitter-image/ogp-image）も cycle-282 で対象へ含めた。
   "src/**/*.tsx",
 ];
-// テストコードは走査対象外（テスト文字列に禁止語が入るため）。
-// opengraph-image.tsx / twitter-image.tsx / src/lib/ogp-image.tsx は @vercel/og の
-// ImageResponse で描画する「生成物」（OGP 画像・DOM/CSS カスケードを持たないレンダラ）で、
-// アクセントカラーは関数引数として渡り JSX の style ブロック内には literal で現れない
-// （実測: false positive 無し）。器（ページ UI）ではないため広域 glob の対象から明示的に除外する。
-const IGNORE = [
-  "**/__tests__/**",
-  "**/*.test.ts",
-  "**/*.test.tsx",
-  "**/opengraph-image.tsx",
-  "**/twitter-image.tsx",
-  "src/lib/ogp-image.tsx",
+// テストコードのみ走査対象外（テスト文字列に禁止語が入るため）。
+// OGP 画像生成（opengraph-image.tsx / twitter-image.tsx / src/lib/ogp-image.tsx）は cycle-282 の
+// 店構え化（型から accentColor/icon を撤去）に合わせて除外を解除し、§8 検査対象へ戻した。旧版は
+// 全面ベタ塗り＋絵文字アイコン＋既定色 青#2563eb だったため除外が死角化していた（ヘッダの「対象」節参照）。
+const IGNORE = ["**/__tests__/**", "**/*.test.ts", "**/*.test.tsx"];
+
+// テンプレート文字列に CSS/HTML を埋め込む稼働デザイン面（`.ts`/`.js`）。上の広域 glob
+// （*.tsx / *.module.css）に載らないが、実際にユーザーへ表示される店構えを持つ——Edge 実行や
+// layout の import チェーン外という制約でトークンを import できず hex を直書きするため、専用の
+// analyzeEmbeddedDesign で生テキストを検査する（cycle-282・フェーズR移行漏れの死角を塞ぐ）。
+//   - src/middleware.ts        : 削除記事へ返す 410 Gone ページの埋め込み HTML/CSS
+//   - src/app/global-not-found.js : 404 ラッパー（本文の意匠は global-not-found.module.css 側で
+//                                    上の *.module.css glob が既に検査するが、.js の inline style も拾う）
+const EMBEDDED_DESIGN_FILES = [
+  "src/middleware.ts",
+  "src/app/global-not-found.js",
 ];
 
 /**
@@ -649,6 +673,102 @@ function analyzeTsx(content: string, file: string): Violation[] {
   return v;
 }
 
+// ── テンプレート埋め込みデザイン面の解析（middleware 410 / global-not-found）────────────
+//
+// analyzeCss は「CSS 宣言ブロック `{…}`」を、analyzeTsx は「JSX の style={{…}} オブジェクト」を
+// 前提とするため、テンプレート文字列内に素の CSS/HTML を持つ面には効かない。ここでは §8 が
+// 名指しで禁じる具体パターンだけを生テキストへ正規表現で当てる的を絞った検査を行う。一般の
+// hex 直書き検査（§10）はしない——これらの面は器の紙/墨/朱 hex を正当に直書きするため。
+
+/**
+ * §8-1「紫〜青（indigo/violet）のアクセントは使わない」で名指しされる、旧ブランドの青紫系 hex。
+ * 埋め込み CSS/HTML は import 経由のトークン化ができず hex を直書きするため、この旧ブランド色
+ * （旧 OGP/旧 410 ページの青・冷色スレート）の再混入だけを的を絞って弾く。器の紙/墨/罫/朱
+ * （@/lib/utsuwaHex）は正当なので一般 hex 検査はしない（誤検知回避）。
+ */
+const BANNED_EMBEDDED_HEX: readonly string[] = [
+  "#2563eb", // 旧ブランドの青（blue-600・旧ボタン/リンク地）
+  "#1d4ed8", // 旧ブランドの青（blue-700・旧 hover）
+  "#3b82f6", // blue-500
+  "#7c3aed", // violet-600
+  "#6d28d9", // violet-700
+  "#4f46e5", // indigo-600
+  "#f8fafc", // 冷色スレート地（slate-50・§2 の「紙」ではない冷たい白）
+  "#1e293b", // 冷色スレート（slate-800）
+];
+
+/**
+ * 絵文字（§8-6: 見出し/ナビ/ボタンの絵文字は不可）。CJK（漢字/かな）を巻き込まないよう
+ * 絵文字ブロック（記号・ダインバット・絵文字・補助記号・絵文字異体字セレクタ）に限定する。
+ */
+const EMOJI_RE =
+  /[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE0F}]/u;
+
+/** border-radius の値を atom 配列へ分解し、非許容 atom（§8-5）を返す（analyzeCss と同一規則）。 */
+function disallowedRadiusAtoms(value: string): string[] {
+  return value
+    .replace(/\s*\/\s*/g, " ")
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((a) => a.toLowerCase())
+    .filter((a) => !ALLOWED_RADIUS_ATOMS.has(a));
+}
+
+/**
+ * テンプレート文字列に CSS/HTML を埋め込む稼働デザイン面（EMBEDDED_DESIGN_FILES）を生テキストで
+ * 検査する。検出対象は §8 が名指しで禁じる具体パターンに限定する:
+ *   §8-1  旧ブランドの青紫 hex（BANNED_EMBEDDED_HEX）／青紫 hue の色関数（oklch/hsl/hwb・250〜320）
+ *   §8-5  非許容の border-radius（0 / var(--radius) / var(--radius-sm) / 2px 以外）
+ *   §8-6  絵文字
+ * 器の紙/墨/朱 hex は正当なので一般 hex 検査（§10）はしない。/* *​/ コメント内は検査しない。
+ */
+function analyzeEmbeddedDesign(content: string, file: string): Violation[] {
+  const v: Violation[] = [];
+  const text = stripComments(content);
+  const push = (code: string, message: string, declaration: string) =>
+    v.push({ file, severity: "ERROR", code, message, declaration });
+
+  // §8-1 旧ブランドの青紫 hex の再混入。
+  const lower = text.toLowerCase();
+  for (const hex of BANNED_EMBEDDED_HEX) {
+    if (lower.includes(hex)) {
+      push("§8-1", `旧ブランドの青紫系 hex（${hex}）の直書きを検出`, hex);
+    }
+  }
+
+  // §8-1 青紫 hue の色関数。器 hex は極座標 hue を持たない（hueOf=null）ため対象外。
+  for (const lit of colorLiterals(text)) {
+    if (isPurpleHue(hueOf(lit))) {
+      push("§8-1", `紫〜青（indigo/violet）の色関数を検出（${lit}）`, lit);
+    }
+  }
+
+  // §8-5 非許容の角丸（テンプレート CSS の border-radius 宣言）。
+  for (const mm of text.matchAll(/border-radius\s*:\s*([^;}"'`]+)/gi)) {
+    const value = mm[1].trim();
+    const bad = disallowedRadiusAtoms(value);
+    if (bad.length > 0) {
+      push(
+        "§8-5",
+        `border-radius は 0 / var(--radius) / var(--radius-sm) / 2px のみ許容（検出: ${bad.join(" ")}）`,
+        `border-radius: ${value}`,
+      );
+    }
+  }
+
+  // §8-6 絵文字（見出し/ナビ/ボタン）。
+  const emoji = text.match(EMOJI_RE);
+  if (emoji) {
+    push(
+      "§8-6",
+      "絵文字を検出（見出し/ナビ/ボタンの絵文字は §8-6 で不可）",
+      emoji[0],
+    );
+  }
+
+  return v;
+}
+
 // ── 実行ヘルパ ───────────────────────────────────────────────────────────
 
 function isAllowlisted(vio: Violation): boolean {
@@ -691,6 +811,7 @@ const fmt = (vs: Violation[]) =>
 describe("DESIGN.md §8 機械ゲート（新デザイン面）", () => {
   const cssViolations = scan(NEW_DESIGN_CSS, analyzeCss);
   const tsxViolations = scan(NEW_DESIGN_TSX, analyzeTsx);
+  const embeddedViolations = scan(EMBEDDED_DESIGN_FILES, analyzeEmbeddedDesign);
 
   test("対象 CSS がゲート対象に含まれていること（設定の空振り検出）", () => {
     const files = fg.sync(NEW_DESIGN_CSS, {
@@ -705,7 +826,11 @@ describe("DESIGN.md §8 機械ゲート（新デザイン面）", () => {
   // メタ文字と誤解釈して 0 件で黙って素通りしやすい（過去、辞典トップ4面の glob が全て空振り
   // していた）。集合全体の length>0 では個々の空振りを検出できないため、glob 単位で担保する。
   test("各 glob が実ファイルに一致すること（空振り glob の検出）", () => {
-    const empty = [...NEW_DESIGN_CSS, ...NEW_DESIGN_TSX].filter(
+    const empty = [
+      ...NEW_DESIGN_CSS,
+      ...NEW_DESIGN_TSX,
+      ...EMBEDDED_DESIGN_FILES,
+    ].filter(
       (g) => fg.sync(g, { cwd: PROJECT_ROOT, ignore: IGNORE }).length === 0,
     );
     expect(
@@ -734,6 +859,14 @@ describe("DESIGN.md §8 機械ゲート（新デザイン面）", () => {
     expect(
       errors,
       `\n新デザイン面の TSX に §8 違反:\n${fmt(errors)}\n`,
+    ).toEqual([]);
+  });
+
+  test("テンプレート埋め込みデザイン面（middleware 410 / global-not-found）に §8 違反（ERROR）が無いこと", () => {
+    const errors = embeddedViolations.filter((x) => x.severity === "ERROR");
+    expect(
+      errors,
+      `\nテンプレート埋め込みデザイン面に §8 違反:\n${fmt(errors)}\n`,
     ).toEqual([]);
   });
 });
@@ -848,5 +981,44 @@ describe("§8 機械ゲートの検出力（合成入力）", () => {
       "synthetic.css",
     );
     expect(vs.filter((x) => x.code === "§2")).toEqual([]);
+  });
+
+  // 埋め込みデザイン面（middleware 410 / global-not-found）の的を絞った検査の検出力。
+  test("埋め込み面: 旧ブランドの青 hex（#2563eb）を検出", () => {
+    const vs = analyzeEmbeddedDesign(
+      `body{background:#2563eb;color:#fff}`,
+      "synthetic.ts",
+    );
+    expect(vs.some((x) => x.code === "§8-1")).toBe(true);
+  });
+  test("埋め込み面: 青紫 hue の色関数を検出", () => {
+    const vs = analyzeEmbeddedDesign(
+      `.x{color:oklch(0.6 0.2 270)}`,
+      "synthetic.ts",
+    );
+    expect(vs.some((x) => x.code === "§8-1")).toBe(true);
+  });
+  test("埋め込み面: 非許容の角丸（8px）を検出", () => {
+    const vs = analyzeEmbeddedDesign(`a{border-radius:8px}`, "synthetic.ts");
+    expect(vs.some((x) => x.code === "§8-5")).toBe(true);
+  });
+  test("埋め込み面: 絵文字を検出", () => {
+    const vs = analyzeEmbeddedDesign(`<a>トップへ ✨</a>`, "synthetic.ts");
+    expect(vs.some((x) => x.code === "§8-6")).toBe(true);
+  });
+  test("埋め込み面: 器 hex（紙/墨/罫/朱）と角丸0は誤検知しない", () => {
+    const vs = analyzeEmbeddedDesign(
+      `body{background:#f8f7f2;color:#201e1a;border-top:1px solid #cdcac5}
+       a.home{color:#af3622;border-radius:0}`,
+      "synthetic.ts",
+    );
+    expect(vs.filter((x) => x.severity === "ERROR")).toEqual([]);
+  });
+  test("埋め込み面: 日本語（漢字/かな）は絵文字として誤検知しない", () => {
+    const vs = analyzeEmbeddedDesign(
+      `<h1>このコンテンツは終了しました</h1>`,
+      "synthetic.ts",
+    );
+    expect(vs.filter((x) => x.code === "§8-6")).toEqual([]);
   });
 });

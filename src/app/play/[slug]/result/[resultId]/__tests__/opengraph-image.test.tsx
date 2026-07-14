@@ -137,21 +137,9 @@ describe("QuizResultOpenGraphImage", () => {
     expect(createOgpImageResponseCalls[0].subtitle).toBe("テストクイズ");
   });
 
-  test("passes result icon as icon to createOgpImageResponse", async () => {
-    const mod = await getModule();
-    await mod.default({
-      params: Promise.resolve({ slug: "test-quiz", resultId: "result-a" }),
-    });
-    expect(createOgpImageResponseCalls[0].icon).toBe("🌟");
-  });
-
-  test("passes quiz accentColor to createOgpImageResponse", async () => {
-    const mod = await getModule();
-    await mod.default({
-      params: Promise.resolve({ slug: "test-quiz", resultId: "result-a" }),
-    });
-    expect(createOgpImageResponseCalls[0].accentColor).toBe("#e74c3c");
-  });
+  // NOTE(cycle-282): result icon / quiz accentColor は店構え化で OgpImageConfig 型から
+  // 削除された（地は常に紙・図像は店の印のみ）。call-site も渡さなくなったため、旧 API を
+  // 前提にしていた "passes result icon" / "passes quiz accentColor" のアサーションは撤去した。
 
   test("renders fallback for unknown slug", async () => {
     const mod = await getModule();

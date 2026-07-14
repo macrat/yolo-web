@@ -1,17 +1,44 @@
 import { ImageResponse } from "next/og";
-import { getContrastTextColor } from "@/play/color-utils";
+import { PAPER, INK, INK_2, RULE, RULE_STRONG, ACCENT } from "@/lib/utsuwaHex";
 
-/** Configuration for generating OGP images. */
+/**
+ * 共通OGP生成器の設定（「店構え（看板）」版・cycle-282）。
+ *
+ * 旧版（全面ベタ塗り＋絵文字アイコン＋ゴシック太字・既定色 青#2563eb）を廃し、札レンダラ
+ * {@link import("./fuda-image").renderFudaImage} と同じ視覚言語で組む——紙地・墨・一本罫・のれん帯・
+ * 明朝（Noto Serif JP）・朱の印。看板は「札から和色の記号面を取り去った器面」として組むため、
+ * 和色はいっさい使わない（DESIGN §2/§4「和色は結果の包みに限る・器へ漏らさない」）。
+ *
+ * 廃止した引数（DESIGN §8 違反のため型から**削除**）:
+ * - `icon`（絵文字）→ §8-6 違反。看板の顔は明朝の品名。図像は店の印 1 つだけ。
+ * - `accentColor`（任意色ベタ背景）→ §2 違反。地は常に紙・文字は常に墨。朱は印専用。
+ */
 export type OgpImageConfig = {
+  /** 品名/ページ名（看板の顔・明朝で大きく組む）。 */
   title: string;
+  /** 副題/説明/カテゴリ（省略可・ゴシック INK_2）。 */
   subtitle?: string;
-  accentColor?: string;
-  icon?: string;
 };
 
 const OGP_SIZE = { width: 1200, height: 630 };
-const DEFAULT_ACCENT_COLOR = "#2563eb";
-const SITE_NAME = "yolos.net";
+
+/** 店号（看板単体で出所が読めるように・DESIGN §4「のれん」）。 */
+const SHOP_NAME = "yolos.net";
+
+/**
+ * 店の印の一字（§4「印」・chop）。カテゴリ別に変えず一つ固定＝単一の店構え。
+ * 「試」（ためす＝「やってみる」）は site-concept「AI が営む『やってみる』のよろず屋」の動詞。
+ */
+const SHOP_SEAL_CHAR = "試";
+/** 印の回転（§4「±8° 以内」）。手捺しのわずかな気配。 */
+const SEAL_ROTATE_DEG = -6;
+
+/**
+ * Noto Serif JP（明朝・品名と印の顔・DESIGN §3）。weight 600 の見出し用。
+ * 札（fuda-image）と同一経路。fuda-image はこの getter を import して一本化する（単一の真実）。
+ */
+const NOTO_SERIF_JP_CSS_URL =
+  "https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@600&display=swap";
 
 /**
  * Google Fonts URL for Noto Sans JP (Regular 400 weight).
@@ -143,6 +170,20 @@ export function getFontData(): Promise<ArrayBuffer | null> {
   return fontDataPromise;
 }
 
+/** 明朝フォントデータ（ビルド/リクエストごとに一度だけ取得しキャッシュ）。 */
+let minchoFontPromise: Promise<ArrayBuffer | null> | null = null;
+
+/**
+ * Noto Serif JP（明朝・見出しの顔）を取得する。看板（本ファイル）と札（fuda-image）が
+ * 同じ経路を共有するための単一 getter。fuda-image はこれを import して私有コピーを持たない。
+ */
+export function getMinchoFontData(): Promise<ArrayBuffer | null> {
+  if (!minchoFontPromise) {
+    minchoFontPromise = fetchGoogleFontData(NOTO_SERIF_JP_CSS_URL);
+  }
+  return minchoFontPromise;
+}
+
 /** Shared OGP image size. */
 export const ogpSize = OGP_SIZE;
 
@@ -150,100 +191,188 @@ export const ogpSize = OGP_SIZE;
 export const ogpContentType = "image/png";
 
 /**
- * Create an OGP ImageResponse with a consistent design.
+ * 品名の書記素数から見出しサイズを決める（札の `typeNameFontSize` に倣う・DESIGN §4-1）。
+ * サロゲートペア対応のため呼び出し側で `[...title].length` を渡す。
+ */
+function titleFontSize(graphemeCount: number): number {
+  if (graphemeCount <= 10) return 80;
+  if (graphemeCount <= 16) return 62;
+  if (graphemeCount <= 24) return 50;
+  if (graphemeCount <= 34) return 40;
+  return 33;
+}
+
+/**
+ * 看板 OGP を {@link ImageResponse} にレンダリングする共通レンダラ。
  *
- * Design:
- * - Full-bleed background with the accent color
- * - Optional icon (emoji) at the top
- * - Title in large bold text (centered)
- * - Optional subtitle below the title
- * - "yolos.net" site name in the bottom-right corner
+ * 紙地・墨・罫・のれん帯・明朝の品名・朱の印で組む（札と同じ店の顔）。器面なので和色は使わず、
+ * 主役は品名（title）を明朝で大きく立てた墨字。階層は墨の濃淡（INK/INK_2）と罫で付け、朱
+ * （ACCENT）は右上の印だけに使う。
  *
- * Japanese font (Noto Sans JP) is loaded from Google Fonts CDN.
- * Falls back to default sans-serif if font loading fails.
+ * 明朝（Noto Serif JP 600）とゴシック（Noto Sans JP 400）を Google Fonts CDN から並行取得し、
+ * 取得失敗時はゴシック→sans-serif へ素直にフォールバックする（描画は成立・書体だけ譲る）。
  */
 export async function createOgpImageResponse(
   config: OgpImageConfig,
 ): Promise<ImageResponse> {
-  const { title, subtitle, accentColor = DEFAULT_ACCENT_COLOR, icon } = config;
+  const { title, subtitle } = config;
+  const graphemeCount = [...title].length;
 
-  // Automatically determine text color based on WCAG contrast ratio.
-  // Delegates to the shared color-utils implementation for consistency.
-  const textColor = getContrastTextColor(accentColor);
+  const [gothicData, minchoData] = await Promise.all([
+    getFontData(),
+    getMinchoFontData(),
+  ]);
 
-  const fontData = await getFontData();
+  const fonts = [
+    ...(gothicData
+      ? [
+          {
+            name: "NotoSansJP",
+            data: gothicData,
+            style: "normal" as const,
+            weight: 400 as const,
+          },
+        ]
+      : []),
+    ...(minchoData
+      ? [
+          {
+            name: "NotoSerifJP",
+            data: minchoData,
+            style: "normal" as const,
+            weight: 600 as const,
+          },
+        ]
+      : []),
+  ];
 
-  const fonts = fontData
-    ? [
-        {
-          name: "NotoSansJP",
-          data: fontData,
-          style: "normal" as const,
-          weight: 400 as const,
-        },
-      ]
-    : [];
+  // 明朝優先・ゴシックへフォールバックの family スタック（札と同一・DESIGN §3）。
+  const minchoFamily = "NotoSerifJP, NotoSansJP, sans-serif";
+  const gothicFamily = "NotoSansJP, sans-serif";
 
   return new ImageResponse(
     <div
       style={{
+        position: "relative",
         width: "100%",
         height: "100%",
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: accentColor,
-        color: textColor,
-        fontFamily: fontData ? "NotoSansJP, sans-serif" : "sans-serif",
-        padding: "40px 60px",
+        backgroundColor: PAPER,
+        color: INK,
+        // 器は罫で包む（角丸 0・§4/§8）。札と同一の枠。
+        border: `2px solid ${RULE_STRONG}`,
+        padding: "56px 64px",
+        fontFamily: gothicFamily,
       }}
     >
-      {icon && (
-        <div
-          style={{
-            fontSize: 80,
-            marginBottom: 20,
-          }}
-        >
-          {icon}
-        </div>
-      )}
+      {/* のれん帯: 店号（出所）＋一本罫で下から仕切る（札と同一）。 */}
       <div
         style={{
-          fontSize: title.length > 20 ? 48 : 64,
-          fontWeight: 700,
-          textAlign: "center",
-          lineHeight: 1.3,
-          maxWidth: "90%",
-          overflow: "hidden",
-          marginBottom: subtitle ? 16 : 0,
+          display: "flex",
+          alignItems: "baseline",
+          gap: "20px",
+          paddingBottom: "20px",
+          borderBottom: `1px solid ${RULE}`,
         }}
       >
-        {title}
-      </div>
-      {subtitle && (
         <div
           style={{
-            fontSize: 28,
-            opacity: 0.9,
-            textAlign: "center",
-            maxWidth: "80%",
+            display: "flex",
+            fontFamily: gothicFamily,
+            fontSize: 30,
+            letterSpacing: "0.04em",
+            color: INK_2,
           }}
         >
-          {subtitle}
+          {SHOP_NAME}
         </div>
-      )}
+      </div>
+
+      {/* 主部: 品名（明朝・墨）を上下中央・左揃えで大きく立てる。副題はその下（ゴシック・INK_2）。
+          alignItems は既定 stretch のまま＝子は全幅なので長い品名は自然に折り返す。 */}
+      <div
+        style={{
+          display: "flex",
+          flex: 1,
+          flexDirection: "column",
+          justifyContent: "center",
+          paddingTop: "40px",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            fontFamily: minchoFamily,
+            fontSize: titleFontSize(graphemeCount),
+            lineHeight: 1.35,
+            color: INK,
+            maxWidth: "100%",
+          }}
+        >
+          {title}
+        </div>
+        {subtitle && subtitle.trim() !== "" ? (
+          <div
+            style={{
+              display: "flex",
+              fontFamily: gothicFamily,
+              fontSize: 30,
+              lineHeight: 1.55,
+              color: INK_2,
+              marginTop: "28px",
+              maxWidth: "900px",
+            }}
+          >
+            {subtitle}
+          </div>
+        ) : null}
+      </div>
+
+      {/* 印: 器面に一つだけ・右上に捺す。朱一色の円環＋一字・回転 ±8° 内・幅 100px（§4）。
+            SVG 一本ストロークで円環を描く（札の印ブロックと同一）。 */}
       <div
         style={{
           position: "absolute",
-          bottom: 30,
-          right: 40,
-          fontSize: 24,
-          opacity: 0.7,
+          top: 44,
+          right: 44,
+          width: 100,
+          height: 100,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          transform: `rotate(${SEAL_ROTATE_DEG}deg)`,
         }}
       >
-        {SITE_NAME}
+        <svg
+          width="100"
+          height="100"
+          viewBox="0 0 100 100"
+          style={{ position: "absolute", top: 0, left: 0 }}
+        >
+          <circle
+            cx="50"
+            cy="50"
+            r="47"
+            fill="none"
+            stroke={ACCENT}
+            strokeWidth="2"
+          />
+        </svg>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: "100%",
+            height: "100%",
+            fontFamily: minchoFamily,
+            fontSize: 52,
+            color: ACCENT,
+          }}
+        >
+          {SHOP_SEAL_CHAR}
+        </div>
       </div>
     </div>,
     {

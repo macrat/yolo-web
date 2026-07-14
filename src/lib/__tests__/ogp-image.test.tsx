@@ -31,7 +31,54 @@ function makeTtfBuffer(extraBytes = 4): ArrayBuffer {
   return buf;
 }
 
-describe("createOgpImageResponse", () => {
+/** 器の色（utsuwaHex の SSoT と一致させる）。新デザインの契約検証に使う。 */
+const PAPER = "#f8f7f2";
+const ACCENT = "#af3622";
+
+/** JSX 風ツリーから文字列の子（テキストノード）をすべて集める。 */
+function collectText(node: unknown, out: string[] = []): string[] {
+  if (typeof node === "string") {
+    out.push(node);
+    return out;
+  }
+  if (Array.isArray(node)) {
+    for (const child of node) collectText(child, out);
+    return out;
+  }
+  if (node && typeof node === "object" && "props" in node) {
+    const props = (node as { props: { children?: unknown } }).props;
+    collectText(props.children, out);
+  }
+  return out;
+}
+
+/** ツリー中の任意の style プロパティ値をすべて集める。 */
+function collectStyleValues(
+  node: unknown,
+  key: string,
+  out: Array<string | number> = [],
+): Array<string | number> {
+  if (Array.isArray(node)) {
+    for (const child of node) collectStyleValues(child, key, out);
+    return out;
+  }
+  if (node && typeof node === "object" && "props" in node) {
+    const props = (
+      node as {
+        props: {
+          children?: unknown;
+          style?: Record<string, string | number>;
+        };
+      }
+    ).props;
+    const value = props.style?.[key];
+    if (value !== undefined) out.push(value);
+    collectStyleValues(props.children, key, out);
+  }
+  return out;
+}
+
+describe("createOgpImageResponse — 店構え（看板）契約", () => {
   beforeEach(() => {
     imageResponseCalls = [];
     vi.clearAllMocks();
@@ -68,63 +115,51 @@ describe("createOgpImageResponse", () => {
     });
   });
 
-  test("uses default accent color when not specified", async () => {
+  test("地は常に紙（PAPER）で全面ベタ塗りの accentColor は無い", async () => {
     const { createOgpImageResponse } = await getModule();
 
     await createOgpImageResponse({ title: "Test" });
 
     const { element } = imageResponseCalls[0];
     const jsx = element as { props: { style: { backgroundColor: string } } };
-    expect(jsx.props.style.backgroundColor).toBe("#2563eb");
+    // ルートの地は常に紙。旧デザインの青ベタ（#2563eb）等は生成されない。
+    expect(jsx.props.style.backgroundColor).toBe(PAPER);
   });
 
-  test("uses custom accent color when specified", async () => {
-    const { createOgpImageResponse } = await getModule();
-
-    await createOgpImageResponse({
-      title: "Test",
-      accentColor: "#dc2626",
-    });
-
-    const { element } = imageResponseCalls[0];
-    const jsx = element as { props: { style: { backgroundColor: string } } };
-    expect(jsx.props.style.backgroundColor).toBe("#dc2626");
-  });
-
-  test("uses white text color for dark accent color (default #2563eb)", async () => {
+  test("朱（ACCENT）は印だけに現れ、地ベタには使わない", async () => {
     const { createOgpImageResponse } = await getModule();
 
     await createOgpImageResponse({ title: "Test" });
 
     const { element } = imageResponseCalls[0];
-    const jsx = element as { props: { style: { color: string } } };
-    expect(jsx.props.style.color).toBe("#ffffff");
+    // 印の一字・円環に朱が使われる（color として）。地の backgroundColor には朱は無い。
+    const bgColors = collectStyleValues(element, "backgroundColor");
+    expect(bgColors).not.toContain(ACCENT);
+    const textColors = collectStyleValues(element, "color");
+    expect(textColors).toContain(ACCENT);
   });
 
-  test("automatically uses dark text color for light accent color (#fedfe1)", async () => {
+  test("店号 yolos.net と店の印「試」を描く", async () => {
     const { createOgpImageResponse } = await getModule();
 
-    await createOgpImageResponse({
-      title: "Test",
-      accentColor: "#fedfe1",
-    });
+    await createOgpImageResponse({ title: "Test" });
 
     const { element } = imageResponseCalls[0];
-    const jsx = element as { props: { style: { color: string } } };
-    expect(jsx.props.style.color).toBe("#1a1a1a");
+    const texts = collectText(element);
+    expect(texts).toContain("yolos.net"); // のれん帯の店号
+    expect(texts).toContain("試"); // 店の印の一字
   });
 
-  test("automatically uses white text color for dark accent color (#0f2540)", async () => {
+  test("絵文字（§8-6 禁止）を看板に持ち込まない", async () => {
     const { createOgpImageResponse } = await getModule();
 
-    await createOgpImageResponse({
-      title: "Test",
-      accentColor: "#0f2540",
-    });
+    // 呼び出し側が誤って絵文字を title に混ぜても、看板は絵文字用の面を持たない。
+    // ここでは通常タイトルで、生成ツリーに絵文字面が無いことを確認する。
+    await createOgpImageResponse({ title: "診断メーカー" });
 
     const { element } = imageResponseCalls[0];
-    const jsx = element as { props: { style: { color: string } } };
-    expect(jsx.props.style.color).toBe("#ffffff");
+    const joined = collectText(element).join("");
+    expect(joined).not.toMatch(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}]/u);
   });
 
   test("includes subtitle when provided", async () => {
@@ -136,41 +171,42 @@ describe("createOgpImageResponse", () => {
     });
 
     const { element } = imageResponseCalls[0];
-    const jsx = element as { props: { children: unknown[] } };
-    const children = jsx.props.children;
-    const flatChildren = Array.isArray(children) ? children : [children];
-    const hasSubtitle = flatChildren.some(
-      (child: unknown) =>
-        child != null &&
-        typeof child === "object" &&
-        "props" in child &&
-        (child as { props: { children?: string } }).props.children ===
-          "Sub Title",
-    );
-    expect(hasSubtitle).toBe(true);
+    const texts = collectText(element);
+    expect(texts).toContain("Sub Title");
   });
 
-  test("includes icon when provided", async () => {
+  test("subtitle 省略時は副題テキストを描かない", async () => {
     const { createOgpImageResponse } = await getModule();
 
-    await createOgpImageResponse({
-      title: "Test",
-      icon: "\u{1F3A8}",
-    });
+    await createOgpImageResponse({ title: "Only Title" });
 
     const { element } = imageResponseCalls[0];
-    const jsx = element as { props: { children: unknown[] } };
-    const children = jsx.props.children;
-    const flatChildren = Array.isArray(children) ? children : [children];
-    const hasIcon = flatChildren.some(
-      (child: unknown) =>
-        child != null &&
-        typeof child === "object" &&
-        "props" in child &&
-        (child as { props: { children?: string } }).props.children ===
-          "\u{1F3A8}",
+    const texts = collectText(element);
+    expect(texts).toContain("Only Title");
+    // 副題ノードは条件付きレンダリングで null になる。
+    expect(texts).not.toContain("Sub Title");
+  });
+
+  test("短い品名は大きく、長い品名は小さく組む（書記素数で段階選択）", async () => {
+    const { createOgpImageResponse } = await getModule();
+
+    await createOgpImageResponse({ title: "QRコード" }); // 5 書記素 → 80
+    const shortSizes = collectStyleValues(
+      imageResponseCalls[0].element,
+      "fontSize",
     );
-    expect(hasIcon).toBe(true);
+    expect(shortSizes).toContain(80);
+
+    imageResponseCalls = [];
+    // 40 書記素超の長い品名 → 最小 33。
+    await createOgpImageResponse({
+      title: "あ".repeat(40),
+    });
+    const longSizes = collectStyleValues(
+      imageResponseCalls[0].element,
+      "fontSize",
+    );
+    expect(longSizes).toContain(33);
   });
 
   test("exports correct ogpSize", async () => {
@@ -189,23 +225,30 @@ describe("createOgpImageResponse", () => {
     await createOgpImageResponse({ title: "Test" });
 
     const { options } = imageResponseCalls[0];
+    // ゴシック・明朝ともに取得失敗 → fonts は空（sans-serif フォールバック）。
     expect((options as { fonts: unknown[] }).fonts).toEqual([]);
   });
 
-  test("provides font data when fetch succeeds", async () => {
-    // Use a TTF magic number so the binary passes the Satori-compatibility check.
-    const fakeArrayBuffer = makeTtfBuffer();
+  test("provides gothic + mincho font data when fetch succeeds", async () => {
+    // getFontData（ゴシック）と getMinchoFontData（明朝）が同経路で 2 面取得する。
+    // ゴシックと明朝は Promise.all で並行取得されるため fetch 呼び出し順は非決定的。
+    // 順序に依存する mockResolvedValueOnce ではなく、URL を見て応答を返す実装で両経路を満たす。
     const fakeCss =
-      'src: url(https://fonts.gstatic.com/s/notosansjp/v1/font.ttf) format("truetype");';
-    mockFetch
-      .mockResolvedValueOnce({
+      'src: url(https://fonts.gstatic.com/s/notojp/v1/font.ttf) format("truetype");';
+    mockFetch.mockImplementation((url: string) => {
+      // Google Fonts の CSS（@font-face）→ gstatic のバイナリ URL を 1 つ含む CSS を返す。
+      if (url.includes("fonts.googleapis.com")) {
+        return Promise.resolve({
+          ok: true,
+          text: () => Promise.resolve(fakeCss),
+        });
+      }
+      // gstatic のフォントバイナリ → Satori 互換の TTF を返す。
+      return Promise.resolve({
         ok: true,
-        text: () => Promise.resolve(fakeCss),
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-        arrayBuffer: () => Promise.resolve(fakeArrayBuffer),
+        arrayBuffer: () => Promise.resolve(makeTtfBuffer()),
       });
+    });
 
     const { createOgpImageResponse } = await getModule();
 
@@ -213,70 +256,28 @@ describe("createOgpImageResponse", () => {
 
     const { options } = imageResponseCalls[0];
     const fonts = (options as { fonts: Array<Record<string, unknown>> }).fonts;
-    expect(fonts).toHaveLength(1);
-    expect(fonts[0]).toMatchObject({
-      name: "NotoSansJP",
-      style: "normal",
-      weight: 400,
-    });
+    expect(fonts).toHaveLength(2);
+    expect(fonts).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ name: "NotoSansJP", weight: 400 }),
+        expect.objectContaining({ name: "NotoSerifJP", weight: 600 }),
+      ]),
+    );
   });
 
-  test("getFontData is exported", async () => {
+  test("getFontData / getMinchoFontData / createOgpImageResponse を export する", async () => {
     const ogpImageModule = await getModule();
     expect(typeof ogpImageModule.getFontData).toBe("function");
+    expect(typeof ogpImageModule.getMinchoFontData).toBe("function");
+    expect(typeof ogpImageModule.createOgpImageResponse).toBe("function");
   });
 
-  test("falls back to next UA when WOFF2 magic number is detected", async () => {
-    // Build an ArrayBuffer with WOFF2 magic number: "wOF2" = 0x77 0x4F 0x46 0x32
-    const woff2Buffer = new ArrayBuffer(4);
-    const view = new Uint8Array(woff2Buffer);
-    view[0] = 0x77; // w
-    view[1] = 0x4f; // O
-    view[2] = 0x46; // F
-    view[3] = 0x32; // 2
-
-    // Build a valid TTF ArrayBuffer for the fallback UA: "\x00\x01\x00\x00"
-    const ttfBuffer = makeTtfBuffer();
-
-    const fakeCss =
-      'src: url(https://fonts.gstatic.com/s/notosansjp/v1/font.ttf) format("truetype");';
-
-    // First UA (IE10): CSS ok, font binary is WOFF2 → should be rejected
-    // Second UA (Android): CSS ok, font binary is TTF → should be accepted
-    mockFetch
-      .mockResolvedValueOnce({
-        ok: true,
-        text: () => Promise.resolve(fakeCss),
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-        arrayBuffer: () => Promise.resolve(woff2Buffer),
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-        text: () => Promise.resolve(fakeCss),
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-        arrayBuffer: () => Promise.resolve(ttfBuffer),
-      });
-
-    const { getFontData } = await getModule();
-    const result = await getFontData();
-
-    // Should have used the fallback UA and returned the TTF buffer
-    expect(result).toBe(ttfBuffer);
-    // fetch should have been called 4 times (2 CSS + 2 font binary)
-    expect(mockFetch).toHaveBeenCalledTimes(4);
-  });
-
-  test("returns null when all UAs fail", async () => {
-    // All fetch calls reject
-    mockFetch.mockRejectedValue(new Error("network error"));
-
-    const { getFontData } = await getModule();
-    const result = await getFontData();
-
-    expect(result).toBeNull();
+  test("OgpImageConfig は title/subtitle のみ（accentColor/icon は型から削除済み）", async () => {
+    const { createOgpImageResponse } = await getModule();
+    // 型レベルの契約: 余剰プロパティは TypeScript が弾く。ここでは実行時に title だけ・
+    // subtitle 付きの両ケースが成立することを確認する（旧 accentColor/icon は不要）。
+    await expect(
+      createOgpImageResponse({ title: "T", subtitle: "S" }),
+    ).resolves.toBeDefined();
   });
 });

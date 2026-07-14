@@ -26,13 +26,10 @@ export default async function OpenGraphImage({
   if (!meta) {
     return createOgpImageResponse({
       title: "遊ぶ",
-      accentColor: "#2563eb",
     });
   }
 
   return createOgpImageResponse({
     title: meta.title,
-    accentColor: meta.accentColor,
-    icon: meta.icon,
   });
 }

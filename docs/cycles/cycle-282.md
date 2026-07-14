@@ -63,9 +63,35 @@ completed_at: null
   - 呼び出し側内訳: `createOgpImageResponse` を呼ぶ実面=54（トップ・ブログ・約38ツール・診断/ゲーム索引・多くの診断結果）、`renderFudaImage`=character-personality 結果 1 面のみ。`twitter-image.tsx`=opengraph-image の再エクスポート。
 - **外部仕様への依存の確認**: 本計画の価値（店構えで統一された OGP 画像）は、特定プラットフォームの機能存続に依存しない。OGP（Open Graph protocol）の `og:image`／Twitter Cards の `twitter:image` は事実上凍結した de-facto 仕様で、1200×630 の画像は主要な SNS・チャット・検索で共通に表示され、非対応環境でも劣化はグレースフル。レンダリングは Satori/@vercel/og による**完全ローカル生成**で、外部当事者が変更可能な仕様への依存は無い。唯一の外部接触は明朝フォントの Google Fonts CDN 取得だが、これは出荷済みの札が既に使っている経路で、取得失敗時はゴシックへフォールバックする。したがって一次資料の再点検を要する volatile な外部仕様依存は無い（この判断自体を記録として残す）。
 
+## 点検結果（B-571・横断監査）
+
+横断点検の結果、**OGP 漏れは単発事故ではなく「design-gate が `.tsx`/`.module.css` しか走査しない」という構造的死角の一症状**と判明した。同じ死角から、テキストゲートに映らない面（`.ts` 埋め込み CSS・バイナリ資産）に**同一クラスの未移行面が 2 件**残っていた。器（UI）レイヤーの移行自体は網羅的で、稼働 CSS/TSX 面に旧デザイン残骸は無い（旧トークン実使用 0・RSS/robots/sitemap/エラー境界すべて準拠を確認）。
+
+| #   | 面                                                  | 深刻度 | 内容                                                                                                                                       | 本サイクルの処置                                                                                                               |
+| --- | --------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
+| 1   | `src/middleware.ts:46-73`（`build410Html`）         | 高     | 削除済みブログ19スラッグへ**実配信中**の410ページが青#2563eb＋8px角丸＋📄絵文字＋ゴシックの完全な旧デザイン                                | **本サイクルで是正**（同一クラス・生きた来訪者向け劣化・小さく直せる）                                                         |
+| 2   | `public/favicon.ico`・`public/apple-touch-icon.png` | 高     | 暗地＋白ゴシック「y」＋青ドットの旧ブランド（バイナリ死角・ブラウザ規約で自動配信）                                                        | **backlog 起票（B-576）**。16-32px 可読性は別種の図像 craft で、55面OGP展開に押し込むと拙速化＝rule4違反。専用タスクで質を担保 |
+| 3   | `src/test/design-gate.test.ts` の走査スコープ       | 中     | `.tsx`/`.module.css` のみ走査＝`.ts`/`.js`/バイナリを最初から見ていない。OGP・middleware・favicon を共通で素通りさせた根                   | **本サイクルで是正**（`middleware.ts`/`global-not-found.js` を走査へ追加＋バイナリ資産の目視チェックリスト化）                 |
+| 4   | theme-color/manifest 欠落                           | 低     | 旧青の残存ではなく欠落。モバイルのアドレスバー色が紙色と揃わない                                                                           | **backlog 起票（B-577）**                                                                                                      |
+| 5   | クイズデータ内の青hex（`character-fortune.ts` 他）  | 低     | `--type-color` として inject されるが消費 CSS が 0＝UI では dead。生存経路は OGP のみ（本サイクルで accentColor 廃止により完全に dead 化） | **backlog 起票（B-578）**。OGP 是正で無害化されるため低優先                                                                    |
+
+点検して問題なしを確認した観点: error/not-found/loading 面（`global-not-found.js` は新トークン移行済）、ErrorBoundary/ErrorMessage（店構え移行済）、旧トークン実使用（0件）、非module CSS（globals.css のみ）、RSS/Atom feed・robots・sitemap（埋め込み色0）、見出し/ナビ/ボタンの絵文字（middleware以外0）、design-gate の IGNORE/ALLOWLIST（OGP以外の誤除外なし・スピナー/和色 ALLOWLIST は根拠付きで妥当）。
+
+## 作業計画（B-570 設計の確定・PM 判断）
+
+設計エージェントの提案を受け、PM として以下を確定した（`tmp/cycle-282/ogp-design-spec.md`・`mock.html`・`preview-full.png` を実見して承認）:
+
+- **看板＝札から和色の記号面を取り去った器面**。紙地(PAPER)・墨(INK/INK_2)・一本罫のれん帯・明朝(Noto Serif JP 600)・朱の印・枠(2px RULE_STRONG)・座標系を札と共有。「並べて別物に見えない」を満たす。主役は品名(title)を明朝で大きく立てた墨字。
+- **`accentColor` 引数＝完全廃止（削除）**。任意色ベタ背景は §2/§8-1 違反。和色への読み替えもしない（和色は成果物＝札の記号面専用・器へ漏らさない）。階層は墨の濃淡と罫で付け、朱は印だけ。型から削除し、TS 余剰プロパティ検査で全呼び出し側を機械的に弾く。
+- **`icon`（絵文字）引数＝完全廃止（削除）**。§8-6 違反。図像は店の印1つだけ。
+- **和色の面カテゴリ別出し分け＝しない（単一の店構え）**。看板に和色を載せない以上カテゴリ別彩色は不要。単一で全面を貫く。
+- **印の一字＝「試」で確定**（ためす＝「やってみる」＝実験的サイトの動詞・明朝で読みが濁らない）。店号はのれん帯の `yolos.net`。
+- **循環依存の回避**: 器定数(PAPER 等)は現在 fuda-image が export し fuda-image→ogp-image の依存があるため、ogp-image が import すると循環。中立モジュール `src/lib/utsuwaHex.ts` へ抽出し fuda-image・ogp-image・`wairoHex.test`（乖離ガード）の3者で共有。明朝 getter は ogp-image に一本化し fuda-image の私有コピーを import へ。
+
 ## キャリーオーバー
 
-- （サイクル進行に応じて記載）
+- **B-576（favicon/apple-touch-icon 店構え化）** を backlog 起票（高・専用タスク）。
+- **B-577（theme-color/manifest 付与）**・**B-578（クイズデータ青hex クレンジング）** を backlog 起票（低）。
 
 ## 補足事項
 

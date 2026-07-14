@@ -10,6 +10,7 @@
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
 | B-575 | 結果体験そのものの価値を最高にする(本丸の中身) | P1 | - | 本丸。皮=フェーズR出荷済(B-545/279)だが価値の中身=未達open。cycle-268からの唯一の問い。着手時はcycle-280事故記録の構造的教訓を必ず踏む。詳細cycle-273/280.md |
+| B-576 | favicon/apple-touch-icon を店構えへ | P2 | - | cycle-282の横断点検で発覚。旧ブランド(暗地+白ゴシックy+青ドット)がバイナリ死角で残存。16-32px可読性は別種の図像craft=専用タスクで質担保。詳細cycle-282.md |
 | B-573 | UI/UX/アクセシビリティのベストプラクティス調査と全面適用 | P1 | - | **緊急**。移行が静的ゲートのみでUX未検証。cycle-281でクリック領域規定のスライスは処理済——残りは標的/アフォーダンス/キーボード/SR/focusの全面掃討+DESIGN/gateへのUX規定追加。詳細cycle-280.md |
 | B-562 | フェーズC-a: 新クラスタの立ち上げ | P1 | - | フェーズR(B-561)完了(cycle-279)で解禁。候補の正典=research/2026-07-11-market-research-cycle278.md T4節。着手時に個別裏取り+実験台帳へ事前登録。同時2クラスタ以下。詳細 rebuild-plan.md §3 |
 | B-564 | フェーズC-c: 辞典の処遇判断(体験化orプルーニング) | P2 | - | フェーズR完了で解禁。検定エンジン検討(B-562)と同時に判断。B-521で辞書CTR 0.08%=参照型の敗北兆候TW-Aと判明済(ADR001)。詳細 rebuild-plan.md §3 |
@@ -30,6 +31,8 @@
 | B-541 | 現状正しい辞典収録数ハードコードの予防的`.length`化 | P4 | - | 辞典の処遇判断(B-564)と連動。詳細 cycle-258.md |
 | B-549 | middleware→proxy 移行(Next.js16非推奨) | P4 | - | 出荷物に影響なし。詳細 cycle-271 接地 |
 | B-512 | next.config redirects コメント「301」→「308」統一 | P4 | - | 文言のみ是正。詳細 cycle-243.md |
+| B-577 | theme-color/manifest の付与(新デザイン整合) | P4 | - | cycle-282点検で発覚。旧青残存でなく欠落。モバイルのアドレスバー色を--paper系へ。light/dark対応。詳細cycle-282.md |
+| B-578 | クイズデータ内の旧青hexクレンジング | P4 | - | cycle-282点検で発覚。--type-color inject用の青hexだが消費CSS0=dead。OGP accentColor廃止で完全無害化済。和色へ寄せるか除去。詳細cycle-282.md |
 | B-429 | test-results/ の prettier/git 管理整備 | P4 | - | .prettierignore/.gitignore 追加。詳細 cycle-197.md |
 | B-508 | ブログ frontmatter 裸配列残骸の一括除去 | P4 | - | 残り4本。B-432と整合注意 |
 | B-520 | kanji-data.json kunYomi 重複クレンジング | P4 | - | 辞典の処遇判断(B-564)と連動。詳細 cycle-251.md |

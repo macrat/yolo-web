@@ -34,7 +34,5 @@ export default async function OpenGraphImage({ params }: Props) {
   return createOgpImageResponse({
     title,
     subtitle: categoryLabel,
-    accentColor: "#2563eb",
-    icon: "\u{1F4DD}",
   });
 }

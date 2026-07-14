@@ -39,9 +39,38 @@ export function isDeletedBlogSlug(slug: string): boolean {
 }
 
 /**
+ * 410 ページの器の色（DESIGN.md §2「紙・墨・朱」）。
+ *
+ * middleware は Edge 実行の可能性があり、React/CSSモジュール/globals.css のトークン
+ * （oklch 変数）も `@/lib/fuda-image` の hex 定数も import できない。そこで globals.css の
+ * light トークンを hex 化した実値（`src/lib/fuda-image.tsx` の PAPER/INK/... と同一）を
+ * 直接埋め込む。値の由来は各コメント（globals.css の対応トークンと oklch）を参照。
+ * 旧デザインの青（#2563eb 等）・冷色スレート（#f8fafc/#1e293b）は §8-1/§10 違反のため撤去した。
+ */
+const PAPER_HEX = "#f8f7f2"; // --paper   oklch(0.975 0.006 90)  地（生成りの紙）
+const INK_HEX = "#201e1a"; // --ink     oklch(0.235 0.008 80)  見出し・本文の墨
+const INK_2_HEX = "#58554f"; // --ink-2   oklch(0.45 0.01 80)    補足文の淡い墨
+const RULE_HEX = "#cdcac5"; // --rule    oklch(0.84 0.008 85)   罫線（構造の主役）
+const ACCENT_HEX = "#af3622"; // --accent  oklch(0.51 0.16 32)    朱（リンク・現在地）
+
+/**
+ * 見出しの明朝スタック（DESIGN §3「見出しは明朝」）。この静的HTMLは Web フォントを
+ * 読み込まないため Noto Serif JP を先頭に置きつつシステム明朝へ素直にフォールバックする
+ * （globals.css の --font-mincho フォールバック相当）。本文はシステムゴシックでよい。
+ */
+const MINCHO_STACK = "'Noto Serif JP','Hiragino Mincho ProN','Yu Mincho',serif";
+const GOTHIC_STACK =
+  "'Hiragino Kaku Gothic ProN','Yu Gothic Medium','Noto Sans JP',sans-serif";
+
+/**
  * 410 Gone ページのHTMLを生成する。
  * middlewareからはReactコンポーネントやCSSモジュールが使用できないため、
  * インラインスタイル付きの静的HTMLで構成する。
+ *
+ * デザインは「店構え」（DESIGN.md §2色/§3タイポ/§4罫/§8禁止）。既に店構え化された
+ * エラー面 `src/app/global-not-found-content.tsx` と流儀（紙地・墨字・明朝見出し・罫）を揃える。
+ * 中央寄せの静かな告知として組み、操作（トップへ戻る導線）は §4「罫と墨で、装飾を足さない」に
+ * 従い朱の文字＋罫囲みで表す（青ベタボタン・装飾絵文字・8px角丸は撤去済み）。
  */
 export function build410Html(): string {
   return `<!DOCTYPE html>
@@ -52,21 +81,22 @@ export function build410Html(): string {
 <title>このコンテンツは終了しました | yolos.net</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f8fafc;color:#1e293b;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1rem}
-.container{max-width:560px;width:100%;text-align:center}
-.icon{font-size:3rem;margin-bottom:1.5rem}
-h1{font-size:1.75rem;font-weight:800;color:#2563eb;margin-bottom:1rem}
-p{font-size:1rem;color:#64748b;line-height:1.8;margin-bottom:2rem}
-a{display:inline-block;padding:0.75rem 2rem;background:#2563eb;color:#fff;text-decoration:none;border-radius:0.5rem;font-weight:600;transition:background 0.2s}
-a:hover{background:#1d4ed8}
+body{font-family:${GOTHIC_STACK};background:${PAPER_HEX};color:${INK_HEX};min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1.5rem}
+.container{max-width:34rem;width:100%;text-align:center}
+h1{font-family:${MINCHO_STACK};font-size:1.6rem;font-weight:600;color:${INK_HEX};line-height:1.5;letter-spacing:0.02em}
+.rule{width:3rem;height:0;border-top:1px solid ${RULE_HEX};margin:1.25rem auto}
+p{font-family:${GOTHIC_STACK};font-size:1rem;color:${INK_2_HEX};line-height:1.9;margin-bottom:2rem}
+a.home{display:inline-block;padding:0.6rem 1.75rem;color:${ACCENT_HEX};text-decoration:none;border:1px solid ${RULE_HEX};border-radius:0;font-size:0.95rem;transition:border-color 0.2s}
+a.home:hover,a.home:focus-visible{border-color:${ACCENT_HEX}}
+a.home:focus-visible{outline:2px solid ${ACCENT_HEX};outline-offset:2px}
 </style>
 </head>
 <body>
 <div class='container'>
-<div class='icon'>📄</div>
 <h1>このコンテンツは終了しました</h1>
+<div class='rule'></div>
 <p>お探しのページはすでに削除されており、現在はご覧いただけません。</p>
-<a href='/'>トップページへ</a>
+<a class='home' href='/'>トップページへ</a>
 </div>
 </body>
 </html>`;

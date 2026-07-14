@@ -1,21 +1,27 @@
-import { ImageResponse } from "next/og";
+import {
+  createOgpImageResponse,
+  ogpSize,
+  ogpContentType,
+} from "@/lib/ogp-image";
 import { getAllSlugs, getEntryBySlug } from "@/humor-dict/data";
-import { getFontData } from "@/lib/ogp-image";
 
 export const alt = "ユーモア辞典";
-export const size = { width: 1200, height: 630 };
-export const contentType = "image/png";
+export const size = ogpSize;
+export const contentType = ogpContentType;
 
 /** 全エントリの slug を静的パラメータとして生成する */
 export function generateStaticParams(): Array<{ slug: string }> {
   return getAllSlugs().map((slug) => ({ slug }));
 }
 
-/** 定義文が長い場合に末尾を省略する最大文字数 */
+/**
+ * 副題（ユーモア定義）が長い場合に末尾を省略する最大文字数。
+ * 器面の副題は 1〜2 行に収めたいので札/看板の他面と同程度に切り詰める。
+ */
 const DEFINITION_MAX_LENGTH = 80;
 
 /**
- * 定義文をOGP画像に収まるように切り詰める。
+ * 定義文を OGP の副題に収まるよう切り詰める。
  * 文字数が超過した場合は末尾に「…」を付加する。
  */
 function truncateDefinition(definition: string): string {
@@ -29,6 +35,12 @@ type Props = {
   params: Promise<{ slug: string }>;
 };
 
+/**
+ * ユーモア辞典エントリの OGP。共通の店構えレンダラ {@link createOgpImageResponse} で組む
+ * （紙地・墨・明朝の品名・朱の印）。品名＝見出し語（読みがあれば添える）、副題＝ユーモア定義。
+ * cycle-282: 旧デザイン（スレート地 #1e293b＋琥珀 #f59e0b の帯・8px 装飾・all-caps）の
+ * 独自 ImageResponse を廃し、他の全 OGP 面と同じ共通レンダラへ統一した（フェーズR移行漏れの是正）。
+ */
 export default async function OpenGraphImage({ params }: Props) {
   const { slug } = await params;
   const entry = getEntryBySlug(slug);
@@ -36,154 +48,10 @@ export default async function OpenGraphImage({ params }: Props) {
   // エントリが見つからない場合はデフォルト表示にフォールバックする
   const word = entry?.word ?? "ユーモア辞典";
   const reading = entry?.reading ?? "";
-  const definition = entry
+  const title = reading ? `${word}（${reading}）` : word;
+  const subtitle = entry
     ? truncateDefinition(entry.definition)
     : "日常語をユーモアで再定義する辞典";
 
-  // 日本語テキストを正しく描画するため Noto Sans JP フォントを読み込む。
-  // フォント取得に失敗した場合はシステムフォントにフォールバックする。
-  const fontData = await getFontData();
-
-  const fonts = fontData
-    ? [
-        {
-          name: "NotoSansJP",
-          data: fontData,
-          style: "normal" as const,
-          weight: 400 as const,
-        },
-      ]
-    : [];
-
-  return new ImageResponse(
-    <div
-      style={{
-        width: "100%",
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "flex-start",
-        justifyContent: "center",
-        backgroundColor: "#1e293b",
-        color: "white",
-        padding: "64px 72px",
-        boxSizing: "border-box",
-        position: "relative",
-        fontFamily: fontData ? "NotoSansJP, sans-serif" : "sans-serif",
-      }}
-    >
-      {/* 辞書カード風の装飾ライン */}
-      <div
-        style={{
-          display: "flex",
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "8px",
-          height: "100%",
-          backgroundColor: "#f59e0b",
-        }}
-      />
-
-      {/* ラベル */}
-      <div
-        style={{
-          display: "flex",
-          fontSize: 20,
-          color: "#f59e0b",
-          fontWeight: 700,
-          letterSpacing: "0.1em",
-          marginBottom: 24,
-          textTransform: "uppercase",
-        }}
-      >
-        ユーモア辞典
-      </div>
-
-      {/* 見出し語とよみがな */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "baseline",
-          gap: 16,
-          marginBottom: 32,
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            fontSize: 88,
-            fontWeight: 700,
-            lineHeight: 1.1,
-            color: "#f8fafc",
-          }}
-        >
-          {word}
-        </div>
-        {reading && (
-          <div
-            style={{
-              display: "flex",
-              fontSize: 32,
-              color: "#94a3b8",
-              fontWeight: 400,
-            }}
-          >
-            【{reading}】
-          </div>
-        )}
-      </div>
-
-      {/* 定義文: 左ボーダー付きブロック引用風 */}
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "flex-start",
-          gap: 20,
-          marginBottom: 48,
-          maxWidth: "100%",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            width: 4,
-            minHeight: 48,
-            backgroundColor: "#f59e0b",
-            borderRadius: 2,
-            flexShrink: 0,
-            alignSelf: "stretch",
-          }}
-        />
-        <div
-          style={{
-            display: "flex",
-            fontSize: 30,
-            lineHeight: 1.7,
-            color: "#cbd5e1",
-            fontWeight: 400,
-          }}
-        >
-          {definition}
-        </div>
-      </div>
-
-      {/* サイト名 */}
-      <div
-        style={{
-          display: "flex",
-          position: "absolute",
-          bottom: 48,
-          right: 72,
-          fontSize: 22,
-          color: "#475569",
-          fontWeight: 400,
-        }}
-      >
-        yolos.net
-      </div>
-    </div>,
-    { ...size, fonts },
-  );
+  return createOgpImageResponse({ title, subtitle });
 }
