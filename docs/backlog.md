@@ -2,8 +2,6 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-571 | フェーズR移行漏れの横断点検 | P1 | 282 | cycle-282で着手。OGP同様の未移行/ゲート除外面が他に無いか横断点検(twitter-image/RSS/エラー面/metadata等)。B-570の是正範囲を確定する先行監査。詳細cycle-280.md |
-| B-570 | OGP画像をサイト全面で新デザイン(店構え)へ移行 | P1 | 282 | cycle-282で着手。共通生成器54面が旧デザイン(絵文字+任意色+ゴシック)・char結果のみ札=不整合。生成器1本を店構えへ書換+design-gate除外解除。詳細cycle-280/282.md |
 
 ## Queued (すぐに着手できる)
 
@@ -96,6 +94,8 @@
 
 | ID | Title | Completed Cycle | Notes |
 | --- | --- | --- | --- |
+| B-570 | OGP画像をサイト全面で新デザイン(店構え)へ移行 | 282 | 共通生成器を店構え(紙/墨/罫/明朝/朱の印「試」)へ書換・54面一斉是正。accentColor/icon削除・器定数utsuwaHex抽出・gate除外解除でhumor独自旧OGPも是正・DESIGN.md §4看板規定・代表8面実見。詳細 cycle-282.md |
+| B-571 | フェーズR移行漏れの横断点検 | 282 | OGP漏れは「gateが.tsx/.module.cssのみ走査」の構造的死角の一症状と判明。同クラスの410ページ(middleware)を店構え化・gateスコープを.ts/.js/バイナリへ拡張。favicon等はB-576〜578起票。詳細 cycle-282.md |
 | B-572 | カードのクリック領域劣化の是正(タイトルのみ→行全体) | 281 | Shinagaki・BlogListをstretched-link化。タグはz-index+fit-contentで独立クリック維持。DESIGN.md §4規定+knowledge新設。詳細 cycle-281.md |
 | B-563 | フェーズC-b: 診断結果の「共有できる記号」を実在させる | 280 | character-personality結果を持ち帰れる/共有できる札画像に(renderFudaImage・固定URL・FudaActions)。ADR002で観測。詳細 cycle-280.md |
 | B-551 | 共有/保存(札保存)計測の是正・実装 | 280 | trackSave新設・shareにcontent_id dual-write・contentIdForQuiz統一・ShareButtonsキャンセル誤計上是正・InviteFriend計測。詳細 cycle-280.md |
