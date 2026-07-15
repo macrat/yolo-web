@@ -11,6 +11,7 @@ import {
   pickResultWairoColor,
   pickResultSymbol,
 } from "@/play/quiz/_components/resultVisual";
+import { getContrastTextColor } from "@/play/color-utils";
 
 /**
  * 札（Tsutsumi）画像レンダラ — 「見せたくなる結果」を単独で持ち帰れる 1 枚の PNG にする
@@ -39,8 +40,8 @@ const FUDA_SIZE = ogpSize;
 
 /** 店号（札単体で出所が読めるように・DESIGN §4「札」）。 */
 const SHOP_NAME = "yolos.net";
-/** 印の一字（診断の「診」・§4「印」）。 */
-const SEAL_CHAR = "診";
+/** 印の一字の既定（診断の「診」・§4「印」）。呼び出し側が sealChar で上書きできる。 */
+const DEFAULT_SEAL_CHAR = "診";
 /** 印の回転（§4「±8° 以内」）。手捺しのわずかな気配。 */
 const SEAL_ROTATE_DEG = -6;
 
@@ -66,6 +67,22 @@ export interface FudaImageResult {
    * 省略時は品名行を出さない。
    */
   productName?: string;
+  /**
+   * 記号面の地色に使うコンテンツ固有の hex（例 伝統色の "#0d5661"）。
+   *
+   * 通常の結果（character-personality 等）は記号面の地を id のハッシュで和色8色へ写像する
+   * （{@link pickResultWairoColor}・成果物パレット・DESIGN §2）。しかし「色そのものが中身の面」
+   * ——伝統色診断の結果色や伝統色辞典の色——では、その固有 hex こそが中身であり、和色8色へ
+   * 丸めると別の色＝別物になってしまう。そこでこのフィールドが指定されたときは記号面の地に
+   * その hex をそのまま使い、前景（記号）色は AA を満たす墨/白を {@link getContrastTextColor} で
+   * 算出する（DESIGN §2「色そのものが中身の面」の例外）。未指定時は従来の和色経路を保つ。
+   *
+   * なお全面ベタ塗りではなく、あくまで囲まれた 300×300 の記号面の中だけに色を閉じる
+   * （器＝紙・罫・墨へ色を漏らさない・DESIGN §2）。
+   */
+  colorOverride?: string;
+  /** 印の一字。省略時は {@link DEFAULT_SEAL_CHAR}（"診"）。 */
+  sealChar?: string;
 }
 
 /**
@@ -78,9 +95,23 @@ export interface FudaImageResult {
 export async function renderFudaImage(
   result: FudaImageResult,
 ): Promise<ImageResponse> {
-  const wairo = WAIRO_HEX[pickResultWairoColor(result.id)];
   const symbol = pickResultSymbol(result.title);
   const graphemeCount = [...result.title].length;
+  const sealChar = result.sealChar ?? DEFAULT_SEAL_CHAR;
+
+  // 記号面の地色・前景色を決める。colorOverride があれば「色そのものが中身の面」なので
+  // その固有 hex を地に使い、前景は AA を満たす墨/白（getContrastTextColor）で決める。
+  // 未指定なら従来どおり id のハッシュで和色8色へ写像する（既存挙動を完全に保つ）。
+  let symbolBg: string;
+  let symbolOn: string;
+  if (result.colorOverride) {
+    symbolBg = result.colorOverride;
+    symbolOn = getContrastTextColor(result.colorOverride);
+  } else {
+    const wairo = WAIRO_HEX[pickResultWairoColor(result.id)];
+    symbolBg = wairo.bg;
+    symbolOn = wairo.on;
+  }
 
   const [gothicData, minchoData] = await Promise.all([
     getFontData(),
@@ -183,8 +214,8 @@ export async function renderFudaImage(
             width: 300,
             height: 300,
             flex: "0 0 auto",
-            backgroundColor: wairo.bg,
-            color: wairo.on,
+            backgroundColor: symbolBg,
+            color: symbolOn,
           }}
         >
           <div
@@ -193,7 +224,7 @@ export async function renderFudaImage(
               fontFamily: minchoFamily,
               fontSize: 190,
               lineHeight: 1,
-              color: wairo.on,
+              color: symbolOn,
             }}
           >
             {symbol}
@@ -264,7 +295,7 @@ export async function renderFudaImage(
             color: ACCENT,
           }}
         >
-          {SEAL_CHAR}
+          {sealChar}
         </div>
       </div>
     </div>,
