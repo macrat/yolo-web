@@ -195,10 +195,10 @@ describe("renderFudaImage", () => {
     const { element } = await render({
       id: "ai",
       title: "藍色(あいいろ)",
-      sealChar: "試",
+      sealChar: "屋",
     });
     const texts = collectText(element);
-    expect(texts).toContain("試");
+    expect(texts).toContain("屋");
     expect(texts).not.toContain("診");
   });
 

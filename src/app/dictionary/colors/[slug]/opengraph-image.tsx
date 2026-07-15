@@ -7,10 +7,10 @@
  * 「色そのものが中身の面」）。記号は色名の先頭字（pickResultSymbol が title 先頭を拾う）、
  * のれん帯の品名に hex コード、下部に色名（よみ）を出す。
  *
- * 印は診断結果ではなく店の看板クラスなので "試"（＝共通店構え ogp-image の SHOP_SEAL_CHAR
- * と同じ店の家印）を渡す。印の役割は出所の証（この 1 枚が yolos.net の工房から来たこと）で、
- * "試"＝「試してみる／実験」はサイトの自己申告（実験的 Web サイト）と響く（B-580 の来訪者
- * 起点の判断）。cycle-282 まで colors 個別ページは OGP 画像を持っていなかったため、これは純増（B-579）。
+ * 印は診断結果ではなく店の看板クラスなので "屋"（＝共通店構え ogp-image の SHOP_SEAL_CHAR
+ * と同じ店の家印・よろず屋の身元）を渡す。cycle-283（B-580）で印の要否・字を実 OGP で見比べ、
+ * 参照面（辞典）に「試（＝試作／暫定）」を捺すのは中身の信頼と座りが悪いと判断して "屋" に定めた。
+ * cycle-282 まで colors 個別ページは OGP 画像を持っていなかったため、これは純増（B-579）。
  */
 
 import {
@@ -24,8 +24,8 @@ export const alt = "日本の伝統色";
 export const size = fudaImageSize;
 export const contentType = fudaImageContentType;
 
-/** 店の看板クラスの印（共通店構え ogp-image と同じ "試"）。 */
-const SHOP_SEAL_CHAR = "試";
+/** 店の看板クラスの印（共通店構え ogp-image と同じ "屋"＝よろず屋の身元）。 */
+const SHOP_SEAL_CHAR = "屋";
 
 /** 色が見つからないときのタイトルフォールバック（描画を落とさない）。 */
 const FALLBACK_TITLE = "色";
