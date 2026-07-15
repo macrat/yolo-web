@@ -139,7 +139,7 @@ describe("createOgpImageResponse — 店構え（看板）契約", () => {
     expect(textColors).toContain(ACCENT);
   });
 
-  test("店号 yolos.net と店の印「屋」を描く", async () => {
+  test("店号 yolos.net と店の印（SHOP_SEAL_CHAR）を描く", async () => {
     const { createOgpImageResponse } = await getModule();
 
     await createOgpImageResponse({ title: "Test" });
@@ -147,7 +147,8 @@ describe("createOgpImageResponse — 店構え（看板）契約", () => {
     const { element } = imageResponseCalls[0];
     const texts = collectText(element);
     expect(texts).toContain("yolos.net"); // のれん帯の店号
-    expect(texts).toContain("屋"); // 店の印の一字（屋号＝よろず屋の身元・cycle-283）
+    // 印の一字は cycle-283 着手前の "試"（「屋」への変更は運営者目線の誤りとして撤回・B-583 で再検討）。
+    expect(texts).toContain("試");
   });
 
   test("絵文字（§8-6 禁止）を看板に持ち込まない", async () => {

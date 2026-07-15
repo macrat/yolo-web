@@ -2,7 +2,7 @@
  * /dictionary/colors/[slug] OGP 画像のテスト。
  *
  * この面は共有レンダラ {@link renderFudaImage}（札）で組み、その伝統色の hex を
- * `colorOverride`、印を "屋"（店の家印）で渡す（B-579・純増した色個別ページの OGP）。ここでは
+ * `colorOverride`、印を SHOP_SEAL_CHAR（cycle-283 着手前の "試"・「屋」は撤回）で渡す（B-579・純増した色個別ページの OGP）。ここでは
  * import が通り generateStaticParams が全色 slug を返すこと・メタ export が正しいこと
  * （非ネットワーク部分）を確認する。記号面の固有色・前景コントラストの検証は
  * 共有レンダラのテスト（src/lib/__tests__/fuda-image.test.tsx）で網羅する。
