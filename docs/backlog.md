@@ -97,7 +97,7 @@
 | ID | Title | Completed Cycle | Notes |
 | --- | --- | --- | --- |
 | B-579 | 色コンテンツ面の成果物色の復元 | 283 | traditional-color結果OGPに固有伝統色を復元+dictionary/colors個別OGP新設(250件・純増)。記号面に罫+AA前景自動選択。DESIGN§2/§4に「色=中身の面」明文化。詳細cycle-283.md |
-| B-580 | OGPの印を来訪者起点で問い直す | 283 | 実物を見た上で印は維持(試/診)。出所は店号が担い印は家印風flourishと文言是正。代替案検討の上で維持・コード変更なし。詳細cycle-283.md |
+| B-580 | OGPの印を来訪者起点で問い直す | 283 | 印5案(試/萬/屋/円環のみ/印なし)を実OGPでレンダーし来訪者目線で見比べ、家印を試→屋(よろず屋の身元)へ変更(コード変更あり)。診断結果は診を維持。詳細cycle-283.md |
 | B-570 | OGP画像をサイト全面で新デザイン(店構え)へ移行 | 282 | 共通生成器を店構え(紙/墨/罫/明朝/朱の印「試」)へ書換・54面一斉是正。accentColor/icon削除・器定数utsuwaHex抽出・gate除外解除でhumor独自旧OGPも是正・DESIGN.md §4看板規定・代表8面実見。詳細 cycle-282.md |
 | B-571 | フェーズR移行漏れの横断点検 | 282 | OGP漏れは「gateが.tsx/.module.cssのみ走査」の構造的死角の一症状と判明。同クラスの410ページ(middleware)を店構え化・gateスコープを.ts/.js/バイナリへ拡張。favicon等はB-576〜578起票。詳細 cycle-282.md |
 | B-572 | カードのクリック領域劣化の是正(タイトルのみ→行全体) | 281 | Shinagaki・BlogListをstretched-link化。タグはz-index+fit-contentで独立クリック維持。DESIGN.md §4規定+knowledge新設。詳細 cycle-281.md |
