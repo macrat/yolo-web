@@ -164,17 +164,31 @@ describe("renderFudaImage", () => {
     expect(backgrounds).not.toContain(wairoBg);
   });
 
-  test("colorOverride 指定時: 前景色は getContrastTextColor 由来（AA を満たす墨/白）", async () => {
+  test("colorOverride 指定時（暗地）: 前景色は getContrastTextColor 由来の白（#ffffff）", async () => {
     const { getContrastTextColor } = await import("@/play/color-utils");
     const hex = "#0d5661"; // 暗い藍 → 白文字
+    expect(getContrastTextColor(hex)).toBe("#ffffff"); // 前提を固定
     const { element } = await render({
       id: "ai",
       title: "藍色(あいいろ)",
       colorOverride: hex,
     });
-    expect(collectForegroundColors(element)).toContain(
-      getContrastTextColor(hex),
-    );
+    expect(collectForegroundColors(element)).toContain("#ffffff");
+  });
+
+  test("colorOverride 指定時（明地）: 前景色は黒（#1a1a1a）へ切り替わる", async () => {
+    // 明るい伝統色（桜色）は白字ではコントラスト不足 → 黒字（DARK_TEXT_COLOR）。
+    // symbolOn が #ffffff にハードコードされる回帰をこのケースが捕える。
+    // 本文の墨字 INK は #201e1a なので、#1a1a1a は記号面前景のみを指す。
+    const { getContrastTextColor } = await import("@/play/color-utils");
+    const hex = "#fedfe1"; // 桜色（明地）
+    expect(getContrastTextColor(hex)).toBe("#1a1a1a"); // 前提を固定
+    const { element } = await render({
+      id: "sakura",
+      title: "桜色(さくらいろ)",
+      colorOverride: hex,
+    });
+    expect(collectForegroundColors(element)).toContain("#1a1a1a");
   });
 
   test("sealChar 指定時: 印の一字に反映する（既定 '診' を上書き）", async () => {

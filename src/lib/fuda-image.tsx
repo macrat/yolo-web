@@ -216,6 +216,11 @@ export async function renderFudaImage(
             flex: "0 0 auto",
             backgroundColor: symbolBg,
             color: symbolOn,
+            // 記号面は必ず罫で囲む（§2「囲まれた面」・§4「罫線の建築」）。紙地に極めて近い
+            // 伝統色（白練 #fcfaf2・胡粉 #fffffb 等）でも色面が紙地に埋没しないよう、器外枠と
+            // 同じ SSoT 色（RULE_STRONG）で1px の枠を回す。角丸 0（§8）。両経路（colorOverride/
+            // 和色）で同一の記号面 div なので、character-personality 等の既存札にも同じ罫が回る。
+            border: `1px solid ${RULE_STRONG}`,
           }}
         >
           <div
