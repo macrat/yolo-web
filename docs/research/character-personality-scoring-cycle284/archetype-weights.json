@@ -1,0 +1,178 @@
+{
+  "q1-a": {
+    "commander": 3
+  },
+  "q1-b": {
+    "trickster": 3,
+    "professor": 2
+  },
+  "q1-c": {
+    "dreamer": 3,
+    "artist": 1
+  },
+  "q1-d": {
+    "guardian": 3
+  },
+  "q2-a": {
+    "artist": 3,
+    "commander": 1
+  },
+  "q2-b": {
+    "professor": 3
+  },
+  "q2-c": {
+    "trickster": 3,
+    "commander": 1
+  },
+  "q2-d": {
+    "guardian": 3,
+    "professor": 2
+  },
+  "q3-a": {
+    "commander": 3
+  },
+  "q3-b": {
+    "dreamer": 3,
+    "guardian": 1
+  },
+  "q3-c": {
+    "trickster": 3,
+    "guardian": 2
+  },
+  "q3-d": {
+    "artist": 3,
+    "dreamer": 1
+  },
+  "q4-a": {
+    "professor": 3
+  },
+  "q4-b": {
+    "commander": 3
+  },
+  "q4-c": {
+    "dreamer": 3,
+    "artist": 1
+  },
+  "q4-d": {
+    "trickster": 3,
+    "commander": 1
+  },
+  "q5-a": {
+    "artist": 3,
+    "trickster": 1
+  },
+  "q5-b": {
+    "guardian": 3,
+    "artist": 1
+  },
+  "q5-c": {
+    "commander": 3
+  },
+  "q5-d": {
+    "professor": 3
+  },
+  "q6-a": {
+    "commander": 3
+  },
+  "q6-b": {
+    "dreamer": 3,
+    "artist": 1
+  },
+  "q6-c": {
+    "professor": 3,
+    "dreamer": 1
+  },
+  "q6-d": {
+    "guardian": 3
+  },
+  "q7-a": {
+    "professor": 3,
+    "artist": 1
+  },
+  "q7-b": {
+    "artist": 3,
+    "trickster": 1
+  },
+  "q7-c": {
+    "dreamer": 3,
+    "artist": 1
+  },
+  "q7-d": {
+    "trickster": 3,
+    "professor": 1,
+    "artist": 1
+  },
+  "q8-a": {
+    "professor": 3
+  },
+  "q8-b": {
+    "commander": 3,
+    "trickster": 1
+  },
+  "q8-c": {
+    "guardian": 3
+  },
+  "q8-d": {
+    "trickster": 3,
+    "dreamer": 1,
+    "artist": 1
+  },
+  "q9-a": {
+    "professor": 3
+  },
+  "q9-b": {
+    "dreamer": 3
+  },
+  "q9-c": {
+    "artist": 3,
+    "dreamer": 1
+  },
+  "q9-d": {
+    "commander": 3
+  },
+  "q10-a": {
+    "commander": 3
+  },
+  "q10-b": {
+    "trickster": 3,
+    "commander": 1
+  },
+  "q10-c": {
+    "guardian": 3,
+    "dreamer": 1
+  },
+  "q10-d": {
+    "dreamer": 3,
+    "professor": 1
+  },
+  "q11-a": {
+    "trickster": 3,
+    "commander": 1
+  },
+  "q11-b": {
+    "guardian": 3
+  },
+  "q11-c": {
+    "professor": 3,
+    "trickster": 1
+  },
+  "q11-d": {
+    "artist": 3,
+    "dreamer": 1
+  },
+  "q12-a": {
+    "professor": 3,
+    "commander": 1
+  },
+  "q12-b": {
+    "dreamer": 3,
+    "artist": 1
+  },
+  "q12-c": {
+    "guardian": 3
+  },
+  "q12-d": {
+    "artist": 3,
+    "commander": 1
+  }
+}
