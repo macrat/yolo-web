@@ -53,3 +53,6 @@ next-env.d.ts
 # ブログ記事に埋め込む公開画像は追跡対象にする（記事本文から参照するため）。
 !public/blog/
 !public/blog/*.png
+
+# Python bytecode cache
+__pycache__/
