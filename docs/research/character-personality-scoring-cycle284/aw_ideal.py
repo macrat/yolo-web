@@ -17,8 +17,12 @@
 # 判定が同点で複数タイプを返しうる場合は不合格(正直な判定)。
 import itertools, numpy as np
 from aw_common import ARCH, AI, DEFINED, lookup, load_weights, classify
+from pathlib import Path as _P
+_HERE = _P(__file__).resolve().parent            # __CY284_PATHS__
+_ROOT = next(p for p in _HERE.parents if (p / "package.json").exists())
 
-W = load_weights("tmp/cycle-284/archetype-weights.json")  # (12,4,6)
+
+W = load_weights(str(_HERE / "archetype-weights.json"))  # (12,4,6)
 
 
 def maxchoice(q, x, tiebreak):

@@ -2,6 +2,10 @@
 # 規則: 12問の回答 -> 6アーキタイプ得点 -> 1位=主軸, 2位=副軸
 #       gap(1位-2位) >= 閾値 なら 主軸×主軸(同型強化), そうでなければ 主軸×副軸
 import json, itertools, numpy as np
+from pathlib import Path as _P
+_HERE = _P(__file__).resolve().parent            # __CY284_PATHS__
+_ROOT = next(p for p in _HERE.parents if (p / "package.json").exists())
+
 
 ARCH = ["commander", "professor", "dreamer", "trickster", "guardian", "artist"]
 AI = {a: i for i, a in enumerate(ARCH)}
@@ -47,7 +51,7 @@ assert all(lookup(x, y) in ALL_TYPES for x in ARCH for y in ARCH)
 assert len({lookup(x, y) for x in ARCH for y in ARCH}) == 24
 
 
-def load_weights(path="tmp/cycle-284/archetype-weights.json"):
+def load_weights(path=str(_HERE / "archetype-weights.json")):
     w = json.load(open(path, encoding="utf-8"))
     qs = []
     for q in range(1, 13):

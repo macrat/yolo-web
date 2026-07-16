@@ -8,8 +8,12 @@
 # これが現行実装の「results配列の並び順で勝者が決まる」36.20% に対応する指標。
 import sys, itertools, numpy as np
 from aw_common import ARCH, DEFINED, lookup, load_weights
+from pathlib import Path as _P
+_HERE = _P(__file__).resolve().parent            # __CY284_PATHS__
+_ROOT = next(p for p in _HERE.parents if (p / "package.json").exists())
 
-W = load_weights("tmp/cycle-284/archetype-weights.json")  # (12,4,6)
+
+W = load_weights(str(_HERE / "archetype-weights.json"))  # (12,4,6)
 TYPES = sorted({lookup(x, y) for x in ARCH for y in ARCH})
 TI = {t: i for i, t in enumerate(TYPES)}
 NT = len(TYPES)

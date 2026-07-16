@@ -1,9 +1,13 @@
 # 4^12 = 16,777,216 通りの回答を全数列挙し、判定の真の性質を確定する(推定ではない)
 import re, numpy as np
-src=open("src/play/quiz/data/character-personality.ts",encoding="utf-8").read()
+from pathlib import Path as _P
+_HERE = _P(__file__).resolve().parent            # __CY284_PATHS__
+_ROOT = next(p for p in _HERE.parents if (p / "package.json").exists())
+
+src=open(str(_ROOT / "src/play/quiz/data/character-personality.ts"),encoding="utf-8").read()
 res_ids=[]
 for f in ["batch1","batch2","batch3"]:
-    b=open(f"src/play/quiz/data/character-personality-results-{f}.ts",encoding="utf-8").read()
+    b=open(str(_ROOT / f"src/play/quiz/data/character-personality-results-{f}.ts"),encoding="utf-8").read()
     res_ids+=re.findall(r'\n    id: "([a-z-]+)",\n    title:', b)
 idx={t:i for i,t in enumerate(res_ids)}; T=len(res_ids)
 qs=[]
