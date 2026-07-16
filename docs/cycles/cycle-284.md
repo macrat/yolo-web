@@ -459,6 +459,12 @@ completed_at: "2026-07-16T10:50:39+0900"
 - 問題: 「実測: 来訪の7割超がモバイル」は典拠なし（現実測 47.4%・導入元 cycle-278 にデバイス言及 0 件）。
 - すべきこと: 数値差し替えでは不足。無典拠の明記・§10 の他ラベル点検・面別デバイス比の取得。
 
+### B-588: git 履歴に残る不要バイナリ/生成物の除去
+
+- 問題: git 履歴に来訪者に不要な生成物・バイナリが残り、リポジトリを肥大化させている。いずれも `.gitignore:47`「画像ファイルはリポジトリ肥大化防止のためコミット禁止」および tmp-directory ルールに反して混入した。内訳は3系統。(1) 本サイクルで PM が混入させた `.py` 5件（`docs/research/character-personality-scoring-cycle284/` の aw_common.py・aw_ideal.py・aw_exhaustive.py・exhaustive.py・ideal.py）と `.pyc` 1件（同 `__pycache__/aw_common.cpython-311.pyc`）。作業ツリーからは削除済みだが、blob は未 push コミット `d743ef01`・`da033631`・`60c386b2` に残存。(2) cycle-177/180 でルート直下にコミットされた PNG 7枚（privacy-w1280・about-w1280-light・about-w360-dark・w360-edit・notfound-w1280・w360-view・notfound-after-dark-set、計 約 1.53MB）。作業ツリーには無いが履歴に残存。(3) cycle-210 で `docs/research/cycle-210-competitor-text-replace-screenshots/` にコミットされた PNG 14枚（計 約 1.26MB）。**現在も追跡中**。`git rm` では blob が履歴に残り続けるため、除去には履歴書き換え（filter-branch/filter-repo）と force push を要する（前例: cycle-247。手順は `docs/cycles/cycle-247.md` に記録）。
+- すべきこと: 履歴に残る上記の不要バイナリ/生成物を除去し、リポジトリ肥大化を解消する。
+- 着手条件: **Owner の指示があるまで着手しない**（履歴書き換え・force push は破壊的操作であり、cycle-247 でも Owner の明示許可のもとで実施された）。
+
 ## 事故報告
 
 本節は、Owner の指示により、PM の記述に依らない独立調査として作成した。従前ここにあった PM 自筆の事故報告は Owner の判断で破棄された（コミット `626af2b9`「PMが自己弁護のために書いた事故報告を破棄」）。本文・自己点検節・コミットメッセージは「PM がこう主張した」という形でのみ扱い、事実は一次資料で確認した。
