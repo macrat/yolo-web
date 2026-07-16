@@ -5,13 +5,29 @@
       "Bash",
       "Edit(/docs/backlog.md)",
       "Edit(/docs/cycles/cycle-*.md)",
+      "Edit(/docs/cycles/cycle-*/**)",
       "WebFetch",
       "WebSearch"
     ],
-    "deny": ["Edit(/docs/constitution.md)"],
+    "deny": [
+      "Edit(/docs/constitution.md)",
+      "Write(/docs/constitution.md)",
+      "MultiEdit(/docs/constitution.md)",
+      "NotebookEdit(/docs/constitution.md)"
+    ],
     "defaultMode": "auto"
   },
   "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/session-start-facts.sh"
+          }
+        ]
+      }
+    ],
     "PreToolUse": [
       {
         "matcher": "Bash",
@@ -31,6 +47,28 @@
           {
             "type": "command",
             "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/backlog-line-length-check.sh"
+          },
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/protect-constitution.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "AskUserQuestion",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/block-owner-delegation.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "SendMessage",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/block-review-reuse.sh"
           }
         ]
       }
@@ -42,6 +80,20 @@
           {
             "type": "command",
             "command": "jq -r '.tool_input.file_path' | xargs npx prettier --write"
+          },
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/post-write-residue-check.sh"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/stop-cycle-guard.sh"
           }
         ]
       }

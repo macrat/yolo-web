@@ -12,6 +12,17 @@ Project: `yolo-web-gcp`, authenticated via `GOOGLE_APPLICATION_CREDENTIALS`.
 **GA4 Analytics**: Pageviews, events, referrers, user behavior → See [reference/ga4.md](reference/ga4.md)
 **Search Console**: Search queries, impressions, clicks, positions → See [reference/searchconsole.md](reference/searchconsole.md)
 
+## 定型レポートの一括実行（まずこれ）
+
+サイクルの計画・振り返りで毎回使う主要指標（週別/日別PV・上位ページ・チャネル別セッション・検索クエリ/流入ページ）は、個別にクエリを組み立てず定型レポートで一括取得してください。
+
+```bash
+npx tsx scripts/analytics-report.ts            # 過去28日
+npx tsx scripts/analytics-report.ts --days 56  # 期間指定
+```
+
+ここに無い深掘りが必要なときだけ、以下のショートカットや query.ts を使います。
+
 ## Running queries
 
 Execute any SQL query:

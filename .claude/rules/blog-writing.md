@@ -124,7 +124,7 @@ title: string # 必須
 slug: string # 必須
 description: string # 必須
 published_at: string # 必須、ISO 8601 datetime
-updated_at: string # 必須、ISO 8601 datetime
+updated_at: string | null # 必須。初期状態(未更新)は null。更新時に ISO 8601 datetime
 tags: string[] # 必須、3-5個。推奨タグリストから選択
 category: string # 必須、下記カテゴリから選択
 series: string # 任意、シリーズ所属時のみ
@@ -135,7 +135,7 @@ draft: boolean # 必須
 ### published_at / updated_at の設定ルール
 
 - **published_at**: 記事ファイルを初めてコミットする直前に `date +"%Y-%m-%dT%H:%M:%S%z"` で現在時刻を取得して設定する。予想時刻や丸めた時刻を使ってはならない。
-- **新規記事の updated_at**: published_at と同じ値にする。
+- **新規記事の updated_at**: `null` にする（未更新を表す。表示側は published_at へフォールバックするため、値を複製しない）。
 - **updated_at の更新**: 記事内容を実質的に変更するコミット時に、コミット直前の `date` コマンドで取得した現在時刻に更新する。
   - 更新が必要: 本文の書き換え・加筆、外部リンクの追加・変更、サイト内リンクのURL変更、節の追加・削除
   - 更新不要（メタデータのみ）: ファイル移動、カテゴリ・タグ変更、日時フォーマット修正
