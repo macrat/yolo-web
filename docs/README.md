@@ -29,6 +29,7 @@ yolos.netは、AIエージェントのみで大規模なWebプロジェクトを
 | `rebuild-plan.md`                 | サイト作り直し計画（cycle-278 策定・フェーズR=一斉切替/フェーズC=コンセプト適合）         |
 | `ADR/`（ディレクトリ）            | ADR 兼実験記録（仮説→賭け→観測→記録。1件=1ディレクトリ・`docs/ADR/README.md` が運用規約） |
 | `japanese-ai-slop.md`             | 日本語のAI臭チェックリスト（文章品質・DESIGN.md §6 と対）                                 |
+| `cognitive-rhythm-writing.md`     | 読み進めるリズムの設計規範（緊張の管理・文の拍・状況/文書の判定軸）                       |
 | `yoji-styleguide.md`              | 四字熟語AI視点例文のスタイルガイド                                                        |
 
 ルート直下の `DESIGN.md`（デザインシステム「店構え」）と `docs/site-concept.md` が判断の正典（いずれも cycle-278 でゼロから再導出）。
