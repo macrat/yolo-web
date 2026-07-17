@@ -53,8 +53,8 @@ const STRUCTURE_LABELS: Record<string, string> = {
   因果: "因果",
 };
 
-/** Maximum number of results to display at once */
-const DISPLAY_LIMIT = 50;
+/** Initial number of results shown, and how many more each "もっと見る" reveals */
+const PAGE_SIZE = 50;
 
 export default function YojiSearchTile({
   variant: _variant = "full",
@@ -79,16 +79,30 @@ export default function YojiSearchTile({
     difficulty !== "all" ||
     origin !== "all";
 
+  // How many results are currently revealed. Starts at one page and grows via
+  // the "もっと見る" button so a "一覧"(browse-all) visitor can reach every entry.
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+
   const results = useMemo(
     () => filterYoji({ query, category, difficulty, origin }),
     [query, category, difficulty, origin],
   );
 
+  // Any change to the query/filters resets the reveal count to one page.
+  // Done during render (React's "adjust state when inputs change" pattern)
+  // instead of in an effect, to avoid a cascading extra render.
+  const filterKey = `${query}|${category}|${difficulty}|${origin}`;
+  const [prevFilterKey, setPrevFilterKey] = useState(filterKey);
+  if (filterKey !== prevFilterKey) {
+    setPrevFilterKey(filterKey);
+    setVisibleCount(PAGE_SIZE);
+  }
+
   // Browse-first: show the list even before any keyword/filter so visitors
   // arriving with a "一覧"(browse) intent see idioms immediately instead of a
   // blank screen. Searching/filtering narrows the same list.
-  const displayedResults = results.slice(0, DISPLAY_LIMIT);
-  const hasMore = results.length > DISPLAY_LIMIT;
+  const displayedResults = results.slice(0, visibleCount);
+  const remainingCount = results.length - displayedResults.length;
 
   const toggleExpand = (yoji: string) => {
     setExpandedYoji((prev) => (prev === yoji ? null : yoji));
@@ -213,11 +227,14 @@ export default function YojiSearchTile({
                 </li>
               ))}
             </ul>
-            {hasMore && (
-              <p className={styles.moreResults}>
-                他 {results.length - DISPLAY_LIMIT}件 ──
-                キーワードやカテゴリで絞り込めます
-              </p>
+            {remainingCount > 0 && (
+              <button
+                type="button"
+                className={styles.moreButton}
+                onClick={() => setVisibleCount((count) => count + PAGE_SIZE)}
+              >
+                もっと見る（他 {remainingCount}件）
+              </button>
             )}
           </>
         )}
