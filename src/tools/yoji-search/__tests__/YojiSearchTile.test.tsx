@@ -11,12 +11,20 @@ describe("YojiSearchTile", () => {
     ).toBeInTheDocument();
   });
 
-  it("shows guide text when no filters are active", () => {
+  it("shows a browsable list by default (browse-first, no blank screen)", () => {
     render(<YojiSearchTile />);
+    // total count is shown above the list
     expect(screen.getByRole("status")).toHaveTextContent(/\d+語を収録/);
+    // the old blank "search first" guide screen is gone
     expect(
-      screen.getByText("キーワードやカテゴリで四字熟語を検索できます"),
-    ).toBeInTheDocument();
+      screen.queryByText("キーワードやカテゴリで四字熟語を検索できます"),
+    ).not.toBeInTheDocument();
+    // idioms are rendered immediately so 一覧-intent visitors see content
+    expect(
+      screen.getAllByRole("button", { name: /の詳細を表示/ }).length,
+    ).toBeGreaterThan(0);
+    // the list is capped and invites narrowing (proves it is not the full dump)
+    expect(screen.getByText(/他 \d+件/)).toBeInTheDocument();
   });
 
   it("filters results when typing a query", async () => {

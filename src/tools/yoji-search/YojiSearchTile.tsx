@@ -84,10 +84,11 @@ export default function YojiSearchTile({
     [query, category, difficulty, origin],
   );
 
-  const displayedResults = hasActiveFilter
-    ? results.slice(0, DISPLAY_LIMIT)
-    : [];
-  const hasMore = hasActiveFilter && results.length > DISPLAY_LIMIT;
+  // Browse-first: show the list even before any keyword/filter so visitors
+  // arriving with a "一覧"(browse) intent see idioms immediately instead of a
+  // blank screen. Searching/filtering narrows the same list.
+  const displayedResults = results.slice(0, DISPLAY_LIMIT);
+  const hasMore = results.length > DISPLAY_LIMIT;
 
   const toggleExpand = (yoji: string) => {
     setExpandedYoji((prev) => (prev === yoji ? null : yoji));
@@ -153,11 +154,7 @@ export default function YojiSearchTile({
             : `${YOJI_COUNT}語を収録`}
         </p>
 
-        {!hasActiveFilter ? (
-          <p className={styles.emptyState}>
-            キーワードやカテゴリで四字熟語を検索できます
-          </p>
-        ) : results.length === 0 ? (
+        {results.length === 0 ? (
           <p className={styles.emptyState}>
             条件に合う四字熟語が見つかりません
           </p>
@@ -219,7 +216,7 @@ export default function YojiSearchTile({
             {hasMore && (
               <p className={styles.moreResults}>
                 他 {results.length - DISPLAY_LIMIT}件 ──
-                キーワードを追加して絞り込めます
+                キーワードやカテゴリで絞り込めます
               </p>
             )}
           </>
