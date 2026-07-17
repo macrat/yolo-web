@@ -23,7 +23,7 @@
 | B-569 | 全診断のmeta/FAQのタイプ名例示が自診断に実在するか横断監査 | P3 | - | cycle-280でcharacter-personalityに別診断のタイプ名混入を発見・是正。検索結果の説明文の実害。他診断の同種混入を点検。詳細 cycle-280.md |
 | B-494 | Dynamic Workflows 運用知見の knowledge 恒久化 | P2 | 279 | **フェーズR(workflow一斉切替)の前提整備として昇格**。6点の知見をknowledge化。詳細 cycle-225.md |
 | B-540 | アンチパターン集の規約準拠クリーンアップ | P2 | - | docs/anti-patterns/全体の規約違反を一般化+発生番号のみへ是正。詳細 cycle-257.md |
-| B-505 | Dependabot 脆弱性アラートの調査と対応 | P2 | - | cycle-277 push時に19件(high3)。増分の調査・対応要。詳細 cycle-246.md |
+| B-505 | Dependabot 脆弱性アラートの調査と対応 | P1 | - | 現在20件(high3)・数サイクル放置。来訪者を害しうる脆弱性はRule1/2でRule4品質より上位=P2は不当(cycle-285でP1へ是正)。ただし来訪者到達性は未評価(静的中心=dev依存のみか要調査)=まず到達性を評価し届く高脆弱性は最優先。詳細 cycle-246.md |
 | B-466 | tmp/ 配下 .ts の typecheck/build 破壊の根本解消 | P3 | - | tsconfig.json exclude "tmp" 追加。詳細 cycle-216.md |
 | B-390 | AP 集全項目のガイド混入監査 | P3 | - | 残り implementation.md と writing.md。詳細 cycle-248.md |
 | B-398 | grep ベーステストの必要性再評価 | P3 | - | 訪問者価値の観点で再評価。詳細 cycle-189.md |
