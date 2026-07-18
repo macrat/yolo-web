@@ -2,7 +2,6 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-593 | ツールのセクション見出しの階層是正(h1→h3飛び) | P2 | 288 | cycle-287監査C1。本体見出しが*Tile.tsxで直接h3=h1→h3飛び。実測7ツールファイル・18箇所。tileごとに判断しh3→h2是正。詳細cycle-288/ |
 
 ## Queued (すぐに着手できる)
 
@@ -109,6 +108,7 @@
 
 | ID | Title | Completed Cycle | Notes |
 | --- | --- | --- | --- |
+| B-593 | ツールのセクション見出しの階層是正(h1→h3飛び) | 288 | 7ツール本体見出し18箇所をh3→h2(全てh1直下トップレベル=一律h2が正)。視覚不変(クラスがfont-size明示+全称マージンリセット)。回帰テスト10件追加。reviewer承認。実測でbacklog「約30」を7ファイルに訂正。詳細cycle-288/ |
 | B-505 | Dependabot 脆弱性アラートの調査と対応 | 286 | 20アラートの到達性評価=REACHABLE-VISITOR 0件。全依存を最新へ更新し破壊メジャーのみ検証で戻す。audit13→0。詳細cycle-286/ |
 | B-591 | 残dev-only高脆弱性(transformers連鎖)の解消 | 286 | 完了処理のCI確認でadm-zip更新失敗が判明→build専用transformers除去でaudit0。詳細cycle-286/ |
 | B-579 | 色コンテンツ面の成果物色の復元 | 283 | traditional-color結果OGPに固有伝統色を復元+dictionary/colors個別OGP新設(250件・純増)。記号面に罫+AA前景自動選択。DESIGN§2/§4に「色=中身の面」明文化。詳細cycle-283.md |
