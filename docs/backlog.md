@@ -2,6 +2,7 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-595 | ゲーム自動オープンモーダルのEsc閉じ後focus復帰 | P3 | 289 | cycle-287監査C3。自動オープン(初回遊び方/終了時結果)のみfocus復帰先がbody。共有useDialogで是正。詳細cycle-289/ |
 
 ## Queued (すぐに着手できる)
 
