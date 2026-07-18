@@ -434,6 +434,15 @@ describe("ResultCard - 結果を包み（Tsutsumi）で見せる（§7・persona
     expect(screen.queryByText("🦊")).not.toBeInTheDocument();
   });
 
+  test("F5: 勲章表示の結果タイトルは見出し(h2)で描画される（SRの見出しナビで結果に到達できる・WCAG 1.3.1）", () => {
+    render(<ResultCard {...defaultProps} result={medalResult} />);
+    const heading = screen.getByRole("heading", {
+      level: 2,
+      name: "勲章タイプ",
+    });
+    expect(heading.tagName).toBe("H2");
+  });
+
   test("color 欠落時は抑制ヘッダにフォールバック（診断完了ラベル・象徴を出さない）", () => {
     // baseResult は icon はあるが color なし
     render(<ResultCard {...defaultProps} />);

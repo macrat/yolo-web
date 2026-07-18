@@ -12,7 +12,7 @@
 | B-598 | 未結線の検索機能の処遇判断(結線 or 撤去) | P2 | - | cycle-287監査C7。検索がcycle-181以降未結線(dead code・build毎656KB索引生成)。旧B-331はcycle-278整理で消滅。a11yでなく製品判断。詳細cycle-287/findings.md |
 | B-595 | ゲーム自動オープンモーダルのEsc閉じ後focus復帰 | P3 | - | cycle-287監査C3(D-3)。初回遊び方/終了時結果の自動モーダルをEscで閉じるとfocusがbodyに落ちる(復帰先無)。共有useDialog・全ゲーム波及。詳細cycle-287/findings.md |
 | B-596 | ブログTOCアンカーのスラッグ不一致(code入り見出し) | P3 | - | cycle-287監査C4(F)。見出しに<code>含むとid(ltagt化)とTOC href生成が不一致でジャンプ不能。スラッグ生成共通化。詳細cycle-287/findings.md |
-| B-594 | 診断結果の主タイトル見出しの再検証 | P3 | - | cycle-287監査C2。Agent Cが「結果主タイトルが<p>」と主張もResultCard.tsx:476は既にh2=偽陽性疑い。実DOMで再確認し実在時のみ是正。詳細cycle-287/findings.md |
+| B-594 | 非診断のTsutsumi結果タイトルの見出し化 | P3 | - | cycle-287 C2(F5の姉妹)。監査ページはF5でh2化済。残=ResultPageShell/DailyFortuneCardのTsutsumiタイトル(同<p>)をtypeNameAs="h2"化。詳細cycle-287/findings.md |
 | B-597 | テーマトグルのタップ標的高さ(28px)のDESIGN準拠 | P4 | - | cycle-287監査C5。switch高さ28px=DESIGN§10の44px未満(WCAG2.5.8 24pxは充足)。当たり判定拡大の要否をDESIGN基準で判断。詳細cycle-287/findings.md |
 | B-599 | 辞典/共有まわりのa11y軽微群 | P4 | - | cycle-287監査C8。同部首117リンクがdiv(list構造喪失)/辞典ヒーロー大字がaria-hidden無で二重読み/共有ボタンの外部予告が面で不整合。詳細cycle-287/findings.md |
 | B-575 | 診断結果のシェアが少ない事実の扱い | P3 | - | share≈2件/28d(旧B-550・フェーズR前の古計測)。着手時は来訪者価値で正当化。経緯・扱いはcycle-285.md |

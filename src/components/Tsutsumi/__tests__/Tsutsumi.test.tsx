@@ -68,4 +68,20 @@ describe("Tsutsumi（包み）", () => {
     const { container } = render(<Tsutsumi typeName="型" color="yamabuki" />);
     expect(container.querySelector("figure")).not.toBeNull();
   });
+
+  test("既定ではタイプ名を <p> で描画する（見出し階層を汚さない）", () => {
+    render(<Tsutsumi typeName="静かな観察者" color="ai" />);
+    // 見出しロールでは取得できない（p のため）
+    expect(screen.queryByRole("heading", { name: "静かな観察者" })).toBeNull();
+    expect(screen.getByText("静かな観察者").tagName).toBe("P");
+  });
+
+  test("typeNameAs='h2' でタイプ名を見出し(h2)にする（F5・SR見出しナビ到達）", () => {
+    render(<Tsutsumi typeName="静かな観察者" color="ai" typeNameAs="h2" />);
+    const heading = screen.getByRole("heading", {
+      level: 2,
+      name: "静かな観察者",
+    });
+    expect(heading.tagName).toBe("H2");
+  });
 });

@@ -451,6 +451,10 @@ export default function ResultCard({
           </p>
           <Tsutsumi
             typeName={result.title}
+            // 診断結果の主タイトル（クライマックス）を見出し(h2)にし、SRの見出しナビで
+            // 結果へ到達できるようにする（cycle-287 F5・WCAG 1.3.1）。ページ h1 は
+            // QuizPlayPageLayout、結果内の詳細見出しは h3 のため h2 が階層上妥当。
+            typeNameAs="h2"
             word={catchphrase ?? undefined}
             symbol={pickResultSymbol(result.title)}
             color={pickResultWairoColor(result.id)}

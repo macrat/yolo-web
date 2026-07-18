@@ -57,6 +57,14 @@ export interface TsutsumiProps {
    * 補足（成果物の外・紙の上に置く小さな注記・任意）。結果の但し書きなど。
    */
   caption?: string;
+  /**
+   * タイプ名（{@link typeName}）を描画する要素。既定は "p"。
+   * 診断結果カードのようにタイプ名がその領域の主見出しになる文脈では "h2" を指定し、
+   * スクリーンリーダの見出しナビで結果（クライマックス）へ到達できるようにする
+   *（cycle-287 / WCAG 1.3.1）。見本・装飾用途では "p" のまま（見出し階層を汚さない）。
+   * 見た目は {@link typeName} のスタイルで固定され、要素を変えても変化しない。
+   */
+  typeNameAs?: "p" | "h2";
 }
 
 /**
@@ -81,6 +89,7 @@ export default function Tsutsumi({
   productName,
   seal,
   caption,
+  typeNameAs = "p",
 }: TsutsumiProps): ReactElement {
   // 数字があれば数字を主役に、無ければ記号を主役にする（記号面は主役を一つに絞る）
   const hasNumber =
@@ -119,7 +128,11 @@ export default function Tsutsumi({
 
       {/* 品名・結果の言葉は紙の上に墨で組む（器は静か）。 */}
       <figcaption className={styles.body}>
-        <p className={styles.typeName}>{typeName}</p>
+        {typeNameAs === "h2" ? (
+          <h2 className={styles.typeName}>{typeName}</h2>
+        ) : (
+          <p className={styles.typeName}>{typeName}</p>
+        )}
         {word && word.trim() !== "" ? (
           <p className={styles.word}>{word}</p>
         ) : null}

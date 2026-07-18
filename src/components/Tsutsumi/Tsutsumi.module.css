@@ -120,6 +120,9 @@
   margin: 0;
   font-family: var(--font-mincho);
   font-size: 1.9375rem; /* 31px・結果の言葉の主役 */
+  /* typeNameAs="h2"（診断結果カード）でも見た目を据え置くため font-weight を明示する。
+     未指定だと <h2> がUA既定の bold になり、<p> 時と字面が変わってしまう（cycle-287）。 */
+  font-weight: normal;
   line-height: 1.4;
   color: var(--ink);
   font-feature-settings: "palt";
