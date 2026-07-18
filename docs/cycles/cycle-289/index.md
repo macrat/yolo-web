@@ -22,11 +22,11 @@ completed_at: null
   - [x] `useDialog`（＋`GameDialog`）に `returnFocusRef` を追加し、自動オープン時のみ showModal 直前に復帰先へ focus（native 復帰先を復帰先アンカーにする）
   - [x] 4ゲームの HowToPlay / Result へ `returnFocusRef={titleRef}` を結線・GameHeader の h1 に ref+tabIndex=-1（Stats は据置）
 - [ ] 検証
-  - [x] `useDialog` の回帰テストを追加（自動オープンで復帰先へ focus／手動起動では素通し／ref 無しは body 据置の3件・全7件通過）
-  - [x] Playwright 実測: 4ゲームの初回遊び方を Esc 閉じ→activeElement が各ゲームの h1(tabIndex=-1) に復帰・body 落ち回避を確認。手動起動(help)は起動元ボタンへ復帰=退行なし。終了時結果は同一共有機構(useDialog+returnFocusRef)のため単体テスト＋遊び方実測で担保。詳細は playwright-verification 節
-  - [x] 視覚不変の確認: ダイアログ正常表示・レイアウト崩れなし・h1/閉じるボタンの focus インジケータ可視・コンソールエラー0（Playwright スクショ）
-- [ ] レビュー（reviewer サブエージェント）を受け、指摘に対応する
-- [x] `npm run lint && npm run format:check && npm run test`（build は確認中）— lint 0・format 準拠・全5489テスト通過
+  - [x] `useDialog` の回帰テストを追加（自動オープンで復帰先へ focus／preventScroll 付与／手動起動では素通し／ref 無しは body 据置の4件・全8件通過）
+  - [x] Playwright 実測: 4ゲームの初回遊び方を Esc 閉じ→activeElement が各ゲームの h1(tabIndex=-1) に復帰・body 落ち回避を確認。**終了時結果も実フローで実測**（kanji-kanaru を6回誤答で負けに誘導→Result 自動オープン→scrollY=2000 から Esc 閉じ→focus=h1・scrollY 保持）。手動起動(help)は起動元ボタンへ復帰=退行なし。詳細は「Playwright 実測結果」節
+  - [x] 視覚不変の確認: ダイアログ正常表示・レイアウト崩れなし・スクロール位置保持・h1/閉じるボタンの focus インジケータ可視・コンソールエラー0（Playwright スクショ）
+- [x] レビュー（reviewer サブエージェント）を受け、指摘に対応する（2巡・経過は [review-log.md](./review-log.md)。1巡目 Major=preventScroll で根治+実測・2巡目=白紙で承認水準/Minor・Nit は記述訂正）
+- [x] `npm run lint && npm run format:check && npm run test && npm run build` の全通過（lint 0・format 準拠・全5490テスト通過・build exit 0）
 
 ## 作業計画
 
