@@ -91,10 +91,14 @@
   根因: eslint 10 が非推奨 API `context.getFilename()` を削除。eslint-config-next 同梱の `eslint-plugin-react` が旧 API を呼び続けており、ルール読込時に例外。
 - **判断**: eslint プラグインエコシステム（plugin-react / plugin-import / plugin-jsx-a11y、いずれも eslint-config-next 配下）が eslint 10 未対応。9 系最新の `^9.39.5` へ据え置き。
 
-## 据え置いた残件（触らない）
+## 残 3 high の解消（完了処理中の追加対応・B-591 完遂）
 
-- **npm audit 残 3 high**: `adm-zip <0.6.0`（GHSA-xcpc-8h2w-3j85）→ `onnxruntime-node` → `@huggingface/transformers` の devDep 連鎖。ビルド専用スクリプト `scripts/generate-kanji-embeddings.ts` でのみ使用され、**来訪者のバンドルには届かない（到達性 NON-VISITOR）**。
-- 修正には `npm audit fix --force` が示す `@huggingface/transformers@3.8.1` への **breaking downgrade** が必要。非破壊方針に反し安全価値も来訪者に無いため据え置く。
+当初は下記を「据え置き（B-591）」としていたが、push 後の CI 確認（完了手順8）で **Dependabot の adm-zip セキュリティ更新ジョブが main に対して失敗**していた（`npm_and_yarn in /. for adm-zip - Update`。私のコミットの build/test/typecheck/lint/Deploy は全て success）。原因は下記の残 3 high で、放置すると赤 CI が永続する。AP-WF15 の判断軸（来訪者影響なし・**本サイクル＝脆弱性対応の目的そのもの**・規模小・放置の永続化を回避）で評価し、別サイクル先送りでなく本サイクル内でクリーンに解消した。
+
+- **残 3 high**: `adm-zip <0.6.0`（GHSA-xcpc-8h2w-3j85）→ `onnxruntime-node` → `@huggingface/transformers` の devDep 単一連鎖。
+- 一次確認: `@huggingface/transformers` を import するのは `scripts/generate-kanji-embeddings.ts` **ただ1ファイル**（`grep` 確認）。この生成スクリプトはどの npm script（prebuild/build/test）・CI からも呼ばれない**手動専用**で、生成物 `src/data/kanji-embeddings-384.json` は**コミット済み**（実行時・ビルド時はこの JSON を使い、transformers は使わない）。
+- 対応: `@huggingface/transformers` を devDependencies から**除去**し、唯一の利用者 `scripts/generate-kanji-embeddings.ts` を**削除**（埋め込みの再生成手順は git 履歴から復元可能。再生成時のみ transformers を再インストールする）。`analyze-embedding-thresholds.ts` は fs/path のみ利用で transformers 非依存のため残置。
+- 結果: adm-zip / onnxruntime-node / transformers の連鎖ごと消え、**npm audit = 0**。4 コマンド全 PASS（test 5461・build 4128）を再確認。**B-591 は解消（Done）**。
 
 ## 最終 overrides とその理由
 
@@ -114,19 +118,21 @@
 
 ## npm audit 件数の推移
 
-| 時点             | total | high  | 内訳                                                                               |
-| ---------------- | ----- | ----- | ---------------------------------------------------------------------------------- |
-| cycle-286 着手前 | 13    | 6     | low2 / moderate5 / high6（複数連鎖）                                               |
-| 最終（本作業後） | **3** | **3** | 全て adm-zip / onnxruntime-node / @huggingface/transformers（devDep・NON-VISITOR） |
+| 時点                        | total | high  | 内訳                                                        |
+| --------------------------- | ----- | ----- | ----------------------------------------------------------- |
+| cycle-286 着手前            | 13    | 6     | low2 / moderate5 / high6（複数連鎖）                        |
+| 一括更新＋メジャー戻し後    | 3     | 3     | adm-zip / onnxruntime-node / @huggingface/transformers 連鎖 |
+| transformers 除去後（最終） | **0** | **0** | 脆弱性なし                                                  |
 
-- Latest 一括更新により推移的依存が自然に patched 版へ解決され、残件は上記 transformers 連鎖のみに収束。
+- Latest 一括更新で推移的依存が patched 版へ解決され残 3 に収束、さらに build 専用の transformers 連鎖を除去して **audit 0** に到達。
 
 ## 変更ファイル
 
 依存の実体変更:
 
-- `package.json`（js-yaml `^4.3.0` へ・`@types/js-yaml ^4.0.9` 復活・typescript/eslint は最新メジャー不採用で 6.0.3 / ^9.39.5 維持・prettier 3.9.5 等 Latest・overrides 確定）
-- `package-lock.json`（上記反映）
+- `package.json`（js-yaml `^4.3.0` へ・`@types/js-yaml ^4.0.9` 復活・typescript/eslint は最新メジャー不採用で 6.0.3 / ^9.39.5 維持・prettier 3.9.5 等 Latest・overrides 確定・**`@huggingface/transformers` を devDependencies から除去**）
+- `package-lock.json`（上記反映。transformers/onnxruntime-node/adm-zip 連鎖が消滅）
+- `scripts/generate-kanji-embeddings.ts` を**削除**（transformers の唯一の利用者・手動専用。埋め込み JSON はコミット済み・再生成手順は git 履歴に保存）
 
 prettier 3.9.5 昇格に伴う**再フォーマット（整形のみ・ロジック不変）= 計 28 ファイル**（`package.json`/`package-lock.json` の依存変更・本サイクルの文書編集は別途。内訳の合計＝13＋14＋1＝28）:
 

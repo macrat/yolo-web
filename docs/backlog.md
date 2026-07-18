@@ -8,7 +8,6 @@
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
 | B-575 | 診断結果のシェアが少ない事実の扱い | P3 | - | share≈2件/28d(旧B-550・フェーズR前の古計測)。着手時は来訪者価値で正当化。経緯・扱いはcycle-285.md |
-| B-591 | 残dev-only高脆弱性(transformers連鎖)の解消 | P3 | - | npm audit残3high(adm-zip/onnxruntime-node/transformers)=build専用devDep連鎖・NON-VISITOR。除去/置換/pin検討。詳細cycle-286/ |
 | B-589 | 判定が同点時に配列順で決着する件の検証 | P3 | - | scoring.ts:82の strict `>` で同点時に配列先頭タイプが決まる(コード確認済)。同点頻度・到達不能タイプ・§5配点表は未検証=重大度不明。着手時に独立再検査。詳細cycle-285.md |
 | B-586 | rebuild-plan.md の処遇(archive移動)と参照元の付け替え | P2 | - | 作り直しはcycle-279完了・中身はbacklog/ADRへ移設済だが参照(ADR001・cycle-kickoff SKILL等)が残る=archive移動と参照付け替えが要る。cycle-284重大事故の舞台。詳細cycle-284.md事故報告 |
 | B-583 | 「店構え」統一と印の要否を来訪者価値から再検討 | P3 | - | 店構え統一・印の要否を来訪者価値から再評価。旧着手条件は消滅済(Queued)。詳細cycle-283.md/cycle-285.md |
@@ -102,7 +101,8 @@
 
 | ID | Title | Completed Cycle | Notes |
 | --- | --- | --- | --- |
-| B-505 | Dependabot 脆弱性アラートの調査と対応 | 286 | 20アラートの到達性評価=REACHABLE-VISITOR 0件。全依存を最新へ更新し破壊メジャーのみ検証で戻す。audit13→3。詳細cycle-286/ |
+| B-505 | Dependabot 脆弱性アラートの調査と対応 | 286 | 20アラートの到達性評価=REACHABLE-VISITOR 0件。全依存を最新へ更新し破壊メジャーのみ検証で戻す。audit13→0。詳細cycle-286/ |
+| B-591 | 残dev-only高脆弱性(transformers連鎖)の解消 | 286 | 完了処理のCI確認でadm-zip更新失敗が判明→build専用transformers除去でaudit0。詳細cycle-286/ |
 | B-579 | 色コンテンツ面の成果物色の復元 | 283 | traditional-color結果OGPに固有伝統色を復元+dictionary/colors個別OGP新設(250件・純増)。記号面に罫+AA前景自動選択。DESIGN§2/§4に「色=中身の面」明文化。詳細cycle-283.md |
 | B-580 | OGPの印を来訪者起点で問い直す | 283 | **撤回**。cycle-283で家印を試→屋に変更したが「どの字が一番『店』を伝えるか」という運営者目線の判断で来訪者価値ゼロ=cycle-282の病の再演(事故)。屋をコードごと撤回し着手前の試へ戻した。印の要否・店構え統一自体の再検討はB-583へ。詳細cycle-283.md事故報告 |
 | B-570 | OGP画像をサイト全面で新デザイン(店構え)へ移行 | 282 | 共通生成器を店構え(紙/墨/罫/明朝/朱の印「試」)へ書換・54面一斉是正。accentColor/icon削除・器定数utsuwaHex抽出・gate除外解除でhumor独自旧OGPも是正・DESIGN.md §4看板規定・代表8面実見。詳細 cycle-282.md |
