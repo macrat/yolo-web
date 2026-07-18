@@ -2,12 +2,12 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-573 | UI/UX/アクセシビリティのベストプラクティス調査と全面適用 | P1 | 287 | cycle-287着手=計測先行スライス(代表原型の動的a11y監査+具体欠陥是正)。全面展開はキャリーオーバー。前提=research/2026-07-15-wcag22-current-state.md。詳細cycle-287/ |
 
 ## Queued (すぐに着手できる)
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-573 | UI/UX/アクセシビリティの全面適用(残: 全面展開) | P1 | - | cycle-287で監査+代表原型の是正スライス完了(F1-F5)。残=全81ページ/36ツールへの全面展開。系統的な個別項目はB-593/595/596/599等に分割起票済。詳細cycle-287/ |
 | B-593 | ツールのセクション見出しの階層是正(h1→h3飛び) | P2 | - | cycle-287監査C1。各*Tile.tsxが個別にh3ハードコード(約30ファイル)でh2を飛ばす。系統的是正(h3→h2か中間h2)。詳細cycle-287/findings.md |
 | B-598 | 未結線の検索機能の処遇判断(結線 or 撤去) | P2 | - | cycle-287監査C7。検索がcycle-181以降未結線(dead code・build毎656KB索引生成)。旧B-331はcycle-278整理で消滅。a11yでなく製品判断。詳細cycle-287/findings.md |
 | B-595 | ゲーム自動オープンモーダルのEsc閉じ後focus復帰 | P3 | - | cycle-287監査C3(D-3)。初回遊び方/終了時結果の自動モーダルをEscで閉じるとfocusがbodyに落ちる(復帰先無)。共有useDialog・全ゲーム波及。詳細cycle-287/findings.md |

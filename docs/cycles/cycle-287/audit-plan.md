@@ -35,4 +35,4 @@ jsx-a11y の広めのルールを **error 強制**した probe(`tmp/eslint-a11y-
 | E   | 辞典(一覧+個別)                    | `/dictionary/kanji` +`/dictionary/kanji/水`         | ランドマーク・見出し階層・一覧カードのタップ標的とアクセシブル名                                    |
 | F   | ブログ記事+静的                    | `/blog/clickable-list-row-stretched-link` +`/about` | 見出し階層・ランドマーク・リンクのアクセシブル名・目次                                              |
 
-各監査は `tmp/a11y-audit-<A..F>.md` に判定表(具体箇所・重大度・再現手順)を書き、PMが `findings.md` に統合する。
+各監査は判定表(具体箇所・重大度・再現手順)を作業ファイル(ephemeral)に書き出し、PMが一次確認のうえ `findings.md` に要点を統合する（正本は `findings.md`）。
