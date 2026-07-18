@@ -123,6 +123,9 @@ export default function GameContainer({
   const [stats, setStats] = useState<NakamawakeGameStats>(() => loadStats());
   const [showResult, setShowResult] = useState(false);
   const [showStats, setShowStats] = useState(false);
+  // Focus-restore anchor for auto-opened modals (first-visit HowToPlay /
+  // game-end Result). Without it, closing those modals drops focus to <body>.
+  const titleRef = useRef<HTMLHeadingElement>(null);
   // Initialize to false for SSR/CSR consistency.
   // Lazy initializer that reads localStorage would return true on first client
   // visit but false during SSR (window undefined), causing a hydration mismatch.
@@ -360,6 +363,7 @@ export default function GameContainer({
         dateString={dateDisplayString}
         onHelpClick={() => setShowHowToPlay(true)}
         onStatsClick={() => setShowStats(true)}
+        titleRef={titleRef}
       />
       <SolvedGroups groups={gameState.solvedGroups} />
       <div style={{ visibility: isReady ? "visible" : "hidden" }}>
@@ -394,12 +398,14 @@ export default function GameContainer({
       <HowToPlayModal
         open={showHowToPlay}
         onClose={() => setShowHowToPlay(false)}
+        returnFocusRef={titleRef}
       />
       <ResultModal
         open={showResult}
         onClose={() => setShowResult(false)}
         gameState={gameState}
         crossCategoryItems={crossCategoryItems}
+        returnFocusRef={titleRef}
         onStatsClick={() => {
           setShowResult(false);
           setShowStats(true);

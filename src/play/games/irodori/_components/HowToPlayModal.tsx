@@ -6,19 +6,26 @@ import styles from "./HowToPlayModal.module.css";
 interface Props {
   open: boolean;
   onClose: () => void;
+  /** Focus-restore anchor for the first-visit auto-open. See GameContainer. */
+  returnFocusRef?: React.RefObject<HTMLElement | null>;
 }
 
 /**
  * Modal explaining how to play the Irodori game.
  * Uses the shared GameDialog component for consistent dialog behavior.
  */
-export default function HowToPlayModal({ open, onClose }: Props) {
+export default function HowToPlayModal({
+  open,
+  onClose,
+  returnFocusRef,
+}: Props) {
   return (
     <GameDialog
       open={open}
       onClose={onClose}
       titleId="irodori-howtoplay-title"
       title={"\u30A4\u30ED\u30C9\u30EA\u306E\u904A\u3073\u65B9"}
+      returnFocusRef={returnFocusRef}
     >
       <div className={styles.content}>
         <p>

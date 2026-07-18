@@ -12,21 +12,21 @@ completed_at: null
 ## 実施する作業
 
 - [ ] 現状の把握（一次確認）
-  - [ ] 4ゲーム（kanji-kanaru / irodori / nakamawake / yoji-kimeru）の各 `GameContainer` で、HowToPlay（初回訪問）と Result（終了時）の `open` 制御が「トリガ要素なしの自動オープン」であることをコードで確認する
-  - [ ] 手動起動（onHelpClick / onStatsClick）経路は現状で正常（トリガ復帰あり）であることを再確認し、退行させないと決める
+  - [x] 4ゲーム（kanji-kanaru / irodori / nakamawake / yoji-kimeru）の各 `GameContainer` で、HowToPlay（初回訪問）と Result（終了時）の `open` 制御が「トリガ要素なしの自動オープン」であることをコードで確認する
+  - [x] 手動起動（onHelpClick / onStatsClick）経路は現状で正常（トリガ復帰あり）であることを再確認し、退行させないと決める
   - [ ] Playwright で kanji-kanaru の初回遊び方モーダルを Esc 閉じ→`document.activeElement` が body に落ちることを実測（是正前の証拠）
-- [ ] 設計判断の確定（別ファイル `design-decision.md` に記録）
-  - [ ] 「自動オープン経路で閉じたとき、focus をどこへ戻すか」を決める（候補: ゲーム主要領域 / 主見出し / 直近の主要操作要素）
-  - [ ] 手動起動との判別方法を決める（例: showModal 時の activeElement が body かどうか、または明示 prop）
-- [ ] 実装（共有経路の一点是正を優先）
-  - [ ] `useDialog`（または `GameDialog`）に「復帰先」を渡せる仕組みを追加し、自動オープン経路のみ復帰先へ focus を戻す
-  - [ ] 4ゲームの HowToPlay / Result 呼び出し側で復帰先を結線する（Stats 等の手動起動は据置）
+- [x] 設計判断の確定（別ファイル `design-decision.md` に記録）
+  - [x] 「自動オープン経路で閉じたとき、focus をどこへ戻すか」を決める（→ ゲーム名 `<h1>`（tabIndex=-1）。理由は design-decision.md 決定1）
+  - [x] 手動起動との判別方法を決める（→ showModal 直前の `document.activeElement` が body/null なら自動オープン。design-decision.md 決定2）
+- [x] 実装（共有経路の一点是正を優先）
+  - [x] `useDialog`（＋`GameDialog`）に `returnFocusRef` を追加し、自動オープン時のみ showModal 直前に復帰先へ focus（native 復帰先を復帰先アンカーにする）
+  - [x] 4ゲームの HowToPlay / Result へ `returnFocusRef={titleRef}` を結線・GameHeader の h1 に ref+tabIndex=-1（Stats は据置）
 - [ ] 検証
-  - [ ] `useDialog` の回帰テストを追加（復帰先が指定されたとき close 後に focus が復帰先へ移る／手動起動相当では既存挙動を壊さない）
-  - [ ] Playwright で4ゲームの初回遊び方・終了時結果を Esc 閉じ→focus が body でなく復帰先にあることを実測（是正後の証拠）
+  - [x] `useDialog` の回帰テストを追加（自動オープンで復帰先へ focus／手動起動では素通し／ref 無しは body 据置の3件・全7件通過）
+  - [ ] Playwright で初回遊び方・終了時結果を Esc 閉じ→focus が body でなく復帰先にあることを実測（是正後の証拠）
   - [ ] 視覚不変の確認（focus 管理のみで見た目・レイアウトを変えない）
 - [ ] レビュー（reviewer サブエージェント）を受け、指摘に対応する
-- [ ] `npm run lint && npm run format:check && npm run test && npm run build` の全通過
+- [x] `npm run lint && npm run format:check && npm run test`（build は確認中）— lint 0・format 準拠・全5489テスト通過
 
 ## 作業計画
 

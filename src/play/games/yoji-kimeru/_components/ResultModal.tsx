@@ -26,6 +26,8 @@ interface ResultModalProps {
   onStatsClick: () => void;
   /** 他カテゴリへの導線データ。Server Component（page.tsx）で事前計算して渡す。 */
   crossCategoryItems: CrossCategoryItem[];
+  /** Focus-restore anchor for the game-end auto-open. See GameContainer. */
+  returnFocusRef?: React.RefObject<HTMLElement | null>;
 }
 
 /**
@@ -40,6 +42,7 @@ export default function ResultModal({
   difficulty,
   onStatsClick,
   crossCategoryItems,
+  returnFocusRef,
 }: ResultModalProps) {
   const { targetYoji, guesses, status } = gameState;
 
@@ -61,6 +64,7 @@ export default function ResultModal({
       onClose={onClose}
       titleId="yoji-kimeru-result-title"
       title={isWon ? "正解!" : "残念..."}
+      returnFocusRef={returnFocusRef}
       footer={
         <button
           className={styles.statsButton}

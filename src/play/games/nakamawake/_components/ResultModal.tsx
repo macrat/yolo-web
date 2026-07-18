@@ -19,6 +19,8 @@ interface Props {
   onStatsClick: () => void;
   /** 他カテゴリへの導線データ。Server Component（page.tsx）で事前計算して渡す。 */
   crossCategoryItems: CrossCategoryItem[];
+  /** Focus-restore anchor for the game-end auto-open. See GameContainer. */
+  returnFocusRef?: React.RefObject<HTMLElement | null>;
 }
 
 /**
@@ -31,6 +33,7 @@ export default function ResultModal({
   gameState,
   onStatsClick,
   crossCategoryItems,
+  returnFocusRef,
 }: Props) {
   const isWon = gameState.status === "won";
   const shareText = generateShareText(gameState);
@@ -51,6 +54,7 @@ export default function ResultModal({
       onClose={onClose}
       titleId="nakamawake-result-title"
       title={isWon ? "\u3059\u3079\u3066\u6B63\u89E3!" : "\u6B8B\u5FF5..."}
+      returnFocusRef={returnFocusRef}
       footer={
         <button
           className={styles.statsButton}

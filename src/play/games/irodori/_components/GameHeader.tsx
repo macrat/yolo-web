@@ -7,6 +7,12 @@ interface Props {
   dateString: string;
   onHelpClick: () => void;
   onStatsClick: () => void;
+  /**
+   * Ref to the game title <h1>. Used as the focus-restore anchor when an
+   * auto-opened modal (first-visit HowToPlay / game-end Result) closes, so
+   * keyboard/SR focus is not lost to <body>. See useDialog / GameContainer.
+   */
+  titleRef?: React.Ref<HTMLHeadingElement>;
 }
 
 /**
@@ -17,10 +23,11 @@ export default function GameHeader({
   dateString,
   onHelpClick,
   onStatsClick,
+  titleRef,
 }: Props) {
   return (
     <header className={styles.header}>
-      <h1 className={styles.title}>
+      <h1 ref={titleRef} tabIndex={-1} className={styles.title}>
         {"イロドリ"} <span className={styles.number}>#{puzzleNumber}</span>
       </h1>
       <p className={styles.date}>{dateString}</p>

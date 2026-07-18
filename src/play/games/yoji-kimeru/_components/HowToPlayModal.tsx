@@ -6,19 +6,26 @@ import styles from "./styles/YojiKimeru.module.css";
 interface HowToPlayModalProps {
   open: boolean;
   onClose: () => void;
+  /** Focus-restore anchor for the first-visit auto-open. See GameContainer. */
+  returnFocusRef?: React.RefObject<HTMLElement | null>;
 }
 
 /**
  * Modal explaining how to play the game.
  * Uses the shared GameDialog component for consistent dialog behavior.
  */
-export default function HowToPlayModal({ open, onClose }: HowToPlayModalProps) {
+export default function HowToPlayModal({
+  open,
+  onClose,
+  returnFocusRef,
+}: HowToPlayModalProps) {
   return (
     <GameDialog
       open={open}
       onClose={onClose}
       titleId="yoji-kimeru-howtoplay-title"
       title="遊び方"
+      returnFocusRef={returnFocusRef}
     >
       <div className={styles.howToPlayContent}>
         <p>

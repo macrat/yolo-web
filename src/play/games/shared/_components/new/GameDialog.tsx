@@ -26,6 +26,15 @@ interface GameDialogProps {
   headerContent?: ReactNode;
   /** Optional content rendered just before the close button (e.g. stats button). */
   footer?: ReactNode;
+  /**
+   * Optional element to focus when an *auto-opened* dialog closes. Auto-opened
+   * dialogs (first-visit HowToPlay / game-end Result) have no trigger element,
+   * so native focus restoration falls back to <body>; passing a stable anchor
+   * (e.g. the game's <h1>) keeps keyboard/SR focus from being lost. Manually
+   * opened dialogs (help/stats buttons) ignore this and restore to the trigger.
+   * See useDialog for details.
+   */
+  returnFocusRef?: React.RefObject<HTMLElement | null>;
 }
 
 /**
@@ -49,10 +58,12 @@ export default function GameDialog({
   className,
   headerContent,
   footer,
+  returnFocusRef,
 }: GameDialogProps) {
   const { dialogRef, handleClose, handleBackdropClick } = useDialog(
     open,
     onClose,
+    returnFocusRef,
   );
 
   return (

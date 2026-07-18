@@ -157,6 +157,9 @@ export default function GameContainer({
   const [stats, setStats] = useState<GameStats>(() => loadStats(difficulty));
   const [showResult, setShowResult] = useState(false);
   const [showStats, setShowStats] = useState(false);
+  // Focus-restore anchor for auto-opened modals (first-visit HowToPlay /
+  // game-end Result). Without it, closing those modals drops focus to <body>.
+  const titleRef = useRef<HTMLHeadingElement>(null);
   const [showHowToPlay, setShowHowToPlay] = useState(() => {
     // Show HowToPlay on first visit
     if (typeof window === "undefined") return false;
@@ -436,6 +439,7 @@ export default function GameContainer({
         onDifficultyChange={handleDifficultyChange}
         onHelpClick={() => setShowHowToPlay(true)}
         onStatsClick={() => setShowStats(true)}
+        titleRef={titleRef}
       />
       <HintBar
         strokeCount={hintsData?.hints.strokeCount ?? 0}
@@ -451,6 +455,7 @@ export default function GameContainer({
       <HowToPlayModal
         open={showHowToPlay}
         onClose={() => setShowHowToPlay(false)}
+        returnFocusRef={titleRef}
       />
       <ResultModal
         open={showResult}
@@ -458,6 +463,7 @@ export default function GameContainer({
         gameState={gameState}
         difficulty={difficulty}
         crossCategoryItems={crossCategoryItems}
+        returnFocusRef={titleRef}
         onStatsClick={() => {
           setShowResult(false);
           setShowStats(true);

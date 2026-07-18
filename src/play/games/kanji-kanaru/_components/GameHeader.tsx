@@ -13,6 +13,12 @@ interface GameHeaderProps {
   onDifficultyChange: (difficulty: Difficulty) => void;
   onHelpClick: () => void;
   onStatsClick: () => void;
+  /**
+   * Ref to the game title <h1>. Used as the focus-restore anchor when an
+   * auto-opened modal (first-visit HowToPlay / game-end Result) closes, so
+   * keyboard/SR focus is not lost to <body>. See useDialog / GameContainer.
+   */
+  titleRef?: React.Ref<HTMLHeadingElement>;
 }
 
 /**
@@ -25,11 +31,12 @@ export default function GameHeader({
   onDifficultyChange,
   onHelpClick,
   onStatsClick,
+  titleRef,
 }: GameHeaderProps) {
   return (
     <header className={styles.header}>
       <div className={styles.headerTop}>
-        <h1 className={styles.title}>
+        <h1 ref={titleRef} tabIndex={-1} className={styles.title}>
           {"\u6F22\u5B57\u30AB\u30CA\u30FC\u30EB"}
         </h1>
         <div className={styles.headerButtons}>
