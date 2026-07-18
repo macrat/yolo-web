@@ -513,6 +513,37 @@ describe("T-11: CSS トークン検証", () => {
 });
 
 // =========================================================
+// T-13: マッチ一覧見出しの見出しレベル（a11y 回帰防止）
+// =========================================================
+describe("T-13: マッチ一覧見出しの見出しレベル", () => {
+  // B-593: h1→h3 飛び是正の回帰防止。
+  // ツール本体セクション見出し「マッチ結果」が h2 であることを保証し、
+  // h2 を飛ばして h3 になる見出し階層崩れの再発を防ぐ。
+  it("マッチが出たとき「マッチ結果」見出しが見出しレベル2（h2）で描画される", async () => {
+    render(<RegexTesterTile variant="full" />);
+    const patternInput = screen.getByRole("textbox", {
+      name: /正規表現パターン/,
+    });
+    const testStringArea = screen.getByRole("textbox", {
+      name: /テスト文字列/,
+    });
+
+    await act(async () => {
+      fireEvent.change(patternInput, { target: { value: "\\d+" } });
+      fireEvent.change(testStringArea, {
+        target: { value: "abc 123 def 456" },
+      });
+      await flushWorker();
+    });
+
+    // 見出しテキストは「マッチ結果: N件」の動的テキスト。level:2 で回帰を検証する。
+    expect(
+      screen.getByRole("heading", { level: 2, name: /マッチ結果/ }),
+    ).toBeInTheDocument();
+  });
+});
+
+// =========================================================
 // T-12: Worker クリーンアップ確認（terminate が呼ばれる）
 // =========================================================
 describe("T-12: Worker ライフサイクル", () => {

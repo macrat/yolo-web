@@ -147,6 +147,22 @@ describe("V-4: タブ切替", () => {
   });
 });
 
+// --- V-4b: 本体見出しの見出しレベル（B-593 回帰防止） ---
+describe("V-4b: 本体見出しの見出しレベル（B-593）", () => {
+  it("よくある間違いセクションの見出しが h2（h1→h3 飛び是正の回帰防止）", async () => {
+    // B-593: ツール本体の見出しが h1 の直下で h3 になり h2 を飛ばしていた問題の是正。
+    // mistakeSectionTitle の見出し（例: 「二重敬語」）が見出しレベル2 で描画されることを検証する。
+    render(<KeigoReferenceTile variant="full" />);
+    const mistakesTab = screen.getByRole("radio", { name: "よくある間違い" });
+    await act(async () => {
+      fireEvent.click(mistakesTab);
+    });
+    expect(
+      screen.getByRole("heading", { level: 2, name: /二重敬語/ }),
+    ).toBeInTheDocument();
+  });
+});
+
 // --- V-5: カテゴリフィルター ---
 describe("V-5: カテゴリフィルター", () => {
   it("「ビジネス」フィルターで基本動詞「行く」が消える", async () => {

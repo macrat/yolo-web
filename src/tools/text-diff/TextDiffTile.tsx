@@ -246,7 +246,7 @@ export default function TextDiffTile({
        * 長文 <pre> には aria-live なし / role="region" + aria-label のみ */}
       {!isEmptyInput && (
         <div className={styles.result}>
-          <h3 className={styles.resultHeading}>差分結果</h3>
+          <h2 className={styles.resultHeading}>差分結果</h2>
           {!hasDiff ? (
             <p className={styles.noDiff}>テキストに差分はありません。</p>
           ) : (

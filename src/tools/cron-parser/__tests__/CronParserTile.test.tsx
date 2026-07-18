@@ -606,6 +606,54 @@ describe("CronParserTile - JST固定化", () => {
 });
 
 // =========================================================
+// 見出しレベル回帰（B-593: h1→h3 飛び是正の回帰防止）
+// =========================================================
+describe("CronParserTile - 見出しレベル回帰（B-593）", () => {
+  // B-593: 本体セクション見出しは h1 直下のトップレベルなので h2 が正。
+  // かつて h3 で描画され h1→h3 とレベルを飛ばしていた回帰を防ぐ。
+  it("解析モードの「Cron式を入力」見出しが level 2（h2）である", async () => {
+    await act(async () => {
+      render(<CronParserTile variant="parser" />);
+    });
+    expect(
+      screen.getByRole("heading", { level: 2, name: "Cron式を入力" }),
+    ).toBeInTheDocument();
+  });
+
+  it("有効なcron式を解析すると「フィールド詳細」「次回実行予定（JST）」も level 2（h2）で描画される", async () => {
+    await act(async () => {
+      render(<CronParserTile variant="parser" />);
+    });
+    const input = screen.getByLabelText(/cron式入力/i);
+    await act(async () => {
+      fireEvent.change(input, { target: { value: "0 9 * * 1-5" } });
+    });
+    const parseBtn = screen.getByRole("button", { name: /^解析$/ });
+    await act(async () => {
+      fireEvent.click(parseBtn);
+    });
+    expect(
+      screen.getByRole("heading", { level: 2, name: "フィールド詳細" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { level: 2, name: "次回実行予定（JST）" }),
+    ).toBeInTheDocument();
+  });
+
+  it("ビルダーモードの「Cron式ビルダー」「生成されたCron式」見出しが level 2（h2）である", async () => {
+    await act(async () => {
+      render(<CronParserTile variant="builder" />);
+    });
+    expect(
+      screen.getByRole("heading", { level: 2, name: "Cron式ビルダー" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { level: 2, name: "生成されたCron式" }),
+    ).toBeInTheDocument();
+  });
+});
+
+// =========================================================
 // CSS トークン検証（E-12 相当）
 // =========================================================
 describe("CronParserTile - CSS トークン検証", () => {

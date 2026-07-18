@@ -205,7 +205,7 @@ export default function DateCalculatorTile({
       {/* Section 1: 日付の差分 */}
       {showDiff && (
         <section className={styles.section}>
-          <h3 className={styles.sectionTitle}>日付の差分</h3>
+          <h2 className={styles.sectionTitle}>日付の差分</h2>
           <div className={styles.row}>
             <label htmlFor={date1Id} className={styles.srOnly}>
               日付1
@@ -288,7 +288,7 @@ export default function DateCalculatorTile({
       {/* Section 2: 日付の加算・減算 */}
       {showAdd && (
         <section className={styles.section}>
-          <h3 className={styles.sectionTitle}>日付の加算・減算</h3>
+          <h2 className={styles.sectionTitle}>日付の加算・減算</h2>
           <div className={styles.row}>
             <label htmlFor={baseDateId} className={styles.srOnly}>
               基準日
@@ -351,7 +351,7 @@ export default function DateCalculatorTile({
       {/* Section 3: 和暦・西暦変換 */}
       {showWareki && (
         <section className={styles.section}>
-          <h3 className={styles.sectionTitle}>和暦・西暦変換</h3>
+          <h2 className={styles.sectionTitle}>和暦・西暦変換</h2>
 
           {/* 西暦→和暦 */}
           <div className={styles.subSection}>

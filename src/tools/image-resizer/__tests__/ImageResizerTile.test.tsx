@@ -258,6 +258,43 @@ describe("ImageResizerTile", () => {
   });
 
   // -------------------------------------------------------
+  // B-593: h1→h3 飛び是正の回帰防止
+  // ツール本体セクション見出しは h2（見出しレベル2）であること。
+  // これらの見出しは初期描画では出ず、ファイル選択後に表示されるため、
+  // 既存テストと同じ描画セットアップ（selectFileAndWaitImageLoad）を再利用する。
+  // -------------------------------------------------------
+  it("B-593: ファイル選択後の本体セクション見出しが h2（見出しレベル2）である", async () => {
+    render(<ImageResizerTile />);
+
+    const fileInput = document.querySelector(
+      'input[type="file"]',
+    ) as HTMLInputElement;
+    const file = new File(["dummy"], "img.png", { type: "image/png" });
+
+    await selectFileAndWaitImageLoad(fileInput, file);
+
+    // 「元画像」「リサイズ設定」がともに h2 として存在する（h3 への飛びが再発していない）
+    expect(
+      screen.getByRole("heading", { level: 2, name: "元画像" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { level: 2, name: "リサイズ設定" }),
+    ).toBeInTheDocument();
+
+    // リサイズ実行後に表示される「リサイズ結果」見出しも h2 であること
+    await act(async () => {
+      fireEvent.click(screen.getByRole("button", { name: "リサイズ" }));
+      await Promise.resolve();
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+
+    expect(
+      screen.getByRole("heading", { level: 2, name: "リサイズ結果" }),
+    ).toBeInTheDocument();
+  });
+
+  // -------------------------------------------------------
   // E-5: ARIA属性
   // -------------------------------------------------------
   it("E-5: SegmentedControl に role=radiogroup と aria-label/labelledby が付与されている", async () => {

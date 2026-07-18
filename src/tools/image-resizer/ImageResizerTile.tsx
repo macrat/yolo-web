@@ -405,7 +405,7 @@ export default function ImageResizerTile({
         {imageInfo && imageSrc && (
           <>
             <div className={styles.section}>
-              <h3 className={styles.sectionTitle}>元画像</h3>
+              <h2 className={styles.sectionTitle}>元画像</h2>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={imageSrc}
@@ -424,7 +424,7 @@ export default function ImageResizerTile({
 
             {/* リサイズ設定 */}
             <div className={styles.section}>
-              <h3 className={styles.sectionTitle}>リサイズ設定</h3>
+              <h2 className={styles.sectionTitle}>リサイズ設定</h2>
 
               {/* モード切替 (SegmentedControl) */}
               <div className={styles.modeRow}>
@@ -623,7 +623,7 @@ export default function ImageResizerTile({
         {/* リサイズ結果 */}
         {result && (
           <div className={styles.section}>
-            <h3 className={styles.sectionTitle}>リサイズ結果</h3>
+            <h2 className={styles.sectionTitle}>リサイズ結果</h2>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={result.dataUrl}

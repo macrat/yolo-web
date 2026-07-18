@@ -386,6 +386,45 @@ describe("バッジアイコンのアクセシビリティ", () => {
 });
 
 // ===========================================================
+// B-593: 見出しレベル回帰防止（h1→h3 飛び是正）
+// ===========================================================
+describe("B-593: 本体セクション見出しは h2（h1→h3 飛び是正の回帰防止）", () => {
+  it("不正メール入力時の「エラー」見出しが見出しレベル2で描画される", async () => {
+    // cycle-288 a11y是正: h1 の直後に h3 が来る見出しレベルの飛びを防ぐため、
+    // 本体セクション見出し（エラー/警告/タイポ提案）は h2 でなければならない。
+    render(<EmailValidatorTile />);
+    const input = screen.getByRole("textbox");
+
+    // @ を含まない不正メールで「エラー」パネルを描画させる
+    await act(async () => {
+      fireEvent.change(input, { target: { value: "notanemail" } });
+    });
+
+    // 「エラー」見出しが level 2 として取得できることを検証（h3 なら失敗する）
+    expect(
+      screen.getByRole("heading", { level: 2, name: "エラー" }),
+    ).toBeInTheDocument();
+  });
+
+  it("タイポドメイン入力時の「もしかして」提案見出しが見出しレベル2で描画される", async () => {
+    render(<EmailValidatorTile />);
+    const input = screen.getByRole("textbox");
+
+    // タイポドメインで「もしかして（タイポの可能性）」提案パネルを描画させる
+    await act(async () => {
+      fireEvent.change(input, { target: { value: "user@gmial.com" } });
+    });
+
+    expect(
+      screen.getByRole("heading", {
+        level: 2,
+        name: /もしかして/,
+      }),
+    ).toBeInTheDocument();
+  });
+});
+
+// ===========================================================
 // E-10: meta 由来の表示
 // ===========================================================
 describe("E-10: meta由来の表示", () => {

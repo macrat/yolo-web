@@ -196,9 +196,9 @@ export default function EmailValidatorTile({
             {/* タイポ提案（①-4: warning 色で強調。コピーボタンなし＝②-15確定） */}
             {result.suggestions.length > 0 && (
               <div className={styles.suggestionPanel}>
-                <h3 className={styles.suggestionTitle}>
+                <h2 className={styles.suggestionTitle}>
                   もしかして（タイポの可能性）
-                </h3>
+                </h2>
                 <ul className={styles.suggestionList}>
                   {result.suggestions.map((sug, i) => (
                     <li key={i}>{sug.replace("もしかして: ", "")}</li>
@@ -212,7 +212,7 @@ export default function EmailValidatorTile({
                 logic.ts が返すエラーメッセージはすべて日本語のため、そのまま渡す。 */}
             {result.errors.length > 0 && (
               <div className={styles.errorPanel}>
-                <h3 className={styles.listTitle}>エラー</h3>
+                <h2 className={styles.listTitle}>エラー</h2>
                 {result.errors.map((err, i) => (
                   <ErrorMessage key={i} message={err} />
                 ))}
@@ -222,7 +222,7 @@ export default function EmailValidatorTile({
             {/* 警告リスト */}
             {result.warnings.length > 0 && (
               <div className={styles.warningPanel}>
-                <h3 className={styles.listTitle}>警告</h3>
+                <h2 className={styles.listTitle}>警告</h2>
                 <ul className={styles.warningList}>
                   {result.warnings.map((warn, i) => (
                     <li key={i}>{warn}</li>

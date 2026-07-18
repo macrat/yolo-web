@@ -299,9 +299,9 @@ export default function RegexTesterTile({
               role="region"
               aria-label="マッチ結果"
             >
-              <h3 className={styles.matchHeading}>
+              <h2 className={styles.matchHeading}>
                 マッチ結果: {matchResult.matches.length}件
-              </h3>
+              </h2>
               <div className={styles.matchList}>
                 {matchResult.matches.slice(0, 50).map((m, i) => (
                   <div key={i} className={styles.matchItem}>

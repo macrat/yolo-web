@@ -341,7 +341,7 @@ export default function CronParserTile({
       {mode === "parser" && (
         <>
           <section className={styles.section}>
-            <h3 className={styles.sectionTitle}>Cron式を入力</h3>
+            <h2 className={styles.sectionTitle}>Cron式を入力</h2>
             <div className={styles.row}>
               <div className={styles.cronInputWrapper}>
                 {/* A-6: useId で一意化した id を label に結合 */}
@@ -393,7 +393,7 @@ export default function CronParserTile({
 
               {/* フィールド詳細 */}
               <section className={styles.section}>
-                <h3 className={styles.sectionTitle}>フィールド詳細</h3>
+                <h2 className={styles.sectionTitle}>フィールド詳細</h2>
                 <div className={styles.resultTable}>
                   {[
                     { label: "分", field: parseResult.minute },
@@ -414,7 +414,7 @@ export default function CronParserTile({
               {/* 次回実行予定（JST固定表示）*/}
               {nextExecs.length > 0 && (
                 <section className={styles.section}>
-                  <h3 className={styles.sectionTitle}>次回実行予定（JST）</h3>
+                  <h2 className={styles.sectionTitle}>次回実行予定（JST）</h2>
                   <ul
                     className={styles.executionList}
                     aria-label="次回実行予定一覧"
@@ -436,7 +436,7 @@ export default function CronParserTile({
       {mode === "builder" && (
         <>
           <section className={styles.section}>
-            <h3 className={styles.sectionTitle}>Cron式ビルダー</h3>
+            <h2 className={styles.sectionTitle}>Cron式ビルダー</h2>
             <div className={styles.presetRow}>
               {PRESETS.map((preset) => (
                 <Button
@@ -564,7 +564,7 @@ export default function CronParserTile({
 
           {/* 生成されたCron式 */}
           <section className={styles.section}>
-            <h3 className={styles.sectionTitle}>生成されたCron式</h3>
+            <h2 className={styles.sectionTitle}>生成されたCron式</h2>
             {/* A-6: コピーボタン（T-4b 更新方針: ビルダー生成式は持ち帰り対象）
              * useCopyToClipboard フック + COPIED_LABEL で統一実装。
              * 生成式が無効（バリデーション失敗）のときはコピーボタンを disabled にする（E-7）。*/}
@@ -604,7 +604,7 @@ export default function CronParserTile({
               const builtNextExecs = getNextExecutions(builtExpression, 5);
               return builtNextExecs.length > 0 ? (
                 <section className={styles.section}>
-                  <h3 className={styles.sectionTitle}>次回実行予定（JST）</h3>
+                  <h2 className={styles.sectionTitle}>次回実行予定（JST）</h2>
                   <ul
                     className={styles.executionList}
                     aria-label="ビルダー次回実行予定一覧"

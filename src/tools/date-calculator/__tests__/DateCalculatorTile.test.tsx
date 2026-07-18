@@ -35,6 +35,20 @@ describe("DateCalculatorTile", () => {
       expect(screen.getByText("和暦・西暦変換")).toBeInTheDocument();
     });
 
+    // B-593: h1→h3 飛び是正の回帰防止 — 本体セクション見出しは常に level:2 であること
+    test("本体セクション見出しが見出しレベル2で描画される", () => {
+      render(<DateCalculatorTile variant="full" />);
+      expect(
+        screen.getByRole("heading", { level: 2, name: "日付の差分" }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("heading", { level: 2, name: "日付の加算・減算" }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("heading", { level: 2, name: "和暦・西暦変換" }),
+      ).toBeInTheDocument();
+    });
+
     test("renders all action buttons", () => {
       render(<DateCalculatorTile variant="full" />);
       expect(

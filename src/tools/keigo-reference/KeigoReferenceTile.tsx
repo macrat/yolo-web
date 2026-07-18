@@ -343,9 +343,9 @@ export default function KeigoReferenceTile({
               if (mistakes.length === 0) return null;
               return (
                 <div key={section.type} className={styles.mistakeSection}>
-                  <h3 className={styles.mistakeSectionTitle}>
+                  <h2 className={styles.mistakeSectionTitle}>
                     {section.label}
-                  </h3>
+                  </h2>
                   {mistakes.map((mistake) => (
                     <div key={mistake.id} className={styles.mistakeCard}>
                       <div>
