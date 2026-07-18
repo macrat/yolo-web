@@ -14,7 +14,7 @@ completed_at: null
 - [ ] 現状の把握（一次確認）
   - [x] 4ゲーム（kanji-kanaru / irodori / nakamawake / yoji-kimeru）の各 `GameContainer` で、HowToPlay（初回訪問）と Result（終了時）の `open` 制御が「トリガ要素なしの自動オープン」であることをコードで確認する
   - [x] 手動起動（onHelpClick / onStatsClick）経路は現状で正常（トリガ復帰あり）であることを再確認し、退行させないと決める
-  - [ ] Playwright で kanji-kanaru の初回遊び方モーダルを Esc 閉じ→`document.activeElement` が body に落ちることを実測（是正前の証拠）
+  - [x] 是正前の body 落ちの証拠: cycle-287 の DOM 実測に加え、単体テスト「returnFocusRef 無し→focus が body に留まる」で同機構上の未是正挙動を再現（Playwright の是正前実測は本サイクルで是正済のため単体テストで代替）
 - [x] 設計判断の確定（別ファイル `design-decision.md` に記録）
   - [x] 「自動オープン経路で閉じたとき、focus をどこへ戻すか」を決める（→ ゲーム名 `<h1>`（tabIndex=-1）。理由は design-decision.md 決定1）
   - [x] 手動起動との判別方法を決める（→ showModal 直前の `document.activeElement` が body/null なら自動オープン。design-decision.md 決定2）
@@ -23,8 +23,8 @@ completed_at: null
   - [x] 4ゲームの HowToPlay / Result へ `returnFocusRef={titleRef}` を結線・GameHeader の h1 に ref+tabIndex=-1（Stats は据置）
 - [ ] 検証
   - [x] `useDialog` の回帰テストを追加（自動オープンで復帰先へ focus／手動起動では素通し／ref 無しは body 据置の3件・全7件通過）
-  - [ ] Playwright で初回遊び方・終了時結果を Esc 閉じ→focus が body でなく復帰先にあることを実測（是正後の証拠）
-  - [ ] 視覚不変の確認（focus 管理のみで見た目・レイアウトを変えない）
+  - [x] Playwright 実測: 4ゲームの初回遊び方を Esc 閉じ→activeElement が各ゲームの h1(tabIndex=-1) に復帰・body 落ち回避を確認。手動起動(help)は起動元ボタンへ復帰=退行なし。終了時結果は同一共有機構(useDialog+returnFocusRef)のため単体テスト＋遊び方実測で担保。詳細は playwright-verification 節
+  - [x] 視覚不変の確認: ダイアログ正常表示・レイアウト崩れなし・h1/閉じるボタンの focus インジケータ可視・コンソールエラー0（Playwright スクショ）
 - [ ] レビュー（reviewer サブエージェント）を受け、指摘に対応する
 - [x] `npm run lint && npm run format:check && npm run test`（build は確認中）— lint 0・format 準拠・全5489テスト通過
 
@@ -69,6 +69,27 @@ completed_at: null
   - WHATWG HTML Standard「the dialog element」focus restoration: https://html.spec.whatwg.org/multipage/interactive-elements.html — close 時 focus は previously focused element（showModal 時の focused 要素）へ復帰。自動オープンではこれが事実上 body。
   - MDN `<dialog>`: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog — showModal 時の初期 focus 規定はあるが close 時復帰の詳細記載なし（仕様側で確認）。
 
+## Playwright 実測結果
+
+ローカル本番ビルドで前景サブエージェントが実測（4ゲーム）:
+
+| ゲーム       | 自動オープン(遊び方)検出 | Esc 後 activeElement              | body 落ち回避 | 判定 |
+| ------------ | ------------------------ | --------------------------------- | ------------- | ---- |
+| kanji-kanaru | dialog[open]             | H1 tabIndex=-1「漢字カナール」    | 回避          | PASS |
+| irodori      | dialog[open]             | H1 tabIndex=-1「イロドリ #150」   | 回避          | PASS |
+| nakamawake   | dialog[open]             | H1 tabIndex=-1「ナカマワケ #156」 | 回避          | PASS |
+| yoji-kimeru  | dialog[open]             | H1 tabIndex=-1「四字キメル」      | 回避          | PASS |
+
+- 手動起動(退行チェック・kanji-kanaru): 遊び方ボタン click→Esc→activeElement は `button[aria-label="遊び方"]`（h1 でも body でもない）＝ native 正常復帰を維持・退行なし。
+- 視覚: ダイアログ正常表示・レイアウト崩れなし。h1/「閉じる」ボタンの focus インジケータ（赤アウトライン）可視。全ページ console error 0。
+
+**終了時 Result 自動オープンの実フロー実測（reviewer 指摘 Major の対応・kanji-kanaru を6回誤答で負けに誘導）**:
+
+- Result 自動オープン時の背景 scrollY は 474（最上部 150 へ飛んでいない＝open 時 `preventScroll` が機能）。
+- モーダル表示中に背景を scrollY=2000 へ設定 → **Esc で閉じた後: activeElement は h1「漢字カナール」(tabIndex=-1)・scrollY は 2000 のまま**（最上部へ飛ばない）。
+- 併せて機構レベルの実測（実 h1 使用）: native の close 復帰はスクロールしない（h1 を previously-focused にして 2523px 位置から close→focus は h1・scrollY 2523 維持）。素の `focus()` は 2523→150 へジャンプするが `focus({preventScroll:true})` は 2523 維持。
+- 結論: 自動オープン（遊び方・Result 両方）で focus は h1 へ復帰し、スクロール位置も保持される。「視覚不変（スクロール位置含む）」が実フローで成立。
+
 ## キャリーオーバー
 
 - なし（着手時点）。作業中に判明した scope 外の問題は本節と `docs/backlog.md` の両方に記載する。
@@ -76,7 +97,7 @@ completed_at: null
 ## 補足事項
 
 - 本件は B-573（全面 a11y 適用）の分割断片の一つ。残る a11y 断片（B-594/596/597/599 等）は別サイクルで継続。
-- 視覚不変が前提（focus 管理のみ）。UI 変更を伴わないため take-screenshot による前後比較は focus インジケータの可視性確認に留める。
+- 見た目・レイアウトは不変（focus 管理のみ）。**スクロール位置も不変**——`focus({ preventScroll: true })` を用い、スクロール状態で開く Result を閉じても最上部へ飛ばない（reviewer 指摘 Major の対応・design-decision.md 決定2・下記 Playwright 実測で確認）。UI 変更を伴わないため take-screenshot は focus インジケータ可視性の確認に留める。
 
 ## サイクル終了時のチェックリスト
 

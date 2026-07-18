@@ -52,9 +52,17 @@ export function useDialog(
       // To fix this without depending on the ordering of the close event vs.
       // native focus restoration, we move focus onto returnFocusRef *before*
       // showModal(). That element then becomes the previously focused element,
-      // so native restoration returns focus to it on every close path. The
-      // pre-showModal focus is overwritten synchronously by showModal()'s own
-      // initial focus and is never painted (no visible flash).
+      // so native restoration returns focus to it on every close path (Esc /
+      // backdrop / close button). The pre-showModal focus is overwritten
+      // synchronously by showModal()'s own initial focus and is never painted.
+      //
+      // preventScroll is essential: the anchor (the game's <h1>) sits at the top
+      // of the page, but an auto-opened modal can appear while the user is
+      // scrolled down (e.g. the game-end Result modal). A plain focus() would
+      // scroll the page to the anchor here, and closing would leave the user
+      // yanked to the top. With preventScroll we keep their scroll position;
+      // native focus restoration on close does not scroll either (verified in a
+      // real browser), so focus is retained AND the scroll position is kept.
       //
       // We only redirect when there is no meaningful opener (activeElement is
       // <body> or null). When opened from a trigger button, we leave native
@@ -64,7 +72,7 @@ export function useDialog(
         returnFocusRef?.current &&
         (opener === null || opener === document.body)
       ) {
-        returnFocusRef.current.focus();
+        returnFocusRef.current.focus({ preventScroll: true });
       }
       dialog.showModal();
     } else if (!open && dialog.open) {

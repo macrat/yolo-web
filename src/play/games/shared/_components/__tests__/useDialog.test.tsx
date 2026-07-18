@@ -142,6 +142,22 @@ describe("useDialog focus restoration (returnFocusRef)", () => {
     expect(document.activeElement).toBe(getByTestId("anchor"));
   });
 
+  it("focuses the anchor with preventScroll (no scroll jump on auto-open)", () => {
+    // The anchor (game <h1>) is at the top of the page, but an auto-opened modal
+    // can appear while the user is scrolled down (game-end Result). Focus must
+    // use { preventScroll: true } so the page is not yanked to the top. jsdom
+    // has no layout/scroll, so we assert the option is passed rather than the
+    // scroll outcome (that is verified in a real browser).
+    const focusSpy = vi.spyOn(HTMLHeadingElement.prototype, "focus");
+    const { rerender } = render(
+      <DialogHarness open={false} useAnchor={true} />,
+    );
+    rerender(<DialogHarness open={true} useAnchor={true} />);
+
+    expect(focusSpy).toHaveBeenCalledWith({ preventScroll: true });
+    focusSpy.mockRestore();
+  });
+
   it("does NOT redirect focus when opened from a trigger (manual open)", () => {
     const { rerender, getByTestId } = render(
       <DialogHarness open={false} useAnchor={true} />,
