@@ -8,6 +8,12 @@ interface FeedbackCellProps {
   label: string;
   /** Optional suffix displayed after the feedback label (e.g., grade direction arrow). */
   suffix?: string;
+  /**
+   * Optional suffix appended to the accessible name instead of `suffix`.
+   * Used to express in words what an ambiguous visual suffix (e.g., an arrow)
+   * conveys, since screen readers do not read arrow symbols consistently.
+   */
+  suffixLabel?: string;
 }
 
 const feedbackLabels: Record<FeedbackLevel, string> = {
@@ -24,6 +30,7 @@ export default function FeedbackCell({
   feedback,
   label,
   suffix,
+  suffixLabel,
 }: FeedbackCellProps) {
   const cellClass =
     feedback === "correct"
@@ -40,7 +47,7 @@ export default function FeedbackCell({
     <div
       className={cellClass}
       role="cell"
-      aria-label={`${label}: ${feedbackLabels[feedback]}`}
+      aria-label={`${label}: ${feedbackLabels[feedback]}${suffixLabel ?? ""}`}
     >
       {displayText}
     </div>

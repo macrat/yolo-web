@@ -17,11 +17,23 @@ const COLUMN_LABELS = [
   "\u8A13\u8AAD\u307F",
 ];
 
-/** Map grade direction to arrow suffix for the grade column. */
+/** Map grade direction to arrow suffix for the grade column (visual only). */
 const GRADE_DIRECTION_ARROWS: Record<GuessFeedback["gradeDirection"], string> =
   {
     up: "\u2191",
     down: "\u2193",
+    equal: "",
+  };
+
+/**
+ * Map grade direction to a spoken-language suffix for the accessible name.
+ * Arrows (\u2191\u2193) are not read consistently by screen readers, so the direction
+ * is expressed in words. up = target grade is higher, down = lower, equal = none.
+ */
+const GRADE_DIRECTION_LABELS: Record<GuessFeedback["gradeDirection"], string> =
+  {
+    up: "\uff08\u5bfe\u8c61\u306f\u3088\u308a\u4e0a\u306e\u5b66\u5e74\uff09",
+    down: "\uff08\u5bfe\u8c61\u306f\u3088\u308a\u4e0b\u306e\u5b66\u5e74\uff09",
     equal: "",
   };
 
@@ -64,7 +76,7 @@ export default function GuessRow({ feedback }: GuessRowProps) {
       <div
         className={styles.guessKanji}
         role="cell"
-        aria-label={"\u63A8\u6E2C\u3057\u305F\u6F22\u5B57"}
+        aria-label={`\u63A8\u6E2C\u3057\u305F\u6F22\u5B57 ${feedback.guess}`}
       >
         {feedback.guess}
       </div>
@@ -76,6 +88,11 @@ export default function GuessRow({ feedback }: GuessRowProps) {
           suffix={
             key === "grade"
               ? GRADE_DIRECTION_ARROWS[feedback.gradeDirection]
+              : undefined
+          }
+          suffixLabel={
+            key === "grade"
+              ? GRADE_DIRECTION_LABELS[feedback.gradeDirection]
               : undefined
           }
         />

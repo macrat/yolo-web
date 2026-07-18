@@ -17,6 +17,8 @@ A: グローバル外装+トップ+検索 `/` / B: ツール `/tools/date-calcul
 | F3  | 診断の進捗バーに**アクセシブル名が無い**(無名 progressbar)                                                                                                                   | `ProgressBar.tsx:22` role=progressbar に aria-label 無し(valuenow/min/maxのみ)                                                                                | Med                                               | WCAG 4.1.2 Name/Role/Value       |
 | F4  | ゲーム結果グリッドの **aria-label が可視テキストを上書きし情報欠落**: (a)推測漢字セルが全行「推測した漢字」で漢字が読めない (b)学年列が可視「近い↑」の↑↓方向をa11y名で落とす | `GuessRow.tsx:67`(推測漢字)・`FeedbackCell.tsx:43`(suffix欠落)                                                                                                | Med                                               | WCAG 1.3.1 / 2.5.3 Label in Name |
 
+F4の波及確認: 姉妹ワードル系 `yoji-kimeru` の `CharFeedbackCell.tsx:36` は `aria-label={`${character}: …`}` と可視文字を含めており同種の上書きは無い(方向suffix概念も無い)。F4は kanji-kanaru 固有と確認済(2026-07-18 grep)。
+
 ## キャリーオーバー(本サイクルのスライス外・backlog起票)
 
 | #   | 所見                                                                                                                                                | 状態/理由                                                                                                                                                                                         |

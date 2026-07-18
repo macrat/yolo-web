@@ -1,0 +1,39 @@
+/**
+ * SkipLink — WCAG 2.4.1 Bypass Blocks(A) 対応のスキップリンク。
+ * body 直下・Header より前に置く最初の focusable 要素として、キーボード利用者が
+ * ヘッダの全リンク（辞典一覧では約 229 リンク）を Tab 通過せず本文へ跳べるようにする。
+ * 見た目は DESIGN.md §2/§4「店構え」トークン、可視性・タップ標的は §10 に従う。
+ */
+
+.skipLink {
+  /* 通常はレイアウトに影響を与えずビューポート外へ退避し、focus 時だけ左上へ復帰させる。
+     display:none や visually-hidden の clip 方式は focus で戻せないため、
+     position:fixed + transform で「focusable のまま画面外」にする。
+     fixed によりスクロール位置に関わらず常に左上へ出現する。 */
+  position: fixed;
+  top: var(--space-8);
+  left: var(--space-8);
+  transform: translateY(calc(-100% - var(--space-8)));
+  /* Header のモバイルメニュー（z-index:11）・オーバーレイ（z-index:10）を含む
+     全 UI より前面に出す。スキップ先へ確実に視線誘導するため十分大きい値を取る。 */
+  z-index: 1000;
+
+  /* 店構え（DESIGN.md §2/§4）: 生成りの紙地・墨字・のれん罫・角丸 0。影・色地は使わない。 */
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
+  padding: var(--space-8) var(--space-16);
+  text-decoration: none;
+
+  /* §10: タップ標的 44px 以上。文字を上下中央に置く。 */
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* キーボード focus 時のみ左上へ出現（マウス利用者には見せない）。
+   focus リングは globals.css の :focus-visible（2px 朱・DESIGN.md §10）が担う。 */
+.skipLink:focus {
+  transform: translateY(0);
+}

@@ -5,6 +5,7 @@ import "@/app/globals.css";
 // Phase 5 = B-331 のスコープであり、本サイクル (cycle-185 = Phase 4.4) では対象外。
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import SkipLink, { MAIN_CONTENT_ID } from "@/components/SkipLink";
 import ThemeProvider from "@/components/ThemeProvider";
 import ThemeToggle from "@/components/ThemeToggle";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
@@ -40,9 +41,15 @@ export default function NewRootLayout({
           }}
         />
         <ThemeProvider>
+          {/* body 直下の最初の focusable 要素。Header の全リンクを Tab で
+              通過せず本文へ跳べるようにする（WCAG 2.4.1・F1）。 */}
+          <SkipLink />
           <GoogleAnalytics />
           <Header actions={<ThemeToggle />} />
-          <main style={{ flex: 1 }}>{children}</main>
+          {/* tabIndex={-1}: スキップリンクからプログラム的に focus を移せるようにする。 */}
+          <main id={MAIN_CONTENT_ID} tabIndex={-1} style={{ flex: 1 }}>
+            {children}
+          </main>
           <Footer />
         </ThemeProvider>
       </body>

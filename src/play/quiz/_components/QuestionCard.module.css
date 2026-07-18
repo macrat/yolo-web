@@ -20,7 +20,8 @@
   }
 }
 
-/* 設問文: 見出しの顔（明朝）。読ませる文なので line-height はゆったり。 */
+/* 設問文: 見出しの顔（明朝）。読ませる文なので line-height はゆったり。
+ * h2 だが margin/font-size/font-weight を明示指定し UA 既定を上書き（見た目据え置き）。 */
 .questionText {
   font-family: var(--font-mincho);
   font-size: 1.25rem;
@@ -29,6 +30,13 @@
   line-height: 1.6;
   color: var(--ink);
   font-feature-settings: "palt";
+}
+
+/* F2: 設問切替時にプログラム的フォーカスを受ける見出し（tabIndex={-1}）。
+ * キーボード tab で到達する要素ではないため focus outline は不要
+ * （結果リビール region の .resultPhase:focus と同じ流儀で抑制）。 */
+.questionText:focus {
+  outline: none;
 }
 
 .choices {

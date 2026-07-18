@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect, useRef } from "react";
 import type { QuizChoice, QuizQuestion, QuizType } from "@/play/quiz/types";
 import { isCorrectChoice } from "@/play/quiz/scoring";
 import styles from "./QuestionCard.module.css";
@@ -30,6 +30,19 @@ export default function QuestionCard({
 }: QuestionCardProps) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [answered, setAnswered] = useState(false);
+
+  // F2（WCAG 2.4.3 / 4.1.3）: 設問切替時のフォーカス管理。
+  // QuizContainer は playing phase で key={question.id} により QuestionCard を
+  // 再マウントする。何もしないと前設問の回答ボタンにあった focus が <body> に
+  // 落ち、キーボード/SR 利用者は「設問が変わったこと」も現在位置も失う。
+  // マウント時（=設問切替時）に設問見出しへプログラム的にフォーカスを移すことで、
+  // 新設問が読み上げられ、そこから操作を続けられる。
+  // preventScroll: true は結果リビール（QuizContainer）の流儀に合わせる
+  // （設問はページ上部で通常スクロール不要。focus() 既定スクロールの誤発火を抑止）。
+  const questionHeadingRef = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    questionHeadingRef.current?.focus({ preventScroll: true });
+  }, []);
 
   // Shuffle choices when the question changes to prevent positional bias
   const shuffledChoices: QuizChoice[] = useMemo(
@@ -78,7 +91,16 @@ export default function QuestionCard({
 
   return (
     <div className={styles.card} key={question.id}>
-      <p className={styles.questionText}>{question.text}</p>
+      {/* 設問文は見出し（h2）。ページ h1 は QuizPlayPageLayout が持つため設問は h2。
+       * SR の見出しナビで設問に到達でき、F2 のフォーカス移動先も兼ねる
+       * （tabIndex={-1} でプログラム的フォーカスのみ受ける）。 */}
+      <h2
+        ref={questionHeadingRef}
+        tabIndex={-1}
+        className={styles.questionText}
+      >
+        {question.text}
+      </h2>
       <div className={styles.choices}>
         {shuffledChoices.map((choice) => {
           const feedbackTag = getFeedbackTag(choice.id);
