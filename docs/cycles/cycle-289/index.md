@@ -2,7 +2,7 @@
 id: 289
 description: ゲームの自動オープンモーダル(初回遊び方・終了時結果)をEscで閉じた後のfocus復帰是正(B-595)
 started_at: 2026-07-19T00:22:48+0900
-completed_at: null
+completed_at: 2026-07-19T01:33:43+0900
 ---
 
 # サイクル-289
@@ -99,12 +99,20 @@ completed_at: null
 - 本件は B-573（全面 a11y 適用）の分割断片の一つ。残る a11y 断片（B-594/596/597/599 等）は別サイクルで継続。
 - 見た目・レイアウトは不変（focus 管理のみ）。**スクロール位置も不変**——`focus({ preventScroll: true })` を用い、スクロール状態で開く Result を閉じても最上部へ飛ばない（reviewer 指摘 Major の対応・design-decision.md 決定2・下記 Playwright 実測で確認）。UI 変更を伴わないため take-screenshot は focus インジケータ可視性の確認に留める。
 
+## レビュー結果
+
+計画・実装を2巡レビュー。経過の詳細は [review-log.md](./review-log.md)。
+
+- **1巡目（reviewer）**: 指摘 **Major 1件**——復帰アンカー h1 が最上部にあるため、スクロール状態で開く Result を閉じると素の `focus()` でページが最上部へジャンプ（晴眼マウス利用者にも波及）・「視覚不変」の主張が不正確・Result close 経路が未実測。→ **対応済**: 機構を実ブラウザで実測し「native close 復帰はスクロールしない／open 時の素 focus のみスクロール」を確認、showModal 直前の focus を `focus({ preventScroll: true })` に変更（focus 保持とスクロール位置保持を両立）。Result 実フローも実測（focus=h1・scrollY 保持）。ドキュメント訂正・単体テスト追加。
+- **2巡目（新規 reviewer・白紙・AP-WF20 準拠）**: **Blocker/Major なし・コードは承認水準**。reviewer 自身が実機で自動オープン遊び方の h1 復帰・手動起動の退行なし・Result 経路の発火（入力 disabled→body→h1 リダイレクト）を追検証。指摘は **Minor/Nit（すべてドキュメント整合）**——Result 実測済みへの記述更新・節名参照の修正・build 完了記録。→ **対応済**（index.md 記述訂正。コード変更なし）。
+- 残存する有効な指摘: **なし**。
+
 ## サイクル終了時のチェックリスト
 
-- [ ] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
-- [ ] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
-- [ ] すべての変更がレビューされ、残存する指摘事項が無くなっている。
-- [ ] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
-- [ ] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
-- [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
-- [ ] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
+- [x] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
+- [x] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
+- [x] すべての変更がレビューされ、残存する指摘事項が無くなっている。
+- [x] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。（lint 0・format 準拠・全5490テスト通過・build exit 0）
+- [x] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
+- [x] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
+- [x] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
