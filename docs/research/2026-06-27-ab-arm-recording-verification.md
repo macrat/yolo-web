@@ -59,11 +59,12 @@ GROUP BY experiment_id, ab_variant ORDER BY level_end_events DESC
 ```
 
 生結果:
-| experiment_id | ab_variant | level_end_events | distinct_sessions |
-|---|---|---|---|
-| quiz_result_visual_v1 | A | 22 | 20 |
-| (null) | (null) | 16 | 13 |
-| quiz_result_visual_v1 | B | 16 | 16 |
+
+| experiment_id         | ab_variant | level_end_events | distinct_sessions |
+| --------------------- | ---------- | ---------------- | ----------------- |
+| quiz_result_visual_v1 | A          | 22               | 20                |
+| (null)                | (null)     | 16               | 13                |
+| quiz_result_visual_v1 | B          | 16               | 16                |
 
 → experiment_id は `quiz_result_visual_v1` のみ。partial tagging（experiment_id だけ／ab_variant だけ）の行は無い。
 
@@ -82,18 +83,19 @@ GROUP BY content_type, content_id, tag_state ORDER BY content_type, content_id, 
 ```
 
 生結果:
-| content_type | content_id | tag_state | events |
-|---|---|---|---|
-| diagnosis | quiz-animal-personality | tagged | 2 |
-| diagnosis | quiz-character-personality | tagged | 30 |
-| diagnosis | quiz-character-personality | **untagged** | **9** |
-| diagnosis | quiz-science-thinking | tagged | 1 |
-| diagnosis | quiz-word-sense-personality | tagged | 5 |
-| diagnosis | quiz-word-sense-personality | **untagged** | **1** |
-| game | kanji-kanaru | untagged | 1 |
-| quiz | quiz-kanji-level | untagged | 3 |
-| quiz | quiz-kotowaza-level | untagged | 1 |
-| quiz | quiz-yoji-level | untagged | 1 |
+
+| content_type | content_id                  | tag_state    | events |
+| ------------ | --------------------------- | ------------ | ------ |
+| diagnosis    | quiz-animal-personality     | tagged       | 2      |
+| diagnosis    | quiz-character-personality  | tagged       | 30     |
+| diagnosis    | quiz-character-personality  | **untagged** | **9**  |
+| diagnosis    | quiz-science-thinking       | tagged       | 1      |
+| diagnosis    | quiz-word-sense-personality | tagged       | 5      |
+| diagnosis    | quiz-word-sense-personality | **untagged** | **1**  |
+| game         | kanji-kanaru                | untagged     | 1      |
+| quiz         | quiz-kanji-level            | untagged     | 3      |
+| quiz         | quiz-kotowaza-level         | untagged     | 1      |
+| quiz         | quiz-yoji-level             | untagged     | 1      |
 
 ### Q4. 日次タイムライン（記録の継続性）
 

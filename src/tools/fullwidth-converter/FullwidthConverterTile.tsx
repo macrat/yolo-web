@@ -45,9 +45,7 @@ import styles from "./FullwidthConverterTile.module.css";
 
 /** variant prop: 表示バリエーションの設定差。別実装ではない。 */
 export type FullwidthConverterTileVariant =
-  | "full"
-  | "toHalfwidth"
-  | "toFullwidth";
+  "full" | "toHalfwidth" | "toFullwidth";
 
 /** モード選択の定義 */
 const MODE_OPTIONS: { label: string; value: ConvertMode }[] = [

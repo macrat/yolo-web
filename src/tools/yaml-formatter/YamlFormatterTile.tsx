@@ -46,10 +46,7 @@ type Mode = "format" | "yaml-to-json" | "json-to-yaml";
 
 /** variant prop: 表示バリエーションの設定差。別実装ではない。 */
 export type YamlFormatterTileVariant =
-  | "full"
-  | "format"
-  | "yaml-to-json"
-  | "json-to-yaml";
+  "full" | "format" | "yaml-to-json" | "json-to-yaml";
 
 export interface YamlFormatterTileProps {
   /**

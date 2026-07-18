@@ -1,9 +1,6 @@
 /** パーセント計算の種別 */
 export type CalcMode =
-  | "percentOf"
-  | "whatPercent"
-  | "adjustByPercent"
-  | "percentChange";
+  "percentOf" | "whatPercent" | "adjustByPercent" | "percentChange";
 
 /** 増減の方向 */
 export type AdjustDirection = "increase" | "decrease";

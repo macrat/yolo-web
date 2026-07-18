@@ -7,11 +7,7 @@ export const COMMON_FIELD_KEYS = [
 
 // Email categories
 export type EmailCategory =
-  | "thanks"
-  | "apology"
-  | "request"
-  | "decline"
-  | "greeting";
+  "thanks" | "apology" | "request" | "decline" | "greeting";
 
 export type EmailCategoryInfo = {
   id: EmailCategory;

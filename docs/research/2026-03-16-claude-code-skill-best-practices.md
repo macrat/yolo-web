@@ -200,9 +200,9 @@ description: Generate descriptive commit messages by analyzing git diffs. Use wh
 ### 悪いdescriptionの例
 
 ```yaml
-description: Helps with documents         # 曖昧すぎる
-description: Processes data               # 汎用すぎる
-description: Does stuff with files        # 具体性ゼロ
+description: Helps with documents # 曖昧すぎる
+description: Processes data # 汎用すぎる
+description: Does stuff with files # 具体性ゼロ
 ```
 
 ### トリガー精度向上のテクニック

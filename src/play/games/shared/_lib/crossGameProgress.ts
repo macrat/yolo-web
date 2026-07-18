@@ -21,14 +21,12 @@ export interface GameInfo {
  */
 export const ALL_GAMES: GameInfo[] = allGameMetas
   .filter((meta: GameMeta) => meta.isDaily === true)
-  .map(
-    (meta: GameMeta): GameInfo => ({
-      slug: meta.slug,
-      title: meta.title,
-      path: getGamePath(meta.slug),
-      statsKey: meta.statsKey,
-    }),
-  );
+  .map((meta: GameMeta): GameInfo => ({
+    slug: meta.slug,
+    title: meta.title,
+    path: getGamePath(meta.slug),
+    statsKey: meta.statsKey,
+  }));
 
 /**
  * Get today's date string in JST (YYYY-MM-DD).

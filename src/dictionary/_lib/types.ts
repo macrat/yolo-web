@@ -107,13 +107,7 @@ export interface ColorEntry {
 }
 
 export type ColorCategory =
-  | "red"
-  | "orange"
-  | "yellow"
-  | "green"
-  | "blue"
-  | "purple"
-  | "achromatic";
+  "red" | "orange" | "yellow" | "green" | "blue" | "purple" | "achromatic";
 
 export const COLOR_CATEGORY_LABELS: Record<ColorCategory, string> = {
   red: "赤系",

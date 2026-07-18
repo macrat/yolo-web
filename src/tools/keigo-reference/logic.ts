@@ -25,10 +25,7 @@ export type KeigoEntry = {
 
 // Common mistake types
 export type MistakeType =
-  | "double-keigo"
-  | "wrong-direction"
-  | "baito-keigo"
-  | "other";
+  "double-keigo" | "wrong-direction" | "baito-keigo" | "other";
 
 export type CommonMistake = {
   id: string;

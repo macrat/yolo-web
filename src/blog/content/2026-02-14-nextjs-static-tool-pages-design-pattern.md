@@ -71,11 +71,7 @@ draft: false
 
 ```typescript
 export type ToolCategory =
-  | "text"
-  | "encoding"
-  | "developer"
-  | "security"
-  | "generator";
+  "text" | "encoding" | "developer" | "security" | "generator";
 
 export interface ToolMeta {
   slug: string;

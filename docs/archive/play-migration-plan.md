@@ -439,18 +439,20 @@ function generatePlayJsonLd(meta: PlayContentMeta): object;
 ## 5. リダイレクトマップ（全件）
 
 フェーズ1で追加:
-| 旧URL | 新URL | 種類 |
-|--------|--------|------|
-| `/games` | `/play` | 一覧 |
+
+| 旧URL          | 新URL         | 種類   |
+| -------------- | ------------- | ------ |
+| `/games`       | `/play`       | 一覧   |
 | `/games/:slug` | `/play/:slug` | ゲーム |
 
 フェーズ2で追加:
-| 旧URL | 新URL | 種類 |
-|--------|--------|------|
-| `/quiz` | `/play` | 一覧 |
-| `/quiz/:slug` | `/play/:slug` | クイズ |
+
+| 旧URL                          | 新URL                          | 種類       |
+| ------------------------------ | ------------------------------ | ---------- |
+| `/quiz`                        | `/play`                        | 一覧       |
+| `/quiz/:slug`                  | `/play/:slug`                  | クイズ     |
 | `/quiz/:slug/result/:resultId` | `/play/:slug/result/:resultId` | 結果ページ |
-| `/fortune/daily` | `/play/daily` | 占い |
+| `/fortune/daily`               | `/play/daily`                  | 占い       |
 
 ## 6. 注意事項
 

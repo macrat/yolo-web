@@ -270,12 +270,7 @@ export function trackContentRating(ab?: AbEventContext): void {
  * 6 values covering all close paths (see cycle-173 §2 and SearchModal/SearchTrigger).
  */
 export type CloseReasonValue =
-  | "escape"
-  | "backdrop"
-  | "close_button"
-  | "popstate"
-  | "navigation"
-  | "cmd_k";
+  "escape" | "backdrop" | "close_button" | "popstate" | "navigation" | "cmd_k";
 
 /** Parameters for trackSearchModalClose. */
 interface SearchModalCloseParams {

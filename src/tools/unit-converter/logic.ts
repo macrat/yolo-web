@@ -1,9 +1,5 @@
 export type UnitCategory =
-  | "length"
-  | "weight"
-  | "temperature"
-  | "area"
-  | "speed";
+  "length" | "weight" | "temperature" | "area" | "speed";
 
 export interface UnitDefinition {
   id: string;

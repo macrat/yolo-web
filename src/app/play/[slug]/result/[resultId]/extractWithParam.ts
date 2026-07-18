@@ -21,8 +21,7 @@ import { isValidMusicTypeId } from "@/play/quiz/data/music-personality";
  */
 export function extractWithParam(
   resolvedSearchParams:
-    | Record<string, string | string[] | undefined>
-    | undefined,
+    Record<string, string | string[] | undefined> | undefined,
   slug: string,
   resultId: string,
 ): string | undefined {

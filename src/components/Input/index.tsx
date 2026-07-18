@@ -2,14 +2,7 @@ import type { ComponentPropsWithoutRef } from "react";
 import styles from "./Input.module.css";
 
 type InputType =
-  | "text"
-  | "email"
-  | "number"
-  | "password"
-  | "search"
-  | "tel"
-  | "url"
-  | "date";
+  "text" | "email" | "number" | "password" | "search" | "tel" | "url" | "date";
 
 interface InputOwnProps {
   /** input の type 属性（デフォルト: "text"） */

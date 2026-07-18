@@ -1,13 +1,7 @@
 /** Type definitions for site-wide search */
 
 export type ContentType =
-  | "tool"
-  | "game"
-  | "kanji"
-  | "yoji"
-  | "color"
-  | "blog"
-  | "quiz";
+  "tool" | "game" | "kanji" | "yoji" | "color" | "blog" | "quiz";
 
 export type SearchDocument = {
   id: string;

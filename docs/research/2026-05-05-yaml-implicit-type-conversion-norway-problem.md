@@ -325,34 +325,34 @@ YAML のクォートには 5 種類のスタイルがある（plain scalar、sin
 
 ```yaml
 # boolean に変換される
-flag: yes          # → true
-flag: no           # → false
-flag: on           # → true
-flag: off          # → false
-flag: y            # → true
-flag: n            # → false
-country: NO        # → false (Norway problem)
-status: YES        # → true
+flag: yes # → true
+flag: no # → false
+flag: on # → true
+flag: off # → false
+flag: y # → true
+flag: n # → false
+country: NO # → false (Norway problem)
+status: YES # → true
 
 # null に変換される
-value: null        # → null
-value: Null        # → null
-value: NULL        # → null
-value: ~           # → null
-name: Null         # → null (姓が Null の場合)
+value: null # → null
+value: Null # → null
+value: NULL # → null
+value: ~ # → null
+name: Null # → null (姓が Null の場合)
 
 # float に変換される
-version: 1.0       # → 1.0（表示上は "1" になることがある）
-version: 3.8       # → 3.8 (float)
-ratio: 1.5e3       # → 1500.0
+version: 1.0 # → 1.0（表示上は "1" になることがある）
+version: 3.8 # → 3.8 (float)
+ratio: 1.5e3 # → 1500.0
 
 # int に変換される（YAML 1.1）
-mode: 010          # → 8 (octal)
-code: 0xFF         # → 255 (hex)
-port: 22:22        # → 1342 (sexagesimal)
+mode: 010 # → 8 (octal)
+code: 0xFF # → 255 (hex)
+port: 22:22 # → 1342 (sexagesimal)
 
 # datetime に変換される
-date: 2024-01-15   # → datetime(2024, 1, 15)
+date: 2024-01-15 # → datetime(2024, 1, 15)
 ```
 
 ### 「全部クォートする」vs「危険な箇所だけクォートする」
@@ -492,13 +492,13 @@ date: 2024-01-15   # → datetime(2024, 1, 15)
 
 ```yaml
 # 危険な書き方（YAML 1.1 で型変換が起きる）
-country: NO          # → false
-debug: on            # → true
-version: 1.0         # → 1.0 (float、表示で "1" になることがある)
-port: 22:22          # → 1342 (sexagesimal)
-release: 2024-01-15  # → datetime
-name: Null           # → null
-permission: 755      # ← 安全（数値リテラルとして問題ない）
+country: NO # → false
+debug: on # → true
+version: 1.0 # → 1.0 (float、表示で "1" になることがある)
+port: 22:22 # → 1342 (sexagesimal)
+release: 2024-01-15 # → datetime
+name: Null # → null
+permission: 755 # ← 安全（数値リテラルとして問題ない）
 
 # 安全な書き方
 country: "NO"

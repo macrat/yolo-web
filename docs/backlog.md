@@ -2,13 +2,13 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-505 | Dependabot 脆弱性アラートの調査と対応 | P1 | 286 | 現在Dependabot20件(high3)。来訪者到達性(悪用可能性)を評価し、届く高脆弱性を最優先で対応。詳細 cycle-246.md/cycle-285.md/cycle-286/ |
 
 ## Queued (すぐに着手できる)
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
 | B-575 | 診断結果のシェアが少ない事実の扱い | P3 | - | share≈2件/28d(旧B-550・フェーズR前の古計測)。着手時は来訪者価値で正当化。経緯・扱いはcycle-285.md |
+| B-591 | 残dev-only高脆弱性(transformers連鎖)の解消 | P3 | - | npm audit残3high(adm-zip/onnxruntime-node/transformers)=build専用devDep連鎖・NON-VISITOR。除去/置換/pin検討。詳細cycle-286/ |
 | B-589 | 判定が同点時に配列順で決着する件の検証 | P3 | - | scoring.ts:82の strict `>` で同点時に配列先頭タイプが決まる(コード確認済)。同点頻度・到達不能タイプ・§5配点表は未検証=重大度不明。着手時に独立再検査。詳細cycle-285.md |
 | B-586 | rebuild-plan.md の処遇(archive移動)と参照元の付け替え | P2 | - | 作り直しはcycle-279完了・中身はbacklog/ADRへ移設済だが参照(ADR001・cycle-kickoff SKILL等)が残る=archive移動と参照付け替えが要る。cycle-284重大事故の舞台。詳細cycle-284.md事故報告 |
 | B-583 | 「店構え」統一と印の要否を来訪者価値から再検討 | P3 | - | 店構え統一・印の要否を来訪者価値から再評価。旧着手条件は消滅済(Queued)。詳細cycle-283.md/cycle-285.md |
@@ -53,6 +53,7 @@
 | ID | Title | Priority | Notes |
 | --- | --- | --- | --- |
 | B-568 | 面横断 content_id 接頭辞規約の全面統一 | P4 | 着手: ADR002観測窓終了後(既存item_id集計との断絶を伴う移行のため)。cycle-280でquiz面はcontentIdForQuizに統一済・ゲーム(素slug)/運勢(fortune-daily)は当面surface未指定・level不在で主指標非汚染。詳細 cycle-280.md |
+| B-590 | eslint 10 / TypeScript 7 の採用 | P4 | 着手: config-next配下のplugin基盤(typescript-eslint8等)がeslint10/TS7対応次第。cycle-286で試行=lintクラッシュ実証。詳細cycle-286/ |
 | B-565 | 全面切替の観測(ADR001) | P2 | 着手: 切替+2週(読み始め=2026-07-27)・結論は+3ヶ月窓。正典 ADR001(docs/ADR/open/)。双方向ガード |
 | B-056 | i18n(多言語対応) | P4 | 着手: 将来オプション(site-concept 宿題処理=現段階不採用)。cycle-167でOwnerが無期限延期を解除 |
 | B-135 | iOS Safari スクロールロックのフォールバック | P4 | 着手: 実害確認時 |
@@ -101,6 +102,7 @@
 
 | ID | Title | Completed Cycle | Notes |
 | --- | --- | --- | --- |
+| B-505 | Dependabot 脆弱性アラートの調査と対応 | 286 | 20アラートの到達性評価=REACHABLE-VISITOR 0件。全依存を最新へ更新し破壊メジャーのみ検証で戻す。audit13→3。詳細cycle-286/ |
 | B-579 | 色コンテンツ面の成果物色の復元 | 283 | traditional-color結果OGPに固有伝統色を復元+dictionary/colors個別OGP新設(250件・純増)。記号面に罫+AA前景自動選択。DESIGN§2/§4に「色=中身の面」明文化。詳細cycle-283.md |
 | B-580 | OGPの印を来訪者起点で問い直す | 283 | **撤回**。cycle-283で家印を試→屋に変更したが「どの字が一番『店』を伝えるか」という運営者目線の判断で来訪者価値ゼロ=cycle-282の病の再演(事故)。屋をコードごと撤回し着手前の試へ戻した。印の要否・店構え統一自体の再検討はB-583へ。詳細cycle-283.md事故報告 |
 | B-570 | OGP画像をサイト全面で新デザイン(店構え)へ移行 | 282 | 共通生成器を店構え(紙/墨/罫/明朝/朱の印「試」)へ書換・54面一斉是正。accentColor/icon削除・器定数utsuwaHex抽出・gate除外解除でhumor独自旧OGPも是正・DESIGN.md §4看板規定・代表8面実見。詳細 cycle-282.md |
