@@ -2,6 +2,7 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-596 | ブログTOCアンカーのスラッグ不一致(code入り見出し) | P3 | 290 | cycle-287監査C4(F)。見出しのインラインcode内に<tag>を含むとDOM idとTOC hrefが不一致でジャンプ不能・TOC表示もcode内容欠落。id生成をSSoT化。詳細cycle-290/ |
 
 ## Queued (すぐに着手できる)
 
@@ -10,7 +11,6 @@
 | B-573 | UI/UX/アクセシビリティの全面適用(残: 全面展開) | P1 | - | cycle-287で監査+代表原型の是正スライス完了(F1-F5)。残=全81ページ/36ツールへの全面展開。系統的な個別項目はB-593/595/596/599等に分割起票済。詳細cycle-287/ |
 | B-598 | 未結線の検索機能の処遇判断(結線 or 撤去) | P2 | - | cycle-287監査C7。検索がcycle-181以降未結線(dead code・build毎656KB索引生成)。旧B-331はcycle-278整理で消滅。a11yでなく製品判断。詳細cycle-287/findings.md |
 | B-595 | ゲーム自動オープンモーダルのEsc閉じ後focus復帰 | P3 | - | cycle-287監査C3(D-3)。初回遊び方/終了時結果の自動モーダルをEscで閉じるとfocusがbodyに落ちる(復帰先無)。共有useDialog・全ゲーム波及。詳細cycle-287/findings.md |
-| B-596 | ブログTOCアンカーのスラッグ不一致(code入り見出し) | P3 | - | cycle-287監査C4(F)。見出しに<code>含むとid(ltagt化)とTOC href生成が不一致でジャンプ不能。スラッグ生成共通化。詳細cycle-287/findings.md |
 | B-594 | /play/daily の見出し構造是正(h1不在) | P3 | - | cycle-287 C2(F5姉妹)。監査ページはF5でh2化済。ResultPageShellは既にh1あり是正不要。残=dailyがh1不在(タイトルがTsutsumi<p>のみ)=h1相当が必要。実DOM確認のうえ是正。詳細cycle-287/findings.md |
 | B-597 | テーマトグルのタップ標的高さ(28px)のDESIGN準拠 | P4 | - | cycle-287監査C5。switch高さ28px=DESIGN§10の44px未満(WCAG2.5.8 24pxは充足)。当たり判定拡大の要否をDESIGN基準で判断。詳細cycle-287/findings.md |
 | B-599 | 辞典/共有まわりのa11y軽微群 | P4 | - | cycle-287監査C8。同部首117リンクがdiv(list構造喪失)/辞典ヒーロー大字がaria-hidden無で二重読み/共有ボタンの外部予告が面で不整合。詳細cycle-287/findings.md |
