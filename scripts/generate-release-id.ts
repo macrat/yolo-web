@@ -10,10 +10,10 @@
  * by deployment ("which release changed the numbers?").
  *
  * WHY env-var-first resolution (this script is NOT the same shape as the other
- * two prebuild codegens):
- * - The other codegens (generate-toolbox-registry / build-search-index) do NOT
- *   touch git at all — they walk meta.ts / build a search index. So "the other
- *   codegens prove git works at build time" is NOT a valid argument here.
+ * prebuild codegen):
+ * - The other codegen (generate-toolbox-registry) does NOT touch git at all —
+ *   it walks meta.ts. So "the other codegen proves git works at build time" is
+ *   NOT a valid argument here.
  * - yolos.net deploys on Vercel, whose build container may be a shallow clone
  *   or may not ship `git`. Therefore release resolution must NOT depend on
  *   `git rev-parse` alone.

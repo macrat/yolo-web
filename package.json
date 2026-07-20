@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "prebuild": "npm run generate:toolbox-registry && npm run generate:release-id && npm run generate:static-assets",
-    "predev": "npm run generate:toolbox-registry && npm run generate:release-id && npm run generate:static-assets",
-    "pretest": "npm run generate:toolbox-registry && npm run generate:release-id && npm run generate:static-assets",
+    "prebuild": "npm run generate:toolbox-registry && npm run generate:release-id",
+    "predev": "npm run generate:toolbox-registry && npm run generate:release-id",
+    "pretest": "npm run generate:toolbox-registry && npm run generate:release-id",
     "pretypecheck": "npm run generate:toolbox-registry && npm run generate:release-id",
     "dev": "next dev",
     "build": "next build",
@@ -19,7 +19,6 @@
     "analyze": "next experimental-analyze --output",
     "format:check": "prettier --check .",
     "generate:release-id": "tsx scripts/generate-release-id.ts",
-    "generate:static-assets": "tsx scripts/build-search-index.ts",
     "generate:toolbox-registry": "tsx scripts/generate-toolbox-registry.ts"
   },
   "dependencies": {

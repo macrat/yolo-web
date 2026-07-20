@@ -19,9 +19,9 @@
  * Async lazy init:
  *   Shiki's `createHighlighter` is async. Importing this module doesn't
  *   trigger highlighter creation — that only happens on first `highlight()`
- *   call. This matters because the prebuild search-index script transitively
- *   imports `blog.ts → markdown.ts → highlight.ts` in tsx's CJS loader,
- *   which would otherwise reject top-level await.
+ *   call. Keeping creation out of module top-level (no top-level await) means
+ *   any tool that transitively imports `blog.ts → markdown.ts → highlight.ts`
+ *   in tsx's CJS loader can do so without hitting a top-level-await rejection.
  */
 
 import type { Highlighter } from "shiki/bundle/full";

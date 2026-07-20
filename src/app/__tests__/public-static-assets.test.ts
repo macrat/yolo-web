@@ -12,15 +12,4 @@ describe("public static assets", () => {
       "google.com, pub-3422033280057965, DIRECT, f08c47fec0942fa0",
     );
   });
-
-  test("search index is generated as public/search-index.json by prebuild script", () => {
-    const indexPath = path.join(process.cwd(), "public", "search-index.json");
-    expect(fs.existsSync(indexPath)).toBe(true);
-
-    const content = fs.readFileSync(indexPath, "utf-8");
-    const parsed = JSON.parse(content);
-
-    expect(Array.isArray(parsed)).toBe(true);
-    expect(parsed.length).toBeGreaterThan(0);
-  });
 });

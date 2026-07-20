@@ -129,7 +129,7 @@ const ALLOWLIST: { fileEndsWith: string; declaration: string }[] = [
   // 唯一の円形例外＝ローディングスピナーの回転リング。DESIGN.md §4「角丸 0px 基調」は
   // 「回転で読み込み中を示すインジケータ」を想定していない——リングは円形でなければ回転が
   // 視認できず機能を果たさない。装飾目的の一律角丸（§8-5）ではなく機能上不可避な形状として、
-  // この3ファイルのスピナーのみ個別許容する。トグル・スライダーのつまみ・進捗ドット等の
+  // この2ファイルのスピナーのみ個別許容する。トグル・スライダーのつまみ・進捗ドット等の
   // 操作系は cycle-279 ですべて var(--radius)/var(--radius-sm) へ変換済みで、ここには含めない
   // （「操作メタファーの円形」という自己正当化での横抜けを一切残さない）。
   {
@@ -140,10 +140,6 @@ const ALLOWLIST: { fileEndsWith: string; declaration: string }[] = [
   {
     fileEndsWith:
       "src/play/games/yoji-kimeru/_components/styles/GameContainer.module.css",
-    declaration: "border-radius: 50%",
-  },
-  {
-    fileEndsWith: "src/components/search/SearchInput.module.css",
     declaration: "border-radius: 50%",
   },
   // §2 是正ゲートの追加許容: --wairo-* はゲームの駒/結果など「成果物」の中身の色として

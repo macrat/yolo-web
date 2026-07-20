@@ -3,16 +3,11 @@ import {
   trackContentStart,
   trackContentEnd,
   trackContentRating,
-  trackSearch,
   trackShare,
   trackSave,
-  trackSearchModalOpen,
-  trackSearchModalClose,
-  trackSearchResultClick,
-  trackSearchAbandoned,
   trackTileFirstInteraction,
 } from "@/lib/analytics";
-import type { CloseReasonValue, TileSurface } from "@/lib/analytics";
+import type { TileSurface } from "@/lib/analytics";
 
 describe("analytics", () => {
   let mockGtag: ReturnType<typeof vi.fn>;
@@ -146,28 +141,6 @@ describe("analytics", () => {
       const params = mockGtag.mock.calls[0][2] as Record<string, unknown>;
       expect(params.ab_variant).toBeUndefined();
       expect("ab_variant" in params).toBe(false);
-    });
-  });
-
-  describe("trackSearch", () => {
-    it("sends search event with trimmed term", () => {
-      trackSearch("  kanji quiz  ");
-
-      expect(mockGtag).toHaveBeenCalledWith("event", "search", {
-        search_term: "kanji quiz",
-      });
-    });
-
-    it("does not send event for empty string", () => {
-      trackSearch("");
-
-      expect(mockGtag).not.toHaveBeenCalled();
-    });
-
-    it("does not send event for whitespace-only string", () => {
-      trackSearch("   ");
-
-      expect(mockGtag).not.toHaveBeenCalled();
     });
   });
 
@@ -365,92 +338,6 @@ describe("analytics", () => {
     });
   });
 
-  describe("trackSearchModalOpen", () => {
-    it("sends search_modal_open event with no parameters", () => {
-      trackSearchModalOpen();
-
-      expect(mockGtag).toHaveBeenCalledWith(
-        "event",
-        "search_modal_open",
-        undefined,
-      );
-    });
-  });
-
-  describe("trackSearchModalClose", () => {
-    const closeReasons: CloseReasonValue[] = [
-      "escape",
-      "backdrop",
-      "close_button",
-      "popstate",
-      "navigation",
-      "cmd_k",
-    ];
-
-    closeReasons.forEach((reason) => {
-      it(`sends search_modal_close event with close_reason="${reason}"`, () => {
-        trackSearchModalClose({ close_reason: reason });
-
-        expect(mockGtag).toHaveBeenCalledWith("event", "search_modal_close", {
-          close_reason: reason,
-        });
-      });
-    });
-  });
-
-  describe("trackSearchResultClick", () => {
-    it("sends search_result_click event with trimmed search_term and result_url", () => {
-      trackSearchResultClick({
-        search_term: "  kanji  ",
-        result_url: "/tools/kanji-test",
-      });
-
-      expect(mockGtag).toHaveBeenCalledWith("event", "search_result_click", {
-        search_term: "kanji",
-        result_url: "/tools/kanji-test",
-      });
-    });
-
-    it("sends search_result_click with query params and hash in result_url", () => {
-      trackSearchResultClick({
-        search_term: "quiz",
-        result_url: "/play/quiz?level=1#section",
-      });
-
-      expect(mockGtag).toHaveBeenCalledWith("event", "search_result_click", {
-        search_term: "quiz",
-        result_url: "/play/quiz?level=1#section",
-      });
-    });
-
-    it("does not send event when result_url is empty string", () => {
-      trackSearchResultClick({
-        search_term: "kanji",
-        result_url: "",
-      });
-
-      expect(mockGtag).not.toHaveBeenCalled();
-    });
-  });
-
-  describe("trackSearchAbandoned", () => {
-    it("sends search_abandoned event with had_query=true", () => {
-      trackSearchAbandoned({ had_query: true });
-
-      expect(mockGtag).toHaveBeenCalledWith("event", "search_abandoned", {
-        had_query: true,
-      });
-    });
-
-    it("sends search_abandoned event with had_query=false", () => {
-      trackSearchAbandoned({ had_query: false });
-
-      expect(mockGtag).toHaveBeenCalledWith("event", "search_abandoned", {
-        had_query: false,
-      });
-    });
-  });
-
   describe("trackTileFirstInteraction", () => {
     const surfaces: TileSurface[] = ["detail"];
 
@@ -513,7 +400,6 @@ describe("analytics", () => {
           variant: "B",
         }),
       ).not.toThrow();
-      expect(() => trackSearch("test")).not.toThrow();
       expect(() => trackShare("twitter", "game", "irodori")).not.toThrow();
       expect(() =>
         trackShare("twitter", "quiz", "character-personality", "fuda", {
@@ -540,17 +426,6 @@ describe("analytics", () => {
           variant: "A",
         }),
       ).not.toThrow();
-      expect(() => trackSearchModalOpen()).not.toThrow();
-      expect(() =>
-        trackSearchModalClose({ close_reason: "escape" }),
-      ).not.toThrow();
-      expect(() =>
-        trackSearchResultClick({
-          search_term: "test",
-          result_url: "/tools/test",
-        }),
-      ).not.toThrow();
-      expect(() => trackSearchAbandoned({ had_query: false })).not.toThrow();
       expect(() =>
         trackTileFirstInteraction({
           item_id: "color-picker",

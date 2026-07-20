@@ -17,8 +17,9 @@ completed_at: null
 - [x] **データ確認**: GA4/BigQuery（113日・1,631セッション）＋SC。単一PV離脱79.4%・ブランド/ナビ系クエリ皆無・検索モーダル発火1〜2ユーザー（動作確認の公算）・Googleが事実上のサイト内検索。→ **結線を支持せず cycle-186 判断を補強**。→ [decision.md](./decision.md)
 - [x] **処遇判断の確定**: **撤去**。結線を選ぶことは cycle-186 確定判断の再掘削であり、それを覆す新証拠はない（データは逆に補強）。根拠は [decision.md](./decision.md)
 - [x] **判断のレビュー（実行前・1巡目）**: 白紙 reviewer が撤去判断を承認（cycle-186 と整合・再掘削でない）。ただし重大な見落としを指摘＝公開記事が検索を告知しており撤去だけでは来訪者に虚偽が残る（→スコープに記事是正を追加）。付随項目（highlight.ts コメント・public-static-assets.test の search サブテストのみ除去）も明確化。→ [decision.md](./decision.md) 該当節
-- [ ] **撤去の実行（コード）**: builder に委譲。(a) `src/components/search/` 一式、(b) `src/lib/search/` 一式、(c) `scripts/build-search-index.ts`、(d) `package.json` の prebuild/predev/pretest から `generate:static-assets` を除去＋スクリプト定義削除、(e) `public/search-index.json`、(f) `src/lib/analytics.ts` の検索モーダル専用関数群（trackSearch/trackSearchModalOpen/Close/trackSearchResultClick/trackSearchAbandoned＋関連型・コメント）、(g) `src/lib/highlight.ts` の陳腐化コメント更新（ファイルは残す）、(h) `public-static-assets.test.ts` の search サブテストのみ除去（ads.txt は残す）、(i) `design-gate.test.ts:146` の検索CSS参照整理。lint/format/test/build 健全化
-- [ ] **撤去の実行（公開記事の是正）**: blog-writer に委譲。`2026-02-21-site-search-feature.md` の冒頭に日付つき注記（機能撤去済み・本文は当時の記録として不変）。dark-mode-toggle L29 リンクは記事存続のためルール上不変。回顧記事の要否は読者価値で判断
+- [x] **撤去の実行（コード）**: builder が完了。(a)-(i) 全て撤去/整理。加えて `analytics.test.ts`（削除関数の import/describe）と `generate-release-id.ts` のコメントも整合。lint/format:check/test（5366件）/build すべて exit 0・`public/search-index.json` はビルドで再生成されないことを確認。
+- [x] **撤去の実行（公開記事の是正）**: blog-writer が完了。`2026-02-21-site-search-feature.md` 冒頭に日付つき NOTE 注記を追加（本文・リンク・CTA 不変、updated_at 更新）。dark-mode-toggle L29 リンクは記事存続のため不変（確認済）。回顧記事は現時点では書かない判断（薄い作業報告に堕ちる／cycle-290 の反省。書くなら「期限切れの外部仕様を根拠に作り続ける／到達不能な機能を告知する失敗と防ぎ方」を主題とする条件付き）→ backlog に P4 で記録。
+- [x] **第3記事の点検**: builder 報告の `2026-02-24-tool-reliability-improvements.md` L136 の `useSearch` 言及は、別ツールのデバウンス値を正当化する技術的比較の一言であり、来訪者へのCTA・リンクではない。記事主題（ツール信頼性）は撤去の影響を受けず、来訪者を誤誘導しない。よって注記不要・本文不変（当時の記録として保持）。
 - [ ] **実行後のレビュー**: 成果物（コード＋記事）を白紙 reviewer に独立レビューさせ、指摘に対応
 
 ## 作業計画
