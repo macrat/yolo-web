@@ -2,7 +2,6 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-596 | ブログTOCアンカーのスラッグ不一致(code入り見出し) | P3 | 290 | cycle-287監査C4(F)。見出しのインラインcode内に<tag>を含むとDOM idとTOC hrefが不一致でジャンプ不能・TOC表示もcode内容欠落。id生成をSSoT化。詳細cycle-290/ |
 
 ## Queued (すぐに着手できる)
 
@@ -10,7 +9,6 @@
 | --- | --- | --- | --- | --- |
 | B-573 | UI/UX/アクセシビリティの全面適用(残: 全面展開) | P1 | - | cycle-287で監査+代表原型の是正スライス完了(F1-F5)。残=全81ページ/36ツールへの全面展開。系統的な個別項目はB-593/595/596/599等に分割起票済。詳細cycle-287/ |
 | B-598 | 未結線の検索機能の処遇判断(結線 or 撤去) | P2 | - | cycle-287監査C7。検索がcycle-181以降未結線(dead code・build毎656KB索引生成)。旧B-331はcycle-278整理で消滅。a11yでなく製品判断。詳細cycle-287/findings.md |
-| B-595 | ゲーム自動オープンモーダルのEsc閉じ後focus復帰 | P3 | - | cycle-287監査C3(D-3)。初回遊び方/終了時結果の自動モーダルをEscで閉じるとfocusがbodyに落ちる(復帰先無)。共有useDialog・全ゲーム波及。詳細cycle-287/findings.md |
 | B-594 | /play/daily の見出し構造是正(h1不在) | P3 | - | cycle-287 C2(F5姉妹)。監査ページはF5でh2化済。ResultPageShellは既にh1あり是正不要。残=dailyがh1不在(タイトルがTsutsumi<p>のみ)=h1相当が必要。実DOM確認のうえ是正。詳細cycle-287/findings.md |
 | B-597 | テーマトグルのタップ標的高さ(28px)のDESIGN準拠 | P4 | - | cycle-287監査C5。switch高さ28px=DESIGN§10の44px未満(WCAG2.5.8 24pxは充足)。当たり判定拡大の要否をDESIGN基準で判断。詳細cycle-287/findings.md |
 | B-599 | 辞典/共有まわりのa11y軽微群 | P4 | - | cycle-287監査C8。同部首117リンクがdiv(list構造喪失)/辞典ヒーロー大字がaria-hidden無で二重読み/共有ボタンの外部予告が面で不整合。詳細cycle-287/findings.md |
@@ -108,6 +106,7 @@
 
 | ID | Title | Completed Cycle | Notes |
 | --- | --- | --- | --- |
+| B-596 | ブログTOCアンカーのスラッグ不一致(code入り見出し) | 290 | 見出しid生成を2経路(DOM/TOC)から単一生成元化・エンティティ復号でcode内容保持。reviewer指摘Blocker=module共有状態の並行汚染をper-call Markedインスタンスで解消(回帰テスト2件)。学びをブログ公開。詳細cycle-290/ |
 | B-595 | ゲーム自動オープンモーダルのEsc閉じ後focus復帰 | 289 | 共有useDialogにreturnFocusRef追加でh1(tabIndex=-1)へ復帰・open時focusはpreventScrollでスクロール保持。4ゲーム配線・回帰4件・Result実測。詳細cycle-289/ |
 | B-593 | ツールのセクション見出しの階層是正(h1→h3飛び) | 288 | 7ツール本体見出し18箇所をh3→h2(全てh1直下トップレベル=一律h2が正)。視覚不変(クラスがfont-size明示+全称マージンリセット)。回帰テスト10件追加。reviewer承認。実測でbacklog「約30」を7ファイルに訂正。詳細cycle-288/ |
 | B-505 | Dependabot 脆弱性アラートの調査と対応 | 286 | 20アラートの到達性評価=REACHABLE-VISITOR 0件。全依存を最新へ更新し破壊メジャーのみ検証で戻す。audit13→0。詳細cycle-286/ |
