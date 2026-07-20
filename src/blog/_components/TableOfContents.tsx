@@ -1,10 +1,9 @@
+import type { Heading } from "@/lib/markdown";
 import styles from "./TableOfContents.module.css";
 
-export interface Heading {
-  level: number;
-  text: string;
-  id: string;
-}
+// Re-export so existing consumers (CollapsibleTOC) keep importing Heading
+// from here while the type lives in the SSoT markdown module.
+export type { Heading };
 
 interface TableOfContentsProps {
   headings: Heading[];

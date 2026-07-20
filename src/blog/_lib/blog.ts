@@ -3,8 +3,8 @@ import path from "node:path";
 import {
   parseFrontmatter,
   markdownToHtml,
-  extractHeadings,
   estimateReadingTime,
+  type Heading,
 } from "@/lib/markdown";
 
 const BLOG_DIR = path.join(process.cwd(), "src/blog/content");
@@ -153,7 +153,7 @@ export interface BlogPostMeta {
 
 export interface BlogPost extends BlogPostMeta {
   contentHtml: string;
-  headings: { level: number; text: string; id: string }[];
+  headings: Heading[];
 }
 
 /**
@@ -227,6 +227,10 @@ export async function getBlogPostBySlug(
     if (postSlug !== slug) continue;
     if (data.draft === true) continue;
 
+    // Render HTML and collect the table-of-contents headings in a single pass
+    // so the TOC anchor ids always match the rendered heading element ids.
+    const { html: contentHtml, headings } = await markdownToHtml(content);
+
     const post: BlogPost = {
       title: String(data.title || ""),
       slug: postSlug,
@@ -240,8 +244,8 @@ export async function getBlogPostBySlug(
         : [],
       draft: false,
       readingTime: estimateReadingTime(content),
-      contentHtml: await markdownToHtml(content),
-      headings: extractHeadings(content),
+      contentHtml,
+      headings,
     };
 
     if (data.series) {

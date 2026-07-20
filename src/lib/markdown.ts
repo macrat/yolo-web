@@ -47,7 +47,7 @@ const codeExtension: MarkedExtension = {
       const cached = highlightedCodeCache.get(token);
       if (cached) return `${cached}\n`;
       // walkTokens は async なので markdownToHtml() を await した経路では必ず埋まる。
-      // ここに来るのは markedInstance.parse() を async モード経由で呼ばなかった
+      // ここに来るのは per-call の instance.parse() を async モード経由で呼ばなかった
       // 場合の保険。素の <pre><code> にエスケープして渡す。
       const escaped = token.text
         .replace(/&/g, "&amp;")
@@ -59,9 +59,21 @@ const codeExtension: MarkedExtension = {
 };
 
 /**
+ * Heading entry for the table of contents.
+ *
+ * Produced as a side-effect of rendering markdown to HTML so that the
+ * `id` here is the *same string* assigned to the corresponding
+ * `<h{level} id="...">` element — there is no second, independent id path.
+ */
+export interface Heading {
+  level: number;
+  text: string;
+  id: string;
+}
+
+/**
  * Generate a URL-friendly heading ID from text.
- * Shared between extractHeadings() and the heading renderer to ensure
- * IDs are always consistent.
+ * Used by the heading renderer as the single source of truth for heading IDs.
  */
 export function generateHeadingId(text: string): string {
   return text
@@ -73,22 +85,47 @@ export function generateHeadingId(text: string): string {
 }
 
 /**
- * Create a heading renderer extension that assigns id attributes
- * using the same logic as extractHeadings().
+ * Decode the HTML entities that marked emits when escaping inline content
+ * (e.g. inline code containing angle brackets: `<body>` -> `&lt;body&gt;`).
  *
- * A closure-based counter tracks duplicate IDs per parse call.
- * The returned resetCounter function MUST be called before each
- * marked.parse() invocation to reset state.
+ * Applied to the tag-stripped heading text before it is used for both the
+ * TOC display text and the id slug, so that code content like `<body>` is
+ * preserved in the TOC instead of being dropped, and the id becomes a clean
+ * slug ("body") rather than a mangled one ("ltbodygt").
+ *
+ * `&amp;` is decoded LAST to avoid double-decoding (so "&amp;lt;" does not
+ * turn into "<").
+ */
+function decodeHtmlEntities(text: string): string {
+  return text
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&amp;/g, "&");
+}
+
+/**
+ * Create a heading renderer extension that assigns id attributes AND collects
+ * the heading list for the table of contents in the same pass.
+ *
+ * This is the single source of truth for heading IDs: the id written to the
+ * `<h{depth} id="...">` element and the id pushed into `headings` are produced
+ * by the exact same code, so the TOC can never disagree with the DOM anchors.
+ *
+ * The duplicate-ID counter and the collected headings array are per-instance
+ * closure state. A FRESH extension (and Marked instance) is created for every
+ * markdownToHtml() call, so this state is never shared across concurrent
+ * parses — see createMarkedInstance() / markdownToHtml().
  */
 function createHeadingExtension(): {
   extension: MarkedExtension;
-  resetCounter: () => void;
+  getHeadings: () => Heading[];
 } {
-  let idCount = new Map<string, number>();
+  const idCount = new Map<string, number>();
+  const headings: Heading[] = [];
 
-  const resetCounter = () => {
-    idCount = new Map<string, number>();
-  };
+  const getHeadings = () => headings;
 
   const extension: MarkedExtension = {
     renderer: {
@@ -96,34 +133,48 @@ function createHeadingExtension(): {
         // Use the built-in parser to render inline tokens to HTML.
         // This preserves marked's default HTML escaping behavior.
         const inner = this.parser.parseInline(tokens);
-        // Extract plain text for ID generation (strip HTML tags)
-        const plainText = inner.replace(/<[^>]*>/g, "");
-        const baseId = generateHeadingId(plainText);
+        // Strip HTML tags, then decode the entities marked produced so that
+        // inline code content (e.g. `<body>`) survives in both text and id.
+        // Trim surrounding whitespace left behind by removed tags (e.g. images).
+        const text = decodeHtmlEntities(inner.replace(/<[^>]*>/g, "")).trim();
+        const baseId = generateHeadingId(text);
         const count = idCount.get(baseId) || 0;
         idCount.set(baseId, count + 1);
         const id = count === 0 ? baseId : `${baseId}-${count}`;
+        headings.push({ level: depth, text, id });
         return `<h${depth} id="${id}">${inner}</h${depth}>\n`;
       },
     },
   };
 
-  return { extension, resetCounter };
+  return { extension, getHeadings };
 }
 
-const { extension: headingExtension, resetCounter: resetHeadingCounter } =
-  createHeadingExtension();
-
 /**
- * Module-level Marked instance with code/highlight, heading, and alert extensions.
- * Using a dedicated instance avoids polluting the global marked state
- * and keeps extensions isolated.
- * markedAlert() is included to support GFM Alert syntax (> [!NOTE], > [!WARNING], etc.).
+ * Build a fresh Marked instance with code/highlight, heading, and alert
+ * extensions, plus a getter for the headings that instance collects.
+ *
+ * A NEW instance is created per markdownToHtml() call rather than reusing a
+ * module-level singleton. The heading extension carries mutable per-parse state
+ * (the duplicate-ID counter and the collected headings), and markdownToHtml()
+ * awaits Shiki between reset and collection. A shared instance would let two
+ * concurrent parses push into the same arrays and return {html, headings} that
+ * disagree — a real risk because getBlogPostBySlug() is not deduped and Next.js
+ * runs generateMetadata, the page body and opengraph-image concurrently for the
+ * same slug. Per-call instances isolate this state structurally.
+ *
+ * This is cheap: Shiki's highlighter is globally cached in highlight.ts and
+ * codeExtension's cache is a per-token WeakMap, so nothing heavy is rebuilt.
+ * markedAlert() is included to support GFM Alert syntax (> [!NOTE], etc.).
  */
-const markedInstance = new Marked(
-  codeExtension,
-  headingExtension,
-  markedAlert(),
-);
+function createMarkedInstance(): {
+  instance: Marked;
+  getHeadings: () => Heading[];
+} {
+  const { extension: headingExtension, getHeadings } = createHeadingExtension();
+  const instance = new Marked(codeExtension, headingExtension, markedAlert());
+  return { instance, getHeadings };
+}
 
 /** Parse YAML frontmatter from a markdown string. Returns { data, content }. */
 export function parseFrontmatter<T>(raw: string): { data: T; content: string } {
@@ -239,71 +290,32 @@ function parseYamlScalar(value: string): unknown {
 }
 
 /**
- * Convert markdown to HTML using the `marked` library.
- * Configured for GFM (GitHub Flavored Markdown) support.
+ * Convert markdown to HTML using the `marked` library, returning both the
+ * sanitized HTML and the collected heading list for the table of contents.
+ *
+ * The headings are gathered by the heading renderer as it assigns element ids,
+ * making this the single source of truth: `headings[i].id` is guaranteed to be
+ * the id on the matching `<h{level}>` in `html`.
  *
  * Async because Shiki's syntax highlighter is async-initialised once per
  * process. Subsequent calls reuse the cached highlighter, so the per-call
  * cost is just tokenization.
  */
-export async function markdownToHtml(md: string): Promise<string> {
-  // Reset the heading ID counter before each parse call so that
-  // duplicate-ID suffixes start fresh for every document.
-  resetHeadingCounter();
+export async function markdownToHtml(
+  md: string,
+): Promise<{ html: string; headings: Heading[] }> {
+  // A fresh Marked instance per call keeps heading-collection state local, so
+  // concurrent calls never cross-pollute each other's html/headings.
+  const { instance, getHeadings } = createMarkedInstance();
   // `async: true` enables async walkTokens (used by codeExtension to call Shiki).
-  const result = await markedInstance.parse(md, {
+  const result = await instance.parse(md, {
     gfm: true,
     breaks: false,
     async: true,
   });
   // Sanitize to strip dangerous tags/attributes (XSS prevention)
-  return sanitize(result);
-}
-
-/**
- * Extract heading structure for table of contents.
- * Returns array of { level, text, id } objects.
- */
-export function extractHeadings(
-  md: string,
-): { level: number; text: string; id: string }[] {
-  const headings: { level: number; text: string; id: string }[] = [];
-  const lines = md.split("\n");
-  const idCount = new Map<string, number>();
-
-  let inCodeBlock = false;
-  for (const line of lines) {
-    if (line.trim().startsWith("```")) {
-      inCodeBlock = !inCodeBlock;
-      continue;
-    }
-    if (inCodeBlock) continue;
-
-    const match = line.match(/^(#{1,6})\s+(.+)$/);
-    if (match) {
-      const level = match[1].length;
-      const text = match[2]
-        // Strip image syntax: ![alt](url) -> "" (must precede link strip;
-        // matches markdownToHtml where <img> tags are fully removed)
-        .replace(/!\[[^\]]*\]\([^)]*\)/g, "")
-        // Strip link syntax: [text](url) -> text
-        .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
-        // Strip existing inline formatting
-        .replace(/\*\*/g, "")
-        .replace(/\*/g, "")
-        .replace(/`/g, "")
-        // Strip HTML tags: <tag> -> empty
-        .replace(/<[^>]*>/g, "")
-        .trim();
-      const baseId = generateHeadingId(text);
-      const count = idCount.get(baseId) || 0;
-      idCount.set(baseId, count + 1);
-      const id = count === 0 ? baseId : `${baseId}-${count}`;
-      headings.push({ level, text, id });
-    }
-  }
-
-  return headings;
+  const html = sanitize(result);
+  return { html, headings: getHeadings() };
 }
 
 /**
