@@ -30,7 +30,7 @@ completed_at: null
   - [x] PM 独立実測: 破損4記事で SSoT mismatch=0／並行レースを修正前に再現(200件)・修正後0件
 - [x] レビュー（reviewer サブエージェント・2巡）を受け、指摘に対応する（下記レビュー結果・[review-log.md](./review-log.md)）
 - [x] `npm run lint && npm run format:check && npm run test && npm run build` の全通過（lint 0・format 準拠・全5492テスト通過・build exit 0）
-- [ ] ブログ執筆（読者価値の判断＝技術読者向けに公開）: 見出し id の SSoT 化と marked 拡張の per-call 状態隔離による並行 SSG レース回避の教訓（blog-writer→contents-review 通過）
+- [x] ブログ執筆（読者価値の判断＝技術読者向けに公開）: 見出し id の SSoT 化と marked 拡張の per-call 状態隔離による並行 SSG レース回避の教訓。記事 `src/blog/content/2026-07-20-toc-anchor-single-source-of-truth-concurrency-race.md`。reviewer 事実正確性＋読者価値レビュー**Go（Blocker/Major/Minor なし）**
 
 ## 作業計画
 
