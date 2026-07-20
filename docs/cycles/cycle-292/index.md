@@ -16,9 +16,10 @@ completed_at: null
 - [x] **履歴の再構成（既決着チェック）**: cycle-20/171/185/279 を調査 → **「結線しない」は cycle-186 で確定済みの製品判断**（SEO便益=Google sitelinks search box が2024-11-21廃止で消滅）。cycle-185 の撤回は「やり方の否定」で結論の否定ではなかったが、続く cycle-186 が結論自体を「作らない」に再判断・確定。cycle-279 で呼び出し元が消え dead code 化。→ [decision.md](./decision.md)
 - [x] **データ確認**: GA4/BigQuery（113日・1,631セッション）＋SC。単一PV離脱79.4%・ブランド/ナビ系クエリ皆無・検索モーダル発火1〜2ユーザー（動作確認の公算）・Googleが事実上のサイト内検索。→ **結線を支持せず cycle-186 判断を補強**。→ [decision.md](./decision.md)
 - [x] **処遇判断の確定**: **撤去**。結線を選ぶことは cycle-186 確定判断の再掘削であり、それを覆す新証拠はない（データは逆に補強）。根拠は [decision.md](./decision.md)
-- [ ] **判断のレビュー（実行前）**: 判断そのものを reviewer に独立レビューさせる。既決着結論の再掘削になっていないか・データ解釈が妥当かを検証させ、承認を得てから実行に入る
-- [ ] **撤去の実行**: 検索一式（`src/components/search/`）＋索引生成（`scripts/build-search-index.ts`＋`src/lib/search/`）＋`generate:static-assets`等の配線＋`public/search-index.json`＋関連テストを除去。`analytics.ts` の検索計測イベント・関連参照も点検して整理。build/lint/test 健全化を確認
-- [ ] **実行後のレビュー**: 成果物を reviewer に独立レビューさせ、指摘に対応
+- [x] **判断のレビュー（実行前・1巡目）**: 白紙 reviewer が撤去判断を承認（cycle-186 と整合・再掘削でない）。ただし重大な見落としを指摘＝公開記事が検索を告知しており撤去だけでは来訪者に虚偽が残る（→スコープに記事是正を追加）。付随項目（highlight.ts コメント・public-static-assets.test の search サブテストのみ除去）も明確化。→ [decision.md](./decision.md) 該当節
+- [ ] **撤去の実行（コード）**: builder に委譲。(a) `src/components/search/` 一式、(b) `src/lib/search/` 一式、(c) `scripts/build-search-index.ts`、(d) `package.json` の prebuild/predev/pretest から `generate:static-assets` を除去＋スクリプト定義削除、(e) `public/search-index.json`、(f) `src/lib/analytics.ts` の検索モーダル専用関数群（trackSearch/trackSearchModalOpen/Close/trackSearchResultClick/trackSearchAbandoned＋関連型・コメント）、(g) `src/lib/highlight.ts` の陳腐化コメント更新（ファイルは残す）、(h) `public-static-assets.test.ts` の search サブテストのみ除去（ads.txt は残す）、(i) `design-gate.test.ts:146` の検索CSS参照整理。lint/format/test/build 健全化
+- [ ] **撤去の実行（公開記事の是正）**: blog-writer に委譲。`2026-02-21-site-search-feature.md` の冒頭に日付つき注記（機能撤去済み・本文は当時の記録として不変）。dark-mode-toggle L29 リンクは記事存続のためルール上不変。回顧記事の要否は読者価値で判断
+- [ ] **実行後のレビュー**: 成果物（コード＋記事）を白紙 reviewer に独立レビューさせ、指摘に対応
 
 ## 作業計画
 
