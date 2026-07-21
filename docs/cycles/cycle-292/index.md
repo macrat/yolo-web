@@ -2,7 +2,7 @@
 id: 292
 description: B-598 未結線の検索機能((new)は cycle-185 の暫定結線撤回以降未結線・cycle-279 の legacy 一掃で完全 dead code 化・build毎673KB索引生成)の処遇判断。履歴で「結線しないはcycle-186確定判断」と確認・GA4/SCデータも補強→撤去と判断。検索一式/索引生成/配線/関連テストを除去する。
 started_at: 2026-07-20T23:37:03+0900
-completed_at: null
+completed_at: 2026-07-21T10:34:03+0900
 ---
 
 # サイクル-292
@@ -20,7 +20,7 @@ completed_at: null
 - [x] **撤去の実行（コード）**: builder が完了。(a)-(i) 全て撤去/整理。加えて `analytics.test.ts`（削除関数の import/describe）と `generate-release-id.ts` のコメントも整合。lint/format:check/test（5366件）/build すべて exit 0・`public/search-index.json` はビルドで再生成されないことを確認。
 - [x] **撤去の実行（公開記事の是正）**: blog-writer が完了。`2026-02-21-site-search-feature.md` 冒頭に日付つき NOTE 注記を追加（本文・リンク・CTA 不変、updated_at 更新）。dark-mode-toggle L29 リンクは記事存続のため不変（確認済）。回顧記事は現時点では書かない判断（薄い作業報告に堕ちる／cycle-290 の反省。書くなら「期限切れの外部仕様を根拠に作り続ける／到達不能な機能を告知する失敗と防ぎ方」を主題とする条件付き）→ backlog に P4 で記録。
 - [x] **第3記事の点検**: builder 報告の `2026-02-24-tool-reliability-improvements.md` L136 の `useSearch` 言及は、別ツールのデバウンス値を正当化する技術的比較の一言であり、来訪者へのCTA・リンクではない。記事主題（ツール信頼性）は撤去の影響を受けず、来訪者を誤誘導しない。よって注記不要・本文不変（当時の記録として保持）。
-- [x] **実行後のレビュー（白紙・複数巡）**: 白紙 reviewer が撤去の完全性・巻き添え・記事是正・記録を独立検証。指摘に対応: (1) 注記の文体をです/ます体へ統一（本文・前例と一致）、(2) 孤児依存 `fuse.js` を package.json/package-lock.json から除去（検索専用・import ゼロ確認済／全ゲート緑）、(3) 索引サイズ表記を backlog も 673KB に統一、(4) 「機能撤去後の孤児ランタイム依存」を AP-I13 として implementation.md に一般化追記、(5) Header の UI 側検索トリガー残骸（`onSearchOpen`/SearchIcon/Cmd+K/検索ボタン/CSS/テスト・layout の「Phase 5 で結線予定」コメント/テスト）を撤去（3呼び出し元とも onSearchOpen 未指定で永久 dead code だった／layout.test は actions スロット検査へ更新／全ゲート緑）。記事注記の「ヘッダーの虫眼鏡アイコン」表現は、機能撤去済み・到達不能を正確に伝えており本文の語を踏襲した記録として妥当と判断し不変。最終確認は下記チェックリストで再レビュー承認をもって完了。
+- [x] **実行後のレビュー（白紙・複数巡）**: 白紙 reviewer が撤去の完全性・巻き添え・記事是正・記録を独立検証。指摘に対応: (1) 注記の文体をです/ます体へ統一（本文・前例と一致）、(2) 孤児依存 `fuse.js` を package.json/package-lock.json から除去（検索専用・import ゼロ確認済／全ゲート緑）、(3) 索引サイズ表記を backlog も 673KB に統一、(4) 「機能撤去後の孤児ランタイム依存」を AP-I13 として implementation.md に一般化追記、(5) Header の UI 側検索トリガー残骸（`onSearchOpen`/SearchIcon/Cmd+K/検索ボタン/CSS/テスト・layout の「Phase 5 で結線予定」コメント/テスト）を撤去（3呼び出し元とも onSearchOpen 未指定で永久 dead code だった／layout.test は actions スロット検査へ更新／全ゲート緑）。記事注記の「ヘッダーの虫眼鏡アイコン」表現は、機能撤去済み・到達不能を正確に伝えており本文の語を踏襲した記録として妥当と判断し不変。最終確認（R5・残渣徹底掃討）で承認＝残渣ゼロ・完了可。各巡の指摘と対応の全経過は [review-log.md](./review-log.md) が正本。
 
 ## 作業計画
 
@@ -56,10 +56,10 @@ completed_at: null
 
 ## サイクル終了時のチェックリスト
 
-- [ ] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
-- [ ] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
-- [ ] すべての変更がレビューされ、残存する指摘事項が無くなっている。
-- [ ] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
-- [ ] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
-- [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
-- [ ] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
+- [x] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
+- [x] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。（B-598 は完了処理で Done へ移動）
+- [x] すべての変更がレビューされ、残存する指摘事項が無くなっている。（白紙 reviewer 計5巡・R5 で残渣ゼロ承認。経過は review-log.md が正本）
+- [x] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。（R5 reviewer が現ツリーで独立実行し全て exit 0・以降の変更は docs のみ／push 時フックが再実行）
+- [x] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
+- [x] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
+- [x] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。（回顧記事 B-600 を起票済・キャリーオーバーなし）

@@ -2,7 +2,6 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-598 | 未結線の検索機能の処遇判断(結線 or 撤去) | P2 | 292 | cycle-287監査C7。cycle-279 legacy一掃で完全dead code化(build毎673KB索引生成)。製品判断。cycle-292で着手。詳細cycle-292/decision.md |
 
 ## Queued (すぐに着手できる)
 
@@ -107,6 +106,7 @@
 
 | ID | Title | Completed Cycle | Notes |
 | --- | --- | --- | --- |
+| B-598 | 未結線の検索機能の処遇判断(結線 or 撤去) | 292 | 判断=撤去(cycle-186確定判断と整合・データも補強)。検索一式/索引生成/fuse.js/Header UIトリガーを撤去(673KB索引停止)・公開記事に日付注記。詳細cycle-292/ |
 | B-596 | ブログTOCアンカーのスラッグ不一致(code入り見出し) | 290 | 見出しid生成を2経路(DOM/TOC)から単一生成元化・エンティティ復号でcode内容保持。reviewer指摘Blocker=module共有状態の並行汚染をper-call Markedインスタンスで解消(回帰テスト2件)。学びをブログ公開。詳細cycle-290/ |
 | B-595 | ゲーム自動オープンモーダルのEsc閉じ後focus復帰 | 289 | 共有useDialogにreturnFocusRef追加でh1(tabIndex=-1)へ復帰・open時focusはpreventScrollでスクロール保持。4ゲーム配線・回帰4件・Result実測。詳細cycle-289/ |
 | B-593 | ツールのセクション見出しの階層是正(h1→h3飛び) | 288 | 7ツール本体見出し18箇所をh3→h2(全てh1直下トップレベル=一律h2が正)。視覚不変(クラスがfont-size明示+全称マージンリセット)。回帰テスト10件追加。reviewer承認。実測でbacklog「約30」を7ファイルに訂正。詳細cycle-288/ |
