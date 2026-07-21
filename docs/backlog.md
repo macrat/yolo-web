@@ -2,7 +2,6 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-584 | DESIGN §10「実測:7割超がモバイル」が典拠なし・現実測は47.4% | P2 | 293 | cycle-293で着手。無典拠の是正・§10の他ラベル点検・面別デバイス比の取得。詳細cycle-293/ |
 
 ## Queued (すぐに着手できる)
 
@@ -54,6 +53,7 @@
 
 | ID | Title | Priority | Notes |
 | --- | --- | --- | --- |
+| B-602 | デバイス比計測の精緻化(広窓GA4・自己流入除外) | P4 | 着手: §10モバイル比に高精度が要るとき。cycle-293はBigQuery(03-28〜)のみで是正済(結論は堅牢)・残=広窓GA4/自己流入除外。詳細cycle-293/device-data.md E節 |
 | B-568 | 面横断 content_id 接頭辞規約の全面統一 | P4 | 着手: ADR002観測窓終了後(既存item_id集計との断絶を伴う移行のため)。cycle-280でquiz面はcontentIdForQuizに統一済・ゲーム(素slug)/運勢(fortune-daily)は当面surface未指定・level不在で主指標非汚染。詳細 cycle-280.md |
 | B-590 | eslint 10 / TypeScript 7 の採用 | P4 | 着手: config-next配下のplugin基盤(typescript-eslint8等)がeslint10/TS7対応次第。cycle-286で試行=lintクラッシュ実証。詳細cycle-286/ |
 | B-592 | overrides(postcss/react-hooks)の解消 | P4 | 着手: postcssは親(next/sanitize-html)がpatched版を引いた時・react-hooksは7.1.1採用判断時にoverride除去(upstreamドリフト回避)。詳細cycle-286/remediation.md |
@@ -105,6 +105,7 @@
 
 | ID | Title | Cycle | Notes |
 | --- | --- | --- | --- |
+| B-584 | DESIGN §10「実測:7割超がモバイル」が典拠なし | 293 | 是正=実測(BigQuery)でモバイル非多数派(セッション45.6%)・「7割超」は診断/play一面の誤一般化。L128を典拠つき「両対応必須」へ。§10他ラベル点検済。reviewer白紙6巡。詳細cycle-293/ |
 | B-598 | 未結線の検索機能の処遇判断(結線 or 撤去) | 292 | 判断=撤去(cycle-186確定判断と整合・データも補強)。検索一式/索引生成/fuse.js/Header UIトリガーを撤去(673KB索引停止)・公開記事に日付注記。詳細cycle-292/ |
 | B-601 | 検索撤去の教訓のブログ記事化 | 292 | 【中止】ブログ執筆をbacklog延期起票したのは完了手順違反。当サイクルで執筆を試みたが事実誤認発覚で取り下げ・公開見送り(下書きはgit履歴に保全・記事は不在)。番号は再利用しない。詳細cycle-292/ |
 | B-600 | /play/character-personality の着地後エンゲージ是正 | 291 | 【中止】既決着結論(cycle-277/278・ADR001フェーズR)の再掘削だったため中止。cycle-291がDoneへ移さず削除したのを正しい運用(Done/Cancel記録)へ是正。再着手しないこと。詳細cycle-291/incident-1.md |
