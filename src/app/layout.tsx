@@ -1,8 +1,5 @@
 import type { Metadata } from "next";
 import "@/app/globals.css";
-// 検索ボタンは Header に渡される onSearchOpen prop が未設定のため
-// 表示されない設計（cycle-181 = Phase 4.1 で確立）。検索コンポーネントの結線は
-// Phase 5 = B-331 のスコープであり、本サイクル (cycle-185 = Phase 4.4) では対象外。
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SkipLink, { MAIN_CONTENT_ID } from "@/components/SkipLink";

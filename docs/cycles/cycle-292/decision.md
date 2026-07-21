@@ -4,7 +4,7 @@ cycle-292 の核心タスク。未結線の検索機能（`src/components/search
 
 ## 結論
 
-**撤去（remove）する。** グローバル検索モーダル一式・索引生成スクリプト・`generate:static-assets` 配線・`public/search-index.json`・関連テスト・検索専用のランタイム依存 `fuse.js`（package.json / package-lock.json）を除去する。これは cycle-186 で確定済みの「作らない」判断を実装面で完遂する作業であり、新たな方針転換ではない。
+**撤去（remove）する。** グローバル検索モーダル一式・索引生成スクリプト・`generate:static-assets` 配線・`public/search-index.json`・関連テスト・検索専用のランタイム依存 `fuse.js`（package.json / package-lock.json）・Header の UI 側トリガー残骸（`onSearchOpen` prop・SearchIcon・Cmd+K キーバインド・検索ボタン・関連CSS/テスト・layout の「Phase 5 で結線予定」コメント/テスト）を除去する。これは cycle-186 で確定済みの「作らない」判断を実装面で完遂する作業であり、新たな方針転換ではない。
 
 ## 判断の芯
 

@@ -72,42 +72,6 @@
   flex-shrink: 0;
 }
 
-/* 検索ボタン（文字/線画のみ・装飾なし・角丸 0）。 */
-.searchButton,
-.mobileSearchButton {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--ink-2);
-  border-radius: var(--radius);
-  transition: color 0.1s;
-}
-
-.searchButton:hover,
-.mobileSearchButton:hover {
-  color: var(--ink);
-}
-
-.searchButton:focus-visible,
-.mobileSearchButton:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-.searchButton {
-  padding: var(--space-8);
-}
-
-/* モバイル検索ボタン: デスクトップでは非表示。モバイルではハンバーガー左隣・44px。 */
-.mobileSearchButton {
-  display: none;
-  min-width: 44px;
-  min-height: 44px;
-}
-
 /* ハンバーガー / モバイルメニュー: デスクトップでは非表示。 */
 .hamburger {
   display: none;
@@ -178,12 +142,6 @@
 
   .desktopActions {
     display: none;
-  }
-
-  .mobileSearchButton {
-    display: inline-flex;
-    margin-left: auto;
-    flex-shrink: 0;
   }
 
   .hamburger {

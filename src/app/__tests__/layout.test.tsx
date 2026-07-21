@@ -1,9 +1,8 @@
 /**
  * src/app/layout.tsx 構造テスト
  *
- * Header の onSearchOpen prop が未設定のため、検索ボタンは
- * 表示されない設計（cycle-181 = Phase 4.1 で確立）。検索コンポーネントの結線は
- * Phase 5 = B-331 のスコープであり、Phase 5 着手時に本テストを更新すること。
+ * Header は actions スロット（ThemeToggle）のみを受け取る。
+ * サイト内検索機能は恒久撤去済みで、Header にも検索関連の prop は存在しない。
  */
 import { describe, test, expect } from "vitest";
 import { readFileSync } from "fs";
@@ -18,11 +17,10 @@ describe("app/layout.tsx の構造", () => {
     );
   });
 
-  test("Header JSX に onSearchOpen prop が渡されていない（Phase 5 で結線予定）", () => {
-    // コメント内の "onSearchOpen" は除外し、<Header ... /> JSX 内のみを検査する
+  test("Header JSX が actions スロットを受け取る", () => {
     const headerJsx = layoutSrc.match(/<Header\b[\s\S]*?\/>/);
     expect(headerJsx).not.toBeNull();
-    expect(headerJsx![0]).not.toMatch(/onSearchOpen/);
+    expect(headerJsx![0]).toMatch(/actions=/);
   });
 
   // cycle-279 C1 で (legacy)/__tests__/metadata.test.ts から移設。
