@@ -62,4 +62,4 @@ completed_at: 2026-07-21T10:34:03+0900
 - [x] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。（R5 reviewer が現ツリーで独立実行し全て exit 0・以降の変更は docs のみ／push 時フックが再実行）
 - [x] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
 - [x] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
-- [x] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。（回顧記事 B-600 を起票済・キャリーオーバーなし）
+- [x] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。（回顧記事 B-601 を起票済・キャリーオーバーなし）
