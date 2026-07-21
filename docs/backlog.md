@@ -2,7 +2,7 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-598 | 未結線の検索機能の処遇判断(結線 or 撤去) | P2 | 292 | cycle-287監査C7。検索がcycle-181以降未結線(dead code・build毎656KB索引生成)。a11yでなく製品判断。詳細cycle-287/findings.md。※cycle-291事故クローズで未着手→cycle-292で着手 |
+| B-598 | 未結線の検索機能の処遇判断(結線 or 撤去) | P2 | 292 | cycle-287監査C7。cycle-279 legacy一掃で完全dead code化(build毎673KB索引生成)。製品判断。cycle-292で着手。詳細cycle-292/decision.md |
 
 ## Queued (すぐに着手できる)
 

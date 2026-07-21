@@ -39,6 +39,9 @@
 - AP-I11: `setTimeout` / `setInterval` を発火させたとき、その ID を `useRef` で保持し、`useEffect` の cleanup（返却する関数）で `clearTimeout` / `clearInterval` しているか？
   → ID を ref に保持せずに `useEffect` cleanup を省略すると、コンポーネント unmount 後もタイマーが走り続け、発火時に `setState` が呼ばれてメモリリークや警告の原因になる。特に「DL 完了後 N 秒でボタン文言を戻す」「スピナー遅延表示」のような UI フィードバック用タイマーは unmount タイミングと競合しやすい。（cycle-212で実際に発生）
 
+- AP-I13: 機能やモジュールを撤去するとき、それ専用に導入したランタイム依存（package.json / package-lock.json のライブラリ）も併せて除去したか？
+  → ソースの削除だけを追跡すると、その機能のためだけに入れた依存が manifest に孤児として残る。ビルド・テストは通り import もされないため気づきにくいが、「撤去して健全化する」目的に反し、依存監査・脆弱性対応の対象が無駄に残る。撤去の完了確認では、削除したモジュールが唯一の利用元だった依存を `grep -rniE "from ['\"]<pkg>"` で洗い出し、import ゼロを確認のうえ package.json から除去して `npm install` で lock を更新すること。（cycle-292で実際に発生）
+
 ---
 
 ## 欠番（フックへ移管し機械的に強制されるアンチパターン）
