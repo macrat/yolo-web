@@ -2,12 +2,12 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-589 | 玄関 character-personality の判定を実在させる(回答が結果を決める) | P1 | 295 | 診断が診断していない=Rule4違反(回答でなく配列順で結果が決まる36〜46%・2タイプは本人に届かない)。設問がタイプへ判別する設計へ(cycle-284 T1)。結果テキストの品質はB-603。詳細cycle-284/294 |
 
 ## Queued (すぐに着手できる)
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-589 | 玄関 character-personality の判定を実在させる(回答が結果を決める) | P1 | - | 診断が診断していない=Rule4違反(回答でなく配列順で結果が決まる36〜46%・2タイプは本人に届かない)。設問がタイプへ判別する設計へ(cycle-284 T1)。結果テキストの品質はB-603。詳細cycle-284/294 |
 | B-573 | UI/UX/アクセシビリティの全面適用(残: 全面展開) | P1 | - | cycle-287で監査+代表原型の是正スライス完了(F1-F5)。残=全81ページ/36ツールへの全面展開。系統的な個別項目はB-593/595/596/599等に分割起票済。詳細cycle-287/ |
 | B-594 | /play/daily の見出し構造是正(h1不在) | P3 | - | cycle-287 C2(F5姉妹)。監査ページはF5でh2化済。ResultPageShellは既にh1あり是正不要。残=dailyがh1不在(タイトルがTsutsumi<p>のみ)=h1相当が必要。実DOM確認のうえ是正。詳細cycle-287/findings.md |
 | B-597 | テーマトグルのタップ標的高さ(28px)のDESIGN準拠 | P4 | - | cycle-287監査C5。switch高さ28px=DESIGN§10の44px未満(WCAG2.5.8 24pxは充足)。当たり判定拡大の要否をDESIGN基準で判断。詳細cycle-287/findings.md |
