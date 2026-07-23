@@ -1,4 +1,10 @@
-import type { QuizDefinition, CompatibilityEntry } from "../types";
+import type {
+  QuizDefinition,
+  QuizAnswer,
+  QuizQuestion,
+  QuizResult,
+  CompatibilityEntry,
+} from "../types";
 export type { CompatibilityEntry };
 import { resultsBatch1 } from "./character-personality-results-batch1";
 import { resultsBatch2 } from "./character-personality-results-batch2";
@@ -10,30 +16,29 @@ export { compatibilityMatrix };
 /**
  * Character Personality Quiz (あなたに似たキャラ診断)
  *
- * 4-axis personality model mapping to 24 character archetypes:
- *   A (Action):     active(+) vs reflective(-)
- *   S (Social):     outward(+) vs inward(-)
- *   P (Perception): logical(+) vs sensory(-)
- *   E (Energy):     burst(+) vs steady(-)
+ * 6-archetype model → 主軸 × 副軸 で 24 タイプを決める専用判定
+ * (cycle-295 で 4軸/直接配点方式から再設計。判定は
+ *  determineCharacterPersonalityResult / scoring.ts の汎用 determineResult は使わない)。
  *
- * 24 result types built from 6 base archetypes:
- *   commander, professor, dreamer, trickster, guardian, artist
+ * 6 base archetypes:
+ *   commander(司令塔・行動) / professor(博士・分析) / dreamer(夢想家・内省)
+ *   trickster(策略家・逆張り) / guardian(守護者・備え) / artist(芸術家・感性)
  *
- * blazing-*:  commander primary (5 types)
- * dreaming-*: professor × dreamer / dreamer × dreamer variants
- * *-scholar:  professor primary (4 types)
- * star-chaser / tender-dreamer / dreaming-canvas / eternal-dreamer: dreamer primary (4 types)
- * clever-guardian / creative-disruptor: trickster primary (2 types)
- * gentle-fortress / ultimate-guardian / data-fortress / guardian-charger: guardian primary (4 types)
- * ultimate-artist / vibe-rebel: artist primary (2 types)
- * + 5 same-type doubles (ultimate-commander, endless-researcher, eternal-dreamer,
- *   ultimate-trickster, ultimate-guardian, ultimate-artist)
+ * 各選択肢は 1 つの主signalアーキタイプ(hi 点) と 1 つの副signalアーキタイプ(lo 点) を持つ。
+ * 総配点は全選択肢 T=30 固定(hi + lo = 30)。hi は反同点のため問ごとに分散:
+ *   [29,27,25,23,21,19,28,26,24,22,20,18](Q1..Q12)。lo = 30 - hi。
+ * 各アーキタイプが主signal を担う設問はちょうど 8 問ずつ(= count の対称性)。
  *
- * Scoring: method B (direct point allocation).
- * Each choice awards 2pt (primary × 2 types) + 1pt (secondary × 2 types).
+ * 判定(determineCharacterPersonalityResult):
+ *   1. 選ばれた選択肢の主signal被選択回数 count[6] と 配点合計 score[6] を集計。
+ *   2. (count, score) の辞書式(count 主・score が同点タイブレーク)で軸を決める。
+ *   3. 主軸 P1 の count ≥ 8 なら同型(P1×P1)、未満なら副軸 P2 と (P1,P2)→typeId。
+ *      順序対が無ければ逆順 (P2,P1) にフォールバック(§2 の 36 順序対を被覆)。
+ *   4. なお残る同点はアーキタイプ正準 index(配列順でない)で決定的に 1 点化。
  *
- * Distribution verified: each of the 24 types receives
- *   Primary: 3–5 slots  Secondary: 3–5 slots  Total: 10–14 pts
+ * points のキーは 24 タイプ ID ではなく 6 アーキタイプ名。汎用 determineResult
+ * (typeId をキーに集計)へは流入しない(QuizContainer で専用判定へ分岐・
+ *  reachability.test.ts の GENERIC_TIEBREAK_EXCLUDED で汎用ガードから除外)。
  */
 const characterPersonalityQuiz: QuizDefinition = {
   meta: {
@@ -101,567 +106,327 @@ const characterPersonalityQuiz: QuizDefinition = {
     ],
   },
   questions: [
-    // Q1: 朝の目覚め方 (主軸: Action, 副軸: Energy)
+    // Q1: 休日の朝の目覚め (除外: commander, professor / hi29 lo1)
     {
       id: "q1",
-      text: "休日の朝8時、アラームなしで目覚めた。あなたがまず取る行動は?",
+      text: "休日の朝8時、アラームなしで自然に目が覚めた。まず何をする?",
       choices: [
         {
           id: "q1-a",
-          text: "「よし今日も動くか!」とベッドから飛び起きて、そのまま外に出る計画を立て始める",
-          points: {
-            "blazing-schemer": 2,
-            "ultimate-commander": 2,
-            "blazing-warden": 1,
-            "blazing-poet": 1,
-          },
+          text: "「もう少しだけ」と布団の中で、今日一日をぼんやり頭の中で思い描く",
+          points: { dreamer: 29, trickster: 1 },
         },
         {
           id: "q1-b",
-          text: "スマホを手に取り、気になってたことをとりあえず調べ始める",
-          points: {
-            "ultimate-trickster": 2,
-            "clever-guardian": 2,
-            "blazing-strategist": 1,
-            "contrarian-professor": 1,
-          },
+          text: "「二度寝と早起き、どっちが得かな」と考えつつ、いつもと違う朝を試したくなる",
+          points: { trickster: 29, artist: 1 },
         },
         {
           id: "q1-c",
-          text: "もう少しだけ...と布団にくるまって、頭の中で今日やりたいことを想像する",
-          points: {
-            "dreaming-canvas": 2,
-            "ultimate-artist": 2,
-            "eternal-dreamer": 1,
-            "star-chaser": 1,
-          },
+          text: "「昨日やり残したことはなかったか」を思い返し、確認できてからゆっくり起きる",
+          points: { guardian: 29, professor: 1 },
         },
         {
           id: "q1-d",
-          text: "「今日は何もしなくていい日だ」とじわじわ確認してから、ゆっくり体を起こす",
-          points: {
-            "ultimate-guardian": 2,
-            "data-fortress": 2,
-            "gentle-fortress": 1,
-            "guardian-charger": 1,
-          },
+          text: "カーテン越しの光の色や空気の感じで、「今日はいい日になりそう」と決める",
+          points: { artist: 29, trickster: 1 },
         },
       ],
     },
-    // Q2: 買い物の判断 (主軸: Action, 副軸: Perception)
+    // Q2: ネットの買い物 (除外: commander, dreamer / hi27 lo3)
     {
       id: "q2",
       text: "ネットで気になるアイテムを見つけた。購入ボタンの前でどうする?",
       choices: [
         {
           id: "q2-a",
-          text: "「欲しい!」と感じたらもうポチっている。後で理由を考える",
-          points: {
-            "blazing-poet": 2,
-            "creative-disruptor": 2,
-            "blazing-canvas": 1,
-            "vibe-rebel": 1,
-          },
+          text: "レビューと仕様を比較表にまとめ、納得できる根拠が揃うまで調べ続ける",
+          points: { professor: 27, trickster: 3 },
         },
         {
           id: "q2-b",
-          text: "レビューと比較サイトを見て、スプレッドシートに整理してから決める",
-          points: {
-            "endless-researcher": 2,
-            "contrarian-professor": 2,
-            "gentle-fortress": 1,
-            "data-fortress": 1,
-          },
+          text: "定価では買わない。クーポンや別の入手ルートがないか裏を探す",
+          points: { trickster: 27, guardian: 3 },
         },
         {
           id: "q2-c",
-          text: "値段と機能を5分で確認して「まあいけるでしょ」と購入する",
-          points: {
-            "blazing-strategist": 2,
-            "ultimate-trickster": 2,
-            "blazing-schemer": 1,
-            "blazing-warden": 1,
-          },
+          text: "返品条件や保証を確認して、失敗しない備えをしてから決める",
+          points: { guardian: 27, artist: 3 },
         },
         {
           id: "q2-d",
-          text: "「本当に必要?」と自問して、1日置いて翌日また考える",
-          points: {
-            "careful-scholar": 2,
-            "dreaming-scholar": 2,
-            "academic-artist": 1,
-            "eternal-dreamer": 1,
-          },
+          text: "スペックより「これ好き」。色や質感がしっくりくるかで直感的に決める",
+          points: { artist: 27, dreamer: 3 },
         },
       ],
     },
-    // Q3: 集団での立ち位置 (主軸: Social, 副軸: Action)
+    // Q3: 初参加のグループイベント (除外: commander, guardian / hi25 lo5)
     {
       id: "q3",
       text: "初めて参加するグループイベント。あなたの動き方は?",
       choices: [
         {
           id: "q3-a",
-          text: "まず全員に話しかけて、場の空気を把握しようとする",
-          points: {
-            "ultimate-commander": 2,
-            "blazing-warden": 2,
-            "blazing-schemer": 1,
-            "blazing-canvas": 1,
-          },
+          text: "どんな集まりで誰と誰がつながっているか、まず全体の構造を観察する",
+          points: { professor: 25, dreamer: 5 },
         },
         {
           id: "q3-b",
-          text: "隅っこで様子を観察してから、気が合いそうな人に声をかける",
-          points: {
-            "dreaming-canvas": 2,
-            "eternal-dreamer": 2,
-            "dreaming-scholar": 1,
-            "tender-dreamer": 1,
-          },
+          text: "会話を聞きながら、一人ひとりの背景を頭の中で勝手に物語にしている",
+          points: { dreamer: 25, trickster: 5 },
         },
         {
           id: "q3-c",
-          text: "仲いい人の隣をキープして、その人越しに輪を広げる",
-          points: {
-            "ultimate-guardian": 2,
-            "guardian-charger": 2,
-            "blazing-strategist": 1,
-            "data-fortress": 1,
-          },
+          text: "場の本音と建前を読み取って、みんなとは違う角度から会話に入る",
+          points: { trickster: 25, artist: 5 },
         },
         {
           id: "q3-d",
-          text: "一人でいても全然平気。むしろ観察が楽しい",
-          points: {
-            "vibe-rebel": 2,
-            "star-chaser": 2,
-            "clever-guardian": 1,
-            "ultimate-artist": 1,
-          },
+          text: "その場の空気や人の雰囲気を肌で感じ取って、心地いい距離を直感でとる",
+          points: { artist: 25, professor: 5 },
         },
       ],
     },
-    // Q4: 問題解決のスタイル (主軸: Perception, 副軸: Action)
+    // Q4: トラブル発生 (除外: commander, artist / hi23 lo7)
     {
       id: "q4",
-      text: "仕事/学校でトラブルが発生した。まず何をする?",
+      text: "仕事や学校でトラブルが発生した。まず何をする?",
       choices: [
         {
           id: "q4-a",
-          text: "原因を構造的に整理してから、解決策を順番に考える",
-          points: {
-            "contrarian-professor": 2,
-            "careful-scholar": 2,
-            "endless-researcher": 1,
-            "data-fortress": 1,
-          },
+          text: "原因を構造的に切り分け、根拠を一つずつ積み上げてから解決策を組む",
+          points: { professor: 23, dreamer: 7 },
         },
         {
           id: "q4-b",
-          text: "「とにかく動きながら考えよう」と行動を始める",
-          points: {
-            "blazing-schemer": 2,
-            "ultimate-commander": 2,
-            "blazing-canvas": 1,
-            "dreaming-canvas": 1,
-          },
+          text: "一度立ち止まって、この先どうなるかを頭の中で最後まで再生してから動く",
+          points: { dreamer: 23, trickster: 7 },
         },
         {
           id: "q4-c",
-          text: "「なんかこっちじゃない気がする」という直感で方向を決める",
-          points: {
-            "tender-dreamer": 2,
-            "blazing-poet": 2,
-            "star-chaser": 1,
-            "ultimate-artist": 1,
-          },
+          text: "王道の対処法を疑って、誰も見ていない抜け道や裏の原因を探す",
+          points: { trickster: 23, artist: 7 },
         },
         {
           id: "q4-d",
-          text: "思いつく限り手を打って、うまくいった道を広げる",
-          points: {
-            "creative-disruptor": 2,
-            "ultimate-trickster": 2,
-            "star-chaser": 1,
-            "blazing-poet": 1,
-          },
+          text: "最悪のケースを先に想定して、被害が広がらない備えを最優先する",
+          points: { guardian: 23, professor: 7 },
         },
       ],
     },
-    // Q5: エネルギーの使い方 (主軸: Energy, 副軸: Action)
+    // Q5: 締切のある大きな課題 (除外: professor, dreamer / hi21 lo9)
     {
       id: "q5",
-      text: "1週間の締切がある大きな課題。あなたの取り組み方は?",
+      text: "1週間の締切がある大きな課題。取り組み方は?",
       choices: [
         {
           id: "q5-a",
-          text: "最後の2日間で全力を出す。それまでは頭の中で熟成させる",
-          points: {
-            "blazing-canvas": 2,
-            "creative-disruptor": 2,
-            "ultimate-artist": 1,
-            "vibe-rebel": 1,
-          },
+          text: "とりあえず着手。動きながら考えて、走りながら軌道修正する",
+          points: { commander: 21, guardian: 9 },
         },
         {
           id: "q5-b",
-          text: "毎日少しずつコツコツ進める。急ぎすぎると質が落ちる",
-          points: {
-            "gentle-fortress": 2,
-            "guardian-charger": 2,
-            "careful-scholar": 1,
-            "endless-researcher": 1,
-          },
+          text: "正攻法だと時間がかかる。省ける手順や近道がないか先に探す",
+          points: { trickster: 21, professor: 9 },
         },
         {
           id: "q5-c",
-          text: "最初の3日で一気に片付けて、残りは余裕を楽しむ",
-          points: {
-            "blazing-warden": 2,
-            "blazing-strategist": 2,
-            "ultimate-commander": 1,
-            "blazing-poet": 1,
-          },
+          text: "余裕をもって前倒し。想定外に備えてバッファを確保しておく",
+          points: { guardian: 21, artist: 9 },
         },
         {
           id: "q5-d",
-          text: "計画表を作って、均等なペースで進める",
-          points: {
-            "endless-researcher": 2,
-            "tender-dreamer": 2,
-            "clever-guardian": 1,
-            "ultimate-guardian": 1,
-          },
+          text: "気分が乗った瞬間に一気に。「まだ違う」と納得いくまで作り込む",
+          points: { artist: 21, trickster: 9 },
         },
       ],
     },
-    // Q6: 感情の処理 (主軸: Social, 副軸: Perception)
+    // Q6: 嬉しいことがあった (除外: professor, trickster / hi19 lo11)
     {
       id: "q6",
-      text: "嬉しいことがあった! あなたの最初のリアクションは?",
+      text: "すごく嬉しいことがあった! 最初のリアクションは?",
       choices: [
         {
           id: "q6-a",
-          text: "すぐ誰かに話したい。LINEかけるか直接会いに行く",
-          points: {
-            "blazing-warden": 2,
-            "blazing-canvas": 2,
-            "blazing-strategist": 1,
-            "ultimate-commander": 1,
-          },
+          text: "いてもたってもいられず動く。誰かに会いに行くか、勢いで次のことも始める",
+          points: { commander: 19, dreamer: 11 },
         },
         {
           id: "q6-b",
-          text: "一人でじっくり噛みしめる。この感情、大切にしたい",
-          points: {
-            "dreaming-canvas": 2,
-            "vibe-rebel": 2,
-            "eternal-dreamer": 1,
-            "contrarian-professor": 1,
-          },
+          text: "一人でその瞬間を頭の中で何度も再生して、じっくり噛みしめる",
+          points: { dreamer: 19, commander: 11 },
         },
         {
           id: "q6-c",
-          text: "「なぜ嬉しいのか」を分析しながら日記に書く",
-          points: {
-            "dreaming-scholar": 2,
-            "academic-artist": 2,
-            "ultimate-trickster": 1,
-            "careful-scholar": 1,
-          },
+          text: "近しい人にだけそっと伝えて、この幸運が続くように気を配る",
+          points: { guardian: 19, artist: 11 },
         },
         {
           id: "q6-d",
-          text: "家族や近くにいる人にだけ伝える。広めたいわけじゃないけど",
-          points: {
-            "guardian-charger": 2,
-            "ultimate-guardian": 2,
-            "blazing-warden": 1,
-            "data-fortress": 1,
-          },
+          text: "この気持ちを色や音、何か形にして表現したくなる",
+          points: { artist: 19, commander: 11 },
         },
       ],
     },
-    // Q7: 創造的な作業 (主軸: Perception, 副軸: Energy)
+    // Q7: 自由に作れる3時間 (除外: professor, artist / hi28 lo2)
     {
       id: "q7",
-      text: "自由に何かを作っていい時間が3時間ある。あなたのアプローチは?",
+      text: "自由に何かを作っていい時間が3時間ある。アプローチは?",
       choices: [
         {
           id: "q7-a",
-          text: "まず構成や設計図を考えてから、手を動かす",
-          points: {
-            "careful-scholar": 2,
-            "academic-artist": 2,
-            "dreaming-scholar": 1,
-            "gentle-fortress": 1,
-          },
+          text: "とにかく手を動かし始める。作りながら完成形を決めていく",
+          points: { commander: 28, artist: 2 },
         },
         {
           id: "q7-b",
-          text: "気分で手を動かし始めて、完成形は後から決まる",
-          points: {
-            "ultimate-artist": 2,
-            "vibe-rebel": 2,
-            "creative-disruptor": 1,
-            "eternal-dreamer": 1,
-          },
+          text: "まず頭の中で完成形を細部まで思い描いてから、実際に手をつける",
+          points: { dreamer: 28, trickster: 2 },
         },
         {
           id: "q7-c",
-          text: "「こういうのを作りたい」というイメージを先に固める",
-          points: {
-            "star-chaser": 2,
-            "tender-dreamer": 2,
-            "dreaming-canvas": 1,
-            "endless-researcher": 1,
-          },
+          text: "王道の作り方をあえて外して、誰もやらない変化球を狙う",
+          points: { trickster: 28, guardian: 2 },
         },
         {
           id: "q7-d",
-          text: "過去に似たものを調べてから、自分なりの改良点を加える",
-          points: {
-            "contrarian-professor": 2,
-            "clever-guardian": 2,
-            "academic-artist": 1,
-            "ultimate-trickster": 1,
-          },
+          text: "失敗しないよう手順と材料を確認して、無理のない範囲で組み立てる",
+          points: { guardian: 28, trickster: 2 },
         },
       ],
     },
-    // Q8: リスクへの姿勢 (主軸: Energy, 副軸: Social)
+    // Q8: リスクのある選択 (除外: dreamer, trickster / hi26 lo4)
     {
       id: "q8",
-      text: "「リターンは大きいがリスクもある」という選択肢が目の前に。あなたは?",
+      text: "「リターンは大きいがリスクもある」選択肢が目の前に。どうする?",
       choices: [
         {
           id: "q8-a",
-          text: "リスクを細かく書き出して、対策を全部考えてから判断する",
-          points: {
-            "data-fortress": 2,
-            "gentle-fortress": 2,
-            "eternal-dreamer": 1,
-            "ultimate-guardian": 1,
-          },
+          text: "「やってみてダメなら次」と、まず飛び込む",
+          points: { commander: 26, guardian: 4 },
         },
         {
           id: "q8-b",
-          text: "「やってみてダメだったら次」くらいの気持ちで飛び込む",
-          points: {
-            "blazing-schemer": 2,
-            "ultimate-commander": 2,
-            "creative-disruptor": 1,
-            "ultimate-trickster": 1,
-          },
+          text: "確率や条件を洗い出し、判断できる根拠が揃うまで調べる",
+          points: { professor: 26, guardian: 4 },
         },
         {
           id: "q8-c",
-          text: "信頼できる人に相談してから決める",
-          points: {
-            "blazing-warden": 2,
-            "guardian-charger": 2,
-            "data-fortress": 1,
-            "ultimate-guardian": 1,
-          },
+          text: "リスクを書き出して対策を用意し、信頼できる人にも相談してから決める",
+          points: { guardian: 26, trickster: 4 },
         },
         {
           id: "q8-d",
-          text: "「失敗したらどう面白いか」まで想像してからGO",
-          points: {
-            "blazing-canvas": 2,
-            "blazing-poet": 2,
-            "creative-disruptor": 1,
-            "vibe-rebel": 1,
-          },
+          text: "理屈より「これは行ける気がする」という直感を信じる",
+          points: { artist: 26, trickster: 4 },
         },
       ],
     },
-    // Q9: 記憶の仕方 (主軸: Perception, 副軸: Social)
+    // Q9: 旅先の景色の記録 (除外: dreamer, guardian / hi24 lo6)
     {
       id: "q9",
-      text: "旅先で素敵な景色を見た。あなたの記録の仕方は?",
+      text: "旅先で素敵な景色に出会った。どう記録する?",
       choices: [
         {
           id: "q9-a",
-          text: "写真を撮って、場所と状況をメモに残す",
-          points: {
-            "endless-researcher": 2,
-            "contrarian-professor": 2,
-            "academic-artist": 1,
-            "dreaming-scholar": 1,
-          },
+          text: "とりあえずすぐシェア。「見て見て!」と発信して、その場を盛り上げる",
+          points: { commander: 24, trickster: 6 },
         },
         {
           id: "q9-b",
-          text: "目に焼き付けて、体に記憶させる。写真より本物",
-          points: {
-            "ultimate-trickster": 2,
-            "eternal-dreamer": 2,
-            "dreaming-canvas": 1,
-            "tender-dreamer": 1,
-          },
+          text: "場所・時間・光の条件をメモに残して、あとで見返せるようにする",
+          points: { professor: 24, commander: 6 },
         },
         {
           id: "q9-c",
-          text: "「この光、あの映画のシーンみたいだ」と物語に変換して覚える",
-          points: {
-            "star-chaser": 2,
-            "ultimate-artist": 2,
-            "blazing-poet": 1,
-            "vibe-rebel": 1,
-          },
+          text: "みんなが撮る定番アングルを外して、あえて裏側から狙う",
+          points: { trickster: 24, artist: 6 },
         },
         {
           id: "q9-d",
-          text: "SNSに投稿して、誰かと感動を共有したい",
-          points: {
-            "blazing-strategist": 2,
-            "blazing-warden": 2,
-            "blazing-canvas": 1,
-            "ultimate-commander": 1,
-          },
+          text: "写真より、目と体に焼き付ける。この光を感覚ごと覚えておきたい",
+          points: { artist: 24, trickster: 6 },
         },
       ],
     },
-    // Q10: 他者との関わり (主軸: Social, 副軸: Energy)
+    // Q10: 久しぶりに会う人 (除外: trickster, guardian / hi22 lo8)
     {
       id: "q10",
       text: "久しぶりに会う人がいる。どんな気持ちになる?",
       choices: [
         {
           id: "q10-a",
-          text: "ワクワク! 話したいことが山ほどある",
-          points: {
-            "blazing-strategist": 2,
-            "ultimate-commander": 2,
-            "blazing-schemer": 1,
-            "blazing-warden": 1,
-          },
+          text: "ワクワク! 会う前から「あれも話そう」と勢いづく",
+          points: { commander: 22, professor: 8 },
         },
         {
           id: "q10-b",
-          text: "普通に楽しみ。まあ会ってみれば盛り上がるでしょ",
-          points: {
-            "clever-guardian": 2,
-            "contrarian-professor": 2,
-            "academic-artist": 1,
-            "blazing-strategist": 1,
-          },
+          text: "前に何を話したか思い出し、相手の近況を整理してから会う",
+          points: { professor: 22, artist: 8 },
         },
         {
           id: "q10-c",
-          text: "少し緊張するが、話し始めれば大丈夫",
-          points: {
-            "tender-dreamer": 2,
-            "gentle-fortress": 2,
-            "dreaming-scholar": 1,
-            "guardian-charger": 1,
-          },
+          text: "会ったらどんな会話になるか、頭の中で何通りも思い描く",
+          points: { dreamer: 22, artist: 8 },
         },
         {
           id: "q10-d",
-          text: "その人のことを事前にいろいろ思い出して、心の準備をする",
-          points: {
-            "dreaming-scholar": 2,
-            "academic-artist": 2,
-            "clever-guardian": 1,
-            "contrarian-professor": 1,
-          },
+          text: "特に準備はしない。会った瞬間の空気に合わせて感覚で話す",
+          points: { artist: 22, dreamer: 8 },
         },
       ],
     },
-    // Q11: ルーティンと変化 (主軸: Action, 副軸: Energy)
+    // Q11: いつも通り vs 新しいやり方 (除外: trickster, artist / hi20 lo10)
     {
       id: "q11",
-      text: "いつも通りのやり方と、新しいやり方が選べる。あなたは?",
+      text: "いつも通りのやり方と、新しいやり方が選べる。どうする?",
       choices: [
         {
           id: "q11-a",
-          text: "新しい方を即試す。失敗しても知見になるから",
-          points: {
-            "blazing-schemer": 2,
-            "ultimate-trickster": 2,
-            "blazing-canvas": 1,
-            "creative-disruptor": 1,
-          },
+          text: "新しい方を即試す。動いてみないと分からないから",
+          points: { commander: 20, dreamer: 10 },
         },
         {
           id: "q11-b",
-          text: "いつも通りが安心。変化にはエネルギーがいる",
-          points: {
-            "ultimate-guardian": 2,
-            "data-fortress": 2,
-            "guardian-charger": 1,
-            "tender-dreamer": 1,
-          },
+          text: "「本当に新しい方がいいのか」を検証してから選ぶ",
+          points: { professor: 20, dreamer: 10 },
         },
         {
           id: "q11-c",
-          text: "「本当に新しいやり方の方がいいの?」とまず検証する",
-          points: {
-            "endless-researcher": 2,
-            "careful-scholar": 2,
-            "contrarian-professor": 1,
-            "dreaming-scholar": 1,
-          },
+          text: "新しいやり方でどうなるか、頭の中で最後までシミュレーションする",
+          points: { dreamer: 20, commander: 10 },
         },
         {
           id: "q11-d",
-          text: "気分で決める。その日の直感に従う",
-          points: {
-            "ultimate-artist": 2,
-            "vibe-rebel": 2,
-            "clever-guardian": 1,
-            "star-chaser": 1,
-          },
+          text: "いつも通りが安心。変える前にリスクを確かめておきたい",
+          points: { guardian: 20, commander: 10 },
         },
       ],
     },
-    // Q12: 将来の計画 (主軸: Energy, 副軸: Perception)
+    // Q12: 5年後の自分 (除外: guardian, artist / hi18 lo12)
     {
       id: "q12",
-      text: "5年後の自分について考えるとき、どんなイメージが浮かぶ?",
+      text: "5年後の自分について考えるとき、何が浮かぶ?",
       choices: [
         {
           id: "q12-a",
-          text: "具体的なマイルストーンが思い浮かぶ。逆算で計画を立てたい",
-          points: {
-            "data-fortress": 2,
-            "gentle-fortress": 2,
-            "careful-scholar": 1,
-            "endless-researcher": 1,
-          },
+          text: "具体的な目標が見えて、もう今すぐ動き出したくなる",
+          points: { commander: 18, dreamer: 12 },
         },
         {
           id: "q12-b",
-          text: "ぼんやりした景色が浮かぶ。詳細より「雰囲気」が先",
-          points: {
-            "eternal-dreamer": 2,
-            "star-chaser": 2,
-            "dreaming-canvas": 1,
-            "ultimate-artist": 1,
-          },
+          text: "現状を分析して、根拠のある道筋を逆算で組み立てる",
+          points: { professor: 18, dreamer: 12 },
         },
         {
           id: "q12-c",
-          text: "「あの時やっておけばよかった」を減らしたいと思う",
-          points: {
-            "ultimate-guardian": 2,
-            "guardian-charger": 2,
-            "gentle-fortress": 1,
-            "tender-dreamer": 1,
-          },
+          text: "ぼんやりした理想の景色が浮かぶ。詳細より「雰囲気」を味わっている",
+          points: { dreamer: 18, trickster: 12 },
         },
         {
           id: "q12-d",
-          text: "ワクワクする未来像が次々と浮かんでくる。絞れない",
-          points: {
-            "blazing-canvas": 2,
-            "creative-disruptor": 2,
-            "blazing-poet": 1,
-            "vibe-rebel": 1,
-          },
+          text: "王道のキャリアを疑って、人と違うルートや裏道を考える",
+          points: { trickster: 18, professor: 12 },
         },
       ],
     },
@@ -699,6 +464,148 @@ export const CHARACTER_PERSONALITY_TYPE_IDS = [
 
 export type CharacterPersonalityTypeId =
   (typeof CHARACTER_PERSONALITY_TYPE_IDS)[number];
+
+/**
+ * 6 base archetypes. この配列順は最終同点決着の決定的規準(正準 index)としても使う
+ * ——quiz.results の配列順ではないので G3(配列順タイブレーク禁止)を満たす。
+ */
+export const ARCHETYPE_IDS = [
+  "commander",
+  "professor",
+  "dreamer",
+  "trickster",
+  "guardian",
+  "artist",
+] as const;
+
+export type ArchetypeId = (typeof ARCHETYPE_IDS)[number];
+
+/**
+ * 主軸の count がこの閾値以上なら同型(主×主)と判定する。
+ * データ導出値: 各アーキタイプは主signal を 8 問で担うので、そのアーキタイプの
+ * 主signal を全 8 問で選ぶ「本人」の count はちょうど 8 になる。
+ */
+const SAME_TYPE_COUNT_THRESHOLD = 8;
+
+/**
+ * (主軸, 副軸) → typeId の写像(design.md §2 の 24 順序対を直接列挙)。
+ * 異型 15 + 同型 6 + 逆順 3。残る 12 の順序対は逆順フォールバックで引く
+ * (順序対 (P1,P2) が無ければ (P2,P1) を引く=36 順序対すべてを被覆)。
+ */
+const AXIS_PAIR_TO_TYPE: Record<string, CharacterPersonalityTypeId> = {
+  // 異型 15(C(6,2))
+  "commander--professor": "blazing-strategist",
+  "commander--dreamer": "blazing-poet",
+  "commander--trickster": "blazing-schemer",
+  "commander--guardian": "blazing-warden",
+  "commander--artist": "blazing-canvas",
+  "professor--dreamer": "dreaming-scholar",
+  "professor--trickster": "contrarian-professor",
+  "professor--guardian": "careful-scholar",
+  "professor--artist": "academic-artist",
+  "dreamer--trickster": "star-chaser",
+  "dreamer--guardian": "tender-dreamer",
+  "dreamer--artist": "dreaming-canvas",
+  "trickster--guardian": "clever-guardian",
+  "trickster--artist": "creative-disruptor",
+  "guardian--artist": "gentle-fortress",
+  // 同型 6
+  "commander--commander": "ultimate-commander",
+  "professor--professor": "endless-researcher",
+  "dreamer--dreamer": "eternal-dreamer",
+  "trickster--trickster": "ultimate-trickster",
+  "guardian--guardian": "ultimate-guardian",
+  "artist--artist": "ultimate-artist",
+  // 逆順 3(#8/#14/#4 の順序違い)
+  "guardian--professor": "data-fortress",
+  "artist--trickster": "vibe-rebel",
+  "guardian--commander": "guardian-charger",
+};
+
+/**
+ * 回答から各アーキタイプの主signal被選択回数 count と 配点合計 score を集計する。
+ * 各選択肢は主signal(hi=最大点)と副signal(lo)を持ち、hi > lo が常に成り立つため
+ * 主signal は選択肢内で最大点のアーキタイプとして一意に決まる。
+ */
+function tallyArchetypes(
+  questions: QuizQuestion[],
+  answers: QuizAnswer[],
+): {
+  count: Record<ArchetypeId, number>;
+  score: Record<ArchetypeId, number>;
+} {
+  const count = Object.fromEntries(ARCHETYPE_IDS.map((a) => [a, 0])) as Record<
+    ArchetypeId,
+    number
+  >;
+  const score = Object.fromEntries(ARCHETYPE_IDS.map((a) => [a, 0])) as Record<
+    ArchetypeId,
+    number
+  >;
+
+  for (const answer of answers) {
+    const question = questions.find((q) => q.id === answer.questionId);
+    if (!question) continue;
+    const choice = question.choices.find((c) => c.id === answer.choiceId);
+    if (!choice?.points) continue;
+
+    let mainArchetype: ArchetypeId | null = null;
+    let mainPoints = -1;
+    for (const archetype of ARCHETYPE_IDS) {
+      const pts = choice.points[archetype] ?? 0;
+      score[archetype] += pts;
+      if (pts > mainPoints) {
+        mainPoints = pts;
+        mainArchetype = archetype;
+      }
+    }
+    if (mainArchetype) count[mainArchetype] += 1;
+  }
+
+  return { count, score };
+}
+
+/**
+ * Determine the character-personality result type from quiz answers.
+ *
+ * count ベースの軸判定(design.md §B-mech / cycle-295):
+ *   1. 主signal被選択回数 count と 配点合計 score を集計。
+ *   2. (count, score) の辞書式順で軸を決める(count が主・score が同点タイブレーク)。
+ *      なお同点はアーキタイプ正準 index(ARCHETYPE_IDS の順)で決定的に決着。
+ *   3. 主軸 P1 の count ≥ 8 なら同型(P1×P1)、未満なら副軸 P2 と (P1,P2)→typeId。
+ *      直接の順序対が無ければ逆順 (P2,P1) にフォールバックする。
+ *
+ * 得点軸でなく count 軸にした理由: 副signalの三次アーキタイプ染み出し(cross-talk)を
+ * 軸決定から排除し、全 24 タイプを本人回答で到達可能(G1=24/24)にするため。
+ */
+export function determineCharacterPersonalityResult(
+  questions: QuizQuestion[],
+  answers: QuizAnswer[],
+  results: QuizResult[],
+): QuizResult {
+  const { count, score } = tallyArchetypes(questions, answers);
+
+  const ranked = [...ARCHETYPE_IDS].sort((a, b) => {
+    if (count[b] !== count[a]) return count[b] - count[a];
+    if (score[b] !== score[a]) return score[b] - score[a];
+    // 最終の決定的決着: アーキタイプ正準 index(配列順=quiz.results 順ではない)。
+    return ARCHETYPE_IDS.indexOf(a) - ARCHETYPE_IDS.indexOf(b);
+  });
+
+  const primary = ranked[0];
+
+  let typeId: CharacterPersonalityTypeId;
+  if (count[primary] >= SAME_TYPE_COUNT_THRESHOLD) {
+    typeId = AXIS_PAIR_TO_TYPE[`${primary}--${primary}`];
+  } else {
+    const secondary = ranked[1];
+    typeId =
+      AXIS_PAIR_TO_TYPE[`${primary}--${secondary}`] ??
+      AXIS_PAIR_TO_TYPE[`${secondary}--${primary}`];
+  }
+
+  return results.find((r) => r.id === typeId) ?? results[0];
+}
 
 /**
  * Look up compatibility between two type IDs.

@@ -14,13 +14,21 @@ import type { QuizDefinition, QuizAnswer } from "../types";
  *   - 配点構造が偏り、あるタイプが常に他タイプに敗れて選ばれなくなる（恒常敗退）
  * どちらも「そのタイプに絶対にならない診断」を来訪者に渡すことになる。これを防ぐ。
  *
- * science-thinking は汎用 determineResult ではなく独自の5軸判定（determineScienceThinkingResult）
- * を使うため、汎用ロジック向けの孤児/悉皆チェックの対象外とする。ただし「タイプを追加したが
- * AXIS_PAIR_TO_TYPE への紐付けを繋ぎ忘れて到達不能になる」事故には汎用診断以上に脆弱なため、
- * 実判定関数を使った専用の到達性ガードを別途設ける（末尾の describe）。
+ * science-thinking / character-personality は汎用 determineResult ではなく独自の軸ベース判定
+ * （determineScienceThinkingResult / determineCharacterPersonalityResult）を使うため、
+ * 汎用ロジック向けの孤児/悉皆・一様標本チェックの対象外とする。
+ *   - 孤児チェック: これらは choice.points のキーが 24 タイプ ID ではなく軸/アーキタイプ名
+ *     なので、typeId を集計する汎用の孤児チェックでは全タイプが孤児に見えてしまう。
+ *   - 一様標本チェック: 軸ベース判定では同型/純タイプが一様ランダム回答では希薄になり得るため、
+ *     汎用の「50万一様標本で全タイプ出現」ガードとは整合しない（cycle-295 G4c 撤回の経緯）。
+ * 専用の到達性ガードは実判定関数を用いて別途設ける（science-thinking は末尾の describe。
+ * character-personality の G1/G4 回帰は後続タスク E4 で追加予定）。
  */
 
-const GENERIC_TIEBREAK_EXCLUDED = new Set(["science-thinking"]);
+const GENERIC_TIEBREAK_EXCLUDED = new Set([
+  "science-thinking",
+  "character-personality",
+]);
 
 const personalityQuizzes: QuizDefinition[] = [...quizBySlug.values()].filter(
   (q) =>
@@ -95,9 +103,9 @@ describe("personality診断の結果タイプ到達性ガード", () => {
   const exhaustiveQuizzes = personalityQuizzes.filter(
     (q) => comboCount(q) <= EXHAUSTIVE_CAP,
   );
-  // 悉皆不可の大規模診断（character-personality=1670万・japanese-culture=690億）。
-  // 決定的シード付き乱数で標本抽出する。SAMPLE_N は現状の最小勝者
-  // （character-personality の academic-artist≈0.5%）でも期待数千ヒットする水準に取る。
+  // 悉皆不可の大規模・汎用判定の診断（japanese-culture=690億 等）を対象に、
+  // 決定的シード付き乱数で標本抽出する。SAMPLE_N は最小勝者でも期待数千ヒットする水準に取る。
+  // （character-personality=1670万 は専用判定へ移行し GENERIC_TIEBREAK_EXCLUDED で除外済み。）
   const sampledQuizzes = personalityQuizzes.filter(
     (q) => comboCount(q) > EXHAUSTIVE_CAP,
   );

@@ -7,6 +7,7 @@ import { NefudaGroup } from "@/components/Nefuda";
 import type { QuizDefinition, QuizAnswer, QuizPhase } from "@/play/quiz/types";
 import { determineResult, calculateKnowledgeScore } from "@/play/quiz/scoring";
 import { determineScienceThinkingResult } from "@/play/quiz/data/science-thinking";
+import { determineCharacterPersonalityResult } from "@/play/quiz/data/character-personality";
 import { getEstimatedTime } from "./introBadges";
 import ProgressBar from "./ProgressBar";
 import QuestionCard from "./QuestionCard";
@@ -198,7 +199,13 @@ export default function QuizContainer({
   const result =
     quiz.meta.slug === "science-thinking"
       ? determineScienceThinkingResult(quiz.questions, answers, quiz.results)
-      : determineResult(quiz, answers);
+      : quiz.meta.slug === "character-personality"
+        ? determineCharacterPersonalityResult(
+            quiz.questions,
+            answers,
+            quiz.results,
+          )
+        : determineResult(quiz, answers);
   const score =
     quiz.meta.type === "knowledge"
       ? calculateKnowledgeScore(quiz.questions, answers)
