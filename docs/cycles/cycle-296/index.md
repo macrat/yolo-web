@@ -28,8 +28,8 @@ cycle-284 が全24タイプを人の目で読了して確定した欠陥(T2):
 
 cycle-284/294 はこの領域で「基準を後から緩める」「実物確認を捏造する」事故を起こした。合否の物差しを設計前に固定する。
 
-- **AC1(テンプレート脱却・機械可検)**: `archetypeBreakdown` の共有文型「あなたの中で(は)…二つが同時に◯◯」を **0/24** に。`characterMessage` の逐語共有助言(現 11/24)を **0**(相互非共有)。三段固定構造を崩し温度・長さにムラを残す。
-- **AC2(横断非共有=T2核心)**: 各タイプの観察・あるある(behaviors)・助言・キャッチが「**他の23タイプの誰かに言えない**」。共有句・共有観察・共有助言=**0**。半自動(句/n-gramオーバーラップ検出=C2)+ reviewer の意味判定(C1)の二段で担保。
+- **AC1(テンプレート脱却・機械可検)**: `archetypeBreakdown` の**共有文型を一つも残さない**。cycle-284/A1 で現物確認された3テンプレ族=(1)異型15「あなたの中で(は)…二つが同時に◯◯」・(2)同型6「あなたの◯◯が極限まで強まると」(cycle-284 L190=6/6)・(3)逆順3「あなたの中で溶け合っている/同居している」——**いずれの族の文型も 0 に**する。`characterMessage` の逐語共有助言(現 外化11/自己ケア5/書き出し 等の族)を **0**(相互非共有)。三段固定構造を崩し温度・長さにムラを残す。**役割語の一様な文末(全文 だぜ/ですわ/っしょ 止め)は AC1・リズム観点の対象外**(約束事であって slop でない=AC4)。
+- **AC2(横断非共有=T2核心)**: 各タイプの観察・あるある(behaviors)・助言・キャッチが「**他の23タイプの誰かに言えない**」。共有句・共有観察・共有助言=**0**。**C2(句/n-gram の機械検出)が拾えるのは逐語・n-gram の共有のみ**——語を変えて同じことを言う「言い換え共有」は C2 では取りこぼす。したがって**意味判定の全荷重は C1(reviewer の現物読了)が負う**。C2 は AC1 と逐語 AC2 の裏取りに限る(C1 を軽くする口実にしない=cycle-284「スクリプト出力を実物とみなす」捏造の回避)。
 - **AC3(タイプ内非水増し)**: 1タイプ内で description/catchphrase/behaviors/characterMessage が**同じ観察を反復しない**(欠陥2)。逐語重複0・観察の重複0。
 - **AC4(声の保存・非平坦化)**: 各タイプの**役割語・キャラ声を保存**する(japanese-ai-slop.md L13/168=架空キャラの声はスコープ外・「だ・である調で統一」を適用しない)。before/after でトーン維持を確認。同時に AI slop(japanese-ai-slop.md の5観点)を落とす——両立させる(役割語は約束事であって slop ではない)。
 - **AC5(非退行・資産不変)**: `typeId`/`title`/`color`/`icon`/相性マトリクス(24×24)/24タイプ一覧/`detailedContent.variant`/フィールド構造は**不変**。文字数レンジは枠崩れ防止のため現行レンジ(description 約220-270字・behaviors 各1文)を大きく外さない。lint/format/test/build 全緑・実機で枠内(はみ出し無し)・ダーク可読・コンソールエラー0。
@@ -46,19 +46,19 @@ cycle-284/294 はこの領域で「基準を後から緩める」「実物確認
 
 ### B. 本文の書き直し(結果先行の固有核・主軸別グループへ委譲)
 
-主軸アーキタイプ別に6グループへ分割委譲(commander主軸6/professor5/dreamer4/trickster3/guardian4/artist2)。同一主軸内は役割語ベースが共通で声の一貫性を保ちやすく、副軸で差を出す。各エージェントに**台帳(A1)・禁止共有句リスト・担当タイプの固有核・AC1-AC5・声の保存・文字数レンジ**を渡す(cycle-284 の再犯回避=同一brief配布をしない)。
+**声のベース**アーキタイプ別に6グループへ分割委譲。同一声ベース内は役割語が共通で声の一貫性を保ちやすく、副軸で差を出す。各エージェントに**台帳(A1)・禁止共有句リスト・担当タイプの固有核・AC1-AC5・声の保存・文字数レンジ**を渡す(cycle-284 の再犯回避=同一brief配布をしない)。**声ベースの割り当ては batch1-3 の声註(「◯◯語り口を基調」/「◯ base tone」)を現物照合して確定**した——AXIS_PAIR_TO_TYPE のキーは全て正準順で声の主従を表さないため、キー順から導くと逆順3タイプ等が誤配属になる(A3 レビュー Blocker B1 で是正)。
 
-- [ ] B1. commander 主軸6タイプ(blazing-strategist/poet/schemer/warden/canvas/ultimate-commander)
-- [ ] B2. professor 主軸5タイプ(dreaming-scholar/contrarian-professor/careful-scholar/academic-artist/endless-researcher)
-- [ ] B3. dreamer 主軸4タイプ(tender-dreamer/dreaming-canvas/star-chaser/eternal-dreamer)
-- [ ] B4. trickster 主軸3タイプ(creative-disruptor/vibe-rebel/ultimate-trickster)
-- [ ] B5. guardian 主軸4タイプ(clever-guardian/gentle-fortress/guardian-charger/ultimate-guardian)
-- [ ] B6. artist 主軸2タイプ(ultimate-artist/data-fortress ほか artist 主軸該当)。※主軸割り当ては A1 台帳で AXIS_PAIR_TO_TYPE を現物照合し確定してから配分する
+- [ ] B1. commander 声6タイプ(blazing-strategist/blazing-poet/blazing-schemer/blazing-warden/blazing-canvas/ultimate-commander)
+- [ ] B2. professor 声5タイプ(dreaming-scholar/contrarian-professor/careful-scholar/academic-artist/endless-researcher)
+- [ ] B3. dreamer 声4タイプ(star-chaser/tender-dreamer/dreaming-canvas/eternal-dreamer)
+- [ ] B4. trickster 声3タイプ(clever-guardian〔trickster×guardian・っしょ声〕/creative-disruptor/ultimate-trickster)
+- [ ] B5. guardian 声4タイプ(gentle-fortress/ultimate-guardian/data-fortress〔guardian×professor・guardian声〕/guardian-charger)
+- [ ] B6. artist 声2タイプ(ultimate-artist/vibe-rebel〔artist×trickster・artist声〕)
 
 ### C. 横断突合とレビュー
 
 - [ ] C1. **横断突合**(reviewer)。全24書き直しを T2 核心基準「他の23に言えるか」で突合し、残存共有(観察・構文・助言)を検出→該当タイプへ差し戻し。AC4(声保存)・AC1(テンプレ脱却)・slop 落ちも点検。
-- [ ] C2. **半自動オーバーラップ検出**。句/n-gram の重複を機械抽出し AC1/AC2 を裏取り(reviewer の意味判定を計器で補強)。結果を [verification.md](./verification.md) に記録。
+- [ ] C2. **半自動オーバーラップ検出**。句/n-gram の重複を機械抽出し AC1/逐語 AC2 を裏取り。**ヒットは件数・バケットで済ませず全件を人の目で読む**(cycle-284 L101=「スクリプト出力は実物でない/バケットのラベルを読むことはヒットを読むことでない/再現可能は妥当性でない」)。C2 は言い換え共有を拾えないため C1 の意味判定を代替しない。結果を [verification.md](./verification.md) に記録。
 
 ### D. 検証・レビュー・完了
 
