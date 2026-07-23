@@ -64,7 +64,7 @@ cycle-284/294 はこの領域で「基準を後から緩める」「実物確認
 
 - [x] D1. `npm run lint && npm run format:check && npm run test && npm run build` 全緑(322ファイル/5463テスト/build✓/exit0)。
 - [x] D2. 実ブラウザ(Playwright)で ultimate-guardian(旧最長フィールド=枠崩れストレス)+ultimate-commander を確認。撮影マトリクス=デスクトップ+375pxモバイル×ライト/ダーク。**枠内・折り返し正常・視覚退行なし・コンソールエラー0・ダーク可読**。スクショは tmp/。
-- [x] D3. 非退行・スコープをファイルレベルで確認(git diff)=**判定/配点/設問/相性/タイトルは完全不変**(character-personality.ts 差分空)・変更は3 batch(本文)+detailed-content.test.ts(batch2字数ガード追加)のみ。テスト変更の妥当性は D3 レビューで確認。
+- [x] D3. 非退行・スコープをファイルレベルで確認(git diff)=**判定/配点/設問/相性/タイトルは完全不変**(character-personality.ts 差分空)・変更は3 batch(本文)+detailed-content.test.ts(batch2字数ガード追加)のみ。**実装レビュー=PASS**(reviewer・Blocker/Major 0)。batch2 は元々全variant=カバレッジ喪失なし・字数検査を強化・コメント註 stale なし・エスケープ健全を確認。
 - [ ] D4. ブログ執筆の判断(読者視点で価値があるか)。
 - [ ] D5. `/cycle-completion` 実行。
 
