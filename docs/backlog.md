@@ -2,12 +2,12 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-589 | 玄関 character-personality の判定を実在させる(回答が結果を決める) | P1 | 295 | 診断が診断していない=Rule4違反(回答でなく配列順で結果が決まる36〜46%・2タイプは本人に届かない)。設問がタイプへ判別する設計へ(cycle-284 T1)。結果テキストの品質はB-603。詳細cycle-284/294 |
 
 ## Queued (すぐに着手できる)
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-603 | character-personality 結果テキストの品質是正(水増し/テンプレート/24タイプ一覧) | P1 | - | cycle-284欠陥2/3/4(T2/T3)。B-589(判定T1)出荷済で着手可。cycle-295 F3申し送り(逆順タイプの主軸提示・設問文ブラッシュアップ)含む。詳細cycle-284/295 |
 | B-573 | UI/UX/アクセシビリティの全面適用(残: 全面展開) | P1 | - | cycle-287で監査+代表原型の是正スライス完了(F1-F5)。残=全81ページ/36ツールへの全面展開。系統的な個別項目はB-593/595/596/599等に分割起票済。詳細cycle-287/ |
 | B-594 | /play/daily の見出し構造是正(h1不在) | P3 | - | cycle-287 C2(F5姉妹)。監査ページはF5でh2化済。ResultPageShellは既にh1あり是正不要。残=dailyがh1不在(タイトルがTsutsumi<p>のみ)=h1相当が必要。実DOM確認のうえ是正。詳細cycle-287/findings.md |
 | B-597 | テーマトグルのタップ標的高さ(28px)のDESIGN準拠 | P4 | - | cycle-287監査C5。switch高さ28px=DESIGN§10の44px未満(WCAG2.5.8 24pxは充足)。当たり判定拡大の要否をDESIGN基準で判断。詳細cycle-287/findings.md |
@@ -53,7 +53,6 @@
 
 | ID | Title | Priority | Notes |
 | --- | --- | --- | --- |
-| B-603 | character-personality 結果テキストの品質是正(水増し/テンプレート/24タイプ一覧) | P1 | cycle-284の欠陥2/3/4(水増し・24/24テンプレート・24タイプ一覧の種明かし)の是正=cycle-284 T2/T3。着手: B-589(判定)出荷後。詳細cycle-284 |
 | B-568 | 面横断 content_id 接頭辞規約の全面統一 | P4 | 着手: ADR002観測窓終了後(既存item_id集計との断絶を伴う移行のため)。cycle-280でquiz面はcontentIdForQuizに統一済・ゲーム(素slug)/運勢(fortune-daily)は当面surface未指定・level不在で主指標非汚染。詳細 cycle-280.md |
 | B-590 | eslint 10 / TypeScript 7 の採用 | P4 | 着手: config-next配下のplugin基盤(typescript-eslint8等)がeslint10/TS7対応次第。cycle-286で試行=lintクラッシュ実証。詳細cycle-286/ |
 | B-592 | overrides(postcss/react-hooks)の解消 | P4 | 着手: postcssは親(next/sanitize-html)がpatched版を引いた時・react-hooksは7.1.1採用判断時にoverride除去(upstreamドリフト回避)。詳細cycle-286/remediation.md |
@@ -105,6 +104,7 @@
 
 | ID | Title | Cycle | Notes |
 | --- | --- | --- | --- |
+| B-589 | 玄関 character-personality の判定を実在させる(回答が結果を決める) | 295 | 【完了】判定を結果先行で再設計・出荷(配列順→6アーキタイプのcount軸判定)。全ゲートPASS(G1=24/24・恣意36〜46%→1.6%)・到達不能2タイプ回復。結果テキストはB-603。詳細cycle-295 |
 | B-602 | デバイス比計測の精緻化(広窓GA4・自己流入除外) | 293 | 【中止】キャリーオーバー定義(スコープ外かつ必須)不適合の誤起票につき取消。計測はスコープ内・広窓GA4は実行不可・自己流入除外は是正に不要。必要時に実施。番号は再利用しない。詳細cycle-293/incident-1.md |
 | B-584 | DESIGN §10「実測:7割超がモバイル」が典拠なし | 293 | 是正=実測(BigQuery)でモバイル非多数派(セッション45.6%)・「7割超」は診断/play一面の誤一般化。L128を典拠つき「両対応必須」へ。§10他ラベル点検済。reviewer白紙で反復レビュー。詳細cycle-293/ |
 | B-598 | 未結線の検索機能の処遇判断(結線 or 撤去) | 292 | 判断=撤去(cycle-186確定判断と整合・データも補強)。検索一式/索引生成/fuse.js/Header UIトリガーを撤去(673KB索引停止)・公開記事に日付注記。詳細cycle-292/ |
