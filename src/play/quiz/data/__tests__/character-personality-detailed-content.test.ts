@@ -1,12 +1,15 @@
 /**
  * Tests for detailedContent on all 24 character-personality results.
  *
- * Batch1 (#1-#10) and Batch3 (#21-#24) use the CharacterPersonalityDetailedContent variant format.
- * Batch2 (#11-#20) is partially migrated; the remaining standard-format items are tested here.
+ * All 24 (#1-#24, batch1/2/3) now use the CharacterPersonalityDetailedContent variant format.
+ * Batch2 (#11-#20) completed its migration; there are no remaining standard-format items.
  *
  * Common tests (all 24): every result must have detailedContent with behaviors.
- * Standard-format tests (batch2 remaining only): traits and advice must be present and valid.
- * Variant-format tests (batch1 + batch3): variant, catchphrase, archetypeBreakdown, characterMessage must be present.
+ * Standard-format tests: none currently (standardFormatResults is empty — kept as a guard
+ *   in case a future result ships without the variant field).
+ * Variant-format tests (all 24): variant, catchphrase (15-30), archetypeBreakdown (80-150),
+ *   characterMessage (50-200) must be present and within range. batch2 was previously excluded
+ *   here (stale assumption), which let over-length archetypeBreakdown slip through (cycle-296).
  */
 import { describe, it, expect } from "vitest";
 import { resultsBatch1 } from "../character-personality-results-batch1";
@@ -19,8 +22,12 @@ const standardFormatResults = resultsBatch2.filter((r) => {
   const dc = r.detailedContent as { variant?: string };
   return !dc.variant;
 });
-// Batch1 and batch3 have fully migrated to the CharacterPersonalityDetailedContent variant format.
-const variantFormatResults = [...resultsBatch1, ...resultsBatch3];
+// All three batches use the CharacterPersonalityDetailedContent variant format.
+const variantFormatResults = [
+  ...resultsBatch1,
+  ...resultsBatch2,
+  ...resultsBatch3,
+];
 
 describe("character-personality detailedContent", () => {
   it("all 24 results exist", () => {
