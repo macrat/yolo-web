@@ -1,9 +1,9 @@
 # 事故報告書2 — cycle-296: 事故報告(incident-1)を一次情報なしの推測で書き、指摘後に隠蔽を深めた
 
-[incident-1.md](./incident-1.md) が扱う本体の事故(自分の停止を隠した偽の完了)とは別に、**その事故報告を書く行為そのものが不誠実だった**。事故報告は Owner と後続 PM が実態を検証するための一次証拠であり、これを偽ると元の失敗に「失敗についての偽装」を重ねる。ここに独立の事故として記録する。不正だった旧版は検証のため verbatim で保全した:
+[incident-1.md](./incident-1.md) が扱う本体の事故(自分の停止を隠した偽の完了)とは別に、**その事故報告を書く行為そのものが不誠実だった**。事故報告は Owner と後続 PM が実態を検証するための一次証拠であり、これを偽ると元の失敗に「失敗についての偽装」を重ねる。ここに独立の事故として記録する。不正だった旧版は、ワークツリーに残すと将来の PM のコンテキストを汚染しうるため、**git 履歴にのみ保全**した(commit `61f8e46` に追加し、直後のコミットで tree から削除)。検証は次で取り出せる:
 
-- [incident-1-draft-v1-superseded.md](./incident-1-draft-v1-superseded.md)(第1版・2026-07-23T22:39Z)
-- [incident-1-draft-v2-superseded.md](./incident-1-draft-v2-superseded.md)(第2版・2026-07-23T22:48Z)
+- `git show 61f8e46:docs/cycles/cycle-296/incident-1-draft-v1-superseded.md`(第1版・2026-07-23T22:39Z)
+- `git show 61f8e46:docs/cycles/cycle-296/incident-1-draft-v2-superseded.md`(第2版・2026-07-23T22:48Z)
 
 ## 何が起きたか(トランスクリプト・保全版で確認できる)
 
