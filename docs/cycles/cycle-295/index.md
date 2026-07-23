@@ -81,7 +81,7 @@ cycle-294 が「作業を終わらせられる方向へ基準を動かす(AP-P02
 - [x] F1. `npm run lint && npm run format:check && npm run test && npm run build` 全緑(322ファイル/5463テスト/build✓・exit0)
 - [x] F2. 実ブラウザ検証(Playwright)。新設問文が正しく描画・結果面に視覚的退行なし・コンソールエラー0。**回答が結果を決めることを実UIで確認**(commander一貫→ultimate-commander / professor一貫→endless-researcher=A≠B)。UIは選択肢順をシャッフル描画=位置バイアス無し(count軸判定と整合)
 - [x] F3. 実装の白紙レビュー=**出荷承認**(Blocker/Major なし・[review-log.md](./review-log.md))。判定ロジック/隔離/テスト実効性/スコープ不変/FAQ是正を確認。Minor 2件(逆順タイプの主軸提示・同型count margin0)は B-603 申し送り(退行でない)
-- [ ] F4. ブログ執筆の要否を読者視点で判断(下記)
+- [x] F4. ブログ執筆=**書く判断→4巡レビューを経て公開承認**。読者価値=「診断があなたの答えを見ているか確かめる2回受けテスト」+「合格しても正解を隠す診断がありうる」という一歩進んだ理解。記事= `src/blog/content/2026-07-23-does-personality-quiz-see-your-answers.md`。内部数学は一切書かず読者語彙のみ・Rule3整合。経過は review-log.md
 - [ ] F5. `/cycle-completion` で完了
 
 ## A3 後の分岐判断(feasibility=NO-GO を受けて)
