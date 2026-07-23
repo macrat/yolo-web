@@ -374,3 +374,134 @@ TH窓の非交差も再現: **G4a は TH≥20 / G4b は TH≥14 / G4c は TH≤1
 3. **結論**: これは **「設計(同型判定機構)で解ける問題」ではなく「一様測度に同型フロア G4c を課すこと自体が G4a と原理的に相反する=基準/測度の問題」**。同型は定義上「強い一貫性の産物」であり、**6アーキタイプ対称・タイプ事前分布なしの一様測度**(index.md で凍結)に対して同型≥0.2% を課すのは、機構の巧拙で回避できない矛盾。→ 候補A は **NO-GO**。次は候補B(G4c=一様同型フロアの妥当性を独立審査で問い直す)または候補C(6同型構成比の見直し)。**機構の追加探索(候補A)は打ち切ってよい**。
 
 **go/no-go**: 候補A=**NO-GO**(全ゲート同時充足0件/約310点探索)。ただし副産物として **G5 は反同点配点で解決可能**と判明(binding から G5 を外せる)。残る binding は **G4c(一様同型フロア)⟷G4a(現実的測度の異型フロア)** の一点。**これは設計で閉じない=基準の問題**。移送すべき「go の設計」はやはり存在しない。
+
+---
+
+## B-mech 機構確定(G4c 撤回後の最終ゲート集合で全ゲート同時充足)
+
+**結論: y(確定)。** G4c を外した最終ゲート集合 **{G1, G2, G4a(c=1.0/0.85 両方), G4b, G5}** を**同時に満たす (配点テンプレート, P, 反同点配点) を確定**した。前任 §A3/候補A の NO-GO は **G4c(一様同型フロア)が binding** だったための不能であり、**G4c 撤回により窓が開いた**ことを実測で確認した(candidate A の P=8 動作点が c=1.0 で G4a/G4b/G5 を通していた事実と整合)。本タスクの要だった **c=0.85 側の同型フロア**も実測で ≥1% を確認(同型min=2.319%、床から +1.32pt)。
+
+- **確定機構**: count ベース軸判定 + P=8 + 反同点配点(T=30・問ごとに hi 分散)。
+- **c=0.85 の同型min(実測)= 2.319%**(ultimate-trickster)/ **c=1.0 の異型min(実測)= 2.222%**(careful-scholar)。いずれも 1% フロアを 2倍以上上回る。
+- **G4b 比(c=0.85)= 2.66×**(≤10)。**G5 恣意率(最悪c=一様・悉皆exact)= 1.57%**(≤5)。
+- **binding だったゲート**: 最終集合内で床に最も近いのは (a) c=1.0 の**異型フロア**=type-slot 非対称の単一順序対タイプ(careful-scholar/data-fortress/guardian-charger/vibe-rebel/creative-disruptor)と (b) c=0.85 の**同型フロア**。どちらも余裕 +1.2〜1.3pt で通過し、**タイトに binding するゲートは無い**。**撤回した G4c(一様同型≥0.2%)は課していない**(一様で同型は 0.0015% だが到達性は G1/G2 が保証)。
+
+### 1. 確定した判定機構(index.md C1 の精密化)
+
+index.md C1 の素案は「6得点→**得点1位=主軸/2位=副軸**、主signal最多回数≥P で同型」だった。本タスクで**軸判定を得点でなく被選択回数(count)に置く**精密化を確定した。理由=**得点ベース軸判定は G1 を通せない**(副signalの三次アーキタイプへの染み出し=cross-talk で副軸が揺れ、反証可能な探索で最良 **18/24** 止まり)。**count ベース軸判定は副signalの cross-talk を軸決定から排除し、G1 を副signal非依存で 24/24 にする**。A2 制約(各選択肢1主signal・総配点 T=30 均一)は保つ。
+
+**判定規則(1回答=12問の選択列 → typeId)**:
+
+1. 各選択肢は **1つの主signalアーキタイプ(hi点)** と **1つの副signalアーキタイプ(lo点=T−hi)** を持つ。総配点は全選択肢 **T=30 固定**(A2(d))。
+2. `count[6]` = 選ばれた選択肢の**主signalアーキタイプの被選択回数**。`score[6]` = 全選択肢の配点合計(主hi+副lo)。
+3. 軸は **(count, score) の辞書式順**で決める(**count が主・score が同点タイブレーク**)。主軸 P1 = 最大キーのアーキタイプ。
+4. **同型判定: `count[P1] ≥ P`(P=8)なら同型(P1×P1)**。
+5. そうでなければ副軸 P2 = 残りの最大キー → **(P1,P2)→typeId**(§2 の写像・順序対が無ければ**逆順フォールバック**)。
+6. **残余の恣意決着(G5対象)**: count も score も同点で最終候補が2以上残る回答のみ、**配列順でない決定的規準(アーキタイプ正準index)**で1点に落とす(G3の最低条件を満たす)。この残余の割合が G5 恣意率=**最悪c(一様)で 1.57%**。
+
+- **反同点配点(G5対策)**: 問ごとに hi を分散(下表)。lo=T−hi も問ごとに変わり、**score の分解能を上げて count 同点時の score 同点を稀にする**。これにより一様恣意率が低く保たれる(前任が候補Aで実証した「G5 は反同点配点で解ける」を count 軸判定でも再現)。
+- **同型は count でのみ判定**(gap≥TH ではない)。よって前任 §A3 の「gap≥TH の三すくみ(G4a↔G4c↔G5 が相反する TH レジーム)」は本機構には存在しない。
+
+### 2. 配点テンプレート全量(B-content / C の仕様)
+
+- **出題構造**: 12問 = 完全グラフ K6 から完全マッチング **{commander–trickster, professor–guardian, dreamer–artist}** を除いた **12本の「除外ペア」**。各問は除外2アーキタイプを除く **4アーキタイプを4択の主signal**に割当てる(⇒各アーキタイプが**主signal 8問**ずつ=count の対称性)。
+- **hi(主)配点**(問ごとに分散・反同点): `[29,27,25,23,21,19,28,26,24,22,20,18]`(T=30、lo=T−hi)。
+- **副signal**は下表の通り(**副signalは軸判定に効かず score タイブレーク/測度Mの選好にのみ効く**フレーバー。B-content は各選択肢の**主signalアーキタイプが明確に伝わる**よう本文を書けばよく、副signalは軽い色付けでよい)。**各選択肢は「MAIN=どのアーキタイプを主signalするか」を人間が設問文に落とせる粒度**で確定済み。
+
+| Q   | 除外ペア            | 選択肢A (main/sub)  | 選択肢B             | 選択肢C            | 選択肢D             | hi/lo |
+| --- | ------------------- | ------------------- | ------------------- | ------------------ | ------------------- | ----- |
+| 1   | commander+professor | dreamer/trickster   | trickster/artist    | guardian/professor | artist/trickster    | 29/1  |
+| 2   | commander+dreamer   | professor/trickster | trickster/guardian  | guardian/artist    | artist/dreamer      | 27/3  |
+| 3   | commander+guardian  | professor/dreamer   | dreamer/trickster   | trickster/artist   | artist/professor    | 25/5  |
+| 4   | commander+artist    | professor/dreamer   | dreamer/trickster   | trickster/artist   | guardian/professor  | 23/7  |
+| 5   | professor+dreamer   | commander/guardian  | trickster/professor | guardian/artist    | artist/trickster    | 21/9  |
+| 6   | professor+trickster | commander/dreamer   | dreamer/commander   | guardian/artist    | artist/commander    | 19/11 |
+| 7   | professor+artist    | commander/artist    | dreamer/trickster   | trickster/guardian | guardian/trickster  | 28/2  |
+| 8   | dreamer+trickster   | commander/guardian  | professor/guardian  | guardian/trickster | artist/trickster    | 26/4  |
+| 9   | dreamer+guardian    | commander/trickster | professor/commander | trickster/artist   | artist/trickster    | 24/6  |
+| 10  | trickster+guardian  | commander/professor | professor/artist    | dreamer/artist     | artist/dreamer      | 22/8  |
+| 11  | trickster+artist    | commander/dreamer   | professor/dreamer   | dreamer/commander  | guardian/commander  | 20/10 |
+| 12  | guardian+artist     | commander/dreamer   | professor/dreamer   | dreamer/trickster  | trickster/professor | 18/12 |
+
+- **検算**: 主signal=各アーキタイプ8問ずつ(計48)。副signalの分布は commander5/professor6/dreamer9/trickster13/guardian5/artist10(計48)——副signalは軸に効かないため非対称でも到達性に影響しない(count対称が効く)。全選択肢の総配点=hi+lo=30(均一・A2(d))。
+- **(主軸,副軸)→typeId 写像**は §2 の全36順序対表(直接24+逆順フォールバック12)をそのまま用いる。同型6は count[P1]≥8 で判定。
+
+### 3. 全ゲートの実測表(測度M・S=300,000・悉皆exact併記)
+
+| #   | typeId (主×副)           | c=1.0     | c=0.85    | 一様(sample) | 区分     |
+| --- | ------------------------ | --------- | --------- | ------------ | -------- |
+| 1   | blazing-strategist C×P   | 4.006     | 4.967     | 5.602        | 異       |
+| 2   | blazing-poet C×D         | 4.279     | 6.165     | 7.366        | 異       |
+| 3   | blazing-schemer C×T      | 3.928     | 5.603     | 6.721        | 異       |
+| 4   | blazing-warden C×G       | 3.345     | 3.347     | 2.529        | 異       |
+| 5   | blazing-canvas C×A       | 4.037     | 5.530     | 6.114        | 異       |
+| 6   | dreaming-scholar P×D     | 3.953     | 6.008     | 6.997        | 異       |
+| 7   | contrarian-professor P×T | 4.536     | 6.113     | 6.963        | 異       |
+| 8   | careful-scholar P×G      | **2.222** | 3.185     | 3.004        | 異       |
+| 9   | academic-artist P×A      | 3.248     | 4.594     | 6.146        | 異       |
+| 10  | star-chaser D×T          | 3.512     | 5.186     | 7.876        | 異       |
+| 11  | tender-dreamer D×G       | 2.499     | 3.951     | 5.828        | 異       |
+| 12  | dreaming-canvas D×A      | 2.836     | 5.258     | 8.124        | 異       |
+| 13  | clever-guardian T×G      | 2.896     | 4.756     | 6.059        | 異       |
+| 14  | creative-disruptor T×A   | 2.645     | 3.313     | 4.248        | 異       |
+| 15  | gentle-fortress G×A      | 3.654     | 5.528     | 6.340        | 異       |
+| 16  | ultimate-commander C×C   | 6.226     | 2.457     | 0.002        | 同       |
+| 17  | endless-researcher P×P   | 6.934     | 2.763     | 0.000        | 同       |
+| 18  | eternal-dreamer D×D      | 6.134     | 2.474     | 0.002        | 同       |
+| 19  | ultimate-trickster T×T   | 5.890     | **2.319** | 0.002        | 同       |
+| 20  | ultimate-guardian G×G    | 8.902     | 3.584     | 0.001        | 同       |
+| 21  | ultimate-artist A×A      | 7.021     | 2.802     | 0.002        | 同       |
+| 22  | data-fortress G×P        | 2.488     | 3.584     | 3.091        | 異(逆順) |
+| 23  | vibe-rebel A×T           | 2.354     | 3.385     | 4.098        | 異(逆順) |
+| 24  | guardian-charger G×C     | 2.455     | 3.130     | 2.887        | 異(逆順) |
+
+| 測度      | 全24 min  | 異型min | 同型min | max   | 比(max/min) | 被覆    | 恣意率           |
+| --------- | --------- | ------- | ------- | ----- | ----------- | ------- | ---------------- |
+| c=1.0     | **2.222** | 2.222   | 5.890   | 8.902 | 4.01        | 24/24   | 0.20%            |
+| c=0.85    | **2.319** | 3.130   | 2.319   | 6.165 | **2.66**    | 24/24   | 0.42%            |
+| 一様(c=0) | 0.000*    | 2.529   | 0.0015  | 8.124 | —           | 24/24** | **1.57%(exact)** |
+
+\* 一様の同型は 0.0015%(≈250/16,777,216)まで薄いが **G4c は撤回済で課さない**。到達性は G2(悉皆)で担保。
+\*\* 一様の被覆「24/24」は悉皆exactでの**到達可能性**(sampleでは同型が薄く0に見える)。
+
+**ゲート判定**:
+
+- **G1**(∀理想回答者・§4.1 ∀分割モデル)= **24/24 PASS**(本番相当の判定関数へ通し・同型6は pure-answerer が count=8、異型18は多数コミット水準 k∈[7,11] で全分割が目標typeId)。
+- **G2**(悉皆 4^12=16,777,216)= **到達不能 0 PASS**(meet-in-the-middle・total 一致確認)。
+- **G4a**(c=1.0/0.85 両方で全24≥1%)= c1_min 2.222% / c085_min 2.319% → **PASS**。
+- **G4b**(c=0.85 比≤10×)= 2.66× → **PASS**。
+- **G5**(最悪c 恣意率≤5%)= 一様exact 1.57% → **PASS**。
+
+### 4. 床際タイプのマージン(将来の無害編集での反転余裕)
+
+- **c=1.0 床際**: #8 careful-scholar(P×G)= **2.222%**、床(1%)まで **+1.222pt**。次点は逆順/単一順序対タイプ群(#22 2.49 / #23 2.35 / #24 2.46 / #14 2.65)——いずれも +1.3pt 以上。
+- **c=0.85 床際**: #19 ultimate-trickster(同型)= **2.319%**、床まで **+1.319pt**。同型6は c=0.85 で 2.32〜3.58% に収まり全て +1.3pt 以上。
+- **同型の count マージン(構造不変量)**: 同型6の pure-answerer は count=**8**=P(余裕0)。これは「各アーキタイプが主signal 8問・pure-answerer が全8問でそれを選ぶ」構造から来る**厳密同値**で、**設問文の言い換え(=signalを変えない編集)には不変**(rewording で count は動かない)。数値マージン0なのは主signalの割当そのものを削るような**機構レベルの改変**にのみ脆弱。数値スラックを持たせたい場合は **N≥14(各アーキタイプ主signal>8問)で pure count>P** にできるが、N=12(現行の設問数)で凍結ゲートは全通過するため本設計は N=12 を採る。
+
+### 5. G1 計器の検出力(§4.4 の罠回避=既知のゴミ設計を通さないこと)
+
+∀分割モデルの G1 計器を**既知のゴミに対して検定**し、**通さない**ことを確認(∃版の空虚ゲート回避):
+
+- 正機構 P=8 → **24/24**。
+- P=9(同型到達不能)→ **18/24**(同型6が落ちる)。P=6(同型過多)→ **6/24**。
+- 定数分類器(常に#1)→ **1/24**。
+- ランダム主signal構造 5種 → **17〜22/24**(いずれも24未満)。
+
+→ 24/24 は正機構・正P・正構造でのみ立つ=**検出力は本物**。
+
+### 6. 手法・探索件数・シード(自己完結・再現情報)
+
+- **独立実装**(前任 `tmp/c295_*.py`/`c295b_*.py` とは別に count 軸判定を新規実装): 測度M・24写像・count判定・恣意判定・∀分割G1・悉皆MITM。numpy ベクトル化。**決定的シード base=20250723**(c ごとに +int(c·1000) オフセット)。標本 **探索 S=30,000〜40,000 / 検証 S=300,000**、**悉皆=4^12 全数(exact)**。silent cap なし。
+- **測度M(index.md 凍結定義に忠実)**: a∈R^6 iid U(0,1)、選択肢signal=生配点ベクトル、確率cで argmax(signal·a)・確率1−cで一様、c∈{1.0,0.85,0.0}。全選択肢総配点=30均一。
+- **探索件数(実数)**:
+  - **P 掃引**: P∈{6,7,8,9}×2機構(score軸/count軸)×3測度=**24点**。P=8 が G4a(c=1.0 異型床)と G1(P=9 同型不能・P=6 異型不能)の両方から**一意に確定**。
+  - **副signal 最適化(count軸・G1はP=8で常時24/24なので測度床を目的に)**: hill-climb/anneal を **8 リスタート×(140〜250)反復**、各点で c∈{1.0,0.85,0.0} を評価。cyclic 初期(floor 1.63)→ 探索最良(**floor 2.24**)を採用。
+  - **G1 ∀分割検定**: 全24タイプ(同型6は単一 pure-answerer、異型18は per-pair でスイング設問を悉皆列挙・Q_none は全4択悉皆)。加えて検出力検定 **10点超**(P違い・定数・ランダム構造)。
+  - **悉皆 G2/exact一様**: 4^12=16,777,216 を MITM(前半6問4,096×後半6問4,096)で全数、total 一致確認。
+- コード(`tmp/c295_core.py`, `c295c_core.py`, `c295c_g1.py`, `c295c_exhaustive.py`, `c295c_final.py`, `c295c_template.py`)は消えてよいが、上記の機構定義・配点テンプレート全量・シード・件数で**本文だけから再現可能**。
+
+### 7. 後続への申し送り(C/E の仕様確定点)
+
+- **C1 判定規則は本節で確定**: count軸(count→score辞書式)・同型 count≥8・(主,副)→typeId は §2 写像+逆順フォールバック・残余は決定的非配列順規準。**index.md C1 の「得点1位/2位」は count 一位/二位に置換**(得点は同点タイブレークに降格)——この差分は G1 を通すための必須の精密化(得点軸は最良18/24)。
+- **B-content**: 各選択肢は上表の **MAIN アーキタイプ**を明確に表現する本文にする(副signalは軽いフレーバーでよく、軸判定には効かない)。設問数 **N=12**。
+- **G3/G5 実装**: 最終恣意決着は配列順でない決定的規準(例=アーキタイプ正準index)で1点化し、候補集合≥2 の割合(=G5)が一様で 1.57% であることを D2/D3 で本番経路を通して再測する。
