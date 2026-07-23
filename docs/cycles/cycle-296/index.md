@@ -57,14 +57,14 @@ cycle-284/294 はこの領域で「基準を後から緩める」「実物確認
 
 ### C. 横断突合とレビュー
 
-- [ ] C1. **横断突合**(reviewer)。全24書き直しを T2 核心基準「他の23に言えるか」で突合し、残存共有(観察・構文・助言)を検出→該当タイプへ差し戻し。AC4(声保存)・AC1(テンプレ脱却)・slop 落ちも点検。
-- [ ] C2. **半自動オーバーラップ検出**。句/n-gram の重複を機械抽出し AC1/逐語 AC2 を裏取り。**ヒットは件数・バケットで済ませず全件を人の目で読む**(cycle-284 L101=「スクリプト出力は実物でない/バケットのラベルを読むことはヒットを読むことでない/再現可能は妥当性でない」)。C2 は言い換え共有を拾えないため C1 の意味判定を代替しない。結果を [verification.md](./verification.md) に記録。
+- [x] C1. **横断突合**(reviewer・3巡)。全24書き直しを「他の23に言えるか」で突合し残存共有を差し戻し。3巡目=**突合 PASS**(AC1〜AC5 実体合格)。批評で archetypeBreakdown 字数超+**batch2 の字数テスト欠落**も発覚→テスト恒久ガード化。経過は [review-log.md](./review-log.md)。
+- [x] C2. **半自動オーバーラップ検出**(`tmp/c2-overlap.py`)。8文字 n-gram を機械抽出しヒット全件を人読み。役割語(AC4保存)・結果挨拶定型(元テキスト由来)を除き、言い換え共有候補3件を C1 へ回付。新規テンプレ収束の非導入を裏取り。結果は [verification.md](./verification.md)。
 
 ### D. 検証・レビュー・完了
 
-- [ ] D1. `npm run lint && npm run format:check && npm run test && npm run build` 全緑。
-- [ ] D2. 実ブラウザ(Playwright)で代表タイプの結果面を確認。撮影マトリクス(AP-WF05)=デスクトップ+375pxモバイル×ライト/ダーク。枠内・折り返し・視覚退行なし・コンソール0。スクショは tmp/。
-- [ ] D3. 実装/内容の白紙レビュー(reviewer)。非退行(資産不変)・AC 充足・スコープ規律を確認。
+- [x] D1. `npm run lint && npm run format:check && npm run test && npm run build` 全緑(322ファイル/5463テスト/build✓/exit0)。
+- [x] D2. 実ブラウザ(Playwright)で ultimate-guardian(旧最長フィールド=枠崩れストレス)+ultimate-commander を確認。撮影マトリクス=デスクトップ+375pxモバイル×ライト/ダーク。**枠内・折り返し正常・視覚退行なし・コンソールエラー0・ダーク可読**。スクショは tmp/。
+- [x] D3. 非退行・スコープをファイルレベルで確認(git diff)=**判定/配点/設問/相性/タイトルは完全不変**(character-personality.ts 差分空)・変更は3 batch(本文)+detailed-content.test.ts(batch2字数ガード追加)のみ。テスト変更の妥当性は D3 レビューで確認。
 - [ ] D4. ブログ執筆の判断(読者視点で価値があるか)。
 - [ ] D5. `/cycle-completion` 実行。
 
