@@ -40,20 +40,20 @@ cycle-284/294 はこの領域で「基準を後から緩める」「実物確認
 
 ### A. 設計土台(横断台帳・固有核の割り当て)
 
-- [ ] A1. **横断棚卸し台帳**([ledger.md](./ledger.md))をサブエージェントで作成。全24タイプの現行本文を読み、(1)共有されている観察・構文(archetypeBreakdown 文型/characterMessage 三段・共有助言)・タイプ内水増しを**現物で**棚卸し(cycle-284 の実測を再確認・鵜呑みにしない)、(2)各タイプの**そのアーキタイプ対だけが正直に持てる固有核**(観察1・あるある方向・助言1・キャッチの芯)を提案。24タイプが互いに侵さない核の配分表を作る。
-- [ ] A2. 受け入れ基準(上記 AC1-AC5)を PM が確定し ledger と整合を確認。
-- [ ] A3. **計画+台帳の白紙レビュー**(reviewer)。基準の妥当性・固有核配分の非衝突・cycle-284/294 の事故型(基準緩和・実物確認捏造)の再発防止を点検。指摘対応後に B へ。
+- [x] A1. **横断棚卸し台帳**([ledger.md](./ledger.md))をサブエージェントで作成。全24タイプの現行本文を読み、(1)共有されている観察・構文(archetypeBreakdown 文型/characterMessage 三段・共有助言)・タイプ内水増しを**現物で**棚卸し(cycle-284 の実測を再確認・鵜呑みにしない)、(2)各タイプの**そのアーキタイプ対だけが正直に持てる固有核**(観察1・あるある方向・助言1・キャッチの芯)を提案。24タイプが互いに侵さない核の配分表を作る。
+- [x] A2. 受け入れ基準(上記 AC1-AC5)を PM が確定し ledger と整合を確認。
+- [x] A3. **計画+台帳の白紙レビュー**(reviewer・2巡)。1巡目=Blocker(グループ声ベース誤配属)+Major2+Minor1 を全是正。2巡目=計画本体承認・台帳の #16 欠落のみ補完(PM 現物確認済)。経過は [review-log.md](./review-log.md)。→ B へ。
 
 ### B. 本文の書き直し(結果先行の固有核・主軸別グループへ委譲)
 
 **声のベース**アーキタイプ別に6グループへ分割委譲。同一声ベース内は役割語が共通で声の一貫性を保ちやすく、副軸で差を出す。各エージェントに**台帳(A1)・禁止共有句リスト・担当タイプの固有核・AC1-AC5・声の保存・文字数レンジ**を渡す(cycle-284 の再犯回避=同一brief配布をしない)。**声ベースの割り当ては batch1-3 の声註(「◯◯語り口を基調」/「◯ base tone」)を現物照合して確定**した——AXIS_PAIR_TO_TYPE のキーは全て正準順で声の主従を表さないため、キー順から導くと逆順3タイプ等が誤配属になる(A3 レビュー Blocker B1 で是正)。
 
-- [ ] B1. commander 声6タイプ(blazing-strategist/blazing-poet/blazing-schemer/blazing-warden/blazing-canvas/ultimate-commander)
-- [ ] B2. professor 声5タイプ(dreaming-scholar/contrarian-professor/careful-scholar/academic-artist/endless-researcher)
-- [ ] B3. dreamer 声4タイプ(star-chaser/tender-dreamer/dreaming-canvas/eternal-dreamer)
-- [ ] B4. trickster 声3タイプ(clever-guardian〔trickster×guardian・っしょ声〕/creative-disruptor/ultimate-trickster)
-- [ ] B5. guardian 声4タイプ(gentle-fortress/ultimate-guardian/data-fortress〔guardian×professor・guardian声〕/guardian-charger)
-- [ ] B6. artist 声2タイプ(ultimate-artist/vibe-rebel〔artist×trickster・artist声〕)
+- [x] B1. commander 声6タイプ(blazing-strategist/blazing-poet/blazing-schemer/blazing-warden/blazing-canvas/ultimate-commander)。tsc緑・237-244字・声保存。
+- [x] B2. professor 声5タイプ(dreaming-scholar/contrarian-professor/careful-scholar/academic-artist/endless-researcher)。tsc緑・233-263字。
+- [x] B3. dreamer 声4タイプ(star-chaser/tender-dreamer/dreaming-canvas/eternal-dreamer)。tsc緑・228-243字・#18逐語同一解消。
+- [x] B4. trickster 声3タイプ(clever-guardian〔trickster×guardian・っしょ声〕/creative-disruptor/ultimate-trickster)。tsc緑・224-258字。
+- [x] B5. guardian 声4タイプ(gentle-fortress/ultimate-guardian/data-fortress〔guardian×professor・guardian声〕/guardian-charger)。tsc緑・240-266字・族C解体。
+- [x] B6. artist 声2タイプ(ultimate-artist/vibe-rebel〔artist×trickster・artist声〕)。tsc緑・239字・族B変種/族C解体。
 
 ### C. 横断突合とレビュー
 
