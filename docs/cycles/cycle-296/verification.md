@@ -19,4 +19,8 @@
 
 ## C1. 横断突合(reviewer の意味判定)
 
-(下記に reviewer 結果を追記)
+白紙 reviewer による全24型の突合を3巡実施(隣接ペアの言い換え共有は1巡ごとに新たに露見)。経過の詳細は [review-log.md](./review-log.md)。
+
+- 最終3巡目=**突合 PASS**: AC1(3テンプレ族+軟化版が 0/24)・AC2(守り/言語化困難/逆張り/脳内映像/察知ケアの各隣接群が手段・動機・対象で分離・助言族の一意分解成立・中心観察24通り非言い換え)・AC3(タイプ内水増し解消)・AC4(6声グループの一人称/語尾/トーン保存)・AC5(資産不変・全フィールド字数レンジ内)を確認。
+- 残 Minor(#12/#18 冒頭逐語一致・声グループ挨拶の近似双子)は仕上げパスで解消。
+- **テスト欠落の是正**: batch2(#11-20)が detailed-content.test.ts の字数検査(catchphrase 15-30/archetypeBreakdown 80-150/characterMessage 50-200)から除外されていた(variantFormatResults が batch1+3 のみの stale 前提)。batch2 を追加し全24型で恒久ガード化。
