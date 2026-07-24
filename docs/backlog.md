@@ -2,13 +2,13 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-604 | 他10診断(汎用配列順タイブレーク)の結果先行トリアージ | P2 | 297 | cycle-297着手。science-thinking除く10診断も同点17〜31%が配列順決着=同じ構造。cycle-294の「実害なし」はcharacter-personalityで撤回済の理屈。∀理想回答者テストで各診断をトリアージし要是正を判断。詳細cycle-294/295 |
 
 ## Queued (すぐに着手できる)
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
 | B-603 | character-personality 結果テキストT3(24タイプ一覧処遇)+F3申し送り | P2 | - | T2(全24本文書き直し)はcycle-296完了。残=T3(欠陥4=一覧37%のバーナム種明かしの撤去/畳み込み/移設判断)・F3(逆順12順序対の主軸提示の和らげ・設問文ブラッシュアップ)。詳細cycle-284/296 |
-| B-604 | 他10診断(汎用配列順タイブレーク)の結果先行トリアージ | P2 | - | science-thinking除く10診断も同点17〜31%が配列順決着=同じ構造。cycle-294の「実害なし」はcharacter-personalityで撤回済の理屈。∀理想回答者テスト(未実施)で各診断をトリアージし要是正を判断。詳細cycle-294/295 |
 | B-573 | UI/UX/アクセシビリティの全面適用(残: 全面展開) | P1 | - | cycle-287で監査+代表原型の是正スライス完了(F1-F5)。残=全81ページ/36ツールへの全面展開。系統的な個別項目はB-593/595/596/599等に分割起票済。詳細cycle-287/ |
 | B-594 | /play/daily の見出し構造是正(h1不在) | P3 | - | cycle-287 C2(F5姉妹)。監査ページはF5でh2化済。ResultPageShellは既にh1あり是正不要。残=dailyがh1不在(タイトルがTsutsumi<p>のみ)=h1相当が必要。実DOM確認のうえ是正。詳細cycle-287/findings.md |
 | B-597 | テーマトグルのタップ標的高さ(28px)のDESIGN準拠 | P4 | - | cycle-287監査C5。switch高さ28px=DESIGN§10の44px未満(WCAG2.5.8 24pxは充足)。当たり判定拡大の要否をDESIGN基準で判断。詳細cycle-287/findings.md |
