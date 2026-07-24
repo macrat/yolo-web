@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { quizBySlug } from "../registry";
-import { determineResult } from "../scoring";
+import { determineResult, calculatePersonalityPoints } from "../scoring";
 import { determineScienceThinkingResult } from "../data/science-thinking";
 import type { QuizDefinition, QuizAnswer } from "../types";
 
@@ -180,6 +180,119 @@ describe("personality診断の結果タイプ到達性ガード", () => {
           expect(unreachableTypes(quiz, winners)).toEqual([]);
         },
         heavyTestTimeoutMs,
+      );
+    },
+  );
+
+  // ---- 理想回答者ガード（cycle-297 で追加・弱い到達性の格上げ）----
+  //
+  // なぜ弱い到達性では不十分だったか:
+  //   上の「全タイプ到達性」ガードは『回答空間のどこかにそのタイプが単独最大になる回答が
+  //   1つでも存在するか』しか見ていない（＝機械的到達性）。そのタイプを犠牲にする不自然な
+  //   回答でも単独最大になれば緑になってしまう。実際 traditional-color の wakakusa（若草色）は
+  //   この弱いガードを緑で通過していたが、cycle-297 で「若草色を各設問で最大化した最も正直な
+  //   回答者」でも桜色に strict 敗北する dead type だと判明した（若草色の +1 が毎回 桜色の +2 に
+  //   相乗りする『桜色の影』構造）。弱い到達性はこれを見逃す。
+  //
+  // 正しい理想回答者ガード:
+  //   各タイプ T について「各設問で points[T] が最大の choice（T-argmax）を選ぶ正直回答者」を考える。
+  //   同一設問で T-argmax が複数ある場合はその直積を候補にし、T を最も有利にする（他型の最大点を
+  //   最小化する）ベストケースで判定する。ベストケースで T が strict 単独最大（他型の最大点 < T総合点）に
+  //   なることを要求する。判定材料は実ソース calculatePersonalityPoints、勝者確認は実ソース
+  //   determineResult を使う（自前再実装しない）。
+  //   注: T-argmax は各設問で固定なので T総合点は全正直ベクトルで不変。変わるのは他型の点のみ。
+
+  /** 各設問について、typeId の points が最大となる choice インデックス集合を返す */
+  function argmaxChoiceIndices(
+    quiz: QuizDefinition,
+    typeId: string,
+  ): number[][] {
+    return quiz.questions.map((q) => {
+      let best = -Infinity;
+      for (const c of q.choices) {
+        const v = c.points?.[typeId] ?? 0;
+        if (v > best) best = v;
+      }
+      const idxs: number[] = [];
+      q.choices.forEach((c, i) => {
+        if ((c.points?.[typeId] ?? 0) === best) idxs.push(i);
+      });
+      return idxs;
+    });
+  }
+
+  // T-argmax 直積の上限。若草色型の分岐（=T-argmax が複数の設問）だけを列挙するため実際は
+  // 極小（本diagnoses群で最大でも数千）。想定外の爆発を silent に通さないための安全弁。
+  const HONEST_ENUM_CAP = 5_000_000;
+
+  /**
+   * typeId の正直回答者ベストケースを求め、strict 単独勝者かどうかを判定する。
+   * 返り値: { tTotal, minMaxOpp, bestAnswers } — strict 条件は minMaxOpp < tTotal。
+   */
+  function analyzeHonest(quiz: QuizDefinition, typeId: string) {
+    const candidateSets = argmaxChoiceIndices(quiz, typeId);
+    const enumSize = candidateSets.reduce((n, s) => n * s.length, 1);
+    if (enumSize > HONEST_ENUM_CAP) {
+      throw new Error(
+        `honest enumSize ${enumSize} > HONEST_ENUM_CAP for ${quiz.meta.slug}/${typeId}`,
+      );
+    }
+    const resultIds = quiz.results.map((r) => r.id);
+    const nQ = candidateSets.length;
+    const cursor = new Array(nQ).fill(0);
+    const choiceIdx = new Array(nQ).fill(0);
+
+    let tTotal = -1;
+    let minMaxOpp = Infinity;
+    let bestAnswers: QuizAnswer[] = [];
+
+    for (let done = false; !done;) {
+      for (let i = 0; i < nQ; i++) choiceIdx[i] = candidateSets[i][cursor[i]];
+      const answers = answersFromIndices(quiz, choiceIdx);
+      const points = calculatePersonalityPoints(quiz.questions, answers);
+
+      const tp = points[typeId] ?? 0;
+      if (tTotal < 0) tTotal = tp;
+
+      let maxOpp = -Infinity;
+      for (const id of resultIds) {
+        if (id === typeId) continue;
+        const v = points[id] ?? 0;
+        if (v > maxOpp) maxOpp = v;
+      }
+
+      if (maxOpp < minMaxOpp) {
+        minMaxOpp = maxOpp;
+        bestAnswers = answers;
+      }
+
+      let d = nQ - 1;
+      for (; d >= 0; d--) {
+        cursor[d]++;
+        if (cursor[d] < candidateSets[d].length) break;
+        cursor[d] = 0;
+      }
+      if (d < 0) done = true;
+    }
+
+    return { tTotal, minMaxOpp, bestAnswers };
+  }
+
+  describe.each(personalityQuizzes.map((q) => [q.meta.slug, q] as const))(
+    "%s: 各タイプが正直な最大化回答で strict 単独勝者になる（理想回答者ガード）",
+    (_slug, quiz) => {
+      it.each(quiz.results.map((r) => r.id))(
+        "タイプ %s は正直な最大化回答のベストケースで単独勝者",
+        (typeId) => {
+          const { tTotal, minMaxOpp, bestAnswers } = analyzeHonest(
+            quiz,
+            typeId,
+          );
+          // ベストケースで他型の最大点が T総合点を strict に下回る＝T が単独最大。
+          expect(minMaxOpp).toBeLessThan(tTotal);
+          // 実判定経路でもそのベストケース回答の勝者が T であることを確認（判定関数との整合）。
+          expect(determineResult(quiz, bestAnswers).id).toBe(typeId);
+        },
       );
     },
   );
