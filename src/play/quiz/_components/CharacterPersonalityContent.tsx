@@ -240,9 +240,16 @@ export default function CharacterPersonalityContent({
       {/* afterCharacterMessage スロット: 相性セクション・CTA等のページ固有要素 */}
       {resolvedAfterCharacterMessage}
 
-      {/* 全タイプ一覧セクション */}
-      <div className={styles.allTypesSection}>
-        <Heading className={styles.allTypesCta}>他のキャラも見てみよう</Heading>
+      {/* 全タイプ一覧セクション（cycle-298: 初期折り畳み）。
+          回遊0の末尾ブロックを default view から外し、探索は summary タップで on-demand に。
+          <details> は初期 closed（open 属性なし）。閉じても中身（24タイプの内部リンク）は
+          DOM に残るため、SSR 初期HTMLに含まれクロール可能（decision.md 一次資料確認済）。 */}
+      <details className={styles.allTypesSection}>
+        <summary className={styles.allTypesSummary}>
+          <Heading className={styles.allTypesCta}>
+            他のキャラも見てみよう
+          </Heading>
+        </summary>
         <ul className={allTypesListClass}>
           {CHARACTER_PERSONALITY_TYPE_IDS.map((typeId) => {
             const result = quiz.results.find((r) => r.id === typeId);
@@ -268,7 +275,7 @@ export default function CharacterPersonalityContent({
             );
           })}
         </ul>
-      </div>
+      </details>
     </div>
   );
 }

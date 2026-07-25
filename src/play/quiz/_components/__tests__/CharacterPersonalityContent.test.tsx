@@ -553,3 +553,56 @@ describe("CharacterPersonalityContent - 全タイプリンク", () => {
     expect(links.length).toBeGreaterThanOrEqual(3);
   });
 });
+
+describe("CharacterPersonalityContent - 全タイプ一覧の初期折り畳み（cycle-298）", () => {
+  it("全タイプ一覧が <details> で初期折り畳み（open 属性なし）であること", () => {
+    const { container } = render(
+      <CharacterPersonalityContent
+        content={sampleContent}
+        resultId={sampleResultId}
+        resultColor={sampleResultColor}
+        headingLevel={2}
+        allTypesLayout="grid"
+      />,
+    );
+    const details = container.querySelector("details");
+    expect(details).not.toBeNull();
+    // 初期状態は閉じている（open 属性が付いていない）
+    expect(details).not.toHaveAttribute("open");
+  });
+
+  it("<summary> に「他のキャラも見てみよう」ラベルがあること", () => {
+    const { container } = render(
+      <CharacterPersonalityContent
+        content={sampleContent}
+        resultId={sampleResultId}
+        resultColor={sampleResultColor}
+        headingLevel={2}
+        allTypesLayout="grid"
+      />,
+    );
+    const summary = container.querySelector("summary");
+    expect(summary).not.toBeNull();
+    expect(summary).toHaveTextContent("他のキャラも見てみよう");
+  });
+
+  it("折り畳み（closed）でも全タイプの内部リンクが DOM に存在すること（クロール可）", () => {
+    const { container } = render(
+      <CharacterPersonalityContent
+        content={sampleContent}
+        resultId={sampleResultId}
+        resultColor={sampleResultColor}
+        headingLevel={2}
+        allTypesLayout="grid"
+      />,
+    );
+    const details = container.querySelector("details");
+    // closed のまま（open 属性なし）であることを確認したうえでリンクの存在を検証する
+    expect(details).not.toHaveAttribute("open");
+    const links = details?.querySelectorAll(
+      "a[href*='/play/character-personality/result/']",
+    );
+    // モックデータの全タイプ（3件）分の内部リンクが閉じた details 内に残っていること
+    expect(links?.length).toBe(3);
+  });
+});
