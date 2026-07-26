@@ -2,7 +2,7 @@
 id: 299
 description: "B-576 favicon/apple-touch-icon の店構え化。cycle-171 の旧ブランド(暗地ベタ+白ゴシック「y」+青ドット#2563eb)が全タブ/ブックマーク/ホーム画面に残存——cycle-282 の店構え刷新(紙地・墨・明朝・朱の印)に取り残された唯一の面。現ブランドの視覚言語で 16-32px でも読める図像に作り直す。"
 started_at: 2026-07-26T23:55:43+0900
-completed_at: null
+completed_at: 2026-07-27T01:24:22+0900
 ---
 
 <!-- index.md には計画・チェックリスト・完了サマリだけを書き、レビュー経過ログ・調査メモは別ファイルに分割してリンクする。 -->
@@ -27,6 +27,7 @@ completed_at: null
 
 - **(1) 現店構えの言語である**: 地は紙(明色)・図像は墨/朱。**旧版の暗地ベタ・ゴシック・青(`#2563eb`)を一掃する**。並べて OGP/札/サイト本体と「別の店に見えない」こと。
 - **(2) 16px で読める**: ブラウザタブ実寸(16px 相当)で、何の図像か潰れずに判別できる。favicon.ico(32×32)・SVG・apple-touch(180×180)の各実寸で確認。**小サイズ可読が本タスクの核心**(cycle-282 が分離した理由)。
+  - 〔A2 での決定による面の整合(基準の芯=16px 可読は緩めない)〕: **SVG は作らない**(理由は A2 に記録)。出荷面は **favicon.ico(16/32/48)＋apple-touch(180)** で、この基準の芯(16px でマークが読める)はこの2面で確認する。kickoff 時点で列挙した「SVG」面は A2 の可読 craft 判断により不採用としたもので、基準のしきい値(16px 可読)を狭めたのではない。
 - **(3) apple-touch-icon の規約を満たす**: **透過なし**(iOS は透過を黒く合成する)・角丸マスクを見越した安全余白(約 10%)。地は紙ベタなので透過問題は自然に回避できる。
 - **(4) B-583 を先取りしない**: 印(店の主張)を出すか・どの字かは B-583 で未決(`ogp-image.tsx:33-39`)。**アイコンは未決の「印/店の主張」に依存させず、既に確定している識別子=ワードマーク(店号 `yolos.net`・その頭文字)に拠る**。旧アイコンも「y＋ドット」でワードマークに拠っていた。字を圧の下で新造しない(cycle-283 の印字すげ替え事故の轍)。
 - **(5) 非退行**: `npm run lint && npm run format:check && npm run test && npm run build` 全緑。旧アイコンへの参照(あれば)を確実に新へ差し替え、`public/` の旧2枚と `app/` の新規経路が二重配信・競合しないこと(Next.js のアイコン規約=下記一次資料で確認済)。ダーク環境でのタブ表示も確認。
@@ -37,21 +38,21 @@ completed_at: null
 
 ### A. 設計(design 段階)
 
-- [ ] A1. `frontend-design` スキルと DESIGN.md(§2/§3/§4 器・書体・印)を読み、アイコンの視覚言語を確定。先頭方向(紙地/墨の y/朱ドット)を出発点に letterform を探索。16px 可読を最優先に形を決める。B-583 未決(印/店の主張)を先取りしない。
-- [ ] A2. 生成方式を決定。候補=(a)手描き SVG を第一(app/icon.svg・可変/ダーク対応)＋ .ico フォールバック＋apple-touch 180×180、(b)Next.js `icon.tsx`/`apple-icon.tsx` で ImageResponse 生成(favicon.ico は生成不可＝静的必須)。**豆粒可読の craft を最優先**に選ぶ(実装コストで選ばない=決定原則)。ラスタライズ手段(sharp 等)の在否を確認。
+- [x] A1. `frontend-design` スキル・DESIGN.md(§2/§3/§4)を読了。**のれん(`src/components/Header/index.tsx:106-108`・`Header.module.css:28-54`)が店号「yolos.net」を明朝・墨で組みドット「.」だけを朱にしている**=これがアイコンの確定した識別子。図像を「紙地・明朝の墨『y』＋朱のドット」に確定(のれんの頭文字縮約)。実グリフ=`src/lib/fonts.ts` と同じ Noto Serif JP 600。印(試)は使わず B-583 を先取りしない。
+- [x] A2. 生成方式=**手描き SVG でなく、実グリフ(Noto Serif JP 600)から ImageMagick でラスタライズ**する方式を採用(`scripts/generate-brand-icons.mjs`)。出荷面は favicon.ico(16/32/48)＋apple-touch PNG(180)。**SVG を作らない理由(可読 craft が主因・実装コストで選んでいない)**: (i) 16px の明朝 y は、SVG のブラウザ側ラスタライズより、サイズ別に pointsize/ドット径を手調整できる ICO の方が潰れず読める(cycle-282 の「16-32px は別種の craft」=本タスクの核心)。(ii) 旧版は 16/32 の2層だったが新版は **48px 層を追加**し HiDPI タブを旧版より広くカバー。(iii) 紙地ブランドは地が常に紙で、SVG のダークモード適応の便益が小さい。(iv) 環境に potrace/opentype 等のベクター抽出が無く実グリフのベクター化ができない事実も後押し(ただし選択の主因は i の可読 craft)。
 
 ### B. 実装(build 段階)
 
-- [ ] B1. 決めた図像で favicon(.ico/SVG)を作成。
-- [ ] B2. apple-touch-icon(180×180・透過なし・安全余白)を作成。
-- [ ] B3. `public/` 旧2枚と新経路が競合しないよう配線(Next.js 規約に従い app/ へ寄せるか public を差し替え)。旧参照の掃討。
+- [x] B1. favicon.ico(16/32/48 マルチ解像度・8bit)を作成。ドット径は 16px 実寸で朱が「朱」と読めるサイズに調整(視覚レビュー Major を是正)。
+- [x] B2. apple-touch-icon.png(180×180・**不透明**〔`-alpha off`〕・安全余白)を作成。ディセンダを持つ y を光学中央へ寄せ下重心を是正(視覚レビュー Major)。
+- [x] B3. `public/` の旧2枚を**同名・同寸で in-place 置換**。head に `icons` 宣言なし・`app/icon.*` 規約ファイルなし・コードに旧アイコン参照なしを grep で確認済(二重配信・競合なし)。dev サーバで `/favicon.ico`・`/apple-touch-icon.png` が 200 で新バイト配信を確認。
 
 ### C. 検証・レビュー・完了
 
-- [ ] C1. `take-screenshot`/Playwright で実ブラウザのタブ(16px)・apple-touch 実寸(180px)・SVG をライト/ダークで撮り、判定基準(1)〜(4)に当てる。旧アイコンとの before/after を並べる。
-- [ ] C2. `reviewer` にレビュー依頼(判定基準の各条を現物で当ててもらう)。指摘に対応。
-- [ ] C3. `npm run lint && npm run format:check && npm run test && npm run build` 全緑(PM が自分で実行)。
-- [ ] C4. ブログ判断(読者価値で。旧ブランド残存の是正は既存記事 cycle-282 系と重複しないか確認)。
+- [x] C1. Playwright で実ブラウザのタブ実寸(16/32/48px)・apple-touch(180px)をライト/ダークで描画・撮影し、判定基準(1)〜(4)に当てた。旧アイコンとの before/after も作成(`tmp/icon/before_after.png`)。全基準を満たすことを確認(スクショは tmp)。
+- [x] C2. `reviewer` にレビュー依頼(視覚=前景 MCP・コード/プロセス=別レビュアー)。**1巡目**で視覚 Major2件(16px ドット弱・apple 下重心)＋コード Major1件(SVG 未整合の記録漏れ)＋ nit(alpha)→すべて是正。**2巡目**は新規レビュアーをゼロから起動(AP-WF20=再レビューは流用でなく白紙)、視覚で favicon 下重心を追加検出→中央化で是正。**最終巡(3巡目)**は視覚・コードとも新規白紙レビュアーで**両者 承認・残存 actionable 指摘なし**(視覚: 全5基準合格・朱と `--accent` の ΔE=1.51・apple 二要素中央均衡/コード: SHA256 バイト再現一致・非退行なし・AP-P02 健全・B-611 framing 正確)。
+- [x] C3. `npm run lint && npm run format:check && npm run test && npm run build` 全緑(PM が自分で最終実行・322ファイル/5543テスト・build exit0)。
+- [x] C4. **ブログ判断=書かない**。favicon/apple-touch のブランド刷新は目に見えない配管/polish で、読者(診断・道具・辞典目当ての来訪者)への学び/楽しみの価値が薄い。16px craft 譚も店構え刷新(cycle-282 の札設計譚・design-token 記事)と重複。読者視点で価値が立たない。
 - [ ] C5. `/cycle-completion` 実行。
 
 ## 作業計画
@@ -81,9 +82,34 @@ cycle-171 の旧ブランド(暗地ベタ+白ゴシック「y」+青ドット)�
   - Next.js App Router アイコン規約(公式 v16.2.11 `nextjs.org/docs/app/api-reference/file-conventions/metadata/app-icons`): `favicon.ico` は `app/` 直下のみ・**コード生成不可(静的必須)**。`icon.(ico/jpg/png/svg)`・`apple-icon` は `icon.tsx`/`apple-icon.tsx` で `ImageResponse` 生成可・`<head>` へ `<link>` 自動注入。現状は `public/` 配置(規約外だが `/favicon.ico`・`/apple-touch-icon.png` として配信される)。→ 二重配信・競合の回避を B3 で確認。
   - アイコン最小セットと apple-touch 要件(2026 の各実務ガイド): apple-touch-icon は **180×180・透過なし**(iOS は透過を黒く合成)・角丸マスク見越しの安全余白。favicon は .ico(32×32)＋SVG(可変・ダーク対応)が現代の推奨。
 
+## 完了サマリ
+
+**成果**: `public/favicon.ico`(16/32/48・8bit)と `public/apple-touch-icon.png`(180×180・不透明・8bit)を、cycle-171 の旧ブランド(暗地ベタ+白ゴシック「y」+青#2563eb)から店構えの視覚言語(紙地#f8f7f2・明朝 Noto Serif JP 600 の墨「y」#201e1a・朱#af3622 のドット)へ刷新。のれん(店号「yolos.net」を明朝・墨・ドットのみ朱)の頭文字縮約で、タブ・ブックマーク・iOS ホーム画面という手元に残る面がサイト本体と「同じ店」に揃った。cycle-282 の店構え刷新に取り残されていた最後の面(B-576)を是正。
+
+- **生成の素性**: `scripts/generate-brand-icons.mjs`(Noto Serif JP 600 TTF を取得し ImageMagick で合成)。再実行で SHA256 バイト一致=決定的に再現可能(レビューで実証)。
+- **判定基準の充足(全5基準・実ブラウザで確認)**: (1)現店構えの言語=旧の暗地/ゴシック/青を一掃・朱と `--accent` の ΔE=1.51、(2)16px 可読=「y」+朱ドットが最小サイズで判別可、(3)apple-touch 規約=透過なし(`-alpha off`)・角丸マスク内・光学中央均衡、(4)B-583 非先取り=印を使わずワードマークに拠る、(5)ダーク破綻なし。
+- **非退行**: `public/` 同名 in-place 置換で head 宣言も規約ファイルも不要=二重配信/競合なし。lint/format/test(5543)/build 全緑。
+- **レビュー**: 視覚・コードの2レンズを3巡(白紙の新規レビュアー)。1・2巡目で Major(16px ドット弱・apple 下重心・favicon 下重心・SVG 記録漏れ)を検出→是正、最終巡は両者 承認・残存 actionable 指摘なし。
+- **スコープ**: favicon + apple-touch の2面に限定(manifest/theme=B-577・印=B-583 は先取りせず)。
+
+## レビュー結果
+
+すべて新規レビュアーを白紙で起動(再レビューは流用せず=AP-WF20)。視覚(実ブラウザ MCP)とコード/プロセスの2レンズ。
+
+- **1巡目**
+  - 視覚(Major×2 + nit): (a)apple-touch が下重心(下余白~~2% vs 上~~42%)→apple マスターの glyph を上へ・pointsize 360→330 で光学中央化。(b)16px で朱ドットが弱い(半径~1.2px)→favicon の dotR 38→54。(nit)apple の未使用 alpha→`-alpha off` 追加。**すべて是正**。
+  - コード(Major×1 + Minor): (a)判定基準(2)/A2 が SVG を挙げるのに実装は ICO+PNG で、SVG 不採用の判断が未記録=固定基準の暗黙の狭小化リスク(AP-P02/WF23)→A2 に SVG 不採用の UX/craft 根拠を明記し基準(2)へ整合注記(閾値は保持)。(Minor)生成器 hex の SSoT 乖離ガード不在→B-611 起票(index/backlog)。**すべて是正**。
+- **2巡目**(新規白紙レビュアー)
+  - 視覚: favicon 自体も下重心(descender が下端・上が空く)→favicon の glyph を上へ(offset -8→-40)で中央化。
+  - コード: B-611/記録の framing が「.mjs で import 不可」と事実誤り(tsx を使えば import 可能)→「node-standalone を意図的に選んだ受容トレードオフ」へ全記録(script コメント・index・backlog)を是正。
+- **最終巡(3巡目・新規白紙レビュアー)**
+  - 視覚: **承認**。全5基準合格。朱と `--accent` の ΔE=1.51(JND 未満)・16px で y+朱可読・apple は不透明/クリップなし/墨左・朱右の二要素で中央均衡・印なし・ダーク破綻なし。favicon の下寄せは 16px 可読を守る意図的 craft と判定(修正不要)。
+  - コード: **承認**。再実行で SHA256 バイト一致(再現性)・hex SSoT 一致・二重配信/競合なし・design-gate コメント正確・AP-P02 健全(閾値保持・SVG 判断は透明な追記)・B-611 framing 正確。残存 actionable 指摘なし。4ゲート緑を自ら再実行確認。
+
 ## キャリーオーバー
 
-- (着手前。完了時に記載)
+- **B-611(新規・Minor)**: `scripts/generate-brand-icons.mjs` の色定数(PAPER/INK/ACCENT)が `src/lib/utsuwaHex.ts` の値を文字列で再宣言している。`wairoHex.test.ts` が globals.css↔utsuwaHex を検証しているのと違い、この生成器の hex が SSoT から乖離してもテストは沈黙する(コメントで「両方直せ」と促してはいる)。
+  - **正直な framing(コードレビュー指摘の是正)**: これは「.ts を import できないから」ではない——`tsx`(既に devDependency で、`generate:release-id` 等が使用)を使い生成器を `.ts` にすれば `utsuwaHex.ts` を直接 import でき、乖離ガードは不要になる。**時系列を正確に**: この tsx-import 案は着手時(A2)には検討しておらず、2巡目のコードレビューで初めて浮上した。その指摘を受けて改めて weigh した結果、**`.mjs`＋node 直実行で3定数を再宣言する現状を維持する判断をした**——一回性・非 CI の資産生成器を node-standalone / 依存最小に保ち、資産の再生成を `src/` のビルド設定へ結合させないため。utsuwaHex は cycle-282 以来この3値を一度も変えておらず実害は小さいが、将来 ACCENT 等を変えたときのサイレント乖離を防ぐ「両方直せ」の注記＋本起票で担保する。**回避不能な帰結ではなく受容したトレードオフ**として記録する。backlog にも記載。
 
 ## 補足事項
 
@@ -92,10 +118,10 @@ cycle-171 の旧ブランド(暗地ベタ+白ゴシック「y」+青ドット)�
 
 ## サイクル終了時のチェックリスト
 
-- [ ] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
-- [ ] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
-- [ ] すべての変更がレビューされ、残存する指摘事項が無くなっている。
-- [ ] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
-- [ ] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
-- [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
-- [ ] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
+- [x] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている(C5=本完了処理を除き完了)。
+- [x] `/docs/backlog.md` のActiveセクションに未完了のタスクがない(B-576 は Done へ移動)。
+- [x] すべての変更がレビューされ、残存する指摘事項が無くなっている(視覚・コード各3巡・最終巡は両者承認・残存 actionable 指摘なし)。
+- [x] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する(PM 実行・322ファイル/5543テスト・build exit0)。
+- [x] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
+- [x] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている(2026-07-27T01:24:22+0900)。
+- [x] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている(B-611)。

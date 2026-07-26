@@ -67,9 +67,8 @@
  *   favicon / apple-touch-icon / OGP 画像の png 等のバイナリ画像は宣言テキストを持たず、この
  *   ゲートでは検査できない。店構え（紙地・墨・朱の印）と揃っているかは take-screenshot 等の
  *   視覚レビューで確認する。
- *   TODO(B-576): `public/favicon.ico`・`public/apple-touch-icon.png` は cycle-282 の点検で旧ブランド
- *   のまま残存していることが発覚済み（別タスク B-576 で是正予定）。ゲートは通すが、是正忘れ防止
- *   のためここに明記する——是正後はこの TODO を削除すること。
+ *   `public/favicon.ico`・`public/apple-touch-icon.png` は cycle-299（B-576）で店構えへ刷新済み
+ *   （紙地・明朝の墨「y」・朱のドット）。素性・再現手順は `scripts/generate-brand-icons.mjs`。
  */
 import { describe, test, expect } from "vitest";
 import * as fs from "node:fs";
