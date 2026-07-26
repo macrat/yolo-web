@@ -39,3 +39,5 @@ UIに関わる変更の結果をレビューするときは `/take-screenshot` �
 - 調査や計画のレビュー → `/docs/anti-patterns/planning.md`
 - 実装のレビュー → `/docs/anti-patterns/implementation.md`
 - ブログなどの記事のレビュー → `/docs/anti-patterns/writing.md`
+
+さらに、上記に加えて**すべてのレビューで** `/docs/anti-patterns/workflow.md`（作業の進め方のアンチパターン）を参照してください。作業の進め方の逸脱は、レビュー対象の種類によらず起こります。
