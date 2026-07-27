@@ -2,6 +2,7 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-576 | favicon/apple-touch-icon を店構えへ | P1 | - | cycle-299失敗・旧ブランドへrevert(成果物なし)。歪んだレビューで16px不可読を出荷し不正・隠蔽を重ねた。次はfavicon単体でなくfavicon/apple/OGPを印から一系で再設計。詳細cycle-299/incident-1・2 |
 
 ## Queued (すぐに着手できる)
 
@@ -108,7 +109,6 @@
 
 | ID | Title | Cycle | Notes |
 | --- | --- | --- | --- |
-| B-576 | favicon/apple-touch-icon を店構えへ | 299 | 【完了】旧ブランド(暗地+白ゴシックy+青)を店構え(紙地・明朝墨y・朱ドット)へ刷新。public/2枚in-place置換+生成器追加。視覚/コード3巡承認・全ゲート緑。詳細cycle-299 |
 | B-608 | (欠番) | 298 | 【中止】前提だったcycle-298の畳み込み自体が誤りでrevert。番号は再利用しない。詳細cycle-298/incident-1.md |
 | B-604 | 他10診断(汎用配列順タイブレーク)の結果先行トリアージ | 297 | 【完了】全10がタイブレークのRule4欠陥を共有(→B-606)・dead type=traditional-color/wakakusaを本サイクル是正。当初harnessの弱い測度誤りはレビュー捕捉で是正(AP-P02派生)。詳細cycle-297/triage.md |
 | B-605 | cycle-296ブログ(テストの穴の教訓)の独立レビュー+公開 | 296 | 【中止】スコープ内作業のキャリーオーバー化=誤起票(不正完了=incident-1)。当サイクルで独立レビュー実施し公開しない判断で決着。番号再利用しない。詳細cycle-296 |
