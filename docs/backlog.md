@@ -2,12 +2,13 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-576 | favicon/apple-touch-icon を店構えへ | P1 | - | cycle-299失敗・旧ブランドへrevert(成果物なし)。歪んだレビューで16px不可読を出荷し不正・隠蔽を重ねた。次はfavicon単体でなくfavicon/apple/OGPを印から一系で再設計。詳細cycle-299/incident-1・2 |
+| B-565 | 全面切替の観測(ADR001・出荷+2週) | P2 | 300 | 着手条件(読み始め07-27)成立で昇格。SC/GA4を基線と方向比較・記名クエリのトリップワイヤ軌跡確認(発火判定は+4週)。詳細ADR001/cycle-300 |
 
 ## Queued (すぐに着手できる)
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-576 | favicon/apple-touch-icon を店構えへ | P1 | - | cycle-299失敗・旧ブランドへrevert(成果物なし)。歪んだレビューで16px不可読を出荷し不正・隠蔽を重ねた。次はfavicon単体でなくfavicon/apple/OGPを印から一系で再設計。詳細cycle-299/incident-1・2 |
 | B-603 | character-personality 24タイプ一覧の処遇(T3・再判定) | P1 | - | **未決へ差し戻し**。cycle-298は測定面を誤り判定撤回(cycle-284の実測が正しかった)。主たる面で基準を立て直し再判定。詳細cycle-298/decision.md |
 | B-607 | character-personality F3申し送り(逆順主軸の和らげ・設問磨き) | P1 | - | cycle-295 F3=逆順フォールバック12順序対でcount二位気質が「主軸」提示される件の本文和らげ+設問文の裁量的ブラッシュアップ。旧B-603から分離(cycle-298)。詳細cycle-295/296 |
 | B-606 | 全10 personality診断の結果先行の点検・再設計(Rule4) | P1 | - | **cycle-297で開いたやりかけ(wakakusa暫定含む)の根治**。本筋はcycle-295 G1〜G5の結果先行再設計。1診断ずつ・優先=強い本人性群。B-603との前後関係は着手時に再判断。詳細=cycle-297/triage.md+incident-2 |
@@ -61,7 +62,6 @@
 | B-568 | 面横断 content_id 接頭辞規約の全面統一 | P4 | 着手: ADR002観測窓終了後(既存item_id集計との断絶を伴う移行のため)。cycle-280でquiz面はcontentIdForQuizに統一済・ゲーム(素slug)/運勢(fortune-daily)は当面surface未指定・level不在で主指標非汚染。詳細 cycle-280.md |
 | B-590 | eslint 10 / TypeScript 7 の採用 | P4 | 着手: config-next配下のplugin基盤(typescript-eslint8等)がeslint10/TS7対応次第。cycle-286で試行=lintクラッシュ実証。詳細cycle-286/ |
 | B-592 | overrides(postcss/react-hooks)の解消 | P4 | 着手: postcssは親(next/sanitize-html)がpatched版を引いた時・react-hooksは7.1.1採用判断時にoverride除去(upstreamドリフト回避)。詳細cycle-286/remediation.md |
-| B-565 | 全面切替の観測(ADR001) | P2 | 着手: 切替+2週(読み始め=2026-07-27)・結論は+3ヶ月窓。正典 ADR001(docs/ADR/open/)。双方向ガード |
 | B-056 | i18n(多言語対応) | P4 | 着手: 将来オプション(site-concept 宿題処理=現段階不採用)。cycle-167でOwnerが無期限延期を解除 |
 | B-135 | iOS Safari スクロールロックのフォールバック | P4 | 着手: 実害確認時 |
 | B-219 | AI 画像生成 MCP サーバーの実装 | P2 | 着手: 必要性確認時。詳細 imagen4-proposal.md(archive) |
