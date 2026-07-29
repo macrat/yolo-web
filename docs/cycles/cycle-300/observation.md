@@ -12,6 +12,7 @@
 - **SC のバックフィル漂流**: 凍結基線ファイルの値（07-13 集計）と、今日同じ期間 06-15〜07-12 を再集計した値がずれる（例: dictionary 16,864→19,060 impr、play 4,634→5,059 impr、記名クエリ 222→250 clk）。原因は SC エクスポートの遅延バックフィル（凍結時に直近日が未成熟）。**方向読みは「今日同時取得の同成熟度 基線 vs 出荷後」で行う**。出荷後窓の直近日（07-25〜27）も同様に未成熟でやや過少の可能性がある点を割り引く。
 - **トリップワイヤの発火基準は凍結値（222clk）を使う**（事前登録の基準は動かさない）。ただし本サイクルは+2週で**発火判定はしない**（発火判定は出荷+4週 ≒2026-08-10）。今回は軌跡確認のみ。
 - **GA4 は漂流なし**: 再集計した基線が凍結値と完全一致（診断 84.0%=343→288・クイズ 86.4%=22→19）。測定面の妥当性が確認できた。
+- **07-13 デプロイ境界の半日混入**: 刷新の本番反映（cycle-279 完了・main push）は **2026-07-13 13:20:53**（commit `4fd0f5f5`）。ship 側窓は 07-13 全日を含むため、当日 00:00〜13:20 の約13.3時間は**旧デザインのトラフィックが ship 側に混入**する。これは ship 側完走率を基線側（高め）へ引くため、観測された低下は**真の低下をやや過小評価**している可能性がある（方向は覆さない・結論は+3ヶ月窓で保留）。cycle-298 の露出（約9時間30分）と同様、境界混入として明記する。
 
 ---
 
@@ -65,6 +66,8 @@
 
 - **診断完走率が 84.0%→約72% へ約12pt 低下**。判定作り直し(07-23)の前後どちらも約72%で**ほぼ同一**＝07-23 要因では説明できない。低下は 07-13 切替の窓に沿う。
 - クイズは n が一桁で読めない（小n）。
+- **診断「開始率」（事前登録指標・着地→開始の変換率）は横ばい**: character-personality で、診断ページを見たセッション→開始したセッションの率は **70.4%(205/291)→72.0%(270/375)**（微増）。※完走率とは別軸。開始率の分母は「診断ページ page_view のあったセッション」、完走率の分母は「level_start のあったセッション/イベント」。
+- **ファネルの局在**: 開始率が横ばい（むしろ微増）で、低下しているのは**開始→完走の下流**（85.3%→72.0%）。＝もし刷新由来のファネル摩擦があるなら**入口（着地→開始）ではなく回答〜結果フェーズに局在**する。+4週の実機点検はこの下流（回答UI・結果面の level_end 発火）に絞る。
 
 ### 3-1. 診断 content_id 別（低下の所在）
 
@@ -121,5 +124,8 @@
 
 - SC カテゴリ: `searchdata_url_impression` を `REGEXP_REPLACE(url,'https?://[^/]+','')` でパス化し top/tools/play/dictionary/blog に分類、period(基線28d/出荷後15d) 別に `SUM(impressions/clicks/sum_position)`・日次平均。
 - 記名クエリ: 上記のうち path LIKE `/play/character-personality%` かつ query が「似て/似た」or（「キャラ」&「診断」）。
-- GA4 ファネル: `events_*` の `level_start`/`level_end` を `content_type`・`content_id` で集計、period 別に完走率=ends/starts。
+- GA4 ファネル: `events_*` の `level_start`/`level_end` を `content_type`・`content_id` で集計、period 別に完走率=ends/starts。session 完走率・starts/session は `user_pseudo_id`+`ga_session_id` を session キーに dedup。
+- 診断開始率: session 単位で「`page_view` かつ page_location に `/play/character-personality`」を分母、「`level_start` かつ content_id=`quiz-character-personality`」を分子。
+- save/share: `event_name IN ('save','share')` を period・content_id 別に件数。
+- モバイル比率: `page_view` を `device.category='mobile'` で PV・session（dedup）別に率。
 - 全クエリは cycle-300 セッションの Bash 履歴に残存（`analyze-bigquery/scripts/query.ts` 経由）。
