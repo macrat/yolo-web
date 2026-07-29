@@ -12,9 +12,10 @@
 | B-607 | character-personality F3申し送り(逆順主軸の和らげ・設問磨き) | P1 | - | cycle-295 F3=逆順フォールバック12順序対でcount二位気質が「主軸」提示される件の本文和らげ+設問文の裁量的ブラッシュアップ。旧B-603から分離(cycle-298)。詳細cycle-295/296 |
 | B-606 | 全10 personality診断の結果先行の点検・再設計(Rule4) | P1 | - | **cycle-297で開いたやりかけ(wakakusa暫定含む)の根治**。本筋はcycle-295 G1〜G5の結果先行再設計。1診断ずつ・優先=強い本人性群。B-603との前後関係は着手時に再判断。詳細=cycle-297/triage.md+incident-2 |
 | B-573 | UI/UX/アクセシビリティの全面適用(残: 全面展開) | P1 | - | cycle-287で監査+代表原型の是正スライス完了(F1-F5)。残=全81ページ/36ツールへの全面展開。系統的な個別項目はB-593/595/596/599等に分割起票済。詳細cycle-287/ |
-| B-609 | レビュー体制の構造的欠陥(基準違反の検出漏れ)の是正 | P2 | - | cycle-298で判明。残=(a)基準違反がMinor判定される(b)candidates.mdがレビュー非読込(c)pre-commit-checkの検出漏れ。機械的強制または手順設計として扱う。詳細cycle-298/incident-3.md |
-| B-610 | ADR001の「オーナー裁定」ラベルの点検(AP-P34) | P3 | - | cycle-298のレビューで発覚。open ADRの決定文と経過欄に他者の権威のラベルが生きている。原発言を確認し、駆動源をルール/constitutionへ帰属し直すか判断。詳細cycle-298/review-log.md(§本サイクル外の発見) |
+| B-609 | レビュー体制の構造的欠陥(基準違反の検出漏れ)の是正 | P2 | - | cycle-298判明+cycle-300。残=(a)基準違反がMinor判定(b)candidates非読込(c)pre-commit検出漏れ(d)観点が計器選択の妥当性(AP-P31等)を問わない。詳細cycle-298/incident-3・cycle-300/incident-1 |
+| B-610 | ADR001+rebuild-plan§1(a)の「オーナー裁定」ラベル是正(AP-P34) | P2 | - | cycle-298発覚+cycle-300で原発言検証済(A/Bは奨励・範囲PM委譲)。帰属をPM導出へ是正。詳細cycle-300/incident-1 |
 | B-611 | brand-icons生成器のhex乖離ガード不在 | P4 | - | cycle-299発覚。生成器色定数がutsuwaHex.tsを文字列再宣言(node-standalone維持の受容トレードオフ)。乖離ガード無くSSoT変更時サイレント乖離しうる。実害は再生成時のみ。詳細cycle-299 |
+| B-612 | 診断完走率低下をA/Bで切り分け | P2 | - | cycle-300でcharacter-personality完走率85.3→72.0%低下(開始→完走の下流に局在)を検出。前後比較では効果分離不可(AP-P31)。旧vs新の結果/回答面の同時期A/Bで設計。着手=ADR001+4週(08-10)に事前登録。詳細cycle-300/incident-1 |
 | B-594 | /play/daily の見出し構造是正(h1不在) | P3 | - | cycle-287 C2(F5姉妹)。監査ページはF5でh2化済。ResultPageShellは既にh1あり是正不要。残=dailyがh1不在(タイトルがTsutsumi<p>のみ)=h1相当が必要。実DOM確認のうえ是正。詳細cycle-287/findings.md |
 | B-597 | テーマトグルのタップ標的高さ(28px)のDESIGN準拠 | P4 | - | cycle-287監査C5。switch高さ28px=DESIGN§10の44px未満(WCAG2.5.8 24pxは充足)。当たり判定拡大の要否をDESIGN基準で判断。詳細cycle-287/findings.md |
 | B-599 | 辞典/共有まわりのa11y軽微群 | P4 | - | cycle-287監査C8。同部首117リンクがdiv(list構造喪失)/辞典ヒーロー大字がaria-hidden無で二重読み/共有ボタンの外部予告が面で不整合。詳細cycle-287/findings.md |
