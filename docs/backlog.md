@@ -2,7 +2,6 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-565 | 全面切替の観測(ADR001・出荷+2週) | P2 | 300 | 着手条件(読み始め07-27)成立で昇格。SC/GA4を基線と方向比較・記名クエリのトリップワイヤ軌跡確認(発火判定は+4週)。詳細ADR001/cycle-300 |
 
 ## Queued (すぐに着手できる)
 
@@ -62,6 +61,7 @@
 | B-568 | 面横断 content_id 接頭辞規約の全面統一 | P4 | 着手: ADR002観測窓終了後(既存item_id集計との断絶を伴う移行のため)。cycle-280でquiz面はcontentIdForQuizに統一済・ゲーム(素slug)/運勢(fortune-daily)は当面surface未指定・level不在で主指標非汚染。詳細 cycle-280.md |
 | B-590 | eslint 10 / TypeScript 7 の採用 | P4 | 着手: config-next配下のplugin基盤(typescript-eslint8等)がeslint10/TS7対応次第。cycle-286で試行=lintクラッシュ実証。詳細cycle-286/ |
 | B-592 | overrides(postcss/react-hooks)の解消 | P4 | 着手: postcssは親(next/sanitize-html)がpatched版を引いた時・react-hooksは7.1.1採用判断時にoverride除去(upstreamドリフト回避)。詳細cycle-286/remediation.md |
+| B-565 | 全面切替の観測(ADR001・継続) | P2 | 着手: 出荷+4週(2026-08-10・トリップワイヤ発火判定＋完走率再読)・結論は+3ヶ月窓。cycle-300で+2週読み始め完了(トリップワイヤ健全・完走率低下は要監視)。正典=ADR001(次回確認日で自動surface)。詳細cycle-300 |
 | B-056 | i18n(多言語対応) | P4 | 着手: 将来オプション(site-concept 宿題処理=現段階不採用)。cycle-167でOwnerが無期限延期を解除 |
 | B-135 | iOS Safari スクロールロックのフォールバック | P4 | 着手: 実害確認時 |
 | B-219 | AI 画像生成 MCP サーバーの実装 | P2 | 着手: 必要性確認時。詳細 imagen4-proposal.md(archive) |
