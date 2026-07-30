@@ -69,4 +69,4 @@ ORDER BY data_date
 ROUND(SUM(sum_position) / SUM(impressions) + 1, 1) AS avg_position
 ```
 
-Note: `sum_position` is pre-summed per row and **zero-based**。平均順位は `SUM(sum_position)/SUM(impressions) + 1`（Search Console 公式: support.google.com/webmasters/answer/12917991 ・2026-07-30 確認）。**+1 を落とすと UI と 1 ずれる**（cycle-300 で実際に発生）。
+Note: `sum_position` is pre-summed per row and **zero-based**。平均順位は `SUM(sum_position)/SUM(impressions) + 1`（Search Console 公式: support.google.com/webmasters/answer/12917991 ・2026-07-30 確認）。**+1 を落とすと UI と 1 ずれる**（恒久知見＝`docs/knowledge/search-console-bigquery.md`）。
