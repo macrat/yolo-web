@@ -10,6 +10,7 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-623 | 知識クイズで「次へ」の2打目がFAQのsummaryを叩く | P4 | - | cycle-301実測(yoji-level q4/q7/q8・kotowaza-level q7/q8)。既存欠陥で結果は壊れないが求めていないFAQが開閉。詳細cycle-301/review-log.md |
 | B-621 | ゲーム/ツール面の主操作要素がfold下にある件の監査 | P1 | - | cycle-301レビュー実測。kanji-kanaruは375x550で入力欄がfoldの460px下。診断以外の面を1巡監査。詳細cycle-301/review-log.md |
 | B-622 | B-613出荷後の計装健全性検査 | P1 | - | 期日=B-613出荷+2日。設問別の数値は出荷後しか検証できず(SECTION1/3は現状0行)、放置すると08-10に「読めない」と判明する。合格条件はinstrumentation-design.md C7〜C11。詳細cycle-301 |
 | B-576 | favicon/apple-touch-icon を店構えへ | P1 | - | cycle-299失敗・旧ブランドへrevert(成果物なし)。歪んだレビューで16px不可読を出荷し不正・隠蔽を重ねた。次はfavicon単体でなくfavicon/apple/OGPを印から一系で再設計。詳細cycle-299/incident-1・2 |
