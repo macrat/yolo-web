@@ -10,6 +10,8 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-621 | ゲーム/ツール面の主操作要素がfold下にある件の監査 | P1 | - | cycle-301レビュー実測。kanji-kanaruは375x550で入力欄がfoldの460px下。診断以外の面を1巡監査。詳細cycle-301/review-log.md |
+| B-622 | B-613出荷後の計装健全性検査 | P1 | - | 期日=B-613出荷+2日。設問別の数値は出荷後しか検証できず(SECTION1/3は現状0行)、放置すると08-10に「読めない」と判明する。合格条件はinstrumentation-design.md C7〜C11。詳細cycle-301 |
 | B-576 | favicon/apple-touch-icon を店構えへ | P1 | - | cycle-299失敗・旧ブランドへrevert(成果物なし)。歪んだレビューで16px不可読を出荷し不正・隠蔽を重ねた。次はfavicon単体でなくfavicon/apple/OGPを印から一系で再設計。詳細cycle-299/incident-1・2 |
 | B-619 | 参照切れドキュメントパスの是正 | P3 | - | cycle-301発覚。生きている参照8ファイル(コード5+docs/sql 1+research 2)が移動済の`docs/visitor-value-measurement.md`を指す。`docs/experiments.md`は不在。横断点検も要る。詳細cycle-301キャリーオーバー |
 | B-617 | SC平均順位の算式誤り(+1欠落)の下流トリアージ | P3 | - | cycle-300で算式を是正(repo全体4箇所)。過去docs(research2件+cycle doc群)の順位値が1小さいまま。戦略結論は不変だが誤記のため注記か補正。詳細cycle-300/observation §1 |
