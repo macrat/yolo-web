@@ -2,16 +2,15 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-613 | 診断の設問単位の計装(離脱局在を読む) | P1 | 301 | level_start/endのみで「何問目で落ちたか」が読めない。**08-10前に入れないと局在確認不可**=期日制約。詳細cycle-300/observation §3・§7 |
+| B-614 | 診断の回答フェーズの摩擦低減 | P1 | 301 | 完走率85.3→72.0%=設問途中の離脱。**375x550で4択のうち完全可視が1つだけ**(上部占有212.5px)。3案以上を比較(AP-P17)。実測詳細cycle-301/measurement.md |
 
 ## Queued (すぐに着手できる)
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
 | B-576 | favicon/apple-touch-icon を店構えへ | P1 | - | cycle-299失敗・旧ブランドへrevert(成果物なし)。歪んだレビューで16px不可読を出荷し不正・隠蔽を重ねた。次はfavicon単体でなくfavicon/apple/OGPを印から一系で再設計。詳細cycle-299/incident-1・2 |
-| B-613 | 診断の設問単位の計装(離脱局在を読む) | P1 | 301 | level_start/endのみで「何問目で落ちたか」が読めない。**08-10前に入れないと局在確認不可**=期日制約。詳細cycle-300/observation §3・§7 |
-| B-614 | 診断の回答フェーズの摩擦低減 | P1 | 301 | 完走率85.3→72.0%=設問途中の離脱。**実機相当(375x635)で4択のうち1つがfold下・1つが途中で切れる**(上部占有=導入176px+パンくず21px)。着手時は3案以上を比較(AP-P17)。詳細cycle-300/observation §7 |
 | B-617 | SC平均順位の算式誤り(+1欠落)の下流トリアージ | P3 | - | cycle-300で算式を是正(repo全体4箇所)。過去docs(research2件+cycle doc群)の順位値が1小さいまま。戦略結論は不変だが誤記のため注記か補正。詳細cycle-300/observation §1 |
-| B-615 | 375px CLSの計装要否の判断 | P3 | - | ADR001事前登録指標だが計装が無く恒久取得不可の状態。入れる(B-573連動)か恒久不可と確定するかをADR001+4週で判断。詳細cycle-300/observation §6 |
 | B-603 | character-personality 24タイプ一覧の処遇(T3・再判定) | P1 | - | **未決へ差し戻し**。cycle-298は測定面を誤り判定撤回(cycle-284の実測が正しかった)。主たる面で基準を立て直し再判定。詳細cycle-298/decision.md |
 | B-607 | character-personality F3申し送り(逆順主軸の和らげ・設問磨き) | P1 | - | cycle-295 F3=逆順フォールバック12順序対でcount二位気質が「主軸」提示される件の本文和らげ+設問文の裁量的ブラッシュアップ。旧B-603から分離(cycle-298)。詳細cycle-295/296 |
 | B-606 | 全10 personality診断の結果先行の点検・再設計(Rule4) | P1 | - | **cycle-297で開いたやりかけ(wakakusa暫定含む)の根治**。本筋はcycle-295 G1〜G5の結果先行再設計。1診断ずつ・優先=強い本人性群。B-603との前後関係は着手時に再判断。詳細=cycle-297/triage.md+incident-2 |
@@ -67,6 +66,7 @@
 | B-590 | eslint 10 / TypeScript 7 の採用 | P4 | 着手: config-next配下のplugin基盤(typescript-eslint8等)がeslint10/TS7対応次第。cycle-286で試行=lintクラッシュ実証。詳細cycle-286/ |
 | B-592 | overrides(postcss/react-hooks)の解消 | P4 | 着手: postcssは親(next/sanitize-html)がpatched版を引いた時・react-hooksは7.1.1採用判断時にoverride除去(upstreamドリフト回避)。詳細cycle-286/remediation.md |
 | B-616 | AdSense再申請の実施(Owner依存) | P3 | 着手: Ownerが実施(PMは外部アカウント操作の手段が無く恒久的に実施・観測不能)。ADR001の事前登録項目。詳細cycle-300/observation §5 |
+| B-615 | 375px CLSの計装要否の判断 | P3 | 着手: 2026-08-10(ADR001 +4週の読み取り時に、入れる〔B-573連動〕か恒久不可と確定するかを判断する取り決め)。ADR001事前登録指標だが計装が無く恒久取得不可の状態。詳細cycle-300/observation §6 |
 | B-565 | 全面切替の観測(ADR001・継続) | P2 | 着手: 出荷+4週(2026-08-10・トリップワイヤ発火判定＋完走率の方向再読とSC週次)・結論は+3ヶ月窓。cycle-300で+2週読み始め完了。正典=ADR001。詳細cycle-300 |
 | B-612 | 診断完走率低下の帰属を同時期対照で切り分け | P2 | 着手: B-614(摩擦低減)かB-613(計装)のいずれかが出荷され対照の対象が実在してから。比較対象は設計で決める。前後比較では効果分離不可(AP-P31)。詳細cycle-300/incident-1 |
 | B-056 | i18n(多言語対応) | P4 | 着手: 将来オプション(site-concept 宿題処理=現段階不採用)。cycle-167でOwnerが無期限延期を解除 |
