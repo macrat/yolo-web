@@ -39,7 +39,7 @@ completed_at: null
 - [ ] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
 - [ ] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
 - [ ] すべての変更がレビューされ、残存する指摘事項が無くなっている。
-- [ ] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
+- [ ] `npm run typecheck && npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する（exit 0）。**`typecheck` を必ず含める**——CI（`.github/workflows/deploy.yml`）は typecheck を**最初のステップ**で走らせ、`pre-push-check.sh` も再実行する。cycle-301 以前のテンプレートはこの4ゲート列挙から typecheck が抜けており、typecheck が赤のまま「全ゲート緑」と記録できる状態だった（cycle-301 で実際に発生）。
 - [ ] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
 - [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
 - [ ] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
