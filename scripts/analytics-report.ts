@@ -144,7 +144,7 @@ async function main() {
         FORMAT_DATE('%Y-%m-%d', DATE_TRUNC(data_date, WEEK(MONDAY))) AS week_start,
         SUM(clicks) AS clicks, SUM(impressions) AS impressions,
         ROUND(SAFE_DIVIDE(SUM(clicks), SUM(impressions)) * 100, 2) AS ctr,
-        ROUND(SAFE_DIVIDE(SUM(sum_position), SUM(impressions)), 1) AS avg_position
+        ROUND(SAFE_DIVIDE(SUM(sum_position), SUM(impressions)) + 1, 1) AS avg_position
       FROM \`${SC_DATASET}.searchdata_url_impression\`
       WHERE data_date BETWEEN '${scFrom}' AND '${scTo}'
       GROUP BY week_start ORDER BY week_start
@@ -156,7 +156,7 @@ async function main() {
     await run(`
       SELECT query, SUM(clicks) AS clicks, SUM(impressions) AS impressions,
         ROUND(SAFE_DIVIDE(SUM(clicks), SUM(impressions)) * 100, 1) AS ctr,
-        ROUND(SAFE_DIVIDE(SUM(sum_position), SUM(impressions)), 1) AS avg_position
+        ROUND(SAFE_DIVIDE(SUM(sum_position), SUM(impressions)) + 1, 1) AS avg_position
       FROM \`${SC_DATASET}.searchdata_url_impression\`
       WHERE data_date BETWEEN '${scFrom}' AND '${scTo}' AND NOT is_anonymized_query
       GROUP BY query ORDER BY clicks DESC, impressions DESC LIMIT 20

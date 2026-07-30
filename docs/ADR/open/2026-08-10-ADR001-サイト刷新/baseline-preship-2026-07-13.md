@@ -14,7 +14,7 @@
 
 ## 1. Search Console — カテゴリ別（サイト全体・28日合計）
 
-集計方法: `REGEXP_REPLACE(url, r'https?://[^/]+', '')` でパス化し、`/`=top、`/tools*`=tools、`/play*`=play、`/dictionary*`=dictionary、`/blog*`=blogに分類。平均掲載順位は `SUM(sum_position)/SUM(impressions)`。
+集計方法: `REGEXP_REPLACE(url, r'https?://[^/]+', '')` でパス化し、`/`=top、`/tools*`=tools、`/play*`=play、`/dictionary*`=dictionary、`/blog*`=blogに分類。平均掲載順位は `SUM(sum_position)/SUM(impressions)`。**【訂正注記・2026-07-30】この算式は誤り**——`sum_position` は0起点で、公式定義は `SUM(sum_position)/SUM(impressions) **+ 1**`（[Search Console 公式](https://support.google.com/webmasters/answer/12917991)・一次確認）。**本ファイルの平均順位（掲載順位）はすべて真値より 1 小さい**（例: 全体 9.41→真値 10.41・記名クエリ 5.86→6.86）。凍結記録として数値は当時のまま保存し書き換えない。比較に使う際は +1 して読むこと（差分・方向は不変）。経緯＝cycle-300/observation.md §1。
 
 | カテゴリ            | 表示回数(impressions) | クリック(clicks) |       CTR | 平均掲載順位 |
 | ------------------- | --------------------: | ---------------: | --------: | -----------: |
