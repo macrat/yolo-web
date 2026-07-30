@@ -56,8 +56,10 @@ B-613 を先に出荷して 08-10 までの約10日で「改善前の離脱局�
 
 - [x] C1. 計装設計を決めた。→ [instrumentation-design.md](./instrumentation-design.md)・`docs/sql/quiz-question-dropoff.sql`（新規）
   - イベント `question_answered` を1種のみ追加（`level_start`/`level_end` は不変＝既存クエリを壊さない）。発火点は `handleAnswer` の type 分岐前1箇所（personality 12本・knowledge 3本の両方で取れることを実コードで確認）。params 5個。**1起点**（`number` は1起点・`index` は0起点という語彙規約で固定）。
-  - **SQL を実行して検証済み**: 合成データ7シナリオで手計算した **23 assertion 全 PASS**、実データで run 分割が既知値（`level_start` 311）と一致。設問別数値の実データ検証は `question_answered` 未出荷のため未実施（合格条件へ繰越）。
+  - **SQL を実行して検証済み（改訂後）**: 合成データで **51 assertion 全 PASS / FAIL 0**（改訂前23→51。最終出力列・`verdict` の CASE 順序6通り・release フィルタ・`ord` の保護ケースを新規に通した）。実データで既知値（`runs_with_start` 311・`runs_with_end` 221・`level_end` 224＝218×1+3×2）を **release フィルタ追加後も再現**。設問別数値の実データ検証は `question_answered` 未出荷のため実施できず、**B-622（出荷+2日）へ繰越**。
   - 量は増加分 0.022%（BigQuery 日次上限 1,000,000 に対して）。GA4 管理画面の登録は不要。
+  - **【改訂・レビュー1巡目の Blocker 是正】出荷境界の旧バンドル汚染を塞いだ**。窓の始点を出荷日**翌日**にし、SECTION 1 に **run 単位の `release` フィルタ**を実装（日付比較にしないのは同一日に複数リリースが出るため＝実測44リリース/16日・07-24 ビルドだけで6）。SECTION 2 は既存系列と突合するため全 run を保持し、`runs_no_answer_by_release`（release 別内訳）を追加して汚染の検出も可能にした。
+  - **B-620 が未完（E3b）なので、`duplicate_answer_rows`/`runs_with_gap`/`runs_with_end` の期待値は時点付き**にした（0 を無条件の合格条件にしない）。
 - [ ] C2. builder に実装させる（`QuizContainer` は**診断12本＋知識クイズ3本＝15本**の共通経路なので、1箇所の変更で全面に効く）。**B-614 の S1 と同じ `QuizContainer.tsx` を触るため並行不能＝同一 builder に直列で依頼する**（AP-WF07）。
 - [ ] C3. テストを追加する（発火の有無・インデックスの値）。
 - [ ] C4. **実機で発火を確認**する。本番ではなくローカルで確認し、本番 GA を汚染しない。

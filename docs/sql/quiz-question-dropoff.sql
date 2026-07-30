@@ -57,9 +57,10 @@
 --   「計装済み run」(run_instrumented) とし、SECTION 1 はこれだけを集計する。
 --
 --   なぜ日付比較（release 末尾の YYYYMMDD >= 出荷日）にしないか: 同一日に
---   複数リリースが出る。実測（窓 20260713-20260728・quiz-% の run に現れた
---   release）では 20260724 だけで 5 release、16日で 45 release あった。日付
---   粒度では「出荷コミットより前に同日ビルドされたバンドル」を弁別できない。
+--   複数リリースが出る。実測（窓 20260713-20260728・quiz-% の level_start /
+--   level_end に現れた release の異なる値は 45＝うち 1 つは NULL なので 44
+--   リリース。ビルド日が 20260724 のものだけで 6 リリース）。日付粒度では
+--   「出荷コミットより前に同日ビルドされたバンドル」を弁別できない。
 --   question_answered の実在で定めれば、その弁別が自動で効く（自己校正）。
 --
 --   残る偏り（正直に記録する）: 計装済みだが窓内で question_answered が
@@ -128,9 +129,11 @@
 --   吸収される。これは仮定ではなく実測上の必要事項——実測(窓 20260713-20260728)で
 --   quiz-character-personality の 221 完走 run のうち **3 run (1.4%) が level_end を
 --   2 回**送っており（間隔 0〜175,412 マイクロ秒・1 run は同一イベントバンドル）、
---   回答ハンドラの二重発火は本番で現に起きていた。**この機序は B-620 で是正済み
---   （QuestionCard.tsx の answerSubmittedRef・cycle-301 §E）**。吸収ロジックは
---   残す——出荷後に二重発火が観測されたら「B-620 の修正が不完全」の証拠になる。
+--   回答ハンドラの二重発火は本番で現に起きていた。**この機序は B-620 で是正中——
+--   第1段（QuestionCard.tsx の answerSubmittedRef）は実装済みだが、レビュー2巡目で
+--   不完全と判定され第2段(E3b: 親 QuizContainer の冪等化ほか)が未完である
+--   （cycle-301 §E / review-log.md 2巡目・2026-07-30 22:00 時点）**。吸収ロジックは
+--   残す——観測された二重発火は「まだ塞がっていない経路」の指標になる。
 --
 --   「at_risk」を「saw（設問を見た）」と呼ばない理由: knowledge クイズ(3本)は
 --   回答後に解説を挟み「次へ」を押して初めて次設問が現れる（QuestionCard の
@@ -315,8 +318,10 @@ ORDER BY content_id, question_number;
 --                                 run では件数の方が多くなる。B-620（二重発火の
 --                                 是正・cycle-301 §E）**出荷前**の実測では
 --                                 quiz-character-personality が 224 件 vs 221 run
---                                 だった。**B-620 出荷後は一致するはず**で、
---                                 一致しなければ修正が不完全である。
+--                                 だった。**B-620 の第2段(E3b)完了後は一致するはず**。
+--                                 第1段だけの時点では別 task の2回タップが残るため
+--                                 一致しないことがある（どちらの時点の窓を読んでいるか
+--                                 を E3b の出荷日で確認する）。
 --   runs_completed              : answered_max = q_total の run 数（= 最終問まで答えた）
 --   runs_no_answer_observed     : question_answered が 1 件も無い run 数（全 run）。
 --                                 出荷境界では**旧バンドル由来**が主因になる。
@@ -328,7 +333,7 @@ ORDER BY content_id, question_number;
 --                                 旧バンドル由来か発火漏れかを **release で弁別**する。
 --   avg_last_answered           : 最後に答えた設問番号の平均
 --   duplicate_answer_rows       : 同一 run・同一 question_number の重複行数（二重発火）。
---                                 B-620 出荷後は 0 であるべき。
+--                                 B-620 の第2段(E3b)完了後は 0 であるべき。
 --   runs_with_gap               : answered_distinct <> answered_max の run 数（番号の飛び）
 --
 -- 整合チェック: personality(12本)は最終問の question_answered と level_end が
@@ -557,14 +562,15 @@ ORDER BY c.answer_rows DESC;
 -- 注: duplicate_pairs > 0 と rows_in_orphan_run > 0 は FAIL にしない。どちらも
 --     本番で実在する雑音であり（orphan run は実測 1 件）、SECTION 1 の
 --     MAX / COUNT(DISTINCT) で吸収済み。率が跳ねたときに気づくための観測列。
---     ただし duplicate_pairs は B-620（二重発火の是正・答えの欠落を伴う欠陥）
---     出荷後は 0 が期待値なので、0 でなければ修正の不完全を疑う。
+--     ただし duplicate_pairs は B-620（二重発火の是正・答えの欠落を伴う欠陥）の
+--     第2段(E3b)完了後は 0 が期待値なので、0 でなければ修正の不完全を疑う。
 --     runs_with_gap（SECTION 2）が 0 でない場合も同様——回答が 1 問飛ばされた
 --     ことを意味し、来訪者に返る診断結果からも 1 問分の回答が落ちている疑いがある。
---     **B-620 の修正（QuestionCard.tsx の answerSubmittedRef）以後に非 0 が出るなら、
---     帰属先は「ガードが無いこと」ではなく「修正が不完全」または別経路**——
---     cycle-301 index.md §E が記録した残存リスク（再マウント後に届いた 2 回目の
---     タップが次設問の選択肢を押す）が候補になる。
+--     **B-620 の第1段（QuestionCard.tsx の answerSubmittedRef）以後に非 0 が出るなら、
+--     帰属先は「ガードが無いこと」ではなく「まだ塞がっていない経路」である**——
+--     実ブラウザ検証で確認された経路は (a) 別 task で届く 2 回目の実タップ
+--     （0〜500ms のすべての間隔で設問が飛ぶ）と (b) knowledge の「次へ」(onNext) の
+--     無ガード。どちらも第2段(E3b)の対象。cycle-301 review-log.md 2巡目を参照。
 
 
 -- ============================================================================
