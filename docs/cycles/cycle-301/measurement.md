@@ -57,7 +57,7 @@ Q1・Q6・Q11 の3箇所で上部要素のレイアウトと選択肢の可視�
 
 上3要素の合計占有高（内部余白を含む）: `bottom(285.5) − top(73)` = **212.5px**。
 
-**実装の意図との食い違い**: `QuizPlayPageLayout.tsx:115` のコメントは「コンパクトな h1 + 短説明（**ファーストビューを占有しない**）」と書いている。しかし 375px 幅では `.shortDescription`（`font-size: 0.9rem`・`line-height: 1.7`）が4行に折り返して 146.9px になり、意図と実体が食い違っている。CSS には幅に応じた出し分けがない（`.header` は `display:flex; flex-direction:column; gap:0.25rem` のみ）。
+**実装の意図との食い違い**: `QuizPlayPageLayout.tsx:115` のコメントは「コンパクトな h1 + 短説明（**ファーストビューを占有しない**）」と書いている。しかし 375px 幅では `.shortDescription`（`font-size: 0.9rem`・`line-height: 1.7`）が**6行**に折り返して 146.9px になり、意図と実体が食い違っている（行数の内訳: 行高 `14.4px × 1.7 = 24.48px`・`146.9 ÷ 24.48 = 6.0`。**当初この記述を「4行」としたのは、px 実測から行数を計算せずに書いた推測だった**——px 値は実測で正しいが、行数は誤り。設計段階で是正した）。CSS には幅に応じた出し分けがない（`.header` は `display:flex; flex-direction:column; gap:0.25rem` のみ）。
 
 ## スクリーンショット
 

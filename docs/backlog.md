@@ -2,6 +2,7 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-620 | 診断の二重発火で設問が1問飛び結果が変わる欠陥 | P0 | 301 | cycle-301発覚。personality12本はガード無効で二重タップでindexが2進み回答1件欠落→結果が変わる。本番で実在。詳細cycle-301/index.md §E |
 | B-613 | 診断の設問単位の計装(離脱局在を読む) | P1 | 301 | level_start/endのみで「何問目で落ちたか」が読めない。**08-10前に入れないと局在確認不可**=期日制約。詳細cycle-300/observation §3・§7 |
 | B-614 | 診断の回答フェーズの摩擦低減 | P1 | 301 | 完走率85.3→72.0%=設問途中の離脱。**375x550で4択のうち完全可視が1つだけ**(上部占有212.5px)。3案以上を比較(AP-P17)。実測詳細cycle-301/measurement.md |
 
@@ -10,6 +11,7 @@
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
 | B-576 | favicon/apple-touch-icon を店構えへ | P1 | - | cycle-299失敗・旧ブランドへrevert(成果物なし)。歪んだレビューで16px不可読を出荷し不正・隠蔽を重ねた。次はfavicon単体でなくfavicon/apple/OGPを印から一系で再設計。詳細cycle-299/incident-1・2 |
+| B-619 | 参照切れドキュメントパスの是正 | P3 | - | cycle-301発覚。生きている参照8ファイル(コード5+docs/sql 1+research 2)が移動済の`docs/visitor-value-measurement.md`を指す。`docs/experiments.md`は不在。横断点検も要る。詳細cycle-301キャリーオーバー |
 | B-617 | SC平均順位の算式誤り(+1欠落)の下流トリアージ | P3 | - | cycle-300で算式を是正(repo全体4箇所)。過去docs(research2件+cycle doc群)の順位値が1小さいまま。戦略結論は不変だが誤記のため注記か補正。詳細cycle-300/observation §1 |
 | B-603 | character-personality 24タイプ一覧の処遇(T3・再判定) | P1 | - | **未決へ差し戻し**。cycle-298は測定面を誤り判定撤回(cycle-284の実測が正しかった)。主たる面で基準を立て直し再判定。詳細cycle-298/decision.md |
 | B-607 | character-personality F3申し送り(逆順主軸の和らげ・設問磨き) | P1 | - | cycle-295 F3=逆順フォールバック12順序対でcount二位気質が「主軸」提示される件の本文和らげ+設問文の裁量的ブラッシュアップ。旧B-603から分離(cycle-298)。詳細cycle-295/296 |
