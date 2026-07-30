@@ -42,7 +42,7 @@ SELECT
   SUM(clicks) AS clicks,
   SUM(impressions) AS impressions,
   ROUND(SAFE_DIVIDE(SUM(clicks), SUM(impressions)) * 100, 1) AS ctr,
-  ROUND(SAFE_DIVIDE(SUM(sum_position), SUM(impressions)), 1) AS avg_position
+  ROUND(SAFE_DIVIDE(SUM(sum_position), SUM(impressions)) + 1, 1) AS avg_position
 FROM \`searchconsole.searchdata_url_impression\`
 WHERE data_date BETWEEN '${FROM}' AND '${TO}'
   AND NOT is_anonymized_query
