@@ -29,7 +29,7 @@
 | B-566 | ツールの処遇判断(最高価値に磨いてから改善orプルーニング) | P2 | - | フェーズR完了で解禁の専用取組。SC表示数による一律削除は撤回済(cycle-279・rule4)。詳細 cycle-279.md・rebuild-plan §2 R-1 |
 | B-569 | 全診断のmeta/FAQのタイプ名例示が自診断に実在するか横断監査 | P3 | - | cycle-280でcharacter-personalityに別診断のタイプ名混入を発見・是正。検索結果の説明文の実害。他診断の同種混入を点検。詳細 cycle-280.md |
 | B-494 | Dynamic Workflows 運用知見の knowledge 恒久化 | P2 | 279 | **フェーズR(workflow一斉切替)の前提整備として昇格**。6点の知見をknowledge化。詳細 cycle-225.md |
-| B-540 | アンチパターン集の規約準拠クリーンアップ+再発防止 | P1 | - | cycle-257起票以来未着手で違反と自己是正が反復(299分が未是正で残存)。(a)現存違反箇所の棚卸しと是正(b)enforcement設計。着手順はkickoffで来訪者価値と比較。詳細cycle-300/incident-2 |
+| B-540 | アンチパターン集の規約準拠クリーンアップ+再発防止 | P1 | - | cycle-257起票以来未着手で違反と自己是正が反復。(a)現存違反箇所の是正(b)enforcement設計(c)B-390との統合/廃止判断。着手順はkickoffで来訪者価値と比較。詳細cycle-300/incident-2 |
 | B-466 | tmp/ 配下 .ts の typecheck/build 破壊の根本解消 | P3 | - | tsconfig.json exclude "tmp" 追加。詳細 cycle-216.md |
 | B-390 | AP 集全項目のガイド混入監査 | P3 | - | 残り implementation.md と writing.md。詳細 cycle-248.md |
 | B-398 | grep ベーステストの必要性再評価 | P3 | - | 訪問者価値の観点で再評価。詳細 cycle-189.md |
