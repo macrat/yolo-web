@@ -62,7 +62,7 @@
 
 | ID | Title | Priority | Notes |
 | --- | --- | --- | --- |
-| B-568 | 面横断 content_id 接頭辞規約の全面統一 | P4 | 着手: ADR002観測窓終了後(既存item_id集計との断絶を伴う移行のため)。cycle-280でquiz面はcontentIdForQuizに統一済・ゲーム(素slug)/運勢(fortune-daily)は当面surface未指定・level不在で主指標非汚染。詳細 cycle-280.md |
+| B-568 | 面横断 content_id 接頭辞規約の全面統一 | P4 | 着手: ADR001の観測窓終了後(item_id集計の断絶を伴う移行のため。旧条件のADR002はexpiredで窓が無く着手不能だった)。詳細 cycle-280.md |
 | B-590 | eslint 10 / TypeScript 7 の採用 | P4 | 着手: config-next配下のplugin基盤(typescript-eslint8等)がeslint10/TS7対応次第。cycle-286で試行=lintクラッシュ実証。詳細cycle-286/ |
 | B-592 | overrides(postcss/react-hooks)の解消 | P4 | 着手: postcssは親(next/sanitize-html)がpatched版を引いた時・react-hooksは7.1.1採用判断時にoverride除去(upstreamドリフト回避)。詳細cycle-286/remediation.md |
 | B-616 | AdSense再申請の実施(Owner依存) | P3 | 着手: Ownerが実施(PMは外部アカウント操作の手段が無く恒久的に実施・観測不能)。ADR001の事前登録項目。詳細cycle-300/observation §5 |
