@@ -13,9 +13,8 @@
 | B-606 | 全10 personality診断の結果先行の点検・再設計(Rule4) | P1 | - | **cycle-297で開いたやりかけ(wakakusa暫定含む)の根治**。本筋はcycle-295 G1〜G5の結果先行再設計。1診断ずつ・優先=強い本人性群。B-603との前後関係は着手時に再判断。詳細=cycle-297/triage.md+incident-2 |
 | B-573 | UI/UX/アクセシビリティの全面適用(残: 全面展開) | P1 | - | cycle-287で監査+代表原型の是正スライス完了(F1-F5)。残=全81ページ/36ツールへの全面展開。系統的な個別項目はB-593/595/596/599等に分割起票済。詳細cycle-287/ |
 | B-609 | レビュー体制の構造的欠陥(基準違反の検出漏れ)の是正 | P2 | - | cycle-298判明+cycle-300。残=(a)基準違反がMinor判定(b)candidates非読込(c)pre-commit検出漏れ(d)観点が計器選択の妥当性(AP-P31等)を問わない。詳細cycle-298/incident-3・cycle-300/incident-1 |
-| B-610 | ADR001+rebuild-plan§1(a)の「オーナー裁定」ラベル是正(AP-P34) | P2 | - | cycle-298発覚+cycle-300で原発言検証済(A/Bは奨励・範囲PM委譲)。帰属をPM導出へ是正。詳細cycle-300/incident-1 |
+| B-610 | ADR001+rebuild-plan§1(a)の「オーナー裁定」ラベル是正(AP-P34) | P2 | - | cycle-298発覚+cycle-300で原発言を逐語検証済(全面A/B棄却はPM導出・A/Bは却下されていない)。帰属を是正。詳細cycle-300/incident-1 |
 | B-611 | brand-icons生成器のhex乖離ガード不在 | P4 | - | cycle-299発覚。生成器色定数がutsuwaHex.tsを文字列再宣言(node-standalone維持の受容トレードオフ)。乖離ガード無くSSoT変更時サイレント乖離しうる。実害は再生成時のみ。詳細cycle-299 |
-| B-612 | 診断完走率低下をA/Bで切り分け | P2 | - | cycle-300でcharacter-personality完走率85.3→72.0%低下(開始→完走の下流に局在)を検出。前後比較では効果分離不可(AP-P31)。旧vs新の結果/回答面の同時期A/Bで設計。着手=ADR001+4週(08-10)に事前登録。詳細cycle-300/incident-1 |
 | B-594 | /play/daily の見出し構造是正(h1不在) | P3 | - | cycle-287 C2(F5姉妹)。監査ページはF5でh2化済。ResultPageShellは既にh1あり是正不要。残=dailyがh1不在(タイトルがTsutsumi<p>のみ)=h1相当が必要。実DOM確認のうえ是正。詳細cycle-287/findings.md |
 | B-597 | テーマトグルのタップ標的高さ(28px)のDESIGN準拠 | P4 | - | cycle-287監査C5。switch高さ28px=DESIGN§10の44px未満(WCAG2.5.8 24pxは充足)。当たり判定拡大の要否をDESIGN基準で判断。詳細cycle-287/findings.md |
 | B-599 | 辞典/共有まわりのa11y軽微群 | P4 | - | cycle-287監査C8。同部首117リンクがdiv(list構造喪失)/辞典ヒーロー大字がaria-hidden無で二重読み/共有ボタンの外部予告が面で不整合。詳細cycle-287/findings.md |
@@ -30,7 +29,7 @@
 | B-566 | ツールの処遇判断(最高価値に磨いてから改善orプルーニング) | P2 | - | フェーズR完了で解禁の専用取組。SC表示数による一律削除は撤回済(cycle-279・rule4)。詳細 cycle-279.md・rebuild-plan §2 R-1 |
 | B-569 | 全診断のmeta/FAQのタイプ名例示が自診断に実在するか横断監査 | P3 | - | cycle-280でcharacter-personalityに別診断のタイプ名混入を発見・是正。検索結果の説明文の実害。他診断の同種混入を点検。詳細 cycle-280.md |
 | B-494 | Dynamic Workflows 運用知見の knowledge 恒久化 | P2 | 279 | **フェーズR(workflow一斉切替)の前提整備として昇格**。6点の知見をknowledge化。詳細 cycle-225.md |
-| B-540 | アンチパターン集の規約準拠クリーンアップ+再発防止 | P1 | - | cycle-257起票以来放置し再発継続・4回の是正でも止まらず=enforcement要。(a)全体を番号のみ/一般化へ是正(b)enforcement設計(構造化検査/警告/レビュー観点。括弧=番号のみhard blockは過不足で不可)。全数調査cycle-300/incident-2 |
+| B-540 | アンチパターン集の規約準拠クリーンアップ+再発防止 | P1 | - | cycle-257起票以来未着手で違反と自己是正が反復(299分が未是正で残存)。(a)現存違反箇所の棚卸しと是正(b)enforcement設計。着手順はkickoffで来訪者価値と比較。詳細cycle-300/incident-2 |
 | B-466 | tmp/ 配下 .ts の typecheck/build 破壊の根本解消 | P3 | - | tsconfig.json exclude "tmp" 追加。詳細 cycle-216.md |
 | B-390 | AP 集全項目のガイド混入監査 | P3 | - | 残り implementation.md と writing.md。詳細 cycle-248.md |
 | B-398 | grep ベーステストの必要性再評価 | P3 | - | 訪問者価値の観点で再評価。詳細 cycle-189.md |
@@ -62,7 +61,8 @@
 | B-568 | 面横断 content_id 接頭辞規約の全面統一 | P4 | 着手: ADR002観測窓終了後(既存item_id集計との断絶を伴う移行のため)。cycle-280でquiz面はcontentIdForQuizに統一済・ゲーム(素slug)/運勢(fortune-daily)は当面surface未指定・level不在で主指標非汚染。詳細 cycle-280.md |
 | B-590 | eslint 10 / TypeScript 7 の採用 | P4 | 着手: config-next配下のplugin基盤(typescript-eslint8等)がeslint10/TS7対応次第。cycle-286で試行=lintクラッシュ実証。詳細cycle-286/ |
 | B-592 | overrides(postcss/react-hooks)の解消 | P4 | 着手: postcssは親(next/sanitize-html)がpatched版を引いた時・react-hooksは7.1.1採用判断時にoverride除去(upstreamドリフト回避)。詳細cycle-286/remediation.md |
-| B-565 | 全面切替の観測(ADR001・継続) | P2 | 着手: 出荷+4週(2026-08-10・トリップワイヤ発火判定＋完走率再読)・結論は+3ヶ月窓。cycle-300で+2週読み始め完了(トリップワイヤ健全・完走率低下は要監視)。正典=ADR001(次回確認日で自動surface)。詳細cycle-300 |
+| B-565 | 全面切替の観測(ADR001・継続) | P2 | 着手: 出荷+4週(2026-08-10・トリップワイヤ発火判定＋完走率の実機点検と方向再読)・結論は+3ヶ月窓。cycle-300で+2週読み始め完了。正典=ADR001。詳細cycle-300 |
+| B-612 | 診断完走率低下を同時期対照で切り分け | P2 | 着手: ADR001+4週(2026-08-10)の実機点検の結果を見てから設計。前後比較では効果分離不可(AP-P31)。比較対象(セグメント分解/摩擦低減版/旧復元)は設計で決める。詳細cycle-300/incident-1 |
 | B-056 | i18n(多言語対応) | P4 | 着手: 将来オプション(site-concept 宿題処理=現段階不採用)。cycle-167でOwnerが無期限延期を解除 |
 | B-135 | iOS Safari スクロールロックのフォールバック | P4 | 着手: 実害確認時 |
 | B-219 | AI 画像生成 MCP サーバーの実装 | P2 | 着手: 必要性確認時。詳細 imagen4-proposal.md(archive) |
