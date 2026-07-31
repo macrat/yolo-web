@@ -189,7 +189,7 @@ B-613 を先に出荷して 08-10 までの約10日で「改善前の離脱局�
 - [ ] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
 - [ ] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
 - [ ] すべての変更がレビューされ、残存する指摘事項が無くなっている。
-- [ ] `npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する。
+- [ ] `npm run typecheck && npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する（**5ゲート**）。※本サイクルはこの列挙から typecheck が抜けていたために実際に typecheck 赤を見逃した（§E3）。`docs/cycles/TEMPLATE.md` は是正済みだが、**その誤りを記録している当のファイルの操作用チェックリストだけが直っていなかった**（**12巡目 Minor 3**）。
 - [ ] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
 - [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
 - [ ] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
