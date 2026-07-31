@@ -7,10 +7,10 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-626 | retryの2打目が窓の外に落ちてXの投稿画面へ飛ぶ | P0 | - | cycle-301の視覚確認で本番再現。600ms窓がintro領域限定のため外側のシェア/FAQが無防備。詳細cycle-301/observation-impact.md §2 |
 | B-613 | 診断の設問単位の計装(離脱局在を読む) | P1 | - | cycle-301で設計のみ完了・未実装。08-10の期日超過が確定。**B-614との出荷順序は指定なし**(ADR001経過記録(a)で撤回)。詳細cycle-301/index.md C・D1 |
 | B-614 | 診断の回答フェーズの摩擦低減 | P1 | - | cycle-301で6案比較のみ・未実装。**必須の申し送り=`:active`を「受理された選択の見た目」へ**(600ms無言棄却の唯一の緩和策)。design.mdは実コードに突き合わせ直すこと。詳細cycle-301/index.md B・E3c |
 | B-625 | 二重タップ記事の完成と公開判断 | P3 | - | cycle-301で執筆・2巡レビュー後draftのまま送り。2つの発火モードを束ねた骨格の立て直しが要る。公開時はpublished_atを取り直す。詳細cycle-301/index.md D4 |
-| B-626 | retryの2打目が窓の外に落ちてXの投稿画面へ飛ぶ | P0 | - | cycle-301の視覚確認で本番再現。600ms窓がintro領域限定のため外側のシェア/FAQが無防備。詳細cycle-301/observation-impact.md §2 |
 | B-627 | B-620の視覚回帰確認の残り(13本・他ブラウザ・実タッチ) | P2 | - | cycle-301でcharacter-personality/kanji-levelの2本のみ実施(退行なし)。残13本・Safari/Firefox・forced-colors・実タッチ環境・SR読み上げが未確認。詳細cycle-301/review-log.md 視覚確認 |
 | B-624 | 知識クイズで回答するとフォーカスがbodyに落ちる | P2 | - | cycle-301レビュー実測(知識クイズ3/3)。押したボタンがdisabledになるため。SR利用者は解説と「次へ」に先頭からTabし直す必要がある。詳細cycle-301/review-log.md |
 | B-623 | 知識クイズで「次へ」の2打目がFAQのsummaryを叩く | P4 | - | cycle-301実測(yoji-level q4/q7/q8・kotowaza-level q7/q8)。既存欠陥で結果は壊れないが求めていないFAQが開閉。詳細cycle-301/review-log.md |
