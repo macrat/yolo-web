@@ -25,10 +25,6 @@ import type {
   CharacterFortuneDetailedContent,
 } from "@/play/quiz/types";
 import {
-  activationOriginOfClick,
-  type ActivationOrigin,
-} from "@/play/quiz/quizProgress";
-import {
   getCompatibility,
   isValidAnimalTypeId,
 } from "@/play/quiz/data/animal-personality";
@@ -93,23 +89,7 @@ type ResultCardProps = {
   score?: number;
   /** knowledge type: total number of questions */
   totalQuestions?: number;
-  /**
-   * 「もう一度挑戦する」。**click の発生源**（origin）を渡す。
-   *
-   * この操作は result→intro の画面の入れ替わりを起こし、ページが一気に短くなる。
-   * かつては2打目が QuizContainer の外（共通フッタのナビ等）に落ちて離脱していた。
-   * 根本是正は親が intro へスクロールとフォーカスを移すこと（リビール）で、
-   * ページ全体を不活性にしていた窓はそれによって不要になり撤去済みである。
-   * ただしリビール後も2打目は fold 内の intro（関連リンク）に着弾しうるため、
-   * **intro 領域に限った**ポインタ入力の窓が掛かる
-   * （`settleScopeAfterScreenSwap` は intro に対して `"intro-region"` を返す）。
-   *
-   * origin を渡すのは、この入れ替わりが**窓を開けてよいか／遷移の最小間隔ガードを
-   * arm してよいか**を親が判断するためである。どちらも「1つのジェスチャの2打目」
-   * が存在しうるポインタ由来のときだけ（判定は `activationOriginOfClick`。詳細は
-   * `src/play/quiz/quizProgress.ts`）。
-   */
-  onRetry: (origin: ActivationOrigin) => void;
+  onRetry: () => void;
   /** 結果の追加コンテンツ（variant別） */
   detailedContent?: DetailedContent;
   /** 結果ページのセクション見出しカスタマイズ */
@@ -543,11 +523,7 @@ export default function ResultCard({
         contentId={contentIdForQuiz(quizSlug)}
         surface="text"
       />
-      <button
-        type="button"
-        className={styles.retryButton}
-        onClick={(event) => onRetry(activationOriginOfClick(event.detail))}
-      >
+      <button type="button" className={styles.retryButton} onClick={onRetry}>
         もう一度挑戦する
       </button>
     </div>

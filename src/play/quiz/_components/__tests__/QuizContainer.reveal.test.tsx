@@ -12,9 +12,6 @@
 import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, act } from "@testing-library/react";
 import QuizContainer from "../QuizContainer";
-import { installQuizTestClock, type QuizTestClock } from "@/test/quizTestClock";
-import { makeTestQuizMeta } from "@/test/quizFixtures";
-import { clickAsPointer } from "@/test/quizClicks";
 import type {
   QuizDefinition,
   QuizMeta,
@@ -25,16 +22,9 @@ import type {
 // gtag をモックして window.gtag に差し替える。analytics.ts は window.gtag を
 // 直接呼ぶので、ここで spy を仕込むことで送出 payload を検査できる。
 const gtagSpy = vi.fn();
-// QuizContainer は遷移間隔ガード（B-620）を持つため、テストからは
-// 「来訪者が時間をかけて答えた」ことを時計を進めて表現する。
-let clock: QuizTestClock;
 beforeEach(() => {
   gtagSpy.mockClear();
   (window as unknown as { gtag: typeof gtagSpy }).gtag = gtagSpy;
-  clock = installQuizTestClock();
-});
-afterEach(() => {
-  clock.restore();
 });
 
 // Panel / Button は軽量モックでテスト集中対象を絞る
@@ -81,13 +71,13 @@ vi.mock("next/link", () => ({
 
 /** 最小 personality quiz（type === "personality"）を組み立てる */
 function makePersonalityQuiz(): QuizDefinition {
-  const meta: QuizMeta = makeTestQuizMeta({
+  const meta: QuizMeta = {
     slug: "character-personality",
     title: "似たキャラ診断",
     type: "personality",
-    category: "personality",
+    description: "テスト",
     questionCount: 1,
-  });
+  } as QuizMeta;
   const questions: QuizQuestion[] = [
     {
       id: "q1",
@@ -107,13 +97,13 @@ function makePersonalityQuiz(): QuizDefinition {
 
 /** 最小 knowledge quiz（type === "knowledge"）を組み立てる */
 function makeKnowledgeQuiz(): QuizDefinition {
-  const meta: QuizMeta = makeTestQuizMeta({
+  const meta: QuizMeta = {
     slug: "yoji-level",
     title: "四字熟語レベル",
     type: "knowledge",
-    category: "knowledge",
+    description: "テスト",
     questionCount: 1,
-  });
+  } as QuizMeta;
   const questions: QuizQuestion[] = [
     {
       id: "q1",
@@ -136,7 +126,7 @@ async function playToLevelEnd(quiz: QuizDefinition) {
   // "はじめる" を押して playing へ
   const startBtn = screen.getByRole("button", { name: "はじめる" });
   await act(async () => {
-    clickAsPointer(startBtn);
+    startBtn.click();
   });
   // playing phase: 設問1の選択肢ボタンを押す。
   // QuestionCard は選択肢を shuffle するので、テキスト名ではなく問題テキストを
@@ -146,18 +136,15 @@ async function playToLevelEnd(quiz: QuizDefinition) {
     .getAllByRole("button")
     .filter((b) => /^選択|^正解|^不正解$/.test(b.textContent ?? ""));
   expect(choiceButtons.length).toBeGreaterThan(0);
-  // 遷移間隔ガード（B-620）を通るよう、来訪者が考える時間ぶん時計を進めてから押す。
-  clock.advancePastTransitionGuard();
   await act(async () => {
-    clickAsPointer(choiceButtons[0]);
+    choiceButtons[0].click();
   });
   // knowledge は手動 next 必要
   if (quiz.meta.type === "knowledge") {
     const nextBtn = screen.queryByRole("button", { name: /次へ|結果/ });
     if (nextBtn) {
-      clock.advancePastTransitionGuard();
       await act(async () => {
-        clickAsPointer(nextBtn);
+        nextBtn.click();
       });
     }
   }

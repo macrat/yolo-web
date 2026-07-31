@@ -12,12 +12,9 @@
  * 本ファイルは document.activeElement を観察するため focus はスパイ化しない。
  */
 
-import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, test, expect, vi, beforeEach } from "vitest";
 import { render, screen, act } from "@testing-library/react";
 import QuizContainer from "../QuizContainer";
-import { installQuizTestClock, type QuizTestClock } from "@/test/quizTestClock";
-import { makeTestQuizMeta } from "@/test/quizFixtures";
-import { clickAsPointer } from "@/test/quizClicks";
 import type {
   QuizDefinition,
   QuizMeta,
@@ -27,16 +24,9 @@ import type {
 
 // analytics.ts は window.gtag を直接呼ぶのでスタブを差し込む。
 const gtagSpy = vi.fn();
-// QuizContainer は遷移間隔ガード（B-620）を持つため、テストからは
-// 「来訪者が時間をかけて答えた」ことを時計を進めて表現する。
-let clock: QuizTestClock;
 beforeEach(() => {
   gtagSpy.mockClear();
   (window as unknown as { gtag: typeof gtagSpy }).gtag = gtagSpy;
-  clock = installQuizTestClock();
-});
-afterEach(() => {
-  clock.restore();
 });
 
 // 結果系は重量級なので軽量モック（本テストは playing phase を観察するのが目的）。
@@ -61,13 +51,13 @@ vi.mock("next/link", () => ({
 
 /** 2 問の personality quiz（設問送りを観察できる最小構成）。 */
 function makeTwoQuestionPersonalityQuiz(): QuizDefinition {
-  const meta: QuizMeta = makeTestQuizMeta({
+  const meta: QuizMeta = {
     slug: "character-personality",
     title: "似たキャラ診断",
     type: "personality",
-    category: "personality",
+    description: "テスト",
     questionCount: 2,
-  });
+  } as QuizMeta;
   const questions: QuizQuestion[] = [
     {
       id: "q1",
@@ -98,20 +88,18 @@ async function startQuiz(quiz: QuizDefinition) {
   render(<QuizContainer quiz={quiz} />);
   const startBtn = screen.getByRole("button", { name: "はじめる" });
   await act(async () => {
-    clickAsPointer(startBtn);
+    startBtn.click();
   });
 }
 
 /** 現在表示中の設問（h2）以外の choice ボタンから最初の1つを押す。 */
 async function clickFirstChoice() {
-  // 直前の遷移から十分な時間が経ってから答える（＝通常の来訪者の操作）。
-  clock.advancePastTransitionGuard();
   const choiceButtons = screen
     .getAllByRole("button")
     .filter((b) => /^選択/.test(b.textContent ?? ""));
   expect(choiceButtons.length).toBeGreaterThan(0);
   await act(async () => {
-    clickAsPointer(choiceButtons[0]);
+    choiceButtons[0].click();
   });
 }
 

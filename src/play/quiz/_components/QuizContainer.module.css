@@ -13,39 +13,6 @@
 
 /* === intro フェーズ === */
 
-/* B-620：retry（「もう一度挑戦する」）で intro へ戻ったときのリビール受け皿。
- * 結果リビールの .resultPhase:focus とまったく同じ扱い——tabIndex=-1 の領域へ
- * プログラム的にフォーカスを移すのは、スクリーンリーダに「はじめの画面へ戻った」
- * ことを伝え、フォーカスが <body> へ落ちるのを防ぐためであって、キーボードで
- * タブ到達する操作要素ではない。領域全体を囲む outline は不要なので抑制する
- * （内側の「はじめる」・関連リンクは個別に focus outline を持つ）。 */
-.introPhase:focus {
-  outline: none;
-}
-
-/* B-620：retry リビール直後（600ms）の落ち着くまでの窓。結果側
- * （.resultPhase[data-settling]）とまったく同じ機構・同じ粒度で、**intro 領域だけ**を
- * 対象にする。
- *
- * 塞ぐ欠陥: 「もう一度挑戦する」を二重タップすると、2打目は intro に切り替わった後の
- * 同じ座標に落ちる。リビールが intro を画面先頭へ移すので、そこには関連リンク
- * （.relatedLinks）が必ず fold 内に来る——実測（375×667・本番ビルド・gap 150ms）で
- * retry ボタンが脆弱帯にあると 2打目が関連リンクを叩いて他のクイズへ離脱した。
- * 脆弱帯は**少なくとも y≈145–190**、細かい25点掃引のハーネスでは **y≈145–215** まで
- * 観測されている（上端はハーネスによって割れているので、どちらか一方を正としない）。
- * 根拠と経緯・再測すべき範囲は quizProgress.ts の settleScopeAfterScreenSwap 経路4。
- *
- * **範囲はこの領域の内側だけ**。ヘッダ・パンくず・FAQ・シェア・共通フッタは
- * QuizContainer の外（QuizPlayPageLayout の兄弟）なので窓に入らない。かつて body 全体に
- * 掛けていた機構は撤去済みで、復活させない。
- * - 見た目は一切変えない。キーボード（Tab / Enter）は pointer-events の影響を受けない
- *   ので窓の中でも通る。ページのスクロールも妨げない。
- * - 窓は JS 側（settleScope === "intro-region"）が data 属性で立て、タイマーで畳む。
- * - 非ポインタ起因の retry では開かない（quizProgress.ts の「3つの軸」の軸3）。 */
-.introPhase[data-settling="true"] {
-  pointer-events: none;
-}
-
 .intro {
   display: flex;
   flex-direction: column;
@@ -127,25 +94,4 @@
  * ので抑制する（内側の各操作要素は個別に focus outline を持つ）。 */
 .resultPhase:focus {
   outline: none;
-}
-
-/* B-620：結果リビール直後（600ms）の落ち着くまでの窓。
- * 最終設問の「次へ」を二重タップすると、2打目は結果画面に切り替わった後の座標に
- * 落ちる。そこが推薦リンク等の操作要素だと、来訪者は自分の結果を一度も見ないまま
- * 離脱する（実観測は1本ぶん。15本悉皆ではタップ座標への着弾 0/15 で、窓は
- * 「ビューポート内に操作要素がある本が 3/15 ある」ことに対する保険＝根拠と残る
- * 不確実性は quizProgress.ts の settleScopeAfterScreenSwap 経路3）。
- * その窓のあいだだけポインタ入力を通さない。
- * - 見た目は一切変えない（DESIGN.md に無い状態表現を足さない）。押した見た目だけ
- *   出て何も起きない、という最悪の見え方を避けるため click を握り潰す形にしない。
- * - キーボード操作（Tab / Enter）は pointer-events の影響を受けないので窓の中でも
- *   通常どおり動く。ページのスクロールも妨げない（スクロールは領域ではなく
- *   ビューポート側の処理）。
- * - 窓は JS 側（settleScope === "result-region"）が data 属性で立て、タイマーで畳む。
- * - result→intro（「もう一度挑戦する」）にも同じ形の窓がある（.introPhase[data-settling]）。
- *   そちらの根本是正はリビール（intro へのスクロールとフォーカス移動）だが、それでも
- *   fold 内に来る関連リンクへの着弾が実測で残ったため、範囲を intro 領域に限った窓を
- *   併せて掛けている。 */
-.resultPhase[data-settling="true"] {
-  pointer-events: none;
 }
