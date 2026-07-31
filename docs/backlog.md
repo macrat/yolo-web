@@ -7,39 +7,34 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-620 | 診断の二重発火で設問が1問飛び結果が変わる欠陥 | P3 | - | cycle-301で実装・出荷したがsrc配下ごとrevert(当初計画外の作業だったため)。初版2026-02-19から存在。詳細cycle-301/index.md §E |
-| B-613 | 診断の設問単位の計装(離脱局在を読む) | P3 | - | cycle-301で設計のみ完了・未実装。08-10の期日超過が確定。**B-614との出荷順序は指定なし**(ADR001経過記録(a)で撤回)。詳細cycle-301/index.md C・D1 |
-| B-614 | 診断の回答フェーズの摩擦低減 | P3 | - | cycle-301で6案比較のみ・未実装。**必須の申し送り=`:active`を「受理された選択の見た目」へ**(600ms無言棄却の唯一の緩和策)。design.mdは実コードに突き合わせ直すこと。詳細cycle-301/index.md B・E3c |
-| B-624 | 知識クイズで回答するとフォーカスがbodyに落ちる | P3 | - | cycle-301レビュー実測(知識クイズ3/3)。押したボタンがdisabledになるため。SR利用者は解説と「次へ」に先頭からTabし直す必要がある。詳細cycle-301/review-log.md |
-| B-623 | 知識クイズで「次へ」の2打目がFAQのsummaryを叩く | P4 | - | cycle-301実測(yoji-level q4/q7/q8・kotowaza-level q7/q8)。既存欠陥で結果は壊れないが求めていないFAQが開閉。詳細cycle-301/review-log.md |
-| B-621 | ゲーム/ツール面の主操作要素がfold下にある件の監査 | P3 | - | cycle-301レビュー実測。kanji-kanaruは375x550で入力欄がfoldの460px下。診断以外の面を1巡監査。詳細cycle-301/review-log.md |
-| B-622 | B-613出荷後の計装健全性検査 | P3 | - | 期日=B-613出荷+2日。設問別の数値は出荷後しか検証できず(SECTION1/3は現状0行)、放置すると08-10に「読めない」と判明する。合格条件はinstrumentation-design.md C7〜C11。詳細cycle-301 |
 | B-576 | favicon/apple-touch-icon を店構えへ | P1 | - | cycle-299失敗・旧ブランドへrevert(成果物なし)。歪んだレビューで16px不可読を出荷し不正・隠蔽を重ねた。次はfavicon単体でなくfavicon/apple/OGPを印から一系で再設計。詳細cycle-299/incident-1・2 |
-| B-619 | 参照切れドキュメントパスの是正 | P3 | - | cycle-301発覚。生きている参照8ファイル(コード5+docs/sql 1+research 2)が移動済の`docs/visitor-value-measurement.md`を指す。`docs/experiments.md`は不在。横断点検も要る。詳細cycle-301キャリーオーバー |
-| B-617 | SC平均順位の算式誤り(+1欠落)の下流トリアージ | P3 | - | cycle-300で算式を是正(repo全体4箇所)。過去docs(research2件+cycle doc群)の順位値が1小さいまま。戦略結論は不変だが誤記のため注記か補正。詳細cycle-300/observation §1 |
 | B-603 | character-personality 24タイプ一覧の処遇(T3・再判定) | P1 | - | **未決へ差し戻し**。cycle-298は測定面を誤り判定撤回(cycle-284の実測が正しかった)。主たる面で基準を立て直し再判定。詳細cycle-298/decision.md |
 | B-607 | character-personality F3申し送り(逆順主軸の和らげ・設問磨き) | P1 | - | cycle-295 F3=逆順フォールバック12順序対でcount二位気質が「主軸」提示される件の本文和らげ+設問文の裁量的ブラッシュアップ。旧B-603から分離(cycle-298)。詳細cycle-295/296 |
 | B-606 | 全10 personality診断の結果先行の点検・再設計(Rule4) | P1 | - | **cycle-297で開いたやりかけ(wakakusa暫定含む)の根治**。本筋はcycle-295 G1〜G5の結果先行再設計。1診断ずつ・優先=強い本人性群。B-603との前後関係は着手時に再判断。詳細=cycle-297/triage.md+incident-2 |
 | B-573 | UI/UX/アクセシビリティの全面適用(残: 全面展開) | P1 | - | cycle-287で監査+代表原型の是正スライス完了(F1-F5)。残=全81ページ/36ツールへの全面展開。系統的な個別項目はB-593/595/596/599等に分割起票済。詳細cycle-287/ |
+| B-562 | フェーズC-a: 新クラスタの立ち上げ | P1 | - | フェーズR(B-561)完了(cycle-279)で解禁。候補の正典=research/2026-07-11-market-research-cycle278.md T4節。着手時に個別裏取り+実験台帳へ事前登録。同時2クラスタ以下。詳細 rebuild-plan.md §3 |
+| B-540 | アンチパターン集の規約準拠クリーンアップ+再発防止 | P1 | - | cycle-257起票以来未着手で違反と自己是正が反復。本体に少なくとも3箇所現存(AP-P04/AP-I13/AP-P31)・機械抽出は網羅不可。(a)現存箇所の是正(b)enforcement設計(c)B-390統合判断。詳細cycle-300/incident-2 |
 | B-618 | pre-commit-checkのAP-WF24検出の穴を塞ぐ | P2 | - | 正規表現が「指示に従/指示により/指摘を受け」しか拾わず「指示で」「指摘で」が素通り(cycle-300で実際に2本通過)。助詞のゆれを含む式へ。コード変更のためbuilder+レビュー。詳細cycle-300 |
 | B-609 | レビュー体制の構造的欠陥(基準違反の検出漏れ)の是正 | P2 | - | cycle-298判明+cycle-300。残=(a)基準違反がMinor判定(b)candidates非読込(c)pre-commit検出漏れ(d)観点が計器選択の妥当性(AP-P31等)を問わない。詳細cycle-298/incident-3・cycle-300/incident-1 |
 | B-610 | ADR001+rebuild-plan§1(a)の「オーナー裁定」ラベル是正(AP-P34) | P2 | - | cycle-298発覚+cycle-300で原発言を逐語検証済(全面A/B棄却はPM導出・A/Bは却下されていない)。帰属を是正(ADR/READMEの『サイト全面のA/Bはしない』も整合対象)。詳細cycle-300/incident-1 |
-| B-611 | brand-icons生成器のhex乖離ガード不在 | P4 | - | cycle-299発覚。生成器色定数がutsuwaHex.tsを文字列再宣言(node-standalone維持の受容トレードオフ)。乖離ガード無くSSoT変更時サイレント乖離しうる。実害は再生成時のみ。詳細cycle-299 |
-| B-594 | /play/daily の見出し構造是正(h1不在) | P3 | - | cycle-287 C2(F5姉妹)。監査ページはF5でh2化済。ResultPageShellは既にh1あり是正不要。残=dailyがh1不在(タイトルがTsutsumi<p>のみ)=h1相当が必要。実DOM確認のうえ是正。詳細cycle-287/findings.md |
-| B-597 | テーマトグルのタップ標的高さ(28px)のDESIGN準拠 | P4 | - | cycle-287監査C5。switch高さ28px=DESIGN§10の44px未満(WCAG2.5.8 24pxは充足)。当たり判定拡大の要否をDESIGN基準で判断。詳細cycle-287/findings.md |
-| B-599 | 辞典/共有まわりのa11y軽微群 | P4 | - | cycle-287監査C8。同部首117リンクがdiv(list構造喪失)/辞典ヒーロー大字がaria-hidden無で二重読み/共有ボタンの外部予告が面で不整合。詳細cycle-287/findings.md |
-| B-575 | 診断結果のシェアが少ない事実の扱い | P3 | - | share≈2件/28d(旧B-550・フェーズR前の古計測)。着手時は来訪者価値で正当化。経緯・扱いはcycle-285.md |
 | B-586 | rebuild-plan.md の処遇(archive移動)と参照元の付け替え | P2 | - | 作り直しはcycle-279完了・中身はbacklog/ADRへ移設済だが参照(ADR001・cycle-kickoff SKILL等)が残る=archive移動と参照付け替えが要る。cycle-284重大事故の舞台。詳細cycle-284.md事故報告 |
-| B-583 | 「店構え」統一と印の要否を来訪者価値から再検討 | P3 | - | 店構え統一・印の要否を来訪者価値から再評価。旧着手条件は消滅済(Queued)。詳細cycle-283.md/cycle-285.md |
-| B-574 | イディオム2一覧のアクセシブル名浄化(stretched-link化) | P4 | - | B-573のa11y掃討の一部。SRが連結を読む冗長さを主リンク名のみへ。cycle-287で辞典検索結果リンクにも同種確認(C6)。詳細cycle-281.md/cycle-287 |
-| B-581 | AP-P33の境界値サンプリング運用化 | P3 | - | cycle-283でPMがAP-P33を再犯(near-white辞典色を実見サンプルから落とし埋没欠陥を見逃す・reviewer捕捉)。「価値の種類で選ぶ」では不足で「失敗軸の両端=境界を必ず含める」を実際の抽出手順に明文化。詳細cycle-283.md自己批判 |
-| B-582 | 伝統色辞典250件のromaji表記統一の点検 | P3 | - | cycle-283で色OGP(看板)にromaji露出。shinsyu(真朱)等ヘボン式/訓令式混在の兆候。既存データ由来だが拡散面へ昇格。250件の表記一貫性を点検。詳細cycle-283.md |
-| B-562 | フェーズC-a: 新クラスタの立ち上げ | P1 | - | フェーズR(B-561)完了(cycle-279)で解禁。候補の正典=research/2026-07-11-market-research-cycle278.md T4節。着手時に個別裏取り+実験台帳へ事前登録。同時2クラスタ以下。詳細 rebuild-plan.md §3 |
 | B-564 | フェーズC-c: 辞典の処遇判断(体験化orプルーニング) | P2 | - | フェーズR完了で解禁。検定エンジン検討(B-562)と同時に判断。B-521で辞書CTR 0.08%=参照型の敗北兆候TW-Aと判明済(ADR001)。詳細 rebuild-plan.md §3 |
 | B-566 | ツールの処遇判断(最高価値に磨いてから改善orプルーニング) | P2 | - | フェーズR完了で解禁の専用取組。SC表示数による一律削除は撤回済(cycle-279・rule4)。詳細 cycle-279.md・rebuild-plan §2 R-1 |
-| B-569 | 全診断のmeta/FAQのタイプ名例示が自診断に実在するか横断監査 | P3 | - | cycle-280でcharacter-personalityに別診断のタイプ名混入を発見・是正。検索結果の説明文の実害。他診断の同種混入を点検。詳細 cycle-280.md |
 | B-494 | Dynamic Workflows 運用知見の knowledge 恒久化 | P2 | 279 | **フェーズR(workflow一斉切替)の前提整備として昇格**。6点の知見をknowledge化。詳細 cycle-225.md |
-| B-540 | アンチパターン集の規約準拠クリーンアップ+再発防止 | P1 | - | cycle-257起票以来未着手で違反と自己是正が反復。本体に少なくとも3箇所現存(AP-P04/AP-I13/AP-P31)・機械抽出は網羅不可。(a)現存箇所の是正(b)enforcement設計(c)B-390統合判断。詳細cycle-300/incident-2 |
+| B-620 | 診断の二重発火で設問が1問飛び結果が変わる欠陥 | P3 | - | cycle-301で実装・出荷したがsrc配下ごとrevert(当初計画外の作業だったため)。初版2026-02-19から存在。詳細cycle-301/index.md §E |
+| B-613 | 診断の設問単位の計装(離脱局在を読む) | P3 | - | cycle-301で設計のみ完了・未実装。08-10の期日超過が確定。**B-614との出荷順序は指定なし**(ADR001経過記録(a)で撤回)。詳細cycle-301/index.md C・D1 |
+| B-614 | 診断の回答フェーズの摩擦低減 | P3 | - | cycle-301で6案比較のみ・未実装。**必須の申し送り=`:active`を「受理された選択の見た目」へ**(600ms無言棄却の唯一の緩和策)。design.mdは実コードに突き合わせ直すこと。詳細cycle-301/index.md B・E3c |
+| B-624 | 知識クイズで回答するとフォーカスがbodyに落ちる | P3 | - | cycle-301レビュー実測(知識クイズ3/3)。押したボタンがdisabledになるため。SR利用者は解説と「次へ」に先頭からTabし直す必要がある。詳細cycle-301/review-log.md |
+| B-621 | ゲーム/ツール面の主操作要素がfold下にある件の監査 | P3 | - | cycle-301レビュー実測。kanji-kanaruは375x550で入力欄がfoldの460px下。診断以外の面を1巡監査。詳細cycle-301/review-log.md |
+| B-622 | B-613出荷後の計装健全性検査 | P3 | - | 期日=B-613出荷+2日。設問別の数値は出荷後しか検証できず(SECTION1/3は現状0行)、放置すると08-10に「読めない」と判明する。合格条件はinstrumentation-design.md C7〜C11。詳細cycle-301 |
+| B-619 | 参照切れドキュメントパスの是正 | P3 | - | cycle-301発覚。生きている参照8ファイル(コード5+docs/sql 1+research 2)が移動済の`docs/visitor-value-measurement.md`を指す。`docs/experiments.md`は不在。横断点検も要る。詳細cycle-301キャリーオーバー |
+| B-617 | SC平均順位の算式誤り(+1欠落)の下流トリアージ | P3 | - | cycle-300で算式を是正(repo全体4箇所)。過去docs(research2件+cycle doc群)の順位値が1小さいまま。戦略結論は不変だが誤記のため注記か補正。詳細cycle-300/observation §1 |
+| B-594 | /play/daily の見出し構造是正(h1不在) | P3 | - | cycle-287 C2(F5姉妹)。監査ページはF5でh2化済。ResultPageShellは既にh1あり是正不要。残=dailyがh1不在(タイトルがTsutsumi<p>のみ)=h1相当が必要。実DOM確認のうえ是正。詳細cycle-287/findings.md |
+| B-575 | 診断結果のシェアが少ない事実の扱い | P3 | - | share≈2件/28d(旧B-550・フェーズR前の古計測)。着手時は来訪者価値で正当化。経緯・扱いはcycle-285.md |
+| B-583 | 「店構え」統一と印の要否を来訪者価値から再検討 | P3 | - | 店構え統一・印の要否を来訪者価値から再評価。旧着手条件は消滅済(Queued)。詳細cycle-283.md/cycle-285.md |
+| B-581 | AP-P33の境界値サンプリング運用化 | P3 | - | cycle-283でPMがAP-P33を再犯(near-white辞典色を実見サンプルから落とし埋没欠陥を見逃す・reviewer捕捉)。「価値の種類で選ぶ」では不足で「失敗軸の両端=境界を必ず含める」を実際の抽出手順に明文化。詳細cycle-283.md自己批判 |
+| B-582 | 伝統色辞典250件のromaji表記統一の点検 | P3 | - | cycle-283で色OGP(看板)にromaji露出。shinsyu(真朱)等ヘボン式/訓令式混在の兆候。既存データ由来だが拡散面へ昇格。250件の表記一貫性を点検。詳細cycle-283.md |
+| B-569 | 全診断のmeta/FAQのタイプ名例示が自診断に実在するか横断監査 | P3 | - | cycle-280でcharacter-personalityに別診断のタイプ名混入を発見・是正。検索結果の説明文の実害。他診断の同種混入を点検。詳細 cycle-280.md |
 | B-466 | tmp/ 配下 .ts の typecheck/build 破壊の根本解消 | P3 | - | tsconfig.json exclude "tmp" 追加。詳細 cycle-216.md |
 | B-390 | AP 集全項目のガイド混入監査 | P3 | - | 残り implementation.md と writing.md。詳細 cycle-248.md |
 | B-398 | grep ベーステストの必要性再評価 | P3 | - | 訪問者価値の観点で再評価。詳細 cycle-189.md |
@@ -49,6 +44,12 @@
 | B-530 | AP-WF11 の運用化(公開前 reader-perspective audit) | P3 | - | 詳細 cycle-255.md |
 | B-531 | Goal-first チェック運用の仕組み化 | P3 | - | 詳細 cycle-255.md |
 | B-364 | cycle-175〜178 連続事故のブログ化再判断 | P3 | - | 着手時PM独立判断。詳細 cycle-178.md |
+| B-567 | 移行時代の `new/` コンポーネントディレクトリ平坦化 | P3 | - | legacy 兄弟が消えた片翼 new/ 3件を平坦化(約24 import)。デザイン/UX 非影響。cycle-279 で非ブロッキング判断。詳細 cycle-279.md |
+| B-623 | 知識クイズで「次へ」の2打目がFAQのsummaryを叩く | P4 | - | cycle-301実測(yoji-level q4/q7/q8・kotowaza-level q7/q8)。既存欠陥で結果は壊れないが求めていないFAQが開閉。詳細cycle-301/review-log.md |
+| B-611 | brand-icons生成器のhex乖離ガード不在 | P4 | - | cycle-299発覚。生成器色定数がutsuwaHex.tsを文字列再宣言(node-standalone維持の受容トレードオフ)。乖離ガード無くSSoT変更時サイレント乖離しうる。実害は再生成時のみ。詳細cycle-299 |
+| B-597 | テーマトグルのタップ標的高さ(28px)のDESIGN準拠 | P4 | - | cycle-287監査C5。switch高さ28px=DESIGN§10の44px未満(WCAG2.5.8 24pxは充足)。当たり判定拡大の要否をDESIGN基準で判断。詳細cycle-287/findings.md |
+| B-599 | 辞典/共有まわりのa11y軽微群 | P4 | - | cycle-287監査C8。同部首117リンクがdiv(list構造喪失)/辞典ヒーロー大字がaria-hidden無で二重読み/共有ボタンの外部予告が面で不整合。詳細cycle-287/findings.md |
+| B-574 | イディオム2一覧のアクセシブル名浄化(stretched-link化) | P4 | - | B-573のa11y掃討の一部。SRが連結を読む冗長さを主リンク名のみへ。cycle-287で辞典検索結果リンクにも同種確認(C6)。詳細cycle-281.md/cycle-287 |
 | B-541 | 現状正しい辞典収録数ハードコードの予防的`.length`化 | P4 | - | 辞典の処遇判断(B-564)と連動。詳細 cycle-258.md |
 | B-549 | middleware→proxy 移行(Next.js16非推奨) | P4 | - | 出荷物に影響なし。詳細 cycle-271 接地 |
 | B-512 | next.config redirects コメント「301」→「308」統一 | P4 | - | 文言のみ是正。詳細 cycle-243.md |
@@ -61,7 +62,6 @@
 | B-158 | 開発体験改善(警告ログノイズ制御) | P4 | - | NEXT_PUBLIC_BASE_URL 未設定時の警告過多 |
 | B-103 | Turbopack Worker安定化後の外部Workerファイル移行 | P4 | - | 安定化後に外部ファイル化 |
 | B-123 | フィーチャーディレクトリ features/ 集約 | P4 | - | src/直下が20超になった時点で検討 |
-| B-567 | 移行時代の `new/` コンポーネントディレクトリ平坦化 | P3 | - | legacy 兄弟が消えた片翼 new/ 3件を平坦化(約24 import)。デザイン/UX 非影響。cycle-279 で非ブロッキング判断。詳細 cycle-279.md |
 | B-450 | tmp パス命名規約 SSoT 化 | P5 | - | 詳細 cycle-210.md |
 
 ## Deferred (すぐに着手できない)
