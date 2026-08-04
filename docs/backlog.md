@@ -2,7 +2,7 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-576 | favicon/apple-touch-icon/看板を「印」から一系で再設計 | P1 | 302 | cycle-302で着手。ADR001(サイト刷新)の未完部分でOwnerが名指しした「やりかけの作業」。cycle-299失敗・旧ブランドへrevert(成果物なし)。詳細cycle-299/incident-1・2 |
+| B-576 | favicon/apple-touch-icon/看板を「印」から一系で再設計 | P1 | 302 | cycle-302で着手。着手根拠=Rule 4 + AP-P27。旧Notesの「Ownerが名指し」は裏取り不能で撤回。詳細cycle-302/ |
 | B-583 | 印の要否と識別子の決定(アイコン系に必要な範囲) | P1 | 302 | cycle-302でB-576と同時実施。cycle-299の失敗根因が「印を未決のままアイコンを設計し旧ブランドのy＋ドットを所与にした」ことなので分離不能。**店構え統一そのものの是非は本サイクルの範囲外**(残余は完了時にQueuedへ戻す) |
 
 ## Queued (すぐに着手できる)
