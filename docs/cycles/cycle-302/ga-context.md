@@ -43,15 +43,24 @@ FROM sess
 生出力:
 
 ```json
-[{"sessions_total":1435,"sessions_returning":128,"sessions_first":1307,"sessions_null_num":0,
-  "pct_returning_sessions":8.92,"users_total":1318,"users_with_returning_session":73}]
+[
+  {
+    "sessions_total": 1435,
+    "sessions_returning": 128,
+    "sessions_first": 1307,
+    "sessions_null_num": 0,
+    "pct_returning_sessions": 8.92,
+    "users_total": 1318,
+    "users_with_returning_session": 73
+  }
+]
 ```
 
-| 指標 | 分子 / 分母 | 比率 |
-| --- | --- | --- |
-| ga_session_number >= 2 のセッション | 128 / 1,435 | **8.92%** |
-| ga_session_number = 1 のセッション | 1,307 / 1,435 | 91.08% |
-| 2回目以降のセッションを持つユーザー | 73 / 1,318 | 5.54% |
+| 指標                                | 分子 / 分母   | 比率      |
+| ----------------------------------- | ------------- | --------- |
+| ga_session_number >= 2 のセッション | 128 / 1,435   | **8.92%** |
+| ga_session_number = 1 のセッション  | 1,307 / 1,435 | 91.08%    |
+| 2回目以降のセッションを持つユーザー | 73 / 1,318    | 5.54%     |
 
 `ga_session_number` が NULL のセッションは 0 件（欠損による過小評価はない）。
 
@@ -85,18 +94,28 @@ FROM u
 生出力:
 
 ```json
-[{"users_total":1318,"users_2plus_days":31,"pct_users_2plus_days":2.35,"users_3plus_days":7,
-  "users_2plus_sessions":67,"pct_users_2plus_sessions":5.08,"users_null_first_touch":4,
-  "users_first_touch_before_period":11,"pct_preexisting_users":0.83}]
+[
+  {
+    "users_total": 1318,
+    "users_2plus_days": 31,
+    "pct_users_2plus_days": 2.35,
+    "users_3plus_days": 7,
+    "users_2plus_sessions": 67,
+    "pct_users_2plus_sessions": 5.08,
+    "users_null_first_touch": 4,
+    "users_first_touch_before_period": 11,
+    "pct_preexisting_users": 0.83
+  }
+]
 ```
 
-| 指標 | 分子 / 分母 | 比率 |
-| --- | --- | --- |
-| **期間内に2日以上訪れたユーザー** | **31 / 1,318** | **2.35%** |
-| 期間内に3日以上訪れたユーザー | 7 / 1,318 | 0.53% |
-| 期間内に2セッション以上のユーザー | 67 / 1,318 | 5.08% |
-| 期間開始前に初回接触があったユーザー（既存訪問者） | 11 / 1,318 | 0.83% |
-| user_first_touch_timestamp が NULL | 4 / 1,318 | 0.30% |
+| 指標                                               | 分子 / 分母    | 比率      |
+| -------------------------------------------------- | -------------- | --------- |
+| **期間内に2日以上訪れたユーザー**                  | **31 / 1,318** | **2.35%** |
+| 期間内に3日以上訪れたユーザー                      | 7 / 1,318      | 0.53%     |
+| 期間内に2セッション以上のユーザー                  | 67 / 1,318     | 5.08%     |
+| 期間開始前に初回接触があったユーザー（既存訪問者） | 11 / 1,318     | 0.83%     |
+| user_first_touch_timestamp が NULL                 | 4 / 1,318      | 0.30%     |
 
 補足: 1-a の「再訪セッション 8.92%」と 1-b の「既存訪問者 0.83%」の差は、
 再訪のほぼ全量が **同一28日期間内での2回目以降**（多くは同日内の複数セッション）であることを示す。
@@ -124,18 +143,18 @@ FROM sess GROUP BY 1 ORDER BY sessions DESC LIMIT 12
 
 生出力（分母 total_sessions = 1435）:
 
-| # | browser | sessions | pct |
-| --- | --- | --- | --- |
-| 1 | Chrome | 781 | 54.43% |
-| 2 | **Safari** | **449** | **31.29%** |
-| 3 | Edge | 123 | 8.57% |
-| 4 | Safari (in-app) | 40 | 2.79% |
-| 5 | Android Webview | 32 | 2.23% |
-| 6 | Firefox | 4 | 0.28% |
-| 7 | Samsung Internet | 3 | 0.21% |
-| 8 | (null) | 1 | 0.07% |
-| 8 | Amazon Silk | 1 | 0.07% |
-| 8 | Opera | 1 | 0.07% |
+| #   | browser          | sessions | pct        |
+| --- | ---------------- | -------- | ---------- |
+| 1   | Chrome           | 781      | 54.43%     |
+| 2   | **Safari**       | **449**  | **31.29%** |
+| 3   | Edge             | 123      | 8.57%      |
+| 4   | Safari (in-app)  | 40       | 2.79%      |
+| 5   | Android Webview  | 32       | 2.23%      |
+| 6   | Firefox          | 4        | 0.28%      |
+| 7   | Samsung Internet | 3        | 0.21%      |
+| 8   | (null)           | 1        | 0.07%      |
+| 8   | Amazon Silk      | 1        | 0.07%      |
+| 8   | Opera            | 1        | 0.07%      |
 
 合計 = 781+449+123+40+32+4+3+1+1+1 = 1,435（全件が上位10件に収まる）。
 
@@ -160,12 +179,12 @@ FROM sess WHERE browser LIKE 'Safari%' GROUP BY 1,2 ORDER BY sessions DESC
 
 生出力:
 
-| browser | os | sessions | pct（/1,435） |
-| --- | --- | --- | --- |
-| Safari | iOS | 400 | 27.87% |
-| Safari | Macintosh | 48 | 3.34% |
-| Safari (in-app) | iOS | 40 | 2.79% |
-| Safari | (null) | 1 | 0.07% |
+| browser         | os        | sessions | pct（/1,435） |
+| --------------- | --------- | -------- | ------------- |
+| Safari          | iOS       | 400      | 27.87%        |
+| Safari          | Macintosh | 48       | 3.34%         |
+| Safari (in-app) | iOS       | 40       | 2.79%         |
+| Safari          | (null)    | 1        | 0.07%         |
 
 ブラウザのタブに favicon を表示する **デスクトップ Safari（Macintosh）は 48 / 1,435 = 3.34%**。
 Safari 全体 31.29% のうち大半（400/449 = 89.1%）は iOS。
@@ -198,26 +217,26 @@ ORDER BY dim, sessions DESC
 
 **device.operating_system**
 
-| # | os | sessions | pct |
-| --- | --- | --- | --- |
-| 1 | **iOS** | **472** | **32.89%** |
-| 2 | Android | 381 | 26.55% |
-| 3 | Linux | 234 | 16.31% |
-| 4 | Windows | 205 | 14.29% |
-| 5 | Macintosh | 89 | 6.20% |
-| 6 | Chrome OS | 52 | 3.62% |
-| 7 | (null) | 2 | 0.14% |
+| #   | os        | sessions | pct        |
+| --- | --------- | -------- | ---------- |
+| 1   | **iOS**   | **472**  | **32.89%** |
+| 2   | Android   | 381      | 26.55%     |
+| 3   | Linux     | 234      | 16.31%     |
+| 4   | Windows   | 205      | 14.29%     |
+| 5   | Macintosh | 89       | 6.20%      |
+| 6   | Chrome OS | 52       | 3.62%      |
+| 7   | (null)    | 2        | 0.14%      |
 
 合計 = 472+381+234+205+89+52+2 = 1,435。
 
 **device.category**
 
-| # | category | sessions | pct |
-| --- | --- | --- | --- |
-| 1 | mobile | 817 | 56.93% |
-| 2 | desktop | 581 | 40.49% |
-| 3 | tablet | 35 | 2.44% |
-| 4 | smart tv | 2 | 0.14% |
+| #   | category | sessions | pct    |
+| --- | -------- | -------- | ------ |
+| 1   | mobile   | 817      | 56.93% |
+| 2   | desktop  | 581      | 40.49% |
+| 3   | tablet   | 35       | 2.44%  |
+| 4   | smart tv | 2        | 0.14%  |
 
 合計 = 817+581+35+2 = 1,435。
 
@@ -253,29 +272,29 @@ ORDER BY dim, sessions DESC
 
 **source / medium（全8件。上位8件を求められたが、実在する組み合わせがちょうど8件）**
 
-| # | source / medium | sessions | pct |
-| --- | --- | --- | --- |
-| 1 | google / organic | 878 | 61.18% |
-| 2 | (not set) / (not set) | 338 | 23.55% |
-| 3 | bing / organic | 113 | 7.87% |
-| 4 | yahoo / organic | 84 | 5.85% |
-| 5 | t.co / referral | 9 | 0.63% |
-| 6 | openai / organic | 9 | 0.63% |
-| 7 | openai / (not set) | 3 | 0.21% |
-| 8 | service.smt.docomo.ne.jp / referral | 1 | 0.07% |
+| #   | source / medium                     | sessions | pct    |
+| --- | ----------------------------------- | -------- | ------ |
+| 1   | google / organic                    | 878      | 61.18% |
+| 2   | (not set) / (not set)               | 338      | 23.55% |
+| 3   | bing / organic                      | 113      | 7.87%  |
+| 4   | yahoo / organic                     | 84       | 5.85%  |
+| 5   | t.co / referral                     | 9        | 0.63%  |
+| 6   | openai / organic                    | 9        | 0.63%  |
+| 7   | openai / (not set)                  | 3        | 0.21%  |
+| 8   | service.smt.docomo.ne.jp / referral | 1        | 0.07%  |
 
 合計 = 878+338+113+84+9+9+3+1 = 1,435。
 `(not set) / (not set)` は GA4 の default_channel_group では Direct として扱われている。
 
 **default_channel_group（GA4 標準チャネルグループ）**
 
-| # | channel_group | sessions | pct |
-| --- | --- | --- | --- |
-| 1 | **Organic Search** | **1,084** | **75.54%** |
-| 2 | **Direct** | **334** | **23.28%** |
-| 3 | **Organic Social** | **9** | **0.63%** |
-| 4 | Unassigned | 7 | 0.49% |
-| 5 | Referral | 1 | 0.07% |
+| #   | channel_group      | sessions  | pct        |
+| --- | ------------------ | --------- | ---------- |
+| 1   | **Organic Search** | **1,084** | **75.54%** |
+| 2   | **Direct**         | **334**   | **23.28%** |
+| 3   | **Organic Social** | **9**     | **0.63%**  |
+| 4   | Unassigned         | 7         | 0.49%      |
+| 5   | Referral           | 1         | 0.07%      |
 
 合計 = 1084+334+9+7+1 = 1,435。
 
@@ -291,19 +310,19 @@ google 878（全体 61.18% / organic 内 81.0%）、bing 113、yahoo 84、openai
 
 ## 数値サマリ（そのまま計画に転記可）
 
-| 問い | 実測値 | 分子/分母 |
-| --- | --- | --- |
-| 再訪セッション比率 | 8.92% | 128 / 1,435 |
-| 2日以上訪れたユーザー比率 | 2.35% | 31 / 1,318 |
-| 28日をまたぐ既存訪問者比率 | 0.83% | 11 / 1,318 |
-| Safari 比率（全体） | 31.29% | 449 / 1,435 |
-| Safari 比率（デスクトップ = Macintosh のみ） | 3.34% | 48 / 1,435 |
-| iOS 比率 | 32.89% | 472 / 1,435 |
-| モバイル比率 | 56.93% | 817 / 1,435 |
-| Organic Search 比率 | 75.54% | 1,084 / 1,435 |
-| うち Google | 61.18% | 878 / 1,435 |
-| Direct 比率 | 23.28% | 334 / 1,435 |
-| Social 比率 | 0.63% | 9 / 1,435 |
+| 問い                                         | 実測値 | 分子/分母     |
+| -------------------------------------------- | ------ | ------------- |
+| 再訪セッション比率                           | 8.92%  | 128 / 1,435   |
+| 2日以上訪れたユーザー比率                    | 2.35%  | 31 / 1,318    |
+| 28日をまたぐ既存訪問者比率                   | 0.83%  | 11 / 1,318    |
+| Safari 比率（全体）                          | 31.29% | 449 / 1,435   |
+| Safari 比率（デスクトップ = Macintosh のみ） | 3.34%  | 48 / 1,435    |
+| iOS 比率                                     | 32.89% | 472 / 1,435   |
+| モバイル比率                                 | 56.93% | 817 / 1,435   |
+| Organic Search 比率                          | 75.54% | 1,084 / 1,435 |
+| うち Google                                  | 61.18% | 878 / 1,435   |
+| Direct 比率                                  | 23.28% | 334 / 1,435   |
+| Social 比率                                  | 0.63%  | 9 / 1,435     |
 
 **小標本の注意**: 再訪関連（31件・73人・128セッション）と Social（9セッション）は特に分子が小さい。
 Social 9件は誤差レベルであり、「OGP の効果を実測で評価できる規模ではない」と扱うべき。
