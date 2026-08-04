@@ -67,11 +67,13 @@
  *   favicon / apple-touch-icon / OGP 画像の png 等のバイナリ画像は宣言テキストを持たず、この
  *   ゲートでは検査できない。店構え（紙地・墨・朱の印）と揃っているかは take-screenshot 等の
  *   視覚レビューで確認する。
- *   TODO(B-576): `public/favicon.ico`・`public/apple-touch-icon.png` は cycle-171 の旧ブランド
- *   （暗地＋白ゴシック「y」＋青ドット）のまま。cycle-299 が店構えへ刷新を試みたが失敗し旧ブランドへ
- *   revert した（16px で読めない/歪んだレビューで出荷・詳細 cycle-299/incident-1・incident-2）。
- *   B-576 は open。次は favicon 単体でなく favicon/apple-touch/OGP を一系として印から holistic に
- *   再設計する（是正後はこの TODO を削除）。
+ *   ただし **cycle-302 以降、アイコンの可否は機械計測できる**——`scripts/icon-metrics.ts` が
+ *   16px 実寸での最小連結可視塊・各地（ライト/ダークのタブ地・純白・中間グレー）に対する
+ *   コントラスト・円マスクでの欠損・**青みの画素数（DESIGN §8-1 の禁止色）**を測り、
+ *   `scripts/__tests__/icon-metrics.test.ts` が較正（cycle-299 が出荷した不合格品を必ず落とす）と
+ *   出荷物の合格を機械的に守っている。
+ *   TODO(B-576): 図像そのものの再設計は未了。cycle-302 の E0 で**禁止色（青）は除去済み**
+ *   （暗地＋白ゴシック「y」＋**朱**ドット）だが、構図は cycle-171 のまま。印から一系での再設計は継続。
  */
 import { describe, test, expect } from "vitest";
 import * as fs from "node:fs";
