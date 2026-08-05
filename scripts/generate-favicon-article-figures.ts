@@ -10,10 +10,18 @@
  * 広い画像は縮小されて届く。図版Aは「等倍（16×16）」と書いた 16px のアイコンを見せる図で、
  * 縮小されると等倍でなくなる。だから本文カラムが最も狭くなる幅（280px ビューポートで 232px、
  * Playwright 実測）に論理幅を抑え、どのビューポートでも 1:1 で届くようにする。
- * 図版Bにこの制約は無い。等倍要件が無いのに 232px に揃えると、デスクトップ（カラム 660〜672px、
- * Playwright 実測）で幅の 3 分の 1 しか使わず、記事の中心的な証拠が小さいまま右に空白が残る。
- * そこで図版Bは論理幅をカラム幅（--measure = 42rem = 672px）に合わせる。縮小される側の
- * ビューポート（390px なら 342/672 ≒ 0.51 倍）でも図中の文字が潰れないよう、文字を大きめに組む。
+ *
+ * 図版Bに等倍の要件は無いが、**縮小率がそのまま図中の文字の縮小率になる**という制約は同じだ。
+ * 論理幅を広く取るほど、モバイルでは強く縮む。カラム幅そのもの（672px）に合わせていたときは、
+ * 360px ビューポートで 312/672 ＝ 0.464 倍まで縮み、図中の最小文字（論理 16）が
+ * **7.4 CSS px** で届いていた（本文 16px・コードブロック 13.6px に対して半分以下）。
+ * 検索露出の 66.66% がモバイルであることを本文自身が測っているのに、
+ * 「実寸では読めない」を主題にした記事の中心的な図版が主戦場で読めない状態だった。
+ *
+ * そこで図版Bは、**測った各ビューポートで図中の文字が 11 CSS px を下回らない**ことを設計条件に
+ * 置き直した。論理幅 496・最小文字 24 なら、カラムが最も狭い 280px ビューポート
+ * （232/496 ＝ 0.468 倍）でも 11.2 CSS px になる。Playwright 実測のカラム幅は
+ * 280→232 / 320→272 / 360→312 / 390→342 / 414→366 / 440→392 / 540→492 / 720→672 / 1024→660。
  *
  * **なぜ 2 倍で書き出すか**: 論理 232px を DPR 2〜3 の画面で 1:1 表示すると素の画素は拡大されて
  * ぼける。実体を 2 倍（464px）で作り、`<img width="232">` で論理幅を指定して表示する。
@@ -42,8 +50,10 @@ const FONT = "IPAGothic, sans-serif";
 
 /** 図版A の論理幅。280px ビューポートの本文カラム幅（実測 232px）＝等倍を保てる上限。 */
 const FIGURE_A_WIDTH = 232;
-/** 図版B の論理幅。本文カラムの幅そのもの（`--measure: 42rem`）。 */
-const FIGURE_B_WIDTH = 672;
+/** 図版B の論理幅。最小文字 24 が 280px ビューポートでも 11 CSS px を保てる上限。 */
+const FIGURE_B_WIDTH = 496;
+/** 図版B の文字の最小サイズ（論理 px）。これを下回る文字を図版Bに置かない。 */
+const FIGURE_B_MIN_FONT = 24;
 /** 実体の画素密度。HiDPI で 1:1 表示してもぼけないように 2 倍で書き出す。 */
 const SCALE = 2;
 
@@ -253,27 +263,22 @@ async function imageA(icon: Icon) {
  */
 async function imageB(icon: Icon) {
   const W = FIGURE_B_WIDTH;
-  const ZOOM = 8;
-  const ART = icon.w * ZOOM; // 128
+  const F = FIGURE_B_MIN_FONT;
+  const ZOOM = 7;
+  const ART = icon.w * ZOOM; // 112
   /** 合成した姿の周りに地を残す幅。地とアイコンの境目が見えないと「沈む」を確かめられない。 */
-  const PAD = 8;
-  const PANEL = ART + PAD * 2; // 144
-  const MARGIN = 20;
-  const GAP = 16;
-  const ROW_H = PANEL + 18;
-  const TOP = 68;
-  const LABEL_X = MARGIN + PANEL * 2 + GAP + 24;
+  const PAD = 6;
+  const PANEL = ART + PAD * 2; // 124
+  const MARGIN = 16;
+  const GAP = 12;
+  const ROW_H = PANEL + 20;
+  const TOP = 84;
+  const LABEL_X = MARGIN + PANEL * 2 + GAP + 16;
   const H = TOP + ROW_H * GROUNDS.length;
 
   let body =
-    text(MARGIN, 26, 17, SUB, "左＝アイコンを地に合成した姿") +
-    text(
-      MARGIN,
-      50,
-      17,
-      SUB,
-      "右＝計器が数えた画素（3:1以上）を黒、数えなかった画素を白で塗った図",
-    );
+    text(MARGIN, 32, F, SUB, "左＝アイコンを地に合成した姿") +
+    text(MARGIN, 66, F, SUB, "右＝計器が数えた画素を黒で塗った図");
   const parts: OverlayOptions[] = [];
 
   for (const [i, g] of GROUNDS.entries()) {
@@ -289,10 +294,10 @@ async function imageB(icon: Icon) {
       `<rect x="${MARGIN}" y="${cy}" width="${PANEL}" height="${PANEL}" fill="${g.hex}"/>` +
       box(MARGIN, cy, PANEL, PANEL) +
       box(maskX, cy, PANEL, PANEL) +
-      text(LABEL_X, cy + 34, 20, INK, g.name) +
-      text(LABEL_X, cy + 58, 16, SUB, g.hex) +
-      text(LABEL_X, cy + 92, 17, SUB, `可視 ${visible}px`) +
-      text(LABEL_X, cy + 116, 17, SUB, `最大塊 ${blob}px`);
+      text(LABEL_X, cy + 26, F, INK, g.name) +
+      text(LABEL_X, cy + 58, F, SUB, g.hex) +
+      text(LABEL_X, cy + 94, F, SUB, `可視 ${visible}px`) +
+      text(LABEL_X, cy + 122, F, SUB, `最大塊 ${blob}px`);
     parts.push(
       at(
         await tile(composed, icon.w, icon.h, ZOOM * SCALE),
