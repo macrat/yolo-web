@@ -6,10 +6,14 @@
  * （`scripts/__tests__/fixtures/cycle299-shipped-16.png`＝cycle-299 が実際に出荷した壊れた favicon）
  * が変われば図もずれる。**手作業で作った画像を出荷しない。**
  *
- * **なぜ横 232px か**: 記事本文のカラム幅は 280px ビューポートで 232px まで縮む（Playwright 実測）。
- * `.prose img { max-width: 100% }` があるので、これより広い画像は縮小されて届く。図版Aは
- * 「等倍（16×16）」と書いた 16px のアイコンを見せる図なので、縮小されると等倍でなくなる。
- * 論理幅を 232px に抑えると、どのビューポートでも 1:1 で届く。
+ * **なぜ論理幅を図版ごとに分けるか**: `.prose img { max-width: 100% }` があるので、カラムより
+ * 広い画像は縮小されて届く。図版Aは「等倍（16×16）」と書いた 16px のアイコンを見せる図で、
+ * 縮小されると等倍でなくなる。だから本文カラムが最も狭くなる幅（280px ビューポートで 232px、
+ * Playwright 実測）に論理幅を抑え、どのビューポートでも 1:1 で届くようにする。
+ * 図版Bにこの制約は無い。等倍要件が無いのに 232px に揃えると、デスクトップ（カラム 660〜672px、
+ * Playwright 実測）で幅の 3 分の 1 しか使わず、記事の中心的な証拠が小さいまま右に空白が残る。
+ * そこで図版Bは論理幅をカラム幅（--measure = 42rem = 672px）に合わせる。縮小される側の
+ * ビューポート（390px なら 342/672 ≒ 0.51 倍）でも図中の文字が潰れないよう、文字を大きめに組む。
  *
  * **なぜ 2 倍で書き出すか**: 論理 232px を DPR 2〜3 の画面で 1:1 表示すると素の画素は拡大されて
  * ぼける。実体を 2 倍（464px）で作り、`<img width="232">` で論理幅を指定して表示する。
@@ -25,7 +29,7 @@
  */
 
 import sharp from "sharp";
-import type { OverlayOptions } from "sharp";
+import type { OverlayOptions, Sharp } from "sharp";
 import * as path from "node:path";
 
 const ROOT = path.join(__dirname, "..");
@@ -36,8 +40,10 @@ const BROKEN = path.join(
 const OUT = path.join(ROOT, "public/blog");
 const FONT = "IPAGothic, sans-serif";
 
-/** 記事側の `<img width>` に書く論理幅。280px ビューポートの本文カラム幅（実測 232px）。 */
-const LOGICAL_WIDTH = 232;
+/** 図版A の論理幅。280px ビューポートの本文カラム幅（実測 232px）＝等倍を保てる上限。 */
+const FIGURE_A_WIDTH = 232;
+/** 図版B の論理幅。本文カラムの幅そのもの（`--measure: 42rem`）。 */
+const FIGURE_B_WIDTH = 672;
 /** 実体の画素密度。HiDPI で 1:1 表示してもぼけないように 2 倍で書き出す。 */
 const SCALE = 2;
 
@@ -190,12 +196,27 @@ function at(input: Buffer, x: number, y: number): OverlayOptions {
 }
 
 /**
+ * 平面的な図なのでパレット PNG で書き出す（図版B は 97KB → 42KB）。
+ * 固有色は 337 色しかなく、量子化の影響はアイコンのアンチエイリアス部分に限られる
+ * （差の出る画素は 0.37%、チャンネル差の最大は 4）。記事が hex を名指ししている色
+ * （地の 4 色とタイルの `#F8F7F2`）は量子化後も完全に一致することを確認済み。
+ */
+function encode(img: Sharp) {
+  return img.png({
+    palette: true,
+    colors: 256,
+    compressionLevel: 9,
+    effort: 10,
+  });
+}
+
+/**
  * 図版A: 等倍と 8 倍の対置。
  * 「等倍」と書いた 16px を本当に 16 CSS px で届けることがこの図の全部なので、
  * 論理幅を本文カラムの最小値に収める（縮小されたら等倍でなくなる）。
  */
 async function imageA(icon: Icon) {
-  const W = LOGICAL_WIDTH;
+  const W = FIGURE_A_WIDTH;
   const H = 244;
   const actual = await tile(
     icon.px.map((p) => [p[0], p[1], p[2]] as RGB),
@@ -216,15 +237,13 @@ async function imageA(icon: Icon) {
     text(14, 76, 14, INK, "同じ画像を8倍に拡大") +
     box(14, 84, 128, 128) +
     text(14, 232, 11, SUB, "拡大すれば y と読める。上と同じ画像だ");
-  await (
+  await encode(
     await canvas(W, H, [
       { input: svgDoc(W, H, body), left: 0, top: 0 },
       at(actual, 14, 26),
       at(zoomed, 14, 84),
-    ])
-  )
-    .png()
-    .toFile(path.join(OUT, "2026-08-05-favicon-actual-size-vs-zoomed.png"));
+    ]),
+  ).toFile(path.join(OUT, "2026-08-05-favicon-actual-size-vs-zoomed.png"));
 }
 
 /**
@@ -233,23 +252,28 @@ async function imageA(icon: Icon) {
  * 数えた画素そのものを塗り出す。地に沈んで数から落ちた面はここで黒が消える。
  */
 async function imageB(icon: Icon) {
-  const W = LOGICAL_WIDTH;
-  const ZOOM = 3;
-  const ART = icon.w * ZOOM; // 48
+  const W = FIGURE_B_WIDTH;
+  const ZOOM = 8;
+  const ART = icon.w * ZOOM; // 128
   /** 合成した姿の周りに地を残す幅。地とアイコンの境目が見えないと「沈む」を確かめられない。 */
   const PAD = 8;
-  const PANEL = ART + PAD * 2; // 64
-  const MARGIN = 8;
-  const GAP = 6;
-  const ROW_H = PANEL + 12;
-  const TOP = 58;
-  const LABEL_X = MARGIN + PANEL * 2 + GAP + 8;
+  const PANEL = ART + PAD * 2; // 144
+  const MARGIN = 20;
+  const GAP = 16;
+  const ROW_H = PANEL + 18;
+  const TOP = 68;
+  const LABEL_X = MARGIN + PANEL * 2 + GAP + 24;
   const H = TOP + ROW_H * GROUNDS.length;
 
   let body =
-    text(MARGIN, 16, 11, SUB, "左＝アイコンを地に合成した姿") +
-    text(MARGIN, 31, 11, SUB, "右＝計器が数えた画素（3:1以上）を黒、") +
-    text(MARGIN, 46, 11, SUB, "数えなかった画素を白で塗った図");
+    text(MARGIN, 26, 17, SUB, "左＝アイコンを地に合成した姿") +
+    text(
+      MARGIN,
+      50,
+      17,
+      SUB,
+      "右＝計器が数えた画素（3:1以上）を黒、数えなかった画素を白で塗った図",
+    );
   const parts: OverlayOptions[] = [];
 
   for (const [i, g] of GROUNDS.entries()) {
@@ -265,9 +289,10 @@ async function imageB(icon: Icon) {
       `<rect x="${MARGIN}" y="${cy}" width="${PANEL}" height="${PANEL}" fill="${g.hex}"/>` +
       box(MARGIN, cy, PANEL, PANEL) +
       box(maskX, cy, PANEL, PANEL) +
-      text(LABEL_X, cy + 22, 11, INK, g.name) +
-      text(LABEL_X, cy + 40, 11, SUB, `可視 ${visible}px`) +
-      text(LABEL_X, cy + 55, 11, SUB, `最大塊 ${blob}px`);
+      text(LABEL_X, cy + 34, 20, INK, g.name) +
+      text(LABEL_X, cy + 58, 16, SUB, g.hex) +
+      text(LABEL_X, cy + 92, 17, SUB, `可視 ${visible}px`) +
+      text(LABEL_X, cy + 116, 17, SUB, `最大塊 ${blob}px`);
     parts.push(
       at(
         await tile(composed, icon.w, icon.h, ZOOM * SCALE),
@@ -284,14 +309,12 @@ async function imageB(icon: Icon) {
     );
   }
 
-  await (
+  await encode(
     await canvas(W, H, [
       { input: svgDoc(W, H, body), left: 0, top: 0 },
       ...parts,
-    ])
-  )
-    .png()
-    .toFile(path.join(OUT, "2026-08-05-favicon-four-grounds.png"));
+    ]),
+  ).toFile(path.join(OUT, "2026-08-05-favicon-four-grounds.png"));
 }
 
 void (async () => {
