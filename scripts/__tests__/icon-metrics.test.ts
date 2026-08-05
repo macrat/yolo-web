@@ -34,15 +34,10 @@ function shippedIconSpecs(): string[] {
   for (const name of readdirSync(PUBLIC)) {
     const full = path.join(PUBLIC, name);
     if (name === "favicon.ico") {
-      // ICO は全サブイメージを個別に見る（層ごとに別の図像でも見逃さないため）。
-      for (let i = 0; ; i++) {
-        try {
-          specs.push(`${full}[${i}]`);
-          if (i > 16) break;
-        } catch {
-          break;
-        }
-      }
+      // ICO の層数はヘッダを読まないと分からないので、多めに積んで
+      // 後段の `existingShippedIconSpecs` が実際に読めたものだけに絞る。
+      // （当初ここに try/catch を書いていたが `push` は throw しないので無意味だった＝7巡目 m-1）
+      for (let i = 0; i <= 16; i++) specs.push(`${full}[${i}]`);
       continue;
     }
     if (/^(apple-touch-icon|icon)[^/]*\.(png|jpg|jpeg)$/.test(name)) {
