@@ -53,6 +53,9 @@ next-env.d.ts
 # ブログ記事に埋め込む公開画像は追跡対象にする（記事本文から参照するため）。
 !public/blog/
 !public/blog/*.png
+# アイコン判定計器(scripts/icon-metrics.ts)の較正 fixture。
+# これが追跡外だと clone 先でテストが落ち、「機械の歯止め」が存在しなくなる（cycle-302 で実際に発生）。
+!scripts/__tests__/fixtures/*.png
 
 # Python bytecode cache
 __pycache__/

@@ -27,7 +27,8 @@
  * ICO のサブイメージは ImageMagick の `[n]` 記法で指定する。
  */
 
-import { execFileSync } from "node:child_process";
+import sharp from "sharp";
+import * as fs from "node:fs/promises";
 
 /** 判定用の地（`docs/cycles/cycle-302/criteria.md` §1-2 の G1〜G4）。 */
 const SURFACE_GROUNDS: ReadonlyArray<{ id: string; hex: string; rgb: RGB }> = [
@@ -71,6 +72,8 @@ const CHROMATIC_MIN_SPREAD = 20;
 const FIGURE_COLOR_DISTANCE = 24;
 
 type RGB = readonly [number, number, number];
+/** アルファを含む画素。透過を落とすと、透過の候補を不透明と誤判定する。 */
+type RGBA = readonly [number, number, number, number];
 
 export interface Metrics {
   readonly label: string;
@@ -99,6 +102,10 @@ export interface Metrics {
    * cycle-171 の旧ブランドはこれに該当した。**0 でなければ旧ブランドの残存を疑う。**
    */
   readonly bluishPixels: number;
+  /** 透過を含むか。apple-touch-icon は透過不可（iOS が黒く合成する）＝ N9。 */
+  readonly hasTransparency: boolean;
+  /** 完全透過の画素数。 */
+  readonly fullyTransparentPixels: number;
   /**
    * 地ごとの存在感。`visiblePixels` は「コントラスト 3:1 以上を持つ画素数」、
    * `largestVisibleComponent` はそのうち最大の連結成分。
@@ -112,33 +119,94 @@ export interface Metrics {
   }>;
 }
 
-/** ImageMagick で画素を読み出す（外部ライブラリを足さずに済ませるため）。 */
-function readPixels(path: string): {
-  pixels: RGB[];
+/**
+ * 画素を読み出す。
+ *
+ * **`sharp` を使う（既に依存に入っている）。** 当初は ImageMagick の `convert` を呼んでいたが、
+ * (1) `ubuntu-latest` のランナーイメージから ImageMagick は削除済みで **CI で必ず落ちる**、
+ * (2) `sharp` は宣言済み・バージョン固定でどこでも同じ結果になる、
+ * (3) `convert ... txt:-` はアルファを落としており、透過を持つ候補を誤って不透明と判定していた。
+ *
+ * ICO は sharp が読めないので、**サブイメージを自前で切り出してから** sharp に渡す。
+ * ICO のバイト列は単純で（6 バイトのヘッダ＋16 バイトのエントリ列＋PNG か BMP の実体）、
+ * 外部バイナリに依存するより自前で読むほうが確実である。
+ */
+async function readPixels(spec: string): Promise<{
+  pixels: RGBA[];
   width: number;
   height: number;
-} {
-  const txt = execFileSync("convert", [path, "-depth", "8", "txt:-"], {
-    encoding: "utf8",
-    maxBuffer: 64 * 1024 * 1024,
-  });
-  const lines = txt.split("\n");
-  // 1行目は "# ImageMagick pixel enumeration: 16,16,255,srgb"
-  const header = lines[0].match(/enumeration:\s*(\d+),(\d+)/);
-  if (!header) throw new Error(`画素列挙のヘッダを解釈できない: ${lines[0]}`);
-  const width = Number(header[1]);
-  const height = Number(header[2]);
-  const pixels: RGB[] = new Array(width * height);
-  for (const line of lines.slice(1)) {
-    // 例: "0,0: (26,26,26)  #1A1A1A  grey10"
-    const m = line.match(/^(\d+),(\d+):\s*\(([^)]+)\)/);
-    if (!m) continue;
-    const x = Number(m[1]);
-    const y = Number(m[2]);
-    const parts = m[3].split(",").map((v) => Number(v.trim()));
-    pixels[y * width + x] = [parts[0], parts[1], parts[2]] as const;
+}> {
+  const buffer = await loadImageBuffer(spec);
+  const { data, info } = await sharp(buffer)
+    .ensureAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+  const pixels: RGBA[] = new Array(info.width * info.height);
+  for (let i = 0; i < info.width * info.height; i++) {
+    const o = i * info.channels;
+    pixels[i] = [data[o], data[o + 1], data[o + 2], data[o + 3]] as const;
   }
-  return { pixels, width, height };
+  return { pixels, width: info.width, height: info.height };
+}
+
+/** `path/to/x.ico[1]` のようなサブイメージ指定を解いて、sharp が読める画像バイト列にする。 */
+async function loadImageBuffer(spec: string): Promise<Buffer> {
+  const m = spec.match(/^(.*)\[(\d+)\]$/);
+  const filePath = m ? m[1] : spec;
+  const index = m ? Number(m[2]) : 0;
+  const raw = await fs.readFile(filePath);
+  if (!filePath.toLowerCase().endsWith(".ico")) return raw;
+  return extractIcoSubImage(raw, index);
+}
+
+/**
+ * ICO からサブイメージを取り出し、sharp が読める PNG バイト列に変換する。
+ *
+ * ICO の中身は PNG か BMP（DIB）のどちらか。PNG ならそのまま返し、
+ * BMP なら 32bpp/24bpp のボトムアップ BGRA(BGR) を読んで PNG に組み直す。
+ */
+async function extractIcoSubImage(ico: Buffer, index: number): Promise<Buffer> {
+  const count = ico.readUInt16LE(4);
+  if (index >= count) {
+    throw new Error(
+      `ICO のサブイメージ ${index} は存在しない（全 ${count} 件）`,
+    );
+  }
+  const entry = 6 + index * 16;
+  const bytes = ico.readUInt32LE(entry + 8);
+  const offset = ico.readUInt32LE(entry + 12);
+  const body = ico.subarray(offset, offset + bytes);
+
+  // PNG がそのまま埋まっている形式。
+  if (body.length > 8 && body.readUInt32BE(0) === 0x89504e47) return body;
+
+  // BMP（BITMAPINFOHEADER）。高さは AND マスクを含むので実際の 2 倍が入っている。
+  const dibHeaderSize = body.readUInt32LE(0);
+  const width = body.readInt32LE(4);
+  const height = Math.floor(body.readInt32LE(8) / 2);
+  const bitCount = body.readUInt16LE(14);
+  if (bitCount !== 32 && bitCount !== 24) {
+    throw new Error(`未対応の ICO ビット深度: ${bitCount}bpp`);
+  }
+  const bytesPerPixel = bitCount / 8;
+  const rowSize = Math.ceil((width * bytesPerPixel) / 4) * 4;
+  const pixelStart = dibHeaderSize;
+  const rgba = Buffer.alloc(width * height * 4);
+  for (let y = 0; y < height; y++) {
+    // BMP はボトムアップ（最終行が先頭にある）。
+    const srcRow = pixelStart + (height - 1 - y) * rowSize;
+    for (let x = 0; x < width; x++) {
+      const s = srcRow + x * bytesPerPixel;
+      const d = (y * width + x) * 4;
+      rgba[d] = body[s + 2]; // R
+      rgba[d + 1] = body[s + 1]; // G
+      rgba[d + 2] = body[s]; // B
+      rgba[d + 3] = bitCount === 32 ? body[s + 3] : 255; // A
+    }
+  }
+  return sharp(rgba, { raw: { width, height, channels: 4 } })
+    .png()
+    .toBuffer();
 }
 
 /** WCAG の相対輝度。 */
@@ -198,8 +266,13 @@ function largestComponentOf(
   return largest;
 }
 
-export function measure(path: string): Metrics {
-  const { pixels, width, height } = readPixels(path);
+export async function measure(spec: string): Promise<Metrics> {
+  const { pixels: rgba, width, height } = await readPixels(spec);
+  // 色の計算は RGB で行い、アルファは別に持つ（透過を落とすと透過の候補を誤判定する）。
+  const pixels: RGB[] = rgba.map((p) => [p[0], p[1], p[2]] as const);
+  const alpha = rgba.map((p) => p[3]);
+  const fullyTransparentPixels = alpha.filter((a) => a === 0).length;
+  const hasTransparency = alpha.some((a) => a < 255);
 
   // アイコン自身の地＝最頻色。
   const counts = new Map<string, { rgb: RGB; n: number }>();
@@ -283,7 +356,7 @@ export function measure(path: string): Metrics {
   });
 
   return {
-    label: path,
+    label: spec,
     width,
     height,
     ownGround,
@@ -293,6 +366,8 @@ export function measure(path: string): Metrics {
     outsideInscribedCircle,
     chromaticContrastToOwnGround,
     bluishPixels,
+    hasTransparency,
+    fullyTransparentPixels,
     presenceByGround,
   };
 }
@@ -307,7 +382,13 @@ export function verdictOf(m: Metrics): {
   const failedGrounds = m.presenceByGround
     .filter((p) => p.largestVisibleComponent < minBlob)
     .map((p) => p.id);
-  const maskFails = m.outsideInscribedCircle > MAX_OUTSIDE_INSCRIBED_CIRCLE;
+  // N3（円マスク耐性）は **32px 以上の層にのみ課す**。
+  // 16×16 で内接円の外を使わないと実効の図領域が約 11×11 に落ち、実在が確定した要件
+  // （16px 可読）を、実在が未確認の制約（検索結果の円形マスク）で損なうため
+  // （criteria.md【M-4】の凍結済みの判断。計器がこれに従っていないと基準と矛盾する）。
+  const maskApplies = Math.min(m.width, m.height) >= 32;
+  const maskFails =
+    maskApplies && m.outsideInscribedCircle > MAX_OUTSIDE_INSCRIBED_CIRCLE;
   return {
     pass: failedGrounds.length === 0 && !maskFails,
     failedGrounds,
@@ -344,22 +425,29 @@ function formatMetrics(m: Metrics): string {
     `   最大連結成分        : ${m.largestComponent}px`,
     `   内接円の外の図      : ${(m.outsideInscribedCircle * 100).toFixed(1)}%  ← 円マスクで失う量`,
     `   青みの画素(§8-1)    : ${m.bluishPixels}px  ← 0 でなければ旧ブランドの残存を疑う`,
+    `   透過                : ${m.hasTransparency ? `あり(完全透過 ${m.fullyTransparentPixels}px)` : "なし"}  ← apple-touch は透過不可(N9)`,
     `   有彩色要素のCR      : ${m.chromaticContrastToOwnGround.toFixed(3)}  ← アイコン自身の地に対して(WCAG 1.4.11 は 3:1 以上)`,
     `   面として残る画素    : ${presence}  ← 可視画素数/最大連結塊(コントラスト${MIN_CONTRAST_FOR_PRESENCE}:1以上)`,
   ].join("\n");
 }
 
 // テストから import されたときは実行しない（CLI として起動されたときだけ走る）。
-if (process.argv[1]?.endsWith("icon-metrics.ts")) {
+async function main(): Promise<void> {
   const targets = process.argv.slice(2);
   if (targets.length === 0) {
     console.error(
       "使い方: npx tsx scripts/icon-metrics.ts <画像パス> [<画像パス> ...]",
     );
-    process.exit(1);
+    process.exitCode = 1;
+    return;
   }
   for (const t of targets) {
-    console.log(formatMetrics(measure(t)));
+    console.log(formatMetrics(await measure(t)));
     console.log("");
   }
+}
+
+// テストから import されたときは実行しない（CLI として起動されたときだけ走る）。
+if (process.argv[1]?.endsWith("icon-metrics.ts")) {
+  void main();
 }
