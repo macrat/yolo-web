@@ -13,10 +13,58 @@
 
 import { describe, test, expect } from "vitest";
 import * as path from "node:path";
-import { measure, verdictOf } from "../icon-metrics";
+import {
+  measure,
+  verdictOf,
+  MIN_VISIBLE_COMPONENT_PER_256,
+  MIN_STROKE_SOLIDITY,
+} from "../icon-metrics";
+import { readdirSync } from "node:fs";
 
 const FIXTURES = path.join(__dirname, "fixtures");
 const PUBLIC = path.join(__dirname, "..", "..", "public");
+
+/**
+ * 出荷しているアイコン面を**走査して**拾う。
+ * ハードコードしていると、E1 が予定している 96px 以上の層や新しいアイコン面が
+ * 自動では守られない（6巡目 m-5）。
+ */
+function shippedIconSpecs(): string[] {
+  const specs: string[] = [];
+  for (const name of readdirSync(PUBLIC)) {
+    const full = path.join(PUBLIC, name);
+    if (name === "favicon.ico") {
+      // ICO は全サブイメージを個別に見る（層ごとに別の図像でも見逃さないため）。
+      for (let i = 0; ; i++) {
+        try {
+          specs.push(`${full}[${i}]`);
+          if (i > 16) break;
+        } catch {
+          break;
+        }
+      }
+      continue;
+    }
+    if (/^(apple-touch-icon|icon)[^/]*\.(png|jpg|jpeg)$/.test(name)) {
+      specs.push(full);
+    }
+  }
+  return specs;
+}
+
+/** 実在するサブイメージだけに絞る（ICO の層数は数えないと分からない）。 */
+async function existingShippedIconSpecs(): Promise<string[]> {
+  const found: string[] = [];
+  for (const spec of shippedIconSpecs()) {
+    try {
+      await measure(spec);
+      found.push(spec);
+    } catch {
+      /* 存在しない層は飛ばす */
+    }
+  }
+  return found;
+}
 
 describe("icon-metrics の較正", () => {
   test("cycle-299 が出荷した favicon を不合格にする（人間の観測に対する固定点）", async () => {
@@ -60,11 +108,11 @@ describe("icon-metrics の較正", () => {
   });
 
   test("いま出荷しているアイコンは合格する（陰性対照＝落としてはいけないもの）", async () => {
-    for (const target of [
-      `${path.join(PUBLIC, "favicon.ico")}[0]`,
-      `${path.join(PUBLIC, "favicon.ico")}[1]`,
-      path.join(PUBLIC, "apple-touch-icon.png"),
-    ]) {
+    const targets = await existingShippedIconSpecs();
+    expect(targets.length, "出荷アイコンが1つも見つからない").toBeGreaterThan(
+      0,
+    );
+    for (const target of targets) {
       expect(
         verdictOf(await measure(target)).pass,
         `${target} が不合格になった`,
@@ -77,11 +125,11 @@ describe("icon-metrics の較正", () => {
     // 16px 2.652 / 32px・apple 2.796 まで落ち、WCAG の 3:1 を割ってレビューで捕捉された。
     // 暗地用の朱（#e87a65）へ替えて 5.845 / 6.135 になった経緯を守る。
     // ※ 当初このコメントに書いた「2.686」はどの実測にも存在しない数値だった（6巡目 m-1）。
-    for (const target of [
-      `${path.join(PUBLIC, "favicon.ico")}[0]`,
-      `${path.join(PUBLIC, "favicon.ico")}[1]`,
-      path.join(PUBLIC, "apple-touch-icon.png"),
-    ]) {
+    const targets = await existingShippedIconSpecs();
+    expect(targets.length, "出荷アイコンが1つも見つからない").toBeGreaterThan(
+      0,
+    );
+    for (const target of targets) {
       expect(
         (await measure(target)).chromaticContrastToOwnGround,
         `${target} の有彩色要素のコントラストが 3:1 未満`,
@@ -90,15 +138,54 @@ describe("icon-metrics の較正", () => {
   });
 
   test("出荷しているアイコンに旧ブランドの青（DESIGN §8-1 の禁止色）が残っていない", async () => {
-    for (const target of [
-      `${path.join(PUBLIC, "favicon.ico")}[0]`,
-      `${path.join(PUBLIC, "favicon.ico")}[1]`,
-      path.join(PUBLIC, "apple-touch-icon.png"),
-    ]) {
+    const targets = await existingShippedIconSpecs();
+    expect(targets.length, "出荷アイコンが1つも見つからない").toBeGreaterThan(
+      0,
+    );
+    for (const target of targets) {
       expect(
         (await measure(target)).bluishPixels,
         `${target} に青みの画素が残っている`,
       ).toBe(0);
     }
+  });
+
+  // 6巡目 m-4: 「しきい値が緩めば落ちる」は、そのままでは成り立たなかった
+  // （20 → 17 に緩めてもテストは全通した）。**較正の主張そのものを検査する。**
+  test("しきい値が、落とすべきものの最悪と通すべきものの最悪の間にある", async () => {
+    // fixture はすべて 16×16（面積 256）なので、塊の画素数がそのまま /256 換算の値になる。
+    const worstBlob = async (spec: string): Promise<number> =>
+      Math.min(
+        ...(await measure(spec)).presenceByGround.map(
+          (p) => p.largestVisibleComponent,
+        ),
+      );
+    const failingWorst = Math.min(
+      await worstBlob(path.join(FIXTURES, "cycle299-shipped-16.png")),
+      await worstBlob(path.join(FIXTURES, "control-thin-on-paper-16.png")),
+    );
+    const passingWorst = await worstBlob(
+      path.join(FIXTURES, "pre-conversion-favicon-16.png"),
+    );
+
+    expect(
+      MIN_VISIBLE_COMPONENT_PER_256,
+      "しきい値が、落とすべきものを通す位置まで緩んでいる",
+    ).toBeGreaterThan(failingWorst);
+    expect(
+      MIN_VISIBLE_COMPONENT_PER_256,
+      "しきい値が、通すべきものを落とす位置まで厳しくなっている",
+    ).toBeLessThanOrEqual(passingWorst);
+  });
+
+  test("ストロークのしきい値も、両側の実測の間にある", async () => {
+    const failing = (
+      await measure(path.join(FIXTURES, "cycle299-shipped-16.png"))
+    ).strokeSolidity;
+    const passing = (
+      await measure(path.join(FIXTURES, "pre-conversion-favicon-16.png"))
+    ).strokeSolidity;
+    expect(MIN_STROKE_SOLIDITY).toBeGreaterThan(failing);
+    expect(MIN_STROKE_SOLIDITY).toBeLessThanOrEqual(passing);
   });
 });

@@ -63,8 +63,27 @@ const MIN_CONTRAST_FOR_PRESENCE = 3.0;
  */
 export const MIN_VISIBLE_COMPONENT_PER_256 = 20;
 
-/** 円マスクで失ってよい図の割合の上限。対照③(四隅に情報)が 48% で落ちる位置に置く。 */
+/**
+ * 円マスクで失ってよい図の割合の上限。
+ *
+ * **較正（両側）**: 落とすべき対照③（四隅に情報）は 48×48 で **56.9%**。通すべき側は
+ * 変換前・出荷物の全層とも **0.0%**（図が中央に収まっている）。0 と 56.9 の間で、
+ * 「四隅の装飾がわずかに切れる程度は許す」意図から 15% に置く。
+ * ※ 通すべき側が全部 0.0% なので、この値は**上側の較正が効いていない**（0.01〜0.56 の
+ *   どこでもテストは通る）。**境界にある実例が現れたら較正し直す**——いまは対照③との距離
+ *   （56.9 対 15）だけが根拠である。この限界を隠さない（6巡目 M-2）。
+ */
 export const MAX_OUTSIDE_INSCRIBED_CIRCLE = 0.15;
+
+/**
+ * 図が「細すぎない」と見なす、ストローク充実度（4近傍すべてが図である画素の割合）の下限。
+ *
+ * **較正（両側）**: 落とすべき側は `fd088fa1` **15.8%**・対照②（極細墨図）**3.8%**。
+ * 通すべき側は変換前/出荷物の 16px **27.1%**・32px **51.5%**・apple **88.2%**。
+ * **20% は 15.8 と 27.1 の間**にある。cycle-299 の失敗の第一の機序（細さで消える）を、
+ * 地とのコントラストとは独立に捕まえる。
+ */
+export const MIN_STROKE_SOLIDITY = 0.2;
 
 /** 有彩色と見なす、RGB の最大値と最小値の差の下限。無彩色のアンチエイリアスを除くため。 */
 const CHROMATIC_MIN_SPREAD = 20;
@@ -384,6 +403,7 @@ export function verdictOf(m: Metrics): {
   pass: boolean;
   failedGrounds: string[];
   maskFails: boolean;
+  tooThin: boolean;
 } {
   const minBlob = (MIN_VISIBLE_COMPONENT_PER_256 * m.width * m.height) / 256;
   const failedGrounds = m.presenceByGround
@@ -396,10 +416,14 @@ export function verdictOf(m: Metrics): {
   const maskApplies = Math.min(m.width, m.height) >= 32;
   const maskFails =
     maskApplies && m.outsideInscribedCircle > MAX_OUTSIDE_INSCRIBED_CIRCLE;
+  // 細さは、地とのコントラストとは独立の失敗の機序（cycle-299 の第一の機序）。
+  // 表示するだけで判定に使っていなかったのを是正した（6巡目 M-4）。
+  const tooThin = m.strokeSolidity < MIN_STROKE_SOLIDITY;
   return {
-    pass: failedGrounds.length === 0 && !maskFails,
+    pass: failedGrounds.length === 0 && !maskFails && !tooThin,
     failedGrounds,
     maskFails,
+    tooThin,
   };
 }
 
@@ -415,6 +439,7 @@ function formatMetrics(m: Metrics): string {
           ? `地に溶ける:${v.failedGrounds.join("/")}`
           : "",
         v.maskFails ? "円マスクで欠ける" : "",
+        v.tooThin ? "図が細すぎる" : "",
       ]
         .filter(Boolean)
         .join(" ")})`;
