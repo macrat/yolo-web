@@ -111,6 +111,15 @@
   margin-bottom: var(--space-8);
 }
 
+/*
+ * 本文中の図版。--measure より広い画像を置いても本文からはみ出させない。
+ * 画像は原寸で置く前提だが、狭い画面では縮む（height: auto で比率を保つ）。
+ */
+.prose img {
+  max-width: 100%;
+  height: auto;
+}
+
 .prose code {
   background-color: var(--paper-2);
   padding: 0.15em 0.35em;
