@@ -27,5 +27,14 @@ export const INK_2 = "#58554f"; // --ink-2       oklch(0.45 0.01 80)
 export const RULE = "#cdcac5"; // --rule        oklch(0.84 0.008 85)
 /** 罫（強・器の枠）。 */
 export const RULE_STRONG = "#302d28"; // --rule-strong oklch(0.30 0.01 80)
-/** 朱（アクセント・印専用）。 */
+/** 朱（アクセント・印専用）。**ライト固定**——地が明るい面（看板・札）専用。 */
 export const ACCENT = "#af3622"; // --accent      oklch(0.51 0.16 32)
+/**
+ * 朱（**暗い地の上に置くとき**）。DESIGN §2 のダーク側 `--accent`。
+ *
+ * **ライト用の {@link ACCENT} を暗い地に当ててはいけない。** cycle-302 の E0 で実際にそれをやり、
+ * favicon（地 `#1A1A1A`）のアクセントのコントラストが旧ブランドの青（3.568）より低い 2.796 まで
+ * 落ちて、WCAG 1.4.11 の 3:1 を割った。この値なら 6.135 で、青の 1.7 倍になる。
+ * 判定は `scripts/icon-metrics.ts` の「有彩色要素の CR」で機械的に測れる。
+ */
+export const ACCENT_ON_DARK = "#e87a65"; // --accent(dark) oklch(0.70 0.14 32)
