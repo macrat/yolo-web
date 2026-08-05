@@ -40,8 +40,9 @@ const SURFACE_GROUNDS: ReadonlyArray<{ id: string; hex: string; rgb: RGB }> = [
 
 /**
  * 「面として存在が残る」と見なす最低コントラスト比。
- * WCAG 2.1 の非テキストコントラスト（1.4.11）が UI 部品・図形に求める値と同じ 3:1 を採る。
- * アイコンは文字ではなく図形として識別されるため、本文の 4.5:1 ではなくこちらが適合する。
+ * WCAG 2.1 の非テキストコントラスト（1.4.11）の 3:1 を**工学的なしきい値として援用する**。
+ * ※ 1.4.11 には「user agent が外観を決定し author が変更しないもの」の除外があり、
+ *   ブラウザクロム上の favicon は適用外の公算が大きい。**「適合する」とは書かない**（6巡目 m-3）。
  */
 const MIN_CONTRAST_FOR_PRESENCE = 3.0;
 
@@ -55,7 +56,7 @@ const MIN_CONTRAST_FOR_PRESENCE = 3.0;
  * | 対象                          | G1(ライト) | G2(ダーク) | G3(純白) | G4(中間) |
  * | ----------------------------- | ---------- | ---------- | -------- | -------- |
  * | `fd088fa1`（**落とすべき**）  | **塊12**   | 塊241      | **塊16** | 塊208    |
- * | 現行 favicon（通すべき）      | 塊234      | **塊26**   | 塊239    | 塊230    |
+ * | **変換前**の favicon（通すべき） | 塊234      | **塊26**   | 塊239    | 塊230    |
  * | 対照②(紙地＋極細墨図)        | **塊1**    | 塊256      | **塊2**  | 塊236    |
  *
  * 20 は、`fd088fa1` の最悪 16 と現行の最悪 26 の間にある。**片方だけを見て決めていない。**
@@ -90,7 +91,7 @@ export interface Metrics {
   /** 内接円の外にある図の画素の割合（円マスクで失われる量）。 */
   readonly outsideInscribedCircle: number;
   /**
-   * 有彩色の図要素（アクセント等）の、**アイコン自身の地**に対する最大コントラスト比。
+   * 有彩色の図要素（アクセント等）の、**アイコン自身の地**に対するコントラスト比の**中央値**。
    *
    * **面の地（G1〜G4）と混同しない。** アイコン内部の要素は自分のタイルの上に乗っているので、
    * 可読性を決めるのはタイルとのコントラストであって、ページの地とのコントラストではない。
@@ -98,7 +99,7 @@ export interface Metrics {
    */
   readonly chromaticContrastToOwnGround: number;
   /**
-   * 青みがかった画素の数（`b > r`）。DESIGN §8-1 は紫〜青のアクセントを名指しで禁じており、
+   * 青みがかった画素の数（`b > r + 2`。+2 は 8bit の丸め誤差を無彩色と見なすため）。DESIGN §8-1 は紫〜青のアクセントを名指しで禁じており、
    * cycle-171 の旧ブランドはこれに該当した。**0 でなければ旧ブランドの残存を疑う。**
    */
   readonly bluishPixels: number;
@@ -326,15 +327,21 @@ export async function measure(spec: string): Promise<Metrics> {
 
   // 有彩色要素（アクセント）の、アイコン自身の地に対するコントラスト。
   // 白やグレーのアンチエイリアスは無彩色なので除外し、色を担っている画素だけを見る。
-  let chromaticContrastToOwnGround = 0;
+  // **最大値は採らない。** 最大だと、大部分の朱が地に沈んでいてもアンチエイリアスの
+  // 1 画素が明るければ通ってしまう——「不合格を出しうる測度」を作ったつもりで、
+  // 最も合格しやすい統計量を選ぶことになる（6巡目 M-5）。**中央値**を採る。
+  const chromaticContrasts: number[] = [];
   for (let i = 0; i < pixels.length; i++) {
     if (!isFigure[i]) continue;
     const p = pixels[i];
-    const chroma = Math.max(...p) - Math.min(...p);
-    if (chroma <= CHROMATIC_MIN_SPREAD) continue;
-    const cr = contrastRatio(p, ownGround);
-    if (cr > chromaticContrastToOwnGround) chromaticContrastToOwnGround = cr;
+    if (Math.max(...p) - Math.min(...p) <= CHROMATIC_MIN_SPREAD) continue;
+    chromaticContrasts.push(contrastRatio(p, ownGround));
   }
+  chromaticContrasts.sort((a, b) => a - b);
+  const chromaticContrastToOwnGround =
+    chromaticContrasts.length === 0
+      ? 0
+      : chromaticContrasts[Math.floor(chromaticContrasts.length / 2)];
 
   // 地ごとの存在感。
   //
@@ -400,23 +407,17 @@ function formatMetrics(m: Metrics): string {
   const presence = m.presenceByGround
     .map((p) => `${p.id}=${p.visiblePixels}px/塊${p.largestVisibleComponent}`)
     .join(" ");
-  const area = m.width * m.height;
-  const minBlob = (MIN_VISIBLE_COMPONENT_PER_256 * area) / 256;
-  const failedGrounds = m.presenceByGround
-    .filter((p) => p.largestVisibleComponent < minBlob)
-    .map((p) => p.id);
-  const maskFails = m.outsideInscribedCircle > MAX_OUTSIDE_INSCRIBED_CIRCLE;
-  const verdict =
-    failedGrounds.length === 0 && !maskFails
-      ? "PASS"
-      : `FAIL(${[
-          failedGrounds.length > 0
-            ? `地に溶ける:${failedGrounds.join("/")}`
-            : "",
-          maskFails ? "円マスクで欠ける" : "",
-        ]
-          .filter(Boolean)
-          .join(" ")})`;
+  const v = verdictOf(m);
+  const verdict = v.pass
+    ? "PASS"
+    : `FAIL(${[
+        v.failedGrounds.length > 0
+          ? `地に溶ける:${v.failedGrounds.join("/")}`
+          : "",
+        v.maskFails ? "円マスクで欠ける" : "",
+      ]
+        .filter(Boolean)
+        .join(" ")})`;
   return [
     `── ${m.label}  ${m.width}×${m.height}  → ${verdict}`,
     `   地(最頻色)          : rgb(${m.ownGround.join(",")})`,
@@ -426,7 +427,7 @@ function formatMetrics(m: Metrics): string {
     `   内接円の外の図      : ${(m.outsideInscribedCircle * 100).toFixed(1)}%  ← 円マスクで失う量`,
     `   青みの画素(§8-1)    : ${m.bluishPixels}px  ← 0 でなければ旧ブランドの残存を疑う`,
     `   透過                : ${m.hasTransparency ? `あり(完全透過 ${m.fullyTransparentPixels}px)` : "なし"}  ← apple-touch は透過不可(N9)`,
-    `   有彩色要素のCR      : ${m.chromaticContrastToOwnGround.toFixed(3)}  ← アイコン自身の地に対して(WCAG 1.4.11 は 3:1 以上)`,
+    `   有彩色要素のCR      : ${m.chromaticContrastToOwnGround.toFixed(3)}（中央値）  ← アイコン自身の地に対して(WCAG 1.4.11 の 3:1 を援用)`,
     `   面として残る画素    : ${presence}  ← 可視画素数/最大連結塊(コントラスト${MIN_CONTRAST_FOR_PRESENCE}:1以上)`,
   ].join("\n");
 }
