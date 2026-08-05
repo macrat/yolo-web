@@ -160,7 +160,11 @@ describe("icon-metrics の較正", () => {
           (p) => p.largestVisibleComponent,
         ),
       );
-    const failingWorst = Math.min(
+    // **落とすべき側は「最も通りやすい（最大の）値」を採る。**
+    // 最小を採ると、落とすべき実例が複数あるとき1件しか担保できない。
+    // 当初 Math.min で書いていたため、実効の下限が 1 になり 2〜26 のどこでも通る
+    // 状態だった（7巡目 B-1/B-2）。
+    const failingHardest = Math.max(
       await worstBlob(path.join(FIXTURES, "cycle299-shipped-16.png")),
       await worstBlob(path.join(FIXTURES, "control-thin-on-paper-16.png")),
     );
@@ -171,7 +175,7 @@ describe("icon-metrics の較正", () => {
     expect(
       MIN_VISIBLE_COMPONENT_PER_256,
       "しきい値が、落とすべきものを通す位置まで緩んでいる",
-    ).toBeGreaterThan(failingWorst);
+    ).toBeGreaterThan(failingHardest);
     expect(
       MIN_VISIBLE_COMPONENT_PER_256,
       "しきい値が、通すべきものを落とす位置まで厳しくなっている",
@@ -179,13 +183,33 @@ describe("icon-metrics の較正", () => {
   });
 
   test("ストロークのしきい値も、両側の実測の間にある", async () => {
-    const failing = (
-      await measure(path.join(FIXTURES, "cycle299-shipped-16.png"))
-    ).strokeSolidity;
+    // 同じ理由で、落とすべき側は複数の対照のうち**最大**を採る。
+    const failing = Math.max(
+      (await measure(path.join(FIXTURES, "cycle299-shipped-16.png")))
+        .strokeSolidity,
+      (await measure(path.join(FIXTURES, "control-thin-on-paper-16.png")))
+        .strokeSolidity,
+    );
     const passing = (
       await measure(path.join(FIXTURES, "pre-conversion-favicon-16.png"))
     ).strokeSolidity;
     expect(MIN_STROKE_SOLIDITY).toBeGreaterThan(failing);
     expect(MIN_STROKE_SOLIDITY).toBeLessThanOrEqual(passing);
+  });
+
+  // 7巡目のブログレビュー B1: 透過を無視して素の RGB を測ると、完全透過の画素が
+  // その RGB で「見えている」ことになり、**安全でない方向へ誤って合格を返していた**。
+  // 地の上に合成してから測る形へ直した。透過ファビコンは web で珍しくない。
+  test("対照: 透過背景＋白い図は、白い地では落ち、暗い地では通る", async () => {
+    const m = await measure(
+      path.join(FIXTURES, "control-transparent-white-16.png"),
+    );
+    expect(m.hasTransparency).toBe(true);
+    const v = verdictOf(m);
+    expect(v.pass).toBe(false);
+    // 白い図は白い地（G1 ライトタブ・G3 純白）で消える。
+    expect(v.failedGrounds).toEqual(expect.arrayContaining(["G1", "G3"]));
+    // 暗い地では見えるので、そちらは落ちない。
+    expect(v.failedGrounds).not.toContain("G2");
   });
 });
