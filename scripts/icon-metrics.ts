@@ -308,8 +308,16 @@ export async function measure(spec: string): Promise<Metrics> {
   const hasTransparency = alpha.some((a) => a < 255);
 
   // アイコン自身の地＝最頻色。
+  //
+  // **完全透過の画素は数えない。** 透過領域に保存されている RGB は書き出しツールの副産物で、
+  // 人間にもブラウザにも見えない。これを数えると**最頻色が透過領域の保存値に支配され、
+  // 「図」の定義そのものが成立しなくなる**（同じ見た目のファイルが、保存値の違いだけで
+  // 図 64px と 図 0px に分かれる）。7巡目のブログ再レビュー B-1。
+  const opaquePixels = rgba
+    .filter((p) => p[3] > 0)
+    .map((p) => [p[0], p[1], p[2]] as RGB);
   const counts = new Map<string, { rgb: RGB; n: number }>();
-  for (const p of pixels) {
+  for (const p of opaquePixels.length > 0 ? opaquePixels : pixels) {
     const key = p.join(",");
     const hit = counts.get(key);
     if (hit) hit.n += 1;
@@ -317,9 +325,10 @@ export async function measure(spec: string): Promise<Metrics> {
   }
   const ownGround = [...counts.values()].sort((a, b) => b.n - a.n)[0].rgb;
 
-  // 図＝地から十分離れた画素。
+  // 図＝地から十分離れた**不透明な**画素。透過画素は図でも地でもない。
   const isFigure = pixels.map(
-    (p) => colorDistance(p, ownGround) > FIGURE_COLOR_DISTANCE,
+    (p, i) =>
+      rgba[i][3] > 0 && colorDistance(p, ownGround) > FIGURE_COLOR_DISTANCE,
   );
   const figurePixels = isFigure.filter(Boolean).length;
 

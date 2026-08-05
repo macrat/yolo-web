@@ -7,8 +7,8 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-576 | favicon/apple-touch-iconの意匠再設計(禁止色の除去は完了) | P1 | - | cycle-302でE0(青→朱)と判定装置を出荷。残=意匠の再設計・48px超の層・icons宣言・design-gate・head検証。判定装置=scripts/icon-metrics.ts。詳細cycle-302/ |
-| B-583 | 印の要否と識別子の決定 | P1 | - | cycle-302では決めず(cycle-283が「圧の下で即断しない」と明記した本丸のため)。B-576の意匠決定に先行して要る。詳細cycle-302/index.md B2 |
+| B-576 | favicon/apple-touch-iconの意匠再設計(禁止色の除去は完了) | P1 | 303 | cycle-302でE0(青→朱)と判定装置を出荷。残=意匠の再設計・48px超の層・icons宣言・design-gate・head検証。判定装置=scripts/icon-metrics.ts。詳細cycle-302/ |
+| B-583 | 印の要否と識別子の決定 | P1 | 303 | cycle-302では決めず(cycle-283が「圧の下で即断しない」と明記した本丸のため)。B-576の意匠決定に先行して要る。詳細cycle-302/index.md B2 |
 | B-629 | E0出荷後のSERP実表示の確認 | P2 | - | 期日=E0出荷+7日。Googleの再クロール後でないと反映されず本サイクル内では確認不能。確認せずにチェックを入れるとAP-WF23の入口になる。詳細cycle-302/ |
 | B-628 | icon-metricsの未較正しきい値の較正 | P3 | - | cycle-302で3つが未較正: 円マスク上限(片側のみ)・図の色距離(最上流)・有彩色の定義。境界にある実例が現れたら較正し直す。詳細cycle-302/criteria.md |
 | B-603 | character-personality 24タイプ一覧の処遇(T3・再判定) | P1 | - | **未決へ差し戻し**。cycle-298は測定面を誤り判定撤回(cycle-284の実測が正しかった)。主たる面で基準を立て直し再判定。詳細cycle-298/decision.md |
@@ -36,7 +36,6 @@
 | B-581 | AP-P33の境界値サンプリング運用化 | P3 | - | cycle-283でPMがAP-P33を再犯(near-white辞典色を実見サンプルから落とし埋没欠陥を見逃す・reviewer捕捉)。「価値の種類で選ぶ」では不足で「失敗軸の両端=境界を必ず含める」を実際の抽出手順に明文化。詳細cycle-283.md自己批判 |
 | B-582 | 伝統色辞典250件のromaji表記統一の点検 | P3 | - | cycle-283で色OGP(看板)にromaji露出。shinsyu(真朱)等ヘボン式/訓令式混在の兆候。既存データ由来だが拡散面へ昇格。250件の表記一貫性を点検。詳細cycle-283.md |
 | B-569 | 全診断のmeta/FAQのタイプ名例示が自診断に実在するか横断監査 | P3 | - | cycle-280でcharacter-personalityに別診断のタイプ名混入を発見・是正。検索結果の説明文の実害。他診断の同種混入を点検。詳細 cycle-280.md |
-| B-466 | tmp/ 配下 .ts の typecheck/build 破壊の根本解消 | P3 | - | tsconfig.json exclude "tmp" 追加。詳細 cycle-216.md |
 | B-390 | AP 集全項目のガイド混入監査 | P3 | - | 残り implementation.md と writing.md。詳細 cycle-248.md |
 | B-398 | grep ベーステストの必要性再評価 | P3 | - | 訪問者価値の観点で再評価。詳細 cycle-189.md |
 | B-451 | 数値 literal 3 分類プロセス改善 | P3 | - | AP-P16強化またはknowledge文書新設。詳細 cycle-210.md |
@@ -124,6 +123,7 @@
 
 | ID | Title | Cycle | Notes |
 | --- | --- | --- | --- |
+| B-466 | tmp/ 配下 .ts の typecheck/build 破壊の根本解消 | 302 | 【完了】tsconfig.json の exclude に "tmp" を追加。cycle-216起票以来、完了ゲートを3回落としていた(直近は本サイクルのレビュアーの一時ファイル) |
 | B-626 | retryの2打目が窓の外に落ちてXの投稿画面へ飛ぶ | 301 | 【中止】不正な起票。前提だったB-620の600ms窓ごとrevert済み。実害が出ている問題を差し置いて連打のエッジケースをP0にしたのはconstitution違反 |
 | B-627 | B-620の視覚回帰確認の残り | 301 | 【中止】不正な起票。対象のB-620をrevertしたため確認すべき変更が存在しない |
 | B-625 | 二重タップ記事の完成と公開判断 | 301 | 【中止】不正な起票。記事は当初計画外の作業(B-620)を題材にしたもので、記事ファイルもrevert済み |

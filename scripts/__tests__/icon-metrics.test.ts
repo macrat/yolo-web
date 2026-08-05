@@ -207,4 +207,24 @@ describe("icon-metrics の較正", () => {
     // 暗い地では見えるので、そちらは落ちない。
     expect(v.failedGrounds).not.toContain("G2");
   });
+
+  // 7巡目のブログ再レビュー B-1: 透過領域に保存されている RGB は書き出しツールの副産物で、
+  // 人間にもブラウザにも見えない。これを最頻色の計算に入れると**「図」の定義そのものが
+  // その保存値に支配される**（同じ見た目のファイルが、保存値の違いだけで別の評決になる）。
+  test("見た目が同じなら、透過領域に保存された RGB が違っても同じ評決になる", async () => {
+    const a = await measure(
+      path.join(FIXTURES, "control-transparent-white-16.png"),
+    );
+    // 同じ見た目で、透過画素の保存 RGB だけを白に置き換えた版。
+    const b = await measure(
+      path.join(FIXTURES, "control-transparent-white-onwhite-16.png"),
+    );
+    expect(b.ownGround).toEqual(a.ownGround);
+    expect(b.figurePixels).toBe(a.figurePixels);
+    expect(b.strokeSolidity).toBe(a.strokeSolidity);
+    expect(verdictOf(b)).toEqual(verdictOf(a));
+    // NaN を出さないこと（図が 0 のときの除算）。
+    expect(Number.isNaN(b.strokeSolidity)).toBe(false);
+    expect(Number.isNaN(b.outsideInscribedCircle)).toBe(false);
+  });
 });
