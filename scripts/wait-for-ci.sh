@@ -62,25 +62,33 @@ while true; do
 
   # ここまでは「このコミットに紐づく run が全部成功した」しか見ていない。
   # それだけでは足りない。Dependabot Updates や CodeQL は push とは無関係に
-  # 動くので、本体のワークフロー (deploy.yml) が一度も起動していなくても
-  # 「すべて成功」になってしまう。cycle-302 で実際にそうなった——76コミットを
-  # push したのに deploy.yml は起動せず、サイトは6日前のままだったのに、
-  # このスクリプトは緑を返していた。
+  # 動くので、本体のワークフロー (deploy.yml) がまだ登録されていなくても
+  # 「すべて成功」になってしまう。cycle-302 で実際にそうなった——push 直後に
+  # Dependabot と CodeQL だけが見えている状態で、このスクリプトは緑を返した。
   #
   # したがって REQUIRED_WORKFLOW が実在して成功したことを必須にする。
   # 名前は .github/workflows/deploy.yml の `name:` と一致させること。
+  #
+  # ただし「まだ見つからない」と「起動しない」は別物である。cycle-302 では
+  # push から run 登録まで 11分かかった。見つからないうちは待つこと——
+  # ここで即座に赤を返すと、遅れているだけの CI を「起動していない」と
+  # 誤報する (実際に PM がそう誤報し、Owner に不要な対応を求めた)。
   REQUIRED_WORKFLOW=${REQUIRED_WORKFLOW:-"CI / Deploy"}
   required_ok=$(echo "$runs" | jq --arg n "$REQUIRED_WORKFLOW" \
     '[.[] | select(.name == $n and .conclusion == "success")] | length')
   if [ "$required_ok" -eq 0 ]; then
-    echo "本体のワークフロー「${REQUIRED_WORKFLOW}」が commit ${SHA} で成功していません。" >&2
-    echo "このコミットに紐づく run は次のとおりですが、いずれも本体ではありません:" >&2
+    if [ "$elapsed" -lt "$TIMEOUT_SEC" ]; then
+      echo "  本体「${REQUIRED_WORKFLOW}」の run を待っています... (${elapsed}s)"
+      sleep "$POLL_INTERVAL"
+      continue
+    fi
+    echo "本体のワークフロー「${REQUIRED_WORKFLOW}」が commit ${SHA} で成功しないまま" >&2
+    echo "${TIMEOUT_SEC}秒が過ぎました。このコミットに紐づく run は次のとおりです:" >&2
     echo "$runs" | jq -r '.[] | "  [\(.conclusion)] \(.name)"' >&2
     echo "" >&2
-    echo "push はできているのにワークフローが起動しない場合、GitHub がその push を" >&2
-    echo "イベントとして記録していない可能性があります (gh api repos/OWNER/REPO/events で確認)。" >&2
-    echo "その場合、GitHub Actions も Vercel のビルドも動かず、サイトは更新されません。" >&2
-    exit 1
+    echo "run の登録には時間がかかります (cycle-302 の実測で 11分)。まず時間を置いて" >&2
+    echo "再実行してください。それでも現れない場合にだけ、Actions の設定を疑うこと。" >&2
+    exit 2
   fi
 
   echo "CI はすべて成功しています (本体「${REQUIRED_WORKFLOW}」の成功を確認):"
