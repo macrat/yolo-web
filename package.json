@@ -15,6 +15,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:e2e": "node tests/e2e/blog-detail-share-buttons.mjs && node tests/e2e/blog-table-min-width-floor.mjs",
     "format": "prettier --write .",
     "analyze": "next experimental-analyze --output",
     "format:check": "prettier --check .",
