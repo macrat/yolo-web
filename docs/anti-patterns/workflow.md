@@ -69,7 +69,7 @@
 
 ## 欠番
 
-- AP-WF16（自動チェック PASS の独立再実行）: `.claude/hooks/pre-push-check.sh` が push のたびに format:check / lint / typecheck / test / build を独立に再実行するため、チェックリストから削除した。サブエージェントの自己申告 PASS を信用してはならないという原則自体は変わらない。（cycle-203, 242で実際に発生していた）
+- AP-WF16（自動チェック PASS の独立再実行）: `.claude/hooks/pre-push-check.sh` が push のたびに format:check / lint / typecheck / test / build と e2e（本番ビルドを配信して実ブラウザで測る）を独立に再実行するため、チェックリストから削除した。サブエージェントの自己申告 PASS を信用してはならないという原則自体は変わらない。（cycle-203, 242で実際に発生していた）
 - AP-WF22（Write 直後の残骸タグ混入）: `.claude/hooks/post-write-residue-check.sh`（編集直後）と `.claude/hooks/pre-commit-check.sh`（コミット前）が機械検出するため、チェックリストから削除した。（cycle-246, 251で実際に発生していた）
 - AP-WF25・AP-WF26: cycle-250 で候補として新設後に同サイクル内で撤回・削除された欠番（詳細 cycle-250.md 事後訂正1）。混同を避けるため再利用しない。
 

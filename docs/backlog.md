@@ -15,6 +15,8 @@
 | B-634 | 表の折り返しに word-break: auto-phrase を上乗せする | P3 | - | cycle-302の床の上に重ねる進歩的強化。単独では不可(日本のモバイルは非Chromiumが56.5%)。詳細 docs/cycles/cycle-302/review-log.md |
 | B-635 | GAにボット除外が効いていない疑い | P2 | - | 直近28日1859セッション中シンガポールが614(33.0%)。city空・平均PV1.0でデータセンター由来。全指標が水増しされている |
 | B-636 | 「日本語の表が1文字ずつ折れる」記事を仕上げて公開する | P2 | 303 | cycle-302で3巡レビューしたが下書きのまま。残る指摘は docs/cycles/cycle-302/review-log.md 記事3巡目 |
+| B-637 | block-destructive-git.shが複合形の破壊コマンドを素通りさせる | P2 | - | `sudo git reset --hard`・`(git reset --hard)`・`if ...; then git reset --hard; fi`が通る。守るのはデータ消失。pre-push-check.shの分解方式を移植して塞ぐ |
+| B-638 | e2eがCIに無くpre-push-check.sh1本に依存 | P2 | - | フックを外す/バイパスするとe2eが一度も走らない。「エラーを出さずにゲートが消える」形。tests/e2e/*.mjsをCIからも回す。詳細=.claude/hooks/pre-push-check.sh |
 | B-630 | icon-metricsがパレット形式のICOを読めない | P3 | - | 4bpp/8bppのICOで「未対応のビット深度」。現在の出荷物は32bppなので実害なしだが、判定装置を名乗る以上は限界。カラーテーブルとANDマスクの読み取りが要る。詳細cycle-302/review-log.md |
 | B-629 | E0出荷後のSERP実表示の確認 | P2 | - | 期日=E0出荷+7日。Googleの再クロール後でないと反映されず本サイクル内では確認不能。確認せずにチェックを入れるとAP-WF23の入口になる。詳細cycle-302/ |
 | B-628 | icon-metricsの未較正しきい値の較正 | P3 | - | cycle-302で3つが未較正: 円マスク上限(片側のみ)・図の色距離(最上流)・有彩色の定義。境界にある実例が現れたら較正し直す。詳細cycle-302/criteria.md |

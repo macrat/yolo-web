@@ -76,7 +76,7 @@ git add .
 git push
 ```
 
-push時にはフック（`.claude/hooks/pre-push-check.sh`）がフルスイート（format:check / lint / typecheck / test / build）を自動で再実行します。数分かかりますが、失敗した場合は必ず修正してから再度pushしてください。
+push時にはフック（`.claude/hooks/pre-push-check.sh`）がフルスイート（format:check / lint / typecheck / test / build）に加えて、本番ビルドを実際に配信して実ブラウザで測るe2eまで自動で再実行します。実測で約7分かかりますが、失敗した場合は必ず修正してから再度pushしてください。
 
 ## 8. CIの成功確認
 

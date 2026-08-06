@@ -1,7 +1,9 @@
 #!/bin/bash
 
 # pre-push-check.sh (PreToolUse hook / matcher: Bash)
-# push 前にフルスイート (format:check / lint / typecheck / test / build) を独立に再実行する。
+# push 前にフルスイート (format:check / lint / typecheck / test / build) と
+# e2e (本番ビルドを実際に配信して実ブラウザで測る) を独立に再実行する。
+# 実測で通しの所要時間は約7分。
 # コミット時のチェック (pre-commit-check.sh) は変更ファイル限定の高速版なので、
 # リポジトリ全体の整合はここで保証する。
 #
@@ -11,13 +13,160 @@
 INPUT=$(cat)
 COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command')
 
-# Only intercept git push commands
-if ! echo "$COMMAND" | grep -q "git push"; then
+# push だけを傍受する。素朴な `grep -q "git push"` は両側に外れていた:
+#   - 素通り: `git  push` (空白2つ) / `git -C /path push` — チェックなしで push できてしまう
+#   - 誤爆:   `echo "remember to git push"` — 無関係なコマンドで全チェック (約7分) を回す
+#
+# 一発の正規表現では直せない。複数行のコマンド (`cd x` 改行 `git push`) や
+# `for ... do git push; done` を数えると、区切りの列挙がすぐ破綻する。
+# 隣の block-destructive-git.sh が同じ問題 (複合コマンドの中の git を見つける) を
+# 分解で解いているので、同じ手順を踏む: heredoc を除く → 区切りと改行で
+# サブコマンドに割る → 各サブコマンドの先頭が git か見る。
+#
+# まず安いふるいで落とす (本判定は下の is_git_push)。push という語が無ければ
+# 確実に対象外なので、大多数の Bash 呼び出しはここで抜ける。
+if ! printf '%s' "$COMMAND" | grep -q "push"; then
+  exit 0
+fi
+
+# heredoc の中身は実行されない。`cat > doc.md <<EOF ... git push ... EOF` を
+# 傍受しないよう先に落とす (block-destructive-git.sh と同じ perl)。
+# あわせて行継続 (バックスラッシュ + 改行) を繋ぐ。繋がないと `git \` の直後で
+# 語が切れ、`git \`+改行+`push` を取りこぼす。
+remove_heredocs() {
+  perl -0777 -pe '
+    while (s/<<[-~]?\s*'\''?"?(\w+)"?'\''?[^\n]*\n.*?\n\s*\1\s*$//ms) {}
+    s/\\\n\s*/ /g;
+  '
+}
+
+# 区切り (; && || | &) を改行に均す。元からの改行はそのまま行の区切りになる。
+# `&&` を先に潰してから単独の `&` を見る (順序が逆だと `&&` が二重に割れる)。
+# block-destructive-git.sh の区切り集合 (|| && ; |) に `&` を足したもの。
+#
+# `$(` も区切りに入れる (`out=$(git push)` を捕まえるため)。ただし「$( は必ず
+# コマンド文脈を開くから正しい」ではない——単一引用符の中や `\$(` では開かない。
+# つまりこれは意図的な過剰傍受で、代償は下の `&` と同じクラス:
+#   `git commit -m 'TODO: $(git push) を実行'` は誤爆する。
+#
+# 裸の `(` とバッククォートは区切りに入れない。こちらを入れると
+# `git commit -m "hook: \`git push\` を直した"` のような日常のコミットメッセージ
+# まで誤爆するので、頻度が釣り合わない。サブシェルの `( git push )` は区切り
+# ではなく語の端の括弧を落とすことで捕まえる (下の is_git_push)。
+#
+# 取りこぼすと分かっている形 (いずれも main の `grep -q "git push"` でも
+# 取りこぼしていたので後退ではない。検体は tmp の試験集に入れてある):
+#   - `` `git push` `` (バッククォート)
+#   - 置換が push より前に来る形。`$(` で割ると語の途中で切れるため。
+#     `git -C $(pwd) push` / `git --git-dir=$(pwd)/.git push` /
+#     `GIT_SSH_COMMAND=$(which ssh) git push`
+#
+# `&` を区切りに足したぶん `git commit -m "wip & git push も直す"` も誤爆する。
+# 誤爆の代償は「空振り7分」では済まない: チェックが赤ければフックは exit 2 で
+# その無関係なコマンド (典型的には git commit) 自体を止め、push 前提の文言を出す。
+split_commands() {
+  printf '%s\n' "$1" | sed -E 's/\$\(/\n/g; s/\s*\|\|\s*/\n/g; s/\s*&&\s*/\n/g; s/\s*;\s*/\n/g; s/\s*\|\s*/\n/g; s/\s*&\s*/\n/g'
+}
+
+# 変数代入の値は引用符で囲まれていて空白を含みうる (GIT_SSH_COMMAND="ssh -v")。
+# 剥がす前に引用符を外すと値の途中で切れて先頭語を見失うので、剥がす段階では
+# 引用符を保ち、引用符の外しは語に割る直前に回す。
+ASSIGN_RE='^[A-Za-z_][A-Za-z0-9_]*=("[^"]*"|'"'"'[^'"'"']*'"'"'|[^[:space:]]*)[[:space:]]+'
+# ラッパーとシェルのキーワード。開始側 (if/elif/while/until) と継続側 (then/do/
+# else) は必ず対で入れること。片側だけだと `if git push; then ...` のような
+# ごく普通の形を取りこぼす。
+WRAPPER_RE='^(time|timeout|nohup|sudo|env|command|exec|eval|xargs|nice|stdbuf|setsid|bash|sh|zsh|if|elif|while|until|then|do|else|\{|!)[[:space:]]+'
+# ラッパー自身のオプション (`env -i` / `sudo -u me` / `xargs -n1` /
+# `timeout --foreground` / `bash -lc`)。ラッパーごとに書き分けるとリストが
+# 際限なく伸びるので、「先頭がオプションなら捨てる」の一本にまとめる。
+# 本物のコマンドがオプションで始まることはないので、これで誤爆は増えない。
+OPT_RE='^-[^[:space:]]*[[:space:]]+'
+# 値を別語で取る短いオプション (`sudo -u me` / `xargs -n 1` / `timeout -k 30`)。
+# 値まで一緒に捨てないと、値のほうが先頭語に見えてしまう。
+# 値が引用符で始まる場合は対象外 (`bash -c "git push"` の中身はコマンド本体)。
+# 値を捕まえておき、それが git そのものなら消さない (`env -i git push` の -i は
+# 値を取らないオプションで、次の語はコマンド本体)。短いオプションが値を取るか
+# 取らないかは一般には決められないので、「git なら本体」の一点で切り分ける。
+OPTARG_RE='^-[A-Za-z][[:space:]]+([^-"'"'"'[:space:]][^[:space:]]*)[[:space:]]+'
+# `timeout 300 git push` の数値引数。
+TIMEARG_RE='^[0-9]+[smhd]?[[:space:]]+'
+# サブシェル・グループの開き括弧。`( git push )` の先頭を剥がす。
+PAREN_RE='^[({][[:space:]]*'
+
+# サブコマンドが git push か。
+# 先頭の空白・変数代入 (GIT_TRACE=1)・ラッパー・シェルのキーワードを剥がしてから、
+# git のグローバルオプションを読み飛ばし、最初の非オプション語が push かを見る。
+# 「どこかに push がある」ではなく「git のサブコマンドが push」で判定する。
+# こうしないと `git commit -m "push まで済ませた"` を傍受して7分溶かす。
+# なお `git push --dry-run` / `-n` も傍受する (何も push されないのに7分回る)。
+# 区別する価値より、オプションの読み分けを増やさないほうを採った。
+# この関数自体は外部プロセスを呼ばず bash の組み込みだけで済ませる
+# (上の grep/perl/sed は "push" を含むコマンドでのみ走る。実測 約70ms)。
+is_git_push() {
+  local cmd="$1" prev="" i=1 w
+  while [ "$cmd" != "$prev" ]; do
+    prev="$cmd"
+    cmd=${cmd#"${cmd%%[![:space:]]*}"}
+    [[ $cmd =~ $PAREN_RE ]] && cmd=${cmd#"${BASH_REMATCH[0]}"}
+    [[ $cmd =~ $ASSIGN_RE ]] && cmd=${cmd#"${BASH_REMATCH[0]}"}
+    [[ $cmd =~ $WRAPPER_RE ]] && cmd=${cmd#"${BASH_REMATCH[0]}"}
+    if [[ $cmd =~ $OPTARG_RE ]]; then
+      case "${BASH_REMATCH[1]}" in
+        git | */git) ;;
+        *) cmd=${cmd#"${BASH_REMATCH[0]}"} ;;
+      esac
+    fi
+    [[ $cmd =~ $OPT_RE ]] && cmd=${cmd#"${BASH_REMATCH[0]}"}
+    [[ $cmd =~ $TIMEARG_RE ]] && cmd=${cmd#"${BASH_REMATCH[0]}"}
+  done
+  # 引用符を外す (`git "push"`)。外した結果 `git commit -m "do push"` は
+  # push が commit の引数の位置に来るので、下の「最初の非オプション語」で落ちる。
+  cmd=${cmd//\"/}
+  cmd=${cmd//\'/}
+  local -a words
+  IFS=$' \t' read -r -a words <<<"$cmd"
+  # 絶対パス・相対パス指定も git とみなす (`/usr/bin/git push`)。
+  case "${words[0]:-}" in
+    git | */git) ;;
+    *) return 1 ;;
+  esac
+  while [ "$i" -lt "${#words[@]}" ]; do
+    w="${words[$i]}"
+    case "$w" in
+      # 値を別語で取るグローバルオプションは次の語ごと飛ばす
+      -C | -c | --git-dir | --work-tree | --namespace | --exec-path) i=$((i + 2)) ;;
+      -*) i=$((i + 1)) ;;
+      *) break ;;
+    esac
+  done
+  # 語の端に張り付いた閉じ括弧を落とす (`( cd x && git push )` の `push)`)。
+  # パターンの括弧は必ずクォートすること。`${w%%[)}]*}` と書くと括弧内の `}` が
+  # 展開の終わりと解釈され、`push]*}` のような値になって一致しなくなる。
+  w="${words[$i]:-}"
+  w=${w%%')'*}
+  w=${w%%'}'*}
+  [ "$w" = "push" ]
+}
+
+IS_PUSH=0
+while IFS= read -r subcmd; do
+  [ -z "$subcmd" ] && continue
+  if is_git_push "$subcmd"; then
+    IS_PUSH=1
+    break
+  fi
+done < <(split_commands "$(printf '%s' "$COMMAND" | remove_heredocs)")
+if [ "$IS_PUSH" != 1 ]; then
   exit 0
 fi
 
 CWD=$(echo "$INPUT" | jq -r '.cwd')
-cd "$CWD" || exit 0
+# ここで黙って通す (exit 0) と、チェックなしの push を許すことになる。
+# push と判定したあとの異常系は閉じる側に倒す。
+if ! cd "$CWD" 2>/dev/null; then
+  echo "作業ディレクトリ ($CWD) に移動できず、push 前のチェックを実行できませんでした。" >&2
+  exit 2
+fi
 # 後で /proc/PID/cwd と文字列比較するので、実体パスに正規化しておく。
 CWD=$(pwd -P)
 
@@ -57,35 +206,47 @@ run_check "build" npm run build
 # グループを特定するのに `setsid` の `$!` は使えない。`setsid` が fork するか
 # どうかは呼び出し文脈で変わり、fork した場合の `$!` はセッションリーダーでは
 # ない (cycle-302 で両方の挙動を実測した)。子自身に `echo $$` で名乗らせる。
+#
+# `kill -KILL` でこのフックが落とされると trap が走らず、サーバが1本残ることが
+# ある。無作為ポート (下記) なので次の実行は別のポートを取れて詰まらない。
+# 残骸は RSS 100〜300MB を掴んだまま残るので、放っておく費用は手間だけではない。
+# 残骸は手で片付ける。`ps -ef | grep next-server` を頼りにしないこと。その行は
+# ポートを持たず、親も中間プロセスなので孤児と現役を区別できない。しかも next は
+# dev でも process.title を "next-server" にするため、take-screenshot などが
+# 立てた dev サーバまで同じ grep に並ぶ。
+# 見るのはグループリーダーの行 (実測):
+#   $ ps -eo pid,ppid,pgid,args | grep 'next start -p'
+#   1603964  1  1603964  npm exec next start -p 21188   ← 孤児 (PPID=1)
+# 孤児は PPID=1 かつポートが 20000-29999。走っている別のフックの現役サーバは
+# PPID がそのフックの shell になるので、この2条件で区別できる。
+# 落とすときはグループごと: kill -TERM -- -<PGID>。
+# 同じ経路で mktemp のファイル2本 (PID 置き場・サーバログ) も /tmp に残る。
+# 回収の仕組みは持たない。理由は下の valid_target を足したあとも変わらない:
+# 記録を tmp/ (全エージェントが書ける共有領域) に置いて、そこから読んだ PGID を
+# kill に渡す形になるため、「構文的には妥当だが古い PGID」(PID が再利用された
+# 後の値、他エージェントが書き換えた値) で無関係なグループを殺しうる。
+# 値が数値かどうかの検証では、この誤りは検出できない。所有を確かめようにも、
+# 回収時にはもうプロセスが別物になっており、この環境では cwd も決め手にならない
+# (PID 1 にも他エージェントの next にもこのリポジトリの cwd が出る。下の
+# holder_is_ours 参照)。検証を足したのだから回収器を戻せる、とはならない。
+# 守れるもの (サーバ1本) より失いうるもののほうが大きい。
 SERVER_PGID=""
 SERVER_LAUNCHER_PID=""
 E2E_PID_FILE=""
 E2E_SERVER_LOG=""
-E2E_STATE_FILE=""
 E2E_PORT=""
-
-# 取り残したサーバを次の実行で回収するための記録置き場。
-# `kill -KILL` で落とされる経路は trap では原理的に塞げないので、
-# 「落ちた後に取り戻す」側で塞ぐ。
-E2E_STATE_DIR="$CWD/tmp/pre-push-e2e"
 
 # --- /proc を読むだけのプロセス照会 -------------------------------------
 # この環境には ss / lsof / fuser が無く、ポートから持ち主を引く手段がないため、
 # すべて /proc で解決する (awk は mawk なので strtonum は使えない。16進のまま比べる)。
 # /proc/PID/stat の comm は括弧で囲まれ空白を含みうるので、最後の ") " より
-# 後ろを読む。そこから先は state(1) ppid(2) pgrp(3) session(4) ... starttime(20)。
+# 後ろを読む。そこから先は state(1) ppid(2) pgrp(3) session(4) ...。
+# このファイルが使うのは pgrp と session だけ。
 
 proc_stat_rest() {
   local line
   line=$(cat "/proc/$1/stat" 2>/dev/null) || return 1
   printf '%s' "${line##*) }"
-}
-
-proc_ppid() {
-  local rest
-  rest=$(proc_stat_rest "$1") || return 1
-  set -- $rest
-  printf '%s' "$2"
 }
 
 proc_pgid() {
@@ -100,13 +261,6 @@ proc_sid() {
   rest=$(proc_stat_rest "$1") || return 1
   set -- $rest
   printf '%s' "$4"
-}
-
-proc_starttime() {
-  local rest
-  rest=$(proc_stat_rest "$1") || return 1
-  set -- $rest
-  printf '%s' "${20}"
 }
 
 # 指定ポートを LISTEN しているプロセスの PID を列挙する。
@@ -137,13 +291,17 @@ listening_pids() {
 # 枯渇時や横取り時の診断。「ps -ef | grep next-server を見ろ」だと、
 # 居座っているのが next 以外のとき (例: python3 -m http.server) に外れるので、
 # 実際に掴んでいるプロセスを直接出す。
+# cmdline は切り詰める。chromium が掴んでいると1プロセスで数千文字になり、
+# 肝心のブロック理由が画面から流れて読めなくなる。
 describe_port_holders() {
-  local port="$1" pid found=0
+  local port="$1" pid found=0 cmd
   for pid in $(listening_pids "$port"); do
     found=1
+    cmd=$(tr '\0' ' ' <"/proc/$pid/cmdline" 2>/dev/null)
+    [ "${#cmd}" -gt 160 ] && cmd="${cmd:0:160}..."
     echo "  pid=$pid pgid=$(proc_pgid "$pid") sid=$(proc_sid "$pid")" \
       "cwd=$(readlink -f "/proc/$pid/cwd" 2>/dev/null)" \
-      "cmd=$(tr '\0' ' ' <"/proc/$pid/cmdline" 2>/dev/null)" >&2
+      "cmd=$cmd" >&2
   done
   if [ "$found" = 0 ]; then
     echo "  (ポート $port を LISTEN しているプロセスは見つかりませんでした)" >&2
@@ -161,8 +319,7 @@ describe_port_holders() {
 # 回収の仕組みとしては成立するが、資源が有限であることは変わらず、記録が壊れた
 # 一回で枯渇に戻る (記録の書き込み前に SIGKILL されればそのポートは永久に失われる)。
 # 「枯れない」ほうが「丁寧に回収する」より強いので、無作為ポートを土台にした。
-# ただし PGID の記録自体は有用なので、枯渇対策ではなく孤児の回収用に併用する
-# (reap_orphan_servers)。記録を失っても次の実行は別のポートを取れるだけで、詰まない。
+# これが効いているので、漏れたサーバの回収は push を守るために必要な機能ではない。
 find_free_port() {
   local attempt port
   for attempt in $(seq 1 50); do
@@ -177,9 +334,19 @@ find_free_port() {
 
 # --- 後片付け -----------------------------------------------------------
 
+# kill に渡す前の入力検証。`kill -- -1` は POSIX 上「シグナルを送れる全プロセス」
+# であり、PGID が 1 や空文字や非数値のまま届くと、このセッション自体を巻き込んで
+# 落としうる。自分の子から取った PGID にも掛ける (安いので)。
+valid_target() {
+  case "$1" in
+    '' | *[!0-9]*) return 1 ;;
+  esac
+  [ "$1" -ge 2 ]
+}
+
 kill_group() {
   local pgid="$1" i
-  [ -n "$pgid" ] || return 0
+  valid_target "$pgid" || return 0
   kill -TERM -- "-$pgid" 2>/dev/null
   for i in $(seq 1 20); do
     kill -0 -- "-$pgid" 2>/dev/null || return 0
@@ -206,16 +373,23 @@ descendant_pids() {
 
 kill_tree() {
   local pid="$1" targets p
-  [ -n "$pid" ] || return 0
+  valid_target "$pid" || return 0
   targets="$pid $(descendant_pids "$pid" | tr '\n' ' ')"
-  for p in $targets; do kill -TERM "$p" 2>/dev/null; done
+  for p in $targets; do valid_target "$p" && kill -TERM "$p" 2>/dev/null; done
   sleep 1
-  for p in $targets; do kill -KILL "$p" 2>/dev/null; done
+  for p in $targets; do valid_target "$p" && kill -KILL "$p" 2>/dev/null; done
 }
 
-# このフックが立てたサーバか。無作為に選んだポートを掴んでいて、かつ作業
-# ディレクトリがこのリポジトリなら、それは我々のもの。
-is_our_process() {
+# 見ているのは cwd だけ。単体で呼ぶと PID 1 にも他エージェントの next にも
+# TRUE を返す (この環境ではそれらの cwd もこのリポジトリ) ので、ポートで
+# 絞っていない場所からは呼ばない。
+#
+# これは所有の証明ではない。呼び出し元が絞っているのは「我々が確保しようと
+# したポート」であって「我々のサーバが掴んでいるポート」ではなく、ここへ来る
+# のは PGID を特定できなかったときだけ——つまり本物の所有判定 (PGID/SID 一致)
+# が使えない場面。同時に走る別のフックのサーバは同じ cwd・同じポートで両条件を
+# 満たすので、巻き込みうる。最後の手段としての当て推量と割り切っている。
+holder_is_ours() {
   [ "$(readlink -f "/proc/$1/cwd" 2>/dev/null)" = "$CWD" ]
 }
 
@@ -234,7 +408,7 @@ stop_e2e_server() {
     if [ -n "$E2E_PORT" ]; then
       local pid
       for pid in $(listening_pids "$E2E_PORT"); do
-        if is_our_process "$pid"; then
+        if holder_is_ours "$pid"; then
           kill_group "$(proc_pgid "$pid")"
         fi
       done
@@ -246,8 +420,6 @@ stop_e2e_server() {
   E2E_PID_FILE=""
   [ -n "$E2E_SERVER_LOG" ] && rm -f "$E2E_SERVER_LOG"
   E2E_SERVER_LOG=""
-  [ -n "$E2E_STATE_FILE" ] && rm -f "$E2E_STATE_FILE"
-  E2E_STATE_FILE=""
   return 0
 }
 
@@ -260,46 +432,7 @@ trap 'stop_e2e_server' EXIT
 trap 'stop_e2e_server; echo "中断されました (SIGINT)。" >&2; exit 130' INT
 trap 'stop_e2e_server; echo "中断されました (SIGTERM)。" >&2; exit 143' TERM
 
-# 前回の実行が SIGKILL などで落ちて残したサーバを回収する。
-# 走っているフック自身のものは殺さない (同時 push を壊さないため)。記録した
-# PID が生きていて starttime も一致するなら、そのフックは現役とみなす。
-reap_orphan_servers() {
-  local f hook_pid hook_start pgid port old_pid_file old_log
-  for f in "$E2E_STATE_DIR"/*.server; do
-    [ -f "$f" ] || continue
-    {
-      read -r hook_pid hook_start pgid port
-      read -r old_pid_file
-      read -r old_log
-    } <"$f" || continue
-    if [ -n "$hook_pid" ] && [ "$(proc_starttime "$hook_pid" 2>/dev/null)" = "$hook_start" ]; then
-      continue
-    fi
-    # PID が再利用されている可能性があるので、グループリーダーが本当に
-    # このリポジトリのプロセスかを確かめてから落とす。
-    if [ -n "$pgid" ] && kill -0 -- "-$pgid" 2>/dev/null && is_our_process "$pgid"; then
-      echo "前回の実行が残したサーバを回収します (pgid $pgid / port $port)。" >&2
-      kill_group "$pgid"
-    fi
-    # SIGKILL では trap が走らないので mktemp も残る。記録から辿って消す。
-    # 壊れた記録で無関係なファイルを消さないよう、mktemp の名前だけを対象にする。
-    remove_if_mktemp "$old_pid_file"
-    remove_if_mktemp "$old_log"
-    rm -f "$f"
-  done
-}
-
-remove_if_mktemp() {
-  case "${1##*/}" in
-    tmp.??????????) [ -f "$1" ] && rm -f "$1" ;;
-  esac
-  return 0
-}
-
 run_e2e() {
-  mkdir -p "$E2E_STATE_DIR"
-  reap_orphan_servers
-
   local port
   port=$(find_free_port)
   if [ -z "$port" ]; then
@@ -320,7 +453,15 @@ run_e2e() {
   local i
   for i in $(seq 1 75); do
     SERVER_PGID=$(cat "$E2E_PID_FILE" 2>/dev/null)
-    [ -n "$SERVER_PGID" ] && break
+    # 採用する前に検証する。ここを [ -n ] だけにすると、壊れた値が
+    # SERVER_PGID に居座り、kill_group が valid_target で黙って return する
+    # せいで stop_e2e_server は「片付けた」と誤解し、フォールバック経路に
+    # 降りずにサーバを取り残す。不正値は空のままにしてフォールバックへ流す。
+    # ここで「生きていて、かつ自分がグループリーダーか」まで確かめたくなるが、
+    # やらない。EADDRINUSE で即死する経路ではその時点で既に死んでいるため、
+    # 生存を条件にすると 15 秒待たされたうえ真因 (EADDRINUSE) を名乗れなくなる。
+    valid_target "$SERVER_PGID" && break
+    SERVER_PGID=""
     sleep 0.2
   done
   if [ -z "$SERVER_PGID" ]; then
@@ -332,17 +473,39 @@ run_e2e() {
     exit 2
   fi
 
-  # 回収用の記録。SIGKILL で落ちても次の実行がこれを見て取り戻す。
-  E2E_STATE_FILE="$E2E_STATE_DIR/$$.server"
-  printf '%s %s %s %s\n%s\n%s\n' "$$" "$(proc_starttime $$)" "$SERVER_PGID" "$port" \
-    "$E2E_PID_FILE" "$E2E_SERVER_LOG" >"$E2E_STATE_FILE"
-
-  for i in $(seq 1 60); do
-    curl -sf -o /dev/null "http://localhost:$port/" && break
+  # `--max-time` は必須。ポートを掴んだまま応答しないプロセスが相手だと、
+  # connect は成功して読み取りで止まるので、付けないと curl が永久に待ち、
+  # ループの1回目から返ってこない (= フックごと無限に固まる)。
+  # 待ち時間の上限は反復回数ではなく実時間で押さえる。1回が最大6秒 (max-time 5 +
+  # sleep 1) 掛かりうるので、回数で数えると遅い環境で試行数が激減する。
+  local wait_max=120 up=0
+  local deadline=$((SECONDS + wait_max))
+  while [ "$SECONDS" -lt "$deadline" ]; do
+    if curl -sf --max-time 5 -o /dev/null "http://localhost:$port/"; then
+      up=1
+      break
+    fi
+    # サーバが既に死んでいるなら待つ意味がない。満了まで回すと、起動に失敗した
+    # だけで毎回 120 秒を捨てることになる。
+    kill -0 -- "-$SERVER_PGID" 2>/dev/null || break
     sleep 1
   done
-  if ! curl -sf -o /dev/null "http://localhost:$port/"; then
-    echo "e2e failed: サーバが起動しませんでした。" >&2
+  if [ "$up" != 1 ]; then
+    # 「起動しませんでした」で一括りにしない。別プロセスがポートを掴んでいて
+    # 応答しないだけ、という別の失敗にすり替えて報告してしまうため。
+    # 最も決定的な証拠は自分のログの EADDRINUSE なので、それを最初に見る
+    # (相手が去ったあとでも真因を名乗れる)。次に自分のサーバの生死を見る。
+    if grep -q "EADDRINUSE" "$E2E_SERVER_LOG"; then
+      echo "e2e failed: ポート $port は別のプロセスに先に取られ (EADDRINUSE)、" \
+        "こちらのサーバは起動できませんでした。" >&2
+    elif kill -0 -- "-$SERVER_PGID" 2>/dev/null; then
+      echo "e2e failed: サーバは起動していますが ${wait_max} 秒以内に 200 を返しませんでした。" >&2
+    elif [ -n "$(listening_pids "$port")" ]; then
+      echo "e2e failed: ポート $port は別のプロセスに掴まれていて、200 を返しません" \
+        "(我々のサーバは起動できずに終了しました)。" >&2
+    else
+      echo "e2e failed: サーバが起動しませんでした。" >&2
+    fi
     describe_port_holders "$port"
     tail -20 "$E2E_SERVER_LOG" >&2
     exit 2
@@ -350,12 +513,14 @@ run_e2e() {
 
   # 空きポートの探索から bind までには窓がある (実測 約3秒)。その窓に別の push が
   # 重なると、敗者の curl は勝者のビルドに通り、無関係な PASS / FAIL を返す。
-  # 起動ログの EADDRINUSE と、実際にポートを掴んでいるのが自分のセッションかで塞ぐ。
-  if grep -q "EADDRINUSE" "$E2E_SERVER_LOG"; then
-    echo "e2e failed: ポート $port は別のプロセスに先に取られました (EADDRINUSE)。" >&2
-    describe_port_holders "$port"
-    exit 2
-  fi
+  # 塞ぐのは「実際にポートを掴んでいるのが自分のセッションか」の一点だけ。
+  #
+  # 以前はここに「起動ログに EADDRINUSE が出ていないか」の枝も並べていたが、
+  # 下の PGID/SID 一致判定の上位互換なので削った (EADDRINUSE で起動できなければ、
+  # ポートを掴んでいるのは必ず他人になり、同じ経路で捕まる)。負けたときの
+  # EADDRINUSE はこの枝の tail に出るので、診断としても失っていない。
+  # なお EADDRINUSE の検査自体は、起動待ちが尽きたときの真因判定として
+  # 上のブロックに移してある (あちらでは相手が去ったあとでも効く)。
   local holder owned=0
   for holder in $(listening_pids "$port"); do
     # setsid で作った新セッションなので、子孫はプロセスグループを変えても
@@ -368,14 +533,25 @@ run_e2e() {
   if [ "$owned" != 1 ]; then
     echo "e2e failed: ポート $port を掴んでいるのは、このフックが起動したサーバではありません。" >&2
     describe_port_holders "$port"
+    tail -20 "$E2E_SERVER_LOG" >&2
     exit 2
   fi
 
+  # e2e 本体にも上限を掛ける。chromium が掴んだまま返らないと、フックは
+  # settings.json の hook timeout まで走り続け、その打ち切りが SIGKILL なら
+  # trap が走らずサーバも mktemp も残る。自分から有界に終わるほうがよい。
+  # `-k 30` は必須。TERM で死なない相手だと、コマンド置換はパイプの書き手が
+  # 全員閉じるまで返らないので、timeout が発火しても待ち続けてしまう。
   local output
-  output=$(E2E_BASE_URL="http://localhost:$port" npm run test:e2e 2>&1)
+  output=$(E2E_BASE_URL="http://localhost:$port" timeout -k 30 600 npm run test:e2e 2>&1)
   local code=$?
   stop_e2e_server
 
+  if [ $code -eq 124 ]; then
+    echo "e2e failed: e2e が 600 秒以内に終わりませんでした (打ち切り)。" >&2
+    echo "$output" >&2
+    exit 2
+  fi
   if [ $code -ne 0 ]; then
     echo "e2e failed." >&2
     echo "$output" >&2
