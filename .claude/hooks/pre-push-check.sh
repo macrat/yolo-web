@@ -45,8 +45,38 @@ run_check "build" npm run build
 # vitest.config.mts は tests/e2e を除外しているので npm test では走らない。
 #
 # 空きポートを探してから起動すること。使用中のポートで起動に失敗すると、
-# そこに居座っている**別の (古い) ビルド**に対して測定が走り、
+# そこに居座っている別の (古い) ビルドに対して測定が走り、
 # 無関係な PASS / FAIL を返す (cycle-302 で実際に起きた)。
+#
+# サーバは必ずプロセスグループごと落とすこと。`npx next start` は
+# npx -> sh -c -> next-server の3段になるので、`$!` (= npx) を kill しても
+# 孫の next-server が生き残り、ポートを掴んだままになる。実行のたびに
+# ポートが1つ失われ、5回目には空きが尽きて push そのものが止まる。
+#
+# グループを特定するのに `setsid` の `$!` は使えない。`setsid` が fork するか
+# どうかは呼び出し文脈で変わり、fork した場合の `$!` はセッションリーダーでは
+# ない (cycle-302 で両方の挙動を実測した)。子自身に `echo $$` で名乗らせる。
+SERVER_PGID=""
+E2E_PID_FILE=""
+
+stop_e2e_server() {
+  if [ -n "$SERVER_PGID" ]; then
+    kill -TERM -- "-$SERVER_PGID" 2>/dev/null
+    local i
+    for i in $(seq 1 20); do
+      kill -0 -- "-$SERVER_PGID" 2>/dev/null || break
+      sleep 0.5
+    done
+    kill -KILL -- "-$SERVER_PGID" 2>/dev/null
+    SERVER_PGID=""
+  fi
+  [ -n "$E2E_PID_FILE" ] && rm -f "$E2E_PID_FILE"
+  E2E_PID_FILE=""
+}
+
+# どの経路で抜けても後片付けする (途中の exit・失敗・中断を含む)。
+trap stop_e2e_server EXIT INT TERM
+
 run_e2e() {
   local port
   for port in 3901 3902 3903 3904 3905; do
@@ -55,20 +85,32 @@ run_e2e() {
   done
   if [ -z "$port" ]; then
     echo "e2e failed: 3901-3905 がすべて使用中で、空きポートを確保できません。" >&2
+    echo "ポートを掴んだままのサーバが残っている可能性があります: ps -ef | grep next-server" >&2
     exit 2
   fi
 
   echo "Running e2e (port $port)..." >&2
-  npx next start -p "$port" >/tmp/pre-push-e2e-server.log 2>&1 &
-  local server_pid=$!
+  E2E_PID_FILE=$(mktemp)
+  # 子が自分のセッションリーダー PID を名乗る。これがプロセスグループ ID になる。
+  setsid bash -c 'echo $$ >"$1"; exec npx next start -p "$2"' _ \
+    "$E2E_PID_FILE" "$port" >/tmp/pre-push-e2e-server.log 2>&1 &
 
   local i
+  for i in $(seq 1 30); do
+    SERVER_PGID=$(cat "$E2E_PID_FILE" 2>/dev/null)
+    [ -n "$SERVER_PGID" ] && break
+    sleep 0.2
+  done
+  if [ -z "$SERVER_PGID" ]; then
+    echo "e2e failed: サーバのプロセスグループを特定できませんでした。" >&2
+    exit 2
+  fi
+
   for i in $(seq 1 60); do
     curl -sf -o /dev/null "http://localhost:$port/" && break
     sleep 1
   done
   if ! curl -sf -o /dev/null "http://localhost:$port/"; then
-    kill "$server_pid" 2>/dev/null
     echo "e2e failed: サーバが起動しませんでした。" >&2
     tail -20 /tmp/pre-push-e2e-server.log >&2
     exit 2
@@ -77,8 +119,7 @@ run_e2e() {
   local output
   output=$(E2E_BASE_URL="http://localhost:$port" npm run test:e2e 2>&1)
   local code=$?
-  kill "$server_pid" 2>/dev/null
-  wait "$server_pid" 2>/dev/null
+  stop_e2e_server
 
   if [ $code -ne 0 ]; then
     echo "e2e failed." >&2

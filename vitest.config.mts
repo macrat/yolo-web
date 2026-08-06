@@ -8,8 +8,13 @@ export default defineConfig({
     environment: "jsdom",
     setupFiles: ["./src/test/setup.ts"],
     // e2e テストは Playwright スクリプト（.mjs）で実装されており、
-    // vitest（jsdom 環境）では実行できないため除外する
-    exclude: ["**/node_modules/**", "**/tests/e2e/**"],
+    // vitest（jsdom 環境）では実行できないため除外する。
+    //
+    // `tmp/` を除外するのは、そこが作業用の置き場（`.claude/rules/tmp-directory.md`）で
+    // あり、リポジトリの複製や検証用スクリプトが置かれるため。除外しないと
+    // 複製の中のテストまで走り、`npm test` が落ちる（cycle-302 で実際に発生）。
+    // 同じ形が `tsconfig.json` にもあり、そちらは B-466 として別に塞いである。
+    exclude: ["**/node_modules/**", "**/tests/e2e/**", "tmp/**"],
     // Shiki の `bundle/full` ハイライタは初回呼び出し時に ~200 言語の grammar を
     // ロードするため、Vitest のデフォルト 5s では足りないテストがある
     // （ブログ本文を Shiki でレンダリングする SEO カバレッジテストなど）。
