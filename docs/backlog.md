@@ -12,6 +12,8 @@
 | B-631 | DESIGN.md §4「読む幅に収まらない面」の未適合面の棚卸し | P2 | - | cycle-302で規則を新設したが実装は表のみ。`.prose pre` と markdown-preview が未適合。詳細 docs/knowledge/frontend.md |
 | B-632 | htmlのfont-sizeがpx固定でブラウザの文字サイズ設定が効かない | P2 | - | 拡大して読む来訪者に届く。最小20px設定だと360pxで88セルが2文字/行以下。詳細 docs/knowledge/frontend.md |
 | B-633 | 7列スコア表がデスクトップで最終列を失う | P3 | - | cycle-302の床の既知の代償。目次の配置を変えないと解けない。詳細 docs/cycles/cycle-302/review-log.md 8巡目 |
+| B-634 | 表の折り返しに word-break: auto-phrase を上乗せする | P3 | - | cycle-302の床の上に重ねる進歩的強化。単独では不可(日本のモバイルは非Chromiumが56.5%)。詳細 docs/cycles/cycle-302/review-log.md |
+| B-635 | GAにボット除外が効いていない疑い | P2 | - | 直近28日1859セッション中シンガポールが614(33.0%)。city空・平均PV1.0でデータセンター由来。全指標が水増しされている |
 | B-630 | icon-metricsがパレット形式のICOを読めない | P3 | - | 4bpp/8bppのICOで「未対応のビット深度」。現在の出荷物は32bppなので実害なしだが、判定装置を名乗る以上は限界。カラーテーブルとANDマスクの読み取りが要る。詳細cycle-302/review-log.md |
 | B-629 | E0出荷後のSERP実表示の確認 | P2 | - | 期日=E0出荷+7日。Googleの再クロール後でないと反映されず本サイクル内では確認不能。確認せずにチェックを入れるとAP-WF23の入口になる。詳細cycle-302/ |
 | B-628 | icon-metricsの未較正しきい値の較正 | P3 | - | cycle-302で3つが未較正: 円マスク上限(片側のみ)・図の色距離(最上流)・有彩色の定義。境界にある実例が現れたら較正し直す。詳細cycle-302/criteria.md |
