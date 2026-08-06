@@ -9,14 +9,16 @@
  * 条件: SP 390×844（タッチデバイス想定）
  *
  * 実行方法:
- *   node tests/e2e/blog-detail-share-buttons.test.mjs
+ *   node tests/e2e/blog-detail-share-buttons.mjs
+ *   （別ポートなら E2E_BASE_URL=http://localhost:<ポート> を渡す）
  *
  * 前提: http://localhost:3001 でビルド済みアプリが起動していること
  */
 
-import { chromium } from "/mnt/data/yolo-web/node_modules/playwright/index.mjs";
+import { chromium } from "playwright";
 
-const BASE_URL = "http://localhost:3001";
+// npm run test:e2e で他のテストと連結するので、宛先の指定方法を揃えておく
+const BASE_URL = process.env.E2E_BASE_URL ?? "http://localhost:3001";
 // headings を持つ記事スラグ（TOC 表示でレイアウトが完全な状態）
 const BLOG_SLUG = "five-failures-and-lessons-from-ai-agents";
 const MIN_TOUCH_SIZE = 44; // WCAG 2.5.5

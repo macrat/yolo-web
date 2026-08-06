@@ -47,6 +47,64 @@ describe("sanitize", () => {
     expect(result).toContain("<td>1</td>");
   });
 
+  /*
+   * markdown.ts の table 拡張が出す包みと案内が、サニタイズを通り抜けること。
+   * class か aria-hidden が落ちると、横スクロールの案内が全ての表に出っぱなしに
+   * なる（あるいは一切出なくなる）。
+   */
+  test("preserves the table scroll wrapper and hint", () => {
+    // markdown.ts の実出力と同じ形（案内が先・包みは幅の見積もりを style で運ぶ）
+    const html =
+      '<div class="table-wrap" style="--table-col-1:2em;--table-col-2:1em">' +
+      '<p class="table-scroll-hint" aria-hidden="true">横にスクロールできます →</p>' +
+      '<div class="table-scroll"><table><tbody><tr><td>1</td></tr></tbody></table></div></div>';
+    const result = sanitize(html);
+    expect(result).toContain('class="table-wrap"');
+    expect(result).toContain('<div class="table-scroll">');
+    expect(result).toContain(
+      '<p class="table-scroll-hint" aria-hidden="true">',
+    );
+    expect(result).toContain("--table-col-1:2em");
+    expect(result).toContain("--table-col-2:1em");
+  });
+
+  /*
+   * 包みが運ぶのは幅の見積もりの2つだけ。任意の CSS を書ける余地は残さない
+   * （本文の生 HTML から表示を乗っ取られないようにするため）。
+   */
+  /*
+   * 値の形もサニタイズの境界。プロパティ名だけを見ていると、
+   * `--table-col-1: url(...)` のような値が通る余地が残る。
+   */
+  test("strips table width hints whose value is not a plain em length", () => {
+    const result = sanitize(
+      '<div class="table-wrap" style="--table-col-1:url(javascript:alert(1));--table-col-2:100vw;--table-col-3:2em">x</div>',
+    );
+    expect(result).not.toContain("javascript");
+    expect(result).not.toContain("100vw");
+    expect(result).toContain("--table-col-3:2em");
+  });
+
+  test("strips style properties other than the table width hints from div", () => {
+    const result = sanitize(
+      '<div class="table-wrap" style="--table-col-1:2em;position:fixed;background:url(javascript:alert(1))">x</div>',
+    );
+    expect(result).toContain("--table-col-1:2em");
+    expect(result).not.toContain("position");
+    expect(result).not.toContain("javascript");
+  });
+
+  /*
+   * div の tabindex は許可しない。スクロール面のフォーカス可能化は
+   * TableScrollHint が溢れた表にだけ実行時に付けるので、記事本文の生 HTML から
+   * タブ順を書き換えられる余地を残さない。
+   */
+  test("strips tabindex from div", () => {
+    const result = sanitize('<div class="table-scroll" tabindex="5">x</div>');
+    expect(result).not.toContain("tabindex");
+    expect(result).toContain('class="table-scroll"');
+  });
+
   test("preserves mermaid div class", () => {
     const html = '<div class="mermaid">graph TD; A--&gt;B;</div>';
     const result = sanitize(html);
