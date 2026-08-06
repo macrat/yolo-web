@@ -248,7 +248,7 @@ describe("markdownToHtml", () => {
     const { html } = await markdownToHtml(md);
     // 1列目は「あいうえお」= 15×5 = 75px。列ごとに出すので、長い列の幅が
     // 短い列の床に化けない
-    // 2列目の見出し "b" は th の太字ぶん広い（0.493em × 1.10 ＋ 遊び0.2em）
+    // 2列目の見出し "b" は th の太字ぶん広い（0.493em × 1.10 ＋ 遊び0.4em）
     expect(html).toContain('style="--table-col-1:5.4em;--table-col-2:0.943em"');
   });
 
@@ -290,7 +290,8 @@ describe("markdownToHtml", () => {
     ["adds the inline code chip padding", "| x |\n|---|\n| `ab` |", "2.027em"],
     // コード内の全角は等幅でも全角送り（半角扱いだと 5.3px 過小）
     ["counts full width inside code", "| x |\n|---|\n| `あ` |", "1.867em"],
-    // 大文字10.2 ×2 ×太字1.03 ＋ 空白4.2 ＋ 大文字2つ → 3.2em
+    // 大文字10.2 ×4 ＋ 空白4.2 ＝ 45px ＝ 3.0em（本文セルなので太字は掛からない）
+    // ＋ 遊び0.4em → 3.4em
     ["counts uppercase and spaces", "| x |\n|---|\n| AB CD |", "3.4em"],
     // ASCII 約物（`.` = 5px）。ここが other(8.5) に落ちると 0.4em ずれる
     ["counts ascii punctuation", "| x |\n|---|\n| a.b.c |", "2.547em"],
