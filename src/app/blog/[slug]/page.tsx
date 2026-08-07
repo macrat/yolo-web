@@ -23,7 +23,6 @@ import CollapsibleTOC from "@/blog/_components/CollapsibleTOC";
 import TagList from "@/blog/_components/TagList";
 import SeriesNav from "@/blog/_components/SeriesNav";
 import MermaidRenderer from "@/blog/_components/MermaidRenderer";
-import TableScrollHint from "@/blog/_components/TableScrollHint";
 import RelatedArticles from "@/blog/_components/RelatedArticles";
 import styles from "./page.module.css";
 
@@ -134,7 +133,6 @@ export default async function BlogPostPage({ params }: Props) {
           />
 
           <MermaidRenderer />
-          <TableScrollHint />
         </div>
       </div>
 

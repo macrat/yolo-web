@@ -72,14 +72,10 @@ const ALLOWED_ATTRIBUTES: Record<string, sanitizeHtml.AllowedAttribute[]> = {
   h6: ["id"],
   // GFM task list checkboxes: marked generates <input checked="" disabled="" type="checkbox">
   input: ["type", "checked", "disabled"],
-  // GFM Alert title paragraph uses class="markdown-alert-title".
-  // 表の横スクロール案内は目で見るための飾りなので aria-hidden で読み上げから外す。
-  p: ["class", "aria-hidden"],
-  // mermaid extension uses <div class="mermaid">, GFM Alerts use class attributes,
-  // table extension uses <div class="table-wrap"> / <div class="table-scroll">。
-  // table-wrap は列ごとの「折り返さずに置いたときの幅」を custom property で運ぶので
-  // style も許す（下の allowedStyles で、その数値プロパティだけに絞ってある）。
-  div: ["class", "style"],
+  // GFM Alert title paragraph uses class="markdown-alert-title"
+  p: ["class"],
+  // mermaid extension uses <div class="mermaid">, GFM Alerts use class attributes
+  div: ["class"],
   // <span> inside Shiki output carries inline `style` declarations with per-token colors
   span: ["class", "style"],
   section: ["class"],
@@ -124,12 +120,6 @@ const SHIKI_STYLE_WHITELIST: Record<string, RegExp[]> = {
 };
 
 /**
- * 表の包みに載せる列幅変数の本数。記事本文の表の最大列数（7）に合わせてある。
- * これを超える列は CSS 側の既定値（6.8em の床）に落ちる。
- */
-const MAX_TABLE_COLUMNS = 7;
-
-/**
  * Sanitize HTML output from marked to prevent XSS attacks.
  *
  * Allows only the tags, attributes, and URL schemes that marked with our
@@ -161,14 +151,6 @@ export function sanitize(html: string): string {
       th: { "text-align": [/^(left|center|right)$/] },
       pre: SHIKI_STYLE_WHITELIST,
       span: SHIKI_STYLE_WHITELIST,
-      // 表の包みが運ぶのは列ごとの見積もり幅だけ。任意の CSS を書ける余地は残さない
-      // （既存記事の最大列数は7で、それを超える列は CSS 側の既定値に落ちる）。
-      div: Object.fromEntries(
-        Array.from({ length: MAX_TABLE_COLUMNS }, (_, index) => [
-          `--table-col-${index + 1}`,
-          [/^\d+(\.\d+)?em$/],
-        ]),
-      ),
     },
   });
 }
