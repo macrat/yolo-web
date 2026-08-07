@@ -14,7 +14,7 @@
   R16. レビュー巡数 = tool_use の Agent/Task のうち input.subagent_type == "reviewer" の数。
        review-log.md の `^## ` 見出し数は書式がサイクルごとに違う（後述）ので比較に使えない。
 
-出力: 標準出力に表 + tmp/cycle-stats/out/compare.json
+出力: 標準出力に表 + scripts/cycle-stats/out/compare.json
 """
 
 import json

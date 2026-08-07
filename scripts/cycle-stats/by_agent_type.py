@@ -9,7 +9,7 @@ R7(Agent|Task を起動とみなす) に完全に従う。追加した規則は�
   R12. ツール名 = tool_use ブロックの name。
 
 使い方:
-  python3 tmp/cycle-stats/by_agent_type.py cycle-297 cycle-298 ...
+  python3 scripts/cycle-stats/by_agent_type.py cycle-297 cycle-298 ...
 """
 
 import json

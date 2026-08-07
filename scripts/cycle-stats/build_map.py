@@ -2,11 +2,11 @@
 """セッション -> サイクル の対応表を作る。
 
 出力:
-  tmp/cycle-stats/out/session_cycle_map.json   機械可読の対応表 (集計スクリプトが読む)
-  tmp/cycle-stats/out/session_cycle_map.md     人が読む要約
+  scripts/cycle-stats/out/session_cycle_map.json   機械可読の対応表 (集計スクリプトが読む)
+  scripts/cycle-stats/out/session_cycle_map.md     人が読む要約
 
 使い方:
-  python3 tmp/cycle-stats/build_map.py
+  python3 scripts/cycle-stats/build_map.py
 """
 
 import json
@@ -97,7 +97,7 @@ def main():
         })
 
     data = {
-        "generated_by": "tmp/cycle-stats/build_map.py",
+        "generated_by": "scripts/cycle-stats/build_map.py",
         "log_dir": common.LOG_DIR,
         "idle_gap_sec": common.IDLE_GAP_SEC,
         "cycles": [{k: c[k] for k in ("id", "name", "started_at", "completed_at", "start", "end")}

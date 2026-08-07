@@ -1,17 +1,17 @@
 {
   "verification": {
-    "total_records_all_files": 110001,
-    "records_no_timestamp": 5610,
+    "total_records_all_files": 111065,
+    "records_no_timestamp": 5631,
     "records_assigned_to_a_cycle": 93476,
-    "records_unassigned_between_cycles": 10915,
-    "records_without_timestamp_bucket": 5610,
-    "assistant_records": 58385,
+    "records_unassigned_between_cycles": 11958,
+    "records_without_timestamp_bucket": 5631,
+    "assistant_records": 58986,
     "assistant_records_without_usage": 0,
     "idle_gap_sec": 300,
-    "sum_of_buckets": 110001,
+    "sum_of_buckets": 111065,
     "balanced": true,
-    "records_with_usage_pct": 53.08,
-    "records_without_usage_pct": 46.92
+    "records_with_usage_pct": 53.11,
+    "records_without_usage_pct": 46.89
   },
   "cycles": {
     "cycle-298": {
@@ -40,7 +40,9 @@
         "tool_calls": 1013,
         "subagent_launches": 0
       },
-      "main_sessions": ["09733106-8c85-40da-a0a3-f217b34ea7e9"],
+      "main_sessions": [
+        "09733106-8c85-40da-a0a3-f217b34ea7e9"
+      ],
       "subagent_files": 28,
       "main_session_count": 1,
       "active_seconds_merged": 22623.7,
@@ -66,28 +68,28 @@
     "__UNASSIGNED__": {
       "cycle": "__UNASSIGNED__",
       "main": {
-        "input_tokens": 2652,
-        "output_tokens": 1508906,
-        "cache_creation_input_tokens": 12877478,
-        "cache_read_input_tokens": 606165838,
-        "records": 7225,
-        "user_messages": 1509,
-        "assistant_responses": 1378,
-        "assistant_records": 3023,
-        "tool_calls": 1335,
-        "subagent_launches": 53
+        "input_tokens": 2757,
+        "output_tokens": 1593197,
+        "cache_creation_input_tokens": 13058458,
+        "cache_read_input_tokens": 650291135,
+        "records": 7492,
+        "user_messages": 1568,
+        "assistant_responses": 1435,
+        "assistant_records": 3133,
+        "tool_calls": 1388,
+        "subagent_launches": 58
       },
       "sub": {
-        "input_tokens": 16962,
-        "output_tokens": 21244,
-        "cache_creation_input_tokens": 4346015,
-        "cache_read_input_tokens": 53474306,
-        "records": 3690,
-        "user_messages": 1227,
-        "assistant_responses": 948,
-        "assistant_records": 2432,
-        "tool_calls": 1167,
-        "subagent_launches": 0
+        "input_tokens": 17403,
+        "output_tokens": 23593,
+        "cache_creation_input_tokens": 5150892,
+        "cache_read_input_tokens": 73669888,
+        "records": 4466,
+        "user_messages": 1505,
+        "assistant_responses": 1173,
+        "assistant_records": 2923,
+        "tool_calls": 1438,
+        "subagent_launches": 1
       },
       "main_sessions": [
         "09733106-8c85-40da-a0a3-f217b34ea7e9",
@@ -122,26 +124,26 @@
         "f749fe73-2538-47b5-ab56-d932df75a910",
         "f9e6f6f2-dcb5-4960-bba3-4a234f2c0d75"
       ],
-      "subagent_files": 57,
+      "subagent_files": 63,
       "main_session_count": 31,
-      "active_seconds_merged": 78981.4,
-      "active_seconds_main_only": 66476.1,
+      "active_seconds_merged": 87509.9,
+      "active_seconds_main_only": 70211.9,
       "wall_clock_seconds": null,
       "started_at": null,
       "completed_at": null,
       "first_record_jst": "2026-07-03T13:52:24.397000+09:00",
-      "last_record_jst": "2026-08-07T12:36:33.764000+09:00",
+      "last_record_jst": "2026-08-07T15:29:25.840000+09:00",
       "total": {
-        "input_tokens": 19614,
-        "output_tokens": 1530150,
-        "cache_creation_input_tokens": 17223493,
-        "cache_read_input_tokens": 659640144,
-        "records": 10915,
-        "user_messages": 2736,
-        "assistant_responses": 2326,
-        "assistant_records": 5455,
-        "tool_calls": 2502,
-        "subagent_launches": 53
+        "input_tokens": 20160,
+        "output_tokens": 1616790,
+        "cache_creation_input_tokens": 18209350,
+        "cache_read_input_tokens": 723961023,
+        "records": 11958,
+        "user_messages": 3073,
+        "assistant_responses": 2608,
+        "assistant_records": 6056,
+        "tool_calls": 2826,
+        "subagent_launches": 59
       }
     },
     "__NO_TIMESTAMP__": {
@@ -151,7 +153,7 @@
         "output_tokens": 0,
         "cache_creation_input_tokens": 0,
         "cache_read_input_tokens": 0,
-        "records": 5610,
+        "records": 5631,
         "user_messages": 0,
         "assistant_responses": 0,
         "assistant_records": 0,
@@ -219,7 +221,7 @@
         "output_tokens": 0,
         "cache_creation_input_tokens": 0,
         "cache_read_input_tokens": 0,
-        "records": 5610,
+        "records": 5631,
         "user_messages": 0,
         "assistant_responses": 0,
         "assistant_records": 0,
@@ -253,7 +255,9 @@
         "tool_calls": 93,
         "subagent_launches": 0
       },
-      "main_sessions": ["09f1e94a-7afa-4967-aafe-c8a39e586f0f"],
+      "main_sessions": [
+        "09f1e94a-7afa-4967-aafe-c8a39e586f0f"
+      ],
       "subagent_files": 7,
       "main_session_count": 1,
       "active_seconds_merged": 9939.2,
@@ -354,7 +358,9 @@
         "tool_calls": 57,
         "subagent_launches": 0
       },
-      "main_sessions": ["3b5dead8-4d2f-4ae3-882f-89f6439a8095"],
+      "main_sessions": [
+        "3b5dead8-4d2f-4ae3-882f-89f6439a8095"
+      ],
       "subagent_files": 8,
       "main_session_count": 1,
       "active_seconds_merged": 1920.1,
@@ -403,7 +409,9 @@
         "tool_calls": 137,
         "subagent_launches": 0
       },
-      "main_sessions": ["478fa83d-7a7a-4ec4-baa1-5feaaa4bcaac"],
+      "main_sessions": [
+        "478fa83d-7a7a-4ec4-baa1-5feaaa4bcaac"
+      ],
       "subagent_files": 6,
       "main_session_count": 1,
       "active_seconds_merged": 5133.0,
@@ -452,7 +460,9 @@
         "tool_calls": 143,
         "subagent_launches": 0
       },
-      "main_sessions": ["59130a05-f5e3-43c8-894f-ec523df4e9a4"],
+      "main_sessions": [
+        "59130a05-f5e3-43c8-894f-ec523df4e9a4"
+      ],
       "subagent_files": 3,
       "main_session_count": 1,
       "active_seconds_merged": 5618.5,
@@ -501,7 +511,9 @@
         "tool_calls": 439,
         "subagent_launches": 0
       },
-      "main_sessions": ["626eab2b-175d-4214-96e4-7d3b3c658b52"],
+      "main_sessions": [
+        "626eab2b-175d-4214-96e4-7d3b3c658b52"
+      ],
       "subagent_files": 17,
       "main_session_count": 1,
       "active_seconds_merged": 14775.8,
@@ -550,7 +562,9 @@
         "tool_calls": 119,
         "subagent_launches": 0
       },
-      "main_sessions": ["71b6b316-c2bc-4f20-b964-ebab26bc4e37"],
+      "main_sessions": [
+        "71b6b316-c2bc-4f20-b964-ebab26bc4e37"
+      ],
       "subagent_files": 3,
       "main_session_count": 1,
       "active_seconds_merged": 5723.7,
@@ -599,7 +613,9 @@
         "tool_calls": 576,
         "subagent_launches": 0
       },
-      "main_sessions": ["7b0c1b1b-6e08-44e4-9c49-2fe070edb33e"],
+      "main_sessions": [
+        "7b0c1b1b-6e08-44e4-9c49-2fe070edb33e"
+      ],
       "subagent_files": 17,
       "main_session_count": 1,
       "active_seconds_merged": 12178.5,
@@ -648,7 +664,9 @@
         "tool_calls": 515,
         "subagent_launches": 0
       },
-      "main_sessions": ["7c702374-b8c4-4c89-906e-2d6d792bd7bc"],
+      "main_sessions": [
+        "7c702374-b8c4-4c89-906e-2d6d792bd7bc"
+      ],
       "subagent_files": 22,
       "main_session_count": 1,
       "active_seconds_merged": 20139.5,
@@ -697,7 +715,9 @@
         "tool_calls": 321,
         "subagent_launches": 0
       },
-      "main_sessions": ["8d8fb1d0-f723-4439-83f4-2e1ebed0bae6"],
+      "main_sessions": [
+        "8d8fb1d0-f723-4439-83f4-2e1ebed0bae6"
+      ],
       "subagent_files": 13,
       "main_session_count": 1,
       "active_seconds_merged": 9206.6,
@@ -746,7 +766,9 @@
         "tool_calls": 826,
         "subagent_launches": 0
       },
-      "main_sessions": ["8fe7be02-b3e5-47a5-a35c-4200f2f44cd0"],
+      "main_sessions": [
+        "8fe7be02-b3e5-47a5-a35c-4200f2f44cd0"
+      ],
       "subagent_files": 45,
       "main_session_count": 1,
       "active_seconds_merged": 27855.6,
@@ -795,7 +817,9 @@
         "tool_calls": 4002,
         "subagent_launches": 11
       },
-      "main_sessions": ["9cb1733a-5ca7-411f-a6ab-81b056248ce4"],
+      "main_sessions": [
+        "9cb1733a-5ca7-411f-a6ab-81b056248ce4"
+      ],
       "subagent_files": 53,
       "main_session_count": 1,
       "active_seconds_merged": 53966.6,
@@ -844,7 +868,9 @@
         "tool_calls": 5395,
         "subagent_launches": 23
       },
-      "main_sessions": ["a0ac882e-cdc1-4f59-ac46-0a182432701e"],
+      "main_sessions": [
+        "a0ac882e-cdc1-4f59-ac46-0a182432701e"
+      ],
       "subagent_files": 69,
       "main_session_count": 1,
       "active_seconds_merged": 156225.8,
@@ -893,7 +919,9 @@
         "tool_calls": 352,
         "subagent_launches": 0
       },
-      "main_sessions": ["a26da1e6-b0f8-4261-9885-2965e561638f"],
+      "main_sessions": [
+        "a26da1e6-b0f8-4261-9885-2965e561638f"
+      ],
       "subagent_files": 16,
       "main_session_count": 1,
       "active_seconds_merged": 15618.6,
@@ -942,7 +970,9 @@
         "tool_calls": 515,
         "subagent_launches": 0
       },
-      "main_sessions": ["a8c33408-e052-4ea2-854a-9a62d4b1cd32"],
+      "main_sessions": [
+        "a8c33408-e052-4ea2-854a-9a62d4b1cd32"
+      ],
       "subagent_files": 18,
       "main_session_count": 1,
       "active_seconds_merged": 9753.6,
@@ -991,7 +1021,9 @@
         "tool_calls": 390,
         "subagent_launches": 0
       },
-      "main_sessions": ["ab2ebadf-44f8-42f6-a022-38549834ec48"],
+      "main_sessions": [
+        "ab2ebadf-44f8-42f6-a022-38549834ec48"
+      ],
       "subagent_files": 15,
       "main_session_count": 1,
       "active_seconds_merged": 18045.6,
@@ -1040,7 +1072,9 @@
         "tool_calls": 1001,
         "subagent_launches": 0
       },
-      "main_sessions": ["ac231bea-dc7e-4c8b-ade4-373363f84852"],
+      "main_sessions": [
+        "ac231bea-dc7e-4c8b-ade4-373363f84852"
+      ],
       "subagent_files": 20,
       "main_session_count": 1,
       "active_seconds_merged": 23926.7,
@@ -1089,7 +1123,9 @@
         "tool_calls": 162,
         "subagent_launches": 0
       },
-      "main_sessions": ["ba54a246-7fd6-4ebd-9dda-85986efe63ad"],
+      "main_sessions": [
+        "ba54a246-7fd6-4ebd-9dda-85986efe63ad"
+      ],
       "subagent_files": 6,
       "main_session_count": 1,
       "active_seconds_merged": 6350.1,
@@ -1138,7 +1174,9 @@
         "tool_calls": 138,
         "subagent_launches": 0
       },
-      "main_sessions": ["cd2773b7-f0d3-4cf2-aa2e-387412e4d568"],
+      "main_sessions": [
+        "cd2773b7-f0d3-4cf2-aa2e-387412e4d568"
+      ],
       "subagent_files": 11,
       "main_session_count": 1,
       "active_seconds_merged": 7057.2,
@@ -1239,7 +1277,9 @@
         "tool_calls": 512,
         "subagent_launches": 0
       },
-      "main_sessions": ["ea094eda-9446-4434-8c8a-7bd075a13a8e"],
+      "main_sessions": [
+        "ea094eda-9446-4434-8c8a-7bd075a13a8e"
+      ],
       "subagent_files": 25,
       "main_session_count": 1,
       "active_seconds_merged": 16576.2,
@@ -1288,7 +1328,9 @@
         "tool_calls": 151,
         "subagent_launches": 0
       },
-      "main_sessions": ["f125e160-f287-4640-9790-5f85a95a89c3"],
+      "main_sessions": [
+        "f125e160-f287-4640-9790-5f85a95a89c3"
+      ],
       "subagent_files": 6,
       "main_session_count": 1,
       "active_seconds_merged": 4253.8,
@@ -1337,7 +1379,9 @@
         "tool_calls": 132,
         "subagent_launches": 0
       },
-      "main_sessions": ["f355a23a-60f2-4261-9a31-1e3e0020e51d"],
+      "main_sessions": [
+        "f355a23a-60f2-4261-9a31-1e3e0020e51d"
+      ],
       "subagent_files": 17,
       "main_session_count": 1,
       "active_seconds_merged": 5490.4,
@@ -1386,7 +1430,9 @@
         "tool_calls": 3495,
         "subagent_launches": 0
       },
-      "main_sessions": ["f5485b6a-96af-491b-9013-25121f7ab71a"],
+      "main_sessions": [
+        "f5485b6a-96af-491b-9013-25121f7ab71a"
+      ],
       "subagent_files": 62,
       "main_session_count": 1,
       "active_seconds_merged": 80951.7,
@@ -1435,7 +1481,9 @@
         "tool_calls": 69,
         "subagent_launches": 0
       },
-      "main_sessions": ["f9e6f6f2-dcb5-4960-bba3-4a234f2c0d75"],
+      "main_sessions": [
+        "f9e6f6f2-dcb5-4960-bba3-4a234f2c0d75"
+      ],
       "subagent_files": 6,
       "main_session_count": 1,
       "active_seconds_merged": 3682.2,

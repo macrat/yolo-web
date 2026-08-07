@@ -2,13 +2,13 @@
 """対応表 (out/session_cycle_map.json) を使ってサイクルごとに集計する。
 
 使い方:
-  python3 tmp/cycle-stats/aggregate.py                 # 全サイクル
-  python3 tmp/cycle-stats/aggregate.py cycle-301 cycle-302
-  python3 tmp/cycle-stats/aggregate.py --json          # JSON で出力
+  python3 scripts/cycle-stats/aggregate.py                 # 全サイクル
+  python3 scripts/cycle-stats/aggregate.py cycle-301 cycle-302
+  python3 scripts/cycle-stats/aggregate.py --json          # JSON で出力
 
 出力:
   標準出力にテキストの表
-  tmp/cycle-stats/out/cycle_stats.json  に全サイクル分の集計
+  scripts/cycle-stats/out/cycle_stats.json  に全サイクル分の集計
 
 数え方は METHOD.md を参照。
 """

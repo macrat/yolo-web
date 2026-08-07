@@ -2,7 +2,7 @@
 """集計の検算。build_map.py / aggregate.py とは独立の経路で数えて突き合わせる。
 
 使い方:
-  python3 tmp/cycle-stats/verify.py
+  python3 scripts/cycle-stats/verify.py
 """
 
 import collections

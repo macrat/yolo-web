@@ -1,3 +1,8 @@
+# サイクルのトークン・時間の数え方（cycle-302 で作成）
+
+> **この文書は数え方の定義である。** cycle-302 の判断・基準ではないので、後続サイクルが数え方として参照してよい。
+> スクリプトは `scripts/cycle-stats/`。生成物（`session_cycle_map.json` 等）は中間生成物なので版管理しない——`build_map.py` で再生成する。
+
 # サイクル別トークン・時間集計の数え方
 
 このディレクトリのスクリプトが「何を、どう数えているか」を書き下したもの。
@@ -15,9 +20,9 @@
 実行順:
 
 ```bash
-python3 tmp/cycle-stats/build_map.py      # 全ログを走査（約 470MB / 数分かからず終わる）
-python3 tmp/cycle-stats/aggregate.py cycle-301 cycle-302
-python3 tmp/cycle-stats/verify.py
+python3 scripts/cycle-stats/build_map.py      # 全ログを走査（約 470MB / 数分かからず終わる）
+python3 scripts/cycle-stats/aggregate.py cycle-301 cycle-302
+python3 scripts/cycle-stats/verify.py
 ```
 
 `aggregate.py` は引数なしで全サイクル、`--json` で JSON 出力。
