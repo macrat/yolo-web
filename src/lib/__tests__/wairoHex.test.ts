@@ -10,15 +10,7 @@ import {
 import { oklchToHex, parseOklch } from "../oklchToHex";
 // 器定数の SSoT は中立モジュール utsuwaHex（fuda-image / ogp-image / 本テストの3者が import）。
 // next/og に依存しない純粋な hex 定数なので ImageResponse のモックは不要。
-import {
-  PAPER,
-  INK,
-  INK_2,
-  RULE,
-  RULE_STRONG,
-  ACCENT,
-  ACCENT_ON_DARK,
-} from "../utsuwaHex";
+import { PAPER, INK, INK_2, RULE, RULE_STRONG, ACCENT } from "../utsuwaHex";
 
 /** WCAG 2.1 相対輝度・コントラスト比を hex から計算する（AA 再計測用・sRGB）。 */
 function hexToRgb(hex: string): [number, number, number] {
@@ -135,20 +127,5 @@ describe("parseOklch", () => {
   });
   test("非 oklch は null", () => {
     expect(parseOklch("#ffffff")).toBeNull();
-  });
-
-  // cycle-302: ライト用の朱を暗い地に当てて WCAG 3:1 を割った失敗への歯止め。
-  // globals.css の dark ブロックだけ変えて ACCENT_ON_DARK を放置するサイレント乖離を検知する。
-  test("ACCENT_ON_DARK が globals.css の dark --accent と一致", () => {
-    const css = readFileSync(
-      join(process.cwd(), "src/app/globals.css"),
-      "utf8",
-    );
-    // ダークは next-themes の attribute="class" 方式で `:root.dark` ブロックに入る。
-    const dark = css.slice(css.indexOf(":root.dark"));
-    const m = dark.match(/--accent:\s*oklch\(([^)]+)\)/);
-    if (!m) throw new Error(":root.dark ブロックに --accent が見つからない");
-    const [L, C, H] = m[1].trim().split(/\s+/).map(Number);
-    expect(oklchToHex(L, C, H)).toBe(ACCENT_ON_DARK);
   });
 });

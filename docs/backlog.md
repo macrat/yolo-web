@@ -7,21 +7,13 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-576 | favicon/apple-touch-iconの意匠再設計(禁止色の除去は完了) | P1 | 303 | cycle-302でE0(青→朱)と判定装置を出荷。残=意匠の再設計・48px超の層・icons宣言・design-gate・head検証。判定装置=scripts/icon-metrics.ts。詳細cycle-302/ |
-| B-583 | 印の要否と識別子の決定 | P1 | 303 | cycle-302では決めず(cycle-283が「圧の下で即断しない」と明記した本丸のため)。B-576の意匠決定に先行して要る。詳細cycle-302/index.md B2 |
-| B-631 | DESIGN.md §4「読む幅に収まらない面」の未適合面の棚卸し | P2 | - | cycle-302で規則を新設したが実装は表のみ。`.prose pre` と markdown-preview が未適合。詳細 docs/knowledge/frontend.md |
-| B-632 | htmlのfont-sizeがpx固定でブラウザの文字サイズ設定が効かない | P2 | - | 拡大して読む来訪者に届く。最小20px設定だと360pxで88セルが2文字/行以下。詳細 docs/knowledge/frontend.md |
+| B-576 | favicon/apple-touch-icon/OGP/札を印から一系で再設計 | P1 | - | cycle-302は目的未達(禁止色の除去のみ)。**OGPと札は手つかず**。完了条件を着手前に定義すること。詳細 docs/cycles/cycle-302/incident-1.md |
+| B-583 | 印の要否と識別子の決定 | P3 | - | B-576の一系を通すのに先行して要る。cycle-299/301/302と3サイクル連続で送っている。詳細 docs/cycles/cycle-302/incident-1.md |
+| B-632 | htmlのfont-sizeがpx固定でブラウザの文字サイズ設定が効かない | P2 | - | globals.css が px 固定のため拡大して読む来訪者に本文が追随しない。着手時に実測から取り直すこと |
 | B-633 | 7列スコア表がデスクトップで最終列を失う | P3 | - | cycle-302の床の既知の代償。目次の配置を変えないと解けない。詳細 docs/cycles/cycle-302/review-log.md 8巡目 |
-| B-634 | 表の折り返しに word-break: auto-phrase を上乗せする | P3 | - | cycle-302の床の上に重ねる進歩的強化。単独では不可(日本のモバイルは非Chromiumが56.5%)。詳細 docs/cycles/cycle-302/review-log.md |
 | B-635 | GAにボット除外が効いていない疑い | P2 | - | 直近28日1859セッション中シンガポールが614(33.0%)。city空・平均PV1.0でデータセンター由来。全指標が水増しされている |
-| B-636 | 「日本語の表が1文字ずつ折れる」記事を仕上げて公開する | P2 | 303 | cycle-302で3巡レビューしたが下書きのまま。残る指摘は docs/cycles/cycle-302/review-log.md 記事3巡目 |
-| B-637 | block-destructive-git.shが複合形の破壊コマンドを素通りさせる | P2 | - | `sudo git reset --hard`・`(git reset --hard)`・`if ...; then git reset --hard; fi`が通る。守るのはデータ消失。pre-push-check.shの分解方式を移植して塞ぐ |
-| B-638 | e2eがCIに無くpre-push-check.sh1本に依存 | P2 | - | フックを外す/バイパスするとe2eが一度も走らない。「エラーを出さずにゲートが消える」形。tests/e2e/*.mjsをCIからも回す。詳細=.claude/hooks/pre-push-check.sh |
-| B-640 | take-screenshotの網羅性ルールが反復要素に合わない | P3 | - | N×4枚は表203個のような面に非現実的。cycle-302は機械走査で代替した。スキル改訂として検討。詳細 docs/cycles/cycle-302/index.md A2 |
-| B-639 | 取り下げ: mainへのpushがデプロイを起こさない | - | - | 実体が無かった。push から run 登録まで11分かかるのを「起動しない」と誤報していた。詳細 docs/cycles/cycle-302/index.md |
-| B-630 | icon-metricsがパレット形式のICOを読めない | P3 | - | 4bpp/8bppのICOで「未対応のビット深度」。現在の出荷物は32bppなので実害なしだが、判定装置を名乗る以上は限界。カラーテーブルとANDマスクの読み取りが要る。詳細cycle-302/review-log.md |
+| B-637 | block-destructive-git.shが複合形の破壊コマンドを素通りさせる | P2 | - | `sudo git reset --hard`・`(git reset --hard)`・`if ...; then ...; fi` が非マッチ。pre-push-check.shの傍受判定も同型 |
 | B-629 | E0出荷後のSERP実表示の確認 | P2 | - | 期日=E0出荷+7日。Googleの再クロール後でないと反映されず本サイクル内では確認不能。確認せずにチェックを入れるとAP-WF23の入口になる。詳細cycle-302/ |
-| B-628 | icon-metricsの未較正しきい値の較正 | P3 | - | cycle-302で3つが未較正: 円マスク上限(片側のみ)・図の色距離(最上流)・有彩色の定義。境界にある実例が現れたら較正し直す。詳細cycle-302/criteria.md |
 | B-603 | character-personality 24タイプ一覧の処遇(T3・再判定) | P1 | - | **未決へ差し戻し**。cycle-298は測定面を誤り判定撤回(cycle-284の実測が正しかった)。主たる面で基準を立て直し再判定。詳細cycle-298/decision.md |
 | B-607 | character-personality F3申し送り(逆順主軸の和らげ・設問磨き) | P1 | - | cycle-295 F3=逆順フォールバック12順序対でcount二位気質が「主軸」提示される件の本文和らげ+設問文の裁量的ブラッシュアップ。旧B-603から分離(cycle-298)。詳細cycle-295/296 |
 | B-606 | 全10 personality診断の結果先行の点検・再設計(Rule4) | P1 | - | **cycle-297で開いたやりかけ(wakakusa暫定含む)の根治**。本筋はcycle-295 G1〜G5の結果先行再設計。1診断ずつ・優先=強い本人性群。B-603との前後関係は着手時に再判断。詳細=cycle-297/triage.md+incident-2 |
