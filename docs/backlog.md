@@ -17,6 +17,7 @@
 | B-636 | 「日本語の表が1文字ずつ折れる」記事を仕上げて公開する | P2 | 303 | cycle-302で3巡レビューしたが下書きのまま。残る指摘は docs/cycles/cycle-302/review-log.md 記事3巡目 |
 | B-637 | block-destructive-git.shが複合形の破壊コマンドを素通りさせる | P2 | - | `sudo git reset --hard`・`(git reset --hard)`・`if ...; then git reset --hard; fi`が通る。守るのはデータ消失。pre-push-check.shの分解方式を移植して塞ぐ |
 | B-638 | e2eがCIに無くpre-push-check.sh1本に依存 | P2 | - | フックを外す/バイパスするとe2eが一度も走らない。「エラーを出さずにゲートが消える」形。tests/e2e/*.mjsをCIからも回す。詳細=.claude/hooks/pre-push-check.sh |
+| B-640 | take-screenshotの網羅性ルールが反復要素に合わない | P3 | - | N×4枚は表203個のような面に非現実的。cycle-302は機械走査で代替した。スキル改訂として検討。詳細 docs/cycles/cycle-302/index.md A2 |
 | B-639 | 取り下げ: mainへのpushがデプロイを起こさない | - | - | 実体が無かった。push から run 登録まで11分かかるのを「起動しない」と誤報していた。詳細 docs/cycles/cycle-302/index.md |
 | B-630 | icon-metricsがパレット形式のICOを読めない | P3 | - | 4bpp/8bppのICOで「未対応のビット深度」。現在の出荷物は32bppなので実害なしだが、判定装置を名乗る以上は限界。カラーテーブルとANDマスクの読み取りが要る。詳細cycle-302/review-log.md |
 | B-629 | E0出荷後のSERP実表示の確認 | P2 | - | 期日=E0出荷+7日。Googleの再クロール後でないと反映されず本サイクル内では確認不能。確認せずにチェックを入れるとAP-WF23の入口になる。詳細cycle-302/ |
