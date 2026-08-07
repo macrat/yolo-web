@@ -18,7 +18,6 @@
 | B-641 | 日本語の表が狭い画面で1文字ずつ縦に折れる | P2 | - | 日本語はどこでも改行できるため列のmin-contentが1文字になる。cycle-302の修正は退行を伴ったため戻した。着手時に実測から取り直すこと |
 | B-635 | GAにボット除外が効いていない疑い | P2 | - | 直近28日1859セッション中シンガポールが614(33.0%)。city空・平均PV1.0でデータセンター由来。全指標が水増しされている |
 | B-637 | block-destructive-git.shが複合形の破壊コマンドを素通りさせる | P2 | - | `sudo git reset --hard`・`(git reset --hard)`・`if ...; then ...; fi` が非マッチ。pre-push-check.shの傍受判定も同型 |
-| B-629 | E0出荷後のSERP実表示の確認 | P2 | - | 期日=E0出荷+7日。Googleの再クロール後でないと反映されず本サイクル内では確認不能。確認せずにチェックを入れるとAP-WF23の入口になる。詳細cycle-302/ |
 | B-618 | pre-commit-checkのAP-WF24検出の穴を塞ぐ | P2 | - | 正規表現が「指示に従/指示により/指摘を受け」しか拾わず「指示で」「指摘で」が素通り(cycle-300で実際に2本通過)。助詞のゆれを含む式へ。コード変更のためbuilder+レビュー。詳細cycle-300 |
 | B-609 | レビュー体制の構造的欠陥(基準違反の検出漏れ)の是正 | P2 | - | cycle-298判明+cycle-300。残=(a)基準違反がMinor判定(b)candidates非読込(c)pre-commit検出漏れ(d)観点が計器選択の妥当性(AP-P31等)を問わない。詳細cycle-298/incident-3・cycle-300/incident-1 |
 | B-610 | ADR001+rebuild-plan§1(a)の「オーナー裁定」ラベル是正(AP-P34) | P2 | - | cycle-298発覚+cycle-300で原発言を逐語検証済(全面A/B棄却はPM導出・A/Bは却下されていない)。帰属を是正(ADR/READMEの『サイト全面のA/Bはしない』も整合対象)。詳細cycle-300/incident-1 |
@@ -49,7 +48,6 @@
 | B-364 | cycle-175〜178 連続事故のブログ化再判断 | P3 | - | 着手時PM独立判断。詳細 cycle-178.md |
 | B-567 | 移行時代の `new/` コンポーネントディレクトリ平坦化 | P3 | - | legacy 兄弟が消えた片翼 new/ 3件を平坦化(約24 import)。デザイン/UX 非影響。cycle-279 で非ブロッキング判断。詳細 cycle-279.md |
 | B-623 | 知識クイズで「次へ」の2打目がFAQのsummaryを叩く | P4 | - | cycle-301実測(yoji-level q4/q7/q8・kotowaza-level q7/q8)。既存欠陥で結果は壊れないが求めていないFAQが開閉。詳細cycle-301/review-log.md |
-| B-611 | brand-icons生成器のhex乖離ガード不在 | P4 | - | cycle-299発覚。生成器色定数がutsuwaHex.tsを文字列再宣言(node-standalone維持の受容トレードオフ)。乖離ガード無くSSoT変更時サイレント乖離しうる。実害は再生成時のみ。詳細cycle-299 |
 | B-597 | テーマトグルのタップ標的高さ(28px)のDESIGN準拠 | P4 | - | cycle-287監査C5。switch高さ28px=DESIGN§10の44px未満(WCAG2.5.8 24pxは充足)。当たり判定拡大の要否をDESIGN基準で判断。詳細cycle-287/findings.md |
 | B-599 | 辞典/共有まわりのa11y軽微群 | P4 | - | cycle-287監査C8。同部首117リンクがdiv(list構造喪失)/辞典ヒーロー大字がaria-hidden無で二重読み/共有ボタンの外部予告が面で不整合。詳細cycle-287/findings.md |
 | B-574 | イディオム2一覧のアクセシブル名浄化(stretched-link化) | P4 | - | B-573のa11y掃討の一部。SRが連結を読む冗長さを主リンク名のみへ。cycle-287で辞典検索結果リンクにも同種確認(C6)。詳細cycle-281.md/cycle-287 |
@@ -71,6 +69,7 @@
 
 | ID | Title | Priority | Notes |
 | --- | --- | --- | --- |
+| B-629 | E0出荷後のSERP実表示の確認 | P2 | 着手: 2026-08-14以降(禁止色を除いたアイコンの出荷=2026-08-07+7日。Googleの再クロール後でないと反映されない)。詳細 docs/cycles/cycle-302/ |
 | B-568 | 面横断 content_id 接頭辞規約の全面統一 | P4 | 着手: ADR001の観測窓終了後(item_id集計の断絶を伴う移行のため。旧条件のADR002はexpiredで窓が無く着手不能だった)。詳細 cycle-280.md |
 | B-590 | eslint 10 / TypeScript 7 の採用 | P4 | 着手: config-next配下のplugin基盤(typescript-eslint8等)がeslint10/TS7対応次第。cycle-286で試行=lintクラッシュ実証。詳細cycle-286/ |
 | B-592 | overrides(postcss/react-hooks)の解消 | P4 | 着手: postcssは親(next/sanitize-html)がpatched版を引いた時・react-hooksは7.1.1採用判断時にoverride除去(upstreamドリフト回避)。詳細cycle-286/remediation.md |
@@ -126,6 +125,7 @@
 
 | ID | Title | Cycle | Notes |
 | --- | --- | --- | --- |
+| B-611 | brand-icons生成器のhex乖離ガード不在 | 302 | 【中止】対象の `scripts/generate-brand-icons.mjs` が存在しない(cycle-299で削除済)。守るべき生成器が無いため起票が成立しない |
 | B-466 | tmp/ 配下 .ts の typecheck/build 破壊の根本解消 | 302 | 【完了】tsconfig.json の exclude に "tmp" を追加。cycle-216起票以来、完了ゲートを3回落としていた(直近は本サイクルのレビュアーの一時ファイル) |
 | B-626 | retryの2打目が窓の外に落ちてXの投稿画面へ飛ぶ | 301 | 【中止】不正な起票。前提だったB-620の600ms窓ごとrevert済み。実害が出ている問題を差し置いて連打のエッジケースをP0にしたのはconstitution違反 |
 | B-627 | B-620の視覚回帰確認の残り | 301 | 【中止】不正な起票。対象のB-620をrevertしたため確認すべき変更が存在しない |
