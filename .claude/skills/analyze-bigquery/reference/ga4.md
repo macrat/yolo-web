@@ -13,30 +13,30 @@ Use wildcard `events_*` with `_TABLE_SUFFIX BETWEEN 'YYYYMMDD' AND 'YYYYMMDD'` f
 
 ## Key columns (events table)
 
-| Column                   | Type     | Description                                                                      |
-| ------------------------ | -------- | -------------------------------------------------------------------------------- |
-| event_date               | STRING   | Date in YYYYMMDD format                                                          |
-| event_name               | STRING   | Event type: `page_view`, `session_start`, `first_visit`, `user_engagement`, etc. |
-| event_params             | RECORD[] | Array of {key, value} pairs. Access via UNNEST.                                  |
-| traffic_source           | RECORD   | First-touch: source, medium, name                                                |
-| collected_traffic_source | RECORD   | Session-level: manual_source, manual_medium, etc.                                |
-| device                   | RECORD   | category, operating_system, browser, etc.                                        |
-| geo                      | RECORD   | country, region, city, etc.                                                      |
-| user_pseudo_id           | STRING   | Anonymous user identifier                                                        |
+| Column                   | Type     | Description                                                                                             |
+| ------------------------ | -------- | ------------------------------------------------------------------------------------------------------- |
+| event_date               | STRING   | Date in YYYYMMDD format                                                                                 |
+| event_name               | STRING   | Event type: `page_view`, `session_start`, `first_visit`, `user_engagement`, etc.                        |
+| event_params             | RECORD[] | Array of {key, value} pairs. Access via UNNEST.                                                         |
+| traffic_source           | RECORD   | First-touch: source, medium, name                                                                       |
+| collected_traffic_source | RECORD   | Event-level, NULL on most events: manual_source, manual_medium, etc.                                    |
+| device                   | RECORD   | category, operating_system, etc. Browser is `device.web_info.browser` (`device.browser` is always NULL) |
+| geo                      | RECORD   | country, region, city, etc.                                                                             |
+| user_pseudo_id           | STRING   | Anonymous user identifier                                                                               |
 
 ## Useful event_params keys
 
 Extract with: `(SELECT ep.value.string_value FROM UNNEST(event_params) ep WHERE ep.key = '<key>')`
 
-| Key                  | Type         | Description                              |
-| -------------------- | ------------ | ---------------------------------------- |
-| page_location        | string_value | Full URL                                 |
-| page_title           | string_value | Page title                               |
-| page_referrer        | string_value | Referrer URL                             |
-| source               | string_value | Traffic source (google, bing, etc.)      |
-| medium               | string_value | Traffic medium (organic, referral, etc.) |
-| session_engaged      | string_value | "1" if engaged session                   |
-| engagement_time_msec | int_value    | Engagement time in ms                    |
+| Key                  | Type                                        | Description                                                                                                                                   |
+| -------------------- | ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| page_location        | string_value                                | Full URL                                                                                                                                      |
+| page_title           | string_value                                | Page title                                                                                                                                    |
+| page_referrer        | string_value                                | Referrer URL                                                                                                                                  |
+| source               | string_value                                | Traffic source (google, bing, etc.)                                                                                                           |
+| medium               | string_value                                | Traffic medium (organic, referral, etc.)                                                                                                      |
+| session_engaged      | string_value (int_value on `session_start`) | Per-event flag, not per-session: the same session can be "0" on `page_view` and "1" on `user_engagement` / `scroll`. State the counting unit. |
+| engagement_time_msec | int_value                                   | Engagement time in ms                                                                                                                         |
 
 ## Common query patterns
 
