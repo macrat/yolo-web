@@ -1,11 +1,27 @@
+# 依存更新の「クールダウン（検疫）」は、この cooldown が正本。
+# 公開直後のパッケージを取り込まないための待機期間を Dependabot 側で設ける。
+# （かつて .npmrc の min-release-age に同じ意図を書いていたが、この環境の
+#  npm 11.8.0 では未実装のため一切機能していなかった。経緯は .npmrc を参照）
+#
+# 典拠: https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference
+#       https://docs.github.com/en/code-security/tutorials/secure-your-dependencies/optimizing-pr-creation-version-updates
+#       (2026-08-08 確認)
+# 注意: cooldown が効くのは version updates のみ。security updates には適用されない。
+#       指定できる日数は 1〜90。未指定時の Dependabot 既定は 3 日。
 version: 2
 updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
+    # github-actions は semver-*-days 非対応のため default-days のみ指定する。
+    cooldown:
+      default-days: 7
 
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "weekly"
+    # 旧 .npmrc の min-release-age=7 の意図を引き継ぎ、一律 7 日とする。
+    cooldown:
+      default-days: 7

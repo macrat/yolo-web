@@ -8,8 +8,8 @@ import {
 } from "../middleware";
 
 describe("DELETED_BLOG_SLUGS", () => {
-  test("19件の削除済みスラッグが定義されている", () => {
-    expect(DELETED_BLOG_SLUGS).toHaveLength(19);
+  test("20件の削除済みスラッグが定義されている", () => {
+    expect(DELETED_BLOG_SLUGS).toHaveLength(20);
   });
 
   const expectedSlugs = [
@@ -32,6 +32,7 @@ describe("DELETED_BLOG_SLUGS", () => {
     "site-name-yolos-net",
     "tools-expansion-27",
     "traditional-colors-dictionary",
+    "favicon-16px-readability-metrics",
   ];
 
   test.each(expectedSlugs)("スラッグ '%s' が含まれている", (slug) => {
@@ -40,7 +41,7 @@ describe("DELETED_BLOG_SLUGS", () => {
 });
 
 describe("isDeletedBlogSlug", () => {
-  test("全19件の削除済みスラッグに対してtrueを返す", () => {
+  test("全20件の削除済みスラッグに対してtrueを返す", () => {
     for (const slug of DELETED_BLOG_SLUGS) {
       expect(isDeletedBlogSlug(slug)).toBe(true);
     }

@@ -27,6 +27,7 @@ export const DELETED_BLOG_SLUGS: readonly string[] = [
   "site-name-yolos-net", // 短期間公開後削除
   "tools-expansion-27", // 短期間公開後削除
   "traditional-colors-dictionary", // 短期間公開後削除
+  "favicon-16px-readability-metrics", // cycle-302で短期間公開後削除
 ] as const;
 
 // 高速検索のためSetに変換

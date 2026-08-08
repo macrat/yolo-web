@@ -18,6 +18,7 @@
 | B-632 | htmlのfont-sizeがpx固定でブラウザの文字サイズ設定が効かない | P2 | - | globals.cssのhtml/bodyがfont-size:16px固定で、文字サイズ設定を上げて読む来訪者に本文が追随しない。詳細cycle-302/carryover.md §7-1 |
 | B-641 | 日本語の表が狭い画面で1文字ずつ縦に折れる | P2 | - | 日本語はどこでも改行できるため列のmin-contentが1文字になり、狭い画面で表のセルが縦一列に潰れて読めない。詳細cycle-302/incident-2.md |
 | B-635 | GAにボット除外が効いていない疑い | P2 | - | 直近28日でシンガポールが614セッション=全体の33.0%。city空・平均PV1.0でデータセンター由来。全指標が水増しされている。実測=cycle-302/review-log.md |
+| B-643 | 取り下げたブログ19件が410登録漏れで素の404を返す | P2 | - | 公開後に取り下げた19スラッグが`DELETED_BLOG_SLUGS`に無く終了の説明が届かない。起点2026-03-19。着手時にSC/GAの流入実測と後継のある1件の301適否の判断が要る。詳細research/2026-08-08-withdrawn-blog-slugs-410.md |
 | B-637 | block-destructive-git.shが複合形の破壊コマンドを素通りさせる | P2 | - | `sudo git reset --hard`・`(git reset --hard)`・`if ...; then ...; fi` が非マッチ。pre-push-check.shの穴は別型(空白2つの`git  push`と`git -C path push`) |
 | B-618 | pre-commit-checkのAP-WF24検出の穴を塞ぐ | P2 | - | 正規表現が「指示に従/指示により/指摘を受け」しか拾わず「指示で」「指摘で」が素通り(cycle-300で実際に2本通過)。助詞のゆれを含む式へ。コード変更のためbuilder+レビュー。詳細cycle-300 |
 | B-609 | レビュー体制の構造的欠陥(基準違反の検出漏れ)の是正 | P2 | - | cycle-298判明+cycle-300。残=(a)基準違反がMinor判定(b)candidates非読込(c)pre-commit検出漏れ(d)観点が計器選択の妥当性(AP-P31等)を問わない。詳細cycle-298/incident-3・cycle-300/incident-1 |
