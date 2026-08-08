@@ -14,11 +14,10 @@
 | B-573 | UI/UX/アクセシビリティの全面適用(残: 全面展開) | P1 | - | cycle-287で監査+代表原型の是正スライス完了(F1-F5)。残=全81ページ/36ツールへの全面展開。系統的な個別項目はB-593/595/596/599等に分割起票済。詳細cycle-287/ |
 | B-562 | フェーズC-a: 新クラスタの立ち上げ | P1 | - | フェーズR(B-561)完了(cycle-279)で解禁。候補の正典=research/2026-07-11-market-research-cycle278.md T4節。着手時に個別裏取り+実験台帳へ事前登録。同時2クラスタ以下。詳細 rebuild-plan.md §3 |
 | B-540 | アンチパターン集の規約準拠クリーンアップ+再発防止 | P1 | - | cycle-257起票以来未着手で違反と自己是正が反復。本体に少なくとも3箇所現存(AP-P04/AP-I13/AP-P31)・機械抽出は網羅不可。(a)現存箇所の是正(b)enforcement設計(c)B-390統合判断。詳細cycle-300/incident-2 |
-| B-635 | GAに全数クロール混入(28日窓のSG帰属セッション73.6%) | P1 | - | 8/5急増・8/6に3020で進行中(GA4は8/6迄)。破損=合計/国別/チャネル/エンゲージ率(セッション単位)・engaged_pv列は無事。要=除外設計と過去点検。詳細=research/2026-08-08-ga-bot-traffic-remeasurement.md |
-| B-643 | AP-P26の人間判別軸が全数クロール型ボットに無効 | P1 | - | user_engagement/engagement_time_msecの有無で判別するとB-635のボットが92%超通過し人間に分類される。判別軸の是正が要る。詳細=research/2026-08-08-ga-bot-traffic-remeasurement.md |
 | B-642 | サイクルの完了条件を着手前に定義させる仕組みが無い | P2 | - | TEMPLATE.mdもkickoff/completionも「何が届けば達成か」を書かせず、終了判定=全タスクのチェックのため目的未達でも完了できる。B-531との統合と、新設か既存の不作動かを判断。詳細cycle-302/carryover.md §7-4・incident-1.md §1-3 |
 | B-632 | htmlのfont-sizeがpx固定でブラウザの文字サイズ設定が効かない | P2 | - | globals.cssのhtml/bodyがfont-size:16px固定で、文字サイズ設定を上げて読む来訪者に本文が追随しない。詳細cycle-302/carryover.md §7-1 |
 | B-641 | 日本語の表が狭い画面で1文字ずつ縦に折れる | P2 | - | 日本語はどこでも改行できるため列のmin-contentが1文字になり、狭い画面で表のセルが縦一列に潰れて読めない。詳細cycle-302/incident-2.md |
+| B-635 | GAにボット除外が効いていない疑い | P2 | - | 直近28日でシンガポールが614セッション=全体の33.0%。city空・平均PV1.0でデータセンター由来。全指標が水増しされている。実測=cycle-302/review-log.md |
 | B-637 | block-destructive-git.shが複合形の破壊コマンドを素通りさせる | P2 | - | `sudo git reset --hard`・`(git reset --hard)`・`if ...; then ...; fi` が非マッチ。pre-push-check.shの穴は別型(空白2つの`git  push`と`git -C path push`) |
 | B-618 | pre-commit-checkのAP-WF24検出の穴を塞ぐ | P2 | - | 正規表現が「指示に従/指示により/指摘を受け」しか拾わず「指示で」「指摘で」が素通り(cycle-300で実際に2本通過)。助詞のゆれを含む式へ。コード変更のためbuilder+レビュー。詳細cycle-300 |
 | B-609 | レビュー体制の構造的欠陥(基準違反の検出漏れ)の是正 | P2 | - | cycle-298判明+cycle-300。残=(a)基準違反がMinor判定(b)candidates非読込(c)pre-commit検出漏れ(d)観点が計器選択の妥当性(AP-P31等)を問わない。詳細cycle-298/incident-3・cycle-300/incident-1 |
