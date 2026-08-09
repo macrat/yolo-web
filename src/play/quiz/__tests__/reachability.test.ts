@@ -330,4 +330,60 @@ describe("personality診断の結果タイプ到達性ガード", () => {
       heavyTestTimeoutMs,
     );
   });
+
+  // ---- word-sense-personality の同点率 悉皆退行ガード（cycle-303 P2a で追加）----
+  //
+  // なぜ必要か:
+  //   cycle-303 で word-sense を結果先行で再設計した（docs/cycles/cycle-303/redesign-v2.md）。
+  //   設計の芯は「同点率をゼロにする」ことではなく（10問4択8フラット型では整数投票の同点は
+  //   構造的に残る＝単一signalでも約43%）、「配点をタイプの意味からのみ導き、内容非依存の
+  //   調律重みで同点を消さない」こと。真の残余同点は開示UIで正直に開示する方針。
+  //
+  // このガードの役割（他ガードとの分担を明確に）:
+  //   - この「同点率 ≤ 24%」の上限ガード（悉皆）は、固定影結合（crea↔humer のような主→副の対結合）が
+  //     再混入して隣接対の恒常同点＝同点率が実測から大きく上振れするのを検出する。0% 目標ではない。
+  //   - 逆に「同点率を人為的に押し下げる V1 型の調律重み（各設問に相異なる重みを与えて整数同点を
+  //     消す）」は、tie 率を下げる方向なのでこの上限ガードでは弾けない。それを弾くのは
+  //     word-sense-personality.test.ts の pure/blended 形状ガード（各 choice は {main:3} か
+  //     {main:2, nuance:1} のみ＝設問固有の任意重みを配点に持ち込めない）である。両者は別々の
+  //     退行を検出するため、どちらも必要。
+  //   実装後の悉皆実測（4^10=1,048,576）: 同点率 20.78%（2型 15.90% / 3型以上 4.88%）。
+  describe("word-sense-personality: 同点率の悉皆退行ガード", () => {
+    const quiz = quizBySlug.get("word-sense-personality");
+    // 実測 20.78% に余裕を持たせた退行検出上限（0%目標ではない）。
+    const TIE_RATE_UPPER_BOUND = 0.24;
+
+    it("word-sense-personality 診断が存在する", () => {
+      expect(quiz).toBeDefined();
+    });
+
+    it(
+      "最大得点を2型以上が分け合う回答の割合が上限以下（影結合・調律の再混入検出）",
+      () => {
+        if (!quiz) return;
+        const dims = quiz.questions.map((q) => q.choices.length);
+        let total = 0;
+        let ties = 0;
+        for (const idx of enumerateAll(dims)) {
+          total++;
+          const points = calculatePersonalityPoints(
+            quiz.questions,
+            answersFromIndices(quiz, idx),
+          );
+          let max = -Infinity;
+          for (const r of quiz.results) {
+            const v = points[r.id] ?? 0;
+            if (v > max) max = v;
+          }
+          let winners = 0;
+          for (const r of quiz.results) {
+            if ((points[r.id] ?? 0) === max) winners++;
+          }
+          if (winners >= 2) ties++;
+        }
+        expect(ties / total).toBeLessThanOrEqual(TIE_RATE_UPPER_BOUND);
+      },
+      heavyTestTimeoutMs,
+    );
+  });
 });

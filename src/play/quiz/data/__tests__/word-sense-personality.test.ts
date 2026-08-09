@@ -117,28 +117,21 @@ describe("word-sense-personality — questions", () => {
     }
   });
 
-  it("each choice has a points object with at least 2 entries", () => {
+  // cycle-303 P2a（結果先行の再設計・redesign-v2.md A-3）で配点構造が変わった。
+  //   - pure（強度3）: 他タイプの声を帯びない単一 voice。エントリは1つ（主 signal のみ、値3）。
+  //   - blended（強度2）: 主が明確だが文が近傍タイプの性質を帯びる。エントリは2つ（主2＋副1）。
+  // 「固定影結合を作らない・副点は文が実際に帯びる性質からのみ」という設計原則の構造ガード。
+  it("each choice is pure({main:3}) or blended({main:2, nuance:1})", () => {
     for (const q of wordSensePersonalityQuiz.questions) {
       for (const choice of q.choices) {
+        const values = Object.values(choice.points ?? {}).sort((a, b) => b - a);
+        const isPure = values.length === 1 && values[0] === 3;
+        const isBlended =
+          values.length === 2 && values[0] === 2 && values[1] === 1;
         expect(
-          Object.keys(choice.points ?? {}).length,
-          `Choice ${choice.id} must have points`,
-        ).toBeGreaterThanOrEqual(2);
-      }
-    }
-  });
-
-  it("each choice has one point value of 2 (primary) and one of 1 (secondary)", () => {
-    for (const q of wordSensePersonalityQuiz.questions) {
-      for (const choice of q.choices) {
-        const values = Object.values(choice.points ?? {});
-        expect(values, `Choice ${choice.id} must have a primary (2)`).toContain(
-          2,
-        );
-        expect(
-          values,
-          `Choice ${choice.id} must have a secondary (1)`,
-        ).toContain(1);
+          isPure || isBlended,
+          `Choice ${choice.id} must be pure {main:3} or blended {main:2, nuance:1}, got ${JSON.stringify(choice.points)}`,
+        ).toBe(true);
       }
     }
   });
@@ -156,39 +149,46 @@ describe("word-sense-personality — questions", () => {
     }
   });
 
-  it("each type appears as primary exactly 5 times across all questions", () => {
-    const primaryCounts: Record<string, number> = {};
+  // 主 signal（そのchoiceで最大点の型。pure は値3・blended は値2）を主タイプとする。
+  const mainTypeOf = (choice: { points?: Record<string, number> }) => {
+    const entries = Object.entries(choice.points ?? {});
+    let best: string | undefined;
+    let bestVal = -Infinity;
+    for (const [typeId, v] of entries) {
+      if (v > bestVal) {
+        bestVal = v;
+        best = typeId;
+      }
+    }
+    return best;
+  };
+
+  it("each type is the main signal exactly 5 times across all questions", () => {
+    const mainCounts: Record<string, number> = {};
     for (const typeId of TYPE_IDS) {
-      primaryCounts[typeId] = 0;
+      mainCounts[typeId] = 0;
     }
     for (const q of wordSensePersonalityQuiz.questions) {
       for (const choice of q.choices) {
-        const pts = choice.points ?? {};
-        for (const [typeId, score] of Object.entries(pts)) {
-          if (score === 2) {
-            primaryCounts[typeId] = (primaryCounts[typeId] ?? 0) + 1;
-          }
-        }
+        const main = mainTypeOf(choice);
+        if (main) mainCounts[main] = (mainCounts[main] ?? 0) + 1;
       }
     }
     for (const typeId of TYPE_IDS) {
       expect(
-        primaryCounts[typeId],
-        `Type ${typeId} should appear as primary exactly 5 times, got ${primaryCounts[typeId]}`,
+        mainCounts[typeId],
+        `Type ${typeId} should be the main signal exactly 5 times, got ${mainCounts[typeId]}`,
       ).toBe(5);
     }
   });
 
-  it("within each question, no two choices share the same primary type", () => {
+  it("within each question, the 4 choices have 4 distinct main types", () => {
     for (const q of wordSensePersonalityQuiz.questions) {
-      const primaries = q.choices.map((c) => {
-        const pts = c.points ?? {};
-        return Object.entries(pts).find(([, v]) => v === 2)?.[0];
-      });
-      const unique = new Set(primaries);
+      const mains = q.choices.map(mainTypeOf);
+      const unique = new Set(mains);
       expect(
         unique.size,
-        `Question ${q.id} has duplicate primary types: ${primaries.join(", ")}`,
+        `Question ${q.id} has duplicate main types: ${mains.join(", ")}`,
       ).toBe(4);
     }
   });

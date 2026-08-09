@@ -101,6 +101,43 @@ export function determineResult(
 }
 
 /**
+ * 最高得点を取る全 typeId を quiz.results の配列順で返す（純関数・決定的）。
+ *
+ * `determineResult` は「単一の勝者」を返し、同点は配列順で割る（＝隠して1つに決める）。
+ * この関数はその同点そのものを **可視化** するために、最高得点を分け合う全タイプを返す:
+ * - 1 件 = 単独勝者（真の同点なし）
+ * - 2 件以上 = 真の同点（本当に複数タイプの声を等しく持つ人）
+ *
+ * word-sense-personality は再設計後も構造的に約20%の同点が残る（10問4択8フラット型の
+ * 整数投票では不可避）。この残余同点を「隠して配列順で割る」のをやめ、副タイプを同格で
+ * 開示する UI（ResultCard の開示ブロック）のためのデータ源がこの関数。
+ *
+ * - personality 型のみ意味を持つ（knowledge 型はスコア閾値判定のため空配列を返す）。
+ * - `determineResult` は変更しない（主タイプの決定性＝シェア/再受験の再現性を保つ）。
+ *   返り値の先頭は必ず `determineResult` の勝者と一致する（どちらも配列順で最初に最大へ
+ *   到達したタイプ）。表示のためだけの関数で、判定そのものは変えない。
+ */
+export function getTiedTypeIds(
+  quiz: QuizDefinition,
+  answers: QuizAnswer[],
+): string[] {
+  if (quiz.meta.type !== "personality") {
+    return [];
+  }
+  const points = calculatePersonalityPoints(quiz.questions, answers);
+  let maxScore = -1;
+  for (const result of quiz.results) {
+    const resultScore = points[result.id] ?? 0;
+    if (resultScore > maxScore) {
+      maxScore = resultScore;
+    }
+  }
+  return quiz.results
+    .filter((result) => (points[result.id] ?? 0) === maxScore)
+    .map((result) => result.id);
+}
+
+/**
  * Check if a specific choice is the correct answer (knowledge type).
  */
 export function isCorrectChoice(

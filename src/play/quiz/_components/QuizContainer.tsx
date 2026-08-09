@@ -4,8 +4,17 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import { trackContentStart, trackContentEnd } from "@/lib/analytics";
 import Link from "next/link";
 import { NefudaGroup } from "@/components/Nefuda";
-import type { QuizDefinition, QuizAnswer, QuizPhase } from "@/play/quiz/types";
-import { determineResult, calculateKnowledgeScore } from "@/play/quiz/scoring";
+import type {
+  QuizDefinition,
+  QuizAnswer,
+  QuizPhase,
+  QuizResult,
+} from "@/play/quiz/types";
+import {
+  determineResult,
+  calculateKnowledgeScore,
+  getTiedTypeIds,
+} from "@/play/quiz/scoring";
 import { determineScienceThinkingResult } from "@/play/quiz/data/science-thinking";
 import { determineCharacterPersonalityResult } from "@/play/quiz/data/character-personality";
 import { getEstimatedTime } from "./introBadges";
@@ -211,6 +220,21 @@ export default function QuizContainer({
       ? calculateKnowledgeScore(quiz.questions, answers)
       : undefined;
 
+  // P2b（cycle-303）: 真の残余同点の正直な開示。
+  // word-sense-personality は再設計後も構造的に約20%の同点が残る。主タイプ（result）は
+  // 従来どおり determineResult の決定的勝者（シェア/再受験の再現性を保つ）だが、同点を
+  // 「隠して配列順で割る」のをやめ、同点を分け合う副タイプ（co-types）を同格で開示する。
+  // scope は word-sense-personality のみ（1診断ずつ・他診断の結果 UX は変えない）。
+  // 単独勝者（同点なし）のときは co-types が空配列になり、ResultCard は開示ブロックを
+  // 出さない（＝約8割の従来体験そのまま）。
+  const coTypes: QuizResult[] =
+    quiz.meta.slug === "word-sense-personality"
+      ? getTiedTypeIds(quiz, answers)
+          .filter((typeId) => typeId !== result.id)
+          .map((typeId) => quiz.results.find((r) => r.id === typeId))
+          .filter((r): r is QuizResult => r !== undefined)
+      : [];
+
   // N2: result region の読み上げラベルは quizType で出し分ける。この wrapper は
   // 全 quizType 共通のため固定文言だと knowledge クイズでも「診断結果」と読まれて
   // しまう（知識クイズは「診断」でなく「クイズ」）。
@@ -247,6 +271,7 @@ export default function QuizContainer({
           accentColor={quiz.meta.accentColor}
           referrerTypeId={referrerTypeId}
           allResults={quiz.results}
+          coTypes={coTypes}
         />
       </div>
       {/* 回遊導線・追加コンテンツは本体の外に二次配置（入れ子回避） */}

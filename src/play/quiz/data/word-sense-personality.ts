@@ -14,15 +14,32 @@ export type { CompatibilityEntry };
  *   humor-wit        — 抱腹絶倒（ほうふくぜっとう）: humorous, witty expressions
  *   gentle-indirect  — 柔和温順（にゅうわおんじゅん）: gentle, indirect phrasing
  *
- * Primary distribution (each type primary 5 times = 8×5 = 40 = 10Q×4C):
- *   elegant-precise:  Q1A, Q3A, Q5D, Q7B, Q9C
- *   warm-empathy:     Q2A, Q3B, Q6A, Q7C, Q10C
- *   creative-playful: Q1B, Q3C, Q5A, Q8D, Q10B
- *   logical-clear:    Q2B, Q3D, Q5B, Q8A, Q10D
- *   poetic-sensory:   Q2D, Q4A, Q6C, Q8C, Q9B
- *   bold-impact:      Q2C, Q4B, Q6B, Q9A, Q7D
- *   humor-wit:        Q1C, Q4C, Q6D, Q7A, Q9D
- *   gentle-indirect:  Q1D, Q4D, Q5C, Q8B, Q10A
+ * 設計の正典: docs/cycles/cycle-303/redesign-v2.md（結果先行の再設計 V2）。
+ * cycle-303 で「結果先行」で再設計した。8タイプ（結果本文から復元した行動的定義）が先に在り、
+ * 各設問がそこへ判別する。配点はタイプの意味（その選択肢がどのタイプの声か・どれだけ強いか）
+ * からのみ導く（同点率を下げるための内容非依存な数値合わせ＝調律は禁止。course-correction.md 参照）。
+ *
+ * incidence（同時出題／B-1）— 各Qの4択が担う型・各型が主signal 5回ずつ・隣接3対を各3問で直接対決:
+ *   Q1: E,L,W,G   Q2: E,L,C,H   Q3: W,G,C,H   Q4: E,L,P,B   Q5: W,G,P,B
+ *   Q6: C,H,P,B   Q7: E,W,C,P   Q8: L,G,H,B   Q9: E,G,C,B   Q10: L,W,H,P
+ *   隣接対の直接対決: EL=3, WG=3, CH=3（旧 EL=2, WG=1, CH=1）。
+ *
+ * 配点（A-3）— 主signal は強度で 2 または 3:
+ *   3（pure）= 他タイプの声を帯びない単一 voice。副点なし。
+ *   2（blended）= 主が明確だが、文が実際にもう一つのタイプの性質を帯びる → その近傍タイプに副 1。
+ *   副点は「文に実際に現れる性質」からのみ与える（固定影結合を作らない）。隣接3対の弁別線を守る:
+ *     poetic=実在の感覚（奇想天外の飛躍でない）／logical=構造を見せる（単なる短さでない）／
+ *     gentle=言い切らない（直接的共感でない）。
+ *
+ * Primary distribution（各型が主 signal 5回）:
+ *   elegant-precise:  Q1A, Q2A, Q4A, Q7A, Q9A
+ *   warm-empathy:     Q1C, Q3A, Q5A, Q7B, Q10B
+ *   creative-playful: Q2C, Q3C, Q6A, Q7C, Q9C
+ *   logical-clear:    Q1B, Q2B, Q4B, Q8A, Q10A
+ *   poetic-sensory:   Q4C, Q5C, Q6C, Q7D, Q10D
+ *   bold-impact:      Q4D, Q5D, Q6D, Q8D, Q9D
+ *   humor-wit:        Q2D, Q3D, Q6B, Q8C, Q10C
+ *   gentle-indirect:  Q1D, Q3B, Q5B, Q8B, Q9B
  */
 
 const wordSensePersonalityQuiz: QuizDefinition = {
@@ -89,272 +106,318 @@ const wordSensePersonalityQuiz: QuizDefinition = {
   },
   questions: [
     {
-      // Q1: elegant-precise(A), creative-playful(B), humor-wit(C), gentle-indirect(D)
+      // Q1: elegant-precise(A), logical-clear(B), warm-empathy(C), gentle-indirect(D)
       id: "q1",
-      text: "AIに人生相談したら四字熟語だけで返事が来た! あなたなら何と返す?",
-      choices: [
-        {
-          id: "q1-a",
-          text: "「なるほど、つまり……」と要点だけを短く整理して返す",
-          points: { "elegant-precise": 2, "logical-clear": 1 },
-        },
-        {
-          id: "q1-b",
-          text: "「じゃあ私も四字熟語で!」と即興で返歌を詠む",
-          points: { "creative-playful": 2, "humor-wit": 1 },
-        },
-        {
-          id: "q1-c",
-          text: "「AIよ、もっと砕けた言葉を教えてくれ」とボケで返す",
-          points: { "humor-wit": 2, "creative-playful": 1 },
-        },
-        {
-          id: "q1-d",
-          text: "「深い言葉をありがとう、少し考えてみます」と丁寧にお礼を言う",
-          points: { "gentle-indirect": 2, "warm-empathy": 1 },
-        },
-      ],
-    },
-    {
-      // Q2: warm-empathy(A), logical-clear(B), bold-impact(C), poetic-sensory(D)
-      id: "q2",
       text: "友達がSNSに「今日は最悪な日だった」と投稿。あなたのリプライは?",
       choices: [
         {
-          id: "q2-a",
-          text: "「つらかったね、何があったの? 話聞くよ」と寄り添う",
+          id: "q1-a",
+          // E(3) pure: 削ぎ落とし・一語で言い切る（推敲して短くする elegant の声）。
+          text: "10行書いては消して、最後は「また明日。」の一言に絞って送る",
+          points: { "elegant-precise": 3 },
+        },
+        {
+          id: "q1-b",
+          // L(2)+E: 「一つに絞る」=elegant を帯び、「順にほどける」=構造を見せる logical。
+          text: "「まず原因を一つに絞ろう。そこから順にほどけるよ」と道筋を示す",
+          points: { "logical-clear": 2, "elegant-precise": 1 },
+        },
+        {
+          id: "q1-c",
+          // W(2)+G: 共感=warm、角を立てず包む・言い切らない=gentle を帯びる。
+          text: "「つらかったね。無理に元気ださなくていいよ、いつでも聞くから」と寄り添う",
           points: { "warm-empathy": 2, "gentle-indirect": 1 },
+        },
+        {
+          id: "q1-d",
+          // G(3) pure: 言い切らない間接の gentle。
+          text: "「そっか……。まあ、ゆっくりでいいからね」とだけ、そっと返す",
+          points: { "gentle-indirect": 3 },
+        },
+      ],
+    },
+    {
+      // Q2: elegant-precise(A), logical-clear(B), creative-playful(C), humor-wit(D)
+      id: "q2",
+      text: "AIに人生相談したら四字熟語だけで返事が来た! あなたの返しは?",
+      choices: [
+        {
+          id: "q2-a",
+          // E(2)+B: 「一語で」=elegant、「よし、決めた」の断言の熱=bold を帯びる。
+          text: "「よし、決めた。以上」と一語で受けて終える",
+          points: { "elegant-precise": 2, "bold-impact": 1 },
         },
         {
           id: "q2-b",
-          text: "「原因は何? 解決策を一緒に考えよう」と整理を提案する",
-          points: { "logical-clear": 2, "elegant-precise": 1 },
+          // L(3) pure: 一字ずつ分解して構造を見せる logical。
+          text: "四字を一字ずつ分解して「要はこの3点の話だ」と読み解く",
+          points: { "logical-clear": 3 },
         },
         {
           id: "q2-c",
-          text: "「明日は絶対よくなる! 今夜は全部忘れて休もう」と強く励ます",
-          points: { "bold-impact": 2, "warm-empathy": 1 },
+          // C(2)+P: 即興の言葉遊び=creative、季語の情景=poetic を帯びる。
+          text: "「じゃあ私は季語で返す」と、その場で情景をひと詠みしてみせる",
+          points: { "creative-playful": 2, "poetic-sensory": 1 },
         },
         {
           id: "q2-d",
-          text: "「雨の日の後には虹が出るよ」と情景を込めてそっと伝える",
-          points: { "poetic-sensory": 2, "gentle-indirect": 1 },
-        },
-      ],
-    },
-    {
-      // Q3: elegant-precise(A), warm-empathy(B), creative-playful(C), logical-clear(D)
-      id: "q3",
-      text: "プレゼン資料のタイトルを頼まれた。あなたが考えるのは?",
-      choices: [
-        {
-          id: "q3-a",
-          text: "「3分でわかる〇〇」— 短く、核心だけを突いたタイトル",
-          points: { "elegant-precise": 2, "bold-impact": 1 },
-        },
-        {
-          id: "q3-b",
-          text: "「みんなで考える〇〇」— 聞く人が参加したくなるタイトル",
-          points: { "warm-empathy": 2, "gentle-indirect": 1 },
-        },
-        {
-          id: "q3-c",
-          text: "「もし〇〇が宇宙に行ったら」— 誰も思いつかない奇抜な切り口",
-          points: { "creative-playful": 2, "humor-wit": 1 },
-        },
-        {
-          id: "q3-d",
-          text: "「〇〇の現状と課題と解決策」— 構成がひと目でわかるタイトル",
-          points: { "logical-clear": 2, "elegant-precise": 1 },
-        },
-      ],
-    },
-    {
-      // Q4: poetic-sensory(A), bold-impact(B), humor-wit(C), gentle-indirect(D)
-      id: "q4",
-      text: "SNSで1万いいねがついた投稿の内容は? あなたの理想を選んでください。",
-      choices: [
-        {
-          id: "q4-a",
-          text: "夕焼けの写真に「今日も世界はこんなに美しかった」と一言",
-          points: { "poetic-sensory": 2, "warm-empathy": 1 },
-        },
-        {
-          id: "q4-b",
-          text: "「人生で一番大事なことを30秒で言います」という宣言から始まる投稿",
-          points: { "bold-impact": 2, "elegant-precise": 1 },
-        },
-        {
-          id: "q4-c",
-          text: "「猫がパソコンに乗ってきたので今日の仕事は終わり」という報告",
+          // H(2)+C: 笑い=humor、「俳人になった」の意外な見立て=creative を帯びる。
+          text: "「AIが急に俳人になった」とボケて返す",
           points: { "humor-wit": 2, "creative-playful": 1 },
         },
-        {
-          id: "q4-d",
-          text: "「ありがとう」とだけ書いて、日々の感謝を静かに伝える投稿",
-          points: { "gentle-indirect": 2, "poetic-sensory": 1 },
-        },
       ],
     },
     {
-      // Q5: creative-playful(A), logical-clear(B), gentle-indirect(C), elegant-precise(D)
-      id: "q5",
-      text: "新しい商品の名前を考えてほしいと頼まれた。あなたのアプローチは?",
-      choices: [
-        {
-          id: "q5-a",
-          text: "言葉を組み合わせたり、造語を作ったりして遊ぶ",
-          points: { "creative-playful": 2, "humor-wit": 1 },
-        },
-        {
-          id: "q5-b",
-          text: "ターゲット・特徴・競合を分析して最適な名前を導く",
-          points: { "logical-clear": 2, "elegant-precise": 1 },
-        },
-        {
-          id: "q5-c",
-          text: "使う人が親しみやすく、呼びやすい名前を重視する",
-          points: { "gentle-indirect": 2, "warm-empathy": 1 },
-        },
-        {
-          id: "q5-d",
-          text: "一語で本質を表す、無駄のないシンプルな名前を選ぶ",
-          points: { "elegant-precise": 2, "logical-clear": 1 },
-        },
-      ],
-    },
-    {
-      // Q6: warm-empathy(A), bold-impact(B), poetic-sensory(C), humor-wit(D)
-      id: "q6",
+      // Q3: warm-empathy(A), gentle-indirect(B), creative-playful(C), humor-wit(D)
+      id: "q3",
       text: "チームの士気が下がっている。あなたはどう声をかける?",
       choices: [
         {
-          id: "q6-a",
-          text: "一人ひとりに声をかけて「どうした? 何かあった?」と聞いてまわる",
+          id: "q3-a",
+          // W(3) pure: 共感を先に差し出す warm。
+          text: "一人ずつ「どうした? 何かあった?」と、まず気持ちを聞いてまわる",
+          points: { "warm-empathy": 3 },
+        },
+        {
+          id: "q3-b",
+          // G(2)+P: 「無理せず」言い切らない=gentle、「外はもう夕焼け」の情景=poetic を帯びる。
+          text: "「無理せず、今日はもう帰ろう。外はもう夕焼けだよ」とそっと",
+          points: { "gentle-indirect": 2, "poetic-sensory": 1 },
+        },
+        {
+          id: "q3-c",
+          // C(3) pure: 予想を裏切る突飛な比喩の creative。
+          text: "「士気という名の妖精が逃げたな。よし、捕まえに行こう」と変な比喩で回す",
+          points: { "creative-playful": 3 },
+        },
+        {
+          id: "q3-d",
+          // H(2)+C: 笑い=humor、「真顔選手権」の見立て=creative を帯びる。
+          text: "「全員そろって真顔選手権、開催中?」とボケて空気をゆるめる",
+          points: { "humor-wit": 2, "creative-playful": 1 },
+        },
+      ],
+    },
+    {
+      // Q4: elegant-precise(A), logical-clear(B), poetic-sensory(C), bold-impact(D)
+      id: "q4",
+      text: "新しい商品の名前を考えてほしいと頼まれた。あなたのアプローチは?",
+      choices: [
+        {
+          id: "q4-a",
+          // E(2)+L: 「一語で言い切る」=elegant、「強みを一つ選ぶ」選定=logical を帯びる。
+          text: "いちばんの強みを一つ選んで、それを一語で言い切る名前にする",
+          points: { "elegant-precise": 2, "logical-clear": 1 },
+        },
+        {
+          id: "q4-b",
+          // L(3) pure: 分析して最適解を導く logical。
+          text: "ターゲット・特徴・競合を分析して、最適な一案を導く",
+          points: { "logical-clear": 3 },
+        },
+        {
+          id: "q4-c",
+          // P(3) pure: 情景と音の浮かぶ、実在の感覚に根ざす poetic。
+          text: "「夕凪」のように、情景と音の浮かぶ名前を探す",
+          points: { "poetic-sensory": 3 },
+        },
+        {
+          id: "q4-d",
+          // B(3) pure: 一発で刺さる強い一語を狙い撃つ bold。
+          text: "一発で記憶に刺さる、強い一語を狙い撃つ",
+          points: { "bold-impact": 3 },
+        },
+      ],
+    },
+    {
+      // Q5: warm-empathy(A), gentle-indirect(B), poetic-sensory(C), bold-impact(D)
+      id: "q5",
+      text: "旅先で見た絶景を誰かに伝えるとき、あなたはどう言う?",
+      choices: [
+        {
+          id: "q5-a",
+          // W(2)+G: 相手を思う=warm、「いつか……な」言い切らない=gentle を帯びる。
+          text: "「あなたにもいつか見せたいな」と、思わず気持ちを添える",
           points: { "warm-empathy": 2, "gentle-indirect": 1 },
+        },
+        {
+          id: "q5-b",
+          // G(3) pure: 言い切らない、ふんわりした gentle。
+          text: "「なんか……言葉にできないけど、すごくよかった」とふんわり伝える",
+          points: { "gentle-indirect": 3 },
+        },
+        {
+          id: "q5-c",
+          // P(3) pure: 実在の感覚（匂い・音）に根ざす描写の poetic。
+          text: "「風の匂いと波の音が、体にしみこんできた」と描写する",
+          points: { "poetic-sensory": 3 },
+        },
+        {
+          id: "q5-d",
+          // B(3) pure: 断言・熱量で言い切る bold。
+          text: "「とにかく行って。人生変わるから」と言い切る",
+          points: { "bold-impact": 3 },
+        },
+      ],
+    },
+    {
+      // Q6: creative-playful(A), humor-wit(B), poetic-sensory(C), bold-impact(D)
+      id: "q6",
+      text: "SNSで1万いいねがついた投稿の理想は? あなたの理想を選んでください。",
+      choices: [
+        {
+          id: "q6-a",
+          // C(2)+H: 奇抜な見立て=creative、その可笑しさ=humor を帯びる。
+          text: "「神様がスクリーンセーバーを更新した空」という見立ての一枚",
+          points: { "creative-playful": 2, "humor-wit": 1 },
         },
         {
           id: "q6-b",
-          text: "「ここが踏ん張りどころ! 自分を信じて!」と熱く背中を押す",
-          points: { "bold-impact": 2, "elegant-precise": 1 },
+          // H(3) pure: 笑いの報告の humor。
+          text: "「猫が乗ってきたので本日の業務は終了します」という報告",
+          points: { "humor-wit": 3 },
         },
         {
           id: "q6-c",
-          text: "「桜は嵐の後に最も美しく咲く」と静かに語りかける",
-          points: { "poetic-sensory": 2, "warm-empathy": 1 },
+          // P(3) pure: 実在の視覚（燃えるように赤い空）に根ざす五感描写の poetic。
+          // 抽象的な評価（「綺麗」）でなく、実際に見えている色そのものを描く。
+          text: "夕焼けの写真に「空が、燃えるみたいに真っ赤だった」と一言",
+          points: { "poetic-sensory": 3 },
         },
         {
           id: "q6-d",
-          text: "「みんな疲れてるんだから、今日はもう帰ろう!」とボケて笑わせる",
-          points: { "humor-wit": 2, "creative-playful": 1 },
+          // B(2)+E: 断言=bold、「30秒で」削ぎ落とし=elegant を帯びる。
+          text: "「大事なことを30秒で言います」と宣言から始まる投稿",
+          points: { "bold-impact": 2, "elegant-precise": 1 },
         },
       ],
     },
     {
-      // Q7: humor-wit(A), elegant-precise(B), warm-empathy(C), bold-impact(D)
+      // Q7: elegant-precise(A), warm-empathy(B), creative-playful(C), poetic-sensory(D)
       id: "q7",
-      text: "職場の飲み会でスピーチを頼まれた。何を言う?",
+      text: "プレゼン資料のタイトルを頼まれた。あなたが考えるのは?",
       choices: [
         {
           id: "q7-a",
-          text: "「乾杯の前に一言……と言いつつ10分話す人の気持ちがわかりました」とつかみ",
-          points: { "humor-wit": 2, "creative-playful": 1 },
+          // E(2)+L: 「核心だけ」削ぎ落とし=elegant、「わかる」設計=logical を帯びる。
+          text: "「3分でわかる〇〇」— 核心だけを、むだなく突いたタイトル",
+          points: { "elegant-precise": 2, "logical-clear": 1 },
         },
         {
           id: "q7-b",
-          text: "「今年の成果を一言で言うと『成長』。以上です」と潔く終える",
-          points: { "elegant-precise": 2, "bold-impact": 1 },
+          // W(3) pure: 聞く人の心に寄る warm。
+          text: "「みんなで考える〇〇」— 聞く人が参加したくなるタイトル",
+          points: { "warm-empathy": 3 },
         },
         {
           id: "q7-c",
-          text: "「皆さんがいてくれたから、今の自分がいます。本当にありがとう」と感謝",
-          points: { "warm-empathy": 2, "gentle-indirect": 1 },
+          // C(2)+H: 誰も思いつかない切り口=creative、その可笑しさ=humor を帯びる。
+          text: "「もし〇〇が宇宙に行ったら」— 誰も思いつかない切り口",
+          points: { "creative-playful": 2, "humor-wit": 1 },
         },
         {
           id: "q7-d",
-          text: "「来年は全員で最高の景色を見に行く! それだけ言いたかった!」と宣言",
-          points: { "bold-impact": 2, "poetic-sensory": 1 },
+          // P(2)+W: 目に浮かぶ情景=poetic、読む人を和ませる=warm を帯びる。
+          text: "「〇〇のある風景」— 目に浮かぶ情景で、読む人をふっと和ませる言葉",
+          points: { "poetic-sensory": 2, "warm-empathy": 1 },
         },
       ],
     },
     {
-      // Q8: logical-clear(A), gentle-indirect(B), poetic-sensory(C), creative-playful(D)
+      // Q8: logical-clear(A), gentle-indirect(B), humor-wit(C), bold-impact(D)
       id: "q8",
-      text: "旅行先で感動した景色を誰かに伝えるとき、あなたはどう言う?",
+      text: "「怒っているの?」と聞かれた。実は少し不満がある。あなたの答えは?",
       choices: [
         {
           id: "q8-a",
-          text: "「晴れてて、海が青くて、気温25度で最高のコンディションだった」と具体的に",
+          // L(2)+E: 「整理」=logical、「要点を絞る／ここ」=elegant を帯びる。
+          text: "「〇〇の件でこう感じた。直してほしいのはここ」と、要点を絞って整理する",
           points: { "logical-clear": 2, "elegant-precise": 1 },
         },
         {
           id: "q8-b",
-          text: "「なんか、すごくよかった……言葉じゃ説明できない感じ」とふんわり伝える",
-          points: { "gentle-indirect": 2, "poetic-sensory": 1 },
+          // G(3) pure: 言い切らず言葉を濁す gentle。
+          // 旧案の「胸のあたりがもやっと」は内面の感覚であって景色/五感描写ではなく、poetic の
+          // 弁別線（実在の情景を浮かべる）に接地しない副点だった（V-2 同観点で是正）。pure gentle に落とす。
+          text: "「怒ってないよ……ただ少し、うまく言えないんだけど」と言葉を濁す",
+          points: { "gentle-indirect": 3 },
         },
         {
           id: "q8-c",
-          text: "「風の匂いと波の音が体に染み込んで、時間が溶けるみたいだった」と描写",
-          points: { "poetic-sensory": 2, "warm-empathy": 1 },
+          // H(3) pure: 笑いでほどく humor（奇抜な造語に寄らない）。
+          text: "「怒ってない。ただ真顔がデフォルトなだけ」と笑ってかわす",
+          points: { "humor-wit": 3 },
         },
         {
           id: "q8-d",
-          text: "「例えるなら、神様がスクリーンセーバーを更新した瞬間みたいな景色」と例える",
-          points: { "creative-playful": 2, "humor-wit": 1 },
+          // B(2)+W: 断言=bold、「好きだから言う」相手を思う=warm を帯びる。
+          text: "「正直、ちょっと不満。でも好きだから言うね」と言い切る",
+          points: { "bold-impact": 2, "warm-empathy": 1 },
         },
       ],
     },
     {
-      // Q9: bold-impact(A), poetic-sensory(B), elegant-precise(C), humor-wit(D)
+      // Q9: elegant-precise(A), gentle-indirect(B), creative-playful(C), bold-impact(D)
       id: "q9",
       text: "大切な人に「好きです」と伝えるとしたら、あなたの一言は?",
       choices: [
         {
           id: "q9-a",
-          text: "「好きです。付き合ってください」とストレートに、これだけ言う",
-          points: { "bold-impact": 2, "elegant-precise": 1 },
+          // E(2)+B: 「一つだけ／絞る」=elegant、まっすぐな熱=bold を帯びる。
+          text: "「伝えたいのは一つだけ。好きです」と絞って言う",
+          points: { "elegant-precise": 2, "bold-impact": 1 },
         },
         {
           id: "q9-b",
-          text: "「あなたがいると、世界がもう少し明るく見える気がします」と詩的に",
-          points: { "poetic-sensory": 2, "warm-empathy": 1 },
+          // G(3) pure: 言い切らない、そっと差し出す gentle。
+          text: "「こんな自分でよければ……そばにいてほしい」とそっと伝える",
+          points: { "gentle-indirect": 3 },
         },
         {
           id: "q9-c",
-          text: "「伝えたいことは一つだけ。好きです」と言葉を絞って伝える",
-          points: { "elegant-precise": 2, "gentle-indirect": 1 },
+          // C(3) pure: 予想を裏切る独自の言い回しの creative。
+          text: "「君は、私の語彙を毎日更新してくる」と独自の言い回しで伝える",
+          points: { "creative-playful": 3 },
         },
         {
           id: "q9-d",
-          text: "「こんな自分でよければ……もらってください」とおぼんこぼんばりに",
-          points: { "humor-wit": 2, "creative-playful": 1 },
+          // B(3) pure: 迷いなき断言の bold。
+          text: "「好きです。付き合ってください」と、それだけ言う",
+          points: { "bold-impact": 3 },
         },
       ],
     },
     {
-      // Q10: gentle-indirect(A), creative-playful(B), warm-empathy(C), logical-clear(D)
+      // Q10: logical-clear(A), warm-empathy(B), humor-wit(C), poetic-sensory(D)
       id: "q10",
-      text: "「怒っているの?」と聞かれた。実は少し不満がある。あなたの答えは?",
+      text: "職場の飲み会でスピーチを頼まれた。何を言う?",
       choices: [
         {
           id: "q10-a",
-          text: "「怒ってないよ……ただちょっと、思うところはあって」とゆっくり話す",
-          points: { "gentle-indirect": 2, "warm-empathy": 1 },
+          // L(2)+E: 「一言で言うと」集約=elegant、「理由は3つ」構造=logical を帯びる。
+          text: "「今年を一言で言うと『成長』。理由は3つあります」と組み立てる",
+          points: { "logical-clear": 2, "elegant-precise": 1 },
         },
         {
           id: "q10-b",
-          text: "「怒ってないよ! ただ私の感情が独自のアップデート中なだけ」とかわす",
-          points: { "creative-playful": 2, "humor-wit": 1 },
+          // W(2)+P: 感謝=warm、「あの夜の景色」情景=poetic を帯びる。
+          text: "「今の自分があるのは皆さんのおかげ。あの夜の景色は忘れません」と感謝を込める",
+          points: { "warm-empathy": 2, "poetic-sensory": 1 },
         },
         {
           id: "q10-c",
-          text: "「少し悲しかった。もう少しこうしてほしかったな」と素直に気持ちを話す",
-          points: { "warm-empathy": 2, "gentle-indirect": 1 },
+          // H(3) pure: つかみの笑いの humor。
+          text: "「乾杯の前に一言、と言って10分話す人の気持ちが、今わかりました」とつかむ",
+          points: { "humor-wit": 3 },
         },
         {
           id: "q10-d",
-          text: "「具体的に言うと、〇〇の件でこう感じた。改善してほしいのはここ」と整理",
-          points: { "logical-clear": 2, "elegant-precise": 1 },
+          // P(3) pure: 実在の五感情景（窓外の夜桜・街灯の光）を描く poetic。
+          // 旧案「来年は全員で最高の景色を見に行こう」は未来への集団への誘い（warm/bold rally）で、
+          // 「最高の景色」は抽象的最上級＝描写でなく、poetic の弁別線（実在の感覚に根ざす）に接地して
+          // いなかった（V-2 是正）。実際に見えている情景そのものを描く文へ書き換え pure poetic を保つ。
+          text: "「ふと窓の外を見たら、夜桜が街灯にふわっと浮かんでいました」と情景を描く",
+          points: { "poetic-sensory": 3 },
         },
       ],
     },

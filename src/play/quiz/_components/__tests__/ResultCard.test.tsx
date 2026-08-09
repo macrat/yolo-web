@@ -1538,3 +1538,108 @@ describe("ResultCard - impossible-advice variant", () => {
     expect(anyLegacyColorVar).toBe(false);
   });
 });
+
+describe("ResultCard - 真の残余同点の開示ブロック（P2b・cycle-303）", () => {
+  // word-sense-personality の同点時のみ QuizContainer が coTypes を渡す。
+  // 主タイプ（result）は determineResult の決定的勝者、coTypes は同点を分け合う副タイプ。
+  const wordSenseResult: QuizResult = {
+    id: "elegant-precise",
+    title: "一字千金（いちじせんきん）タイプ",
+    description: "あなたは一字千金タイプです。",
+  };
+  const wordSenseProps = {
+    result: wordSenseResult,
+    quizType: "personality" as const,
+    quizTitle: "言葉の感覚診断",
+    quizSlug: "word-sense-personality",
+    onRetry: vi.fn(),
+  };
+
+  test("coTypes が未指定のときは開示ブロックを描画しない（単独勝者＝従来体験）", () => {
+    const { container } = render(<ResultCard {...wordSenseProps} />);
+    expect(
+      screen.queryByLabelText("同じくらい強く出た型"),
+    ).not.toBeInTheDocument();
+    expect(container.querySelector("[class*='tiedDisclosure']")).toBeNull();
+  });
+
+  test("coTypes が空配列のときも開示ブロックを描画しない", () => {
+    const { container } = render(
+      <ResultCard {...wordSenseProps} coTypes={[]} />,
+    );
+    expect(
+      screen.queryByLabelText("同じくらい強く出た型"),
+    ).not.toBeInTheDocument();
+    expect(container.querySelector("[class*='tiedDisclosure']")).toBeNull();
+  });
+
+  test("2 型同点（coTypes 1 件）: 主タイプと副タイプを同格に列挙し、副タイプの結果解説へリンクする", () => {
+    const coTypes: QuizResult[] = [
+      {
+        id: "poetic-sensory",
+        title: "花鳥風月（かちょうふうげつ）タイプ",
+        description: "花鳥風月タイプの説明。",
+      },
+    ];
+    render(<ResultCard {...wordSenseProps} coTypes={coTypes} />);
+
+    // 開示ブロックの region が存在する
+    const region = screen.getByLabelText("同じくらい強く出た型");
+    expect(region).toBeInTheDocument();
+
+    // 同格コピー: 主・副の両型名を含み「同じくらい強く出ています」と述べる（X>Y を暗示しない）
+    expect(region.textContent).toContain("一字千金（いちじせんきん）タイプ");
+    expect(region.textContent).toContain("花鳥風月（かちょうふうげつ）タイプ");
+    expect(region.textContent).toContain("同じくらい強く出ています");
+    // 「主に」という優劣を暗示する語を使わない
+    expect(region.textContent).not.toContain("主に");
+
+    // 副タイプの第三者向け結果解説ページへのリンク
+    const link = screen
+      .getByText("花鳥風月（かちょうふうげつ）タイプの解説を見る")
+      .closest("a");
+    expect(link).toHaveAttribute(
+      "href",
+      "/play/word-sense-personality/result/poetic-sensory",
+    );
+  });
+
+  test("3 型同点（coTypes 2 件）: 3 型すべてを列挙し、2 つの副タイプへリンクする", () => {
+    const coTypes: QuizResult[] = [
+      {
+        id: "poetic-sensory",
+        title: "花鳥風月（かちょうふうげつ）タイプ",
+        description: "花鳥風月タイプの説明。",
+      },
+      {
+        id: "logical-clear",
+        title: "理路整然（りろせいぜん）タイプ",
+        description: "理路整然タイプの説明。",
+      },
+    ];
+    render(<ResultCard {...wordSenseProps} coTypes={coTypes} />);
+
+    const region = screen.getByLabelText("同じくらい強く出た型");
+    expect(region.textContent).toContain("一字千金（いちじせんきん）タイプ");
+    expect(region.textContent).toContain("花鳥風月（かちょうふうげつ）タイプ");
+    expect(region.textContent).toContain("理路整然（りろせいぜん）タイプ");
+
+    // 2 つの副タイプそれぞれに結果解説ページリンクがある
+    expect(
+      screen
+        .getByText("花鳥風月（かちょうふうげつ）タイプの解説を見る")
+        .closest("a"),
+    ).toHaveAttribute(
+      "href",
+      "/play/word-sense-personality/result/poetic-sensory",
+    );
+    expect(
+      screen
+        .getByText("理路整然（りろせいぜん）タイプの解説を見る")
+        .closest("a"),
+    ).toHaveAttribute(
+      "href",
+      "/play/word-sense-personality/result/logical-clear",
+    );
+  });
+});

@@ -104,7 +104,62 @@ type ResultCardProps = {
    * ResultCard 内で個別クイズデータをインポートする必要をなくし、バンドルサイズを削減する。
    */
   allResults?: QuizResult[];
+  /**
+   * 真の残余同点（最高得点を主タイプと分け合う副タイプ）。P2b（cycle-303）。
+   * word-sense-personality の同点時のみ QuizContainer から渡される（他診断は常に空/未指定）。
+   * 1件以上あるとき、主タイプと同格に「同じくらい強く出た型」を開示するブロックを描画する。
+   * 空/未指定なら開示ブロックは出さない（＝単独勝者＝従来体験）。
+   */
+  coTypes?: QuizResult[];
 };
+
+/**
+ * 真の同点の開示ブロック（P2b・cycle-303）。
+ *
+ * 診断が構造的に残す残余同点（本当に複数タイプの声を等しく持つ人）を、恣意的・不可視に
+ * 配列順で割らず、**同格**として正直に開示する。主タイプ（determineResult の決定的勝者）と
+ * co-types を上下つけず同じ強さの声として列挙し、「主に X」のような X>Y を暗示するコピーには
+ * しない。各 co-type にはその第三者向け結果解説ページ（/play/[slug]/result/[id]）への
+ * リンクを添える。
+ *
+ * DESIGN.md 準拠: 一段沈む面（--paper-2）＋罫（--rule）の静かな区画。装飾線・絵文字・
+ * 禁止色は使わない。型名の強調は 墨（--ink）と【】括弧の組版のみ（朱はリンクに限る）。
+ */
+function renderTiedTypesDisclosure(
+  mainResult: QuizResult,
+  coTypes: QuizResult[],
+  quizSlug: string,
+): React.ReactNode {
+  // 主タイプ＋副タイプを同格に並べる（配列順で上下をつけない）。主タイプが先頭なのは
+  // 「今表示している結果カード＝主タイプ」という所在を保つためで、優劣の含意ではない。
+  const tiedTitles = [mainResult, ...coTypes]
+    .map((type) => `【${type.title}】`)
+    .join("と");
+
+  return (
+    <section
+      className={styles.tiedDisclosure}
+      aria-label="同じくらい強く出た型"
+    >
+      <p className={styles.tiedDisclosureText}>
+        あなたの言葉の感覚は、{tiedTitles}
+        が同じくらい強く出ています。いずれも同じ強さの、あなたの声です。
+      </p>
+      <ul className={styles.tiedTypeLinks}>
+        {coTypes.map((coType) => (
+          <li key={coType.id}>
+            <Link
+              href={`/play/${quizSlug}/result/${coType.id}`}
+              className={styles.tiedTypeLink}
+            >
+              {coType.title}の解説を見る
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
 
 function renderStandardContent(
   content: QuizResultDetailedContent,
@@ -393,6 +448,7 @@ export default function ResultCard({
   accentColor,
   referrerTypeId,
   allResults,
+  coTypes,
 }: ResultCardProps) {
   const shareUrl =
     typeof window !== "undefined"
@@ -493,6 +549,11 @@ export default function ResultCard({
         </>
       )}
       <p className={styles.description}>{result.description}</p>
+      {/* 真の残余同点の開示（P2b・cycle-303）。co-types が1件以上あるときのみ描画。
+          単独勝者（約8割）には出さず従来体験を保つ。判定は変えず表示のみの加算ブロック。 */}
+      {coTypes &&
+        coTypes.length > 0 &&
+        renderTiedTypesDisclosure(result, coTypes, quizSlug)}
       {result.recommendation && result.recommendationLink && (
         <Link
           href={result.recommendationLink}
