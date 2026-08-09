@@ -23,8 +23,8 @@ completed_at: null
 ## 実施する作業
 
 - [x] **D1. 決定の前提を接地する**: (a) 現物を実見（favicon/apple=旧ブランド・OGP看板「試」・fuda札「診」）、(b) DESIGN.md §4「印」と site-concept.md の規律を確認、(c) favicon/OGP が誰にいつ出るか(favicon=極小16pxでの識別が第一)を確定。→ [decision.md](./decision.md) §D1
-- [x] **D2. B-583 を決定する**（PM が決定）: (a)店構えの主張=否・静かな一貫性で足りる、(b)favicon に印義務なし・独自の家族内マーク、(c)店の印=「試」確定(『やってみる』の追認・仮置き解除)・fuda「診」は内容別で現状維持、(d)site-concept は honest・変更不要。→ [decision.md](./decision.md) §D2
-- [ ] **D3. 決定のレビュー**（reviewer・観点固定）: 観点を「craft・一貫性」でなく **「来訪者にこの顔から何が届くか／自己像で選んでいないか」**(AP-I01/P07)に据える。cycle-283 のレビューはこの観点を欠いて根を素通りした。指摘は必要性を判断して対応。
+- [x] **D2. B-583 を決定する**（PM が決定）: (a)店構えの主張=否・静かな一貫性で足りる、(b)favicon に印義務なし・独自の家族内マーク、(c)店の印=「試」確定(字に意味論を載せず、既出荷・非有害・動かす便益なしで維持・仮置き解除)・fuda「診」は内容別で現状維持、(d)site-concept は honest・変更不要。→ [decision.md](./decision.md) §D2
+- [x] **D3. 決定のレビュー**（reviewer3巡・毎回新規＝AP-WF20回避）: 観点を「来訪者に何が届くか／自己像・正典で接地していないか」に固定。指摘を是正——1巡目=試の根拠を意味論からprovenance/非有害へ・看板印の要否を正面処理、2巡目=site-conceptへの誤帰属訂正(「静かな一貫性」は不在)・provenance過大主張の誠実化、3巡目=誤帰属のindex.md伝播除去・(a)スコープ明記・D4コメント是正のピン留め。全て対応済。→ [decision.md](./decision.md)
 - [ ] **D4.（決定が実装を許すなら）B-576 実装**（builder ＋ reviewer）: favicon.ico / apple-touch-icon.png を D2 の決定に沿って新デザインで作り直し、OGP/fuda の印を確定して一系へ統合。**外部仕様の一次資料確認**（favicon/apple-touch-icon の要求サイズ・形式・SERP favicon 要件）を実装冒頭で行う。図像1面ごとにタスクを分割し個別レビュー。
 - [ ] **D5. 視覚確認**（take-screenshot スキル）: タブ・ブックマーク・SERP擬似・OGP共有・fuda を light/dark・複数幅で変更前後撮影し PM が実見。
 - [ ] **D6. 検証**: 5ゲート（typecheck/lint/format:check/test/build）すべて緑。
@@ -53,9 +53,9 @@ D1(接地)→D2(決定・ADR起票)→D3(決定レビュー)→〔決定が許�
 
 - [cycle-303/self-audit.md](../cycle-303/self-audit.md)（21サイクル放置の点検・再発防止の事前確約・優先度逆転の是正）
 - cycle-283.md（B-583 起票の経緯・「屋」印の撤回・印を来訪者価値から決め直す4論点 a-d）
-- docs/site-concept.md（「宣言を実装に先行させない」「静かな一貫性で足りるのでは」・名の由来=よろず／よろず屋ではない）
-- src/lib/ogp-image.tsx（SHOP_SEAL_CHAR="試"・未決コメント）・src/lib/fuda-image.tsx（DEFAULT_SEAL_CHAR="診"）・DESIGN.md §4「印」
-- ADR001（次回確認日 2026-08-10=未来のため本サイクルでは未開封。移行の観測は移行完了を前提に読む旨は self-audit に記録済）
+- docs/site-concept.md（実在するのは「宣言を実装に先行させない」L17・名の由来=YOLO×よろず／よろず屋ではない L11）。※「静かな一貫性で足りるのでは」は **site-concept には無く**、cycle-283 で PM 自身が立てた B-583 の未決の問い（decision.md D1 の訂正注記参照）。
+- src/lib/ogp-image.tsx（SHOP_SEAL_CHAR="試"・未決コメント→D4で確定へ更新）・src/lib/fuda-image.tsx（DEFAULT_SEAL_CHAR="診"）・DESIGN.md §4「印」
+- ADR001（kickoff時=未来のため未開封→実行中に08-10到来し開封・項1トリップワイヤのみ確認=発火なし。詳細 [adr001-note.md](./adr001-note.md)）
 - ※外部仕様（favicon/apple-touch-icon の要求サイズ・SERP favicon 要件）の一次資料確認は D4(実装)冒頭で行う。
 
 ## キャリーオーバー
