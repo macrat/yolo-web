@@ -1,6 +1,6 @@
 ---
 id: 303
-description: "B-606 の1本目として、来訪者トラフィック最上位の「強い本人性」診断 word-sense-personality の結果先行欠陥（同点時に回答でなく results 配列順で結果が決まり results[0]=elegant-precise へ +6.11pt の系統偏り。同点依存率 27.79%）を是正する。cycle-297 triage の申し送り（1診断ずつ・優先=word-sense）と cycle-295 の G1〜G5 を典拠に、実測で比例した是正の深さ（公正タイブレーク／同点の正直な開示／結果先行の再設計）を選び、来訪者の回答が結果を決めるようにする。"
+description: "B-606 の1本目として、来訪者トラフィック上位（診断内PV2位）の「強い本人性」診断 word-sense-personality を結果先行で再設計する。現状は回答が割れると結果が答えでなく results 配列順で決まり（results[0]=elegant-precise へ +6.11pt・同点依存率 27.79%）、診断が診断していない。**当初『公正タイブレーク』を採ったがオーナー指摘で破棄——『タイブレーク語が中心＝壊れた枠』（cycle-294/incident-2）。** 本筋は cycle-295 の方法論に沿い、タイプ定義と設問・配点を『回答が結果を決める』よう設計し直し、同点が設計上ほとんど生じないようにすること。1診断ずつ（cycle-297 triage）。"
 started_at: 2026-08-09T07:23:24+0900
 completed_at: null
 ---
@@ -27,10 +27,13 @@ completed_at: null
 
 ## 実施する作業
 
-- [ ] **P1. 実測と是正方針の設計**（planner + reviewer）: word-sense-personality の現物（設問・選択肢配点・結果タイプ・FAQ）を読み、(a) 同点依存率・先頭偏り、(b) 各タイプの到達性（理想回答者テスト）、(c) 出現率、を実測する。cycle-295 の G1〜G5 と triage の3つの選択肢——①公正タイブレーク（配列順→回答依存の決定的・公正な決着）②同点の正直な開示 UX（「X型とY型のあいだ」）③結果先行の再設計（B-589 スケール）——を来訪者価値で比較し、**比例した1案を選んで根拠とともに `design.md` に記録**する。共有 `determineResult` を触る場合は他8診断への波及と、シェア/再受験の決定性・再現性の保持を明記する。
-- [ ] **P2. 実装**（builder + reviewer）: 選んだ方針を実装。決定的であること（同じ回答→常に同じ結果）を保つ。
-- [ ] **P3. 検証**（reviewer/harness）: 是正前後を実測し、`design.md` に前後比較を残す。回帰ガード（`reachability.test.ts` 等）を追加または更新し、欠陥が赤→緑になることを示す。
-- [ ] **P4. 視覚確認**: 結果ページの表示に影響する変更なら `take-screenshot` スキルで前後を確認。UI を変えないなら、その旨と理由を記録。
+- [x] **P1a. 実測（欠陥の実在確認）**（planner + reviewer2名で独立再現済み）: word-sense-personality（10問4択・8型）の同点依存率 27.79%・elegant 先頭偏り +6.11pt・出現6.15倍・dead=0 を悉皆（4^10）で実測。→ [design.md](./design.md) §0〜§2。
+- [~] **P1b. 是正方針の設計【差し替え済み】**: 当初「公正タイブレーク（案①）」を採用したが、**オーナー指摘により破棄**——「タイブレークという語が中心に来た時点で壊れた枠」（`cycle-294/incident-2.md`）。**本筋は結果先行の再設計**（タイプが先・設問がそこへ判別・同点が設計上ほとんど生じない）。経緯＝[course-correction.md](./course-correction.md)。→ 再設計は **P1c** で行う。
+- [x] **P1c. 結果先行の再設計【設計フレームワーク承認】**（planner 2巡 + reviewer）: V1（純single-signal＋反同点重み）は「重みが同点消去の本体＝隠れたタイブレーク」でレビュー却下→ **V2** で確定。V2＝(A) 固定影結合を廃した内容接地の配点（主signal強度2/3＋文が実際に帯びる時だけの近傍nuance）、(B) 隣接3対を各3問で直接対決させる incidence 改修、(C) 真の残余同点（実測21%）を主タイプは決定的に保ちつつ**同格で正直に開示**。悉皆実測 G1=8/8・dead=0・同点27.79%→21.39%・出現6.15→1.74倍。**フレームワーク健全（差し戻し不要）**・調律重み排除を reviewer が独立確認。→ [redesign-v2.md](./redesign-v2.md)。content 是正3件（V-2/V-3/V-5）は P2 の builder が対応。
+- [ ] **P2a. 実装: 診断データの再設計**（builder + reviewer）: `word-sense-personality.ts` を redesign-v2.md A-3/B-1 で実装（incidence改修・40択の書き直し・内容接地の配点）。V-2/V-3 の content 是正を反映。**最終データで G1=8/8・dead=0・同点率・出現を悉皆再実測**し redesign-v2.md を実測値へ更新（目標に向けて撫でない）。決定性（同じ回答→同じ結果）保持。typeId・title・結果本文・相性36は不変。
+- [ ] **P2b. 実装: 真の同点の開示機構**（builder + reviewer）: `scoring.ts` に `getTiedTypeIds`（`determineResult` は不変）、`QuizContainer.tsx` で co-types を計算、`ResultCard.tsx` に同点時のみ同格併記の開示ブロック（X>Y を暗示しないコピー・V-5）。第三者ページ・OGP・SEO・相性は単一 typeId のまま不変。
+- [ ] **P3. 検証**（reviewer/harness）: 実装後の最終コードで全ゲートを悉皆再実測し、`redesign-v2.md`／`review-log.md` に前後比較を残す。回帰ガード（`reachability.test.ts` に同点率の悉皆退行ガード追加）で欠陥が赤→緑になることを示す。
+- [ ] **P4. 視覚確認**: 開示ブロックのある結果ページを `take-screenshot` で前後確認（単独勝者・2型同点・3型同点の3ケース）。独立レビュー。
 - [ ] **P5. ブログ判断**: 読者（自診断を作る人・結果の公正さに関心のある人）にとって価値があるかを読者視点で判断し、価値があれば blog-writer で執筆・独立レビュー。無ければ書かない理由を記録。
 - [ ] **P6. キャリーオーバー整理**: B-606 の残り診断（music→yoji→animal→character-fortune＋娯楽くじ群）の状態を backlog に反映。
 
