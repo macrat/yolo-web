@@ -481,3 +481,43 @@ redesign.md の**数値はすべて独立再現できた**（影構造・27.79%�
 - backlog B-643・index.md訂正: 妥当。
 
 **結論: 承認（push 可）。** 根本原因・機構・修正・重大度のすべてが一次資料と実測（負の対照含む）で裏付き、誤りや過大/過小はない。行番号の軽微不一致は直接是正済み。
+
+## インジェクション防御レビュー（2026-08-09）
+
+対象: 事故報告全面改稿 `incident-agent-files.md`・新規フック `session-start-integrity.sh`（層2）/`protect-agent-instructions.sh`（層3）・配線 `settings.json`・backlog B-643。すべて実測。
+
+### 有効な指摘
+
+- **[BLOCKER・有効] backlog.md L23（B-643）が240文字で、`backlog-line-length-check.sh`の200文字上限を超過。** `perl -CSD`実測=240。この状態ではコミットが既存フックにブロックされ、ハンク全体をpushできない（フックはディスク上のbacklog.mdを見るため、フック単体をコミットしようとしても止まる）。B-643を200文字以内に要約し直す必要がある。実際、本レビュー中に当該フックが発火し書き込みを止めた＝ブロッカーの実演。
+- **[Minor・有効] §6「正直な残余リスク」に層2の偽陽性/警戒疲れ（alert fatigue）が未記載。** 層2は`.claude/**`・`CLAUDE.md`・`docs/anti-patterns/**`のトラスト面に未コミット変更があれば毎SessionStart（/clear・/compactでも発火）に「セキュリティ警告」を出す。本リポジトリの通常作業（anti-patterns・skills・CLAUDE.md編集）は正規のドリフトを頻繁に生むため、警告が常態化して「無視できない形」という設計意図が形骸化するリスクがある。§6は「過小評価しない」と宣言している以上、この最も現実的な失敗モードも明示すべき。
+- **[Minor・有効] `session-start-integrity.sh`のヘッダ文言が不正確。** シグネチャのみ検出（＝コミット済みでgit statusクリーン、DRIFT無し）の場合でも「HEAD から乖離しています」と出る。実測でコミット済み注入シグネチャに対しSIG警告は正しく出たが、その時ファイルはHEADと一致しており「乖離」表現は誤り。DRIFT有無で見出しを出し分けるのが正確。
+
+### 検証して健全と判断した点（有効な問題なし・根拠つき）
+
+- **層3 `protect-agent-instructions.sh`（実測全通過）**: (a)非commitコマンド=exit0無出力、(b)commit＋トラスト面クリーン=exit0、(c1)commit＋AGENTS.md`nextjs-agent-rules`=exit2ブロック、(c2)commit＋CLAUDE.md汎用`<!-- BEGIN: my-agent-rules -->`=exit2、(c3)commit＋マーカー無し正規CLAUDE.md=exit0（正規編集を誤ブロックしない）。jq欠落・cwd不正でも安全にexit0。
+- **層2 `session-start-integrity.sh`（実測全通過）**: 真の非gitディレクトリ=exit0無出力、クリーンgitリポジトリ（トラスト面ファイル無し）=exit0無出力、コミット済み注入シグネチャ=SIG警告（ブロックせずexit0＝仕様どおり警告注入のみ）。エラーで落ちない。
+- **配線**: settings.jsonは妥当JSON。SessionStartにsession-start-facts後段へ、PreToolUse/Bash最後段へ追加。既存6フックの順序・内容は不変。新規.shはexecビット付き（コミット時100755）。
+- **事故報告の枠と正確さ（一次資料照合）**: commit`07803895`（cycle-302脆弱性対応）がnext 16.2.10→^16.3.0（`git log -S`で確認）、`next.config.ts`に`agentRules: false`実在、`git log -S "nextjs-agent-rules" -- CLAUDE.md`=0、機構（`generate-agent-files.js`のマーカー・注入文言「Read the relevant guide in node_modules/next/dist/docs/ … before writing any code」「committing it with your work keeps the tree clean」・AGENTS/CLAUDE分岐・`start-server.js:419`の`agentRules !== false`ゲート）すべて実ソースと一致。注入内容が「一見良性」である点を誇張せず、危険なのは経路であるという枠づけも正直。誇張/過小なし。
+- **format:check**: 全通過（prettierは.shを対象外とし新規フックで破綻せず）。
+
+**結論: 改善指示（要是正・pushはBLOCKER解消まで不可）。** 防御ロジック・配線・事故報告の事実は健全だが、backlog L23の200字超過が既存コミットフックで確実にpushを止める。あわせてMinor2件（層2の偽陽性の残余リスク明記・ヘッダ文言）を是正のこと。
+
+## インジェクション防御の再レビュー（2026-08-09・白紙で全体）
+
+前回改善指示の3件を全て実測で是正確認。新規指摘なし。
+
+### 前回3件の是正確認（すべて有効に是正）
+
+- **[BLOCKER→解消] backlog B-643の200字超過**: 現在197字（`perl -CSD`実測）。`backlog-line-length-check.sh`をcommit入力で手動実行=**exit0で通過**。既存コミットフックを塞がなくなった。
+- **[Minor→解消] §6に層2の警戒疲れ（正規編集での偽陽性）**: incident §6(c)「警戒疲れ（最も起きやすい失敗モード）」として追記済み。`.claude/**`・`CLAUDE.md`・`docs/anti-patterns/**`の正規未コミット編集で毎SessionStart警告が出て形骸化しうる旨と、B-643での機械的区別の必要を明示。
+- **[Minor→解消] 層2ヘッダのSIG-only誤表現**: 見出しを中立化（「確認すべき状態を検出しました」）し、SIG/DRIFTを出し分けるよう修正。実測=(1)コミット済みシグネチャでgit statusクリーンのSIG-onlyは「既知の注入シグネチャを検出」のみ表示し「乖離」表現を出さない、(2)未コミット正規編集のDRIFT-onlyは乖離節のみ表示。誤表現は解消。
+
+### 全体（白紙）再検証・すべて健全
+
+- **層3 protect-agent-instructions.sh**（一時dir実測）: 非commit/クリーンcommit=exit0、CLAUDE.md`nextjs-agent-rules`=exit2、AGENTS.md汎用`my-agent`マーカー=exit2、マーカー無し正規CLAUDE.md=exit0、cwd不正=exit0。誤ブロックなし・安全側フェイル。
+- **層2 session-start-integrity.sh**（一時dir実測）: 非git=無出力exit0、クリーンgit(トラスト面無)=無出力exit0、SIG-only/DRIFT-onlyの出し分け正常、警告注入のみでブロックせず（仕様どおり）。現リポジトリ実発火でも正しく未コミットフックとsettings変更を乖離surface。
+- **配線**: settings.jsonは妥当JSON。SessionStartはfacts後段、PreToolUse/Bashは最後段に追加。既存フック不変。両.shはexecビット付き（100755）。
+- **事故報告（一次資料照合）**: commit`07803895`=next 16.2.10→^16.3.0、`next.config.ts:9`に`agentRules: false`、`start-server.js:419`に`agentRules !== false`ゲート、`generate-agent-files.js`実在、`git log -S "nextjs-agent-rules" -- CLAUDE.md`=0件。失敗チェーン（黙って読む/自力検知不能/痕跡消失）を層2（検知・surface）と層3（commit前遮断）が断つ枠づけは正確。残余リスク(a)途中注入(b)未知シグネチャ(c)警戒疲れを過小評価せず明示。
+- **format:check**: 全通過。
+
+**結論: 承認（push 可）。** 前回BLOCKER含む3件はすべて実測で是正済み。防御2層・配線・事故報告のいずれにも新規の有効な指摘なし。
