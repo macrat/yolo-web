@@ -25,13 +25,13 @@ completed_at: null
 - [x] **D1. 決定の前提を接地する**: (a) 現物を実見（favicon/apple=旧ブランド・OGP看板「試」・fuda札「診」）、(b) DESIGN.md §4「印」と site-concept.md の規律を確認、(c) favicon/OGP が誰にいつ出るか(favicon=極小16pxでの識別が第一)を確定。→ [decision.md](./decision.md) §D1
 - [x] **D2. B-583 を決定する**（PM が決定）: (a)店構えの主張=否・静かな一貫性で足りる、(b)favicon に印義務なし・独自の家族内マーク、(c)店の印=「試」確定(字に意味論を載せず、既出荷・非有害・動かす便益なしで維持・仮置き解除)・fuda「診」は内容別で現状維持、(d)site-concept は honest・変更不要。→ [decision.md](./decision.md) §D2
 - [x] **D3. 決定のレビュー**（reviewer3巡・毎回新規＝AP-WF20回避）: 観点を「来訪者に何が届くか／自己像・正典で接地していないか」に固定。指摘を是正——1巡目=試の根拠を意味論からprovenance/非有害へ・看板印の要否を正面処理、2巡目=site-conceptへの誤帰属訂正(「静かな一貫性」は不在)・provenance過大主張の誠実化、3巡目=誤帰属のindex.md伝播除去・(a)スコープ明記・D4コメント是正のピン留め。全て対応済。→ [decision.md](./decision.md)
-- [ ] **D4.（決定が実装を許すなら）B-576 実装**（builder ＋ reviewer）: favicon.ico / apple-touch-icon.png を D2 の決定に沿って新デザインで作り直し、OGP/fuda の印を確定して一系へ統合。**外部仕様の一次資料確認**（favicon/apple-touch-icon の要求サイズ・形式・SERP favicon 要件）を実装冒頭で行う。図像1面ごとにタスクを分割し個別レビュー。
-- [ ] **D5. 視覚確認**（take-screenshot スキル）: タブ・ブックマーク・SERP擬似・OGP共有・fuda を light/dark・複数幅で変更前後撮影し PM が実見。
-- [ ] **D6. 検証**: 5ゲート（typecheck/lint/format:check/test/build）すべて緑。
-- [ ] **D7. 実装のレビュー**（reviewer）: 残存指摘ゼロまで対応。
+- [x] **D4. B-576 実装**: 外部仕様を一次確認(Google SERP favicon=正方形/48px超推奨・Next16 icon規約)。候補A(朱地#af3622・紙#f8f7f2の明朝Y)を確定し `src/app/{icon.svg,favicon.ico(16/32/48手組ICO),apple-icon.png(180)}` へNext16規約で配置。旧public資産2件＋obsolete recolorスクリプトを削除。ogp/color-ogp/各テストの印コメントを未決→確定へ是正(SHOP_SEAL_CHAR="試"値不変)。`.gitignore`に`!src/app/apple-icon.png`(*.png握り潰し欠陥の是正)。
+- [x] **D5. 視覚確認**: 変更前後を `tmp/favicon-after/before-after.png`(旧/新×16/32/180)・16px白/濃・8倍拡大でPM実見。旧ブランド消滅・新マーク16px判読/非埋没・家族整合を確認。
+- [x] **D6. 検証**: 5ゲート緑（typecheck/lint/format:check/test **5553 passed**/build、いずれもexit 0・PMが独立再実行し確認）。
+- [x] **D7. 実装のレビュー**（reviewer2巡・毎回新規）: 1巡目=色OGPの未決コメント残存(Major)・ブログの旧最終形記述(Minor)・SSoTドリフト(Minor)。Major/blog是正、SSoTはキャリーオーバー。2巡目=**承認・指摘無し**(旧ブランド/未決残存ゼロ・有効ICO・追跡出荷・決定準拠・ブログ追記正確)。
 - [ ] **D8. ブログ判断**: 読者(受け手)視点で書く価値があるか判断。無ければ書かない理由を記す。
 - [ ] **D9. 整理**: backlog（B-583/B-576 の帰趨）・ADR（決定/移行完了）・キャリーオーバーを更新。
-- [ ] **D10. ADR001 の期限処理（08-10 に到来）**: kickoff(08-09)時は未来だったが実行中に 08-10 到来。開いて読了済。**時間固定の本命=項1(トリップワイヤ発火判定)のみ本サイクルで確認・記録**(+2週で335clk≫閾値111・発火余地なし)。**深い監視読み(項2-6)は専用の直後サイクルへ**——favicon移行と非結合・項2は未出荷B-613依存で読めない・項3は週次系列の丁寧な扱いを要す・項6はOwner依存。記録付きの理由ある分割(回避ではない)。→ [adr001-note.md](./adr001-note.md)
+- [x] **D10. ADR001 の期限処理（08-10 に到来）**: kickoff(08-09)時は未来だったが実行中に 08-10 到来。開いて読了。**項1(トリップワイヤ発火判定)を確認=発火なし(健全)**——4週窓890clk≫閾値111(基線と同一フィルタ・+2週335clkを桁まで再現)。**深い監視読み(項2-6)は専用の直後サイクルへ**(favicon移行と非結合・項2は未出荷B-613依存で読めない・項6はOwner依存)。記録付きの理由ある分割(回避ではない)。完了処理(経過記録追記・ディレクトリrename・持ち越しサイクル起票)はD9で。→ [adr001-note.md](./adr001-note.md)
 
 ## 作業計画
 
