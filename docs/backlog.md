@@ -2,12 +2,12 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-606 | 全10 personality診断の結果先行の点検・再設計(Rule4) | P1 | 303 | **cycle-303で1本目=word-sense-personalityに着手**。本筋はcycle-295 G1〜G5の結果先行再設計。1診断ずつ・優先=強い本人性群。詳細=cycle-297/triage.md・cycle-303/ |
 
 ## Queued (すぐに着手できる)
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-606 | 全10 personality診断の結果先行の点検・再設計(Rule4) | P1 | - | **cycle-303でword-sense完了**。残9=music/yoji/animal/character-fortune/娯楽くじ群。タイブレーク中心は壊れた枠(cycle-294)・調律重み禁止・真の同点は同格開示。詳細cycle-303/ |
 | B-576 | faviconとOGP画像を新デザインに合わせて作り直す | P1 | - | 新デザインと図像が不整合。過去2サイクル(299/302)の資料・図像・判断は前提にしない。cycle-302 E0で禁止色(青)は除去済=急性の実害は消え、未決のB-583(印の要否)に依存。B-583を先に決めてから再着手が筋。詳細cycle-303/ |
 | B-603 | character-personality 24タイプ一覧の処遇(T3・再判定) | P1 | - | **未決へ差し戻し**。cycle-298は測定面を誤り判定撤回(cycle-284の実測が正しかった)。主たる面で基準を立て直し再判定。詳細cycle-298/decision.md |
 | B-607 | character-personality F3申し送り(逆順主軸の和らげ・設問磨き) | P1 | - | cycle-295 F3=逆順フォールバック12順序対でcount二位気質が「主軸」提示される件の本文和らげ+設問文の裁量的ブラッシュアップ。旧B-603から分離(cycle-298)。詳細cycle-295/296 |

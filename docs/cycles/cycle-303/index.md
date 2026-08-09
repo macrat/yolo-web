@@ -30,12 +30,12 @@ completed_at: null
 - [x] **P1a. 実測（欠陥の実在確認）**（planner + reviewer2名で独立再現済み）: word-sense-personality（10問4択・8型）の同点依存率 27.79%・elegant 先頭偏り +6.11pt・出現6.15倍・dead=0 を悉皆（4^10）で実測。→ [design.md](./design.md) §0〜§2。
 - [~] **P1b. 是正方針の設計【差し替え済み】**: 当初「公正タイブレーク（案①）」を採用したが、**オーナー指摘により破棄**——「タイブレークという語が中心に来た時点で壊れた枠」（`cycle-294/incident-2.md`）。**本筋は結果先行の再設計**（タイプが先・設問がそこへ判別・同点が設計上ほとんど生じない）。経緯＝[course-correction.md](./course-correction.md)。→ 再設計は **P1c** で行う。
 - [x] **P1c. 結果先行の再設計【設計フレームワーク承認】**（planner 2巡 + reviewer）: V1（純single-signal＋反同点重み）は「重みが同点消去の本体＝隠れたタイブレーク」でレビュー却下→ **V2** で確定。V2＝(A) 固定影結合を廃した内容接地の配点（主signal強度2/3＋文が実際に帯びる時だけの近傍nuance）、(B) 隣接3対を各3問で直接対決させる incidence 改修、(C) 真の残余同点（実測21%）を主タイプは決定的に保ちつつ**同格で正直に開示**。悉皆実測 G1=8/8・dead=0・同点27.79%→21.39%・出現6.15→1.74倍。**フレームワーク健全（差し戻し不要）**・調律重み排除を reviewer が独立確認。→ [redesign-v2.md](./redesign-v2.md)。content 是正3件（V-2/V-3/V-5）は P2 の builder が対応。
-- [ ] **P2a. 実装: 診断データの再設計**（builder + reviewer）: `word-sense-personality.ts` を redesign-v2.md A-3/B-1 で実装（incidence改修・40択の書き直し・内容接地の配点）。V-2/V-3 の content 是正を反映。**最終データで G1=8/8・dead=0・同点率・出現を悉皆再実測**し redesign-v2.md を実測値へ更新（目標に向けて撫でない）。決定性（同じ回答→同じ結果）保持。typeId・title・結果本文・相性36は不変。
-- [ ] **P2b. 実装: 真の同点の開示機構**（builder + reviewer）: `scoring.ts` に `getTiedTypeIds`（`determineResult` は不変）、`QuizContainer.tsx` で co-types を計算、`ResultCard.tsx` に同点時のみ同格併記の開示ブロック（X>Y を暗示しないコピー・V-5）。第三者ページ・OGP・SEO・相性は単一 typeId のまま不変。
-- [ ] **P3. 検証**（reviewer/harness）: 実装後の最終コードで全ゲートを悉皆再実測し、`redesign-v2.md`／`review-log.md` に前後比較を残す。回帰ガード（`reachability.test.ts` に同点率の悉皆退行ガード追加）で欠陥が赤→緑になることを示す。
-- [ ] **P4. 視覚確認**: 開示ブロックのある結果ページを `take-screenshot` で前後確認（単独勝者・2型同点・3型同点の3ケース）。独立レビュー。
-- [ ] **P5. ブログ判断**: 読者（自診断を作る人・結果の公正さに関心のある人）にとって価値があるかを読者視点で判断し、価値があれば blog-writer で執筆・独立レビュー。無ければ書かない理由を記録。
-- [ ] **P6. キャリーオーバー整理**: B-606 の残り診断（music→yoji→animal→character-fortune＋娯楽くじ群）の状態を backlog に反映。
+- [x] **P2a. 実装: 診断データの再設計**（builder + reviewer2巡）: `word-sense-personality.ts` を実装（incidence改修・全40択書き直し・内容接地の配点）。レビューが Q10D/Q6C の pure poetic 非接地（poetic 2倍支配の主因）を捉え、builder が実在の五感描写へ書き換え＋Q8B の非接地副点を除去。**最終悉皆: G1=8/8・dead=0・同点27.79→20.78%・出現6.15→1.77倍**。全40択の副点密輸なしを reviewer が独立確認。typeId・title・結果本文・相性36は byte 不変。→ [redesign-v2.md](./redesign-v2.md) §0/A-3・[review-log.md](./review-log.md)。
+- [x] **P2b. 実装: 真の同点の開示機構**（builder + reviewer）: `scoring.ts` に `getTiedTypeIds`（`determineResult` 不変・先頭は全1,048,576通りで勝者一致を確認）、`QuizContainer.tsx` で word-sense 限定 co-types、`ResultCard.tsx` に同点時のみ同格開示ブロック（「いずれも同じ強さの、あなたの声です」・優劣語なし）。DESIGN 準拠・a11y（44px/aria-label/focus）・リンク実在を reviewer が Playwright で確認。第三者ページ・OGP・SEO・相性・シェアURL は単一 typeId のまま不変。
+- [x] **P3. 検証**: 全5ゲート緑（typecheck/lint/format/test **5553件**/build）。悉皆ゲート（G1=8/8・dead=0・同点20.78%）を reviewer2名が独立再現。回帰ガード（reachability.test.ts に同点率悉皆退行ガード＋形状ガード）追加。
+- [x] **P4. 視覚確認**: 単独勝者・2型同点・3型同点の結果ページを light/dark・390/1280px で撮影し PM が実見（`tmp/p4/`）。開示ブロックは紙地・罫・朱リンクのみで既存カードと一貫、単独勝者では非表示。**残る構造的非対称（主型フルカード vs 副型リンク）は dual-typeId 過大の裁定どおり最小形で、可視化・同格コピーで芯を満たす**（→ キャリーオーバー）。
+- [x] **P5. ブログ判断＝書いて公開**: 読者（診断を作る dev 寄りの人）向けの**方法**記事「タイプ診断の同点は設問の欠陥、全回答を数え上げて見つける」を執筆・公開（`draft:false`）。失敗の反省記でなく転用可能な方法（数え上げで同点率・到達性・偏りを測る／同点は設問設計の問題／真の同点は同格開示）。独立レビュー2巡——高指摘（到達性を成果に偽装＝記事の芯に反する）を是正し、数値を悉皆で独立再実測して一致確認のうえ**公開可**。7月記事（受け手向け）と差別化・相互リンク。
+- [x] **P6. キャリーオーバー整理**: B-606 を Queued へ戻し残り9診断を明記（backlog 更新済み）。開示機構の汎用性・構造的非対称の将来検討・dev ノイズを上記キャリーオーバーに記録。
 
 ## 作業計画
 
@@ -71,7 +71,10 @@ word-sense-personality を受けた来訪者の**回答が、その人の結果�
 
 ## キャリーオーバー
 
-- （サイクル進行に応じて記載）
+- **B-606 の残り9診断**（music→yoji→animal→character-fortune→娯楽くじ群）は未着手のまま。**他8診断は依然として同点を `determineResult` の配列順で不可視に決着している**（word-sense のみ結果先行再設計＋同格開示を land）。B-606 で1診断ずつ是正する（backlog 更新済み）。教訓「タイブレーク中心は壊れた枠／調律重み禁止／真の同点は開示」を各診断に適用すること。
+- **開示機構は汎用**（`getTiedTypeIds` は全 quiz で動く純関数）。他診断を結果先行で是正する際、`QuizContainer` の slug 分岐を広げれば同じ同格開示を再利用できる。
+- **構造的非対称（主型フルカード vs 副型リンク）は意図的な最小形**。真の同点で視覚的にも完全同格にする（dual-typeId・二型併記カード等）のは今回は過大と裁定した（redesign-v2 §C-2/V-5）。将来、同点開示の来訪者反応を見て価値があれば再検討する余地あり（新規起票は保留＝B-606 の各診断是正時に横断判断）。
+- **CLAUDE.md の `nextjs-agent-rules` ブロック**は `next dev` が自動再生成する dev ノイズ（`node_modules/next/dist/server/lib/generate-agent-files.js`）。本サイクルではコミットに含めなかった（未ステージのまま）。恒久対処が要るなら別途。
 
 ## 補足事項
 
