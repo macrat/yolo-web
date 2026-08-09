@@ -1,8 +1,8 @@
 ---
 id: 303
-description: "B-606 の1本目として、来訪者トラフィック上位（診断内PV2位）の「強い本人性」診断 word-sense-personality を結果先行で再設計する。現状は回答が割れると結果が答えでなく results 配列順で決まり（results[0]=elegant-precise へ +6.11pt・同点依存率 27.79%）、診断が診断していない。**当初『公正タイブレーク』を採ったがオーナー指摘で破棄——『タイブレーク語が中心＝壊れた枠』（cycle-294/incident-2）。** 本筋は cycle-295 の方法論に沿い、タイプ定義と設問・配点を『回答が結果を決める』よう設計し直し、同点が設計上ほとんど生じないようにすること。1診断ずつ（cycle-297 triage）。"
+description: "B-606 の1本目として、来訪者トラフィック上位（診断内PV2位）の「強い本人性」診断 word-sense-personality を結果先行で再設計する。現状は回答が割れると結果が答えでなく results 配列順で決まり（results[0]=elegant-precise へ +6.11pt・同点依存率 27.79%）、診断が診断していない。**当初『公正タイブレーク』を採ったが、cycle-294/incident-2 の教訓『タイブレーク語が中心＝壊れた枠』に反すると判明して破棄した（オーナーがこの教訓を指した。適用できていなかったのは PM の責）。** 本筋は cycle-295 の方法論に沿い、タイプ定義と設問・配点を『回答が結果を決める』よう設計し直し、同点が設計上ほとんど生じないようにすること。1診断ずつ（cycle-297 triage）。"
 started_at: 2026-08-09T07:23:24+0900
-completed_at: null
+completed_at: 2026-08-09T11:25:18+0900
 ---
 
 <!-- index.md には計画・チェックリスト・完了サマリだけを書く。実測ログ・候補比較・レビュー経過は同ディレクトリの別ファイル（design.md・review-log.md 等）へ分割してここからリンクする。 -->
@@ -28,7 +28,7 @@ completed_at: null
 ## 実施する作業
 
 - [x] **P1a. 実測（欠陥の実在確認）**（planner + reviewer2名で独立再現済み）: word-sense-personality（10問4択・8型）の同点依存率 27.79%・elegant 先頭偏り +6.11pt・出現6.15倍・dead=0 を悉皆（4^10）で実測。→ [design.md](./design.md) §0〜§2。
-- [~] **P1b. 是正方針の設計【差し替え済み】**: 当初「公正タイブレーク（案①）」を採用したが、**オーナー指摘により破棄**——「タイブレークという語が中心に来た時点で壊れた枠」（`cycle-294/incident-2.md`）。**本筋は結果先行の再設計**（タイプが先・設問がそこへ判別・同点が設計上ほとんど生じない）。経緯＝[course-correction.md](./course-correction.md)。→ 再設計は **P1c** で行う。
+- [~] **P1b. 是正方針の設計【差し替え済み】**: 当初「公正タイブレーク（案①）」を採用したが、**`cycle-294/incident-2.md` の教訓「タイブレークという語が中心に来た時点で壊れた枠」に反すると判明して破棄した**（オーナーがこの教訓を指した。案①は価値の問いを機械の問いにすり替える誤りで、それを適用できていなかったのは PM の責）。**本筋は結果先行の再設計**（タイプが先・設問がそこへ判別・同点が設計上ほとんど生じない）。経緯＝[course-correction.md](./course-correction.md)。→ 再設計は **P1c** で行う。
 - [x] **P1c. 結果先行の再設計【設計フレームワーク承認】**（planner 2巡 + reviewer）: V1（純single-signal＋反同点重み）は「重みが同点消去の本体＝隠れたタイブレーク」でレビュー却下→ **V2** で確定。V2＝(A) 固定影結合を廃した内容接地の配点（主signal強度2/3＋文が実際に帯びる時だけの近傍nuance）、(B) 隣接3対を各3問で直接対決させる incidence 改修、(C) 真の残余同点（実測21%）を主タイプは決定的に保ちつつ**同格で正直に開示**。悉皆実測 G1=8/8・dead=0・同点27.79%→21.39%・出現6.15→1.74倍。**フレームワーク健全（差し戻し不要）**・調律重み排除を reviewer が独立確認。→ [redesign-v2.md](./redesign-v2.md)。content 是正3件（V-2/V-3/V-5）は P2 の builder が対応。
 - [x] **P2a. 実装: 診断データの再設計**（builder + reviewer2巡）: `word-sense-personality.ts` を実装（incidence改修・全40択書き直し・内容接地の配点）。レビューが Q10D/Q6C の pure poetic 非接地（poetic 2倍支配の主因）を捉え、builder が実在の五感描写へ書き換え＋Q8B の非接地副点を除去。**最終悉皆: G1=8/8・dead=0・同点27.79→20.78%・出現6.15→1.77倍**。全40択の副点密輸なしを reviewer が独立確認。typeId・title・結果本文・相性36は byte 不変。→ [redesign-v2.md](./redesign-v2.md) §0/A-3・[review-log.md](./review-log.md)。
 - [x] **P2b. 実装: 真の同点の開示機構**（builder + reviewer）: `scoring.ts` に `getTiedTypeIds`（`determineResult` 不変・先頭は全1,048,576通りで勝者一致を確認）、`QuizContainer.tsx` で word-sense 限定 co-types、`ResultCard.tsx` に同点時のみ同格開示ブロック（「いずれも同じ強さの、あなたの声です」・優劣語なし）。DESIGN 準拠・a11y（44px/aria-label/focus）・リンク実在を reviewer が Playwright で確認。第三者ページ・OGP・SEO・相性・シェアURL は単一 typeId のまま不変。
@@ -60,7 +60,7 @@ word-sense-personality を受けた来訪者の**回答が、その人の結果�
 - `src/play/quiz/scoring.ts:58-101`（2026-08-09 実査）: 汎用 `determineResult` の strict `>` 配列順タイブレーク。character-personality/science-thinking のみ専用判定（`QuizContainer.tsx:200-208`）。
 - `docs/cycles/cycle-297/triage.md`（B-606 の根の分析・全10診断の実測一覧・重篤度3階層・優先順・「1診断ずつ」の申し送り）。
 - `docs/cycles/cycle-295/design.md`・`docs/cycles/cycle-295/index.md`・`verification.md`（結果先行再設計 G1〜G5 の確立済み方法論。※ character-personality 専用の測度・写像であり、word-sense には構造が異なるため機械的に流用せず、方法論として参照する）。
-- `src/play/quiz/data/word-sense-personality.ts`（806行・12問4択・結果タイプ群。P1 で現物を精読する）。
+- `src/play/quiz/data/word-sense-personality.ts`（806行・**10問4択**・結果タイプ群。P1 で現物を精読する。※計画初稿は申し送りに従い「12問」と書いたが、P1 の現物確認で 10問4択と判明＝下記補足で訂正）。
 - **外部仕様への依存**: 無し。本サイクルは内部の診断判定ロジックのみを対象とし、SEO 機能・ブラウザ API・Schema.org・サードパーティプラットフォームに依存しない。よって一次資料確認は不要。
 
 ### 期限が来た ADR・Deferred の確認結果（kickoff 手順 2・3）
@@ -79,13 +79,28 @@ word-sense-personality を受けた来訪者の**回答が、その人の結果�
 ## 補足事項
 
 - MCP ツール（GA/BigQuery・Playwright）を使うサブエージェントは foreground で実行する（CLAUDE.md）。
+- **計画時の一部記述は P1 で更新された**: §作業内容の「是正の深さ（tiebreak 単独／開示 UX／G1〜G5）」は、cycle-294 の教訓に照らして**結果先行の再設計**に確定した（→ [course-correction.md](./course-correction.md)）。§計画にあたって参考にした情報の「12問4択」は誤りで、現物は **10問4択**（806行というファイル行数自体は正しい・結果本文と相性を含むため。P1 で判明・[design.md](./design.md) §0）。
+
+## レビュー結果
+
+全レビューの逐語記録と対応＝**[review-log.md](./review-log.md)**。巡ごとの要点と決着（**有効な指摘はすべて対応・残存ゼロ**）:
+
+| 巡                               | レビュー対象 | 主な指摘                                                                                                                             | 対応                                                        |
+| -------------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------- |
+| 計画（案①公正タイブレーク）      | reviewer2名  | 実測は再現。だが**案①は cycle-294 の教訓「タイブレークは壊れた枠」に反する機械の問いへのすり替えだった**（オーナーが同教訓を指した） | 案①破棄・結果先行へ差し替え（course-correction.md）         |
+| 再設計 V1（single-signal＋重み） | reviewer2名  | **重み W が同点消去の本体＝隠れたタイブレーク**（等重み43%）。single-signal は判別を捨てる                                           | V1 破棄・V2 へ                                              |
+| 再設計 V2                        | reviewer1名  | フレームワーク健全。V-1（10倍は分母不一致の誇張）・V-2/V-3（content 是正）・V-4/V-5                                                  | V-1/V-4 は PM が doc 是正・V-2/V-3/V-5 は P2 builder が対応 |
+| P2a 実装                         | reviewer     | **P2a-1: Q10D の pure poetic 非接地＝poetic 2倍支配の主因**・P2a-2/3                                                                 | builder が実在の五感へ書き換え＋Q8B 是正→出現1.77倍         |
+| P2a 是正後                       | reviewer     | 全数値再現一致・密輸なし。F-final-1（redesign-v2 の A-3 表が stale）                                                                 | PM が A-3/available を実装値へ整合                          |
+| P2b 開示UI                       | reviewer     | 健全。F-p2b-1（2型に「どれも」は不自然）                                                                                             | 「いずれも」へ是正                                          |
+| ブログ                           | reviewer2巡  | **B-1: 到達性を成果に偽装（記事の芯に反する）**・B-2/B-3                                                                             | 到達性を「元から健全・測って触らず」へ書き直し→**公開可**   |
 
 ## サイクル終了時のチェックリスト
 
-- [ ] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
-- [ ] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
-- [ ] すべての変更がレビューされ、残存する指摘事項が無くなっている。
-- [ ] `npm run typecheck && npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する（exit 0）。
-- [ ] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
-- [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
-- [ ] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
+- [x] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
+- [x] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
+- [x] すべての変更がレビューされ、残存する指摘事項が無くなっている。
+- [x] `npm run typecheck && npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する（exit 0）。（2026-08-09 実測: typecheck 0・lint 0・format 0・test **5553 passed（323 files）**・build 成功）
+- [x] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
+- [x] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
+- [x] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
