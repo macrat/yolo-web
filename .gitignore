@@ -56,3 +56,8 @@ next-env.d.ts
 
 # Python bytecode cache
 __pycache__/
+
+# trust-guard hook の状態ファイル（プロンプトインジェクション検知・セッションローカル）
+.claude/.model-edited
+.claude/.trust-alerted
+.claude/.trust-alerts.log
