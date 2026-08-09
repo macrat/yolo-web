@@ -1,6 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // `next dev` は AI エージェントを検出すると nextjs-agent-rules ブロックを
+  // AGENTS.md / CLAUDE.md へ自動 upsert する（Next.js 16.3+ の既定 ON）。
+  // 本プロジェクトでは CLAUDE.md が Claude Code の動作指示そのものであり、
+  // 外部ツールがそこへ書き込むのは指示の完全性を損なう重大事故（cycle-303/incident-agent-files.md）。
+  // 公式の opt-out（ai-agents.md / start-server.js の `agentRules !== false` ゲート）で無効化する。
+  agentRules: false,
   experimental: {
     // multiple root layouts 構成では通常の app/not-found.tsx で 404 を構成できないため、
     // Next.js v16.2 公式仕様に従い global-not-found.js を採用 (B-333-7, cycle-180)

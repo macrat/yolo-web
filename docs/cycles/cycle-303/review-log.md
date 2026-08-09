@@ -467,3 +467,17 @@ redesign.md の**数値はすべて独立再現できた**（影構造・27.79%�
 ### 結論
 
 **承認（push 可）。** C-1（中）は両ファイルで一次資料どおりに是正され、OGP=旧ブランドの残存記述は 0 件。C-2/C-3/C-4 も解消。新規の事実誤り・自己正当化・AP 誤ラベル・優先度不整合は無く、backlog は 200 文字フックを通過（実測 189/175 文字）。N-1 は任意の語法磨きで push を妨げない。push してよい。
+
+## agent-files事故の是正レビュー（push前）
+
+対象: `next.config.ts`(`agentRules: false`追加)・`CLAUDE.md`(注入ブロック除去)・`docs/backlog.md`(B-643)・`docs/cycles/cycle-303/index.md`(訂正)・`incident-agent-files.md`(事故報告)。全項目を一次資料で独立検証した。
+
+- **根本原因（有効・正）**: `git log -S '16.3.0' -- package.json`で、コミット`07803895`(2026-08-07・cycle-302)が`next`を`16.2.10`→`^16.3.0`に更新したことを確認。`ai-agents.md`が「On Next.js 16.3 or later, run `next dev` … auto-generates AGENTS.md and CLAUDE.md」と明記し、当該の`next dev`自動書き込みが16.3+スコープであることを裏付ける。「16.2.10では起きない」は公式ドキュメントのバージョン限定記述に基づく妥当な根拠（AP-WF27抵触なし）。
+- **機構（有効・正）**: `generate-agent-files.js`冒頭コメント・`writeAgentFiles`の3分岐（AGENTS.md不在・CLAUDE.md存在→2番目の分岐でCLAUDE.mdへupsert）・`app-info-log.js`の`ensureAgentRulesForDev`(getAgentName/hasCurrentAgentRules)・`start-server.js:418-419`のゲート`agentRules !== false`(既定true)・ブロック末尾の自己永続化文言「committing it with your work keeps the tree clean」を逐語で確認、すべて事故報告§1と一致。検出は`@vercel/detect-agent`が`CLAUDECODE`等の環境変数で行い、本環境で`CLAUDECODE`がsetされていることも確認。
+- **修正の実測（有効・正）**: 本番環境で独立再現。(a)`agentRules: false`の下で`npm run dev`起動→`✓ Ready`・CLAUDE.mdのmd5不変・0マーカー・書き込みログ無し。(b)**負の対照**として一時的にfixを外して起動→`✓ Generated CLAUDE.md for AI agents`が出力されCLAUDE.mdに+10行(2マーカー)書き込まれた。fixが因果的に有効と確定。検証後CLAUDE.md・next.config.tsをバックアップから完全復元(md5一致)し、残存next-serverプロセスを停止。CLAUDE.mdはHEAD一致・注入ブロック0件。
+- **重大度（有効・正）**: 事故報告§2・index.mdとも「無害」を撤回し、指示ファイルの完全性を外部依存が握る重大事故と位置づけ。誇張・過小なし。
+- **ゲート（有効・正）**: fix適用状態で`typecheck`=0・`lint`=0・`build`=成功(exit 0)。buildもCLAUDE.mdを書かない(md5不変)。
+- **軽微（是正済み）**: 事故報告§1の行番号引用2件が実ファイルと不一致だった（`start-server.js:351`→gateは418-419、`config-schema.js:474`→実際は496）。一次資料で正しい値を確認し直接是正した。実体（該当コードの存在）は正しく、根本原因・機構・修正の結論に影響なし。
+- backlog B-643・index.md訂正: 妥当。
+
+**結論: 承認（push 可）。** 根本原因・機構・修正・重大度のすべてが一次資料と実測（負の対照含む）で裏付き、誤りや過大/過小はない。行番号の軽微不一致は直接是正済み。

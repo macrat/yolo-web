@@ -20,6 +20,7 @@
 | B-641 | 日本語の表が狭い画面で1文字ずつ縦に折れる | P2 | - | 日本語はどこでも改行できるため列のmin-contentが1文字になり、狭い画面で表のセルが縦一列に潰れて読めない。詳細cycle-302/incident-2.md |
 | B-635 | GAにボット除外が効いていない疑い | P2 | - | 直近28日でシンガポールが614セッション=全体の33.0%。city空・平均PV1.0でデータセンター由来。全指標が水増しされている。実測=cycle-302/review-log.md |
 | B-637 | block-destructive-git.shが複合形の破壊コマンドを素通りさせる | P2 | - | `sudo git reset --hard`・`(git reset --hard)`・`if ...; then ...; fi` が非マッチ。pre-push-check.shの穴は別型(空白2つの`git  push`と`git -C path push`) |
+| B-643 | CLAUDE.md/AGENTS.mdへの外部書き込みを弾く防御フック | P2 | - | 一次是正=next.configのagentRules:false(cycle-303)。防御多層化として`nextjs-agent-rules`マーカーが指示ファイルに現れたら弾くフックを検討。詳細cycle-303/incident-agent-files.md |
 | B-618 | pre-commit-checkのAP-WF24検出の穴を塞ぐ | P2 | - | 正規表現が「指示に従/指示により/指摘を受け」しか拾わず「指示で」「指摘で」が素通り(cycle-300で実際に2本通過)。助詞のゆれを含む式へ。コード変更のためbuilder+レビュー。詳細cycle-300 |
 | B-609 | レビュー体制の構造的欠陥(基準違反の検出漏れ)の是正 | P2 | - | cycle-298判明+cycle-300。残=(a)基準違反がMinor判定(b)candidates非読込(c)pre-commit検出漏れ(d)観点が計器選択の妥当性(AP-P31等)を問わない。詳細cycle-298/incident-3・cycle-300/incident-1 |
 | B-610 | ADR001+rebuild-plan§1(a)の「オーナー裁定」ラベル是正(AP-P34) | P2 | - | cycle-298発覚+cycle-300で原発言を逐語検証済(全面A/B棄却はPM導出・A/Bは却下されていない)。帰属を是正(ADR/READMEの『サイト全面のA/Bはしない』も整合対象)。詳細cycle-300/incident-1 |

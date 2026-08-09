@@ -85,7 +85,7 @@ word-sense-personality を受けた来訪者の**回答が、その人の結果�
 - **B-606 の残り9診断**（music→yoji→animal→character-fortune→娯楽くじ群）は未着手のまま。**他8診断は依然として同点を `determineResult` の配列順で不可視に決着している**（word-sense のみ結果先行再設計＋同格開示を land）。B-606 で1診断ずつ是正する（backlog 更新済み）。教訓「タイブレーク中心は壊れた枠／調律重み禁止／真の同点は開示」を各診断に適用すること。
 - **開示機構は汎用**（`getTiedTypeIds` は全 quiz で動く純関数）。他診断を結果先行で是正する際、`QuizContainer` の slug 分岐を広げれば同じ同格開示を再利用できる。
 - **構造的非対称（主型フルカード vs 副型リンク）は意図的な最小形**。真の同点で視覚的にも完全同格にする（dual-typeId・二型併記カード等）のは今回は過大と裁定した（redesign-v2 §C-2/V-5）。将来、同点開示の来訪者反応を見て価値があれば再検討する余地あり（新規起票は保留＝B-606 の各診断是正時に横断判断）。
-- **CLAUDE.md の `nextjs-agent-rules` ブロック**は `next dev` が自動再生成する dev ノイズ（`node_modules/next/dist/server/lib/generate-agent-files.js`）。本サイクルではコミットに含めなかった（未ステージのまま）。恒久対処が要るなら別途。
+- **【重大・是正済み】CLAUDE.md への外部書き込み事故**: `next dev`（Next.js 16.3+ の既定 ON 機能 agentRules）が、AI エージェント検出時に `nextjs-agent-rules` ブロックを **CLAUDE.md（Claude Code の動作指示ファイル）に自動書き込み**していた。**当初これを「dev ノイズ・無害」と誤認したが、指示ファイルの完全性を外部依存が握る重大事故だった。** `next.config.ts` に `agentRules: false` を追加して無効化（実測で再発しないことを確認）・注入ブロックを除去。全文＝[incident-agent-files.md](./incident-agent-files.md)。防御多層化のフックは backlog へ。
 
 ## 補足事項
 
