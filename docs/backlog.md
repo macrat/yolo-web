@@ -2,8 +2,6 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-565 | 全面切替の観測(ADR001・継続) | P2 | 305 | **出荷+4週(08-10)到来**。トリップワイヤ発火判定＋完走率/開始率の方向再読＋SC週次系列＋save/share再読。結論は+3ヶ月窓。正典=ADR001。cycle-304で項1のみ実測(890clk・発火なし)し完了処理を積み残し |
-| B-615 | 375px CLSの計装要否の判断 | P3 | 305 | **08-10到来**(ADR001+4週の読み取り時に判断する取り決め=ADR項5)。CLS計装を入れる〔B-573連動〕か恒久取得不可と確定するか。詳細cycle-300/observation §6 |
 
 ## Queued (すぐに着手できる)
 
@@ -73,11 +71,12 @@
 
 | ID | Title | Priority | Notes |
 | --- | --- | --- | --- |
+| B-565 | 全面切替後のコンバージョン悪化チェック(ADR001) | P2 | **ADR001は現行記載が不正書き換えの疑い。次に扱う際は本来の趣旨(デザイン変更の決断＋変更後の完走率悪化チェックのみ)に照らし検証・復元してから読む**。cycle-305で+4週観測も失敗クローズ。詳細cycle-305/incident-1・observation |
+| B-615 | 375px CLSのレイアウトシフト点検・あればバグ修正 | P4 | **ADRの賭けではなく通常のバグ(cycle-305でオーナー是正)**。デザイン移行が安定した面で375px CLSを点検し、シフトがあれば修正。計装(field計測)の新設は不要。着手: デザイン移行(B-583/B-576/B-573)の完了後 |
 | B-629 | E0出荷後のSERP実表示の確認 | P2 | 着手: 2026-08-14以降(禁止色を除いたアイコンの出荷=2026-08-07+7日。Googleの再クロール後でないと反映されない)。詳細 docs/cycles/cycle-302/ |
 | B-568 | 面横断 content_id 接頭辞規約の全面統一 | P4 | 着手: ADR001の観測窓終了後(item_id集計の断絶を伴う移行のため。旧条件のADR002はexpiredで窓が無く着手不能だった)。詳細 cycle-280.md |
 | B-590 | eslint 10 / TypeScript 7 の採用 | P4 | 着手: config-next配下のplugin基盤(typescript-eslint8等)がeslint10/TS7対応次第。cycle-286で試行=lintクラッシュ実証。詳細cycle-286/ |
 | B-592 | overrides(postcss/react-hooks)の解消 | P4 | 着手: postcssは親(next/sanitize-html)がpatched版を引いた時・react-hooksは7.1.1採用判断時にoverride除去(upstreamドリフト回避)。詳細cycle-286/remediation.md |
-| B-616 | AdSense再申請の実施(Owner依存) | P3 | 着手: Ownerが実施(PMは外部アカウント操作の手段が無く恒久的に実施・観測不能)。ADR001の事前登録項目。詳細cycle-300/observation §5 |
 | B-612 | 診断完走率低下の帰属を同時期対照で切り分け | P2 | 着手: B-614(摩擦低減)かB-613(計装)のいずれかが出荷され対照の対象が実在してから。比較対象は設計で決める。前後比較では効果分離不可(AP-P31)。詳細cycle-300/incident-1 |
 | B-622 | B-613出荷後の計装健全性検査 | P3 | 着手: B-613の出荷+2日(未出荷のためcycle-302でQueuedから移動)。合格条件=instrumentation-design.md C7〜C11。詳細cycle-301 |
 | B-056 | i18n(多言語対応) | P4 | 着手: 将来オプション(site-concept 宿題処理=現段階不採用)。cycle-167でOwnerが無期限延期を解除 |
@@ -127,6 +126,7 @@
 
 | ID | Title | Cycle | Notes |
 | --- | --- | --- | --- |
+| B-616 | AdSense再申請(Owner依存) | 305 | 【中止】**不正な起票**。これはオーナーのタスク(外部アカウント操作)であり、オーナーは報告も依頼も受けていない。PMのbacklogに他者のタスクを勝手に作り、ブロッカー/存続ゲートにし対応を求めるのは許されない(オーナー指摘・cycle-305 incident-1)。番号は再利用しない |
 | B-611 | brand-icons生成器のhex乖離ガード不在 | 302 | 【中止】対象の `scripts/generate-brand-icons.mjs` が存在しない(cycle-299で削除済)。守るべき生成器が無いため起票が成立しない |
 | B-466 | tmp/ 配下 .ts の typecheck/build 破壊の根本解消 | 302 | 【完了】tsconfig.json の exclude に "tmp" を追加。cycle-216起票以来、完了ゲートを3回落としていた(直近は本サイクルのレビュアーの一時ファイル) |
 | B-626 | retryの2打目が窓の外に落ちてXの投稿画面へ飛ぶ | 301 | 【中止】不正な起票。前提だったB-620の600ms窓ごとrevert済み。実害が出ている問題を差し置いて連打のエッジケースをP0にしたのはconstitution違反 |
