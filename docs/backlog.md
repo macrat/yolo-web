@@ -2,6 +2,8 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-565 | 全面切替の観測(ADR001・継続) | P2 | 305 | **出荷+4週(08-10)到来**。トリップワイヤ発火判定＋完走率/開始率の方向再読＋SC週次系列＋save/share再読。結論は+3ヶ月窓。正典=ADR001。cycle-304で項1のみ実測(890clk・発火なし)し完了処理を積み残し |
+| B-615 | 375px CLSの計装要否の判断 | P3 | 305 | **08-10到来**(ADR001+4週の読み取り時に判断する取り決め=ADR項5)。CLS計装を入れる〔B-573連動〕か恒久取得不可と確定するか。詳細cycle-300/observation §6 |
 
 ## Queued (すぐに着手できる)
 
@@ -76,8 +78,6 @@
 | B-590 | eslint 10 / TypeScript 7 の採用 | P4 | 着手: config-next配下のplugin基盤(typescript-eslint8等)がeslint10/TS7対応次第。cycle-286で試行=lintクラッシュ実証。詳細cycle-286/ |
 | B-592 | overrides(postcss/react-hooks)の解消 | P4 | 着手: postcssは親(next/sanitize-html)がpatched版を引いた時・react-hooksは7.1.1採用判断時にoverride除去(upstreamドリフト回避)。詳細cycle-286/remediation.md |
 | B-616 | AdSense再申請の実施(Owner依存) | P3 | 着手: Ownerが実施(PMは外部アカウント操作の手段が無く恒久的に実施・観測不能)。ADR001の事前登録項目。詳細cycle-300/observation §5 |
-| B-615 | 375px CLSの計装要否の判断 | P3 | 着手: 2026-08-10(ADR001 +4週の読み取り時に、入れる〔B-573連動〕か恒久不可と確定するかを判断する取り決め)。ADR001事前登録指標だが計装が無く恒久取得不可の状態。詳細cycle-300/observation §6 |
-| B-565 | 全面切替の観測(ADR001・継続) | P2 | 着手: 出荷+4週(2026-08-10・トリップワイヤ発火判定＋完走率の方向再読とSC週次)・結論は+3ヶ月窓。cycle-300で+2週読み始め完了。正典=ADR001。詳細cycle-300 |
 | B-612 | 診断完走率低下の帰属を同時期対照で切り分け | P2 | 着手: B-614(摩擦低減)かB-613(計装)のいずれかが出荷され対照の対象が実在してから。比較対象は設計で決める。前後比較では効果分離不可(AP-P31)。詳細cycle-300/incident-1 |
 | B-622 | B-613出荷後の計装健全性検査 | P3 | 着手: B-613の出荷+2日(未出荷のためcycle-302でQueuedから移動)。合格条件=instrumentation-design.md C7〜C11。詳細cycle-301 |
 | B-056 | i18n(多言語対応) | P4 | 着手: 将来オプション(site-concept 宿題処理=現段階不採用)。cycle-167でOwnerが無期限延期を解除 |
