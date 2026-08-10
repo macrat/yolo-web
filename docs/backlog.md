@@ -2,14 +2,14 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-583 | 印/店メタファーの自己貶めを来訪者価値から問い直す | P1 | 306 | cycle-306で着手。発生元(cycle-282/283/304 incident-1/305 incident-1)をPM自身が通読済。芯=自己貶めの連鎖(よろず→よろず屋(店)→試の烙印)を来訪者価値から疑い解体。字決めではない |
-| B-576 | faviconとOGP画像を新デザインに合わせて作り直す | P1 | 306 | cycle-306でB-583とセット着手(同じ「サイトの顔」の是正・確定identityに依存)。現faviconは旧ブランド(暗地・サンセリフy・ドット)で検索結果に露出=新しい紙/墨/明朝の顔と不一致 |
 
 ## Queued (すぐに着手できる)
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
 | B-606 | 全10 personality診断の結果先行の点検・再設計(Rule4) | P1 | - | **cycle-303でword-sense完了**。残9=music/yoji/animal/character-fortune/娯楽くじ群。タイブレーク中心は壊れた枠(cycle-294)・調律重み禁止・真の同点は同格開示。詳細cycle-303/ |
+| B-644 | 約2845ページが og:image 不在のまま summary_large_image を宣言し空の大カードになる | P3 | - | 既存欠陥(cycle-306で実ビルド発覚)。原因=global `summary_large_image`＋root OGPが子ルートに継承されない。是正は設計判断要・別サイクル。詳細cycle-306/review-log.md |
+| B-645 | 内容fuda印(結果札「診」/伝統色「色」)をサイトidentity印へ視覚統一するか判断 | P4 | - | cycle-306で看板OGP＋faviconはidentity印(hanko＋y)に統一・fuda印は旧形のまま=形が不統一。完全統一か現状維持かを来訪者価値で判断。自己貶め除去は完了(試→色)。詳細cycle-306/review-log.md 推奨A |
 | B-603 | character-personality 24タイプ一覧の処遇(T3・再判定) | P1 | - | **未決へ差し戻し**。cycle-298は測定面を誤り判定撤回(cycle-284の実測が正しかった)。主たる面で基準を立て直し再判定。詳細cycle-298/decision.md |
 | B-607 | character-personality F3申し送り(逆順主軸の和らげ・設問磨き) | P1 | - | cycle-295 F3=逆順フォールバック12順序対でcount二位気質が「主軸」提示される件の本文和らげ+設問文の裁量的ブラッシュアップ。旧B-603から分離(cycle-298)。詳細cycle-295/296 |
 | B-573 | UI/UX/アクセシビリティの全面適用(残: 全面展開) | P1 | - | cycle-287で監査+代表原型の是正スライス完了(F1-F5)。残=全81ページ/36ツールへの全面展開。系統的な個別項目はB-593/595/596/599等に分割起票済。詳細cycle-287/ |
@@ -126,6 +126,8 @@
 
 | ID | Title | Cycle | Notes |
 | --- | --- | --- | --- |
+| B-583 | 印/店メタファーの自己貶めを来訪者価値から問い直す | 306 | 【完了】OGPの自己貶め印「試」撤去→朱のy印。伝統色OGP250色の「試」も内容印「色」へ。/about由来偽装是正。店の個性・視覚言語は維持。発生元通読・独立レビュー#1〜#4承認。詳細cycle-306/ |
+| B-576 | faviconとOGP画像を新デザインに合わせて作り直す | 306 | 【完了】旧ブランドfavicon→F2(朱の角丸印＋白抜きy)。favicon.ico/icon.svg/apple-touch-icon再生成＋配線。OGPと同一identity標章に統一。検索16px可読・AA。詳細cycle-306/ |
 | B-616 | AdSense再申請(Owner依存) | 305 | 【中止】**不正な起票**。これはオーナーのタスク(外部アカウント操作)であり、オーナーは報告も依頼も受けていない。PMのbacklogに他者のタスクを勝手に作り、ブロッカー/存続ゲートにし対応を求めるのは許されない(オーナー指摘・cycle-305 incident-1)。番号は再利用しない |
 | B-611 | brand-icons生成器のhex乖離ガード不在 | 302 | 【中止】対象の `scripts/generate-brand-icons.mjs` が存在しない(cycle-299で削除済)。守るべき生成器が無いため起票が成立しない |
 | B-466 | tmp/ 配下 .ts の typecheck/build 破壊の根本解消 | 302 | 【完了】tsconfig.json の exclude に "tmp" を追加。cycle-216起票以来、完了ゲートを3回落としていた(直近は本サイクルのレビュアーの一時ファイル) |

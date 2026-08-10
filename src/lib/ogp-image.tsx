@@ -28,18 +28,18 @@ const OGP_SIZE = { width: 1200, height: 630 };
 const SHOP_NAME = "yolos.net";
 
 /**
- * 店の印の一字（§4「印」・chop）。
- *
- * **この字も「印を持つこと／店を主張すること」自体も、来訪者価値の観点で未決である。**
- * cycle-283 で私（PM）はこの印を「屋（＝店）」に変えたが、それは「どの字が一番『店』を伝えるか」
- * という運営者目線の問いに基づく判断で、来訪者に何の価値も無い自己像の押し付けだった（cycle-283
- * 事故報告）。ここでは cycle-283 着手前の状態（"試"）へ戻すに留める——圧の下で新たな字を選ぶこと
- * こそ同じ病の再演だから。印の要否・字・そもそも「店」を全面に主張する統一（店構え）が来訪者価値
- * の観点で必要かは、B-583 で腰を据えて再検討する。それまでこの字を「正しい」と扱わないこと。
+ * 印（§4「印」・chop）はサイトの identity（頭字 y）を朱の hanko で捺したもの——
+ * 店主張でも試作でもない。cycle-282/283 の自己貶め（"試"＝試作/見本＝来訪前に信頼を削る一字）を
+ * 撤去し、cycle-306 で「朱の塗りの角丸印＋紙色で白抜きした頭字 y（明朝）」に確定した。
+ * favicon(F2) と同一標章。詳細 docs/cycles/cycle-306/decision.md（決定1・決定4）。
  */
-const SHOP_SEAL_CHAR = "試";
+
+/** 印に白抜きするサイトの頭字（identity＝yolos の "y"）。favicon(F2) と同一標章。 */
+const SEAL_INITIAL = "y";
 /** 印の回転（§4「±8° 以内」）。手捺しのわずかな気配。 */
 const SEAL_ROTATE_DEG = -6;
+/** 角丸 hanko の角丸半径（§4「角丸」の 0px 基調に対する「印」の例外・§4「印」）。 */
+const SEAL_CORNER_RADIUS = 22;
 
 /**
  * Noto Serif JP（明朝・品名と印の顔・DESIGN §3）。weight 600 の見出し用。
@@ -339,8 +339,9 @@ export async function createOgpImageResponse(
         ) : null}
       </div>
 
-      {/* 印: 器面に一つだけ・右上に捺す。朱一色の円環＋一字・回転 ±8° 内・幅 100px（§4）。
-            SVG 一本ストロークで円環を描く（札の印ブロックと同一）。 */}
+      {/* 印: 器面に一つだけ・右上に捺す。サイトの identity 標章（頭字 y）を朱の hanko で。
+            朱（ACCENT）の塗りの角丸正方形に、紙色（PAPER）で白抜きした明朝の頭字 y。
+            回転 ±8° 内・幅 100px（§4）・favicon(F2) と同一標章（cycle-306/decision.md 決定4）。 */}
       <div
         style={{
           position: "absolute",
@@ -351,37 +352,26 @@ export async function createOgpImageResponse(
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          backgroundColor: ACCENT,
+          borderRadius: SEAL_CORNER_RADIUS,
           transform: `rotate(${SEAL_ROTATE_DEG}deg)`,
         }}
       >
-        <svg
-          width="100"
-          height="100"
-          viewBox="0 0 100 100"
-          style={{ position: "absolute", top: 0, left: 0 }}
-        >
-          <circle
-            cx="50"
-            cy="50"
-            r="47"
-            fill="none"
-            stroke={ACCENT}
-            strokeWidth="2"
-          />
-        </svg>
         <div
           style={{
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            width: "100%",
-            height: "100%",
             fontFamily: minchoFamily,
-            fontSize: 52,
-            color: ACCENT,
+            fontSize: 62,
+            lineHeight: 1,
+            color: PAPER,
+            // 明朝 y は descender を持つため、字面をわずかに下げて視覚中央へ重心を合わせる
+            // （幾何中央だと上寄りに見える／下げすぎると descender が縁に触れる）。
+            paddingTop: 5,
           }}
         >
-          {SHOP_SEAL_CHAR}
+          {SEAL_INITIAL}
         </div>
       </div>
     </div>,

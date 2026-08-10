@@ -67,11 +67,9 @@
  *   favicon / apple-touch-icon / OGP 画像の png 等のバイナリ画像は宣言テキストを持たず、この
  *   ゲートでは検査できない。店構え（紙地・墨・朱の印）と揃っているかは take-screenshot 等の
  *   視覚レビューで確認する。
- *   TODO(B-576): `public/favicon.ico`・`public/apple-touch-icon.png` は cycle-171 の旧ブランド
- *   （暗地＋白ゴシック「y」＋青ドット）のまま。cycle-299 が店構えへ刷新を試みたが失敗し旧ブランドへ
- *   revert した（16px で読めない/歪んだレビューで出荷・詳細 cycle-299/incident-1・incident-2）。
- *   B-576 は open。次は favicon 単体でなく favicon/apple-touch/OGP を一系として印から holistic に
- *   再設計する（是正後はこの TODO を削除）。
+ *   （B-576 済み・cycle-306）`public/favicon.ico`・`public/icon.svg`・`public/apple-touch-icon.png`
+ *   はブランド標章 F2「朱の印・白抜き y」（紙地＋朱の角丸印＋白抜き明朝 y）へ刷新。資産は
+ *   `scripts/generate-favicons.ts` で SSoT 色（utsuwaHex）から再現生成する。
  */
 import { describe, test, expect } from "vitest";
 import * as fs from "node:fs";

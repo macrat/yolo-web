@@ -7,11 +7,11 @@
  * 「色そのものが中身の面」）。記号は色名の先頭字（pickResultSymbol が title 先頭を拾う）、
  * のれん帯の品名に hex コード、下部に色名（よみ）を出す。
  *
- * 印は共通店構え ogp-image と同じ SHOP_SEAL_CHAR を渡す。**その字も「印を持つこと／店を
- * 主張すること」自体も来訪者価値の観点で未決**で、cycle-283 の「屋」への変更は運営者目線の
- * 誤りとして撤回し着手前の "試" へ戻してある（cycle-283 事故報告・再検討は B-583）。ここでの
- * 来訪者価値は印ではなく「色そのものを届ける」ことにある。cycle-282 まで colors 個別ページは
- * OGP 画像を持っていなかったため、これは純増（B-579）。
+ * この面の印は内容を表す一字「色」（結果札の既定「診」と平行）。cycle-282/283 の自己貶め
+ * 「試」（店の看板印を内容 fuda に流用した誤り）は cycle-306 で撤去した（詳細
+ * docs/cycles/cycle-306/decision.md）。サイトの identity 印（朱塗りの角丸 hanko＋白抜き y）は
+ * 汎用看板 ogp-image・favicon にあり、内容 fuda の印はこれとは別（内容を表す字）。cycle-282
+ * まで colors 個別ページは OGP 画像を持っていなかったため、これは純増（B-579）。
  */
 
 import {
@@ -25,8 +25,11 @@ export const alt = "日本の伝統色";
 export const size = fudaImageSize;
 export const contentType = fudaImageContentType;
 
-/** 店の看板クラスの印（共通店構え ogp-image と同じ "試"・cycle-283 で「屋」を撤回。B-583 で再検討）。 */
-const SHOP_SEAL_CHAR = "試";
+/**
+ * 内容を表す印の一字。伝統色辞典の中身は「色そのもの」なので印は「色」（結果札の既定「診」と
+ * 平行の内容印・§4 / cycle-306）。回帰検知のためテストから参照できるよう export する。
+ */
+export const CONTENT_SEAL_CHAR = "色";
 
 /** 色が見つからないときのタイトルフォールバック（描画を落とさない）。 */
 const FALLBACK_TITLE = "色";
@@ -52,6 +55,6 @@ export default async function OpenGraphImage({ params }: Props) {
     productName: color?.hex,
     // 地色はその伝統色 hex。色が無ければ colorOverride 未指定＝従来の和色経路へフォールバック。
     colorOverride: color?.hex,
-    sealChar: SHOP_SEAL_CHAR,
+    sealChar: CONTENT_SEAL_CHAR,
   });
 }

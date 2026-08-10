@@ -2,9 +2,11 @@
  * /dictionary/colors/[slug] OGP 画像のテスト。
  *
  * この面は共有レンダラ {@link renderFudaImage}（札）で組み、その伝統色の hex を
- * `colorOverride`、印を SHOP_SEAL_CHAR（cycle-283 着手前の "試"・「屋」は撤回）で渡す（B-579・純増した色個別ページの OGP）。ここでは
- * import が通り generateStaticParams が全色 slug を返すこと・メタ export が正しいこと
- * （非ネットワーク部分）を確認する。記号面の固有色・前景コントラストの検証は
+ * `colorOverride`、印を内容印 CONTENT_SEAL_CHAR（＝内容を表す一字「色」・cycle-306 で
+ * 自己貶め「試」を撤去）で渡す（B-579・純増した色個別ページの OGP）。ここでは
+ * import が通り generateStaticParams が全色 slug を返すこと・メタ export が正しいこと・
+ * 内容印が「色」であること（自己貶め「試」等への回帰を捕まえる）を確認する（非ネットワーク部分）。
+ * 記号面の固有色・前景コントラストの検証は
  * 共有レンダラのテスト（src/lib/__tests__/fuda-image.test.tsx）で網羅する。
  */
 
@@ -26,5 +28,12 @@ describe("dictionary/colors opengraph-image", () => {
     expect(params.length).toBe(getAllColorSlugs().length);
     expect(params.length).toBeGreaterThan(0);
     expect(params[0]).toHaveProperty("slug");
+  });
+
+  it("内容印が内容を表す一字「色」である（自己貶め「試」等への回帰を捕まえる）", async () => {
+    const mod = await import("../opengraph-image");
+    expect(mod.CONTENT_SEAL_CHAR).toBe("色");
+    // cycle-282/283 の自己貶め「試」（店の看板印を内容 fuda に流用した誤り）へ戻さない。
+    expect(mod.CONTENT_SEAL_CHAR).not.toBe("試");
   });
 });

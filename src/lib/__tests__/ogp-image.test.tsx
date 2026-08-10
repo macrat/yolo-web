@@ -126,20 +126,25 @@ describe("createOgpImageResponse — 店構え（看板）契約", () => {
     expect(jsx.props.style.backgroundColor).toBe(PAPER);
   });
 
-  test("朱（ACCENT）は印だけに現れ、地ベタには使わない", async () => {
+  test("朱（ACCENT）は identity 印（hanko）の塗りに限定し、地ベタにはしない", async () => {
     const { createOgpImageResponse } = await getModule();
 
     await createOgpImageResponse({ title: "Test" });
 
     const { element } = imageResponseCalls[0];
-    // 印の一字・円環に朱が使われる（color として）。地の backgroundColor には朱は無い。
+    // 地（ルート）の背景は常に紙。旧デザインの青ベタや朱の全面ベタ地は作らない。
+    const rootBg = (
+      element as { props: { style: { backgroundColor: string } } }
+    ).props.style.backgroundColor;
+    expect(rootBg).toBe(PAPER);
+    expect(rootBg).not.toBe(ACCENT);
+    // 朱は identity 印（角丸 hanko）の塗り背景としてだけ現れる。
+    // ミューテーション観点: 印の塗りを消す/別色にすると toContain(ACCENT) が落ちる。
     const bgColors = collectStyleValues(element, "backgroundColor");
-    expect(bgColors).not.toContain(ACCENT);
-    const textColors = collectStyleValues(element, "color");
-    expect(textColors).toContain(ACCENT);
+    expect(bgColors).toContain(ACCENT);
   });
 
-  test("店号 yolos.net と店の印（SHOP_SEAL_CHAR）を描く", async () => {
+  test("identity 印: 朱塗りの角丸 hanko に紙色で白抜きした頭字 y を捺す", async () => {
     const { createOgpImageResponse } = await getModule();
 
     await createOgpImageResponse({ title: "Test" });
@@ -147,8 +152,19 @@ describe("createOgpImageResponse — 店構え（看板）契約", () => {
     const { element } = imageResponseCalls[0];
     const texts = collectText(element);
     expect(texts).toContain("yolos.net"); // のれん帯の店号
-    // 印の一字は cycle-283 着手前の "試"（「屋」への変更は運営者目線の誤りとして撤回・B-583 で再検討）。
-    expect(texts).toContain("試");
+    // 印は自己貶めの一字「試」ではなく、サイトの頭字 y（favicon F2 と同一標章・cycle-306 で確定）。
+    expect(texts).toContain("y");
+    expect(texts).not.toContain("試");
+
+    // 角丸 hanko であること（§4「角丸」の 0px 基調に対する「印」の例外・borderRadius 22）。
+    // ミューテーション観点: 角丸を消す/変えると toContain(22) が落ちる。
+    const radii = collectStyleValues(element, "borderRadius");
+    expect(radii).toContain(22);
+
+    // 白抜きの頭字 y は紙色（PAPER）。朱に対し紙色で抜く（コントラスト AA）。
+    // ミューテーション観点: 白抜き色を朱（ACCENT）等にすると PAPER が color から消え落ちる。
+    const textColors = collectStyleValues(element, "color");
+    expect(textColors).toContain(PAPER);
   });
 
   test("絵文字（§8-6 禁止）を看板に持ち込まない", async () => {
