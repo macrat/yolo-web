@@ -147,8 +147,7 @@ describe("createOgpImageResponse — 店構え（看板）契約", () => {
     const { element } = imageResponseCalls[0];
     const texts = collectText(element);
     expect(texts).toContain("yolos.net"); // のれん帯の店号
-    // 印の一字 "試" は B-583（cycle-304 decision.md §(c)）で店の印として確定（根拠は既出荷・
-    // 非有害・動かす便益なしで維持——字義に来訪者価値を載せない）。値は不変。
+    // 印の一字は cycle-283 着手前の "試"（「屋」への変更は運営者目線の誤りとして撤回・B-583 で再検討）。
     expect(texts).toContain("試");
   });
 

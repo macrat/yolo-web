@@ -54,10 +54,6 @@ next-env.d.ts
 !public/blog/
 !public/blog/*.png
 
-# アプリアイコン（Next.js app 規約の出荷資産）は追跡対象にする。
-# *.png に握り潰されると新規チェックアウト/デプロイで顔が欠落するため明示的に除外（cycle-304・B-576）。
-!src/app/apple-icon.png
-
 # Python bytecode cache
 __pycache__/
 

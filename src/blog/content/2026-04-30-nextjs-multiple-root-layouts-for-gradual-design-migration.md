@@ -110,8 +110,6 @@ Next.js App Routerには `icon.tsx` や `apple-icon.tsx` といった「file con
 
 この問題は、`public/favicon.ico` と `public/apple-touch-icon.png` を直接置くことで解決した。`public/` の自動配信は `<html>` がどのlayoutから生成されるかに依存しないため、両Group共通で機能する。移行完了時に `public/` の2ファイルだけが残るので、最終形の負債も最小化される。
 
-> **追記（移行完了後）**: その後 Route Group（`(legacy)`/`(new)`）を平坦化して単一の `app/` 直下に統合したため、Groupごとにfaviconが分かれる前提そのものが消えた。これにより `app/` の `icon`/`apple-icon` 規約が全ページへ一様に効くようになり、最終形は `public/` 直置きではなく `src/app/{icon.svg, favicon.ico, apple-icon.png}`（Next.jsのicon file convention）へ移した。本文の「`public/` の2ファイルが残る」は、Route Groupを保っていた当時の見通しである。
-
 ## 実装中にハマった本番ビルドの罠
 
 ここまでの設計は理屈通りに動いた。しかし、`(new)/layout.tsx` にHeader/Footer/ThemeProvider/モバイルメニューを実装し終えてPlaywrightで本番ビルドを叩いた瞬間、2つの罠が立て続けに発覚した。**両方とも jsdom ベースの vitest 単体テストでは pass していた**。読者が同じパターンを採用するときに同じ罠を踏まないように、再現条件と修正方法を共有する。

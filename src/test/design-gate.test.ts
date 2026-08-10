@@ -64,14 +64,14 @@
  *   これらは take-screenshot / frontend-design スキルによる実見レビューが担保する。
  *
  * ── バイナリ資産（CSS/HTML を持たず機械検査「できない」・視覚レビューで担保）──────────
- *   favicon / apple-icon / OGP 画像の png 等のバイナリ画像は宣言テキストを持たず、この
+ *   favicon / apple-touch-icon / OGP 画像の png 等のバイナリ画像は宣言テキストを持たず、この
  *   ゲートでは検査できない。店構え（紙地・墨・朱の印）と揃っているかは take-screenshot 等の
  *   視覚レビューで確認する。
- *   B-576 は cycle-304 で解消済み: 旧ブランド（暗地＋白ゴシック「y」＋青/コーラル点・cycle-171）を
- *   廃し、家族（紙・墨・朱・明朝の精神）内の独自マークへ刷新した。favicon は Next 16 の icon 規約で
- *   `src/app/icon.svg`（朱地・紙の「y」・sizes=any で全サイズ鮮明）＋ `src/app/apple-icon.png`（180）
- *   ＋ `src/app/favicon.ico`（16/32/48）に置き、`public/` の旧2ファイルは削除した（二重配信なし）。
- *   選定根拠と 16px 実寸検証は docs/cycles/cycle-304/decision.md §D2・favicon/apple 設計方向を参照。
+ *   TODO(B-576): `public/favicon.ico`・`public/apple-touch-icon.png` は cycle-171 の旧ブランド
+ *   （暗地＋白ゴシック「y」＋青ドット）のまま。cycle-299 が店構えへ刷新を試みたが失敗し旧ブランドへ
+ *   revert した（16px で読めない/歪んだレビューで出荷・詳細 cycle-299/incident-1・incident-2）。
+ *   B-576 は open。次は favicon 単体でなく favicon/apple-touch/OGP を一系として印から holistic に
+ *   再設計する（是正後はこの TODO を削除）。
  */
 import { describe, test, expect } from "vitest";
 import * as fs from "node:fs";
