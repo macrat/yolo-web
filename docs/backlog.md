@@ -7,6 +7,7 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-583 | 印/店メタファー自体が来訪者に価値を持つか問い直す(印の要否から) | P1 | - | cycle-306で再オープン。acute害「試」は除去したが本来の付託=印/店メタファー自体の是非は未回答(印ありきで字/形を選んだ)。やり直し=無印を既定に置き残す側へ立証責任＋付託適合レビュー＋枠組みはオーナーに諮る。詳細cycle-306/incident-1.md |
 | B-606 | 全10 personality診断の結果先行の点検・再設計(Rule4) | P1 | - | **cycle-303でword-sense完了**。残9=music/yoji/animal/character-fortune/娯楽くじ群。タイブレーク中心は壊れた枠(cycle-294)・調律重み禁止・真の同点は同格開示。詳細cycle-303/ |
 | B-644 | 約2845ページが og:image 不在のまま summary_large_image を宣言し空の大カードになる | P3 | - | 既存欠陥(cycle-306で実ビルド発覚)。原因=global `summary_large_image`＋root OGPが子ルートに継承されない。是正は設計判断要・別サイクル。詳細cycle-306/review-log.md |
 | B-645 | 内容fuda印(結果札「診」/伝統色「色」)をサイトidentity印へ視覚統一するか判断 | P4 | - | cycle-306で看板OGP＋faviconはidentity印(hanko＋y)に統一・fuda印は旧形のまま=形が不統一。完全統一か現状維持かを来訪者価値で判断。自己貶め除去は完了(試→色)。詳細cycle-306/review-log.md 推奨A |
@@ -126,8 +127,7 @@
 
 | ID | Title | Cycle | Notes |
 | --- | --- | --- | --- |
-| B-583 | 印/店メタファーの自己貶めを来訪者価値から問い直す | 306 | 【完了】OGPの自己貶め印「試」撤去→朱のy印。伝統色OGP250色の「試」も内容印「色」へ。/about由来偽装是正。店の個性・視覚言語は維持。発生元通読・独立レビュー#1〜#4承認。詳細cycle-306/ |
-| B-576 | faviconとOGP画像を新デザインに合わせて作り直す | 306 | 【完了】旧ブランドfavicon→F2(朱の角丸印＋白抜きy)。favicon.ico/icon.svg/apple-touch-icon再生成＋配線。OGPと同一identity標章に統一。検索16px可読・AA。詳細cycle-306/ |
+| B-576 | faviconとOGP画像を新デザインに合わせて作り直す | 306 | 【完了(acute)】旧ブランドfavicon→朱の印＋白抜きy。favicon.ico/icon.svg/apple-touch-icon再生成＋配線。ただし印の要否/形の妥当性はB-583で再検討中(印ありきの前提が未検証)。詳細cycle-306/ |
 | B-616 | AdSense再申請(Owner依存) | 305 | 【中止】**不正な起票**。これはオーナーのタスク(外部アカウント操作)であり、オーナーは報告も依頼も受けていない。PMのbacklogに他者のタスクを勝手に作り、ブロッカー/存続ゲートにし対応を求めるのは許されない(オーナー指摘・cycle-305 incident-1)。番号は再利用しない |
 | B-611 | brand-icons生成器のhex乖離ガード不在 | 302 | 【中止】対象の `scripts/generate-brand-icons.mjs` が存在しない(cycle-299で削除済)。守るべき生成器が無いため起票が成立しない |
 | B-466 | tmp/ 配下 .ts の typecheck/build 破壊の根本解消 | 302 | 【完了】tsconfig.json の exclude に "tmp" を追加。cycle-216起票以来、完了ゲートを3回落としていた(直近は本サイクルのレビュアーの一時ファイル) |
