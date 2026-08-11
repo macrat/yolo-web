@@ -2,7 +2,7 @@
 id: 308
 description: "B-583（最優先 P0・282/283/304/305/306 が5サイクル連続で失敗した本丸）に決着。印/店構えの統一/店の主張という開発側都合のメタファーが来訪前の顔と可視コピーで来訪者価値を持つかを、字/形を選ばず constitution から導出（GA 実測=届く来訪前の顔は検索結果の favicon のみ・OGP 露出≒0）。判定: (a) 店の全面主張の統一は不要＝必要なのは静かな一貫性（Rule4）で「店構え＝正典」の地位を降格、(b) favicon マークは『認識』の来訪者価値で keep・「店の印」framing を『識別マーク』へ是正・OGP印は露出≒0で塗り替えない、(d) 名乗り「よろず屋」は誠実＋Rule2＋撤去の反射性で keep・about『店の品書き』は増分ゼロ＋不整合で平明化。実装＝DESIGN.md 脱正典化・コメント整合・about 可視是正（favicon/OGP は塗り替えない＝ship-revert ループ遮断）。独立レビュー5名で付託適合/自己欺瞞/接地/網羅/実装を点検・是正し『5サイクルの型を破った・収束』と確認。全5ゲート緑。B-576 は解消・B-648（aria-label 平明化）を起票。"
 started_at: 2026-08-11T16:29:50+0900
-completed_at: null
+completed_at: 2026-08-11T17:46:32+0900
 ---
 
 <!-- index.md には計画・チェックリスト・完了サマリだけを書く。接地の生データ=grounding.md、決定=decision.md、レビュー経過=review-log.md に分割してここからリンクする。 -->
@@ -85,10 +85,10 @@ completed_at: null
 
 ## サイクル終了時のチェックリスト
 
-- [ ] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
-- [ ] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
-- [ ] すべての変更がレビューされ、残存する指摘事項が無くなっている。
-- [ ] `npm run typecheck && npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する（exit 0）。**`typecheck` を必ず含める**（CI は typecheck を最初のステップで走らせる）。
-- [ ] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
-- [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
-- [ ] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
+- [x] 上記「実施する作業」に記載されたすべてのタスク（P1〜P7）に完了のチェックが入っている。
+- [x] `/docs/backlog.md` のActiveセクションに未完了のタスクがない（B-583 は Done へ移動・Active は空）。
+- [x] すべての変更がレビューされ、残存する指摘事項が無くなっている（判定2巡＋再レビューA/B＋最終再レビュー＝承認・ワークフローAP点検＝承認・残存 Blocker なし・Minor は B-648 で追跡）。
+- [x] `npm run typecheck && npm run lint && npm run format:check && npm run test && npm run build` がすべて成功（exit 0・隔離環境で実行＝typecheck ✓／lint ✓／format:check ✓／test 5547 passed ✓／build exit 0 ✓・push フックが再実行して再確認）。
+- [x] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している（結果反映へ更新済み）。
+- [x] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている（2026-08-11T17:46:32+0900）。
+- [x] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている（B-648 起票・B-576 解消・M1 追跡注記）。
