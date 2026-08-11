@@ -193,9 +193,11 @@ export default function Home() {
           <span className={styles.phrase}>やってみるサイト。</span>
           <span className={styles.phrase}>AIが営む、よろず屋です。</span>
         </p>
-        {/* AI 運営の明示（constitution rule 3）。詳細な注記は Footer が常時表示するため一言に。 */}
+        {/* AI 運営の明示（constitution rule 3・正直の開示であって「実験」を価値として売り込まない）。
+            詳細な注記は Footer が常時表示するため一言に。cycle-309 立証(decision.md E3): 「店主」は
+            「店」の枠を来訪者が受け入れる前提の押し付け(§0.1(3))のため「運営しているのは」へ是正。 */}
         <p className={styles.aiNotice}>
-          店主は人ではなくAIです。実験として営んでいるので、内容に誤りがあるかもしれません。
+          運営しているのは人ではなくAIです。実験なので、内容に誤りがあるかもしれません。
         </p>
       </div>
 

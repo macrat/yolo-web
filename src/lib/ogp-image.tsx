@@ -1,19 +1,20 @@
 import { ImageResponse } from "next/og";
-import { PAPER, INK, INK_2, RULE, RULE_STRONG, ACCENT } from "@/lib/utsuwaHex";
+import { PAPER, INK, INK_2, RULE, RULE_STRONG } from "@/lib/utsuwaHex";
 
 /**
- * 共通OGP生成器の設定（「店構え（看板）」版・cycle-282）。
+ * 共通リンクプレビュー画像（og:image）生成器の設定。
  *
- * 旧版（全面ベタ塗り＋絵文字アイコン＋ゴシック太字・既定色 青#2563eb）を廃し、札レンダラ
- * {@link import("./fuda-image").renderFudaImage} と同じ視覚言語で組む——紙地・墨・一本罫・のれん帯・
- * 明朝（Noto Serif JP）・朱の印。看板は札と器を共有する**共有面（看板・DESIGN §4）**であり、
- * 和色の記号面は持たない（地は常に紙・文字は墨）が、店の印は持つ（単独で共有される1枚として
- * 出所が読めるため・§4 の印規定「器＝ページ UI には捺さない」とは別カテゴリ）。和色はいっさい使わない
+ * 旧版（全面ベタ塗り＋絵文字アイコン＋ゴシック太字・既定色 青#2563eb）を廃し、紙地・墨・一本罫・
+ * ヘッダの店号・明朝（Noto Serif JP）の品名で静かに組む。地は常に紙・文字は墨。和色はいっさい使わない
  * （DESIGN §2/§4「和色は結果の包みに限る・器へ漏らさない」）。
  *
+ * cycle-309 立証(decision.md E1): 朱の印（店の朱肉印）は撤去した——カードは店号(ヘッダ)＋大見出しで
+ * 既に yolos.net を二度名乗り、印は識別として冗長な signifier（来訪者に「店の印」とは読まれない・
+ * §0.1(3)）。識別は店号と品名が担う。favicon の識別マークは認識の価値で別途 keep。
+ *
  * 廃止した引数（DESIGN §8 違反のため型から**削除**）:
- * - `icon`（絵文字）→ §8-6 違反。看板の顔は明朝の品名。図像は店の印 1 つだけ。
- * - `accentColor`（任意色ベタ背景）→ §2 違反。地は常に紙・文字は常に墨。朱は印専用。
+ * - `icon`（絵文字）→ §8-6 違反。看板の顔は明朝の品名。
+ * - `accentColor`（任意色ベタ背景）→ §2 違反。地は常に紙・文字は常に墨。
  */
 export interface OgpImageConfig {
   /** 品名/ページ名（看板の顔・明朝で大きく組む）。 */
@@ -24,25 +25,11 @@ export interface OgpImageConfig {
 
 const OGP_SIZE = { width: 1200, height: 630 };
 
-/** 店号（看板単体で出所が読めるように・DESIGN §4「のれん」）。 */
+/** 店号（カード単体で出所が読めるようにヘッダに置く・平明な識別）。 */
 const SHOP_NAME = "yolos.net";
 
 /**
- * 印（§4「印」・chop）はサイトの identity（頭字 y）を朱の hanko で捺したもの——
- * 店主張でも試作でもない。cycle-282/283 の自己貶め（"試"＝試作/見本＝来訪前に信頼を削る一字）を
- * 撤去し、cycle-306 で「朱の塗りの角丸印＋紙色で白抜きした頭字 y（明朝）」に確定した。
- * favicon(F2) と同一標章。詳細 docs/cycles/cycle-306/decision.md（決定1・決定4）。
- */
-
-/** 印に白抜きするサイトの頭字（identity＝yolos の "y"）。favicon(F2) と同一標章。 */
-const SEAL_INITIAL = "y";
-/** 印の回転（§4「±8° 以内」）。手捺しのわずかな気配。 */
-const SEAL_ROTATE_DEG = -6;
-/** 角丸 hanko の角丸半径（§4「角丸」の 0px 基調に対する「印」の例外・§4「印」）。 */
-const SEAL_CORNER_RADIUS = 22;
-
-/**
- * Noto Serif JP（明朝・品名と印の顔・DESIGN §3）。weight 600 の見出し用。
+ * Noto Serif JP（明朝・品名の顔・DESIGN §3）。weight 600 の見出し用。
  * 札（fuda-image）と同一経路。fuda-image はこの getter を import して一本化する（単一の真実）。
  */
 const NOTO_SERIF_JP_CSS_URL =
@@ -213,11 +200,10 @@ function titleFontSize(graphemeCount: number): number {
 }
 
 /**
- * 看板 OGP を {@link ImageResponse} にレンダリングする共通レンダラ。
+ * リンクプレビュー画像（og:image）を {@link ImageResponse} にレンダリングする共通レンダラ。
  *
- * 紙地・墨・罫・のれん帯・明朝の品名・朱の印で組む（札と同じ店の顔）。器面なので和色は使わず、
- * 主役は品名（title）を明朝で大きく立てた墨字。階層は墨の濃淡（INK/INK_2）と罫で付け、朱
- * （ACCENT）は右上の印だけに使う。
+ * 紙地・墨・罫・ヘッダの店号・明朝の品名で静かに組む。和色は使わず、主役は品名（title）を明朝で
+ * 大きく立てた墨字。階層は墨の濃淡（INK/INK_2）と罫で付ける（cycle-309 立証で朱の印は撤去・E1）。
  *
  * 明朝（Noto Serif JP 600）とゴシック（Noto Sans JP 400）を Google Fonts CDN から並行取得し、
  * 取得失敗時はゴシック→sans-serif へ素直にフォールバックする（描画は成立・書体だけ譲る）。
@@ -276,7 +262,7 @@ export async function createOgpImageResponse(
         fontFamily: gothicFamily,
       }}
     >
-      {/* のれん帯: 店号（出所）＋一本罫で下から仕切る（札と同一）。 */}
+      {/* ヘッダ: 店号（出所）＋一本罫で下から仕切る（平明なマストヘッド・識別）。 */}
       <div
         style={{
           display: "flex",
@@ -339,41 +325,9 @@ export async function createOgpImageResponse(
         ) : null}
       </div>
 
-      {/* 印: 器面に一つだけ・右上に捺す。サイトの identity 標章（頭字 y）を朱の hanko で。
-            朱（ACCENT）の塗りの角丸正方形に、紙色（PAPER）で白抜きした明朝の頭字 y。
-            回転 ±8° 内・幅 100px（§4）・favicon(F2) と同一標章（cycle-306/decision.md 決定4）。 */}
-      <div
-        style={{
-          position: "absolute",
-          top: 44,
-          right: 44,
-          width: 100,
-          height: 100,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          backgroundColor: ACCENT,
-          borderRadius: SEAL_CORNER_RADIUS,
-          transform: `rotate(${SEAL_ROTATE_DEG}deg)`,
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontFamily: minchoFamily,
-            fontSize: 62,
-            lineHeight: 1,
-            color: PAPER,
-            // 明朝 y は descender を持つため、字面をわずかに下げて視覚中央へ重心を合わせる
-            // （幾何中央だと上寄りに見える／下げすぎると descender が縁に触れる）。
-            paddingTop: 5,
-          }}
-        >
-          {SEAL_INITIAL}
-        </div>
-      </div>
+      {/* cycle-309 立証(decision.md E1): 朱の印(店の朱肉印)を撤去。看板は店号(のれん帯)＋大見出しで
+          既に yolos.net を二度名乗っており、印は識別として冗長な signifier（来訪者に「店の印」とは
+          読まれない・§0.1(3)）。識別は店号と品名が担う。favicon の識別マークは別途 keep。 */}
     </div>,
     {
       ...OGP_SIZE,

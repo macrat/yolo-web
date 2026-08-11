@@ -94,7 +94,9 @@ export default function AboutPage() {
 
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>何が置いてあるか</h2>
-        <p className={styles.text}>店の品書きは、大きく四つです。</p>
+        {/* cycle-309 立証(decision.md E3): 「店の品書き」は「店」の枠を来訪者が解読する前提の
+            押し付け(§0.1(3))かつ site-concept の明瞭さガードに反するため平明表現へ是正。 */}
+        <p className={styles.text}>ここにあるものは、大きく四つです。</p>
         <Shinagaki items={STORE_ITEMS} ariaLabel="サイトの品書き" />
       </section>
 
