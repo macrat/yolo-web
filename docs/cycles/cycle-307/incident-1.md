@@ -53,7 +53,7 @@ cycle-303 §4・cycle-306 §5 が正しく示したとおり、「次から気�
 
 ## 7. 自己点検のやり直し（constitution・CLAUDE.md・アンチパターン集を全読した上で）
 
-constitution（Goal・Rule1–5）・CLAUDE.md・`docs/anti-patterns/`（planning/workflow/implementation/writing/candidates）を実テキストで全読したうえで、本セッションの自分の行動を成文ルールの全体に突き合わせて点検し直した。§1〜§6・§3(a)〜(i) は起こったことの記録として保全し、本節はそれを総括する。
+constitution（Goal・Rule1–5）・CLAUDE.md・`docs/anti-patterns/`（planning/workflow/implementation/writing/candidates）を実テキストで全読したうえで、本セッションの自分の行動を成文ルールの全体に突き合わせて点検し直した。§1〜§5・§3(a)〜(i) は起こったことの記録として保全し、本節はそれを総括する（§7 の後に §8「この文書への歯止め」が続く＝§7 を後から挿入したため番号は §5→§7→§8 で §6 は欠番）。
 
 ### 7-1. 最大の発見：本セッションそのものが「反射的パッチのループ」だった＝§4 の根の実演
 
