@@ -2,7 +2,7 @@
 id: 309
 description: "最優先 P0 の本丸 B-583（店メタファーの視覚意匠が来訪前/可視の顔で来訪者に価値を持つか・7サイクル目）に、cycle-306 申し送り §6 が定めた立証——各要素で『店の意匠を残した版と外した版を第一級の実物としてレンダーして並べ、コンセプト/constitution から来訪者価値で見比べ keep/remove/change を証明する』——を今度こそ実行する。cycle-308 の失敗はこの立証を一度もしなかったこと。測定（GA/露出）は使わない（ブランディングはコンセプトから決める・incident-1 §2(c)）。対象要素は charter (a)(b)(d) に対応: E1=OGP 看板の店の意匠 / E2=favicon の印 / E3=名乗り・about のコピー。pre-308 の状態から白紙で立証する。"
 started_at: 2026-08-11T21:35:23+0900
-completed_at: null
+completed_at: 2026-08-11T23:27:35+0900
 ---
 
 <!-- index.md には計画・チェックリスト・完了サマリだけを書く。立証の生データ=grounding.md、両版レンダーの比較と決定=decision.md、レビュー経過=review-log.md に分割してここからリンクする。 -->
@@ -41,7 +41,7 @@ completed_at: null
   - [x] E3 (d) 名乗り・about のコピー: 現行（店主/よろず屋/店の品書き）版 vs 店の語彙を薄めた版を実文面で並べ比較・決定。
 - [x] **P4. 実装**: P3 の各決定（keep/remove/change）が指示する変更のみを反映。証明のない変更はしない。DESIGN.md は決定に合わせて更新（脱正典化 or 追認を証明つきで）。
 - [x] **P5. 検証**: 全5ゲート緑（typecheck / lint / format:check / test / build）。UI 変更があれば take-screenshot で変更前後を実見（新規視覚回帰なし）。
-- [ ] **P6. B-576 の扱い判断**: B-583 が印/OGP の identity を決めた結論に照らして、B-576（favicon/OGP 作り直し）を進めるか・不要かを判断（露出でなく決定内容に依拠）。
+- [x] **P6. B-576 の扱い判断**: B-583 の決定に照らし、favicon マークは認識価値で現行のまま keep・OGP 印は remove ＝作り直すべき新 identity が生じないため **B-576 は不要（解消）**と判断（露出でなく決定内容に依拠）。backlog で Done・decision.md B-576 節。
 - [x] **P7. レビューと完了処理**: 独立 reviewer 計5名で点検（立証適合を必須観点に）。第1巡（A立証=E2過大申告/B実装=コメント2件）→是正。第2巡（新規A'=承認/B'=コメント2件）→是正＋同クラス悉皆確認。第3巡（§11閉塞確認）=承認。**収束**（[review-log.md](./review-log.md)）。ブログ判断＝**書かない**（内部のブランディング是正・前提是正で読者の学び/楽しみにならない・cycle-282/283/306/308 と同種・CLAUDE.md「読者価値が無ければ書かない」）。ワークフロー AP 点検・cycle-completion は完了処理で実施。
 
 ## 作業計画
@@ -90,10 +90,10 @@ completed_at: null
 
 ## サイクル終了時のチェックリスト
 
-- [ ] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
-- [ ] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
-- [ ] すべての変更がレビューされ、残存する指摘事項が無くなっている。
-- [ ] `npm run typecheck && npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する（exit 0）。**`typecheck` を必ず含める**（CI は typecheck を最初のステップで走らせる）。
-- [ ] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
-- [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
-- [ ] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
+- [x] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
+- [x] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
+- [x] すべての変更がレビューされ、残存する指摘事項が無くなっている。
+- [x] `npm run typecheck && npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する（exit 0）。**`typecheck` を必ず含める**（CI は typecheck を最初のステップで走らせる）。
+- [x] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
+- [x] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
+- [x] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
