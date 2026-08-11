@@ -1,54 +1,49 @@
 /**
- * 【一時ハーネス・cycle-309 P3 立証用・完了時に削除】
- * B-583 立証: OGP 看板の「店の意匠を残した版/外した版」を実 PNG として吐き、PM が見比べる。
- * V0=現行(のれん帯+朱印+明朝+罫枠) / V1=印だけ外す / V2=印+のれん枠を外し素の識別(店号+品名)。
+ * 【一時ファイル・cycle-309 P3 立証用・完了時に削除】
+ * B-583 立証: OGP 看板の「店の意匠を残した版/外した版」を実 Next dev で PNG 化して PM が見比べる。
+ * showSeal=朱の hanko 印 / showShopFrame=のれん帯(店号+一本罫)+2px 罫枠 をトグル。
+ * V0 相当(全部あり)は createOgpImageResponse を直接使う（本ファイルは V1/V2 用）。
  */
-import { describe, it } from "vitest";
-import { writeFileSync, mkdirSync } from "node:fs";
 import { ImageResponse } from "next/og";
-import {
-  createOgpImageResponse,
-  getFontData,
-  getMinchoFontData,
-} from "@/lib/ogp-image";
+import { getFontData, getMinchoFontData, ogpSize } from "@/lib/ogp-image";
 import { PAPER, INK, INK_2, RULE, RULE_STRONG, ACCENT } from "@/lib/utsuwaHex";
 
-const OUT = "/mnt/data/yolo-web/tmp/cycle-309";
-const SIZE = { width: 1200, height: 630 };
 const TITLE = "yolos.net";
 const SUBTITLE = "AIエージェントによる実験的Webサイト";
 
-async function fonts() {
-  const [g, m] = await Promise.all([getFontData(), getMinchoFontData()]);
-  return [
-    ...(g
+export async function renderVariantOgp(
+  showSeal: boolean,
+  showShopFrame: boolean,
+) {
+  const [gothicData, minchoData] = await Promise.all([
+    getFontData(),
+    getMinchoFontData(),
+  ]);
+  const fonts = [
+    ...(gothicData
       ? [
           {
             name: "NotoSansJP",
-            data: g,
+            data: gothicData,
             style: "normal" as const,
             weight: 400 as const,
           },
         ]
       : []),
-    ...(m
+    ...(minchoData
       ? [
           {
             name: "NotoSerifJP",
-            data: m,
+            data: minchoData,
             style: "normal" as const,
             weight: 600 as const,
           },
         ]
       : []),
   ];
-}
-const mincho = "NotoSerifJP, NotoSansJP, sans-serif";
-const gothic = "NotoSansJP, sans-serif";
+  const mincho = "NotoSerifJP, NotoSansJP, sans-serif";
+  const gothic = "NotoSansJP, sans-serif";
 
-/** V1/V2 共通レンダラ: showSeal(朱印) と showShopFrame(のれん帯+罫枠) をトグル。 */
-async function renderVariant(showSeal: boolean, showShopFrame: boolean) {
-  const f = await fonts();
   return new ImageResponse(
     <div
       style={{
@@ -155,29 +150,6 @@ async function renderVariant(showSeal: boolean, showShopFrame: boolean) {
         </div>
       ) : null}
     </div>,
-    { ...SIZE, fonts: f },
+    { ...ogpSize, fonts },
   );
 }
-
-async function dump(name: string, res: Response) {
-  const buf = Buffer.from(await res.arrayBuffer());
-  writeFileSync(`${OUT}/${name}`, buf);
-  // eslint-disable-next-line no-console
-  console.log(`WROTE ${name} ${buf.length} bytes`);
-}
-
-describe("_tmp ogp render (cycle-309 立証)", () => {
-  it("V0 現行(store dressing all)", async () => {
-    mkdirSync(OUT, { recursive: true });
-    await dump(
-      "ogp-V0-current.png",
-      await createOgpImageResponse({ title: TITLE, subtitle: SUBTITLE }),
-    );
-  }, 60000);
-  it("V1 印だけ外す", async () => {
-    await dump("ogp-V1-noseal.png", await renderVariant(false, true));
-  }, 60000);
-  it("V2 印+のれん枠を外す(素の識別)", async () => {
-    await dump("ogp-V2-plain.png", await renderVariant(false, false));
-  }, 60000);
-});
