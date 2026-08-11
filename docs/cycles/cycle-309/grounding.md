@@ -63,7 +63,8 @@
 ## §3. 現状の顔の実見（P1c・実物レンダー）
 
 - 現行 favicon を 16/32/48px に実 PNG 化: `tmp/cycle-309/fav-cur-{16,32,48}.png`。
-- 現行 OGP（V0）と立証用の両版を実 PNG 化: §立証（decision.md）で記録。
+- favicon の別版（容器なし＝素の朱 y）を next/og で同条件レンダーし 16/32/48/96px に: `tmp/cycle-309/favvar-{A,B}-*.png`（A=容器あり／B=容器なし）。16px 実見で容器あり＞容器なし（素の字は消える）を確認＝E2 の両版比較。
+- 現行 OGP（V0）と立証用の両版（V1 印なし・V2 素）を実 PNG 化: `tmp/cycle-309/ogp-v{0,1,2}.png`・出荷版 `ogp-after.png`。詳細は decision.md。
 
 ## §4. コンセプト/constitution からの導出（P2）
 

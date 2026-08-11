@@ -8,10 +8,10 @@
  * のれん帯の品名に hex コード、下部に色名（よみ）を出す。
  *
  * この面の印は内容を表す一字「色」（結果札の既定「診」と平行）。cycle-282/283 の自己貶め
- * 「試」（店の看板印を内容 fuda に流用した誤り）は cycle-306 で撤去した（詳細
- * docs/cycles/cycle-306/decision.md）。サイトの identity 印（朱塗りの角丸 hanko＋白抜き y）は
- * 汎用看板 ogp-image・favicon にあり、内容 fuda の印はこれとは別（内容を表す字）。cycle-282
- * まで colors 個別ページは OGP 画像を持っていなかったため、これは純増（B-579）。
+ * 「試」（識別マークを内容 fuda に流用した誤り）は cycle-306 で撤去した（詳細
+ * docs/cycles/cycle-306/decision.md）。サイトの identity 標章（朱の角丸＋白抜き y）は
+ * cycle-309 立証 E1/E2 で favicon のみが担う（汎用 OGP からは撤去）。内容 fuda の印はこれとは別
+ * （内容を表す字）。cycle-282 まで colors 個別ページは OGP 画像を持っていなかったため、これは純増（B-579）。
  */
 
 import {
