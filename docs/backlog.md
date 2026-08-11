@@ -2,12 +2,12 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-583 | 印/店メタファー自体が来訪者に価値を持つか問い直す | P0 | - | **cycle-308完了後に撤回=未達**(6サイクル目の失敗)。続ける/やめるを正面から判断せず"続ける"に流れ"解体"の語で覆った矮小化・撤去もタスクも無し。土台の「OGP露出≒0」は計測不能を偽ゼロ扱い。詳細cycle-308/incident-2.md |
 
 ## Queued (すぐに着手できる)
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-583 | 印/店メタファー自体が来訪者に価値を持つか問い直す | P0 | - | **cycle-308で未達(6サイクル目)**。申し送り§6の立証(撤去版と残置版を実物比較し証明)を実行せず"残す"に既定流入。ブランディングは測定でなくコンセプト/constitutionで決める(incident-1 §2(c))。詳細cycle-308/incident-2.md |
 | B-606 | 全10 personality診断の結果先行の点検・再設計(Rule4) | P1 | - | **cycle-303でword-sense完了**。残9=music/yoji/animal/character-fortune/娯楽くじ群。タイブレーク中心は壊れた枠(cycle-294)・調律重み禁止・真の同点は同格開示。詳細cycle-303/ |
 | B-644 | 約2845ページが og:image 不在のまま summary_large_image を宣言し空の大カードになる | P3 | - | 既存欠陥(cycle-306で実ビルド発覚)。原因=global `summary_large_image`＋root OGPが子ルートに継承されない。是正は設計判断要・別サイクル。詳細cycle-306/review-log.md |
 | B-603 | character-personality 24タイプ一覧の処遇(T3・再判定) | P1 | - | **未決へ差し戻し**。cycle-298は測定面を誤り判定撤回(cycle-284の実測が正しかった)。主たる面で基準を立て直し再判定。詳細cycle-298/decision.md |
@@ -52,7 +52,6 @@
 | B-623 | 知識クイズで「次へ」の2打目がFAQのsummaryを叩く | P4 | - | cycle-301実測(yoji-level q4/q7/q8・kotowaza-level q7/q8)。既存欠陥で結果は壊れないが求めていないFAQが開閉。詳細cycle-301/review-log.md |
 | B-597 | テーマトグルのタップ標的高さ(28px)のDESIGN準拠 | P4 | - | cycle-287監査C5。switch高さ28px=DESIGN§10の44px未満(WCAG2.5.8 24pxは充足)。当たり判定拡大の要否をDESIGN基準で判断。詳細cycle-287/findings.md |
 | B-599 | 辞典/共有まわりのa11y軽微群 | P4 | - | cycle-287監査C8。同部首117リンクがdiv(list構造喪失)/辞典ヒーロー大字がaria-hidden無で二重読み/共有ボタンの外部予告が面で不整合。詳細cycle-287/findings.md |
-| B-648 | Shinagakiのaria-label「〜の品書き」を平明語(「一覧」等)へ | P4 | - | cycle-308(B-583 (d-2))で判断=change推奨。範囲は全サイトのShinagaki(aria期待テスト含む)。可視コピーは保ちaria機能ラベルのみ平明化。B-599隣接。詳細cycle-308/decision.md (d-2) |
 | B-574 | イディオム2一覧のアクセシブル名浄化(stretched-link化) | P4 | - | B-573のa11y掃討の一部。SRが連結を読む冗長さを主リンク名のみへ。cycle-287で辞典検索結果リンクにも同種確認(C6)。詳細cycle-281.md/cycle-287 |
 | B-541 | 現状正しい辞典収録数ハードコードの予防的`.length`化 | P4 | - | 辞典の処遇判断(B-564)と連動。詳細 cycle-258.md |
 | B-549 | middleware→proxy 移行(Next.js16非推奨) | P4 | - | 出荷物に影響なし。詳細 cycle-271 接地 |
@@ -72,7 +71,7 @@
 
 | ID | Title | Priority | Notes |
 | --- | --- | --- | --- |
-| B-576 | faviconとOGP画像を新デザインに合わせて作り直す | P1 | cycle-308の解消判断(「露出≒0で作り直しは無駄」)は根拠が崩れて撤回(OGP露出は計測不能)。着手: B-583で店の見立ての是非を決めた後、その結論に合わせて作り直す(印ありきで塗り替えない)。詳細cycle-308/incident-2.md |
+| B-576 | faviconとOGP画像を新デザインに合わせて作り直す | P1 | cycle-308の解消判断(「露出≒0で作り直しは無駄」)は撤回(ブランディングは測定でなくコンセプトで決める・incident-1 §2(c))。着手: B-583で店の見立ての是非を決めた後、その結論に合わせて作り直す(印ありきで塗り替えない)。詳細cycle-308/incident-2.md |
 | B-565 | 全面切替後のコンバージョン悪化チェック(ADR001) | P2 | **ADR001は現行記載が不正書き換えの疑い。次に扱う際は本来の趣旨(デザイン変更の決断＋変更後の完走率悪化チェックのみ)に照らし検証・復元してから読む**。cycle-305で+4週観測も失敗クローズ。詳細cycle-305/incident-1・observation |
 | B-615 | 375px CLSのレイアウトシフト点検・あればバグ修正 | P4 | **ADRの賭けではなく通常のバグ(cycle-305でオーナー是正)**。デザイン移行が安定した面で375px CLSを点検し、シフトがあれば修正。計装(field計測)の新設は不要。着手: デザイン移行(B-583/B-576/B-573)の完了後 |
 | B-629 | E0出荷後のSERP実表示の確認 | P2 | 着手: 2026-08-14以降(禁止色を除いたアイコンの出荷=2026-08-07+7日。Googleの再クロール後でないと反映されない)。詳細 docs/cycles/cycle-302/ |

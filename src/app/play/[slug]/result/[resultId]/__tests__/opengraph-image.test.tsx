@@ -132,7 +132,7 @@ describe("QuizResultOpenGraphImage", () => {
   });
 
   // NOTE(cycle-282): result icon / quiz accentColor は店構え化で OgpImageConfig 型から
-  // 削除された（地は常に紙・図像は identity マークのみ）。call-site も渡さなくなったため、旧 API を
+  // 削除された（地は常に紙・図像は店の印のみ）。call-site も渡さなくなったため、旧 API を
   // 前提にしていた "passes result icon" / "passes quiz accentColor" のアサーションは撤去した。
 
   test("renders fallback for unknown slug", async () => {

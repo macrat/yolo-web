@@ -94,7 +94,7 @@ export default function AboutPage() {
 
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>何が置いてあるか</h2>
-        <p className={styles.text}>ここにあるものは、大きく四つです。</p>
+        <p className={styles.text}>店の品書きは、大きく四つです。</p>
         <Shinagaki items={STORE_ITEMS} ariaLabel="サイトの品書き" />
       </section>
 
