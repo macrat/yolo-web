@@ -23,15 +23,15 @@ completed_at: null
 
 ## 実施する作業
 
-- [ ] **P1. 接地（PM 自身・記憶でなく実体で・grounding.md に記録）**
-  - [ ] P1a. GA4/BigQuery（foreground sub-agent）: 来訪前の顔の**実露出**を実測——検索経由（favicon が出る面）とシェア経由（OGP が出る面）の構成比。どの顔が実際に潜在来訪者に届くかを確定する（記憶・過去要約を鵜呑みにせず再実測＝AP-WF06/WF12）。
-  - [ ] P1b. 現状の顔を実レンダー実見（PM・take-screenshot / 実ファイル）: 現行 favicon（16/32/48px・検索結果の文脈）・現行 OGP・結果札を、「クリックを迷う潜在来訪者が受け取るもの」として実見する。
-  - [ ] P1c. 店/印メタファーの現存箇所を悉皆 scan（PM・grep で網羅・一部で済ませない）: 来訪前の顔（favicon/OGP/札）と来訪者可視のコピー（「のれん」「店号」「店主」「店の品書き」「店構え」等）に、店の主張・印がどこに何箇所あるかを列挙。
-- [ ] **P2. constitution からの導出（PM・grounding.md に記録）**: Goal・Rule1-5 から「来訪前の顔がクリックを迷う潜在来訪者に何をすべきか」を導く（PM 文書＝容疑者を根拠に引かない・記憶で断じない）。導いた役割に照らし、各要素の要否を判定する基準を立てる。
-- [ ] **P3. 要素ごとの判定（PM・実物の顔を見て決定・委譲しない・decision.md に記録）**: 各要素に keep/remove/change の立証責任を負わせ、撤去版・残置版を第一級の実物で比較して justification を持つ。
-  - [ ] (a) 店構えの統一（全面で店を主張する統一）は来訪者に資するか、静かな一貫性で足りるか。
-  - [ ] (b) 印(hanko)は来訪前の顔に要るか。
-  - [ ] (d) 店の主張（のれん/店号/店主/店の品書き等の店フレーミング）を来訪者に押し付けていないか。
+- [x] **P1. 接地（PM 自身・記憶でなく実体で・grounding.md に記録）**
+  - [x] P1a. GA4/BigQuery（foreground sub-agent）: 実測完了。Organic Search（favicon 露出）=1,299 実来訪者比 92.7%／Social（OGP 露出）=5≒0。**届く来訪前の顔は favicon のみ**。→ grounding.md P1a
+  - [x] P1b. 現状の顔を実見（PM・favicon.ico を convert して 16/32/48px 実見・`tmp/cycle-308/fav-*.png`）: 検索者が受け取るのは「赤い y のマーク」であって「店の印」ではない。→ grounding.md P1b
+  - [x] P1c. 店/印メタファーの現存箇所を悉皆 scan（PM・grep）: 来訪者可視は3系統（トップの店フレーム・「品書き」aria-label・OGP/favicon 印）。→ grounding.md P1c
+- [x] **P2. constitution からの導出（PM・grounding.md に記録）**: favicon の仕事＝「検索結果で認識でき・16-48px で可読なブランドマーク」。「店/印」は要求されない内部メタファー。→ grounding.md P2
+- [x] **P3. 要素ごとの判定（PM・実物の顔を見て決定・委譲しない・decision.md に記録）**: 各要素に keep/remove/change の立証責任を負わせ来訪者価値から justify。
+  - [x] (a) 店の全面主張の統一は**不要**（必要なのは静かな一貫性・「店構え＝正典」を降格）。→ decision.md (a)
+  - [x] (b) favicon マークは認識の価値で**keep**（「店の印」framing は是正）／OGP・札の印は露出≒0 で触らない。→ decision.md (b)
+  - [x] (d) トップの店フレームは押し付けでなく来訪者価値（広さ＋Rule3）で**keep**／SR「品書き」ラベルのみ follow-up。→ decision.md (d)
 - [ ] **P4. 実装（判定が change/remove の場合・builder + reviewer・タスク分割）**: 決定を来訪前の顔とコピーに反映。判定が keep なら justification を文書化して据え置く。
 - [ ] **P5. 検証**: 全5ゲート緑（typecheck/lint/format/test/build・exit 0）。視覚確認（PM 実見・変更後の顔を light/dark・favicon 16-48px・OGP・390/1280px）。
 - [ ] **P6. B-576 の扱い判断**: B-583 の identity 決定に照らし、favicon/OGP がその結論と整合するか。整合なら据え置き、乖離なら是正 or B-576 へ正しく申し送る（B-576 は B-583 の結論に依存＝backlog）。
