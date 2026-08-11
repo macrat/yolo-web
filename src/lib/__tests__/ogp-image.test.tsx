@@ -302,7 +302,7 @@ describe("createOgpImageResponse — 店構え（看板）契約", () => {
     // tsc（noUnusedLocals 相当の未使用ディレクティブ検査）が fail する——旧 API の静かな復活を
     // 型レベルで検知する。実行時にはモックが余剰プロパティを無視して解決するだけなので await する。
     await expect(
-      // @ts-expect-error icon は型から削除済み（§8-6・図像は店の印のみ）
+      // @ts-expect-error icon は型から削除済み（§8-6・OGP は図像を持たない＝cycle-309 E1 で印撤去）
       createOgpImageResponse({ title: "T", icon: "🧪" }),
     ).resolves.toBeDefined();
     await expect(
