@@ -32,10 +32,10 @@ completed_at: null
   - [x] (a) 店の全面主張の統一は**不要**（必要なのは静かな一貫性・「店構え＝正典」を降格）。→ decision.md (a)
   - [x] (b) favicon マークは認識の価値で**keep**（「店の印」framing は是正）／OGP・札の印は露出≒0 で触らない。→ decision.md (b)
   - [x] (d) トップの店フレームは押し付けでなく来訪者価値（広さ＋Rule3）で**keep**／SR「品書き」ラベルのみ follow-up。→ decision.md (d)
-- [ ] **P4. 実装（判定が change/remove の場合・builder + reviewer・タスク分割）**: 決定を来訪前の顔とコピーに反映。判定が keep なら justification を文書化して据え置く。
-- [ ] **P5. 検証**: 全5ゲート緑（typecheck/lint/format/test/build・exit 0）。視覚確認（PM 実見・変更後の顔を light/dark・favicon 16-48px・OGP・390/1280px）。
-- [ ] **P6. B-576 の扱い判断**: B-583 の identity 決定に照らし、favicon/OGP がその結論と整合するか。整合なら据え置き、乖離なら是正 or B-576 へ正しく申し送る（B-576 は B-583 の結論に依存＝backlog）。
-- [ ] **P7. レビューと完了処理**: 各段で reviewer を通す。**付託適合を必須観点にする**（＝実装の粗探しでなく「B-583 の問い＝メタファーの是非を来訪者価値から問うたか」を必ず観点に含める）。ブログ判断・ワークフロー AP 点検・cycle-completion。
+- [x] **P4. 実装**: 判定が指示する変更を反映。DESIGN.md 脱正典化（ヘッダ／§1／§4「印」＝識別マーク・露出接地・ship-revert 遮断）・コード内コメント整合（ogp-image/fuda-image/In/page.module.css の「店の印/店の顔」→識別マーク・挙動不変）・about `:97`「店の品書き」→平明表現。favicon/OGP/名乗りフレームは isolation を生き延び keep（塗り替えない）。
+- [x] **P5. 検証**: 全5ゲート緑（typecheck ✓／lint ✓／format:check ✓／test 5547 passed ✓／build exit 0 ✓・dev server 停止＋`.next` 削除の隔離環境）。視覚確認＝顔（favicon/OGP）は**据え置き＝変更なし**で新規視覚回帰なし。唯一の可視変更 about `:97` はビルド済み HTML で新文言「ここにあるものは、大きく四つです」present・旧「店の品書きは」absent・名乗り「AIが営むよろず屋」keep を実確認。
+- [x] **P6. B-576 の扱い判断**: 現行 favicon マークが「検索結果での認識」の来訪者価値を満たし・OGP 露出≒0 と確定 ⇒ 「作り直し（re-paint）」は churn で来訪者価値を生まない＝**B-576 解消**（backlog Done・decision.md B-576 節）。
+- [ ] **P7. レビューと完了処理**: 各段で reviewer を通す（**付託適合を必須観点に**）。判定は独立レビュー2巡（付託適合・自己欺瞞／接地・網羅）で点検し是正済み。実装後に**白紙の新規 reviewer で再レビュー（AP-WF20）**→ ブログ判断・ワークフロー AP 点検・cycle-completion。
 
 ## 作業計画
 
