@@ -2,12 +2,12 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-583 | 印/店メタファー自体が来訪者に価値を持つか問い直す | P0 | 309 | **cycle-308で未達(6サイクル目)**。申し送り§6の立証(両版を実物比較し証明)を実行せず"残す"に流入。測定でなくコンセプトで決める。cycle-309で立証実行。詳細cycle-308/incident-2.md |
 
 ## Queued (すぐに着手できる)
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-583 | 印/店メタファー自体が来訪者に価値を持つか問い直す | P0 | - | **cycle-308で未達(6サイクル目)**。申し送り§6の立証(撤去版と残置版を実物比較し証明)を実行せず"残す"に既定流入。ブランディングは測定でなくコンセプト/constitutionで決める(incident-1 §2(c))。詳細cycle-308/incident-2.md |
 | B-606 | 全10 personality診断の結果先行の点検・再設計(Rule4) | P1 | - | **cycle-303でword-sense完了**。残9=music/yoji/animal/character-fortune/娯楽くじ群。タイブレーク中心は壊れた枠(cycle-294)・調律重み禁止・真の同点は同格開示。詳細cycle-303/ |
 | B-644 | 約2845ページが og:image 不在のまま summary_large_image を宣言し空の大カードになる | P3 | - | 既存欠陥(cycle-306で実ビルド発覚)。原因=global `summary_large_image`＋root OGPが子ルートに継承されない。是正は設計判断要・別サイクル。詳細cycle-306/review-log.md |
 | B-603 | character-personality 24タイプ一覧の処遇(T3・再判定) | P1 | - | **未決へ差し戻し**。cycle-298は測定面を誤り判定撤回(cycle-284の実測が正しかった)。主たる面で基準を立て直し再判定。詳細cycle-298/decision.md |
