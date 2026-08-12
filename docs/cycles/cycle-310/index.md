@@ -1,13 +1,11 @@
 ---
 id: 310
-description: "最優先 P0 の本丸 B-583 の残件 E1（OGP 識別マークの要否）を、cycle-309 で立証が論理的に無効と露呈し revert・次サイクルへ委譲された件として **clean context で再立証**する。cycle-309 の失敗の芯は『両版レンダーの儀式は行ったが、そこから結論への推論が無効』だった（AP-P02／E1-E2 非対称／per-route 立証欠如／禁止語『冗長・静かな一貫性』／反射的撤去）。本サイクルは (1) E2(favicon＝識別マークとして keep) と一貫した論理で、(2) 母集団をルート OGP と代表的固有 OGP に分割して両方をレンダーし、(3)『favicon と一貫した識別マークを OGP にも残す』案を第一級に載せ、(4) 禁止語を使わず、面をまたいだ認識価値から keep/remove/reframe を証明する。レビュー観点に『立証の論理の妥当性』を必須で含める。"
+description: "最優先 P0 の本丸 B-583 の残件 E1（OGP/favicon マークの要否・形）を決着させた（8サイクル目）。初め認識（cross-surface recognition）から keep を導いたが、それは charter の核＝『来訪者にどんなイメージを持ってほしいか（ブランドイメージ）』を仕組みにすり替えた誤り（AP-P02・incident-1.md）。是正: (1) 強制ゲート brand-image-gate.sh を設置、(2) ブランドイメージを constitution+site-concept だけから定義（brand-image.md・独立レビュー3巡 PASS・5面 A 信頼/B 気軽さ/C 手ごたえ/D 正直気取らなさ/E 広さの心地よさ）、(3) そこから E1 を面ごとに飛躍なく導出（e1-decision.md・独立レビューで認識の密輸を段階的に除去）。**決定: マークは両面 keep（根拠=A 手をかけた気配・認識でない）／形は面ごと〔OGP=容器なしの素の朱明朝 y へ change・favicon=塗りタイルのまま〕／店の物語を reframe。** B-576 も解消（favicon 不要・OGP は素の y へ是正）。※本ファイル P1-P7 は認識軸で誤った初版の記録として保全（その E1 結論は無効・正典は banner と上記3ファイル）。"
 started_at: 2026-08-12T10:18:21+0900
 completed_at: null
 ---
 
 <!-- index.md には計画・チェックリスト・完了サマリだけを書く。立証の生データ（両版レンダーの比較と決定）は decision.md、レビュー経過は review-log.md に分割してここからリンクする。 -->
-
-<!-- pause-cycle: E1(OGP識別マーク)の立証がcharterの核=ブランドイメージの定義を欠いていた(cycle-310/incident-1.md)。判断=このコンテキストで継続(リセットは8サイクル同型失敗のため選ばない)。順序を構造で強制するゲート(.claude/hooks/brand-image-gate.sh)を設置。次の実作業=brand-image.mdを constitution+site-concept だけから定義→独立レビュー(イメージか仕組みかの二値軸)→PASSを得てからマークの要否を導く。オーナーが開いた判断の場に一旦返すため中断。 -->
 
 # サイクル-310
 
@@ -92,11 +90,12 @@ completed_at: null
 
 ## キャリーオーバー
 
-- **B-583（完了）**: 8サイクル目で決着。残件 E1（OGP 識別マークの要否）を再立証し、**マークは「店の朱肉印」でなく中立な識別マークとして keep（pixel 不変）・「店の印」の物語だけ reframe** と結論。E0/E3（cycle-309 完了）と併せ B-583 は Done。
-- **B-576（完了＝解消）**: E1/E2 の決定＝「マークは現行のまま keep・物語だけ reframe」＝作り直すべき新 identity は生じない → 不要。Done。
-- **未着手の follow-up（Queued 据置・本サイクルで広げない）**: B-649（店語彙 aria-label の §0.1(3) 平明化評価）・B-650（ルート OGP subtitle「実験的Webサイト」の §0.1(4) 評価）。いずれも B-583 の店メタファーとは別軸。
-- **プロセスの学び（review-log.md メタ節）**: cycle-309 を沈めた失敗の型（自己通読が地まで届かない＝AP-WF11 同型）を、今回はレビュー観点「立証の論理の妥当性」（AP-WF02 の是正）が第1巡で捕捉した。観点を「儀式の存在」でなく「推論の妥当性」に据える設計が機能した。
-- **残る内部語彙（非ブロッキング・射程外）**: `src/lib/fuda-image.tsx` の内容 fuda 印（`DEFAULT_SEAL_CHAR` 等・結果札の内容標章「診」「色」＝来訪者可視だが identity 印と別カテゴリ）は本サイクルの identity マーク reframe の射程外。将来 B-649 系と合流可。
+- **B-583（完了）**: 8サイクル目で決着。charter の核＝**ブランドイメージ**（[brand-image.md](./brand-image.md)・独立レビュー3巡 PASS・5面 A〜E）を constitution+site-concept だけから定義し、そこから E1 を**面ごとに飛躍なく導出**（[e1-decision.md](./e1-decision.md)）。**結論: マークは両面 keep（根拠＝A 手をかけた気配・認識でない）／形は面ごと〔OGP＝容器なしの素の朱明朝 y へ change・favicon＝塗りタイルのまま〕／店の物語を reframe。** E0/E3（cycle-309）と併せ Done。※初版は認識軸で誤り（incident-1.md）→ブランドイメージから導き直して是正。
+- **B-576（完了＝解消）**: favicon＝作り直し不要（タイル keep）／OGP マーク＝本サイクルで素の朱 y へ是正して解消。Done。
+- **強制ゲート（恒久・再発防止）**: `.claude/hooks/brand-image-gate.sh` を設置。B-583 系サイクルは brand-image のレビュー PASS 無しに完了不可＝「charter の問い（ブランドイメージ）を仕組みにすり替える」失敗（8サイクル反復）を構造で封じる。将来リセットにも効く。
+- **未着手の follow-up（Queued 据置）**: B-649（店語彙 aria-label の §0.1(3) 平明化）・B-650（ルート OGP subtitle 評価）。B-583 とは別軸。
+- **プロセスの学び（incident-1.md）**: 「ブランドイメージ（喚起したい印象）」を「認識・識別可能性・一貫性・易探索」等の**仕組み**にすり替えると charter を外す（AP-P02）。今回はゲートで一段目（イメージ定義）を強制し、E1 導出でも独立レビューが認識の密輸を段階的に除去して収束した。
+- **残る内部語彙（非ブロッキング・射程外）**: `src/lib/fuda-image.tsx` の内容 fuda 印（結果札の内容標章「診」「色」＝identity マークと別カテゴリ）は本サイクルの射程外。
 
 ## 補足事項
 
@@ -108,8 +107,8 @@ completed_at: null
 
 - [x] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
 - [x] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。（B-583 を Done へ移動）
-- [x] すべての変更がレビューされ、残存する指摘事項が無くなっている。（新規 reviewer 5名・3巡で収束・第3巡承認）
-- [x] `npm run typecheck && npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する（exit 0）。（最終状態で typecheck/lint/format=0・test EXIT:0・build EXIT:0/4142ページ。SEAL→MARK リネーム後も OGP 出力 md5 一致＝pixel 不変）
-- [x] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
-- [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。（E1未達で再オープン・null）
+- [x] すべての変更がレビューされ、残存する指摘事項が無くなっている。（brand-image 3巡 PASS・e1-decision 複数巡で認識密輸を除去し収束・実装レビュー承認。すべて新規 reviewer をゼロ起動）
+- [x] `npm run typecheck && npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する（exit 0）。（最終状態で typecheck/lint/format=0・test 5554 pass EXIT:0・build EXIT:0/4142ページ。OGP マーク変更は契約テストを新設計へ更新済み）
+- [x] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。（※description は初版=認識軸の記録。実際の決着は banner・brand-image.md・e1-decision.md が正典）
+- [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。（cycle-completion で設定）
 - [x] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
