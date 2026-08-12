@@ -1,6 +1,6 @@
 ---
 id: 310
-description: "最優先 P0 の本丸 B-583 の残件 E1（OGP/favicon マークの要否・形）を決着させた（8サイクル目）。初め認識（cross-surface recognition）から keep を導いたが、それは charter の核＝『来訪者にどんなイメージを持ってほしいか（ブランドイメージ）』を仕組みにすり替えた誤り（AP-P02・incident-1.md）。是正: (1) 強制ゲート brand-image-gate.sh を設置、(2) ブランドイメージを constitution+site-concept だけから定義（brand-image.md・独立レビュー3巡 PASS・5面 A 信頼/B 気軽さ/C 手ごたえ/D 正直気取らなさ/E 広さの心地よさ）、(3) そこから E1 を面ごとに飛躍なく導出（e1-decision.md・独立レビューで認識の密輸を段階的に除去）。**決定: マークは両面 keep（根拠=A 手をかけた気配・認識でない）／形は面ごと〔OGP=容器なしの素の朱明朝 y へ change・favicon=塗りタイルのまま〕／店の物語を reframe。** B-576 も解消（favicon 不要・OGP は素の y へ是正）。※本ファイル P1-P7 は認識軸で誤った初版の記録として保全（その E1 結論は無効・正典は banner と上記3ファイル）。"
+description: "最優先 P0 の本丸 B-583 の残件 E1（OGP/favicon マークの要否・形）を決着させた（8サイクル目）。初め認識（cross-surface recognition）から keep を導いたが、それは charter の核＝『来訪者にどんなイメージを持ってほしいか（ブランドイメージ）』を仕組みにすり替えた誤り（AP-P02・incident-1.md）。是正: (1) 強制ゲート brand-image-gate.sh を設置、(2) ブランドイメージを constitution+site-concept だけから定義（brand-image.md・独立レビュー3巡 PASS・5面 A 信頼/B 気軽さ/C 手ごたえ/D 正直気取らなさ/E 広さの心地よさ）、(3) そこから E1 を面ごとに飛躍なく導出（e1-decision.md・独立レビューで認識の密輸を段階的に除去）。**決定: マークは両面 keep（根拠=A 手をかけた気配・認識でない）／形は面ごと〔OGP=容器なしの素の朱明朝 y へ change・favicon=塗りタイルのまま〕／店の物語を reframe。** B-576 も解消（favicon 不要・OGP は素の y へ是正）。※当初＝認識軸の計画/立証は誤り（E1 結論は無効）で、本ファイル下方の『失敗記録・認識軸の当初計画』節と decision.md に保全。正典は banner と上記3ファイル。"
 started_at: 2026-08-12T10:18:21+0900
 completed_at: 2026-08-12T20:20:13+0900
 ---
@@ -13,7 +13,7 @@ completed_at: 2026-08-12T20:20:13+0900
 >
 > 本サイクルは初め E1 を「立証つきで決着」としてクローズ・デプロイしたが、**立証が charter の核心＝ブランドイメージの定義を欠く**ことが露呈した。芯: keep を「**認識（cross-surface recognition）**」という機構から導き、charter の一段目——「**来訪者にどんなイメージを持ってほしいか**」というブランドイメージの定義——を飛ばした（AP-P02 の再演・**事故報告 → [incident-1.md](./incident-1.md)**）。
 >
-> **是正（本サイクル内で完遂）**: (1) 順序を構造で強制するゲート **`.claude/hooks/brand-image-gate.sh`** を設置（B-583 サイクルは brand-image のレビュー PASS 無しに完了不可）。(2) **ブランドイメージを constitution+site-concept だけから定義** → **[brand-image.md](./brand-image.md)**（独立レビュー3巡 PASS・5面 A 信頼/B 気軽さ/C 手ごたえ/D 正直・気取らなさ/E 広さの心地よさ）。(3) そのイメージから E1 を**面ごとに飛躍なく導出** → **[e1-decision.md](./e1-decision.md)**（独立レビュー複数巡で認識の密輸を順に除去）。**結論: マークは両面 keep（根拠＝A 手をかけた気配・認識でない）／形は面ごと〔OGP＝容器なしの素の朱明朝 y へ change・favicon＝塗りタイルのまま〕／店の物語は reframe**。以下の旧本文・チェックリスト（P1〜P7）は「**認識軸で誤った初版の記録**」として保全する（その E1 結論は無効）。正しい記録は上記3ファイル。
+> **是正（本サイクル内で完遂）**: (1) 順序を構造で強制するゲート **`.claude/hooks/brand-image-gate.sh`** を設置（B-583 サイクルは brand-image のレビュー PASS 無しに完了不可）。(2) **ブランドイメージを constitution+site-concept だけから定義** → **[brand-image.md](./brand-image.md)**（独立レビュー3巡 PASS・5面 A 信頼/B 気軽さ/C 手ごたえ/D 正直・気取らなさ/E 広さの心地よさ）。(3) そのイメージから E1 を**面ごとに飛躍なく導出** → **[e1-decision.md](./e1-decision.md)**（独立レビュー複数巡で認識の密輸を順に除去）。**結論: マークは両面 keep（根拠＝A 手をかけた気配・認識でない）／形は面ごと〔OGP＝容器なしの素の朱明朝 y へ change・favicon＝塗りタイルのまま〕／店の物語は reframe**。当初＝認識軸のチェックリスト（旧 P1-P7・出荷実態と逆の「pixel 不変 keep」を主張）は誤りのため**除去**した。当初計画は以下の「**失敗記録・認識軸の当初計画**」節と decision.md（認識軸の版）に保全する（その E1 結論は無効）。正しい記録は上記3ファイル。
 
 最優先（P0）の本丸 **B-583** の残件 **E1（OGP の識別マークの要否）** を、**clean context で再立証**する。E1 は cycle-309 で「両版を実物レンダーする立証の儀式は行ったが、そこから『撤去』へ至る推論が論理的に無効」と露呈し、製品変更を revert・再立証を本サイクルへ委譲した（cycle-309/incident-1.md）。E2（favicon＝識別マークとして keep・認識価値）・E3（名乗り/about の店の押し付けを平明化）は立証つきで完了・本番反映済で、本サイクルの射程外。**残るのは E1 の一点のみ**。
 
@@ -41,7 +41,7 @@ completed_at: 2026-08-12T20:20:13+0900
 
 ## 実施した作業（正典・ブランドイメージから）
 
-> 下記は**実際に決着した作業**（ブランドイメージ→面ごと導出→OGP change）。当初の「認識軸」の計画・チェックリスト（P1-P7）は誤りだったため正本から外し、失敗の記録として [decision.md](./decision.md)（認識軸の版）と [incident-1.md](./incident-1.md) に保全した（その「pixel 不変 keep」等の結論は**無効**）。「## 作業計画」以下も当初＝認識軸の計画で、失敗記録として残置（正典は本節・brand-image.md・e1-decision.md）。
+> 下記は**実際に決着した作業**（ブランドイメージ→面ごと導出→OGP change）。当初の「認識軸」のチェックリスト（旧 P1-P7・出荷実態と逆の「pixel 不変 keep」を主張）は誤りのため**除去**した。その立証内容は [decision.md](./decision.md)（認識軸の版）に、失敗の芯は [incident-1.md](./incident-1.md) に保全（結論は**無効**）。下方の「## ［失敗記録・認識軸の当初計画］作業計画」も当初計画の残置。正典は本節・brand-image.md・e1-decision.md。
 
 - [x] **G. 強制ゲートの設置**：`.claude/hooks/brand-image-gate.sh` を Stop フックに登録・動作検証（completed_at 設定時に brand-image PASS 無しならブロック）。「charter の問い＝ブランドイメージを仕組みにすり替える」失敗を構造で封じる。
 - [x] **B. ブランドイメージの定義**（[brand-image.md](./brand-image.md)）：来訪者に持ってほしい印象を **constitution+site-concept だけ**から定義（既存マーク/DESIGN/§0.1 は容疑者＝入力にしない）。5面 A 信頼・安心/B 気軽さ/C 手ごたえ・充足感/D 正直・気取らなさ/E 広さの心地よさ。独立レビュー3巡（二値軸「印象か仕組みか」）で E 面 navigation 混入・C 面 成果物混入を是正し **PASS**。
@@ -76,10 +76,10 @@ completed_at: 2026-08-12T20:20:13+0900
 - `docs/cycles/cycle-309/decision.md`（E2 の確定結論＝favicon マークは識別マークとして keep・認識価値／E3 完了／E1 の無効な結論の記録）、`cycle-309/grounding.md §0/§0.1`（地と構築物の線・立証基準4点）。
 - `docs/site-concept.md`（自己定義「AIが営むよろず屋」＝PM 構築物）、`docs/constitution.md`（Goal・Rule2/3/4＝地）。由来の不変事実は「YOLO×よろず」。
 - 容疑者（権威に引かない）: `DESIGN.md` §4（印規定）、`src/lib/ogp-image.tsx`（現状の OGP レンダラ・印を描く本体は L342 付近・コメントが「店の印」を騙る箇所は L9-16/31-41/218-220/342）。
-- **外部仕様の一次資料確認（kickoff 手順5・P1b で実施）**: [Define a favicon](https://developers.google.com/search/docs/appearance/favicon-in-search)（favicon が検索結果に出る事実は scope 確定に使う・露出の多寡は判断根拠にしない）。
+- **外部仕様の一次資料確認（kickoff 手順5）**: [Define a favicon](https://developers.google.com/search/docs/appearance/favicon-in-search)（favicon が検索結果に出る事実は scope 確定に使う・露出の多寡は判断根拠にしない）。
 - **期限が来た ADR・Deferred の確認結果（kickoff 手順 2・3）**:
   - `docs/ADR/open/2026-10-13-ADR001-サイト刷新`: 先頭日付 2026-10-13 は今日（08-12）より未来のため開かない。
-  - Deferred の着手条件付き項目はいずれも条件未達（B-576 は本サイクルの E1 決定後がゲート＝P6 で解禁判断／B-629 は 2026-08-14 以降／他は R-1 プルーニング等の未達ゲート）。**Deferred→Queued の移動対象なし**。Queued→Deferred へ戻す項目も無し。
+  - Deferred の着手条件付き項目はいずれも条件未達（B-576 は本サイクルの E1 決定後がゲート＝解禁判断／B-629 は 2026-08-14 以降／他は R-1 プルーニング等の未達ゲート）。**Deferred→Queued の移動対象なし**。Queued→Deferred へ戻す項目も無し。
 
 ## キャリーオーバー
 
