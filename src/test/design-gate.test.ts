@@ -65,11 +65,11 @@
  *
  * ── バイナリ資産（CSS/HTML を持たず機械検査「できない」・視覚レビューで担保）──────────
  *   favicon / apple-touch-icon / OGP 画像の png 等のバイナリ画像は宣言テキストを持たず、この
- *   ゲートでは検査できない。器（紙地・墨・罫）と揃っているかは take-screenshot 等の
+ *   ゲートでは検査できない。店構え（紙地・墨・朱の印）と揃っているかは take-screenshot 等の
  *   視覚レビューで確認する。
- *   `public/favicon.ico`・`public/icon.svg`・`public/apple-touch-icon.png` は識別マーク
- *   （朱の角丸＋白抜き y・cycle-309 立証 E2 で「店の印」でなく認識用の識別標章と位置づけ）。
- *   OGP からは印を撤去（cycle-309 E1）。資産は `scripts/generate-favicons.ts` で SSoT 色（utsuwaHex）から再現生成する。
+ *   （B-576 済み・cycle-306）`public/favicon.ico`・`public/icon.svg`・`public/apple-touch-icon.png`
+ *   はブランド標章 F2「朱の印・白抜き y」（紙地＋朱の角丸印＋白抜き明朝 y）へ刷新。資産は
+ *   `scripts/generate-favicons.ts` で SSoT 色（utsuwaHex）から再現生成する。
  */
 import { describe, test, expect } from "vitest";
 import * as fs from "node:fs";

@@ -131,9 +131,9 @@ describe("QuizResultOpenGraphImage", () => {
     expect(createOgpImageResponseCalls[0].subtitle).toBe("テストクイズ");
   });
 
-  // NOTE(cycle-282): result icon / quiz accentColor は OgpImageConfig 型から削除された
-  // （地は常に紙・OGP は図像を持たない＝cycle-309 E1 で朱の印も撤去）。call-site も渡さなくなった
-  // ため、旧 API を前提にしていた "passes result icon" / "passes quiz accentColor" のアサーションは撤去した。
+  // NOTE(cycle-282): result icon / quiz accentColor は店構え化で OgpImageConfig 型から
+  // 削除された（地は常に紙・図像は店の印のみ）。call-site も渡さなくなったため、旧 API を
+  // 前提にしていた "passes result icon" / "passes quiz accentColor" のアサーションは撤去した。
 
   test("renders fallback for unknown slug", async () => {
     const mod = await getModule();
