@@ -99,7 +99,8 @@ completed_at: 2026-08-12T20:20:13+0900
   - **着手条件**: B-651（新デザインシステムの確定）完了後。
   - **統合**: 偽完了だった B-583・B-576 の実デザイン側の作業（マーク・favicon/OGP）をここに統合。
 
-- **再発防止（本サイクルで恒久化）**: `CLAUDE.md` にツギハギ禁止ルールを追加。理論の記録は [design-system-principles.md](./design-system-principles.md)（コンセプト→デザインシステム→デザインの導出順・整合の必要・ブランドイメージを別文書にしない理由）。ブランドイメージ強制ゲート `.claude/hooks/brand-image-gate.sh` は revert で消えていないか B-651 着手時に要確認。
+- **再発防止（本サイクルで恒久化）**: `CLAUDE.md` にツギハギ禁止ルールを追加。理論の記録は [design-system-principles.md](./design-system-principles.md)（コンセプト→デザインシステム→デザインの導出順・整合の必要・ブランドイメージを別文書にしない理由）。
+- **撤去した有害無益な施策**: ブランドイメージ強制ゲート（Stop フック `.claude/hooks/brand-image-gate.sh`）を削除。実効性が無いうえ「別文書 `brand-image.md` を作れ」と正しい原則に反して次の PM を誤りへ押し戻す罠だった（[incident-7.md](./incident-7.md)）。AP-P02 の再発防止は仕組みでなく B-651 の正しい進め方で担保する。
 
 ## 補足事項
 
