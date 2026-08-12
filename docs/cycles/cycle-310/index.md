@@ -2,7 +2,7 @@
 id: 310
 description: "最優先 P0 の本丸 B-583 の残件 E1（OGP/favicon マークの要否・形）を決着させた（8サイクル目）。初め認識（cross-surface recognition）から keep を導いたが、それは charter の核＝『来訪者にどんなイメージを持ってほしいか（ブランドイメージ）』を仕組みにすり替えた誤り（AP-P02・incident-1.md）。是正: (1) 強制ゲート brand-image-gate.sh を設置、(2) ブランドイメージを constitution+site-concept だけから定義（brand-image.md・独立レビュー3巡 PASS・5面 A 信頼/B 気軽さ/C 手ごたえ/D 正直気取らなさ/E 広さの心地よさ）、(3) そこから E1 を面ごとに飛躍なく導出（e1-decision.md・独立レビューで認識の密輸を段階的に除去）。**決定: マークは両面 keep（根拠=A 手をかけた気配・認識でない）／形は面ごと〔OGP=容器なしの素の朱明朝 y へ change・favicon=塗りタイルのまま〕／店の物語を reframe。** B-576 も解消（favicon 不要・OGP は素の y へ是正）。※本ファイル P1-P7 は認識軸で誤った初版の記録として保全（その E1 結論は無効・正典は banner と上記3ファイル）。"
 started_at: 2026-08-12T10:18:21+0900
-completed_at: null
+completed_at: 2026-08-12T20:20:13+0900
 ---
 
 <!-- index.md には計画・チェックリスト・完了サマリだけを書く。立証の生データ（両版レンダーの比較と決定）は decision.md、レビュー経過は review-log.md に分割してここからリンクする。 -->
@@ -39,34 +39,27 @@ completed_at: null
 
 **出発点**: 現 HEAD（72d6f1f8・pre-309 相当）は OGP レンダラに朱の hanko 印が復活し、コメントも「店の印／店の顔」と来訪者向けの主張を騙る版。favicon マークは E2 で「識別マークとして keep」確定済。本サイクルは白紙で E1 を立証し、決定（keep/remove/reframe）が指示する変更のみを反映する。
 
-## 実施する作業
+## 実施した作業（正典・ブランドイメージから）
 
-- [x] **P1. 接地（clean context・PM 自身・記憶でなく実体で）** → grounding は cycle-309 の一次資料を継承・下記で確認済。
-  - [x] P1a. E1 の判定に使う確定済みの地を一次資料で確認：E2 の結論（`cycle-309/decision.md` E2＝favicon マークは店の印でなく識別マークとして keep・認識価値）／§0.1 の立証基準／現 OGP レンダラの実体（印描画は L342 付近・コメントが「店の印」を騙る箇所 L9-16/31-41/218-220/342）を確認。
-  - [x] P1b. 外部仕様の一次資料再点検（kickoff 手順5）：Google が検索結果に favicon を表示しうる・**「ブランドを視覚的に表現するマークにせよ」**を WebFetch で再確認済（decision.md）。OGP＝シェア unfurl は scope の事実。露出は判断根拠にしない。
-- [x] **P2. 立証セットアップ（母集団分割・3案・実物レンダー）**
-  - [x] P2a. レンダー母集団を分割で確定：**(i) ルート OGP**（`/opengraph-image`・title="yolos.net"・のれん＋title で二度）、**(ii) 代表的な固有 OGP**（`/tools/base64`・title＝道具名・のれん＝yolos.net 一度）。固有 OGP を必ず含めた（cycle-309 の per-route 欠如の是正）。
-  - [x] P2b. 各母集団で **A＝マークあり／B＝マークなし** を第一級の実物としてレンダー（1200×630 実 PNG・実 Next パイプライン・`tmp/cycle-310/ogp-{root,tool}-{A,B}.png`）。レンダーの手作業はサブエージェントに委ねたが**見比べと判断は PM**（Read で 4 枚を実見）。
-- [x] **P3. 立証＝実物比較と判断（本サイクルの核・PM が自分の目で見て決める・decision.md に記録）**
-  - [x] P3a. ルート OGP と固有 OGP の両方で A/B を並べ、**面をまたいだ認識価値**（favicon の赤い y ⇔ OGP の同じマーク）から keep を証明。ワードマーク≠ロゴマークの事実を据えた。**禁止語「冗長」「静かな一貫性」不使用。**
-  - [x] P3b. 結論を E2 と並べ読みして整合を確認（同じ「中立な識別マーク」前提から一貫して keep・AP-WF11）。儀式→結論の推論の各ステップを PM が明示検証（decision.md「立証」§1-6）。**決定＝keep（pixel 不変）＋「店の印」物語を識別マークへ reframe。**
-- [x] **P4. 実装（決定が指示する変更のみ・証明のない変更はしない）**
-  - [x] keep＋reframe を実施：`src/lib/ogp-image.tsx` の「店の印／店の顔／手捺し」物語を「識別マーク（identity mark）」へ是正（コメント＋定数名 `SEAL_*`→`MARK_*` のリネーム。**値は不変で OGP 出力は md5 で byte 同一を再検証＝pixel 不変**）。`DESIGN.md` §4 印/看板＋§1 の識別マーク framing へ・冒頭に premise ノート再追加。`site-concept.md`・`cycle-309/grounding.md §4` の E1 status/supersession を更新。
-  - [x] remove は不採用（立証で keep に決定）。
-  - [x] premise 是正ノートを DESIGN.md 冒頭に再追加（cycle-309 §92 の宿題）。site-concept.md 冒頭の恒久ノートは保持済。
-- [x] **P5. 検証**：全5ゲート緑（typecheck exit 0〔.next dev 残骸を除去後〕/ lint exit 0 / format:check 準拠 / test 323files・5554件 pass / build 成功・4142ページ生成）。**pixel 不変＝新規視覚回帰なし**を客観確認——SEAL→MARK リネーム後に OGP を再レンダーし、レンダー前の PNG と **md5 一致（root/tool 両方）**を確認（値不変ゆえ出力は byte 同一）。
-- [x] **P6. B-576 の扱い判断**：E1/E2 の決定＝「マークは識別標章として現行のまま keep（pixel 不変）・物語だけ reframe」＝作り直すべき新 identity は生じない → **B-576 は不要（Done）**。露出でなく決定内容に依拠（decision.md B-576 節）。
-- [x] **P7. レビューと完了処理**：独立 reviewer 計5名（新規起動・「立証の論理の妥当性」を必須観点に）で3巡点検。第1巡（論理／実装の2名）→ Major2件（事実誤り「3面」・grounding §4 未整合）＋Minor 是正。第2巡（新規2名・白紙）→ 全 Minor（reframe 未完 SEAL→MARK・証拠精度・OGP 寸法再導出）是正。第3巡（新規1名・総合）→ **承認「立証・実装・文書ともに妥当で収束」**（非ブロッキング観察1件も是正）。**収束**（[review-log.md](./review-log.md)）。ブログ判断＝**書かない**（内部のブランディング立証・来訪者に変化が見えない〔pixel 不変〕・cycle-282/283/306/308/309 と同種で読者の学び/楽しみにならない・CLAUDE.md）。ワークフロー AP 点検・cycle-completion は完了処理で実施。
+> 下記は**実際に決着した作業**（ブランドイメージ→面ごと導出→OGP change）。当初の「認識軸」の計画・チェックリスト（P1-P7）は誤りだったため正本から外し、失敗の記録として [decision.md](./decision.md)（認識軸の版）と [incident-1.md](./incident-1.md) に保全した（その「pixel 不変 keep」等の結論は**無効**）。「## 作業計画」以下も当初＝認識軸の計画で、失敗記録として残置（正典は本節・brand-image.md・e1-decision.md）。
 
-## 作業計画
+- [x] **G. 強制ゲートの設置**：`.claude/hooks/brand-image-gate.sh` を Stop フックに登録・動作検証（completed_at 設定時に brand-image PASS 無しならブロック）。「charter の問い＝ブランドイメージを仕組みにすり替える」失敗を構造で封じる。
+- [x] **B. ブランドイメージの定義**（[brand-image.md](./brand-image.md)）：来訪者に持ってほしい印象を **constitution+site-concept だけ**から定義（既存マーク/DESIGN/§0.1 は容疑者＝入力にしない）。5面 A 信頼・安心/B 気軽さ/C 手ごたえ・充足感/D 正直・気取らなさ/E 広さの心地よさ。独立レビュー3巡（二値軸「印象か仕組みか」）で E 面 navigation 混入・C 面 成果物混入を是正し **PASS**。
+- [x] **E1. マーク要否・形の導出**（[e1-decision.md](./e1-decision.md)）：A〜E から**面ごとに**導出。両母集団（ルート/固有 OGP）でマークあり/なし＋代替形（素の朱 y）を実物レンダーし PM が実見。独立レビュー複数巡で認識の密輸（slop 誇張・established 残渣・cross-surface consistency）を段階的に除去して収束。**決定＝マーク両面 keep（根拠＝A 手をかけた気配・認識でない）／形は面ごと〔OGP＝容器なしの素の朱明朝 y へ change・favicon＝塗りタイルのまま〕／店の物語を A/D で reframe。**
+- [x] **実装**：`src/lib/ogp-image.tsx` の OGP マークを素の朱 y へ変更（塗り/角丸を外し y 色を ACCENT・未使用 `MARK_CORNER_RADIUS` 除去・認識語を A/D へ是正）。出力は承認済み bareY レンダーと **md5 一致**で確認。`public/icon.svg`（favicon）は不変。契約テストを新設計へ更新（退行検知維持）。DESIGN §4/premise・site-concept・grounding §4・colors OGP コメント・decision.md を面ごとの形＋A/D 根拠へ整合。
+- [x] **検証**：全5ゲート緑（typecheck/lint/format=0・test 5554 pass EXIT:0・build EXIT:0/4142ページ）。実装レビュー**承認**（コード＝決定と一致・出荷文書に認識軸/同一標章の stale なし）。
+- [x] **B-576**：favicon 不要（タイル keep）・OGP は素の y へ是正して解消（Done）。
+- [x] **完了処理**：ブログ＝書かない（内部のブランディング/設計プロセス・OGP の微細変更は読者の学び/楽しみにならない・cycle-282/283/306/308/309 と同種）。ワークフロー AP 点検・cycle-completion。
+
+---
+
+## ［失敗記録・認識軸の当初計画］作業計画
+
+> ⚠ 以下は**当初＝認識軸の誤った計画**の保全（正典ではない）。この計画の「面をまたいだ認識価値から keep を証明」という測度が charter の問い（ブランドイメージ）とズレていたのが失敗の芯（[incident-1.md](./incident-1.md)）。
 
 ### 目的
 
 8サイクル閉じられなかった本丸 B-583 の**最後の残件 E1**（OGP 識別マークの要否）を、cycle-309 の失敗（立証の儀式から結論への推論が無効）を構造的な歯止めで塞いだうえで再立証し、片付ける。成果物は**証明つきの文書化された判断**（decision.md）と、それが指示する変更（あれば）。
-
-### 作業内容
-
-上のチェックリストの通り。核（P3）は、**PM 自身がルート OGP と固有 OGP の両母集団で A（マークあり）/B（マークなし）を実物で見比べ、面をまたいだ認識価値から証明し、E2 の結論と整合させる**こと。cycle-309 との違いは「レンダーの有無」ではなく「レンダーから結論への推論の妥当性」——ここを PM が明示的に検証し、レビューにも必須観点として問わせる。
 
 ### 検討した他の選択肢と判断理由
 
@@ -99,9 +92,9 @@ completed_at: null
 
 ## 補足事項
 
-- **ADR 判断（暫定・P3 完了時に再確認）**: 本サイクルは来訪前の顔の識別マークを来訪者価値から問い直す是正であり、コンセプト・アーキテクチャの転換ではない見込み。判定が店メタファーの全面解体のような大方針転換に至る場合は ADR 起票の要否を P3 完了時に再判断する。ADR001 は先頭日付が未来で本サイクルは観測対象外。
+- **ADR 判断（確定）**: ADR 起票なし。E1 のマーク変更は測定しないブランディングの小さな refinement で、コンセプト/アーキテクチャの転換でも観測すべき賭けでもない（ブランドイメージはコンセプト/constitution から導き測らない）。ADR001 は先頭日付 2026-10-13 が未来で本サイクルは観測対象外・覆した ADR なし。
 - MCP ツール（Playwright 等）を使うサブエージェントは foreground で実行する（CLAUDE.md）。
-- **本サイクル最大のリスクと歯止め**: cycle-309 の「レンダーの儀式は行ったが推論が無効」の再演。歯止め＝上表の #1〜#7（禁止語不使用・母集団分割・E1/E2 整合・keep 案第一級・撤去も維持も立証責任・レビュー観点に論理妥当性を必須）。加えて context 肥大による反射的誤りを避けるため clean context で着手し、検証可能な事実（配信先等）を推測で断定しない（AP-WF06）。
+- **本サイクル最大のリスクと実際の歯止め**: 「charter の問い（ブランドイメージ）を仕組み（認識・識別・一貫・易探索・cross-surface coherence）にすり替える」失敗（8サイクル反復・AP-P02）。実際に効いた歯止め＝(1) 強制ゲート `brand-image-gate.sh`（一段目＝イメージ定義を構造で強制）、(2) 各レビューに「認識/仕組みの密輸」を名指しで狩らせた観点設計。※上の「失敗記録・認識軸の当初計画」の歯止め表（#1-#7）は当初の想定で、認識軸の測度ズレ自体は防げなかった（incident-1.md）。
 
 ## サイクル終了時のチェックリスト
 
@@ -109,6 +102,6 @@ completed_at: null
 - [x] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。（B-583 を Done へ移動）
 - [x] すべての変更がレビューされ、残存する指摘事項が無くなっている。（brand-image 3巡 PASS・e1-decision 複数巡で認識密輸を除去し収束・実装レビュー承認。すべて新規 reviewer をゼロ起動）
 - [x] `npm run typecheck && npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する（exit 0）。（最終状態で typecheck/lint/format=0・test 5554 pass EXIT:0・build EXIT:0/4142ページ。OGP マーク変更は契約テストを新設計へ更新済み）
-- [x] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。（※description は初版=認識軸の記録。実際の決着は banner・brand-image.md・e1-decision.md が正典）
-- [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。（cycle-completion で設定）
+- [x] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。（完了準備で最終決着＝ブランドイメージから面ごと導出・OGP を素の朱 y へ change へ更新済み）
+- [x] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
 - [x] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
