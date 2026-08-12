@@ -2,7 +2,7 @@
 id: 310
 description: "最優先 P0 の本丸 B-583 の残件 E1（OGP 識別マークの要否）を、cycle-309 で立証が論理的に無効と露呈し revert・次サイクルへ委譲された件として **clean context で再立証**する。cycle-309 の失敗の芯は『両版レンダーの儀式は行ったが、そこから結論への推論が無効』だった（AP-P02／E1-E2 非対称／per-route 立証欠如／禁止語『冗長・静かな一貫性』／反射的撤去）。本サイクルは (1) E2(favicon＝識別マークとして keep) と一貫した論理で、(2) 母集団をルート OGP と代表的固有 OGP に分割して両方をレンダーし、(3)『favicon と一貫した識別マークを OGP にも残す』案を第一級に載せ、(4) 禁止語を使わず、面をまたいだ認識価値から keep/remove/reframe を証明する。レビュー観点に『立証の論理の妥当性』を必須で含める。"
 started_at: 2026-08-12T10:18:21+0900
-completed_at: null
+completed_at: 2026-08-12T13:13:54+0900
 ---
 
 <!-- index.md には計画・チェックリスト・完了サマリだけを書く。立証の生データ（両版レンダーの比較と決定）は decision.md、レビュー経過は review-log.md に分割してここからリンクする。 -->
@@ -103,5 +103,5 @@ completed_at: null
 - [x] すべての変更がレビューされ、残存する指摘事項が無くなっている。（新規 reviewer 5名・3巡で収束・第3巡承認）
 - [x] `npm run typecheck && npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する（exit 0）。（最終状態で typecheck/lint/format=0・test EXIT:0・build EXIT:0/4142ページ。SEAL→MARK リネーム後も OGP 出力 md5 一致＝pixel 不変）
 - [x] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
-- [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。（cycle-completion で設定）
+- [x] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
 - [x] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
