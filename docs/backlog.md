@@ -2,12 +2,12 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-583 | 印/店メタファー自体が来訪者に価値を持つか問い直す(残=E1再立証) | P0 | 310 | cycle-310でE1(OGP識別マーク)を再立証。E2(favicon)と一貫した論理で・固有OGPを母集団分割で含め・「一貫したマークをOGPにも残す」案を第一級に。詳細cycle-309/incident-1.md §申し送り |
 
 ## Queued (すぐに着手できる)
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-583 | 印/店メタファー自体が来訪者に価値を持つか問い直す | P0 | - | **cycle-309でE1(OGP識別マーク)立証が無効=部分未達・revert済**。残=E1再立証(E2と一貫・固有OGP含む・clean context)。E3は立証つき完了。詳細cycle-309/incident-1.md |
 | B-649 | 店語彙のaria-label(「品書き」等・SR可視)を§0.1レンズで平明化評価 | P3 | - | cycle-309でE3(店主/店の品書き)を是正。残=SR可視の「○○の品書き」ラベル複数面。§0.1(3)の「signifierの自明伝達を仮定しない」でSR明瞭さを評価。詳細cycle-309/decision.md 射程外節 |
 | B-650 | ルートOGP subtitle「実験的Webサイト」を§0.1(4)で来訪者価値評価 | P4 | - | cycle-309で気づき。「AIエージェントによる実験的Webサイト」は開示だが「実験」descriptor止まりで何が得られるか伝えない。売り込みでなく価値を伝える表現に改善するか評価。詳細cycle-309/decision.md |
 | B-606 | 全10 personality診断の結果先行の点検・再設計(Rule4) | P1 | - | **cycle-303でword-sense完了**。残9=music/yoji/animal/character-fortune/娯楽くじ群。タイブレーク中心は壊れた枠(cycle-294)・調律重み禁止・真の同点は同格開示。詳細cycle-303/ |
