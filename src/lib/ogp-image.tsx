@@ -32,8 +32,10 @@ const SHOP_NAME = "yolos.net";
 
 /**
  * 識別マーク（サイトの identity＝頭字 y を朱の角丸標章で表したもの）。店の朱肉印でも試作でもない
- * 中立な identity mark で、favicon⇔OGP⇔サイトヘッダで同一の標章として反復露出し、面をまたいだ
- * 認識を与える（cycle-310/decision.md E1・cycle-309/decision.md E2 で立証）。
+ * 中立な identity mark で、favicon（検索結果）⇔OGP（シェア）で同一の標章として反復露出し、面を
+ * またいだ認識を与える（cycle-310/decision.md E1・cycle-309/decision.md E2 で立証）。
+ * ※サイトヘッダのロゴは "yolos.net" のテキスト（ワードマーク・朱はドットのみ）で別チャネル——
+ * この角丸標章の朱 y は favicon と OGP の2面が持つ（cycle-310 レビュー是正）。
  * cycle-282/283 の自己貶め（"試"＝試作/見本＝来訪前に信頼を削る一字）を撤去し、cycle-306 で
  * 「朱の塗りの角丸標章＋紙色で白抜きした頭字 y（明朝）」に確定。favicon(F2) と同一標章。
  * 形状（頭字 y・角丸・朱）は favicon と一致させることが面をまたいだ認識の源＝変更しない。
