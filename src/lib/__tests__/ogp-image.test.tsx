@@ -126,7 +126,7 @@ describe("createOgpImageResponse — 店構え（看板）契約", () => {
     expect(jsx.props.style.backgroundColor).toBe(PAPER);
   });
 
-  test("朱（ACCENT）は identity 印（hanko）の塗りに限定し、地ベタにはしない", async () => {
+  test("朱（ACCENT）は identity マーク（素の朱 y）にだけ現れ、地ベタにも塗りタイルにもしない", async () => {
     const { createOgpImageResponse } = await getModule();
 
     await createOgpImageResponse({ title: "Test" });
@@ -138,13 +138,17 @@ describe("createOgpImageResponse — 店構え（看板）契約", () => {
     ).props.style.backgroundColor;
     expect(rootBg).toBe(PAPER);
     expect(rootBg).not.toBe(ACCENT);
-    // 朱は identity 印（角丸 hanko）の塗り背景としてだけ現れる。
-    // ミューテーション観点: 印の塗りを消す/別色にすると toContain(ACCENT) が落ちる。
+    // cycle-310 E1: OGP マークは容器なしの素の朱 y へ変更（塗りタイルを撤去）。よって朱は
+    // 塗りの背景（地ベタも識別マークの塗りタイルも）として現れない。
+    // ミューテーション観点: マークを塗りタイルに戻すと backgroundColor に ACCENT が現れ落ちる。
     const bgColors = collectStyleValues(element, "backgroundColor");
-    expect(bgColors).toContain(ACCENT);
+    expect(bgColors).not.toContain(ACCENT);
+    // 朱は識別マークの頭字 y の文字色としてだけ現れる。
+    const textColors = collectStyleValues(element, "color");
+    expect(textColors).toContain(ACCENT);
   });
 
-  test("identity 印: 朱塗りの角丸 hanko に紙色で白抜きした頭字 y を捺す", async () => {
+  test("identity マーク: 容器なしの素の朱（ACCENT）の明朝 y（塗りタイルは持たない）", async () => {
     const { createOgpImageResponse } = await getModule();
 
     await createOgpImageResponse({ title: "Test" });
@@ -152,19 +156,20 @@ describe("createOgpImageResponse — 店構え（看板）契約", () => {
     const { element } = imageResponseCalls[0];
     const texts = collectText(element);
     expect(texts).toContain("yolos.net"); // のれん帯の店号
-    // 印は自己貶めの一字「試」ではなく、サイトの頭字 y（favicon F2 と同一標章・cycle-306 で確定）。
+    // マークは自己貶めの一字「試」ではなく、サイトの頭字 y。
     expect(texts).toContain("y");
     expect(texts).not.toContain("試");
 
-    // 角丸 hanko であること（§4「角丸」の 0px 基調に対する「印」の例外・borderRadius 22）。
-    // ミューテーション観点: 角丸を消す/変えると toContain(22) が落ちる。
-    const radii = collectStyleValues(element, "borderRadius");
-    expect(radii).toContain(22);
-
-    // 白抜きの頭字 y は紙色（PAPER）。朱に対し紙色で抜く（コントラスト AA）。
-    // ミューテーション観点: 白抜き色を朱（ACCENT）等にすると PAPER が color から消え落ちる。
+    // 頭字 y の文字色は朱（ACCENT）。cycle-310 E1: 紙色白抜き＋塗りタイルから素の朱 y へ変更
+    //（大きい OGP 面で紙墨明朝の作りと一体・app バッジの気取りを外す）。
+    // ミューテーション観点: y の色を PAPER 等に戻すと ACCENT が color から消え落ちる。
     const textColors = collectStyleValues(element, "color");
-    expect(textColors).toContain(PAPER);
+    expect(textColors).toContain(ACCENT);
+
+    // 塗りタイル（旧デザインの角丸 hanko・borderRadius 22）は持たない。
+    // ミューテーション観点: 塗りタイルを復活させると borderRadius 22 が現れ落ちる。
+    const radii = collectStyleValues(element, "borderRadius");
+    expect(radii).not.toContain(22);
   });
 
   test("絵文字（§8-6 禁止）を看板に持ち込まない", async () => {
