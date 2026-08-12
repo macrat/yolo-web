@@ -45,10 +45,10 @@ completed_at: null
   - [x] P3a. ルート OGP と固有 OGP の両方で A/B を並べ、**面をまたいだ認識価値**（favicon の赤い y ⇔ OGP の同じマーク）から keep を証明。ワードマーク≠ロゴマークの事実を据えた。**禁止語「冗長」「静かな一貫性」不使用。**
   - [x] P3b. 結論を E2 と並べ読みして整合を確認（同じ「中立な識別マーク」前提から一貫して keep・AP-WF11）。儀式→結論の推論の各ステップを PM が明示検証（decision.md「立証」§1-6）。**決定＝keep（pixel 不変）＋「店の印」物語を識別マークへ reframe。**
 - [x] **P4. 実装（決定が指示する変更のみ・証明のない変更はしない）**
-  - [x] keep＋reframe を実施：`src/lib/ogp-image.tsx` のコメントの「店の印／店の顔」物語を「識別マーク（identity mark）」へ是正（**pixel/コード不変＝コメントのみ**）。`DESIGN.md` §4 印/看板を識別マーク framing へ・冒頭に premise ノート再追加。`site-concept.md` の E1 status を「keep で決着」へ更新。
+  - [x] keep＋reframe を実施：`src/lib/ogp-image.tsx` の「店の印／店の顔／手捺し」物語を「識別マーク（identity mark）」へ是正（コメント＋定数名 `SEAL_*`→`MARK_*` のリネーム。**値は不変で OGP 出力は md5 で byte 同一を再検証＝pixel 不変**）。`DESIGN.md` §4 印/看板＋§1 の識別マーク framing へ・冒頭に premise ノート再追加。`site-concept.md`・`cycle-309/grounding.md §4` の E1 status/supersession を更新。
   - [x] remove は不採用（立証で keep に決定）。
   - [x] premise 是正ノートを DESIGN.md 冒頭に再追加（cycle-309 §92 の宿題）。site-concept.md 冒頭の恒久ノートは保持済。
-- [x] **P5. 検証**：全5ゲート緑（typecheck exit 0〔.next dev 残骸を除去後〕/ lint exit 0 / format:check 準拠 / test 323files・5554件 pass / build 成功・4142ページ生成）。**pixel 不変（diff はコメントのみ・OGP 出力は byte 同一）＝新規視覚回帰なし**を客観確認（git diff でコード無変更を確認）。
+- [x] **P5. 検証**：全5ゲート緑（typecheck exit 0〔.next dev 残骸を除去後〕/ lint exit 0 / format:check 準拠 / test 323files・5554件 pass / build 成功・4142ページ生成）。**pixel 不変＝新規視覚回帰なし**を客観確認——SEAL→MARK リネーム後に OGP を再レンダーし、レンダー前の PNG と **md5 一致（root/tool 両方）**を確認（値不変ゆえ出力は byte 同一）。
 - [x] **P6. B-576 の扱い判断**：E1/E2 の決定＝「マークは識別標章として現行のまま keep（pixel 不変）・物語だけ reframe」＝作り直すべき新 identity は生じない → **B-576 は不要（Done）**。露出でなく決定内容に依拠（decision.md B-576 節）。
 - [ ] **P7. レビューと完了処理**：独立 reviewer で点検（**「立証の論理の妥当性」を必須観点に**：測度と問いの一致・E1/E2 整合・母集団分割・禁止語不使用・3案比較）。指摘を是正し収束（review-log.md）。ブログ判断・ワークフロー AP 点検・cycle-completion を完了処理で実施。
 

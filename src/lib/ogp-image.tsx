@@ -42,14 +42,14 @@ const SHOP_NAME = "yolos.net";
  */
 
 /** 識別マークに白抜きするサイトの頭字（identity＝yolos の "y"）。favicon(F2) と同一標章。 */
-const SEAL_INITIAL = "y";
-/** 識別マークの回転（§4「±8° 以内」）。手捺しのわずかな気配。 */
-const SEAL_ROTATE_DEG = -6;
-/** 角丸標章の角丸半径（§4「角丸」の 0px 基調に対する識別マークの例外・§4「印」）。 */
-const SEAL_CORNER_RADIUS = 22;
+const MARK_INITIAL = "y";
+/** 識別マークのわずかな傾き（§4「±8° 以内」）。機械的な硬さを避ける微小な回転。 */
+const MARK_ROTATE_DEG = -6;
+/** 角丸標章の角丸半径（§4「角丸」の 0px 基調に対する識別マークの例外・§4）。 */
+const MARK_CORNER_RADIUS = 22;
 
 /**
- * Noto Serif JP（明朝・品名と印の顔・DESIGN §3）。weight 600 の見出し用。
+ * Noto Serif JP（明朝・品名と識別マークの顔・DESIGN §3）。weight 600 の見出し用。
  * 札（fuda-image）と同一経路。fuda-image はこの getter を import して一本化する（単一の真実）。
  */
 const NOTO_SERIF_JP_CSS_URL =
@@ -361,8 +361,8 @@ export async function createOgpImageResponse(
           alignItems: "center",
           justifyContent: "center",
           backgroundColor: ACCENT,
-          borderRadius: SEAL_CORNER_RADIUS,
-          transform: `rotate(${SEAL_ROTATE_DEG}deg)`,
+          borderRadius: MARK_CORNER_RADIUS,
+          transform: `rotate(${MARK_ROTATE_DEG}deg)`,
         }}
       >
         <div
@@ -379,7 +379,7 @@ export async function createOgpImageResponse(
             paddingTop: 5,
           }}
         >
-          {SEAL_INITIAL}
+          {MARK_INITIAL}
         </div>
       </div>
     </div>,
