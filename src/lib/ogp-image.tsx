@@ -2,18 +2,21 @@ import { ImageResponse } from "next/og";
 import { PAPER, INK, INK_2, RULE, RULE_STRONG, ACCENT } from "@/lib/utsuwaHex";
 
 /**
- * 共通OGP生成器の設定（「店構え（看板）」版・cycle-282）。
+ * 共通OGP生成器の設定（共有カード＝シェア unfurl の1枚・cycle-282 で全面ベタ塗り版から刷新）。
  *
  * 旧版（全面ベタ塗り＋絵文字アイコン＋ゴシック太字・既定色 青#2563eb）を廃し、札レンダラ
  * {@link import("./fuda-image").renderFudaImage} と同じ視覚言語で組む——紙地・墨・一本罫・のれん帯・
- * 明朝（Noto Serif JP）・朱の印。看板は札と器を共有する**共有面（看板・DESIGN §4）**であり、
- * 和色の記号面は持たない（地は常に紙・文字は墨）が、店の印は持つ（単独で共有される1枚として
- * 出所が読めるため・§4 の印規定「器＝ページ UI には捺さない」とは別カテゴリ）。和色はいっさい使わない
- * （DESIGN §2/§4「和色は結果の包みに限る・器へ漏らさない」）。
+ * 明朝（Noto Serif JP）・朱の識別マーク。和色の記号面は持たない（地は常に紙・文字は墨）が、
+ * 朱の識別マーク（頭字 y）は持つ——単独で共有される1枚で出所（yolos.net）が一目で読め、
+ * favicon⇔OGP で同一の標章として面をまたいだ認識を与えるため（cycle-310/decision.md E1 で立証）。
+ * 和色はいっさい使わない（DESIGN §2/§4「和色は結果の包みに限る・器へ漏らさない」）。
+ *
+ * この標章は「店の朱肉印」ではなく中立な識別マーク（identity mark）——この寸法では来訪者に
+ * 「店の印」は知覚されない（cycle-309/decision.md E2）。店を体現させる役目は負わせない。
  *
  * 廃止した引数（DESIGN §8 違反のため型から**削除**）:
- * - `icon`（絵文字）→ §8-6 違反。看板の顔は明朝の品名。図像は店の印 1 つだけ。
- * - `accentColor`（任意色ベタ背景）→ §2 違反。地は常に紙・文字は常に墨。朱は印専用。
+ * - `icon`（絵文字）→ §8-6 違反。カードの顔は明朝の品名。図像は識別マーク 1 つだけ。
+ * - `accentColor`（任意色ベタ背景）→ §2 違反。地は常に紙・文字は常に墨。朱は識別マーク専用。
  */
 export interface OgpImageConfig {
   /** 品名/ページ名（看板の顔・明朝で大きく組む）。 */
@@ -24,21 +27,23 @@ export interface OgpImageConfig {
 
 const OGP_SIZE = { width: 1200, height: 630 };
 
-/** 店号（看板単体で出所が読めるように・DESIGN §4「のれん」）。 */
+/** 店号（カード単体で出所 yolos.net が読めるように・DESIGN §4「のれん」）。 */
 const SHOP_NAME = "yolos.net";
 
 /**
- * 印（§4「印」・chop）はサイトの identity（頭字 y）を朱の hanko で捺したもの——
- * 店主張でも試作でもない。cycle-282/283 の自己貶め（"試"＝試作/見本＝来訪前に信頼を削る一字）を
- * 撤去し、cycle-306 で「朱の塗りの角丸印＋紙色で白抜きした頭字 y（明朝）」に確定した。
- * favicon(F2) と同一標章。詳細 docs/cycles/cycle-306/decision.md（決定1・決定4）。
+ * 識別マーク（サイトの identity＝頭字 y を朱の角丸標章で表したもの）。店の朱肉印でも試作でもない
+ * 中立な identity mark で、favicon⇔OGP⇔サイトヘッダで同一の標章として反復露出し、面をまたいだ
+ * 認識を与える（cycle-310/decision.md E1・cycle-309/decision.md E2 で立証）。
+ * cycle-282/283 の自己貶め（"試"＝試作/見本＝来訪前に信頼を削る一字）を撤去し、cycle-306 で
+ * 「朱の塗りの角丸標章＋紙色で白抜きした頭字 y（明朝）」に確定。favicon(F2) と同一標章。
+ * 形状（頭字 y・角丸・朱）は favicon と一致させることが面をまたいだ認識の源＝変更しない。
  */
 
-/** 印に白抜きするサイトの頭字（identity＝yolos の "y"）。favicon(F2) と同一標章。 */
+/** 識別マークに白抜きするサイトの頭字（identity＝yolos の "y"）。favicon(F2) と同一標章。 */
 const SEAL_INITIAL = "y";
-/** 印の回転（§4「±8° 以内」）。手捺しのわずかな気配。 */
+/** 識別マークの回転（§4「±8° 以内」）。手捺しのわずかな気配。 */
 const SEAL_ROTATE_DEG = -6;
-/** 角丸 hanko の角丸半径（§4「角丸」の 0px 基調に対する「印」の例外・§4「印」）。 */
+/** 角丸標章の角丸半径（§4「角丸」の 0px 基調に対する識別マークの例外・§4「印」）。 */
 const SEAL_CORNER_RADIUS = 22;
 
 /**
@@ -213,11 +218,11 @@ function titleFontSize(graphemeCount: number): number {
 }
 
 /**
- * 看板 OGP を {@link ImageResponse} にレンダリングする共通レンダラ。
+ * 共有カード（OGP）を {@link ImageResponse} にレンダリングする共通レンダラ。
  *
- * 紙地・墨・罫・のれん帯・明朝の品名・朱の印で組む（札と同じ店の顔）。器面なので和色は使わず、
+ * 紙地・墨・罫・のれん帯・明朝の品名・朱の識別マークで組む（札と同じ視覚言語）。和色は使わず、
  * 主役は品名（title）を明朝で大きく立てた墨字。階層は墨の濃淡（INK/INK_2）と罫で付け、朱
- * （ACCENT）は右上の印だけに使う。
+ * （ACCENT）は右上の識別マークだけに使う。
  *
  * 明朝（Noto Serif JP 600）とゴシック（Noto Sans JP 400）を Google Fonts CDN から並行取得し、
  * 取得失敗時はゴシック→sans-serif へ素直にフォールバックする（描画は成立・書体だけ譲る）。
@@ -339,9 +344,10 @@ export async function createOgpImageResponse(
         ) : null}
       </div>
 
-      {/* 印: 器面に一つだけ・右上に捺す。サイトの identity 標章（頭字 y）を朱の hanko で。
+      {/* 識別マーク: カード面に一つだけ・右上に据える。サイトの identity 標章（頭字 y）。
             朱（ACCENT）の塗りの角丸正方形に、紙色（PAPER）で白抜きした明朝の頭字 y。
-            回転 ±8° 内・幅 100px（§4）・favicon(F2) と同一標章（cycle-306/decision.md 決定4）。 */}
+            回転 ±8° 内・幅 100px（§4）・favicon(F2) と同一標章で面をまたいだ認識を与える
+            （cycle-310/decision.md E1・cycle-309/decision.md E2）。 */}
       <div
         style={{
           position: "absolute",

@@ -35,21 +35,21 @@ completed_at: null
 
 ## 実施する作業
 
-- [ ] **P1. 接地（clean context・PM 自身・記憶でなく実体で）**
-  - [ ] P1a. E1 の判定に使う確定済みの地を一次資料で確認：E2 の結論（`cycle-309/decision.md` E2＝favicon マークは店の印でなく識別マークとして keep・認識価値）／§0.1 の立証基準／現 OGP レンダラの実体（印を描く箇所・コメントが「店の印」を騙る箇所）。
-  - [ ] P1b. 外部仕様の一次資料再点検（kickoff 手順5）：Google が検索結果に favicon を表示しうること（[Define a favicon](https://developers.google.com/search/docs/appearance/favicon-in-search)）を WebFetch で再確認。OGP がシェア unfurl の1枚として出ることは scope の事実。露出の多寡は判断根拠にしない。
-- [ ] **P2. 立証セットアップ（母集団分割・3案・実物レンダー）**
-  - [ ] P2a. レンダー母集団を分割で確定：**(i) ルート OGP**（title＝サイト名系・のれん＋title で店号が二度）、**(ii) 代表的な固有 OGP**（例：ゲーム/辞典/道具の1枚・title＝ページ名・のれん＝yolos.net が一度だけ）。固有 OGP を必ず含める（cycle-309 の per-route 欠如の是正）。
-  - [ ] P2b. 各母集団で **3案**を第一級の実物としてレンダー（1200×630 実 PNG・実 Next パイプライン）：**A＝マークあり（現行・favicon と同一標章の朱 y）／B＝マークなし（印を外す）**。favicon と一貫した識別マークを OGP に残す案（A）を撤去案（B）と対等に並べる。レンダーの手作業はサブエージェントに委ねてよいが、**見比べと判断は PM が下す**（委譲しない＝304/305/308 の致命傷）。
-- [ ] **P3. 立証＝実物比較と判断（本サイクルの核・PM が自分の目で見て決める・decision.md に記録）**
-  - [ ] P3a. ルート OGP と固有 OGP の両方で A/B を並べ、**面をまたいだ認識価値**（検索結果の favicon の赤い y ⇔ シェア OGP の同じマーク）から keep/remove/reframe を証明。ワードマークとロゴは別チャネルの事実を踏まえる。**禁止語「冗長」「静かな一貫性」を使わない。**
-  - [ ] P3b. 結論を E2 と並べ読みして整合を確認（同じ「中立な識別マーク」前提から一貫した結論か・AP-WF11 の自己通読）。儀式（レンダー）から結論への推論の各ステップが妥当かを PM が明示的に検証（AP-P02＝測度と問いの一致）。
-- [ ] **P4. 実装（決定が指示する変更のみ・証明のない変更はしない）**
-  - [ ] keep（＋reframe）なら：OGP レンダラ（`src/lib/ogp-image.tsx`）のコメントが騙る「店の印／店の顔／店の識別」の物語を、E2 と一貫した「識別マーク（identity mark）」表現へ是正（画像 pixel は変えない）。DESIGN.md §4 の「印」規定も E2/E1 の identity-mark framing に整合。
-  - [ ] remove なら：共有レンダラから印を外す変更のみ。
-  - [ ] premise 是正ノート（由来=YOLO×よろず 不変／よろず屋=PM 構築物／signifier の自明伝達を仮定しない／実験を売りにしない）を DESIGN.md 冒頭に再追加（cycle-309 の E1 revert で失われた分・キャリーオーバー §87 の宿題）。
-- [ ] **P5. 検証**：全5ゲート緑（typecheck / lint / format:check / test / build）。OGP 画像に pixel 変更があれば take-screenshot で変更前後を実見（新規視覚回帰なし）。コメント/文言のみの reframe なら視覚回帰なしを明記。
-- [ ] **P6. B-576 の扱い判断**：E1 の決定に照らし、favicon/OGP を「新デザインに作り直す」必要（新 identity）が生じるか否かを決定内容（露出でなく）から判断し、Done or 着手条件を確定。
+- [x] **P1. 接地（clean context・PM 自身・記憶でなく実体で）** → grounding は cycle-309 の一次資料を継承・下記で確認済。
+  - [x] P1a. E1 の判定に使う確定済みの地を一次資料で確認：E2 の結論（`cycle-309/decision.md` E2＝favicon マークは店の印でなく識別マークとして keep・認識価値）／§0.1 の立証基準／現 OGP レンダラの実体（印描画は L342 付近・コメントが「店の印」を騙る箇所 L9-16/31-41/218-220/342）を確認。
+  - [x] P1b. 外部仕様の一次資料再点検（kickoff 手順5）：Google が検索結果に favicon を表示しうる・**「ブランドを視覚的に表現するマークにせよ」**を WebFetch で再確認済（decision.md）。OGP＝シェア unfurl は scope の事実。露出は判断根拠にしない。
+- [x] **P2. 立証セットアップ（母集団分割・3案・実物レンダー）**
+  - [x] P2a. レンダー母集団を分割で確定：**(i) ルート OGP**（`/opengraph-image`・title="yolos.net"・のれん＋title で二度）、**(ii) 代表的な固有 OGP**（`/tools/base64`・title＝道具名・のれん＝yolos.net 一度）。固有 OGP を必ず含めた（cycle-309 の per-route 欠如の是正）。
+  - [x] P2b. 各母集団で **A＝マークあり／B＝マークなし** を第一級の実物としてレンダー（1200×630 実 PNG・実 Next パイプライン・`tmp/cycle-310/ogp-{root,tool}-{A,B}.png`）。レンダーの手作業はサブエージェントに委ねたが**見比べと判断は PM**（Read で 4 枚を実見）。
+- [x] **P3. 立証＝実物比較と判断（本サイクルの核・PM が自分の目で見て決める・decision.md に記録）**
+  - [x] P3a. ルート OGP と固有 OGP の両方で A/B を並べ、**面をまたいだ認識価値**（favicon の赤い y ⇔ OGP の同じマーク）から keep を証明。ワードマーク≠ロゴマークの事実を据えた。**禁止語「冗長」「静かな一貫性」不使用。**
+  - [x] P3b. 結論を E2 と並べ読みして整合を確認（同じ「中立な識別マーク」前提から一貫して keep・AP-WF11）。儀式→結論の推論の各ステップを PM が明示検証（decision.md「立証」§1-6）。**決定＝keep（pixel 不変）＋「店の印」物語を識別マークへ reframe。**
+- [x] **P4. 実装（決定が指示する変更のみ・証明のない変更はしない）**
+  - [x] keep＋reframe を実施：`src/lib/ogp-image.tsx` のコメントの「店の印／店の顔」物語を「識別マーク（identity mark）」へ是正（**pixel/コード不変＝コメントのみ**）。`DESIGN.md` §4 印/看板を識別マーク framing へ・冒頭に premise ノート再追加。`site-concept.md` の E1 status を「keep で決着」へ更新。
+  - [x] remove は不採用（立証で keep に決定）。
+  - [x] premise 是正ノートを DESIGN.md 冒頭に再追加（cycle-309 §92 の宿題）。site-concept.md 冒頭の恒久ノートは保持済。
+- [x] **P5. 検証**：全5ゲート緑（typecheck exit 0〔.next dev 残骸を除去後〕/ lint exit 0 / format:check 準拠 / test 323files・5554件 pass / build 成功・4142ページ生成）。**pixel 不変（diff はコメントのみ・OGP 出力は byte 同一）＝新規視覚回帰なし**を客観確認（git diff でコード無変更を確認）。
+- [x] **P6. B-576 の扱い判断**：E1/E2 の決定＝「マークは識別標章として現行のまま keep（pixel 不変）・物語だけ reframe」＝作り直すべき新 identity は生じない → **B-576 は不要（Done）**。露出でなく決定内容に依拠（decision.md B-576 節）。
 - [ ] **P7. レビューと完了処理**：独立 reviewer で点検（**「立証の論理の妥当性」を必須観点に**：測度と問いの一致・E1/E2 整合・母集団分割・禁止語不使用・3案比較）。指摘を是正し収束（review-log.md）。ブログ判断・ワークフロー AP 点検・cycle-completion を完了処理で実施。
 
 ## 作業計画
