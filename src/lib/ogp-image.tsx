@@ -7,12 +7,12 @@ import { PAPER, INK, INK_2, RULE, RULE_STRONG, ACCENT } from "@/lib/utsuwaHex";
  * 旧版（全面ベタ塗り＋絵文字アイコン＋ゴシック太字・既定色 青#2563eb）を廃し、札レンダラ
  * {@link import("./fuda-image").renderFudaImage} と同じ視覚言語で組む——紙地・墨・一本罫・のれん帯・
  * 明朝（Noto Serif JP）・朱の識別マーク。和色の記号面は持たない（地は常に紙・文字は墨）が、
- * 朱の識別マーク（頭字 y）は持つ——単独で共有される1枚で出所（yolos.net）が一目で読め、
- * favicon⇔OGP で同一の標章として面をまたいだ認識を与えるため（cycle-310/decision.md E1 で立証）。
+ * 朱の識別マーク（頭字 y）は持つ——手をかけた顔として「誰かが手入れした場所」の気配を与える
+ * （既定の OG カードや隅の空きは放置に見える＝A 信頼・安心を損なう・cycle-310/e1-decision.md E1）。
  * 和色はいっさい使わない（DESIGN §2/§4「和色は結果の包みに限る・器へ漏らさない」）。
  *
- * この標章は「店の朱肉印」ではなく中立な識別マーク（identity mark）——この寸法では来訪者に
- * 「店の印」は知覚されない（cycle-309/decision.md E2）。店を体現させる役目は負わせない。
+ * この標章は「店の朱肉印」ではなく謙虚な作り手/識別の印——店を体現させる役目は負わせない
+ * （気取り＝D 正直・気取らなさ を犯すため店の物語は外す・cycle-309/decision.md E2・cycle-310 E1）。
  *
  * 廃止した引数（DESIGN §8 違反のため型から**削除**）:
  * - `icon`（絵文字）→ §8-6 違反。カードの顔は明朝の品名。図像は識別マーク 1 つだけ。
@@ -31,22 +31,22 @@ const OGP_SIZE = { width: 1200, height: 630 };
 const SHOP_NAME = "yolos.net";
 
 /**
- * 識別マーク（サイトの identity＝頭字 y を朱の角丸標章で表したもの）。店の朱肉印でも試作でもない
- * 中立な identity mark で、favicon（検索結果）⇔OGP（シェア）で同一の標章として反復露出し、面を
- * またいだ認識を与える（cycle-310/decision.md E1・cycle-309/decision.md E2 で立証）。
- * ※サイトヘッダのロゴは "yolos.net" のテキスト（ワードマーク・朱はドットのみ）で別チャネル——
- * この角丸標章の朱 y は favicon と OGP の2面が持つ（cycle-310 レビュー是正）。
- * cycle-282/283 の自己貶め（"試"＝試作/見本＝来訪前に信頼を削る一字）を撤去し、cycle-306 で
- * 「朱の塗りの角丸標章＋紙色で白抜きした頭字 y（明朝）」に確定。favicon(F2) と同一標章。
- * 形状（頭字 y・角丸・朱）は favicon と一致させることが面をまたいだ認識の源＝変更しない。
+ * 識別マーク（サイトの identity＝頭字 y）。店の朱肉印でも試作でもない、謙虚な作り手/識別の印。
+ * cycle-282/283 の自己貶め（"試"＝試作/見本＝来訪前に信頼を削る一字）を撤去した。
+ *
+ * **形は面ごとに違う（cycle-310/e1-decision.md E1・単一形を前提にしない）**:
+ * - この OGP（大きい共有面）では **容器を持たない素の朱の明朝 y**。紙・墨・明朝の作りと一体で、
+ *   塗りタイル（app バッジ状の異物）より A（作りの整合）と D（気取らなさ）に資す。
+ * - favicon（`public/icon.svg`・極小 16-48px）は **朱の塗りの角丸タイル＋白抜き y** のまま。極小で
+ *   消えない確とした印が A（手をかけた仕上がり）に資す（素の y は 16px でほぼ消え放置に見える）。
+ * 面ごとに形が違うことは harm ではない——両面を一つの identity として突き合わせる「一貫」は
+ * 認識の操作でありブランドイメージ A〜E に無い。各面が単独で cared-for(A)・気取らない(D) であればよい。
  */
 
-/** 識別マークに白抜きするサイトの頭字（identity＝yolos の "y"）。favicon(F2) と同一標章。 */
+/** 識別マークが表すサイトの頭字（identity＝yolos の "y"）。 */
 const MARK_INITIAL = "y";
 /** 識別マークのわずかな傾き（§4「±8° 以内」）。機械的な硬さを避ける微小な回転。 */
 const MARK_ROTATE_DEG = -6;
-/** 角丸標章の角丸半径（§4「角丸」の 0px 基調に対する識別マークの例外・§4）。 */
-const MARK_CORNER_RADIUS = 22;
 
 /**
  * Noto Serif JP（明朝・品名と識別マークの顔・DESIGN §3）。weight 600 の見出し用。
@@ -346,10 +346,13 @@ export async function createOgpImageResponse(
         ) : null}
       </div>
 
-      {/* 識別マーク: カード面に一つだけ・右上に据える。サイトの identity 標章（頭字 y）。
-            朱（ACCENT）の塗りの角丸正方形に、紙色（PAPER）で白抜きした明朝の頭字 y。
-            回転 ±8° 内・幅 100px（§4）・favicon(F2) と同一標章で面をまたいだ認識を与える
-            （cycle-310/decision.md E1・cycle-309/decision.md E2）。 */}
+      {/* 識別マーク: カード面に一つだけ・右上に据える。サイトの identity 標章（頭字 y）を
+            **容器を持たない素の朱（ACCENT）の明朝 y** で表す。紙・墨・明朝の作りと一体の一筆で、
+            謙虚な作り手の印として据える（app バッジ状の塗りタイルは大きい共有面で作りから浮き
+            気取って見えるため外した——cycle-310/e1-decision.md E1: 大きい OGP 面では A〔紙墨明朝の
+            作りとの整合〕と D〔気取らなさ〕が素の y を指す）。回転 ±8° 内・幅 100px（§4）。
+            ※favicon(public/icon.svg) は極小(16px)で消えないよう塗りタイルのまま（面ごとに A に
+            最も資する形を選ぶ・e1-decision.md）。 */}
       <div
         style={{
           position: "absolute",
@@ -360,8 +363,6 @@ export async function createOgpImageResponse(
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: ACCENT,
-          borderRadius: MARK_CORNER_RADIUS,
           transform: `rotate(${MARK_ROTATE_DEG}deg)`,
         }}
       >
@@ -373,7 +374,7 @@ export async function createOgpImageResponse(
             fontFamily: minchoFamily,
             fontSize: 62,
             lineHeight: 1,
-            color: PAPER,
+            color: ACCENT,
             // 明朝 y は descender を持つため、字面をわずかに下げて視覚中央へ重心を合わせる
             // （幾何中央だと上寄りに見える／下げすぎると descender が縁に触れる）。
             paddingTop: 5,
