@@ -50,7 +50,7 @@ completed_at: null
   - [x] premise 是正ノートを DESIGN.md 冒頭に再追加（cycle-309 §92 の宿題）。site-concept.md 冒頭の恒久ノートは保持済。
 - [x] **P5. 検証**：全5ゲート緑（typecheck exit 0〔.next dev 残骸を除去後〕/ lint exit 0 / format:check 準拠 / test 323files・5554件 pass / build 成功・4142ページ生成）。**pixel 不変＝新規視覚回帰なし**を客観確認——SEAL→MARK リネーム後に OGP を再レンダーし、レンダー前の PNG と **md5 一致（root/tool 両方）**を確認（値不変ゆえ出力は byte 同一）。
 - [x] **P6. B-576 の扱い判断**：E1/E2 の決定＝「マークは識別標章として現行のまま keep（pixel 不変）・物語だけ reframe」＝作り直すべき新 identity は生じない → **B-576 は不要（Done）**。露出でなく決定内容に依拠（decision.md B-576 節）。
-- [ ] **P7. レビューと完了処理**：独立 reviewer で点検（**「立証の論理の妥当性」を必須観点に**：測度と問いの一致・E1/E2 整合・母集団分割・禁止語不使用・3案比較）。指摘を是正し収束（review-log.md）。ブログ判断・ワークフロー AP 点検・cycle-completion を完了処理で実施。
+- [x] **P7. レビューと完了処理**：独立 reviewer 計5名（新規起動・「立証の論理の妥当性」を必須観点に）で3巡点検。第1巡（論理／実装の2名）→ Major2件（事実誤り「3面」・grounding §4 未整合）＋Minor 是正。第2巡（新規2名・白紙）→ 全 Minor（reframe 未完 SEAL→MARK・証拠精度・OGP 寸法再導出）是正。第3巡（新規1名・総合）→ **承認「立証・実装・文書ともに妥当で収束」**（非ブロッキング観察1件も是正）。**収束**（[review-log.md](./review-log.md)）。ブログ判断＝**書かない**（内部のブランディング立証・来訪者に変化が見えない〔pixel 不変〕・cycle-282/283/306/308/309 と同種で読者の学び/楽しみにならない・CLAUDE.md）。ワークフロー AP 点検・cycle-completion は完了処理で実施。
 
 ## 作業計画
 
@@ -84,7 +84,11 @@ completed_at: null
 
 ## キャリーオーバー
 
-- （P7 完了時に記載）
+- **B-583（完了）**: 8サイクル目で決着。残件 E1（OGP 識別マークの要否）を再立証し、**マークは「店の朱肉印」でなく中立な識別マークとして keep（pixel 不変）・「店の印」の物語だけ reframe** と結論。E0/E3（cycle-309 完了）と併せ B-583 は Done。
+- **B-576（完了＝解消）**: E1/E2 の決定＝「マークは現行のまま keep・物語だけ reframe」＝作り直すべき新 identity は生じない → 不要。Done。
+- **未着手の follow-up（Queued 据置・本サイクルで広げない）**: B-649（店語彙 aria-label の §0.1(3) 平明化評価）・B-650（ルート OGP subtitle「実験的Webサイト」の §0.1(4) 評価）。いずれも B-583 の店メタファーとは別軸。
+- **プロセスの学び（review-log.md メタ節）**: cycle-309 を沈めた失敗の型（自己通読が地まで届かない＝AP-WF11 同型）を、今回はレビュー観点「立証の論理の妥当性」（AP-WF02 の是正）が第1巡で捕捉した。観点を「儀式の存在」でなく「推論の妥当性」に据える設計が機能した。
+- **残る内部語彙（非ブロッキング・射程外）**: `src/lib/fuda-image.tsx` の内容 fuda 印（`DEFAULT_SEAL_CHAR` 等・結果札の内容標章「診」「色」＝来訪者可視だが identity 印と別カテゴリ）は本サイクルの identity マーク reframe の射程外。将来 B-649 系と合流可。
 
 ## 補足事項
 
@@ -94,10 +98,10 @@ completed_at: null
 
 ## サイクル終了時のチェックリスト
 
-- [ ] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
-- [ ] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。
-- [ ] すべての変更がレビューされ、残存する指摘事項が無くなっている。
-- [ ] `npm run typecheck && npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する（exit 0）。
-- [ ] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
-- [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。
-- [ ] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
+- [x] 上記「実施する作業」に記載されたすべてのタスクに完了のチェックが入っている。
+- [x] `/docs/backlog.md` のActiveセクションに未完了のタスクがない。（B-583 を Done へ移動）
+- [x] すべての変更がレビューされ、残存する指摘事項が無くなっている。（新規 reviewer 5名・3巡で収束・第3巡承認）
+- [x] `npm run typecheck && npm run lint && npm run format:check && npm run test && npm run build` がすべて成功する（exit 0）。（最終状態で typecheck/lint/format=0・test EXIT:0・build EXIT:0/4142ページ。SEAL→MARK リネーム後も OGP 出力 md5 一致＝pixel 不変）
+- [x] 本ファイル冒頭のdescriptionがこのサイクルの内容を正確に反映している。
+- [ ] 本ファイル冒頭のcompleted_atがサイクル完了日時で更新されている。（cycle-completion で設定）
+- [x] 作業中に見つけたすべての問題点や改善点が「キャリーオーバー」および `docs/backlog.md` に記載されている。
