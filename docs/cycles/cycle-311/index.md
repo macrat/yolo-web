@@ -14,9 +14,9 @@ completed_at: null
 ## 実施する作業
 
 - [x] **T1** 現行 `docs/site-concept.md` の全記述を棚卸しし、「地（constitution・不変の事実・生の実測）／過去サイクルの導出（構築物）／cycle-310 の無効な決定・虚偽／ツギハギ痕跡」に分類する（参照先の実在と裏取りを含む）→ [inventory-site-concept.md](./inventory-site-concept.md)
-- [ ] **T2** 現行 `DESIGN.md` について T1 と同じ棚卸しを行う（別サブエージェント）
+- [x] **T2** 現行 `DESIGN.md` について T1 と同じ棚卸しを行う（別サブエージェント）→ [inventory-design.md](./inventory-design.md)。あわせてトークンのコントラストを独立検証 → [token-verification.md](./token-verification.md)
 - [x] **T3** 来訪者の実態を実測で把握する（GA4／Search Console。誰が・どの面に・どう着地しているか。ボット混入 B-635 を前提に読む）→ [visitor-reality.md](./visitor-reality.md)
-- [ ] **T4** コンセプト＝ブランドイメージを**一つの決定**として導出し `concept-decision.md` に記録する（店メタファーの keep/remove を含む）
+- [x] **T4** コンセプト＝ブランドイメージを**一つの決定**として導出し `concept-decision.md` に記録する（店メタファーの keep/remove を含む）→ [concept-decision.md](./concept-decision.md)（判定: 店メタファーを外す）
 - [ ] **T5** T4 を独立レビュー（導出の妥当性／「印象」から「仕組み・美学」へのすり替え検知）にかけ、指摘に対応する
 - [ ] **T6** `docs/site-concept.md` を全面的に書き直す（ブランドイメージを統合・ツギハギゼロ）
 - [ ] **T7** T6 をレビューし、指摘に対応する
