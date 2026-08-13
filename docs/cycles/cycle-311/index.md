@@ -17,7 +17,9 @@ completed_at: null
 - [x] **T2** 現行 `DESIGN.md` について T1 と同じ棚卸しを行う（別サブエージェント）→ [inventory-design.md](./inventory-design.md)。あわせてトークンのコントラストを独立検証 → [token-verification.md](./token-verification.md)
 - [x] **T3** 来訪者の実態を実測で把握する（GA4／Search Console。誰が・どの面に・どう着地しているか。ボット混入 B-635 を前提に読む）→ [visitor-reality.md](./visitor-reality.md)
 - [x] **T4** コンセプト＝ブランドイメージを**一つの決定**として導出し `concept-decision.md` に記録する（店メタファーの keep/remove を含む）→ [concept-decision.md](./concept-decision.md)（判定: 店メタファーを外す）
-- [ ] **T5** T4 を独立レビュー（導出の妥当性／「印象」から「仕組み・美学」へのすり替え検知）にかけ、指摘に対応する → すり替え検知1巡目: [review-concept-substitution.md](./review-concept-substitution.md)（REJECT・是正済み）
+- [ ] **T5** T4 を独立レビュー（導出の妥当性／「印象」から「仕組み・美学」へのすり替え検知）にかけ、指摘に対応する
+  - 1巡目・すり替え検知: [review-concept-substitution.md](./review-concept-substitution.md)（REJECT → 是正）
+  - 1巡目・導出妥当性: [review-concept-derivation.md](./review-concept-derivation.md)（REJECT・指摘13件 → 決定を全面的に導出し直し、判定が「店の全面 remove」から「案3＝自己像から外し設計規律は機能名で保持」へ変わった。実測の誤り2件と実見の不足も訂正）
 - [ ] **T6** `docs/site-concept.md` を全面的に書き直す（ブランドイメージを統合・ツギハギゼロ）
 - [ ] **T7** T6 をレビューし、指摘に対応する
 - [ ] **T8** `DESIGN.md` を確定コンセプトから再導出して全面的に書き直す
