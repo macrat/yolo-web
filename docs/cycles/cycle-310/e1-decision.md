@@ -1,4 +1,6 @@
-# cycle-310 E1 決定（OGP/favicon マークの要否・形）——ブランドイメージからの導出
+# cycle-310 E1 決定（OGP/favicon マークの要否・形）——ブランドイメージからの導出【無効】
+
+> **【無効】このファイルは事故により無効です。** 2度目の偽完了で、無効な [brand-image.md](./brand-image.md) から E1（マークの要否・形）を導いた決定。前提（別文書のブランドイメージ・導出の逆行）が誤りで、**結論（OGP マークを素の朱 y へ）は接地しておらず無効**（→ [failure-explanation.md](./failure-explanation.md)・[design-system-principles.md](./design-system-principles.md)）。全体の経緯は [index.md](./index.md)。この変更は本番に残っており、去就は B-652 で新デザインシステムに照らして再評価する。
 
 > B-583 の残件 E1 を、`brand-image.md`（独立レビュー3巡で PASS）のブランドイメージ **A〜E から飛躍なく**導く。前サイクル v1 は keep を「認識（cross-surface recognition）」から導いた誤り（AP-P02・incident-1.md）。本決定は**認識を結論の根拠にしない**。物差しは A〜E（来訪者に持ってほしい印象）。
 >

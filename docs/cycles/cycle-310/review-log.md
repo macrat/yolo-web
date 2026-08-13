@@ -1,4 +1,6 @@
-# cycle-310 レビュー経過ログ
+# cycle-310 レビュー経過ログ【無効】
+
+> **【無効】このファイルは事故により無効です。** 本サイクルで無効になった2度の立証（[decision.md](./decision.md)／[brand-image.md](./brand-image.md)・[e1-decision.md](./e1-decision.md)）に対するレビュー記録。各巡は PASS を出したが、**導出の逆行・機構へのすり替え・デザインシステム放置という根本的不備を捕捉できなかった**（→ [failure-explanation.md](./failure-explanation.md)・[incident-1.md](./incident-1.md)）。全体の経緯は [index.md](./index.md)。
 
 B-583 残件 E1（OGP 識別マークの要否）の再立証に対する独立レビュー。cycle-309 のレビュー失敗（観点を「立証の儀式が行われたか」に狭め「立証の論理が妥当か」を問わなかった＝AP-WF02）を是正するため、**全 reviewer に「立証の論理の妥当性」を必須観点**として渡した。再レビューは既存 reviewer の継続でなく毎回**新規 reviewer をゼロから起動**（AP-WF20/WF10・前回指摘を渡さず白紙で全体を見直させる）。
 

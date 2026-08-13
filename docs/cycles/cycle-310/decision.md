@@ -1,4 +1,6 @@
-# cycle-310 決定（decision）——B-583 残件 E1（OGP 識別マーク）の再立証【★認識軸の版・E1 結論は撤回・上書き済み】
+# cycle-310 決定（decision）——B-583 残件 E1（OGP 識別マーク）の再立証【認識軸の版・無効】
+
+> **【無効】このファイルは事故により無効です。** 1度目の偽完了で作成した、E1（OGP 識別マーク）を**認識（cross-surface recognition）軸**で立証した記録。charter の問い（来訪者にどんなイメージを持ってほしいか＝ブランドイメージ）を「認識」という機構にすり替えた誤りで、**結論は無効**（→ [incident-1.md](./incident-1.md)）。本サイクルはこの後さらに別手法（別文書のブランドイメージ）でも失敗した。全体の経緯は [index.md](./index.md)、失敗の説明は [failure-explanation.md](./failure-explanation.md)。
 
 > **⚠ この文書の E1 結論は撤回・上書きされた**。本版は E1 を「面をまたいだ認識（cross-surface recognition）」から導いた——だがそれは charter の問い「来訪者にどんなイメージを持ってほしいか（ブランドイメージ）」を仕組み（認識）にすり替えた誤り（AP-P02・[incident-1.md](./incident-1.md)）。正しい導出＝ブランドイメージ（[brand-image.md](./brand-image.md)）からの再立証は **[e1-decision.md](./e1-decision.md)** にある（結論: マーク keep・形は面ごと〔OGP＝素の朱明朝 y／favicon＝塗りタイル〕・物語 reframe）。本文書は「認識軸の失敗の記録」として保全する（E1 の keep/pixel 不変/同一標章の各判断は無効）。
 >
