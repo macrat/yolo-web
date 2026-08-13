@@ -138,7 +138,7 @@ describe("createOgpImageResponse — 店構え（看板）契約", () => {
     ).props.style.backgroundColor;
     expect(rootBg).toBe(PAPER);
     expect(rootBg).not.toBe(ACCENT);
-    // cycle-310 E1: OGP マークは容器なしの素の朱 y へ変更（塗りタイルを撤去）。よって朱は
+    // OGP マークは容器なしの素の朱 y で、塗りタイルを持たない。よって朱は
     // 塗りの背景（地ベタも識別マークの塗りタイルも）として現れない。
     // ミューテーション観点: マークを塗りタイルに戻すと backgroundColor に ACCENT が現れ落ちる。
     const bgColors = collectStyleValues(element, "backgroundColor");
@@ -160,8 +160,7 @@ describe("createOgpImageResponse — 店構え（看板）契約", () => {
     expect(texts).toContain("y");
     expect(texts).not.toContain("試");
 
-    // 頭字 y の文字色は朱（ACCENT）。cycle-310 E1: 紙色白抜き＋塗りタイルから素の朱 y へ変更
-    //（大きい OGP 面で紙墨明朝の作りと一体・app バッジの気取りを外す）。
+    // 頭字 y の文字色は朱（ACCENT）。OGP マークは容器なしの素の朱 y で、塗りタイルは持たない。
     // ミューテーション観点: y の色を PAPER 等に戻すと ACCENT が color から消え落ちる。
     const textColors = collectStyleValues(element, "color");
     expect(textColors).toContain(ACCENT);

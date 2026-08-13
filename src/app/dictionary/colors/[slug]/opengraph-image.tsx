@@ -9,8 +9,7 @@
  *
  * この面の印は内容を表す一字「色」（結果札の既定「診」と平行）。cycle-282/283 の自己貶め
  * 「試」（店の看板印を内容 fuda に流用した誤り）は cycle-306 で撤去した（詳細
- * docs/cycles/cycle-306/decision.md）。サイトの identity 標章（頭字 y・形は面ごとに違う＝汎用看板
- * ogp-image は容器なしの素の朱 y／favicon は朱の塗りタイル・cycle-310/e1-decision.md）は
+ * docs/cycles/cycle-306/decision.md）。サイトの identity 標章（頭字 y）は
  * ogp-image・favicon にあり、内容 fuda の印はこれとは別（内容を表す字）。cycle-282
  * まで colors 個別ページは OGP 画像を持っていなかったため、これは純増（B-579）。
  */
