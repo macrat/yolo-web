@@ -21,6 +21,7 @@ completed_at: null
   - 1巡目・すり替え検知: [review-concept-substitution.md](./review-concept-substitution.md)（REJECT → 是正）
   - 1巡目・導出妥当性: [review-concept-derivation.md](./review-concept-derivation.md)（REJECT・指摘13件 → 決定を全面的に導出し直し、判定が「店の全面 remove」から「案3＝自己像から外し設計規律は機能名で保持」へ変わった。実測の誤り2件と実見の不足も訂正）
   - 2巡目・すり替え検知: [review-concept-substitution-2.md](./review-concept-substitution-2.md)（**軸判定 PASS**。指摘は自己点検の測度2件——「引用の内側にあるか」という位置のテストは形式テストで、1巡目の「NG語照合」と同型 → 主語のテストへ是正）
+  - 2巡目・導出妥当性: [review-concept-derivation-2.md](./review-concept-derivation-2.md)（REJECT・致命5件/重大3件 → **第3版へ全面的に導出し直し**。(a)「サイトは店を名乗っていない」が本番と矛盾していた（実際は名乗っており、ただしその面に organic 流入が 0）、(b) 回遊を上位9件から誤読（区画をまたぐのは 0.7%）、(c) 3案比較が実質2案、(d) §6 が現行 DESIGN §1 の写像で T8 の逆走を仕込んでいた、(e) クリックだけを測度に選びサイトの過半（表示の82%＝辞典）を正体から外していた、(f) B・C・E の constitution 帰属が不成立）
 - [ ] **T6** `docs/site-concept.md` を全面的に書き直す（ブランドイメージを統合・ツギハギゼロ）
 - [ ] **T7** T6 をレビューし、指摘に対応する
 - [ ] **T8** `DESIGN.md` を確定コンセプトから再導出して全面的に書き直す
