@@ -20,6 +20,7 @@ completed_at: null
 - [ ] **T5** T4 を独立レビュー（導出の妥当性／「印象」から「仕組み・美学」へのすり替え検知）にかけ、指摘に対応する
   - 1巡目・すり替え検知: [review-concept-substitution.md](./review-concept-substitution.md)（REJECT → 是正）
   - 1巡目・導出妥当性: [review-concept-derivation.md](./review-concept-derivation.md)（REJECT・指摘13件 → 決定を全面的に導出し直し、判定が「店の全面 remove」から「案3＝自己像から外し設計規律は機能名で保持」へ変わった。実測の誤り2件と実見の不足も訂正）
+  - 2巡目・すり替え検知: [review-concept-substitution-2.md](./review-concept-substitution-2.md)（**軸判定 PASS**。指摘は自己点検の測度2件——「引用の内側にあるか」という位置のテストは形式テストで、1巡目の「NG語照合」と同型 → 主語のテストへ是正）
 - [ ] **T6** `docs/site-concept.md` を全面的に書き直す（ブランドイメージを統合・ツギハギゼロ）
 - [ ] **T7** T6 をレビューし、指摘に対応する
 - [ ] **T8** `DESIGN.md` を確定コンセプトから再導出して全面的に書き直す
