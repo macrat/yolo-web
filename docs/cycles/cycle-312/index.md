@@ -21,9 +21,9 @@ completed_at: null
   - [x] T1-c. 外部仕様の一次資料確認（oklch 対応状況・Google のスパムポリシー・AI 生成コンテンツの扱い・WCAG 1.4.11）
   - [x] T1-d. 検証結果を突き合わせ、**直すべき箇所の確定リスト**を作る（[fix-list.md](./fix-list.md)）
 - [x] **T2. 自己名乗りをどの語で立てるか決める** — 候補を並べ、来訪者にとっていちばん分かりやすく魅力的なものを選ぶ（[decision-yorozuya.md](./decision-yorozuya.md)・レビュー MUST 8件を反映済み）
-- [ ] **T3. 識別マーク（DESIGN §4）の規定を立て直す** — cycle-310 由来で無効と宣言された規定について、実装の実態と来訪者価値から、何が残り何が落ちるかを確定する
-- [ ] **T4. `docs/site-concept.md` の書き直し**
-- [ ] **T5. `DESIGN.md` の書き直し**（§1〜§11 の節番号と主題は保存する）
+- [x] **T3. 識別マーク（DESIGN §4）の規定を立て直す**（[decision-mark.md](./decision-mark.md)・実態調査は [facts-identification-mark.md](./facts-identification-mark.md)）。あわせて、規定違反として検出された画面上の印の扁平化と字の極小を是正した
+- [x] **T4. `docs/site-concept.md` の書き直し**（レビュー MUST 8件・NICE 3件を反映済み）
+- [x] **T5. `DESIGN.md` の書き直し**（§1〜§11 の節番号と主題を保存。140行→164行・ツギハギ痕跡0件）
 - [ ] **T6. 参照整合** — `.claude/skills/frontend-design/SKILL.md` を新 `DESIGN.md` から作り直す + 残り10ファイルの整合
 - [ ] **T7. レビュー** — 来訪者価値の観点を必ず渡す。指摘を判断し、必要なものはすべて対応する
 - [ ] **T9. 自己名乗りの出荷** — `metadata` description とルート OGP subtitle の2箇所（現状「AIエージェントによる実験的Webサイト」）を決定どおりに変更し、OGP 画像の実レンダーを確認する
