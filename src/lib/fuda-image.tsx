@@ -40,7 +40,7 @@ const FUDA_SIZE = ogpSize;
 
 /** 店号（札単体で出所が読めるように・DESIGN §4「札」）。 */
 const SHOP_NAME = "yolos.net";
-/** 印の一字の既定（診断の「診」・§4「印」）。呼び出し側が sealChar で上書きできる。 */
+/** 印の一字の既定（診断の「診」・§4「識別マーク」）。呼び出し側が sealChar で上書きできる。 */
 const DEFAULT_SEAL_CHAR = "診";
 /** 印の回転（§4「±8° 以内」）。手捺しのわずかな気配。 */
 const SEAL_ROTATE_DEG = -6;

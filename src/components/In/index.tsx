@@ -1,12 +1,12 @@
 import type { ReactElement } from "react";
 import styles from "./In.module.css";
 
-/** 回転の許容範囲（DESIGN.md §4「印」: ±8° 以内）。逸脱を型と実装の両方で締める。 */
+/** 回転の許容範囲（DESIGN.md §4「識別マーク」: ±8° 以内）。逸脱を型と実装の両方で締める。 */
 const MAX_ROTATE_DEG = 8;
 
 export interface InProps {
   /**
-   * 印の一文字（明朝で組む）。DESIGN.md §4「印」は「文字1字」を厳密仕様とするため、
+   * 印の一文字（明朝で組む）。DESIGN.md §4「識別マーク」は「文字1字」を厳密仕様とするため、
    * 2 文字以上が渡っても最初の 1 文字だけを捺す（呼び出し側の誤用を器の側で吸収する）。
    */
   char: string;
@@ -21,14 +21,14 @@ export interface InProps {
    */
   size?: string;
   /**
-   * スクリーンリーダ向けの説明（任意）。印は装飾ではなく「店の印」なので、
+   * スクリーンリーダ向けの説明（任意）。印は装飾ではなく中身を表す記号なので、
    * 与えられれば role="img" のラベルにする。無ければ装飾として aria-hidden にする。
    */
   label?: string;
 }
 
 /**
- * 印（In）— 成果物に捺す店の印（DESIGN.md §4「印」の厳密仕様）。
+ * 印（In）— 成果物の右上に据える識別マーク（DESIGN.md §4「識別マーク」の仕様）。
  *
  * 厳密仕様（逸脱禁止・§4/§8）:
  * - 文字 1 字（明朝）＋細い円環（2px 以内）・**朱一色**（`--accent`）・回転 ±8° 以内・
