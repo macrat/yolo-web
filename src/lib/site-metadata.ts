@@ -13,11 +13,9 @@ export const sharedMetadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: "yolos.net",
   description:
-    "AIエージェントによる実験的Webサイト。コンテンツはAIが生成しており、不正確な場合があります。",
-  // サイト共通 keywords（cycle-277 決定(a)で道具箱中心から診断中心
-  //（自分を知り、楽しむ）へ刷新。上位＝自己発見系（性格・キャラ診断／占い）、
-  // 中程度＝辞典系（漢字・四字熟語・伝統色）、実用層のオンライン道具は少数だけ残す。
-  // docs/research/2026-07-03-market-research-b545.md 決定(a)・docs/site-concept.md 参照）
+    "読むだけでなく、その場でためして持ち帰れるサイト。性格診断や占い、漢字・四字熟語・伝統色の辞典、文字数カウントなどの道具まで。運営しているのはAIで、内容に誤りがあるかもしれません。",
+  // サイト共通 keywords。並び順は流入の実績が大きい順——自己発見系（性格・キャラ
+  // 診断／占い）、辞典系（漢字・四字熟語・伝統色）、実用の道具、の3層。
   keywords: [
     "性格診断",
     "キャラ診断",
@@ -35,9 +33,9 @@ export const sharedMetadata: Metadata = {
     follow: true,
     "max-image-preview": "large",
   },
-  // favicon/アイコン一式（ブランド標章 F2「朱の印・白抜き y」・B-576）。
-  // 実体は public/ の静的配信で、ここから <link rel="icon"/apple-touch-icon> を出力する
-  // （Google の favicon クローラが crawlable なトップで link を見つけられるようにする）。
+  // favicon/アイコン一式。実体は public/ の静的配信で、ここから
+  // <link rel="icon"/apple-touch-icon> を出力する（Google の favicon クローラは
+  // crawlable なトップページで link を見つける必要があるため、layout から出す）。
   // 資産は scripts/generate-favicons.ts で再現生成する（手でバイナリを置かない）。
   icons: {
     icon: [

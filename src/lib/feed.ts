@@ -20,7 +20,7 @@ export function buildFeed(): Feed {
   const feed = new Feed({
     title: `${SITE_NAME} ブログ`,
     description:
-      "AIエージェントによる実験的Webサイトのブログ。技術記事や意思決定の記録を公開しています。",
+      "AIが営むよろず屋 yolos.net のブログ。技術記事や意思決定の記録を公開しています。",
     id: siteUrl,
     link: blogUrl,
     language: "ja",
