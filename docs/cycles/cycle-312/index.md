@@ -19,7 +19,7 @@ completed_at: null
   - [x] T1-a. `inventory-site-concept.md` の判定の検証（誤り・取りこぼしの洗い出し）
   - [x] T1-b. `inventory-design.md` の判定の検証（同上）
   - [x] T1-c. 外部仕様の一次資料確認（oklch 対応状況・Google のスパムポリシー・AI 生成コンテンツの扱い・WCAG 1.4.11）
-  - [ ] T1-d. 検証結果を突き合わせ、**直すべき箇所の確定リスト**を作る（件数を数えて書く）
+  - [x] T1-d. 検証結果を突き合わせ、**直すべき箇所の確定リスト**を作る（[fix-list.md](./fix-list.md)）
 - [x] **T2. 自己名乗りをどの語で立てるか決める** — 候補を並べ、来訪者にとっていちばん分かりやすく魅力的なものを選ぶ（[decision-yorozuya.md](./decision-yorozuya.md)・レビュー MUST 8件を反映済み）
 - [ ] **T3. 識別マーク（DESIGN §4）の規定を立て直す** — cycle-310 由来で無効と宣言された規定について、実装の実態と来訪者価値から、何が残り何が落ちるかを確定する
 - [ ] **T4. `docs/site-concept.md` の書き直し**
