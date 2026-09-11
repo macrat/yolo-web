@@ -109,7 +109,6 @@
   font-size: 4rem;
   line-height: 1;
   color: var(--on);
-  font-feature-settings: "palt";
 }
 
 /* 品名・結果の言葉（紙の上・墨）。器は静か。 */
@@ -128,7 +127,6 @@
   font-weight: normal;
   line-height: 1.4;
   color: var(--ink);
-  font-feature-settings: "palt";
 }
 
 .word {

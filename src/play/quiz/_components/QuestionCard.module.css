@@ -29,7 +29,6 @@
   margin: 0 0 1.25rem;
   line-height: 1.6;
   color: var(--ink);
-  font-feature-settings: "palt";
 }
 
 /* F2: 設問切替時にプログラム的フォーカスを受ける見出し（tabIndex={-1}）。

@@ -1018,3 +1018,39 @@ describe("§8 機械ゲートの検出力（合成入力）", () => {
     expect(vs.filter((x) => x.code === "§8-6")).toEqual([]);
   });
 });
+
+/**
+ * §3「約物」のゲート。
+ *
+ * 見出し書体（--font-mincho＝Noto Serif JP）に `palt` テーブルは無く、
+ * `font-feature-settings: "palt"` を指定すると、書体が既定で有効にしている
+ * `chws`（連続約物のアキ詰め）が代わりに切れる。実測（31px・「」「」——！？）で
+ * 指定なし 224.3px に対し palt 指定 239.8px——詰めるための指定が字を広げていた。
+ *
+ * grep 一行で検査できる規則なので機械ゲートに置く。cycle-312 で 26 宣言 /
+ * 20 ファイルが素通りしていた（globals.css だけ直して直したつもりになっていた）。
+ */
+describe("DESIGN.md §3 約物（明朝に palt を掛けない）", () => {
+  test("--font-mincho を使うブロックに font-feature-settings: palt が無いこと", () => {
+    const files = fg.sync(NEW_DESIGN_CSS, {
+      cwd: PROJECT_ROOT,
+      ignore: IGNORE,
+    });
+    const offenders: string[] = [];
+    for (const rel of files) {
+      const css = fs.readFileSync(path.join(PROJECT_ROOT, rel), "utf-8");
+      // コメントを外してからブロック単位で見る（説明文中の "palt" を拾わない）
+      const stripped = css.replace(/\/\*[\s\S]*?\*\//g, "");
+      for (const block of stripped.match(/\{[^{}]*\}/g) ?? []) {
+        if (
+          block.includes("--font-mincho") &&
+          /font-feature-settings[^;]*palt/.test(block)
+        ) {
+          offenders.push(rel);
+          break;
+        }
+      }
+    }
+    expect(offenders).toEqual([]);
+  });
+});
