@@ -8,9 +8,8 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-629 | E0出荷後のSERP実表示の確認 | P2 | - | 禁止色を除いたアイコンの出荷(2026-08-07)から1ヶ月以上が経過し、Googleの再クロールは完了見込み。SERPでの実表示を確認する。詳細 docs/cycles/cycle-302/ |
 | B-653 | SC「生成AIパフォーマンスレポート」の撤退基準への含意調査 | P3 | - | SCの生成AIパフォーマンスレポートの仕様を一次資料で確認し、削除判断の数値基準(site-concept判断基準2)の計器として何が変わるか判定する。詳細cycle-311/index.md 計画にあたって参考にした情報 |
-| B-649 | 店語彙のaria-label(「品書き」等・SR可視)を§0.1レンズで平明化評価 | P3 | - | cycle-309でE3(店主/店の品書き)を是正。残=SR可視の「○○の品書き」ラベル複数面。§0.1(3)の「signifierの自明伝達を仮定しない」でSR明瞭さを評価。詳細cycle-309/decision.md 射程外節 |
-| B-650 | ルートOGP subtitle「実験的Webサイト」を§0.1(4)で来訪者価値評価 | P4 | - | cycle-309で気づき。「AIエージェントによる実験的Webサイト」は開示だが「実験」descriptor止まりで何が得られるか伝えない。売り込みでなく価値を伝える表現に改善するか評価。詳細cycle-309/decision.md |
 | B-606 | 全10 personality診断の結果先行の点検・再設計(Rule4) | P1 | - | **cycle-303でword-sense完了**。残9=music/yoji/animal/character-fortune/娯楽くじ群。タイブレーク中心は壊れた枠(cycle-294)・調律重み禁止・真の同点は同格開示。詳細cycle-303/ |
 | B-644 | 約2845ページが og:image 不在のまま summary_large_image を宣言し空の大カードになる | P3 | - | 既存欠陥(cycle-306で実ビルド発覚)。原因=global `summary_large_image`＋root OGPが子ルートに継承されない。是正は設計判断要・別サイクル。詳細cycle-306/review-log.md |
 | B-603 | character-personality 24タイプ一覧の処遇(T3・再判定) | P1 | - | **未決へ差し戻し**。cycle-298は測定面を誤り判定撤回(cycle-284の実測が正しかった)。主たる面で基準を立て直し再判定。詳細cycle-298/decision.md |
@@ -77,7 +76,8 @@
 | B-565 | 全面切替後のコンバージョン悪化チェック(ADR001) | P2 | **ADR001は現行記載が不正書き換えの疑い。次に扱う際は本来の趣旨(デザイン変更の決断＋変更後の完走率悪化チェックのみ)に照らし検証・復元してから読む**。cycle-305で+4週観測も失敗クローズ。詳細cycle-305/incident-1・observation |
 | B-615 | 375px CLSのレイアウトシフト点検・あればバグ修正 | P4 | **ADRの賭けではなく通常のバグ(cycle-305でオーナー是正)**。デザイン移行が安定した面で375px CLSを点検し、シフトがあれば修正。計装(field計測)の新設は不要。着手: デザイン移行(B-651/B-652/B-573)の完了後 |
 | B-652 | 新デザインシステムと矛盾する場合サイト全体(favicon/OGP画像等)を作り直す | P1 | 着手: B-651(新デザインシステム確定)完了後。現行の実デザインが新システムと矛盾するか点検し、矛盾あれば新システムから作り直してQueuedへ・矛盾なければCancel。偽完了だったB-583/B-576の実デザイン側作業を統合。詳細cycle-310キャリーオーバー |
-| B-629 | E0出荷後のSERP実表示の確認 | P2 | 着手: 2026-08-14以降(禁止色を除いたアイコンの出荷=2026-08-07+7日。Googleの再クロール後でないと反映されない)。詳細 docs/cycles/cycle-302/ |
+| B-649 | 店語彙のaria-label(「品書き」等・SR可視)の平明化評価 | P3 | 着手: B-651完了後。評価対象である店語彙そのものの去就(概念語を来訪者可視面に出すか)がB-651で決まるため、決着前に個々のラベル文言を磨いても手戻りになる。残=SR可視の「○○の品書き」ラベル複数面。詳細cycle-309/decision.md 射程外節 |
+| B-650 | ルートOGP subtitle「実験的Webサイト」の来訪者価値評価 | P4 | 着手: B-651完了後。OGP subtitleはサイトの自己表示であり、その正典はsite-concept.md。B-651が自己定義を確定させてから文言を導く。論点=「実験」descriptor止まりで何が得られるか伝えていない点。詳細cycle-309/decision.md |
 | B-568 | 面横断 content_id 接頭辞規約の全面統一 | P4 | 着手: ADR001の観測窓終了後(item_id集計の断絶を伴う移行のため。旧条件のADR002はexpiredで窓が無く着手不能だった)。詳細 cycle-280.md |
 | B-590 | eslint 10 / TypeScript 7 の採用 | P4 | 着手: config-next配下のplugin基盤(typescript-eslint8等)がeslint10/TS7対応次第。cycle-286で試行=lintクラッシュ実証。詳細cycle-286/ |
 | B-592 | overrides(postcss/react-hooks)の解消 | P4 | 着手: postcssは親(next/sanitize-html)がpatched版を引いた時・react-hooksは7.1.1採用判断時にoverride除去(upstreamドリフト回避)。詳細cycle-286/remediation.md |
