@@ -10,6 +10,11 @@
 | --- | --- | --- | --- | --- |
 | B-629 | E0出荷後のSERP実表示の確認 | P2 | - | 禁止色を除いたアイコンの出荷(2026-08-07)から1ヶ月以上が経過し、Googleの再クロールは完了見込み。SERPでの実表示を確認する。詳細 docs/cycles/cycle-302/ |
 | B-653 | SC「生成AIパフォーマンスレポート」の撤退基準への含意調査 | P3 | - | SCの生成AIパフォーマンスレポートの仕様を一次資料で確認し、削除判断の数値基準(site-concept判断基準2)の計器として何が変わるか判定する。詳細cycle-311/index.md 計画にあたって参考にした情報 |
+| B-654 | 情報の境界に `--rule` を使っている箇所の実査と是正 | P2 | - | `--rule` は 1.5/1.6 で境界に使えない。入力欄の枠など存在を伝える境界を `--rule-strong` へ。詳細cycle-312/carryover |
+| B-655 | storybook の旧 DESIGN.md §番号参照が既に嘘 | P3 | - | 廃止済みの旧システムの節を約20箇所引いている。書き直しと独立に既に誤り。詳細cycle-312/carryover |
+| B-656 | 店語彙の内部識別子・コメントの整理 | P4 | - | 識別子78ファイル・コメント1,180箇所。来訪者には届かないため低優先。詳細cycle-312/carryover |
+| B-657 | /play/impossible-advice/result/* に description が無い | P3 | - | 本番573URL中この7件のみ。共有前提の結果ページとして欠陥。詳細cycle-312/carryover |
+| B-658 | character.md に廃止済みターゲット定義の語が残る | P4 | - | 271行付近の表。cycle-278 で廃止された語彙。詳細cycle-312/carryover |
 | B-606 | 全10 personality診断の結果先行の点検・再設計(Rule4) | P1 | - | **cycle-303でword-sense完了**。残9=music/yoji/animal/character-fortune/娯楽くじ群。タイブレーク中心は壊れた枠(cycle-294)・調律重み禁止・真の同点は同格開示。詳細cycle-303/ |
 | B-644 | 約2845ページが og:image 不在のまま summary_large_image を宣言し空の大カードになる | P3 | - | 既存欠陥(cycle-306で実ビルド発覚)。原因=global `summary_large_image`＋root OGPが子ルートに継承されない。是正は設計判断要・別サイクル。詳細cycle-306/review-log.md |
 | B-603 | character-personality 24タイプ一覧の処遇(T3・再判定) | P1 | - | **未決へ差し戻し**。cycle-298は測定面を誤り判定撤回(cycle-284の実測が正しかった)。主たる面で基準を立て直し再判定。詳細cycle-298/decision.md |
