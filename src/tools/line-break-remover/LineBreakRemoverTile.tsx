@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * LineBreakRemoverTile — 改行削除ツールの単一正典タイル
+ * LineBreakRemoverTile — 改行削除ツールの単一出どころタイル
  *
  * cycle-228 T-4 で LineBreakRemoverPage.tsx を Panel ルートのタイルへ作り直したもの。
  *

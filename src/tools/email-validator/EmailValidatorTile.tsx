@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * EmailValidatorTile — メールアドレスバリデーターの単一正典タイル
+ * EmailValidatorTile — メールアドレスバリデーターの単一出どころタイル
  *
  * cycle-228 T-10 で EmailValidatorPage.tsx を Panel ルートのタイルへ作り直したもの。
  *

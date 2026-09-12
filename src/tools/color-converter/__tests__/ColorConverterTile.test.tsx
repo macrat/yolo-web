@@ -1,5 +1,5 @@
 /**
- * ColorConverterTile — 単一正典タイルのテスト
+ * ColorConverterTile — 単一出どころタイルのテスト
  *
  * cycle-228 T-15: ColorConverterPage.test.tsx の振る舞いを移植・拡張。
  *

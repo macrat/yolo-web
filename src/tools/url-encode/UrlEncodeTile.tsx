@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * UrlEncodeTile — URL エンコード/デコードの単一正典タイル
+ * UrlEncodeTile — URL エンコード/デコードの単一出どころタイル
  *
  * cycle-226 T-1 で UrlEncodePage.tsx を Panel ルートのタイルへ作り直したもの。
  *

@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * QrCodeTile — QRコード生成ツールの単一正典タイル
+ * QrCodeTile — QRコード生成ツールの単一出どころタイル
  *
  * cycle-228 T-25 で QrCodePage.tsx を Panel ルートのタイルへ作り直したもの。
  *

@@ -53,7 +53,7 @@ describe("WAIRO_HEX — AA を生成 hex 値そのもので再計測", () => {
   });
 });
 
-describe("oklchToHex — 正典 oklch との乖離ガード", () => {
+describe("oklchToHex — 出どころ oklch との乖離ガード", () => {
   // globals.css の :root（light）ブロックの和色 oklch を hex 化し、WAIRO_HEX と一致すること。
   // oklch→sRGB クリップによるサイレント乖離（globals.css だけ変えて hex 表を放置）を検知する。
   const cssPath = join(process.cwd(), "src/app/globals.css");

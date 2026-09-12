@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * ByteCounterTile — バイト数計算ツールの単一正典タイル
+ * ByteCounterTile — バイト数計算ツールの単一出どころタイル
  *
  * cycle-228 T-2: ByteCounterPage.tsx を廃止し、Panel ルートのタイルへ統一。
  *

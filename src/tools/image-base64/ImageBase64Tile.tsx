@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * ImageBase64Tile — 画像 Base64 変換の単一正典タイル
+ * ImageBase64Tile — 画像 Base64 変換の単一出どころタイル
  *
  * cycle-228 T-26: ImageBase64Page.tsx を Panel ルートのタイルへ再実装。
  *

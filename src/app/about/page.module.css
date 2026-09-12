@@ -17,7 +17,7 @@
   color: var(--ink);
 }
 
-/* 冒頭の一言（自己紹介の正典・docs/site-concept.md 参照）。本文よりやや大きく見せ場にする。 */
+/* 冒頭の一言（自己紹介の出どころ・docs/site-concept.md 参照）。本文よりやや大きく見せ場にする。 */
 .lead {
   margin: 0 0 var(--space-32);
   color: var(--ink);

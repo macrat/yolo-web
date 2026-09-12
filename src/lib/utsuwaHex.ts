@@ -7,7 +7,7 @@
  * どちらにも属さないこのモジュールへ置き、3者（fuda-image・ogp-image・乖離ガードテスト
  * `__tests__/wairoHex.test.ts`）がここから import することで循環を断ち、単一の真実にする。
  *
- * なぜ hex 直書きか: 正典トークンは `globals.css` に oklch で定義されるが、Satori（OG/札の
+ * なぜ hex 直書きか: 出どころトークンは `globals.css` に oklch で定義されるが、Satori（OG/札の
  * 画像生成）は oklch を解釈できない。ここで light トークンの hex を固定して Satori へ渡す。
  *
  * ライト固定の根拠: OG/札は 1 枚の PNG で light/dark を切り替えられないため light の地色を採る。

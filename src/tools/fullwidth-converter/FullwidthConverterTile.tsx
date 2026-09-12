@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * FullwidthConverterTile — 全角半角変換の単一正典タイル
+ * FullwidthConverterTile — 全角半角変換の単一出どころタイル
  *
  * cycle-227 T-3 で FullwidthConverterPage.tsx を Panel ルートのタイルへ作り直したもの。
  *

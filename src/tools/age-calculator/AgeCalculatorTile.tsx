@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * AgeCalculatorTile — 年齢計算の単一正典タイル
+ * AgeCalculatorTile — 年齢計算の単一出どころタイル
  *
  * cycle-228 T-7: AgeCalculatorPage.tsx を Panel ルートのタイルへ作り直したもの。
  *

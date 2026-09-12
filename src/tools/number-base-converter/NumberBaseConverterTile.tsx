@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * NumberBaseConverterTile — 進数変換の単一正典タイル
+ * NumberBaseConverterTile — 進数変換の単一出どころタイル
  *
  * cycle-228 T-9: NumberBaseConverterPage.tsx を Panel ルートのタイルへ作り直したもの。
  *

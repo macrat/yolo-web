@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * MarkdownPreviewTile — Markdown ライブプレビューの単一正典タイル
+ * MarkdownPreviewTile — Markdown ライブプレビューの単一出どころタイル
  *
  * cycle-228 T-24: MarkdownPreviewPage.tsx を Panel ルートのタイルへ作り直したもの。
  *

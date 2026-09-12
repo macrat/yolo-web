@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * KanaConverterTile — ひらがな・カタカナ変換の単一正典タイル
+ * KanaConverterTile — ひらがな・カタカナ変換の単一出どころタイル
  *
  * cycle-228 T-3 で KanaConverterPage.tsx を Panel ルートのタイルへ作り直したもの。
  *

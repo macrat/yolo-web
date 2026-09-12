@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * KeigoReferenceTile — 敬語早見表の単一正典タイル
+ * KeigoReferenceTile — 敬語早見表の単一出どころタイル
  *
  * cycle-228 T-18: KeigoReferencePage.tsx をタイル・アーキテクチャへ移行。
  * ルートが <Panel>（DESIGN.md §1 パネル準拠）で自己完結。

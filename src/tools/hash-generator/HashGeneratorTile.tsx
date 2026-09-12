@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * HashGeneratorTile — ハッシュ生成ツールの単一正典タイル
+ * HashGeneratorTile — ハッシュ生成ツールの単一出どころタイル
  *
  * cycle-228 T-17 で HashGeneratorPage.tsx を Panel ルートのタイルへ統合したもの。
  *

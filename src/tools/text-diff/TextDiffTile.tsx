@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * TextDiffTile — テキスト差分比較の単一正典タイル
+ * TextDiffTile — テキスト差分比較の単一出どころタイル
  *
  * cycle-228 T-23 で TextDiffPage.tsx を Panel ルートのタイルへ移植。
  *

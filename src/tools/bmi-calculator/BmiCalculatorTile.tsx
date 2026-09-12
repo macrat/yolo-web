@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * BmiCalculatorTile — BMI計算の単一正典タイル
+ * BmiCalculatorTile — BMI計算の単一出どころタイル
  *
  * cycle-228 T-6: BmiCalculatorPage.tsx を Panel ルートのタイルへ作り直したもの。
  *

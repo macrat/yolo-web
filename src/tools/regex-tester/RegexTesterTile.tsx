@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * RegexTesterTile — 正規表現テスター 単一正典タイル
+ * RegexTesterTile — 正規表現テスター 単一出どころタイル
  *
  * cycle-228 T-29: RegexTesterPage.tsx → Panel ルートのタイルへ再構築。
  *

@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * UnixTimestampTile — UNIXタイムスタンプと日時の相互変換の単一正典タイル
+ * UnixTimestampTile — UNIXタイムスタンプと日時の相互変換の単一出どころタイル
  *
  * cycle-228 T-22: UnixTimestampPage.tsx を Panel ルートのタイルへ作り直したもの。
  *

@@ -9,7 +9,7 @@
   - `docs/site-concept.md`「共有できる記号」節（『独自記号のシェア可能性』を未検証の賭けと明記）。
   - `DESIGN.md` §4「札」（店号・品名・記号面・タイプ名・印の視覚言語）。
   - 外部仕様: Web Share API Level 2 のファイル共有は実装依存（"Limited availability"）ゆえ `navigator.canShare({files})` の**特徴検出が必須**、非対応時はダウンロード等へフォールバック（cycle-280.md 参考情報・[MDN Navigator.canShare()]／[caniuse web-share]）。
-  - 実装設計の正典: `docs/cycles/cycle-280.md`（C-b／B-551）。
+  - 実装設計の出どころ: `docs/cycles/cycle-280.md`（C-b／B-551）。
 
 ## 失効理由（2026-07-14・PM の全責任における撤回）
 
@@ -74,7 +74,7 @@ ADR の観測規律（`docs/ADR/README.md`）では、数値の撤退基準を�
 - `level_end`: event_params に `content_id`（='quiz-character-personality'）・`content_type` を持つ。
 - `save`（新設）: `content_id`・`content_type`・`method`（'web_share_files'|'download'）・`surface`（'fuda'）。
 - `share`: 既存の `item_id` を温存しつつ `content_id`（=item_id と同値・dual-write）・`method`（'web_share'|'clipboard' 等）・`surface`（'fuda'|'invite'|'text'）を持つ。
-- content_id 正典値 = `contentIdForQuiz('character-personality')` = `'quiz-character-personality'`。
+- content_id 規定値 = `contentIdForQuiz('character-personality')` = `'quiz-character-personality'`。
 
 ### SQL-1: save率・share率（fuda）＝指標(1)(2)（実行可能・出荷日以降）
 

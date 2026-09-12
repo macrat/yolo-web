@@ -60,7 +60,7 @@ export const metadata: Metadata = {
 /**
  * 目玉（今日のためしどころ）に立てる診断。成長エンジン＝実測集客首位の
  * character-personality を店先の焦点にする。品名・遷移先はレジストリ（単一情報源）から
- * 引き、コピーの具体（問数「12」・タイプ数「24」）は診断データの正典値と一致する
+ * 引き、コピーの具体（問数「12」・タイプ数「24」）は診断データの出どころ値と一致する
  * （page.test.tsx が questionCount / result 数の一致を機械ガードし、乖離を防ぐ）。
  */
 const HERO_SLUG = "character-personality";

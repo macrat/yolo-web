@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * SqlFormatterTile — SQL整形・圧縮の単一正典タイル
+ * SqlFormatterTile — SQL整形・圧縮の単一出どころタイル
  *
  * cycle-228 T-13: SqlFormatterPage.tsx を Panel ルートのタイルへ作り直したもの。
  *

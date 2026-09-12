@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * PasswordGeneratorTile — パスワード生成の単一正典タイル
+ * PasswordGeneratorTile — パスワード生成の単一出どころタイル
  *
  * cycle-228 T-11 で PasswordGeneratorPage.tsx をタイルへ作り直したもの。
  *

@@ -3,7 +3,7 @@ import type { WairoColor } from "@/components/Tsutsumi";
 /**
  * 成果物パレット「和色」8色の hex ルックアップ表（DESIGN.md §2）。
  *
- * なぜ hex が要るか: 正典トークンは `globals.css` に oklch で定義されるが、Satori
+ * なぜ hex が要るか: 出どころトークンは `globals.css` に oklch で定義されるが、Satori
  * （札＝OG 画像生成・`src/lib/fuda-image.tsx`）は oklch を解釈できない。ここで hex に
  * 固定して Satori へ渡す。
  *

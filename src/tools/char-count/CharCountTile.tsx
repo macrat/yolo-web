@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * CharCountTile — 文字数カウントの単一正典タイル
+ * CharCountTile — 文字数カウントの単一出どころタイル
  *
  * cycle-228 T-1: CharCountPage.tsx を Panel ルートのタイルへ作り直したもの。
  *

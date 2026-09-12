@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * HtmlEntityTile — HTML エンティティ変換の単一正典タイル
+ * HtmlEntityTile — HTML エンティティ変換の単一出どころタイル
  *
  * cycle-227 T-1 で HtmlEntityPage.tsx を Panel ルートのタイルへ作り直したもの。
  *

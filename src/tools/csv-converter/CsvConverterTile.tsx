@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * CsvConverterTile — CSV/TSV/JSON/Markdown表の相互変換ツールの単一正典タイル
+ * CsvConverterTile — CSV/TSV/JSON/Markdown表の相互変換ツールの単一出どころタイル
  *
  * cycle-228 T-16: CsvConverterPage.tsx をタイル化したもの。
  *

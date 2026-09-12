@@ -1,6 +1,6 @@
 # フロントエンド実装の技術ノート
 
-DESIGN.md（デザインの原則の正典）が「何を・なぜ」を定め、本ノートは「どう実装するか」の手段を補う。原則と手段を分けることで DESIGN.md を規範文書として安定させる（DESIGN.md §11）。
+DESIGN.md（デザインの原則の出どころ）が「何を・なぜ」を定め、本ノートは「どう実装するか」の手段を補う。原則と手段を分けることで DESIGN.md を規範文書として安定させる（DESIGN.md §11）。
 
 ## stretched-link で行全体をクリック可能にする
 
@@ -78,6 +78,8 @@ DESIGN.md §4「クリック標的＝視覚単位の全体」の実装手段。�
 これは仕様どおりの挙動である。CSS Fonts 4 は、既定で有効な feature は `font-feature-settings` が `normal` でなくても有効であり続け、作者が明示的に上書きした feature だけが無効になると定めている（解決順序は 既定 → CSS プロパティ → `font-feature-settings` の足し合わせ）。Chromium が `chws` を既定で有効にした際、排他にしたのは `halt`・`palt` とその縦組み版だけである（GPOS 実装のため）。
 
 この区別は実務上重要で、「`font-feature-settings` を書かない」という乱暴な規則にすると、数字の桁揃えに使う `tnum` まで巻き添えで消える。
+
+ただし**移植性は保証されていない**。OpenType 仕様は `chws` を `fwid`・`halt`・`hwid`・`palt`・`pkna`・`pwid`・`qwid`・`twid`・`pnum`・`tnum` の10機能と相互排他と定めており、Chromium が排他の対象を `halt`・`palt`（とその縦組み版）だけに狭めているために `tnum` が無事なだけである。他のエンジンが仕様どおりに実装すれば `tnum` でも `chws` は落ちる。
 
 ### 書体によって結論が逆になる
 

@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Base64Tile — Base64エンコード/デコードの単一正典タイル
+ * Base64Tile — Base64エンコード/デコードの単一出どころタイル
  *
  * cycle-227 T-2 で Base64Tool.tsx を Panel ルートのタイルへ作り直したもの。
  *

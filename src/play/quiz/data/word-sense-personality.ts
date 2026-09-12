@@ -14,7 +14,7 @@ export type { CompatibilityEntry };
  *   humor-wit        — 抱腹絶倒（ほうふくぜっとう）: humorous, witty expressions
  *   gentle-indirect  — 柔和温順（にゅうわおんじゅん）: gentle, indirect phrasing
  *
- * 設計の正典: docs/cycles/cycle-303/redesign-v2.md（結果先行の再設計 V2）。
+ * 設計の出どころ: docs/cycles/cycle-303/redesign-v2.md（結果先行の再設計 V2）。
  * cycle-303 で「結果先行」で再設計した。8タイプ（結果本文から復元した行動的定義）が先に在り、
  * 各設問がそこへ判別する。配点はタイプの意味（その選択肢がどのタイプの声か・どれだけ強いか）
  * からのみ導く（同点率を下げるための内容非依存な数値合わせ＝調律は禁止。course-correction.md 参照）。

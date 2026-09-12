@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * ImageResizerTile — 画像リサイズの単一正典タイル
+ * ImageResizerTile — 画像リサイズの単一出どころタイル
  *
  * cycle-228 T-27: ImageResizerPage.tsx（559行）を Panel ルートのタイルへ移行。
  *

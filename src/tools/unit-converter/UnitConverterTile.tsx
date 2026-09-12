@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * UnitConverterTile — 単位変換の単一正典タイル
+ * UnitConverterTile — 単位変換の単一出どころタイル
  *
  * cycle-228 T-20: UnitConverterPage.tsx を Panel ルートのタイルへ作り直したもの。
  *

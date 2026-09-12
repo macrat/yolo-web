@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * TraditionalColorPaletteTile — 伝統色カラーパレットの単一正典タイル（cycle-228 T-19）
+ * TraditionalColorPaletteTile — 伝統色カラーパレットの単一出どころタイル（cycle-228 T-19）
  *
  * ## 設計原則
  *

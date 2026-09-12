@@ -1,5 +1,5 @@
 /**
- * TextDiffTile — text-diff 単一正典タイル 回帰テスト
+ * TextDiffTile — text-diff 単一出どころタイル 回帰テスト
  *
  * cycle-228 T-23 で TextDiffPage.tsx を Panel ルートのタイルへ移植。
  * 旧 TextDiffPage.test.tsx の振る舞いを全移植し以下を拡張:

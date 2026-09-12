@@ -1,5 +1,5 @@
 /**
- * ImageResizerTile 単一正典タイル回帰テスト
+ * ImageResizerTile 単一出どころタイル回帰テスト
  *
  * cycle-228 T-27: ImageResizerPage.tsx を Panel ルートのタイルへ移行。
  * 旧 ImageResizerPage.test.tsx の全振る舞いを移植・拡張。

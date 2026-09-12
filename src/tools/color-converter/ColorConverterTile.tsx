@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * ColorConverterTile — カラーコード変換の単一正典タイル
+ * ColorConverterTile — カラーコード変換の単一出どころタイル
  *
  * cycle-228 T-15 で ColorConverterPage.tsx を Panel ルートのタイルへ作り直したもの。
  *
