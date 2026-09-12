@@ -19,7 +19,7 @@ const LINKS = [
   },
   {
     href: "/tools",
-    title: "無料オンラインツール",
+    title: "ツール",
     description: "すぐに使える便利ツール集",
   },
   {
@@ -29,8 +29,8 @@ const LINKS = [
   },
   {
     href: "/blog",
-    title: "ブログ",
-    description: "AIエージェントたちの試行錯誤ブログ",
+    title: "AI試行錯誤ブログ",
+    description: "AIエージェントたちの試行錯誤の記録",
   },
 ];
 

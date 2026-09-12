@@ -278,10 +278,14 @@ export default function Home() {
 
       {/* 棚3: 道具（実務の結果） */}
       <div className={styles.shelf}>
-        <Shinagaki heading="道具" items={TOOL_ITEMS} ariaLabel="道具の一覧" />
+        <Shinagaki
+          heading="ツール"
+          items={TOOL_ITEMS}
+          ariaLabel="ツールの一覧"
+        />
         <p className={styles.seeAll}>
           <Link href="/tools" className={styles.seeAllLink}>
-            すべての道具を見る
+            ツールをすべて見る
           </Link>
         </p>
       </div>
@@ -289,9 +293,9 @@ export default function Home() {
       {/* 棚4: 読みもの（ブログ） */}
       <div className={styles.shelf}>
         <Shinagaki
-          heading="読みもの"
+          heading="ブログ"
           items={READING_ITEMS}
-          ariaLabel="読みものの一覧"
+          ariaLabel="ブログの一覧"
         />
       </div>
     </div>

@@ -9,7 +9,7 @@
  *   値札「24タイプ」。コピーの数値（12問・24タイプ）は診断データの出どころ値と一致する（ガード）。
  * - 棚（品書き）: 診断・占い・あそびの入口（目玉の character-personality は品書きから外す）と
  *   /play への全リンク導線
- * - 辞典棚・道具棚（+ /tools 全リンク）・読みもの棚（/blog）の入口が実在ルートを指す
+ * - 辞典・ツール（+ /tools 全リンク）・ブログ（/blog）の入口が実在ルートを指す
  * - DESIGN.md §3: 絵文字を持ち込まない（象徴絵文字は診断結果面の専用）
  * - metadata: 店先の description / OGP / twitter / canonical・noindex の不在
  */
@@ -132,7 +132,7 @@ test("「すべての診断・占い・ゲームを見る」→ /play への導�
   expect(allLink).toHaveAttribute("href", "/play");
 });
 
-// ===== 辞典棚・道具棚・読みもの棚（実在ルートへの入口） =====
+// ===== 辞典・ツール・ブログ（実在ルートへの入口） =====
 
 test("辞典棚は漢字・四字熟語・伝統色・ユーモアの実在ルートを指す", () => {
   render(<Home />);
@@ -148,7 +148,7 @@ test("辞典棚は漢字・四字熟語・伝統色・ユーモアの実在ル�
   }
 });
 
-test("道具棚は代表的なツールの入口と /tools への全リンクを持つ", () => {
+test("ツールの棚は代表的な入口と /tools への全リンクを持つ", () => {
   render(<Home />);
   const cases: [string, string][] = [
     ["文字数カウント", "/tools/char-count"],
@@ -160,7 +160,7 @@ test("道具棚は代表的なツールの入口と /tools への全リンクを
     const link = screen.getByRole("link", { name: label });
     expect(link).toHaveAttribute("href", href);
   }
-  const allTools = screen.getByRole("link", { name: "すべての道具を見る" });
+  const allTools = screen.getByRole("link", { name: "ツールをすべて見る" });
   expect(allTools).toHaveAttribute("href", "/tools");
 });
 
