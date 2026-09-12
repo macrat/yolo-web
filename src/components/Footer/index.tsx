@@ -26,9 +26,9 @@ const FOOTER_SECTIONS: {
     title: "ツール",
     links: [
       { label: "ツール一覧", href: "/tools" },
-      { label: "文字カウンター", href: "/tools/char-count" },
+      { label: "文字数カウント", href: "/tools/char-count" },
       { label: "JSON 整形", href: "/tools/json-formatter" },
-      { label: "色変換", href: "/tools/color-converter" },
+      { label: "カラーコード変換", href: "/tools/color-converter" },
     ],
   },
   {

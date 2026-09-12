@@ -409,7 +409,7 @@ export default function GameContainer({
     return (
       <div className={styles.loading}>
         <div className={styles.spinner} aria-hidden="true" />
-        <span>{"\u8AAD\u307F\u8FBC\u307F\u4E2D..."}</span>
+        <span>{"\u8AAD\u307F\u8FBC\u307F\u4E2D\u2026\u2026"}</span>
       </div>
     );
   }

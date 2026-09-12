@@ -53,7 +53,9 @@ export default function ResultModal({
       open={open}
       onClose={onClose}
       titleId="nakamawake-result-title"
-      title={isWon ? "\u3059\u3079\u3066\u6B63\u89E3!" : "\u6B8B\u5FF5..."}
+      title={
+        isWon ? "\u3059\u3079\u3066\u6B63\u89E3!" : "\u6B8B\u5FF5\u2026\u2026"
+      }
       returnFocusRef={returnFocusRef}
       footer={
         <button

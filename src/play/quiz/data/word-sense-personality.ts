@@ -68,7 +68,7 @@ const wordSensePersonalityQuiz: QuizDefinition = {
     ],
     publishedAt: "2026-03-30T18:00:00+09:00",
     relatedLinks: [
-      { label: "四字熟語性格診断を受ける", href: "/play/yoji-personality" },
+      { label: "四字熟語で性格診断を受ける", href: "/play/yoji-personality" },
       { label: "四字熟語力診断に挑戦", href: "/play/yoji-level" },
     ],
     faq: [

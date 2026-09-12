@@ -155,7 +155,7 @@ const TOOL_ITEMS: ShinagakiItem[] = [
     note: "文章の文字数と行数を、その場で数えます。",
   },
   {
-    name: "単位換算",
+    name: "単位変換",
     href: "/tools/unit-converter",
     note: "長さ・重さ・温度などをまとめて換算。",
   },
@@ -165,7 +165,7 @@ const TOOL_ITEMS: ShinagakiItem[] = [
     note: "読みづらいJSONを、見やすい形に整えます。",
   },
   {
-    name: "QRコード作成",
+    name: "QRコード生成",
     href: "/tools/qr-code",
     note: "URLや文章から、QRコードをその場で作ります。",
   },

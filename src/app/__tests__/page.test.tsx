@@ -152,9 +152,9 @@ test("ツールの棚は代表的な入口と /tools への全リンクを持つ
   render(<Home />);
   const cases: [string, string][] = [
     ["文字数カウント", "/tools/char-count"],
-    ["単位換算", "/tools/unit-converter"],
+    ["単位変換", "/tools/unit-converter"],
     ["JSON整形", "/tools/json-formatter"],
-    ["QRコード作成", "/tools/qr-code"],
+    ["QRコード生成", "/tools/qr-code"],
   ];
   for (const [label, href] of cases) {
     const link = screen.getByRole("link", { name: label });

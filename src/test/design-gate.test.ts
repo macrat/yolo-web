@@ -75,6 +75,8 @@ import { describe, test, expect } from "vitest";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import fg from "fast-glob";
+import { toolsBySlug } from "@/tools/registry";
+import { playContentBySlug } from "@/play/registry";
 
 const PROJECT_ROOT = path.resolve(__dirname, "../..");
 
@@ -1068,15 +1070,29 @@ describe("DESIGN.md §3 約物（明朝に palt を掛けない）", () => {
  * 範囲は誤検知を生むだけでなく、その内側に入った本物の違反を飲み込んで見逃す。
  * コメントと3種のリテラルを先頭から順に食べ、リテラルの中身だけを返す。
  */
+/**
+ * `\uXXXX` の並びを実際の字へ戻す。
+ *
+ * 一部のコンテンツは和文を丸ごとエスケープで書いている。そのままでは和文を
+ * 探す検査に一字も引っ掛からず、**ファイルごと網の外に落ちる**（cycle-312 で
+ * 53ファイルが該当）。読む側の目には同じ文なので、検査も同じ文として読む。
+ */
+function decodeEscapes(text: string): string {
+  return text.replace(/\\u([0-9a-fA-F]{4})/g, (_, hex) =>
+    String.fromCharCode(parseInt(hex, 16)),
+  );
+}
+
 function jsStringLiterals(src: string): string[] {
   const TOKEN =
     /\/\/[^\n]*|\/\*[\s\S]*?\*\/|'((?:[^'\\\n]|\\.)*)'|"((?:[^"\\\n]|\\.)*)"|`((?:[^`\\]|\\.)*)`/g;
   const bodies: string[] = [];
   for (const m of src.matchAll(TOKEN)) {
-    if (m[1] !== undefined) bodies.push(m[1]);
-    else if (m[2] !== undefined) bodies.push(m[2]);
+    if (m[1] !== undefined) bodies.push(decodeEscapes(m[1]));
+    else if (m[2] !== undefined) bodies.push(decodeEscapes(m[2]));
     // テンプレートの `${...}` は式であって文であり、来訪者には届かない。
-    else if (m[3] !== undefined) bodies.push(m[3].replace(/\$\{[^{}]*\}/g, ""));
+    else if (m[3] !== undefined)
+      bodies.push(decodeEscapes(m[3].replace(/\$\{[^{}]*\}/g, "")));
   }
   return bodies;
 }
@@ -1281,6 +1297,81 @@ describe("入力欄は 16px を下回らない（iOS Safari の自動ズーム�
           offenders.push(
             `${rel}: .${cls} に 16px の床が無い（${sizes.join(" / ")}）`,
           );
+        }
+      }
+    }
+    expect(offenders).toEqual([]);
+  });
+});
+
+/**
+ * §6-4「行き先を指す名前は、着いた先の名前と別の語にしない」のゲート。
+ *
+ * 「道具」と書いて「ツール」に着けば、来訪者は別の場所に来たと思う。同じ道具を
+ * 面ごとに別の名で呼べば、二つあると思う。cycle-312 では棚見出しとリンク4件を
+ * 直して「呼び名を1つへ揃えた」と報告したが、突合していないラベルがその倍あった。
+ * 出どころ（レジストリ）の名と、画面に置いたラベルを機械で突き合わせる。
+ */
+describe("DESIGN.md §6-4 行き先の名前（着いた先の名前と揃える）", () => {
+  /** 行き先の正式名。道具は meta.name、遊びはレジストリの表示名。 */
+  function canonicalName(href: string): string | null {
+    const tool = href.match(/^\/tools\/([a-z0-9-]+)$/);
+    if (tool) return toolsBySlug.get(tool[1])?.meta.name ?? null;
+    const play = href.match(/^\/play\/([a-z0-9-]+)$/);
+    if (play) {
+      const content = playContentBySlug.get(play[1]);
+      // 一覧・推薦・関連リンクはどの面も shortTitle を使う。行き先の「navigation
+      // 上の名前」はこれなので、突き合わせの基準もこれに置く。
+      return content ? (content.shortTitle ?? content.title) : null;
+    }
+    return null;
+  }
+
+  /**
+   * ラベルが正式名を指していると言えるか。
+   *
+   * 完全一致だけを通すと、正式名に限定語を足した形（「JSON整形」→「JSON整形・検証」）
+   * まで落ちる。来訪者はこれで迷わない——迷うのは**別の語に替える**ことである。
+   * どちらかがもう一方を含んでいれば通す。
+   */
+  function pointsTo(label: string, canonical: string): boolean {
+    // 「…を受ける」「…で遊ぶ」のような誘い文句は、名前に動作を足した形である。
+    // 名前そのものは残っているので、動作を外してから突き合わせる。
+    const name = decodeEscapes(label)
+      .replace(/(?:を|で|に)?(?:受ける|見る|遊ぶ|試す|する|やる)$/, "")
+      .replace(/\s+/g, "");
+    const target = canonical.replace(/\s+/g, "");
+    return target.includes(name) || name.includes(target);
+  }
+
+  test("リンクのラベルが行き先の名前と別の語でないこと", () => {
+    const files = fg.sync(["src/**/*.tsx", "src/**/*.ts"], {
+      cwd: PROJECT_ROOT,
+      ignore: [...IGNORE, "**/__tests__/**", "**/storybook/**", "**/meta.ts"],
+    });
+    const offenders: string[] = [];
+
+    for (const rel of files) {
+      const src = fs.readFileSync(path.join(PROJECT_ROOT, rel), "utf-8");
+      // `{ name: "…", href: "/tools/x" }` と `{ label: "…", href: "…" }` の両形。
+      // 順序はどちらでも書けるので、両向きを見る。
+      const patterns = [
+        /(?:name|label):\s*"([^"]+)",\s*href:\s*"([^"]+)"/g,
+        /href:\s*"([^"]+)",\s*(?:name|label):\s*"([^"]+)"/g,
+      ];
+      for (const [index, re] of patterns.entries()) {
+        for (const m of src.matchAll(re)) {
+          const label = index === 0 ? m[1] : m[2];
+          const href = index === 0 ? m[2] : m[1];
+          if (!/^\/(?:tools|play)\/[a-z0-9-]+$/.test(href)) continue;
+          const canonical = canonicalName(href);
+          if (canonical === null) {
+            // 実在しない行き先か、レジストリの形が変わったかのどちらか。
+            // どちらも「黙って通す」が最悪の結果なので落とす。
+            offenders.push(`${rel}: ${href} の名前を引けない`);
+          } else if (!pointsTo(label, canonical)) {
+            offenders.push(`${rel}: 「${label}」→ ${href}（「${canonical}」）`);
+          }
         }
       }
     }
