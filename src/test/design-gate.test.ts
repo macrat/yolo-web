@@ -44,7 +44,7 @@
  *          :hover/:focus/:active/:checked・[aria-current] 等・Current/Selected/Active/Correct
  *          命名）を一切含まない場合は、静的な区画/箱の地への誤用の疑いとして ERROR にする。
  *   §3    見出しの階層（1.25 倍スケール）・約物（`palt`/`halt` を掛けない・三点リーダ・
- *          和文の括弧）・入力欄の下限 16px。
+ *          和文の括弧）。
  *   §6    来訪者に届く言葉から内部の設計語彙を締め出す。行き先のラベルは着いた先の名前と揃える。
  *   §8-1  紫〜青（indigo/violet）のアクセント: 色関数 oklch/lch/hsl/hwb で hue≈250〜320。
  *          全面グラデーション背景（linear/radial-gradient）は警告レベル（面積判定は視覚レビュー）。
@@ -55,7 +55,7 @@
  *          ピル形状（9999px/50%/999px 等）もこの網に掛かる。
  *   §8-6  all-caps（text-transform: uppercase）= WARNING（§8 注記どおり多用の判定は視覚レビュー）。
  *   §8-7  本文書体に Inter/Roboto/Open Sans 等の欧文既定 sans = ERROR。font-family に monospace = ERROR。
- *   §10   色の直書き（トークン非経由の hex / rgb() / hsl() / oklch() 等を色プロパティに直書き）= ERROR。
+ *   §10   入力欄の下限 16px。色の直書き（トークン非経由の hex / rgb() / hsl() / oklch() 等を色プロパティに直書き）= ERROR。
  *          中性のスクリム（rgba(0,0,0,α) / rgba(255,255,255,α) 等のオーバーレイ幕）は慣例的例外として許容。
  *
  *   すべての検査は「標準 CSS プロパティ宣言」に対して行い、`--*` のカスタムプロパティ定義
