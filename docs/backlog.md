@@ -17,7 +17,7 @@
 | B-667 | 評価窓と読み返しの手順が仕組みとして無い | P3 | - | site-concept は窓をbacklogのDeferredに書くと定めたが、kickoffに期日走査の手順が無く、ブログの読み返しの契機も手順化されていない。詳細cycle-312/index.md |
 | B-660 | 本文と見出しが DESIGN §3 の値から外れている面がある | P3 | - | 結果の本文が行間1.8・一部15.2px、見出しが1.25倍スケール外(ブログで16件中7件)。詳細cycle-312/carryover |
 | B-654 | 情報の境界に `--rule` を使っている箇所の実査と是正 | P2 | - | `--rule` は 1.5/1.6 で境界に使えない。入力欄の枠など存在を伝える境界を `--rule-strong` へ。詳細cycle-312/carryover |
-| B-655 | 旧 DESIGN.md の「パネル」規則を引く §参照が62箇所 | P3 | - | 廃止済み(cycle-278)の節を40ファイル62箇所が引く(実測)。内訳=tools 35・app 23(うちstorybook 21)・components 4。書き直しと独立に既に誤り。詳細cycle-312/carryover |
+| B-655 | 廃止済みの「パネル」規則を引く参照が63箇所 | P3 | - | cycle-278で廃止した節を63箇所が引く(実測)。§付き62(tools 35・app 23=うちstorybook 21・components 4)＋§無しでDESIGN.mdに帰属する1。storybook以外が42件。書き直しと独立に既に誤り。詳細cycle-312/carryover |
 | B-656 | 店語彙の内部識別子・コメントの整理 | P4 | - | 識別子78ファイル・コメント1,180箇所。来訪者には届かないため低優先。詳細cycle-312/carryover |
 | B-657 | /play/impossible-advice/result/* に description が無い | P3 | - | 本番573URL中この7件のみ。共有前提の結果ページとして欠陥。詳細cycle-312/carryover |
 | B-658 | character.md に廃止済みターゲット定義の語が残る | P4 | - | 271行付近の表。cycle-278 で廃止された語彙。詳細cycle-312/carryover |
