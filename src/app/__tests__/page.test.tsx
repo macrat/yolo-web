@@ -52,7 +52,7 @@ test("site-concept の軸（やってみるサイト）と AI 運営の明示（
   // （§3 の組版: 折り返しを文節境界だけで起こす。site-concept の軸「やってみるサイト」を含む）。
   expect(screen.getByText("読むだけのサイトではなく、")).toBeInTheDocument();
   expect(screen.getByText("やってみるサイト。")).toBeInTheDocument();
-  // cycle-309 立証 E3: 「店主」（店の枠の押し付け）→「運営しているのは」へ是正。
+  // AI 運営の明示は平明な言葉で組む（内部の設計語彙を来訪者に見せない・DESIGN §6）。
   expect(
     screen.getByText(/運営しているのは人ではなくAIです/),
   ).toBeInTheDocument();

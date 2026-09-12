@@ -3,7 +3,7 @@
 - 状態: 実験中（open）——cycle-279 で出荷済み（2026-07-13）
 - 起票日: 2026-07-12 ／ 出荷日: 2026-07-13（cycle-279）
 - 決定・仮説: **コンセプト（AI が営む『やってみる』のよろず屋）とデザインシステム（店構え）は表裏一体であり、全ページ一斉切替とレガシー破棄（タイル・道具箱）はそのパーツ**——一体の「サイト刷新」として次サイクルに workflow で決着させる（オーナー裁定・cycle-278）。B-560 の決着（全面 legacy-vs-new A/B の棄却。柱=デュアル保守の放棄）を含む。来訪者価値の仮説: 刷新と文章規範の適用で来訪者の信頼と体験の質が上がる（安っぽさ・AI 臭の除去）。副次: AdSense 審査通過。 ※**注記（2026-07-30・cycle-300/incident-1.md）**: 本行の「オーナー裁定」ラベルは原発言未検証のまま貼られていた（AP-P34）。原発言で裁定されたのは「漸進分割の失敗・完全破棄・中途半端な放置が最悪」という**戦略**で、**全面 A/B の棄却は PM の導出**である。**A/B 自体は却下されておらず**、観測手段として挙げられ範囲判断は PM に委ねられていた。ラベル本文の是正は B-610。
-- 根拠: `docs/site-concept.md`・`DESIGN.md`・`docs/rebuild-plan.md`（正典）・`docs/research/2026-07-11-market-research-cycle278.md`・`docs/research/2026-07-11-design-antipatterns-and-direction.md`
+- 根拠: `docs/site-concept.md`・`DESIGN.md`・`docs/rebuild-plan.md`・`docs/research/2026-07-11-market-research-cycle278.md`・`docs/research/2026-07-11-design-antipatterns-and-direction.md`（いずれも改訂されうる文書であり、観測で覆りうる）
 - 観測手段と評価窓:
   - Search Console 週次（カテゴリ別。**基線=切替前28日**・読み始め=切替+2週・結論=+3ヶ月窓）。双方向ガード=上げ下げとも単一原因に断定しない。
   - GA4: 診断開始率・完走率・札保存/共有（新設イベント）・375px の CLS。
