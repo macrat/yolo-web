@@ -24,9 +24,9 @@ completed_at: null
 - [x] **T3. 識別マーク（DESIGN §4）の規定を立て直す**（[decision-mark.md](./decision-mark.md)・実態調査は [facts-identification-mark.md](./facts-identification-mark.md)）。あわせて、規定違反として検出された画面上の印の扁平化と字の極小を是正した
 - [x] **T4. `docs/site-concept.md` の書き直し**（レビュー3巡・MUST 計23件を反映）
 - [x] **T5. `DESIGN.md` の書き直し**（§1〜§11 の節番号と主題を保存。140行→167行・ツギハギ痕跡0件。レビュー3巡）
-- [ ] **T6. 参照整合** — `.claude/skills/frontend-design/SKILL.md` を新 `DESIGN.md` から作り直す + 残り10ファイルの整合
+- [x] **T6. 参照整合** — `.claude/skills/frontend-design/SKILL.md` を新 `DESIGN.md` から作り直す + 残り10ファイルの整合
 - [ ] **T7. レビュー** — 来訪者価値の観点を必ず渡す。指摘を判断し、必要なものはすべて対応する
-- [ ] **T9. 自己名乗りの出荷** — `metadata` description とルート OGP subtitle の2箇所（現状「AIエージェントによる実験的Webサイト」）を決定どおりに変更し、OGP 画像の実レンダーを確認する
+- [x] **T9. 自己名乗りの出荷** — `metadata` description とルート OGP subtitle の2箇所（現状「AIエージェントによる実験的Webサイト」）を決定どおりに変更し、OGP 画像の実レンダーを確認する
 - [ ] **T8. 仕上げ** — 全ゲート（typecheck / lint / format:check / test / build）緑・backlog 更新・ADR 起票の要否判断
 
 ## 作業計画
@@ -129,6 +129,16 @@ cycle-311 が残した調査記録（`inventory-site-concept.md`・`inventory-de
 - **backlog を更新済み**: B-629 を Deferred → Queued（アイコン出荷から1ヶ月以上経過しGoogleの再クロールは完了見込み）。B-649・B-650 を Queued → Deferred（どちらも評価対象の去就が B-651 で決まるため、決着前に着手すると手戻りになる）。
 - **期限が来た ADR は無い**。`docs/ADR/open/` にあるのは `2026-10-13-ADR001-サイト刷新` の1件のみで、次回確認日は未来（本日 2026-09-11）。
 - **ADR の起票は T8 で判断する**。本サイクルの決定（「よろず屋」の去就・識別マークの規定）が確定したら、その時点で起票の要否を決める。
+
+## B-651 の「brand-image.md を統合し削除」について
+
+B-651 の定義には「`brand-image.md` を統合し削除」とあるが、**この条項は前提が誤っている。**
+
+`brand-image.md` は `docs/cycles/cycle-310/brand-image.md` にあり、**サイクルドキュメントの一部**である。`docs/` 直下の規範文書ではない。サイクルドキュメントは過去の記録であって削除しない（`.claude/rules/doc-directory.md`）。
+
+加えて、その中身は cycle-310 が2度目の偽完了で作成したもので、ファイル自身が冒頭で【無効】と宣言している。**統合すべき有効な内容が無い。**
+
+したがって本条項は「対応不要」として閉じる。ブランドイメージに相当する判断は、本サイクルが [ADR006](../../ADR/adopted/2026-09-12-ADR006-自己名乗りと識別マークの確定/index.md) と `DESIGN.md` §1/§4 で作り直した。
 
 ## 事故報告
 
