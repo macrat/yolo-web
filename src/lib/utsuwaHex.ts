@@ -29,3 +29,20 @@ export const RULE = "#cdcac5"; // --rule        oklch(0.84 0.008 85)
 export const RULE_STRONG = "#302d28"; // --rule-strong oklch(0.30 0.01 80)
 /** 朱（アクセント・印専用）。 */
 export const ACCENT = "#af3622"; // --accent      oklch(0.51 0.16 32)
+
+/**
+ * ダーク側。CSS を書けない面（middleware の 410 等）で `prefers-color-scheme` に
+ * 追随させるために持つ。値は globals.css の `:root.dark` の oklch と対応する。
+ */
+/** 紙地（ダーク）。 */
+export const PAPER_DARK = "#1b1915"; // --paper       oklch(0.215 0.008 80)
+/** 墨（ダーク・主文字色）。 */
+export const INK_DARK = "#e9e8e4"; // --ink         oklch(0.93 0.005 90)
+/** 墨（ダーク・副次）。 */
+export const INK_2_DARK = "#a7a49f"; // --ink-2       oklch(0.72 0.008 85)
+/** 罫（ダーク）。 */
+export const RULE_DARK = "#3f3d38"; // --rule        oklch(0.36 0.008 80)
+/** 罫（ダーク・強）。 */
+export const RULE_STRONG_DARK = "#d9d7d4"; // --rule-strong oklch(0.88 0.005 90)
+/** 朱（ダーク）。 */
+export const ACCENT_DARK = "#e87a65"; // --accent      oklch(0.70 0.14 32)

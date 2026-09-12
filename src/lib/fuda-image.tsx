@@ -24,7 +24,7 @@ import { getContrastTextColor } from "@/play/color-utils";
  * Satori 制約への対応:
  * - Satori は oklch を解釈できない → 和色は {@link WAIRO_HEX}（light 固定 hex）で渡す。
  * - 印の円環は SVG `<circle>` 一本ストロークで描く（画面の {@link import("@/components/In").default In}
- *   と同じ流儀・朱一色・回転 ±8° 内・幅は包み幅の 1/5 以下）。
+ *   と同じ流儀・朱一色・回転 ±8° 内・幅は面の幅の 1/5 以下）。
  * - 明朝（結果の言葉の顔・DESIGN §3）は Noto Serif JP を CDN から取得。取得失敗時は
  *   ゴシックへ素直にフォールバック（描画は成立させ、書体だけ譲る）。
  */
@@ -258,7 +258,7 @@ export async function renderFudaImage(
         </div>
       </div>
 
-      {/* 印: 成果物に一つだけ・右上に捺す。朱一色の円環＋一字・回転 ±8° 内・幅は包み幅の 1/5 以下
+      {/* 印: 成果物に一つだけ・右上に捺す。朱一色の円環＋一字・回転 ±8° 内・幅は面の幅の 1/5 以下
             （100/1200 ≒ 8%）。SVG 一本ストロークで円環を描く（画面の In と同じ流儀）。 */}
       <div
         style={{

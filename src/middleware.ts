@@ -1,17 +1,42 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { PAPER, INK, INK_2, RULE, RULE_STRONG, ACCENT } from "@/lib/utsuwaHex";
+import {
+  PAPER,
+  INK,
+  INK_2,
+  RULE,
+  RULE_STRONG,
+  ACCENT,
+  PAPER_DARK,
+  INK_DARK,
+  INK_2_DARK,
+  RULE_DARK,
+  RULE_STRONG_DARK,
+  ACCENT_DARK,
+} from "@/lib/utsuwaHex";
 
 /**
- * 削除済みブログ記事のスラッグ一覧。
- * これらのURLに対して HTTP 410 Gone を返す。
- * cycle番号はそのスラッグが削除された際のサイクルを示す。
+ * 記事は残っているが URL が変わったもの。旧 URL から来た人を新しい URL へ送る。
+ *
+ * 中身が読める場所があるのに「削除されました」を見せるのは、来訪者にとって記事が
+ * 失われたのと同じである（site-concept「消すときは、いま使っている人の行き先を
+ * 用意する——代わりになる面があれば転送する」）。
+ */
+export const MOVED_BLOG_SLUGS: Readonly<Record<string, string>> = {
+  "ai-agent-bias-and-context-engineering":
+    "ai-agent-concept-rethink-1-bias-and-context-engineering",
+  "forced-ideation-1728-combinations":
+    "ai-agent-concept-rethink-2-forced-ideation-1728",
+  "ai-agent-workflow-limits-when-4-skills-break":
+    "ai-agent-concept-rethink-3-workflow-limits",
+} as const;
+
+/**
+ * 中身ごと無くなった記事のスラッグ。これらには HTTP 410 Gone を返す。
+ * 行末の cycle 番号は、その記事を削除したサイクルを指す。
  */
 export const DELETED_BLOG_SLUGS: readonly string[] = [
   "ai-agent-site-strategy-formulation", // cycle-66で3部作に置換
-  "ai-agent-bias-and-context-engineering", // cycle-68でスラッグ変更
-  "forced-ideation-1728-combinations", // cycle-68でスラッグ変更
-  "ai-agent-workflow-limits-when-4-skills-break", // cycle-68でスラッグ変更
   "nextjs-static-page-split-for-tools", // cycle-84で削除、改良版記事あり
   "achievement-system-multi-agent-incidents", // cycle-84で削除
   "character-fortune-text-art", // cycle-84で削除
@@ -80,20 +105,22 @@ export function build410Html(): string {
 <meta name='viewport' content='width=device-width, initial-scale=1' />
 <title>このコンテンツは終了しました | yolos.net</title>
 <style>
+:root{color-scheme:light dark;--paper:${PAPER};--ink:${INK};--ink-2:${INK_2};--rule:${RULE};--rule-strong:${RULE_STRONG};--accent:${ACCENT}}
+@media (prefers-color-scheme:dark){:root{--paper:${PAPER_DARK};--ink:${INK_DARK};--ink-2:${INK_2_DARK};--rule:${RULE_DARK};--rule-strong:${RULE_STRONG_DARK};--accent:${ACCENT_DARK}}}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:${GOTHIC_STACK};background:${PAPER};color:${INK};min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1.5rem;line-height:1.7}
+body{font-family:${GOTHIC_STACK};background:var(--paper);color:var(--ink);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1.5rem;line-height:1.7}
 .container{max-width:34rem;width:100%}
-.shop{font-family:${MINCHO_STACK};font-size:1.25rem;color:${INK};text-decoration:none;display:block}
-.noren{border-bottom:1px solid ${RULE_STRONG};padding-bottom:0.5rem;margin-bottom:2rem}
-h1{font-family:${MINCHO_STACK};font-size:1.6rem;font-weight:600;color:${INK};line-height:1.4;letter-spacing:0.02em}
-p{font-family:${GOTHIC_STACK};font-size:1rem;color:${INK_2};line-height:1.9;margin-top:1rem}
-h2{font-family:${MINCHO_STACK};font-size:1.125rem;font-weight:600;color:${INK};line-height:1.4;margin-top:2.5rem;padding-bottom:0.5rem;border-bottom:1px solid ${RULE}}
+.shop{font-family:${MINCHO_STACK};font-size:1.25rem;color:var(--ink);text-decoration:none;display:block}
+.noren{border-bottom:1px solid var(--rule-strong);padding-bottom:0.5rem;margin-bottom:2rem}
+h1{font-family:${MINCHO_STACK};font-size:1.6rem;font-weight:600;color:var(--ink);line-height:1.4;letter-spacing:0.02em}
+p{font-family:${GOTHIC_STACK};font-size:1rem;color:var(--ink-2);line-height:1.9;margin-top:1rem}
+h2{font-family:${MINCHO_STACK};font-size:1.125rem;font-weight:600;color:var(--ink);line-height:1.4;margin-top:2.5rem;padding-bottom:0.5rem;border-bottom:1px solid var(--rule)}
 ul{list-style:none;margin-top:0.5rem}
-li{border-bottom:1px solid ${RULE}}
-li a{display:block;padding:0.75rem 0;color:${ACCENT};text-decoration:none;font-size:1rem}
+li{border-bottom:1px solid var(--rule)}
+li a{display:block;padding:0.75rem 0;color:var(--accent);text-decoration:none;font-size:1rem}
 li a:hover,li a:focus-visible{text-decoration:underline}
-li a:focus-visible{outline:2px solid ${ACCENT};outline-offset:2px}
-.note{font-size:0.8125rem;color:${INK_2};margin-top:2.5rem;line-height:1.7}
+li a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.note{font-size:0.8125rem;color:var(--ink-2);margin-top:2.5rem;line-height:1.7}
 </style>
 </head>
 <body>
@@ -103,10 +130,10 @@ li a:focus-visible{outline:2px solid ${ACCENT};outline-offset:2px}
 <p>お探しの記事はすでに取り下げられており、読むことができません。近いものがあるかもしれないので、下から探してみてください。</p>
 <h2>行き先</h2>
 <ul>
-<li><a href='/blog'>読みもの一覧</a></li>
-<li><a href='/tools'>道具</a></li>
+<li><a href='/blog'>AI試行錯誤ブログ</a></li>
+<li><a href='/tools'>ツール</a></li>
 <li><a href='/dictionary'>辞典</a></li>
-<li><a href='/play'>診断・占い・あそび</a></li>
+<li><a href='/play'>遊ぶ</a></li>
 </ul>
 <p class='note'>運営しているのは人ではなくAIです。実験なので、内容に誤りがあるかもしれません。</p>
 </div>
@@ -121,6 +148,13 @@ export function middleware(request: NextRequest): NextResponse | Response {
   const blogPathMatch = /^\/blog\/([^/]+)$/.exec(pathname);
   if (blogPathMatch) {
     const slug = blogPathMatch[1];
+    // 記事が新しい URL で生きているなら、消えた告知でなく現物へ送る（308: 恒久）
+    const movedTo = MOVED_BLOG_SLUGS[slug];
+    if (movedTo) {
+      const url = request.nextUrl.clone();
+      url.pathname = `/blog/${movedTo}`;
+      return NextResponse.redirect(url, 308);
+    }
     if (isDeletedBlogSlug(slug)) {
       return new Response(build410Html(), {
         status: 410,
