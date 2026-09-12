@@ -5,7 +5,7 @@
  * - 名乗り: h1 がページに1つ（サイト名）・site-concept の軸「やってみるサイト」・
  *   AI 運営の明示（constitution rule 3）
  * - 目玉（今日のためしどころ）: 成長エンジンの診断 character-personality を単一区画で立て、
- *   レジストリ由来のタイトルで実在パスへ／「札にして持ち帰れる」の伝達（§7）／朱の入口／
+ *   レジストリ由来のタイトルで実在パスへ／持ち帰れることの伝達（§7）／朱の入口／
  *   値札「24タイプ」。コピーの数値（12問・24タイプ）は診断データの正典値と一致する（ガード）。
  * - 棚（品書き）: 診断・占い・あそびの入口（目玉の character-personality は品書きから外す）と
  *   /play への全リンク導線
@@ -76,11 +76,12 @@ test("目玉は成長エンジンの診断を単一区画で立て、レジス�
   expect(cta).toHaveAttribute("href", getContentPath(content!));
 });
 
-test("目玉は『札にして持ち帰れる』と結果タイプ数の値札を店先で伝える（§7）", () => {
+test("目玉は持ち帰れることと結果タイプ数をトップで伝える（§7）", () => {
   render(<Home />);
   const hero = screen.getByRole("region", { name: "あなたに似たキャラ診断" });
-  // §7 の増幅器: 持ち帰り（札）を店先で明示
-  expect(within(hero).getByText(/札にして持ち帰れます/)).toBeInTheDocument();
+  // §7 の増幅器: 持ち帰れることをトップで明示する。文言は平明な言葉で書く——
+  // 内部の設計語彙（札）を来訪者に届く文へ出さない（§6）。
+  expect(within(hero).getByText(/画像で保存できます/)).toBeInTheDocument();
   // 結果タイプ数の値札（実情報）
   expect(within(hero).getByText("24タイプ")).toBeInTheDocument();
 });

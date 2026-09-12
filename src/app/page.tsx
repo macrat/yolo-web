@@ -216,7 +216,7 @@ export default function Home() {
               {heroContent.title}
             </h2>
             <p className={styles.heroLede}>
-              12の問いに答えると、あなたに近いキャラクター像がひとつ。結果は札にして持ち帰れます。
+              12の問いに答えると、あなたに近いキャラクター像がひとつ。結果は画像で保存できます。
             </p>
             <p className={styles.heroTags}>
               <Nefuda label="24タイプ" />
@@ -246,7 +246,7 @@ export default function Home() {
               seal="診"
             />
             <p className={styles.heroSampleNote}>
-              結果はこんな札になります（これは見本です）。
+              結果はこんな画像になります（これは見本です）。
             </p>
           </div>
         </section>

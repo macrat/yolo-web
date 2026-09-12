@@ -1022,10 +1022,13 @@ describe("§8 機械ゲートの検出力（合成入力）", () => {
 /**
  * §3「約物」のゲート。
  *
- * 見出し書体（--font-mincho＝Noto Serif JP）に `palt` テーブルは無く、
- * `font-feature-settings: "palt"` を指定すると、書体が既定で有効にしている
- * `chws`（連続約物のアキ詰め）が代わりに切れる。実測（31px・「」「」——！？）で
+ * `palt` は `chws` と排他で、見出し書体（--font-mincho）に指定すると、書体が既定で
+ * 有効にしている `chws`（連続約物のアキ詰め）が切れる。実測（600/31px・「」「」——！？）で
  * 指定なし 224.3px に対し palt 指定 239.8px——詰めるための指定が字を広げていた。
+ *
+ * 検査するのは `palt` だけである。`font-feature-settings` は書いた feature 以外を
+ * 無効化しないため（liga/kern/tnum はいずれも normal と同値・実測）、`tnum` など
+ * 排他でない feature は通す。詳細は docs/knowledge/frontend.md。
  *
  * grep 一行で検査できる規則なので機械ゲートに置く。cycle-312 で 26 宣言 /
  * 20 ファイルが素通りしていた（globals.css だけ直して直したつもりになっていた）。
