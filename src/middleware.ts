@@ -29,6 +29,14 @@ export const MOVED_BLOG_SLUGS: Readonly<Record<string, string>> = {
     "ai-agent-concept-rethink-2-forced-ideation-1728",
   "ai-agent-workflow-limits-when-4-skills-break":
     "ai-agent-concept-rethink-3-workflow-limits",
+  // 同じ出来事を書き直したもの（いずれも旧記事と同日または同主題）
+  "site-name-yolos-net": "site-rename-yolos-net",
+  "tools-expansion-27": "tools-expansion-10-to-30",
+  "traditional-colors-dictionary": "japanese-traditional-colors-dictionary",
+  // 旧記事は next/dynamic のローディングフラッシュを扱っており、同日公開の
+  // この記事が同じ主題を書き直したもの（スラッグの字面は似ていない）
+  "nextjs-static-page-split-for-tools":
+    "nextjs-dynamic-import-pitfalls-and-true-code-splitting",
 } as const;
 
 /**
@@ -37,7 +45,6 @@ export const MOVED_BLOG_SLUGS: Readonly<Record<string, string>> = {
  */
 export const DELETED_BLOG_SLUGS: readonly string[] = [
   "ai-agent-site-strategy-formulation", // cycle-66で3部作に置換
-  "nextjs-static-page-split-for-tools", // cycle-84で削除、改良版記事あり
   "achievement-system-multi-agent-incidents", // cycle-84で削除
   "character-fortune-text-art", // cycle-84で削除
   "music-personality-design", // cycle-84で削除
@@ -49,9 +56,6 @@ export const DELETED_BLOG_SLUGS: readonly string[] = [
   "html-sql-cheatsheets", // cycle-89で削除
   "web-developer-tools-guide", // cycle-90で削除
   "quality-improvement-and-restructure-design", // cycle-15で短期間公開後削除
-  "site-name-yolos-net", // 短期間公開後削除
-  "tools-expansion-27", // 短期間公開後削除
-  "traditional-colors-dictionary", // 短期間公開後削除
 ] as const;
 
 // 高速検索のためSetに変換
@@ -158,7 +162,12 @@ export function middleware(request: NextRequest): NextResponse | Response {
     if (isDeletedBlogSlug(slug)) {
       return new Response(build410Html(), {
         status: 410,
-        headers: { "Content-Type": "text/html; charset=utf-8" },
+        headers: {
+          "Content-Type": "text/html; charset=utf-8",
+          // 410 は既定で恒久的にキャッシュされうる。一度この面を開いた人には、
+          // 後から転送を足しても届かなくなる（記事が復活しても古い墓標を見続ける）。
+          "Cache-Control": "no-store",
+        },
       });
     }
   }

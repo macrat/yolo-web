@@ -74,8 +74,9 @@ const ALLOWED_ATTRIBUTES: Record<string, sanitizeHtml.AllowedAttribute[]> = {
   input: ["type", "checked", "disabled"],
   // GFM Alert title paragraph uses class="markdown-alert-title"
   p: ["class"],
-  // mermaid extension uses <div class="mermaid">, GFM Alerts use class attributes
-  div: ["class"],
+  // mermaid extension uses <div class="mermaid">, GFM Alerts use class attributes.
+  // 表のスクロール器は tabindex/role/aria-label を持つ（キーボードで隠れた列へ届く）。
+  div: ["class", "tabindex", "role", "aria-label"],
   // <span> inside Shiki output carries inline `style` declarations with per-token colors
   span: ["class", "style"],
   section: ["class"],

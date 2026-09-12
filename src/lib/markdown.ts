@@ -5,7 +5,7 @@
  * build-time rendering.
  */
 
-import { Marked, type MarkedExtension, type Tokens } from "marked";
+import { Marked, Renderer, type MarkedExtension, type Tokens } from "marked";
 // GFM Alert構文（> [!NOTE]等）をadmonitionのHTMLに変換するため追加
 import markedAlert from "marked-alert";
 // XSS防止のためmarked出力をホワイトリスト方式でサニタイズ
@@ -24,6 +24,9 @@ import { highlight } from "@/lib/highlight";
  * 先読みしてハイライト結果を WeakMap に保存しておき、同期 renderer はそこから
  * 取り出すだけにする。marked 単体は同期 renderer しかサポートしないため。
  */
+/** marked 既定の表レンダラ。器で包む前の table HTML を得るために保持する。 */
+const defaultTableRenderer = Renderer.prototype.table;
+
 const highlightedCodeCache = new WeakMap<Tokens.Code, string>();
 
 const codeExtension: MarkedExtension = {
@@ -35,6 +38,18 @@ const codeExtension: MarkedExtension = {
     highlightedCodeCache.set(code, await highlight(code.text, code.lang));
   },
   renderer: {
+    /**
+     * 表を、キーボードでもスクロールできる器で包む。
+     *
+     * 読む幅に収まらない表は、はみ出した列が画面端で切れて到達できなくなる
+     * （body が overflow-x: clip のため）。table 自体を display:block にすると
+     * 表の意味構造が支援技術から失われるので、外側を器にする。tabindex が無いと
+     * スクロール領域にキーボードから入れず、隠れた列へマウス以外で届かない。
+     */
+    table(token: Tokens.Table) {
+      const inner = defaultTableRenderer.call(this, token);
+      return `<div class="tableScroll" tabindex="0" role="region" aria-label="表（横にスクロールできます）">\n${inner}</div>\n`;
+    },
     code(token: Tokens.Code) {
       if (token.lang === "mermaid") {
         const escaped = token.text

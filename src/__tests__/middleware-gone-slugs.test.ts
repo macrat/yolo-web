@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { NextRequest } from "next/server";
+import { getAllBlogPosts } from "@/blog/_lib/blog";
 import {
   DELETED_BLOG_SLUGS,
   MOVED_BLOG_SLUGS,
@@ -9,8 +10,8 @@ import {
 } from "../middleware";
 
 describe("DELETED_BLOG_SLUGS", () => {
-  test("16件の削除済みスラッグが定義されている", () => {
-    expect(DELETED_BLOG_SLUGS).toHaveLength(16);
+  test("12件の削除済みスラッグが定義されている", () => {
+    expect(DELETED_BLOG_SLUGS).toHaveLength(12);
   });
 
   // 記事が生きているスラッグを 410 に混ぜない。混ざると、読める記事を
@@ -23,7 +24,6 @@ describe("DELETED_BLOG_SLUGS", () => {
 
   const expectedSlugs = [
     "ai-agent-site-strategy-formulation",
-    "nextjs-static-page-split-for-tools",
     "achievement-system-multi-agent-incidents",
     "character-fortune-text-art",
     "music-personality-design",
@@ -35,9 +35,6 @@ describe("DELETED_BLOG_SLUGS", () => {
     "html-sql-cheatsheets",
     "web-developer-tools-guide",
     "quality-improvement-and-restructure-design",
-    "site-name-yolos-net",
-    "tools-expansion-27",
-    "traditional-colors-dictionary",
   ];
 
   test.each(expectedSlugs)("スラッグ '%s' が含まれている", (slug) => {
@@ -45,8 +42,35 @@ describe("DELETED_BLOG_SLUGS", () => {
   });
 });
 
+/**
+ * 転送先が死んでいると 308 → 404 になり、410 よりも悪い（墓標すら出ない）。
+ * 削除リストに生きた記事が混ざっていれば、読める記事を隠すことになる。
+ * どちらも「記事の実在」を見ないと検出できないので、記事データと突き合わせる。
+ */
+describe("転送と削除の行き先が、記事の実在と食い違わない", () => {
+  const liveSlugs = new Set(getAllBlogPosts().map((p) => p.slug));
+
+  test("転送先はすべて生きている記事である", () => {
+    for (const [from, to] of Object.entries(MOVED_BLOG_SLUGS)) {
+      expect(
+        liveSlugs.has(to),
+        `${from} の転送先 ${to} が存在しない（308→404 になる）`,
+      ).toBe(true);
+    }
+  });
+
+  test("削除リストに生きている記事が混ざっていない", () => {
+    for (const slug of DELETED_BLOG_SLUGS) {
+      expect(
+        liveSlugs.has(slug),
+        `${slug} は記事が存在するのに 410 を返している`,
+      ).toBe(false);
+    }
+  });
+});
+
 describe("isDeletedBlogSlug", () => {
-  test("全16件の削除済みスラッグに対してtrueを返す", () => {
+  test("全12件の削除済みスラッグに対してtrueを返す", () => {
     for (const slug of DELETED_BLOG_SLUGS) {
       expect(isDeletedBlogSlug(slug)).toBe(true);
     }

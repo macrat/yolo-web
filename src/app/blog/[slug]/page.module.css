@@ -176,16 +176,25 @@
   color: var(--ink-2);
 }
 
-/* 表は読む幅に収まらないことがある。狭い画面で右端の列が黙って切れると、
- * 数値を見せる記事では中身が届かない。表だけを横スクロールさせ、ページ本体は
- * 横に溢れさせない。`display: block` で table 自身をスクロール容器にする。 */
 .prose table {
-  display: block;
   width: 100%;
-  max-width: 100%;
-  overflow-x: auto;
   border-collapse: collapse;
+  margin: 0;
+}
+
+/* 表が読む幅に収まらないとき、右端の列が画面端で黙って切れる（body が
+ * overflow-x: clip のため、はみ出した列へは到達できない）。表そのものを
+ * display:block にすると表の意味構造が支援技術から失われるので、外側の器を
+ * スクロールさせる。tabindex でキーボードからもスクロールできるようにする
+ * （これが無いと、隠れた列へマウス以外で到達する手段が無い）。 */
+.tableScroll {
+  overflow-x: auto;
   margin: 0 0 var(--space-16);
+}
+
+.tableScroll:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .prose th,
