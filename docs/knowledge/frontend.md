@@ -77,7 +77,7 @@ DESIGN.md §4「クリック標的＝視覚単位の全体」の実装手段。�
 
 これは仕様どおりの挙動である。CSS Fonts 4 は、既定で有効な feature は `font-feature-settings` が `normal` でなくても有効であり続け、作者が明示的に上書きした feature だけが無効になると定めている（解決順序は 既定 → CSS プロパティ → `font-feature-settings` の足し合わせ）。Chromium が `chws` を既定で有効にした際、排他にしたのは `halt`・`palt` とその縦組み版だけである（GPOS 実装のため）。
 
-この区別は実務上重要で、「`font-feature-settings` を書かない」という乱暴な規則にすると、数字の桁揃えに使う `tnum` まで巻き添えで消える。
+この区別は実務上重要で、「`font-feature-settings` を書かない」という乱暴な規則にすると、数字の桁揃えに使う `tnum` まで巻き添えで消える。ただし `tnum` が `chws` と併存するのは**ブラウザの実装に依っている**（下記）。
 
 ただし**移植性は保証されていない**。OpenType 仕様は `chws` を `fwid`・`halt`・`hwid`・`palt`・`pkna`・`pwid`・`qwid`・`twid`・`pnum`・`tnum` の10機能と相互排他と定めており、Chromium が排他の対象を `halt`・`palt`（とその縦組み版）だけに狭めているために `tnum` が無事なだけである。他のエンジンが仕様どおりに実装すれば `tnum` でも `chws` は落ちる。
 
@@ -108,6 +108,7 @@ DESIGN.md §4「クリック標的＝視覚単位の全体」の実装手段。�
 書体に当該 feature のテーブルがあるかを推測しない。同じ文字列を feature 違いで並べて幅を測れば1分で分かる。
 
 ```js
+await document.fonts.ready; // Web フォントの読み込みを待つ（待たないとフォールバックを測る）
 const probe = document.createElement("span");
 probe.style.cssText =
   "position:absolute;visibility:hidden;white-space:nowrap;font:600 31px 'Noto Serif JP'";
@@ -117,6 +118,7 @@ for (const ff of ["normal", '"palt"', '"chws"', '"halt"', '"tnum"']) {
   probe.style.fontFeatureSettings = ff;
   console.log(ff, probe.getBoundingClientRect().width);
 }
+probe.remove();
 ```
 
 ### 検査

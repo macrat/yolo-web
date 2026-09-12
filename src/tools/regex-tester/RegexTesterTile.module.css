@@ -48,7 +48,8 @@
   flex: 1;
   border: none;
   font-family: var(--font-mono);
-  font-size: 0.95rem;
+  /* 来訪者が打ち込む欄なので 16px。16px 未満だと iOS Safari が自動拡大する。 */
+  font-size: 1rem;
   color: var(--ink);
   background-color: transparent;
   padding: 0 0.25rem;

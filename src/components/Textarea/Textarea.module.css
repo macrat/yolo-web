@@ -7,7 +7,10 @@
   width: 100%;
   box-sizing: border-box;
   font-family: inherit;
-  font-size: 14px;
+  /* 来訪者が読み書きする欄なので 16px（DESIGN §3: 13〜14px は補助情報に限る）。
+   * 16px 未満だと iOS Safari がフォーカス時にページを自動拡大し、来訪者が手で
+   * 戻す必要が生じる。 */
+  font-size: 16px;
   line-height: 1.7;
   background: var(--paper);
   color: var(--ink);
