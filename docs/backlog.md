@@ -44,7 +44,7 @@
 | B-609 | レビュー体制の構造的欠陥(基準違反の検出漏れ)の是正 | P2 | - | cycle-298判明+cycle-300。残=(a)基準違反がMinor判定(b)candidates非読込(c)pre-commit検出漏れ(d)観点が計器選択の妥当性(AP-P31等)を問わない。詳細cycle-298/incident-3・cycle-300/incident-1 |
 | B-610 | ADR001+rebuild-plan§1(a)の「オーナー裁定」ラベル是正(AP-P34) | P2 | - | cycle-298発覚+cycle-300で原発言を逐語検証済(全面A/B棄却はPM導出・A/Bは却下されていない)。帰属を是正(ADR/READMEの『サイト全面のA/Bはしない』も整合対象)。詳細cycle-300/incident-1 |
 | B-586 | rebuild-plan.md の処遇(archive移動)と参照元の付け替え | P2 | - | 作り直しはcycle-279完了・中身はbacklog/ADRへ移設済だが参照(ADR001・cycle-kickoff SKILL等)が残る=archive移動と参照付け替えが要る。cycle-284重大事故の舞台。詳細cycle-284.md事故報告 |
-| B-564 | フェーズC-c: 辞典の処遇判断(体験化orプルーニング) | P2 | - | フェーズR完了で解禁。検定エンジン検討(B-562)と同時に判断。B-521で辞書CTR 0.08%=参照型の敗北兆候TW-Aと判明済(ADR001)。詳細 rebuild-plan.md §3 |
+| B-564 | フェーズC-c: 辞典の処遇判断(体験化orプルーニング) | P2 | - | フェーズR完了で解禁。検定エンジン検討(B-562)と同時に判断。B-521で辞書CTR 0.08%を実測済(ADR001)=参照型が訪問を失う兆候。標本は漢字辞典1カテゴリ・順位は未統制。詳細 rebuild-plan.md §3 |
 | B-566 | ツールの処遇判断(最高価値に磨いてから改善orプルーニング) | P2 | - | フェーズR完了で解禁の専用取組。SC表示数による一律削除は撤回済(cycle-279・rule4)。詳細 cycle-279.md・rebuild-plan §2 R-1 |
 | B-494 | Dynamic Workflows 運用知見の knowledge 恒久化 | P2 | 279 | **フェーズR(workflow一斉切替)の前提整備として昇格**。6点の知見をknowledge化。詳細 cycle-225.md |
 | B-620 | 診断の二重発火で設問が1問飛び結果が変わる欠陥 | P3 | - | cycle-301で実装・出荷したがsrc配下ごとrevert(当初計画外の作業だったため)。初版2026-02-19から存在。詳細cycle-301/index.md §E |
