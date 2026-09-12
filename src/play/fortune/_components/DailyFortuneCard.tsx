@@ -52,7 +52,7 @@ export default function DailyFortuneCard() {
   if (!state) {
     return (
       <div className={styles.card}>
-        <p className={styles.loading}>運勢を占っています...</p>
+        <p className={styles.loading}>運勢を占っています……</p>
       </div>
     );
   }

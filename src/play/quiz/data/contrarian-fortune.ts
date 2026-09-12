@@ -142,12 +142,12 @@ const contrarianFortuneQuiz: QuizDefinition = {
         },
         {
           id: "q3-b",
-          text: "「この後きっと何か起きる...」",
+          text: "「この後きっと何か起きる……」",
           points: { cosmicworrier: 2, overthinker: 1 },
         },
         {
           id: "q3-c",
-          text: "「ツキって何だろうね...」と哲学する",
+          text: "「ツキって何だろうね……」と哲学する",
           points: { paradoxmaster: 2, calmchaos: 1 },
         },
         {
@@ -168,7 +168,7 @@ const contrarianFortuneQuiz: QuizDefinition = {
         },
         {
           id: "q4-b",
-          text: "不吉の前兆かも...",
+          text: "不吉の前兆かも……",
           points: { cosmicworrier: 2, overthinker: 1 },
         },
         {

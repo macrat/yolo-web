@@ -738,7 +738,7 @@ export const compatibilityMatrix: Record<string, CompatibilityEntry> = {
   "amami-kuro-usagi--amami-kuro-usagi": {
     label: "巣穴設計コンテスト",
     description:
-      "慎重派同士が出会うと、計画の立て合いが始まる。「こっちのルートの方が安全」「いや、データによると...」と議論は尽きない。行動は遅いが、動いた時の確実性は抜群。二人で掘った巣穴は、要塞レベルの完成度になる。",
+      "慎重派同士が出会うと、計画の立て合いが始まる。「こっちのルートの方が安全」「いや、データによると……」と議論は尽きない。行動は遅いが、動いた時の確実性は抜群。二人で掘った巣穴は、要塞レベルの完成度になる。",
   },
   "yamane--yamane": {
     label: "同時冬眠の危機",
@@ -768,7 +768,7 @@ export const compatibilityMatrix: Record<string, CompatibilityEntry> = {
   "nihon-risu--nihon-risu": {
     label: "木の実隠し場所の情報戦",
     description:
-      "二匹とも慎重に食料を隠すが、二匹とも一部の隠し場所を忘れる。「あれ、ここに埋めたはずなのに...」と同じ場所を掘り返す姿は微笑ましい。お互いの忘れっぽさを責めないのが、この組み合わせの美点。",
+      "二匹とも慎重に食料を隠すが、二匹とも一部の隠し場所を忘れる。「あれ、ここに埋めたはずなのに……」と同じ場所を掘り返す姿は微笑ましい。お互いの忘れっぽさを責めないのが、この組み合わせの美点。",
   },
   "ezo-shika--ezo-shika": {
     label: "角突き合わせの儀式",

@@ -74,7 +74,7 @@ export const differentArchetypeCompatibility: Record<
   "blazing-poet--contrarian-professor": {
     label: "炎の詩と知的逆張り",
     description:
-      "詩人が「行くぞ!」と叫ぶと、逆張り博士が「その方向でいいの?逆から見ると...」と返す。詩人は一瞬止まり、新しい角度から詩を書き直す。結果は当初より深い。",
+      "詩人が「行くぞ!」と叫ぶと、逆張り博士が「その方向でいいの?逆から見ると……」と返す。詩人は一瞬止まり、新しい角度から詩を書き直す。結果は当初より深い。",
   },
   "blazing-poet--careful-scholar": {
     label: "衝動と17回の確認",
@@ -109,7 +109,7 @@ export const differentArchetypeCompatibility: Record<
   "blazing-poet--ultimate-trickster": {
     label: "炎の詩と裏の裏の言葉",
     description:
-      "詩人が詩的な言葉で場を動かすと、策略家が「その言葉の裏の裏を読むと...」と解析を始める。詩人は「難しく考えすぎ!」と笑うが、二人の作る空気は誰も真似できない。",
+      "詩人が詩的な言葉で場を動かすと、策略家が「その言葉の裏の裏を読むと……」と解析を始める。詩人は「難しく考えすぎ!」と笑うが、二人の作る空気は誰も真似できない。",
   },
   "blazing-poet--ultimate-guardian": {
     label: "詩的爆走と七つのお守り",
@@ -136,7 +136,7 @@ export const differentArchetypeCompatibility: Record<
   "blazing-schemer--dreaming-scholar": {
     label: "裏道と夢の論文",
     description:
-      "策略司令塔が「絶対こっちの方が近い」と裏道に入ると、夢想学者が「理論上はそうだけど、夢の中では別の道があって...」と独自の検証を始める。迂回した先で思わぬ発見がある。",
+      "策略司令塔が「絶対こっちの方が近い」と裏道に入ると、夢想学者が「理論上はそうだけど、夢の中では別の道があって……」と独自の検証を始める。迂回した先で思わぬ発見がある。",
   },
   "blazing-schemer--careful-scholar": {
     label: "裏道と17回の安全確認",
@@ -156,7 +156,7 @@ export const differentArchetypeCompatibility: Record<
   "blazing-schemer--dreaming-canvas": {
     label: "裏道と夢の映像",
     description:
-      "司令塔が「こっちが正解!」と突進すると、夢想画家が「この景色、夢で見た気がする...」と立ち止まる。その直感が実は正しいことに、後から二人とも気づく。",
+      "司令塔が「こっちが正解!」と突進すると、夢想画家が「この景色、夢で見た気がする……」と立ち止まる。その直感が実は正しいことに、後から二人とも気づく。",
   },
   "blazing-schemer--gentle-fortress": {
     label: "爆速と静かなセーフティネット",
@@ -166,7 +166,7 @@ export const differentArchetypeCompatibility: Record<
   "blazing-schemer--endless-researcher": {
     label: "裏技と永遠の検証",
     description:
-      "司令塔が「これ絶対うまくいく!」と裏技を試みる横で、研究者が「でも事前検証が...」と調査を始める。司令塔はとっくに次の手を打っているが、研究者の検証が次回の成功率を上げる。",
+      "司令塔が「これ絶対うまくいく!」と裏技を試みる横で、研究者が「でも事前検証が……」と調査を始める。司令塔はとっくに次の手を打っているが、研究者の検証が次回の成功率を上げる。",
   },
   "blazing-schemer--eternal-dreamer": {
     label: "裏道と脳内47回目の旅",
@@ -193,7 +193,7 @@ export const differentArchetypeCompatibility: Record<
   "blazing-warden--dreaming-scholar": {
     label: "全速力と夢の理論",
     description:
-      "守護司令塔が「全員いるか、行くぞ!」と叫ぶと、夢想学者が「あ、理論上は別ルートが...」と白昼夢から帰ってくる。走りながら理論を語る、不思議なコンビが誕生する。",
+      "守護司令塔が「全員いるか、行くぞ!」と叫ぶと、夢想学者が「あ、理論上は別ルートが……」と白昼夢から帰ってくる。走りながら理論を語る、不思議なコンビが誕生する。",
   },
   "blazing-warden--contrarian-professor": {
     label: "熱い指揮と冷静な逆説",
@@ -213,7 +213,7 @@ export const differentArchetypeCompatibility: Record<
   "blazing-warden--dreaming-canvas": {
     label: "集団の熱と一人の映像世界",
     description:
-      "守護司令塔が「全員まとまれ!」と声を張り上げる傍らで、夢想画家が「この瞬間、映画のシーンに似てる...」と静かに映像化している。集団の熱と個の感性が不思議に共存する。",
+      "守護司令塔が「全員まとまれ!」と声を張り上げる傍らで、夢想画家が「この瞬間、映画のシーンに似てる……」と静かに映像化している。集団の熱と個の感性が不思議に共存する。",
   },
   "blazing-warden--creative-disruptor": {
     label: "王道突進と逆張り遊撃",
@@ -233,12 +233,12 @@ export const differentArchetypeCompatibility: Record<
   "blazing-warden--ultimate-trickster": {
     label: "仲間思いと裏の裏の安全",
     description:
-      "守護司令塔が全員の安全を確認しながら走る横で、策略家が「このルートの裏の裏のリスクは...」と計算している。二人が揃うと、表も裏も守られた最強ルートが完成する。",
+      "守護司令塔が全員の安全を確認しながら走る横で、策略家が「このルートの裏の裏のリスクは……」と計算している。二人が揃うと、表も裏も守られた最強ルートが完成する。",
   },
   "blazing-warden--ultimate-artist": {
     label: "集団の熱と美の孤独",
     description:
-      "守護司令塔が全員を引っ張る喧騒の中、美の追求者が「うーん、この群像劇の配色が...」と静かに立ち止まる。うるさいくらいの熱量と深い静けさが、なぜかバランスを取る。",
+      "守護司令塔が全員を引っ張る喧騒の中、美の追求者が「うーん、この群像劇の配色が……」と静かに立ち止まる。うるさいくらいの熱量と深い静けさが、なぜかバランスを取る。",
   },
   "blazing-warden--vibe-rebel": {
     label: "全員連れていく熱と野生の単独行",
@@ -255,7 +255,7 @@ export const differentArchetypeCompatibility: Record<
   "blazing-canvas--contrarian-professor": {
     label: "感性の突進と知的逆説",
     description:
-      "情熱の画家が「これだ!」と感性で突き進むと、逆張り博士が「面白い。でも別の解釈だと...」と追いかける。感性に理論の骨格が加わり、作品の深みが倍増する。",
+      "情熱の画家が「これだ!」と感性で突き進むと、逆張り博士が「面白い。でも別の解釈だと……」と追いかける。感性に理論の骨格が加わり、作品の深みが倍増する。",
   },
   "blazing-canvas--careful-scholar": {
     label: "情熱と17回の検証",
@@ -270,7 +270,7 @@ export const differentArchetypeCompatibility: Record<
   "blazing-canvas--tender-dreamer": {
     label: "情熱の画家とやさしい夢想家",
     description:
-      "情熱の画家が「失敗しても面白い!」と飛び込む横で、やさしい夢想家が「誰かが傷つかないか心配で...」とそっと確認する。熱量と温かさが、誰も傷つけない情熱を作る。",
+      "情熱の画家が「失敗しても面白い!」と飛び込む横で、やさしい夢想家が「誰かが傷つかないか心配で……」とそっと確認する。熱量と温かさが、誰も傷つけない情熱を作る。",
   },
   "blazing-canvas--clever-guardian": {
     label: "感性の爆走と戦略的安全係",
@@ -307,7 +307,7 @@ export const differentArchetypeCompatibility: Record<
   "clever-guardian--dreaming-scholar": {
     label: "白昼夢と戦略的弱点探し",
     description:
-      "夢想学者が「これを研究したら面白いなぁ...」と夢見る横で、安全係が「その研究計画、穴がここにある」と指摘する。夢に穴のない構造が加わり、なぜか現実になりやすくなる。",
+      "夢想学者が「これを研究したら面白いなぁ……」と夢見る横で、安全係が「その研究計画、穴がここにある」と指摘する。夢に穴のない構造が加わり、なぜか現実になりやすくなる。",
   },
   "creative-disruptor--dreaming-scholar": {
     label: "夢の理論と逆張りの実験",
@@ -332,7 +332,7 @@ export const differentArchetypeCompatibility: Record<
   "dreaming-scholar--ultimate-guardian": {
     label: "夢想の研究と七重の安全網",
     description:
-      "夢想学者が「理論上はいけるはず...」と夢見ながら進む横で、備えの王が全ての失敗シナリオに対策を打っている。夢想と現実的守りが揃うと、失敗しない実験になる。",
+      "夢想学者が「理論上はいけるはず……」と夢見ながら進む横で、備えの王が全ての失敗シナリオに対策を打っている。夢想と現実的守りが揃うと、失敗しない実験になる。",
   },
   "dreaming-scholar--ultimate-artist": {
     label: "夢の論文と美の永遠追求",
@@ -354,7 +354,7 @@ export const differentArchetypeCompatibility: Record<
   "contrarian-professor--tender-dreamer": {
     label: "知的逆張りと優しい全肯定",
     description:
-      "逆張り博士が「でも違う見方をすると...」と追加説明をするたびに、やさしい夢想家が「どっちも素敵ですよね」と全肯定する。否定がないと逆張り博士は少し困惑する。",
+      "逆張り博士が「でも違う見方をすると……」と追加説明をするたびに、やさしい夢想家が「どっちも素敵ですよね」と全肯定する。否定がないと逆張り博士は少し困惑する。",
   },
   "contrarian-professor--dreaming-canvas": {
     label: "論理の逆張りと感性の映像",
@@ -369,27 +369,27 @@ export const differentArchetypeCompatibility: Record<
   "contrarian-professor--ultimate-commander": {
     label: "逆説の知性と覇王の突進",
     description:
-      "逆張り博士が「でも逆の方向からだと...」と言い終わる前に、覇王が「考えるより動け!」と突進する。半分の理論で動いた結果が、実は博士の逆説の答えだったりする。",
+      "逆張り博士が「でも逆の方向からだと……」と言い終わる前に、覇王が「考えるより動け!」と突進する。半分の理論で動いた結果が、実は博士の逆説の答えだったりする。",
   },
   "contrarian-professor--eternal-dreamer": {
     label: "知的逆張りと永遠の妄想",
     description:
-      "逆張り博士が「その夢、逆から見ると...」と解析し始めると、永遠の妄想家が「あ、そのアングルの夢、まだ見てなかった」と新しい旅を始める。逆張りが夢の燃料になる。",
+      "逆張り博士が「その夢、逆から見ると……」と解析し始めると、永遠の妄想家が「あ、そのアングルの夢、まだ見てなかった」と新しい旅を始める。逆張りが夢の燃料になる。",
   },
   "contrarian-professor--ultimate-guardian": {
     label: "逆張り知性と備えの王",
     description:
-      "逆張り博士が「その備え、本当に必要?逆に考えると...」と問うと、備えの王が「逆から考えても必要だった」と淡々と答える。最終的に二人の備えは完璧になる。",
+      "逆張り博士が「その備え、本当に必要?逆に考えると……」と問うと、備えの王が「逆から考えても必要だった」と淡々と答える。最終的に二人の備えは完璧になる。",
   },
   "contrarian-professor--ultimate-artist": {
     label: "逆説の論理と美の追求",
     description:
-      "逆張り博士が「その美しさ、逆説的に言うと...」と解析すると、美の追求者が「うーん、逆説でも違う」と言い出す。どこまでも終わらない美の定義論争が二人の間で続く。",
+      "逆張り博士が「その美しさ、逆説的に言うと……」と解析すると、美の追求者が「うーん、逆説でも違う」と言い出す。どこまでも終わらない美の定義論争が二人の間で続く。",
   },
   "contrarian-professor--guardian-charger": {
     label: "知的逆張りと盾の突進",
     description:
-      "逆張り博士が「前に出るべき理由、逆から考えると...」と分析する間に、守護者がすでに前に出ている。理論と行動のタイムラグが、実は完璧なタイミングを生んでいる。",
+      "逆張り博士が「前に出るべき理由、逆から考えると……」と分析する間に、守護者がすでに前に出ている。理論と行動のタイムラグが、実は完璧なタイミングを生んでいる。",
   },
 
   // careful-scholar (professor+guardian) pairs
@@ -463,7 +463,7 @@ export const differentArchetypeCompatibility: Record<
   "academic-artist--ultimate-trickster": {
     label: "詩的分析と裏読みの美",
     description:
-      "データ詩人が「この美しさは...」と分析すると、策略家が「その美しさの裏を読むと、また別の美しさがある」と返す。表と裏の美しさを両方見られるのは、この二人だけだ。",
+      "データ詩人が「この美しさは……」と分析すると、策略家が「その美しさの裏を読むと、また別の美しさがある」と返す。表と裏の美しさを両方見られるのは、この二人だけだ。",
   },
   "academic-artist--ultimate-guardian": {
     label: "感性の論理と七重の安全",
@@ -505,12 +505,12 @@ export const differentArchetypeCompatibility: Record<
   "data-fortress--star-chaser": {
     label: "数値の城と逆張りの夢",
     description:
-      "逆張り妄想家が「この夢、普通じゃない?」と問うたびに、論理守護者が「その問いの統計的有意性は...」と検証を始める。数値が逆張りを証明したとき、二人は最高に嬉しい。",
+      "逆張り妄想家が「この夢、普通じゃない?」と問うたびに、論理守護者が「その問いの統計的有意性は……」と検証を始める。数値が逆張りを証明したとき、二人は最高に嬉しい。",
   },
   "guardian-charger--star-chaser": {
     label: "盾の突進と夢の逆張り",
     description:
-      "守護者が「後ろの安全を確保して前に出る」と動くとき、逆張り妄想家が「でも前に出る必要ある?逆から考えると...」と問う。逆の問いが守護者に新しい盾の使い方を教える。",
+      "守護者が「後ろの安全を確保して前に出る」と動くとき、逆張り妄想家が「でも前に出る必要ある?逆から考えると……」と問う。逆の問いが守護者に新しい盾の使い方を教える。",
   },
 
   // tender-dreamer (dreamer+guardian) pairs
@@ -522,7 +522,7 @@ export const differentArchetypeCompatibility: Record<
   "tender-dreamer--ultimate-commander": {
     label: "みんなの幸せと覇王の突進",
     description:
-      "やさしい夢想家が「みんなが幸せかどうか心配で...」と確認している間に、覇王が「全員ついてこい!」と走り出す。走った先でみんなが笑顔になれば、それが幸せだったと気づく。",
+      "やさしい夢想家が「みんなが幸せかどうか心配で……」と確認している間に、覇王が「全員ついてこい!」と走り出す。走った先でみんなが笑顔になれば、それが幸せだったと気づく。",
   },
   "endless-researcher--tender-dreamer": {
     label: "永遠の調査とやさしい心配",
@@ -655,7 +655,7 @@ export const differentArchetypeCompatibility: Record<
   "gentle-fortress--ultimate-trickster": {
     label: "温かい安全と裏の裏の配慮",
     description:
-      "守護芸術家が「誰か傷ついてないか」と気を配るとき、策略家が「その心配の裏を読むと...」と分析する。感情的な配慮と戦略的な配慮が重なって、誰も傷つかない場が作られる。",
+      "守護芸術家が「誰か傷ついてないか」と気を配るとき、策略家が「その心配の裏を読むと……」と分析する。感情的な配慮と戦略的な配慮が重なって、誰も傷つかない場が作られる。",
   },
 
   // ultimate-commander (commander+commander) pairs

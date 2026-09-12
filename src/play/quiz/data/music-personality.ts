@@ -123,7 +123,7 @@ const musicPersonalityQuiz: QuizDefinition = {
         },
         {
           id: "q2-b",
-          text: "「え、いや、その...」とモゴモゴする",
+          text: "「え、いや、その……」とモゴモゴする",
           points: { "solo-explorer": 2, "lyrics-dweller": 1 },
         },
         {
@@ -763,7 +763,7 @@ export const compatibilityMatrix: Record<string, CompatibilityEntry> = {
   "lyrics-dweller--midnight-shuffle": {
     label: "深夜の邂逅",
     description:
-      "シャッフルで偶然流れてきた曲の歌詞に心を撃ち抜かれる。これが二人の共通体験。「あの曲、偶然聴いたんだけど歌詞がすごくて...」という会話が成立する唯一の組み合わせ。深夜の偶然が言葉の発見につながる、ロマンチックな関係。",
+      "シャッフルで偶然流れてきた曲の歌詞に心を撃ち抜かれる。これが二人の共通体験。「あの曲、偶然聴いたんだけど歌詞がすごくて……」という会話が成立する唯一の組み合わせ。深夜の偶然が言葉の発見につながる、ロマンチックな関係。",
   },
 };
 
