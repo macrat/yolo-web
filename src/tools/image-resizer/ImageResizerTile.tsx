@@ -379,7 +379,7 @@ export default function ImageResizerTile({
           onError={handleFileError}
           maxSizeBytes={MAX_FILE_SIZE}
           accept="image/*"
-          description="PNG, JPEG, GIF, WebP対応 (最大20MB)"
+          description="PNG, JPEG, GIF, WebP対応（最大20MB）"
         />
 
         {/* エラー表示 */}

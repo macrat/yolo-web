@@ -214,7 +214,7 @@ export default function ColorConverterTile({
   // 入力欄のラベルテキスト（モードによって変わる）
   const inputLabel =
     inputMode === "hex"
-      ? "HEX値 (#RGB または #RRGGBB)"
+      ? "HEX値（#RGB または #RRGGBB）"
       : inputMode === "rgb"
         ? "RGB値 (R, G, B)"
         : "HSL値 (H, S, L)";

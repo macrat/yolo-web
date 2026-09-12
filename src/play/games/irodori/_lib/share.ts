@@ -20,7 +20,7 @@ export function generateShareText(state: IrodoriGameState): string {
   const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
   const url = `${baseUrl}/play/irodori`;
 
-  return `\u30A4\u30ED\u30C9\u30EA #${state.puzzleNumber} \u30B9\u30B3\u30A2: ${totalScore}/100 (${rank}\u30E9\u30F3\u30AF)\n${emojiRow}\n#\u30A4\u30ED\u30C9\u30EA #yolosnet\n${url}`;
+  return `\u30A4\u30ED\u30C9\u30EA #${state.puzzleNumber} \u30B9\u30B3\u30A2: ${totalScore}/100\uFF08${rank}\u30E9\u30F3\u30AF\uFF09\n${emojiRow}\n#\u30A4\u30ED\u30C9\u30EA #yolosnet\n${url}`;
 }
 
 /**
@@ -58,7 +58,11 @@ export function generateResultImage(state: IrodoriGameState): string | null {
 
   // Score
   ctx.font = "bold 36px sans-serif";
-  ctx.fillText(`${totalScore}/100 (${rank}\u30E9\u30F3\u30AF)`, width / 2, 85);
+  ctx.fillText(
+    `${totalScore}/100\uFF08${rank}\u30E9\u30F3\u30AF\uFF09`,
+    width / 2,
+    85,
+  );
 
   // Color pairs
   const patchSize = 60;

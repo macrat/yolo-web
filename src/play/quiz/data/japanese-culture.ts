@@ -175,12 +175,12 @@ const japaneseCultureQuiz: QuizDefinition = {
       choices: [
         {
           id: "q4-a",
-          text: "手作りのもの(手紙、作品など)",
+          text: "手作りのもの（手紙、作品など）",
           points: { togei: 2, sado: 1 },
         },
         {
           id: "q4-b",
-          text: "体験チケット(スポーツ観戦、ライブなど)",
+          text: "体験チケット（スポーツ観戦、ライブなど）",
           points: { budo: 2, rakugo: 1 },
         },
         {

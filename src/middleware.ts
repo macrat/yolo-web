@@ -109,7 +109,7 @@ export function build410Html(): string {
 <head>
 <meta charset='utf-8' />
 <meta name='viewport' content='width=device-width, initial-scale=1' />
-<title>このコンテンツは終了しました | yolos.net</title>
+<title>この記事は削除されました | yolos.net</title>
 <style>
 :root{color-scheme:light dark;--paper:${PAPER};--ink:${INK};--ink-2:${INK_2};--rule:${RULE};--rule-strong:${RULE_STRONG};--accent:${ACCENT}}
 @media (prefers-color-scheme:dark){:root{--paper:${PAPER_DARK};--ink:${INK_DARK};--ink-2:${INK_2_DARK};--rule:${RULE_DARK};--rule-strong:${RULE_STRONG_DARK};--accent:${ACCENT_DARK}}}
@@ -118,9 +118,9 @@ body{font-family:${GOTHIC_STACK};background:var(--paper);color:var(--ink);min-he
 .container{max-width:34rem;width:100%}
 .shop{font-family:${MINCHO_STACK};font-size:1.25rem;color:var(--ink);text-decoration:none;display:block}
 .noren{border-bottom:1px solid var(--rule-strong);padding-bottom:0.5rem;margin-bottom:2rem}
-h1{font-family:${MINCHO_STACK};font-size:1.6rem;font-weight:600;color:var(--ink);line-height:1.4;letter-spacing:0.02em}
+h1{font-family:${MINCHO_STACK};font-size:1.5625rem;font-weight:600;color:var(--ink);line-height:1.4;letter-spacing:0.02em}
 p{font-family:${GOTHIC_STACK};font-size:1rem;color:var(--ink-2);line-height:1.9;margin-top:1rem}
-h2{font-family:${MINCHO_STACK};font-size:1.125rem;font-weight:600;color:var(--ink);line-height:1.4;margin-top:2.5rem;padding-bottom:0.5rem;border-bottom:1px solid var(--rule)}
+h2{font-family:${MINCHO_STACK};font-size:1.25rem;font-weight:600;color:var(--ink);line-height:1.4;margin-top:2.5rem;padding-bottom:0.5rem;border-bottom:1px solid var(--rule)}
 ul{list-style:none;margin-top:0.5rem}
 li{border-bottom:1px solid var(--rule)}
 li a{display:block;padding:0.75rem 0;color:var(--accent);text-decoration:none;font-size:1rem}

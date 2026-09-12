@@ -236,13 +236,13 @@ export default function EmailValidatorTile({
               <div className={styles.analysisItem}>
                 <span className={styles.analysisLabel}>ローカルパート:</span>
                 <span className={styles.analysisValue}>
-                  {result.localPart || "(空)"}
+                  {result.localPart || "（空）"}
                 </span>
               </div>
               <div className={styles.analysisItem}>
                 <span className={styles.analysisLabel}>ドメイン:</span>
                 <span className={styles.analysisValue}>
-                  {result.domain || "(空)"}
+                  {result.domain || "（空）"}
                 </span>
               </div>
             </div>

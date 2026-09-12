@@ -193,7 +193,7 @@ const characterFortuneQuiz: QuizDefinition = {
     },
     {
       id: "q5",
-      text: "突然100万円が降ってきた(合法)。72時間以内に使い切らないと消える。どうする?",
+      text: "突然100万円が降ってきた（合法）。72時間以内に使い切らないと消える。どうする?",
       choices: [
         {
           id: "q5-a",
@@ -497,7 +497,7 @@ export const compatibilityMatrix: Record<string, CompatibilityEntry> = {
   "artist--artist": {
     label: "美しいけど何も決まらない午後",
     description:
-      "「この光、美しいよね」「うん、美しい……」で30分が溶ける。ランチの店を決めるのに2時間かかる(外観の雰囲気で選ぶため)。生産性はゼロだが、二人の間に流れる空気は確かに芸術作品のように美しい。",
+      "「この光、美しいよね」「うん、美しい……」で30分が溶ける。ランチの店を決めるのに2時間かかる（外観の雰囲気で選ぶため）。生産性はゼロだが、二人の間に流れる空気は確かに芸術作品のように美しい。",
   },
 
   // Cross-type combinations (15)

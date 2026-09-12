@@ -86,9 +86,18 @@ describe("isDeletedBlogSlug", () => {
 });
 
 describe("build410Html", () => {
-  test("「このコンテンツは終了しました」というメッセージを含む", () => {
+  // 見出しそのものを見る。本文のどこかに同じ語があれば通る書き方だと、
+  // 見出しを差し替えてもタブのタイトルが古いまま通ってしまう（実際に起きた）。
+  test("見出しが「この記事は削除されました」であること", () => {
     const html = build410Html();
-    expect(html).toContain("このコンテンツは終了しました");
+    expect(html).toContain("<h1>この記事は削除されました</h1>");
+  });
+
+  test("タブのタイトルが見出しと同じ文言であること", () => {
+    const html = build410Html();
+    expect(html).toContain(
+      "<title>この記事は削除されました | yolos.net</title>",
+    );
   });
 
   test("トップページへのリンク（href='/'）を含む", () => {
@@ -188,7 +197,7 @@ describe("middleware（統合テスト）", () => {
     const response = middleware(request);
     expect(response.status).toBe(410);
     const body = await response.text();
-    expect(body).toContain("このコンテンツは終了しました");
+    expect(body).toContain("<h1>この記事は削除されました</h1>");
   });
 
   test("削除済みスラッグ（web-developer-tools-guide）へのリクエストで410レスポンスが返る", async () => {
@@ -198,7 +207,7 @@ describe("middleware（統合テスト）", () => {
     const response = middleware(request);
     expect(response.status).toBe(410);
     const body = await response.text();
-    expect(body).toContain("このコンテンツは終了しました");
+    expect(body).toContain("<h1>この記事は削除されました</h1>");
   });
 
   test("通常スラッグ（cron-parser-guide）へのリクエストでNextResponse.next()相当が返る", () => {

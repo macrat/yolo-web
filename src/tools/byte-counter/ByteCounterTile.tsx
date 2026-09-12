@@ -161,7 +161,7 @@ export default function ByteCounterTile({
             </div>
             <div className={styles.breakdownRow}>
               <span className={styles.breakdownLabel}>
-                3バイト文字 (日本語等)
+                3バイト文字（日本語等）
               </span>
               <span className={styles.breakdownValue}>
                 {result.threeByteChars}文字
@@ -169,7 +169,7 @@ export default function ByteCounterTile({
             </div>
             <div className={styles.breakdownRow}>
               <span className={styles.breakdownLabel}>
-                4バイト文字 (絵文字等)
+                4バイト文字（絵文字等）
               </span>
               <span className={styles.breakdownValue}>
                 {result.fourByteChars}文字

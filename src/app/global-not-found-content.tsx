@@ -51,7 +51,7 @@ export default function GlobalNotFoundContent() {
       </section>
 
       <section className={styles.sections}>
-        <h2 className={styles.sectionsTitle}>主要コンテンツ</h2>
+        <h2 className={styles.sectionsTitle}>行き先</h2>
         <div className={styles.grid}>
           {LINKS.map((link) => (
             <Link key={link.href} href={link.href} className={styles.card}>

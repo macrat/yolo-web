@@ -1084,8 +1084,11 @@ function decodeEscapes(text: string): string {
 }
 
 function jsStringLiterals(src: string): string[] {
+  // 先頭から順に食べる。正規表現リテラルを先に食べるのは、その中の引用符や
+  // バッククォート（`/[a-z'`{|}]/` のような文字クラス）が文字列の始まりに
+  // 見えてしまい、そこから対がずれるためである。
   const TOKEN =
-    /\/\/[^\n]*|\/\*[\s\S]*?\*\/|'((?:[^'\\\n]|\\.)*)'|"((?:[^"\\\n]|\\.)*)"|`((?:[^`\\]|\\.)*)`/g;
+    /\/\/[^\n]*|\/\*[\s\S]*?\*\/|(?:^|[=(,:[!&|?;{+\-*%~^]|\breturn|\btypeof)\s*\/(?![*/])(?:[^/\\\n[]|\\.|\[(?:[^\]\\]|\\.)*\])+\/[gimsuy]*|'((?:[^'\\\n]|\\.)*)'|"((?:[^"\\\n]|\\.)*)"|`((?:[^`\\]|\\.)*)`/g;
   const bodies: string[] = [];
   for (const m of src.matchAll(TOKEN)) {
     if (m[1] !== undefined) bodies.push(decodeEscapes(m[1]));
@@ -1106,7 +1109,12 @@ function jsStringLiterals(src: string): string[] {
  * JSX ではないので、同じ網に掛けると無関係なコードが地の文に化ける。
  */
 function jsxTextNodes(src: string): string[] {
-  return Array.from(src.matchAll(/>([^<>{}]*)</g), (m) => m[1]);
+  // JSDoc が例として `<Tile />` のようなタグを書くので、コメントを外してから
+  // 拾う。外さないと、コメント中の `>` と `<` に挟まれた解説文が地の文に化ける。
+  const code = src.replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/[^\n]*/g, "");
+  // `=>` や総称型 `useState<string>` の `>` はタグの終わりではない。地の文に
+  // 化けたコードは `;` を含むので、それを目印に落とす——JSX の地の文に `;` は出ない。
+  return Array.from(code.matchAll(/(?<![=-])>([^<>{};]*)</g), (m) => m[1]);
 }
 
 /**
@@ -1115,7 +1123,10 @@ function jsxTextNodes(src: string): string[] {
  * 来訪者が読む文字（placeholder・画面テキスト）に ASCII の三点が混ざると、
  * 和文の組版が崩れる。grep 一行で検査できる規則なので機械へ置く。
  */
-describe("DESIGN.md §3 三点リーダ（来訪者が読む文に `...` を使わない）", () => {
+describe("DESIGN.md §3 約物（三点リーダと括弧）", () => {
+  /** 来訪者に読ませる文かどうかの判定。識別子やパスは和文を含まない。 */
+  const JAPANESE = /[ぁ-んァ-ヶ一-龠]/;
+
   test("placeholder に ASCII の三点が無いこと", () => {
     const files = fg.sync(["src/**/*.tsx"], {
       cwd: PROJECT_ROOT,
@@ -1138,6 +1149,30 @@ describe("DESIGN.md §3 三点リーダ（来訪者が読む文に `...` を使�
    * ノードの両方を見て、置き場所に依存しなくする——`...array` のスプレッドや
    * テンプレートの式は文ではないので触れない。
    */
+  test("和文が入る括弧が全角であること", () => {
+    const files = fg.sync(["src/**/*.ts", "src/**/*.tsx"], {
+      cwd: PROJECT_ROOT,
+      ignore: [...IGNORE, "**/__tests__/**", "**/storybook/**"],
+    });
+    const offenders: string[] = [];
+    for (const rel of files) {
+      const src = fs.readFileSync(path.join(PROJECT_ROOT, rel), "utf-8");
+      const texts = rel.endsWith(".tsx")
+        ? [...jsStringLiterals(src), ...jsxTextNodes(src)]
+        : jsStringLiterals(src);
+      for (const body of texts) {
+        if (!JAPANESE.test(body)) continue;
+        for (const paren of body.matchAll(/\(([^()]*)\)/g)) {
+          // 中身が欧文・数値・単位だけの括弧は半角のままでよい（§3）。
+          if (JAPANESE.test(paren[1])) {
+            offenders.push(`${rel}: ${body.trim().slice(0, 40)}`);
+          }
+        }
+      }
+    }
+    expect(offenders).toEqual([]);
+  });
+
   test("来訪者が読む散文に ASCII の三点が無いこと", () => {
     const files = fg.sync(["src/**/*.ts", "src/**/*.tsx"], {
       cwd: PROJECT_ROOT,
@@ -1151,7 +1186,7 @@ describe("DESIGN.md §3 三点リーダ（来訪者が読む文に `...` を使�
         : jsStringLiterals(src);
       for (const body of texts) {
         // 和文を含む文＝来訪者に読ませる文。識別子やパスは対象外。
-        if (body.includes("...") && /[ぁ-んァ-ヶ一-龠]/.test(body)) {
+        if (body.includes("...") && JAPANESE.test(body)) {
           offenders.push(`${rel}: ${body.trim().slice(0, 40)}`);
         }
       }
@@ -1372,6 +1407,39 @@ describe("DESIGN.md §6-4 行き先の名前（着いた先の名前と揃える
           } else if (!pointsTo(label, canonical)) {
             offenders.push(`${rel}: 「${label}」→ ${href}（「${canonical}」）`);
           }
+        }
+      }
+    }
+    expect(offenders).toEqual([]);
+  });
+});
+
+/**
+ * §3「見出しの階層は 1.25 倍スケール（16/20/25/31/39px）」のゲート。
+ *
+ * CSS を書けない面（410・404）は CSS を文字列で持つので、`globals.css` の見出し
+ * トークンが効かない。cycle-312 で 410 の CSS ブロックを丸ごと書き直しながら
+ * `h1: 1.6rem`・`h2: 1.125rem` を出荷しかけた——どちらもスケールに無い値である。
+ * 手で写す面ほど、機械で見張る。
+ */
+describe("DESIGN.md §3 見出しの階層スケール（CSS を埋め込む面）", () => {
+  /** 1.25 倍スケール（16/20/25/31/39px）を rem で表した許容値。 */
+  const SCALE_REM = [1, 1.25, 1.5625, 1.9375, 2.4375];
+
+  test("埋め込み CSS の見出しが 1.25 倍スケールの値であること", () => {
+    const offenders: string[] = [];
+    for (const rel of EMBEDDED_DESIGN_FILES) {
+      // テンプレートの `${TOKEN}` は `}` を含むので、先に外す——外さないと
+      // CSS ルールがそこで切れたと誤読し、font-size に一度も到達しない。
+      const src = fs
+        .readFileSync(path.join(PROJECT_ROOT, rel), "utf-8")
+        .replace(/\$\{[^{}]*\}/g, "");
+      // 例: "h1{font-family:…;font-size:1.5625rem;…}"
+      for (const m of src.matchAll(/\bh([1-6])\s*\{([^}]*)\}/g)) {
+        const size = m[2].match(/font-size:\s*([\d.]+)rem/)?.[1];
+        if (size === undefined) continue;
+        if (!SCALE_REM.includes(Number(size))) {
+          offenders.push(`${rel}: h${m[1]} が ${size}rem`);
         }
       }
     }
