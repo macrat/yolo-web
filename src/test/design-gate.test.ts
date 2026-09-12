@@ -1177,3 +1177,113 @@ describe("DESIGN.md §6 来訪者に届く言葉（内部語彙を漏らさな�
     expect(offenders).toEqual([]);
   });
 });
+
+/**
+ * 入力欄の下限 16px のゲート。
+ *
+ * iOS Safari は 16px 未満の欄にフォーカスするとページごと拡大し、来訪者は
+ * タップのたびにピンチで戻すことになる。共有部品（Input・Textarea・Select）は
+ * `max(1rem, 16px)` を敷いているが、生の `<input>` を自前で組んでいる面がある。
+ * cycle-312 で共有部品だけを直して「入力欄を16px相当へ」と報告したとき、辞典の
+ * 検索欄が網の外に残っていた。**書いた欄を数えるのではなく、在る欄を数える。**
+ *
+ * 走査は className→CSS の対応を辿る。辿れない欄は**落とす**——見えないものを
+ * 「問題なし」と黙って通すと、このゲートは在るだけで何も守らなくなる。
+ */
+describe("入力欄は 16px を下回らない（iOS Safari の自動ズーム）", () => {
+  /** フォーカスで iOS が拡大する型。range/checkbox/color/file/button は拡大しない。 */
+  const ZOOMING_TYPE = /^(?:text|search|number|email|tel|url|password)$/;
+
+  /**
+   * その指定が「設定に関わらず 16px を下回らない」と言えるか。
+   *
+   * `rem`/`em` は来訪者の文字サイズ設定に比例するので、既定の 16px で何 px に
+   * なるかは担保にならない——設定を小さくしている人の画面では 1.5rem でも
+   * 16px を割る。絶対値の床（`max(1rem, 16px)` の 16px）があって初めて言える。
+   */
+  function hasFloorOf16px(value: string): boolean {
+    const absolute = Array.from(value.matchAll(/([\d.]+)px/g), (m) =>
+      Number(m[1]),
+    );
+    if (absolute.length === 0) return false;
+    // 単一指定ならその値、max() なら床は最大の絶対値。
+    return Math.max(...absolute) >= 16;
+  }
+
+  /**
+   * 入力欄に効いている CSS Modules のクラス名を取り出す。
+   *
+   * 直に `className={styles.input}` と書く面と、共有部品のように
+   * `const classNames = [styles.input, ...]` を組み立てて渡す面がある。後者を
+   * 辿らないと、**最も多くの欄に効いている共有部品が黙って網から外れる**。
+   */
+  function resolveStyleClass(src: string, attrs: string): string | null {
+    const direct = attrs.match(/className=\{styles\.([A-Za-z0-9_]+)\}/);
+    if (direct) return direct[1];
+
+    const viaVariable = attrs.match(/className=\{([A-Za-z0-9_]+)\}/);
+    if (!viaVariable) return null;
+    const declaration = src.match(
+      new RegExp(`const\\s+${viaVariable[1]}\\s*=\\s*\\[([\\s\\S]*?)\\]`),
+    );
+    return declaration?.[1].match(/styles\.([A-Za-z0-9_]+)/)?.[1] ?? null;
+  }
+
+  test("生の入力欄の font-size が 16px 以上であること", () => {
+    const files = fg.sync(["src/**/*.tsx"], {
+      cwd: PROJECT_ROOT,
+      ignore: [...IGNORE, "**/__tests__/**", "**/storybook/**"],
+      absolute: false,
+    });
+    const offenders: string[] = [];
+
+    for (const rel of files) {
+      const abs = path.join(PROJECT_ROOT, rel);
+      const src = fs.readFileSync(abs, "utf-8");
+      // JSDoc は `<textarea>` を説明のために書く。コードとして数えない。
+      const code = src
+        .replace(/\/\*[\s\S]*?\*\//g, "")
+        .replace(/\/\/[^\n]*/g, "");
+
+      for (const tag of code.matchAll(/<(input|textarea)\b([\s\S]*?)\/?>/g)) {
+        const [, element, attrs] = tag;
+        if (element === "input") {
+          // 素の `<input>` の既定は text。型を書いていない欄も、`type={type}` の
+          // ように動的な欄も、文字を打てる欄として数える——「型が読めないから
+          // 対象外」にすると、共有部品のように型を prop で受ける欄が全部外れる。
+          const literalType = attrs.match(/type="([a-z]+)"/)?.[1];
+          if (literalType && !ZOOMING_TYPE.test(literalType)) continue;
+        }
+        const cls = resolveStyleClass(code, attrs);
+        if (!cls) {
+          offenders.push(`${rel}: 入力欄の className を辿れない`);
+          continue;
+        }
+
+        // 同じディレクトリか styles/ 配下の module.css を探す。
+        const sheets = fg.sync(["*.module.css", "styles/*.module.css"], {
+          cwd: path.dirname(abs),
+          absolute: true,
+        });
+        const rules = sheets
+          .map((sheet) => fs.readFileSync(sheet, "utf-8"))
+          .flatMap(
+            (css) =>
+              css.match(new RegExp(`\\.${cls}\\s*\\{[^}]*\\}`, "g")) ?? [],
+          );
+        const sizes = rules
+          .map((rule) => rule.match(/font-size:\s*([^;]+);/)?.[1])
+          .filter((v): v is string => v !== undefined);
+
+        if (sizes.length === 0) {
+          offenders.push(`${rel}: .${cls} の font-size を辿れない`);
+        } else if (!sizes.every(hasFloorOf16px)) {
+          offenders.push(
+            `${rel}: .${cls} に 16px の床が無い（${sizes.join(" / ")}）`,
+          );
+        }
+      }
+    }
+    expect(offenders).toEqual([]);
+  });
+});
