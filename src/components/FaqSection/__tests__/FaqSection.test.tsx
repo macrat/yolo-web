@@ -120,7 +120,7 @@ describe("FaqSection", () => {
     expect(css).not.toMatch(/var\(--color-/);
   });
 
-  it("影なし: box-shadow を使用しない（DESIGN.md §5: 通常の要素にエレベーションを使わない）", () => {
+  it("影なし: box-shadow を使用しない（DESIGN.md §4: 通常の要素にエレベーションを使わない）", () => {
     const cssPath = resolve(__dirname, "../FaqSection.module.css");
     const css = readFileSync(cssPath, "utf-8");
     // shadow-button や shadow-dragging が含まれていないこと

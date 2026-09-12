@@ -34,9 +34,9 @@ type ToggleSwitchProps = ToggleSwitchOwnProps &
  *   小さい。
  *
  * デザイン:
- * - DESIGN.md §5: 「ON/OFF を切り替えるフォーム要素は、原則としてチェック
+ * - DESIGN.md §4: 「ON/OFF を切り替えるフォーム要素は、原則としてチェック
  *   ボックスではなくトグルスイッチを使う」
- * - DESIGN.md §2: フォーカスは `outline: 2px solid var(--accent); outline-offset: 2px;`
+ * - DESIGN.md §10: フォーカスは `outline: 2px solid var(--accent); outline-offset: 2px;`
  *
  * @example
  * // controlled

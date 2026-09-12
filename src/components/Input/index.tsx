@@ -34,7 +34,7 @@ type InputProps = InputOwnProps &
  *
  * デザイン:
  * - DESIGN.md §4: 入力欄は角丸 `--radius-sm` (2px) の例外を適用
- * - DESIGN.md §2: フォーカスは `outline: 2px solid var(--accent); outline-offset: 2px;`
+ * - DESIGN.md §10: フォーカスは `outline: 2px solid var(--accent); outline-offset: 2px;`
  *
  * @example
  * // controlled

@@ -194,7 +194,7 @@ export default function SqlFormatterTile({
               <option value="tab">タブ</option>
             </Select>
           </div>
-          {/* DESIGN.md §5: 単一 ON/OFF はトグルスイッチで統一 (B-9) */}
+          {/* DESIGN.md §4: ON/OFF の切り替えはトグルスイッチで表す */}
           <ToggleSwitch
             label="キーワード大文字"
             checked={uppercase}

@@ -26,7 +26,7 @@ interface RelatedToolsProps {
  * - 新デザイントークンのみ使用（--ink / --ink-2 / --rule / --accent 等）
  * - 旧トークン（--fg / --bg / --border / --r-* 等）は使用しない
  * - DESIGN.md §4: 区切りは罫（--rule）。カードのグリッド・角丸装飾は使わない
- * - DESIGN.md §2: フォーカスは outline: 2px solid var(--accent); outline-offset: 2px
+ * - DESIGN.md §10: フォーカスは outline: 2px solid var(--accent); outline-offset: 2px
  */
 export default function RelatedTools({
   currentSlug,

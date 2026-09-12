@@ -197,7 +197,7 @@ export default function PasswordGeneratorTile({
           />
         </div>
 
-        {/* DESIGN.md §5: ON/OFF を切り替えるフォーム要素は原則としてトグルスイッチを使う */}
+        {/* DESIGN.md §4: ON/OFF を切り替えるフォーム要素は原則としてトグルスイッチを使う */}
         <div className={styles.toggleGroup}>
           <ToggleSwitch
             label="大文字 (A-Z)"

@@ -9,9 +9,9 @@
  *   現在の状態を正確に反映できる。
  * - `useSyncExternalStore` を使って hydration mismatch を回避する（next-themes の慣例）。
  *   サーバー側ではテーマが不明なため、コンポーネントを表示しない。
- * - DESIGN.md §3: Lucide スタイル線画アイコン、strokeWidth 1.5px、サイズ 16px。
+ * - DESIGN.md §4: 線画アイコン、strokeWidth 1.5px、サイズ 16px。
  *   アイコンのみのボタンには aria-label を付与（DESIGN.md §3 の規定）。
- * - DESIGN.md §5: ON/OFF 切替は原則トグルスイッチを使う。
+ * - DESIGN.md §4: ON/OFF 切替は原則トグルスイッチを使う。
  *
  * デザイン:
  * - ボタンではなく横長のトラック + サムのトグルスイッチ風。
