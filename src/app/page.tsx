@@ -258,7 +258,7 @@ export default function Home() {
         <Shinagaki
           heading="診断・占い・あそび"
           items={featuredPlayItems}
-          ariaLabel="診断・占い・あそびの品書き"
+          ariaLabel="診断・占い・あそびの一覧"
         />
         <p className={styles.seeAll}>
           <Link href="/play" className={styles.seeAllLink}>
@@ -272,13 +272,13 @@ export default function Home() {
         <Shinagaki
           heading="辞典"
           items={DICTIONARY_ITEMS}
-          ariaLabel="辞典の品書き"
+          ariaLabel="辞典の一覧"
         />
       </div>
 
       {/* 棚3: 道具（実務の結果） */}
       <div className={styles.shelf}>
-        <Shinagaki heading="道具" items={TOOL_ITEMS} ariaLabel="道具の品書き" />
+        <Shinagaki heading="道具" items={TOOL_ITEMS} ariaLabel="道具の一覧" />
         <p className={styles.seeAll}>
           <Link href="/tools" className={styles.seeAllLink}>
             すべての道具を見る
@@ -291,7 +291,7 @@ export default function Home() {
         <Shinagaki
           heading="読みもの"
           items={READING_ITEMS}
-          ariaLabel="読みものの品書き"
+          ariaLabel="読みものの一覧"
         />
       </div>
     </div>

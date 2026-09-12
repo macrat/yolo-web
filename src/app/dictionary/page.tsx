@@ -103,7 +103,7 @@ export default function DictionaryPage() {
       </div>
 
       {/* 4系統の品書き（罫区切りリスト1枚で渡す・§4） */}
-      <Shinagaki items={DICTIONARY_ITEMS} ariaLabel="辞典の品書き" />
+      <Shinagaki items={DICTIONARY_ITEMS} ariaLabel="辞典の一覧" />
     </div>
   );
 }

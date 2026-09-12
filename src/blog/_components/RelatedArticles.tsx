@@ -29,6 +29,6 @@ export default function RelatedArticles({ posts }: RelatedArticlesProps) {
   }));
 
   return (
-    <Shinagaki heading="関連記事" items={items} ariaLabel="関連記事の品書き" />
+    <Shinagaki heading="関連記事" items={items} ariaLabel="関連記事の一覧" />
   );
 }

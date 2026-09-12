@@ -118,7 +118,7 @@ export default function ColorsIndexPage() {
         <Shinagaki
           heading="色みから探す"
           items={categoryItems}
-          ariaLabel="色みのグループから探す品書き"
+          ariaLabel="色みのグループから探す一覧"
         />
       </div>
     </div>
