@@ -153,8 +153,8 @@ export default function Base64Tile({
   const outputLabel = direction === "encode" ? "Base64出力" : "テキスト出力";
   const inputPlaceholder =
     direction === "encode"
-      ? "エンコードするテキストを入力..."
-      : "デコードするBase64文字列を入力（標準形・URL-safe形・パディングなし、いずれも対応）...";
+      ? "エンコードするテキストを入力"
+      : "デコードするBase64文字列を入力（標準形・URL-safe形・パディングなし、いずれも対応）";
 
   // ---------- ハンドラ ----------
   function handleDirectionChange(val: string) {

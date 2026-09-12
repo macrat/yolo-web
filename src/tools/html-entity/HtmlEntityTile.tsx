@@ -171,8 +171,8 @@ export default function HtmlEntityTile({
           onChange={handleInputChange}
           placeholder={
             mode === "encode"
-              ? "エンコードするテキストを入力..."
-              : "デコードするHTMLエンティティを入力..."
+              ? "エンコードするテキストを入力"
+              : "デコードするHTMLエンティティを入力"
           }
           rows={6}
           spellCheck={false}

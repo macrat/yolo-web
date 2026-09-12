@@ -230,7 +230,7 @@ export default function MarkdownPreviewTile({
                 <div className={styles.emptyHint}>
                   {isMounted
                     ? "左の入力欄にMarkdownを入力するとプレビューが表示されます"
-                    : "読み込み中..."}
+                    : "読み込み中……"}
                 </div>
               )}
             </div>

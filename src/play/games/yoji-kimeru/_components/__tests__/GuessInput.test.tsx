@@ -93,7 +93,7 @@ describe("GuessInput", () => {
 
     expect(screen.getByRole("textbox")).toHaveAttribute(
       "placeholder",
-      "送信中...",
+      "送信中……",
     );
   });
 

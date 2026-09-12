@@ -1061,6 +1061,39 @@ describe("DESIGN.md §3 約物（明朝に palt を掛けない）", () => {
 });
 
 /**
+ * TypeScript ソースから、文字列リテラルの中身だけを順に取り出す。
+ *
+ * 引用符を素朴に対で拾うと、コメント中の引用符や `'"'` のような「引用符そのもの
+ * を値にしたリテラル」で対がずれ、無関係な範囲がひとつの文字列に化ける。ずれた
+ * 範囲は誤検知を生むだけでなく、その内側に入った本物の違反を飲み込んで見逃す。
+ * コメントと3種のリテラルを先頭から順に食べ、リテラルの中身だけを返す。
+ */
+function jsStringLiterals(src: string): string[] {
+  const TOKEN =
+    /\/\/[^\n]*|\/\*[\s\S]*?\*\/|'((?:[^'\\\n]|\\.)*)'|"((?:[^"\\\n]|\\.)*)"|`((?:[^`\\]|\\.)*)`/g;
+  const bodies: string[] = [];
+  for (const m of src.matchAll(TOKEN)) {
+    if (m[1] !== undefined) bodies.push(m[1]);
+    else if (m[2] !== undefined) bodies.push(m[2]);
+    // テンプレートの `${...}` は式であって文であり、来訪者には届かない。
+    else if (m[3] !== undefined) bodies.push(m[3].replace(/\$\{[^{}]*\}/g, ""));
+  }
+  return bodies;
+}
+
+/**
+ * JSX のタグに挟まれた地の文を取り出す。
+ *
+ * 画面の文言は文字列リテラルとは限らない——`<p>読み込み中...</p>` のように JSX へ
+ * 直に書かれた文は、リテラルを何度走査しても出てこない。式（`{...}`）と入れ子タグを
+ * 含まない区間だけを地の文として拾う。適用は `.tsx` に限る——`.ts` の不等号や総称型は
+ * JSX ではないので、同じ網に掛けると無関係なコードが地の文に化ける。
+ */
+function jsxTextNodes(src: string): string[] {
+  return Array.from(src.matchAll(/>([^<>{}]*)</g), (m) => m[1]);
+}
+
+/**
  * §3「三点リーダは「……」（2倍）で、`...` を使わない」のゲート。
  *
  * 来訪者が読む文字（placeholder・画面テキスト）に ASCII の三点が混ざると、
@@ -1077,6 +1110,34 @@ describe("DESIGN.md §3 三点リーダ（来訪者が読む文に `...` を使�
       const src = fs.readFileSync(path.join(PROJECT_ROOT, rel), "utf-8");
       for (const m of src.matchAll(/placeholder="([^"]*)"/g)) {
         if (m[1].includes("...")) offenders.push(`${rel}: ${m[1]}`);
+      }
+    }
+    expect(offenders).toEqual([]);
+  });
+
+  /**
+   * 画面に出る散文すべて（結果・設問・待ち文言・入力欄の手引き）。属性形の
+   * `placeholder="..."` だけを走査すると、変数に置かれた文言・prop で渡る文言・
+   * JSX に直に書かれた文言が丸ごと網から漏れる。文字列リテラルと JSX のテキスト
+   * ノードの両方を見て、置き場所に依存しなくする——`...array` のスプレッドや
+   * テンプレートの式は文ではないので触れない。
+   */
+  test("来訪者が読む散文に ASCII の三点が無いこと", () => {
+    const files = fg.sync(["src/**/*.ts", "src/**/*.tsx"], {
+      cwd: PROJECT_ROOT,
+      ignore: [...IGNORE, "**/__tests__/**"],
+    });
+    const offenders: string[] = [];
+    for (const rel of files) {
+      const src = fs.readFileSync(path.join(PROJECT_ROOT, rel), "utf-8");
+      const texts = rel.endsWith(".tsx")
+        ? [...jsStringLiterals(src), ...jsxTextNodes(src)]
+        : jsStringLiterals(src);
+      for (const body of texts) {
+        // 和文を含む文＝来訪者に読ませる文。識別子やパスは対象外。
+        if (body.includes("...") && /[ぁ-んァ-ヶ一-龠]/.test(body)) {
+          offenders.push(`${rel}: ${body.trim().slice(0, 40)}`);
+        }
       }
     }
     expect(offenders).toEqual([]);

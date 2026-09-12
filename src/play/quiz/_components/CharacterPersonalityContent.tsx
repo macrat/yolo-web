@@ -130,7 +130,7 @@ function CompatibilityArea({
   if (loading) {
     return (
       <div style={{ textAlign: "center", padding: "1rem", opacity: 0.6 }}>
-        相性データを読み込み中...
+        相性データを読み込み中……
       </div>
     );
   }

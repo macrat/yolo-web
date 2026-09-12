@@ -215,7 +215,7 @@ export default function PasswordGeneratorTile({
             onChange={(e) => updateOption("digits", e.target.checked)}
           />
           <ToggleSwitch
-            label="記号 (!@#$...)"
+            label="記号 (!@#$ など)"
             checked={options.symbols}
             onChange={(e) => updateOption("symbols", e.target.checked)}
           />

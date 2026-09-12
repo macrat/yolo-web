@@ -198,8 +198,8 @@ export default function UrlEncodeTile({
           onChange={handleInputChange}
           placeholder={
             direction === "encode"
-              ? "エンコードするテキストを入力..."
-              : "デコードするURL文字列を入力..."
+              ? "エンコードするテキストを入力"
+              : "デコードするURL文字列を入力"
           }
           rows={5}
           spellCheck={false}

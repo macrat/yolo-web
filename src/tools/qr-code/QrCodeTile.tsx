@@ -193,7 +193,7 @@ export default function QrCodeTile({
           !errorMessage && (
             <p className={styles.placeholder}>
               {input.trim()
-                ? "QRコードを生成中..."
+                ? "QRコードを生成中……"
                 : "入力するとQRコードが表示されます"}
             </p>
           )

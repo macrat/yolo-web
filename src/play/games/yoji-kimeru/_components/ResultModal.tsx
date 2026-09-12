@@ -63,7 +63,7 @@ export default function ResultModal({
       open={open}
       onClose={onClose}
       titleId="yoji-kimeru-result-title"
-      title={isWon ? "正解!" : "残念..."}
+      title={isWon ? "正解!" : "残念……"}
       returnFocusRef={returnFocusRef}
       footer={
         <button

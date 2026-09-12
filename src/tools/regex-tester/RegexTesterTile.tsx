@@ -267,7 +267,7 @@ export default function RegexTesterTile({
         {/* === 処理中インジケータ === */}
         {isProcessing && (
           <div className={styles.processing} role="status" aria-live="polite">
-            処理中...
+            処理中……
           </div>
         )}
 
