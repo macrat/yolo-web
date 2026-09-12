@@ -90,9 +90,9 @@ export default async function YojiPersonalityResultPage({ params }: Props) {
   // フォールバックは quiz.meta.accentColor（深紅色）を使用する。
   const resultColor = result.color ?? quiz.meta.accentColor;
 
-  const shareText = `${quiz.meta.title}の結果は「${result.title}」でした！あなたは? #四字熟語診断 #yolosnet`;
+  const shareText = `${quiz.meta.title}の結果は「${result.title}」でした！あなたは？ #四字熟語診断 #yolosnet`;
   const shareUrl = `${BASE_URL}/play/${SLUG}/result/${resultId}`;
-  const ctaText = "あなたはどの四字熟語? 診断してみよう";
+  const ctaText = "あなたはどの四字熟語？ 診断してみよう";
 
   // descriptionが4行を超えるかどうかの判定
 

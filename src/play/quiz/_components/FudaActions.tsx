@@ -68,7 +68,7 @@ export default function FudaActions({
     typeof window !== "undefined"
       ? `${window.location.origin}/play/${quizSlug}/result/${resultId}`
       : `/play/${quizSlug}/result/${resultId}`;
-  const shareText = `${quizTitle}の結果は「${resultTitle}」でした!`;
+  const shareText = `${quizTitle}の結果は「${resultTitle}」でした！`;
 
   /**
    * 固定 URL から札 PNG を取得して File 化する。
@@ -181,7 +181,7 @@ export default function FudaActions({
 
   const statusMessage =
     status === "copied"
-      ? "リンクをコピーしました!"
+      ? "リンクをコピーしました！"
       : status === "error"
         ? "画像を用意できませんでした。時間をおいて再度お試しください。"
         : "";

@@ -47,7 +47,7 @@ function renderButton(contentId?: string) {
     <InviteFriendButton
       quizSlug="character-personality"
       resultTypeId="type-a"
-      inviteText="相性を調べよう!"
+      inviteText="相性を調べよう！"
       contentId={contentId}
     />,
   );

@@ -44,13 +44,13 @@ describe("EntryRatingButton", () => {
     expect(button).toHaveAttribute("aria-pressed", "true");
   });
 
-  it("クリック後: ボタンのテキストが『おもしろかった!』に変わること", () => {
+  it("クリック後: ボタンのテキストが『おもしろかった！』に変わること", () => {
     render(<EntryRatingButton slug="test-entry" />);
     const button = screen.getByRole("button");
 
     fireEvent.click(button);
 
-    expect(button).toHaveTextContent("おもしろかった!");
+    expect(button).toHaveTextContent("おもしろかった！");
   });
 
   it("評価済み復元: isRated が true を返す場合、useEffect 後に aria-pressed が true になること", async () => {

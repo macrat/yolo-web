@@ -176,7 +176,7 @@ describe("PlayQuizResultPage CTA", () => {
     expect(screen.getByText("あなたも挑戦してみよう")).toBeInTheDocument();
   });
 
-  it("personality タイプのクイズでは「あなたはどのタイプ? 診断してみよう」と表示する", async () => {
+  it("personality タイプのクイズでは「あなたはどのタイプ？ 診断してみよう」と表示する", async () => {
     const params = Promise.resolve({
       slug: "personality-quiz",
       resultId: "result-x",
@@ -185,7 +185,7 @@ describe("PlayQuizResultPage CTA", () => {
     render(page);
 
     expect(
-      screen.getByText("あなたはどのタイプ? 診断してみよう"),
+      screen.getByText("あなたはどのタイプ？ 診断してみよう"),
     ).toBeInTheDocument();
   });
 
@@ -211,7 +211,7 @@ describe("PlayQuizResultPage CTA", () => {
     expect(screen.getByText("全8問 / 登録不要")).toBeInTheDocument();
   });
 
-  it("旧来のCTAテキスト「あなたも挑戦してみる?」は表示されない", async () => {
+  it("旧来のCTAテキスト「あなたも挑戦してみる？」は表示されない", async () => {
     const params = Promise.resolve({
       slug: "knowledge-quiz",
       resultId: "result-a",
@@ -219,7 +219,9 @@ describe("PlayQuizResultPage CTA", () => {
     const page = await PlayQuizResultPage({ params });
     render(page);
 
-    expect(screen.queryByText("あなたも挑戦してみる?")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("あなたも挑戦してみる？"),
+    ).not.toBeInTheDocument();
   });
 });
 
@@ -247,7 +249,7 @@ describe("PlayQuizResultPage CTA2", () => {
 
     // CTAテキストが複数存在する（CTA1 + CTA2）
     const ctaElements =
-      screen.getAllByText("あなたはどのタイプ? 診断してみよう");
+      screen.getAllByText("あなたはどのタイプ？ 診断してみよう");
     expect(ctaElements.length).toBeGreaterThanOrEqual(2);
   });
 
@@ -261,7 +263,7 @@ describe("PlayQuizResultPage CTA2", () => {
 
     // CTAテキストが1つだけ存在する（CTA1のみ）
     const ctaElements =
-      screen.queryAllByText("あなたはどのタイプ? 診断してみよう");
+      screen.queryAllByText("あなたはどのタイプ？ 診断してみよう");
     expect(ctaElements.length).toBe(1);
   });
 });

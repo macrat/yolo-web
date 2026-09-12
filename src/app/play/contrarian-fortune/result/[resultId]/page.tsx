@@ -105,7 +105,7 @@ export default async function ContrarianFortuneResultPage({ params }: Props) {
   // フォールバックは quiz.meta.accentColor を使用する。
   const resultColor = result.color ?? quiz.meta.accentColor;
 
-  const shareText = `${quiz.meta.title}の結果は「${result.title}」でした！あなたは? #逆張り運勢診断 #yolosnet`;
+  const shareText = `${quiz.meta.title}の結果は「${result.title}」でした！あなたは？ #逆張り運勢診断 #yolosnet`;
   const shareUrl = `${BASE_URL}/play/${SLUG}/result/${resultId}`;
   const ctaText = CTA_TEXT;
 

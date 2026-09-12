@@ -41,7 +41,7 @@ export default function CompatibilitySection({
       : `/play/${quizSlug}/result/${myType.id}?with=${friendType.id}`;
 
   const hashtag = quizTitle.replace(/\s/g, "");
-  const shareText = `私は「${myType.title}」、友達は「${friendType.title}」。相性は「${compatibility.label}」でした! #${hashtag} #yolosnet`;
+  const shareText = `私は「${myType.title}」、友達は「${friendType.title}」。相性は「${compatibility.label}」でした！ #${hashtag} #yolosnet`;
 
   return (
     <div className={styles.section}>

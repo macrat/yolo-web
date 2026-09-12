@@ -88,7 +88,7 @@ describe("UnexpectedCompatibilityResultPage", () => {
 
   describe("CTA_TEXT", () => {
     it("CTA1テキストが18文字以下でモバイル(375px)で1行に収まる長さである", () => {
-      // yoji-personalityのCTAテキスト「あなたはどの四字熟語? 診断してみよう」は17文字。
+      // yoji-personalityのCTAテキスト「あなたはどの四字熟語？ 診断してみよう」は17文字。
       // unexpected-compatibilityも同等の長さに揃える。
       expect(CTA_TEXT.length).toBeLessThanOrEqual(18);
     });

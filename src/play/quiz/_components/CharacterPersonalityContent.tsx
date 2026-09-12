@@ -31,7 +31,7 @@ import styles from "./CharacterPersonalityContent.module.css";
 
 const QUIZ_SLUG = "character-personality";
 const QUIZ_TITLE = "あなたに似たキャラ診断";
-const INVITE_TEXT = "似たキャラ診断で相性を調べよう!";
+const INVITE_TEXT = "似たキャラ診断で相性を調べよう！";
 
 interface CompatibilityApiResponse {
   label: string;

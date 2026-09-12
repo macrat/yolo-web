@@ -48,7 +48,7 @@ export default function HintBar({
       </span>
       <span className={styles.hintValue}>読み {reading.length}文字</span>
       {showReadingHint && (
-        <span className={styles.hintValue}>読み {reading.charAt(0)}...</span>
+        <span className={styles.hintValue}>読み {reading.charAt(0)}……</span>
       )}
       {showOriginHint && (
         <span className={styles.hintValue}>出典 {originLabels[origin]}</span>

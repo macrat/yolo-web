@@ -51,7 +51,7 @@ export default function EntryRatingButton({ slug }: EntryRatingButtonProps) {
         aria-pressed={rated}
         onClick={handleClick}
       >
-        {rated ? "おもしろかった!" : "おもしろかった"}
+        {rated ? "おもしろかった！" : "おもしろかった"}
       </button>
     </div>
   );

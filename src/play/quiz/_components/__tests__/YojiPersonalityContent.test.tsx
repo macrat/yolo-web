@@ -25,7 +25,7 @@ vi.mock("@/play/quiz/data/yoji-personality", () => ({
   default: {
     meta: {
       slug: "yoji-personality",
-      title: "あなたを四字熟語に例えると?",
+      title: "あなたを四字熟語に例えると？",
       accentColor: "#b91c1c",
       questionCount: 8,
     },

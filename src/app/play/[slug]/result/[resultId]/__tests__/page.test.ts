@@ -61,8 +61,8 @@ describe("play/[slug]/result/[resultId]/page.tsx", () => {
   });
 
   describe("シェアテキストの変更", () => {
-    it("シェアテキストの末尾に「あなたは?」が含まれている", () => {
-      expect(pageSource).toContain("あなたは?");
+    it("シェアテキストの末尾に「あなたは？」が含まれている", () => {
+      expect(pageSource).toContain("あなたは？");
     });
   });
 
@@ -95,8 +95,8 @@ describe("play/[slug]/result/[resultId]/page.tsx", () => {
       expect(pageSource).not.toContain('"あなたの特徴"');
     });
 
-    it("旧来の固定見出し「こんなところ、ありませんか?」が残っていない", () => {
-      expect(pageSource).not.toContain('"こんなところ、ありませんか?"');
+    it("旧来の固定見出し「こんなところ、ありませんか？」が残っていない", () => {
+      expect(pageSource).not.toContain('"こんなところ、ありませんか？"');
     });
   });
 

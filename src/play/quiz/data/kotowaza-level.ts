@@ -6,7 +6,7 @@ const kotowazaLevelQuiz: QuizDefinition = {
     title: "ことわざ・慣用句力診断",
     shortTitle: "ことわざ力診断",
     description:
-      "ことわざや慣用句の意味から正しい表現を当てるクイズです。全10問であなたのことわざ力を診断します。有名なことわざから意外と知らない慣用句まで幅広く出題!",
+      "ことわざや慣用句の意味から正しい表現を当てるクイズです。全10問であなたのことわざ力を診断します。有名なことわざから意外と知らない慣用句まで幅広く出題！",
     shortDescription: "ことわざ・慣用句10問であなたの語彙力を測定",
     type: "knowledge",
     category: "knowledge",
@@ -30,22 +30,22 @@ const kotowazaLevelQuiz: QuizDefinition = {
     ],
     faq: [
       {
-        question: "ことわざと慣用句はどちらも出題されますか?",
+        question: "ことわざと慣用句はどちらも出題されますか？",
         answer:
           "はい、全10問の中にことわざと慣用句の両方が含まれています。有名なことわざから体の部位を使った慣用句まで幅広く出題します。",
       },
       {
-        question: "どれくらいの時間で終わりますか?",
+        question: "どれくらいの時間で終わりますか？",
         answer:
           "全10問で、1問ごとに意味の説明文を読んで選択肢を選ぶ形式です。ゆっくり解いても5〜10分程度で終わります。",
       },
       {
-        question: "知らないことわざが出てきたらどうなりますか?",
+        question: "知らないことわざが出てきたらどうなりますか？",
         answer:
           "各問題の解答後に解説が表示されます。由来や語源も紹介しているので、知らなかったことわざも楽しく学べます。",
       },
       {
-        question: "結果はどのようにレベル分けされていますか?",
+        question: "結果はどのようにレベル分けされていますか？",
         answer:
           "10問中の正解数に応じて「ことわざビギナー」から「ことわざマスター」まで5段階で診断されます。",
       },
@@ -55,7 +55,7 @@ const kotowazaLevelQuiz: QuizDefinition = {
     {
       // ことわざ / 易 / 動物 — 正解位置: a
       id: "q1",
-      text: "「上手な人でも時には失敗する」という意味のことわざは?",
+      text: "「上手な人でも時には失敗する」という意味のことわざは？",
       choices: [
         { id: "q1-a", text: "猿も木から落ちる", isCorrect: true },
         { id: "q1-b", text: "犬も歩けば棒に当たる" },
@@ -68,7 +68,7 @@ const kotowazaLevelQuiz: QuizDefinition = {
     {
       // ことわざ / 易 / 食べ物 — 正解位置: b
       id: "q2",
-      text: "「思いがけない幸運が舞い込むこと」を表すことわざは?",
+      text: "「思いがけない幸運が舞い込むこと」を表すことわざは？",
       choices: [
         { id: "q2-a", text: "花より団子" },
         { id: "q2-b", text: "棚からぼたもち", isCorrect: true },
@@ -81,7 +81,7 @@ const kotowazaLevelQuiz: QuizDefinition = {
     {
       // ことわざ / 易 / 道具・生活 — 正解位置: c
       id: "q3",
-      text: "「用心の上にさらに用心を重ねること」を表すことわざは?",
+      text: "「用心の上にさらに用心を重ねること」を表すことわざは？",
       choices: [
         { id: "q3-a", text: "転ばぬ先の杖" },
         { id: "q3-b", text: "備えあれば憂いなし" },
@@ -94,7 +94,7 @@ const kotowazaLevelQuiz: QuizDefinition = {
     {
       // ことわざ / 易 / 努力 — 正解位置: a
       id: "q4",
-      text: "「何度失敗しても、くじけずに立ち上がること」を表すことわざは?",
+      text: "「何度失敗しても、くじけずに立ち上がること」を表すことわざは？",
       choices: [
         { id: "q4-a", text: "七転び八起き", isCorrect: true },
         { id: "q4-b", text: "石の上にも三年" },
@@ -107,7 +107,7 @@ const kotowazaLevelQuiz: QuizDefinition = {
     {
       // 慣用句 / 普通 / 体の部位 — 正解位置: b
       id: "q5",
-      text: "「相手の弱みにつけこむ」という意味の慣用句は?",
+      text: "「相手の弱みにつけこむ」という意味の慣用句は？",
       choices: [
         { id: "q5-a", text: "腕を磨く" },
         { id: "q5-b", text: "足元を見る", isCorrect: true },
@@ -120,7 +120,7 @@ const kotowazaLevelQuiz: QuizDefinition = {
     {
       // ことわざ / 普通 / 道具・生活 — 正解位置: d
       id: "q6",
-      text: "「身近なことほど案外気づきにくい」という意味のことわざは?",
+      text: "「身近なことほど案外気づきにくい」という意味のことわざは？",
       choices: [
         { id: "q6-a", text: "木を見て森を見ず" },
         { id: "q6-b", text: "井の中の蛙大海を知らず" },
@@ -133,7 +133,7 @@ const kotowazaLevelQuiz: QuizDefinition = {
     {
       // ことわざ / 普通 / 道具・生活 — 正解位置: d
       id: "q7",
-      text: "「やわらかいものに釘を打つように、手ごたえがないこと」のたとえは?",
+      text: "「やわらかいものに釘を打つように、手ごたえがないこと」のたとえは？",
       choices: [
         { id: "q7-a", text: "焼け石に水" },
         { id: "q7-b", text: "蛙の面に水" },
@@ -146,7 +146,7 @@ const kotowazaLevelQuiz: QuizDefinition = {
     {
       // 慣用句 / 難 / 体の部位 — 正解位置: c
       id: "q8",
-      text: "「あることをきっかけに、急に物事が理解できるようになる」という意味の慣用句は?",
+      text: "「あることをきっかけに、急に物事が理解できるようになる」という意味の慣用句は？",
       choices: [
         { id: "q8-a", text: "耳が痛い" },
         { id: "q8-b", text: "腑に落ちる" },
@@ -159,7 +159,7 @@ const kotowazaLevelQuiz: QuizDefinition = {
     {
       // ことわざ / 難 / 動物 — 正解位置: c
       id: "q9",
-      text: "「泳ぎの得意な者でも溺れることがある」という意味のことわざは?",
+      text: "「泳ぎの得意な者でも溺れることがある」という意味のことわざは？",
       choices: [
         { id: "q9-a", text: "蛙の子は蛙" },
         { id: "q9-b", text: "蛇の道は蛇" },
@@ -172,7 +172,7 @@ const kotowazaLevelQuiz: QuizDefinition = {
     {
       // ことわざ / 難 / 道具・生活 — 正解位置: a
       id: "q10",
-      text: "「思うようにならず、もどかしいこと」を表すことわざは?",
+      text: "「思うようにならず、もどかしいこと」を表すことわざは？",
       choices: [
         { id: "q10-a", text: "二階から目薬", isCorrect: true },
         { id: "q10-b", text: "帯に短し襷に長し" },
@@ -188,7 +188,7 @@ const kotowazaLevelQuiz: QuizDefinition = {
       id: "beginner",
       title: "ことわざビギナー",
       description:
-        "まだまだ伸びしろたっぷり! ことわざや慣用句は日常会話の中にたくさん隠れています。まずは身近な表現から意識して使ってみましょう。",
+        "まだまだ伸びしろたっぷり！ ことわざや慣用句は日常会話の中にたくさん隠れています。まずは身近な表現から意識して使ってみましょう。",
       icon: "\u{1F331}",
       minScore: 0,
       recommendation: "漢字力診断にも挑戦してみよう",
@@ -198,7 +198,7 @@ const kotowazaLevelQuiz: QuizDefinition = {
       id: "learner",
       title: "ことわざ見習い",
       description:
-        "基本的なことわざはバッチリ! 日本語の表現力をさらに伸ばすために、本や新聞でことわざ・慣用句を探してみましょう。",
+        "基本的なことわざはバッチリ！ 日本語の表現力をさらに伸ばすために、本や新聞でことわざ・慣用句を探してみましょう。",
       icon: "\u{1F4DD}",
       minScore: 3,
       recommendation: "四字熟語力診断で語彙力をさらに試そう",
@@ -208,7 +208,7 @@ const kotowazaLevelQuiz: QuizDefinition = {
       id: "intermediate",
       title: "ことわざ中級者",
       description:
-        "なかなかのことわざ力です! 由来や語源まで知ると、ことわざの世界がもっと面白くなりますよ。",
+        "なかなかのことわざ力です！ 由来や語源まで知ると、ことわざの世界がもっと面白くなりますよ。",
       icon: "\u{1F4D6}",
       minScore: 5,
       recommendation: "漢字力診断であなたの漢字力も確認しよう",
@@ -218,7 +218,7 @@ const kotowazaLevelQuiz: QuizDefinition = {
       id: "advanced",
       title: "ことわざ上級者",
       description:
-        "かなりの語彙力の持ち主! ことわざや慣用句を自在に使いこなせる実力者です。会話や文章で的確に使えると表現に深みが出ますね。",
+        "かなりの語彙力の持ち主！ ことわざや慣用句を自在に使いこなせる実力者です。会話や文章で的確に使えると表現に深みが出ますね。",
       icon: "\u{1F393}",
       minScore: 7,
       recommendation: "四字熟語力診断にも挑戦しよう",
@@ -228,7 +228,7 @@ const kotowazaLevelQuiz: QuizDefinition = {
       id: "master",
       title: "ことわざマスター",
       description:
-        "素晴らしいことわざ力! ことわざ・慣用句をほぼ完璧に理解しているあなたは、まさにことわざマスターです。",
+        "素晴らしいことわざ力！ ことわざ・慣用句をほぼ完璧に理解しているあなたは、まさにことわざマスターです。",
       icon: "\u{1F451}",
       minScore: 9,
       recommendation: "漢字力診断で漢字力も確認しよう",

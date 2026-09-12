@@ -179,13 +179,13 @@ export default async function PlayQuizResultPage({
   }
 
   // 末尾に「あなたは?」を追加してシェアした友人の興味を引く
-  const shareText = `${quiz.meta.title}の結果は「${result.title}」でした！あなたは? #${quiz.meta.title.replace(/\s/g, "")} #yolosnet`;
+  const shareText = `${quiz.meta.title}の結果は「${result.title}」でした！あなたは？ #${quiz.meta.title.replace(/\s/g, "")} #yolosnet`;
   const shareUrl = `${BASE_URL}/play/${slug}/result/${resultId}`;
 
   // CTAテキストをクイズタイプに応じて出し分ける
   const ctaText =
     quiz.meta.type === "personality"
-      ? "あなたはどのタイプ? 診断してみよう"
+      ? "あなたはどのタイプ？ 診断してみよう"
       : "あなたも挑戦してみよう";
 
   const { detailedContent } = result;

@@ -46,7 +46,7 @@ type Props = {
 };
 
 const SLUG = "character-personality";
-const INVITE_TEXT = "似たキャラ診断で相性を調べよう!";
+const INVITE_TEXT = "似たキャラ診断で相性を調べよう！";
 const quiz = characterPersonalityQuiz;
 
 export function generateStaticParams() {
@@ -172,9 +172,9 @@ export default async function CharacterPersonalityResultPage({
     }
   }
 
-  const shareText = `${quiz.meta.title}の結果は「${result.title}」でした！あなたは? #${quiz.meta.title.replace(/\s/g, "")} #yolosnet`;
+  const shareText = `${quiz.meta.title}の結果は「${result.title}」でした！あなたは？ #${quiz.meta.title.replace(/\s/g, "")} #yolosnet`;
   const shareUrl = `${BASE_URL}/play/${SLUG}/result/${resultId}`;
-  const ctaText = "あなたはどのタイプ? 診断してみよう";
+  const ctaText = "あなたはどのタイプ？ 診断してみよう";
 
   // descriptionが4行を超えるかどうかの判定
 

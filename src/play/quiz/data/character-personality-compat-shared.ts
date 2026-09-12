@@ -29,7 +29,7 @@ export const sharedArchetypeCompatibility: Record<string, CompatibilityEntry> =
     "blazing-poet--blazing-strategist": {
       label: "熱量の方向が違う同志",
       description:
-        "どちらも「やるぞ!」で走り出すが、策士は3手先を見ながら走り、詩人は走りながら空を見上げる。進む速度は同じなのに辿り着く場所がいつも違う。",
+        "どちらも「やるぞ！」で走り出すが、策士は3手先を見ながら走り、詩人は走りながら空を見上げる。進む速度は同じなのに辿り着く場所がいつも違う。",
     },
 
     // blazing-strategist (cmd+prf) × blazing-schemer (cmd+tri)
@@ -43,7 +43,7 @@ export const sharedArchetypeCompatibility: Record<string, CompatibilityEntry> =
     "blazing-strategist--blazing-warden": {
       label: "先頭と後方の二人司令",
       description:
-        "策士は先頭で計算を走らせ、守護司令塔は「全員ついてきてるか!」と叫ぶ。役割が自然に分かれ、チームの前後をこの二人が完璧にカバーする。",
+        "策士は先頭で計算を走らせ、守護司令塔は「全員ついてきてるか！」と叫ぶ。役割が自然に分かれ、チームの前後をこの二人が完璧にカバーする。",
     },
 
     // blazing-strategist (cmd+prf) × blazing-canvas (cmd+art)
@@ -71,14 +71,14 @@ export const sharedArchetypeCompatibility: Record<string, CompatibilityEntry> =
     "blazing-poet--blazing-schemer": {
       label: "炎と策の大暴走",
       description:
-        "詩人が「行くぞ!」と煽り、謀略家が「どうせなら裏道で行こう」と誘う。勢いと策略が合わさって、誰も想定しなかった方向に事態が展開する。",
+        "詩人が「行くぞ！」と煽り、謀略家が「どうせなら裏道で行こう」と誘う。勢いと策略が合わさって、誰も想定しなかった方向に事態が展開する。",
     },
 
     // blazing-poet (cmd+drm) × blazing-warden (cmd+grd)
     "blazing-poet--blazing-warden": {
       label: "夢と責任の熱い相棒",
       description:
-        "詩人が夢を語りながら走り、守護司令塔が「全員ついてきてるか!」と振り返る。ビジョンと責任感がセットで動くので、誰も置いてかれない熱量の旅になる。",
+        "詩人が夢を語りながら走り、守護司令塔が「全員ついてきてるか！」と振り返る。ビジョンと責任感がセットで動くので、誰も置いてかれない熱量の旅になる。",
     },
 
     // blazing-poet (cmd+drm) × blazing-canvas (cmd+art)
@@ -92,7 +92,7 @@ export const sharedArchetypeCompatibility: Record<string, CompatibilityEntry> =
     "blazing-poet--ultimate-commander": {
       label: "熱量の強火と中火",
       description:
-        "覇王が全開で突っ走る傍ら、詩人が「ちょっと待って、あの夕焼けきれいじゃない?」と立ち止まる。覇王は苦笑いしながらも、実は詩人の感性に何度も救われている。",
+        "覇王が全開で突っ走る傍ら、詩人が「ちょっと待って、あの夕焼けきれいじゃない？」と立ち止まる。覇王は苦笑いしながらも、実は詩人の感性に何度も救われている。",
     },
 
     // blazing-poet (cmd+drm) × guardian-charger (grd+cmd)
@@ -106,14 +106,14 @@ export const sharedArchetypeCompatibility: Record<string, CompatibilityEntry> =
     "blazing-schemer--blazing-warden": {
       label: "抜け道と安全確認の問答",
       description:
-        "謀略家が「裏道で行こう」と言うたびに、守護司令塔が「全員通れるか確認した?」と返す。スピードと安全性を両立させるこの二人のやり取りは、毎回攻防戦になる。",
+        "謀略家が「裏道で行こう」と言うたびに、守護司令塔が「全員通れるか確認した？」と返す。スピードと安全性を両立させるこの二人のやり取りは、毎回攻防戦になる。",
     },
 
     // blazing-schemer (cmd+tri) × blazing-canvas (cmd+art)
     "blazing-canvas--blazing-schemer": {
       label: "奇策と衝動の共犯関係",
       description:
-        "謀略家が仕掛けた奇策に、画家が「それ面白い!」と飛びついて感性で仕上げる。計算と直感が混ざり合い、後から誰も再現できない傑作が生まれる。",
+        "謀略家が仕掛けた奇策に、画家が「それ面白い！」と飛びついて感性で仕上げる。計算と直感が混ざり合い、後から誰も再現できない傑作が生まれる。",
     },
 
     // blazing-schemer (cmd+tri) × ultimate-commander (cmd+cmd)
@@ -127,21 +127,21 @@ export const sharedArchetypeCompatibility: Record<string, CompatibilityEntry> =
     "blazing-schemer--guardian-charger": {
       label: "奇手と盾の奇妙な均衡",
       description:
-        "謀略家が「こっちから崩そう」と言い、守護者が「それで後方は大丈夫か?」と確認する。リスクを取る者と守る者が同じチームにいる、緊張感のある最強ペア。",
+        "謀略家が「こっちから崩そう」と言い、守護者が「それで後方は大丈夫か？」と確認する。リスクを取る者と守る者が同じチームにいる、緊張感のある最強ペア。",
     },
 
     // blazing-warden (cmd+grd) × blazing-canvas (cmd+art)
     "blazing-canvas--blazing-warden": {
       label: "守りながら描く二人旅",
       description:
-        "守護司令塔が「全員安全か?」と確認しながら進む横で、画家が「この景色、残しておきたい」と足を止める。責任感と感性が同居する、温かみのある旅路。",
+        "守護司令塔が「全員安全か？」と確認しながら進む横で、画家が「この景色、残しておきたい」と足を止める。責任感と感性が同居する、温かみのある旅路。",
     },
 
     // blazing-warden (cmd+grd) × ultimate-commander (cmd+cmd)
     "blazing-warden--ultimate-commander": {
       label: "全開と全員確認の攻防",
       description:
-        "覇王が「止まるな全員前だ!」と叫ぶ中、守護司令塔が「最後の一人を待ってから行く」と譲らない。この二人が揃うとチームが最速かつ誰も脱落しない奇跡が起きる。",
+        "覇王が「止まるな全員前だ！」と叫ぶ中、守護司令塔が「最後の一人を待ってから行く」と譲らない。この二人が揃うとチームが最速かつ誰も脱落しない奇跡が起きる。",
     },
 
     // blazing-warden (cmd+grd) × guardian-charger (grd+cmd)
@@ -180,7 +180,7 @@ export const sharedArchetypeCompatibility: Record<string, CompatibilityEntry> =
     "blazing-strategist--dreaming-scholar": {
       label: "行動と白昼夢の知的対話",
       description:
-        "策士が「で、その研究どう使う?」と詰め寄り、学術夢想家が「使い方より面白さが大事で……」と答える。お互い論理は通っているのに、向いている方向が90度ずれている。",
+        "策士が「で、その研究どう使う？」と詰め寄り、学術夢想家が「使い方より面白さが大事で……」と答える。お互い論理は通っているのに、向いている方向が90度ずれている。",
     },
 
     // blazing-strategist (cmd+prf) × contrarian-professor (prf+tri)
@@ -222,7 +222,7 @@ export const sharedArchetypeCompatibility: Record<string, CompatibilityEntry> =
     "contrarian-professor--dreaming-scholar": {
       label: "夢想と反論の無限ループ",
       description:
-        "学術夢想家が「こんな研究したら面白い!」と提案すると、へそ曲がり博士が「でもこういう反証があって……」と返す。夢はどんどん精緻になるが、一向に実験が始まらない。",
+        "学術夢想家が「こんな研究したら面白い！」と提案すると、へそ曲がり博士が「でもこういう反証があって……」と返す。夢はどんどん精緻になるが、一向に実験が始まらない。",
     },
 
     // dreaming-scholar (prf+drm) × careful-scholar (prf+grd)
@@ -331,42 +331,42 @@ export const sharedArchetypeCompatibility: Record<string, CompatibilityEntry> =
     "blazing-poet--dreaming-scholar": {
       label: "炎の夢と霧の夢",
       description:
-        "詩人が「やるぞ!」と走り出し、学術夢想家が「実はその方向で論文が書けそうで……」と白昼夢に入る。同じ「夢見る」でも、方向と温度がまるで違う二人。",
+        "詩人が「やるぞ！」と走り出し、学術夢想家が「実はその方向で論文が書けそうで……」と白昼夢に入る。同じ「夢見る」でも、方向と温度がまるで違う二人。",
     },
 
     // blazing-poet (cmd+drm) × star-chaser (drm+tri)
     "blazing-poet--star-chaser": {
       label: "夢と斜め視点のぶつかり合い",
       description:
-        "詩人が熱量で「夢に向かうぞ!」と言い、夢追い人が「でもそれって普通じゃない?」と逆張りする。詩人は熱くなるが、斜めの視点のおかげで夢の輪郭が鮮明になる。",
+        "詩人が熱量で「夢に向かうぞ！」と言い、夢追い人が「でもそれって普通じゃない？」と逆張りする。詩人は熱くなるが、斜めの視点のおかげで夢の輪郭が鮮明になる。",
     },
 
     // blazing-poet (cmd+drm) × tender-dreamer (drm+grd)
     "blazing-poet--tender-dreamer": {
       label: "熱い夢とやさしい夢",
       description:
-        "詩人が「みんなで行くぞ!」と旗を振り、夢想家が「みんな大丈夫かな……」と後ろを気にする。前向きな夢と内向きな思いやりが同居する、温度差のある優しいコンビ。",
+        "詩人が「みんなで行くぞ！」と旗を振り、夢想家が「みんな大丈夫かな……」と後ろを気にする。前向きな夢と内向きな思いやりが同居する、温度差のある優しいコンビ。",
     },
 
     // blazing-poet (cmd+drm) × dreaming-canvas (drm+art)
     "blazing-poet--dreaming-canvas": {
       label: "行動する夢と映像化する夢",
       description:
-        "詩人が「行くぞ!」と飛び出す横で、夢見る画家が目を閉じて「あ、あのシーンだ」と映像を見ている。どちらも夢の住人だが、夢との距離感が全く違う。",
+        "詩人が「行くぞ！」と飛び出す横で、夢見る画家が目を閉じて「あ、あのシーンだ」と映像を見ている。どちらも夢の住人だが、夢との距離感が全く違う。",
     },
 
     // blazing-poet (cmd+drm) × eternal-dreamer (drm+drm)
     "blazing-poet--eternal-dreamer": {
       label: "「今すぐ」と「いつか」の差",
       description:
-        "詩人が「やるぞ、今すぐ!」と叫び、永遠の夢想家が「いつかやろう……」と呟く。同じ夢を持っているのに、行動への踏み出し方がまるで違う二人。",
+        "詩人が「やるぞ、今すぐ！」と叫び、永遠の夢想家が「いつかやろう……」と呟く。同じ夢を持っているのに、行動への踏み出し方がまるで違う二人。",
     },
 
     // dreaming-scholar (prf+drm) × star-chaser (drm+tri)
     "dreaming-scholar--star-chaser": {
       label: "夢を理論化する者と斜める者",
       description:
-        "学術夢想家が「この夢に理論的根拠を加えると……」と膨らませ、夢追い人が「でもその夢、普通すぎない?」と鋭い突っ込みを入れる。夢がどんどん精密で尖っていく。",
+        "学術夢想家が「この夢に理論的根拠を加えると……」と膨らませ、夢追い人が「でもその夢、普通すぎない？」と鋭い突っ込みを入れる。夢がどんどん精密で尖っていく。",
     },
 
     // dreaming-scholar (prf+drm) × tender-dreamer (drm+grd)
@@ -394,21 +394,21 @@ export const sharedArchetypeCompatibility: Record<string, CompatibilityEntry> =
     "star-chaser--tender-dreamer": {
       label: "斜め視線とやさしい視線",
       description:
-        "夢追い人が「その夢、普通じゃない?」と突っ込み、優しい夢想家が「でも大切な夢だよ」と優しく包む。冷静な逆張りと温かい肯定が同居する、奇妙なバランスのコンビ。",
+        "夢追い人が「その夢、普通じゃない？」と突っ込み、優しい夢想家が「でも大切な夢だよ」と優しく包む。冷静な逆張りと温かい肯定が同居する、奇妙なバランスのコンビ。",
     },
 
     // star-chaser (drm+tri) × dreaming-canvas (drm+art)
     "dreaming-canvas--star-chaser": {
       label: "鋭い夢と柔らかい夢",
       description:
-        "夢追い人が「それって本当に夢なの?」と問い、夢見る画家が「夢の中でフルカラーで見えるから本物だよ」と答える。問いと映像が交差して、夢の輪郭が深まる。",
+        "夢追い人が「それって本当に夢なの？」と問い、夢見る画家が「夢の中でフルカラーで見えるから本物だよ」と答える。問いと映像が交差して、夢の輪郭が深まる。",
     },
 
     // star-chaser (drm+tri) × eternal-dreamer (drm+drm)
     "eternal-dreamer--star-chaser": {
       label: "鋭い夢想家と純粋な夢想家",
       description:
-        "夢追い人が「それって現実的?」と問い詰め、永遠の夢想家が「現実的かどうかより、夢であることが大事」と答える。議論するほど、お互いの夢がより鮮明になっていく。",
+        "夢追い人が「それって現実的？」と問い詰め、永遠の夢想家が「現実的かどうかより、夢であることが大事」と答える。議論するほど、お互いの夢がより鮮明になっていく。",
     },
 
     // tender-dreamer (drm+grd) × dreaming-canvas (drm+art)
@@ -447,7 +447,7 @@ export const sharedArchetypeCompatibility: Record<string, CompatibilityEntry> =
     "blazing-schemer--star-chaser": {
       label: "奇策と逆張りの同盟",
       description:
-        "謀略家が「普通じゃない道を行こう」と言い、夢追い人が「でもそれって普通じゃない?」と突っ込む。逆張り同士なのになぜか逆張り合いになり、結果が最も尖った方向へ転がる。",
+        "謀略家が「普通じゃない道を行こう」と言い、夢追い人が「でもそれって普通じゃない？」と突っ込む。逆張り同士なのになぜか逆張り合いになり、結果が最も尖った方向へ転がる。",
     },
 
     // blazing-schemer (cmd+tri) × clever-guardian (tri+grd)
@@ -468,7 +468,7 @@ export const sharedArchetypeCompatibility: Record<string, CompatibilityEntry> =
     "blazing-schemer--ultimate-trickster": {
       label: "熱量の策と冷静の策",
       description:
-        "謀略家が熱量で「こっちの裏道だ!」と走り、究極の策略家が「その裏をさらに読んでみると……」と静かに考える。同じ「策」でも温度がまるで違う二人。",
+        "謀略家が熱量で「こっちの裏道だ！」と走り、究極の策略家が「その裏をさらに読んでみると……」と静かに考える。同じ「策」でも温度がまるで違う二人。",
     },
 
     // blazing-schemer (cmd+tri) × vibe-rebel (art+tri)
@@ -482,7 +482,7 @@ export const sharedArchetypeCompatibility: Record<string, CompatibilityEntry> =
     "contrarian-professor--star-chaser": {
       label: "知的反論と夢への突っ込み",
       description:
-        "へそ曲がり博士が理屈で反論し、夢追い人が感性で「それって普通すぎない?」と突っ込む。二人とも「今の方向性への疑問」という武器を持つが、使い方が全く違う。",
+        "へそ曲がり博士が理屈で反論し、夢追い人が感性で「それって普通すぎない？」と突っ込む。二人とも「今の方向性への疑問」という武器を持つが、使い方が全く違う。",
     },
 
     // contrarian-professor (prf+tri) × clever-guardian (tri+grd)
@@ -517,21 +517,21 @@ export const sharedArchetypeCompatibility: Record<string, CompatibilityEntry> =
     "clever-guardian--star-chaser": {
       label: "夢への逆張りと穴の逆張り",
       description:
-        "夢追い人が「この夢、普通じゃない?」と夢に突っ込み、戦略的安全係が「その夢の実現方法に弱点がある」と探す。夢が鋭く、かつ堅牢になる少し珍しい二人組。",
+        "夢追い人が「この夢、普通じゃない？」と夢に突っ込み、戦略的安全係が「その夢の実現方法に弱点がある」と探す。夢が鋭く、かつ堅牢になる少し珍しい二人組。",
     },
 
     // star-chaser (drm+tri) × creative-disruptor (tri+art)
     "creative-disruptor--star-chaser": {
       label: "夢の逆張りと王道の逆張り",
       description:
-        "夢追い人が「これって普通すぎない?」と夢を問い直し、逆張り曲者が「普通じゃない方向で仕上げよう」と美学で応える。二人で話すと、夢が確実に「王道でないもの」になる。",
+        "夢追い人が「これって普通すぎない？」と夢を問い直し、逆張り曲者が「普通じゃない方向で仕上げよう」と美学で応える。二人で話すと、夢が確実に「王道でないもの」になる。",
     },
 
     // star-chaser (drm+tri) × ultimate-trickster (tri+tri)
     "star-chaser--ultimate-trickster": {
       label: "夢の疑問と策略の疑問",
       description:
-        "夢追い人が「この夢って本当に正しい方向?」と問い、究極の策略家が「そもそも正しい方向って何?」と返す。問いが問いを呼ぶが、最終的に夢の骨格が強化される。",
+        "夢追い人が「この夢って本当に正しい方向？」と問い、究極の策略家が「そもそも正しい方向って何？」と返す。問いが問いを呼ぶが、最終的に夢の骨格が強化される。",
     },
 
     // star-chaser (drm+tri) × vibe-rebel (art+tri)
@@ -598,21 +598,21 @@ export const sharedArchetypeCompatibility: Record<string, CompatibilityEntry> =
     "blazing-warden--tender-dreamer": {
       label: "熱い守りと静かな心配",
       description:
-        "守護司令塔が「全員で前に進むぞ!」と叫び、優しい夢想家が「みんな疲れてないかな……」と後ろを気にする。元気よく守る者とそっと心配する者が同じ方向を向く。",
+        "守護司令塔が「全員で前に進むぞ！」と叫び、優しい夢想家が「みんな疲れてないかな……」と後ろを気にする。元気よく守る者とそっと心配する者が同じ方向を向く。",
     },
 
     // blazing-warden (cmd+grd) × clever-guardian (tri+grd)
     "blazing-warden--clever-guardian": {
       label: "守りの熱量と守りの策略",
       description:
-        "守護司令塔が熱量で「全員守るぞ!」と言い、戦略的安全係が「守るべき弱点を先に計算した」と返す。勢いと策略が組み合わさって、チームの守りが異常に固くなる。",
+        "守護司令塔が熱量で「全員守るぞ！」と言い、戦略的安全係が「守るべき弱点を先に計算した」と返す。勢いと策略が組み合わさって、チームの守りが異常に固くなる。",
     },
 
     // blazing-warden (cmd+grd) × gentle-fortress (grd+art)
     "blazing-warden--gentle-fortress": {
       label: "熱血守護と静かな守護",
       description:
-        "守護司令塔が「全員絶対に守る!」と宣言し、穏やかな要塞が「大丈夫?」と静かに聞く。同じ「守りたい」という気持ちが、全く異なる表現形式で現れているペア。",
+        "守護司令塔が「全員絶対に守る！」と宣言し、穏やかな要塞が「大丈夫？」と静かに聞く。同じ「守りたい」という気持ちが、全く異なる表現形式で現れているペア。",
     },
 
     // blazing-warden (cmd+grd) × ultimate-guardian (grd+grd)
@@ -626,7 +626,7 @@ export const sharedArchetypeCompatibility: Record<string, CompatibilityEntry> =
     "blazing-warden--data-fortress": {
       label: "感情の守りとデータの守り",
       description:
-        "守護司令塔が「大切な人を守る!」と熱量で動き、論理的守護者が「守るべき理由をデータで証明した」と言う。同じ「守る」という行動に、熱さとデータが同居する。",
+        "守護司令塔が「大切な人を守る！」と熱量で動き、論理的守護者が「守るべき理由をデータで証明した」と言う。同じ「守る」という行動に、熱さとデータが同居する。",
     },
 
     // careful-scholar (prf+grd) × tender-dreamer (drm+grd)
@@ -678,7 +678,7 @@ export const sharedArchetypeCompatibility: Record<string, CompatibilityEntry> =
     "gentle-fortress--tender-dreamer": {
       label: "そっと守る者同士の沈黙",
       description:
-        "優しい夢想家が「みんなが笑ってれば私は大丈夫」と言い、穏やかな要塞が「大丈夫?」と聞く。どちらも自分より相手を優先して疲れている。たまには互いに「大丈夫?」と聞き合う。",
+        "優しい夢想家が「みんなが笑ってれば私は大丈夫」と言い、穏やかな要塞が「大丈夫？」と聞く。どちらも自分より相手を優先して疲れている。たまには互いに「大丈夫？」と聞き合う。",
     },
 
     // tender-dreamer (drm+grd) × ultimate-guardian (grd+grd)
@@ -780,21 +780,21 @@ export const sharedArchetypeCompatibility: Record<string, CompatibilityEntry> =
     "academic-artist--blazing-canvas": {
       label: "衝動の絵と論理の詩",
       description:
-        "情熱の画家が「感じたら描く!」と飛び出し、データの詩人が「その感情、なぜそう感じたか分析すると……」と掘り下げる。衝動と理性が同じ「美しい」を目指して動いている。",
+        "情熱の画家が「感じたら描く！」と飛び出し、データの詩人が「その感情、なぜそう感じたか分析すると……」と掘り下げる。衝動と理性が同じ「美しい」を目指して動いている。",
     },
 
     // blazing-canvas (cmd+art) × dreaming-canvas (drm+art)
     "blazing-canvas--dreaming-canvas": {
       label: "走る画家と夢見る画家",
       description:
-        "情熱の画家が「行くぞ!」と叫びながら描き、夢見る画家が目を閉じて映像を見ながら描く。どちらもキャンバスに向かっているが、一人は走り、一人は夢の中にいる。",
+        "情熱の画家が「行くぞ！」と叫びながら描き、夢見る画家が目を閉じて映像を見ながら描く。どちらもキャンバスに向かっているが、一人は走り、一人は夢の中にいる。",
     },
 
     // blazing-canvas (cmd+art) × creative-disruptor (tri+art)
     "blazing-canvas--creative-disruptor": {
       label: "衝動の逸脱と計算の逸脱",
       description:
-        "情熱の画家が「やる!」と走り出した結果として王道を外れ、逆張り曲者が計算して王道を外す。どちらも「普通じゃない」を作るが、意図的かどうかが決定的に違う。",
+        "情熱の画家が「やる！」と走り出した結果として王道を外れ、逆張り曲者が計算して王道を外す。どちらも「普通じゃない」を作るが、意図的かどうかが決定的に違う。",
     },
 
     // blazing-canvas (cmd+art) × gentle-fortress (grd+art)
@@ -808,14 +808,14 @@ export const sharedArchetypeCompatibility: Record<string, CompatibilityEntry> =
     "blazing-canvas--ultimate-artist": {
       label: "炎の感性と純粋な感性",
       description:
-        "情熱の画家が「やるぞ!」と感性に火をつけ、美の追求者が「うーん、まだ違う」と感性を磨き続ける。どちらも感性に従って動くが、一人は爆発させ、一人は精錬させる。",
+        "情熱の画家が「やるぞ！」と感性に火をつけ、美の追求者が「うーん、まだ違う」と感性を磨き続ける。どちらも感性に従って動くが、一人は爆発させ、一人は精錬させる。",
     },
 
     // blazing-canvas (cmd+art) × vibe-rebel (art+tri)
     "blazing-canvas--vibe-rebel": {
       label: "炎の直感と野生の直感",
       description:
-        "情熱の画家が「感じたから行く!」と走り出し、野生の芸術家が「直感で動いたらここにいた」と笑う。どちらも理由より感覚が先。二人でいると、常識という概念が溶けていく。",
+        "情熱の画家が「感じたから行く！」と走り出し、野生の芸術家が「直感で動いたらここにいた」と笑う。どちらも理由より感覚が先。二人でいると、常識という概念が溶けていく。",
     },
 
     // academic-artist (prf+art) × dreaming-canvas (drm+art)

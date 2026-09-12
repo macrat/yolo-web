@@ -249,7 +249,7 @@ function buildAnimalPersonalityAfterTodayAction(
           <InviteFriendButton
             quizSlug={quiz.meta.slug}
             resultTypeId={resultId}
-            inviteText="日本の固有種診断で相性を調べよう!"
+            inviteText="日本の固有種診断で相性を調べよう！"
             contentId={contentIdForQuiz(quiz.meta.slug)}
           />
         </>
@@ -261,7 +261,7 @@ function buildAnimalPersonalityAfterTodayAction(
     <InviteFriendButton
       quizSlug={quiz.meta.slug}
       resultTypeId={resultId}
-      inviteText="日本の固有種診断で相性を調べよう!"
+      inviteText="日本の固有種診断で相性を調べよう！"
       contentId={contentIdForQuiz(quiz.meta.slug)}
     />
   );
@@ -461,7 +461,7 @@ export default function ResultCard({
       ? `${window.location.origin}/play/${quizSlug}/result/${result.id}`
       : `/play/${quizSlug}/result/${result.id}`;
 
-  const shareText = `${quizTitle}の結果は「${result.title}」でした! #${quizTitle.replace(/\s/g, "")} #yolosnet`;
+  const shareText = `${quizTitle}の結果は「${result.title}」でした！ #${quizTitle.replace(/\s/g, "")} #yolosnet`;
 
   // catchphrase を description の前に表示する variant のリスト。
   // このリストに含まれる variant は detailedContent.catchphrase を持つことが保証される。

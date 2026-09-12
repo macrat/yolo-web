@@ -36,14 +36,14 @@ vi.mock("@/play/seo", () => ({
   generatePlayMetadata: vi.fn(() => ({
     title: "今日のユーモア運勢 - 運勢 | yolos.net",
     description:
-      "AIが毎日生成するユーモラスな運勢診断。今日のあなたの運勢は一体どんな形?",
+      "AIが毎日生成するユーモラスな運勢診断。今日のあなたの運勢は一体どんな形？",
   })),
   generatePlayJsonLd: vi.fn(() => ({
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "今日のユーモア運勢",
     description:
-      "AIが毎日生成するユーモラスな運勢診断。今日のあなたの運勢は一体どんな形?",
+      "AIが毎日生成するユーモラスな運勢診断。今日のあなたの運勢は一体どんな形？",
     url: "https://yolos.net/play/daily",
     applicationCategory: "EntertainmentApplication",
     operatingSystem: "All",

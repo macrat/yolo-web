@@ -112,7 +112,7 @@ export default function GameShareButtons({
         )}
       </div>
       <div className={styles.copiedMessage} role="status" aria-live="polite">
-        {copied ? "コピーしました!" : ""}
+        {copied ? "コピーしました！" : ""}
       </div>
     </div>
   );

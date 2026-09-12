@@ -320,7 +320,7 @@ export default function RegexTesterTile({
                 ))}
                 {matchResult.matches.length > 50 && (
                   <p className={styles.truncated}>
-                    ...他 {matchResult.matches.length - 50} 件のマッチ
+                    ……他 {matchResult.matches.length - 50} 件のマッチ
                   </p>
                 )}
               </div>
