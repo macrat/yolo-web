@@ -1628,6 +1628,32 @@ describe("DESIGN.md §6-4 行き先の名前（着いた先の名前と揃える
    * 「ル」も、「診断」のような総称語も、どちらかがもう一方を含んでいれば通す判定では
    * 「指している」ことになってしまう。切り詰めの側は、正式名の大半を残している場合に限る。
    */
+  /** 主題として意味を持つ最短の連なり（「藍」だけの一致で通さないための下限）。 */
+  const SUBJECT_MIN_LENGTH = 3;
+
+  /**
+   * 二つの名前が同じものを名指しているか。
+   *
+   * 逐語一致は求めない——一覧の「日本の伝統色診断」と、着いた先の「あなたを日本の
+   * 伝統色に例えると？」は、どちらも『日本の伝統色』を名指しているので迷わない。
+   * 迷うのは「道具」と「ツール」のように、名指す語そのものが入れ替わる形である。
+   * 共通の連なりが主題と呼べる長さに達しているかで分ける。
+   */
+  function sharesSubject(a: string, b: string): boolean {
+    const x = nameOnly(a);
+    const y = nameOnly(b);
+    for (
+      let len = Math.min(x.length, y.length);
+      len >= SUBJECT_MIN_LENGTH;
+      len--
+    ) {
+      for (let i = 0; i + len <= x.length; i++) {
+        if (y.includes(x.slice(i, i + len))) return true;
+      }
+    }
+    return false;
+  }
+
   function pointsTo(label: string, canonical: string): boolean {
     const name = nameOnly(label);
     const target = nameOnly(canonical);
@@ -1710,6 +1736,28 @@ describe("DESIGN.md §6-4 行き先の名前（着いた先の名前と揃える
     expect(pairs, "行き先とラベルの対を一つも走査していない").toBeGreaterThan(
       20,
     );
+  });
+
+  /**
+   * 一覧に出す短い呼び名（`shortTitle`）と、着いた先が名乗る題（`title`）。
+   *
+   * どちらを使ってもよいが、同じものを名指していなければならない。ここを誰も
+   * 見ていなかったので、一覧のラベルと着いた先の見出しが別の語という状態が、
+   * リンク側のゲートをすり抜けて残っていた。
+   */
+  test("短い呼び名が、着いた先の題と同じものを名指していること", () => {
+    const offenders: string[] = [];
+    let checked = 0;
+    for (const content of playContentBySlug.values()) {
+      if (content.shortTitle === undefined) continue;
+      checked++;
+      if (!sharesSubject(content.shortTitle, content.title)) {
+        offenders.push(`${content.title} ↔ ${content.shortTitle}`);
+      }
+    }
+    expect(offenders).toEqual([]);
+    // 短い呼び名を持つ面は実測7件。走査が壊れて0件になったら落とす。
+    expect(checked, "短い呼び名を一つも走査していない").toBeGreaterThan(5);
   });
 });
 

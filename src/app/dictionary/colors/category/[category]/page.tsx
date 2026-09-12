@@ -73,7 +73,7 @@ export default async function ColorCategoryPage({
   const breadcrumbJsonLd = generateBreadcrumbJsonLd([
     { label: "ホーム", href: "/" },
     { label: "辞典", href: "/dictionary" },
-    { label: "伝統色辞典", href: "/dictionary/colors" },
+    { label: "日本の伝統色", href: "/dictionary/colors" },
     { label: `${categoryLabel}の伝統色` },
   ]);
 
@@ -89,7 +89,7 @@ export default async function ColorCategoryPage({
         items={[
           { label: "ホーム", href: "/" },
           { label: "辞典", href: "/dictionary" },
-          { label: "伝統色辞典", href: "/dictionary/colors" },
+          { label: "日本の伝統色", href: "/dictionary/colors" },
           { label: `${categoryLabel}の伝統色` },
         ]}
       />

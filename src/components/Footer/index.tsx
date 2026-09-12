@@ -27,14 +27,14 @@ const FOOTER_SECTIONS: {
     links: [
       { label: "ツール一覧", href: "/tools" },
       { label: "文字数カウント", href: "/tools/char-count" },
-      { label: "JSON 整形", href: "/tools/json-formatter" },
+      { label: "JSON整形・検証", href: "/tools/json-formatter" },
       { label: "カラーコード変換", href: "/tools/color-converter" },
     ],
   },
   {
     title: "遊び",
     links: [
-      { label: "全コンテンツ", href: "/play" },
+      { label: "遊び一覧", href: "/play" },
       { label: "今日の運勢", href: "/play#fortune" },
       { label: "タイプ診断", href: "/play#personality" },
       { label: "知識クイズ", href: "/play#knowledge" },
@@ -45,7 +45,7 @@ const FOOTER_SECTIONS: {
     title: "ブログ",
     links: [
       { label: "ブログ一覧", href: "/blog" },
-      { label: "AI ワークフロー", href: "/blog/category/ai-workflow" },
+      { label: "AIワークフロー", href: "/blog/category/ai-workflow" },
       { label: "開発ノート", href: "/blog/category/dev-notes" },
       { label: "ツールガイド", href: "/blog/category/tool-guides" },
       { label: "日本語・文化", href: "/blog/category/japanese-culture" },
@@ -56,7 +56,7 @@ const FOOTER_SECTIONS: {
     title: "その他",
     links: [
       { label: "辞典", href: "/dictionary" },
-      { label: "サイト紹介", href: "/about" },
+      { label: "このサイトについて", href: "/about" },
       { label: "プライバシー", href: "/privacy" },
       {
         label: "GitHub",

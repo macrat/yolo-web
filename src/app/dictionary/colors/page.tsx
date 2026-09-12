@@ -73,7 +73,7 @@ export default function ColorsIndexPage() {
   const breadcrumbJsonLd = generateBreadcrumbJsonLd([
     { label: "ホーム", href: "/" },
     { label: "辞典", href: "/dictionary" },
-    { label: "伝統色辞典" },
+    { label: "日本の伝統色" },
   ]);
 
   return (
@@ -88,7 +88,7 @@ export default function ColorsIndexPage() {
         items={[
           { label: "ホーム", href: "/" },
           { label: "辞典", href: "/dictionary" },
-          { label: "伝統色辞典" },
+          { label: "日本の伝統色" },
         ]}
       />
 

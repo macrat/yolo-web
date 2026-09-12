@@ -76,7 +76,7 @@ const DICTIONARY_ITEMS: ShinagakiItem[] = [
     meta: `${yojiCount}語`,
   },
   {
-    name: "伝統色辞典",
+    name: "日本の伝統色",
     href: "/dictionary/colors",
     note: "日本の伝統色の名前と色みを、由来つきで並べています。",
     meta: `${colorCount}色`,

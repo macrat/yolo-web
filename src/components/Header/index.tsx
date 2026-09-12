@@ -17,7 +17,7 @@ const NAV_ITEMS: { label: string; href: string }[] = [
   { label: "遊び", href: "/play" },
   { label: "ツール", href: "/tools" },
   { label: "ブログ", href: "/blog" },
-  { label: "サイト紹介", href: "/about" },
+  { label: "このサイトについて", href: "/about" },
 ];
 
 /** ハンバーガーアイコン（Lucide スタイル線画）。
