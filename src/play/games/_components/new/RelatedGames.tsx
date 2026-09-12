@@ -12,8 +12,8 @@ interface RelatedGamesProps {
  * 関連ゲームカード（(new) デザイン体系版・cycle-268 フォーク）。
  *
  * legacy `../RelatedGames` との差分は **registry の絵文字アイコン
- * （game.icon = 📚🎯🧩🎨）を描画しないこと**（DESIGN.md §3「絵文字は UI 装飾・
- * ナビには使わない」準拠・MUST-1）。ゲーム名テキストで十分に識別できる。
+ * （game.icon = 📚🎯🧩🎨）を描画しないこと**（DESIGN.md §6「見出し・ナビ・
+ * ボタンに絵文字を使わない」準拠）。ゲーム名テキストで十分に識別できる。
  *
  * 共有 CSS `RelatedContentCard.module.css` は新デザイン（店構え）へ移行済みで、
  * クイズ面（RelatedQuizzes 等）と共有する。絵文字アイコンを描画しないため `.icon`

@@ -60,7 +60,7 @@
   background: var(--accent);
 }
 
-/* フォーカス: DESIGN.md §2 準拠。
+/* フォーカス: DESIGN.md §10 準拠。
  * :focus-visible でキーボード操作時のみリングを表示する。 */
 .input:focus-visible ~ .track {
   outline: 2px solid var(--accent);

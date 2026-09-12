@@ -10,7 +10,7 @@
  * - `useSyncExternalStore` を使って hydration mismatch を回避する（next-themes の慣例）。
  *   サーバー側ではテーマが不明なため、コンポーネントを表示しない。
  * - DESIGN.md §4: 線画アイコン、strokeWidth 1.5px、サイズ 16px。
- *   アイコンのみのボタンには aria-label を付与（DESIGN.md §3 の規定）。
+ *   アイコンのみのボタンには aria-label を付与（DESIGN.md §6: `aria-label` は現物の代わりに読まれる）。
  * - DESIGN.md §4: ON/OFF 切替は原則トグルスイッチを使う。
  *
  * デザイン:
@@ -39,7 +39,7 @@ const emptySubscribe = () => () => {};
 
 /**
  * 太陽アイコン — トラック左端（ライト側）に配置。
- * Lucide "sun" の paths に準拠。DESIGN.md §3: strokeWidth 1.5px、16px 表示。
+ * Lucide "sun" の paths に準拠。DESIGN.md §4: 線画・strokeWidth 1.5px、16px 表示。
  */
 function SunIcon() {
   return (
@@ -62,7 +62,7 @@ function SunIcon() {
 
 /**
  * 月アイコン — トラック右端（ダーク側）に配置。
- * Lucide "moon" の path に準拠。DESIGN.md §3: strokeWidth 1.5px、16px 表示。
+ * Lucide "moon" の path に準拠。DESIGN.md §4: 線画・strokeWidth 1.5px、16px 表示。
  */
 function MoonIcon() {
   return (

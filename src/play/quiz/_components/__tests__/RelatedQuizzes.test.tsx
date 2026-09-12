@@ -120,7 +120,7 @@ test("RelatedQuizzes renders shortDescription for each item", () => {
 test("RelatedQuizzes does not render emoji icons (新デザイン体系・cycle-253)", () => {
   render(<RelatedQuizzes currentSlug="kanji-level" category="knowledge" />);
 
-  // DESIGN.md §3: 絵文字は使わない。回遊カードから絵文字アイコンを撤去した。
+  // DESIGN.md §6: 絵文字は使わない。回遊カードから絵文字アイコンを撤去した。
   expect(screen.queryByText("📖")).not.toBeInTheDocument();
   expect(screen.queryByText("🈵")).not.toBeInTheDocument();
 });

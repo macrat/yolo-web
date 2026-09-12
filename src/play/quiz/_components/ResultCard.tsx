@@ -538,7 +538,7 @@ export default function ResultCard({
         </div>
       ) : (
         <>
-          {/* 抑制ヘッダ（フォールバック）。絵文字アイコンは新デザイン体系で撤去（DESIGN.md §3） */}
+          {/* 抑制ヘッダ（フォールバック）。絵文字アイコンは新デザイン体系で撤去（DESIGN.md §6） */}
           <p className={styles.resultLabel}>あなたの結果</p>
           <h2 className={styles.title}>{result.title}</h2>
           {quizType === "knowledge" &&

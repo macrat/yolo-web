@@ -10,7 +10,7 @@
  * - 棚（品書き）: 診断・占い・あそびの入口（目玉の character-personality は品書きから外す）と
  *   /play への全リンク導線
  * - 辞典・ツール（+ /tools 全リンク）・ブログ（/blog）の入口が実在ルートを指す
- * - DESIGN.md §3: 絵文字を持ち込まない（象徴絵文字は診断結果面の専用）
+ * - DESIGN.md §6: 絵文字を持ち込まない（象徴絵文字は診断結果面の専用）
  * - metadata: 店先の description / OGP / twitter / canonical・noindex の不在
  */
 import { expect, test } from "vitest";
@@ -182,7 +182,7 @@ test("ブログ棚は新しい記事と、/blog への入口を持つ", () => {
 
 // ===== DESIGN.md 準拠（トップに絵文字を持ち込まない） =====
 
-test("ページに絵文字を含まない（DESIGN.md §3）", () => {
+test("ページに絵文字を含まない（DESIGN.md §6）", () => {
   const { container } = render(<Home />);
   expect(container.textContent ?? "").not.toMatch(/\p{Extended_Pictographic}/u);
 });

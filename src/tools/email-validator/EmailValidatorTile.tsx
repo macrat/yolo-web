@@ -147,7 +147,7 @@ export default function EmailValidatorTile({
             >
               {/*
                * Lucide スタイル SVG アイコン（aria-hidden="true" で装飾専用宣言）。
-               * DESIGN.md §3「絵文字不可・必要なら Lucide 線画アイコン」に準拠。
+               * DESIGN.md §6「見出し・ナビ・ボタンに絵文字を使わない」・§4「アイコンは線画に限る」に準拠。
                * スクリーンリーダーはバッジのテキスト（「有効」「無効」等）のみを読み上げる。
                */}
               {result.valid ? (

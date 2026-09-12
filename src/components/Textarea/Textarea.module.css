@@ -27,7 +27,7 @@
   color: var(--ink-2);
 }
 
-/* フォーカス: DESIGN.md §2 に従い outline を使う */
+/* フォーカス: DESIGN.md §10 に従い outline を使う */
 .textarea:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;

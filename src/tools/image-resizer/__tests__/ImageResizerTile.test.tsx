@@ -472,9 +472,9 @@ describe("ImageResizerTile", () => {
   });
 
   // -------------------------------------------------------
-  // アスペクト比ロックボタン — DESIGN.md §3 絵文字禁止 是正テスト
+  // アスペクト比ロックボタン — DESIGN.md §6「ボタンに絵文字を使わない」の是正テスト
   // -------------------------------------------------------
-  it("DESIGN §3 是正: アスペクト比ロックボタンが可視テキストラベルを持ち絵文字を含まない", async () => {
+  it("DESIGN §6 是正: アスペクト比ロックボタンが可視テキストラベルを持ち絵文字を含まない", async () => {
     render(<ImageResizerTile />);
 
     const fileInput = document.querySelector(
@@ -494,7 +494,7 @@ describe("ImageResizerTile", () => {
     expect(visibleText).not.toMatch(/[\u{1F512}\u{1F513}]/u);
   });
 
-  it("DESIGN §3 是正: アスペクト比ロックボタンは SVG 線画アイコンを含む（Lucide スタイル）", async () => {
+  it("DESIGN §4 是正: アスペクト比ロックボタンは SVG 線画アイコンを含む（Lucide スタイル）", async () => {
     render(<ImageResizerTile />);
 
     const fileInput = document.querySelector(
@@ -515,7 +515,7 @@ describe("ImageResizerTile", () => {
     expect(svg?.getAttribute("aria-hidden")).toBe("true");
   });
 
-  it("DESIGN §3 是正: アスペクト比ロック状態トグルで可視テキストが切り替わる", async () => {
+  it("DESIGN §6 是正: アスペクト比ロック状態トグルで可視テキストが切り替わる", async () => {
     render(<ImageResizerTile />);
 
     const fileInput = document.querySelector(

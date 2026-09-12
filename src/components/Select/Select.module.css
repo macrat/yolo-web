@@ -35,7 +35,7 @@
   cursor: pointer;
 }
 
-/* フォーカス: DESIGN.md §2 に従い outline を使う */
+/* フォーカス: DESIGN.md §10 に従い outline を使う */
 .select:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;

@@ -107,7 +107,7 @@ describe("FaqSection", () => {
     expect(css).toContain("var(--radius)");
   });
 
-  it("フォーカス可視: outline: 2px solid var(--accent) が含まれる（DESIGN.md §2）", () => {
+  it("フォーカス可視: outline: 2px solid var(--accent) が含まれる（DESIGN.md §10）", () => {
     const cssPath = resolve(__dirname, "../FaqSection.module.css");
     const css = readFileSync(cssPath, "utf-8");
     expect(css).toContain("outline: 2px solid var(--accent)");

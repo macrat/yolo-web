@@ -361,7 +361,7 @@ describe("E-15: CSS トークン検証", () => {
     expect(cssWithoutComments).not.toMatch(/linear-gradient/);
   });
 
-  test("--accent-soft を background-color に使っていない（§2: --accent はフォーカス専用）", () => {
+  test("--accent-soft を background-color に使っていない（§2: 朱はリンク・主ボタン・現在地・識別マークに限る）", () => {
     const cssWithoutComments = css.replace(/\/\*[\s\S]*?\*\//g, "");
     expect(cssWithoutComments).not.toMatch(
       /background(-color)?[^;]*var\(--accent-soft\)/,

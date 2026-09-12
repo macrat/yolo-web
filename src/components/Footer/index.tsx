@@ -107,7 +107,7 @@ export default function Footer() {
                         aria-label={link.ariaLabel}
                       >
                         {link.label}
-                        {/* DESIGN.md §3: アイコンサイズ 16px 相当のテキスト記号 */}
+                        {/* 外部リンクを示す記号。記号だけで意味を運ばせず言葉に添える（DESIGN.md §4） */}
                         <span
                           className={styles.externalIcon}
                           aria-hidden="true"

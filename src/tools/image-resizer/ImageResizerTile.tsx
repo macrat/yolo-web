@@ -456,7 +456,7 @@ export default function ImageResizerTile({
                       />
                     </div>
                     <span className={styles.label}>px</span>
-                    {/* DESIGN.md §3: 絵文字禁止 → Lucide スタイル SVG 線画 + 可視テキストラベル */}
+                    {/* DESIGN.md §6: ボタンに絵文字を使わない → §4 の線画アイコン + 可視テキストラベル */}
                     <button
                       type="button"
                       className={`${styles.lockButton} ${maintainAspectRatio ? styles.lockButtonActive : ""}`}
