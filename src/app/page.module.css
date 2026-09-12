@@ -123,7 +123,7 @@
 }
 
 /* 目玉の品名（診断名）: 品書きより一段大きい明朝で、視線がまずここに落ちる（scale contrast）。
- * h2 なので明朝・palt・31px は globals.css の見出し基層が与える。ここは余白・色のみ調整。 */
+ * h2 なので明朝・31px は globals.css の見出し基層が与える。ここは余白・色のみ調整。 */
 .heroTitle {
   margin: 0 0 var(--space-16);
   color: var(--ink);

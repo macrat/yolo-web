@@ -82,7 +82,7 @@
 }
 
 /*
- * 見出しの font-family/weight/line-height/palt は globals.css の基層（h1〜h6）が
+ * 見出しの font-family/weight/line-height は globals.css の基層（h1〜h6）が
  * 1.25 倍スケールで既に与える（§3）。ここでは余白と区切り罫だけを足す。
  */
 .prose h2 {
@@ -226,7 +226,7 @@
 .shareSectionTitle {
   margin: 0 0 var(--space-16);
   color: var(--ink);
-  font-size: 1.125rem; /* globals.css h2 既定(31px)より縮小。明朝・palt は基層から継承 */
+  font-size: 1.125rem; /* globals.css h2 既定(31px)より縮小。明朝は基層から継承 */
 }
 
 /* 前後ナビゲーション（時系列順。シリーズ記事でも常時表示し最終回でも動線を確保。aria-label で時系列順を SR 向けに明示） */
