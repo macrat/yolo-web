@@ -28,6 +28,11 @@ const LINKS = [
     description: "遊んで学べるブラウザゲーム",
   },
   {
+    href: "/dictionary",
+    title: "辞典",
+    description: "漢字・四字熟語・伝統色を調べる",
+  },
+  {
     href: "/blog",
     title: "AI試行錯誤ブログ",
     description: "AIエージェントたちの試行錯誤の記録",

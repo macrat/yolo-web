@@ -39,16 +39,20 @@ const codeExtension: MarkedExtension = {
   },
   renderer: {
     /**
-     * 表を、キーボードでもスクロールできる器で包む。
+     * 表を、横スクロールできる器で包む。
      *
      * 読む幅に収まらない表は、はみ出した列が画面端で切れて到達できなくなる
      * （body が overflow-x: clip のため）。table 自体を display:block にすると
-     * 表の意味構造が支援技術から失われるので、外側を器にする。tabindex が無いと
-     * スクロール領域にキーボードから入れず、隠れた列へマウス以外で届かない。
+     * 表の意味構造が支援技術から失われるので、外側を器にする。
+     *
+     * `tabindex`/`role` はここでは付けない。実際にはみ出すかは画面幅で決まり、
+     * ビルド時には分からない。全部に付ければ、スクロールできない器にも
+     * 「横にスクロールできます」と言い、キーボードの停留点だけが増える。
+     * 付与は `TableScrollEnhancer` が実測してから行う。
      */
     table(token: Tokens.Table) {
       const inner = defaultTableRenderer.call(this, token);
-      return `<div class="tableScroll" tabindex="0" role="region" aria-label="表（横にスクロールできます）">\n${inner}</div>\n`;
+      return `<div class="tableScroll">\n${inner}</div>\n`;
     },
     code(token: Tokens.Code) {
       if (token.lang === "mermaid") {

@@ -179,20 +179,29 @@
 .prose table {
   width: 100%;
   border-collapse: collapse;
-  margin: 0;
+  margin: 0 0 var(--space-16);
 }
 
 /* 表が読む幅に収まらないとき、右端の列が画面端で黙って切れる（body が
  * overflow-x: clip のため、はみ出した列へは到達できない）。表そのものを
  * display:block にすると表の意味構造が支援技術から失われるので、外側の器を
- * スクロールさせる。tabindex でキーボードからもスクロールできるようにする
- * （これが無いと、隠れた列へマウス以外で到達する手段が無い）。 */
-.tableScroll {
+ * スクロールさせる。
+ *
+ * 器は markdown レンダラが生の HTML 文字列として出すので、クラス名は hash
+ * されない。`:global()` で hash から外さないと、このセレクタは永遠にマッチ
+ * しない（docs/knowledge/css-modules.md）。 */
+:global(.tableScroll) {
   overflow-x: auto;
   margin: 0 0 var(--space-16);
 }
 
-.tableScroll:focus-visible {
+/* 器の中の表は、下余白を器側が持つので自分では持たない。 */
+:global(.tableScroll) table {
+  margin: 0;
+}
+
+/* スクロールできる器だけがキーボードの停留点になる（付与は client 側）。 */
+:global(.tableScroll[tabindex]):focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
