@@ -147,7 +147,7 @@ const ALLOWLIST: { fileEndsWith: string; declaration: string }[] = [
     declaration: "border-radius: 50%",
   },
   // §2 是正ゲートの追加許容: --wairo-* はゲームの駒/結果など「成果物」の中身の色として
-  // DESIGN.md §2「成果物パレット（中身の色・唯一の例外）」が明示的に認めている。
+  // DESIGN.md §2「成果物パレット」が、成果物の内部に限って明示的に認めている。
   // STATE_SELECTOR_RE は「hover/selected の座布団」用の許容のみを機械判定するため、
   // 状態セレクタ名を持たない成果物カラーの静的宣言はここで個別に許容する
   // （器＝ページ UI の静的背景には和色を使わない・§2 の原則自体は変えない）。

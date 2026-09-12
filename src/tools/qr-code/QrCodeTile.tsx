@@ -200,7 +200,7 @@ export default function QrCodeTile({
         )}
 
         {/* PNG ダウンロードボタン（T-4b: download 主体のためコピーボタンなし）
-         * DESIGN.md L82「ボタンやフォームなどのUIコンポーネントは src/components/ にあるものを使う」 */}
+         * 操作部品は共有の Button を使い、面ごとに独自のボタンを作らない（器は一貫・DESIGN.md §1）。 */}
         <Button variant="primary" onClick={handleDownload} disabled={!dataUrl}>
           PNG形式でダウンロード
         </Button>
