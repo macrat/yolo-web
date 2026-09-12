@@ -1,0 +1,12 @@
+/*
+ * ⚠️ 結果ページルート /play/[slug]/result/[resultId] のスタイル。
+ * このページは第三者向けのシェア／検索ランディング専用で、受検者本人には表示されない
+ * （本人は /play/[slug] 上のインライン結果＝ResultCard 経由で見る）。
+ */
+
+.description {
+  font-size: 1rem;
+  line-height: 1.9;
+  margin-bottom: 1.5rem;
+  color: var(--ink);
+}

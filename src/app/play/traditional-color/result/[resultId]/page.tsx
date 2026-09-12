@@ -21,7 +21,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import ResultPageShell from "@/play/quiz/_components/ResultPageShell";
-import DescriptionExpander from "@/app/play/[slug]/result/[resultId]/DescriptionExpander";
+import ResultDescription from "@/app/play/[slug]/result/[resultId]/ResultDescription";
 import TraditionalColorContent from "@/play/quiz/_components/TraditionalColorContent";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { countCharWidth } from "@/lib/countCharWidth";
@@ -95,9 +95,6 @@ export default async function TraditionalColorResultPage({ params }: Props) {
   const ctaText = "あなたはどの伝統色? 診断してみよう";
 
   // descriptionが4行を超えるかどうかの判定
-  const DESCRIPTION_LONG_THRESHOLD = 128;
-  const isDescriptionLong =
-    countCharWidth(result.description) > DESCRIPTION_LONG_THRESHOLD;
 
   return (
     <ResultPageShell
@@ -120,11 +117,7 @@ export default async function TraditionalColorResultPage({ params }: Props) {
           <p className={styles.catchphrase}>{colorDc.catchphrase}</p>
         </div>
 
-        {/* DescriptionExpander: 長いdescriptionは折りたたみ */}
-        <DescriptionExpander
-          description={result.description}
-          isLong={isDescriptionLong}
-        />
+        <ResultDescription description={result.description} />
 
         {/* CTA1: 共通 primary ボタン（--accent 地・--paper 文字）ベースの主要 CTA（インライン結果とトーン統一） */}
         <div className={styles.trySection}>

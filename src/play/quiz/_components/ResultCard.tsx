@@ -96,6 +96,11 @@ type ResultCardProps = {
   resultPageLabels?: QuizMeta["resultPageLabels"];
   /** クイズのアクセントカラー（見出し色やcharacterIntro背景に使用） */
   accentColor?: string;
+  /**
+   * この診断の主題が色そのものか（DESIGN.md §2）。true のとき結果の面は
+   * 和色8色ではなく、その結果が持つ固有色を地に使う。
+   */
+  colorIsSubject?: boolean;
   /** 相性診断用の referrer タイプID（animal-personality variantで使用） */
   referrerTypeId?: string;
   /**
@@ -446,6 +451,7 @@ export default function ResultCard({
   detailedContent,
   resultPageLabels,
   accentColor,
+  colorIsSubject,
   referrerTypeId,
   allResults,
   coTypes,
@@ -514,6 +520,7 @@ export default function ResultCard({
             word={catchphrase ?? undefined}
             symbol={pickResultSymbol(result.title)}
             color={pickResultWairoColor(result.id)}
+            colorOverride={colorIsSubject ? result.color : undefined}
             productName={quizTitle}
             seal="診"
           />

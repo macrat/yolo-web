@@ -25,7 +25,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import ResultPageShell from "@/play/quiz/_components/ResultPageShell";
-import DescriptionExpander from "@/app/play/[slug]/result/[resultId]/DescriptionExpander";
+import ResultDescription from "@/app/play/[slug]/result/[resultId]/ResultDescription";
 import UnexpectedCompatibilityContent from "@/play/quiz/_components/UnexpectedCompatibilityContent";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { countCharWidth } from "@/lib/countCharWidth";
@@ -106,9 +106,6 @@ export default async function UnexpectedCompatibilityResultPage({
   const ctaText = CTA_TEXT;
 
   // descriptionが4行を超えるかどうかの判定
-  const DESCRIPTION_LONG_THRESHOLD = 128;
-  const isDescriptionLong =
-    countCharWidth(result.description) > DESCRIPTION_LONG_THRESHOLD;
 
   return (
     <ResultPageShell
@@ -123,11 +120,7 @@ export default async function UnexpectedCompatibilityResultPage({
          * 旧デザインの全面塗り「カラーヒーロー」（--accent-weak 背景バンド）は撤去した。 */}
         <p className={styles.catchphrase}>{ucDc.catchphrase}</p>
 
-        {/* DescriptionExpander: 長いdescriptionは折りたたみ */}
-        <DescriptionExpander
-          description={result.description}
-          isLong={isDescriptionLong}
-        />
+        <ResultDescription description={result.description} />
 
         {/* CTA1: 共通トーン（primary ボタン = --accent 地・--paper 文字）。タイプ固有色は撤去済み */}
         <div className={styles.trySection}>

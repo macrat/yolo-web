@@ -269,6 +269,7 @@ export default function QuizContainer({
           detailedContent={result.detailedContent}
           resultPageLabels={quiz.meta.resultPageLabels}
           accentColor={quiz.meta.accentColor}
+          colorIsSubject={quiz.meta.colorIsSubject}
           referrerTypeId={referrerTypeId}
           allResults={quiz.results}
           coTypes={coTypes}

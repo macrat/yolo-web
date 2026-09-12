@@ -9,6 +9,8 @@ const traditionalColorQuiz: QuizDefinition = {
     description:
       "8つの質問に答えて、あなたの性格に一致する日本の伝統色を判定します。藍色、朱色、若草色など、和の色から1色が決まります。",
     shortDescription: "8問の性格診断で、あなたの伝統色を判定",
+    // この診断の主題は色そのものなので、結果の面はその色を地に使う（DESIGN.md §2）。
+    colorIsSubject: true,
     type: "personality",
     category: "personality",
     questionCount: 8,

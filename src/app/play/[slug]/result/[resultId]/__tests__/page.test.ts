@@ -110,25 +110,11 @@ describe("play/[slug]/result/[resultId]/page.tsx", () => {
     });
   });
 
-  describe("DescriptionExpanderコンポーネントの利用", () => {
-    it("DescriptionExpanderをimportしている", () => {
-      expect(pageSource).toContain("DescriptionExpander");
-    });
-  });
-
-  describe("DESCRIPTION_LONG_THRESHOLD の閾値", () => {
-    it("DESCRIPTION_LONG_THRESHOLDが128に設定されている（全角16文字×4行分）", () => {
-      // countCharWidth は全角1文字をwidth 2 としてカウントする。
-      // 1行あたり全角16文字 = width 32。4行分 = 32 × 4 = 128。
-      expect(pageSource).toContain("DESCRIPTION_LONG_THRESHOLD = 128");
-    });
-
-    it("コメントに「width 32 × 4 = 128」または「全角16文字 x 4行 = 128」の内容がある", () => {
-      const hasCorrectComment =
-        pageSource.includes("32") &&
-        pageSource.includes("128") &&
-        pageSource.includes("DESCRIPTION_LONG_THRESHOLD");
-      expect(hasCorrectComment).toBe(true);
+  describe("結果の本文", () => {
+    it("本文を畳まずに出す（DESIGN.md §6 結果を出し惜しみしない）", () => {
+      expect(pageSource).toContain("ResultDescription");
+      expect(pageSource).not.toContain("続きを読む");
+      expect(pageSource).not.toContain("line-clamp");
     });
   });
 

@@ -21,7 +21,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import ResultPageShell from "@/play/quiz/_components/ResultPageShell";
-import DescriptionExpander from "@/app/play/[slug]/result/[resultId]/DescriptionExpander";
+import ResultDescription from "@/app/play/[slug]/result/[resultId]/ResultDescription";
 import YojiPersonalityContent from "@/play/quiz/_components/YojiPersonalityContent";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { countCharWidth } from "@/lib/countCharWidth";
@@ -95,9 +95,6 @@ export default async function YojiPersonalityResultPage({ params }: Props) {
   const ctaText = "あなたはどの四字熟語? 診断してみよう";
 
   // descriptionが4行を超えるかどうかの判定
-  const DESCRIPTION_LONG_THRESHOLD = 128;
-  const isDescriptionLong =
-    countCharWidth(result.description) > DESCRIPTION_LONG_THRESHOLD;
 
   return (
     <ResultPageShell
@@ -112,11 +109,7 @@ export default async function YojiPersonalityResultPage({ params }: Props) {
             トーン統一。旧デザインの colorHero＝タイプ色を敷いたヒーローは撤去した）。 */}
         <p className={styles.catchphrase}>{yojiDc.catchphrase}</p>
 
-        {/* DescriptionExpander: 長いdescriptionは折りたたみ */}
-        <DescriptionExpander
-          description={result.description}
-          isLong={isDescriptionLong}
-        />
+        <ResultDescription description={result.description} />
 
         {/* CTA1 */}
         <div className={styles.trySection}>

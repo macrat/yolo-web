@@ -1,5 +1,6 @@
-import type { ReactElement } from "react";
+import type { CSSProperties, ReactElement } from "react";
 import In from "@/components/In";
+import { getContrastTextColor } from "@/play/color-utils";
 import styles from "./Tsutsumi.module.css";
 
 /**
@@ -43,6 +44,16 @@ export interface TsutsumiProps {
   /** 成果物の地に使う和色（8 色から選ぶ）。 */
   color: WairoColor;
   /**
+   * 記号面の地に使う固有色（hex）。**主題が色そのものである面にだけ**与える
+   *（伝統色診断の結果・伝統色辞典の個別エントリ）。DESIGN.md §2 のとおり、そこでは
+   * 色が装飾ではなく中身なので、和色8色へ写像すると中身が別物になる——「藍色です」と
+   * 言いながら紅の面を見せることになる。前景は輝度から読める側（墨/白）を選ぶ。
+   *
+   * 与えなければ {@link color} の和色をそのまま使う。札画像の共有レンダラ
+   * （`renderFudaImage` の `colorOverride`）と同じ規則で、画面と持ち帰る画像を揃える。
+   */
+  colorOverride?: string;
+  /**
    * 店号（札として単独で持ち帰った画像からも出所が分かるように・DESIGN.md §4「札」）。
    * 既定は "yolos.net"。
    */
@@ -85,6 +96,7 @@ export default function Tsutsumi({
   number,
   unit,
   color,
+  colorOverride,
   shopName = "yolos.net",
   productName,
   seal,
@@ -97,7 +109,18 @@ export default function Tsutsumi({
   const hasSymbol = symbol !== undefined && symbol.trim() !== "";
 
   return (
-    <figure className={styles.tsutsumi} data-color={color}>
+    <figure
+      className={styles.tsutsumi}
+      data-color={color}
+      style={
+        colorOverride
+          ? ({
+              "--fill": colorOverride,
+              "--on": getContrastTextColor(colorOverride),
+            } as CSSProperties)
+          : undefined
+      }
+    >
       <header className={styles.head}>
         <span className={styles.shop}>{shopName}</span>
         {productName && productName.trim() !== "" ? (

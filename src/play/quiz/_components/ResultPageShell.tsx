@@ -77,8 +77,10 @@ export default function ResultPageShell({
           // 結果を包み（Tsutsumi）で見せる（DESIGN.md §4「包み」/§7「見せたくなる結果」）。
           // h1 は SEO/見出し構造のため維持するが控えめに（器は静か）。結果そのものは
           // Tsutsumi が主役——第三者向けページでもインライン結果と同じ視覚トーンで届ける
-          // （§7 トーン統一）。固有色は quiz データの任意 hex を捨て、id から和色8色へ
-          // 決定的に写像する（§2）。symbol は絵文字ではなくタイプ名の先頭1字（§8-6）。
+          // （§7 トーン統一）。地の色は id から和色8色へ決定的に写像する。ただし主題が
+          // 色そのものである診断だけは、その結果の固有色を地に使う（§2）——8色へ丸めると
+          // 「藍色です」と言いながら紅の面を見せることになる。symbol は絵文字ではなく
+          // タイプ名の先頭1字（§8-6）。
           // 重要: 単独ページには「診断完了」の完了主張は付けない（第三者は完走していない）。
           <div className={styles.medalWrap}>
             <h1 className={styles.medalHeading}>{result.title}</h1>
@@ -86,6 +88,9 @@ export default function ResultPageShell({
               typeName={result.title}
               symbol={pickResultSymbol(result.title)}
               color={pickResultWairoColor(result.id)}
+              colorOverride={
+                quiz.meta.colorIsSubject ? result.color : undefined
+              }
               productName={quiz.meta.title}
               seal="診"
             />

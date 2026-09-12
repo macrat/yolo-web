@@ -24,7 +24,7 @@ import { countCharWidth } from "@/lib/countCharWidth";
 import { getCompatibility } from "@/play/quiz/data/music-personality";
 import CompatibilityDisplay from "./CompatibilityDisplay";
 import { extractWithParam } from "./extractWithParam";
-import DescriptionExpander from "./DescriptionExpander";
+import ResultDescription from "./ResultDescription";
 import ResultPageShell from "@/play/quiz/_components/ResultPageShell";
 import OtherTypesNav from "@/play/quiz/_components/OtherTypesNav";
 import styles from "./page.module.css";
@@ -191,11 +191,6 @@ export default async function PlayQuizResultPage({
   const { detailedContent } = result;
 
   // descriptionが4行を超えるかどうかの判定:
-  // countCharWidth は全角1文字を width 2 としてカウントするため、
-  // 1行あたり全角16文字 = width 32。4行分 = width 32 × 4 = 128。
-  const DESCRIPTION_LONG_THRESHOLD = 128;
-  const isDescriptionLong =
-    countCharWidth(result.description) > DESCRIPTION_LONG_THRESHOLD;
 
   // resultPageLabels から見出しを取得（未設定時はデフォルト値）
   const traitsHeading =
@@ -224,11 +219,7 @@ export default async function PlayQuizResultPage({
       }
     >
       {/* Standard variant のレンダリングロジックをインライン化 */}
-      {/* DescriptionExpander + CTA1 は常に表示 */}
-      <DescriptionExpander
-        description={result.description}
-        isLong={isDescriptionLong}
-      />
+      <ResultDescription description={result.description} />
 
       {/* CTA1 */}
       <div className={styles.trySection}>
