@@ -176,8 +176,14 @@
   color: var(--ink-2);
 }
 
+/* 表は読む幅に収まらないことがある。狭い画面で右端の列が黙って切れると、
+ * 数値を見せる記事では中身が届かない。表だけを横スクロールさせ、ページ本体は
+ * 横に溢れさせない。`display: block` で table 自身をスクロール容器にする。 */
 .prose table {
+  display: block;
   width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
   border-collapse: collapse;
   margin: 0 0 var(--space-16);
 }
