@@ -1,5 +1,5 @@
 /**
- * DESIGN.md §8「禁止リスト（AI slop 遮断・機械的に検査する）」の機械ゲート。
+ * DESIGN.md §8「禁止リスト（AI slop 遮断）」の機械ゲート。
  *
  * 目的（フェーズ R・C0）: 後続の workflow 一斉変換で多数ページを量産する際、§8 の
  * 「機械検査できる項目」を lint/テストで機械的に弾く。§8 は担保先が二層で、機械検査
@@ -43,9 +43,9 @@
  *   §8-6  all-caps（text-transform: uppercase）= WARNING（§8 注記どおり多用の判定は視覚レビュー）。
  *   §10   色の直書き（トークン非経由の hex / rgb() / hsl() / oklch() 等を色プロパティに直書き）= ERROR。
  *          中性のスクリム（rgba(0,0,0,α) / rgba(255,255,255,α) 等のオーバーレイ幕）は慣例的例外として許容。
- *   §2    是正ゲート（cycle-278 C4・結果面(quiz)の系統的違反を受けて追加）: `--accent-weak` /
- *          `--wairo-*` は DESIGN.md §2「操作・選択状態のハイライト（hover/selected の座布団）
- *          にのみ可。区画の地には不可」。background/background-color にこれらが使われている
+ *   §2    是正ゲート: `--accent-weak` は DESIGN.md §2「操作・選択状態のハイライト
+ *          （hover/selected の座布団）にのみ可。区画の地には不可」。`--wairo-*` は §2
+ *          「成果物の内部に限る」——どちらも静的な区画の地には当たらない。background/background-color にこれらが使われている
  *          宣言のうち、そのルールのセレクタが「状態セレクタ」（下の STATE_SELECTOR_RE 参照:
  *          :hover/:focus/:active/:checked・[aria-current] 等・Current/Selected/Active/Correct
  *          命名）を一切含まない場合は、静的な区画/箱の地への誤用の疑いとして ERROR にする。

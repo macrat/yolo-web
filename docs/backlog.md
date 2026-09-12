@@ -22,6 +22,10 @@
 | B-656 | 店語彙の内部識別子・コメントの整理 | P4 | - | 識別子78ファイル・コメント1,180箇所。来訪者には届かないため低優先。詳細cycle-312/carryover |
 | B-657 | /play/impossible-advice/result/* に description が無い | P3 | - | 本番573URL中この7件のみ。共有前提の結果ページとして欠陥。詳細cycle-312/carryover |
 | B-658 | character.md に廃止済みターゲット定義の語が残る | P4 | - | 271行付近の表。cycle-278 で廃止された語彙。詳細cycle-312/carryover |
+| B-668 | DESIGN §10 に速度と代替テキストの下限が無い | P3 | - | 「全ページ共通の下限」を名乗る節に LCP/INP の下限が無く、alt は文言の規則だけで有無を誰も要求していない。CLS だけが §9(広告)に置かれている。詳細cycle-312/index.md |
+| B-669 | DESIGN §10 の最小幅 375px と実測の 360px が食い違う | P4 | - | 同じ行が「単一デバイスを想定しない」と書くのに、実際に多い 360px(Galaxy系)が規範の外。過去サイクルの検証も 360px。下限を 360px にするか理由を1行書く。詳細cycle-312/index.md |
+| B-670 | 規範文書が自分の規則を自分へ適用する射程が未定義 | P4 | - | §3(太字)は measure-doc.mjs が文書自身を計測するのに、§6(箇条・太字の過剰・コロン見出し)は適用されていない。site-concept の見出しはコロン形。1行で射程を決める。詳細cycle-312/index.md |
+| B-671 | DESIGN の細部3件（固有色hexの射程・成果物の語・状態変化の時間） | P4 | - | §2「色は直書きしない」と §2 の固有色(データ由来のhex)の関係が未定義／§4 の成果物の定義に当たらない辞典の面を §4 が成果物と呼ぶ／§5 の(3)状態変化だけ時間の規定が無い。詳細cycle-312/index.md |
 | B-606 | 全10 personality診断の結果先行の点検・再設計(Rule4) | P1 | - | **cycle-303でword-sense完了**。残9=music/yoji/animal/character-fortune/娯楽くじ群。タイブレーク中心は壊れた枠(cycle-294)・調律重み禁止・真の同点は同格開示。詳細cycle-303/ |
 | B-644 | 約2845ページが og:image 不在のまま summary_large_image を宣言し空の大カードになる | P3 | - | 既存欠陥(cycle-306で実ビルド発覚)。原因=global `summary_large_image`＋root OGPが子ルートに継承されない。是正は設計判断要・別サイクル。詳細cycle-306/review-log.md |
 | B-603 | character-personality 24タイプ一覧の処遇(T3・再判定) | P1 | - | **未決へ差し戻し**。cycle-298は測定面を誤り判定撤回(cycle-284の実測が正しかった)。主たる面で基準を立て直し再判定。詳細cycle-298/decision.md |

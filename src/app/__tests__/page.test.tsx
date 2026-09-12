@@ -20,6 +20,7 @@ import { playContentBySlug } from "@/play/registry";
 import { quizBySlug, getResultIdsForQuiz } from "@/play/quiz/registry";
 import { getContentPath } from "@/play/paths";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
+import { getAllBlogPosts } from "@/blog/_lib/blog";
 
 /** 目玉（今日のためしどころ）に立てる診断の slug（page.tsx の HERO_SLUG と同期）。 */
 const HERO_SLUG = "character-personality";
@@ -109,7 +110,7 @@ test("診断・占い・あそび棚の品書きは想定の slug がレジス�
   expect(EXPECTED_FEATURED_SLUGS).not.toContain(HERO_SLUG);
 });
 
-test("各品書きの品名は正規パスへのリンクで、レジストリ由来のタイトルを持つ", () => {
+test("各品書きの品名は正規パスへのリンクで、レジストリ由来の表示名を持つ", () => {
   const { container } = render(<Home />);
   for (const slug of EXPECTED_FEATURED_SLUGS) {
     const content = playContentBySlug.get(slug);
@@ -120,7 +121,10 @@ test("各品書きの品名は正規パスへのリンクで、レジストリ�
       `a[href="${getContentPath(content)}"]`,
     );
     expect(link, `"${slug}" の品名リンクが見つからない`).not.toBeNull();
-    expect(link?.textContent ?? "").toContain(content.title);
+    // 表示名は一覧・推薦と同じ shortTitle（DESIGN §6-4「行き先の名前を揃える」）。
+    expect(link?.textContent ?? "").toContain(
+      content.shortTitle ?? content.title,
+    );
   }
 });
 
@@ -164,10 +168,16 @@ test("ツールの棚は代表的な入口と /tools への全リンクを持つ
   expect(allTools).toHaveAttribute("href", "/tools");
 });
 
-test("読みもの棚はブログ（/blog）への入口を持つ", () => {
+test("ブログ棚は新しい記事と、/blog への入口を持つ", () => {
   render(<Home />);
-  const blog = screen.getByRole("link", { name: "ブログ" });
-  expect(blog).toHaveAttribute("href", "/blog");
+  const posts = getAllBlogPosts().slice(0, 3);
+  expect(posts.length).toBeGreaterThan(0);
+  for (const post of posts) {
+    const link = screen.getByRole("link", { name: post.title });
+    expect(link).toHaveAttribute("href", `/blog/${post.slug}`);
+  }
+  const allPosts = screen.getByRole("link", { name: "ブログをすべて見る" });
+  expect(allPosts).toHaveAttribute("href", "/blog");
 });
 
 // ===== DESIGN.md 準拠（トップに絵文字を持ち込まない） =====

@@ -7,6 +7,7 @@ import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { playContentBySlug } from "@/play/registry";
 import type { PlayContentMeta } from "@/play/types";
 import { getContentPath } from "@/play/paths";
+import { getAllBlogPosts } from "@/blog/_lib/blog";
 import styles from "./page.module.css";
 
 /**
@@ -26,7 +27,7 @@ import styles from "./page.module.css";
  *    朱の入口ボタン「やってみる →」44px・ピルなし）、右に結果の見本を Tsutsumi（包み）で 1 枚
  *    実際に見せる。「持ち帰れる札」を言うだけでなく成果物として見せ（§7 の増幅器）、来訪者自身
  *    の結果と誤認させないよう「見本」であることを正直に添える。デスクトップは左右・モバイルは縦積み。
- * 3. 品書き（よろず＝広さの棚）: 目玉の後ろに、残りの体験・辞典・道具・読みものを
+ * 3. 品書き（よろず＝広さの棚）: 目玉の後ろに、残りの体験・辞典・ツール・ブログを
  *    Shinagaki の棚で並べる。ここは「品揃えの広さ＝よろず」を示す部分。器は静かに。
  *    目玉に立てた診断は品書きから外す（同じページで同一診断を二度立てない）。
  *
@@ -35,7 +36,7 @@ import styles from "./page.module.css";
  */
 
 const TOP_DESCRIPTION =
-  "AIが営むよろず屋、yolos.net。性格診断や占い、漢字・四字熟語・伝統色の辞典、文字数カウントや単位換算などの道具まで。読むだけでなく、その場でためして持ち帰れます。";
+  "AIが営むよろず屋、yolos.net。性格診断や占い、漢字・四字熟語・伝統色の辞典、文字数カウントや単位変換などのツールまで。読むだけでなく、その場でためして持ち帰れます。";
 
 export const metadata: Metadata = {
   title: SITE_NAME,
@@ -115,7 +116,9 @@ const featuredPlayItems: ShinagakiItem[] = FEATURED_PLAY.flatMap((entry) => {
   if (content === undefined) return [];
   return [
     {
-      name: content.title,
+      // 一覧・推薦・関連リンクと同じ「navigation 上の名前」を使う。面ごとに
+      // 別の名で呼ぶと、来訪者には同じものが二つあるように見える（DESIGN §6-4）。
+      name: content.shortTitle ?? content.title,
       href: getContentPath(content),
       note: entry.note,
       tags: entry.tags,
@@ -147,7 +150,7 @@ const DICTIONARY_ITEMS: ShinagakiItem[] = [
   },
 ];
 
-/** 「道具」棚（§7「実務の結果」= 正確さが価値）。代表的な道具の入口。全一覧は /tools。 */
+/** 「ツール」棚（§7「実務の結果」= 正確さが価値）。代表的な入口だけを置く。全一覧は /tools。 */
 const TOOL_ITEMS: ShinagakiItem[] = [
   {
     name: "文字数カウント",
@@ -171,14 +174,23 @@ const TOOL_ITEMS: ShinagakiItem[] = [
   },
 ];
 
-/** 「読みもの」棚（ブログ）。 */
-const READING_ITEMS: ShinagakiItem[] = [
-  {
-    name: "ブログ",
-    href: "/blog",
-    note: "サイトを作りながら気づいたことや、道具の使い方を書いています。",
-  },
-];
+/** 棚に出す記事の本数。多いと棚が読みものになり、少ないと何のブログか伝わらない。 */
+const FEATURED_POST_COUNT = 3;
+
+/**
+ * 「ブログ」棚。新しい記事から数本を出す。
+ *
+ * ひとことには description の第1文を使う。description は検索結果向けの要約なので
+ * 行に置くには長いが、その第1文は記事の掴みとして書かれているのでそのまま置ける。
+ */
+const READING_ITEMS: ShinagakiItem[] = getAllBlogPosts()
+  .slice(0, FEATURED_POST_COUNT)
+  .map((post) => ({
+    name: post.title,
+    href: `/blog/${post.slug}`,
+    note: `${post.description.split("。")[0]}。`,
+    tags: [`${post.readingTime}分`],
+  }));
 
 export default function Home() {
   return (
@@ -276,7 +288,7 @@ export default function Home() {
         />
       </div>
 
-      {/* 棚3: 道具（実務の結果） */}
+      {/* 棚3: ツール（実務の結果） */}
       <div className={styles.shelf}>
         <Shinagaki
           heading="ツール"
@@ -290,13 +302,18 @@ export default function Home() {
         </p>
       </div>
 
-      {/* 棚4: 読みもの（ブログ） */}
+      {/* 棚4: ブログ（サイトを作る過程の記録） */}
       <div className={styles.shelf}>
         <Shinagaki
           heading="ブログ"
           items={READING_ITEMS}
           ariaLabel="ブログの一覧"
         />
+        <p className={styles.seeAll}>
+          <Link href="/blog" className={styles.seeAllLink}>
+            ブログをすべて見る
+          </Link>
+        </p>
       </div>
     </div>
   );
