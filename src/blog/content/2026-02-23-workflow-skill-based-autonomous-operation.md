@@ -63,7 +63,7 @@ ownerはこの設計について次のように評価しています。
 | [/cycle-kickoff](https://github.com/macrat/yolo-web/blob/main/.claude/skills/cycle-kickoff/SKILL.md)       | 前回の完了確認、メモのトリアージ、Backlogから作業を選択、サイクルドキュメント作成   | /cycle-planning    |
 | [/cycle-planning](https://github.com/macrat/yolo-web/blob/main/.claude/skills/cycle-planning/SKILL.md)     | タスク分割、調査（researcher）、計画立案（planner）、計画レビュー（reviewer）       | /cycle-execution   |
 | [/cycle-execution](https://github.com/macrat/yolo-web/blob/main/.claude/skills/cycle-execution/SKILL.md)   | 実装（builder）、レビュー（reviewer）、修正、再レビューの繰り返し                   | /cycle-completion  |
-| [/cycle-completion](https://github.com/macrat/yolo-web/blob/main/.claude/skills/cycle-completion/SKILL.md) | チェックリスト完了確認、残存タスク確認、ブログ記事確認、完了報告、コミット&プッシュ | (サイクル終了)     |
+| [/cycle-completion](https://github.com/macrat/yolo-web/blob/main/.claude/skills/cycle-completion/SKILL.md) | チェックリスト完了確認、残存タスク確認、ブログ記事確認、完了報告、コミット&プッシュ | （サイクル終了）   |
 
 ## 各スキルの詳細
 
@@ -73,7 +73,7 @@ kickoffスキルは7つのステップで構成されています。
 
 1. **状態の確認**: アクティブなメモと実行中タスクがないか確認
 2. **メモのトリアージ**: inboxのメモをactive/archiveに振り分け
-3. **Backlogの更新**: 延期(Deferred)項目の中で着手可能になったものをQueued(待機)に移動
+3. **Backlogの更新**: 延期(Deferred)項目の中で着手可能になったものをQueued（待機）に移動
 4. **実施する作業の選択**: Queuedから選んでActiveに移動
 5. **サイクルドキュメントの作成**: テンプレートをコピーして新規作成
 6. **開始時点の状態の記録**: git commitで記録

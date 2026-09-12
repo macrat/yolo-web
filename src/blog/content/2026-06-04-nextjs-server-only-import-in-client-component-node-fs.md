@@ -132,7 +132,7 @@ export default function RelatedBlogPosts({ toolSlug }: { toolSlug: string }) {
 }
 ```
 
-ここで多くの人が立ち止まる。「`RelatedBlogPosts` に `fs` はない。`StorybookContent` にもない。なのになぜ `node:fs` のエラーが出るのか?」と。答えは、`RelatedBlogPosts` がさらに import している先にあった。
+ここで多くの人が立ち止まる。「`RelatedBlogPosts` に `fs` はない。`StorybookContent` にもない。なのになぜ `node:fs` のエラーが出るのか？」と。答えは、`RelatedBlogPosts` がさらに import している先にあった。
 
 ## 根本原因: 推移的依存とトップレベル副作用の合わせ技
 
@@ -142,7 +142,7 @@ export default function RelatedBlogPosts({ toolSlug }: { toolSlug: string }) {
 
 `"use client"` を書いたファイルは、ブラウザで動くコードの起点になる。そして起点が import するモジュールは、そのモジュールが import するモジュール、さらにその先……と、依存グラフ全体がクライアントバンドルの候補になる。これが推移的依存だ。この「Client Component の import チェーンがバンドルに与える影響」は、サイズ最適化の観点でも重要で、[next/dynamicの2つの落とし穴と真のコード分割](/blog/nextjs-dynamic-import-pitfalls-and-true-code-splitting)でも別の角度から扱っている。今回はそれが「サイズ」ではなく「ビルドの可否」として表面化したケースだ。
 
-ここで誤解しやすいのは「Server Component を import しても、それは server で実行されるはずだから client には載らないのでは?」という点だ。たしかに `RelatedBlogPosts` のレンダリング自体は server で行われる。しかし `"use client"` なファイルが `import RelatedBlogPosts from ...` と書いた瞬間、Turbopack はその import 文を解決するためにモジュールグラフへ `RelatedBlogPosts` を、そしてその依存を辿って引き込もうとする。実行されるかどうかとは別に、import 文の存在がグラフへの参加を意味する。
+ここで誤解しやすいのは「Server Component を import しても、それは server で実行されるはずだから client には載らないのでは？」という点だ。たしかに `RelatedBlogPosts` のレンダリング自体は server で行われる。しかし `"use client"` なファイルが `import RelatedBlogPosts from ...` と書いた瞬間、Turbopack はその import 文を解決するためにモジュールグラフへ `RelatedBlogPosts` を、そしてその依存を辿って引き込もうとする。実行されるかどうかとは別に、import 文の存在がグラフへの参加を意味する。
 
 依存を逆向きに辿るとこうなっていた。
 
@@ -158,7 +158,7 @@ StorybookContent.tsx ("use client")
 
 ### 事実2: トップレベルの副作用が fs を「実行されなくても」載せる
 
-ここまでなら「使わない import なら tree-shaking で消えるのでは?」と思うかもしれない。実際それを期待していた。`RelatedBlogPosts` を描画するだけで、`fs` を呼ぶ関数を client 側で呼ぶわけではない。
+ここまでなら「使わない import なら tree-shaking で消えるのでは？」と思うかもしれない。実際それを期待していた。`RelatedBlogPosts` を描画するだけで、`fs` を呼ぶ関数を client 側で呼ぶわけではない。
 
 問題は、依存の途中にある `cross-links.ts` が、関数の中ではなく モジュールのトップレベルで fs を引く処理を走らせていたことだ。
 

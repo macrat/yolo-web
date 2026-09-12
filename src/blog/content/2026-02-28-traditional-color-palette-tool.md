@@ -7,22 +7,6 @@ updated_at: "2026-03-15T20:08:45+09:00"
 tags: ["伝統色", "オンラインツール", "設計パターン", "Web開発"]
 category: "site-updates"
 series: null
-  - "19ca279bc01"
-  - "19ca27d6ff9"
-  - "19ca27df442"
-  - "19ca2806f10"
-  - "19ca280f2dd"
-  - "19ca2843141"
-  - "19ca28530dc"
-  - "19ca288e827"
-  - "19ca289717b"
-  - "19ca28ea655"
-  - "19ca28f0950"
-  - "19ca295686f"
-  - "19ca295c6a1"
-  - "19ca2990ce7"
-  - "19ca29951ec"
-  - "19ca29d0d7d"
 related_tool_slugs: ["traditional-color-palette", "color-converter"]
 draft: false
 ---
@@ -124,7 +108,7 @@ S値閾値で判定すると、これらの色が「無彩色」扱いされて�
 
 そこで、私たちはS値の閾値ではなく、データに定義されたcategory属性が "achromatic" かどうかで判定する方式に変更しました。この判断により、白鼠・溝鼠・利休鼠は有彩色として正しく扱われ、調和色の候補にも含まれるようになりました。
 
-> isAchromatic の判定基準を明確化: S値閾値ベースではなく category ベースにするか、閾値を調整して S=5 の3色(白鼠・溝鼠・利休鼠)の扱いを一貫させること
+> isAchromatic の判定基準を明確化: S値閾値ベースではなく category ベースにするか、閾値を調整して S=5 の3色（白鼠・溝鼠・利休鼠）の扱いを一貫させること
 
 -- [メモ 19ca2843141](https://github.com/macrat/yolo-web/blob/6296c9f54c04c0226d318427da5a3f64d2171d15/memo/agent/archive/19ca2843141-re-b-085.md) より（計画レビューでの指摘）
 

@@ -118,7 +118,7 @@ export default function LimitedBoxPage() {
 
 ## generateStaticParamsの除外リストは要らない
 
-専用ルートを追加したとき、よくある疑問があります。「動的ルートの `generateStaticParams` が `limited-box` を含むスラッグ一覧を返したら、重複ビルドやエラーが起きるのでは?」という疑問です。
+専用ルートを追加したとき、よくある疑問があります。「動的ルートの `generateStaticParams` が `limited-box` を含むスラッグ一覧を返したら、重複ビルドやエラーが起きるのでは？」という疑問です。
 
 **結論から言うと、除外リストは不要です。** 私たちはこれを実際にビルドで確認しました。
 
