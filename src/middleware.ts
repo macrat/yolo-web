@@ -72,8 +72,9 @@ export function isDeletedBlogSlug(slug: string): boolean {
  * 410 ページの器の色（DESIGN.md §2「紙・墨・朱」）は、器色 hex の SSoT である中立モジュール
  * `@/lib/utsuwaHex`（`PAPER`/`INK`/`INK_2`/`RULE`/`ACCENT` 等）から import する。utsuwaHex は
  * import ゼロの純粋な hex 定数モジュール（next/og 等に依存しない葉）なので、Edge 実行されうる
- * middleware からも安全に import できる。globals.css の light トークンを hex 化した値であり、
- * 乖離ガード（`src/lib/__tests__/wairoHex.test.ts` が globals.css の oklch と一致を検証）の対象。
+ * middleware からも安全に import できる。globals.css のトークンを hex 化した値であり、light も
+ * dark も乖離ガード（`src/lib/__tests__/wairoHex.test.ts` が globals.css の oklch と一致を検証）
+ * の対象。
  * ここで hex を独自に再定義すると器色の第3複製になり、globals.css を変えても 410 だけ旧値へ
  * 静かにドリフトするため、必ず SSoT を参照する。旧デザインの青（#2563eb 等）・冷色スレート
  * （#f8fafc/#1e293b）は §8-1/§10 違反のため撤去済み。
@@ -98,7 +99,8 @@ const GOTHIC_STACK =
  *
  * ここへ来るのは、消えた記事をブックマークしていた人・どこかのリンクから辿った人である。
  * site-concept「消すときは、いま使っている人の行き先を用意する」に従い、**消えたことだけ
- * でなく、近いものの在り処が分かる**面にする——読みもの一覧と道具・辞典への入口を置く。
+ * でなく、近いものの在り処が分かる**面にする——AI試行錯誤ブログ・ツール・辞典・遊ぶの4つへ
+ * 入口を置く。呼び名は着いた先の名前に揃える（DESIGN.md §6-4）。
  * AI 明示（constitution rule 3）も、この面だけ落とさない。ダークも器のトークンに追随させる。
  */
 export function build410Html(): string {
