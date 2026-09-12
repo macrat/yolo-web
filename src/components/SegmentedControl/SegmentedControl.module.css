@@ -24,7 +24,7 @@
   justify-content: center;
   min-height: 36px; /* タップターゲット確保 */
   padding: 6px 14px;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-family: inherit;
   background: transparent;
   color: var(--ink);

@@ -16,7 +16,7 @@
   font-family: inherit;
   /* 来訪者が操作する欄なので 16px（DESIGN §3: 13〜14px は補助情報に限る）。
    * 16px 未満だと iOS Safari がフォーカス時にページを自動拡大する。 */
-  font-size: 16px;
+  font-size: 1rem;
   line-height: 1.5;
   min-height: 44px; /* WCAG 2.5.5 AAA タップターゲット推奨値 */
   background: var(--paper);

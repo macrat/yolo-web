@@ -144,7 +144,9 @@ body {
   overflow-x: clip;
   background: var(--paper);
   color: var(--ink);
-  font-size: 16px;
+  /* font-size を px で固定しない（DESIGN §10）。ブラウザや OS で文字を大きくして
+   * いる人がいる。ここで固定すると、その設定が本文に効かなくなる。既定はブラウザの
+   * 16px なので、指定しないことが 16px 基準を捨てることにはならない。 */
   line-height: 1.7;
 }
 
