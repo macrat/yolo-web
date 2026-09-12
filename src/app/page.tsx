@@ -178,17 +178,34 @@ const TOOL_ITEMS: ShinagakiItem[] = [
 const FEATURED_POST_COUNT = 3;
 
 /**
- * 「ブログ」棚。新しい記事から数本を出す。
- *
- * ひとことには description の第1文を使う。description は検索結果向けの要約なので
- * 行に置くには長いが、その第1文は記事の掴みとして書かれているのでそのまま置ける。
+ * ひとことの上限。記事の第1文は中央値51字・最長143字（実測87本）で、360px では
+ * 1行あたり約19字なので、143字は8行の壁になる。60字（約3行）で切る——中央値は
+ * そのまま通り、長すぎる3割だけが縮む。
  */
+const NOTE_MAX_LENGTH = 60;
+
+/**
+ * 記事のひとことを作る。
+ *
+ * description は検索結果向けの要約なので行に置くには長いが、その第1文は記事の
+ * 掴みとして書かれているのでそのまま置ける。長すぎる第1文だけ、読点で切って
+ * 「……」を添える——途中で断ち切るより、続きがあることを見せるほうが親切である。
+ */
+function toNote(description: string): string {
+  const firstSentence = `${description.split("。")[0]}。`;
+  if (firstSentence.length <= NOTE_MAX_LENGTH) return firstSentence;
+  const head = firstSentence.slice(0, NOTE_MAX_LENGTH);
+  const lastComma = head.lastIndexOf("、");
+  return `${lastComma > 0 ? head.slice(0, lastComma) : head}……`;
+}
+
+/** 「ブログ」棚。新しい記事から数本を出す。 */
 const READING_ITEMS: ShinagakiItem[] = getAllBlogPosts()
   .slice(0, FEATURED_POST_COUNT)
   .map((post) => ({
     name: post.title,
     href: `/blog/${post.slug}`,
-    note: `${post.description.split("。")[0]}。`,
+    note: toNote(post.description),
     tags: [`${post.readingTime}分`],
   }));
 
