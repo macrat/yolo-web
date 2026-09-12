@@ -24,14 +24,6 @@
   margin: 0 0 0.75rem;
 }
 
-/* 控えめな SEO 見出し。視覚の主役は下の Tsutsumi に譲る。 */
-.medalHeading {
-  font-size: 1rem;
-  color: var(--ink-2);
-  margin: 0;
-  line-height: 1.4;
-}
-
 .title {
   font-size: 1.75rem;
   font-weight: 600;

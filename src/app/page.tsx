@@ -196,7 +196,10 @@ function toNote(description: string): string {
   if (firstSentence.length <= NOTE_MAX_LENGTH) return firstSentence;
   const head = firstSentence.slice(0, NOTE_MAX_LENGTH);
   const lastComma = head.lastIndexOf("、");
-  return `${lastComma > 0 ? head.slice(0, lastComma) : head}……`;
+  // 読点が前のほうにあると、切った先に何も残らない（欧文で始まる文で起きやすい）。
+  // 上限の半分を下回るなら読点では切らず、上限まで取る。
+  const cutAtComma = lastComma >= NOTE_MAX_LENGTH / 2;
+  return `${cutAtComma ? head.slice(0, lastComma) : head}……`;
 }
 
 /** 「ブログ」棚。新しい記事から数本を出す。 */
@@ -206,7 +209,8 @@ const READING_ITEMS: ShinagakiItem[] = getAllBlogPosts()
     name: post.title,
     href: `/blog/${post.slug}`,
     note: toNote(post.description),
-    tags: [`${post.readingTime}分`],
+    // 値札の語は一覧・記事本文と揃える。「17分」だけだと「17分前」とも読める。
+    tags: [`${post.readingTime}分で読める`],
   }));
 
 export default function Home() {

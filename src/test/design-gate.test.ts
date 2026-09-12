@@ -1376,6 +1376,44 @@ describe("DESIGN.md §3 約物（三点リーダと括弧）", () => {
     expect(offenders).toEqual([]);
     expect(texts, "和文の文を一つも走査していない").toBeGreaterThan(2000);
   });
+
+  /**
+   * 記事の本文。サイトでいちばん分量のある和文がここにある。
+   *
+   * `site-concept.md` は「来訪者に届く言葉の規則はブログにも掛かる」と定めている。
+   * ゲートが `.ts`/`.tsx` だけを見ていたあいだ、公開中の記事に §3 の違反が61箇所
+   * 残っていた（実測）——画面の文言を直しても、いちばん読まれる和文は網の外だった。
+   */
+  test("記事の本文が §3 の約物に従うこと", () => {
+    const offenders: string[] = [];
+    let lines = 0;
+    const files = fg.sync(["src/blog/content/*.md"], { cwd: PROJECT_ROOT });
+    for (const rel of files) {
+      const md = fs.readFileSync(path.join(PROJECT_ROOT, rel), "utf-8");
+      // frontmatter・コード・リンクの URL は組版の対象ではない。
+      const body = md
+        .replace(/^---\n[\s\S]*?\n---\n/, "")
+        .replace(/```[\s\S]*?```/g, "")
+        .replace(/`[^`\n]*`/g, "")
+        .replace(/\]\([^)]*\)/g, "]")
+        .replace(/https?:\/\/\S+/g, "");
+      for (const line of body.split("\n")) {
+        if (!JAPANESE.test(line)) continue;
+        lines++;
+        const halfWidthParen = Array.from(line.matchAll(/\(([^()]*)\)/g)).some(
+          (paren) => JAPANESE.test(paren[1]),
+        );
+        const asciiDots =
+          /[ぁ-んァ-ヶ一-龠]\.\.\.|\.\.\.[ぁ-んァ-ヶ一-龠]/.test(line);
+        const halfWidthPunct = /[ぁ-んァ-ヶ一-龠ー々。、」』）][?!]/.test(line);
+        if (halfWidthParen || asciiDots || halfWidthPunct) {
+          offenders.push(`${rel}: ${line.trim().slice(0, 50)}`);
+        }
+      }
+    }
+    expect(offenders).toEqual([]);
+    expect(lines, "記事の和文を一行も走査していない").toBeGreaterThan(1000);
+  });
 });
 
 /**

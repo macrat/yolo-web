@@ -70,12 +70,14 @@ export interface TsutsumiProps {
   caption?: string;
   /**
    * タイプ名（{@link typeName}）を描画する要素。既定は "p"。
-   * 診断結果カードのようにタイプ名がその領域の主見出しになる文脈では "h2" を指定し、
-   * スクリーンリーダの見出しナビで結果（クライマックス）へ到達できるようにする
-   *（cycle-287 / WCAG 1.3.1）。見本・装飾用途では "p" のまま（見出し階層を汚さない）。
-   * 見た目は {@link typeName} のスタイルで固定され、要素を変えても変化しない。
+   *
+   * タイプ名がその面の主役であるとき、それが見出しである——スクリーンリーダの見出し
+   * ナビで結果（クライマックス）へ到達できるようにする（WCAG 1.3.1）。結果だけを見せる
+   * 単独ページでは "h1"、診断の中で結果を出す面では "h2"。見本・装飾では "p" のまま
+   * （見出し階層を汚さない）。見た目は {@link typeName} のスタイルで固定され、要素を
+   * 変えても変化しない——同じ言葉を小さな見出しと大きな包みで二度出さないための口である。
    */
-  typeNameAs?: "p" | "h2";
+  typeNameAs?: "p" | "h2" | "h1";
 }
 
 /**
@@ -154,7 +156,9 @@ export default function Tsutsumi({
 
       {/* 品名・結果の言葉は紙の上に墨で組む（器は静か）。 */}
       <figcaption className={styles.body}>
-        {typeNameAs === "h2" ? (
+        {typeNameAs === "h1" ? (
+          <h1 className={styles.typeName}>{typeName}</h1>
+        ) : typeNameAs === "h2" ? (
           <h2 className={styles.typeName}>{typeName}</h2>
         ) : (
           <p className={styles.typeName}>{typeName}</p>
