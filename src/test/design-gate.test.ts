@@ -1027,8 +1027,10 @@ describe("§8 機械ゲートの検出力（合成入力）", () => {
  * 指定なし 224.3px に対し palt 指定 239.8px——詰めるための指定が字を広げていた。
  *
  * 検査するのは `palt` だけである。`font-feature-settings` は書いた feature 以外を
- * 無効化しないため（liga/kern/tnum はいずれも normal と同値・実測）、`tnum` など
- * 排他でない feature は通す。詳細は docs/knowledge/frontend.md。
+ * 無効化しない（liga/kern/tnum はいずれも normal と同値・実測）。`tnum` は現行の
+ * 配信環境で `chws` と併存するので通す——ただし OpenType 仕様は `chws` を `tnum` を
+ * 含む10機能と相互排他と定めており、併存はブラウザの実装に依っている。
+ * 詳細は docs/knowledge/frontend.md。
  *
  * grep 一行で検査できる規則なので機械ゲートに置く。cycle-312 で 26 宣言 /
  * 20 ファイルが素通りしていた（globals.css だけ直して直したつもりになっていた）。

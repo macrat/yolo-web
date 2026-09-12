@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { PAPER, INK, INK_2, RULE, ACCENT } from "@/lib/utsuwaHex";
+import { PAPER, INK, INK_2, RULE, RULE_STRONG, ACCENT } from "@/lib/utsuwaHex";
 
 /**
  * 削除済みブログ記事のスラッグ一覧。
@@ -64,10 +64,13 @@ const GOTHIC_STACK =
  * middlewareからはReactコンポーネントやCSSモジュールが使用できないため、
  * インラインスタイル付きの静的HTMLで構成する。
  *
- * デザインは「店構え」（DESIGN.md §2色/§3タイポ/§4罫/§8禁止）。既に店構え化された
- * エラー面 `src/app/global-not-found-content.tsx` と流儀（紙地・墨字・明朝見出し・罫）を揃える。
- * 中央寄せの静かな告知として組み、操作（トップへ戻る導線）は §4「罫と墨で、装飾を足さない」に
- * 従い朱の文字＋罫囲みで表す（青ベタボタン・装飾絵文字・8px角丸は撤去済み）。
+ * デザインは DESIGN.md（§2色/§3タイポ/§4罫/§8禁止）に従う。エラー面
+ * `src/app/global-not-found-content.tsx` と流儀（紙地・墨字・明朝見出し・罫）を揃える。
+ *
+ * ここへ来るのは、消えた記事をブックマークしていた人・どこかのリンクから辿った人である。
+ * site-concept「消すときは、いま使っている人の行き先を用意する」に従い、**消えたことだけ
+ * でなく、近いものの在り処が分かる**面にする——読みもの一覧と道具・辞典への入口を置く。
+ * AI 明示（constitution rule 3）も、この面だけ落とさない。ダークも器のトークンに追随させる。
  */
 export function build410Html(): string {
   return `<!DOCTYPE html>
@@ -78,22 +81,34 @@ export function build410Html(): string {
 <title>このコンテンツは終了しました | yolos.net</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:${GOTHIC_STACK};background:${PAPER};color:${INK};min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1.5rem}
-.container{max-width:34rem;width:100%;text-align:center}
-h1{font-family:${MINCHO_STACK};font-size:1.6rem;font-weight:600;color:${INK};line-height:1.5;letter-spacing:0.02em}
-.rule{width:3rem;height:0;border-top:1px solid ${RULE};margin:1.25rem auto}
-p{font-family:${GOTHIC_STACK};font-size:1rem;color:${INK_2};line-height:1.9;margin-bottom:2rem}
-a.home{display:inline-block;padding:0.6rem 1.75rem;color:${ACCENT};text-decoration:none;border:1px solid ${RULE};border-radius:0;font-size:0.95rem;transition:border-color 0.2s}
-a.home:hover,a.home:focus-visible{border-color:${ACCENT}}
-a.home:focus-visible{outline:2px solid ${ACCENT};outline-offset:2px}
+body{font-family:${GOTHIC_STACK};background:${PAPER};color:${INK};min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1.5rem;line-height:1.7}
+.container{max-width:34rem;width:100%}
+.shop{font-family:${MINCHO_STACK};font-size:1.25rem;color:${INK};text-decoration:none;display:block}
+.noren{border-bottom:1px solid ${RULE_STRONG};padding-bottom:0.5rem;margin-bottom:2rem}
+h1{font-family:${MINCHO_STACK};font-size:1.6rem;font-weight:600;color:${INK};line-height:1.4;letter-spacing:0.02em}
+p{font-family:${GOTHIC_STACK};font-size:1rem;color:${INK_2};line-height:1.9;margin-top:1rem}
+h2{font-family:${MINCHO_STACK};font-size:1.125rem;font-weight:600;color:${INK};line-height:1.4;margin-top:2.5rem;padding-bottom:0.5rem;border-bottom:1px solid ${RULE}}
+ul{list-style:none;margin-top:0.5rem}
+li{border-bottom:1px solid ${RULE}}
+li a{display:block;padding:0.75rem 0;color:${ACCENT};text-decoration:none;font-size:1rem}
+li a:hover,li a:focus-visible{text-decoration:underline}
+li a:focus-visible{outline:2px solid ${ACCENT};outline-offset:2px}
+.note{font-size:0.8125rem;color:${INK_2};margin-top:2.5rem;line-height:1.7}
 </style>
 </head>
 <body>
 <div class='container'>
-<h1>このコンテンツは終了しました</h1>
-<div class='rule'></div>
-<p>お探しのページはすでに削除されており、現在はご覧いただけません。</p>
-<a class='home' href='/'>トップページへ</a>
+<div class='noren'><a class='shop' href='/'>yolos.net</a></div>
+<h1>この記事は削除されました</h1>
+<p>お探しの記事はすでに取り下げられており、読むことができません。近いものがあるかもしれないので、下から探してみてください。</p>
+<h2>行き先</h2>
+<ul>
+<li><a href='/blog'>読みもの一覧</a></li>
+<li><a href='/tools'>道具</a></li>
+<li><a href='/dictionary'>辞典</a></li>
+<li><a href='/play'>診断・占い・あそび</a></li>
+</ul>
+<p class='note'>運営しているのは人ではなくAIです。実験なので、内容に誤りがあるかもしれません。</p>
 </div>
 </body>
 </html>`;
