@@ -117,6 +117,15 @@ describe("build410Html", () => {
   describe("店構えデザイン契約", () => {
     const html = build410Html();
 
+    /** 埋め込み CSS から、そのセレクタのルール本体だけを取り出す。 */
+    function ruleOf(selector: string): string {
+      const match = html.match(
+        new RegExp(`(^|[;}\\n])${selector}\\s*\\{([^}]*)\\}`),
+      );
+      expect(match, `${selector} のルールが見つからない`).not.toBeNull();
+      return match![2];
+    }
+
     test("旧アクセント青（#2563eb / #1d4ed8）を含まない（§8-1）", () => {
       expect(html).not.toContain("#2563eb");
       expect(html).not.toContain("#1d4ed8");
@@ -137,8 +146,10 @@ describe("build410Html", () => {
       expect(html).toContain("#af3622"); // --accent（朱）
     });
 
+    // 全文に "Noto Serif JP" があるだけでは、見出しが明朝で組まれている証拠に
+    // ならない（店号や h2 のおかげで通ってしまう）。h1 のルールを取り出して見る。
     test("見出しは明朝スタック（Noto Serif JP）で組む（§3）", () => {
-      expect(html).toContain("Noto Serif JP");
+      expect(ruleOf("h1")).toContain("Noto Serif JP");
     });
 
     test("行き止まりにしない——店号と、近いものへの行き先を持つ", () => {
@@ -152,14 +163,25 @@ describe("build410Html", () => {
 
     test("行き先のラベルは着いた先の名前と一致する（§6）", () => {
       // 「道具」と書いて「ツール」に着くと、来訪者は別の場所に来たと思う。
-      expect(html).toContain("AI試行錯誤ブログ");
-      expect(html).toContain("ツール");
-      expect(html).toContain("辞典");
-      expect(html).toContain("遊ぶ");
+      // リンクの文言そのものを見る——本文のどこかに同じ語があれば通る書き方だと、
+      // ラベルを書き換えても通ってしまう。
+      const labels: Record<string, string> = {
+        "/blog": "AI試行錯誤ブログ",
+        "/tools": "ツール",
+        "/dictionary": "辞典",
+        "/play": "遊ぶ",
+      };
+      for (const [href, label] of Object.entries(labels)) {
+        expect(html).toContain(`<a href='${href}'>${label}</a>`);
+      }
     });
 
-    test("AI 明示を落とさない（constitution rule 3）", () => {
+    // constitution rule 3 は3点（AI が運営・実験である・誤りがありうる）を求める。
+    // 1点だけ見ていると、残り2点を落としても通る。
+    test("AI 明示の3点を落とさない（constitution rule 3）", () => {
       expect(html).toContain("運営しているのは人ではなくAIです");
+      expect(html).toContain("実験");
+      expect(html).toContain("誤りがあるかもしれません");
     });
 
     test("ダークに追随する（ライト固定にしない・§10）", () => {
@@ -168,12 +190,17 @@ describe("build410Html", () => {
     });
 
     test("リンクは朱の文字で表す（青ベタボタンでない・§4）", () => {
-      expect(html).toContain("var(--accent)");
       expect(html).toContain("--accent:#af3622");
+      const linkRule = ruleOf("li a");
+      expect(linkRule).toContain("color:var(--accent)");
+      // 塗りボタンにしない——地を塗ると §4「装飾は枠・罫・言葉まで」から外れる。
+      expect(linkRule).not.toMatch(/background(-color)?:/);
     });
 
-    test("角丸は0基調（8px角丸 0.5rem を含まない・§8-5）", () => {
-      expect(html).not.toContain("border-radius:0.5rem");
+    // §4「角丸の例外は値札と入力欄の 2px だけ」。410 にはどちらも無いので
+    // 角丸は一切出てはいけない。特定の値だけを弾く書き方だと、別の値が通る。
+    test("角丸を一切使わない（§4）", () => {
+      expect(html).not.toMatch(/border-radius:/);
     });
   });
 });
