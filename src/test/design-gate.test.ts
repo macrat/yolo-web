@@ -1059,3 +1059,60 @@ describe("DESIGN.md §3 約物（明朝に palt を掛けない）", () => {
     expect(offenders).toEqual([]);
   });
 });
+
+/**
+ * §3「三点リーダは「……」（2倍）で、`...` を使わない」のゲート。
+ *
+ * 来訪者が読む文字（placeholder・画面テキスト）に ASCII の三点が混ざると、
+ * 和文の組版が崩れる。grep 一行で検査できる規則なので機械へ置く。
+ */
+describe("DESIGN.md §3 三点リーダ（来訪者が読む文に `...` を使わない）", () => {
+  test("placeholder に ASCII の三点が無いこと", () => {
+    const files = fg.sync(["src/**/*.tsx"], {
+      cwd: PROJECT_ROOT,
+      ignore: [...IGNORE, "**/__tests__/**", "**/storybook/**"],
+    });
+    const offenders: string[] = [];
+    for (const rel of files) {
+      const src = fs.readFileSync(path.join(PROJECT_ROOT, rel), "utf-8");
+      for (const m of src.matchAll(/placeholder="([^"]*)"/g)) {
+        if (m[1].includes("...")) offenders.push(`${rel}: ${m[1]}`);
+      }
+    }
+    expect(offenders).toEqual([]);
+  });
+});
+
+/**
+ * §6「来訪者に届く言葉」のゲート。
+ *
+ * 内部の設計語彙（店/品書き/値札/包み/札/のれん/棚）が、来訪者に読まれる属性へ
+ * 漏れていないか。cycle-312 では `ariaLabel` が prop 名だったために `aria-label=`
+ * を探す走査から漏れ、10件が長く残っていた。属性でも prop でも拾う。
+ */
+describe("DESIGN.md §6 来訪者に届く言葉（内部語彙を漏らさない）", () => {
+  const INTERNAL_VOCAB = /品書き|値札|のれん|店構え|店主|包み(?!込)|札(?!幌)/;
+
+  test("aria-label・alt・title・placeholder に内部語彙が無いこと", () => {
+    const files = fg.sync(["src/**/*.tsx"], {
+      cwd: PROJECT_ROOT,
+      ignore: [...IGNORE, "**/__tests__/**", "**/storybook/**"],
+    });
+    const offenders: string[] = [];
+    for (const rel of files) {
+      const src = fs.readFileSync(path.join(PROJECT_ROOT, rel), "utf-8");
+      // 属性形（alt="..."）と prop 形（ariaLabel="..." / ariaLabel={`...`}）の両方
+      const patterns = [
+        /(?:aria-label|alt|title|placeholder)="([^"]*)"/g,
+        /ariaLabel=(?:"([^"]*)"|\{`([^`]*)`\})/g,
+      ];
+      for (const re of patterns) {
+        for (const m of src.matchAll(re)) {
+          const value = m[1] ?? m[2] ?? "";
+          if (INTERNAL_VOCAB.test(value)) offenders.push(`${rel}: ${value}`);
+        }
+      }
+    }
+    expect(offenders).toEqual([]);
+  });
+});
