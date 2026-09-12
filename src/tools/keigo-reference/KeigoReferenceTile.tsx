@@ -198,7 +198,7 @@ export default function KeigoReferenceTile({
                 <Input
                   id={searchId}
                   type="text"
-                  placeholder="動詞を検索..."
+                  placeholder="動詞を検索……"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   aria-label="敬語を検索"

@@ -107,7 +107,7 @@ export default function ColorsIndexPage() {
       <div className={styles.shelf}>
         <DictionarySearch
           heading="色名・コードから探す"
-          placeholder="色名・ローマ字・カラーコードで検索..."
+          placeholder="色名・ローマ字・カラーコードで検索……"
           unit="色"
           items={colorSearchItems}
         />

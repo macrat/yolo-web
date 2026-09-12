@@ -346,7 +346,7 @@ export default function ImageBase64Tile({
               variant="mono"
               value={decodeInput}
               onChange={(e) => setDecodeInput(e.target.value)}
-              placeholder="data:image/png;base64,iVBOR... または Base64文字列を貼り付け"
+              placeholder="data:image/png;base64,iVBOR…… または Base64文字列を貼り付け"
               rows={6}
               spellCheck={false}
             />

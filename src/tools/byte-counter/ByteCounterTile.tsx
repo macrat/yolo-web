@@ -87,7 +87,7 @@ export default function ByteCounterTile({
           id={inputId}
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder="ここにテキストを入力してください..."
+          placeholder="ここにテキストを入力してください……"
           rows={10}
           aria-describedby={liveRegionId}
         />

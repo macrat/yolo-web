@@ -177,7 +177,7 @@ export default function MarkdownPreviewTile({
             variant="mono"
             value={input}
             onChange={handleInputChange}
-            placeholder="Markdownを入力..."
+            placeholder="Markdownを入力……"
             spellCheck={false}
             rows={18}
           />

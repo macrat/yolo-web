@@ -214,7 +214,7 @@ export default function LineBreakRemoverTile({
             id={inputId}
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="改行を削除するテキストを入力..."
+            placeholder="改行を削除するテキストを入力……"
             rows={8}
             spellCheck={false}
             aria-label="入力テキスト"

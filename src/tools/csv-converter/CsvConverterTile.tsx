@@ -212,7 +212,7 @@ export default function CsvConverterTile({
             variant="mono"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="変換するデータを入力..."
+            placeholder="変換するデータを入力……"
             spellCheck={false}
             rows={12}
           />

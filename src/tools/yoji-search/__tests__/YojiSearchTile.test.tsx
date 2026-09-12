@@ -7,7 +7,7 @@ describe("YojiSearchTile", () => {
   it("renders search input", () => {
     render(<YojiSearchTile />);
     expect(
-      screen.getByPlaceholderText("四字熟語・読み・意味で検索..."),
+      screen.getByPlaceholderText("四字熟語・読み・意味で検索……"),
     ).toBeInTheDocument();
   });
 
@@ -49,7 +49,7 @@ describe("YojiSearchTile", () => {
     const user = userEvent.setup();
     render(<YojiSearchTile />);
 
-    const input = screen.getByPlaceholderText("四字熟語・読み・意味で検索...");
+    const input = screen.getByPlaceholderText("四字熟語・読み・意味で検索……");
     await user.type(input, "一期一会");
 
     expect(
@@ -70,7 +70,7 @@ describe("YojiSearchTile", () => {
     ).toBeGreaterThan(firstPage);
 
     // changing the query, then clearing it, returns to a single page of results
-    const input = screen.getByPlaceholderText("四字熟語・読み・意味で検索...");
+    const input = screen.getByPlaceholderText("四字熟語・読み・意味で検索……");
     await user.type(input, "一");
     await user.clear(input);
 
@@ -83,7 +83,7 @@ describe("YojiSearchTile", () => {
     const user = userEvent.setup();
     render(<YojiSearchTile />);
 
-    const input = screen.getByPlaceholderText("四字熟語・読み・意味で検索...");
+    const input = screen.getByPlaceholderText("四字熟語・読み・意味で検索……");
     await user.type(input, "一期一会");
 
     expect(screen.getByText("一期一会")).toBeInTheDocument();
@@ -94,7 +94,7 @@ describe("YojiSearchTile", () => {
     const user = userEvent.setup();
     render(<YojiSearchTile />);
 
-    const input = screen.getByPlaceholderText("四字熟語・読み・意味で検索...");
+    const input = screen.getByPlaceholderText("四字熟語・読み・意味で検索……");
     await user.type(input, "zzznonexistent");
 
     expect(
@@ -106,7 +106,7 @@ describe("YojiSearchTile", () => {
     const user = userEvent.setup();
     render(<YojiSearchTile />);
 
-    const input = screen.getByPlaceholderText("四字熟語・読み・意味で検索...");
+    const input = screen.getByPlaceholderText("四字熟語・読み・意味で検索……");
     await user.type(input, "一期一会");
 
     const button = screen.getByRole("button", {
@@ -123,7 +123,7 @@ describe("YojiSearchTile", () => {
     const user = userEvent.setup();
     render(<YojiSearchTile />);
 
-    const input = screen.getByPlaceholderText("四字熟語・読み・意味で検索...");
+    const input = screen.getByPlaceholderText("四字熟語・読み・意味で検索……");
     await user.type(input, "一期一会");
 
     const expandButton = screen.getByRole("button", {

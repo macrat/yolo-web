@@ -161,7 +161,7 @@ export default function KanaConverterTile({
           id={inputId}
           value={input}
           onChange={handleInputChange}
-          placeholder="変換するテキストを入力..."
+          placeholder="変換するテキストを入力……"
           rows={6}
           spellCheck={false}
         />

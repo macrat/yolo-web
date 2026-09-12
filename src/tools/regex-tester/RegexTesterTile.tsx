@@ -258,7 +258,7 @@ export default function RegexTesterTile({
             variant="mono"
             value={testString}
             onChange={(e) => setTestString(e.target.value)}
-            placeholder="テストするテキストを入力..."
+            placeholder="テストするテキストを入力……"
             rows={6}
             spellCheck={false}
           />

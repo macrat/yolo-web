@@ -192,7 +192,7 @@ export default function HashGeneratorTile({
           variant="mono"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="ハッシュ化するテキストを入力..."
+          placeholder="ハッシュ化するテキストを入力……"
           rows={4}
           spellCheck={false}
         />

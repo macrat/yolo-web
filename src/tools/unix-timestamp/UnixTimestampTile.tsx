@@ -247,7 +247,7 @@ export default function UnixTimestampTile({
             className={styles.tsInput}
             value={tsInput}
             onChange={(e) => setTsInput(e.target.value)}
-            placeholder="UNIXタイムスタンプを入力..."
+            placeholder="UNIXタイムスタンプを入力……"
             aria-label="UNIXタイムスタンプ"
             inputMode="numeric"
           />
