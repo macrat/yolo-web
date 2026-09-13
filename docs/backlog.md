@@ -28,6 +28,7 @@
 | B-673 | 疑問符・感嘆符の全角/半角が診断データ全体で混在 | P3 | - | src/play/quiz/data で全角「？」76件・半角「?」527件(実測)。DESIGN §3 は cycle-312 で「和文に続くなら全角・欧文に続くなら半角」を定めたので、規範側は揃った。データを規範に合わせる。詳細cycle-312/index.md |
 | B-675 | 公開中の記事「ソース走査ゲートの死角」に事実誤りが3件ある | P1 | 313 | 交替順の主張が誤り・jsxTextNodesの掲載コードが是正前の死角を含む・「ここまでの4つの死角」が本文の件数と合わない。公開中で来訪者に届く誤りだがcycle-312のスコープ外(incident-4)。詳細cycle-312/index.md |
 | B-680 | 公開記事がサイト名の由来を一次資料と別に答えている | P1 | 313 | 2026-02-18-site-rename-yolos-net.md:31 が YOLO を「人生一度きり」だけで説明する。オーナーのメモはAIエージェントのモード名の意味も含む。詳細cycle-312/incident-9 |
+| B-683 | /about の「名前の由来」が site-concept と食い違う | P1 | 313 | about/page.tsx:88 が YOLO を「運営のすべてをAIに任せた実験」とだけ説明し You Only Live Once が無い。site-concept とオーナーのメモが正で実装が従う側。詳細cycle-312/incident-9 |
 | B-676 | 値札の語彙を名乗るラベルが12pxで規範の下限を割っている | P3 | - | QuestionCard.feedbackTagが0.75rem(12px)。DESIGN §4の値札は字サイズを §3 に委ね、§3は「13〜14pxは補助情報に限る」なので12pxは規範の外。他に12px以下の文字が無いか実査してから直す。詳細cycle-312/index.md |
 | B-677 | irodori の共有画像が濃紺の地を直書きして店構えの外にある | P2 | - | share.ts が canvas に #1a1a2e(濃紺)#ffffff #aaaaaa を直書き(7箇所)。DESIGN §2の直書き3分類にも §4「看板は地が紙・任意色のベタを敷かない」にも掛からない。持ち帰られる現物なので実害。詳細cycle-312/index.md |
 | B-678 | 見出し・ナビ・ボタンの絵文字にゲートが無い | P3 | - | DESIGN §8 は機械で検査する側に置いたが design-gate.test.ts に実装が無い。どの要素の中にあるかは構造なので JSX の見出し/nav/button を辿れば機械で読める。詳細cycle-312/incident-8.md |
