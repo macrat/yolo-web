@@ -56,7 +56,8 @@
  *   §8-6  all-caps（text-transform: uppercase）= WARNING（§8 注記どおり多用の判定は視覚レビュー）。
  *   §8-7  本文書体に Inter/Roboto/Open Sans 等の欧文既定 sans = ERROR。font-family に monospace = ERROR。
  *   §10   入力欄の下限 16px。色の直書き（トークン非経由の hex / rgb() / hsl() / oklch() 等を色プロパティに直書き）= ERROR。
- *          中性のスクリム（rgba(0,0,0,α) / rgba(255,255,255,α) 等のオーバーレイ幕）は慣例的例外として許容。
+ *          黒/白だけの薄膜（rgba(0,0,0,α) 等）はこのゲートが拾わない。規範（§2）は覆い幕に
+ *          トークンを求めており、トークン化と同時にこの見逃しも閉じる（B-679）。
  *
  *   すべての検査は「標準 CSS プロパティ宣言」に対して行い、`--*` のカスタムプロパティ定義
  *   （＝トークン定義）は検査しない。理由: §10 はトークン経由での色指定を原則とし、パレット自体は
@@ -617,7 +618,7 @@ function analyzeCss(content: string, file: string): Violation[] {
       }
     }
 
-    // §10 色の直書き（トークン非経由）。中性スクリムは慣例的例外として許容。
+    // §2 色の直書き（トークン非経由）。黒/白だけの薄膜は現状このゲートが拾わない（B-679）。
     const rawNonNeutral = literals.filter((lit) => !isNeutralColor(lit));
     if (rawNonNeutral.length > 0) {
       push(
@@ -1003,7 +1004,7 @@ describe("§8 機械ゲートの検出力（合成入力）", () => {
     const vs = analyzeCss(`.x { color: #3366ff; }`, "synthetic.css");
     expect(vs.some((x) => x.code === "§10")).toBe(true);
   });
-  test("中性スクリム rgba(0,0,0,α) は許容（誤検知しない）", () => {
+  test("黒だけの薄膜 rgba(0,0,0,α) を現状は拾わない（B-679 で閉じる）", () => {
     const vs = analyzeCss(
       `.x { background: rgba(0, 0, 0, 0.4); }`,
       "synthetic.css",

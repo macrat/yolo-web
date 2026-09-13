@@ -30,7 +30,7 @@
 | B-676 | 値札の語彙を名乗るラベルが12pxで規範の下限を割っている | P3 | - | QuestionCard.feedbackTagが0.75rem(12px)。DESIGN §4の値札は13px、§3は「13〜14pxは補助情報に限る」で12pxはどちらにも無い。他に12px以下の文字が無いか実査してから直す。詳細cycle-312/index.md |
 | B-677 | irodori の共有画像が濃紺の地を直書きして店構えの外にある | P2 | - | share.ts が canvas に #1a1a2e(濃紺)#ffffff #aaaaaa を直書き(7箇所)。DESIGN §2の直書き3分類にも §4「看板は地が紙・任意色のベタを敷かない」にも掛からない。持ち帰られる現物なので実害。詳細cycle-312/index.md |
 | B-678 | 見出し・ナビ・ボタンの絵文字にゲートが無い | P3 | - | DESIGN §8 は機械で検査する側に置いたが design-gate.test.ts に実装が無い。どの要素の中にあるかは構造なので JSX の見出し/nav/button を辿れば機械で読める。詳細cycle-312/incident-8.md |
-| B-679 | 面を覆う幕がトークンを持たず直書きされている | P3 | - | Header.module.css:124 の rgba(0,0,0,0.4)。DESIGN §2 は覆い幕を設計の要素と定めトークンを持つことを求めるが、トークンが無い。globals.css に足して置き換える。詳細cycle-312/incident-8.md |
+| B-679 | 面を覆う幕がトークンを持たず直書きされている | P3 | - | Header.module.css:124 と GameDialog.module.css:17 の rgba(0,0,0,α)。DESIGN §2 は覆い幕にトークンを求める。globals.cssにトークンを足し2箇所を置換、gateの見逃しも閉じる。詳細cycle-312/incident-8.md |
 | B-606 | 全10 personality診断の結果先行の点検・再設計(Rule4) | P1 | - | **cycle-303でword-sense完了**。残9=music/yoji/animal/character-fortune/娯楽くじ群。タイブレーク中心は壊れた枠(cycle-294)・調律重み禁止・真の同点は同格開示。詳細cycle-303/ |
 | B-644 | 約2845ページが og:image 不在のまま summary_large_image を宣言し空の大カードになる | P3 | - | 既存欠陥(cycle-306で実ビルド発覚)。原因=global `summary_large_image`＋root OGPが子ルートに継承されない。是正は設計判断要・別サイクル。詳細cycle-306/review-log.md |
 | B-603 | character-personality 24タイプ一覧の処遇(T3・再判定) | P1 | - | **未決へ差し戻し**。cycle-298は測定面を誤り判定撤回(cycle-284の実測が正しかった)。主たる面で基準を立て直し再判定。詳細cycle-298/decision.md |
