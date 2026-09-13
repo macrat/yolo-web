@@ -8,7 +8,7 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-663 | 入力欄の14px固定でiOS Safariがフォーカス時に自動ズームする | P1 | - | 来訪者に影響する実在の欠陥。cycle-312で直したが取り消しで元に戻った。共有部品Input/Textarea/Selectが根。詳細cycle-312 |
+| B-663 | 入力欄の14px固定でiOS Safariがフォーカス時に自動ズームする | P2 | - | char-count・unit-converterで実測。共有部品Input/Textarea/Selectが根。着手はB-651(デザインシステム確定)の後。詳細cycle-312 |
 | B-653 | SC「生成AIパフォーマンスレポート」の撤退基準への含意調査 | P3 | - | SCの生成AIパフォーマンスレポートの仕様を一次資料で確認し、削除判断の数値基準(site-concept判断基準2)の計器として何が変わるか判定する。詳細cycle-311/index.md 計画にあたって参考にした情報 |
 | B-649 | 店語彙のaria-label(「品書き」等・SR可視)を§0.1レンズで平明化評価 | P3 | - | cycle-309でE3(店主/店の品書き)を是正。残=SR可視の「○○の品書き」ラベル複数面。§0.1(3)の「signifierの自明伝達を仮定しない」でSR明瞭さを評価。詳細cycle-309/decision.md 射程外節 |
 | B-650 | ルートOGP subtitle「実験的Webサイト」を§0.1(4)で来訪者価値評価 | P4 | - | cycle-309で気づき。「AIエージェントによる実験的Webサイト」は開示だが「実験」descriptor止まりで何が得られるか伝えない。売り込みでなく価値を伝える表現に改善するか評価。詳細cycle-309/decision.md |
