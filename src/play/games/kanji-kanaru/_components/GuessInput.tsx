@@ -86,7 +86,7 @@ export default function GuessInput({
           disabled={disabled}
           placeholder={
             submitting
-              ? "\u9001\u4FE1\u4E2D\u2026\u2026"
+              ? "\u9001\u4FE1\u4E2D..."
               : "\u6F22\u5B57\u3092\u5165\u529B"
           }
           aria-label={"\u6F22\u5B57\u3092\u5165\u529B"}
@@ -100,7 +100,7 @@ export default function GuessInput({
           disabled={disabled}
           type="button"
         >
-          {submitting ? "\u9001\u4FE1\u4E2D\u2026\u2026" : "\u9001\u4FE1"}
+          {submitting ? "\u9001\u4FE1\u4E2D..." : "\u9001\u4FE1"}
         </button>
       </div>
       <div className={styles.errorMessage} role="alert" aria-live="polite">

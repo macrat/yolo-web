@@ -63,7 +63,7 @@ export default function ResultModal({
       open={open}
       onClose={onClose}
       titleId="yoji-kimeru-result-title"
-      title={isWon ? "正解！" : "残念……"}
+      title={isWon ? "正解!" : "残念..."}
       returnFocusRef={returnFocusRef}
       footer={
         <button
@@ -85,7 +85,7 @@ export default function ResultModal({
       </div>
       <div className={styles.resultSummary}>
         {isWon
-          ? `${guesses.length}/6 で正解しました！`
+          ? `${guesses.length}/6 で正解しました!`
           : "6回以内に正解できませんでした"}
       </div>
       <GameShareButtons

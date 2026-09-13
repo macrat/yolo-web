@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * LineBreakRemoverTile — 改行削除ツールの単一出どころタイル
+ * LineBreakRemoverTile — 改行削除ツールの単一正典タイル
  *
  * cycle-228 T-4 で LineBreakRemoverPage.tsx を Panel ルートのタイルへ作り直したもの。
  *
@@ -214,7 +214,7 @@ export default function LineBreakRemoverTile({
             id={inputId}
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="改行を削除するテキストを入力……"
+            placeholder="改行を削除するテキストを入力..."
             rows={8}
             spellCheck={false}
             aria-label="入力テキスト"

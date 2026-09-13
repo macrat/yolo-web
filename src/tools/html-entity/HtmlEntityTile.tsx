@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * HtmlEntityTile — HTML エンティティ変換の単一出どころタイル
+ * HtmlEntityTile — HTML エンティティ変換の単一正典タイル
  *
  * cycle-227 T-1 で HtmlEntityPage.tsx を Panel ルートのタイルへ作り直したもの。
  *
@@ -171,8 +171,8 @@ export default function HtmlEntityTile({
           onChange={handleInputChange}
           placeholder={
             mode === "encode"
-              ? "エンコードするテキストを入力"
-              : "デコードするHTMLエンティティを入力"
+              ? "エンコードするテキストを入力..."
+              : "デコードするHTMLエンティティを入力..."
           }
           rows={6}
           spellCheck={false}

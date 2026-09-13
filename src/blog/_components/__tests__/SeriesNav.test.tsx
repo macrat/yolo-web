@@ -70,7 +70,7 @@ describe("SeriesNav", () => {
     expect(screen.getAllByText("Third Post").length).toBeGreaterThanOrEqual(1);
   });
 
-  test("highlights the current post with aria-current and '（この記事）' badge", () => {
+  test("highlights the current post with aria-current and '(この記事)' badge", () => {
     render(
       <SeriesNav
         seriesId="ai-agent-ops"
@@ -80,7 +80,7 @@ describe("SeriesNav", () => {
     );
     const currentEl = screen.getByText("Second Post");
     expect(currentEl.closest("[aria-current='page']")).toBeInTheDocument();
-    expect(screen.getByText("（この記事）")).toBeInTheDocument();
+    expect(screen.getByText("(この記事)")).toBeInTheDocument();
   });
 
   test("current post is not a link", () => {

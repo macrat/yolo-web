@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * CsvConverterTile — CSV/TSV/JSON/Markdown表の相互変換ツールの単一出どころタイル
+ * CsvConverterTile — CSV/TSV/JSON/Markdown表の相互変換ツールの単一正典タイル
  *
  * cycle-228 T-16: CsvConverterPage.tsx をタイル化したもの。
  *
@@ -212,7 +212,7 @@ export default function CsvConverterTile({
             variant="mono"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="変換するデータを入力……"
+            placeholder="変換するデータを入力..."
             spellCheck={false}
             rows={12}
           />

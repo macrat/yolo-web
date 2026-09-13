@@ -1,12 +1,12 @@
 /*
- * CronParserTile のスタイル（cycle-228 T-28 単一出どころタイル化）
+ * CronParserTile のスタイル（cycle-228 T-28 単一正典タイル化）
  * フェーズR: 店構え（紙・墨・朱）トークンへ移行。
  *
  * CronParserPage.module.css から移植。Panel がルートのため
  * .container は不要（Panel.module.css に委譲）。
  *
  * DESIGN.md 準拠:
- * - §10: フォーカス: outline: 2px solid var(--accent); outline-offset: 2px;
+ * - §2: フォーカス: outline: 2px solid var(--accent); outline-offset: 2px;
  * - §4: 影は使わない・角丸は 0（--radius）基調、入力欄のみ --radius-sm (2px)
  * - 区画の罫は --rule、フォーム要素の輪郭は --rule-strong、沈む面は --paper-2
  * - font-weight: 700 使用禁止（600 まで）

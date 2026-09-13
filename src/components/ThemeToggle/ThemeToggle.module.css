@@ -9,7 +9,7 @@
  * - box-shadow は使わない（§4）。輪郭はトラック/サムそれぞれの --rule 罫で示す。
  * - 現在状態（選択側）は「サムの位置」を主たる手掛かりとし、アイコン色の濃淡
  *   （--ink=選択中 / --ink-2=非選択）を副次的な手掛かりとして添える（色のみに頼らない）。
- * - フォーカスは outline: 2px solid var(--accent); outline-offset: 2px（DESIGN.md §10）。
+ * - フォーカスは outline: 2px solid var(--accent); outline-offset: 2px（DESIGN.md §2/§10）。
  */
 
 .toggle {

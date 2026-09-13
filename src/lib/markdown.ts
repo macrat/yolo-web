@@ -5,7 +5,7 @@
  * build-time rendering.
  */
 
-import { Marked, Renderer, type MarkedExtension, type Tokens } from "marked";
+import { Marked, type MarkedExtension, type Tokens } from "marked";
 // GFM Alert構文（> [!NOTE]等）をadmonitionのHTMLに変換するため追加
 import markedAlert from "marked-alert";
 // XSS防止のためmarked出力をホワイトリスト方式でサニタイズ
@@ -24,9 +24,6 @@ import { highlight } from "@/lib/highlight";
  * 先読みしてハイライト結果を WeakMap に保存しておき、同期 renderer はそこから
  * 取り出すだけにする。marked 単体は同期 renderer しかサポートしないため。
  */
-/** marked 既定の表レンダラ。器で包む前の table HTML を得るために保持する。 */
-const defaultTableRenderer = Renderer.prototype.table;
-
 const highlightedCodeCache = new WeakMap<Tokens.Code, string>();
 
 const codeExtension: MarkedExtension = {
@@ -38,22 +35,6 @@ const codeExtension: MarkedExtension = {
     highlightedCodeCache.set(code, await highlight(code.text, code.lang));
   },
   renderer: {
-    /**
-     * 表を、横スクロールできる器で包む。
-     *
-     * 読む幅に収まらない表は、はみ出した列が画面端で切れて到達できなくなる
-     * （body が overflow-x: clip のため）。table 自体を display:block にすると
-     * 表の意味構造が支援技術から失われるので、外側を器にする。
-     *
-     * `tabindex`/`role` はここでは付けない。実際にはみ出すかは画面幅で決まり、
-     * ビルド時には分からない。全部に付ければ、スクロールできない器にも
-     * 「横にスクロールできます」と言い、キーボードの停留点だけが増える。
-     * 付与は `TableScrollEnhancer` が実測してから行う。
-     */
-    table(token: Tokens.Table) {
-      const inner = defaultTableRenderer.call(this, token);
-      return `<div class="tableScroll">\n${inner}</div>\n`;
-    },
     code(token: Tokens.Code) {
       if (token.lang === "mermaid") {
         const escaped = token.text

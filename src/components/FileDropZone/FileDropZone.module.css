@@ -23,7 +23,7 @@
   border-color: var(--accent);
 }
 
-/* フォーカス時: DESIGN.md §10 に従い outline を使う */
+/* フォーカス時: DESIGN.md §2 に従い outline を使う */
 .dropZone:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;

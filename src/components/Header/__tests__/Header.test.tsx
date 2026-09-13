@@ -137,7 +137,7 @@ describe("Header", () => {
       expect(nav).toBeInTheDocument();
 
       // 4 項目すべてが含まれている
-      const navItems = ["ツール", "遊び", "ブログ", "このサイトについて"];
+      const navItems = ["ツール", "遊び", "ブログ", "サイト紹介"];
       for (const label of navItems) {
         // nav 内のリンクを確認
         const links = nav.querySelectorAll("a");

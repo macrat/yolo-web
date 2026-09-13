@@ -6,9 +6,6 @@
  */
 .tsutsumi {
   position: relative;
-  /* 識別マークの大きさ。.seal の上限と .head が空ける余白の両方がこれを参照するので、
-   * 片方だけ変えて重なりが生まれることがない（DESIGN §4「他の要素に重ねない」）。 */
-  --seal-size: 30px;
   /* 器＝カードの地は紙のまま（§4/§7）。和色は下の .figure の中だけ。 */
   background: var(--paper);
   /* 罫で明確に包む（構造の主役は罫）。角丸 0 基調。 */
@@ -33,10 +30,6 @@
   /* 店号帯を一本罫で下から仕切る（のれんの流儀・器は罫で組む）。 */
   padding-bottom: var(--space-8);
   border-bottom: 1px solid var(--rule);
-  /* 識別マークの居場所を空けておく（DESIGN §4「他の要素に重ねない」）。これが無いと、
-   * 品名が長いときや画面が狭いときに品名が印の下へ潜り込む。位置を個別に調整して
-   * 逃げると、別の文字数・別の幅で再発する。 */
-  padding-inline-end: calc(var(--seal-size) + var(--space-8));
 }
 
 .shop {
@@ -53,21 +46,16 @@
 }
 
 /*
- * 印: 成果物に一つだけ・右上に据える。§4「大きさは面の幅の 1/5 以下・縦横比 1:1」。
+ * 印: 成果物に一つだけ・右上に捺す。§4「大きさは包み幅の 1/5 以下」。
  * In へは size="100%" を渡し、この枠の幅（18% < 1/5）で実サイズを決める。
- * aspect-ratio が要る——In の block-size は 100% なので、この枠に高さが無いと
- * 高さが中身なりに潰れ、円環が扁平になって字が読めなくなる。
  */
 .seal {
   position: absolute;
   top: var(--space-24);
   right: var(--space-24);
   inline-size: 18%;
-  /* のれん帯の中に収まる大きさに抑える。大きくすると帯を突き抜けて罫を横断し、
-   * 罫が印の内側で途切れて描画の壊れに見える。「捺した」感のための重なりは、
-   * その下にある字と罫を読みにくくすることと引き換えになる。 */
-  max-inline-size: var(--seal-size);
-  aspect-ratio: 1;
+  max-inline-size: 64px;
+  /* 記号面に一部重なって「捺した」感を出す。z 順で最前に。 */
   z-index: 1;
 }
 
@@ -118,6 +106,7 @@
   font-size: 4rem;
   line-height: 1;
   color: var(--on);
+  font-feature-settings: "palt";
 }
 
 /* 品名・結果の言葉（紙の上・墨）。器は静か。 */
@@ -136,6 +125,7 @@
   font-weight: normal;
   line-height: 1.4;
   color: var(--ink);
+  font-feature-settings: "palt";
 }
 
 .word {

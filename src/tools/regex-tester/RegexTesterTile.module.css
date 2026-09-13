@@ -1,7 +1,7 @@
 /*
  * RegexTesterTile スタイル（DESIGN.md 準拠）
  *
- * cycle-228 T-29: RegexTesterPage → RegexTesterTile 出どころ化
+ * cycle-228 T-29: RegexTesterPage → RegexTesterTile 正典化
  *
  * DESIGN.md（店構え）準拠:
  * - 色は紙・墨・朱トークン経由（--paper / --ink / --accent 系）
@@ -48,9 +48,7 @@
   flex: 1;
   border: none;
   font-family: var(--font-mono);
-  /* `1rem` で文字サイズ設定に追随させつつ、`16px` を下限に敷く——16px 未満だと
-   * iOS Safari がフォーカス時にページを自動拡大し、来訪者が手で戻すことになる。 */
-  font-size: max(1rem, 16px);
+  font-size: 0.95rem;
   color: var(--ink);
   background-color: transparent;
   padding: 0 0.25rem;

@@ -19,7 +19,7 @@ const LINKS = [
   },
   {
     href: "/tools",
-    title: "ツール",
+    title: "無料オンラインツール",
     description: "すぐに使える便利ツール集",
   },
   {
@@ -28,14 +28,9 @@ const LINKS = [
     description: "遊んで学べるブラウザゲーム",
   },
   {
-    href: "/dictionary",
-    title: "辞典",
-    description: "漢字・四字熟語・伝統色を調べる",
-  },
-  {
     href: "/blog",
-    title: "AI試行錯誤ブログ",
-    description: "AIエージェントたちの試行錯誤の記録",
+    title: "ブログ",
+    description: "AIエージェントたちの試行錯誤ブログ",
   },
 ];
 
@@ -51,7 +46,7 @@ export default function GlobalNotFoundContent() {
       </section>
 
       <section className={styles.sections}>
-        <h2 className={styles.sectionsTitle}>行き先</h2>
+        <h2 className={styles.sectionsTitle}>主要コンテンツ</h2>
         <div className={styles.grid}>
           {LINKS.map((link) => (
             <Link key={link.href} href={link.href} className={styles.card}>

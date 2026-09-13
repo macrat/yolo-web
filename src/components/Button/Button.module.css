@@ -12,7 +12,7 @@
   justify-content: center;
   min-height: 44px; /* WCAG 2.5.5 AAA タップターゲット推奨値 */
   padding: 9px 18px;
-  font-size: 0.875rem;
+  font-size: 14px;
   font-family: inherit; /* body から日本語ゴシックスタックを継承 */
   border: 1px solid var(--rule);
   border-radius: var(--radius);
@@ -73,7 +73,7 @@
 .sizeSmall {
   min-height: unset; /* .button からの 44px 継承を切って密集レイアウト用の縮小高さを維持 */
   padding: 5px 11px;
-  font-size: 0.75rem;
+  font-size: 12px;
 }
 
 /* ================================================================

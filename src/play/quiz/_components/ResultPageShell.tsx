@@ -47,8 +47,8 @@ export default function ResultPageShell({
 
   // MUST-2（§7 トーン統一）: 単独結果ページのヘッダを、インライン ResultCard の
   // 勲章と同じ視覚（象徴タイル＋固有名）に揃える。シェア/検索で着地した第三者にも
-  // 「結果＝勲章」の印象を割らずに届ける（DESIGN.md §4「包み」——画面で見た結果と
-  //  持ち帰られた像とで手がかりが入れ替わらないようにする）。
+  // 「結果＝勲章」の印象を割らずに届ける（DESIGN.md §7「インライン結果と単独結果
+  //  ページの視覚トーンを統一」）。
   // 適用条件はインラインと同じ「personality 型 かつ result.icon・result.color が両方存在」。
   // それ以外（knowledge 型・欠落）は現行の素の icon+title にフォールバックする。
   // 重要: 単独ページには「診断完了」バッジを付けない。第三者は診断を完走していないため、
@@ -75,23 +75,17 @@ export default function ResultPageShell({
 
         {showMedal ? (
           // 結果を包み（Tsutsumi）で見せる（DESIGN.md §4「包み」/§7「見せたくなる結果」）。
-          // 包みのタイプ名がそのまま h1 である——同じ言葉を小さな見出しと大きな包みで
-          // 二度出すと、来訪者には重複に見え、見出しの階層も見た目上は逆転する。結果そのものは
+          // h1 は SEO/見出し構造のため維持するが控えめに（器は静か）。結果そのものは
           // Tsutsumi が主役——第三者向けページでもインライン結果と同じ視覚トーンで届ける
-          // （§7 トーン統一）。地の色は id から和色8色へ決定的に写像する。ただし主題が
-          // 色そのものである診断だけは、その結果の固有色を地に使う（§2）——8色へ丸めると
-          // 「藍色です」と言いながら紅の面を見せることになる。symbol は絵文字ではなく
-          // タイプ名の先頭1字（§8-6）。
+          // （§7 トーン統一）。固有色は quiz データの任意 hex を捨て、id から和色8色へ
+          // 決定的に写像する（§2）。symbol は絵文字ではなくタイプ名の先頭1字（§8-6）。
           // 重要: 単独ページには「診断完了」の完了主張は付けない（第三者は完走していない）。
           <div className={styles.medalWrap}>
+            <h1 className={styles.medalHeading}>{result.title}</h1>
             <Tsutsumi
               typeName={result.title}
-              typeNameAs="h1"
               symbol={pickResultSymbol(result.title)}
               color={pickResultWairoColor(result.id)}
-              colorOverride={
-                quiz.meta.colorIsSubject ? result.color : undefined
-              }
               productName={quiz.meta.title}
               seal="診"
             />

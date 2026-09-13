@@ -164,7 +164,7 @@ describe("CharacterPersonalityResultPage CTA1", () => {
     render(page);
 
     const ctaButtons =
-      screen.getAllByText("あなたはどのタイプ？ 診断してみよう");
+      screen.getAllByText("あなたはどのタイプ? 診断してみよう");
     expect(ctaButtons.length).toBeGreaterThanOrEqual(1);
   });
 });
@@ -197,7 +197,7 @@ describe("CharacterPersonalityResultPage CTA2", () => {
     render(page);
 
     // CTA2はテキストリンク形式
-    const links = screen.getAllByText("あなたはどのタイプ？ 診断してみよう");
+    const links = screen.getAllByText("あなたはどのタイプ? 診断してみよう");
     expect(links.length).toBeGreaterThanOrEqual(1);
   });
 });

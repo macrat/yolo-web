@@ -52,7 +52,7 @@ export default function DailyFortuneCard() {
   if (!state) {
     return (
       <div className={styles.card}>
-        <p className={styles.loading}>運勢を占っています……</p>
+        <p className={styles.loading}>運勢を占っています...</p>
       </div>
     );
   }
@@ -63,7 +63,7 @@ export default function DailyFortuneCard() {
     typeof window !== "undefined"
       ? `${window.location.origin}/play/daily`
       : "/play/daily";
-  const shareText = `今日のユーモア運勢は「${fortune.title}」(${fortune.rating}/5) でした！ #ユーモア運勢 #yolosnet`;
+  const shareText = `今日のユーモア運勢は「${fortune.title}」(${fortune.rating}/5) でした! #ユーモア運勢 #yolosnet`;
 
   return (
     <div className={styles.card}>
@@ -108,7 +108,7 @@ export default function DailyFortuneCard() {
         contentId="fortune-daily"
       />
 
-      <p className={styles.comeback}>明日も来てね！ 毎日運勢が変わります</p>
+      <p className={styles.comeback}>明日も来てね! 毎日運勢が変わります</p>
     </div>
   );
 }

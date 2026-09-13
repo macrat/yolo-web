@@ -526,7 +526,7 @@ describe("CharacterPersonalityContent - 相性機能（ローディング中）"
       />,
     );
 
-    expect(screen.getByText("相性データを読み込み中……")).toBeInTheDocument();
+    expect(screen.getByText("相性データを読み込み中...")).toBeInTheDocument();
     expect(
       screen.queryByTestId("compatibility-section"),
     ).not.toBeInTheDocument();

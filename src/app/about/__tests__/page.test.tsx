@@ -29,7 +29,7 @@ test("About page explains the name origin (YOLO x よろず)", () => {
 
 test("About page does not define the site as diagnosis-centered (superseded concept)", () => {
   const { container } = render(<AboutPage />);
-  // 旧コンセプトの出どころフレーズが残っていないこと
+  // 旧コンセプトの正典フレーズが残っていないこと
   expect(container.textContent).not.toMatch(/「自分を知り、楽しむ」ための場所/);
   expect(
     screen.queryByRole("heading", { name: "診断とゲームを楽しむ" }),

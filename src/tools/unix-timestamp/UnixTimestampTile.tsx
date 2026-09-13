@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * UnixTimestampTile — UNIXタイムスタンプと日時の相互変換の単一出どころタイル
+ * UnixTimestampTile — UNIXタイムスタンプと日時の相互変換の単一正典タイル
  *
  * cycle-228 T-22: UnixTimestampPage.tsx を Panel ルートのタイルへ作り直したもの。
  *
@@ -247,7 +247,7 @@ export default function UnixTimestampTile({
             className={styles.tsInput}
             value={tsInput}
             onChange={(e) => setTsInput(e.target.value)}
-            placeholder="UNIXタイムスタンプを入力……"
+            placeholder="UNIXタイムスタンプを入力..."
             aria-label="UNIXタイムスタンプ"
             inputMode="numeric"
           />

@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * FullwidthConverterTile — 全角半角変換の単一出どころタイル
+ * FullwidthConverterTile — 全角半角変換の単一正典タイル
  *
  * cycle-227 T-3 で FullwidthConverterPage.tsx を Panel ルートのタイルへ作り直したもの。
  *
@@ -198,7 +198,7 @@ export default function FullwidthConverterTile({
           id={inputId}
           value={input}
           onChange={handleInputChange}
-          placeholder="変換するテキストを入力……"
+          placeholder="変換するテキストを入力..."
           rows={6}
           spellCheck={false}
         />

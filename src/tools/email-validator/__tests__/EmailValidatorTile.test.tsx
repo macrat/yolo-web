@@ -1,5 +1,5 @@
 /**
- * EmailValidatorTile の回帰テスト（単一出どころタイル / cycle-228 T-10）
+ * EmailValidatorTile の回帰テスト（単一正典タイル / cycle-228 T-10）
  *
  * 旧 EmailValidatorPage.test.tsx の全振る舞いを移植・拡張。
  *

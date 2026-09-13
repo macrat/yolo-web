@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * CharCountTile — 文字数カウントの単一出どころタイル
+ * CharCountTile — 文字数カウントの単一正典タイル
  *
  * cycle-228 T-1: CharCountPage.tsx を Panel ルートのタイルへ作り直したもの。
  *
@@ -93,7 +93,7 @@ export default function CharCountTile({
         id={inputId}
         value={text}
         onChange={(e) => setText(e.target.value)}
-        placeholder="ここにテキストを入力してください……"
+        placeholder="ここにテキストを入力してください..."
         rows={variant === "compact" ? 5 : 10}
         aria-describedby={summaryId}
       />

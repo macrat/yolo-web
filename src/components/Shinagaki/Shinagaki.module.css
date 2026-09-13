@@ -8,13 +8,14 @@
   width: 100%;
 }
 
-/* 棚（区画）の見出し: 明朝・墨。§3 見出しの流儀。 */
+/* 棚（区画）の見出し: 明朝・墨・詰め（palt）。§3 見出しの流儀。 */
 .heading {
   margin: 0 0 var(--space-16);
   color: var(--ink);
   font-family: var(--font-mincho);
   font-size: 1.375rem; /* 22px 目安（1.25 倍スケール帯） */
   line-height: 1.4;
+  font-feature-settings: "palt";
 }
 
 /*

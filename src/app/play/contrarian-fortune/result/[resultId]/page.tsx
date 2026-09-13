@@ -22,6 +22,7 @@
  *
  * 新デザイン体系（DESIGN.md）でインライン結果（ResultCard）とトーン統一:
  * - catchphrase: 共通アクセントの淡い面に置く（旧タイプカラー薄背景ヒーローは撤去）
+ * - DescriptionExpander: 長いdescriptionは折りたたみ
  * - CTA1: 共通 primary ボタン（--accent 地・--paper 文字）ベースの主要ボタン（タイプカラー注入は撤去）
  * - ContrarianFortuneContent: 共通コンポーネントでコアコンテンツを一括レンダリング
  */
@@ -30,7 +31,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import ResultPageShell from "@/play/quiz/_components/ResultPageShell";
-import ResultDescription from "@/app/play/[slug]/result/[resultId]/ResultDescription";
+import DescriptionExpander from "@/app/play/[slug]/result/[resultId]/DescriptionExpander";
 import ContrarianFortuneContent from "@/play/quiz/_components/ContrarianFortuneContent";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { countCharWidth } from "@/lib/countCharWidth";
@@ -105,11 +106,14 @@ export default async function ContrarianFortuneResultPage({ params }: Props) {
   // フォールバックは quiz.meta.accentColor を使用する。
   const resultColor = result.color ?? quiz.meta.accentColor;
 
-  const shareText = `${quiz.meta.title}の結果は「${result.title}」でした！あなたは？ #逆張り運勢診断 #yolosnet`;
+  const shareText = `${quiz.meta.title}の結果は「${result.title}」でした！あなたは? #逆張り運勢診断 #yolosnet`;
   const shareUrl = `${BASE_URL}/play/${SLUG}/result/${resultId}`;
   const ctaText = CTA_TEXT;
 
   // descriptionが4行を超えるかどうかの判定
+  const DESCRIPTION_LONG_THRESHOLD = 128;
+  const isDescriptionLong =
+    countCharWidth(result.description) > DESCRIPTION_LONG_THRESHOLD;
 
   return (
     <ResultPageShell
@@ -130,7 +134,11 @@ export default async function ContrarianFortuneResultPage({ params }: Props) {
           <p className={styles.catchphrase}>{cfDc.catchphrase}</p>
         </div>
 
-        <ResultDescription description={result.description} />
+        {/* DescriptionExpander: 長いdescriptionは折りたたみ */}
+        <DescriptionExpander
+          description={result.description}
+          isLong={isDescriptionLong}
+        />
 
         {/* CTA1: 共通 primary ボタン（--accent 地・--paper 文字）ベースの主要 CTA（インライン結果とトーン統一） */}
         <div className={styles.trySection}>

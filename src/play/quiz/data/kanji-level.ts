@@ -5,7 +5,7 @@ const kanjiLevelQuiz: QuizDefinition = {
     slug: "kanji-level",
     title: "漢字力診断",
     description:
-      "難読漢字の読みを当てるクイズです。全10問であなたの漢字力を診断します。日常では見かけにくい漢字から、知っていると自慢できる漢字まで幅広く出題！",
+      "難読漢字の読みを当てるクイズです。全10問であなたの漢字力を診断します。日常では見かけにくい漢字から、知っていると自慢できる漢字まで幅広く出題!",
     shortDescription: "難読漢字10問であなたの漢字力を測定",
     type: "knowledge",
     category: "knowledge",
@@ -28,27 +28,27 @@ const kanjiLevelQuiz: QuizDefinition = {
     ],
     faq: [
       {
-        question: "何問出題されますか？",
+        question: "何問出題されますか?",
         answer:
           "全10問出題されます。すべて4択形式で、難読漢字の読み方を選ぶ問題です。",
       },
       {
-        question: "どのくらいの難しさの漢字が出ますか？",
+        question: "どのくらいの難しさの漢字が出ますか?",
         answer:
           "日常では見かけにくい難読漢字から、知っていると自慢できる漢字まで幅広く出題しています。「挨拶」「薔薇」のような比較的知られた漢字から「齧歯類」「鸚鵡」のような難しい漢字まで含まれます。",
       },
       {
-        question: "スコアや結果はどのように決まりますか？",
+        question: "スコアや結果はどのように決まりますか?",
         answer:
           "10問中の正解数でスコアが決まります。スコアに応じて「漢字ビギナー」から「漢字マスター」まで5段階で結果が表示されます。",
       },
       {
-        question: "何度でも挑戦できますか？",
+        question: "何度でも挑戦できますか?",
         answer:
           "はい、何度でも挑戦できます。同じ問題が出題されるため、繰り返すことで漢字力を鍛えられます。",
       },
       {
-        question: "問題と正解の信頼性はどの程度ですか？",
+        question: "問題と正解の信頼性はどの程度ですか?",
         answer:
           "問題と正解はAIが辞書を参照して作成しています。スコア計算は正確ですが、解説文はAIの見解であり誤りを含む可能性があります。",
       },
@@ -57,7 +57,7 @@ const kanjiLevelQuiz: QuizDefinition = {
   questions: [
     {
       id: "q1",
-      text: "「挨拶」の読みは？",
+      text: "「挨拶」の読みは?",
       choices: [
         { id: "q1-a", text: "あいさつ", isCorrect: true },
         { id: "q1-b", text: "あいじょう" },
@@ -69,7 +69,7 @@ const kanjiLevelQuiz: QuizDefinition = {
     },
     {
       id: "q2",
-      text: "「薔薇」の読みは？",
+      text: "「薔薇」の読みは?",
       choices: [
         { id: "q2-a", text: "しょうび" },
         { id: "q2-b", text: "ばら", isCorrect: true },
@@ -81,7 +81,7 @@ const kanjiLevelQuiz: QuizDefinition = {
     },
     {
       id: "q3",
-      text: "「所謂」の読みは？",
+      text: "「所謂」の読みは?",
       choices: [
         { id: "q3-a", text: "しょい" },
         { id: "q3-b", text: "ところが" },
@@ -93,7 +93,7 @@ const kanjiLevelQuiz: QuizDefinition = {
     },
     {
       id: "q4",
-      text: "「流石」の読みは？",
+      text: "「流石」の読みは?",
       choices: [
         { id: "q4-a", text: "さすが", isCorrect: true },
         { id: "q4-b", text: "ながれいし" },
@@ -105,7 +105,7 @@ const kanjiLevelQuiz: QuizDefinition = {
     },
     {
       id: "q5",
-      text: "「海月」の読みは？",
+      text: "「海月」の読みは?",
       choices: [
         { id: "q5-a", text: "うみつき" },
         { id: "q5-b", text: "くらげ", isCorrect: true },
@@ -117,7 +117,7 @@ const kanjiLevelQuiz: QuizDefinition = {
     },
     {
       id: "q6",
-      text: "「土竜」の読みは？",
+      text: "「土竜」の読みは?",
       choices: [
         { id: "q6-a", text: "どりゅう" },
         { id: "q6-b", text: "つちへび" },
@@ -129,7 +129,7 @@ const kanjiLevelQuiz: QuizDefinition = {
     },
     {
       id: "q7",
-      text: "「案山子」の読みは？",
+      text: "「案山子」の読みは?",
       choices: [
         { id: "q7-a", text: "あんざんし" },
         { id: "q7-b", text: "かかし", isCorrect: true },
@@ -141,7 +141,7 @@ const kanjiLevelQuiz: QuizDefinition = {
     },
     {
       id: "q8",
-      text: "「齧歯類」の読みは？",
+      text: "「齧歯類」の読みは?",
       choices: [
         { id: "q8-a", text: "げっしるい", isCorrect: true },
         { id: "q8-b", text: "かじはるい" },
@@ -153,7 +153,7 @@ const kanjiLevelQuiz: QuizDefinition = {
     },
     {
       id: "q9",
-      text: "「鸚鵡」の読みは？",
+      text: "「鸚鵡」の読みは?",
       choices: [
         { id: "q9-a", text: "にわとり" },
         { id: "q9-b", text: "おうむ", isCorrect: true },
@@ -165,7 +165,7 @@ const kanjiLevelQuiz: QuizDefinition = {
     },
     {
       id: "q10",
-      text: "「蒟蒻」の読みは？",
+      text: "「蒟蒻」の読みは?",
       choices: [
         { id: "q10-a", text: "こんにゃく", isCorrect: true },
         { id: "q10-b", text: "くずきり" },
@@ -181,7 +181,7 @@ const kanjiLevelQuiz: QuizDefinition = {
       id: "beginner",
       title: "漢字ビギナー",
       description:
-        "まだまだ伸びしろたっぷり！ 日常の中で漢字に触れる機会を増やしてみましょう。読書や漢字ドリルがおすすめです。",
+        "まだまだ伸びしろたっぷり! 日常の中で漢字に触れる機会を増やしてみましょう。読書や漢字ドリルがおすすめです。",
       icon: "🌱",
       minScore: 0,
       recommendation: "漢字辞典で漢字の世界を探検しよう",
@@ -191,7 +191,7 @@ const kanjiLevelQuiz: QuizDefinition = {
       id: "egg",
       title: "漢字の卵",
       description:
-        "基本的な難読漢字はバッチリ！ もう少し難しい漢字にも挑戦してみましょう。四字熟語の学習もおすすめです。",
+        "基本的な難読漢字はバッチリ! もう少し難しい漢字にも挑戦してみましょう。四字熟語の学習もおすすめです。",
       icon: "🥚",
       minScore: 3,
       recommendation: "四字熟語辞典でさらにレベルアップ",
@@ -201,7 +201,7 @@ const kanjiLevelQuiz: QuizDefinition = {
       id: "intermediate",
       title: "漢字中級者",
       description:
-        "なかなかの漢字力です！ 日常的に漢字に親しんでいることがうかがえます。さらに上を目指して学習を続けましょう。",
+        "なかなかの漢字力です! 日常的に漢字に親しんでいることがうかがえます。さらに上を目指して学習を続けましょう。",
       icon: "📖",
       minScore: 5,
       recommendation: "漢字カナールで毎日の漢字トレーニング",
@@ -211,7 +211,7 @@ const kanjiLevelQuiz: QuizDefinition = {
       id: "advanced",
       title: "漢字上級者",
       description:
-        "かなりの漢字通！ 難読漢字もスラスラ読める実力の持ち主です。漢字検定にも挑戦できるレベルでしょう。",
+        "かなりの漢字通! 難読漢字もスラスラ読める実力の持ち主です。漢字検定にも挑戦できるレベルでしょう。",
       icon: "🎓",
       minScore: 7,
       recommendation: "漢字カナールであなたの実力を試そう",
@@ -221,7 +221,7 @@ const kanjiLevelQuiz: QuizDefinition = {
       id: "master",
       title: "漢字マスター",
       description:
-        "素晴らしい漢字力！ 難読漢字をほぼ完璧に読みこなすあなたは、まさに漢字マスターです。周りの人にも自慢できますね！",
+        "素晴らしい漢字力! 難読漢字をほぼ完璧に読みこなすあなたは、まさに漢字マスターです。周りの人にも自慢できますね!",
       icon: "👑",
       minScore: 9,
       recommendation: "漢字辞典であなたの知識をさらに深めよう",

@@ -250,7 +250,8 @@ const scienceThinkingQuiz: QuizDefinition = {
         href: "/play/music-personality",
       },
       {
-        label: "\u52D5\u7269\u6027\u683C\u8A3A\u65AD\u3092\u53D7\u3051\u308B",
+        label:
+          "\u65E5\u672C\u306B\u3057\u304B\u3044\u306A\u3044\u52D5\u7269\u3067\u6027\u683C\u8A3A\u65AD",
         href: "/play/animal-personality",
       },
       {

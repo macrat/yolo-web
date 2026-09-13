@@ -21,7 +21,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import ResultPageShell from "@/play/quiz/_components/ResultPageShell";
-import ResultDescription from "@/app/play/[slug]/result/[resultId]/ResultDescription";
+import DescriptionExpander from "@/app/play/[slug]/result/[resultId]/DescriptionExpander";
 import YojiPersonalityContent from "@/play/quiz/_components/YojiPersonalityContent";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { countCharWidth } from "@/lib/countCharWidth";
@@ -90,11 +90,14 @@ export default async function YojiPersonalityResultPage({ params }: Props) {
   // フォールバックは quiz.meta.accentColor（深紅色）を使用する。
   const resultColor = result.color ?? quiz.meta.accentColor;
 
-  const shareText = `${quiz.meta.title}の結果は「${result.title}」でした！あなたは？ #四字熟語診断 #yolosnet`;
+  const shareText = `${quiz.meta.title}の結果は「${result.title}」でした！あなたは? #四字熟語診断 #yolosnet`;
   const shareUrl = `${BASE_URL}/play/${SLUG}/result/${resultId}`;
-  const ctaText = "あなたはどの四字熟語？ 診断してみよう";
+  const ctaText = "あなたはどの四字熟語? 診断してみよう";
 
   // descriptionが4行を超えるかどうかの判定
+  const DESCRIPTION_LONG_THRESHOLD = 128;
+  const isDescriptionLong =
+    countCharWidth(result.description) > DESCRIPTION_LONG_THRESHOLD;
 
   return (
     <ResultPageShell
@@ -109,7 +112,11 @@ export default async function YojiPersonalityResultPage({ params }: Props) {
             トーン統一。旧デザインの colorHero＝タイプ色を敷いたヒーローは撤去した）。 */}
         <p className={styles.catchphrase}>{yojiDc.catchphrase}</p>
 
-        <ResultDescription description={result.description} />
+        {/* DescriptionExpander: 長いdescriptionは折りたたみ */}
+        <DescriptionExpander
+          description={result.description}
+          isLong={isDescriptionLong}
+        />
 
         {/* CTA1 */}
         <div className={styles.trySection}>

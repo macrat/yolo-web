@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * BusinessEmailTile — ビジネスメール作成の単一出どころタイル
+ * BusinessEmailTile — ビジネスメール作成の単一正典タイル
  *
  * cycle-228 T-30: BusinessEmailPage.tsx を Panel ルートのタイルへ作り直したもの。
  *

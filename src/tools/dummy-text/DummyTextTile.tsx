@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * DummyTextTile — ダミーテキスト生成の単一出どころタイル
+ * DummyTextTile — ダミーテキスト生成の単一正典タイル
  *
  * cycle-228 T-8 で DummyTextPage.tsx を Panel ルートのタイルへ作り直したもの。
  *
@@ -149,7 +149,7 @@ export default function DummyTextTile({
   return (
     <Panel as={as} className={className}>
       {/* 言語切り替え: variant=full のみ SegmentedControl を表示。固定 variant は非表示。
-          C-2: aria-label="テキスト言語" でアクセシブル名を付与（html-entity 出どころと同じパターン）。 */}
+          C-2: aria-label="テキスト言語" でアクセシブル名を付与（html-entity 正典と同じパターン）。 */}
       {fixedLanguage === null && (
         <div className={styles.languageControl}>
           <SegmentedControl

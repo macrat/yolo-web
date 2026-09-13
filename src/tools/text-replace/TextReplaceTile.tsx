@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * TextReplaceTile — テキスト置換ツールの単一出どころタイル
+ * TextReplaceTile — テキスト置換ツールの単一正典タイル
  *
  * cycle-228 T-5 で TextReplacePage.tsx を Panel ルートのタイルへ再実装。
  *

@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * SqlFormatterTile — SQL整形・圧縮の単一出どころタイル
+ * SqlFormatterTile — SQL整形・圧縮の単一正典タイル
  *
  * cycle-228 T-13: SqlFormatterPage.tsx を Panel ルートのタイルへ作り直したもの。
  *
@@ -194,7 +194,7 @@ export default function SqlFormatterTile({
               <option value="tab">タブ</option>
             </Select>
           </div>
-          {/* DESIGN.md §4: ON/OFF の切り替えはトグルスイッチで表す */}
+          {/* DESIGN.md §5: 単一 ON/OFF はトグルスイッチで統一 (B-9) */}
           <ToggleSwitch
             label="キーワード大文字"
             checked={uppercase}

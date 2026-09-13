@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Base64Tile — Base64エンコード/デコードの単一出どころタイル
+ * Base64Tile — Base64エンコード/デコードの単一正典タイル
  *
  * cycle-227 T-2 で Base64Tool.tsx を Panel ルートのタイルへ作り直したもの。
  *
@@ -153,8 +153,8 @@ export default function Base64Tile({
   const outputLabel = direction === "encode" ? "Base64出力" : "テキスト出力";
   const inputPlaceholder =
     direction === "encode"
-      ? "エンコードするテキストを入力"
-      : "デコードするBase64文字列を入力（標準形・URL-safe形・パディングなし、いずれも対応）";
+      ? "エンコードするテキストを入力..."
+      : "デコードするBase64文字列を入力（標準形・URL-safe形・パディングなし、いずれも対応）...";
 
   // ---------- ハンドラ ----------
   function handleDirectionChange(val: string) {

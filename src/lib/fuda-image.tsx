@@ -24,7 +24,7 @@ import { getContrastTextColor } from "@/play/color-utils";
  * Satori 制約への対応:
  * - Satori は oklch を解釈できない → 和色は {@link WAIRO_HEX}（light 固定 hex）で渡す。
  * - 印の円環は SVG `<circle>` 一本ストロークで描く（画面の {@link import("@/components/In").default In}
- *   と同じ流儀・朱と紙色の2色・回転 ±8° 内・幅は面の幅の 1/5 以下）。
+ *   と同じ流儀・朱一色・回転 ±8° 内・幅は包み幅の 1/5 以下）。
  * - 明朝（結果の言葉の顔・DESIGN §3）は Noto Serif JP を CDN から取得。取得失敗時は
  *   ゴシックへ素直にフォールバック（描画は成立させ、書体だけ譲る）。
  */
@@ -40,7 +40,7 @@ const FUDA_SIZE = ogpSize;
 
 /** 店号（札単体で出所が読めるように・DESIGN §4「札」）。 */
 const SHOP_NAME = "yolos.net";
-/** 印の一字の既定（診断の「診」・§4「識別マーク」）。呼び出し側が sealChar で上書きできる。 */
+/** 印の一字の既定（診断の「診」・§4「印」）。呼び出し側が sealChar で上書きできる。 */
 const DEFAULT_SEAL_CHAR = "診";
 /** 印の回転（§4「±8° 以内」）。手捺しのわずかな気配。 */
 const SEAL_ROTATE_DEG = -6;
@@ -75,7 +75,7 @@ export interface FudaImageResult {
    * ——伝統色診断の結果色や伝統色辞典の色——では、その固有 hex こそが中身であり、和色8色へ
    * 丸めると別の色＝別物になってしまう。そこでこのフィールドが指定されたときは記号面の地に
    * その hex をそのまま使い、前景（記号）色は AA を満たす墨/白を {@link getContrastTextColor} で
-   * 算出する（DESIGN §2「主題が色そのものである面」）。未指定時は従来の和色経路を保つ。
+   * 算出する（DESIGN §2「色そのものが中身の面」の例外）。未指定時は従来の和色経路を保つ。
    *
    * なお全面ベタ塗りではなく、あくまで囲まれた 300×300 の記号面の中だけに色を閉じる
    * （器＝紙・罫・墨へ色を漏らさない・DESIGN §2）。
@@ -258,7 +258,7 @@ export async function renderFudaImage(
         </div>
       </div>
 
-      {/* 印: 成果物に一つだけ・右上に捺す。朱の円環＋一字・回転 ±8° 内・幅は面の幅の 1/5 以下
+      {/* 印: 成果物に一つだけ・右上に捺す。朱一色の円環＋一字・回転 ±8° 内・幅は包み幅の 1/5 以下
             （100/1200 ≒ 8%）。SVG 一本ストロークで円環を描く（画面の In と同じ流儀）。 */}
       <div
         style={{

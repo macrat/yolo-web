@@ -390,7 +390,7 @@ const TEMPLATES: EmailTemplate[] = [
         label: "候補日時",
         type: "textarea",
         required: true,
-        placeholder: "3月5日（水） 10:00〜12:00\n3月6日（木） 14:00〜16:00",
+        placeholder: "3月5日(水) 10:00〜12:00\n3月6日(木) 14:00〜16:00",
       },
       {
         key: "duration",

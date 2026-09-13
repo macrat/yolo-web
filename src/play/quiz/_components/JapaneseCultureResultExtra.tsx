@@ -66,7 +66,7 @@ function JapaneseCultureResultExtra({
           <InviteFriendButton
             quizSlug={quiz.meta.slug}
             resultTypeId={resultId}
-            inviteText="日本文化適性診断で相性を調べよう！"
+            inviteText="日本文化適性診断で相性を調べよう!"
           />
         </>
       );
@@ -78,7 +78,7 @@ function JapaneseCultureResultExtra({
     <InviteFriendButton
       quizSlug={quiz.meta.slug}
       resultTypeId={resultId}
-      inviteText="日本文化適性診断で相性を調べよう！"
+      inviteText="日本文化適性診断で相性を調べよう!"
     />
   );
 }

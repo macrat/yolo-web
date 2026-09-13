@@ -3,8 +3,8 @@
  * 設計方針:
  * - <input type="checkbox"> を視覚的に隠し、CSS セレクタ `:checked ~` で
  *   状態を切り替える。独自の JS state を持たないため再レンダリングオーバーヘッドが小さい。
- * - DESIGN.md §4: ON/OFF を切り替えるフォーム要素はトグルスイッチを使う
- * - DESIGN.md §10: フォーカスは outline: 2px solid var(--accent); outline-offset: 2px;
+ * - DESIGN.md §5: ON/OFF を切り替えるフォーム要素はトグルスイッチを使う
+ * - DESIGN.md §2: フォーカスは outline: 2px solid var(--accent); outline-offset: 2px;
  */
 
 /* ラッパー <label>: クリック領域全体をトグルにする */
@@ -60,7 +60,7 @@
   background: var(--accent);
 }
 
-/* フォーカス: DESIGN.md §10 準拠。
+/* フォーカス: DESIGN.md §2 準拠。
  * :focus-visible でキーボード操作時のみリングを表示する。 */
 .input:focus-visible ~ .track {
   outline: 2px solid var(--accent);

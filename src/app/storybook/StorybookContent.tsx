@@ -50,7 +50,7 @@ const COLOR_SECTIONS = [
   {
     title: "朱 (Accent)",
     swatches: [
-      { token: "--accent", role: "朱。リンク・主ボタン・現在地・識別マーク" },
+      { token: "--accent", role: "朱。リンク・主ボタン・現在地・記入印" },
       {
         token: "--accent-weak",
         role: "朱の気配。hover/selected の座布団にのみ可",

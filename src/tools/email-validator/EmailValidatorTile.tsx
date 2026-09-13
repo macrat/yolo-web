@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * EmailValidatorTile — メールアドレスバリデーターの単一出どころタイル
+ * EmailValidatorTile — メールアドレスバリデーターの単一正典タイル
  *
  * cycle-228 T-10 で EmailValidatorPage.tsx を Panel ルートのタイルへ作り直したもの。
  *
@@ -147,7 +147,7 @@ export default function EmailValidatorTile({
             >
               {/*
                * Lucide スタイル SVG アイコン（aria-hidden="true" で装飾専用宣言）。
-               * DESIGN.md §6「見出し・ナビ・ボタンに絵文字を使わない」・§4「アイコンは線画に限る」に準拠。
+               * DESIGN.md §3「絵文字不可・必要なら Lucide 線画アイコン」に準拠。
                * スクリーンリーダーはバッジのテキスト（「有効」「無効」等）のみを読み上げる。
                */}
               {result.valid ? (
@@ -236,13 +236,13 @@ export default function EmailValidatorTile({
               <div className={styles.analysisItem}>
                 <span className={styles.analysisLabel}>ローカルパート:</span>
                 <span className={styles.analysisValue}>
-                  {result.localPart || "（空）"}
+                  {result.localPart || "(空)"}
                 </span>
               </div>
               <div className={styles.analysisItem}>
                 <span className={styles.analysisLabel}>ドメイン:</span>
                 <span className={styles.analysisValue}>
-                  {result.domain || "（空）"}
+                  {result.domain || "(空)"}
                 </span>
               </div>
             </div>

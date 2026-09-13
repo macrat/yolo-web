@@ -19,6 +19,7 @@
   font-family: var(--font-mincho);
   font-size: 1.375rem; /* 22px 目安（1.25 倍スケール帯） */
   line-height: 1.4;
+  font-feature-settings: "palt";
 }
 
 /*
@@ -34,11 +35,7 @@
   background-color: var(--paper);
   color: var(--ink);
   font-family: var(--font-gothic);
-  /* 来訪者が読み書きする欄（DESIGN §3: 13〜14px は補助情報に限る）。
-   * `1rem` で文字サイズ設定に追随させつつ、`16px` を下限に敷く——16px 未満だと
-   * iOS Safari がフォーカス時にページを自動拡大し、来訪者が手で戻すことになる。
-   * 設定を小さくしている人がいても、この欄だけは拡大されない大きさを保つ。 */
-  font-size: max(1rem, 16px);
+  font-size: 1rem; /* 16px */
   line-height: 1.5;
 }
 

@@ -57,7 +57,7 @@ export default function SeriesNav({
               {post.slug === currentSlug ? (
                 <span aria-current="page" className={styles.currentLink}>
                   {post.title}
-                  <span className={styles.currentBadge}>（この記事）</span>
+                  <span className={styles.currentBadge}>(この記事)</span>
                 </span>
               ) : (
                 <Link href={`/blog/${post.slug}`} className={styles.link}>

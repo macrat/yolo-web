@@ -1,5 +1,5 @@
 /**
- * TraditionalColorPaletteTile 単一出どころタイルのテスト（cycle-228 T-19）
+ * TraditionalColorPaletteTile 単一正典タイルのテスト（cycle-228 T-19）
  *
  * 旧 TraditionalColorPalettePage.test.tsx の全振る舞いを移植し、
  * タイルアーキテクチャ要件（Panel ルート・useId・variant・複数インスタンス）を追加。

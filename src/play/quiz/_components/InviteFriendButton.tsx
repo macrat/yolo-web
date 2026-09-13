@@ -75,7 +75,7 @@ export default function InviteFriendButton({
         友達に診断を送る
       </button>
       <div className={styles.copiedMessage} role="status" aria-live="polite">
-        {copied ? "リンクをコピーしました！" : ""}
+        {copied ? "リンクをコピーしました!" : ""}
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-/* ImageResizerTile — 単一出どころタイルのスタイル
+/* ImageResizerTile — 単一正典タイルのスタイル
  * cycle-228 T-27: ImageResizerPage.module.css をタイル向けに移植。
  * DESIGN.md 準拠（紙・墨・朱の新トークン）:
  * - --ink / --ink-2 / --paper-2 / --rule / --rule-strong / --accent / --accent-weak 使用
@@ -96,7 +96,7 @@
 }
 
 /* ===== アスペクト比ロックボタン =====
- * DESIGN.md §6: ボタンに絵文字を使わない → §4 の線画アイコン + 可視テキストラベルで状態を表示。
+ * DESIGN.md §3: 絵文字禁止 → SVG 線画アイコン + 可視テキストラベルで状態を表示。
  * 幅は固定せず auto にして「固定中」「固定解除」ラベルを収める。
  */
 .lockButton {

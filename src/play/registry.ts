@@ -62,7 +62,7 @@ export const fortunePlayContentMeta: PlayContentMeta = {
   slug: "daily",
   title: "今日のユーモア運勢",
   description:
-    "AIが毎日生成するユーモラスな運勢診断。今日のあなたの運勢は一体どんな形？",
+    "AIが毎日生成するユーモラスな運勢診断。今日のあなたの運勢は一体どんな形?",
   shortDescription: "AIが毎日生成するユーモラスな運勢",
   icon: "🔮",
   accentColor: "#7c3aed",

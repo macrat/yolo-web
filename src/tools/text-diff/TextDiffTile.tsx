@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * TextDiffTile — テキスト差分比較の単一出どころタイル
+ * TextDiffTile — テキスト差分比較の単一正典タイル
  *
  * cycle-228 T-23 で TextDiffPage.tsx を Panel ルートのタイルへ移植。
  *
@@ -207,7 +207,7 @@ export default function TextDiffTile({
             variant="mono"
             value={oldText}
             onChange={(e) => setOldText(e.target.value)}
-            placeholder="変更前のテキストを入力……"
+            placeholder="変更前のテキストを入力..."
             rows={10}
             spellCheck={false}
             aria-label="変更前テキスト"
@@ -222,7 +222,7 @@ export default function TextDiffTile({
             variant="mono"
             value={newText}
             onChange={(e) => setNewText(e.target.value)}
-            placeholder="変更後のテキストを入力……"
+            placeholder="変更後のテキストを入力..."
             rows={10}
             spellCheck={false}
             aria-label="変更後テキスト"

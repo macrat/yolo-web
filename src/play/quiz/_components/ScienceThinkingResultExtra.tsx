@@ -68,7 +68,7 @@ function ScienceThinkingResultExtra({
       <InviteFriendButton
         quizSlug={quiz.meta.slug}
         resultTypeId={resultId}
-        inviteText="理系思考タイプ診断であなたの理系脳の形を調べよう！"
+        inviteText="理系思考タイプ診断であなたの理系脳の形を調べよう!"
       />
     );
   }
@@ -120,7 +120,7 @@ function ScienceThinkingResultExtra({
       <InviteFriendButton
         quizSlug={quiz.meta.slug}
         resultTypeId={resultId}
-        inviteText="理系思考タイプ診断であなたの理系脳の形を調べよう！"
+        inviteText="理系思考タイプ診断であなたの理系脳の形を調べよう!"
       />
     </div>
   );

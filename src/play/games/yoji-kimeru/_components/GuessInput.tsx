@@ -97,7 +97,7 @@ export default function GuessInput({
             composingRef.current = false;
           }}
           disabled={disabled || submitting}
-          placeholder={submitting ? "送信中……" : "四字熟語を入力"}
+          placeholder={submitting ? "送信中..." : "四字熟語を入力"}
           aria-label="四字熟語を入力"
           autoComplete="off"
           autoCorrect="off"
@@ -109,7 +109,7 @@ export default function GuessInput({
           disabled={disabled || submitting}
           type="button"
         >
-          {submitting ? "送信中……" : "送信"}
+          {submitting ? "送信中..." : "送信"}
         </button>
       </div>
       <div className={styles.errorMessage} role={error ? "alert" : undefined}>

@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * MarkdownPreviewTile — Markdown ライブプレビューの単一出どころタイル
+ * MarkdownPreviewTile — Markdown ライブプレビューの単一正典タイル
  *
  * cycle-228 T-24: MarkdownPreviewPage.tsx を Panel ルートのタイルへ作り直したもの。
  *
@@ -177,7 +177,7 @@ export default function MarkdownPreviewTile({
             variant="mono"
             value={input}
             onChange={handleInputChange}
-            placeholder="Markdownを入力……"
+            placeholder="Markdownを入力..."
             spellCheck={false}
             rows={18}
           />
@@ -230,7 +230,7 @@ export default function MarkdownPreviewTile({
                 <div className={styles.emptyHint}>
                   {isMounted
                     ? "左の入力欄にMarkdownを入力するとプレビューが表示されます"
-                    : "読み込み中……"}
+                    : "読み込み中..."}
                 </div>
               )}
             </div>

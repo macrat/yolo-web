@@ -73,7 +73,7 @@ export default function ColorsIndexPage() {
   const breadcrumbJsonLd = generateBreadcrumbJsonLd([
     { label: "ホーム", href: "/" },
     { label: "辞典", href: "/dictionary" },
-    { label: "日本の伝統色" },
+    { label: "伝統色辞典" },
   ]);
 
   return (
@@ -88,7 +88,7 @@ export default function ColorsIndexPage() {
         items={[
           { label: "ホーム", href: "/" },
           { label: "辞典", href: "/dictionary" },
-          { label: "日本の伝統色" },
+          { label: "伝統色辞典" },
         ]}
       />
 
@@ -107,7 +107,7 @@ export default function ColorsIndexPage() {
       <div className={styles.shelf}>
         <DictionarySearch
           heading="色名・コードから探す"
-          placeholder="色名・ローマ字・カラーコードで検索……"
+          placeholder="色名・ローマ字・カラーコードで検索..."
           unit="色"
           items={colorSearchItems}
         />
@@ -118,7 +118,7 @@ export default function ColorsIndexPage() {
         <Shinagaki
           heading="色みから探す"
           items={categoryItems}
-          ariaLabel="色みのグループから探す一覧"
+          ariaLabel="色みのグループから探す品書き"
         />
       </div>
     </div>

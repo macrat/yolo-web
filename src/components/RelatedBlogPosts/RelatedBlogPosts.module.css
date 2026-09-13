@@ -13,6 +13,7 @@
   font-family: var(--font-mincho);
   font-size: 1.25rem; /* 20px 目安 */
   line-height: 1.4;
+  font-feature-settings: "palt";
   margin: 0 0 var(--space-16);
   color: var(--ink);
 }

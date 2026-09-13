@@ -26,7 +26,7 @@ import { ogpContentType } from "@/lib/ogp-image";
 import { getResultIdsForQuiz } from "@/play/quiz/registry";
 import characterPersonalityQuiz from "@/play/quiz/data/character-personality";
 
-export const alt = "診断結果のカード";
+export const alt = "診断結果の札";
 export const size = fudaImageSize;
 export const contentType = ogpContentType;
 

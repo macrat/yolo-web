@@ -25,7 +25,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import ResultPageShell from "@/play/quiz/_components/ResultPageShell";
-import ResultDescription from "@/app/play/[slug]/result/[resultId]/ResultDescription";
+import DescriptionExpander from "@/app/play/[slug]/result/[resultId]/DescriptionExpander";
 import CompatibilityDisplay from "@/app/play/[slug]/result/[resultId]/CompatibilityDisplay";
 import CharacterPersonalityContent from "@/play/quiz/_components/CharacterPersonalityContent";
 import InviteFriendButton from "@/play/quiz/_components/InviteFriendButton";
@@ -46,7 +46,7 @@ type Props = {
 };
 
 const SLUG = "character-personality";
-const INVITE_TEXT = "似たキャラ診断で相性を調べよう！";
+const INVITE_TEXT = "似たキャラ診断で相性を調べよう!";
 const quiz = characterPersonalityQuiz;
 
 export function generateStaticParams() {
@@ -172,11 +172,14 @@ export default async function CharacterPersonalityResultPage({
     }
   }
 
-  const shareText = `${quiz.meta.title}の結果は「${result.title}」でした！あなたは？ #${quiz.meta.title.replace(/\s/g, "")} #yolosnet`;
+  const shareText = `${quiz.meta.title}の結果は「${result.title}」でした！あなたは? #${quiz.meta.title.replace(/\s/g, "")} #yolosnet`;
   const shareUrl = `${BASE_URL}/play/${SLUG}/result/${resultId}`;
-  const ctaText = "あなたはどのタイプ？ 診断してみよう";
+  const ctaText = "あなたはどのタイプ? 診断してみよう";
 
   // descriptionが4行を超えるかどうかの判定
+  const DESCRIPTION_LONG_THRESHOLD = 128;
+  const isDescriptionLong =
+    countCharWidth(result.description) > DESCRIPTION_LONG_THRESHOLD;
 
   return (
     <ResultPageShell
@@ -191,7 +194,11 @@ export default async function CharacterPersonalityResultPage({
             トーン統一。旧デザインの colorHero＝タイプ色を敷いたヒーローは撤去した）。 */}
         <p className={styles.catchphrase}>{characterDc.catchphrase}</p>
 
-        <ResultDescription description={result.description} />
+        {/* DescriptionExpander: 長いdescriptionは折りたたみ */}
+        <DescriptionExpander
+          description={result.description}
+          isLong={isDescriptionLong}
+        />
 
         {/* CTA1 */}
         <div className={styles.trySection}>

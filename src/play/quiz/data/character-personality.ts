@@ -45,9 +45,9 @@ const characterPersonalityQuiz: QuizDefinition = {
     slug: "character-personality",
     title: "あなたに似たキャラ診断",
     description:
-      "12個の日常シチュエーションに答えて、あなたの性格に最もよく似たキャラクターを判定します。「締切3分前に5手先を読む炎の策士」や「夢の中で3本の論文を書き終えた学術夢想家」など、24タイプのキャラクターから1つが決まります。友達との相性診断もできます！",
+      "12個の日常シチュエーションに答えて、あなたの性格に最もよく似たキャラクターを判定します。「締切3分前に5手先を読む炎の策士」や「夢の中で3本の論文を書き終えた学術夢想家」など、24タイプのキャラクターから1つが決まります。友達との相性診断もできます!",
     shortDescription:
-      "日常の行動パターン12問から、あなたに似たキャラクターを24タイプの中から診断！",
+      "日常の行動パターン12問から、あなたに似たキャラクターを24タイプの中から診断!",
     type: "personality",
     category: "personality",
     questionCount: 12,
@@ -109,7 +109,7 @@ const characterPersonalityQuiz: QuizDefinition = {
     // Q1: 休日の朝の目覚め (除外: commander, professor / hi29 lo1)
     {
       id: "q1",
-      text: "休日の朝8時、アラームなしで自然に目が覚めた。まず何をする？",
+      text: "休日の朝8時、アラームなしで自然に目が覚めた。まず何をする?",
       choices: [
         {
           id: "q1-a",
@@ -136,7 +136,7 @@ const characterPersonalityQuiz: QuizDefinition = {
     // Q2: ネットの買い物 (除外: commander, dreamer / hi27 lo3)
     {
       id: "q2",
-      text: "ネットで気になるアイテムを見つけた。購入ボタンの前でどうする？",
+      text: "ネットで気になるアイテムを見つけた。購入ボタンの前でどうする?",
       choices: [
         {
           id: "q2-a",
@@ -163,7 +163,7 @@ const characterPersonalityQuiz: QuizDefinition = {
     // Q3: 初参加のグループイベント (除外: commander, guardian / hi25 lo5)
     {
       id: "q3",
-      text: "初めて参加するグループイベント。あなたの動き方は？",
+      text: "初めて参加するグループイベント。あなたの動き方は?",
       choices: [
         {
           id: "q3-a",
@@ -190,7 +190,7 @@ const characterPersonalityQuiz: QuizDefinition = {
     // Q4: トラブル発生 (除外: commander, artist / hi23 lo7)
     {
       id: "q4",
-      text: "仕事や学校でトラブルが発生した。まず何をする？",
+      text: "仕事や学校でトラブルが発生した。まず何をする?",
       choices: [
         {
           id: "q4-a",
@@ -217,7 +217,7 @@ const characterPersonalityQuiz: QuizDefinition = {
     // Q5: 締切のある大きな課題 (除外: professor, dreamer / hi21 lo9)
     {
       id: "q5",
-      text: "1週間の締切がある大きな課題。取り組み方は？",
+      text: "1週間の締切がある大きな課題。取り組み方は?",
       choices: [
         {
           id: "q5-a",
@@ -244,7 +244,7 @@ const characterPersonalityQuiz: QuizDefinition = {
     // Q6: 嬉しいことがあった (除外: professor, trickster / hi19 lo11)
     {
       id: "q6",
-      text: "すごく嬉しいことがあった！ 最初のリアクションは？",
+      text: "すごく嬉しいことがあった! 最初のリアクションは?",
       choices: [
         {
           id: "q6-a",
@@ -271,7 +271,7 @@ const characterPersonalityQuiz: QuizDefinition = {
     // Q7: 自由に作れる3時間 (除外: professor, artist / hi28 lo2)
     {
       id: "q7",
-      text: "自由に何かを作っていい時間が3時間ある。アプローチは？",
+      text: "自由に何かを作っていい時間が3時間ある。アプローチは?",
       choices: [
         {
           id: "q7-a",
@@ -298,7 +298,7 @@ const characterPersonalityQuiz: QuizDefinition = {
     // Q8: リスクのある選択 (除外: dreamer, trickster / hi26 lo4)
     {
       id: "q8",
-      text: "「リターンは大きいがリスクもある」選択肢が目の前に。どうする？",
+      text: "「リターンは大きいがリスクもある」選択肢が目の前に。どうする?",
       choices: [
         {
           id: "q8-a",
@@ -325,11 +325,11 @@ const characterPersonalityQuiz: QuizDefinition = {
     // Q9: 旅先の景色の記録 (除外: dreamer, guardian / hi24 lo6)
     {
       id: "q9",
-      text: "旅先で素敵な景色に出会った。どう記録する？",
+      text: "旅先で素敵な景色に出会った。どう記録する?",
       choices: [
         {
           id: "q9-a",
-          text: "とりあえずすぐシェア。「見て見て！」と発信して、その場を盛り上げる",
+          text: "とりあえずすぐシェア。「見て見て!」と発信して、その場を盛り上げる",
           points: { commander: 24, trickster: 6 },
         },
         {
@@ -352,11 +352,11 @@ const characterPersonalityQuiz: QuizDefinition = {
     // Q10: 久しぶりに会う人 (除外: trickster, guardian / hi22 lo8)
     {
       id: "q10",
-      text: "久しぶりに会う人がいる。どんな気持ちになる？",
+      text: "久しぶりに会う人がいる。どんな気持ちになる?",
       choices: [
         {
           id: "q10-a",
-          text: "ワクワク！ 会う前から「あれも話そう」と勢いづく",
+          text: "ワクワク! 会う前から「あれも話そう」と勢いづく",
           points: { commander: 22, professor: 8 },
         },
         {
@@ -379,7 +379,7 @@ const characterPersonalityQuiz: QuizDefinition = {
     // Q11: いつも通り vs 新しいやり方 (除外: trickster, artist / hi20 lo10)
     {
       id: "q11",
-      text: "いつも通りのやり方と、新しいやり方が選べる。どうする？",
+      text: "いつも通りのやり方と、新しいやり方が選べる。どうする?",
       choices: [
         {
           id: "q11-a",
@@ -406,7 +406,7 @@ const characterPersonalityQuiz: QuizDefinition = {
     // Q12: 5年後の自分 (除外: guardian, artist / hi18 lo12)
     {
       id: "q12",
-      text: "5年後の自分について考えるとき、何が浮かぶ？",
+      text: "5年後の自分について考えるとき、何が浮かぶ?",
       choices: [
         {
           id: "q12-a",

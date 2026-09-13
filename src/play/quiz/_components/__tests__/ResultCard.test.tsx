@@ -178,12 +178,12 @@ vi.mock("@/play/quiz/_components/MusicPersonalityContent", () => ({
                 <span>相性セクション</span>
               </div>
               <div data-testid="invite-friend-button">
-                <span>音楽性格診断で相性を調べよう！</span>
+                <span>音楽性格診断で相性を調べよう!</span>
               </div>
             </>
           ) : (
             <div data-testid="invite-friend-button">
-              <span>音楽性格診断で相性を調べよう！</span>
+              <span>音楽性格診断で相性を調べよう!</span>
             </div>
           ))}
       </div>

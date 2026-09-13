@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * UrlEncodeTile — URL エンコード/デコードの単一出どころタイル
+ * UrlEncodeTile — URL エンコード/デコードの単一正典タイル
  *
  * cycle-226 T-1 で UrlEncodePage.tsx を Panel ルートのタイルへ作り直したもの。
  *
@@ -198,8 +198,8 @@ export default function UrlEncodeTile({
           onChange={handleInputChange}
           placeholder={
             direction === "encode"
-              ? "エンコードするテキストを入力"
-              : "デコードするURL文字列を入力"
+              ? "エンコードするテキストを入力..."
+              : "デコードするURL文字列を入力..."
           }
           rows={5}
           spellCheck={false}

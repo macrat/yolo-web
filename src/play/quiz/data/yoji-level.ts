@@ -5,7 +5,7 @@ const yojiLevelQuiz: QuizDefinition = {
     slug: "yoji-level",
     title: "四字熟語力診断",
     description:
-      "四字熟語の意味から正しい熟語を当てるクイズです。全10問であなたの四字熟語力を診断します。日常で使える四字熟語から難読なものまで幅広く出題！",
+      "四字熟語の意味から正しい熟語を当てるクイズです。全10問であなたの四字熟語力を診断します。日常で使える四字熟語から難読なものまで幅広く出題!",
     shortDescription: "四字熟語10問であなたの語彙力を測定",
     type: "knowledge",
     category: "knowledge",
@@ -28,22 +28,22 @@ const yojiLevelQuiz: QuizDefinition = {
     ],
     faq: [
       {
-        question: "四字熟語の読み方も問われますか？",
+        question: "四字熟語の読み方も問われますか?",
         answer:
           "いいえ、この診断は「意味」から正しい四字熟語を選ぶ形式です。意味の説明文を読んで、4つの選択肢の中から正しい四字熟語を選んでください。",
       },
       {
-        question: "全部で何問ありますか？",
+        question: "全部で何問ありますか?",
         answer:
           "全10問です。日常でよく使われる四字熟語から難読な四字熟語まで、難易度に幅を持たせて出題しています。",
       },
       {
-        question: "似た意味の選択肢が多くて難しいですが、コツはありますか？",
+        question: "似た意味の選択肢が多くて難しいですが、コツはありますか?",
         answer:
           "設問の意味説明にあるキーワードに注目してみましょう。各問題の解答後に表示される解説で語源や使い方を確認すると、次回以降の正解率が上がります。",
       },
       {
-        question: "スコアが高いと四字熟語の実力があると言えますか？",
+        question: "スコアが高いと四字熟語の実力があると言えますか?",
         answer:
           "この診断は意味を問う形式のため、四字熟語の知識の目安になります。ただし、解説文はAIの見解であり誤りを含む可能性があります。さらに学びたい場合は四字熟語辞典も活用してください。",
       },
@@ -53,7 +53,7 @@ const yojiLevelQuiz: QuizDefinition = {
     {
       // life category, difficulty 1
       id: "q1",
-      text: "「一生に一度の出会いを大切にすること」を表す四字熟語は？",
+      text: "「一生に一度の出会いを大切にすること」を表す四字熟語は?",
       choices: [
         { id: "q1-a", text: "一期一会", isCorrect: true },
         { id: "q1-b", text: "一日一善" },
@@ -66,7 +66,7 @@ const yojiLevelQuiz: QuizDefinition = {
     {
       // effort category, difficulty 1
       id: "q2",
-      text: "「互いに競い合い高め合うこと」を表す四字熟語は？",
+      text: "「互いに競い合い高め合うこと」を表す四字熟語は?",
       choices: [
         { id: "q2-a", text: "粉骨砕身" },
         { id: "q2-b", text: "切磋琢磨", isCorrect: true },
@@ -79,7 +79,7 @@ const yojiLevelQuiz: QuizDefinition = {
     {
       // nature category, difficulty 1
       id: "q3",
-      text: "「自然の美しい風景」を表す四字熟語は？",
+      text: "「自然の美しい風景」を表す四字熟語は?",
       choices: [
         { id: "q3-a", text: "春夏秋冬" },
         { id: "q3-b", text: "森羅万象" },
@@ -92,7 +92,7 @@ const yojiLevelQuiz: QuizDefinition = {
     {
       // emotion category, difficulty 1
       id: "q4",
-      text: "「疑う心があると何でも怖くなる」ことを表す四字熟語は？",
+      text: "「疑う心があると何でも怖くなる」ことを表す四字熟語は?",
       choices: [
         { id: "q4-a", text: "半信半疑" },
         { id: "q4-b", text: "五里霧中" },
@@ -105,7 +105,7 @@ const yojiLevelQuiz: QuizDefinition = {
     {
       // society category, difficulty 1
       id: "q5",
-      text: "「言葉なしに心が通じ合うこと」を表す四字熟語は？",
+      text: "「言葉なしに心が通じ合うこと」を表す四字熟語は?",
       choices: [
         { id: "q5-a", text: "異口同音" },
         { id: "q5-b", text: "以心伝心", isCorrect: true },
@@ -118,7 +118,7 @@ const yojiLevelQuiz: QuizDefinition = {
     {
       // knowledge category, difficulty 1
       id: "q6",
-      text: "「古いことを学び新しい知識を得ること」を表す四字熟語は？",
+      text: "「古いことを学び新しい知識を得ること」を表す四字熟語は?",
       choices: [
         { id: "q6-a", text: "博学多才" },
         { id: "q6-b", text: "温故知新", isCorrect: true },
@@ -131,7 +131,7 @@ const yojiLevelQuiz: QuizDefinition = {
     {
       // conflict category, difficulty 1
       id: "q7",
-      text: "「周囲が敵ばかりで孤立すること」を表す四字熟語は？",
+      text: "「周囲が敵ばかりで孤立すること」を表す四字熟語は?",
       choices: [
         { id: "q7-a", text: "百戦錬磨" },
         { id: "q7-b", text: "一騎当千" },
@@ -144,7 +144,7 @@ const yojiLevelQuiz: QuizDefinition = {
     {
       // change category, difficulty 2
       id: "q8",
-      text: "「命令がすぐに変わること」を表す四字熟語は？",
+      text: "「命令がすぐに変わること」を表す四字熟語は?",
       choices: [
         { id: "q8-a", text: "千変万化" },
         { id: "q8-b", text: "本末転倒" },
@@ -157,7 +157,7 @@ const yojiLevelQuiz: QuizDefinition = {
     {
       // virtue category, difficulty 2
       id: "q9",
-      text: "「心が清く正しいこと」を表す四字熟語は？",
+      text: "「心が清く正しいこと」を表す四字熟語は?",
       choices: [
         { id: "q9-a", text: "品行方正" },
         { id: "q9-b", text: "清廉潔白", isCorrect: true },
@@ -170,7 +170,7 @@ const yojiLevelQuiz: QuizDefinition = {
     {
       // knowledge category, difficulty 3 (MUST FIX: replaced negative/荒唐無稽 with difficulty 3)
       id: "q10",
-      text: "「広く読んでよく記憶すること」を表す四字熟語は？",
+      text: "「広く読んでよく記憶すること」を表す四字熟語は?",
       choices: [
         { id: "q10-a", text: "博学多才" },
         { id: "q10-b", text: "読書三到" },
@@ -186,7 +186,7 @@ const yojiLevelQuiz: QuizDefinition = {
       id: "beginner",
       title: "四字熟語ビギナー",
       description:
-        "まだまだ伸びしろたっぷり！ まずは日常でよく使われる四字熟語から覚えてみましょう。四字熟語辞典で楽しく学べます。",
+        "まだまだ伸びしろたっぷり! まずは日常でよく使われる四字熟語から覚えてみましょう。四字熟語辞典で楽しく学べます。",
       icon: "\u{1F331}",
       minScore: 0,
       recommendation: "四字熟語辞典で学ぼう",
@@ -196,7 +196,7 @@ const yojiLevelQuiz: QuizDefinition = {
       id: "learner",
       title: "四字熟語見習い",
       description:
-        "基本的な四字熟語はバッチリ！ もう少し難しい四字熟語にも挑戦してみましょう。四字キメルで遊びながら覚えるのがおすすめです。",
+        "基本的な四字熟語はバッチリ! もう少し難しい四字熟語にも挑戦してみましょう。四字キメルで遊びながら覚えるのがおすすめです。",
       icon: "\u{1F4DD}",
       minScore: 3,
       recommendation: "四字キメルで遊びながら覚えよう",
@@ -206,7 +206,7 @@ const yojiLevelQuiz: QuizDefinition = {
       id: "intermediate",
       title: "四字熟語中級者",
       description:
-        "なかなかの四字熟語力です！ 日頃から言葉に親しんでいることがうかがえます。さらに上を目指して語彙力を磨きましょう。",
+        "なかなかの四字熟語力です! 日頃から言葉に親しんでいることがうかがえます。さらに上を目指して語彙力を磨きましょう。",
       icon: "\u{1F4D6}",
       minScore: 5,
       recommendation: "四字熟語辞典でさらに知識を深めよう",
@@ -216,7 +216,7 @@ const yojiLevelQuiz: QuizDefinition = {
       id: "advanced",
       title: "四字熟語上級者",
       description:
-        "かなりの語彙力の持ち主！ 難しい四字熟語もスラスラ答えられる実力者です。四字キメルであなたの実力を存分に発揮しましょう。",
+        "かなりの語彙力の持ち主! 難しい四字熟語もスラスラ答えられる実力者です。四字キメルであなたの実力を存分に発揮しましょう。",
       icon: "\u{1F393}",
       minScore: 7,
       recommendation: "四字キメルで実力を試そう",
@@ -226,7 +226,7 @@ const yojiLevelQuiz: QuizDefinition = {
       id: "master",
       title: "四字熟語マスター",
       description:
-        "素晴らしい四字熟語力！ ほぼ完璧に四字熟語を使いこなすあなたは、まさに四字熟語マスターです。その知識を周りの人にも分けてあげましょう！",
+        "素晴らしい四字熟語力! ほぼ完璧に四字熟語を使いこなすあなたは、まさに四字熟語マスターです。その知識を周りの人にも分けてあげましょう!",
       icon: "\u{1F451}",
       minScore: 9,
       recommendation: "四字熟語辞典を制覇しよう",

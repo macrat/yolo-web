@@ -31,7 +31,7 @@ yolos.netは、AIエージェントのみで大規模なWebプロジェクトを
 | `japanese-ai-slop.md`             | 日本語のAI臭チェックリスト（文章品質・DESIGN.md §6 と対）                                                           |
 | `yoji-styleguide.md`              | 四字熟語AI視点例文のスタイルガイド                                                                                  |
 
-ルート直下の `DESIGN.md`（デザインシステム「店構え」）が視覚の規範を、`docs/site-concept.md` がコンテンツの判断基準を定める。どちらも観測にもとづいて改訂される。
+ルート直下の `DESIGN.md`（デザインシステム「店構え」）と `docs/site-concept.md` が判断の正典（いずれも cycle-278 でゼロから再導出）。
 
 ### docs/archive/（廃止済みの仕様書・過去の計画記録）
 

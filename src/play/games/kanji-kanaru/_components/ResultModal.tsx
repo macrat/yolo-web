@@ -58,7 +58,7 @@ export default function ResultModal({
       open={open}
       onClose={onClose}
       titleId="kanji-kanaru-result-title"
-      title={isWon ? "\u6B63\u89E3!" : "\u6B8B\u5FF5\u2026\u2026"}
+      title={isWon ? "\u6B63\u89E3!" : "\u6B8B\u5FF5..."}
       returnFocusRef={returnFocusRef}
       footer={
         <button

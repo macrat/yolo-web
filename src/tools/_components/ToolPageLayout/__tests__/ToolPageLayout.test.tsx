@@ -362,7 +362,7 @@ describe("ToolPageLayout", () => {
     expect(css).not.toMatch(/var\(--color-/);
   });
 
-  it("CSS: box-shadow を使用しない（影なし、DESIGN.md §4）", () => {
+  it("CSS: box-shadow を使用しない（影なし、DESIGN.md §4/§5）", () => {
     const cssPath = resolve(__dirname, "../ToolPageLayout.module.css");
     const css = readFileSync(cssPath, "utf-8");
     expect(css).not.toMatch(/box-shadow/);

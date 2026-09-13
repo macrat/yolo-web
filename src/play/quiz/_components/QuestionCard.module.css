@@ -29,6 +29,7 @@
   margin: 0 0 1.25rem;
   line-height: 1.6;
   color: var(--ink);
+  font-feature-settings: "palt";
 }
 
 /* F2: 設問切替時にプログラム的フォーカスを受ける見出し（tabIndex={-1}）。
@@ -94,7 +95,7 @@
   color: var(--ink-2);
 }
 
-/* 正誤の文字ラベル（値札の語彙・ink-2・罫囲み・radius-sm 例外）。 */
+/* 正誤の文字ラベル（値札の語彙・12-13px・ink-2・罫囲み・radius-sm 例外）。 */
 .feedbackTag {
   flex-shrink: 0;
   padding: 0.1rem 0.5rem;

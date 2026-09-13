@@ -7,15 +7,14 @@
  * どちらにも属さないこのモジュールへ置き、3者（fuda-image・ogp-image・乖離ガードテスト
  * `__tests__/wairoHex.test.ts`）がここから import することで循環を断ち、単一の真実にする。
  *
- * なぜ hex 直書きか: 出どころトークンは `globals.css` に oklch で定義されるが、Satori（OG/札の
- * 画像生成）は oklch を解釈できない。ここで hex を固定して渡す。
+ * なぜ hex 直書きか: 正典トークンは `globals.css` に oklch で定義されるが、Satori（OG/札の
+ * 画像生成）は oklch を解釈できない。ここで light トークンの hex を固定して Satori へ渡す。
  *
- * light と dark の両方を持つ理由: OG/札は 1 枚の PNG なので light に固定するが、CSS を書けない
- * 面（middleware の 410 等）は `prefers-color-scheme` に追随させたいので dark も要る。
+ * ライト固定の根拠: OG/札は 1 枚の PNG で light/dark を切り替えられないため light の地色を採る。
  *
- * 乖離ガード: 各定数のコメントに対応する globals.css のトークン名（`--paper` 等）を残す。
- * `__tests__/wairoHex.test.ts` が globals.css の `:root` と `:root.dark` の oklch を再変換して
- * 本表と一致することを検証し、globals.css だけ変えて本表を放置するサイレント乖離を検知する。
+ * 乖離ガード: 各定数のコメントに対応する globals.css の light トークン名（`--paper` 等）を残す。
+ * `__tests__/wairoHex.test.ts` が globals.css の oklch を再変換して本表と一致することを検証し、
+ * globals.css だけ変えて本表を放置するサイレント乖離を検知する。
  */
 
 /** 紙地（全面の地色）。 */
@@ -30,18 +29,3 @@ export const RULE = "#cdcac5"; // --rule        oklch(0.84 0.008 85)
 export const RULE_STRONG = "#302d28"; // --rule-strong oklch(0.30 0.01 80)
 /** 朱（アクセント・印専用）。 */
 export const ACCENT = "#af3622"; // --accent      oklch(0.51 0.16 32)
-
-// ここから下はダーク側。値は globals.css の `:root.dark` の oklch と対応する。
-
-/** 紙地（ダーク）。 */
-export const PAPER_DARK = "#1b1915"; // --paper       oklch(0.215 0.008 80)
-/** 墨（ダーク・主文字色）。 */
-export const INK_DARK = "#e9e8e4"; // --ink         oklch(0.93 0.005 90)
-/** 墨（ダーク・副次）。 */
-export const INK_2_DARK = "#a7a49f"; // --ink-2       oklch(0.72 0.008 85)
-/** 罫（ダーク）。 */
-export const RULE_DARK = "#3f3d38"; // --rule        oklch(0.36 0.008 80)
-/** 罫（ダーク・強）。 */
-export const RULE_STRONG_DARK = "#d9d7d4"; // --rule-strong oklch(0.88 0.005 90)
-/** 朱（ダーク）。 */
-export const ACCENT_DARK = "#e87a65"; // --accent      oklch(0.70 0.14 32)

@@ -20,7 +20,7 @@
   margin: var(--space-24) 0 var(--space-48);
 }
 
-/* 辞典名（h1）。サイズ・明朝は globals.css の見出し基層が与える。ここは余白のみ。 */
+/* 辞典名（h1）。サイズ・明朝・詰めは globals.css の見出し基層が与える。ここは余白のみ。 */
 .title {
   margin: 0 0 var(--space-16);
   color: var(--ink);

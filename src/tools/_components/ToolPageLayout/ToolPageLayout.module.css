@@ -34,6 +34,7 @@
   color: var(--ink);
   margin: 0;
   line-height: 1.4;
+  font-feature-settings: "palt";
 }
 
 /* shortDescription: 1〜2文のコンパクトな短説明。文章として読ませるため 16px/1.9（§3）。 */
@@ -69,6 +70,7 @@
   color: var(--ink);
   margin: 0 0 var(--space-8);
   line-height: 1.4;
+  font-feature-settings: "palt";
 }
 
 .howItWorksText {
@@ -106,6 +108,7 @@
   margin: 0 0 var(--space-16);
   color: var(--ink);
   line-height: 1.4;
+  font-feature-settings: "palt";
 }
 
 /* モバイル対応（375px 先行・§10） */

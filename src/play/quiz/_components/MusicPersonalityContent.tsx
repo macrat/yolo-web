@@ -100,7 +100,7 @@ function buildAfterTodayAction(
           <InviteFriendButton
             quizSlug={quiz.meta.slug}
             resultTypeId={resultId}
-            inviteText="音楽性格診断で相性を調べよう！"
+            inviteText="音楽性格診断で相性を調べよう!"
           />
         </>
       );
@@ -111,7 +111,7 @@ function buildAfterTodayAction(
     <InviteFriendButton
       quizSlug={quiz.meta.slug}
       resultTypeId={resultId}
-      inviteText="音楽性格診断で相性を調べよう！"
+      inviteText="音楽性格診断で相性を調べよう!"
     />
   );
 }

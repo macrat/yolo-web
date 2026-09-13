@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * ColorConverterTile — カラーコード変換の単一出どころタイル
+ * ColorConverterTile — カラーコード変換の単一正典タイル
  *
  * cycle-228 T-15 で ColorConverterPage.tsx を Panel ルートのタイルへ作り直したもの。
  *
@@ -214,7 +214,7 @@ export default function ColorConverterTile({
   // 入力欄のラベルテキスト（モードによって変わる）
   const inputLabel =
     inputMode === "hex"
-      ? "HEX値（#RGB または #RRGGBB）"
+      ? "HEX値 (#RGB または #RRGGBB)"
       : inputMode === "rgb"
         ? "RGB値 (R, G, B)"
         : "HSL値 (H, S, L)";

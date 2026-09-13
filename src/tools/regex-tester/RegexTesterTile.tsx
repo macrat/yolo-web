@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * RegexTesterTile — 正規表現テスター 単一出どころタイル
+ * RegexTesterTile — 正規表現テスター 単一正典タイル
  *
  * cycle-228 T-29: RegexTesterPage.tsx → Panel ルートのタイルへ再構築。
  *
@@ -258,7 +258,7 @@ export default function RegexTesterTile({
             variant="mono"
             value={testString}
             onChange={(e) => setTestString(e.target.value)}
-            placeholder="テストするテキストを入力……"
+            placeholder="テストするテキストを入力..."
             rows={6}
             spellCheck={false}
           />
@@ -267,7 +267,7 @@ export default function RegexTesterTile({
         {/* === 処理中インジケータ === */}
         {isProcessing && (
           <div className={styles.processing} role="status" aria-live="polite">
-            処理中……
+            処理中...
           </div>
         )}
 
@@ -320,7 +320,7 @@ export default function RegexTesterTile({
                 ))}
                 {matchResult.matches.length > 50 && (
                   <p className={styles.truncated}>
-                    ……他 {matchResult.matches.length - 50} 件のマッチ
+                    ...他 {matchResult.matches.length - 50} 件のマッチ
                   </p>
                 )}
               </div>

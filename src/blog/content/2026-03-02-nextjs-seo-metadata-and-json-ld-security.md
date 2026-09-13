@@ -8,6 +8,36 @@ tags: ["Next.js", "SEO", "セキュリティ"]
 category: "dev-notes"
 series: "nextjs-deep-dive"
 series_order: 5
+  - "19ca9d91e1d"
+  - "19ca9d93698"
+  - "19ca9dd345f"
+  - "19ca9dcf4e0"
+  - "19ca9ddf821"
+  - "19ca9de1ec5"
+  - "19ca9de4220"
+  - "19ca9e13b11"
+  - "19ca9e0e017"
+  - "19ca9e31105"
+  - "19ca9e41bea"
+  - "19ca9e443d3"
+  - "19ca9e462a3"
+  - "19ca9e48ec3"
+  - "19ca9e684eb"
+  - "19ca9e6a567"
+  - "19ca9e6f3f9"
+  - "19ca9e73994"
+  - "19ca9ed644c"
+  - "19ca9ed6aef"
+  - "19ca9ed7173"
+  - "19ca9fb83c1"
+  - "19ca9f28e68"
+  - "19caa0dde23"
+  - "19caa0e3b47"
+  - "19caa12a368"
+  - "19caa1558b6"
+  - "19caa1f1c84"
+  - "19caa1f7260"
+  - "19caa23cab0"
 related_tool_slugs: []
 draft: false
 ---
@@ -229,7 +259,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
 コンテンツのメタデータに公開日や更新日のフィールドがない場合は、まずそれを追加するところから始めます。このアプローチにより、各ページのメタデータに発行日や更新日を記録するようになります。
 
-#### 一覧ページのlastModifiedはどうする？
+#### 一覧ページのlastModifiedはどうする?
 
 `/games`のような一覧ページは、配下のコンテンツが更新されれば一覧の内容も変わります。そのため、配下コンテンツの最新更新日時を使うのが適切です。
 
@@ -255,7 +285,7 @@ const sitemapEntries = [
 ];
 ```
 
-#### 静的ページはどうする？
+#### 静的ページはどうする?
 
 「このサイトについて」のような静的ページは、更新頻度が低いため定数で管理します。
 

@@ -5,12 +5,12 @@
  * - 名乗り: h1 がページに1つ（サイト名）・site-concept の軸「やってみるサイト」・
  *   AI 運営の明示（constitution rule 3）
  * - 目玉（今日のためしどころ）: 成長エンジンの診断 character-personality を単一区画で立て、
- *   レジストリ由来のタイトルで実在パスへ／持ち帰れることの伝達（§7）／朱の入口／
- *   値札「24タイプ」。コピーの数値（12問・24タイプ）は診断データの出どころ値と一致する（ガード）。
+ *   レジストリ由来のタイトルで実在パスへ／「札にして持ち帰れる」の伝達（§7）／朱の入口／
+ *   値札「24タイプ」。コピーの数値（12問・24タイプ）は診断データの正典値と一致する（ガード）。
  * - 棚（品書き）: 診断・占い・あそびの入口（目玉の character-personality は品書きから外す）と
  *   /play への全リンク導線
- * - 辞典・ツール（+ /tools 全リンク）・ブログ（/blog）の入口が実在ルートを指す
- * - DESIGN.md §6: 絵文字を持ち込まない（象徴絵文字は診断結果面の専用）
+ * - 辞典棚・道具棚（+ /tools 全リンク）・読みもの棚（/blog）の入口が実在ルートを指す
+ * - DESIGN.md §3: 絵文字を持ち込まない（象徴絵文字は診断結果面の専用）
  * - metadata: 店先の description / OGP / twitter / canonical・noindex の不在
  */
 import { expect, test } from "vitest";
@@ -20,7 +20,6 @@ import { playContentBySlug } from "@/play/registry";
 import { quizBySlug, getResultIdsForQuiz } from "@/play/quiz/registry";
 import { getContentPath } from "@/play/paths";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
-import { getAllBlogPosts } from "@/blog/_lib/blog";
 
 /** 目玉（今日のためしどころ）に立てる診断の slug（page.tsx の HERO_SLUG と同期）。 */
 const HERO_SLUG = "character-personality";
@@ -53,7 +52,7 @@ test("site-concept の軸（やってみるサイト）と AI 運営の明示（
   // （§3 の組版: 折り返しを文節境界だけで起こす。site-concept の軸「やってみるサイト」を含む）。
   expect(screen.getByText("読むだけのサイトではなく、")).toBeInTheDocument();
   expect(screen.getByText("やってみるサイト。")).toBeInTheDocument();
-  // AI 運営の明示は平明な言葉で組む（内部の設計語彙を来訪者に見せない・DESIGN §6）。
+  // cycle-309 立証 E3: 「店主」（店の枠の押し付け）→「運営しているのは」へ是正。
   expect(
     screen.getByText(/運営しているのは人ではなくAIです/),
   ).toBeInTheDocument();
@@ -77,17 +76,16 @@ test("目玉は成長エンジンの診断を単一区画で立て、レジス�
   expect(cta).toHaveAttribute("href", getContentPath(content!));
 });
 
-test("目玉は持ち帰れることと結果タイプ数をトップで伝える（§7）", () => {
+test("目玉は『札にして持ち帰れる』と結果タイプ数の値札を店先で伝える（§7）", () => {
   render(<Home />);
   const hero = screen.getByRole("region", { name: "あなたに似たキャラ診断" });
-  // §7 の増幅器: 持ち帰れることをトップで明示する。文言は平明な言葉で書く——
-  // 内部の設計語彙（札）を来訪者に届く文へ出さない（§6）。
-  expect(within(hero).getByText(/画像で保存できます/)).toBeInTheDocument();
+  // §7 の増幅器: 持ち帰り（札）を店先で明示
+  expect(within(hero).getByText(/札にして持ち帰れます/)).toBeInTheDocument();
   // 結果タイプ数の値札（実情報）
   expect(within(hero).getByText("24タイプ")).toBeInTheDocument();
 });
 
-test("目玉のコピーの数値は診断データの出どころ値と一致する（12問・24タイプ）", () => {
+test("目玉のコピーの数値は診断データの正典値と一致する（12問・24タイプ）", () => {
   // トップに書いた「12の問い」「24タイプ」が診断データの実値とずれないことを機械ガードする
   // （データが変わればこのテストが落ち、店先コピーの更新を強制する）。
   const quiz = quizBySlug.get(HERO_SLUG);
@@ -110,7 +108,7 @@ test("診断・占い・あそび棚の品書きは想定の slug がレジス�
   expect(EXPECTED_FEATURED_SLUGS).not.toContain(HERO_SLUG);
 });
 
-test("各品書きの品名は正規パスへのリンクで、レジストリ由来の表示名を持つ", () => {
+test("各品書きの品名は正規パスへのリンクで、レジストリ由来のタイトルを持つ", () => {
   const { container } = render(<Home />);
   for (const slug of EXPECTED_FEATURED_SLUGS) {
     const content = playContentBySlug.get(slug);
@@ -121,10 +119,7 @@ test("各品書きの品名は正規パスへのリンクで、レジストリ�
       `a[href="${getContentPath(content)}"]`,
     );
     expect(link, `"${slug}" の品名リンクが見つからない`).not.toBeNull();
-    // 表示名は一覧・推薦と同じ shortTitle（DESIGN §6-4「行き先の名前を揃える」）。
-    expect(link?.textContent ?? "").toContain(
-      content.shortTitle ?? content.title,
-    );
+    expect(link?.textContent ?? "").toContain(content.title);
   }
 });
 
@@ -136,7 +131,7 @@ test("「すべての診断・占い・ゲームを見る」→ /play への導�
   expect(allLink).toHaveAttribute("href", "/play");
 });
 
-// ===== 辞典・ツール・ブログ（実在ルートへの入口） =====
+// ===== 辞典棚・道具棚・読みもの棚（実在ルートへの入口） =====
 
 test("辞典棚は漢字・四字熟語・伝統色・ユーモアの実在ルートを指す", () => {
   render(<Home />);
@@ -152,37 +147,31 @@ test("辞典棚は漢字・四字熟語・伝統色・ユーモアの実在ル�
   }
 });
 
-test("ツールの棚は代表的な入口と /tools への全リンクを持つ", () => {
+test("道具棚は代表的なツールの入口と /tools への全リンクを持つ", () => {
   render(<Home />);
   const cases: [string, string][] = [
     ["文字数カウント", "/tools/char-count"],
-    ["単位変換", "/tools/unit-converter"],
+    ["単位換算", "/tools/unit-converter"],
     ["JSON整形", "/tools/json-formatter"],
-    ["QRコード生成", "/tools/qr-code"],
+    ["QRコード作成", "/tools/qr-code"],
   ];
   for (const [label, href] of cases) {
     const link = screen.getByRole("link", { name: label });
     expect(link).toHaveAttribute("href", href);
   }
-  const allTools = screen.getByRole("link", { name: "ツールをすべて見る" });
+  const allTools = screen.getByRole("link", { name: "すべての道具を見る" });
   expect(allTools).toHaveAttribute("href", "/tools");
 });
 
-test("ブログ棚は新しい記事と、/blog への入口を持つ", () => {
+test("読みもの棚はブログ（/blog）への入口を持つ", () => {
   render(<Home />);
-  const posts = getAllBlogPosts().slice(0, 3);
-  expect(posts.length).toBeGreaterThan(0);
-  for (const post of posts) {
-    const link = screen.getByRole("link", { name: post.title });
-    expect(link).toHaveAttribute("href", `/blog/${post.slug}`);
-  }
-  const allPosts = screen.getByRole("link", { name: "ブログをすべて見る" });
-  expect(allPosts).toHaveAttribute("href", "/blog");
+  const blog = screen.getByRole("link", { name: "ブログ" });
+  expect(blog).toHaveAttribute("href", "/blog");
 });
 
 // ===== DESIGN.md 準拠（トップに絵文字を持ち込まない） =====
 
-test("ページに絵文字を含まない（DESIGN.md §6）", () => {
+test("ページに絵文字を含まない（DESIGN.md §3）", () => {
   const { container } = render(<Home />);
   expect(container.textContent ?? "").not.toMatch(/\p{Extended_Pictographic}/u);
 });

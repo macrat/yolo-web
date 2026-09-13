@@ -88,7 +88,7 @@ const unexpectedCompatibilityQuiz: QuizDefinition = {
   questions: [
     {
       id: "q1",
-      text: "朝のルーティンで一番大事なのは？",
+      text: "朝のルーティンで一番大事なのは?",
       choices: [
         {
           id: "q1-a",
@@ -114,7 +114,7 @@ const unexpectedCompatibilityQuiz: QuizDefinition = {
     },
     {
       id: "q2",
-      text: "人間関係で大切にしていることは？",
+      text: "人間関係で大切にしていることは?",
       choices: [
         {
           id: "q2-a",
@@ -140,7 +140,7 @@ const unexpectedCompatibilityQuiz: QuizDefinition = {
     },
     {
       id: "q3",
-      text: "休日に一人で過ごすなら？",
+      text: "休日に一人で過ごすなら?",
       choices: [
         {
           id: "q3-a",
@@ -166,7 +166,7 @@ const unexpectedCompatibilityQuiz: QuizDefinition = {
     },
     {
       id: "q4",
-      text: "自分の性格を色で表すと？",
+      text: "自分の性格を色で表すと?",
       choices: [
         {
           id: "q4-a",
@@ -192,7 +192,7 @@ const unexpectedCompatibilityQuiz: QuizDefinition = {
     },
     {
       id: "q5",
-      text: "困ったときに頼りにするのは？",
+      text: "困ったときに頼りにするのは?",
       choices: [
         {
           id: "q5-a",
@@ -218,7 +218,7 @@ const unexpectedCompatibilityQuiz: QuizDefinition = {
     },
     {
       id: "q6",
-      text: "好きな季節は？",
+      text: "好きな季節は?",
       choices: [
         {
           id: "q6-a",
@@ -244,7 +244,7 @@ const unexpectedCompatibilityQuiz: QuizDefinition = {
     },
     {
       id: "q7",
-      text: "大切な人へのプレゼントを選ぶ基準は？",
+      text: "大切な人へのプレゼントを選ぶ基準は?",
       choices: [
         {
           id: "q7-a",
@@ -270,7 +270,7 @@ const unexpectedCompatibilityQuiz: QuizDefinition = {
     },
     {
       id: "q8",
-      text: "今の自分に足りないと思うものは？",
+      text: "今の自分に足りないと思うものは?",
       choices: [
         {
           id: "q8-a",

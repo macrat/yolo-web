@@ -87,7 +87,7 @@ export function validateEmail(email: string): EmailValidationResult {
 
   // Local part checks
   if (localPart === "") {
-    errors.push("ローカルパート（@の前）が空です");
+    errors.push("ローカルパート(@の前)が空です");
   } else {
     if (localPart.length > 64) {
       errors.push("ローカルパートが64文字を超えています");
@@ -114,14 +114,14 @@ export function validateEmail(email: string): EmailValidationResult {
 
   // Domain checks
   if (domain === "") {
-    errors.push("ドメイン（@の後）が空です");
+    errors.push("ドメイン(@の後)が空です");
   } else {
     if (domain.length > 253) {
       errors.push("ドメインが253文字を超えています");
     }
     const labels = domain.split(".");
     if (labels.length < 2) {
-      errors.push("ドメインにTLD（トップレベルドメイン）がありません");
+      errors.push("ドメインにTLD(トップレベルドメイン)がありません");
     }
     for (const label of labels) {
       if (label.length === 0) {

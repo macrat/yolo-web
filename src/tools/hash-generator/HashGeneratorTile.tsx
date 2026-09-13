@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * HashGeneratorTile — ハッシュ生成ツールの単一出どころタイル
+ * HashGeneratorTile — ハッシュ生成ツールの単一正典タイル
  *
  * cycle-228 T-17 で HashGeneratorPage.tsx を Panel ルートのタイルへ統合したもの。
  *
@@ -192,7 +192,7 @@ export default function HashGeneratorTile({
           variant="mono"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="ハッシュ化するテキストを入力……"
+          placeholder="ハッシュ化するテキストを入力..."
           rows={4}
           spellCheck={false}
         />

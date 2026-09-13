@@ -96,11 +96,6 @@ type ResultCardProps = {
   resultPageLabels?: QuizMeta["resultPageLabels"];
   /** クイズのアクセントカラー（見出し色やcharacterIntro背景に使用） */
   accentColor?: string;
-  /**
-   * この診断の主題が色そのものか（DESIGN.md §2）。true のとき結果の面は
-   * 和色8色ではなく、その結果が持つ固有色を地に使う。
-   */
-  colorIsSubject?: boolean;
   /** 相性診断用の referrer タイプID（animal-personality variantで使用） */
   referrerTypeId?: string;
   /**
@@ -249,7 +244,7 @@ function buildAnimalPersonalityAfterTodayAction(
           <InviteFriendButton
             quizSlug={quiz.meta.slug}
             resultTypeId={resultId}
-            inviteText="日本の固有種診断で相性を調べよう！"
+            inviteText="日本の固有種診断で相性を調べよう!"
             contentId={contentIdForQuiz(quiz.meta.slug)}
           />
         </>
@@ -261,7 +256,7 @@ function buildAnimalPersonalityAfterTodayAction(
     <InviteFriendButton
       quizSlug={quiz.meta.slug}
       resultTypeId={resultId}
-      inviteText="日本の固有種診断で相性を調べよう！"
+      inviteText="日本の固有種診断で相性を調べよう!"
       contentId={contentIdForQuiz(quiz.meta.slug)}
     />
   );
@@ -451,7 +446,6 @@ export default function ResultCard({
   detailedContent,
   resultPageLabels,
   accentColor,
-  colorIsSubject,
   referrerTypeId,
   allResults,
   coTypes,
@@ -461,7 +455,7 @@ export default function ResultCard({
       ? `${window.location.origin}/play/${quizSlug}/result/${result.id}`
       : `/play/${quizSlug}/result/${result.id}`;
 
-  const shareText = `${quizTitle}の結果は「${result.title}」でした！ #${quizTitle.replace(/\s/g, "")} #yolosnet`;
+  const shareText = `${quizTitle}の結果は「${result.title}」でした! #${quizTitle.replace(/\s/g, "")} #yolosnet`;
 
   // catchphrase を description の前に表示する variant のリスト。
   // このリストに含まれる variant は detailedContent.catchphrase を持つことが保証される。
@@ -520,7 +514,6 @@ export default function ResultCard({
             word={catchphrase ?? undefined}
             symbol={pickResultSymbol(result.title)}
             color={pickResultWairoColor(result.id)}
-            colorOverride={colorIsSubject ? result.color : undefined}
             productName={quizTitle}
             seal="診"
           />
@@ -538,7 +531,7 @@ export default function ResultCard({
         </div>
       ) : (
         <>
-          {/* 抑制ヘッダ（フォールバック）。絵文字アイコンは新デザイン体系で撤去（DESIGN.md §6） */}
+          {/* 抑制ヘッダ（フォールバック）。絵文字アイコンは新デザイン体系で撤去（DESIGN.md §3） */}
           <p className={styles.resultLabel}>あなたの結果</p>
           <h2 className={styles.title}>{result.title}</h2>
           {quizType === "knowledge" &&

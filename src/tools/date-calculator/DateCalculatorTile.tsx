@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * DateCalculatorTile — 日付計算の単一出どころタイル
+ * DateCalculatorTile — 日付計算の単一正典タイル
  *
  * cycle-228 T-21: DateCalculatorPage.tsx を Panel ルートのタイルへ作り直し。
  *

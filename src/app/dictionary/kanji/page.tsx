@@ -183,7 +183,7 @@ export default function KanjiIndexPage() {
       <div className={styles.search}>
         <DictionarySearch
           heading="漢字を検索"
-          placeholder="漢字・読み・意味で検索……"
+          placeholder="漢字・読み・意味で検索..."
           unit="漢字"
           items={searchItems}
         />

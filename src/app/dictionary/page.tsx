@@ -76,7 +76,7 @@ const DICTIONARY_ITEMS: ShinagakiItem[] = [
     meta: `${yojiCount}語`,
   },
   {
-    name: "日本の伝統色",
+    name: "伝統色辞典",
     href: "/dictionary/colors",
     note: "日本の伝統色の名前と色みを、由来つきで並べています。",
     meta: `${colorCount}色`,
@@ -103,7 +103,7 @@ export default function DictionaryPage() {
       </div>
 
       {/* 4系統の品書き（罫区切りリスト1枚で渡す・§4） */}
-      <Shinagaki items={DICTIONARY_ITEMS} ariaLabel="辞典の一覧" />
+      <Shinagaki items={DICTIONARY_ITEMS} ariaLabel="辞典の品書き" />
     </div>
   );
 }

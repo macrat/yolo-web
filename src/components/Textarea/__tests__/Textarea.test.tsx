@@ -125,14 +125,14 @@ describe("Textarea", () => {
     expect(textareaBlock).toContain("var(--radius-sm)");
   });
 
-  it(".textarea:focus-visible has outline: 2px solid var(--accent) (DESIGN §10)", () => {
+  it(".textarea:focus-visible has outline: 2px solid var(--accent) (DESIGN §2)", () => {
     const cssPath = resolve(__dirname, "../Textarea.module.css");
     const css = readFileSync(cssPath, "utf-8");
     // focus-visible ブロックに outline: 2px solid var(--accent) が含まれること
     expect(css).toContain("outline: 2px solid var(--accent)");
   });
 
-  it(".textarea:focus-visible has outline-offset: 2px (DESIGN §10)", () => {
+  it(".textarea:focus-visible has outline-offset: 2px (DESIGN §2)", () => {
     const cssPath = resolve(__dirname, "../Textarea.module.css");
     const css = readFileSync(cssPath, "utf-8");
     expect(css).toContain("outline-offset: 2px");
@@ -159,7 +159,7 @@ describe("Textarea", () => {
     expect(css).not.toMatch(/var\(--color-/);
   });
 
-  it(".textarea が line-height を明示している（DESIGN §3: 行間は成り行きにしない）", () => {
+  it(".textarea has line-height (行間原則1.7 or specified value, DESIGN §3)", () => {
     const cssPath = resolve(__dirname, "../Textarea.module.css");
     const css = readFileSync(cssPath, "utf-8");
     const textareaBlock = css.match(/\.textarea\s*\{[^}]+\}/)?.[0] ?? "";

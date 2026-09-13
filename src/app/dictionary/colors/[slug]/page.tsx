@@ -42,7 +42,7 @@ export default async function ColorDetailPage({
       breadcrumbItems={[
         { label: "ホーム", href: "/" },
         { label: "辞典", href: "/dictionary" },
-        { label: "日本の伝統色", href: "/dictionary/colors" },
+        { label: "伝統色辞典", href: "/dictionary/colors" },
         { label: color.name },
       ]}
       jsonLd={jsonLd}

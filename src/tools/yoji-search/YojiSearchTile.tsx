@@ -126,7 +126,7 @@ export default function YojiSearchTile({
             <Input
               id={searchId}
               type="search"
-              placeholder="四字熟語・読み・意味で検索……"
+              placeholder="四字熟語・読み・意味で検索..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               aria-label="四字熟語を検索"

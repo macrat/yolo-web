@@ -7,7 +7,6 @@ import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { playContentBySlug } from "@/play/registry";
 import type { PlayContentMeta } from "@/play/types";
 import { getContentPath } from "@/play/paths";
-import { getAllBlogPosts } from "@/blog/_lib/blog";
 import styles from "./page.module.css";
 
 /**
@@ -27,7 +26,7 @@ import styles from "./page.module.css";
  *    朱の入口ボタン「やってみる →」44px・ピルなし）、右に結果の見本を Tsutsumi（包み）で 1 枚
  *    実際に見せる。「持ち帰れる札」を言うだけでなく成果物として見せ（§7 の増幅器）、来訪者自身
  *    の結果と誤認させないよう「見本」であることを正直に添える。デスクトップは左右・モバイルは縦積み。
- * 3. 品書き（よろず＝広さの棚）: 目玉の後ろに、残りの体験・辞典・ツール・ブログを
+ * 3. 品書き（よろず＝広さの棚）: 目玉の後ろに、残りの体験・辞典・道具・読みものを
  *    Shinagaki の棚で並べる。ここは「品揃えの広さ＝よろず」を示す部分。器は静かに。
  *    目玉に立てた診断は品書きから外す（同じページで同一診断を二度立てない）。
  *
@@ -36,7 +35,7 @@ import styles from "./page.module.css";
  */
 
 const TOP_DESCRIPTION =
-  "AIが営むよろず屋、yolos.net。性格診断や占い、漢字・四字熟語・伝統色の辞典、文字数カウントや単位変換などのツールまで。読むだけでなく、その場でためして持ち帰れます。";
+  "AIが営むよろず屋、yolos.net。性格診断や占い、漢字・四字熟語・伝統色の辞典、文字数カウントや単位換算などの道具まで。読むだけでなく、その場でためして持ち帰れます。";
 
 export const metadata: Metadata = {
   title: SITE_NAME,
@@ -61,7 +60,7 @@ export const metadata: Metadata = {
 /**
  * 目玉（今日のためしどころ）に立てる診断。成長エンジン＝実測集客首位の
  * character-personality を店先の焦点にする。品名・遷移先はレジストリ（単一情報源）から
- * 引き、コピーの具体（問数「12」・タイプ数「24」）は診断データの出どころ値と一致する
+ * 引き、コピーの具体（問数「12」・タイプ数「24」）は診断データの正典値と一致する
  * （page.test.tsx が questionCount / result 数の一致を機械ガードし、乖離を防ぐ）。
  */
 const HERO_SLUG = "character-personality";
@@ -116,9 +115,7 @@ const featuredPlayItems: ShinagakiItem[] = FEATURED_PLAY.flatMap((entry) => {
   if (content === undefined) return [];
   return [
     {
-      // 一覧・推薦・関連リンクと同じ「navigation 上の名前」を使う。面ごとに
-      // 別の名で呼ぶと、来訪者には同じものが二つあるように見える（DESIGN §6-4）。
-      name: content.shortTitle ?? content.title,
+      name: content.title,
       href: getContentPath(content),
       note: entry.note,
       tags: entry.tags,
@@ -150,7 +147,7 @@ const DICTIONARY_ITEMS: ShinagakiItem[] = [
   },
 ];
 
-/** 「ツール」棚（§7「実務の結果」= 正確さが価値）。代表的な入口だけを置く。全一覧は /tools。 */
+/** 「道具」棚（§7「実務の結果」= 正確さが価値）。代表的な道具の入口。全一覧は /tools。 */
 const TOOL_ITEMS: ShinagakiItem[] = [
   {
     name: "文字数カウント",
@@ -158,7 +155,7 @@ const TOOL_ITEMS: ShinagakiItem[] = [
     note: "文章の文字数と行数を、その場で数えます。",
   },
   {
-    name: "単位変換",
+    name: "単位換算",
     href: "/tools/unit-converter",
     note: "長さ・重さ・温度などをまとめて換算。",
   },
@@ -168,50 +165,20 @@ const TOOL_ITEMS: ShinagakiItem[] = [
     note: "読みづらいJSONを、見やすい形に整えます。",
   },
   {
-    name: "QRコード生成",
+    name: "QRコード作成",
     href: "/tools/qr-code",
     note: "URLや文章から、QRコードをその場で作ります。",
   },
 ];
 
-/** 棚に出す記事の本数。多いと棚が読みものになり、少ないと何のブログか伝わらない。 */
-const FEATURED_POST_COUNT = 3;
-
-/**
- * ひとことの上限。記事の第1文は中央値51字・最長143字（実測87本）で、360px では
- * 1行あたり約19字なので、143字は8行の壁になる。60字（約3行）で切る——中央値は
- * そのまま通り、長すぎる3割だけが縮む。
- */
-const NOTE_MAX_LENGTH = 60;
-
-/**
- * 記事のひとことを作る。
- *
- * description は検索結果向けの要約なので行に置くには長いが、その第1文は記事の
- * 掴みとして書かれているのでそのまま置ける。長すぎる第1文だけ、読点で切って
- * 「……」を添える——途中で断ち切るより、続きがあることを見せるほうが親切である。
- */
-function toNote(description: string): string {
-  const firstSentence = `${description.split("。")[0]}。`;
-  if (firstSentence.length <= NOTE_MAX_LENGTH) return firstSentence;
-  const head = firstSentence.slice(0, NOTE_MAX_LENGTH);
-  const lastComma = head.lastIndexOf("、");
-  // 読点が前のほうにあると、切った先に何も残らない（欧文で始まる文で起きやすい）。
-  // 上限の半分を下回るなら読点では切らず、上限まで取る。
-  const cutAtComma = lastComma >= NOTE_MAX_LENGTH / 2;
-  return `${cutAtComma ? head.slice(0, lastComma) : head}……`;
-}
-
-/** 「ブログ」棚。新しい記事から数本を出す。 */
-const READING_ITEMS: ShinagakiItem[] = getAllBlogPosts()
-  .slice(0, FEATURED_POST_COUNT)
-  .map((post) => ({
-    name: post.title,
-    href: `/blog/${post.slug}`,
-    note: toNote(post.description),
-    // 値札の語は一覧・記事本文と揃える。「17分」だけだと「17分前」とも読める。
-    tags: [`${post.readingTime}分で読める`],
-  }));
+/** 「読みもの」棚（ブログ）。 */
+const READING_ITEMS: ShinagakiItem[] = [
+  {
+    name: "ブログ",
+    href: "/blog",
+    note: "サイトを作りながら気づいたことや、道具の使い方を書いています。",
+  },
+];
 
 export default function Home() {
   return (
@@ -226,9 +193,9 @@ export default function Home() {
           <span className={styles.phrase}>やってみるサイト。</span>
           <span className={styles.phrase}>AIが営む、よろず屋です。</span>
         </p>
-        {/* AI 運営の明示（constitution rule 3）。正直の開示であって「実験」を売り文句にしない。
-            詳細な注記は Footer が常時表示するため、ここは一言に留める。
-            内部の設計語彙（店主・品書き等）は来訪者に見せない（DESIGN §6）。 */}
+        {/* AI 運営の明示（constitution rule 3・正直の開示であって「実験」を価値として売り込まない）。
+            詳細な注記は Footer が常時表示するため一言に。cycle-309 立証(decision.md E3): 「店主」は
+            「店」の枠を来訪者が受け入れる前提の押し付け(§0.1(3))のため「運営しているのは」へ是正。 */}
         <p className={styles.aiNotice}>
           運営しているのは人ではなくAIです。実験なので、内容に誤りがあるかもしれません。
         </p>
@@ -249,7 +216,7 @@ export default function Home() {
               {heroContent.title}
             </h2>
             <p className={styles.heroLede}>
-              12の問いに答えると、あなたに近いキャラクター像がひとつ。結果は画像で保存できます。
+              12の問いに答えると、あなたに近いキャラクター像がひとつ。結果は札にして持ち帰れます。
             </p>
             <p className={styles.heroTags}>
               <Nefuda label="24タイプ" />
@@ -279,7 +246,7 @@ export default function Home() {
               seal="診"
             />
             <p className={styles.heroSampleNote}>
-              結果はこんな画像になります（これは見本です）。
+              結果はこんな札になります（これは見本です）。
             </p>
           </div>
         </section>
@@ -291,7 +258,7 @@ export default function Home() {
         <Shinagaki
           heading="診断・占い・あそび"
           items={featuredPlayItems}
-          ariaLabel="診断・占い・あそびの一覧"
+          ariaLabel="診断・占い・あそびの品書き"
         />
         <p className={styles.seeAll}>
           <Link href="/play" className={styles.seeAllLink}>
@@ -305,36 +272,27 @@ export default function Home() {
         <Shinagaki
           heading="辞典"
           items={DICTIONARY_ITEMS}
-          ariaLabel="辞典の一覧"
+          ariaLabel="辞典の品書き"
         />
       </div>
 
-      {/* 棚3: ツール（実務の結果） */}
+      {/* 棚3: 道具（実務の結果） */}
       <div className={styles.shelf}>
-        <Shinagaki
-          heading="ツール"
-          items={TOOL_ITEMS}
-          ariaLabel="ツールの一覧"
-        />
+        <Shinagaki heading="道具" items={TOOL_ITEMS} ariaLabel="道具の品書き" />
         <p className={styles.seeAll}>
           <Link href="/tools" className={styles.seeAllLink}>
-            ツールをすべて見る
+            すべての道具を見る
           </Link>
         </p>
       </div>
 
-      {/* 棚4: ブログ（サイトを作る過程の記録） */}
+      {/* 棚4: 読みもの（ブログ） */}
       <div className={styles.shelf}>
         <Shinagaki
-          heading="ブログ"
+          heading="読みもの"
           items={READING_ITEMS}
-          ariaLabel="ブログの一覧"
+          ariaLabel="読みものの品書き"
         />
-        <p className={styles.seeAll}>
-          <Link href="/blog" className={styles.seeAllLink}>
-            ブログをすべて見る
-          </Link>
-        </p>
       </div>
     </div>
   );

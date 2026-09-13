@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * KeigoReferenceTile — 敬語早見表の単一出どころタイル
+ * KeigoReferenceTile — 敬語早見表の単一正典タイル
  *
  * cycle-228 T-18: KeigoReferencePage.tsx をタイル・アーキテクチャへ移行。
  * ルートが <Panel>（DESIGN.md §1 パネル準拠）で自己完結。
@@ -198,7 +198,7 @@ export default function KeigoReferenceTile({
                 <Input
                   id={searchId}
                   type="text"
-                  placeholder="動詞を検索……"
+                  placeholder="動詞を検索..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   aria-label="敬語を検索"

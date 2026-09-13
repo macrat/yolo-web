@@ -117,7 +117,7 @@ describe("CharacterFortuneResultPage CTA1", () => {
     render(page);
 
     const ctaButtons =
-      screen.getAllByText("あなたはどのタイプ？ 診断してみよう");
+      screen.getAllByText("あなたはどのタイプ? 診断してみよう");
     expect(ctaButtons.length).toBeGreaterThanOrEqual(1);
   });
 });
@@ -182,7 +182,7 @@ describe("CharacterFortuneResultPage CTA", () => {
 
     // CTA1 と 相性セクションのCTA の両方が存在する
     const ctaButtons =
-      screen.getAllByText("あなたはどのタイプ？ 診断してみよう");
+      screen.getAllByText("あなたはどのタイプ? 診断してみよう");
     expect(ctaButtons.length).toBeGreaterThanOrEqual(1);
 
     // 相性診断ボタンも表示される

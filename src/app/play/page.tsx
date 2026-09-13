@@ -115,7 +115,7 @@ export default function PlayPage() {
           <Shinagaki
             heading={shelf.label}
             items={shelf.items}
-            ariaLabel={`${shelf.label}の一覧`}
+            ariaLabel={`${shelf.label}の品書き`}
           />
         </div>
       ))}

@@ -32,9 +32,9 @@ interface CrossCategoryBannerProps {
  * cycle-268 での legacy 版（廃止済み）からの差分:
  * - バッジのハードコード派手色（紫/桃/青のカテゴリ別装飾色）を撤去し、無彩の
  *   var(--paper)（地）/ var(--ink-2)（文字）/ var(--rule)（罫）に統一
- *   （DESIGN.md §2「副次的な要素は別の色ではなく色の不在で表す」）。カテゴリは categoryLabel テキストで識別できる。
- * - 装飾の絵文字アイコン（item.icon）を撤去（DESIGN.md §6「見出し・ナビ・
- *   ボタンに絵文字を使わない」）。タイトルテキストで十分識別できる。
+ *   （DESIGN.md §2「色は機能のみ」）。カテゴリは categoryLabel テキストで識別できる。
+ * - 装飾の絵文字アイコン（item.icon）を撤去（DESIGN.md §3「絵文字は UI 装飾・
+ *   ナビには使わない」）。タイトルテキストで十分識別できる。
  * - ラベルの中央寄せを撤去（左寄せ）、角丸を新トークン化、旧 --color-* → 新トークン。
  *
  * CrossCategoryItem.icon フィールド自体は型・props を変えず保持する

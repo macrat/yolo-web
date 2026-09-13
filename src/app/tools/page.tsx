@@ -104,7 +104,7 @@ export default function ToolsPage() {
               key={category}
               heading={heading}
               items={items}
-              ariaLabel={`${heading}の一覧`}
+              ariaLabel={`${heading}の品書き`}
             />
           );
         })}

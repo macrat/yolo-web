@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * KanaConverterTile — ひらがな・カタカナ変換の単一出どころタイル
+ * KanaConverterTile — ひらがな・カタカナ変換の単一正典タイル
  *
  * cycle-228 T-3 で KanaConverterPage.tsx を Panel ルートのタイルへ作り直したもの。
  *
@@ -161,7 +161,7 @@ export default function KanaConverterTile({
           id={inputId}
           value={input}
           onChange={handleInputChange}
-          placeholder="変換するテキストを入力……"
+          placeholder="変換するテキストを入力..."
           rows={6}
           spellCheck={false}
         />

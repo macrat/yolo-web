@@ -1,5 +1,5 @@
 /* TraditionalColorPaletteTile.module.css
- * cycle-228 T-19: 単一出どころタイル化
+ * cycle-228 T-19: 単一正典タイル化
  * DESIGN.md（店構え）準拠:
  * - 旧 --color-* トークン不使用（紙 --paper/--paper-2・墨 --ink/--ink-2・朱 --accent）
  * - --accent を background に直接使わない（スウォッチの動的実色は成果物パレットなので対象外）

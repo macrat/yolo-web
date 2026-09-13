@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * ImageBase64Tile — 画像 Base64 変換の単一出どころタイル
+ * ImageBase64Tile — 画像 Base64 変換の単一正典タイル
  *
  * cycle-228 T-26: ImageBase64Page.tsx を Panel ルートのタイルへ再実装。
  *
@@ -346,7 +346,7 @@ export default function ImageBase64Tile({
               variant="mono"
               value={decodeInput}
               onChange={(e) => setDecodeInput(e.target.value)}
-              placeholder="data:image/png;base64,iVBOR…… または Base64文字列を貼り付け"
+              placeholder="data:image/png;base64,iVBOR... または Base64文字列を貼り付け"
               rows={6}
               spellCheck={false}
             />

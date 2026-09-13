@@ -84,7 +84,7 @@ export default function NextGameBanner({
     <div className={styles.container}>
       <div className={styles.progress}>
         {allComplete
-          ? "今日のパズル 完全制覇！"
+          ? "今日のパズル 完全制覇!"
           : `今日のパズル ${playedCount}/${totalCount} クリア`}
       </div>
       {!allComplete && (

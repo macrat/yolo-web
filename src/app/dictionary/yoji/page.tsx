@@ -128,7 +128,7 @@ export default function YojiIndexPage() {
       <div className={styles.search}>
         <DictionarySearch
           heading="四字熟語を検索"
-          placeholder="四字熟語・読み・意味で検索……"
+          placeholder="四字熟語・読み・意味で検索..."
           unit="四字熟語"
           items={searchItems}
         />

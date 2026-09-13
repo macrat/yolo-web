@@ -39,7 +39,7 @@ interface FudaActionsProps {
 /** 札画像を共有/保存の対象とする診断の contentType（GA4）。 */
 const CONTENT_TYPE = "diagnosis";
 
-/** 見出し（この結果を画像で持ち帰る）の id。ボタン群が aria-describedby で参照する。 */
+/** 見出し（この結果を札として持ち帰る）の id。ボタン群が aria-describedby で参照する。 */
 const LABEL_ID = "fuda-actions-label";
 
 /**
@@ -68,7 +68,7 @@ export default function FudaActions({
     typeof window !== "undefined"
       ? `${window.location.origin}/play/${quizSlug}/result/${resultId}`
       : `/play/${quizSlug}/result/${resultId}`;
-  const shareText = `${quizTitle}の結果は「${resultTitle}」でした！`;
+  const shareText = `${quizTitle}の結果は「${resultTitle}」でした!`;
 
   /**
    * 固定 URL から札 PNG を取得して File 化する。
@@ -181,17 +181,16 @@ export default function FudaActions({
 
   const statusMessage =
     status === "copied"
-      ? "リンクをコピーしました！"
+      ? "リンクをコピーしました!"
       : status === "error"
         ? "画像を用意できませんでした。時間をおいて再度お試しください。"
         : "";
 
   return (
     <div className={styles.wrapper}>
-      {/* 見出しをボタン群と aria-describedby で結びつけ、支援技術で「何をするボタンか」を伝える。
-          文言は平明な言葉で書く——内部の設計語彙（札）を来訪者に届く文へ出さない（DESIGN §6）。 */}
+      {/* 見出しをボタン群と aria-describedby で結びつけ、支援技術で「何をする札か」を伝える。 */}
       <p id={LABEL_ID} className={styles.label}>
-        この結果を画像で持ち帰る
+        この結果を札として持ち帰る
       </p>
       <div className={styles.buttons}>
         <button

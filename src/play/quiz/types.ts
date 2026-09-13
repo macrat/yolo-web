@@ -331,16 +331,6 @@ export interface QuizMeta {
     behaviorsHeading?: string;
     adviceHeading?: string;
   };
-  /**
-   * この診断の主題が色そのものであるか（DESIGN.md §2「主題が色そのものである面」）。
-   *
-   * true のとき、結果の面は成果物パレットの和色8色ではなく、各結果が持つ固有色
-   * （{@link QuizResult.color}）を地に使う。そこでは色が装飾ではなく中身なので、
-   * 8色へ写像すると中身が別物になる——「あなたは藍色です」と言いながら紅の面を
-   * 見せることになる。既定は false で、他の診断の `color` は従来どおり見出し色等に
-   * しか使わない。
-   */
-  colorIsSubject?: boolean;
 }
 
 /** Complete quiz definition including questions and results */

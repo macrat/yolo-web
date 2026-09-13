@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * QrCodeTile — QRコード生成ツールの単一出どころタイル
+ * QrCodeTile — QRコード生成ツールの単一正典タイル
  *
  * cycle-228 T-25 で QrCodePage.tsx を Panel ルートのタイルへ作り直したもの。
  *
@@ -193,14 +193,14 @@ export default function QrCodeTile({
           !errorMessage && (
             <p className={styles.placeholder}>
               {input.trim()
-                ? "QRコードを生成中……"
+                ? "QRコードを生成中..."
                 : "入力するとQRコードが表示されます"}
             </p>
           )
         )}
 
         {/* PNG ダウンロードボタン（T-4b: download 主体のためコピーボタンなし）
-         * 操作部品は共有の Button を使い、面ごとに独自のボタンを作らない（器は一貫・DESIGN.md §1）。 */}
+         * DESIGN.md L82「ボタンやフォームなどのUIコンポーネントは src/components/ にあるものを使う」 */}
         <Button variant="primary" onClick={handleDownload} disabled={!dataUrl}>
           PNG形式でダウンロード
         </Button>

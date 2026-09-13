@@ -1,6 +1,6 @@
 /*
- * 印（In）— 成果物の右上に据える印（DESIGN.md §4 の識別マーク仕様）。
- * 朱と紙色の2色・細い円環（SVG 一本ストローク）・明朝一文字・縦横比 1:1・回転 ±8° 以内。
+ * 印（In）— 成果物に捺す店の印（DESIGN.md §4「印」の厳密仕様）。
+ * 朱一色（--accent のみ）・細い円環（SVG 一本ストローク）・明朝一文字・回転 ±8° 以内。
  * かすれ/にじみ/グラデ/影は一切足さない（捺印質感の演出＝禁止）。全色トークン経由・直書きなし。
  * border-radius は使わない（円環は SVG circle・§8-5 角丸ゲートに触れない）。
  */
@@ -12,8 +12,6 @@
   /* 幅＝高さ。サイズは呼び出し側（包みは幅の 1/5 以下）から --in-size で受ける。 */
   inline-size: var(--in-size, 48px);
   block-size: var(--in-size, 48px);
-  /* 字の大きさをこの枠から引くための問い合わせ基準（下の .char が cqi で参照する）。 */
-  container-type: inline-size;
   /* §4「回転は ±8° 以内」。component 側でクランプ済みの角度を受ける。 */
   transform: rotate(var(--in-rotate, -4deg));
   /* 印は成果物の一部——選択ドラッグでずれないように。 */
@@ -30,7 +28,7 @@
   display: block;
 }
 
-/* 円環の線: 朱の細線（2px 以内）。fill なし＝枠だけ。 */
+/* 円環の線: 朱一色・細線（2px 以内）。fill なし＝枠だけ。 */
 .ringLine {
   fill: none;
   stroke: var(--accent);
@@ -38,18 +36,15 @@
   stroke-width: 1.5px;
 }
 
-/* 一文字: 明朝・朱・中央。円環の内側に収まる字サイズ。 */
+/* 一文字: 明朝・朱一色・中央。円環の内側に収まる字サイズ。 */
 .char {
   position: relative;
   color: var(--accent);
   font-family: var(--font-mincho);
-  /*
-   * 円環（直径）に対して 55%。1 字が枠に触れず収まる。
-   * cqi＝この枠の幅の 1%。--in-size を直接掛けてはいけない——呼び出し側が "100%" を
-   * 渡すと calc(100% * 0.55) が「親の font-size の 55%」に解決され、字だけが極小になる。
-   */
-  font-size: 55cqi;
+  /* 円環（直径）に対して約 55%。1 字が枠に触れず収まる。 */
+  font-size: calc(var(--in-size, 48px) * 0.55);
   font-weight: 600;
   line-height: 1;
   /* 明朝の詰めで一文字が締まって見えるように。 */
+  font-feature-settings: "palt";
 }

@@ -97,7 +97,7 @@ describe("DailyFortuneCard", () => {
       render(<DailyFortuneCard />);
     });
     expect(
-      screen.getByText("明日も来てね！ 毎日運勢が変わります"),
+      screen.getByText("明日も来てね! 毎日運勢が変わります"),
     ).toBeInTheDocument();
   });
 });

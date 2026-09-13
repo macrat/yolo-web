@@ -21,7 +21,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import ResultPageShell from "@/play/quiz/_components/ResultPageShell";
-import ResultDescription from "@/app/play/[slug]/result/[resultId]/ResultDescription";
+import DescriptionExpander from "@/app/play/[slug]/result/[resultId]/DescriptionExpander";
 import CompatibilityDisplay from "@/app/play/[slug]/result/[resultId]/CompatibilityDisplay";
 import MusicPersonalityContent from "@/play/quiz/_components/MusicPersonalityContent";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
@@ -157,11 +157,14 @@ export default async function MusicPersonalityResultPage({
     }
   }
 
-  const shareText = `${quiz.meta.title}の結果は「${result.title}」でした！あなたは？ #${quiz.meta.title.replace(/\s/g, "")} #yolosnet`;
+  const shareText = `${quiz.meta.title}の結果は「${result.title}」でした！あなたは? #${quiz.meta.title.replace(/\s/g, "")} #yolosnet`;
   const shareUrl = `${BASE_URL}/play/${SLUG}/result/${resultId}`;
-  const ctaText = "あなたはどのタイプ？ 診断してみよう";
+  const ctaText = "あなたはどのタイプ? 診断してみよう";
 
   // descriptionが4行を超えるかどうかの判定
+  const DESCRIPTION_LONG_THRESHOLD = 128;
+  const isDescriptionLong =
+    countCharWidth(result.description) > DESCRIPTION_LONG_THRESHOLD;
 
   return (
     <ResultPageShell
@@ -172,10 +175,14 @@ export default async function MusicPersonalityResultPage({
     >
       {/* music-personality固有のJSX */}
       <div className={styles.detailedSection}>
-        {/* キャッチコピー: 本文の前に置いて第一印象を与える */}
+        {/* キャッチコピー: DescriptionExpanderの前に配置し第一印象を与える */}
         <p className={styles.catchphrase}>{musicDc.catchphrase}</p>
 
-        <ResultDescription description={result.description} />
+        {/* DescriptionExpander: 長いdescriptionは折りたたみ */}
+        <DescriptionExpander
+          description={result.description}
+          isLong={isDescriptionLong}
+        />
 
         {/* CTA1: 共通トーン（primary ボタン = --accent 地・--paper 文字）。クイズ固有の派手色は撤去済み */}
         <div className={styles.trySection}>

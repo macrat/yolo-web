@@ -48,7 +48,7 @@ export default function HintBar({
       </span>
       <span className={styles.hintValue}>読み {reading.length}文字</span>
       {showReadingHint && (
-        <span className={styles.hintValue}>読み {reading.charAt(0)}……</span>
+        <span className={styles.hintValue}>読み {reading.charAt(0)}...</span>
       )}
       {showOriginHint && (
         <span className={styles.hintValue}>出典 {originLabels[origin]}</span>
@@ -59,13 +59,13 @@ export default function HintBar({
         </span>
       )}
       {!showReadingHint && (
-        <span className={styles.hintValue}>（3回目で読みヒント）</span>
+        <span className={styles.hintValue}>(3回目で読みヒント)</span>
       )}
       {showReadingHint && !showOriginHint && (
-        <span className={styles.hintValue}>（4回目で出典ヒント）</span>
+        <span className={styles.hintValue}>(4回目で出典ヒント)</span>
       )}
       {showOriginHint && !showCategoryHint && (
-        <span className={styles.hintValue}>（5回目でカテゴリヒント）</span>
+        <span className={styles.hintValue}>(5回目でカテゴリヒント)</span>
       )}
     </div>
   );

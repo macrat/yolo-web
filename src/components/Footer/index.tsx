@@ -26,15 +26,15 @@ const FOOTER_SECTIONS: {
     title: "ツール",
     links: [
       { label: "ツール一覧", href: "/tools" },
-      { label: "文字数カウント", href: "/tools/char-count" },
-      { label: "JSON整形・検証", href: "/tools/json-formatter" },
-      { label: "カラーコード変換", href: "/tools/color-converter" },
+      { label: "文字カウンター", href: "/tools/char-count" },
+      { label: "JSON 整形", href: "/tools/json-formatter" },
+      { label: "色変換", href: "/tools/color-converter" },
     ],
   },
   {
     title: "遊び",
     links: [
-      { label: "遊び一覧", href: "/play" },
+      { label: "全コンテンツ", href: "/play" },
       { label: "今日の運勢", href: "/play#fortune" },
       { label: "タイプ診断", href: "/play#personality" },
       { label: "知識クイズ", href: "/play#knowledge" },
@@ -45,7 +45,7 @@ const FOOTER_SECTIONS: {
     title: "ブログ",
     links: [
       { label: "ブログ一覧", href: "/blog" },
-      { label: "AIワークフロー", href: "/blog/category/ai-workflow" },
+      { label: "AI ワークフロー", href: "/blog/category/ai-workflow" },
       { label: "開発ノート", href: "/blog/category/dev-notes" },
       { label: "ツールガイド", href: "/blog/category/tool-guides" },
       { label: "日本語・文化", href: "/blog/category/japanese-culture" },
@@ -56,7 +56,7 @@ const FOOTER_SECTIONS: {
     title: "その他",
     links: [
       { label: "辞典", href: "/dictionary" },
-      { label: "このサイトについて", href: "/about" },
+      { label: "サイト紹介", href: "/about" },
       { label: "プライバシー", href: "/privacy" },
       {
         label: "GitHub",
@@ -107,7 +107,7 @@ export default function Footer() {
                         aria-label={link.ariaLabel}
                       >
                         {link.label}
-                        {/* 外部リンクを示す記号。記号だけで意味を運ばせず言葉に添える（DESIGN.md §4） */}
+                        {/* DESIGN.md §3: アイコンサイズ 16px 相当のテキスト記号 */}
                         <span
                           className={styles.externalIcon}
                           aria-hidden="true"

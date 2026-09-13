@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * UnitConverterTile — 単位変換の単一出どころタイル
+ * UnitConverterTile — 単位変換の単一正典タイル
  *
  * cycle-228 T-20: UnitConverterPage.tsx を Panel ルートのタイルへ作り直したもの。
  *
@@ -196,7 +196,7 @@ export default function UnitConverterTile({
           onClick={handleSwap}
           aria-label="変換元と変換先の単位を入れ替え"
         >
-          {/* DESIGN.md §4: 線画アイコン、stroke 1.5px / 20px */}
+          {/* DESIGN.md §3: Lucide スタイル線画アイコン、stroke 1.5px / 20px */}
           <svg
             width="20"
             height="20"

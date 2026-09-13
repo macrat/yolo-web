@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * CronParserTile — cron-parser の単一出どころタイル
+ * CronParserTile — cron-parser の単一正典タイル
  *
  * cycle-228 T-28: CronParserPage.tsx（571行）を Panel ルートのタイルへ移植。
  *

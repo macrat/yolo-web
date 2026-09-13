@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * JsonFormatterTile — JSON 整形・圧縮・検証の単一出どころタイル
+ * JsonFormatterTile — JSON 整形・圧縮・検証の単一正典タイル
  *
  * cycle-228 T-12 で JsonFormatterPage.tsx を Panel ルートのタイルへ作り直したもの。
  *

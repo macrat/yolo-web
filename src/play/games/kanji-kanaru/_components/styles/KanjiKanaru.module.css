@@ -36,6 +36,7 @@
   font-weight: 600;
   letter-spacing: 0.05em;
   color: var(--ink);
+  font-feature-settings: "palt";
 }
 
 .headerButtons {
@@ -306,9 +307,7 @@
 
 .inputField {
   flex: 1;
-  /* `1rem` で文字サイズ設定に追随させつつ、`16px` を下限に敷く——16px 未満だと
-   * iOS Safari がフォーカス時にページを自動拡大し、来訪者が手で戻すことになる。 */
-  font-size: max(1.5rem, 16px);
+  font-size: 1.5rem;
   text-align: center;
   padding: var(--space-8);
   border: 2px solid var(--rule);
@@ -375,6 +374,7 @@
   font-weight: 600;
   color: var(--ink);
   margin-bottom: 0.25rem;
+  font-feature-settings: "palt";
 }
 
 .resultReadings {

@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * PasswordGeneratorTile — パスワード生成の単一出どころタイル
+ * PasswordGeneratorTile — パスワード生成の単一正典タイル
  *
  * cycle-228 T-11 で PasswordGeneratorPage.tsx をタイルへ作り直したもの。
  *
@@ -197,7 +197,7 @@ export default function PasswordGeneratorTile({
           />
         </div>
 
-        {/* DESIGN.md §4: ON/OFF を切り替えるフォーム要素は原則としてトグルスイッチを使う */}
+        {/* DESIGN.md §5: ON/OFF を切り替えるフォーム要素は原則としてトグルスイッチを使う */}
         <div className={styles.toggleGroup}>
           <ToggleSwitch
             label="大文字 (A-Z)"
@@ -215,7 +215,7 @@ export default function PasswordGeneratorTile({
             onChange={(e) => updateOption("digits", e.target.checked)}
           />
           <ToggleSwitch
-            label="記号（!@#$ など）"
+            label="記号 (!@#$...)"
             checked={options.symbols}
             onChange={(e) => updateOption("symbols", e.target.checked)}
           />

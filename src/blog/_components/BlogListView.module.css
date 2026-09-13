@@ -20,7 +20,7 @@
   max-width: var(--measure);
 }
 
-/* 店号（h1）。サイズ・明朝は globals.css の見出し基層が与える。ここは余白のみ調整。 */
+/* 店号（h1）。サイズ・明朝・詰めは globals.css の見出し基層が与える。ここは余白のみ調整。 */
 .title {
   margin: 0 0 var(--space-16);
   color: var(--ink);

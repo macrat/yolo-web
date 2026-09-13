@@ -50,7 +50,7 @@ describe("HashGeneratorTile", () => {
   test("renders without crashing", () => {
     render(<HashGeneratorTile />);
     expect(
-      screen.getByPlaceholderText("ハッシュ化するテキストを入力……"),
+      screen.getByPlaceholderText("ハッシュ化するテキストを入力..."),
     ).toBeInTheDocument();
   });
 

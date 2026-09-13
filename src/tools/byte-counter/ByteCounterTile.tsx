@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * ByteCounterTile — バイト数計算ツールの単一出どころタイル
+ * ByteCounterTile — バイト数計算ツールの単一正典タイル
  *
  * cycle-228 T-2: ByteCounterPage.tsx を廃止し、Panel ルートのタイルへ統一。
  *
@@ -87,7 +87,7 @@ export default function ByteCounterTile({
           id={inputId}
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder="ここにテキストを入力してください……"
+          placeholder="ここにテキストを入力してください..."
           rows={10}
           aria-describedby={liveRegionId}
         />
@@ -161,7 +161,7 @@ export default function ByteCounterTile({
             </div>
             <div className={styles.breakdownRow}>
               <span className={styles.breakdownLabel}>
-                3バイト文字（日本語等）
+                3バイト文字 (日本語等)
               </span>
               <span className={styles.breakdownValue}>
                 {result.threeByteChars}文字
@@ -169,7 +169,7 @@ export default function ByteCounterTile({
             </div>
             <div className={styles.breakdownRow}>
               <span className={styles.breakdownLabel}>
-                4バイト文字（絵文字等）
+                4バイト文字 (絵文字等)
               </span>
               <span className={styles.breakdownValue}>
                 {result.fourByteChars}文字

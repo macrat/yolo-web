@@ -33,13 +33,13 @@ describe("validateEmail", () => {
   test("invalid: empty local part", () => {
     const result = validateEmail("@example.com");
     expect(result.valid).toBe(false);
-    expect(result.errors).toContain("ローカルパート（@の前）が空です");
+    expect(result.errors).toContain("ローカルパート(@の前)が空です");
   });
 
   test("invalid: empty domain", () => {
     const result = validateEmail("user@");
     expect(result.valid).toBe(false);
-    expect(result.errors).toContain("ドメイン（@の後）が空です");
+    expect(result.errors).toContain("ドメイン(@の後)が空です");
   });
 
   test("invalid: local part starts with dot", () => {

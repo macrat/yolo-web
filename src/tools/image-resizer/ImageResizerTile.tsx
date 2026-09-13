@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * ImageResizerTile — 画像リサイズの単一出どころタイル
+ * ImageResizerTile — 画像リサイズの単一正典タイル
  *
  * cycle-228 T-27: ImageResizerPage.tsx（559行）を Panel ルートのタイルへ移行。
  *
@@ -379,7 +379,7 @@ export default function ImageResizerTile({
           onError={handleFileError}
           maxSizeBytes={MAX_FILE_SIZE}
           accept="image/*"
-          description="PNG, JPEG, GIF, WebP対応（最大20MB）"
+          description="PNG, JPEG, GIF, WebP対応 (最大20MB)"
         />
 
         {/* エラー表示 */}
@@ -456,7 +456,7 @@ export default function ImageResizerTile({
                       />
                     </div>
                     <span className={styles.label}>px</span>
-                    {/* DESIGN.md §6: ボタンに絵文字を使わない → §4 の線画アイコン + 可視テキストラベル */}
+                    {/* DESIGN.md §3: 絵文字禁止 → Lucide スタイル SVG 線画 + 可視テキストラベル */}
                     <button
                       type="button"
                       className={`${styles.lockButton} ${maintainAspectRatio ? styles.lockButtonActive : ""}`}

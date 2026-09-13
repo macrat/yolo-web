@@ -1,6 +1,5 @@
-import type { CSSProperties, ReactElement } from "react";
+import type { ReactElement } from "react";
 import In from "@/components/In";
-import { getContrastTextColor } from "@/play/color-utils";
 import styles from "./Tsutsumi.module.css";
 
 /**
@@ -44,16 +43,6 @@ export interface TsutsumiProps {
   /** 成果物の地に使う和色（8 色から選ぶ）。 */
   color: WairoColor;
   /**
-   * 記号面の地に使う固有色（hex）。**主題が色そのものである面にだけ**与える
-   *（伝統色診断の結果・伝統色辞典の個別エントリ）。DESIGN.md §2 のとおり、そこでは
-   * 色が装飾ではなく中身なので、和色8色へ写像すると中身が別物になる——「藍色です」と
-   * 言いながら紅の面を見せることになる。前景は輝度から読める側（墨/白）を選ぶ。
-   *
-   * 与えなければ {@link color} の和色をそのまま使う。札画像の共有レンダラ
-   * （`renderFudaImage` の `colorOverride`）と同じ規則で、画面と持ち帰る画像を揃える。
-   */
-  colorOverride?: string;
-  /**
    * 店号（札として単独で持ち帰った画像からも出所が分かるように・DESIGN.md §4「札」）。
    * 既定は "yolos.net"。
    */
@@ -70,14 +59,12 @@ export interface TsutsumiProps {
   caption?: string;
   /**
    * タイプ名（{@link typeName}）を描画する要素。既定は "p"。
-   *
-   * タイプ名がその面の主役であるとき、それが見出しである——スクリーンリーダの見出し
-   * ナビで結果（クライマックス）へ到達できるようにする（WCAG 1.3.1）。結果だけを見せる
-   * 単独ページでは "h1"、診断の中で結果を出す面では "h2"。見本・装飾では "p" のまま
-   * （見出し階層を汚さない）。見た目は {@link typeName} のスタイルで固定され、要素を
-   * 変えても変化しない——同じ言葉を小さな見出しと大きな包みで二度出さないための口である。
+   * 診断結果カードのようにタイプ名がその領域の主見出しになる文脈では "h2" を指定し、
+   * スクリーンリーダの見出しナビで結果（クライマックス）へ到達できるようにする
+   *（cycle-287 / WCAG 1.3.1）。見本・装飾用途では "p" のまま（見出し階層を汚さない）。
+   * 見た目は {@link typeName} のスタイルで固定され、要素を変えても変化しない。
    */
-  typeNameAs?: "p" | "h2" | "h1";
+  typeNameAs?: "p" | "h2";
 }
 
 /**
@@ -98,7 +85,6 @@ export default function Tsutsumi({
   number,
   unit,
   color,
-  colorOverride,
   shopName = "yolos.net",
   productName,
   seal,
@@ -111,18 +97,7 @@ export default function Tsutsumi({
   const hasSymbol = symbol !== undefined && symbol.trim() !== "";
 
   return (
-    <figure
-      className={styles.tsutsumi}
-      data-color={color}
-      style={
-        colorOverride
-          ? ({
-              "--fill": colorOverride,
-              "--on": getContrastTextColor(colorOverride),
-            } as CSSProperties)
-          : undefined
-      }
-    >
+    <figure className={styles.tsutsumi} data-color={color}>
       <header className={styles.head}>
         <span className={styles.shop}>{shopName}</span>
         {productName && productName.trim() !== "" ? (
@@ -130,13 +105,10 @@ export default function Tsutsumi({
         ) : null}
       </header>
 
-      {/* 識別マークは成果物に一つだけ。§4「大きさは面の幅の 1/5 以下」を .seal 側の幅で担保する。
-       * label は与えない＝装飾として aria-hidden にする。この印が伝えるのは出所であり、
-       * それは header の店号が既に読み上げている。「印 診」と読ませても来訪者には意味が
-       * 立たず、雑音が増えるだけである（DESIGN §6: 内部語彙を来訪者に届く言葉へ出さない）。 */}
+      {/* 印は成果物に一つだけ捺す。§4「大きさは包み幅の 1/5 以下」を .seal 側の幅で担保する。 */}
       {seal && seal.trim() !== "" ? (
         <span className={styles.seal}>
-          <In char={seal} size="100%" />
+          <In char={seal} size="100%" label={`印 ${[...seal][0]}`} />
         </span>
       ) : null}
 
@@ -156,9 +128,7 @@ export default function Tsutsumi({
 
       {/* 品名・結果の言葉は紙の上に墨で組む（器は静か）。 */}
       <figcaption className={styles.body}>
-        {typeNameAs === "h1" ? (
-          <h1 className={styles.typeName}>{typeName}</h1>
-        ) : typeNameAs === "h2" ? (
+        {typeNameAs === "h2" ? (
           <h2 className={styles.typeName}>{typeName}</h2>
         ) : (
           <p className={styles.typeName}>{typeName}</p>
