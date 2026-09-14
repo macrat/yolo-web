@@ -98,7 +98,7 @@ describe("TagList", () => {
     expect(ul.className.trim().split(/\s+/).length).toBe(1);
   });
 
-  test("記事のタグは並び順のまま全件リンクとして描画される", () => {
+  test("linkableTags 未指定なら記事のタグは並び順のまま全件リンクとして描画される", () => {
     render(
       <TagList tags={["YAML", "DevOps", "設定ファイル", "Next.js", "運用"]} />,
     );
@@ -109,6 +109,49 @@ describe("TagList", () => {
       "設定ファイル",
       "Next.js",
       "運用",
+    ]);
+  });
+});
+
+describe("TagList linkableTags フィルタ", () => {
+  test("linkableTags に含まれるタグは描かれる", () => {
+    render(
+      <TagList
+        tags={["Next.js", "YAML"]}
+        linkableTags={new Set(["Next.js"])}
+      />,
+    );
+    expect(screen.getByRole("link", { name: "Next.js" })).toBeInTheDocument();
+  });
+
+  test("linkableTags に含まれないタグは DOM に出ない", () => {
+    render(
+      <TagList
+        tags={["Next.js", "YAML"]}
+        linkableTags={new Set(["Next.js"])}
+      />,
+    );
+    // YAML はタグページを持たないため、押せないラベルとしても残してはいけない
+    expect(screen.queryByText("YAML")).not.toBeInTheDocument();
+  });
+
+  test("可視タグが 0 件になるときは何も描かない", () => {
+    const { container } = render(
+      <TagList tags={["Next.js", "YAML"]} linkableTags={new Set<string>()} />,
+    );
+    expect(container.innerHTML).toBe("");
+  });
+
+  test("すべてのタグが linkableTags にあるときは全件描かれる", () => {
+    render(
+      <TagList
+        tags={["Next.js", "YAML"]}
+        linkableTags={new Set(["Next.js", "YAML"])}
+      />,
+    );
+    expect(screen.getAllByRole("link").map((l) => l.textContent)).toEqual([
+      "Next.js",
+      "YAML",
     ]);
   });
 });

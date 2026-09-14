@@ -205,6 +205,21 @@ describe("BlogList 基本表示", () => {
   });
 });
 
+describe("BlogList linkableTags フィルタ", () => {
+  test("linkableTags に含まれないタグは DOM に出ない", () => {
+    render(
+      <BlogList
+        posts={[makePost({ tags: ["TypeScript", "YAML"] })]}
+        newSlugs={new Set()}
+        categoryLabels={categoryLabels}
+        linkableTags={new Set(["TypeScript"])}
+      />,
+    );
+    expect(screen.getByText("TypeScript")).toBeInTheDocument();
+    expect(screen.queryByText("YAML")).not.toBeInTheDocument();
+  });
+});
+
 describe("BlogList 新着マーク", () => {
   test("newSlugs に含まれるとき「新着」マークが表示される", () => {
     render(

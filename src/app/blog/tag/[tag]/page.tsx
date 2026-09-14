@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import {
-  getAllTags,
   getPostsByTag,
+  getTagsWithMinPosts,
   TAG_DESCRIPTIONS,
+  MIN_POSTS_FOR_TAG_PAGE,
   MIN_POSTS_FOR_TAG_INDEX,
 } from "@/blog/_lib/blog";
 import { paginate, BLOG_POSTS_PER_PAGE } from "@/lib/pagination";
@@ -20,7 +21,7 @@ export const dynamicParams = false;
 export function generateStaticParams() {
   // encodeURIComponent は不要: Next.js が動的セグメントを自動的にデコードするため
   // generateStaticParams では生の（デコード済み）タグ名を返す
-  return getAllTags().map((tag) => ({ tag }));
+  return getTagsWithMinPosts(MIN_POSTS_FOR_TAG_PAGE).map((tag) => ({ tag }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -30,7 +31,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const tag = decodeURIComponent(rawTag);
   const posts = getPostsByTag(tag);
 
-  if (posts.length === 0) return {};
+  if (posts.length < MIN_POSTS_FOR_TAG_PAGE) return {};
 
   const description =
     TAG_DESCRIPTIONS[tag] ??
@@ -75,8 +76,8 @@ export default async function TagPage({ params }: Props) {
 
   const posts = getPostsByTag(tag);
 
-  // Return 404 for tag names that no published post uses
-  if (posts.length === 0) {
+  // Return 404 for tags with too few posts to fill a page
+  if (posts.length < MIN_POSTS_FOR_TAG_PAGE) {
     notFound();
   }
 

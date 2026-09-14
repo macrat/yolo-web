@@ -58,6 +58,14 @@ export const CATEGORY_DESCRIPTIONS: Record<BlogCategory, string> = {
 };
 
 /**
+ * Minimum number of posts a tag needs before it gets a listing page of its own.
+ * A page built from one or two posts is thin content: it gives a visitor
+ * nothing a search result did not already show. A tag below the threshold has
+ * no page, and is left out of the tag lists so no link points at a 404.
+ */
+export const MIN_POSTS_FOR_TAG_PAGE = 3;
+
+/**
  * Minimum number of posts required for a tag page to be indexed by search engines.
  * Tag pages with fewer posts will have noindex meta tag set.
  */
@@ -65,7 +73,7 @@ export const MIN_POSTS_FOR_TAG_INDEX = 5;
 
 /**
  * Descriptions for each tag, shown on tag listing pages.
- * Every tag used by a published post needs an entry here.
+ * Every tag that has a page of its own needs an entry here.
  * A description names only what the tag's posts actually cover, so a reader
  * who arrives from search finds what the text promised.
  */
@@ -532,7 +540,9 @@ export function getPostsByTag(tag: string): BlogPostMeta[] {
 
 /**
  * Get all tags that have at least the given minimum number of posts.
- * Used to determine which tag pages are indexable and listed in the sitemap.
+ * Used to determine which tags get a page of their own
+ * ({@link MIN_POSTS_FOR_TAG_PAGE}) and which of those pages are indexable and
+ * listed in the sitemap ({@link MIN_POSTS_FOR_TAG_INDEX}).
  */
 export function getTagsWithMinPosts(minPosts: number): string[] {
   const posts = getAllBlogPosts();

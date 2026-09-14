@@ -5,6 +5,8 @@ import {
   ALL_CATEGORIES,
   CATEGORY_LABELS,
   SERIES_LABELS,
+  getTagsWithMinPosts,
+  MIN_POSTS_FOR_TAG_PAGE,
 } from "@/blog/_lib/blog";
 import BlogFilterableList from "./BlogFilterableList";
 import BlogListPanel, {
@@ -65,7 +67,7 @@ function buildBreadcrumbItems(
  * Client Component では用意できない値はここで解決して渡す:
  * - 「新着」判定に使う Date.now()（react-hooks/purity 制約。判定ロジックはテスト容易性のため
  *   newSlugsHelper.ts に分離）
- * - node:fs を使う @/blog/_lib/blog 由来のカテゴリ・シリーズ情報
+ * - node:fs を使う @/blog/_lib/blog 由来のカテゴリ・シリーズ情報と、タグページを持つタグの集合
  *
  * 6 ルートすべてから呼ばれる共通 Server Component:
  * - /blog（全記事 page=1）
@@ -87,6 +89,7 @@ export default function BlogListView({
   // eslint-disable-next-line react-hooks/purity
   const now = Date.now();
   const newSlugs = calculateNewSlugs(allPosts, now);
+  const linkableTags = new Set(getTagsWithMinPosts(MIN_POSTS_FOR_TAG_PAGE));
 
   const headerDescription = activeCategory
     ? CATEGORY_DESCRIPTIONS[activeCategory]
@@ -117,6 +120,7 @@ export default function BlogListView({
     categories,
     categoryLabels: CATEGORY_LABELS,
     seriesLabels: SERIES_LABELS,
+    linkableTags,
   };
 
   return (

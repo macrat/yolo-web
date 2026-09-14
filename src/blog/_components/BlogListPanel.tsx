@@ -59,6 +59,11 @@ export interface BlogListData extends BlogListSource {
   categoryLabels: Record<string, string>;
   /** シリーズID → 表示名のマッピング */
   seriesLabels: Record<string, string>;
+  /**
+   * タグページを持つタグの集合。{@link BlogList} 経由で {@link TagList} に流し、
+   * 行き先のページを持たないタグを描かないようにする。
+   */
+  linkableTags?: ReadonlySet<string>;
 }
 
 interface BlogListPanelProps extends BlogListData {
@@ -174,6 +179,7 @@ export default function BlogListPanel({
   categories,
   categoryLabels,
   seriesLabels,
+  linkableTags,
   keyword,
   onKeywordChange,
 }: BlogListPanelProps) {
@@ -304,6 +310,7 @@ export default function BlogListPanel({
           posts={displayPosts}
           newSlugs={newSlugs}
           categoryLabels={categoryLabels}
+          linkableTags={linkableTags}
         />
       ) : (
         <p className={styles.noResults} role="status">

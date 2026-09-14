@@ -7,7 +7,9 @@ import {
   getBlogPostBySlug,
   getRelatedPosts,
   getSeriesPosts,
+  getTagsWithMinPosts,
   CATEGORY_LABELS,
+  MIN_POSTS_FOR_TAG_PAGE,
 } from "@/blog/_lib/blog";
 import {
   generateBlogPostMetadata,
@@ -54,6 +56,9 @@ export default async function BlogPostPage({ params }: Props) {
 
   const relatedPosts = getRelatedPosts(post, allPosts);
 
+  // タグページを持つタグだけを見せる。算出は node:fs に依存するため Server Component で行う。
+  const linkableTags = new Set(getTagsWithMinPosts(MIN_POSTS_FOR_TAG_PAGE));
+
   const jsonLd = generateBlogPostJsonLd({
     ...post,
     image: `${BASE_URL}/blog/${slug}/opengraph-image`,
@@ -90,7 +95,7 @@ export default async function BlogPostPage({ params }: Props) {
           )}
           <span>{post.readingTime}分で読める</span>
         </div>
-        <TagList tags={post.tags} />
+        <TagList tags={post.tags} linkableTags={linkableTags} />
       </header>
 
       {/*

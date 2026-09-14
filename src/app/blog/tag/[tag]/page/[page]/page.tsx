@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import {
-  getAllTags,
   getPostsByTag,
+  getTagsWithMinPosts,
   TAG_DESCRIPTIONS,
+  MIN_POSTS_FOR_TAG_PAGE,
   MIN_POSTS_FOR_TAG_INDEX,
 } from "@/blog/_lib/blog";
 import { paginate, BLOG_POSTS_PER_PAGE } from "@/lib/pagination";
@@ -24,7 +25,7 @@ export const dynamicParams = false;
 export function generateStaticParams() {
   const params: { tag: string; page: string }[] = [];
 
-  for (const tag of getAllTags()) {
+  for (const tag of getTagsWithMinPosts(MIN_POSTS_FOR_TAG_PAGE)) {
     const posts = getPostsByTag(tag);
     const { totalPages } = paginate(posts, 1, BLOG_POSTS_PER_PAGE);
 
@@ -42,7 +43,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const pageNum = Number(page);
   const posts = getPostsByTag(tag);
 
-  if (posts.length === 0) return {};
+  if (posts.length < MIN_POSTS_FOR_TAG_PAGE) return {};
 
   const description =
     TAG_DESCRIPTIONS[tag] ??
@@ -87,8 +88,8 @@ export default async function TagPaginatedPage({ params }: Props) {
 
   const posts = getPostsByTag(tag);
 
-  // Return 404 for tag names that no published post uses
-  if (posts.length === 0) {
+  // Return 404 for tags with too few posts to fill a page
+  if (posts.length < MIN_POSTS_FOR_TAG_PAGE) {
     notFound();
   }
 

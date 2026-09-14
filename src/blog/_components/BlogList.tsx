@@ -25,6 +25,12 @@ interface BlogListProps {
    * 引き込まないため、呼び出し元から props で受け取る。
    */
   categoryLabels: Record<string, string>;
+  /**
+   * タグページを持つタグの集合。{@link TagList} に流し、行き先のページを持たない
+   * タグを描かないようにする。
+   * 算出は node:fs に依存するため、Server Component（BlogListView）で計算して渡す。
+   */
+  linkableTags?: ReadonlySet<string>;
 }
 
 /**
@@ -38,6 +44,7 @@ export default function BlogList({
   posts,
   newSlugs,
   categoryLabels,
+  linkableTags,
 }: BlogListProps) {
   return (
     <ul className={styles.list} aria-label="ブログ記事一覧">
@@ -68,11 +75,15 @@ export default function BlogList({
             {/*
              * タグのリンクは行全体を覆う stretched-link（.titleLink::after）より前面に
              * 立て（tagRow）、行遷移に飲まれず独立クリックできるようにする。
-             * ラッパ div でなく className 渡しなのは、TagList がタグを持たない記事で
-             * null を返すため——常時 div で包むとタグ無しの行に空要素が残り、.row の
+             * ラッパ div でなく className 渡しなのは、TagList が可視タグ 0 件の記事で
+             * null を返すため——常時 div で包むとタグの出ない行に空要素が残り、.row の
              * gap を余計に消費して行間が不揃いになる。
              */}
-            <TagList tags={post.tags} className={styles.tagRow} />
+            <TagList
+              tags={post.tags}
+              linkableTags={linkableTags}
+              className={styles.tagRow}
+            />
           </li>
         );
       })}
