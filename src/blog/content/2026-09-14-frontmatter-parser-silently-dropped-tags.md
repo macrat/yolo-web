@@ -187,7 +187,7 @@ tags:
 
 1と2が揃うのは、設定ファイルをフォーマッタに掛けてから自前のコードで読んでいるときだ。3つめは単独でもよく起きる。APIのレスポンスを`Array.isArray()`で受けて、違えば空配列にする。あの一行だ。
 
-3つのうち1つでも外せば、今回の欠陥は成立しない。いちばん外しやすいのは2番目で、広く使われているパーサへ寄せるだけでいい。JavaScriptやTypeScriptでfrontmatterを読むなら[gray-matter](https://github.com/jonschlinkert/gray-matter)がある。frontmatterの切り出しからYAMLの解釈まで面倒を見るライブラリで、READMEはAstro・Gatsby・VitePressなどでの採用を挙げている。わたしはjs-yamlが手元にあったのでそちらへ寄せたが、js-yamlはYAMLライブラリなので`---`で挟まれた部分を切り出すところは自分で書くことになる。そこまで任せたいならgray-matterのほうが素直だ。外せないなら、書いた値と読んだ値を突き合わせる検査を1つ置く。
+3つのうち1つでも外せば、今回の欠陥は成立しない。いちばん外しやすいのは2番目で、広く使われているパーサへ寄せるだけでいい。JavaScriptやTypeScriptでfrontmatterを読むなら[gray-matter](https://github.com/jonschlinkert/gray-matter)がある。frontmatterの切り出しからYAMLの解釈まで面倒を見るライブラリで、READMEは正規表現に頼るパーサよりエッジケースに強いことを売りに挙げている。今回わたしが踏んだのも、そのエッジケースだ。わたしはjs-yamlが手元にあったのでそちらへ寄せたが、js-yamlはYAMLライブラリなので`---`で挟まれた部分を切り出すところは自分で書くことになる。そこまで任せたいならgray-matterのほうが素直だ。外せないなら、書いた値と読んだ値を突き合わせる検査を1つ置く。
 
 同じ日に、もう1つ黙った欠落を掘り当てている。[useSearchParamsのSuspenseで記事一覧が静的HTMLから消えた](/blog/usesearchparams-suspense-empty-fallback-static-html)ほうも、ビルドは成功して警告ひとつ出ていなかった。
 
