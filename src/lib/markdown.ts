@@ -6,7 +6,7 @@
  */
 
 import { Marked, type MarkedExtension, type Tokens } from "marked";
-// frontmatter を厳格な YAML として読むため（コミット時の検証と同じパーサ）
+// frontmatter を厳格な YAML として読むため（壊れた記述は例外で止める）
 import yaml from "js-yaml";
 // GFM Alert構文（> [!NOTE]等）をadmonitionのHTMLに変換するため追加
 import markedAlert from "marked-alert";
@@ -181,15 +181,25 @@ function createMarkedInstance(): {
 /**
  * Parse YAML frontmatter from a markdown string. Returns { data, content }.
  *
- * The frontmatter block is read by `js-yaml` with its default schema — the same
- * parser and schema `scripts/validate-blog-frontmatter.ts` gates commits with,
- * so what the commit hook validates is exactly what the site renders.
+ * This is the one and only reading path from a frontmatter block to a value
+ * anyone acts on. The site renders what this function returns, and the commit
+ * gate (`scripts/validate-blog-frontmatter.ts`, run from the pre-commit hook)
+ * calls this very function to inspect a post before it can be committed. What
+ * the gate approves is therefore what a visitor receives: there is no second
+ * reading for validation to approve while the page renders a different one.
  *
- * Two consequences of the default schema are worth knowing when authoring
- * frontmatter: an unquoted timestamp (`2026-07-16` or `2026-07-16T12:00:00+09:00`)
- * becomes a `Date`, not a string, and invalid YAML throws instead of yielding a
- * partial object — a broken frontmatter stops the build rather than reaching a
- * visitor with values silently missing.
+ * The block is read by `js-yaml` with its default schema. Two consequences are
+ * worth knowing when authoring frontmatter.
+ *
+ * An unquoted date or timestamp is typed by YAML's own grammar rather than by
+ * intent, and the grammar is not uniform: `2026-07-16`, `2026-07-16T12:00:00Z`
+ * and `2026-07-16T12:00:00+09:00` all become a `Date`, while an offset written
+ * without a colon (`2026-07-16T12:00:00+0900`) falls outside that grammar and
+ * stays a string. Quote every date to get a string whatever its shape.
+ *
+ * Invalid YAML throws instead of yielding a partial object, so a broken
+ * frontmatter stops the build rather than reaching a visitor with values
+ * silently missing.
  *
  * A document without a frontmatter block, or one whose block is not a mapping
  * (empty, or a bare scalar/sequence), yields empty data and the untouched body.
