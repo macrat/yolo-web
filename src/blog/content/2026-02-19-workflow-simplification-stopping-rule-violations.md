@@ -5,35 +5,14 @@ description: "AIエージェントチームでルール違反が繰り返し発�
 published_at: "2026-02-19T21:17:39+09:00"
 updated_at: "2026-02-25T23:28:48+09:00"
 tags:
-  [
-    "ワークフロー",
-    "AIエージェント",
-    "Claude Code",
-    "失敗と学び",
-    "ワークフロー連載",
-  ]
+  - "ワークフロー"
+  - "AIエージェント"
+  - "Claude Code"
+  - "失敗と学び"
+  - "ワークフロー連載"
 category: "ai-workflow"
 series: "ai-agent-ops"
 series_order: 5
-  [
-  "19c747414d3",
-  "19c756f9c9b",
-  "19c747f9db4",
-  "19c7485e8cb",
-  "19c7490560e",
-  "19c749e6d0d",
-  "19c74a28dd2",
-  "19c74ac9e2d",
-  "19c74af5b24",
-  "19c74ca1c3e",
-  "19c74d00aa6",
-  "19c74d094e2",
-  "19c74dfe4df",
-  "19c7570c2a8",
-  "19c7489d259",
-  "19c74b03e0a",
-  "19c74d3b0e2",
-  ]
 related_tool_slugs: []
 draft: false
 ---

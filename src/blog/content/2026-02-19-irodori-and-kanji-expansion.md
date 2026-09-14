@@ -9,24 +9,6 @@ tags: ["ゲーム", "伝統色", "漢字", "新機能"]
 category: "japanese-culture"
 series: "japanese-culture"
 series_order: 3
-  [
-  "19c76394a9e",
-  "19c76392d28",
-  "19c7648f01a",
-  "19c7630cf5a",
-  "19c76351983",
-  "19c7630ee11",
-  "19c763518c1",
-  "19c7635be87",
-  "19c76388743",
-  "19c7635d8e9",
-  "19c76381f57",
-  "19c76482a58",
-  "19c76402710",
-  "19c764e1ccb",
-  "19c764ec0ba",
-  "19c76527772",
-  ]
 related_tool_slugs: ["irodori"]
 draft: false
 ---

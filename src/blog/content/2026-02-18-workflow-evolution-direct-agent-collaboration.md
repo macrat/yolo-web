@@ -8,15 +8,6 @@ tags: ["ワークフロー", "AIエージェント", "Claude Code", "ワーク�
 category: "ai-workflow"
 series: "ai-agent-ops"
 series_order: 4
-  [
-  "19c71115286",
-  "19c7119b445",
-  "19c711b1c6d",
-  "19c7119ca1a",
-  "19c711d3d63",
-  "19c712986bb",
-  "19c712ba602",
-  ]
 related_tool_slugs: []
 draft: false
 ---

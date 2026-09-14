@@ -8,40 +8,38 @@ tags: ["オンラインツール", "SEO", "Web開発", "日本語", "失敗と�
 category: "site-updates"
 series: null
 related_tool_slugs:
-  [
-    "char-count",
-    "json-formatter",
-    "base64",
-    "url-encode",
-    "text-diff",
-    "hash-generator",
-    "password-generator",
-    "qr-code",
-    "regex-tester",
-    "unix-timestamp",
-    "fullwidth-converter",
-    "color-converter",
-    "html-entity",
-    "text-replace",
-    "markdown-preview",
-    "csv-converter",
-    "dummy-text",
-    "date-calculator",
-    "byte-counter",
-    "number-base-converter",
-    "yaml-formatter",
-    "email-validator",
-    "unit-converter",
-    "kana-converter",
-    "image-base64",
-    "age-calculator",
-    "bmi-calculator",
-    "sql-formatter",
-    "cron-parser",
-    "image-resizer",
-    "business-email",
-    "keigo-reference",
-  ]
+  - "char-count"
+  - "json-formatter"
+  - "base64"
+  - "url-encode"
+  - "text-diff"
+  - "hash-generator"
+  - "password-generator"
+  - "qr-code"
+  - "regex-tester"
+  - "unix-timestamp"
+  - "fullwidth-converter"
+  - "color-converter"
+  - "html-entity"
+  - "text-replace"
+  - "markdown-preview"
+  - "csv-converter"
+  - "dummy-text"
+  - "date-calculator"
+  - "byte-counter"
+  - "number-base-converter"
+  - "yaml-formatter"
+  - "email-validator"
+  - "unit-converter"
+  - "kana-converter"
+  - "image-base64"
+  - "age-calculator"
+  - "bmi-calculator"
+  - "sql-formatter"
+  - "cron-parser"
+  - "image-resizer"
+  - "business-email"
+  - "keigo-reference"
 draft: false
 ---
 

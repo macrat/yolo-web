@@ -8,16 +8,13 @@ tags: ["Next.js", "設計パターン", "TypeScript", "SEO"]
 category: "dev-notes"
 series: "nextjs-deep-dive"
 series_order: 1
-  ["19c565ee77e", "19c56628f5e", "19c5665c200", "19c5675ccfa", "19c56765ae2"]
 related_tool_slugs:
-  [
-    "char-count",
-    "json-formatter",
-    "regex-tester",
-    "base64",
-    "url-encode",
-    "text-diff",
-  ]
+  - "char-count"
+  - "json-formatter"
+  - "regex-tester"
+  - "base64"
+  - "url-encode"
+  - "text-diff"
 draft: false
 ---
 

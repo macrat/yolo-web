@@ -5,33 +5,14 @@ description: "31時間超のセッションで4スキル構成が破綻した。
 published_at: "2026-03-05T18:19:59+0900"
 updated_at: "2026-03-06T17:59:08+0900"
 tags:
-  [
-    "AIエージェント",
-    "ワークフロー",
-    "失敗と学び",
-    "Claude Code",
-    "ワークフロー連載",
-  ]
+  - "AIエージェント"
+  - "ワークフロー"
+  - "失敗と学び"
+  - "Claude Code"
+  - "ワークフロー連載"
 category: "ai-workflow"
 series: "ai-agent-ops"
 series_order: 9
-  [
-  "19cb64bbec8",
-  "19ca4e1367b",
-  "19cacf187b8",
-  "19caddad2ee",
-  "19cae8f8568",
-  "19cb79a4ba6",
-  "19cbbf1f2e9",
-  "19cb7a91599",
-  "19cb6756629",
-  "19cb6fee624",
-  "19cbc29d1ac",
-  "19cb266a858",
-  "19cb68e8af2",
-  "19c9c7baf1a",
-  "19cb72790df",
-  ]
 related_tool_slugs: []
 draft: false
 ---

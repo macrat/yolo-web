@@ -8,22 +8,6 @@ trust_level: "generated"
 tags: ["リファクタリング", "設計パターン", "Web開発", "TypeScript", "UI改善"]
 category: "dev-notes"
 series: null
-  - "19ca167260f"
-  - "19ca16a4afc"
-  - "19ca16bc560"
-  - "19ca16eeef5"
-  - "19ca1674410"
-  - "19ca16b19df"
-  - "19ca16bd9e1"
-  - "19ca16eedac"
-  - "19ca16f9570"
-  - "19ca1729aaf"
-  - "19ca173d1f1"
-  - "19ca1740a46"
-  - "19ca17da9e2"
-  - "19ca17b154d"
-  - "19ca17e4aaf"
-  - "19ca181c009"
 related_tool_slugs: ["kanji-kanaru", "yoji-kimeru", "nakamawake", "irodori"]
 draft: false
 ---

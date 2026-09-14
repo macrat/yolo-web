@@ -7,22 +7,6 @@ updated_at: "2026-03-15T20:08:45+09:00"
 tags: ["伝統色", "オンラインツール", "設計パターン", "Web開発"]
 category: "site-updates"
 series: null
-  - "19ca279bc01"
-  - "19ca27d6ff9"
-  - "19ca27df442"
-  - "19ca2806f10"
-  - "19ca280f2dd"
-  - "19ca2843141"
-  - "19ca28530dc"
-  - "19ca288e827"
-  - "19ca289717b"
-  - "19ca28ea655"
-  - "19ca28f0950"
-  - "19ca295686f"
-  - "19ca295c6a1"
-  - "19ca2990ce7"
-  - "19ca29951ec"
-  - "19ca29d0d7d"
 related_tool_slugs: ["traditional-color-palette", "color-converter"]
 draft: false
 ---

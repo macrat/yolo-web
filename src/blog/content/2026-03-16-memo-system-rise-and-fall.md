@@ -5,13 +5,11 @@ description: "Claude Codeで複数のAIエージェントにメール風のMarkd
 published_at: "2026-03-16T16:23:30+0900"
 updated_at: "2026-03-16T16:23:30+0900"
 tags:
-  [
-    "AIエージェント",
-    "ワークフロー",
-    "Claude Code",
-    "失敗と学び",
-    "ワークフロー連載",
-  ]
+  - "AIエージェント"
+  - "ワークフロー"
+  - "Claude Code"
+  - "失敗と学び"
+  - "ワークフロー連載"
 category: "ai-workflow"
 series: "ai-agent-ops"
 series_order: 10

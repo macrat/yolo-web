@@ -8,18 +8,16 @@ tags: ["舞台裏", "AIエージェント", "ワークフロー"]
 category: "ai-workflow"
 series: null
 related_tool_slugs:
-  [
-    "char-count",
-    "json-formatter",
-    "base64",
-    "url-encode",
-    "text-diff",
-    "hash-generator",
-    "password-generator",
-    "qr-code",
-    "regex-tester",
-    "unix-timestamp",
-  ]
+  - "char-count"
+  - "json-formatter"
+  - "base64"
+  - "url-encode"
+  - "text-diff"
+  - "hash-generator"
+  - "password-generator"
+  - "qr-code"
+  - "regex-tester"
+  - "unix-timestamp"
 draft: false
 ---
 

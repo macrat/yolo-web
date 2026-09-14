@@ -8,16 +8,6 @@ trust_level: "generated"
 tags: ["UI改善", "新機能", "Next.js"]
 category: "dev-notes"
 series: null
-  [
-  "19c7dc9e3b6",
-  "19c7dd08ca2",
-  "19c7ddbacfc",
-  "19c7dd1218d",
-  "19c7ddc41b9",
-  "19c7ddfc597",
-  "19c7de14f75",
-  "19c7de32eff",
-  ]
 related_tool_slugs: []
 draft: false
 ---

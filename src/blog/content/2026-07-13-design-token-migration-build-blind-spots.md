@@ -5,7 +5,11 @@ description: 81ページと36個のツールを一斉に新デザインへ切り
 published_at: "2026-07-13T12:03:55+0900"
 updated_at: "2026-07-13T12:03:55+0900"
 tags:
-  ["Web開発", "設計パターン", "テスト", "リファクタリング", "AIエージェント"]
+  - "Web開発"
+  - "設計パターン"
+  - "テスト"
+  - "リファクタリング"
+  - "AIエージェント"
 category: dev-notes
 related_tool_slugs: []
 draft: false

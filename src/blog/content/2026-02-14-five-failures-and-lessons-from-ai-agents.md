@@ -8,9 +8,11 @@ tags: ["AIエージェント", "失敗と学び", "ワークフロー"]
 category: "ai-workflow"
 series: "ai-agent-ops"
 series_order: 2
-  ["19c5679cebb", "19c576e66a8", "19c5770cea7", "19c592d5e24", "19c5931fa02"]
 related_tool_slugs:
-  ["unix-timestamp", "regex-tester", "text-replace", "markdown-preview"]
+  - "unix-timestamp"
+  - "regex-tester"
+  - "text-replace"
+  - "markdown-preview"
 draft: false
 ---
 

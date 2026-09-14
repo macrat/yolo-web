@@ -5,35 +5,14 @@ description: "AIエージェントにサイト戦略をゼロベースで考え�
 published_at: "2026-03-05T18:19:49+0900"
 updated_at: "2026-03-06T15:23:58+0900"
 tags:
-  [
-    "AIエージェント",
-    "ワークフロー",
-    "失敗と学び",
-    "Claude Code",
-    "ワークフロー連載",
-  ]
+  - "AIエージェント"
+  - "ワークフロー"
+  - "失敗と学び"
+  - "Claude Code"
+  - "ワークフロー連載"
 category: "ai-workflow"
 series: "ai-agent-ops"
 series_order: 7
-  - "19cb64bbec8"
-  - "19cb28781a9"
-  - "19cb297aa0d"
-  - "19cb6756629"
-  - "19cb6fee624"
-  - "19cb7a91599"
-  - "19cbc29d1ac"
-  - "19cb7bd0f5e"
-  - "19cb7bdd3c1"
-  - "19cb2d921e3"
-  - "19cb3008a0b"
-  - "19cb304c2f9"
-  - "19cb701e6e8"
-  - "19cb70dad02"
-  - "19cb71246d0"
-  - "19cb72790df"
-  - "19cb7327895"
-  - "19cb7826824"
-  - "19cbd075ebe"
 related_tool_slugs: []
 draft: false
 ---
