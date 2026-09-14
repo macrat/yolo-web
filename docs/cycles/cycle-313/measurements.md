@@ -387,3 +387,47 @@ CSS の上でも保証されている（箱の寸法に効く宣言が無い）�
 いずれも掲載2本以下なので `noindex, follow` で、`sitemap.xml` のタグURLは23件で前後不変である
 （実ビルドの生成物で実測——タグページ37枚のうち `index, follow` は23枚、`sitemap.xml` の `/blog/tag/` は23件）。
 増えたのはタグページ8種・一覧系ルート8枚で、内訳は §8 にある。
+
+## 15. 記事タイトルの分割不能な連続
+
+6巡目のレビューが「`useSearchParams` はサイトで唯一の13文字以上のラテン語トークン」として、
+記事2のタイトルが 360px で横スクロールを生むと指摘した。**この理由づけは誤りである。**
+全89記事のタイトルを数えると、14文字以上のトークンは4本ある。
+
+| トークン              | 長さ | 記事                                                     |
+| --------------------- | ---- | -------------------------------------------------------- |
+| `global-not-found.js` | 19   | Next.js複数root layoutで not-found.tsx が効かない        |
+| `Worker.terminate`    | 16   | 50字で215秒フリーズした正規表現を、Worker.terminate()で… |
+| `useSearchParams`     | 15   | useSearchParams の Suspense で記事一覧が静的HTMLから…    |
+| `mermaid.render`      | 14   | Mermaid ganttチャートのコロンの罠と…                     |
+
+ただし、折り返しどころ（ハイフン・ピリオド）を除いた**連続する英数字だけ**で数え直すと順位が変わる。
+
+| 連続              | 長さ |
+| ----------------- | ---- |
+| `useSearchParams` | 15   |
+| `emulateMedia`    | 12   |
+| `frontmatter`     | 11   |
+| `JavaScript`      | 10   |
+
+`global-not-found.js` はハイフンとピリオドで4つに割れるため、最長の連続は `found` の5文字にとどまる。
+**折れる場所を持たない連続としては `useSearchParams` が site 最長で、2位に3文字の差がある。**
+つまり指摘の結論（この記事が最初にこの幅を超える）は成り立つが、
+「唯一の長いトークン」という理由づけでは成り立たない。トークンの長さではなく、
+トークンの中に折れる場所があるかどうかが効いている。
+
+このサイトは API 名を題に採るため、`generateStaticParams`（20）・`IntersectionObserver`（20）・
+`dangerouslySetInnerHTML`（24）のように、折れる場所を持たない、より長い連続は今後も現れる。
+タイトルを言い換えて避けるのは1本ぶんの手当てにしかならない。
+
+測定コマンド:
+
+```sh
+grep -h "^title:" src/blog/content/*.md | sed 's/^title: *//' | tr -d '"' |
+  python3 -c "
+import sys,re
+rows=[(len(m),m,t) for t in (l.rstrip() for l in sys.stdin)
+      for m in [max(re.findall(r'[A-Za-z0-9]+',t) or [''],key=len)]]
+rows.sort(reverse=True)
+print(*rows[:8],sep='\n')"
+```
