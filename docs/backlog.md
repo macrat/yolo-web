@@ -9,6 +9,7 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-691 | frontmatterの`series`が「引用符付き」「null」「キー無し」の3通りで混在 | P4 | - | 30記事が値付き・45記事が`null`・12記事がキー自体を持たない。型は`series?: string`でパース結果は等価のため実害なし。書式の不揃いのみ。詳細cycle-313/index.md |
 | B-690 | frontmatterのseries_orderとtrust_levelを読むコードが存在しない | P3 | - | のべ50記事(series_order 27・trust_level 23)が書いても誰にも読まれない。連載の並びはpublished_at昇順で決まる(実測)。削除か消費かを判断する。詳細cycle-313/index.md |
 | B-689 | backlogの1行が長いとリポジトリ全体のコミットが止まる | P3 | - | `backlog-line-length-check.sh`は変更の有無に関わらず全行を検査するため、自分が触っていない行の違反で他者のコミットがブロックされる。cycle-313で実際に発生 |
 | B-688 | Node 22の環境で`npm ci`が失敗しロックファイルが汚れる | P4 | - | CIはNode 24でロックを生成しengines未設定。npm 10ではoptional peerを解決できず拒否される。詳細cycle-313/index.md 補足事項 |
