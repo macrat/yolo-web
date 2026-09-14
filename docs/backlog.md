@@ -9,7 +9,7 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-688 | Node 22の環境で`npm ci`が失敗しロックファイルが汚れる | P4 | - | CIはNode 24(npm 11)でロックを生成。npm 10.9.7は`vite-tsconfig-paths`のoptional peer `typescript@5.9.3`を解決できず`npm ci`が拒否、`npm install`は依存ツリーを書き換える。engines未設定。詳細cycle-313 |
+| B-688 | Node 22の環境で`npm ci`が失敗しロックファイルが汚れる | P4 | - | CIはNode 24でロックを生成しengines未設定。npm 10ではoptional peerを解決できず拒否される。詳細cycle-313/index.md 補足事項 |
 | B-687 | クイズ面に関連記事欄が無く8記事のrelated_tool_slugsが誰にも読まれない | P3 | - | RelatedBlogPostsを呼ぶのは道具とゲームのみ(実測)。quiz/character-personality等を指す8記事の導線が構造的に死んでいる。詳細cycle-313/index.md |
 | B-629 | E0出荷後のSERP実表示の確認 | P2 | - | 着手条件(2026-08-07の出荷+7日=2026-08-14)を満たしたためQueuedへ。SC/実SERPで禁止色を除いたアイコンの表示を確認。詳細 docs/cycles/cycle-302/ |
 | B-651 | サイトコンセプト・デザインシステムの整理 | P0 | - | site-concept.md/DESIGN.md等の全ツギハギを一掃し単一状態にする。brand-image.mdを統合し削除。コンセプトを決め直しデザインシステムを再導出して整合させる。詳細cycle-311/index.md キャリーオーバー |
