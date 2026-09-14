@@ -9,6 +9,7 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-698 | 実行環境がUTCのため`date`手順どおりだとpublished_atがUTCになる | P3 | - | 既存88記事は全て日本時間(+0900が36・+09:00が52)。blog-writing.mdの手順`date +"...%z"`はこの環境でUTCを返す。手順にTZ指定を入れるか表記を決め直す |
 | B-697 | bundle-budget.test.ts のコメントに経緯が堆積している | P4 | - | `cycle-102 B-206`・`cycle-277 T6-c で置き換え済み`・`フェーズRで完全撤去`等がコード内に残る。ツギハギ禁止(履歴はサイクル文書へ)に反する。詳細cycle-313/index.md キャリーオーバー |
 | B-695 | JS無効時のハンバーガーボタンが生きたまま何も起きない | P3 | - | `disabled:false`/`aria-hidden:null`/`tabindex:null`のまま(実測)。押しても何も起きない。JS無しで機能しないコントロールの扱いがサイト内で3通りに割れている(テーマトグル/検索欄/ハンバーガー)。統一の判断が要る |
 | B-696 | ハイドレーション時に一覧DOMが差し替わりフォーカスがbodyに落ちる | P3 | - | cycle-313 T7が作った新挙動。fallbackのDOMはhydrateされず破棄・再生成される(実測・発生窓50〜220ms)。根治は`useSearchParams`をやめマウント後に`location.search`を読む形。詳細cycle-313 |
