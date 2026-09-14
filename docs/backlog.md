@@ -7,6 +7,7 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-685 | frontmatterの値が次行に折り返されるとパーサが読めずタグ等が落ちる | P3 | - | `markdown.ts`のparseYamlBlockが値を次行に持つ形を読めず、12記事でtags等がnull(cycle-312実測)。prettierの整形で発生し、ビルドもテストも通る。詳細cycle-312/incident-19 |
 | B-651 | サイトコンセプト・デザインシステムの整理 | P0 | - | site-concept.md/DESIGN.md等の全ツギハギを一掃し単一状態にする。brand-image.mdを統合し削除。コンセプトを決め直しデザインシステムを再導出して整合させる。詳細cycle-311/index.md キャリーオーバー |
 | B-653 | SC「生成AIパフォーマンスレポート」の撤退基準への含意調査 | P3 | - | SCの生成AIパフォーマンスレポートの仕様を一次資料で確認し、削除判断の数値基準(site-concept判断基準2)の計器として何が変わるか判定する。詳細cycle-311/index.md 計画にあたって参考にした情報 |
 | B-649 | 店語彙のaria-label(「品書き」等・SR可視)を§0.1レンズで平明化評価 | P3 | - | cycle-309でE3(店主/店の品書き)を是正。残=SR可視の「○○の品書き」ラベル複数面。§0.1(3)の「signifierの自明伝達を仮定しない」でSR明瞭さを評価。詳細cycle-309/decision.md 射程外節 |
