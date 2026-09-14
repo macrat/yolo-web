@@ -73,7 +73,9 @@ export const MIN_POSTS_FOR_TAG_INDEX = 5;
 
 /**
  * Descriptions for each tag, shown on tag listing pages.
- * Every tag that has a page of its own needs an entry here.
+ * The keys correspond exactly to the tags that have a page of their own: a tag
+ * with a page always has one, and an entry for a tag without a page is dead
+ * text no reader ever sees.
  * A description names only what the tag's posts actually cover, so a reader
  * who arrives from search finds what the text promised.
  */
@@ -134,19 +136,6 @@ export const TAG_DESCRIPTIONS: Record<string, string> = {
     "Webアクセシビリティの実践知識をまとめた記事集。キーボード操作・スクリーンリーダーの読み上げ・フォーカス管理・クリック領域の設計など、あらゆる利用者が迷わず使えるUIにするための具体的な実装と勘所を、実際のコードや失敗例とともに解説します。",
   テスト:
     "ソフトウェアのテストと検証に関する記事集。全入力の網羅的な数え上げによる挙動の確認、回帰テストの設計、性格診断のような分岐ロジックが「入力どおりに結果を返すか」を数値で測る手法など、品質を目で確かめる代わりに機械で確かめる勘所を、実際のコード例とともに解説します。",
-  RSS: "RSS・Atomフィードの配信に関する記事。RSS 2.0とAtom 1.0を並べて出すエンドポイント構成、最近の更新だけに絞ってフィードを小さく保つフィルタ、フィード生成を静的に寄せて毎リクエストの実行をなくす方法を扱います。",
-  Playwright:
-    "ブラウザ自動操作ツールPlaywrightに関する記事。ダークのつもりがライトで撮れていたスクリーンショットの落とし穴、キーボード操作とアクセシビリティツリーの読み取りで見つけた欠陥など、実際に動かして初めて表に出る問題を扱います。",
-  データ変換:
-    "データを目的の形に取り出し・変換する技術に関する記事。SQLの実行順の読み方、絞り込みと集計の使い分け、結合やサブクエリの組み立て方など、手元のデータを扱うときに効いてくる考え方と構文を早見表も交えて扱います。",
-  React:
-    "Reactのコンポーネント設計と状態管理に関する記事。複数のコンポーネントが同じ資源を奪い合うときの制御、useEffectでの後始末の書き方、ライブラリに任せるか自前で書くかの判断を、実際のコードで扱います。",
-  YAML: "YAMLの書き方と落とし穴に関する記事。暗黙の型変換で国コードNOがfalseに化ける仕組み、仕様バージョンと実装の乖離、クォートによる防御の指針など、設定を安全に書くための作法を実際の挙動とともに扱います。",
-  DevOps:
-    "開発と運用をつなぐ設定に関する記事。docker-composeやGitHub Actionsのワークフローに書いた値が黙って別物に化ける経路、パーサの実装差が持ち込む移植性の問題、linterに頼りきらない書き手側の防御を扱います。",
-  設定ファイル:
-    "設定ファイルの扱いに関する記事。YAMLの記法の癖、パーサごとの解釈の違い、意図しない型変換を防ぐ書き方など、アプリケーションの挙動を左右する設定を安全に書き、正しく読み解くための知識を扱います。",
-  SNS: "SNSでの共有を見据えたコンテンツ作りに関する記事。診断結果を1枚の画像として持ち帰れるようにする工夫、保存と共有の挙動が端末ごとに変わる事情、見せたくなる見た目の設計を扱います。",
 };
 
 /**

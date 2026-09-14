@@ -33,7 +33,7 @@
   line-height: 1.9;
 }
 
-/* タグページのパンくず（共有の Breadcrumb）。見出しとのアキだけをここで与える。 */
+/* 絞り込み一覧のパンくず（共有の Breadcrumb）。見出しとのアキだけをここで与える。 */
 .breadcrumb {
   margin-bottom: var(--space-8);
 }

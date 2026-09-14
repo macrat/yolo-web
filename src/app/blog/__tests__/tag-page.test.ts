@@ -50,15 +50,24 @@ describe("/blog/tag/[tag]", () => {
     expect(tagNames).toContain("SEO");
   }, 15000);
 
-  test("ページを持つタグに TAG_DESCRIPTIONS の説明文が定義されていること", () => {
-    // 説明文はタグページの見出し下に出るため、ページを持つタグには必ず要る
-    const missingDescriptions = getTagsWithMinPosts(
-      MIN_POSTS_FOR_TAG_PAGE,
-    ).filter((tag) => !TAG_DESCRIPTIONS[tag]);
+  test("TAG_DESCRIPTIONS のキーがページを持つタグと過不足なく一致すること", () => {
+    // 説明文はタグページの見出し下に出るため、ページを持つタグには必ず要る。
+    // 逆にページを持たないタグの説明文は、どこにも出ないまま残る死んだ文になる。
+    const tagsWithPage = getTagsWithMinPosts(MIN_POSTS_FOR_TAG_PAGE);
+    const missingDescriptions = tagsWithPage.filter(
+      (tag) => !TAG_DESCRIPTIONS[tag],
+    );
+    const orphanDescriptions = Object.keys(TAG_DESCRIPTIONS).filter(
+      (tag) => !tagsWithPage.includes(tag),
+    );
 
     expect(
       missingDescriptions,
       `タグ説明文が未定義のタグ: ${missingDescriptions.join(", ")}`,
+    ).toHaveLength(0);
+    expect(
+      orphanDescriptions,
+      `ページを持たないタグの説明文が残っている: ${orphanDescriptions.join(", ")}`,
     ).toHaveLength(0);
   }, 15000);
 
