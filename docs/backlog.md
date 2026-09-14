@@ -11,7 +11,9 @@
 | --- | --- | --- | --- | --- |
 | B-691 | frontmatterの`series`が「引用符付き」「null」「キー無し」の3通りで混在 | P4 | - | 30記事が値付き・45記事が`null`・12記事がキー自体を持たない。型は`series?: string`でパース結果は等価のため実害なし。書式の不揃いのみ。詳細cycle-313/index.md |
 | B-690 | frontmatterのseries_orderとtrust_levelを読むコードが存在しない | P3 | - | のべ50記事(series_order 27・trust_level 23)が書いても誰にも読まれない。連載の並びはpublished_at昇順で決まる(実測)。削除か消費かを判断する。詳細cycle-313/index.md |
-| B-689 | backlogの1行が長いとリポジトリ全体のコミットが止まる | P3 | - | `backlog-line-length-check.sh`は変更の有無に関わらず全行を検査するため、自分が触っていない行の違反で他者のコミットがブロックされる。cycle-313で実際に発生 |
+| B-689 | 他者が編集中のファイルの状態で自分のコミットが止まる | P3 | - | `backlog-line-length-check.sh`と`pre-commit-check.sh`のformat検査が、変更の有無に関わらず全体を検査する。並行作業中は他者の作業途中のファイルで自分のコミットが拒否される。cycle-313で両方発生 |
+| B-692 | JS無効だとサイト全体がライトテーマ固定になる | P3 | - | next-themesがJS依存のためOSがdarkでも紙色のまま。一覧が静的描画になりJS無効でも読める面が増えたので影響が実在するようになった。`prefers-color-scheme`のフォールバックを入れるか固定と決めるかの判断が要る |
+| B-693 | BlogListPanelに`TODO(cycle-184/B-389)`が4箇所残る | P4 | - | `linkableTags`関連。B-389(タグUIの処遇)の決着と合わせて掃除する。ツギハギ禁止に照らすと本来残らないもの。詳細cycle-313/index.md |
 | B-688 | Node 22の環境で`npm ci`が失敗しロックファイルが汚れる | P4 | - | CIはNode 24でロックを生成しengines未設定。npm 10ではoptional peerを解決できず拒否される。詳細cycle-313/index.md 補足事項 |
 | B-687 | クイズ面に関連記事欄が無く8記事のrelated_tool_slugsが誰にも読まれない | P3 | - | RelatedBlogPostsを呼ぶのは道具とゲームのみ(実測)。quiz/character-personality等を指す8記事の導線が構造的に死んでいる。詳細cycle-313/index.md |
 | B-629 | E0出荷後のSERP実表示の確認 | P2 | - | 着手条件(2026-08-07の出荷+7日=2026-08-14)を満たしたためQueuedへ。SC/実SERPで禁止色を除いたアイコンの表示を確認。詳細 docs/cycles/cycle-302/ |
