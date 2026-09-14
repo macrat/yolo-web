@@ -369,7 +369,8 @@ describe("ブログ一覧ページの静的HTML", () => {
       pagesWithoutBreadcrumb.map((facts) => facts.url),
       `パンくずが静的HTMLに無い絞り込み一覧がある:\n` +
         pagesWithoutBreadcrumb.map((facts) => `  ${facts.url}`).join("\n") +
-        `\nタグページではパンくずが本文内の唯一の脱出口になる。`,
+        `\nパンくずは絞り込んだ一覧から上位へ戻る経路であり、` +
+        `タグページでは本文内の唯一の脱出口になる。`,
     ).toEqual([]);
   });
 

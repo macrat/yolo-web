@@ -73,9 +73,7 @@ export const MIN_POSTS_FOR_TAG_INDEX = 5;
 
 /**
  * Descriptions for each tag, shown on tag listing pages.
- * The keys correspond exactly to the tags that have a page of their own: a tag
- * with a page always has one, and an entry for a tag without a page is dead
- * text no reader ever sees.
+ * Every tag that has a page of its own needs an entry here.
  * A description names only what the tag's posts actually cover, so a reader
  * who arrives from search finds what the text promised.
  */
@@ -113,7 +111,7 @@ export const TAG_DESCRIPTIONS: Record<string, string> = {
   伝統色:
     "日本の伝統色に関する記事集。紅梅色・萌黄色・藍色など、日本古来の色名とその背景にある文化・歴史を詳しく解説します。yolos.netの伝統色ツールの使い方や活用事例の紹介記事も合わせて掲載しています。",
   ワークフロー連載:
-    "AIエージェントによるサイト運営ワークフローの進化を連載形式で記録したシリーズ記事集。初期設計から現在に至るまでの改善の軌跡と失敗の歴史を時系列で追うことができます。試行錯誤の積み重ねをご覧ください。",
+    "AIエージェントによるサイト運営ワークフローの進化を連載形式で記録したシリーズ記事集。初期設計から現在に至るまでの改善の軌跡と失敗の歴史を、新しいものから順に並べています。はじめから読む場合は各記事の連載ナビゲーションをお使いください。",
   リファクタリング:
     "コードのリファクタリング事例と設計改善の記録をまとめた記事集。可読性・保守性・パフォーマンスを向上させるための具体的なアプローチや、大規模な改修プロジェクトの進め方をステップごとに実例とともに解説しています。",
   正規表現:

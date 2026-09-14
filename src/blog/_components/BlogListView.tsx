@@ -59,10 +59,10 @@ function buildBreadcrumbItems(
  * 描画し、記事リンクを静的 HTML に載せる。fallback と本体は同じ {@link BlogListPanel} なので、
  * キーワードが無い通常の閲覧では描画結果が一致しレイアウトがずれない。
  *
- * 絞り込みのある一覧（タグ・カテゴリ）の先頭にはパンくずを出す。タグページはカテゴリナビも
- * 人気タグも出さないため、これが本文内の唯一の脱出口になる。経路の組み立ては
- * {@link buildBreadcrumbItems} が受け持ち、BreadcrumbList の構造化データは同じ項目から
- * {@link Breadcrumb} が出すため、読者が見る経路と検索エンジンへ申告する経路は一致する。
+ * 絞り込みのある一覧（タグ・カテゴリ）の先頭にはパンくずを出す。絞り込んだ一覧から上位へ戻る
+ * 経路を本文内に置くためで、経路の組み立ては {@link buildBreadcrumbItems} が受け持つ。
+ * BreadcrumbList の構造化データは同じ項目から {@link Breadcrumb} が出すため、読者が見る経路と
+ * 検索エンジンへ申告する経路は一致する。
  *
  * Client Component では用意できない値はここで解決して渡す:
  * - 「新着」判定に使う Date.now()（react-hooks/purity 制約。判定ロジックはテスト容易性のため
