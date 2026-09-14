@@ -179,7 +179,9 @@ function createMarkedInstance(): {
 }
 
 /**
- * Parse YAML frontmatter from a markdown string. Returns { data, content }.
+ * Parse YAML frontmatter from a markdown string. Returns the parsed mapping
+ * (`data`), the body below the block (`content`), and the block text exactly as
+ * written (`frontmatter`).
  *
  * This is the one and only reading path from a frontmatter block to a value
  * anyone acts on. The site renders what this function returns, and the commit
@@ -187,6 +189,9 @@ function createMarkedInstance(): {
  * calls this very function to inspect a post before it can be committed. What
  * the gate approves is therefore what a visitor receives: there is no second
  * reading for validation to approve while the page renders a different one.
+ * `frontmatter` carries the delimiters' contents along with the parsed values,
+ * so a caller that compares a value against the way it is written reads both
+ * from this one boundary rather than drawing a second one of its own.
  *
  * The block is read by `js-yaml` with its default schema. Two consequences are
  * worth knowing when authoring frontmatter.
@@ -201,21 +206,30 @@ function createMarkedInstance(): {
  * frontmatter stops the build rather than reaching a visitor with values
  * silently missing.
  *
- * A document without a frontmatter block, or one whose block is not a mapping
- * (empty, or a bare scalar/sequence), yields empty data and the untouched body.
+ * A document without a frontmatter block yields empty data, empty frontmatter
+ * text and the untouched body. A block that is not a mapping (empty, or a bare
+ * scalar/sequence) yields empty data alongside the block text as written.
  */
-export function parseFrontmatter<T>(raw: string): { data: T; content: string } {
+export function parseFrontmatter<T>(raw: string): {
+  data: T;
+  content: string;
+  frontmatter: string;
+} {
   const normalized = raw.replace(/\r\n/g, "\n");
   const match = normalized.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
   if (!match) {
-    return { data: {} as T, content: normalized };
+    return { data: {} as T, content: normalized, frontmatter: "" };
   }
 
   const parsed = yaml.load(match[1]);
   const isMapping =
     typeof parsed === "object" && parsed !== null && !Array.isArray(parsed);
 
-  return { data: (isMapping ? parsed : {}) as T, content: match[2] };
+  return {
+    data: (isMapping ? parsed : {}) as T,
+    content: match[2],
+    frontmatter: match[1],
+  };
 }
 
 /**

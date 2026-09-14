@@ -3,21 +3,25 @@
  *
  * Two guarantees are checked across all posts at once.
  *
- * **Fidelity** — every value written between the `---` delimiters reaches the
- * parsed result unchanged. This is the guarantee nothing else in the pipeline
- * can give: a reader that drops a key hands back a type-correct empty array and
- * a YAML scalar left unquoted can come back as another type entirely, so a post
- * can lose its tags or its title without a single error anywhere. The check
- * reads the frontmatter text as written and compares it against what
- * `parseFrontmatter` — the reader the site itself renders from — returns, so
- * the loss surfaces here instead of on the live site.
+ * **Fidelity** — the keys written between the `---` delimiters are exactly the
+ * keys the parsed result carries, and every value reaches it unchanged. This is
+ * the guarantee nothing else in the pipeline can give: a reader that drops a key
+ * hands back a type-correct empty array and a YAML scalar left unquoted can come
+ * back as another type entirely, so a post can lose its tags or its title
+ * without a single error anywhere. The check reads the frontmatter text as
+ * written and compares it against what `parseFrontmatter` — the reader the site
+ * itself renders from — returns, so the loss surfaces here instead of on the
+ * live site.
  *
- * The comparison runs in the writing direction: every parsed value is encoded
- * back into frontmatter text, and that text must be what stands in the file.
- * Every string is written quoted — quoting is what keeps YAML's implicit typing
- * from reading a title as a boolean or a timestamp as a `Date` — while `null`,
- * numbers and booleans stay bare and a list becomes a block sequence. A value
- * the parser silently reshaped, or a quote left off, fails to match.
+ * Keys are matched both ways: a key written in the file and absent from the
+ * parsed result is a value the reader swallowed, and a key in the parsed result
+ * that nobody wrote is a value the reader invented. Values are compared in the
+ * writing direction: every parsed value is encoded back into frontmatter text,
+ * and that text must be what stands in the file. Every string is written
+ * quoted — quoting is what keeps YAML's implicit typing from reading a title as
+ * a boolean or a timestamp as a `Date` — while `null`, numbers and booleans stay
+ * bare and a list becomes a block sequence. A value the parser silently
+ * reshaped, or a quote left off, fails to match.
  *
  * **Validity** — the parsed values obey the rules in
  * `.claude/rules/blog-writing.md`: a known category, a known series, and ISO
@@ -39,9 +43,11 @@ const BLOCK_ITEM_LINE = /^ {2}- (.*)$/;
 const COMMENT_LINE = /^\s*#/;
 
 /**
- * ISO 8601 datetime with a time component and a timezone offset.
- * Matches `YYYY-MM-DDTHH:MM:SS+HH:MM` and `YYYY-MM-DDTHH:MM:SS+HHMM`.
- * Does not match a bare `YYYY-MM-DD`.
+ * ISO 8601 datetime with a time component and a numeric timezone offset.
+ * Matches `YYYY-MM-DDTHH:MM:SS+HH:MM` and `YYYY-MM-DDTHH:MM:SS+HHMM` — the
+ * shape `date +"%Y-%m-%dT%H:%M:%S%z"` produces, which is where
+ * `.claude/rules/blog-writing.md` says a timestamp is taken from. A bare
+ * `YYYY-MM-DD` and a `Z`-terminated instant are outside that shape.
  */
 const ISO_DATETIME_REGEX =
   /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:?\d{2}$/;
@@ -68,15 +74,22 @@ const FORMS: Record<
   boolean: { label: "a boolean", check: (value) => typeof value === "boolean" },
 };
 
+/** The form a key must hold once parsed, and whether it may be left out. */
+interface KeyRule {
+  form: ValueForm;
+  required: boolean;
+}
+
 /**
- * The form each key must hold once parsed, and whether it may be left out.
+ * The keys a writer chooses from — the key table of
+ * `.claude/rules/blog-writing.md`.
  *
  * The timestamps are required to be *strings*. A YAML reader is free to turn an
  * unquoted timestamp into a `Date`, and it does so for some spellings and not
  * others — `2026-07-16T12:00:00+09:00` becomes a `Date` while the same instant
  * written `+0900` stays a string. Asserting the form directly covers both.
  */
-const KEY_RULES: Record<string, { form: ValueForm; required: boolean }> = {
+const CANONICAL_KEYS: Record<string, KeyRule> = {
   title: { form: "string", required: true },
   slug: { form: "string", required: true },
   description: { form: "string", required: true },
@@ -84,11 +97,26 @@ const KEY_RULES: Record<string, { form: ValueForm; required: boolean }> = {
   updated_at: { form: "nullableString", required: true },
   category: { form: "string", required: true },
   series: { form: "nullableString", required: false },
-  series_order: { form: "number", required: false },
   tags: { form: "stringList", required: true },
   related_tool_slugs: { form: "stringList", required: true },
   draft: { form: "boolean", required: true },
+};
+
+/**
+ * Keys that stand in posts while no code on the site reads them. They are held
+ * to a form like any other key so that everything written is covered, and they
+ * are listed apart so the table above stays the list of keys a writer picks
+ * from.
+ */
+const UNREAD_KEYS: Record<string, KeyRule> = {
+  series_order: { form: "number", required: false },
   trust_level: { form: "string", required: false },
+};
+
+/** Every key a post may carry; anything else fails as unknown. */
+const KEY_RULES: Record<string, KeyRule> = {
+  ...CANONICAL_KEYS,
+  ...UNREAD_KEYS,
 };
 
 /** A value as it stands in the file: the key-line text and the entries below. */
@@ -114,15 +142,10 @@ function loadAllPosts(): Post[] {
     .sort();
 
   return files.map((file) => {
-    const raw = fs
-      .readFileSync(path.join(BLOG_DIR, file), "utf-8")
-      .replace(/\r\n/g, "\n");
-    const { data } = parseFrontmatter<Record<string, unknown>>(raw);
-    return {
-      file,
-      frontmatter: raw.match(/^---\n([\s\S]*?)\n---/)?.[1] ?? "",
-      data,
-    };
+    const raw = fs.readFileSync(path.join(BLOG_DIR, file), "utf-8");
+    const { data, frontmatter } =
+      parseFrontmatter<Record<string, unknown>>(raw);
+    return { file, frontmatter, data };
   });
 }
 
@@ -202,13 +225,16 @@ function formatWriting({ inline, items }: Writing): string {
 }
 
 /**
- * The frontmatter lines that belong to no key.
+ * The frontmatter lines that depart from the one writing form.
  *
  * A key line that carries its value on the same line is complete — nothing may
  * follow it but the next key. A key line with an empty value opens a block, and
- * only `  - value` entries may follow. Every other line is text that no reader
- * can attribute to a key: a stray sequence, or a list wrapped onto lines of its
- * own where a line break can swallow entries without anyone noticing.
+ * only `  - value` entries may follow. Every other line departs from that form:
+ * a sequence entry written without the two-space indent, or a list wrapped onto
+ * lines of its own where a line break can swallow entries without anyone
+ * noticing. Some of those lines are valid YAML and parse to the intended value;
+ * holding every post to a single form is what keeps a value's spelling
+ * predictable enough for the fidelity check to state how it must be written.
  */
 function findOrphanLines(frontmatter: string): string[] {
   const lines = frontmatter.split("\n");
@@ -227,7 +253,9 @@ function findOrphanLines(frontmatter: string): string[] {
     const itemMatch = line.match(BLOCK_ITEM_LINE);
     if (insideBlock && itemMatch && itemMatch[1].trim() !== "") continue;
 
-    orphans.push(`line ${index + 1}: ${line}`);
+    orphans.push(
+      `line ${index + 1}: ${line} — neither a key line nor a "  - value" entry under one`,
+    );
   }
 
   return orphans;
@@ -244,14 +272,31 @@ describe("blog frontmatter validation", () => {
     expect(violations).toEqual([]);
   });
 
-  test("every value is written exactly as it parses", () => {
+  test("every written key parses, and every value is written exactly as it parses", () => {
     const violations: string[] = [];
 
     for (const { file, frontmatter, data } of posts) {
       const writings = collectWritings(frontmatter);
+      const keys = new Set([...writings.keys(), ...Object.keys(data)]);
 
-      for (const [key, value] of Object.entries(data)) {
-        const written = writings.get(key) ?? { inline: "", items: [] };
+      for (const key of keys) {
+        const written = writings.get(key);
+
+        if (written === undefined) {
+          violations.push(
+            `${file}: ${key} parses to ${JSON.stringify(data[key])} but is written nowhere in the frontmatter`,
+          );
+          continue;
+        }
+
+        if (!(key in data)) {
+          violations.push(
+            `${file}: ${key} is written as ${formatWriting(written)} but is missing from the parsed result`,
+          );
+          continue;
+        }
+
+        const value = data[key];
         const expected = canonicalWriting(value, written);
         if (!sameWriting(written, expected)) {
           violations.push(
@@ -264,7 +309,7 @@ describe("blog frontmatter validation", () => {
     expect(violations).toEqual([]);
   });
 
-  test("every frontmatter line belongs to a key", () => {
+  test("every frontmatter line keeps to the one writing form", () => {
     const violations: string[] = [];
 
     for (const { file, frontmatter } of posts) {
