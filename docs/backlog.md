@@ -9,6 +9,7 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-697 | bundle-budget.test.ts のコメントに経緯が堆積している | P4 | - | `cycle-102 B-206`・`cycle-277 T6-c で置き換え済み`・`フェーズRで完全撤去`等がコード内に残る。ツギハギ禁止(履歴はサイクル文書へ)に反する。詳細cycle-313/index.md キャリーオーバー |
 | B-695 | JS無効時のハンバーガーボタンが生きたまま何も起きない | P3 | - | `disabled:false`/`aria-hidden:null`/`tabindex:null`のまま(実測)。押しても何も起きない。JS無しで機能しないコントロールの扱いがサイト内で3通りに割れている(テーマトグル/検索欄/ハンバーガー)。統一の判断が要る |
 | B-696 | ハイドレーション時に一覧DOMが差し替わりフォーカスがbodyに落ちる | P3 | - | cycle-313 T7が作った新挙動。fallbackのDOMはhydrateされず破棄・再生成される(実測・発生窓50〜220ms)。根治は`useSearchParams`をやめマウント後に`location.search`を読む形。詳細cycle-313 |
 | B-694 | `readOnly`の入力欄が通常の入力欄と見分けられない | P3 | - | `Input.module.css`に`:disabled`のスタイルはあるが`readOnly`には無い。「打てるのに値が捨てられる」欄が意図せず出荷されうる(cycle-313で実際に直前まで行った)。視覚的手がかりを与えるか用途を絞るか、デザイン方針の判断が要る |
