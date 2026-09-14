@@ -11,9 +11,9 @@
  * 2. 静的シェルの検索欄が `disabled` であること
  *    （ハイドレーション前に打った文字は黙って捨てられるため）
  *
- * 前提:
- * - `npm run build` 済みであること（`.next/` が存在すること）
- * - `.next/server/app/blog.html` が無い場合はスイート全体をスキップする
+ * 実行経路:
+ * - `npm run build` の後に `npm run test:build` で実行する
+ * - 生成物が無いときはスキップせず失敗する（`requireBuildOutput`）
  *
  * データソース:
  * - `.next/server/app/blog**.html`（一覧ルートのプリレンダリング結果）
@@ -23,13 +23,15 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import { describe, expect, test } from "vitest";
 
+import { SERVER_APP_DIR, requireBuildOutput } from "./build-output";
+
 // ---------------------------------------------------------------------------
 // ビルド生成物のパス
 // ---------------------------------------------------------------------------
-const PROJECT_ROOT = path.resolve(__dirname, "../..");
-const SERVER_APP_DIR = path.join(PROJECT_ROOT, ".next", "server", "app");
 const BLOG_DIR = path.join(SERVER_APP_DIR, "blog");
 const BLOG_INDEX_HTML = path.join(SERVER_APP_DIR, "blog.html");
+
+requireBuildOutput(BLOG_INDEX_HTML);
 
 // ---------------------------------------------------------------------------
 // 一覧ルートの形
@@ -106,9 +108,7 @@ function toPrerenderedPages(htmlPaths: string[]): PrerenderedPage[] {
 function collectPrerenderedPages(shape: ListingShape): PrerenderedPage[] {
   switch (shape) {
     case "/blog":
-      return fs.existsSync(BLOG_INDEX_HTML)
-        ? toPrerenderedPages([BLOG_INDEX_HTML])
-        : [];
+      return toPrerenderedPages([BLOG_INDEX_HTML]);
     case "/blog/page/[page]":
       return toPrerenderedPages(listHtmlFilesIn(path.join(BLOG_DIR, "page")));
     case "/blog/category/[category]":
@@ -178,14 +178,9 @@ function readHtml(page: PrerenderedPage): string {
 // テスト
 // ---------------------------------------------------------------------------
 
-const buildExists = fs.existsSync(BLOG_INDEX_HTML);
-
-describe.skipIf(!buildExists)("ブログ一覧ページの静的HTML", () => {
+describe("ブログ一覧ページの静的HTML", () => {
   const pagesByShape = new Map<ListingShape, PrerenderedPage[]>(
-    LISTING_SHAPES.map((shape) => [
-      shape,
-      buildExists ? collectPrerenderedPages(shape) : [],
-    ]),
+    LISTING_SHAPES.map((shape) => [shape, collectPrerenderedPages(shape)]),
   );
 
   // ---- 検査 1: 6 ルート形すべてがプリレンダリングされている ----

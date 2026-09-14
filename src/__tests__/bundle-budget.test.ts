@@ -6,9 +6,10 @@
  * checking baseline JS, per-route-category page-specific JS, and large
  * chunk counts.
  *
- * Prerequisites:
- * - `npm run build` must be run before these tests (`.next/` must exist).
- * - If `.next/build-manifest.json` is missing, the entire suite is skipped.
+ * How to run:
+ * - Run `npm run test:build` after `npm run build`.
+ * - If the build output is missing the suite fails instead of being skipped
+ *   (see `requireBuildOutput`).
  *
  * Data sources:
  * - `.next/build-manifest.json` for baseline (rootMainFiles + polyfillFiles)
@@ -20,14 +21,15 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import { describe, expect, test } from "vitest";
 
+import { NEXT_DIR, SERVER_APP_DIR, requireBuildOutput } from "./build-output";
+
 // ---------------------------------------------------------------------------
-// Project root and build output paths
+// Build output paths
 // ---------------------------------------------------------------------------
-const PROJECT_ROOT = path.resolve(__dirname, "../..");
-const NEXT_DIR = path.join(PROJECT_ROOT, ".next");
 const BUILD_MANIFEST_PATH = path.join(NEXT_DIR, "build-manifest.json");
-const SERVER_APP_DIR = path.join(NEXT_DIR, "server", "app");
 const STATIC_CHUNKS_DIR = path.join(NEXT_DIR, "static", "chunks");
+
+requireBuildOutput(BUILD_MANIFEST_PATH, SERVER_APP_DIR, STATIC_CHUNKS_DIR);
 
 // ---------------------------------------------------------------------------
 // Budget configuration
@@ -316,9 +318,7 @@ function categoriseRoute(route: string): string | null {
 // Tests
 // ---------------------------------------------------------------------------
 
-const buildExists = fs.existsSync(BUILD_MANIFEST_PATH);
-
-describe.skipIf(!buildExists)("Bundle budget", () => {
+describe("Bundle budget", () => {
   // ---- Test 1: Baseline JS budget ----
   test("baseline JS (rootMainFiles + polyfillFiles) is within budget", () => {
     const baseline = getBaselineSize();
@@ -337,7 +337,7 @@ describe.skipIf(!buildExists)("Bundle budget", () => {
 
   // ---- Test 2: Route category page-specific JS budgets ----
   describe("route category page-specific JS budgets", () => {
-    const allRoutes = buildExists ? getRoutePageSpecificSizes() : [];
+    const allRoutes = getRoutePageSpecificSizes();
 
     // Group routes by category
     const categoryRoutes = new Map<string, RouteSize[]>();
