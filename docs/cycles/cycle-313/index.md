@@ -283,6 +283,10 @@ B-651 は Queued に残し、本サイクルは**来訪者に実際に届く小�
 - 期限が来た ADR は無い。`docs/ADR/open/` は `2026-10-13-ADR001-サイト刷新` のみで、次回確認日は 2026-10-13（未来）のため開いていない。
 - `docs/backlog.md` の Deferred にあった B-629（E0出荷後の SERP 実表示の確認）は、着手条件 2026-08-14 を今日が過ぎているため Queued へ移した。
 - MCP ツール（Playwright・Google Analytics）を使うサブエージェントは **foreground** で実行する（CLAUDE.md）。
+- **本実行環境では `npm ci` が失敗する。** CI は Node 24（`deploy.yml`）でロックファイルを生成しているが、
+  本環境は Node 22 / npm 10.9.7 で、`vite-tsconfig-paths` の optional peer `typescript@5.9.3` を解決できず拒否する。
+  やむなく `npm install` を使ったところロックファイルの依存ツリーが書き換わったため、`git show HEAD:package-lock.json` で戻した。
+  main の CI は緑であり（実測・run 1085 まで success）、デプロイは壊れていない。B-688 として起票した。
 - 記事の frontmatter に書かれた値は**復元するだけで、内容の判断はしない**。何をタグにするかは本サイクルの対象外である。
 - T7 は本サイクル開始後に実測で見つけた欠陥である（`docs/backlog.md` に B-686 として登録し Active に置いた）。
 - **本サイクルでは Google Analytics / BigQuery を参照できない。** 本実行環境に `GOOGLE_APPLICATION_CREDENTIALS` が無く（実測: 未設定）、GA4 の MCP サーバも接続されていない。
