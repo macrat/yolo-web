@@ -8,6 +8,7 @@ import {
 } from "@/blog/_lib/blog";
 import { paginate, BLOG_POSTS_PER_PAGE } from "@/lib/pagination";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
+import { generateBreadcrumbJsonLd, safeJsonLdStringify } from "@/lib/seo";
 import BlogListView from "@/blog/_components/BlogListView";
 
 interface Props {
@@ -90,36 +91,19 @@ export default async function CategoryPaginatedPage({ params }: Props) {
     BLOG_POSTS_PER_PAGE,
   );
 
-  const breadcrumbJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      {
-        "@type": "ListItem",
-        position: 1,
-        name: "ホーム",
-        item: BASE_URL,
-      },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "ブログ",
-        item: `${BASE_URL}/blog`,
-      },
-      {
-        "@type": "ListItem",
-        position: 3,
-        name: label,
-        item: `${BASE_URL}/blog/category/${category}`,
-      },
-    ],
-  };
+  const breadcrumbJsonLd = generateBreadcrumbJsonLd([
+    { label: "ホーム", href: "/" },
+    { label: "ブログ", href: "/blog" },
+    { label, href: `/blog/category/${category}` },
+  ]);
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        dangerouslySetInnerHTML={{
+          __html: safeJsonLdStringify(breadcrumbJsonLd),
+        }}
       />
       <BlogListView
         posts={items}

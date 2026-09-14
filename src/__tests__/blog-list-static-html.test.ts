@@ -5,20 +5,25 @@
  * キーワード検索だけを Client Component が担う。検索状態は `useSearchParams`
  * に依存するため、一覧本体がクライアント描画へ退避すると記事リンクが
  * 静的HTMLから消え、クローラからも JS 無効環境からも記事へ辿り着けなくなる。
- * ここでは本番ビルドの生成物を直接読み、次の 4 点を検査する。
+ * ここでは本番ビルドの生成物を直接読み、次の 6 点を検査する。
  *
  * 1. 一覧の 6 ルート形すべてがプリレンダリングされていること
  * 2. 一覧ルートのプリレンダリング済みHTMLすべてに記事リンクが載っていること
  * 3. 公開記事のすべてが、いずれかの一覧ページの静的HTMLからリンクされていること
  * 4. 静的シェルの検索欄が `disabled` であること
  *    （ハイドレーション前に打った文字は黙って捨てられるため）
+ * 5. タグ一覧のすべてのページがパンくずを出していること
+ *    （掲載記事が少ないタグでは本文内の唯一の脱出口になるため）
+ * 6. パンくずを出しているページが申告する BreadcrumbList が、その可視の経路と
+ *    一致すること（読者が見る経路と検索エンジンへ申告する経路を食い違わせないため）
  *
  * 実行経路:
  * - `npm run build` の後に `npm run test:build` で実行する
  * - 生成物が無いときはスキップせず失敗する（`requireBuildOutput`）
  *
  * データソース:
- * - `.next/server/app/blog**.html`（一覧ルートと記事ページのプリレンダリング結果）
+ * - `.next/prerender-manifest.json`（ビルドがプリレンダリングしたURLの一覧）
+ * - `.next/server/app/blog**.html`（そのURLに対応する静的HTML）
  * - `getAllBlogPosts()`（公開記事の集合）
  */
 
@@ -27,15 +32,14 @@ import * as path from "node:path";
 import { describe, expect, test } from "vitest";
 
 import { getAllBlogPosts } from "@/blog/_lib/blog";
-import { SERVER_APP_DIR, requireBuildOutput } from "./build-output";
+import { NEXT_DIR, SERVER_APP_DIR, requireBuildOutput } from "./build-output";
 
 // ---------------------------------------------------------------------------
 // ビルド生成物のパス
 // ---------------------------------------------------------------------------
-const BLOG_DIR = path.join(SERVER_APP_DIR, "blog");
-const BLOG_INDEX_HTML = path.join(SERVER_APP_DIR, "blog.html");
+const PRERENDER_MANIFEST = path.join(NEXT_DIR, "prerender-manifest.json");
 
-requireBuildOutput(BLOG_INDEX_HTML);
+requireBuildOutput(PRERENDER_MANIFEST);
 
 // ---------------------------------------------------------------------------
 // 一覧ルートの形
@@ -63,6 +67,14 @@ const LISTING_SHAPES: readonly ListingShape[] = [
   "/blog/tag/[tag]/page/[page]",
 ];
 
+/** タグ一覧のルート形。可視のパンくずを出す唯一の一覧。 */
+const TAG_LISTING_SHAPES: readonly ListingShape[] = [
+  "/blog/tag/[tag]",
+  "/blog/tag/[tag]/page/[page]",
+];
+
+const ARTICLE_SHAPE = "/blog/[slug]";
+
 interface PrerenderedPage {
   /** 生成されたHTMLの絶対パス */
   htmlPath: string;
@@ -74,67 +86,40 @@ interface PrerenderedPage {
 // ヘルパー: 生成物の走査
 // ---------------------------------------------------------------------------
 
-function listHtmlFilesIn(dir: string): string[] {
-  if (!fs.existsSync(dir)) return [];
-  return fs
-    .readdirSync(dir, { withFileTypes: true })
-    .filter((entry) => entry.isFile() && entry.name.endsWith(".html"))
-    .map((entry) => path.join(dir, entry.name))
+/**
+ * `prerender-manifest.json` の `routes`。
+ * キーが生成されたURL、`srcRoute` がその元になったルート形。
+ */
+const prerenderedRoutes: Record<string, { srcRoute: string | null }> =
+  JSON.parse(fs.readFileSync(PRERENDER_MANIFEST, "utf8")).routes;
+
+/** ビルドが生成したURLのうち、指定のルート形から出たもの。 */
+function urlsGeneratedFrom(shape: string): string[] {
+  return Object.entries(prerenderedRoutes)
+    .filter(([, route]) => route.srcRoute === shape)
+    .map(([url]) => url)
     .sort();
-}
-
-function listSubdirectoriesIn(dir: string): string[] {
-  if (!fs.existsSync(dir)) return [];
-  return fs
-    .readdirSync(dir, { withFileTypes: true })
-    .filter((entry) => entry.isDirectory())
-    .map((entry) => path.join(dir, entry.name))
-    .sort();
-}
-
-/** 生成物の絶対パスから公開URLを復元する。 */
-function toUrl(htmlPath: string): string {
-  const relative = path
-    .relative(SERVER_APP_DIR, htmlPath)
-    .replace(/\.html$/, "");
-  return `/${relative.split(path.sep).join("/")}`;
-}
-
-function toPrerenderedPages(htmlPaths: string[]): PrerenderedPage[] {
-  return htmlPaths.map((htmlPath) => ({ htmlPath, url: toUrl(htmlPath) }));
 }
 
 /**
  * 指定したルート形でプリレンダリングされたページを集める。
- * 動的セグメントのプレースホルダディレクトリ（`[page]` など）にHTMLは出力
- * されないため、ディレクトリ直下のHTMLを拾うだけで実ページだけが集まる。
+ *
+ * 出どころはビルドが書き出すマニフェストであり、生成物ディレクトリの走査ではない。
+ * `next start` は未知のURLへのリクエストを受けると、その応答（404 ページを含む）を
+ * `.next/server/app` 配下へHTMLとして書き出すため、ディレクトリを数えると
+ * 「誰かがサイトを開いたかどうか」で検査対象が変わってしまう。
  */
 function collectPrerenderedPages(shape: ListingShape): PrerenderedPage[] {
-  switch (shape) {
-    case "/blog":
-      return toPrerenderedPages([BLOG_INDEX_HTML]);
-    case "/blog/page/[page]":
-      return toPrerenderedPages(listHtmlFilesIn(path.join(BLOG_DIR, "page")));
-    case "/blog/category/[category]":
-      return toPrerenderedPages(
-        listHtmlFilesIn(path.join(BLOG_DIR, "category")),
-      );
-    case "/blog/tag/[tag]":
-      return toPrerenderedPages(listHtmlFilesIn(path.join(BLOG_DIR, "tag")));
-    case "/blog/category/[category]/page/[page]":
-      return toPrerenderedPages(
-        listSubdirectoriesIn(path.join(BLOG_DIR, "category")).flatMap((dir) =>
-          listHtmlFilesIn(path.join(dir, "page")),
-        ),
-      );
-    case "/blog/tag/[tag]/page/[page]":
-      return toPrerenderedPages(
-        listSubdirectoriesIn(path.join(BLOG_DIR, "tag")).flatMap((dir) =>
-          listHtmlFilesIn(path.join(dir, "page")),
-        ),
-      );
-  }
+  return urlsGeneratedFrom(shape).map((url) => ({
+    url,
+    htmlPath: path.join(SERVER_APP_DIR, `${url}.html`),
+  }));
 }
+
+/** ビルドが生成した記事ページの slug。 */
+const generatedArticleSlugs = new Set(
+  urlsGeneratedFrom(ARTICLE_SHAPE).map((url) => url.slice("/blog/".length)),
+);
 
 // ---------------------------------------------------------------------------
 // ヘルパー: 静的HTMLの読み取り
@@ -153,11 +138,6 @@ function decodeSlug(rawSlug: string): string {
   }
 }
 
-/** その slug の記事ページが実際に生成されているか。 */
-function isGeneratedArticle(slug: string): boolean {
-  return fs.existsSync(path.join(BLOG_DIR, `${slug}.html`));
-}
-
 /** 静的HTMLに書き出されたアンカーのうち、生成済み記事ページを指すものの slug。 */
 function findArticleLinkSlugs(document: Document): string[] {
   const slugs = new Set<string>();
@@ -165,11 +145,35 @@ function findArticleLinkSlugs(document: Document): string[] {
     const match = ARTICLE_HREF_PATTERN.exec(anchor.getAttribute("href") ?? "");
     if (!match) continue;
     const slug = decodeSlug(match[1]);
-    if (isGeneratedArticle(slug)) {
+    if (generatedArticleSlugs.has(slug)) {
       slugs.add(slug);
     }
   }
   return [...slugs];
+}
+
+/** 可視のパンくずに並ぶ項目名（各項目の先頭に付く区切り「/」は除く）。 */
+function findVisibleBreadcrumbTrail(document: Document): string[] {
+  const nav = document.querySelector('nav[aria-label="パンくずリスト"]');
+  if (!nav) return [];
+  return [...nav.querySelectorAll("li")].map((item) =>
+    (item.textContent ?? "").replace(/^\s*\/\s*/, "").trim(),
+  );
+}
+
+/** ページが申告する BreadcrumbList の項目名（BreadcrumbList 1 つにつき 1 本）。 */
+function findDeclaredBreadcrumbTrails(document: Document): string[][] {
+  const trails: string[][] = [];
+  for (const script of document.querySelectorAll(
+    'script[type="application/ld+json"]',
+  )) {
+    const data = JSON.parse(script.textContent ?? "null");
+    if (data?.["@type"] !== "BreadcrumbList") continue;
+    trails.push(
+      (data.itemListElement as { name: string }[]).map((entry) => entry.name),
+    );
+  }
+  return trails;
 }
 
 /** 一覧ページ1枚の静的HTMLから読み取った検査対象の事実。 */
@@ -182,6 +186,10 @@ interface ListingPageFacts {
   searchInputCount: number;
   /** そのうちハイドレーション前から操作できてしまう検索欄の数 */
   enabledSearchInputCount: number;
+  /** 可視のパンくずに並ぶ項目名 */
+  visibleBreadcrumbTrail: string[];
+  /** 構造化データとして申告している経路 */
+  declaredBreadcrumbTrails: string[][];
 }
 
 function readListingPageFacts(page: PrerenderedPage): ListingPageFacts {
@@ -199,6 +207,8 @@ function readListingPageFacts(page: PrerenderedPage): ListingPageFacts {
     searchInputCount: searchInputs.length,
     enabledSearchInputCount: searchInputs.filter((input) => !input.disabled)
       .length,
+    visibleBreadcrumbTrail: findVisibleBreadcrumbTrail(document),
+    declaredBreadcrumbTrails: findDeclaredBreadcrumbTrails(document),
   };
 }
 
@@ -207,10 +217,18 @@ function readListingPageFacts(page: PrerenderedPage): ListingPageFacts {
 // ---------------------------------------------------------------------------
 
 describe("ブログ一覧ページの静的HTML", () => {
+  const pagesByShape = new Map<ListingShape, PrerenderedPage[]>(
+    LISTING_SHAPES.map((shape) => [shape, collectPrerenderedPages(shape)]),
+  );
+
+  requireBuildOutput(
+    ...[...pagesByShape.values()].flat().map((page) => page.htmlPath),
+  );
+
   const factsByShape = new Map<ListingShape, ListingPageFacts[]>(
     LISTING_SHAPES.map((shape) => [
       shape,
-      collectPrerenderedPages(shape).map(readListingPageFacts),
+      (pagesByShape.get(shape) ?? []).map(readListingPageFacts),
     ]),
   );
   const allFacts = LISTING_SHAPES.flatMap(
@@ -243,9 +261,9 @@ describe("ブログ一覧ページの静的HTML", () => {
         pagesWithoutArticleLink.map((facts) => facts.url),
         `${shape} の静的HTMLに記事リンク（href="/blog/<slug>"）が 1 本も無い:\n` +
           pagesWithoutArticleLink.map((facts) => `  ${facts.url}`).join("\n") +
-          `\n一覧本体がクライアント描画へ退避している。` +
-          `記事リンクがクローラにも JS 無効環境にも届かなくなるため、` +
-          `一覧はキーワード非依存の静的シェルとしてサーバーで描画すること。`,
+          `\n一覧はキーワード非依存の静的シェルとしてサーバーで描画すること。` +
+          `一覧本体がクライアント描画へ退避すると、記事リンクがクローラにも` +
+          `JS 無効環境にも届かなくなる。`,
       ).toEqual([]);
     });
   }
@@ -288,6 +306,46 @@ describe("ブログ一覧ページの静的HTML", () => {
       `ハイドレーション前に操作できる検索欄がある:\n${problems.join("\n")}\n` +
         `入力してもキーワードが黙って捨てられるため、` +
         `静的シェルの検索欄は disabled にすること。`,
+    ).toEqual([]);
+  });
+
+  // ---- 検査 5: タグ一覧にはパンくずがある ----
+  test("タグ一覧のすべてのページがパンくずを出している", () => {
+    const pagesWithoutBreadcrumb = TAG_LISTING_SHAPES.flatMap(
+      (shape) => factsByShape.get(shape) ?? [],
+    ).filter((facts) => facts.visibleBreadcrumbTrail.length === 0);
+
+    expect(
+      pagesWithoutBreadcrumb.map((facts) => facts.url),
+      `パンくずが静的HTMLに無いタグ一覧がある:\n` +
+        pagesWithoutBreadcrumb.map((facts) => `  ${facts.url}`).join("\n") +
+        `\n掲載記事が少ないタグではパンくずが本文内の唯一の脱出口になる。`,
+    ).toEqual([]);
+  });
+
+  // ---- 検査 6: 申告する経路が見える経路と一致する ----
+  test("パンくずを出しているページの BreadcrumbList が可視の経路と一致する", () => {
+    const problems = allFacts.flatMap((facts) => {
+      if (facts.visibleBreadcrumbTrail.length === 0) return [];
+      const visible = facts.visibleBreadcrumbTrail.join(" > ");
+      if (facts.declaredBreadcrumbTrails.length !== 1) {
+        return [
+          `  ${facts.url}: BreadcrumbList が ${facts.declaredBreadcrumbTrails.length} 件（見える経路は「${visible}」）`,
+        ];
+      }
+      const declared = facts.declaredBreadcrumbTrails[0].join(" > ");
+      if (declared !== visible) {
+        return [
+          `  ${facts.url}: 見える経路「${visible}」／申告「${declared}」`,
+        ];
+      }
+      return [];
+    });
+
+    expect(
+      problems,
+      `読者が見る経路と検索エンジンへ申告する経路が食い違っている:\n${problems.join("\n")}\n` +
+        `パンくずと BreadcrumbList は同じ項目から組み立てること。`,
     ).toEqual([]);
   });
 });

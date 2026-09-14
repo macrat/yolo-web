@@ -14,6 +14,9 @@ interface Props {
   params: Promise<{ tag: string }>;
 }
 
+/** Only allow statically generated tag names; return 404 for others */
+export const dynamicParams = false;
+
 export function generateStaticParams() {
   // encodeURIComponent は不要: Next.js が動的セグメントを自動的にデコードするため
   // generateStaticParams では生の（デコード済み）タグ名を返す
@@ -83,45 +86,14 @@ export default async function TagPage({ params }: Props) {
 
   const { items, totalPages } = paginate(posts, 1, BLOG_POSTS_PER_PAGE);
 
-  const breadcrumbJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      {
-        "@type": "ListItem",
-        position: 1,
-        name: "ホーム",
-        item: BASE_URL,
-      },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "ブログ",
-        item: `${BASE_URL}/blog`,
-      },
-      {
-        "@type": "ListItem",
-        position: 3,
-        name: tag,
-        item: `${BASE_URL}/blog/tag/${encodeURIComponent(tag)}`,
-      },
-    ],
-  };
-
   return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
-      />
-      <BlogListView
-        posts={items}
-        currentPage={1}
-        totalPages={totalPages}
-        basePath={`/blog/tag/${encodeURIComponent(tag)}`}
-        tagHeader={{ tag, description }}
-        allPosts={posts}
-      />
-    </>
+    <BlogListView
+      posts={items}
+      currentPage={1}
+      totalPages={totalPages}
+      basePath={`/blog/tag/${encodeURIComponent(tag)}`}
+      tagHeader={{ tag, description }}
+      allPosts={posts}
+    />
   );
 }

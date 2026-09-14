@@ -94,21 +94,34 @@ describe("Breadcrumb", () => {
     expect(parsed.itemListElement[2].item).toBeUndefined();
   });
 
-  test("includeJsonLd={false} のとき構造化データを出さず、見えるパンくずは変わらない", () => {
-    const { container } = render(
-      <Breadcrumb items={items} includeJsonLd={false} />,
+  test("構造化データの経路が見えるパンくずと一致する", () => {
+    const { container } = render(<Breadcrumb items={items} />);
+    const script = container.querySelector(
+      'script[type="application/ld+json"]',
     );
+    const parsed = JSON.parse(script!.textContent ?? "");
+
+    const visibleTrail = screen
+      .getAllByRole("listitem")
+      .map((li) => li.textContent?.replace(/^\//, "") ?? "");
     expect(
-      container.querySelector('script[type="application/ld+json"]'),
-    ).toBeNull();
-    expect(screen.getAllByRole("listitem")).toHaveLength(3);
-    expect(screen.getByRole("link", { name: "ホーム" })).toHaveAttribute(
-      "href",
-      "/",
+      parsed.itemListElement.map((entry: { name: string }) => entry.name),
+    ).toEqual(visibleTrail);
+  });
+
+  test("項目名に < が含まれても script タグを閉じない", () => {
+    const { container } = render(
+      <Breadcrumb
+        items={[{ label: "ホーム", href: "/" }, { label: "</script><b>" }]}
+      />,
     );
-    expect(screen.getByText("文字数カウント")).toHaveAttribute(
-      "aria-current",
-      "page",
+    const script = container.querySelector(
+      'script[type="application/ld+json"]',
     );
+    expect(script!.textContent).not.toContain("<");
+    expect(container.querySelector("b")).toBeNull();
+    // エスケープしても構造化データとしての中身は保たれる
+    const parsed = JSON.parse(script!.textContent ?? "");
+    expect(parsed.itemListElement[1].name).toBe("</script><b>");
   });
 });

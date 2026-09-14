@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import Breadcrumb from "@/components/Breadcrumb";
+import Breadcrumb, { type BreadcrumbItem } from "@/components/Breadcrumb";
 import {
   CATEGORY_DESCRIPTIONS,
   ALL_CATEGORIES,
@@ -15,6 +15,34 @@ import { calculateNewSlugs } from "./newSlugsHelper";
 import styles from "./BlogListView.module.css";
 
 /**
+ * タグページのパンくず経路を組み立てる。
+ *
+ * 2 ページ目以降は現在地がそのページであることを示し、タグの 1 ページ目へ戻るリンクを残す。
+ * 1 ページ目ではタグ名自身が現在地になる。
+ */
+function buildTagBreadcrumbItems(
+  tag: string,
+  basePath: string,
+  currentPage: number,
+): BreadcrumbItem[] {
+  const trail: BreadcrumbItem[] = [
+    { label: "ホーム", href: "/" },
+    { label: "ブログ", href: "/blog" },
+  ];
+
+  if (currentPage > 1) {
+    trail.push(
+      { label: tag, href: basePath },
+      { label: `${currentPage}ページ目` },
+    );
+  } else {
+    trail.push({ label: tag });
+  }
+
+  return trail;
+}
+
+/**
  * ブログ一覧ページのビュー (Server Component)。
  *
  * ページ見出し（タイトル・説明文）とフィルター付き記事一覧を表示する。
@@ -26,9 +54,9 @@ import styles from "./BlogListView.module.css";
  * 描画し、記事リンクを静的 HTML に載せる。fallback と本体は同じ {@link BlogListPanel} なので、
  * キーワードが無い通常の閲覧では描画結果が一致しレイアウトがずれない。
  *
- * タグページの先頭にはパンくず（ホーム / ブログ / タグ名）を出す。掲載記事が少ないタグでは
- * これが本文内の唯一の脱出口になる。構造化データ（BreadcrumbList）は同じ経路をタグのルートが
- * 出しているため、ここでは可視のパンくずだけを描く。
+ * タグページの先頭にはパンくずを出す。掲載記事が少ないタグではこれが本文内の唯一の脱出口になる。
+ * 経路の組み立ては {@link buildTagBreadcrumbItems} が受け持ち、BreadcrumbList の構造化データは
+ * 同じ項目から {@link Breadcrumb} が出すため、読者が見る経路と検索エンジンへ申告する経路は一致する。
  *
  * Client Component では用意できない値はここで解決して渡す:
  * - 「新着」判定に使う Date.now()（react-hooks/purity 制約。判定ロジックはテスト容易性のため
@@ -87,12 +115,11 @@ export default function BlogListView({
           <>
             <div className={styles.breadcrumb}>
               <Breadcrumb
-                items={[
-                  { label: "ホーム", href: "/" },
-                  { label: "ブログ", href: "/blog" },
-                  { label: tagHeader.tag },
-                ]}
-                includeJsonLd={false}
+                items={buildTagBreadcrumbItems(
+                  tagHeader.tag,
+                  basePath,
+                  currentPage,
+                )}
               />
             </div>
             <h1 className={styles.title}>{tagHeader.tag}</h1>
