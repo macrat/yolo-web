@@ -9,7 +9,6 @@ import {
 } from "@/blog/_lib/blog";
 import { paginate, BLOG_POSTS_PER_PAGE } from "@/lib/pagination";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
-import { generateBreadcrumbJsonLd, safeJsonLdStringify } from "@/lib/seo";
 import BlogListView from "@/blog/_components/BlogListView";
 
 interface Props {
@@ -65,33 +64,18 @@ export default async function CategoryPage({ params }: Props) {
     notFound();
   }
 
-  const label = CATEGORY_LABELS[category as BlogCategory];
   const allPosts = getAllBlogPosts();
   const categoryPosts = allPosts.filter((p) => p.category === category);
   const { items, totalPages } = paginate(categoryPosts, 1, BLOG_POSTS_PER_PAGE);
 
-  const breadcrumbJsonLd = generateBreadcrumbJsonLd([
-    { label: "ホーム", href: "/" },
-    { label: "ブログ", href: "/blog" },
-    { label, href: `/blog/category/${category}` },
-  ]);
-
   return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: safeJsonLdStringify(breadcrumbJsonLd),
-        }}
-      />
-      <BlogListView
-        posts={items}
-        currentPage={1}
-        totalPages={totalPages}
-        basePath={`/blog/category/${category}`}
-        activeCategory={category as BlogCategory}
-        allPosts={allPosts}
-      />
-    </>
+    <BlogListView
+      posts={items}
+      currentPage={1}
+      totalPages={totalPages}
+      basePath={`/blog/category/${category}`}
+      activeCategory={category as BlogCategory}
+      allPosts={allPosts}
+    />
   );
 }

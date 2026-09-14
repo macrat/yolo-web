@@ -8,7 +8,6 @@ import {
 } from "@/blog/_lib/blog";
 import { paginate, BLOG_POSTS_PER_PAGE } from "@/lib/pagination";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
-import { generateBreadcrumbJsonLd, safeJsonLdStringify } from "@/lib/seo";
 import BlogListView from "@/blog/_components/BlogListView";
 
 interface Props {
@@ -79,8 +78,6 @@ export default async function CategoryPaginatedPage({ params }: Props) {
   const { category, page } = await params;
   const pageNum = Number(page);
 
-  const label = CATEGORY_LABELS[category as BlogCategory];
-
   // dynamicParams=false + generateStaticParams(category x 2..totalPages) means only
   // valid category/page pairs are routed here in production builds.
   const allPosts = getAllBlogPosts();
@@ -91,28 +88,14 @@ export default async function CategoryPaginatedPage({ params }: Props) {
     BLOG_POSTS_PER_PAGE,
   );
 
-  const breadcrumbJsonLd = generateBreadcrumbJsonLd([
-    { label: "ホーム", href: "/" },
-    { label: "ブログ", href: "/blog" },
-    { label, href: `/blog/category/${category}` },
-  ]);
-
   return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: safeJsonLdStringify(breadcrumbJsonLd),
-        }}
-      />
-      <BlogListView
-        posts={items}
-        currentPage={pageNum}
-        totalPages={totalPages}
-        basePath={`/blog/category/${category}`}
-        activeCategory={category as BlogCategory}
-        allPosts={allPosts}
-      />
-    </>
+    <BlogListView
+      posts={items}
+      currentPage={pageNum}
+      totalPages={totalPages}
+      basePath={`/blog/category/${category}`}
+      activeCategory={category as BlogCategory}
+      allPosts={allPosts}
+    />
   );
 }

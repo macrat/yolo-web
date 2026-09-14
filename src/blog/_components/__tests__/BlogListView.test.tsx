@@ -92,6 +92,34 @@ const renderTagPage = ({ tag = "設計パターン", currentPage = 1 } = {}) =>
     />,
   );
 
+/** カテゴリページとして描く（既定はカテゴリ「開発ノート」の 1 ページ目） */
+const renderCategoryPage = ({
+  category = "dev-notes" as const,
+  currentPage = 1,
+} = {}) =>
+  render(
+    <BlogListView
+      posts={mockPosts}
+      currentPage={currentPage}
+      totalPages={2}
+      basePath={`/blog/category/${category}`}
+      activeCategory={category}
+      allPosts={mockPosts}
+    />,
+  );
+
+/** 絞り込みの無い全記事一覧として描く */
+const renderAllPostsPage = () =>
+  render(
+    <BlogListView
+      posts={mockPosts}
+      currentPage={1}
+      totalPages={1}
+      basePath="/blog"
+      allPosts={mockPosts}
+    />,
+  );
+
 /** 可視のパンくずの表示順（区切りの「/」は除く） */
 function visibleBreadcrumbTrail(): string[] {
   const nav = screen.getByRole("navigation", { name: "パンくずリスト" });
@@ -217,8 +245,8 @@ describe("BlogListView 統合テスト", () => {
   });
 });
 
-describe("タグページのパンくず", () => {
-  test("ホーム・ブログへ戻るリンクを出し、現在地はタグ名になる", () => {
+describe("一覧ページのパンくず", () => {
+  test("タグページはホーム・ブログへ戻るリンクを出し、現在地はタグ名になる", () => {
     renderTagPage();
     const nav = screen.getByRole("navigation", { name: "パンくずリスト" });
     expect(within(nav).getByRole("link", { name: "ホーム" })).toHaveAttribute(
@@ -237,22 +265,30 @@ describe("タグページのパンくず", () => {
     ).toBeNull();
   });
 
-  test("タグページ以外ではパンくずを出さない", () => {
-    render(
-      <BlogListView
-        posts={mockPosts}
-        currentPage={1}
-        totalPages={1}
-        basePath="/blog"
-        allPosts={mockPosts}
-      />,
+  test("カテゴリページはホーム・ブログへ戻るリンクを出し、現在地はカテゴリ名になる", () => {
+    renderCategoryPage();
+    const nav = screen.getByRole("navigation", { name: "パンくずリスト" });
+    expect(within(nav).getByRole("link", { name: "ホーム" })).toHaveAttribute(
+      "href",
+      "/",
     );
+    expect(within(nav).getByRole("link", { name: "ブログ" })).toHaveAttribute(
+      "href",
+      "/blog",
+    );
+    const current = within(nav).getByText("開発ノート");
+    expect(current).toHaveAttribute("aria-current", "page");
+    expect(within(nav).queryByRole("link", { name: "開発ノート" })).toBeNull();
+  });
+
+  test("絞り込みの無い全記事一覧ではパンくずを出さない", () => {
+    renderAllPostsPage();
     expect(
       screen.queryByRole("navigation", { name: "パンくずリスト" }),
     ).toBeNull();
   });
 
-  test("2 ページ目では現在地がページ番号になり、1 ページ目へ戻れる", () => {
+  test("タグページの 2 ページ目では現在地がページ番号になり、1 ページ目へ戻れる", () => {
     renderTagPage({ currentPage: 2 });
     const nav = screen.getByRole("navigation", { name: "パンくずリスト" });
 
@@ -268,10 +304,24 @@ describe("タグページのパンくず", () => {
     );
     expect(within(nav).queryByRole("link", { name: "2ページ目" })).toBeNull();
   });
+
+  test("カテゴリページの 2 ページ目では現在地がページ番号になり、1 ページ目へ戻れる", () => {
+    renderCategoryPage({ currentPage: 2 });
+    const nav = screen.getByRole("navigation", { name: "パンくずリスト" });
+
+    expect(
+      within(nav).getByRole("link", { name: "開発ノート" }),
+    ).toHaveAttribute("href", "/blog/category/dev-notes");
+    expect(within(nav).getByText("2ページ目")).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+    expect(within(nav).queryByRole("link", { name: "2ページ目" })).toBeNull();
+  });
 });
 
-describe("タグページの構造化データ", () => {
-  test("BreadcrumbList の経路が可視のパンくずと一致する（1 ページ目）", () => {
+describe("一覧ページの構造化データ", () => {
+  test("タグページの BreadcrumbList の経路が可視のパンくずと一致する（1 ページ目）", () => {
     const { container } = renderTagPage();
     const { parsed } = breadcrumbJsonLd(container);
 
@@ -285,7 +335,7 @@ describe("タグページの構造化データ", () => {
     ]);
   });
 
-  test("BreadcrumbList の経路が可視のパンくずと一致する（2 ページ目）", () => {
+  test("タグページの BreadcrumbList の経路が可視のパンくずと一致する（2 ページ目）", () => {
     const { container } = renderTagPage({ currentPage: 2 });
     const { parsed } = breadcrumbJsonLd(container);
 
@@ -297,6 +347,28 @@ describe("タグページの構造化データ", () => {
       `${BASE_URL}/blog/tag/${encodeURIComponent("設計パターン")}`,
     );
     expect(parsed.itemListElement[3].item).toBeUndefined();
+  });
+
+  test("カテゴリページの BreadcrumbList の経路が可視のパンくずと一致する", () => {
+    const { container } = renderCategoryPage();
+    const { parsed } = breadcrumbJsonLd(container);
+
+    expect(parsed.itemListElement.map((entry) => entry.name)).toEqual(
+      visibleBreadcrumbTrail(),
+    );
+    expect(parsed.itemListElement.map((entry) => entry.name)).toEqual([
+      "ホーム",
+      "ブログ",
+      "開発ノート",
+    ]);
+  });
+
+  test("絞り込みの無い全記事一覧では BreadcrumbList を申告しない", () => {
+    const { container } = renderAllPostsPage();
+
+    expect(
+      container.querySelectorAll('script[type="application/ld+json"]'),
+    ).toHaveLength(0);
   });
 
   test("タグ名に < が含まれても script タグを閉じない", () => {

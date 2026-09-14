@@ -15,16 +15,19 @@ import { calculateNewSlugs } from "./newSlugsHelper";
 import styles from "./BlogListView.module.css";
 
 /**
- * タグページのパンくず経路を組み立てる。
+ * 一覧ページのパンくず経路を組み立てる。
  *
- * 2 ページ目以降は現在地がそのページであることを示し、タグの 1 ページ目へ戻るリンクを残す。
- * 1 ページ目ではタグ名自身が現在地になる。
+ * 絞り込みのある一覧（タグ・カテゴリ）では、その絞り込み名が現在地になる。
+ * 2 ページ目以降は現在地がそのページであることを示し、絞り込みの 1 ページ目へ戻るリンクを残す。
+ * 絞り込みの無い全記事一覧はブログの入口そのものなので経路を出さない。
  */
-function buildTagBreadcrumbItems(
-  tag: string,
+function buildBreadcrumbItems(
+  filterLabel: string | undefined,
   basePath: string,
   currentPage: number,
-): BreadcrumbItem[] {
+): BreadcrumbItem[] | null {
+  if (!filterLabel) return null;
+
   const trail: BreadcrumbItem[] = [
     { label: "ホーム", href: "/" },
     { label: "ブログ", href: "/blog" },
@@ -32,11 +35,11 @@ function buildTagBreadcrumbItems(
 
   if (currentPage > 1) {
     trail.push(
-      { label: tag, href: basePath },
+      { label: filterLabel, href: basePath },
       { label: `${currentPage}ページ目` },
     );
   } else {
-    trail.push({ label: tag });
+    trail.push({ label: filterLabel });
   }
 
   return trail;
@@ -54,9 +57,10 @@ function buildTagBreadcrumbItems(
  * 描画し、記事リンクを静的 HTML に載せる。fallback と本体は同じ {@link BlogListPanel} なので、
  * キーワードが無い通常の閲覧では描画結果が一致しレイアウトがずれない。
  *
- * タグページの先頭にはパンくずを出す。掲載記事が少ないタグではこれが本文内の唯一の脱出口になる。
- * 経路の組み立ては {@link buildTagBreadcrumbItems} が受け持ち、BreadcrumbList の構造化データは
- * 同じ項目から {@link Breadcrumb} が出すため、読者が見る経路と検索エンジンへ申告する経路は一致する。
+ * 絞り込みのある一覧（タグ・カテゴリ）の先頭にはパンくずを出す。掲載記事が少ない絞り込みでは
+ * これが本文内の唯一の脱出口になる。経路の組み立ては {@link buildBreadcrumbItems} が受け持ち、
+ * BreadcrumbList の構造化データは同じ項目から {@link Breadcrumb} が出すため、読者が見る経路と
+ * 検索エンジンへ申告する経路は一致する。
  *
  * Client Component では用意できない値はここで解決して渡す:
  * - 「新着」判定に使う Date.now()（react-hooks/purity 制約。判定ロジックはテスト容易性のため
@@ -88,6 +92,13 @@ export default function BlogListView({
     ? CATEGORY_DESCRIPTIONS[activeCategory]
     : "AIエージェントたちがサイトを運営する過程を公開。意思決定、技術的挑戦、失敗と学びを記録します。";
 
+  const breadcrumbItems = buildBreadcrumbItems(
+    tagHeader?.tag ??
+      (activeCategory ? CATEGORY_LABELS[activeCategory] : undefined),
+    basePath,
+    currentPage,
+  );
+
   // カテゴリ一覧をシリアライズ可能な形に変換して Client Component に渡す
   const categories = ALL_CATEGORIES.map((cat) => ({
     value: cat,
@@ -111,26 +122,15 @@ export default function BlogListView({
   return (
     <div className={styles.page}>
       <div className={styles.intro}>
-        {tagHeader ? (
-          <>
-            <div className={styles.breadcrumb}>
-              <Breadcrumb
-                items={buildTagBreadcrumbItems(
-                  tagHeader.tag,
-                  basePath,
-                  currentPage,
-                )}
-              />
-            </div>
-            <h1 className={styles.title}>{tagHeader.tag}</h1>
-            <p className={styles.description}>{tagHeader.description}</p>
-          </>
-        ) : (
-          <>
-            <h1 className={styles.title}>AI試行錯誤ブログ</h1>
-            <p className={styles.description}>{headerDescription}</p>
-          </>
+        {breadcrumbItems && (
+          <div className={styles.breadcrumb}>
+            <Breadcrumb items={breadcrumbItems} />
+          </div>
         )}
+        <h1 className={styles.title}>{tagHeader?.tag ?? "AI試行錯誤ブログ"}</h1>
+        <p className={styles.description}>
+          {tagHeader?.description ?? headerDescription}
+        </p>
       </div>
 
       <Suspense fallback={<BlogListPanel {...listData} keyword="" />}>
