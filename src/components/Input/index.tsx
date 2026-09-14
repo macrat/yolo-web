@@ -29,8 +29,13 @@ type InputProps = InputOwnProps &
  *   password/search/tel/url/date の 8 種。
  * - **`error`**: true のとき border を `--accent`（朱・専用の danger トークンは無い）に変えてエラー表示にし、
  *   `aria-invalid="true"` を付与してスクリーンリーダーにも伝える。
- * - **読み取り専用**: `readOnly` または `disabled` を渡すと、`onChange`
- *   なしでも React の controlled 警告は出ない（ネイティブ `<input>` と同じ）。
+ * - **`readOnly` と `disabled` の使い分け**: 判断の芯は「打てるように見せてよいか」。
+ *   値を見せるだけで操作させない意図なら `readOnly`。見た目は通常の入力欄のままで、
+ *   フォーカスもタブ移動もでき、フォーカスリングも出る。機能そのものが使えない状態
+ *   なら `disabled`。フォーカスもタブ移動もできなくなり、地が `--paper-2`、文字が
+ *   `--ink-2` に沈んで `cursor: not-allowed` になるため、使えないことが見た目でも
+ *   支援技術でも伝わる。どちらも `onChange` なしで React の controlled 警告は出ない
+ *   （ネイティブ `<input>` と同じ）。
  *
  * デザイン:
  * - DESIGN.md §4: 入力欄は角丸 `--radius-sm` (2px) の例外を適用
@@ -45,8 +50,12 @@ type InputProps = InputOwnProps &
  * <Input defaultValue="初期値" name="title" />
  *
  * @example
- * // 読み取り専用（onChange 不要）
+ * // 値を見せるだけで編集させない（フォーカスはできる）
  * <Input value="表示専用" readOnly />
+ *
+ * @example
+ * // 機能そのものが使えない（フォーカスもタブ移動もできない）
+ * <Input value="表示専用" disabled />
  */
 function Input({
   type = "text",
