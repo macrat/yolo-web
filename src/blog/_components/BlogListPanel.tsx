@@ -11,20 +11,17 @@ interface CategoryItem {
   label: string;
 }
 
-interface TagHeader {
+/** タグページの見出しに出す情報。 */
+export interface TagHeader {
   tag: string;
   description: string;
 }
 
 /**
- * 一覧の描画に必要なデータ一式。
- * キーワードに依存しない値だけで構成され、Server Component から渡される。
+ * 一覧ルートが供給する中身。一覧を描く 6 ルートすべてがこの形で渡す。
  */
-export interface BlogListData {
-  /**
-   * 現在のページに表示する記事（ページネーション済み）。
-   * キーワード検索が有効な場合はこれを使わず allPosts から全件フィルタする。
-   */
+export interface BlogListSource {
+  /** 現在のページに表示する記事（ページネーション済み） */
   posts: BlogPostMeta[];
   /** 現在の 1-based ページ番号 */
   currentPage: number;
@@ -32,39 +29,35 @@ export interface BlogListData {
   totalPages: number;
   /** ページネーションリンクのベースパス（例: "/blog" / "/blog/category/dev-notes"） */
   basePath: string;
-  /** 現在アクティブなカテゴリスラッグ（カテゴリページの場合のみ設定） */
+  /** 現在アクティブなカテゴリスラッグ（カテゴリページのみ設定） */
   activeCategory?: BlogCategory;
   /**
-   * 全記事（ページネーション前）。
-   * カテゴリカウント表示・人気タグ算出・キーワード検索の全件対象として使う。
-   * タグページでは省略可（省略時は件数バッジなし）。
+   * この一覧の母集合（ページネーション前の全件）。
+   * 件数バッジ・人気タグ・キーワード検索の対象になる。
+   * カテゴリページはカテゴリ横断の件数を出すためサイトの全記事を、
+   * タグページはそのタグが付いた全記事を渡す。
    */
-  allPosts?: BlogPostMeta[];
-  /**
-   * タグページ専用ヘッダー情報。
-   * 設定されている場合はカテゴリナビを表示しない。
-   */
+  allPosts: BlogPostMeta[];
+  /** タグページの見出し情報。設定されていればタグページとして描く。 */
   tagHeader?: TagHeader;
-  /**
-   * 「新着」マークを表示する記事のスラッグ集合。
-   * Date.now() は react-hooks/purity 制約により Client Component 内で使用できないため、
-   * Server Component（BlogListView）で計算して渡す。
-   */
+}
+
+/**
+ * 一覧の描画に必要なデータ一式。
+ *
+ * ルートが供給する {@link BlogListSource} に、Server Component でしか用意できない値を足したもの。
+ * node:fs を使う `@/blog/_lib/blog` は Client Component からインポートできず、
+ * Date.now() も react-hooks/purity 制約により Client Component 内で呼べないため、
+ * これらは BlogListView が解決し、シリアライズ可能な形にして props で運ぶ。
+ */
+export interface BlogListData extends BlogListSource {
+  /** 「新着」マークを表示する記事のスラッグ集合 */
   newSlugs: ReadonlySet<string>;
-  /**
-   * カテゴリ一覧。
-   * node:fs を使う @/blog/_lib/blog を Client Component から直接インポートできないため props で受け取る。
-   */
+  /** カテゴリナビに並べるカテゴリ（表示順） */
   categories: CategoryItem[];
-  /**
-   * カテゴリID → 表示名のマッピング。
-   * node:fs を使う @/blog/_lib/blog を Client Component から直接インポートできないため props で受け取る。
-   */
+  /** カテゴリID → 表示名のマッピング */
   categoryLabels: Record<string, string>;
-  /**
-   * シリーズID → 表示名のマッピング。
-   * node:fs を使う @/blog/_lib/blog を Client Component から直接インポートできないため props で受け取る。
-   */
+  /** シリーズID → 表示名のマッピング */
   seriesLabels: Record<string, string>;
   /**
    * タグページが存在するタグの集合（getTagsWithMinPosts(3) の結果）。
@@ -80,9 +73,9 @@ interface BlogListPanelProps extends BlogListData {
   keyword: string;
   /**
    * キーワード入力のハンドラ。
-   * 省略するとパネル全体が同期的・決定的に描画できる形になり、
-   * 検索欄は操作不可（`disabled`）＋ JavaScript 無効時だけ現れる説明文つきで描かれる。
-   * Server Component から描画する静的シェル（Suspense の fallback）がこの形を使う。
+   * Server Component はイベントハンドラを RSC ツリーへ渡せないため、
+   * サーバーで描く静的シェル（Suspense の fallback）はこれを持たない。
+   * ハンドラの有無が、そのまま検索欄を操作できるかどうかになる。
    */
   onKeywordChange?: (keyword: string) => void;
 }
@@ -125,6 +118,45 @@ function buildTagHref(tag: string, keyword: string): string {
 }
 
 /**
+ * キーワード検索の対象になる記事。
+ * 母集合を、この一覧がすでに掛けている絞り込み（タグ・カテゴリ）まで狭める。
+ */
+function selectSearchBase(
+  allPosts: BlogPostMeta[],
+  activeCategory: BlogCategory | undefined,
+  tagHeader: TagHeader | undefined,
+): BlogPostMeta[] {
+  if (tagHeader) {
+    return allPosts.filter((post) => post.tags.includes(tagHeader.tag));
+  }
+  if (activeCategory) {
+    return allPosts.filter((post) => post.category === activeCategory);
+  }
+  return allPosts;
+}
+
+/**
+ * 表示する記事が 0 件のときの一文。
+ * いま何で絞り込んでいるかに合わせて、次にどうすれば記事へ辿り着けるかを伝える。
+ */
+function buildEmptyMessage(
+  isSearching: boolean,
+  activeCategory: BlogCategory | undefined,
+  tagHeader: TagHeader | undefined,
+): string {
+  if (isSearching) {
+    return "一致する記事が見つかりませんでした。キーワードを変えるか、カテゴリやタグを切り替えると見つかるかもしれません。";
+  }
+  if (tagHeader) {
+    return "このタグの記事はまだありません。";
+  }
+  if (activeCategory) {
+    return "このカテゴリの記事はまだありません。";
+  }
+  return "まだ記事がありません。";
+}
+
+/**
  * ブログ一覧の本体 — カテゴリナビ・キーワード検索欄・人気タグ・品書き・ページネーション。
  *
  * 渡された props だけで描画結果が決まる純粋な表示コンポーネントで、
@@ -132,7 +164,7 @@ function buildTagHref(tag: string, keyword: string): string {
  * キーワード状態の管理（URL との同期）は {@link BlogFilterableList} が持つ。
  *
  * キーワード検索が有効な場合:
- * - allPosts の全件に対してフィルタする（ページネーション無効化）
+ * - 母集合の全件に対してフィルタする（ページネーション無効化）
  * - ページネーションコンポーネントは非表示
  */
 export default function BlogListPanel({
@@ -141,7 +173,7 @@ export default function BlogListPanel({
   totalPages,
   basePath,
   activeCategory,
-  allPosts = [],
+  allPosts,
   tagHeader,
   newSlugs,
   categories,
@@ -151,6 +183,11 @@ export default function BlogListPanel({
   keyword,
   onKeywordChange,
 }: BlogListPanelProps) {
+  // 検索欄を操作できるのは Client Component から描かれたときだけ。
+  // Server Component はイベントハンドラを RSC ツリーへ渡せないため、
+  // サーバーで描く静的シェルにはハンドラが無く、検索欄は disabled で出る。
+  const isInteractive = onKeywordChange !== undefined;
+
   // カテゴリごとの記事件数を算出
   const countByCategory: Record<string, number> = {};
   for (const post of allPosts) {
@@ -173,30 +210,16 @@ export default function BlogListPanel({
   const showPopularTags =
     !activeCategory && !tagHeader && popularTags.length > 0;
 
-  // キーワード検索が有効な場合: allPosts 全件を対象にフィルタ（ページネーション無効化）
+  // キーワード検索が有効な場合: 母集合の全件を対象にフィルタ（ページネーション無効化）
   const isSearching = keyword.trim().length > 0;
-
-  let displayPosts: BlogPostMeta[];
-  if (isSearching) {
-    // タグページ: allPosts（タグ絞り込み済み全件）を対象にする
-    // カテゴリページ: allPosts からカテゴリ絞り込み済み全件を対象にする
-    // 通常ページ: allPosts 全件を対象にする
-    const searchBase = tagHeader
-      ? allPosts.length > 0
-        ? allPosts.filter((p) => p.tags.includes(tagHeader.tag))
-        : posts
-      : activeCategory
-        ? allPosts.filter((p) => p.category === activeCategory)
-        : allPosts;
-    displayPosts = filterPostsByKeyword(
-      searchBase,
-      keyword,
-      categoryLabels,
-      seriesLabels,
-    );
-  } else {
-    displayPosts = posts;
-  }
+  const displayPosts = isSearching
+    ? filterPostsByKeyword(
+        selectSearchBase(allPosts, activeCategory, tagHeader),
+        keyword,
+        categoryLabels,
+        seriesLabels,
+      )
+    : posts;
 
   return (
     <div className={styles.wrapper}>
@@ -240,7 +263,7 @@ export default function BlogListPanel({
           className={styles.searchInput}
           placeholder="記事を検索…"
           value={keyword}
-          disabled={!onKeywordChange}
+          disabled={!isInteractive}
           onChange={
             onKeywordChange
               ? (event) => onKeywordChange(event.target.value)
@@ -248,7 +271,7 @@ export default function BlogListPanel({
           }
           aria-label="ブログ記事をキーワードで検索"
         />
-        {!onKeywordChange && (
+        {!isInteractive && (
           <noscript className={styles.searchNote}>
             検索には JavaScript
             が必要です。記事は下の一覧から、そのまま読めます。
@@ -291,13 +314,7 @@ export default function BlogListPanel({
         />
       ) : (
         <p className={styles.noResults} role="status">
-          {isSearching
-            ? "一致する記事が見つかりませんでした。キーワードを変えるか、カテゴリやタグを切り替えると見つかるかもしれません。"
-            : tagHeader
-              ? "このタグの記事はまだありません。"
-              : activeCategory
-                ? "このカテゴリの記事はまだありません。"
-                : "まだ記事がありません。"}
+          {buildEmptyMessage(isSearching, activeCategory, tagHeader)}
         </p>
       )}
 

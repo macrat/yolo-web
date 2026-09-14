@@ -1,6 +1,5 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import type { BlogPostMeta, BlogCategory } from "@/blog/_lib/blog";
 import {
   CATEGORY_DESCRIPTIONS,
   ALL_CATEGORIES,
@@ -9,57 +8,29 @@ import {
   getTagsWithMinPosts,
 } from "@/blog/_lib/blog";
 import BlogFilterableList from "./BlogFilterableList";
-import BlogListPanel, { type BlogListData } from "./BlogListPanel";
+import BlogListPanel, {
+  type BlogListData,
+  type BlogListSource,
+} from "./BlogListPanel";
 import { calculateNewSlugs } from "./newSlugsHelper";
 import styles from "./BlogListView.module.css";
-
-interface TagHeader {
-  tag: string;
-  description: string;
-}
-
-interface BlogListViewProps {
-  /** 現在のページに表示する記事（ページネーション済み） */
-  posts: BlogPostMeta[];
-  /** 現在の 1-based ページ番号 */
-  currentPage: number;
-  /** 総ページ数 */
-  totalPages: number;
-  /** ページネーションリンクのベースパス（例: "/blog" / "/blog/category/dev-notes"） */
-  basePath: string;
-  /** 現在アクティブなカテゴリスラッグ（カテゴリページの場合のみ設定） */
-  activeCategory?: BlogCategory;
-  /**
-   * 全記事（ページネーション前）。
-   * カテゴリカウント表示・人気タグ算出・キーワード検索の全件対象として使う。
-   * タグページでは省略可（省略時は件数バッジなし）。
-   */
-  allPosts?: BlogPostMeta[];
-  /**
-   * タグページ専用ヘッダー情報。
-   * 設定されている場合はカテゴリナビではなくタグヘッダーを表示する。
-   */
-  tagHeader?: TagHeader;
-}
 
 /**
  * ブログ一覧ページのビュー (Server Component)。
  *
- * ページヘッダー（タイトル・説明文）とフィルター付き記事一覧を表示する。
+ * ページ見出し（タイトル・説明文）とフィルター付き記事一覧を表示する。
+ * 一覧の描画は {@link BlogListPanel} が受け持ち、キーワード（`?q=`）の状態管理だけを
+ * Client Component の {@link BlogFilterableList} が担う。
  *
- * 記事一覧は、キーワード（`?q=`）が無ければ props だけで確定する。
- * そこでキーワード空の {@link BlogListPanel} を Suspense の fallback としてサーバーで描画し、
- * 記事リンクを静的 HTML に載せる。`useSearchParams` を呼ぶ {@link BlogFilterableList} は
- * プリレンダリング時にクライアント描画へ退避するが、描画結果は同じ {@link BlogListPanel} の
- * ため、キーワードが無い通常の閲覧では fallback と一致しレイアウトがずれない。
+ * `useSearchParams` を呼ぶ {@link BlogFilterableList} はプリレンダリング時にクライアント描画へ
+ * 退避するため、キーワード空の {@link BlogListPanel} を Suspense の fallback としてサーバーで
+ * 描画し、記事リンクを静的 HTML に載せる。fallback と本体は同じ {@link BlogListPanel} なので、
+ * キーワードが無い通常の閲覧では描画結果が一致しレイアウトがずれない。
  *
- * Date.now() は react-hooks/purity 制約により Client Component 内で使用できないため、
- * Server Component のここで計算して newSlugs として渡す。
- * newSlugs の計算ロジックは newSlugsHelper.ts に分離（テスト容易性のため）。
- *
- * CATEGORY_LABELS / ALL_CATEGORIES / SERIES_LABELS は node:fs を使う blog.ts から
- * インポートしているため、Client Component（BlogFilterableList）には直接インポートできない。
- * Server Component からシリアライズ可能な形（plain object / array）で props として渡す。
+ * Client Component では用意できない値はここで解決して渡す:
+ * - 「新着」判定に使う Date.now()（react-hooks/purity 制約。判定ロジックはテスト容易性のため
+ *   newSlugsHelper.ts に分離）
+ * - node:fs を使う @/blog/_lib/blog 由来のカテゴリ・シリーズ情報
  *
  * 6 ルートすべてから呼ばれる共通 Server Component:
  * - /blog（全記事 page=1）
@@ -75,14 +46,12 @@ export default function BlogListView({
   totalPages,
   basePath,
   activeCategory,
-  allPosts = [],
+  allPosts,
   tagHeader,
-}: BlogListViewProps) {
+}: BlogListSource) {
   // eslint-disable-next-line react-hooks/purity
   const now = Date.now();
-  // 「新着」マーク判定: allPosts 全件を対象（タグページでは posts を代替として使う）
-  const newSlugsBase = allPosts.length > 0 ? allPosts : posts;
-  const newSlugs = calculateNewSlugs(newSlugsBase, now);
+  const newSlugs = calculateNewSlugs(allPosts, now);
 
   // TODO(cycle-184/B-389): X1 採用時に削除（タグ UI 完全廃止）
   // MIN_POSTS_FOR_TAG_PAGE = 3 未満のタグはタグページが存在しないため UI から非表示にする。

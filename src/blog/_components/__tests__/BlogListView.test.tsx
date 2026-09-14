@@ -69,6 +69,7 @@ describe("BlogListView 統合テスト", () => {
         currentPage={1}
         totalPages={1}
         basePath="/blog"
+        allPosts={mockPosts}
       />,
     );
     expect(screen.getByRole("heading", { level: 1 })).toBeInTheDocument();
@@ -148,6 +149,7 @@ describe("BlogListView 統合テスト", () => {
         currentPage={1}
         totalPages={1}
         basePath="/blog/tag/%E8%A8%AD%E8%A8%88%E3%83%91%E3%82%BF%E3%83%BC%E3%83%B3"
+        allPosts={mockPosts}
         tagHeader={{
           tag: "設計パターン",
           description: "設計パターンの記事一覧",
