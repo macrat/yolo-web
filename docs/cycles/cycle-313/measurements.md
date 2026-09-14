@@ -339,3 +339,28 @@ CSS の上でも保証されている（箱の寸法に効く宣言が無い）�
 
 名前に反して `deploy.yml` はデプロイしない。公開はホスティング側のリポジトリ連携で行われており、
 設定はリポジトリの外にある。したがって**来訪者に届くかどうかは `main` にマージされたかどうかだけで決まる。**
+
+## 14. タグページを持たないタグが読者から隠れている
+
+パーサの欠落とは別に、書かれたタグが読者に届かない経路がもう一つある。`TagList` は
+`linkableTags`（掲載記事が3本以上あるタグ＝タグページが生成されるタグ）に含まれないタグを
+`filter` で落とし、DOM に一切出していない。
+
+公開88記事を走査すると、タグページを持たないタグは8種、影響を受ける記事は9本ある。
+
+| 記事                                                               | 全タグ | 読者から消えているタグ     |
+| ------------------------------------------------------------------ | ------ | -------------------------- |
+| `2026-05-05-yaml-implicit-type-conversion-quote-everything`        | 5      | YAML・DevOps・設定ファイル |
+| `2026-02-25-rss-feed-and-pagination`                               | 5      | RSS                        |
+| `2026-03-03-nextjs-route-handler-static-and-bundle-budget-test`    | 3      | RSS                        |
+| `2026-05-04-scroll-lock-reference-counter-for-multiple-components` | 5      | React                      |
+| `2026-05-30-playwright-dark-mode-screenshot-next-themes`           | 5      | Playwright                 |
+| `2026-07-18-a11y-static-green-but-broken-dynamic-audit`            | 5      | Playwright                 |
+| `2026-06-13-sql-execution-order-guide`                             | 3      | データ変換                 |
+| `2026-06-15-sql-cheatsheet`                                        | 3      | データ変換                 |
+| `2026-07-13-character-quiz-result-as-fuda`                         | 4      | SNS                        |
+
+いちばん重いのは YAML の記事で、5件のうち3件が消えている。その記事を最もよく表す「YAML」が読者には見えない。
+
+閾値の3本そのものは正しい。下げれば記事1〜2本の薄いタグページが8つ増え、読者にとっても検索にとっても良くない。
+直すべきは「隠す」という扱いのほうで、ページを持たないタグも見せ、リンクにしないのが答えになる。
