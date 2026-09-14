@@ -33,22 +33,7 @@
   line-height: 1.9;
 }
 
-/* タグページの疑似パンくず（visible な Breadcrumb コンポーネントは使わず、
- * 「ブログ / タグ」の軽い導入テキストのみ・JSON-LD は route 側で維持） */
-.tagBreadcrumb {
-  margin: 0 0 var(--space-8);
-  font-family: var(--font-gothic);
-  font-size: 0.875rem;
-  color: var(--ink-2);
-}
-
-.tagBreadcrumb a {
-  color: var(--ink-2);
-  text-decoration: none;
-}
-
-.tagBreadcrumb a:hover {
-  color: var(--accent);
-  text-decoration: underline;
-  text-underline-offset: 0.15em;
+/* タグページのパンくず（共有の Breadcrumb）。見出しとのアキだけをここで与える。 */
+.breadcrumb {
+  margin-bottom: var(--space-8);
 }

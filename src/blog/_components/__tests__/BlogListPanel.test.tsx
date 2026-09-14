@@ -312,6 +312,48 @@ describe("リンクへのキーワード引き継ぎ", () => {
   });
 });
 
+describe("人気タグのリンク先", () => {
+  const trickyTags = ["C#", "CI/CD", "Claude Code"];
+  const trickyPosts = trickyTags.map((tag, index) =>
+    makePost({ slug: `post-${index}`, title: `記事${index}`, tags: [tag] }),
+  );
+  const trickyProps = {
+    ...defaultProps,
+    posts: trickyPosts,
+    allPosts: trickyPosts,
+  };
+
+  /** 人気タグナビの href を集める */
+  const popularTagHrefs = () =>
+    Array.from(
+      screen
+        .getByRole("navigation", { name: "人気タグ" })
+        .querySelectorAll("a"),
+    ).map((link) => link.getAttribute("href") ?? "");
+
+  test("URL で意味を持つ文字を含むタグでも、リンク先がそのタグのページを指す", () => {
+    render(<BlogListPanel {...trickyProps} />);
+    const prefix = "/blog/tag/";
+    const hrefs = popularTagHrefs();
+    expect(hrefs).toHaveLength(trickyTags.length);
+    expect(
+      hrefs.map((href) => decodeURIComponent(href.slice(prefix.length))),
+    ).toEqual(trickyTags);
+    hrefs.forEach((href) => {
+      expect(href.slice(prefix.length)).not.toMatch(/[ #?/]/);
+    });
+  });
+
+  test("キーワードを引き継ぐときもタグ名の部分はエンコードされたまま", () => {
+    render(<BlogListPanel {...trickyProps} keyword="記事" />);
+    popularTagHrefs().forEach((href) => {
+      const [path, query] = href.split("?");
+      expect(path.slice("/blog/tag/".length)).not.toMatch(/[ #/]/);
+      expect(query).toContain("q=");
+    });
+  });
+});
+
 describe("人気タグの出現条件", () => {
   test("カテゴリ絞り込みが無く、タグページでもないとき表示される", () => {
     render(<BlogListPanel {...defaultProps} />);

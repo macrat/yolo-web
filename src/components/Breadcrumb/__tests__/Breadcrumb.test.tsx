@@ -93,4 +93,22 @@ describe("Breadcrumb", () => {
     // 最後の要素（現在位置）は item プロパティを持たない
     expect(parsed.itemListElement[2].item).toBeUndefined();
   });
+
+  test("includeJsonLd={false} のとき構造化データを出さず、見えるパンくずは変わらない", () => {
+    const { container } = render(
+      <Breadcrumb items={items} includeJsonLd={false} />,
+    );
+    expect(
+      container.querySelector('script[type="application/ld+json"]'),
+    ).toBeNull();
+    expect(screen.getAllByRole("listitem")).toHaveLength(3);
+    expect(screen.getByRole("link", { name: "ホーム" })).toHaveAttribute(
+      "href",
+      "/",
+    );
+    expect(screen.getByText("文字数カウント")).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+  });
 });

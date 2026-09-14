@@ -44,8 +44,29 @@ describe("TagList", () => {
   test("日本語タグのリンクが正しいhrefを持つこと", () => {
     render(<TagList tags={["設計パターン"]} />);
     const link = screen.getByRole("link");
-    // タグ名はURL上エンコードされるが、Next.js Linkはhrefにそのまま設定する
-    expect(link.getAttribute("href")).toBe("/blog/tag/設計パターン");
+    expect(link.getAttribute("href")).toBe(
+      `/blog/tag/${encodeURIComponent("設計パターン")}`,
+    );
+  });
+
+  test("URL で意味を持つ文字を含むタグでも、リンク先がそのタグのページを指す", () => {
+    const tags = ["C#", "CI/CD", "Claude Code"];
+    render(<TagList tags={tags} />);
+    const hrefs = screen
+      .getAllByRole("link")
+      .map((link) => link.getAttribute("href") ?? "");
+
+    // 各 href はタグページのパスで、末尾のセグメントを戻すと元のタグ名になる
+    const prefix = "/blog/tag/";
+    expect(hrefs.every((href) => href.startsWith(prefix))).toBe(true);
+    expect(
+      hrefs.map((href) => decodeURIComponent(href.slice(prefix.length))),
+    ).toEqual(tags);
+
+    // 生の空白・# ・/ は別の URL（リンク切れ・フラグメント・別ルート）になる
+    hrefs.forEach((href) => {
+      expect(href.slice(prefix.length)).not.toMatch(/[ #?/]/);
+    });
   });
 
   test("タグテキストが表示されること", () => {
@@ -60,7 +81,7 @@ describe("TagList", () => {
   });
 
   test("className を渡すと根 ul に付与される（既存クラスと併存）", () => {
-    // BlogList が stretched-link より前面へタグを出すため z-index クラスを渡す用途。
+    // BlogList が stretched-link より前面へタグのリンクを立たせるためのクラスを渡す用途。
     render(<TagList tags={["Next.js"]} className="custom-class" />);
     const ul = screen.getByRole("list", { name: "タグ" });
     expect(ul).toHaveClass("custom-class");

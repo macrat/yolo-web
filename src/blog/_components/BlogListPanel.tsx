@@ -100,6 +100,8 @@ function buildCategoryHref(
 /**
  * タグリンクの href を生成する。
  * 現在のキーワード（q=）を引き継ぐ。
+ * タグ名は URL セグメントとしてエンコードする（`#` `/` 空白などを含むタグ名でも、
+ * リンク先がそのタグのページに一致する）。
  */
 function buildTagHref(tag: string, keyword: string): string {
   const params = new URLSearchParams();
@@ -107,7 +109,8 @@ function buildTagHref(tag: string, keyword: string): string {
     params.set("q", keyword);
   }
   const query = params.toString();
-  return query ? `/blog/tag/${tag}?${query}` : `/blog/tag/${tag}`;
+  const path = `/blog/tag/${encodeURIComponent(tag)}`;
+  return query ? `${path}?${query}` : path;
 }
 
 /**

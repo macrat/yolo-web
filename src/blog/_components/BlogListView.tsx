@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import Link from "next/link";
+import Breadcrumb from "@/components/Breadcrumb";
 import {
   CATEGORY_DESCRIPTIONS,
   ALL_CATEGORIES,
@@ -25,6 +25,10 @@ import styles from "./BlogListView.module.css";
  * 退避するため、キーワード空の {@link BlogListPanel} を Suspense の fallback としてサーバーで
  * 描画し、記事リンクを静的 HTML に載せる。fallback と本体は同じ {@link BlogListPanel} なので、
  * キーワードが無い通常の閲覧では描画結果が一致しレイアウトがずれない。
+ *
+ * タグページの先頭にはパンくず（ホーム / ブログ / タグ名）を出す。掲載記事が少ないタグでは
+ * これが本文内の唯一の脱出口になる。構造化データ（BreadcrumbList）は同じ経路をタグのルートが
+ * 出しているため、ここでは可視のパンくずだけを描く。
  *
  * Client Component では用意できない値はここで解決して渡す:
  * - 「新着」判定に使う Date.now()（react-hooks/purity 制約。判定ロジックはテスト容易性のため
@@ -81,11 +85,16 @@ export default function BlogListView({
       <div className={styles.intro}>
         {tagHeader ? (
           <>
-            <p className={styles.tagBreadcrumb}>
-              <Link href="/blog">ブログ</Link>
-              <span aria-hidden="true"> / </span>
-              タグ
-            </p>
+            <div className={styles.breadcrumb}>
+              <Breadcrumb
+                items={[
+                  { label: "ホーム", href: "/" },
+                  { label: "ブログ", href: "/blog" },
+                  { label: tagHeader.tag },
+                ]}
+                includeJsonLd={false}
+              />
+            </div>
             <h1 className={styles.title}>{tagHeader.tag}</h1>
             <p className={styles.description}>{tagHeader.description}</p>
           </>

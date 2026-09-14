@@ -66,8 +66,8 @@ export default function BlogList({
             </div>
 
             {/*
-             * タグは行全体を覆う stretched-link（.titleLink::after）より前面に置き
-             * （tagRow: z-index）、行遷移に飲まれず独立クリックできるようにする。
+             * タグのリンクは行全体を覆う stretched-link（.titleLink::after）より前面に
+             * 立て（tagRow）、行遷移に飲まれず独立クリックできるようにする。
              * ラッパ div でなく className 渡しなのは、TagList がタグを持たない記事で
              * null を返すため——常時 div で包むとタグ無しの行に空要素が残り、.row の
              * gap を余計に消費して行間が不揃いになる。

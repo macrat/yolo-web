@@ -11,6 +11,12 @@ export type { BreadcrumbItem };
 interface BreadcrumbProps {
   /** パンくずリストの項目。最後の要素が現在位置（href なし）になる */
   items: BreadcrumbItem[];
+  /**
+   * BreadcrumbList の構造化データを併せて出力するか。既定は出力する。
+   * ページが同じ経路の BreadcrumbList を自前で出している場合だけ false にする
+   * （1 ページに 2 つ置くと検索エンジンに同じ経路を二重に申告することになる）。
+   */
+  includeJsonLd?: boolean;
 }
 
 /**
@@ -24,17 +30,25 @@ interface BreadcrumbProps {
  *   SP での「/」行頭孤立を防ぐ（CSS ::before + inline-flex では flex item が分離する問題あり）
  * - リンクは Next.js の <Link> を使用
  * - スタイルは new デザイン体系のみ（DESIGN.md §2 参照）
- * - BreadcrumbList JSON-LD を <script> で出力（SEO 構造化データ）
+ * - BreadcrumbList JSON-LD を <script> で出力（SEO 構造化データ・includeJsonLd で抑えられる）
+ *
+ * 可視のパンくずと構造化データは同じ items から作るので、読者が見る経路と
+ * 検索エンジンへ申告する経路は一致する。
  */
-export default function Breadcrumb({ items }: BreadcrumbProps) {
+export default function Breadcrumb({
+  items,
+  includeJsonLd = true,
+}: BreadcrumbProps) {
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: safeJsonLdStringify(generateBreadcrumbJsonLd(items)),
-        }}
-      />
+      {includeJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: safeJsonLdStringify(generateBreadcrumbJsonLd(items)),
+          }}
+        />
+      )}
       <nav className={styles.nav} aria-label="パンくずリスト">
         <ol className={styles.list}>
           {items.map((item, index) => {

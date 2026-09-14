@@ -17,7 +17,7 @@
   gap: var(--space-8);
   padding: var(--space-16) 0;
   border-bottom: 1px solid var(--rule);
-  /* stretched-link（.titleLink::after）の絶対配置の基準（§4/§10・cycle-281）。 */
+  /* stretched-link（.titleLink::after）の絶対配置の基準（§4/§10）。 */
   position: relative;
 }
 
@@ -40,9 +40,9 @@
 /*
  * stretched-link: クリック/タップ標的を品名テキストだけでなく視覚単位（行）全体へ
  * 拡張する（description・値札・公開日・新着マークまで覆う。人は罫で囲まれた行を
- * クリック可能と認識するため・§4/§10・cycle-281）。アクセシブル名は品名のみに
- * 保たれる（SR 良好・入れ子アンカーを作らない）。タグは .tagRow の z-index で
- * この擬似要素より前面に維持し、独立クリックを両立する。
+ * クリック可能と認識するため・§4/§10）。アクセシブル名は品名のみに
+ * 保たれる（SR 良好・入れ子アンカーを作らない）。行内のタグリンクは .tagRow a の
+ * z-index でこの擬似要素より前面に立ち、独立クリックを両立する。
  */
 .titleLink::after {
   content: "";
@@ -103,17 +103,13 @@
 }
 
 /*
- * タグ行（TagList の根 ul に付与）。stretched-link の .titleLink::after が行全体を
- * 覆うため、タグはその前面（z-index:1）に立たせて独立クリックを維持する。
- * position:relative は z-index を効かせるため（§4/§10・cycle-281）。
- * width:fit-content: タグ帯を内容幅に絞り、タグ右側の空き部分を主リンクの標的
- * （::after）に残す（この空き帯を z-index で覆うと記事へ遷移できない「デッドゾーン」
- * になるため）。fit-content は min(max-content, available) なので、狭幅では利用幅で
- * 頭打ちになり flex-wrap の折り返しは保たれる（overflow しない・cycle-281）。
+ * タグ行（TagList の根 ul に付与）。行全体を覆う stretched-link（.titleLink::after）に対し、
+ * 前面に立てるのはタグのリンク矩形だけにする。帯（ul）ごと前面に出すと、タグ同士のすきま・
+ * 折り返した行の間・最終行の右の空きまで主リンクを覆い、押しても記事にもタグにも進めない
+ * 帯ができる。リンク矩形だけを上げれば、覆われない余白はすべて行＝記事への標的に残る
+ * （§4「クリック標的＝視覚単位の全体」）。
  */
-.tagRow {
+.tagRow a {
   position: relative;
   z-index: 1;
-  width: fit-content;
-  max-width: 100%;
 }

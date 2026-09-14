@@ -144,7 +144,10 @@ describe("BlogList 基本表示", () => {
       />,
     );
     const tagLink = screen.getByRole("link", { name: "Claude Code" });
-    expect(tagLink.getAttribute("href")).toBe("/blog/tag/Claude Code");
+    // 空白を含むタグ名でも、リンク先はそのタグのページに一致する
+    expect(tagLink.getAttribute("href")).toBe(
+      `/blog/tag/${encodeURIComponent("Claude Code")}`,
+    );
   });
 
   test("タイトルリンクのアクセシブル名は記事タイトルのみ（stretched-link 下でも行連結にならない）", () => {
@@ -169,7 +172,7 @@ describe("BlogList 基本表示", () => {
 
   test("タグリンクは stretched-link 下でも独立したリンクとして取得できる", () => {
     // stretched-link がタイトルの標的を行全体に広げても、
-    // タグは z-index で前面に維持され別リンクとして生きている契約。
+    // タグのリンクは z-index で前面に維持され別リンクとして生きている契約。
     render(
       <BlogList
         posts={[makePost({ tags: ["設計パターン", "Web開発"] })]}
@@ -178,7 +181,9 @@ describe("BlogList 基本表示", () => {
       />,
     );
     const tagLink = screen.getByRole("link", { name: "設計パターン" });
-    expect(tagLink.getAttribute("href")).toBe("/blog/tag/設計パターン");
+    expect(tagLink.getAttribute("href")).toBe(
+      `/blog/tag/${encodeURIComponent("設計パターン")}`,
+    );
     // タイトルリンクとは別要素であること
     const titleLink = screen.getByRole("link", { name: "テスト記事タイトル" });
     expect(tagLink).not.toBe(titleLink);

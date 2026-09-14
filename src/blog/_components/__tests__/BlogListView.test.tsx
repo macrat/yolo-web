@@ -1,5 +1,5 @@
 import { describe, expect, test, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import type { BlogPostMeta } from "@/blog/_lib/blog";
 
 // useSearchParams / useRouter のモック（BlogFilterableList が使用）
@@ -60,6 +60,22 @@ const mockPosts: BlogPostMeta[] = [
   makePost({ slug: "post-b", title: "記事B" }),
   makePost({ slug: "post-c", title: "記事C" }),
 ];
+
+/** タグページとして描く（タグ名「設計パターン」） */
+const renderTagPage = () =>
+  render(
+    <BlogListView
+      posts={mockPosts}
+      currentPage={1}
+      totalPages={1}
+      basePath={`/blog/tag/${encodeURIComponent("設計パターン")}`}
+      allPosts={mockPosts}
+      tagHeader={{
+        tag: "設計パターン",
+        description: "設計パターンの記事一覧",
+      }}
+    />,
+  );
 
 describe("BlogListView 統合テスト", () => {
   test("ページタイトル（h1）が表示される", () => {
@@ -143,21 +159,11 @@ describe("BlogListView 統合テスト", () => {
   });
 
   test("tagHeader が指定された場合タグ名が表示される（タグページモード）", () => {
-    render(
-      <BlogListView
-        posts={mockPosts}
-        currentPage={1}
-        totalPages={1}
-        basePath="/blog/tag/%E8%A8%AD%E8%A8%88%E3%83%91%E3%82%BF%E3%83%BC%E3%83%B3"
-        allPosts={mockPosts}
-        tagHeader={{
-          tag: "設計パターン",
-          description: "設計パターンの記事一覧",
-        }}
-      />,
-    );
+    renderTagPage();
     // タグ名が h1 として表示される（BlogListView 内でレンダリングされる）
-    expect(screen.getByText("設計パターン")).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { level: 1, name: "設計パターン" }),
+    ).toBeInTheDocument();
   });
 
   test("posts が空のとき記事カードが表示されない", () => {
@@ -172,5 +178,48 @@ describe("BlogListView 統合テスト", () => {
     );
     // 記事タイトルが表示されない（エラーにはならない）
     expect(screen.queryByText("記事A")).not.toBeInTheDocument();
+  });
+});
+
+describe("タグページのパンくず", () => {
+  test("ホーム・ブログへ戻るリンクを出し、現在地はタグ名になる", () => {
+    renderTagPage();
+    const nav = screen.getByRole("navigation", { name: "パンくずリスト" });
+    expect(within(nav).getByRole("link", { name: "ホーム" })).toHaveAttribute(
+      "href",
+      "/",
+    );
+    expect(within(nav).getByRole("link", { name: "ブログ" })).toHaveAttribute(
+      "href",
+      "/blog",
+    );
+    // 現在地はリンクにせず、汎用語ではなくタグ名そのものを出す
+    const current = within(nav).getByText("設計パターン");
+    expect(current).toHaveAttribute("aria-current", "page");
+    expect(
+      within(nav).queryByRole("link", { name: "設計パターン" }),
+    ).toBeNull();
+  });
+
+  test("タグページ以外ではパンくずを出さない", () => {
+    render(
+      <BlogListView
+        posts={mockPosts}
+        currentPage={1}
+        totalPages={1}
+        basePath="/blog"
+        allPosts={mockPosts}
+      />,
+    );
+    expect(
+      screen.queryByRole("navigation", { name: "パンくずリスト" }),
+    ).toBeNull();
+  });
+
+  test("BreadcrumbList の構造化データは重ねて出さない（経路はルートが宣言する）", () => {
+    const { container } = renderTagPage();
+    expect(
+      container.querySelector('script[type="application/ld+json"]'),
+    ).toBeNull();
   });
 });
