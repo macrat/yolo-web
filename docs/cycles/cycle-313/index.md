@@ -28,8 +28,10 @@ completed_at: null
 - [ ] T4: `parseFrontmatter` を `js-yaml` へ一本化し、`parseYamlBlock` / `parseYamlScalar` を削除する
 - [ ] T5: 全記事で「サイトの読み取り結果 == 厳格な YAML」を検査する回帰テストを新設する
 - [ ] T6: 実ビルドで、タグ一覧ページへの掲載と記事ページの関連ツールリンクの復旧を確認する
-- [ ] T7: レビューを受け、指摘に対応する
-- [ ] T8: ブログを書くかを読者の視点で判断する
+- [ ] T7: ブログ一覧6ルートの記事リストを静的HTMLに載せる（`useSearchParams` による CSR 退避の是正）
+- [ ] T8: 是正前後の見た目を実機相当で撮って比較し、レイアウトのずれが無いことを確認する
+- [ ] T9: レビューを受け、指摘に対応する
+- [ ] T10: ブログを書くかを読者の視点で判断する
 
 ## 作業計画
 
@@ -46,6 +48,15 @@ completed_at: null
 
 タグを失っている8記事のうち7記事は「ワークフロー連載」に属する。連載の記事が連載タグの一覧から
 まとめて欠けている状態で、読み進めたい読者が次の1本にたどり着けない。
+
+**そして、確かめに行って別の欠陥が出た。** 本番の `https://yolos.net/blog` が返す HTML には、
+記事へのリンクが**1本も入っていない**（実測: `<a>` は25個・すべてヘッダとフッタ）。
+記事一覧はハイドレーション後にクライアントで描かれている。`/blog/category/*`・`/blog/tag/*` も同じである。
+
+つまり、JavaScript が動くまで一覧は空白で、動かない環境では最後まで空白のままになる。
+タグを復元しても、その行き先のページが最初の描画で空なら、来訪者の道は繋がらない。
+本サイクルの検証手順（生成された HTML でタグ一覧への掲載を確認する）も、このままでは成立しない。
+**同じ道の同じ区間の話なので、本サイクルで両方を直す。**
 
 ### 作業内容
 
@@ -122,6 +133,35 @@ T1・T2 の後、87記事すべてで手書きパーサと `js-yaml` の全キ�
 - タグを復元した8記事が、該当するタグ一覧ページに載っていること
 - 関連ツールを復元した4記事の記事ページに、道具へのリンクが出ていること
 
+#### T7: ブログ一覧を静的HTMLに載せる
+
+`src/blog/_components/BlogListView.tsx` は、記事一覧まるごとを `<Suspense>` で包んでいる。**fallback を渡していない。**
+その中身の `BlogFilterableList` は `"use client"` で `useSearchParams` を呼ぶ。
+
+Next.js の仕様はこうである（下記一次資料）。
+
+> If a route is prerendered, calling `useSearchParams` will cause the Client Component tree up to the closest `Suspense` boundary to be client-side rendered.
+
+> Place the `<Suspense>` boundary as close to the hook call as possible. Wrapping a large subtree forces the entire subtree into the fallback and loses prerendered content.
+
+境界が一覧全体を包み、fallback が空なので、静的HTMLには**何も入らない**。実測と一致する。
+
+是正は、フックの読み取りを必要な葉まで下ろし、記事リストそのものは静的シェルに載せることである。
+キーワード検索（`?q=`）が無い状態の一覧は、サーバ側で確定できる——`posts` は既にページネーション済みで
+Server Component から渡っている。`?q=` が付いたときだけクライアントが差し替えればよい。
+
+fallback の形は最終的な描画と一致させる（Next.js 公式がレイアウトシフトの回避として求めている）。
+`calculateNewSlugs` は `Date.now()` を使うが、これは既に Server Component 側で計算して props で渡しており、
+fallback を非決定的にしない。
+
+**完了条件は測れる形にする**——`npm run build` の生成物で、`/blog`・`/blog/category/*`・`/blog/tag/*` の
+各 HTML に記事への `<a href="/blog/<slug>">` が含まれていること。
+
+#### T8: 見た目の確認
+
+`take-screenshot` スキルで是正前後を撮り、一覧の見た目が変わっていないこと、
+最初の描画で記事が見えるようになっていることを確認する。
+
 ### 検討した他の選択肢と判断理由
 
 **(a) 手書きパーサに折り返し配列の読み取りを足す。** 採らない。
@@ -137,6 +177,17 @@ T1・T2 の後、87記事すべてで手書きパーサと `js-yaml` の全キ�
 `prettier` 公式ドキュメント（下記）は markdown の frontmatter の整形について何も規定していない。
 規定の無い挙動に設計を依存させると、`prettier` の更新で黙って壊れる。
 パーサ側を正しくして、**整形結果に依存しない状態**にするのが正しい。
+
+**(e) T7 で `export const instant = false` を使って一覧をリクエスト毎の描画にする。** 採らない。
+Next.js 公式が「For a client-hook error this is rarely the right answer」と述べており、
+ナビゲーションが即時でなくなる代償を払う。一覧の中身はキーワードが無ければサーバで確定できるので、
+境界を葉へ下ろすほうが正しい。
+
+**(f) T7 を別サイクルへ回す。** 採らない。
+本サイクルの検証手順（生成HTMLでタグ一覧への掲載を確認する）がこの欠陥に依存しており、
+直さないと本サイクルの成果が確かめられない。また、タグを復元する目的は
+「読者が次の1本にたどり着けるようにする」ことで、行き先が最初の描画で空ならその目的は達成されない。
+**同じ道の同じ区間である。**
 
 **(d) B-651（サイトコンセプト・デザインシステムの整理・P0）を本サイクルで扱う。** 採らない。
 cycle-310・311・312 の3サイクルが連続で B-651 に失敗し、来訪者には1件も届いていない。
@@ -164,6 +215,7 @@ B-651 は Queued に残し、本サイクルは**来訪者に実際に届く小�
 - `docs/backlog.md` の Deferred にあった B-629（E0出荷後の SERP 実表示の確認）は、着手条件 2026-08-14 を今日が過ぎているため Queued へ移した。
 - MCP ツール（Playwright・Google Analytics）を使うサブエージェントは **foreground** で実行する（CLAUDE.md）。
 - 記事の frontmatter に書かれた値は**復元するだけで、内容の判断はしない**。何をタグにするかは本サイクルの対象外である。
+- T7 は本サイクル開始後に実測で見つけた欠陥である（`docs/backlog.md` に B-686 として登録し Active に置いた）。
 
 ## サイクル終了時のチェックリスト
 
