@@ -6,23 +6,29 @@ import {
   MIN_POSTS_FOR_TAG_INDEX,
 } from "@/blog/_lib/blog";
 
+/**
+ * 説明文はタグページの見出し下に出ると同時に meta description になる。
+ * 長さに下限は置かない。掲載記事の薄いタグでは、字数を埋めようとすると
+ * ページに無い内容まで書くことになり、読者を欺くため。
+ */
+const MAX_TAG_DESCRIPTION_LENGTH = 160;
+
 describe("TAG_DESCRIPTIONS", () => {
-  test("設計パターンの説明文が定義されていること", () => {
-    expect(TAG_DESCRIPTIONS["設計パターン"]).toBeDefined();
-    expect(typeof TAG_DESCRIPTIONS["設計パターン"]).toBe("string");
+  test("各タグ説明文が中身を持つこと", () => {
+    for (const [tag, desc] of Object.entries(TAG_DESCRIPTIONS)) {
+      expect(typeof desc, `タグ「${tag}」の説明文が文字列でない`).toBe(
+        "string",
+      );
+      expect(desc.trim(), `タグ「${tag}」の説明文が空`).not.toBe("");
+    }
   });
 
-  test("Next.jsの説明文が定義されていること", () => {
-    expect(TAG_DESCRIPTIONS["Next.js"]).toBeDefined();
-    expect(typeof TAG_DESCRIPTIONS["Next.js"]).toBe("string");
-  });
-
-  test("各タグ説明文が100文字以上であること", () => {
+  test("各タグ説明文が検索結果で切り詰められない長さに収まること", () => {
     for (const [tag, desc] of Object.entries(TAG_DESCRIPTIONS)) {
       expect(
         desc.length,
-        `タグ「${tag}」の説明文が短すぎる（${desc.length}文字）`,
-      ).toBeGreaterThanOrEqual(100);
+        `タグ「${tag}」の説明文が長すぎる（${desc.length}文字）`,
+      ).toBeLessThanOrEqual(MAX_TAG_DESCRIPTION_LENGTH);
     }
   });
 
