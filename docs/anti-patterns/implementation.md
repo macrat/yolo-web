@@ -47,6 +47,7 @@
 
 ---
 
-## 欠番（フックへ移管し機械的に強制されるアンチパターン）
+## 欠番
 
 - AP-I12（JSX属性文字列内の `\u` エスケープ）: `.claude/hooks/post-write-residue-check.sh`（編集直後）と `.claude/hooks/pre-commit-check.sh`（コミット前）が機械検出するため、チェックリストから削除した。（cycle-268で実際に発生していた）
+- AP-I16: cycle-313 で候補として新設後に同サイクル内で撤回・削除された欠番（詳細 cycle-313/incident-5.md）。内容は AP-I15 が扱う。混同を避けるため再利用しない。
