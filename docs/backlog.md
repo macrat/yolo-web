@@ -9,6 +9,10 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-701 | 記事行のタグリンクだけ`q=`を引き継がない | P4 | - | `BlogListPanel`の人気タグは`buildTagHref`で`?q=`を付けるが、各行の`TagList`は`/blog/tag/<tag>`固定。同じ画面の同じ見た目のタグで挙動が割れている。B-389(タグUIの処遇)の決着と合わせる |
+| B-702 | `BlogList.tsx`のコメントに経緯が残っている | P4 | - | 「旧BlogGrid+BlogCardを廃し罫区切りへ変換した」等。何をしたかではなく今どうなっているかで書き直す対象。B-697(bundle-budget)と同型 |
+| B-699 | 3記事のrelated_tool_slugsが実在しない`quiz`を指している | P3 | - | `/play/quiz`は404(実測)。cycle-102で`/quiz/*`を`/play/*`へ301した際の取り残し。値を消せば実在検査(registryとの包含チェック1本)をそのまま入れられる。詳細cycle-313 |
+| B-700 | frontmatter検証がコミット時にキー集合・書式・型を見ていない | P3 | - | `validate-blog-frontmatter.ts`が見るのは日時2キーのみ。未知キーや壊れた書式はコミットを通過し`npm run test`で初めて落ちる。pre-commitで`parseFrontmatter`を呼ぶ以上、同じ場所で検査できる |
 | B-698 | 実行環境がUTCのため`date`手順どおりだとpublished_atがUTCになる | P3 | - | 既存88記事は全て日本時間(+0900が36・+09:00が52)。blog-writing.mdの手順`date +"...%z"`はこの環境でUTCを返す。手順にTZ指定を入れるか表記を決め直す |
 | B-697 | bundle-budget.test.ts のコメントに経緯が堆積している | P4 | - | `cycle-102 B-206`・`cycle-277 T6-c で置き換え済み`・`フェーズRで完全撤去`等がコード内に残る。ツギハギ禁止(履歴はサイクル文書へ)に反する。詳細cycle-313/index.md キャリーオーバー |
 | B-695 | JS無効時のハンバーガーボタンが生きたまま何も起きない | P3 | - | `disabled:false`/`aria-hidden:null`/`tabindex:null`のまま(実測)。押しても何も起きない。JS無しで機能しないコントロールの扱いがサイト内で3通りに割れている(テーマトグル/検索欄/ハンバーガー)。統一の判断が要る |
