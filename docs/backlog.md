@@ -21,7 +21,7 @@
 | B-698 | 実行環境がUTCのため`date`手順どおりだとpublished_atがUTCになる | P3 | - | 既存89記事は全て日本時間(+0900が37・+09:00が52)。blog-writing.mdの手順`date +"...%z"`はこの環境でUTCを返す。手順にTZ指定を入れるか表記を決め直す |
 | B-697 | bundle-budget.test.ts のコメントに経緯が堆積している | P4 | - | `cycle-102 B-206`・`cycle-277 T6-c で置き換え済み`・`フェーズRで完全撤去`等がコード内に残る。ツギハギ禁止(履歴はサイクル文書へ)に反する。詳細cycle-313/index.md キャリーオーバー |
 | B-695 | JS無効時のハンバーガーボタンが生きたまま何も起きない | P3 | - | `disabled:false`/`aria-hidden:null`/`tabindex:null`のまま(実測)。押しても何も起きない。JS無しで機能しないコントロールの扱いがサイト内で3通りに割れている(テーマトグル/検索欄/ハンバーガー)。統一の判断が要る |
-| B-696 | ハイドレーション時に一覧DOMが差し替わりフォーカスがbodyに落ちる | P3 | - | cycle-313 T7が作った新挙動。fallbackのDOMはhydrateされず破棄・再生成される(実測・発生窓50〜220ms)。根治は`useSearchParams`をやめマウント後に`location.search`を読む形。詳細cycle-313 |
+| B-696 | ハイドレーション時に一覧DOMが差し替わりフォーカスがbodyに落ちる | P3 | - | cycle-313 T7が作った新挙動。fallbackのDOMはhydrateされず破棄・再生成される(実測・発生窓50〜220ms)。根治案(`useSearchParams`撤廃)は戻る/進むの`?q=`追従の自前実装を伴うため不採用と判断済み。詳細cycle-313 |
 | B-694 | `readOnly`の入力欄が通常の入力欄と見分けられない | P3 | - | `Input.module.css`に`:disabled`のスタイルはあるが`readOnly`には無い。「打てるのに値が捨てられる」欄が意図せず出荷されうる(cycle-313で実際に直前まで行った)。視覚的手がかりを与えるか用途を絞るか、デザイン方針の判断が要る |
 | B-691 | frontmatterの`series`が「引用符付き」「null」「キー無し」の3通りで混在 | P4 | - | 31記事が値付き・46記事が`null`・12記事がキー自体を持たない。型は`series?: string`でパース結果は等価のため実害なし。書式の不揃いのみ。詳細cycle-313/index.md |
 | B-690 | frontmatterのseries_orderとtrust_levelを読むコードが存在しない | P3 | - | のべ50記事(series_order 27・trust_level 23)が書いても誰にも読まれない。連載の並びはpublished_at昇順で決まる(実測)。削除か消費かを判断する。詳細cycle-313/index.md T1・キャリーオーバー |
