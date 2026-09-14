@@ -27,11 +27,11 @@
 | B-695 | JS無効時のハンバーガーボタンが生きたまま何も起きない | P3 | - | `disabled:false`/`aria-hidden:null`/`tabindex:null`のまま(実測)。押しても何も起きない。JS無しで機能しないコントロールの扱いがサイト内で3通りに割れている(テーマトグル/検索欄/ハンバーガー)。統一の判断が要る |
 | B-696 | ハイドレーション時に一覧DOMが差し替わりフォーカスがbodyに落ちる | P3 | - | cycle-313 T7が作った新挙動。fallbackのDOMはhydrateされず破棄・再生成される(実測・発生窓50〜220ms)。根治案(`useSearchParams`撤廃)は戻る/進むの`?q=`追従の自前実装を伴うため不採用と判断済み。詳細cycle-313 |
 | B-694 | `readOnly`の入力欄が通常の入力欄と見分けられない | P3 | - | `Input.module.css`に`:disabled`のスタイルはあるが`readOnly`には無い。「打てるのに値が捨てられる」欄が意図せず出荷されうる(cycle-313で実際に直前まで行った)。視覚的手がかりを与えるか用途を絞るか、デザイン方針の判断が要る |
-| B-691 | frontmatterの`series`が「引用符付き」「null」「キー無し」の3通りで混在 | P4 | - | 31記事が値付き・46記事が`null`・12記事がキー自体を持たない。型は`series?: string`でパース結果は等価のため実害なし。書式の不揃いのみ。詳細cycle-313/index.md |
+| B-691 | frontmatterの`series`が「引用符付き」「null」「キー無し」の3通りで混在 | P4 | - | 作業ブランチ先端の89記事で31記事が値付き・46記事が`null`・12記事がキー自体を持たない。型は`series?: string`でパース結果は等価のため実害なし。詳細cycle-313/index.md |
 | B-690 | frontmatterのseries_orderとtrust_levelを読むコードが存在しない | P3 | - | のべ50記事(series_order 27・trust_level 23)が書いても誰にも読まれない。連載の並びはpublished_at昇順で決まる(実測)。削除か消費かを判断する。詳細cycle-313/index.md T1・キャリーオーバー |
 | B-689 | 他者が編集中のファイルの状態で自分のコミットが止まる | P3 | - | `backlog-line-length-check.sh`と`pre-commit-check.sh`のformat検査が、変更の有無に関わらず全体を検査する。並行作業中は他者の作業途中のファイルで自分のコミットが拒否される。cycle-313で両方発生 |
 | B-692 | JS無効だとサイト全体がライトテーマ固定になる | P3 | - | next-themesがJS依存のためOSがdarkでも紙色のまま。一覧が静的描画になりJS無効でも読める面が増えたので影響が実在するようになった。`prefers-color-scheme`のフォールバックを入れるか固定と決めるかの判断が要る |
-| B-688 | Node 22の環境で`npm ci`が失敗しロックファイルが汚れる | P4 | - | CIはNode 24でロックを生成しengines未設定。npm 10ではoptional peerを解決できず拒否される。詳細cycle-313/index.md 補足事項 |
+| B-688 | Node 22の環境で`npm ci`が失敗しロックファイルが汚れる | P4 | - | `Missing: typescript@5.9.3 from lock file`で停止。入れ子`tsconfck`のoptional peer`^5.0.0`をルートの6.0.3が満たせず、npm 10が5.x最新を足そうとする。詳細cycle-313/index.md 補足事項 |
 | B-687 | クイズ面に「関連ブログ記事」欄が無く7記事のrelated_tool_slugsが誰にも読まれない | P3 | - | RelatedBlogPostsを呼ぶのは道具とゲームのみ(実測)。7記事の導線が構造的に死んでいる。詳細cycle-313/measurements.md §6 |
 | B-629 | E0出荷後のSERP実表示の確認 | P2 | - | 着手条件(2026-08-07の出荷+7日=2026-08-14)を満たしたためQueuedへ。SC/実SERPで禁止色を除いたアイコンの表示を確認。詳細 docs/cycles/cycle-302/ |
 | B-651 | サイトコンセプト・デザインシステムの整理 | P0 | - | site-concept.md/DESIGN.md等の全ツギハギを一掃し単一状態にする。brand-image.mdを統合し削除。コンセプトを決め直しデザインシステムを再導出して整合させる。詳細cycle-311/index.md キャリーオーバー |
