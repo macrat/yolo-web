@@ -1,5 +1,6 @@
 import { describe, expect, test, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
+import { renderToStaticMarkup } from "react-dom/server";
 import userEvent from "@testing-library/user-event";
 import type { BlogPostMeta, BlogCategory } from "@/blog/_lib/blog";
 
@@ -116,6 +117,20 @@ const defaultProps = {
 const searchInput = () =>
   screen.getByRole("searchbox", { name: "ブログ記事をキーワードで検索" });
 
+/**
+ * ハンドラを持たない静的シェルを、サーバー描画のマークアップとして読む。
+ *
+ * `<noscript>` の中身が要素になるのはサーバー描画とブラウザの解析だけで、
+ * React のクライアント描画は noscript の子をテキストとして扱う。
+ * 読者に届くのはサーバーが書き出したHTMLなので、案内はそちらから読む。
+ */
+function parseStaticShell(): Document {
+  return new DOMParser().parseFromString(
+    renderToStaticMarkup(<BlogListPanel {...defaultProps} />),
+    "text/html",
+  );
+}
+
 describe("検索欄の操作可否（onKeywordChange の有無）", () => {
   test("ハンドラが無いとき検索欄は操作できない", () => {
     render(<BlogListPanel {...defaultProps} />);
@@ -123,10 +138,21 @@ describe("検索欄の操作可否（onKeywordChange の有無）", () => {
   });
 
   test("ハンドラが無いとき JavaScript が要る旨の案内を noscript で出す", () => {
-    const { container } = render(<BlogListPanel {...defaultProps} />);
-    const note = container.querySelector("noscript");
+    const note = parseStaticShell().querySelector("noscript");
     expect(note).not.toBeNull();
-    expect(note).toHaveTextContent("検索には JavaScript が必要です");
+    expect(note?.textContent).toContain("検索には JavaScript が必要です");
+  });
+
+  test("ハンドラが無いとき検索欄が案内を自分の説明として指す", () => {
+    const shell = parseStaticShell();
+    const noteId = shell
+      .querySelector('input[type="search"]')
+      ?.getAttribute("aria-describedby");
+
+    expect(noteId).toBeTruthy();
+    expect(shell.getElementById(noteId ?? "")?.textContent).toContain(
+      "検索には JavaScript が必要です",
+    );
   });
 
   test("ハンドラがあるとき検索欄は操作できる", () => {

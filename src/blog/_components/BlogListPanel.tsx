@@ -82,6 +82,14 @@ interface BlogListPanelProps extends BlogListData {
 const TOP_TAGS_COUNT = 8;
 
 /**
+ * JavaScript が無効なときに検索欄へ結び付ける注記の id。
+ * 注記は `<noscript>` の中の要素に付くため、JavaScript が有効な環境ではこの id を持つ
+ * 要素が生まれない。参照先の無い aria-describedby は無視される規定なので、
+ * ハイドレーション前の静的シェルでも説明が付かないだけで、余計な読み上げは起きない。
+ */
+const SEARCH_NOTE_ID = "blog-search-noscript-note";
+
+/**
  * カテゴリリンクの href を生成する。
  * 現在のキーワード（q=）を引き継ぎ、カテゴリを切り替えてもキーワードが消えないようにする。
  */
@@ -270,11 +278,14 @@ export default function BlogListPanel({
               : undefined
           }
           aria-label="ブログ記事をキーワードで検索"
+          aria-describedby={isInteractive ? undefined : SEARCH_NOTE_ID}
         />
         {!isInteractive && (
           <noscript className={styles.searchNote}>
-            検索には JavaScript
-            が必要です。記事は下の一覧から、そのまま読めます。
+            <span id={SEARCH_NOTE_ID}>
+              検索には JavaScript
+              が必要です。記事は下の一覧から、そのまま読めます。
+            </span>
           </noscript>
         )}
       </div>

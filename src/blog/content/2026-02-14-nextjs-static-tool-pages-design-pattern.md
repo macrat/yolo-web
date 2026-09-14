@@ -12,13 +12,7 @@ tags:
 category: "dev-notes"
 series: "nextjs-deep-dive"
 series_order: 1
-related_tool_slugs:
-  - "char-count"
-  - "json-formatter"
-  - "regex-tester"
-  - "base64"
-  - "url-encode"
-  - "text-diff"
+related_tool_slugs: []
 draft: false
 ---
 
