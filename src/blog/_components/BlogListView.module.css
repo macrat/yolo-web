@@ -1,8 +1,8 @@
 /*
- * ブログ一覧ページのビュー — DESIGN.md フェーズ R「店構え」へ変換。
- * Panel（旧トークン --fg/--bg/--border 依存の矩形パネル）を廃し、
- * 他の C2/C3 変換済みトップ面（/tools, /dictionary/humor 等）と同じ
- * 「.page（--max-width）+ .intro（--measure）」の型へ揃えた。全トークン経由・直書きなし（§10）。
+ * ブログ一覧ページのビュー（DESIGN.md「店構え」）。
+ * 器は「.page（操作面 --max-width）+ .intro（読む面 --measure）」の二層で、
+ * /tools・/dictionary/humor などのトップ面と同じ型（§4 本文幅と操作幅）。
+ * 色はすべてトークン経由・直書きなし（§10）。
  */
 
 /* ページ全体: 操作面の最大幅 --max-width(960px)。中央寄せは器の配置で、本文は左揃え（§4）。 */

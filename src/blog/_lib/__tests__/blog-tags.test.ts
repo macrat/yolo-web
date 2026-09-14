@@ -8,10 +8,13 @@ import {
 
 /**
  * 説明文はタグページの見出し下に出ると同時に meta description になる。
+ * 上限は「見出し下で一息に読める一段落（日本語で 2〜3 文）」に留めるための歯止め。
+ * 検索スニペットに全文が載ることを保証する値ではない——日本語のスニペットは
+ * 全角 60〜90 文字ほどで切れるため、それは字数ではなく書き出しに要点を置いて満たす。
  * 長さに下限は置かない。掲載記事の薄いタグでは、字数を埋めようとすると
  * ページに無い内容まで書くことになり、読者を欺くため。
  */
-const MAX_TAG_DESCRIPTION_LENGTH = 160;
+const MAX_TAG_DESCRIPTION_LENGTH = 150;
 
 describe("TAG_DESCRIPTIONS", () => {
   test("各タグ説明文が中身を持つこと", () => {
@@ -23,11 +26,12 @@ describe("TAG_DESCRIPTIONS", () => {
     }
   });
 
-  test("各タグ説明文が検索結果で切り詰められない長さに収まること", () => {
+  test("各タグ説明文が一段落として読める長さに収まること", () => {
     for (const [tag, desc] of Object.entries(TAG_DESCRIPTIONS)) {
+      const length = [...desc].length;
       expect(
-        desc.length,
-        `タグ「${tag}」の説明文が長すぎる（${desc.length}文字）`,
+        length,
+        `タグ「${tag}」の説明文が長すぎる（${length}文字）`,
       ).toBeLessThanOrEqual(MAX_TAG_DESCRIPTION_LENGTH);
     }
   });
