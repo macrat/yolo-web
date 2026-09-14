@@ -12,6 +12,7 @@ const KEYWORD_DEBOUNCE_MS = 300;
  *
  * 描画そのものは {@link BlogListPanel} が行い、ここは状態管理だけを受け持つ:
  * - 入力は即時ローカル state に反映し、URL へは debounce して書き戻す
+ *   （読んでいる位置を保つため、書き戻しではスクロールさせない）
  * - URL 直接アクセスやブラウザバックで `?q=` が変わればローカル state を追従させる
  *
  * `useSearchParams` を呼ぶためプリレンダリング時はクライアント描画へ退避する。
@@ -45,7 +46,9 @@ export default function BlogFilterableList(props: BlogListData) {
       }
       const query = params.toString();
       // カテゴリページやタグページでも basePath を使って URL を構築
-      router.replace(query ? `${basePath}?${query}` : basePath);
+      router.replace(query ? `${basePath}?${query}` : basePath, {
+        scroll: false,
+      });
     }, KEYWORD_DEBOUNCE_MS);
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps -- searchParams の更新で再起動しない（urlKeyword で代用）

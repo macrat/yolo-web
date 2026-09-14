@@ -80,7 +80,8 @@ interface BlogListPanelProps extends BlogListData {
   keyword: string;
   /**
    * キーワード入力のハンドラ。
-   * 省略すると入力欄は操作不可（`disabled`）になり、パネル全体が同期的・決定的に描画できる。
+   * 省略するとパネル全体が同期的・決定的に描画できる形になり、
+   * 検索欄は操作不可（`disabled`）＋ JavaScript 無効時だけ現れる説明文つきで描かれる。
    * Server Component から描画する静的シェル（Suspense の fallback）がこの形を使う。
    */
   onKeywordChange?: (keyword: string) => void;
@@ -233,19 +234,27 @@ export default function BlogListPanel({
       )}
 
       {/* キーワード検索 */}
-      <Input
-        type="search"
-        className={styles.searchInput}
-        placeholder="記事を検索…"
-        value={keyword}
-        disabled={!onKeywordChange}
-        onChange={
-          onKeywordChange
-            ? (event) => onKeywordChange(event.target.value)
-            : undefined
-        }
-        aria-label="ブログ記事をキーワードで検索"
-      />
+      <div className={styles.search}>
+        <Input
+          type="search"
+          className={styles.searchInput}
+          placeholder="記事を検索…"
+          value={keyword}
+          disabled={!onKeywordChange}
+          onChange={
+            onKeywordChange
+              ? (event) => onKeywordChange(event.target.value)
+              : undefined
+          }
+          aria-label="ブログ記事をキーワードで検索"
+        />
+        {!onKeywordChange && (
+          <noscript className={styles.searchNote}>
+            検索には JavaScript
+            が必要です。記事は下の一覧から、そのまま読めます。
+          </noscript>
+        )}
+      </div>
 
       {/* 人気タグ（フィルタ未適用かつタグページでない時のみ） */}
       {showPopularTags && (
