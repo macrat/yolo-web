@@ -9,6 +9,8 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-722 | タグ名とURLの往復をコメントが実態より広く約束している | P3 | - | `/`を含むタグ名の到達性と`decodeURIComponent`の無条件二重デコード。現状`/`も`%`も含むタグは無い(実測)。詳細cycle-313/review-log.md |
+| B-721 | データが空なら黙って通るテストが15箇所ある | P3 | - | `seo-coverage.test.ts`に14・`blog-tags.test.ts`に1(実測)。同型の欠陥がcycle-313で実害化した。詳細cycle-313/review-log.md |
 | B-720 | published_atの`Z`形をコミットゲートは通しテストが落とす | P4 | - | `2026-09-14T01:00:00Z`はコミットゲートの`DATETIME_PATTERN`を通り`npm run test`の`ISO_DATETIME_REGEX`で落ちる(実測)。書き手はコミット後に別の場所で落とされる。揃え先の判断が要る。B-698とは別因 |
 | B-719 | 一覧のペイロードに誰も読まない値が全記事ぶん載っている | P4 | - | `draft`は常に`false`で除外判定後は誰も読まず`related_tool_slugs`は一覧で未使用。両方が`allPosts`としてClient Componentへ渡り`.next/server/app/blog.html`に各88回出現(実測)。B-690と別 |
 | B-718 | ハイドレーションが終わるまで検索欄が無言で反応しない | P3 | - | `disabled`のまま描かれる時間=無負荷99ms・Fast3G相当988ms・低速相当約4.3秒(実測)。JS有効のため`<noscript>`は出ずフォーカスも不可。仕組みはB-696と同じだが症状と是正先が別。詳細cycle-313/review-log.md |
