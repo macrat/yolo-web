@@ -10,7 +10,7 @@ tags:
   - "Claude Code"
   - "失敗と学び"
 category: ai-workflow
-series: ai-agent-ops
+series: "ai-agent-ops"
 related_tool_slugs: []
 draft: false
 ---
