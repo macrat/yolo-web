@@ -64,6 +64,7 @@
 - AP-WF22（Write 直後の残骸タグ混入）: `.claude/hooks/post-write-residue-check.sh`（編集直後）と `.claude/hooks/pre-commit-check.sh`（コミット前）が機械検出するため、チェックリストから削除した。（cycle-246, 251で実際に発生していた）
 - AP-WF25・AP-WF26: cycle-250 で候補として新設後に同サイクル内で撤回・削除された欠番（詳細 cycle-250.md 事後訂正1）。混同を避けるため再利用しない。
 - AP-WF42・AP-WF43・AP-WF44: cycle-312 で候補として新設後に同サイクル内で撤回・削除された欠番（詳細 cycle-312/incident-16.md）。混同を避けるため再利用しない。
+- AP-WF45・AP-WF46・AP-WF47・AP-WF48・AP-WF49: cycle-313 で候補として新設後に同サイクル内で撤回・削除された欠番（詳細 cycle-313/incident-5.md）。混同を避けるため再利用しない。
 
 ## 候補メモ
 
