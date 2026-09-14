@@ -9,6 +9,7 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-694 | `readOnly`の入力欄が通常の入力欄と見分けられない | P3 | - | `Input.module.css`に`:disabled`のスタイルはあるが`readOnly`には無い。「打てるのに値が捨てられる」欄が意図せず出荷されうる(cycle-313で実際に直前まで行った)。視覚的手がかりを与えるか用途を絞るか、デザイン方針の判断が要る |
 | B-691 | frontmatterの`series`が「引用符付き」「null」「キー無し」の3通りで混在 | P4 | - | 30記事が値付き・45記事が`null`・12記事がキー自体を持たない。型は`series?: string`でパース結果は等価のため実害なし。書式の不揃いのみ。詳細cycle-313/index.md |
 | B-690 | frontmatterのseries_orderとtrust_levelを読むコードが存在しない | P3 | - | のべ50記事(series_order 27・trust_level 23)が書いても誰にも読まれない。連載の並びはpublished_at昇順で決まる(実測)。削除か消費かを判断する。詳細cycle-313/index.md |
 | B-689 | 他者が編集中のファイルの状態で自分のコミットが止まる | P3 | - | `backlog-line-length-check.sh`と`pre-commit-check.sh`のformat検査が、変更の有無に関わらず全体を検査する。並行作業中は他者の作業途中のファイルで自分のコミットが拒否される。cycle-313で両方発生 |
