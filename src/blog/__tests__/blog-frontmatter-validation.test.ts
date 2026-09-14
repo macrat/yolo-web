@@ -1,7 +1,11 @@
 /**
  * Frontmatter validation for every post in `src/blog/content`.
  *
- * Two guarantees are checked across all posts at once.
+ * Two guarantees are checked across all posts at once, over a set of posts
+ * first shown to be every file standing in the content directory and never
+ * empty. A guarantee stated over all posts says nothing when there are none: a
+ * content directory moved or renamed, or posts that stopped ending in `.md`,
+ * would leave every check below walking an empty list and reporting success.
  *
  * **Fidelity** — the keys written between the `---` delimiters are exactly the
  * keys the parsed result carries, and every value reaches it unchanged. This is
@@ -263,6 +267,24 @@ function findOrphanLines(frontmatter: string): string[] {
 
 describe("blog frontmatter validation", () => {
   const posts = loadAllPosts();
+
+  test("every file in the content directory is read as a post", () => {
+    const files = fs
+      .readdirSync(BLOG_DIR, { withFileTypes: true })
+      .filter((entry) => entry.isFile())
+      .map((entry) => entry.name)
+      .sort();
+
+    expect(
+      posts.length,
+      `no post was read from ${BLOG_DIR}: the directory holds ${files.length} file(s), none of them a .md post. Every check below walks the posts, so on an empty set all of them pass without reading anything`,
+    ).toBeGreaterThan(0);
+
+    expect(
+      posts.map(({ file }) => file),
+      `files stand in ${BLOG_DIR} that no check below reads`,
+    ).toEqual(files);
+  });
 
   test("every post has a frontmatter block", () => {
     const violations = posts
