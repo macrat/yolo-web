@@ -80,7 +80,7 @@ interface BlogListPanelProps extends BlogListData {
   keyword: string;
   /**
    * キーワード入力のハンドラ。
-   * 省略すると入力欄は読み取り専用になり、パネル全体が同期的・決定的に描画できる。
+   * 省略すると入力欄は操作不可（`disabled`）になり、パネル全体が同期的・決定的に描画できる。
    * Server Component から描画する静的シェル（Suspense の fallback）がこの形を使う。
    */
   onKeywordChange?: (keyword: string) => void;
@@ -238,7 +238,7 @@ export default function BlogListPanel({
         className={styles.searchInput}
         placeholder="記事を検索…"
         value={keyword}
-        readOnly={!onKeywordChange}
+        disabled={!onKeywordChange}
         onChange={
           onKeywordChange
             ? (event) => onKeywordChange(event.target.value)
