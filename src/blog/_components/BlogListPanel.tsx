@@ -134,17 +134,16 @@ function selectSearchBase(
 /**
  * 表示する記事が 0 件のときの一文。
  * いま何で絞り込んでいるかに合わせて、次にどうすれば記事へ辿り着けるかを伝える。
+ *
+ * タグページは掲載 0 件のタグを 404 にするため、タグで絞った一覧が空になるのは
+ * キーワード検索で 0 件になったときだけ。
  */
 function buildEmptyMessage(
   isSearching: boolean,
   activeCategory: BlogCategory | undefined,
-  tagHeader: TagHeader | undefined,
 ): string {
   if (isSearching) {
     return "一致する記事が見つかりませんでした。キーワードを変えるか、カテゴリやタグを切り替えると見つかるかもしれません。";
-  }
-  if (tagHeader) {
-    return "このタグの記事はまだありません。";
   }
   if (activeCategory) {
     return "このカテゴリの記事はまだありません。";
@@ -308,7 +307,7 @@ export default function BlogListPanel({
         />
       ) : (
         <p className={styles.noResults} role="status">
-          {buildEmptyMessage(isSearching, activeCategory, tagHeader)}
+          {buildEmptyMessage(isSearching, activeCategory)}
         </p>
       )}
 

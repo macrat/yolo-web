@@ -27,14 +27,7 @@ trust_level: ~
 
 Content here.`;
 
-    const result = parseFrontmatter<{
-      title: string;
-      slug: string;
-      draft: boolean;
-      series: null;
-      series_order: number;
-      trust_level: null;
-    }>(raw);
+    const result = parseFrontmatter(raw);
     expect(result.data.title).toBe("Hello World");
     expect(result.data.slug).toBe("hello-world");
     expect(result.data.draft).toBe(false);
@@ -55,11 +48,7 @@ authors: []
 
 Body.`;
 
-    const result = parseFrontmatter<{
-      tags: string[];
-      related_tool_slugs: string[];
-      authors: string[];
-    }>(raw);
+    const result = parseFrontmatter(raw);
     expect(result.data.tags).toEqual(["tag1", "tag2"]);
     expect(result.data.related_tool_slugs).toEqual([
       "char-count",
@@ -80,7 +69,7 @@ tags:
 
 Body.`;
 
-    const result = parseFrontmatter<{ tags: string[] }>(raw);
+    const result = parseFrontmatter(raw);
     expect(result.data.tags).toEqual(["tag1", "tag2", "tag3"]);
   });
 
@@ -91,7 +80,7 @@ subject: "Hello \\"World\\""
 
 Body.`;
 
-    const result = parseFrontmatter<{ subject: string }>(raw);
+    const result = parseFrontmatter(raw);
     expect(result.data.subject).toBe('Hello "World"');
   });
 
@@ -103,10 +92,7 @@ updated_at: 2026-07-16
 
 Body.`;
 
-    const result = parseFrontmatter<{
-      published_at: unknown;
-      updated_at: unknown;
-    }>(raw);
+    const result = parseFrontmatter(raw);
     expect(result.data.published_at).toBe("2026-07-16T12:00:00+0900");
     expect(result.data.updated_at).toBeInstanceOf(Date);
   });
@@ -122,7 +108,7 @@ series_order: 3
 
 Body.`;
 
-    const result = parseFrontmatter<Record<string, unknown>>(raw);
+    const result = parseFrontmatter(raw);
     expect(result.frontmatter).toBe(
       'title: "Hello World"\ntags:\n  - "tag1"\n  - "tag2"\nseries_order: 3',
     );
@@ -144,7 +130,7 @@ updated_at: 2026-07-16
 
 Body.`;
 
-    const result = parseFrontmatter<Record<string, unknown>>(raw);
+    const result = parseFrontmatter(raw);
     // A caller that compares a value against the way it is written reads both
     // from this one return value, so the two must never disagree.
     expect(yaml.load(result.frontmatter)).toEqual(result.data);
@@ -157,12 +143,12 @@ title: "unterminated
 
 Body.`;
 
-    expect(() => parseFrontmatter<Record<string, unknown>>(raw)).toThrow();
+    expect(() => parseFrontmatter(raw)).toThrow();
   });
 
   test("returns empty data when there is no frontmatter", async () => {
     const raw = "Just some content without frontmatter.";
-    const result = parseFrontmatter<Record<string, unknown>>(raw);
+    const result = parseFrontmatter(raw);
     expect(result.data).toEqual({});
     expect(result.content).toBe(raw);
     expect(result.frontmatter).toBe("");
@@ -176,7 +162,7 @@ Body.`;
 
 Body.`;
 
-    const result = parseFrontmatter<Record<string, unknown>>(raw);
+    const result = parseFrontmatter(raw);
     expect(result.data).toEqual({});
     expect(result.content.trim()).toBe("Body.");
     expect(result.frontmatter).toBe('- "tag1"\n- "tag2"');

@@ -147,8 +147,7 @@ function loadAllPosts(): Post[] {
 
   return files.map((file) => {
     const raw = fs.readFileSync(path.join(BLOG_DIR, file), "utf-8");
-    const { data, frontmatter } =
-      parseFrontmatter<Record<string, unknown>>(raw);
+    const { data, frontmatter } = parseFrontmatter(raw);
     return { file, frontmatter, data };
   });
 }

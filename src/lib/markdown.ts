@@ -178,6 +178,11 @@ function createMarkedInstance(): {
   return { instance, getHeadings };
 }
 
+/** A YAML document is usable as frontmatter only if it is a key/value mapping. */
+function isMapping(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
 /**
  * Parse YAML frontmatter from a markdown string. Returns the parsed mapping
  * (`data`), the body below the block (`content`), and the block text exactly as
@@ -186,12 +191,18 @@ function createMarkedInstance(): {
  * This is the one and only reading path from a frontmatter block to a value
  * anyone acts on. The site renders what this function returns, and the commit
  * gate (`scripts/validate-blog-frontmatter.ts`, run from the pre-commit hook)
- * calls this very function to inspect a post before it can be committed. What
- * the gate approves is therefore what a visitor receives: there is no second
- * reading for validation to approve while the page renders a different one.
- * `frontmatter` carries the delimiters' contents along with the parsed values,
- * so a caller that compares a value against the way it is written reads both
- * from this one boundary rather than drawing a second one of its own.
+ * calls this very function to inspect a post before it can be committed, so the
+ * values the gate looks at are the values a visitor receives — there is no
+ * second reading that could disagree with the first. `frontmatter` carries the
+ * delimiters' contents along with the parsed values, so a caller that compares a
+ * value against the way it is written reads both from this one boundary rather
+ * than drawing a second one of its own.
+ *
+ * Reading is not approving. The commit gate inspects `published_at`,
+ * `updated_at` and the shape of the block; a post whose `title`, `tags` or
+ * `category` is missing passes it. Those keys are required by
+ * `validateFrontmatter` (`src/blog/_lib/blog.ts`), which throws while the site
+ * is built, so the loss stops before publication but after the commit.
  *
  * The block is read by `js-yaml` with its default schema. Two consequences are
  * worth knowing when authoring frontmatter.
@@ -209,24 +220,28 @@ function createMarkedInstance(): {
  * A document without a frontmatter block yields empty data, empty frontmatter
  * text and the untouched body. A block that is not a mapping (empty, or a bare
  * scalar/sequence) yields empty data alongside the block text as written.
+ *
+ * `data` comes back as `Record<string, unknown>` — whatever YAML produced, with
+ * every value still unknown. A caller that needs a shape has to check the values
+ * into one. Letting the caller name the shape here would only rename the values:
+ * the type checker would go green over a block that was never looked at, which
+ * is how a post's tags can go missing and stay missing.
  */
-export function parseFrontmatter<T>(raw: string): {
-  data: T;
+export function parseFrontmatter(raw: string): {
+  data: Record<string, unknown>;
   content: string;
   frontmatter: string;
 } {
   const normalized = raw.replace(/\r\n/g, "\n");
   const match = normalized.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
   if (!match) {
-    return { data: {} as T, content: normalized, frontmatter: "" };
+    return { data: {}, content: normalized, frontmatter: "" };
   }
 
   const parsed = yaml.load(match[1]);
-  const isMapping =
-    typeof parsed === "object" && parsed !== null && !Array.isArray(parsed);
 
   return {
-    data: (isMapping ? parsed : {}) as T,
+    data: isMapping(parsed) ? parsed : {},
     content: match[2],
     frontmatter: match[1],
   };

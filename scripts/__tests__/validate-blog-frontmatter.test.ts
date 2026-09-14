@@ -7,11 +7,22 @@
  * とくに、frontmatter ブロックそのものが欠けている記事を
  * 「published_at が無い」と報告してしまわないこと（直すべき場所を見失う）を
  * 構造の不備として個別に検出できることを確認する。
+ *
+ * あわせて、記事本文からは読み取れない事実（git の履歴）を集める
+ * readArticleContext() が、git の失敗を「既存記事」に読み替えないことを確認する。
+ * 読み替えると、改訂偽装を防ぐ検査が何も言わずに外れる。
  */
-import { describe, expect, test } from "vitest";
+import { beforeEach, describe, expect, test, vi } from "vitest";
+
+const { execFileSync } = vi.hoisted(() => ({ execFileSync: vi.fn() }));
+vi.mock("child_process", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("child_process")>();
+  return { ...actual, default: { ...actual, execFileSync }, execFileSync };
+});
 
 import {
   collectProblems,
+  readArticleContext,
   type ArticleContext,
 } from "../validate-blog-frontmatter";
 
@@ -150,5 +161,37 @@ describe("updated_at", () => {
     expect(problems).toEqual([
       "updated_at は null または日時文字列にしてください (現在: 42)",
     ]);
+  });
+});
+
+describe("記事の文脈（git の履歴）", () => {
+  beforeEach(() => {
+    execFileSync.mockReset();
+  });
+
+  test("履歴が無ければ新規記事として扱う", () => {
+    execFileSync.mockReturnValue("");
+
+    expect(readArticleContext("src/blog/content/new.md", NOW)).toEqual({
+      isNew: true,
+      now: NOW,
+    });
+  });
+
+  test("履歴があれば既存記事として扱う", () => {
+    execFileSync.mockReturnValue("9f1c0d4e8a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d\n");
+
+    expect(readArticleContext("src/blog/content/old.md", NOW)).toEqual({
+      isNew: false,
+      now: NOW,
+    });
+  });
+
+  test("git が履歴を答えられないときは、既存記事として通さない", () => {
+    execFileSync.mockImplementation(() => {
+      throw new Error("fatal: not a git repository");
+    });
+
+    expect(() => readArticleContext("src/blog/content/any.md", NOW)).toThrow();
   });
 });

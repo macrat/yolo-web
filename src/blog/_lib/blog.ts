@@ -323,7 +323,14 @@ function validateFrontmatter(
   };
 }
 
-/** Markdown file names in the content directory. */
+/**
+ * Markdown file names in the content directory.
+ *
+ * A directory that cannot be read throws, naming the path, rather than coming
+ * back as an empty list. "There are no posts" and "the posts could not be read"
+ * render as the same empty blog, so a read that failed has to say so instead of
+ * passing for an answer.
+ */
 function listPostFiles(): string[] {
   return fs.readdirSync(BLOG_DIR).filter((f) => f.endsWith(".md"));
 }
@@ -337,7 +344,7 @@ function readPostFile(
   file: string,
 ): { meta: BlogPostMeta; content: string } | null {
   const raw = fs.readFileSync(path.join(BLOG_DIR, file), "utf-8");
-  const { data, content } = parseFrontmatter<Record<string, unknown>>(raw);
+  const { data, content } = parseFrontmatter(raw);
   const frontmatter = validateFrontmatter(
     path.join(BLOG_CONTENT_PATH, file),
     data,
@@ -372,8 +379,6 @@ function readPostFile(
  * Excludes posts where draft: true.
  */
 export function getAllBlogPosts(): BlogPostMeta[] {
-  if (!fs.existsSync(BLOG_DIR)) return [];
-
   const posts: BlogPostMeta[] = [];
 
   for (const file of listPostFiles()) {
@@ -399,8 +404,6 @@ export function getAllBlogPosts(): BlogPostMeta[] {
 export async function getBlogPostBySlug(
   slug: string,
 ): Promise<BlogPost | null> {
-  if (!fs.existsSync(BLOG_DIR)) return null;
-
   for (const file of listPostFiles()) {
     const post = readPostFile(file);
     if (!post || post.meta.slug !== slug) continue;

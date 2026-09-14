@@ -75,7 +75,7 @@ export function collectProblems(
 ): string[] {
   let parsed: { data: Record<string, unknown>; frontmatter: string };
   try {
-    parsed = parseFrontmatter<Record<string, unknown>>(src);
+    parsed = parseFrontmatter(src);
   } catch (e) {
     return [
       `frontmatter を YAML としてパースできません。壊れた記述 (キーを失った配列の残骸等) を修復してください: ${e instanceof Error ? e.message.split("\n")[0] : e}`,
@@ -138,17 +138,20 @@ export function collectProblems(
   return problems;
 }
 
-function isNewFile(file: string): boolean {
-  try {
-    const out = execFileSync(
-      "git",
-      ["log", "--max-count=1", "--format=%H", "--", file],
-      { encoding: "utf-8" },
-    );
-    return out.trim() === "";
-  } catch {
-    return false;
-  }
+/**
+ * 記事1本の検証に必要な、本文からは読み取れない事実を集める。
+ *
+ * git が履歴を答えられないときは例外を投げる。「答えられなかった」を「既存記事」に
+ * 読み替えると、改訂偽装を防ぐ「新規記事の updated_at は null」の検査が何も言わずに
+ * 外れるため。
+ */
+export function readArticleContext(file: string, now: number): ArticleContext {
+  const history = execFileSync(
+    "git",
+    ["log", "--max-count=1", "--format=%H", "--", file],
+    { encoding: "utf-8" },
+  );
+  return { isNew: history.trim() === "", now };
 }
 
 function main(files: string[]): number {
@@ -168,7 +171,14 @@ function main(files: string[]): number {
       continue;
     }
 
-    const context: ArticleContext = { isNew: isNewFile(file), now: Date.now() };
+    let context: ArticleContext;
+    try {
+      context = readArticleContext(file, Date.now());
+    } catch {
+      fail(file, "git の履歴を読み取れず、新規記事かどうかを判定できません");
+      continue;
+    }
+
     for (const problem of collectProblems(src, context)) {
       fail(file, problem);
     }
