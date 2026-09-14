@@ -7,7 +7,8 @@ import {
   type Heading,
 } from "@/lib/markdown";
 
-const BLOG_DIR = path.join(process.cwd(), "src/blog/content");
+const BLOG_CONTENT_PATH = "src/blog/content";
+const BLOG_DIR = path.join(process.cwd(), BLOG_CONTENT_PATH);
 
 export type BlogCategory =
   | "ai-workflow"
@@ -126,15 +127,21 @@ export const TAG_DESCRIPTIONS: Record<string, string> = {
     "ソフトウェアのテストと検証に関する記事集。全入力の網羅的な数え上げによる挙動の確認、回帰テストの設計、性格診断のような分岐ロジックが「入力どおりに結果を返すか」を数値で測る手法など、品質を目で確かめる代わりに機械で確かめる勘所を、実際のコード例とともに解説します。",
 };
 
+/**
+ * A post's frontmatter as the blog schema defines it, after validation.
+ *
+ * `updated_at` is null until the post is revised, and `series` is null for a
+ * post that belongs to no series — both are values an author writes, not gaps.
+ */
 interface BlogFrontmatter {
   title: string;
   slug: string;
   description: string;
   published_at: string;
-  updated_at: string;
+  updated_at: string | null;
   tags: string[];
-  category: string;
-  series?: string;
+  category: BlogCategory;
+  series: string | null;
   related_tool_slugs: string[];
   draft: boolean;
 }
@@ -159,6 +166,193 @@ export interface BlogPost extends BlogPostMeta {
 }
 
 /**
+ * Describe a rejected frontmatter value for an error message.
+ *
+ * An unquoted timestamp comes back from YAML as a `Date`, and JSON encodes a
+ * `Date` as a quoted string — indistinguishable from a properly quoted value in
+ * the very message that has to explain why the value was rejected. Name the
+ * type instead.
+ */
+function describeValue(value: unknown): string {
+  if (value instanceof Date) return `Date(${value.toISOString()})`;
+  return JSON.stringify(value) ?? String(value);
+}
+
+function rejectValue(
+  file: string,
+  key: string,
+  expected: string,
+  value: unknown,
+): never {
+  throw new Error(
+    `${file}: frontmatter の ${key} は${expected}である必要があります (実際: ${describeValue(value)})`,
+  );
+}
+
+function requireValue(
+  file: string,
+  data: Record<string, unknown>,
+  key: string,
+): unknown {
+  if (!(key in data)) {
+    throw new Error(`${file}: frontmatter に必須キー ${key} がありません`);
+  }
+  return data[key];
+}
+
+function requireString(
+  file: string,
+  data: Record<string, unknown>,
+  key: string,
+): string {
+  const value = requireValue(file, data, key);
+  if (typeof value !== "string") rejectValue(file, key, "文字列", value);
+  return value;
+}
+
+function asNullableString(
+  file: string,
+  key: string,
+  value: unknown,
+): string | null {
+  if (value !== null && typeof value !== "string") {
+    rejectValue(file, key, "文字列または null", value);
+  }
+  return value;
+}
+
+function requireNullableString(
+  file: string,
+  data: Record<string, unknown>,
+  key: string,
+): string | null {
+  return asNullableString(file, key, requireValue(file, data, key));
+}
+
+/** Read an optional key, for which an absent key says what an explicit null says. */
+function optionalNullableString(
+  file: string,
+  data: Record<string, unknown>,
+  key: string,
+): string | null {
+  return key in data ? asNullableString(file, key, data[key]) : null;
+}
+
+function isStringArray(value: unknown): value is string[] {
+  return (
+    Array.isArray(value) && value.every((entry) => typeof entry === "string")
+  );
+}
+
+function requireStringArray(
+  file: string,
+  data: Record<string, unknown>,
+  key: string,
+): string[] {
+  const value = requireValue(file, data, key);
+  if (!isStringArray(value)) rejectValue(file, key, "文字列の配列", value);
+  return value;
+}
+
+function requireBoolean(
+  file: string,
+  data: Record<string, unknown>,
+  key: string,
+): boolean {
+  const value = requireValue(file, data, key);
+  if (typeof value !== "boolean") rejectValue(file, key, "真偽値", value);
+  return value;
+}
+
+function requireCategory(
+  file: string,
+  data: Record<string, unknown>,
+  key: string,
+): BlogCategory {
+  const value = requireValue(file, data, key);
+  const category = ALL_CATEGORIES.find((candidate) => candidate === value);
+  if (category === undefined) {
+    rejectValue(
+      file,
+      key,
+      `カテゴリID (${ALL_CATEGORIES.join(" / ")}) のいずれか`,
+      value,
+    );
+  }
+  return category;
+}
+
+/**
+ * Validate a parsed frontmatter block against the blog schema.
+ *
+ * A missing or mistyped key throws, naming the file and the key. Frontmatter is
+ * written by hand and read by nobody else: a value quietly swapped for a
+ * default publishes a post with its tags or its category gone, and leaves
+ * nothing for the type checker, a test or a build to catch — the loss is
+ * visible only to a visitor looking at the page.
+ */
+function validateFrontmatter(
+  file: string,
+  data: Record<string, unknown>,
+): BlogFrontmatter {
+  return {
+    title: requireString(file, data, "title"),
+    slug: requireString(file, data, "slug"),
+    description: requireString(file, data, "description"),
+    published_at: requireString(file, data, "published_at"),
+    updated_at: requireNullableString(file, data, "updated_at"),
+    tags: requireStringArray(file, data, "tags"),
+    category: requireCategory(file, data, "category"),
+    series: optionalNullableString(file, data, "series"),
+    related_tool_slugs: requireStringArray(file, data, "related_tool_slugs"),
+    draft: requireBoolean(file, data, "draft"),
+  };
+}
+
+/** Markdown file names in the content directory. */
+function listPostFiles(): string[] {
+  return fs.readdirSync(BLOG_DIR).filter((f) => f.endsWith(".md"));
+}
+
+/**
+ * Read one markdown file into validated post metadata and its body.
+ *
+ * Returns null for a draft, which never reaches a visitor.
+ */
+function readPostFile(
+  file: string,
+): { meta: BlogPostMeta; content: string } | null {
+  const raw = fs.readFileSync(path.join(BLOG_DIR, file), "utf-8");
+  const { data, content } = parseFrontmatter<Record<string, unknown>>(raw);
+  const frontmatter = validateFrontmatter(
+    path.join(BLOG_CONTENT_PATH, file),
+    data,
+  );
+
+  if (frontmatter.draft) return null;
+
+  const meta: BlogPostMeta = {
+    title: frontmatter.title,
+    slug: frontmatter.slug,
+    description: frontmatter.description,
+    published_at: frontmatter.published_at,
+    // An unrevised post carries no update date, so it shows its publication date.
+    updated_at: frontmatter.updated_at ?? frontmatter.published_at,
+    tags: frontmatter.tags,
+    category: frontmatter.category,
+    related_tool_slugs: frontmatter.related_tool_slugs,
+    draft: false,
+    readingTime: estimateReadingTime(content),
+  };
+
+  if (frontmatter.series !== null) {
+    meta.series = frontmatter.series;
+  }
+
+  return { meta, content };
+}
+
+/**
  * List all published blog posts, sorted by published_at descending.
  * Reads from src/blog/content/*.md at build time.
  * Excludes posts where draft: true.
@@ -166,36 +360,11 @@ export interface BlogPost extends BlogPostMeta {
 export function getAllBlogPosts(): BlogPostMeta[] {
   if (!fs.existsSync(BLOG_DIR)) return [];
 
-  const files = fs.readdirSync(BLOG_DIR).filter((f) => f.endsWith(".md"));
   const posts: BlogPostMeta[] = [];
 
-  for (const file of files) {
-    const filePath = path.join(BLOG_DIR, file);
-    const raw = fs.readFileSync(filePath, "utf-8");
-    const { data, content } = parseFrontmatter<BlogFrontmatter>(raw);
-
-    if (data.draft === true) continue;
-
-    const meta: BlogPostMeta = {
-      title: String(data.title || ""),
-      slug: String(data.slug || file.replace(/\.md$/, "")),
-      description: String(data.description || ""),
-      published_at: String(data.published_at || ""),
-      updated_at: String(data.updated_at || data.published_at || ""),
-      tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
-      category: (data.category as BlogCategory) || "dev-notes",
-      related_tool_slugs: Array.isArray(data.related_tool_slugs)
-        ? data.related_tool_slugs.map(String)
-        : [],
-      draft: false,
-      readingTime: estimateReadingTime(content),
-    };
-
-    if (data.series) {
-      meta.series = String(data.series);
-    }
-
-    posts.push(meta);
+  for (const file of listPostFiles()) {
+    const post = readPostFile(file);
+    if (post) posts.push(post.meta);
   }
 
   posts.sort(
@@ -218,43 +387,15 @@ export async function getBlogPostBySlug(
 ): Promise<BlogPost | null> {
   if (!fs.existsSync(BLOG_DIR)) return null;
 
-  const files = fs.readdirSync(BLOG_DIR).filter((f) => f.endsWith(".md"));
-
-  for (const file of files) {
-    const filePath = path.join(BLOG_DIR, file);
-    const raw = fs.readFileSync(filePath, "utf-8");
-    const { data, content } = parseFrontmatter<BlogFrontmatter>(raw);
-
-    const postSlug = String(data.slug || file.replace(/\.md$/, ""));
-    if (postSlug !== slug) continue;
-    if (data.draft === true) continue;
+  for (const file of listPostFiles()) {
+    const post = readPostFile(file);
+    if (!post || post.meta.slug !== slug) continue;
 
     // Render HTML and collect the table-of-contents headings in a single pass
     // so the TOC anchor ids always match the rendered heading element ids.
-    const { html: contentHtml, headings } = await markdownToHtml(content);
+    const { html: contentHtml, headings } = await markdownToHtml(post.content);
 
-    const post: BlogPost = {
-      title: String(data.title || ""),
-      slug: postSlug,
-      description: String(data.description || ""),
-      published_at: String(data.published_at || ""),
-      updated_at: String(data.updated_at || data.published_at || ""),
-      tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
-      category: (data.category as BlogCategory) || "dev-notes",
-      related_tool_slugs: Array.isArray(data.related_tool_slugs)
-        ? data.related_tool_slugs.map(String)
-        : [],
-      draft: false,
-      readingTime: estimateReadingTime(content),
-      contentHtml,
-      headings,
-    };
-
-    if (data.series) {
-      post.series = String(data.series);
-    }
-
-    return post;
+    return { ...post.meta, contentHtml, headings };
   }
 
   return null;
