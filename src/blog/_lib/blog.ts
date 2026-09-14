@@ -147,7 +147,7 @@ export const TAG_DESCRIPTIONS: Record<string, string> = {
  * `updated_at` is null until the post is revised, and `series` is null for a
  * post that belongs to no series — both are values an author writes, not gaps.
  */
-interface BlogFrontmatter {
+export interface BlogFrontmatter {
   title: string;
   slug: string;
   description: string;
@@ -305,7 +305,7 @@ function requireCategory(
  * nothing for the type checker, a test or a build to catch — the loss is
  * visible only to a visitor looking at the page.
  */
-function validateFrontmatter(
+export function validateFrontmatter(
   file: string,
   data: Record<string, unknown>,
 ): BlogFrontmatter {
