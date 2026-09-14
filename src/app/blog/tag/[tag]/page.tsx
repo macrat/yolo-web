@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import {
+  getAllTags,
   getPostsByTag,
-  getTagsWithMinPosts,
   TAG_DESCRIPTIONS,
   MIN_POSTS_FOR_TAG_INDEX,
 } from "@/blog/_lib/blog";
@@ -10,18 +10,14 @@ import { paginate, BLOG_POSTS_PER_PAGE } from "@/lib/pagination";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import BlogListView from "@/blog/_components/BlogListView";
 
-/** Minimum number of posts a tag must have to generate a static page. */
-const MIN_POSTS_FOR_TAG_PAGE = 3;
-
 interface Props {
   params: Promise<{ tag: string }>;
 }
 
 export function generateStaticParams() {
-  const tags = getTagsWithMinPosts(MIN_POSTS_FOR_TAG_PAGE);
   // encodeURIComponent は不要: Next.js が動的セグメントを自動的にデコードするため
   // generateStaticParams では生の（デコード済み）タグ名を返す
-  return tags.map((tag) => ({ tag }));
+  return getAllTags().map((tag) => ({ tag }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -31,7 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const tag = decodeURIComponent(rawTag);
   const posts = getPostsByTag(tag);
 
-  if (posts.length < MIN_POSTS_FOR_TAG_PAGE) return {};
+  if (posts.length === 0) return {};
 
   const description =
     TAG_DESCRIPTIONS[tag] ??
@@ -76,8 +72,8 @@ export default async function TagPage({ params }: Props) {
 
   const posts = getPostsByTag(tag);
 
-  // Return 404 for tags with too few posts
-  if (posts.length < MIN_POSTS_FOR_TAG_PAGE) {
+  // Return 404 for tag names that no published post uses
+  if (posts.length === 0) {
     notFound();
   }
 

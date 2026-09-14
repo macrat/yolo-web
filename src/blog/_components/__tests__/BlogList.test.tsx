@@ -200,25 +200,6 @@ describe("BlogList 基本表示", () => {
   });
 });
 
-describe("BlogList linkableTags", () => {
-  test("linkableTags 指定時、含まれるタグはリンク・含まれないタグはリンクでない要素として並ぶ", () => {
-    render(
-      <BlogList
-        posts={[makePost({ tags: ["TypeScript", "YAML"] })]}
-        newSlugs={new Set()}
-        categoryLabels={categoryLabels}
-        linkableTags={new Set(["TypeScript"])}
-      />,
-    );
-    const tagLink = screen.getByRole("link", { name: "TypeScript" });
-    expect(tagLink.getAttribute("href")).toBe("/blog/tag/TypeScript");
-    // タグページを持たない YAML も読者に見せる（ただしリンクにはしない）
-    const yaml = screen.getByText("YAML");
-    expect(yaml).toBeInTheDocument();
-    expect(yaml.closest("a")).toBeNull();
-  });
-});
-
 describe("BlogList 新着マーク", () => {
   test("newSlugs に含まれるとき「新着」マークが表示される", () => {
     render(

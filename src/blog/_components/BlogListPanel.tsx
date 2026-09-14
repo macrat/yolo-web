@@ -59,12 +59,6 @@ export interface BlogListData extends BlogListSource {
   categoryLabels: Record<string, string>;
   /** シリーズID → 表示名のマッピング */
   seriesLabels: Record<string, string>;
-  /**
-   * タグページを持つタグの集合（getTagsWithMinPosts(3) の結果）。
-   * BlogList（内部で TagList）に流し、どのタグをタグページへのリンクにするかを決める。
-   * node:fs 依存のため Server Component（BlogListView）で計算して渡す。
-   */
-  linkableTags?: ReadonlySet<string>;
 }
 
 interface BlogListPanelProps extends BlogListData {
@@ -178,7 +172,6 @@ export default function BlogListPanel({
   categories,
   categoryLabels,
   seriesLabels,
-  linkableTags,
   keyword,
   onKeywordChange,
 }: BlogListPanelProps) {
@@ -309,7 +302,6 @@ export default function BlogListPanel({
           posts={displayPosts}
           newSlugs={newSlugs}
           categoryLabels={categoryLabels}
-          linkableTags={linkableTags}
         />
       ) : (
         <p className={styles.noResults} role="status">

@@ -1,9 +1,8 @@
 /*
  * 記事タグ（値札）— DESIGN.md §4「値札＝罫囲みの静かな器」。
  * 文字は --ink-2、囲みは一本罫、角丸は値札の例外 2px。背景ベタ塗り・影は持たない。
- * タグページを持つタグはリンク（実線の罫）、持たないタグは静的ラベル（破線の罫）として
- * 同じ寸法で並べ、罫の線種だけで押せるかどうかを伝える（§2「副次的な要素は別の色でなく
- * 罫と墨の濃淡で表す」）。全トークン経由・直書きなし（§10）。
+ * ホバー・フォーカスでのみ朱へ転じる（§2「副次的な要素は別の色でなく罫と墨の濃淡で表す」）。
+ * 全トークン経由・直書きなし（§10）。
  */
 .tags {
   display: flex;
@@ -15,12 +14,10 @@
 }
 
 /*
- * 値札の器（リンク・ラベル共通の寸法と字面）。
- * 高さ 44px はリンクのタップターゲット（§10）に要る寸法で、ラベルも同じ寸法に揃えて
- * タグ列の律を一定に保つ。
+ * 値札そのもの。高さ 44px はタップターゲット（§10）に要る寸法。
+ * ホバー・フォーカスで朱へ転じ、押せることを示す。
  */
-.tagLink,
-.tagLabel {
+.tagLink {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
@@ -28,12 +25,8 @@
   color: var(--ink-2);
   font-family: var(--font-gothic);
   font-size: 0.8125rem; /* 13px 補助情報 */
-  border-radius: var(--radius-sm);
-}
-
-/* リンク: 実線の罫。ホバー・フォーカスで朱へ転じ、押せることを示す。 */
-.tagLink {
   border: 1px solid var(--rule);
+  border-radius: var(--radius-sm);
   text-decoration: none;
   transition:
     color 0.15s ease,
@@ -48,12 +41,4 @@
 .tagLink:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
-}
-
-/*
- * ラベル: 破線の罫。実線より弱い線が「押せる値札ではない」ことを静止状態で示し、
- * 朱に転じる状態も持たないためリンクより前へ出ない。
- */
-.tagLabel {
-  border: 1px dashed var(--rule);
 }

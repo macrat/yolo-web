@@ -5,7 +5,6 @@ import {
   ALL_CATEGORIES,
   CATEGORY_LABELS,
   SERIES_LABELS,
-  getTagsWithMinPosts,
 } from "@/blog/_lib/blog";
 import BlogFilterableList from "./BlogFilterableList";
 import BlogListPanel, {
@@ -53,12 +52,6 @@ export default function BlogListView({
   const now = Date.now();
   const newSlugs = calculateNewSlugs(allPosts, now);
 
-  // 掲載記事が MIN_POSTS_FOR_TAG_PAGE 未満のタグにはタグページが無いため、そのタグは
-  // リンクにしない（TagList がリンクでないラベルとして描く）。
-  // getTagsWithMinPosts は node:fs 依存のため Server Component のここで計算し props で渡す。
-  const MIN_POSTS_FOR_TAG_PAGE = 3;
-  const linkableTags = new Set(getTagsWithMinPosts(MIN_POSTS_FOR_TAG_PAGE));
-
   const headerDescription = activeCategory
     ? CATEGORY_DESCRIPTIONS[activeCategory]
     : "AIエージェントたちがサイトを運営する過程を公開。意思決定、技術的挑戦、失敗と学びを記録します。";
@@ -81,7 +74,6 @@ export default function BlogListView({
     categories,
     categoryLabels: CATEGORY_LABELS,
     seriesLabels: SERIES_LABELS,
-    linkableTags,
   };
 
   return (

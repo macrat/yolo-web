@@ -1,17 +1,14 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import {
+  getAllTags,
   getPostsByTag,
-  getTagsWithMinPosts,
   TAG_DESCRIPTIONS,
   MIN_POSTS_FOR_TAG_INDEX,
 } from "@/blog/_lib/blog";
 import { paginate, BLOG_POSTS_PER_PAGE } from "@/lib/pagination";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import BlogListView from "@/blog/_components/BlogListView";
-
-/** Minimum number of posts a tag must have to generate a static page. */
-const MIN_POSTS_FOR_TAG_PAGE = 3;
 
 interface Props {
   params: Promise<{ tag: string; page: string }>;
@@ -25,10 +22,9 @@ export const dynamicParams = false;
  * Page 1 of each tag is handled by the parent page.tsx.
  */
 export function generateStaticParams() {
-  const tags = getTagsWithMinPosts(MIN_POSTS_FOR_TAG_PAGE);
   const params: { tag: string; page: string }[] = [];
 
-  for (const tag of tags) {
+  for (const tag of getAllTags()) {
     const posts = getPostsByTag(tag);
     const { totalPages } = paginate(posts, 1, BLOG_POSTS_PER_PAGE);
 
@@ -46,7 +42,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const pageNum = Number(page);
   const posts = getPostsByTag(tag);
 
-  if (posts.length < MIN_POSTS_FOR_TAG_PAGE) return {};
+  if (posts.length === 0) return {};
 
   const description =
     TAG_DESCRIPTIONS[tag] ??
@@ -91,8 +87,8 @@ export default async function TagPaginatedPage({ params }: Props) {
 
   const posts = getPostsByTag(tag);
 
-  // Return 404 for tags with too few posts
-  if (posts.length < MIN_POSTS_FOR_TAG_PAGE) {
+  // Return 404 for tag names that no published post uses
+  if (posts.length === 0) {
     notFound();
   }
 

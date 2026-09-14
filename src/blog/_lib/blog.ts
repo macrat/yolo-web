@@ -65,7 +65,7 @@ export const MIN_POSTS_FOR_TAG_INDEX = 5;
 
 /**
  * Descriptions for each tag, shown on tag listing pages.
- * Tags with 3+ posts are eligible for tag pages.
+ * Every tag used by a published post needs an entry here.
  * Each description is 100+ characters to provide meaningful context.
  */
 export const TAG_DESCRIPTIONS: Record<string, string> = {
@@ -125,6 +125,19 @@ export const TAG_DESCRIPTIONS: Record<string, string> = {
     "Webアクセシビリティの実践知識をまとめた記事集。キーボード操作・スクリーンリーダーの読み上げ・フォーカス管理・クリック領域の設計など、あらゆる利用者が迷わず使えるUIにするための具体的な実装と勘所を、実際のコードや失敗例とともに解説します。",
   テスト:
     "ソフトウェアのテストと検証に関する記事集。全入力の網羅的な数え上げによる挙動の確認、回帰テストの設計、性格診断のような分岐ロジックが「入力どおりに結果を返すか」を数値で測る手法など、品質を目で確かめる代わりに機械で確かめる勘所を、実際のコード例とともに解説します。",
+  RSS: "RSS・Atomフィードの配信に関する記事集。RSS 2.0とAtom 1.0の使い分け、更新を購読者とクローラへ届ける仕組み、フィードを静的生成に寄せて配信を軽く保つ実装まで、購読を支える設計を実例とともに解説します。",
+  Playwright:
+    "ブラウザ自動操作ツールPlaywrightの実践記事集。画面の撮影とテーマ切替のすれ違い、キーボード操作やアクセシビリティツリーの検証など、実際に動かして初めて見える不具合の見つけ方を実コードとともに解説します。",
+  データ変換:
+    "データを目的の形に取り出し・変換する技術の記事集。SQLの実行順の読み方、絞り込みと集計の使い分け、結合やサブクエリの組み立て方など、手元のデータを扱うときに効いてくる考え方と構文を早見表も交えて解説します。",
+  React:
+    "Reactのコンポーネント設計と状態管理に関する記事集。副作用の後始末、複数のコンポーネントが同じ資源を奪い合うときの制御、フックの使いどころなど、組み合わせて動かして初めて表に出る落とし穴と対処を実コードで解説します。",
+  YAML: "YAMLの書き方と落とし穴に関する記事集。暗黙の型変換で国コードNOがfalseに化ける仕組み、仕様バージョンと実装の乖離、クォートによる防御の指針など、設定を安全に書くための作法を実際の挙動とともに解説します。",
+  DevOps:
+    "開発と運用をつなぐ足回りに関する記事集。CIワークフローやコンテナ構成など運用を動かす設定の書き方、設定の誤りが本番で表に出るまでの経路、壊さないための検証の勘所を、実際に踏んだ事例とともに解説します。",
+  設定ファイル:
+    "設定ファイルの扱いに関する記事集。YAMLやJSONの記法の癖、パーサごとの解釈の違い、意図しない型変換を防ぐ書き方など、アプリケーションの挙動を左右する設定を安全に書き、正しく読み解くための知識を実例で解説します。",
+  SNS: "SNSでの共有を見据えたコンテンツ作りの記事集。診断結果を1枚の画像として持ち帰れるようにする工夫、保存と共有の挙動が端末ごとに変わる事情、見せたくなる見た目の設計など、遊んだ結果を人に見せるための取り組みを紹介します。",
 };
 
 /**
@@ -515,7 +528,7 @@ export function getPostsByTag(tag: string): BlogPostMeta[] {
 
 /**
  * Get all tags that have at least the given minimum number of posts.
- * Used to determine which tags get their own static pages.
+ * Used to determine which tag pages are indexable and listed in the sitemap.
  */
 export function getTagsWithMinPosts(minPosts: number): string[] {
   const posts = getAllBlogPosts();
