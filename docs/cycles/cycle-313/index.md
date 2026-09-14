@@ -572,7 +572,7 @@ Next.js 公式が「For a client-hook error this is rarely the right answer」�
 | B-703 | ブログ記事がバンドルバジェットテストの旧実装を説明している                                          | T8l             |
 | B-704 | `test:build` に `pre` フックが無く単体実行だと生成物が古くなりうる                                  | T8l             |
 | B-705 | `.claude/rules/testing.md` の `paths` が実行系ファイルを拾わない                                    | T8l             |
-| B-706 | 並行作業中に `.next` の読み手と作り手が衝突しビルドが壊れる                                         | T8l             |
+| B-706 | 並行作業中に生成物の読み手と作り手が衝突し、追跡対象のファイルまで壊れる                            | T8l             |
 | B-707 | `blog-writing.md` の日時の型変換の説明が一様でない                                                  | T10             |
 | B-708 | 無効状態の入力欄が見た目でほぼ区別できない                                                          | T8b             |
 | B-709 | `GuessInput` の振動タイマーが解除されない                                                           | 最終ゲート      |
