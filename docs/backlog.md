@@ -16,7 +16,7 @@
 | B-703 | ブログ記事がbundle budgetテストの旧実装(`describe.skipIf`)を説明している | P4 | - | cycle-313で`requireBuildOutput()`へ変えたため記事190-195行と食い違う。記事は記録だが読者には現状と異なる手法が推奨として読める。注記の要否を判断する |
 | B-704 | `test:build`に`pre`フックが無く単体実行だと生成物が古くなりうる | P4 | - | `pretest`は`generate:toolbox-registry`/`generate:release-id`を走らせるが`pretest:build`が無い。通常は先行する`prebuild`が同じ生成をするため現状問題は出ていない |
 | B-705 | `.claude/rules/testing.md`の`paths`が実行系ファイルを拾わない | P4 | - | `src/**/*`と`vitest.config.mts`のみ。`package.json`のscriptsや`deploy.yml`を編集するときにルールが読み込まれない。ルールの内容はそれらの整合も含む |
-| B-701 | 記事行のタグリンクだけ`q=`を引き継がない | P4 | - | `BlogListPanel`の人気タグは`buildTagHref`で`?q=`を付けるが、各行の`TagList`は`/blog/tag/<tag>`固定。同じ画面の同じ見た目のタグで挙動が割れている。タグUIは継続と決まっており(B-389はcycle-184で中止)、単独で判断できる |
+| B-701 | 記事行のタグリンクだけ`q=`を引き継がない | P4 | - | `BlogListPanel`の人気タグは`buildTagHref`で`?q=`を付けるが、各行の`TagList`は`/blog/tag/<tag>`固定。同じ画面の同じ見た目のタグで挙動が割れている。撤去案B-389はcycle-184で中止、後続B-391は一括整理で消滅。存続の決定は記録に無い |
 | B-699 | 3記事のrelated_tool_slugsが実在しない`quiz`を指している | P3 | - | `/play/quiz`は404(実測)。cycle-102で`/quiz/*`を`/play/*`へ301した際の取り残し。値を消せば実在検査(registryとの包含チェック1本)をそのまま入れられる。詳細cycle-313 |
 | B-700 | frontmatter検証がコミット時にキー集合・書式・型を見ていない | P3 | - | `validate-blog-frontmatter.ts`が見るのは日時2キーのみ。未知キーや壊れた書式はコミットを通過し`npm run test`で初めて落ちる。pre-commitで`parseFrontmatter`を呼ぶ以上、同じ場所で検査できる |
 | B-698 | 実行環境がUTCのため`date`手順どおりだとpublished_atがUTCになる | P3 | - | 既存89記事は全て日本時間(+0900が37・+09:00が52)。blog-writing.mdの手順`date +"...%z"`はこの環境でUTCを返す。手順にTZ指定を入れるか表記を決め直す |
