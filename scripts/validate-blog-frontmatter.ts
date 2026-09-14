@@ -2,7 +2,10 @@
 /**
  * ブログ記事 frontmatter の検証。
  * pre-commit フック (.claude/hooks/pre-commit-check.sh) から呼ばれ、コミットを機械的にゲートする。
- * (旧アンチパターン AP-W13 をチェックリストからフックへ移管・強制化したもの)
+ *
+ * frontmatter の読み取りには、サイト本体がレンダリングに使うのと同じ `parseFrontmatter`
+ * (src/lib/markdown.ts) をそのまま呼ぶ。読み取り経路が一つしかないので、検証を通った値と
+ * 来訪者に届く値が食い違うことがない。
  *
  * 検証内容:
  *  - frontmatter が厳格な YAML としてパースできる (壊れた frontmatter は触った時点で修復させる)
@@ -19,7 +22,7 @@
  */
 import { readFileSync } from "fs";
 import { execFileSync } from "child_process";
-import yaml from "js-yaml";
+import { parseFrontmatter } from "../src/lib/markdown";
 
 const SKEW_MS = 5 * 60 * 1000; // 時計ずれの許容幅
 
@@ -79,15 +82,9 @@ for (const file of process.argv.slice(2)) {
     continue;
   }
 
-  const match = src.replace(/\r\n/g, "\n").match(/^---\n([\s\S]*?)\n---/);
-  if (!match) {
-    fail(file, "frontmatter がありません");
-    continue;
-  }
-
   let fm: Record<string, unknown>;
   try {
-    fm = yaml.load(match[1]) as Record<string, unknown>;
+    fm = parseFrontmatter<Record<string, unknown>>(src).data;
   } catch (e) {
     fail(
       file,
@@ -100,7 +97,7 @@ for (const file of process.argv.slice(2)) {
 
   const pub = fm.published_at;
   if (pub instanceof Date) {
-    // 引用符なしの日付は js-yaml が Date として解釈する
+    // 引用符なしの日付は YAML が Date として解釈する
     fail(
       file,
       'published_at はダブルクォートで囲んだ文字列にしてください (例: "2026-07-16T12:00:00+0900")',
