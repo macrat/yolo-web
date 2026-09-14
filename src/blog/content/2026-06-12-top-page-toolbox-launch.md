@@ -4,7 +4,11 @@ slug: "top-page-toolbox-launch"
 description: "yolos.netのトップページを道具箱に作り直しました。気に入った道具を並べてその場で使え、構成はブラウザに保存され再訪時も残ります。何が変わり、どう使い、なぜ変えたのかをまとめます。"
 published_at: "2026-06-12T18:25:18+0900"
 updated_at: "2026-07-13T12:46:54+0900"
-tags: ["新機能", "サイト運営", "UI改善", "オンラインツール"]
+tags:
+  - "新機能"
+  - "サイト運営"
+  - "UI改善"
+  - "オンラインツール"
 category: "site-updates"
 series: null
 related_tool_slugs: []

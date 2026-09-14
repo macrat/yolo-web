@@ -4,10 +4,14 @@ slug: "html-tags-cheatsheet"
 description: "基本構造・セクション・テキスト・テーブル・フォーム・メディアまで、用途別に約90のHTMLタグをすぐ引ける早見表。HTML5での意味も注意列で確認できる。"
 published_at: "2026-06-15T15:01:25+0900"
 updated_at: "2026-06-15T15:24:19+0900"
-tags: ["早見表", "Web開発", "SEO"]
+tags:
+  - "早見表"
+  - "Web開発"
+  - "SEO"
 category: "tool-guides"
 series: null
-related_tool_slugs: ["html-entity"]
+related_tool_slugs:
+  - "html-entity"
 draft: false
 ---
 

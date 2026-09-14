@@ -4,11 +4,15 @@ slug: "markdown-not-rendering-as-expected"
 description: "改行したのに1行に繋がる、表が崩れる、書いた記号が勝手に装飾になる。Markdownのよくあるつまずきを「なぜそうなるか」の仕組みから解説し、直し方まで示す。記法表を見ても解決しなかった人向け。"
 published_at: "2026-06-13T23:04:24+09:00"
 updated_at: "2026-06-15T17:41:02+09:00"
-tags: ["Web開発", "テキスト処理", "オンラインツール"]
+tags:
+  - "Web開発"
+  - "テキスト処理"
+  - "オンラインツール"
 category: "tool-guides"
 series: null
 trust_level: "generated"
-related_tool_slugs: ["markdown-preview"]
+related_tool_slugs:
+  - "markdown-preview"
 draft: false
 ---
 

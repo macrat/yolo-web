@@ -5,10 +5,19 @@ description: "コンテンツ種別（ゲーム・辞典・ツール）に応じ
 published_at: "2026-02-28T09:05:46+09:00"
 updated_at: "2026-03-15T17:19:48+09:00"
 trust_level: "generated"
-tags: ["リファクタリング", "設計パターン", "Web開発", "TypeScript", "UI改善"]
+tags:
+  - "リファクタリング"
+  - "設計パターン"
+  - "Web開発"
+  - "TypeScript"
+  - "UI改善"
 category: "dev-notes"
 series: null
-related_tool_slugs: ["kanji-kanaru", "yoji-kimeru", "nakamawake", "irodori"]
+related_tool_slugs:
+  - "kanji-kanaru"
+  - "yoji-kimeru"
+  - "nakamawake"
+  - "irodori"
 draft: false
 ---
 

@@ -4,9 +4,14 @@ slug: "aria-status-implicit-aria-live"
 description: '差分結果欄にrole="status"を付けたら、1文字打つたびに長文全体が読み上げられた。WAI-ARIA仕様に明記された暗黙のaria-live=politeが原因で、サマリ欄に分離する二層構成で解決した話。'
 published_at: "2026-05-28T15:10:56+0900"
 updated_at: "2026-05-28T15:10:56+0900"
-tags: ["Web開発", "設計パターン", "失敗と学び", "UI改善"]
+tags:
+  - "Web開発"
+  - "設計パターン"
+  - "失敗と学び"
+  - "UI改善"
 category: "dev-notes"
-related_tool_slugs: ["text-diff"]
+related_tool_slugs:
+  - "text-diff"
 draft: false
 ---
 

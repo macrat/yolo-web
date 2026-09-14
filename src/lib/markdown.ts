@@ -6,6 +6,8 @@
  */
 
 import { Marked, type MarkedExtension, type Tokens } from "marked";
+// frontmatter を厳格な YAML として読むため（コミット時の検証と同じパーサ）
+import yaml from "js-yaml";
 // GFM Alert構文（> [!NOTE]等）をadmonitionのHTMLに変換するため追加
 import markedAlert from "marked-alert";
 // XSS防止のためmarked出力をホワイトリスト方式でサニタイズ
@@ -176,7 +178,22 @@ function createMarkedInstance(): {
   return { instance, getHeadings };
 }
 
-/** Parse YAML frontmatter from a markdown string. Returns { data, content }. */
+/**
+ * Parse YAML frontmatter from a markdown string. Returns { data, content }.
+ *
+ * The frontmatter block is read by `js-yaml` with its default schema — the same
+ * parser and schema `scripts/validate-blog-frontmatter.ts` gates commits with,
+ * so what the commit hook validates is exactly what the site renders.
+ *
+ * Two consequences of the default schema are worth knowing when authoring
+ * frontmatter: an unquoted timestamp (`2026-07-16` or `2026-07-16T12:00:00+09:00`)
+ * becomes a `Date`, not a string, and invalid YAML throws instead of yielding a
+ * partial object — a broken frontmatter stops the build rather than reaching a
+ * visitor with values silently missing.
+ *
+ * A document without a frontmatter block, or one whose block is not a mapping
+ * (empty, or a bare scalar/sequence), yields empty data and the untouched body.
+ */
 export function parseFrontmatter<T>(raw: string): { data: T; content: string } {
   const normalized = raw.replace(/\r\n/g, "\n");
   const match = normalized.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
@@ -184,109 +201,11 @@ export function parseFrontmatter<T>(raw: string): { data: T; content: string } {
     return { data: {} as T, content: normalized };
   }
 
-  const yamlBlock = match[1];
-  const content = match[2];
-  const data = parseYamlBlock(yamlBlock) as T;
+  const parsed = yaml.load(match[1]);
+  const isMapping =
+    typeof parsed === "object" && parsed !== null && !Array.isArray(parsed);
 
-  return { data, content };
-}
-
-/**
- * Minimal YAML parser for frontmatter blocks.
- * Handles: quoted strings, unquoted strings, booleans, nulls, numbers,
- * inline arrays, and block arrays.
- */
-function parseYamlBlock(yaml: string): Record<string, unknown> {
-  const result: Record<string, unknown> = {};
-  const lines = yaml.split("\n");
-
-  let i = 0;
-  while (i < lines.length) {
-    const line = lines[i];
-    const keyMatch = line.match(/^([A-Za-z_][A-Za-z0-9_-]*):\s*(.*)/);
-    if (!keyMatch) {
-      i++;
-      continue;
-    }
-
-    const key = keyMatch[1];
-    const value = keyMatch[2].trim();
-
-    // Inline array: ["a", "b"]
-    if (value.startsWith("[")) {
-      const arrayContent = value.slice(1, value.lastIndexOf("]"));
-      if (arrayContent.trim() === "") {
-        result[key] = [];
-      } else {
-        result[key] = arrayContent.split(",").map((s) =>
-          s
-            .trim()
-            .replace(/^"(.*)"$/, "$1")
-            .replace(/^'(.*)'$/, "$1"),
-        );
-      }
-      i++;
-      continue;
-    }
-
-    // Check for block array on following lines
-    if (value === "" || value === "") {
-      const items: string[] = [];
-      let j = i + 1;
-      while (j < lines.length) {
-        const itemMatch = lines[j].match(/^\s+-\s+(.*)/);
-        if (itemMatch) {
-          items.push(
-            itemMatch[1]
-              .trim()
-              .replace(/^"(.*)"$/, "$1")
-              .replace(/^'(.*)'$/, "$1"),
-          );
-          j++;
-        } else {
-          break;
-        }
-      }
-      if (items.length > 0) {
-        result[key] = items;
-        i = j;
-        continue;
-      }
-    }
-
-    // Scalar values
-    result[key] = parseYamlScalar(value);
-    i++;
-  }
-
-  return result;
-}
-
-function parseYamlScalar(value: string): unknown {
-  // Quoted string
-  if (value.startsWith('"') && value.endsWith('"')) {
-    return value.slice(1, -1).replace(/\\"/g, '"').replace(/\\\\/g, "\\");
-  }
-  if (value.startsWith("'") && value.endsWith("'")) {
-    return value.slice(1, -1);
-  }
-
-  // null
-  if (value === "null" || value === "~" || value === "") {
-    return null;
-  }
-
-  // boolean
-  if (value === "true") return true;
-  if (value === "false") return false;
-
-  // number
-  if (/^-?\d+(\.\d+)?$/.test(value)) {
-    return Number(value);
-  }
-
-  // Unquoted string
-  return value;
+  return { data: (isMapping ? parsed : {}) as T, content: match[2] };
 }
 
 /**

@@ -13,7 +13,8 @@ tags:
 category: "dev-notes"
 series: null
 trust_level: "generated"
-related_tool_slugs: ["regex-tester"]
+related_tool_slugs:
+  - "regex-tester"
 draft: false
 ---
 

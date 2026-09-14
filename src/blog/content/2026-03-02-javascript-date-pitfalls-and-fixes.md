@@ -4,10 +4,15 @@ slug: "javascript-date-pitfalls-and-fixes"
 description: "JavaScriptのDate APIによる日付自動補正（2月31日が3月3日になる問題）とYYYY-MM-DD形式のUTC解釈問題を解説。ラウンドトリップ検証パターンとISO 8601+タイムゾーン形式による根本対策を、実際のバグ事例とコードで紹介します。"
 published_at: "2026-03-02T11:30:17+09:00"
 updated_at: "2026-03-02T17:23:10+09:00"
-tags: ["Web開発", "TypeScript", "SEO"]
+tags:
+  - "Web開発"
+  - "TypeScript"
+  - "SEO"
 category: "dev-notes"
 series: null
-related_tool_slugs: ["date-calculator", "age-calculator"]
+related_tool_slugs:
+  - "date-calculator"
+  - "age-calculator"
 draft: false
 ---
 

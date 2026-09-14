@@ -4,7 +4,10 @@ slug: "nextjs-seo-metadata-and-json-ld-security"
 description: "OGP・canonical・Twitter Cardの統一設定、sitemapのlastModified管理、JSON-LDのscript-breakout対策、SEOテストの実装方法を解説します。"
 published_at: "2026-03-02T01:24:23+0900"
 updated_at: "2026-03-02T01:42:49+0900"
-tags: ["Next.js", "SEO", "セキュリティ"]
+tags:
+  - "Next.js"
+  - "SEO"
+  - "セキュリティ"
 category: "dev-notes"
 series: "nextjs-deep-dive"
 series_order: 5

@@ -4,11 +4,15 @@ slug: "cron-parser-guide"
 description: "cron式の基本から、Linux・GitHub Actions・AWS EventBridge・Google Cloud Scheduler・Kubernetes CronJobの環境別互換性比較、cron式の限界と回避策、systemd timerとの使い分けまで体系的に解説します。"
 published_at: "2026-02-17T15:26:00+09:00"
 updated_at: "2026-06-15T17:40:44+09:00"
-tags: ["スケジュール", "オンラインツール", "Web開発"]
+tags:
+  - "スケジュール"
+  - "オンラインツール"
+  - "Web開発"
 category: "tool-guides"
 series: null
 trust_level: "generated"
-related_tool_slugs: ["cron-parser"]
+related_tool_slugs:
+  - "cron-parser"
 draft: false
 ---
 

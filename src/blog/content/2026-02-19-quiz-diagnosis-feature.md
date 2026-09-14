@@ -4,10 +4,15 @@ slug: "quiz-diagnosis-feature"
 description: "漢字力診断テストと日本の伝統色パーソナリティ診断をリリース。あなたの漢字力を10問で判定したり、性格に合った伝統色を診断したり。結果はSNSでシェアできます。無料で今すぐ遊べます。"
 published_at: "2026-02-19T22:39:26+09:00"
 updated_at: "2026-02-28T20:34:30+09:00"
-tags: ["ゲーム", "新機能", "漢字", "設計パターン"]
+tags:
+  - "ゲーム"
+  - "新機能"
+  - "漢字"
+  - "設計パターン"
 category: "site-updates"
 series: null
-related_tool_slugs: ["quiz"]
+related_tool_slugs:
+  - "quiz"
 draft: false
 ---
 

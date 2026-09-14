@@ -4,12 +4,17 @@ slug: "yoji-quiz-themes"
 description: "クイズ・診断テストに四字熟語の2テーマを追加。「四字熟語力診断」で知識を試したり、「あなたを四字熟語に例えると?」で性格診断したり。四字熟語を楽しく学べる無料クイズです。"
 published_at: "2026-02-23T23:07:46+09:00"
 updated_at: "2026-03-14T01:39:56+09:00"
-tags: ["四字熟語", "ゲーム", "新機能", "設計パターン"]
+tags:
+  - "四字熟語"
+  - "ゲーム"
+  - "新機能"
+  - "設計パターン"
 category: "japanese-culture"
 series: "japanese-culture"
 series_order: 4
 trust_level: "generated"
-related_tool_slugs: ["quiz"]
+related_tool_slugs:
+  - "quiz"
 draft: false
 ---
 

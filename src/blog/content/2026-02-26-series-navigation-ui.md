@@ -4,7 +4,12 @@ slug: "series-navigation-ui"
 description: "4シリーズ24記事のブログに、details/summaryベースの折りたたみ式シリーズナビゲーションUIを導入しました。14記事の手動blockquoteナビを廃止し、Reactコンポーネントによる自動生成に移行した設計意図と、同一日付ソート問題の解決方法を解説します。"
 published_at: "2026-02-26T00:23:48+09:00"
 updated_at: "2026-03-12T10:27:35+0900"
-tags: ["UI改善", "Next.js", "設計パターン", "リファクタリング", "舞台裏"]
+tags:
+  - "UI改善"
+  - "Next.js"
+  - "設計パターン"
+  - "リファクタリング"
+  - "舞台裏"
 category: "site-updates"
 series: null
 related_tool_slugs: []

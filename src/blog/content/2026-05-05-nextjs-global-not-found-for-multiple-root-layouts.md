@@ -4,7 +4,11 @@ slug: "nextjs-global-not-found-for-multiple-root-layouts"
 description: "Route Groupで複数root layoutを並走させると app/not-found.tsx が unmatched URL を捕まえられない。公式が示す解決策である global-not-found.js を、experimentalフラグの設定から実装の落とし穴・テスト戦略まで実コードで示す。"
 published_at: "2026-05-05T19:29:20+0900"
 updated_at: "2026-05-05T19:39:30+0900"
-tags: ["Next.js", "Web開発", "設計パターン", "失敗と学び"]
+tags:
+  - "Next.js"
+  - "Web開発"
+  - "設計パターン"
+  - "失敗と学び"
 category: "dev-notes"
 series: "nextjs-deep-dive"
 series_order: 9

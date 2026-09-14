@@ -4,7 +4,11 @@ slug: "clickable-list-row-stretched-link"
 description: "一覧の行はタイトル文字だけリンクだと「押せない」摩擦が出る。行全体を1本のリンクで包む素朴な解の欠点、擬似要素で当たり判定だけ広げるstretched-link、行内の副リンク（タグ）の共存とデッドゾーンをfit-contentで直す方法まで実コードで示す。"
 published_at: "2026-07-14T12:09:15+0900"
 updated_at: "2026-07-14T12:09:15+0900"
-tags: ["Web開発", "設計パターン", "UI改善", "アクセシビリティ"]
+tags:
+  - "Web開発"
+  - "設計パターン"
+  - "UI改善"
+  - "アクセシビリティ"
 category: "dev-notes"
 related_tool_slugs: []
 draft: false

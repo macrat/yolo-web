@@ -14,47 +14,67 @@ beforeAll(async () => {
 }, 60000);
 
 describe("parseFrontmatter", () => {
-  test("parses quoted string values", async () => {
+  test("parses scalars with their YAML types", async () => {
     const raw = `---
 title: "Hello World"
 slug: "hello-world"
+draft: false
+series: null
+series_order: 3
+trust_level: ~
 ---
 
 Content here.`;
 
-    const result = parseFrontmatter<{ title: string; slug: string }>(raw);
+    const result = parseFrontmatter<{
+      title: string;
+      slug: string;
+      draft: boolean;
+      series: null;
+      series_order: number;
+      trust_level: null;
+    }>(raw);
     expect(result.data.title).toBe("Hello World");
     expect(result.data.slug).toBe("hello-world");
+    expect(result.data.draft).toBe(false);
+    expect(result.data.series).toBeNull();
+    expect(result.data.series_order).toBe(3);
+    expect(result.data.trust_level).toBeNull();
     expect(result.content.trim()).toBe("Content here.");
   });
 
-  test("parses boolean values", async () => {
+  test("parses block, inline and empty arrays alike", async () => {
     const raw = `---
-draft: false
-public: true
+tags:
+  - "tag1"
+  - "tag2"
+related_tool_slugs: ["char-count", "regex-tester"]
+authors: []
 ---
 
 Body.`;
 
-    const result = parseFrontmatter<{ draft: boolean; public: boolean }>(raw);
-    expect(result.data.draft).toBe(false);
-    expect(result.data.public).toBe(true);
+    const result = parseFrontmatter<{
+      tags: string[];
+      related_tool_slugs: string[];
+      authors: string[];
+    }>(raw);
+    expect(result.data.tags).toEqual(["tag1", "tag2"]);
+    expect(result.data.related_tool_slugs).toEqual([
+      "char-count",
+      "regex-tester",
+    ]);
+    expect(result.data.authors).toEqual([]);
   });
 
-  test("parses null values", async () => {
+  test("keeps every element of an array wrapped across lines", async () => {
     const raw = `---
-reply_to: null
----
-
-Body.`;
-
-    const result = parseFrontmatter<{ reply_to: null }>(raw);
-    expect(result.data.reply_to).toBeNull();
-  });
-
-  test("parses inline arrays", async () => {
-    const raw = `---
-tags: ["tag1", "tag2", "tag3"]
+tags:
+  [
+    "tag1",
+    "tag2",
+    "tag3"
+  ]
 ---
 
 Body.`;
@@ -63,31 +83,7 @@ Body.`;
     expect(result.data.tags).toEqual(["tag1", "tag2", "tag3"]);
   });
 
-  test("parses block arrays", async () => {
-    const raw = `---
-tags:
-  - tag1
-  - tag2
----
-
-Body.`;
-
-    const result = parseFrontmatter<{ tags: string[] }>(raw);
-    expect(result.data.tags).toEqual(["tag1", "tag2"]);
-  });
-
-  test("parses empty inline arrays", async () => {
-    const raw = `---
-tags: []
----
-
-Body.`;
-
-    const result = parseFrontmatter<{ tags: string[] }>(raw);
-    expect(result.data.tags).toEqual([]);
-  });
-
-  test("handles escaped quotes in strings", async () => {
+  test("unescapes quotes inside double-quoted strings", async () => {
     const raw = `---
 subject: "Hello \\"World\\""
 ---
@@ -98,11 +94,50 @@ Body.`;
     expect(result.data.subject).toBe('Hello "World"');
   });
 
-  test("returns empty data when no frontmatter", async () => {
+  test("reads an unquoted timestamp as a Date, a quoted one as a string", async () => {
+    const raw = `---
+published_at: "2026-07-16T12:00:00+0900"
+updated_at: 2026-07-16
+---
+
+Body.`;
+
+    const result = parseFrontmatter<{
+      published_at: unknown;
+      updated_at: unknown;
+    }>(raw);
+    expect(result.data.published_at).toBe("2026-07-16T12:00:00+0900");
+    expect(result.data.updated_at).toBeInstanceOf(Date);
+  });
+
+  test("throws on invalid YAML instead of returning partial data", async () => {
+    const raw = `---
+title: "unterminated
+---
+
+Body.`;
+
+    expect(() => parseFrontmatter<Record<string, unknown>>(raw)).toThrow();
+  });
+
+  test("returns empty data when there is no frontmatter", async () => {
     const raw = "Just some content without frontmatter.";
     const result = parseFrontmatter<Record<string, unknown>>(raw);
     expect(result.data).toEqual({});
     expect(result.content).toBe(raw);
+  });
+
+  test("returns empty data when the frontmatter block is not a mapping", async () => {
+    const raw = `---
+- "tag1"
+- "tag2"
+---
+
+Body.`;
+
+    const result = parseFrontmatter<Record<string, unknown>>(raw);
+    expect(result.data).toEqual({});
+    expect(result.content.trim()).toBe("Body.");
   });
 });
 

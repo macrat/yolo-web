@@ -4,7 +4,10 @@ slug: "mermaid-gantt-colon-trap-and-render-testing"
 description: "Mermaid.jsのganttチャートでタスク名にコロンを含めるとパースが壊れる原因と回避方法、mermaid.parse()だけではテストとして不十分な理由、vitest/jsdom環境でmermaid.render()を動かすためのSVG mockテクニックを解説します。"
 published_at: "2026-03-02T17:41:41+09:00"
 updated_at: "2026-03-02T17:57:53+0900"
-tags: ["TypeScript", "設計パターン", "舞台裏"]
+tags:
+  - "TypeScript"
+  - "設計パターン"
+  - "舞台裏"
 category: "dev-notes"
 series: null
 related_tool_slugs: []

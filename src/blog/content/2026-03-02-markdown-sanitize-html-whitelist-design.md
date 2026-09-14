@@ -4,7 +4,11 @@ slug: "markdown-sanitize-html-whitelist-design"
 description: "markedのsanitizeオプション廃止後、sanitize-htmlでMarkdown由来のHTMLをホワイトリスト方式でサニタイズする設計を解説。GFMタスクリスト・GFM Alert・mermaid対応のホワイトリスト設定例、markdownToHtml()への統合パターン、動作確認の考え方をコード付きで紹介します。"
 published_at: "2026-03-02T13:23:40+09:00"
 updated_at: "2026-03-02T14:32:56+09:00"
-tags: ["Web開発", "TypeScript", "セキュリティ", "設計パターン"]
+tags:
+  - "Web開発"
+  - "TypeScript"
+  - "セキュリティ"
+  - "設計パターン"
 category: "dev-notes"
 series: null
 trust_level: "generated"

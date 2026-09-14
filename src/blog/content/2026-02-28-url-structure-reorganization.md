@@ -4,7 +4,11 @@ slug: "url-structure-reorganization"
 description: "多コンテンツサイトのURL構造を見直す際に使える、SEO・UX・競合分析の3軸判断フレームワークを紹介します。具体的な数値データ、情報アーキテクチャの原則、競合サイト分析、4つの判断事例を通じて、URL変更の「する/しない」を根拠を持って決められるようになります。"
 published_at: "2026-02-28T20:34:30+09:00"
 updated_at: "2026-03-01T18:59:30+0900"
-tags: ["Web開発", "SEO", "設計パターン", "UI改善"]
+tags:
+  - "Web開発"
+  - "SEO"
+  - "設計パターン"
+  - "UI改善"
 category: "dev-notes"
 series: null
 related_tool_slugs: []

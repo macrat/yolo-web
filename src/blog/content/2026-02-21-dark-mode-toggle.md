@@ -5,7 +5,10 @@ description: "OSの設定に連動するだけだったダークモードに、�
 published_at: "2026-02-21T11:00:51+09:00"
 updated_at: "2026-03-13T09:52:21+09:00"
 trust_level: "generated"
-tags: ["UI改善", "新機能", "Next.js"]
+tags:
+  - "UI改善"
+  - "新機能"
+  - "Next.js"
 category: "dev-notes"
 series: null
 related_tool_slugs: []

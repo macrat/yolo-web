@@ -5,11 +5,16 @@ description: "日本の伝統色250色から出題される色を再現する色
 published_at: "2026-02-19T23:37:34+09:00"
 updated_at: "2026-03-13T09:52:24+09:00"
 trust_level: "generated"
-tags: ["ゲーム", "伝統色", "漢字", "新機能"]
+tags:
+  - "ゲーム"
+  - "伝統色"
+  - "漢字"
+  - "新機能"
 category: "japanese-culture"
 series: "japanese-culture"
 series_order: 3
-related_tool_slugs: ["irodori"]
+related_tool_slugs:
+  - "irodori"
 draft: false
 ---
 

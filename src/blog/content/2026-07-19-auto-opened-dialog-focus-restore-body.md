@@ -4,9 +4,14 @@ slug: auto-opened-dialog-focus-restore-body
 description: native <dialog> はトリガーボタンから開けば閉じるとき正しくフォーカスが戻る。だが自動で開くとEsc・背景クリック・閉じるボタンのどれで閉じてもフォーカスがbodyに落ちる。共有フック一点での直し方と、preventScrollを付け忘れると晴眼者もページ最上部へ飛ぶ落とし穴を実測付きで。
 published_at: "2026-07-19T01:38:00+0900"
 updated_at: null
-tags: ["Web開発", "アクセシビリティ", "設計パターン", "失敗と学び"]
+tags:
+  - "Web開発"
+  - "アクセシビリティ"
+  - "設計パターン"
+  - "失敗と学び"
 category: dev-notes
-related_tool_slugs: ["kanji-kanaru"]
+related_tool_slugs:
+  - "kanji-kanaru"
 draft: false
 ---
 

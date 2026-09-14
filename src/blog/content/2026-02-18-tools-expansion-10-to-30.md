@@ -4,7 +4,12 @@ slug: "tools-expansion-10-to-30"
 description: "Webツールを10個から30個に拡充した経緯と、その後の結果を紹介。プログラマティックSEO戦略に基づくツール選定、6バッチにわたる段階的実装、戦略転換の全記録。そして量的拡大戦略から得た実践的な教訓も合わせて解説します。"
 published_at: "2026-02-18T18:03:26+09:00"
 updated_at: "2026-03-15T20:08:52+09:00"
-tags: ["オンラインツール", "SEO", "Web開発", "日本語", "失敗と学び"]
+tags:
+  - "オンラインツール"
+  - "SEO"
+  - "Web開発"
+  - "日本語"
+  - "失敗と学び"
 category: "site-updates"
 series: null
 related_tool_slugs:

@@ -4,7 +4,11 @@ slug: "ga-period-totals-hide-when"
 description: "GAの期間集計で「削除済みURLに4PV、来訪者が404に落ちている」と判断したが、掘ると全PVは削除前日の正常閲覧だった。期間の合計値が因果を錯覚させる罠と、その防ぎ方を実例で示す。"
 published_at: "2026-06-12T19:48:19+0900"
 updated_at: "2026-06-12T19:48:19+0900"
-tags: ["失敗と学び", "AIエージェント", "サイト運営", "SEO"]
+tags:
+  - "失敗と学び"
+  - "AIエージェント"
+  - "サイト運営"
+  - "SEO"
 category: "ai-workflow"
 related_tool_slugs: []
 draft: false

@@ -4,9 +4,15 @@ slug: "redos-defense-web-worker-terminate"
 description: "ブラウザだけで動く正規表現テスターに `(a+)+(b+)+c` を渡すと、たった50字でメインスレッドが215秒固まった。Web Worker + worker.terminate() + timeout 100msで、危険なパターンでもタブを生かしたまま中断する設計を実測値付きでまとめた。"
 published_at: "2026-05-29T17:06:09+0900"
 updated_at: "2026-05-29T17:30:00+0900"
-tags: ["Web開発", "正規表現", "パフォーマンス", "セキュリティ", "失敗と学び"]
+tags:
+  - "Web開発"
+  - "正規表現"
+  - "パフォーマンス"
+  - "セキュリティ"
+  - "失敗と学び"
 category: "dev-notes"
-related_tool_slugs: ["regex-tester"]
+related_tool_slugs:
+  - "regex-tester"
 draft: false
 ---
 

@@ -4,10 +4,14 @@ slug: "markdown-cheatsheet"
 description: "Markdownの記法を素早く引ける早見表。見出し・リスト・リンク・コード・表・引用などの基本に加え、表や取り消し線などのGFM拡張も、CommonMark標準との別を明示してまとめた。"
 published_at: "2026-06-15T15:01:06+09:00"
 updated_at: "2026-06-15T15:01:06+09:00"
-tags: ["早見表", "テキスト処理", "Web開発"]
+tags:
+  - "早見表"
+  - "テキスト処理"
+  - "Web開発"
 category: "tool-guides"
 series: null
-related_tool_slugs: ["markdown-preview"]
+related_tool_slugs:
+  - "markdown-preview"
 draft: false
 ---
 

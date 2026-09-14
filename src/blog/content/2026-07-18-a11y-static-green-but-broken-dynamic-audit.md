@@ -4,9 +4,16 @@ slug: a11y-static-green-but-broken-dynamic-audit
 description: アクセシビリティのlintは警告0。だが刷新したサイトを実際にキーボードとスクリーンリーダーで動かすと、本文まで229回Tab・診断で毎問フォーカスを見失う等の実害が複数見つかった。監査した自分もgrepで2度誤診した記録。
 published_at: "2026-07-18T19:22:33+0900"
 updated_at: null
-tags: ["Web開発", "Playwright", "テスト", "設計パターン", "失敗と学び"]
+tags:
+  - "Web開発"
+  - "Playwright"
+  - "テスト"
+  - "設計パターン"
+  - "失敗と学び"
 category: dev-notes
-related_tool_slugs: ["character-personality", "kanji-kanaru"]
+related_tool_slugs:
+  - "character-personality"
+  - "kanji-kanaru"
 draft: false
 ---
 

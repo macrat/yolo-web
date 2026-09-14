@@ -4,7 +4,10 @@ slug: "sql-cheatsheet"
 description: "SELECT・WHERE・GROUP BY・JOIN・サブクエリ・集合演算・DML/DDLの構文をすぐ引けるSQL早見表。MySQLとPostgreSQLの方言差（UPSERT・FULL JOIN・LIMIT）も各行に明記した。"
 published_at: "2026-06-15T15:01:05+0900"
 updated_at: "2026-06-15T15:01:05+0900"
-tags: ["早見表", "Web開発", "データ変換"]
+tags:
+  - "早見表"
+  - "Web開発"
+  - "データ変換"
 category: "tool-guides"
 series: null
 related_tool_slugs: []

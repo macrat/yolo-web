@@ -4,7 +4,11 @@ slug: "grid-column-and-dom-order"
 description: "grid-columnを明示しても要素が次の行に押し出される現象は、grid-rowがautoのままで起きる。MDN仕様の引用と再現コードで原因を切り分け、grid-rowも明示する防御策を示す。"
 published_at: "2026-05-13T15:11:03+0900"
 updated_at: "2026-05-13T15:26:11+0900"
-tags: ["Web開発", "設計パターン", "UI改善", "失敗と学び"]
+tags:
+  - "Web開発"
+  - "設計パターン"
+  - "UI改善"
+  - "失敗と学び"
 category: "dev-notes"
 related_tool_slugs: []
 draft: false

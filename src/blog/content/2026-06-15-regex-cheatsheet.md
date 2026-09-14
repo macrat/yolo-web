@@ -4,10 +4,14 @@ slug: "regex-cheatsheet"
 description: "正規表現のメタ文字・量指定子・文字クラス・アンカー・先読み後読み・フラグを表で一覧。メールやURLなどよく使うパターンも収録。JavaScript基準で引ける早見表。"
 published_at: "2026-06-15T15:00:08+09:00"
 updated_at: "2026-06-15T15:00:08+09:00"
-tags: ["早見表", "正規表現", "テキスト処理"]
+tags:
+  - "早見表"
+  - "正規表現"
+  - "テキスト処理"
 category: "tool-guides"
 series: null
-related_tool_slugs: ["regex-tester"]
+related_tool_slugs:
+  - "regex-tester"
 draft: false
 ---
 

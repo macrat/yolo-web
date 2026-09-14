@@ -4,10 +4,14 @@ slug: "cron-cheatsheet"
 description: "Cron式の5フィールドの値の範囲、特殊文字（* , - / ? L W #）、@dailyなどのショートカット、よく使うパターンと実用例を表で一覧。Linux・GitHub Actions・AWS・Quartzの違いもまとめた早見表。"
 published_at: "2026-06-15T15:00:29+09:00"
 updated_at: "2026-06-15T15:25:09+09:00"
-tags: ["早見表", "スケジュール", "Web開発"]
+tags:
+  - "早見表"
+  - "スケジュール"
+  - "Web開発"
 category: "tool-guides"
 series: null
-related_tool_slugs: ["cron-parser"]
+related_tool_slugs:
+  - "cron-parser"
 draft: false
 ---
 

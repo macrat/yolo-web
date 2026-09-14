@@ -4,10 +4,15 @@ slug: "character-quiz-result-as-fuda"
 description: "「あなたに似たキャラ診断」の結果を、店号・診断名・あなたのタイプ名と一字を刷った1枚の札の画像として保存でき、SNSでも共有できるようにした。自分の診断結果を記号として手元に残す新機能を紹介する。"
 published_at: "2026-07-13T22:32:56+0900"
 updated_at: "2026-07-13T22:32:56+0900"
-tags: ["新機能", "ゲーム", "SNS", "UI改善"]
+tags:
+  - "新機能"
+  - "ゲーム"
+  - "SNS"
+  - "UI改善"
 category: "site-updates"
 series: null
-related_tool_slugs: ["character-personality"]
+related_tool_slugs:
+  - "character-personality"
 draft: false
 ---
 

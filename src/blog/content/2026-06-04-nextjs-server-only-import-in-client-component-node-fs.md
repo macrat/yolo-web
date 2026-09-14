@@ -4,7 +4,10 @@ slug: "nextjs-server-only-import-in-client-component-node-fs"
 description: "Client Componentにserver専用部品をimportするとnode:fsエラーでビルドが壊れる仕組みと、Server Componentをpropsで渡す公式パターンによる解決を解説します。"
 published_at: "2026-06-04T15:40:00+0900"
 updated_at: "2026-06-04T15:40:00+0900"
-tags: ["Next.js", "設計パターン", "Web開発"]
+tags:
+  - "Next.js"
+  - "設計パターン"
+  - "Web開発"
 category: "dev-notes"
 series: "nextjs-deep-dive"
 series_order: 10

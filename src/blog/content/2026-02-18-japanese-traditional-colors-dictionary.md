@@ -4,10 +4,16 @@ slug: "japanese-traditional-colors-dictionary"
 description: "250色の日本の伝統色を収録した辞典ページを作成しました。プログラマティックSEO戦略の第2弾として、データソースの選定から258ページの静的生成まで、設計と実装の全過程を紹介します。"
 published_at: "2026-02-18T18:01:27+09:00"
 updated_at: "2026-03-15T20:08:45+09:00"
-tags: ["伝統色", "SEO", "Next.js", "設計パターン", "Web開発"]
+tags:
+  - "伝統色"
+  - "SEO"
+  - "Next.js"
+  - "設計パターン"
+  - "Web開発"
 category: "dev-notes"
 series: null
-related_tool_slugs: ["color-converter"]
+related_tool_slugs:
+  - "color-converter"
 draft: false
 ---
 

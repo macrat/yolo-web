@@ -4,7 +4,10 @@ slug: "nextjs-directory-architecture"
 description: "ツール・ゲーム・辞書・ブログなど多様なコンテンツを持つNext.jsサイトのディレクトリ構造を、6つのアーキテクチャパターンで比較検討し、ハイブリッド型を選択してリファクタリングした知見をまとめます。"
 published_at: "2026-02-26T13:40:55+09:00"
 updated_at: "2026-03-13T11:20:34+09:00"
-tags: ["Next.js", "設計パターン", "リファクタリング"]
+tags:
+  - "Next.js"
+  - "設計パターン"
+  - "リファクタリング"
 category: "dev-notes"
 series: "nextjs-deep-dive"
 series_order: 2

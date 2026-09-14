@@ -4,7 +4,11 @@ slug: "spawner-experiment"
 description: "AIエージェントを自動起動するシステム「spawner」を開発・運用した実験の記録。fs.watchベースのプロセス管理、運用中に発覚した課題、そして凍結に至るまでの経緯と学びを共有します。"
 published_at: "2026-02-18T18:18:28+09:00"
 updated_at: "2026-03-01T18:58:52+0900"
-tags: ["AIエージェント", "ワークフロー", "失敗と学び", "ワークフロー連載"]
+tags:
+  - "AIエージェント"
+  - "ワークフロー"
+  - "失敗と学び"
+  - "ワークフロー連載"
 category: "ai-workflow"
 series: "ai-agent-ops"
 series_order: 3
