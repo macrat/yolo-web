@@ -18,7 +18,7 @@
 | B-692 | JS無効だとサイト全体がライトテーマ固定になる | P3 | - | next-themesがJS依存のためOSがdarkでも紙色のまま。一覧が静的描画になりJS無効でも読める面が増えたので影響が実在するようになった。`prefers-color-scheme`のフォールバックを入れるか固定と決めるかの判断が要る |
 | B-693 | タグUI暫定措置の`TODO(cycle-184/B-389)`が`src/`に12箇所残る | P4 | - | `linkableTags`関連。B-389(タグUIの処遇)の決着と合わせて掃除する。内訳はcycle-313/index.md キャリーオーバー |
 | B-688 | Node 22の環境で`npm ci`が失敗しロックファイルが汚れる | P4 | - | CIはNode 24でロックを生成しengines未設定。npm 10ではoptional peerを解決できず拒否される。詳細cycle-313/index.md 補足事項 |
-| B-687 | クイズ面に関連記事欄が無く8記事のrelated_tool_slugsが誰にも読まれない | P3 | - | RelatedBlogPostsを呼ぶのは道具とゲームのみ(実測)。8記事の導線が構造的に死んでいる。詳細cycle-313/measurements.md §5 |
+| B-687 | クイズ面に「関連ブログ記事」欄が無く8記事のrelated_tool_slugsが誰にも読まれない | P3 | - | RelatedBlogPostsを呼ぶのは道具とゲームのみ(実測)。8記事の導線が構造的に死んでいる。詳細cycle-313/measurements.md §5 |
 | B-629 | E0出荷後のSERP実表示の確認 | P2 | - | 着手条件(2026-08-07の出荷+7日=2026-08-14)を満たしたためQueuedへ。SC/実SERPで禁止色を除いたアイコンの表示を確認。詳細 docs/cycles/cycle-302/ |
 | B-651 | サイトコンセプト・デザインシステムの整理 | P0 | - | site-concept.md/DESIGN.md等の全ツギハギを一掃し単一状態にする。brand-image.mdを統合し削除。コンセプトを決め直しデザインシステムを再導出して整合させる。詳細cycle-311/index.md キャリーオーバー |
 | B-653 | SC「生成AIパフォーマンスレポート」の撤退基準への含意調査 | P3 | - | SCの生成AIパフォーマンスレポートの仕様を一次資料で確認し、削除判断の数値基準(site-concept判断基準2)の計器として何が変わるか判定する。詳細cycle-311/index.md 計画にあたって参考にした情報 |

@@ -11,7 +11,18 @@
 
 **PM の側の誤り**: 並行作業中は `git commit <paths>` でパスを明示するか、`git commit --only` を使う必要がある。
 `git add <path>` で範囲を絞っても、`git commit` がインデックス全体を拾うので意味が無い。
-結果として、31記事の変更は PM のドキュメントコミット `8a80e0f` に入っている（実測: 31 files changed, 92 insertions, 493 deletions）。
+
+結果として、PM のドキュメントコミット `8a80e0f` は3系統の変更を同居させている
+（実測: `git show --stat -M 8a80e0f` は **33 files changed, 109 insertions(+), 496 deletions(-)**）。
+
+| 同居した変更                                                                       | 内訳                                   |
+| ---------------------------------------------------------------------------------- | -------------------------------------- |
+| `docs/cycles/cycle-313/index.md`（PM が意図した変更）                              | 1 file, 17 insertions, 3 deletions     |
+| `src/blog/content/` の記事（T1・T2 担当がステージ済みだったもの）                  | 31 files, 92 insertions, 493 deletions |
+| `BlogFilterableList.module.css` → `BlogListPanel.module.css` のリネーム（T7 担当） | R100（内容は同一）                     |
+
+ファイルのリネームまで巻き込んでいる点が重い。リネームが担当のコミットから剥がれると、
+**後から `git log --follow` で履歴を読む側が損をする**。
 
 ## 何が起きたか
 
