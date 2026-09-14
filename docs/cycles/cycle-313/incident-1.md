@@ -57,8 +57,8 @@ PM は復旧の直後、「T5 の書き直しが失われた」と判断して�
 
 ## なぜ止められなかったか
 
-`.claude/hooks/block-destructive-git.sh` は `git reset --hard` だけを弾く（60-62行目）。
-`--hard` の付かない `reset` は素通りする。
+`.claude/hooks/block-destructive-git.sh` の `check_destructive` は、`reset` については
+`git reset --hard` だけを弾く（Pattern 1・60〜64行目）。`--hard` の付かない `reset` は素通りする。
 
 この穴は既に `docs/backlog.md` の B-637 で起票されている（複合形の破壊コマンドが素通りする件）。
 本件はその具体例が実際に起きたものである。
