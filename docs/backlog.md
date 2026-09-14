@@ -9,6 +9,9 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-703 | ブログ記事がbundle budgetテストの旧実装(`describe.skipIf`)を説明している | P4 | - | cycle-313で`requireBuildOutput()`へ変えたため記事190-195行と食い違う。記事は記録だが読者には現状と異なる手法が推奨として読める。注記の要否を判断する |
+| B-704 | `test:build`に`pre`フックが無く単体実行だと生成物が古くなりうる | P4 | - | `pretest`は`generate:toolbox-registry`/`generate:release-id`を走らせるが`pretest:build`が無い。通常は先行する`prebuild`が同じ生成をするため現状問題は出ていない |
+| B-705 | `.claude/rules/testing.md`の`paths`が実行系ファイルを拾わない | P4 | - | `src/**/*`と`vitest.config.mts`のみ。`package.json`のscriptsや`deploy.yml`を編集するときにルールが読み込まれない。ルールの内容はそれらの整合も含む |
 | B-701 | 記事行のタグリンクだけ`q=`を引き継がない | P4 | - | `BlogListPanel`の人気タグは`buildTagHref`で`?q=`を付けるが、各行の`TagList`は`/blog/tag/<tag>`固定。同じ画面の同じ見た目のタグで挙動が割れている。B-389(タグUIの処遇)の決着と合わせる |
 | B-702 | `BlogList.tsx`のコメントに経緯が残っている | P4 | - | 「旧BlogGrid+BlogCardを廃し罫区切りへ変換した」等。何をしたかではなく今どうなっているかで書き直す対象。B-697(bundle-budget)と同型 |
 | B-699 | 3記事のrelated_tool_slugsが実在しない`quiz`を指している | P3 | - | `/play/quiz`は404(実測)。cycle-102で`/quiz/*`を`/play/*`へ301した際の取り残し。値を消せば実在検査(registryとの包含チェック1本)をそのまま入れられる。詳細cycle-313 |
