@@ -235,6 +235,7 @@ T4 でパーサを `js-yaml` にすればインライン形でも実害は無く
 | `/tools/unix-timestamp` の関連記事             | 0                  | 3                  |
 | `/tools/hash-generator` の関連記事             | 0                  | 2                  |
 | `/tools/qr-code` の関連記事                    | 0                  | 2                  |
+| RSS フィードの `<category>` 総数               | 65                 | 70                 |
 
 一覧系の生成 HTML **57件を全数走査し、記事リンクが0件のページは0件**。
 
