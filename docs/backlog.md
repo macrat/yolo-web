@@ -9,6 +9,7 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-690 | frontmatterのseries_orderとtrust_levelを読むコードが存在しない | P3 | - | のべ50記事(series_order 27・trust_level 23)が書いても誰にも読まれない。連載の並びはpublished_at昇順で決まる(実測)。削除か消費かを判断する。詳細cycle-313/index.md |
 | B-689 | backlogの1行が長いとリポジトリ全体のコミットが止まる | P3 | - | `backlog-line-length-check.sh`は変更の有無に関わらず全行を検査するため、自分が触っていない行の違反で他者のコミットがブロックされる。cycle-313で実際に発生 |
 | B-688 | Node 22の環境で`npm ci`が失敗しロックファイルが汚れる | P4 | - | CIはNode 24でロックを生成しengines未設定。npm 10ではoptional peerを解決できず拒否される。詳細cycle-313/index.md 補足事項 |
 | B-687 | クイズ面に関連記事欄が無く8記事のrelated_tool_slugsが誰にも読まれない | P3 | - | RelatedBlogPostsを呼ぶのは道具とゲームのみ(実測)。quiz/character-personality等を指す8記事の導線が構造的に死んでいる。詳細cycle-313/index.md |
