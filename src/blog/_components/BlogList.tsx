@@ -26,10 +26,9 @@ interface BlogListProps {
    */
   categoryLabels: Record<string, string>;
   /**
-   * タグページが存在するタグの集合（getTagsWithMinPosts(3) の結果）。
-   * TagList に流してタグ表示をフィルタする。
+   * タグページを持つタグの集合（getTagsWithMinPosts(3) の結果）。
+   * TagList に流し、どのタグをタグページへのリンクにするかを決める。
    * node:fs 依存のため Server Component（BlogListView）で計算して渡す。
-   * // TODO(cycle-184/B-389): X1 採用時に削除（タグ UI 完全廃止）
    */
   linkableTags?: ReadonlySet<string>;
 }
@@ -74,13 +73,12 @@ export default function BlogList({
               </time>
             </div>
 
-            {/* TODO(cycle-184/B-389): X1 採用時に削除（タグ UI 完全廃止）*/}
             {/*
              * タグは行全体を覆う stretched-link（.titleLink::after）より前面に置き
              * （tagRow: z-index）、行遷移に飲まれず独立クリックできるようにする。
-             * ラッパ div でなく className 渡しなのは、TagList が可視タグ 0 件で null を
-             * 返すため——常時 div で包むと 0 件行に空要素が残り .row の gap を余計に
-             * 消費して行間が不揃いになる（設計 §3-2 MUST-2・cycle-281）。
+             * ラッパ div でなく className 渡しなのは、TagList がタグを持たない記事で
+             * null を返すため——常時 div で包むとタグ無しの行に空要素が残り、.row の
+             * gap を余計に消費して行間が不揃いになる。
              */}
             <TagList
               tags={post.tags}

@@ -55,10 +55,10 @@ export default async function BlogPostPage({ params }: Props) {
 
   const relatedPosts = getRelatedPosts(post, allPosts);
 
-  // TODO(cycle-184/B-389): X1 採用時に削除（タグ UI 完全廃止）
-  // MIN_POSTS_FOR_TAG_PAGE = 3 未満のタグはタグページが存在しないため UI から非表示にする。
+  // 掲載記事が MIN_POSTS_FOR_TAG_PAGE 未満のタグにはタグページが無いため、そのタグは
+  // リンクにしない（TagList がリンクでないラベルとして描く）。
   // getTagsWithMinPosts は node:fs 依存のため Server Component のここで計算し props で渡す。
-  const MIN_POSTS_FOR_TAG_PAGE = 3; // TODO(cycle-184/B-389): X1 採用時に一括削除
+  const MIN_POSTS_FOR_TAG_PAGE = 3;
   const linkableTags = new Set(getTagsWithMinPosts(MIN_POSTS_FOR_TAG_PAGE));
 
   const jsonLd = generateBlogPostJsonLd({
@@ -97,7 +97,6 @@ export default async function BlogPostPage({ params }: Props) {
           )}
           <span>{post.readingTime}分で読める</span>
         </div>
-        {/* TODO(cycle-184/B-389): X1 採用時に削除 */}
         <TagList tags={post.tags} linkableTags={linkableTags} />
       </header>
 

@@ -200,8 +200,8 @@ describe("BlogList 基本表示", () => {
   });
 });
 
-describe("BlogList linkableTags フィルタ", () => {
-  test("linkableTags 指定時、含まれないタグは DOM に出ない（要素ごと描画されない）", () => {
+describe("BlogList linkableTags", () => {
+  test("linkableTags 指定時、含まれるタグはリンク・含まれないタグはリンクでない要素として並ぶ", () => {
     render(
       <BlogList
         posts={[makePost({ tags: ["TypeScript", "YAML"] })]}
@@ -210,8 +210,12 @@ describe("BlogList linkableTags フィルタ", () => {
         linkableTags={new Set(["TypeScript"])}
       />,
     );
-    expect(screen.getByText("TypeScript")).toBeInTheDocument();
-    expect(screen.queryByText("YAML")).not.toBeInTheDocument();
+    const tagLink = screen.getByRole("link", { name: "TypeScript" });
+    expect(tagLink.getAttribute("href")).toBe("/blog/tag/TypeScript");
+    // タグページを持たない YAML も読者に見せる（ただしリンクにはしない）
+    const yaml = screen.getByText("YAML");
+    expect(yaml).toBeInTheDocument();
+    expect(yaml.closest("a")).toBeNull();
   });
 });
 

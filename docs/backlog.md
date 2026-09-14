@@ -15,7 +15,7 @@
 | B-703 | ブログ記事がbundle budgetテストの旧実装(`describe.skipIf`)を説明している | P4 | - | cycle-313で`requireBuildOutput()`へ変えたため記事190-195行と食い違う。記事は記録だが読者には現状と異なる手法が推奨として読める。注記の要否を判断する |
 | B-704 | `test:build`に`pre`フックが無く単体実行だと生成物が古くなりうる | P4 | - | `pretest`は`generate:toolbox-registry`/`generate:release-id`を走らせるが`pretest:build`が無い。通常は先行する`prebuild`が同じ生成をするため現状問題は出ていない |
 | B-705 | `.claude/rules/testing.md`の`paths`が実行系ファイルを拾わない | P4 | - | `src/**/*`と`vitest.config.mts`のみ。`package.json`のscriptsや`deploy.yml`を編集するときにルールが読み込まれない。ルールの内容はそれらの整合も含む |
-| B-701 | 記事行のタグリンクだけ`q=`を引き継がない | P4 | - | `BlogListPanel`の人気タグは`buildTagHref`で`?q=`を付けるが、各行の`TagList`は`/blog/tag/<tag>`固定。同じ画面の同じ見た目のタグで挙動が割れている。B-389(タグUIの処遇)の決着と合わせる |
+| B-701 | 記事行のタグリンクだけ`q=`を引き継がない | P4 | - | `BlogListPanel`の人気タグは`buildTagHref`で`?q=`を付けるが、各行の`TagList`は`/blog/tag/<tag>`固定。同じ画面の同じ見た目のタグで挙動が割れている。タグUIは継続と決まっており(B-389はcycle-184で中止)、単独で判断できる |
 | B-702 | `BlogList.tsx`のコメントに経緯が残っている | P4 | - | 「旧BlogGrid+BlogCardを廃し罫区切りへ変換した」等。何をしたかではなく今どうなっているかで書き直す対象。B-697(bundle-budget)と同型 |
 | B-699 | 3記事のrelated_tool_slugsが実在しない`quiz`を指している | P3 | - | `/play/quiz`は404(実測)。cycle-102で`/quiz/*`を`/play/*`へ301した際の取り残し。値を消せば実在検査(registryとの包含チェック1本)をそのまま入れられる。詳細cycle-313 |
 | B-700 | frontmatter検証がコミット時にキー集合・書式・型を見ていない | P3 | - | `validate-blog-frontmatter.ts`が見るのは日時2キーのみ。未知キーや壊れた書式はコミットを通過し`npm run test`で初めて落ちる。pre-commitで`parseFrontmatter`を呼ぶ以上、同じ場所で検査できる |
@@ -28,7 +28,6 @@
 | B-690 | frontmatterのseries_orderとtrust_levelを読むコードが存在しない | P3 | - | のべ50記事(series_order 27・trust_level 23)が書いても誰にも読まれない。連載の並びはpublished_at昇順で決まる(実測)。削除か消費かを判断する。詳細cycle-313/index.md T1・キャリーオーバー |
 | B-689 | 他者が編集中のファイルの状態で自分のコミットが止まる | P3 | - | `backlog-line-length-check.sh`と`pre-commit-check.sh`のformat検査が、変更の有無に関わらず全体を検査する。並行作業中は他者の作業途中のファイルで自分のコミットが拒否される。cycle-313で両方発生 |
 | B-692 | JS無効だとサイト全体がライトテーマ固定になる | P3 | - | next-themesがJS依存のためOSがdarkでも紙色のまま。一覧が静的描画になりJS無効でも読める面が増えたので影響が実在するようになった。`prefers-color-scheme`のフォールバックを入れるか固定と決めるかの判断が要る |
-| B-693 | タグUI暫定措置の`TODO(cycle-184/B-389)`が`src/`に12箇所残る | P4 | - | `linkableTags`関連。B-389(タグUIの処遇)の決着と合わせて掃除する。内訳はcycle-313/index.md キャリーオーバー |
 | B-688 | Node 22の環境で`npm ci`が失敗しロックファイルが汚れる | P4 | - | CIはNode 24でロックを生成しengines未設定。npm 10ではoptional peerを解決できず拒否される。詳細cycle-313/index.md 補足事項 |
 | B-687 | クイズ面に「関連ブログ記事」欄が無く7記事のrelated_tool_slugsが誰にも読まれない | P3 | - | RelatedBlogPostsを呼ぶのは道具とゲームのみ(実測)。7記事の導線が構造的に死んでいる。詳細cycle-313/measurements.md §6 |
 | B-629 | E0出荷後のSERP実表示の確認 | P2 | - | 着手条件(2026-08-07の出荷+7日=2026-08-14)を満たしたためQueuedへ。SC/実SERPで禁止色を除いたアイコンの表示を確認。詳細 docs/cycles/cycle-302/ |
@@ -156,6 +155,7 @@
 
 | ID | Title | Cycle | Notes |
 | --- | --- | --- | --- |
+| B-693 | タグUI暫定措置の`TODO(cycle-184/B-389)`が`src/`に12箇所残る | 313 | 12箇所すべて削除。待ち先のX1案(タグUI完全廃止)はcycle-184で中止済みで、残す理由が無かった。周辺コメントは「なぜリンクにしないか」の説明へ書き直し |
 | B-675 | 公開中の記事「ソース走査ゲートの死角」に事実誤りが3件ある | 312 | 【中止】対象の記事`2026-09-12-source-scan-gate-blind-spots.md`はcycle-312で書き取り消しで削除したもので、公開されたことがない。起票の「公開中の記事」が誤り。詳細cycle-312 |
 | B-655 | 廃止済みの「パネル」規則を引く参照の一掃 | 312 | 【中止】新しいコンセプト・デザインシステムに合わせて作り直す対象。確定前に直すのは二度手間。B-651に畳む。詳細cycle-312 |
 | B-658 | docs/character.mdに廃止済みターゲット定義の語が残る | 312 | 【中止】新しいコンセプト・デザインシステムに合わせて作り直す対象。確定前に直すのは二度手間。B-651に畳む。詳細cycle-312 |

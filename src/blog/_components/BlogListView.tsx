@@ -53,10 +53,10 @@ export default function BlogListView({
   const now = Date.now();
   const newSlugs = calculateNewSlugs(allPosts, now);
 
-  // TODO(cycle-184/B-389): X1 採用時に削除（タグ UI 完全廃止）
-  // MIN_POSTS_FOR_TAG_PAGE = 3 未満のタグはタグページが存在しないため UI から非表示にする。
+  // 掲載記事が MIN_POSTS_FOR_TAG_PAGE 未満のタグにはタグページが無いため、そのタグは
+  // リンクにしない（TagList がリンクでないラベルとして描く）。
   // getTagsWithMinPosts は node:fs 依存のため Server Component のここで計算し props で渡す。
-  const MIN_POSTS_FOR_TAG_PAGE = 3; // TODO(cycle-184/B-389): X1 採用時に一括削除
+  const MIN_POSTS_FOR_TAG_PAGE = 3;
   const linkableTags = new Set(getTagsWithMinPosts(MIN_POSTS_FOR_TAG_PAGE));
 
   const headerDescription = activeCategory
@@ -81,7 +81,7 @@ export default function BlogListView({
     categories,
     categoryLabels: CATEGORY_LABELS,
     seriesLabels: SERIES_LABELS,
-    linkableTags, // TODO(cycle-184/B-389): X1 採用時に削除
+    linkableTags,
   };
 
   return (

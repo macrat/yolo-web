@@ -60,7 +60,7 @@ describe("TagList", () => {
   });
 
   test("className を渡すと根 ul に付与される（既存クラスと併存）", () => {
-    // BlogList が stretched-link より前面へタグを出すため z-index クラスを渡す用途（cycle-281）。
+    // BlogList が stretched-link より前面へタグを出すため z-index クラスを渡す用途。
     render(<TagList tags={["Next.js"]} className="custom-class" />);
     const ul = screen.getByRole("list", { name: "タグ" });
     expect(ul).toHaveClass("custom-class");
@@ -97,50 +97,106 @@ describe("TagList.module.css — 新デザイントークン確認（DESIGN.md �
   });
 });
 
-describe("TagList linkableTags フィルタ", () => {
-  test("linkableTags 未指定のときはすべてのタグが表示される", () => {
+describe("TagList linkableTags — リンクになるタグ・ならないタグ", () => {
+  test("linkableTags 未指定のときはすべてのタグがリンクになる", () => {
     render(<TagList tags={["Next.js", "YAML"]} />);
-    expect(screen.getByText("Next.js")).toBeInTheDocument();
-    expect(screen.getByText("YAML")).toBeInTheDocument();
+    const hrefs = screen
+      .getAllByRole("link")
+      .map((link) => link.getAttribute("href"));
+    expect(hrefs).toEqual(["/blog/tag/Next.js", "/blog/tag/YAML"]);
   });
 
-  test("linkableTags 指定時、含まれるタグは表示される", () => {
+  test("linkableTags に含まれるタグはタグページへのリンクになる", () => {
     render(
       <TagList
         tags={["Next.js", "YAML"]}
         linkableTags={new Set(["Next.js"])}
       />,
     );
-    expect(screen.getByText("Next.js")).toBeInTheDocument();
+    const link = screen.getByRole("link");
+    expect(link).toHaveTextContent("Next.js");
+    expect(link.getAttribute("href")).toBe("/blog/tag/Next.js");
   });
 
-  test("linkableTags 指定時、含まれないタグは DOM に出ない（要素ごと描画されない）", () => {
+  test("linkableTags に含まれないタグも表示される（リンクにはしない）", () => {
     render(
       <TagList
         tags={["Next.js", "YAML"]}
         linkableTags={new Set(["Next.js"])}
       />,
     );
-    // YAML は linkableTags に含まれないため DOM に出てはいけない
-    expect(screen.queryByText("YAML")).not.toBeInTheDocument();
+    const yaml = screen.getByText("YAML");
+    expect(yaml).toBeInTheDocument();
+    expect(yaml.tagName).toBe("SPAN");
+    expect(yaml.closest("a")).toBeNull();
+    // リンクはタグページを持つ Next.js の 1 本だけ
+    expect(screen.getAllByRole("link")).toHaveLength(1);
   });
 
-  test("linkableTags が空集合のときはタグリストが全表示されない（null 相当）", () => {
-    const { container } = render(
+  test("記事のタグは並び順のまま全件描画される（リンクの有無で欠けない）", () => {
+    render(
+      <TagList
+        tags={["YAML", "DevOps", "設定ファイル", "Next.js", "運用"]}
+        linkableTags={new Set(["Next.js", "運用"])}
+      />,
+    );
+    const items = screen.getAllByRole("listitem");
+    expect(items.map((item) => item.textContent)).toEqual([
+      "YAML",
+      "DevOps",
+      "設定ファイル",
+      "Next.js",
+      "運用",
+    ]);
+  });
+
+  test("linkableTags が空集合でも全タグが表示され、リンクは 1 本も無い", () => {
+    render(
       <TagList tags={["Next.js", "YAML"]} linkableTags={new Set<string>()} />,
     );
-    // すべてのタグが linkableTags にないため null を返す
-    expect(container.innerHTML).toBe("");
+    expect(screen.getByText("Next.js")).toBeInTheDocument();
+    expect(screen.getByText("YAML")).toBeInTheDocument();
+    expect(screen.queryAllByRole("link")).toHaveLength(0);
   });
 
-  test("linkableTags 指定時、すべてのタグが含まれる場合は全タグが表示される", () => {
+  test("linkableTags にすべて含まれる場合は全タグがリンクになる", () => {
     render(
       <TagList
         tags={["Next.js", "YAML"]}
         linkableTags={new Set(["Next.js", "YAML"])}
       />,
     );
-    expect(screen.getByText("Next.js")).toBeInTheDocument();
-    expect(screen.getByText("YAML")).toBeInTheDocument();
+    expect(screen.getAllByRole("link")).toHaveLength(2);
+  });
+
+  test("リンクとリンクでないタグは異なるクラスで描かれる（罫の線種で区別する）", () => {
+    render(
+      <TagList
+        tags={["Next.js", "YAML"]}
+        linkableTags={new Set(["Next.js"])}
+      />,
+    );
+    const linkClass = screen.getByRole("link").className;
+    const labelClass = screen.getByText("YAML").className;
+    expect(linkClass).not.toBe(labelClass);
+    expect(labelClass).not.toContain("undefined");
+  });
+});
+
+describe("TagList.module.css — リンクでないタグの見た目", () => {
+  test("リンクは実線の罫・リンクでないタグは破線の罫で描かれる", () => {
+    const cssPath = path.resolve(__dirname, "../TagList.module.css");
+    const css = fs.readFileSync(cssPath, "utf-8");
+    expect(css).toMatch(/\.tagLink\s*\{[^}]*border:\s*1px solid var\(--rule\)/);
+    expect(css).toMatch(
+      /\.tagLabel\s*\{[^}]*border:\s*1px dashed var\(--rule\)/,
+    );
+  });
+
+  test("リンクでないタグはホバーで朱に転じる状態を持たない（リンクより前へ出ない）", () => {
+    const cssPath = path.resolve(__dirname, "../TagList.module.css");
+    const css = fs.readFileSync(cssPath, "utf-8");
+    expect(css).toContain(".tagLink:hover");
+    expect(css).not.toContain(".tagLabel:hover");
   });
 });
