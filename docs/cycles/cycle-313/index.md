@@ -58,8 +58,9 @@ completed_at: null
 | 残骸の除去と折り返し配列の正規化（T1・T2）                 | 旧パーサと厳格な YAML の乖離が31記事から0記事になった                               | `732c2f48`                                  |
 | 読み取り経路の一本化と書式の統一（T4・T4b・T8c・T8d・T8f） | 描画も検証も `parseFrontmatter` の1本を通る。frontmatter の書式は全記事で揃っている | `732c2f48` `e3e978f2` `2e274682`            |
 | 書かれた値がパース結果に現れることの回帰テスト（T5）       | 全記事・全キーを検査する9件が通る（`blog-frontmatter-validation.test.ts`）          | `bb4b0cf7` `d04f66bf`                       |
-| ブログ一覧の静的描画（T7・T8b・T8i・T8k）                  | 一覧系59ページを全数走査して、記事リンクが0件のページは0件                          | `54ad8abb` `ee0486b0` `2a22097d` `92495623` |
+| ブログ一覧の静的描画（T7・T8b・T8i・T8k）                  | 一覧系67ページを全数走査して、記事リンクが0件のページは0件                          | `54ad8abb` `ee0486b0` `2a22097d` `92495623` |
 | 一覧の静的描画を守る回帰テスト（T8h・T8l）                 | CI と pre-push で実際に走る。`.next` が無ければ理由を添えて失敗する                 | `e797ba7d` `6da360ca`                       |
+| すべてのタグにタグページを用意（T11・T12）                 | 9記事で隠れていた全タグが読者に届く。`linkableTags` と重複定数ごと撤去              | `6a6eb561` `f9526235`                       |
 | ブログ2本（T10）                                           | パーサの記事と Next.js の記事を追加し、レビューで見つかった事実誤りを反映した       | `87230eeb` `5aa05dda` `0f863d2f` `e71dc216` |
 
 復旧した面の数値は [measurements.md §10](./measurements.md#10-実ビルドでの復旧の確認) にある。
@@ -420,7 +421,7 @@ Next.js 公式が「For a client-hook error this is rarely the right answer」�
 
 ## キャリーオーバー
 
-本サイクルで起票し、次以降へ送るもの20件（すべて `docs/backlog.md` の Queued）。
+本サイクルで起票し、次以降へ送るもの21件（すべて `docs/backlog.md` の Queued）。
 
 | ID    | 内容                                                                                      | 出どころ   |
 | ----- | ----------------------------------------------------------------------------------------- | ---------- |
@@ -430,7 +431,6 @@ Next.js 公式が「For a client-hook error this is rarely the right answer」�
 | B-690 | `series_order` と `trust_level` を読むコードが存在しない（のべ50記事）                    | T1・T4     |
 | B-691 | frontmatter の `series` が「値あり30・null 45・キー無し12」で混在                         | T8c・T8d   |
 | B-692 | JS 無効だとサイト全体がライトテーマ固定になる                                             | T8         |
-| B-693 | タグUI暫定措置の `TODO(cycle-184/B-389)` が `src/` に12箇所残る                           | T7         |
 | B-694 | `readOnly` の入力欄が通常の入力欄と見分けられない                                         | T8b        |
 | B-695 | JS 無効時のハンバーガーボタンが生きたまま何も起きない                                     | T8b        |
 | B-696 | ハイドレーション時に一覧DOMが差し替わりフォーカスが body に落ちる                         | T7         |
@@ -439,16 +439,19 @@ Next.js 公式が「For a client-hook error this is rarely the right answer」�
 | B-699 | 3記事の `related_tool_slugs` が実在しない `quiz` を指している                             | T6         |
 | B-700 | frontmatter 検証がコミット時にキー集合・書式・型を見ていない                              | T8f        |
 | B-701 | 記事行のタグリンクだけ `q=` を引き継がない                                                | T8k        |
-| B-702 | `BlogList.tsx` のコメントに経緯が残っている                                               | T8k        |
 | B-703 | ブログ記事がバンドルバジェットテストの旧実装を説明している                                | T8l        |
 | B-704 | `test:build` に `pre` フックが無く単体実行だと生成物が古くなりうる                        | T8l        |
 | B-705 | `.claude/rules/testing.md` の `paths` が実行系ファイルを拾わない                          | T8l        |
 | B-706 | 並行作業中に `.next` の読み手と作り手が衝突しビルドが壊れる                               | T8l        |
+| B-707 | `blog-writing.md` の日時の型変換の説明が一様でない                                        | T10        |
+| B-708 | 無効状態の入力欄が見た目でほぼ区別できない                                                | T8b        |
+| B-709 | `GuessInput` の振動タイマーが解除されない                                                 | 最終ゲート |
 
 B-687 が指す「読まれない公開7記事」の内訳は
 [measurements.md §6](./measurements.md#6-道具ゲームの関連ブログ記事欄) にある。
-B-693 の12箇所の内訳（実測・`grep -rn "TODO(cycle-184/B-389)" src/`）は
-`src/app/blog/[slug]/page.tsx` 3・`BlogListView.tsx` 3・`BlogList.tsx` 2・`BlogListPanel.tsx` 2・`TagList.tsx` 2。
+
+本サイクル中に起票し、本サイクル中に解消したものが2件ある。B-693（`TODO(cycle-184/B-389)` が12箇所）と
+B-702（`BlogList.tsx` のコメントに経緯が残る）で、どちらも `docs/backlog.md` の Done にある。
 
 本サイクルの本体である B-685（frontmatter の読み違え）と B-686（一覧の CSR 退避）は Active にあり、
 本サイクルで完了する。
