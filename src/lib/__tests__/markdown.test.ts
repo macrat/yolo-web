@@ -1,4 +1,5 @@
 import { describe, test, expect, beforeAll } from "vitest";
+import yaml from "js-yaml";
 import {
   parseFrontmatter,
   markdownToHtml,
@@ -110,6 +111,45 @@ Body.`;
     expect(result.data.updated_at).toBeInstanceOf(Date);
   });
 
+  test("returns the block between the delimiters exactly as written", async () => {
+    const raw = `---
+title: "Hello World"
+tags:
+  - "tag1"
+  - "tag2"
+series_order: 3
+---
+
+Body.`;
+
+    const result = parseFrontmatter<Record<string, unknown>>(raw);
+    expect(result.frontmatter).toBe(
+      'title: "Hello World"\ntags:\n  - "tag1"\n  - "tag2"\nseries_order: 3',
+    );
+    expect(result.frontmatter).not.toContain("---");
+  });
+
+  test("reading the returned block back yields the returned data", async () => {
+    const raw = `---
+title: "Hello World"
+draft: false
+series: null
+series_order: 3
+tags:
+  - "tag1"
+  - "tag2"
+published_at: "2026-07-16T12:00:00+0900"
+updated_at: 2026-07-16
+---
+
+Body.`;
+
+    const result = parseFrontmatter<Record<string, unknown>>(raw);
+    // A caller that compares a value against the way it is written reads both
+    // from this one return value, so the two must never disagree.
+    expect(yaml.load(result.frontmatter)).toEqual(result.data);
+  });
+
   test("throws on invalid YAML instead of returning partial data", async () => {
     const raw = `---
 title: "unterminated
@@ -125,6 +165,7 @@ Body.`;
     const result = parseFrontmatter<Record<string, unknown>>(raw);
     expect(result.data).toEqual({});
     expect(result.content).toBe(raw);
+    expect(result.frontmatter).toBe("");
   });
 
   test("returns empty data when the frontmatter block is not a mapping", async () => {
@@ -138,6 +179,7 @@ Body.`;
     const result = parseFrontmatter<Record<string, unknown>>(raw);
     expect(result.data).toEqual({});
     expect(result.content.trim()).toBe("Body.");
+    expect(result.frontmatter).toBe('- "tag1"\n- "tag2"');
   });
 });
 
