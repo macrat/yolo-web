@@ -45,3 +45,24 @@ Prettier の[公式オプション一覧](https://prettier.io/docs/options)に m
 
 markdown 本文中のコードブロックも言語ごとに整形される（`yaml` / `typescript` / `json` で実測）。
 記事で整形前後を対比したいときの回避策は `docs/blog-writing.md` にある。
+
+## `.gitignore` された場所で Prettier を試すと、何も起きずに成功する
+
+Prettier 3 の既定の `--ignore-path` は `.gitignore` を含む。このリポジトリの `.gitignore` は `tmp/*` を
+無視しているため、`./tmp/` 配下のファイルに `prettier --write` を掛けても**何も実行されない**。
+
+```
+$ printf -- '---\ntitle:    "x"\n---\n' > tmp/a.md
+$ npx prettier --write tmp/a.md   # 出力なし
+$ echo $?
+0
+$ cat tmp/a.md                    # 整形されていない
+---
+title:    "x"
+---
+```
+
+`--write` は対象ファイル名すら出さず、`--check` は無条件に `All matched files use Prettier code style!` を返す。
+**整形の挙動を実験で確かめるとき、`./tmp/` は使えない。** ここで測ると「走らなかった」を
+「変化しなかった」と読み違える。リポジトリ外の作業ディレクトリを使うか、`--ignore-path /dev/null` を渡すこと。
+設定は `--config <リポジトリの .prettierrc>` で明示的に渡す。

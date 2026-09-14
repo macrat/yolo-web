@@ -9,6 +9,7 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
+| B-706 | 並行作業中に`.next`の読み手と作り手が衝突しビルドが壊れる | P3 | - | cycle-313でビルド成果物を読むテストを導入したため顕在化。2つの`next build`が同じ`.next`を奪い合うと`pages-manifest.json`不在等で落ち、`.next`が壊れた状態で残る。作業ディレクトリの分離か排他の仕組みが要る |
 | B-703 | ブログ記事がbundle budgetテストの旧実装(`describe.skipIf`)を説明している | P4 | - | cycle-313で`requireBuildOutput()`へ変えたため記事190-195行と食い違う。記事は記録だが読者には現状と異なる手法が推奨として読める。注記の要否を判断する |
 | B-704 | `test:build`に`pre`フックが無く単体実行だと生成物が古くなりうる | P4 | - | `pretest`は`generate:toolbox-registry`/`generate:release-id`を走らせるが`pretest:build`が無い。通常は先行する`prebuild`が同じ生成をするため現状問題は出ていない |
 | B-705 | `.claude/rules/testing.md`の`paths`が実行系ファイルを拾わない | P4 | - | `src/**/*`と`vitest.config.mts`のみ。`package.json`のscriptsや`deploy.yml`を編集するときにルールが読み込まれない。ルールの内容はそれらの整合も含む |
