@@ -9,6 +9,7 @@ import {
   getTagsWithMinPosts,
 } from "@/blog/_lib/blog";
 import BlogFilterableList from "./BlogFilterableList";
+import BlogListPanel, { type BlogListData } from "./BlogListPanel";
 import { calculateNewSlugs } from "./newSlugsHelper";
 import styles from "./BlogListView.module.css";
 
@@ -45,7 +46,12 @@ interface BlogListViewProps {
  * ブログ一覧ページのビュー (Server Component)。
  *
  * ページヘッダー（タイトル・説明文）とフィルター付き記事一覧を表示する。
- * useSearchParams を使う BlogFilterableList は Suspense でラップする（Next.js 要件）。
+ *
+ * 記事一覧は、キーワード（`?q=`）が無ければ props だけで確定する。
+ * そこでキーワード空の {@link BlogListPanel} を Suspense の fallback としてサーバーで描画し、
+ * 記事リンクを静的 HTML に載せる。`useSearchParams` を呼ぶ {@link BlogFilterableList} は
+ * プリレンダリング時にクライアント描画へ退避するが、描画結果は同じ {@link BlogListPanel} の
+ * ため、キーワードが無い通常の閲覧では fallback と一致しレイアウトがずれない。
  *
  * Date.now() は react-hooks/purity 制約により Client Component 内で使用できないため、
  * Server Component のここで計算して newSlugs として渡す。
@@ -94,6 +100,21 @@ export default function BlogListView({
     label: CATEGORY_LABELS[cat],
   }));
 
+  const listData: BlogListData = {
+    posts,
+    currentPage,
+    totalPages,
+    basePath,
+    activeCategory,
+    allPosts,
+    tagHeader,
+    newSlugs,
+    categories,
+    categoryLabels: CATEGORY_LABELS,
+    seriesLabels: SERIES_LABELS,
+    linkableTags, // TODO(cycle-184/B-389): X1 採用時に削除
+  };
+
   return (
     <div className={styles.page}>
       <div className={styles.intro}>
@@ -115,21 +136,8 @@ export default function BlogListView({
         )}
       </div>
 
-      <Suspense>
-        <BlogFilterableList
-          posts={posts}
-          currentPage={currentPage}
-          totalPages={totalPages}
-          basePath={basePath}
-          activeCategory={activeCategory}
-          allPosts={allPosts}
-          tagHeader={tagHeader}
-          newSlugs={newSlugs}
-          categories={categories}
-          categoryLabels={CATEGORY_LABELS}
-          seriesLabels={SERIES_LABELS}
-          linkableTags={linkableTags} // TODO(cycle-184/B-389): X1 採用時に削除
-        />
+      <Suspense fallback={<BlogListPanel {...listData} keyword="" />}>
+        <BlogFilterableList {...listData} />
       </Suspense>
     </div>
   );
