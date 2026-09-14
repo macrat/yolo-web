@@ -36,7 +36,6 @@ interface BlogListProps {
 /**
  * ブログ記事一覧 — 品書き（DESIGN.md フェーズ R「店構え」）。
  *
- * カードグリッド（旧 BlogGrid + BlogCard）を廃し、罫区切りのリストへ変換した。
  * 各行 = 品名（タイトル・明朝リンク）+ ひとこと（description・--ink-2）+
  * 値札（カテゴリ・読了時間・{@link NefudaGroup}）+ 右端メタ（公開日）+ タグ（{@link TagList}）。
  * 器は静か——カード背景・box-shadow・角丸装飾は持たない（構造の主役は --rule の一本罫）。
