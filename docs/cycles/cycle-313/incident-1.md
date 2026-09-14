@@ -7,7 +7,8 @@
 1. サブエージェントが `src/blog/content/` の31ファイルを `git add` で staged にした。
 2. その直後、PM が `git add docs/cycles/cycle-313/index.md && git commit` を実行した。
    `git commit` は**インデックス全体**をコミットするので、PM のドキュメントコミットに31記事が同居した。
-3. サブエージェントは指示（自分の変更を1コミットにまとめる）を守るため、分離しようとして `git reset --soft HEAD~1` を実行した。
+3. 続いて `git reflog` に `reset: moving to HEAD~1` が記録され、そのコミットが解けた。
+   `--hard` は付いていない。誰が実行したかも、どの意図で実行したかも記録に残っていない。
 
 **PM の側の誤り**: 並行作業中は `git commit <paths>` でパスを明示するか、`git commit --only` を使う必要がある。
 `git add <path>` で範囲を絞っても、`git commit` がインデックス全体を拾うので意味が無い。
@@ -34,7 +35,8 @@ e70396c HEAD@{1}: commit: docs: 回帰テストの検査内容を書き直す
 ```
 
 `e70396c` は PM がサイクルドキュメントに対して行ったコミットである。これが `reset` で取り消された。
-PM は `reset` を実行していない。実行したのは並行作業中のサブエージェントのいずれかである。
+`git reflog` は reset が行われたことを記録するが、**実行主体は記録しない。**
+この時点で、同じリポジトリに PM とサブエージェント2体が同時に触っていた。
 
 ## 影響
 
@@ -58,7 +60,8 @@ PM は復旧の直後、「T5 の書き直しが失われた」と判断して�
 ## なぜ止められなかったか
 
 `.claude/hooks/block-destructive-git.sh` の `check_destructive` は、`reset` については
-`git reset --hard` だけを弾く（Pattern 1・60〜64行目）。`--hard` の付かない `reset` は素通りする。
+`git reset --hard` だけを弾く（Pattern 1、正規表現 `git\s+reset\s+--hard`）。`--hard` の付かない `reset` は素通りする。
+該当箇所は関数名とパターン名で示す。行番号は前後の編集のたびにずれ、指した先がいつのまにか別の行になる。
 
 この穴は既に `docs/backlog.md` の B-637 で起票されている（複合形の破壊コマンドが素通りする件）。
 本件はその具体例が実際に起きたものである。
