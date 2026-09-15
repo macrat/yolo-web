@@ -197,3 +197,33 @@ function ClientShell({ serverSlot }: { serverSlot: React.ReactNode }) {
 **予防**: ルート（`app/` 配下の `page.tsx`/`layout.tsx` 等）を移動・リネームしたら、視覚検証で `next dev` を使った後は `rm -rf .next/dev` を挟んでから commit する。辞典移行（cycle-262〜265）のように route group をまたぐ `git mv` を伴う作業では定常的に発生する。
 
 出典: cycle-265
+
+## 13. prerender + `useSearchParams` の `<Suspense>` は、fallback の有無でペイロードの見え方が変わる
+
+prerender されたルートで `useSearchParams` を呼ぶと、最も近い `<Suspense>` 境界までがクライアント描画へ
+退避する（[公式](https://nextjs.org/docs/app/api-reference/functions/use-search-params)）。公式は境界を
+フック呼び出しの近くに置くよう求めており、大きな部分木を包むと prerender 済みの内容を失うと明記している。
+
+**fallback を渡すと、同じ内容が静的HTMLと RSC ペイロードの両方に載る。** ブログ一覧で実測した値は次のとおり。
+
+| `/blog` の生成HTML                      | 非圧縮  | gzip   | brotli |
+| --------------------------------------- | ------- | ------ | ------ |
+| fallback あり（一覧が静的HTMLに載る）   | 145,419 | 31,306 | 23,467 |
+| fallback 無し（一覧はクライアント描画） | 90,731  | 24,781 | 20,334 |
+
+**非圧縮の差は 54,688 バイトだが、実際に転送される brotli 後の差は 3,133 バイトである。**
+重複した内容は brotli の大きなウィンドウでほぼ全部が後方参照に畳まれる
+（検証: 90,731 バイトのHTMLに flight ペイロード 81,178 バイトをそのまま追記しても、brotli 後の増分は 14 バイト）。
+
+**ペイロードを論じるときは圧縮後で測ること。** 非圧縮バイトは、重複がある場合に代償を一桁大きく見せる。
+
+なお `/blog` の非圧縮 90,731 バイトのうち **81,178 バイト（89.5%）は RSC flight ペイロード**で、
+可視HTMLは 9,553 バイトである。これは Client Component へ渡す props の直列化であり、
+静的HTML化の有無に関わらず全来訪者が受け取る。
+
+## 14. 非JSのクローラは一覧面から記事へたどれない
+
+Googlebot は JavaScript を実行するが、**GPTBot・ClaudeBot・PerplexityBot は実行しない**
+（[SearchOptimo](https://searchoptimo.com/blog/do-ai-crawlers-render-javascript) の調査・2026-09-15 確認）。
+一覧をクライアント描画にすると、これらのエージェントに対して一覧は記事情報を持たない殻になる。
+`sitemap.xml` に全記事URLが載っていれば個々の記事には到達できるが、一覧面からの経路は無い。

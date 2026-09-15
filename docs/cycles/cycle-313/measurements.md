@@ -156,18 +156,18 @@ T11＝掲載数のしきい値の撤廃（同 11巡目・`af3cb261`）である�
 
 消費箇所は**関数名・定数名で示す**。行番号は前後の編集のたびにずれ、指した先がいつのまにか別の行になる。
 
-| 面                                    | 消費箇所                                                                 |
-| ------------------------------------- | ------------------------------------------------------------------------ |
-| 記事ページのタグ表示                  | `src/app/blog/[slug]/page.tsx` の `BlogPostPage`（`TagList` へ渡す）     |
-| 一覧カードのタグ表示                  | `src/blog/_components/BlogList.tsx` の `BlogList`（`TagList` へ渡す）    |
-| タグ一覧ページへの掲載                | `getPostsByTag`（`src/blog/_lib/blog.ts`）                               |
-| タグページの生成可否                  | `getAllTags`（同）                                                       |
-| `sitemap.xml` のタグURL               | `src/app/sitemap.ts` の `indexableTags`（`MIN_POSTS_FOR_TAG_INDEX = 5`） |
-| 関連記事のスコア＝共有タグ数          | `getRelatedPosts` の `sharedTagCount`（`src/blog/_lib/blog.ts`）         |
-| 一覧の「人気タグ」算出                | `src/blog/_components/BlogListPanel.tsx` の `tagCounts` / `popularTags`  |
-| ブログ内キーワード検索の対象文字列    | `filterPostsByKeyword`（`src/blog/_components/searchFilter.ts`）         |
-| RSS / Atom フィードの `category`      | `buildFeed`（`src/lib/feed.ts`）                                         |
-| 記事ページの `<meta name="keywords">` | `generateBlogPostMetadata`（`src/lib/seo.ts`）                           |
+| 面                                    | 消費箇所                                                                     |
+| ------------------------------------- | ---------------------------------------------------------------------------- |
+| 記事ページのタグ表示                  | `src/app/blog/[slug]/page.tsx` の `BlogPostPage`（`TagList` へ渡す）         |
+| 一覧カードのタグ表示                  | `src/blog/_components/BlogList.tsx` の `BlogList`（`TagList` へ渡す）        |
+| タグ一覧ページへの掲載                | `getPostsByTag`（`src/blog/_lib/blog.ts`）                                   |
+| タグページの生成可否                  | `getAllTags`（同）                                                           |
+| `sitemap.xml` のタグURL               | `src/app/sitemap.ts` の `indexableTags`（`MIN_POSTS_FOR_TAG_INDEX = 5`）     |
+| 関連記事のスコア＝共有タグ数          | `getRelatedPosts` の `sharedTagCount`（`src/blog/_lib/blog.ts`）             |
+| 一覧の「人気タグ」算出                | `src/blog/_components/BlogFilterableList.tsx` の `tagCounts` / `popularTags` |
+| ブログ内キーワード検索の対象文字列    | `filterPostsByKeyword`（`src/blog/_components/searchFilter.ts`）             |
+| RSS / Atom フィードの `category`      | `buildFeed`（`src/lib/feed.ts`）                                             |
+| 記事ページの `<meta name="keywords">` | `generateBlogPostMetadata`（`src/lib/seo.ts`）                               |
 
 タグページが生成されるのは掲載3本以上のタグだけで（`MIN_POSTS_FOR_TAG_PAGE = 3`）、
 **それに満たないタグは `TagList` が `filter` で落とし、記事ページにも一覧カードにも DOM として出ない**（§14・[B-726](../../backlog.md)）。
@@ -328,10 +328,14 @@ CSS の上でも保証されている（箱の寸法に効く宣言が無い）�
 
 ## 10. 実ビルドでの復旧の確認
 
-> **一覧の2行（`/blog` と `/blog/tag/ワークフロー連載` の記事リンク・`robots`）は撤回した**
-> （[incident-10.md](./incident-10.md)）。撤回後に測り直した `/blog` は記事リンク0本・
-> 初期ペイロード 90,731 バイト（是正後は 145,419 バイト）で、一覧の記事リンクは是正前と同じ状態に戻っている。
-> タグとフィード、道具面の行は frontmatter の復元によるもので、そのまま有効である。
+> **記事リンクの2行（`/blog` と `/blog/tag/ワークフロー連載`）は撤回した**
+> （[incident-10.md](./incident-10.md)）。撤回後に測り直した `/blog` は記事リンク0本・非圧縮 90,731 バイト
+> （是正後は 145,419 バイト。**圧縮後の実転送量では 20,334 ← 23,467 で差は 3,133 バイト**）で、
+> 一覧の記事リンクは是正前と同じ状態に戻っている。
+> **`robots` の行は撤回していない**——`noindex, follow → index, follow` はタグの復元で掲載本数が
+> しきい値を跨いだ結果で、一覧の静的描画とは無関係である（本番も現在 `index, follow`）。
+> タグとフィードの行も frontmatter の復元によるもので有効である。
+> **道具面の3行は、この節の本文が書いているとおり終了時点では成り立たない**（宣言52件を全件撤回したため）。
 
 `npm run build`（exit 0）の生成物 `.next/server/app/` の HTML を直接検分した。
 各行は本番HTML（`curl`）およびソースからの再計算とも突き合わせてある。
@@ -377,7 +381,8 @@ CSS の上でも保証されている（箱の寸法に効く宣言が無い）�
 T11 を実装した67件の状態を手で全数走査した記録は無い。その状態を支えていたのは下の回帰テストだけであり、
 T11 の取り下げによってその状態自体が存在しなくなった。
 
-この不変条件は `src/__tests__/blog-list-static-html.test.ts` が毎ビルド検査する。
+この不変条件を検査していた `src/__tests__/blog-list-static-html.test.ts` は、
+T7 の撤回にあわせて削除した（[incident-10.md](./incident-10.md)）。現在この検査は存在しない。
 
 ## 11. frontmatter の検証スクリプトが見ていたもの
 
