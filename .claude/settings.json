@@ -103,15 +103,6 @@
             "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/trust-guard.sh check"
           }
         ]
-      },
-      {
-        "matcher": "Agent|Task",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/record-review.sh"
-          }
-        ]
       }
     ],
     "Stop": [
