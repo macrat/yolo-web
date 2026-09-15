@@ -1,6 +1,5 @@
 import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react";
-import tsconfigPaths from "vite-tsconfig-paths";
 
 /**
  * 本番ビルドの生成物（`.next/`）を直接読むテスト。
@@ -18,7 +17,9 @@ const BUILD_OUTPUT_TESTS = [
 const EXCLUDED_PATHS = ["**/node_modules/**", "**/tests/e2e/**", "tmp/**"];
 
 export default defineConfig({
-  plugins: [tsconfigPaths(), react()],
+  plugins: [react()],
+  // `@/` などの tsconfig パスエイリアスは Vite が自身で解決する。
+  resolve: { tsconfigPaths: true },
   test: {
     environment: "jsdom",
     setupFiles: ["./src/test/setup.ts"],
