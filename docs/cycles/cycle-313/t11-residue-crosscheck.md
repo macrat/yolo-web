@@ -33,3 +33,6 @@
 
 台帳外で1件見つかった: `src/__tests__/blog-list-static-html.test.ts`（検査6の説明と失敗メッセージ）。
 T11 稼働中に書かれたもので、掲載数を根拠にしていた。描画条件を根拠にする形へ是正（`07627454`）。
+
+（`src/__tests__/blog-list-static-html.test.ts` は、その後 T7 の撤回にあわせて削除した——
+[incident-10.md](./incident-10.md)。）
