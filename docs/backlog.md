@@ -8,7 +8,7 @@
 
 | ID | Title | Priority | Target Cycle | Notes |
 | --- | --- | --- | --- | --- |
-| B-685 | frontmatterをサイトのパーサが読めず12記事でタグ/ツールリンクが落ちている | P2 | - | **cycle-313の全撤回で復活・未修正**。2026-09-15再実測=87記事中31記事が乖離・実害12記事(タグ40件/ツール52件が空)。詳細cycle-314/index.md |
+| B-685 | frontmatterをサイトのパーサが読めず12記事でタグ/ツールリンクが落ちている | P2 | 315 | **cycle-313の全撤回で復活・本番で継続中**(実測=/blog/memo-system-rise-and-fallのタグリンク0本)。8記事のタグ40件が未達。prettier整形が原因で新記事も再発。詳細cycle-314/index.md |
 | B-736 | npm 10では`npm ci`が失敗する(ローカル環境限定) | P4 | - | tsconfckのoptional peerをルートのtypescript6が満たせず停止。出荷・CIに影響なし(CIはnpm11で緑)。回避=`npx npm@11.19.1 ci`。詳細cycle-314/index.md |
 | B-629 | E0出荷後のSERP実表示の確認 | P2 | - | 着手条件(2026-08-07の出荷+7日=2026-08-14)を満たしたためQueuedへ。SC/実SERPで禁止色を除いたアイコンの表示を確認。詳細 docs/cycles/cycle-302/ |
 | B-653 | SC「生成AIパフォーマンスレポート」の撤退基準への含意調査 | P3 | - | SCの生成AIパフォーマンスレポートの仕様を一次資料で確認し、削除判断の数値基準(site-concept判断基準2)の計器として何が変わるか判定する。詳細cycle-311/index.md 計画にあたって参考にした情報 |
