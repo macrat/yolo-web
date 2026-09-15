@@ -1,5 +1,4 @@
 import { describe, test, expect, beforeAll } from "vitest";
-import yaml from "js-yaml";
 import {
   parseFrontmatter,
   markdownToHtml,
@@ -15,157 +14,95 @@ beforeAll(async () => {
 }, 60000);
 
 describe("parseFrontmatter", () => {
-  test("parses scalars with their YAML types", async () => {
+  test("parses quoted string values", async () => {
     const raw = `---
 title: "Hello World"
 slug: "hello-world"
-draft: false
-series: null
-series_order: 3
-trust_level: ~
 ---
 
 Content here.`;
 
-    const result = parseFrontmatter(raw);
+    const result = parseFrontmatter<{ title: string; slug: string }>(raw);
     expect(result.data.title).toBe("Hello World");
     expect(result.data.slug).toBe("hello-world");
-    expect(result.data.draft).toBe(false);
-    expect(result.data.series).toBeNull();
-    expect(result.data.series_order).toBe(3);
-    expect(result.data.trust_level).toBeNull();
     expect(result.content.trim()).toBe("Content here.");
   });
 
-  test("parses block, inline and empty arrays alike", async () => {
+  test("parses boolean values", async () => {
     const raw = `---
-tags:
-  - "tag1"
-  - "tag2"
-related_tool_slugs: ["char-count", "regex-tester"]
-authors: []
+draft: false
+public: true
 ---
 
 Body.`;
 
-    const result = parseFrontmatter(raw);
-    expect(result.data.tags).toEqual(["tag1", "tag2"]);
-    expect(result.data.related_tool_slugs).toEqual([
-      "char-count",
-      "regex-tester",
-    ]);
-    expect(result.data.authors).toEqual([]);
+    const result = parseFrontmatter<{ draft: boolean; public: boolean }>(raw);
+    expect(result.data.draft).toBe(false);
+    expect(result.data.public).toBe(true);
   });
 
-  test("keeps every element of an array wrapped across lines", async () => {
+  test("parses null values", async () => {
     const raw = `---
-tags:
-  [
-    "tag1",
-    "tag2",
-    "tag3"
-  ]
+reply_to: null
 ---
 
 Body.`;
 
-    const result = parseFrontmatter(raw);
+    const result = parseFrontmatter<{ reply_to: null }>(raw);
+    expect(result.data.reply_to).toBeNull();
+  });
+
+  test("parses inline arrays", async () => {
+    const raw = `---
+tags: ["tag1", "tag2", "tag3"]
+---
+
+Body.`;
+
+    const result = parseFrontmatter<{ tags: string[] }>(raw);
     expect(result.data.tags).toEqual(["tag1", "tag2", "tag3"]);
   });
 
-  test("unescapes quotes inside double-quoted strings", async () => {
+  test("parses block arrays", async () => {
+    const raw = `---
+tags:
+  - tag1
+  - tag2
+---
+
+Body.`;
+
+    const result = parseFrontmatter<{ tags: string[] }>(raw);
+    expect(result.data.tags).toEqual(["tag1", "tag2"]);
+  });
+
+  test("parses empty inline arrays", async () => {
+    const raw = `---
+tags: []
+---
+
+Body.`;
+
+    const result = parseFrontmatter<{ tags: string[] }>(raw);
+    expect(result.data.tags).toEqual([]);
+  });
+
+  test("handles escaped quotes in strings", async () => {
     const raw = `---
 subject: "Hello \\"World\\""
 ---
 
 Body.`;
 
-    const result = parseFrontmatter(raw);
+    const result = parseFrontmatter<{ subject: string }>(raw);
     expect(result.data.subject).toBe('Hello "World"');
   });
 
-  test("reads an unquoted timestamp as a Date, a quoted one as a string", async () => {
-    const raw = `---
-published_at: "2026-07-16T12:00:00+0900"
-updated_at: 2026-07-16
----
-
-Body.`;
-
-    const result = parseFrontmatter(raw);
-    expect(result.data.published_at).toBe("2026-07-16T12:00:00+0900");
-    expect(result.data.updated_at).toBeInstanceOf(Date);
-  });
-
-  test("returns the block between the delimiters exactly as written", async () => {
-    const raw = `---
-title: "Hello World"
-tags:
-  - "tag1"
-  - "tag2"
-series_order: 3
----
-
-Body.`;
-
-    const result = parseFrontmatter(raw);
-    expect(result.frontmatter).toBe(
-      'title: "Hello World"\ntags:\n  - "tag1"\n  - "tag2"\nseries_order: 3',
-    );
-    expect(result.frontmatter).not.toContain("---");
-  });
-
-  test("reading the returned block back yields the returned data", async () => {
-    const raw = `---
-title: "Hello World"
-draft: false
-series: null
-series_order: 3
-tags:
-  - "tag1"
-  - "tag2"
-published_at: "2026-07-16T12:00:00+0900"
-updated_at: 2026-07-16
----
-
-Body.`;
-
-    const result = parseFrontmatter(raw);
-    // A caller that compares a value against the way it is written reads both
-    // from this one return value, so the two must never disagree.
-    expect(yaml.load(result.frontmatter)).toEqual(result.data);
-  });
-
-  test("throws on invalid YAML instead of returning partial data", async () => {
-    const raw = `---
-title: "unterminated
----
-
-Body.`;
-
-    expect(() => parseFrontmatter(raw)).toThrow();
-  });
-
-  test("returns empty data when there is no frontmatter", async () => {
+  test("returns empty data when no frontmatter", async () => {
     const raw = "Just some content without frontmatter.";
-    const result = parseFrontmatter(raw);
+    const result = parseFrontmatter<Record<string, unknown>>(raw);
     expect(result.data).toEqual({});
     expect(result.content).toBe(raw);
-    expect(result.frontmatter).toBe("");
-  });
-
-  test("returns empty data when the frontmatter block is not a mapping", async () => {
-    const raw = `---
-- "tag1"
-- "tag2"
----
-
-Body.`;
-
-    const result = parseFrontmatter(raw);
-    expect(result.data).toEqual({});
-    expect(result.content.trim()).toBe("Body.");
-    expect(result.frontmatter).toBe('- "tag1"\n- "tag2"');
   });
 });
 

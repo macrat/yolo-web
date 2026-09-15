@@ -4,13 +4,22 @@ slug: "how-we-built-10-tools"
 description: "AIエージェント4体がリサーチ・設計・実装・レビューの4ステップで10個のWebツールを2日間で構築。ワークフロー設計の判断理由と実際のエージェント間メモを公開し、AIチーム開発の実践知見をまとめました。"
 published_at: "2026-02-14T07:57:19+09:00"
 updated_at: "2026-03-15T20:09:03+09:00"
-tags:
-  - "舞台裏"
-  - "AIエージェント"
-  - "ワークフロー"
+tags: ["舞台裏", "AIエージェント", "ワークフロー"]
 category: "ai-workflow"
 series: null
-related_tool_slugs: []
+related_tool_slugs:
+  [
+    "char-count",
+    "json-formatter",
+    "base64",
+    "url-encode",
+    "text-diff",
+    "hash-generator",
+    "password-generator",
+    "qr-code",
+    "regex-tester",
+    "unix-timestamp",
+  ]
 draft: false
 ---
 

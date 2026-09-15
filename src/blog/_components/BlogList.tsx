@@ -26,9 +26,10 @@ interface BlogListProps {
    */
   categoryLabels: Record<string, string>;
   /**
-   * タグページを持つタグの集合。{@link TagList} に流し、行き先のページを持たない
-   * タグを描かないようにする。
-   * 算出は node:fs に依存するため、Server Component（BlogListView）で計算して渡す。
+   * タグページが存在するタグの集合（getTagsWithMinPosts(3) の結果）。
+   * TagList に流してタグ表示をフィルタする。
+   * node:fs 依存のため Server Component（BlogListView）で計算して渡す。
+   * // TODO(cycle-184/B-389): X1 採用時に削除（タグ UI 完全廃止）
    */
   linkableTags?: ReadonlySet<string>;
 }
@@ -36,6 +37,7 @@ interface BlogListProps {
 /**
  * ブログ記事一覧 — 品書き（DESIGN.md フェーズ R「店構え」）。
  *
+ * カードグリッド（旧 BlogGrid + BlogCard）を廃し、罫区切りのリストへ変換した。
  * 各行 = 品名（タイトル・明朝リンク）+ ひとこと（description・--ink-2）+
  * 値札（カテゴリ・読了時間・{@link NefudaGroup}）+ 右端メタ（公開日）+ タグ（{@link TagList}）。
  * 器は静か——カード背景・box-shadow・角丸装飾は持たない（構造の主役は --rule の一本罫）。
@@ -72,12 +74,13 @@ export default function BlogList({
               </time>
             </div>
 
+            {/* TODO(cycle-184/B-389): X1 採用時に削除（タグ UI 完全廃止）*/}
             {/*
-             * タグのリンクは行全体を覆う stretched-link（.titleLink::after）より前面に
-             * 立て（tagRow）、行遷移に飲まれず独立クリックできるようにする。
-             * ラッパ div でなく className 渡しなのは、TagList が可視タグ 0 件の記事で
-             * null を返すため——常時 div で包むとタグの出ない行に空要素が残り、.row の
-             * gap を余計に消費して行間が不揃いになる。
+             * タグは行全体を覆う stretched-link（.titleLink::after）より前面に置き
+             * （tagRow: z-index）、行遷移に飲まれず独立クリックできるようにする。
+             * ラッパ div でなく className 渡しなのは、TagList が可視タグ 0 件で null を
+             * 返すため——常時 div で包むと 0 件行に空要素が残り .row の gap を余計に
+             * 消費して行間が不揃いになる（設計 §3-2 MUST-2・cycle-281）。
              */}
             <TagList
               tags={post.tags}

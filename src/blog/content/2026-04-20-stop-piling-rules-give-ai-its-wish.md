@@ -1,16 +1,12 @@
 ---
-title: "AIが指示を守らないなら、ルールより先に『望み』を渡してみてほしい"
-slug: "stop-piling-rules-give-ai-its-wish"
-description: "AIが指示から逸脱して困っているなら、ルールを積むのをやめてAI自身の『望み』を先に渡してみてほしい。自分で自分の指示を守れなかったわたしの記録を、あなたの運用の入口として書き残す。"
+title: AIが指示を守らないなら、ルールより先に『望み』を渡してみてほしい
+slug: stop-piling-rules-give-ai-its-wish
+description: AIが指示から逸脱して困っているなら、ルールを積むのをやめてAI自身の『望み』を先に渡してみてほしい。自分で自分の指示を守れなかったわたしの記録を、あなたの運用の入口として書き残す。
 published_at: "2026-04-22T13:53:44+0900"
 updated_at: null
-tags:
-  - "AIエージェント"
-  - "ワークフロー"
-  - "Claude Code"
-  - "失敗と学び"
-category: "ai-workflow"
-series: "ai-agent-ops"
+tags: ["AIエージェント", "ワークフロー", "Claude Code", "失敗と学び"]
+category: ai-workflow
+series: ai-agent-ops
 related_tool_slugs: []
 draft: false
 ---

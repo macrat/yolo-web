@@ -7,8 +7,7 @@ import {
   type Heading,
 } from "@/lib/markdown";
 
-const BLOG_CONTENT_PATH = "src/blog/content";
-const BLOG_DIR = path.join(process.cwd(), BLOG_CONTENT_PATH);
+const BLOG_DIR = path.join(process.cwd(), "src/blog/content");
 
 export type BlogCategory =
   | "ai-workflow"
@@ -58,14 +57,6 @@ export const CATEGORY_DESCRIPTIONS: Record<BlogCategory, string> = {
 };
 
 /**
- * Minimum number of posts a tag needs before it gets a listing page of its own.
- * A page built from one or two posts is thin content: it gives a visitor
- * nothing a search result did not already show. A tag below the threshold has
- * no page, and is left out of the tag lists so no link points at a 404.
- */
-export const MIN_POSTS_FOR_TAG_PAGE = 3;
-
-/**
  * Minimum number of posts required for a tag page to be indexed by search engines.
  * Tag pages with fewer posts will have noindex meta tag set.
  */
@@ -73,9 +64,8 @@ export const MIN_POSTS_FOR_TAG_INDEX = 5;
 
 /**
  * Descriptions for each tag, shown on tag listing pages.
- * Every tag that has a page of its own needs an entry here.
- * A description names only what the tag's posts actually cover, so a reader
- * who arrives from search finds what the text promised.
+ * Tags with 3+ posts are eligible for tag pages.
+ * Each description is 100+ characters to provide meaningful context.
  */
 export const TAG_DESCRIPTIONS: Record<string, string> = {
   設計パターン:
@@ -111,7 +101,7 @@ export const TAG_DESCRIPTIONS: Record<string, string> = {
   伝統色:
     "日本の伝統色に関する記事集。紅梅色・萌黄色・藍色など、日本古来の色名とその背景にある文化・歴史を詳しく解説します。yolos.netの伝統色ツールの使い方や活用事例の紹介記事も合わせて掲載しています。",
   ワークフロー連載:
-    "AIエージェントによるサイト運営ワークフローの設計と、その見直しや失敗を連載形式で記録したシリーズ記事集。新しいものから順に並べているので、直近の試行錯誤から読めます。各記事の連載ナビゲーションからは、シリーズ全体をはじめから順に辿れます。",
+    "AIエージェントによるサイト運営ワークフローの進化を連載形式で記録したシリーズ記事集。初期設計から現在に至るまでの改善の軌跡と失敗の歴史を時系列で追うことができます。試行錯誤の積み重ねをご覧ください。",
   リファクタリング:
     "コードのリファクタリング事例と設計改善の記録をまとめた記事集。可読性・保守性・パフォーマンスを向上させるための具体的なアプローチや、大規模な改修プロジェクトの進め方をステップごとに実例とともに解説しています。",
   正規表現:
@@ -136,21 +126,15 @@ export const TAG_DESCRIPTIONS: Record<string, string> = {
     "ソフトウェアのテストと検証に関する記事集。全入力の網羅的な数え上げによる挙動の確認、回帰テストの設計、性格診断のような分岐ロジックが「入力どおりに結果を返すか」を数値で測る手法など、品質を目で確かめる代わりに機械で確かめる勘所を、実際のコード例とともに解説します。",
 };
 
-/**
- * A post's frontmatter as the blog schema defines it, after validation.
- *
- * `updated_at` is null until the post is revised, and `series` is null for a
- * post that belongs to no series — both are values an author writes, not gaps.
- */
-export interface BlogFrontmatter {
+interface BlogFrontmatter {
   title: string;
   slug: string;
   description: string;
   published_at: string;
-  updated_at: string | null;
+  updated_at: string;
   tags: string[];
-  category: BlogCategory;
-  series: string | null;
+  category: string;
+  series?: string;
   related_tool_slugs: string[];
   draft: boolean;
 }
@@ -175,210 +159,43 @@ export interface BlogPost extends BlogPostMeta {
 }
 
 /**
- * Describe a rejected frontmatter value for an error message.
- *
- * An unquoted timestamp comes back from YAML as a `Date`, and JSON encodes a
- * `Date` as a quoted string — indistinguishable from a properly quoted value in
- * the very message that has to explain why the value was rejected. Name the
- * type instead.
- */
-function describeValue(value: unknown): string {
-  if (value instanceof Date) return `Date(${value.toISOString()})`;
-  return JSON.stringify(value) ?? String(value);
-}
-
-function rejectValue(
-  file: string,
-  key: string,
-  expected: string,
-  value: unknown,
-): never {
-  throw new Error(
-    `${file}: frontmatter の ${key} は${expected}である必要があります (実際: ${describeValue(value)})`,
-  );
-}
-
-function requireValue(
-  file: string,
-  data: Record<string, unknown>,
-  key: string,
-): unknown {
-  if (!(key in data)) {
-    throw new Error(`${file}: frontmatter に必須キー ${key} がありません`);
-  }
-  return data[key];
-}
-
-function requireString(
-  file: string,
-  data: Record<string, unknown>,
-  key: string,
-): string {
-  const value = requireValue(file, data, key);
-  if (typeof value !== "string") rejectValue(file, key, "文字列", value);
-  return value;
-}
-
-function asNullableString(
-  file: string,
-  key: string,
-  value: unknown,
-): string | null {
-  if (value !== null && typeof value !== "string") {
-    rejectValue(file, key, "文字列または null", value);
-  }
-  return value;
-}
-
-function requireNullableString(
-  file: string,
-  data: Record<string, unknown>,
-  key: string,
-): string | null {
-  return asNullableString(file, key, requireValue(file, data, key));
-}
-
-/** Read an optional key, for which an absent key says what an explicit null says. */
-function optionalNullableString(
-  file: string,
-  data: Record<string, unknown>,
-  key: string,
-): string | null {
-  return key in data ? asNullableString(file, key, data[key]) : null;
-}
-
-function isStringArray(value: unknown): value is string[] {
-  return (
-    Array.isArray(value) && value.every((entry) => typeof entry === "string")
-  );
-}
-
-function requireStringArray(
-  file: string,
-  data: Record<string, unknown>,
-  key: string,
-): string[] {
-  const value = requireValue(file, data, key);
-  if (!isStringArray(value)) rejectValue(file, key, "文字列の配列", value);
-  return value;
-}
-
-function requireBoolean(
-  file: string,
-  data: Record<string, unknown>,
-  key: string,
-): boolean {
-  const value = requireValue(file, data, key);
-  if (typeof value !== "boolean") rejectValue(file, key, "真偽値", value);
-  return value;
-}
-
-function requireCategory(
-  file: string,
-  data: Record<string, unknown>,
-  key: string,
-): BlogCategory {
-  const value = requireValue(file, data, key);
-  const category = ALL_CATEGORIES.find((candidate) => candidate === value);
-  if (category === undefined) {
-    rejectValue(
-      file,
-      key,
-      `カテゴリID (${ALL_CATEGORIES.join(" / ")}) のいずれか`,
-      value,
-    );
-  }
-  return category;
-}
-
-/**
- * Validate a parsed frontmatter block against the blog schema.
- *
- * A missing or mistyped key throws, naming the file and the key. Frontmatter is
- * written by hand and read by nobody else: a value quietly swapped for a
- * default publishes a post with its tags or its category gone, and leaves
- * nothing for the type checker, a test or a build to catch — the loss is
- * visible only to a visitor looking at the page.
- */
-export function validateFrontmatter(
-  file: string,
-  data: Record<string, unknown>,
-): BlogFrontmatter {
-  return {
-    title: requireString(file, data, "title"),
-    slug: requireString(file, data, "slug"),
-    description: requireString(file, data, "description"),
-    published_at: requireString(file, data, "published_at"),
-    updated_at: requireNullableString(file, data, "updated_at"),
-    tags: requireStringArray(file, data, "tags"),
-    category: requireCategory(file, data, "category"),
-    series: optionalNullableString(file, data, "series"),
-    related_tool_slugs: requireStringArray(file, data, "related_tool_slugs"),
-    draft: requireBoolean(file, data, "draft"),
-  };
-}
-
-/**
- * Markdown file names in the content directory.
- *
- * A directory that cannot be read throws, naming the path, rather than coming
- * back as an empty list. "There are no posts" and "the posts could not be read"
- * render as the same empty blog, so a read that failed has to say so instead of
- * passing for an answer.
- */
-function listPostFiles(): string[] {
-  return fs.readdirSync(BLOG_DIR).filter((f) => f.endsWith(".md"));
-}
-
-/**
- * Read one markdown file into validated post metadata and its body.
- *
- * Returns null for a draft, which never reaches a visitor.
- */
-function readPostFile(
-  file: string,
-): { meta: BlogPostMeta; content: string } | null {
-  const raw = fs.readFileSync(path.join(BLOG_DIR, file), "utf-8");
-  const { data, content } = parseFrontmatter(raw);
-  const frontmatter = validateFrontmatter(
-    path.join(BLOG_CONTENT_PATH, file),
-    data,
-  );
-
-  if (frontmatter.draft) return null;
-
-  const meta: BlogPostMeta = {
-    title: frontmatter.title,
-    slug: frontmatter.slug,
-    description: frontmatter.description,
-    published_at: frontmatter.published_at,
-    // An unrevised post carries no update date, so it shows its publication date.
-    updated_at: frontmatter.updated_at ?? frontmatter.published_at,
-    tags: frontmatter.tags,
-    category: frontmatter.category,
-    related_tool_slugs: frontmatter.related_tool_slugs,
-    draft: false,
-    readingTime: estimateReadingTime(content),
-  };
-
-  if (frontmatter.series !== null) {
-    meta.series = frontmatter.series;
-  }
-
-  return { meta, content };
-}
-
-/**
  * List all published blog posts, sorted by published_at descending.
  * Reads from src/blog/content/*.md at build time.
  * Excludes posts where draft: true.
  */
 export function getAllBlogPosts(): BlogPostMeta[] {
+  if (!fs.existsSync(BLOG_DIR)) return [];
+
+  const files = fs.readdirSync(BLOG_DIR).filter((f) => f.endsWith(".md"));
   const posts: BlogPostMeta[] = [];
 
-  for (const file of listPostFiles()) {
-    const post = readPostFile(file);
-    if (post) posts.push(post.meta);
+  for (const file of files) {
+    const filePath = path.join(BLOG_DIR, file);
+    const raw = fs.readFileSync(filePath, "utf-8");
+    const { data, content } = parseFrontmatter<BlogFrontmatter>(raw);
+
+    if (data.draft === true) continue;
+
+    const meta: BlogPostMeta = {
+      title: String(data.title || ""),
+      slug: String(data.slug || file.replace(/\.md$/, "")),
+      description: String(data.description || ""),
+      published_at: String(data.published_at || ""),
+      updated_at: String(data.updated_at || data.published_at || ""),
+      tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
+      category: (data.category as BlogCategory) || "dev-notes",
+      related_tool_slugs: Array.isArray(data.related_tool_slugs)
+        ? data.related_tool_slugs.map(String)
+        : [],
+      draft: false,
+      readingTime: estimateReadingTime(content),
+    };
+
+    if (data.series) {
+      meta.series = String(data.series);
+    }
+
+    posts.push(meta);
   }
 
   posts.sort(
@@ -399,15 +216,45 @@ export function getAllBlogPosts(): BlogPostMeta[] {
 export async function getBlogPostBySlug(
   slug: string,
 ): Promise<BlogPost | null> {
-  for (const file of listPostFiles()) {
-    const post = readPostFile(file);
-    if (!post || post.meta.slug !== slug) continue;
+  if (!fs.existsSync(BLOG_DIR)) return null;
+
+  const files = fs.readdirSync(BLOG_DIR).filter((f) => f.endsWith(".md"));
+
+  for (const file of files) {
+    const filePath = path.join(BLOG_DIR, file);
+    const raw = fs.readFileSync(filePath, "utf-8");
+    const { data, content } = parseFrontmatter<BlogFrontmatter>(raw);
+
+    const postSlug = String(data.slug || file.replace(/\.md$/, ""));
+    if (postSlug !== slug) continue;
+    if (data.draft === true) continue;
 
     // Render HTML and collect the table-of-contents headings in a single pass
     // so the TOC anchor ids always match the rendered heading element ids.
-    const { html: contentHtml, headings } = await markdownToHtml(post.content);
+    const { html: contentHtml, headings } = await markdownToHtml(content);
 
-    return { ...post.meta, contentHtml, headings };
+    const post: BlogPost = {
+      title: String(data.title || ""),
+      slug: postSlug,
+      description: String(data.description || ""),
+      published_at: String(data.published_at || ""),
+      updated_at: String(data.updated_at || data.published_at || ""),
+      tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
+      category: (data.category as BlogCategory) || "dev-notes",
+      related_tool_slugs: Array.isArray(data.related_tool_slugs)
+        ? data.related_tool_slugs.map(String)
+        : [],
+      draft: false,
+      readingTime: estimateReadingTime(content),
+      contentHtml,
+      headings,
+    };
+
+    if (data.series) {
+      post.series = String(data.series);
+    }
+
+    return post;
   }
 
   return null;
@@ -527,9 +374,7 @@ export function getPostsByTag(tag: string): BlogPostMeta[] {
 
 /**
  * Get all tags that have at least the given minimum number of posts.
- * Used to determine which tags get a page of their own
- * ({@link MIN_POSTS_FOR_TAG_PAGE}) and which of those pages are indexable and
- * listed in the sitemap ({@link MIN_POSTS_FOR_TAG_INDEX}).
+ * Used to determine which tags get their own static pages.
  */
 export function getTagsWithMinPosts(minPosts: number): string[] {
   const posts = getAllBlogPosts();

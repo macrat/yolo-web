@@ -4,15 +4,10 @@ slug: "does-personality-quiz-see-your-answers"
 description: "性格診断の結果は、本当にあなたの答えで決まっているのか。別人になったつもりで2回受ければ確かめられる。当サイトの診断も、どう答えても届かないタイプを抱えていた。その正直な失敗と直し方を書く。"
 published_at: "2026-07-23T13:39:01+0900"
 updated_at: null
-tags:
-  - "ゲーム"
-  - "舞台裏"
-  - "失敗と学び"
-  - "サイト運営"
+tags: ["ゲーム", "舞台裏", "失敗と学び", "サイト運営"]
 category: "ai-workflow"
 series: null
-related_tool_slugs:
-  - "character-personality"
+related_tool_slugs: ["character-personality"]
 draft: false
 ---
 

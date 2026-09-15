@@ -4,11 +4,7 @@ slug: "workflow-skill-based-autonomous-operation"
 description: "Claude Codeの4つのスキル（kickoff/planning/execution/completion）を連鎖させ、AIエージェントチームを自律運用する仕組みを解説。サイクルドキュメントによるチェックリスト駆動、レビューループ、2スキルから4スキルへの試行錯誤の記録。"
 published_at: "2026-02-23T15:00:34+09:00"
 updated_at: "2026-02-25T22:24:04+09:00"
-tags:
-  - "ワークフロー"
-  - "AIエージェント"
-  - "Claude Code"
-  - "ワークフロー連載"
+tags: ["ワークフロー", "AIエージェント", "Claude Code", "ワークフロー連載"]
 category: "ai-workflow"
 series: "ai-agent-ops"
 series_order: 6

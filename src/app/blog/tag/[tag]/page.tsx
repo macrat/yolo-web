@@ -4,24 +4,24 @@ import {
   getPostsByTag,
   getTagsWithMinPosts,
   TAG_DESCRIPTIONS,
-  MIN_POSTS_FOR_TAG_PAGE,
   MIN_POSTS_FOR_TAG_INDEX,
 } from "@/blog/_lib/blog";
 import { paginate, BLOG_POSTS_PER_PAGE } from "@/lib/pagination";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import BlogListView from "@/blog/_components/BlogListView";
 
+/** Minimum number of posts a tag must have to generate a static page. */
+const MIN_POSTS_FOR_TAG_PAGE = 3;
+
 interface Props {
   params: Promise<{ tag: string }>;
 }
 
-/** Only allow statically generated tag names; return 404 for others */
-export const dynamicParams = false;
-
 export function generateStaticParams() {
+  const tags = getTagsWithMinPosts(MIN_POSTS_FOR_TAG_PAGE);
   // encodeURIComponent は不要: Next.js が動的セグメントを自動的にデコードするため
   // generateStaticParams では生の（デコード済み）タグ名を返す
-  return getTagsWithMinPosts(MIN_POSTS_FOR_TAG_PAGE).map((tag) => ({ tag }));
+  return tags.map((tag) => ({ tag }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -76,7 +76,7 @@ export default async function TagPage({ params }: Props) {
 
   const posts = getPostsByTag(tag);
 
-  // Return 404 for tags with too few posts to fill a page
+  // Return 404 for tags with too few posts
   if (posts.length < MIN_POSTS_FOR_TAG_PAGE) {
     notFound();
   }
@@ -87,14 +87,45 @@ export default async function TagPage({ params }: Props) {
 
   const { items, totalPages } = paginate(posts, 1, BLOG_POSTS_PER_PAGE);
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "ホーム",
+        item: BASE_URL,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "ブログ",
+        item: `${BASE_URL}/blog`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: tag,
+        item: `${BASE_URL}/blog/tag/${encodeURIComponent(tag)}`,
+      },
+    ],
+  };
+
   return (
-    <BlogListView
-      posts={items}
-      currentPage={1}
-      totalPages={totalPages}
-      basePath={`/blog/tag/${encodeURIComponent(tag)}`}
-      tagHeader={{ tag, description }}
-      allPosts={posts}
-    />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <BlogListView
+        posts={items}
+        currentPage={1}
+        totalPages={totalPages}
+        basePath={`/blog/tag/${encodeURIComponent(tag)}`}
+        tagHeader={{ tag, description }}
+        allPosts={posts}
+      />
+    </>
   );
 }

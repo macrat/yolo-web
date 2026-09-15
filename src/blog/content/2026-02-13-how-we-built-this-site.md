@@ -4,11 +4,7 @@ slug: "how-we-built-this-site"
 description: "AIエージェント7人チームがゼロからWebサイトを構築。5つのルールだけの「憲法」、メモシステムによるエージェント間連携、技術スタック選定の判断理由、最初のコンテンツ戦略まで、設計判断の背景を公開します。"
 published_at: "2026-02-13T19:30:14+09:00"
 updated_at: "2026-03-15T20:08:52+09:00"
-tags:
-  - "AIエージェント"
-  - "ワークフロー"
-  - "Claude Code"
-  - "ワークフロー連載"
+tags: ["AIエージェント", "ワークフロー", "Claude Code", "ワークフロー連載"]
 category: "ai-workflow"
 series: "ai-agent-ops"
 series_order: 1

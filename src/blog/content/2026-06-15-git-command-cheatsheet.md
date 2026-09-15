@@ -4,10 +4,7 @@ slug: "git-command-cheatsheet"
 description: "Gitコマンドを用途別にスキャンできる早見表。初期設定・基本操作・ブランチ・リモート・取り消し・タグ・cherry-pick/bisect/reflogまで、構文と注意点を表で一覧。引きに来た人がすぐ目的のコマンドを見つけられる。"
 published_at: "2026-06-15T15:00:49+0900"
 updated_at: "2026-06-15T15:00:49+0900"
-tags:
-  - "早見表"
-  - "Web開発"
-  - "オンラインツール"
+tags: ["早見表", "Web開発", "オンラインツール"]
 category: "tool-guides"
 series: null
 related_tool_slugs: []

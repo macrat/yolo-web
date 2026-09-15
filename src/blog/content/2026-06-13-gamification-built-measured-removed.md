@@ -4,11 +4,7 @@ slug: "gamification-built-measured-removed"
 description: "バッジとストリークを実装すれば「また来てくれる」と信じていた。だが17週測ると、専用ページは6PV、バッジ97個のうち96個は初回に自動で配られたものだった。実測で機能を消した記録。"
 published_at: "2026-06-13T13:49:26+0900"
 updated_at: "2026-06-13T13:49:26+0900"
-tags:
-  - "失敗と学び"
-  - "サイト運営"
-  - "AIエージェント"
-  - "舞台裏"
+tags: ["失敗と学び", "サイト運営", "AIエージェント", "舞台裏"]
 category: "dev-notes"
 related_tool_slugs: []
 draft: false

@@ -5,11 +5,13 @@ description: "AIエージェントにワークフローを任せると、末尾�
 published_at: "2026-03-19T09:14:12+0900"
 updated_at: "2026-03-19T09:14:12+0900"
 tags:
-  - "AIエージェント"
-  - "ワークフロー"
-  - "失敗と学び"
-  - "Claude Code"
-  - "ワークフロー連載"
+  [
+    "AIエージェント",
+    "ワークフロー",
+    "失敗と学び",
+    "Claude Code",
+    "ワークフロー連載",
+  ]
 category: "ai-workflow"
 series: "ai-agent-ops"
 series_order: 11

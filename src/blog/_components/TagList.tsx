@@ -4,31 +4,32 @@ import styles from "./TagList.module.css";
 interface TagListProps {
   tags: string[];
   /**
-   * タグページを持つタグの集合（`getTagsWithMinPosts(MIN_POSTS_FOR_TAG_PAGE)` の結果）。
-   * 指定すると、この集合に無いタグは描かない（DOM に出さない）。
-   * 未指定ならすべてのタグを描く。
-   * 算出は node:fs に依存するため、Server Component で計算して props で受け取る。
+   * タグページが存在するタグの集合（getTagsWithMinPosts(3) の結果）。
+   * 指定された場合、この集合に含まれないタグは UI から非表示にする（DOM に出さない）。
+   * 未指定の場合はすべてのタグを表示する（後方互換）。
+   * node:fs 依存のため Server Component で計算して props で受け取る。
+   * // TODO(cycle-184/B-389): X1 採用時に削除（タグ UI 完全廃止）
    */
   linkableTags?: ReadonlySet<string>;
   /**
    * 呼び出し側が根 `<ul>` に付与する追加クラス。任意。
-   * 例: BlogList は行全体を覆う stretched-link の擬似要素より前面へタグのリンクを
-   * 立たせるため、`a` を持ち上げるクラスを渡す。
+   * 例: BlogList が stretched-link の擬似要素より前面へタグを出すため
+   * z-index を持つクラスを渡す（cycle-281）。
    */
   className?: string;
 }
 
 /**
- * 記事のタグを並べる。
- * 各タグはそのタグの記事一覧（`/blog/tag/[tag]`）へのリンクになる。
- * タグ名は URL セグメントとしてエンコードして組み立てる（`#` `/` 空白などを
- * 含むタグ名でも、リンク先がそのタグのページに一致する）。
+ * Renders a list of clickable tag links.
+ * Each tag links to /blog/tag/[tag] for cross-category discovery.
  */
 export default function TagList({
   tags,
   linkableTags,
   className,
 }: TagListProps) {
+  // TODO(cycle-184/B-389): X1 採用時に削除（タグ UI 完全廃止）
+  // linkableTags が指定されている場合は含まれるタグのみ表示する（含まれないタグは DOM に出さない）
   const visibleTags = linkableTags
     ? tags.filter((tag) => linkableTags.has(tag))
     : tags;
@@ -41,11 +42,8 @@ export default function TagList({
       aria-label="タグ"
     >
       {visibleTags.map((tag) => (
-        <li key={tag}>
-          <Link
-            href={`/blog/tag/${encodeURIComponent(tag)}`}
-            className={styles.tagLink}
-          >
+        <li key={tag} className={styles.tag}>
+          <Link href={`/blog/tag/${tag}`} className={styles.tagLink}>
             {tag}
           </Link>
         </li>

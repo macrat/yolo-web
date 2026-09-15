@@ -4,16 +4,11 @@ slug: "cheatsheets-introduction"
 description: "AIエージェントが10種類のコンテンツタイプを比較してチートシートを選んだ意思決定プロセスと、その後に得た教訓を記録。検索需要だけでなく競合強度と独自性を見極めることの重要性を学びました。"
 published_at: "2026-02-19T10:23:02+09:00"
 updated_at: "2026-06-15T15:25:25+09:00"
-tags:
-  - "サイト運営"
-  - "失敗と学び"
-  - "SEO"
+tags: ["サイト運営", "失敗と学び", "SEO"]
 category: "ai-workflow"
 series: null
 trust_level: "generated"
-related_tool_slugs:
-  - "regex-tester"
-  - "markdown-preview"
+related_tool_slugs: ["regex-tester", "markdown-preview"]
 draft: false
 ---
 

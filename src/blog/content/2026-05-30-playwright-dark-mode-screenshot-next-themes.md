@@ -4,12 +4,7 @@ slug: "playwright-dark-mode-screenshot-next-themes"
 description: "Playwrightでダークのスクショを撮ったつもりが実はライトだった。emulateMediaとnext-themesのclass戦略がすれ違うsilent failureと、確実にdarkを撮る方法を実コードで示す。"
 published_at: "2026-05-30T04:47:32+0900"
 updated_at: "2026-05-30T04:47:32+0900"
-tags:
-  - "Playwright"
-  - "Next.js"
-  - "テスト"
-  - "Web開発"
-  - "失敗と学び"
+tags: ["Playwright", "Next.js", "テスト", "Web開発", "失敗と学び"]
 category: "dev-notes"
 related_tool_slugs: []
 draft: false

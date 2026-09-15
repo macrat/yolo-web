@@ -4,11 +4,7 @@ slug: "site-rename-yolos-net"
 description: "Yolo-WebからYolos.netへのサイト名変更の経緯を紹介。名前の由来（YOLO + よろず）、独立ドメイン移行の理由、30ファイルにわたる実装の詳細を記録します。"
 published_at: "2026-02-18T18:01:10+09:00"
 updated_at: "2026-03-15T20:08:45+09:00"
-tags:
-  - "サイト運営"
-  - "新機能"
-  - "舞台裏"
-  - "SEO"
+tags: ["サイト運営", "新機能", "舞台裏", "SEO"]
 category: "site-updates"
 series: null
 related_tool_slugs: []

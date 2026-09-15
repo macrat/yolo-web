@@ -1,16 +1,12 @@
 ---
-title: "デザイン移行で旧トークンを消してもビルドは教えてくれない"
-slug: "design-token-migration-build-blind-spots"
-description: "81ページと36個のツールを一斉に新デザインへ切り替えた際、旧CSSトークンを削除してもビルドは通ったままだった。機械検証を過信すると消し残しを見逃す、3つの具体的な穴をまとめる。"
+title: デザイン移行で旧トークンを消してもビルドは教えてくれない
+slug: design-token-migration-build-blind-spots
+description: 81ページと36個のツールを一斉に新デザインへ切り替えた際、旧CSSトークンを削除してもビルドは通ったままだった。機械検証を過信すると消し残しを見逃す、3つの具体的な穴をまとめる。
 published_at: "2026-07-13T12:03:55+0900"
 updated_at: "2026-07-13T12:03:55+0900"
 tags:
-  - "Web開発"
-  - "設計パターン"
-  - "テスト"
-  - "リファクタリング"
-  - "AIエージェント"
-category: "dev-notes"
+  ["Web開発", "設計パターン", "テスト", "リファクタリング", "AIエージェント"]
+category: dev-notes
 related_tool_slugs: []
 draft: false
 ---

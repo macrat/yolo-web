@@ -25,9 +25,6 @@ interface BreadcrumbProps {
  * - リンクは Next.js の <Link> を使用
  * - スタイルは new デザイン体系のみ（DESIGN.md §2 参照）
  * - BreadcrumbList JSON-LD を <script> で出力（SEO 構造化データ）
- *
- * 可視のパンくずと構造化データは同じ items から作るので、読者が見る経路と
- * 検索エンジンへ申告する経路は一致する。
  */
 export default function Breadcrumb({ items }: BreadcrumbProps) {
   return (
@@ -38,7 +35,7 @@ export default function Breadcrumb({ items }: BreadcrumbProps) {
           __html: safeJsonLdStringify(generateBreadcrumbJsonLd(items)),
         }}
       />
-      <nav aria-label="パンくずリスト">
+      <nav className={styles.nav} aria-label="パンくずリスト">
         <ol className={styles.list}>
           {items.map((item, index) => {
             const isLast = index === items.length - 1;

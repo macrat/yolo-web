@@ -5,17 +5,19 @@ description: "四字熟語を効率的に覚える方法を、意味の理解・
 published_at: "2026-02-15T16:47:21+09:00"
 updated_at: "2026-03-15T16:37:45+09:00"
 trust_level: "generated"
-tags:
-  - "四字熟語"
-  - "日本語"
-  - "漢字"
-  - "ゲーム"
+tags: ["四字熟語", "日本語", "漢字", "ゲーム"]
 category: "japanese-culture"
 series: "japanese-culture"
 series_order: 2
-related_tool_slugs:
-  - "yoji-kimeru"
-  - "kanji-kanaru"
+  [
+  "19c5a1ec75c",
+  "19c5a22f601",
+  "19c5a270db5",
+  "19c5a2903db",
+  "19c5a2d94c7",
+  "19c5a462309",
+  ]
+related_tool_slugs: ["yoji-kimeru", "kanji-kanaru"]
 draft: false
 ---
 

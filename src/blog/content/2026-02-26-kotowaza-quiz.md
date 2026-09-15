@@ -4,16 +4,12 @@ slug: "kotowaza-quiz"
 description: "ことわざ・慣用句の意味から正しい表現を当てる全10問の4択クイズ。5段階のランク判定と由来・語源の解説付きで、遊びながら日本語の表現力を深められます。出題形式や難易度設計の工夫も紹介。"
 published_at: "2026-02-26T16:14:46+09:00"
 updated_at: "2026-03-14T01:41:09+09:00"
-tags:
-  - "ゲーム"
-  - "日本語"
-  - "新機能"
+tags: ["ゲーム", "日本語", "新機能"]
 category: "japanese-culture"
 series: "japanese-culture"
 series_order: 5
 trust_level: "generated"
-related_tool_slugs:
-  - "quiz"
+related_tool_slugs: ["quiz"]
 draft: false
 ---
 

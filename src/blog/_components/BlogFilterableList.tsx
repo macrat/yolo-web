@@ -15,17 +15,16 @@ interface CategoryItem {
   label: string;
 }
 
-/** タグページの見出しに出す情報。 */
-export interface TagHeader {
+interface TagHeader {
   tag: string;
   description: string;
 }
 
-/**
- * 一覧ルートが供給する中身。一覧を描く 6 ルートすべてがこの形で渡す。
- */
-export interface BlogListSource {
-  /** 現在のページに表示する記事（ページネーション済み） */
+interface BlogFilterableListProps {
+  /**
+   * 現在のページに表示する記事（ページネーション済み）。
+   * キーワード検索が有効な場合はこれを使わず allPosts から全件フィルタする。
+   */
   posts: BlogPostMeta[];
   /** 現在の 1-based ページ番号 */
   currentPage: number;
@@ -33,39 +32,45 @@ export interface BlogListSource {
   totalPages: number;
   /** ページネーションリンクのベースパス（例: "/blog" / "/blog/category/dev-notes"） */
   basePath: string;
-  /** 現在アクティブなカテゴリスラッグ（カテゴリページのみ設定） */
+  /** 現在アクティブなカテゴリスラッグ（カテゴリページの場合のみ設定） */
   activeCategory?: BlogCategory;
   /**
-   * この一覧の母集合（ページネーション前の全件）。
-   * 件数バッジ・人気タグ・キーワード検索の対象になる。
-   * カテゴリページはカテゴリ横断の件数を出すためサイトの全記事を、
-   * タグページはそのタグが付いた全記事を渡す。
+   * 全記事（ページネーション前）。
+   * カテゴリカウント表示・人気タグ算出・キーワード検索の全件対象として使う。
+   * タグページでは省略可（省略時は件数バッジなし）。
    */
-  allPosts: BlogPostMeta[];
-  /** タグページの見出し情報。設定されていればタグページとして描く。 */
+  allPosts?: BlogPostMeta[];
+  /**
+   * タグページ専用ヘッダー情報。
+   * 設定されている場合はカテゴリナビではなくタグヘッダーを表示する。
+   */
   tagHeader?: TagHeader;
-}
-
-/**
- * 一覧の描画に必要なデータ一式。
- *
- * ルートが供給する {@link BlogListSource} に、Server Component でしか用意できない値を足したもの。
- * node:fs を使う `@/blog/_lib/blog` は Client Component からインポートできず、
- * Date.now() も react-hooks/purity 制約により Client Component 内で呼べないため、
- * これらは BlogListView が解決し、シリアライズ可能な形にして props で運ぶ。
- */
-export interface BlogListData extends BlogListSource {
-  /** 「新着」マークを表示する記事のスラッグ集合 */
+  /**
+   * 「新着」マークを表示する記事のスラッグ集合。
+   * 呼び出し元の Server Component（BlogListView）で計算して渡す。
+   * Date.now() は react-hooks/purity 制約により Client Component 内で使用できないため。
+   */
   newSlugs: ReadonlySet<string>;
-  /** カテゴリナビに並べるカテゴリ（表示順） */
+  /**
+   * カテゴリ一覧（Server Component から渡す）。
+   * node:fs を使う @/blog/_lib/blog を Client Component から直接インポートできないため props で受け取る。
+   */
   categories: CategoryItem[];
-  /** カテゴリID → 表示名のマッピング */
+  /**
+   * カテゴリID → 表示名のマッピング（Server Component から渡す）。
+   * node:fs を使う @/blog/_lib/blog を Client Component から直接インポートできないため props で受け取る。
+   */
   categoryLabels: Record<string, string>;
-  /** シリーズID → 表示名のマッピング */
+  /**
+   * シリーズID → 表示名のマッピング（Server Component から渡す）。
+   * node:fs を使う @/blog/_lib/blog を Client Component から直接インポートできないため props で受け取る。
+   */
   seriesLabels: Record<string, string>;
   /**
-   * タグページを持つタグの集合。{@link BlogList} 経由で TagList に流し、
-   * 行き先のページを持たないタグを描かないようにする。
+   * タグページが存在するタグの集合（getTagsWithMinPosts(3) の結果）。
+   * BlogList（内部で TagList）に流してタグ表示をフィルタする。
+   * node:fs 依存のため Server Component（BlogListView）で計算して渡す。
+   * // TODO(cycle-184/B-389): X1 採用時に削除（タグ UI 完全廃止）
    */
   linkableTags?: ReadonlySet<string>;
 }
@@ -100,8 +105,6 @@ function buildCategoryHref(
 /**
  * タグリンクの href を生成する。
  * 現在のキーワード（q=）を引き継ぐ。
- * タグ名は URL セグメントとしてエンコードする（`#` `/` 空白などを含むタグ名でも、
- * リンク先がそのタグのページに一致する）。
  */
 function buildTagHref(tag: string, keyword: string): string {
   const params = new URLSearchParams();
@@ -109,59 +112,18 @@ function buildTagHref(tag: string, keyword: string): string {
     params.set("q", keyword);
   }
   const query = params.toString();
-  const path = `/blog/tag/${encodeURIComponent(tag)}`;
-  return query ? `${path}?${query}` : path;
+  return query ? `/blog/tag/${tag}?${query}` : `/blog/tag/${tag}`;
 }
 
 /**
- * キーワード検索の対象になる記事。
- * 母集合を、この一覧がすでに掛けている絞り込み（タグ・カテゴリ）まで狭める。
- */
-function selectSearchBase(
-  allPosts: BlogPostMeta[],
-  activeCategory: BlogCategory | undefined,
-  tagHeader: TagHeader | undefined,
-): BlogPostMeta[] {
-  if (tagHeader) {
-    return allPosts.filter((post) => post.tags.includes(tagHeader.tag));
-  }
-  if (activeCategory) {
-    return allPosts.filter((post) => post.category === activeCategory);
-  }
-  return allPosts;
-}
-
-/**
- * 表示する記事が 0 件のときの一文。
- * いま何で絞り込んでいるかに合わせて、次にどうすれば記事へ辿り着けるかを伝える。
+ * キーワード検索とカテゴリナビ付きブログ記事一覧 (Client Component)。
  *
- * タグページは掲載記事が閾値に満たないタグを 404 にするため、タグで絞った一覧が
- * 空になるのはキーワード検索で 0 件になったときだけ。
- */
-function buildEmptyMessage(
-  isSearching: boolean,
-  activeCategory: BlogCategory | undefined,
-): string {
-  if (isSearching) {
-    return "一致する記事が見つかりませんでした。キーワードを変えるか、カテゴリやタグを切り替えると見つかるかもしれません。";
-  }
-  if (activeCategory) {
-    return "このカテゴリの記事はまだありません。";
-  }
-  return "まだ記事がありません。";
-}
-
-/**
- * ブログ一覧の本体 (Client Component) — カテゴリナビ・キーワード検索欄・人気タグ・品書き・ページネーション。
- *
- * 絞り込みの持ち方:
- * - キーワードはローカル state で即時反映し、URL（`?q=`）へは debounce して書き戻す
- *   （読んでいる位置を保つため、書き戻しではスクロールさせない）。
- *   URL 直接アクセスやブラウザバックで `?q=` が変われば、ローカル state を追従させる
- * - カテゴリは URL ベースの静的ルーティング（/blog/category/[category]）
+ * フィルター状態の管理:
+ * - キーワード: ローカル state（即時反映）+ URL の `?q=`（debounce で遅延反映）
+ * - カテゴリ: URL ベースの静的ルーティング（/blog/category/[cat]）
  *
  * キーワード検索が有効な場合:
- * - 母集合の全件に対してフィルタする（ページネーション無効化）
+ * - allPosts の全件に対してフィルタする（ページネーション無効化）
  * - ページネーションコンポーネントは非表示
  */
 export default function BlogFilterableList({
@@ -170,25 +132,25 @@ export default function BlogFilterableList({
   totalPages,
   basePath,
   activeCategory,
-  allPosts,
+  allPosts = [],
   tagHeader,
   newSlugs,
   categories,
   categoryLabels,
   seriesLabels,
   linkableTags,
-}: BlogListData) {
+}: BlogFilterableListProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
 
   const urlKeyword = searchParams.get("q") ?? "";
 
   // キーワードはローカル state で管理し、URL は debounce で遅延更新する
-  const [keyword, setKeyword] = useState(urlKeyword);
+  const [keyword, setKeywordLocal] = useState(urlKeyword);
 
   // URL から開かれた / ブラウザ戻るで URL が変わった場合、ローカル state も追従する
   useEffect(() => {
-    setKeyword(urlKeyword);
+    setKeywordLocal(urlKeyword);
   }, [urlKeyword]);
 
   // ローカル state の keyword を debounce して URL に反映
@@ -203,9 +165,7 @@ export default function BlogFilterableList({
       }
       const query = params.toString();
       // カテゴリページやタグページでも basePath を使って URL を構築
-      router.replace(query ? `${basePath}?${query}` : basePath, {
-        scroll: false,
-      });
+      router.replace(query ? `${basePath}?${query}` : basePath);
     }, KEYWORD_DEBOUNCE_MS);
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps -- searchParams の更新で再起動しない（urlKeyword で代用）
@@ -233,16 +193,32 @@ export default function BlogFilterableList({
   const showPopularTags =
     !activeCategory && !tagHeader && popularTags.length > 0;
 
-  // キーワード検索が有効な場合: 母集合の全件を対象にフィルタ（ページネーション無効化）
+  // キーワード検索が有効な場合: allPosts 全件を対象にフィルタ（ページネーション無効化）
   const isSearching = keyword.trim().length > 0;
-  const displayPosts = isSearching
-    ? filterPostsByKeyword(
-        selectSearchBase(allPosts, activeCategory, tagHeader),
-        keyword,
-        categoryLabels,
-        seriesLabels,
-      )
-    : posts;
+
+  let displayPosts: BlogPostMeta[];
+  if (isSearching) {
+    // タグページ: allPosts（タグ絞り込み済み全件）を対象にする
+    // カテゴリページ: allPosts からカテゴリ絞り込み済み全件を対象にする
+    // 通常ページ: allPosts 全件を対象にする
+    const searchBase = tagHeader
+      ? allPosts.length > 0
+        ? allPosts.filter((p) => p.tags.includes(tagHeader.tag))
+        : posts
+      : activeCategory
+        ? allPosts.filter((p) => p.category === activeCategory)
+        : allPosts;
+    displayPosts = filterPostsByKeyword(
+      searchBase,
+      keyword,
+      categoryLabels,
+      seriesLabels,
+    );
+  } else {
+    displayPosts = posts;
+  }
+
+  const hitCount = isSearching ? displayPosts.length : null;
 
   return (
     <div className={styles.wrapper}>
@@ -285,7 +261,7 @@ export default function BlogFilterableList({
         className={styles.searchInput}
         placeholder="記事を検索…"
         value={keyword}
-        onChange={(event) => setKeyword(event.target.value)}
+        onChange={(e) => setKeywordLocal(e.target.value)}
         aria-label="ブログ記事をキーワードで検索"
       />
 
@@ -308,9 +284,9 @@ export default function BlogFilterableList({
       )}
 
       {/* 検索ヒット件数（>=1 件時のみ表示） */}
-      {isSearching && displayPosts.length > 0 && (
+      {isSearching && hitCount !== null && hitCount > 0 && (
         <p className={styles.hitCount} aria-live="polite" aria-atomic="true">
-          {displayPosts.length}件ヒット
+          {hitCount}件ヒット
         </p>
       )}
 
@@ -320,15 +296,21 @@ export default function BlogFilterableList({
           posts={displayPosts}
           newSlugs={newSlugs}
           categoryLabels={categoryLabels}
-          linkableTags={linkableTags}
+          linkableTags={linkableTags} // TODO(cycle-184/B-389): X1 採用時に削除
         />
       ) : (
         <p className={styles.noResults} role="status">
-          {buildEmptyMessage(isSearching, activeCategory)}
+          {isSearching
+            ? "一致する記事が見つかりませんでした。キーワードを変えるか、カテゴリやタグを切り替えると見つかるかもしれません。"
+            : tagHeader
+              ? "このタグの記事はまだありません。"
+              : activeCategory
+                ? "このカテゴリの記事はまだありません。"
+                : "まだ記事がありません。"}
         </p>
       )}
 
-      {/* ページネーション（キーワード検索中は非表示）。タップターゲット 44px は Pagination 本体が持つ。 */}
+      {/* ページネーション（キーワード検索中は非表示）。Pagination 本体が 44px タップターゲットを持つ（B-388）。 */}
       {!isSearching && (
         <Pagination
           currentPage={currentPage}

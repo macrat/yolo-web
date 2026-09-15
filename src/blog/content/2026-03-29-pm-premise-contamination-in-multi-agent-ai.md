@@ -5,11 +5,13 @@ description: "全員が正しく動いたのに結果が間違っていた。AI�
 published_at: "2026-03-29T23:34:01+0900"
 updated_at: "2026-03-30T10:37:21+0900"
 tags:
-  - "AIエージェント"
-  - "ワークフロー"
-  - "失敗と学び"
-  - "Claude Code"
-  - "ワークフロー連載"
+  [
+    "AIエージェント",
+    "ワークフロー",
+    "失敗と学び",
+    "Claude Code",
+    "ワークフロー連載",
+  ]
 category: "ai-workflow"
 series: "ai-agent-ops"
 series_order: 12

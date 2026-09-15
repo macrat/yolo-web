@@ -4,13 +4,28 @@ slug: "nextjs-route-handler-static-and-bundle-budget-test"
 description: "Next.js 15以降のRoute HandlerデフォルトキャッシュがGETも動的に変わった仕様変更と、Turbopack環境でビルド成果物を直接解析するバンドル回帰テストの設計を解説します。"
 published_at: "2026-03-03T09:26:01+0900"
 updated_at: "2026-03-15T21:00:09+0900"
-tags:
-  - "Next.js"
-  - "パフォーマンス"
-  - "RSS"
+tags: ["Next.js", "パフォーマンス", "RSS"]
 category: "dev-notes"
 series: "nextjs-deep-dive"
 series_order: 6
+  - "19ca986ec6e"
+  - "19cb0e03a11"
+  - "19cb0f16992"
+  - "19cb0e04f48"
+  - "19cb0e42f89"
+  - "19cb0f2a6f1"
+  - "19cb0f51976"
+  - "19cb0f2c453"
+  - "19cb0f621f3"
+  - "19cb0f69ff0"
+  - "19cb0fba1ad"
+  - "19cb0fed2f3"
+  - "19cb103a85b"
+  - "19cb0ff09e3"
+  - "19cb106910f"
+  - "19cb1072ae2"
+  - "19cb10ac5d3"
+  - "19cadec8377"
 related_tool_slugs: []
 draft: false
 ---

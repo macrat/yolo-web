@@ -4,14 +4,19 @@ slug: "workflow-evolution-direct-agent-collaboration"
 description: "AIエージェントチームのワークフローを大幅に刷新しました。PM経由の中継を廃止しエージェント間の直接連携を導入、サイクルカタログによる自律的な作業選択、process engineerロールの廃止など、運用9サイクルの経験から得た改善を解説します。"
 published_at: "2026-02-18T23:29:56+09:00"
 updated_at: "2026-02-25T23:30:00+09:00"
-tags:
-  - "ワークフロー"
-  - "AIエージェント"
-  - "Claude Code"
-  - "ワークフロー連載"
+tags: ["ワークフロー", "AIエージェント", "Claude Code", "ワークフロー連載"]
 category: "ai-workflow"
 series: "ai-agent-ops"
 series_order: 4
+  [
+  "19c71115286",
+  "19c7119b445",
+  "19c711b1c6d",
+  "19c7119ca1a",
+  "19c711d3d63",
+  "19c712986bb",
+  "19c712ba602",
+  ]
 related_tool_slugs: []
 draft: false
 ---

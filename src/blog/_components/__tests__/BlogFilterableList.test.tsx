@@ -82,6 +82,18 @@ function makePost(overrides: Partial<BlogPostMeta> = {}): BlogPostMeta {
   };
 }
 
+/** デフォルトの props */
+const defaultProps = {
+  posts: [] as BlogPostMeta[],
+  currentPage: 1,
+  totalPages: 1,
+  basePath: "/blog",
+  newSlugs: new Set<string>(),
+  categories,
+  categoryLabels,
+  seriesLabels,
+};
+
 const mockPosts: BlogPostMeta[] = [
   makePost({
     slug: "post-ai",
@@ -106,144 +118,49 @@ const mockPosts: BlogPostMeta[] = [
   }),
 ];
 
-/** 全記事を母集合に取り、絞り込みのない一覧として描くときの props */
-const defaultProps = {
-  posts: mockPosts,
-  allPosts: mockPosts,
-  currentPage: 1,
-  totalPages: 1,
-  basePath: "/blog",
-  newSlugs: new Set<string>(),
-  categories,
-  categoryLabels,
-  seriesLabels,
-};
-
-/** `?q=` の値を差し替える。 */
-function setUrlKeyword(query: string): void {
-  vi.mocked(nextNavigation.useSearchParams).mockReturnValue(
-    new URLSearchParams(query) as ReturnType<
-      typeof nextNavigation.useSearchParams
-    >,
-  );
-}
-
-/** 検索欄の input。aria-label で引く。 */
-const searchInput = () =>
-  screen.getByRole("searchbox", { name: "ブログ記事をキーワードで検索" });
-
+// 各テスト前にデフォルトのモックに戻す
 beforeEach(() => {
-  setUrlKeyword("");
+  vi.mocked(nextNavigation.useSearchParams).mockReturnValue(
+    new URLSearchParams() as ReturnType<typeof nextNavigation.useSearchParams>,
+  );
   mockReplace.mockClear();
 });
 
-describe("URL からキーワードを取り込む", () => {
-  test("?q= の値が検索欄と一覧の絞り込みに反映される", () => {
-    setUrlKeyword("q=Next.js開発");
-    render(<BlogFilterableList {...defaultProps} />);
-    expect(searchInput()).toHaveValue("Next.js開発");
-    expect(screen.getByText("Next.js開発記録")).toBeInTheDocument();
-    expect(screen.queryByText("AIの使い方記事")).not.toBeInTheDocument();
-  });
-
-  test("?q= が変われば検索欄がその値に追従する", () => {
-    const { rerender } = render(<BlogFilterableList {...defaultProps} />);
-    expect(searchInput()).toHaveValue("");
-
-    setUrlKeyword("q=AI");
-    rerender(<BlogFilterableList {...defaultProps} />);
-
-    expect(searchInput()).toHaveValue("AI");
-    expect(screen.getByText("AIの使い方記事")).toBeInTheDocument();
-    expect(screen.queryByText("Next.js開発記録")).not.toBeInTheDocument();
-  });
-});
-
-describe("キーワードを URL へ書き戻す", () => {
-  test("入力は即座に反映され、URL への書き戻しは遅延する", async () => {
-    render(<BlogFilterableList {...defaultProps} />);
-    await userEvent.type(searchInput(), "A");
-
-    expect(searchInput()).toHaveValue("A");
-    expect(mockReplace).not.toHaveBeenCalled();
-
-    await waitFor(
-      () => {
-        expect(mockReplace).toHaveBeenCalledWith("/blog?q=A", {
-          scroll: false,
-        });
-      },
-      { timeout: 1000 },
-    );
-  });
-
-  test("書き戻し先は basePath なのでカテゴリページから外れない", async () => {
+describe("フィルターナビゲーション表示", () => {
+  test("カテゴリナビゲーションが表示される", () => {
     render(
       <BlogFilterableList
         {...defaultProps}
-        basePath="/blog/category/dev-notes"
-        activeCategory="dev-notes"
+        posts={mockPosts}
+        allPosts={mockPosts}
       />,
     );
-    await userEvent.type(searchInput(), "A");
-
-    await waitFor(
-      () => {
-        expect(mockReplace).toHaveBeenCalledWith(
-          "/blog/category/dev-notes?q=A",
-          { scroll: false },
-        );
-      },
-      { timeout: 1000 },
-    );
-  });
-
-  test("キーワードを消すと URL から q= が落ちる", async () => {
-    setUrlKeyword("q=AI");
-    render(<BlogFilterableList {...defaultProps} />);
-    await userEvent.clear(searchInput());
-
-    expect(searchInput()).toHaveValue("");
-
-    await waitFor(
-      () => {
-        expect(mockReplace).toHaveBeenCalledWith("/blog", { scroll: false });
-      },
-      { timeout: 1000 },
-    );
-  });
-
-  test("URL 由来のキーワードをそのまま表示しているだけなら書き戻さない", async () => {
-    setUrlKeyword("q=AI");
-    render(<BlogFilterableList {...defaultProps} />);
-
-    await waitFor(
-      () => {
-        expect(searchInput()).toHaveValue("AI");
-      },
-      { timeout: 1000 },
-    );
-    expect(mockReplace).not.toHaveBeenCalled();
-  });
-});
-
-describe("カテゴリナビゲーション", () => {
-  test("カテゴリナビゲーションが表示される", () => {
-    render(<BlogFilterableList {...defaultProps} />);
     expect(
       screen.getByRole("navigation", { name: "カテゴリで絞り込む" }),
     ).toBeInTheDocument();
   });
 
   test("「すべて」リンクが /blog を指す", () => {
-    render(<BlogFilterableList {...defaultProps} />);
+    render(
+      <BlogFilterableList
+        {...defaultProps}
+        posts={mockPosts}
+        allPosts={mockPosts}
+      />,
+    );
     const nav = screen.getByRole("navigation", { name: "カテゴリで絞り込む" });
     expect(nav.querySelector('[href="/blog"]')).not.toBeNull();
     expect(nav).toHaveTextContent("すべて");
   });
 
-  test("カテゴリリンクの href が各カテゴリページを指す", () => {
-    render(<BlogFilterableList {...defaultProps} />);
+  test("カテゴリリンクの href が正しい（例: /blog/category/dev-notes）", () => {
+    render(
+      <BlogFilterableList
+        {...defaultProps}
+        posts={mockPosts}
+        allPosts={mockPosts}
+      />,
+    );
     const nav = screen.getByRole("navigation", { name: "カテゴリで絞り込む" });
     expect(
       nav.querySelector('[href="/blog/category/dev-notes"]'),
@@ -253,24 +170,44 @@ describe("カテゴリナビゲーション", () => {
     ).not.toBeNull();
   });
 
-  test("activeCategory が無いとき「すべて」が現在地として示される", () => {
-    render(<BlogFilterableList {...defaultProps} />);
+  test("初期状態では「すべて」リンクが aria-current=page かつ data-active=true", () => {
+    render(
+      <BlogFilterableList
+        {...defaultProps}
+        posts={mockPosts}
+        allPosts={mockPosts}
+      />,
+    );
     const nav = screen.getByRole("navigation", { name: "カテゴリで絞り込む" });
     const allLink = nav.querySelector('[href="/blog"]') as Element;
     expect(allLink).toHaveAttribute("aria-current", "page");
     expect(allLink).toHaveAttribute("data-active", "true");
+  });
+
+  test("初期状態ではカテゴリリンクが aria-current を持たない", () => {
+    render(
+      <BlogFilterableList
+        {...defaultProps}
+        posts={mockPosts}
+        allPosts={mockPosts}
+      />,
+    );
+    const nav = screen.getByRole("navigation", { name: "カテゴリで絞り込む" });
     const devNotesLink = nav.querySelector(
       '[href="/blog/category/dev-notes"]',
     ) as Element;
     expect(devNotesLink).not.toHaveAttribute("aria-current");
     expect(devNotesLink).not.toHaveAttribute("data-active");
   });
+});
 
-  test("activeCategory のカテゴリが現在地として示される", () => {
+describe("activeCategory 指定時のフィルタリング", () => {
+  test("activeCategory が指定されたカテゴリリンクが aria-current=page", () => {
     render(
       <BlogFilterableList
         {...defaultProps}
         posts={mockPosts.filter((p) => p.category === "dev-notes")}
+        allPosts={mockPosts}
         activeCategory="dev-notes"
       />,
     );
@@ -280,185 +217,296 @@ describe("カテゴリナビゲーション", () => {
     ) as Element;
     expect(devNotesLink).toHaveAttribute("aria-current", "page");
     expect(devNotesLink).toHaveAttribute("data-active", "true");
+    // 「すべて」はアクティブでない
     const allLink = nav.querySelector('[href="/blog"]') as Element;
     expect(allLink).not.toHaveAttribute("aria-current");
   });
+});
 
-  test("tagHeader が指定されたときカテゴリナビは表示されない", () => {
+describe("キーワード検索フィルタリング（?q= 経由）", () => {
+  test("?q= でタイトルにマッチする記事のみ表示される", () => {
+    vi.mocked(nextNavigation.useSearchParams).mockReturnValue(
+      new URLSearchParams("q=Next.js開発") as ReturnType<
+        typeof nextNavigation.useSearchParams
+      >,
+    );
     render(
       <BlogFilterableList
         {...defaultProps}
-        tagHeader={{
-          tag: "設計パターン",
-          description: "設計パターンの記事一覧",
-        }}
+        posts={mockPosts}
+        allPosts={mockPosts}
       />,
     );
-    expect(
-      screen.queryByRole("navigation", { name: "カテゴリで絞り込む" }),
-    ).not.toBeInTheDocument();
-  });
-});
-
-describe("キーワードによる絞り込み", () => {
-  test("タイトルにマッチする記事のみ表示される", () => {
-    setUrlKeyword("q=Next.js開発");
-    render(<BlogFilterableList {...defaultProps} />);
     expect(screen.getByText("Next.js開発記録")).toBeInTheDocument();
     expect(screen.queryByText("AIの使い方記事")).not.toBeInTheDocument();
     expect(screen.queryByText("サイト更新情報")).not.toBeInTheDocument();
   });
 
-  test("description にマッチする記事のみ表示される", () => {
-    setUrlKeyword("q=機能追加");
-    render(<BlogFilterableList {...defaultProps} />);
+  test("?q= で description にマッチする記事のみ表示される", () => {
+    vi.mocked(nextNavigation.useSearchParams).mockReturnValue(
+      new URLSearchParams("q=機能追加") as ReturnType<
+        typeof nextNavigation.useSearchParams
+      >,
+    );
+    render(
+      <BlogFilterableList
+        {...defaultProps}
+        posts={mockPosts}
+        allPosts={mockPosts}
+      />,
+    );
     expect(screen.getByText("サイト更新情報")).toBeInTheDocument();
     expect(screen.queryByText("AIの使い方記事")).not.toBeInTheDocument();
   });
 
-  test("英字の大文字小文字を区別しない", () => {
-    setUrlKeyword("q=next.js");
-    render(<BlogFilterableList {...defaultProps} />);
+  test("検索は大文字小文字を区別しない（英字）", () => {
+    vi.mocked(nextNavigation.useSearchParams).mockReturnValue(
+      new URLSearchParams("q=next.js") as ReturnType<
+        typeof nextNavigation.useSearchParams
+      >,
+    );
+    render(
+      <BlogFilterableList
+        {...defaultProps}
+        posts={mockPosts}
+        allPosts={mockPosts}
+      />,
+    );
+    // "Next.js" を含む記事が小文字の "next.js" でヒット
     expect(screen.getByText("Next.js開発記録")).toBeInTheDocument();
   });
 
-  test("カテゴリとキーワードは積集合で効く", () => {
-    setUrlKeyword("q=Next");
+  test("?q= でマッチなしの場合 role=status の空結果メッセージが表示される", () => {
+    vi.mocked(nextNavigation.useSearchParams).mockReturnValue(
+      new URLSearchParams("q=zzzzz存在しない語") as ReturnType<
+        typeof nextNavigation.useSearchParams
+      >,
+    );
+    render(
+      <BlogFilterableList
+        {...defaultProps}
+        posts={mockPosts}
+        allPosts={mockPosts}
+      />,
+    );
+    const statusMsg = screen.getByRole("status");
+    expect(statusMsg).toBeInTheDocument();
+  });
+});
+
+describe("カテゴリ + キーワード併用（積集合）", () => {
+  test("activeCategory + ?q= の積集合でフィルタリングされる", () => {
+    vi.mocked(nextNavigation.useSearchParams).mockReturnValue(
+      new URLSearchParams("q=Next") as ReturnType<
+        typeof nextNavigation.useSearchParams
+      >,
+    );
     render(
       <BlogFilterableList
         {...defaultProps}
         posts={mockPosts.filter((p) => p.category === "dev-notes")}
+        allPosts={mockPosts}
         activeCategory="dev-notes"
       />,
     );
+    // dev-notes かつ "Next" を含む記事のみ表示
     expect(screen.getByText("Next.js開発記録")).toBeInTheDocument();
+    // dev-notes だが "Next" を含まない記事は除外（今回のモックデータにはないが構造確認）
     expect(screen.queryByText("AIの使い方記事")).not.toBeInTheDocument();
   });
+});
 
-  test("マッチなしのとき role=status の空結果メッセージが表示される", () => {
-    setUrlKeyword("q=zzzzz存在しない語");
-    render(<BlogFilterableList {...defaultProps} />);
-    expect(screen.getByRole("status")).toBeInTheDocument();
+describe("ヒット件数表示（MJ-C 対応）", () => {
+  test("?q= ありかつヒット件数 ≥1 の時、件数表示が DOM に存在する", () => {
+    vi.mocked(nextNavigation.useSearchParams).mockReturnValue(
+      new URLSearchParams("q=AI") as ReturnType<
+        typeof nextNavigation.useSearchParams
+      >,
+    );
+    render(
+      <BlogFilterableList
+        {...defaultProps}
+        posts={mockPosts}
+        allPosts={mockPosts}
+      />,
+    );
+    // ヒット件数表示は aria-live="polite" を持つ要素
+    const hitCountEl = document.querySelector("[aria-live='polite']");
+    expect(hitCountEl).not.toBeNull();
+  });
+
+  test("?q= ありかつヒット 0 件の時、ヒット件数表示は DOM に存在しない", () => {
+    vi.mocked(nextNavigation.useSearchParams).mockReturnValue(
+      new URLSearchParams("q=zzzzz存在しない語") as ReturnType<
+        typeof nextNavigation.useSearchParams
+      >,
+    );
+    render(
+      <BlogFilterableList
+        {...defaultProps}
+        posts={mockPosts}
+        allPosts={mockPosts}
+      />,
+    );
+    // 0 件時は件数表示要素が描画されない（空状態メッセージのみ）
+    const hitCountEl = document.querySelector("[aria-live='polite']");
+    expect(hitCountEl).toBeNull();
+    // 空状態メッセージが表示される
+    const statusMsg = screen.getByRole("status");
+    expect(statusMsg).toBeInTheDocument();
   });
 });
 
-describe("ヒット件数表示", () => {
-  test("ヒット件数 1 件以上のとき件数が読み上げ対象として出る", () => {
-    setUrlKeyword("q=AI");
-    const { container } = render(<BlogFilterableList {...defaultProps} />);
-    expect(container.querySelector("[aria-live='polite']")).not.toBeNull();
-  });
-
-  test("ヒット 0 件のとき件数は出さず空状態メッセージだけを出す", () => {
-    setUrlKeyword("q=zzzzz存在しない語");
-    const { container } = render(<BlogFilterableList {...defaultProps} />);
-    expect(container.querySelector("[aria-live='polite']")).toBeNull();
-    expect(screen.getByRole("status")).toBeInTheDocument();
-  });
-});
-
-describe("リンクへのキーワード引き継ぎ", () => {
-  test("キーワードがあるときカテゴリリンクの href に q= が載る", () => {
-    setUrlKeyword("q=Next.js");
-    render(<BlogFilterableList {...defaultProps} />);
+describe("buildCategoryHref: カテゴリリンク href にキーワード引き継ぎ", () => {
+  test("?q= がある状態でカテゴリリンクの href に q= が含まれる", () => {
+    vi.mocked(nextNavigation.useSearchParams).mockReturnValue(
+      new URLSearchParams("q=Next.js") as ReturnType<
+        typeof nextNavigation.useSearchParams
+      >,
+    );
+    render(
+      <BlogFilterableList
+        {...defaultProps}
+        posts={mockPosts}
+        allPosts={mockPosts}
+      />,
+    );
     const nav = screen.getByRole("navigation", { name: "カテゴリで絞り込む" });
     const devNotesLink = nav.querySelector(
       '[href*="/blog/category/dev-notes"]',
     ) as HTMLAnchorElement;
+    expect(devNotesLink.getAttribute("href")).toContain("q=");
     expect(devNotesLink.getAttribute("href")).toContain(
       "/blog/category/dev-notes",
     );
-    expect(devNotesLink.getAttribute("href")).toContain("q=");
   });
 
-  test("キーワードが無いときカテゴリリンクの href に q= は載らない", () => {
-    render(<BlogFilterableList {...defaultProps} />);
+  test("q= がない状態でカテゴリリンクの href に q= が含まれない", () => {
+    render(
+      <BlogFilterableList
+        {...defaultProps}
+        posts={mockPosts}
+        allPosts={mockPosts}
+      />,
+    );
     const nav = screen.getByRole("navigation", { name: "カテゴリで絞り込む" });
     const devNotesLink = nav.querySelector(
       '[href="/blog/category/dev-notes"]',
     ) as HTMLAnchorElement;
     expect(devNotesLink.getAttribute("href")).not.toContain("q=");
   });
+});
 
-  test("キーワードがあるとき人気タグリンクの href に q= が載る", () => {
-    setUrlKeyword("q=AI");
-    render(<BlogFilterableList {...defaultProps} />);
+describe("buildTagHref: タグリンク href にキーワード引き継ぎ", () => {
+  test("?q= がある状態で人気タグリンクの href に q= が含まれる", () => {
+    vi.mocked(nextNavigation.useSearchParams).mockReturnValue(
+      new URLSearchParams("q=AI") as ReturnType<
+        typeof nextNavigation.useSearchParams
+      >,
+    );
+    render(
+      <BlogFilterableList
+        {...defaultProps}
+        posts={mockPosts}
+        allPosts={mockPosts}
+      />,
+    );
+    // 人気タグが表示される（カテゴリフィルタ未適用かつタグページでないため）
     const popularTagsNav = screen.getByRole("navigation", { name: "人気タグ" });
     const tagLinks = popularTagsNav.querySelectorAll("a");
-    expect(tagLinks.length).toBeGreaterThan(0);
+    // すべてのタグリンクに q= が含まれることを確認
     tagLinks.forEach((link) => {
       expect(link.getAttribute("href")).toContain("q=");
     });
   });
 });
 
-describe("人気タグのリンク先", () => {
-  const trickyTags = ["C#", "CI/CD", "Claude Code"];
-  const trickyPosts = trickyTags.map((tag, index) =>
-    makePost({ slug: `post-${index}`, title: `記事${index}`, tags: [tag] }),
-  );
-  const trickyProps = {
-    ...defaultProps,
-    posts: trickyPosts,
-    allPosts: trickyPosts,
-  };
-
-  /** 人気タグナビの href を集める */
-  const popularTagHrefs = () =>
-    Array.from(
-      screen
-        .getByRole("navigation", { name: "人気タグ" })
-        .querySelectorAll("a"),
-    ).map((link) => link.getAttribute("href") ?? "");
-
-  test("URL で意味を持つ文字を含むタグでも、リンク先がそのタグのページを指す", () => {
-    render(<BlogFilterableList {...trickyProps} />);
-    const prefix = "/blog/tag/";
-    const hrefs = popularTagHrefs();
-    expect(hrefs).toHaveLength(trickyTags.length);
-    expect(
-      hrefs.map((href) => decodeURIComponent(href.slice(prefix.length))),
-    ).toEqual(trickyTags);
-    hrefs.forEach((href) => {
-      expect(href.slice(prefix.length)).not.toMatch(/[ #?/]/);
-    });
-  });
-
-  test("キーワードを引き継ぐときもタグ名の部分はエンコードされたまま", () => {
-    setUrlKeyword("q=記事");
-    render(<BlogFilterableList {...trickyProps} />);
-    popularTagHrefs().forEach((href) => {
-      const [path, query] = href.split("?");
-      expect(path.slice("/blog/tag/".length)).not.toMatch(/[ #/]/);
-      expect(query).toContain("q=");
-    });
-  });
-});
-
-describe("人気タグの出現条件", () => {
-  test("カテゴリ絞り込みが無く、タグページでもないとき表示される", () => {
-    render(<BlogFilterableList {...defaultProps} />);
+describe("人気タグ表示の出現条件", () => {
+  test("カテゴリフィルタ未適用かつ非タグページのとき人気タグが表示される", () => {
+    render(
+      <BlogFilterableList
+        {...defaultProps}
+        posts={mockPosts}
+        allPosts={mockPosts}
+      />,
+    );
     expect(
       screen.getByRole("navigation", { name: "人気タグ" }),
     ).toBeInTheDocument();
   });
 
-  test("activeCategory が指定されたときは表示されない", () => {
-    render(<BlogFilterableList {...defaultProps} activeCategory="dev-notes" />);
+  test("activeCategory が指定された時（カテゴリフィルタ適用中）は人気タグが表示されない", () => {
+    render(
+      <BlogFilterableList
+        {...defaultProps}
+        posts={mockPosts}
+        allPosts={mockPosts}
+        activeCategory="dev-notes"
+      />,
+    );
     expect(
       screen.queryByRole("navigation", { name: "人気タグ" }),
     ).not.toBeInTheDocument();
   });
 
-  test("tagHeader が指定されたとき（タグページ）は表示されない", () => {
+  test("tagHeader が指定されたとき（タグページ）は人気タグが表示されない", () => {
     render(
       <BlogFilterableList
         {...defaultProps}
+        posts={mockPosts}
+        allPosts={mockPosts}
         tagHeader={{ tag: "TypeScript", description: "TypeScriptの記事一覧" }}
       />,
     );
     expect(
       screen.queryByRole("navigation", { name: "人気タグ" }),
     ).not.toBeInTheDocument();
+  });
+});
+
+describe("タグページでの tagHeader 表示", () => {
+  test("tagHeader が指定されたとき、カテゴリナビは表示されずタグ名が表示される", () => {
+    render(
+      <BlogFilterableList
+        {...defaultProps}
+        posts={mockPosts}
+        allPosts={mockPosts}
+        tagHeader={{
+          tag: "設計パターン",
+          description: "設計パターンの記事一覧",
+        }}
+      />,
+    );
+    // カテゴリナビは表示されない
+    expect(
+      screen.queryByRole("navigation", { name: "カテゴリで絞り込む" }),
+    ).not.toBeInTheDocument();
+  });
+});
+
+describe("debounce と URL 更新", () => {
+  test("入力欄に文字を入力すると debounce 後に router.replace が呼ばれる", async () => {
+    render(
+      <BlogFilterableList
+        {...defaultProps}
+        posts={mockPosts}
+        allPosts={mockPosts}
+      />,
+    );
+    const searchInput = screen.getByRole("searchbox");
+    await userEvent.type(searchInput, "a");
+    // 入力直後（debounce 前）は router.replace が呼ばれていない
+    expect(mockReplace).not.toHaveBeenCalled();
+    // debounce 後（300ms 後）に router.replace が呼ばれること
+    await waitFor(
+      () => {
+        expect(mockReplace).toHaveBeenCalled();
+        const lastCalledUrl = mockReplace.mock.calls[
+          mockReplace.mock.calls.length - 1
+        ][0] as string;
+        expect(lastCalledUrl).toContain("q=");
+      },
+      { timeout: 1000 },
+    );
   });
 });

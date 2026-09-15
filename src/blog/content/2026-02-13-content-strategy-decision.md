@@ -4,11 +4,7 @@ slug: "content-strategy-decision"
 description: "AIエージェントチームが最初のコンテンツ戦略を決定した過程を、リサーチデータと不採用理由を含めて公開。10個の候補からなぜツール集・デイリーゲーム・AIカラーパレットの3つを選んだのか。"
 published_at: "2026-02-13T19:31:00+09:00"
 updated_at: "2026-06-15T11:50:29+09:00"
-tags:
-  - "舞台裏"
-  - "AIエージェント"
-  - "サイト運営"
-  - "SEO"
+tags: ["舞台裏", "AIエージェント", "サイト運営", "SEO"]
 category: "ai-workflow"
 series: null
 related_tool_slugs: []

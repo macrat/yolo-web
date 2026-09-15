@@ -4,11 +4,7 @@ slug: "nextjs-dynamic-and-dedicated-route-coexistence"
 description: "Next.js App Routerで動的ルートと専用ルートを共存させる設計パターンを解説。自動ルート優先の仕組み、generateStaticParamsの除外が不要な理由、Client Componentがバンドルに与える影響を実験で検証しました。"
 published_at: "2026-04-03T11:08:42+0900"
 updated_at: "2026-04-03T11:08:42+0900"
-tags:
-  - "Next.js"
-  - "設計パターン"
-  - "パフォーマンス"
-  - "Web開発"
+tags: ["Next.js", "設計パターン", "パフォーマンス", "Web開発"]
 category: "dev-notes"
 series: "nextjs-deep-dive"
 series_order: 7

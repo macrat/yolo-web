@@ -15,9 +15,6 @@ interface Props {
   params: Promise<{ category: string }>;
 }
 
-/** Only allow statically generated categories; return 404 for others */
-export const dynamicParams = false;
-
 export function generateStaticParams() {
   return ALL_CATEGORIES.map((cat) => ({ category: cat }));
 }
@@ -64,18 +61,50 @@ export default async function CategoryPage({ params }: Props) {
     notFound();
   }
 
+  const label = CATEGORY_LABELS[category as BlogCategory];
   const allPosts = getAllBlogPosts();
   const categoryPosts = allPosts.filter((p) => p.category === category);
   const { items, totalPages } = paginate(categoryPosts, 1, BLOG_POSTS_PER_PAGE);
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "ホーム",
+        item: BASE_URL,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "ブログ",
+        item: `${BASE_URL}/blog`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: label,
+        item: `${BASE_URL}/blog/category/${category}`,
+      },
+    ],
+  };
+
   return (
-    <BlogListView
-      posts={items}
-      currentPage={1}
-      totalPages={totalPages}
-      basePath={`/blog/category/${category}`}
-      activeCategory={category as BlogCategory}
-      allPosts={allPosts}
-    />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <BlogListView
+        posts={items}
+        currentPage={1}
+        totalPages={totalPages}
+        basePath={`/blog/category/${category}`}
+        activeCategory={category as BlogCategory}
+        allPosts={allPosts}
+      />
+    </>
   );
 }

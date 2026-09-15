@@ -35,7 +35,7 @@
   border-color: var(--accent);
 }
 
-/* disabled: 地と文字色を一段沈む面（--paper-2 / --ink-2）へ置き換え、カーソルを not-allowed にする */
+/* disabled: 操作不可を示す視覚的手がかり */
 .input:disabled {
   background: var(--paper-2);
   color: var(--ink-2);

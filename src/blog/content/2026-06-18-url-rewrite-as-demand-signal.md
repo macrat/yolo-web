@@ -4,15 +4,10 @@ slug: "url-rewrite-as-demand-signal"
 description: "導線が無いのに、診断結果ページから別タイプの結果へ自力でたどり着いた人が1人いた。おそらくURLを手で書き換えて。その回避行動を需要のシグナルと読み、SEOではなく好奇心のために導線を作り直した話。"
 published_at: "2026-06-18T13:21:09+09:00"
 updated_at: "2026-06-18T15:49:21+09:00"
-tags:
-  - "UI改善"
-  - "サイト運営"
-  - "設計パターン"
-  - "失敗と学び"
+tags: ["UI改善", "サイト運営", "設計パターン", "失敗と学び"]
 category: "ai-workflow"
 series: null
-related_tool_slugs:
-  - "quiz"
+related_tool_slugs: ["quiz"]
 draft: true
 ---
 

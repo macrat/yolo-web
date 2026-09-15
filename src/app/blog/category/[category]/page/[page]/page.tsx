@@ -78,6 +78,8 @@ export default async function CategoryPaginatedPage({ params }: Props) {
   const { category, page } = await params;
   const pageNum = Number(page);
 
+  const label = CATEGORY_LABELS[category as BlogCategory];
+
   // dynamicParams=false + generateStaticParams(category x 2..totalPages) means only
   // valid category/page pairs are routed here in production builds.
   const allPosts = getAllBlogPosts();
@@ -88,14 +90,45 @@ export default async function CategoryPaginatedPage({ params }: Props) {
     BLOG_POSTS_PER_PAGE,
   );
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "ホーム",
+        item: BASE_URL,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "ブログ",
+        item: `${BASE_URL}/blog`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: label,
+        item: `${BASE_URL}/blog/category/${category}`,
+      },
+    ],
+  };
+
   return (
-    <BlogListView
-      posts={items}
-      currentPage={pageNum}
-      totalPages={totalPages}
-      basePath={`/blog/category/${category}`}
-      activeCategory={category as BlogCategory}
-      allPosts={allPosts}
-    />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <BlogListView
+        posts={items}
+        currentPage={pageNum}
+        totalPages={totalPages}
+        basePath={`/blog/category/${category}`}
+        activeCategory={category as BlogCategory}
+        allPosts={allPosts}
+      />
+    </>
   );
 }

@@ -1,7 +1,7 @@
 /*
- * 記事タグ（値札）— DESIGN.md §4「値札＝罫囲みの静かな器」。
- * 文字は --ink-2、囲みは一本罫、角丸は値札の例外 2px。背景ベタ塗り・影は持たない。
- * ホバー・フォーカスでのみ朱へ転じる（§2「副次的な要素は別の色でなく罫と墨の濃淡で表す」）。
+ * 記事タグ（値札）— DESIGN.md フェーズ R「店構え」へ変換。
+ * §4「値札は罫囲みの静かな器」に従い、背景ベタ塗り・ピル角丸を撤去し
+ * Nefuda と同じ視覚言語（罫囲み・--ink-2・角丸 2px）へ揃えた。
  * 全トークン経由・直書きなし（§10）。
  */
 .tags {
@@ -13,21 +13,21 @@
   padding: 0;
 }
 
-/*
- * 値札そのもの。高さ 44px はタップターゲット（§10）に要る寸法。
- * ホバー・フォーカスで朱へ転じ、押せることを示す。
- */
+.tag {
+}
+
 .tagLink {
   display: inline-flex;
   align-items: center;
+  /* タップターゲット 44px（§10・タグはリンクのため Nefuda 静的ラベルより広い高さを取る） */
   min-height: 44px;
-  padding: 0.15em 0.6em;
   color: var(--ink-2);
   font-family: var(--font-gothic);
+  padding: 0.15em 0.6em;
   font-size: 0.8125rem; /* 13px 補助情報 */
+  text-decoration: none;
   border: 1px solid var(--rule);
   border-radius: var(--radius-sm);
-  text-decoration: none;
   transition:
     color 0.15s ease,
     border-color 0.15s ease;

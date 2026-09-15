@@ -4,14 +4,10 @@ slug: "personality-quiz-tie-enumeration"
 description: "タイプ分け性格診断で同点が多いのは、タイブレークでなく設問が型を判別できていないサイン。全回答を数え上げれば、回答が結果を決めているかを同点率・到達性・偏りで測れる。10問4択の104万通りも総当たりは一瞬だ。"
 published_at: "2026-08-09T10:47:55+0900"
 updated_at: null
-tags:
-  - "ゲーム"
-  - "設計パターン"
-  - "テスト"
+tags: ["ゲーム", "設計パターン", "テスト"]
 category: "dev-notes"
 series: null
-related_tool_slugs:
-  - "word-sense-personality"
+related_tool_slugs: ["word-sense-personality"]
 draft: false
 ---
 

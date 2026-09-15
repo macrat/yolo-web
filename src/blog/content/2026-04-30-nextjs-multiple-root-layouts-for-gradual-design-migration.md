@@ -4,12 +4,7 @@ slug: "nextjs-multiple-root-layouts-for-gradual-design-migration"
 description: "Route Groupの複数root layoutで `<html>`/`<body>`/CSSを完全分離し、ページ単位でデザイン移行する設計と、jsdomで検出できなかった2つの本番ビルドの罠の再現条件・修正コードを示す。"
 published_at: "2026-04-30T17:25:02+0900"
 updated_at: "2026-07-13T12:46:54+0900"
-tags:
-  - "Next.js"
-  - "設計パターン"
-  - "リファクタリング"
-  - "Web開発"
-  - "失敗と学び"
+tags: ["Next.js", "設計パターン", "リファクタリング", "Web開発", "失敗と学び"]
 category: "dev-notes"
 series: "nextjs-deep-dive"
 series_order: 8
