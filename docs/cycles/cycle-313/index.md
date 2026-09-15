@@ -96,6 +96,16 @@ CLAUDE.md は「Do not publish if it lacks value for readers」と定めてい�
 検証済みの技術的知見（YAML 1.1 timestamp の文法・Prettier が壊れた frontmatter を飛ばす機構）は
 [docs/knowledge/frontmatter-yaml-and-prettier.md](../../knowledge/frontmatter-yaml-and-prettier.md) に残した。
 
+**完了処理でも、書かないと判断した。** 本サイクルが来訪者に届けたものは作業ブランチ上にしかなく、
+書けるとすれば題材は自分の失敗そのものになる。それは読者のためではなく自己記録であり、
+[AP-WF38](../../anti-patterns/workflow.md)（内部記録の完全性を追求して来訪者価値ゼロの作業を
+生み続けていないか）に当たる。
+
+**ADR も起票しない。** 本サイクルの判断（関連ツールの全件撤回・T11 の取り下げ・記事2本の取り下げ・
+`aria-describedby` の撤回・起票46件の全件中止）は、いずれも着手前の状態へ戻したものである。
+観測できる変化が存在せず、計測しないものは定義上、賭けではない。ADR006〜008 の失効処理は
+[incident-7.md](./incident-7.md) にある。
+
 ## 作業計画
 
 ### 目的
