@@ -117,48 +117,20 @@ cycle-168 のOwnerアドバイス（2026-04-20）に基づくガイドライン�
 src/blog/content/YYYY-MM-DD-<slug>.md
 ```
 
-記事の先頭には `---` で囲んだfrontmatterを置きます。以下をそのままコピーし、値を書き換えて使ってください。
+ブログ記事には、以下の形式のfrontmatterを含めてください。
 
 ```yaml
----
-title: "記事のタイトル"
-slug: "article-slug"
-description: "検索結果に表示される記事の要約。"
-published_at: "2026-09-01T10:30:00+0900"
-updated_at: null
-tags:
-  - "AIエージェント"
-  - "ワークフロー"
-  - "失敗と学び"
-category: "ai-workflow"
-series: null
-related_tool_slugs:
-  - "unix-timestamp"
-draft: false
----
+title: string # 必須
+slug: string # 必須
+description: string # 必須
+published_at: string # 必須、ISO 8601 datetime
+updated_at: string | null # 必須。初期状態(未更新)は null。更新時に ISO 8601 datetime
+tags: string[] # 必須、3-5個。推奨タグリストから選択
+category: string # 必須、下記カテゴリから選択
+series: string # 任意、シリーズ所属時のみ
+related_tool_slugs: string[] # 必須
+draft: boolean # 必須
 ```
-
-| キー               | 必須 | 値                                                        |
-| ------------------ | ---- | --------------------------------------------------------- |
-| title              | 必須 | 文字列                                                    |
-| slug               | 必須 | 文字列。ファイル名の `<slug>` と同じ                      |
-| description        | 必須 | 文字列                                                    |
-| published_at       | 必須 | 文字列。ISO 8601 datetime                                 |
-| updated_at         | 必須 | 文字列またはnull。未更新はnull、更新時はISO 8601 datetime |
-| tags               | 必須 | 文字列のリスト。3〜5個を推奨タグリストから選ぶ            |
-| category           | 必須 | 文字列。カテゴリ表のIDを1つ                               |
-| series             | 任意 | 文字列またはnull。シリーズ表のIDを1つ、属さないならnull   |
-| related_tool_slugs | 必須 | 文字列のリスト。関連ツールが無ければ `[]`                 |
-| draft              | 必須 | 真偽値                                                    |
-
-値の書き方は例の形から外さないでください。引用符の有無はYAMLの型解釈を変え、書いた値を別の型にすり替えます。型が変わらない書き方の揺れも、書かれ方と読まれ方を突き合わせる検査が落とします。
-
-- 文字列は引用符で囲む。囲まないとYAMLの暗黙の型変換が働き、タイトルが真偽値に、日時が日付オブジェクトになって、書いた値がそのまま届かない。書くときは二重引用符でよく、値が `"` を含む場合にPrettierが単一引用符へ揃えるのは任せてよい。
-- `null`・数値・真偽値は引用符を付けずに書く。
-- リストは1行1件のブロック形で書く。インライン形（`tags: ["a", "b"]`）は行の幅が80桁（全角は2桁）を超えた時点でPrettierが `[` 以下を複数行へ折り返すため、同じ値が要素数しだいで1行にも複数行にもなる。ブロック形は折り返されないので、この揺れが起きない。
-- 空のリストだけは `[]` と1行で書く。ブロック形は1件以上でなければ表せない。
-
-全記事のfrontmatterがこの形になっているかは `src/blog/__tests__/blog-frontmatter-validation.test.ts` が検査します。
 
 ### published_at / updated_at の設定ルール
 
@@ -194,7 +166,7 @@ draft: false
 
 ## シリーズ
 
-記事がシリーズに属する場合、frontmatterの series にシリーズIDを設定してください。1記事1シリーズです。
+記事がシリーズに属する場合、frontmatterに series フィールドを追加してください。1記事1シリーズです。
 
 | ID               | シリーズ名           |
 | ---------------- | -------------------- |

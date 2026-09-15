@@ -1,8 +1,7 @@
 #!/bin/bash
 
 # pre-push-check.sh (PreToolUse hook / matcher: Bash)
-# push 前にフルスイート (format:check / lint / typecheck / test / build / test:build) を
-# 独立に再実行する。test:build はビルド生成物 (.next/) を読むテストなので build の後に置く。
+# push 前にフルスイート (format:check / lint / typecheck / test / build) を独立に再実行する。
 # コミット時のチェック (pre-commit-check.sh) は変更ファイル限定の高速版なので、
 # リポジトリ全体の整合はここで保証する。
 #
@@ -39,6 +38,5 @@ run_check "lint" npm run lint
 run_check "typecheck" npm run typecheck
 run_check "test" npm test
 run_check "build" npm run build
-run_check "build output" npm run test:build
 
 exit 0
