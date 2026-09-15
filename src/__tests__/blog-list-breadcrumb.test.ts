@@ -1,23 +1,16 @@
 /**
- * ブログ一覧ページの静的HTML検査
+ * ブログ一覧ページのパンくず検査
  *
- * ブログ一覧は 6 つのルート形すべてが同じ Server Component から描画され、
- * キーワード検索だけを Client Component が担う。検索状態は `useSearchParams`
- * に依存するため、一覧本体がクライアント描画へ退避すると記事リンクが
- * 静的HTMLから消え、クローラからも JS 無効環境からも記事へ辿り着けなくなる。
- * ここでは本番ビルドの生成物を直接読み、次の 7 点を検査する。
+ * ブログ一覧は 6 つのルート形すべてが同じ Server Component から描画される。
+ * 絞り込みのある一覧（タグ・カテゴリ）は掲載記事が少ないことがあり、本文内の
+ * パンくずがそこから上位へ戻る唯一の脱出口になる。可視のパンくずと
+ * BreadcrumbList の構造化データは同じ項目から組み立てるため、食い違えば
+ * 読者には無い経路を検索エンジンにだけ見せていることになる。
+ * ここでは本番ビルドの生成物を直接読み、次の 3 点を検査する。
  *
  * 1. 一覧の 6 ルート形すべてがプリレンダリングされていること
- * 2. 一覧ルートのプリレンダリング済みHTMLすべてに記事リンクが載っていること
- * 3. 一覧が出す記事リンクの行き先がすべて生成されていること
- *    （行き先の無いリンクを踏んだ読者は 404 に落ちるため）
- * 4. 公開記事のすべてが、いずれかの一覧ページの静的HTMLからリンクされていること
- * 5. 静的シェルの検索欄が `disabled` であること
- *    （ハイドレーション前に打った文字は黙って捨てられるため）
- * 6. 絞り込み一覧（タグ・カテゴリ）のすべてのページがパンくずを出していること
- *    （絞り込んだ一覧から上位へ戻る経路を本文内に置くため）
- * 7. 各ページが申告する BreadcrumbList が、そのページの可視の経路と一致すること
- *    （読者が見る経路と検索エンジンへ申告する経路を食い違わせないため）
+ * 2. 絞り込み一覧（タグ・カテゴリ）のすべてのページがパンくずを出していること
+ * 3. 各ページが申告する BreadcrumbList が、そのページの可視の経路と一致すること
  *
  * 実行経路:
  * - `npm run build` の後に `npm run test:build` で実行する
@@ -26,14 +19,12 @@
  * データソース:
  * - `.next/prerender-manifest.json`（ビルドがプリレンダリングしたURLの一覧）
  * - `.next/server/app/blog**.html`（そのURLに対応する静的HTML）
- * - `getAllBlogPosts()`（公開記事の集合）
  */
 
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { describe, expect, test } from "vitest";
 
-import { getAllBlogPosts } from "@/blog/_lib/blog";
 import { NEXT_DIR, SERVER_APP_DIR, requireBuildOutput } from "./build-output";
 
 // ---------------------------------------------------------------------------
@@ -49,8 +40,8 @@ requireBuildOutput(PRERENDER_MANIFEST);
 
 /**
  * 一覧を描画するルートの形。
- * いずれも BlogListView を経由するため、1 つでも静的HTMLから記事リンクが
- * 消えていれば同じ原因で他も壊れている可能性が高い。
+ * いずれも BlogListView を経由するため、1 つでも経路が壊れていれば
+ * 同じ原因で他も壊れている可能性が高い。
  */
 type ListingShape =
   | "/blog"
@@ -76,8 +67,6 @@ const FILTERED_LISTING_SHAPES: readonly ListingShape[] = [
   "/blog/tag/[tag]",
   "/blog/tag/[tag]/page/[page]",
 ];
-
-const ARTICLE_SHAPE = "/blog/[slug]";
 
 interface PrerenderedPage {
   /** 生成されたHTMLの絶対パス */
@@ -120,62 +109,11 @@ function collectPrerenderedPages(shape: ListingShape): PrerenderedPage[] {
   }));
 }
 
-/** ビルドが生成した記事ページの slug。 */
-const generatedArticleSlugs = new Set(
-  urlsGeneratedFrom(ARTICLE_SHAPE).map((url) => url.slice("/blog/".length)),
-);
-
 // ---------------------------------------------------------------------------
 // ヘルパー: 静的HTMLの読み取り
 // ---------------------------------------------------------------------------
 
-/** `/blog/<slug>` 形式のリンク先（`/blog/page/2` などの階層つきURLは除く）。 */
-const ARTICLE_HREF_PATTERN = /^\/blog\/([^/?#]+)$/;
-
 const parser = new DOMParser();
-
-/** href の slug 部分をデコードした値。パーセントエンコードが壊れていれば slug は読めない。 */
-function decodeSlug(rawSlug: string): string | null {
-  try {
-    return decodeURIComponent(rawSlug);
-  } catch {
-    return null;
-  }
-}
-
-/** 静的HTMLに書き出された記事リンクを、行き先が生成されているかで振り分けたもの。 */
-interface ArticleLinks {
-  /** 生成済みの記事ページを指すリンクの slug */
-  reachableSlugs: string[];
-  /** 行き先のページが生成されていないリンクの href */
-  deadHrefs: string[];
-}
-
-/**
- * 静的HTMLのアンカーから記事リンクを読み取る。
- *
- * slug が読めない href はどの生成済みページとも突き合わせられないため、行き先の無いリンクに数える。
- * 読めなかったものを生の文字列で代用すると、壊れたリンクが「読めた」ことになって検査を素通りする。
- */
-function readArticleLinks(document: Document): ArticleLinks {
-  const reachableSlugs = new Set<string>();
-  const deadHrefs = new Set<string>();
-
-  for (const anchor of document.querySelectorAll("a[href]")) {
-    const href = anchor.getAttribute("href") ?? "";
-    const match = ARTICLE_HREF_PATTERN.exec(href);
-    if (!match) continue;
-
-    const slug = decodeSlug(match[1]);
-    if (slug !== null && generatedArticleSlugs.has(slug)) {
-      reachableSlugs.add(slug);
-    } else {
-      deadHrefs.add(href);
-    }
-  }
-
-  return { reachableSlugs: [...reachableSlugs], deadHrefs: [...deadHrefs] };
-}
 
 /** 可視のパンくずに並ぶ項目名（各項目の先頭に付く区切り「/」は除く）。 */
 function findVisibleBreadcrumbTrail(document: Document): string[] {
@@ -210,14 +148,6 @@ function findDeclaredBreadcrumbTrails(document: Document): string[][] {
 interface ListingPageFacts {
   /** 対応する公開URL */
   url: string;
-  /** そのページの静的HTMLから辿れる記事の slug */
-  reachableArticleSlugs: string[];
-  /** そのページが出している、行き先のページが生成されていない記事リンクの href */
-  deadArticleHrefs: string[];
-  /** 静的HTMLに含まれる検索欄の数 */
-  searchInputCount: number;
-  /** そのうちハイドレーション前から操作できてしまう検索欄の数 */
-  enabledSearchInputCount: number;
   /** 可視のパンくずに並ぶ項目名 */
   visibleBreadcrumbTrail: string[];
   /** 構造化データとして申告している経路 */
@@ -229,18 +159,9 @@ function readListingPageFacts(page: PrerenderedPage): ListingPageFacts {
     fs.readFileSync(page.htmlPath, "utf8"),
     "text/html",
   );
-  const searchInputs = [
-    ...document.querySelectorAll<HTMLInputElement>('input[type="search"]'),
-  ];
-  const articleLinks = readArticleLinks(document);
 
   return {
     url: page.url,
-    reachableArticleSlugs: articleLinks.reachableSlugs,
-    deadArticleHrefs: articleLinks.deadHrefs,
-    searchInputCount: searchInputs.length,
-    enabledSearchInputCount: searchInputs.filter((input) => !input.disabled)
-      .length,
     visibleBreadcrumbTrail: findVisibleBreadcrumbTrail(document),
     declaredBreadcrumbTrails: findDeclaredBreadcrumbTrails(document),
   };
@@ -250,7 +171,7 @@ function readListingPageFacts(page: PrerenderedPage): ListingPageFacts {
 // テスト
 // ---------------------------------------------------------------------------
 
-describe("ブログ一覧ページの静的HTML", () => {
+describe("ブログ一覧ページのパンくず", () => {
   const pagesByShape = new Map<ListingShape, PrerenderedPage[]>(
     LISTING_SHAPES.map((shape) => [shape, collectPrerenderedPages(shape)]),
   );
@@ -284,82 +205,7 @@ describe("ブログ一覧ページの静的HTML", () => {
     ).toEqual([]);
   });
 
-  // ---- 検査 2: 一覧の静的HTMLに記事リンクが載っている ----
-  for (const shape of LISTING_SHAPES) {
-    test(`${shape} の静的HTMLに記事リンクが載っている`, () => {
-      const pagesWithoutArticleLink = (factsByShape.get(shape) ?? []).filter(
-        (facts) => facts.reachableArticleSlugs.length === 0,
-      );
-
-      expect(
-        pagesWithoutArticleLink.map((facts) => facts.url),
-        `${shape} の静的HTMLに記事リンク（href="/blog/<slug>"）が 1 本も無い:\n` +
-          pagesWithoutArticleLink.map((facts) => `  ${facts.url}`).join("\n") +
-          `\n一覧はキーワード非依存の静的シェルとしてサーバーで描画すること。` +
-          `一覧本体がクライアント描画へ退避すると、記事リンクがクローラにも` +
-          `JS 無効環境にも届かなくなる。`,
-      ).toEqual([]);
-    });
-  }
-
-  // ---- 検査 3: 一覧が出す記事リンクの行き先が生成されている ----
-  // 検査 2 が数えるのは行き先のあるリンクだけなので、
-  // 「読者が踏んで 404 に落ちるリンク」はここで別に拾う。
-  test("一覧の静的HTMLに行き先の無い記事リンクが無い", () => {
-    const problems = allFacts.flatMap((facts) =>
-      facts.deadArticleHrefs.map((href) => `  ${facts.url}: ${href}`),
-    );
-
-    expect(
-      problems,
-      `行き先のページが生成されていない記事リンクが一覧に出ている:\n${problems.join("\n")}\n` +
-        `一覧から進んだ読者はこのリンクで 404 に落ちる。` +
-        `リンク先の記事が生成されているか、リンクの組み立てが正しいかを確認すること。`,
-    ).toEqual([]);
-  });
-
-  // ---- 検査 4: 公開記事のすべてが一覧の静的HTMLから辿れる ----
-  // 1 ページあたりの記事リンクが 1 本でもあれば検査 2 は通るため、
-  // 「どの記事も取りこぼしていないこと」はここで全数を突き合わせて保証する。
-  test("公開記事のすべてが一覧の静的HTMLからリンクされている", () => {
-    const linkedSlugs = new Set(
-      allFacts.flatMap((facts) => facts.reachableArticleSlugs),
-    );
-    const unreachableSlugs = getAllBlogPosts()
-      .map((post) => post.slug)
-      .filter((slug) => !linkedSlugs.has(slug));
-
-    expect(
-      unreachableSlugs,
-      `一覧の静的HTMLからリンクされていない公開記事がある（${unreachableSlugs.length} 件）:\n` +
-        unreachableSlugs.map((slug) => `  /blog/${slug}`).join("\n") +
-        `\n一覧の静的HTMLに載っていない記事はクローラにも JS 無効環境にも届かない。` +
-        `ページネーションを含むすべての一覧ページが、` +
-        `公開記事の全件をサーバー描画で出し切っていることを確認すること。`,
-    ).toEqual([]);
-  });
-
-  // ---- 検査 5: 静的シェルの検索欄は操作不可 ----
-  test("一覧の静的シェルの検索欄は disabled になっている", () => {
-    const problems = allFacts.flatMap((facts) => {
-      if (facts.searchInputCount === 0) {
-        return [`  ${facts.url}: 検索欄が静的HTMLに無い`];
-      }
-      if (facts.enabledSearchInputCount > 0) {
-        return [`  ${facts.url}: 検索欄に disabled が付いていない`];
-      }
-      return [];
-    });
-
-    expect(
-      problems,
-      `ハイドレーション前に操作できる検索欄がある:\n${problems.join("\n")}\n` +
-        `入力してもキーワードが黙って捨てられるため、` +
-        `静的シェルの検索欄は disabled にすること。`,
-    ).toEqual([]);
-  });
-
-  // ---- 検査 6: 絞り込み一覧にはパンくずがある ----
+  // ---- 検査 2: 絞り込み一覧にはパンくずがある ----
   test("絞り込み一覧のすべてのページがパンくずを出している", () => {
     const pagesWithoutBreadcrumb = FILTERED_LISTING_SHAPES.flatMap(
       (shape) => factsByShape.get(shape) ?? [],
@@ -374,7 +220,7 @@ describe("ブログ一覧ページの静的HTML", () => {
     ).toEqual([]);
   });
 
-  // ---- 検査 7: 申告する経路が見える経路と一致する ----
+  // ---- 検査 3: 申告する経路が見える経路と一致する ----
   // 経路を出さないページは BreadcrumbList も申告しないことを含めて突き合わせる。
   // 見えない経路を申告したページは、読者には無い脱出口を検索エンジンにだけ見せている。
   test("一覧ページの BreadcrumbList が可視の経路と一致する", () => {

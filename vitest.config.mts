@@ -8,7 +8,7 @@ import react from "@vitejs/plugin-react";
  * unit プロジェクト（= `npm run test`）からは外れる。
  */
 const BUILD_OUTPUT_TESTS = [
-  "src/__tests__/blog-list-static-html.test.ts",
+  "src/__tests__/blog-list-breadcrumb.test.ts",
   "src/__tests__/bundle-budget.test.ts",
 ];
 

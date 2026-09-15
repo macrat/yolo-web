@@ -10,24 +10,9 @@
   gap: var(--space-24);
 }
 
-/* キーワード検索: 入力欄と、それが働かないときの一文をひと組で置く。 */
-.search {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-8);
-}
-
+/* キーワード検索 */
 .searchInput {
   width: 100%;
-}
-
-/* JavaScript が動かない環境でだけ現れる補足。UA スタイルで display: none のため、
- * 動く環境では要素として存在しても組版に一切かかわらない。 */
-.searchNote {
-  font-family: var(--font-gothic);
-  font-size: 0.875rem;
-  line-height: 1.7;
-  color: var(--ink-2);
 }
 
 /* カテゴリで絞り込む: 文字リンクの横並び。区切りは下辺の一本罫（§4）。 */

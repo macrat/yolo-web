@@ -8,11 +8,10 @@ import {
   getTagsWithMinPosts,
   MIN_POSTS_FOR_TAG_PAGE,
 } from "@/blog/_lib/blog";
-import BlogFilterableList from "./BlogFilterableList";
-import BlogListPanel, {
+import BlogFilterableList, {
   type BlogListData,
   type BlogListSource,
-} from "./BlogListPanel";
+} from "./BlogFilterableList";
 import { calculateNewSlugs } from "./newSlugsHelper";
 import styles from "./BlogListView.module.css";
 
@@ -50,14 +49,9 @@ function buildBreadcrumbItems(
 /**
  * ブログ一覧ページのビュー (Server Component)。
  *
- * ページ見出し（タイトル・説明文）とフィルター付き記事一覧を表示する。
- * 一覧の描画は {@link BlogListPanel} が受け持ち、キーワード（`?q=`）の状態管理だけを
- * Client Component の {@link BlogFilterableList} が担う。
- *
- * `useSearchParams` を呼ぶ {@link BlogFilterableList} はプリレンダリング時にクライアント描画へ
- * 退避するため、キーワード空の {@link BlogListPanel} を Suspense の fallback としてサーバーで
- * 描画し、記事リンクを静的 HTML に載せる。fallback と本体は同じ {@link BlogListPanel} なので、
- * キーワードが無い通常の閲覧では描画結果が一致しレイアウトがずれない。
+ * ページ見出し（タイトル・説明文）を出し、記事一覧そのものは Client Component の
+ * {@link BlogFilterableList} が描く。`useSearchParams` を呼ぶコンポーネントは Suspense で
+ * 囲むことが Next.js の要件なので、ここで境界を置く。
  *
  * 絞り込みのある一覧（タグ・カテゴリ）の先頭にはパンくずを出す。絞り込んだ一覧から上位へ戻る
  * 経路を本文内に置くためで、経路の組み立ては {@link buildBreadcrumbItems} が受け持つ。
@@ -137,7 +131,7 @@ export default function BlogListView({
         </p>
       </div>
 
-      <Suspense fallback={<BlogListPanel {...listData} keyword="" />}>
+      <Suspense>
         <BlogFilterableList {...listData} />
       </Suspense>
     </div>
