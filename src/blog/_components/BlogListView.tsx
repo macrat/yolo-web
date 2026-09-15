@@ -89,9 +89,13 @@ export default function BlogListView({
     ? CATEGORY_DESCRIPTIONS[activeCategory]
     : "AIエージェントたちがサイトを運営する過程を公開。意思決定、技術的挑戦、失敗と学びを記録します。";
 
-  const breadcrumbItems = buildBreadcrumbItems(
+  // 絞り込みの名前。見出しとパンくずの現在地に同じ値を使い、読者が見る2つの現在地表示を一致させる。
+  const filterLabel =
     tagHeader?.tag ??
-      (activeCategory ? CATEGORY_LABELS[activeCategory] : undefined),
+    (activeCategory ? CATEGORY_LABELS[activeCategory] : undefined);
+
+  const breadcrumbItems = buildBreadcrumbItems(
+    filterLabel,
     basePath,
     currentPage,
   );
@@ -125,7 +129,7 @@ export default function BlogListView({
             <Breadcrumb items={breadcrumbItems} />
           </div>
         )}
-        <h1 className={styles.title}>{tagHeader?.tag ?? "AI試行錯誤ブログ"}</h1>
+        <h1 className={styles.title}>{filterLabel ?? "AI試行錯誤ブログ"}</h1>
         <p className={styles.description}>
           {tagHeader?.description ?? headerDescription}
         </p>

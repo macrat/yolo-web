@@ -246,6 +246,21 @@ describe("BlogListView 統合テスト", () => {
 });
 
 describe("一覧ページのパンくず", () => {
+  test("絞り込み一覧の見出しは、パンくずの現在地と同じ名前になる", () => {
+    // 読者が現在地を知る手がかりは見出しとパンくずの2つで、食い違うと迷子になる。
+    for (const render of [renderTagPage, renderCategoryPage]) {
+      const { unmount } = render();
+      const nav = screen.getByRole("navigation", { name: "パンくずリスト" });
+      const current = within(nav).getByText(
+        (_, el) => el?.getAttribute("aria-current") === "page",
+      );
+      expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
+        current.textContent ?? "",
+      );
+      unmount();
+    }
+  });
+
   test("タグページはホーム・ブログへ戻るリンクを出し、現在地はタグ名になる", () => {
     renderTagPage();
     const nav = screen.getByRole("navigation", { name: "パンくずリスト" });

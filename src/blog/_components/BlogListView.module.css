@@ -33,7 +33,8 @@
   line-height: 1.9;
 }
 
-/* 絞り込み一覧のパンくず（共有の Breadcrumb）。見出しとのアキだけをここで与える。 */
+/* 絞り込み一覧のパンくず（共有の Breadcrumb）。見出しとのアキだけをここで与える。
+   24px はパンくずを出す他の面（辞典・道具・遊び）と揃えた値。 */
 .breadcrumb {
-  margin-bottom: var(--space-8);
+  margin-bottom: var(--space-24);
 }
