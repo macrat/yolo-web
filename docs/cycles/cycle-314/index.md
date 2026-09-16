@@ -30,7 +30,7 @@ cycle-311 が倒れたのは、判断を避けて作業へ逃げたからであ�
 
 - [x] T0: 計画のレビューを3巡受け、指摘に対応する（26件／21件／15件・[review-plan.md](./review-plan.md)・[review-plan-2.md](./review-plan-2.md)・[review-plan-3.md](./review-plan-3.md)）
 - [x] T1 **【判断・最初に置く】**: ADR006 の**3つの決定すべて**（1 自己名乗り「よろず屋」据え置き／2 線は語の出自でなく「説明なしに意味へ届くか」／3 識別マークの仕事は出所の伝達だけ）を**追認するか覆すか**を決める。覆すなら根拠は**来訪者の側からの新しい事実**に限る → **3件とも追認**（[decision-t1.md](./decision-t1.md)）
-- [ ] T2a: `docs/site-concept.md` のツギハギ**9行**の処遇対照表を作る（T4 の入力）
+- [x] T2a: `docs/site-concept.md` のツギハギ**9行**の処遇対照表を作る（T4 の入力）→ [t2a-site-concept.md](./t2a-site-concept.md)
 - [ ] T2b: `DESIGN.md` のツギハギ**36行**の処遇対照表を作る（T5 の入力・**T4 の関門を通過してから**着手する）。
       24行は `inventory-design.md` §F、残り12行は cycle-312 の `verify-inventory-design.md` §2 が名指しした漏れ。合わせて全45件
 - [ ] T3: `--rule` のコントラストを WCAG SC 1.4.11 の**3層**で判定し、判定結果と機械ゲート再導出の受け皿を起票する
