@@ -210,3 +210,31 @@ $ sed -n '/^## 2\. 取りこぼしの一覧/,/^## 3\./p' docs/cycles/cycle-312/v
 
 **行番号は現行の `DESIGN.md`（140行）に収まる**（最大 L139）。cycle-312 が編集していた198行版
 （`git show f029a85c^:DESIGN.md | wc -l` → 198）ではなく、cycle-312 の全取り消し後＝現行の版を指している。
+
+## 完了条件5 の「11ファイル」——実測して確定した
+
+cycle-311 の `reference-map.md` が挙げた「11ファイル」はレビュー未実施の数だったので、自分で数え直した。
+
+```
+$ grep -rln "DESIGN\.md\|site-concept" docs/ .claude/ CLAUDE.md | grep -v "^docs/cycles/" | grep -v "^docs/archive/" | wc -l
+20
+```
+
+20件のうち、**新しい規範に合わせて整合させる対象は11件**である。残り9件は性質が違う。
+
+| 対象（11件・T6 で整合させる）                         | 備考                                                                 |
+| ----------------------------------------------------- | -------------------------------------------------------------------- |
+| `.claude/skills/frontend-design/SKILL.md`             | **最重要**。`DESIGN.md` の逐条要約で、放置すると旧規範が実装へ流れる |
+| `docs/README.md`                                      | 文書一覧の説明                                                       |
+| `docs/character.md`                                   | 廃止済みターゲット定義の語が残る（B-658）                            |
+| `docs/knowledge/frontend.md`                          | 技術知見                                                             |
+| `docs/anti-patterns/implementation.md`・`planning.md` | 2件                                                                  |
+| `docs/backlog.md`                                     | 起票の Notes                                                         |
+| `docs/rebuild-plan.md`                                | B-586 が archive 移動を検討中                                        |
+| `docs/tools-idea.md`                                  | 道具の候補                                                           |
+| `docs/ADR/open/…ADR001-サイト刷新/index.md`           | **open の ADR は生きている**ので整合対象                             |
+
+**対象外9件**——`docs/research/` 7件は**調査結果の記録**であり、書かれた時点の事実を残す文書なので書き換えない
+（`.claude/rules/doc-directory.md`）。`docs/ADR/expired/` 2件も失効した記録なので同じ。
+
+**cycle-311 の「11ファイル」は、数として正しかった。**
