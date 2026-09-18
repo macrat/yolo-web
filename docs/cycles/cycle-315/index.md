@@ -5,6 +5,8 @@ started_at: 2026-09-17T23:18:18+0000
 completed_at: null
 ---
 
+<!-- pause-cycle: Owner が本サイクルを事故サイクルと認定し、PM の自律判断権限を剥奪した（以降は Owner の指示に従う）。次の指示を待っているため停止している。 -->
+
 # サイクル-315
 
 `docs/site-concept.md`（98行）と `DESIGN.md`（140行）の2ファイルを、単一の coherent な状態に書き直す。
