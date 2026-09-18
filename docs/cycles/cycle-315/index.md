@@ -269,6 +269,7 @@ AI 明示を維持する理由は constitution rule 3 であって、検索評�
 | 3巡目 書き直した `docs/site-concept.md`      | **REJECT** | 25件（Blocker 6 / Major 7 / Minor 9 / Question 3）  | [review-concept.md](./review-concept.md) |
 | 4巡目 決定と成果物（`decision.md` と成果物） | **REJECT** | 30件（Blocker 5 / Major 7 / Minor 15 / Question 3） | [review-final.md](./review-final.md)     |
 | 5巡目 決定と成果物（同上）                   | **REJECT** | 23件（Blocker 0 / Major 3 / Minor 16 / Question 4） | [review-final-2.md](./review-final-2.md) |
+| 6巡目 決定と成果物（同上）                   | **REJECT** | 12件（Blocker 0 / Major 1 / Minor 8 / Question 3）  | [review-final-3.md](./review-final-3.md) |
 | T5 の骨格案（`options-t5.md`・4案）          | **REJECT** | 23件（Blocker 6 / Major 8 / Minor 5 / Question 4）  | [review-t5.md](./review-t5.md)           |
 
 T5 のレビューはコンセプト確定前の案に対するもので、確定後に全体を見直す（[incident-2.md](./incident-2.md)）。
