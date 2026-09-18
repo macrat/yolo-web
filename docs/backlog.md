@@ -38,7 +38,7 @@
 | B-618 | pre-commit-checkのAP-WF24検出の穴を塞ぐ | P2 | 正規表現が「指示に従/指示により/指摘を受け」しか拾わず「指示で」「指摘で」が素通り(cycle-300で実際に2本通過)。助詞のゆれを含む式へ。コード変更のためbuilder+レビュー。詳細cycle-300 |
 | B-609 | レビュー体制の構造的欠陥(基準違反の検出漏れ)の是正 | P2 | cycle-298判明+cycle-300。残=(a)基準違反がMinor判定(b)candidates非読込(c)pre-commit検出漏れ(d)観点が計器選択の妥当性(AP-P31等)を問わない。詳細cycle-298/incident-3・cycle-300/incident-1 |
 | B-610 | ADR001+rebuild-plan§1(a)の「オーナー裁定」ラベル是正(AP-P34) | P2 | cycle-298発覚+cycle-300で原発言を逐語検証済(全面A/B棄却はPM導出・A/Bは却下されていない)。帰属を是正(ADR/READMEの『サイト全面のA/Bはしない』も整合対象)。詳細cycle-300/incident-1 |
-| B-586 | rebuild-plan.md の処遇(archive移動)と参照元の付け替え | P2 | 作り直しはcycle-279完了・中身はbacklog/ADRへ移設済だが参照(ADR001・cycle-kickoff SKILL等)が残る=archive移動と参照付け替えが要る。cycle-284重大事故の舞台。詳細cycle-284.md事故報告 |
+| B-586 | rebuild-plan.md の処遇(archive移動)と参照元の付け替え | P1 | **cycle-315で実害**——失効したこの計画書をcycle-kickoff SKILL経由で判断の根拠にした。生きている参照9ファイル。詳細cycle-315/incident-3.md |
 | B-564 | フェーズC-c: 辞典の処遇判断(体験化orプルーニング) | P2 | フェーズR完了で解禁。検定エンジン検討(B-562)と同時に判断。B-521で辞書CTR 0.08%=参照型の敗北兆候TW-Aと判明済(ADR001)。詳細 rebuild-plan.md §3 |
 | B-566 | ツールの処遇判断(最高価値に磨いてから改善orプルーニング) | P2 | フェーズR完了で解禁の専用取組。SC表示数による一律削除は撤回済(cycle-279・rule4)。詳細 cycle-279.md・rebuild-plan §2 R-1 |
 | B-494 | Dynamic Workflows 運用知見の knowledge 恒久化 | P2 | **フェーズR(workflow一斉切替)の前提整備として昇格**。6点の知見をknowledge化。詳細 cycle-225.md |
