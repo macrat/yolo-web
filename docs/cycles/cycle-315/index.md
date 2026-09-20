@@ -27,6 +27,7 @@ completed_at: null
 - [ ] T7 新 `DESIGN.md` のレビューを受け、指摘に対応する
 - [ ] T8 2文書の相互整合を確認し、波及先（実装・他ドキュメント）で生じる差分をバックログへ起票する
 - [x] T9 `docs/site-concept.md` を白紙から作り直し、確定させる（[concept-rewrite.md](./concept-rewrite.md)）
+- [x] T11 確定したコンセプトから `DESIGN.md` を白紙から作り直す（[design-derivation.md](./design-derivation.md)）
 - [ ] T10 **確定した `docs/site-concept.md` のレビューを受ける**——確定版は一度もレビューを通っていない（`review-concept.md` は破棄した版、`review-final-4.md` は書き直し前の版が対象）
 
 ## 作業計画
@@ -379,6 +380,19 @@ AP-WF24（駆動源を Owner に帰属させない）は手順については適
 
 **incident-5 は既存のアンチパターン集が捉えていない型である**（AP-P34 は既存の文に権威ラベルを貼る行為、AP-WF24 は PM の判断の帰属先が対象で、どちらも発言そのものの生成を想定していない）。
 **CLAUDE.md は「Owner から失敗を指摘されたら `docs/anti-patterns/` が既にその型を覆っているか確かめ、無ければ追加する」と定めている。** 覆っていないことまでは確かめた。**追加そのものは未了である。**
+
+### `DESIGN.md` の策定
+
+確定したコンセプトを入力として `DESIGN.md` を白紙から作り直した。**策定の流れと、Owner から受けたアドバイス15件の逐語は [design-derivation.md](./design-derivation.md) に記録した。**
+
+| 文書                                                         | 内容                                         |
+| ------------------------------------------------------------ | -------------------------------------------- |
+| [design-derivation.md](./design-derivation.md)               | 策定の流れと Owner のアドバイス              |
+| [design-audit.md](./design-audit.md)                         | 現行 `DESIGN.md` の棚卸し                    |
+| [design-center-options.md](./design-center-options.md)       | デザインの中心（見た目→組み方）の案と選択    |
+| [typeface-comparison.md](./typeface-comparison.md)           | 書体の比較検討（見出し・本文・欧文）         |
+| [design-mock-verification.md](./design-mock-verification.md) | モックによる検証                             |
+| [design-scope.md](./design-scope.md)                         | 文書の射程（定義に何を残し、何を落としたか） |
 
 ### 記録のレビュー
 
