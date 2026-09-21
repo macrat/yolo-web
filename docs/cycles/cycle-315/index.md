@@ -28,7 +28,7 @@ completed_at: null
 - [ ] T8 2文書の相互整合を確認し、波及先（実装・他ドキュメント）で生じる差分をバックログへ起票する
 - [x] T9 `docs/site-concept.md` を白紙から作り直し、確定させる（[concept-rewrite.md](./concept-rewrite.md)）
 - [x] T11 確定したコンセプトから `DESIGN.md` を白紙から作り直す（[design-derivation.md](./design-derivation.md)）
-- [x] T10 **確定した `docs/site-concept.md` のレビューを受ける**——2026-09-19T02:33:13Z に Owner が確定版（`c5c375f6`）を受理した（「サイトコンセプトはこれで行きましょう。」）。あわせて T12 の6巡がツギハギと語の通じやすさを見ている
+- [x] T10 **確定した `docs/site-concept.md` のレビューを受ける**——T12 の6巡が確定版（`c5c375f6`）を対象にしている。6巡目に残った `site-concept.md` の指摘2件は、いずれも取り消した追記についてのもので、現在の版には掛からない
 - [x] T12 確定した2文書を読み直し、ツギハギと本セッション固有の語を落とす（6巡。**2巡目以降は指示の範囲を越えたため、加えた変更を取り消した**——[design-derivation.md](./design-derivation.md)）
 
 ## 作業計画
