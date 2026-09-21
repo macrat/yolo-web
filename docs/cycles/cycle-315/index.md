@@ -28,7 +28,7 @@ completed_at: null
 - [ ] T8 2文書の相互整合を確認し、波及先（実装・他ドキュメント）で生じる差分をバックログへ起票する
 - [x] T9 `docs/site-concept.md` を白紙から作り直し、確定させる（[concept-rewrite.md](./concept-rewrite.md)）
 - [x] T11 確定したコンセプトから `DESIGN.md` を白紙から作り直す（[design-derivation.md](./design-derivation.md)）
-- [ ] T10 **確定した `docs/site-concept.md` のレビューを受ける**——確定版はコンセプトとしてのレビューを一度も通っていない（`review-concept.md` は破棄した版、`review-final-4.md` は書き直し前の版が対象。T12 の6巡はツギハギと語の通じやすさだけを見たもの）
+- [x] T10 **確定した `docs/site-concept.md` のレビューを受ける**——2026-09-19T02:33:13Z に Owner が確定版（`c5c375f6`）を受理した（「サイトコンセプトはこれで行きましょう。」）。あわせて T12 の6巡がツギハギと語の通じやすさを見ている
 - [x] T12 確定した2文書を読み直し、ツギハギと本セッション固有の語を落とす（6巡。**2巡目以降は指示の範囲を越えたため、加えた変更を取り消した**——[design-derivation.md](./design-derivation.md)）
 
 ## 作業計画
@@ -412,7 +412,6 @@ constitution はこのプロジェクトで最も効力の強い規範文書で�
 | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
 | **サイトが来訪者に「よろず屋」と名乗り続けている**                               | `src/app/page.tsx:194`・同 `:38` の metadata・`src/app/about/page.tsx`。テストが文言を固定している                               |
 | `frontend-design` スキル・`ADR/open/ADR001` が旧コンセプトを参照                 | 確定版に合わせる作業が未着手（`DESIGN.md` は確定版から作り直したので解消済み）                                                   |
-| 確定した `docs/site-concept.md` のレビュー                                       | 未実施（T10）                                                                                                                    |
 | `docs/rebuild-plan.md` が失効のまま `docs/` 直下に残存                           | 失効文書はアーカイブへ移すルールがある（[incident-3.md](./incident-3.md)）                                                       |
 | `.claude/skills/new-cycle-idea/catalog/` の5ファイルにターゲット廃止の記述が残存 | うち3ファイルは失効した `docs/rebuild-plan.md §4` を参照している                                                                 |
 | `docs/anti-patterns/` への incident-5 の型の追加                                 | 未実施                                                                                                                           |
