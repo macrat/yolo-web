@@ -531,10 +531,11 @@ constitution はこのプロジェクトで最も効力の強い規範文書で�
 
 **レビュー: 完了手順**
 
-| 文書                                                   | 内容                                                   |
-| ------------------------------------------------------ | ------------------------------------------------------ |
-| [review-workflow-ap.md](./review-workflow-ap.md)       | ワークフローのアンチパターン点検（サイクル完了手順 5） |
-| [review-design-rewrite.md](./review-design-rewrite.md) | `DESIGN.md` の不備27件の修正と書き直しのレビュー       |
+| 文書                                                       | 内容                                                   |
+| ---------------------------------------------------------- | ------------------------------------------------------ |
+| [review-workflow-ap.md](./review-workflow-ap.md)           | ワークフローのアンチパターン点検（サイクル完了手順 5） |
+| [review-design-rewrite.md](./review-design-rewrite.md)     | `DESIGN.md` の不備27件の修正と書き直しのレビュー       |
+| [review-design-rewrite-2.md](./review-design-rewrite-2.md) | 同・2巡目（直した結果に生まれた破れ）                  |
 
 ## キャリーオーバー
 
