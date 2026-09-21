@@ -428,6 +428,113 @@ constitution はこのプロジェクトで最も効力の強い規範文書で�
 **本サイクルの成果物（`docs/site-concept.md`・`DESIGN.md`）に未了は無い。**
 2文書の外に残る差分は、いずれも本サイクルの「触らないもの」に当たるため、上表のとおり B-746〜B-753 として起票した（B-747 は本サイクルで対応済み）。
 
+## このサイクルの文書
+
+**事実の調査**
+
+| 文書                                                                       | 内容                                                                |
+| -------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| [facts-src.md](./facts-src.md)                                             | 事実調査: `src/` 内の店メタファー語彙の実測                         |
+| [facts-design.md](./facts-design.md)                                       | DESIGN.md 実測（事実のみ）                                          |
+| [facts-ga.md](./facts-ga.md)                                               | 来訪者の行動データ実測（事実のみ）                                  |
+| [facts-l9.md](./facts-l9.md)                                               | site-concept.md L9 の出自と正確な主張——一次資料での確認             |
+| [concept-content-breakdown.md](./concept-content-breakdown.md)             | 今回「サイトコンセプト」として作ったものの中身（実測）              |
+| [research-concept-definition.md](./research-concept-definition.md)         | 「コンセプト」の一般的定義に関する調査                              |
+| [research-site-concept-framework.md](./research-site-concept-framework.md) | Web サイト「コンセプト策定」段階で定義すべきとされる要素 — 調査報告 |
+| [concept-gap.md](./concept-gap.md)                                         | 一般的なコンセプト策定の項目と、今回作ったものの照合                |
+| [t3-derivation-map.md](./t3-derivation-map.md)                             | T3 の設計図: 現行 `site-concept.md` の全規則を来源で分類する        |
+
+**案と決定**
+
+| 文書                             | 内容                                                                   |
+| -------------------------------- | ---------------------------------------------------------------------- |
+| [options-t1.md](./options-t1.md) | T1: `docs/site-concept.md` の「コンセプト／非コンセプト」の線引き——5案 |
+| [options-t2.md](./options-t2.md) | T2: 「やってみる」「よろず屋」の自己矛盾をどう解消するか——6案          |
+| [options-t5.md](./options-t5.md) | T5: `DESIGN.md` をコンセプトから導出する骨格——5案                      |
+| [options-v2.md](./options-v2.md) | 2巡目: `docs/site-concept.md` をどう作り直すか                         |
+| [decision.md](./decision.md)     | 決定: `docs/site-concept.md` をどう作り直すか                          |
+| [decision-2.md](./decision-2.md) | 調査を受けた判断——site-concept.md をどう直すか                         |
+| [decision-3.md](./decision-3.md) | 決定（作り直し）: site-concept.md をコンセプト本体だけに絞る           |
+
+**コンセプトの作り直し**
+
+| 文書                                       | 内容                                                           |
+| ------------------------------------------ | -------------------------------------------------------------- |
+| [concept-rewrite.md](./concept-rewrite.md) | サイトコンセプトの作り直し——7巡の APPROVE を捨ててから確定まで |
+
+**`DESIGN.md` の策定**
+
+| 文書                                                         | 内容                                                          |
+| ------------------------------------------------------------ | ------------------------------------------------------------- |
+| [design-audit.md](./design-audit.md)                         | 現行 `DESIGN.md` の棚卸し——コンセプトとの衝突と、文書内の矛盾 |
+| [design-center-options.md](./design-center-options.md)       | デザインの中心——第1段階: 見た目                               |
+| [typeface-comparison.md](./typeface-comparison.md)           | 見出し書体の比較検討                                          |
+| [design-mock-verification.md](./design-mock-verification.md) | デザインモックによる検証                                      |
+| [design-scope.md](./design-scope.md)                         | `DESIGN.md` の射程——デザイン定義に何を残し、何を落としたか    |
+| [design-derivation.md](./design-derivation.md)               | `DESIGN.md` をどう策定し、どこで壊したか                      |
+
+**事故**
+
+| 文書                             | 内容                                                                   |
+| -------------------------------- | ---------------------------------------------------------------------- |
+| [incident-1.md](./incident-1.md) | 事故: 自分で置いた歯止めを、達成できた内容に合わせて外した             |
+| [incident-2.md](./incident-2.md) | 事故: サイトコンセプトが確定する前に、デザインシステムを作り始めた     |
+| [incident-3.md](./incident-3.md) | 事故: 失効した計画書を参照し、ターゲットについて誤った報告をした       |
+| [incident-4.md](./incident-4.md) | 事故: 一次資料が取得できたのに、二次情報と一般辞書で「調べた」と称した |
+| [incident-5.md](./incident-5.md) | 事故: Owner の発言を偽造し、指摘を受けたあとも偽造した指示に従い続けた |
+
+**レビュー: 計画・案**
+
+| 文書                                     | 内容                                                                        |
+| ---------------------------------------- | --------------------------------------------------------------------------- |
+| [review-t1.md](./review-t1.md)           | review-t1: `options-t1.md`（コンセプト／非コンセプトの線引き5案）のレビュー |
+| [review-t2.md](./review-t2.md)           | T2 決定のレビュー（`options-t2.md`）                                        |
+| [review-t5.md](./review-t5.md)           | レビュー: T5 `DESIGN.md` をコンセプトから導出する骨格（options-t5.md・4案） |
+| [review-v2.md](./review-v2.md)           | review-v2: 2巡目の判断（`options-v2.md`）のレビュー                         |
+| [review-concept.md](./review-concept.md) | review-concept: 新 `docs/site-concept.md`（成果物）のレビュー               |
+| [review-final.md](./review-final.md)     | review-final: サイクル-315（B-651）の決定と成果物のレビュー（4巡目）        |
+| [review-final-2.md](./review-final-2.md) | review-final-2: サイクル-315（B-651）の決定と成果物のレビュー（5巡目）      |
+| [review-final-3.md](./review-final-3.md) | review-final-3: サイクル-315（B-651）の決定と成果物のレビュー（6巡目）      |
+| [review-final-4.md](./review-final-4.md) | review-final-4: サイクル-315（B-651）の決定と成果物のレビュー（7巡目）      |
+
+**レビュー: `DESIGN.md` の策定**
+
+| 文書                                               | 内容                                                                     |
+| -------------------------------------------------- | ------------------------------------------------------------------------ |
+| [review-design-audit.md](./review-design-audit.md) | レビュー: `design-audit.md`（現行 `DESIGN.md` の棚卸し）                 |
+| [review-design.md](./review-design.md)             | `DESIGN.md`（208行・`f62afb98`）のレビュー                               |
+| [review-design-2.md](./review-design-2.md)         | `DESIGN.md`（277行・`63cad20d`）のレビュー——2巡目                        |
+| [review-identity.md](./review-identity.md)         | レビュー: `DESIGN.md` は強い独自性を確実に発揮できるか                   |
+| [review-usability.md](./review-usability.md)       | `DESIGN.md` レビュー——誰もが使えるか                                     |
+| [review-final-design.md](./review-final-design.md) | `DESIGN.md` 最終レビュー——強烈な独自性とアクセシビリティは両立しているか |
+
+**レビュー: 記録**
+
+| 文書                                       | 内容                                                                                                |
+| ------------------------------------------ | --------------------------------------------------------------------------------------------------- |
+| [review-record.md](./review-record.md)     | review-record: cycle-315 の作業記録（concept-rewrite.md・incident-5.md・index.md 追記）のレビュー   |
+| [review-record-2.md](./review-record-2.md) | review-record-2: cycle-315 の作業記録（concept-rewrite.md・incident-5.md・index.md）の2巡目レビュー |
+| [review-record-3.md](./review-record-3.md) | review-record-3: cycle-315 の作業記録（concept-rewrite.md・incident-5.md・index.md）の3巡目レビュー |
+
+**レビュー: 2文書の読み直しと修正**
+
+| 文書                                                 | 内容                                                                        |
+| ---------------------------------------------------- | --------------------------------------------------------------------------- |
+| [review-readability.md](./review-readability.md)     | `docs/site-concept.md` / `DESIGN.md` 読みやすさレビュー（ツギハギ・初読者） |
+| [review-readability-2.md](./review-readability-2.md) | `docs/site-concept.md` / `DESIGN.md` 読みやすさレビュー（2巡目）            |
+| [review-readability-3.md](./review-readability-3.md) | `docs/site-concept.md` / `DESIGN.md` 読みやすさレビュー（3巡目）            |
+| [review-readability-4.md](./review-readability-4.md) | `docs/site-concept.md` / `DESIGN.md` 読みやすさレビュー（4巡目）            |
+| [review-readability-5.md](./review-readability-5.md) | `docs/site-concept.md` / `DESIGN.md` 読みやすさレビュー（5巡目）            |
+| [review-readability-6.md](./review-readability-6.md) | `docs/site-concept.md` / `DESIGN.md` 読みやすさレビュー（6巡目）            |
+| [review-minimal-fixes.md](./review-minimal-fixes.md) | `DESIGN.md` / `docs/site-concept.md` 最小修正のレビュー                     |
+| [review-final-check.md](./review-final-check.md)     | `DESIGN.md` / `docs/site-concept.md` 最終確認レビュー                       |
+
+**レビュー: 完了手順**
+
+| 文書                                             | 内容                                                   |
+| ------------------------------------------------ | ------------------------------------------------------ |
+| [review-workflow-ap.md](./review-workflow-ap.md) | ワークフローのアンチパターン点検（サイクル完了手順 5） |
+
 ## キャリーオーバー
 
 **すべて `docs/backlog.md` に起票済み。** 本サイクル固有の残件は無い。
