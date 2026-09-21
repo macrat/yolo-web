@@ -505,7 +505,7 @@ constitution はこのプロジェクトで最も効力の強い規範文書で�
 | [review-record-2.md](./review-record-2.md) | review-record-2: cycle-315 の作業記録（concept-rewrite.md・incident-5.md・index.md）の2巡目レビュー |
 | [review-record-3.md](./review-record-3.md) | review-record-3: cycle-315 の作業記録（concept-rewrite.md・incident-5.md・index.md）の3巡目レビュー |
 
-**レビュー: 2文書の読み直し（6巡）**
+**レビュー: 2文書の読み直し（6巡）と、修正の確認**
 
 | 文書                                                 | 内容                                                                        |
 | ---------------------------------------------------- | --------------------------------------------------------------------------- |
@@ -515,6 +515,7 @@ constitution はこのプロジェクトで最も効力の強い規範文書で�
 | [review-readability-4.md](./review-readability-4.md) | `docs/site-concept.md` / `DESIGN.md` 読みやすさレビュー（4巡目）            |
 | [review-readability-5.md](./review-readability-5.md) | `docs/site-concept.md` / `DESIGN.md` 読みやすさレビュー（5巡目）            |
 | [review-readability-6.md](./review-readability-6.md) | `docs/site-concept.md` / `DESIGN.md` 読みやすさレビュー（6巡目）            |
+| [review-minimal-fixes.md](./review-minimal-fixes.md) | 指摘の取捨選択と最小限の修正の確認（デザインの決定を変えていないか）        |
 
 ## キャリーオーバー
 
