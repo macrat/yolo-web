@@ -538,6 +538,7 @@ constitution はこのプロジェクトで最も効力の強い規範文書で�
 | [review-design-rewrite-2.md](./review-design-rewrite-2.md) | 同・2巡目（直した結果に生まれた破れ）                       |
 | [review-design-rewrite-3.md](./review-design-rewrite-3.md) | 同・3巡目（幾何の確定と、残った受け側の取りこぼし）         |
 | [review-design-rewrite-4.md](./review-design-rewrite-4.md) | 同・4巡目（縦罫の変更の受け側を全件判定・モックで目視確認） |
+| [review-design-rewrite-5.md](./review-design-rewrite-5.md) | 同・5巡目（§8 の書き直しが §5 を置き去りにした5件）         |
 
 ## キャリーオーバー
 
