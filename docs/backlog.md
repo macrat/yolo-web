@@ -9,8 +9,8 @@
 | --- | --- | --- | --- |
 | B-754 | サイトデザインの刷新 | P1 | 確定した`DESIGN.md`を実装へ適用する単一のタスク。favicon・OGP画像と来訪者が読む文言(トップの「AIが営む、よろず屋です。」等)を含むサイト全体が対象。B-583・B-576・B-652を統合。詳細cycle-315/index.md |
 | B-755 | 道具箱の作りの撤去 | P2 | 機能はcycle-279で撤去済みで、同居を前提にした作りだけが残っている。実測=`*Tile.tsx`36本・GAの`variant`欄・`generate:toolbox-registry`・コメント40ファイル。詳細cycle-315/index.md |
-| B-756 | 診断・ゲームの中身の刷新 | P2 | 実測=14面(`src/app/play/`から`[slug]`と`__tests__`を除いた数)。site-conceptの問いで1面ずつ伸ばす/作り直す/引き上げるを決める。B-606・B-603はこの判定の中で扱う。詳細cycle-315/index.md |
-| B-757 | ブログの中身の刷新 | P2 | 実測=87記事(`src/blog/content/*.md`)。`docs/site-concept.md`は「AIが作ったことを売りにする」をDon'tに置いているが、運営の内側を題材にした記事が相当数ある。1記事ずつ来訪者の得で判定し、伸ばす・作り直す・引き上げるのいずれかを決める |
+| B-756 | 診断・ゲームの刷新 | P2 | 実測=14面(`src/app/play/`から`[slug]`と`__tests__`を除いた数)。site-conceptの問いで1面ずつ伸ばす/作り直す/引き上げるを決める。B-606・B-603はこの判定の中で扱う。詳細cycle-315/index.md |
+| B-757 | ブログの刷新 | P2 | 実測=87記事(`src/blog/content/*.md`)。`docs/site-concept.md`は「AIが作ったことを売りにする」をDon'tに置いているが、運営の内側を題材にした記事が相当数ある。1記事ずつ来訪者の得で判定し、伸ばす・作り直す・引き上げるのいずれかを決める |
 | B-742 | docs/character.mdが旧コンセプト「診断を主軸に」のまま | P3 | B-651完了で着手条件を満たした。実測=:122/:205。確定した`docs/site-concept.md`に合わせる。中止済みB-658と同主題。詳細cycle-314/index.md |
 | B-672 | ソースコードのコメントに経緯と旧コンセプトの語が残っている | P4 | B-651完了で着手条件を満たした。実測=`cycle-NNN`参照が201ファイル359箇所。存在しない§番号を引く参照と、`page.module.css`:2等の「よろず屋」コメントも同種。詳細cycle-312 |
 | B-663 | 入力欄の14px固定でiOS Safariがフォーカス時に自動ズームする | P2 | 着手条件を満たした(cycle-315でDESIGN.md §4が入力欄を本文と同じ`1.0625rem`・16px下限と規定)。char-count・unit-converterで実測。共有部品Input/Textarea/Selectが根。詳細cycle-312 |
@@ -42,8 +42,8 @@
 | B-618 | pre-commit-checkのAP-WF24検出の穴を塞ぐ | P2 | 正規表現が「指示に従/指示により/指摘を受け」しか拾わず「指示で」「指摘で」が素通り(cycle-300で実際に2本通過)。助詞のゆれを含む式へ。コード変更のためbuilder+レビュー。詳細cycle-300 |
 | B-609 | レビュー体制の構造的欠陥(基準違反の検出漏れ)の是正 | P2 | cycle-298判明+cycle-300。残=(a)基準違反がMinor判定(b)candidates非読込(c)pre-commit検出漏れ(d)観点が計器選択の妥当性(AP-P31等)を問わない。詳細cycle-298/incident-3・cycle-300/incident-1 |
 | B-610 | ADR001+rebuild-plan§1(a)の「オーナー裁定」ラベル是正(AP-P34) | P2 | cycle-298発覚+cycle-300で原発言を逐語検証済(全面A/B棄却はPM導出・A/Bは却下されていない)。帰属を是正(ADR/READMEの『サイト全面のA/Bはしない』も整合対象)。詳細cycle-300/incident-1 |
-| B-564 | 辞典の中身の刷新 | P2 | 実測=4系統(colors・humor・kanji・yoji)。site-conceptの問いで系統ごとに伸ばす/作り直す/引き上げるを決める。参照型の敗北兆候はB-521。詳細cycle-315/index.md |
-| B-566 | ツールの中身の刷新 | P2 | 実測=36本(`src/tools/*/meta.ts`)で定番が多数。site-conceptの問いで1本ずつ伸ばす/作り直す/引き上げるを決める。一律削除は撤回済(cycle-279)。詳細cycle-315/index.md |
+| B-564 | 辞典の刷新 | P2 | 実測=4系統(colors・humor・kanji・yoji)。site-conceptの問いで系統ごとに伸ばす/作り直す/引き上げるを決める。参照型の敗北兆候はB-521。詳細cycle-315/index.md |
+| B-566 | ツールの刷新 | P2 | 実測=36本(`src/tools/*/meta.ts`)で定番が多数。site-conceptの問いで1本ずつ伸ばす/作り直す/引き上げるを決める。一律削除は撤回済(cycle-279)。詳細cycle-315/index.md |
 | B-494 | Dynamic Workflows 運用知見の knowledge 恒久化 | P2 | **フェーズR(workflow一斉切替)の前提整備として昇格**。6点の知見をknowledge化。詳細 cycle-225.md |
 | B-620 | 診断の二重発火で設問が1問飛び結果が変わる欠陥 | P3 | cycle-301で実装・出荷したがsrc配下ごとrevert(当初計画外の作業だったため)。初版2026-02-19から存在。詳細cycle-301/index.md §E |
 | B-613 | 診断の設問単位の計装(離脱局在を読む) | P3 | cycle-301で設計のみ完了・未実装。08-10の期日超過が確定。**B-614との出荷順序は指定なし**(ADR001経過記録(a)で撤回)。詳細cycle-301/index.md C・D1 |
