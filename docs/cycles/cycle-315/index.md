@@ -531,15 +531,20 @@ constitution はこのプロジェクトで最も効力の強い規範文書で�
 
 **レビュー: 完了手順**
 
-| 文書                                                       | 内容                                                        |
-| ---------------------------------------------------------- | ----------------------------------------------------------- |
-| [review-workflow-ap.md](./review-workflow-ap.md)           | ワークフローのアンチパターン点検（サイクル完了手順 5）      |
-| [review-design-rewrite.md](./review-design-rewrite.md)     | `DESIGN.md` の不備27件の修正と書き直しのレビュー            |
-| [review-design-rewrite-2.md](./review-design-rewrite-2.md) | 同・2巡目（直した結果に生まれた破れ）                       |
-| [review-design-rewrite-3.md](./review-design-rewrite-3.md) | 同・3巡目（幾何の確定と、残った受け側の取りこぼし）         |
-| [review-design-rewrite-4.md](./review-design-rewrite-4.md) | 同・4巡目（縦罫の変更の受け側を全件判定・モックで目視確認） |
-| [review-design-rewrite-5.md](./review-design-rewrite-5.md) | 同・5巡目（§8 の書き直しが §5 を置き去りにした5件）         |
-| [review-design-rewrite-6.md](./review-design-rewrite-6.md) | 同・6巡目（受け側66件の全件判定と、320px で結果が切れる件） |
+| 文書                                                       | 内容                                                             |
+| ---------------------------------------------------------- | ---------------------------------------------------------------- |
+| [review-workflow-ap.md](./review-workflow-ap.md)           | ワークフローのアンチパターン点検（サイクル完了手順 5）           |
+| [review-design-rewrite.md](./review-design-rewrite.md)     | `DESIGN.md` の不備27件の修正と書き直しのレビュー                 |
+| [review-design-rewrite-2.md](./review-design-rewrite-2.md) | 同・2巡目（直した結果に生まれた破れ）                            |
+| [review-design-rewrite-3.md](./review-design-rewrite-3.md) | 同・3巡目（幾何の確定と、残った受け側の取りこぼし）              |
+| [review-design-rewrite-4.md](./review-design-rewrite-4.md) | 同・4巡目（縦罫の変更の受け側を全件判定・モックで目視確認）      |
+| [review-design-rewrite-5.md](./review-design-rewrite-5.md) | 同・5巡目（§8 の書き直しが §5 を置き去りにした5件）              |
+| [review-design-rewrite-6.md](./review-design-rewrite-6.md) | 同・6巡目（受け側66件の全件判定と、320px で結果が切れる件）      |
+| [review-design-rewrite-7.md](./review-design-rewrite-7.md) | 同・7巡目（来訪者の観点を初めて通し、内部整合では出なかった5件） |
+| [review-design-rewrite-8.md](./review-design-rewrite-8.md) | 同・8巡目（7件中6件が前巡の修正が作ったもの）                    |
+| [review-consistency.md](./review-consistency.md)           | 目的を矛盾・ツギハギ・前提知識の3つに絞った検査・1巡目           |
+| [review-consistency-2.md](./review-consistency-2.md)       | 同・2巡目                                                        |
+| [review-consistency-3.md](./review-consistency-3.md)       | 同・3巡目                                                        |
 
 ## キャリーオーバー
 
