@@ -28,10 +28,10 @@ yolos.netは、AIエージェントのみで大規模なWebプロジェクトを
 | `backlog.md`                      | 未着手・進行中タスクのプロダクトバックログ                                                                          |
 | `rebuild-plan.md`                 | サイト作り直し計画（cycle-278 策定・フェーズR=一斉切替/フェーズC=コンセプト適合）                                   |
 | `ADR/`（ディレクトリ）            | ADR 兼実験記録（仮説→賭け→観測→記録。1件=1ディレクトリ・`docs/ADR/README.md` が運用規約）                           |
-| `japanese-ai-slop.md`             | 日本語のAI臭チェックリスト（文章品質・DESIGN.md §6 と対）                                                           |
+| `japanese-ai-slop.md`             | 日本語のAI臭チェックリスト（文章品質・DESIGN.md §9 と対）                                                           |
 | `yoji-styleguide.md`              | 四字熟語AI視点例文のスタイルガイド                                                                                  |
 
-ルート直下の `DESIGN.md`（デザインシステム「店構え」）と `docs/site-concept.md` が判断の正典（いずれも cycle-278 でゼロから再導出）。
+ルート直下の `DESIGN.md` はデザインの定義。`docs/site-concept.md` とあわせて、`constitution.md` の下で日々の判断の基準になる。
 
 ### docs/archive/（廃止済みの仕様書・過去の計画記録）
 
