@@ -121,7 +121,7 @@ cycle-315 で `docs/site-concept.md` と `DESIGN.md` を作り直した。**来�
 | 画面の切り替わり             | 「もう一度挑戦する」のあと、開始の画面（「はじめる」）が画面の中に見えている。「はじめる」「次へ」「もう一度挑戦する」、最終問の回答など、画面が切り替わる操作を同じ座標で二度打ちしても、2打目がシェア・FAQ・ほかのリンクに落ちない（375×550 で確かめる）                                                                                                                                                          |
 | B-621                        | 各面の主操作が、モバイルのファーストビューに入る                                                                                                                                                                                                                                                                                                                                                                    |
 | 札画像・irodori のシェア画像 | 残すなら、`DESIGN.md` §2（中身の色の上に文字を置かない）・§10 に従って描かれている。残さないなら、その判断と理由が記録されている                                                                                                                                                                                                                                                                                    |
-| favicon・apple-touch-icon    | `DESIGN.md` §10（`--ink` の地に `--paper` の `y` を見出し書体で。角丸なし）どおりで、16px で潰れず、ブラウザのタブのライトとダークの両方で見分けられる。Google 検索の要件（正方形・48px 超・ICO か PNG などの対応形式・URL を頻繁に変えない・Googlebot-Image が favicon を、Googlebot がホームページをクロールできる。[facts-external-specs.md](./facts-external-specs.md) §9）を満たす                             |
+| favicon・apple-touch-icon    | `DESIGN.md` §10（`--ink` の地に `--paper` の `y` を見出し書体で。角丸なし）どおりで、16px で潰れず、ブラウザのタブのライトとダークの両方で見分けられる。Google 検索の推奨（48px 超）と要件（正方形で 8px 以上・ICO か PNG などの対応形式・URL を頻繁に変えない・Googlebot-Image が favicon を、Googlebot がホームページをクロールできる。[facts-external-specs.md](./facts-external-specs.md) §9）を満たす          |
 
 ### 検討した他の選択肢と判断理由
 
@@ -166,7 +166,8 @@ cycle-315 で `docs/site-concept.md` と `DESIGN.md` を作り直した。**来�
 | 計画 11巡目 | major 1・minor 2（[review-plan-11.md](./review-plan-11.md)） | 同上                                                        | 改善指示              |
 | 計画 12巡目 | major 1・minor 4（[review-plan-12.md](./review-plan-12.md)） | 同上                                                        | 改善指示              |
 | 計画 13巡目 | major 0・minor 2（[review-plan-13.md](./review-plan-13.md)） | 同上                                                        | 改善指示              |
-| 計画 14巡目 | major 0・minor 2（[review-plan-14.md](./review-plan-14.md)） | 同上                                                        | 改善指示 → 15巡目待ち |
+| 計画 14巡目 | major 0・minor 2（[review-plan-14.md](./review-plan-14.md)） | 同上                                                        | 改善指示              |
+| 計画 15巡目 | major 0・minor 2（[review-plan-15.md](./review-plan-15.md)） | 同上                                                        | 改善指示 → 16巡目待ち |
 
 ## キャリーオーバー
 

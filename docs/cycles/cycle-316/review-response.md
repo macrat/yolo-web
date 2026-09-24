@@ -1,6 +1,6 @@
 # 計画レビューの指摘への対応
 
-指摘の本文は [review-plan.md](./review-plan.md)（1巡目）・[review-plan-2.md](./review-plan-2.md)（2巡目）・[review-plan-3.md](./review-plan-3.md)（3巡目）・[review-plan-4.md](./review-plan-4.md)（4巡目）・[review-plan-5.md](./review-plan-5.md)（5巡目）・[review-plan-6.md](./review-plan-6.md)（6巡目）・[review-plan-7.md](./review-plan-7.md)（7巡目）・[review-plan-8.md](./review-plan-8.md)（8巡目）・[review-plan-9.md](./review-plan-9.md)（9巡目）・[review-plan-10.md](./review-plan-10.md)（10巡目）・[review-plan-11.md](./review-plan-11.md)（11巡目）・[review-plan-12.md](./review-plan-12.md)（12巡目）・[review-plan-13.md](./review-plan-13.md)（13巡目）・[review-plan-14.md](./review-plan-14.md)（14巡目）。
+指摘の本文は [review-plan.md](./review-plan.md)（1巡目）・[review-plan-2.md](./review-plan-2.md)（2巡目）・[review-plan-3.md](./review-plan-3.md)（3巡目）・[review-plan-4.md](./review-plan-4.md)（4巡目）・[review-plan-5.md](./review-plan-5.md)（5巡目）・[review-plan-6.md](./review-plan-6.md)（6巡目）・[review-plan-7.md](./review-plan-7.md)（7巡目）・[review-plan-8.md](./review-plan-8.md)（8巡目）・[review-plan-9.md](./review-plan-9.md)（9巡目）・[review-plan-10.md](./review-plan-10.md)（10巡目）・[review-plan-11.md](./review-plan-11.md)（11巡目）・[review-plan-12.md](./review-plan-12.md)（12巡目）・[review-plan-13.md](./review-plan-13.md)（13巡目）・[review-plan-14.md](./review-plan-14.md)（14巡目）・[review-plan-15.md](./review-plan-15.md)（15巡目）。
 
 ## 1巡目
 
@@ -173,3 +173,10 @@
 | ------------------------------ | -------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | minor-1 変更前に無い URL       | 除外をやめた変更が、隣の定義（比べる相手）に及ぶかを確かめたか | 案 (a) を採り、「変更前に無い URL は、変更前に同じ項目を描いていたページと比べる」を足した。来訪者が同じものを得るために変更前に払っていた量と比べるためである |
 | minor-2 中身が原因のときの帰結 | —                                                              | 帰結の括弧を「HTML・データ・CSS・JS・画像」にした                                                                                                              |
+
+## 15巡目
+
+| 指摘                                | 背後の問い                                                 | 対応                                                            |
+| ----------------------------------- | ---------------------------------------------------------- | --------------------------------------------------------------- |
+| minor-1 Google の推奨を要件と書いた | 一次資料の要約が、原文の強さ（要件か推奨か）を保っているか | 「推奨（48px 超）と要件（正方形で 8px 以上・…）」に分けて書いた |
+| minor-2 B-573 の「81ページ」        | —                                                          | 「対象のページ（全ページ）も同じ」に直した                      |
