@@ -388,3 +388,4 @@
 - 原文: "Your favicon must be a square (1:1 aspect ratio) that's at least 8x8px. While the minimum size requirement is 8x8px, we recommend using a favicon that's larger than 48x48px so that it looks good on various surfaces."
 - 原文: "Google Search supports the following favicon file formats: BMP, GIF, ICO, PNG, JPEG, PPM, and TIFF."（SVG は挙がっていない）
 - 原文: "The favicon URL must be stable (don't change the URL frequently)."
+- 同じページに、Googlebot-Image が favicon のファイルを、Googlebot がホームページをクロールできることが要件として書かれている（計画の5巡目のレビューが確認）。

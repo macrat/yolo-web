@@ -17,7 +17,7 @@
 | B-650 | ルートOGP副題「実験的Webサイト」が何が得られるかを伝えない | P4 | 開示だが「実験」止まり。DESIGN§9・§10で書き直す。詳細cycle-309/decision.md。cycle-316でB-754の一部 |
 | B-755 | 道具箱の作りの撤去 | P2 | 機能はcycle-279で撤去済みなのに、同居を前提にした作りとコメントが残り、読む者に存在しない機能があるように見せている。詳細cycle-315/index.md。cycle-316でB-754の一部として扱う |
 | B-567 | 移行時代の `new/` コンポーネントディレクトリ平坦化 | P3 | legacy 兄弟が消えた片翼 new/ 3件を平坦化(約24 import)。デザイン/UX 非影響。cycle-279 で非ブロッキング判断。詳細 cycle-279.md。cycle-316でB-754の一部として扱う |
-| B-614 | 診断の回答フェーズの摩擦低減 | P3 | 375×550で4択のうち見えるのが1つだけ(上部212.5px・説明欄にSEO用の長文を描画)。全15本。付帯=押した選択肢を即座に見せる。詳細cycle-301/index.md。cycle-316でB-754の一部 |
+| B-614 | 診断の回答フェーズの摩擦低減 | P3 | 375×550で4択のうち見えるのが1つだけ・知識クイズの「次へ」が画面外。全15本。付帯=押した選択肢を即座に見せる。cycle-301のdesign.mdは実コードに突き合わせ直す。cycle-316でB-754の一部 |
 | B-621 | ゲーム/ツール面の主操作要素がfold下にある件の監査 | P3 | cycle-301レビュー実測。kanji-kanaruは375x550で入力欄がfoldの460px下。診断以外の面を1巡監査。詳細cycle-301/review-log.md。cycle-316でB-754の一部 |
 | B-624 | 知識クイズで回答するとフォーカスがbodyに落ちる | P3 | 押したボタンがdisabledになるため。SR利用者は先頭からTabし直す。詳細cycle-301/review-log.md。cycle-316でB-754の一部 |
 
@@ -50,7 +50,6 @@
 | B-564 | 辞典の刷新 | P2 | site-conceptの問いで系統ごとに判定し、伸ばす/作り直す/引き上げるを決める。参照するだけの辞書に来訪者の反応が取れていない(B-521)。詳細cycle-315/index.md |
 | B-566 | ツールの刷新 | P2 | site-conceptは「定番を作り直すのは他所の土俵」と定めた。当たるかを1本ずつ判定し、伸ばす/作り直す/引き上げるを決める。一律削除は撤回済(cycle-279)。詳細cycle-315/index.md |
 | B-494 | Dynamic Workflows 運用知見の knowledge 恒久化 | P2 | **フェーズR(workflow一斉切替)の前提整備として昇格**。6点の知見をknowledge化。詳細 cycle-225.md |
-| B-613 | 診断の設問単位の計装(離脱局在を読む) | P3 | cycle-301で設計のみ完了・未実装。08-10の期日超過が確定。**B-614との出荷順序は指定なし**(ADR001経過記録(a)で撤回)。詳細cycle-301/index.md C・D1 |
 | B-619 | 参照切れドキュメントパスの是正 | P3 | cycle-301発覚。生きている参照8ファイル(コード5+docs/sql 1+research 2)が移動済の`docs/visitor-value-measurement.md`を指す。`docs/experiments.md`は不在。横断点検も要る。詳細cycle-301キャリーオーバー |
 | B-617 | SC平均順位の算式誤り(+1欠落)の下流トリアージ | P3 | cycle-300で算式を是正(repo全体4箇所)。過去docs(research2件+cycle doc群)の順位値が1小さいまま。戦略結論は不変だが誤記のため注記か補正。詳細cycle-300/observation §1 |
 | B-575 | 診断結果のシェアが少ない事実の扱い | P3 | share≈2件/28d(旧B-550・フェーズR前の古計測)。着手時は来訪者価値で正当化。経緯・扱いはcycle-285.md |
@@ -65,7 +64,7 @@
 | B-530 | AP-WF11 の運用化(公開前 reader-perspective audit) | P3 | 詳細 cycle-255.md |
 | B-531 | Goal-first チェック運用の仕組み化 | P3 | 詳細 cycle-255.md |
 | B-364 | cycle-175〜178 連続事故のブログ化再判断 | P3 | 着手時PM独立判断。詳細 cycle-178.md |
-| B-623 | 知識クイズで「次へ」の2打目がFAQのsummaryを叩く | P4 | cycle-301実測(yoji-level q4/q7/q8・kotowaza-level q7/q8)。既存欠陥で結果は壊れないが求めていないFAQが開閉。詳細cycle-301/review-log.md |
+| B-623 | 知識クイズで「次へ」の2打目がFAQのsummaryを叩く | P4 | cycle-301実測(yoji-level q4/q7/q8・kotowaza-level q7/q8)。既存欠陥で結果は壊れないが求めていないFAQが開閉。詳細cycle-301/review-log.md。cycle-316のT9で再現を確認し、再現すればB-754の中で直す |
 | B-541 | 現状正しい辞典収録数ハードコードの予防的`.length`化 | P4 | 辞典の処遇判断(B-564)と連動。詳細 cycle-258.md |
 | B-549 | middleware→proxy 移行(Next.js16非推奨) | P4 | 出荷物に影響なし。詳細 cycle-271 接地 |
 | B-512 | next.config redirects コメント「301」→「308」統一 | P4 | 文言のみ是正。詳細 cycle-243.md |
@@ -78,11 +77,13 @@
 | B-123 | フィーチャーディレクトリ features/ 集約 | P4 | src/直下が20超になった時点で検討 |
 | B-450 | tmp パス命名規約 SSoT 化 | P5 | 詳細 cycle-210.md |
 | B-568 | 面横断 content_id 接頭辞規約の全面統一 | P4 | GAの集計の断絶を伴うが、旧→新の接頭辞対応表でつなげる。ADR009の主計器(SC)には掛からない。詳細 cycle-280.md・cycle-316/options.md |
+| B-758 | 変更前から全5ページで実験室のLCPが2.5秒を超えている | P2 | 診断のプレイ面3.8秒ほか。LCP要素は全て文字。実地の値(SCのCore Web Vitals/CrUX)を確かめ原因を調べる。実測cycle-316/facts-speed-before.md |
 
 ## Deferred (すぐに着手できない)
 
 | ID | Title | Priority | Notes |
 | --- | --- | --- | --- |
+| B-613 | 診断の設問単位の計装(離脱局在を読む) | P3 | 着手: cycle-316の出荷後、刷新後のQuizContainerに設計(cycle-301)を突き合わせ直してから。B-620の判断材料にもなる。詳細cycle-301/index.md C・D1 |
 | B-629 | 新しいfaviconの検索結果での表示確認 | P2 | 着手: cycle-316の出荷+7日。SC/実SERPで新faviconの表示を確かめる(旧faviconの確認から題を改めた)。詳細cycle-316/options.md |
 | B-620 | 診断の二重発火で設問が1問飛び結果が変わる欠陥 | P3 | 着手: cycle-316出荷後。T9の二度打ちの記録とB-613の出荷を材料に判断。cycle-301の修正は600msの無言棄却等で正味マイナスでrevert。詳細cycle-316/options.md |
 | B-740 | cycle-314の失敗をブログ化するか判断する | P4 | 着手: 事故分析(incident-1・incident-2)がレビュー済みになってから。題材=隔離された成果物をその自己申告で信じた機構と、チェック項目は当てる先を選べる件。詳細cycle-314/ |
