@@ -1,6 +1,6 @@
 # 計画レビューの指摘への対応
 
-指摘の本文は [review-plan.md](./review-plan.md)（1巡目）・[review-plan-2.md](./review-plan-2.md)（2巡目）・[review-plan-3.md](./review-plan-3.md)（3巡目）・[review-plan-4.md](./review-plan-4.md)（4巡目）・[review-plan-5.md](./review-plan-5.md)（5巡目）・[review-plan-6.md](./review-plan-6.md)（6巡目）・[review-plan-7.md](./review-plan-7.md)（7巡目）・[review-plan-8.md](./review-plan-8.md)（8巡目）・[review-plan-9.md](./review-plan-9.md)（9巡目）・[review-plan-10.md](./review-plan-10.md)（10巡目）・[review-plan-11.md](./review-plan-11.md)（11巡目）・[review-plan-12.md](./review-plan-12.md)（12巡目）・[review-plan-13.md](./review-plan-13.md)（13巡目）・[review-plan-14.md](./review-plan-14.md)（14巡目）・[review-plan-15.md](./review-plan-15.md)（15巡目）。
+指摘の本文は [review-plan.md](./review-plan.md)（1巡目）・[review-plan-2.md](./review-plan-2.md)（2巡目）・[review-plan-3.md](./review-plan-3.md)（3巡目）・[review-plan-4.md](./review-plan-4.md)（4巡目）・[review-plan-5.md](./review-plan-5.md)（5巡目）・[review-plan-6.md](./review-plan-6.md)（6巡目）・[review-plan-7.md](./review-plan-7.md)（7巡目）・[review-plan-8.md](./review-plan-8.md)（8巡目）・[review-plan-9.md](./review-plan-9.md)（9巡目）・[review-plan-10.md](./review-plan-10.md)（10巡目）・[review-plan-11.md](./review-plan-11.md)（11巡目）・[review-plan-12.md](./review-plan-12.md)（12巡目）・[review-plan-13.md](./review-plan-13.md)（13巡目）・[review-plan-14.md](./review-plan-14.md)（14巡目）・[review-plan-15.md](./review-plan-15.md)（15巡目）・[review-plan-16.md](./review-plan-16.md)（16巡目）。
 
 ## 1巡目
 
@@ -180,3 +180,12 @@
 | ----------------------------------- | ---------------------------------------------------------- | --------------------------------------------------------------- |
 | minor-1 Google の推奨を要件と書いた | 一次資料の要約が、原文の強さ（要件か推奨か）を保っているか | 「推奨（48px 超）と要件（正方形で 8px 以上・…）」に分けて書いた |
 | minor-2 B-573 の「81ページ」        | —                                                          | 「対象のページ（全ページ）も同じ」に直した                      |
+
+## 16巡目
+
+| 指摘                                   | 背後の問い                                               | 対応                                                                                                                         |
+| -------------------------------------- | -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| minor-1 T8 の範囲                      | 範囲を広げた修正が、同じ範囲を書いている隣の文に及んだか | T8 の範囲を、完了の条件に定めた範囲（sitemap の全 URL・sitemap に載らないページ・操作で現れる状態）に揃えた                  |
+| minor-2 options の「目視を全ページに」 | —                                                        | 機械の検査は全ページと操作で現れる状態に、目視と操作は選んだページに掛ける、と書き分けた                                     |
+| minor-3 T5a の実装の手段               | —                                                        | 「説明欄に `shortDescription` を使う」を外し、「B-614 の本体」だけにした。事実は options の B-614 の行に材料として残っている |
+| minor-4 全角の空白                     | —                                                        | 消した                                                                                                                       |
