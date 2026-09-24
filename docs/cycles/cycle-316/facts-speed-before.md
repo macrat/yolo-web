@@ -53,4 +53,4 @@
 | `/tools/char-count`                                                                                        |        204 |
 | 3,299 ページの中央値                                                                                       |        235 |
 
-`/play/character-personality` など、リクエストごとに描くページはこの数え方の対象に入っていない。計画の10巡目のレビューが、`next start` で sitemap の `/play` 128 URL を取得して同じ数え方を掛け、最大は `/play/character-personality/result/dreaming-scholar` の414字だったと報告した。
+`/play/character-personality` など、リクエストごとに描くページはこの数え方の対象に入っていない。
