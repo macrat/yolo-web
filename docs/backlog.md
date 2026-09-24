@@ -3,7 +3,7 @@
 | ID | Title | Priority | Notes |
 | --- | --- | --- | --- |
 | B-754 | サイトデザインの刷新 | P1 | **cycle-316で着手**。cycle-315で作り直した`DESIGN.md`が実装に届かず、来訪者が見る面は捨てたデザインのまま。favicon・OGP・文言を含むサイト全体。B-583・B-576・B-652を統合。詳細cycle-316/index.md |
-| B-663 | 入力欄の14px固定でiOS Safariがフォーカス時に自動ズームする | P2 | 着手条件を満たした(cycle-315でDESIGN.md §4が入力欄を本文と同じ`1.0625rem`・16px下限と規定)。char-count・unit-converterで実測。共有部品Input/Textarea/Selectが根。詳細cycle-312 |
+| B-663 | 入力欄の14px固定でiOS Safariがフォーカス時に自動ズームする | P2 | DESIGN.md §4が入力欄を`1.0625rem`・16px下限と規定。char-count・unit-converterで実測。共有部品Input/Textarea/Selectが根。詳細cycle-312。cycle-316でB-754の一部 |
 | B-632 | htmlのfont-sizeがpx固定でブラウザの文字サイズ設定が効かない | P2 | globals.cssのhtml/bodyがfont-size:16px固定で、文字サイズ設定を上げて読む来訪者に本文が追随しない。詳細cycle-302/carryover.md §7-1。cycle-316でB-754の一部 |
 | B-577 | theme-color付与+410ダーク追従 | P4 | theme-color欠落(アドレスバー色を--paperへ)+410ページがライト固定。manifestは扱わない(理由cycle-316/options.md)。詳細cycle-282.md。cycle-316でB-754の一部 |
 | B-597 | テーマトグルのタップ標的高さ(28px) | P4 | cycle-287監査C5。DESIGN§6の44px未満。トグルを置くかをcycle-316のT1で来訪者価値から判断。詳細cycle-287/findings.md。cycle-316でB-754の一部 |
