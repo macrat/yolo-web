@@ -1,6 +1,6 @@
 # 計画レビューの指摘への対応
 
-指摘の本文は [review-plan.md](./review-plan.md)（1巡目）・[review-plan-2.md](./review-plan-2.md)（2巡目）・[review-plan-3.md](./review-plan-3.md)（3巡目）・[review-plan-4.md](./review-plan-4.md)（4巡目）・[review-plan-5.md](./review-plan-5.md)（5巡目）・[review-plan-6.md](./review-plan-6.md)（6巡目）・[review-plan-7.md](./review-plan-7.md)（7巡目）・[review-plan-8.md](./review-plan-8.md)（8巡目）・[review-plan-9.md](./review-plan-9.md)（9巡目）・[review-plan-10.md](./review-plan-10.md)（10巡目）・[review-plan-11.md](./review-plan-11.md)（11巡目）・[review-plan-12.md](./review-plan-12.md)（12巡目）。
+指摘の本文は [review-plan.md](./review-plan.md)（1巡目）・[review-plan-2.md](./review-plan-2.md)（2巡目）・[review-plan-3.md](./review-plan-3.md)（3巡目）・[review-plan-4.md](./review-plan-4.md)（4巡目）・[review-plan-5.md](./review-plan-5.md)（5巡目）・[review-plan-6.md](./review-plan-6.md)（6巡目）・[review-plan-7.md](./review-plan-7.md)（7巡目）・[review-plan-8.md](./review-plan-8.md)（8巡目）・[review-plan-9.md](./review-plan-9.md)（9巡目）・[review-plan-10.md](./review-plan-10.md)（10巡目）・[review-plan-11.md](./review-plan-11.md)（11巡目）・[review-plan-12.md](./review-plan-12.md)（12巡目）・[review-plan-13.md](./review-plan-13.md)（13巡目）。
 
 ## 1巡目
 
@@ -159,3 +159,10 @@
 | minor-2 見比べの断り書き             | —                                                    | 帰結の一部として「端末の書体に改めるときは、改めた画面を見て組み方を決め、失う得を記録する。この見比べは上限を覆す材料にしない」と書き直した                                                                                                                                                                                               |
 | minor-3 実地の値の記録の置き場所     | —                                                    | T10 に移し、T10 の行に書いた。options の B-758 の行も揃えた                                                                                                                                                                                                                                                                                |
 | minor-4 作業の並び                   | —                                                    | T1a の行を T1 の前に置いた（番号は参照を保つため変えない）                                                                                                                                                                                                                                                                                 |
+
+## 13巡目
+
+| 指摘                       | 背後の問い                                           | 対応                                                                                                                                                                                                                                                                    |
+| -------------------------- | ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| minor-1 境界の除外         | 除外の理由が、線の根拠（来訪者が払う量）と同じ向きか | 案 (b) を採り、除外をやめた。全ページのうち増分が最大と見込まれるページを境界とし、中身が変わるページも候補に残した。来訪者はそのページで払った量を取り返せないので、中身の変化で増えた分も含めて上限に掛ける。変更前が重いページは増分が小さく出るので自然に選ばれない |
+| minor-2 T1a の行の書き漏れ | —                                                    | T1a の行に「境界のページを選び、測り方を決めたうえで」を足した                                                                                                                                                                                                          |
