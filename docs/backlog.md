@@ -77,12 +77,12 @@
 | B-123 | フィーチャーディレクトリ features/ 集約 | P4 | src/直下が20超になった時点で検討 |
 | B-450 | tmp パス命名規約 SSoT 化 | P5 | 詳細 cycle-210.md |
 | B-568 | 面横断 content_id 接頭辞規約の全面統一 | P4 | GAの集計の断絶を伴うが、旧→新の接頭辞対応表でつなげる。ADR009の主計器(SC)には掛からない。詳細 cycle-280.md・cycle-316/options.md |
-| B-758 | 変更前から全5ページで実験室のLCPが2.5秒を超えている | P2 | 診断のプレイ面3.8秒ほか。LCP要素は全て文字。実地の値(SCのCore Web Vitals/CrUX)を確かめ原因を調べる。実測cycle-316/facts-speed-before.md |
 
 ## Deferred (すぐに着手できない)
 
 | ID | Title | Priority | Notes |
 | --- | --- | --- | --- |
+| B-758 | 全ページで実験室のLCPが2.5秒を超えている(2026-09の計測) | P2 | 着手: cycle-316の出荷後、新しいデザインで測り直してから。診断のプレイ面3.8秒ほか。LCP要素は全て文字。実測cycle-316/facts-speed-before.md |
 | B-613 | 診断の設問単位の計装(離脱局在を読む) | P3 | 着手: cycle-316の出荷後、刷新後のQuizContainerに設計(cycle-301)を突き合わせ直してから。B-620の判断材料にもなる。詳細cycle-301/index.md C・D1 |
 | B-629 | 新しいfaviconの検索結果での表示確認 | P2 | 着手: cycle-316の出荷+7日。SC/実SERPで新faviconの表示を確かめる(旧faviconの確認から題を改めた)。詳細cycle-316/options.md |
 | B-620 | 診断の二重発火で設問が1問飛び結果が変わる欠陥 | P3 | 着手: cycle-316出荷後。T9の二度打ちの記録とB-613の出荷を材料に判断。cycle-301の修正は600msの無言棄却等で正味マイナスでrevert。詳細cycle-316/options.md |
