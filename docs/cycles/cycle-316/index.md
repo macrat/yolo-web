@@ -11,7 +11,7 @@ cycle-315 で `docs/site-concept.md` と `DESIGN.md` を作り直した。**来�
 
 ## 実施する作業
 
-- [ ] T0 開始時の実測と外部仕様の確認（[facts-design-gap.md](./facts-design-gap.md)・[facts-external-specs.md](./facts-external-specs.md)）と、進め方の案の比較（[options.md](./options.md)）。**作業に入る前に、下の「表示の速さ」の5ページを、変更前のビルドで測って facts に記録する**
+- [x] T0 開始時の実測と外部仕様の確認（[facts-design-gap.md](./facts-design-gap.md)・[facts-external-specs.md](./facts-external-specs.md)）と、進め方の案の比較（[options.md](./options.md)）。**作業に入る前に、下の「表示の速さ」の5ページを、変更前のビルドで測って facts に記録する**
 - [ ] T1a **Web フォントの判断**（土台を作る前に行い、単独でレビューを受ける）: 下の「表示の速さ」の境界のページを選び、測り方を決めたうえで、対象ページについて、Web フォントの3書体（Zen Antique・BIZ UDPGothic・IBM Plex Sans。コードの `ui-monospace` は転送が無い）を載せた刷新後の転送量を見積もるか試作して測り、**計画で先に決めた上限**（下の「転送量」）に照らす。配り方（`frontend-design` スキルの「サイトで実際に使う字からサブセットを作る」か next/font の分割配信か。next/font を採るならスキルの側を直す）の判断を含む。**上限は T1a では動かさない。** 越えるときの帰結は下の「転送量」に従う
 - [ ] T1 **土台**: トークン（§2）・書体（§3）・組版（§4。B-632）・線とコンテナと全幅の罫線（§5）・上端と下端（§5 レイアウト・§9 告知）・theme-color と既定テーマ（§10。B-577）・テーマ切替を置くかどうかの判断（B-597）。書体の Web フォントの配り方は T1a の判断に従う
 - [ ] T2 **コントロール**（§6）と**入力**（§8。B-663）: リンク・プライマリボタン・現在地・無効・ラジオボタン・チェックボックス・アコーディオン・hover・フォーカスの二重リング・入力欄とラベルとエラー・ページ送り。`DESIGN.md` に相当の無い部品（セグメント切替・トグルスイッチ・値札・印など）の置き換え
@@ -151,24 +151,25 @@ cycle-315 で `docs/site-concept.md` と `DESIGN.md` を作り直した。**来�
 
 ## レビュー結果
 
-| 対象        | 指摘                                                         | 対応                                                        | 判定                  |
-| ----------- | ------------------------------------------------------------ | ----------------------------------------------------------- | --------------------- |
-| 計画 1巡目  | major 9・minor 8（[review-plan.md](./review-plan.md)）       | 指摘ごとの対応は [review-response.md](./review-response.md) | 改善指示              |
-| 計画 2巡目  | major 2・minor 14（[review-plan-2.md](./review-plan-2.md)）  | 同上                                                        | 改善指示              |
-| 計画 3巡目  | major 2・minor 10（[review-plan-3.md](./review-plan-3.md)）  | 同上                                                        | 改善指示              |
-| 計画 4巡目  | major 2・minor 7（[review-plan-4.md](./review-plan-4.md)）   | 同上                                                        | 改善指示              |
-| 計画 5巡目  | major 2・minor 6（[review-plan-5.md](./review-plan-5.md)）   | 同上                                                        | 改善指示              |
-| 計画 6巡目  | major 2・minor 4（[review-plan-6.md](./review-plan-6.md)）   | 同上                                                        | 改善指示              |
-| 計画 7巡目  | major 1・minor 4（[review-plan-7.md](./review-plan-7.md)）   | 同上                                                        | 改善指示              |
-| 計画 8巡目  | major 2・minor 5（[review-plan-8.md](./review-plan-8.md)）   | 同上                                                        | 改善指示              |
-| 計画 9巡目  | major 1・minor 5（[review-plan-9.md](./review-plan-9.md)）   | 同上                                                        | 改善指示              |
-| 計画 10巡目 | major 1・minor 3（[review-plan-10.md](./review-plan-10.md)） | 同上                                                        | 改善指示              |
-| 計画 11巡目 | major 1・minor 2（[review-plan-11.md](./review-plan-11.md)） | 同上                                                        | 改善指示              |
-| 計画 12巡目 | major 1・minor 4（[review-plan-12.md](./review-plan-12.md)） | 同上                                                        | 改善指示              |
-| 計画 13巡目 | major 0・minor 2（[review-plan-13.md](./review-plan-13.md)） | 同上                                                        | 改善指示              |
-| 計画 14巡目 | major 0・minor 2（[review-plan-14.md](./review-plan-14.md)） | 同上                                                        | 改善指示              |
-| 計画 15巡目 | major 0・minor 2（[review-plan-15.md](./review-plan-15.md)） | 同上                                                        | 改善指示              |
-| 計画 16巡目 | major 0・minor 4（[review-plan-16.md](./review-plan-16.md)） | 同上                                                        | 改善指示 → 17巡目待ち |
+| 対象        | 指摘                                                         | 対応                                                        | 判定     |
+| ----------- | ------------------------------------------------------------ | ----------------------------------------------------------- | -------- |
+| 計画 1巡目  | major 9・minor 8（[review-plan.md](./review-plan.md)）       | 指摘ごとの対応は [review-response.md](./review-response.md) | 改善指示 |
+| 計画 2巡目  | major 2・minor 14（[review-plan-2.md](./review-plan-2.md)）  | 同上                                                        | 改善指示 |
+| 計画 3巡目  | major 2・minor 10（[review-plan-3.md](./review-plan-3.md)）  | 同上                                                        | 改善指示 |
+| 計画 4巡目  | major 2・minor 7（[review-plan-4.md](./review-plan-4.md)）   | 同上                                                        | 改善指示 |
+| 計画 5巡目  | major 2・minor 6（[review-plan-5.md](./review-plan-5.md)）   | 同上                                                        | 改善指示 |
+| 計画 6巡目  | major 2・minor 4（[review-plan-6.md](./review-plan-6.md)）   | 同上                                                        | 改善指示 |
+| 計画 7巡目  | major 1・minor 4（[review-plan-7.md](./review-plan-7.md)）   | 同上                                                        | 改善指示 |
+| 計画 8巡目  | major 2・minor 5（[review-plan-8.md](./review-plan-8.md)）   | 同上                                                        | 改善指示 |
+| 計画 9巡目  | major 1・minor 5（[review-plan-9.md](./review-plan-9.md)）   | 同上                                                        | 改善指示 |
+| 計画 10巡目 | major 1・minor 3（[review-plan-10.md](./review-plan-10.md)） | 同上                                                        | 改善指示 |
+| 計画 11巡目 | major 1・minor 2（[review-plan-11.md](./review-plan-11.md)） | 同上                                                        | 改善指示 |
+| 計画 12巡目 | major 1・minor 4（[review-plan-12.md](./review-plan-12.md)） | 同上                                                        | 改善指示 |
+| 計画 13巡目 | major 0・minor 2（[review-plan-13.md](./review-plan-13.md)） | 同上                                                        | 改善指示 |
+| 計画 14巡目 | major 0・minor 2（[review-plan-14.md](./review-plan-14.md)） | 同上                                                        | 改善指示 |
+| 計画 15巡目 | major 0・minor 2（[review-plan-15.md](./review-plan-15.md)） | 同上                                                        | 改善指示 |
+| 計画 16巡目 | major 0・minor 4（[review-plan-16.md](./review-plan-16.md)） | 同上                                                        | 改善指示 |
+| 計画 17巡目 | 指摘なし（[review-plan-17.md](./review-plan-17.md)）         | —                                                           | **承認** |
 
 ## キャリーオーバー
 
