@@ -712,7 +712,7 @@ tests/e2e には `blog-detail-share-buttons.mjs` が1ファイルあり、色の
 
 **見出し書体として使っているもの（字形は中身でない）**
 
-ツールの見出し（`ToolPageLayout`・`ErrorBoundary`）、ゲームの見出し（kanji-kanaru・yoji-kimeru・irodori・nakamawake の `.title`、`GameLayout`、`GameDialog`、`RelatedBlogPosts`）、診断の開始ボタンと結果面の「やってみる」ボタン（`QuizContainer .startButton`、結果ページ9つの `.tryButton`）、関連コンテンツの見出しと名前（`RelatedContentCard`・`RecommendedContent`・`RelatedTools`・`RelatedBlogPosts`・`PlayRecommendBlock`）、辞典の見出し（`DictionarySearch`・`FacetIndex .heading`）、ユーモア辞典の語（`app/dictionary/humor` の `.word`・`.relatedWord`）、ブログの見出し（`SeriesNav`・`blog/[slug] .navTitle`）、トップのヒーローのリンク、共有部品（Header のロゴ・Footer の列見出し・Shinagaki・Tsutsumi・In）。
+ツールの見出し（`ToolPageLayout`・`ErrorBoundary`）、ゲームの見出し（kanji-kanaru・yoji-kimeru・irodori・nakamawake の `.title`、`GameLayout`、`GameDialog`、`RelatedBlogPosts`）、診断の開始ボタンと結果面の「やってみる」ボタン（`QuizContainer .startButton`、結果ページ10個の `.tryButton`）、関連コンテンツの見出しと名前（`RelatedContentCard`・`RecommendedContent`・`RelatedTools`・`RelatedBlogPosts`・`PlayRecommendBlock`）、辞典の見出し（`DictionarySearch`・`FacetIndex .heading`）、ユーモア辞典の語（`app/dictionary/humor` の `.word`・`.relatedWord`）、ブログの見出し（`SeriesNav`・`blog/[slug] .navTitle`）、トップのヒーローのリンク、共有部品（Header のロゴ・Footer の列見出し・Shinagaki・Tsutsumi・In）。
 
 ### 12-2. 見出し書体に無い字
 
