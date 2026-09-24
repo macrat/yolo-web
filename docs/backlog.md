@@ -2,21 +2,24 @@
 
 | ID | Title | Priority | Notes |
 | --- | --- | --- | --- |
-| B-754 | サイトデザインの刷新 | P1 | **cycle-316で着手**。確定した`DESIGN.md`が実装に届いておらず、来訪者が見る面は捨てたデザインシステムのまま。favicon・OGP画像と来訪者が読む文言を含むサイト全体が対象。B-583・B-576・B-652を統合。詳細cycle-315/index.md |
+| B-754 | サイトデザインの刷新 | P1 | **cycle-316で着手**。cycle-315で作り直した`DESIGN.md`が実装に届かず、来訪者が見る面は捨てたデザインのまま。favicon・OGP・文言を含むサイト全体。B-583・B-576・B-652を統合。詳細cycle-316/index.md |
 | B-663 | 入力欄の14px固定でiOS Safariがフォーカス時に自動ズームする | P2 | 着手条件を満たした(cycle-315でDESIGN.md §4が入力欄を本文と同じ`1.0625rem`・16px下限と規定)。char-count・unit-converterで実測。共有部品Input/Textarea/Selectが根。詳細cycle-312 |
-| B-632 | htmlのfont-sizeがpx固定でブラウザの文字サイズ設定が効かない | P2 | globals.cssのhtml/bodyがfont-size:16px固定で、文字サイズ設定を上げて読む来訪者に本文が追随しない。詳細cycle-302/carryover.md §7-1 |
-| B-577 | theme-color/manifest付与+410ダーク追従 | P4 | cycle-282点検/レビューで発覚。theme-color欠落(アドレスバー色を--paper系へ)+410ページのprefers-color-schemeダーク対応(現状ライト固定)。詳細cycle-282.md。cycle-316でB-754の一部として扱う |
-| B-597 | テーマトグルのタップ標的高さ(28px)のDESIGN準拠 | P4 | cycle-287監査C5。switch高さ28px=DESIGN§10の44px未満(WCAG2.5.8 24pxは充足)。当たり判定拡大の要否をDESIGN基準で判断。詳細cycle-287/findings.md。cycle-316でB-754の一部として扱う |
+| B-632 | htmlのfont-sizeがpx固定でブラウザの文字サイズ設定が効かない | P2 | globals.cssのhtml/bodyがfont-size:16px固定で、文字サイズ設定を上げて読む来訪者に本文が追随しない。詳細cycle-302/carryover.md §7-1。cycle-316でB-754の一部 |
+| B-577 | theme-color付与+410ダーク追従 | P4 | theme-color欠落(アドレスバー色を--paperへ)+410ページがライト固定。manifestは扱わない(理由cycle-316/options.md)。詳細cycle-282.md。cycle-316でB-754の一部 |
+| B-597 | テーマトグルのタップ標的高さ(28px) | P4 | cycle-287監査C5。DESIGN§6の44px未満。トグルを置くかをcycle-316のT1で来訪者価値から判断。詳細cycle-287/findings.md。cycle-316でB-754の一部 |
 | B-578 | クイズデータ内の旧青hexクレンジング | P4 | cycle-282点検で発覚。--type-color inject用の青hexだが消費CSS0=dead。OGP accentColor廃止で完全無害化済。和色へ寄せるか除去。詳細cycle-282.md。cycle-316でB-754の一部として扱う |
 | B-641 | 日本語の表が狭い画面で1文字ずつ縦に折れる | P2 | 日本語はどこでも改行できるため列のmin-contentが1文字になり、狭い画面で表のセルが縦一列に潰れて読めない。詳細cycle-302/incident-2.md。cycle-316でB-754の一部として扱う |
 | B-649 | 店語彙のaria-label(「品書き」等・SR可視)の平明化 | P3 | cycle-309でE3を是正。残=SR可視の「○○の品書き」ラベル複数面。詳細cycle-309/decision.md 射程外節。cycle-316でB-754の一部として扱う |
 | B-574 | イディオム2一覧のアクセシブル名浄化(stretched-link化) | P4 | B-573のa11y掃討の一部。SRが連結を読む冗長さを主リンク名のみへ。cycle-287で辞典検索結果リンクにも同種確認(C6)。詳細cycle-281.md/cycle-287。cycle-316でB-754の一部として扱う |
 | B-599 | 辞典/共有まわりのa11y軽微群 | P4 | cycle-287監査C8。同部首117リンクがdiv(list構造喪失)/辞典ヒーロー大字がaria-hidden無で二重読み/共有ボタンの外部予告が面で不整合。詳細cycle-287/findings.md。cycle-316でB-754の一部として扱う |
-| B-594 | /play/daily の見出し構造是正(h1不在) | P3 | cycle-316でB-754の一部として扱う。旧Notesは本行の履歴(git)参照 |
-| B-644 | 約2845ページが og:image 不在のまま summary_large_image を宣言し空の大カードになる | P3 | cycle-316でB-754の一部として扱う。旧Notesは本行の履歴(git)参照 |
-| B-650 | ルートOGP subtitle「実験的Webサイト」を§0.1(4)で来訪者価値評価 | P4 | cycle-316でB-754の一部として扱う。旧Notesは本行の履歴(git)参照 |
+| B-594 | /play/daily の見出し構造是正(h1不在) | P3 | dailyだけh1不在(タイトルがTsutsumiの<p>のみ)。ResultPageShellはh1あり是正不要。DESIGN§5「最初のセクションは主見出し」。詳細cycle-287/findings.md。cycle-316でB-754の一部 |
+| B-644 | 約2845ページが og:image 不在のまま summary_large_image を宣言し空の大カードになる | P3 | 原因=global `summary_large_image`＋root OGPが子ルートに継承されない。詳細cycle-306/review-log.md。cycle-316でB-754の一部 |
+| B-650 | ルートOGP副題「実験的Webサイト」が何が得られるかを伝えない | P4 | 開示だが「実験」止まり。DESIGN§9・§10で書き直す。詳細cycle-309/decision.md。cycle-316でB-754の一部 |
 | B-755 | 道具箱の作りの撤去 | P2 | 機能はcycle-279で撤去済みなのに、同居を前提にした作りとコメントが残り、読む者に存在しない機能があるように見せている。詳細cycle-315/index.md。cycle-316でB-754の一部として扱う |
 | B-567 | 移行時代の `new/` コンポーネントディレクトリ平坦化 | P3 | legacy 兄弟が消えた片翼 new/ 3件を平坦化(約24 import)。デザイン/UX 非影響。cycle-279 で非ブロッキング判断。詳細 cycle-279.md。cycle-316でB-754の一部として扱う |
+| B-614 | 診断の回答フェーズの摩擦低減 | P3 | cycle-301で6案比較のみ・未実装。**必須の申し送り=`:active`を「受理された選択の見た目」へ**(600ms無言棄却の唯一の緩和策)。design.mdは実コードに突き合わせ直すこと。詳細cycle-301/index.md B・E3c。cycle-316でB-754の一部 |
+| B-620 | 診断の二重発火で設問が1問飛び結果が変わる欠陥 | P3 | cycle-301で実装・出荷したがsrc配下ごとrevert(当初計画外の作業だったため)。初版2026-02-19から存在。詳細cycle-301/index.md §E。cycle-316でB-754の一部 |
+| B-621 | ゲーム/ツール面の主操作要素がfold下にある件の監査 | P3 | cycle-301レビュー実測。kanji-kanaruは375x550で入力欄がfoldの460px下。診断以外の面を1巡監査。詳細cycle-301/review-log.md。cycle-316でB-754の一部 |
 
 ## Queued (すぐに着手できる)
 
@@ -48,11 +51,8 @@
 | B-564 | 辞典の刷新 | P2 | site-conceptの問いで系統ごとに判定し、伸ばす/作り直す/引き上げるを決める。参照するだけの辞書に来訪者の反応が取れていない(B-521)。詳細cycle-315/index.md |
 | B-566 | ツールの刷新 | P2 | site-conceptは「定番を作り直すのは他所の土俵」と定めた。当たるかを1本ずつ判定し、伸ばす/作り直す/引き上げるを決める。一律削除は撤回済(cycle-279)。詳細cycle-315/index.md |
 | B-494 | Dynamic Workflows 運用知見の knowledge 恒久化 | P2 | **フェーズR(workflow一斉切替)の前提整備として昇格**。6点の知見をknowledge化。詳細 cycle-225.md |
-| B-620 | 診断の二重発火で設問が1問飛び結果が変わる欠陥 | P3 | cycle-301で実装・出荷したがsrc配下ごとrevert(当初計画外の作業だったため)。初版2026-02-19から存在。詳細cycle-301/index.md §E |
 | B-613 | 診断の設問単位の計装(離脱局在を読む) | P3 | cycle-301で設計のみ完了・未実装。08-10の期日超過が確定。**B-614との出荷順序は指定なし**(ADR001経過記録(a)で撤回)。詳細cycle-301/index.md C・D1 |
-| B-614 | 診断の回答フェーズの摩擦低減 | P3 | cycle-301で6案比較のみ・未実装。**必須の申し送り=`:active`を「受理された選択の見た目」へ**(600ms無言棄却の唯一の緩和策)。design.mdは実コードに突き合わせ直すこと。詳細cycle-301/index.md B・E3c |
 | B-624 | 知識クイズで回答するとフォーカスがbodyに落ちる | P3 | cycle-301レビュー実測(知識クイズ3/3)。押したボタンがdisabledになるため。SR利用者は解説と「次へ」に先頭からTabし直す必要がある。詳細cycle-301/review-log.md |
-| B-621 | ゲーム/ツール面の主操作要素がfold下にある件の監査 | P3 | cycle-301レビュー実測。kanji-kanaruは375x550で入力欄がfoldの460px下。診断以外の面を1巡監査。詳細cycle-301/review-log.md |
 | B-619 | 参照切れドキュメントパスの是正 | P3 | cycle-301発覚。生きている参照8ファイル(コード5+docs/sql 1+research 2)が移動済の`docs/visitor-value-measurement.md`を指す。`docs/experiments.md`は不在。横断点検も要る。詳細cycle-301キャリーオーバー |
 | B-617 | SC平均順位の算式誤り(+1欠落)の下流トリアージ | P3 | cycle-300で算式を是正(repo全体4箇所)。過去docs(research2件+cycle doc群)の順位値が1小さいまま。戦略結論は不変だが誤記のため注記か補正。詳細cycle-300/observation §1 |
 | B-575 | 診断結果のシェアが少ない事実の扱い | P3 | share≈2件/28d(旧B-550・フェーズR前の古計測)。着手時は来訪者価値で正当化。経緯・扱いはcycle-285.md |

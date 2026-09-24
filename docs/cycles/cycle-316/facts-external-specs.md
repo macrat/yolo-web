@@ -368,3 +368,12 @@
   - Global Usage 94.25%
   - 対応開始: Chrome 111、Edge 111、Firefox 113、Safari 15.4、iOS Safari 15.4
   - Baseline の表記は取得した本文に見当たらなかった。
+
+---
+
+## 8. LCP の「良好」の基準
+
+計画の2巡目のレビューで表示の速さに合格の線を置くことになり、PM が追加で確認した。
+
+- 確認した URL: https://web.dev/articles/lcp （取得日 2026-09-24）
+- 原文: "To provide a good user experience, sites should strive to have Largest Contentful Paint of 2.5 seconds or less. To ensure you're hitting this target for most of your users, a good threshold to measure is the 75th percentile of page loads, segmented across mobile and desktop devices."

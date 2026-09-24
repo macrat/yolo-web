@@ -689,9 +689,31 @@ tests/e2e には `blog-detail-share-buttons.mjs` が1ファイルあり、色の
 
 計画のレビューで、1〜11 の実測範囲から漏れていると指摘されたもの。計測日は同じ 2026-09-24。
 
-| 何が               | 実測                                                                                                                                                                                  | 根拠                                                                                                                                     |
-| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| コードの色分け     | Shiki（`shiki/bundle/full`）がビルド時に、ライトの色をインラインの `color`・`background-color` として、ダークの色を `--shiki-dark`・`--shiki-dark-bg` として埋め込む。2テーマとも有彩 | `src/lib/highlight.ts:1-25`                                                                                                              |
-| mermaid の図       | 11記事が ` ```mermaid ` を含む。描画テーマは `isDark ? "dark" : "default"`（どちらも有彩）                                                                                            | `grep -l '```mermaid' src/blog/content/*.md \| wc -l`、`src/blog/_components/MermaidRenderer.tsx:51`                                     |
-| ブログ本文の絵文字 | 87記事のうち2記事（`2026-02-22-game-infrastructure-refactoring.md`・`2026-02-14-character-counting-guide.md`）                                                                        | Python で U+1F300–1FAFF・U+2600–27BF を検索                                                                                              |
-| 字形が中身の面     | 漢字辞典の詳細の大字は見出し書体（`--font-mincho`）で組まれている。漢字カナールの盤面は `font-family: inherit`                                                                        | `src/dictionary/_components/kanji/KanjiDetail.module.css:22, 134`、`src/play/games/kanji-kanaru/_components/GameContainer.module.css:60` |
+| 何が               | 実測                                                                                                                                                                                  | 根拠                                                                                                 |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| コードの色分け     | Shiki（`shiki/bundle/full`）がビルド時に、ライトの色をインラインの `color`・`background-color` として、ダークの色を `--shiki-dark`・`--shiki-dark-bg` として埋め込む。2テーマとも有彩 | `src/lib/highlight.ts:1-25`                                                                          |
+| mermaid の図       | 11記事が ` ```mermaid ` を含む。描画テーマは `isDark ? "dark" : "default"`（どちらも有彩）                                                                                            | `grep -l '```mermaid' src/blog/content/*.md \| wc -l`、`src/blog/_components/MermaidRenderer.tsx:51` |
+| ブログ本文の絵文字 | 87記事のうち2記事（`2026-02-22-game-infrastructure-refactoring.md`・`2026-02-14-character-counting-guide.md`）                                                                        | Python で U+1F300–1FAFF・U+2600–27BF を検索                                                          |
+
+### 12-1. `--font-mincho`（いまの見出し書体）を使う箇所の内訳
+
+計画の2巡目のレビューで、字形が中身の面の列挙が不完全だと指摘されたため作り直した。コマンド: `rg -n "var\(--font-mincho" src -g '*.css' -g '!src/app/globals.css'` の各行について、直前のセレクタを読んだ。**「字形が中身」とは、表示している字そのものが来訪者の求める答え・学習の対象であるものを指す**（辞典の見出し字、ゲームの答え、読みを問う設問）。
+
+**字形が中身になりうるもの**
+
+| 面                 | 箇所                                                                                                                                                                                                                                                              |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 漢字辞典の詳細     | `src/dictionary/_components/kanji/KanjiDetail.module.css:22`（`.character` 大字）、`:134`（`.relatedLink` 関連する字）                                                                                                                                            |
+| 四字熟語辞典の詳細 | `src/dictionary/_components/yoji/YojiDetail.module.css:19`（`.character` 大字）、`:110`（`.kanjiLink`）、`:131`（`.kanjiChar`）、`:148`（`.relatedLink`）                                                                                                         |
+| 辞典の一覧と索引   | `src/dictionary/_components/DictionaryEntryList/DictionaryEntryList.module.css:65`（`.name` 見出し語）、`src/dictionary/_components/FacetIndex/FacetIndex.module.css:50`（`.link` 部首などの索引）、`src/app/dictionary/kanji/page.module.css:95`（`.facetLink`） |
+| 漢字カナール       | 盤面 `src/play/games/kanji-kanaru/_components/styles/KanjiKanaru.module.css:191`（`.guessKanji`、書体の指定なし＝本文から継承）、正解の表示 `:372`（`.resultAnswer`、見出し書体）                                                                                 |
+| 四字熟語きめる     | 正解の表示 `src/play/games/yoji-kimeru/_components/styles/YojiKimeru.module.css:331`（`.resultAnswer`）。盤面は書体の指定なし                                                                                                                                     |
+| 知識クイズの設問   | `src/play/quiz/_components/QuestionCard.module.css:26`（`.questionText`。漢字・ことわざ・四字熟語の読みや意味を問う設問）                                                                                                                                         |
+
+**見出し書体として使っているもの（字形は中身でない）**
+
+ツールの見出し（`ToolPageLayout`・`ErrorBoundary`）、ゲームの見出し（kanji-kanaru・yoji-kimeru・irodori・nakamawake の `.title`、`GameLayout`、`GameDialog`、`RelatedBlogPosts`）、診断の開始ボタンと結果面の「やってみる」ボタン（`QuizContainer .startButton`、結果ページ9つの `.tryButton`）、関連コンテンツの見出しと名前（`RelatedContentCard`・`RecommendedContent`・`RelatedTools`・`RelatedBlogPosts`・`PlayRecommendBlock`）、辞典の見出し（`DictionarySearch`・`FacetIndex .heading`）、ユーモア辞典の語（`app/dictionary/humor` の `.word`・`.relatedWord`）、ブログの見出し（`SeriesNav`・`blog/[slug] .navTitle`）、トップのヒーローのリンク、共有部品（Header のロゴ・Footer の列見出し・Shinagaki・Tsutsumi・In）。
+
+### 12-2. 見出し書体に無い字
+
+Google Fonts の Zen Antique の CSS（`https://fonts.googleapis.com/css2?family=Zen+Antique&display=swap`、2026-09-24 取得・`@font-face` の unicode-range 8039区間）を `src/data/kanji-data.json` の2136字と照合した。**範囲外は「𠮟」（U+20B9F）の1字だけだった。** `DESIGN.md` §3「Zen Antique に無い字を含む見出しは、その和文を丸ごと本文書体で組む」が実際に掛かる面である（同じ照合を計画の2巡目のレビューも行い、同じ結果だった）。
