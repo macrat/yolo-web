@@ -377,3 +377,14 @@
 
 - 確認した URL: https://web.dev/articles/lcp （取得日 2026-09-24）
 - 原文: "To provide a good user experience, sites should strive to have Largest Contentful Paint of 2.5 seconds or less. To ensure you're hitting this target for most of your users, a good threshold to measure is the 75th percentile of page loads, segmented across mobile and desktop devices."
+
+---
+
+## 9. Google 検索の favicon の要件
+
+計画の4巡目のレビューで指摘され、PM が追加で確認した。
+
+- 確認した URL: https://developers.google.com/search/docs/appearance/favicon-in-search （取得日 2026-09-24）
+- 原文: "Your favicon must be a square (1:1 aspect ratio) that's at least 8x8px. While the minimum size requirement is 8x8px, we recommend using a favicon that's larger than 48x48px so that it looks good on various surfaces."
+- 原文: "Google Search supports the following favicon file formats: BMP, GIF, ICO, PNG, JPEG, PPM, and TIFF."（SVG は挙がっていない）
+- 原文: "The favicon URL must be stable (don't change the URL frequently)."
