@@ -19,6 +19,7 @@ import Pagination from "@/components/Pagination";
 import ShareButtons from "@/components/ShareButtons";
 import FaqSection from "@/components/FaqSection";
 import RelatedTools from "@/components/RelatedTools";
+import Section from "@/components/Section";
 import styles from "./page.module.css";
 
 // カラースウォッチの定義。
@@ -132,9 +133,9 @@ export default function StorybookContent({
   const { copy, copiedKey } = useCopyToClipboard();
 
   return (
-    <div className={styles.container}>
+    <>
       {/* === 1. 概要 === */}
-      <section id="overview" className={styles.section}>
+      <Section id="overview">
         <h1 className={styles.pageTitle}>Storybook（開発者向け）</h1>
         {/* 見本は Panel に収めて並べる */}
         <Panel as="div">
@@ -162,10 +163,10 @@ export default function StorybookContent({
             </div>
           </nav>
         </Panel>
-      </section>
+      </Section>
 
       {/* === 2. カラーパレット === */}
-      <section id="colors" className={styles.section}>
+      <Section id="colors">
         <h2 className={styles.sectionTitle}>2. カラーパレット</h2>
         {/* 見本は Panel に収めて並べる */}
         <Panel as="div">
@@ -199,11 +200,11 @@ export default function StorybookContent({
             </div>
           ))}
         </Panel>
-      </section>
+      </Section>
 
       {/* === 3. 角丸 === */}
       {/* 影は持たないので影のトークンは無く、角丸だけを展示する（DESIGN.md §5）。 */}
-      <section id="radius-elevation" className={styles.section}>
+      <Section id="radius-elevation">
         <h2 className={styles.sectionTitle}>3. 角丸</h2>
         {/* 見本は Panel に収めて並べる */}
         <Panel as="div">
@@ -239,10 +240,10 @@ export default function StorybookContent({
             </div>
           </div>
         </Panel>
-      </section>
+      </Section>
 
       {/* === 4. Panel === */}
-      <section id="panel" className={styles.section}>
+      <Section id="panel">
         <h2 className={styles.sectionTitle}>4. Panel</h2>
         {/*
          * Panel は入れ子にしないが、ここは Panel そのものの見本なので、
@@ -292,10 +293,10 @@ export default function StorybookContent({
             </div>
           </div>
         </Panel>
-      </section>
+      </Section>
 
       {/* === 5. Button === */}
-      <section id="button" className={styles.section}>
+      <Section id="button">
         <h2 className={styles.sectionTitle}>5. Button</h2>
         {/* 見本は Panel に収めて並べる */}
         <Panel as="div">
@@ -345,10 +346,10 @@ export default function StorybookContent({
             </div>
           </div>
         </Panel>
-      </section>
+      </Section>
 
       {/* === 6. Input === */}
-      <section id="input" className={styles.section}>
+      <Section id="input">
         <h2 className={styles.sectionTitle}>6. Input</h2>
         {/* 見本は Panel に収めて並べる */}
         <Panel as="div">
@@ -434,10 +435,10 @@ export default function StorybookContent({
             </div>
           </div>
         </Panel>
-      </section>
+      </Section>
 
       {/* === 7. Breadcrumb === */}
-      <section id="breadcrumb" className={styles.section}>
+      <Section id="breadcrumb">
         <h2 className={styles.sectionTitle}>7. Breadcrumb</h2>
         {/* 見本は Panel に収めて並べる */}
         <Panel as="div">
@@ -473,10 +474,10 @@ export default function StorybookContent({
             </div>
           </div>
         </Panel>
-      </section>
+      </Section>
 
       {/* === 8. ToggleSwitch === */}
-      <section id="toggle-switch" className={styles.section}>
+      <Section id="toggle-switch">
         <h2 className={styles.sectionTitle}>8. ToggleSwitch</h2>
         {/* 見本は Panel に収めて並べる */}
         <Panel as="div">
@@ -519,9 +520,9 @@ export default function StorybookContent({
             </div>
           </div>
         </Panel>
-      </section>
+      </Section>
       {/* === 9. Pagination === */}
-      <section id="pagination" className={styles.section}>
+      <Section id="pagination">
         <h2 className={styles.sectionTitle}>9. Pagination</h2>
         {/* 見本は Panel に収めて並べる */}
         <Panel as="div">
@@ -566,10 +567,10 @@ export default function StorybookContent({
             <Pagination currentPage={1} totalPages={1} basePath="/blog" />
           </div>
         </Panel>
-      </section>
+      </Section>
 
       {/* === 10. ShareButtons === */}
-      <section id="share-buttons" className={styles.section}>
+      <Section id="share-buttons">
         <h2 className={styles.sectionTitle}>10. ShareButtons</h2>
         {/* 見本は Panel に収めて並べる */}
         <Panel as="div">
@@ -597,10 +598,10 @@ export default function StorybookContent({
             sns={["copy"]}
           />
         </Panel>
-      </section>
+      </Section>
 
       {/* === 11. Textarea === */}
-      <section id="textarea" className={styles.section}>
+      <Section id="textarea">
         <h2 className={styles.sectionTitle}>11. Textarea</h2>
         {/* 見本は Panel に収めて並べる */}
         <Panel as="div">
@@ -657,10 +658,10 @@ export default function StorybookContent({
             </div>
           </div>
         </Panel>
-      </section>
+      </Section>
 
       {/* === 12. Select === */}
-      <section id="select" className={styles.section}>
+      <Section id="select">
         <h2 className={styles.sectionTitle}>12. Select</h2>
         {/* 見本は Panel に収めて並べる */}
         <Panel as="div">
@@ -689,10 +690,10 @@ export default function StorybookContent({
             </div>
           </div>
         </Panel>
-      </section>
+      </Section>
 
       {/* === 13. SegmentedControl === */}
-      <section id="segmented-control" className={styles.section}>
+      <Section id="segmented-control">
         <h2 className={styles.sectionTitle}>13. SegmentedControl</h2>
         {/* 見本は Panel に収めて並べる */}
         <Panel as="div">
@@ -732,10 +733,10 @@ export default function StorybookContent({
             aria-label="改行処理モード"
           />
         </Panel>
-      </section>
+      </Section>
 
       {/* === 14. ErrorMessage === */}
-      <section id="error-message" className={styles.section}>
+      <Section id="error-message">
         <h2 className={styles.sectionTitle}>14. ErrorMessage</h2>
         {/* 見本は Panel に収めて並べる */}
         <Panel as="div">
@@ -754,10 +755,10 @@ export default function StorybookContent({
             変換に失敗しました。入力内容を確認してください。
           </ErrorMessage>
         </Panel>
-      </section>
+      </Section>
 
       {/* === 15. FileDropZone === */}
-      <section id="file-drop-zone" className={styles.section}>
+      <Section id="file-drop-zone">
         <h2 className={styles.sectionTitle}>15. FileDropZone</h2>
         {/* 見本は Panel に収めて並べる */}
         <Panel as="div">
@@ -778,10 +779,10 @@ export default function StorybookContent({
             onFileSelect={(file) => console.log("selected:", file.name)}
           />
         </Panel>
-      </section>
+      </Section>
 
       {/* === 16. useCopyToClipboard === */}
-      <section id="use-copy-to-clipboard" className={styles.section}>
+      <Section id="use-copy-to-clipboard">
         <h2 className={styles.sectionTitle}>16. useCopyToClipboard</h2>
         {/* 見本は Panel に収めて並べる */}
         <Panel as="div">
@@ -819,10 +820,10 @@ export default function StorybookContent({
             秒後にリセット）
           </div>
         </Panel>
-      </section>
+      </Section>
 
       {/* === 17. Input (type=date) === */}
-      <section id="input-date" className={styles.section}>
+      <Section id="input-date">
         <h2 className={styles.sectionTitle}>17. Input (type=date)</h2>
         {/* 見本は Panel に収めて並べる */}
         <Panel as="div">
@@ -853,10 +854,10 @@ export default function StorybookContent({
             </div>
           </div>
         </Panel>
-      </section>
+      </Section>
 
       {/* === 18. FaqSection === */}
-      <section id="faq-section" className={styles.section}>
+      <Section id="faq-section">
         <h2 className={styles.sectionTitle}>18. FaqSection</h2>
         {/* 見本は Panel に収めて並べる */}
         <Panel as="div">
@@ -875,10 +876,10 @@ export default function StorybookContent({
           </div>
           <FaqSection faq={[]} />
         </Panel>
-      </section>
+      </Section>
 
       {/* === 19. RelatedTools === */}
-      <section id="related-tools" className={styles.section}>
+      <Section id="related-tools">
         <h2 className={styles.sectionTitle}>19. RelatedTools</h2>
         {/* 見本は Panel に収めて並べる */}
         <Panel as="div">
@@ -904,10 +905,10 @@ export default function StorybookContent({
             relatedSlugs={["nonexistent-tool"]}
           />
         </Panel>
-      </section>
+      </Section>
 
       {/* === 20. RelatedBlogPosts === */}
-      <section id="related-blog-posts" className={styles.section}>
+      <Section id="related-blog-posts">
         <h2 className={styles.sectionTitle}>20. RelatedBlogPosts</h2>
         {/* 見本は Panel に収めて並べる */}
         <Panel as="div">
@@ -926,7 +927,7 @@ export default function StorybookContent({
           </div>
           {relatedBlogPostsEmpty}
         </Panel>
-      </section>
-    </div>
+      </Section>
+    </>
   );
 }

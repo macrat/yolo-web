@@ -1,11 +1,8 @@
 /**
- * global-not-found.js — グローバル 404 ページ
+ * global-not-found.js — どのルートにも一致しない URL の 404 ページ
+ * （next.config.ts の experimental.globalNotFound）。
  *
- * multiple root layouts 構成では通常の app/not-found.tsx で 404 を
- * 構成できないため、Next.js の global-not-found.js
- * (experimental.globalNotFound: true) を使う。
- *
- * - layout の import チェーンに乗らないため、globals.css を冒頭で明示 import し、
+ * - ルートのレイアウトを通らずに描かれるため、globals.css を冒頭で明示 import し、
  *   <html>/<body> と、どのページにも共通の枠（SiteFrame）を src/app/layout.tsx と同じ形で出す。
  * - GoogleAnalytics を置く: 404 着地は外部リンク切れの定量把握に直接価値があり、
  *   GA で 404 発生 URL を追跡できないと改善の起点が失われる。

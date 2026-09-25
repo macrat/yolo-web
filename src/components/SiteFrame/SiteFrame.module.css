@@ -7,3 +7,9 @@
   border-inline: var(--rule-w) solid var(--rule);
   padding-inline: var(--box-padding);
 }
+
+/* main はスキップのリンクがフォーカスを移す先で、操作するものではない。輪を出すとコンテナの左右の
+ * ボーダーに沿って線が並び、罫線の形が崩れる。スキップのあとは、本文が画面の上に来ることで位置が分かる。 */
+.main:focus {
+  outline: none;
+}

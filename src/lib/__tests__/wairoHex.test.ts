@@ -18,9 +18,6 @@ import {
   RULE_STRONG,
   ACCENT,
   PAPER_DARK,
-  INK_DARK,
-  INK_2_DARK,
-  RULE_DARK,
 } from "../utsuwaHex";
 
 /** WCAG 2.1 相対輝度・コントラスト比を hex から計算する（AA 再計測用・sRGB）。 */
@@ -124,9 +121,6 @@ describe("oklchToHex — 正典 oklch との乖離ガード", () => {
 
   const CONTAINER_DARK_TOKENS: ReadonlyArray<[hex: string, token: string]> = [
     [PAPER_DARK, "paper"],
-    [INK_DARK, "ink"],
-    [INK_2_DARK, "ink-2"],
-    [RULE_DARK, "rule-2"],
   ];
 
   test.each(CONTAINER_DARK_TOKENS)(

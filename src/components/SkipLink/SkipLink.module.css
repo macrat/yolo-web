@@ -1,38 +1,31 @@
-/**
- * SkipLink — WCAG 2.4.1 Bypass Blocks(A) 対応のスキップリンク。
- * 上端より前に置く最初の focusable 要素として、キーボード利用者が
- * 上端のリンクを Tab で越えずに本文へ跳べるようにする。
- * 見た目は紙・墨・罫のトークンで組み、タップ標的は 44px（§6）。
- */
-
+/* スキップのリンク（WCAG 2.4.1）。本文へ進むリンクなので、§6 のリンクとして下線を持つ。
+ * フォーカスが入るまでは画面の外に置き、入ったときだけ左上に出す。display: none や clip で隠すと
+ * フォーカスを受けられないため、position: fixed と transform で外へ送る。fixed なので、
+ * どこまでスクロールしていても左上に出る。 */
 .skipLink {
-  /* 通常はレイアウトに影響を与えずビューポート外へ退避し、focus 時だけ左上へ復帰させる。
-     display:none や visually-hidden の clip 方式は focus で戻せないため、
-     position:fixed + transform で「focusable のまま画面外」にする。
-     fixed によりスクロール位置に関わらず常に左上へ出現する。 */
   position: fixed;
   top: var(--space-8);
   left: var(--space-8);
   transform: translateY(calc(-100% - var(--space-8)));
-  /* ページの中の重なる UI より前面に出し、フォーカスが入ったときに必ず見えるようにする。 */
+  /* ページの中の重なる部品より前に出し、フォーカスが入ったときに必ず見えるようにする。 */
   z-index: 1000;
-
-  /* 紙地・墨字・のれん罫・角丸 0。影・色地は使わない。 */
-  background: var(--paper);
-  color: var(--ink);
-  border: 1px solid var(--rule-strong);
-  border-radius: var(--radius);
-  padding: var(--space-8) var(--space-16);
-  text-decoration: none;
-
-  /* タップ標的 44px 以上（§6）。文字を上下中央に置く。 */
-  min-height: 44px;
   display: inline-flex;
   align-items: center;
+  /* タップの標的は 44px 以上（§6）。 */
+  min-height: 44px;
+  padding-inline: var(--space-8);
+  background: var(--paper);
+  /* フォーカスの二重リングの内の輪（§6）。ページの上に重なって出るので、下に何があっても
+   * 外の輪とのあいだに --paper が見えるよう、地と同じ色の太い線で要素に持たせる。 */
+  border: var(--rule-w) solid var(--paper);
 }
 
-/* キーボード focus 時のみ左上へ出現（マウス利用者には見せない）。
-   focus リングは globals.css の :focus-visible が担う。 */
 .skipLink:focus {
-  transform: translateY(0);
+  transform: none;
+}
+
+/* フォーカスの二重リングの外の輪（§6）。内の輪のボーダーに密着させる。 */
+.skipLink:focus-visible {
+  outline: var(--rule-w) solid var(--ink);
+  outline-offset: 0;
 }

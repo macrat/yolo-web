@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
+import FrameLink from "@/components/FrameLink";
 import { AI_NOTICE, FOOTER_LINKS } from "@/lib/site-frame";
 import styles from "./Footer.module.css";
 
@@ -20,13 +20,11 @@ export default function Footer() {
           <ul className={styles.links}>
             {FOOTER_LINKS.map((link) => (
               <li key={link.href}>
-                <Link
+                <FrameLink
                   href={link.href}
-                  className={styles.link}
-                  aria-current={pathname === link.href ? "page" : undefined}
-                >
-                  {link.label}
-                </Link>
+                  label={link.label}
+                  current={pathname === link.href}
+                />
               </li>
             ))}
           </ul>

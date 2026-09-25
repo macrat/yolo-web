@@ -1,10 +1,15 @@
 import { describe, expect, test } from "vitest";
 import { NextRequest } from "next/server";
+import { readFileSync } from "fs";
+import { resolve } from "path";
+import postcss, { type AtRule, type Container } from "postcss";
 import {
   DELETED_BLOG_SLUGS,
   isDeletedBlogSlug,
   build410Html,
   middleware,
+  GONE_PAGE_TOKENS,
+  GONE_PAGE_FALLBACK_FONT_FACE,
 } from "../middleware";
 import { SITE_NAME } from "@/lib/constants";
 import {
@@ -97,20 +102,22 @@ describe("build410Html", () => {
       expect(html).not.toContain("📄");
     });
 
-    test("紙と墨の無彩の色を使う（§2）", () => {
-      expect(html).toContain("#fcfcfc"); // --paper
-      expect(html).toContain("#0b0b0b"); // --ink
+    test("端末の設定が dark なら dark のトークンに切り替わる（§10）", () => {
+      expect(html).toMatch(
+        /@media \(prefers-color-scheme: dark\)\{:root\{color-scheme:dark;--paper:/,
+      );
     });
 
-    test("端末の設定が dark なら dark の紙と墨になる（§10）", () => {
-      const dark = html.match(/@media \(prefers-color-scheme:dark\)\{[^}]*\}/);
-      expect(dark).not.toBeNull();
-      expect(dark![0]).toContain("#121212"); // dark の --paper
-      expect(dark![0]).toContain("#f5f5f5"); // dark の --ink
+    test("theme-color はテーマごとの紙の色（§10）", () => {
+      expect(html).toContain(
+        "<meta name='theme-color' media='(prefers-color-scheme: light)' content='#fcfcfc' />",
+      );
+      expect(html).toContain(
+        "<meta name='theme-color' media='(prefers-color-scheme: dark)' content='#121212' />",
+      );
     });
 
-    test("Web フォントを読まないので、見出しは仮名が全角の端末の書体で組む（§3）", () => {
-      expect(html).toContain("h1{font-family:'BIZ UDGothic',");
+    test("Web フォントを読まないので、Zen Antique を名指ししない（§3）", () => {
       expect(html).not.toContain("Zen Antique");
     });
 
@@ -129,17 +136,25 @@ describe("build410Html の枠（DESIGN.md §5 レイアウト）", () => {
   const header = html.match(/<header>[\s\S]*<\/header>/)?.[0] ?? "";
   const footer = html.match(/<footer>[\s\S]*<\/footer>/)?.[0] ?? "";
 
+  /** FrameLink と同じ形のリンク。字を data-label にも持たせ、太字の幅を先に取る。 */
+  const frameLink = (href: string, label: string, extraClass = "") =>
+    `<a class='link${extraClass}' href='${href}'><span class='label' data-label='${label}'>${label}</span></a>`;
+
   test("上端にサイト名のトップへのリンクと、ほかのページと同じナビの項目を置く", () => {
-    expect(header).toContain(`<a class='link' href='/'>${SITE_NAME}</a>`);
+    expect(header).toContain(frameLink("/", SITE_NAME, " site-name"));
     for (const item of HEADER_NAV_ITEMS) {
-      expect(header).toContain(`href='${item.href}'>${item.label}</a>`);
+      expect(header).toContain(frameLink(item.href, item.label));
     }
   });
 
   test("下端にほかのページと同じリンクを置く", () => {
     for (const link of FOOTER_LINKS) {
-      expect(footer).toContain(`href='${link.href}'>${link.label}</a>`);
+      expect(footer).toContain(frameLink(link.href, link.label));
     }
+  });
+
+  test("中間の main にはフォーカスの輪を出さない", () => {
+    expect(html).toContain("main:focus{outline:none}");
   });
 
   test("スキップのリンクが中間の main を指す", () => {
@@ -176,5 +191,67 @@ describe("middleware（統合テスト）", () => {
     const response = middleware(request);
     // NextResponse.next() は status 200 を返す
     expect(response.status).toBe(200);
+  });
+});
+
+/**
+ * 410 のページのトークンが globals.css と同じ名前・同じ値であることの検査。
+ * middleware は globals.css を読めないので、globals.css だけを変えたときに 410 が古い値のまま残らないようにする。
+ */
+describe("build410Html のトークンは globals.css と一致する", () => {
+  const globals = postcss.parse(
+    readFileSync(resolve(__dirname, "../app/globals.css"), "utf-8"),
+  );
+
+  /** 宣言の値の空白を1つにそろえる（globals.css は長い値を折り返して書く）。 */
+  const normalize = (value: string) => value.replace(/\s+/g, " ").trim();
+
+  /** ブロックの直下の :root の宣言を集める。 */
+  function rootDeclarations(block: Container): Map<string, string> {
+    const decls = new Map<string, string>();
+    block.each((node) => {
+      if (node.type !== "rule" || node.selector !== ":root") return;
+      node.walkDecls((decl) => {
+        decls.set(decl.prop, normalize(decl.value));
+      });
+    });
+    return decls;
+  }
+
+  function mediaBlock(query: string): AtRule {
+    const found = globals.nodes.find(
+      (node): node is AtRule =>
+        node.type === "atrule" &&
+        node.name === "media" &&
+        node.params === query,
+    );
+    if (!found) throw new Error(`globals.css に @media ${query} が無い`);
+    return found;
+  }
+
+  /** Web フォントを除いた書体の並び。410 は Web フォントを読み込まない。 */
+  const withoutWebFonts = (value: string) =>
+    value.replace(/var\(--font-(plex-sans|zen-antique)\), /g, "");
+
+  test.each(Object.entries(GONE_PAGE_TOKENS))("%s", (scope, tokens) => {
+    const expected = rootDeclarations(
+      scope === "root" ? globals : mediaBlock(scope),
+    );
+    for (const [prop, value] of Object.entries(tokens)) {
+      expect(expected.has(prop), `${prop} が globals.css に無い`).toBe(true);
+      expect(value, prop).toBe(withoutWebFonts(expected.get(prop)!));
+    }
+  });
+
+  test("IBM Plex Sans の代わりの書体の @font-face", () => {
+    const fontFace = globals.nodes.find(
+      (node): node is AtRule =>
+        node.type === "atrule" && node.name === "font-face",
+    );
+    const expected = new Map<string, string>();
+    fontFace!.walkDecls((decl) => {
+      expected.set(decl.prop, decl.value);
+    });
+    expect(Object.fromEntries(expected)).toEqual(GONE_PAGE_FALLBACK_FONT_FACE);
   });
 });

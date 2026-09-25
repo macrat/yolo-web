@@ -1,0 +1,29 @@
+/* セクション（DESIGN.md §5 ページの割り方）。中間のコンテナのコンテンツ幅に、上から順に並ぶ。
+ * 上下の余白は、狭い画面では詰めてコンテンツに回す。 */
+.section {
+  --section-space: var(--space-32);
+  padding-block: var(--section-space);
+}
+
+@media (min-width: 45rem) {
+  .section {
+    --section-space: var(--space-48);
+  }
+}
+
+.section + .section {
+  padding-block-start: 0;
+}
+
+/* セクションのあいだの全幅の罫線（§5 コンテナ）。コンテナの左右のボーダーを貫き、画面の端まで届く。
+ * セクションはコンテナのコンテンツ幅いっぱいにあり、その中心は画面の中心と重なる。
+ * そのため左右に (100vw − セクションの幅) / 2 ずつ張り出すと、罫線の両端が画面の端に来る。
+ * 幅を取るスクロールバーがある画面では 100vw がその分だけ広く、はみ出した分は html と body の
+ * overflow-x: clip が切る。罫線は border で引き、強制カラーのモードでも線として残す。 */
+.section + .section::before {
+  content: "";
+  display: block;
+  margin-inline: calc(50% - 50vw);
+  margin-block-end: var(--section-space);
+  border-top: var(--rule-w) solid var(--rule);
+}

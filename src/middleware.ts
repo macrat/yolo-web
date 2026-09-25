@@ -1,15 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import {
-  PAPER,
-  INK,
-  INK_2,
-  RULE,
-  PAPER_DARK,
-  INK_DARK,
-  INK_2_DARK,
-  RULE_DARK,
-} from "@/lib/utsuwaHex";
+import { PAPER, PAPER_DARK } from "@/lib/utsuwaHex";
 import { SITE_NAME } from "@/lib/constants";
 import {
   AI_NOTICE,
@@ -57,22 +48,98 @@ export function isDeletedBlogSlug(slug: string): boolean {
 }
 
 /**
- * 書体の並び（DESIGN.md §3）。この静的HTMLは Web フォントを読み込まないので、端末にある書体だけで組む。
- * 本文は globals.css の --font-ja-body、見出しは Zen Antique の代わりに組む --font-ja-heading-fallback と同じ並び。
+ * 410 のページが使う globals.css のトークン（DESIGN.md §2〜§5）。middleware は globals.css を読めないので、
+ * 同じ名前・同じ値をここに持つ。一致は __tests__/middleware-gone-slugs.test.ts が globals.css と照らして確かめる。
+ * 書体の並びだけは、Web フォント（--font-plex-sans・--font-zen-antique）を除いた並びにする。このページは
+ * Web フォントを読み込まないので、ほかのページが Web フォントを読み込む前と同じ書体で組む。
  */
-const BODY_STACK =
-  "'BIZ UDPGothic','Hiragino Kaku Gothic ProN','Yu Gothic Medium','Noto Sans JP',sans-serif";
-const HEADING_STACK =
-  "'BIZ UDGothic','Hiragino Kaku Gothic ProN','Yu Gothic Medium','Noto Sans JP',sans-serif";
+export const GONE_PAGE_TOKENS = {
+  root: {
+    "color-scheme": "light",
+    "--paper": "oklch(0.99 0 0)",
+    "--ink": "oklch(0.15 0 0)",
+    "--ink-2": "oklch(0.44 0 0)",
+    "--rule": "var(--ink)",
+    "--rule-2": "oklch(0.62 0 0)",
+    "--rule-w": "3px",
+    "--rule-w-hair": "1px",
+    "--space-8": "8px",
+    "--space-16": "16px",
+    "--space-24": "24px",
+    "--space-48": "48px",
+    "--measure": "40rem",
+    "--max-width": "60rem",
+    "--box-padding": "var(--space-8)",
+    "--container-width": "min(var(--max-width), 100% - 2 * var(--space-16))",
+    "--text-body": "1.0625rem",
+    "--text-step-3": "2.08rem",
+    "--text-step-4": "2.92rem",
+    "--text-step-5": "4.08rem",
+    "--text-heading-main": "var(--text-step-3)",
+    "--leading-body": "1.85",
+    "--leading-heading": "1.25",
+    "--font-ja-body":
+      '"BIZ UDPGothic", "Hiragino Kaku Gothic ProN", "Yu Gothic Medium", "Noto Sans JP", sans-serif',
+    "--font-ja-heading-fallback":
+      '"BIZ UDGothic", "Hiragino Kaku Gothic ProN", "Yu Gothic Medium", "Noto Sans JP", sans-serif',
+    "--font-heading":
+      '"IBM Plex Sans Fallback", var(--font-ja-heading-fallback)',
+    "--font-body": '"IBM Plex Sans Fallback", var(--font-ja-body)',
+  },
+  "(min-width: 45rem)": {
+    "--box-padding": "var(--space-16)",
+    "--text-heading-main": "var(--text-step-4)",
+  },
+  "(min-width: 64rem)": {
+    "--text-heading-main": "var(--text-step-5)",
+  },
+  "(prefers-color-scheme: dark)": {
+    "color-scheme": "dark",
+    "--paper": "oklch(0.18 0 0)",
+    "--ink": "oklch(0.97 0 0)",
+    "--ink-2": "oklch(0.74 0 0)",
+    "--rule-2": "oklch(0.53 0 0)",
+  },
+} as const satisfies Record<string, Record<string, string>>;
 
-/** 上端・下端のリンク。React の Header・Footer と同じ組み方で、現在地を持たない（410 はナビの行き先でない）。 */
+/** IBM Plex Sans の代わりの書体。globals.css の同じ @font-face と同じ記述で、一致は試験が確かめる。 */
+export const GONE_PAGE_FALLBACK_FONT_FACE = {
+  "font-family": '"IBM Plex Sans Fallback"',
+  src: 'local("Arial")',
+  "size-adjust": "101.13%",
+  "ascent-override": "101.35%",
+  "descent-override": "27.19%",
+  "line-gap-override": "0%",
+  "unicode-range": "U+0000-007F",
+} as const;
+
+function declarations(decls: Readonly<Record<string, string>>): string {
+  return Object.entries(decls)
+    .map(([prop, value]) => `${prop}:${value}`)
+    .join(";");
+}
+
+function tokenRules(): string {
+  const { root, ...media } = GONE_PAGE_TOKENS;
+  return [
+    `@font-face{${declarations(GONE_PAGE_FALLBACK_FONT_FACE)}}`,
+    `:root{${declarations(root)}}`,
+    ...Object.entries(media).map(
+      ([query, decls]) => `@media ${query}{:root{${declarations(decls)}}}`,
+    ),
+  ].join("\n");
+}
+
+/**
+ * 上端・下端のリンク。React の FrameLink と同じ組み方で、現在地を持たない（410 はナビの行き先でない）。
+ */
+function frameLink(link: SiteLink, extraClass = ""): string {
+  const className = extraClass ? `link ${extraClass}` : "link";
+  return `<a class='${className}' href='${link.href}'><span class='label' data-label='${link.label}'>${link.label}</span></a>`;
+}
+
 function frameLinks(links: readonly SiteLink[]): string {
-  return links
-    .map(
-      (link) =>
-        `<li><a class='link' href='${link.href}'>${link.label}</a></li>`,
-    )
-    .join("");
+  return links.map((link) => `<li>${frameLink(link)}</li>`).join("");
 }
 
 /**
@@ -82,12 +149,10 @@ function frameLinks(links: readonly SiteLink[]): string {
  *
  * どのページとも同じ枠（DESIGN.md §5 レイアウト）を持たせる。スキップのリンク・上端・中間・下端を置き、
  * コンテナの左右のボーダーを上端から下端まで通して、上端・下端の全幅の罫線と交わらせる。
- * 上端・下端の文字と行き先、AI 運営の告知は `@/lib/site-frame` から取り、ほかのページと食い違わせない。
- * 寸法は globals.css のトークン（§4・§5）と同じ値で書く。
- *
- * 色（DESIGN.md §2）は、トークンを読めないので器色 hex の SSoT `@/lib/utsuwaHex` から取る。
- * ここで hex を独自に書くと、globals.css を変えても 410 だけ古い値のまま残るため。
- * テーマはほかのページと同じく端末の設定に従う（§10）。
+ * 規則は SiteFrame・SkipLink・Header・Footer・FrameLink の CSS と同じ宣言で書き、トークンは
+ * GONE_PAGE_TOKENS から取る。上端・下端の文字と行き先、AI 運営の告知は `@/lib/site-frame` から取る。
+ * テーマはほかのページと同じく端末の設定に従う（§10）。theme-color の値は、meta が CSS のトークンを
+ * 読めないので `@/lib/utsuwaHex` から取る。
  */
 export function build410Html(): string {
   return `<!DOCTYPE html>
@@ -99,38 +164,41 @@ export function build410Html(): string {
 <meta name='theme-color' media='(prefers-color-scheme: dark)' content='${PAPER_DARK}' />
 <title>このコンテンツは終了しました | ${SITE_NAME}</title>
 <style>
-:root{color-scheme:light;--paper:${PAPER};--ink:${INK};--ink-2:${INK_2};--rule-2:${RULE};--box-padding:8px}
-@media (prefers-color-scheme:dark){:root{color-scheme:dark;--paper:${PAPER_DARK};--ink:${INK_DARK};--ink-2:${INK_2_DARK};--rule-2:${RULE_DARK}}}
-@media (min-width:45rem){:root{--box-padding:16px}}
+${tokenRules()}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html,body{background:var(--paper);color:var(--ink)}
-body{display:flex;flex-direction:column;min-height:100vh;font-family:${BODY_STACK};font-size:1.0625rem;line-height:1.85;overflow-wrap:break-word}
-a{color:var(--ink);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:0.15em}
+html,body{max-width:100vw;overflow-x:clip;background:var(--paper);color:var(--ink)}
+body{display:flex;flex-direction:column;min-height:100vh;font-family:var(--font-body);font-size:var(--text-body);line-height:var(--leading-body);overflow-wrap:break-word}
+a{color:var(--ink);text-decoration:underline;text-decoration-thickness:var(--rule-w-hair);text-underline-offset:0.15em}
 a:visited{color:var(--ink-2)}
-a:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
-.skip{position:fixed;top:8px;left:8px;transform:translateY(calc(-100% - 8px));z-index:1000;display:inline-flex;align-items:center;min-height:44px;padding:8px 16px;background:var(--paper);border:1px solid var(--ink);text-decoration:none}
-.skip:focus{transform:translateY(0)}
-.container{width:min(60rem,100% - 32px);margin-inline:auto;border-inline:3px solid var(--ink);padding-inline:var(--box-padding)}
-header{border-bottom:3px solid var(--ink)}
-header .container{display:flex;flex-wrap:wrap;align-items:center;column-gap:24px;padding-block:8px}
-footer{border-top:3px solid var(--ink)}
-footer .container{display:flex;flex-direction:column;gap:16px;padding-block:24px}
-ul{list-style:none;display:flex;flex-wrap:wrap;column-gap:8px}
-@media (min-width:45rem){ul{column-gap:16px}}
-.link{position:relative;display:inline-flex;align-items:center;min-width:44px;min-height:44px}
-.link::after{content:'';position:absolute;inset:0;border:1px solid transparent;pointer-events:none}
+.skip{position:fixed;top:var(--space-8);left:var(--space-8);transform:translateY(calc(-100% - var(--space-8)));z-index:1000;display:inline-flex;align-items:center;min-height:44px;padding-inline:var(--space-8);background:var(--paper);border:var(--rule-w) solid var(--paper)}
+.skip:focus{transform:none}
+.skip:focus-visible{outline:var(--rule-w) solid var(--ink);outline-offset:0}
+.container{width:var(--container-width);margin-inline:auto;border-inline:var(--rule-w) solid var(--rule);padding-inline:var(--box-padding)}
+header{border-bottom:var(--rule-w) solid var(--rule)}
+header .container{display:flex;flex-wrap:wrap;align-items:center;column-gap:var(--space-24);padding-block:var(--space-8)}
+footer{border-top:var(--rule-w) solid var(--rule)}
+footer .container{display:flex;flex-direction:column;gap:var(--space-16);padding-block:var(--space-24)}
+ul{list-style:none;display:flex;flex-wrap:wrap;column-gap:var(--space-8)}
+@media (min-width:45rem){ul{column-gap:var(--space-16)}}
+.link{position:relative;display:inline-flex;align-items:center;min-height:44px}
+.link::after{content:'';position:absolute;inset-block:0;left:50%;width:max(100%,44px);transform:translateX(-50%);border:var(--rule-w-hair) solid transparent}
 .link:hover::after{border-color:var(--rule-2)}
-main{flex:1;display:flex;flex-direction:column;align-items:flex-start;gap:24px;padding-block:48px}
-h1{font-family:${HEADING_STACK};font-size:2.08rem;font-weight:400;line-height:1.25;word-break:auto-phrase}
-@media (min-width:45rem){h1{font-size:2.92rem}}
-@media (min-width:64rem){h1{font-size:4.08rem}}
-p{max-width:40rem}
+.link:focus-visible{outline:none}
+.link:focus-visible::after{outline:var(--rule-w) solid var(--ink);outline-offset:var(--rule-w)}
+.label{display:grid}
+.label::after{content:attr(data-label);height:0;overflow:hidden;visibility:hidden;font-weight:700}
+.site-name{font-family:var(--font-heading);font-size:var(--text-body)}
+main{flex:1;display:flex;flex-direction:column;gap:var(--space-24);padding-block:var(--space-48)}
+main:focus{outline:none}
+main .link{align-self:flex-start}
+h1{font-family:var(--font-heading);font-size:var(--text-heading-main);font-weight:400;line-height:var(--leading-heading);word-break:auto-phrase}
+p{max-width:var(--measure)}
 </style>
 </head>
 <body>
 <a class='skip' href='#${MAIN_CONTENT_ID}'>メインコンテンツへスキップ</a>
 <header><div class='container'>
-<a class='link' href='/'>${SITE_NAME}</a>
+${frameLink({ label: SITE_NAME, href: "/" }, "site-name")}
 <nav aria-label='メインナビゲーション'><ul>${frameLinks(HEADER_NAV_ITEMS)}</ul></nav>
 </div></header>
 <main id='${MAIN_CONTENT_ID}' tabindex='-1' class='container'>

@@ -15,7 +15,7 @@ export default function SiteFrame({ children }: { children: React.ReactNode }) {
       {/* 最初にフォーカスが入る要素。上端のリンクを Tab で越えずに本文へ跳べるようにする（WCAG 2.4.1）。 */}
       <SkipLink />
       <Header />
-      {/* tabIndex={-1}: スキップのリンクからフォーカスを移せるようにする。 */}
+      {/* tabIndex={-1}: スキップのリンクからフォーカスを移し、次の Tab を本文の最初のリンクから始める。 */}
       <main id={MAIN_CONTENT_ID} tabIndex={-1} className={styles.main}>
         {children}
       </main>

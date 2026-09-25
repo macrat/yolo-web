@@ -2,8 +2,7 @@ import { MAIN_CONTENT_ID } from "@/lib/site-frame";
 import styles from "./SkipLink.module.css";
 
 /**
- * SkipLink — 本文へのスキップリンク（WCAG 2.4.1 Bypass Blocks(A)）。
- * SiteFrame が上端より前に、最初の focusable 要素として置く。
+ * 本文へのスキップのリンク（WCAG 2.4.1）。SiteFrame が上端より前に、最初にフォーカスが入る要素として置く。
  */
 export default function SkipLink() {
   return (

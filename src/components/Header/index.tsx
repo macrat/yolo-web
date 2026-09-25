@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
+import FrameLink from "@/components/FrameLink";
 import { SITE_NAME } from "@/lib/constants";
 import { HEADER_NAV_ITEMS } from "@/lib/site-frame";
 import styles from "./Header.module.css";
@@ -17,24 +17,21 @@ export default function Header() {
   return (
     <header className={styles.header}>
       <div className={styles.inner}>
-        <Link
+        <FrameLink
           href="/"
-          className={`${styles.link} ${styles.siteName}`}
-          aria-current={pathname === "/" ? "page" : undefined}
-        >
-          {SITE_NAME}
-        </Link>
+          label={SITE_NAME}
+          current={pathname === "/"}
+          className={styles.siteName}
+        />
         <nav aria-label="メインナビゲーション">
           <ul className={styles.navList}>
             {HEADER_NAV_ITEMS.map((item) => (
               <li key={item.href}>
-                <Link
+                <FrameLink
                   href={item.href}
-                  className={styles.link}
-                  aria-current={pathname === item.href ? "page" : undefined}
-                >
-                  {item.label}
-                </Link>
+                  label={item.label}
+                  current={pathname === item.href}
+                />
               </li>
             ))}
           </ul>
