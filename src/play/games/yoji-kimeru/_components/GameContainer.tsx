@@ -307,7 +307,7 @@ export default function GameContainer({
 
       // Validate: not a duplicate
       if (gameState.guesses.some((g) => g.guess === input)) {
-        return "\u3053\u306E\u7D44\u307F\u5408\u308F\u305B\u306F\u3059\u3067\u306B\u5165\u529B\u3057\u307E\u3057\u305F";
+        return "\u3053\u306E\u7D44\u307F\u5408\u308F\u305B\u306F\u3059\u3067\u306B\u5165\u529B\u3057\u307E\u3057\u305F\u3002\u5225\u306E\u56DB\u5B57\u719F\u8A9E\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044";
       }
 
       setSubmitting(true);

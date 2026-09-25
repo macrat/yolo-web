@@ -200,15 +200,10 @@
   min-height: 1.2em;
 }
 
-/* 免責事項 */
+/* 免責事項。補助情報の文字で置き、地で囲まない（§4）。 */
 .disclaimer {
-  padding: 0.75rem 1rem;
-  background-color: var(--paper-2);
-  border-radius: var(--radius);
-  font-size: 0.8rem;
-  font-style: italic;
+  font-size: var(--text-small);
   color: var(--ink-2);
-  line-height: 1.5;
 }
 
 @media (max-width: 640px) {

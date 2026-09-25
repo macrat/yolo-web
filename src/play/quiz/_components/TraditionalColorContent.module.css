@@ -4,11 +4,10 @@
  *
  * 設計方針（ResultCard.module.css を一次規範として語彙をそろえる）:
  * - 左寄せ・トークンのみ・絵文字なし・影なし。
- * - 装飾としての色使い（見出し罫線・カード薄敷き・seasonTag 等）はタイプごとの派手色（--type-color）から外し、
+ * - 装飾としての色使い（見出し罫線・カード薄敷き等）はタイプごとの派手色（--type-color）から外し、
  *   共通アクセント（--accent / --paper-2 / --accent-weak）に統一する。
  *   各タイプの個性は「色そのもの（色見本）」と「言葉（本文）」で立てる。
  * - 角丸は一律 0px（--radius）。カードもリンクも直角。
- *   --radius-sm は値札ラベル・入力欄が使い、ここでは使わない。
  *
  * color-as-content の例外:
  * - 「他の色も見てみよう」の色ドット（.colorDot）は伝統色そのものを表示することが診断の核なので、
@@ -69,16 +68,13 @@
   background: var(--paper-2);
 }
 
-/* 季節タグ: 値札（メタ情報ラベル）の語彙で組む: --rule 罫囲み + --ink-2 の文字。 */
+/*
+ * 季節。風景に添える補助情報なので、補助情報の文字で置き、枠や地で囲まない（§4）。
+ * 細い線で囲むと §6 の hover と読み違え、押せないものが押せそうに見えるため。
+ */
 .seasonTag {
-  display: inline-flex;
-  align-items: center;
-  align-self: flex-start;
-  padding: 0.2rem 0.75rem;
-  border-radius: var(--radius);
-  font-size: 0.8rem;
   color: var(--ink-2);
-  border: 1px solid var(--rule);
+  font-size: var(--text-small);
 }
 
 .sceneryText {

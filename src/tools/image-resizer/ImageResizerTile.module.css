@@ -11,14 +11,14 @@
   gap: 1.5rem;
 }
 
-/* ===== セクション ===== */
+/* ===== セクション =====
+ * Panel のボックスの中なので枠で囲まず、小見出しの上の細い罫線で区切る（§5）。 */
 .section {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  padding: 1rem;
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
+  padding-top: var(--space-16);
+  border-top: var(--rule-w-hair) solid var(--rule-2);
 }
 
 .sectionTitle {

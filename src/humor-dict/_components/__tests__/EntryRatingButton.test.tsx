@@ -24,73 +24,38 @@ describe("EntryRatingButton", () => {
     mockIsRated.mockReturnValue(false);
   });
 
-  it("初期表示: ボタンが表示され、aria-pressed が false であること", () => {
+  it("初期表示: 「おもしろかった」のボタンがあり、切り替えのボタンではないこと", () => {
     render(<EntryRatingButton slug="test-entry" />);
-    const button = screen.getByRole("button");
-    expect(button).toBeInTheDocument();
-    expect(button).toHaveAttribute("aria-pressed", "false");
-    expect(button).toHaveTextContent("おもしろかった");
+    const button = screen.getByRole("button", { name: "おもしろかった" });
+    expect(button).not.toHaveAttribute("aria-pressed");
+    expect(screen.getByRole("status")).toHaveTextContent("");
   });
 
-  it("クリック: markAsRated と trackContentRating が呼ばれ、aria-pressed が true になること", async () => {
+  it("クリック: markAsRated と trackContentRating が呼ばれ、ボタンが消えて送ったことを文で言うこと", () => {
     render(<EntryRatingButton slug="test-entry" />);
-    const button = screen.getByRole("button");
 
-    fireEvent.click(button);
+    fireEvent.click(screen.getByRole("button", { name: "おもしろかった" }));
 
     expect(mockMarkAsRated).toHaveBeenCalledTimes(1);
     expect(mockMarkAsRated).toHaveBeenCalledWith("test-entry");
     expect(mockTrackContentRating).toHaveBeenCalledTimes(1);
-    expect(button).toHaveAttribute("aria-pressed", "true");
+    expect(screen.queryByRole("button")).not.toBeInTheDocument();
+    expect(screen.getByRole("status")).toHaveTextContent(
+      "「おもしろかった」を送りました",
+    );
   });
 
-  it("クリック後: ボタンのテキストが『おもしろかった!』に変わること", () => {
-    render(<EntryRatingButton slug="test-entry" />);
-    const button = screen.getByRole("button");
-
-    fireEvent.click(button);
-
-    expect(button).toHaveTextContent("おもしろかった!");
-  });
-
-  it("評価済み復元: isRated が true を返す場合、useEffect 後に aria-pressed が true になること", async () => {
+  it("評価済み復元: isRated が true を返す場合、ボタンを出さず送ったことを文で言うこと", async () => {
     mockIsRated.mockReturnValue(true);
 
     render(<EntryRatingButton slug="already-rated" />);
 
     await waitFor(() => {
-      const button = screen.getByRole("button");
-      expect(button).toHaveAttribute("aria-pressed", "true");
+      expect(screen.getByRole("status")).toHaveTextContent(
+        "「おもしろかった」を送りました",
+      );
     });
-  });
-
-  it("二重クリック防止: 評価済み状態でクリックしても markAsRated が追加で呼ばれないこと", () => {
-    render(<EntryRatingButton slug="test-entry" />);
-    const button = screen.getByRole("button");
-
-    // 1回目のクリックで評価済みになる
-    fireEvent.click(button);
-    expect(mockMarkAsRated).toHaveBeenCalledTimes(1);
-
-    // 2回目のクリックでは呼ばれない
-    fireEvent.click(button);
-    expect(mockMarkAsRated).toHaveBeenCalledTimes(1);
-    expect(mockTrackContentRating).toHaveBeenCalledTimes(1);
-  });
-
-  it("二重クリック防止: isRated が true の初期状態でクリックしても markAsRated が呼ばれないこと", async () => {
-    mockIsRated.mockReturnValue(true);
-
-    render(<EntryRatingButton slug="already-rated" />);
-
-    // useEffect で rated = true になるのを待つ
-    await waitFor(() => {
-      const button = screen.getByRole("button");
-      expect(button).toHaveAttribute("aria-pressed", "true");
-    });
-
-    fireEvent.click(screen.getByRole("button"));
-
+    expect(screen.queryByRole("button")).not.toBeInTheDocument();
     expect(mockMarkAsRated).not.toHaveBeenCalled();
     expect(mockTrackContentRating).not.toHaveBeenCalled();
   });

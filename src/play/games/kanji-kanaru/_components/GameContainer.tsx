@@ -300,12 +300,12 @@ export default function GameContainer({
 
       // Validate: is a joyo kanji (lightweight client-side check)
       if (!JOYO_KANJI_SET.has(input)) {
-        return "\u5E38\u7528\u6F22\u5B57\u3067\u306F\u3042\u308A\u307E\u305B\u3093";
+        return "\u5E38\u7528\u6F22\u5B57\u3067\u306F\u3042\u308A\u307E\u305B\u3093\u3002\u5E38\u7528\u6F22\u5B57\u30921\u6587\u5B57\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044";
       }
 
       // Validate: not a duplicate
       if (gameState.guesses.some((g) => g.guess === input)) {
-        return "\u3053\u306E\u6F22\u5B57\u306F\u3059\u3067\u306B\u5165\u529B\u3057\u307E\u3057\u305F";
+        return "\u3053\u306E\u6F22\u5B57\u306F\u3059\u3067\u306B\u5165\u529B\u3057\u307E\u3057\u305F\u3002\u307E\u3060\u5165\u529B\u3057\u3066\u3044\u306A\u3044\u6F22\u5B57\u30921\u6587\u5B57\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044";
       }
 
       setSubmitting(true);

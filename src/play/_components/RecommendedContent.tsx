@@ -12,7 +12,7 @@ interface RecommendedContentProps {
  * 他カテゴリからおすすめコンテンツ3件を表示するServer Component。
  *
  * - 現在のコンテンツとは異なるカテゴリから各1件を選出
- * - 各カードにアイコン、タイトル（shortTitle優先）、短い説明、カテゴリバッジを表示
+ * - 各行にタイトル（shortTitle優先）、短い説明、カテゴリ（補助情報の文字）を表示
  * - レコメンドが0件の場合はnullを返す
  */
 export default function RecommendedContent({

@@ -78,16 +78,14 @@
   margin: 0;
 }
 
-/* プライバシーノート: 区画は --paper-2 + 罫（色ベタの通知バーにしない）。 */
+/*
+ * プライバシーの注記。補助情報の文字で置き、枠や地で囲まない（§4）。
+ * 細い線で囲むと §6 の hover と読み違え、押せないものが押せそうに見えるため。
+ */
 .privacyNote {
   max-width: var(--measure);
-  background-color: var(--paper-2);
-  border: 1px solid var(--rule);
   color: var(--ink-2);
-  font-size: 0.8125rem;
-  border-radius: var(--radius);
-  padding: var(--space-8) var(--space-16);
-  text-align: center;
+  font-size: var(--text-small);
   margin: 0;
 }
 

@@ -1,39 +1,6 @@
-/*
- * 評価ボタン（ユーモア辞典の詳細ページ）。押すとその場で評価を送る、プライマリでないボタン（§6）。
- */
+/* 評価のボタンと、送ったあとの文の置き場所（ユーモア辞典の詳細ページ）。 */
 .wrapper {
   display: flex;
   margin-top: var(--space-24);
   margin-bottom: var(--space-32);
-}
-
-/* 送る前は、実行するものの印として下線を持つ。見えるのは字だけなので、字の左右の余白と、字を並びの左端に
- * 置く張り出しは data-text-box（globals.css）が持ち、hover の線とフォーカスの二重リングはその箱の内側に
- * 出る。タップの標的は 44px 以上（§6）。 */
-.button {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  min-width: 44px;
-  border: none;
-  border-radius: 0;
-  background: transparent;
-  color: var(--ink);
-  font-size: 0.875rem;
-  text-decoration: underline;
-  text-decoration-thickness: var(--rule-w-hair);
-  text-underline-offset: 0.15em;
-  cursor: pointer;
-}
-
-/* 送ったあとは押しても何も起きないので、下線も hover の線も持たず、送った状態を太字で示す（§6）。
- * フォーカスしているあいだは、二重リングの内の輪を hover で消さない。 */
-.button[aria-pressed="true"] {
-  font-weight: 700;
-  text-decoration: none;
-  cursor: default;
-}
-
-.button[aria-pressed="true"]:hover:not(:focus-visible) {
-  box-shadow: none;
 }

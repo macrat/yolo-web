@@ -10,38 +10,24 @@ interface PanelOwnProps<T extends PanelTag = "section"> {
   children: React.ReactNode;
   /** 追加クラス */
   className?: string;
-  /**
-   * padding バリアント。
-   * - "normal" (デフォルト): 1.5rem — 通常のパネル
-   * - "comfortable": 2rem — 長文読み物用の広めのパディング
-   */
-  padding?: "normal" | "comfortable";
 }
 
 type PanelProps<T extends PanelTag = "section"> = PanelOwnProps<T> &
   Omit<ComponentPropsWithoutRef<T>, keyof PanelOwnProps<T>>;
 
 /**
- * Panel — 矩形コンテナの汎用ラッパー。
+ * Panel — DESIGN.md §5 のボックス。道具の面をこれで囲む。
  *
- * DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される。
- * DESIGN.md §4: パネルは入れ子にしない。パネルには影をつけない。
+ * ボックスは入れ子にしない。中を分けるときは、小見出しの上の細い罫線で区切る（§5）。
  */
 function Panel<T extends PanelTag = "section">({
   as,
   children,
   className,
-  padding = "normal",
   ...rest
 }: PanelProps<T>) {
   const Tag = (as ?? "section") as ElementType;
-  const combinedClassName = [
-    styles.panel,
-    padding === "comfortable" ? styles.paddingComfortable : null,
-    className,
-  ]
-    .filter(Boolean)
-    .join(" ");
+  const combinedClassName = [styles.panel, className].filter(Boolean).join(" ");
 
   return (
     <Tag className={combinedClassName} {...rest}>

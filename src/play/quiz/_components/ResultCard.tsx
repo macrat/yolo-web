@@ -502,8 +502,8 @@ export default function ResultCard({
         <div className={styles.medalWrap}>
           {/* 到達の承認を兼ねた静かなラベル（煽らない・けばけばしくしない） */}
           <p className={styles.medalLabel}>
-            <span className={styles.medalLabelDone}>診断完了</span>
-            あなたの結果
+            <span>診断完了</span>
+            <span>あなたの結果</span>
           </p>
           <Tsutsumi
             typeName={result.title}

@@ -432,11 +432,14 @@ hr {
     inset 0 0 0 calc(var(--rule-w) + var(--rule-w-hair)) var(--paper);
 }
 
-/* 太い枠に外の輪を接して引くと、枠と一続きになってリングが見えない。二重リングを枠から太い線の太さだけ
- * 内側へ離し、枠とのあいだを --paper で塗る。塗りは枠の内側から、外の輪は枠の外側から測る。 */
+/* 太い枠に接して引く線は、枠と一続きになって見えない。二重リングと hover の線を、枠から太い線の太さだけ
+ * 内側へ離し、枠とのあいだを --paper で塗る。塗りと hover の線は枠の内側から、外の輪は枠の外側から測る。 */
 :where([data-thick-frame]) {
   --focus-ring-offset: calc(-3 * var(--rule-w));
   --focus-ring-fill: inset 0 0 0 calc(3 * var(--rule-w)) var(--paper);
+  --hover-line:
+    inset 0 0 0 var(--rule-w) var(--paper),
+    inset 0 0 0 calc(var(--rule-w) + var(--rule-w-hair)) var(--rule-2);
 }
 
 /* §5 コントロールの左端。hover の線・無効の枠・フォーカスのリングは、字の左右に余白を持つ箱に出す。
@@ -535,6 +538,19 @@ hr {
 [data-field][aria-invalid="true"] {
   --field-line: var(--rule-w);
   border-color: var(--rule);
+}
+/* 日付・時刻の欄は、暦を開くボタンを欄の中の止まりどころとして持つ。そこにいるあいだ欄は :focus-visible に
+ * ならないので、欄の中のどこにフォーカスがあっても欄の二重リングを出す。 */
+input[data-field]:is(
+    [type="date"],
+    [type="time"],
+    [type="datetime-local"],
+    [type="month"],
+    [type="week"]
+  ):focus-within {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-fill);
 }
 /* §6 無効。太い破線の枠と --ink-2 の文字で示す。 */
 [data-field]:is(:disabled, [aria-disabled="true"]) {

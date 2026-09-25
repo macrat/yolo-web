@@ -10,14 +10,17 @@
  * - font-weight: 700 使用禁止（600 まで）
  */
 
-/* セクション */
+/* まとまり。Panel のボックスの中なので枠で囲まず、2つ目からは小見出しの上の細い罫線で区切る（§5）。 */
 .section {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  padding: 1rem;
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
+}
+
+.section:not(:first-of-type) {
+  margin-top: var(--space-24);
+  padding-top: var(--space-16);
+  border-top: var(--rule-w-hair) solid var(--rule-2);
 }
 
 /* セクションタイトル */

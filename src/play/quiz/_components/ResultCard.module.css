@@ -2,7 +2,7 @@
  * 結果カード（受検者本人向けインライン結果）。
  * 左寄せ・トークンのみ・bold 不使用・絵文字なし・影なし。
  * personality 型・icon/color 両方あるタイプは結果を包み（Tsutsumi）で見せる。
- * 角丸は 0px（--radius）。値札的な小ラベルだけ --radius-sm。
+ * 角丸は 0px（--radius）。
  * リビールは 1 回・400ms 以下・prefers-reduced-motion 尊重（§11）。
  */
 
@@ -42,24 +42,18 @@
   animation: medalReveal 0.4s ease both;
 }
 
-/* 到達の承認ラベル（静かな達成感。煽らない） */
+/*
+ * 到達の承認ラベル（静かな達成感。煽らない）。補助情報の文字で置き、枠や地で囲まない（§4）。
+ * 細い線で囲むと §6 の hover と読み違え、押せないものが押せそうに見えるため。
+ * 語どうしは字で区切らず間隔で分ける。
+ */
 .medalLabel {
-  font-size: 0.8rem;
-  color: var(--ink-2);
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--space-16);
   margin: 0;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-/* 「診断完了」バッジ。値札（メタ情報ラベル）の語彙——--rule 罫囲み + --ink-2 の文字
- * （値札ラベルと同じ --radius-sm）。 */
-.medalLabelDone {
-  padding: 0.1rem 0.45rem;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--rule);
   color: var(--ink-2);
-  font-size: 0.75rem;
+  font-size: var(--text-small);
 }
 
 .title {

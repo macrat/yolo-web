@@ -2,6 +2,7 @@
 
 import { useState, useRef, useCallback, useEffect, useId } from "react";
 import Button from "@/components/Button";
+import ErrorMessage from "@/components/ErrorMessage";
 import styles from "./styles/YojiKimeru.module.css";
 
 /** Duration of the shake animation in ms. Must match CSS .shaking animation duration. */
@@ -28,6 +29,7 @@ export default function GuessInput({
   disabledReason,
 }: GuessInputProps) {
   const reasonId = useId();
+  const errorId = useId();
   // 送信中はボタンの字が「送信中...」と理由を言うので、理由の文を別に出さない。
   const showReason = Boolean(disabled && !submitting && disabledReason);
   const [value, setValue] = useState("");
@@ -35,6 +37,10 @@ export default function GuessInput({
   const [shaking, setShaking] = useState(false);
   const composingRef = useRef(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const describedBy =
+    [showReason ? reasonId : null, error ? errorId : null]
+      .filter(Boolean)
+      .join(" ") || undefined;
   const shakeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Clear the shake timer on unmount to prevent state updates after cleanup.
@@ -107,7 +113,8 @@ export default function GuessInput({
           disabled={disabled || submitting}
           placeholder={submitting ? "送信中..." : "四字熟語を入力"}
           aria-label="四字熟語を入力"
-          aria-describedby={showReason ? reasonId : undefined}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={describedBy}
           autoComplete="off"
           autoCorrect="off"
           spellCheck={false}
@@ -126,9 +133,7 @@ export default function GuessInput({
           {disabledReason}
         </p>
       )}
-      <div className={styles.errorMessage} role={error ? "alert" : undefined}>
-        {error}
-      </div>
+      {error && <ErrorMessage id={errorId} message={error} />}
     </div>
   );
 }

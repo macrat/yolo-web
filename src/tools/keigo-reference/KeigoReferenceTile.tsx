@@ -261,7 +261,7 @@ export default function KeigoReferenceTile({
                                   handleExpandKeyDown(e, entry.id)
                                 }
                                 aria-expanded={expandedEntryId === entry.id}
-                                aria-label={`${entry.casual} の例文を${expandedEntryId === entry.id ? "閉じる" : "表示"}`}
+                                aria-label={`${entry.casual} の例文`}
                               >
                                 <DisclosureTriangle />
                                 {entry.casual}

@@ -1,7 +1,6 @@
 /* WordGrid（なかまわけ）— 単語盤面。
  * 選んだ語は、語の上の 20px の四角の内側を塗って示す（§6 チェックボックスと同じ形）。
- * 語のマスの太い枠と、その内側に出すフォーカスのリングは data-thick-frame（globals.css）が持ち、hover の細い線は
- * globals.css の既定がボタンの内側に出す。 */
+ * 語のマスの太い枠と、その内側に離して出す hover の線とフォーカスのリングは data-thick-frame（globals.css）が持つ。 */
 
 .grid {
   display: grid;

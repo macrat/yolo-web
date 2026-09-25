@@ -19,12 +19,15 @@
 }
 
 /* 見出しへ進むリンク。項目は縁の見えないコントロールなので、押せる範囲を上下に接して並べる（§5）。下線と色は globals.css の a の既定に従う（§6）。タップの標的は 44px 以上で、
- * 字の左右の余白と、字を並びの左端に置く張り出しは data-text-box（globals.css）が持つ。 */
+ * 字の左右の余白と、字を並びの左端に置く張り出しは data-text-box（globals.css）が持つ。
+ * 2行に折れた項目が続いても境目が分かるよう、項目の中の行間を詰め、押せる範囲の上下に 8px の余白を持たせて、
+ * 項目どうしの字のあいだを項目の中の行のあいだより広くする。 */
 .link {
   display: flex;
   align-items: center;
   min-height: 44px;
+  padding-block: var(--space-8);
   font-family: var(--font-body);
   font-size: var(--text-small);
-  line-height: 1.6;
+  line-height: 1.4;
 }

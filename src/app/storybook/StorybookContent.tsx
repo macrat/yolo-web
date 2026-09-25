@@ -258,11 +258,8 @@ export default function StorybookContent({
       {/* === 4. Panel === */}
       <Section id="panel">
         <h2 className={styles.sectionTitle}>4. Panel</h2>
-        {/*
-         * Panel は入れ子にしないが、ここは Panel そのものの見本なので、
-         * 外側 Panel の中にサンプル Panel を入れ子にしている。
-         */}
-        <Panel as="div">
+        {/* ボックスは入れ子にしないので、Panel の見本だけは Panel に収めずに並べる。 */}
+        <div>
           <span className={styles.previewLabel}>Preview: Panel</span>
 
           <div
@@ -271,7 +268,7 @@ export default function StorybookContent({
             <Panel>
               <p>as=&quot;section&quot;（デフォルト）: 汎用コンテナパネル</p>
               <p style={{ color: "var(--ink-2)", fontSize: "0.9rem" }}>
-                パネルは入れ子にせず、影をつけない。
+                ボックスは入れ子にしない。
               </p>
             </Panel>
 
@@ -305,7 +302,7 @@ export default function StorybookContent({
               ))}
             </div>
           </div>
-        </Panel>
+        </div>
       </Section>
 
       {/* === 5. Button === */}

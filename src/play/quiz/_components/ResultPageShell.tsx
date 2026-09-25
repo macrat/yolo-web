@@ -51,7 +51,7 @@ export default function ResultPageShell({
   //  ページの視覚トーンを統一」）。
   // 適用条件はインラインと同じ「personality 型 かつ result.icon・result.color が両方存在」。
   // それ以外（knowledge 型・欠落）は現行の素の icon+title にフォールバックする。
-  // 重要: 単独ページには「診断完了」バッジを付けない。第三者は診断を完走していないため、
+  // 重要: 単独ページには「診断完了」の文字を付けない。第三者は診断を完走していないため、
   //   完了主張は偽になる。単独ページの勲章＝(象徴タイル＋固有名) のみ。
   const showMedal =
     quiz.meta.type === "personality" &&

@@ -3,31 +3,29 @@
 import { useState, useEffect, useCallback } from "react";
 import { isRated, markAsRated } from "@/humor-dict/_lib/rating-storage";
 import { trackContentRating } from "@/lib/analytics";
+import Button from "@/components/Button";
 import styles from "./EntryRatingButton.module.css";
 
 interface EntryRatingButtonProps {
   slug: string;
 }
 
+/** 押したあとに出す文。押したあとは押しても何も起きないので、ボタンを消して字で言う（§6）。 */
+const RATED_MESSAGE = "「おもしろかった」を送りました";
+
 /**
- * A "funny" reaction button for humor dictionary entries.
+ * ユーモア辞典の見出し語に「おもしろかった」を送るボタン。押すとその場で評価を送る、プライマリでないボタン（§6）。
  *
- * - Uses localStorage (via rating-storage) to persist the rated state across
- *   page loads, initialized client-side only to avoid SSR hydration mismatches.
- * - Deliberately avoids `disabled` so the button remains accessible and
- *   focusable; duplicate actions are blocked via the `rated` guard in the
- *   click handler.
- * - Text-only label (no emoji, per DESIGN.md §6: 見出し・ナビ・ボタンに絵文字を
- *   使わない). The rated state is conveyed by bold text without an underline (§6) and a
- *   label text change, not by color or decorative motion.
+ * - 送ったかどうかは localStorage（rating-storage）に残す。サーバーの描画と食い違わないよう、読み戻しは
+ *   マウントのあとにクライアントだけで行う。
+ * - 送ったあとは押しても何も起きないので、ボタンを残さず、送ったことを文で言う。切り替えのボタンとして
+ *   読ませると、押せば戻るように聞こえるため。
+ * - 文は常に置いてある role="status" の段落に入れ、押したときにスクリーンリーダーにも伝わるようにする（§8）。
  */
 export default function EntryRatingButton({ slug }: EntryRatingButtonProps) {
   const [rated, setRated] = useState(false);
 
-  // Restore rated state from localStorage on the client only.
-  // Starting with `false` avoids a hydration mismatch on SSR.
-  // The setState call here intentionally synchronizes React state with
-  // localStorage (an external system) after mount — a valid use of useEffect.
+  // マウントのあとに localStorage と同期する。初めを false にするのは、サーバーの描画と食い違わないため。
   useEffect(() => {
     if (isRated(slug)) {
       setRated(true); // eslint-disable-line react-hooks/set-state-in-effect -- Restore rating state from localStorage on mount
@@ -35,25 +33,15 @@ export default function EntryRatingButton({ slug }: EntryRatingButtonProps) {
   }, [slug]);
 
   const handleClick = useCallback(() => {
-    // Guard against double-rating; the button intentionally has no `disabled`
-    // attribute to keep it focusable and accessible.
-    if (rated) return;
     markAsRated(slug);
     trackContentRating();
     setRated(true);
-  }, [rated, slug]);
+  }, [slug]);
 
   return (
     <div className={styles.wrapper}>
-      <button
-        type="button"
-        className={styles.button}
-        data-text-box="inline"
-        aria-pressed={rated}
-        onClick={handleClick}
-      >
-        {rated ? "おもしろかった!" : "おもしろかった"}
-      </button>
+      {!rated && <Button onClick={handleClick}>おもしろかった</Button>}
+      <p role="status">{rated ? RATED_MESSAGE : ""}</p>
     </div>
   );
 }
