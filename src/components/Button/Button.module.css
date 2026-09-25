@@ -4,8 +4,7 @@
 .button {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  /* タップの標的は 44px 以上（§6）。幅は字の大きさに、44px に届くまで余白を足したもの（§5）。 */
+  /* タップの標的は 44px 以上（§6）。幅は字の大きさに、44px に届くまで右へ余白を足したもの（§5）。 */
   min-width: 44px;
   min-height: 44px;
   border: none;
@@ -13,22 +12,22 @@
   color: var(--ink);
   background: transparent;
   line-height: 1.4;
-  text-align: center;
+  text-align: start;
   cursor: pointer;
 }
 
 /* プライマリでないボタンは、進むもの・実行するものの印として下線を持つ。見えるのは字だけなので、
  * 字の左右の余白と、字を並びの左端に置く張り出しは data-text-box（globals.css）が持つ。 */
 .variantDefault {
-  justify-content: flex-start;
   text-decoration: underline;
   text-decoration-thickness: var(--rule-w-hair);
   text-underline-offset: 0.15em;
 }
 
-/* プライマリボタンは反転で示し、ボーダーを持たない。1ページに1つまで。反転の箱の左端が並びの左端に来る。 */
+/* プライマリボタンは反転で示し、ボーダーを持たない。1ページに1つまで。反転の地が縁として見えるので、
+ * 箱の左端を並びの左端に揃え、字は縁の内側 8px から始める（§5）。 */
 .variantPrimary {
-  padding-inline: var(--space-16);
+  padding-inline: var(--space-8);
   background: var(--ink);
   color: var(--paper);
 }

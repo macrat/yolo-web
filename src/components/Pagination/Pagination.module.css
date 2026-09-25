@@ -1,22 +1,28 @@
 /* ページ送り（DESIGN.md §6・§7）。どの項目も、押すと別のページが開くリンクとして下線を持つ。
  * hover の細い線とフォーカスの二重リングは globals.css の既定に従う。 */
 
+/* 押せる範囲どうしのあいだを 8px にする（§5）。後ろの項目の箱は字より余白の分だけ前へ張り出すので、
+ * その分を足す。 */
+.pagination,
+.pageNumbers {
+  --item-gap: calc(var(--space-8) + var(--text-box-pad));
+}
+
 .pagination {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: var(--space-8);
+  gap: var(--item-gap);
   margin-top: var(--space-32);
   padding: var(--space-16) 0;
 }
 
 /* タップの標的は 44px 四方以上（§6）。見えるのは字だけなので、字の左右の余白と、字を並びの左端に置く
- * 張り出しは data-text-box（globals.css）が持つ。link モードの下線と訪問済みの色は globals.css の a の
- * 既定に従う。 */
+ * 張り出しは data-text-box（globals.css）が持つ。1字の番号のように 44px に届かない箱は、字を左に置いたまま
+ * 右へ広げる（§5）。link モードの下線と訪問済みの色は globals.css の a の既定に従う。 */
 .pageItem {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
   min-width: 44px;
   min-height: 44px;
   font-variant-numeric: tabular-nums;
@@ -61,12 +67,13 @@ button.pageItem {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-8);
+  gap: var(--item-gap);
 }
 
+/* 後ろの「次へ」の箱が張り出す分だけ後ろをあけ、前後の押せる範囲から字までを同じ間隔にする。 */
 .mobileIndicator {
   display: none;
-  padding-inline: var(--space-8);
+  padding-inline-end: var(--text-box-pad);
   font-variant-numeric: tabular-nums;
   color: var(--ink-2);
 }
@@ -86,9 +93,9 @@ button.pageItem {
 }
 
 /* 番号の並びは、「前へ」「次へ」と同じ1行に収まる幅でだけ出す。番号が最も多い（7つ並ぶ）ときに1行に
- * 収まるのが 34rem からで、それより狭い画面では畳んで、いまのページと総ページ数だけを出す。並びを
+ * 収まるのが 38rem からで、それより狭い画面では畳んで、いまのページと総ページ数だけを出す。並びを
  * 折り返すと、「次へ」が別の行に回り、端のページでは先頭の行が見えない場所取りだけになるため。 */
-@media (width < 34rem) {
+@media (width < 38rem) {
   .pageNumbers {
     display: none;
   }

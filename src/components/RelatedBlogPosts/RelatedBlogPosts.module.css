@@ -22,7 +22,7 @@
   border-top: var(--rule-w-hair) solid var(--rule-2);
 }
 
-/* 行の左右の余白と張り出しは data-text-box（globals.css）が持つ。 */
+/* 字を罫線の内側から始める行の左右の余白は data-text-box（globals.css）が持つ。 */
 .item {
   position: relative;
   padding-block: var(--space-16);

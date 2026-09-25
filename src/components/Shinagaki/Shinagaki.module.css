@@ -29,7 +29,7 @@
 /*
  * 各行: 主内容（品名・ひとこと・値札）と右端メタを横に置く。左揃え基調。
  * position: relative は品名リンクの stretched-link 擬似要素（.name::after）の位置基準
- * （行全体をクリック標的にするため）。左右の余白と張り出しは data-text-box（globals.css）が持つ。
+ * （行全体をクリック標的にするため）。字を罫線の内側から始める左右の余白は data-text-box（globals.css）が持つ。
  */
 .row {
   position: relative;
