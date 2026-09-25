@@ -48,12 +48,12 @@
   line-height: 1.9;
 }
 
-/* 分類の行: カテゴリ導線＋難易度の値札を横に並べる。 */
-.tags {
+/* 分類の行: カテゴリ導線と難易度を、字で区切らず間隔をあけて横に並べる。 */
+.classification {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-8);
+  gap: var(--space-8) var(--space-16);
   margin-top: var(--space-16);
 }
 
@@ -178,7 +178,7 @@
   text-underline-offset: 0.15em;
 }
 
-/* 成立と出典: 定義リスト（値札＝ラベル・値）。 */
+/* 成立と出典: ラベルと値を組にした定義リスト。 */
 .metaList {
   margin: 0;
   border-top: 1px solid var(--rule);

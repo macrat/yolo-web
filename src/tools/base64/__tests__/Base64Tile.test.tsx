@@ -2,9 +2,9 @@
  * Base64Tile のユニットテスト（TDD: 実装前に書く）
  *
  * 検証観点:
- * - V-1: variant=full でのレンダリング（方向トグル表示・URL-safe のチェックボックス表示）
- * - V-2: variant=encode でのレンダリング（方向固定・方向トグル非表示・URL-safe のチェックボックス表示）
- * - V-3: variant=decode でのレンダリング（方向固定・方向トグル非表示・URL-safe のチェックボックス非表示）
+ * - V-1: variant=full でのレンダリング（方向のラジオボタン表示・URL-safe のチェックボックス表示）
+ * - V-2: variant=encode でのレンダリング（方向固定・方向のラジオボタン非表示・URL-safe のチェックボックス表示）
+ * - V-3: variant=decode でのレンダリング（方向固定・方向のラジオボタン非表示・URL-safe のチェックボックス非表示）
  * - V-4: variant=encode でエンコード変換が動く
  * - V-5: variant=decode でデコード変換が動く
  * - V-6: variant=full でエンコード→デコード切り替えが動く
@@ -38,7 +38,7 @@ describe("V-1: variant=full", () => {
 });
 
 // --- V-2: variant=encode ---
-describe("V-2: variant=encode（方向固定・方向トグル非表示・URL-safe 表示）", () => {
+describe("V-2: variant=encode（方向固定・方向のラジオボタン非表示・URL-safe 表示）", () => {
   it("ラジオボタンの組が表示されない", () => {
     render(<Base64Tile variant="encode" />);
     expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();
@@ -57,7 +57,7 @@ describe("V-2: variant=encode（方向固定・方向トグル非表示・URL-sa
 });
 
 // --- V-3: variant=decode ---
-describe("V-3: variant=decode（方向固定・方向トグル非表示・URL-safe 非表示）", () => {
+describe("V-3: variant=decode（方向固定・方向のラジオボタン非表示・URL-safe 非表示）", () => {
   it("ラジオボタンの組が表示されない", () => {
     render(<Base64Tile variant="decode" />);
     expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();
@@ -113,8 +113,8 @@ describe("V-5: variant=decode での変換", () => {
   });
 });
 
-// --- V-6: variant=full でのトグル切り替え ---
-describe("V-6: variant=full でのトグル切り替え", () => {
+// --- V-6: variant=full での方向の切り替え ---
+describe("V-6: variant=full での方向の切り替え", () => {
   it("デコードに切り替えると入力ラベルが「Base64入力」になる", () => {
     render(<Base64Tile variant="full" />);
     const decodeBtn = screen.getByRole("radio", { name: "デコード" });
@@ -375,7 +375,7 @@ describe("V-10: エラー・ライブリージョン・コピー", () => {
 
 // --- V-11: デフォルト variant ---
 describe("V-11: デフォルト variant", () => {
-  it("variant 未指定の場合 full と同等（方向トグル表示）", () => {
+  it("variant 未指定の場合 full と同等（方向のラジオボタン表示）", () => {
     render(<Base64Tile />);
     expect(screen.getByRole("radiogroup")).toBeInTheDocument();
   });

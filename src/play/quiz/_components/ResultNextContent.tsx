@@ -49,8 +49,11 @@ export default function ResultNextContent({
                 {content.shortTitle ?? content.title}
               </span>
               <span className={styles.metaRow}>
-                <span className={styles.badge}>{content.categoryLabel}</span>
-                <span className={styles.meta}>{content.metaText}</span>
+                <span>{content.categoryLabel}</span>
+                {/* 問題数も更新頻度も持たないものは metaText がカテゴリと同じ語になるので、2度は出さない。 */}
+                {content.metaText !== content.categoryLabel && (
+                  <span>{content.metaText}</span>
+                )}
               </span>
             </Link>
           </li>

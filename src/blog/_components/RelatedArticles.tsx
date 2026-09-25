@@ -22,7 +22,7 @@ export default function RelatedArticles({ posts }: RelatedArticlesProps) {
   const items: ShinagakiItem[] = posts.map((post) => ({
     name: post.title,
     href: `/blog/${post.slug}`,
-    tags: [CATEGORY_LABELS[post.category]],
+    facts: [CATEGORY_LABELS[post.category]],
     meta: formatDate(post.published_at),
     // 右端メタは公開日。機械可読な <time dateTime> で包むため生の値も渡す。
     metaDateTime: post.published_at,

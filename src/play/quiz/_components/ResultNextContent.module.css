@@ -56,24 +56,15 @@
   line-height: 1.4;
 }
 
+/*
+ * 補助情報（カテゴリ・所要の目安）: 枠や地で囲まず、補助情報の文字で置く（§4・§7）。
+ * 値どうしは字で区切らず間隔で分ける。
+ */
 .metaRow {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-/* カテゴリのラベル（診断/クイズ/パズル等）。 */
-.badge {
-  font-size: 0.7rem;
-  background-color: var(--paper);
-  border: 1px solid var(--rule);
-  padding: 0.125rem 0.5rem;
-  border-radius: var(--radius-sm);
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: var(--space-16);
   color: var(--ink-2);
-  white-space: nowrap;
-}
-
-.meta {
-  font-size: 0.75rem;
-  color: var(--ink-2);
+  font-size: var(--text-small);
 }

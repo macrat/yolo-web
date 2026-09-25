@@ -31,7 +31,7 @@
   letter-spacing: 0.01em;
 }
 
-/* 品名リンク: いまは静止時に下線を出さず、hover で下線を出す。 */
+/* 品名リンク: 静止時に下線を出さず、hover で下線を出す。 */
 .titleLink {
   color: var(--ink);
   text-decoration: none;
@@ -39,7 +39,7 @@
 
 /*
  * stretched-link: クリック/タップ標的を品名テキストだけでなく視覚単位（行）全体へ
- * 拡張する（description・種別・公開日・新着マークまで覆う。人は罫で囲まれた行を
+ * 拡張する（description・補助情報・公開日・新着の印まで覆う。人は罫で囲まれた行を
  * クリック可能と認識するため）。アクセシブル名は品名のみに
  * 保たれる（SR 良好・入れ子アンカーを作らない）。タグは .tagRow の z-index で
  * この擬似要素より前面に維持し、独立クリックを両立する。
@@ -61,14 +61,16 @@
   outline-offset: 2px;
 }
 
-/* 新着マーク: 塗りバッジではなく --accent の文字のみ。
- * 英字の全部大文字（NEW）でなく「新着」と日本語で書く。 */
+/*
+ * 新着の印: 行に添える補助情報なので、ほかの補助情報と同じ文字で置く（§4）。
+ * 色で目立たせないのは、UI に色を出さないため（§2）。
+ */
 .newMark {
-  margin-right: var(--space-8);
-  color: var(--accent);
+  margin-right: var(--space-16);
+  color: var(--ink-2);
   font-family: var(--font-body);
-  font-size: 0.75rem;
-  font-weight: 700;
+  font-size: var(--text-small);
+  font-weight: 400;
 }
 
 /* ひとこと（description）: 補足の墨。文章として読ませるため 16px/行間で組む。3行でクランプ。 */
@@ -84,17 +86,23 @@
   overflow: hidden;
 }
 
-/* 種別（カテゴリ・読了時間）+ 右端メタ（公開日）を横並びに。 */
+/* 補助情報（カテゴリ・読了時間）+ 右端メタ（公開日）を横並びに。 */
 .metaRow {
   display: flex;
   align-items: baseline;
   flex-wrap: wrap;
   justify-content: space-between;
-  gap: var(--space-8);
+  gap: var(--space-16);
 }
 
-/* 種別は枠や地で囲まず、補助情報の文字で置く（§7）。 */
-.kind {
+/*
+ * 補助情報は枠や地で囲まず、補助情報の文字で置く（§4・§7）。
+ * 値どうしは字で区切らず間隔で分ける。「・」はカテゴリ名の中（「日本語・文化」など）にも現れ、区切りと見分けられないため。
+ */
+.facts {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--space-16);
   color: var(--ink-2);
   font-family: var(--font-body);
   font-size: var(--text-small);

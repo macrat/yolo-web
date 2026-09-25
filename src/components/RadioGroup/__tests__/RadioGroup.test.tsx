@@ -23,21 +23,6 @@ describe("RadioGroup", () => {
     expect(screen.getByText("並び順").tagName).toBe("LEGEND");
   });
 
-  it("見出しを持たない組は aria-label を名前にする", () => {
-    render(
-      <RadioGroup
-        aria-label="単位"
-        options={options}
-        value="new"
-        onChange={vi.fn()}
-      />,
-    );
-    expect(
-      screen.getByRole("radiogroup", { name: "単位" }),
-    ).toBeInTheDocument();
-    expect(document.querySelector("legend")).toBeNull();
-  });
-
   it("value の選択肢だけが選ばれている", () => {
     render(
       <RadioGroup

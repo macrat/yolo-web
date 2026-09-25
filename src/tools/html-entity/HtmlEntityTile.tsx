@@ -154,7 +154,7 @@ export default function HtmlEntityTile({
             options={DIRECTION_OPTIONS}
             value={dynamicMode}
             onChange={handleModeChange}
-            legend="変換モード"
+            legend="変換の向き"
           />
         </div>
       )}

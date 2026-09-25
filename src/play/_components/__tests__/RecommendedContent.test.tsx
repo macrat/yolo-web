@@ -94,7 +94,7 @@ test("RecommendedContent has nav with correct aria-label", () => {
   ).toBeInTheDocument();
 });
 
-test("RecommendedContent renders title, description, and category badge for each card", () => {
+test("RecommendedContent renders title, description, and category for each card", () => {
   render(<RecommendedContent currentSlug="kanji-level" />);
 
   // タイトル（shortTitle優先）
@@ -145,7 +145,7 @@ test("RecommendedContent returns null when no recommendations", () => {
   expect(container.firstChild).toBeNull();
 });
 
-test("RecommendedContent renders category label badges", () => {
+test("RecommendedContent renders category labels", () => {
   render(<RecommendedContent currentSlug="kanji-level" />);
 
   // 新デザイン体系ではカテゴリラベルを静かなタグとして表示する

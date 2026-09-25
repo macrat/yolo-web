@@ -41,12 +41,12 @@ test("renders reading and meaning", () => {
   ).toBeInTheDocument();
 });
 
-test("renders difficulty badge", () => {
+test("renders difficulty", () => {
   render(<YojiDetail yoji={mockYoji} />);
   expect(screen.getByText("初級")).toBeInTheDocument();
 });
 
-test("renders category badge", () => {
+test("renders category link", () => {
   render(<YojiDetail yoji={mockYoji} />);
   expect(screen.getByText("人生")).toBeInTheDocument();
 });

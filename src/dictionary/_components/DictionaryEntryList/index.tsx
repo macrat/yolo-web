@@ -18,8 +18,8 @@ export interface DictionaryEntryItem {
   reading?: string;
   /** ひとこと（意味・語義プレビュー）。任意——無ければ出さない。 */
   note?: string;
-  /** 種別の語（種別・難易度・カラーコード等）。任意——「・」でつないで1行にし、空なら描画しない。 */
-  tags?: string[];
+  /** 補助情報（学年・画数・難易度・カラーコードなど）。任意——間隔をあけて横に並べ、空なら描画しない。 */
+  facts?: string[];
   /**
    * 色見本の地色（colors のみ・成果物の中身＝和色・§2）。
    * CSS ではなくインライン style で当てる（成果物パレットは器のトークンの外・データ由来の変数）。任意。
@@ -39,7 +39,7 @@ interface DictionaryEntryListProps {
  *
  * - 一覧は罫区切りのリストであってカードのグリッドではない。上辺＋各行の一本罫で全行を囲い、
  *   カード装飾・box-shadow・色地を持たない。
- * - 各行 = 品名（リンク・墨）＋ よみ（--ink-2）＋ ひとこと（意味）＋ 任意の種別、
+ * - 各行 = 品名（リンク・墨）＋ よみ（--ink-2）＋ ひとこと（意味）＋ 任意の補助情報、
  *   colors のみ品名の頭に色見本（成果物の中身＝和色・§2）。
  * - 検索器の結果とファセット絞り込みの結果が、この 1 枚の器を共有する（見せ方を一貫させる）。
  *   幅は呼び出し側が決める（読む面 --measure / 操作面 --max-width を親で当てる）。
@@ -51,9 +51,7 @@ export default function DictionaryEntryList({
   return (
     <ul className={styles.list} aria-label={ariaLabel}>
       {items.map((item) => {
-        const kind = (item.tags ?? [])
-          .filter((tag) => tag.trim() !== "")
-          .join("・");
+        const facts = (item.facts ?? []).filter((fact) => fact.trim() !== "");
         return (
           <li key={item.key} className={styles.row}>
             <Link href={item.href} className={styles.itemLink}>
@@ -73,7 +71,13 @@ export default function DictionaryEntryList({
               {item.note ? (
                 <span className={styles.note}>{item.note}</span>
               ) : null}
-              {kind ? <span className={styles.kind}>{kind}</span> : null}
+              {facts.length > 0 ? (
+                <span className={styles.facts}>
+                  {facts.map((fact, index) => (
+                    <span key={index}>{fact}</span>
+                  ))}
+                </span>
+              ) : null}
             </Link>
           </li>
         );

@@ -297,7 +297,7 @@ describe("CronParserTile - ARIA", () => {
       render(<CronParserTile variant="full" />);
     });
     expect(
-      screen.getByRole("radiogroup", { name: "モード" }),
+      screen.getByRole("radiogroup", { name: "使う機能" }),
     ).toBeInTheDocument();
   });
 });

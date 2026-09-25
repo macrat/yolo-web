@@ -73,7 +73,7 @@ const heroContent: PlayContentMeta | undefined =
  * 二度立てない）。棚は性格・キャラ診断で発見の幅を、contrarian-fortune で占い枠を、
  * nakamawake であそび（毎日更新のパズル）を添え、棚見出しを実体で満たす。全リストは /play。
  */
-const FEATURED_PLAY: { slug: string; note: string; tags?: string[] }[] = [
+const FEATURED_PLAY: { slug: string; note: string; facts?: string[] }[] = [
   {
     slug: "word-sense-personality",
     note: "言葉の選び方から、四字熟語の8タイプであなたを言い当てます。",
@@ -97,7 +97,7 @@ const FEATURED_PLAY: { slug: string; note: string; tags?: string[] }[] = [
   {
     slug: "nakamawake",
     note: "16個の言葉を、共通点で4つのグループに分けるパズル。",
-    tags: ["毎日更新"],
+    facts: ["毎日更新"],
   },
 ];
 
@@ -115,7 +115,7 @@ const featuredPlayItems: ShinagakiItem[] = FEATURED_PLAY.flatMap((entry) => {
       name: content.title,
       href: getContentPath(content),
       note: entry.note,
-      tags: entry.tags,
+      facts: entry.facts,
     },
   ];
 });
@@ -215,7 +215,7 @@ export default function Home() {
             <p className={styles.heroLede}>
               12の問いに答えると、あなたに近いキャラクター像がひとつ。結果は札にして持ち帰れます。
             </p>
-            <p className={styles.heroTags}>24タイプ</p>
+            <p className={styles.heroFacts}>24タイプ</p>
             <p className={styles.heroAction}>
               <Link
                 href={getContentPath(heroContent)}

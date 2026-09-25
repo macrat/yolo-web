@@ -43,7 +43,7 @@ export default function ColorsIndexPage() {
   // 「色みから探す」棚（品書き）。色相のグループを入口として並べる。
   // 並び順は虹の並び（COLOR_CATEGORY_LABELS の定義順＝赤→…→無彩色）を正準にする。
   // getColorCategories() はアルファベット順にソートするため、そのまま使うと色相の並びが崩れる。
-  // 件数は種別の文字で各棚に添える（中身のあるものだけ）。
+  // 件数は補助情報の文字で各棚に添える（中身のあるものだけ）。
   const presentCategories = new Set<ColorCategory>(getColorCategories());
   const categoryOrder = Object.keys(COLOR_CATEGORY_LABELS) as ColorCategory[];
   const categoryItems: ShinagakiItem[] = categoryOrder
@@ -53,7 +53,7 @@ export default function ColorsIndexPage() {
       return {
         name: COLOR_CATEGORY_LABELS[slug],
         href: `/dictionary/colors/category/${slug}`,
-        tags: [`${count}色`],
+        facts: [`${count}色`],
       };
     });
 
@@ -65,7 +65,7 @@ export default function ColorsIndexPage() {
     href: `/dictionary/colors/${c.slug}`,
     reading: c.romaji,
     swatch: c.hex,
-    tags: [c.hex, COLOR_CATEGORY_LABELS[c.category]],
+    facts: [c.hex, COLOR_CATEGORY_LABELS[c.category]],
     haystack: [c.name, c.romaji, c.hex].join(" ").toLowerCase(),
   }));
 

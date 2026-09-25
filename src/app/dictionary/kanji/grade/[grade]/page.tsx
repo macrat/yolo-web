@@ -16,7 +16,7 @@ import styles from "./page.module.css";
  * カードのグリッドやピル群を使わず、辞典の「引く体験」に揃える——絞り込んだ漢字は
  * 共有の品書き（DictionaryEntryList・罫区切りリスト）で「漢字＋読み＋意味＋画数」として
  * 出し、ほかの学年への導線は罫の索引（FacetIndex・トップのファセット索引と同じ流儀）で置く。
- * 学年で絞ったので種別は重複を避け画数を添える。
+ * 学年で絞ったので補助情報は重複を避け画数を添える。
  * 色・角丸・書体・余白はすべてトークン経由。インライン style は使わない。
  */
 
@@ -70,14 +70,14 @@ export default async function KanjiGradePage({
   const kanjiList = getKanjiByGrade(gradeNum);
   const gradeLabel = KANJI_GRADE_LABELS[gradeNum];
 
-  // 品書きの行（漢字＋読み＋意味＋画数）。学年で絞ったので種別は画数（学年は重複）。
+  // 品書きの行（漢字＋読み＋意味＋画数）。学年で絞ったので補助情報は画数（学年は重複）。
   const entries: DictionaryEntryItem[] = kanjiList.map((k) => ({
     key: k.character,
     name: k.character,
     href: `/dictionary/kanji/${encodeURIComponent(k.character)}`,
     reading: [...k.onYomi, ...k.kunYomi].join("・") || undefined,
     note: k.meanings.join("・") || undefined,
-    tags: [`${k.strokeCount}画`],
+    facts: [`${k.strokeCount}画`],
   }));
 
   const gradeItems = validGrades.map((g) => ({

@@ -2,9 +2,9 @@
  * FullwidthConverterTile ユニットテスト（T-3 TDD: 実装前に書く）
  *
  * 検証観点:
- * - V-1: variant=full でのレンダリング（方向トグル・checkbox 3個が表示される）
- * - V-2: variant=toHalfwidth（方向固定・トグル非表示・checkbox 3個あり）
- * - V-3: variant=toFullwidth（方向固定・トグル非表示・checkbox 3個あり）
+ * - V-1: variant=full でのレンダリング（方向のラジオボタン・checkbox 3個が表示される）
+ * - V-2: variant=toHalfwidth（方向固定・方向のラジオボタン非表示・checkbox 3個あり）
+ * - V-3: variant=toFullwidth（方向固定・方向のラジオボタン非表示・checkbox 3個あり）
  * - V-4: variant=toHalfwidth で半角変換が動く
  * - V-5: variant=toFullwidth で全角変換が動く
  * - V-6: variant=full でモード切り替えが動く
@@ -59,7 +59,7 @@ describe("V-1: variant=full", () => {
 });
 
 // --- V-2: variant=toHalfwidth ---
-describe("V-2: variant=toHalfwidth（方向固定・トグル非表示）", () => {
+describe("V-2: variant=toHalfwidth（方向固定・方向のラジオボタン非表示）", () => {
   it("ラジオボタンの組が表示されない", () => {
     render(<FullwidthConverterTile variant="toHalfwidth" />);
     expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();
@@ -80,7 +80,7 @@ describe("V-2: variant=toHalfwidth（方向固定・トグル非表示）", () =
 });
 
 // --- V-3: variant=toFullwidth ---
-describe("V-3: variant=toFullwidth（方向固定・トグル非表示）", () => {
+describe("V-3: variant=toFullwidth（方向固定・方向のラジオボタン非表示）", () => {
   it("ラジオボタンの組が表示されない", () => {
     render(<FullwidthConverterTile variant="toFullwidth" />);
     expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();
@@ -340,7 +340,7 @@ describe("V-13: オプション checkbox OFF での変換抑制", () => {
 
 // --- V-14: デフォルト variant は full と同等 ---
 describe("V-14: デフォルト variant", () => {
-  it("variant 未指定の場合 full と同等の動作をする（トグルが表示される）", () => {
+  it("variant 未指定の場合 full と同等の動作をする（方向のラジオボタンが表示される）", () => {
     render(<FullwidthConverterTile />);
     expect(screen.getByRole("radiogroup")).toBeInTheDocument();
   });

@@ -3,8 +3,6 @@
 /**
  * Base64Tile — Base64エンコード/デコードの単一正典タイル
  *
- * cycle-227 T-2 で Base64Tool.tsx を Panel ルートのタイルへ作り直したもの。
- *
  * ## 設計原則
  *
  * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>。外部ラッパーなし。
@@ -18,13 +16,13 @@
  * ## variant
  *
  * - `"full"` (デフォルト): 方向のラジオボタンを表示し
- *   encode / decode をユーザーが切り替えられる。URL-safe トグルは encode 時のみ表示。
- * - `"encode"`: 方向を encode に固定し、ラジオボタンの組を出さない。URL-safe トグル表示。
+ *   encode / decode をユーザーが切り替えられる。URL-safe のチェックボックスは encode 時のみ表示。
+ * - `"encode"`: 方向を encode に固定し、ラジオボタンの組を出さない。URL-safe のチェックボックスを表示。
  * - `"decode"`: 方向を decode に固定し、ラジオボタンの組と URL-safe のチェックボックスを出さない。
  *
- * ## URL-safe トグルの表示ルール
+ * ## URL-safe のチェックボックスの表示ルール
  *
- * decode 時に URL-safe トグルを表示すると「操作しても出力が変わらない」死んだコントロールに
+ * decode 時に URL-safe のチェックボックスを表示すると「操作しても出力が変わらない」死んだコントロールに
  * なるため、encode 方向の時のみ表示する（full では動的に、encode/decode では静的に制御）。
  *
  * ## 使い方
@@ -73,8 +71,8 @@ export interface Base64TileProps {
   /**
    * 表示バリエーション（デフォルト: "full"）
    * - "full": 方向のラジオボタンを出す（encode / decode をユーザーが切り替え）
-   * - "encode": 方向を encode に固定、方向のラジオボタンを出さない、URL-safe トグル表示
-   * - "decode": 方向を decode に固定、方向のラジオボタン・URL-safe トグル両方非表示
+   * - "encode": 方向を encode に固定、方向のラジオボタンを出さない、URL-safe のチェックボックスを表示
+   * - "decode": 方向を decode に固定、方向のラジオボタンと URL-safe のチェックボックスをどちらも出さない
    */
   variant?: Base64TileVariant;
   /** 初期入力値（デフォルト: ""） */
@@ -114,9 +112,9 @@ export default function Base64Tile({
   // 実際に使う方向: fixed があればそれを使い、なければ state を使う
   const direction = fixedDirection ?? dynamicDirection;
 
-  // URL-safe トグルを表示するのは encode 方向の時のみ
+  // URL-safe のチェックボックスを表示するのは encode 方向の時のみ
   // decode 方向で表示すると「操作しても出力が変わらない」死んだコントロールになるため
-  const showUrlSafeToggle = direction === "encode";
+  const showUrlSafe = direction === "encode";
 
   // ---------- リアルタイム変換（共有エンジン logic.ts を使用） ----------
   const conversionResult = useMemo(() => {
@@ -183,14 +181,14 @@ export default function Base64Tile({
             options={DIRECTION_OPTIONS}
             value={dynamicDirection}
             onChange={handleDirectionChange}
-            legend="変換モード"
+            legend="変換の向き"
           />
         </div>
       )}
 
       {/* URL-safe オプション（encode 方向の時のみ表示）
           decode 方向で表示すると「操作しても出力が変わらない」死んだコントロールになるため非表示 */}
-      {showUrlSafeToggle && (
+      {showUrlSafe && (
         <div className={styles.optionRow}>
           <Checkbox
             label="URL-safe 形式で出力"

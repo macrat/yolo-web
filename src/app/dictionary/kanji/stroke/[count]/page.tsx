@@ -18,7 +18,7 @@ import styles from "./page.module.css";
  *
  * 旧デザイン（カードグリッド・§8-4 とピル群・§8-5・旧トークン）を全廃し、辞典の「引く体験」に
  * 揃えた——絞り込んだ漢字は共有の品書き（DictionaryEntryList）で「漢字＋読み＋意味＋学年」
- * として出し、ほかの画数への導線は罫の索引（FacetIndex）で置く。画数で絞ったので種別は重複を
+ * として出し、ほかの画数への導線は罫の索引（FacetIndex）で置く。画数で絞ったので補助情報は重複を
  * 避け学年を添える。色・角丸・書体・余白はすべてトークン経由（§10・直書き禁止）。
  */
 
@@ -70,14 +70,14 @@ export default async function KanjiStrokePage({
   const strokeCount = Number(count);
   const kanjiList = getKanjiByStrokeCount(strokeCount);
 
-  // 品書きの行（漢字＋読み＋意味＋学年）。画数で絞ったので種別は学年（画数は重複）。
+  // 品書きの行（漢字＋読み＋意味＋学年）。画数で絞ったので補助情報は学年（画数は重複）。
   const entries: DictionaryEntryItem[] = kanjiList.map((k) => ({
     key: k.character,
     name: k.character,
     href: `/dictionary/kanji/${encodeURIComponent(k.character)}`,
     reading: [...k.onYomi, ...k.kunYomi].join("・") || undefined,
     note: k.meanings.join("・") || undefined,
-    tags: [KANJI_GRADE_LABELS[k.grade]],
+    facts: [KANJI_GRADE_LABELS[k.grade]],
   }));
 
   const strokeItems = validCounts.map((c) => ({

@@ -330,7 +330,7 @@ export default function CronParserTile({
             setDynamicMode(v as TabMode);
             setLiveSummary("");
           }}
-          legend="モード"
+          legend="使う機能"
         />
       )}
 

@@ -27,7 +27,7 @@
 }
 
 /*
- * 各行: 主内容（品名・ひとこと・種別）と右端メタを横に置く。左揃え基調。
+ * 各行: 主内容（品名・ひとこと・補助情報）と右端メタを横に置く。左揃え基調。
  * position: relative は品名リンクの stretched-link 擬似要素（.name::after）の位置基準
  * （行全体をクリック標的にするため）。字を罫線の内側から始める左右の余白は data-text-box（globals.css）が持つ。
  */
@@ -40,7 +40,7 @@
   border-bottom: var(--rule-w-hair) solid var(--rule-2);
 }
 
-/* 主内容を縦に積む（品名 → ひとこと → 種別）。min-width:0 で長い語の溢れを防ぐ。 */
+/* 主内容を縦に積む（品名 → ひとこと → 補助情報）。min-width:0 で長い語の溢れを防ぐ。 */
 .main {
   flex: 1 1 auto;
   min-width: 0;
@@ -66,7 +66,7 @@
  * stretched-link: 品名リンクの擬似要素で、クリック/タップ標的だけを視覚単位（行）
  * 全体に広げる（人は罫で囲まれた単位をクリック可能と認識するため）。
  * DOM は不変なのでアクセシブル名は品名のみに保たれる。
- * 行内に対話要素は無い（note/種別/メタは非対話）ため ::after が行全体を覆って良い。
+ * 行内に対話要素は無い（note/補助情報/メタは非対話）ため ::after が行全体を覆って良い。
  * hover の線とフォーカスの二重リングは、data-hit-area（globals.css）がこの範囲に出す。
  */
 .name::after {
@@ -84,9 +84,15 @@
   line-height: 1.7;
 }
 
-/* 種別: それが何の仲間かを言う補助情報。枠や地で囲まず、補助情報の文字で置く（§7）。 */
-.kind {
+/*
+ * 補助情報: 枠や地で囲まず、補助情報の文字で置く（§4・§7）。
+ * 値どうしは字で区切らず間隔で分ける。「・」は値の中（「日本語・文化」など）にも現れ、区切りと見分けられないため。
+ */
+.facts {
   margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--space-16);
   color: var(--ink-2);
   font-family: var(--font-body);
   font-size: var(--text-small);

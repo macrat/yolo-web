@@ -171,7 +171,7 @@ export default function UrlEncodeTile({
             options={DIRECTION_OPTIONS}
             value={dynamicDirection}
             onChange={handleDirectionChange}
-            legend="変換方向"
+            legend="変換の向き"
           />
         )}
 

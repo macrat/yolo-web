@@ -235,7 +235,7 @@ describe("ImageBase64Tile", () => {
   it("E-5: ラジオボタンの組が見出しを名前として持つ", () => {
     render(<ImageBase64Tile variant="full" />);
     expect(
-      screen.getByRole("radiogroup", { name: "変換モード" }),
+      screen.getByRole("radiogroup", { name: "変換の向き" }),
     ).toBeInTheDocument();
   });
 

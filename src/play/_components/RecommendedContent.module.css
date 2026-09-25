@@ -2,7 +2,7 @@
  * RecommendedContent — 他カテゴリのおすすめ。
  * カードのグリッドではなく罫区切りの一覧で組む
  * （RelatedTools/RelatedBlogPosts と同型）。器は静か——背景色・box-shadow・カード角丸なし。
- * 品名は本文の書体で、いまは hover で下線を出す。カテゴリは罫で囲んだ小さなラベルで示す。
+ * 品名は本文の書体で、hover で下線を出す。カテゴリは補助情報の文字で添える。
  */
 
 .related {
@@ -67,14 +67,9 @@
   line-height: 1.6;
 }
 
-/* カテゴリの値札。中身のある情報として添える。 */
-.badge {
-  display: inline-flex;
-  align-items: center;
-  font-size: 0.8125rem;
+/* カテゴリ（種別）: 枠や地で囲まず、補助情報の文字で置く（§4・§7）。 */
+.category {
   color: var(--ink-2);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius-sm);
-  padding: 0.15em 0.5em;
-  width: fit-content;
+  font-family: var(--font-body);
+  font-size: var(--text-small);
 }

@@ -140,7 +140,7 @@
 }
 
 /* 結果のタイプ数などの補助情報。枠や地で囲まず、補助情報の文字で置く。 */
-.heroTags {
+.heroFacts {
   margin: 0 0 var(--space-24);
   color: var(--ink-2);
   font-size: var(--text-small);

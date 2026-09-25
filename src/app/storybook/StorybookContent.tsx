@@ -41,7 +41,7 @@ const COLOR_SECTIONS = [
     title: "文字 (Ink)",
     swatches: [
       { token: "--ink", role: "本文・見出し" },
-      { token: "--ink-2", role: "補足・値札の文字・キャプション" },
+      { token: "--ink-2", role: "補足・補助情報の文字・キャプション" },
     ],
   },
   {
@@ -134,7 +134,6 @@ export default function StorybookContent({
   // RadioGroup controlled state
   const [groupValue, setGroupValue] = useState("encode");
   const [longGroupValue, setLongGroupValue] = useState("hiragana-to-katakana");
-  const [unitValue, setUnitValue] = useState("seconds");
   // Pagination button mode state
   const [paginationPage, setPaginationPage] = useState(1);
   // useCopyToClipboard demo
@@ -243,7 +242,7 @@ export default function StorybookContent({
               </div>
               <div className={styles.radiusSampleLabel}>--radius-sm</div>
               <div style={{ fontSize: "0.7rem", color: "var(--ink-2)" }}>
-                値札ラベルと入力欄が使う（0px）
+                記事のタグと入力欄が使う（0px）
               </div>
             </div>
           </div>
@@ -753,10 +752,10 @@ export default function StorybookContent({
           <span className={styles.previewLabel}>Preview: RadioGroup</span>
 
           <h3 className={styles.subsectionTitle} style={{ marginTop: 0 }}>
-            見出しを持つ組（legend）
+            見出し（legend）と選択肢
           </h3>
           <RadioGroup
-            legend="変換モード"
+            legend="変換の向き"
             options={[
               { label: "エンコード", value: "encode" },
               { label: "デコード", value: "decode" },
@@ -777,19 +776,6 @@ export default function StorybookContent({
             ]}
             value={longGroupValue}
             onChange={setLongGroupValue}
-          />
-
-          <h3 className={styles.subsectionTitle}>
-            周りの文で分かる組（aria-label）
-          </h3>
-          <RadioGroup
-            aria-label="単位"
-            options={[
-              { label: "秒", value: "seconds" },
-              { label: "ミリ秒", value: "milliseconds" },
-            ]}
-            value={unitValue}
-            onChange={setUnitValue}
           />
         </Panel>
       </Section>

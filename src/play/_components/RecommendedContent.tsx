@@ -35,7 +35,7 @@ export default function RecommendedContent({
               <span className={styles.description}>
                 {content.shortDescription}
               </span>
-              <span className={styles.badge}>
+              <span className={styles.category}>
                 {resolveDisplayCategory(content)}
               </span>
             </Link>

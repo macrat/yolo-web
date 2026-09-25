@@ -92,9 +92,14 @@
   line-height: 1.7;
 }
 
-/* 種別（種別・難易度・コード等）は枠や地で囲まず、補助情報の文字で置く（§7）。 */
-.kind {
-  display: block;
+/*
+ * 補助情報（学年・画数・難易度・カラーコードなど）は枠や地で囲まず、補助情報の文字で置く（§4・§7）。
+ * 値どうしは字で区切らず間隔で分ける。「・」は値の中（「対立・闘い」など）にも現れ、区切りと見分けられないため。
+ */
+.facts {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--space-16);
   margin: var(--space-8) 0 0;
   color: var(--ink-2);
   font-family: var(--font-body);

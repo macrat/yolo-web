@@ -20,7 +20,7 @@ import styles from "./page.module.css";
  * 旧デザイン（カードグリッド・§8-4 とピル群・§8-5・旧トークン）を全廃し、辞典の「引く体験」に
  * 揃えた——絞り込んだ四字熟語は共有の品書き（DictionaryEntryList）で「熟語＋読み＋意味＋難易度」
  * として出し、ほかのカテゴリへの導線は罫の索引（FacetIndex）で置く。カテゴリで絞ったので
- * 種別は重複を避け難易度を添える。色・角丸・書体・余白はすべてトークン経由（§10・直書き禁止）。
+ * 補助情報は重複を避け難易度を添える。色・角丸・書体・余白はすべてトークン経由（§10・直書き禁止）。
  */
 
 export function generateStaticParams() {
@@ -69,14 +69,14 @@ export default async function YojiCategoryPage({
   const yojiList = getYojiByCategory(category as YojiCategory);
   const categoryLabel = YOJI_CATEGORY_LABELS[category as YojiCategory];
 
-  // 品書きの行（熟語＋読み＋意味＋難易度）。カテゴリで絞ったので種別は難易度（重複回避）。
+  // 品書きの行（熟語＋読み＋意味＋難易度）。カテゴリで絞ったので補助情報は難易度（重複回避）。
   const entries: DictionaryEntryItem[] = yojiList.map((y) => ({
     key: y.yoji,
     name: y.yoji,
     href: `/dictionary/yoji/${encodeURIComponent(y.yoji)}`,
     reading: y.reading,
     note: y.meaning,
-    tags: [YOJI_DIFFICULTY_LABELS[y.difficulty]],
+    facts: [YOJI_DIFFICULTY_LABELS[y.difficulty]],
   }));
 
   const categoryItems = validCategories.map((c) => ({

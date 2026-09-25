@@ -112,7 +112,7 @@ export default function KanjiIndexPage() {
       href: `/dictionary/kanji/${encodeURIComponent(k.character)}`,
       reading: readings.join("・") || undefined,
       note: k.meanings.join("・") || undefined,
-      tags: [KANJI_GRADE_LABELS[k.grade]],
+      facts: [KANJI_GRADE_LABELS[k.grade]],
       haystack: [
         k.character,
         ...k.onYomi,

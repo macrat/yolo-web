@@ -225,7 +225,7 @@ export default function ImageBase64Tile({
             options={MODE_OPTIONS}
             value={dynamicMode}
             onChange={handleModeChange}
-            legend="変換モード"
+            legend="変換の向き"
           />
         </div>
       )}

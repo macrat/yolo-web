@@ -62,7 +62,7 @@ export default async function ColorCategoryPage({
     href: `/dictionary/colors/${c.slug}`,
     reading: c.romaji,
     swatch: c.hex,
-    tags: [c.hex],
+    facts: [c.hex],
   }));
 
   const categoryItems = validCategories.map((c) => ({

@@ -13,10 +13,10 @@ export interface ShinagakiItem {
    */
   note?: string;
   /**
-   * 種別（それが何の仲間かを言う語）。任意——複数あれば「・」でつないで1行にする。
-   * 空・空要素のみなら種別の行を出さない（中身の無い行を作らない）。
+   * 補助情報（種別・件数・所要時間など、品名に添える短い値）。任意——複数あれば間隔をあけて横に並べる。
+   * 空・空要素のみなら補助情報の行を出さない（中身の無い行を作らない）。
    */
-  tags?: string[];
+  facts?: string[];
   /** 行右端に添える短いメタ（更新日・件数など）。任意——空なら描画しない。 */
   meta?: string;
   /**
@@ -48,7 +48,7 @@ export interface ShinagakiProps {
  * 仕様:
  * - 一覧は「罫区切りのリスト」であってカードのグリッドではない。
  *   各行を細い線（`--rule-2`）で仕切る（カード装飾・影・色地なし）。
- * - 各行 = 品名（リンク・墨）+ ひとこと（`--ink-2`）+ 任意の種別 + 任意の右端メタ。
+ * - 各行 = 品名（リンク・墨）+ ひとこと（`--ink-2`）+ 任意の補助情報 + 任意の右端メタ。
  * - 左揃え。幅は呼び出し側が決められるよう、このコンポーネントは幅を固定しない
  *   （読む面は `--measure`、操作面は `--max-width` を親で当てる）。
  */
@@ -69,9 +69,7 @@ export default function Shinagaki({
       ) : null}
       <ul className={styles.list} aria-label={ariaLabel} data-text-box="rows">
         {items.map((item) => {
-          const kind = (item.tags ?? [])
-            .filter((tag) => tag.trim() !== "")
-            .join("・");
+          const facts = (item.facts ?? []).filter((fact) => fact.trim() !== "");
           return (
             <li key={item.href} className={styles.row}>
               <div className={styles.main}>
@@ -83,7 +81,13 @@ export default function Shinagaki({
                   {item.name}
                 </Link>
                 {item.note ? <p className={styles.note}>{item.note}</p> : null}
-                {kind ? <p className={styles.kind}>{kind}</p> : null}
+                {facts.length > 0 ? (
+                  <p className={styles.facts}>
+                    {facts.map((fact, index) => (
+                      <span key={index}>{fact}</span>
+                    ))}
+                  </p>
+                ) : null}
               </div>
               {item.meta && item.meta.trim() !== "" ? (
                 item.metaDateTime ? (

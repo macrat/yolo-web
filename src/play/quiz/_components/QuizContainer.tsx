@@ -144,7 +144,7 @@ export default function QuizContainer({
 
     // h1 と説明はページ章立て（QuizPlayPageLayout の header）が担うため、
     // ここでは「これから始める道具」としての所要情報と開始操作だけを静かに置く。
-    // 所要情報（種別・問題数・所要時間・タイプ数）は「・」でつないだ1行の補助情報にする。
+    // 所要情報（種別・問題数・所要時間・タイプ数）は、間隔をあけて並べた補助情報にする。
     const introFacts = [
       typeLabel,
       `全${questionCount}問`,
@@ -152,13 +152,15 @@ export default function QuizContainer({
       quiz.meta.type === "personality" && resultTypeCount > 0
         ? `${resultTypeCount}タイプ`
         : "",
-    ]
-      .filter((fact) => fact !== "")
-      .join("・");
+    ].filter((fact) => fact !== "");
     return (
       <div className={styles.stage}>
         <div className={styles.intro}>
-          <p className={styles.introFacts}>{introFacts}</p>
+          <p className={styles.introFacts}>
+            {introFacts.map((fact) => (
+              <span key={fact}>{fact}</span>
+            ))}
+          </p>
           <p className={styles.introLead}>
             {quiz.meta.type === "knowledge"
               ? "準備ができたら始めましょう。"

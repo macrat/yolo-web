@@ -2,9 +2,9 @@
  * HtmlEntityTile のユニットテスト（TDD: 実装前に作成）
  *
  * 検証観点:
- * - V-1: variant=full でのレンダリング（方向トグルが表示される）
- * - V-2: variant=encode でのレンダリング（方向固定・トグル非表示）
- * - V-3: variant=decode でのレンダリング（方向固定・トグル非表示）
+ * - V-1: variant=full でのレンダリング（方向のラジオボタンが表示される）
+ * - V-2: variant=encode でのレンダリング（方向固定・方向のラジオボタン非表示）
+ * - V-3: variant=decode でのレンダリング（方向固定・方向のラジオボタン非表示）
  * - V-4: variant=encode でエンコード変換が動く
  * - V-5: variant=decode でデコード変換が動く
  * - V-6: variant=full でエンコード→デコード切り替えが動く
@@ -57,7 +57,7 @@ describe("V-1: variant=full", () => {
 });
 
 // --- V-2: variant=encode ---
-describe("V-2: variant=encode（方向固定・トグル非表示）", () => {
+describe("V-2: variant=encode（方向固定・方向のラジオボタン非表示）", () => {
   it("ラジオボタンの組が表示されない", () => {
     render(<HtmlEntityTile variant="encode" />);
     expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();
@@ -71,7 +71,7 @@ describe("V-2: variant=encode（方向固定・トグル非表示）", () => {
 });
 
 // --- V-3: variant=decode ---
-describe("V-3: variant=decode（方向固定・トグル非表示）", () => {
+describe("V-3: variant=decode（方向固定・方向のラジオボタン非表示）", () => {
   it("ラジオボタンの組が表示されない", () => {
     render(<HtmlEntityTile variant="decode" />);
     expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();
@@ -108,8 +108,8 @@ describe("V-5: variant=decode での変換", () => {
   });
 });
 
-// --- V-6: variant=full でのトグル切り替え ---
-describe("V-6: variant=full でのトグル切り替え", () => {
+// --- V-6: variant=full での方向の切り替え ---
+describe("V-6: variant=full での方向の切り替え", () => {
   it("デコードに切り替えてデコードが動く", () => {
     render(<HtmlEntityTile variant="full" />);
     const decodeBtn = screen.getByRole("radio", { name: "デコード" });
@@ -149,7 +149,7 @@ describe("V-7: id インスタンス一意性", () => {
 
 // --- V-8: デフォルト variant は full と同等 ---
 describe("V-8: デフォルト variant", () => {
-  it("variant 未指定の場合 full と同等の動作をする（トグルが表示される）", () => {
+  it("variant 未指定の場合 full と同等の動作をする（方向のラジオボタンが表示される）", () => {
     render(<HtmlEntityTile />);
     expect(screen.getByRole("radiogroup")).toBeInTheDocument();
   });
@@ -180,7 +180,7 @@ describe("V-9: a11y（role='status' aria-live='polite'）", () => {
   it("ラジオボタンの組は見出しを名前として持つ", () => {
     render(<HtmlEntityTile variant="full" />);
     expect(
-      screen.getByRole("radiogroup", { name: "変換モード" }),
+      screen.getByRole("radiogroup", { name: "変換の向き" }),
     ).toBeInTheDocument();
   });
 });

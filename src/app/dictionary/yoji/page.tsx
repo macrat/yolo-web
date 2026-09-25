@@ -74,7 +74,7 @@ const CATEGORY_NOTES: Record<YojiCategory, string> = {
 };
 
 /**
- * カテゴリの品書き。各カテゴリを収録数の多い順に並べ、収録数を種別の文字で添える。
+ * カテゴリの品書き。各カテゴリを収録数の多い順に並べ、収録数を補助情報の文字で添える。
  * リンク先はカテゴリページ（実在ルート）で、そこから各語の詳細へ辿れる。
  */
 const categoryItems: ShinagakiItem[] = getYojiCategories()
@@ -84,7 +84,7 @@ const categoryItems: ShinagakiItem[] = getYojiCategories()
     name: YOJI_CATEGORY_LABELS[slug],
     href: `/dictionary/yoji/category/${slug}`,
     note: CATEGORY_NOTES[slug],
-    tags: [`${count}語`],
+    facts: [`${count}語`],
   }));
 
 // 検索器（共有の器）へ渡す正規化データ。表示は品名（四字熟語）＋読み＋意味＋カテゴリ/難易度、
@@ -95,7 +95,7 @@ const searchItems: DictionarySearchItem[] = getAllYoji().map((y) => ({
   href: `/dictionary/yoji/${encodeURIComponent(y.yoji)}`,
   reading: y.reading,
   note: y.meaning,
-  tags: [
+  facts: [
     YOJI_CATEGORY_LABELS[y.category],
     YOJI_DIFFICULTY_LABELS[y.difficulty],
   ],

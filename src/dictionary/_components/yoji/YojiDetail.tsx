@@ -84,7 +84,7 @@ export default function YojiDetail({ yoji }: YojiDetailProps) {
         <p className={styles.reading}>{yoji.reading}</p>
         <p className={styles.meaning}>{yoji.meaning}</p>
         {/* 分類: カテゴリは索引への導線、難易度は補助情報の文字。ピルにしない。 */}
-        <div className={styles.tags}>
+        <div className={styles.classification}>
           <Link
             href={`/dictionary/yoji/category/${yoji.category}`}
             className={styles.categoryTag}

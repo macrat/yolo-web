@@ -10,7 +10,7 @@ import styles from "./DictionarySearch.module.css";
 /**
  * 検索器に渡す 1 件の正規化データ。各辞典（kanji/yoji/colors）が自分のデータ形から
  * この共通形へ落とし込んで渡す（器はデータ形に依存しない）。表示フィールド（品名・よみ・
- * 意味・種別・色見本）は品書きの共有型 {@link DictionaryEntryItem} を継承し、検索器は
+ * 意味・補助情報・色見本）は品書きの共有型 {@link DictionaryEntryItem} を継承し、検索器は
  * 検索対象文字列（haystack）だけを足す——結果の見せ方はファセット絞り込みと同じ器を共有する。
  */
 export interface DictionarySearchItem extends DictionaryEntryItem {

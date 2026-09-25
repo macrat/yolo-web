@@ -7,13 +7,13 @@ const items: ShinagakiItem[] = [
     name: "文字数カウント",
     href: "/tools/char-count",
     note: "貼り付けた文章の文字数をすぐ数えます。",
-    tags: ["3分", "コピーできます"],
+    facts: ["3分", "コピーできます"],
   },
   {
     name: "今日の運勢",
     href: "/play/fortune",
     note: "今日のあなたの運勢を占います。",
-    tags: ["診断"],
+    facts: ["診断"],
     meta: "2026-07-12",
   },
 ];
@@ -27,15 +27,15 @@ describe("Shinagaki", () => {
     expect(link2).toHaveAttribute("href", "/play/fortune");
   });
 
-  test("主リンクのアクセシブル名は品名のみ（note/種別/メタが連結されない・stretched-link 回帰テスト）", () => {
+  test("主リンクのアクセシブル名は品名のみ（note/補助情報/メタが連結されない・stretched-link 回帰テスト）", () => {
     // stretched-link（.name::after で行全体を標的化）方式では DOM が不変のため、
     // リンクのアクセシブル名は品名だけに保たれる。行全体を <a> で包む方式なら
-    // アクセシブル名が「品名＋ひとこと＋種別＋メタ」の連結になり、この取得は失敗する。
+    // アクセシブル名が「品名＋ひとこと＋補助情報＋メタ」の連結になり、この取得は失敗する。
     render(<Shinagaki items={items} />);
-    // note・tags・meta を持つ項目でも、品名だけで一意にリンクが取れる
+    // note・facts・meta を持つ項目でも、品名だけで一意にリンクが取れる
     const link = screen.getByRole("link", { name: "今日の運勢" });
     expect(link).toHaveAttribute("href", "/play/fortune");
-    // アクセシブル名に note/種別/メタの文字列が混入していない
+    // アクセシブル名に note/補助情報/メタの文字列が混入していない
     const accessibleName = link.textContent ?? "";
     expect(accessibleName).toBe("今日の運勢");
     expect(accessibleName).not.toContain("占います");
@@ -50,10 +50,14 @@ describe("Shinagaki", () => {
     ).toBeInTheDocument();
   });
 
-  test("種別は枠を持たない文字として出て、複数の語は「・」でつながる", () => {
+  test("補助情報は枠を持たない文字として出て、複数の値は字で区切らず別々の要素に分かれる", () => {
     render(<Shinagaki items={items} />);
-    expect(screen.getByText("3分・コピーできます").tagName).toBe("P");
-    expect(screen.getByText("診断").tagName).toBe("P");
+    const first = screen.getByText("3分");
+    const second = screen.getByText("コピーできます");
+    expect(first.parentElement?.tagName).toBe("P");
+    expect(second.parentElement).toBe(first.parentElement);
+    expect(first.parentElement?.textContent).toBe("3分コピーできます");
+    expect(screen.getByText("診断").parentElement?.tagName).toBe("P");
   });
 
   test("右端メタが表示される", () => {
@@ -87,12 +91,12 @@ describe("Shinagaki", () => {
     expect(item.querySelector("p")).toBeNull();
   });
 
-  test("tags が無い項目・空の語だけの項目は種別の行を出さない", () => {
+  test("facts が無い項目・空の値だけの項目は補助情報の行を出さない", () => {
     render(
       <Shinagaki
         items={[
           { name: "素の項目", href: "/x" },
-          { name: "空の種別", href: "/y", tags: ["", "  "] },
+          { name: "空の補助情報", href: "/y", facts: ["", "  "] },
         ]}
       />,
     );

@@ -9,7 +9,9 @@ export interface RadioGroupOption {
   value: string;
 }
 
-interface RadioGroupBaseProps {
+interface RadioGroupProps {
+  /** 組の名前。選択肢の上に見出しとして見せ、読み上げでも組の名前になる。 */
+  legend: ReactNode;
   options: RadioGroupOption[];
   /** 選ばれている選択肢の値。 */
   value: string;
@@ -19,16 +21,6 @@ interface RadioGroupBaseProps {
 }
 
 /**
- * 組の名前は、見出しとして見せる（legend）か、周りの文で分かるときだけ読み上げ用に持たせる（aria-label）。
- * どちらか一方を必ず持つ。
- */
-type RadioGroupProps = RadioGroupBaseProps &
-  (
-    | { legend: ReactNode; "aria-label"?: never }
-    | { legend?: never; "aria-label": string }
-  );
-
-/**
  * ラジオボタンの組（DESIGN.md §5・§6）。`<fieldset>` の中に同じ `name` の Radio を並べる。
  *
  * 選択肢は押せる範囲を接して横に並べ、幅が足りなければ折り返す。本物の `<input type="radio">` なので、
@@ -36,7 +28,7 @@ type RadioGroupProps = RadioGroupBaseProps &
  *
  * @example
  * <RadioGroup
- *   legend="変換モード"
+ *   legend="変換の向き"
  *   options={[
  *     { label: "エンコード", value: "encode" },
  *     { label: "デコード", value: "decode" },
@@ -47,7 +39,6 @@ type RadioGroupProps = RadioGroupBaseProps &
  */
 export default function RadioGroup({
   legend,
-  "aria-label": ariaLabel,
   options,
   value,
   onChange,
@@ -59,15 +50,12 @@ export default function RadioGroup({
     <fieldset
       // fieldset の既定の役割は group なので、ラジオボタンの組であることを読み上げに伝える。
       role="radiogroup"
-      aria-label={ariaLabel}
-      aria-labelledby={legend === undefined ? undefined : legendId}
+      aria-labelledby={legendId}
       className={[styles.group, className].filter(Boolean).join(" ")}
     >
-      {legend !== undefined && (
-        <legend id={legendId} className={styles.legend}>
-          {legend}
-        </legend>
-      )}
+      <legend id={legendId} className={styles.legend}>
+        {legend}
+      </legend>
       <div className={styles.options}>
         {options.map((option) => (
           <Radio
