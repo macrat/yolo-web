@@ -389,9 +389,11 @@ describe("ImageBase64Tile", () => {
       fireEvent.change(fileInput, { target: { files: [bigFile] } });
     });
 
-    expect(
-      screen.getByText("ファイルサイズが10MBを超えています"),
-    ).toBeInTheDocument();
+    const message =
+      "ファイルが10MBを超えています。10MB以下のファイルを選んでください";
+    expect(screen.getByText(message)).toBeInTheDocument();
+    expect(fileInput).toHaveAttribute("aria-invalid", "true");
+    expect(fileInput).toHaveAccessibleDescription(new RegExp(message));
   });
 
   it("エラー: 非画像ファイルでエラーが表示される", async () => {
@@ -407,8 +409,9 @@ describe("ImageBase64Tile", () => {
     });
 
     expect(
-      screen.getByText("画像ファイルを選択してください"),
+      screen.getByText("画像ファイルを選んでください（PNG・JPEG・GIF・WebP）"),
     ).toBeInTheDocument();
+    expect(fileInput).toHaveAttribute("aria-invalid", "true");
   });
 
   it("エラー: FileReader onerror 発火でエラーが表示される", async () => {
@@ -430,7 +433,9 @@ describe("ImageBase64Tile", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText("ファイルの読み込みに失敗しました"),
+        screen.getByText(
+          "ファイルを読み込めませんでした。もう一度選び直してください",
+        ),
       ).toBeInTheDocument();
     });
   });

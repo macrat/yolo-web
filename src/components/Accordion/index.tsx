@@ -46,7 +46,7 @@ export default function Accordion({
           aria-hidden="true"
           focusable="false"
         >
-          <path d="M6 3.5 16 10 6 16.5Z" />
+          <path d="M1.5 3.5 11.5 10 1.5 16.5Z" />
         </svg>
         <span className={styles.label}>{summary}</span>
       </summary>

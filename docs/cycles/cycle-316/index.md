@@ -194,6 +194,7 @@ cycle-315 で `docs/site-concept.md` と `DESIGN.md` を作り直した。**来�
 | `DESIGN.md` の左端の規則（単独）4巡目            | major 4・minor 5（[review-design-left-edge-4.md](./review-design-left-edge-4.md)） | 規則を短い原則にまとめ、撮り比べの記述を実測に合わせた。箇条書きや表の中のリンクの組み方は実装のレビューで撮って決める                                                                                                                          | 改善指示   |
 | `DESIGN.md` の左端の規則（単独）5巡目            | major 2・minor 7（[review-design-left-edge-5.md](./review-design-left-edge-5.md)） | ラジオボタン・チェックボックス・アコーディオンを縁の見えないものに移し、本文の中のリンクを押せる範囲から除いた。規則の確かめは、規則を部品に掛ける実装のレビューで合わせて行う（規則の文面だけの単独レビューを5巡重ね、指摘が細部へ移ったため） | 改善指示   |
 | T2 コントロールの土台 4巡目（7590adc）           | major 0・minor 8（[review-t2-controls-4.md](./review-t2-controls-4.md)）           | 間隔と本文の中のリンクの範囲を `DESIGN.md` に決め、minor を直す                                                                                                                                                                                 | 改善指示   |
+| T2 入力と状態を変えるコントロール（c233f78）     | major 1・minor 8（[review-t2-inputs.md](./review-t2-inputs.md)）                   | 直した。確かめは T2-3 のレビューで合わせて行う                                                                                                                                                                                                  | 改善指示   |
 
 ## キャリーオーバー
 

@@ -139,7 +139,7 @@ export default function ImageBase64Tile({
     setBase64Result(null);
     setEncodeSummary("");
     if (!file.type.startsWith("image/")) {
-      setEncodeError("画像ファイルを選択してください");
+      setEncodeError("画像ファイルを選んでください（PNG・JPEG・GIF・WebP）");
       return;
     }
     // 世代カウントを進める（連続ドロップ・アンマウント対策）
@@ -154,9 +154,11 @@ export default function ImageBase64Tile({
           `Base64に変換しました。元サイズ ${formatFileSize(result.originalSize)}、Base64サイズ ${formatFileSize(result.base64Size)}、MIMEタイプ ${result.mimeType}`,
         );
       }
-    } catch (e) {
+    } catch {
       if (currentGeneration === generationRef.current) {
-        setEncodeError(e instanceof Error ? e.message : "エラーが発生しました");
+        setEncodeError(
+          "ファイルを読み込めませんでした。もう一度選び直してください",
+        );
       }
     }
   }, []);
@@ -231,8 +233,7 @@ export default function ImageBase64Tile({
       {/* エンコードモード */}
       {mode === "encode" && (
         <div className={styles.encodePanel}>
-          {/* FileDropZone でファイルのドラッグ&ドロップ
-           *  maxSizeBytes: 10MB 上限 / onError で日本語エラーメッセージを受け取る */}
+          {/* ファイルの問題は、選ぶ欄の直下に欄の説明として出す（§8） */}
           <FileDropZone
             label="画像ファイル"
             onFileSelect={handleFileSelect}
@@ -240,10 +241,8 @@ export default function ImageBase64Tile({
             maxSizeBytes={MAX_FILE_SIZE}
             accept="image/*"
             description="PNG, JPEG, GIF, WebP 対応（最大10MB）"
+            error={encodeError || undefined}
           />
-
-          {/* エラー表示 */}
-          {encodeError && <ErrorMessage message={encodeError} />}
 
           {/* 結果表示エリア（ファイル選択後） */}
           {base64Result && (

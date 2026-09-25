@@ -124,6 +124,7 @@ export default function ImageResizerTile({
   const [outputFormat, setOutputFormat] = useState("image/png");
   const [quality, setQuality] = useState(80);
   const [result, setResult] = useState<ResizedResult | null>(null);
+  const [fileError, setFileError] = useState("");
   const [error, setError] = useState("");
   const [gifWarning, setGifWarning] = useState(false);
   const [resultSummary, setResultSummary] = useState("");
@@ -131,6 +132,7 @@ export default function ImageResizerTile({
   // ---------- ファイル選択ハンドラ ----------
   const handleFile = useCallback((file: File) => {
     // 状態をリセット
+    setFileError("");
     setError("");
     setResult(null);
     setGifWarning(false);
@@ -140,12 +142,14 @@ export default function ImageResizerTile({
 
     // ファイルサイズ上限チェック（FileDropZone が呼ぶ前に弾くが念のため）
     if (file.size > MAX_FILE_SIZE) {
-      setError("ファイルサイズが20MBを超えています");
+      setFileError(
+        "ファイルが20MBを超えています。20MB以下のファイルを選んでください",
+      );
       return;
     }
 
     if (!file.type.startsWith("image/")) {
-      setError("画像ファイルを選択してください");
+      setFileError("画像ファイルを選んでください（PNG・JPEG・GIF・WebP）");
       return;
     }
 
@@ -187,20 +191,25 @@ export default function ImageResizerTile({
       img.onerror = () => {
         if (!isMounted.current) return;
         if (currentProcessId !== processIdRef.current) return;
-        setError("画像の読み込みに失敗しました");
+        setFileError(
+          "画像を読み込めませんでした。壊れていない画像ファイルを選び直してください",
+        );
       };
       img.src = dataUrl;
     };
     reader.onerror = () => {
       if (!isMounted.current) return;
       if (currentProcessId !== processIdRef.current) return;
-      setError("ファイルの読み込みに失敗しました");
+      setFileError(
+        "ファイルを読み込めませんでした。もう一度選び直してください",
+      );
     };
     reader.readAsDataURL(file);
   }, []);
 
   const handleFileError = useCallback((message: string) => {
-    setError(message);
+    setFileError(message);
+    setError("");
     setResult(null);
     setGifWarning(false);
   }, []);
@@ -381,6 +390,7 @@ export default function ImageResizerTile({
           maxSizeBytes={MAX_FILE_SIZE}
           accept="image/*"
           description="PNG, JPEG, GIF, WebP対応 (最大20MB)"
+          error={fileError || undefined}
         />
 
         {/* エラー表示 */}

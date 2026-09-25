@@ -26,4 +26,18 @@ describe("Radio", () => {
       "inline",
     );
   });
+
+  it("無効の理由を入力の説明として読ませる", () => {
+    render(
+      <Radio
+        name="order"
+        label="古い順"
+        disabled
+        disabledReason="記事が2件以上あると選べます"
+      />,
+    );
+    expect(
+      screen.getByRole("radio", { name: "古い順" }),
+    ).toHaveAccessibleDescription("記事が2件以上あると選べます");
+  });
 });

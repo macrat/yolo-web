@@ -1,14 +1,10 @@
-/*
- * SeriesNav — シリーズナビゲーション。
- * 本文をパネルで包まないので、区画としての罫囲みをこのコンポーネント自身が持つ
- * （--paper-2 の地と --rule の一本罫。カード装飾・影・角丸は使わない）。
- * 全トークン経由・直書きなし。
- */
+/* 連載の案内。記事の本文と分けて読ませるため、ボックスに入れる（§5）。太い線で囲み、コンテナと同じ
+ * 内側の余白を持つ。 */
 .seriesNav {
   margin-bottom: var(--space-24);
-  border: 1px solid var(--rule);
-  background: var(--paper-2);
-  padding: var(--space-16) var(--space-24);
+  border: var(--rule-w) solid var(--rule);
+  background: var(--paper);
+  padding: var(--box-padding);
 }
 
 /* 開閉の行のラベル。シリーズ名を太字にし、位置を補助情報の大きさで添える。 */
@@ -76,7 +72,7 @@
   gap: var(--space-16);
   margin-top: var(--space-16);
   padding-top: var(--space-16);
-  border-top: 1px solid var(--rule);
+  border-top: var(--rule-w-hair) solid var(--rule-2);
 }
 
 /* 前の記事のみ: 左寄せ */
@@ -86,7 +82,7 @@
   gap: var(--space-16);
   margin-top: var(--space-16);
   padding-top: var(--space-16);
-  border-top: 1px solid var(--rule);
+  border-top: var(--rule-w-hair) solid var(--rule-2);
 }
 
 /* 次の記事のみ: 右寄せ */
@@ -96,7 +92,7 @@
   gap: var(--space-16);
   margin-top: var(--space-16);
   padding-top: var(--space-16);
-  border-top: 1px solid var(--rule);
+  border-top: var(--rule-w-hair) solid var(--rule-2);
 }
 
 .prevLink,

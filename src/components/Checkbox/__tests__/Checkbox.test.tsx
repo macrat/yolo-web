@@ -29,4 +29,27 @@ describe("Checkbox", () => {
     rerender(<Checkbox label="通知" checked={false} disabled readOnly />);
     expect(screen.getByRole("checkbox")).toBeDisabled();
   });
+
+  it("無効のあいだだけ理由を行の外に出し、入力の説明として読ませる", () => {
+    const { rerender } = render(
+      <Checkbox
+        label="通知"
+        disabled
+        disabledReason="ログインすると選べます"
+      />,
+    );
+    const checkbox = screen.getByRole("checkbox", { name: "通知" });
+    expect(checkbox).toHaveAccessibleDescription("ログインすると選べます");
+    expect(
+      screen.getByText("ログインすると選べます").closest("label"),
+    ).toBeNull();
+    rerender(<Checkbox label="通知" disabledReason="ログインすると選べます" />);
+    expect(
+      screen.queryByText("ログインすると選べます"),
+    ).not.toBeInTheDocument();
+    expect(screen.getByRole("checkbox")).not.toHaveAttribute(
+      "aria-describedby",
+    );
+    expect(screen.getByRole("checkbox")).toBe(checkbox);
+  });
 });

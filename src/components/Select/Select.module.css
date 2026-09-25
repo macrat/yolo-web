@@ -49,8 +49,9 @@
     box-shadow: none;
   }
 
-  /* 候補は選ぶ欄の一部なので、hover では見え方を変えない。キーボードで移った候補には、globals.css が
-   * 押せる範囲に密着した二重リングを出す。 */
+  /* 候補は押すと欄の値を変えるので、hover では押せる範囲の内側に細い線を出す（§6）。キーボードで移った
+   * 候補には、globals.css が押せる範囲に密着した二重リングを出す。マウスを載せた候補とリングの出ている
+   * 候補が別のとき、Enter で選ばれるのはリングの出ている候補だと、線の太さで見分けられる。 */
   .select option {
     min-height: 44px;
     padding: var(--space-8);
@@ -62,5 +63,9 @@
   .select option:is(:hover, :focus, :checked) {
     background: transparent;
     color: var(--ink);
+  }
+
+  .select option:hover:not(:focus-visible) {
+    box-shadow: var(--hover-line);
   }
 }

@@ -104,7 +104,7 @@ describe("V-2: 置換ロジック", () => {
     expect(screen.getByLabelText("置換結果")).toHaveValue("fooNUMbarNUM");
   });
 
-  it("大文字小文字区別トグルOFFで大文字小文字を無視して置換する", () => {
+  it("大文字小文字を区別するチェックを外すと、大文字小文字を無視して置換する", () => {
     render(<TextReplaceTile variant="full" />);
     fireEvent.change(screen.getByLabelText("入力テキスト"), {
       target: { value: "Hello HELLO hello" },
@@ -124,7 +124,7 @@ describe("V-2: 置換ロジック", () => {
     expect(screen.getByLabelText("置換結果")).toHaveValue("hi hi hi");
   });
 
-  it("すべて置換トグルOFFで最初の1件だけ置換する", () => {
+  it("すべて置換のチェックを外すと、最初の1件だけ置換する", () => {
     render(<TextReplaceTile variant="full" />);
     fireEvent.change(screen.getByLabelText("入力テキスト"), {
       target: { value: "foo bar foo" },

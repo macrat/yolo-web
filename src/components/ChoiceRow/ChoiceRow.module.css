@@ -74,3 +74,16 @@
 .input:disabled + .mark::after {
   background: var(--ink-2);
 }
+
+/* 無効の理由は、行の横に本文の大きさで添える。幅が足りなければ下に回り、形と同じ左端から始まる。 */
+.withReason {
+  display: inline-flex;
+  max-width: 100%;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: var(--space-8);
+}
+
+.reason {
+  color: var(--ink-2);
+}

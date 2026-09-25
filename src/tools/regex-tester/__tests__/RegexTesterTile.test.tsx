@@ -490,20 +490,27 @@ describe("T-11: CSS トークン検証", () => {
     expect(css).not.toMatch(/font-weight:\s*700/);
   });
 
-  it("patternRow:focus-within に outline: 2px solid var(--accent) が存在する", () => {
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).toMatch(/\.patternRow:focus-within/);
-    expect(css).toMatch(/outline:\s*2px\s+solid\s+var\(--accent\)/);
+  it("パターンの欄は、入力を包む行が共通の入力欄の形（data-field）を持つ", () => {
+    render(<RegexTesterTile />);
+    const input = screen.getByRole("textbox", { name: "正規表現パターン" });
+    expect(input.closest("[data-field]")).not.toBeNull();
+    expect(input).not.toHaveAttribute("data-field");
   });
 
-  it("patternInput に min-height: 2.25rem 以上が設定されている", () => {
+  it("入力が受けたフォーカスを、枠を持つ行に二重リングで出す", () => {
+    const css = readFileSync(cssPath, "utf-8");
+    const ringSection =
+      css.match(
+        /\.patternRow:has\(\.patternInput:focus-visible\)\s*\{[^}]+\}/,
+      )?.[0] ?? "";
+    expect(ringSection).toMatch(/outline:\s*var\(--focus-ring\)/);
+  });
+
+  it("patternInput は文字の大きさを持たず、入力欄の既定（16px 以上）に従う", () => {
     const css = readFileSync(cssPath, "utf-8");
     const patternInputSection =
       css.match(/\.patternInput\s*\{[^}]+\}/)?.[0] ?? "";
-    expect(patternInputSection).not.toMatch(/min-height:\s*2rem\b/);
-    expect(patternInputSection).toMatch(
-      /min-height:\s*(2\.[2-9]\d*rem|3rem|44px)/,
-    );
+    expect(patternInputSection).not.toMatch(/font-size/);
   });
 
   it(".replaceInput 独自セクションが存在しない（Input 共通部品に委譲）", () => {

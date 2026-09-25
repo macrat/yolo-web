@@ -219,7 +219,7 @@
 }
 
 /* ラジオボタン・チェックボックスの組。縦に積むときは押せる範囲どうしを接し、横に並べるときは間隔を
- * 押せる範囲の余白と同じ 8px にして接する（§5）。 */
+ * 押せる範囲の余白と同じ幅にして接する（§5）。 */
 .choiceGroup,
 .choiceGroupInline {
   border: none;
@@ -235,7 +235,7 @@
 .choiceGroupInline {
   display: flex;
   flex-wrap: wrap;
-  column-gap: var(--space-8);
+  column-gap: var(--text-box-pad);
 }
 
 .choiceLegend {

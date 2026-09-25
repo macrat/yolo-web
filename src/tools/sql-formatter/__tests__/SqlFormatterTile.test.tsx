@@ -5,7 +5,7 @@
  * - V-1: variant=full でのレンダリング（全機能が表示される）
  * - V-2: 整形ボタンで出力が更新される
  * - V-3: 圧縮ボタンで出力が更新される
- * - V-4: キーワード大文字トグルスイッチ
+ * - V-4: キーワード大文字のチェックボックス
  * - V-5: インデント選択が整形に反映される
  * - V-6: ARIA（role="status" aria-live="polite"）
  * - V-7: コピーボタンの有効/無効
@@ -50,7 +50,7 @@ describe("V-1: variant=full のレンダリング", () => {
     expect(screen.getByLabelText("インデント")).toBeInTheDocument();
   });
 
-  it("キーワード大文字トグルスイッチが表示される", () => {
+  it("キーワード大文字のチェックボックスが表示される", () => {
     render(<SqlFormatterTile variant="full" />);
     expect(
       screen.getByRole("checkbox", { name: "キーワード大文字" }),
@@ -118,7 +118,7 @@ describe("V-3: 圧縮ボタンの動作", () => {
   });
 });
 
-describe("V-4: キーワード大文字トグル", () => {
+describe("V-4: キーワード大文字のチェックボックス", () => {
   it("デフォルト（ON）でキーワードが大文字になる", () => {
     render(<SqlFormatterTile variant="full" />);
     const input = screen.getByLabelText("SQL入力");
@@ -131,7 +131,7 @@ describe("V-4: キーワード大文字トグル", () => {
     expect(output.value).toContain("FROM");
   });
 
-  it("トグルをOFFにするとキーワードが小文字になる", () => {
+  it("チェックを外すとキーワードが小文字になる", () => {
     render(<SqlFormatterTile variant="full" />);
     const toggle = screen.getByRole("checkbox", { name: "キーワード大文字" });
     fireEvent.click(toggle);

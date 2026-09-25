@@ -56,14 +56,14 @@ describe("V-1: variant=full（全機能・3モード SegmentedControl 表示）"
     expect(screen.getByLabelText("変換結果")).toBeInTheDocument();
   });
 
-  it("初期モード（remove）でトグルスイッチが表示される", () => {
+  it("初期モード（remove）で連続する改行をまとめるチェックボックスが表示される", () => {
     render(<LineBreakRemoverTile variant="full" />);
     expect(
       screen.getByRole("checkbox", { name: "連続する改行を1つにまとめる" }),
     ).toBeInTheDocument();
   });
 
-  it("smart-pdf に切り替えるとトグルが非表示・行内改行オプションが表示される", () => {
+  it("smart-pdf に切り替えるとチェックボックスが非表示・行内改行オプションが表示される", () => {
     render(<LineBreakRemoverTile variant="full" />);
     fireEvent.click(screen.getByRole("radio", { name: "PDFスマートモード" }));
     expect(

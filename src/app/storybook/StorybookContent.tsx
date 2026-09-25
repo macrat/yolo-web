@@ -401,9 +401,13 @@ export default function StorybookContent({
 
           <h3 className={styles.subsectionTitle}>無効・読み取り専用</h3>
           <div className={styles.fieldStack}>
-            <Field label="無効">
+            <Field
+              label="無効"
+              disabled
+              disabledReason="「自分で決める」を選ぶと書き込めます"
+            >
               {(control) => (
-                <Input {...control} defaultValue="無効状態の入力値" disabled />
+                <Input {...control} defaultValue="無効状態の入力値" />
               )}
             </Field>
             <Field label="読み取り専用">
@@ -492,8 +496,17 @@ export default function StorybookContent({
             />
             <Checkbox label="メール配信（初期: 選択済み）" defaultChecked />
             <Checkbox label="ラベルが長く、狭い画面で2行に折り返しても、四角は1行目の字の中央に並ぶ" />
-            <Checkbox label="無効（未選択）" disabled />
-            <Checkbox label="無効（選択済み）" disabled defaultChecked />
+            <Checkbox
+              label="無効（未選択）"
+              disabled
+              disabledReason="通知を受け取ると選べます"
+            />
+            <Checkbox
+              label="無効（選択済み）"
+              disabled
+              disabledReason="この項目は外せません"
+              defaultChecked
+            />
           </fieldset>
           <p className={styles.demoStatus}>
             「通知を受け取る」: {checkboxOn ? "選択済み" : "未選択"}
@@ -518,7 +531,12 @@ export default function StorybookContent({
                 onChange={() => setRadioValue(value)}
               />
             ))}
-            <Radio name="storybook-order-disabled" label="無効" disabled />
+            <Radio
+              name="storybook-order-disabled"
+              label="無効"
+              disabled
+              disabledReason="記事が2件以上あると選べます"
+            />
           </fieldset>
 
           <h3 className={styles.subsectionTitle}>横に並べる</h3>
@@ -670,12 +688,15 @@ export default function StorybookContent({
                 />
               )}
             </Field>
-            <Field label="無効">
+            <Field
+              label="無効"
+              disabled
+              disabledReason="変換の結果が出ると書き込めます"
+            >
               {(control) => (
                 <Textarea
                   {...control}
                   value="無効状態のテキストエリア"
-                  disabled
                   rows={3}
                 />
               )}
@@ -710,9 +731,9 @@ export default function StorybookContent({
                 </Select>
               )}
             </Field>
-            <Field label="無効">
+            <Field label="無効" disabled disabledReason="国を選ぶと選べます">
               {(control) => (
-                <Select {...control} disabled>
+                <Select {...control}>
                   <option value="a">選択肢 A</option>
                   <option value="b">選択肢 B</option>
                 </Select>
@@ -877,14 +898,13 @@ export default function StorybookContent({
                 <Input {...control} type="date" defaultValue="2000-01-01" />
               )}
             </Field>
-            <Field label="無効">
+            <Field
+              label="無効"
+              disabled
+              disabledReason="「日付で指定」を選ぶと選べます"
+            >
               {(control) => (
-                <Input
-                  {...control}
-                  type="date"
-                  defaultValue="2026-06-04"
-                  disabled
-                />
+                <Input {...control} type="date" defaultValue="2026-06-04" />
               )}
             </Field>
           </div>

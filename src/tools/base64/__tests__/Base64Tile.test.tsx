@@ -2,15 +2,15 @@
  * Base64Tile のユニットテスト（TDD: 実装前に書く）
  *
  * 検証観点:
- * - V-1: variant=full でのレンダリング（方向トグル表示・URL-safe トグル表示）
- * - V-2: variant=encode でのレンダリング（方向固定・方向トグル非表示・URL-safe トグル表示）
- * - V-3: variant=decode でのレンダリング（方向固定・方向トグル非表示・URL-safe トグル非表示）
+ * - V-1: variant=full でのレンダリング（方向トグル表示・URL-safe のチェックボックス表示）
+ * - V-2: variant=encode でのレンダリング（方向固定・方向トグル非表示・URL-safe のチェックボックス表示）
+ * - V-3: variant=decode でのレンダリング（方向固定・方向トグル非表示・URL-safe のチェックボックス非表示）
  * - V-4: variant=encode でエンコード変換が動く
  * - V-5: variant=decode でデコード変換が動く
  * - V-6: variant=full でエンコード→デコード切り替えが動く
  * - V-7: id インスタンス一意性（同一ページに2つ描画して id が重複しない）
  * - V-8: aria-describedby と説明文 div の関連付けが切れていない
- * - V-9: URL-safe トグルの挙動（encode 時のみ表示・round-trip）
+ * - V-9: URL-safe のチェックボックスの挙動（encode 時のみ表示・round-trip）
  * - V-10: エラー日本語化・ライブリージョン・コピー
  * - V-11: variant 未指定（デフォルト=full）
  */
@@ -25,7 +25,7 @@ describe("V-1: variant=full", () => {
     expect(screen.getByRole("radiogroup")).toBeInTheDocument();
   });
 
-  it("URL-safe トグルが初期表示される（encode 方向のため）", () => {
+  it("URL-safe のチェックボックスが初期表示される（encode 方向のため）", () => {
     render(<Base64Tile variant="full" />);
     expect(screen.getByRole("checkbox")).toBeInTheDocument();
   });
@@ -44,7 +44,7 @@ describe("V-2: variant=encode（方向固定・方向トグル非表示・URL-sa
     expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();
   });
 
-  it("URL-safe トグルが表示される（encode のため）", () => {
+  it("URL-safe のチェックボックスが表示される（encode のため）", () => {
     render(<Base64Tile variant="encode" />);
     expect(screen.getByRole("checkbox")).toBeInTheDocument();
   });
@@ -63,7 +63,7 @@ describe("V-3: variant=decode（方向固定・方向トグル非表示・URL-sa
     expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();
   });
 
-  it("URL-safe トグルが表示されない", () => {
+  it("URL-safe のチェックボックスが表示されない", () => {
     render(<Base64Tile variant="decode" />);
     expect(screen.queryByRole("checkbox")).not.toBeInTheDocument();
   });
@@ -132,14 +132,14 @@ describe("V-6: variant=full でのトグル切り替え", () => {
     expect(output.value).toBe("Hello, World!");
   });
 
-  it("デコードに切り替えるとURL-safeトグルが非表示になる", () => {
+  it("デコードに切り替えるとURL-safe のチェックボックスが非表示になる", () => {
     render(<Base64Tile variant="full" />);
     expect(screen.getByRole("checkbox")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("radio", { name: "デコード" }));
     expect(screen.queryByRole("checkbox")).not.toBeInTheDocument();
   });
 
-  it("エンコードに戻るとURL-safeトグルが再表示される", () => {
+  it("エンコードに戻るとURL-safe のチェックボックスが再表示される", () => {
     render(<Base64Tile variant="full" />);
     fireEvent.click(screen.getByRole("radio", { name: "デコード" }));
     expect(screen.queryByRole("checkbox")).not.toBeInTheDocument();
@@ -214,8 +214,8 @@ describe("V-8: aria-describedby と説明文 div の関連付け", () => {
   });
 });
 
-// --- V-9: URL-safe トグルの挙動 ---
-describe("V-9: URL-safe トグルの挙動", () => {
+// --- V-9: URL-safe のチェックボックスの挙動 ---
+describe("V-9: URL-safe のチェックボックスの挙動", () => {
   it("URL-safe ON で '+' '/' を含む Base64 が '-' '_' に変換される", () => {
     render(<Base64Tile variant="encode" />);
     const toggle = screen.getByRole("checkbox");

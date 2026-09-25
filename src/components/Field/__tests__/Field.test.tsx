@@ -69,4 +69,33 @@ describe("Field", () => {
     const select = screen.getByRole("combobox", { name: "言語" });
     expect(select).toHaveAttribute("aria-invalid", "true");
   });
+
+  it("無効のとき欄に disabled を渡し、理由を欄の直下に置いて欄の説明にする", () => {
+    render(
+      <Field
+        label="枚数"
+        disabled
+        disabledReason="「自分で決める」を選ぶと書き込めます"
+      >
+        {(c) => <Input {...c} />}
+      </Field>,
+    );
+    const input = screen.getByRole("textbox", { name: "枚数" });
+    expect(input).toBeDisabled();
+    expect(input).toHaveAccessibleDescription(
+      "「自分で決める」を選ぶと書き込めます",
+    );
+  });
+
+  it("無効でないときは理由を出さない", () => {
+    render(
+      <Field label="枚数" disabledReason="「自分で決める」を選ぶと書き込めます">
+        {(c) => <Input {...c} />}
+      </Field>,
+    );
+    expect(screen.getByRole("textbox")).toBeEnabled();
+    expect(
+      screen.queryByText("「自分で決める」を選ぶと書き込めます"),
+    ).not.toBeInTheDocument();
+  });
 });

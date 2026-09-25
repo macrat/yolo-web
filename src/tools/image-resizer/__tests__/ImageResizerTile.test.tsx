@@ -413,8 +413,11 @@ describe("ImageResizerTile", () => {
       fireEvent.change(fileInput, { target: { files: [bigFile] } });
     });
 
-    expect(screen.getByRole("alert")).toBeInTheDocument();
-    expect(screen.getByRole("alert").textContent).toMatch(/20MB/);
+    expect(screen.getByRole("alert").textContent).toBe(
+      "ファイルが20MBを超えています。20MB以下のファイルを選んでください",
+    );
+    expect(fileInput).toHaveAttribute("aria-invalid", "true");
+    expect(fileInput).toHaveAccessibleDescription(/20MB以下のファイルを選んで/);
   });
 
   it("エラー: 非画像ファイルでエラーメッセージが表示される", async () => {
@@ -429,8 +432,10 @@ describe("ImageResizerTile", () => {
       fireEvent.change(fileInput, { target: { files: [textFile] } });
     });
 
-    expect(screen.getByRole("alert")).toBeInTheDocument();
-    expect(screen.getByRole("alert").textContent).toMatch(/画像ファイル/);
+    expect(screen.getByRole("alert").textContent).toBe(
+      "画像ファイルを選んでください（PNG・JPEG・GIF・WebP）",
+    );
+    expect(fileInput).toHaveAttribute("aria-invalid", "true");
   });
 
   it("エラー: Canvas処理失敗でエラーメッセージが表示される", async () => {

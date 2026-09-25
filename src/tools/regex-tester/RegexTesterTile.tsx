@@ -200,13 +200,12 @@ export default function RegexTesterTile({
         </div>
 
         {/* === 正規表現パターン入力行（スラッシュ装飾 + フラグ表示） ===
-            patternRow コンテナの :focus-within でフォーカスリングを提供（B-2 準拠）。
-            patternInput 自体は outline:none（コンテナが代理）。 */}
+            枠とフォーカスのリングは、入力を包む行が持つ。 */}
         <div className={styles.field}>
           <label htmlFor={patternId} className={styles.label}>
             正規表現パターン
           </label>
-          <div className={styles.patternRow}>
+          <div className={styles.patternRow} data-field="">
             <span className={styles.slash} aria-hidden="true">
               /
             </span>

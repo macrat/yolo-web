@@ -30,6 +30,12 @@
   cursor: pointer;
 }
 
+/* エラーのあいだは、入力が持つ aria-invalid を見えている欄に太い線で出す（§8）。 */
+.fileInput[aria-invalid="true"] + .dropZone {
+  --field-line: var(--rule-w);
+  border-color: var(--rule);
+}
+
 /* 入力が受けたフォーカスを、見えている欄に二重リングで出す（§6）。 */
 .fileInput:focus-visible + .dropZone {
   outline: var(--focus-ring);

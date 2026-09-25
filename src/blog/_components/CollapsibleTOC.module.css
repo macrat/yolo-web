@@ -4,15 +4,16 @@
  * Grid 列幅が `1fr auto` に切り替わり TOC が縮んで本文が広がる。
  */
 
+/* 目次はボックスに入れる（§5）。太い線で囲み、コンテナと同じ内側の余白を持つ。 */
 .tocDetails {
-  border: 1px solid var(--rule);
-  padding: var(--space-16) var(--space-24);
-  background: var(--paper-2);
+  border: var(--rule-w) solid var(--rule);
+  padding: var(--box-padding);
+  background: var(--paper);
 }
 
 /*
  * 見出しの多い記事でも目次が画面の高さを超えないよう、中で縦に送る。
- * 8rem は、sticky の上のあき 1rem・枠の上下の余白 2rem・開閉の行 44px と、そのあまり。
+ * 8rem は、sticky の上のあき 1rem・ボックスの上下の線と余白・開閉の行 44px と、そのあまり。
  */
 .tocBody {
   max-height: calc(100vh - 8rem);

@@ -175,4 +175,44 @@ describe("FileDropZone", () => {
     );
     expect(screen.getByText("PNG, JPEG 対応 (最大10MB)")).toBeInTheDocument();
   });
+
+  it("エラーのあいだ、入力を aria-invalid にし、欄の直下の理由の文を入力の説明にする", () => {
+    const { container, rerender } = render(
+      <FileDropZone
+        label="画像ファイル"
+        onFileSelect={onFileSelect}
+        error="画像ファイルを選んでください（PNG・JPEG など）"
+      />,
+    );
+    const input = getFileInput(container);
+    expect(input).toHaveAttribute("aria-invalid", "true");
+    expect(input).toHaveAccessibleDescription(
+      /画像ファイルを選んでください（PNG・JPEG など）/,
+    );
+    expect(container.querySelector("[data-field]")!.nextElementSibling).toBe(
+      screen.getByRole("alert"),
+    );
+    rerender(<FileDropZone label="画像ファイル" onFileSelect={onFileSelect} />);
+    expect(input).not.toHaveAttribute("aria-invalid");
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+  });
+
+  it("上限を超えたときの文は、直し方まで言う", () => {
+    const onError = vi.fn();
+    const { container } = render(
+      <FileDropZone
+        label="画像ファイル"
+        onFileSelect={onFileSelect}
+        maxSizeBytes={10 * MB}
+        onError={onError}
+      />,
+    );
+    selectFile(
+      getFileInput(container),
+      new File(["x".repeat(10 * MB + 1)], "big.png", { type: "image/png" }),
+    );
+    expect(onError).toHaveBeenCalledWith(
+      "ファイルが10MBを超えています。10MB以下のファイルを選んでください",
+    );
+  });
 });

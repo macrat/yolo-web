@@ -2,6 +2,7 @@
 
 import { useCallback, useId, useRef, useState } from "react";
 import type { DragEvent, ChangeEvent } from "react";
+import ErrorMessage from "@/components/ErrorMessage";
 import styles from "./FileDropZone.module.css";
 
 interface FileDropZoneProps {
@@ -14,7 +15,7 @@ interface FileDropZoneProps {
   /** ファイルサイズの上限（バイト）。未指定なら制限しない。 */
   maxSizeBytes?: number;
 
-  /** 選ばれたファイルが上限を超えたときに、来訪者に見せる日本語の文を渡して呼ぶ。 */
+  /** 選ばれたファイルが上限を超えたときに、何が問題でどう直すかを言う文を渡して呼ぶ。文は error に渡して欄に出す。 */
   onError?: (message: string) => void;
 
   /** input[type="file"] の accept 属性（例: "image/*"）。未指定なら制限しない。 */
@@ -22,6 +23,11 @@ interface FileDropZoneProps {
 
   /** 対応する形式や容量の目安など、欄の中に添える補助情報。 */
   description?: string;
+  /**
+   * 選んだファイルの何が問題でどう直すかを言う文。あるあいだ、欄を太い線で囲み、この文を欄の直下に
+   * 置いて入力の説明として読ませる（§8）。
+   */
+  error?: string;
 }
 
 /**
@@ -42,11 +48,20 @@ function FileDropZone({
   onError,
   accept,
   description,
+  error,
 }: FileDropZoneProps) {
   const inputId = useId();
   const labelId = `${inputId}-label`;
   const promptId = `${inputId}-prompt`;
   const descriptionId = `${inputId}-description`;
+  const errorId = `${inputId}-error`;
+  const describedBy = [
+    promptId,
+    description ? descriptionId : undefined,
+    error ? errorId : undefined,
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   const processFile = useCallback(
     (file: File) => {
@@ -54,7 +69,9 @@ function FileDropZone({
         const mbRaw = maxSizeBytes / (1024 * 1024);
         // 整数なら小数点なし、端数があれば小数1桁（10 → "10"、1.5 → "1.5"）。
         const mb = mbRaw % 1 === 0 ? mbRaw.toFixed(0) : mbRaw.toFixed(1);
-        onError?.(`ファイルサイズが${mb}MBを超えています`);
+        onError?.(
+          `ファイルが${mb}MBを超えています。${mb}MB以下のファイルを選んでください`,
+        );
         return;
       }
       onFileSelect(file);
@@ -116,9 +133,8 @@ function FileDropZone({
         onChange={handleFileInput}
         className={styles.fileInput}
         aria-labelledby={labelId}
-        aria-describedby={
-          description ? `${promptId} ${descriptionId}` : promptId
-        }
+        aria-describedby={describedBy}
+        aria-invalid={error ? true : undefined}
       />
       <label
         htmlFor={inputId}
@@ -140,6 +156,7 @@ function FileDropZone({
           </span>
         )}
       </label>
+      {error && <ErrorMessage id={errorId} message={error} />}
     </div>
   );
 }

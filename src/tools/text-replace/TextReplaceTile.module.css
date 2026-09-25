@@ -36,12 +36,11 @@
   }
 }
 
-/* オプション（チェックボックス）の横並び。間隔を押せる範囲の余白と同じ 8px にして、押せる範囲どうしを
- * 接する（§5）。 */
+/* オプション（チェックボックス）の横並び。間隔を押せる範囲の余白と同じ幅にして、押せる範囲どうしを接する（§5）。 */
 .optionsRow {
   display: flex;
   flex-wrap: wrap;
-  column-gap: var(--space-8);
+  column-gap: var(--text-box-pad);
   align-items: center;
   margin-bottom: 1rem;
 }

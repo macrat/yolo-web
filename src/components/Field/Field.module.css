@@ -18,3 +18,10 @@
 .field > :not(.label) {
   align-self: stretch;
 }
+
+/* 無効の理由は、無効の字と同じ --ink-2 で、本文の大きさで添える（§6）。 */
+.reason {
+  color: var(--ink-2);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+}
