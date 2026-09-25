@@ -97,10 +97,11 @@ export default function ShareButtons({
     }
   }, [title, getFullUrl, track]);
 
+  /** ariaLabel は見える文言で始め、声で操作する来訪者が見えている文言で押せるようにする。 */
   interface ShareAction {
     key: SnsType;
     label: string;
-    ariaLabel: string;
+    ariaLabel?: string;
     onClick: () => void | Promise<void>;
   }
 
@@ -108,25 +109,25 @@ export default function ShareButtons({
     {
       key: "x",
       label: "X でシェア",
-      ariaLabel: "X で共有（外部サイト・新しいタブで開く）",
+      ariaLabel: "X でシェア（外部サイト・新しいタブで開く）",
       onClick: handleShareX,
     },
     {
       key: "line",
       label: "LINE でシェア",
-      ariaLabel: "LINE で共有（外部サイト・新しいタブで開く）",
+      ariaLabel: "LINE でシェア（外部サイト・新しいタブで開く）",
       onClick: handleShareLine,
     },
     {
       key: "hatena",
       label: "はてブに追加",
-      ariaLabel: "はてなブックマークに追加（外部サイト・新しいタブで開く）",
+      ariaLabel:
+        "はてブに追加（はてなブックマーク・外部サイト・新しいタブで開く）",
       onClick: handleShareHatena,
     },
     {
       key: "copy",
       label: "URLをコピー",
-      ariaLabel: "URLをコピー",
       onClick: handleCopy,
     },
   ];

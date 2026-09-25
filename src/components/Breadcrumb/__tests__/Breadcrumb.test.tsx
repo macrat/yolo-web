@@ -58,15 +58,19 @@ describe("Breadcrumb", () => {
     expect(list.tagName).toBe("OL");
   });
 
-  test("separator が JSX で明示的に各 li に配置されている（CSS ::before ではなく inline 方式）", () => {
+  // 折り返しは li のあいだでだけ起きるので、区切りを前の項目の後ろに置くと、行の頭が必ず項目の名前になる
+  test("区切りは、いまのページより前の各 li の末尾にある", () => {
     const { container } = render(<Breadcrumb items={items} />);
-    // separator は JSX <span aria-hidden="true"> で生成し、current span と同じ li 内にある
-    // これにより SP で折返し時に「/」が単独行に落ちる問題を防ぐ
     const listItems = container.querySelectorAll("li");
-    // 2 番目・3 番目 li にそれぞれ aria-hidden="true" の separator span が含まれる
-    expect(listItems[0].querySelector("[aria-hidden='true']")).toBeNull();
-    expect(listItems[1].querySelector("[aria-hidden='true']")).not.toBeNull();
-    expect(listItems[2].querySelector("[aria-hidden='true']")).not.toBeNull();
+    expect(listItems[0].lastElementChild).toHaveAttribute(
+      "aria-hidden",
+      "true",
+    );
+    expect(listItems[1].lastElementChild).toHaveAttribute(
+      "aria-hidden",
+      "true",
+    );
+    expect(listItems[2].querySelector("[aria-hidden='true']")).toBeNull();
   });
 
   test("separator の textContent が '/' であること", () => {

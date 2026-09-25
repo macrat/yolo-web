@@ -116,6 +116,19 @@ describe("Pagination", () => {
         expect(text).not.toMatch(/^\d+ \/ \d+$/);
       }
     });
+
+    // role を持たない span の aria-label は読まれないので、読ませる文を文字で持つ
+    test("「n / N」は aria-label を持たず、文字で「ページ n / N」と読ませる", () => {
+      const { container } = render(
+        <Pagination currentPage={3} totalPages={10} basePath="/blog" />,
+      );
+      const indicator = Array.from(
+        container.querySelectorAll("nav > span"),
+      ).find((el) => /\d+ \/ \d+$/.test(el.textContent ?? ""));
+      expect(indicator).toBeDefined();
+      expect(indicator).not.toHaveAttribute("aria-label");
+      expect(indicator).toHaveTextContent("ページ 3 / 10");
+    });
   });
 
   describe("button モード", () => {

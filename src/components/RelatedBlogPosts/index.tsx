@@ -23,15 +23,14 @@ export default function RelatedBlogPosts({ toolSlug }: RelatedBlogPostsProps) {
   return (
     <section className={styles.section} aria-label="関連ブログ記事">
       <h2 className={styles.title}>関連ブログ記事</h2>
-      <ul
-        className={styles.list}
-        /* 行は隙間なく並ぶので、フォーカスの輪は行の内側に、hover の線は行の左右に出す（§6）。 */
-        data-focus-ring="inset"
-        data-hover-line="sides"
-      >
+      <ul className={styles.list} data-text-box="rows">
         {posts.map((post) => (
           <li key={post.slug} className={styles.item}>
-            <Link href={`/blog/${post.slug}`} className={styles.link}>
+            <Link
+              href={`/blog/${post.slug}`}
+              className={styles.link}
+              data-hit-area="after"
+            >
               <span className={styles.postTitle}>{post.title}</span>
               <time className={styles.date} dateTime={post.published_at}>
                 {formatDate(post.published_at)}

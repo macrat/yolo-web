@@ -31,13 +31,13 @@ describe("ShareButtons", () => {
     test("デフォルトでは X / LINE / はてブ / コピー の 4 ボタンが表示される", () => {
       render(<ShareButtons url="/blog/test" title="テスト記事" />);
       expect(
-        screen.getByRole("button", { name: /X で共有/ }),
+        screen.getByRole("button", { name: /^X でシェア/ }),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole("button", { name: /LINE で共有/ }),
+        screen.getByRole("button", { name: /^LINE でシェア/ }),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole("button", { name: /はてなブックマークに追加/ }),
+        screen.getByRole("button", { name: /^はてブに追加/ }),
       ).toBeInTheDocument();
       expect(
         screen.getByRole("button", { name: /URLをコピー/ }),
@@ -47,13 +47,13 @@ describe("ShareButtons", () => {
     test("sns prop で表示するボタンを絞り込める", () => {
       render(<ShareButtons url="/blog/test" title="テスト記事" sns={["x"]} />);
       expect(
-        screen.getByRole("button", { name: /X で共有/ }),
+        screen.getByRole("button", { name: /^X でシェア/ }),
       ).toBeInTheDocument();
       expect(
-        screen.queryByRole("button", { name: /LINE で共有/ }),
+        screen.queryByRole("button", { name: /^LINE でシェア/ }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole("button", { name: /はてなブックマークに追加/ }),
+        screen.queryByRole("button", { name: /^はてブに追加/ }),
       ).not.toBeInTheDocument();
       expect(
         screen.queryByRole("button", { name: /URLをコピー/ }),
@@ -70,7 +70,7 @@ describe("ShareButtons", () => {
     test("X ボタンをクリックすると新規タブで Twitter 共有 URL を開く", () => {
       mockWindowOpen.mockReturnValue(null);
       render(<ShareButtons url="/blog/test" title="テスト記事" />);
-      fireEvent.click(screen.getByRole("button", { name: /X で共有/ }));
+      fireEvent.click(screen.getByRole("button", { name: /^X でシェア/ }));
       expect(mockWindowOpen).toHaveBeenCalledTimes(1);
       const [url, target] = mockWindowOpen.mock.calls[0];
       expect(url).toContain("twitter.com/intent/tweet");
@@ -86,7 +86,7 @@ describe("ShareButtons", () => {
     test("LINE ボタンをクリックすると新規タブで LINE 共有 URL を開く", () => {
       mockWindowOpen.mockReturnValue(null);
       render(<ShareButtons url="/blog/test" title="テスト記事" />);
-      fireEvent.click(screen.getByRole("button", { name: /LINE で共有/ }));
+      fireEvent.click(screen.getByRole("button", { name: /^LINE でシェア/ }));
       expect(mockWindowOpen).toHaveBeenCalledTimes(1);
       const [url, target] = mockWindowOpen.mock.calls[0];
       expect(url).toContain("line.me/R/share");
@@ -98,9 +98,7 @@ describe("ShareButtons", () => {
     test("はてブボタンをクリックすると新規タブではてな URL を開く", () => {
       mockWindowOpen.mockReturnValue(null);
       render(<ShareButtons url="/blog/test" title="テスト記事" />);
-      fireEvent.click(
-        screen.getByRole("button", { name: /はてなブックマークに追加/ }),
-      );
+      fireEvent.click(screen.getByRole("button", { name: /^はてブに追加/ }));
       expect(mockWindowOpen).toHaveBeenCalledTimes(1);
       const [url, target] = mockWindowOpen.mock.calls[0];
       expect(url).toContain("b.hatena.ne.jp");
@@ -132,11 +130,12 @@ describe("ShareButtons", () => {
   });
 
   describe("アクセシビリティ", () => {
-    test("各ボタンに aria-label が存在する", () => {
+    // 声で操作する来訪者が、見えている文言で押せる（WCAG 2.5.3）
+    test("どのボタンも、読み上げ名が見える文言で始まる", () => {
       render(<ShareButtons url="/blog/test" title="テスト記事" />);
-      const buttons = screen.getAllByRole("button");
-      for (const btn of buttons) {
-        expect(btn).toHaveAttribute("aria-label");
+      for (const btn of screen.getAllByRole("button")) {
+        const name = btn.getAttribute("aria-label") ?? btn.textContent ?? "";
+        expect(name.startsWith(btn.textContent ?? "")).toBe(true);
       }
     });
 

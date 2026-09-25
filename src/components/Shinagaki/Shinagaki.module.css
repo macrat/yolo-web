@@ -23,23 +23,20 @@
  */
 .list {
   list-style: none;
-  margin: 0;
-  padding: 0;
   border-top: var(--rule-w-hair) solid var(--rule-2);
 }
 
 /*
  * 各行: 主内容（品名・ひとこと・値札）と右端メタを横に置く。左揃え基調。
  * position: relative は品名リンクの stretched-link 擬似要素（.name::after）の位置基準
- * （行全体をクリック標的にするため）。
+ * （行全体をクリック標的にするため）。左右の余白と張り出しは data-text-box（globals.css）が持つ。
  */
 .row {
   position: relative;
   display: flex;
   align-items: baseline;
   gap: var(--space-16);
-  /* 行の内側に出るフォーカスの輪（太い線2本分）と hover の線が字に掛からないよう、左右に余白を取る。 */
-  padding: var(--space-16) var(--space-8);
+  padding-block: var(--space-16);
   border-bottom: var(--rule-w-hair) solid var(--rule-2);
 }
 

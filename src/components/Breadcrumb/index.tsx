@@ -14,16 +14,9 @@ interface BreadcrumbProps {
 }
 
 /**
- * Breadcrumb — パンくずリストコンポーネント。
- *
- * 仕様:
- * - 外側 <nav aria-label="パンくずリスト"> + 内側 <ol> + <li> の構造
- * - 最後の項目は href なしで aria-current="page" を付与
- * - 区切り文字（/）は各 li 内の <span aria-hidden="true"> で配置する
- * - li を display:inline にすることで separator + テキストが同じインラインコンテキストに属し、
- *   SP での「/」行頭孤立を防ぐ（CSS ::before + inline-flex では flex item が分離する問題あり）
- * - リンクは Next.js の <Link> を使用
- * - BreadcrumbList JSON-LD を <script> で出力（SEO 構造化データ）
+ * パンくず（DESIGN.md §5・§6）。最後の項目がいまのページで、リンクにせず aria-current="page" を付ける。
+ * 区切りの「/」は前の項目の後ろに置き、項目と同じ li に入れる。折り返しは li のあいだでだけ起き、
+ * 行の頭には必ず項目の名前が来る。BreadcrumbList の JSON-LD も出す。
  */
 export default function Breadcrumb({ items }: BreadcrumbProps) {
   return (
@@ -41,25 +34,23 @@ export default function Breadcrumb({ items }: BreadcrumbProps) {
 
             return (
               <li key={item.label} className={styles.item}>
-                {/* 2 番目以降の li の先頭に区切り「/」を配置する */}
-                {index > 0 && (
-                  <span className={styles.separator} aria-hidden="true">
-                    /
-                  </span>
-                )}
-                {/* 現在位置（最後の要素）はリンクにしない */}
                 {isLast ? (
                   <span className={styles.current} aria-current="page">
                     {item.label}
                   </span>
                 ) : (
-                  <Link
-                    href={item.href ?? "/"}
-                    className={styles.link}
-                    data-hit-area="after"
-                  >
-                    {item.label}
-                  </Link>
+                  <>
+                    <Link
+                      href={item.href ?? "/"}
+                      className={styles.link}
+                      data-text-box="inline"
+                    >
+                      {item.label}
+                    </Link>
+                    <span className={styles.separator} aria-hidden="true">
+                      /
+                    </span>
+                  </>
                 )}
               </li>
             );

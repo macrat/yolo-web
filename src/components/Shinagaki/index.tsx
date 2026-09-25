@@ -68,13 +68,7 @@ export default function Shinagaki({
       {heading ? (
         <HeadingTag className={styles.heading}>{heading}</HeadingTag>
       ) : null}
-      <ul
-        className={styles.list}
-        aria-label={ariaLabel}
-        /* 行は隙間なく並ぶので、フォーカスの輪は行の内側に、hover の線は行の左右に出す（§6）。 */
-        data-focus-ring="inset"
-        data-hover-line="sides"
-      >
+      <ul className={styles.list} aria-label={ariaLabel} data-text-box="rows">
         {items.map((item) => (
           <li key={item.href} className={styles.row}>
             <div className={styles.main}>

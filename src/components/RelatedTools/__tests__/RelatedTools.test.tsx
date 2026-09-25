@@ -160,13 +160,15 @@ describe("RelatedTools", () => {
     );
   });
 
-  // 行は隙間なく並ぶので、フォーカスの輪を行の内側に出す（DESIGN.md §6）
-  it("行の並びがフォーカスの輪を内側に出す指定を持つ", () => {
+  // 一覧の行は字だけで見えるので、字を左端に揃え、線とリングを行の箱に出す（DESIGN.md §5・§6）
+  it("行の並びが一覧の行の箱の指定を持ち、押せる範囲を行に広げる", () => {
     const { container } = render(
       <RelatedTools currentSlug="" relatedSlugs={["char-count", "base64"]} />,
     );
     const list = container.querySelector("ul");
-    expect(list).toHaveAttribute("data-focus-ring", "inset");
-    expect(list).toHaveAttribute("data-hover-line", "sides");
+    expect(list).toHaveAttribute("data-text-box", "rows");
+    for (const link of screen.getAllByRole("link")) {
+      expect(link).toHaveAttribute("data-hit-area", "after");
+    }
   });
 });

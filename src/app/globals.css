@@ -48,6 +48,9 @@
    * 大きさも変わらない。 */
   --hover-line: inset 0 0 0 var(--rule-w-hair) var(--rule-2);
 
+  /* §5 字だけで見えるものの箱が、字の左右に持つ余白。 */
+  --text-box-pad: var(--space-8);
+
   /* §5 角丸の半径。角丸は持たないので 0。 */
   --radius: 0px;
   --radius-sm: var(--radius);
@@ -378,11 +381,35 @@ hr {
   box-shadow: var(--focus-ring-fill);
 }
 
-/* 詰めて並んだもの（一覧の行・隙間なく並ぶボタン）の中では、二重リングを要素の内側に出し、隣に食い込ませない。
- * 外の輪を要素の縁の内側に置き、その内側を --paper で塗る。 */
-[data-focus-ring="inset"] {
+/* 外に輪を出す余地の無いものでは、二重リングを要素の内側に出し、隣に食い込ませない。外の輪を要素の縁の
+ * 内側に置き、その内側を --paper で塗る。外の輪は要素の縁から、塗りは枠の内側から測るので、枠を持たない
+ * 要素で内と外が同じ太さになる。 */
+[data-focus-ring="inset"],
+[data-text-box] {
   --focus-ring-offset: calc(-1 * var(--rule-w));
   --focus-ring-fill: inset 0 0 0 calc(2 * var(--rule-w)) var(--paper);
+}
+
+/* §5 字だけで見えるもの（リンク・プライマリでないボタン・ページ送り・一覧の行）。字の左端をコンテンツ幅の
+ * 左端に揃え、hover の線・無効の枠・フォーカスのリングは、字の左右に余白を持つ箱に出す。箱は字より余白の
+ * 分だけ左へ出て、コンテナの内側の余白に張り出す。その余白は狭い画面でも箱の余白と同じ幅しかないので、
+ * リングは箱の内側に出し、無効の枠は枠線ではなく outline で箱の縁に引く。
+ *
+ * "inline" は行の中に並ぶもの。後ろには続くものがあるので、張り出すのは左だけ。
+ * "rows" は一覧。行の区切りも箱の辺なので、一覧ごと左右に張り出し、各行の中で字を余白の分だけ下げる。
+ * 上下は行の区切りがそのまま辺になるので、hover の線は左右だけに出して閉じる。 */
+[data-text-box="inline"] {
+  padding-inline: var(--text-box-pad);
+  margin-inline-start: calc(-1 * var(--text-box-pad));
+}
+[data-text-box="rows"] {
+  margin-inline: calc(-1 * var(--text-box-pad));
+  --hover-line:
+    inset var(--rule-w-hair) 0 0 var(--rule-2),
+    inset calc(-1 * var(--rule-w-hair)) 0 0 var(--rule-2);
+}
+[data-text-box="rows"] > li {
+  padding-inline: var(--text-box-pad);
 }
 
 /* §6 hover・active。進むもの・実行するもの・状態を変えるものに出し、押しても何も起きない現在地と無効には
@@ -409,13 +436,6 @@ hr {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
   box-shadow: var(--focus-ring-fill);
-}
-
-/* 一覧の行の hover。上下は行の区切りがそのまま辺になるので、左右だけに線を出して閉じる。 */
-[data-hover-line="sides"] {
-  --hover-line:
-    inset var(--rule-w-hair) 0 0 var(--rule-2),
-    inset calc(-1 * var(--rule-w-hair)) 0 0 var(--rule-2);
 }
 
 .visually-hidden {

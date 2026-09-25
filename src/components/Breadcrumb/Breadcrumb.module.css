@@ -1,70 +1,45 @@
-/**
- * Breadcrumb — パンくずリストコンポーネント。
- *
- * 区切り文字「/」は JSX <span aria-hidden="true"> で li 内に配置する。
- *
- * CSS ::before を使わない理由:
- * li が display:inline-flex のとき、::before は flex item として扱われる。
- * flex-wrap: wrap の環境で current span が長いと、::before（「/」）と
- * current span が別の flex item として分離され、行頭に「/」が孤立する。
- * JSX でセパレータを li 内にインライン配置し、li 自体を display:inline に
- * することで「/」と後続テキストが同じインラインフォーマットコンテキストに属し、
- * li 単位でしか折り返しが起きなくなる。
- */
+/* パンくず（DESIGN.md §5・§6）。 */
 
+/* 項目の並び。幅が足りなければ li のあいだで折り返す。 */
 .list {
-  /* リストスタイルをリセットし、横並び折返しにする */
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0;
+  align-items: center;
   list-style: none;
-  margin: 0;
-  padding: 0;
   font-size: var(--text-small);
   line-height: 1.5;
   color: var(--ink-2);
 }
 
-/*
- * 各 li を display:inline にする。
- * display:inline-flex や display:flex は使わない。
- * inline にすることで、li 内の separator と link/current が
- * 同じインラインフォーマットコンテキストに属し、折り返しが li 単位になる。
- */
+/* 項目と、その後ろの区切りを1つにまとめ、あいだで折り返さない。いまのページの名前は長いことがあるので、
+ * 行に収まらなければ li の中で折り返す。 */
 .item {
-  display: inline;
+  display: flex;
+  align-items: center;
+  min-width: 0;
 }
 
-/* 区切り「/」— JSX で明示配置する aria-hidden span */
-.separator {
-  display: inline;
-  color: var(--ink-2);
-  user-select: none;
-  margin: 0 0.4em;
-}
-
-/* パンくずは本文の中のリンクではないので、押せる範囲を 44px 四方以上にする（§6）。字の箱は字の幅のまま
- * 置き、字と区切りの間隔をどの項目でも等しくする。下線と訪問済みの色は globals.css の a の既定に従う。 */
+/* パンくずは本文の中のリンクではないので、押せる範囲を 44px 四方以上にする（§6）。字だけで見えるので、
+ * 字の左右の余白と、字を並びの左端に置く張り出しは data-text-box（globals.css）が持つ。押せる範囲は、
+ * 字の幅に左右の余白を足した幅と 44px の大きいほう。下線と訪問済みの色は globals.css の a の既定に従う。 */
 .link {
-  position: relative;
   display: inline-flex;
   align-items: center;
+  flex-shrink: 0;
+  min-width: 44px;
   min-height: 44px;
+  white-space: nowrap;
 }
 
-/* 押せる範囲。字の幅が 44px に届かない項目では、字を中心に左右へ同じだけ広げる。
- * hover の細い線とフォーカスの二重リングは、data-hit-area（globals.css）がこの範囲に出す。 */
-.link::after {
-  content: "";
-  position: absolute;
-  inset-block: 0;
-  left: 50%;
-  width: max(100%, 44px);
-  transform: translateX(-50%);
+/* 区切りの「/」。前の項目の箱の後ろと、後ろの項目の箱の前に、それぞれ同じ間隔をあけ、リングと hover の
+ * 線を「/」に掛けない。後ろの項目の箱は字より余白の分だけ前へ張り出すので、後ろ側はその分を足す。 */
+.separator {
+  margin-inline: var(--space-8) calc(var(--space-8) + var(--text-box-pad));
+  user-select: none;
 }
 
+/* いまのページはリンクにせず、下線を持たない文字で置く。 */
 .current {
-  /* いまのページはリンクにせず、下線を持たない文字で置く。 */
+  min-width: 0;
   color: var(--ink);
 }

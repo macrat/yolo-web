@@ -33,15 +33,14 @@ export default function RelatedTools({
   return (
     <nav className={styles.related} aria-label="関連ツール">
       <h2 className={styles.heading}>関連ツール</h2>
-      <ul
-        className={styles.list}
-        /* 行は隙間なく並ぶので、フォーカスの輪は行の内側に、hover の線は行の左右に出す（§6）。 */
-        data-focus-ring="inset"
-        data-hover-line="sides"
-      >
+      <ul className={styles.list} data-text-box="rows">
         {relatedTools.map((tool) => (
           <li key={tool.slug} className={styles.row}>
-            <Link href={`/tools/${tool.slug}`} className={styles.link}>
+            <Link
+              href={`/tools/${tool.slug}`}
+              className={styles.link}
+              data-hit-area="after"
+            >
               <span className={styles.name}>{tool.name}</span>
               <span className={styles.description}>
                 {tool.shortDescription}
