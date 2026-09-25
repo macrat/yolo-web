@@ -16,7 +16,7 @@
 .heading {
   margin: 0 0 var(--space-16);
   color: var(--ink);
-  font-family: var(--font-mincho);
+  font-family: var(--font-heading);
   font-size: 1.375rem; /* 22px 目安（1.25 倍スケール帯） */
   line-height: 1.4;
   font-feature-settings: "palt";
@@ -34,7 +34,7 @@
   border-radius: var(--radius-sm);
   background-color: var(--paper);
   color: var(--ink);
-  font-family: var(--font-gothic);
+  font-family: var(--font-body);
   font-size: 1rem; /* 16px */
   line-height: 1.5;
 }
@@ -56,14 +56,14 @@
 .summary {
   margin: var(--space-16) 0 0;
   color: var(--ink-2);
-  font-family: var(--font-gothic);
+  font-family: var(--font-body);
   font-size: 0.8125rem; /* 13px 補助情報 */
   line-height: 1.6;
 }
 
 /* 件数の数字は tabular で桁を揃える（§3 数字の流儀）。 */
 .count {
-  font-family: var(--font-number);
+  font-family: var(--font-body);
   font-variant-numeric: tabular-nums;
 }
 

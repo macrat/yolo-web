@@ -25,7 +25,7 @@
   min-height: 44px;
   min-width: 44px;
   padding: 0 var(--space-16);
-  font-family: var(--font-gothic);
+  font-family: var(--font-body);
   font-size: 0.9375rem; /* 15px・操作面の UI ラベル（§3 補助帯） */
   line-height: 1.4;
   white-space: nowrap;
@@ -60,7 +60,7 @@
  * min-height で表示時のレイアウトシフトを防ぐ。 */
 .copiedMessage {
   min-height: 1.4em;
-  font-family: var(--font-gothic);
+  font-family: var(--font-body);
   font-size: 0.8125rem; /* 13px 補助情報 */
   line-height: 1.4;
   color: var(--accent);

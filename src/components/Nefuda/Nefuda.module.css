@@ -7,7 +7,7 @@
   display: inline-flex;
   align-items: center;
   /* §3: 補助情報は 13px 目安（文章として読ませる文は 16px を当てる。値札は補助情報） */
-  font-family: var(--font-gothic);
+  font-family: var(--font-body);
   font-size: 0.8125rem; /* 13px */
   line-height: 1.5;
   color: var(--ink-2);

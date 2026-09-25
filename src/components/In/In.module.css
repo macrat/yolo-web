@@ -40,7 +40,7 @@
 .char {
   position: relative;
   color: var(--accent);
-  font-family: var(--font-mincho);
+  font-family: var(--font-heading);
   /* 円環（直径）に対して約 55%。1 字が枠に触れず収まる。 */
   font-size: calc(var(--in-size, 48px) * 0.55);
   font-weight: 600;

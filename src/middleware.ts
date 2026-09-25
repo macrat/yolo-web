@@ -51,13 +51,12 @@ export function isDeletedBlogSlug(slug: string): boolean {
  */
 
 /**
- * 見出しの明朝スタック（DESIGN §3「見出しは明朝」）。この静的HTMLは Web フォントを
- * 読み込まないため Noto Serif JP を先頭に置きつつシステム明朝へ素直にフォールバックする
- * （globals.css の --font-mincho フォールバック相当）。本文はシステムゴシックでよい。
+ * 書体の並び（DESIGN §3・globals.css の --font-heading / --font-body と同じ順）。
+ * この静的HTMLは Web フォントを読み込まないので、端末にある書体だけで組める並びにする。
  */
-const MINCHO_STACK = "'Noto Serif JP','Hiragino Mincho ProN','Yu Mincho',serif";
-const GOTHIC_STACK =
-  "'Hiragino Kaku Gothic ProN','Yu Gothic Medium','Noto Sans JP',sans-serif";
+const BODY_STACK =
+  "'BIZ UDPGothic','Hiragino Kaku Gothic ProN','Yu Gothic Medium','Noto Sans JP',sans-serif";
+const HEADING_STACK = `'Zen Antique',${BODY_STACK}`;
 
 /**
  * 410 Gone ページのHTMLを生成する。
@@ -78,11 +77,11 @@ export function build410Html(): string {
 <title>このコンテンツは終了しました | yolos.net</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:${GOTHIC_STACK};background:${PAPER};color:${INK};min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1.5rem}
+body{font-family:${BODY_STACK};background:${PAPER};color:${INK};min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1.5rem}
 .container{max-width:34rem;width:100%;text-align:center}
-h1{font-family:${MINCHO_STACK};font-size:1.6rem;font-weight:600;color:${INK};line-height:1.5;letter-spacing:0.02em}
+h1{font-family:${HEADING_STACK};font-size:1.6rem;font-weight:600;color:${INK};line-height:1.5;letter-spacing:0.02em}
 .rule{width:3rem;height:0;border-top:1px solid ${RULE};margin:1.25rem auto}
-p{font-family:${GOTHIC_STACK};font-size:1rem;color:${INK_2};line-height:1.9;margin-bottom:2rem}
+p{font-family:${BODY_STACK};font-size:1rem;color:${INK_2};line-height:1.9;margin-bottom:2rem}
 a.home{display:inline-block;padding:0.6rem 1.75rem;color:${ACCENT};text-decoration:none;border:1px solid ${RULE};border-radius:0;font-size:0.95rem;transition:border-color 0.2s}
 a.home:hover,a.home:focus-visible{border-color:${ACCENT}}
 a.home:focus-visible{outline:2px solid ${ACCENT};outline-offset:2px}

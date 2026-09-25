@@ -21,13 +21,13 @@
 .count {
   margin: 0 0 var(--space-24);
   color: var(--ink-2);
-  font-family: var(--font-gothic);
+  font-family: var(--font-body);
   font-size: 0.8125rem; /* 13px 補助情報 */
   line-height: 1.6;
 }
 
 /* 件数の数字は tabular で桁を揃える（§3 数字の流儀）。 */
 .countNum {
-  font-family: var(--font-number);
+  font-family: var(--font-body);
   font-variant-numeric: tabular-nums;
 }

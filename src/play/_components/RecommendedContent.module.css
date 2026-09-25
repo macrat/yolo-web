@@ -14,7 +14,7 @@
 /* 見出し: サイト共通の罫下線で静かに区切る（ResultCard .detailedHeading と同じ様式・
  * DESIGN.md §3/§4。朱の左罫は見出しの装飾に使わない） */
 .heading {
-  font-family: var(--font-mincho);
+  font-family: var(--font-heading);
   font-size: 1.25rem;
   line-height: 1.4;
   font-feature-settings: "palt";
@@ -51,7 +51,7 @@
 
 .name {
   color: var(--ink);
-  font-family: var(--font-mincho);
+  font-family: var(--font-heading);
   font-size: 1.0625rem;
   line-height: 1.4;
 }
@@ -63,7 +63,7 @@
 }
 
 .description {
-  font-family: var(--font-gothic);
+  font-family: var(--font-body);
   font-size: 0.9375rem;
   color: var(--ink-2);
   line-height: 1.6;

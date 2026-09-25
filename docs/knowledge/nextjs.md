@@ -197,3 +197,15 @@ function ClientShell({ serverSlot }: { serverSlot: React.ReactNode }) {
 **予防**: ルート（`app/` 配下の `page.tsx`/`layout.tsx` 等）を移動・リネームしたら、視覚検証で `next dev` を使った後は `rm -rf .next/dev` を挟んでから commit する。辞典移行（cycle-262〜265）のように route group をまたぐ `git mv` を伴う作業では定常的に発生する。
 
 出典: cycle-265
+
+---
+
+## 13. Turbopack の `next/font/google` は `adjustFontFallback: false` だけでは自動の代わりの書体を止めない
+
+Next.js 16.3.0 の Turbopack ビルドでは、`next/font/google` に `adjustFontFallback: false` を渡しても、`"<書体名> Fallback"` の `@font-face`（`local("Times New Roman")` などにメトリクスを合わせたもの）が生成され、CSS 変数の値にもその名前が入る。`next/font/local` の `adjustFontFallback: false` は効く。
+
+**影響**: 自動の代わりの書体は `unicode-range` を持たないので、読み込みのあいだ和文の中の「——」「……」まで欧文の書体で描かれる。
+
+**対処**: `fallback: []` も一緒に渡す。Turbopack は `fallback` が指定されると自動の代わりの書体を作らず、変数の値は `"<書体名>"` だけになる。確かめるときは `npx next build --experimental-build-mode=compile` のあと、`.next/static/chunks/*.css` で `Fallback` を探す。
+
+出典: cycle-316

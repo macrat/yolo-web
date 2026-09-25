@@ -15,7 +15,7 @@
 }
 
 .heading {
-  font-family: var(--font-mincho);
+  font-family: var(--font-heading);
   font-size: 1.25rem;
   line-height: 1.4;
   font-feature-settings: "palt";
@@ -50,7 +50,7 @@
 
 .name {
   color: var(--ink);
-  font-family: var(--font-mincho);
+  font-family: var(--font-heading);
   font-size: 1.0625rem;
   line-height: 1.4;
 }
@@ -62,7 +62,7 @@
 }
 
 .description {
-  font-family: var(--font-gothic);
+  font-family: var(--font-body);
   font-size: 0.9375rem;
   color: var(--ink-2);
   line-height: 1.6;

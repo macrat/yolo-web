@@ -6,6 +6,18 @@
  * （cycle-279 C1・本ファイルで旧トークン定義を完全削除・詳細は各所のコメント参照）。
  */
 
+/* IBM Plex Sans の読み込みのあいだに U+0000-007F を組む代わりの書体。
+ * Plex（Regular）と Arial のメトリクスから next/font と同じ式で求めた値で、行の高さと字幅を Plex に合わせる。 */
+@font-face {
+  font-family: "IBM Plex Sans Fallback";
+  src: local("Arial");
+  size-adjust: 101.13%;
+  ascent-override: 101.35%;
+  descent-override: 27.19%;
+  line-gap-override: 0%;
+  unicode-range: U+0000-007F;
+}
+
 :root {
   /* §2 色（ライト）— 紙・墨・朱（DESIGN.md §2 が正典・oklch のまま丸めない）。
    * アクセントは朱の1色のみ。旧値の青紫 oklch(0.62 0.22 264) は §8-1 の禁止色のため
@@ -34,14 +46,19 @@
   --radius: 0px; /* 角丸 0px 基調（帳面・棚の直角） */
   --radius-sm: 2px; /* 例外は値札ラベルと入力欄のみ */
 
-  /* §3 フォント変数 — 見出し明朝・本文ゴシック・数字。
-   * next/font の変数（--font-mincho / --font-number）が未配線の環境でも壊れないよう
-   * システムフォールバックを var() の第2引数で持たせる。--font-mono は body セレクタで
-   * 定義する（下記・コード/等幅表示用・DESIGN §3）。 */
-  --font-mincho: var(--font-mincho, "Hiragino Mincho ProN", "Yu Mincho", serif);
-  --font-gothic:
-    "Hiragino Kaku Gothic ProN", "Yu Gothic Medium", "Noto Sans JP", sans-serif;
-  --font-number: var(--font-number, "Zilla Slab", "Roboto Slab", serif);
+  /* §3 書体の並び。欧文・数字（U+0000-007F）は IBM Plex Sans が組み、ほかの字は和文の書体へ落ちる。
+   * --font-zen-antique と --font-plex-sans は layout.tsx が next/font で <html> に置く。 */
+  --font-ja-body:
+    "BIZ UDPGothic", "Hiragino Kaku Gothic ProN", "Yu Gothic Medium",
+    "Noto Sans JP", sans-serif;
+  --font-heading:
+    var(--font-plex-sans), "IBM Plex Sans Fallback", var(--font-zen-antique),
+    var(--font-ja-body);
+  --font-body:
+    var(--font-plex-sans), "IBM Plex Sans Fallback", var(--font-ja-body);
+  --font-mono:
+    ui-monospace, "Menlo", "Consolas", "Liberation Mono", "Courier New",
+    monospace;
 
   /* ==========================================================================
    * 成果物パレット「和色」（DESIGN.md §2「成果物パレット（中身の色・唯一の例外）」）。
@@ -149,13 +166,9 @@ body {
 }
 
 body {
-  /* 本文・UI はシステム日本語ゴシック（DESIGN.md §3「本文・UI」）。--font-gothic は
-   * globals の :root で Hiragino/Yu Gothic/Noto Sans JP のスタックとして定義済み。 */
-  font-family: var(--font-gothic);
+  font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* --font-mono: コードブロック / 等幅表示に使用（DESIGN §3）。 */
-  --font-mono: "Menlo", "Consolas", "Liberation Mono", "Courier New", monospace;
 }
 
 /* モバイルメニュー展開時のスクロールロック。
@@ -191,15 +204,15 @@ hr {
  * 必要に応じて上書きできる。
  * ========================================================================== */
 
-/* 見出し: 明朝の顔（DESIGN.md §3）。palt（詰め）は見出しのみ・line-height 1.4・
- * 1.25 倍スケール（16/20/25/31/39px）。ウェイトは明朝 600（--font-mincho は 600 一本）。 */
+/* 見出し（DESIGN.md §3）。palt（詰め）は見出しのみ・line-height 1.4・
+ * 1.25 倍スケール（16/20/25/31/39px）。 */
 h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
-  font-family: var(--font-mincho);
+  font-family: var(--font-heading);
   font-weight: 600;
   line-height: 1.4;
   font-feature-settings: "palt";
@@ -240,7 +253,7 @@ h6 {
 /* 数字ユーティリティ: スコア・計測値・結果の主役に等幅数字（DESIGN.md §3）。 */
 .tabular,
 [data-number] {
-  font-family: var(--font-number);
+  font-family: var(--font-body);
   font-feature-settings: "tnum";
 }
 

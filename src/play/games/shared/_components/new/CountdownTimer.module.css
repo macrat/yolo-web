@@ -13,7 +13,7 @@
 }
 
 .time {
-  font-family: var(--font-number);
+  font-family: var(--font-body);
   font-size: 1.5rem;
   font-weight: 600;
   font-variant-numeric: tabular-nums;

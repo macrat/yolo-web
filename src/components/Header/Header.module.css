@@ -29,7 +29,7 @@
 .logo {
   color: var(--ink);
   text-decoration: none;
-  font-family: var(--font-mincho);
+  font-family: var(--font-heading);
   font-weight: 600;
   /* のれんの店号として本文より一段大きく、明朝の顔を立てる（§3 見出しスケール h4 相当）。 */
   font-size: 1.375rem;

@@ -61,7 +61,7 @@
 .codeValue {
   padding: var(--space-8) 0;
   color: var(--ink);
-  font-family: var(--font-number);
+  font-family: var(--font-body);
   font-feature-settings: "tnum";
 }
 

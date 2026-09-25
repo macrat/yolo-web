@@ -203,7 +203,7 @@ export default function RadarChart({
               dominantBaseline="middle"
               fontSize={11}
               fill="var(--ink-2)"
-              fontFamily="var(--font-number)"
+              fontFamily="var(--font-body)"
             >
               {item.pct}%
             </text>

@@ -26,6 +26,7 @@ import ThemeToggle from "@/components/ThemeToggle";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import GlobalNotFoundContent from "@/app/global-not-found-content";
 import { SITE_NAME } from "@/lib/constants";
+import { plexSans, zenAntique } from "@/lib/fonts";
 
 export const metadata = {
   title: `ページが見つかりません | ${SITE_NAME}`,
@@ -36,7 +37,11 @@ export default function GlobalNotFound() {
   return (
     // suppressHydrationWarning: next-themes がクライアント側で <html class="dark"> を付与するため、
     // サーバーとクライアントの class 不一致による hydration 警告を抑制する
-    <html lang="ja" suppressHydrationWarning>
+    <html
+      lang="ja"
+      suppressHydrationWarning
+      className={`${zenAntique.variable} ${plexSans.variable}`}
+    >
       <body
         style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
       >

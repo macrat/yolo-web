@@ -8,9 +8,7 @@ import ThemeToggle from "@/components/ThemeToggle";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import { generateWebSiteJsonLd, safeJsonLdStringify } from "@/lib/seo";
 import { sharedMetadata } from "@/lib/site-metadata";
-// フェーズ R の新デザイントークン層で使う Web フォント（見出し明朝・数字）を
-// CSS 変数（--font-mincho / --font-number）としてツリー全体に配線する（DESIGN.md §3）。
-import { mincho, number } from "@/lib/fonts";
+import { plexSans, zenAntique } from "@/lib/fonts";
 
 export const metadata: Metadata = sharedMetadata;
 
@@ -26,7 +24,7 @@ export default function NewRootLayout({
     <html
       lang="ja"
       suppressHydrationWarning
-      className={`${mincho.variable} ${number.variable}`}
+      className={`${zenAntique.variable} ${plexSans.variable}`}
     >
       <body
         style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}

@@ -31,7 +31,7 @@
 }
 
 .title {
-  font-family: var(--font-mincho);
+  font-family: var(--font-heading);
   font-size: 1.4rem;
   font-weight: 600;
   letter-spacing: 0.05em;
@@ -369,7 +369,7 @@
 
 /* ===== Result Modal ===== */
 .resultAnswer {
-  font-family: var(--font-mincho);
+  font-family: var(--font-heading);
   font-size: 1.5rem;
   font-weight: 600;
   color: var(--ink);
@@ -442,7 +442,7 @@
 }
 
 .statValue {
-  font-family: var(--font-number);
+  font-family: var(--font-body);
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--ink);

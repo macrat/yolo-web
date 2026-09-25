@@ -19,7 +19,7 @@
 
 /* 大字: 対象の漢字を明朝で大きく（見出しの主役・§7 見出しの大字）。 */
 .character {
-  font-family: var(--font-mincho);
+  font-family: var(--font-heading);
   font-size: 6rem;
   font-weight: 600;
   line-height: 1;
@@ -105,7 +105,7 @@
 
 /* 数値（画数・部首番号）: 桁が映える tabular 数字書体（§3）。 */
 .number {
-  font-family: var(--font-number);
+  font-family: var(--font-body);
   font-feature-settings: "tnum";
 }
 
@@ -131,7 +131,7 @@
   min-width: 44px;
   min-height: 44px;
   padding: 0 var(--space-8);
-  font-family: var(--font-mincho);
+  font-family: var(--font-heading);
   font-size: 1.375rem; /* 22px */
   line-height: 1.2;
   color: var(--ink);

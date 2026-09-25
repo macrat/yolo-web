@@ -47,7 +47,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-16);
-  font-family: var(--font-gothic);
+  font-family: var(--font-body);
   font-size: 0.875rem;
   color: var(--ink-2);
   flex-wrap: wrap;
@@ -260,14 +260,14 @@
 }
 
 .navLabel {
-  font-family: var(--font-gothic);
+  font-family: var(--font-body);
   font-size: 0.75rem;
   color: var(--ink-2);
   margin-bottom: var(--space-8);
 }
 
 .navTitle {
-  font-family: var(--font-mincho);
+  font-family: var(--font-heading);
   font-size: 0.9375rem;
   font-weight: 600;
   color: var(--accent);

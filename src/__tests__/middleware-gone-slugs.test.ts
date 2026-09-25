@@ -98,8 +98,8 @@ describe("build410Html", () => {
       expect(html).toContain("#af3622"); // --accent（朱）
     });
 
-    test("見出しは明朝スタック（Noto Serif JP）で組む（§3）", () => {
-      expect(html).toContain("Noto Serif JP");
+    test("見出しは Zen Antique を先頭にした並びで組む（§3）", () => {
+      expect(html).toContain("h1{font-family:'Zen Antique',");
     });
 
     test("トップへの導線は朱の文字で表す（青ベタボタンでない・§4）", () => {

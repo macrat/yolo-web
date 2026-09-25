@@ -37,7 +37,7 @@
  * 「ブログ / タグ」の軽い導入テキストのみ・JSON-LD は route 側で維持） */
 .tagBreadcrumb {
   margin: 0 0 var(--space-8);
-  font-family: var(--font-gothic);
+  font-family: var(--font-body);
   font-size: 0.875rem;
   color: var(--ink-2);
 }

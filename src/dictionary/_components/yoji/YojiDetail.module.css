@@ -16,7 +16,7 @@
 
 /* 大字: 熟語を明朝で大きく（見出しの主役・§7）。 */
 .character {
-  font-family: var(--font-mincho);
+  font-family: var(--font-heading);
   font-size: 3.25rem;
   font-weight: 600;
   line-height: 1.2;
@@ -107,7 +107,7 @@
   min-width: 44px;
   min-height: 44px;
   padding: 0 var(--space-8);
-  font-family: var(--font-mincho);
+  font-family: var(--font-heading);
   font-size: 2rem;
   line-height: 1;
   color: var(--ink);
@@ -128,7 +128,7 @@
   min-width: 44px;
   min-height: 44px;
   padding: 0 var(--space-8);
-  font-family: var(--font-mincho);
+  font-family: var(--font-heading);
   font-size: 2rem;
   line-height: 1;
   color: var(--ink-2);
@@ -145,7 +145,7 @@
   display: inline-flex;
   align-items: center;
   min-height: 44px;
-  font-family: var(--font-mincho);
+  font-family: var(--font-heading);
   font-size: 1.125rem; /* 18px */
   line-height: 1.4;
   color: var(--ink);

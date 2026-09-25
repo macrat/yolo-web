@@ -62,7 +62,7 @@
 /* 品名: 一覧の主役。§4「品名（リンク・墨）」・§3 明朝で組む。 */
 .name {
   color: var(--ink);
-  font-family: var(--font-mincho);
+  font-family: var(--font-heading);
   font-size: 1.125rem; /* 18px */
   line-height: 1.4;
   letter-spacing: 0.01em;
@@ -77,7 +77,7 @@
 /* よみ: 品名に添える補助情報（§3 補助字 13px・--ink-2）。 */
 .reading {
   color: var(--ink-2);
-  font-family: var(--font-gothic);
+  font-family: var(--font-body);
   font-size: 0.8125rem; /* 13px */
   line-height: 1.5;
 }
@@ -87,7 +87,7 @@
   display: block;
   margin: var(--space-8) 0 0;
   color: var(--ink-2);
-  font-family: var(--font-gothic);
+  font-family: var(--font-body);
   font-size: 1rem; /* 16px */
   line-height: 1.7;
 }

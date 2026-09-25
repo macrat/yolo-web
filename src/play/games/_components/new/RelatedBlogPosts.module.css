@@ -11,7 +11,7 @@
 }
 
 .title {
-  font-family: var(--font-mincho);
+  font-family: var(--font-heading);
   font-size: 1.09375rem;
   line-height: 1.4;
   font-feature-settings: "palt";

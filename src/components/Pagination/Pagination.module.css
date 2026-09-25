@@ -27,7 +27,7 @@
   padding: 0 var(--space-8);
   border: 1px solid var(--rule);
   border-radius: var(--radius);
-  font-family: var(--font-gothic);
+  font-family: var(--font-body);
   font-size: 0.875rem;
   line-height: 1;
   color: var(--ink);
@@ -77,7 +77,7 @@
   justify-content: center;
   min-width: 2.75rem;
   height: 2.75rem;
-  font-family: var(--font-gothic);
+  font-family: var(--font-body);
   font-size: 0.875rem;
   color: var(--ink-2);
   user-select: none;
@@ -93,7 +93,7 @@
 /* モバイル: "現在ページ / 総ページ" インジケータ（非表示）。tabular 数字で桁を揃える（§3）。 */
 .mobileIndicator {
   display: none;
-  font-family: var(--font-number);
+  font-family: var(--font-body);
   font-variant-numeric: tabular-nums;
   font-size: 0.875rem;
   color: var(--ink-2);

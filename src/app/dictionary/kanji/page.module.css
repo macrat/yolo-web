@@ -92,7 +92,7 @@
   min-width: 44px;
   padding: 0 var(--space-8);
   color: var(--ink);
-  font-family: var(--font-mincho);
+  font-family: var(--font-heading);
   font-size: 1.125rem; /* 18px — 品名と同格 */
   line-height: 1.4;
   text-decoration: none;

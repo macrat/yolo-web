@@ -19,7 +19,8 @@
     "analyze": "next experimental-analyze --output",
     "format:check": "prettier --check .",
     "generate:release-id": "tsx scripts/generate-release-id.ts",
-    "generate:toolbox-registry": "tsx scripts/generate-toolbox-registry.ts"
+    "generate:toolbox-registry": "tsx scripts/generate-toolbox-registry.ts",
+    "generate:zen-antique-charset": "tsx scripts/generate-zen-antique-charset.ts"
   },
   "dependencies": {
     "diff": "^9.0.0",

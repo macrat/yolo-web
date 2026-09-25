@@ -10,7 +10,7 @@
 }
 
 .title {
-  font-family: var(--font-mincho);
+  font-family: var(--font-heading);
   font-size: 1.25rem; /* 20px 目安 */
   line-height: 1.4;
   font-feature-settings: "palt";
@@ -45,7 +45,7 @@
 
 .postTitle {
   color: var(--ink);
-  font-family: var(--font-mincho);
+  font-family: var(--font-heading);
   font-size: 1.0625rem; /* 17px 目安 */
   line-height: 1.4;
   flex: 1;
@@ -62,7 +62,7 @@
 }
 
 .date {
-  font-family: var(--font-gothic);
+  font-family: var(--font-body);
   font-size: 0.8125rem; /* 13px 補助情報 */
   color: var(--ink-2);
   flex-shrink: 0;

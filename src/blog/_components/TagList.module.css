@@ -22,7 +22,7 @@
   /* タップターゲット 44px（§10・タグはリンクのため Nefuda 静的ラベルより広い高さを取る） */
   min-height: 44px;
   color: var(--ink-2);
-  font-family: var(--font-gothic);
+  font-family: var(--font-body);
   padding: 0.15em 0.6em;
   font-size: 0.8125rem; /* 13px 補助情報 */
   text-decoration: none;

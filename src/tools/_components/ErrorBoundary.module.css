@@ -11,7 +11,7 @@
 }
 
 .heading {
-  font-family: var(--font-mincho);
+  font-family: var(--font-heading);
   font-size: 1.09375rem;
   color: var(--accent);
   margin: 0 0 var(--space-8);
@@ -20,7 +20,7 @@
 }
 
 .text {
-  font-family: var(--font-gothic);
+  font-family: var(--font-body);
   font-size: 0.9rem;
   color: var(--ink-2);
   margin: 0;

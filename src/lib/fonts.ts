@@ -1,28 +1,43 @@
 /**
- * Web フォント基盤（DESIGN.md §3 タイポグラフィ由来）。
+ * Web フォントの配り方（DESIGN.md §3）。
  *
- * next/font/google で見出し明朝と数字書体を CSS 変数として配線する。
- * - 見出し明朝: DESIGN.md §3「見出し・店号・品名」の明朝系 Web フォント1書体。
- *   源ノ明朝（= Noto Serif JP）をウェイト1本（600）で採用する。
- * - 数字: DESIGN.md §3「数字（スコア・計測値・結果の主役）」用。tabular・大サイズで
- *   個性が立つ書体として Zilla Slab（500）を採用（Inter/Roboto 系の既定は §8-7 で禁止）。
- *
- * display: "swap" は §10「Web フォント読み込みで本文・結果がリフローしない」の要件
- * （font-display: swap + フォールバック）に対応する。本文・UI はシステムゴシックで
- * ネイティブ描画するため、ここでは見出し明朝と数字だけを Web フォント配信する。
+ * 配るのは見出しの和文の Zen Antique と、欧文・数字の IBM Plex Sans だけ。
+ * 本文・UI の和文は端末の書体で組むので配らない。
+ * 書体の並び（--font-heading・--font-body）は globals.css で組み立てる。
  */
-import { Noto_Serif_JP, Zilla_Slab } from "next/font/google";
+import { Zen_Antique } from "next/font/google";
+import localFont from "next/font/local";
 
-export const mincho = Noto_Serif_JP({
-  weight: "600",
-  subsets: ["latin"],
+// next/font が自動で置く代わりの書体は unicode-range を持たず、読み込みのあいだ
+// 和文の「——」「……」まで欧文の字形で描くので止める。Turbopack は next/font/google の
+// adjustFontFallback: false だけでは自動の代わりの書体を止めないので、fallback: [] も渡す。
+// preload しないのは、見出しの字ごとに分割ファイルが分かれ、どれを読むかがページで決まるため。
+export const zenAntique = Zen_Antique({
+  weight: "400",
   display: "swap",
-  variable: "--font-mincho",
+  preload: false,
+  adjustFontFallback: false,
+  fallback: [],
+  variable: "--font-zen-antique",
 });
 
-export const number = Zilla_Slab({
-  weight: "500",
-  subsets: ["latin"],
+// Plex で組むのは U+0000-007F だけにする。ほかの字（欧文約物・アクセント付きラテン）は和文の書体が組む。
+// 読み込みのあいだの代わりの書体は、同じ範囲を付けて globals.css に置く。
+export const plexSans = localFont({
+  src: [
+    {
+      path: "../fonts/ibm-plex-sans/IBMPlexSans-Regular-Latin1.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../fonts/ibm-plex-sans/IBMPlexSans-Bold-Latin1.woff2",
+      weight: "700",
+      style: "normal",
+    },
+  ],
   display: "swap",
-  variable: "--font-number",
+  adjustFontFallback: false,
+  declarations: [{ prop: "unicode-range", value: "U+0000-007F" }],
+  variable: "--font-plex-sans",
 });

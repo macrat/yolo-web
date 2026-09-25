@@ -23,7 +23,7 @@
 /* 設問文: 見出しの顔（明朝）。読ませる文なので line-height はゆったり。
  * h2 だが margin/font-size/font-weight を明示指定し UA 既定を上書き（見た目据え置き）。 */
 .questionText {
-  font-family: var(--font-mincho);
+  font-family: var(--font-heading);
   font-size: 1.25rem;
   font-weight: 600;
   margin: 0 0 1.25rem;
