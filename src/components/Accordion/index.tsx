@@ -1,4 +1,5 @@
 import type { ReactNode, SyntheticEvent } from "react";
+import DisclosureTriangle from "@/components/DisclosureTriangle";
 import styles from "./Accordion.module.css";
 
 interface AccordionProps {
@@ -38,16 +39,7 @@ export default function Accordion({
         className={[styles.summary, summaryClassName].filter(Boolean).join(" ")}
         data-text-box="inline"
       >
-        <svg
-          className={styles.triangle}
-          width="20"
-          height="20"
-          viewBox="0 0 20 20"
-          aria-hidden="true"
-          focusable="false"
-        >
-          <path d="M1.5 3.5 11.5 10 1.5 16.5Z" />
-        </svg>
+        <DisclosureTriangle />
         <span className={styles.label}>{summary}</span>
       </summary>
       {children}

@@ -131,7 +131,7 @@ export default async function TraditionalColorResultPage({ params }: Props) {
           <Link
             href={`/play/${SLUG}`}
             className={styles.tryButton}
-            data-focus-ring="inset"
+            data-inverted
           >
             {ctaText}
           </Link>

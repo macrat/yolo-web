@@ -305,6 +305,21 @@ textarea {
   color: var(--ink-2);
 }
 
+/* §6 反転。--ink の地に --paper の字で示すコントロール（プライマリボタンと、同じ役のリンク）。地が縁として
+ * 見え、下線を持たず、訪問済みでも字の色を変えない。hover の線とフォーカスのリングの色はこの地に合わせる
+ * （下の data-inverted の規則）。 */
+:where([data-inverted]) {
+  background: var(--ink);
+  color: var(--paper);
+  text-decoration: none;
+}
+
+/* §6 太い枠を持つコントロール。枠が縁として見える。フォーカスのリングは枠の内側に出す（下の
+ * data-thick-frame の規則）。 */
+:where([data-thick-frame]) {
+  border: var(--rule-w) solid var(--rule);
+}
+
 hr {
   border: none;
   border-top: var(--rule-w-hair) solid var(--rule-2);
@@ -384,7 +399,10 @@ hr {
 }
 
 /* §6 本文の中のリンクの hover。字に接する細い線を足すと下線と読み違えるので、下線を太い線の太さにする。 */
-:where(a[href]:not([data-text-box], [data-hit-area])):where(:hover, :active) {
+:where(a[href]:not([data-text-box], [data-hit-area], [data-inverted])):where(
+  :hover,
+  :active
+) {
   text-decoration-thickness: var(--rule-w);
 }
 
@@ -399,10 +417,26 @@ hr {
   [role="button"],
   [data-text-box],
   [data-hit-area],
-  [data-focus-ring="inset"]
+  [data-inverted],
+  [data-thick-frame]
 ) {
   --focus-ring-offset: calc(-1 * var(--rule-w));
   --focus-ring-fill: inset 0 0 0 calc(2 * var(--rule-w)) var(--paper);
+}
+
+/* 反転の地では、縁に接する線は地の外の --paper に溶けて見えない。hover の線は --paper で、縁から太い線の
+ * 太さだけ内側に引く。そのあいだは地の色で塗る。 */
+:where([data-inverted]) {
+  --hover-line:
+    inset 0 0 0 var(--rule-w) var(--ink),
+    inset 0 0 0 calc(var(--rule-w) + var(--rule-w-hair)) var(--paper);
+}
+
+/* 太い枠に外の輪を接して引くと、枠と一続きになってリングが見えない。二重リングを枠から太い線の太さだけ
+ * 内側へ離し、枠とのあいだを --paper で塗る。塗りは枠の内側から、外の輪は枠の外側から測る。 */
+:where([data-thick-frame]) {
+  --focus-ring-offset: calc(-3 * var(--rule-w));
+  --focus-ring-fill: inset 0 0 0 calc(3 * var(--rule-w)) var(--paper);
 }
 
 /* §5 コントロールの左端。hover の線・無効の枠・フォーカスのリングは、字の左右に余白を持つ箱に出す。
@@ -429,11 +463,21 @@ hr {
 }
 
 /* §6 部品の hover・active。進むもの・実行するもの・状態を変えるものに出し、押しても何も起きない現在地と
- * 無効には出さない。部品のクラスが上書きできるよう、詳細度を 0 にする。 */
-:where(a[href][data-text-box], button, summary, [role="button"]):where(
-    :hover,
-    :active
-  ):where(:not(:disabled, [aria-disabled="true"], [aria-current="page"])) {
+ * 無効には出さない。押せる範囲を ::after に広げた要素は、線をその範囲にだけ出す（下の data-hit-area の規則）。
+ * 部品のクラスが上書きできるよう、詳細度を 0 にする。 */
+:where(
+    a[href]:is([data-text-box], [data-inverted]),
+    button,
+    summary,
+    [role="button"]
+  ):where(:hover, :active):where(
+    :not(
+      :disabled,
+      [aria-disabled="true"],
+      [aria-current="page"],
+      [data-hit-area]
+    )
+  ) {
   box-shadow: var(--hover-line);
 }
 

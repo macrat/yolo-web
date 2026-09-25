@@ -18,31 +18,6 @@
   display: none;
 }
 
-/* 太い線で描く三角（§6）。1px が 1 単位の viewBox に、太い線の太さで引く。左の辺を線の太さの半分だけ
- * 内側に置き、線の外側を箱の左端に揃える（§5 最初の形を揃える）。
- * 回す中心は、下を向いた三角の線の外側も箱の左端に来て、上下が箱の中央に来る点。右を向いた三角の線の外側は
- * 横が 0〜14.25、縦が 0.74〜19.26 なので、中心 (a, b) は a + b = 19.26、b − a = 10 − 14.25 / 2 を解いて求める。 */
-.triangle {
-  flex: none;
-  margin-block-start: calc((1lh - 20px) / 2);
-  fill: none;
-  stroke: var(--rule);
-  stroke-width: var(--rule-w);
-  stroke-linejoin: miter;
-  transform-origin: 8.2px 11.07px;
-  transition: transform 150ms ease-out;
-}
-
-.accordion[open] > .summary .triangle {
-  transform: rotate(90deg);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .triangle {
-    transition: none;
-  }
-}
-
 .label {
   min-width: 0;
 }

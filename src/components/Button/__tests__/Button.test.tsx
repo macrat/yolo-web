@@ -1,4 +1,5 @@
 import { expect, test, describe, vi, it } from "vitest";
+import { createRef } from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { readFileSync } from "fs";
 import { resolve } from "path";
@@ -26,6 +27,22 @@ describe("Button", () => {
       "data-variant",
       "primary",
     );
+  });
+
+  test("primary は反転の地を持つ（data-inverted）", () => {
+    render(<Button variant="primary">primary</Button>);
+    expect(screen.getByRole("button")).toHaveAttribute("data-inverted");
+  });
+
+  test("default は反転の地を持たない", () => {
+    render(<Button>default</Button>);
+    expect(screen.getByRole("button")).not.toHaveAttribute("data-inverted");
+  });
+
+  test("ref は button 要素に渡る", () => {
+    const ref = createRef<HTMLButtonElement>();
+    render(<Button ref={ref}>次へ</Button>);
+    expect(ref.current).toBe(screen.getByRole("button", { name: "次へ" }));
   });
 
   test("variant を省略すると data-variant='default' がデフォルト", () => {

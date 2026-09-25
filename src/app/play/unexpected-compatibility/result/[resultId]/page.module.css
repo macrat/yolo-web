@@ -43,25 +43,17 @@
   margin-bottom: 0;
 }
 
-/* 主要 CTA: プライマリボタンと同じ反転（--ink の地に --paper の字）で、ボーダーを持たない。反転の地が縁として
- * 見えるので、箱の左端を並びの左端に揃え、字は縁の内側 8px から始める（§5・§6）。フォーカスの二重リングは
- * data-focus-ring="inset"（globals.css）が押せる範囲の内側に出す。 */
+/* 主要 CTA: プライマリボタンと同じ反転で、ボーダーを持たない。反転の地と、その上の hover の線とフォーカスの
+ * リングは data-inverted（globals.css）が持つ。反転の地が縁として見えるので、箱の左端を並びの左端に揃え、
+ * 字は縁の内側 8px から始める（§5・§6）。 */
 .tryButton {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
   padding: var(--space-8);
-  background: var(--ink);
-  color: var(--paper);
   font-family: var(--font-body);
   font-size: 1.0625rem;
   line-height: 1.4;
-  text-decoration: none;
-}
-
-/* hover の細い線を押せる範囲の内側に出す。詳細度を 0 にして、フォーカスの二重リングを上書きしない。 */
-:where(.tryButton):where(:hover, :active) {
-  box-shadow: var(--hover-line);
 }
 
 .tryCost {

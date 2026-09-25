@@ -145,7 +145,7 @@ export default async function ContrarianFortuneResultPage({ params }: Props) {
           <Link
             href={`/play/${SLUG}`}
             className={styles.tryButton}
-            data-focus-ring="inset"
+            data-inverted
           >
             {ctaText}
           </Link>

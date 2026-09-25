@@ -31,6 +31,7 @@ import Panel from "@/components/Panel";
 import RadioGroup from "@/components/RadioGroup";
 import Input from "@/components/Input";
 import Accordion from "@/components/Accordion";
+import DisclosureTriangle from "@/components/DisclosureTriangle";
 import {
   filterEntries,
   getKeigoCategories,
@@ -262,16 +263,7 @@ export default function KeigoReferenceTile({
                                 aria-expanded={expandedEntryId === entry.id}
                                 aria-label={`${entry.casual} の例文を${expandedEntryId === entry.id ? "閉じる" : "表示"}`}
                               >
-                                <svg
-                                  className={styles.triangle}
-                                  width="20"
-                                  height="20"
-                                  viewBox="0 0 20 20"
-                                  aria-hidden="true"
-                                  focusable="false"
-                                >
-                                  <path d="M1.5 3.5 11.5 10 1.5 16.5Z" />
-                                </svg>
+                                <DisclosureTriangle />
                                 {entry.casual}
                               </button>
                             </th>

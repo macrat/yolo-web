@@ -134,7 +134,7 @@ export default async function UnexpectedCompatibilityResultPage({
           <Link
             href={`/play/${SLUG}`}
             className={styles.tryButton}
-            data-focus-ring="inset"
+            data-inverted
           >
             {ctaText}
           </Link>

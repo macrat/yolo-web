@@ -68,12 +68,10 @@ export default function QuestionCard({
   );
 
   // 回答した選択肢は押せなくなるので、フォーカスは「次へ」に移し、キーボードでそのまま進めるようにする。
-  const nextAreaRef = useRef<HTMLDivElement>(null);
+  const nextButtonRef = useRef<HTMLButtonElement>(null);
   useEffect(() => {
     if (!answered) return;
-    nextAreaRef.current
-      ?.querySelector("button")
-      ?.focus({ preventScroll: true });
+    nextButtonRef.current?.focus({ preventScroll: true });
   }, [answered]);
 
   // 正誤は文字で伝える（WCAG 1.4.1）。
@@ -128,8 +126,8 @@ export default function QuestionCard({
           {question.explanation && (
             <div className={styles.explanation}>{question.explanation}</div>
           )}
-          <div className={styles.next} ref={nextAreaRef}>
-            <Button variant="primary" onClick={onNext}>
+          <div className={styles.next}>
+            <Button variant="primary" onClick={onNext} ref={nextButtonRef}>
               次へ
             </Button>
           </div>

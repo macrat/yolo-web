@@ -85,9 +85,9 @@
 /*
  * <th scope="row"> 内の実 <button> で、その行の例文を開閉する。<tr> に role="button" を付けると
  * ARIA in HTML 仕様に違反するため、この設計にする。
- * 例文は次の行に出るので details で組めず、アコーディオン（§6）と同じ三角を button に描く。縁の見えない
- * コントロールなので、三角を並びの左端に揃え、字の左右の余白と張り出しは data-text-box（globals.css）が
- * 持つ。hover の線とフォーカスのリングは globals.css の既定に従う。
+ * 例文は次の行に出るので details で組めず、アコーディオン（§6）と同じ三角（DisclosureTriangle）を button に
+ * 置く。縁の見えないコントロールなので、三角を並びの左端に揃え、字の左右の余白と張り出しは
+ * data-text-box（globals.css）が持つ。hover の線とフォーカスのリングは globals.css の既定に従う。
  */
 .expandButton {
   display: flex;
@@ -103,29 +103,6 @@
   cursor: pointer;
   text-align: left;
   line-height: inherit;
-}
-
-/* 太い線で描く三角。閉じているあいだは右を、開いているあいだは下を向く。形と回す中心は Accordion の
- * 三角と同じで、線の外側を箱の左端に揃える。 */
-.triangle {
-  flex: none;
-  margin-block-start: calc((1lh - 20px) / 2);
-  fill: none;
-  stroke: var(--rule);
-  stroke-width: var(--rule-w);
-  stroke-linejoin: miter;
-  transform-origin: 8.2px 11.07px;
-  transition: transform 150ms ease-out;
-}
-
-.expandButton[aria-expanded="true"] .triangle {
-  transform: rotate(90deg);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .triangle {
-    transition: none;
-  }
 }
 
 /* 例文パネル（アコーディオン） */

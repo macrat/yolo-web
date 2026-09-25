@@ -1,5 +1,5 @@
 /* ボタン（DESIGN.md §6）。どちらの種類も、押すとそのページで何かが実行されるもの。
- * hover の細い線とフォーカスの二重リングは globals.css の既定に従う。 */
+ * hover の細い線とフォーカスの二重リングは globals.css に従う。 */
 
 .button {
   display: inline-flex;
@@ -16,8 +16,6 @@
   word-break: auto-phrase;
   border: none;
   border-radius: 0;
-  color: var(--ink);
-  background: transparent;
   line-height: 1.4;
   text-align: start;
   cursor: pointer;
@@ -26,17 +24,18 @@
 /* プライマリでないボタンは、進むもの・実行するものの印として下線を持つ。見えるのは字だけなので、
  * 字の左右の余白と、字を並びの左端に置く張り出しは data-text-box（globals.css）が持つ。 */
 .variantDefault {
+  background: transparent;
+  color: var(--ink);
   text-decoration: underline;
   text-decoration-thickness: var(--rule-w-hair);
   text-underline-offset: 0.15em;
 }
 
-/* プライマリボタンは反転で示し、ボーダーを持たない。1ページに1つまで。反転の地が縁として見えるので、
- * 箱の左端を並びの左端に揃え、字は縁の内側 8px から始める（§5）。 */
+/* プライマリボタンは反転で示し、ボーダーを持たない。1ページに1つまで。反転の地は data-inverted
+ * （globals.css）が持つ。反転の地が縁として見えるので、箱の左端を並びの左端に揃え、字は縁の内側 8px から
+ * 始める（§5）。 */
 .variantPrimary {
   padding-inline: var(--space-8);
-  background: var(--ink);
-  color: var(--paper);
 }
 
 /* 無効は太い破線の枠で示し、押しても何も起きないので下線も反転も持たない。枠は箱の縁の内側に引き、

@@ -232,11 +232,7 @@ export default async function PlayQuizResultPage({
 
       {/* CTA1 */}
       <div className={styles.trySection}>
-        <Link
-          href={`/play/${slug}`}
-          className={styles.tryButton}
-          data-focus-ring="inset"
-        >
+        <Link href={`/play/${slug}`} className={styles.tryButton} data-inverted>
           {ctaText}
         </Link>
         <p className={styles.tryCost}>

@@ -34,6 +34,7 @@ export default function WordGrid({
           <button
             key={word}
             className={styles.wordButton}
+            data-thick-frame
             onClick={() => onWordToggle(word)}
             disabled={disabled}
             aria-pressed={isSelected}

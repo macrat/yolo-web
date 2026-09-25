@@ -153,8 +153,8 @@
 
 /*
  * 目玉の入口。このページで最も進んでほしい1つなので、プライマリボタンと同じ反転で示し、ボーダーを持たない
- * （§6）。反転の地が縁として見えるので、箱の左端を並びの左端に揃え、字は縁の内側 8px から始める（§5）。
- * 訪問済みでも反転の字の色を保つ。
+ * （§6）。反転の地と、その上の hover の線とフォーカスのリングは data-inverted（globals.css）が持つ。反転の地が
+ * 縁として見えるので、箱の左端を並びの左端に揃え、字は縁の内側 8px から始める（§5）。
  */
 .heroLink {
   display: inline-flex;
@@ -162,18 +162,9 @@
   gap: var(--space-8);
   min-height: 44px;
   padding-inline: var(--space-8);
-  background: var(--ink);
-  color: var(--paper);
   font-family: var(--font-body);
   font-size: 1.125rem; /* 18px */
   line-height: 1.4;
-  text-decoration: none;
-}
-
-/* hover は、押せる範囲の内側に細い線を出す（§6）。フォーカスの二重リングは data-focus-ring（globals.css）が
- * 箱の内側に出すので、フォーカスしているあいだは線で上書きしない。 */
-.heroLink:is(:hover, :active):not(:focus-visible) {
-  box-shadow: var(--hover-line);
 }
 
 /* ── 品書き（よろず＝広さの棚）─────────────────────────────────────────── */

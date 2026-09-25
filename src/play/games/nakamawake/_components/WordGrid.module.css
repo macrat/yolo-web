@@ -1,6 +1,7 @@
 /* WordGrid（なかまわけ）— 単語盤面。
  * 選んだ語は、語の上の 20px の四角の内側を塗って示す（§6 チェックボックスと同じ形）。
- * hover の細い線は globals.css の既定がボタンの内側に出す。 */
+ * 語のマスの太い枠と、その内側に出すフォーカスのリングは data-thick-frame（globals.css）が持ち、hover の細い線は
+ * globals.css の既定がボタンの内側に出す。 */
 
 .grid {
   display: grid;
@@ -18,7 +19,6 @@
   gap: var(--space-8);
   min-height: 44px;
   padding: var(--space-16) 0.25rem;
-  border: var(--rule-w) solid var(--rule);
   border-radius: var(--radius);
   background: var(--paper);
   color: var(--ink);
@@ -28,11 +28,6 @@
   cursor: pointer;
   text-align: center;
   word-break: break-all;
-  /* 外の輪は太い枠に重なって見分けられないので、枠の内側に --paper と --ink の輪を1本ずつ塗り、
-   * 枠と合わせて二重リングにする（§6）。 */
-  --focus-ring-fill:
-    inset 0 0 0 var(--rule-w) var(--paper),
-    inset 0 0 0 calc(2 * var(--rule-w)) var(--ink);
 }
 
 /* 太い線で描く 20px の四角。選ぶと内側を --ink で 8px 塗る。 */

@@ -68,8 +68,6 @@
   text-decoration-thickness: var(--rule-w-hair);
   text-underline-offset: 0.15em;
   cursor: pointer;
-  /* hover の線は押せる範囲（::after）にだけ出し、字の箱には出さない。 */
-  box-shadow: none;
 }
 
 /* 押せる範囲を行全体に広げる。hover の線とフォーカスの二重リングは、data-hit-area（globals.css）がこの範囲に出す。 */

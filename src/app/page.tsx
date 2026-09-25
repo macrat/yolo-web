@@ -220,7 +220,7 @@ export default function Home() {
               <Link
                 href={getContentPath(heroContent)}
                 className={styles.heroLink}
-                data-focus-ring="inset"
+                data-inverted
               >
                 やってみる →
               </Link>

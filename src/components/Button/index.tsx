@@ -1,4 +1,4 @@
-import { useId, type ComponentPropsWithoutRef } from "react";
+import { useId, type ComponentPropsWithRef } from "react";
 import styles from "./Button.module.css";
 
 /**
@@ -23,14 +23,17 @@ interface ButtonOwnProps {
 }
 
 type ButtonProps = ButtonOwnProps &
-  Omit<ComponentPropsWithoutRef<"button">, keyof ButtonOwnProps>;
+  Omit<ComponentPropsWithRef<"button">, keyof ButtonOwnProps>;
 
 const variantClassMap: Record<ButtonVariant, string> = {
   default: styles.variantDefault,
   primary: styles.variantPrimary,
 };
 
-/** ボタン（DESIGN.md §6）。見え方は Button.module.css が持つ。 */
+/**
+ * ボタン（DESIGN.md §6）。見え方は Button.module.css が持つ。ref は button 要素に渡るので、呼び出し側が
+ * フォーカスを移せる。
+ */
 function Button({
   variant = "default",
   disabledReason,
@@ -75,6 +78,8 @@ function Button({
       data-variant={variant}
       /* プライマリでないボタンは縁が見えないので、字を並びの左端に置く箱で組む（§5）。 */
       data-text-box={variant === "default" ? "inline" : undefined}
+      /* プライマリボタンは反転の地で示し、hover の線とフォーカスのリングもその地に合わせる（§6）。 */
+      data-inverted={variant === "primary" ? "" : undefined}
       {...rest}
     >
       {children}
