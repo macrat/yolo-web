@@ -1,246 +1,73 @@
-/**
- * Header（のれん）— 上端。
- * 店号（サイト名・見出しの書体）+ 下に一本の --rule-strong 罫。ナビは文字のみ。
- * ヘッダに背景色・影は付けない。地は紙のまま。角丸は 0（--radius）。
- */
-
+/* 上端（DESIGN.md §5 レイアウト）。背景を敷かず、下に全幅の罫線だけを引く。 */
 .header {
-  /* .inner の height と .mobileOverlay の top が同じ値を参照するためローカル変数で一元化。 */
-  --header-height: 3.5rem;
-  /* 背景色・影を付けない。下辺に一本の強い罫（のれん罫）だけを引く。 */
-  background: transparent;
-  border-bottom: 1px solid var(--rule-strong);
-  width: 100%;
+  border-bottom: var(--rule-w) solid var(--rule);
 }
 
+/* コンテナと同じ幅と内側の余白を取り、中身の左端をコンテンツ幅の左端に揃える（§5 コンテナ）。 */
 .inner {
-  /* 最大幅（§5）。 */
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 0 var(--space-16);
-  height: var(--header-height);
+  width: min(var(--max-width), 100% - 2 * var(--space-16));
+  margin-inline: auto;
+  padding: var(--space-8) calc(var(--rule-w) + var(--box-padding));
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-24);
+  column-gap: var(--space-24);
 }
 
-/* 店号: サイト名・見出しの書体（§5）。ドット（"."）だけ --accent。 */
-.logo {
-  color: var(--ink);
-  text-decoration: none;
-  font-family: var(--font-heading);
-  /* のれんの店号として本文より一段大きく、見出しの書体の顔を立てる。 */
-  font-size: 1.375rem;
-  line-height: 1;
-  letter-spacing: 0.01em;
-  white-space: nowrap;
-  flex-shrink: 0;
-  /* モバイルのタップターゲット 44px 確保。 */
-  min-height: 44px;
+/* 項目のあいだは、狭い画面では詰めて1行に入る項目を増やす。 */
+.navList {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--space-8);
+}
+
+@media (min-width: 45rem) {
+  .navList {
+    column-gap: var(--space-16);
+  }
+}
+
+/* ナビの項目とサイト名。幅は字の大きさで、押せる範囲が 44px 四方に届かない分だけ余白を足す（§5・§6）。
+ * 下線と訪問済みの色は globals.css の a の既定に従う。 */
+.link {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  /* hover の細い線を要素の内側に出すため、線の幅を先に取っておく。 */
+  border: var(--rule-w-hair) solid transparent;
 }
 
-.logo:hover {
+.link:hover {
+  border-color: var(--rule-2);
+}
+
+/* 二重リング（§6）。外は --ink の輪で、要素とのあいだの幅には下地の --paper が見えて内の輪になる。
+ * 上端は背景を敷かないので、下地はいつも --paper になる。 */
+.link:focus-visible {
+  outline: var(--rule-w) solid var(--ink);
+  outline-offset: var(--rule-w);
+}
+
+/* 現在地は押しても何も起きないので、下線も hover も持たない（§6）。 */
+.link[aria-current="page"] {
   color: var(--ink);
   text-decoration: none;
 }
 
-/* ドット（"."）の色。 */
-.dot {
-  color: var(--accent);
+.link[aria-current="page"]:hover {
+  border-color: transparent;
 }
 
-/* ==============================
-   デスクトップ専用要素（デフォルト表示）
-   ============================== */
-
-.desktopNav {
-  display: flex;
-  align-items: center;
-  gap: var(--space-24);
-  flex: 1;
+.navList .link[aria-current="page"] {
+  font-weight: 700;
 }
 
-.desktopActions {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: var(--space-8);
-  flex-shrink: 0;
-}
-
-/* ハンバーガー / モバイルメニュー: デスクトップでは非表示。 */
-.hamburger {
-  display: none;
-}
-
-.mobileMenu {
-  display: none;
-}
-
-/* ==============================
-   ナビリンク（文字のみ）
-   ============================== */
-
-.navLink {
-  color: var(--ink-2);
-  text-decoration: none;
-  font-size: 0.9375rem;
-  padding: var(--space-8) 0;
-  white-space: nowrap;
-  transition: color 0.1s;
-}
-
-.navLink:hover {
-  color: var(--ink);
-  /* いまはホバー時だけ下線を出す。 */
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
-}
-
-.navLink:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-/* 現在地。usePathname 判定で aria-current="page" が付与される。 */
-.navLink[aria-current="page"] {
-  color: var(--accent);
-}
-
-/* ==============================
-   モバイルオーバーレイ（デフォルトは非表示）
-   ============================== */
-
-.mobileOverlay {
-  position: fixed;
-  top: var(--header-height);
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.4);
-  z-index: 10;
-}
-
-@media (min-width: 721px) {
-  .mobileOverlay {
-    display: none;
-  }
-}
-
-/* ==============================
-   モバイル（max-width: 720px）
-   ============================== */
-
-@media (max-width: 720px) {
-  .desktopNav {
-    display: none;
-  }
-
-  .desktopActions {
-    display: none;
-  }
-
-  .hamburger {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin-left: auto;
-    min-width: 44px;
-    min-height: 44px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--ink);
-    border-radius: var(--radius);
-    flex-shrink: 0;
-  }
-
-  .hamburger:hover {
-    color: var(--accent);
-  }
-
-  .hamburger:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-  }
-
-  /* モバイルメニュー: 店構えの流儀（紙地・強い罫・文字）。 */
-  .mobileMenu {
-    display: block;
-    background: var(--paper);
-    border-bottom: 1px solid var(--rule-strong);
-    padding: var(--space-8) var(--space-16) var(--space-16);
-    position: relative;
-    z-index: 11;
-    /* 開閉のアニメーション（150ms 以下・§11）。 */
-    animation: menuFadeIn 0.15s ease;
-  }
-
-  @keyframes menuFadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(-4px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  /* 品書きの流儀: 各項目を罫で区切る。 */
-  .mobileNavList {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .mobileNavList li + li {
-    border-top: 1px solid var(--rule);
-  }
-
-  .mobileNavLink {
-    display: flex;
-    align-items: center;
-    min-height: 44px;
-    color: var(--ink-2);
-    text-decoration: none;
-    font-size: 1rem;
-    transition: color 0.1s;
-  }
-
-  .mobileNavLink:hover {
-    color: var(--ink);
-    text-decoration: underline;
-    text-underline-offset: 0.2em;
-  }
-
-  .mobileNavLink:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-  }
-
-  .mobileNavLink[aria-current="page"] {
-    color: var(--accent);
-  }
-
-  /* actions スロット（テーマトグル等）: ナビの下に強い罫で区切って配置。 */
-  .mobileActions {
-    margin-top: var(--space-16);
-    padding-top: var(--space-16);
-    border-top: 1px solid var(--rule-strong);
-    display: flex;
-    align-items: center;
-    gap: var(--space-8);
-  }
-}
-
-/* prefers-reduced-motion では開閉アニメを止め、即時表示にする（§11）。 */
-@media (prefers-reduced-motion: reduce) {
-  .mobileMenu {
-    animation: none;
-  }
+/* サイト名は見出しの書体で、本文と同じ大きさで組む（§5 レイアウト）。 */
+.siteName {
+  font-family: var(--font-heading);
+  font-size: var(--text-body);
+  font-weight: 400;
 }

@@ -1,11 +1,20 @@
 /**
- * サイト共通の Metadata オブジェクト。
+ * サイト共通の Metadata と Viewport。
  *
- * src/app/layout.tsx から import して使う。
+ * ルートのレイアウト（src/app/layout.tsx・src/app/global-not-found.js）から import して使う。
  */
 
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { BASE_URL, SITE_NAME } from "@/lib/constants";
+import { PAPER, PAPER_DARK } from "@/lib/utsuwaHex";
+
+/** theme-color は端末のテーマごとの --paper（DESIGN.md §10）。 */
+export const sharedViewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: PAPER },
+    { media: "(prefers-color-scheme: dark)", color: PAPER_DARK },
+  ],
+};
 
 /** サイト共通の Metadata。src/app/layout.tsx が使う。 */
 export const sharedMetadata: Metadata = {

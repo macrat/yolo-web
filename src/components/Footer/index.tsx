@@ -1,141 +1,46 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import styles from "./Footer.module.css";
 
-/** AI 運営の通知文（constitution Rule 3 の安全装置）。
- * 差し替え可能にすると本サイトの来訪者向け通知が漏れるリスクがあるため、
- * 内部固定にして上書きできない構造にしている。文言の改訂は本ファイルを
- * 編集する形で行う。 */
-const NOTE =
-  "このサイトは AI が運営する実験サイトです。内容には誤りがありえます。";
+/** AI 運営の告知（constitution 規則3・DESIGN.md §9）。どのページにも出るよう、props で差し替えられなくしている。 */
+const NOTICE =
+  "このサイトは、AI が運営する実験のサイトです。内容が壊れていたり、誤っていたりすることがあります。";
 
-/** フッターサイトマップの4カラム構成。
- * 外部リンクは external: true を指定して新規タブ＋ rel="noopener noreferrer" で開く。
- * ブログカテゴリは `/blog/category/[slug]` ルートが実在するもののみ採用（確認済）。
- * 「ツール」= インタラクティブな道具、「その他」= 静的リファレンス・補助動線。
- * 追加・削除は本ファイルを編集する形で行う。 */
-const FOOTER_SECTIONS: {
-  title: string;
-  links: {
-    label: string;
-    href: string;
-    external?: boolean;
-    ariaLabel?: string;
-  }[];
-}[] = [
-  {
-    title: "ツール",
-    links: [
-      { label: "ツール一覧", href: "/tools" },
-      { label: "文字カウンター", href: "/tools/char-count" },
-      { label: "JSON 整形", href: "/tools/json-formatter" },
-      { label: "色変換", href: "/tools/color-converter" },
-    ],
-  },
-  {
-    title: "遊び",
-    links: [
-      { label: "全コンテンツ", href: "/play" },
-      { label: "今日の運勢", href: "/play#fortune" },
-      { label: "タイプ診断", href: "/play#personality" },
-      { label: "知識クイズ", href: "/play#knowledge" },
-      { label: "毎日のパズル", href: "/play#game" },
-    ],
-  },
-  {
-    title: "ブログ",
-    links: [
-      { label: "ブログ一覧", href: "/blog" },
-      { label: "AI ワークフロー", href: "/blog/category/ai-workflow" },
-      { label: "開発ノート", href: "/blog/category/dev-notes" },
-      { label: "ツールガイド", href: "/blog/category/tool-guides" },
-      { label: "日本語・文化", href: "/blog/category/japanese-culture" },
-      { label: "サイト更新", href: "/blog/category/site-updates" },
-    ],
-  },
-  {
-    title: "その他",
-    links: [
-      { label: "辞典", href: "/dictionary" },
-      { label: "サイト紹介", href: "/about" },
-      { label: "プライバシー", href: "/privacy" },
-      {
-        label: "GitHub",
-        href: "https://github.com/macrat/yolo-web",
-        external: true,
-        ariaLabel: "GitHub（外部サイト・新しいタブで開く）",
-      },
-    ],
-  },
+/** どのページからも辿れてほしい行き先。上端のナビに無い辞典と、サイトについての案内を置く。 */
+const LINKS: { label: string; href: string }[] = [
+  { label: "辞典", href: "/dictionary" },
+  { label: "サイト紹介", href: "/about" },
+  { label: "プライバシー", href: "/privacy" },
 ];
 
 /**
- * Footer — サイトフッター。
- *
- * - 4カラム式サイトマップ（ツール / 遊び / ブログ / その他）
- * - AI 運営の注記（constitution Rule 3 への対応）
- * - 「© 年 yolos.net」
- *
- * 内容はすべてサイト全体で共通のため props を受け取らない。一貫性の確保と
- * layout 側の boilerplate 回避のため、リンクと注記は内部固定。AI 運営注記は
- * 上書きできない構造にして constitution Rule 3 の安全装置として機能させる。
- *
- * デザイン:
- * - 地は一段沈む面 `--paper-2`、上辺に一本の `--rule-strong` 罫で本文と区切る
- * - 文字は墨（`--ink` / `--ink-2`）。リンクは器の chrome として静かに（既定は墨、hover で下線）
- * - 棚見出しは見出しの書体・罫下線。AI 明示文を定位置（下部）に。絵文字は使わない
- * - 4カラムは grid でレスポンシブ対応。モバイルでは 2 カラムに自動折り返し
+ * 下端（DESIGN.md §5 レイアウト）。上に全幅の罫線を引き、その下に告知とリンクを置く。
+ * 現在地は usePathname で決めるのでクライアントで描く。
  */
 export default function Footer() {
-  return (
-    <footer className={styles.footer} role="contentinfo">
-      <div className={styles.inner}>
-        {/* 4カラムサイトマップ — Header の <nav aria-label="メインナビゲーション"> と
-            対称的に <nav aria-label="サイトマップ"> でランドマーク化 */}
-        <nav aria-label="サイトマップ" className={styles.sitemap}>
-          {FOOTER_SECTIONS.map((section) => (
-            <div key={section.title} className={styles.column}>
-              <h3 className={styles.columnTitle}>{section.title}</h3>
-              <ul className={styles.columnLinks}>
-                {section.links.map((link) =>
-                  link.external ? (
-                    <li key={link.href}>
-                      <a
-                        href={link.href}
-                        className={styles.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={link.ariaLabel}
-                      >
-                        {link.label}
-                        {/* 外部リンクを示す 16px 相当のテキスト記号 */}
-                        <span
-                          className={styles.externalIcon}
-                          aria-hidden="true"
-                        >
-                          ↗
-                        </span>
-                      </a>
-                    </li>
-                  ) : (
-                    <li key={link.href}>
-                      <Link href={link.href} className={styles.link}>
-                        {link.label}
-                      </Link>
-                    </li>
-                  ),
-                )}
-              </ul>
-            </div>
-          ))}
-        </nav>
+  const pathname = usePathname();
 
-        {/* フッター下部: AI 運営注記と著作権 */}
-        <div className={styles.bottom}>
-          <p className={styles.note}>{NOTE}</p>
-          <span className={styles.copyright}>
-            &copy; {new Date().getFullYear()} yolos.net
-          </span>
-        </div>
+  return (
+    <footer className={styles.footer}>
+      <div className={styles.inner}>
+        <p className={styles.notice}>{NOTICE}</p>
+        <nav aria-label="サイトの案内">
+          <ul className={styles.links}>
+            {LINKS.map((link) => (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  className={styles.link}
+                  aria-current={pathname === link.href ? "page" : undefined}
+                >
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
       </div>
     </footer>
   );

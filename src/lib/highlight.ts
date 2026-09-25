@@ -14,7 +14,7 @@
  *   The light theme's colors are baked into inline `color` / `background-color`
  *   declarations, and the dark theme's colors are stored alongside as
  *   `--shiki-dark` / `--shiki-dark-bg` CSS variables. The blog page CSS swaps
- *   them in via `:root.dark .shiki { color: var(--shiki-dark) !important; }`.
+ *   them in under `@media (prefers-color-scheme: dark)`.
  *
  * Async lazy init:
  *   Shiki's `createHighlighter` is async. Importing this module doesn't
@@ -68,7 +68,7 @@ export async function highlight(code: string, lang?: string): Promise<string> {
       dark: "vitesse-dark",
     },
     // Light is the "default" — its colors go into plain `color` properties.
-    // Dark goes into `--shiki-dark` CSS variables, swapped in by .dark CSS.
+    // Dark goes into `--shiki-dark` CSS variables, swapped in by the dark media query.
     defaultColor: "light",
   });
 }

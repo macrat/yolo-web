@@ -96,6 +96,13 @@ describe("build410Html", () => {
       expect(html).toContain("#0b0b0b"); // --ink
     });
 
+    test("端末の設定が dark なら dark の紙と墨になる（§10）", () => {
+      const dark = html.match(/@media \(prefers-color-scheme:dark\)\{[^}]*\}/);
+      expect(dark).not.toBeNull();
+      expect(dark![0]).toContain("#121212"); // dark の --paper
+      expect(dark![0]).toContain("#f5f5f5"); // dark の --ink
+    });
+
     test("Web フォントを読まないので、見出しは仮名が全角の端末の書体で組む（§3）", () => {
       expect(html).toContain("h1{font-family:'BIZ UDGothic',");
       expect(html).not.toContain("Zen Antique");
@@ -103,7 +110,7 @@ describe("build410Html", () => {
 
     test("トップへの導線は墨の文字で表す（色ベタのボタンでない・§6）", () => {
       expect(html).toContain("href='/'");
-      expect(html).toContain(`color:#0b0b0b`);
+      expect(html).toMatch(/a\.home\{[^}]*color:var\(--ink\)/);
     });
 
     test("角丸を持たない（0.5rem の角丸を含まない・§5）", () => {

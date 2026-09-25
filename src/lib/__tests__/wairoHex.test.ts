@@ -8,9 +8,20 @@ import {
   type WairoHex,
 } from "../wairoHex";
 import { oklchToHex, parseOklch } from "../oklchToHex";
-// 器定数の SSoT は中立モジュール utsuwaHex（fuda-image / ogp-image / 本テストの3者が import）。
-// next/og に依存しない純粋な hex 定数なので ImageResponse のモックは不要。
-import { PAPER, INK, INK_2, RULE, RULE_STRONG, ACCENT } from "../utsuwaHex";
+// 器定数の SSoT は中立モジュール utsuwaHex。next/og に依存しない純粋な hex 定数なので
+// ImageResponse のモックは不要。
+import {
+  PAPER,
+  INK,
+  INK_2,
+  RULE,
+  RULE_STRONG,
+  ACCENT,
+  PAPER_DARK,
+  INK_DARK,
+  INK_2_DARK,
+  RULE_DARK,
+} from "../utsuwaHex";
 
 /** WCAG 2.1 相対輝度・コントラスト比を hex から計算する（AA 再計測用・sRGB）。 */
 function hexToRgb(hex: string): [number, number, number] {
@@ -58,16 +69,18 @@ describe("oklchToHex — 正典 oklch との乖離ガード", () => {
   // oklch→sRGB クリップによるサイレント乖離（globals.css だけ変えて hex 表を放置）を検知する。
   const cssPath = join(process.cwd(), "src/app/globals.css");
   const css = readFileSync(cssPath, "utf8");
-  // ダークブロック（:root.dark）以降は除外し、light の宣言だけを対象にする。
-  const lightCss = css.split(":root.dark")[0];
+  // dark の値は prefers-color-scheme: dark のブロックにあり、それより前が light の宣言。
+  const [lightCss, darkCss] = css.split("@media (prefers-color-scheme: dark)");
 
-  function readOklchToken(name: string): string {
+  function readOklchTokenIn(block: string, name: string): string {
     // 例: "--wairo-kurenai: oklch(0.5 0.17 18);"
     const re = new RegExp(`--${name}:\\s*(oklch\\([^)]*\\))`);
-    const m = lightCss.match(re);
-    if (!m) throw new Error(`token --${name} not found in light globals.css`);
+    const m = block.match(re);
+    if (!m) throw new Error(`token --${name} not found in globals.css`);
     return m[1];
   }
+  const readOklchToken = (name: string): string =>
+    readOklchTokenIn(lightCss, name);
 
   test("中性文字色（ink-white / ink-sumi）が globals.css と一致", () => {
     const white = parseOklch(readOklchToken("wairo-ink-white"));
@@ -104,6 +117,22 @@ describe("oklchToHex — 正典 oklch との乖離ガード", () => {
     "器定数 %s が globals.css の light トークン --%s から再現できる",
     (hex, token) => {
       const parsed = parseOklch(readOklchToken(token));
+      expect(parsed).not.toBeNull();
+      expect(oklchToHex(parsed!.l, parsed!.c, parsed!.h)).toBe(hex);
+    },
+  );
+
+  const CONTAINER_DARK_TOKENS: ReadonlyArray<[hex: string, token: string]> = [
+    [PAPER_DARK, "paper"],
+    [INK_DARK, "ink"],
+    [INK_2_DARK, "ink-2"],
+    [RULE_DARK, "rule-2"],
+  ];
+
+  test.each(CONTAINER_DARK_TOKENS)(
+    "器定数 %s が globals.css の dark トークン --%s から再現できる",
+    (hex, token) => {
+      const parsed = parseOklch(readOklchTokenIn(darkCss, token));
       expect(parsed).not.toBeNull();
       expect(oklchToHex(parsed!.l, parsed!.c, parsed!.h)).toBe(hex);
     },

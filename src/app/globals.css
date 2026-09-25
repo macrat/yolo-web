@@ -146,26 +146,28 @@
   }
 }
 
-/* ダークモード — next-themes が attribute="class" で <html class="dark"> を付与する */
-:root.dark {
-  color-scheme: dark;
+/* テーマは端末の設定に従う（§10）。 */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
 
-  /* §2 UI の色（ダーク）。light とは別の値を持つ。 */
-  --paper: oklch(0.18 0 0);
-  --paper-2: oklch(0.24 0 0);
-  --ink: oklch(0.97 0 0);
-  --ink-2: oklch(0.74 0 0);
-  --rule-2: oklch(0.53 0 0);
+    /* §2 UI の色（ダーク）。light とは別の値を持つ。 */
+    --paper: oklch(0.18 0 0);
+    --paper-2: oklch(0.24 0 0);
+    --ink: oklch(0.97 0 0);
+    --ink-2: oklch(0.74 0 0);
+    --rule-2: oklch(0.53 0 0);
 
-  /* 和色（ダーク）。文字色は両モードで共通なので、地の色だけを変える。 */
-  --wairo-kurenai: oklch(0.55 0.16 18); /* 紅 */
-  --wairo-kaki: oklch(0.72 0.14 55); /* 柿 */
-  --wairo-yamabuki: oklch(0.82 0.14 88); /* 山吹 */
-  --wairo-moegi: oklch(0.8 0.16 135); /* 萌黄 */
-  --wairo-tokiwa: oklch(0.52 0.11 155); /* 常磐 */
-  --wairo-ai: oklch(0.52 0.1 255); /* 藍 */
-  --wairo-fuji: oklch(0.74 0.09 300); /* 藤 */
-  --wairo-suou: oklch(0.52 0.13 0); /* 蘇芳 */
+    /* 和色（ダーク）。文字色は両モードで共通なので、地の色だけを変える。 */
+    --wairo-kurenai: oklch(0.55 0.16 18); /* 紅 */
+    --wairo-kaki: oklch(0.72 0.14 55); /* 柿 */
+    --wairo-yamabuki: oklch(0.82 0.14 88); /* 山吹 */
+    --wairo-moegi: oklch(0.8 0.16 135); /* 萌黄 */
+    --wairo-tokiwa: oklch(0.52 0.11 155); /* 常磐 */
+    --wairo-ai: oklch(0.52 0.1 255); /* 藍 */
+    --wairo-fuji: oklch(0.74 0.09 300); /* 藤 */
+    --wairo-suou: oklch(0.52 0.13 0); /* 蘇芳 */
+  }
 }
 
 *,
@@ -201,15 +203,6 @@ body {
   overflow-wrap: break-word;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-/* モバイルメニュー展開時のスクロールロック。
- * src/lib/scroll-lock.ts の acquireScrollLock / releaseScrollLock が
- * 参照カウンタ式で body に付与・除去する（AP-I07）。
- * コンポーネントから body.classList を直接操作してはならない。
- * layout.tsx の <body style={...}> と競合しない classList 方式を採用。 */
-.scroll-locked {
-  overflow: hidden;
 }
 
 /* 見出しの和文の Zen Antique はウェイト400の1本だけなので、太字にすると合成太字になる。

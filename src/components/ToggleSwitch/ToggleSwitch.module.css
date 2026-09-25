@@ -41,8 +41,7 @@
 
 /* トラック（横長の背景） — OFF 状態のデフォルト。
  * DESIGN.md §4「角丸 0px 基調」に従い、トラックも直角（--radius=0）で組む。
- * ON/OFF は角丸ではなく地の色（--rule→--accent）とつまみの位置で示す
- * ——ThemeToggle と同じ流儀（器は静かに・一律角丸を持ち込まない §8-5）。 */
+ * ON/OFF は角丸ではなく地の色（--rule→--accent）とつまみの位置で示す。 */
 .track {
   display: inline-block;
   width: 36px;

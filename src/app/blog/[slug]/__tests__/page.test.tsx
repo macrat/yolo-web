@@ -162,11 +162,7 @@ describe("app/blog/[slug]/page", () => {
     });
   });
 
-  // cycle-188/189 の右端ズレ退行防止ガード。cycle-279 フェーズR で のれん/Footer(chrome) は
-  // 新デザイン（横パディング=var(--space-16)=§4 の 8px スケール・--max-width）へ移行済み。
-  // C5（blog 移行・本テスト更新時点）で blog 本文カラムも新デザイン基準（--max-width・
-  // --space スケール）へ揃えた。
-  describe("グローバルヘッダー/フッターと本文カラムの横幅整列（cycle-188/189 退行防止・C5で本文も新デザインへ移行）", () => {
+  describe("グローバルの上端・下端と本文カラムの横幅", () => {
     it(".contentColumn に max-width: var(--max-width) が定義されていること（新デザイン・操作面の最大幅）", () => {
       expect(css).toMatch(
         /\.contentColumn[^{]*\{[^}]*max-width:\s*var\(--max-width\)/,
@@ -179,19 +175,22 @@ describe("app/blog/[slug]/page", () => {
       );
     });
 
-    it("Footer.module.css の .inner 横パディングが var(--space-16) であること（新デザイン chrome の一貫性）", () => {
-      expect(footerCss).toMatch(
-        /\.inner[^{]*\{[^}]*padding:[^;}]*var\(--space-16\)/,
-      );
-    });
+    it.each([
+      ["Header", () => headerCss],
+      ["Footer", () => footerCss],
+    ])(
+      "%s.module.css の .inner がコンテナと同じ幅と内側の余白を取ること（DESIGN.md §5 コンテナ）",
+      (_name, read) => {
+        expect(read()).toMatch(
+          /\.inner[^{]*\{[^}]*width:\s*min\(var\(--max-width\)/,
+        );
+        expect(read()).toMatch(
+          /\.inner[^{]*\{[^}]*padding:[^;}]*var\(--rule-w\) \+ var\(--box-padding\)/,
+        );
+      },
+    );
 
-    it("Header.module.css の .inner 横パディングが var(--space-16) であること（新デザイン chrome の一貫性）", () => {
-      expect(headerCss).toMatch(
-        /\.inner[^{]*\{[^}]*padding:[^;}]*var\(--space-16\)/,
-      );
-    });
-
-    it("page.module.css の SP ブレークポイントは 720px（Header/Footer と一致）", () => {
+    it("page.module.css の SP ブレークポイントは 720px", () => {
       // サイト共通の SP ブレークポイントは 720px
       expect(css).toMatch(/@media\s*\(max-width:\s*720px\)/);
       expect(css).not.toMatch(/@media\s*\(max-width:\s*768px\)/);
@@ -207,8 +206,10 @@ describe("app/blog/[slug]/page", () => {
       expect(css).toMatch(/\.prose pre[^{]*\{[^}]*var\(--paper-2\)/);
     });
 
-    it("Shiki dual-theme 切替（:global(.dark) .shiki）は維持されていること", () => {
-      expect(css).toMatch(/:global\(\.dark\)\s*\.prose\s*:global\(\.shiki\)/);
+    it("Shiki dual-theme の dark 配色が端末の設定（prefers-color-scheme: dark）で当たること", () => {
+      expect(css).toMatch(
+        /@media \(prefers-color-scheme: dark\)\s*\{\s*\.prose\s*:global\(\.shiki\)/,
+      );
     });
   });
 

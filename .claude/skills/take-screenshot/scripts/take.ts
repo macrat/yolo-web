@@ -18,11 +18,8 @@ if (selectorIndex !== -1 && !selector) {
   process.exit(1);
 }
 
-// --dark フラグ: 指定時はダークテーマで撮影する
-// next-themes は attribute="class" で <html class="dark"> を管理するため、
-// emulateMedia だけでは silent-light になる場合がある。
-// addInitScript で localStorage に theme='dark' を事前注入し、
-// next-themes に dark を選ばせる方式を採用する。
+// --dark フラグ: 指定時はダークテーマで撮影する。
+// サイトは端末の設定（prefers-color-scheme）に従うので、ブラウザの設定を dark にして撮る。
 const darkMode = process.argv.includes("--dark");
 
 const widths = [1920, 1536, 1280, 720, 440, 360];
@@ -52,23 +49,10 @@ async function main() {
   const darkFailedWidths: number[] = [];
 
   for (const width of widths) {
-    const context = await browser.newContext();
-
-    if (darkMode) {
-      // ページ遷移前に localStorage へ dark を注入する。
-      // next-themes はハイドレーション時に localStorage['theme'] を読んで
-      // <html class="dark"> を付与するため、この順序が必須。
-      await context.addInitScript(() => {
-        localStorage.setItem("theme", "dark");
-      });
-    }
-
+    const context = await browser.newContext({
+      colorScheme: darkMode ? "dark" : "light",
+    });
     const page = await context.newPage();
-
-    if (darkMode) {
-      // 保険として OS レベルのカラースキームも dark にする（page.goto 前に設定）
-      await page.emulateMedia({ colorScheme: "dark" });
-    }
 
     await page.setViewportSize({ width, height: 900 });
     await page.goto(url, { waitUntil: "networkidle" });
@@ -76,20 +60,18 @@ async function main() {
     // dark 適用の成否を判定する
     let darkApplied = false;
     if (darkMode) {
-      // next-themes がハイドレーション後に <html class="dark"> を付与するまで待つ。
-      // タイムアウト 5 秒以内に dark クラスが付かない場合は失敗とみなす。
-      darkApplied = await page
-        .waitForFunction(
-          () => document.documentElement.classList.contains("dark"),
-          { timeout: 5000 },
-        )
-        .then(() => true)
-        .catch(() => false);
+      // 撮る前に、dark の値が実際に当たったことを確かめる。
+      // テーマの値を上書きする仕組みが紛れ込んでも、light のまま dark の名前で保存しないため。
+      darkApplied = await page.evaluate(
+        () =>
+          window.matchMedia("(prefers-color-scheme: dark)").matches &&
+          getComputedStyle(document.documentElement).colorScheme === "dark",
+      );
 
       if (!darkApplied) {
         // ファイル名と終了コードの両方で失敗を通知する（ログ見落としを防ぐ二重化）
         console.error(
-          `[ERROR] w${width}: <html class="dark"> が 5 秒以内に付与されませんでした。` +
+          `[ERROR] w${width}: dark の値が当たっていません。` +
             ` ファイル名を _dark-FAILED に変更して保存します。`,
         );
         darkFailedWidths.push(width);

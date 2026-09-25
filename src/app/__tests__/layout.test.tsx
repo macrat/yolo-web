@@ -1,8 +1,7 @@
 /**
  * src/app/layout.tsx 構造テスト
  *
- * Header は actions スロット（ThemeToggle）のみを受け取る。
- * サイト内検索機能は恒久撤去済みで、Header にも検索関連の prop は存在しない。
+ * 上端・下端は全ページで同じ内容なので、layout から何も渡さない。
  */
 import { describe, test, expect } from "vitest";
 import { readFileSync } from "fs";
@@ -17,21 +16,15 @@ describe("app/layout.tsx の構造", () => {
     );
   });
 
-  test("Header JSX が actions スロットを受け取る", () => {
-    const headerJsx = layoutSrc.match(/<Header\b[\s\S]*?\/>/);
-    expect(headerJsx).not.toBeNull();
-    expect(headerJsx![0]).toMatch(/actions=/);
+  test("Header と Footer に props を渡さない", () => {
+    expect(layoutSrc).toMatch(/<Header\s*\/>/);
+    expect(layoutSrc).toMatch(/<Footer\s*\/>/);
   });
 
-  // cycle-279 C1 で (legacy)/__tests__/metadata.test.ts から移設。
-  // playLinks は Footer.tsx の DEFAULT_PLAY_LINKS をデフォルト値として使うため、
-  // layout.tsx 側で二重定義・prop 渡しをしないことを回帰ガードする。
-  test("layout.tsx does not define a local playLinks constant (no duplicate with Footer.tsx)", () => {
-    expect(layoutSrc).not.toMatch(/const\s+playLinks\s*=/);
-  });
-
-  test("layout.tsx passes no playLinks prop to Footer (uses Footer default)", () => {
-    expect(layoutSrc).not.toMatch(/<Footer\s[^>]*playLinks=/);
+  test("theme-color を端末のテーマごとに出す viewport を持つ", () => {
+    expect(layoutSrc).toMatch(
+      /export const viewport: Viewport = sharedViewport/,
+    );
   });
 
   // F1 / WCAG 2.4.1 Bypass Blocks: スキップリンクとスキップ先 main の回帰ガード。

@@ -146,18 +146,20 @@
  *
  * Shiki は light テーマ色を通常の `color` / `background-color` として埋め込み、
  * dark テーマ色を `--shiki-dark` / `--shiki-dark-bg` CSS 変数として並置する。
- * `<html class="dark">` 配下では変数値を `!important` で上書きしてダーク配色に切替える。
+ * 端末の設定が dark のときは変数値を `!important` で上書きしてダーク配色に切替える。
  *
  * `!important` は CSS Modules + サードパーティ生成 inline style に上書きするための
  * shiki 公式パターン（https://shiki.style/guide/dual-themes 参照）。
  */
-:global(.dark) .prose :global(.shiki),
-:global(.dark) .prose :global(.shiki span) {
-  color: var(--shiki-dark) !important;
-  background-color: var(--shiki-dark-bg) !important;
-  font-style: var(--shiki-dark-font-style) !important;
-  font-weight: var(--shiki-dark-font-weight) !important;
-  text-decoration: var(--shiki-dark-text-decoration) !important;
+@media (prefers-color-scheme: dark) {
+  .prose :global(.shiki),
+  .prose :global(.shiki span) {
+    color: var(--shiki-dark) !important;
+    background-color: var(--shiki-dark-bg) !important;
+    font-style: var(--shiki-dark-font-style) !important;
+    font-weight: var(--shiki-dark-font-weight) !important;
+    text-decoration: var(--shiki-dark-text-decoration) !important;
+  }
 }
 
 /*

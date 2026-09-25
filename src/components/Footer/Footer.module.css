@@ -1,116 +1,66 @@
-/*
- * Footer — 下端。
- * 紙・墨・罫で区切る。地は一段沈む面 --paper-2。AI 明示を定位置（下部）に。絵文字なし。
- * リンクは器の chrome として静かに扱う。角丸は 0（--radius）。
- */
+/* 下端（DESIGN.md §5 レイアウト）。背景を敷かず、上に全幅の罫線だけを引く。 */
 .footer {
-  background: var(--paper-2);
-  color: var(--ink-2);
-  /* 本文との境界は強い罫。 */
-  border-top: 1px solid var(--rule-strong);
+  border-top: var(--rule-w) solid var(--rule);
 }
 
+/* コンテナと同じ幅と内側の余白を取り、中身の左端をコンテンツ幅の左端に揃える（§5 コンテナ）。 */
 .inner {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: var(--space-48) var(--space-16);
+  width: min(var(--max-width), 100% - 2 * var(--space-16));
+  margin-inline: auto;
+  padding: var(--space-24) calc(var(--rule-w) + var(--box-padding));
   display: flex;
   flex-direction: column;
-  gap: var(--space-32);
+  gap: var(--space-16);
 }
 
-/*
- * 棚（区画）のグリッド。auto-fit + minmax で画面幅に応じて 4→2→1 カラムへ自然に折り返す。
- * minmax の最小値 160px は棚見出しが折り返さない最小幅。
- */
-.sitemap {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: var(--space-24) var(--space-32);
+.notice {
+  max-width: var(--measure);
 }
 
-.column {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-8);
-}
-
-/* 棚の見出し（品名の親）: 見出しの書体・墨。罫下線で棚を仕切る。英字の全部大文字は使わない。 */
-.columnTitle {
-  color: var(--ink);
-  font-family: var(--font-heading);
-  font-size: 0.9375rem;
-  letter-spacing: 0.01em;
-  margin: 0 0 var(--space-8);
-  padding-bottom: var(--space-8);
-  border-bottom: 1px solid var(--rule);
-}
-
-.columnLinks {
+/* 項目のあいだは、狭い画面では詰めて1行に入る項目を増やす。 */
+.links {
   list-style: none;
-  padding: 0;
-  margin: 0;
   display: flex;
-  flex-direction: column;
-  gap: var(--space-8);
+  flex-wrap: wrap;
+  column-gap: var(--space-8);
 }
 
-/* リンク: 器の chrome として静かに置く。いまは静止時に下線を出さず、hover で下線を出す。 */
+@media (min-width: 45rem) {
+  .links {
+    column-gap: var(--space-16);
+  }
+}
+
+/* 幅は字の大きさで、押せる範囲が 44px 四方に届かない分だけ余白を足す（§5・§6）。
+ * 下線と訪問済みの色は globals.css の a の既定に従う。 */
 .link {
-  color: var(--ink-2);
-  text-decoration: none;
-  font-size: 0.875rem;
   display: inline-flex;
   align-items: center;
-  gap: 0.2em;
-  transition: color 0.1s;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  /* hover の細い線を要素の内側に出すため、線の幅を先に取っておく。 */
+  border: var(--rule-w-hair) solid transparent;
 }
 
 .link:hover {
-  color: var(--accent);
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
+  border-color: var(--rule-2);
 }
 
+/* 二重リング（§6）。外は --ink の輪で、要素とのあいだの幅には下地の --paper が見えて内の輪になる。
+ * 下端は背景を敷かないので、下地はいつも --paper になる。 */
 .link:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--rule-w) solid var(--ink);
+  outline-offset: var(--rule-w);
 }
 
-/* 外部リンクの「↗」記号（テキスト記号・絵文字ではない）。本文より小さめ。 */
-.externalIcon {
-  font-size: 0.7em;
-  opacity: 0.8;
+/* 現在地は押しても何も起きないので、下線も hover も持たない（§6）。 */
+.link[aria-current="page"] {
+  color: var(--ink);
+  font-weight: 700;
+  text-decoration: none;
 }
 
-/* 下部: AI 明示（定位置・§9/constitution rule3）と著作権。上を罫で区切る。 */
-.bottom {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: var(--space-8) var(--space-32);
-  padding-top: var(--space-24);
-  border-top: 1px solid var(--rule);
-}
-
-.note {
-  color: var(--ink-2);
-  font-size: 0.8125rem;
-  line-height: 1.7;
-  flex: 1 1 auto;
-  min-width: 0;
-}
-
-.copyright {
-  color: var(--ink-2);
-  font-size: 0.875rem;
-  white-space: nowrap;
-}
-
-/* モバイルでのタップターゲット 44px 確保。デスクトップではコンパクトな見た目を維持。 */
-@media (max-width: 720px) {
-  .link {
-    min-height: 44px;
-    padding: 0.5rem 0;
-  }
+.link[aria-current="page"]:hover {
+  border-color: transparent;
 }

@@ -1,6 +1,15 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { PAPER, INK, INK_2, RULE, ACCENT } from "@/lib/utsuwaHex";
+import {
+  PAPER,
+  INK,
+  INK_2,
+  RULE,
+  PAPER_DARK,
+  INK_DARK,
+  INK_2_DARK,
+  RULE_DARK,
+} from "@/lib/utsuwaHex";
 
 /**
  * 削除済みブログ記事のスラッグ一覧。
@@ -40,15 +49,6 @@ export function isDeletedBlogSlug(slug: string): boolean {
 }
 
 /**
- * 410 ページの器の色（DESIGN.md §2）は、器色 hex の SSoT である中立モジュール
- * `@/lib/utsuwaHex`（`PAPER`/`INK`/`INK_2`/`RULE`/`ACCENT` 等）から import する。utsuwaHex は
- * import ゼロの純粋な hex 定数モジュール（next/og 等に依存しない葉）なので、Edge 実行されうる
- * middleware からも安全に import できる。globals.css の light トークンを hex 化した値であり、
- * 乖離ガード（`src/lib/__tests__/wairoHex.test.ts` が globals.css の oklch と一致を検証）の対象。
- * ここで hex を独自に再定義すると、globals.css を変えても 410 だけ古い値のまま残るため、必ず SSoT を参照する。
- */
-
-/**
  * 書体の並び（DESIGN.md §3）。この静的HTMLは Web フォントを読み込まないので、端末にある書体だけで組む。
  * 本文は globals.css の --font-ja-body、見出しは Zen Antique の代わりに組む --font-ja-heading-fallback と同じ並び。
  */
@@ -64,6 +64,10 @@ const HEADING_STACK =
  *
  * エラー面 `src/app/global-not-found-content.tsx` と流儀（紙地・墨字・見出しの書体・罫）を揃える。
  * 中央寄せの静かな告知として組み、トップへ戻る導線は文字と罫囲みで表す。
+ *
+ * 色（DESIGN.md §2）は、トークンを読めないので器色 hex の SSoT `@/lib/utsuwaHex` から取る。
+ * ここで hex を独自に書くと、globals.css を変えても 410 だけ古い値のまま残るため。
+ * テーマはほかのページと同じく端末の設定に従う（§10）。
  */
 export function build410Html(): string {
   return `<!DOCTYPE html>
@@ -71,17 +75,21 @@ export function build410Html(): string {
 <head>
 <meta charset='utf-8' />
 <meta name='viewport' content='width=device-width, initial-scale=1' />
+<meta name='theme-color' media='(prefers-color-scheme: light)' content='${PAPER}' />
+<meta name='theme-color' media='(prefers-color-scheme: dark)' content='${PAPER_DARK}' />
 <title>このコンテンツは終了しました | yolos.net</title>
 <style>
+:root{color-scheme:light;--paper:${PAPER};--ink:${INK};--ink-2:${INK_2};--rule-2:${RULE}}
+@media (prefers-color-scheme:dark){:root{color-scheme:dark;--paper:${PAPER_DARK};--ink:${INK_DARK};--ink-2:${INK_2_DARK};--rule-2:${RULE_DARK}}}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:${BODY_STACK};background:${PAPER};color:${INK};min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1.5rem}
+body{font-family:${BODY_STACK};background:var(--paper);color:var(--ink);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1.5rem}
 .container{max-width:34rem;width:100%;text-align:center}
-h1{font-family:${HEADING_STACK};font-size:1.6rem;font-weight:400;color:${INK};line-height:1.5;letter-spacing:0.02em}
-.rule{width:3rem;height:0;border-top:1px solid ${RULE};margin:1.25rem auto}
-p{font-family:${BODY_STACK};font-size:1rem;color:${INK_2};line-height:1.9;margin-bottom:2rem}
-a.home{display:inline-block;padding:0.6rem 1.75rem;color:${ACCENT};text-decoration:none;border:1px solid ${RULE};border-radius:0;font-size:0.95rem;transition:border-color 0.2s}
-a.home:hover,a.home:focus-visible{border-color:${ACCENT}}
-a.home:focus-visible{outline:2px solid ${ACCENT};outline-offset:2px}
+h1{font-family:${HEADING_STACK};font-size:1.6rem;font-weight:400;color:var(--ink);line-height:1.5;letter-spacing:0.02em}
+.rule{width:3rem;height:0;border-top:1px solid var(--rule-2);margin:1.25rem auto}
+p{font-family:${BODY_STACK};font-size:1rem;color:var(--ink-2);line-height:1.9;margin-bottom:2rem}
+a.home{display:inline-block;padding:0.6rem 1.75rem;color:var(--ink);text-decoration:none;border:1px solid var(--rule-2);border-radius:0;font-size:0.95rem;transition:border-color 0.2s}
+a.home:hover,a.home:focus-visible{border-color:var(--ink)}
+a.home:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 </style>
 </head>
 <body>

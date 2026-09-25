@@ -25,11 +25,9 @@ npx tsx .claude/skills/take-screenshot/scripts/take.ts <URL> --dark
 npx tsx .claude/skills/take-screenshot/scripts/take.ts <URL> --selector <CSSセレクタ> --dark
 ```
 
-> **注意**: このサイトは next-themes の `attribute="class"` でテーマを管理している（`<html class="dark">`）。
-> `page.emulateMedia({ colorScheme: 'dark' })` 単独では、ハイドレーション後のクラス付与と競合して
-> **silent-light**（見た目は light なのにファイル名だけ dark）になる場合がある。
-> `--dark` フラグは `localStorage.setItem('theme','dark')` をページ遷移前に注入し、
-> `<html class="dark">` の付与を `waitForFunction` で確認してから撮影するため信頼性が高い。
+> **注意**: このサイトのテーマは端末の設定（`prefers-color-scheme`）に従う。
+> `--dark` フラグはブラウザの設定を dark にして撮り、撮る前に dark の値が当たったことを確かめる。
+> 当たっていなければ、ファイル名に `_dark-FAILED` を付けて非ゼロで終わる。
 
 まだサーバーを起動していない場合は、以下のコマンドで起動してください。
 

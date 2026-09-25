@@ -1,7 +1,11 @@
-import { expect, test, describe } from "vitest";
+import { expect, test, describe, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import Footer from "@/components/Footer";
-import { ALL_CATEGORIES } from "@/blog/_lib/blog";
+
+let mockPathname = "/";
+vi.mock("next/navigation", () => ({
+  usePathname: () => mockPathname,
+}));
 
 /**
  * Footer のテストは「機能・整合性の安全装置」のみ。
@@ -9,27 +13,41 @@ import { ALL_CATEGORIES } from "@/blog/_lib/blog";
  * 方針に従って書かない。
  */
 describe("Footer", () => {
-  test("AI 運営の注記が描画される（constitution Rule 3 の安全装置）", () => {
-    render(<Footer />);
-    const footer = screen.getByRole("contentinfo");
-    // 内部固定の NOTE（DESIGN.md §6 / constitution rule3 の定型文）に
-    // 「AI が運営する実験」であることと「誤りがありえる」旨が含まれることを保証。
-    expect(footer.textContent).toContain("AI");
-    expect(footer.textContent).toContain("実験");
-    expect(footer.textContent).toContain("誤り");
+  beforeEach(() => {
+    mockPathname = "/";
   });
 
-  test("ブログカテゴリリンクの href が ALL_CATEGORIES と整合する（死リンク防止）", () => {
-    // ブログカテゴリは src/blog/_lib/blog.ts の ALL_CATEGORIES を出典に
-    // しているため、カテゴリ追加・削除時に Footer の死リンクを検知する。
+  test("AI 運営の告知が描画される（constitution 規則3の安全装置）", () => {
     render(<Footer />);
     const footer = screen.getByRole("contentinfo");
-    const categoryAnchors = Array.from(
-      footer.querySelectorAll('a[href^="/blog/category/"]'),
+    // AI が運営する実験であることと、内容が壊れていたり誤っていたりしうることを伝える。
+    expect(footer.textContent).toContain("AI");
+    expect(footer.textContent).toContain("実験");
+    expect(footer.textContent).toContain("壊れて");
+    expect(footer.textContent).toContain("誤って");
+  });
+
+  test("サイト紹介とプライバシーへのリンクを持つ", () => {
+    render(<Footer />);
+    expect(screen.getByRole("link", { name: "サイト紹介" })).toHaveAttribute(
+      "href",
+      "/about",
     );
-    const hrefs = categoryAnchors.map((a) => a.getAttribute("href"));
-    const expected = ALL_CATEGORIES.map((slug) => `/blog/category/${slug}`);
-    // 順序は問わずセット一致を要求
-    expect(hrefs.sort()).toEqual(expected.sort());
+    expect(screen.getByRole("link", { name: "プライバシー" })).toHaveAttribute(
+      "href",
+      "/privacy",
+    );
+  });
+
+  test("いま開いているページを指すリンクは現在地になる", () => {
+    mockPathname = "/privacy";
+    render(<Footer />);
+    expect(screen.getByRole("link", { name: "プライバシー" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+    expect(
+      screen.getByRole("link", { name: "サイト紹介" }),
+    ).not.toHaveAttribute("aria-current");
   });
 });

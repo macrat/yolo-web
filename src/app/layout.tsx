@@ -1,31 +1,24 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "@/app/globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SkipLink, { MAIN_CONTENT_ID } from "@/components/SkipLink";
-import ThemeProvider from "@/components/ThemeProvider";
-import ThemeToggle from "@/components/ThemeToggle";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import { generateWebSiteJsonLd, safeJsonLdStringify } from "@/lib/seo";
-import { sharedMetadata } from "@/lib/site-metadata";
+import { sharedMetadata, sharedViewport } from "@/lib/site-metadata";
 import { plexSans, zenAntique } from "@/lib/fonts";
 
 export const metadata: Metadata = sharedMetadata;
+export const viewport: Viewport = sharedViewport;
 
-export default function NewRootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const websiteJsonLd = generateWebSiteJsonLd();
   return (
-    // suppressHydrationWarning: next-themes がクライアント側で <html class="dark"> を付与するため、
-    // サーバーとクライアントの class 不一致による hydration 警告を抑制する
-    <html
-      lang="ja"
-      suppressHydrationWarning
-      className={`${zenAntique.variable} ${plexSans.variable}`}
-    >
+    <html lang="ja" className={`${zenAntique.variable} ${plexSans.variable}`}>
       <body
         style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
       >
@@ -35,18 +28,16 @@ export default function NewRootLayout({
             __html: safeJsonLdStringify(websiteJsonLd),
           }}
         />
-        <ThemeProvider>
-          {/* body 直下の最初の focusable 要素。Header の全リンクを Tab で
-              通過せず本文へ跳べるようにする（WCAG 2.4.1・F1）。 */}
-          <SkipLink />
-          <GoogleAnalytics />
-          <Header actions={<ThemeToggle />} />
-          {/* tabIndex={-1}: スキップリンクからプログラム的に focus を移せるようにする。 */}
-          <main id={MAIN_CONTENT_ID} tabIndex={-1} style={{ flex: 1 }}>
-            {children}
-          </main>
-          <Footer />
-        </ThemeProvider>
+        {/* body 直下の最初の focusable 要素。上端の全リンクを Tab で
+            通過せず本文へ跳べるようにする（WCAG 2.4.1・F1）。 */}
+        <SkipLink />
+        <GoogleAnalytics />
+        <Header />
+        {/* tabIndex={-1}: スキップリンクからプログラム的に focus を移せるようにする。 */}
+        <main id={MAIN_CONTENT_ID} tabIndex={-1} style={{ flex: 1 }}>
+          {children}
+        </main>
+        <Footer />
       </body>
     </html>
   );

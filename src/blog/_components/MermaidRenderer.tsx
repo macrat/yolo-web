@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
-import { useTheme } from "next-themes";
+import { useEffect, useSyncExternalStore } from "react";
 
 /**
  * Data attribute used to store the original Mermaid source code.
@@ -10,6 +9,24 @@ import { useTheme } from "next-themes";
  */
 const ORIGINAL_CODE_ATTR = "data-original-code";
 
+/** The site follows the device's color scheme (DESIGN.md §10). */
+const DARK_SCHEME_QUERY = "(prefers-color-scheme: dark)";
+
+function subscribeColorScheme(callback: () => void): () => void {
+  const mq = window.matchMedia(DARK_SCHEME_QUERY);
+  mq.addEventListener("change", callback);
+  return () => mq.removeEventListener("change", callback);
+}
+
+function getIsDarkSnapshot(): boolean {
+  return window.matchMedia(DARK_SCHEME_QUERY).matches;
+}
+
+// Diagrams render only on the client; this value only serves hydration.
+function getIsDarkServerSnapshot(): boolean {
+  return false;
+}
+
 /**
  * Client component that initializes Mermaid.js and renders
  * all `.mermaid` elements found on the page.
@@ -17,12 +34,16 @@ const ORIGINAL_CODE_ATTR = "data-original-code";
  * Must be included in pages that may contain mermaid diagrams.
  * Uses dynamic import to avoid loading mermaid in SSR.
  *
- * When the theme changes, diagrams are re-rendered with the
- * appropriate Mermaid theme by restoring the original source
+ * When the device's color scheme changes, diagrams are re-rendered
+ * with the appropriate Mermaid theme by restoring the original source
  * code and clearing the `data-processed` attribute.
  */
 export default function MermaidRenderer() {
-  const { resolvedTheme } = useTheme();
+  const isDark = useSyncExternalStore(
+    subscribeColorScheme,
+    getIsDarkSnapshot,
+    getIsDarkServerSnapshot,
+  );
 
   useEffect(() => {
     const mermaidElements = document.querySelectorAll<HTMLElement>(".mermaid");
@@ -43,8 +64,6 @@ export default function MermaidRenderer() {
       const mermaid = (await import("mermaid")).default;
 
       if (cancelled) return;
-
-      const isDark = resolvedTheme === "dark";
 
       mermaid.initialize({
         startOnLoad: false,
@@ -70,7 +89,7 @@ export default function MermaidRenderer() {
     return () => {
       cancelled = true;
     };
-  }, [resolvedTheme]);
+  }, [isDark]);
 
   return null;
 }
