@@ -314,7 +314,6 @@ export default function YamlFormatterTile({
             <Button
               onClick={handleCopy}
               type="button"
-              size="small"
               disabled={!output}
               aria-label={copiedKey ? COPIED_LABEL : "コピー"}
             >

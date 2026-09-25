@@ -229,7 +229,6 @@ export default function LineBreakRemoverTile({
             </label>
             {/* コピーボタン */}
             <Button
-              size="small"
               onClick={handleCopy}
               disabled={!hasOutput}
               aria-label={copiedKey ? COPIED_LABEL : "コピー"}

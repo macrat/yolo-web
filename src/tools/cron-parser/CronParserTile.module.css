@@ -42,7 +42,7 @@
 }
 
 /* プリセットボタン行
- * ボタン自体は共通 Button コンポーネント（variant="default" size="small"）を使用。
+ * ボタン自体は共通 Button コンポーネント（variant="default"）を使用。
  * 塗りや状態表現は Button コンポーネント側に委譲し、ここは配置だけを持つ。 */
 .presetRow {
   display: flex;

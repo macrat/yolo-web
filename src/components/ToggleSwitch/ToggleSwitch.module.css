@@ -57,10 +57,11 @@
   background: var(--accent);
 }
 
-/* フォーカス: :focus-visible でキーボード操作時のみリングを表示する。 */
+/* 隠した input が受けたフォーカスを、見えている線路に二重リング（§6）で出す。 */
 .input:focus-visible ~ .track {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-fill);
 }
 
 /* disabled: トラックを半透明に */

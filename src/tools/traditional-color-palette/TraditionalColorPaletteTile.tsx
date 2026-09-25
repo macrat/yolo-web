@@ -205,7 +205,6 @@ export default function TraditionalColorPaletteTile({
           <span className={styles.colorCodeLabel}>HEX</span>
           <span className={styles.colorCodeValue}>{hexValue}</span>
           <Button
-            size="small"
             variant="default"
             onClick={() => void copy(hexValue, hexKey)}
             aria-label={
@@ -221,7 +220,6 @@ export default function TraditionalColorPaletteTile({
           <span className={styles.colorCodeLabel}>RGB</span>
           <span className={styles.colorCodeValue}>{rgbValue}</span>
           <Button
-            size="small"
             variant="default"
             onClick={() => void copy(rgbValue, rgbKey)}
             aria-label={
@@ -237,7 +235,6 @@ export default function TraditionalColorPaletteTile({
           <span className={styles.colorCodeLabel}>HSL</span>
           <span className={styles.colorCodeValue}>{hslValue}</span>
           <Button
-            size="small"
             variant="default"
             onClick={() => void copy(hslValue, hslKey)}
             aria-label={

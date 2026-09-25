@@ -34,7 +34,6 @@ interface SegmentedControlProps {
  * デザイン (DESIGN.md):
  * - 選択中塗り: --accent-weak 背景 + --accent 文字・枠（状態ハイライトとして gate 許容）。
  *   --accent をベタ塗りの地には使わない（①-16 を部品レベルで根絶）。
- * - フォーカス: outline: 2px solid var(--accent); outline-offset: 2px;
  * - 角丸: --radius（0px 基調・操作可能要素だが値札/入力欄の例外には当たらない）
  *
  * @example
@@ -104,6 +103,8 @@ function SegmentedControl({
       aria-label={ariaLabel}
       aria-labelledby={ariaLabelledby}
       className={[styles.root, className].filter(Boolean).join(" ")}
+      /* 選択肢は 4px の間隔で詰めて並ぶので、フォーカスの輪を選択肢の内側に出す。 */
+      data-focus-ring="inset"
     >
       {options.map((opt, index) => {
         const isSelected = opt.value === value;

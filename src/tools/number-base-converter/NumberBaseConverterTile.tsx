@@ -230,7 +230,6 @@ export default function NumberBaseConverterTile({
                 </div>
                 <div className={styles.resultCardActions}>
                   <Button
-                    size="small"
                     onClick={async () => {
                       if (hasValue) {
                         await copy(card.copyValue, card.key);
@@ -259,7 +258,6 @@ export default function NumberBaseConverterTile({
               <div className={styles.hexResultHeader}>
                 <span className={styles.hexResultLabel}>{hexCard.label}</span>
                 <Button
-                  size="small"
                   onClick={async () => {
                     if (hasValue) {
                       await copy(hexCard.copyValue, hexCard.key);

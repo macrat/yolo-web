@@ -37,17 +37,14 @@ function buildPageUrl(basePath: string, page: number): string {
 }
 
 /**
- * Pagination — ページナビゲーションコンポーネント。
+ * ページ送り（DESIGN.md §6・§7）。
  *
- * link モード（デフォルト）と button モードをサポート。
- * totalPages が 1 以下のときは null を返す（不要なため）。
- *
- * 罫（--rule）で囲んだ文字ベースの表現。現在地は塗りではなく --accent の文字色のみ。
+ * link モード（既定）と button モードを持つ。totalPages が 1 以下のときは何も出さない。
+ * 前後のページが無い端では「前へ」「次へ」を置かない。押しても何も起きない項目を並べないため。
  */
 export default function Pagination(props: PaginationProps) {
   const { currentPage, totalPages } = props;
 
-  // 1 ページ以下なら表示不要
   if (totalPages <= 1) {
     return null;
   }
@@ -57,105 +54,47 @@ export default function Pagination(props: PaginationProps) {
   const hasPrev = currentPage > 1;
   const hasNext = currentPage < totalPages;
 
-  /**
-   * link モードでページアイテムをレンダリング。
-   * isActive のとき aria-current="page" を付与。
-   * isDisabled のとき <span> でレンダリングする（<Link> を避ける理由:
-   *   - href="/page/0" などの不正 URL が生成され、クローラーや prefetch が 404 を踏む
-   *   - pointer-events: none や tabIndex={-1} では表面的に踏めないだけで URL 自体は存在する）。
-   */
-  function renderLinkItem(
+  function renderItem(
     page: number,
     label: string,
     ariaLabel: string,
-    isActive?: boolean,
-    isDisabled?: boolean,
+    isCurrent: boolean,
   ): React.ReactNode {
-    const linkProps = props as PaginationLinkProps;
+    const ariaCurrent = isCurrent ? "page" : undefined;
 
-    const className = [
-      styles.pageItem,
-      isActive ? styles.active : undefined,
-      isDisabled ? styles.disabled : undefined,
-    ]
-      .filter(Boolean)
-      .join(" ");
-
-    if (isDisabled) {
-      // 無効状態は <span> でレンダリングして不正 href を生成しない
+    if (mode === "button") {
+      const { onPageChange } = props as PaginationButtonProps;
       return (
-        <span className={className} aria-label={ariaLabel} aria-disabled="true">
+        <button
+          type="button"
+          className={styles.pageItem}
+          aria-label={ariaLabel}
+          aria-current={ariaCurrent}
+          onClick={() => onPageChange(page)}
+        >
           {label}
-        </span>
+        </button>
       );
     }
 
-    const href = buildPageUrl(linkProps.basePath ?? "/", page);
+    const { basePath } = props as PaginationLinkProps;
     return (
       <Link
-        href={href}
-        className={className}
+        href={buildPageUrl(basePath ?? "/", page)}
+        className={styles.pageItem}
         aria-label={ariaLabel}
-        aria-current={isActive ? "page" : undefined}
+        aria-current={ariaCurrent}
       >
         {label}
       </Link>
     );
   }
 
-  /**
-   * button モードでページアイテムをレンダリング。
-   */
-  function renderButtonItem(
-    page: number,
-    label: string,
-    ariaLabel: string,
-    isActive?: boolean,
-    isDisabled?: boolean,
-  ): React.ReactNode {
-    const { onPageChange } = props as PaginationButtonProps;
-
-    const className = [
-      styles.pageItem,
-      isActive ? styles.active : undefined,
-      isDisabled ? styles.disabled : undefined,
-    ]
-      .filter(Boolean)
-      .join(" ");
-
-    return (
-      <button
-        type="button"
-        className={className}
-        aria-label={ariaLabel}
-        aria-current={isActive ? "page" : undefined}
-        aria-disabled={isDisabled || undefined}
-        disabled={isDisabled}
-        onClick={() => onPageChange(page)}
-      >
-        {label}
-      </button>
-    );
-  }
-
-  function renderItem(
-    page: number,
-    label: string,
-    ariaLabel: string,
-    isActive?: boolean,
-    isDisabled?: boolean,
-  ): React.ReactNode {
-    return mode === "button"
-      ? renderButtonItem(page, label, ariaLabel, isActive, isDisabled)
-      : renderLinkItem(page, label, ariaLabel, isActive, isDisabled);
-  }
-
   return (
     <nav className={styles.pagination} aria-label="ページナビゲーション">
-      {/* 前へ */}
-      {renderItem(currentPage - 1, "‹ 前へ", "前のページ", false, !hasPrev)}
+      {hasPrev && renderItem(currentPage - 1, "‹ 前へ", "前のページ", false)}
 
-      {/* デスクトップ: ページ番号一覧 */}
+      {/* 広い画面: ページ番号の並び */}
       <span className={styles.pageNumbers}>
         {pageNumbers.map((entry, index) => {
           if (entry === "ellipsis") {
@@ -170,16 +109,20 @@ export default function Pagination(props: PaginationProps) {
             );
           }
 
-          const isCurrent = entry === currentPage;
           return (
             <span key={entry}>
-              {renderItem(entry, String(entry), `ページ${entry}`, isCurrent)}
+              {renderItem(
+                entry,
+                String(entry),
+                `ページ${entry}`,
+                entry === currentPage,
+              )}
             </span>
           );
         })}
       </span>
 
-      {/* モバイル: コンパクトなページインジケータ。aria-hidden を付けないことで
+      {/* 狭い画面: いまのページと総ページ数。aria-hidden を付けないことで
           スクリーンリーダー利用者もページ位置を把握できる */}
       <span
         className={styles.mobileIndicator}
@@ -188,8 +131,7 @@ export default function Pagination(props: PaginationProps) {
         {currentPage} / {totalPages}
       </span>
 
-      {/* 次へ */}
-      {renderItem(currentPage + 1, "次へ ›", "次のページ", false, !hasNext)}
+      {hasNext && renderItem(currentPage + 1, "次へ ›", "次のページ", false)}
     </nav>
   );
 }

@@ -233,7 +233,6 @@ export default function Base64Tile({
           {/* コピーボタン */}
           <Button
             variant="default"
-            size="small"
             onClick={handleCopy}
             disabled={!output}
             aria-label="出力をコピー"

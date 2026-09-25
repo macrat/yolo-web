@@ -36,6 +36,18 @@
   --rule-w: 3px;
   --rule-w-hair: 1px;
 
+  /* §6 フォーカスの二重リング。外の輪は outline で --ink に引き、要素とのあいだを box-shadow の広がりで
+   * --paper に塗って内の輪にする。内の輪を下地に任せず塗るのは、反転した背景・コンテンツの色・--paper-2 の
+   * 上でも、内と外の2色が揃って見えるようにするため。どちらの輪も太い線と同じ太さで、要素に密着する。
+   * 要素の外に余地がない場所では、[data-focus-ring="inset"] が同じ2つの輪を要素の内側に移す。 */
+  --focus-ring: var(--rule-w) solid var(--ink);
+  --focus-ring-offset: var(--rule-w);
+  --focus-ring-fill: 0 0 0 var(--rule-w) var(--paper);
+
+  /* §6 hover・active に要素の内側へ現れる細いボーダー。外に出さないので、隣の要素に掛からず、
+   * 大きさも変わらない。 */
+  --hover-line: inset 0 0 0 var(--rule-w-hair) var(--rule-2);
+
   /* §5 角丸の半径。角丸は持たないので 0。 */
   --radius: 0px;
   --radius-sm: var(--radius);
@@ -359,9 +371,51 @@ hr {
   color: var(--paper);
 }
 
+/* §6 フォーカス。 */
 :focus-visible {
-  outline: 2px solid var(--ink);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-fill);
+}
+
+/* 詰めて並んだもの（一覧の行・隙間なく並ぶボタン）の中では、二重リングを要素の内側に出し、隣に食い込ませない。
+ * 外の輪を要素の縁の内側に置き、その内側を --paper で塗る。 */
+[data-focus-ring="inset"] {
+  --focus-ring-offset: calc(-1 * var(--rule-w));
+  --focus-ring-fill: inset 0 0 0 calc(2 * var(--rule-w)) var(--paper);
+}
+
+/* §6 hover・active。進むもの・実行するもの・状態を変えるものに出し、押しても何も起きない現在地と無効には
+ * 出さない。部品のクラスが上書きできるよう、詳細度を 0 にする。 */
+:where(a[href], button, summary, [role="button"]):where(:hover, :active):where(
+    :not(:disabled, [aria-disabled="true"], [aria-current="page"])
+  ) {
+  box-shadow: var(--hover-line);
+}
+
+/* 押せる範囲を ::after に広げた要素（上端・下端のリンク、一覧の行の名前）。hover とフォーカスを要素の字の箱ではなく
+ * その範囲に出し、タップの標的と一致させる（§6）。::after の位置と大きさは部品が決める。 */
+:where([data-hit-area="after"]):hover,
+:where([data-hit-area="after"]):focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+:where([data-hit-area="after"]):where(
+    :not([aria-current="page"], [aria-disabled="true"])
+  ):hover::after {
+  box-shadow: var(--hover-line);
+}
+:where([data-hit-area="after"]):focus-visible::after {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-fill);
+}
+
+/* 一覧の行の hover。上下は行の区切りがそのまま辺になるので、左右だけに線を出して閉じる。 */
+[data-hover-line="sides"] {
+  --hover-line:
+    inset var(--rule-w-hair) 0 0 var(--rule-2),
+    inset calc(-1 * var(--rule-w-hair)) 0 0 var(--rule-2);
 }
 
 .visually-hidden {

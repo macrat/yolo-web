@@ -258,7 +258,6 @@ export default function JsonFormatterTile({
             <Button
               onClick={() => void handleCopy()}
               type="button"
-              size="small"
               disabled={!output}
               aria-label={copiedKey ? COPIED_LABEL : "コピー"}
             >

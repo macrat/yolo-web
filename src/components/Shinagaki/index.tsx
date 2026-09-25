@@ -4,7 +4,7 @@ import { NefudaGroup } from "@/components/Nefuda";
 import styles from "./Shinagaki.module.css";
 
 export interface ShinagakiItem {
-  /** 品名（一覧の主役・リンクの表示文言）。本文の書体・墨で組む。 */
+  /** 品名（一覧の主役・リンクの表示文言）。本文の書体で組む。 */
   name: string;
   /** 品名リンクの遷移先。 */
   href: string;
@@ -48,7 +48,7 @@ export interface ShinagakiProps {
  *
  * 仕様:
  * - 一覧は「罫区切りのリスト」であってカードのグリッドではない。
- *   各行を `--rule` の一本罫で仕切り、区切りを構造の主役にする（カード装飾・影・色地なし）。
+ *   各行を細い線（`--rule-2`）で仕切る（カード装飾・影・色地なし）。
  * - 各行 = 品名（リンク・墨）+ ひとこと（`--ink-2`）+ 任意の値札群 + 任意の右端メタ。
  * - 左揃え。幅は呼び出し側が決められるよう、このコンポーネントは幅を固定しない
  *   （読む面は `--measure`、操作面は `--max-width` を親で当てる）。
@@ -68,11 +68,21 @@ export default function Shinagaki({
       {heading ? (
         <HeadingTag className={styles.heading}>{heading}</HeadingTag>
       ) : null}
-      <ul className={styles.list} aria-label={ariaLabel}>
+      <ul
+        className={styles.list}
+        aria-label={ariaLabel}
+        /* 行は隙間なく並ぶので、フォーカスの輪は行の内側に、hover の線は行の左右に出す（§6）。 */
+        data-focus-ring="inset"
+        data-hover-line="sides"
+      >
         {items.map((item) => (
           <li key={item.href} className={styles.row}>
             <div className={styles.main}>
-              <Link href={item.href} className={styles.name}>
+              <Link
+                href={item.href}
+                className={styles.name}
+                data-hit-area="after"
+              >
                 {item.name}
               </Link>
               {item.note ? <p className={styles.note}>{item.note}</p> : null}

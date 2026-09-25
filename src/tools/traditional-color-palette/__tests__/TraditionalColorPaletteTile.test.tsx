@@ -288,7 +288,7 @@ describe("コピーボタン状態", () => {
     expect(copyButtons).toHaveLength(0);
   });
 
-  it("カード描画時、コピーボタンは共通 Button コンポーネント(size=small)を使っている", async () => {
+  it("カード描画時、コピーボタンは共通 Button コンポーネントを使っている", async () => {
     render(<TraditionalColorPaletteTile />);
     const swatches = document.querySelectorAll("[data-swatch-slug]");
     await act(async () => {
@@ -298,8 +298,8 @@ describe("コピーボタン状態", () => {
       "[data-testid='palette-results']",
     );
     expect(paletteResults).toBeInTheDocument();
-    const smallButtons = document.querySelectorAll("[data-size='small']");
-    expect(smallButtons.length).toBeGreaterThan(0);
+    const sharedButtons = paletteResults!.querySelectorAll("[data-variant]");
+    expect(sharedButtons.length).toBeGreaterThan(0);
   });
 
   it("カード描画時、各コピーボタンに有効な aria-label が付いている", async () => {

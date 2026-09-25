@@ -224,7 +224,6 @@ export default function UnixTimestampTile({
         <code className={styles.currentValue}>{mounted ? currentTs : ""}</code>
         {/* 現在タイムスタンプをコピー */}
         <Button
-          size="small"
           disabled={!mounted || currentTs === 0}
           onClick={() => copy(String(currentTs), "current")}
           aria-label={
@@ -287,7 +286,6 @@ export default function UnixTimestampTile({
               <span className={styles.resultLabel}>ローカル時刻</span>
               <code className={styles.resultValue}>{tsResult.localString}</code>
               <Button
-                size="small"
                 disabled={!tsResult.localString}
                 onClick={() => copy(tsResult.localString, "local")}
                 aria-label={
@@ -301,7 +299,6 @@ export default function UnixTimestampTile({
               <span className={styles.resultLabel}>UTC</span>
               <code className={styles.resultValue}>{tsResult.utcString}</code>
               <Button
-                size="small"
                 disabled={!tsResult.utcString}
                 onClick={() => copy(tsResult.utcString, "utc")}
                 aria-label={copiedKey === "utc" ? COPIED_LABEL : "UTCをコピー"}
@@ -313,7 +310,6 @@ export default function UnixTimestampTile({
               <span className={styles.resultLabel}>ISO 8601</span>
               <code className={styles.resultValue}>{tsResult.isoString}</code>
               <Button
-                size="small"
                 disabled={!tsResult.isoString}
                 onClick={() => copy(tsResult.isoString, "iso")}
                 aria-label={
@@ -327,7 +323,6 @@ export default function UnixTimestampTile({
               <span className={styles.resultLabel}>秒</span>
               <code className={styles.resultValue}>{tsResult.seconds}</code>
               <Button
-                size="small"
                 disabled={tsResult.seconds === undefined}
                 onClick={() => copy(String(tsResult.seconds), "tsSeconds")}
                 aria-label={
@@ -343,7 +338,6 @@ export default function UnixTimestampTile({
                 {tsResult.milliseconds}
               </code>
               <Button
-                size="small"
                 disabled={tsResult.milliseconds === undefined}
                 onClick={() => copy(String(tsResult.milliseconds), "tsMs")}
                 aria-label={
@@ -475,7 +469,6 @@ export default function UnixTimestampTile({
               <span className={styles.resultLabel}>秒</span>
               <code className={styles.resultValue}>{dateResult.seconds}</code>
               <Button
-                size="small"
                 disabled={dateResult.seconds === undefined}
                 onClick={() => copy(String(dateResult.seconds), "dateSec")}
                 aria-label={
@@ -491,7 +484,6 @@ export default function UnixTimestampTile({
                 {dateResult.milliseconds}
               </code>
               <Button
-                size="small"
                 disabled={dateResult.milliseconds === undefined}
                 onClick={() => copy(String(dateResult.milliseconds), "dateMs")}
                 aria-label={

@@ -240,7 +240,6 @@ export default function SqlFormatterTile({
             <Button
               onClick={handleCopy}
               type="button"
-              size="small"
               disabled={!output}
               aria-label={copiedKey ? COPIED_LABEL : "コピー"}
             >

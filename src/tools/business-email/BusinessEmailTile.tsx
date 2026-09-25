@@ -305,7 +305,6 @@ export default function BusinessEmailTile({
             </label>
             {/* T-4b: 件名コピーボタン — 空のとき disabled */}
             <Button
-              size="small"
               onClick={handleCopySubject}
               disabled={!generated.subject}
               aria-label={
@@ -333,7 +332,6 @@ export default function BusinessEmailTile({
             </label>
             {/* T-4b: 本文コピーボタン — 空のとき disabled */}
             <Button
-              size="small"
               onClick={handleCopyBody}
               disabled={!generated.body}
               aria-label={

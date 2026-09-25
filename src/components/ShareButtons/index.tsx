@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import Button from "@/components/Button";
 import { trackShare } from "@/lib/analytics";
 import styles from "./ShareButtons.module.css";
 
@@ -31,14 +32,8 @@ function openShareUrl(url: string): void {
 }
 
 /**
- * ShareButtons — 共有ボタン群。
- *
- * ブランド色のベタ塗り・ブランドロゴ SVG・絵文字を持たない。共有先は「文字＋罫の線画ボタン」で示す——地は紙、`--rule` の一本罫で囲み、文字は墨、
- * hover で枠と文字に --accent、focus 可視、44px。共有機能（X intent / LINE / クリップボード）は維持。
- * サービスは色やロゴではなく文言（「X でシェア」等）で識別する（ボタンに絵文字を使わない）。
- *
- * 辞典等の実務面では共有は主役でない（静かに置く）。器は静かに保ち、
- * 主役はページの成果物側に譲る。
+ * 共有のボタンの並び。どのボタンも、押すと共有先のページが開くか URL がコピーされる、プライマリでない
+ * ボタン（DESIGN.md §6）なので、共通の Button で組む。共有先はロゴや色ではなく文言で言う。
  */
 export default function ShareButtons({
   url,
@@ -142,19 +137,12 @@ export default function ShareButtons({
         {actions
           .filter((a) => sns.includes(a.key))
           .map(({ key, label, ariaLabel, onClick }) => (
-            <button
-              key={key}
-              type="button"
-              className={styles.button}
-              onClick={onClick}
-              aria-label={ariaLabel}
-            >
+            <Button key={key} onClick={onClick} aria-label={ariaLabel}>
               {label}
-            </button>
+            </Button>
           ))}
       </div>
-      {/* コピー完了フィードバック。aria-live="polite" でスクリーンリーダーに通知。
-          色ベタでなく --accent の文字で示す。 */}
+      {/* コピー完了フィードバック。aria-live="polite" でスクリーンリーダーに通知。 */}
       <div className={styles.copiedMessage} role="status" aria-live="polite">
         {copied ? "コピーしました" : ""}
       </div>

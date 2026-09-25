@@ -242,7 +242,6 @@ export default function HashGeneratorTile({
               <span className={styles.algoLabel}>{result.algorithm}</span>
               <code className={styles.hashValue}>{result.hash}</code>
               <Button
-                size="small"
                 onClick={() => void copy(result.hash, result.algorithm)}
                 disabled={!result.hash}
                 aria-label={

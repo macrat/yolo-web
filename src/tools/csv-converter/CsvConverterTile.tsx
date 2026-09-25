@@ -228,7 +228,6 @@ export default function CsvConverterTile({
             <Button
               onClick={handleCopy}
               type="button"
-              size="small"
               disabled={!output}
               aria-label={copiedKey ? COPIED_LABEL : "コピー"}
             >

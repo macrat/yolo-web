@@ -23,7 +23,6 @@ interface BreadcrumbProps {
  * - li を display:inline にすることで separator + テキストが同じインラインコンテキストに属し、
  *   SP での「/」行頭孤立を防ぐ（CSS ::before + inline-flex では flex item が分離する問題あり）
  * - リンクは Next.js の <Link> を使用
- * - スタイルは new デザイン体系のみ（DESIGN.md §2 参照）
  * - BreadcrumbList JSON-LD を <script> で出力（SEO 構造化データ）
  */
 export default function Breadcrumb({ items }: BreadcrumbProps) {
@@ -35,7 +34,7 @@ export default function Breadcrumb({ items }: BreadcrumbProps) {
           __html: safeJsonLdStringify(generateBreadcrumbJsonLd(items)),
         }}
       />
-      <nav className={styles.nav} aria-label="パンくずリスト">
+      <nav aria-label="パンくずリスト">
         <ol className={styles.list}>
           {items.map((item, index) => {
             const isLast = index === items.length - 1;

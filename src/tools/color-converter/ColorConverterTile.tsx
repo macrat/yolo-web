@@ -306,7 +306,6 @@ export default function ColorConverterTile({
               <div className={styles.resultCardLabel}>HEX</div>
               <div className={styles.resultCardValue}>{hexValue}</div>
               <Button
-                size="small"
                 variant="default"
                 disabled={!hexValue}
                 onClick={() => void copy(hexValue, "hex")}
@@ -321,7 +320,6 @@ export default function ColorConverterTile({
               <div className={styles.resultCardLabel}>RGB</div>
               <div className={styles.resultCardValue}>{rgbValue}</div>
               <Button
-                size="small"
                 variant="default"
                 disabled={!rgbValue}
                 onClick={() => void copy(rgbValue, "rgb")}
@@ -336,7 +334,6 @@ export default function ColorConverterTile({
               <div className={styles.resultCardLabel}>HSL</div>
               <div className={styles.resultCardValue}>{hslValue}</div>
               <Button
-                size="small"
                 variant="default"
                 disabled={!hslValue}
                 onClick={() => void copy(hslValue, "hsl")}

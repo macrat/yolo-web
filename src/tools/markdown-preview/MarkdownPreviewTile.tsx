@@ -189,7 +189,6 @@ export default function MarkdownPreviewTile({
             <span className={styles.panelLabel}>プレビュー</span>
             {/* HTML コピーボタン。出力が空のときは disabled */}
             <Button
-              size="small"
               disabled={!canCopy}
               onClick={() => copy(result.html)}
               aria-label={copiedKey ? COPIED_LABEL : "HTMLをコピー"}

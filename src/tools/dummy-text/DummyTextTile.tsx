@@ -215,7 +215,6 @@ export default function DummyTextTile({
           </label>
           {/* T-4b: コピーボタンあり確定。出力が空のとき disabled（通常は空にならない） */}
           <Button
-            size="small"
             onClick={handleCopy}
             disabled={!output}
             aria-label={copiedKey ? COPIED_LABEL : "コピー"}

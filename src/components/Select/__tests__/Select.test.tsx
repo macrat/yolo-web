@@ -132,13 +132,6 @@ describe("Select", () => {
   });
 
   // CSS 規約: フォーカスに outline を使用し border-color を使わない
-  it("Select.module.css のフォーカスは outline を使っている", () => {
-    const cssPath = resolve(__dirname, "../Select.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).toContain("outline: 2px solid var(--accent)");
-    expect(css).toContain("outline-offset: 2px");
-  });
-
   // WCAG 2.5.5 AAA タップターゲット保証
   it(".select has min-height: 44px for WCAG 2.5.5 AAA tap target", () => {
     const cssPath = resolve(__dirname, "../Select.module.css");

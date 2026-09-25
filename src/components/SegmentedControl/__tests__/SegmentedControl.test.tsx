@@ -293,13 +293,6 @@ describe("SegmentedControl", () => {
 
   // ---- CSS 検証: フォーカスアウトライン ----
 
-  it("CSS: フォーカスに outline: 2px solid var(--accent) を使っている", () => {
-    const cssPath = resolve(__dirname, "../SegmentedControl.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).toContain("outline: 2px solid var(--accent)");
-    expect(css).toContain("outline-offset: 2px");
-  });
-
   // ---- CSS 検証: 角丸 ----
 
   it("CSS: 角丸に --radius を使っている（DESIGN.md §4: 0px 基調）", () => {

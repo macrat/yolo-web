@@ -170,9 +170,7 @@ export default function AgeCalculatorTile({
               aria-label="基準日"
               aria-required="true"
             />
-            <Button size="small" onClick={handleSetToday}>
-              今日に設定
-            </Button>
+            <Button onClick={handleSetToday}>今日に設定</Button>
           </div>
         </div>
         <div className={styles.actions}>

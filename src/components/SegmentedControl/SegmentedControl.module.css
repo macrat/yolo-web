@@ -1,6 +1,6 @@
 /* SegmentedControl — radiogroup 型のモード切替コンポーネント。
  * 選択中（[aria-checked]）と hover に --accent-weak の地を敷く。
- * 選択中は --accent-weak 地 + --accent 文字・枠。角丸は 0px。フォーカスは outline: 2px solid var(--accent); outline-offset: 2px。
+ * 選択中は --accent-weak 地 + --accent 文字・枠。角丸は 0px。
  * WAI-ARIA: role="radiogroup" + role="radio" + aria-checked + ロービング tabindex。
  */
 
@@ -38,12 +38,6 @@
   -webkit-appearance: none;
   text-align: center;
   line-height: 1;
-}
-
-/* フォーカス */
-.option:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
 }
 
 /* 選択中の状態: --accent-weak の座布団と、--accent の文字と枠。

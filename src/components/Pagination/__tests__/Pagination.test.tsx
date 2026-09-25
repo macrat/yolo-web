@@ -55,50 +55,25 @@ describe("Pagination", () => {
       expect(current).toHaveAttribute("aria-current", "page");
     });
 
-    test("前のページが存在しないとき「前へ」は <span> でレンダリングされ <a> ではない", () => {
+    test("1 ページ目では「前へ」を置かない", () => {
       render(<Pagination currentPage={1} totalPages={5} basePath="/blog" />);
-      // disabled 状態の prev は span（linkではない）でレンダリングされる
-      // role="link" を持つ要素としては存在しないことを確認
-      const prevLink = screen.queryByRole("link", { name: "前のページ" });
-      expect(prevLink).toBeNull();
-      // span として存在し aria-disabled を持つ
-      const prevSpan = screen.getByLabelText("前のページ");
-      expect(prevSpan.tagName.toLowerCase()).toBe("span");
-      expect(prevSpan).toHaveAttribute("aria-disabled", "true");
+      expect(screen.queryByLabelText("前のページ")).toBeNull();
     });
 
-    test("次のページが存在しないとき「次へ」は <span> でレンダリングされ <a> ではない", () => {
+    test("最終ページでは「次へ」を置かない", () => {
       render(<Pagination currentPage={5} totalPages={5} basePath="/blog" />);
-      const nextLink = screen.queryByRole("link", { name: "次のページ" });
-      expect(nextLink).toBeNull();
-      const nextSpan = screen.getByLabelText("次のページ");
-      expect(nextSpan.tagName.toLowerCase()).toBe("span");
-      expect(nextSpan).toHaveAttribute("aria-disabled", "true");
-    });
-
-    test("1 ページ目で「前へ」の span が href を持たない（不正 URL を生成しない）", () => {
-      render(<Pagination currentPage={1} totalPages={5} basePath="/blog" />);
-      const prevSpan = screen.getByLabelText("前のページ");
-      expect(prevSpan).not.toHaveAttribute("href");
-    });
-
-    test("最終ページで「次へ」の span が href を持たない（不正 URL を生成しない）", () => {
-      render(<Pagination currentPage={5} totalPages={5} basePath="/blog" />);
-      const nextSpan = screen.getByLabelText("次のページ");
-      expect(nextSpan).not.toHaveAttribute("href");
+      expect(screen.queryByLabelText("次のページ")).toBeNull();
     });
 
     test("前のページが存在するとき「前へ」リンクが機能する href を持つ", () => {
       render(<Pagination currentPage={3} totalPages={5} basePath="/blog" />);
       const prev = screen.getByRole("link", { name: "前のページ" });
-      expect(prev).not.toHaveAttribute("aria-disabled");
       expect(prev).toHaveAttribute("href", "/blog/page/2");
     });
 
     test("次のページが存在するとき「次へ」リンクが機能する href を持つ", () => {
       render(<Pagination currentPage={3} totalPages={5} basePath="/blog" />);
       const next = screen.getByRole("link", { name: "次のページ" });
-      expect(next).not.toHaveAttribute("aria-disabled");
       expect(next).toHaveAttribute("href", "/blog/page/4");
     });
 
@@ -145,32 +120,16 @@ describe("Pagination", () => {
       expect(handlePageChange).toHaveBeenCalledWith(2);
     });
 
-    test("disabled 状態のボタンは disabled 属性を持つ", () => {
-      const handlePageChange = vi.fn();
+    test("1 ページ目では「前へ」のボタンを置かない", () => {
       render(
         <Pagination
           mode="button"
           currentPage={1}
           totalPages={5}
-          onPageChange={handlePageChange}
+          onPageChange={vi.fn()}
         />,
       );
-      const prevBtn = screen.getByRole("button", { name: "前のページ" });
-      expect(prevBtn).toBeDisabled();
-    });
-
-    test("disabled ボタンをクリックしても onPageChange が呼ばれない", () => {
-      const handlePageChange = vi.fn();
-      render(
-        <Pagination
-          mode="button"
-          currentPage={1}
-          totalPages={5}
-          onPageChange={handlePageChange}
-        />,
-      );
-      fireEvent.click(screen.getByRole("button", { name: "前のページ" }));
-      expect(handlePageChange).not.toHaveBeenCalled();
+      expect(screen.queryByRole("button", { name: "前のページ" })).toBeNull();
     });
 
     test("「次へ」ボタンで currentPage+1 が渡される", () => {

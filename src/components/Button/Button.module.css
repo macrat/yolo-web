@@ -1,88 +1,56 @@
-/* Button — クリック操作のボタン。
- * 主ボタン（primary）= --accent の地に --paper の文字。
- * 副ボタン（default）= 罫の線画（地は紙・罫は --rule・hover で枠と文字に --accent。ShareButtons と同型）。
- * 角丸は 0px。box-shadow は持たない（§5）。
- * フォーカスは outline: 2px solid var(--accent); outline-offset: 2px。
- */
+/* ボタン（DESIGN.md §6）。どちらの種類も、押すとそのページで何かが実行されるもの。
+ * hover の細い線とフォーカスの二重リングは globals.css の既定に従う。 */
 
 .button {
-  /* 共通ベーススタイル */
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 44px; /* WCAG 2.5.5 AAA タップターゲット推奨値 */
-  padding: 9px 18px;
-  font-size: 14px;
-  font-family: inherit; /* body から日本語ゴシックスタックを継承 */
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
-  /* background / color / border-color はバリアント側で上書きする */
-  cursor: pointer;
-  white-space: nowrap;
-  transition:
-    color 0.15s ease,
-    background 0.15s ease,
-    border-color 0.15s ease;
-}
-
-/* ---- フォーカス ---- */
-.button:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-/* ================================================================
-   variant
-   ================================================================ */
-
-/* default（副ボタン）— 罫の線画。地は紙のまま・罫で輪郭を示す。
- * hover は枠と文字に --accent（色ベタにしない・ShareButtons の副ボタンと同型）。 */
-.variantDefault {
-  background: var(--paper);
+  /* タップの標的は 44px 以上（§6）。幅は字の大きさに、44px に届くまで余白を足したもの（§5）。 */
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 var(--space-8);
+  /* 無効のときの破線の枠の幅を先に取っておき、無効になっても大きさを変えない。 */
+  border: var(--rule-w) solid transparent;
+  border-radius: 0;
   color: var(--ink);
-  border-color: var(--rule);
-}
-.variantDefault:hover:not(:disabled) {
-  color: var(--accent);
-  border-color: var(--accent);
+  background: transparent;
+  line-height: 1.4;
+  text-align: center;
+  cursor: pointer;
 }
 
-/* primary（主ボタン）— --accent の地に --paper の文字。
- * hover/active は彩度・色相を変えず明度のみ filter で調整する
- * （トークンに accent の濃淡違いが無いため、色の直書きを避けて filter で表現）。 */
+/* プライマリでないボタンは、進むもの・実行するものの印として下線を持つ。 */
+.variantDefault {
+  text-decoration: underline;
+  text-decoration-thickness: var(--rule-w-hair);
+  text-underline-offset: 0.15em;
+}
+
+/* プライマリボタンは反転で示し、ボーダーを持たない。1ページに1つまで。 */
 .variantPrimary {
-  background: var(--accent);
+  padding: 0 var(--space-16);
+  background: var(--ink);
   color: var(--paper);
-  border-color: var(--accent);
-}
-.variantPrimary:hover:not(:disabled) {
-  filter: brightness(0.92);
-}
-.variantPrimary:active:not(:disabled) {
-  filter: brightness(0.85);
 }
 
-/* ================================================================
-   size
-   ================================================================ */
-
-/* default size は .button ベースで定義済み (9px 18px / 14px) */
-
-/* small */
-/* 密集レイアウト限定。WCAG 2.5.5 タップターゲット (44px) 非準拠。本番採用時に再評価する。 */
-.sizeSmall {
-  min-height: unset; /* .button からの 44px 継承を切って密集レイアウト用の縮小高さを維持 */
-  padding: 5px 11px;
-  font-size: 12px;
-}
-
-/* ================================================================
-   disabled
-   ================================================================ */
-
+/* 無効は太い破線の枠で示し、押しても何も起きないので下線も反転も持たない。 */
 .button:disabled {
-  background: var(--paper-2);
-  color: var(--ink-2);
+  border-style: dashed;
   border-color: var(--rule);
+  background: transparent;
+  color: var(--ink-2);
+  text-decoration: none;
   cursor: not-allowed;
+}
+
+/* 無効の理由は、ボタンの横に本文の大きさで添える。幅が足りなければ下に回る。 */
+.withReason {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.reason {
+  color: var(--ink-2);
 }

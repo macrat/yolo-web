@@ -176,7 +176,6 @@ export default function KanaConverterTile({
           {/* コピーボタン */}
           <Button
             variant="default"
-            size="small"
             onClick={handleCopy}
             disabled={!hasOutput}
             aria-label={copiedKey ? COPIED_LABEL : "コピー"}

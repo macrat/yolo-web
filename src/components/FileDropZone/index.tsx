@@ -58,7 +58,6 @@ interface FileDropZoneProps {
  * ### デザイン
  * - 角丸: `--radius-sm`
  * - border: 2px dashed `--rule-strong` (通常) / `--accent` (ドラッグ中・ホバー)
- * - フォーカス: `outline: 2px solid var(--accent); outline-offset: 2px`
  * - ドラッグ中の視覚表現は border 色の変化だけ（影・opacity は変えない）
  *
  * ### hydration

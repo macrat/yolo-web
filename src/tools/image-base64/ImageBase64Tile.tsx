@@ -288,10 +288,7 @@ export default function ImageBase64Tile({
                   >
                     Base64
                   </label>
-                  <Button
-                    size="small"
-                    onClick={() => copy(base64Result.base64, "base64")}
-                  >
+                  <Button onClick={() => copy(base64Result.base64, "base64")}>
                     {copiedKey === "base64" ? COPIED_LABEL : "コピー"}
                   </Button>
                 </div>
@@ -314,10 +311,7 @@ export default function ImageBase64Tile({
                   >
                     Data URI
                   </label>
-                  <Button
-                    size="small"
-                    onClick={() => copy(base64Result.dataUri, "datauri")}
-                  >
+                  <Button onClick={() => copy(base64Result.dataUri, "datauri")}>
                     {copiedKey === "datauri" ? COPIED_LABEL : "コピー"}
                   </Button>
                 </div>

@@ -190,7 +190,6 @@ export default function HtmlEntityTile({
           </label>
           {/* コピーボタン */}
           <Button
-            size="small"
             variant="default"
             disabled={!output}
             onClick={() => void handleCopy()}

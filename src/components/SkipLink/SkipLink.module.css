@@ -15,17 +15,8 @@
   min-height: 44px;
   padding-inline: var(--space-8);
   background: var(--paper);
-  /* フォーカスの二重リングの内の輪（§6）。ページの上に重なって出るので、下に何があっても
-   * 外の輪とのあいだに --paper が見えるよう、地と同じ色の太い線で要素に持たせる。 */
-  border: var(--rule-w) solid var(--paper);
 }
 
 .skipLink:focus {
   transform: none;
-}
-
-/* フォーカスの二重リングの外の輪（§6）。内の輪のボーダーに密着させる。 */
-.skipLink:focus-visible {
-  outline: var(--rule-w) solid var(--ink);
-  outline-offset: 0;
 }

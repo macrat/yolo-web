@@ -29,11 +29,12 @@
   color: var(--ink);
 }
 
-/* F2: 設問切替時にプログラム的フォーカスを受ける見出し（tabIndex={-1}）。
- * キーボード tab で到達する要素ではないため focus outline は不要
- * （結果リビール region の .resultPhase:focus と同じ流儀で抑制）。 */
+/* 設問切替時にプログラム的フォーカスを受ける見出し（tabIndex={-1}）。
+ * キーボード tab で到達する要素ではないため、フォーカスの輪は出さない
+ * （結果リビール region の .resultPhase:focus と同じ流儀）。 */
 .questionText:focus {
   outline: none;
+  box-shadow: none;
 }
 
 .choices {

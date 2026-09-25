@@ -275,12 +275,7 @@ export default function PasswordGeneratorTile({
           <code className={styles.passwordCode}>{password}</code>
 
           <div className={styles.copyButtonWrap}>
-            <Button
-              variant="default"
-              size="small"
-              disabled={!password}
-              onClick={handleCopy}
-            >
+            <Button variant="default" disabled={!password} onClick={handleCopy}>
               {isCopied ? COPIED_LABEL : "コピー"}
             </Button>
           </div>

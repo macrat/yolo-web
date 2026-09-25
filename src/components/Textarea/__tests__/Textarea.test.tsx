@@ -125,19 +125,6 @@ describe("Textarea", () => {
     expect(textareaBlock).toContain("var(--radius-sm)");
   });
 
-  it(".textarea:focus-visible has outline: 2px solid var(--accent)", () => {
-    const cssPath = resolve(__dirname, "../Textarea.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    // focus-visible ブロックに outline: 2px solid var(--accent) が含まれること
-    expect(css).toContain("outline: 2px solid var(--accent)");
-  });
-
-  it(".textarea:focus-visible has outline-offset: 2px", () => {
-    const cssPath = resolve(__dirname, "../Textarea.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).toContain("outline-offset: 2px");
-  });
-
   it(".textarea uses --rule-strong", () => {
     const cssPath = resolve(__dirname, "../Textarea.module.css");
     const css = readFileSync(cssPath, "utf-8");

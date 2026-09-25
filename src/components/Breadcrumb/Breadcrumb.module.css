@@ -1,6 +1,5 @@
 /**
  * Breadcrumb — パンくずリストコンポーネント。
- * new デザイン体系のみ使用（DESIGN.md §2, globals.css 参照）。
  *
  * 区切り文字「/」は JSX <span aria-hidden="true"> で li 内に配置する。
  *
@@ -13,10 +12,6 @@
  * li 単位でしか折り返しが起きなくなる。
  */
 
-.nav {
-  /* コンテンツ幅に追従 */
-}
-
 .list {
   /* リストスタイルをリセットし、横並び折返しにする */
   display: flex;
@@ -26,7 +21,7 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  font-size: 0.875rem; /* 14px — 本文 16px より少し小さめ */
+  font-size: var(--text-small);
   line-height: 1.5;
   color: var(--ink-2);
 }
@@ -50,21 +45,16 @@
 }
 
 .link {
-  color: var(--accent);
-  text-decoration: none;
-}
-
-.link:hover {
-  text-decoration: underline;
-}
-
-.link:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-  border-radius: var(--radius-sm);
+  /* パンくずは本文の中のリンクではないので、タップの標的を 44px 以上にする（§6）。下線と訪問済みの色は
+   * globals.css の a の既定に従う。 */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
 }
 
 .current {
-  /* 現在位置はリンクではなく通常テキスト。より強調された文字色を使う */
+  /* いまのページはリンクにせず、下線を持たない文字で置く。 */
   color: var(--ink);
 }

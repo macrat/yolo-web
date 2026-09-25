@@ -1,19 +1,23 @@
-import type { ComponentPropsWithoutRef } from "react";
+import { useId, type ComponentPropsWithoutRef } from "react";
 import styles from "./Button.module.css";
 
 /**
- * ボタンのバリアント:
- * - "primary": 主ボタン。`--accent` の地に `--paper` の文字。アクションの主要な選択肢に使う。
- * - "default": 副ボタン。地は`--paper`のまま罫（`--rule`）で輪郭を示す線画。補助的なアクションに使う。
+ * ボタンの種類（DESIGN.md §6）。どちらも、押すとそのページで何かが実行されるものに使う。
+ * - "primary": プライマリボタン。反転で示す。1ページに1つまで。
+ * - "default": プライマリでないボタン。下線で示す。
+ * その場で状態を変えるもの（選ぶ・開閉する）は、ボタンではなくラジオボタン・チェックボックス・
+ * アコーディオンで組む。
  */
 type ButtonVariant = "primary" | "default";
-type ButtonSize = "default" | "small";
 
 interface ButtonOwnProps {
-  /** ボタンの見た目バリアント（デフォルト: "default"） */
+  /** ボタンの種類（既定: "default"） */
   variant?: ButtonVariant;
-  /** ボタンのサイズ（デフォルト: "default"） */
-  size?: ButtonSize;
+  /**
+   * 無効のときに、なぜ押せないかを言う文（§6 無効）。disabled のときだけ、ボタンの横に出して
+   * ボタンの説明として読ませる。
+   */
+  disabledReason?: string;
   /** ボタンに表示する内容 */
   children: React.ReactNode;
 }
@@ -21,39 +25,26 @@ interface ButtonOwnProps {
 type ButtonProps = ButtonOwnProps &
   Omit<ComponentPropsWithoutRef<"button">, keyof ButtonOwnProps>;
 
-/** variant → CSS クラス のマッピング */
 const variantClassMap: Record<ButtonVariant, string> = {
   default: styles.variantDefault,
   primary: styles.variantPrimary,
 };
 
-/** size → CSS クラス のマッピング */
-const sizeClassMap: Record<ButtonSize, string | undefined> = {
-  default: undefined, // ベーススタイル (.button) で定義済み
-  small: styles.sizeSmall,
-};
-
-/**
- * Button — クリック操作のボタン。
- *
- * 角丸は var(--radius)（0px）・box-shadow は使わない（DESIGN.md §5。詳細は
- * Button.module.css 冒頭コメント参照）。
- */
+/** ボタン（DESIGN.md §6）。見え方は Button.module.css が持つ。 */
 function Button({
   variant = "default",
-  size = "default",
+  disabledReason,
   children,
   className,
   disabled,
   onClick,
+  "aria-describedby": ariaDescribedBy,
   ...rest
 }: ButtonProps) {
-  const classes = [
-    styles.button,
-    variantClassMap[variant],
-    sizeClassMap[size],
-    className,
-  ]
+  const reasonId = useId();
+  const showReason = Boolean(disabled && disabledReason);
+
+  const classes = [styles.button, variantClassMap[variant], className]
     .filter(Boolean)
     .join(" ");
 
@@ -68,19 +59,38 @@ function Button({
     onClick?.(e);
   }
 
-  return (
+  const describedBy =
+    [ariaDescribedBy, showReason ? reasonId : undefined]
+      .filter(Boolean)
+      .join(" ") || undefined;
+
+  const button = (
     <button
       type="button"
       className={classes}
       disabled={disabled}
       onClick={handleClick}
-      /* data 属性でバリアント/サイズを公開し、テストから検証可能にする */
+      aria-describedby={describedBy}
+      /* data 属性で種類を公開し、テストから検証可能にする */
       data-variant={variant}
-      data-size={size}
       {...rest}
     >
       {children}
     </button>
+  );
+
+  if (disabledReason === undefined) return button;
+
+  // 無効と有効が切り替わってもボタンの要素を作り直さないよう、理由を持つボタンはいつも包む。
+  return (
+    <span className={styles.withReason}>
+      {button}
+      {showReason && (
+        <span id={reasonId} className={styles.reason}>
+          {disabledReason}
+        </span>
+      )}
+    </span>
   );
 }
 

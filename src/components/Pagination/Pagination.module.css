@@ -1,105 +1,72 @@
-/*
- * Pagination — ページナビゲーション。
- *
- * 塗りのボタン・box-shadow・角丸を持たない。各ページ番号は罫（--rule）で囲んだ
- * 素の文字。現在地は --accent の文字色のみ（塗りにしない）。角丸は 0px（--radius）。全トークン経由・直書きなし。
- */
+/* ページ送り（DESIGN.md §6・§7）。どの項目も、押すと別のページが開くリンクとして下線を持つ。
+ * hover の細い線とフォーカスの二重リングは globals.css の既定に従う。 */
 
 .pagination {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: var(--space-8);
   flex-wrap: wrap;
+  gap: var(--space-8);
   margin-top: var(--space-32);
   padding: var(--space-16) 0;
 }
 
-/* ページアイテム（link / button 共通ベース）。タップターゲット 44px を高さで確保（§6）。 */
+/* タップの標的は 44px 四方以上（§6）。link モードの下線と訪問済みの色は globals.css の a の既定に従う。 */
 .pageItem {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 2.75rem;
-  height: 2.75rem;
+  min-width: 44px;
+  min-height: 44px;
   padding: 0 var(--space-8);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
-  font-family: var(--font-body);
-  font-size: 0.875rem;
-  line-height: 1;
-  color: var(--ink);
-  background: transparent;
-  text-decoration: none;
-  cursor: pointer;
-  transition:
-    color 0.15s ease,
-    border-color 0.15s ease;
+  font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 
-.pageItem:hover:not(.disabled):not(.active) {
-  color: var(--accent);
-  border-color: var(--accent);
-}
-
-/* フォーカス */
-.pageItem:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-/* アクティブ（現在ページ）: 現在地は --accent の文字色のみ（塗りにしない）。 */
-.active {
-  color: var(--accent);
-  border-color: var(--accent);
-  font-weight: 600;
-  pointer-events: none;
-  cursor: default;
-}
-
-/* 無効（prev/next の端点） */
-.disabled {
-  color: var(--ink-2);
+/* button モードの項目にも、link モードと同じ下線と色を与える。 */
+button.pageItem {
+  border: none;
   background: transparent;
-  border-color: var(--rule);
-  opacity: 0.6;
-  cursor: not-allowed;
-  pointer-events: none;
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-thickness: var(--rule-w-hair);
+  text-underline-offset: 0.15em;
+  cursor: pointer;
 }
 
-/* 省略記号 */
+/* いまのページは現在地（§6）。太字で示し、押しても何も起きないので下線を持たない。
+ * 開いているページなので訪問済みにもなるが、ほかの番号より前に出すため --ink で置く。 */
+.pageItem[aria-current="page"] {
+  color: var(--ink);
+  font-weight: 700;
+  text-decoration: none;
+}
+
 .ellipsis {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 2.75rem;
-  height: 2.75rem;
-  font-family: var(--font-body);
-  font-size: 0.875rem;
+  min-width: 44px;
+  min-height: 44px;
   color: var(--ink-2);
   user-select: none;
 }
 
-/* デスクトップ: ページ番号一覧 */
 .pageNumbers {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--space-8);
 }
 
-/* モバイル: "現在ページ / 総ページ" インジケータ（非表示）。tabular 数字で桁を揃える。 */
 .mobileIndicator {
   display: none;
-  font-family: var(--font-body);
-  font-variant-numeric: tabular-nums;
-  font-size: 0.875rem;
-  color: var(--ink-2);
   padding: 0 var(--space-8);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-2);
 }
 
-/* レスポンシブ: モバイルではページ番号を隠してインジケータを表示 */
-@media (max-width: 480px) {
+/* 狭い画面では番号の並びを畳み、いまのページと総ページ数だけを出す。 */
+@media (width < 45rem) {
   .pageNumbers {
     display: none;
   }

@@ -365,11 +365,9 @@ export default function CronParserTile({
             </div>
             <div className={styles.presetRow}>
               {PRESETS.map((preset) => (
-                /* 共通 Button default/small バリアント（B-3準拠）。*/
                 <Button
                   key={preset.expression}
                   variant="default"
-                  size="small"
                   onClick={() => handlePreset(preset.expression)}
                   aria-label={`プリセット: ${preset.label}`}
                 >
@@ -442,7 +440,6 @@ export default function CronParserTile({
                 <Button
                   key={preset.expression}
                   variant="default"
-                  size="small"
                   onClick={() => handleBuilderPreset(preset.expression)}
                   aria-label={`プリセット: ${preset.label}`}
                 >

@@ -244,7 +244,6 @@ export default function TextReplaceTile({
           </label>
           {/* コピーボタン（出力空のとき disabled） */}
           <Button
-            size="small"
             onClick={handleCopy}
             disabled={!output}
             aria-label={copiedKey ? COPIED_LABEL : "コピー"}

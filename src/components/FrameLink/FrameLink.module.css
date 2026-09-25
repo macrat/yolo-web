@@ -10,7 +10,7 @@
 
 /* 押せる範囲（§6 の 44px 四方）。字の幅が 44px に届かない項目では、字を中心に左右へ同じだけ広げる。
  * 箱を広げると字の後ろの間隔だけが広がるので、広げるのはこの範囲だけにする。
- * hover の細い線とフォーカスの二重リングもこの範囲に出し、タップの標的と一致させる。 */
+ * hover の細い線とフォーカスの二重リングは、data-hit-area（globals.css）がこの範囲に出す。 */
 .link::after {
   content: "";
   position: absolute;
@@ -18,22 +18,6 @@
   left: 50%;
   width: max(100%, 44px);
   transform: translateX(-50%);
-  border: var(--rule-w-hair) solid transparent;
-}
-
-.link:hover::after {
-  border-color: var(--rule-2);
-}
-
-/* 二重リング（§6）。外は --ink の輪で、範囲とのあいだの幅には下地の --paper が見えて内の輪になる。
- * 上端・下端は背景を敷かないので、下地はいつも --paper になる。 */
-.link:focus-visible {
-  outline: none;
-}
-
-.link:focus-visible::after {
-  outline: var(--rule-w) solid var(--ink);
-  outline-offset: var(--rule-w);
 }
 
 /* 現在地は太字で示し、押しても何も起きないので下線も hover も持たない（§6）。 */
@@ -41,10 +25,6 @@
   color: var(--ink);
   font-weight: 700;
   text-decoration: none;
-}
-
-.link[aria-current="page"]:hover::after {
-  border-color: transparent;
 }
 
 /* 字の箱の幅を、同じ字の太字の幅で取る。現在地になって太字になっても幅が変わらず、

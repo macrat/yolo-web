@@ -15,8 +15,6 @@ interface RelatedBlogPostsProps {
  * - `getRelatedBlogPostsForTool` で取得した関連記事をリスト表示する
  * - 記事タイトルと公開日（published_at）を表示し、来訪者が記事の新しさを判断できる情報を保持する
  * - 関連記事が 0 件のとき null を返す
- * - スタイルは new デザイン体系のみ（DESIGN.md §2 参照）
- * - 旧 --color-* トークンは使用しない
  */
 export default function RelatedBlogPosts({ toolSlug }: RelatedBlogPostsProps) {
   const posts = getRelatedBlogPostsForTool(toolSlug);
@@ -25,7 +23,12 @@ export default function RelatedBlogPosts({ toolSlug }: RelatedBlogPostsProps) {
   return (
     <section className={styles.section} aria-label="関連ブログ記事">
       <h2 className={styles.title}>関連ブログ記事</h2>
-      <ul className={styles.list}>
+      <ul
+        className={styles.list}
+        /* 行は隙間なく並ぶので、フォーカスの輪は行の内側に、hover の線は行の左右に出す（§6）。 */
+        data-focus-ring="inset"
+        data-hover-line="sides"
+      >
         {posts.map((post) => (
           <li key={post.slug} className={styles.item}>
             <Link href={`/blog/${post.slug}`} className={styles.link}>

@@ -5,13 +5,14 @@ import * as path from "path";
 // 各テストで何度も readFileSync するのを避けるため、モジュールロード時に一度だけ読む。
 const pagePath = path.resolve(__dirname, "../page.tsx");
 const cssPath = path.resolve(__dirname, "../page.module.css");
-const shareButtonsCssPath = path.resolve(
+// 共有のボタンは共通の Button で組むので、タップの標的の大きさは Button の CSS が持つ。
+const buttonCssPath = path.resolve(
   __dirname,
-  "../../../../components/ShareButtons/ShareButtons.module.css",
+  "../../../../components/Button/Button.module.css",
 );
 const source = fs.readFileSync(pagePath, "utf-8");
 const css = fs.readFileSync(cssPath, "utf-8");
-const shareButtonsCss = fs.readFileSync(shareButtonsCssPath, "utf-8");
+const buttonCss = fs.readFileSync(buttonCssPath, "utf-8");
 
 describe("app/blog/[slug]/page", () => {
   describe("page module exports", () => {
@@ -188,13 +189,13 @@ describe("app/blog/[slug]/page", () => {
     });
   });
 
-  describe("WCAG 2.5.5: ShareButtons.module.css に min-height: 44px が定義されていること", () => {
-    it("ShareButtons.module.css に min-height: 44px ルールが存在する", () => {
-      expect(shareButtonsCss).toMatch(/min-height:\s*44px/);
+  describe("共有のボタンのタップの標的が 44px 以上であること（§6）", () => {
+    it("Button.module.css に min-height: 44px ルールが存在する", () => {
+      expect(buttonCss).toMatch(/min-height:\s*44px/);
     });
 
-    it("ShareButtons.module.css に min-width: 44px ルールが存在する", () => {
-      expect(shareButtonsCss).toMatch(/min-width:\s*44px/);
+    it("Button.module.css に min-width: 44px ルールが存在する", () => {
+      expect(buttonCss).toMatch(/min-width:\s*44px/);
     });
   });
 });

@@ -159,14 +159,6 @@ describe("RelatedBlogPosts", () => {
     expect(css).toMatch(/var\(--(ink|rule|accent)/);
   });
 
-  // CSS規約チェック: フォーカススタイルが DESIGN.md 準拠
-  it("CSS が DESIGN.md 準拠のフォーカススタイル（outline: 2px solid var(--accent)）を持つ", () => {
-    const cssPath = resolve(__dirname, "../RelatedBlogPosts.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).toContain("outline: 2px solid var(--accent)");
-    expect(css).toContain("outline-offset: 2px");
-  });
-
   // CSS規約チェック: 旧トークン（--r-normal / --r-interactive 等）を使っていないこと。
   // §4「品書き」の行リンクはカードではないため角丸は不要（旧トークン痕跡の不在で確認する）。
   it("CSS が旧角丸トークン（--r-normal / --r-interactive）を使っていない", () => {

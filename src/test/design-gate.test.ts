@@ -23,6 +23,7 @@
  *   §5   角丸は 0px。影・グロー・半透明ぼかし・グラデーションを持たない。この検査が見るのは:
  *        border-radius が ALLOWED_RADIUS_ATOMS 以外 = ERROR。backdrop-filter: blur・色付きの影 = ERROR。
  *        中性の影・グラデーション背景 = WARN（人手で確認）。絵文字（埋め込み面）= ERROR。
+ *        線を引くトークン（LINE_SHADOW_TOKENS）だけの box-shadow は影でないので見ない。
  *   §12  色の直書き（トークンを経由しない hex / rgb() / oklch() 等）= ERROR。
  *        中性のスクリム（rgba(0,0,0,α) 等のオーバーレイ幕）は許す。
  *   英字の全部大文字（text-transform: uppercase）= WARN（frontend-design スキルの目視の項目）。
@@ -302,6 +303,13 @@ const isPurpleHue = (h: number | null): boolean =>
   h !== null && h >= 250 && h <= 320;
 
 // border-radius で ERROR にしない値。§5 は角丸を 0px とするが、この検査は 2px も ERROR にしない。
+// box-shadow で線を引くトークン（§6 フォーカスの内の輪・hover の細いボーダー）。ずらしもぼかしも持たない
+// 広がりだけの値で、影ではない。値の定義は globals.css。
+const LINE_SHADOW_TOKENS = new Set([
+  "var(--focus-ring-fill)",
+  "var(--hover-line)",
+]);
+
 const ALLOWED_RADIUS_ATOMS = new Set([
   "0",
   "0px",
@@ -492,6 +500,7 @@ function analyzeCss(content: string, file: string): Violation[] {
     const literals = colorLiterals(value);
     if (prop === "box-shadow" || prop === "text-shadow") {
       if (value.toLowerCase() === "none") continue;
+      if (prop === "box-shadow" && LINE_SHADOW_TOKENS.has(value)) continue;
       const colored = literals.filter((lit) => !isNeutralColor(lit));
       if (colored.length > 0) {
         // §5 色付きの影・グロー

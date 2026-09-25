@@ -218,7 +218,6 @@ export default function UrlEncodeTile({
           {/* コピーボタン */}
           <Button
             variant="default"
-            size="small"
             onClick={handleCopy}
             disabled={!output}
             aria-label={copiedKey ? COPIED_LABEL : "コピー"}

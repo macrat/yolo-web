@@ -28,30 +28,12 @@ describe("Button", () => {
     );
   });
 
-  // 旧 ghost variant は廃止。TypeScript 型から除外されているため、
-  // ランタイムでも "ghost" を受け付けないことを確認する（型レベルの保証で十分）。
-
   test("variant を省略すると data-variant='default' がデフォルト", () => {
     render(<Button>省略</Button>);
     expect(screen.getByRole("button")).toHaveAttribute(
       "data-variant",
       "default",
     );
-  });
-
-  test("size prop: default は data-size='default' を持つ", () => {
-    render(<Button size="default">default size</Button>);
-    expect(screen.getByRole("button")).toHaveAttribute("data-size", "default");
-  });
-
-  test("size prop: small は data-size='small' を持つ", () => {
-    render(<Button size="small">small</Button>);
-    expect(screen.getByRole("button")).toHaveAttribute("data-size", "small");
-  });
-
-  test("size を省略すると data-size='default' がデフォルト", () => {
-    render(<Button>省略</Button>);
-    expect(screen.getByRole("button")).toHaveAttribute("data-size", "default");
   });
 
   test("通常時に onClick が発火する", () => {
@@ -92,27 +74,41 @@ describe("Button", () => {
     expect(screen.getByRole("button")).toHaveAttribute("type", "reset");
   });
 
-  // WCAG 2.5.5 AAA タップターゲット保証
-  it(".button has min-height: 44px for WCAG 2.5.5 AAA tap target", () => {
+  it(".button has min-height: 44px (§6 tap target)", () => {
     const cssPath = resolve(__dirname, "../Button.module.css");
     const css = readFileSync(cssPath, "utf-8");
     const buttonBlock = css.match(/\.button\s*\{[^}]+\}/)?.[0] ?? "";
     expect(buttonBlock).toContain("min-height: 44px");
   });
 
-  // small は密集レイアウト限定で WCAG 非準拠のまま据え置く設計意図の回帰防止
-  // .button からの cascade 継承（min-height: 44px）を unset で明示的に切ること
-  it(".sizeSmall does not enforce min-height: 44px (intentional: dense-layout-only variant)", () => {
-    const cssPath = resolve(__dirname, "../Button.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    const sizeSmallBlock = css.match(/\.sizeSmall\s*\{[^}]+\}/)?.[0] ?? "";
-    expect(sizeSmallBlock).not.toContain("min-height: 44px");
+  test("無効で理由があれば、理由を横に出してボタンの説明にする", () => {
+    render(
+      <Button disabled disabledReason="文字を入れると押せます">
+        変換
+      </Button>,
+    );
+    const button = screen.getByRole("button", { name: "変換" });
+    expect(button).toHaveAccessibleDescription("文字を入れると押せます");
+    expect(screen.getByText("文字を入れると押せます")).toBeInTheDocument();
   });
 
-  it(".sizeSmall explicitly sets min-height: unset to cut cascade from .button", () => {
-    const cssPath = resolve(__dirname, "../Button.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    const sizeSmallBlock = css.match(/\.sizeSmall\s*\{[^}]+\}/)?.[0] ?? "";
-    expect(sizeSmallBlock).toContain("min-height: unset");
+  test("有効なときは理由を出さない", () => {
+    render(<Button disabledReason="文字を入れると押せます">変換</Button>);
+    expect(
+      screen.queryByText("文字を入れると押せます"),
+    ).not.toBeInTheDocument();
+    expect(screen.getByRole("button")).not.toHaveAttribute("aria-describedby");
+  });
+
+  test("呼び出し側の aria-describedby と理由を両方つなぐ", () => {
+    render(
+      <>
+        <p id="note">注記</p>
+        <Button disabled disabledReason="理由" aria-describedby="note">
+          変換
+        </Button>
+      </>,
+    );
+    expect(screen.getByRole("button")).toHaveAccessibleDescription("注記 理由");
   });
 });

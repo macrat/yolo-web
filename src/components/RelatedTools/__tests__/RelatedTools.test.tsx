@@ -160,11 +160,13 @@ describe("RelatedTools", () => {
     );
   });
 
-  // CSS 規約: カードリンクのフォーカス可視（WCAG 2.4.7）
-  it("CSS に focus-visible のフォーカス outline 定義が含まれている", () => {
-    const cssPath = resolve(__dirname, "../RelatedTools.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).toContain("focus-visible");
-    expect(css).toContain("outline");
+  // 行は隙間なく並ぶので、フォーカスの輪を行の内側に出す（DESIGN.md §6）
+  it("行の並びがフォーカスの輪を内側に出す指定を持つ", () => {
+    const { container } = render(
+      <RelatedTools currentSlug="" relatedSlugs={["char-count", "base64"]} />,
+    );
+    const list = container.querySelector("ul");
+    expect(list).toHaveAttribute("data-focus-ring", "inset");
+    expect(list).toHaveAttribute("data-hover-line", "sides");
   });
 });

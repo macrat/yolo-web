@@ -303,45 +303,39 @@ export default function StorybookContent({
           <span className={styles.previewLabel}>Preview: Button</span>
 
           <div className={styles.buttonMatrix}>
-            {/* Primary */}
+            {/* 1ページに1つまでの反転のボタン */}
             <div className={styles.buttonGroup}>
               <div className={styles.buttonGroupLabel}>primary</div>
               <Button
                 variant="primary"
-                onClick={() => console.log("primary default clicked")}
+                onClick={() => console.log("primary clicked")}
               >
-                Primary Default
+                計算する
               </Button>
               <Button
                 variant="primary"
-                size="small"
-                onClick={() => console.log("primary small clicked")}
+                disabled
+                disabledReason="生年月日を入れると押せます"
               >
-                Primary Small
-              </Button>
-              <Button variant="primary" disabled>
-                Primary Disabled
+                計算する
               </Button>
             </div>
 
-            {/* Default — var(--paper) 地の標準ボタン */}
+            {/* プライマリでない、実行するボタン */}
             <div className={styles.buttonGroup}>
               <div className={styles.buttonGroupLabel}>default</div>
               <Button
                 variant="default"
-                onClick={() => console.log("default default clicked")}
+                onClick={() => console.log("default clicked")}
               >
-                Default Default
+                結果をコピー
               </Button>
               <Button
                 variant="default"
-                size="small"
-                onClick={() => console.log("default small clicked")}
+                disabled
+                disabledReason="結果が出ると押せます"
               >
-                Default Small
-              </Button>
-              <Button variant="default" disabled>
-                Default Disabled
+                結果をコピー
               </Button>
             </div>
           </div>

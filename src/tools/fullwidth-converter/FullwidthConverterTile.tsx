@@ -213,7 +213,6 @@ export default function FullwidthConverterTile({
           {/* コピーボタン */}
           <Button
             variant="default"
-            size="small"
             onClick={handleCopy}
             disabled={!output}
             aria-label={copiedKey ? COPIED_LABEL : "コピー"}

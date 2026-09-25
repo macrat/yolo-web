@@ -34,7 +34,6 @@ type InputProps = InputOwnProps &
  *
  * デザイン:
  * - 入力欄の角丸は `--radius-sm`
- * - フォーカスは `outline: 2px solid var(--accent); outline-offset: 2px;`
  *
  * @example
  * // controlled
