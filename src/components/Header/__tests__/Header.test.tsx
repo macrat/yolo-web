@@ -31,7 +31,7 @@ vi.mock("next/navigation", () => ({
   usePathname: () => mockPathname,
 }));
 
-const NAV_LABELS = ["遊び", "ツール", "ブログ", "サイト紹介"];
+const NAV_LABELS = ["遊び", "ツール", "辞典", "ブログ", "サイト紹介"];
 
 describe("Header", () => {
   beforeEach(() => {

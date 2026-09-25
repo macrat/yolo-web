@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { PAPER, INK, INK_2, RULE, RULE_STRONG, ACCENT } from "@/lib/utsuwaHex";
+import { PAPER, INK, INK_2, RULE, RULE_2 } from "@/lib/utsuwaHex";
 
 /**
  * 共通OGP生成器の設定（共有カード＝シェア unfurl の1枚）。
@@ -260,7 +260,7 @@ export async function createOgpImageResponse(
         backgroundColor: PAPER,
         color: INK,
         // 罫で包む（角丸 0）。札と同一の枠。
-        border: `2px solid ${RULE_STRONG}`,
+        border: `2px solid ${RULE}`,
         padding: "56px 64px",
         fontFamily: gothicFamily,
       }}
@@ -272,7 +272,7 @@ export async function createOgpImageResponse(
           alignItems: "baseline",
           gap: "20px",
           paddingBottom: "20px",
-          borderBottom: `1px solid ${RULE}`,
+          borderBottom: `1px solid ${RULE_2}`,
         }}
       >
         <div
@@ -350,7 +350,7 @@ export async function createOgpImageResponse(
             fontFamily: minchoFamily,
             fontSize: 62,
             lineHeight: 1,
-            color: ACCENT,
+            color: INK,
             // 明朝 y は descender を持つため、字面をわずかに下げて視覚中央へ重心を合わせる
             // （幾何中央だと上寄りに見える／下げすぎると descender が縁に触れる）。
             paddingTop: 5,

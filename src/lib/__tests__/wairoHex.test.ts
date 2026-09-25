@@ -10,15 +10,7 @@ import {
 import { oklchToHex, parseOklch } from "../oklchToHex";
 // 器定数の SSoT は中立モジュール utsuwaHex。next/og に依存しない純粋な hex 定数なので
 // ImageResponse のモックは不要。
-import {
-  PAPER,
-  INK,
-  INK_2,
-  RULE,
-  RULE_STRONG,
-  ACCENT,
-  PAPER_DARK,
-} from "../utsuwaHex";
+import { PAPER, INK, INK_2, RULE, RULE_2, PAPER_DARK } from "../utsuwaHex";
 
 /** WCAG 2.1 相対輝度・コントラスト比を hex から計算する（AA 再計測用・sRGB）。 */
 function hexToRgb(hex: string): [number, number, number] {
@@ -105,9 +97,9 @@ describe("oklchToHex — 正典 oklch との乖離ガード", () => {
     [PAPER, "paper"],
     [INK, "ink"],
     [INK_2, "ink-2"],
-    [RULE, "rule-2"],
-    [RULE_STRONG, "ink"],
-    [ACCENT, "ink"],
+    // --rule は var(--ink) なので、墨の oklch と突き合わせる。
+    [RULE, "ink"],
+    [RULE_2, "rule-2"],
   ];
 
   test.each(CONTAINER_TOKENS)(

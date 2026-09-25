@@ -27,7 +27,7 @@
   --rule: var(--ink);
   --rule-2: oklch(0.62 0 0);
 
-  /* §2 に無い UI の色の名前。部品が参照しているあいだ、意味の近い §2 のトークンを指す。 */
+  /* §2 に無い UI の色の名前。意味の近い §2 のトークンを指す。 */
   --accent: var(--ink);
   --accent-weak: var(--paper-2);
   --rule-strong: var(--rule);
@@ -36,7 +36,7 @@
   --rule-w: 3px;
   --rule-w-hair: 1px;
 
-  /* §5 角丸は持たない。 */
+  /* §5 角丸の半径。角丸は持たないので 0。 */
   --radius: 0px;
   --radius-sm: var(--radius);
 
@@ -204,7 +204,7 @@ body {
 body {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  min-height: 100svh;
   font-family: var(--font-body);
   font-size: var(--text-body);
   line-height: var(--leading-body);

@@ -167,7 +167,7 @@ export function build410Html(): string {
 ${tokenRules()}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{max-width:100vw;overflow-x:clip;background:var(--paper);color:var(--ink)}
-body{display:flex;flex-direction:column;min-height:100vh;font-family:var(--font-body);font-size:var(--text-body);line-height:var(--leading-body);overflow-wrap:break-word}
+body{display:flex;flex-direction:column;min-height:100svh;font-family:var(--font-body);font-size:var(--text-body);line-height:var(--leading-body);overflow-wrap:break-word}
 a{color:var(--ink);text-decoration:underline;text-decoration-thickness:var(--rule-w-hair);text-underline-offset:0.15em}
 a:visited{color:var(--ink-2)}
 .skip{position:fixed;top:var(--space-8);left:var(--space-8);transform:translateY(calc(-100% - var(--space-8)));z-index:1000;display:inline-flex;align-items:center;min-height:44px;padding-inline:var(--space-8);background:var(--paper);border:var(--rule-w) solid var(--paper)}

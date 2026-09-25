@@ -23,13 +23,13 @@ export const AI_NOTICE =
 export const HEADER_NAV_ITEMS: readonly SiteLink[] = [
   { label: "遊び", href: "/play" },
   { label: "ツール", href: "/tools" },
+  { label: "辞典", href: "/dictionary" },
   { label: "ブログ", href: "/blog" },
   { label: "サイト紹介", href: "/about" },
 ];
 
-/** 下端のリンク。上端のナビに無い辞典と、サイトについての案内を置く。 */
+/** 下端のリンク。サイトについての案内を置く。 */
 export const FOOTER_LINKS: readonly SiteLink[] = [
-  { label: "辞典", href: "/dictionary" },
   { label: "サイト紹介", href: "/about" },
   { label: "プライバシー", href: "/privacy" },
 ];

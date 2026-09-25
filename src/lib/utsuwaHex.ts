@@ -24,12 +24,10 @@ export const PAPER = "#fcfcfc"; // --paper   oklch(0.99 0 0)
 export const INK = "#0b0b0b"; // --ink     oklch(0.15 0 0)
 /** 墨（前に出ない文字）。 */
 export const INK_2 = "#525252"; // --ink-2   oklch(0.44 0 0)
-/** 細い線。 */
-export const RULE = "#868686"; // --rule-2  oklch(0.62 0 0)
 /** 太い線。UI は無彩なので、太い線は文字と同じ墨で引く。 */
-export const RULE_STRONG = INK; // --rule    var(--ink)
-/** 印（y の字）。UI は無彩なので墨で描く。 */
-export const ACCENT = INK; // --ink
+export const RULE = INK; // --rule    var(--ink)
+/** 細い線。 */
+export const RULE_2 = "#868686"; // --rule-2  oklch(0.62 0 0)
 
 /** dark の紙。 */
 export const PAPER_DARK = "#121212"; // --paper   oklch(0.18 0 0)

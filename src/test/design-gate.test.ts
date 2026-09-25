@@ -5,25 +5,24 @@
  * 「目で確かめる」が担う。この検査はそれを肩代わりしない。
  *
  * ── 対象 ──────────────────────────────────────────────────────────────
- *   `src/**\/*.module.css`・`src/app/globals.css`・`src/**\/*.tsx` を広域 glob で走査する。
- *   ページを足しても列挙漏れで検査から外れないようにするため。除外はテスト（IGNORE）と、
- *   理由を添えた個別の許容（ALLOWLIST）だけにする。
+ *   `src/**\/*.module.css`・`src/app/globals.css`・`src/**\/*.tsx`・`src/app/global-not-found.js` を
+ *   広域 glob で走査する。ページを足しても列挙漏れで検査から外れないようにするため。除外はテスト
+ *   （IGNORE）と、理由を添えた個別の許容（ALLOWLIST）だけにする。
  *
- *   テンプレート文字列に CSS/HTML を埋め込む面（EMBEDDED_DESIGN_FILES）は、トークンを import
- *   できず hex を直書きするので analyzeCss/analyzeTsx が効かない。analyzeEmbeddedDesign が
- *   生テキストへ的を絞った検査（青・青紫の hex と色関数・角丸・絵文字）だけを当てる。
- *   紙・墨の hex は正当なので一般の hex 検査はしない。
+ *   削除記事へ返す 410 のページ（`src/middleware.ts`）は、CSS と HTML をテンプレート文字列に
+ *   埋め込むので analyzeCss/analyzeTsx が効かない。analyzeEmbeddedDesign が生テキストへ的を絞った
+ *   検査（青・青紫の hex と色関数・角丸・絵文字）だけを当てる（EMBEDDED_DESIGN_FILES）。
  *
  * ── 検査する項目（コードは DESIGN.md の節）────────────────────────────────
- *   §2   UI は無彩: 色関数で hue≈250〜320（青〜紫）の色 = ERROR。
+ *   §2   UI の色は無彩。この検査は、そのうち取り違えやすい青〜紫を見る:
+ *        色関数で hue≈250〜320 の色 = ERROR。
  *        --accent-weak / --wairo-* を状態セレクタ（STATE_SELECTOR_RE）の外で background に使う = ERROR。
  *   §3   本文の font-family に Inter/Roboto/Open Sans 等の欧文既定 sans・monospace = ERROR。
  *        見出しの書体（--font-heading）で組む要素のウェイトが 400 以外 = ERROR
  *        （Zen Antique は 400 の1本だけで、ほかのウェイトはブラウザが合成太字を作る。§4「合成太字を作らない」）。
- *   §5   §5 は「角丸は 0px」「影・グロー・半透明ぼかし・グラデーションを持たない」と定める。
- *        この検査はそれより緩く、2px の角丸と中性の影を ERROR にしない:
- *        backdrop-filter: blur・色付きの影 = ERROR。中性の影・グラデーション背景 = WARN（人手で確認）。
- *        border-radius が 0 / var(--radius) / var(--radius-sm) / 2px 以外 = ERROR。絵文字（埋め込み面）= ERROR。
+ *   §5   角丸は 0px。影・グロー・半透明ぼかし・グラデーションを持たない。この検査が見るのは:
+ *        border-radius が ALLOWED_RADIUS_ATOMS 以外 = ERROR。backdrop-filter: blur・色付きの影 = ERROR。
+ *        中性の影・グラデーション背景 = WARN（人手で確認）。絵文字（埋め込み面）= ERROR。
  *   §12  色の直書き（トークンを経由しない hex / rgb() / oklch() 等）= ERROR。
  *        中性のスクリム（rgba(0,0,0,α) 等のオーバーレイ幕）は許す。
  *   英字の全部大文字（text-transform: uppercase）= WARN（frontend-design スキルの目視の項目）。
@@ -53,20 +52,18 @@ const DESIGN_CSS_GLOBS = [
   // トークン定義と要素の既定（*.module.css ではないので明示する）。
   "src/app/globals.css",
 ];
-const DESIGN_TSX_GLOBS = ["src/**/*.tsx"];
+const DESIGN_TSX_GLOBS = [
+  "src/**/*.tsx",
+  // 404 のルート。Next.js が拡張子 .js で読むファイル名なので明示する。
+  "src/app/global-not-found.js",
+];
 // テストはテスト文字列に禁止語を含むので走査しない。
 const IGNORE = ["**/__tests__/**", "**/*.test.ts", "**/*.test.tsx"];
 
-// テンプレート文字列に CSS/HTML を埋め込む面（`.ts`/`.js`）。上の glob に載らないが来訪者に
-// 表示される。Edge 実行や layout の import チェーンの外にあってトークンを import できず、hex を
-// 直書きするため、analyzeEmbeddedDesign で生テキストを検査する。
-//   - src/middleware.ts           : 削除記事へ返す 410 Gone ページの HTML/CSS
-//   - src/app/global-not-found.js : 404 のルート（.js なので上の glob に載らない。本文の CSS は
-//                                   global-not-found.module.css を上の glob が検査する）
-const EMBEDDED_DESIGN_FILES = [
-  "src/middleware.ts",
-  "src/app/global-not-found.js",
-];
+// テンプレート文字列に CSS/HTML を埋め込む面。上の glob の解析が効かないが来訪者に表示されるため、
+// analyzeEmbeddedDesign で生テキストを検査する。
+//   - src/middleware.ts : 削除記事へ返す 410 Gone ページの HTML/CSS
+const EMBEDDED_DESIGN_FILES = ["src/middleware.ts"];
 
 /** 理由を添えて個別に許す宣言。 */
 const ALLOWLIST: { fileEndsWith: string; declaration: string }[] = [
@@ -604,17 +601,16 @@ function analyzeTsx(content: string, file: string): Violation[] {
   return v;
 }
 
-// ── テンプレート埋め込みデザイン面の解析（middleware 410 / global-not-found）────────────
+// ── テンプレート埋め込みデザイン面の解析（middleware 410）────────────────────────────
 //
 // analyzeCss は「CSS 宣言ブロック `{…}`」を、analyzeTsx は「JSX の style={{…}} オブジェクト」を
 // 前提とするため、テンプレート文字列内に素の CSS/HTML を持つ面には効かない。ここでは具体的な
-// パターンだけを生テキストへ正規表現で当てる。一般の hex 直書き検査（§12）はしない——これらの
-// 面は紙・墨の hex を正当に直書きするため。
+// パターンだけを生テキストへ正規表現で当てる。一般の色直書き検査（§12）はしない——410 のページは
+// CSS module を使えず、トークンの値（紙・墨・線の oklch）をこの面の中に定義として持つため。
 
 /**
- * 無彩の UI（§2）に入り込みやすい青・青紫・冷色スレートの hex。埋め込み CSS/HTML は
- * トークンを import できず hex を直書きするため、これらの色だけを的を絞って弾く。紙・墨・罫
- * （@/lib/utsuwaHex）は正当なので一般 hex 検査はしない（誤検知回避）。
+ * 無彩の UI（§2）に入り込みやすい青・青紫・冷色スレートの hex。埋め込み CSS/HTML には
+ * 一般の色直書き検査を当てないので、これらの色だけを的を絞って弾く。
  */
 const BANNED_EMBEDDED_HEX: readonly string[] = [
   "#2563eb", // blue-600
@@ -649,7 +645,7 @@ function disallowedRadiusAtoms(value: string): string[] {
  * 検査する。検出対象は次の具体パターンに限る:
  *   §2  青・青紫の hex（BANNED_EMBEDDED_HEX）／青〜紫 hue の色関数（oklch/hsl/hwb・250〜320）
  *   §5  ERROR にしない値（0 / var(--radius) / var(--radius-sm) / 2px）以外の border-radius・絵文字
- * 紙・墨の hex は正当なので一般 hex 検査（§12）はしない。/* *​/ コメント内は検査しない。
+ * 一般の色直書き検査（§12）はしない。/* *​/ コメント内は検査しない。
  */
 function analyzeEmbeddedDesign(content: string, file: string): Violation[] {
   const v: Violation[] = [];
@@ -955,7 +951,7 @@ describe("DESIGN.md の機械の検査", () => {
     expect(errors, `\nTSX に違反:\n${fmt(errors)}\n`).toEqual([]);
   });
 
-  test("テンプレート埋め込みデザイン面（middleware 410 / global-not-found）に違反（ERROR）が無いこと", () => {
+  test("テンプレート埋め込みデザイン面（middleware 410）に違反（ERROR）が無いこと", () => {
     const errors = embeddedViolations.filter((x) => x.severity === "ERROR");
     expect(
       errors,
@@ -1083,7 +1079,7 @@ describe("機械の検査の検出力（合成入力）", () => {
     expect(vs.filter((x) => x.code === "§2")).toEqual([]);
   });
 
-  // 埋め込みデザイン面（middleware 410 / global-not-found）の的を絞った検査の検出力。
+  // 埋め込みデザイン面（middleware 410）の的を絞った検査の検出力。
   test("埋め込み面: 青の hex（#2563eb）を検出", () => {
     const vs = analyzeEmbeddedDesign(
       `body{background:#2563eb;color:#fff}`,

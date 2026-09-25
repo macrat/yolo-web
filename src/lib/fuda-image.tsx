@@ -5,7 +5,7 @@ import {
   ogpSize,
   ogpContentType,
 } from "@/lib/ogp-image";
-import { PAPER, INK, INK_2, RULE, RULE_STRONG, ACCENT } from "@/lib/utsuwaHex";
+import { PAPER, INK, INK_2, RULE, RULE_2 } from "@/lib/utsuwaHex";
 import { WAIRO_HEX } from "@/lib/wairoHex";
 import {
   pickResultWairoColor,
@@ -156,7 +156,7 @@ export async function renderFudaImage(
         backgroundColor: PAPER,
         color: INK,
         // 器は罫で包む（構造の主役は罫・角丸 0）。
-        border: `2px solid ${RULE_STRONG}`,
+        border: `2px solid ${RULE}`,
         padding: "56px 64px",
         fontFamily: gothicFamily,
       }}
@@ -168,7 +168,7 @@ export async function renderFudaImage(
           alignItems: "baseline",
           gap: "20px",
           paddingBottom: "20px",
-          borderBottom: `1px solid ${RULE}`,
+          borderBottom: `1px solid ${RULE_2}`,
         }}
       >
         <div
@@ -218,9 +218,9 @@ export async function renderFudaImage(
             color: symbolOn,
             // 記号面は必ず罫で囲む。紙地に極めて近い
             // 伝統色（白練 #fcfaf2・胡粉 #fffffb 等）でも色面が紙地に埋没しないよう、器外枠と
-            // 同じ SSoT 色（RULE_STRONG）で1px の枠を回す。角丸 0。両経路（colorOverride/
+            // 同じ SSoT 色（RULE）で1px の枠を回す。角丸 0。両経路（colorOverride/
             // 和色）で同一の記号面 div なので、どの札にも同じ罫が回る。
-            border: `1px solid ${RULE_STRONG}`,
+            border: `1px solid ${RULE}`,
           }}
         >
           <div
@@ -284,7 +284,7 @@ export async function renderFudaImage(
             cy="50"
             r="47"
             fill="none"
-            stroke={ACCENT}
+            stroke={INK}
             strokeWidth="2"
           />
         </svg>
@@ -297,7 +297,7 @@ export async function renderFudaImage(
             height: "100%",
             fontFamily: minchoFamily,
             fontSize: 52,
-            color: ACCENT,
+            color: INK,
           }}
         >
           {sealChar}
