@@ -70,6 +70,11 @@ export const GONE_PAGE_TOKENS = {
     "--measure": "40rem",
     "--max-width": "60rem",
     "--box-padding": "var(--space-8)",
+    "--text-box-pad": "var(--space-8)",
+    "--focus-ring": "var(--rule-w) solid var(--ink)",
+    "--focus-ring-offset": "var(--rule-w)",
+    "--focus-ring-fill": "0 0 0 var(--rule-w) var(--paper)",
+    "--hover-line": "inset 0 0 0 var(--rule-w-hair) var(--rule-2)",
     "--container-width": "min(var(--max-width), 100% - 2 * var(--space-16))",
     "--text-body": "1.0625rem",
     "--text-step-3": "2.08rem",
@@ -135,7 +140,7 @@ function tokenRules(): string {
  */
 function frameLink(link: SiteLink, extraClass = ""): string {
   const className = extraClass ? `link ${extraClass}` : "link";
-  return `<a class='${className}' href='${link.href}'><span class='label' data-label='${link.label}'>${link.label}</span></a>`;
+  return `<a class='${className}' href='${link.href}' data-text-box='inline'><span class='label' data-label='${link.label}'>${link.label}</span></a>`;
 }
 
 function frameLinks(links: readonly SiteLink[]): string {
@@ -170,33 +175,31 @@ html,body{max-width:100vw;overflow-x:clip;background:var(--paper);color:var(--in
 body{display:flex;flex-direction:column;min-height:100svh;font-family:var(--font-body);font-size:var(--text-body);line-height:var(--leading-body);overflow-wrap:break-word}
 a{color:var(--ink);text-decoration:underline;text-decoration-thickness:var(--rule-w-hair);text-underline-offset:0.15em}
 a:visited{color:var(--ink-2)}
-.skip{position:fixed;top:var(--space-8);left:var(--space-8);transform:translateY(calc(-100% - var(--space-8)));z-index:1000;display:inline-flex;align-items:center;min-height:44px;padding-inline:var(--space-8);background:var(--paper);border:var(--rule-w) solid var(--paper)}
+:focus-visible{outline:var(--focus-ring);outline-offset:var(--focus-ring-offset);box-shadow:var(--focus-ring-fill)}
+:where(a[href]):hover{box-shadow:var(--hover-line)}
+[data-text-box=inline]{padding-inline:var(--text-box-pad);margin-inline-start:calc(-1 * var(--text-box-pad));--focus-ring-offset:calc(-1 * var(--rule-w));--focus-ring-fill:inset 0 0 0 calc(2 * var(--rule-w)) var(--paper)}
+.skip{position:fixed;top:var(--space-8);left:calc((100% - var(--container-width)) / 2 + var(--rule-w) + var(--box-padding));transform:translateY(calc(-100% - var(--space-8)));z-index:1000;display:inline-flex;align-items:center;min-width:44px;min-height:44px;background:var(--paper)}
 .skip:focus{transform:none}
-.skip:focus-visible{outline:var(--rule-w) solid var(--ink);outline-offset:0}
 .container{width:var(--container-width);margin-inline:auto;border-inline:var(--rule-w) solid var(--rule);padding-inline:var(--box-padding)}
 header{border-bottom:var(--rule-w) solid var(--rule)}
-header .container{display:flex;flex-wrap:wrap;align-items:center;column-gap:var(--space-24);padding-block:var(--space-8)}
+header .container{display:flex;flex-wrap:wrap;align-items:center;column-gap:var(--space-8);padding-block:var(--space-8)}
 footer{border-top:var(--rule-w) solid var(--rule)}
 footer .container{display:flex;flex-direction:column;gap:var(--space-16);padding-block:var(--space-24)}
 ul{list-style:none;display:flex;flex-wrap:wrap;column-gap:var(--space-8)}
-@media (min-width:45rem){ul{column-gap:var(--space-16)}}
-.link{position:relative;display:inline-flex;align-items:center;min-height:44px}
-.link::after{content:'';position:absolute;inset-block:0;left:50%;width:max(100%,44px);transform:translateX(-50%);border:var(--rule-w-hair) solid transparent}
-.link:hover::after{border-color:var(--rule-2)}
-.link:focus-visible{outline:none}
-.link:focus-visible::after{outline:var(--rule-w) solid var(--ink);outline-offset:var(--rule-w)}
+@media (min-width:45rem){header .container{column-gap:var(--space-24)}ul{column-gap:var(--space-16)}}
+.link{display:inline-flex;align-items:center;min-width:44px;min-height:44px}
 .label{display:grid}
 .label::after{content:attr(data-label);height:0;overflow:hidden;visibility:hidden;font-weight:700}
 .site-name{font-family:var(--font-heading);font-size:var(--text-body)}
 main{flex:1;display:flex;flex-direction:column;gap:var(--space-24);padding-block:var(--space-48)}
-main:focus{outline:none}
+main:focus{outline:none;box-shadow:none}
 main .link{align-self:flex-start}
 h1{font-family:var(--font-heading);font-size:var(--text-heading-main);font-weight:400;line-height:var(--leading-heading);word-break:auto-phrase}
 p{max-width:var(--measure)}
 </style>
 </head>
 <body>
-<a class='skip' href='#${MAIN_CONTENT_ID}'>メインコンテンツへスキップ</a>
+<a class='skip' href='#${MAIN_CONTENT_ID}' data-text-box='inline'>メインコンテンツへスキップ</a>
 <header><div class='container'>
 ${frameLink({ label: SITE_NAME, href: "/" }, "site-name")}
 <nav aria-label='メインナビゲーション'><ul>${frameLinks(HEADER_NAV_ITEMS)}</ul></nav>
@@ -204,7 +207,7 @@ ${frameLink({ label: SITE_NAME, href: "/" }, "site-name")}
 <main id='${MAIN_CONTENT_ID}' tabindex='-1' class='container'>
 <h1>このコンテンツは終了しました</h1>
 <p>お探しのページはすでに削除されており、現在はご覧いただけません。</p>
-<a class='link' href='/'>トップページへ</a>
+<a class='link' href='/' data-text-box='inline'>トップページへ</a>
 </main>
 <footer><div class='container'>
 <p>${AI_NOTICE}</p>

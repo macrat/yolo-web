@@ -6,7 +6,11 @@ import styles from "./SkipLink.module.css";
  */
 export default function SkipLink() {
   return (
-    <a href={`#${MAIN_CONTENT_ID}`} className={styles.skipLink}>
+    <a
+      href={`#${MAIN_CONTENT_ID}`}
+      className={styles.skipLink}
+      data-text-box="inline"
+    >
       メインコンテンツへスキップ
     </a>
   );

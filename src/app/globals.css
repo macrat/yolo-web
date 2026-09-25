@@ -420,7 +420,7 @@ hr {
   box-shadow: var(--hover-line);
 }
 
-/* 押せる範囲を ::after に広げた要素（上端・下端のリンク、一覧の行の名前）。hover とフォーカスを要素の字の箱ではなく
+/* 押せる範囲を ::after に広げた要素（一覧の行の名前）。hover とフォーカスを要素の字の箱ではなく
  * その範囲に出し、タップの標的と一致させる（§6）。::after の位置と大きさは部品が決める。 */
 :where([data-hit-area="after"]):hover,
 :where([data-hit-area="after"]):focus-visible {

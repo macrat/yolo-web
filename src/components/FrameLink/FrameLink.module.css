@@ -1,23 +1,12 @@
-/* 上端・下端のリンク（DESIGN.md §5 レイアウト・§6）。箱の幅は字の幅なので、どの項目の字も
- * コンテンツ幅の左端と同じ線から始まり、項目のあいだの間隔は字と字のあいだで等しくなる。
- * 下線と訪問済みの色は globals.css の a の既定に従う。 */
+/* 上端・下端のリンク（DESIGN.md §5 レイアウト・§6）。見えるのは字だけなので、字の左右の余白と、字を並びの
+ * 左端に置く張り出しは data-text-box（globals.css）が持ち、hover の線とフォーカスの二重リングはその箱に出る。
+ * 押せる範囲は、字の幅に左右の余白を足した幅と 44px の大きいほう（§6）。下線と訪問済みの色は globals.css の
+ * a の既定に従う。 */
 .link {
-  position: relative;
   display: inline-flex;
   align-items: center;
+  min-width: 44px;
   min-height: 44px;
-}
-
-/* 押せる範囲（§6 の 44px 四方）。字の幅が 44px に届かない項目では、字を中心に左右へ同じだけ広げる。
- * 箱を広げると字の後ろの間隔だけが広がるので、広げるのはこの範囲だけにする。
- * hover の細い線とフォーカスの二重リングは、data-hit-area（globals.css）がこの範囲に出す。 */
-.link::after {
-  content: "";
-  position: absolute;
-  inset-block: 0;
-  left: 50%;
-  width: max(100%, 44px);
-  transform: translateX(-50%);
 }
 
 /* 現在地は太字で示し、押しても何も起きないので下線も hover も持たない（§6）。 */

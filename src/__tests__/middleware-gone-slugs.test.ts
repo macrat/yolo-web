@@ -138,7 +138,7 @@ describe("build410Html の枠（DESIGN.md §5 レイアウト）", () => {
 
   /** FrameLink と同じ形のリンク。字を data-label にも持たせ、太字の幅を先に取る。 */
   const frameLink = (href: string, label: string, extraClass = "") =>
-    `<a class='link${extraClass}' href='${href}'><span class='label' data-label='${label}'>${label}</span></a>`;
+    `<a class='link${extraClass}' href='${href}' data-text-box='inline'><span class='label' data-label='${label}'>${label}</span></a>`;
 
   test("上端にサイト名のトップへのリンクと、ほかのページと同じナビの項目を置く", () => {
     expect(header).toContain(frameLink("/", SITE_NAME, " site-name"));
@@ -154,7 +154,7 @@ describe("build410Html の枠（DESIGN.md §5 レイアウト）", () => {
   });
 
   test("中間の main にはフォーカスの輪を出さない", () => {
-    expect(html).toContain("main:focus{outline:none}");
+    expect(html).toContain("main:focus{outline:none;box-shadow:none}");
   });
 
   test("スキップのリンクが中間の main を指す", () => {

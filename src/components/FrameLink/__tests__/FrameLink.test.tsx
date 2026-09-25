@@ -26,4 +26,13 @@ describe("FrameLink", () => {
     const label = screen.getByText("遊び");
     expect(label).toHaveAttribute("data-label", "遊び");
   });
+
+  // 字だけで見えるので、字を左端に揃え、線とリングを字の左右に余白を持つ箱に出す（DESIGN.md §5）
+  test("字だけで見えるものの箱で組む", () => {
+    render(<FrameLink href="/play" label="遊び" current={false} />);
+    expect(screen.getByRole("link", { name: "遊び" })).toHaveAttribute(
+      "data-text-box",
+      "inline",
+    );
+  });
 });

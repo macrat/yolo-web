@@ -13,10 +13,12 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  column-gap: var(--space-24);
+  column-gap: var(--space-8);
 }
 
-/* 項目のあいだは、狭い画面では詰めて1行に入る項目を増やす。 */
+/* 項目のあいだの間隔。箱は字の左右に余白を持って前へ張り出すので、8px では箱どうしが接し、字と字の
+ * あいだは余白2つ分になる。狭い画面ではサイト名もナビの項目も詰めて並べ、1行に入る項目を増やす。
+ * 広い画面では、サイト名とナビのあいだをナビの項目どうしより広く取る。 */
 .navList {
   list-style: none;
   display: flex;
@@ -25,6 +27,10 @@
 }
 
 @media (min-width: 45rem) {
+  .inner {
+    column-gap: var(--space-24);
+  }
+
   .navList {
     column-gap: var(--space-16);
   }

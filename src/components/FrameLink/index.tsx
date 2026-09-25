@@ -26,7 +26,7 @@ export default function FrameLink({
       href={href}
       className={className ? `${styles.link} ${className}` : styles.link}
       aria-current={current ? "page" : undefined}
-      data-hit-area="after"
+      data-text-box="inline"
     >
       <span className={styles.label} data-label={label}>
         {label}
