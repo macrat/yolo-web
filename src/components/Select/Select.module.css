@@ -1,54 +1,66 @@
-/* Select コンポーネントのスタイル。
- * 入力欄は罫囲み（--rule-strong）+ 角丸 --radius-sm。
- */
-
+/* 下向きの印を欄の右端に重ねるための包み。欄と同じ幅を持つ。 */
 .wrapper {
   position: relative;
-  display: inline-block;
-  width: 100%;
+  max-width: var(--measure);
 }
 
+/* 印の幅と、印の右の 8px を、字が印の下に潜らないよう右の余白に取る。 */
 .select {
-  display: block;
-  width: 100%;
-  box-sizing: border-box;
-  font-family: inherit;
-  font-size: 14px;
-  line-height: 1.5;
-  min-height: 44px; /* WCAG 2.5.5 AAA タップターゲット推奨値 */
-  background: var(--paper);
-  color: var(--ink);
-  border: 1px solid var(--rule-strong);
-  border-radius: var(--radius-sm);
-  /* 右側にアイコン分のパディングを確保 */
-  padding: 9px 36px 9px 12px;
-  transition: border-color 0.15s;
-  /* ブラウザ既定の矢印を非表示にしてカスタムアイコンに差し替える */
+  padding-inline-end: calc(var(--space-8) + 16px + var(--space-8));
   appearance: none;
-  -webkit-appearance: none;
   cursor: pointer;
 }
 
-/* disabled: 操作不可を示す視覚的手がかり */
-.select:disabled {
-  background: var(--paper-2);
-  color: var(--ink-2);
-  cursor: not-allowed;
-}
-
-/* ChevronDown アイコンをセレクトボックス右端に配置 */
 .icon {
   position: absolute;
-  right: 10px;
+  inset-inline-end: var(--space-8);
   top: 50%;
   transform: translateY(-50%);
-  pointer-events: none; /* アイコンへのクリックを select に通す */
-  color: var(--ink-2);
   display: flex;
-  align-items: center;
+  color: var(--ink);
+  /* 印の上を押しても欄が開くように、押した先を欄に通す。 */
+  pointer-events: none;
 }
 
-/* disabled 時はアイコンも薄くする */
 .wrapper:has(.select:disabled) .icon {
   color: var(--ink-2);
+}
+
+/* 候補を開いた形も描けるブラウザでは、候補を欄の直下に、欄と同じ細い線の中に並べる（§8）。
+ * 候補の枠の上の辺を欄の下の辺に重ね、線が二重にならないようにする。候補が欄の上に開くときも、
+ * 余白の向きが入れ替わるので同じように重なる。 */
+@supports (appearance: base-select) {
+  .select,
+  .select::picker(select) {
+    appearance: base-select;
+  }
+
+  .select::picker-icon {
+    display: none;
+  }
+
+  .select::picker(select) {
+    margin-block: calc(-1 * var(--rule-w-hair));
+    padding: 0;
+    border: var(--rule-w-hair) solid var(--rule-2);
+    border-radius: 0;
+    background: var(--paper);
+    color: var(--ink);
+    box-shadow: none;
+  }
+
+  /* 候補は選ぶ欄の一部なので、hover では見え方を変えない。キーボードで移った候補には、globals.css が
+   * 押せる範囲に密着した二重リングを出す。 */
+  .select option {
+    min-height: 44px;
+    padding: var(--space-8);
+    background: transparent;
+    color: var(--ink);
+    font-size: var(--text-input);
+  }
+
+  .select option:is(:hover, :focus, :checked) {
+    background: transparent;
+    color: var(--ink);
+  }
 }

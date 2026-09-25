@@ -44,6 +44,7 @@ import Textarea from "@/components/Textarea";
 import Select from "@/components/Select";
 import Input from "@/components/Input";
 import ErrorMessage from "@/components/ErrorMessage";
+import Checkbox from "@/components/Checkbox";
 import { useRegexWorker } from "./useRegexWorker";
 import { REGEX_SAMPLE_INPUTS } from "./meta";
 import styles from "./RegexTesterTile.module.css";
@@ -235,15 +236,17 @@ export default function RegexTesterTile({
           <legend className={styles.flagsLegend}>フラグ</legend>
           <div className={styles.flagsRow}>
             {FLAG_OPTIONS.map((opt) => (
-              <label key={opt.flag} className={styles.flagLabel}>
-                <input
-                  type="checkbox"
-                  checked={flags.includes(opt.flag)}
-                  onChange={() => toggleFlag(opt.flag)}
-                />
-                <span className={styles.flagCode}>{opt.label}</span>
-                <span className={styles.flagDesc}>{opt.description}</span>
-              </label>
+              <Checkbox
+                key={opt.flag}
+                checked={flags.includes(opt.flag)}
+                onChange={() => toggleFlag(opt.flag)}
+                label={
+                  <>
+                    <span className={styles.flagCode}>{opt.label}</span>{" "}
+                    <span className={styles.flagDesc}>{opt.description}</span>
+                  </>
+                }
+              />
             ))}
           </div>
         </fieldset>

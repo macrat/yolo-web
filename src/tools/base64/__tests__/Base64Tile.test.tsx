@@ -27,7 +27,7 @@ describe("V-1: variant=full", () => {
 
   it("URL-safe トグルが初期表示される（encode 方向のため）", () => {
     render(<Base64Tile variant="full" />);
-    expect(screen.getByRole("switch")).toBeInTheDocument();
+    expect(screen.getByRole("checkbox")).toBeInTheDocument();
   });
 
   it("入力欄と出力欄が存在する", () => {
@@ -46,7 +46,7 @@ describe("V-2: variant=encode（方向固定・方向トグル非表示・URL-sa
 
   it("URL-safe トグルが表示される（encode のため）", () => {
     render(<Base64Tile variant="encode" />);
-    expect(screen.getByRole("switch")).toBeInTheDocument();
+    expect(screen.getByRole("checkbox")).toBeInTheDocument();
   });
 
   it("入力欄と出力欄が存在する", () => {
@@ -65,7 +65,7 @@ describe("V-3: variant=decode（方向固定・方向トグル非表示・URL-sa
 
   it("URL-safe トグルが表示されない", () => {
     render(<Base64Tile variant="decode" />);
-    expect(screen.queryByRole("switch")).not.toBeInTheDocument();
+    expect(screen.queryByRole("checkbox")).not.toBeInTheDocument();
   });
 
   it("入力欄と出力欄が存在する", () => {
@@ -134,17 +134,17 @@ describe("V-6: variant=full でのトグル切り替え", () => {
 
   it("デコードに切り替えるとURL-safeトグルが非表示になる", () => {
     render(<Base64Tile variant="full" />);
-    expect(screen.getByRole("switch")).toBeInTheDocument();
+    expect(screen.getByRole("checkbox")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("radio", { name: "デコード" }));
-    expect(screen.queryByRole("switch")).not.toBeInTheDocument();
+    expect(screen.queryByRole("checkbox")).not.toBeInTheDocument();
   });
 
   it("エンコードに戻るとURL-safeトグルが再表示される", () => {
     render(<Base64Tile variant="full" />);
     fireEvent.click(screen.getByRole("radio", { name: "デコード" }));
-    expect(screen.queryByRole("switch")).not.toBeInTheDocument();
+    expect(screen.queryByRole("checkbox")).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole("radio", { name: "エンコード" }));
-    expect(screen.getByRole("switch")).toBeInTheDocument();
+    expect(screen.getByRole("checkbox")).toBeInTheDocument();
   });
 });
 
@@ -176,12 +176,12 @@ describe("V-7: id インスタンス一意性", () => {
 
 // --- V-8: aria-describedby と説明文 div の関連付け ---
 describe("V-8: aria-describedby と説明文 div の関連付け", () => {
-  it("ToggleSwitchのaria-describedbyが説明文divのidと一致する（variant=full）", () => {
+  it("チェックボックスのaria-describedbyが説明文divのidと一致する（variant=full）", () => {
     const { container } = render(<Base64Tile variant="full" />);
-    const toggleSwitch = container.querySelector('[role="switch"]');
-    expect(toggleSwitch).not.toBeNull();
+    const checkbox = container.querySelector('input[type="checkbox"]');
+    expect(checkbox).not.toBeNull();
 
-    const describedById = toggleSwitch!.getAttribute("aria-describedby");
+    const describedById = checkbox!.getAttribute("aria-describedby");
     expect(describedById).toBeTruthy();
 
     // 説明文 div が同一コンテナ内に存在し、id が一致する
@@ -194,8 +194,8 @@ describe("V-8: aria-describedby と説明文 div の関連付け", () => {
     const { container: c1 } = render(<Base64Tile variant="full" />);
     const { container: c2 } = render(<Base64Tile variant="encode" />);
 
-    const toggle1 = c1.querySelector('[role="switch"]');
-    const toggle2 = c2.querySelector('[role="switch"]');
+    const toggle1 = c1.querySelector('input[type="checkbox"]');
+    const toggle2 = c2.querySelector('input[type="checkbox"]');
 
     expect(toggle1).not.toBeNull();
     expect(toggle2).not.toBeNull();
@@ -218,7 +218,7 @@ describe("V-8: aria-describedby と説明文 div の関連付け", () => {
 describe("V-9: URL-safe トグルの挙動", () => {
   it("URL-safe ON で '+' '/' を含む Base64 が '-' '_' に変換される", () => {
     render(<Base64Tile variant="encode" />);
-    const toggle = screen.getByRole("switch");
+    const toggle = screen.getByRole("checkbox");
     fireEvent.click(toggle);
     const input = screen.getByLabelText("テキスト入力");
     // ">>>" → 標準 Base64 は "Pj4+" ('+' を含む)
@@ -238,7 +238,7 @@ describe("V-9: URL-safe トグルの挙動", () => {
   it("URL-safe ON でエンコード → decode variant でデコード（round-trip）", () => {
     // URL-safe encode
     const { unmount } = render(<Base64Tile variant="encode" />);
-    fireEvent.click(screen.getByRole("switch"));
+    fireEvent.click(screen.getByRole("checkbox"));
     const input = screen.getByLabelText("テキスト入力");
     fireEvent.change(input, { target: { value: ">>>" } });
     const output = screen.getByLabelText("Base64出力") as HTMLTextAreaElement;

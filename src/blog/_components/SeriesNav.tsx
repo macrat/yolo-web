@@ -1,5 +1,5 @@
 import Link from "next/link";
-import ChevronDown from "@/components/icons/ChevronDown";
+import Accordion from "@/components/Accordion";
 import { SERIES_LABELS, type BlogPostMeta } from "@/blog/_lib/blog";
 import styles from "./SeriesNav.module.css";
 
@@ -39,13 +39,14 @@ export default function SeriesNav({
 
   return (
     <nav className={styles.seriesNav} aria-label="シリーズナビゲーション">
-      <details className={styles.details}>
-        <summary className={styles.summary}>
-          <span className={styles.seriesLabel}>{seriesLabel}</span>
-          <span className={styles.position}>{positionLabel}</span>
-          {/* details[open] で CSS が 180° 回転（JS 不要） */}
-          <ChevronDown className={styles.chevron} />
-        </summary>
+      <Accordion
+        summary={
+          <>
+            <span className={styles.seriesLabel}>{seriesLabel}</span>{" "}
+            <span className={styles.position}>{positionLabel}</span>
+          </>
+        }
+      >
         <ol className={styles.list}>
           {seriesPosts.map((post) => (
             <li
@@ -67,7 +68,7 @@ export default function SeriesNav({
             </li>
           ))}
         </ol>
-      </details>
+      </Accordion>
 
       {(prevPost || nextPost) && (
         <div

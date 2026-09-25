@@ -51,7 +51,7 @@ import Button from "@/components/Button";
 import SegmentedControl from "@/components/SegmentedControl";
 import Textarea from "@/components/Textarea";
 import ErrorMessage from "@/components/ErrorMessage";
-import ToggleSwitch from "@/components/ToggleSwitch";
+import Checkbox from "@/components/Checkbox";
 import {
   useCopyToClipboard,
   COPIED_LABEL,
@@ -192,7 +192,7 @@ export default function Base64Tile({
           decode 方向で表示すると「操作しても出力が変わらない」死んだコントロールになるため非表示 */}
       {showUrlSafeToggle && (
         <div className={styles.optionRow}>
-          <ToggleSwitch
+          <Checkbox
             label="URL-safe 形式で出力"
             checked={urlSafe}
             onChange={(e) => setUrlSafe(e.target.checked)}

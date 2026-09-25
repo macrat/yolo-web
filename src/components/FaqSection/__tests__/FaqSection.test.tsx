@@ -1,7 +1,5 @@
-import { expect, test, describe, it } from "vitest";
+import { expect, test, describe } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { readFileSync } from "fs";
-import { resolve } from "path";
 import FaqSection from "@/components/FaqSection";
 import type { FaqEntry } from "@/lib/seo";
 
@@ -93,30 +91,10 @@ describe("FaqSection", () => {
     expect(parsed["@context"]).toBe("https://schema.org");
   });
 
-  // --- CSS 規約（DESIGN.md 準拠） ---
-
-  it(".section は --rule トークンを使った border-top を持つ（DESIGN.md §4: 区切りは罫）", () => {
-    const cssPath = resolve(__dirname, "../FaqSection.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).toContain("var(--rule)");
-  });
-
-  it(".item は --radius を使った border-radius を持つ（DESIGN.md §4: 角丸は 0px 基調）", () => {
-    const cssPath = resolve(__dirname, "../FaqSection.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).toContain("var(--radius)");
-  });
-
-  it("旧トークン --color-* を使用しない（新トークンのみ）", () => {
-    const cssPath = resolve(__dirname, "../FaqSection.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).not.toMatch(/var\(--color-/);
-  });
-
-  it("影なし: box-shadow を使用しない（DESIGN.md §5: 通常の要素にエレベーションを使わない）", () => {
-    const cssPath = resolve(__dirname, "../FaqSection.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    // shadow-button や shadow-dragging が含まれていないこと
-    expect(css).not.toMatch(/box-shadow/);
+  test("質問の行がアコーディオンの summary で、質問の文を持つ", () => {
+    const { container } = render(<FaqSection faq={sampleFaq} />);
+    const summaries = container.querySelectorAll("summary");
+    expect(summaries[0]).toHaveTextContent("テスト質問1");
+    expect(summaries[1]).toHaveTextContent("テスト質問2");
   });
 });

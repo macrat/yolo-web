@@ -16,7 +16,7 @@
  *
  * ## variant
  *
- * - `"full"` (デフォルト): format/minify + インデント Select + 大文字化 ToggleSwitch + コピー
+ * - `"full"` (デフォルト): format/minify + インデント Select + 大文字化チェックボックス + コピー
  *   （詳細ページ・道具箱両方で使用）
  *
  * ## 使い方
@@ -39,7 +39,7 @@ import Button from "@/components/Button";
 import Select from "@/components/Select";
 import Textarea from "@/components/Textarea";
 import ErrorMessage from "@/components/ErrorMessage";
-import ToggleSwitch from "@/components/ToggleSwitch";
+import Checkbox from "@/components/Checkbox";
 import {
   useCopyToClipboard,
   COPIED_LABEL,
@@ -89,7 +89,7 @@ export type SqlFormatterTileVariant = "full";
 export interface SqlFormatterTileProps {
   /**
    * 表示バリエーション（デフォルト: "full"）
-   * - "full": format/minify + インデント Select + 大文字化 ToggleSwitch + コピー
+   * - "full": format/minify + インデント Select + 大文字化チェックボックス + コピー
    */
   variant?: SqlFormatterTileVariant;
   /** Panel の as prop に透過される HTML タグ（デフォルト: "section"） */
@@ -194,8 +194,7 @@ export default function SqlFormatterTile({
               <option value="tab">タブ</option>
             </Select>
           </div>
-          {/* DESIGN.md §5: 単一 ON/OFF はトグルスイッチで統一 (B-9) */}
-          <ToggleSwitch
+          <Checkbox
             label="キーワード大文字"
             checked={uppercase}
             onChange={(e) => setUppercase(e.target.checked)}

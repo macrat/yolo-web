@@ -1,17 +1,7 @@
-/* ErrorMessage コンポーネントのスタイル。
- * ステータス（成功/エラー）は緑/赤のベタでなく --accent と文字で
- * 示す——地は --paper-2（区画の沈み）に留め、
- * 色の識別は文字（--accent）だけが担う。枠は中立の --rule のみ（色付き片罫にしない）。
- * role="alert" が assertive を暗黙指定するため aria-live の二重指定はしない。
- * 角丸は 0px 基調。
- */
+/* エラーの理由は、本文と同じ大きさ・同じ色の文で書く（§8）。囲まないのは、細い線で囲んだものが
+ * hover や平常時の入力欄と読み違えられ、太い線で囲んだものがボックスやエラーの入力欄と読み違えられるため。 */
 .errorMessage {
-  display: block;
-  padding: var(--space-8) var(--space-16);
-  background-color: var(--paper-2);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
-  color: var(--accent);
-  font-size: 0.9rem;
-  line-height: 1.5;
+  color: var(--ink);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
 }

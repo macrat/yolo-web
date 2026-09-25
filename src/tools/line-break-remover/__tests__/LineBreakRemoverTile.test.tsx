@@ -2,9 +2,9 @@
  * LineBreakRemoverTile のユニットテスト（TDD: 実装前に書く）
  *
  * 検証観点:
- * - V-1: variant=full でのレンダリング（3モード SegmentedControl 表示・ToggleSwitch 表示）
- * - V-2: variant=remove（固定モード・SegmentedControl 非表示・ToggleSwitch 維持）
- * - V-3: variant=replace-space（固定モード・SegmentedControl 非表示・ToggleSwitch 維持）
+ * - V-1: variant=full でのレンダリング（3モード SegmentedControl 表示・チェックボックス表示）
+ * - V-2: variant=remove（固定モード・SegmentedControl 非表示・チェックボックス 維持）
+ * - V-3: variant=replace-space（固定モード・SegmentedControl 非表示・チェックボックス 維持）
  * - V-4: variant=smart-pdf（固定モード・SegmentedControl 非表示・行内改行 SegmentedControl 表示）
  * - V-5: variant=full で変換ロジックが動作する
  * - V-6: variant=remove でモードが固定されて動作する
@@ -59,7 +59,7 @@ describe("V-1: variant=full（全機能・3モード SegmentedControl 表示）"
   it("初期モード（remove）でトグルスイッチが表示される", () => {
     render(<LineBreakRemoverTile variant="full" />);
     expect(
-      screen.getByRole("switch", { name: "連続する改行を1つにまとめる" }),
+      screen.getByRole("checkbox", { name: "連続する改行を1つにまとめる" }),
     ).toBeInTheDocument();
   });
 
@@ -67,7 +67,7 @@ describe("V-1: variant=full（全機能・3モード SegmentedControl 表示）"
     render(<LineBreakRemoverTile variant="full" />);
     fireEvent.click(screen.getByRole("radio", { name: "PDFスマートモード" }));
     expect(
-      screen.queryByRole("switch", { name: "連続する改行を1つにまとめる" }),
+      screen.queryByRole("checkbox", { name: "連続する改行を1つにまとめる" }),
     ).not.toBeInTheDocument();
     expect(screen.getByRole("radio", { name: "削除する" })).toBeInTheDocument();
     expect(
@@ -92,10 +92,10 @@ describe("V-2: variant=remove（モード固定）", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("ToggleSwitch（連続改行統合）が表示される（機能を削らない）", () => {
+  it("チェックボックス（連続改行統合）が表示される（機能を削らない）", () => {
     render(<LineBreakRemoverTile variant="remove" />);
     expect(
-      screen.getByRole("switch", { name: "連続する改行を1つにまとめる" }),
+      screen.getByRole("checkbox", { name: "連続する改行を1つにまとめる" }),
     ).toBeInTheDocument();
   });
 
@@ -115,10 +115,10 @@ describe("V-3: variant=replace-space（モード固定）", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("ToggleSwitch（連続改行統合）が表示される", () => {
+  it("チェックボックス（連続改行統合）が表示される", () => {
     render(<LineBreakRemoverTile variant="replace-space" />);
     expect(
-      screen.getByRole("switch", { name: "連続する改行を1つにまとめる" }),
+      screen.getByRole("checkbox", { name: "連続する改行を1つにまとめる" }),
     ).toBeInTheDocument();
   });
 
@@ -152,10 +152,10 @@ describe("V-4: variant=smart-pdf（モード固定）", () => {
     ).toBeInTheDocument();
   });
 
-  it("ToggleSwitch（連続改行統合）が表示されない（smart-pdf モード対象外）", () => {
+  it("チェックボックス（連続改行統合）が表示されない（smart-pdf モード対象外）", () => {
     render(<LineBreakRemoverTile variant="smart-pdf" />);
     expect(
-      screen.queryByRole("switch", { name: "連続する改行を1つにまとめる" }),
+      screen.queryByRole("checkbox", { name: "連続する改行を1つにまとめる" }),
     ).not.toBeInTheDocument();
   });
 });
@@ -217,7 +217,7 @@ describe("V-6: variant=remove での変換", () => {
 
   it("連続改行統合オンで動作する", () => {
     render(<LineBreakRemoverTile variant="remove" />);
-    const toggle = screen.getByRole("switch", {
+    const toggle = screen.getByRole("checkbox", {
       name: "連続する改行を1つにまとめる",
     });
     fireEvent.click(toggle);

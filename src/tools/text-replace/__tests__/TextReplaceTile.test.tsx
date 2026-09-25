@@ -2,7 +2,7 @@
  * TextReplaceTile のユニットテスト（TDD: 実装前に書く）
  *
  * 検証観点:
- * - V-1: variant=full での基本レンダリング（3 ToggleSwitch・入出力欄・role=status）
+ * - V-1: variant=full での基本レンダリング（3つのチェックボックス・入出力欄・role=status）
  * - V-2: 置換ロジック（通常・正規表現・大文字小文字・全置換）
  * - V-3: 置換件数サマリが role=status に表示される（C-3 要件）
  * - V-4: 正規表現エラー時に日本語エラーが表示される（A-4・G-2 要件）
@@ -37,16 +37,16 @@ Object.defineProperty(navigator, "clipboard", {
 
 // --- V-1: variant=full での基本レンダリング ---
 describe("V-1: variant=full 基本レンダリング", () => {
-  it("3つのToggleSwitchが表示される（正規表現・大文字小文字・すべて置換）", () => {
+  it("3つのチェックボックスが表示される（正規表現・大文字小文字・すべて置換）", () => {
     render(<TextReplaceTile variant="full" />);
     expect(
-      screen.getByRole("switch", { name: "正規表現" }),
+      screen.getByRole("checkbox", { name: "正規表現" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("switch", { name: "大文字小文字を区別" }),
+      screen.getByRole("checkbox", { name: "大文字小文字を区別" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("switch", { name: "すべて置換" }),
+      screen.getByRole("checkbox", { name: "すべて置換" }),
     ).toBeInTheDocument();
   });
 
@@ -100,7 +100,7 @@ describe("V-2: 置換ロジック", () => {
       target: { value: "NUM" },
     });
     // 正規表現ON
-    fireEvent.click(screen.getByRole("switch", { name: "正規表現" }));
+    fireEvent.click(screen.getByRole("checkbox", { name: "正規表現" }));
     expect(screen.getByLabelText("置換結果")).toHaveValue("fooNUMbarNUM");
   });
 
@@ -118,7 +118,9 @@ describe("V-2: 置換ロジック", () => {
     // 初期状態（区別ON）
     expect(screen.getByLabelText("置換結果")).toHaveValue("Hello HELLO hi");
     // 区別OFFに
-    fireEvent.click(screen.getByRole("switch", { name: "大文字小文字を区別" }));
+    fireEvent.click(
+      screen.getByRole("checkbox", { name: "大文字小文字を区別" }),
+    );
     expect(screen.getByLabelText("置換結果")).toHaveValue("hi hi hi");
   });
 
@@ -133,7 +135,7 @@ describe("V-2: 置換ロジック", () => {
     fireEvent.change(screen.getByLabelText("置換文字列"), {
       target: { value: "baz" },
     });
-    fireEvent.click(screen.getByRole("switch", { name: "すべて置換" }));
+    fireEvent.click(screen.getByRole("checkbox", { name: "すべて置換" }));
     expect(screen.getByLabelText("置換結果")).toHaveValue("baz bar foo");
   });
 
@@ -181,7 +183,7 @@ describe("V-4: 正規表現エラー日本語化", () => {
     fireEvent.change(screen.getByLabelText("検索文字列"), {
       target: { value: "[invalid" },
     });
-    fireEvent.click(screen.getByRole("switch", { name: "正規表現" }));
+    fireEvent.click(screen.getByRole("checkbox", { name: "正規表現" }));
     expect(screen.getByRole("alert")).toBeInTheDocument();
     // 英語エラーが露出していないこと
     expect(screen.queryByText("Invalid regular expression")).toBeNull();
@@ -195,7 +197,7 @@ describe("V-4: 正規表現エラー日本語化", () => {
     fireEvent.change(screen.getByLabelText("検索文字列"), {
       target: { value: "[invalid" },
     });
-    fireEvent.click(screen.getByRole("switch", { name: "正規表現" }));
+    fireEvent.click(screen.getByRole("checkbox", { name: "正規表現" }));
     expect(screen.getByRole("button", { name: "コピー" })).toBeDisabled();
   });
 });
@@ -211,13 +213,13 @@ describe("V-5: 正規表現ON時の補足説明", () => {
 
   it("正規表現スイッチON時に補足説明が表示される", () => {
     render(<TextReplaceTile variant="full" />);
-    fireEvent.click(screen.getByRole("switch", { name: "正規表現" }));
+    fireEvent.click(screen.getByRole("checkbox", { name: "正規表現" }));
     expect(screen.getByText(/分からなければオフのまま/)).toBeInTheDocument();
   });
 
   it("正規表現スイッチON時に $1 などの説明が含まれる", () => {
     render(<TextReplaceTile variant="full" />);
-    fireEvent.click(screen.getByRole("switch", { name: "正規表現" }));
+    fireEvent.click(screen.getByRole("checkbox", { name: "正規表現" }));
     const regexHint = screen.getByTestId("regex-hint");
     expect(regexHint).toBeInTheDocument();
     expect(regexHint.textContent).toMatch(/\$1/);
@@ -379,16 +381,16 @@ describe("V-10: CSS トークン検証", () => {
 
 // --- V-11: デフォルト variant ---
 describe("V-11: デフォルト variant", () => {
-  it("variant 未指定の場合 full と同等（3 ToggleSwitch が表示される）", () => {
+  it("variant 未指定の場合 full と同等（3つのチェックボックス が表示される）", () => {
     render(<TextReplaceTile />);
     expect(
-      screen.getByRole("switch", { name: "正規表現" }),
+      screen.getByRole("checkbox", { name: "正規表現" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("switch", { name: "大文字小文字を区別" }),
+      screen.getByRole("checkbox", { name: "大文字小文字を区別" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("switch", { name: "すべて置換" }),
+      screen.getByRole("checkbox", { name: "すべて置換" }),
     ).toBeInTheDocument();
   });
 });

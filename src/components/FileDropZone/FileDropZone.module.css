@@ -1,48 +1,43 @@
-/* ファイルを取り込む口。押すとファイルを選ぶ画面が開き、ファイルを上に落としても取り込める。
- * フォーカスの二重リングは globals.css の既定に従う。 */
+/* ラベルを欄の上に置き、あいだを 8px あける（§5・§8）。 */
+.field {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-8);
+}
 
+.label {
+  max-width: 100%;
+  font-size: var(--text-body);
+}
+
+/* 見えないまま、フォーカスと選ぶ画面を開く動作を受ける。display: none にするとフォーカスを受けない。 */
+.fileInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* 選ぶ欄の枠は globals.css の [data-field] が引く。選ぶ欄は hover で見え方を変えない（§6）。 */
 .dropZone {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-  border: 2px dashed var(--rule-strong);
-  border-radius: var(--radius-sm);
-  background-color: var(--paper-2);
+  align-self: stretch;
   cursor: pointer;
-  transition: border-color 0.15s;
 }
 
-/* ホバー時: border 色を --accent に変える（塗りは変えない） */
-.dropZone:hover {
-  border-color: var(--accent);
+/* 入力が受けたフォーカスを、見えている欄に二重リングで出す（§6）。 */
+.fileInput:focus-visible + .dropZone {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-fill);
 }
 
-/* ドラッグアクティブ時: border 色だけを --accent に変える（影や opacity は変えない） */
-.dropZoneActive {
-  border-color: var(--accent);
-}
-
-.dropText {
-  margin: 0;
-  font-size: 0.95rem;
-  color: var(--ink);
-}
-
-.dropDescription {
-  margin: 0.25rem 0 0;
-  font-size: 0.8rem;
+.description {
   color: var(--ink-2);
-}
-
-/* hidden file input — クリックで programmatic open するための隠しインプット */
-.fileInput {
-  display: none;
-}
-
-@media (max-width: 640px) {
-  .dropZone {
-    padding: 1.5rem;
-  }
+  font-size: var(--text-small);
 }

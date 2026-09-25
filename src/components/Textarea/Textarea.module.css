@@ -1,41 +1,14 @@
-/* Textarea コンポーネントのスタイル。
- * 入力欄は罫囲み（--rule-strong）+ 角丸 --radius-sm。
- */
+/* 行の高さを本文と同じにして、欄の中の文章を本文と同じ組みで読ませる。
+ * 高さは書き手が縦にだけ変えられる。横に伸ばすとページが横に送られるため。 */
 .textarea {
-  display: block;
-  width: 100%;
-  box-sizing: border-box;
-  font-family: inherit;
-  font-size: 14px;
-  line-height: 1.7;
-  background: var(--paper);
-  color: var(--ink);
-  border: 1px solid var(--rule-strong);
-  border-radius: var(--radius-sm);
-  padding: 9px 12px;
+  line-height: var(--leading-body);
   resize: vertical;
-  transition: border-color 0.15s;
 }
 
-.textarea::placeholder {
-  color: var(--ink-2);
-}
-
-/* disabled: 操作不可を示す視覚的手がかり */
 .textarea:disabled {
-  background: var(--paper-2);
-  color: var(--ink-2);
-  cursor: not-allowed;
   resize: none;
 }
 
-/* readOnly: 出力専用 textarea の視覚的区別 */
-.textarea:read-only {
-  background: var(--paper-2);
-  cursor: default;
-}
-
-/* mono バリアント: コード・技術系テキストに等幅フォントを使う */
 .mono {
   font-family: var(--font-mono);
 }

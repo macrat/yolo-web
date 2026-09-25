@@ -17,9 +17,9 @@
  *
  * ## variant
  *
- * - `"full"` (デフォルト): SegmentedControl で3種の変換モードを切替可能。ToggleSwitch 表示。
- * - `"remove"`: モードを remove に固定。SegmentedControl 非表示。ToggleSwitch 維持。
- * - `"replace-space"`: モードを replace-space に固定。SegmentedControl 非表示。ToggleSwitch 維持。
+ * - `"full"` (デフォルト): SegmentedControl で3種の変換モードを切替可能。チェックボックス表示。
+ * - `"remove"`: モードを remove に固定。SegmentedControl 非表示。チェックボックス維持。
+ * - `"replace-space"`: モードを replace-space に固定。SegmentedControl 非表示。チェックボックス維持。
  * - `"smart-pdf"`: モードを smart-pdf に固定。SegmentedControl 非表示。行内改行オプション表示。
  *
  * ## 使い方
@@ -45,7 +45,7 @@ import Button from "@/components/Button";
 import SegmentedControl from "@/components/SegmentedControl";
 import Textarea from "@/components/Textarea";
 import ErrorMessage from "@/components/ErrorMessage";
-import ToggleSwitch from "@/components/ToggleSwitch";
+import Checkbox from "@/components/Checkbox";
 import {
   useCopyToClipboard,
   COPIED_LABEL,
@@ -80,8 +80,8 @@ export interface LineBreakRemoverTileProps {
   /**
    * 表示バリエーション（デフォルト: "full"）
    * - "full": 3モード SegmentedControl 表示（ユーザーがモードを切り替え可能）
-   * - "remove": モードを remove に固定。SegmentedControl 非表示。ToggleSwitch 維持。
-   * - "replace-space": モードを replace-space に固定。ToggleSwitch 維持。
+   * - "remove": モードを remove に固定。SegmentedControl 非表示。チェックボックス維持。
+   * - "replace-space": モードを replace-space に固定。チェックボックス維持。
    * - "smart-pdf": モードを smart-pdf に固定。行内改行オプション表示。
    */
   variant?: LineBreakRemoverTileVariant;
@@ -179,7 +179,7 @@ export default function LineBreakRemoverTile({
           fixed の場合も機能を削らないため維持 */}
       {(mode === "remove" || mode === "replace-space") && (
         <div className={styles.optionRow}>
-          <ToggleSwitch
+          <Checkbox
             label="連続する改行を1つにまとめる"
             checked={mergeConsecutive}
             onChange={(e) => setMergeConsecutive(e.target.checked)}

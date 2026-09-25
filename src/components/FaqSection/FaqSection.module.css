@@ -1,5 +1,4 @@
-/* よくある質問のセクション。質問ごとに details を持ち、質問の行（summary）を押すと答えが開く。
- * フォーカスの二重リングと hover の細い線は globals.css の既定に従う。 */
+/* よくある質問のセクション。質問ごとのアコーディオンを縦に接して並べる。 */
 
 .section {
   margin-top: 2rem;
@@ -13,77 +12,9 @@
   color: var(--ink);
 }
 
-.list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.item {
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
-  overflow: hidden;
-}
-
-.question {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  width: 100%;
-  padding: 0.75rem 1rem;
-  font-size: 0.95rem;
-  color: var(--ink);
-  cursor: pointer;
-  list-style: none;
-  background: none;
-}
-
-/* WebKit で三角マーカーを消す */
-.question::-webkit-details-marker {
-  display: none;
-}
-
-.questionLabel {
-  color: var(--ink);
-  flex-shrink: 0;
-}
-
-.questionText {
-  flex: 1;
-  text-align: left;
-}
-
-.indicator {
-  flex-shrink: 0;
-  font-size: 0.75rem;
-  color: var(--ink-2);
-  transition: transform 0.2s;
-}
-
-.item[open] .indicator {
-  transform: rotate(90deg);
-}
-
+/* 答えは本文として、本文の大きさ・本文の幅で組む。次の質問の行とのあいだを 16px あける。 */
 .answer {
-  padding: 0 1rem 0.75rem;
-  font-size: 0.9rem;
-  line-height: 1.7;
-  color: var(--ink-2);
-}
-
-.answerLabel {
+  max-width: var(--measure);
+  padding-block-end: var(--space-16);
   color: var(--ink);
-  margin-right: 0.5rem;
-}
-
-@media (max-width: 768px) {
-  .question {
-    font-size: 0.9rem;
-    padding: 0.625rem 0.75rem;
-  }
-
-  .answer {
-    font-size: 0.85rem;
-    padding: 0 0.75rem 0.625rem;
-  }
 }

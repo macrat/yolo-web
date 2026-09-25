@@ -234,6 +234,7 @@ export default function ImageBase64Tile({
           {/* FileDropZone でファイルのドラッグ&ドロップ
            *  maxSizeBytes: 10MB 上限 / onError で日本語エラーメッセージを受け取る */}
           <FileDropZone
+            label="画像ファイル"
             onFileSelect={handleFileSelect}
             onError={handleFileError}
             maxSizeBytes={MAX_FILE_SIZE}

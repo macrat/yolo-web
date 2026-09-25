@@ -92,9 +92,7 @@ describe("ImageBase64Tile", () => {
     // SegmentedControl（モード切替）が存在する
     expect(screen.getByRole("radiogroup")).toBeInTheDocument();
     // FileDropZone が存在する
-    expect(
-      screen.getByRole("button", { name: /クリックまたはドラッグ/i }),
-    ).toBeInTheDocument();
+    expect(screen.getByLabelText("画像ファイル")).toBeInTheDocument();
   });
 
   // -------------------------------------------------------
@@ -105,9 +103,7 @@ describe("ImageBase64Tile", () => {
     // SegmentedControl が表示されない
     expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();
     // FileDropZone が表示される
-    expect(
-      screen.getByRole("button", { name: /クリックまたはドラッグ/i }),
-    ).toBeInTheDocument();
+    expect(screen.getByLabelText("画像ファイル")).toBeInTheDocument();
   });
 
   // -------------------------------------------------------
@@ -598,9 +594,7 @@ describe("ImageBase64Tile", () => {
     const encodeOption = screen.getByRole("radio", { name: /画像 → Base64/i });
     fireEvent.click(encodeOption);
 
-    expect(
-      screen.getByRole("button", { name: /クリックまたはドラッグ/i }),
-    ).toBeInTheDocument();
+    expect(screen.getByLabelText("画像ファイル")).toBeInTheDocument();
   });
 
   it("モード切替: モード切替後に古い結果が残らない (G-1 準拠)", async () => {

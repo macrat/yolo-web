@@ -190,24 +190,25 @@
   margin-bottom: 0.25rem;
 }
 
-/* Input サンプル */
-.inputGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.inputItem {
+/* 入力欄の見本。欄は本文の幅で折り返すので、縦に積む（§5）。 */
+.fieldStack {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: var(--space-24);
+  margin-bottom: var(--space-16);
 }
 
-.inputItemLabel {
-  font-size: 0.75rem;
+/* 見本に添える、その見本が何かの説明。 */
+.demoCaption {
+  font-size: var(--text-small);
   color: var(--ink-2);
   font-family: var(--font-mono);
+}
+
+.demoStatus {
+  font-size: var(--text-small);
+  color: var(--ink-2);
+  margin-top: var(--space-8);
 }
 
 /* Breadcrumb サンプル */
@@ -217,29 +218,29 @@
   gap: 1rem;
 }
 
-/* Toggle サンプル */
-.toggleSamples {
+/* ラジオボタン・チェックボックスの組。縦に積むときは押せる範囲どうしを接し、横に並べるときは間隔を
+ * 押せる範囲の余白と同じ 8px にして接する（§5）。 */
+.choiceGroup,
+.choiceGroupInline {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.choiceGroup {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
 }
 
-.toggleItem {
+.choiceGroupInline {
   display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+  flex-wrap: wrap;
+  column-gap: var(--space-8);
 }
 
-.toggleItemLabel {
-  font-size: 0.75rem;
-  color: var(--ink-2);
-  font-family: var(--font-mono);
-}
-
-.toggleStatus {
-  font-size: 0.8rem;
-  color: var(--ink-2);
-  margin-top: 0.25rem;
+.choiceLegend {
+  padding: 0;
+  margin-bottom: var(--space-8);
 }
 
 /* Panel as prop デモ */

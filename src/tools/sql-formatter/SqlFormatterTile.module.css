@@ -13,7 +13,7 @@
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  */
 
-/* コントロール行: インデント Select + ToggleSwitch + ボタン群を横並びに */
+/* コントロール行: インデント Select + チェックボックス + ボタン群を横並びに */
 .controls {
   display: flex;
   align-items: center;
@@ -23,7 +23,7 @@
   margin-bottom: 1rem;
 }
 
-/* オプション群（左側）: インデント Select + ToggleSwitch */
+/* オプション群（左側）: インデント Select + チェックボックス */
 .options {
   display: flex;
   align-items: center;

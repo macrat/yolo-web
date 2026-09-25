@@ -35,7 +35,7 @@ import { useState, useEffect, useCallback, useRef, useId } from "react";
 import Panel from "@/components/Panel";
 import Button from "@/components/Button";
 import ErrorMessage from "@/components/ErrorMessage";
-import ToggleSwitch from "@/components/ToggleSwitch";
+import Checkbox from "@/components/Checkbox";
 import {
   useCopyToClipboard,
   COPIED_LABEL,
@@ -97,7 +97,7 @@ export type PasswordGeneratorTileVariant = "full";
 export interface PasswordGeneratorTileProps {
   /**
    * 表示バリエーション（デフォルト: "full"）
-   * - "full": 長さスライダー・4文字種ToggleSwitch・強度メーター・生成・コピーの全機能
+   * - "full": 長さスライダー・文字種のチェックボックス・強度メーター・生成・コピーの全機能
    * logic に独立モードがないため full のみ（variant を無理にひねり出さない）
    */
   variant?: PasswordGeneratorTileVariant;
@@ -197,29 +197,28 @@ export default function PasswordGeneratorTile({
           />
         </div>
 
-        {/* DESIGN.md §5: ON/OFF を切り替えるフォーム要素は原則としてトグルスイッチを使う */}
         <div className={styles.toggleGroup}>
-          <ToggleSwitch
+          <Checkbox
             label="大文字 (A-Z)"
             checked={options.uppercase}
             onChange={(e) => updateOption("uppercase", e.target.checked)}
           />
-          <ToggleSwitch
+          <Checkbox
             label="小文字 (a-z)"
             checked={options.lowercase}
             onChange={(e) => updateOption("lowercase", e.target.checked)}
           />
-          <ToggleSwitch
+          <Checkbox
             label="数字 (0-9)"
             checked={options.digits}
             onChange={(e) => updateOption("digits", e.target.checked)}
           />
-          <ToggleSwitch
+          <Checkbox
             label="記号 (!@#$...)"
             checked={options.symbols}
             onChange={(e) => updateOption("symbols", e.target.checked)}
           />
-          <ToggleSwitch
+          <Checkbox
             label="紛らわしい文字を除外 (O/0, I/l/1)"
             checked={options.excludeAmbiguous}
             onChange={(e) => updateOption("excludeAmbiguous", e.target.checked)}

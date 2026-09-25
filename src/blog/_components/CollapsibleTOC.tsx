@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useSyncExternalStore, type SyntheticEvent } from "react";
-import ChevronDown from "@/components/icons/ChevronDown";
+import Accordion from "@/components/Accordion";
 import TableOfContents, { type Heading } from "./TableOfContents";
 import styles from "./CollapsibleTOC.module.css";
 
@@ -57,14 +57,15 @@ export default function CollapsibleTOC({ headings }: CollapsibleTOCProps) {
   };
 
   return (
-    <details className={styles.tocDetails} open={open} onToggle={handleToggle}>
-      <summary className={styles.tocSummary}>
-        <span>目次</span>
-        <ChevronDown className={styles.tocChevron} />
-      </summary>
+    <Accordion
+      className={styles.tocDetails}
+      summary="目次"
+      open={open}
+      onToggle={handleToggle}
+    >
       <div className={styles.tocBody}>
         <TableOfContents headings={headings} />
       </div>
-    </details>
+    </Accordion>
   );
 }

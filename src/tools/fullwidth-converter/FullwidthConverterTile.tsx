@@ -28,7 +28,7 @@
  * - 出力 textarea は readOnly で表示専用
  * - role="status" aria-live="polite" の div にサマリテキストを置く
  * - checkbox 3個は role=group + aria-label="変換対象" でグループ化
- * - 各 checkbox は useId ベースの id と htmlFor で label と正しく関連付け
+ * - 各 checkbox は useId ベースの id を持ち、ラベルを含む行（Checkbox）に包まれる
  */
 
 import { useId, useMemo, useState } from "react";
@@ -36,6 +36,7 @@ import Panel from "@/components/Panel";
 import Button from "@/components/Button";
 import SegmentedControl from "@/components/SegmentedControl";
 import Textarea from "@/components/Textarea";
+import Checkbox from "@/components/Checkbox";
 import {
   useCopyToClipboard,
   COPIED_LABEL,
@@ -173,19 +174,13 @@ export default function FullwidthConverterTile({
       {/* role=group + aria-label でアクセシブルにグループ化 */}
       <div className={styles.optionsRow} role="group" aria-label="変換対象">
         {OPTION_KEYS.map((key) => (
-          <label
+          <Checkbox
             key={key}
-            className={styles.checkboxLabel}
-            htmlFor={checkboxIds[key]}
-          >
-            <input
-              id={checkboxIds[key]}
-              type="checkbox"
-              checked={options[key]}
-              onChange={() => handleOptionChange(key)}
-            />
-            {OPTION_LABELS[key]}
-          </label>
+            id={checkboxIds[key]}
+            label={OPTION_LABELS[key]}
+            checked={options[key]}
+            onChange={() => handleOptionChange(key)}
+          />
         ))}
       </div>
 

@@ -1,0 +1,76 @@
+/* 行の高さは 44px 以上（§6）。ラベルが折り返しても、形は1行目の字の中央に並ぶ。 */
+.row {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-8);
+  width: fit-content;
+  min-width: 44px;
+  max-width: 100%;
+  min-height: 44px;
+  padding-block: max(0px, (44px - 1lh) / 2);
+  line-height: var(--leading-body);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+/* 見えないまま、フォーカスと押した結果を受ける。display: none にするとフォーカスを受けない。 */
+.input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* 太い線で描く 20px の四角（§6）。 */
+.mark {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  margin-block-start: calc((1lh - 20px) / 2);
+  border: var(--rule-w) solid var(--rule);
+}
+
+/* ラジオボタンは円。サイトで丸い形を持つのはこれだけ（§5）。 */
+.radio {
+  border-radius: 50%;
+}
+
+/* 選択済みは内側を --ink で 8px 塗る（§6）。 */
+.mark::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: inherit;
+  background: var(--ink);
+  visibility: hidden;
+}
+
+.input:checked + .mark::after {
+  visibility: visible;
+}
+
+.label {
+  min-width: 0;
+}
+
+/* §6 無効。押せる範囲の縁に太い破線の枠を引き、字と形を --ink-2 にする。枠は箱の内側に引き、
+ * 有効なときと大きさを変えない。 */
+.row:has(.input:disabled) {
+  outline: var(--rule-w) dashed var(--rule);
+  outline-offset: calc(-1 * var(--rule-w));
+  color: var(--ink-2);
+  cursor: not-allowed;
+}
+
+.input:disabled + .mark {
+  border-color: var(--ink-2);
+}
+
+.input:disabled + .mark::after {
+  background: var(--ink-2);
+}

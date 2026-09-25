@@ -1,13 +1,12 @@
 import type { ComponentPropsWithoutRef } from "react";
-import styles from "./Input.module.css";
 
 type InputType =
   "text" | "email" | "number" | "password" | "search" | "tel" | "url" | "date";
 
 interface InputOwnProps {
-  /** input の type 属性（デフォルト: "text"） */
+  /** input の type 属性（既定: "text"） */
   type?: InputType;
-  /** エラー状態。true のとき border を --accent にして aria-invalid を付与 */
+  /** エラーのとき true。太い線で囲み、aria-invalid で支援技術にも伝える（§8）。 */
   error?: boolean;
 }
 
@@ -15,52 +14,16 @@ type InputProps = InputOwnProps &
   Omit<ComponentPropsWithoutRef<"input">, keyof InputOwnProps>;
 
 /**
- * Input — テキスト入力コンポーネント。
+ * 書き込む欄（DESIGN.md §8）。見え方は globals.css の [data-field] が持つ。
+ * ラベルと、エラーの理由の文は Field が付ける。
  *
- * 標準の `<input>` 要素を薄くラップしたコンポーネント。`type` と `error` を
- * 除く HTML 属性はすべて素の `<input>` に透過するため、振る舞いはネイティブ
- * `<input>` と完全に同一。
- *
- * - **controlled / uncontrolled の両対応**: `value`（controlled）でも
- *   `defaultValue`（uncontrolled）でも使える。両方を同時に指定した場合は
- *   React 標準の挙動どおり `value` が優先され、開発モードでは警告が出る
- *   ので、どちらか一方を選んで使うこと。
- * - **`type`**: デフォルト `"text"`。サポートする値は text/email/number/
- *   password/search/tel/url/date の 8 種。
- * - **`error`**: true のとき border を `--accent`（専用の danger トークンは無い）に変えてエラー表示にし、
- *   `aria-invalid="true"` を付与してスクリーンリーダーにも伝える。
- * - **読み取り専用**: `readOnly` または `disabled` を渡すと、`onChange`
- *   なしでも React の controlled 警告は出ない（ネイティブ `<input>` と同じ）。
- *
- * デザイン:
- * - 入力欄の角丸は `--radius-sm`
- *
- * @example
- * // controlled
- * <Input value={text} onChange={(e) => setText(e.target.value)} />
- *
- * @example
- * // uncontrolled
- * <Input defaultValue="初期値" name="title" />
- *
- * @example
- * // 読み取り専用（onChange 不要）
- * <Input value="表示専用" readOnly />
+ * `type` と `error` を除く属性は、そのまま `<input>` に渡る。
  */
-function Input({
-  type = "text",
-  error = false,
-  className,
-  ...rest
-}: InputProps) {
-  const classNames = [styles.input, error && styles.error, className]
-    .filter(Boolean)
-    .join(" ");
-
+function Input({ type = "text", error = false, ...rest }: InputProps) {
   return (
     <input
       type={type}
-      className={classNames}
+      data-field=""
       aria-invalid={error ? true : undefined}
       {...rest}
     />

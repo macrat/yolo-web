@@ -17,7 +17,7 @@
  *
  * ## variant
  *
- * - `"full"` (デフォルト): 検索/置換 Input＋3 ToggleSwitch（正規表現/大小文字/全置換）
+ * - `"full"` (デフォルト): 検索/置換 Input＋3つのチェックボックス（正規表現/大小文字/全置換）
  *   ＋置換件数表示の完全な UI。
  *   text-replace は logic に独立した出力モードがないため full のみで良い。
  *
@@ -42,7 +42,7 @@ import Button from "@/components/Button";
 import Textarea from "@/components/Textarea";
 import Input from "@/components/Input";
 import ErrorMessage from "@/components/ErrorMessage";
-import ToggleSwitch from "@/components/ToggleSwitch";
+import Checkbox from "@/components/Checkbox";
 import {
   useCopyToClipboard,
   COPIED_LABEL,
@@ -56,7 +56,7 @@ export type TextReplaceTileVariant = "full";
 export interface TextReplaceTileProps {
   /**
    * 表示バリエーション（デフォルト: "full"）
-   * - "full": 検索/置換Input＋3 ToggleSwitch（正規表現/大小文字/全置換）＋置換件数表示
+   * - "full": 検索/置換Input＋3つのチェックボックス（正規表現/大小文字/全置換）＋置換件数表示
    *   text-replace は logic に独立した出力モードがないため full のみ。
    */
   variant?: TextReplaceTileVariant;
@@ -188,16 +188,16 @@ export default function TextReplaceTile({
         </div>
       </div>
 
-      {/* オプション（3 ToggleSwitch: 正規表現・大文字小文字区別・全置換） */}
+      {/* オプション（正規表現・大文字小文字区別・全置換のチェックボックス） */}
       <div className={styles.optionsRow}>
-        <ToggleSwitch
+        <Checkbox
           label="正規表現"
           checked={options.useRegex}
           onChange={(e) =>
             setOptions((prev) => ({ ...prev, useRegex: e.target.checked }))
           }
         />
-        <ToggleSwitch
+        <Checkbox
           label="大文字小文字を区別"
           checked={options.caseSensitive}
           onChange={(e) =>
@@ -207,7 +207,7 @@ export default function TextReplaceTile({
             }))
           }
         />
-        <ToggleSwitch
+        <Checkbox
           label="すべて置換"
           checked={options.globalReplace}
           onChange={(e) =>

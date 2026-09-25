@@ -1,0 +1,44 @@
+/* 開閉の行は 44px 以上（§6）。ラベルが折り返しても、三角は1行目の字の中央に並ぶ。 */
+.summary {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-8);
+  width: fit-content;
+  min-width: 44px;
+  max-width: 100%;
+  min-height: 44px;
+  padding-block: max(0px, (44px - 1lh) / 2);
+  line-height: var(--leading-body);
+  color: var(--ink);
+  list-style: none;
+  cursor: pointer;
+}
+
+.summary::-webkit-details-marker {
+  display: none;
+}
+
+/* 太い線で描く三角（§6）。1px が 1 単位の viewBox に、太い線の太さで引く。 */
+.triangle {
+  flex: none;
+  margin-block-start: calc((1lh - 20px) / 2);
+  fill: none;
+  stroke: var(--rule);
+  stroke-width: var(--rule-w);
+  stroke-linejoin: miter;
+  transition: transform 150ms ease-out;
+}
+
+.accordion[open] > .summary .triangle {
+  transform: rotate(90deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .triangle {
+    transition: none;
+  }
+}
+
+.label {
+  min-width: 0;
+}

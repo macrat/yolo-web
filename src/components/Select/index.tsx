@@ -3,51 +3,35 @@ import type { ComponentPropsWithoutRef } from "react";
 import ChevronDown from "@/components/icons/ChevronDown";
 import styles from "./Select.module.css";
 
-type SelectProps = ComponentPropsWithoutRef<"select">;
+interface SelectOwnProps {
+  /** エラーのとき true。太い線で囲み、aria-invalid で支援技術にも伝える（§8）。 */
+  error?: boolean;
+}
+
+type SelectProps = SelectOwnProps &
+  Omit<ComponentPropsWithoutRef<"select">, keyof SelectOwnProps>;
 
 /**
- * Select — セレクトボックスコンポーネント。
+ * 選ぶ欄（DESIGN.md §8）。枠・エラー・無効・フォーカスの見え方は globals.css の [data-field] が持ち、
+ * 開いたときの候補は同じ細い線の中に並ぶ。ラベルと、エラーの理由の文は Field が付ける。
  *
- * 標準の `<select>` 要素を薄くラップしたコンポーネント。HTML 属性はすべて
- * 素の `<select>` に透過するため、振る舞いはネイティブ `<select>` と完全に同一。
- *
- * - **controlled / uncontrolled の両対応**: `value`（controlled）でも
- *   `defaultValue`（uncontrolled）でも使える。
- * - **children で option を受ける**: `<Select><option value="a">A</option></Select>`
- *   の形で使う。
- * - **forwardRef 対応**: ref が必要な場合は親から渡すことができる。
- *
- * デザイン:
- * - 入力欄の角丸は `--radius-sm`
- * - 影なし（DESIGN.md §5）
- *
- * @example
- * // controlled
- * <Select value={lang} onChange={(e) => setLang(e.target.value)}>
- *   <option value="ja">日本語</option>
- *   <option value="en">英語</option>
- * </Select>
- *
- * @example
- * // uncontrolled
- * <Select defaultValue="ja" name="language">
- *   <option value="ja">日本語</option>
- *   <option value="en">英語</option>
- * </Select>
- *
- * @example
- * // 幅を親に合わせたい場合は className で上書き
- * <Select className={styles.mySelect}>...</Select>
+ * 候補は children の `<option>` で渡す。`error` を除く属性は、そのまま `<select>` に渡る。
  */
 const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select(
-  { className, children, ...rest },
+  { error = false, className, children, ...rest },
   ref,
 ) {
   const selectClassName = [styles.select, className].filter(Boolean).join(" ");
 
   return (
     <div className={styles.wrapper}>
-      <select ref={ref} className={selectClassName} {...rest}>
+      <select
+        ref={ref}
+        className={selectClassName}
+        data-field=""
+        aria-invalid={error ? true : undefined}
+        {...rest}
+      >
         {children}
       </select>
       <span className={styles.icon} aria-hidden="true">

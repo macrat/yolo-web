@@ -184,11 +184,12 @@ describe("ImageResizerTile", () => {
   // -------------------------------------------------------
   // E-1: 基本レンダリング
   // -------------------------------------------------------
-  it("E-1: 初期描画でドロップゾーンが存在する", () => {
+  it("E-1: 初期描画で画像ファイルを選ぶ欄が存在する", () => {
     render(<ImageResizerTile />);
-    expect(
-      screen.getByRole("button", { name: /クリックまたはドラッグ/i }),
-    ).toBeInTheDocument();
+    expect(screen.getByLabelText("画像ファイル")).toHaveAttribute(
+      "type",
+      "file",
+    );
   });
 
   // -------------------------------------------------------

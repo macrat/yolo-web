@@ -36,11 +36,12 @@
   }
 }
 
-/* オプション（ToggleSwitch）の横並び */
+/* オプション（チェックボックス）の横並び。間隔を押せる範囲の余白と同じ 8px にして、押せる範囲どうしを
+ * 接する（§5）。 */
 .optionsRow {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  column-gap: var(--space-8);
   align-items: center;
   margin-bottom: 1rem;
 }

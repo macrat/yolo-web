@@ -1,34 +1,23 @@
+import { createRef } from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
-import { readFileSync } from "fs";
-import { resolve } from "path";
 import Select from "../index";
 
 describe("Select", () => {
-  it("デフォルトで select 要素をレンダリングする", () => {
+  it("select と候補を描き、入力欄の共通の見え方（data-field）に乗る", () => {
     render(
-      <Select aria-label="選択肢">
-        <option value="a">A</option>
-      </Select>,
-    );
-    const select = screen.getByRole("combobox");
-    expect(select).toBeInTheDocument();
-  });
-
-  it("children として渡した option が描画される", () => {
-    render(
-      <Select aria-label="フルーツ">
+      <Select aria-label="果物">
         <option value="apple">りんご</option>
         <option value="banana">バナナ</option>
-        <option value="cherry">さくらんぼ</option>
       </Select>,
     );
+    const select = screen.getByRole("combobox", { name: "果物" });
+    expect(select).toHaveAttribute("data-field");
     expect(screen.getByText("りんご")).toBeInTheDocument();
     expect(screen.getByText("バナナ")).toBeInTheDocument();
-    expect(screen.getByText("さくらんぼ")).toBeInTheDocument();
   });
 
-  it("controlled: value/onChange が機能する", () => {
+  it("controlled で value と onChange が働く", () => {
     const handleChange = vi.fn();
     render(
       <Select aria-label="選択" value="b" onChange={handleChange}>
@@ -38,118 +27,64 @@ describe("Select", () => {
     );
     const select = screen.getByRole("combobox");
     expect(select).toHaveValue("b");
-
     fireEvent.change(select, { target: { value: "a" } });
     expect(handleChange).toHaveBeenCalledTimes(1);
   });
 
-  it("uncontrolled: defaultValue が反映される", () => {
+  it("uncontrolled で defaultValue が入る", () => {
     render(
       <Select aria-label="選択" defaultValue="b">
         <option value="a">A</option>
         <option value="b">B</option>
       </Select>,
     );
-    const select = screen.getByRole("combobox");
-    expect(select).toHaveValue("b");
+    expect(screen.getByRole("combobox")).toHaveValue("b");
   });
 
-  it("disabled 属性が透過される", () => {
-    render(
-      <Select aria-label="選択" disabled>
+  it("error のときだけ aria-invalid を付ける", () => {
+    const { rerender } = render(
+      <Select aria-label="選択" error>
         <option value="a">A</option>
       </Select>,
     );
-    const select = screen.getByRole("combobox");
-    expect(select).toBeDisabled();
+    expect(screen.getByRole("combobox")).toHaveAttribute(
+      "aria-invalid",
+      "true",
+    );
+    rerender(
+      <Select aria-label="選択">
+        <option value="a">A</option>
+      </Select>,
+    );
+    expect(screen.getByRole("combobox")).not.toHaveAttribute("aria-invalid");
   });
 
-  it("name 属性が透過される", () => {
+  it("ほかの属性と className をそのまま渡す", () => {
     render(
-      <Select aria-label="選択" name="fruit">
+      <Select
+        aria-label="選択"
+        name="fruit"
+        disabled
+        className="custom"
+        aria-describedby="desc"
+      >
         <option value="a">A</option>
       </Select>,
     );
     const select = screen.getByRole("combobox");
     expect(select).toHaveAttribute("name", "fruit");
-  });
-
-  it("aria-label 属性が透過される", () => {
-    render(
-      <Select aria-label="フルーツ選択">
-        <option value="a">A</option>
-      </Select>,
-    );
-    const select = screen.getByRole("combobox", { name: "フルーツ選択" });
-    expect(select).toBeInTheDocument();
-  });
-
-  it("aria-describedby 属性が透過される", () => {
-    render(
-      <>
-        <span id="desc">フルーツを選んでください</span>
-        <Select aria-label="選択" aria-describedby="desc">
-          <option value="a">A</option>
-        </Select>
-      </>,
-    );
-    const select = screen.getByRole("combobox");
     expect(select).toHaveAttribute("aria-describedby", "desc");
+    expect(select).toHaveClass("custom");
+    expect(select).toBeDisabled();
   });
 
-  it("data-* など任意の HTML 属性が透過される（...rest）", () => {
-    render(
-      <Select aria-label="選択" data-testid="my-select">
-        <option value="a">A</option>
-      </Select>,
-    );
-    const select = screen.getByTestId("my-select");
-    expect(select).toBeInTheDocument();
-  });
-
-  it("カスタム className が追加される", () => {
-    render(
-      <Select aria-label="選択" className="custom-class">
-        <option value="a">A</option>
-      </Select>,
-    );
-    const select = screen.getByRole("combobox");
-    expect(select.className).toMatch(/custom-class/);
-  });
-
-  // CSS 規約: --radius-sm の使用を確認
-  it("Select.module.css が --radius-sm を使っている", () => {
-    const cssPath = resolve(__dirname, "../Select.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).toContain("var(--radius-sm)");
-  });
-
-  // CSS 規約: --rule-strong の使用を確認
-  it("Select.module.css が --rule-strong を使っている", () => {
-    const cssPath = resolve(__dirname, "../Select.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).toContain("var(--rule-strong)");
-  });
-
-  // CSS 規約: フォーカスに outline を使用し border-color を使わない
-  // WCAG 2.5.5 AAA タップターゲット保証
-  it(".select has min-height: 44px for WCAG 2.5.5 AAA tap target", () => {
-    const cssPath = resolve(__dirname, "../Select.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    const selectBlock = css.match(/\.select\s*\{[^}]+\}/)?.[0] ?? "";
-    expect(selectBlock).toContain("min-height: 44px");
-  });
-
-  // forwardRef: ref が select 要素に届く
-  it("ref が select 要素に届く（forwardRef）", async () => {
-    const { default: React } = await import("react");
-    const ref = React.createRef<HTMLSelectElement>();
+  it("ref が select に届く", () => {
+    const ref = createRef<HTMLSelectElement>();
     render(
       <Select aria-label="選択" ref={ref}>
         <option value="a">A</option>
       </Select>,
     );
-    expect(ref.current).not.toBeNull();
     expect(ref.current?.tagName).toBe("SELECT");
   });
 });

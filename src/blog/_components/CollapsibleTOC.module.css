@@ -1,68 +1,20 @@
 /*
- * CollapsibleTOC — 開閉可能な目次のスタイル。
- *
- * <details> の summary をクリック領域として、シェブロンで開閉状態を示す。
+ * 開閉できる目次。開閉はアコーディオンが持つ。
  * 折りたたまれた状態では、親 .articleBody の :has() ルールにより
  * Grid 列幅が `1fr auto` に切り替わり TOC が縮んで本文が広がる。
- *
- * 区画としての罫囲みはこのコンポーネント自身が持つ（--paper-2 の地と
- * --rule の一本罫。角丸は 0px）。全トークン経由・直書きなし。
  */
 
 .tocDetails {
   border: 1px solid var(--rule);
-  border-radius: var(--radius);
   padding: var(--space-16) var(--space-24);
   background: var(--paper-2);
 }
 
-.tocSummary {
-  font-family: var(--font-body);
-  font-size: 0.9375rem;
-  font-weight: 700;
-  cursor: pointer;
-  color: var(--ink);
-  /* デフォルト三角マーカーを消し、自作シェブロンで状態を表現する */
-  list-style: none;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: var(--space-8);
-}
-
-/* Safari/WebKit でも三角マーカー非表示 */
-.tocSummary::-webkit-details-marker {
-  display: none;
-}
-
-.tocSummary:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-.tocChevron {
-  flex-shrink: 0;
-  color: var(--ink-2);
-  transition: transform 0.2s ease;
-}
-
 /*
- * 折りたたみ時はシェブロンを左向きに（90deg 反時計回転）。
- * 「TOC が右に縮んだ状態。クリックで左方向に広がる」ことを示唆する。
- */
-.tocDetails:not([open]) .tocChevron {
-  transform: rotate(-90deg);
-}
-
-/*
- * 見出し数が多い記事（38件など）で viewport を超えないよう内部スクロールを持たせる。
- * 8rem の内訳: sticky top 1rem + tocDetails 上下 padding 2rem + summary 約 1.5rem +
- * tocBody margin-top 0.75rem + 余裕 2.75rem ≒ 8rem。
- * デスクトップ（sticky 配置）でも viewport に収まり、モバイル（非 sticky）でも
- * 縦長 TOC が本文への到達を阻害しない。
+ * 見出しの多い記事でも目次が画面の高さを超えないよう、中で縦に送る。
+ * 8rem は、sticky の上のあき 1rem・枠の上下の余白 2rem・開閉の行 44px と、そのあまり。
  */
 .tocBody {
-  margin-top: 0.75rem;
   max-height: calc(100vh - 8rem);
   overflow-y: auto;
 }

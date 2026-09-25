@@ -28,10 +28,7 @@
   color: var(--ink-2);
 }
 
-/* number input の幅のみを指定する。
-   border/padding/min-height/color/background/border-radius は共通 Input が提供する。
-   :focus-visible も共通 Input.module.css が担う（重複定義しない）。
-   親 .numberField が width:fit-content のため Input の width:100% は親幅に収まる。 */
+/* number input の幅のみを指定する。枠・余白・フォーカスは共通の入力欄（globals.css の [data-field]）が持つ。 */
 .numberInput {
   width: 5rem;
 }

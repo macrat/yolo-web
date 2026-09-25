@@ -375,6 +375,7 @@ export default function ImageResizerTile({
       <div className={styles.inner}>
         {/* ファイル選択 */}
         <FileDropZone
+          label="画像ファイル"
           onFileSelect={handleFile}
           onError={handleFileError}
           maxSizeBytes={MAX_FILE_SIZE}

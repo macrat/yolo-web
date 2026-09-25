@@ -4,6 +4,10 @@ import { useState } from "react";
 import Panel from "@/components/Panel";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
+import Field from "@/components/Field";
+import Checkbox from "@/components/Checkbox";
+import Radio from "@/components/Radio";
+import Accordion from "@/components/Accordion";
 import Textarea from "@/components/Textarea";
 import Select from "@/components/Select";
 import SegmentedControl from "@/components/SegmentedControl";
@@ -14,7 +18,6 @@ import {
   COPIED_LABEL,
 } from "@/components/hooks/useCopyToClipboard";
 import Breadcrumb from "@/components/Breadcrumb";
-import ToggleSwitch from "@/components/ToggleSwitch";
 import Pagination from "@/components/Pagination";
 import ShareButtons from "@/components/ShareButtons";
 import FaqSection from "@/components/FaqSection";
@@ -95,9 +98,9 @@ const TOC_ITEMS = [
   { id: "radius-elevation", label: "3. 角丸" },
   { id: "panel", label: "4. Panel" },
   { id: "button", label: "5. Button" },
-  { id: "input", label: "6. Input" },
+  { id: "input", label: "6. Input・Field" },
   { id: "breadcrumb", label: "7. Breadcrumb" },
-  { id: "toggle-switch", label: "8. ToggleSwitch" },
+  { id: "checkbox-radio", label: "8. Checkbox・Radio" },
   { id: "pagination", label: "9. Pagination" },
   { id: "share-buttons", label: "10. ShareButtons" },
   { id: "textarea", label: "11. Textarea" },
@@ -107,7 +110,7 @@ const TOC_ITEMS = [
   { id: "file-drop-zone", label: "15. FileDropZone" },
   { id: "use-copy-to-clipboard", label: "16. useCopyToClipboard" },
   { id: "input-date", label: "17. Input (type=date)" },
-  { id: "faq-section", label: "18. FaqSection" },
+  { id: "faq-section", label: "18. Accordion・FaqSection" },
   { id: "related-tools", label: "19. RelatedTools" },
   { id: "related-blog-posts", label: "20. RelatedBlogPosts" },
 ];
@@ -123,8 +126,9 @@ export default function StorybookContent({
   relatedBlogPostsWithPosts,
   relatedBlogPostsEmpty,
 }: StorybookContentProps) {
-  // ToggleSwitch controlled state
-  const [toggleOn, setToggleOn] = useState(false);
+  // Checkbox・Radio controlled state
+  const [checkboxOn, setCheckboxOn] = useState(false);
+  const [radioValue, setRadioValue] = useState("new");
   // Controlled input state
   const [controlledText, setControlledText] = useState("controlled value");
   // SegmentedControl controlled state
@@ -344,17 +348,34 @@ export default function StorybookContent({
         </Panel>
       </Section>
 
-      {/* === 6. Input === */}
+      {/* === 6. Input・Field === */}
       <Section id="input">
-        <h2 className={styles.sectionTitle}>6. Input</h2>
+        <h2 className={styles.sectionTitle}>6. Input・Field</h2>
         {/* 見本は Panel に収めて並べる */}
         <Panel as="div">
-          <span className={styles.previewLabel}>Preview: Input</span>
+          <span className={styles.previewLabel}>Preview: Input・Field</span>
 
           <h3 className={styles.subsectionTitle} style={{ marginTop: 0 }}>
-            各 type
+            ラベル・必須・エラー（Field）
           </h3>
-          <div className={styles.inputGrid}>
+          <div className={styles.fieldStack}>
+            <Field label="名前">
+              {(control) => <Input {...control} autoComplete="name" />}
+            </Field>
+            <Field label="メールアドレス" required>
+              {(control) => (
+                <Input {...control} type="email" autoComplete="email" />
+              )}
+            </Field>
+            <Field label="年齢" error="数字で入力してください。例: 30">
+              {(control) => (
+                <Input {...control} inputMode="numeric" defaultValue="三十" />
+              )}
+            </Field>
+          </div>
+
+          <h3 className={styles.subsectionTitle}>各 type</h3>
+          <div className={styles.fieldStack}>
             {(
               [
                 "text",
@@ -366,69 +387,49 @@ export default function StorybookContent({
                 "url",
               ] as const
             ).map((type) => (
-              <div key={type} className={styles.inputItem}>
-                <div className={styles.inputItemLabel}>
-                  type=&quot;{type}&quot;
-                </div>
-                <Input
-                  type={type}
-                  placeholder={`type="${type}" の入力欄`}
-                  aria-label={`type ${type} の入力欄`}
-                />
-              </div>
+              <Field key={type} label={`type="${type}"`}>
+                {(control) => (
+                  <Input
+                    {...control}
+                    type={type}
+                    placeholder={`type="${type}" の入力欄`}
+                  />
+                )}
+              </Field>
             ))}
           </div>
 
-          <h3 className={styles.subsectionTitle}>特殊状態</h3>
-          <div className={styles.inputGrid}>
-            <div className={styles.inputItem}>
-              <div className={styles.inputItemLabel}>error={"{true}"}</div>
-              <Input
-                defaultValue="エラー状態の入力値"
-                error
-                aria-label="エラー状態の入力欄"
-              />
-            </div>
-            <div className={styles.inputItem}>
-              <div className={styles.inputItemLabel}>disabled</div>
-              <Input
-                value="無効状態の入力値"
-                disabled
-                readOnly
-                aria-label="無効状態の入力欄"
-              />
-            </div>
-            <div className={styles.inputItem}>
-              <div className={styles.inputItemLabel}>readOnly</div>
-              <Input
-                value="読み取り専用の入力値"
-                readOnly
-                aria-label="読み取り専用の入力欄"
-              />
-            </div>
+          <h3 className={styles.subsectionTitle}>無効・読み取り専用</h3>
+          <div className={styles.fieldStack}>
+            <Field label="無効">
+              {(control) => (
+                <Input {...control} defaultValue="無効状態の入力値" disabled />
+              )}
+            </Field>
+            <Field label="読み取り専用">
+              {(control) => (
+                <Input {...control} value="読み取り専用の入力値" readOnly />
+              )}
+            </Field>
           </div>
 
           <h3 className={styles.subsectionTitle}>Controlled / Uncontrolled</h3>
-          <div className={styles.inputGrid}>
-            <div className={styles.inputItem}>
-              <div className={styles.inputItemLabel}>
-                controlled (value + onChange)
-              </div>
-              <Input
-                value={controlledText}
-                onChange={(e) => setControlledText(e.target.value)}
-                aria-label="controlled 入力欄"
-              />
-              <div style={{ fontSize: "0.8rem", color: "var(--ink-2)" }}>
-                現在の値: {controlledText}
-              </div>
+          <div className={styles.fieldStack}>
+            <div>
+              <Field label="controlled（value + onChange）">
+                {(control) => (
+                  <Input
+                    {...control}
+                    value={controlledText}
+                    onChange={(e) => setControlledText(e.target.value)}
+                  />
+                )}
+              </Field>
+              <p className={styles.demoStatus}>現在の値: {controlledText}</p>
             </div>
-            <div className={styles.inputItem}>
-              <div className={styles.inputItemLabel}>
-                uncontrolled (defaultValue)
-              </div>
-              <Input defaultValue="初期値" aria-label="uncontrolled 入力欄" />
-            </div>
+            <Field label="uncontrolled（defaultValue）">
+              {(control) => <Input {...control} defaultValue="初期値" />}
+            </Field>
           </div>
         </Panel>
       </Section>
@@ -443,7 +444,7 @@ export default function StorybookContent({
           <div className={styles.breadcrumbSamples}>
             <div>
               <div
-                className={styles.inputItemLabel}
+                className={styles.demoCaption}
                 style={{ marginBottom: "0.5rem" }}
               >
                 1 階層（現在位置のみ）
@@ -452,7 +453,7 @@ export default function StorybookContent({
             </div>
             <div>
               <div
-                className={styles.inputItemLabel}
+                className={styles.demoCaption}
                 style={{ marginBottom: "0.5rem" }}
               >
                 2 階層
@@ -461,7 +462,7 @@ export default function StorybookContent({
             </div>
             <div>
               <div
-                className={styles.inputItemLabel}
+                className={styles.demoCaption}
                 style={{ marginBottom: "0.5rem" }}
               >
                 3 階層
@@ -472,49 +473,61 @@ export default function StorybookContent({
         </Panel>
       </Section>
 
-      {/* === 8. ToggleSwitch === */}
-      <Section id="toggle-switch">
-        <h2 className={styles.sectionTitle}>8. ToggleSwitch</h2>
+      {/* === 8. Checkbox・Radio === */}
+      <Section id="checkbox-radio">
+        <h2 className={styles.sectionTitle}>8. Checkbox・Radio</h2>
         {/* 見本は Panel に収めて並べる */}
         <Panel as="div">
-          <span className={styles.previewLabel}>Preview: ToggleSwitch</span>
+          <span className={styles.previewLabel}>Preview: Checkbox・Radio</span>
 
-          <div className={styles.toggleSamples}>
-            <div className={styles.toggleItem}>
-              <div className={styles.toggleItemLabel}>
-                controlled (checked + onChange)
-              </div>
-              <ToggleSwitch
-                label="通知を受け取る"
-                checked={toggleOn}
-                onChange={(e) => setToggleOn(e.target.checked)}
+          <h3 className={styles.subsectionTitle} style={{ marginTop: 0 }}>
+            チェックボックス
+          </h3>
+          <fieldset className={styles.choiceGroup}>
+            <legend className={styles.choiceLegend}>通知の設定</legend>
+            <Checkbox
+              label="通知を受け取る"
+              checked={checkboxOn}
+              onChange={(e) => setCheckboxOn(e.target.checked)}
+            />
+            <Checkbox label="メール配信（初期: 選択済み）" defaultChecked />
+            <Checkbox label="ラベルが長く、狭い画面で2行に折り返しても、四角は1行目の字の中央に並ぶ" />
+            <Checkbox label="無効（未選択）" disabled />
+            <Checkbox label="無効（選択済み）" disabled defaultChecked />
+          </fieldset>
+          <p className={styles.demoStatus}>
+            「通知を受け取る」: {checkboxOn ? "選択済み" : "未選択"}
+          </p>
+
+          <h3 className={styles.subsectionTitle}>ラジオボタン</h3>
+          <fieldset className={styles.choiceGroup}>
+            <legend className={styles.choiceLegend}>並び順</legend>
+            {(
+              [
+                ["new", "新しい順"],
+                ["old", "古い順"],
+                ["name", "名前の順"],
+              ] as const
+            ).map(([value, label]) => (
+              <Radio
+                key={value}
+                name="storybook-order"
+                value={value}
+                label={label}
+                checked={radioValue === value}
+                onChange={() => setRadioValue(value)}
               />
-              <div className={styles.toggleStatus}>
-                現在の状態: {toggleOn ? "ON" : "OFF"}
-              </div>
-            </div>
+            ))}
+            <Radio name="storybook-order-disabled" label="無効" disabled />
+          </fieldset>
 
-            <div className={styles.toggleItem}>
-              <div className={styles.toggleItemLabel}>
-                uncontrolled (defaultChecked)
-              </div>
-              <ToggleSwitch
-                label="メール配信（初期: ON）"
-                defaultChecked
-                name="email-notify"
-              />
-            </div>
-
-            <div className={styles.toggleItem}>
-              <div className={styles.toggleItemLabel}>disabled</div>
-              <ToggleSwitch label="無効状態（OFF）" disabled />
-            </div>
-
-            <div className={styles.toggleItem}>
-              <div className={styles.toggleItemLabel}>disabled + checked</div>
-              <ToggleSwitch label="無効状態（ON）" disabled defaultChecked />
-            </div>
-          </div>
+          <h3 className={styles.subsectionTitle}>横に並べる</h3>
+          <fieldset className={styles.choiceGroupInline}>
+            <legend className={styles.choiceLegend}>変換対象</legend>
+            <Checkbox label="英数字" defaultChecked />
+            <Checkbox label="カタカナ" defaultChecked />
+            <Checkbox label="記号" />
+          </fieldset>
         </Panel>
       </Section>
       {/* === 9. Pagination === */}
@@ -531,32 +544,32 @@ export default function StorybookContent({
           <div
             style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
           >
-            <div className={styles.inputItemLabel}>
+            <div className={styles.demoCaption}>
               5 ページ・現在ページ = 1（前へを置かない）
             </div>
             <Pagination currentPage={1} totalPages={5} basePath="/blog" />
 
-            <div className={styles.inputItemLabel}>
+            <div className={styles.demoCaption}>
               5 ページ・現在ページ = 3（中間）
             </div>
             <Pagination currentPage={3} totalPages={5} basePath="/blog" />
 
-            <div className={styles.inputItemLabel}>
+            <div className={styles.demoCaption}>
               5 ページ・現在ページ = 5（次へを置かない）
             </div>
             <Pagination currentPage={5} totalPages={5} basePath="/blog" />
 
-            <div className={styles.inputItemLabel}>
+            <div className={styles.demoCaption}>
               10 ページ・現在ページ = 1（省略あり）
             </div>
             <Pagination currentPage={1} totalPages={10} basePath="/blog" />
 
-            <div className={styles.inputItemLabel}>
+            <div className={styles.demoCaption}>
               10 ページ・現在ページ = 5（両側省略あり）
             </div>
             <Pagination currentPage={5} totalPages={10} basePath="/blog" />
 
-            <div className={styles.inputItemLabel}>1 ページのみ（非表示）</div>
+            <div className={styles.demoCaption}>1 ページのみ（非表示）</div>
             <div style={{ color: "var(--ink-2)", fontSize: "0.85rem" }}>
               （totalPages=1 のとき null が返るため何も表示されない）
             </div>
@@ -614,52 +627,59 @@ export default function StorybookContent({
           <h3 className={styles.subsectionTitle} style={{ marginTop: 0 }}>
             variant
           </h3>
-          <div className={styles.inputGrid}>
-            <div className={styles.inputItem}>
-              <div className={styles.inputItemLabel}>
-                variant=&quot;default&quot;
-              </div>
-              <Textarea
-                variant="default"
-                rows={3}
-                placeholder="通常テキスト入力（システムフォント）"
-                aria-label="default variant のテキストエリア"
-              />
-            </div>
-            <div className={styles.inputItem}>
-              <div className={styles.inputItemLabel}>
-                variant=&quot;mono&quot;
-              </div>
-              <Textarea
-                variant="mono"
-                rows={3}
-                placeholder="等幅フォント（コード・技術系テキスト）"
-                aria-label="mono variant のテキストエリア"
-                spellCheck={false}
-              />
-            </div>
+          <div className={styles.fieldStack}>
+            <Field label='variant="default"'>
+              {(control) => (
+                <Textarea
+                  {...control}
+                  variant="default"
+                  rows={3}
+                  placeholder="本文の書体で書く欄"
+                />
+              )}
+            </Field>
+            <Field label='variant="mono"'>
+              {(control) => (
+                <Textarea
+                  {...control}
+                  variant="mono"
+                  rows={3}
+                  placeholder="等幅の書体で書く欄（コード）"
+                  spellCheck={false}
+                />
+              )}
+            </Field>
           </div>
 
-          <h3 className={styles.subsectionTitle}>特殊状態</h3>
-          <div className={styles.inputGrid}>
-            <div className={styles.inputItem}>
-              <div className={styles.inputItemLabel}>readOnly</div>
-              <Textarea
-                value="読み取り専用の出力テキスト。多くのツールが入力欄と並べて出力を表示するパターンで使用する。"
-                readOnly
-                rows={3}
-                aria-label="読み取り専用のテキストエリア"
-              />
-            </div>
-            <div className={styles.inputItem}>
-              <div className={styles.inputItemLabel}>disabled</div>
-              <Textarea
-                value="無効状態のテキストエリア"
-                disabled
-                rows={3}
-                aria-label="無効状態のテキストエリア"
-              />
-            </div>
+          <h3 className={styles.subsectionTitle}>エラー・読み取り専用・無効</h3>
+          <div className={styles.fieldStack}>
+            <Field
+              label="本文"
+              required
+              error="本文が空です。1文字以上入力してください。"
+            >
+              {(control) => <Textarea {...control} rows={3} />}
+            </Field>
+            <Field label="読み取り専用（出力）">
+              {(control) => (
+                <Textarea
+                  {...control}
+                  value="読み取り専用の出力テキスト。多くのツールが入力欄と並べて出力を表示するパターンで使用する。"
+                  readOnly
+                  rows={3}
+                />
+              )}
+            </Field>
+            <Field label="無効">
+              {(control) => (
+                <Textarea
+                  {...control}
+                  value="無効状態のテキストエリア"
+                  disabled
+                  rows={3}
+                />
+              )}
+            </Field>
           </div>
         </Panel>
       </Section>
@@ -671,27 +691,33 @@ export default function StorybookContent({
         <Panel as="div">
           <span className={styles.previewLabel}>Preview: Select</span>
 
-          <h3 className={styles.subsectionTitle} style={{ marginTop: 0 }}>
-            通常
-          </h3>
-          <div className={styles.inputGrid}>
-            <div className={styles.inputItem}>
-              <div className={styles.inputItemLabel}>
-                children で option を受ける（uncontrolled）
-              </div>
-              <Select defaultValue="ja" aria-label="言語の選択">
-                <option value="ja">日本語</option>
-                <option value="en">英語</option>
-                <option value="zh">中国語</option>
-              </Select>
-            </div>
-            <div className={styles.inputItem}>
-              <div className={styles.inputItemLabel}>disabled</div>
-              <Select disabled aria-label="無効状態のセレクト">
-                <option value="a">選択肢 A</option>
-                <option value="b">選択肢 B</option>
-              </Select>
-            </div>
+          <div className={styles.fieldStack}>
+            <Field label="言語">
+              {(control) => (
+                <Select {...control} defaultValue="ja">
+                  <option value="ja">日本語</option>
+                  <option value="en">英語</option>
+                  <option value="zh">中国語</option>
+                </Select>
+              )}
+            </Field>
+            <Field label="都道府県" required error="都道府県を選んでください。">
+              {(control) => (
+                <Select {...control} defaultValue="">
+                  <option value="">選んでください</option>
+                  <option value="tokyo">東京都</option>
+                  <option value="osaka">大阪府</option>
+                </Select>
+              )}
+            </Field>
+            <Field label="無効">
+              {(control) => (
+                <Select {...control} disabled>
+                  <option value="a">選択肢 A</option>
+                  <option value="b">選択肢 B</option>
+                </Select>
+              )}
+            </Field>
           </div>
         </Panel>
       </Section>
@@ -772,6 +798,7 @@ export default function StorybookContent({
             基本（accept + maxSizeBytes + description）
           </h3>
           <FileDropZone
+            label="画像ファイル"
             onFileSelect={(file) => console.log("selected:", file.name)}
             accept="image/*"
             maxSizeBytes={10 * 1024 * 1024}
@@ -780,6 +807,7 @@ export default function StorybookContent({
 
           <h3 className={styles.subsectionTitle}>制限なし</h3>
           <FileDropZone
+            label="ファイル"
             onFileSelect={(file) => console.log("selected:", file.name)}
           />
         </Panel>
@@ -835,49 +863,62 @@ export default function StorybookContent({
             Preview: Input (type=date)
           </span>
 
-          <div className={styles.inputGrid}>
-            <div className={styles.inputItem}>
-              <div className={styles.inputItemLabel}>type=&quot;date&quot;</div>
-              <Input
-                type="date"
-                defaultValue="2026-06-04"
-                aria-label="日付入力欄"
-              />
-            </div>
-            <div className={styles.inputItem}>
-              <div className={styles.inputItemLabel}>
-                type=&quot;date&quot; disabled
-              </div>
-              <Input
-                type="date"
-                value="2026-06-04"
-                disabled
-                readOnly
-                aria-label="無効状態の日付入力欄"
-              />
-            </div>
+          <div className={styles.fieldStack}>
+            <Field label="生年月日" required>
+              {(control) => (
+                <Input {...control} type="date" defaultValue="2026-06-04" />
+              )}
+            </Field>
+            <Field
+              label="基準日"
+              error="基準日が生年月日より前です。生年月日より後の日付を選んでください。"
+            >
+              {(control) => (
+                <Input {...control} type="date" defaultValue="2000-01-01" />
+              )}
+            </Field>
+            <Field label="無効">
+              {(control) => (
+                <Input
+                  {...control}
+                  type="date"
+                  defaultValue="2026-06-04"
+                  disabled
+                />
+              )}
+            </Field>
           </div>
         </Panel>
       </Section>
 
-      {/* === 18. FaqSection === */}
+      {/* === 18. Accordion・FaqSection === */}
       <Section id="faq-section">
-        <h2 className={styles.sectionTitle}>18. FaqSection</h2>
+        <h2 className={styles.sectionTitle}>18. Accordion・FaqSection</h2>
         {/* 見本は Panel に収めて並べる */}
         <Panel as="div">
-          <span className={styles.previewLabel}>Preview: FaqSection</span>
+          <span className={styles.previewLabel}>
+            Preview: Accordion・FaqSection
+          </span>
 
           <h3 className={styles.subsectionTitle} style={{ marginTop: 0 }}>
-            faq あり（2 件）
+            Accordion
           </h3>
+          <Accordion summary="目次">
+            <p>開いたときに出る中身。</p>
+          </Accordion>
+          <Accordion summary="ラベルが長く、狭い画面で2行に折り返しても、三角は1行目の字の中央に並ぶ">
+            <p>開いたときに出る中身。</p>
+          </Accordion>
+
+          <h3 className={styles.subsectionTitle}>FaqSection（2 件）</h3>
           <FaqSection faq={SAMPLE_FAQ} />
 
           <h3 className={styles.subsectionTitle}>
             faq が空配列のとき（null を返す）
           </h3>
-          <div style={{ fontSize: "0.85rem", color: "var(--ink-2)" }}>
+          <p className={styles.demoStatus}>
             （空配列を渡すと何も表示されない）
-          </div>
+          </p>
           <FaqSection faq={[]} />
         </Panel>
       </Section>

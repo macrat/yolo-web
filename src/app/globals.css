@@ -39,7 +39,8 @@
   /* §6 フォーカスの二重リング。外の輪は outline で --ink に引き、要素とのあいだを box-shadow の広がりで
    * --paper に塗って内の輪にする。内の輪を下地に任せず塗るのは、反転した背景・コンテンツの色・--paper-2 の
    * 上でも、内と外の2色が揃って見えるようにするため。どちらの輪も太い線と同じ太さで、要素に密着する。
-   * ここの値は輪を要素の外に出す、本文の中のリンクの形。部品では、同じ2つの輪を要素の内側に移す。 */
+   * ここの値は輪を要素の外に出す形で、本文の中のリンクと入力欄が使う。ほかの部品では、同じ2つの輪を
+   * 要素の内側に移す。 */
   --focus-ring: var(--rule-w) solid var(--ink);
   --focus-ring-offset: var(--rule-w);
   --focus-ring-fill: 0 0 0 var(--rule-w) var(--paper);
@@ -374,7 +375,8 @@ hr {
   color: var(--paper);
 }
 
-/* §6 フォーカス。既定は本文の中のリンクの形。押せる範囲が字そのものなので、二重リングを字の外に出す。 */
+/* §6 フォーカス。既定は二重リングを要素の外に出す形。本文の中のリンクは押せる範囲が字そのもので、入力欄は地が
+ * --paper なので、どちらも外に出す。 */
 :focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
@@ -393,6 +395,7 @@ hr {
 :where(
   button,
   summary,
+  option,
   [role="button"],
   [data-text-box],
   [data-hit-area],
@@ -448,6 +451,53 @@ hr {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
   box-shadow: var(--focus-ring-fill);
+}
+
+/* §6 ラジオボタン・チェックボックスの行。ラベルを含む行全体が押せる範囲なので、中の入力が受けた
+ * フォーカスと、行の上の hover を、入力ではなく行に出す。 */
+:where(label[data-text-box]):where(:hover, :active):where(
+    :not(:has(:disabled))
+  ) {
+  box-shadow: var(--hover-line);
+}
+:where(label[data-text-box]):has(:focus-visible) {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-fill);
+}
+
+/* §8 入力欄（書き込む欄・選ぶ欄）。細い線で囲み、エラーのときだけ太い線にする。hover では見え方を変えない。
+ * 縁が見えるので縁の左端を並びの左端に揃え、中身は縁の外側から 8px の位置に置く（§5）。線が太くなっても
+ * 中身が動かないよう、内側の余白を線の太さのぶん減らす。
+ * 二重リングは既定の形のまま縁の外に密着して出す。欄の地は --paper なので、内側に出すと内の輪が地に溶け、
+ * エラーの太い線と見分けられなくなる（§6）。 */
+[data-field] {
+  --field-line: var(--rule-w-hair);
+  display: block;
+  width: 100%;
+  max-width: var(--measure);
+  min-height: 44px;
+  padding: calc(var(--space-8) - var(--field-line));
+  border: var(--field-line) solid var(--rule-2);
+  border-radius: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: var(--text-input);
+}
+[data-field]::placeholder {
+  color: var(--ink-2);
+}
+[data-field][aria-invalid="true"] {
+  --field-line: var(--rule-w);
+  border-color: var(--rule);
+}
+/* §6 無効。太い破線の枠と --ink-2 の文字で示す。 */
+[data-field]:is(:disabled, [aria-disabled="true"]) {
+  --field-line: var(--rule-w);
+  border-style: dashed;
+  border-color: var(--rule);
+  color: var(--ink-2);
+  cursor: not-allowed;
 }
 
 .visually-hidden {

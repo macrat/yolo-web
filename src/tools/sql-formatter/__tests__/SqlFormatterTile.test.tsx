@@ -53,7 +53,7 @@ describe("V-1: variant=full のレンダリング", () => {
   it("キーワード大文字トグルスイッチが表示される", () => {
     render(<SqlFormatterTile variant="full" />);
     expect(
-      screen.getByRole("switch", { name: "キーワード大文字" }),
+      screen.getByRole("checkbox", { name: "キーワード大文字" }),
     ).toBeInTheDocument();
   });
 
@@ -133,7 +133,7 @@ describe("V-4: キーワード大文字トグル", () => {
 
   it("トグルをOFFにするとキーワードが小文字になる", () => {
     render(<SqlFormatterTile variant="full" />);
-    const toggle = screen.getByRole("switch", { name: "キーワード大文字" });
+    const toggle = screen.getByRole("checkbox", { name: "キーワード大文字" });
     fireEvent.click(toggle);
     const input = screen.getByLabelText("SQL入力");
     fireEvent.change(input, {
