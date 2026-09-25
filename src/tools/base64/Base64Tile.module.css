@@ -1,6 +1,4 @@
 /* Base64Tile スタイル
- * 組み方（紙 --paper/--paper-2・墨 --ink/--ink-2・罫 --rule/--rule-strong・
- * --accent。角丸 0 基調 var(--radius)、入力欄・値札のみ var(--radius-sm)。影は使わない）。
  *
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  */

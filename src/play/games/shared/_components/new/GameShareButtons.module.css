@@ -10,9 +10,10 @@
   margin-top: var(--space-8);
 }
 
+/* コピーの知らせ。出たり消えたりしても下の要素が動かないよう、1行分の高さをいつも取る。 */
 .copiedMessage {
-  font-size: 0.8125rem;
-  color: var(--ink);
+  min-height: 1lh;
   margin-top: 0.25rem;
-  min-height: 1.2em;
+  font-size: var(--text-small);
+  color: var(--ink);
 }

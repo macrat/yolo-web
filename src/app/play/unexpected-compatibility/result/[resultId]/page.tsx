@@ -119,8 +119,7 @@ export default async function UnexpectedCompatibilityResultPage({
     >
       {/* unexpected-compatibility固有のJSX */}
       <div className={styles.detailedSection}>
-        {/* キャッチコピー: 結果のコアメッセージ。静かなリード文として置く（器は静か・§4）。
-         * 旧デザインの全面塗り「カラーヒーロー」（--accent-weak 背景バンド）は撤去した。 */}
+        {/* キャッチコピー: 結果のコアメッセージ。静かなリード文として置く（§4）。 */}
         <p className={styles.catchphrase}>{ucDc.catchphrase}</p>
 
         {/* DescriptionExpander: 長いdescriptionは折りたたみ */}

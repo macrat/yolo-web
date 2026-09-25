@@ -5,7 +5,10 @@ import GuessInput from "@/play/games/kanji-kanaru/_components/GuessInput";
 describe("GuessInput", () => {
   test("renders input field and submit button", () => {
     render(
-      <GuessInput onSubmit={() => Promise.resolve(null)} disabled={false} />,
+      <GuessInput
+        onSubmit={() => Promise.resolve({ kind: "accepted" as const })}
+        disabled={false}
+      />,
     );
     expect(screen.getByPlaceholderText("漢字を入力")).toBeInTheDocument();
     expect(
@@ -14,7 +17,7 @@ describe("GuessInput", () => {
   });
 
   test("calls onSubmit with input value when submit button is clicked", async () => {
-    const onSubmit = vi.fn().mockResolvedValue(null);
+    const onSubmit = vi.fn().mockResolvedValue({ kind: "accepted" });
     render(<GuessInput onSubmit={onSubmit} disabled={false} />);
 
     const input = screen.getByPlaceholderText("漢字を入力");
@@ -27,11 +30,11 @@ describe("GuessInput", () => {
   });
 
   test("shows error when onSubmit returns an error message", async () => {
-    const onSubmit = vi
-      .fn()
-      .mockResolvedValue(
+    const onSubmit = vi.fn().mockResolvedValue({
+      kind: "invalid",
+      message:
         "\u5E38\u7528\u6F22\u5B57\u3067\u306F\u3042\u308A\u307E\u305B\u3093",
-      );
+    });
     render(<GuessInput onSubmit={onSubmit} disabled={false} />);
 
     const input = screen.getByPlaceholderText("漢字を入力");
@@ -63,7 +66,10 @@ describe("GuessInput", () => {
 
   test("input and button are disabled when disabled prop is true", () => {
     render(
-      <GuessInput onSubmit={() => Promise.resolve(null)} disabled={true} />,
+      <GuessInput
+        onSubmit={() => Promise.resolve({ kind: "accepted" as const })}
+        disabled={true}
+      />,
     );
 
     const input = screen.getByPlaceholderText("漢字を入力");
@@ -74,7 +80,7 @@ describe("GuessInput", () => {
   });
 
   test("clears input after successful submission", async () => {
-    const onSubmit = vi.fn().mockResolvedValue(null);
+    const onSubmit = vi.fn().mockResolvedValue({ kind: "accepted" });
     render(<GuessInput onSubmit={onSubmit} disabled={false} />);
 
     const input = screen.getByPlaceholderText("漢字を入力") as HTMLInputElement;
@@ -87,7 +93,9 @@ describe("GuessInput", () => {
   });
 
   test("does not clear input after failed submission", async () => {
-    const onSubmit = vi.fn().mockResolvedValue("\u30A8\u30E9\u30FC");
+    const onSubmit = vi
+      .fn()
+      .mockResolvedValue({ kind: "invalid", message: "\u30A8\u30E9\u30FC" });
     render(<GuessInput onSubmit={onSubmit} disabled={false} />);
 
     const input = screen.getByPlaceholderText("漢字を入力") as HTMLInputElement;
@@ -97,5 +105,23 @@ describe("GuessInput", () => {
     await waitFor(() => {
       expect(input.value).toBe("x");
     });
+  });
+
+  test("shows a failed evaluation outside the field without marking the input invalid", async () => {
+    const onSubmit = vi.fn().mockResolvedValue({ kind: "unavailable" });
+    render(<GuessInput onSubmit={onSubmit} disabled={false} />);
+
+    const input = screen.getByPlaceholderText("漢字を入力") as HTMLInputElement;
+    fireEvent.change(input, { target: { value: "山" } });
+    fireEvent.click(screen.getByRole("button", { name: "送信" }));
+
+    await waitFor(() => {
+      expect(screen.getByRole("alert")).toHaveTextContent(
+        "答え合わせができませんでした。時間をおいて、もう一度送ってください",
+      );
+    });
+    expect(input).not.toHaveAttribute("aria-invalid");
+    expect(input).not.toHaveAttribute("aria-describedby");
+    expect(input.value).toBe("山");
   });
 });

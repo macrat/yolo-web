@@ -31,7 +31,7 @@
  *
  * - role="status" aria-live="polite" のライブリージョンに実テキストノードのサマリを置く
  * - バッジアイコン SVG は aria-hidden="true" で装飾専用を宣言
- * - ①-4: タイポ提案がある場合は「有効（要確認）」として警告色で表示し矛盾シグナルを解消
+ * - タイポの提案があるときは、判定を「有効（要確認）」と文言で言い、有効と提案が食い違って見えないようにする
  * - ②-15: コピーボタンは実装しない（知る対象のため不要）
  */
 
@@ -193,15 +193,17 @@ export default function EmailValidatorTile({
               </span>
             </div>
 
-            {/* タイポ提案（①-4: warning 色で強調。コピーボタンなし＝②-15確定） */}
+            {/* タイポの提案。コピーボタンを持たないのは、写すものではなく確かめるものだから。 */}
             {result.suggestions.length > 0 && (
-              <div className={styles.suggestionPanel}>
-                <h2 className={styles.suggestionTitle}>
+              <div className={styles.notice}>
+                <h2 className={styles.noticeTitle}>
                   もしかして（タイポの可能性）
                 </h2>
-                <ul className={styles.suggestionList}>
+                <ul className={styles.noticeList}>
                   {result.suggestions.map((sug, i) => (
-                    <li key={i}>{sug.replace("もしかして: ", "")}</li>
+                    <li key={i} className={styles.suggestionItem}>
+                      {sug.replace("もしかして: ", "")}
+                    </li>
                   ))}
                 </ul>
               </div>
@@ -211,8 +213,8 @@ export default function EmailValidatorTile({
                 複数エラーがある場合は各エラーを個別の ErrorMessage として表示する。
                 logic.ts が返すエラーメッセージはすべて日本語のため、そのまま渡す。 */}
             {result.errors.length > 0 && (
-              <div className={styles.errorPanel}>
-                <h2 className={styles.listTitle}>エラー</h2>
+              <div className={styles.notice}>
+                <h2 className={styles.noticeTitle}>エラー</h2>
                 {result.errors.map((err, i) => (
                   <ErrorMessage key={i} message={err} />
                 ))}
@@ -221,9 +223,9 @@ export default function EmailValidatorTile({
 
             {/* 警告リスト */}
             {result.warnings.length > 0 && (
-              <div className={styles.warningPanel}>
-                <h2 className={styles.listTitle}>警告</h2>
-                <ul className={styles.warningList}>
+              <div className={styles.notice}>
+                <h2 className={styles.noticeTitle}>警告</h2>
+                <ul className={styles.noticeList}>
                   {result.warnings.map((warn, i) => (
                     <li key={i}>{warn}</li>
                   ))}

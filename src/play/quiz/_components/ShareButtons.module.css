@@ -19,8 +19,9 @@
   row-gap: var(--space-8);
 }
 
+/* コピーの知らせ。出たり消えたりしても下の要素が動かないよう、1行分の高さをいつも取る。 */
 .copiedMessage {
-  font-size: 0.8rem;
+  min-height: 1lh;
+  font-size: var(--text-small);
   color: var(--ink);
-  min-height: 1.25rem;
 }

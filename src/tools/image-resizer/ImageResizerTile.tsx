@@ -402,15 +402,15 @@ export default function ImageResizerTile({
          * 処理を妨げない注意であり role="alert"（assertive）は過剰なため不使用。
          */}
         {gifWarning && (
-          <div
-            className={styles.gifWarningBox}
+          <p
+            className={styles.gifWarning}
             role="status"
             aria-live="polite"
             data-testid="gif-warning"
           >
             <strong>GIF画像の注意:</strong>{" "}
             アニメーションGIFはリサイズ後にアニメーションが失われ、最初のフレームのみが出力されます。アニメーションを保持したい場合はご注意ください。
-          </div>
+          </p>
         )}
 
         {/* 元画像情報とリサイズ設定 */}

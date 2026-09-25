@@ -1,11 +1,4 @@
-/* PercentCalculatorTile スタイル
- *
- * 組み方:
- * - 色は紙・墨トークン経由（--paper / --ink / --accent 系）
- * - font-weight 700 禁止
- * - 角丸は var(--radius)（0）/ var(--radius-sm)のみ
- * - box-shadow は使わない（§5）
- */
+/* PercentCalculatorTile スタイル */
 
 /* モードの説明テキスト */
 .description {

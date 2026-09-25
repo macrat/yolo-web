@@ -1,6 +1,4 @@
 /* QrCodeTile スタイル
- * 組み方（色は紙・墨トークン経由・bold禁止・
- * 角丸は var(--radius) / var(--radius-sm) のみ・罫は --rule-strong）
  *
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  */

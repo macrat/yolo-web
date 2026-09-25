@@ -1,8 +1,7 @@
-/* HslSliders（イロドリ）— H/S/L スライダーと回答プレビュー
- * 。
+/* HslSliders（イロドリ）— H/S/L スライダーと回答プレビュー。
  * スライダーの track グラデーションは操作対象そのもの（色相環・彩度・明度の連続量を
  * 視覚化する機能的な表示）であり、装飾のグラデーションではない。
- * つまみ（thumb）は入力欄と同じ var(--radius-sm) の角で組む。 */
+ * つまみ（thumb）は角を持たない（§5）。 */
 
 .slidersArea {
   display: flex;
@@ -46,7 +45,7 @@
   appearance: none;
   width: 22px;
   height: 22px;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius);
   background: var(--paper);
   border: 2px solid var(--ink);
   cursor: pointer;
@@ -55,7 +54,7 @@
 .slider::-moz-range-thumb {
   width: 22px;
   height: 22px;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius);
   background: var(--paper);
   border: 2px solid var(--ink);
   cursor: pointer;

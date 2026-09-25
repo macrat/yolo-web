@@ -1,9 +1,6 @@
-/* TextDiffTile — text-diff 単一正典タイルスタイル
- * 組み方（色は紙・墨トークン経由・bold禁止・
- * 角丸は var(--radius) / var(--radius-sm) のみ・罫は --rule-strong）
+/* TextDiffTile スタイル
  *
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
- * box-shadow は使わない（§5）。
  */
 
 /* 比較の単位のラジオボタンの組と、その下の入力欄のあいだをあける */

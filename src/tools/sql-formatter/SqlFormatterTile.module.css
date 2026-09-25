@@ -1,14 +1,6 @@
 /*
  * SqlFormatterTile.module.css
  *
- * 組み方:
- * - 色は紙・墨トークン経由（--paper / --ink / --accent 系）
- * - --accent 直塗り禁止
- * - font-weight: 700 禁止
- * - 角丸は var(--radius)（0）/ var(--radius-sm)のみ
- * - フォーム境界線: --rule-strong
- * - box-shadow は使わない（§5）
- *
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  */
 

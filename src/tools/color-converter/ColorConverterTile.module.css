@@ -1,14 +1,7 @@
 /**
  * ColorConverterTile.module.css
  *
- *
- * 組み方:
- * - line-height: 1.7（フォーム要素も含む）
- * - 影は使わない・角丸は 0（--radius）基調、入力欄のみ --radius-sm
- * - 罫線は --rule、フォーム要素の輪郭は --rule-strong
- * - font-weight: 600 まで（700 禁止）
- * - 結果色見本（.colorPreview）に入る実際の色は成果物データのため TSX の
- *   inline style で入れる（UI でなくコンテンツの色・§2）。
+ * 結果の色見本（.colorPreview）に入る色はコンテンツの色なので、TSX の inline style で入れる（§2）。
  *
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  */
@@ -41,7 +34,7 @@
   color: var(--ink-2);
 }
 
-/* カラーピッカー: native <input type="color"> → 入力欄なので --radius-sm */
+/* カラーピッカー: native <input type="color">。 */
 .colorPicker {
   width: 3rem;
   height: 2.75rem;

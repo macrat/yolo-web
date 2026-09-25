@@ -43,7 +43,7 @@ const DEFAULT_MAX_RESULTS = 100;
 /**
  * 辞典の検索器（DictionarySearch）— 4 辞典トップ共有の「引く体験」の器。
  *
- * - 入力欄は店構え（罫・--radius-sm・ピル禁止・影なし）。検索は substring 一致（haystack.includes）で、
+ * - 入力欄は共通の入力欄（§8）。検索は substring 一致（haystack.includes）で、
  *   辞典ごとの検索ロジックを器へ持ち込まない（呼び出し側が haystack を組む）。
  * - 検索結果はカードのグリッドでなく品書き（罫区切りリスト）で出す。件数は入力欄の下に
  *   小さな補助情報の文字で。空クエリのときは全件を吐かず、引き方の一言だけを出す

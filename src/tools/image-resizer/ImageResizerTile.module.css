@@ -46,16 +46,14 @@
   color: var(--ink-2);
 }
 
-/* ===== GIF 警告ボックス =====
- * 色ベタの警告地にしない。地は中立の沈み（--paper-2）、意味は --accent の罫と文字で伝える。 */
-.gifWarningBox {
-  padding: 0.75rem;
-  border: 1px solid var(--accent);
-  border-radius: var(--radius);
-  background-color: var(--paper-2);
-  color: var(--accent);
-  font-size: 0.875rem;
-  line-height: 1.5;
+/* ===== GIF の注意 =====
+ * 注意は本文の文字で言い、囲まない。細い線で囲むと hover と、太い線で囲むとボックスと読み違えるため（§6）。 */
+.gifWarning {
+  margin: 0;
+  max-width: var(--measure);
+  color: var(--ink);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
 }
 
 /* ===== コントロール行 ===== */

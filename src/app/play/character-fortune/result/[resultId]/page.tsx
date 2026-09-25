@@ -101,7 +101,7 @@ export default async function CharacterFortuneResultPage({ params }: Props) {
       {/* character-fortune固有のJSX。キャラごとの色を持たず、インライン結果（ResultCard）と
           同じ無彩のトーンで組む。 */}
       <div className={styles.detailedSection}>
-        {/* (a) キャラクターの自己紹介。共通アクセントの淡い面（--accent-weak）に左寄せで置く。 */}
+        {/* (a) キャラクターの自己紹介。--paper-2 の地に左寄せで置く。 */}
         <p className={styles.characterIntro}>{cf.characterIntro}</p>
 
         {/* CTA1 */}

@@ -22,14 +22,14 @@
 }
 
 /*
- * 件数・注記（補助情報・--ink-2・13px）。値札に近い静かな文字で、検索結果の件数や引き方の一言を出す。
+ * 件数・注記。検索結果の件数や引き方の一言を、補助情報の文字で出す（§4）。
  * aria-live で件数の変化をスクリーンリーダへ伝える（TSX 側）。
  */
 .summary {
   margin: var(--space-16) 0 0;
   color: var(--ink-2);
   font-family: var(--font-body);
-  font-size: 0.8125rem; /* 13px 補助情報 */
+  font-size: var(--text-small);
   line-height: 1.6;
 }
 

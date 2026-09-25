@@ -3,10 +3,14 @@
 import { useState, useRef, useCallback, useId } from "react";
 import Button from "@/components/Button";
 import ErrorMessage from "@/components/ErrorMessage";
+import {
+  EVALUATE_UNAVAILABLE_MESSAGE,
+  type GuessSubmitResult,
+} from "@/play/games/shared/_lib/guessSubmit";
 import styles from "./styles/KanjiKanaru.module.css";
 
 interface GuessInputProps {
-  onSubmit: (kanji: string) => Promise<string | null>;
+  onSubmit: (kanji: string) => Promise<GuessSubmitResult>;
   disabled: boolean;
   submitting?: boolean;
   /** 送信中でないのに入力できないとき、なぜ入力できないかを言う文（§6 無効）。 */
@@ -16,7 +20,8 @@ interface GuessInputProps {
 /**
  * Single kanji input field with submit button.
  * Handles IME composition events to prevent premature submission.
- * Returns an error message from onSubmit if validation fails.
+ * An input error from onSubmit is tied to the field; a failed evaluation is
+ * announced outside the field, since the input itself is valid.
  * Supports async onSubmit for server-side evaluation.
  */
 export default function GuessInput({
@@ -31,6 +36,7 @@ export default function GuessInput({
   const showReason = Boolean(disabled && !submitting && disabledReason);
   const [value, setValue] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [unavailable, setUnavailable] = useState(false);
   const [shaking, setShaking] = useState(false);
   const composingRef = useRef(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -56,10 +62,14 @@ export default function GuessInput({
       return;
     }
 
-    const errorMsg = await onSubmit(trimmed);
-    if (errorMsg) {
-      setError(errorMsg);
+    setUnavailable(false);
+    const result = await onSubmit(trimmed);
+    if (result.kind === "invalid") {
+      setError(result.message);
       triggerShake();
+    } else if (result.kind === "unavailable") {
+      setError(null);
+      setUnavailable(true);
     } else {
       setError(null);
       setValue("");
@@ -89,6 +99,7 @@ export default function GuessInput({
           onChange={(e) => {
             setValue(e.target.value);
             setError(null);
+            setUnavailable(false);
           }}
           onKeyDown={handleKeyDown}
           onCompositionStart={() => {
@@ -125,6 +136,7 @@ export default function GuessInput({
         </p>
       )}
       {error && <ErrorMessage id={errorId} message={error} />}
+      {unavailable && <ErrorMessage message={EVALUATE_UNAVAILABLE_MESSAGE} />}
     </div>
   );
 }

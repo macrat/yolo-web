@@ -19,7 +19,7 @@ T2 の中心の条件の「朱の色だけで示していたリンクや操作�
 
 ## 確かめたこと
 
-作業ツリーは 9530e39（未コミットの変更なし）。`npm run build` のあと `next start`（ポート 3955）で開いた。Playwright MCP のブラウザ（chromium-1246）は入っていなかった。そのため `node_modules/playwright` を `/opt/pw-browsers/chromium-1194` で動かし、スクリプトで開いた。撮った画像とスクリプトは `tmp/review-t2-final/` に置いた。
+作業ツリーは 9530e39（未コミットの変更なし）。`npm run build` のあと `next start`（ポート 3955）で開いた。Playwright MCP のブラウザ（chromium-1246）は入っていなかった。そのため `node_modules/playwright` を `/opt/pw-browsers/chromium-1194` で動かし、スクリプトで開いた。
 
 - **テストほか**: `typecheck`・`lint`・`format:check`・vitest（330 ファイル・5510 件）・`build` がすべて通る
 - **下線・反転の機械の検査**（`audit.mjs`）: 375px・light で次の 85 ページを見た。`/play` の直下の 20 本、診断の結果 11 本（各1件）、道具 36 本、辞典（一覧・漢字の詳細・四字熟語・色・笑辞典）、ブログ（一覧・分類・記事3本・タグ）、about・privacy・storybook。見たのは、見えている `a[href]`・`button`・`[role=button]`・`summary` のすべて。自分か子孫の字に下線がある、反転の地を持つ、`aria-current`・無効、開閉の三角を持つ、のどれかに当たるかを調べた。当たらないのは、伝統色の色見本（250個）となかまわけの語のマス（16個）だけ。どちらも `aria-pressed` の形で状態を示す。`scrollWidth` は 85 ページとも 375 だった
@@ -61,7 +61,7 @@ T2 の中心の条件の「朱の色だけで示していたリンクや操作�
 
 T2 の行は「値札…の置き換え」と「告知・バッジのように、ほかのタスクの行に無い状態の示し方も T2 で扱う」を求める。b9550ae は `ResultNextContent`・`RecommendedContent`・`BlogList` の値札を文字にした。一方で、同じ形の次の2つが残っている。
 
-- `src/play/quiz/_components/ResultCard.module.css` の `.medalLabelDone`: 1px の `--rule`（= `--ink`）の枠・`--radius-sm`・`0.75rem`（12px）で「診断完了」と出す。PV の78%が集まる `/play/character-personality` の結果の、いちばん上にある（`tmp/review-t2-final/cp-light-375-9result.png`）。コメントは「値札（メタ情報ラベル）の語彙」のまま
+- `src/play/quiz/_components/ResultCard.module.css` の `.medalLabelDone`: 1px の `--rule`（= `--ink`）の枠・`--radius-sm`・`0.75rem`（12px）で「診断完了」と出す。PV の78%が集まる `/play/character-personality` の結果の、いちばん上にある。コメントは「値札（メタ情報ラベル）の語彙」のまま
 - `src/play/quiz/_components/TraditionalColorContent.module.css` の `.seasonTag`: 1px の `--ink` の枠・`0.8rem`（12.8px）の季節
 
 来訪者から見ると、この枠は §6 の読み分けで「細い線で囲まれたもの＝hover」にあたる。押せないものが押せそうに見える。字も §4 の下限（14px）を下回る。T4 の行は包み（Tsutsumi）と rankBadge を名指しするが、この2つはどの行にも無い。前回（review-t2-replace）の Minor-3 と同じ種類の取り残しである（AP-WF04）。
@@ -73,7 +73,7 @@ T2 の行は「値札…の置き換え」と「告知・バッジのように�
 `src/components/Panel/Panel.module.css` は `border: 1px solid var(--rule)` と `border-radius: var(--radius)` を持つ。冒頭のコメントも「DESIGN.md フェーズ R・店構えへ変換」「§4『パネルには影をつけない』」で、いまの `DESIGN.md` と合わない。
 
 - T2 の行は「部品が参照する古いトークン（…`--radius`…）を §2・§5 のトークンに置き換える」を求める。t2-inventory.md §3-2 の `Panel` の行が残っている。
-- `Panel` は 36 の道具のルートである。1px の `--ink` の線は §5 の2種類のどちらでもない（細い線は `--rule-2`）。§6 の読み分けでは「細い線で囲まれたもの＝hover」になる。date-calculator では、この枠が入れ子になって3重に並ぶ（`tmp/review-t2-final/p1280D_tools_date-calculator.png`）。
+- `Panel` は 36 の道具のルートである。1px の `--ink` の線は §5 の2種類のどちらでもない（細い線は `--rule-2`）。§6 の読み分けでは「細い線で囲まれたもの＝hover」になる。date-calculator では、この枠が入れ子になって3重に並ぶ。
 - T5 の行は、細い枠で hover と読み違える面として GameDialog・NextGameBanner・behaviorsItem を挙げる。しかし `Panel` は挙げていない。同じ形の `1px solid var(--rule)` は `src/` に 154 か所ある（トップの目玉の `.hero` も含む。コメントはまだ「枠は --rule-strong」と書く）。
 
 **直し方**:
@@ -85,13 +85,13 @@ T2 の行は「値札…の置き換え」と「告知・バッジのように�
 
 t2-inventory.md §1-9 は、ゲームの `.errorMessage` を「T2『入力欄とラベルとエラー』」に割り当てている。d4c98ba は kanji-kanaru・yoji-kimeru の欄に `data-field` を付けた。しかし、エラーのときに `aria-invalid` を立てていない。そのため、欄は細い線のままである。エラーの文も `aria-describedby` で欄に結ばれていない（`src/play/games/kanji-kanaru/_components/GuessInput.tsx`、yoji-kimeru も同じ）。
 
-kanji-kanaru で「あ」を送ると、「常用漢字ではありません」は太字で出る。一方で、欄の線は 1px のままである（`tmp/review-t2-final/kk-err2-375.png`）。§8 の「エラーのときだけ太いボーダーになる。その直下に、何が問題でどう直すかを文字で書く」のうち、ボーダーが欠けている。文も「何が問題か」だけで、「どう直すか」を言わない。
+kanji-kanaru で「あ」を送ると、「常用漢字ではありません」は太字で出る。一方で、欄の線は 1px のままである。§8 の「エラーのときだけ太いボーダーになる。その直下に、何が問題でどう直すかを文字で書く」のうち、ボーダーが欠けている。文も「何が問題か」だけで、「どう直すか」を言わない。
 
 **直し方**: builder が、エラーのあいだ欄に `aria-invalid="true"` と、エラーの文への `aria-describedby` を付ける。入力を変えたら外す。文には直し方を足す（例「常用漢字を1字入力してください」）。2本とも撮って確かめる。
 
 ### Minor-1 太い枠のマスでは、hover の線がほぼ見えない
 
-語のマスの hover は、既定の `inset 0 0 0 1px var(--rule-2)` のままである。3px の `--ink` の枠のすぐ内側に 1px の灰の線が付くので、実寸では枠が少し太ったようにしか見えない（`tmp/review-t2-final/nk-grid-light.png` の「東武」が hover 中。3倍で撮った `nk-hover-light.png`・`nk-hover-dark.png` で、ようやく線が分かる）。反転では、同じ問題を「縁から 3px 内側に引く」ことで解いている。
+語のマスの hover は、既定の `inset 0 0 0 1px var(--rule-2)` のままである。3px の `--ink` の枠のすぐ内側に 1px の灰の線が付くので、実寸では枠が少し太ったようにしか見えない。反転では、同じ問題を「縁から 3px 内側に引く」ことで解いている。
 
 **直し方**: builder が、`data-thick-frame` にも `--hover-line` を持たせる。枠から太い線の太さだけ内側に 1px の線を引く形にする。1倍で撮って確かめる。
 
@@ -112,7 +112,7 @@ index.md の補足事項にも、この判断は無い。`DESIGN.md` を実装�
 
 ### Minor-3 日付の欄の暦のボタンに、二重リングが出ない
 
-`type="date"` の欄は、年・月・日の後にもう1つ Tab の止まりどころ（暦を開くボタン）を持つ。そこでは入力が `:focus-visible` にならない。そのため、欄の二重リングが消え、Chrome の既定の細い輪が暦の印を囲むだけになる（`tmp/review-t2-final/date-picker-focus.png`）。date-calculator は4か所、age-calculator は2か所、storybook は2か所ある。
+`type="date"` の欄は、年・月・日の後にもう1つ Tab の止まりどころ（暦を開くボタン）を持つ。そこでは入力が `:focus-visible` にならない。そのため、欄の二重リングが消え、Chrome の既定の細い輪が暦の印を囲むだけになる。date-calculator は4か所、age-calculator は2か所、storybook は2か所ある。
 
 **直し方**: builder が、`[data-field]:focus-within` でも欄のリングを出すか、同じ働きの規則を足す。3つの面を Tab で送って確かめる。
 
@@ -151,13 +151,13 @@ index.md の補足事項にも、この判断は無い。`DESIGN.md` を実装�
 
 ### Minor-8 kanji-kanaru の盤が、375px でコンテンツ幅から右へはみ出す
 
-盤（`.board`）と列の見出しが、画面の右端（x=375）まで伸びる。右端の列「訓読み数」は、盤の中の横送りでしか見えない（`tmp/review-t2-final/kk-err-375.png`）。T2 の変更によるものではない。一方で、T5 の行は kanji-kanaru について見出しと入力欄のラベルしか挙げていない。
+盤（`.board`）と列の見出しが、画面の右端（x=375）まで伸びる。右端の列「訓読み数」は、盤の中の横送りでしか見えない。T2 の変更によるものではない。一方で、T5 の行は kanji-kanaru について見出しと入力欄のラベルしか挙げていない。
 
 **直し方**: PM が、この盤の組み方を T5（または T4 の判定のマス）の行に名前を挙げて書く。
 
 ### Minor-9 ブログの目次で、2行に折れた項目どうしの境目が見えない
 
-目次のリンクは 44px の押せる範囲を上下に接して並べる（§5 のとおり）。しかし、2行に折れた項目が続くと、下線付きの行が等間隔に並び、どこで項目が変わるかが分からない（`tmp/review-t2-final/p1280D_blog_personality-quiz-tie-enumeration.png` の右の目次）。
+目次のリンクは 44px の押せる範囲を上下に接して並べる（§5 のとおり）。しかし、2行に折れた項目が続くと、下線付きの行が等間隔に並び、どこで項目が変わるかが分からない。
 
 **直し方**: builder が、項目のあいだを 8px あけるか、項目の中の行間を詰めて、項目の境目が見えるようにする。1280px と 375px で撮って確かめる。
 

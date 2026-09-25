@@ -1,13 +1,7 @@
 /*
  * CronParserTile のスタイル
  *
- * Panel がルートのため
- * .container は不要（Panel.module.css に委譲）。
- *
- * 組み方:
- * - 影は使わない・角丸は 0（--radius）基調、入力欄のみ --radius-sm
- * - 区画の罫は --rule、フォーム要素の輪郭は --rule-strong、沈む面は --paper-2
- * - font-weight: 700 使用禁止（600 まで）
+ * Panel がルートのため .container は不要（Panel.module.css に委譲）。
  */
 
 /* まとまり。Panel のボックスの中なので枠で囲まず、2つ目からは小見出しの上の細い罫線で区切る（§5）。 */

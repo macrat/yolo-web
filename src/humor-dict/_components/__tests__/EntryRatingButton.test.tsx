@@ -40,21 +40,25 @@ describe("EntryRatingButton", () => {
     expect(mockMarkAsRated).toHaveBeenCalledWith("test-entry");
     expect(mockTrackContentRating).toHaveBeenCalledTimes(1);
     expect(screen.queryByRole("button")).not.toBeInTheDocument();
-    expect(screen.getByRole("status")).toHaveTextContent(
-      "「おもしろかった」を送りました",
-    );
+    const status = screen.getByRole("status");
+    expect(status).toHaveTextContent("「おもしろかった」を送りました");
+    expect(status).toHaveFocus();
   });
 
-  it("評価済み復元: isRated が true を返す場合、ボタンを出さず送ったことを文で言うこと", async () => {
+  it("評価済み復元: isRated が true を返す場合、ボタンを出さず、読み上げの知らせに入れずに文で言うこと", async () => {
     mockIsRated.mockReturnValue(true);
 
     render(<EntryRatingButton slug="already-rated" />);
 
     await waitFor(() => {
-      expect(screen.getByRole("status")).toHaveTextContent(
-        "「おもしろかった」を送りました",
-      );
+      expect(
+        screen.getByText("「おもしろかった」を送りました"),
+      ).toBeInTheDocument();
     });
+    expect(screen.getByRole("status")).toHaveTextContent("");
+    expect(
+      screen.getByText("「おもしろかった」を送りました"),
+    ).not.toHaveFocus();
     expect(screen.queryByRole("button")).not.toBeInTheDocument();
     expect(mockMarkAsRated).not.toHaveBeenCalled();
     expect(mockTrackContentRating).not.toHaveBeenCalled();

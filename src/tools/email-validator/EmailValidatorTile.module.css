@@ -1,15 +1,8 @@
-/* EmailValidatorTile.module.css
+/* EmailValidatorTile — メールアドレスの検証のタイル。
  *
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
- *
- * 組み方:
- * - フォーカスは共通の入力欄（Input）が持つ
- * - 影は使わない・角丸は 0（--radius）基調、値札（バッジ）のみ --radius-sm
- * - 罫線 --rule / フォーム輪郭 --rule-strong / 沈む面 --paper-2
- * - font-weight は 600 以下を使用（700 禁止）
- * - 判定は色分け（緑/赤のベタ）で伝えず、文言で伝える。
- *   有効 = 墨（--ink）で静かに、無効・要確認・エラー・警告 = --accentの
- *   文字＋罫で注意を促す。色のついた地は作らず、沈む面（--paper-2）だけを使う。
+ * フォーカスと入力欄の見え方は共通の入力欄（Input）が持つ。
+ * 判定は色で分けず、文言（有効 / 有効（要確認）/ 無効）で伝える。
  */
 
 /* 入力グループ */
@@ -33,7 +26,7 @@
   gap: 0.75rem;
 }
 
-/* 判定バッジ: 基底クラス（値札相当の小さなタグ → --radius-sm） */
+/* 判定バッジ: 基底クラス。判定を文言で言う小さな印。 */
 .badge {
   display: inline-flex;
   align-items: center;
@@ -103,67 +96,34 @@
   word-break: break-all;
 }
 
-/* タイポ提案セクション（①-4 矛盾シグナル解消: 提案を --accent の文字と罫で強調） */
-.suggestionPanel {
+/* タイポの提案・エラー・警告。注意は本文の文字で言い、囲まない。細い線で囲むと hover と、太い線で囲むと
+ * ボックスと読み違えるため（§6）。見出しは本文と同じ大きさの見出し書体（§4 の最も小さい段）。 */
+.notice {
   display: flex;
+  max-width: var(--measure);
   flex-direction: column;
-  gap: 0.5rem;
-  padding: 0.75rem;
-  background-color: var(--paper-2);
-  border: 1px solid var(--accent);
-  border-radius: var(--radius);
-  color: var(--accent);
+  gap: var(--space-8);
+  color: var(--ink);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
 }
 
-.suggestionTitle {
-  font-size: 0.8rem;
-  margin: 0 0 0.25rem;
+.noticeTitle {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: var(--text-step-1);
+  font-weight: 400;
+  line-height: var(--leading-heading);
 }
 
-.suggestionList {
+.noticeList {
   margin: 0;
   padding-left: 1.2rem;
-  font-size: 0.875rem;
   list-style-type: disc;
 }
 
-.suggestionList li {
-  margin-bottom: 0.2rem;
+.suggestionItem {
   font-family: var(--font-mono);
-}
-
-/* エラーリスト */
-.errorPanel {
-  padding: 0.75rem;
-  background-color: var(--paper-2);
-  border: 1px solid var(--accent);
-  border-radius: var(--radius);
-  color: var(--accent);
-}
-
-.listTitle {
-  font-size: 0.8rem;
-  margin: 0 0 0.375rem;
-}
-
-/* 警告リスト */
-.warningPanel {
-  padding: 0.75rem;
-  background-color: var(--paper-2);
-  border: 1px solid var(--accent);
-  border-radius: var(--radius);
-  color: var(--accent);
-}
-
-.warningList {
-  margin: 0;
-  padding-left: 1.2rem;
-  font-size: 0.875rem;
-  list-style-type: disc;
-}
-
-.warningList li {
-  margin-bottom: 0.2rem;
 }
 
 @media (max-width: 640px) {

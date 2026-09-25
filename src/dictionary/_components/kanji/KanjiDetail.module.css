@@ -71,7 +71,7 @@
   color: var(--ink);
 }
 
-/* 基本情報: 罫で区切った定義リスト（値札＝ラベル・値）。 */
+/* 基本情報: 罫で区切った定義リスト（ラベルと値）。 */
 .infoList {
   margin: 0;
   border-top: 1px solid var(--rule);
@@ -85,7 +85,7 @@
   border-bottom: 1px solid var(--rule);
 }
 
-/* ラベル（値札の文言相当）: 墨の補・固定幅で値の頭を揃える。 */
+/* ラベル: 前に出ない文字（--ink-2）で、固定幅にして値の頭を揃える。 */
 .infoTerm {
   flex: 0 0 6rem;
   margin: 0;

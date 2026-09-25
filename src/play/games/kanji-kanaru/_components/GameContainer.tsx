@@ -23,6 +23,7 @@ import {
 import { JOYO_KANJI_SET } from "@/play/games/kanji-kanaru/data/joyo-kanji-set";
 import type { CrossCategoryItem } from "@/play/games/shared/_components/new/CrossCategoryBanner";
 import Button from "@/components/Button";
+import type { GuessSubmitResult } from "@/play/games/shared/_lib/guessSubmit";
 import GameHeader from "./GameHeader";
 import HintBar from "./HintBar";
 import GameBoard from "./GameBoard";
@@ -285,27 +286,40 @@ export default function GameContainer({
 
   /**
    * Handle a guess submission.
-   * Returns an error message string if invalid, or null on success.
-   * Now async: validates locally, then calls the server evaluate API.
+   * An invalid input is returned as "invalid" with the message to show on the
+   * field; a failed evaluation request is returned as "unavailable".
+   * Validates locally, then calls the server evaluate API.
    */
   const handleGuess = useCallback(
-    async (input: string): Promise<string | null> => {
-      if (gameState.status !== "playing") return null;
-      if (submitting) return null;
+    async (input: string): Promise<GuessSubmitResult> => {
+      if (gameState.status !== "playing") return { kind: "accepted" };
+      if (submitting) return { kind: "accepted" };
 
       // Validate: single character
       if ([...input].length !== 1) {
-        return "\u6F22\u5B57\u30921\u6587\u5B57\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044";
+        return {
+          kind: "invalid",
+          message:
+            "\u6F22\u5B57\u30921\u6587\u5B57\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044",
+        };
       }
 
       // Validate: is a joyo kanji (lightweight client-side check)
       if (!JOYO_KANJI_SET.has(input)) {
-        return "\u5E38\u7528\u6F22\u5B57\u3067\u306F\u3042\u308A\u307E\u305B\u3093\u3002\u5E38\u7528\u6F22\u5B57\u30921\u6587\u5B57\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044";
+        return {
+          kind: "invalid",
+          message:
+            "\u5E38\u7528\u6F22\u5B57\u3067\u306F\u3042\u308A\u307E\u305B\u3093\u3002\u5E38\u7528\u6F22\u5B57\u30921\u6587\u5B57\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044",
+        };
       }
 
       // Validate: not a duplicate
       if (gameState.guesses.some((g) => g.guess === input)) {
-        return "\u3053\u306E\u6F22\u5B57\u306F\u3059\u3067\u306B\u5165\u529B\u3057\u307E\u3057\u305F\u3002\u307E\u3060\u5165\u529B\u3057\u3066\u3044\u306A\u3044\u6F22\u5B57\u30921\u6587\u5B57\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044";
+        return {
+          kind: "invalid",
+          message:
+            "\u3053\u306E\u6F22\u5B57\u306F\u3059\u3067\u306B\u5165\u529B\u3057\u307E\u3057\u305F\u3002\u307E\u3060\u5165\u529B\u3057\u3066\u3044\u306A\u3044\u6F22\u5B57\u30921\u6587\u5B57\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044",
+        };
       }
 
       setSubmitting(true);
@@ -390,11 +404,9 @@ export default function GameContainer({
           saveStats(updatedStats, difficulty);
         }
 
-        return null;
-      } catch (err) {
-        return err instanceof Error
-          ? err.message
-          : "\u30A8\u30E9\u30FC\u304C\u767A\u751F\u3057\u307E\u3057\u305F\u3002\u3082\u3046\u4E00\u5EA6\u304A\u8A66\u3057\u304F\u3060\u3055\u3044\u3002";
+        return { kind: "accepted" };
+      } catch {
+        return { kind: "unavailable" };
       } finally {
         setSubmitting(false);
       }

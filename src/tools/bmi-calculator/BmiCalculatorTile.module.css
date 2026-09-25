@@ -1,12 +1,6 @@
 /* BmiCalculatorTile スタイル
  *
- * 組み方（紙 --paper/--paper-2・墨 --ink/--ink-2・罫 --rule/--rule-strong・
- * --accent）:
- * - 色は上記トークンのみ（緑/橙/赤の信号色は使わない）
- * - font-weight は 600 まで
- * - 角丸は 0 基調 var(--radius)。例外は入力欄・値札の var(--radius-sm)（本タイルは共有
- *   Input を使うため入力欄自身の指定なし）
- * - 影（box-shadow）は使わない（DESIGN.md §5）
+ * 判定を信号の色（緑・橙・赤）で分けない。UI は無彩で、判定は文言と目盛りの上の位置で読ませる（§1・§2）。
  *
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  */

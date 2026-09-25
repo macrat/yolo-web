@@ -76,7 +76,7 @@
   gap: var(--text-box-pad);
 }
 
-/* タグのページへ進むリンク。枠で囲むと hover の線や値札と読み違えるので、枠も地も持たず下線で示す（§6）。
+/* タグのページへ進むリンク。押すと別のページが開くので、下線で示す（§6）。
  * 下線と訪問済みの色は globals.css の a の既定に従い、字の左右の余白は data-text-box（globals.css）が持つ。 */
 .tagChip {
   display: inline-flex;

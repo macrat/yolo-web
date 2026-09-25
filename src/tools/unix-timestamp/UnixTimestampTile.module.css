@@ -1,15 +1,7 @@
 /*
  * UnixTimestampTile.module.css
- * cycle-228 T-22: UnixTimestampPage.module.css をタイル向けに移植。
- * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  *
- * DESIGN トークン準拠:
- * - [B-1] 旧 --color-* トークン不使用
- * - [B-3] --accent 直塗り禁止
- * - [B-4] font-weight: 700 禁止
- * - [B-5] 角丸は var(--radius)
- * - [B-6] box-shadow は使わない
- * - [B-7] 罫線は var(--rule)
+ * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  */
 
 /* ---- 現在タイムスタンプ表示バー ---- */

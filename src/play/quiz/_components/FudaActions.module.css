@@ -29,7 +29,7 @@
 
 /* 知らせの文。用意中は、ボタンが押せない理由をここに出す（§6 無効）。 */
 .status {
-  font-size: 0.8rem;
+  min-height: 1lh;
+  font-size: var(--text-small);
   color: var(--ink);
-  min-height: 1.25rem;
 }
