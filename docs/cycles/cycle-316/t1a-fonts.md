@@ -1,5 +1,7 @@
 # T1a Web フォントの判断
 
+> **この文書の判断は取り下げた。** いまの判断は [fonts-decision.md](./fonts-decision.md) にある（経緯は [incident-2.md](./incident-2.md)）。
+
 作業日: 2026-09-24〜25（時刻は UTC）。
 
 - **変更前**は、`src/` が main（`6505cdd`。HEAD まで `src/` に差分なし）と同一のビルドを `next start -p 3000` で起動して測った。

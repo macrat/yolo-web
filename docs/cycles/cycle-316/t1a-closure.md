@@ -1,5 +1,7 @@
 # T1a を判断として閉じ、残りを T1 の受け入れ条件に移す
 
+> **この文書の判断は取り下げた。** いまの判断は [fonts-decision.md](./fonts-decision.md) にある（経緯は [incident-2.md](./incident-2.md)）。
+
 ## 何を決めたか
 
 **T1a「Web フォントの判断」は、[t1a-fonts.md](./t1a-fonts.md)（6巡目の版）の結論をもって閉じる。** 6巡目のレビュー（[review-t1a-6.md](./review-t1a-6.md)）の指摘は、判断を覆すものではなく、実装の作り方と確かめ方に掛かるものなので、T1 の受け入れ条件に移す。
