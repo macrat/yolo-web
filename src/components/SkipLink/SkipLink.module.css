@@ -33,7 +33,7 @@
 }
 
 /* キーボード focus 時のみ左上へ出現（マウス利用者には見せない）。
-   focus リングは globals.css の :focus-visible（2px 朱・DESIGN.md §10）が担う。 */
+   focus リングは globals.css の :focus-visible が担う。 */
 .skipLink:focus {
   transform: translateY(0);
 }

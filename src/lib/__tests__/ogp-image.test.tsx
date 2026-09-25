@@ -32,8 +32,8 @@ function makeTtfBuffer(extraBytes = 4): ArrayBuffer {
 }
 
 /** 器の色（utsuwaHex の SSoT と一致させる）。新デザインの契約検証に使う。 */
-const PAPER = "#f8f7f2";
-const ACCENT = "#af3622";
+const PAPER = "#fcfcfc";
+const INK = "#0b0b0b";
 
 /** JSX 風ツリーから文字列の子（テキストノード）をすべて集める。 */
 function collectText(node: unknown, out: string[] = []): string[] {
@@ -126,29 +126,24 @@ describe("createOgpImageResponse — 店構え（看板）契約", () => {
     expect(jsx.props.style.backgroundColor).toBe(PAPER);
   });
 
-  test("朱（ACCENT）は identity マーク（素の朱 y）にだけ現れ、地ベタにも塗りタイルにもしない", async () => {
+  test("墨（INK）は文字の色としてだけ現れ、地ベタにも塗りタイルにもしない", async () => {
     const { createOgpImageResponse } = await getModule();
 
     await createOgpImageResponse({ title: "Test" });
 
     const { element } = imageResponseCalls[0];
-    // 地（ルート）の背景は常に紙。旧デザインの青ベタや朱の全面ベタ地は作らない。
     const rootBg = (
       element as { props: { style: { backgroundColor: string } } }
     ).props.style.backgroundColor;
     expect(rootBg).toBe(PAPER);
-    expect(rootBg).not.toBe(ACCENT);
-    // OGP マークは容器なしの素の朱 y で、塗りタイルを持たない。よって朱は
-    // 塗りの背景（地ベタも識別マークの塗りタイルも）として現れない。
-    // ミューテーション観点: マークを塗りタイルに戻すと backgroundColor に ACCENT が現れ落ちる。
+    // ミューテーション観点: マークを塗りタイルに戻すと backgroundColor に INK が現れ落ちる。
     const bgColors = collectStyleValues(element, "backgroundColor");
-    expect(bgColors).not.toContain(ACCENT);
-    // 朱は識別マークの頭字 y の文字色としてだけ現れる。
+    expect(bgColors).not.toContain(INK);
     const textColors = collectStyleValues(element, "color");
-    expect(textColors).toContain(ACCENT);
+    expect(textColors).toContain(INK);
   });
 
-  test("identity マーク: 容器なしの素の朱（ACCENT）の明朝 y（塗りタイルは持たない）", async () => {
+  test("identity マーク: 容器なしの墨の y（塗りタイルは持たない）", async () => {
     const { createOgpImageResponse } = await getModule();
 
     await createOgpImageResponse({ title: "Test" });
@@ -160,10 +155,9 @@ describe("createOgpImageResponse — 店構え（看板）契約", () => {
     expect(texts).toContain("y");
     expect(texts).not.toContain("試");
 
-    // 頭字 y の文字色は朱（ACCENT）。OGP マークは容器なしの素の朱 y で、塗りタイルは持たない。
-    // ミューテーション観点: y の色を PAPER 等に戻すと ACCENT が color から消え落ちる。
+    // 頭字 y の文字色は墨。OGP マークは容器なしの y で、塗りタイルは持たない。
     const textColors = collectStyleValues(element, "color");
-    expect(textColors).toContain(ACCENT);
+    expect(textColors).toContain(INK);
 
     // 塗りタイル（旧デザインの角丸 hanko・borderRadius 22）は持たない。
     // ミューテーション観点: 塗りタイルを復活させると borderRadius 22 が現れ落ちる。

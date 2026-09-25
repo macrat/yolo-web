@@ -9,7 +9,6 @@
 .title {
   font-family: var(--font-body);
   font-size: 0.9375rem;
-  font-weight: 700;
   margin-bottom: var(--space-8);
   color: var(--ink);
 }

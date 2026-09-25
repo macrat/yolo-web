@@ -1,9 +1,7 @@
 /**
- * デザインシステムのグローバルスタイル（DESIGN.md 正典）。
- *
- * app 全体で読み込まれる唯一のグローバルスタイル。cycle-279 C1 で (legacy)/ 一式・
- * old-globals.css を削除し、フェーズ R 新トークン層のみの単一体系へ移行済み
- * （cycle-279 C1・本ファイルで旧トークン定義を完全削除・詳細は各所のコメント参照）。
+ * サイト全体の土台（DESIGN.md が正典）。
+ * app 全体で読み込まれる唯一のグローバルスタイルで、トークンと要素の既定だけを持つ。
+ * 要素の規則は低い詳細度で書き、部品の CSS module が上書きできるようにする。
  */
 
 /* IBM Plex Sans の読み込みのあいだに U+0000-007F を組む代わりの書体。
@@ -19,32 +17,54 @@
 }
 
 :root {
-  /* §2 色（ライト）— 紙・墨・朱（DESIGN.md §2 が正典・oklch のまま丸めない）。
-   * アクセントは朱の1色のみ。旧値の青紫 oklch(0.62 0.22 264) は §8-1 の禁止色のため
-   * フェーズ R で朱へ再定義済み（旧 --accent-strong/--accent-soft の別名は cycle-279 C1 で
-   * --accent/--accent-weak へ統合し廃止）。 */
-  --paper: oklch(0.975 0.006 90); /* 地。生成りの紙 */
-  --paper-2: oklch(0.955 0.007 90); /* 一段沈む面（区画・コード・広告区画） */
-  --ink: oklch(0.235 0.008 80); /* 本文・見出し */
-  --ink-2: oklch(0.45 0.01 80); /* 補足・値札の文字・キャプション */
-  --rule: oklch(0.84 0.008 85); /* 罫線（構造の主役） */
-  --rule-strong: oklch(0.3 0.01 80); /* 強い罫（のれん罫・区切りの主格） */
-  --accent: oklch(0.51 0.16 32); /* 朱。リンク・主ボタン・現在地・記入印 */
-  --accent-weak: oklch(
-    0.51 0.16 32 / 0.12
-  ); /* 朱の気配。hover/selected の座布団にのみ可（区画の地には不可・§2） */
+  color-scheme: light;
 
-  /* §4 レイアウト — スペーシング（8px スケール）・幅・角丸 */
+  /* §2 UI の色。すべて無彩。 */
+  --paper: oklch(0.99 0 0);
+  --paper-2: oklch(0.95 0 0);
+  --ink: oklch(0.15 0 0);
+  --ink-2: oklch(0.44 0 0);
+  --rule: var(--ink);
+  --rule-2: oklch(0.62 0 0);
+
+  /* §2 に無い UI の色の名前。部品が参照しているあいだ、意味の近い §2 のトークンを指す。 */
+  --accent: var(--ink);
+  --accent-weak: var(--paper-2);
+  --rule-strong: var(--rule);
+
+  /* §5 線。太い線と細い線の2種類だけで、あいだの太さを持たない。 */
+  --rule-w: 3px;
+  --rule-w-hair: 1px;
+
+  /* §5 角丸は持たない。 */
+  --radius: 0px;
+  --radius-sm: var(--radius);
+
+  /* §5 余白と間隔（8px の倍数）・幅。ボックスの内側の余白は、狭い画面ではコンテンツに回す。 */
   --space-8: 8px;
   --space-16: 16px;
   --space-24: 24px;
   --space-32: 32px;
   --space-48: 48px;
   --space-64: 64px;
-  --measure: 42rem; /* 読む面の幅（全角38字前後の上限） */
-  --max-width: 960px; /* 操作面の最大幅 */
-  --radius: 0px; /* 角丸 0px 基調（帳面・棚の直角） */
-  --radius-sm: 2px; /* 例外は値札ラベルと入力欄のみ */
+  --measure: 42rem;
+  --max-width: 960px;
+  --box-padding: var(--space-8);
+
+  /* §4 組版。見出しは本文から 1.4 倍ずつの5段で、画面幅ごとに役割へ割り当てる段が下がる。 */
+  --text-body: 1.0625rem;
+  --text-small: 0.875rem;
+  --text-input: max(var(--text-body), 16px);
+  --text-step-1: 1.0625rem;
+  --text-step-2: 1.49rem;
+  --text-step-3: 2.08rem;
+  --text-step-4: 2.92rem;
+  --text-step-5: 4.08rem;
+  --text-heading-main: var(--text-step-3);
+  --text-heading-section: var(--text-step-2);
+  --text-heading-sub: var(--text-step-1);
+  --leading-body: 1.85;
+  --leading-heading: 1.25;
 
   /* §3 書体の並び。欧文・数字（U+0000-007F）は IBM Plex Sans が組み、ほかの字は和文の書体へ落ちる。
    * --font-zen-antique と --font-plex-sans は layout.tsx が next/font で <html> に置く。 */
@@ -110,19 +130,33 @@
   --wairo-suou-on: var(--wairo-ink-white);
 }
 
+@media (min-width: 45rem) {
+  :root {
+    --box-padding: var(--space-16);
+    --text-heading-main: var(--text-step-4);
+    --text-heading-section: var(--text-step-3);
+    --text-heading-sub: var(--text-step-2);
+  }
+}
+
+@media (min-width: 64rem) {
+  :root {
+    --text-heading-main: var(--text-step-5);
+    --text-heading-section: var(--text-step-4);
+    --text-heading-sub: var(--text-step-3);
+  }
+}
+
 /* ダークモード — next-themes が attribute="class" で <html class="dark"> を付与する */
 :root.dark {
-  /* §2 色（ダーク）— 紙・墨・朱。DESIGN.md §2 が正典・oklch のまま丸めない。 */
-  --paper: oklch(0.215 0.008 80); /* 地。墨の帳面 */
-  --paper-2: oklch(0.245 0.008 80); /* 一段沈む面（区画・コード・広告区画） */
-  --ink: oklch(0.93 0.005 90); /* 本文・見出し */
-  --ink-2: oklch(0.72 0.008 85); /* 補足・値札の文字・キャプション */
-  --rule: oklch(0.36 0.008 80); /* 罫線（構造の主役） */
-  --rule-strong: oklch(0.88 0.005 90); /* 強い罫（のれん罫・区切りの主格） */
-  --accent: oklch(0.7 0.14 32); /* 朱（ダーク・DESIGN §2） */
-  --accent-weak: oklch(
-    0.7 0.14 32 / 0.16
-  ); /* 朱の気配。hover/selected の座布団にのみ可 */
+  color-scheme: dark;
+
+  /* §2 UI の色（ダーク）。light とは別の値を持つ。 */
+  --paper: oklch(0.18 0 0);
+  --paper-2: oklch(0.24 0 0);
+  --ink: oklch(0.97 0 0);
+  --ink-2: oklch(0.74 0 0);
+  --rule-2: oklch(0.53 0 0);
 
   /* 成果物パレット「和色」（ダーク・地の色）。文字色（--wairo-*-on）は両モード共通のため
    * :root 側の定義をそのまま使う（各色ダークでも同じ白/墨が AA を満たすよう明度調整済み・上表参照）。
@@ -137,7 +171,6 @@
   --wairo-suou: oklch(0.52 0.13 0); /* 蘇芳 */
 }
 
-/* グローバルリセット — old-globals.css からの移植 */
 *,
 *::before,
 *::after {
@@ -155,18 +188,22 @@ body:has(dialog[open]) {
   overflow: hidden;
 }
 
+/* ルートの文字サイズは来訪者のブラウザの既定に従わせ、rem で決まる値をすべてそれに追従させる。 */
 html,
 body {
   max-width: 100vw;
   overflow-x: clip;
   background: var(--paper);
   color: var(--ink);
-  font-size: 16px;
-  line-height: 1.7;
 }
 
 body {
   font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  /* 連続約物のアキを詰める。書体が halt か chws を持つときだけ効き、ほかでは全角のまま組む。 */
+  text-spacing-trim: normal;
+  overflow-wrap: break-word;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -180,32 +217,8 @@ body {
   overflow: hidden;
 }
 
-a {
-  color: var(--accent);
-  /* 下線はリンクの専有（DESIGN.md §3）。ナビ・店号など chrome のリンクは
-   * 各 module.css で text-decoration:none に上書きする。 */
-  text-decoration: underline;
-  text-underline-offset: 0.15em;
-}
-a:hover {
-  color: var(--accent);
-}
-
-hr {
-  border: none;
-  border-top: 1px solid var(--rule);
-  margin: 1.5em 0;
-}
-
-/* ==========================================================================
- * フェーズ R 基調タイポグラフィ（DESIGN.md §3）— C0.2 グローバル基層。
- * src/app/ 配下の全ページに効く「器」の字組み。これらは要素・ユーティリティ選択子
- * （低い詳細度）で書くため、個別コンポーネントの module.css（クラス選択子＝高い詳細度）が
- * 必要に応じて上書きできる。
- * ========================================================================== */
-
-/* 見出し（DESIGN.md §3）。palt（詰め）は見出しのみ・line-height 1.4・
- * 1.25 倍スケール（16/20/25/31/39px）。 */
+/* 見出しの和文の Zen Antique はウェイト400の1本だけなので、太字にすると合成太字になる。
+ * 語の途中で折らないよう、和文は文節で折る。 */
 h1,
 h2,
 h3,
@@ -213,51 +226,130 @@ h4,
 h5,
 h6 {
   font-family: var(--font-heading);
-  font-weight: 600;
-  line-height: 1.4;
-  font-feature-settings: "palt";
+  font-weight: 400;
+  line-height: var(--leading-heading);
+  word-break: auto-phrase;
 }
 h1 {
-  font-size: 2.4375rem; /* 39px */
+  font-size: var(--text-heading-main);
 }
 h2 {
-  font-size: 1.9375rem; /* 31px */
+  font-size: var(--text-heading-section);
 }
 h3 {
-  font-size: 1.5625rem; /* 25px */
+  font-size: var(--text-heading-sub);
 }
-h4 {
-  font-size: 1.25rem; /* 20px */
-}
+h4,
 h5,
 h6 {
-  font-size: 1rem; /* 16px */
+  font-size: var(--text-step-1);
 }
 
-/* 読み物コンテナ: 文章として読ませる文は 16px / line-height 1.9・ベタ組み（DESIGN.md §3）。
- * body 既定を一律 1.9 にすると UI（ナビ・ボタン・値札）が間延びするため、body 既定は
- * 現行の 1.7 のまま維持し、読ませる本文だけ .prose / [data-prose] に 1.9 を当てる。
- * 補助情報（キャプション・値札 13–14px）はこのコンテナの外で扱う。 */
-.prose,
-[data-prose] {
-  line-height: 1.9;
-  font-feature-settings: normal;
+b,
+strong {
+  font-weight: 700;
 }
 
-/* フォーカス可視（DESIGN.md §10 の基本形）。既存コンポーネント個別の :focus-visible と同値。 */
+small {
+  font-size: var(--text-small);
+}
+
+input,
+select,
+textarea,
+button {
+  font-family: inherit;
+}
+
+/* 16px を下回ると、端末が入力のたびに画面を拡大する。 */
+input,
+select,
+textarea {
+  font-size: var(--text-input);
+}
+
+/* 部品のクラスが色を決めたリンクには、訪問済みの色を掛けない。 */
+:where(a) {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-thickness: var(--rule-w-hair);
+  text-underline-offset: 0.15em;
+}
+:where(a:visited) {
+  color: var(--ink-2);
+}
+
+hr {
+  border: none;
+  border-top: var(--rule-w-hair) solid var(--rule-2);
+  margin: var(--space-24) 0;
+}
+
+/* 等幅の字面は同じ大きさの和文より大きく見えるので、一段縮める。補助情報の下限は割らない。 */
+:where(code, kbd, samp, pre) {
+  font-family: var(--font-mono);
+  font-size: max(0.9em, var(--text-small));
+}
+:where(pre code, pre kbd, pre samp) {
+  font-size: 1em;
+}
+
+:where(:not(pre) > code) {
+  background: var(--paper-2);
+  padding: 0 0.25em;
+}
+
+/* コードのボックス。折り返さず、ボックスの中で横に送る。 */
+:where(pre) {
+  background: var(--paper-2);
+  border: var(--rule-w) solid var(--rule);
+  padding: var(--box-padding);
+  overflow-x: auto;
+}
+
+/* 表は外枠を持たず、行どうし・列どうしを細い線で区切る。 */
+:where(table) {
+  border-collapse: collapse;
+}
+:where(th, td) {
+  border: var(--rule-w-hair) solid var(--rule-2);
+  padding: var(--space-8);
+  text-align: left;
+  vertical-align: top;
+}
+:where(th) {
+  font-weight: 700;
+}
+:where(table > :first-child > tr:first-child > *) {
+  border-top: none;
+}
+:where(table > :last-child > tr:last-child > *) {
+  border-bottom: none;
+}
+:where(th:first-child, td:first-child) {
+  border-left: none;
+}
+:where(th:last-child, td:last-child) {
+  border-right: none;
+}
+
+::selection {
+  background: var(--ink);
+  color: var(--paper);
+}
+
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--ink);
   outline-offset: 2px;
 }
 
-/* 数字ユーティリティ: スコア・計測値・結果の主役に等幅数字（DESIGN.md §3）。 */
+/* 数字ユーティリティ: スコア・計測値・結果の主役に等幅数字。 */
 .tabular,
 [data-number] {
   font-family: var(--font-body);
   font-feature-settings: "tnum";
 }
 
-/* アクセシビリティ — old-globals.css からの移植 */
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -270,26 +362,12 @@ h6 {
   border: 0;
 }
 
-/* ==========================================================================
- Admonition (GFM Alert) スタイル — marked-alert が出力する .markdown-alert
- クラスに対するスタイル定義。CSS Modules のスコープ外のクラスを使用するため、
- グローバルスタイルとして定義する。
-
- DESIGN.md §2 是正（フェーズ R・cycle-279 C1）: 旧実装は note=青/tip=緑/important=紫/
- warning=黄/caution=赤 と種別ごとに地の色を塗り分けていたが、これは§2「アクセントは
- 朱の1色・副次的な要素は色の不在（墨の濃淡・罫）で表す」に反する。新実装は5種を色で
- 分けず、罫＋墨＋朱の店構えへ統一する:
-   - 地は全種別共通で --paper-2（一段沈む面）・枠は --rule。種別の区別はラベル文字
-     （アイコン＋見出し語）だけで示し、色は差をつけない（note/tip/important）。
-   - 強調が要る warning/caution のみ、左罫とラベル文字を --accent（朱）にする——
-     色数を増やさず朱1色の強弱だけで重大度を表す（§2 のアクセント運用の範囲内）。
- ========================================================================== */
-
+/* GFM Alert（marked-alert が出力する .markdown-alert）。CSS Modules のスコープ外のクラスなので
+ * ここに置く。種別は色で分けず、ラベルの文字で示す。注意を促す種別だけ、左に太い線を引く。 */
 .markdown-alert {
   padding: var(--space-16) var(--space-24);
   margin: var(--space-24) 0;
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
+  border: var(--rule-w-hair) solid var(--rule-2);
   background-color: var(--paper-2);
 }
 
@@ -301,9 +379,8 @@ h6 {
   display: flex;
   align-items: center;
   gap: 0.4em;
-  font-weight: 600;
+  font-weight: 700;
   margin-bottom: var(--space-8);
-  font-size: 0.95em;
   color: var(--ink);
 }
 
@@ -314,18 +391,9 @@ h6 {
   fill: currentColor;
 }
 
-/* Note / Tip / Important: 中立種別。--rule の罫囲み＋--ink のラベルのまま、
- * 種別間で色の差はつけない（意図的に上書きなし）。 */
-
-/* Warning / Caution: 強調種別。朱の左罫＋ラベルで注意を引く。 */
 .markdown-alert-warning,
 .markdown-alert-caution {
-  border-left: 4px solid var(--accent);
-}
-
-.markdown-alert-warning .markdown-alert-title,
-.markdown-alert-caution .markdown-alert-title {
-  color: var(--accent);
+  border-left: var(--rule-w) solid var(--rule);
 }
 
 /* インラインスタイルから参照するグローバルアニメーション

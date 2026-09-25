@@ -1,5 +1,5 @@
 /**
- * 器（うつわ）の色 — 紙・墨・罫・朱の直書き hex 定数の SSoT（DESIGN.md §2）。
+ * 器（うつわ）の色 — 紙・墨・線の直書き hex 定数の SSoT（DESIGN.md §2）。
  *
  * なぜ中立モジュールとして切り出すか: 器定数は札レンダラ（{@link import("./fuda-image")}）と
  * 看板レンダラ（{@link import("./ogp-image")}）の**両方**が使う。fuda-image は ogp-image を
@@ -17,15 +17,15 @@
  * globals.css だけ変えて本表を放置するサイレント乖離を検知する。
  */
 
-/** 紙地（全面の地色）。 */
-export const PAPER = "#f8f7f2"; // --paper       oklch(0.975 0.006 90)
+/** 紙（全面の地色）。 */
+export const PAPER = "#fcfcfc"; // --paper   oklch(0.99 0 0)
 /** 墨（主文字色）。 */
-export const INK = "#201e1a"; // --ink         oklch(0.235 0.008 80)
-/** 墨（副次・薄い階層）。 */
-export const INK_2 = "#58554f"; // --ink-2       oklch(0.45 0.01 80)
-/** 罫（細い仕切り線）。 */
-export const RULE = "#cdcac5"; // --rule        oklch(0.84 0.008 85)
-/** 罫（強・器の枠）。 */
-export const RULE_STRONG = "#302d28"; // --rule-strong oklch(0.30 0.01 80)
-/** 朱（アクセント・印専用）。 */
-export const ACCENT = "#af3622"; // --accent      oklch(0.51 0.16 32)
+export const INK = "#0b0b0b"; // --ink     oklch(0.15 0 0)
+/** 墨（前に出ない文字）。 */
+export const INK_2 = "#525252"; // --ink-2   oklch(0.44 0 0)
+/** 細い線。 */
+export const RULE = "#868686"; // --rule-2  oklch(0.62 0 0)
+/** 太い線。UI は無彩なので、太い線は文字と同じ墨で引く。 */
+export const RULE_STRONG = INK; // --rule    var(--ink)
+/** 印（y の字）。UI は無彩なので墨で描く。 */
+export const ACCENT = INK; // --ink

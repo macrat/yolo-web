@@ -19,11 +19,9 @@
   border-top: 1px solid var(--rule);
 }
 
-/* 見出し: ResultCard detailedHeading 語彙に倣う（罫下線＋左寄せ、font-weight 600。
- * サイト共通の見出し様式・DESIGN.md §3/§4。朱の左罫は見出しの装飾に使わない） */
+/* 見出し: ResultCard detailedHeading と同じく、左寄せ・罫下線で区切る。 */
 .heading {
   font-size: 1.05rem;
-  font-weight: 600;
   color: var(--ink);
   margin: 0 0 1rem;
   padding-bottom: 0.5rem;

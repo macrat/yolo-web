@@ -179,7 +179,7 @@ describe("renderFudaImage", () => {
   test("colorOverride 指定時（明地）: 前景色は黒（#1a1a1a）へ切り替わる", async () => {
     // 明るい伝統色（桜色）は白字ではコントラスト不足 → 黒字（DARK_TEXT_COLOR）。
     // symbolOn が #ffffff にハードコードされる回帰をこのケースが捕える。
-    // 本文の墨字 INK は #201e1a なので、#1a1a1a は記号面前景のみを指す。
+    // 本文の墨字 INK は #0b0b0b なので、#1a1a1a は記号面前景のみを指す。
     const { getContrastTextColor } = await import("@/play/color-utils");
     const hex = "#fedfe1"; // 桜色（明地）
     expect(getContrastTextColor(hex)).toBe("#1a1a1a"); // 前提を固定

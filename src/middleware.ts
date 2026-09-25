@@ -79,7 +79,7 @@ export function build410Html(): string {
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{font-family:${BODY_STACK};background:${PAPER};color:${INK};min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1.5rem}
 .container{max-width:34rem;width:100%;text-align:center}
-h1{font-family:${HEADING_STACK};font-size:1.6rem;font-weight:600;color:${INK};line-height:1.5;letter-spacing:0.02em}
+h1{font-family:${HEADING_STACK};font-size:1.6rem;font-weight:400;color:${INK};line-height:1.5;letter-spacing:0.02em}
 .rule{width:3rem;height:0;border-top:1px solid ${RULE};margin:1.25rem auto}
 p{font-family:${BODY_STACK};font-size:1rem;color:${INK_2};line-height:1.9;margin-bottom:2rem}
 a.home{display:inline-block;padding:0.6rem 1.75rem;color:${ACCENT};text-decoration:none;border:1px solid ${RULE};border-radius:0;font-size:0.95rem;transition:border-color 0.2s}

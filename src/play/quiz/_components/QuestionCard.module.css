@@ -20,12 +20,10 @@
   }
 }
 
-/* 設問文: 見出しの顔（明朝）。読ませる文なので line-height はゆったり。
- * h2 だが margin/font-size/font-weight を明示指定し UA 既定を上書き（見た目据え置き）。 */
+/* 設問文: 見出し書体で組む h2。読ませる文なので line-height はゆったり。 */
 .questionText {
   font-family: var(--font-heading);
   font-size: 1.25rem;
-  font-weight: 600;
   margin: 0 0 1.25rem;
   line-height: 1.6;
   color: var(--ink);

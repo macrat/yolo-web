@@ -92,20 +92,18 @@ describe("build410Html", () => {
       expect(html).not.toContain("📄");
     });
 
-    test("紙・墨・朱の器の色を使う（§2）", () => {
-      expect(html).toContain("#f8f7f2"); // --paper
-      expect(html).toContain("#201e1a"); // --ink
-      expect(html).toContain("#af3622"); // --accent（朱）
+    test("紙と墨の無彩の色を使う（§2）", () => {
+      expect(html).toContain("#fcfcfc"); // --paper
+      expect(html).toContain("#0b0b0b"); // --ink
     });
 
     test("見出しは Zen Antique を先頭にした並びで組む（§3）", () => {
       expect(html).toContain("h1{font-family:'Zen Antique',");
     });
 
-    test("トップへの導線は朱の文字で表す（青ベタボタンでない・§4）", () => {
+    test("トップへの導線は墨の文字で表す（色ベタのボタンでない・§6）", () => {
       expect(html).toContain("href='/'");
-      // リンク色は朱（--accent）であり、背景ベタ塗りボタンではない
-      expect(html).toContain(`color:#af3622`);
+      expect(html).toContain(`color:#0b0b0b`);
     });
 
     test("角丸は0基調（8px角丸 0.5rem を含まない・§8-5）", () => {

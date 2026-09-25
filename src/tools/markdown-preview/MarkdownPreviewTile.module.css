@@ -95,7 +95,6 @@
 
 .preview h1 {
   font-size: 1.5rem;
-  font-weight: 600;
   margin: 0.5em 0;
   border-bottom: 1px solid var(--rule);
   padding-bottom: 0.3em;
@@ -103,13 +102,11 @@
 
 .preview h2 {
   font-size: 1.3rem;
-  font-weight: 600;
   margin: 0.5em 0;
 }
 
 .preview h3 {
   font-size: 1.1rem;
-  font-weight: 600;
   margin: 0.5em 0;
 }
 

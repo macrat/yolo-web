@@ -54,5 +54,5 @@
   margin-bottom: 0;
 }
 
-/* 本文中のリンクは globals.css の既定 a{}（朱・下線・:hover/:focus-visible 済み）に委ねる
+/* 本文中のリンクは globals.css の既定の a（色・下線・訪問済み）と :focus-visible に委ねる
  * （§3「下線はリンクの専有」。privacy 等ほかの読み物ページと同じ流儀で揃える）。 */

@@ -39,7 +39,6 @@
 .columnTitle {
   color: var(--ink);
   font-family: var(--font-heading);
-  font-weight: 600;
   font-size: 0.9375rem;
   letter-spacing: 0.01em;
   margin: 0 0 var(--space-8);

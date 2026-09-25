@@ -68,4 +68,4 @@
   text-decoration: none;
 }
 
-/* フォーカス可視は globals.css の :focus-visible（朱の 2px アウトライン）に委ねる（§10）。 */
+/* フォーカス可視は globals.css の :focus-visible に委ねる（§10）。 */

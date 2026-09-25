@@ -124,11 +124,9 @@ export default async function BlogPostPage({ params }: Props) {
           {/*
            * 本文（読み物の店構え・DESIGN.md §3/§4）。Panel の矩形コンテナには包まず、
            * 読む幅 --measure に絞ったテキスト列として直接置く（§4「本文幅と操作幅」）。
-           * globals.css の `.prose` ユーティリティ（line-height 1.9）と、この
-           * page.module.css の `.prose`（色・幅・要素別組版）を併用する。
            */}
           <div
-            className={`prose ${styles.prose}`}
+            className={styles.prose}
             dangerouslySetInnerHTML={{ __html: post.contentHtml }} // markdownToHtml() 内部で sanitize 済み
           />
 

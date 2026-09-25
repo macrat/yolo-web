@@ -33,7 +33,6 @@
    ============================================================ */
 .sectionHeading {
   font-size: 1.05rem;
-  font-weight: 600;
   color: var(--ink);
   margin: 0 0 1rem;
   padding-bottom: 0.5rem;
@@ -134,7 +133,6 @@
  * （サイト共通の見出し様式・DESIGN.md §3/§4。朱の左罫は見出しの装飾に使わない） */
 .allTypesCta {
   font-size: 1.05rem;
-  font-weight: 600;
   color: var(--ink);
   margin: 0 0 1rem;
   padding-bottom: 0.5rem;

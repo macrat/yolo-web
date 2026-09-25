@@ -73,8 +73,7 @@
 /* articleAside（TOC サイドバー）の幅は Grid によって自動制御されるため個別指定不要 */
 
 /*
- * 本文 prose スタイル。globals.css の `.prose` ユーティリティ（line-height 1.9）と併用する。
- * 読む幅 --measure に絞る（§4「本文幅と操作幅」）。
+ * 本文。行間は globals.css の body が与える。読む幅 --measure に絞る（§4「本文幅と操作幅」）。
  */
 .prose {
   max-width: var(--measure);
@@ -82,8 +81,8 @@
 }
 
 /*
- * 見出しの font-family/weight/line-height/palt は globals.css の基層（h1〜h6）が
- * 1.25 倍スケールで既に与える（§3）。ここでは余白と区切り罫だけを足す。
+ * 見出しの書体・ウェイト・行間・大きさは globals.css の見出しの規則が与える。
+ * ここでは余白と区切り罫だけを足す。
  */
 .prose h2 {
   margin-top: var(--space-32);
@@ -226,7 +225,7 @@
 .shareSectionTitle {
   margin: 0 0 var(--space-16);
   color: var(--ink);
-  font-size: 1.125rem; /* globals.css h2 既定(31px)より縮小。明朝・palt は基層から継承 */
+  font-size: 1.125rem; /* globals.css の h2 の大きさより小さくする */
 }
 
 /* 前後ナビゲーション（時系列順。シリーズ記事でも常時表示し最終回でも動線を確保。aria-label で時系列順を SR 向けに明示） */

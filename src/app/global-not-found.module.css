@@ -14,7 +14,6 @@
 
 .heroTitle {
   font-size: 2rem;
-  font-weight: 800;
   color: var(--ink);
   margin-bottom: 1rem;
 }
@@ -33,7 +32,6 @@
 
 .sectionsTitle {
   font-size: 1.5rem;
-  font-weight: 700;
   margin-bottom: 1.5rem;
   text-align: left;
 }
@@ -65,7 +63,6 @@
 
 .cardTitle {
   font-size: 1.1rem;
-  font-weight: 600;
   margin-bottom: 0.5rem;
   color: var(--ink);
 }

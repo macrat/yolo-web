@@ -88,16 +88,16 @@ describe("oklchToHex — 正典 oklch との乖離ガード", () => {
     },
   );
 
-  // 器（紙・墨・罫・朱）の直書き hex 定数（utsuwaHex.ts）も、和色と同じく
+  // 器（紙・墨・線）の直書き hex 定数（utsuwaHex.ts）も、和色と同じく
   // globals.css の light トークンから生成した値。トークン名との対応（PAPER↔--paper 等）を
   // globals.css の oklch から再変換して突き合わせ、サイレント乖離を検知する。
   const CONTAINER_TOKENS: ReadonlyArray<[hex: string, token: string]> = [
     [PAPER, "paper"],
     [INK, "ink"],
     [INK_2, "ink-2"],
-    [RULE, "rule"],
-    [RULE_STRONG, "rule-strong"],
-    [ACCENT, "accent"],
+    [RULE, "rule-2"],
+    [RULE_STRONG, "ink"],
+    [ACCENT, "ink"],
   ];
 
   test.each(CONTAINER_TOKENS)(

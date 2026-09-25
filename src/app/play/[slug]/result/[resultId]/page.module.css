@@ -64,7 +64,6 @@
  * .detailedHeading と同じ語彙。朱の左罫は見出しの装飾に使わない・DESIGN.md §3/§4）。 */
 .detailedSectionHeading {
   font-size: 1.05rem;
-  font-weight: 600;
   color: var(--ink);
   margin: 0 0 1rem;
   padding-bottom: 0.5rem;

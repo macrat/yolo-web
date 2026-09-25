@@ -114,7 +114,6 @@
 .shareSectionTitle {
   font-family: var(--font-heading);
   font-size: 1.09375rem;
-  font-weight: 600;
   margin-bottom: var(--space-8);
   color: var(--ink);
   line-height: 1.4;

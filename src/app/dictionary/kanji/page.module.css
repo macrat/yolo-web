@@ -14,7 +14,7 @@
   padding: var(--space-32) var(--space-24) var(--space-64);
 }
 
-/* 店号（h1）。サイズ・明朝・詰めは globals.css の見出し基層が与える。ここは余白のみ。 */
+/* 店号（h1）。書体と大きさは globals.css の見出しの規則が与える。ここは余白のみ。 */
 .title {
   margin: var(--space-16) 0 var(--space-16);
   color: var(--ink);
@@ -104,4 +104,4 @@
   text-underline-offset: 0.15em;
 }
 
-/* フォーカス可視は globals.css の :focus-visible（朱の 2px アウトライン）に委ねる（§10）。 */
+/* フォーカス可視は globals.css の :focus-visible に委ねる（§10）。 */

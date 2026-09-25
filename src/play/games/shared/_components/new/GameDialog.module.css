@@ -20,7 +20,6 @@
 .modalTitle {
   font-family: var(--font-heading);
   font-size: 1.25rem;
-  font-weight: 600;
   color: var(--ink);
   margin-bottom: var(--space-16);
   line-height: 1.4;
