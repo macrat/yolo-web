@@ -6,7 +6,7 @@
  *   AI 運営の明示（constitution rule 3）
  * - 目玉（今日のためしどころ）: 成長エンジンの診断 character-personality を単一区画で立て、
  *   レジストリ由来のタイトルで実在パスへ／「札にして持ち帰れる」の伝達／入口ボタン／
- *   値札「24タイプ」。コピーの数値（12問・24タイプ）は診断データの正典値と一致する（ガード）。
+ *   結果のタイプ数「24タイプ」。コピーの数値（12問・24タイプ）は診断データの正典値と一致する（ガード）。
  * - 棚（品書き）: 診断・占い・あそびの入口（目玉の character-personality は品書きから外す）と
  *   /play への全リンク導線
  * - 辞典棚・道具棚（+ /tools 全リンク）・読みもの棚（/blog）の入口が実在ルートを指す
@@ -76,12 +76,12 @@ test("目玉は成長エンジンの診断を単一区画で立て、レジス�
   expect(cta).toHaveAttribute("href", getContentPath(content!));
 });
 
-test("目玉は『札にして持ち帰れる』と結果タイプ数の値札を店先で伝える", () => {
+test("目玉は『札にして持ち帰れる』と結果タイプ数を店先で伝える", () => {
   render(<Home />);
   const hero = screen.getByRole("region", { name: "あなたに似たキャラ診断" });
   // 持ち帰り（札）を店先で明示
   expect(within(hero).getByText(/札にして持ち帰れます/)).toBeInTheDocument();
-  // 結果タイプ数の値札（実情報）
+  // 結果タイプ数（実情報）
   expect(within(hero).getByText("24タイプ")).toBeInTheDocument();
 });
 

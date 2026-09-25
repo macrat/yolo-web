@@ -239,10 +239,10 @@ describe("E-4: 変換ロジックの正確性", () => {
 
 // --- E-5: ARIA ---
 describe("E-5: ARIA属性", () => {
-  test("SegmentedControl に role='radiogroup' が存在すること", () => {
+  test("ラジオボタンの組に role='radiogroup' が存在すること", () => {
     render(<UnixTimestampTile />);
     const radiogroup = screen.getByRole("radiogroup", {
-      name: "タイムスタンプ単位",
+      name: "単位",
     });
     expect(radiogroup).toBeInTheDocument();
   });

@@ -15,11 +15,11 @@
  *
  * ## variant
  *
- * - `"full"` (デフォルト): 全機能（SegmentedControl table/mistakes + 検索 + フィルタ + テーブル/カード）
+ * - `"full"` (デフォルト): 全機能（表示する内容のラジオボタンの組 + 検索 + 分類の絞り込み + テーブル/カード）
  *
  * ## アクセシビリティ
  *
- * - C-2: 全 SegmentedControl に aria-label 付与
+ * - ラジオボタンの組は、見える見出し（legend）を名前として読ませる
  * - C-3: role="status" aria-live="polite" のライブリージョン＋件数サマリ
  * - C-8: テーブルは <tr> に role="button" 禁止（ARIA in HTML 仕様）。
  *   先頭セル <th scope="row"> 内の実 <button aria-expanded> でキーボード操作する。
@@ -28,7 +28,7 @@
 
 import { useState, useMemo, Fragment, useId } from "react";
 import Panel from "@/components/Panel";
-import SegmentedControl from "@/components/SegmentedControl";
+import RadioGroup from "@/components/RadioGroup";
 import Input from "@/components/Input";
 import {
   filterEntries,
@@ -84,7 +84,6 @@ export default function KeigoReferenceTile({
   className,
 }: KeigoReferenceTileProps = {}) {
   // ---------- id インスタンス一意化（複数同居時の重複 id・label 誤結合防止） ----------
-  // SegmentedControl は id prop を持たないが、Input には useId を使う。
   const uid = useId();
   const searchId = `${uid}-search`;
 
@@ -180,12 +179,12 @@ export default function KeigoReferenceTile({
   return (
     <Panel as={as} className={className}>
       <div className={styles.inner}>
-        {/* メインタブ切替: SegmentedControl（C-2: aria-label 必須）*/}
-        <SegmentedControl
+        {/* 表示する内容の切り替え */}
+        <RadioGroup
           options={TAB_OPTIONS}
           value={activeTab}
           onChange={(val) => setActiveTab(val as ActiveTab)}
-          aria-label="表示切替"
+          legend="表示する内容"
         />
 
         {/* 表タブコンテンツ */}
@@ -205,14 +204,14 @@ export default function KeigoReferenceTile({
                 />
               </div>
 
-              {/* カテゴリフィルター: SegmentedControl（C-2: aria-label 必須）*/}
-              <SegmentedControl
+              {/* 分類で絞り込む */}
+              <RadioGroup
                 options={CATEGORY_OPTIONS}
                 value={selectedCategory}
                 onChange={(val) =>
                   setSelectedCategory(val as KeigoCategory | "all")
                 }
-                aria-label="カテゴリフィルター"
+                legend="分類"
                 className={styles.categoryControl}
               />
             </div>

@@ -41,7 +41,7 @@ import Panel from "@/components/Panel";
 import FileDropZone from "@/components/FileDropZone";
 import Input from "@/components/Input";
 import Select from "@/components/Select";
-import SegmentedControl from "@/components/SegmentedControl";
+import RadioGroup from "@/components/RadioGroup";
 import ErrorMessage from "@/components/ErrorMessage";
 import {
   calculateDimensions,
@@ -88,7 +88,6 @@ export default function ImageResizerTile({
 }: ImageResizerTileProps = {}) {
   // ---------- id インスタンス一意化（複数同居時の重複 id・label 誤結合防止） ----------
   const uid = useId();
-  const resizeModeId = `${uid}-resize-mode`;
   const widthId = `${uid}-resize-width`;
   const heightId = `${uid}-resize-height`;
   const percentId = `${uid}-resize-percent`;
@@ -437,18 +436,12 @@ export default function ImageResizerTile({
             <div className={styles.section}>
               <h2 className={styles.sectionTitle}>リサイズ設定</h2>
 
-              {/* モード切替 (SegmentedControl) */}
-              <div className={styles.modeRow}>
-                <span id={resizeModeId} className={styles.modeLabel}>
-                  モード:
-                </span>
-                <SegmentedControl
-                  options={RESIZE_MODE_OPTIONS}
-                  value={resizeMode}
-                  onChange={(v) => setResizeMode(v as ResizeMode)}
-                  aria-labelledby={resizeModeId}
-                />
-              </div>
+              <RadioGroup
+                legend="サイズの決め方"
+                options={RESIZE_MODE_OPTIONS}
+                value={resizeMode}
+                onChange={(v) => setResizeMode(v as ResizeMode)}
+              />
 
               {/* サイズ指定モード */}
               {resizeMode === "dimensions" ? (

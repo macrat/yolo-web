@@ -18,9 +18,9 @@
  *
  * ## variant
  *
- * - `"full"` (デフォルト): SegmentedControl でモード切替（parser/builder）が可能。
- * - `"parser"`: 解析モードに固定。SegmentedControl 非表示。
- * - `"builder"`: ビルダーモードに固定。SegmentedControl 非表示。
+ * - `"full"` (デフォルト): ラジオボタンの組でモード切替（parser/builder）が可能。
+ * - `"parser"`: 解析モードに固定。ラジオボタンの組を出さない。
+ * - `"builder"`: ビルダーモードに固定。ラジオボタンの組を出さない。
  *
  * ## 機能（feature-preserving）
  *
@@ -29,7 +29,7 @@
  *
  * ## アクセシビリティ
  *
- * - C-2: SegmentedControl に aria-label="モード切替"
+ * - モードのラジオボタンの組は、見える見出し（legend）を名前として読ませる
  * - C-3: role="status" aria-live="polite" のライブリージョン+実テキストサマリ
  * - A-4: エラーは ErrorMessage コンポーネント+日本語文言
  * - A-6: 全 DOM id と htmlFor は useId ベースで一意化
@@ -38,7 +38,7 @@
  * ## 共通部品
  *
  * - Panel: タイルのルート
- * - SegmentedControl: モード切替（full のみ）
+ * - RadioGroup: モード切替（full のみ）
  * - ErrorMessage: エラー表示
  * - Input: cron式入力・ビルダー各フィールド
  * - Button: 解析・プリセット・コピー
@@ -51,7 +51,7 @@
 
 import { useId, useState, useCallback } from "react";
 import Panel from "@/components/Panel";
-import SegmentedControl from "@/components/SegmentedControl";
+import RadioGroup from "@/components/RadioGroup";
 import ErrorMessage from "@/components/ErrorMessage";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
@@ -79,9 +79,9 @@ export type CronParserTileVariant = "full" | "parser" | "builder";
 export interface CronParserTileProps {
   /**
    * 表示バリエーション（デフォルト: "full"）
-   * - "full": SegmentedControl でモード切替可能
-   * - "parser": 解析モードに固定、SegmentedControl 非表示
-   * - "builder": ビルダーモードに固定、SegmentedControl 非表示
+   * - "full": ラジオボタンの組でモードを切り替える
+   * - "parser": 解析モードに固定、ラジオボタンの組を出さない
+   * - "builder": ビルダーモードに固定、ラジオボタンの組を出さない
    */
   variant?: CronParserTileVariant;
   /** Panel の as prop に透過される HTML タグ（デフォルト: "section"） */
@@ -107,9 +107,7 @@ const PRESETS: Preset[] = [
   { label: "毎月1日", expression: "0 0 1 * *" },
 ];
 
-// SegmentedControl の options 型に合わせて { label: string; value: string }[] で宣言。
-// as const を使うと readonly リテラル型になり unknown 経由のキャストが必要になるため、
-// 型アノテーションで { label: string; value: string }[] を付与する（型安全性維持）。
+// RadioGroup の options に渡せるよう、readonly のリテラル型にせず { label: string; value: string }[] で宣言する。
 const MODE_OPTIONS: { label: string; value: string }[] = [
   { label: "解析", value: "parser" },
   { label: "ビルダー", value: "builder" },
@@ -186,8 +184,8 @@ export default function CronParserTile({
   const dayOfWeekId = `${uid}-day-of-week`;
 
   // ---------- variant から固定モードを決定 ----------
-  // "full" は SegmentedControl でユーザーが切り替え可能。
-  // "parser" / "builder" は固定（SegmentedControl 非表示）。
+  // "full" はラジオボタンの組で来訪者が切り替える。
+  // "parser" / "builder" は固定（ラジオボタンの組を出さない）。
   const fixedMode: TabMode | null =
     variant === "parser" ? "parser" : variant === "builder" ? "builder" : null;
 
@@ -321,19 +319,18 @@ export default function CronParserTile({
         {liveSummary}
       </div>
 
-      {/* モード切替（variant=full のみ表示・C-2: aria-label 付与）
-       * U-4 是正(a): モード切替時に liveSummary をリセットして stale 表示を防止する。
+      {/* モード切替（variant=full のみ表示）。
+       * モードを切り替えたら、前のモードの結果を読み上げないよう liveSummary を空にする。
        * fixedMode がある（parser/builder）場合は非表示。 */}
       {fixedMode === null && (
-        <SegmentedControl
+        <RadioGroup
           options={MODE_OPTIONS}
           value={dynamicMode}
           onChange={(v) => {
             setDynamicMode(v as TabMode);
-            // U-4 是正(a): モード切替で liveSummary をリセット（stale 表示防止）
             setLiveSummary("");
           }}
-          aria-label="モード切替"
+          legend="モード"
         />
       )}
 

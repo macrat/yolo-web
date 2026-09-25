@@ -17,10 +17,10 @@
  *
  * ## variant
  *
- * - `"full"` (デフォルト): 方向トグル（SegmentedControl）を表示し
+ * - `"full"` (デフォルト): 方向のラジオボタンを表示し
  *   encode / decode をユーザーが切り替えられる。URL-safe トグルは encode 時のみ表示。
- * - `"encode"`: 方向を encode に固定し、SegmentedControl を非表示にする。URL-safe トグル表示。
- * - `"decode"`: 方向を decode に固定し、SegmentedControl と URL-safe トグルを非表示にする。
+ * - `"encode"`: 方向を encode に固定し、ラジオボタンの組を出さない。URL-safe トグル表示。
+ * - `"decode"`: 方向を decode に固定し、ラジオボタンの組と URL-safe のチェックボックスを出さない。
  *
  * ## URL-safe トグルの表示ルール
  *
@@ -48,7 +48,7 @@
 import { useId, useMemo, useState } from "react";
 import Panel from "@/components/Panel";
 import Button from "@/components/Button";
-import SegmentedControl from "@/components/SegmentedControl";
+import RadioGroup from "@/components/RadioGroup";
 import Textarea from "@/components/Textarea";
 import ErrorMessage from "@/components/ErrorMessage";
 import Checkbox from "@/components/Checkbox";
@@ -72,9 +72,9 @@ const DIRECTION_OPTIONS: { label: string; value: Direction }[] = [
 export interface Base64TileProps {
   /**
    * 表示バリエーション（デフォルト: "full"）
-   * - "full": 方向トグル表示（encode / decode をユーザーが切り替え）
-   * - "encode": 方向を encode に固定、方向トグル非表示、URL-safe トグル表示
-   * - "decode": 方向を decode に固定、方向トグル・URL-safe トグル両方非表示
+   * - "full": 方向のラジオボタンを出す（encode / decode をユーザーが切り替え）
+   * - "encode": 方向を encode に固定、方向のラジオボタンを出さない、URL-safe トグル表示
+   * - "decode": 方向を decode に固定、方向のラジオボタン・URL-safe トグル両方非表示
    */
   variant?: Base64TileVariant;
   /** 初期入力値（デフォルト: ""） */
@@ -158,7 +158,7 @@ export default function Base64Tile({
 
   // ---------- ハンドラ ----------
   function handleDirectionChange(val: string) {
-    // fixedDirection がある場合はここに到達しない（SegmentedControl が非表示）
+    // fixedDirection がある場合はここに到達しない（ラジオボタンの組を出さない）
     setDynamicDirection(val as Direction);
   }
 
@@ -178,12 +178,12 @@ export default function Base64Tile({
       {/* コントロール行: 方向選択（full のみ表示） */}
       {fixedDirection === null && (
         <div className={styles.controls}>
-          {/* variant=full のみ方向トグルを表示。encode/decode は固定のため非表示。 */}
-          <SegmentedControl
+          {/* variant=full のみ方向のラジオボタンを出す。encode/decode は固定のため非表示。 */}
+          <RadioGroup
             options={DIRECTION_OPTIONS}
             value={dynamicDirection}
             onChange={handleDirectionChange}
-            aria-label="変換モード"
+            legend="変換モード"
           />
         </div>
       )}

@@ -62,7 +62,7 @@
   gap: 0.5rem;
 }
 
-/* カテゴリ値札（診断/クイズ/パズル等・Nefuda と同じ語彙）。 */
+/* カテゴリのラベル（診断/クイズ/パズル等）。 */
 .badge {
   font-size: 0.7rem;
   background-color: var(--paper);

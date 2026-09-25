@@ -4,7 +4,7 @@
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  */
 
-/* コントロール行: SegmentedControl を格納する行 */
+/* 方向のラジオボタンの組と入力欄のあいだをあける */
 .controls {
   margin-bottom: 1rem;
 }

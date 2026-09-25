@@ -58,8 +58,8 @@
 }
 
 /*
- * カテゴリ導線: 値札（Nefuda）と同じ静かな器（罫囲み・--radius-sm・--ink-2）だが、索引への
- * リンクなので hover で --accent に変える。ピル（999px）にはしない。
+ * カテゴリ導線: 罫囲み・--radius-sm・--ink-2 の静かな器で、索引へのリンクなので hover で
+ * --accent に変える。ピル（999px）にはしない。
  */
 .categoryTag {
   display: inline-flex;
@@ -77,6 +77,12 @@
 .categoryTag:hover {
   color: var(--accent);
   border-color: var(--accent);
+}
+
+/* 難易度は枠や地で囲まず、補助情報の文字で置く。 */
+.difficulty {
+  color: var(--ink-2);
+  font-size: var(--text-small);
 }
 
 .section {

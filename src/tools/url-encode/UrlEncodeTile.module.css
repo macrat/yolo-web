@@ -6,10 +6,11 @@
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  */
 
-/* コントロール行: SegmentedControl + Select を横並びに */
+/* 方向のラジオボタンの組とモードの欄を横に並べる。組は見出しの分だけ背が高いので、下端で揃えて
+ * ラジオボタンの行と欄を同じ高さに置く。 */
 .controls {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   flex-wrap: wrap;
   gap: 1rem;
   margin-bottom: 1rem;

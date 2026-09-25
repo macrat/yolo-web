@@ -1,6 +1,5 @@
 import Link from "next/link";
 import type { ReactElement } from "react";
-import { NefudaGroup } from "@/components/Nefuda";
 import styles from "./Shinagaki.module.css";
 
 export interface ShinagakiItem {
@@ -14,8 +13,8 @@ export interface ShinagakiItem {
    */
   note?: string;
   /**
-   * 値札の文言配列（各要素が値札 1 枚・{@link NefudaGroup} に渡す）。任意——
-   * 空・空要素のみなら値札を描画しない（中身の無いラベルを貼らない）。
+   * 種別（それが何の仲間かを言う語）。任意——複数あれば「・」でつないで1行にする。
+   * 空・空要素のみなら種別の行を出さない（中身の無い行を作らない）。
    */
   tags?: string[];
   /** 行右端に添える短いメタ（更新日・件数など）。任意——空なら描画しない。 */
@@ -49,7 +48,7 @@ export interface ShinagakiProps {
  * 仕様:
  * - 一覧は「罫区切りのリスト」であってカードのグリッドではない。
  *   各行を細い線（`--rule-2`）で仕切る（カード装飾・影・色地なし）。
- * - 各行 = 品名（リンク・墨）+ ひとこと（`--ink-2`）+ 任意の値札群 + 任意の右端メタ。
+ * - 各行 = 品名（リンク・墨）+ ひとこと（`--ink-2`）+ 任意の種別 + 任意の右端メタ。
  * - 左揃え。幅は呼び出し側が決められるよう、このコンポーネントは幅を固定しない
  *   （読む面は `--measure`、操作面は `--max-width` を親で当てる）。
  */
@@ -69,31 +68,35 @@ export default function Shinagaki({
         <HeadingTag className={styles.heading}>{heading}</HeadingTag>
       ) : null}
       <ul className={styles.list} aria-label={ariaLabel} data-text-box="rows">
-        {items.map((item) => (
-          <li key={item.href} className={styles.row}>
-            <div className={styles.main}>
-              <Link
-                href={item.href}
-                className={styles.name}
-                data-hit-area="after"
-              >
-                {item.name}
-              </Link>
-              {item.note ? <p className={styles.note}>{item.note}</p> : null}
-              {/* NefudaGroup は空・空要素のみのとき null を返すため、ここでの空判定は不要 */}
-              {item.tags ? <NefudaGroup labels={item.tags} /> : null}
-            </div>
-            {item.meta && item.meta.trim() !== "" ? (
-              item.metaDateTime ? (
-                <time className={styles.meta} dateTime={item.metaDateTime}>
-                  {item.meta}
-                </time>
-              ) : (
-                <span className={styles.meta}>{item.meta}</span>
-              )
-            ) : null}
-          </li>
-        ))}
+        {items.map((item) => {
+          const kind = (item.tags ?? [])
+            .filter((tag) => tag.trim() !== "")
+            .join("・");
+          return (
+            <li key={item.href} className={styles.row}>
+              <div className={styles.main}>
+                <Link
+                  href={item.href}
+                  className={styles.name}
+                  data-hit-area="after"
+                >
+                  {item.name}
+                </Link>
+                {item.note ? <p className={styles.note}>{item.note}</p> : null}
+                {kind ? <p className={styles.kind}>{kind}</p> : null}
+              </div>
+              {item.meta && item.meta.trim() !== "" ? (
+                item.metaDateTime ? (
+                  <time className={styles.meta} dateTime={item.metaDateTime}>
+                    {item.meta}
+                  </time>
+                ) : (
+                  <span className={styles.meta}>{item.meta}</span>
+                )
+              ) : null}
+            </li>
+          );
+        })}
       </ul>
     </section>
   );

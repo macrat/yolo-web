@@ -42,7 +42,7 @@ const mockPosts: BlogPostMeta[] = [
 ];
 
 // DESIGN.md フェーズ R: RelatedArticles は共有の Shinagaki（品書き）へ統合された。
-// 品名=タイトル・値札=カテゴリ名・右端メタ=公開日という Shinagaki の型で検証する。
+// 品名=タイトル・種別=カテゴリ名・右端メタ=公開日という Shinagaki の型で検証する。
 describe("RelatedArticles", () => {
   test("「関連記事」見出しが表示されること", () => {
     render(<RelatedArticles posts={mockPosts} />);
@@ -57,7 +57,7 @@ describe("RelatedArticles", () => {
     expect(firstPostLink).toHaveAttribute("href", "/blog/post-1");
   });
 
-  test("各記事のカテゴリ値札が表示されること", () => {
+  test("各記事のカテゴリが表示されること", () => {
     render(<RelatedArticles posts={mockPosts} />);
     expect(screen.getByText("開発ノート")).toBeInTheDocument();
     expect(screen.getByText("AIワークフロー")).toBeInTheDocument();

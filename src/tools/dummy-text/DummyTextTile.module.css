@@ -68,7 +68,7 @@
   min-height: 1.2em;
 }
 
-/* 言語 SegmentedControl のラッパー（variant="full" のみ表示） */
+/* 言語のラジオボタンの組と、その下の設定のあいだをあける */
 .languageControl {
   margin-bottom: 1rem;
 }

@@ -2,10 +2,10 @@
  * LineBreakRemoverTile のユニットテスト（TDD: 実装前に書く）
  *
  * 検証観点:
- * - V-1: variant=full でのレンダリング（3モード SegmentedControl 表示・チェックボックス表示）
- * - V-2: variant=remove（固定モード・SegmentedControl 非表示・チェックボックス 維持）
- * - V-3: variant=replace-space（固定モード・SegmentedControl 非表示・チェックボックス 維持）
- * - V-4: variant=smart-pdf（固定モード・SegmentedControl 非表示・行内改行 SegmentedControl 表示）
+ * - V-1: variant=full でのレンダリング（3モード ラジオボタンの組表示・チェックボックス表示）
+ * - V-2: variant=remove（固定モード・ラジオボタンの組非表示・チェックボックス 維持）
+ * - V-3: variant=replace-space（固定モード・ラジオボタンの組非表示・チェックボックス 維持）
+ * - V-4: variant=smart-pdf（固定モード・ラジオボタンの組非表示・行内改行 ラジオボタンの組表示）
  * - V-5: variant=full で変換ロジックが動作する
  * - V-6: variant=remove でモードが固定されて動作する
  * - V-7: variant=replace-space でモードが固定されて動作する
@@ -36,7 +36,7 @@ beforeEach(() => {
 });
 
 // --- V-1: variant=full ---
-describe("V-1: variant=full（全機能・3モード SegmentedControl 表示）", () => {
+describe("V-1: variant=full（全機能・3モード ラジオボタンの組表示）", () => {
   it("3つの変換モードが表示される", () => {
     render(<LineBreakRemoverTile variant="full" />);
     expect(
@@ -76,9 +76,9 @@ describe("V-1: variant=full（全機能・3モード SegmentedControl 表示）"
   });
 });
 
-// --- V-2: variant=remove（モード固定・SegmentedControl 非表示）---
+// --- V-2: variant=remove（モード固定・ラジオボタンの組非表示）---
 describe("V-2: variant=remove（モード固定）", () => {
-  it("モード切替 SegmentedControl が表示されない", () => {
+  it("モード切替 ラジオボタンの組が表示されない", () => {
     render(<LineBreakRemoverTile variant="remove" />);
     // remove/replace-space/PDFスマートモードのラジオが無い
     expect(
@@ -108,7 +108,7 @@ describe("V-2: variant=remove（モード固定）", () => {
 
 // --- V-3: variant=replace-space（モード固定）---
 describe("V-3: variant=replace-space（モード固定）", () => {
-  it("モード切替 SegmentedControl が表示されない", () => {
+  it("モード切替 ラジオボタンの組が表示されない", () => {
     render(<LineBreakRemoverTile variant="replace-space" />);
     expect(
       screen.queryByRole("radio", { name: "改行を削除" }),
@@ -131,7 +131,7 @@ describe("V-3: variant=replace-space（モード固定）", () => {
 
 // --- V-4: variant=smart-pdf（モード固定）---
 describe("V-4: variant=smart-pdf（モード固定）", () => {
-  it("モード切替 SegmentedControl が表示されない", () => {
+  it("モード切替 ラジオボタンの組が表示されない", () => {
     render(<LineBreakRemoverTile variant="smart-pdf" />);
     expect(
       screen.queryByRole("radio", { name: "改行を削除" }),
@@ -144,7 +144,7 @@ describe("V-4: variant=smart-pdf（モード固定）", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("行内改行処理の SegmentedControl が表示される", () => {
+  it("行内改行処理の ラジオボタンの組が表示される", () => {
     render(<LineBreakRemoverTile variant="smart-pdf" />);
     expect(screen.getByRole("radio", { name: "削除する" })).toBeInTheDocument();
     expect(
@@ -346,7 +346,7 @@ describe("V-10: エラー・ライブリージョン・コピー", () => {
 
 // --- V-11: aria 属性 ---
 describe("V-11: aria 属性", () => {
-  it("variant=full: 変換モード SegmentedControl に aria-labelledby が付与されている", () => {
+  it("variant=full: 変換モード ラジオボタンの組に aria-labelledby が付与されている", () => {
     render(<LineBreakRemoverTile variant="full" />);
     const radiogroups = screen.getAllByRole("radiogroup");
     const modeGroup = radiogroups.find(
@@ -355,7 +355,7 @@ describe("V-11: aria 属性", () => {
     expect(modeGroup).toBeDefined();
   });
 
-  it("variant=full, smart-pdf モード時: 行内改行処理の SegmentedControl にも aria-labelledby が付与される", () => {
+  it("variant=full, smart-pdf モード時: 行内改行処理の ラジオボタンの組にも aria-labelledby が付与される", () => {
     render(<LineBreakRemoverTile variant="full" />);
     fireEvent.click(screen.getByRole("radio", { name: "PDFスマートモード" }));
     const radiogroups = screen.getAllByRole("radiogroup");
@@ -404,7 +404,7 @@ describe("V-12: clipboard 不在時の silent fail", () => {
 
 // --- V-13: デフォルト variant ---
 describe("V-13: デフォルト variant", () => {
-  it("variant 未指定の場合 full と同等（3モード SegmentedControl 表示）", () => {
+  it("variant 未指定の場合 full と同等（3モード ラジオボタンの組表示）", () => {
     render(<LineBreakRemoverTile />);
     expect(
       screen.getByRole("radio", { name: "改行を削除" }),

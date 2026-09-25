@@ -17,11 +17,11 @@
  *
  * ## variant
  *
- * - `"full"` (デフォルト): SegmentedControl（2/8/10/16 基数選択）を表示し、
+ * - `"full"` (デフォルト): 2・8・10・16 進数のラジオボタンの組を表示し、
  *   4基数すべての結果カードを表示する。各カードにコピーボタン付き。
  * - `"bin-hex"`: 入力基数を2進数に固定し、16進数結果を中心に表示する。
  *   T-31 で道具箱に恒久展示される多モード変換系の代表。
- *   SegmentedControl を非表示にし、「2進数 → 16進数」の変換器として一目で分かる。
+ *   ラジオボタンの組を出さず、「2進数 → 16進数」の変換器として一目で分かる。
  *
  * ## アクセシビリティ（C-3 準拠）
  *
@@ -37,7 +37,7 @@ import {
   COPIED_LABEL,
 } from "@/components/hooks/useCopyToClipboard";
 import Input from "@/components/Input";
-import SegmentedControl from "@/components/SegmentedControl";
+import RadioGroup from "@/components/RadioGroup";
 import ErrorMessage from "@/components/ErrorMessage";
 import Button from "@/components/Button";
 import styles from "./NumberBaseConverterTile.module.css";
@@ -69,7 +69,7 @@ export type NumberBaseConverterTileVariant = "full" | "bin-hex";
 export interface NumberBaseConverterTileProps {
   /**
    * 表示バリエーション（デフォルト: "full"）
-   * - "full": 基数選択 SegmentedControl + 4基数すべての結果カード
+   * - "full": 基数選択のラジオボタンの組 + 4基数すべての結果カード
    * - "bin-hex": 入力基数を2進数に固定し、16進数結果を中心に表示（固定 variant）
    */
   variant?: NumberBaseConverterTileVariant;
@@ -89,7 +89,7 @@ export default function NumberBaseConverterTile({
   const inputId = `${uid}-input`;
 
   // ---------- variant から固定基数を決定 ----------
-  // "full" は SegmentedControl でユーザーが切り替え可能。
+  // "full" はラジオボタンの組で来訪者が切り替える。
   // "bin-hex" は2進数に固定（ユーザーが変更できない）。
   const isBinHex = variant === "bin-hex";
 
@@ -140,7 +140,7 @@ export default function NumberBaseConverterTile({
 
   // ---------- ハンドラ ----------
   function handleBaseChange(val: string): void {
-    // isBinHex の場合はここに到達しない（SegmentedControl が非表示）
+    // isBinHex の場合はここに到達しない（ラジオボタンの組を出さない）
     setFromBaseStr(val);
     setInput("");
   }
@@ -161,19 +161,15 @@ export default function NumberBaseConverterTile({
   // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）
   return (
     <Panel as={as} className={className}>
-      {/* variant=full のみ: 入力基数選択 SegmentedControl */}
+      {/* variant=full のみ: 入力基数選択のラジオボタンの組 */}
       {!isBinHex && (
-        <div className={styles.baseControl}>
-          <SegmentedControl
-            options={BASE_OPTIONS.map((o) => ({
-              label: o.label,
-              value: o.value,
-            }))}
-            value={fromBaseStr}
-            onChange={handleBaseChange}
-            aria-label="入力する進数"
-          />
-        </div>
+        <RadioGroup
+          legend="入力する進数"
+          options={BASE_OPTIONS}
+          value={fromBaseStr}
+          onChange={handleBaseChange}
+          className={styles.baseControl}
+        />
       )}
 
       {/* variant=bin-hex のみ: 方向ラベル（2進数 → 16進数） */}

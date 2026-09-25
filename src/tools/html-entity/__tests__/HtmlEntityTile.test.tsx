@@ -42,7 +42,7 @@ afterEach(() => {
 
 // --- V-1: variant=full ---
 describe("V-1: variant=full", () => {
-  it("方向トグル（SegmentedControl）が表示される", () => {
+  it("方向のラジオボタンの組が表示される", () => {
     render(<HtmlEntityTile variant="full" />);
     expect(screen.getByRole("radiogroup")).toBeInTheDocument();
   });
@@ -58,7 +58,7 @@ describe("V-1: variant=full", () => {
 
 // --- V-2: variant=encode ---
 describe("V-2: variant=encode（方向固定・トグル非表示）", () => {
-  it("SegmentedControl（radiogroup）が表示されない", () => {
+  it("ラジオボタンの組が表示されない", () => {
     render(<HtmlEntityTile variant="encode" />);
     expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();
   });
@@ -72,7 +72,7 @@ describe("V-2: variant=encode（方向固定・トグル非表示）", () => {
 
 // --- V-3: variant=decode ---
 describe("V-3: variant=decode（方向固定・トグル非表示）", () => {
-  it("SegmentedControl（radiogroup）が表示されない", () => {
+  it("ラジオボタンの組が表示されない", () => {
     render(<HtmlEntityTile variant="decode" />);
     expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();
   });
@@ -177,10 +177,11 @@ describe("V-9: a11y（role='status' aria-live='polite'）", () => {
     expect(status.textContent).not.toBe("");
   });
 
-  it("SegmentedControl に aria-label が付いている（C-2 要件）", () => {
+  it("ラジオボタンの組は見出しを名前として持つ", () => {
     render(<HtmlEntityTile variant="full" />);
-    const radiogroup = screen.getByRole("radiogroup");
-    expect(radiogroup).toHaveAttribute("aria-label");
+    expect(
+      screen.getByRole("radiogroup", { name: "変換モード" }),
+    ).toBeInTheDocument();
   });
 });
 

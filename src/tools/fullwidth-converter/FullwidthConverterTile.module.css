@@ -4,7 +4,7 @@
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  */
 
-/* 方向トグル行（variant=full のみ表示） */
+/* 方向のラジオボタンの組と、その下の並びのあいだをあける */
 .controls {
   margin-bottom: 1rem;
 }

@@ -2,7 +2,7 @@
  * 記事・辞典ページ向けの関連コンテンツ回遊ブロック。
  * 品書きの流儀: 罫区切りのリスト（カードのグリッド・色付き左罫・絵文字は使わない）。
  * 器は静か——背景色・box-shadow・角丸カードなし。区切りの主役は --rule の一本罫。
- * 全トークン経由・色/角丸の直書きなし。値札は Nefuda を再利用する。
+ * 全トークン経由・色/角丸の直書きなし。
  */
 
 .container {
@@ -53,7 +53,7 @@
   outline-offset: 2px;
 }
 
-/* 品名と値札を横並び（折り返し可）で置く。 */
+/* 品名と種別を横並び（折り返し可）で置く。 */
 .head {
   display: flex;
   align-items: baseline;
@@ -74,6 +74,13 @@
   color: var(--accent);
   text-decoration: underline;
   text-underline-offset: 0.15em;
+}
+
+/* 種別は枠や地で囲まず、補助情報の文字で置く（§7）。 */
+.kind {
+  color: var(--ink-2);
+  font-family: var(--font-body);
+  font-size: var(--text-small);
 }
 
 /* ひとこと: 補足の墨。文章として読ませるため 16px/行間で組む。 */

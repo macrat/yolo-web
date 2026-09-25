@@ -10,18 +10,9 @@
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  */
 
-/* カテゴリ選択セクション */
+/* カテゴリのラジオボタンの組と、その下の変換の欄のあいだをあける */
 .categorySection {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
   margin-bottom: 1.25rem;
-}
-
-.sectionLabel {
-  font-size: 0.85rem;
-  color: var(--ink-2);
-  margin: 0;
 }
 
 /* 変換パネル: 変換元・スワップ・変換先を横並び */

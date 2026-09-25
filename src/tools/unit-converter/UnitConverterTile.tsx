@@ -17,7 +17,7 @@
  *
  * ## variant
  *
- * - `"full"` (デフォルト): カテゴリ SegmentedControl を表示し、全カテゴリをユーザーが
+ * - `"full"` (デフォルト): カテゴリのラジオボタンの組を出し、全カテゴリをユーザーが
  *   切り替えられる。道具箱・詳細ページ共通。
  *
  * ## 使い方
@@ -32,14 +32,14 @@ import { useState, useCallback, useMemo, useId } from "react";
 import Panel from "@/components/Panel";
 import { convert, getAllCategories, type UnitCategory } from "./logic";
 import Select from "@/components/Select";
-import SegmentedControl from "@/components/SegmentedControl";
+import RadioGroup from "@/components/RadioGroup";
 import ErrorMessage from "@/components/ErrorMessage";
 import Input from "@/components/Input";
 import styles from "./UnitConverterTile.module.css";
 
 const categories = getAllCategories();
 
-/** カテゴリ選択のSegmentedControl用オプション */
+/** カテゴリのラジオボタンの組に渡す選択肢 */
 const categoryOptions = categories.map((cat) => ({
   label: cat.name,
   value: cat.id,
@@ -61,7 +61,7 @@ export type UnitConverterTileVariant = "full";
 export interface UnitConverterTileProps {
   /**
    * 表示バリエーション（デフォルト: "full"）
-   * - "full": カテゴリ SegmentedControl を表示し、全カテゴリをユーザーが切り替えられる。
+   * - "full": カテゴリのラジオボタンの組を出し、全カテゴリをユーザーが切り替えられる。
    */
   variant?: UnitConverterTileVariant;
   /** Panel の as prop に透過される HTML タグ（デフォルト: "section"） */
@@ -78,7 +78,6 @@ export default function UnitConverterTile({
   // ---------- id インスタンス一意化（A-6: 複数同居時の重複 id・label 誤結合防止） ----------
   const uid = useId();
   const valueInputId = `${uid}-value`;
-  const categoryGroupLabelId = `${uid}-category-label`;
 
   // ---------- State ----------
   const [category, setCategory] = useState<UnitCategory>("length");
@@ -147,18 +146,14 @@ export default function UnitConverterTile({
   // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）（A-1）
   return (
     <Panel as={as} className={className}>
-      {/* カテゴリ選択 — A-2: SegmentedControl に aria-labelledby（C-2）・C-5: 初期値が options 内に存在 */}
-      <div className={styles.categorySection}>
-        <p id={categoryGroupLabelId} className={styles.sectionLabel}>
-          カテゴリ
-        </p>
-        <SegmentedControl
-          options={categoryOptions}
-          value={category}
-          onChange={handleCategoryChange}
-          aria-labelledby={categoryGroupLabelId}
-        />
-      </div>
+      {/* カテゴリの切り替え */}
+      <RadioGroup
+        legend="カテゴリ"
+        options={categoryOptions}
+        value={category}
+        onChange={handleCategoryChange}
+        className={styles.categorySection}
+      />
 
       {/* 変換パネル: 値入力 + 単位セレクト + スワップ + 結果 */}
       <div className={styles.converterPanel}>

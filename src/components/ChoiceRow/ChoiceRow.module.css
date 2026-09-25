@@ -54,8 +54,10 @@
   visibility: visible;
 }
 
+/* 狭い幅で選択肢の語の途中で折れると読み違えるので、ボタンと同じく文節で折る。 */
 .label {
   min-width: 0;
+  word-break: auto-phrase;
 }
 
 /* §6 無効。押せる範囲の縁に太い破線の枠を引き、字と形を --ink-2 にする。枠は箱の内側に引き、

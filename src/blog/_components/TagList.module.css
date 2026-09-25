@@ -1,5 +1,5 @@
 /*
- * 記事タグ（値札）。Nefuda と同じ視覚言語（罫囲み・--ink-2・--radius-sm）で組み、
+ * 記事タグ。罫囲み・--ink-2・--radius-sm で組み、
  * 背景の塗りとピルの角丸は持たない。
  */
 .tags {
@@ -17,7 +17,7 @@
 .tagLink {
   display: inline-flex;
   align-items: center;
-  /* タップターゲット 44px（§6・タグはリンクのため Nefuda 静的ラベルより広い高さを取る） */
+  /* タップターゲット 44px（§6） */
   min-height: 44px;
   color: var(--ink-2);
   font-family: var(--font-body);

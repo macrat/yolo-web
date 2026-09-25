@@ -74,18 +74,16 @@ describe("CronParserTile - 基本レンダリング", () => {
     });
     const group = screen.getByRole("radiogroup");
     expect(group).toBeInTheDocument();
-    const options = screen.getAllByRole("radio");
-    expect(options.length).toBe(2);
-    const labels = options.map((o) => o.textContent);
-    expect(labels).toContain("解析");
-    expect(labels).toContain("ビルダー");
+    expect(screen.getAllByRole("radio")).toHaveLength(2);
+    expect(screen.getByRole("radio", { name: "解析" })).toBeInTheDocument();
+    expect(screen.getByRole("radio", { name: "ビルダー" })).toBeInTheDocument();
   });
 
   it("variant=parser でモード切替コントロールが表示されない", async () => {
     await act(async () => {
       render(<CronParserTile variant="parser" />);
     });
-    // SegmentedControl が非表示（radiogroup なし）
+    // ラジオボタンの組が非表示（radiogroup なし）
     const group = screen.queryByRole("radiogroup");
     expect(group).toBeNull();
   });
@@ -294,14 +292,13 @@ describe("CronParserTile - ARIA", () => {
     expect(statusEl?.textContent?.trim()).toBeTruthy();
   });
 
-  it("variant=full でSegmentedControlにaria-labelが付与されている（C-2）", async () => {
+  it("variant=full でラジオボタンの組が見出しを名前として持つ", async () => {
     await act(async () => {
       render(<CronParserTile variant="full" />);
     });
-    const group = screen.getByRole("radiogroup");
-    const hasLabel =
-      group.hasAttribute("aria-label") || group.hasAttribute("aria-labelledby");
-    expect(hasLabel).toBe(true);
+    expect(
+      screen.getByRole("radiogroup", { name: "モード" }),
+    ).toBeInTheDocument();
   });
 });
 

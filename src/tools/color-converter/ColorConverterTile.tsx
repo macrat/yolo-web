@@ -15,10 +15,10 @@
  *
  * ## variant
  *
- * - `"full"` (デフォルト): SegmentedControl で HEX/RGB/HSL モードをユーザーが切り替える。
- * - `"hex"`: 入力モードを HEX に固定し、SegmentedControl を非表示にする。
- * - `"rgb"`: 入力モードを RGB に固定し、SegmentedControl を非表示にする。
- * - `"hsl"`: 入力モードを HSL に固定し、SegmentedControl を非表示にする。
+ * - `"full"` (デフォルト): ラジオボタンの組で HEX/RGB/HSL モードをユーザーが切り替える。
+ * - `"hex"`: 入力モードを HEX に固定し、ラジオボタンの組を出さない。
+ * - `"rgb"`: 入力モードを RGB に固定し、ラジオボタンの組を出さない。
+ * - `"hsl"`: 入力モードを HSL に固定し、ラジオボタンの組を出さない。
  *
  * ## 使い方
  *
@@ -39,7 +39,7 @@
 import { useId, useState, useCallback } from "react";
 import Panel from "@/components/Panel";
 import Button from "@/components/Button";
-import SegmentedControl from "@/components/SegmentedControl";
+import RadioGroup from "@/components/RadioGroup";
 import Input from "@/components/Input";
 import ErrorMessage from "@/components/ErrorMessage";
 import {
@@ -96,10 +96,10 @@ function buildSummary(result: ColorResult | null): string {
 export interface ColorConverterTileProps {
   /**
    * 表示バリエーション（デフォルト: "full"）
-   * - "full": SegmentedControl でモードを切り替え可能
-   * - "hex": HEX モードに固定、SegmentedControl 非表示
-   * - "rgb": RGB モードに固定、SegmentedControl 非表示
-   * - "hsl": HSL モードに固定、SegmentedControl 非表示
+   * - "full": ラジオボタンの組でモードを切り替える
+   * - "hex": HEX モードに固定、ラジオボタンの組を出さない
+   * - "rgb": RGB モードに固定、ラジオボタンの組を出さない
+   * - "hsl": HSL モードに固定、ラジオボタンの組を出さない
    */
   variant?: ColorConverterTileVariant;
   /** 初期入力値（デフォルト: ""）。"full" または固定モードの初期値として使われる。 */
@@ -191,7 +191,7 @@ export default function ColorConverterTile({
    * ユーザーが誤入力を疑う。空欄から入力し直してもらう設計が最もシンプル。
    */
   const handleModeChange = useCallback((newMode: string) => {
-    // fixedMode がある場合はここに到達しない（SegmentedControl が非表示）
+    // fixedMode がある場合はここに到達しない（ラジオボタンの組を出さない）
     setDynamicMode(newMode as InputMode);
     setResult(null);
     setInputText("");
@@ -234,11 +234,11 @@ export default function ColorConverterTile({
       {/* モード切替 (variant=full のみ表示) */}
       {fixedMode === null && (
         <div className={styles.modeControl}>
-          <SegmentedControl
+          <RadioGroup
             options={MODE_OPTIONS}
             value={dynamicMode}
             onChange={handleModeChange}
-            aria-label="入力モード"
+            legend="入力モード"
           />
         </div>
       )}

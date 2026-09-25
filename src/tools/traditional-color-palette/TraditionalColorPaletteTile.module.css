@@ -31,14 +31,6 @@
   color: var(--ink-2);
 }
 
-/* --- カテゴリフィルタ（SegmentedControl を使用する） --- */
-
-.categorySection {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-
 /* --- スウォッチグリッド --- */
 
 .swatchGrid {

@@ -22,7 +22,7 @@ import styles from "./page.module.css";
  *
  * 旧デザイン（ColorCard のカードグリッド・§8-4 とピル群・§8-5・旧トークン）を全廃し、辞典の
  * 「引く体験」に揃えた——絞り込んだ色は共有の品書き（DictionaryEntryList）で「色名＋色見本＋
- * ローマ字＋HEX の値札」として出し、ほかの色みへの導線は罫の索引（FacetIndex）で置く。
+ * ローマ字＋HEX」として出し、ほかの色みへの導線は罫の索引（FacetIndex）で置く。
  * 色見本は成果物の中身＝和色（§2 の唯一の例外）としてデータ由来の変数で当て、器には漏らさない。
  * 色・角丸・書体・余白はすべてトークン経由（§10・直書き禁止）。BreadcrumbList JSON-LD は維持。
  */
@@ -55,7 +55,7 @@ export default async function ColorCategoryPage({
   const colorList = getColorsByCategory(category as ColorCategory);
   const categoryLabel = COLOR_CATEGORY_LABELS[category as ColorCategory];
 
-  // 品書きの行（色名＋色見本＋ローマ字＋HEX の値札）。swatch は成果物の中身＝和色（§2）。
+  // 品書きの行（色名＋色見本＋ローマ字＋HEX）。swatch は成果物の中身＝和色（§2）。
   const entries: DictionaryEntryItem[] = colorList.map((c) => ({
     key: c.slug,
     name: c.name,

@@ -14,8 +14,8 @@ import styles from "./page.module.css";
 /**
  * 漢字辞典・部首ファセット面。
  *
- * カードのグリッドやピル群を使わず、辞典の「引く体験」に揃える——絞り込んだ漢字は共有の品書き（DictionaryEntryList）で「漢字＋読み＋意味＋学年/画数の
- * 値札」として出し、ほかの部首への導線は罫の索引（FacetIndex）で置く。部首で絞ったので値札は
+ * カードのグリッドやピル群を使わず、辞典の「引く体験」に揃える——絞り込んだ漢字は共有の品書き（DictionaryEntryList）で「漢字＋読み＋意味＋学年/画数」
+ * として出し、ほかの部首への導線は罫の索引（FacetIndex）で置く。部首で絞ったので種別は
  * 学年と画数を添える。色・角丸・書体・余白はすべてトークン経由。
  */
 
@@ -72,7 +72,7 @@ export default async function KanjiRadicalPage({
 
   const kanjiList = getKanjiByRadical(radical);
 
-  // 品書きの行（漢字＋読み＋意味＋学年/画数の値札）。部首で絞ったので値札は学年と画数を添える。
+  // 品書きの行（漢字＋読み＋意味＋学年/画数）。部首で絞ったので種別は学年と画数を添える。
   const entries: DictionaryEntryItem[] = kanjiList.map((k) => ({
     key: k.character,
     name: k.character,

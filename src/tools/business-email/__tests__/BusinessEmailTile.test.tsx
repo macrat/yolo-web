@@ -73,16 +73,16 @@ describe("BusinessEmailTile", () => {
     it("初期カテゴリは「お礼」でチェック状態", () => {
       render(<BusinessEmailTile variant="full" />);
       const thanksOption = screen.getByRole("radio", { name: "お礼" });
-      expect(thanksOption).toHaveAttribute("aria-checked", "true");
+      expect(thanksOption).toBeChecked();
     });
 
     it("「お詫び」に切り替えるとチェック状態が変わる", () => {
       render(<BusinessEmailTile variant="full" />);
       const apologyOption = screen.getByRole("radio", { name: "お詫び" });
       fireEvent.click(apologyOption);
-      expect(apologyOption).toHaveAttribute("aria-checked", "true");
+      expect(apologyOption).toBeChecked();
       const thanksOption = screen.getByRole("radio", { name: "お礼" });
-      expect(thanksOption).toHaveAttribute("aria-checked", "false");
+      expect(thanksOption).not.toBeChecked();
     });
 
     it("カテゴリ切替後にテンプレートセレクトが存在する", () => {
@@ -220,10 +220,11 @@ describe("BusinessEmailTile", () => {
       expect(statusRegion).toHaveAttribute("aria-live", "polite");
     });
 
-    it("SegmentedControl に aria-label が付与されている（C-2）", () => {
+    it("ラジオボタンの組は見出しを名前として持つ", () => {
       render(<BusinessEmailTile variant="full" />);
-      const radiogroup = screen.getByRole("radiogroup");
-      expect(radiogroup).toHaveAttribute("aria-label");
+      expect(
+        screen.getByRole("radiogroup", { name: "メールの種類" }),
+      ).toBeInTheDocument();
     });
 
     it("件名・本文プレビューに aria-label が付与されている", () => {

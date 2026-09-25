@@ -4,12 +4,8 @@
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  */
 
-/* コントロール行: SegmentedControl */
+/* 方向のラジオボタンの組と、その下の欄のあいだをあける */
 .controls {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
   margin-bottom: 1rem;
 }
 

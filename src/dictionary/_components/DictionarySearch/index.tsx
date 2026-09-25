@@ -10,7 +10,7 @@ import styles from "./DictionarySearch.module.css";
 /**
  * 検索器に渡す 1 件の正規化データ。各辞典（kanji/yoji/colors）が自分のデータ形から
  * この共通形へ落とし込んで渡す（器はデータ形に依存しない）。表示フィールド（品名・よみ・
- * 意味・値札・色見本）は品書きの共有型 {@link DictionaryEntryItem} を継承し、検索器は
+ * 意味・種別・色見本）は品書きの共有型 {@link DictionaryEntryItem} を継承し、検索器は
  * 検索対象文字列（haystack）だけを足す——結果の見せ方はファセット絞り込みと同じ器を共有する。
  */
 export interface DictionarySearchItem extends DictionaryEntryItem {
@@ -45,7 +45,7 @@ const DEFAULT_MAX_RESULTS = 100;
  * - 入力欄は店構え（罫・--radius-sm・ピル禁止・影なし）。検索は substring 一致（haystack.includes）で、
  *   辞典ごとの検索ロジックを器へ持ち込まない（呼び出し側が haystack を組む）。
  * - 検索結果はカードのグリッドでなく品書き（罫区切りリスト）で出す。件数は入力欄の下に
- *   小さな注記（値札の言語）で。空クエリのときは全件を吐かず、引き方の一言だけを出す
+ *   小さな補助情報の文字で。空クエリのときは全件を吐かず、引き方の一言だけを出す
  *   （閲覧の導線はファセット/カテゴリの棚が担う）。
  * - 色見本（colors）は成果物の中身（和色）として結果行にだけ出す（§2）——器には漏らさない。
  */

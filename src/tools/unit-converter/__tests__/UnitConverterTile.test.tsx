@@ -33,7 +33,7 @@ describe("T-1: 基本レンダリング", () => {
     ).toBeInTheDocument();
   });
 
-  test("カテゴリのSegmentedControlが表示される", () => {
+  test("カテゴリのラジオボタンの組が表示される", () => {
     render(<UnitConverterTile />);
     expect(screen.getByText("カテゴリ")).toBeInTheDocument();
     const radioButtons = screen.getAllByRole("radio");
@@ -150,13 +150,13 @@ describe("T-4: 変換ロジックの正確性", () => {
 
 // ---- T-5: ARIA 属性 ----
 describe("T-5: ARIA 属性", () => {
-  test("SegmentedControl が role='radiogroup' を持つ", () => {
+  test("ラジオボタンの組が role='radiogroup' を持つ", () => {
     render(<UnitConverterTile />);
     const radiogroup = screen.getByRole("radiogroup");
     expect(radiogroup).toBeInTheDocument();
   });
 
-  test("カテゴリ SegmentedControl が aria-labelledby を持つ", () => {
+  test("カテゴリ ラジオボタンの組が aria-labelledby を持つ", () => {
     render(<UnitConverterTile />);
     const radiogroup = screen.getByRole("radiogroup");
     expect(radiogroup).toHaveAttribute("aria-labelledby");
@@ -190,7 +190,7 @@ describe("T-5: ARIA 属性", () => {
   test("初期値で長さカテゴリのラジオボタンが選択状態になっている", () => {
     render(<UnitConverterTile />);
     const lengthRadio = screen.getByRole("radio", { name: "長さ" });
-    expect(lengthRadio).toHaveAttribute("aria-checked", "true");
+    expect(lengthRadio).toBeChecked();
   });
 
   test("Input と label の関連付けが useId で一意化されている", () => {

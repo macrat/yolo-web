@@ -2,7 +2,7 @@
  * KanaConverterTile のユニットテスト（TDD: 実装前に書く）
  *
  * 検証観点:
- * - V-1: variant=full でのレンダリング（4択 SegmentedControl が表示される）
+ * - V-1: variant=full でのレンダリング（4択 ラジオボタンの組が表示される）
  * - V-2: variant=hiragana-to-katakana（固定・モード選択 UI 非表示）
  * - V-3: variant=katakana-to-hiragana（固定・モード選択 UI 非表示）
  * - V-4: variant=to-fullwidth-katakana（固定・モード選択 UI 非表示）
@@ -19,7 +19,7 @@
  * - V-15: コピーボタンが空入力時に disabled
  * - V-16: コピーボタンが出力ありのとき有効
  * - V-17: 空入力時モード切替後に古い結果が残らない
- * - V-18: SegmentedControl に aria-label が設定されている（C-2）
+ * - V-18: ラジオボタンの組に aria-label が設定されている（C-2）
  * - V-19: CSS トークン検証（--color-* 不使用・--accent 直塗りなし・bold なし）
  * - V-20: コピーボタンクリックで正しい値がクリップボードに書き込まれる（旧 E-6 相当）
  * - V-21: コピー後に COPIED_LABEL が表示される（ラベル遷移）
@@ -46,7 +46,7 @@ beforeEach(() => {
 
 // --- V-1: variant=full ---
 describe("V-1: variant=full", () => {
-  it("4択の SegmentedControl（radiogroup）が表示される", () => {
+  it("4択の ラジオボタンの組が表示される", () => {
     render(<KanaConverterTile variant="full" />);
     expect(screen.getByRole("radiogroup")).toBeInTheDocument();
     // 4つのラジオボタンが存在する
@@ -64,7 +64,7 @@ describe("V-1: variant=full", () => {
 
 // --- V-2: variant=hiragana-to-katakana（固定） ---
 describe("V-2: variant=hiragana-to-katakana（固定）", () => {
-  it("SegmentedControl（radiogroup）が表示されない", () => {
+  it("ラジオボタンの組が表示されない", () => {
     render(<KanaConverterTile variant="hiragana-to-katakana" />);
     expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();
   });
@@ -80,7 +80,7 @@ describe("V-2: variant=hiragana-to-katakana（固定）", () => {
 
 // --- V-3: variant=katakana-to-hiragana（固定） ---
 describe("V-3: variant=katakana-to-hiragana（固定）", () => {
-  it("SegmentedControl（radiogroup）が表示されない", () => {
+  it("ラジオボタンの組が表示されない", () => {
     render(<KanaConverterTile variant="katakana-to-hiragana" />);
     expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();
   });
@@ -88,7 +88,7 @@ describe("V-3: variant=katakana-to-hiragana（固定）", () => {
 
 // --- V-4: variant=to-fullwidth-katakana（固定） ---
 describe("V-4: variant=to-fullwidth-katakana（固定）", () => {
-  it("SegmentedControl（radiogroup）が表示されない", () => {
+  it("ラジオボタンの組が表示されない", () => {
     render(<KanaConverterTile variant="to-fullwidth-katakana" />);
     expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();
   });
@@ -96,7 +96,7 @@ describe("V-4: variant=to-fullwidth-katakana（固定）", () => {
 
 // --- V-5: variant=to-halfwidth-katakana（固定） ---
 describe("V-5: variant=to-halfwidth-katakana（固定）", () => {
-  it("SegmentedControl（radiogroup）が表示されない", () => {
+  it("ラジオボタンの組が表示されない", () => {
     render(<KanaConverterTile variant="to-halfwidth-katakana" />);
     expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();
   });
@@ -298,8 +298,8 @@ describe("V-17: モード切替後に古い結果が残らない", () => {
   });
 });
 
-// --- V-18: SegmentedControl に aria-label（C-2） ---
-describe("V-18: SegmentedControl に aria-label（C-2）", () => {
+// --- V-18: ラジオボタンの組に aria-label（C-2） ---
+describe("V-18: ラジオボタンの組に aria-label（C-2）", () => {
   it("variant=full の radiogroup に aria-label が設定されている", () => {
     render(<KanaConverterTile variant="full" />);
     const radiogroup = screen.getByRole("radiogroup");

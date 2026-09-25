@@ -17,12 +17,12 @@
  *
  * ## variant
  *
- * - `"full"` (デフォルト): 方向トグル（SegmentedControl）を表示し
+ * - `"full"` (デフォルト): 方向のラジオボタンを表示し
  *   encode / decode をユーザーが切り替えられる。
- * - `"encode"`: 方向を encode に固定し、SegmentedControl を非表示にする。
+ * - `"encode"`: 方向を encode に固定し、ラジオボタンの組を出さない。
  *   T-31 で道具箱に恒久展示されるファイル I/O 系の代表として「画像 → Base64」の
  *   変換器として一目で分かる構成にする。
- * - `"decode"`: 方向を decode に固定し、SegmentedControl を非表示にする。
+ * - `"decode"`: 方向を decode に固定し、ラジオボタンの組を出さない。
  *
  * ## 非同期安全性（D-4 準拠）
  *
@@ -41,7 +41,7 @@
 import { useId, useState, useCallback, useRef } from "react";
 import Panel from "@/components/Panel";
 import Button from "@/components/Button";
-import SegmentedControl from "@/components/SegmentedControl";
+import RadioGroup from "@/components/RadioGroup";
 import Textarea from "@/components/Textarea";
 import ErrorMessage from "@/components/ErrorMessage";
 import FileDropZone from "@/components/FileDropZone";
@@ -76,9 +76,9 @@ export type ImageBase64TileVariant = "full" | "encode" | "decode";
 export interface ImageBase64TileProps {
   /**
    * 表示バリエーション（デフォルト: "full"）
-   * - "full": 方向トグル表示（encode / decode をユーザーが切り替え）
-   * - "encode": 方向を encode に固定、方向トグル非表示
-   * - "decode": 方向を decode に固定、方向トグル非表示
+   * - "full": 方向のラジオボタンを出す（encode / decode をユーザーが切り替え）
+   * - "encode": 方向を encode に固定、方向のラジオボタンを出さない
+   * - "decode": 方向を decode に固定、方向のラジオボタンを出さない
    */
   variant?: ImageBase64TileVariant;
   /** Panel の as prop に透過される HTML タグ（デフォルト: "section"） */
@@ -218,14 +218,14 @@ export default function ImageBase64Tile({
   // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）
   return (
     <Panel as={as} className={className}>
-      {/* variant=full のみ方向トグルを表示。encode/decode は固定のため非表示。 */}
+      {/* variant=full のみ方向のラジオボタンを出す。encode/decode は固定のため非表示。 */}
       {fixedMode === null && (
         <div className={styles.controls}>
-          <SegmentedControl
+          <RadioGroup
             options={MODE_OPTIONS}
             value={dynamicMode}
             onChange={handleModeChange}
-            aria-label="変換モード"
+            legend="変換モード"
           />
         </div>
       )}

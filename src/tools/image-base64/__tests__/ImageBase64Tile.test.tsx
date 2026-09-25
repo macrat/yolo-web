@@ -89,7 +89,7 @@ describe("ImageBase64Tile", () => {
   // -------------------------------------------------------
   it("E-1: variant=full — ToolPageLayout なしでコンポーネントが正常に描画される", () => {
     render(<ImageBase64Tile variant="full" />);
-    // SegmentedControl（モード切替）が存在する
+    // ラジオボタンの組（モード切替）が存在する
     expect(screen.getByRole("radiogroup")).toBeInTheDocument();
     // FileDropZone が存在する
     expect(screen.getByLabelText("画像ファイル")).toBeInTheDocument();
@@ -98,9 +98,9 @@ describe("ImageBase64Tile", () => {
   // -------------------------------------------------------
   // variant=encode: 固定モードのレンダリング
   // -------------------------------------------------------
-  it("variant=encode — SegmentedControl が非表示、FileDropZone が表示される", () => {
+  it("variant=encode — ラジオボタンの組が非表示、FileDropZone が表示される", () => {
     render(<ImageBase64Tile variant="encode" />);
-    // SegmentedControl が表示されない
+    // ラジオボタンの組が表示されない
     expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();
     // FileDropZone が表示される
     expect(screen.getByLabelText("画像ファイル")).toBeInTheDocument();
@@ -109,9 +109,9 @@ describe("ImageBase64Tile", () => {
   // -------------------------------------------------------
   // variant=decode: 固定モードのレンダリング
   // -------------------------------------------------------
-  it("variant=decode — SegmentedControl が非表示、Base64 入力欄が表示される", () => {
+  it("variant=decode — ラジオボタンの組が非表示、Base64 入力欄が表示される", () => {
     render(<ImageBase64Tile variant="decode" />);
-    // SegmentedControl が表示されない
+    // ラジオボタンの組が表示されない
     expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();
     // Base64 テキストエリアが表示される
     expect(screen.getByPlaceholderText(/data:image/i)).toBeInTheDocument();
@@ -232,10 +232,11 @@ describe("ImageBase64Tile", () => {
   // -------------------------------------------------------
   // E-5: ARIA
   // -------------------------------------------------------
-  it("E-5: SegmentedControlがrole=radiogroupとaria-labelを持つ", () => {
+  it("E-5: ラジオボタンの組が見出しを名前として持つ", () => {
     render(<ImageBase64Tile variant="full" />);
-    const radiogroup = screen.getByRole("radiogroup");
-    expect(radiogroup).toHaveAttribute("aria-label", "変換モード");
+    expect(
+      screen.getByRole("radiogroup", { name: "変換モード" }),
+    ).toBeInTheDocument();
   });
 
   it("E-5: エンコード結果欄に実テキストを持つ独立した role=status 要素が存在する（C-3 準拠）", async () => {

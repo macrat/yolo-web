@@ -46,7 +46,7 @@
   margin: 0 0 var(--space-48);
 }
 
-/* カテゴリの品書き（区画）。見出し・行・値札の見た目は Shinagaki/Nefuda が持つ。 */
+/* カテゴリの品書き（区画）。見出し・行・種別の見た目は Shinagaki が持つ。 */
 .directory {
   margin: 0;
 }

@@ -114,9 +114,12 @@ describe("YojiSearchTile", () => {
     });
     await user.click(button);
 
-    expect(screen.getByText("例文")).toBeInTheDocument();
-    expect(screen.getByText("カテゴリ")).toBeInTheDocument();
-    expect(screen.getByText("難易度")).toBeInTheDocument();
+    // 絞り込みの組の見出しと同じ語なので、詳細の見出し（dt）に絞って探す。
+    expect(screen.getByText("例文", { selector: "dt" })).toBeInTheDocument();
+    expect(
+      screen.getByText("カテゴリ", { selector: "dt" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("難易度", { selector: "dt" })).toBeInTheDocument();
   });
 
   it("collapses detail panel on second click", async () => {

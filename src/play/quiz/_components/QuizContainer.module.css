@@ -20,6 +20,13 @@
   gap: 1rem;
 }
 
+/* 所要情報は枠や地で囲まず、補助情報の文字で置く。 */
+.introFacts {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: var(--text-small);
+}
+
 /* 開始前の一言（補足）。目立たせない */
 .introLead {
   font-size: 0.95rem;

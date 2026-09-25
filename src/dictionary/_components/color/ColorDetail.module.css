@@ -96,7 +96,7 @@
 }
 
 /*
- * カテゴリ導線: 値札（Nefuda）と同じ静かな器（罫囲み・--radius-sm・--ink-2）で、索引への
+ * カテゴリ導線: 罫囲み・--radius-sm・--ink-2 の静かな器で、索引への
  * リンクなので hover で --accent に変える。ピルにしない。
  */
 .categoryLink {

@@ -3,7 +3,7 @@
 import { useState, useMemo, useId } from "react";
 import Panel from "@/components/Panel";
 import Input from "@/components/Input";
-import SegmentedControl from "@/components/SegmentedControl";
+import RadioGroup from "@/components/RadioGroup";
 import {
   YOJI_CATEGORY_LABELS,
   YOJI_DIFFICULTY_LABELS,
@@ -135,15 +135,14 @@ export default function YojiSearchTile({
         </div>
 
         <div className={styles.filters}>
-          <SegmentedControl
+          <RadioGroup
             options={CATEGORY_OPTIONS}
             value={category}
             onChange={(val) => setCategory(val as YojiCategory | "all")}
-            aria-label="カテゴリで絞り込み"
-            className={styles.categoryControl}
+            legend="カテゴリ"
           />
           <div className={styles.subFilters}>
-            <SegmentedControl
+            <RadioGroup
               options={DIFFICULTY_OPTIONS}
               value={String(difficulty)}
               onChange={(val) =>
@@ -151,13 +150,13 @@ export default function YojiSearchTile({
                   val === "all" ? "all" : (Number(val) as YojiDifficulty),
                 )
               }
-              aria-label="難易度で絞り込み"
+              legend="難易度"
             />
-            <SegmentedControl
+            <RadioGroup
               options={ORIGIN_OPTIONS}
               value={origin}
               onChange={(val) => setOrigin(val as YojiOrigin | "all")}
-              aria-label="出典で絞り込み"
+              legend="出典"
             />
           </div>
         </div>

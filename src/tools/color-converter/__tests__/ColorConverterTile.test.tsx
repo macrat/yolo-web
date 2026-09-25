@@ -4,10 +4,10 @@
  * cycle-228 T-15: ColorConverterPage.test.tsx の振る舞いを移植・拡張。
  *
  * テスト項目:
- * - variant="full": SegmentedControl 表示・全モード切替・変換ロジック・コピー等
- * - variant="hex": SegmentedControl 非表示・HEX ラベル表示・変換動作・defaultInput プリフィル
- * - variant="rgb": SegmentedControl 非表示・RGB ラベル表示・変換動作・defaultInput プリフィル
- * - variant="hsl": SegmentedControl 非表示・HSL ラベル表示・変換動作・defaultInput プリフィル
+ * - variant="full": ラジオボタンの組表示・全モード切替・変換ロジック・コピー等
+ * - variant="hex": ラジオボタンの組非表示・HEX ラベル表示・変換動作・defaultInput プリフィル
+ * - variant="rgb": ラジオボタンの組非表示・RGB ラベル表示・変換動作・defaultInput プリフィル
+ * - variant="hsl": ラジオボタンの組非表示・HSL ラベル表示・変換動作・defaultInput プリフィル
  * - 複数インスタンス同居時の id 一意性
  * - Panel ルート要素であること
  * - useId ベース id で label 関連付けが切れないこと
@@ -41,7 +41,7 @@ afterEach(() => {
 describe("E-1: 基本レンダリング (variant=full)", () => {
   it("コンポーネントが正常にレンダリングされる", () => {
     render(<ColorConverterTile />);
-    // SegmentedControl (radiogroup) が存在すること
+    // ラジオボタンの組が存在すること
     expect(screen.getByRole("radiogroup")).toBeInTheDocument();
     // テキスト入力欄が存在すること
     expect(screen.getByLabelText(/HEX値/)).toBeInTheDocument();
@@ -180,15 +180,16 @@ describe("E-4: 変換ロジックの正確性 (UI 経由)", () => {
 });
 
 describe("E-5: ARIA 属性", () => {
-  it("SegmentedControl が role='radiogroup' を持つ", () => {
+  it("ラジオボタンの組が role='radiogroup' を持つ", () => {
     render(<ColorConverterTile />);
     expect(screen.getByRole("radiogroup")).toBeInTheDocument();
   });
 
-  it("SegmentedControl に aria-label が付いている", () => {
+  it("ラジオボタンの組は見出しを名前として持つ", () => {
     render(<ColorConverterTile />);
-    const radiogroup = screen.getByRole("radiogroup");
-    expect(radiogroup).toHaveAttribute("aria-label");
+    expect(
+      screen.getByRole("radiogroup", { name: "入力モード" }),
+    ).toBeInTheDocument();
   });
 
   it("結果サマリに role='status' と aria-live='polite' が付いている", () => {
@@ -308,7 +309,7 @@ describe("G-1: 入力修正時のエラー状態クリア", () => {
 });
 
 describe("variant='hex': 固定 HEX モード", () => {
-  it("(a) SegmentedControl が非表示になる", () => {
+  it("(a) ラジオボタンの組が非表示になる", () => {
     render(<ColorConverterTile variant="hex" />);
     expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();
   });
@@ -335,7 +336,7 @@ describe("variant='hex': 固定 HEX モード", () => {
 });
 
 describe("variant='rgb': 固定 RGB モード", () => {
-  it("(a) SegmentedControl が非表示になる", () => {
+  it("(a) ラジオボタンの組が非表示になる", () => {
     render(<ColorConverterTile variant="rgb" />);
     expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();
   });
@@ -362,7 +363,7 @@ describe("variant='rgb': 固定 RGB モード", () => {
 });
 
 describe("variant='hsl': 固定 HSL モード", () => {
-  it("(a) SegmentedControl が非表示になる", () => {
+  it("(a) ラジオボタンの組が非表示になる", () => {
     render(<ColorConverterTile variant="hsl" />);
     expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();
   });

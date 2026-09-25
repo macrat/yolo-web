@@ -9,7 +9,7 @@
  * - E-2: ファイル選択後のリサイズコントロール表示
  * - E-3: 初期状態
  * - E-4: ファイル選択後の幅/高さ設定・Canvas drawImage 呼び出し
- * - E-5: ARIA属性（SegmentedControl・ライブリージョン）
+ * - E-5: ARIA属性（ラジオボタンの組・ライブリージョン）
  * - E-6/E-7/E-8: コピーボタンなし（download 主体）
  * - E-12: CSSトークン検証
  * - A-1: Panel ルート確認
@@ -298,7 +298,7 @@ describe("ImageResizerTile", () => {
   // -------------------------------------------------------
   // E-5: ARIA属性
   // -------------------------------------------------------
-  it("E-5: SegmentedControl に role=radiogroup と aria-label/labelledby が付与されている", async () => {
+  it("E-5: ラジオボタンの組が見出しを名前として持つ", async () => {
     render(<ImageResizerTile />);
 
     const fileInput = document.querySelector(
@@ -308,11 +308,9 @@ describe("ImageResizerTile", () => {
 
     await selectFileAndWaitImageLoad(fileInput, file);
 
-    const radiogroup = screen.getByRole("radiogroup");
-    const hasLabel =
-      radiogroup.hasAttribute("aria-labelledby") ||
-      radiogroup.hasAttribute("aria-label");
-    expect(hasLabel).toBe(true);
+    expect(
+      screen.getByRole("radiogroup", { name: "サイズの決め方" }),
+    ).toBeInTheDocument();
   });
 
   it("E-5b: リサイズ後に role=status aria-live=polite の要素が存在しサマリテキストを含む", async () => {

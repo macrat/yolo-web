@@ -92,8 +92,11 @@
   line-height: 1.7;
 }
 
-/* 値札群（種別・難易度・コード等）の上アキ。 */
-.tags {
+/* 種別（種別・難易度・コード等）は枠や地で囲まず、補助情報の文字で置く（§7）。 */
+.kind {
   display: block;
   margin: var(--space-8) 0 0;
+  color: var(--ink-2);
+  font-family: var(--font-body);
+  font-size: var(--text-small);
 }

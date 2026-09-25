@@ -17,9 +17,9 @@
  *
  * ## variant
  *
- * - `"full"` (デフォルト): 言語 SegmentedControl を表示し、Lorem/日本語をユーザーが切り替えられる。
- * - `"lorem"`: 言語を Lorem Ipsum に固定し、SegmentedControl を非表示にする。
- * - `"japanese"`: 言語を日本語に固定し、SegmentedControl を非表示にする。
+ * - `"full"` (デフォルト): 言語のラジオボタンの組を出し、Lorem/日本語をユーザーが切り替えられる。
+ * - `"lorem"`: 言語を Lorem Ipsum に固定し、ラジオボタンの組を出さない。
+ * - `"japanese"`: 言語を日本語に固定し、ラジオボタンの組を出さない。
  *
  * 固定 variant でも段落数・文数コントロール・コピーボタンは維持（G-3 feature-preserving）。
  *
@@ -33,7 +33,7 @@
 import { useId, useMemo, useState } from "react";
 import Panel from "@/components/Panel";
 import Button from "@/components/Button";
-import SegmentedControl from "@/components/SegmentedControl";
+import RadioGroup from "@/components/RadioGroup";
 import Textarea from "@/components/Textarea";
 import Input from "@/components/Input";
 import {
@@ -60,9 +60,9 @@ const LANGUAGE_OPTIONS: { label: string; value: TextLanguage }[] = [
 export interface DummyTextTileProps {
   /**
    * 表示バリエーション（デフォルト: "full"）
-   * - "full": 言語 SegmentedControl 表示（ユーザーが Lorem/日本語を切り替え）
-   * - "lorem": 言語を Lorem Ipsum に固定、SegmentedControl 非表示
-   * - "japanese": 言語を日本語に固定、SegmentedControl 非表示
+   * - "full": 言語のラジオボタンの組を出す（ユーザーが Lorem/日本語を切り替え）
+   * - "lorem": 言語を Lorem Ipsum に固定、ラジオボタンの組を出さない
+   * - "japanese": 言語を日本語に固定、ラジオボタンの組を出さない
    */
   variant?: DummyTextTileVariant;
   /** Panel の as prop に透過される HTML タグ（デフォルト: "section"） */
@@ -119,7 +119,7 @@ export default function DummyTextTile({
 
   // ---------- ハンドラ ----------
   function handleLanguageChange(value: string): void {
-    // fixedLanguage がある場合はここに到達しない（SegmentedControl が非表示）
+    // fixedLanguage がある場合はここに到達しない（ラジオボタンの組を出さない）
     setDynamicLanguage(value as TextLanguage);
   }
 
@@ -148,15 +148,14 @@ export default function DummyTextTile({
   // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）
   return (
     <Panel as={as} className={className}>
-      {/* 言語切り替え: variant=full のみ SegmentedControl を表示。固定 variant は非表示。
-          C-2: aria-label="テキスト言語" でアクセシブル名を付与（html-entity 正典と同じパターン）。 */}
+      {/* 言語の切り替え: variant=full のみ出す。固定 variant は言語が決まっているので出さない。 */}
       {fixedLanguage === null && (
         <div className={styles.languageControl}>
-          <SegmentedControl
+          <RadioGroup
             options={LANGUAGE_OPTIONS}
             value={dynamicLanguage}
             onChange={handleLanguageChange}
-            aria-label="テキスト言語"
+            legend="文章の言語"
           />
         </div>
       )}

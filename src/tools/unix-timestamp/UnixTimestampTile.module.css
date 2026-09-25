@@ -57,9 +57,10 @@
 }
 
 /* ---- タイムスタンプ入力行 ---- */
+/* 単位の組は見出しの分だけ背が高いので、下端で揃えてラジオボタンの行と入力欄を同じ高さに置く。 */
 .tsInputRow {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   gap: 0.5rem;
   flex-wrap: wrap;
 }

@@ -49,7 +49,7 @@ describe("BlogList 基本表示", () => {
         categoryLabels={categoryLabels}
       />,
     );
-    expect(screen.getByText("開発ノート")).toBeInTheDocument();
+    expect(screen.getByText("開発ノート・5分で読める")).toBeInTheDocument();
   });
 
   test("日付が表示される", () => {
@@ -149,7 +149,7 @@ describe("BlogList 基本表示", () => {
 
   test("タイトルリンクのアクセシブル名は記事タイトルのみ（stretched-link 下でも行連結にならない）", () => {
     // stretched-link（::after）は CSS のみで標的を広げる方式のため、
-    // アクセシブル名は品名だけに保たれ、description・値札・タグ名を巻き込まない。
+    // アクセシブル名は品名だけに保たれ、description・種別・タグ名を巻き込まない。
     render(
       <BlogList
         posts={[

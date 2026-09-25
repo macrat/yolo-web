@@ -102,7 +102,7 @@ export default function KanjiIndexPage() {
   const allKanji = getAllKanji();
   const totalKanji = allKanji.length;
 
-  // 検索器（共有の器）へ渡す正規化データ。表示は品名（字）＋読み＋意味＋学年の値札、
+  // 検索器（共有の器）へ渡す正規化データ。表示は品名（字）＋読み＋意味＋学年、
   // 検索対象（haystack）は字・音訓・意味・使用例を連結。
   const searchItems: DictionarySearchItem[] = allKanji.map((k) => {
     const readings = [...k.onYomi, ...k.kunYomi];

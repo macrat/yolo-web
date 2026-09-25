@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { formatDate } from "@/lib/date";
-import { NefudaGroup } from "@/components/Nefuda";
 import TagList from "./TagList";
 import styles from "./BlogList.module.css";
 
@@ -39,7 +38,7 @@ interface BlogListProps {
  *
  * カードのグリッドにせず、罫区切りのリストで組む。
  * 各行 = 品名（タイトル・リンク）+ ひとこと（description・--ink-2）+
- * 値札（カテゴリ・読了時間・{@link NefudaGroup}）+ 右端メタ（公開日）+ タグ（{@link TagList}）。
+ * 種別（カテゴリ・読了時間）+ 右端メタ（公開日）+ タグ（{@link TagList}）。
  * 器は静か——カード背景・box-shadow・角丸装飾は持たない（構造の主役は --rule の一本罫）。
  */
 export default function BlogList({
@@ -66,9 +65,9 @@ export default function BlogList({
             <p className={styles.description}>{post.description}</p>
 
             <div className={styles.metaRow}>
-              <NefudaGroup
-                labels={[categoryLabel, `${post.readingTime}分で読める`]}
-              />
+              <span className={styles.kind}>
+                {`${categoryLabel}・${post.readingTime}分で読める`}
+              </span>
               <time className={styles.date} dateTime={post.published_at}>
                 {formatDate(post.published_at)}
               </time>

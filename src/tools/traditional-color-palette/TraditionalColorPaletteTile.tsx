@@ -14,8 +14,8 @@
  *
  * ## variant
  *
- * - `"full"` (唯一のバリエーション): 検索＋カテゴリ SegmentedControl＋スウォッチグリッド
- *   ＋ハーモニー SegmentedControl＋色詳細カード＋コピー HEX/RGB/HSL
+ * - `"full"` (唯一のバリエーション): 検索＋カテゴリのラジオボタンの組＋スウォッチグリッド
+ *   ＋配色パターンのラジオボタンの組＋色詳細カード＋コピー HEX/RGB/HSL
  *   このツールはすべての機能が一体で意味をなすため、full 以外のバリエーションは設けない。
  *
  * ## アクセシビリティ（C-3 準拠）
@@ -30,7 +30,7 @@ import Link from "next/link";
 import Panel from "@/components/Panel";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
-import SegmentedControl from "@/components/SegmentedControl";
+import RadioGroup from "@/components/RadioGroup";
 import {
   useCopyToClipboard,
   COPIED_LABEL,
@@ -63,14 +63,14 @@ const CATEGORY_OPTIONS: Array<{ value: ColorCategory | "all"; label: string }> =
     { value: "achromatic", label: COLOR_CATEGORY_LABELS.achromatic },
   ];
 
-/** SegmentedControl 用のカテゴリオプション */
-const CATEGORY_SC_OPTIONS = CATEGORY_OPTIONS.map((opt) => ({
+/** 色の系統のラジオボタンの組に渡す選択肢 */
+const CATEGORY_RADIO_OPTIONS = CATEGORY_OPTIONS.map((opt) => ({
   label: opt.label,
   value: opt.value,
 }));
 
-/** SegmentedControl 用の配色パターンオプション */
-const HARMONY_SC_OPTIONS = HARMONY_TYPE_INFO.map((info) => ({
+/** 配色パターンのラジオボタンの組に渡す選択肢 */
+const HARMONY_RADIO_OPTIONS = HARMONY_TYPE_INFO.map((info) => ({
   label: info.label,
   value: info.type,
 }));
@@ -273,15 +273,13 @@ export default function TraditionalColorPaletteTile({
           />
         </div>
 
-        {/* カテゴリフィルタ（SegmentedControl） */}
-        <div className={styles.categorySection}>
-          <SegmentedControl
-            options={CATEGORY_SC_OPTIONS}
-            value={categoryFilter}
-            onChange={(v) => setCategoryFilter(v as ColorCategory | "all")}
-            aria-label="カテゴリフィルタ"
-          />
-        </div>
+        {/* 色の系統で絞り込む */}
+        <RadioGroup
+          options={CATEGORY_RADIO_OPTIONS}
+          value={categoryFilter}
+          onChange={(v) => setCategoryFilter(v as ColorCategory | "all")}
+          legend="色の系統"
+        />
 
         {/* スウォッチグリッド */}
         {filteredColors.length === 0 ? (
@@ -311,13 +309,13 @@ export default function TraditionalColorPaletteTile({
           </div>
         )}
 
-        {/* 配色パターン選択（SegmentedControl） */}
+        {/* 配色パターンの選択 */}
         <div className={styles.harmonySection}>
-          <SegmentedControl
-            options={HARMONY_SC_OPTIONS}
+          <RadioGroup
+            options={HARMONY_RADIO_OPTIONS}
             value={harmonyType}
             onChange={(v) => setHarmonyType(v as HarmonyType)}
-            aria-label="配色パターン"
+            legend="配色パターン"
           />
           {currentHarmonyInfo && (
             <p className={styles.harmonyDescription}>

@@ -30,7 +30,7 @@ describe("V-1: variant=full レンダリング", () => {
     ).toBeInTheDocument();
   });
 
-  it("タブ切替UI（SegmentedControl）が存在する", () => {
+  it("タブ切替UI（ラジオボタンの組）が存在する", () => {
     render(<KeigoReferenceTile variant="full" />);
     const radiogroups = screen.getAllByRole("radiogroup");
     expect(radiogroups.length).toBeGreaterThan(0);
@@ -294,14 +294,14 @@ describe("V-8: ARIA 要件", () => {
     expect(statusEl?.textContent).toMatch(/件/);
   });
 
-  it("全 SegmentedControl に aria-label が付与されている（C-2）", () => {
+  it("ラジオボタンの組は、どれも見出しを名前として持つ", () => {
     render(<KeigoReferenceTile variant="full" />);
-    const radiogroups = screen.getAllByRole("radiogroup");
-    radiogroups.forEach((rg) => {
-      const ariaLabel = rg.getAttribute("aria-label");
-      const ariaLabelledby = rg.getAttribute("aria-labelledby");
-      expect(ariaLabel || ariaLabelledby).toBeTruthy();
-    });
+    expect(
+      screen.getByRole("radiogroup", { name: "表示する内容" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("radiogroup", { name: "分類" }),
+    ).toBeInTheDocument();
   });
 
   it("検索結果更新後にライブリージョンのサマリが更新される", async () => {

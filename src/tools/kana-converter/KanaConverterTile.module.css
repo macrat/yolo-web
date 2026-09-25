@@ -2,24 +2,11 @@
  * 本ファイルは補足文字（--ink-2）のみ持つ軽量レイアウト。
  *
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
- *
- * ## モバイル対応
- * SegmentedControl 自体の flex-wrap: wrap により 4択が縦折返しされる（横スクロールは発生しない）。
- * 2カラムレイアウトは使用しない（w360 で縦積みになる設計・単一カラム）。
  */
 
-/* モード切替ラッパー（variant=full のみ表示） */
+/* 変換モードのラジオボタンの組と、その下の入力欄のあいだをあける */
 .modeControl {
-  display: flex;
-  flex-direction: column;
-  gap: 0.375rem;
   margin-bottom: 1rem;
-  width: 100%;
-}
-
-.modeLabel {
-  font-size: 0.875rem;
-  color: var(--ink-2);
 }
 
 /* 入力/出力フィールド */

@@ -27,7 +27,7 @@
   border: 0;
 }
 
-/* カテゴリ選択セクション — SegmentedControl を上部に配置 */
+/* カテゴリのラジオボタンの組と、その下のテンプレートの欄のあいだをあける */
 .categorySection {
   margin-bottom: 0.5rem;
 }

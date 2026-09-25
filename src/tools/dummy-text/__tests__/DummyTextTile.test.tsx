@@ -83,18 +83,18 @@ describe("DummyTextTile — variant='full'", () => {
     expect(output.value.length).toBeGreaterThan(0);
   });
 
-  // E-5: ARIA — SegmentedControl に role="radiogroup" が付与されている
+  // E-5: ARIA — ラジオボタンの組に role="radiogroup" が付与されている
   test("has role=radiogroup for language selection", () => {
     render(<DummyTextTile variant="full" />);
     const radiogroup = screen.getByRole("radiogroup");
     expect(radiogroup).toBeInTheDocument();
   });
 
-  // E-5: ARIA — SegmentedControl に aria-label が付与されている
-  test("SegmentedControl has aria-label", () => {
+  test("language radio group is named by its legend", () => {
     render(<DummyTextTile variant="full" />);
-    const radiogroup = screen.getByRole("radiogroup");
-    expect(radiogroup).toHaveAttribute("aria-label");
+    expect(
+      screen.getByRole("radiogroup", { name: "文章の言語" }),
+    ).toBeInTheDocument();
   });
 
   // E-5: ARIA — role="status" aria-live="polite" 領域が存在する（C-3）
@@ -261,8 +261,8 @@ describe("DummyTextTile — variant='lorem' (固定)", () => {
     mockHook.copy = vi.fn();
   });
 
-  // 固定 variant では言語選択 SegmentedControl が非表示
-  test("does not show language SegmentedControl", () => {
+  // 固定 variant では言語選択 ラジオボタンの組が非表示
+  test("does not show language ラジオボタンの組", () => {
     render(<DummyTextTile variant="lorem" />);
     expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();
   });
@@ -294,8 +294,8 @@ describe("DummyTextTile — variant='japanese' (固定)", () => {
     mockHook.copy = vi.fn();
   });
 
-  // 固定 variant では言語選択 SegmentedControl が非表示
-  test("does not show language SegmentedControl", () => {
+  // 固定 variant では言語選択 ラジオボタンの組が非表示
+  test("does not show language ラジオボタンの組", () => {
     render(<DummyTextTile variant="japanese" />);
     expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();
   });

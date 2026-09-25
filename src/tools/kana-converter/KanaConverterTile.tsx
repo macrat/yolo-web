@@ -18,12 +18,12 @@
  *
  * ## variant
  *
- * - `"full"` (デフォルト): 4択 SegmentedControl を表示し、ユーザーがモードを切り替えられる。
- * - `"hiragana-to-katakana"`: ひらがな→カタカナに固定し、SegmentedControl を非表示にする。
+ * - `"full"` (デフォルト): 4択のラジオボタンの組を出し、ユーザーがモードを切り替えられる。
+ * - `"hiragana-to-katakana"`: ひらがな→カタカナに固定し、ラジオボタンの組を出さない。
  *   **この variant は T-31 で道具箱に恒久展示される代表。**
- * - `"katakana-to-hiragana"`: カタカナ→ひらがなに固定し、SegmentedControl を非表示にする。
- * - `"to-fullwidth-katakana"`: 半角カナ→全角カナに固定し、SegmentedControl を非表示にする。
- * - `"to-halfwidth-katakana"`: 全角カナ→半角カナに固定し、SegmentedControl を非表示にする。
+ * - `"katakana-to-hiragana"`: カタカナ→ひらがなに固定し、ラジオボタンの組を出さない。
+ * - `"to-fullwidth-katakana"`: 半角カナ→全角カナに固定し、ラジオボタンの組を出さない。
+ * - `"to-halfwidth-katakana"`: 全角カナ→半角カナに固定し、ラジオボタンの組を出さない。
  *
  * ## アクセシビリティ（C-3 準拠）
  *
@@ -35,7 +35,7 @@
 import { useId, useMemo, useState } from "react";
 import Panel from "@/components/Panel";
 import Button from "@/components/Button";
-import SegmentedControl from "@/components/SegmentedControl";
+import RadioGroup from "@/components/RadioGroup";
 import Textarea from "@/components/Textarea";
 import {
   useCopyToClipboard,
@@ -52,7 +52,7 @@ export type KanaConverterTileVariant =
   | "to-fullwidth-katakana"
   | "to-halfwidth-katakana";
 
-/** 変換モードの選択肢（SegmentedControl の options として渡す） */
+/** 変換モードの選択肢 */
 const MODE_OPTIONS: { label: string; value: KanaConvertMode }[] = [
   { value: "hiragana-to-katakana", label: "ひらがな → カタカナ" },
   { value: "katakana-to-hiragana", label: "カタカナ → ひらがな" },
@@ -63,11 +63,11 @@ const MODE_OPTIONS: { label: string; value: KanaConvertMode }[] = [
 export interface KanaConverterTileProps {
   /**
    * 表示バリエーション（デフォルト: "full"）
-   * - "full": 4択 SegmentedControl 表示（ユーザーがモードを切り替え）
-   * - "hiragana-to-katakana": ひらがな→カタカナに固定、SegmentedControl 非表示
-   * - "katakana-to-hiragana": カタカナ→ひらがなに固定、SegmentedControl 非表示
-   * - "to-fullwidth-katakana": 半角カナ→全角カナに固定、SegmentedControl 非表示
-   * - "to-halfwidth-katakana": 全角カナ→半角カナに固定、SegmentedControl 非表示
+   * - "full": 4択のラジオボタンの組を出す（ユーザーがモードを切り替え）
+   * - "hiragana-to-katakana": ひらがな→カタカナに固定、ラジオボタンの組を出さない
+   * - "katakana-to-hiragana": カタカナ→ひらがなに固定、ラジオボタンの組を出さない
+   * - "to-fullwidth-katakana": 半角カナ→全角カナに固定、ラジオボタンの組を出さない
+   * - "to-halfwidth-katakana": 全角カナ→半角カナに固定、ラジオボタンの組を出さない
    */
   variant?: KanaConverterTileVariant;
   /** 初期入力値（デフォルト: ""） */
@@ -88,7 +88,6 @@ export default function KanaConverterTile({
   const uid = useId();
   const inputId = `${uid}-input`;
   const outputId = `${uid}-output`;
-  const modeLabelId = `${uid}-mode-label`;
 
   // ---------- variant から固定モードを決定 ----------
   // "full" は初期値 hiragana-to-katakana で、ユーザーが切り替え可能。
@@ -119,7 +118,7 @@ export default function KanaConverterTile({
 
   // ---------- ハンドラ ----------
   function handleModeChange(val: string): void {
-    // fixedMode がある場合はここに到達しない（SegmentedControl が非表示）
+    // fixedMode がある場合はここに到達しない（ラジオボタンの組を出さない）
     setDynamicMode(val as KanaConvertMode);
   }
 
@@ -136,20 +135,15 @@ export default function KanaConverterTile({
   // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）
   return (
     <Panel as={as} className={className}>
-      {/* 変換モード切替: variant=full のみ SegmentedControl を表示。固定 variant は非表示。 */}
+      {/* 変換モード切替: variant=full のみ出す。固定 variant はモードが決まっているので出さない。 */}
       {fixedMode === null && (
-        <div className={styles.modeControl}>
-          <span id={modeLabelId} className={styles.modeLabel}>
-            変換モード
-          </span>
-          {/* C-2: aria-labelledby で SegmentedControl にアクセシブル名を付与 */}
-          <SegmentedControl
-            options={MODE_OPTIONS}
-            value={dynamicMode}
-            onChange={handleModeChange}
-            aria-labelledby={modeLabelId}
-          />
-        </div>
+        <RadioGroup
+          legend="変換モード"
+          options={MODE_OPTIONS}
+          value={dynamicMode}
+          onChange={handleModeChange}
+          className={styles.modeControl}
+        />
       )}
 
       {/* 入力欄 */}

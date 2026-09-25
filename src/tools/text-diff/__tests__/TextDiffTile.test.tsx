@@ -51,7 +51,7 @@ describe("E-1: 基本レンダリング", () => {
     expect(screen.getByLabelText("変更後テキスト")).toBeInTheDocument();
   });
 
-  it("比較モードの SegmentedControl（radiogroup）が存在する（variant=full）", () => {
+  it("比較モードの ラジオボタンの組が存在する（variant=full）", () => {
     render(<TextDiffTile />);
     const radiogroup = screen.getByRole("radiogroup");
     expect(radiogroup).toBeInTheDocument();
@@ -73,27 +73,27 @@ describe("E-1: 基本レンダリング", () => {
 // variant 別テスト（A-5: variant prop の設定差）
 // ===========================================================
 describe("variant 別テスト", () => {
-  it("variant=full: SegmentedControl が表示される", () => {
+  it("variant=full: ラジオボタンの組が表示される", () => {
     render(<TextDiffTile variant="full" />);
     expect(screen.getByRole("radiogroup")).toBeInTheDocument();
   });
 
-  it("variant=line: SegmentedControl が非表示・モードが行単位に固定される", () => {
+  it("variant=line: ラジオボタンの組が非表示・モードが行単位に固定される", () => {
     render(<TextDiffTile variant="line" />);
-    // SegmentedControl は非表示
+    // ラジオボタンの組は非表示
     expect(screen.queryByRole("radiogroup")).toBeNull();
     // 入力エリアは存在する
     expect(screen.getByLabelText("変更前テキスト")).toBeInTheDocument();
     expect(screen.getByLabelText("変更後テキスト")).toBeInTheDocument();
   });
 
-  it("variant=word: SegmentedControl が非表示・モードが単語単位に固定される", () => {
+  it("variant=word: ラジオボタンの組が非表示・モードが単語単位に固定される", () => {
     render(<TextDiffTile variant="word" />);
     expect(screen.queryByRole("radiogroup")).toBeNull();
     expect(screen.getByLabelText("変更前テキスト")).toBeInTheDocument();
   });
 
-  it("variant=char: SegmentedControl が非表示・モードが文字単位に固定される", () => {
+  it("variant=char: ラジオボタンの組が非表示・モードが文字単位に固定される", () => {
     render(<TextDiffTile variant="char" />);
     expect(screen.queryByRole("radiogroup")).toBeNull();
     expect(screen.getByLabelText("変更前テキスト")).toBeInTheDocument();
@@ -187,7 +187,7 @@ describe("E-2: 入力→結果更新", () => {
     expect(region.textContent?.length).toBeGreaterThan(0);
   });
 
-  it("モードを変更すると比較モードが切り替わる（SegmentedControl のクリック）", () => {
+  it("モードを変更すると比較モードが切り替わる（ラジオボタンの組のクリック）", () => {
     render(<TextDiffTile />);
 
     const wordOption = screen.getByRole("radio", { name: "単語単位" });
@@ -381,7 +381,7 @@ describe("E-5: ARIA", () => {
     expect(region).toHaveAttribute("aria-label", "差分結果");
   });
 
-  it("SegmentedControl に aria-label または aria-labelledby が設定されている（C-2 要件）", () => {
+  it("ラジオボタンの組に aria-label または aria-labelledby が設定されている（C-2 要件）", () => {
     render(<TextDiffTile />);
     const radiogroup = screen.getByRole("radiogroup");
     const hasAriaLabel =

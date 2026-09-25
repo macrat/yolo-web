@@ -119,7 +119,7 @@ describe("基本レンダリング", () => {
   it("カテゴリフィルタが表示される", () => {
     render(<TraditionalColorPaletteTile />);
     expect(
-      screen.getByRole("radiogroup", { name: "カテゴリフィルタ" }),
+      screen.getByRole("radiogroup", { name: "色の系統" }),
     ).toBeInTheDocument();
   });
 
@@ -158,7 +158,7 @@ describe("入力→結果更新", () => {
     await act(async () => {
       fireEvent.click(analogousOption);
     });
-    expect(analogousOption).toHaveAttribute("aria-checked", "true");
+    expect(analogousOption).toBeChecked();
   });
 });
 
@@ -210,7 +210,7 @@ describe("変換ロジックの正確性（UI 経由）", () => {
 describe("ARIA 属性（C-3）", () => {
   it("カテゴリフィルタに role='radiogroup' が付与されている", () => {
     render(<TraditionalColorPaletteTile />);
-    const group = screen.getByRole("radiogroup", { name: "カテゴリフィルタ" });
+    const group = screen.getByRole("radiogroup", { name: "色の系統" });
     expect(group).toBeInTheDocument();
   });
 
@@ -422,7 +422,7 @@ describe("配色パターンタブ", () => {
   it("初期状態で「補色」が選択されている（C-5）", () => {
     render(<TraditionalColorPaletteTile />);
     const complementaryOption = screen.getByRole("radio", { name: "補色" });
-    expect(complementaryOption).toHaveAttribute("aria-checked", "true");
+    expect(complementaryOption).toBeChecked();
   });
 });
 

@@ -59,7 +59,7 @@
   color: var(--ink-2);
 }
 
-/* 人気タグセクション: 罫囲みの値札（Nefuda と同じ視覚言語）を横並びで置く。器は静か（背景なし）。 */
+/* 人気タグセクション: 罫で囲んだタグを横並びで置く。器は静か（背景なし）。 */
 .popularTags {
   display: flex;
   align-items: flex-start;

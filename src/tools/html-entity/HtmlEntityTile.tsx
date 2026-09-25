@@ -17,10 +17,10 @@
  *
  * ## variant
  *
- * - `"full"` (デフォルト): 方向トグル（SegmentedControl）を表示し
+ * - `"full"` (デフォルト): 方向のラジオボタンを表示し
  *   encode / decode をユーザーが切り替えられる。
- * - `"encode"`: 方向を encode に固定し、SegmentedControl を非表示にする。
- * - `"decode"`: 方向を decode に固定し、SegmentedControl を非表示にする。
+ * - `"encode"`: 方向を encode に固定し、ラジオボタンの組を出さない。
+ * - `"decode"`: 方向を decode に固定し、ラジオボタンの組を出さない。
  *
  * ## 使い方
  *
@@ -41,7 +41,7 @@
 import { useId, useMemo, useState } from "react";
 import Panel from "@/components/Panel";
 import Button from "@/components/Button";
-import SegmentedControl from "@/components/SegmentedControl";
+import RadioGroup from "@/components/RadioGroup";
 import Textarea from "@/components/Textarea";
 import ErrorMessage from "@/components/ErrorMessage";
 import {
@@ -74,9 +74,9 @@ function buildSummary(mode: EntityMode, output: string): string {
 export interface HtmlEntityTileProps {
   /**
    * 表示バリエーション（デフォルト: "full"）
-   * - "full": 方向トグル表示（encode / decode をユーザーが切り替え）
-   * - "encode": 方向を encode に固定、方向トグル非表示
-   * - "decode": 方向を decode に固定、方向トグル非表示
+   * - "full": 方向のラジオボタンを出す（encode / decode をユーザーが切り替え）
+   * - "encode": 方向を encode に固定、方向のラジオボタンを出さない
+   * - "decode": 方向を decode に固定、方向のラジオボタンを出さない
    */
   variant?: HtmlEntityTileVariant;
   /** 初期入力値（デフォルト: ""） */
@@ -130,7 +130,7 @@ export default function HtmlEntityTile({
 
   // ---------- ハンドラ ----------
   function handleModeChange(val: string) {
-    // fixedMode がある場合はここに到達しない（SegmentedControl が非表示）
+    // fixedMode がある場合はここに到達しない（ラジオボタンの組を出さない）
     setDynamicMode(val as EntityMode);
   }
 
@@ -150,11 +150,11 @@ export default function HtmlEntityTile({
       {/* コントロール行: 方向選択（full のみ表示） */}
       {fixedMode === null && (
         <div className={styles.controls}>
-          <SegmentedControl
+          <RadioGroup
             options={DIRECTION_OPTIONS}
             value={dynamicMode}
             onChange={handleModeChange}
-            aria-label="変換モード"
+            legend="変換モード"
           />
         </div>
       )}

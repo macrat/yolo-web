@@ -18,10 +18,10 @@
  *
  * ## variant
  *
- * - `"full"` (デフォルト): 方向トグル（SegmentedControl）を表示し
+ * - `"full"` (デフォルト): 方向のラジオボタンを表示し
  *   toHalfwidth / toFullwidth をユーザーが切り替えられる。
- * - `"toHalfwidth"`: 方向を toHalfwidth に固定し、SegmentedControl を非表示にする。
- * - `"toFullwidth"`: 方向を toFullwidth に固定し、SegmentedControl を非表示にする。
+ * - `"toHalfwidth"`: 方向を toHalfwidth に固定し、ラジオボタンの組を出さない。
+ * - `"toFullwidth"`: 方向を toFullwidth に固定し、ラジオボタンの組を出さない。
  *
  * ## アクセシビリティ（C-3 準拠）
  *
@@ -34,7 +34,7 @@
 import { useId, useMemo, useState } from "react";
 import Panel from "@/components/Panel";
 import Button from "@/components/Button";
-import SegmentedControl from "@/components/SegmentedControl";
+import RadioGroup from "@/components/RadioGroup";
 import Textarea from "@/components/Textarea";
 import Checkbox from "@/components/Checkbox";
 import {
@@ -67,9 +67,9 @@ const OPTION_KEYS = ["alphanumeric", "katakana", "symbol"] as const;
 export interface FullwidthConverterTileProps {
   /**
    * 表示バリエーション（デフォルト: "full"）
-   * - "full": 方向トグル表示（toHalfwidth / toFullwidth をユーザーが切り替え）
-   * - "toHalfwidth": 方向を toHalfwidth に固定、方向トグル非表示
-   * - "toFullwidth": 方向を toFullwidth に固定、方向トグル非表示
+   * - "full": 方向のラジオボタンを出す（toHalfwidth / toFullwidth をユーザーが切り替え）
+   * - "toHalfwidth": 方向を toHalfwidth に固定、方向のラジオボタンを出さない
+   * - "toFullwidth": 方向を toFullwidth に固定、方向のラジオボタンを出さない
    */
   variant?: FullwidthConverterTileVariant;
   /** 初期入力値（デフォルト: ""） */
@@ -137,7 +137,7 @@ export default function FullwidthConverterTile({
 
   // ---------- ハンドラ ----------
   function handleModeChange(val: string): void {
-    // fixedMode がある場合はここに到達しない（SegmentedControl が非表示）
+    // fixedMode がある場合はここに到達しない（ラジオボタンの組を出さない）
     setDynamicMode(val as ConvertMode);
   }
 
@@ -158,14 +158,14 @@ export default function FullwidthConverterTile({
   // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）
   return (
     <Panel as={as} className={className}>
-      {/* 方向トグル: variant=full のみ表示。toHalfwidth/toFullwidth は固定のため非表示。 */}
+      {/* 方向のラジオボタン: variant=full のみ表示。toHalfwidth/toFullwidth は固定のため非表示。 */}
       {fixedMode === null && (
         <div className={styles.controls}>
-          <SegmentedControl
+          <RadioGroup
             options={MODE_OPTIONS}
             value={dynamicMode}
             onChange={handleModeChange}
-            aria-label="変換モード"
+            legend="変換モード"
           />
         </div>
       )}

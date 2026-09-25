@@ -18,7 +18,7 @@ describe("PercentCalculatorTile", () => {
   test("初期状態で「XのY%」モードが選択されている", () => {
     render(<PercentCalculatorTile />);
     const radio = screen.getByRole("radio", { name: "XのY%" });
-    expect(radio).toHaveAttribute("aria-checked", "true");
+    expect(radio).toBeChecked();
   });
 
   test("数値入力で計算結果がリアルタイム表示される", () => {

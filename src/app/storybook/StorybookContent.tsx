@@ -10,7 +10,7 @@ import Radio from "@/components/Radio";
 import Accordion from "@/components/Accordion";
 import Textarea from "@/components/Textarea";
 import Select from "@/components/Select";
-import SegmentedControl from "@/components/SegmentedControl";
+import RadioGroup from "@/components/RadioGroup";
 import ErrorMessage from "@/components/ErrorMessage";
 import FileDropZone from "@/components/FileDropZone";
 import {
@@ -105,7 +105,7 @@ const TOC_ITEMS = [
   { id: "share-buttons", label: "10. ShareButtons" },
   { id: "textarea", label: "11. Textarea" },
   { id: "select", label: "12. Select" },
-  { id: "segmented-control", label: "13. SegmentedControl" },
+  { id: "radio-group", label: "13. RadioGroup" },
   { id: "error-message", label: "14. ErrorMessage" },
   { id: "file-drop-zone", label: "15. FileDropZone" },
   { id: "use-copy-to-clipboard", label: "16. useCopyToClipboard" },
@@ -131,8 +131,10 @@ export default function StorybookContent({
   const [radioValue, setRadioValue] = useState("new");
   // Controlled input state
   const [controlledText, setControlledText] = useState("controlled value");
-  // SegmentedControl controlled state
-  const [segmentValue, setSegmentValue] = useState("option-a");
+  // RadioGroup controlled state
+  const [groupValue, setGroupValue] = useState("encode");
+  const [longGroupValue, setLongGroupValue] = useState("hiragana-to-katakana");
+  const [unitValue, setUnitValue] = useState("seconds");
   // Pagination button mode state
   const [paginationPage, setPaginationPage] = useState(1);
   // useCopyToClipboard demo
@@ -743,45 +745,51 @@ export default function StorybookContent({
         </Panel>
       </Section>
 
-      {/* === 13. SegmentedControl === */}
-      <Section id="segmented-control">
-        <h2 className={styles.sectionTitle}>13. SegmentedControl</h2>
+      {/* === 13. RadioGroup === */}
+      <Section id="radio-group">
+        <h2 className={styles.sectionTitle}>13. RadioGroup</h2>
         {/* 見本は Panel に収めて並べる */}
         <Panel as="div">
-          <span className={styles.previewLabel}>Preview: SegmentedControl</span>
+          <span className={styles.previewLabel}>Preview: RadioGroup</span>
 
           <h3 className={styles.subsectionTitle} style={{ marginTop: 0 }}>
-            controlled（value + onChange）
+            見出しを持つ組（legend）
           </h3>
-          <SegmentedControl
+          <RadioGroup
+            legend="変換モード"
             options={[
-              { label: "選択肢 A", value: "option-a" },
-              { label: "選択肢 B", value: "option-b" },
-              { label: "選択肢 C", value: "option-c" },
+              { label: "エンコード", value: "encode" },
+              { label: "デコード", value: "decode" },
             ]}
-            value={segmentValue}
-            onChange={setSegmentValue}
-            aria-label="サンプル選択"
+            value={groupValue}
+            onChange={setGroupValue}
           />
-          <div
-            style={{
-              fontSize: "0.8rem",
-              color: "var(--ink-2)",
-              marginTop: "0.5rem",
-            }}
-          >
-            現在の値: {segmentValue}
-          </div>
+          <p className={styles.demoStatus}>現在の値: {groupValue}</p>
 
-          <h3 className={styles.subsectionTitle}>2 択パターン</h3>
-          <SegmentedControl
+          <h3 className={styles.subsectionTitle}>幅が足りなければ折り返す</h3>
+          <RadioGroup
+            legend="変換モード"
             options={[
-              { label: "削除", value: "remove" },
-              { label: "スペースに置換", value: "replace-space" },
+              { label: "ひらがな → カタカナ", value: "hiragana-to-katakana" },
+              { label: "カタカナ → ひらがな", value: "katakana-to-hiragana" },
+              { label: "半角カナ → 全角カナ", value: "to-fullwidth-katakana" },
+              { label: "全角カナ → 半角カナ", value: "to-halfwidth-katakana" },
             ]}
-            value="remove"
-            onChange={() => {}}
-            aria-label="改行処理モード"
+            value={longGroupValue}
+            onChange={setLongGroupValue}
+          />
+
+          <h3 className={styles.subsectionTitle}>
+            周りの文で分かる組（aria-label）
+          </h3>
+          <RadioGroup
+            aria-label="単位"
+            options={[
+              { label: "秒", value: "seconds" },
+              { label: "ミリ秒", value: "milliseconds" },
+            ]}
+            value={unitValue}
+            onChange={setUnitValue}
           />
         </Panel>
       </Section>

@@ -56,7 +56,7 @@ import Panel from "@/components/Panel";
 import Button from "@/components/Button";
 import ErrorMessage from "@/components/ErrorMessage";
 import Input from "@/components/Input";
-import SegmentedControl from "@/components/SegmentedControl";
+import RadioGroup from "@/components/RadioGroup";
 import {
   useCopyToClipboard,
   COPIED_LABEL,
@@ -250,11 +250,11 @@ export default function UnixTimestampTile({
             aria-label="UNIXタイムスタンプ"
             inputMode="numeric"
           />
-          <SegmentedControl
+          <RadioGroup
             options={UNIT_OPTIONS}
             value={tsUnit}
             onChange={(v) => setTsUnit(v as "seconds" | "milliseconds")}
-            aria-label="タイムスタンプ単位"
+            legend="単位"
           />
         </div>
 

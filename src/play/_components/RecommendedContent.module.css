@@ -2,7 +2,7 @@
  * RecommendedContent — 他カテゴリのおすすめ。
  * カードのグリッドではなく罫区切りの一覧で組む
  * （RelatedTools/RelatedBlogPosts と同型）。器は静か——背景色・box-shadow・カード角丸なし。
- * 品名は本文の書体で、いまは hover で下線を出す。カテゴリは値札（Nefuda 風の小ラベル）で示す。
+ * 品名は本文の書体で、いまは hover で下線を出す。カテゴリは罫で囲んだ小さなラベルで示す。
  */
 
 .related {

@@ -10,7 +10,6 @@ import {
 } from "@/dictionary/_lib/types";
 import { getYojiByCategory } from "@/dictionary/_lib/yoji";
 import { getAllKanjiChars } from "@/dictionary/_lib/kanji";
-import Nefuda from "@/components/Nefuda";
 import { headingFontAttr } from "@/lib/zen-antique-charset";
 import styles from "./YojiDetail.module.css";
 
@@ -84,7 +83,7 @@ export default function YojiDetail({ yoji }: YojiDetailProps) {
         </h1>
         <p className={styles.reading}>{yoji.reading}</p>
         <p className={styles.meaning}>{yoji.meaning}</p>
-        {/* 分類: カテゴリは索引への導線、難易度は情報の値札。ピルにしない。 */}
+        {/* 分類: カテゴリは索引への導線、難易度は補助情報の文字。ピルにしない。 */}
         <div className={styles.tags}>
           <Link
             href={`/dictionary/yoji/category/${yoji.category}`}
@@ -92,7 +91,7 @@ export default function YojiDetail({ yoji }: YojiDetailProps) {
           >
             {categoryLabel}
           </Link>
-          <Nefuda label={difficultyLabel} />
+          <span className={styles.difficulty}>{difficultyLabel}</span>
         </div>
       </div>
 

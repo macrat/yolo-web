@@ -3,7 +3,6 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { trackContentStart, trackContentEnd } from "@/lib/analytics";
 import Link from "next/link";
-import { NefudaGroup } from "@/components/Nefuda";
 import type {
   QuizDefinition,
   QuizAnswer,
@@ -145,19 +144,21 @@ export default function QuizContainer({
 
     // h1 と説明はページ章立て（QuizPlayPageLayout の header）が担うため、
     // ここでは「これから始める道具」としての所要情報と開始操作だけを静かに置く。
-    // 所要情報は値札（Nefuda）——種別・所要時間などの「情報のあるラベル」。
-    const introBadgeLabels = [
+    // 所要情報（種別・問題数・所要時間・タイプ数）は「・」でつないだ1行の補助情報にする。
+    const introFacts = [
       typeLabel,
       `全${questionCount}問`,
       estimatedTime,
       quiz.meta.type === "personality" && resultTypeCount > 0
         ? `${resultTypeCount}タイプ`
         : "",
-    ];
+    ]
+      .filter((fact) => fact !== "")
+      .join("・");
     return (
       <div className={styles.stage}>
         <div className={styles.intro}>
-          <NefudaGroup labels={introBadgeLabels} />
+          <p className={styles.introFacts}>{introFacts}</p>
           <p className={styles.introLead}>
             {quiz.meta.type === "knowledge"
               ? "準備ができたら始めましょう。"

@@ -51,13 +51,13 @@ describe("app/play/page.tsx", () => {
     }
   });
 
-  test("毎日更新コンテンツにだけ「毎日更新」の値札が付く（DAILY_UPDATE_SLUGSが単一情報源）", () => {
+  test("毎日更新コンテンツにだけ「毎日更新」の種別が付く（DAILY_UPDATE_SLUGSが単一情報源）", () => {
     render(<PlayPage />);
     const dailyBadges = screen.getAllByText("毎日更新");
     expect(dailyBadges).toHaveLength(DAILY_UPDATE_SLUGS.size);
   });
 
-  test("クイズには問題数の値札が付く（quizQuestionCountBySlugが単一情報源）", () => {
+  test("クイズには問題数の種別が付く（quizQuestionCountBySlugが単一情報源）", () => {
     render(<PlayPage />);
     const [slug, count] = [...quizQuestionCountBySlug.entries()][0];
     const content = allPlayContents.find((c) => c.slug === slug);
@@ -71,7 +71,7 @@ describe("app/play/page.tsx", () => {
     ).toBeInTheDocument();
   });
 
-  test("ゲーム棚にはクイズの問題数の値札が付かない（中身の無いラベルを貼らない）", () => {
+  test("ゲーム棚にはクイズの問題数の種別が付かない（中身の無いラベルを貼らない）", () => {
     render(<PlayPage />);
     const gameContent = allPlayContents.find((c) => c.category === "game");
     expect(gameContent).toBeDefined();

@@ -107,7 +107,7 @@
   flex: 1;
 }
 
-/* SegmentedControl 行のマージン */
+/* 入力モードのラジオボタンの組と、その下の欄のあいだをあける */
 .modeControl {
   margin-bottom: 1rem;
 }

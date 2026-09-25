@@ -39,7 +39,7 @@ beforeEach(() => {
 
 // --- V-1: variant=full ---
 describe("V-1: variant=full", () => {
-  it("方向トグル（SegmentedControl）が表示される", () => {
+  it("方向のラジオボタンの組が表示される", () => {
     render(<FullwidthConverterTile variant="full" />);
     expect(screen.getByRole("radiogroup")).toBeInTheDocument();
   });
@@ -60,7 +60,7 @@ describe("V-1: variant=full", () => {
 
 // --- V-2: variant=toHalfwidth ---
 describe("V-2: variant=toHalfwidth（方向固定・トグル非表示）", () => {
-  it("SegmentedControl（radiogroup）が表示されない", () => {
+  it("ラジオボタンの組が表示されない", () => {
     render(<FullwidthConverterTile variant="toHalfwidth" />);
     expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();
   });
@@ -81,7 +81,7 @@ describe("V-2: variant=toHalfwidth（方向固定・トグル非表示）", () =
 
 // --- V-3: variant=toFullwidth ---
 describe("V-3: variant=toFullwidth（方向固定・トグル非表示）", () => {
-  it("SegmentedControl（radiogroup）が表示されない", () => {
+  it("ラジオボタンの組が表示されない", () => {
     render(<FullwidthConverterTile variant="toFullwidth" />);
     expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();
   });

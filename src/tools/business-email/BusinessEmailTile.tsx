@@ -17,12 +17,12 @@
  *
  * ## variant
  *
- * - `"full"` (デフォルト): SegmentedControl 5カテゴリ + テンプレート Select + 動的フィールド
+ * - `"full"` (デフォルト): 5カテゴリのラジオボタンの組 + テンプレート Select + 動的フィールド
  *   + プレビュー + コピー3ターゲット（件名/本文/全体）。
  *
  * ## アクセシビリティ（C-3 準拠）
  *
- * - SegmentedControl に aria-label="メールカテゴリ"（C-2）
+ * - カテゴリのラジオボタンの組は、見える見出し（legend）を名前として読ませる
  * - role="status" aria-live="polite" の div にサマリテキストを置く（C-3）
  *   （readOnly textarea は値変化をスクリーンリーダーが読み上げないため）
  * - 動的フィールドの label↔input 関連: htmlFor={`${uid}-field-${key}`} ←→ id={`${uid}-field-${key}`}
@@ -31,7 +31,7 @@
 import { useId, useState, useMemo, useCallback } from "react";
 import Panel from "@/components/Panel";
 import Button from "@/components/Button";
-import SegmentedControl from "@/components/SegmentedControl";
+import RadioGroup from "@/components/RadioGroup";
 import Select from "@/components/Select";
 import Input from "@/components/Input";
 import Textarea from "@/components/Textarea";
@@ -51,7 +51,7 @@ import styles from "./BusinessEmailTile.module.css";
 // カテゴリ一覧（モジュールレベルで一度だけ取得）
 const categories = getCategories();
 
-// SegmentedControl の options 配列（EmailCategory の文字列値を使用）
+// カテゴリのラジオボタンの組に渡す選択肢（EmailCategory の文字列値を使用）
 const categoryOptions = categories.map((cat) => ({
   label: cat.name,
   value: cat.id,
@@ -68,7 +68,7 @@ export type BusinessEmailTileVariant = "full";
 export interface BusinessEmailTileProps {
   /**
    * 表示バリエーション（デフォルト: "full"）
-   * - "full": SegmentedControl 5カテゴリ + テンプレート Select + 動的フィールド
+   * - "full": 5カテゴリのラジオボタンの組 + テンプレート Select + 動的フィールド
    *   + プレビュー + コピー3ターゲット
    */
   variant?: BusinessEmailTileVariant;
@@ -213,13 +213,13 @@ export default function BusinessEmailTile({
         {statusSummary}
       </div>
 
-      {/* A-3: SegmentedControl でカテゴリ切替（C-2: aria-label 必須） */}
+      {/* カテゴリの切り替え */}
       <div className={styles.categorySection}>
-        <SegmentedControl
+        <RadioGroup
           options={categoryOptions}
           value={selectedCategory}
           onChange={handleCategoryChange}
-          aria-label="メールカテゴリ"
+          legend="メールの種類"
         />
       </div>
 

@@ -17,7 +17,7 @@ import UrlEncodeTile from "../UrlEncodeTile";
 
 // --- V-1: variant=full ---
 describe("V-1: variant=full", () => {
-  it("方向トグル（SegmentedControl）が表示される", () => {
+  it("方向のラジオボタンの組が表示される", () => {
     render(<UrlEncodeTile variant="full" />);
     expect(screen.getByRole("radiogroup")).toBeInTheDocument();
   });
@@ -31,7 +31,7 @@ describe("V-1: variant=full", () => {
 
 // --- V-2: variant=encode ---
 describe("V-2: variant=encode（方向固定・トグル非表示）", () => {
-  it("SegmentedControl（radiogroup）が表示されない", () => {
+  it("ラジオボタンの組が表示されない", () => {
     render(<UrlEncodeTile variant="encode" />);
     expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();
   });
@@ -45,7 +45,7 @@ describe("V-2: variant=encode（方向固定・トグル非表示）", () => {
 
 // --- V-3: variant=decode ---
 describe("V-3: variant=decode（方向固定・トグル非表示）", () => {
-  it("SegmentedControl（radiogroup）が表示されない", () => {
+  it("ラジオボタンの組が表示されない", () => {
     render(<UrlEncodeTile variant="decode" />);
     expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();
   });

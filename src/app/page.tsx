@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Shinagaki, { type ShinagakiItem } from "@/components/Shinagaki";
-import Nefuda from "@/components/Nefuda";
 import Tsutsumi from "@/components/Tsutsumi";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { playContentBySlug } from "@/play/registry";
@@ -21,7 +20,7 @@ import styles from "./page.module.css";
  * 2. 目玉（今日のためしどころ・above the fold）: 成長エンジンの「あなたに似たキャラ診断」を
  *    単一の独立した区画（罫で囲う・--rule-strong の枠・地は --paper・影/色地/角丸/グラデ/ピル
  *    なし・§5）として立てる。中は「誘い＋結果見本」の非対称な一対
- *    ——左に誘い（診断名を品書きより一段大きい文字＝scale contrast・具体の一言・値札・
+ *    ——左に誘い（診断名を品書きより一段大きい文字＝scale contrast・具体の一言・結果のタイプ数・
  *    入口ボタン「やってみる →」44px・ピルなし）、右に結果の見本を Tsutsumi（包み）で 1 枚
  *    実際に見せる。「持ち帰れる札」を言うだけでなく成果物として見せ、来訪者自身
  *    の結果と誤認させないよう「見本」であることを正直に添える。デスクトップは左右・モバイルは縦積み。
@@ -68,7 +67,7 @@ const heroContent: PlayContentMeta | undefined =
 /**
  * 「診断・占い・あそび」棚に品書きとして並べる体験の入口。
  * 品名（title）と遷移先（href）はレジストリ（単一情報源）から描画時に引き、ここでは
- * slug と、店の言葉で書いた「ひとこと」・値札だけを持つ（コピーの重複と乖離を防ぐ）。
+ * slug と、店の言葉で書いた「ひとこと」・補助情報だけを持つ（コピーの重複と乖離を防ぐ）。
  *
  * character-personality は目玉に立てたため、品書きからは外す（同一診断を同じページで
  * 二度立てない）。棚は性格・キャラ診断で発見の幅を、contrarian-fortune で占い枠を、
@@ -216,9 +215,7 @@ export default function Home() {
             <p className={styles.heroLede}>
               12の問いに答えると、あなたに近いキャラクター像がひとつ。結果は札にして持ち帰れます。
             </p>
-            <p className={styles.heroTags}>
-              <Nefuda label="24タイプ" />
-            </p>
+            <p className={styles.heroTags}>24タイプ</p>
             <p className={styles.heroAction}>
               <Link
                 href={getContentPath(heroContent)}

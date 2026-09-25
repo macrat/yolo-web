@@ -17,18 +17,17 @@
  *
  * ## variant
  *
- * - `"full"` (デフォルト): SegmentedControl（行/単語/文字）を表示し
+ * - `"full"` (デフォルト): 行・単語・文字のラジオボタンの組を表示し
  *   ユーザーがモードを切り替えられる。
- * - `"line"`: モードを行単位に固定し、SegmentedControl を非表示にする。
- * - `"word"`: モードを単語単位に固定し、SegmentedControl を非表示にする。
- * - `"char"`: モードを文字単位に固定し、SegmentedControl を非表示にする。
+ * - `"line"`: モードを行単位に固定し、ラジオボタンの組を出さない。
+ * - `"word"`: モードを単語単位に固定し、ラジオボタンの組を出さない。
+ * - `"char"`: モードを文字単位に固定し、ラジオボタンの組を出さない。
  *
  * ## アクセシビリティ（C-3 準拠）
  *
  * - role="status" aria-live="polite" の div にサマリテキストを置く
  *   （readOnly textarea は値変化をスクリーンリーダーが読み上げないため）
  * - 差分結果 pre は role="region" aria-label="差分結果"
- * - SegmentedControl に aria-labelledby を設定（C-2 要件）
  *
  * ## 個別論点の解消（旧 TextDiffPage.tsx から継承）
  *
@@ -40,7 +39,7 @@
 
 import { useId, useMemo, useState } from "react";
 import Panel from "@/components/Panel";
-import SegmentedControl from "@/components/SegmentedControl";
+import RadioGroup from "@/components/RadioGroup";
 import Textarea from "@/components/Textarea";
 import { computeDiff, hasDifferences, type DiffMode } from "./logic";
 import styles from "./TextDiffTile.module.css";
@@ -51,10 +50,10 @@ export type TextDiffTileVariant = "full" | DiffMode;
 export interface TextDiffTileProps {
   /**
    * 表示バリエーション（デフォルト: "full"）
-   * - "full": SegmentedControl を表示し、ユーザーがモードを選択できる
-   * - "line": 行単位モードに固定、SegmentedControl 非表示
-   * - "word": 単語単位モードに固定、SegmentedControl 非表示
-   * - "char": 文字単位モードに固定、SegmentedControl 非表示
+   * - "full": ラジオボタンの組を出し、ユーザーがモードを選択できる
+   * - "line": 行単位モードに固定、ラジオボタンの組を出さない
+   * - "word": 単語単位モードに固定、ラジオボタンの組を出さない
+   * - "char": 文字単位モードに固定、ラジオボタンの組を出さない
    */
   variant?: TextDiffTileVariant;
   /** Panel の as prop に透過される HTML タグ（デフォルト: "section"） */
@@ -78,7 +77,6 @@ export default function TextDiffTile({
   const uid = useId();
   const oldTextId = `${uid}-old`;
   const newTextId = `${uid}-new`;
-  const modeLabelId = `${uid}-mode-label`;
 
   // ---------- variant からモード固定値を決定 ----------
   // "full" のみ動的切替可能。"line"/"word"/"char" はモード固定。
@@ -184,14 +182,11 @@ export default function TextDiffTile({
       {/* 比較モード切替（variant=full のみ表示。固定 variant は非表示） */}
       {fixedMode === null && (
         <div className={styles.controls}>
-          <span id={modeLabelId} className={styles.controlLabel}>
-            比較モード:
-          </span>
-          <SegmentedControl
+          <RadioGroup
+            legend="比較の単位"
             options={DIFF_MODE_OPTIONS}
             value={dynamicMode}
             onChange={(v) => setDynamicMode(v as DiffMode)}
-            aria-labelledby={modeLabelId}
           />
         </div>
       )}

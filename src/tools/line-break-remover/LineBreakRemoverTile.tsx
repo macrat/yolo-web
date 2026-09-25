@@ -17,10 +17,10 @@
  *
  * ## variant
  *
- * - `"full"` (デフォルト): SegmentedControl で3種の変換モードを切替可能。チェックボックス表示。
- * - `"remove"`: モードを remove に固定。SegmentedControl 非表示。チェックボックス維持。
- * - `"replace-space"`: モードを replace-space に固定。SegmentedControl 非表示。チェックボックス維持。
- * - `"smart-pdf"`: モードを smart-pdf に固定。SegmentedControl 非表示。行内改行オプション表示。
+ * - `"full"` (デフォルト): ラジオボタンの組で3種の変換モードを切替可能。チェックボックス表示。
+ * - `"remove"`: モードを remove に固定。ラジオボタンの組を出さない。チェックボックス維持。
+ * - `"replace-space"`: モードを replace-space に固定。ラジオボタンの組を出さない。チェックボックス維持。
+ * - `"smart-pdf"`: モードを smart-pdf に固定。ラジオボタンの組を出さない。行内改行オプション表示。
  *
  * ## 使い方
  *
@@ -42,7 +42,7 @@
 import { useId, useMemo, useState } from "react";
 import Panel from "@/components/Panel";
 import Button from "@/components/Button";
-import SegmentedControl from "@/components/SegmentedControl";
+import RadioGroup from "@/components/RadioGroup";
 import Textarea from "@/components/Textarea";
 import ErrorMessage from "@/components/ErrorMessage";
 import Checkbox from "@/components/Checkbox";
@@ -60,7 +60,7 @@ import styles from "./LineBreakRemoverTile.module.css";
 /** variant prop の型。full は全機能表示、それ以外はモード固定（RemoveMode の値に揃える）。 */
 export type LineBreakRemoverTileVariant = "full" | RemoveMode;
 
-/** 変換モードの選択肢（SegmentedControl の options として渡す） */
+/** 変換モードの選択肢 */
 const MODE_OPTIONS: { label: string; value: RemoveMode }[] = [
   { value: "remove", label: "改行を削除" },
   { value: "replace-space", label: "改行をスペースに置換" },
@@ -68,8 +68,7 @@ const MODE_OPTIONS: { label: string; value: RemoveMode }[] = [
 ];
 
 /**
- * smart-pdf モードの行内改行処理選択肢（SegmentedControl の options として渡す）。
- * 相互排他の選択肢は SegmentedControl で実装する。
+ * smart-pdf モードの行内改行処理の選択肢。どちらか一方だけを選ぶので、ラジオボタンの組にする。
  */
 const SMART_PDF_JOIN_OPTIONS: { label: string; value: SmartPdfJoinStyle }[] = [
   { value: "remove", label: "削除する" },
@@ -79,8 +78,8 @@ const SMART_PDF_JOIN_OPTIONS: { label: string; value: SmartPdfJoinStyle }[] = [
 export interface LineBreakRemoverTileProps {
   /**
    * 表示バリエーション（デフォルト: "full"）
-   * - "full": 3モード SegmentedControl 表示（ユーザーがモードを切り替え可能）
-   * - "remove": モードを remove に固定。SegmentedControl 非表示。チェックボックス維持。
+   * - "full": 3モードのラジオボタンの組を出す（ユーザーがモードを切り替え可能）
+   * - "remove": モードを remove に固定。ラジオボタンの組を出さない。チェックボックス維持。
    * - "replace-space": モードを replace-space に固定。チェックボックス維持。
    * - "smart-pdf": モードを smart-pdf に固定。行内改行オプション表示。
    */
@@ -100,8 +99,6 @@ export default function LineBreakRemoverTile({
   const uid = useId();
   const inputId = `${uid}-input`;
   const outputId = `${uid}-output`;
-  const modeLabelId = `${uid}-mode-label`;
-  const joinLabelId = `${uid}-join-label`;
 
   // ---------- variant からモードを決定 ----------
   // "full" の場合はユーザーがモードを切り替え可能。それ以外は固定。
@@ -146,7 +143,7 @@ export default function LineBreakRemoverTile({
 
   // ---------- ハンドラ ----------
   function handleModeChange(newMode: string): void {
-    // fixedMode がある場合はここに到達しない（SegmentedControl が非表示）
+    // fixedMode がある場合はここに到達しない（ラジオボタンの組を出さない）
     setDynamicMode(newMode as RemoveMode);
   }
 
@@ -159,20 +156,15 @@ export default function LineBreakRemoverTile({
   // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）
   return (
     <Panel as={as} className={className}>
-      {/* 変換モード切替（variant=full のみ表示）
-          fixedMode がある場合は固定モードのため SegmentedControl を表示しない */}
+      {/* 変換モード切替（variant=full のみ表示）。固定 variant はモードが決まっているので出さない。 */}
       {fixedMode === null && (
-        <div className={styles.modeControl}>
-          <span id={modeLabelId} className={styles.modeLabel}>
-            変換モード
-          </span>
-          <SegmentedControl
-            options={MODE_OPTIONS}
-            value={dynamicMode}
-            onChange={handleModeChange}
-            aria-labelledby={modeLabelId}
-          />
-        </div>
+        <RadioGroup
+          legend="変換モード"
+          options={MODE_OPTIONS}
+          value={dynamicMode}
+          onChange={handleModeChange}
+          className={styles.modeControl}
+        />
       )}
 
       {/* オプション（remove/replace-space モード用）
@@ -187,20 +179,15 @@ export default function LineBreakRemoverTile({
         </div>
       )}
 
-      {/* オプション（smart-pdf モード用）
-          相互排他の選択肢は SegmentedControl で実装する。 */}
+      {/* オプション（smart-pdf モード用） */}
       {mode === "smart-pdf" && (
-        <div className={styles.smartPdfOptions}>
-          <span id={joinLabelId} className={styles.optionLabel}>
-            行内改行の処理
-          </span>
-          <SegmentedControl
-            options={SMART_PDF_JOIN_OPTIONS}
-            value={smartPdfJoinStyle}
-            onChange={(v) => setSmartPdfJoinStyle(v as SmartPdfJoinStyle)}
-            aria-labelledby={joinLabelId}
-          />
-        </div>
+        <RadioGroup
+          legend="行内改行の処理"
+          options={SMART_PDF_JOIN_OPTIONS}
+          value={smartPdfJoinStyle}
+          onChange={(v) => setSmartPdfJoinStyle(v as SmartPdfJoinStyle)}
+          className={styles.smartPdfOptions}
+        />
       )}
 
       {/* 入出力パネル */}

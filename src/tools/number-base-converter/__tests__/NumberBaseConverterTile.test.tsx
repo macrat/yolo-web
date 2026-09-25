@@ -37,7 +37,7 @@ describe("NumberBaseConverterTile (variant=full)", () => {
     render(<NumberBaseConverterTile variant="full" />);
     // 入力欄が表示されること
     expect(screen.getByLabelText("変換する数値")).toBeInTheDocument();
-    // SegmentedControl (入力基数選択) が表示されること
+    // ラジオボタンの組(入力基数選択) が表示されること
     expect(screen.getByRole("radiogroup")).toBeInTheDocument();
   });
 
@@ -119,11 +119,12 @@ describe("NumberBaseConverterTile (variant=full)", () => {
     expect(screen.getByRole("alert")).toBeInTheDocument();
   });
 
-  // T-full-8: ARIA - radiogroup に aria-label が付いている
-  test("T-full-8: radiogroup has aria-label", () => {
+  // T-full-8: ARIA - radiogroup は見出しを名前として持つ
+  test("T-full-8: radiogroup is named by its legend", () => {
     render(<NumberBaseConverterTile variant="full" />);
-    const radiogroup = screen.getByRole("radiogroup");
-    expect(radiogroup).toHaveAttribute("aria-label");
+    expect(
+      screen.getByRole("radiogroup", { name: "入力する進数" }),
+    ).toBeInTheDocument();
   });
 
   // T-full-9: ARIA - role=status aria-live=polite のライブリージョン
@@ -245,8 +246,8 @@ describe("NumberBaseConverterTile (variant=bin-hex)", () => {
     expect(screen.getByLabelText("変換する数値（2進数）")).toBeInTheDocument();
   });
 
-  // T-bin-hex-2: SegmentedControl が表示されない（固定 variant）
-  test("T-bin-hex-2: SegmentedControl is not shown (fixed variant)", () => {
+  // T-bin-hex-2: ラジオボタンの組が表示されない（固定 variant）
+  test("T-bin-hex-2: ラジオボタンの組is not shown (fixed variant)", () => {
     render(<NumberBaseConverterTile variant="bin-hex" />);
     // 基数選択の radiogroup が非表示
     expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();

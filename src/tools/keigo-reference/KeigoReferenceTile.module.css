@@ -16,11 +16,12 @@
   gap: 1rem;
 }
 
-/* 検索バー: 操作側 flexShrink:0・膨張側 flex:1（AP-P21 スクロール競合防止） */
+/* 検索バー: 操作側 flexShrink:0・膨張側 flex:1（AP-P21 スクロール競合防止）。分類の組は見出しの分だけ背が
+ * 高いので、下端で揃えてラジオボタンの行と検索の欄を同じ高さに置く。 */
 .searchBar {
   display: flex;
   gap: 0.75rem;
-  align-items: flex-start;
+  align-items: flex-end;
   flex-wrap: wrap;
   flex-shrink: 0;
 }
@@ -30,9 +31,11 @@
   min-width: 200px;
 }
 
-/* カテゴリフィルター SegmentedControl のレイアウト調整 */
+/* 分類の組は検索の欄に押し縮められず、並びに収まらなければ次の行に回る。行の幅を超えるときだけ、
+ * 選択肢を組の中で折り返す。 */
 .categoryControl {
   flex-shrink: 0;
+  max-width: 100%;
 }
 
 /* C-3: ライブリージョンサマリ */

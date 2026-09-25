@@ -57,7 +57,7 @@ export const metadata: Metadata = {
  * - 全20種（ゲーム4+クイズ15+占い1）を、既存のカテゴリ区分（PLAY_CATEGORIES）ごとに
  *   棚（見出し付き Shinagaki）として並べる。件数が20件程度に収まるため、検索/絞り込み UI
  *   を持たなくても一覧性で十分に探せる。
- * - 値札（Nefuda・tags）は「中身のあるものだけ」: 毎日更新されるコンテンツにのみ
+ * - 種別（tags）は「中身のあるものだけ」: 毎日更新されるコンテンツにのみ
  *   「毎日更新」を付す（DAILY_UPDATE_SLUGS が単一情報源）。
  * - meta（行右端）はクイズの問題数「全N問」（quizQuestionCountBySlug が単一情報源。
  *   詳細ページ/おすすめ導線と表記を統一）。ゲーム・占いには実情報が無いため付けない。
@@ -68,7 +68,7 @@ function byPublishedAtDesc(a: PlayContentMeta, b: PlayContentMeta): number {
   return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
 }
 
-/** PlayContentMeta → ShinagakiItem。値札・メタは「中身のあるものだけ」付ける。 */
+/** PlayContentMeta → ShinagakiItem。種別・メタは「中身のあるものだけ」付ける。 */
 function toShinagakiItem(content: PlayContentMeta): ShinagakiItem {
   const questionCount = quizQuestionCountBySlug.get(content.slug);
   return {

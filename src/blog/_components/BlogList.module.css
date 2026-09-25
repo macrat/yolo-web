@@ -39,7 +39,7 @@
 
 /*
  * stretched-link: クリック/タップ標的を品名テキストだけでなく視覚単位（行）全体へ
- * 拡張する（description・値札・公開日・新着マークまで覆う。人は罫で囲まれた行を
+ * 拡張する（description・種別・公開日・新着マークまで覆う。人は罫で囲まれた行を
  * クリック可能と認識するため）。アクセシブル名は品名のみに
  * 保たれる（SR 良好・入れ子アンカーを作らない）。タグは .tagRow の z-index で
  * この擬似要素より前面に維持し、独立クリックを両立する。
@@ -84,13 +84,20 @@
   overflow: hidden;
 }
 
-/* 値札（カテゴリ・読了時間）+ 右端メタ（公開日）を横並びに。 */
+/* 種別（カテゴリ・読了時間）+ 右端メタ（公開日）を横並びに。 */
 .metaRow {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   flex-wrap: wrap;
   justify-content: space-between;
   gap: var(--space-8);
+}
+
+/* 種別は枠や地で囲まず、補助情報の文字で置く（§7）。 */
+.kind {
+  color: var(--ink-2);
+  font-family: var(--font-body);
+  font-size: var(--text-small);
 }
 
 .date {

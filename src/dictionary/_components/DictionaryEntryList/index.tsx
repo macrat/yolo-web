@@ -1,6 +1,5 @@
 import Link from "next/link";
 import type { ReactElement } from "react";
-import { NefudaGroup } from "@/components/Nefuda";
 import styles from "./DictionaryEntryList.module.css";
 
 /**
@@ -19,7 +18,7 @@ export interface DictionaryEntryItem {
   reading?: string;
   /** ひとこと（意味・語義プレビュー）。任意——無ければ出さない。 */
   note?: string;
-  /** 値札の文言配列（種別・難易度・カラーコード等）。任意——空なら描画しない。 */
+  /** 種別の語（種別・難易度・カラーコード等）。任意——「・」でつないで1行にし、空なら描画しない。 */
   tags?: string[];
   /**
    * 色見本の地色（colors のみ・成果物の中身＝和色・§2）。
@@ -40,7 +39,7 @@ interface DictionaryEntryListProps {
  *
  * - 一覧は罫区切りのリストであってカードのグリッドではない。上辺＋各行の一本罫で全行を囲い、
  *   カード装飾・box-shadow・色地を持たない。
- * - 各行 = 品名（リンク・墨）＋ よみ（--ink-2）＋ ひとこと（意味）＋ 任意の値札群、
+ * - 各行 = 品名（リンク・墨）＋ よみ（--ink-2）＋ ひとこと（意味）＋ 任意の種別、
  *   colors のみ品名の頭に色見本（成果物の中身＝和色・§2）。
  * - 検索器の結果とファセット絞り込みの結果が、この 1 枚の器を共有する（見せ方を一貫させる）。
  *   幅は呼び出し側が決める（読む面 --measure / 操作面 --max-width を親で当てる）。
@@ -51,34 +50,34 @@ export default function DictionaryEntryList({
 }: DictionaryEntryListProps): ReactElement {
   return (
     <ul className={styles.list} aria-label={ariaLabel}>
-      {items.map((item) => (
-        <li key={item.key} className={styles.row}>
-          <Link href={item.href} className={styles.itemLink}>
-            <span className={styles.headword}>
-              {item.swatch ? (
-                <span
-                  className={styles.swatch}
-                  style={{ backgroundColor: item.swatch }}
-                  aria-hidden="true"
-                />
-              ) : null}
-              <span className={styles.name}>{item.name}</span>
-              {item.reading ? (
-                <span className={styles.reading}>{item.reading}</span>
-              ) : null}
-            </span>
-            {item.note ? (
-              <span className={styles.note}>{item.note}</span>
-            ) : null}
-            {/* NefudaGroup は空・空要素のみのとき null を返すため、ここでの空判定は不要。 */}
-            {item.tags ? (
-              <span className={styles.tags}>
-                <NefudaGroup labels={item.tags} />
+      {items.map((item) => {
+        const kind = (item.tags ?? [])
+          .filter((tag) => tag.trim() !== "")
+          .join("・");
+        return (
+          <li key={item.key} className={styles.row}>
+            <Link href={item.href} className={styles.itemLink}>
+              <span className={styles.headword}>
+                {item.swatch ? (
+                  <span
+                    className={styles.swatch}
+                    style={{ backgroundColor: item.swatch }}
+                    aria-hidden="true"
+                  />
+                ) : null}
+                <span className={styles.name}>{item.name}</span>
+                {item.reading ? (
+                  <span className={styles.reading}>{item.reading}</span>
+                ) : null}
               </span>
-            ) : null}
-          </Link>
-        </li>
-      ))}
+              {item.note ? (
+                <span className={styles.note}>{item.note}</span>
+              ) : null}
+              {kind ? <span className={styles.kind}>{kind}</span> : null}
+            </Link>
+          </li>
+        );
+      })}
     </ul>
   );
 }

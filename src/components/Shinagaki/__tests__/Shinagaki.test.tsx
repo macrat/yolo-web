@@ -27,15 +27,15 @@ describe("Shinagaki", () => {
     expect(link2).toHaveAttribute("href", "/play/fortune");
   });
 
-  test("主リンクのアクセシブル名は品名のみ（note/値札/メタが連結されない・stretched-link 回帰テスト）", () => {
+  test("主リンクのアクセシブル名は品名のみ（note/種別/メタが連結されない・stretched-link 回帰テスト）", () => {
     // stretched-link（.name::after で行全体を標的化）方式では DOM が不変のため、
     // リンクのアクセシブル名は品名だけに保たれる。行全体を <a> で包む方式なら
-    // アクセシブル名が「品名＋ひとこと＋値札＋メタ」の連結になり、この取得は失敗する。
+    // アクセシブル名が「品名＋ひとこと＋種別＋メタ」の連結になり、この取得は失敗する。
     render(<Shinagaki items={items} />);
     // note・tags・meta を持つ項目でも、品名だけで一意にリンクが取れる
     const link = screen.getByRole("link", { name: "今日の運勢" });
     expect(link).toHaveAttribute("href", "/play/fortune");
-    // アクセシブル名に note/値札/メタの文字列が混入していない
+    // アクセシブル名に note/種別/メタの文字列が混入していない
     const accessibleName = link.textContent ?? "";
     expect(accessibleName).toBe("今日の運勢");
     expect(accessibleName).not.toContain("占います");
@@ -50,11 +50,10 @@ describe("Shinagaki", () => {
     ).toBeInTheDocument();
   });
 
-  test("値札が表示される", () => {
+  test("種別は枠を持たない文字として出て、複数の語は「・」でつながる", () => {
     render(<Shinagaki items={items} />);
-    expect(screen.getByText("3分")).toBeInTheDocument();
-    expect(screen.getByText("コピーできます")).toBeInTheDocument();
-    expect(screen.getByText("診断")).toBeInTheDocument();
+    expect(screen.getByText("3分・コピーできます").tagName).toBe("P");
+    expect(screen.getByText("診断").tagName).toBe("P");
   });
 
   test("右端メタが表示される", () => {
@@ -88,13 +87,18 @@ describe("Shinagaki", () => {
     expect(item.querySelector("p")).toBeNull();
   });
 
-  test("tags が無い項目は値札を描画しない", () => {
-    const { container } = render(
-      <Shinagaki items={[{ name: "素の項目", href: "/x" }]} />,
+  test("tags が無い項目・空の語だけの項目は種別の行を出さない", () => {
+    render(
+      <Shinagaki
+        items={[
+          { name: "素の項目", href: "/x" },
+          { name: "空の種別", href: "/y", tags: ["", "  "] },
+        ]}
+      />,
     );
-    // 品名リンクは <a>。値札の span が無いことを確認するため、リンク配下以外の span を数える
-    const spans = container.querySelectorAll("li span");
-    expect(spans).toHaveLength(0);
+    for (const item of screen.getAllByRole("listitem")) {
+      expect(item.querySelector("p")).toBeNull();
+    }
   });
 
   test("meta が空文字なら右端メタを描画しない", () => {

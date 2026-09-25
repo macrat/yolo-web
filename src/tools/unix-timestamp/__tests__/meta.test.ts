@@ -1,7 +1,7 @@
 /**
  * meta.ts FAQ整合性テスト (G-4: FAQ と実 UI 整合)
  *
- * 実UIはSegmentedControlによる秒/ミリ秒の選択であり、
+ * 実UIは秒/ミリ秒のラジオボタンによる選択であり、
  * FAQ回答文がチェックボックスなどの誤った操作表記を含まないことを保証する。
  */
 import { describe, test, expect } from "vitest";
@@ -14,7 +14,7 @@ describe("G-4: FAQ と実UI整合", () => {
       f.question.includes("秒とミリ秒のどちらで入力すればよい"),
     );
     expect(q1).toBeDefined();
-    // チェックボックスという表記はNG（実UIはSegmentedControl）
+    // チェックボックスという表記はNG（実UIはラジオボタン）
     expect(q1!.answer).not.toContain("チェックボックス");
   });
 

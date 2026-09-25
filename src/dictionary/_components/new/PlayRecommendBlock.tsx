@@ -3,7 +3,6 @@ import type { PlayContentMeta } from "@/play/types";
 import { getContentPath } from "@/play/paths";
 import { resolveDisplayCategory } from "@/play/seo";
 import { quizQuestionCountBySlug, DAILY_UPDATE_SLUGS } from "@/play/registry";
-import { NefudaGroup } from "@/components/Nefuda";
 import styles from "./PlayRecommendBlock.module.css";
 
 interface PlayRecommendBlockProps {
@@ -39,7 +38,7 @@ function getCtaText(category: PlayContentMeta["category"]): string {
 }
 
 /**
- * 値札に表示するコスト感情報を返す。
+ * 種別として表示するコスト感情報を返す。
  *
  * 評価順序:
  * 1. DAILY_UPDATE_SLUGS に含まれる → 「毎日更新」
@@ -63,7 +62,7 @@ function getMetaText(content: PlayContentMeta): string {
  * 記事・辞典ページ向けの関連コンテンツ回遊ブロック（Server Component）。
  *
  * 色付き左罫のカードや絵文字アイコンを使わず、品書き（罫区切りのリスト）で組む。各行 = 品名（リンク）＋ひとこと＋
- * 値札（毎日更新／全X問など・{@link NefudaGroup} 再利用）＋「遊んでみる →」等のリンク文言。
+ * 種別（毎日更新／全X問など）＋「遊んでみる →」等のリンク文言。
  * 器は静かに保ち（背景色・カード装飾なし）、見出し「こちらもおすすめ」は見出しの書体・墨。
  *
  * - 推薦リストが空の場合は null を返す
@@ -89,8 +88,8 @@ export default function PlayRecommendBlock({
                 <span className={styles.title}>
                   {content.shortTitle ?? content.title}
                 </span>
-                {/* 値札（毎日更新／全X問など）。getMetaText は常に非空を返す。 */}
-                <NefudaGroup labels={[getMetaText(content)]} />
+                {/* 種別（毎日更新／全X問など）。getMetaText は常に非空を返す。 */}
+                <span className={styles.kind}>{getMetaText(content)}</span>
               </span>
               <span className={styles.description}>
                 {content.shortDescription}
