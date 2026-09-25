@@ -3,8 +3,6 @@
  * 設計方針:
  * - <input type="checkbox"> を視覚的に隠し、CSS セレクタ `:checked ~` で
  *   状態を切り替える。独自の JS state を持たないため再レンダリングオーバーヘッドが小さい。
- * - DESIGN.md §5: ON/OFF を切り替えるフォーム要素はトグルスイッチを使う
- * - DESIGN.md §2: フォーカスは outline: 2px solid var(--accent); outline-offset: 2px;
  */
 
 /* ラッパー <label>: クリック領域全体をトグルにする */
@@ -16,7 +14,7 @@
   align-items: center;
   gap: 0.5rem;
   cursor: pointer;
-  /* DESIGN.md §10: タップ領域は最低 44px。トラックの見た目は 20px 高だが、
+  /* DESIGN.md §6: タップターゲットは 44px 以上。トラックの見た目は 20px 高だが、
    * ラベル全体を 44px 高にして指で確実に押せるようにする（モバイル誤タップ防止）。 */
   min-height: 44px;
 }
@@ -40,7 +38,7 @@
 }
 
 /* トラック（横長の背景） — OFF 状態のデフォルト。
- * DESIGN.md §4「角丸 0px 基調」に従い、トラックも直角（--radius=0）で組む。
+ * 角丸は持たない（DESIGN.md §5）ので、トラックも直角（--radius=0）で組む。
  * ON/OFF は角丸ではなく地の色（--rule→--accent）とつまみの位置で示す。 */
 .track {
   display: inline-block;
@@ -59,8 +57,7 @@
   background: var(--accent);
 }
 
-/* フォーカス: DESIGN.md §2 準拠。
- * :focus-visible でキーボード操作時のみリングを表示する。 */
+/* フォーカス: :focus-visible でキーボード操作時のみリングを表示する。 */
 .input:focus-visible ~ .track {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
@@ -72,7 +69,7 @@
   cursor: not-allowed;
 }
 
-/* サム（丸いつまみ） — OFF 状態は左端。影は付けない（§4）——
+/* サム（丸いつまみ） — OFF 状態は左端。影は付けない（§5）——
  * トラックとサムの地の対比（--rule と --paper）+ 罫の縁取りだけで輪郭を示す
  * （ダーク/ライトで明暗の向きが変わっても縁取りで常に視認できるようにする）。 */
 .thumb {

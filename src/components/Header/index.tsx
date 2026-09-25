@@ -3,15 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { SITE_NAME } from "@/lib/constants";
+import { HEADER_NAV_ITEMS } from "@/lib/site-frame";
 import styles from "./Header.module.css";
-
-/** 全ページで同じナビの項目。サイトの主軸である遊びを先頭に置く。 */
-const NAV_ITEMS: { label: string; href: string }[] = [
-  { label: "遊び", href: "/play" },
-  { label: "ツール", href: "/tools" },
-  { label: "ブログ", href: "/blog" },
-  { label: "サイト紹介", href: "/about" },
-];
 
 /**
  * 上端（DESIGN.md §5 レイアウト）。サイト名とナビを並べ、下に全幅の罫線を引く。
@@ -33,7 +26,7 @@ export default function Header() {
         </Link>
         <nav aria-label="メインナビゲーション">
           <ul className={styles.navList}>
-            {NAV_ITEMS.map((item) => (
+            {HEADER_NAV_ITEMS.map((item) => (
               <li key={item.href}>
                 <Link
                   href={item.href}

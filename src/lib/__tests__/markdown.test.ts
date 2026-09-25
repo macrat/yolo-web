@@ -197,6 +197,14 @@ describe("markdownToHtml", () => {
     expect(html).toContain("<td>");
   });
 
+  test("表を横に送れる枠で包む（列が本文の幅に収まらない表のため）", async () => {
+    const md = "| A | B |\n|---|---|\n| 1 | 2 |";
+    const { html } = await markdownToHtml(md);
+    expect(html).toMatch(
+      /<div class="table-scroll"><table>[\s\S]*<\/table>\s*<\/div>/,
+    );
+  });
+
   test("converts blockquotes", async () => {
     const { html } = await markdownToHtml("> quote text");
     expect(html).toContain("<blockquote>");

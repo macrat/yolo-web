@@ -5,7 +5,7 @@
  * build-time rendering.
  */
 
-import { Marked, type MarkedExtension, type Tokens } from "marked";
+import { Marked, Renderer, type MarkedExtension, type Tokens } from "marked";
 // GFM Alert構文（> [!NOTE]等）をadmonitionのHTMLに変換するため追加
 import markedAlert from "marked-alert";
 // XSS防止のためmarked出力をホワイトリスト方式でサニタイズ
@@ -151,7 +151,20 @@ function createHeadingExtension(): {
 }
 
 /**
- * Build a fresh Marked instance with code/highlight, heading, and alert
+ * 表は列が本文の幅に収まらないことがあるので、横に送れる枠で包む。枠の外へはみ出して
+ * コンテナのボーダーに重なったり、画面の端で切れたりしないようにする（DESIGN.md §5「表」）。
+ * 表そのものは marked の既定の組み方で出す。
+ */
+const tableExtension: MarkedExtension = {
+  renderer: {
+    table(token: Tokens.Table) {
+      return `<div class="table-scroll">${Renderer.prototype.table.call(this, token)}</div>\n`;
+    },
+  },
+};
+
+/**
+ * Build a fresh Marked instance with code/highlight, heading, table, and alert
  * extensions, plus a getter for the headings that instance collects.
  *
  * A NEW instance is created per markdownToHtml() call rather than reusing a
@@ -172,7 +185,12 @@ function createMarkedInstance(): {
   getHeadings: () => Heading[];
 } {
   const { extension: headingExtension, getHeadings } = createHeadingExtension();
-  const instance = new Marked(codeExtension, headingExtension, markedAlert());
+  const instance = new Marked(
+    codeExtension,
+    headingExtension,
+    tableExtension,
+    markedAlert(),
+  );
   return { instance, getHeadings };
 }
 

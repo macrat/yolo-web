@@ -6,6 +6,12 @@ import {
   build410Html,
   middleware,
 } from "../middleware";
+import { SITE_NAME } from "@/lib/constants";
+import {
+  FOOTER_LINKS,
+  HEADER_NAV_ITEMS,
+  MAIN_CONTENT_ID,
+} from "@/lib/site-frame";
 
 describe("DELETED_BLOG_SLUGS", () => {
   test("19件の削除済みスラッグが定義されている", () => {
@@ -108,14 +114,37 @@ describe("build410Html", () => {
       expect(html).not.toContain("Zen Antique");
     });
 
-    test("トップへの導線は墨の文字で表す（色ベタのボタンでない・§6）", () => {
-      expect(html).toContain("href='/'");
-      expect(html).toMatch(/a\.home\{[^}]*color:var\(--ink\)/);
+    test("リンクは墨の文字と下線で表す（色ベタのボタンでない・§6）", () => {
+      expect(html).toMatch(/a\{color:var\(--ink\);text-decoration:underline;/);
     });
 
     test("角丸を持たない（0.5rem の角丸を含まない・§5）", () => {
       expect(html).not.toContain("border-radius:0.5rem");
     });
+  });
+});
+
+describe("build410Html の枠（DESIGN.md §5 レイアウト）", () => {
+  const html = build410Html();
+  const header = html.match(/<header>[\s\S]*<\/header>/)?.[0] ?? "";
+  const footer = html.match(/<footer>[\s\S]*<\/footer>/)?.[0] ?? "";
+
+  test("上端にサイト名のトップへのリンクと、ほかのページと同じナビの項目を置く", () => {
+    expect(header).toContain(`<a class='link' href='/'>${SITE_NAME}</a>`);
+    for (const item of HEADER_NAV_ITEMS) {
+      expect(header).toContain(`href='${item.href}'>${item.label}</a>`);
+    }
+  });
+
+  test("下端にほかのページと同じリンクを置く", () => {
+    for (const link of FOOTER_LINKS) {
+      expect(footer).toContain(`href='${link.href}'>${link.label}</a>`);
+    }
+  });
+
+  test("スキップのリンクが中間の main を指す", () => {
+    expect(html).toContain(`href='#${MAIN_CONTENT_ID}'`);
+    expect(html).toContain(`<main id='${MAIN_CONTENT_ID}' tabindex='-1'`);
   });
 });
 

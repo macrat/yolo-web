@@ -172,10 +172,15 @@
   color: var(--ink-2);
 }
 
+/* 表を包む枠（src/lib/markdown.ts）。列が本文の幅に収まらない表は、この枠の中で横に送る。 */
+.prose :global(.table-scroll) {
+  overflow-x: auto;
+  margin: 0 0 var(--space-16);
+}
+
 .prose table {
   width: 100%;
   border-collapse: collapse;
-  margin: 0 0 var(--space-16);
 }
 
 .prose th,
@@ -324,9 +329,7 @@
 }
 
 /*
- * モバイルブレークポイント 720px はサイト共通値（Header.module.css / Footer.module.css）。
- * 縦方向 padding のみ縮小し、左右は --space-24 を維持して
- * Header/Footer/本文の左右位置を上から下まで揃える。
+ * 狭い画面では縦方向の padding だけを縮め、左右は --space-24 を保つ。
  */
 @media (max-width: 720px) {
   .contentColumn {

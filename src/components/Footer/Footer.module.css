@@ -3,11 +3,13 @@
   border-top: var(--rule-w) solid var(--rule);
 }
 
-/* コンテナと同じ幅と内側の余白を取り、中身の左端をコンテンツ幅の左端に揃える（§5 コンテナ）。 */
+/* コンテナ（§5）。左右のボーダーを引き、上の全幅の罫線と交わらせる。
+ * 中身の左端はコンテンツ幅の左端に来る。 */
 .inner {
-  width: min(var(--max-width), 100% - 2 * var(--space-16));
+  width: var(--container-width);
   margin-inline: auto;
-  padding: var(--space-24) calc(var(--rule-w) + var(--box-padding));
+  border-inline: var(--rule-w) solid var(--rule);
+  padding: var(--space-24) var(--box-padding);
   display: flex;
   flex-direction: column;
   gap: var(--space-16);
@@ -31,19 +33,27 @@
   }
 }
 
-/* 幅は字の大きさで、押せる範囲が 44px 四方に届かない分だけ余白を足す（§5・§6）。
+/* 幅は字の大きさで、押せる範囲が 44px 四方に届かない分だけ右に余白を足す（§5・§6）。
+ * 字は箱の左に置き、どの項目の字もコンテンツ幅の左端と同じ線から始める。
  * 下線と訪問済みの色は globals.css の a の既定に従う。 */
 .link {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
   min-width: 44px;
   min-height: 44px;
-  /* hover の細い線を要素の内側に出すため、線の幅を先に取っておく。 */
-  border: var(--rule-w-hair) solid transparent;
+  position: relative;
 }
 
-.link:hover {
+/* hover の細い線（§6）。要素の内側に重ねて引き、字の位置を線の幅の分だけ動かさない。 */
+.link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: var(--rule-w-hair) solid transparent;
+  pointer-events: none;
+}
+
+.link:hover::after {
   border-color: var(--rule-2);
 }
 
@@ -54,13 +64,13 @@
   outline-offset: var(--rule-w);
 }
 
-/* 現在地は押しても何も起きないので、下線も hover も持たない（§6）。 */
+/* 現在地は太字で示し、押しても何も起きないので下線も hover も持たない（§6）。 */
 .link[aria-current="page"] {
   color: var(--ink);
   font-weight: 700;
   text-decoration: none;
 }
 
-.link[aria-current="page"]:hover {
+.link[aria-current="page"]:hover::after {
   border-color: transparent;
 }

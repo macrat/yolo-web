@@ -1,0 +1,9 @@
+/* 中間はコンテナ（§5）。左右のボーダーを上端と下端のボーダーにつなげ、ページの中身をコンテンツ幅に収める。
+ * 余りの高さを埋めて、中身が短いページでもボーダーを下端まで届かせる。 */
+.main {
+  flex: 1;
+  width: var(--container-width);
+  margin-inline: auto;
+  border-inline: var(--rule-w) solid var(--rule);
+  padding-inline: var(--box-padding);
+}

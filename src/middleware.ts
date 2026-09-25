@@ -10,6 +10,14 @@ import {
   INK_2_DARK,
   RULE_DARK,
 } from "@/lib/utsuwaHex";
+import { SITE_NAME } from "@/lib/constants";
+import {
+  AI_NOTICE,
+  FOOTER_LINKS,
+  HEADER_NAV_ITEMS,
+  MAIN_CONTENT_ID,
+  type SiteLink,
+} from "@/lib/site-frame";
 
 /**
  * 削除済みブログ記事のスラッグ一覧。
@@ -57,13 +65,25 @@ const BODY_STACK =
 const HEADING_STACK =
   "'BIZ UDGothic','Hiragino Kaku Gothic ProN','Yu Gothic Medium','Noto Sans JP',sans-serif";
 
+/** 上端・下端のリンク。React の Header・Footer と同じ組み方で、現在地を持たない（410 はナビの行き先でない）。 */
+function frameLinks(links: readonly SiteLink[]): string {
+  return links
+    .map(
+      (link) =>
+        `<li><a class='link' href='${link.href}'>${link.label}</a></li>`,
+    )
+    .join("");
+}
+
 /**
  * 410 Gone ページのHTMLを生成する。
  * middlewareからはReactコンポーネントやCSSモジュールが使用できないため、
  * インラインスタイル付きの静的HTMLで構成する。
  *
- * エラー面 `src/app/global-not-found-content.tsx` と流儀（紙地・墨字・見出しの書体・罫）を揃える。
- * 中央寄せの静かな告知として組み、トップへ戻る導線は文字と罫囲みで表す。
+ * どのページとも同じ枠（DESIGN.md §5 レイアウト）を持たせる。スキップのリンク・上端・中間・下端を置き、
+ * コンテナの左右のボーダーを上端から下端まで通して、上端・下端の全幅の罫線と交わらせる。
+ * 上端・下端の文字と行き先、AI 運営の告知は `@/lib/site-frame` から取り、ほかのページと食い違わせない。
+ * 寸法は globals.css のトークン（§4・§5）と同じ値で書く。
  *
  * 色（DESIGN.md §2）は、トークンを読めないので器色 hex の SSoT `@/lib/utsuwaHex` から取る。
  * ここで hex を独自に書くと、globals.css を変えても 410 だけ古い値のまま残るため。
@@ -77,28 +97,51 @@ export function build410Html(): string {
 <meta name='viewport' content='width=device-width, initial-scale=1' />
 <meta name='theme-color' media='(prefers-color-scheme: light)' content='${PAPER}' />
 <meta name='theme-color' media='(prefers-color-scheme: dark)' content='${PAPER_DARK}' />
-<title>このコンテンツは終了しました | yolos.net</title>
+<title>このコンテンツは終了しました | ${SITE_NAME}</title>
 <style>
-:root{color-scheme:light;--paper:${PAPER};--ink:${INK};--ink-2:${INK_2};--rule-2:${RULE}}
+:root{color-scheme:light;--paper:${PAPER};--ink:${INK};--ink-2:${INK_2};--rule-2:${RULE};--box-padding:8px}
 @media (prefers-color-scheme:dark){:root{color-scheme:dark;--paper:${PAPER_DARK};--ink:${INK_DARK};--ink-2:${INK_2_DARK};--rule-2:${RULE_DARK}}}
+@media (min-width:45rem){:root{--box-padding:16px}}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:${BODY_STACK};background:var(--paper);color:var(--ink);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1.5rem}
-.container{max-width:34rem;width:100%;text-align:center}
-h1{font-family:${HEADING_STACK};font-size:1.6rem;font-weight:400;color:var(--ink);line-height:1.5;letter-spacing:0.02em}
-.rule{width:3rem;height:0;border-top:1px solid var(--rule-2);margin:1.25rem auto}
-p{font-family:${BODY_STACK};font-size:1rem;color:var(--ink-2);line-height:1.9;margin-bottom:2rem}
-a.home{display:inline-block;padding:0.6rem 1.75rem;color:var(--ink);text-decoration:none;border:1px solid var(--rule-2);border-radius:0;font-size:0.95rem;transition:border-color 0.2s}
-a.home:hover,a.home:focus-visible{border-color:var(--ink)}
-a.home:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+html,body{background:var(--paper);color:var(--ink)}
+body{display:flex;flex-direction:column;min-height:100vh;font-family:${BODY_STACK};font-size:1.0625rem;line-height:1.85;overflow-wrap:break-word}
+a{color:var(--ink);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:0.15em}
+a:visited{color:var(--ink-2)}
+a:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.skip{position:fixed;top:8px;left:8px;transform:translateY(calc(-100% - 8px));z-index:1000;display:inline-flex;align-items:center;min-height:44px;padding:8px 16px;background:var(--paper);border:1px solid var(--ink);text-decoration:none}
+.skip:focus{transform:translateY(0)}
+.container{width:min(60rem,100% - 32px);margin-inline:auto;border-inline:3px solid var(--ink);padding-inline:var(--box-padding)}
+header{border-bottom:3px solid var(--ink)}
+header .container{display:flex;flex-wrap:wrap;align-items:center;column-gap:24px;padding-block:8px}
+footer{border-top:3px solid var(--ink)}
+footer .container{display:flex;flex-direction:column;gap:16px;padding-block:24px}
+ul{list-style:none;display:flex;flex-wrap:wrap;column-gap:8px}
+@media (min-width:45rem){ul{column-gap:16px}}
+.link{position:relative;display:inline-flex;align-items:center;min-width:44px;min-height:44px}
+.link::after{content:'';position:absolute;inset:0;border:1px solid transparent;pointer-events:none}
+.link:hover::after{border-color:var(--rule-2)}
+main{flex:1;display:flex;flex-direction:column;align-items:flex-start;gap:24px;padding-block:48px}
+h1{font-family:${HEADING_STACK};font-size:2.08rem;font-weight:400;line-height:1.25;word-break:auto-phrase}
+@media (min-width:45rem){h1{font-size:2.92rem}}
+@media (min-width:64rem){h1{font-size:4.08rem}}
+p{max-width:40rem}
 </style>
 </head>
 <body>
-<div class='container'>
+<a class='skip' href='#${MAIN_CONTENT_ID}'>メインコンテンツへスキップ</a>
+<header><div class='container'>
+<a class='link' href='/'>${SITE_NAME}</a>
+<nav aria-label='メインナビゲーション'><ul>${frameLinks(HEADER_NAV_ITEMS)}</ul></nav>
+</div></header>
+<main id='${MAIN_CONTENT_ID}' tabindex='-1' class='container'>
 <h1>このコンテンツは終了しました</h1>
-<div class='rule'></div>
 <p>お探しのページはすでに削除されており、現在はご覧いただけません。</p>
-<a class='home' href='/'>トップページへ</a>
-</div>
+<a class='link' href='/'>トップページへ</a>
+</main>
+<footer><div class='container'>
+<p>${AI_NOTICE}</p>
+<nav aria-label='サイトの案内'><ul>${frameLinks(FOOTER_LINKS)}</ul></nav>
+</div></footer>
 </body>
 </html>`;
 }

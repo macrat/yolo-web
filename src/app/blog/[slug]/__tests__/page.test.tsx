@@ -5,22 +5,12 @@ import * as path from "path";
 // 各テストで何度も readFileSync するのを避けるため、モジュールロード時に一度だけ読む。
 const pagePath = path.resolve(__dirname, "../page.tsx");
 const cssPath = path.resolve(__dirname, "../page.module.css");
-const footerCssPath = path.resolve(
-  __dirname,
-  "../../../../components/Footer/Footer.module.css",
-);
-const headerCssPath = path.resolve(
-  __dirname,
-  "../../../../components/Header/Header.module.css",
-);
 const shareButtonsCssPath = path.resolve(
   __dirname,
   "../../../../components/ShareButtons/ShareButtons.module.css",
 );
 const source = fs.readFileSync(pagePath, "utf-8");
 const css = fs.readFileSync(cssPath, "utf-8");
-const footerCss = fs.readFileSync(footerCssPath, "utf-8");
-const headerCss = fs.readFileSync(headerCssPath, "utf-8");
 const shareButtonsCss = fs.readFileSync(shareButtonsCssPath, "utf-8");
 
 describe("app/blog/[slug]/page", () => {
@@ -162,7 +152,7 @@ describe("app/blog/[slug]/page", () => {
     });
   });
 
-  describe("グローバルの上端・下端と本文カラムの横幅", () => {
+  describe("本文カラムの横幅", () => {
     it(".contentColumn に max-width: var(--max-width) が定義されていること（新デザイン・操作面の最大幅）", () => {
       expect(css).toMatch(
         /\.contentColumn[^{]*\{[^}]*max-width:\s*var\(--max-width\)/,
@@ -174,21 +164,6 @@ describe("app/blog/[slug]/page", () => {
         /\.contentColumn[^{]*\{[^}]*padding:[^;}]*var\(--space-24\)/,
       );
     });
-
-    it.each([
-      ["Header", () => headerCss],
-      ["Footer", () => footerCss],
-    ])(
-      "%s.module.css の .inner がコンテナと同じ幅と内側の余白を取ること（DESIGN.md §5 コンテナ）",
-      (_name, read) => {
-        expect(read()).toMatch(
-          /\.inner[^{]*\{[^}]*width:\s*min\(var\(--max-width\)/,
-        );
-        expect(read()).toMatch(
-          /\.inner[^{]*\{[^}]*padding:[^;}]*var\(--rule-w\) \+ var\(--box-padding\)/,
-        );
-      },
-    );
 
     it("page.module.css の SP ブレークポイントは 720px", () => {
       // サイト共通の SP ブレークポイントは 720px

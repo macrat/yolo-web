@@ -20,7 +20,9 @@
  *   §3   本文の font-family に Inter/Roboto/Open Sans 等の欧文既定 sans・monospace = ERROR。
  *        見出しの書体（--font-heading）で組む要素のウェイトが 400 以外 = ERROR
  *        （Zen Antique は 400 の1本だけで、ほかのウェイトはブラウザが合成太字を作る。§4「合成太字を作らない」）。
- *   §5   backdrop-filter: blur・色付きの影 = ERROR。中性の影・グラデーション背景 = WARN（人手で確認）。
+ *   §5   §5 は「角丸は 0px」「影・グロー・半透明ぼかし・グラデーションを持たない」と定める。
+ *        この検査はそれより緩く、2px の角丸と中性の影を ERROR にしない:
+ *        backdrop-filter: blur・色付きの影 = ERROR。中性の影・グラデーション背景 = WARN（人手で確認）。
  *        border-radius が 0 / var(--radius) / var(--radius-sm) / 2px 以外 = ERROR。絵文字（埋め込み面）= ERROR。
  *   §12  色の直書き（トークンを経由しない hex / rgb() / oklch() 等）= ERROR。
  *        中性のスクリム（rgba(0,0,0,α) 等のオーバーレイ幕）は許す。
@@ -59,8 +61,8 @@ const IGNORE = ["**/__tests__/**", "**/*.test.ts", "**/*.test.tsx"];
 // 表示される。Edge 実行や layout の import チェーンの外にあってトークンを import できず、hex を
 // 直書きするため、analyzeEmbeddedDesign で生テキストを検査する。
 //   - src/middleware.ts           : 削除記事へ返す 410 Gone ページの HTML/CSS
-//   - src/app/global-not-found.js : 404 ラッパー（本文の CSS は global-not-found.module.css を
-//                                   上の glob が検査し、ここでは .js の inline style を拾う）
+//   - src/app/global-not-found.js : 404 のルート（.js なので上の glob に載らない。本文の CSS は
+//                                   global-not-found.module.css を上の glob が検査する）
 const EMBEDDED_DESIGN_FILES = [
   "src/middleware.ts",
   "src/app/global-not-found.js",
@@ -302,7 +304,7 @@ function hueOf(lit: string): number | null {
 const isPurpleHue = (h: number | null): boolean =>
   h !== null && h >= 250 && h <= 320;
 
-// border-radius で許容する値（§5）: 0 / var(--radius) / var(--radius-sm) / 2px。
+// border-radius で ERROR にしない値。§5 は角丸を 0px とするが、この検査は 2px も ERROR にしない。
 const ALLOWED_RADIUS_ATOMS = new Set([
   "0",
   "0px",
@@ -646,7 +648,7 @@ function disallowedRadiusAtoms(value: string): string[] {
  * テンプレート文字列に CSS/HTML を埋め込む稼働デザイン面（EMBEDDED_DESIGN_FILES）を生テキストで
  * 検査する。検出対象は次の具体パターンに限る:
  *   §2  青・青紫の hex（BANNED_EMBEDDED_HEX）／青〜紫 hue の色関数（oklch/hsl/hwb・250〜320）
- *   §5  非許容の border-radius（0 / var(--radius) / var(--radius-sm) / 2px 以外）・絵文字
+ *   §5  ERROR にしない値（0 / var(--radius) / var(--radius-sm) / 2px）以外の border-radius・絵文字
  * 紙・墨の hex は正当なので一般 hex 検査（§12）はしない。/* *​/ コメント内は検査しない。
  */
 function analyzeEmbeddedDesign(content: string, file: string): Violation[] {

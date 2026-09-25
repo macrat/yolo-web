@@ -201,7 +201,7 @@
   color: var(--ink);
 }
 
-/* 出典の外部リンク: Footer の外部リンク記号パターンに準拠。 */
+/* 出典の外部リンク。外部へ出ることを ↗ の記号で添える。 */
 .externalLink {
   color: var(--accent);
   text-decoration: none;

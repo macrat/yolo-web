@@ -145,7 +145,7 @@ export default function YojiDetail({ yoji }: YojiDetailProps) {
                   aria-label={`${getSourceLabel(yoji.sourceUrl)}（外部サイト・新しいタブで開く）`}
                 >
                   {getSourceLabel(yoji.sourceUrl)}
-                  {/* テキストより小さめの外部リンク記号 (Footer と統一) */}
+                  {/* テキストより小さめの外部リンク記号 */}
                   <span className={styles.externalIcon} aria-hidden="true">
                     ↗
                   </span>

@@ -51,6 +51,8 @@
   --measure: 40rem;
   --max-width: 60rem;
   --box-padding: var(--space-8);
+  /* コンテナの幅。画面の端から左右のボーダーまで 16px 以上あけ、全幅の罫線が張り出す余地を残す。 */
+  --container-width: min(var(--max-width), 100% - 2 * var(--space-16));
 
   /* §4 組版。見出しは本文から 1.4 倍ずつの5段で、画面幅ごとに役割へ割り当てる段が下がる。 */
   --text-body: 1.0625rem;
@@ -196,7 +198,12 @@ body {
   color: var(--ink);
 }
 
+/* 上端・中間・下端を縦に積み、中身が短いページでも下端を画面の下に置く。
+ * コンテナの左右のボーダーが上端から下端まで途切れずに通るよう、中間が余りの高さを埋める。 */
 body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
   font-family: var(--font-body);
   font-size: var(--text-body);
   line-height: var(--leading-body);

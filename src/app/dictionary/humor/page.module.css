@@ -58,7 +58,7 @@
 
 /*
  * 行全体をリンクにする（browsing の一覧なので広いタップ面が価値・44px を縦 padding で確保）。
- * いまは静止時に下線を出さず、hover で下線を出す（Footer/Shinagaki と同じ組み方）。
+ * 静止時は下線を出さず、hover で見出し語に下線を出す。
  */
 .entryLink {
   display: block;
