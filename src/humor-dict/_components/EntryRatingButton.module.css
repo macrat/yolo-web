@@ -1,8 +1,6 @@
 /*
- * 評価ボタン（ユーモア辞典の詳細ページ）。DESIGN.md §8 是正（cycle-279）:
- * 絵文字・生hex色・border-radius:8px・ピル寄りの角丸を撤去し、店構えの語彙へ。
- * 文字ラベルのみ・全トークン経由・box-shadow なし。選択状態は --accent-weak
- * （§2「操作・選択状態のハイライトにのみ可」）で表す。
+ * 評価ボタン（ユーモア辞典の詳細ページ）。
+ * 文字ラベルのみ・全トークン経由・角丸と box-shadow なし。選択状態は --accent-weak の地で表す。
  */
 .wrapper {
   display: flex;
@@ -36,7 +34,7 @@
   color: var(--accent);
 }
 
-/* Rated state: --accent-weak で選択状態を示す（§2: 操作・選択状態のみ可）。
+/* Rated state: --accent-weak で選択状態を示す。
  * ボタン自身が持つ aria-pressed 属性をセレクタに使う（design-gate の STATE_SELECTOR_RE
  * が [aria-pressed] を状態セレクタとして認識するため、専用クラスを持たずに済む）。 */
 .button[aria-pressed="true"] {

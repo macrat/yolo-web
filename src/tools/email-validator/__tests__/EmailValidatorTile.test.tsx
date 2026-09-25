@@ -1,7 +1,5 @@
 /**
- * EmailValidatorTile の回帰テスト（単一正典タイル / cycle-228 T-10）
- *
- * 旧 EmailValidatorPage.test.tsx の全振る舞いを移植・拡張。
+ * EmailValidatorTile の回帰テスト
  *
  * 観点:
  *   E-1: 基本レンダリング（Panel ルート確認）
@@ -386,11 +384,11 @@ describe("バッジアイコンのアクセシビリティ", () => {
 });
 
 // ===========================================================
-// B-593: 見出しレベル回帰防止（h1→h3 飛び是正）
+// 見出しレベルの飛びを防ぐ
 // ===========================================================
-describe("B-593: 本体セクション見出しは h2（h1→h3 飛び是正の回帰防止）", () => {
+describe("本体セクション見出しは h2（h1→h3 の飛びを防ぐ）", () => {
   it("不正メール入力時の「エラー」見出しが見出しレベル2で描画される", async () => {
-    // cycle-288 a11y是正: h1 の直後に h3 が来る見出しレベルの飛びを防ぐため、
+    // h1 の直後に h3 が来る見出しレベルの飛びを防ぐため、
     // 本体セクション見出し（エラー/警告/タイポ提案）は h2 でなければならない。
     render(<EmailValidatorTile />);
     const input = screen.getByRole("textbox");
@@ -443,15 +441,14 @@ describe("E-12: CSSトークン検証", () => {
     "src/tools/email-validator/EmailValidatorTile.module.css",
   );
 
-  it("--color-* 旧トークンが存在しない", () => {
+  it("--color-* トークンが存在しない", () => {
     const css = readFileSync(cssPath, "utf-8");
     expect(css).not.toMatch(/var\(--color-/);
   });
 
-  it("--accent を地（background）へ直塗りしていない（文字・罫での使用は新デザインで許可）", () => {
+  it("--accent を地（background）へ直塗りしていない（文字・罫での使用は許す）", () => {
     const css = readFileSync(cssPath, "utf-8");
-    // フェーズR（店構えデザイン）では、エラー・警告・要確認は --accent の
-    // 文字と罫（border）で示す方針に変わった。禁止されるのは色のついた地＝
+    // エラー・警告・要確認は --accent の文字と罫（border）で示す。禁止するのは色のついた地＝
     // --accent を background に直塗りすることのみ（沈む面は --paper-2 を使う）。
     const accentBackgroundFill = css.match(
       /background(-color)?:\s*var\(--accent[^-]/g,

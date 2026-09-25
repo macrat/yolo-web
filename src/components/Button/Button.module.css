@@ -1,7 +1,7 @@
-/* Button — クリック操作のボタン（DESIGN.md フェーズ R・店構えへ変換）。
+/* Button — クリック操作のボタン。
  * 主ボタン（primary）= --accent の地に --paper の文字。
  * 副ボタン（default）= 罫の線画（地は紙・罫は --rule・hover で枠と文字に --accent。ShareButtons と同型）。
- * 角丸は 0px 基調。box-shadow は廃止（§4/§8-2）。
+ * 角丸は 0px。box-shadow は持たない（§5）。
  * フォーカスは outline: 2px solid var(--accent); outline-offset: 2px。
  */
 
@@ -35,7 +35,7 @@
    variant
    ================================================================ */
 
-/* default（副ボタン）— 罫の線画。地は紙のまま・罫で輪郭を示す（§4/§7 実務側）。
+/* default（副ボタン）— 罫の線画。地は紙のまま・罫で輪郭を示す。
  * hover は枠と文字に --accent（色ベタにしない・ShareButtons の副ボタンと同型）。 */
 .variantDefault {
   background: var(--paper);
@@ -49,7 +49,7 @@
 
 /* primary（主ボタン）— --accent の地に --paper の文字。
  * hover/active は彩度・色相を変えず明度のみ filter で調整する
- * （新トークンに accent の濃淡違いが無いため、色の直書きを避けて filter で表現）。 */
+ * （トークンに accent の濃淡違いが無いため、色の直書きを避けて filter で表現）。 */
 .variantPrimary {
   background: var(--accent);
   color: var(--paper);

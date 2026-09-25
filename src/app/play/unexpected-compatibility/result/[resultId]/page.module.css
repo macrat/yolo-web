@@ -1,11 +1,11 @@
 /*
- * 結果ページルート /play/[slug]/result/[resultId] のスタイル（新デザイン体系・DESIGN.md）。
+ * 結果ページルート /play/[slug]/result/[resultId] のスタイル。
  * このページは第三者向けのシェア／検索ランディング専用で、受検者本人には表示されない
  * （本人は /play/[slug] 上のインライン結果＝ResultCard 経由で見る）。
  *
  * インライン結果（ResultCard）とトーン統一する: 無彩・左寄せ・絵文字マーカーなし・
- * タイプごとの派手色（旧 --type-color の colorHero 背景／ボタン枠）を使わず
- * 共通アクセント（--accent 系）・--accent に寄せる。新トークンのみ使用。
+ * タイプごとの派手色（--type-color）を使わず
+ * 共通アクセント（--accent 系）・--accent に寄せる。
  *
  * 共通コンテンツセクション（存在の本質〜全タイプ一覧）のスタイルは
  * UnexpectedCompatibilityContent.module.css に集約されている。
@@ -24,10 +24,8 @@
 
 /*
  * キャッチコピーは静かなリード文として置く（インライン ResultCard の
- * .catchphraseBeforeDescription と同じ語彙）。DESIGN.md §2「--accent-weak は
- * hover/selected の座布団にのみ可・区画の地（セクション背景等）には不可」に従い、
- * 旧デザインの全面塗り「カラーヒーロー」（--accent-weak 背景・角丸バンド）は撤去した。
- * 器は静かに、成果物（Tsutsumi・ResultPageShell 側）だけが主役（§4/§7）。
+ * .catchphraseBeforeDescription と同じ語彙）。区画を色で塗らない（§1）。
+ * 器は静かに、成果物（Tsutsumi・ResultPageShell 側）だけが主役。
  */
 .catchphrase {
   font-size: 1.1rem;
@@ -45,8 +43,7 @@
   margin-bottom: 0;
 }
 
-/* 主要 CTA: 罫の線画（トップページ .heroLink と同じ語彙・ピル/塗り/影禁止）。
- * クイズごとの accentColor インライン注入は撤去済み。 */
+/* 主要 CTA: 罫の線画（トップページ .heroLink と同じ語彙・ピル/塗り/影禁止）。 */
 .tryButton {
   display: inline-flex;
   align-items: center;

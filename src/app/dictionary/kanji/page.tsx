@@ -15,18 +15,16 @@ import { KANJI_GRADE_LABELS } from "@/dictionary/_lib/types";
 import styles from "./page.module.css";
 
 /**
- * 漢字辞典トップ = 引くための入口（DESIGN.md フェーズ R・新デザイン「店構え」へ変換）。
+ * 漢字辞典トップ = 引くための入口。
  *
- * 旧トップ（CategoryNav の pill 群 + 常用漢字2,136字を DictionaryCard で全件フラット列挙する
- * カードグリッド + 検索）を全廃し、DESIGN.md の店構えへ作り直した。フェーズ R・C2/C3 で、
- * 共有の検索器（DictionarySearch）を使って「引く体験」を復活させた——検索結果はカードでなく
- * 品書き（罫区切りリスト・§4/§8-4）で出し、字・読み・意味・使用例を横断して引ける。
+ * 共有の検索器（DictionarySearch）で「引く体験」を主役にする——検索結果はカードでなく
+ * 品書き（罫区切りリスト）で出し、字・読み・意味・使用例を横断して引ける。
  *
- * 構成（§1「器は静か」/ §4「罫の建築」/ §6 文章 / §7「実務辞典は引く体験が主役」）:
- * - 名乗り（読む面）: 何を収録し、どう引けるかを自然な日本語で（§6）。
- * - 検索（引く体験の主役・§7）: 共有の検索器を名乗りの直後に置く。
+ * 構成:
+ * - 名乗り（読む面）: 何を収録し、どう引けるかを自然な日本語で（§9）。
+ * - 検索（引く体験の主役）: 共有の検索器を名乗りの直後に置く。
  * - 学年・部首・画数の 3 つのファセットを、それぞれ見出し付きの「棚」= 罫で区切った区画に置き、
- *   区画の中はファセット値へのテキストリンクの索引にする。カードのグリッド（§8-4）も、
+ *   区画の中はファセット値へのテキストリンクの索引にする。カードのグリッドも、
  *   2,136 字の全件フラット列挙もしない。全ての漢字は 3 ファセットのいずれかから到達できる。
  *
  * 索引が品書き（罫区切りの縦リスト）ではなく折り返すリンク群なのは、部首 198・画数 24 の
@@ -34,7 +32,7 @@ import styles from "./page.module.css";
  * 帳面の区画として成立しない）。リンクの流儀（墨→hover で下線・44px のタップ面）と
  * 罫での区画分けで店の言語に接地する。
  *
- * 色・角丸・書体・余白はすべてトークン経由（§10・直書き禁止）。インライン style は使わない。
+ * 色・角丸・書体・余白はすべてトークン経由。インライン style は使わない。
  */
 
 export const metadata: Metadata = {
@@ -65,7 +63,7 @@ export const metadata: Metadata = {
 interface FacetIndex {
   /** 棚の見出し（例「学年別」）。 */
   heading: string;
-  /** 見出しの下に添える一文（初訪者にファセットの意味を伝える・§6）。 */
+  /** 見出しの下に添える一文（初訪者にファセットの意味を伝える）。 */
   intro: string;
   /** リスト全体のアクセシビリティ名。 */
   ariaLabel: string;
@@ -105,7 +103,7 @@ export default function KanjiIndexPage() {
   const totalKanji = allKanji.length;
 
   // 検索器（共有の器）へ渡す正規化データ。表示は品名（字）＋読み＋意味＋学年の値札、
-  // 検索対象（haystack）は字・音訓・意味・使用例を連結（旧 KanjiIndexClient と同じ検索範囲を維持）。
+  // 検索対象（haystack）は字・音訓・意味・使用例を連結。
   const searchItems: DictionarySearchItem[] = allKanji.map((k) => {
     const readings = [...k.onYomi, ...k.kunYomi];
     return {
@@ -179,7 +177,7 @@ export default function KanjiIndexPage() {
         }
       </p>
 
-      {/* 検索（引く体験の主役・§7 実務辞典）。字・読み・意味・使用例を横断して引ける。 */}
+      {/* 検索（引く体験の主役）。字・読み・意味・使用例を横断して引ける。 */}
       <div className={styles.search}>
         <DictionarySearch
           heading="漢字を検索"

@@ -1,13 +1,13 @@
 /*
- * ContrarianFortuneContent 共通コンポーネントのスタイル。新デザイン体系（DESIGN.md）。
+ * ContrarianFortuneContent 共通コンポーネントのスタイル。
  * ResultCard.tsx（受検者向けインライン結果）と page.tsx（第三者向け静的結果ページ）の両方から使用される。
  *
  * 設計方針（ResultCard.module.css / CharacterPersonalityContent.module.css /
  * YojiPersonalityContent.module.css を一次規範として語彙をそろえる）:
- * - 左寄せ・新トークンのみ・font-weight は最大 600・絵文字なし・影なし。
+ * - 左寄せ・トークンのみ・font-weight は最大 600・絵文字なし・影なし。
  * - タイプごとの派手色（--type-color）は装飾から外し、共通アクセント（--accent 系）に統一する。
  *   各タイプの個性は色ではなく言葉（本文）で立てる。
- * - 角丸は一律 --radius（0px・角ばり）。新体系に操作要素専用の角丸はない。
+ * - 角丸は一律 --radius（0px・角ばり）。操作要素にも角丸を持たせない。
  *
  * なお wrapper は caller 互換のため --type-color の注入を引き続き受け取るが、
  * 装飾としては参照しない（color-as-content ではないため）。
@@ -35,10 +35,8 @@
 
 /* ============================================================
    coreSentence カード: 逆張りフレームの「核心一文」。
-   DESIGN.md §2 是正（cycle-278 C4）: --accent-weak は操作・選択状態のハイライトにのみ可で
-   区画の地には不可のため、静的な区画の地は persona/thirdPartyNote と同じ --paper-2 に統一する。
-   旧版の color-mix(--type-color, ...) ティント＋type-color 左罫線は新デザイン語彙に
-   そぐわないため撤去し、装飾としての --type-color 参照は捨てる。
+   静的な区画の地は persona/thirdPartyNote と同じ --paper-2。
+   --type-color を装飾（ティント・左罫線）に使わない。
    ============================================================ */
 .coreSentenceCard {
   padding: 1.1rem 1.25rem;
@@ -118,7 +116,6 @@
    humorMetrics テーブル（省略可）: 笑い指標。
    ResultCard.module.css の humorMetricsTable と質感をそろえ、
    --paper-2 のラベルセル + --rule の罫線で素直なテーブルに見せる。
-   旧版の type-color ティント縞や font-weight 700 は撤去。
    ============================================================ */
 .humorMetricsSection {
   margin-bottom: 2rem;
@@ -168,9 +165,8 @@
   border-bottom: 1px solid var(--rule);
 }
 
-/* 罫の升目索引（DESIGN.md §4/§8-4 是正 cycle-278 C4）:
-   「同型アイコンカードの3枚組」等のカードグリッドは §4 の禁止対象であり、一覧の既定は
-   罫区切りであるべきなので、辞典の部首索引の流儀（罫で仕切った升目に複数列で流す）に組む。
+/* 罫の升目索引:
+   カードのグリッドにせず、辞典の部首索引の流儀（罫で仕切った升目に複数列で流す）に組む。
    セル個々はカード化しない（背景・全周枠を持たない）——列内の行は border-bottom の罫だけで
    区切る。現在地は面を塗らず、文字色と下罫（--accent）で示す。
    public props "pill" は caller 互換のため TSX 側で受け取り、内部で本クラスへマップする。 */
@@ -195,7 +191,7 @@
 
 .allTypesGrid .allTypesItem a,
 .allTypesGrid .allTypesItemCurrent a {
-  min-height: 44px; /* WCAG 2.5.5 / DESIGN.md §10: タップターゲット 44px 以上 */
+  min-height: 44px; /* WCAG 2.5.5 / DESIGN.md §6: タップターゲット 44px 以上 */
   display: flex;
   align-items: center;
   gap: 0.375rem;
@@ -240,7 +236,7 @@
 
 .allTypesListVertical .allTypesItem a,
 .allTypesListVertical .allTypesItemCurrent a {
-  min-height: 44px; /* WCAG 2.5.5 / DESIGN.md §10: タップターゲット 44px 以上 */
+  min-height: 44px; /* WCAG 2.5.5 / DESIGN.md §6: タップターゲット 44px 以上 */
   display: flex;
   align-items: center;
   gap: 0.5rem;

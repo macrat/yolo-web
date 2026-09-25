@@ -40,7 +40,7 @@ function contrastRatio(a: string, b: string): number {
 const WAIRO_KEYS = Object.keys(WAIRO_HEX) as Array<keyof typeof WAIRO_HEX>;
 
 describe("WAIRO_HEX — AA を生成 hex 値そのもので再計測", () => {
-  // DESIGN §2: 継承でなく生成 hex 値で 4.5:1（通常テキスト AA）を満たすこと。
+  // 継承でなく生成 hex 値で 4.5:1（通常テキスト AA）を満たすこと。
   test.each(WAIRO_KEYS)("%s は地色×文字色が AA 4.5:1 以上", (key) => {
     const { bg, on }: WairoHex = WAIRO_HEX[key];
     expect(contrastRatio(bg, on)).toBeGreaterThanOrEqual(4.5);

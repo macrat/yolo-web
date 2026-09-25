@@ -1,12 +1,11 @@
 /*
- * ⚠️ 結果ページルート /play/[slug]/result/[resultId] のスタイル（新デザイン体系・DESIGN.md）。
+ * ⚠️ 結果ページルート /play/[slug]/result/[resultId] のスタイル。
  * このページは第三者向けのシェア／検索ランディング専用で、受検者本人には表示されない
  * （本人は /play/[slug] 上のインライン結果＝ResultCard 経由で見る）。
  *
  * character-fortune 専用結果ページのスタイル。
  * インライン結果（ResultCard）とトーン統一する: 無彩・左寄せ・絵文字マーカーなし・
  * クイズごとの派手色（accentColor）を使わず共通 --accent / --accent-weak に寄せる。
- * 新トークンのみ使用（旧 --color-* は撤去）。
  */
 
 /* ============================================================
@@ -17,8 +16,7 @@
   margin-bottom: 0;
 }
 
-/* 主要 CTA: 罫の線画（トップページ .heroLink と同じ語彙・ピル/塗り/影禁止）。
- * クイズごとの accentColor インライン注入は撤去済み。 */
+/* 主要 CTA: 罫の線画（トップページ .heroLink と同じ語彙・ピル/塗り/影禁止）。 */
 .tryButton {
   display: inline-flex;
   align-items: center;
@@ -62,7 +60,7 @@
 }
 
 /* セクション見出し。サイト共通の罫下線で静かに区切る（インライン ResultCard の
- * .detailedHeading と同じ語彙・DESIGN.md §3/§4）。 */
+ * .detailedHeading と同じ語彙）。 */
 .detailedSectionHeading {
   font-size: 1.05rem;
   color: var(--ink);
@@ -71,8 +69,7 @@
   border-bottom: 1px solid var(--rule);
 }
 
-/* (b) 「あるある」リスト。旧 💡 絵文字マーカーは撤去。
- * カード風の囲みは維持しつつ無彩・左寄せに統一。 */
+/* (b) 「あるある」リスト。絵文字マーカーを持たず、無彩・左寄せのカード風の囲み。 */
 .behaviorsList {
   list-style: none;
   padding: 0;
@@ -95,8 +92,7 @@
    character-fortune variant 固有ブロック
    ============================================================ */
 
-/* (a) キャラクターの自己紹介。DESIGN.md §2 是正（cycle-278 C4）: --accent-weak は
- * 操作・選択状態のハイライトにのみ可で区画の地には不可のため、--paper-2 に統一する。 */
+/* (a) キャラクターの自己紹介。地は --paper-2。 */
 .characterIntro {
   font-size: 1rem;
   line-height: 1.8;
@@ -165,9 +161,8 @@
 }
 
 /* (f) 全タイプ一覧セクション。
- * DESIGN.md §4/§8-4 是正（cycle-278 C4）: 旧来のチップ風横wrap（個々にカード状の全周枠）は
- * 「同型カードのグリッド」に近い質感で §4 の禁止対象に触れるため、他クイズ（例:
- * CharacterPersonalityContent.module.css .allTypesGrid）と同じ罫の升目索引に統一する。
+ * 個々をカード状に囲むと同型カードのグリッドに見えるので、他クイズ（例:
+ * CharacterPersonalityContent.module.css .allTypesGrid）と同じ罫の升目索引にする。
  * 個々のセルはカード化せず、border-bottom の罫だけで区切る。現在地は面を塗らず、
  * 文字色と下罫（--accent）で示す。 */
 .allTypesSection {

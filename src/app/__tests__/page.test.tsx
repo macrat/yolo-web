@@ -1,16 +1,16 @@
 /**
- * トップページ（よろず屋の店先）のテスト — DESIGN.md フェーズ R・作り直し版
+ * トップページ（よろず屋の店先）のテスト
  *
  * 検証観点:
  * - 名乗り: h1 がページに1つ（サイト名）・site-concept の軸「やってみるサイト」・
  *   AI 運営の明示（constitution rule 3）
  * - 目玉（今日のためしどころ）: 成長エンジンの診断 character-personality を単一区画で立て、
- *   レジストリ由来のタイトルで実在パスへ／「札にして持ち帰れる」の伝達（§7）／入口ボタン／
+ *   レジストリ由来のタイトルで実在パスへ／「札にして持ち帰れる」の伝達／入口ボタン／
  *   値札「24タイプ」。コピーの数値（12問・24タイプ）は診断データの正典値と一致する（ガード）。
  * - 棚（品書き）: 診断・占い・あそびの入口（目玉の character-personality は品書きから外す）と
  *   /play への全リンク導線
  * - 辞典棚・道具棚（+ /tools 全リンク）・読みもの棚（/blog）の入口が実在ルートを指す
- * - DESIGN.md §3: 絵文字を持ち込まない（象徴絵文字は診断結果面の専用）
+ * - DESIGN.md §5: 絵文字を持ち込まない
  * - metadata: 店先の description / OGP / twitter / canonical・noindex の不在
  */
 import { expect, test } from "vitest";
@@ -49,10 +49,10 @@ test("h1 はページに1つで、サイト名を表示する", () => {
 test("site-concept の軸（やってみるサイト）と AI 運営の明示（rule 3）がある", () => {
   render(<Home />);
   // 一言は文節ごとの span（inline-block）で組んでいるため、各文節を個別に検証する
-  // （§3 の組版: 折り返しを文節境界だけで起こす。site-concept の軸「やってみるサイト」を含む）。
+  // （折り返しを文節境界だけで起こす。site-concept の軸「やってみるサイト」を含む）。
   expect(screen.getByText("読むだけのサイトではなく、")).toBeInTheDocument();
   expect(screen.getByText("やってみるサイト。")).toBeInTheDocument();
-  // cycle-309 立証 E3: 「店主」（店の枠の押し付け）→「運営しているのは」へ是正。
+  // 運営者を店の見立て（「店主」）でなく平明な言葉で言う。
   expect(
     screen.getByText(/運営しているのは人ではなくAIです/),
   ).toBeInTheDocument();
@@ -76,10 +76,10 @@ test("目玉は成長エンジンの診断を単一区画で立て、レジス�
   expect(cta).toHaveAttribute("href", getContentPath(content!));
 });
 
-test("目玉は『札にして持ち帰れる』と結果タイプ数の値札を店先で伝える（§7）", () => {
+test("目玉は『札にして持ち帰れる』と結果タイプ数の値札を店先で伝える", () => {
   render(<Home />);
   const hero = screen.getByRole("region", { name: "あなたに似たキャラ診断" });
-  // §7 の増幅器: 持ち帰り（札）を店先で明示
+  // 持ち帰り（札）を店先で明示
   expect(within(hero).getByText(/札にして持ち帰れます/)).toBeInTheDocument();
   // 結果タイプ数の値札（実情報）
   expect(within(hero).getByText("24タイプ")).toBeInTheDocument();
@@ -169,9 +169,9 @@ test("読みもの棚はブログ（/blog）への入口を持つ", () => {
   expect(blog).toHaveAttribute("href", "/blog");
 });
 
-// ===== DESIGN.md 準拠（トップに絵文字を持ち込まない） =====
+// ===== トップに絵文字を持ち込まない（DESIGN.md §5） =====
 
-test("ページに絵文字を含まない（DESIGN.md §3）", () => {
+test("ページに絵文字を含まない（DESIGN.md §5）", () => {
   const { container } = render(<Home />);
   expect(container.textContent ?? "").not.toMatch(/\p{Extended_Pictographic}/u);
 });
@@ -182,11 +182,11 @@ test("metadata title はサイト名そのもの", () => {
   expect(metadata.title).toBe(SITE_NAME);
 });
 
-test("metadata description は店構え（よろず屋・やってみる）で、旧・道具箱中心ではない", () => {
+test("metadata description は店構え（よろず屋・やってみる）で、道具箱中心ではない", () => {
   const description = metadata.description as string;
   expect(description).toMatch(/よろず屋/);
   expect(description).toMatch(/ためして/);
-  // 旧トップの「無料のオンラインツールを集めたサイト」型の自己定義に戻っていない
+  // 「無料のオンラインツールを集めたサイト」型の自己定義ではない
   expect(description).not.toMatch(/ツールを集めたサイト/);
 });
 

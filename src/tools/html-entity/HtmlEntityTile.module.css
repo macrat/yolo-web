@@ -1,6 +1,5 @@
 /* HtmlEntityTile スタイル
- * cycle-227 T-1: HtmlEntityPage.module.css をタイル向けに継承・移植。
- * DESIGN トークン準拠（紙・墨の新トークン。--ink-2 使用）
+ * トークン（--ink-2 使用）
  *
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  */

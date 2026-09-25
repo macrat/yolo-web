@@ -73,22 +73,21 @@ describe("build410Html", () => {
     expect(html).toContain("</html>");
   });
 
-  // 店構え（DESIGN.md §2/§3/§4/§8）への移行を固定する契約テスト。
-  // 旧デザイン（青アクセント・冷色スレート・装飾絵文字・8px角丸）への逆戻りを機械的に防ぐ。
+  // 410 ページの見た目を DESIGN.md の色（§2）・書体（§3）・持たないもの（§5）に固定する。
   describe("店構えデザイン契約", () => {
     const html = build410Html();
 
-    test("旧アクセント青（#2563eb / #1d4ed8）を含まない（§8-1）", () => {
+    test("青のアクセント（#2563eb / #1d4ed8）を含まない（§2）", () => {
       expect(html).not.toContain("#2563eb");
       expect(html).not.toContain("#1d4ed8");
     });
 
-    test("冷色スレート地（#f8fafc / #1e293b）を含まない（§10）", () => {
+    test("冷色スレート地（#f8fafc / #1e293b）を含まない（§2）", () => {
       expect(html).not.toContain("#f8fafc");
       expect(html).not.toContain("#1e293b");
     });
 
-    test("装飾絵文字（📄）を含まない（§8-6）", () => {
+    test("絵文字（📄）を含まない（§5）", () => {
       expect(html).not.toContain("📄");
     });
 
@@ -107,7 +106,7 @@ describe("build410Html", () => {
       expect(html).toContain(`color:#0b0b0b`);
     });
 
-    test("角丸は0基調（8px角丸 0.5rem を含まない・§8-5）", () => {
+    test("角丸を持たない（0.5rem の角丸を含まない・§5）", () => {
       expect(html).not.toContain("border-radius:0.5rem");
     });
   });

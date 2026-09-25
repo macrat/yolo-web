@@ -1,4 +1,4 @@
-/* GameContainer（なかまわけ）— ミス表示・フィードバック帯（DESIGN.md フェーズ R・店構えへ変換） */
+/* GameContainer（なかまわけ）— ミス表示・フィードバック帯 */
 
 .mistakeIndicator {
   text-align: center;
@@ -18,7 +18,7 @@
 }
 
 /* 残りミス1回の警告状態。色（--danger 等）ではなく --accent と文字で示す。
- * 点滅は状態変化の強調のみに使い、prefers-reduced-motion では静止表示にする（§5）。 */
+ * 点滅は状態変化の強調のみに使い、prefers-reduced-motion では静止表示にする（§11）。 */
 .mistakeDanger {
   color: var(--accent);
   font-weight: 600;

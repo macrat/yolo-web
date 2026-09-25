@@ -34,9 +34,9 @@ type TextareaProps = TextareaOwnProps &
  *
  * デザイン:
  * - 入力欄の角丸は `--radius-sm`
- * - DESIGN.md §2: フォーカスは `outline: 2px solid var(--accent); outline-offset: 2px;`
- * - DESIGN.md §3: 行間は原則 1.7
- * - 影なし（DESIGN.md §4 パネルには影をつけない・フォーム要素も同様）
+ * - フォーカスは `outline: 2px solid var(--accent); outline-offset: 2px;`
+ * - 行間は 1.7
+ * - 影なし（DESIGN.md §5）
  * - resize: vertical（垂直方向のリサイズを許容）
  *
  * @example

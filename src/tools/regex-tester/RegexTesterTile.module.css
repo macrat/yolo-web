@@ -1,15 +1,13 @@
 /*
- * RegexTesterTile スタイル（DESIGN.md 準拠）
+ * RegexTesterTile スタイル
  *
- * cycle-228 T-29: RegexTesterPage → RegexTesterTile 正典化
- *
- * DESIGN.md（店構え）準拠:
+ * 組み方:
  * - 色は紙・墨トークン経由（--paper / --ink / --accent 系）
  * - フォーカス: outline: 2px solid var(--accent); outline-offset: 2px;
- * - font-weight: 最大 600（DESIGN.md §3）
+ * - font-weight: 最大 600
  * - 角丸は var(--radius)（0）/ 入力欄相当のみ var(--radius-sm)
  * - フォーム境界線: --rule-strong
- * - box-shadow は使わない（§4）
+ * - box-shadow は使わない（§5）
  */
 
 /* タイル内コンテンツの縦スタック */
@@ -67,7 +65,7 @@
   flex-shrink: 0;
 }
 
-/* フラグ fieldset（UX是正(c): 常時表示の説明テキストを含む） */
+/* フラグ fieldset（常時表示の説明テキストを含む） */
 .flagsFieldset {
   border: none;
   padding: 0;

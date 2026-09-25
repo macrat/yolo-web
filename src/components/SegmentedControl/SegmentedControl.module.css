@@ -1,8 +1,6 @@
-/* SegmentedControl — radiogroup 型のモード切替コンポーネント（DESIGN.md フェーズ R・店構えへ変換）。
- * DESIGN.md §2: --accent-weak は「操作・選択状態のハイライト（hover/selected の座布団）」
- * にのみ可——本コンポーネントの selected/hover はまさにその用途（[aria-checked]/:hover）。
- * 選択中は --accent-weak 地 + --accent 文字・枠。§4: 角丸は 0px 基調（操作可能要素だが
- * 値札/入力欄の例外には当たらない）。フォーカスは outline: 2px solid var(--accent); outline-offset: 2px。
+/* SegmentedControl — radiogroup 型のモード切替コンポーネント。
+ * 選択中（[aria-checked]）と hover に --accent-weak の地を敷く。
+ * 選択中は --accent-weak 地 + --accent 文字・枠。角丸は 0px。フォーカスは outline: 2px solid var(--accent); outline-offset: 2px。
  * WAI-ARIA: role="radiogroup" + role="radio" + aria-checked + ロービング tabindex。
  */
 
@@ -49,7 +47,7 @@
 }
 
 /* 選択中の状態: --accent-weak の座布団と、--accent の文字と枠。
- * DESIGN.md §2: 状態ハイライトなので --accent-weak を地に使ってよい（gate 許容: [aria-checked]）。 */
+ * 状態を示す地なので design-gate は [aria-checked] のセレクタを許す。 */
 .option[aria-checked="true"] {
   background: var(--accent-weak);
   color: var(--accent);

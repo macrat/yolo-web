@@ -1,9 +1,9 @@
 /*
- * プライバシーポリシー — DESIGN.md フェーズ R・店構え(cycle-279)。
+ * プライバシーポリシー。
  * 純粋な読み物ページ(規約文)のため、器は罫と組版だけで組む静かな帳面にする。
  * 見出しは globals.css の見出しの規則にまかせ、ここでは
  * 読む面の幅(--measure)・余白(8px スケール)・区切りの罫・墨の濃淡だけを整える。
- * 色付きカード・影・角丸装飾・旧トークン(--fg/--bg/--border/--r-*)は使わない(§2/§4/§8)。
+ * 色付きカード・影・角丸装飾は使わない(§5)。
  */
 
 .main {
@@ -12,7 +12,7 @@
   padding: var(--space-32) var(--space-24) var(--space-64);
 }
 
-/* 表題: のれん罫(--rule-strong)で本文と区切り、規約文書としての起点を示す(§4)。 */
+/* 表題: のれん罫(--rule-strong)で本文と区切り、規約文書としての起点を示す。 */
 .title {
   margin: 0 0 var(--space-32);
   padding-bottom: var(--space-16);
@@ -28,7 +28,7 @@
   margin-bottom: 0;
 }
 
-/* 章見出し(h2): 一本罫(--rule)で仕切る。のれん罫より軽い区切りの主格(§4)。 */
+/* 章見出し(h2): 一本罫(--rule)で仕切る。のれん罫より軽い区切り。 */
 .sectionTitle {
   margin: 0 0 var(--space-16);
   padding-bottom: var(--space-8);
@@ -72,7 +72,7 @@
   margin-bottom: 0;
 }
 
-/* 制定日: 補助情報の墨(--ink-2)で、本文と一本罫(--rule)で仕切る(§3/§4)。 */
+/* 制定日: 補助情報の墨(--ink-2)で、本文と一本罫(--rule)で仕切る。 */
 .enactmentDate {
   margin: var(--space-32) 0 0;
   padding-top: var(--space-24);

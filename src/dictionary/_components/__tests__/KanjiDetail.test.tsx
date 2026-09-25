@@ -30,7 +30,7 @@ test("renders readings", () => {
 
 test("renders basic info", () => {
   render(<KanjiDetail kanji={mockKanji} />);
-  // 画数・部首番号は tabular 数字書体の span に分離（DESIGN §3）。数値と単位が別ノードになる。
+  // 画数・部首番号は数値の span に分離。数値と単位が別ノードになる。
   expect(screen.getByText("3")).toBeInTheDocument(); // 画数
   expect(screen.getByText("46")).toBeInTheDocument(); // 部首番号
   expect(screen.getByText("小学1年")).toBeInTheDocument(); // 学年
@@ -38,7 +38,7 @@ test("renders basic info", () => {
 
 test("renders examples", () => {
   render(<KanjiDetail kanji={mockKanji} />);
-  // 使用例はカード/ピルではなく読点で組んだ自然な一文で見せる（DESIGN §4/§6）。
+  // 使用例はカード/ピルではなく読点で組んだ自然な一文で見せる。
   expect(screen.getByText("山脈、火山、登山")).toBeInTheDocument();
 });
 

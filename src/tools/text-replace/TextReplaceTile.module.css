@@ -1,6 +1,5 @@
 /* TextReplaceTile スタイル
- * cycle-228 T-5: TextReplacePage.module.css をタイル向けに継承・移植。
- * DESIGN.md（店構え）準拠（色は紙・墨トークン経由・bold禁止・
+ * 組み方（色は紙・墨トークン経由・bold禁止・
  * 角丸は var(--radius) / var(--radius-sm) のみ・罫は --rule-strong）
  *
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。

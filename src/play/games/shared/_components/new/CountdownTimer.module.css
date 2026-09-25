@@ -1,5 +1,5 @@
-/* CountdownTimer — 次の問題までの残り時間表示（DESIGN.md フェーズ R・店構えへ変換）。
- * 数字は tabular-nums で桁を揃える（§7 実務側の見た目）。装飾なし・新トークンのみ。 */
+/* CountdownTimer — 次の問題までの残り時間表示。
+ * 数字は tabular-nums で桁を揃える。装飾なし・トークンのみ。 */
 
 .container {
   padding: var(--space-8) 0;

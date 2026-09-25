@@ -1,10 +1,8 @@
 /**
- * あそび一覧（/play）のテスト — DESIGN.md フェーズ R・新デザイン変換版
+ * あそび一覧（/play）のテスト
  *
- * 旧実装（PlayFilterableList によるキーワード検索/カテゴリ絞り込みUI + PlayGrid の
- * カードグリッド）を、カテゴリ別の品書き（Shinagaki）一覧へ置き換えた。
- * このテストは新しい構成（棚+品書き）を検証し、旧UI（検索ボックス・絞り込みナビ）が
- * 存在しないことも確認する。
+ * カテゴリ別の品書き（Shinagaki）の構成（棚+品書き）を検証し、検索ボックス・絞り込みナビが
+ * 無いことも確認する。
  *
  * レジストリ（allPlayContents 等）はモックせず実データを使う。トップページの
  * page.test.tsx と同じ方針——データが変わればテストが追従して検証する。
@@ -84,12 +82,12 @@ describe("app/play/page.tsx", () => {
     expect(within(row as HTMLElement).queryByText(/^全\d+問$/)).toBeNull();
   });
 
-  test("旧デザインのキーワード検索ボックスは存在しない", () => {
+  test("キーワード検索ボックスは存在しない", () => {
     render(<PlayPage />);
     expect(screen.queryByRole("searchbox")).toBeNull();
   });
 
-  test("旧デザインのカテゴリ絞り込みナビゲーションは存在しない", () => {
+  test("カテゴリ絞り込みナビゲーションは存在しない", () => {
     render(<PlayPage />);
     expect(
       screen.queryByRole("navigation", { name: "カテゴリで絞り込む" }),

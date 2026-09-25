@@ -1,13 +1,12 @@
 /* BmiCalculatorTile スタイル
- * cycle-228 T-6: BmiCalculatorPage.module.css をタイル向けに移植。
  *
- * DESIGN.md「店構え」準拠（紙 --paper/--paper-2・墨 --ink/--ink-2・罫 --rule/--rule-strong・
+ * 組み方（紙 --paper/--paper-2・墨 --ink/--ink-2・罫 --rule/--rule-strong・
  * --accent）:
- * - 色は上記トークンのみ（緑/橙/赤の信号色は使わない。§2「副次は色でなく墨の濃淡・罫で」）
+ * - 色は上記トークンのみ（緑/橙/赤の信号色は使わない）
  * - font-weight は 600 まで
  * - 角丸は 0 基調 var(--radius)。例外は入力欄・値札の var(--radius-sm)（本タイルは共有
  *   Input を使うため入力欄自身の指定なし）
- * - 影（box-shadow）は使わない（DESIGN.md §4）
+ * - 影（box-shadow）は使わない（DESIGN.md §5）
  *
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  */
@@ -48,8 +47,7 @@
   padding: 0.75rem 0 1.75rem;
 }
 
-/* 目盛りバー本体。旧デザインの緑→橙→赤の色帯をやめ、罫で囲った中立の帯にする
- * （DESIGN.md §2 紙・墨 / §4「構造の主役は罫」）。区分の境界は下の目盛りラベル
+/* 目盛りバー本体。緑→橙→赤の色帯にせず、罫で囲った中立の帯にする。区分の境界は下の目盛りラベル
  * （10/18.5/25/30/40/50）が示し、現在地は .meterIndicator が示す。 */
 .meterTrack {
   display: flex;
@@ -83,15 +81,15 @@
   background-color: var(--paper-2);
 }
 
-/* 現在地マーカー: 墨（DESIGN.md §2）。中立の目盛りバー上で位置を示す。
- * §7 実務側のため器は静かに——--accent の強調は使わず、位置は墨のマーカーと目盛りラベルで読ませる。 */
+/* 現在地マーカー: 墨。中立の目盛りバー上で位置を示す。
+ * 器は静かに——--accent の強調は使わず、位置は墨のマーカーと目盛りラベルで読ませる。 */
 .meterIndicator {
   position: absolute;
   top: 0.375rem;
   width: 3px;
   height: 18px;
   background-color: var(--ink);
-  /* 幅3pxの装飾マーカー: 角丸は視覚上不要なため除去（DESIGN.md §4 角丸規約準拠） */
+  /* 幅3pxのマーカー。角丸は持たない（DESIGN.md §5）。 */
   transform: translateX(-50%);
   transition: left 0.3s ease;
 }
@@ -167,8 +165,7 @@
   color: var(--ink);
 }
 
-/* 判定カテゴリの文字色。信号色（緑/橙/赤）をやめ、意味は判定名の文言そのものが伝える
- * （DESIGN.md §2「副次は色でなく墨の濃淡」/ §7 実務側は器を静かに）。低体重のみ一段沈めた
+/* 判定カテゴリの文字色。信号色（緑/橙/赤）を使わず、意味は判定名の文言そのものが伝える。低体重のみ一段沈めた
  * --ink-2、それ以外は本文と同じ墨。区分の差は色ではなく判定テキストで読ませる。 */
 .categoryLow {
   color: var(--ink-2);

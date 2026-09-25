@@ -1,9 +1,9 @@
 /*
- * 結果カード（受検者本人向けインライン結果）。DESIGN.md。
- * 左寄せ・新トークンのみ・bold 不使用・絵文字なし・影なし。
- * personality 型・icon/color 両方あるタイプは結果を包み（Tsutsumi）で見せる（§4/§7）。
- * 角丸は 0px 基調（--radius）。値札的な小ラベルのみ例外で --radius-sm。
- * リビールは 1 回・400ms 以下・prefers-reduced-motion 尊重（§5）。
+ * 結果カード（受検者本人向けインライン結果）。
+ * 左寄せ・トークンのみ・bold 不使用・絵文字なし・影なし。
+ * personality 型・icon/color 両方あるタイプは結果を包み（Tsutsumi）で見せる。
+ * 角丸は 0px（--radius）。値札的な小ラベルだけ --radius-sm。
+ * リビールは 1 回・400ms 以下・prefers-reduced-motion 尊重（§11）。
  */
 
 .card {
@@ -29,16 +29,16 @@
   margin: 0 0 0.25rem;
 }
 
-/* === 結果を包みで見せる（§7・personality 型のみ） ===
+/* === 結果を包みで見せる（personality 型のみ） ===
  * この見出し部（器）は静かな到達ラベルだけを持つ。結果そのものは Tsutsumi（罫で
- * 明確に包まれた独立ビジュアル）が主役——器は賑やかにしない（§4）。 */
+ * 明確に包まれた独立ビジュアル）が主役——器は賑やかにしない。 */
 .medalWrap {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 0.75rem;
   margin: 0 0 1rem;
-  /* リビールは 1 回・450ms 以下（§5 の上限内）。opacity 中心＋わずかな立ち上がり。 */
+  /* リビールは 1 回・400ms（§11）。opacity 中心＋わずかな立ち上がり。 */
   animation: medalReveal 0.4s ease both;
 }
 
@@ -52,9 +52,7 @@
   gap: 0.5rem;
 }
 
-/* 「診断完了」バッジ。DESIGN.md §2 是正（cycle-278 C4）: --accent-weak は
- * 操作・選択状態のハイライトにのみ可で静的なラベル地には不可のため、
- * 値札（メタ情報ラベル）の語彙——--rule 罫囲み + --ink-2 の文字に統一する
+/* 「診断完了」バッジ。値札（メタ情報ラベル）の語彙——--rule 罫囲み + --ink-2 の文字
  * （値札ラベルと同じ --radius-sm）。 */
 .medalLabelDone {
   padding: 0.1rem 0.45rem;
@@ -164,9 +162,9 @@
   }
 }
 
-/* === 真の残余同点の開示ブロック（P2b・cycle-303／word-sense-personality のみ） ===
+/* === 真の残余同点の開示ブロック（word-sense-personality のみ） ===
  * 恣意的・不可視に配列順で割らず、主タイプと副タイプを同格に開示する静かな区画。
- * DESIGN.md §4: 罫（--rule）＋一段沈む面（--paper-2）。影なし・角丸0基調・絵文字なし。
+ * 罫（--rule）＋ --paper-2 の地。影なし・角丸 0・絵文字なし。
  * --accentは中のリンクだけに使う（区画の地・見出しには使わない）。 */
 .tiedDisclosure {
   margin: 0 0 1.5rem;
@@ -285,9 +283,7 @@
   border: 1px solid var(--rule);
 }
 
-/* advice カード（標準 variant）。DESIGN.md §2 是正（cycle-278 C4）: --accent-weak は
- * 操作・選択状態のハイライトにのみ可で区画の地には不可のため、
- * characterIntro と同じ --paper-2（一段沈む面）に統一する。 */
+/* advice カード（標準 variant）。地は characterIntro と同じ --paper-2。 */
 .adviceCard {
   padding: 1.1rem 1.25rem;
   border-radius: var(--radius);

@@ -31,7 +31,7 @@ function makeTtfBuffer(extraBytes = 4): ArrayBuffer {
   return buf;
 }
 
-/** 器の色（utsuwaHex の SSoT と一致させる）。新デザインの契約検証に使う。 */
+/** 器の色（utsuwaHex の SSoT と一致させる）。画像の色の検証に使う。 */
 const PAPER = "#fcfcfc";
 const INK = "#0b0b0b";
 
@@ -122,7 +122,7 @@ describe("createOgpImageResponse — 店構え（看板）契約", () => {
 
     const { element } = imageResponseCalls[0];
     const jsx = element as { props: { style: { backgroundColor: string } } };
-    // ルートの地は常に紙。旧デザインの青ベタ（#2563eb）等は生成されない。
+    // ルートの地は常に紙。青のベタ塗り（#2563eb）等は生成されない。
     expect(jsx.props.style.backgroundColor).toBe(PAPER);
   });
 
@@ -159,13 +159,13 @@ describe("createOgpImageResponse — 店構え（看板）契約", () => {
     const textColors = collectStyleValues(element, "color");
     expect(textColors).toContain(INK);
 
-    // 塗りタイル（旧デザインの角丸 hanko・borderRadius 22）は持たない。
+    // 角丸の塗りタイル（borderRadius 22）は持たない。
     // ミューテーション観点: 塗りタイルを復活させると borderRadius 22 が現れ落ちる。
     const radii = collectStyleValues(element, "borderRadius");
     expect(radii).not.toContain(22);
   });
 
-  test("絵文字（§8-6 禁止）を看板に持ち込まない", async () => {
+  test("絵文字（§5）を看板に持ち込まない", async () => {
     const { createOgpImageResponse } = await getModule();
 
     // 呼び出し側が誤って絵文字を title に混ぜても、看板は絵文字用の面を持たない。
@@ -287,27 +287,26 @@ describe("createOgpImageResponse — 店構え（看板）契約", () => {
     expect(typeof ogpImageModule.createOgpImageResponse).toBe("function");
   });
 
-  test("OgpImageConfig は title/subtitle のみ（accentColor/icon は型から削除済み）", async () => {
+  test("OgpImageConfig は title/subtitle のみ（accentColor/icon を持たない）", async () => {
     const { createOgpImageResponse } = await getModule();
     // 型レベルの契約: 余剰プロパティは TypeScript が弾く。ここでは実行時に title だけ・
-    // subtitle 付きの両ケースが成立することを確認する（旧 accentColor/icon は不要）。
+    // subtitle 付きの両ケースが成立することを確認する（accentColor/icon は要らない）。
     await expect(
       createOgpImageResponse({ title: "T", subtitle: "S" }),
     ).resolves.toBeDefined();
   });
 
-  test("旧 API の余剰プロパティ（icon/accentColor）はコンパイル時に弾かれる（@ts-expect-error で固定）", async () => {
+  test("余剰プロパティ（icon/accentColor）はコンパイル時に弾かれる（@ts-expect-error で固定）", async () => {
     const { createOgpImageResponse } = await getModule();
     // コンパイル時契約: OgpImageConfig の余剰プロパティ検査が効くことを @ts-expect-error で
     // 恒久固定する。将来 icon/accentColor を型に復活させると @ts-expect-error が未使用となり
-    // tsc（noUnusedLocals 相当の未使用ディレクティブ検査）が fail する——旧 API の静かな復活を
-    // 型レベルで検知する。実行時にはモックが余剰プロパティを無視して解決するだけなので await する。
+    // tsc（noUnusedLocals 相当の未使用ディレクティブ検査）が fail する——型レベルで検知する。実行時にはモックが余剰プロパティを無視して解決するだけなので await する。
     await expect(
-      // @ts-expect-error icon は型から削除済み（§8-6・図像は店の印のみ）
+      // @ts-expect-error icon は型に無い（絵文字を持たない・§5）
       createOgpImageResponse({ title: "T", icon: "🧪" }),
     ).resolves.toBeDefined();
     await expect(
-      // @ts-expect-error accentColor は型から削除済み（§2・地は常に紙）
+      // @ts-expect-error accentColor は型に無い（地は常に紙・§10）
       createOgpImageResponse({ title: "T", accentColor: "#e74c3c" }),
     ).resolves.toBeDefined();
   });

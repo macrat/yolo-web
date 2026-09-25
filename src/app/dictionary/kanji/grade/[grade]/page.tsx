@@ -11,14 +11,13 @@ import { KANJI_GRADE_LABELS } from "@/dictionary/_lib/types";
 import styles from "./page.module.css";
 
 /**
- * 漢字辞典・学年ファセット面（DESIGN.md フェーズ R・新デザイン「店構え」へ変換）。
+ * 漢字辞典・学年ファセット面。
  *
- * 旧デザイン（共有 DictionaryGrid/DictionaryCard のカードグリッド・§8-4 と CategoryNav の
- * ピル群・§8-5・旧トークン）を全廃し、辞典の「引く体験」に揃えた——絞り込んだ漢字は
+ * カードのグリッドやピル群を使わず、辞典の「引く体験」に揃える——絞り込んだ漢字は
  * 共有の品書き（DictionaryEntryList・罫区切りリスト）で「漢字＋読み＋意味＋画数の値札」として
  * 出し、ほかの学年への導線は罫の索引（FacetIndex・トップのファセット索引と同じ流儀）で置く。
  * 学年で絞ったので値札は重複を避け画数を添える。
- * 色・角丸・書体・余白はすべてトークン経由（§10・直書き禁止）。インライン style は使わない。
+ * 色・角丸・書体・余白はすべてトークン経由。インライン style は使わない。
  */
 
 export function generateStaticParams() {

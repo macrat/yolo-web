@@ -6,21 +6,17 @@ import type { ToolCategory } from "@/tools/types";
 import styles from "./page.module.css";
 
 /**
- * ツール一覧トップ — DESIGN.md フェーズ R で新デザイン「店構え」へ変換。
+ * ツール一覧トップ。
  *
- * 旧トップ（Panel + ToolsFilterableList/ToolsGrid・カードグリッド・クライアント側検索/
- * フィルタUI・旧トークン --fg/--bg/--border 等）を全廃し、DESIGN.md の店構えへ組み直した。
- * ツールは実務の道具であり、器は静か（§1/§4）——罫区切りの品書き1枚に全36ツールを載せる。
+ * ツールは実務の道具であり、器は静か——罫区切りの品書き1枚に全36ツールを載せる。
  *
- * 構成（§1「器は静か」/ §4「一覧の既定は品書き」/ §6 文章）:
+ * 構成:
  * - 名乗り（器・Shinagaki 外）: h1「ツール」+ 何が揃っているか・登録不要である旨を具体で。
  * - 全ツールを種別ごとの棚（見出し付き Shinagaki）に分ける。カードのグリッド・同型アイコン
- *   （§8-4）は使わない。各行 = 品名（ツールページへのリンク）+ ひとこと（shortDescription）。
+ *   は使わない。各行 = 品名（ツールページへのリンク）+ ひとこと（shortDescription）。
  *   種別（棚見出し）自体が分類情報を担うため、行内に種別タグは重ねない
  *   （全行共通になる情報はラベル化しない）。
- * - 検索/絞り込み UI は持たない。36件は罫区切りの品書きを上から辿るだけで一望でき、
- *   旧トップのクライアント側フィルタ（JS 依存・状態を持つ UI）を追加する必要がないと判断した
- *   （迷った判断・要報告: 件数が増え一覧が長くなった場合は再検討が要る）。
+ * - 検索/絞り込み UI は持たない。36件は罫区切りの品書きを上から辿るだけで一望できる。
  *
  * データは src/tools/registry.ts（生成元は generated/tools-registry.ts）から取得する唯一の
  * 真実源。ツール名・説明文をこのファイルにハードコードしない（meta.ts が更新されれば
@@ -78,7 +74,7 @@ export default function ToolsPage() {
 
   return (
     <div className={styles.page}>
-      {/* 名乗り（器・読む面）。何が揃っているかを具体で（§6）。 */}
+      {/* 名乗り（器・読む面）。何が揃っているかを具体で（§9）。 */}
       <div className={styles.intro}>
         <h1 className={styles.title}>ツール</h1>
         <p className={styles.description}>
@@ -88,7 +84,7 @@ export default function ToolsPage() {
         </p>
       </div>
 
-      {/* 種別ごとの棚。各棚 = 見出し付き品書き（§4）。 */}
+      {/* 種別ごとの棚。各棚 = 見出し付き品書き。 */}
       <div className={styles.shelves}>
         {CATEGORY_SHELVES.map(({ category, heading }) => {
           const items: ShinagakiItem[] = allToolMetas

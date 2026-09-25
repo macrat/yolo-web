@@ -1,7 +1,5 @@
 /* MarkdownPreviewTile.module.css
- * cycle-228 T-24: MarkdownPreviewPage.module.css を正典タイル向けに継承・移植。
- * フェーズR C5: 新デザイントークン（紙・墨）へ移行。
- * DESIGN トークン準拠:
+ * 組み方:
  * - font-weight: 700 不使用
  * - 角丸は --radius（0）に統一・box-shadow 不使用（影は使わない）
  * - プレビュー枠の境界線は --rule-strong

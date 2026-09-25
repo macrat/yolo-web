@@ -13,7 +13,7 @@
   margin-bottom: 0.5rem;
 }
 
-/* 注記 — 静的な区画なので --accent-weak は使わない（§2: hover/selected 専用）。
+/* 注記 — 静的な区画なので色の地を敷かない。
  * 地は --paper-2・枠は --rule の中立な注記ボックス。 */
 .notice {
   background: var(--paper-2);
@@ -150,7 +150,7 @@
   min-height: 2.6em;
 }
 
-/* 角丸サンプル（DESIGN.md §4: 影は原則使わないため影トークン自体を廃止・角丸のみ展示） */
+/* 角丸サンプル（影は持たないので影のトークンは無く、角丸だけを展示する・DESIGN.md §5） */
 .radiusRow {
   display: flex;
   gap: 1rem;

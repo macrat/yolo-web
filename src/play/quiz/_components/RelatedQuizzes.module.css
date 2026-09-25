@@ -1,10 +1,9 @@
 /*
- * 関連クイズ・診断の回遊導線。DESIGN.md。品書きの語彙に寄せた
+ * 関連クイズ・診断の回遊導線。品書きの語彙に寄せた
  * カード型（罫囲み・角丸0基調）。絵文字なし・影なし・全トークン経由。
  *
  * 注: 関連ゲーム側は src/play/_components/RelatedContentCard.module.css を使うが、
- * クイズ側は表示語彙が異なるため本ファイルを別に持つ。両者とも店構えの新トークンで
- * 統一済み（cycle-279）。
+ * クイズ側は表示語彙が異なるため本ファイルを別に持つ。
  */
 .related {
   margin-top: 2rem;
@@ -12,8 +11,7 @@
   border-top: 1px solid var(--rule);
 }
 
-/* 見出し: サイト共通の罫下線で静かに区切る（ResultCard .detailedHeading と同じ様式・
- * DESIGN.md §3/§4） */
+/* 見出し: サイト共通の罫下線で静かに区切る（ResultCard .detailedHeading と同じ様式） */
 .heading {
   font-size: 1rem;
   margin: 0 0 0.75rem;

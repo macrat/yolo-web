@@ -1,4 +1,4 @@
-/* GameContainer（イロドリ）— 進捗・操作ボタン（DESIGN.md フェーズ R・店構えへ変換）。 */
+/* GameContainer（イロドリ）— 進捗・操作ボタン。 */
 
 .progressBar {
   display: flex;
@@ -21,8 +21,7 @@
   transition: background-color 0.2s;
 }
 
-/* 完了は色の不在（墨）で示す。和色は「成果物中身」に限るため進捗チップ（器）には使わない
- * （DESIGN.md §2）。現在地は --accent（操作・選択状態のハイライトとして正当）。 */
+/* 完了は墨で示す。進捗チップは UI なので和色を使わない（DESIGN.md §1）。現在地は --accent。 */
 .progressDotCompleted {
   background: var(--ink);
 }
@@ -76,7 +75,7 @@
 }
 
 /* 次の問題へボタンも操作系の器なので submitButton と同じ --accent を使う
- * （和色は成果物中身に限る・器には漏らさない・DESIGN.md §2）。 */
+ * （和色は UI に使わない・DESIGN.md §1）。 */
 .nextButton {
   composes: submitButton;
 }

@@ -5,16 +5,16 @@
   width: 100%;
 }
 
-/* 左寄せに統一（インライン ResultCard と同じトーン）。中央寄せはしない（§4）。 */
+/* 左寄せ（インライン ResultCard と同じトーン・§5）。 */
 .card {
   text-align: left;
   padding: 2rem 1rem;
 }
 
-/* === 結果を包みで見せる（MUST-2：§7 トーン統一・personality 型のみ） ===
+/* === 結果を包みで見せる（personality 型のみ） ===
  * インライン ResultCard と同じ視覚（Tsutsumi）に揃え、単独結果ページ /result/[id] に
  * 着地した第三者にも同じ結果体験を返す。h1 は SEO 用に維持するが控えめに——結果その
- * ものは Tsutsumi が主役（器は静か・§4）。単独ページには「診断完了」バッジは置かない
+ * ものは Tsutsumi が主役（器は静か）。単独ページには「診断完了」バッジは置かない
  * （第三者は完走していない＝偽の完了主張になる）。 */
 .medalWrap {
   display: flex;

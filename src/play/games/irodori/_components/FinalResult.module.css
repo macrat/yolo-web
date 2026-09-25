@@ -1,5 +1,5 @@
-/* FinalResult（イロドリ）— 最終結果（DESIGN.md フェーズ R・店構えへ変換）。
- * 絵文字ランクは撤去し、tabular な数字＋文字だけの静かな到達表示にする。 */
+/* FinalResult（イロドリ）— 最終結果。
+ * 絵文字を持たず、tabular な数字＋文字だけの静かな到達表示にする。 */
 
 .finalResult {
   text-align: center;

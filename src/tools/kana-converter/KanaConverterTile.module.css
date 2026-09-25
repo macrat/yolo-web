@@ -1,12 +1,9 @@
 /* KanaConverterTile スタイル
- * cycle-228 T-3: KanaConverterPage.module.css をタイル向けに移植。
- * フェーズR C5: 新デザイントークン（紙・墨）へ移行。
  * 本ファイルは補足文字（--ink-2）のみ持つ軽量レイアウト。
  *
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  *
- * ## モバイル対応（cycle-227 申し送り・cycle-228 T-3 実機確認済み）
- * SegmentedControl 4択が w360 で横はみ出ししないことを実機で確認済み。
+ * ## モバイル対応
  * SegmentedControl 自体の flex-wrap: wrap により 4択が縦折返しされる（横スクロールは発生しない）。
  * 2カラムレイアウトは使用しない（w360 で縦積みになる設計・単一カラム）。
  */

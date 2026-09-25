@@ -1,6 +1,5 @@
 /* ImageBase64Tile スタイル
- * cycle-228 T-26: ImageBase64Page.module.css をタイル向けに移植。
- * DESIGN トークン準拠（紙・墨の新トークン。--rule-strong / --radius / --paper-2 / --ink-2 使用）
+ * トークン（--rule-strong / --radius / --paper-2 / --ink-2 使用）
  *
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  */
@@ -31,7 +30,7 @@
 
 /* 画像プレビュー
  * border-radius は var(--radius)（非インタラクティブ要素）
- * box-shadow は使わない（DESIGN.md §4） */
+ * box-shadow は使わない（DESIGN.md §5） */
 .preview {
   max-width: 100%;
   max-height: 300px;

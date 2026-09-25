@@ -1,4 +1,4 @@
-/* Loading state: centered with spinner animation（DESIGN.md フェーズ R・店構えへ変換） */
+/* Loading state: centered with spinner animation */
 .loading {
   display: flex;
   flex-direction: column;
@@ -10,8 +10,7 @@
   font-size: 0.9375rem;
 }
 
-/* Animated spinner shown before the loading text（読み込み待機の機能的な回転表示・§5 装飾目的の
- * 一律アニメではない）。 */
+/* Animated spinner shown before the loading text（読み込み待機を示す回転表示）。 */
 .spinner {
   width: 2rem;
   height: 2rem;

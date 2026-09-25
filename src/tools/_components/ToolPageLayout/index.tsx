@@ -13,12 +13,12 @@ interface ToolPageLayoutProps {
 }
 
 /**
- * ToolPageLayout — 新デザインのツールページの器。
+ * ToolPageLayout — ツールページの器。
  *
  * 確定提示方式（タイル＝ツール本体を主役＝ファーストビューに描画し、
  * 補助情報を下に二次配置）を実装する。
  *
- * 要素並び順（cycle-224 判断3）:
+ * 要素並び順:
  *   1. パンくず（Breadcrumb。BreadcrumbList JSON-LD 内蔵）
  *   2. コンパクトな h1（meta.name）+ 短説明（meta.shortDescription）
  *   3. ツール本体（children＝主役・ファーストビュー）
@@ -33,8 +33,7 @@ interface ToolPageLayoutProps {
  * - WebApplication JSON-LD はこの器に入れない（page.tsx 側に残す）
  * - 道具箱への追加導線は作らない（Phase 10 の責務）
  * - N-2: children が null/空要素でも howItWorks 以降のレイアウトが破綻しない
- * - DESIGN.md フェーズ R・店構えへ変換済み: 新トークンのみ使用（--paper/--ink/--rule/--accent 等）。
- *   ツール名は見出しの書体で組む（§3）。旧トークン（--fg/--bg/--border/--r-*）は使用しない。
+ * - 色はトークン（--paper/--ink/--rule/--accent 等）だけで組む。ツール名は見出しの書体で組む（§3）。
  */
 export default function ToolPageLayout({
   meta,
@@ -62,7 +61,7 @@ export default function ToolPageLayout({
        *    後続セクションのレイアウトは影響を受けない。
        *    TileInteractionTracker が同一の <section> を描画しつつ
        *    「最初の操作」計測（tile_first_interaction, surface:"detail"）を
-       *    担う（cycle-234）。DOM 構造は従来と同一 */}
+       *    担う。DOM 構造は <section> 1つのまま */}
       <TileInteractionTracker
         itemId={meta.slug}
         className={styles.content}
@@ -81,7 +80,7 @@ export default function ToolPageLayout({
         <p className={styles.howItWorksText}>{meta.howItWorks}</p>
       </section>
 
-      {/* 5. プライバシーノート（旧 ToolLayout の固定文言を踏襲） */}
+      {/* 5. プライバシーノート（固定文言） */}
       <p className={styles.privacyNote} role="note">
         {
           "このツールはブラウザ上で動作します。入力データがサーバーに送信されることはありません。"

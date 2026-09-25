@@ -1,12 +1,11 @@
-/* Kanji Kanaru Game Styles（DESIGN.md フェーズ R・店構えへ変換）
+/* Kanji Kanaru Game Styles
  *
- * 判定フィードバック（一致/近い/不一致）は成果物（ゲームの駒）にあたるため、
- * §2 の例外規定により和色（--wairo-*）を使用してよい。
+ * 判定フィードバック（一致/近い/不一致）のセルの地に和色（--wairo-*）を使う。
  * - 一致（正解） = --wairo-tokiwa（常磐・緑）
  * - 近い          = --wairo-yamabuki（山吹・黄）
- * - 不一致        = 色の不在（--ink-2 の墨の濃淡。§2「副次的な要素は色の不在で表す」）
- * どの状態も色だけでなく、セル内のテキスト（一致/近い/不一致）で判定できる（§2 games注記）。
- * 器（ヘッダー・入力欄・ボタン等）は新トークンのみ使用する。
+ * - 不一致        = 色の不在（--ink-2 の墨の濃淡）
+ * どの状態も色だけでなく、セル内のテキスト（一致/近い/不一致）で判定できる（§2）。
+ * 器（ヘッダー・入力欄・ボタン等）は UI のトークンだけを使う。
  */
 
 /* ===== Header ===== */
@@ -108,7 +107,7 @@
 }
 
 /* 現在選択中の難易度: --accent-weak で選択状態を示す
- * （DESIGN.md §2「操作・選択状態のハイライトにのみ可」・セレクタ名 Active が状態を表す）。 */
+ * （セレクタ名 Active が状態を表す）。 */
 .difficultyButtonActive {
   composes: difficultyButton;
   background-color: var(--accent-weak);
@@ -369,7 +368,6 @@
 .resultAnswer {
   font-family: var(--font-heading);
   font-size: 1.5rem;
-  font-weight: 600;
   color: var(--ink);
   margin-bottom: 0.25rem;
 }

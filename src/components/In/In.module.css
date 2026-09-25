@@ -1,8 +1,8 @@
 /*
- * 印（In）— 成果物に捺す店の印（DESIGN.md §4「印」の厳密仕様）。
+ * 印（In）— 成果物に捺す店の印。
  * --accent 一色・細い円環（SVG 一本ストローク）・見出しの書体の一文字・回転 ±8° 以内。
  * かすれ/にじみ/グラデ/影は一切足さない（捺印質感の演出＝禁止）。全色トークン経由・直書きなし。
- * border-radius は使わない（円環は SVG circle・§8-5 角丸ゲートに触れない）。
+ * border-radius は使わない（円環は SVG circle で描く）。
  */
 .in {
   position: relative;
@@ -12,7 +12,7 @@
   /* 幅＝高さ。サイズは呼び出し側（包みは幅の 1/5 以下）から --in-size で受ける。 */
   inline-size: var(--in-size, 48px);
   block-size: var(--in-size, 48px);
-  /* §4「回転は ±8° 以内」。component 側でクランプ済みの角度を受ける。 */
+  /* 回転は ±8° 以内。component 側でクランプ済みの角度を受ける。 */
   transform: rotate(var(--in-rotate, -4deg));
   /* 印は成果物の一部——選択ドラッグでずれないように。 */
   user-select: none;
@@ -32,7 +32,7 @@
 .ringLine {
   fill: none;
   stroke: var(--accent);
-  /* non-scaling-stroke と併せて、拡大しても 1.5px を保つ（§4「2px 以内」）。 */
+  /* non-scaling-stroke と併せて、拡大しても 1.5px を保つ（円環は 2px 以内）。 */
   stroke-width: 1.5px;
 }
 
@@ -43,6 +43,5 @@
   font-family: var(--font-heading);
   /* 円環（直径）に対して約 55%。1 字が枠に触れず収まる。 */
   font-size: calc(var(--in-size, 48px) * 0.55);
-  font-weight: 600;
   line-height: 1;
 }

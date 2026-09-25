@@ -18,20 +18,18 @@ import type { YojiCategory } from "@/dictionary/_lib/types";
 import styles from "./page.module.css";
 
 /**
- * 四字熟語辞典トップ = 引く辞典の入口（DESIGN.md フェーズ R で新デザインへ変換）
+ * 四字熟語辞典トップ = 引く辞典の入口
  *
- * 旧トップ（400語をカードのグリッドで一気に並べ、クライアント検索を載せる YojiIndexClient +
- * 共有 DictionaryGrid/DictionaryCard/SearchBox・旧トークン）を、DESIGN.md の「店構え」へ
- * 作り直した。フェーズ R・C2/C3 で、共有の検索器（DictionarySearch）を使って「引く体験」を
- * 復活させた——検索結果はカードでなく品書き（罫区切りリスト・§4/§8-4）で出す。
+ * 共有の検索器（DictionarySearch）で「引く体験」を主役にする——検索結果はカードでなく
+ * 品書き（罫区切りリスト）で出す。
  *
- * 構成（§1「器は静か」/ §4「一覧の既定は品書き」/ §6 文章 / §7「実務辞典は引く体験が主役」）:
- * - 自己紹介（器・Shinagaki 外）: 何の辞典か・何が読めるかを具体の日本語で（§6）。
- * - 検索（引く体験の主役・§7）: 共有の検索器を名乗りの直後に置く。
+ * 構成:
+ * - 自己紹介（器・Shinagaki 外）: 何の辞典か・何が読めるかを具体の日本語で（§9）。
+ * - 検索（引く体験の主役）: 共有の検索器を名乗りの直後に置く。
  * - 「カテゴリから探す」棚（閲覧の導線・見出し付き品書き）: 各カテゴリ = 品名（カテゴリページへの
  *   リンク）+ ひとこと（note）+ 収録数の値札（Nefuda）。件数の多い順に並べる。
  *
- * カードのグリッドは使わない（§4/§8-4）。色・角丸・書体はすべてトークン経由（§10・直書き禁止）。
+ * カードのグリッドは使わない。色・角丸・書体はすべてトークン経由。
  * インライン style は使わない。
  */
 
@@ -59,7 +57,7 @@ export const metadata: Metadata = {
 };
 
 /**
- * カテゴリごとの「ひとこと」（§6 具体で書く）。品書きの各行の説明に使う。
+ * カテゴリごとの「ひとこと」（具体で書く・§9）。品書きの各行の説明に使う。
  * ラベル（YOJI_CATEGORY_LABELS）だけでは伝わりにくい範囲を、自然な日本語で補う。
  */
 const CATEGORY_NOTES: Record<YojiCategory, string> = {
@@ -90,7 +88,7 @@ const categoryItems: ShinagakiItem[] = getYojiCategories()
   }));
 
 // 検索器（共有の器）へ渡す正規化データ。表示は品名（四字熟語）＋読み＋意味＋カテゴリ/難易度の値札、
-// 検索対象（haystack）は語・読み・意味・例文を連結（旧 YojiIndexClient の検索範囲＝語/読み/意味を包含）。
+// 検索対象（haystack）は語・読み・意味・例文を連結。
 const searchItems: DictionarySearchItem[] = getAllYoji().map((y) => ({
   key: y.yoji,
   name: y.yoji,
@@ -115,7 +113,7 @@ export default function YojiIndexPage() {
         ]}
       />
 
-      {/* 自己紹介（器・辞典の名乗り）。何が読めるかを具体に（§6）。 */}
+      {/* 自己紹介（器・辞典の名乗り）。何が読めるかを具体に（§9）。 */}
       <div className={styles.intro}>
         <h1 className={styles.title}>四字熟語辞典</h1>
         <p className={styles.lead}>{yojiCount}語の四字熟語を集めた辞典です。</p>
@@ -124,7 +122,7 @@ export default function YojiIndexPage() {
         </p>
       </div>
 
-      {/* 検索（引く体験の主役・§7 実務辞典）。語・読み・意味・例文を横断して引ける。 */}
+      {/* 検索（引く体験の主役）。語・読み・意味・例文を横断して引ける。 */}
       <div className={styles.search}>
         <DictionarySearch
           heading="四字熟語を検索"

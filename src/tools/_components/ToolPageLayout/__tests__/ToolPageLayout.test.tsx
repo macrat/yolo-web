@@ -344,31 +344,31 @@ describe("ToolPageLayout", () => {
 
   // --- CSS 規約チェック ---
 
-  it("CSS: max-width が --max-width（操作面の最大幅）を使う（DESIGN.md §4）", () => {
+  it("CSS: max-width が --max-width（最大幅）を使う（DESIGN.md §5）", () => {
     const cssPath = resolve(__dirname, "../ToolPageLayout.module.css");
     const css = readFileSync(cssPath, "utf-8");
     expect(css).toContain("var(--max-width)");
   });
 
-  it("CSS: 長文テキストに --measure（読む面）制限が含まれる（DESIGN.md §4）", () => {
+  it("CSS: 長文テキストに --measure（読む面）制限が含まれる（DESIGN.md §5）", () => {
     const cssPath = resolve(__dirname, "../ToolPageLayout.module.css");
     const css = readFileSync(cssPath, "utf-8");
     expect(css).toContain("var(--measure)");
   });
 
-  it("CSS: 旧 --color-* トークンを使用しない（新トークンのみ）", () => {
+  it("CSS: --color-* トークンを使用しない", () => {
     const cssPath = resolve(__dirname, "../ToolPageLayout.module.css");
     const css = readFileSync(cssPath, "utf-8");
     expect(css).not.toMatch(/var\(--color-/);
   });
 
-  it("CSS: box-shadow を使用しない（影なし、DESIGN.md §4/§5）", () => {
+  it("CSS: box-shadow を使用しない（影なし、DESIGN.md §5）", () => {
     const cssPath = resolve(__dirname, "../ToolPageLayout.module.css");
     const css = readFileSync(cssPath, "utf-8");
     expect(css).not.toMatch(/box-shadow/);
   });
 
-  it("CSS: font-weight: 700 を使用しない（DESIGN.md §3 / 計画判断2）", () => {
+  it("CSS: font-weight: 700 を使用しない", () => {
     const cssPath = resolve(__dirname, "../ToolPageLayout.module.css");
     const css = readFileSync(cssPath, "utf-8");
     expect(css).not.toMatch(/font-weight:\s*700/);

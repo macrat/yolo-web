@@ -26,17 +26,14 @@ interface DictionaryDetailLayoutProps {
 }
 
 /**
- * 辞典詳細ページの共通レイアウトコンポーネント（(new) デザイン体系版）。
+ * 辞典詳細ページの共通レイアウトコンポーネント。
  * JSON-LD, Breadcrumb, valueProposition, Detail, FAQ, ShareButtons を
  * 統一的な構造で出力する。ToolLayout のパターンに準拠。
  *
- * legacy 版（src/dictionary/_components/DictionaryDetailLayout.tsx）からのフォーク。
- * 差分:
- * - import を (new) 体系（@/components/Breadcrumb 等）へ差し替え
- * - 信頼度バッジ（legacy の品質バッジ）を撤去（(new) 版なし・AI 注記は Footer が担保）
+ * - 品質バッジは持たない（AI 運営の注記は Footer が担う）
  * - 最上位 <article> に --max-width の外枠を持たせる（詳細は「実務／参照」の
- *   操作面寄り・§4/§7）。CSS は DESIGN.md フェーズ R の店構えへ変換済み（罫と組版で組む・
- *   旧トークン/影/ピル/角丸装飾なし）。各 Detail の内側は読む面 --measure に絞られる。
+ *   操作面寄り）。CSS は罫と組版で組み、影・ピル・角丸装飾を持たない。
+ *   各 Detail の内側は読む面 --measure に絞られる。
  *
  * Server Component として実装。ColorDetail のような "use client" コンポーネントは
  * children として渡されるため問題なし。

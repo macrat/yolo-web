@@ -12,12 +12,11 @@ import { headingFontAttr } from "@/lib/zen-antique-charset";
 import styles from "./page.module.css";
 
 /**
- * 漢字辞典・部首ファセット面（DESIGN.md フェーズ R・新デザイン「店構え」へ変換）。
+ * 漢字辞典・部首ファセット面。
  *
- * 旧デザイン（カードグリッド・§8-4 とピル群・§8-5・旧トークン）を全廃し、辞典の「引く体験」に
- * 揃えた——絞り込んだ漢字は共有の品書き（DictionaryEntryList）で「漢字＋読み＋意味＋学年/画数の
+ * カードのグリッドやピル群を使わず、辞典の「引く体験」に揃える——絞り込んだ漢字は共有の品書き（DictionaryEntryList）で「漢字＋読み＋意味＋学年/画数の
  * 値札」として出し、ほかの部首への導線は罫の索引（FacetIndex）で置く。部首で絞ったので値札は
- * 学年と画数を添える。色・角丸・書体・余白はすべてトークン経由（§10・直書き禁止）。
+ * 学年と画数を添える。色・角丸・書体・余白はすべてトークン経由。
  */
 
 export function generateStaticParams() {

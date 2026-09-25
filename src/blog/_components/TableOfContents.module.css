@@ -1,7 +1,6 @@
 /*
  * 外側の CollapsibleTOC（<details className={tocDetails}>）が background / border /
- * padding を担うため、.toc には内部レイアウトのみ記述する。
- * DESIGN.md フェーズ R「店構え」へ変換済み（全トークン経由・直書きなし）。
+ * padding を担うため、.toc には内部レイアウトのみ記述する。全トークン経由・直書きなし。
  */
 .toc {
 }

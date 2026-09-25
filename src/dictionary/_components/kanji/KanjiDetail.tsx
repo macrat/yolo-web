@@ -49,7 +49,7 @@ export default function KanjiDetail({ kanji }: KanjiDetailProps) {
 
       <section className={styles.section}>
         <h2>{"\u57FA\u672C\u60C5\u5831"}</h2>
-        {/* \u7F6B\u3067\u533A\u5207\u3063\u305F\u5B9A\u7FA9\u30EA\u30B9\u30C8\uFF08\u5024\u672D\uFF1D\u30E9\u30D9\u30EB\u30FB\u5024\u30FB\u00A74\uFF09\u3002\u6570\u5024\u306F tabular \u6570\u5B57\u66F8\u4F53\uFF08\u00A73\uFF09\u3002 */}
+        {/* 罫で区切った定義リスト（ラベルと値）。数値は本文の書体で組む。 */}
         <dl className={styles.infoList}>
           <div className={styles.infoRow}>
             <dt className={styles.infoTerm}>{"\u90E8\u9996"}</dt>
@@ -93,7 +93,7 @@ export default function KanjiDetail({ kanji }: KanjiDetailProps) {
       {kanji.examples.length > 0 && (
         <section className={styles.section}>
           <h2>{"\u4F7F\u7528\u4F8B"}</h2>
-          {/* \u4F7F\u7528\u4F8B\u306F\u719F\u8A9E\u306E\u5217\u6319\u3002\u30AB\u30FC\u30C9/\u30D4\u30EB\u3067\u306F\u306A\u304F\u8AAD\u70B9\u3067\u7D44\u3093\u3060\u81EA\u7136\u306A\u4E00\u6587\u3067\u898B\u305B\u308B\uFF08\u00A74/\u00A76\uFF09\u3002 */}
+          {/* 使用例は熟語の列挙。カード/ピルではなく読点で組んだ自然な一文で見せる。 */}
           <p className={styles.examples}>{kanji.examples.join("\u3001")}</p>
         </section>
       )}

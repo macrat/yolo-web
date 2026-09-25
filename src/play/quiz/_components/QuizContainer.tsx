@@ -220,9 +220,9 @@ export default function QuizContainer({
       ? calculateKnowledgeScore(quiz.questions, answers)
       : undefined;
 
-  // P2b（cycle-303）: 真の残余同点の正直な開示。
-  // word-sense-personality は再設計後も構造的に約20%の同点が残る。主タイプ（result）は
-  // 従来どおり determineResult の決定的勝者（シェア/再受験の再現性を保つ）だが、同点を
+  // 真の残余同点の正直な開示。
+  // word-sense-personality は構造的に約20%の同点が残る。主タイプ（result）は
+  // determineResult の決定的勝者（シェア/再受験の再現性を保つ）だが、同点を
   // 「隠して配列順で割る」のをやめ、同点を分け合う副タイプ（co-types）を同格で開示する。
   // scope は word-sense-personality のみ（1診断ずつ・他診断の結果 UX は変えない）。
   // 単独勝者（同点なし）のときは co-types が空配列になり、ResultCard は開示ブロックを
@@ -251,10 +251,9 @@ export default function QuizContainer({
       role="region"
       aria-label={resultRegionLabel}
     >
-      {/* 結果本体（主役）。器は静かに、成果物（ResultCard内の Tsutsumi）だけが主役（§4）。
-       * detailedContent の variant 別サブコンポーネント（legacy 結果コンテンツ）は
-       * 引き続き quiz.meta.accentColor を受け取るが、ResultCard 自身の chrome
-       * （見出し・標準セクション・ボタン）は新トークン --accent に統一されている。 */}
+      {/* 結果本体（主役）。器は静かに、成果物（ResultCard内の Tsutsumi）だけが主役。
+       * detailedContent の variant 別サブコンポーネントは quiz.meta.accentColor を受け取るが、
+       * ResultCard 自身の chrome（見出し・標準セクション・ボタン）は --accent を使う。 */}
       <div className={styles.stage}>
         <ResultCard
           result={result}

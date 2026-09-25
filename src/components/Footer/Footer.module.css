@@ -1,12 +1,12 @@
 /*
- * Footer（店構え）— DESIGN.md §4 レイアウト・§6 文章。
+ * Footer — 下端。
  * 紙・墨・罫で区切る。地は一段沈む面 --paper-2。AI 明示を定位置（下部）に。絵文字なし。
- * リンクは器の chrome として静かに扱う（器は静か・§4/§7）。角丸は 0 基調（--radius）。
+ * リンクは器の chrome として静かに扱う。角丸は 0（--radius）。
  */
 .footer {
   background: var(--paper-2);
   color: var(--ink-2);
-  /* 本文との境界は「区切りの主格」= 強い罫（§4）。 */
+  /* 本文との境界は強い罫。 */
   border-top: 1px solid var(--rule-strong);
 }
 
@@ -35,7 +35,7 @@
   gap: var(--space-8);
 }
 
-/* 棚の見出し（品名の親）: 見出しの書体・墨。罫下線で棚を仕切る。all-caps は使わない（§8-6）。 */
+/* 棚の見出し（品名の親）: 見出しの書体・墨。罫下線で棚を仕切る。英字の全部大文字は使わない。 */
 .columnTitle {
   color: var(--ink);
   font-family: var(--font-heading);
@@ -55,8 +55,7 @@
   gap: var(--space-8);
 }
 
-/* リンク: 器の chrome として静かに（§4/§7「器は静か」）。既定は墨、hover で下線。
- * 下線はリンクの専有（§3）——静止時は下線を出さず、hover で操作可能を示す。 */
+/* リンク: 器の chrome として静かに置く。いまは静止時に下線を出さず、hover で下線を出す。 */
 .link {
   color: var(--ink-2);
   text-decoration: none;
@@ -84,7 +83,7 @@
   opacity: 0.8;
 }
 
-/* 下部: AI 明示（定位置・§6/constitution rule3）と著作権。上を罫で区切る。 */
+/* 下部: AI 明示（定位置・§9/constitution rule3）と著作権。上を罫で区切る。 */
 .bottom {
   display: flex;
   flex-wrap: wrap;

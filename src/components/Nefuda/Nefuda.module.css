@@ -10,7 +10,7 @@
   font-size: 0.8125rem; /* 13px */
   line-height: 1.5;
   color: var(--ink-2);
-  /* §4: 罫囲み（構造の主役は罫）。1px 実線の --rule。 */
+  /* 罫囲み。1px 実線の --rule。 */
   border: 1px solid var(--rule);
   /* 値札と入力欄は --radius-sm を使う。 */
   border-radius: var(--radius-sm);

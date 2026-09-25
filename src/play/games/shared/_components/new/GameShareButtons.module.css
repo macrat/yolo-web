@@ -1,12 +1,11 @@
 /*
- * GameShareButtons — ゲーム結果の共有ボタン群（DESIGN.md フェーズ R・店構えへ変換）。
+ * GameShareButtons — ゲーム結果の共有ボタン群。
  *
  * GameShareButtons は `shareGameResult`（ゲーム結果テキスト整形）に依存し、
  * 汎用 ShareButtons へ単純置換できない機能差があるため機能はそのまま保持する。
  * 見た目は src/components/ShareButtons と同じ語彙に統一する（「文字＋罫の線画ボタン」）:
  * 地は紙・--rule の一本罫囲み・文字は墨・hover は枠と文字に --accent。
- * ブランド色ベタ塗り（旧: X=黒地・コピー=反転面）は撤去し、全ボタンを同型にする
- * 。サービスは文言で識別する。
+ * ブランド色のベタ塗りを持たず、全ボタンを同型にする。サービスは文言で識別する。
  * タップターゲット 44px・focus 可視・全トークン経由。
  */
 

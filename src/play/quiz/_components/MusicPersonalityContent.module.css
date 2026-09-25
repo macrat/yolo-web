@@ -1,28 +1,21 @@
 /*
- * MusicPersonalityContent 共通コンポーネントのスタイル。新デザイン体系（DESIGN.md）。
+ * MusicPersonalityContent 共通コンポーネントのスタイル。
  * ResultCard.tsx（受検者向けインライン結果）と page.tsx（第三者向け静的結果ページ）の両方から使用される。
  *
  * 設計方針（ResultCard.module.css / CharacterPersonalityContent.module.css /
  * AnimalPersonalityContent.module.css を一次規範として語彙をそろえる）:
- * - 左寄せ・新トークンのみ・font-weight は最大 600・絵文字なし・影なし。
- * - 旧版は strengths (🎵 紫ティント) / weaknesses (😅 クリームティント) / behaviors (🎤) /
- *   todayAction (中央寄せ＋紫ティント) の各セクションを絵文字マーカーと色ティントで分けていたが、
- *   新デザインでは「色ではなく構造と言葉で立てる」方針に従い、3 セクション（strengths/weaknesses/
- *   behaviors）ともカード質感を統一する。差別化は見出しと本文表現で行う。
- * - クイズタイプごとのアクセント色（旧 --music-accent-color / --music-accent-bg 独自トークン）は
- *   全廃。共通 --accent / --accent-weak に統一する。
- * - 全タイプ一覧の旧 pill 型（横wrap・999px角丸）は新デザイン言語に含まれないため廃止。
- *   8 クイズ間で質感を揃えるため、page.tsx 側の "pill" 指定も内部で CharacterPersonalityContent と
+ * - 左寄せ・トークンのみ・font-weight は最大 600・絵文字なし・影なし。
+ * - 3 セクション（strengths/weaknesses/behaviors）は絵文字マーカーや色ティントで分けず、
+ *   色ではなく構造と言葉で立て、カード質感をそろえる。差別化は見出しと本文表現で行う。
+ * - クイズタイプごとのアクセント色を持たず、共通 --accent / --accent-weak を使う。
+ * - 全タイプ一覧はピル型にしない。8 クイズ間で質感を揃えるため、page.tsx 側の "pill" 指定も内部で CharacterPersonalityContent と
  *   同じ allTypesGrid（2-3列グリッド）にマップする。public props は "list" | "pill" のまま維持する。
- * - 角丸は一律 0px（--radius）。新体系に操作専用の角丸はなく、カードもリンクも直角。
+ * - 角丸は一律 0px（--radius）。カードもリンクも直角。
  *   --radius-sm は値札ラベル・入力欄が使い、ここでは使わない。
  */
 
 /* ============================================================
    wrapper: caller signature 互換のために残す。
-   旧版は --music-accent-color / --music-accent-bg を独自定義し、:global(.dark) で
-   ダークモード値を差し替えていたが、これらは色装飾と一体だったため本リファクタで全廃した
-   （共通アクセントに統一）。
    ============================================================ */
 .wrapper {
   text-align: left;
@@ -43,8 +36,7 @@
 /* ============================================================
    strengths / weaknesses / behaviors リスト
    3 セクションとも同じ「アクセント縦線マーカー＋枠線カード」の質感に統一する。
-   旧版で使っていたティント差（紫/クリーム）と絵文字マーカー（🎵/😅/🎤）は捨て、
-   見出し文言と本文で区別する。
+   色のティントや絵文字マーカーで分けず、見出し文言と本文で区別する。
    ============================================================ */
 .itemList {
   list-style: none;
@@ -76,10 +68,7 @@
 
 /* ============================================================
    todayAction カード: 「今日の音楽ライフのヒント」
-   DESIGN.md §2 是正（cycle-278 C4）: --accent-weak は操作・選択状態のハイライトにのみ可で
-   区画の地には不可のため、静的な区画の地は --paper-2（一段沈む面）に統一する。
-   旧版は中央寄せ＋font-weight 500＋紫ティント（--music-accent-bg）で目立たせていたが、
-   左寄せ・600 以下・共通アクセントに揃える。
+   静的な区画の地は --paper-2。左寄せ・ウェイト 600 以下・共通アクセント。
    ============================================================ */
 .todayActionCard {
   padding: 1.1rem 1.25rem;
@@ -102,7 +91,7 @@
 }
 
 /* 全タイプ見出し: ResultCard detailedHeading 言語に合わせ、左寄せ・罫下線で区切る
- * （サイト共通の見出し様式・DESIGN.md §3/§4） */
+ * （サイト共通の見出し様式） */
 .allTypesCta {
   font-size: 1.05rem;
   color: var(--ink);
@@ -111,9 +100,8 @@
   border-bottom: 1px solid var(--rule);
 }
 
-/* 罫の升目索引（page.tsx 版＝旧 "pill" の置換先・DESIGN.md §4/§8-4 是正 cycle-278 C4）:
-   「同型アイコンカードの3枚組」等のカードグリッドは §4 の禁止対象であり、一覧の既定は
-   罫区切りであるべきなので、辞典の部首索引の流儀（罫で仕切った升目に複数列で流す）に組む。
+/* 罫の升目索引（page.tsx 版）:
+   カードのグリッドにせず、辞典の部首索引の流儀（罫で仕切った升目に複数列で流す）に組む。
    セル個々はカード化しない（背景・全周枠を持たない）——列内の行は border-bottom の罫だけで
    区切る。現在地は面を塗らず、文字色と下罫（--accent）で示す。 */
 .allTypesGrid {

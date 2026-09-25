@@ -1,21 +1,20 @@
 /**
- * Header（のれん）— DESIGN.md §4「のれん」。
+ * Header（のれん）— 上端。
  * 店号（サイト名・見出しの書体）+ 下に一本の --rule-strong 罫。ナビは文字のみ。
- * ヘッダに背景色・影は付けない（§4）。地は紙のまま。
- * 角丸は 0 基調（--radius）。トークンは DESIGN.md（§2/§3/§4）が正典。
+ * ヘッダに背景色・影は付けない。地は紙のまま。角丸は 0（--radius）。
  */
 
 .header {
   /* .inner の height と .mobileOverlay の top が同じ値を参照するためローカル変数で一元化。 */
   --header-height: 3.5rem;
-  /* §4: 背景色・影を付けない。下辺に一本の強い罫（のれん罫）だけを引く。 */
+  /* 背景色・影を付けない。下辺に一本の強い罫（のれん罫）だけを引く。 */
   background: transparent;
   border-bottom: 1px solid var(--rule-strong);
   width: 100%;
 }
 
 .inner {
-  /* 操作面の最大幅（§4）。 */
+  /* 最大幅（§5）。 */
   max-width: var(--max-width);
   margin: 0 auto;
   padding: 0 var(--space-16);
@@ -30,7 +29,6 @@
   color: var(--ink);
   text-decoration: none;
   font-family: var(--font-heading);
-  font-weight: 600;
   /* のれんの店号として本文より一段大きく、見出しの書体の顔を立てる。 */
   font-size: 1.375rem;
   line-height: 1;
@@ -96,7 +94,7 @@
 
 .navLink:hover {
   color: var(--ink);
-  /* 下線はリンクの専有（§3）。ホバー時のみ下線で操作可能を示す。 */
+  /* いまはホバー時だけ下線を出す。 */
   text-decoration: underline;
   text-underline-offset: 0.2em;
 }
@@ -176,7 +174,7 @@
     padding: var(--space-8) var(--space-16) var(--space-16);
     position: relative;
     z-index: 11;
-    /* 開閉の状態変化アニメ（§5 で許容。150ms 以下）。 */
+    /* 開閉のアニメーション（150ms 以下・§11）。 */
     animation: menuFadeIn 0.15s ease;
   }
 
@@ -240,7 +238,7 @@
   }
 }
 
-/* §5: prefers-reduced-motion を尊重（開閉アニメを即時表示に置換）。 */
+/* prefers-reduced-motion では開閉アニメを止め、即時表示にする（§11）。 */
 @media (prefers-reduced-motion: reduce) {
   .mobileMenu {
     animation: none;

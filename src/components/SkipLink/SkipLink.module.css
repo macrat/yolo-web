@@ -2,7 +2,7 @@
  * SkipLink — WCAG 2.4.1 Bypass Blocks(A) 対応のスキップリンク。
  * body 直下・Header より前に置く最初の focusable 要素として、キーボード利用者が
  * ヘッダの全リンク（辞典一覧では約 229 リンク）を Tab 通過せず本文へ跳べるようにする。
- * 見た目は DESIGN.md §2/§4「店構え」トークン、可視性・タップ標的は §10 に従う。
+ * 見た目は紙・墨・罫のトークンで組み、タップ標的は 44px（§6）。
  */
 
 .skipLink {
@@ -18,7 +18,7 @@
      全 UI より前面に出す。スキップ先へ確実に視線誘導するため十分大きい値を取る。 */
   z-index: 1000;
 
-  /* 店構え（DESIGN.md §2/§4）: 生成りの紙地・墨字・のれん罫・角丸 0。影・色地は使わない。 */
+  /* 紙地・墨字・のれん罫・角丸 0。影・色地は使わない。 */
   background: var(--paper);
   color: var(--ink);
   border: 1px solid var(--rule-strong);
@@ -26,7 +26,7 @@
   padding: var(--space-8) var(--space-16);
   text-decoration: none;
 
-  /* §10: タップ標的 44px 以上。文字を上下中央に置く。 */
+  /* タップ標的 44px 以上（§6）。文字を上下中央に置く。 */
   min-height: 44px;
   display: inline-flex;
   align-items: center;

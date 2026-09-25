@@ -1,6 +1,5 @@
 /* ImageResizerTile — 単一正典タイルのスタイル
- * cycle-228 T-27: ImageResizerPage.module.css をタイル向けに移植。
- * DESIGN.md 準拠（紙・墨の新トークン）:
+ * 組み方:
  * - --ink / --ink-2 / --paper-2 / --rule / --rule-strong / --accent / --accent-weak 使用
  * - --accent は直塗り禁止（静的な地に使わない）。選択/固定中の状態セレクタ内でのみ
  *   --accent-weak 座布団 + --accent 文字を使う
@@ -56,7 +55,7 @@
 }
 
 /* ===== GIF 警告ボックス =====
- * §2: 色ベタの警告地にしない。地は中立の沈み（--paper-2）、意味は --accent の罫と文字で伝える。 */
+ * 色ベタの警告地にしない。地は中立の沈み（--paper-2）、意味は --accent の罫と文字で伝える。 */
 .gifWarningBox {
   padding: 0.75rem;
   border: 1px solid var(--accent);
@@ -95,7 +94,7 @@
 }
 
 /* ===== アスペクト比ロックボタン =====
- * DESIGN.md §3: 絵文字禁止 → SVG 線画アイコン + 可視テキストラベルで状態を表示。
+ * 絵文字を使わず（DESIGN.md §5）、SVG 線画アイコン + 可視テキストラベルで状態を表示。
  * 幅は固定せず auto にして「固定中」「固定解除」ラベルを収める。
  */
 .lockButton {
@@ -128,7 +127,7 @@
 }
 
 /* ロック中（選択状態）: 状態セレクタ相当のクラス名（Active）内でのみ
- * --accent-weak 座布団 + --accent 枠・文字で「固定中」を示す（§2）。 */
+ * --accent-weak 座布団 + --accent 枠・文字で「固定中」を示す。 */
 .lockButtonActive {
   border-color: var(--accent);
   background-color: var(--accent-weak);

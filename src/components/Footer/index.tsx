@@ -79,7 +79,7 @@ const FOOTER_SECTIONS: {
  * layout 側の boilerplate 回避のため、リンクと注記は内部固定。AI 運営注記は
  * 上書きできない構造にして constitution Rule 3 の安全装置として機能させる。
  *
- * デザイン（DESIGN.md §4 レイアウト・§6 文章）:
+ * デザイン:
  * - 地は一段沈む面 `--paper-2`、上辺に一本の `--rule-strong` 罫で本文と区切る
  * - 文字は墨（`--ink` / `--ink-2`）。リンクは器の chrome として静かに（既定は墨、hover で下線）
  * - 棚見出しは見出しの書体・罫下線。AI 明示文を定位置（下部）に。絵文字は使わない
@@ -107,7 +107,7 @@ export default function Footer() {
                         aria-label={link.ariaLabel}
                       >
                         {link.label}
-                        {/* DESIGN.md §3: アイコンサイズ 16px 相当のテキスト記号 */}
+                        {/* 外部リンクを示す 16px 相当のテキスト記号 */}
                         <span
                           className={styles.externalIcon}
                           aria-hidden="true"

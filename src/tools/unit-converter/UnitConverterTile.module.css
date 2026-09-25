@@ -1,12 +1,11 @@
 /* UnitConverterTile スタイル
- * cycle-228 T-20: UnitConverterPage.module.css をタイル向けに移植。
- * DESIGN.md（店構え）トークン準拠:
+ * 組み方:
  * - 角丸は var(--radius)（区画・カード・ボタン・値プレビュー等）
  * - フォーカス: outline: 2px solid var(--accent); outline-offset: 2px;
  * - font-weight: 700 禁止 → 使用しない
  * - box-shadow は使わない（罫と地の対比で表現）
  * - 罫線は var(--rule)（強い輪郭は var(--rule-strong)）
- * - 旧トークン不使用。地=紙 --paper/--paper-2、文字=墨 --ink/--ink-2、--accent
+ * - 地=紙 --paper/--paper-2、文字=墨 --ink/--ink-2、--accent
  *
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  */
@@ -96,7 +95,7 @@
 }
 
 .swapButton:focus-visible {
-  outline: 2px solid var(--accent); /* B-2: フォーカス outline */
+  outline: 2px solid var(--accent); /* フォーカス outline */
   outline-offset: 2px;
 }
 

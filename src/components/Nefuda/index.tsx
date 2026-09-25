@@ -19,7 +19,7 @@ export interface NefudaProps {
  * - 単一ラベルを表す最小部品。複数を横に並べるのは呼び出し側 or {@link NefudaGroup}。
  */
 export default function Nefuda({ label }: NefudaProps): ReactElement | null {
-  // §4: 中身の無いラベルを貼らない——空値は構造ごと省く
+  // 中身の無いラベルを貼らない——空値は構造ごと省く
   if (label.trim() === "") {
     return null;
   }
@@ -29,7 +29,7 @@ export default function Nefuda({ label }: NefudaProps): ReactElement | null {
 export interface NefudaGroupProps {
   /**
    * 値札の文言配列。各要素が値札 1 枚になる。
-   * 空文字・空白のみの要素は間引かれ、全て空なら群ごと描画しない（§4）。
+   * 空文字・空白のみの要素は間引かれ、全て空なら群ごと描画しない。
    */
   labels: string[];
   /** スクリーンリーダ向けの群のラベル（任意）。 */

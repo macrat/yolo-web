@@ -4,7 +4,7 @@
  * ResultCard は「受検者本人向け」のインライン結果表示です。
  *
  * 診断を完了した本人は、`/play/[slug]` 上でこの ResultCard を通して結果を見ます
- * （`QuizContainer` の intro→playing→result フェーズ遷移。variant ごとの結果コンポーネント
+ * （`QuizContainer` の intro→playing→result の段階遷移。variant ごとの結果コンポーネント
  *  への dispatch もここで行う）。本人はこの後 `/play/[slug]/result/[resultId]` へは遷移せず、
  *  その `/result/<id>` URL はシェア用にここで生成される（→ 第三者が開く静的ページ）。
  *
@@ -105,16 +105,16 @@ type ResultCardProps = {
    */
   allResults?: QuizResult[];
   /**
-   * 真の残余同点（最高得点を主タイプと分け合う副タイプ）。P2b（cycle-303）。
+   * 真の残余同点（最高得点を主タイプと分け合う副タイプ）。
    * word-sense-personality の同点時のみ QuizContainer から渡される（他診断は常に空/未指定）。
    * 1件以上あるとき、主タイプと同格に「同じくらい強く出た型」を開示するブロックを描画する。
-   * 空/未指定なら開示ブロックは出さない（＝単独勝者＝従来体験）。
+   * 空/未指定なら開示ブロックは出さない（＝単独勝者）。
    */
   coTypes?: QuizResult[];
 };
 
 /**
- * 真の同点の開示ブロック（P2b・cycle-303）。
+ * 真の同点の開示ブロック。
  *
  * 診断が構造的に残す残余同点（本当に複数タイプの声を等しく持つ人）を、恣意的・不可視に
  * 配列順で割らず、**同格**として正直に開示する。主タイプ（determineResult の決定的勝者）と
@@ -122,7 +122,7 @@ type ResultCardProps = {
  * しない。各 co-type にはその第三者向け結果解説ページ（/play/[slug]/result/[id]）への
  * リンクを添える。
  *
- * DESIGN.md 準拠: 一段沈む面（--paper-2）＋罫（--rule）の静かな区画。装飾線・絵文字・
+ * --paper-2 の地＋罫（--rule）の静かな区画。装飾線・絵文字・
  * 禁止色は使わない。型名の強調は 墨（--ink）と【】括弧の組版のみ。
  */
 function renderTiedTypesDisclosure(
@@ -173,15 +173,14 @@ function renderStandardContent(
   const behaviorsHeading = labels?.behaviorsHeading ?? "このタイプのあるある";
   const adviceHeading = labels?.adviceHeading ?? "このタイプの人へのアドバイス";
 
-  // 標準 variant の見出し・アドバイスは新デザイン体系の共通アクセント（--accent）に
-  // 統一する（クイズごとの派手色を使わない）。accentColor は variant 別サブ
-  // コンポーネント（legacy 結果コンテンツ）でのみ引き続き使用する。
+  // 標準 variant の見出し・アドバイスは共通アクセント（--accent）で組む
+  // （クイズごとの派手色を使わない）。accentColor は variant 別サブコンポーネントだけが使う。
   void accentColor;
 
   return (
     <>
       {/* traits（持ち味）。診断を遊んだ本人にも持ち味を届けるため、
-          静的結果ページと同じく behaviors の前に表示する（cycle-250）。 */}
+          静的結果ページと同じく behaviors の前に表示する。 */}
       <h3 className={styles.detailedHeading}>{traitsHeading}</h3>
       <ul className={styles.traitsList}>
         {content.traits.map((t, i) => (
@@ -265,9 +264,8 @@ function buildAnimalPersonalityAfterTodayAction(
 function renderCharacterFortuneContent(
   content: CharacterFortuneDetailedContent,
 ): React.ReactNode {
-  // 新デザイン体系ではクイズごとの任意 hex（accentColor）を器/成果物の色に使わない
-  // （DESIGN.md §2「成果物パレットは和色8色に限る・直書き禁止」）。見出し・面はすべて
-  // 標準トークン（--accent・--paper-2）に統一する。
+  // クイズごとの任意 hex（accentColor）を器/成果物の色に使わない。見出し・面はすべて
+  // 標準トークン（--accent・--paper-2）で組む。
   return (
     <>
       <p className={styles.characterIntro}>{content.characterIntro}</p>
@@ -483,10 +481,10 @@ export default function ResultCard({
         ).catchphrase
       : null;
 
-  // 勲章 first-view（B：§7 / personality 型のみ）。
+  // 勲章 first-view（personality 型のみ）。
   // 適用条件は「personality 型 かつ 結果自身の象徴 icon と固有色 color が両方存在」。
   // これ以外（knowledge 型、icon/color 欠落）は現行の抑制ヘッダにフォールバックする
-  // （§7 は knowledge 系に勲章を一律適用しない方針。ResultCard は複数の personality
+  // （knowledge 系には勲章を一律に適用しない。ResultCard は複数の personality
   //  診断で共有されるため、特定診断に依存しない汎用の文言・構造にする）。
   const showMedal =
     quizType === "personality" && Boolean(result.icon) && Boolean(result.color);
@@ -494,11 +492,11 @@ export default function ResultCard({
   return (
     <div className={styles.card}>
       {showMedal ? (
-        // 結果を包み（Tsutsumi）で見せる（DESIGN.md §4「包み」/§7「見せたくなる結果」）。
+        // 結果を包み（Tsutsumi）で見せる。
         // 器（この見出し部）は静かな到達ラベルだけを持ち、結果そのものは罫で明確に
         // 包まれた独立ビジュアル（Tsutsumi）が主役になる。固有色は quiz データの任意
-        // hex を捨て、id から和色8色へ決定的に写像する（§2「成果物パレットは8色に限る」）。
-        // symbol は絵文字（result.icon）ではなくタイプ名の先頭1字（§8-6 絵文字禁止）。
+        // hex を使わず、id から和色8色へ決定的に写像する。
+        // symbol は絵文字（result.icon）ではなくタイプ名の先頭1字（絵文字を持たない・§5）。
         <div className={styles.medalWrap}>
           {/* 到達の承認を兼ねた静かなラベル（煽らない・けばけばしくしない） */}
           <p className={styles.medalLabel}>
@@ -508,7 +506,7 @@ export default function ResultCard({
           <Tsutsumi
             typeName={result.title}
             // 診断結果の主タイトル（クライマックス）を見出し(h2)にし、SRの見出しナビで
-            // 結果へ到達できるようにする（cycle-287 F5・WCAG 1.3.1）。ページ h1 は
+            // 結果へ到達できるようにする（WCAG 1.3.1）。ページ h1 は
             // QuizPlayPageLayout、結果内の詳細見出しは h3 のため h2 が階層上妥当。
             typeNameAs="h2"
             word={catchphrase ?? undefined}
@@ -517,8 +515,8 @@ export default function ResultCard({
             productName={quizTitle}
             seal="診"
           />
-          {/* 「札を持ち帰る」保存/共有アクション（cycle-280・§4札/§7）。
-              character-personality に限定する（PM判断5）。固定 URL の札画像 Route Handler
+          {/* 「札を持ち帰る」保存/共有アクション。
+              character-personality に限る。固定 URL の札画像 Route Handler
               （/play/character-personality/result/<id>/fuda-image）が存在する面のみ。 */}
           {detailedContent?.variant === "character-personality" && (
             <FudaActions
@@ -531,7 +529,7 @@ export default function ResultCard({
         </div>
       ) : (
         <>
-          {/* 抑制ヘッダ（フォールバック）。絵文字アイコンは新デザイン体系で撤去（DESIGN.md §3） */}
+          {/* 抑制ヘッダ（フォールバック）。絵文字アイコンは出さない（DESIGN.md §5） */}
           <p className={styles.resultLabel}>あなたの結果</p>
           <h2 className={styles.title}>{result.title}</h2>
           {quizType === "knowledge" &&
@@ -549,8 +547,8 @@ export default function ResultCard({
         </>
       )}
       <p className={styles.description}>{result.description}</p>
-      {/* 真の残余同点の開示（P2b・cycle-303）。co-types が1件以上あるときのみ描画。
-          単独勝者（約8割）には出さず従来体験を保つ。判定は変えず表示のみの加算ブロック。 */}
+      {/* 真の残余同点の開示。co-types が1件以上あるときのみ描画。
+          単独勝者（約8割）には出さない。判定は変えず表示のみの加算ブロック。 */}
       {coTypes &&
         coTypes.length > 0 &&
         renderTiedTypesDisclosure(result, coTypes, quizSlug)}

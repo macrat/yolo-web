@@ -1,4 +1,4 @@
-/* GameLayout — ゲームページ共通の器（DESIGN.md フェーズ R・店構えへ変換）。
+/* GameLayout — ゲームページ共通の器。
  * パンくず・のれん下の紹介文・遊び方の説明・ゲーム本体・シェア・関連導線を
  * 紙・墨の器へ統一する。読みカラム設計の max-width:600px は GameLayout 設計として
  * 維持する（ToolPageLayout の --max-width を機械転用しない・盤面は狭い方が遊びやすい）。
@@ -36,7 +36,6 @@
 .usageExampleHeading {
   font-family: var(--font-heading);
   font-size: 0.9375rem;
-  font-weight: 600;
   color: var(--ink);
   margin-bottom: var(--space-8);
   line-height: 1.4;

@@ -55,10 +55,10 @@ export default async function BlogPostPage({ params }: Props) {
 
   const relatedPosts = getRelatedPosts(post, allPosts);
 
-  // TODO(cycle-184/B-389): X1 採用時に削除（タグ UI 完全廃止）
+  // TODO(B-389): X1 採用時に削除（タグ UI 完全廃止）
   // MIN_POSTS_FOR_TAG_PAGE = 3 未満のタグはタグページが存在しないため UI から非表示にする。
   // getTagsWithMinPosts は node:fs 依存のため Server Component のここで計算し props で渡す。
-  const MIN_POSTS_FOR_TAG_PAGE = 3; // TODO(cycle-184/B-389): X1 採用時に一括削除
+  const MIN_POSTS_FOR_TAG_PAGE = 3; // TODO(B-389): X1 採用時に一括削除
   const linkableTags = new Set(getTagsWithMinPosts(MIN_POSTS_FOR_TAG_PAGE));
 
   const jsonLd = generateBlogPostJsonLd({
@@ -97,7 +97,7 @@ export default async function BlogPostPage({ params }: Props) {
           )}
           <span>{post.readingTime}分で読める</span>
         </div>
-        {/* TODO(cycle-184/B-389): X1 採用時に削除 */}
+        {/* TODO(B-389): X1 採用時に削除 */}
         <TagList tags={post.tags} linkableTags={linkableTags} />
       </header>
 
@@ -122,8 +122,7 @@ export default async function BlogPostPage({ params }: Props) {
           )}
 
           {/*
-           * 本文（読み物の店構え・DESIGN.md §3/§4）。Panel の矩形コンテナには包まず、
-           * 読む幅 --measure に絞ったテキスト列として直接置く（§4「本文幅と操作幅」）。
+           * 本文。矩形のコンテナには包まず、読む幅 --measure に絞ったテキスト列として直接置く（§5）。
            */}
           <div
             className={styles.prose}
@@ -146,7 +145,7 @@ export default async function BlogPostPage({ params }: Props) {
           />
         </section>
 
-        {/* 関連記事（品書き・DESIGN.md §4） */}
+        {/* 関連記事 */}
         <RelatedArticles posts={relatedPosts} />
 
         {/*

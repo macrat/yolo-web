@@ -14,8 +14,6 @@
  *   Search Console / GA で 404 発生 URL を追跡できないと改善の起点が失われる。
  * - JSON-LD は不採用: 404 は SEO 上 noindex のため不要。
  * - Header の actions プロップには ThemeToggle のみ渡す。
- *
- * B-333-7 (cycle-180) / R1 Major-2 修正で ThemeProvider と GoogleAnalytics を追加
  */
 
 import "@/app/globals.css";

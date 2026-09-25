@@ -19,8 +19,8 @@ type SelectProps = ComponentPropsWithoutRef<"select">;
  *
  * デザイン:
  * - 入力欄の角丸は `--radius-sm`
- * - DESIGN.md §2: フォーカスは `outline: 2px solid var(--accent); outline-offset: 2px;`
- * - DESIGN.md §5: 影なし
+ * - フォーカスは `outline: 2px solid var(--accent); outline-offset: 2px;`
+ * - 影なし（DESIGN.md §5）
  *
  * @example
  * // controlled

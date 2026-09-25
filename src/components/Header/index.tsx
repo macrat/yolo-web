@@ -9,9 +9,7 @@ import styles from "./Header.module.css";
 /** サイト全体で固定のナビゲーション項目。
  * 全ページ共通とし、ページごとに差し替える要件はない。
  * 追加・削除は本ファイルを編集する形で行う。
- * 「遊び」を先頭に（cycle-277 決定(a)＝診断中心への統一。サイトの主軸＝
- * 自分を知り、楽しむ体験〔/play〕をナビ先頭で表現する。旧「ツール」先頭は
- * 撤回した道具箱-as-core〔cycle-167〕の名残だった）。
+ * 「遊び」を先頭に置き、サイトの主軸（自分を知り、楽しむ体験〔/play〕）をナビの先頭で表す。
  * 「サイト紹介」は信頼形成のため Header に動線を確保。 */
 const NAV_ITEMS: { label: string; href: string }[] = [
   { label: "遊び", href: "/play" },
@@ -57,7 +55,7 @@ interface HeaderProps {
  * ナビゲーション項目はサイト全体で共通とするため `NAV_ITEMS` 定数で内部固定。
  * 一貫性確保と layout 側の boilerplate 回避のため props では受け取らない。
  *
- * デザイン（DESIGN.md §4「のれん」）:
+ * デザイン:
  * - 店号（サイト名・見出しの書体）+ 下辺に一本の `--rule-strong` 罫。背景色・影は付けない（地は紙）。
  * - ナビは文字のみ・現在地は `aria-current="page"` を CSS で `--accent` 着色。
  *

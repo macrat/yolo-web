@@ -136,12 +136,12 @@ export default function StorybookContent({
       {/* === 1. 概要 === */}
       <section id="overview" className={styles.section}>
         <h1 className={styles.pageTitle}>Storybook（開発者向け）</h1>
-        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        {/* 見本は Panel に収めて並べる */}
         <Panel as="div">
           <span className={styles.previewLabel}>Preview: 概要</span>
           <div className={styles.notice}>
             <p>
-              このページは新デザインシステムのコンポーネントカタログ。
+              このページはデザインシステムのコンポーネントカタログ。
               <code>@/components/</code>{" "}
               配下のコンポーネントを実機で動作確認できる開発者向けページ。
               来訪者の目に触れる想定はないため noindex を指定している。
@@ -167,7 +167,7 @@ export default function StorybookContent({
       {/* === 2. カラーパレット === */}
       <section id="colors" className={styles.section}>
         <h2 className={styles.sectionTitle}>2. カラーパレット</h2>
-        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        {/* 見本は Panel に収めて並べる */}
         <Panel as="div">
           <span className={styles.previewLabel}>Preview: カラーパレット</span>
           <p
@@ -202,11 +202,10 @@ export default function StorybookContent({
       </section>
 
       {/* === 3. 角丸 === */}
-      {/* DESIGN.md §4: 影（box-shadow）は原則使わないため影トークン自体が存在しない
-       * （旧 --shadow-button/--shadow-dragging は cycle-279 C1 で廃止）。角丸のみ展示する。 */}
+      {/* 影は持たないので影のトークンは無く、角丸だけを展示する（DESIGN.md §5）。 */}
       <section id="radius-elevation" className={styles.section}>
         <h2 className={styles.sectionTitle}>3. 角丸</h2>
-        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        {/* 見本は Panel に収めて並べる */}
         <Panel as="div">
           <span className={styles.previewLabel}>Preview: 角丸</span>
 
@@ -246,9 +245,8 @@ export default function StorybookContent({
       <section id="panel" className={styles.section}>
         <h2 className={styles.sectionTitle}>4. Panel</h2>
         {/*
-         * DESIGN.md §4 では「パネルは原則として入れ子にしない」とあるが、
-         * ここでは Panel コンポーネント自体のプレビューを目的とするため、
-         * 例外的に外側 Panel の中にサンプル Panel を入れ子にしている。
+         * Panel は入れ子にしないが、ここは Panel そのものの見本なので、
+         * 外側 Panel の中にサンプル Panel を入れ子にしている。
          */}
         <Panel as="div">
           <span className={styles.previewLabel}>Preview: Panel</span>
@@ -259,7 +257,7 @@ export default function StorybookContent({
             <Panel>
               <p>as=&quot;section&quot;（デフォルト）: 汎用コンテナパネル</p>
               <p style={{ color: "var(--ink-2)", fontSize: "0.9rem" }}>
-                DESIGN.md §4 準拠。パネルは入れ子にせず、影をつけない。
+                パネルは入れ子にせず、影をつけない。
               </p>
             </Panel>
 
@@ -299,7 +297,7 @@ export default function StorybookContent({
       {/* === 5. Button === */}
       <section id="button" className={styles.section}>
         <h2 className={styles.sectionTitle}>5. Button</h2>
-        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        {/* 見本は Panel に収めて並べる */}
         <Panel as="div">
           <span className={styles.previewLabel}>Preview: Button</span>
 
@@ -352,7 +350,7 @@ export default function StorybookContent({
       {/* === 6. Input === */}
       <section id="input" className={styles.section}>
         <h2 className={styles.sectionTitle}>6. Input</h2>
-        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        {/* 見本は Panel に収めて並べる */}
         <Panel as="div">
           <span className={styles.previewLabel}>Preview: Input</span>
 
@@ -441,7 +439,7 @@ export default function StorybookContent({
       {/* === 7. Breadcrumb === */}
       <section id="breadcrumb" className={styles.section}>
         <h2 className={styles.sectionTitle}>7. Breadcrumb</h2>
-        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        {/* 見本は Panel に収めて並べる */}
         <Panel as="div">
           <span className={styles.previewLabel}>Preview: Breadcrumb</span>
 
@@ -480,7 +478,7 @@ export default function StorybookContent({
       {/* === 8. ToggleSwitch === */}
       <section id="toggle-switch" className={styles.section}>
         <h2 className={styles.sectionTitle}>8. ToggleSwitch</h2>
-        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        {/* 見本は Panel に収めて並べる */}
         <Panel as="div">
           <span className={styles.previewLabel}>Preview: ToggleSwitch</span>
 
@@ -525,7 +523,7 @@ export default function StorybookContent({
       {/* === 9. Pagination === */}
       <section id="pagination" className={styles.section}>
         <h2 className={styles.sectionTitle}>9. Pagination</h2>
-        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        {/* 見本は Panel に収めて並べる */}
         <Panel as="div">
           <span className={styles.previewLabel}>Preview: Pagination</span>
 
@@ -573,7 +571,7 @@ export default function StorybookContent({
       {/* === 10. ShareButtons === */}
       <section id="share-buttons" className={styles.section}>
         <h2 className={styles.sectionTitle}>10. ShareButtons</h2>
-        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        {/* 見本は Panel に収めて並べる */}
         <Panel as="div">
           <span className={styles.previewLabel}>Preview: ShareButtons</span>
 
@@ -604,7 +602,7 @@ export default function StorybookContent({
       {/* === 11. Textarea === */}
       <section id="textarea" className={styles.section}>
         <h2 className={styles.sectionTitle}>11. Textarea</h2>
-        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        {/* 見本は Panel に収めて並べる */}
         <Panel as="div">
           <span className={styles.previewLabel}>Preview: Textarea</span>
 
@@ -664,7 +662,7 @@ export default function StorybookContent({
       {/* === 12. Select === */}
       <section id="select" className={styles.section}>
         <h2 className={styles.sectionTitle}>12. Select</h2>
-        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        {/* 見本は Panel に収めて並べる */}
         <Panel as="div">
           <span className={styles.previewLabel}>Preview: Select</span>
 
@@ -696,7 +694,7 @@ export default function StorybookContent({
       {/* === 13. SegmentedControl === */}
       <section id="segmented-control" className={styles.section}>
         <h2 className={styles.sectionTitle}>13. SegmentedControl</h2>
-        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        {/* 見本は Panel に収めて並べる */}
         <Panel as="div">
           <span className={styles.previewLabel}>Preview: SegmentedControl</span>
 
@@ -739,7 +737,7 @@ export default function StorybookContent({
       {/* === 14. ErrorMessage === */}
       <section id="error-message" className={styles.section}>
         <h2 className={styles.sectionTitle}>14. ErrorMessage</h2>
-        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        {/* 見本は Panel に収めて並べる */}
         <Panel as="div">
           <span className={styles.previewLabel}>Preview: ErrorMessage</span>
 
@@ -761,7 +759,7 @@ export default function StorybookContent({
       {/* === 15. FileDropZone === */}
       <section id="file-drop-zone" className={styles.section}>
         <h2 className={styles.sectionTitle}>15. FileDropZone</h2>
-        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        {/* 見本は Panel に収めて並べる */}
         <Panel as="div">
           <span className={styles.previewLabel}>Preview: FileDropZone</span>
 
@@ -785,7 +783,7 @@ export default function StorybookContent({
       {/* === 16. useCopyToClipboard === */}
       <section id="use-copy-to-clipboard" className={styles.section}>
         <h2 className={styles.sectionTitle}>16. useCopyToClipboard</h2>
-        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        {/* 見本は Panel に収めて並べる */}
         <Panel as="div">
           <span className={styles.previewLabel}>
             Preview: useCopyToClipboard
@@ -826,7 +824,7 @@ export default function StorybookContent({
       {/* === 17. Input (type=date) === */}
       <section id="input-date" className={styles.section}>
         <h2 className={styles.sectionTitle}>17. Input (type=date)</h2>
-        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        {/* 見本は Panel に収めて並べる */}
         <Panel as="div">
           <span className={styles.previewLabel}>
             Preview: Input (type=date)
@@ -860,7 +858,7 @@ export default function StorybookContent({
       {/* === 18. FaqSection === */}
       <section id="faq-section" className={styles.section}>
         <h2 className={styles.sectionTitle}>18. FaqSection</h2>
-        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        {/* 見本は Panel に収めて並べる */}
         <Panel as="div">
           <span className={styles.previewLabel}>Preview: FaqSection</span>
 
@@ -882,7 +880,7 @@ export default function StorybookContent({
       {/* === 19. RelatedTools === */}
       <section id="related-tools" className={styles.section}>
         <h2 className={styles.sectionTitle}>19. RelatedTools</h2>
-        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        {/* 見本は Panel に収めて並べる */}
         <Panel as="div">
           <span className={styles.previewLabel}>Preview: RelatedTools</span>
 
@@ -911,7 +909,7 @@ export default function StorybookContent({
       {/* === 20. RelatedBlogPosts === */}
       <section id="related-blog-posts" className={styles.section}>
         <h2 className={styles.sectionTitle}>20. RelatedBlogPosts</h2>
-        {/* DESIGN.md §1: すべてのコンテンツはパネルに収まった形で提供される */}
+        {/* 見本は Panel に収めて並べる */}
         <Panel as="div">
           <span className={styles.previewLabel}>Preview: RelatedBlogPosts</span>
 

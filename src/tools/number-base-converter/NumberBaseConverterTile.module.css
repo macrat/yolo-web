@@ -1,6 +1,4 @@
 /* NumberBaseConverterTile スタイル
- * cycle-228 T-9: NumberBaseConverterPage.module.css をタイル向けに移植。
- * フェーズR C5: 新デザイントークン（紙・墨）へ移行。
  * 結果カード＝沈む面（--paper-2）+ 罫（--rule）・角丸0（--radius）。
  *
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。

@@ -1,9 +1,9 @@
 /*
- * ShareButtons — 共有ボタン群（DESIGN.md §4「札」/§8 準拠の店構え版）。
+ * ShareButtons — 共有ボタン群。
  * 「文字＋罫の線画ボタン」: 地は紙・--rule の一本罫囲み・文字は墨。
- * §8 厳守——ブランド色ベタ塗り・ブランドロゴ・絵文字・ピル・box-shadow なし。
- * hover は枠と文字に --accent（下線はリンク専有のためボタンでは使わない・§3）。
- * 角丸は 0px 基調（--radius）。タップターゲット 44px・focus 可視・全トークン経由。
+ * ブランド色のベタ塗り・ブランドロゴ・絵文字・ピル・box-shadow なし。
+ * hover は枠と文字に --accent（ボタンに下線は使わない）。
+ * 角丸は 0px（--radius）。タップターゲット 44px・focus 可視・全トークン経由。
  */
 
 .wrapper {
@@ -26,12 +26,12 @@
   min-width: 44px;
   padding: 0 var(--space-16);
   font-family: var(--font-body);
-  font-size: 0.9375rem; /* 15px・操作面の UI ラベル（§3 補助帯） */
+  font-size: 0.9375rem; /* 15px・操作面の UI ラベル */
   line-height: 1.4;
   white-space: nowrap;
   color: var(--ink);
   background: var(--paper);
-  /* §4: 構造の主役は罫。一律角丸を避け 0px 基調（帳面の直角）。 */
+  /* 罫で囲み、角丸は 0px。 */
   border: 1px solid var(--rule);
   border-radius: var(--radius);
   cursor: pointer;

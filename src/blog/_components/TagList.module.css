@@ -17,7 +17,7 @@
 .tagLink {
   display: inline-flex;
   align-items: center;
-  /* タップターゲット 44px（§10・タグはリンクのため Nefuda 静的ラベルより広い高さを取る） */
+  /* タップターゲット 44px（§6・タグはリンクのため Nefuda 静的ラベルより広い高さを取る） */
   min-height: 44px;
   color: var(--ink-2);
   font-family: var(--font-body);

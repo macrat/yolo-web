@@ -1,9 +1,8 @@
 /*
- * Pagination — ページナビゲーション（DESIGN.md フェーズ R「店構え」へ変換）。
+ * Pagination — ページナビゲーション。
  *
- * §4「ページネーションは店構え（罫・文字・ピル禁止）」に従い、塗りの
- * ボタン・box-shadow・8px 角丸を撤去した。各ページ番号は罫（--rule）で囲んだ
- * 素の文字。現在地は --accent の文字色のみ（塗りにしない）。角丸は 0px 基調（--radius）。全トークン経由・直書きなし。
+ * 塗りのボタン・box-shadow・角丸を持たない。各ページ番号は罫（--rule）で囲んだ
+ * 素の文字。現在地は --accent の文字色のみ（塗りにしない）。角丸は 0px（--radius）。全トークン経由・直書きなし。
  */
 
 .pagination {
@@ -16,7 +15,7 @@
   padding: var(--space-16) 0;
 }
 
-/* ページアイテム（link / button 共通ベース）。タップターゲット 44px を高さで確保（§10）。 */
+/* ページアイテム（link / button 共通ベース）。タップターゲット 44px を高さで確保（§6）。 */
 .pageItem {
   display: inline-flex;
   align-items: center;
@@ -89,7 +88,7 @@
   gap: var(--space-8);
 }
 
-/* モバイル: "現在ページ / 総ページ" インジケータ（非表示）。tabular 数字で桁を揃える（§3）。 */
+/* モバイル: "現在ページ / 総ページ" インジケータ（非表示）。tabular 数字で桁を揃える。 */
 .mobileIndicator {
   display: none;
   font-family: var(--font-body);

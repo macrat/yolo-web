@@ -1,7 +1,6 @@
 /* TraditionalColorPaletteTile.module.css
- * cycle-228 T-19: 単一正典タイル化
- * DESIGN.md（店構え）準拠:
- * - 旧 --color-* トークン不使用（紙 --paper/--paper-2・墨 --ink/--ink-2・--accent）
+ * 組み方:
+ * - トークンは紙 --paper/--paper-2・墨 --ink/--ink-2・--accent
  * - --accent を background に直接使わない（スウォッチの動的実色は成果物パレットなので対象外）
  * - 太字（700）不使用
  * - 角丸は var(--radius)、罫線は var(--rule)
@@ -67,7 +66,7 @@
   z-index: 1;
 }
 
-/* 選択済みスウォッチ: box-shadow は使わず outline で代替（B-6 準拠） */
+/* 選択済みスウォッチ: box-shadow は使わず outline で示す */
 .swatchSelected {
   outline: 3px solid var(--accent);
   outline-offset: 1px;

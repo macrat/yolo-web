@@ -36,7 +36,7 @@ const sizeClassMap: Record<ButtonSize, string | undefined> = {
 /**
  * Button — クリック操作のボタン。
  *
- * DESIGN.md §4: 角丸は var(--radius)（0px 基調）・box-shadow は使わない（詳細は
+ * 角丸は var(--radius)（0px）・box-shadow は使わない（DESIGN.md §5。詳細は
  * Button.module.css 冒頭コメント参照）。
  */
 function Button({

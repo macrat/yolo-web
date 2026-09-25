@@ -1,11 +1,10 @@
 /*
- * RelatedContentCard — 関連ゲームの共通スタイル（DESIGN.md フェーズ R・店構えへ変換）。
- * new/legacy 両方の RelatedGames（src/play/games/_components/RelatedGames.tsx と
- * _components/new/RelatedGames.tsx）で共有する（RelatedQuizzes は別ファイル
- * RelatedQuizzes.module.css を持ち、本ファイルとは共有していない）。
- * §4「品書き（一覧の既定形）」: カードのグリッドではなく罫区切りの一覧で組む
+ * RelatedContentCard — 関連ゲームの共通スタイル。
+ * RelatedGames（src/play/games/_components/new/RelatedGames.tsx）が使う（RelatedQuizzes は別ファイル
+ * RelatedQuizzes.module.css を持つ）。
+ * カードのグリッドではなく罫区切りの一覧で組む
  * （RelatedTools/RecommendedContent と同型）。器は静か——背景色・box-shadow・カード角丸なし。
- * 品名は本文の書体、hover で下線（下線はリンク専有・§3）。
+ * 品名は本文の書体で、いまは hover で下線を出す。
  */
 
 .related {

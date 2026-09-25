@@ -7,20 +7,19 @@ import { humorDictMeta } from "@/humor-dict/meta";
 import styles from "./page.module.css";
 
 /**
- * ユーモア辞典トップ — DESIGN.md フェーズ R で「店構え」へ変換。
+ * ユーモア辞典トップ。
  *
- * 旧デザイン（淡色地カード・角丸・box-shadow・hover 地色替え・旧トークン --border/--bg/--r-*）を
- * 全廃し、§4「一覧の既定は品書き（罫区切りリスト）」に沿って作り直した。器は静か（紙・墨・罫・
- * 組版のみ）、主役は 31 語の見出し。色・角丸・書体はすべてトークン経由（§10・直書き禁止）。
+ * 見出し語を品書き（罫区切りリスト）で並べる。淡色地のカード・角丸・影は持たない。器は静か（紙・墨・罫・
+ * 組版のみ）、主役は 31 語の見出し。色・角丸・書体はすべてトークン経由。
  *
- * 品書きの実装について（迷った判断・報告参照）: 共有の Shinagaki コンポーネントは
+ * 品書きの実装について: 共有の Shinagaki コンポーネントは
  * name/note/tags/meta の器で、辞典特有の「見出し語のよみがな（読み添え）」を品名の脇に
  * 置く枠を持たない。ここでは辞典の情報（語・よみ・語義プレビュー）を失わないことを優先し、
- * §4 の品書きと同じ視覚言語（上辺＋各行の一本罫・墨の品名・16px の説明・hover で下線）を
- * このページ内で組んだ。Shinagaki は編集していない。
+ * Shinagaki と同じ視覚言語（上辺＋各行の一本罫・墨の品名・16px の説明・hover で下線）を
+ * このページ内で組む。
  *
- * 表示コピーは §6 の自然な日本語で書き下ろした（meta.ts の煽り気味の説明文は据え置き＝
- * メタデータ・JSON-LD 用の共有データのため、可視テキストのみ本ページで自然文に差し替える）。
+ * 表示コピーは自然な日本語で書く（§9）。meta.ts の説明文はメタデータ・JSON-LD と共有するので、
+ * 画面に出す文はこのページで書く。
  */
 
 export const metadata: Metadata = generateHumorDictMetadata();
@@ -65,7 +64,7 @@ export default function HumorDictIndexPage() {
         ]}
       />
 
-      {/* 自己紹介（器・店の名乗り）。§6 の言葉で、何が読めるかを具体に。 */}
+      {/* 自己紹介（器・店の名乗り）。何が読めるかを具体に（§9）。 */}
       <div className={styles.intro}>
         <h1 className={styles.title}>{humorDictMeta.title}</h1>
         <p className={styles.lead}>
@@ -78,7 +77,7 @@ export default function HumorDictIndexPage() {
         </p>
       </div>
 
-      {/* 見出し語の品書き（§4 罫区切りリスト）。各行 = 見出し語（リンク）＋よみ＋語義プレビュー。 */}
+      {/* 見出し語の品書き（罫区切りリスト）。各行 = 見出し語（リンク）＋よみ＋語義プレビュー。 */}
       <ul className={styles.list} aria-label="ユーモア辞典 見出し語一覧">
         {entries.map((entry) => (
           <li key={entry.slug} className={styles.row}>

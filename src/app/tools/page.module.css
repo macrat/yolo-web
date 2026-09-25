@@ -1,19 +1,19 @@
 /*
- * ツール一覧トップ — DESIGN.md フェーズ R で新デザイン「店構え」へ変換。
+ * ツール一覧トップ。
  *
- * 器は静か（§1/§4）: 地は --paper（globals.css で body に付与）のまま、色付きカード・
+ * 器は静か: 地は --paper（globals.css で body に付与）のまま、色付きカード・
  * 同型アイコン・影・グラデーション・角丸装飾を持たない。構造は罫（Shinagaki の一本罫）と
- * 組版だけで組む。色・書体・余白はすべてトークン経由（§10・直書き禁止）。
+ * 組版だけで組む。色・書体・余白はすべてトークン経由。
  */
 
-/* ページ全体: 操作面の最大幅 --max-width。中央寄せは器の配置で、本文は左揃え（§4）。 */
+/* ページ全体: 操作面の最大幅 --max-width。中央寄せは器の配置で、中は左揃え（§5）。 */
 .page {
   max-width: var(--max-width);
   margin: 0 auto;
   padding: var(--space-32) var(--space-24) var(--space-64);
 }
 
-/* 名乗り（読む面）: 一行の長さを --measure に絞る（§3）。 */
+/* 名乗り（読む面）: 一行の長さを --measure に絞る（§5）。 */
 .intro {
   max-width: var(--measure);
   margin: var(--space-24) 0 var(--space-48);
@@ -25,7 +25,7 @@
   color: var(--ink);
 }
 
-/* 説明: 文章として読ませるので 16px / line-height 1.9（§3）。 */
+/* 説明: 文章として読ませるので 16px / line-height 1.9。 */
 .description {
   margin: 0;
   color: var(--ink);

@@ -1,10 +1,10 @@
 /*
- * 漢字詳細（1 字）— DESIGN.md フェーズ R・店構え（実務／参照・§7 実務側）。
- * 見出しは対象の漢字を見出しの書体で大字。情報は罫で組んだ定義リスト。数値は tabular 数字書体。
- * 器は静か（紙・墨・罫・組版のみ）。色付きカード・影・ピル・角丸装飾なし・全トークン経由（§10）。
+ * 漢字詳細（1 字）。
+ * 見出しは対象の漢字を見出しの書体で大字。情報は罫で組んだ定義リスト。
+ * 器は静か（紙・墨・罫・組版のみ）。色付きカード・影・ピル・角丸装飾なし・全トークン経由。
  */
 
-/* 読む面に絞る（§3 --measure）。左揃え基調（§4）。 */
+/* 読む面に絞り、左揃えにする（§5）。 */
 .detail {
   max-width: var(--measure);
   margin: 0 auto;
@@ -17,11 +17,10 @@
   margin-bottom: var(--space-32);
 }
 
-/* 大字: 対象の漢字を見出しの書体で大きく（見出しの主役・§7 見出しの大字）。 */
+/* 大字: 対象の漢字を見出しの書体で大きく（見出しの主役）。 */
 .character {
   font-family: var(--font-heading);
   font-size: 6rem;
-  font-weight: 600;
   line-height: 1;
   color: var(--ink);
   flex-shrink: 0;
@@ -39,7 +38,7 @@
   color: var(--ink);
 }
 
-/* 読み: 補助情報（墨の補・§2/§3）。 */
+/* 読み: 補助情報（--ink-2）。 */
 .readings {
   margin-bottom: 0.25rem;
   font-size: 1rem;
@@ -51,7 +50,7 @@
   color: var(--ink);
 }
 
-/* 意味: 読ませる本文（16px・§3）。 */
+/* 意味: 読ませる本文（16px）。 */
 .meanings {
   font-size: 1rem;
   line-height: 1.9;
@@ -103,27 +102,26 @@
   line-height: 1.7;
 }
 
-/* 数値（画数・部首番号）: 桁が映える tabular 数字書体（§3）。 */
+/* 数値（画数・部首番号）: 本文の書体で組む。数字は IBM Plex Sans が組み、既定で桁が揃う。 */
 .number {
   font-family: var(--font-body);
-  font-feature-settings: "tnum";
 }
 
-/* 使用例: 読点で組んだ自然な一文（§4/§6）。 */
+/* 使用例: 読点で組んだ自然な一文。 */
 .examples {
   font-size: 1rem;
   line-height: 1.9;
   color: var(--ink);
 }
 
-/* 同じ部首の漢字: 単字リンクの索引（升目・§4）。カード/ピルではない。 */
+/* 同じ部首の漢字: 単字リンクの索引（升目）。カード/ピルではない。 */
 .relatedList {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-8);
 }
 
-/* 索引リンク: 本文の書体・墨、静止時は下線なし、hover で下線。タップ面 44px（§10）。 */
+/* 索引リンク: 本文の書体・墨、静止時は下線なし、hover で下線。タップ面 44px（§6）。 */
 .relatedLink {
   display: inline-flex;
   align-items: center;
@@ -158,7 +156,7 @@
   text-underline-offset: 0.15em;
 }
 
-/* モバイル先行（375）: 大字を縦積みにして読みやすさを保つ。中央寄せはしない（左揃え基調・§4）。 */
+/* モバイル先行（375）: 大字を縦積みにして読みやすさを保つ。中央寄せはしない（左揃え・§5）。 */
 @media (max-width: 640px) {
   .header {
     gap: var(--space-16);

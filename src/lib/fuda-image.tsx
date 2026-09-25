@@ -15,7 +15,7 @@ import { getContrastTextColor } from "@/play/color-utils";
 
 /**
  * 札（Tsutsumi）画像レンダラ — 「見せたくなる結果」を単独で持ち帰れる 1 枚の PNG にする
- * （DESIGN.md §4「包み」/「札」/「印」・§7・§8）。
+ * （包み・札・印）。
  *
  * 構図は画面の {@link import("@/components/Tsutsumi").default Tsutsumi} と同じ視覚言語で組む
  * （並べて「別物に見えない」こと）——紙の地に、和色の記号面を一つ、店号・品名・タイプ名を
@@ -38,11 +38,11 @@ const FUDA_SIZE = ogpSize;
  * globals.css の light トークン（PAPER↔--paper 等）との一致を担保する。
  */
 
-/** 店号（札単体で出所が読めるように・DESIGN §4「札」）。 */
+/** 店号（札単体で出所が読めるように）。 */
 const SHOP_NAME = "yolos.net";
-/** 印の一字の既定（診断の「診」・§4「印」）。呼び出し側が sealChar で上書きできる。 */
+/** 印の一字の既定（診断の「診」）。呼び出し側が sealChar で上書きできる。 */
 const DEFAULT_SEAL_CHAR = "診";
-/** 印の回転（§4「±8° 以内」）。手捺しのわずかな気配。 */
+/** 印の回転（±8° 以内）。手捺しのわずかな気配。 */
 const SEAL_ROTATE_DEG = -6;
 
 /**
@@ -63,7 +63,7 @@ export interface FudaImageResult {
   /** タイプ名（下部の結果の言葉＋記号面の先頭書記素）。 */
   title: string;
   /**
-   * 品名（何の結果か・"あなたに似たキャラ診断" 等・DESIGN §4「札」）。
+   * 品名（何の結果か・"あなたに似たキャラ診断" 等）。
    * 省略時は品名行を出さない。
    */
   productName?: string;
@@ -71,14 +71,14 @@ export interface FudaImageResult {
    * 記号面の地色に使うコンテンツ固有の hex（例 伝統色の "#0d5661"）。
    *
    * 通常の結果（character-personality 等）は記号面の地を id のハッシュで和色8色へ写像する
-   * （{@link pickResultWairoColor}・成果物パレット・DESIGN §2）。しかし「色そのものが中身の面」
+   * （{@link pickResultWairoColor}・成果物パレット）。しかし「色そのものが中身の面」
    * ——伝統色診断の結果色や伝統色辞典の色——では、その固有 hex こそが中身であり、和色8色へ
    * 丸めると別の色＝別物になってしまう。そこでこのフィールドが指定されたときは記号面の地に
    * その hex をそのまま使い、前景（記号）色は AA を満たす墨/白を {@link getContrastTextColor} で
-   * 算出する（DESIGN §2「色そのものが中身の面」の例外）。未指定時は従来の和色経路を保つ。
+   * 算出する（DESIGN.md §2「色の範囲を制限しない」）。未指定時は和色8色へ写像する。
    *
    * なお全面ベタ塗りではなく、あくまで囲まれた 300×300 の記号面の中だけに色を閉じる
-   * （器＝紙・罫・墨へ色を漏らさない・DESIGN §2）。
+   * （器＝紙・罫・墨へ色を漏らさない・DESIGN.md §1）。
    */
   colorOverride?: string;
   /** 印の一字。省略時は {@link DEFAULT_SEAL_CHAR}（"診"）。 */
@@ -155,7 +155,7 @@ export async function renderFudaImage(
         flexDirection: "column",
         backgroundColor: PAPER,
         color: INK,
-        // 器は罫で包む（構造の主役は罫・角丸 0）。§4/§8。
+        // 器は罫で包む（構造の主役は罫・角丸 0）。
         border: `2px solid ${RULE_STRONG}`,
         padding: "56px 64px",
         fontFamily: gothicFamily,
@@ -216,10 +216,10 @@ export async function renderFudaImage(
             flex: "0 0 auto",
             backgroundColor: symbolBg,
             color: symbolOn,
-            // 記号面は必ず罫で囲む（§2「囲まれた面」・§4「罫線の建築」）。紙地に極めて近い
+            // 記号面は必ず罫で囲む。紙地に極めて近い
             // 伝統色（白練 #fcfaf2・胡粉 #fffffb 等）でも色面が紙地に埋没しないよう、器外枠と
-            // 同じ SSoT 色（RULE_STRONG）で1px の枠を回す。角丸 0（§8）。両経路（colorOverride/
-            // 和色）で同一の記号面 div なので、character-personality 等の既存札にも同じ罫が回る。
+            // 同じ SSoT 色（RULE_STRONG）で1px の枠を回す。角丸 0。両経路（colorOverride/
+            // 和色）で同一の記号面 div なので、どの札にも同じ罫が回る。
             border: `1px solid ${RULE_STRONG}`,
           }}
         >

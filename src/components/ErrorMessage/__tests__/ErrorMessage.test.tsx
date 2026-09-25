@@ -93,13 +93,13 @@ describe("ErrorMessage", () => {
     expect(css).toContain("color: var(--accent)");
   });
 
-  it("CSS が --radius を使用している（DESIGN.md §4: インタラクティブ要素・値札のいずれでもないため 0px 基調）", () => {
+  it("CSS が --radius を使用している（角丸 0px・DESIGN.md §5）", () => {
     const cssPath = resolve(__dirname, "../ErrorMessage.module.css");
     const css = readFileSync(cssPath, "utf-8");
     expect(css).toContain("var(--radius)");
   });
 
-  it("CSS に font-weight: 700 が存在しない（DESIGN.md §3 制約）", () => {
+  it("CSS に font-weight: 700 が存在しない", () => {
     const cssPath = resolve(__dirname, "../ErrorMessage.module.css");
     const css = readFileSync(cssPath, "utf-8");
     expect(css).not.toMatch(/font-weight\s*:\s*700/);

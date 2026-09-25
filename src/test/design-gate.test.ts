@@ -1,136 +1,76 @@
 /**
- * DESIGN.md §8「禁止リスト（AI slop 遮断・機械的に検査する）」の機械ゲート。
+ * DESIGN.md の規定のうち、CSS と TSX の宣言から機械で判定できるものの検査。
  *
- * 目的（フェーズ R・C0）: 後続の workflow 一斉変換で多数ページを量産する際、§8 の
- * 「機械検査できる項目」を lint/テストで機械的に弾く。§8 は担保先が二層で、機械検査
- * できない項目（定型構成の再現・イラスト質感・モーションの意図）は視覚レビュー工程が
- * 担保する——本テストはそれを肩代わりしない（下の「視覚レビューへ回す項目」を参照）。
+ * 機械で判定できない規定（構成・画像の質感・動きの意図など）は、frontend-design スキルの
+ * 「目で確かめる」が担う。この検査はそれを肩代わりしない。
  *
- * 正典: リポジトリルート DESIGN.md（§2 色 / §3 タイポ / §4 レイアウト / §8 禁止リスト / §10 品質バー）。
+ * ── 対象 ──────────────────────────────────────────────────────────────
+ *   `src/**\/*.module.css`・`src/app/globals.css`・`src/**\/*.tsx` を広域 glob で走査する。
+ *   ページを足しても列挙漏れで検査から外れないようにするため。除外はテスト（IGNORE）と、
+ *   理由を添えた個別の許容（ALLOWLIST）だけにする。
  *
- * ── 対象（src 全体・広域 glob）──────────────────────────────────────────
- *   cycle-279 C1 で (legacy)/ 一式・old-globals.css・旧デザイントークン定義
- *   （--bg / --fg / --r- 系 / --shadow- 系 / status 系 / --admonition-* 等）を完全削除し、
- *   src/ 全体が新トークン体系のみになった。フェーズR 最終レビュー是正（cycle-279 MUST-5）で、
- *   個別列挙方式（新規ページ追加時に列挙漏れが起きると検査対象から漏れる）から
- *   `src/**\/*.module.css` / `src/**\/*.tsx` の広域 glob へ切り替えた——src/ に live な
- *   デザイン面が新規追加されても自動的に検査対象へ入る。除外は IGNORE のテスト・
- *   ALLOWLIST の意図的な例外（スピナーの回転リング・成果物の和色等・理由付き）のみに限定する。
+ *   テンプレート文字列に CSS/HTML を埋め込む面（EMBEDDED_DESIGN_FILES）は、トークンを import
+ *   できず hex を直書きするので analyzeCss/analyzeTsx が効かない。analyzeEmbeddedDesign が
+ *   生テキストへ的を絞った検査（青・青紫の hex と色関数・角丸・絵文字）だけを当てる。
+ *   紙・墨の hex は正当なので一般の hex 検査はしない。
  *
- *   OGP 画像生成（`opengraph-image.tsx`/`twitter-image.tsx`/`src/lib/ogp-image.tsx`）は
- *   cycle-282 で新デザイン（店構え）化し共通レンダラの型から accentColor/icon を撤去したのに
- *   合わせ、IGNORE からの除外を解除して §8 機械検査の対象へ戻した（cycle-282・フェーズR移行漏れ
- *   の構造的死角を塞ぐ）——call-site は createOgpImageResponse を呼ぶだけで色リテラルを持たず、
- *   共通レンダラ ogp-image.tsx も色は器 hex 定数（@/lib/utsuwaHex の PAPER/INK/ACCENT 等）を
- *   変数参照するため、JSX の style ブロック内に禁止色の literal は現れない（実測: false positive 無し）。
+ * ── 検査する項目（コードは DESIGN.md の節）────────────────────────────────
+ *   §2   UI は無彩: 色関数で hue≈250〜320（青〜紫）の色 = ERROR。
+ *        --accent-weak / --wairo-* を状態セレクタ（STATE_SELECTOR_RE）の外で background に使う = ERROR。
+ *   §3   本文の font-family に Inter/Roboto/Open Sans 等の欧文既定 sans・monospace = ERROR。
+ *        見出しの書体（--font-heading）で組む要素のウェイトが 400 以外 = ERROR
+ *        （Zen Antique は 400 の1本だけで、ほかのウェイトはブラウザが合成太字を作る。§4「合成太字を作らない」）。
+ *   §5   backdrop-filter: blur・色付きの影 = ERROR。中性の影・グラデーション背景 = WARN（人手で確認）。
+ *        border-radius が 0 / var(--radius) / var(--radius-sm) / 2px 以外 = ERROR。絵文字（埋め込み面）= ERROR。
+ *   §12  色の直書き（トークンを経由しない hex / rgb() / oklch() 等）= ERROR。
+ *        中性のスクリム（rgba(0,0,0,α) 等のオーバーレイ幕）は許す。
+ *   英字の全部大文字（text-transform: uppercase）= WARN（frontend-design スキルの目視の項目）。
  *
- *   テンプレート文字列に CSS/HTML を埋め込む稼働デザイン面（Edge 実行等でトークンを import
- *   できず hex を直書きせざるを得ない面）は analyzeCss/analyzeTsx が効かないため、専用の
- *   analyzeEmbeddedDesign で「§8 が名指しで禁じる具体パターン」（旧ブランドの青紫 hex・非許容の
- *   角丸・青紫 hue の色関数・絵文字）だけを生テキストへ的を絞って検査する。対象は
- *   EMBEDDED_DESIGN_FILES（`src/middleware.ts` の 410 ページ・`src/app/global-not-found.js`）。
- *   器の紙/墨 hex は正当なので一般 hex 検査はしない（誤検知回避）。
+ *   検査は標準の CSS プロパティの宣言に対して行い、`--*` のトークン定義は検査しない。
+ *   トークンの値は DESIGN.md §2 の表と照らすもので、この検査は面がトークンをどう使うかを見る。
  *
- * ── 機械検査する項目（§8 の番号付き）──────────────────────────────────────
- *   §8-1  紫〜青（indigo/violet）のアクセント: 色関数 oklch/lch/hsl/hwb で hue≈250〜320。
- *          全面グラデーション背景（linear/radial-gradient）は警告レベル（面積判定は視覚レビュー）。
- *   §8-2  グラスモーフィズム（backdrop-filter: blur）= ERROR。色付き box-shadow/グロー = ERROR。
- *          中性色（黒/白/グレー）の box-shadow は §4「操作フィードバックの最小限のみ許容」に当たる
- *          可能性があるため WARNING（人手確認へ）。
- *   §8-5  一律角丸: border-radius が 0 / var(--radius) / var(--radius-sm) / 2px 以外 = ERROR。
- *          ピル形状（9999px/50%/999px 等）もこの網に掛かる。
- *   §8-7  本文書体に Inter/Roboto/Open Sans 等の欧文既定 sans = ERROR。font-family に monospace = ERROR。
- *   §8-6  all-caps（text-transform: uppercase）= WARNING（§8 注記どおり多用の判定は視覚レビュー）。
- *   §10   色の直書き（トークン非経由の hex / rgb() / hsl() / oklch() 等を色プロパティに直書き）= ERROR。
- *          中性のスクリム（rgba(0,0,0,α) / rgba(255,255,255,α) 等のオーバーレイ幕）は慣例的例外として許容。
- *   §2    是正ゲート（cycle-278 C4・結果面(quiz)の系統的違反を受けて追加）: `--accent-weak` /
- *          `--wairo-*` は DESIGN.md §2「操作・選択状態のハイライト（hover/selected の座布団）
- *          にのみ可。区画の地には不可」。background/background-color にこれらが使われている
- *          宣言のうち、そのルールのセレクタが「状態セレクタ」（下の STATE_SELECTOR_RE 参照:
- *          :hover/:focus/:active/:checked・[aria-current] 等・Current/Selected/Active/Correct
- *          命名）を一切含まない場合は、静的な区画/箱の地への誤用の疑いとして ERROR にする。
- *
- *   すべての検査は「標準 CSS プロパティ宣言」に対して行い、`--*` のカスタムプロパティ定義
- *   （＝トークン定義）は検査しない。理由: §10 はトークン経由での色指定を原則とし、パレット自体は
- *   DESIGN.md §2 が正典で数も小さく視覚レビュー管轄。ゲートは「面でトークンをどう使うか」を見張る。
- *
- * ── 機械検査「できない」ので視覚レビュー工程へ回す項目（§8 の二層担保の下層）──────────
- *   §8-3  カード上端/左端だけの色付きボーダー（構図依存・判定は目視）。
- *   §8-4  同型アイコンカード3枚組ヒーロー・H1 直上のピル型バッジ・定型順序（構成の再現は目視）。
- *   §8-6  見出し/ナビ/ボタンの絵文字（絵文字は本文にも正当に出現しうるため機械判定困難・目視）。
- *   §8-8  AI 生成イラスト質感・Corporate Memphis・無関係ストック写真・浮遊3D（画像質感は目視）。
- *   §8-9  全要素一律の fade-in・スクロール登場アニメ（意図の有無は目視）。
- *   §8-11 結果の出し惜しみ・偽の限定・煽り LP 記号（文章/導線の意味は §6 と視覚/内容レビュー）。
- *   これらは take-screenshot / frontend-design スキルによる実見レビューが担保する。
- *
- * ── バイナリ資産（CSS/HTML を持たず機械検査「できない」・視覚レビューで担保）──────────
- *   favicon / apple-touch-icon / OGP 画像の png 等のバイナリ画像は宣言テキストを持たず、この
- *   ゲートでは検査できない。サイトの見た目と揃っているかは take-screenshot 等の
- *   視覚レビューで確認する。
- *   `public/favicon.ico`・`public/icon.svg`・`public/apple-touch-icon.png` は、紙地に朱の角丸タイルと
- *   白抜きの y を置いた標章。資産は `scripts/generate-favicons.ts` で生成する。
+ * ── 画像の資産 ────────────────────────────────────────────────────────────
+ *   favicon / apple-touch-icon / OGP 画像の png は宣言テキストを持たず、この検査では見られない。
+ *   `public/favicon.ico`・`public/icon.svg`・`public/apple-touch-icon.png` は
+ *   `scripts/generate-favicons.ts` で生成し、見た目は take-screenshot で確かめる。
  */
 import { describe, test, expect } from "vitest";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import fg from "fast-glob";
+import postcss from "postcss";
 
 const PROJECT_ROOT = path.resolve(__dirname, "../..");
 
-// 新デザイン面（対象）。C1 で変換したコンポーネントの glob をここへ追記して面を広げる。
-// 注意（fast-glob のメタ文字）: literal パスに fast-glob のメタ文字を含む名前をそのまま
-// glob へ書くと、意図した実パスに一致せず 0 件で黙って素通りする（＝ゲートが空振り）。
-// 実害を起こしたのは旧 Route Group `(new)`/`(legacy)` のパーレン——fast-glob（picomatch）は
-// エスケープしない丸括弧を生成正規表現のグループとしてそのまま通すため、`(new)` は中身の
-// `new`（括弧なし）に一致する正規表現になり、実ディレクトリ名 `(new)`（括弧込み）に一致せず
-// 0 件になった（extglob ではない・`{extglob:false}` でも同一正規表現）。`\(new\)` のエスケープが
-// 必要だった（フェーズ R・C1 で src/app/ 直下へ平坦化し、この問題自体が消滅）。動的セグメント
-// `[param]` のブラケットは、この fast-glob バージョンでは literal の `[param]` ディレクトリに
-// 一致し空振りの実害は無かったが、一般には文字クラスと解釈されうるメタ文字なので `*` で受ける。
-// 空振りは下の「空振り検出」テストが各 glob 単位で fail させる。
-const NEW_DESIGN_CSS = [
-  // src 全体の live な *.module.css を広域 glob で網羅する（cycle-279 MUST-5）。
-  // 新規ページ追加時の列挙漏れを構造的に防ぐ——除外は IGNORE（テスト）のみ。
+// 検査する面。literal のパスに fast-glob のメタ文字（丸括弧・角括弧）を含む名前をそのまま
+// 書くと、picomatch がそれを正規表現のグループや文字クラスとして読み、実パスに一致せず 0 件で
+// 黙って素通りする。動的セグメント `[param]` は `*` で受ける。空振りは下の「空振り glob の検出」が
+// glob ごとに fail させる。
+const DESIGN_CSS_GLOBS = [
   "src/**/*.module.css",
-  // トークン定義本体（*.module.css ではないため上の glob に一致しない・明示的に追加）。
+  // トークン定義と要素の既定（*.module.css ではないので明示する）。
   "src/app/globals.css",
 ];
-const NEW_DESIGN_TSX = [
-  // src 全体の live な *.tsx を広域 glob で網羅する（cycle-279 MUST-5）。
-  // 新規ページ追加時の列挙漏れを構造的に防ぐ——除外は IGNORE（テスト）のみ。
-  // OGP 生成物（opengraph-image/twitter-image/ogp-image）も cycle-282 で対象へ含めた。
-  "src/**/*.tsx",
-];
-// テストコードのみ走査対象外（テスト文字列に禁止語が入るため）。
-// OGP 画像生成（opengraph-image.tsx / twitter-image.tsx / src/lib/ogp-image.tsx）は cycle-282 の
-// 店構え化（型から accentColor/icon を撤去）に合わせて除外を解除し、§8 検査対象へ戻した。旧版は
-// 全面ベタ塗り＋絵文字アイコン＋既定色 青#2563eb だったため除外が死角化していた（ヘッダの「対象」節参照）。
+const DESIGN_TSX_GLOBS = ["src/**/*.tsx"];
+// テストはテスト文字列に禁止語を含むので走査しない。
 const IGNORE = ["**/__tests__/**", "**/*.test.ts", "**/*.test.tsx"];
 
-// テンプレート文字列に CSS/HTML を埋め込む稼働デザイン面（`.ts`/`.js`）。上の広域 glob
-// （*.tsx / *.module.css）に載らないが、実際にユーザーへ表示される店構えを持つ——Edge 実行や
-// layout の import チェーン外という制約でトークンを import できず hex を直書きするため、専用の
-// analyzeEmbeddedDesign で生テキストを検査する（cycle-282・フェーズR移行漏れの死角を塞ぐ）。
-//   - src/middleware.ts        : 削除記事へ返す 410 Gone ページの埋め込み HTML/CSS
-//   - src/app/global-not-found.js : 404 ラッパー（本文の意匠は global-not-found.module.css 側で
-//                                    上の *.module.css glob が既に検査するが、.js の inline style も拾う）
+// テンプレート文字列に CSS/HTML を埋め込む面（`.ts`/`.js`）。上の glob に載らないが来訪者に
+// 表示される。Edge 実行や layout の import チェーンの外にあってトークンを import できず、hex を
+// 直書きするため、analyzeEmbeddedDesign で生テキストを検査する。
+//   - src/middleware.ts           : 削除記事へ返す 410 Gone ページの HTML/CSS
+//   - src/app/global-not-found.js : 404 ラッパー（本文の CSS は global-not-found.module.css を
+//                                   上の glob が検査し、ここでは .js の inline style を拾う）
 const EMBEDDED_DESIGN_FILES = [
   "src/middleware.ts",
   "src/app/global-not-found.js",
 ];
 
-/**
- * 旧資産の明示的許容（新デザイン面の物理的メタファーによる例外）。
- * globals.css の .markdown-alert は cycle-279 C1 で新トークン（--rule/--paper-2/--accent）へ
- * 再設計済み（border-radius も var(--radius) の 0px に統一したため、旧 legacy 許容は不要）。
- */
+/** 理由を添えて個別に許す宣言。 */
 const ALLOWLIST: { fileEndsWith: string; declaration: string }[] = [
-  // 唯一の円形例外＝ローディングスピナーの回転リング。DESIGN.md §4「角丸 0px 基調」は
-  // 「回転で読み込み中を示すインジケータ」を想定していない——リングは円形でなければ回転が
-  // 視認できず機能を果たさない。装飾目的の一律角丸（§8-5）ではなく機能上不可避な形状として、
-  // この2ファイルのスピナーのみ個別許容する。トグル・スライダーのつまみ・進捗ドット等の
-  // 操作系は cycle-279 ですべて var(--radius)/var(--radius-sm) へ変換済みで、ここには含めない
-  // （「操作メタファーの円形」という自己正当化での横抜けを一切残さない）。
+  // ローディングスピナーの回転リング。円でなければ回転が見えず、読み込み中を示せないため、
+  // この2ファイルのスピナーだけ円を許す。操作に使う部品（トグル・スライダーのつまみ・進捗ドット等）は
+  // ここに含めない。
   {
     fileEndsWith:
       "src/play/games/kanji-kanaru/_components/GameContainer.module.css",
@@ -141,11 +81,8 @@ const ALLOWLIST: { fileEndsWith: string; declaration: string }[] = [
       "src/play/games/yoji-kimeru/_components/styles/GameContainer.module.css",
     declaration: "border-radius: 50%",
   },
-  // §2 是正ゲートの追加許容: --wairo-* はゲームの駒/結果など「成果物」の中身の色として
-  // DESIGN.md §2「成果物パレット（中身の色・唯一の例外）」が明示的に認めている。
-  // STATE_SELECTOR_RE は「hover/selected の座布団」用の許容のみを機械判定するため、
-  // 状態セレクタ名を持たない成果物カラーの静的宣言はここで個別に許容する
-  // （器＝ページ UI の静的背景には和色を使わない・§2 の原則自体は変えない）。
+  // ゲームの駒・結果の色見本など、中身に和色（--wairo-*）を敷く宣言。セレクタ名が状態を
+  // 表さないので STATE_SELECTOR_RE に掛からず、ここで個別に許す。
   {
     fileEndsWith:
       "src/play/games/kanji-kanaru/_components/styles/KanjiKanaru.module.css",
@@ -255,7 +192,7 @@ type Severity = "ERROR" | "WARN";
 interface Violation {
   file: string;
   severity: Severity;
-  code: string; // §8-x / §10 など
+  code: string; // DESIGN.md の節（§2 など）
   message: string;
   declaration: string;
 }
@@ -365,7 +302,7 @@ function hueOf(lit: string): number | null {
 const isPurpleHue = (h: number | null): boolean =>
   h !== null && h >= 250 && h <= 320;
 
-// border-radius で許容する値（§4/§8-5）: 0 / var(--radius) / var(--radius-sm) / 2px。
+// border-radius で許容する値（§5）: 0 / var(--radius) / var(--radius-sm) / 2px。
 const ALLOWED_RADIUS_ATOMS = new Set([
   "0",
   "0px",
@@ -377,7 +314,7 @@ const ALLOWED_RADIUS_ATOMS = new Set([
   "unset",
 ]);
 
-// §8-7: 本文書体に不可の欧文既定 sans。
+// §3: 本文の書体に使わない欧文の既定の sans。
 const BANNED_FONT_RE =
   /\b(inter|roboto|open\s*sans|lato|montserrat|poppins|nunito|source\s*sans)\b/i;
 
@@ -410,26 +347,23 @@ function extractDeclarationsWithSelector(
 }
 
 /**
- * 状態セレクタの許可リスト（DESIGN.md §2 是正ゲート・cycle-278 C4）。
- * これに一致するセレクタ内の --accent-weak / --wairo-* 背景は「操作・選択状態のハイライト」
- * として正当なので誤検知しない。一致しない場合のみ「静的な区画の地への誤用」と判定する。
+ * 状態セレクタ。これに一致するセレクタ内の --accent-weak / --wairo-* の背景は、操作や選択の
+ * 状態を示す地として許す。一致しないものは、静的な区画に地を敷いた疑いとして検出する。
  *   - 疑似クラス: :hover / :focus / :focus-visible / :focus-within / :active / :checked / ::selection
  *   - ARIA/data 状態属性: [aria-current] [aria-selected] [aria-pressed] [aria-checked]
  *     [data-selected] [data-current] [data-active] [data-state=...]
  *   - 本コードベースの慣例的な状態クラス名（JS 側で条件付与される操作結果ハイライトで、
  *     静的な区画の地ではない）: Current / Selected / Active / Correct
  *     （例: .allTypesItemCurrent・.itemCurrent・.choiceCorrect）
- * 迷ったときの既定は「静的背景＝誤用」（DESIGN.md §1「器は静か」）に倣い、このリストを
- * 広げすぎない。判定に迷う新規パターンが出た場合はここへの追記ではなく実装側の見直しを優先する。
+ * UI は無彩（DESIGN.md §1）なので、このリストを広げすぎない。判定に迷うパターンが出たら、
+ * ここへ足すより実装の側を見直す。
  */
 const STATE_SELECTOR_RE =
   /:hover\b|:focus(-visible|-within)?\b|:active\b|:checked\b|::selection\b|\[aria-(current|selected|pressed|checked)\b|\[data-(selected|current|active|state)\b|current|selected|active|correct/i;
 
 /**
- * DESIGN.md §2 是正ゲート（cycle-278 C4）: --accent-weak / --wairo-* が background /
- * background-color の値に使われ、かつそのルールのセレクタが STATE_SELECTOR_RE に一致しない
- * 場合を検出する。結果面(quiz)で発生した「--accent-weak を区画の地に静的に使う」系統的違反
- * （§2「区画の地には不可」）の再発を機械的に検出するための追加ゲート。
+ * --accent-weak / --wairo-* が background / background-color の値に使われ、かつそのルールの
+ * セレクタが STATE_SELECTOR_RE に一致しない宣言を検出する。静的な区画に地を敷かないため。
  */
 function analyzeStaticAccentBackground(css: string, file: string): Violation[] {
   const v: Violation[] = [];
@@ -445,7 +379,7 @@ function analyzeStaticAccentBackground(css: string, file: string): Violation[] {
       file,
       severity: "ERROR",
       code: "§2",
-      message: `${usesAccentWeak ? "--accent-weak" : "--wairo-*"} が状態セレクタを含まないルールの ${prop} に使われている——静的な区画の地への誤用の疑い（DESIGN.md §2: hover/selected の座布団にのみ可）`,
+      message: `${usesAccentWeak ? "--accent-weak" : "--wairo-*"} が状態セレクタを含まないルールの ${prop} に使われている——静的な区画に地を敷いている疑い`,
       declaration: `${selector} { ${prop}: ${value}; }`,
     });
   }
@@ -466,7 +400,7 @@ function analyzeCss(content: string, file: string): Violation[] {
     v.push({ file, severity, code, message, declaration: `${prop}: ${value}` });
 
   for (const { prop, value } of extractDeclarations(content)) {
-    // トークン定義（--*）は検査しない（§10 の指標はトークン「利用」側）。
+    // トークン定義（--*）は検査しない（見るのはトークンの使い方）。
     if (prop.startsWith("--")) continue;
 
     const isRadius =
@@ -475,29 +409,29 @@ function analyzeCss(content: string, file: string): Violation[] {
     const isBackdrop =
       prop === "backdrop-filter" || prop === "-webkit-backdrop-filter";
 
-    // §8-2 グラスモーフィズム
+    // §5 半透明ぼかし
     if (isBackdrop && /\bblur\s*\(/i.test(value)) {
       push(
         "ERROR",
-        "§8-2",
-        "backdrop-filter: blur（グラスモーフィズム）は禁止",
+        "§5",
+        "backdrop-filter: blur（半透明ぼかし）は持たない",
         prop,
         value,
       );
     }
 
-    // §8-6 all-caps（警告）
+    // 英字の全部大文字（警告）
     if (prop === "text-transform" && /\buppercase\b/i.test(value)) {
       push(
         "WARN",
-        "§8-6",
-        "text-transform: uppercase（all-caps 多用は §8-6・視覚レビューで最終判断）",
+        "uppercase",
+        "text-transform: uppercase（英字の全部大文字は目視で確かめる）",
         prop,
         value,
       );
     }
 
-    // §8-5 角丸
+    // §5 角丸
     if (isRadius) {
       const atoms = value
         .replace(/\s*\/\s*/g, " ")
@@ -510,7 +444,7 @@ function analyzeCss(content: string, file: string): Violation[] {
       if (bad.length > 0) {
         push(
           "ERROR",
-          "§8-5",
+          "§5",
           `border-radius は 0 / var(--radius) / var(--radius-sm) / 2px のみ許容（検出: ${bad.join(" ")}）`,
           prop,
           value,
@@ -518,13 +452,13 @@ function analyzeCss(content: string, file: string): Violation[] {
       }
     }
 
-    // §8-7 フォント
+    // §3 書体
     if (isFont) {
       if (BANNED_FONT_RE.test(value)) {
         push(
           "ERROR",
-          "§8-7",
-          "本文書体に欧文既定 sans（Inter/Roboto/Open Sans 等）は禁止",
+          "§3",
+          "本文の書体に欧文の既定の sans（Inter/Roboto/Open Sans 等）は使わない",
           prop,
           value,
         );
@@ -532,8 +466,8 @@ function analyzeCss(content: string, file: string): Violation[] {
       if (/\bmonospace\b/i.test(value)) {
         push(
           "ERROR",
-          "§8-7",
-          "本文の font-family に monospace は禁止（コードは var(--font-mono) 経由）",
+          "§3",
+          "本文の font-family に monospace は使わない（コードは var(--font-mono) 経由）",
           prop,
           value,
         );
@@ -542,15 +476,15 @@ function analyzeCss(content: string, file: string): Violation[] {
 
     if (!COLOR_PROPS.has(prop)) continue;
 
-    // §8-1 全面グラデーション背景（警告・面積は視覚レビュー）
+    // §5 グラデーション背景（警告・色が中身かどうかは目視で確かめる）
     if (
       (prop === "background" || prop === "background-image") &&
       /\b(linear|radial|conic)-gradient\s*\(/i.test(value)
     ) {
       push(
         "WARN",
-        "§8-1",
-        "gradient 背景を検出（全面グラデーションは §8-1 禁止・面積は視覚レビューで判断）",
+        "§5",
+        "gradient 背景を検出（グラデーションは持たない。中身の表示かどうかを目視で確かめる）",
         prop,
         value,
       );
@@ -561,20 +495,20 @@ function analyzeCss(content: string, file: string): Violation[] {
       if (value.toLowerCase() === "none") continue;
       const colored = literals.filter((lit) => !isNeutralColor(lit));
       if (colored.length > 0) {
-        // §8-2 色付き影・グロー
+        // §5 色付きの影・グロー
         push(
           "ERROR",
-          "§8-2",
-          `色付き ${prop}（グロー/色影）は禁止（検出: ${colored.join(", ")}）`,
+          "§5",
+          `色付き ${prop}（グロー/色影）は持たない（検出: ${colored.join(", ")}）`,
           prop,
           value,
         );
       } else {
-        // 中性影 or var() 参照 → §4「操作フィードバックの最小限のみ許容」の可能性・人手確認
+        // 中性の影や var() 参照は、目視で確かめる
         push(
           "WARN",
-          "§8-2",
-          `${prop} を検出。§4「影は原則なし」——最小限の操作フィードバックか視覚レビューで確認`,
+          "§5",
+          `${prop} を検出。影は持たない（§5）——目視で確認`,
           prop,
           value,
         );
@@ -582,37 +516,37 @@ function analyzeCss(content: string, file: string): Violation[] {
       continue;
     }
 
-    // §8-1 紫〜青の色関数（hue 250〜320）
+    // §2 青〜紫の色関数（hue 250〜320）
     for (const lit of literals) {
       if (isPurpleHue(hueOf(lit))) {
         push(
           "ERROR",
-          "§8-1",
-          `紫〜青（indigo/violet）のアクセントを検出（${lit}）`,
+          "§2",
+          `青〜紫（indigo/violet）の色を検出（${lit}）`,
           prop,
           value,
         );
       }
     }
 
-    // §10 色の直書き（トークン非経由）。中性スクリムは慣例的例外として許容。
+    // §12 色の直書き（トークンを経由しない）。中性のスクリムは許す。
     const rawNonNeutral = literals.filter((lit) => !isNeutralColor(lit));
     if (rawNonNeutral.length > 0) {
       push(
         "ERROR",
-        "§10",
-        `色の直書きを検出（トークン経由が原則: ${rawNonNeutral.join(", ")}）`,
+        "§12",
+        `色の直書きを検出（トークンを経由する: ${rawNonNeutral.join(", ")}）`,
         prop,
         value,
       );
     }
   }
-  // §2 是正ゲート（cycle-278 C4）: --accent-weak/--wairo-* の静的背景誤用。
+  // §2 --accent-weak/--wairo-* を静的な区画の地に使っていないか。
   v.push(...analyzeStaticAccentBackground(content, file));
   return v;
 }
 
-// ── TSX 解析（インライン style オブジェクトのみ・新デザイン面の chrome 用）────────────
+// ── TSX 解析（インライン style オブジェクト）──────────────────────────────────
 
 function analyzeTsx(content: string, file: string): Violation[] {
   const v: Violation[] = [];
@@ -633,15 +567,15 @@ function analyzeTsx(content: string, file: string): Violation[] {
     if (/backdropFilter\s*:\s*[^,}]*blur\s*\(/i.test(block)) {
       push(
         "ERROR",
-        "§8-2",
-        "インライン style の backdropFilter: blur（グラスモーフィズム）は禁止",
+        "§5",
+        "インライン style の backdropFilter: blur（半透明ぼかし）は持たない",
       );
     }
     if (BANNED_FONT_RE.test(block) && /fontFamily/i.test(block)) {
       push(
         "ERROR",
-        "§8-7",
-        "インライン style の fontFamily に欧文既定 sans は禁止",
+        "§3",
+        "インライン style の fontFamily に欧文の既定の sans は使わない",
       );
     }
     const brMatch = block.match(/borderRadius\s*:\s*["'`]([^"'`]+)["'`]/);
@@ -654,15 +588,15 @@ function analyzeTsx(content: string, file: string): Violation[] {
       if (bad.length > 0)
         push(
           "ERROR",
-          "§8-5",
+          "§5",
           `インライン style の borderRadius が不許容（${bad.join(" ")}）`,
         );
     }
     for (const lit of colorLiterals(block)) {
       if (isNeutralColor(lit)) continue;
       if (isPurpleHue(hueOf(lit)))
-        push("ERROR", "§8-1", `インライン style に紫〜青の色（${lit}）`);
-      push("ERROR", "§10", `インライン style の色直書き（${lit}）`);
+        push("ERROR", "§2", `インライン style に青〜紫の色（${lit}）`);
+      push("ERROR", "§12", `インライン style の色直書き（${lit}）`);
     }
   }
   return v;
@@ -671,35 +605,34 @@ function analyzeTsx(content: string, file: string): Violation[] {
 // ── テンプレート埋め込みデザイン面の解析（middleware 410 / global-not-found）────────────
 //
 // analyzeCss は「CSS 宣言ブロック `{…}`」を、analyzeTsx は「JSX の style={{…}} オブジェクト」を
-// 前提とするため、テンプレート文字列内に素の CSS/HTML を持つ面には効かない。ここでは §8 が
-// 名指しで禁じる具体パターンだけを生テキストへ正規表現で当てる的を絞った検査を行う。一般の
-// hex 直書き検査（§10）はしない——これらの面は器の紙/墨 hex を正当に直書きするため。
+// 前提とするため、テンプレート文字列内に素の CSS/HTML を持つ面には効かない。ここでは具体的な
+// パターンだけを生テキストへ正規表現で当てる。一般の hex 直書き検査（§12）はしない——これらの
+// 面は紙・墨の hex を正当に直書きするため。
 
 /**
- * §8-1「紫〜青（indigo/violet）のアクセントは使わない」で名指しされる、旧ブランドの青紫系 hex。
- * 埋め込み CSS/HTML は import 経由のトークン化ができず hex を直書きするため、この旧ブランド色
- * （旧 OGP/旧 410 ページの青・冷色スレート）の再混入だけを的を絞って弾く。器の紙/墨/罫
+ * 無彩の UI（§2）に入り込みやすい青・青紫・冷色スレートの hex。埋め込み CSS/HTML は
+ * トークンを import できず hex を直書きするため、これらの色だけを的を絞って弾く。紙・墨・罫
  * （@/lib/utsuwaHex）は正当なので一般 hex 検査はしない（誤検知回避）。
  */
 const BANNED_EMBEDDED_HEX: readonly string[] = [
-  "#2563eb", // 旧ブランドの青（blue-600・旧ボタン/リンク地）
-  "#1d4ed8", // 旧ブランドの青（blue-700・旧 hover）
+  "#2563eb", // blue-600
+  "#1d4ed8", // blue-700
   "#3b82f6", // blue-500
   "#7c3aed", // violet-600
   "#6d28d9", // violet-700
   "#4f46e5", // indigo-600
-  "#f8fafc", // 冷色スレート地（slate-50・§2 の「紙」ではない冷たい白）
+  "#f8fafc", // 冷色スレート地（slate-50・無彩でない冷たい白）
   "#1e293b", // 冷色スレート（slate-800）
 ];
 
 /**
- * 絵文字（§8-6: 見出し/ナビ/ボタンの絵文字は不可）。CJK（漢字/かな）を巻き込まないよう
+ * 絵文字（§5: どこにも置かない）。CJK（漢字/かな）を巻き込まないよう
  * 絵文字ブロック（記号・ダインバット・絵文字・補助記号・絵文字異体字セレクタ）に限定する。
  */
 const EMOJI_RE =
   /[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE0F}]/u;
 
-/** border-radius の値を atom 配列へ分解し、非許容 atom（§8-5）を返す（analyzeCss と同一規則）。 */
+/** border-radius の値を atom 配列へ分解し、非許容 atom（§5）を返す（analyzeCss と同一規則）。 */
 function disallowedRadiusAtoms(value: string): string[] {
   return value
     .replace(/\s*\/\s*/g, " ")
@@ -711,11 +644,10 @@ function disallowedRadiusAtoms(value: string): string[] {
 
 /**
  * テンプレート文字列に CSS/HTML を埋め込む稼働デザイン面（EMBEDDED_DESIGN_FILES）を生テキストで
- * 検査する。検出対象は §8 が名指しで禁じる具体パターンに限定する:
- *   §8-1  旧ブランドの青紫 hex（BANNED_EMBEDDED_HEX）／青紫 hue の色関数（oklch/hsl/hwb・250〜320）
- *   §8-5  非許容の border-radius（0 / var(--radius) / var(--radius-sm) / 2px 以外）
- *   §8-6  絵文字
- * 器の紙/墨 hex は正当なので一般 hex 検査（§10）はしない。/* *​/ コメント内は検査しない。
+ * 検査する。検出対象は次の具体パターンに限る:
+ *   §2  青・青紫の hex（BANNED_EMBEDDED_HEX）／青〜紫 hue の色関数（oklch/hsl/hwb・250〜320）
+ *   §5  非許容の border-radius（0 / var(--radius) / var(--radius-sm) / 2px 以外）・絵文字
+ * 紙・墨の hex は正当なので一般 hex 検査（§12）はしない。/* *​/ コメント内は検査しない。
  */
 function analyzeEmbeddedDesign(content: string, file: string): Violation[] {
   const v: Violation[] = [];
@@ -723,45 +655,209 @@ function analyzeEmbeddedDesign(content: string, file: string): Violation[] {
   const push = (code: string, message: string, declaration: string) =>
     v.push({ file, severity: "ERROR", code, message, declaration });
 
-  // §8-1 旧ブランドの青紫 hex の再混入。
+  // §2 青・青紫の hex。
   const lower = text.toLowerCase();
   for (const hex of BANNED_EMBEDDED_HEX) {
     if (lower.includes(hex)) {
-      push("§8-1", `旧ブランドの青紫系 hex（${hex}）の直書きを検出`, hex);
+      push("§2", `青・青紫系の hex（${hex}）の直書きを検出`, hex);
     }
   }
 
-  // §8-1 青紫 hue の色関数。器 hex は極座標 hue を持たない（hueOf=null）ため対象外。
+  // §2 青〜紫 hue の色関数。hex は極座標 hue を持たない（hueOf=null）ため対象外。
   for (const lit of colorLiterals(text)) {
     if (isPurpleHue(hueOf(lit))) {
-      push("§8-1", `紫〜青（indigo/violet）の色関数を検出（${lit}）`, lit);
+      push("§2", `青〜紫（indigo/violet）の色関数を検出（${lit}）`, lit);
     }
   }
 
-  // §8-5 非許容の角丸（テンプレート CSS の border-radius 宣言）。
+  // §5 非許容の角丸（テンプレート CSS の border-radius 宣言）。
   for (const mm of text.matchAll(/border-radius\s*:\s*([^;}"'`]+)/gi)) {
     const value = mm[1].trim();
     const bad = disallowedRadiusAtoms(value);
     if (bad.length > 0) {
       push(
-        "§8-5",
+        "§5",
         `border-radius は 0 / var(--radius) / var(--radius-sm) / 2px のみ許容（検出: ${bad.join(" ")}）`,
         `border-radius: ${value}`,
       );
     }
   }
 
-  // §8-6 絵文字（見出し/ナビ/ボタン）。
+  // §5 絵文字。
   const emoji = text.match(EMOJI_RE);
   if (emoji) {
-    push(
-      "§8-6",
-      "絵文字を検出（見出し/ナビ/ボタンの絵文字は §8-6 で不可）",
-      emoji[0],
-    );
+    push("§5", "絵文字を検出（絵文字はどこにも置かない）", emoji[0]);
   }
 
   return v;
+}
+
+// ── 見出しの書体のウェイト（§3・§4）──────────────────────────────────────
+//
+// 見出しの書体 Zen Antique はウェイト 400 の1本だけを配る。見出しの書体で組む要素に 400 以外の
+// ウェイトが当たると、ブラウザが合成太字を作り、字の中の空きが潰れる（§4「合成太字を作らない」）。
+// 見出しにウェイトの差も使わない（§3）。見出しの書体で組む要素は次の3通りで生まれるので、
+// それぞれに当たるウェイトを検査する:
+//   1. font-family に var(--font-heading) を当てたクラス（同じファイルの別のルールのウェイトも見る）
+//   2. globals.css が見出しの書体を当てる h1〜h6 を、要素セレクタで指すルール
+//   3. TSX で h1〜h6 に付けたクラス（そのクラスが本文の書体へ替えていないもの）
+
+const HEADING_FONT_RE = /var\(--font-heading\)/;
+const HEADING_ELEMENT_RE = /(^|[^\w.#-])h[1-6](?![\w-])/;
+const REGULAR_WEIGHTS = new Set([
+  "400",
+  "normal",
+  "inherit",
+  "initial",
+  "unset",
+]);
+
+/** セレクタの最後の複合セレクタ（スタイルが当たる要素を表す部分）。 */
+function subjectOf(selector: string): string {
+  const parts = selector.trim().split(/\s*[\s>+~]\s*/);
+  return parts[parts.length - 1] ?? "";
+}
+
+/** 複合セレクタが持つクラス名。 */
+function classesOf(compound: string): string[] {
+  return [...compound.matchAll(/\.([A-Za-z_][\w-]*)/g)].map((m) => m[1]);
+}
+
+interface WeightRule {
+  selector: string;
+  subject: string;
+  fontFamily: string | null;
+  fontWeight: string | null;
+}
+
+/** CSS のルールを、セレクタごとに font-family と font-weight の宣言へまとめる。 */
+function weightRules(css: string): WeightRule[] {
+  const out: WeightRule[] = [];
+  postcss.parse(css).walkRules((rule) => {
+    let fontFamily: string | null = null;
+    let fontWeight: string | null = null;
+    rule.each((node) => {
+      if (node.type !== "decl") return;
+      if (node.prop === "font-family") fontFamily = node.value;
+      if (node.prop === "font-weight") fontWeight = node.value;
+    });
+    for (const selector of rule.selectors) {
+      out.push({
+        selector,
+        subject: subjectOf(selector),
+        fontFamily,
+        fontWeight,
+      });
+    }
+  });
+  return out;
+}
+
+const isRegularWeight = (weight: string): boolean =>
+  REGULAR_WEIGHTS.has(weight.trim().toLowerCase());
+
+/** 見出しの書体を当てたクラスの集合。 */
+function headingFontClasses(rules: WeightRule[]): Set<string> {
+  const classes = new Set<string>();
+  for (const rule of rules) {
+    if (rule.fontFamily !== null && HEADING_FONT_RE.test(rule.fontFamily)) {
+      for (const cls of classesOf(rule.subject)) classes.add(cls);
+    }
+  }
+  return classes;
+}
+
+/** 1・2: CSS の中で、見出しの書体で組む要素に 400 以外のウェイトを当てた宣言。 */
+function analyzeHeadingWeightCss(content: string, file: string): Violation[] {
+  const rules = weightRules(content);
+  const headingClasses = headingFontClasses(rules);
+  const v: Violation[] = [];
+  for (const rule of rules) {
+    if (rule.fontWeight === null || isRegularWeight(rule.fontWeight)) continue;
+    const setsBodyFont =
+      rule.fontFamily !== null && !HEADING_FONT_RE.test(rule.fontFamily);
+    if (setsBodyFont) continue;
+    const setsHeadingFont =
+      rule.fontFamily !== null && HEADING_FONT_RE.test(rule.fontFamily);
+    const targetsHeadingClass = classesOf(rule.subject).some((cls) =>
+      headingClasses.has(cls),
+    );
+    const targetsHeadingElement = HEADING_ELEMENT_RE.test(rule.subject);
+    if (setsHeadingFont || targetsHeadingClass || targetsHeadingElement) {
+      v.push({
+        file,
+        severity: "ERROR",
+        code: "§3",
+        message: `見出しの書体で組む要素に font-weight: ${rule.fontWeight}（Zen Antique は 400 だけで、ほかは合成太字になる）`,
+        declaration: `${rule.selector} { font-weight: ${rule.fontWeight}; }`,
+      });
+    }
+  }
+  return v;
+}
+
+/** TSX の `import x from "….module.css"` を、プロジェクトルートからのパスへ解決する。 */
+function cssModuleImports(content: string, file: string): Map<string, string> {
+  const imports = new Map<string, string>();
+  for (const m of content.matchAll(
+    /import\s+(\w+)\s+from\s+["']([^"']+\.module\.css)["']/g,
+  )) {
+    const [, alias, spec] = m;
+    const resolved = spec.startsWith("@/")
+      ? path.join("src", spec.slice(2))
+      : path.join(path.dirname(file), spec);
+    imports.set(alias, resolved.replace(/\\/g, "/"));
+  }
+  return imports;
+}
+
+/** 3: TSX の h1〜h6 に付けたクラスが、本文の書体へ替えずに 400 以外のウェイトを当てている。 */
+function analyzeHeadingWeightTsx(
+  content: string,
+  file: string,
+  readCss: (cssPath: string) => string | null,
+): Violation[] {
+  const imports = cssModuleImports(content, file);
+  if (imports.size === 0) return [];
+  const v: Violation[] = [];
+  for (const tag of content.matchAll(/<h([1-6])\b([^>]*)>/g)) {
+    const attrs = tag[2];
+    for (const [alias, cssPath] of imports) {
+      const refs = attrs.matchAll(
+        new RegExp(`\\b${alias}(?:\\.(\\w+)|\\[["'](\\w+)["']\\])`, "g"),
+      );
+      for (const ref of refs) {
+        const cls = ref[1] ?? ref[2];
+        const css = readCss(cssPath);
+        if (css === null) continue;
+        const rules = weightRules(css).filter((rule) =>
+          classesOf(rule.subject).includes(cls),
+        );
+        const setsBodyFont = rules.some(
+          (rule) =>
+            rule.fontFamily !== null && !HEADING_FONT_RE.test(rule.fontFamily),
+        );
+        if (setsBodyFont) continue;
+        for (const rule of rules) {
+          if (rule.fontWeight === null || isRegularWeight(rule.fontWeight))
+            continue;
+          v.push({
+            file,
+            severity: "ERROR",
+            code: "§3",
+            message: `<h${tag[1]}> に付けた .${cls}（${cssPath}）が font-weight: ${rule.fontWeight} を当てている（見出しの書体は 400 だけ）`,
+            declaration: `${rule.selector} { font-weight: ${rule.fontWeight}; }`,
+          });
+        }
+      }
+    }
+  }
+  return v;
+}
+
+function readProjectCss(cssPath: string): string | null {
+  const abs = path.join(PROJECT_ROOT, cssPath);
+  return fs.existsSync(abs) ? fs.readFileSync(abs, "utf-8") : null;
 }
 
 // ── 実行ヘルパ ───────────────────────────────────────────────────────────
@@ -803,13 +899,19 @@ const fmt = (vs: Violation[]) =>
 
 // ── テスト ───────────────────────────────────────────────────────────────
 
-describe("DESIGN.md §8 機械ゲート（新デザイン面）", () => {
-  const cssViolations = scan(NEW_DESIGN_CSS, analyzeCss);
-  const tsxViolations = scan(NEW_DESIGN_TSX, analyzeTsx);
+describe("DESIGN.md の機械の検査", () => {
+  const cssViolations = scan(DESIGN_CSS_GLOBS, analyzeCss);
+  const tsxViolations = scan(DESIGN_TSX_GLOBS, analyzeTsx);
+  const headingWeightViolations = [
+    ...scan(DESIGN_CSS_GLOBS, analyzeHeadingWeightCss),
+    ...scan(DESIGN_TSX_GLOBS, (content, file) =>
+      analyzeHeadingWeightTsx(content, file, readProjectCss),
+    ),
+  ];
   const embeddedViolations = scan(EMBEDDED_DESIGN_FILES, analyzeEmbeddedDesign);
 
   test("対象 CSS がゲート対象に含まれていること（設定の空振り検出）", () => {
-    const files = fg.sync(NEW_DESIGN_CSS, {
+    const files = fg.sync(DESIGN_CSS_GLOBS, {
       cwd: PROJECT_ROOT,
       ignore: IGNORE,
     });
@@ -817,13 +919,13 @@ describe("DESIGN.md §8 機械ゲート（新デザイン面）", () => {
     expect(files).toContain("src/app/globals.css");
   });
 
-  // 各 glob が最低 1 ファイルに一致することを個別に検査する。fast-glob は `[param]` を
-  // メタ文字と誤解釈して 0 件で黙って素通りしやすい（過去、辞典トップ4面の glob が全て空振り
-  // していた）。集合全体の length>0 では個々の空振りを検出できないため、glob 単位で担保する。
+  // 各 glob が最低 1 ファイルに一致することを個別に検査する。fast-glob はメタ文字を含む
+  // literal パスを 0 件で黙って素通りしやすく、集合全体の length>0 では個々の空振りを
+  // 検出できないため、glob 単位で担保する。
   test("各 glob が実ファイルに一致すること（空振り glob の検出）", () => {
     const empty = [
-      ...NEW_DESIGN_CSS,
-      ...NEW_DESIGN_TSX,
+      ...DESIGN_CSS_GLOBS,
+      ...DESIGN_TSX_GLOBS,
       ...EMBEDDED_DESIGN_FILES,
     ].filter(
       (g) => fg.sync(g, { cwd: PROJECT_ROOT, ignore: IGNORE }).length === 0,
@@ -834,77 +936,78 @@ describe("DESIGN.md §8 機械ゲート（新デザイン面）", () => {
     ).toEqual([]);
   });
 
-  test("新デザイン面の CSS に §8 違反（ERROR）が無いこと", () => {
+  test("CSS に違反（ERROR）が無いこと", () => {
     const errors = cssViolations.filter((x) => x.severity === "ERROR");
     const warns = cssViolations.filter((x) => x.severity === "WARN");
     if (warns.length > 0) {
-      // 警告は fail させない（§4 最小影・§8-1 gradient 面積・§8-6 all-caps は視覚レビューで最終判断）。
+      // 警告は fail させない（影・グラデーション・英字の全部大文字は目視で最終判断する）。
       console.warn(
         `\n[design-gate] CSS 警告 ${warns.length} 件（視覚レビューへ）:\n${fmt(warns)}`,
       );
     }
-    expect(
-      errors,
-      `\n新デザイン面の CSS に §8 違反:\n${fmt(errors)}\n`,
-    ).toEqual([]);
+    expect(errors, `\nCSS に違反:\n${fmt(errors)}\n`).toEqual([]);
   });
 
-  test("新デザイン面の TSX（インライン style）に §8 違反（ERROR）が無いこと", () => {
+  test("TSX（インライン style）に違反（ERROR）が無いこと", () => {
     const errors = tsxViolations.filter((x) => x.severity === "ERROR");
-    expect(
-      errors,
-      `\n新デザイン面の TSX に §8 違反:\n${fmt(errors)}\n`,
-    ).toEqual([]);
+    expect(errors, `\nTSX に違反:\n${fmt(errors)}\n`).toEqual([]);
   });
 
-  test("テンプレート埋め込みデザイン面（middleware 410 / global-not-found）に §8 違反（ERROR）が無いこと", () => {
+  test("テンプレート埋め込みデザイン面（middleware 410 / global-not-found）に違反（ERROR）が無いこと", () => {
     const errors = embeddedViolations.filter((x) => x.severity === "ERROR");
     expect(
       errors,
-      `\nテンプレート埋め込みデザイン面に §8 違反:\n${fmt(errors)}\n`,
+      `\nテンプレート埋め込みデザイン面に違反:\n${fmt(errors)}\n`,
+    ).toEqual([]);
+  });
+
+  test("見出しの書体で組む要素のウェイトが 400 であること（合成太字を作らない）", () => {
+    expect(
+      headingWeightViolations,
+      `\n見出しの書体で組む要素に 400 以外のウェイト:\n${fmt(headingWeightViolations)}\n`,
     ).toEqual([]);
   });
 });
 
 /**
- * ゲート自身の検出力の回帰テスト（合成入力）。実ファイルを汚さずに「わざと違反を混ぜたら
- * 検出できる」ことを恒久的に担保する（タスク要件の自己検証）。
+ * 検査そのものの検出力（合成入力）。実ファイルを汚さずに、違反を混ぜたら検出でき、
+ * 正当なものを誤検知しないことを確かめる。
  */
-describe("§8 機械ゲートの検出力（合成入力）", () => {
-  test("§8-1 紫の色関数を検出", () => {
+describe("機械の検査の検出力（合成入力）", () => {
+  test("§2 青〜紫の色関数を検出", () => {
     const vs = analyzeCss(`.x { color: oklch(0.6 0.2 270); }`, "synthetic.css");
-    expect(vs.some((x) => x.code === "§8-1")).toBe(true);
+    expect(vs.some((x) => x.code === "§2")).toBe(true);
   });
-  test("§8-2 グラスモーフィズムを検出", () => {
+  test("§5 半透明ぼかしを検出", () => {
     const vs = analyzeCss(
       `.x { backdrop-filter: blur(8px); }`,
       "synthetic.css",
     );
-    expect(vs.some((x) => x.code === "§8-2")).toBe(true);
+    expect(vs.some((x) => x.code === "§5")).toBe(true);
   });
-  test("§8-2 色付き box-shadow を検出", () => {
+  test("§5 色付き box-shadow を検出", () => {
     const vs = analyzeCss(
       `.x { box-shadow: 0 0 20px oklch(0.6 0.2 270); }`,
       "synthetic.css",
     );
-    expect(vs.some((x) => x.code === "§8-2" && x.severity === "ERROR")).toBe(
+    expect(vs.some((x) => x.code === "§5" && x.severity === "ERROR")).toBe(
       true,
     );
   });
-  test("§8-5 ピル形状 border-radius を検出", () => {
+  test("§5 ピル形状 border-radius を検出", () => {
     const vs = analyzeCss(`.x { border-radius: 9999px; }`, "synthetic.css");
-    expect(vs.some((x) => x.code === "§8-5")).toBe(true);
+    expect(vs.some((x) => x.code === "§5")).toBe(true);
   });
-  test("§8-7 本文書体 Inter を検出", () => {
+  test("§3 本文の書体 Inter を検出", () => {
     const vs = analyzeCss(
       `.x { font-family: Inter, sans-serif; }`,
       "synthetic.css",
     );
-    expect(vs.some((x) => x.code === "§8-7")).toBe(true);
+    expect(vs.some((x) => x.code === "§3")).toBe(true);
   });
-  test("§10 色の直書き（hex）を検出", () => {
+  test("§12 色の直書き（hex）を検出", () => {
     const vs = analyzeCss(`.x { color: #3366ff; }`, "synthetic.css");
-    expect(vs.some((x) => x.code === "§10")).toBe(true);
+    expect(vs.some((x) => x.code === "§12")).toBe(true);
   });
   test("中性スクリム rgba(0,0,0,α) は許容（誤検知しない）", () => {
     const vs = analyzeCss(
@@ -925,10 +1028,10 @@ describe("§8 機械ゲートの検出力（合成入力）", () => {
       `<div style={{ fontFamily: "Inter, sans-serif" }} />`,
       "synthetic.tsx",
     );
-    expect(vs.some((x) => x.code === "§8-7")).toBe(true);
+    expect(vs.some((x) => x.code === "§3")).toBe(true);
   });
 
-  // §2 是正ゲート（cycle-278 C4）: --accent-weak/--wairo-* の静的背景誤用を検出する追加ゲート。
+  // §2 --accent-weak/--wairo-* を静的な区画の地に使う宣言の検出。
   test("§2 静的セレクタの --accent-weak 背景（区画の地）を検出", () => {
     const vs = analyzeCss(
       `.todayActionCard { background: var(--accent-weak); }`,
@@ -969,7 +1072,7 @@ describe("§8 機械ゲートの検出力（合成入力）", () => {
       true,
     );
   });
-  test("§2 background 以外のプロパティに使う --wairo-* は対象外（誤検知しない・成果物中身の色）", () => {
+  test("§2 background 以外のプロパティに使う --wairo-* は対象外（誤検知しない）", () => {
     const vs = analyzeCss(
       `.barFill { background-color: var(--extra-fill); }
        .wrapper[data-color="kurenai"] { --extra-fill: var(--wairo-kurenai); }`,
@@ -979,29 +1082,29 @@ describe("§8 機械ゲートの検出力（合成入力）", () => {
   });
 
   // 埋め込みデザイン面（middleware 410 / global-not-found）の的を絞った検査の検出力。
-  test("埋め込み面: 旧ブランドの青 hex（#2563eb）を検出", () => {
+  test("埋め込み面: 青の hex（#2563eb）を検出", () => {
     const vs = analyzeEmbeddedDesign(
       `body{background:#2563eb;color:#fff}`,
       "synthetic.ts",
     );
-    expect(vs.some((x) => x.code === "§8-1")).toBe(true);
+    expect(vs.some((x) => x.code === "§2")).toBe(true);
   });
   test("埋め込み面: 青紫 hue の色関数を検出", () => {
     const vs = analyzeEmbeddedDesign(
       `.x{color:oklch(0.6 0.2 270)}`,
       "synthetic.ts",
     );
-    expect(vs.some((x) => x.code === "§8-1")).toBe(true);
+    expect(vs.some((x) => x.code === "§2")).toBe(true);
   });
   test("埋め込み面: 非許容の角丸（8px）を検出", () => {
     const vs = analyzeEmbeddedDesign(`a{border-radius:8px}`, "synthetic.ts");
-    expect(vs.some((x) => x.code === "§8-5")).toBe(true);
+    expect(vs.some((x) => x.code === "§5")).toBe(true);
   });
   test("埋め込み面: 絵文字を検出", () => {
     const vs = analyzeEmbeddedDesign(`<a>トップへ ✨</a>`, "synthetic.ts");
-    expect(vs.some((x) => x.code === "§8-6")).toBe(true);
+    expect(vs.some((x) => x.code === "§5")).toBe(true);
   });
-  test("埋め込み面: 旧ブランドの青紫でない hex と角丸0は誤検知しない", () => {
+  test("埋め込み面: 青紫でない hex と角丸0は誤検知しない", () => {
     const vs = analyzeEmbeddedDesign(
       `body{background:#f8f7f2;color:#201e1a;border-top:1px solid #cdcac5}
        a.home{color:#af3622;border-radius:0}`,
@@ -1014,6 +1117,53 @@ describe("§8 機械ゲートの検出力（合成入力）", () => {
       `<h1>このコンテンツは終了しました</h1>`,
       "synthetic.ts",
     );
-    expect(vs.filter((x) => x.code === "§8-6")).toEqual([]);
+    expect(vs.filter((x) => x.code === "§5")).toEqual([]);
+  });
+
+  // 見出しの書体のウェイト（§3・§4）。
+  test("見出しの書体を当てたルールの font-weight: 600 を検出", () => {
+    const vs = analyzeHeadingWeightCss(
+      `.character { font-family: var(--font-heading); font-weight: 600; }`,
+      "synthetic.css",
+    );
+    expect(vs.some((x) => x.code === "§3")).toBe(true);
+  });
+  test("見出しの書体を当てたクラスへ別のルールで当てたウェイトを検出", () => {
+    const vs = analyzeHeadingWeightCss(
+      `.title { font-family: var(--font-heading); }
+       @media (min-width: 45rem) { .title { font-weight: bold; } }`,
+      "synthetic.css",
+    );
+    expect(vs.some((x) => x.code === "§3")).toBe(true);
+  });
+  test("h1〜h6 を要素セレクタで指すルールのウェイトを検出", () => {
+    const vs = analyzeHeadingWeightCss(
+      `.card h3 { font-weight: 700; }`,
+      "synthetic.css",
+    );
+    expect(vs.some((x) => x.code === "§3")).toBe(true);
+  });
+  test("h1〜h6 に付けたクラスのウェイトを検出", () => {
+    const css = `.heading { font-size: 1.5rem; font-weight: 600; }`;
+    const vs = analyzeHeadingWeightTsx(
+      `import styles from "./X.module.css";
+       export const X = () => <h2 className={styles.heading}>見出し</h2>;`,
+      "src/synthetic/X.tsx",
+      (cssPath) => (cssPath === "src/synthetic/X.module.css" ? css : null),
+    );
+    expect(vs.some((x) => x.code === "§3")).toBe(true);
+  });
+  test("ウェイト 400 と、本文の書体へ替えたルールのウェイトは誤検知しない", () => {
+    const css = `.heading { font-family: var(--font-heading); font-weight: 400; }
+       .label { font-family: var(--font-body); font-weight: 700; }
+       .h2Like { font-weight: 700; }`;
+    expect(analyzeHeadingWeightCss(css, "synthetic.css")).toEqual([]);
+    const vs = analyzeHeadingWeightTsx(
+      `import styles from "./X.module.css";
+       export const X = () => <h2 className={styles.label}>見出し</h2>;`,
+      "src/synthetic/X.tsx",
+      () => css,
+    );
+    expect(vs).toEqual([]);
   });
 });

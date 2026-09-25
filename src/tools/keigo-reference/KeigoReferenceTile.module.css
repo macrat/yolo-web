@@ -1,14 +1,12 @@
 /* KeigoReferenceTile.module.css
- * cycle-228 T-18: KeigoReferencePage.module.css をタイル向けに移植。
  * Panel がルート要素のため .container クラスは不要（Panel.module.css に委譲）。
  *
- * フェーズR C5: 新デザイントークン（紙・墨）へ移行。
- * DESIGN トークン準拠:
+ * 組み方:
  * - font-weight の最大値は 600（700以上は禁止）
  * - 角丸は --radius（0）に統一・フォーム境界線は --rule-strong
  * - 「よくある間違い」の 誤/正 は色分けしない。誤は墨（--ink）、
  *   正は--accentで「持ち帰るべき正答」だけを強調する。
- *   誤/正の区別は文言ラベル「誤:」「正:」が担う（DESIGN §2）。
+ *   誤/正の区別は文言ラベル「誤:」「正:」が担う。
  */
 
 /* タイル内レイアウト（Panel のパディング内側） */
@@ -94,7 +92,7 @@
  * <th scope="row"> 内の実 <button> にインタラクションを持たせる。
  * ボタンはテキストとして見えるように外観をリセット。
  * <tr> に role="button" を付けると ARIA in HTML 仕様に違反するため
- * この設計を採用（cycle-225 reviewer指摘1対応）。
+ * この設計にする。
  */
 .expandButton {
   background: none;

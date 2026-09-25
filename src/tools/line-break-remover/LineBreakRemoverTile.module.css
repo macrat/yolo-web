@@ -1,6 +1,4 @@
 /* LineBreakRemoverTile スタイル
- * cycle-228 T-4: LineBreakRemoverPage.module.css をタイル向けに移植。
- * フェーズR C5: 新デザイントークン（紙・墨）へ移行。
  * 本ファイルは補足文字（--ink-2）のみ持つ軽量レイアウト。
  *
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。

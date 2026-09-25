@@ -13,8 +13,7 @@ import DictionarySearch, {
 } from "@/dictionary/_components/DictionarySearch";
 import styles from "./page.module.css";
 
-// 収録色数はデータ層から動的に算出する（メタ文言の「250色」ハードコードを排し、
-// 色の増減時にメタが自動追従するようにする。B-541 の colors 分回収）。
+// 収録色数はデータ層から算出し、色の増減にメタ文言が追従するようにする。
 const colorCount = getAllColors().length;
 
 export const metadata: Metadata = {
@@ -59,7 +58,7 @@ export default function ColorsIndexPage() {
     });
 
   // 検索器（共有の器）へ渡す正規化データ。表示は色名＋ローマ字＋色見本（成果物の中身＝和色・§2）＋
-  // カラーコード/色みの値札、検索対象（haystack）は色名・ローマ字・HEX を連結（旧 ColorsIndexClient と同じ範囲）。
+  // カラーコード/色みの値札、検索対象（haystack）は色名・ローマ字・HEX を連結。
   const colorSearchItems: DictionarySearchItem[] = allColors.map((c) => ({
     key: c.slug,
     name: c.name,
@@ -92,7 +91,7 @@ export default function ColorsIndexPage() {
         ]}
       />
 
-      {/* 名乗り（読む面）。何が引けるかを具体で（§6）。器は静か・色見本は成果物側に置く（§2）。 */}
+      {/* 名乗り（読む面）。何が引けるかを具体で（§9）。器は静か・色見本は成果物側に置く（§2）。 */}
       <div className={styles.intro}>
         <h1 className={styles.title}>日本の伝統色</h1>
         <p className={styles.lead}>
@@ -103,7 +102,7 @@ export default function ColorsIndexPage() {
         </p>
       </div>
 
-      {/* 棚1: 色名・コードから探す（引く体験の主役・§7）。共有の検索器で品書き＋色見本を出す。 */}
+      {/* 棚1: 色名・コードから探す（引く体験の主役）。共有の検索器で品書き＋色見本を出す。 */}
       <div className={styles.shelf}>
         <DictionarySearch
           heading="色名・コードから探す"

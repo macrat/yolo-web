@@ -1,12 +1,11 @@
 /*
- * ⚠️ 結果ページルート /play/[slug]/result/[resultId] のスタイル（新デザイン体系・DESIGN.md）。
+ * ⚠️ 結果ページルート /play/[slug]/result/[resultId] のスタイル。
  * このページは第三者向けのシェア／検索ランディング専用で、受検者本人には表示されない
  * （本人は /play/[slug] 上のインライン結果＝ResultCard 経由で見る）。
  *
  * character-personality 専用結果ページのスタイル。
  * インライン結果（ResultCard）とトーン統一する: 無彩・左寄せ・絵文字マーカーなし・
- * クイズごとの派手色（タイプ色＝--type-color）を使わず共通 --accent に寄せる。新トークンのみ使用。
- * 旧デザインの colorHero（タイプ色を敷いたヒーローエリア）は撤去した。
+ * クイズごとの派手色（タイプ色＝--type-color）を使わず共通 --accent に寄せる。
  *
  * 共通コンテンツセクション（キャラ解説〜全タイプ一覧）のスタイルは
  * CharacterPersonalityContent.module.css に集約されている。
@@ -41,8 +40,7 @@
   margin-bottom: 0;
 }
 
-/* 主要 CTA: 罫の線画（トップページ .heroLink と同じ語彙・ピル/塗り/影禁止）。
- * クイズごとの accentColor インライン注入は撤去済み。 */
+/* 主要 CTA: 罫の線画（トップページ .heroLink と同じ語彙・ピル/塗り/影禁止）。 */
 .tryButton {
   display: inline-flex;
   align-items: center;

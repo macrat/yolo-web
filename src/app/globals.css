@@ -362,13 +362,6 @@ hr {
   outline-offset: 2px;
 }
 
-/* 数字ユーティリティ: スコア・計測値・結果の主役に等幅数字。 */
-.tabular,
-[data-number] {
-  font-family: var(--font-body);
-  font-feature-settings: "tnum";
-}
-
 .visually-hidden {
   position: absolute;
   width: 1px;

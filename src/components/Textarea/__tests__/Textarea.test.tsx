@@ -125,20 +125,20 @@ describe("Textarea", () => {
     expect(textareaBlock).toContain("var(--radius-sm)");
   });
 
-  it(".textarea:focus-visible has outline: 2px solid var(--accent) (DESIGN §2)", () => {
+  it(".textarea:focus-visible has outline: 2px solid var(--accent)", () => {
     const cssPath = resolve(__dirname, "../Textarea.module.css");
     const css = readFileSync(cssPath, "utf-8");
     // focus-visible ブロックに outline: 2px solid var(--accent) が含まれること
     expect(css).toContain("outline: 2px solid var(--accent)");
   });
 
-  it(".textarea:focus-visible has outline-offset: 2px (DESIGN §2)", () => {
+  it(".textarea:focus-visible has outline-offset: 2px", () => {
     const cssPath = resolve(__dirname, "../Textarea.module.css");
     const css = readFileSync(cssPath, "utf-8");
     expect(css).toContain("outline-offset: 2px");
   });
 
-  it(".textarea uses --rule-strong (DESIGN.md §4)", () => {
+  it(".textarea uses --rule-strong", () => {
     const cssPath = resolve(__dirname, "../Textarea.module.css");
     const css = readFileSync(cssPath, "utf-8");
     const textareaBlock = css.match(/\.textarea\s*\{[^}]+\}/)?.[0] ?? "";
@@ -152,14 +152,14 @@ describe("Textarea", () => {
     expect(textareaBlock).toContain("resize: vertical");
   });
 
-  it(".textarea does NOT use old --color-* tokens", () => {
+  it(".textarea does NOT use --color-* tokens", () => {
     const cssPath = resolve(__dirname, "../Textarea.module.css");
     const css = readFileSync(cssPath, "utf-8");
-    // 旧トークン（--color-border, --color-text 等）が使われていないこと
+    // --color-border, --color-text 等の、§2 に無いトークンが使われていないこと
     expect(css).not.toMatch(/var\(--color-/);
   });
 
-  it(".textarea has line-height (行間原則1.7 or specified value, DESIGN §3)", () => {
+  it(".textarea has line-height", () => {
     const cssPath = resolve(__dirname, "../Textarea.module.css");
     const css = readFileSync(cssPath, "utf-8");
     const textareaBlock = css.match(/\.textarea\s*\{[^}]+\}/)?.[0] ?? "";

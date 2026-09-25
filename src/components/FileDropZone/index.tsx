@@ -55,11 +55,11 @@ interface FileDropZoneProps {
  * - デフォルトは可視テキストを `aria-labelledby` で参照（WCAG 2.5.3 Label in Name 準拠）。
  * - `ariaLabel` prop を渡すと `aria-label` で上書き（`aria-labelledby` は外れる）。
  *
- * ### デザイン (DESIGN.md 準拠)
+ * ### デザイン
  * - 角丸: `--radius-sm`
  * - border: 2px dashed `--rule-strong` (通常) / `--accent` (ドラッグ中・ホバー)
  * - フォーカス: `outline: 2px solid var(--accent); outline-offset: 2px`
- * - ドラッグ中の視覚表現は border 色変化のみ（影・opacity 変化等は禁止）
+ * - ドラッグ中の視覚表現は border 色の変化だけ（影・opacity は変えない）
  *
  * ### hydration
  * dragActive は純粋なクライアント state のみ依存。SSR では常に false 扱いで

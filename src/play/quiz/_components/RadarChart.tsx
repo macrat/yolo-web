@@ -14,7 +14,7 @@ interface RadarChartProps {
   axes: RadarChartAxis[];
   /**
    * データ多角形の色。RadarChart は結果の成果物（包み）の中に置くデータ可視化なので、
-   * 任意 hex ではなく和色8色（DESIGN.md §2「成果物パレット」）から選ぶ。グリッド・軸・
+   * 任意 hex ではなく和色8色（成果物パレット）から選ぶ。グリッド・軸・
    * ラベルは墨（--rule / --ink-2）で組み、データ系列だけがこの和色を持つ。
    */
   color: WairoColor;
@@ -133,7 +133,7 @@ export default function RadarChart({
       role="img"
       aria-label="レーダーチャート"
     >
-      {/* Background grid: 墨の罫（--rule）で組む。装飾の色付きグローは使わない（§8-2）。 */}
+      {/* Background grid: 墨の罫（--rule）で組む。装飾の色付きグローは使わない（§5）。 */}
       {gridPolygons.map((points, i) => (
         <polygon
           key={`grid-${i}`}
@@ -175,7 +175,7 @@ export default function RadarChart({
         </g>
       </g>
 
-      {/* Axis labels and score percentages。文字は墨（--ink / --ink-2）・tabular 数値（§10 AA）。 */}
+      {/* Axis labels and score percentages。文字は墨（--ink / --ink-2）・tabular 数値。 */}
       {labels.map((item, i) => {
         // Adjust text-anchor based on horizontal position
         const anchorX = item.x - cx;

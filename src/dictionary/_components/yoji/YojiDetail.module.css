@@ -1,8 +1,8 @@
 /*
- * 四字熟語詳細 — DESIGN.md フェーズ R・店構え（実務／参照・§7 実務側）。
+ * 四字熟語詳細。
  * 見出しは熟語を見出しの書体で大字。読み・意味・成り立ち・例文を罫と組版で組む。
- * 器は静か（紙・墨・罫のみ）。ピル・色付きカード・影・角丸装飾なし・全トークン経由（§10）。
- * 左揃え基調（中央寄せの多用をしない・§4）。
+ * 器は静か（紙・墨・罫のみ）。ピル・色付きカード・影・角丸装飾なし・全トークン経由。
+ * 左揃え（§5）。
  */
 
 .detail {
@@ -14,11 +14,10 @@
   margin-bottom: var(--space-32);
 }
 
-/* 大字: 熟語を見出しの書体で大きく（見出しの主役・§7）。 */
+/* 大字: 熟語を見出しの書体で大きく（見出しの主役）。 */
 .character {
   font-family: var(--font-heading);
   font-size: 3.25rem;
-  font-weight: 600;
   line-height: 1.2;
   letter-spacing: 0.08em;
   color: var(--ink);
@@ -34,7 +33,7 @@
   color: var(--ink);
 }
 
-/* 読み: 補助情報の墨（--ink-2・§2/§3）。 */
+/* 読み: 補助情報の墨（--ink-2・§2）。 */
 .reading {
   font-size: 1rem;
   line-height: 1.7;
@@ -42,7 +41,7 @@
   margin-bottom: var(--space-8);
 }
 
-/* 意味: 読ませる本文（16px・§3）。 */
+/* 意味: 読ませる本文（16px）。 */
 .meaning {
   font-size: 1rem;
   color: var(--ink);
@@ -220,7 +219,7 @@
   font-size: 0.7em;
 }
 
-/* 例文（AI が見た人間のひとコマ）: 一本罫の引用（§4 罫で組む）。 */
+/* 例文（AI が見た人間のひとコマ）: 一本罫の引用。 */
 .exampleQuote {
   margin: 0;
   padding: var(--space-8) var(--space-16);
