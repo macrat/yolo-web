@@ -13,26 +13,27 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  column-gap: var(--space-8);
+  column-gap: var(--text-box-pad);
 }
 
-/* 項目のあいだの間隔。箱は字の左右に余白を持って前へ張り出すので、8px では箱どうしが接し、字と字の
- * あいだは余白2つ分になる。狭い画面ではサイト名もナビの項目も詰めて並べ、1行に入る項目を増やす。
- * 広い画面では、サイト名とナビのあいだをナビの項目どうしより広く取る。 */
+/* 項目は縁の見えないコントロールで、間隔は押せる範囲のあいだで測る（§5）。間隔を箱の余白と同じ幅にすると、
+ * 前へ張り出す箱どうしが接し、字と字のあいだは 16px になる。狭い画面ではサイト名もナビの項目も接して並べ、
+ * 1行に入る項目を増やす。広い画面では押せる範囲のあいだを、ナビの項目どうしで 8px、サイト名とナビで 16px
+ * あける。 */
 .navList {
   list-style: none;
   display: flex;
   flex-wrap: wrap;
-  column-gap: var(--space-8);
+  column-gap: var(--text-box-pad);
 }
 
 @media (min-width: 45rem) {
   .inner {
-    column-gap: var(--space-24);
+    column-gap: calc(var(--space-16) + var(--text-box-pad));
   }
 
   .navList {
-    column-gap: var(--space-16);
+    column-gap: calc(var(--space-8) + var(--text-box-pad));
   }
 }
 

@@ -1,18 +1,13 @@
 /* ページ送り（DESIGN.md §6・§7）。どの項目も、押すと別のページが開くリンクとして下線を持つ。
  * hover の細い線とフォーカスの二重リングは globals.css の既定に従う。 */
 
-/* 押せる範囲どうしのあいだを 8px にする（§5）。後ろの項目の箱は字より余白の分だけ前へ張り出すので、
- * その分を足す。 */
-.pagination,
-.pageNumbers {
-  --item-gap: calc(var(--space-8) + var(--text-box-pad));
-}
-
+/* 項目は縁の見えないコントロールなので、ほかの並びと同じく押せる範囲を接して並べる（§5）。間隔を箱の余白と
+ * 同じ幅にすると、前へ張り出す箱どうしが接し、字と字のあいだは 16px になる。 */
 .pagination {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: var(--item-gap);
+  gap: var(--text-box-pad);
   margin-top: var(--space-32);
   padding: var(--space-16) 0;
 }
@@ -67,7 +62,7 @@ button.pageItem {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--item-gap);
+  gap: var(--text-box-pad);
 }
 
 /* 後ろの「次へ」の箱が張り出す分だけ後ろをあけ、前後の押せる範囲から字までを同じ間隔にする。 */

@@ -200,17 +200,6 @@
   font-weight: 700;
 }
 
-/* 本文のリンクは文の中のリンク（§5・§6）。色と平常時の下線は globals.css の a の既定に従う。押せる範囲は
- * 字そのものなので、hover は字を囲む細い線ではなく、下線を太い線の太さにして示す。フォーカスの二重リングは
- * globals.css の既定のとおり字の外に出る。 */
-.prose a {
-  --hover-line: none;
-}
-
-.prose a:where(:hover, :active) {
-  text-decoration-thickness: var(--rule-w);
-}
-
 /* mermaid ラッパー: block にして overflow-x: auto を flex に依存せず機能させる */
 .prose :global(.mermaid) {
   display: block;

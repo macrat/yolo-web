@@ -1,26 +1,30 @@
-/* スキップのリンク（WCAG 2.4.1）。本文へ進むリンクなので、§6 のリンクとして下線を持つ。見えるのは字だけなので、
- * 字の左右の余白と、字を左端から左へ張り出す箱は data-text-box（globals.css）が持つ。
- * フォーカスが入るまでは画面の外に置き、入ったときだけ上端の中に出す。display: none や clip で隠すと
- * フォーカスを受けられないため、position: fixed と transform で外へ送る。fixed なので、
- * どこまでスクロールしていても同じ場所に出る。 */
-.skipLink {
-  position: fixed;
-  top: var(--space-8);
-  /* 字をコンテンツ幅の左端に置く。fixed の % は画面の幅を指すので、コンテナの幅の式と同じ基準で測れる。 */
-  left: calc(
-    (100% - var(--container-width)) / 2 + var(--rule-w) + var(--box-padding)
-  );
-  transform: translateY(calc(-100% - var(--space-8)));
-  /* ページの中の重なる部品より前に出し、フォーカスが入ったときに必ず見えるようにする。 */
-  z-index: 1000;
-  display: inline-flex;
-  align-items: center;
-  /* タップの標的は 44px 以上（§6）。 */
-  min-width: 44px;
-  min-height: 44px;
-  background: var(--paper);
+/* スキップのリンク（WCAG 2.4.1）の行。フォーカスが入ったときだけ、上端の上にコンテナの1行として出す。
+ * 上端の項目に重ねると、覆われた項目の字が欠けて見えたり、リンクの字と続けて読めたりするので、
+ * 上端を1行ぶん下へ送る。コンテナの左右のボーダーは、この行から上端へ途切れずに続く。 */
+.row {
+  width: var(--container-width);
+  margin-inline: auto;
+  border-inline: var(--rule-w) solid var(--rule);
+  padding: var(--space-8) var(--box-padding);
 }
 
-.skipLink:focus {
-  transform: none;
+/* フォーカスが入るまでは、場所を取らず見えない。display: none で隠すとフォーカスを受けられないので、
+ * 1px に切り詰めて外へ出す。 */
+.row:not(:focus-within) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* 本文へ進むリンクなので、§6 のリンクとして下線を持つ。見えるのは字だけなので、字の左右の余白と、字を
+ * 並びの左端に置く張り出しは data-text-box（globals.css）が持つ。タップの標的は 44px 以上（§6）。 */
+.link {
+  display: inline-flex;
+  align-items: center;
+  min-width: 44px;
+  min-height: 44px;
 }

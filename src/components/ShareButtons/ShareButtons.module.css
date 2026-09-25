@@ -6,10 +6,13 @@
   gap: var(--space-8);
 }
 
+/* ボタンは縁の見えないコントロールなので、押せる範囲を接して並べる（§5）。間隔を箱の余白と同じ幅にすると、
+ * 前へ張り出す箱どうしが接する。折り返した行どうしは、押せる範囲のあいだを 8px あける。 */
 .buttons {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-8);
+  column-gap: var(--text-box-pad);
+  row-gap: var(--space-8);
 }
 
 /* コピーの知らせ。出たり消えたりしても下の要素が動かないよう、1行分の高さをいつも取る。 */

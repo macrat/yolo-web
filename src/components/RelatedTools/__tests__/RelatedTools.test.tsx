@@ -160,7 +160,7 @@ describe("RelatedTools", () => {
     );
   });
 
-  // 一覧の行は字だけで見えるので、字を左端に揃え、線とリングを行の箱に出す（DESIGN.md §5・§6）
+  // 一覧の行は区切りの罫線が縁として見えるので、罫線を左端に揃えて字を内側 8px から始め、線とリングを行全体に出す（DESIGN.md §5・§6）
   it("行の並びが一覧の行の箱の指定を持ち、押せる範囲を行に広げる", () => {
     const { container } = render(
       <RelatedTools currentSlug="" relatedSlugs={["char-count", "base64"]} />,

@@ -1,9 +1,9 @@
 /**
  * コンテナの左右のボーダー（DESIGN.md §5 コンテナ）が上端から下端まで途切れずに通ることの検査。
  *
- * ボーダーは上端の .inner・中間の main・下端の .inner の3つが、同じ幅・同じ位置で引き継いで引く。
- * どれか1つでも幅か線が変わると、ボーダーがそこで折れたり切れたりするので、3つの宣言が揃っていることを見る。
- * middleware が返す 410 のページは、上端・中間・下端が1つの .container の規則を共有する。
+ * ボーダーは、フォーカスが入ったときに出るスキップのリンクの行・上端の .inner・中間の main・下端の .inner が、
+ * 同じ幅・同じ位置で引き継いで引く。どれか1つでも幅か線が変わると、ボーダーがそこで折れたり切れたりするので、
+ * 宣言が揃っていることを見る。middleware が返す 410 のページは、これらが1つの .container の規則を共有する。
  */
 import { describe, test, expect } from "vitest";
 import { readFileSync } from "fs";
@@ -37,6 +37,7 @@ const goneCss = build410Html().match(/<style>([\s\S]*)<\/style>/)![1];
 
 describe("コンテナの左右のボーダーが上端から下端まで通る", () => {
   test.each([
+    ["スキップのリンクの行", "SkipLink/SkipLink.module.css", ".row"],
     ["上端", "Header/Header.module.css", ".inner"],
     ["中間", "SiteFrame/SiteFrame.module.css", ".main"],
     ["下端", "Footer/Footer.module.css", ".inner"],

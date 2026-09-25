@@ -176,17 +176,17 @@ body{display:flex;flex-direction:column;min-height:100svh;font-family:var(--font
 a{color:var(--ink);text-decoration:underline;text-decoration-thickness:var(--rule-w-hair);text-underline-offset:0.15em}
 a:visited{color:var(--ink-2)}
 :focus-visible{outline:var(--focus-ring);outline-offset:var(--focus-ring-offset);box-shadow:var(--focus-ring-fill)}
-:where(a[href]):hover{box-shadow:var(--hover-line)}
+:where(a[href][data-text-box]):where(:hover,:active){box-shadow:var(--hover-line)}
 [data-text-box=inline]{padding-inline:var(--text-box-pad);margin-inline-start:calc(-1 * var(--text-box-pad));--focus-ring-offset:calc(-1 * var(--rule-w));--focus-ring-fill:inset 0 0 0 calc(2 * var(--rule-w)) var(--paper)}
-.skip{position:fixed;top:var(--space-8);left:calc((100% - var(--container-width)) / 2 + var(--rule-w) + var(--box-padding));transform:translateY(calc(-100% - var(--space-8)));z-index:1000;display:inline-flex;align-items:center;min-width:44px;min-height:44px;background:var(--paper)}
-.skip:focus{transform:none}
+.skip-row{padding-block:var(--space-8)}
+.skip-row:not(:focus-within){position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 .container{width:var(--container-width);margin-inline:auto;border-inline:var(--rule-w) solid var(--rule);padding-inline:var(--box-padding)}
 header{border-bottom:var(--rule-w) solid var(--rule)}
-header .container{display:flex;flex-wrap:wrap;align-items:center;column-gap:var(--space-8);padding-block:var(--space-8)}
+header .container{display:flex;flex-wrap:wrap;align-items:center;column-gap:var(--text-box-pad);padding-block:var(--space-8)}
 footer{border-top:var(--rule-w) solid var(--rule)}
 footer .container{display:flex;flex-direction:column;gap:var(--space-16);padding-block:var(--space-24)}
-ul{list-style:none;display:flex;flex-wrap:wrap;column-gap:var(--space-8)}
-@media (min-width:45rem){header .container{column-gap:var(--space-24)}ul{column-gap:var(--space-16)}}
+ul{list-style:none;display:flex;flex-wrap:wrap;column-gap:var(--text-box-pad)}
+@media (min-width:45rem){header .container{column-gap:calc(var(--space-16) + var(--text-box-pad))}ul{column-gap:calc(var(--space-8) + var(--text-box-pad))}}
 .link{display:inline-flex;align-items:center;min-width:44px;min-height:44px}
 .label{display:grid}
 .label::after{content:attr(data-label);height:0;overflow:hidden;visibility:hidden;font-weight:700}
@@ -199,7 +199,7 @@ p{max-width:var(--measure)}
 </style>
 </head>
 <body>
-<a class='skip' href='#${MAIN_CONTENT_ID}' data-text-box='inline'>メインコンテンツへスキップ</a>
+<div class='container skip-row'><a class='link' href='#${MAIN_CONTENT_ID}' data-text-box='inline'>メインコンテンツへスキップ</a></div>
 <header><div class='container'>
 ${frameLink({ label: SITE_NAME, href: "/" }, "site-name")}
 <nav aria-label='メインナビゲーション'><ul>${frameLinks(HEADER_NAV_ITEMS)}</ul></nav>

@@ -94,8 +94,10 @@
   gap: 0.4rem;
 }
 
+/* ラベルとコピーのボタンが1行に収まらない幅では、ボタンを次の行に回し、どちらも語の途中で折らない。 */
 .previewHeader {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   min-height: 1.5rem;

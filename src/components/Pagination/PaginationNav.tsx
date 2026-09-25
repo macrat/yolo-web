@@ -9,6 +9,7 @@ export const NEXT_LABEL = "次へ ›";
 export interface PaginationItem {
   page: number;
   label: string;
+  /** 読み上げ名。見える文言を含め、声で操作する来訪者が見えている文言で押せるようにする。 */
   ariaLabel: string;
   isCurrent: boolean;
 }
@@ -59,7 +60,7 @@ export default function PaginationNav({
         renderItem({
           page: currentPage - 1,
           label: PREV_LABEL,
-          ariaLabel: "前のページ",
+          ariaLabel: `前へ（ページ${currentPage - 1}）`,
           isCurrent: false,
         })
       ) : (
@@ -111,7 +112,7 @@ export default function PaginationNav({
         renderItem({
           page: currentPage + 1,
           label: NEXT_LABEL,
-          ariaLabel: "次のページ",
+          ariaLabel: `次へ（ページ${currentPage + 1}）`,
           isCurrent: false,
         })
       ) : (

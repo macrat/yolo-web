@@ -58,12 +58,12 @@ describe("Pagination", () => {
 
     test("1 ページ目では「前へ」を置かない", () => {
       render(<Pagination currentPage={1} totalPages={5} basePath="/blog" />);
-      expect(screen.queryByLabelText("前のページ")).toBeNull();
+      expect(screen.queryByLabelText(/^前へ/)).toBeNull();
     });
 
     test("最終ページでは「次へ」を置かない", () => {
       render(<Pagination currentPage={5} totalPages={5} basePath="/blog" />);
-      expect(screen.queryByLabelText("次のページ")).toBeNull();
+      expect(screen.queryByLabelText(/^次へ/)).toBeNull();
     });
 
     test("端では「前へ」「次へ」の代わりに、読み上げずフォーカスも受けない場所取りを置く", () => {
@@ -80,14 +80,24 @@ describe("Pagination", () => {
 
     test("前のページが存在するとき「前へ」リンクが機能する href を持つ", () => {
       render(<Pagination currentPage={3} totalPages={5} basePath="/blog" />);
-      const prev = screen.getByRole("link", { name: "前のページ" });
+      const prev = screen.getByRole("link", { name: /^前へ/ });
       expect(prev).toHaveAttribute("href", "/blog/page/2");
     });
 
     test("次のページが存在するとき「次へ」リンクが機能する href を持つ", () => {
       render(<Pagination currentPage={3} totalPages={5} basePath="/blog" />);
-      const next = screen.getByRole("link", { name: "次のページ" });
+      const next = screen.getByRole("link", { name: /^次へ/ });
       expect(next).toHaveAttribute("href", "/blog/page/4");
+    });
+
+    test("「前へ」「次へ」の読み上げ名は、見える文言を含み、行き先のページを言う（WCAG 2.5.3）", () => {
+      render(<Pagination currentPage={3} totalPages={5} basePath="/blog" />);
+      expect(
+        screen.getByRole("link", { name: "前へ（ページ2）" }),
+      ).toHaveTextContent("前へ");
+      expect(
+        screen.getByRole("link", { name: "次へ（ページ4）" }),
+      ).toHaveTextContent("次へ");
     });
 
     test("10 ページの中間では省略記号が表示される", () => {
@@ -155,7 +165,7 @@ describe("Pagination", () => {
           onPageChange={vi.fn()}
         />,
       );
-      expect(screen.queryByRole("button", { name: "前のページ" })).toBeNull();
+      expect(screen.queryByRole("button", { name: /^前へ/ })).toBeNull();
     });
 
     test("「次へ」ボタンで currentPage+1 が渡される", () => {
@@ -168,7 +178,7 @@ describe("Pagination", () => {
           onPageChange={handlePageChange}
         />,
       );
-      fireEvent.click(screen.getByRole("button", { name: "次のページ" }));
+      fireEvent.click(screen.getByRole("button", { name: /^次へ/ }));
       expect(handlePageChange).toHaveBeenCalledWith(4);
     });
 
@@ -185,10 +195,10 @@ describe("Pagination", () => {
         );
       }
       render(<Controlled />);
-      const next = screen.getByRole("button", { name: "次のページ" });
+      const next = screen.getByRole("button", { name: /^次へ/ });
       next.focus();
       fireEvent.click(next);
-      expect(screen.queryByRole("button", { name: "次のページ" })).toBeNull();
+      expect(screen.queryByRole("button", { name: /^次へ/ })).toBeNull();
       expect(document.activeElement).toBe(
         screen.getByRole("button", { name: "ページ5" }),
       );

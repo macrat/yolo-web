@@ -19,17 +19,17 @@
   max-width: var(--measure);
 }
 
-/* 項目のあいだの間隔は、項目の箱と箱のあいだで測る（Header と同じ）。狭い画面では詰めて、1行に入る
- * 項目を増やす。 */
+/* 項目の間隔は、上端のナビと同じく押せる範囲のあいだで測る（§5）。狭い画面では押せる範囲を接して並べ、
+ * 1行に入る項目を増やす。広い画面では 8px あける。 */
 .links {
   list-style: none;
   display: flex;
   flex-wrap: wrap;
-  column-gap: var(--space-8);
+  column-gap: var(--text-box-pad);
 }
 
 @media (min-width: 45rem) {
   .links {
-    column-gap: var(--space-16);
+    column-gap: calc(var(--space-8) + var(--text-box-pad));
   }
 }

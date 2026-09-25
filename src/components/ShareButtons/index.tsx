@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import Button from "@/components/Button";
 import { trackShare } from "@/lib/analytics";
 import styles from "./ShareButtons.module.css";
@@ -42,7 +42,15 @@ export default function ShareButtons({
   contentType,
   contentId,
 }: ShareButtonsProps) {
-  const [copied, setCopied] = useState(false);
+  // 押すたびに増える番号。0 のあいだは「コピーしました」を出さない。押し直すと番号が変わってタイマーを
+  // 掛け直すので、先のタイマーが後の知らせを早く消さない。外したときもタイマーを止める。
+  const [copiedCount, setCopiedCount] = useState(0);
+
+  useEffect(() => {
+    if (copiedCount === 0) return;
+    const timer = setTimeout(() => setCopiedCount(0), 2000);
+    return () => clearTimeout(timer);
+  }, [copiedCount]);
 
   const getFullUrl = useCallback(
     (): string => `${window.location.origin}${url}`,
@@ -88,9 +96,7 @@ export default function ShareButtons({
     const fullUrl = getFullUrl();
     try {
       await navigator.clipboard.writeText(title + "\n" + fullUrl);
-      setCopied(true);
-      // 2 秒後に「コピーしました」メッセージを非表示にする
-      setTimeout(() => setCopied(false), 2000);
+      setCopiedCount((count) => count + 1);
       track("clipboard");
     } catch {
       // クリップボード API が利用できない場合はサイレントに失敗
@@ -145,7 +151,7 @@ export default function ShareButtons({
       </div>
       {/* コピー完了フィードバック。aria-live="polite" でスクリーンリーダーに通知。 */}
       <div className={styles.copiedMessage} role="status" aria-live="polite">
-        {copied ? "コピーしました" : ""}
+        {copiedCount > 0 ? "コピーしました" : ""}
       </div>
     </div>
   );

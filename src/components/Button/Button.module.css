@@ -7,6 +7,13 @@
   /* タップの標的は 44px 以上（§6）。幅は字の大きさに、44px に届くまで右へ余白を足したもの（§5）。 */
   min-width: 44px;
   min-height: 44px;
+  /* 折り返して2行になっても、字を縁の内側 8px から始め、内側に出るリングに字を掛けない（§5・§6）。 */
+  padding-block: var(--space-8);
+  /* 並びの中で縮んで語の途中で折れないよう、字の幅を保つ。コンテンツ幅に収まらないときだけ、文節の切れ目で
+   * 折り返す（§5）。 */
+  flex-shrink: 0;
+  max-width: 100%;
+  word-break: auto-phrase;
   border: none;
   border-radius: 0;
   color: var(--ink);
@@ -46,6 +53,8 @@
 /* 無効の理由は、ボタンの横に本文の大きさで添える。幅が足りなければ下に回る。 */
 .withReason {
   display: inline-flex;
+  flex-shrink: 0;
+  max-width: 100%;
   flex-wrap: wrap;
   align-items: center;
   gap: var(--space-8);

@@ -39,7 +39,7 @@
   /* §6 フォーカスの二重リング。外の輪は outline で --ink に引き、要素とのあいだを box-shadow の広がりで
    * --paper に塗って内の輪にする。内の輪を下地に任せず塗るのは、反転した背景・コンテンツの色・--paper-2 の
    * 上でも、内と外の2色が揃って見えるようにするため。どちらの輪も太い線と同じ太さで、要素に密着する。
-   * 要素の外に余地がない場所では、[data-focus-ring="inset"] が同じ2つの輪を要素の内側に移す。 */
+   * ここの値は輪を要素の外に出す、本文の中のリンクの形。部品では、同じ2つの輪を要素の内側に移す。 */
   --focus-ring: var(--rule-w) solid var(--ink);
   --focus-ring-offset: var(--rule-w);
   --focus-ring-fill: 0 0 0 var(--rule-w) var(--paper);
@@ -48,7 +48,7 @@
    * 大きさも変わらない。 */
   --hover-line: inset 0 0 0 var(--rule-w-hair) var(--rule-2);
 
-  /* §5 字だけで見えるものの箱が、字の左右に持つ余白。 */
+  /* §5 縁の見えないコントロールの押せる範囲が、字の左右に持つ余白。 */
   --text-box-pad: var(--space-8);
 
   /* §5 角丸の半径。角丸は持たないので 0。 */
@@ -374,28 +374,41 @@ hr {
   color: var(--paper);
 }
 
-/* §6 フォーカス。 */
+/* §6 フォーカス。既定は本文の中のリンクの形。押せる範囲が字そのものなので、二重リングを字の外に出す。 */
 :focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
   box-shadow: var(--focus-ring-fill);
 }
 
-/* 外に輪を出す余地の無いものでは、二重リングを要素の内側に出し、隣に食い込ませない。外の輪を要素の縁の
- * 内側に置き、その内側を --paper で塗る。外の輪は要素の縁から、塗りは枠の内側から測るので、枠を持たない
- * 要素で内と外が同じ太さになる。 */
-[data-focus-ring="inset"],
-[data-text-box] {
+/* §6 本文の中のリンクの hover。字に接する細い線を足すと下線と読み違えるので、下線を太い線の太さにする。 */
+:where(a[href]:not([data-text-box], [data-hit-area])):where(:hover, :active) {
+  text-decoration-thickness: var(--rule-w);
+}
+
+/* 部品（本文の中のリンクでないコントロール）の二重リングは、押せる範囲の内側に密着させ、隣に食い込ませない。
+ * 外の輪を要素の縁の内側に置き、その内側を --paper で塗る。外の輪は要素の縁から、塗りは枠の内側から測るので、
+ * 枠を持たない要素で内と外が同じ太さになる。値は子孫に継ぐので、押せる範囲を ::after に広げた一覧の行にも
+ * 同じリングが出る。 */
+:where(
+  button,
+  summary,
+  [role="button"],
+  [data-text-box],
+  [data-hit-area],
+  [data-focus-ring="inset"]
+) {
   --focus-ring-offset: calc(-1 * var(--rule-w));
   --focus-ring-fill: inset 0 0 0 calc(2 * var(--rule-w)) var(--paper);
 }
 
 /* §5 コントロールの左端。hover の線・無効の枠・フォーカスのリングは、字の左右に余白を持つ箱に出す。
- * リングは箱の内側に出し、無効の枠は枠線ではなく outline で箱の縁に引く。箱がコンテナの内側の余白に
- * 張り出しても、その余白は狭い画面で箱の余白と同じ幅しかないため。
+ * 無効の枠は枠線ではなく outline で箱の縁に引く。箱がコンテナの内側の余白に張り出しても、その余白は
+ * 狭い画面で箱の余白と同じ幅しかないため。
  *
  * "inline" は縁が見えないもの（リンク・プライマリでないボタン・ページ送り・パンくず）。見えるのは字だけ
  * なので、字の左端を並びの左端に揃え、箱は余白の分だけ左へ張り出す。44px に届かない箱は右へ広げる。
+ * 並びの間隔を余白と同じ幅にすると、押せる範囲どうしが接し、字と字のあいだは余白2つ分になる。
  * "rows" は一覧。行の区切りの罫線が縁として見えるので、罫線の左端を並びの左端に揃え、字は各行の中で
  * 余白の分だけ内側から始める。上下は行の区切りがそのまま辺になるので、hover の線は左右だけに出して閉じる。 */
 [data-text-box="inline"] {
@@ -411,17 +424,17 @@ hr {
   padding-inline: var(--text-box-pad);
 }
 
-/* §6 hover・active。進むもの・実行するもの・状態を変えるものに出し、押しても何も起きない現在地と無効には
- * 出さない。部品のクラスが上書きできるよう、詳細度を 0 にする。 */
-:where(a[href], button, summary, [role="button"]):where(:hover, :active):where(
-    :not(:disabled, [aria-disabled="true"], [aria-current="page"])
-  ) {
+/* §6 部品の hover・active。進むもの・実行するもの・状態を変えるものに出し、押しても何も起きない現在地と
+ * 無効には出さない。部品のクラスが上書きできるよう、詳細度を 0 にする。 */
+:where(a[href][data-text-box], button, summary, [role="button"]):where(
+    :hover,
+    :active
+  ):where(:not(:disabled, [aria-disabled="true"], [aria-current="page"])) {
   box-shadow: var(--hover-line);
 }
 
 /* 押せる範囲を ::after に広げた要素（一覧の行の名前）。hover とフォーカスを要素の字の箱ではなく
  * その範囲に出し、タップの標的と一致させる（§6）。::after の位置と大きさは部品が決める。 */
-:where([data-hit-area="after"]):hover,
 :where([data-hit-area="after"]):focus-visible {
   outline: none;
   box-shadow: none;

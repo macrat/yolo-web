@@ -1,5 +1,11 @@
 import { expect, test, describe, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import {
+  act,
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+} from "@testing-library/react";
 import ShareButtons from "@/components/ShareButtons";
 
 // window.open のモック
@@ -126,6 +132,51 @@ describe("ShareButtons", () => {
       await waitFor(() => {
         expect(screen.getByRole("status")).toHaveTextContent("コピーしました");
       });
+    });
+
+    test("押し直すと、「コピーしました」は後から押したときから2秒出る", async () => {
+      vi.useFakeTimers();
+      try {
+        mockClipboardWriteText.mockResolvedValue(undefined);
+        render(<ShareButtons url="/blog/test" title="テスト記事" />);
+        const copy = screen.getByRole("button", { name: /URLをコピー/ });
+        await act(async () => {
+          fireEvent.click(copy);
+        });
+        await act(async () => {
+          vi.advanceTimersByTime(1500);
+        });
+        await act(async () => {
+          fireEvent.click(copy);
+        });
+        await act(async () => {
+          vi.advanceTimersByTime(1000);
+        });
+        expect(screen.getByRole("status")).toHaveTextContent("コピーしました");
+        await act(async () => {
+          vi.advanceTimersByTime(1000);
+        });
+        expect(screen.getByRole("status")).toHaveTextContent("");
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
+    test("外したあとにタイマーを残さない", async () => {
+      vi.useFakeTimers();
+      try {
+        mockClipboardWriteText.mockResolvedValue(undefined);
+        const { unmount } = render(
+          <ShareButtons url="/blog/test" title="テスト記事" />,
+        );
+        await act(async () => {
+          fireEvent.click(screen.getByRole("button", { name: /URLをコピー/ }));
+        });
+        unmount();
+        expect(vi.getTimerCount()).toBe(0);
+      } finally {
+        vi.useRealTimers();
+      }
     });
   });
 
