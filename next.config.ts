@@ -8,8 +8,7 @@ const nextConfig: NextConfig = {
   // 公式の opt-out（ai-agents.md / start-server.js の `agentRules !== false` ゲート）で無効化する。
   agentRules: false,
   experimental: {
-    // multiple root layouts 構成では通常の app/not-found.tsx で 404 を構成できないため、
-    // Next.js v16.2 公式仕様に従い global-not-found.js を採用 (B-333-7, cycle-180)
+    // どのルートにも一致しない URL の 404 を src/app/global-not-found.js で描く。
     globalNotFound: true,
   },
   async redirects() {
