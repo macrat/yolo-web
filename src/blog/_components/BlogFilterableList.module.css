@@ -12,44 +12,33 @@
   width: 100%;
 }
 
-/* カテゴリで絞り込む: 文字リンクの横並び。区切りは下辺の一本罫。 */
+/* カテゴリで絞り込む: 文字のリンクの横並び。区切りは下辺の細い線。項目は縁の見えないコントロールなので、
+ * 押せる範囲を接して並べる（§5）。間隔を箱の余白と同じ幅にすると、前へ張り出す箱どうしが接する。 */
 .filterNav {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-16);
+  gap: var(--text-box-pad);
   padding-bottom: var(--space-16);
-  border-bottom: 1px solid var(--rule);
+  border-bottom: var(--rule-w-hair) solid var(--rule-2);
 }
 
+/* 分類のページへ進むリンク。下線と訪問済みの色は globals.css の a の既定に従う（§6）。タップの標的は
+ * 44px 以上で、字の左右の余白と、字を並びの左端に置く張り出しは data-text-box（globals.css）が持つ。 */
 .filterButton {
-  /* タップターゲット 44px 確保（DESIGN.md §6） */
   display: inline-flex;
   align-items: center;
   gap: var(--space-8);
   min-height: 44px;
   font-family: var(--font-body);
   font-size: 0.9375rem;
+}
+
+/* いま開いている分類は現在地（§6）。太字で示し、押しても何も起きないので下線を持たない。 */
+.filterButton[aria-current="page"] {
+  color: var(--ink);
+  font-weight: 700;
   text-decoration: none;
-  color: var(--ink-2);
-  transition: color 0.15s ease;
-}
-
-.filterButton:hover {
-  color: var(--accent);
-  text-decoration: underline;
-  text-underline-offset: 0.15em;
-}
-
-/* 現在地は --accent の文字色（塗りにしない）。 */
-.filterButton[data-active="true"] {
-  color: var(--accent);
-  font-weight: 600;
-}
-
-.filterButton:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
 }
 
 .count {
@@ -59,56 +48,43 @@
   color: var(--ink-2);
 }
 
-/* 人気タグセクション: 罫で囲んだタグを横並びで置く。器は静か（背景なし）。 */
+/* 人気タグ: 見出しの文字のあとに、タグのリンクを横に並べる。器は静か（背景なし）。 */
 .popularTags {
   display: flex;
   align-items: flex-start;
   flex-wrap: wrap;
-  gap: var(--space-8);
+  column-gap: var(--space-16);
 }
 
+/* タグの1行目と同じ高さに置き、字の中心を揃える。 */
 .popularTagsLabel {
-  font-family: var(--font-body);
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--ink-2);
-  white-space: nowrap;
-  flex-shrink: 0;
-  /* ラベルとタグの垂直位置を揃える */
-  padding-top: 0.625rem;
-}
-
-.popularTagsList {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-8);
-}
-
-.tagChip {
-  /* 44px タップターゲット確保（a11y 要件） */
   display: inline-flex;
   align-items: center;
   min-height: 44px;
-  padding: 0.15em 0.65em;
   font-family: var(--font-body);
-  font-size: 0.8125rem;
-  text-decoration: none;
+  font-size: var(--text-small);
+  font-weight: 700;
   color: var(--ink-2);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius-sm);
-  transition:
-    color 0.15s ease,
-    border-color 0.15s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
-.tagChip:hover {
-  color: var(--accent);
-  border-color: var(--accent);
+/* タグは縁の見えないコントロールなので、押せる範囲を接して並べる（§5）。 */
+.popularTagsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--text-box-pad);
 }
 
-.tagChip:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+/* タグのページへ進むリンク。枠で囲むと hover の線や値札と読み違えるので、枠も地も持たず下線で示す（§6）。
+ * 下線と訪問済みの色は globals.css の a の既定に従い、字の左右の余白は data-text-box（globals.css）が持つ。 */
+.tagChip {
+  display: inline-flex;
+  align-items: center;
+  min-width: 44px;
+  min-height: 44px;
+  font-family: var(--font-body);
+  font-size: var(--text-small);
 }
 
 /* ヒット件数表示（>=1 件時のみ表示） */

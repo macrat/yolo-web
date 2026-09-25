@@ -42,34 +42,35 @@
 }
 
 /*
- * 見出し語の品書き（罫区切りリスト）。
- * 上辺にも罫を引き、各行の下辺罫と合わせて全行を罫で囲う。カード装飾・影・色地は使わない。
+ * 見出し語の品書き。行どうしを細い線で区切るリスト（§7）。上辺にも線を引き、各行の下辺の線と合わせて
+ * 全行を囲う。カード装飾・影・色地は使わない。字を罫線の内側から始める行の左右の余白は
+ * data-text-box（globals.css）が持つ。
  */
 .list {
   list-style: none;
   margin: 0;
   padding: 0;
-  border-top: 1px solid var(--rule);
+  border-top: var(--rule-w-hair) solid var(--rule-2);
 }
 
 .row {
-  border-bottom: 1px solid var(--rule);
+  position: relative;
+  border-bottom: var(--rule-w-hair) solid var(--rule-2);
 }
 
-/*
- * 行全体をリンクにする（browsing の一覧なので広いタップ面が価値・44px を縦 padding で確保）。
- * 静止時は下線を出さず、hover で見出し語に下線を出す。
- */
+/* 各行は1本のリンク。下線は見出し語にだけ引くので、行のリンクそのものは下線を持たない。 */
 .entryLink {
   display: block;
-  padding: var(--space-16) 0;
+  padding-block: var(--space-16);
   text-decoration: none;
-  color: var(--ink);
 }
 
-.entryLink:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+/* 押せる範囲を行全体に広げる。hover の線とフォーカスの二重リングは、data-hit-area（globals.css）が
+ * この範囲に出す。 */
+.entryLink::after {
+  content: "";
+  position: absolute;
+  inset: 0;
 }
 
 /* 見出し語＋よみを 1 行に（ベースライン揃え・狭幅では折り返す）。 */
@@ -80,18 +81,15 @@
   gap: var(--space-8);
 }
 
-/* 見出し語: 一覧の主役。墨・本文の書体で組む（一覧の行の名前は見出しでない）。 */
+/* 見出し語: 一覧の主役。本文の書体で組む（一覧の行の名前は見出しでない）。下線を持ち、色はリンクの色
+ * （訪問済みは --ink-2）を受け継ぐ（§6 一覧の行）。 */
 .word {
-  color: var(--ink);
   font-family: var(--font-body);
   font-size: 1.125rem; /* 18px */
   line-height: 1.4;
   letter-spacing: 0.01em;
-}
-
-.entryLink:hover .word {
-  color: var(--accent);
   text-decoration: underline;
+  text-decoration-thickness: var(--rule-w-hair);
   text-underline-offset: 0.15em;
 }
 

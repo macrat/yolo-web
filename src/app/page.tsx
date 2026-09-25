@@ -220,6 +220,7 @@ export default function Home() {
               <Link
                 href={getContentPath(heroContent)}
                 className={styles.heroLink}
+                data-focus-ring="inset"
               >
                 やってみる →
               </Link>
@@ -256,7 +257,11 @@ export default function Home() {
           ariaLabel="診断・占い・あそびの品書き"
         />
         <p className={styles.seeAll}>
-          <Link href="/play" className={styles.seeAllLink}>
+          <Link
+            href="/play"
+            className={styles.seeAllLink}
+            data-text-box="inline"
+          >
             すべての診断・占い・ゲームを見る
           </Link>
         </p>
@@ -275,7 +280,11 @@ export default function Home() {
       <div className={styles.shelf}>
         <Shinagaki heading="道具" items={TOOL_ITEMS} ariaLabel="道具の品書き" />
         <p className={styles.seeAll}>
-          <Link href="/tools" className={styles.seeAllLink}>
+          <Link
+            href="/tools"
+            className={styles.seeAllLink}
+            data-text-box="inline"
+          >
             すべての道具を見る
           </Link>
         </p>

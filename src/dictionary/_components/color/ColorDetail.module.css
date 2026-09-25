@@ -75,63 +75,28 @@
   border-bottom: 1px solid var(--rule);
 }
 
-/*
- * コピーボタン: 操作要素。角丸は入力欄と同じ --radius-sm。背景は持たず罫のみ、hover で --accent に変える。
- * タップ面 44px（§6）。
- */
-.copyButton {
-  min-height: 44px;
-  font-size: 0.875rem; /* 14px */
-  padding: 0 var(--space-16);
-  background-color: transparent;
-  border: 1px solid var(--rule);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  color: var(--ink-2);
-}
-
-.copyButton:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-/*
- * カテゴリ導線: 罫囲み・--radius-sm・--ink-2 の静かな器で、索引への
- * リンクなので hover で --accent に変える。ピルにしない。
- */
+/* 分類のページへ進むリンク。枠で囲むと hover の線や値札と読み違えるので、枠も地も持たず下線で示す（§6）。
+ * 下線と訪問済みの色は globals.css の a の既定に従う。タップの標的は 44px 以上で、字の左右の余白と、
+ * 字を並びの左端に置く張り出しは data-text-box（globals.css）が持つ。 */
 .categoryLink {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
   font-size: 0.9375rem; /* 15px */
-  padding: 0 var(--space-16);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius-sm);
-  text-decoration: none;
-  color: var(--ink-2);
 }
 
-.categoryLink:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-/* 関連ツールへの導線のリンク。 */
+/* 関連ツールへ進むリンク。categoryLink と同じく縁の見えないコントロールとして置く。 */
 .crossLink {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   font-size: 1rem;
-  color: var(--accent);
-  text-decoration: none;
-}
-
-.crossLink:hover {
-  text-decoration: underline;
-  text-underline-offset: 0.15em;
 }
 
 /*
- * 同カテゴリの伝統色: 色で辿る索引。各項目は色面（成果物）＋色名。器は直角＋一本罫で、
- * 色付きカードの装飾はしない（色面そのものが情報）。
+ * 同カテゴリの伝統色: 色で辿る索引。各項目は色面（成果物）＋色名。色付きカードの装飾はしない
+ * （色面そのものが情報）。項目は縁の見えないコントロールで、押せる範囲は色面と色名を合わせた箱。
+ * 箱の左右の余白と、色面を並びの左端に置く張り出しは data-text-box（globals.css）が持つ。
  */
 .relatedList {
   display: grid;
@@ -143,19 +108,8 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-8);
-  padding: var(--space-8);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
+  padding-block: var(--space-8);
   text-decoration: none;
-  color: var(--ink);
-}
-
-.relatedLink:hover {
-  border-color: var(--accent);
-}
-
-.relatedLink:hover .relatedName {
-  color: var(--accent);
 }
 
 /* 関連色の色面（成果物・データ由来色はインライン style）。 */
@@ -167,9 +121,12 @@
   border: 1px solid var(--rule);
 }
 
+/* 色名に下線を引き、色はリンクの色（訪問済みは --ink-2）を受け継ぐ（§6）。 */
 .relatedName {
   font-size: 0.875rem; /* 14px */
-  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-thickness: var(--rule-w-hair);
+  text-underline-offset: 0.15em;
 }
 
 @media (max-width: 640px) {

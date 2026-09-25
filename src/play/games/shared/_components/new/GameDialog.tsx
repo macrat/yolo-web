@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import Button from "@/components/Button";
 import { useDialog } from "../useDialog";
 import styles from "./GameDialog.module.css";
 
@@ -81,9 +82,9 @@ export default function GameDialog({
       </h2>
       {children}
       {footer}
-      <button className={styles.modalClose} onClick={handleClose} type="button">
-        {"閉じる"}
-      </button>
+      <div className={styles.modalClose}>
+        <Button onClick={handleClose}>閉じる</Button>
+      </div>
     </dialog>
   );
 }

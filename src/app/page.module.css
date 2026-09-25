@@ -152,33 +152,28 @@
 }
 
 /*
- * 入口のボタン（罫の線画）。ピルではない直角の罫囲みに --accent の文字。
- * 下線はリンク専有だが CTA ボタンは枠が輪郭を担うため下線を出さない（globals の a を上書き）。
- * hover は --accent-weak の地。タップ 44px。
+ * 目玉の入口。このページで最も進んでほしい1つなので、プライマリボタンと同じ反転で示し、ボーダーを持たない
+ * （§6）。反転の地が縁として見えるので、箱の左端を並びの左端に揃え、字は縁の内側 8px から始める（§5）。
+ * 訪問済みでも反転の字の色を保つ。
  */
 .heroLink {
   display: inline-flex;
   align-items: center;
   gap: var(--space-8);
   min-height: 44px;
-  padding: 0 var(--space-24);
-  color: var(--accent);
+  padding-inline: var(--space-8);
+  background: var(--ink);
+  color: var(--paper);
   font-family: var(--font-body);
   font-size: 1.125rem; /* 18px */
   line-height: 1.4;
-  border: 1px solid var(--accent);
-  border-radius: var(--radius); /* 0px（§5） */
   text-decoration: none;
 }
 
-.heroLink:hover {
-  background: var(--accent-weak);
-  text-decoration: none;
-}
-
-.heroLink:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+/* hover は、押せる範囲の内側に細い線を出す（§6）。フォーカスの二重リングは data-focus-ring（globals.css）が
+ * 箱の内側に出すので、フォーカスしているあいだは線で上書きしない。 */
+.heroLink:is(:hover, :active):not(:focus-visible) {
+  box-shadow: var(--hover-line);
 }
 
 /* ── 品書き（よろず＝広さの棚）─────────────────────────────────────────── */
@@ -192,8 +187,9 @@
 }
 
 /*
- * 「すべて見る」導線（棚から一覧ページへ）。リンク色・下線は globals.css の a が与える。
- * ここではタップターゲット 44px（§6）の確保だけを担う。
+ * 「すべて見る」導線（棚から一覧ページへ）。縁の見えないコントロールで、下線と訪問済みの色は globals.css の
+ * a の既定に従う（§6）。タップの標的は 44px 以上で、字の左右の余白と、字を並びの左端に置く張り出しは
+ * data-text-box（globals.css）が持つ。
  */
 .seeAll {
   margin: var(--space-16) 0 0;

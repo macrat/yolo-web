@@ -1,4 +1,4 @@
-/* GameHeader（なかまわけ）— 見出し・番号・操作アイコン */
+/* GameHeader（なかまわけ）— 見出し・番号・遊び方と統計のボタン */
 
 .header {
   display: flex;
@@ -26,33 +26,9 @@
   color: var(--ink-2);
 }
 
+/* 遊び方・統計のボタン。見え方は Button が持ち、縁の見えないコントロールなので押せる範囲を接して並べる（§5）。 */
 .buttons {
   display: flex;
-  gap: var(--space-8);
-}
-
-/* 線画アイコン（20px）を内包する操作ボタン。枠線なし・角丸は --radius・
- * hover はアイコン色を --accent にする（背景は塗らない）。44px の最小タップターゲットを確保。 */
-.iconButton {
-  width: 2.75rem;
-  height: 2.75rem;
-  padding: 0;
-  border-radius: var(--radius);
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--ink-2);
-  transition: color 0.15s ease;
-}
-
-.iconButton:hover {
-  color: var(--accent);
-}
-
-.iconButton:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  flex-wrap: wrap;
+  column-gap: var(--text-box-pad);
 }

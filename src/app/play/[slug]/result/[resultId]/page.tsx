@@ -232,7 +232,11 @@ export default async function PlayQuizResultPage({
 
       {/* CTA1 */}
       <div className={styles.trySection}>
-        <Link href={`/play/${slug}`} className={styles.tryButton}>
+        <Link
+          href={`/play/${slug}`}
+          className={styles.tryButton}
+          data-focus-ring="inset"
+        >
           {ctaText}
         </Link>
         <p className={styles.tryCost}>
@@ -277,7 +281,11 @@ export default async function PlayQuizResultPage({
 
           {/* CTA2: detailedContent読了者向けのテキストリンク形式CTA */}
           <div className={styles.cta2Section}>
-            <Link href={`/play/${slug}`} className={styles.cta2Link}>
+            <Link
+              href={`/play/${slug}`}
+              className={styles.cta2Link}
+              data-text-box="inline"
+            >
               {ctaText}
             </Link>
           </div>

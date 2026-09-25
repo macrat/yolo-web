@@ -112,7 +112,7 @@ export default function YojiPersonalityContent({
         <Heading className={styles.allTypesCta}>
           他の四字熟語も見てみよう
         </Heading>
-        <ul className={allTypesListClass}>
+        <ul className={allTypesListClass} data-text-box="rows">
           {quiz.results.map((r) => (
             <li
               key={r.id}
@@ -125,6 +125,7 @@ export default function YojiPersonalityContent({
               <Link
                 href={`/play/${quiz.meta.slug}/result/${r.id}`}
                 aria-current={r.id === resultId ? "page" : undefined}
+                data-hit-area="after"
               >
                 {/* 新デザインでは絵文字アイコン（r.icon）を描画しない（DESIGN.md: 絵文字を使わない）。
                     各タイプの区別はタイトル文言で行う。 */}

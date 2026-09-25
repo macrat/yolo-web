@@ -32,22 +32,29 @@
   line-height: 1.9;
 }
 
-/* タグページの疑似パンくず（visible な Breadcrumb コンポーネントは使わず、
- * 「ブログ / タグ」の軽い導入テキストのみ・JSON-LD は route 側で維持） */
+/* タグページのパンくず。JSON-LD は route 側が出すので、Breadcrumb 部品を使わず同じ見え方で置く（§5・§6）。 */
 .tagBreadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   margin: 0 0 var(--space-8);
   font-family: var(--font-body);
-  font-size: 0.875rem;
+  font-size: var(--text-small);
+  line-height: 1.5;
   color: var(--ink-2);
 }
 
-.tagBreadcrumb a {
-  color: var(--ink-2);
-  text-decoration: none;
+/* パンくずのリンクは縁の見えないコントロール。タップの標的は 44px 以上で、字の左右の余白と、字を並びの
+ * 左端に置く張り出しは data-text-box（globals.css）が持つ。下線と訪問済みの色は globals.css の a の既定に従う。 */
+.tagBreadcrumbLink {
+  display: inline-flex;
+  align-items: center;
+  min-width: 44px;
+  min-height: 44px;
 }
 
-.tagBreadcrumb a:hover {
-  color: var(--accent);
-  text-decoration: underline;
-  text-underline-offset: 0.15em;
+/* 区切りの「/」。リンクの箱の後ろに間隔をあけ、リングと hover の線を「/」に掛けない。 */
+.tagBreadcrumbSeparator {
+  margin-inline: var(--space-8);
+  user-select: none;
 }

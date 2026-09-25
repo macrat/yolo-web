@@ -1,7 +1,21 @@
 import { describe, it, expect } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import YojiSearchTile from "../YojiSearchTile";
+
+/** 結果の並びの行（開閉の行）の数。 */
+function countResultRows(): number {
+  return document.querySelectorAll("li details > summary").length;
+}
+
+/** 四字熟語の結果の行の開閉の行を返す。 */
+function getResultSummary(yoji: string): HTMLElement {
+  const summary = within(document.body)
+    .getByText(yoji, { selector: "summary *" })
+    .closest("summary");
+  if (!summary) throw new Error(`${yoji} の行が無い`);
+  return summary as HTMLElement;
+}
 
 describe("YojiSearchTile", () => {
   it("renders search input", () => {
@@ -20,9 +34,7 @@ describe("YojiSearchTile", () => {
       screen.queryByText("キーワードやカテゴリで四字熟語を検索できます"),
     ).not.toBeInTheDocument();
     // idioms are rendered immediately so 一覧-intent visitors see content
-    expect(
-      screen.getAllByRole("button", { name: /の詳細を表示/ }).length,
-    ).toBeGreaterThan(0);
+    expect(countResultRows()).toBeGreaterThan(0);
     // the list is paged, and a "もっと見る" button lets browse-all visitors
     // reach every entry (not a dead end)
     expect(
@@ -34,13 +46,9 @@ describe("YojiSearchTile", () => {
     const user = userEvent.setup();
     render(<YojiSearchTile />);
 
-    const before = screen.getAllByRole("button", {
-      name: /の詳細を表示/,
-    }).length;
+    const before = countResultRows();
     await user.click(screen.getByRole("button", { name: /もっと見る/ }));
-    const after = screen.getAllByRole("button", {
-      name: /の詳細を表示/,
-    }).length;
+    const after = countResultRows();
 
     expect(after).toBeGreaterThan(before);
   });
@@ -61,22 +69,16 @@ describe("YojiSearchTile", () => {
     const user = userEvent.setup();
     render(<YojiSearchTile />);
 
-    const firstPage = screen.getAllByRole("button", {
-      name: /の詳細を表示/,
-    }).length;
+    const firstPage = countResultRows();
     await user.click(screen.getByRole("button", { name: /もっと見る/ }));
-    expect(
-      screen.getAllByRole("button", { name: /の詳細を表示/ }).length,
-    ).toBeGreaterThan(firstPage);
+    expect(countResultRows()).toBeGreaterThan(firstPage);
 
     // changing the query, then clearing it, returns to a single page of results
     const input = screen.getByPlaceholderText("四字熟語・読み・意味で検索...");
     await user.type(input, "一");
     await user.clear(input);
 
-    expect(screen.getAllByRole("button", { name: /の詳細を表示/ }).length).toBe(
-      firstPage,
-    );
+    expect(countResultRows()).toBe(firstPage);
   });
 
   it("filters results when typing a query", async () => {
@@ -86,7 +88,7 @@ describe("YojiSearchTile", () => {
     const input = screen.getByPlaceholderText("四字熟語・読み・意味で検索...");
     await user.type(input, "一期一会");
 
-    expect(screen.getByText("一期一会")).toBeInTheDocument();
+    expect(getResultSummary("一期一会")).toBeInTheDocument();
     expect(screen.getByRole("status")).toHaveTextContent(/\d+語中 \d+件/);
   });
 
@@ -109,10 +111,7 @@ describe("YojiSearchTile", () => {
     const input = screen.getByPlaceholderText("四字熟語・読み・意味で検索...");
     await user.type(input, "一期一会");
 
-    const button = screen.getByRole("button", {
-      name: /一期一会 の詳細を表示/,
-    });
-    await user.click(button);
+    await user.click(getResultSummary("一期一会"));
 
     // 絞り込みの組の見出しと同じ語なので、詳細の見出し（dt）に絞って探す。
     expect(screen.getByText("例文", { selector: "dt" })).toBeInTheDocument();
@@ -129,15 +128,8 @@ describe("YojiSearchTile", () => {
     const input = screen.getByPlaceholderText("四字熟語・読み・意味で検索...");
     await user.type(input, "一期一会");
 
-    const expandButton = screen.getByRole("button", {
-      name: /一期一会 の詳細を表示/,
-    });
-    await user.click(expandButton);
-
-    const collapseButton = screen.getByRole("button", {
-      name: /一期一会 の詳細を閉じる/,
-    });
-    await user.click(collapseButton);
+    await user.click(getResultSummary("一期一会"));
+    await user.click(getResultSummary("一期一会"));
 
     expect(screen.queryByText("例文")).not.toBeInTheDocument();
   });

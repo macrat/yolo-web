@@ -1,22 +1,22 @@
 /*
  * ブログ記事一覧 — 品書き。
- * 罫区切りのリスト（カードのグリッド・box-shadow・角丸装飾は使わない）。
- * 区切りの主役は --rule の一本罫。全トークン経由・直書きなし。
+ * 行どうしを細い線で区切るリスト（§7）。カードのグリッド・影・角丸は持たない。
  */
 
 .list {
   list-style: none;
   margin: 0;
   padding: 0;
-  border-top: 1px solid var(--rule);
+  border-top: var(--rule-w-hair) solid var(--rule-2);
 }
 
+/* 字を罫線の内側から始める行の左右の余白は data-text-box（globals.css）が持つ。 */
 .row {
   display: flex;
   flex-direction: column;
   gap: var(--space-8);
-  padding: var(--space-16) 0;
-  border-bottom: 1px solid var(--rule);
+  padding-block: var(--space-16);
+  border-bottom: var(--rule-w-hair) solid var(--rule-2);
   /* stretched-link（.titleLink::after）の絶対配置の基準。 */
   position: relative;
 }
@@ -31,18 +31,15 @@
   letter-spacing: 0.01em;
 }
 
-/* 品名リンク: 静止時に下線を出さず、hover で下線を出す。 */
-.titleLink {
-  color: var(--ink);
-  text-decoration: none;
-}
+/* 品名リンクの下線と訪問済みの色は globals.css の a の既定に従う（§6 一覧の行・§7 下線は名前に付く）。 */
 
 /*
  * stretched-link: クリック/タップ標的を品名テキストだけでなく視覚単位（行）全体へ
- * 拡張する（description・補助情報・公開日・新着の印まで覆う。人は罫で囲まれた行を
+ * 拡張する（description・補助情報・公開日まで覆う。人は罫で囲まれた行を
  * クリック可能と認識するため）。アクセシブル名は品名のみに
  * 保たれる（SR 良好・入れ子アンカーを作らない）。タグは .tagRow の z-index で
  * この擬似要素より前面に維持し、独立クリックを両立する。
+ * hover の線とフォーカスの二重リングは、data-hit-area（globals.css）がこの範囲に出す。
  */
 .titleLink::after {
   content: "";
@@ -50,22 +47,13 @@
   inset: 0;
 }
 
-.titleLink:hover {
-  color: var(--accent);
-  text-decoration: underline;
-  text-underline-offset: 0.15em;
-}
-
-.titleLink:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
 /*
  * 新着の印: 行に添える補助情報なので、ほかの補助情報と同じ文字で置く（§4）。
- * 色で目立たせないのは、UI に色を出さないため（§2）。
+ * 色で目立たせないのは、UI に色を出さないため（§2）。下線は名前にだけ付けるので、
+ * inline-block にしてリンクの下線を受け継がない。
  */
 .newMark {
+  display: inline-block;
   margin-right: var(--space-16);
   color: var(--ink-2);
   font-family: var(--font-body);

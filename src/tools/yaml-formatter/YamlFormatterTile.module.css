@@ -4,7 +4,7 @@
  *
  * DESIGN トークン準拠:
  * - 旧 --color-* トークン不使用 (B-1)
- * - --accent 直塗り禁止（フォーカスの outline のみ許可）(B-3)
+ * - --accent 直塗り禁止(B-3)
  * - font-weight: 700 禁止 (B-4)
  * - 角丸: var(--radius)（区画・カード・ボタン等） (B-5)
  * - フォーム境界線: var(--rule-strong) (B-7)

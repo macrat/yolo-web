@@ -80,10 +80,14 @@ export default function PlayRecommendBlock({
     <nav aria-label="関連する占い・診断" className={styles.container}>
       <h2 className={styles.heading}>{heading}</h2>
       <p className={styles.subtext}>{subtext}</p>
-      <ul className={styles.list}>
+      <ul className={styles.list} data-text-box="rows">
         {recommendations.map((content) => (
           <li key={content.slug} className={styles.row}>
-            <Link href={getContentPath(content)} className={styles.card}>
+            <Link
+              href={getContentPath(content)}
+              className={styles.card}
+              data-hit-area="after"
+            >
               <span className={styles.head}>
                 <span className={styles.title}>
                   {content.shortTitle ?? content.title}

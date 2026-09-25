@@ -100,8 +100,19 @@ export default function BlogListView({
         {tagHeader ? (
           <>
             <p className={styles.tagBreadcrumb}>
-              <Link href="/blog">ブログ</Link>
-              <span aria-hidden="true"> / </span>
+              <Link
+                href="/blog"
+                className={styles.tagBreadcrumbLink}
+                data-text-box="inline"
+              >
+                ブログ
+              </Link>
+              <span
+                className={styles.tagBreadcrumbSeparator}
+                aria-hidden="true"
+              >
+                /
+              </span>
               タグ
             </p>
             <h1 className={styles.title}>{tagHeader.tag}</h1>

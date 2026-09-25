@@ -1,5 +1,4 @@
-import BarChart from "@/components/icons/BarChart";
-import HelpCircle from "@/components/icons/HelpCircle";
+import Button from "@/components/Button";
 import styles from "./GameHeader.module.css";
 
 interface Props {
@@ -16,7 +15,8 @@ interface Props {
 }
 
 /**
- * Game header showing the title, puzzle number, date, and icon buttons.
+ * Game header showing the title, puzzle number, date, and the buttons that
+ * open the help and stats dialogs.
  */
 export default function GameHeader({
   puzzleNumber,
@@ -33,22 +33,8 @@ export default function GameHeader({
       </h1>
       <p className={styles.date}>{dateString}</p>
       <div className={styles.buttons}>
-        <button
-          onClick={onHelpClick}
-          className={styles.iconButton}
-          aria-label={"\u904A\u3073\u65B9"}
-          type="button"
-        >
-          <HelpCircle />
-        </button>
-        <button
-          onClick={onStatsClick}
-          className={styles.iconButton}
-          aria-label={"\u7D71\u8A08"}
-          type="button"
-        >
-          <BarChart />
-        </button>
+        <Button onClick={onHelpClick}>{"\u904A\u3073\u65B9"}</Button>
+        <Button onClick={onStatsClick}>{"\u7D71\u8A08"}</Button>
       </div>
     </header>
   );

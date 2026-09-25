@@ -39,7 +39,7 @@ interface BlogListProps {
  * カードのグリッドにせず、罫区切りのリストで組む。
  * 各行 = 品名（タイトル・リンク）+ ひとこと（description・--ink-2）+
  * 補助情報（カテゴリ・読了時間）+ 右端メタ（公開日）+ タグ（{@link TagList}）。
- * 器は静か——カード背景・box-shadow・角丸装飾は持たない（構造の主役は --rule の一本罫）。
+ * 器は静か——カード背景・box-shadow・角丸装飾は持たない（構造の主役は行を区切る細い線）。
  */
 export default function BlogList({
   posts,
@@ -48,7 +48,11 @@ export default function BlogList({
   linkableTags,
 }: BlogListProps) {
   return (
-    <ul className={styles.list} aria-label="ブログ記事一覧">
+    <ul
+      className={styles.list}
+      aria-label="ブログ記事一覧"
+      data-text-box="rows"
+    >
       {posts.map((post) => {
         const categoryLabel = categoryLabels[post.category] ?? post.category;
         const isNew = newSlugs.has(post.slug);
@@ -56,7 +60,11 @@ export default function BlogList({
         return (
           <li key={post.slug} className={styles.row}>
             <h2 className={styles.title}>
-              <Link href={`/blog/${post.slug}`} className={styles.titleLink}>
+              <Link
+                href={`/blog/${post.slug}`}
+                className={styles.titleLink}
+                data-hit-area="after"
+              >
                 {isNew && <span className={styles.newMark}>新着</span>}
                 {post.title}
               </Link>

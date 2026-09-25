@@ -129,9 +129,13 @@ export default async function UnexpectedCompatibilityResultPage({
           isLong={isDescriptionLong}
         />
 
-        {/* CTA1: 共通トーン（primary ボタン = --accent 地・--paper 文字）。タイプ固有色は撤去済み */}
+        {/* CTA1 */}
         <div className={styles.trySection}>
-          <Link href={`/play/${SLUG}`} className={styles.tryButton}>
+          <Link
+            href={`/play/${SLUG}`}
+            className={styles.tryButton}
+            data-focus-ring="inset"
+          >
             {ctaText}
           </Link>
           <p className={styles.tryCost}>
@@ -151,7 +155,11 @@ export default async function UnexpectedCompatibilityResultPage({
           afterLifeAdvice={
             /* CTA2: 全タイプ一覧の前に配置 — コンテンツを読み終えた時点での自然な誘導 */
             <div className={styles.cta2Section}>
-              <Link href={`/play/${SLUG}`} className={styles.cta2Link}>
+              <Link
+                href={`/play/${SLUG}`}
+                className={styles.cta2Link}
+                data-text-box="inline"
+              >
                 {ctaText}
               </Link>
             </div>

@@ -15,21 +15,15 @@ test("404 page renders heading", () => {
 test("404 page has links to main sections", () => {
   render(<GlobalNotFound />);
 
-  const homeLink = screen.getByRole("link", { name: /トップページに戻る/ });
+  const homeLink = screen.getByRole("link", { name: "ホーム" });
   expect(homeLink).toHaveAttribute("href", "/");
 
-  const toolsLink = screen.getByRole("link", {
-    name: /すぐに使える便利ツール集/,
-  });
+  const toolsLink = screen.getByRole("link", { name: "無料オンラインツール" });
   expect(toolsLink).toHaveAttribute("href", "/tools");
 
-  const gamesLink = screen.getByRole("link", {
-    name: /遊んで学べるブラウザゲーム/,
-  });
+  const gamesLink = screen.getByRole("link", { name: "遊ぶ" });
   expect(gamesLink).toHaveAttribute("href", "/play");
 
-  const blogLink = screen.getByRole("link", {
-    name: /試行錯誤ブログ/,
-  });
+  const blogLink = screen.getByRole("link", { name: "ブログ" });
   expect(blogLink).toHaveAttribute("href", "/blog");
 });

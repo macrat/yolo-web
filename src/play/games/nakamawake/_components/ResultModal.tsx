@@ -3,6 +3,7 @@
 import { useCallback } from "react";
 import type { NakamawakeGameState } from "@/play/games/nakamawake/_lib/types";
 import { generateShareText } from "@/play/games/nakamawake/_lib/share";
+import Button from "@/components/Button";
 import GameDialog from "@/play/games/shared/_components/new/GameDialog";
 import GameShareButtons from "@/play/games/shared/_components/new/GameShareButtons";
 import CountdownTimer from "@/play/games/shared/_components/new/CountdownTimer";
@@ -56,13 +57,11 @@ export default function ResultModal({
       title={isWon ? "\u3059\u3079\u3066\u6B63\u89E3!" : "\u6B8B\u5FF5..."}
       returnFocusRef={returnFocusRef}
       footer={
-        <button
-          className={styles.statsButton}
-          onClick={handleStatsClick}
-          type="button"
-        >
-          {"\u7D71\u8A08\u3092\u898B\u308B"}
-        </button>
+        <div className={styles.statsAction}>
+          <Button onClick={handleStatsClick}>
+            {"\u7D71\u8A08\u3092\u898B\u308B"}
+          </Button>
+        </div>
       }
     >
       <div className={styles.resultSummary}>

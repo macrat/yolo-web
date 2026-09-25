@@ -1,12 +1,15 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useId } from "react";
+import Button from "@/components/Button";
 import styles from "./styles/KanjiKanaru.module.css";
 
 interface GuessInputProps {
   onSubmit: (kanji: string) => Promise<string | null>;
   disabled: boolean;
   submitting?: boolean;
+  /** 送信中でないのに入力できないとき、なぜ入力できないかを言う文（§6 無効）。 */
+  disabledReason?: string;
 }
 
 /**
@@ -19,7 +22,11 @@ export default function GuessInput({
   onSubmit,
   disabled,
   submitting = false,
+  disabledReason,
 }: GuessInputProps) {
+  const reasonId = useId();
+  // 送信中はボタンの字が「送信中...」と理由を言うので、理由の文を別に出さない。
+  const showReason = Boolean(disabled && !submitting && disabledReason);
   const [value, setValue] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [shaking, setShaking] = useState(false);
@@ -70,6 +77,7 @@ export default function GuessInput({
         <input
           ref={inputRef}
           className={styles.inputField}
+          data-field
           type="text"
           value={value}
           onChange={(e) => {
@@ -90,19 +98,25 @@ export default function GuessInput({
               : "\u6F22\u5B57\u3092\u5165\u529B"
           }
           aria-label={"\u6F22\u5B57\u3092\u5165\u529B"}
+          aria-describedby={showReason ? reasonId : undefined}
           autoComplete="off"
           autoCorrect="off"
           spellCheck={false}
         />
-        <button
-          className={styles.submitButton}
+        <Button
+          variant="primary"
           onClick={() => void handleSubmit()}
           disabled={disabled}
-          type="button"
+          aria-describedby={showReason ? reasonId : undefined}
         >
           {submitting ? "\u9001\u4FE1\u4E2D..." : "\u9001\u4FE1"}
-        </button>
+        </Button>
       </div>
+      {showReason && (
+        <p id={reasonId} className={styles.disabledReason}>
+          {disabledReason}
+        </p>
+      )}
       <div className={styles.errorMessage} role="alert" aria-live="polite">
         {error ?? ""}
       </div>

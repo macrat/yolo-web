@@ -7,6 +7,7 @@ import {
 } from "@/play/games/shared/_lib/share";
 import { useCanWebShare, shareGameResult } from "@/lib/webShare";
 import { trackShare } from "@/lib/analytics";
+import Button from "@/components/Button";
 import styles from "./GameShareButtons.module.css";
 
 /**
@@ -76,40 +77,14 @@ export default function GameShareButtons({
     <div>
       <div className={styles.shareArea}>
         {canWebShare ? (
-          <button
-            className={styles.shareButtonCopy}
-            onClick={handleWebShare}
-            type="button"
-          >
-            {"シェア"}
-          </button>
+          <Button onClick={handleWebShare}>{"シェア"}</Button>
         ) : (
           <>
-            <button
-              className={styles.shareButtonCopy}
-              onClick={handleCopy}
-              type="button"
-            >
-              {"結果をコピー"}
-            </button>
-            <button
-              className={styles.shareButtonX}
-              onClick={handleShareX}
-              type="button"
-            >
-              X{"でシェア"}
-            </button>
+            <Button onClick={handleCopy}>{"結果をコピー"}</Button>
+            <Button onClick={handleShareX}>X{"でシェア"}</Button>
           </>
         )}
-        {onSaveImage && (
-          <button
-            className={styles.shareButtonImage}
-            onClick={onSaveImage}
-            type="button"
-          >
-            {"画像を保存"}
-          </button>
-        )}
+        {onSaveImage && <Button onClick={onSaveImage}>{"画像を保存"}</Button>}
       </div>
       <div className={styles.copiedMessage} role="status" aria-live="polite">
         {copied ? "コピーしました!" : ""}

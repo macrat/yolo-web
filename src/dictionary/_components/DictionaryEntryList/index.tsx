@@ -49,12 +49,16 @@ export default function DictionaryEntryList({
   ariaLabel,
 }: DictionaryEntryListProps): ReactElement {
   return (
-    <ul className={styles.list} aria-label={ariaLabel}>
+    <ul className={styles.list} aria-label={ariaLabel} data-text-box="rows">
       {items.map((item) => {
         const facts = (item.facts ?? []).filter((fact) => fact.trim() !== "");
         return (
           <li key={item.key} className={styles.row}>
-            <Link href={item.href} className={styles.itemLink}>
+            <Link
+              href={item.href}
+              className={styles.itemLink}
+              data-hit-area="after"
+            >
               <span className={styles.headword}>
                 {item.swatch ? (
                   <span

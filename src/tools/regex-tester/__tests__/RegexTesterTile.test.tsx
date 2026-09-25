@@ -99,6 +99,24 @@ import RegexTesterTile from "../RegexTesterTile";
 // =========================================================
 // T-1: Panel ルート（アーキテクチャ要件 A-1）
 // =========================================================
+
+/** 置換のアコーディオンの開閉の行。 */
+function getReplaceSummary(): HTMLElement {
+  const summary = screen
+    .getByText("置換", { selector: "summary *" })
+    .closest("summary");
+  if (!summary) throw new Error("置換の開閉の行が無い");
+  return summary as HTMLElement;
+}
+
+/** 置換のアコーディオンを開く。details の toggle はタイマーで遅れて届くので、偽のタイマーを進めて届ける。 */
+async function openReplace(): Promise<void> {
+  await act(async () => {
+    fireEvent.click(getReplaceSummary());
+    vi.advanceTimersByTime(0);
+  });
+}
+
 describe("T-1: Panel ルート", () => {
   it("タイルのルート要素が <section>（Panel デフォルト）で描画される", () => {
     const { container } = render(<RegexTesterTile variant="full" />);
@@ -296,25 +314,20 @@ describe("T-6: フラグ操作", () => {
 // T-7: 置換機能
 // =========================================================
 describe("T-7: 置換機能", () => {
-  it("「置換を表示」ボタンが存在する", () => {
+  it("「置換」の開閉の行が存在する", () => {
     render(<RegexTesterTile variant="full" />);
-    expect(screen.getByRole("button", { name: /置換/ })).toBeInTheDocument();
+    expect(getReplaceSummary()).toBeInTheDocument();
   });
 
-  it("「置換を表示」ボタンを押すと置換文字列入力欄が表示される", async () => {
+  it("「置換」の行を開くと置換文字列入力欄が表示される", async () => {
     render(<RegexTesterTile variant="full" />);
-    const toggleBtn = screen.getByRole("button", { name: /置換を表示/ });
-    await act(async () => {
-      fireEvent.click(toggleBtn);
-    });
+    await openReplace();
     expect(screen.getByLabelText(/置換文字列/)).toBeInTheDocument();
   });
 
   it("パターン・テスト文字列・置換文字列を入力すると置換結果が表示される", async () => {
     render(<RegexTesterTile variant="full" />);
-    await act(async () => {
-      fireEvent.click(screen.getByRole("button", { name: /置換を表示/ }));
-    });
+    await openReplace();
 
     const patternInput = screen.getByRole("textbox", {
       name: /正規表現パターン/,
@@ -431,9 +444,7 @@ describe("T-9: 複数インスタンス同居（道具箱）", () => {
 describe("T-10: 置換結果 aria-labelledby", () => {
   it("置換結果ラベルに id が付与され <pre> が aria-labelledby で紐付いている", async () => {
     render(<RegexTesterTile variant="full" />);
-    await act(async () => {
-      fireEvent.click(screen.getByRole("button", { name: /置換を表示/ }));
-    });
+    await openReplace();
 
     const patternInput = screen.getByRole("textbox", {
       name: /正規表現パターン/,

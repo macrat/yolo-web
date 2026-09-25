@@ -53,15 +53,8 @@ function getStatusServerSnapshot(): GamePlayStatus[] {
 }
 
 /**
- * Banner showing other game suggestions after completing a game
- * （(new) デザイン体系版。legacy 版は廃止済みで、本ファイルが唯一の実装）.
- * Highlights unplayed games and shows daily progress.
- *
- * cycle-268 で legacy 版（廃止済み）から CSS のみ差し替え:
- * 未プレイ強調の青ボタン（--color-primary + #fff）を無彩の austere（反転塗り）へ、
- * 中央寄せ撤去、新トークン化。
- * cycle-279 でさらに店構えへ再移行し、反転塗りも撤去——未プレイは
- * var(--accent) の罫+文字のみで示す（背景は塗らない）。ロジックは不変。
+ * ゲームを終えたあとに、ほかのデイリーゲームを1行1項目の一覧で出す（§7）。今日の進み具合と、各ゲームを
+ * 今日遊んだかどうかを文字で示す。
  */
 export default function NextGameBanner({
   currentGameSlug,
@@ -88,22 +81,22 @@ export default function NextGameBanner({
           : `今日のパズル ${playedCount}/${totalCount} クリア`}
       </div>
       {!allComplete && (
-        <div className={styles.gameList}>
+        <ul className={styles.gameList} data-text-box="rows">
           {otherGames.map(({ game, playedToday }) => (
-            <Link
-              key={game.slug}
-              href={game.path}
-              className={`${styles.gameLink} ${
-                playedToday ? styles.played : styles.unplayed
-              }`}
-            >
-              <span className={styles.gameTitle}>{game.title}</span>
+            <li key={game.slug} className={styles.row}>
+              <Link
+                href={game.path}
+                className={styles.gameLink}
+                data-hit-area="after"
+              >
+                <span className={styles.gameTitle}>{game.title}</span>
+              </Link>
               <span className={styles.gameStatus}>
                 {playedToday ? "クリア済" : "未プレイ"}
               </span>
-            </Link>
+            </li>
           ))}
-        </div>
+        </ul>
       )}
     </div>
   );

@@ -184,7 +184,11 @@ export default async function AnimalPersonalityResultPage({
 
         {/* CTA1 */}
         <div className={styles.trySection}>
-          <Link href={`/play/${SLUG}`} className={styles.tryButton}>
+          <Link
+            href={`/play/${SLUG}`}
+            className={styles.tryButton}
+            data-focus-ring="inset"
+          >
             {ctaText}
           </Link>
           <p className={styles.tryCost}>
@@ -212,7 +216,11 @@ export default async function AnimalPersonalityResultPage({
               )}
               {/* CTA2: 全タイプ一覧の前に配置 — コンテンツを読み終えた時点での自然な誘導 */}
               <div className={styles.cta2Section}>
-                <Link href={`/play/${SLUG}`} className={styles.cta2Link}>
+                <Link
+                  href={`/play/${SLUG}`}
+                  className={styles.cta2Link}
+                  data-text-box="inline"
+                >
                   {ctaText}
                 </Link>
               </div>

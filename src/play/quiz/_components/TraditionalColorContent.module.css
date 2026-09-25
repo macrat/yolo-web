@@ -3,7 +3,7 @@
  * ResultCard.tsx（受検者向けインライン結果）と page.tsx（第三者向け静的結果ページ）の両方から使用される。
  *
  * 設計方針（ResultCard.module.css を一次規範として語彙をそろえる）:
- * - 左寄せ・トークンのみ・font-weight は最大 600・絵文字なし・影なし。
+ * - 左寄せ・トークンのみ・絵文字なし・影なし。
  * - 装飾としての色使い（見出し罫線・カード薄敷き・seasonTag 等）はタイプごとの派手色（--type-color）から外し、
  *   共通アクセント（--accent / --paper-2 / --accent-weak）に統一する。
  *   各タイプの個性は「色そのもの（色見本）」と「言葉（本文）」で立てる。
@@ -168,15 +168,11 @@
   border: 1px solid var(--rule);
 }
 
-/* ============================================================
-   罫の升目索引（page.tsx版）。
+/* 罫の升目索引（page.tsx版）:
    カードのグリッドにせず、辞典の部首索引の流儀（罫で仕切った升目に複数列で流す）に組む。
-   セル個々はカード化しない（背景・全周枠を持たない）——列内の行は border-bottom の罫だけで
-   区切る。現在地は面を塗らず、文字色と下罫（--accent）で示す。
-   Traditional は 48 タイプあるが、複数列に流すことで縦長さを抑える。
-   color-as-content の例外: 各セル内に「色ドット + 色名」を flex で並べ、色ドットは引き続き
-   r.color の inline backgroundColor で実色を表示する（上記 .colorDot 参照）。
-   ============================================================ */
+   セル個々はカード化しない（背景・全周枠を持たない）——列内の行は下罫だけで区切る。
+   Traditional は 48 タイプあるが、複数列に流すことで縦長さを抑える。各セルは「色ドット + 色名」を並べ、
+   色ドットは r.color の実色を表示する（上記 .colorDot 参照）。 */
 .allTypesGrid {
   list-style: none;
   padding: 0;
@@ -193,7 +189,9 @@
 
 .allTypesGrid .allTypesItem,
 .allTypesGrid .allTypesItemCurrent {
+  position: relative;
   break-inside: avoid;
+  border-bottom: var(--rule-w-hair) solid var(--rule-2);
 }
 
 .allTypesGrid .allTypesItem a,
@@ -202,40 +200,22 @@
   align-items: center;
   min-height: 44px;
   gap: 0.5rem;
-  padding: 0.5rem 0.25rem;
-  border-bottom: 1px solid var(--rule);
+  padding-block: 0.5rem;
   font-size: 0.875rem;
-  text-decoration: none;
-  transition: background-color 0.15s ease;
-  width: 100%;
 }
 
-.allTypesGrid .allTypesItem a {
-  color: var(--ink);
-}
-
-.allTypesGrid .allTypesItem a:hover {
-  background-color: var(--paper-2);
-}
-
-/* 現在のタイプ: 面を塗らず、文字色と下罫（--accent）で「今ここ」を示す */
-.allTypesGrid .allTypesItemCurrent a {
-  color: var(--accent);
-  font-weight: 600;
-  border-bottom-color: var(--accent);
-  pointer-events: none;
-}
-
-/* ============================================================
-   縦並びリスト レイアウト（ResultCard版）
-   ============================================================ */
+/* 縦並びリスト レイアウト（ResultCard版） */
 .allTypesListVertical {
   list-style: none;
   padding: 0;
   margin: 1rem 0 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  border-top: var(--rule-w-hair) solid var(--rule-2);
+}
+
+.allTypesListVertical .allTypesItem,
+.allTypesListVertical .allTypesItemCurrent {
+  position: relative;
+  border-bottom: var(--rule-w-hair) solid var(--rule-2);
 }
 
 .allTypesListVertical .allTypesItem a,
@@ -244,23 +224,23 @@
   align-items: center;
   min-height: 44px;
   gap: 0.5rem;
-  padding: 0.5rem 0.75rem;
-  /* 現在タイプの枠線と高さをそろえるため、非現在項目も透明枠を持たせる */
-  border: 1px solid transparent;
-  border-radius: var(--radius);
+  padding-block: 0.5rem;
   font-size: 0.9rem;
+}
+
+/* どちらのレイアウトも、字を罫線の内側から始める行の左右の余白と hover の線の形は data-text-box（globals.css）が
+   持つ。下線と訪問済みの色は a の既定に従う。押せる範囲を行全体に広げ、hover の線とフォーカスの二重リングは
+   data-hit-area（globals.css）がこの範囲に出す。 */
+.allTypesItem a::after,
+.allTypesItemCurrent a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+/* 現在のタイプ: 押しても何も起きないので下線を持たず、太字で示す（§6 現在地）。 */
+.allTypesItemCurrent a {
   color: var(--ink);
+  font-weight: 700;
   text-decoration: none;
-  transition: background-color 0.15s ease;
-}
-
-.allTypesListVertical .allTypesItem a:hover {
-  background-color: var(--paper-2);
-}
-
-/* 現在のタイプ: アクセント枠＋淡い面で「今ここ」を示す（font-weight は上げない） */
-.allTypesListVertical .allTypesItemCurrent a {
-  border: 1px solid var(--accent);
-  background-color: var(--accent-weak);
-  pointer-events: none;
 }

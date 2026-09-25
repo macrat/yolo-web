@@ -1,8 +1,7 @@
 /*
  * 設問カード。
- * 設問文=見出しの書体・選択肢=紙地+罫のボタン（hover で --accent-weak の座布団・44px・
- * ピル/ブランド色禁止）。正誤フィードバックは色だけでなく文字ラベルを併記する
- * （WCAG 1.4.1）。角丸は 0px 基調（--radius）。リビールは 1 回・300ms・reduced-motion 尊重。
+ * 設問文=見出しの書体・選択肢=下線を持つボタンを1行ずつ並べた一覧。正誤フィードバックは
+ * 文字で示す（WCAG 1.4.1）。リビールは 1 回・300ms・reduced-motion 尊重。
  */
 
 .card {
@@ -37,76 +36,60 @@
   box-shadow: none;
 }
 
+/* 選択肢は1行1項目の一覧（§7）。字を罫線の内側から始める行の左右の余白と、hover の線の形は
+ * data-text-box（globals.css）が持つ。 */
 .choices {
-  display: flex;
-  flex-direction: column;
-  gap: 0.625rem;
+  list-style: none;
+  border-top: var(--rule-w-hair) solid var(--rule-2);
 }
 
-/* 選択肢ボタン: 紙地+罫。ピル・ブランド色は使わない。タップ 44px 以上。 */
-.choiceButton {
+.choice {
+  position: relative;
   display: flex;
-  align-items: center;
+  flex-wrap: wrap;
+  align-items: baseline;
   justify-content: space-between;
-  gap: 0.75rem;
-  width: 100%;
+  column-gap: 0.75rem;
   min-height: 44px;
-  padding: 0.75rem 1rem;
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
-  background-color: var(--paper);
+  padding-block: 0.625rem;
+  border-bottom: var(--rule-w-hair) solid var(--rule-2);
+}
+
+/* 押すと回答が決まるので、下線を持つ（§6）。 */
+.choiceButton {
+  padding: 0;
+  border: none;
+  background: none;
   color: var(--ink);
   font-size: 1rem;
-  font-family: inherit;
-  cursor: pointer;
+  line-height: 1.6;
   text-align: left;
-  transition:
-    border-color 0.15s ease,
-    background-color 0.15s ease;
+  text-decoration: underline;
+  text-decoration-thickness: var(--rule-w-hair);
+  text-underline-offset: 0.15em;
+  cursor: pointer;
+  /* hover の線は押せる範囲（::after）にだけ出し、字の箱には出さない。 */
+  box-shadow: none;
 }
 
-/* hover: --accent-weak の座布団。 */
-.choiceButton:hover:not(:disabled) {
-  border-color: var(--accent);
-  background-color: var(--accent-weak);
+/* 押せる範囲を行全体に広げる。hover の線とフォーカスの二重リングは、data-hit-area（globals.css）がこの範囲に出す。 */
+.choiceButton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
 }
 
-.choiceButton:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+.choiceText {
+  font-size: 1rem;
+  line-height: 1.6;
 }
 
-.choiceButton:disabled {
-  cursor: default;
-}
-
-/* 正解（knowledge type のフィードバック）。色（アクセント枠+淡い面）に加え
- * 文字ラベル（.feedbackTag）で伝える（色だけに頼らない）。 */
-.choiceCorrect {
-  border-color: var(--accent);
-  background-color: var(--accent-weak);
-}
-
-/* 不正解（選んだが誤りだった選択肢）。罫を強め、文字を静かに沈める。 */
-.choiceWrong {
-  border-color: var(--rule-strong);
-  color: var(--ink-2);
-}
-
-/* 正誤の文字ラベル（値札の語彙・ink-2・罫囲み・--radius-sm）。 */
+/* 正誤の文字（knowledge type のフィードバック）。正誤は色ではなくこの文字で伝える。 */
 .feedbackTag {
   flex-shrink: 0;
-  padding: 0.1rem 0.5rem;
-  border: 1px solid var(--rule);
-  border-radius: var(--radius-sm);
-  font-size: 0.75rem;
-  color: var(--ink-2);
+  font-size: var(--text-small);
+  font-weight: 700;
   white-space: nowrap;
-}
-
-.choiceCorrect .feedbackTag {
-  border-color: var(--accent);
-  color: var(--accent);
 }
 
 /* 解説ブロック（knowledge type） */
@@ -121,32 +104,9 @@
   animation: fadeIn 0.3s ease;
 }
 
-/* 「次へ」ボタン: 罫の線画（トップページ .heroLink と同じ語彙）。横幅いっぱい。 */
-.nextButton {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  min-height: 44px;
+/* 「次へ」ボタンの見え方は Button が持ち、ここは上の内容とのあいだだけを持つ。 */
+.next {
   margin-top: 1rem;
-  padding: 0 1.25rem;
-  border: 1px solid var(--accent);
-  border-radius: var(--radius);
-  background: var(--paper);
-  color: var(--accent);
-  font-size: 1rem;
-  font-family: inherit;
-  cursor: pointer;
-  transition: background-color 0.15s ease;
-}
-
-.nextButton:hover {
-  background-color: var(--accent-weak);
-}
-
-.nextButton:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
 }
 
 @media (prefers-reduced-motion: reduce) {

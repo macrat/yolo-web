@@ -148,7 +148,7 @@ export default function ContrarianFortuneContent({
          * - page.tsx は "pill"（互換ラベル）→ Character/Yoji と同じ allTypesGrid（2-3列）
          * - ResultCard は "list" → Character/Animal と同じ allTypesListVertical（縦リスト）
          */}
-        <ul className={allTypesListClassName}>
+        <ul className={allTypesListClassName} data-text-box="rows">
           {allResults.map((r) => (
             <li
               key={r.id}
@@ -161,6 +161,7 @@ export default function ContrarianFortuneContent({
               <Link
                 href={`/play/${quizSlug}/result/${r.id}`}
                 aria-current={r.id === resultId ? "page" : undefined}
+                data-hit-area="after"
               >
                 {/* 新デザインでは絵文字アイコン（r.icon）を描画しない（DESIGN.md: 絵文字を使わない）。
                     各タイプの区別はタイトル文言で行う。 */}

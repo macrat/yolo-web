@@ -96,6 +96,7 @@ export default async function HumorDictEntryPage({
                   <Link
                     href={`/dictionary/humor/${related.slug}`}
                     className={styles.relatedLink}
+                    data-text-box="inline"
                   >
                     <span className={styles.relatedWord}>{related.word}</span>
                     <span className={styles.relatedReading}>
@@ -121,7 +122,13 @@ export default async function HumorDictEntryPage({
 
         {/* 一覧へ戻るリンク */}
         <div className={styles.backLink}>
-          <Link href="/dictionary/humor">← ユーモア辞典一覧へ</Link>
+          <Link
+            href="/dictionary/humor"
+            className={styles.backLinkAnchor}
+            data-text-box="inline"
+          >
+            ← ユーモア辞典一覧へ
+          </Link>
         </div>
       </article>
     </div>

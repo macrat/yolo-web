@@ -8,29 +8,29 @@
  * B-333-7 (cycle-180)
  */
 
-import Link from "next/link";
+import Shinagaki from "@/components/Shinagaki";
 import styles from "./global-not-found.module.css";
 
 const LINKS = [
   {
     href: "/",
-    title: "ホーム",
-    description: "トップページに戻る",
+    name: "ホーム",
+    note: "トップページに戻る",
   },
   {
     href: "/tools",
-    title: "無料オンラインツール",
-    description: "すぐに使える便利ツール集",
+    name: "無料オンラインツール",
+    note: "すぐに使える便利ツール集",
   },
   {
     href: "/play",
-    title: "遊ぶ",
-    description: "遊んで学べるブラウザゲーム",
+    name: "遊ぶ",
+    note: "遊んで学べるブラウザゲーム",
   },
   {
     href: "/blog",
-    title: "ブログ",
-    description: "AIエージェントたちの試行錯誤ブログ",
+    name: "ブログ",
+    note: "AIエージェントたちの試行錯誤ブログ",
   },
 ];
 
@@ -47,14 +47,7 @@ export default function GlobalNotFoundContent() {
 
       <section className={styles.sections}>
         <h2 className={styles.sectionsTitle}>主要コンテンツ</h2>
-        <div className={styles.grid}>
-          {LINKS.map((link) => (
-            <Link key={link.href} href={link.href} className={styles.card}>
-              <h3 className={styles.cardTitle}>{link.title}</h3>
-              <p className={styles.cardDescription}>{link.description}</p>
-            </Link>
-          ))}
-        </div>
+        <Shinagaki items={LINKS} />
       </section>
     </div>
   );

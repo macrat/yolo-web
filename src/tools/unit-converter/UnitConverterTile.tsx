@@ -35,6 +35,7 @@ import Select from "@/components/Select";
 import RadioGroup from "@/components/RadioGroup";
 import ErrorMessage from "@/components/ErrorMessage";
 import Input from "@/components/Input";
+import Button from "@/components/Button";
 import styles from "./UnitConverterTile.module.css";
 
 const categories = getAllCategories();
@@ -184,15 +185,14 @@ export default function UnitConverterTile({
           </Select>
         </div>
 
-        {/* スワップボタン — B-8: Lucide スタイル線画アイコン、生グリフ・絵文字禁止（C-4: aria-label 必須） */}
-        <button
-          type="button"
+        {/* 単位を入れ替えるボタン。線画の矢印に文字を添え、何が起きるかを字で言う。 */}
+        <Button
           className={styles.swapButton}
           onClick={handleSwap}
           aria-label="変換元と変換先の単位を入れ替え"
         >
-          {/* DESIGN.md §3: Lucide スタイル線画アイコン、stroke 1.5px / 20px */}
           <svg
+            className={styles.swapIcon}
             width="20"
             height="20"
             viewBox="0 0 24 24"
@@ -210,7 +210,8 @@ export default function UnitConverterTile({
             <path d="M3 17h18" />
             <path d="M18 14l3 3-3 3" />
           </svg>
-        </button>
+          入れ替え
+        </Button>
 
         {/* 変換先 */}
         <div className={styles.unitGroup}>

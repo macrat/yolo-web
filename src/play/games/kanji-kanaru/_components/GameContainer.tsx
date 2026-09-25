@@ -22,6 +22,7 @@ import {
 } from "@/play/games/kanji-kanaru/_lib/storage";
 import { JOYO_KANJI_SET } from "@/play/games/kanji-kanaru/data/joyo-kanji-set";
 import type { CrossCategoryItem } from "@/play/games/shared/_components/new/CrossCategoryBanner";
+import Button from "@/components/Button";
 import GameHeader from "./GameHeader";
 import HintBar from "./HintBar";
 import GameBoard from "./GameBoard";
@@ -419,13 +420,9 @@ export default function GameContainer({
     return (
       <div className={styles.error}>
         <p className={styles.errorMessage}>{error}</p>
-        <button
-          onClick={() => void initializeGame(difficulty)}
-          type="button"
-          className={styles.retryButton}
-        >
+        <Button onClick={() => void initializeGame(difficulty)}>
           {"\u518D\u8A66\u884C"}
-        </button>
+        </Button>
       </div>
     );
   }
@@ -451,6 +448,11 @@ export default function GameContainer({
         onSubmit={handleGuess}
         disabled={gameState.status !== "playing" || submitting}
         submitting={submitting}
+        disabledReason={
+          gameState.status !== "playing"
+            ? "\u3053\u306E\u96E3\u6613\u5EA6\u306E\u4ECA\u65E5\u306E\u554F\u984C\u306F\u7D42\u308F\u308A\u307E\u3057\u305F\u3002\u307B\u304B\u306E\u96E3\u6613\u5EA6\u304B\u3001\u660E\u65E5\u306E\u554F\u984C\u3067\u904A\u3079\u307E\u3059\u3002"
+            : undefined
+        }
       />
       <HowToPlayModal
         open={showHowToPlay}

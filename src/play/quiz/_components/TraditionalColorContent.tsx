@@ -99,7 +99,7 @@ export default function TraditionalColorContent({
       {/* 全タイプ一覧セクション */}
       <div className={styles.allTypesSection}>
         <Heading className={styles.allTypesCta}>他の色も見てみよう</Heading>
-        <ul className={allTypesListClass}>
+        <ul className={allTypesListClass} data-text-box="rows">
           {quiz.results.map((r) => (
             <li
               key={r.id}
@@ -112,6 +112,7 @@ export default function TraditionalColorContent({
               <Link
                 href={`/play/${quiz.meta.slug}/result/${r.id}`}
                 aria-current={r.id === resultId ? "page" : undefined}
+                data-hit-area="after"
               >
                 {/* color-as-content の例外: 各伝統色そのものを色ドットで表示する。
                     新デザインでは装飾色は --accent に寄せるが、ここは「色＝診断内容」なので

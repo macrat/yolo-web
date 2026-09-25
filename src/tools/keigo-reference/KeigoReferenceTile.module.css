@@ -64,15 +64,6 @@
 
 .tableRow {
   border-bottom: 1px solid var(--rule);
-  transition: background-color 0.15s;
-}
-
-.tableRow:hover {
-  background-color: var(--paper-2);
-}
-
-.tableRowExpanded {
-  background-color: var(--paper-2);
 }
 
 .td {
@@ -92,28 +83,49 @@
 }
 
 /*
- * <th scope="row"> 内の実 <button> にインタラクションを持たせる。
- * ボタンはテキストとして見えるように外観をリセット。
- * <tr> に role="button" を付けると ARIA in HTML 仕様に違反するため
- * この設計にする。
+ * <th scope="row"> 内の実 <button> で、その行の例文を開閉する。<tr> に role="button" を付けると
+ * ARIA in HTML 仕様に違反するため、この設計にする。
+ * 例文は次の行に出るので details で組めず、アコーディオン（§6）と同じ三角を button に描く。縁の見えない
+ * コントロールなので、三角を並びの左端に揃え、字の左右の余白と張り出しは data-text-box（globals.css）が
+ * 持つ。hover の線とフォーカスのリングは globals.css の既定に従う。
  */
 .expandButton {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-8);
+  min-height: 44px;
+  padding-block: max(0px, (44px - 1lh) / 2);
   background: none;
   border: none;
-  padding: 0;
   font: inherit;
   font-weight: 600;
   color: var(--ink);
   cursor: pointer;
   text-align: left;
-  width: 100%;
   line-height: inherit;
 }
 
-.expandButton:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-  border-radius: var(--radius);
+/* 太い線で描く三角。閉じているあいだは右を、開いているあいだは下を向く。形と回す中心は Accordion の
+ * 三角と同じで、線の外側を箱の左端に揃える。 */
+.triangle {
+  flex: none;
+  margin-block-start: calc((1lh - 20px) / 2);
+  fill: none;
+  stroke: var(--rule);
+  stroke-width: var(--rule-w);
+  stroke-linejoin: miter;
+  transform-origin: 8.2px 11.07px;
+  transition: transform 150ms ease-out;
+}
+
+.expandButton[aria-expanded="true"] .triangle {
+  transform: rotate(90deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .triangle {
+    transition: none;
+  }
 }
 
 /* 例文パネル（アコーディオン） */
@@ -219,31 +231,25 @@
   padding: 2rem 0;
 }
 
-/* モバイルカードビュー（デフォルト非表示） */
+/* 狭い画面の一覧（広い画面では表を出すので隠す）。1行1項目で、行どうしを細い線で区切る（§7）。 */
 .mobileCards {
   display: none;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .mobileCard {
-  border: 1px solid var(--rule-strong);
-  border-radius: var(--radius);
-  padding: 0.75rem 1rem;
-  margin-bottom: 0.5rem;
-  background-color: var(--paper);
-  cursor: pointer;
-  transition: background-color 0.1s;
+  border-bottom: var(--rule-w-hair) solid var(--rule-2);
 }
 
-.mobileCard:hover {
-  background-color: var(--paper-2);
-}
-
-.mobileCard:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+/* 開閉の行を行の幅いっぱいに広げ、hover の線とフォーカスのリングを行の単位に出す。 */
+.mobileCard .mobileCardSummary {
+  width: auto;
 }
 
 .mobileCardTitle {
+  display: block;
   font-weight: 600;
   font-size: 0.95rem;
   color: var(--ink);

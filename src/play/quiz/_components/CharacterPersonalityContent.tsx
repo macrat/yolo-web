@@ -243,7 +243,7 @@ export default function CharacterPersonalityContent({
       {/* 全タイプ一覧セクション */}
       <div className={styles.allTypesSection}>
         <Heading className={styles.allTypesCta}>他のキャラも見てみよう</Heading>
-        <ul className={allTypesListClass}>
+        <ul className={allTypesListClass} data-text-box="rows">
           {CHARACTER_PERSONALITY_TYPE_IDS.map((typeId) => {
             const result = quiz.results.find((r) => r.id === typeId);
             if (!result) return null;
@@ -259,6 +259,7 @@ export default function CharacterPersonalityContent({
                 <Link
                   href={`/play/${QUIZ_SLUG}/result/${result.id}`}
                   aria-current={result.id === resultId ? "page" : undefined}
+                  data-hit-area="after"
                 >
                   {/* 新デザインでは絵文字アイコン（result.icon）を描画しない（DESIGN.md: 絵文字を使わない）。
                       各タイプの区別はタイトル文言で行う。 */}

@@ -86,6 +86,7 @@ export default async function BlogPostPage({ params }: Props) {
           <Link
             href={`/blog/category/${post.category}`}
             className={styles.category}
+            data-text-box="inline"
           >
             {CATEGORY_LABELS[post.category]}
           </Link>
@@ -155,7 +156,11 @@ export default async function BlogPostPage({ params }: Props) {
          */}
         <nav className={styles.postNav} aria-label="前後の記事（時系列順）">
           {prevPost ? (
-            <Link href={`/blog/${prevPost.slug}`} className={styles.prevPost}>
+            <Link
+              href={`/blog/${prevPost.slug}`}
+              className={styles.prevPost}
+              data-text-box="inline"
+            >
               <span className={styles.navLabel}>前の記事</span>
               <span className={styles.navTitle}>{prevPost.title}</span>
             </Link>
@@ -163,7 +168,11 @@ export default async function BlogPostPage({ params }: Props) {
             <span aria-hidden="true" />
           )}
           {nextPost ? (
-            <Link href={`/blog/${nextPost.slug}`} className={styles.nextPost}>
+            <Link
+              href={`/blog/${nextPost.slug}`}
+              className={styles.nextPost}
+              data-text-box="inline"
+            >
               <span className={styles.navLabel}>次の記事</span>
               <span className={styles.navTitle}>{nextPost.title}</span>
             </Link>

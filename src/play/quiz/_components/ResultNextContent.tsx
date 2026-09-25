@@ -41,10 +41,14 @@ export default function ResultNextContent({
   return (
     <section className={styles.section} aria-label="次のおすすめ">
       <h3 className={styles.heading}>次はこれを試してみよう</h3>
-      <ul className={styles.list}>
+      <ul className={styles.list} data-text-box="rows">
         {contents.map((content) => (
           <li key={content.slug}>
-            <Link href={content.contentPath} className={styles.link}>
+            <Link
+              href={content.contentPath}
+              className={styles.link}
+              data-hit-area="after"
+            >
               <span className={styles.title}>
                 {content.shortTitle ?? content.title}
               </span>

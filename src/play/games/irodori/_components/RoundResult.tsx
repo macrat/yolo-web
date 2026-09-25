@@ -53,10 +53,7 @@ export default function RoundResult({ round }: Props) {
         <div className={styles.colorName}>
           {"\u3053\u306E\u8272\u306F\u300E"}
           {round.target.slug ? (
-            <Link
-              href={`/dictionary/colors/${round.target.slug}`}
-              className={styles.colorNameLink}
-            >
+            <Link href={`/dictionary/colors/${round.target.slug}`}>
               {round.target.name}
             </Link>
           ) : (

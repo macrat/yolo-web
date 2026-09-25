@@ -19,10 +19,13 @@ export default function TableOfContents({ headings }: TableOfContentsProps) {
         {headings.map((heading) => (
           <li
             key={heading.id}
-            className={styles.item}
             style={{ paddingLeft: `${(heading.level - 2) * 0.75}rem` }}
           >
-            <a href={`#${heading.id}`} className={styles.link}>
+            <a
+              href={`#${heading.id}`}
+              className={styles.link}
+              data-text-box="inline"
+            >
               {heading.text}
             </a>
           </li>

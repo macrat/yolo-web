@@ -1,5 +1,6 @@
 /* WordGrid（なかまわけ）— 単語盤面。
- * 選択状態（.selected）は --accent-weak の地で示し、色だけでなく罫色も変える。 */
+ * 選んだ語は、語の上の 20px の四角の内側を塗って示す（§6 チェックボックスと同じ形）。
+ * hover の細い線は globals.css の既定がボタンの内側に出す。 */
 
 .grid {
   display: grid;
@@ -10,8 +11,14 @@
 }
 
 .wordButton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-8);
+  min-height: 44px;
   padding: var(--space-16) 0.25rem;
-  border: 2px solid var(--rule);
+  border: var(--rule-w) solid var(--rule);
   border-radius: var(--radius);
   background: var(--paper);
   color: var(--ink);
@@ -19,38 +26,49 @@
   font-weight: 500;
   font-family: inherit;
   cursor: pointer;
-  transition:
-    border-color 0.15s ease,
-    background-color 0.15s ease,
-    color 0.15s ease;
   text-align: center;
-  min-height: 3rem;
   word-break: break-all;
+  /* 外の輪は太い枠に重なって見分けられないので、枠の内側に --paper と --ink の輪を1本ずつ塗り、
+   * 枠と合わせて二重リングにする（§6）。 */
+  --focus-ring-fill:
+    inset 0 0 0 var(--rule-w) var(--paper),
+    inset 0 0 0 calc(2 * var(--rule-w)) var(--ink);
 }
 
-.wordButton:hover:not(:disabled) {
-  border-color: var(--accent);
-  color: var(--accent);
+/* 太い線で描く 20px の四角。選ぶと内側を --ink で 8px 塗る。 */
+.mark {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border: var(--rule-w) solid var(--rule);
 }
 
-.wordButton:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+.mark::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  background: var(--ink);
+  visibility: hidden;
 }
 
+.wordButton[aria-pressed="true"] .mark::after {
+  visibility: visible;
+}
+
+/* §6 無効。枠を太い破線にし、字と四角を --ink-2 にする。 */
 .wordButton:disabled {
-  opacity: 0.5;
+  border-style: dashed;
+  color: var(--ink-2);
   cursor: not-allowed;
 }
 
-.selected {
-  background: var(--accent-weak);
-  color: var(--accent);
-  border-color: var(--accent);
+.wordButton:disabled .mark {
+  border-color: var(--ink-2);
 }
 
-.selected:hover:not(:disabled) {
-  filter: brightness(0.97);
+.wordButton:disabled .mark::after {
+  background: var(--ink-2);
 }
 
 @media (max-width: 480px) {
@@ -61,6 +79,5 @@
   .wordButton {
     font-size: 0.85rem;
     padding: var(--space-8) 0.25rem;
-    min-height: 2.5rem;
   }
 }

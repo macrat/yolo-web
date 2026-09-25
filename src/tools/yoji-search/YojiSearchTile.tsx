@@ -3,6 +3,8 @@
 import { useState, useMemo, useId } from "react";
 import Panel from "@/components/Panel";
 import Input from "@/components/Input";
+import Button from "@/components/Button";
+import Accordion from "@/components/Accordion";
 import RadioGroup from "@/components/RadioGroup";
 import {
   YOJI_CATEGORY_LABELS,
@@ -104,18 +106,14 @@ export default function YojiSearchTile({
   const displayedResults = results.slice(0, visibleCount);
   const remainingCount = results.length - displayedResults.length;
 
-  const toggleExpand = (yoji: string) => {
-    setExpandedYoji((prev) => (prev === yoji ? null : yoji));
-  };
-
-  const handleKeyDown = (
-    e: React.KeyboardEvent<HTMLButtonElement>,
+  // 開いた項目を1つに保つ。ほかの項目を開くと、前に開いていた項目は閉じる。閉じる側の toggle は、
+  // いま開いている項目が自分のときだけ状態を空にする。
+  const handleToggle = (
+    e: React.SyntheticEvent<HTMLDetailsElement>,
     yoji: string,
   ) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      toggleExpand(yoji);
-    }
+    const isOpen = e.currentTarget.open;
+    setExpandedYoji((prev) => (isOpen ? yoji : prev === yoji ? null : prev));
   };
 
   return (
@@ -176,64 +174,66 @@ export default function YojiSearchTile({
             <ul className={styles.resultList}>
               {displayedResults.map((entry) => (
                 <li key={entry.yoji} className={styles.resultItem}>
-                  <button
-                    type="button"
-                    className={styles.resultButton}
-                    onClick={() => toggleExpand(entry.yoji)}
-                    onKeyDown={(e) => handleKeyDown(e, entry.yoji)}
-                    aria-expanded={expandedYoji === entry.yoji}
-                    aria-label={`${entry.yoji} の詳細を${expandedYoji === entry.yoji ? "閉じる" : "表示"}`}
+                  <Accordion
+                    open={expandedYoji === entry.yoji}
+                    onToggle={(e) => handleToggle(e, entry.yoji)}
+                    summaryClassName={styles.resultSummary}
+                    summary={
+                      <span className={styles.resultHead}>
+                        <span className={styles.yojiText}>{entry.yoji}</span>
+                        <span className={styles.reading}>{entry.reading}</span>
+                        <span className={styles.meaning}>{entry.meaning}</span>
+                      </span>
+                    }
                   >
-                    <span className={styles.yojiText}>{entry.yoji}</span>
-                    <span className={styles.reading}>{entry.reading}</span>
-                    <span className={styles.meaning}>{entry.meaning}</span>
-                  </button>
-                  {expandedYoji === entry.yoji && (
-                    <div className={styles.detailPanel}>
-                      <dl className={styles.detailList}>
-                        <div className={styles.detailRow}>
-                          <dt className={styles.detailLabel}>例文</dt>
-                          <dd className={styles.detailValue}>
-                            {entry.example}
-                          </dd>
-                        </div>
-                        <div className={styles.detailRow}>
-                          <dt className={styles.detailLabel}>カテゴリ</dt>
-                          <dd className={styles.detailValue}>
-                            {YOJI_CATEGORY_LABELS[entry.category]}
-                          </dd>
-                        </div>
-                        <div className={styles.detailRow}>
-                          <dt className={styles.detailLabel}>難易度</dt>
-                          <dd className={styles.detailValue}>
-                            {YOJI_DIFFICULTY_LABELS[entry.difficulty]}
-                          </dd>
-                        </div>
-                        <div className={styles.detailRow}>
-                          <dt className={styles.detailLabel}>出典</dt>
-                          <dd className={styles.detailValue}>{entry.origin}</dd>
-                        </div>
-                        <div className={styles.detailRow}>
-                          <dt className={styles.detailLabel}>構造</dt>
-                          <dd className={styles.detailValue}>
-                            {STRUCTURE_LABELS[entry.structure] ??
-                              entry.structure}
-                          </dd>
-                        </div>
-                      </dl>
-                    </div>
-                  )}
+                    {expandedYoji === entry.yoji && (
+                      <div className={styles.detailPanel}>
+                        <dl className={styles.detailList}>
+                          <div className={styles.detailRow}>
+                            <dt className={styles.detailLabel}>例文</dt>
+                            <dd className={styles.detailValue}>
+                              {entry.example}
+                            </dd>
+                          </div>
+                          <div className={styles.detailRow}>
+                            <dt className={styles.detailLabel}>カテゴリ</dt>
+                            <dd className={styles.detailValue}>
+                              {YOJI_CATEGORY_LABELS[entry.category]}
+                            </dd>
+                          </div>
+                          <div className={styles.detailRow}>
+                            <dt className={styles.detailLabel}>難易度</dt>
+                            <dd className={styles.detailValue}>
+                              {YOJI_DIFFICULTY_LABELS[entry.difficulty]}
+                            </dd>
+                          </div>
+                          <div className={styles.detailRow}>
+                            <dt className={styles.detailLabel}>出典</dt>
+                            <dd className={styles.detailValue}>
+                              {entry.origin}
+                            </dd>
+                          </div>
+                          <div className={styles.detailRow}>
+                            <dt className={styles.detailLabel}>構造</dt>
+                            <dd className={styles.detailValue}>
+                              {STRUCTURE_LABELS[entry.structure] ??
+                                entry.structure}
+                            </dd>
+                          </div>
+                        </dl>
+                      </div>
+                    )}
+                  </Accordion>
                 </li>
               ))}
             </ul>
             {remainingCount > 0 && (
-              <button
-                type="button"
+              <Button
                 className={styles.moreButton}
                 onClick={() => setVisibleCount((count) => count + PAGE_SIZE)}
               >
                 もっと見る（他 {remainingCount}件）
-              </button>
+              </Button>
             )}
           </>
         )}

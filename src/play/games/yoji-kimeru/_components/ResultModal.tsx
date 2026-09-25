@@ -10,6 +10,7 @@ import {
   originLabels,
 } from "@/play/games/yoji-kimeru/_lib/constants";
 import { generateShareText } from "@/play/games/yoji-kimeru/_lib/share";
+import Button from "@/components/Button";
 import GameDialog from "@/play/games/shared/_components/new/GameDialog";
 import GameShareButtons from "@/play/games/shared/_components/new/GameShareButtons";
 import CountdownTimer from "@/play/games/shared/_components/new/CountdownTimer";
@@ -66,13 +67,9 @@ export default function ResultModal({
       title={isWon ? "正解!" : "残念..."}
       returnFocusRef={returnFocusRef}
       footer={
-        <button
-          className={styles.statsButton}
-          onClick={handleStatsClick}
-          type="button"
-        >
-          統計を見る
-        </button>
+        <div className={styles.statsAction}>
+          <Button onClick={handleStatsClick}>統計を見る</Button>
+        </div>
       }
     >
       <div className={styles.resultAnswer}>{targetYoji.yoji}</div>

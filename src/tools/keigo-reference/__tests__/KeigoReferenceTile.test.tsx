@@ -248,12 +248,11 @@ describe("V-6: アコーディオン展開", () => {
     expect(trWithRoleButton).toHaveLength(0);
   });
 
-  it("モバイルカードが role='button' + tabIndex=0 を持つ", () => {
+  it("狭い画面の行はアコーディオン（details・summary）で開閉する", () => {
     render(<KeigoReferenceTile variant="full" />);
-    const cardButtons = document.querySelectorAll(
-      'div[role="button"][tabindex="0"]',
-    );
-    expect(cardButtons.length).toBeGreaterThan(0);
+    const summaries = document.querySelectorAll("li details > summary");
+    expect(summaries.length).toBeGreaterThan(0);
+    expect(document.querySelectorAll('[role="button"]')).toHaveLength(0);
   });
 });
 

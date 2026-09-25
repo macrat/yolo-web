@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Button from "@/components/Button";
 import type { ColorEntry } from "@/dictionary/_lib/types";
 import { COLOR_CATEGORY_LABELS } from "@/dictionary/_lib/types";
 import { getColorsByCategory } from "@/dictionary/_lib/colors";
@@ -28,13 +29,9 @@ function CopyButton({ text }: { text: string }) {
   };
 
   return (
-    <button
-      className={styles.copyButton}
-      onClick={handleCopy}
-      aria-label={`${text}をコピー`}
-    >
+    <Button onClick={handleCopy} aria-label={`${text}をコピー`}>
       {copied ? "コピー済み" : "コピー"}
-    </button>
+    </Button>
   );
 }
 
@@ -125,6 +122,7 @@ export default function ColorDetail({
         <Link
           href={`/dictionary/colors/category/${color.category}`}
           className={styles.categoryLink}
+          data-text-box="inline"
         >
           {categoryLabel}
         </Link>
@@ -132,7 +130,11 @@ export default function ColorDetail({
 
       <section className={styles.section}>
         <h2>関連ツール</h2>
-        <Link href="/tools/color-converter" className={styles.crossLink}>
+        <Link
+          href="/tools/color-converter"
+          className={styles.crossLink}
+          data-text-box="inline"
+        >
           カラーコードを変換する
         </Link>
       </section>
@@ -146,6 +148,7 @@ export default function ColorDetail({
                 key={c.slug}
                 href={`/dictionary/colors/${c.slug}`}
                 className={styles.relatedLink}
+                data-text-box="inline"
               >
                 <span
                   className={styles.relatedSwatch}

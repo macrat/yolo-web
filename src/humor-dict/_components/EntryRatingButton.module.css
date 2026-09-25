@@ -1,45 +1,39 @@
 /*
- * 評価ボタン（ユーモア辞典の詳細ページ）。
- * 文字ラベルのみ・全トークン経由・角丸と box-shadow なし。選択状態は --accent-weak の地で表す。
+ * 評価ボタン（ユーモア辞典の詳細ページ）。押すとその場で評価を送る、プライマリでないボタン（§6）。
  */
 .wrapper {
   display: flex;
-  justify-content: center;
   margin-top: var(--space-24);
   margin-bottom: var(--space-32);
 }
 
+/* 送る前は、実行するものの印として下線を持つ。見えるのは字だけなので、字の左右の余白と、字を並びの左端に
+ * 置く張り出しは data-text-box（globals.css）が持ち、hover の線とフォーカスの二重リングはその箱の内側に
+ * 出る。タップの標的は 44px 以上（§6）。 */
 .button {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  padding: var(--space-8) var(--space-24);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
-  background-color: var(--paper);
-  color: var(--ink);
-  font-size: 0.875rem;
-  font-weight: 600;
-  cursor: pointer;
   min-height: 44px;
   min-width: 44px;
-  transition:
-    background-color 0.15s ease,
-    border-color 0.15s ease;
-}
-
-/* Only apply hover feedback to non-rated buttons to avoid confusing feedback */
-.button:not([aria-pressed="true"]):hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-/* Rated state: --accent-weak で選択状態を示す。
- * ボタン自身が持つ aria-pressed 属性をセレクタに使う（design-gate の STATE_SELECTOR_RE
- * が [aria-pressed] を状態セレクタとして認識するため、専用クラスを持たずに済む）。 */
-.button[aria-pressed="true"] {
-  background-color: var(--accent-weak);
-  border-color: var(--accent);
+  border: none;
+  border-radius: 0;
+  background: transparent;
   color: var(--ink);
+  font-size: 0.875rem;
+  text-decoration: underline;
+  text-decoration-thickness: var(--rule-w-hair);
+  text-underline-offset: 0.15em;
+  cursor: pointer;
+}
+
+/* 送ったあとは押しても何も起きないので、下線も hover の線も持たず、送った状態を太字で示す（§6）。
+ * フォーカスしているあいだは、二重リングの内の輪を hover で消さない。 */
+.button[aria-pressed="true"] {
+  font-weight: 700;
+  text-decoration: none;
   cursor: default;
+}
+
+.button[aria-pressed="true"]:hover:not(:focus-visible) {
+  box-shadow: none;
 }

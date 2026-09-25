@@ -123,7 +123,7 @@ export default function UnexpectedCompatibilityContent({
         <Heading className={styles.allTypesCta}>
           他の「相性の良い存在」も見てみよう
         </Heading>
-        <ul className={allTypesListClass}>
+        <ul className={allTypesListClass} data-text-box="rows">
           {allResults.map((r) => (
             <li
               key={r.id}
@@ -136,6 +136,7 @@ export default function UnexpectedCompatibilityContent({
               <Link
                 href={`/play/${quizSlug}/result/${r.id}`}
                 aria-current={r.id === resultId ? "page" : undefined}
+                data-hit-area="after"
               >
                 {/* 新デザインでは絵文字アイコン（r.icon）を描画しない（DESIGN.md: 絵文字を使わない）。
                     各タイプの区別はタイトル文言で行う。 */}

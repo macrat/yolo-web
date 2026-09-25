@@ -47,24 +47,24 @@
   margin-bottom: 0.5rem;
 }
 
+/* 目次の項目は縁の見えないコントロールなので、押せる範囲を接して並べる（§5）。間隔を箱の余白と同じ幅に
+ * すると、前へ張り出す箱どうしが接し、字と字のあいだは 16px になる。 */
 .tocList {
   list-style: none;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem 1.5rem;
+  gap: 0 var(--text-box-pad);
   margin: 0;
   padding: 0;
 }
 
-.tocList li a {
-  font-size: 0.9rem;
-  color: var(--accent);
-  text-decoration: none;
-}
-
-.tocList li a:hover {
-  color: var(--accent);
-  text-decoration: underline;
+/* 節へ進むリンク。下線と色は globals.css の a の既定に従う（§6）。タップの標的は 44px 以上で、字の左右の
+ * 余白と、字を並びの左端に置く張り出しは data-text-box（globals.css）が持つ。 */
+.tocLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: var(--text-small);
 }
 
 /* セクションの見出し。大きさは globals.css の h2（§4 のセクションの見出し）に従い、

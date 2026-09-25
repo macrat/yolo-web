@@ -5,42 +5,46 @@
  *
  * character-fortune 専用結果ページのスタイル。
  * インライン結果（ResultCard）とトーン統一する: 無彩・左寄せ・絵文字マーカーなし・
- * クイズごとの派手色（accentColor）を使わず共通 --accent / --accent-weak に寄せる。
+ * クイズごとの派手色（accentColor）を使わない。
  */
 
 /* ============================================================
-   CTA（trySection / tryButton）
+   CTA（trySection / tryButton / tryLink）
    ============================================================ */
 
 .trySection {
   margin-bottom: 0;
 }
 
-/* 主要 CTA: 罫の線画（トップページ .heroLink と同じ語彙・ピル/塗り/影禁止）。 */
+/* 主要 CTA: プライマリボタンと同じ反転（--ink の地に --paper の字）で、ボーダーを持たない。反転の地が縁として
+ * 見えるので、箱の左端を並びの左端に揃え、字は縁の内側 8px から始める（§5・§6）。フォーカスの二重リングは
+ * data-focus-ring="inset"（globals.css）が押せる範囲の内側に出す。 */
 .tryButton {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
   min-height: 44px;
-  padding: 0 1.5rem;
-  border: 1px solid var(--accent);
-  border-radius: var(--radius);
-  background: var(--paper);
-  color: var(--accent);
+  padding: var(--space-8);
+  background: var(--ink);
+  color: var(--paper);
   font-family: var(--font-body);
   font-size: 1.0625rem;
-  cursor: pointer;
+  line-height: 1.4;
   text-decoration: none;
-  transition: background-color 0.15s ease;
 }
 
-.tryButton:hover {
-  background-color: var(--accent-weak);
+/* hover の細い線を押せる範囲の内側に出す。詳細度を 0 にして、フォーカスの二重リングを上書きしない。 */
+:where(.tryButton):where(:hover, :active) {
+  box-shadow: var(--hover-line);
 }
 
-.tryButton:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+/* 2つ目以降の誘い。1ページに1つまでの反転は最初の CTA が持つので、ここは縁の見えないリンクにする。下線と
+ * 訪問済みの色は a の既定に従い、字の左右の余白と張り出しは data-text-box（globals.css）が持つ。 */
+.tryLink {
+  display: inline-flex;
+  align-items: center;
+  min-width: 44px;
+  min-height: 44px;
+  font-size: 1.0625rem;
 }
 
 .tryCost {
@@ -163,14 +167,14 @@
 /* (f) 全タイプ一覧セクション。
  * 個々をカード状に囲むと同型カードのグリッドに見えるので、他クイズ（例:
  * CharacterPersonalityContent.module.css .allTypesGrid）と同じ罫の升目索引にする。
- * 個々のセルはカード化せず、border-bottom の罫だけで区切る。現在地は面を塗らず、
- * 文字色と下罫（--accent）で示す。 */
+ * 個々のセルはカード化せず、下罫だけで区切る。 */
 .allTypesSection {
   margin-top: 2rem;
   padding-top: 1.5rem;
   border-top: 1px solid var(--rule);
 }
 
+/* 字を罫線の内側から始める行の左右の余白と、hover の線の形は data-text-box（globals.css）が持つ。 */
 .allTypesList {
   list-style: none;
   padding: 0;
@@ -187,37 +191,35 @@
 
 .allTypesItem,
 .allTypesItemCurrent {
+  position: relative;
   break-inside: avoid;
+  border-bottom: var(--rule-w-hair) solid var(--rule-2);
 }
 
+/* 下線と訪問済みの色は a の既定に従う。 */
 .allTypesItem a,
 .allTypesItemCurrent a {
   display: flex;
   align-items: center;
   gap: 0.375rem;
   min-height: 44px;
-  padding: 0.4rem 0.25rem;
-  border-bottom: 1px solid var(--rule);
+  padding-block: 0.4rem;
   font-size: 0.875rem;
-  text-decoration: none;
-  transition: background-color 0.15s ease;
-  width: 100%;
 }
 
-.allTypesItem a {
-  color: var(--ink);
+/* 押せる範囲を行全体に広げる。hover の線とフォーカスの二重リングは、data-hit-area（globals.css）がこの範囲に出す。 */
+.allTypesItem a::after,
+.allTypesItemCurrent a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
 }
 
-.allTypesItem a:hover {
-  background-color: var(--paper-2);
-}
-
-/* 現在表示中のタイプ: 面を塗らず、文字色と下罫（--accent）で示す。 */
+/* 現在表示中のタイプ: 押しても何も起きないので下線を持たず、太字で示す（§6 現在地）。 */
 .allTypesItemCurrent a {
-  color: var(--accent);
-  border-bottom-color: var(--accent);
-  font-weight: 600;
-  pointer-events: none;
+  color: var(--ink);
+  font-weight: 700;
+  text-decoration: none;
 }
 
 .allTypesCta {

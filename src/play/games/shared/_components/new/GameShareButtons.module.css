@@ -1,62 +1,18 @@
-/*
- * GameShareButtons — ゲーム結果の共有ボタン群。
- *
- * GameShareButtons は `shareGameResult`（ゲーム結果テキスト整形）に依存し、
- * 汎用 ShareButtons へ単純置換できない機能差があるため機能はそのまま保持する。
- * 見た目は src/components/ShareButtons と同じ語彙に統一する（「文字＋罫の線画ボタン」）:
- * 地は紙・--rule の一本罫囲み・文字は墨・hover は枠と文字に --accent。
- * ブランド色のベタ塗りを持たず、全ボタンを同型にする。サービスは文言で識別する。
- * タップターゲット 44px・focus 可視・全トークン経由。
- */
+/* GameShareButtons — ゲーム結果の共有ボタンの並び。ボタンの見え方は Button が持ち、ここは並べ方と
+ * 知らせの文字だけを持つ。サービスは文言で見分ける。 */
 
+/* ボタンは縁の見えないコントロールなので、押せる範囲を接して並べる（§5）。 */
 .shareArea {
   display: flex;
-  gap: var(--space-8);
   flex-wrap: wrap;
+  column-gap: var(--text-box-pad);
+  row-gap: var(--space-8);
   margin-top: var(--space-8);
-}
-
-.shareButton {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 44px;
-  padding: 0 var(--space-16);
-  font-family: inherit;
-  font-size: 0.9375rem;
-  font-weight: 600;
-  line-height: 1.4;
-  white-space: nowrap;
-  color: var(--ink);
-  background: var(--paper);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
-  cursor: pointer;
-  transition:
-    color 0.15s ease,
-    border-color 0.15s ease;
-}
-
-.shareButton:hover {
-  color: var(--accent);
-  border-color: var(--accent);
-}
-
-.shareButton:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-/* すべてのボタンを同一の線画スタイルにする（コピー/X/画像保存の区別は文言のみ）。 */
-.shareButtonCopy,
-.shareButtonX,
-.shareButtonImage {
-  composes: shareButton;
 }
 
 .copiedMessage {
   font-size: 0.8125rem;
-  color: var(--accent);
+  color: var(--ink);
   margin-top: 0.25rem;
   min-height: 1.2em;
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect, useRef, useId } from "react";
 import { trackContentEnd } from "@/lib/analytics";
 import type {
   NakamawakeGameState,
@@ -126,6 +126,7 @@ export default function GameContainer({
   // Focus-restore anchor for auto-opened modals (first-visit HowToPlay /
   // game-end Result). Without it, closing those modals drops focus to <body>.
   const titleRef = useRef<HTMLHeadingElement>(null);
+  const disabledReasonId = useId();
   // Initialize to false for SSR/CSR consistency.
   // Lazy initializer that reads localStorage would return true on first client
   // visit but false during SSR (window undefined), causing a hydration mismatch.
@@ -372,6 +373,7 @@ export default function GameContainer({
           selectedWords={gameState.selectedWords}
           onWordToggle={handleWordToggle}
           disabled={gameState.status !== "playing"}
+          disabledReasonId={disabledReasonId}
         />
       </div>
       <div
@@ -394,6 +396,8 @@ export default function GameContainer({
         onDeselectAll={handleDeselectAll}
         disabled={gameState.status !== "playing"}
         canCheck={gameState.selectedWords.length === 4}
+        disabledReason="今日の問題は終わりました。明日また新しい問題が出ます。"
+        disabledReasonId={disabledReasonId}
       />
       <HowToPlayModal
         open={showHowToPlay}

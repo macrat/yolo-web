@@ -179,36 +179,17 @@
   color: var(--ink-2);
 }
 
-/* 置換セクション */
+/* 置換セクション。開閉の行（アコーディオン）で出し入れし、上を細い線で区切る。 */
 .replaceSection {
+  padding-top: 0.5rem;
+  border-top: var(--rule-w-hair) solid var(--rule-2);
+}
+
+.replaceBody {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  padding-top: 0.5rem;
-  border-top: 1px solid var(--rule);
-}
-
-/* 置換切替ボタン */
-.toggleButton {
-  padding: 0.5rem 1rem;
-  border: 1px solid var(--rule-strong);
-  border-radius: var(--radius);
-  background-color: var(--paper);
-  color: var(--ink);
-  font-size: 0.875rem;
-  cursor: pointer;
-  width: fit-content;
-  transition: border-color 0.15s;
-  min-height: 2.75rem;
-}
-
-.toggleButton:hover {
-  border-color: var(--accent);
-}
-
-.toggleButton:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  margin-top: 0.75rem;
 }
 
 /* スクリーンリーダー専用非表示（視覚的には非表示・SR には読み上げられる）*/

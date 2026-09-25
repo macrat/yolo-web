@@ -85,60 +85,20 @@
   max-width: 720px;
 }
 
-/* おすすめリンク（任意）。罫の線画（トップページ .heroLink と同じ語彙・ピル禁止）。 */
+/* おすすめリンク（任意）。縁の見えないコントロールで、字の左右の余白と、字を並びの左端に置く張り出しは
+ * data-text-box（globals.css）が持つ。下線と訪問済みの色は a の既定に従う。 */
 .recommendation {
   display: inline-flex;
   align-items: center;
+  min-width: 44px;
   min-height: 44px;
   margin-bottom: 1.5rem;
-  padding: 0 1.1rem;
-  border: 1px solid var(--accent);
-  border-radius: var(--radius);
-  color: var(--accent);
-  text-decoration: none;
   font-size: 0.9rem;
-  transition: background-color 0.15s ease;
 }
 
-.recommendation:hover {
-  background-color: var(--accent-weak);
-}
-
-.recommendation:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-/* もう一度挑戦ボタン。罫の線画ボタン（ブランド色・影なし・角丸0）。 */
-.retryButton {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 44px;
+/* もう一度挑戦ボタンの見え方は Button が持ち、ここは上の内容とのあいだだけを持つ。 */
+.retry {
   margin-top: 0.5rem;
-  padding: 0 1.25rem;
-  border: 1px solid var(--rule-strong);
-  border-radius: var(--radius);
-  background-color: var(--paper);
-  color: var(--ink);
-  font-size: 0.9rem;
-  font-family: inherit;
-  cursor: pointer;
-  transition:
-    background-color 0.15s ease,
-    border-color 0.15s ease,
-    color 0.15s ease;
-}
-
-.retryButton:hover {
-  background-color: var(--accent-weak);
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.retryButton:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
 }
 
 @keyframes medalReveal {
@@ -183,40 +143,26 @@
   margin: 0;
 }
 
-/* co-type の結果解説ページへのリンク群。罫の線画リンク（.recommendation と同語彙）。 */
+/* co-type の結果解説ページへのリンク群（.recommendation と同じ、縁の見えないリンク）。 */
 .tiedTypeLinks {
   list-style: none;
   padding: 0;
   margin: 1rem 0 0;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  align-items: flex-start;
 }
 
 .tiedTypeLink {
   display: inline-flex;
   align-items: center;
+  min-width: 44px;
   min-height: 44px;
-  padding: 0 1.1rem;
-  border: 1px solid var(--accent);
-  border-radius: var(--radius);
-  color: var(--accent);
-  text-decoration: none;
   font-size: 0.9rem;
   line-height: 1.4;
   /* 型名は「柔和温順（にゅうわおんじゅん）タイプ」のように長い。語中改行を抑える。 */
   word-break: keep-all;
   overflow-wrap: anywhere;
-  transition: background-color 0.15s ease;
-}
-
-.tiedTypeLink:hover {
-  background-color: var(--accent-weak);
-}
-
-.tiedTypeLink:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
 }
 
 /* detailedContent セクション（全 variant 共通の親コンテナ） */

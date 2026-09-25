@@ -3,6 +3,7 @@
 import { useState, useCallback, useMemo, useEffect, useRef } from "react";
 import type { QuizChoice, QuizQuestion, QuizType } from "@/play/quiz/types";
 import { isCorrectChoice } from "@/play/quiz/scoring";
+import Button from "@/components/Button";
 import styles from "./QuestionCard.module.css";
 
 /** Fisher-Yates shuffle: returns a new array with elements in random order */
@@ -66,21 +67,16 @@ export default function QuestionCard({
     [answered, onAnswer, quizType],
   );
 
-  const getChoiceClassName = (choiceId: string): string => {
-    if (!answered || quizType !== "knowledge") {
-      return styles.choiceButton;
-    }
-    const correct = isCorrectChoice(question, choiceId);
-    if (correct) {
-      return `${styles.choiceButton} ${styles.choiceCorrect}`;
-    }
-    if (choiceId === selectedId && !correct) {
-      return `${styles.choiceButton} ${styles.choiceWrong}`;
-    }
-    return styles.choiceButton;
-  };
+  // 回答した選択肢は押せなくなるので、フォーカスは「次へ」に移し、キーボードでそのまま進めるようにする。
+  const nextAreaRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!answered) return;
+    nextAreaRef.current
+      ?.querySelector("button")
+      ?.focus({ preventScroll: true });
+  }, [answered]);
 
-  // 正誤は色だけで伝えない（WCAG 1.4.1）。色に加えて短い文字ラベルを添える。
+  // 正誤は文字で伝える（WCAG 1.4.1）。
   const getFeedbackTag = (choiceId: string): string | null => {
     if (!answered || quizType !== "knowledge") return null;
     const correct = isCorrectChoice(question, choiceId);
@@ -101,33 +97,42 @@ export default function QuestionCard({
       >
         {question.text}
       </h2>
-      <div className={styles.choices}>
+      {/* 回答する前の選択肢は、押すと回答が決まるボタンの一覧（§7）。回答したあとは押せるものが無いので、
+       * 無効のボタンを並べずに、正誤の文字を添えた一覧にする。 */}
+      <ul className={styles.choices} data-text-box="rows">
         {shuffledChoices.map((choice) => {
           const feedbackTag = getFeedbackTag(choice.id);
           return (
-            <button
-              key={choice.id}
-              type="button"
-              className={getChoiceClassName(choice.id)}
-              onClick={() => handleSelect(choice.id)}
-              disabled={answered}
-            >
-              <span>{choice.text}</span>
+            <li key={choice.id} className={styles.choice}>
+              {answered ? (
+                <span className={styles.choiceText}>{choice.text}</span>
+              ) : (
+                <button
+                  type="button"
+                  className={styles.choiceButton}
+                  onClick={() => handleSelect(choice.id)}
+                  data-hit-area="after"
+                >
+                  {choice.text}
+                </button>
+              )}
               {feedbackTag && (
                 <span className={styles.feedbackTag}>{feedbackTag}</span>
               )}
-            </button>
+            </li>
           );
         })}
-      </div>
+      </ul>
       {answered && quizType === "knowledge" && (
         <>
           {question.explanation && (
             <div className={styles.explanation}>{question.explanation}</div>
           )}
-          <button type="button" className={styles.nextButton} onClick={onNext}>
-            次へ
-          </button>
+          <div className={styles.next} ref={nextAreaRef}>
+            <Button variant="primary" onClick={onNext}>
+              次へ
+            </Button>
+          </div>
         </>
       )}
     </div>

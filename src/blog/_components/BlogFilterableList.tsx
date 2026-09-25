@@ -228,7 +228,7 @@ export default function BlogFilterableList({
           <Link
             href={buildCategoryHref(null, keyword)}
             className={styles.filterButton}
-            data-active={!activeCategory ? "true" : undefined}
+            data-text-box="inline"
             aria-current={!activeCategory ? "page" : undefined}
           >
             すべて
@@ -241,7 +241,7 @@ export default function BlogFilterableList({
               key={value}
               href={buildCategoryHref(value, keyword)}
               className={styles.filterButton}
-              data-active={activeCategory === value ? "true" : undefined}
+              data-text-box="inline"
               aria-current={activeCategory === value ? "page" : undefined}
             >
               {label}
@@ -275,6 +275,7 @@ export default function BlogFilterableList({
                 key={tag}
                 href={buildTagHref(tag, keyword)}
                 className={styles.tagChip}
+                data-text-box="inline"
               >
                 {tag}
               </Link>

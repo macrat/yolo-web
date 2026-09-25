@@ -1,7 +1,7 @@
 /*
  * 辞典の検索器（DictionarySearch）— 4 辞典トップ共有の「引く体験」の器。
  *
- * 器は静か。入力欄は店構え（罫囲み・角丸は入力欄の例外 --radius-sm・ピル禁止・影なし）。
+ * 器は静か。入力欄は共通の書き込む欄（Input）で、見え方とフォーカスは globals.css の [data-field] が持つ。
  * 検索結果はカードのグリッドでなく品書き（罫区切りリスト）で出す——上辺＋各行の一本罫で囲い、
  * カード装飾・box-shadow・色地を持たない。色見本（colors）だけは成果物の中身（和色）として
  * 結果行に出してよい（§2）——器（入力欄・罫・見出し）には決して漏らさない。
@@ -19,33 +19,6 @@
   font-family: var(--font-heading);
   font-size: 1.375rem; /* 22px 目安（1.25 倍スケール帯） */
   line-height: 1.4;
-}
-
-/*
- * 入力欄（店構え）。角丸は --radius-sm。
- * 罫囲み・地は紙・影なし・ピルにしない。タップ面 44px を min-height で確保（§6）。
- */
-.input {
-  width: 100%;
-  min-height: 44px;
-  padding: var(--space-8) var(--space-16);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius-sm);
-  background-color: var(--paper);
-  color: var(--ink);
-  font-family: var(--font-body);
-  font-size: 1rem; /* 16px */
-  line-height: 1.5;
-}
-
-.input::placeholder {
-  color: var(--ink-2);
-}
-
-.input:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-  border-color: var(--accent);
 }
 
 /*

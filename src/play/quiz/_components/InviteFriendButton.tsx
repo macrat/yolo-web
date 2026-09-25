@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { trackShare } from "@/lib/analytics";
+import Button from "@/components/Button";
 import styles from "./InviteFriendButton.module.css";
 
 interface InviteFriendButtonProps {
@@ -71,9 +72,7 @@ export default function InviteFriendButton({
   return (
     <div className={styles.wrapper}>
       <p className={styles.label}>友達との相性を調べてみよう</p>
-      <button type="button" className={styles.button} onClick={handleInvite}>
-        友達に診断を送る
-      </button>
+      <Button onClick={handleInvite}>友達に診断を送る</Button>
       <div className={styles.copiedMessage} role="status" aria-live="polite">
         {copied ? "リンクをコピーしました!" : ""}
       </div>

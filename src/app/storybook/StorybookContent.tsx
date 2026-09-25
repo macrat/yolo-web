@@ -163,7 +163,13 @@ export default function StorybookContent({
               <ol className={styles.tocList}>
                 {TOC_ITEMS.map((item) => (
                   <li key={item.id}>
-                    <a href={`#${item.id}`}>{item.label}</a>
+                    <a
+                      href={`#${item.id}`}
+                      className={styles.tocLink}
+                      data-text-box="inline"
+                    >
+                      {item.label}
+                    </a>
                   </li>
                 ))}
               </ol>

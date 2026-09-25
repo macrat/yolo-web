@@ -26,6 +26,7 @@ import {
   saveTodayGame,
 } from "@/play/games/irodori/_lib/storage";
 import type { CrossCategoryItem } from "@/play/games/shared/_components/new/CrossCategoryBanner";
+import Button from "@/components/Button";
 import GameHeader from "./GameHeader";
 import ProgressBar from "./ProgressBar";
 import ColorTarget from "./ColorTarget";
@@ -355,13 +356,9 @@ export default function GameContainer({
             onLChange={setSliderL}
           />
           <div className={styles.submitArea}>
-            <button
-              className={styles.submitButton}
-              onClick={handleSubmit}
-              type="button"
-            >
+            <Button variant="primary" onClick={handleSubmit}>
               {"\u6C7A\u5B9A"}
-            </button>
+            </Button>
           </div>
         </>
       )}
@@ -371,13 +368,9 @@ export default function GameContainer({
           <RoundResult round={currentRound} />
           {gameState.status === "playing" && (
             <div className={styles.submitArea}>
-              <button
-                className={styles.nextButton}
-                onClick={handleNextRound}
-                type="button"
-              >
+              <Button variant="primary" onClick={handleNextRound}>
                 {"\u6B21\u306E\u554F\u984C\u3078"}
-              </button>
+              </Button>
             </div>
           )}
         </>
@@ -385,13 +378,9 @@ export default function GameContainer({
 
       {gameState.status === "completed" && phase === "result" && (
         <div className={styles.submitArea}>
-          <button
-            className={styles.submitButton}
-            onClick={() => setShowFinalResult(true)}
-            type="button"
-          >
+          <Button variant="primary" onClick={() => setShowFinalResult(true)}>
             {"\u7D50\u679C\u3092\u898B\u308B"}
-          </button>
+          </Button>
         </div>
       )}
 

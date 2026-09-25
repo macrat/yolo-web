@@ -68,11 +68,3 @@
   color: var(--ink);
   text-align: center;
 }
-
-.colorNameLink {
-  color: var(--accent);
-}
-
-.colorNameLink:hover {
-  opacity: 0.8;
-}

@@ -33,10 +33,14 @@ export default function RelatedQuizzes({
   return (
     <nav className={styles.related} aria-label="関連コンテンツ">
       <h2 className={styles.heading}>他のクイズ・診断も試してみよう</h2>
-      <ul className={styles.list}>
+      <ul className={styles.list} data-text-box="rows">
         {relatedContents.map((content) => (
           <li key={content.slug}>
-            <Link href={getPlayPath(content.slug)} className={styles.link}>
+            <Link
+              href={getPlayPath(content.slug)}
+              className={styles.link}
+              data-hit-area="after"
+            >
               <span className={styles.name}>
                 {content.shortTitle ?? content.title}
               </span>

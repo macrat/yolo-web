@@ -42,8 +42,12 @@ export default function TagList({
       aria-label="タグ"
     >
       {visibleTags.map((tag) => (
-        <li key={tag} className={styles.tag}>
-          <Link href={`/blog/tag/${tag}`} className={styles.tagLink}>
+        <li key={tag}>
+          <Link
+            href={`/blog/tag/${tag}`}
+            className={styles.tagLink}
+            data-text-box="inline"
+          >
             {tag}
           </Link>
         </li>

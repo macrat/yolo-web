@@ -52,7 +52,7 @@ export default function SeriesNav({
             <li
               key={post.slug}
               className={
-                post.slug === currentSlug ? styles.currentItem : styles.listItem
+                post.slug === currentSlug ? styles.currentItem : undefined
               }
             >
               {post.slug === currentSlug ? (
@@ -61,7 +61,11 @@ export default function SeriesNav({
                   <span className={styles.currentBadge}>(この記事)</span>
                 </span>
               ) : (
-                <Link href={`/blog/${post.slug}`} className={styles.link}>
+                <Link
+                  href={`/blog/${post.slug}`}
+                  className={styles.link}
+                  data-text-box="inline"
+                >
                   {post.title}
                 </Link>
               )}
@@ -81,13 +85,21 @@ export default function SeriesNav({
           }
         >
           {prevPost && (
-            <Link href={`/blog/${prevPost.slug}`} className={styles.prevLink}>
+            <Link
+              href={`/blog/${prevPost.slug}`}
+              className={styles.prevLink}
+              data-text-box="inline"
+            >
               <span className={styles.quickNavLabel}>シリーズ内の前の記事</span>
               <span className={styles.quickNavTitle}>{prevPost.title}</span>
             </Link>
           )}
           {nextPost && (
-            <Link href={`/blog/${nextPost.slug}`} className={styles.nextLink}>
+            <Link
+              href={`/blog/${nextPost.slug}`}
+              className={styles.nextLink}
+              data-text-box="inline"
+            >
               <span className={styles.quickNavLabel}>シリーズ内の次の記事</span>
               <span className={styles.quickNavTitle}>{nextPost.title}</span>
             </Link>

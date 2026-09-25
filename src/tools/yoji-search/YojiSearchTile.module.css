@@ -40,6 +40,7 @@
   padding: 2rem 0;
 }
 
+/* 結果は1行1項目の並びで、行どうしを細い線で区切る（§7）。各行はアコーディオンで、開くと詳細が出る（§6）。 */
 .resultList {
   list-style: none;
   margin: 0;
@@ -47,37 +48,23 @@
 }
 
 .resultItem {
-  border-bottom: 1px solid var(--rule);
+  border-bottom: var(--rule-w-hair) solid var(--rule-2);
 }
 
 .resultItem:last-child {
   border-bottom: none;
 }
 
-.resultButton {
+/* 開閉の行を行の幅いっぱいに広げ、hover の線とフォーカスのリングを行の単位に出す。 */
+.resultItem .resultSummary {
+  width: auto;
+}
+
+.resultHead {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: 0.5rem;
-  width: 100%;
-  padding: 0.75rem 0.5rem;
-  background: none;
-  border: none;
-  font: inherit;
-  color: var(--ink);
-  cursor: pointer;
-  text-align: left;
-  transition: background-color 0.15s;
-}
-
-.resultButton:hover {
-  background-color: var(--paper-2);
-}
-
-.resultButton:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-  border-radius: var(--radius);
+  gap: var(--space-8);
 }
 
 .yojiText {
@@ -92,18 +79,18 @@
   flex-shrink: 0;
 }
 
+/* 意味は語とよみの後ろに続け、残りの幅が狭ければ次の行に回して、1字ずつ折れる細い列にしない。 */
 .meaning {
   color: var(--ink-2);
   font-size: 0.875rem;
-  flex: 1;
+  flex: 1 1 12em;
   min-width: 0;
 }
 
 .detailPanel {
   padding: 0.75rem 1rem 1rem;
   background-color: var(--paper-2);
-  border-radius: var(--radius);
-  margin: 0 0.5rem 0.75rem;
+  margin: 0 0 0.75rem;
 }
 
 .detailList {
@@ -131,27 +118,7 @@
   line-height: 1.7;
 }
 
+/* 続きを出すボタン。結果の並びの下に、字の幅で置く。 */
 .moreButton {
-  display: block;
-  width: 100%;
-  min-height: 44px;
-  padding: 0.75rem 1rem;
-  margin-top: 0.25rem;
-  background: none;
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
-  font: inherit;
-  font-size: 0.9375rem;
-  color: var(--ink);
-  cursor: pointer;
-  transition: background-color 0.15s;
-}
-
-.moreButton:hover {
-  background-color: var(--paper-2);
-}
-
-.moreButton:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  align-self: flex-start;
 }

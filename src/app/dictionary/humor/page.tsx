@@ -78,12 +78,17 @@ export default function HumorDictIndexPage() {
       </div>
 
       {/* 見出し語の品書き（罫区切りリスト）。各行 = 見出し語（リンク）＋よみ＋語義プレビュー。 */}
-      <ul className={styles.list} aria-label="ユーモア辞典 見出し語一覧">
+      <ul
+        className={styles.list}
+        aria-label="ユーモア辞典 見出し語一覧"
+        data-text-box="rows"
+      >
         {entries.map((entry) => (
           <li key={entry.slug} className={styles.row}>
             <Link
               href={`/dictionary/humor/${entry.slug}`}
               className={styles.entryLink}
+              data-hit-area="after"
             >
               <span className={styles.headword}>
                 <span className={styles.word}>{entry.word}</span>

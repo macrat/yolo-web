@@ -17,7 +17,7 @@
  * - 個別論点①-5: GIF警告
  * - エラーハンドリング
  * - モード切替（dimensions/percent）
- * - アスペクト比ロック
+ * - 縦横比を保つチェックボックス
  * - ダウンロード機能
  * - D-4: 非同期処理アンマウント後 setState 防止
  */
@@ -476,9 +476,9 @@ describe("ImageResizerTile", () => {
   });
 
   // -------------------------------------------------------
-  // アスペクト比ロックボタン — DESIGN.md §3 絵文字禁止 是正テスト
+  // 縦横比を保つチェックボックス
   // -------------------------------------------------------
-  it("DESIGN §3 是正: アスペクト比ロックボタンが可視テキストラベルを持ち絵文字を含まない", async () => {
+  it("縦横比を保つ: チェックボックスで示し、既定で選ばれていて、押すと外れる", async () => {
     render(<ImageResizerTile />);
 
     const fileInput = document.querySelector(
@@ -488,55 +488,10 @@ describe("ImageResizerTile", () => {
 
     await selectFileAndWaitImageLoad(fileInput, file);
 
-    const lockButton = screen.getByRole("button", {
-      name: /アスペクト比/i,
-    });
-    expect(lockButton).toBeInTheDocument();
-
-    const visibleText = lockButton.textContent?.trim() ?? "";
-    expect(visibleText.length).toBeGreaterThan(0);
-    expect(visibleText).not.toMatch(/[\u{1F512}\u{1F513}]/u);
-  });
-
-  it("DESIGN §3 是正: アスペクト比ロックボタンは SVG 線画アイコンを含む（Lucide スタイル）", async () => {
-    render(<ImageResizerTile />);
-
-    const fileInput = document.querySelector(
-      'input[type="file"]',
-    ) as HTMLInputElement;
-    const file = new File(["dummy"], "img.png", { type: "image/png" });
-
-    await selectFileAndWaitImageLoad(fileInput, file);
-
-    const lockButton = screen.getByRole("button", {
-      name: /アスペクト比/i,
-    });
-
-    const svg = lockButton.querySelector("svg");
-    expect(svg).not.toBeNull();
-    expect(svg?.getAttribute("fill")).toBe("none");
-    expect(svg?.getAttribute("stroke")).toBe("currentColor");
-    expect(svg?.getAttribute("aria-hidden")).toBe("true");
-  });
-
-  it("DESIGN §3 是正: アスペクト比ロック状態トグルで可視テキストが切り替わる", async () => {
-    render(<ImageResizerTile />);
-
-    const fileInput = document.querySelector(
-      'input[type="file"]',
-    ) as HTMLInputElement;
-    const file = new File(["dummy"], "img.png", { type: "image/png" });
-
-    await selectFileAndWaitImageLoad(fileInput, file);
-
-    const lockButton = screen.getByRole("button", {
-      name: /アスペクト比/i,
-    });
-
-    const initialText = lockButton.textContent?.trim() ?? "";
-    fireEvent.click(lockButton);
-    const toggledText = lockButton.textContent?.trim() ?? "";
-    expect(toggledText).not.toBe(initialText);
+    const checkbox = screen.getByRole("checkbox", { name: "縦横比を保つ" });
+    expect(checkbox).toBeChecked();
+    fireEvent.click(checkbox);
+    expect(checkbox).not.toBeChecked();
   });
 
   // -------------------------------------------------------

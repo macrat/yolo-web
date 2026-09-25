@@ -1,3 +1,4 @@
+import Button from "@/components/Button";
 import styles from "./GameControls.module.css";
 
 interface Props {
@@ -6,6 +7,10 @@ interface Props {
   onDeselectAll: () => void;
   disabled: boolean;
   canCheck: boolean;
+  /** disabled のとき、なぜ操作できないかを言う文（§6 無効）。 */
+  disabledReason?: string;
+  /** disabledReason を置く要素の id。言葉の盤面もこの文を説明として読ませる。 */
+  disabledReasonId?: string;
 }
 
 /**
@@ -17,33 +22,44 @@ export default function GameControls({
   onDeselectAll,
   disabled,
   canCheck,
+  disabledReason,
+  disabledReasonId,
 }: Props) {
+  const describedBy = disabled && disabledReason ? disabledReasonId : undefined;
   return (
-    <div className={styles.controls}>
-      <button
-        className={styles.secondaryButton}
-        onClick={onShuffle}
-        disabled={disabled}
-        type="button"
-      >
-        {"\u30B7\u30E3\u30C3\u30D5\u30EB"}
-      </button>
-      <button
-        className={styles.secondaryButton}
-        onClick={onDeselectAll}
-        disabled={disabled}
-        type="button"
-      >
-        {"\u9078\u629E\u89E3\u9664"}
-      </button>
-      <button
-        className={styles.primaryButton}
-        onClick={onCheck}
-        disabled={disabled || !canCheck}
-        type="button"
-      >
-        {"\u30C1\u30A7\u30C3\u30AF"}
-      </button>
+    <div className={styles.area}>
+      <div className={styles.controls}>
+        <Button
+          onClick={onShuffle}
+          disabled={disabled}
+          aria-describedby={describedBy}
+        >
+          {"シャッフル"}
+        </Button>
+        <Button
+          onClick={onDeselectAll}
+          disabled={disabled}
+          aria-describedby={describedBy}
+        >
+          {"選択解除"}
+        </Button>
+        <Button
+          variant="primary"
+          onClick={onCheck}
+          disabled={disabled || !canCheck}
+          aria-describedby={describedBy}
+          disabledReason={
+            disabled ? undefined : "言葉を4つ選ぶとチェックできます"
+          }
+        >
+          {"チェック"}
+        </Button>
+      </div>
+      {describedBy && (
+        <p id={describedBy} className={styles.reason}>
+          {disabledReason}
+        </p>
+      )}
     </div>
   );
 }

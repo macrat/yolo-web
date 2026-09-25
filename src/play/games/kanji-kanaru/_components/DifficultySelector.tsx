@@ -1,6 +1,7 @@
 "use client";
 
 import type { Difficulty } from "@/play/games/kanji-kanaru/_lib/types";
+import RadioGroup from "@/components/RadioGroup";
 import styles from "./styles/KanjiKanaru.module.css";
 
 interface DifficultySelectorProps {
@@ -9,39 +10,25 @@ interface DifficultySelectorProps {
 }
 
 const DIFFICULTY_OPTIONS: { value: Difficulty; label: string }[] = [
-  { value: "beginner", label: "\u521D\u7D1A" },
-  { value: "intermediate", label: "\u4E2D\u7D1A" },
-  { value: "advanced", label: "\u4E0A\u7D1A" },
+  { value: "beginner", label: "初級" },
+  { value: "intermediate", label: "中級" },
+  { value: "advanced", label: "上級" },
 ];
 
 /**
- * Compact button group for selecting game difficulty.
+ * 難易度を1つ選ぶラジオボタンの組。選んだ難易度は円の塗りで示す（§6）。
  */
 export default function DifficultySelector({
   difficulty,
   onChange,
 }: DifficultySelectorProps) {
   return (
-    <div
+    <RadioGroup
       className={styles.difficultySelector}
-      role="group"
-      aria-label={"\u96E3\u6613\u5EA6"}
-    >
-      {DIFFICULTY_OPTIONS.map((opt) => (
-        <button
-          key={opt.value}
-          type="button"
-          className={
-            opt.value === difficulty
-              ? styles.difficultyButtonActive
-              : styles.difficultyButton
-          }
-          onClick={() => onChange(opt.value)}
-          aria-pressed={opt.value === difficulty}
-        >
-          {opt.label}
-        </button>
-      ))}
-    </div>
+      legend={"難易度"}
+      options={DIFFICULTY_OPTIONS}
+      value={difficulty}
+      onChange={(value) => onChange(value as Difficulty)}
+    />
   );
 }

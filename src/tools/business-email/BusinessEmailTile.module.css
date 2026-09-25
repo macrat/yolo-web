@@ -5,7 +5,7 @@
  *
  * 組み方（紙 --paper/--paper-2・墨 --ink/--ink-2・罫 --rule/--rule-strong・
  * --accent）:
- * - 色は上記トークンのみ（--accent はフォーカス outline の参照のみ・地への直塗り禁止）
+ * - 色は上記トークンのみ（--accent の地への直塗り禁止）
  * - font-weight は 600 まで
  * - 角丸は 0 基調 var(--radius)。例外は入力欄・値札の var(--radius-sm)（本タイルは共有
  *   Input/Textarea を使うため入力欄自身の指定なし）

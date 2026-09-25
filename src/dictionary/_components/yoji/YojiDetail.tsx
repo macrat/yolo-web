@@ -88,6 +88,7 @@ export default function YojiDetail({ yoji }: YojiDetailProps) {
           <Link
             href={`/dictionary/yoji/category/${yoji.category}`}
             className={styles.categoryTag}
+            data-text-box="inline"
           >
             {categoryLabel}
           </Link>
@@ -105,12 +106,17 @@ export default function YojiDetail({ yoji }: YojiDetailProps) {
                   key={`${ch}-${i}`}
                   href={`/dictionary/kanji/${encodeURIComponent(ch)}`}
                   className={styles.kanjiLink}
+                  data-text-box="inline"
                   title={`漢字「${ch}」の詳細を見る`}
                 >
                   {ch}
                 </Link>
               ) : (
-                <span key={`${ch}-${i}`} className={styles.kanjiChar}>
+                <span
+                  key={`${ch}-${i}`}
+                  className={styles.kanjiChar}
+                  data-text-box="inline"
+                >
                   {ch}
                 </span>
               ),
@@ -172,6 +178,7 @@ export default function YojiDetail({ yoji }: YojiDetailProps) {
                 key={y.yoji}
                 href={`/dictionary/yoji/${encodeURIComponent(y.yoji)}`}
                 className={styles.relatedLink}
+                data-text-box="inline"
               >
                 {y.yoji}
               </Link>
@@ -182,7 +189,11 @@ export default function YojiDetail({ yoji }: YojiDetailProps) {
 
       <section className={styles.section}>
         <h2>関連ゲーム</h2>
-        <Link href="/play/yoji-kimeru" className={styles.crossLink}>
+        <Link
+          href="/play/yoji-kimeru"
+          className={styles.crossLink}
+          data-text-box="inline"
+        >
           四字キメル - 毎日の四字熟語パズルで遊ぶ
         </Link>
       </section>

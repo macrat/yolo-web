@@ -7,6 +7,7 @@ import {
   generateResultImage,
   downloadImage,
 } from "@/play/games/irodori/_lib/share";
+import Button from "@/components/Button";
 import GameDialog from "@/play/games/shared/_components/new/GameDialog";
 import GameShareButtons from "@/play/games/shared/_components/new/GameShareButtons";
 import CountdownTimer from "@/play/games/shared/_components/new/CountdownTimer";
@@ -62,13 +63,11 @@ export default function ResultModal({
       width={440}
       returnFocusRef={returnFocusRef}
       footer={
-        <button
-          className={styles.statsButton}
-          onClick={handleStatsClick}
-          type="button"
-        >
-          {"\u7D71\u8A08\u3092\u898B\u308B"}
-        </button>
+        <div className={styles.statsAction}>
+          <Button onClick={handleStatsClick}>
+            {"\u7D71\u8A08\u3092\u898B\u308B"}
+          </Button>
+        </div>
       }
     >
       <FinalResult gameState={gameState} />

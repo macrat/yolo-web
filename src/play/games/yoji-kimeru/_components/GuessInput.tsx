@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useCallback, useEffect, useId } from "react";
+import Button from "@/components/Button";
 import styles from "./styles/YojiKimeru.module.css";
 
 /** Duration of the shake animation in ms. Must match CSS .shaking animation duration. */
@@ -10,6 +11,8 @@ interface GuessInputProps {
   onSubmit: (input: string) => Promise<string | null>;
   disabled: boolean;
   submitting?: boolean;
+  /** 送信中でないのに入力できないとき、なぜ入力できないかを言う文（§6 無効）。 */
+  disabledReason?: string;
 }
 
 /**
@@ -22,7 +25,11 @@ export default function GuessInput({
   onSubmit,
   disabled,
   submitting = false,
+  disabledReason,
 }: GuessInputProps) {
+  const reasonId = useId();
+  // 送信中はボタンの字が「送信中...」と理由を言うので、理由の文を別に出さない。
+  const showReason = Boolean(disabled && !submitting && disabledReason);
   const [value, setValue] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [shaking, setShaking] = useState(false);
@@ -83,6 +90,7 @@ export default function GuessInput({
         <input
           ref={inputRef}
           className={styles.inputField}
+          data-field
           type="text"
           value={value}
           onChange={(e) => {
@@ -99,19 +107,25 @@ export default function GuessInput({
           disabled={disabled || submitting}
           placeholder={submitting ? "送信中..." : "四字熟語を入力"}
           aria-label="四字熟語を入力"
+          aria-describedby={showReason ? reasonId : undefined}
           autoComplete="off"
           autoCorrect="off"
           spellCheck={false}
         />
-        <button
-          className={styles.submitButton}
+        <Button
+          variant="primary"
           onClick={() => void handleSubmit()}
           disabled={disabled || submitting}
-          type="button"
+          aria-describedby={showReason ? reasonId : undefined}
         >
           {submitting ? "送信中..." : "送信"}
-        </button>
+        </Button>
       </div>
+      {showReason && (
+        <p id={reasonId} className={styles.disabledReason}>
+          {disabledReason}
+        </p>
+      )}
       <div className={styles.errorMessage} role={error ? "alert" : undefined}>
         {error}
       </div>

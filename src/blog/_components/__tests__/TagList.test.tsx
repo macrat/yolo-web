@@ -89,11 +89,11 @@ describe("TagList.module.css — 新デザイントークン確認（DESIGN.md �
     expect(css).not.toMatch(/var\(--r-(normal|interactive)\)/);
   });
 
-  test("新トークン（--ink-2 / --rule / --accent 等）が使われていること", () => {
+  test("タグは枠で囲まず、下線を消さない（§6 リンクは下線で示す）", () => {
     const cssPath = path.resolve(__dirname, "../TagList.module.css");
     const css = fs.readFileSync(cssPath, "utf-8");
-    // 新デザイントークンが使われていること（文字色・罫・ホバー色）
-    expect(css).toMatch(/var\(--(ink|rule|accent)/);
+    expect(css).not.toMatch(/\bborder\s*:/);
+    expect(css).not.toMatch(/text-decoration\s*:\s*none/);
   });
 });
 

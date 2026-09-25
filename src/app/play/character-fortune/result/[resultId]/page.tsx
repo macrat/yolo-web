@@ -98,17 +98,19 @@ export default async function CharacterFortuneResultPage({ params }: Props) {
       shareText={shareText}
       shareUrl={shareUrl}
     >
-      {/* character-fortune固有のJSX。
-          旧デザインの per-quiz accentColor インライン注入（自己紹介の面・CTA の背景・
-          見出しの文字色）は全撤去し、共通アクセント（CSS 側 --accent / --accent-weak）へ
-          寄せてインライン結果（ResultCard）とトーン統一した。 */}
+      {/* character-fortune固有のJSX。キャラごとの色を持たず、インライン結果（ResultCard）と
+          同じ無彩のトーンで組む。 */}
       <div className={styles.detailedSection}>
         {/* (a) キャラクターの自己紹介。共通アクセントの淡い面（--accent-weak）に左寄せで置く。 */}
         <p className={styles.characterIntro}>{cf.characterIntro}</p>
 
         {/* CTA1 */}
         <div className={styles.trySection}>
-          <Link href={`/play/${SLUG}`} className={styles.tryButton}>
+          <Link
+            href={`/play/${SLUG}`}
+            className={styles.tryButton}
+            data-focus-ring="inset"
+          >
             {ctaText}
           </Link>
           <p className={styles.tryCost}>
@@ -155,14 +157,18 @@ export default async function CharacterFortuneResultPage({ params }: Props) {
         {/* (e) 相性診断への誘導 */}
         <div className={styles.compatibilitySection}>
           <p className={styles.compatibilityPrompt}>{cf.compatibilityPrompt}</p>
-          <Link href={`/play/${SLUG}`} className={styles.tryButton}>
+          <Link
+            href={`/play/${SLUG}`}
+            className={styles.tryLink}
+            data-text-box="inline"
+          >
             診断して相性を見てみる
           </Link>
         </div>
 
         {/* (f) 全タイプ一覧 + CTA */}
         <div className={styles.allTypesSection}>
-          <ul className={styles.allTypesList}>
+          <ul className={styles.allTypesList} data-text-box="rows">
             {quiz.results.map((r) => (
               <li
                 key={r.id}
@@ -174,7 +180,11 @@ export default async function CharacterFortuneResultPage({ params }: Props) {
               >
                 {/* 新デザインでは絵文字（icon）を装飾に使わない（DESIGN.md §8-6）。
                     各タイプの区別はタイトル文言だけで行う。 */}
-                <Link href={`/play/${SLUG}/result/${r.id}`}>
+                <Link
+                  href={`/play/${SLUG}/result/${r.id}`}
+                  aria-current={r.id === resultId ? "page" : undefined}
+                  data-hit-area="after"
+                >
                   <span>{r.title}</span>
                 </Link>
               </li>
@@ -182,7 +192,11 @@ export default async function CharacterFortuneResultPage({ params }: Props) {
           </ul>
           <p className={styles.allTypesCta}>他のキャラも見てみよう</p>
           <div className={styles.trySection}>
-            <Link href={`/play/${SLUG}`} className={styles.tryButton}>
+            <Link
+              href={`/play/${SLUG}`}
+              className={styles.tryLink}
+              data-text-box="inline"
+            >
               {ctaText}
             </Link>
             <p className={styles.tryCost}>

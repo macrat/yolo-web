@@ -38,6 +38,8 @@
 
 import { useState, useCallback, useRef, useId, useEffect } from "react";
 import Panel from "@/components/Panel";
+import Button from "@/components/Button";
+import Checkbox from "@/components/Checkbox";
 import FileDropZone from "@/components/FileDropZone";
 import Input from "@/components/Input";
 import Select from "@/components/Select";
@@ -460,73 +462,6 @@ export default function ImageResizerTile({
                       />
                     </div>
                     <span className={styles.label}>px</span>
-                    {/* DESIGN.md §3: 絵文字禁止 → Lucide スタイル SVG 線画 + 可視テキストラベル */}
-                    <button
-                      type="button"
-                      className={`${styles.lockButton} ${maintainAspectRatio ? styles.lockButtonActive : ""}`}
-                      onClick={() =>
-                        setMaintainAspectRatio(!maintainAspectRatio)
-                      }
-                      aria-label={
-                        maintainAspectRatio
-                          ? "アスペクト比 固定中（クリックで解除）"
-                          : "アスペクト比 固定解除（クリックで固定）"
-                      }
-                    >
-                      {maintainAspectRatio ? (
-                        /* Lucide "Lock" (施錠) — stroke 1.5px / 16px */
-                        <>
-                          <svg
-                            width="16"
-                            height="16"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="1.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            aria-hidden="true"
-                          >
-                            <rect
-                              x="3"
-                              y="11"
-                              width="18"
-                              height="11"
-                              rx="2"
-                              ry="2"
-                            />
-                            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                          </svg>
-                          <span className={styles.lockLabel}>固定中</span>
-                        </>
-                      ) : (
-                        /* Lucide "Unlock" (開錠) — stroke 1.5px / 16px */
-                        <>
-                          <svg
-                            width="16"
-                            height="16"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="1.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            aria-hidden="true"
-                          >
-                            <rect
-                              x="3"
-                              y="11"
-                              width="18"
-                              height="11"
-                              rx="2"
-                              ry="2"
-                            />
-                            <path d="M7 11V7a5 5 0 0 1 9.9-1" />
-                          </svg>
-                          <span className={styles.lockLabel}>固定解除</span>
-                        </>
-                      )}
-                    </button>
                   </div>
                   <div className={styles.row}>
                     <label htmlFor={heightId} className={styles.label}>
@@ -543,6 +478,11 @@ export default function ImageResizerTile({
                     </div>
                     <span className={styles.label}>px</span>
                   </div>
+                  <Checkbox
+                    label="縦横比を保つ"
+                    checked={maintainAspectRatio}
+                    onChange={(e) => setMaintainAspectRatio(e.target.checked)}
+                  />
                 </>
               ) : (
                 /* パーセント指定モード */
@@ -603,13 +543,13 @@ export default function ImageResizerTile({
                 </div>
               )}
 
-              <button
-                type="button"
-                className={styles.resizeButton}
+              <Button
+                variant="primary"
+                className={styles.action}
                 onClick={handleResize}
               >
                 リサイズ
-              </button>
+              </Button>
             </div>
           </>
         )}
@@ -648,13 +588,9 @@ export default function ImageResizerTile({
                 </span>
               </div>
             </div>
-            <button
-              type="button"
-              className={styles.downloadButton}
-              onClick={handleDownload}
-            >
+            <Button className={styles.action} onClick={handleDownload}>
               ダウンロード
-            </button>
+            </Button>
           </div>
         )}
 

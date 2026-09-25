@@ -23,7 +23,7 @@
  * 新デザイン体系（DESIGN.md）でインライン結果（ResultCard）とトーン統一:
  * - catchphrase: 共通アクセントの淡い面に置く（旧タイプカラー薄背景ヒーローは撤去）
  * - DescriptionExpander: 長いdescriptionは折りたたみ
- * - CTA1: 共通 primary ボタン（--accent 地・--paper 文字）ベースの主要ボタン（タイプカラー注入は撤去）
+ * - CTA1: プライマリの反転で示す主要 CTA
  * - ContrarianFortuneContent: 共通コンポーネントでコアコンテンツを一括レンダリング
  */
 
@@ -140,9 +140,13 @@ export default async function ContrarianFortuneResultPage({ params }: Props) {
           isLong={isDescriptionLong}
         />
 
-        {/* CTA1: 共通 primary ボタン（--accent 地・--paper 文字）ベースの主要 CTA（インライン結果とトーン統一） */}
+        {/* CTA1 */}
         <div className={styles.trySection}>
-          <Link href={`/play/${SLUG}`} className={styles.tryButton}>
+          <Link
+            href={`/play/${SLUG}`}
+            className={styles.tryButton}
+            data-focus-ring="inset"
+          >
             {ctaText}
           </Link>
           <p className={styles.tryCost}>
@@ -162,7 +166,11 @@ export default async function ContrarianFortuneResultPage({ params }: Props) {
           afterThirdPartyNote={
             /* CTA2: 全タイプ一覧の前に配置 — コンテンツを読み終えた時点での自然な誘導 */
             <div className={styles.cta2Section}>
-              <Link href={`/play/${SLUG}`} className={styles.cta2Link}>
+              <Link
+                href={`/play/${SLUG}`}
+                className={styles.cta2Link}
+                data-text-box="inline"
+              >
                 {ctaText}
               </Link>
             </div>

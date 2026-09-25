@@ -34,10 +34,14 @@ export default function RelatedGames({
   return (
     <nav className={styles.related} aria-label="関連ゲーム">
       <h2 className={styles.heading}>関連ゲーム</h2>
-      <ul className={styles.list}>
+      <ul className={styles.list} data-text-box="rows">
         {relatedGames.map((game) => (
           <li key={game.slug}>
-            <Link href={`/play/${game.slug}`} className={styles.link}>
+            <Link
+              href={`/play/${game.slug}`}
+              className={styles.link}
+              data-hit-area="after"
+            >
               <span className={styles.name}>{game.title}</span>
               <span className={styles.description}>
                 {game.shortDescription}

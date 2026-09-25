@@ -7,16 +7,20 @@ interface Props {
   selectedWords: string[];
   onWordToggle: (word: string) => void;
   disabled: boolean;
+  /** disabled のとき、なぜ選べないかを言う文の id。 */
+  disabledReasonId?: string;
 }
 
 /**
  * 4x4 grid of word buttons. Players tap words to select them.
+ * 選んだかどうかは、語の上の四角の塗りで示す（§6 チェックボックスと同じ形）。
  */
 export default function WordGrid({
   words,
   selectedWords,
   onWordToggle,
   disabled,
+  disabledReasonId,
 }: Props) {
   return (
     <div
@@ -29,13 +33,15 @@ export default function WordGrid({
         return (
           <button
             key={word}
-            className={`${styles.wordButton} ${isSelected ? styles.selected : ""}`}
+            className={styles.wordButton}
             onClick={() => onWordToggle(word)}
             disabled={disabled}
             aria-pressed={isSelected}
             aria-label={word}
+            aria-describedby={disabled ? disabledReasonId : undefined}
             type="button"
           >
+            <span className={styles.mark} aria-hidden="true" />
             {word}
           </button>
         );

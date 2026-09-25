@@ -15,7 +15,7 @@
  *
  * ## variant
  *
- * - `"full"` (デフォルト): 全機能（表示する内容のラジオボタンの組 + 検索 + 分類の絞り込み + テーブル/カード）
+ * - `"full"` (デフォルト): 全機能（表示する内容のラジオボタンの組 + 検索 + 分類の絞り込み + 表/狭い画面の一覧）
  *
  * ## アクセシビリティ
  *
@@ -23,13 +23,14 @@
  * - C-3: role="status" aria-live="polite" のライブリージョン＋件数サマリ
  * - C-8: テーブルは <tr> に role="button" 禁止（ARIA in HTML 仕様）。
  *   先頭セル <th scope="row"> 内の実 <button aria-expanded> でキーボード操作する。
- *   モバイルカード <div> は role="button" + tabIndex=0 + onKeyDown で可。
+ *   狭い画面の一覧は、各行をアコーディオン（details・summary）で開閉する。
  */
 
 import { useState, useMemo, Fragment, useId } from "react";
 import Panel from "@/components/Panel";
 import RadioGroup from "@/components/RadioGroup";
 import Input from "@/components/Input";
+import Accordion from "@/components/Accordion";
 import {
   filterEntries,
   getKeigoCategories,
@@ -123,16 +124,11 @@ export default function KeigoReferenceTile({
   };
 
   /**
-   * モバイルカード向けキーボード操作ハンドラ（<div role="button"> で使う）
+   * 狭い画面の行（アコーディオン）の開閉。開いた項目を1つに保つので、ほかの行を開くと前に開いていた行は
+   * 閉じる。閉じる側の toggle は、いま開いている項目が自分のときだけ状態を空にする。
    */
-  const handleCardKeyDown = (
-    e: React.KeyboardEvent<HTMLDivElement>,
-    id: string,
-  ) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      toggleEntry(id);
-    }
+  const handleMobileToggle = (isOpen: boolean, id: string) => {
+    setExpandedEntryId((prev) => (isOpen ? id : prev === id ? null : prev));
   };
 
   // C-3: ライブリージョン用のサマリテキスト（実テキストノード）
@@ -249,9 +245,7 @@ export default function KeigoReferenceTile({
                            * <tr> は素のまま維持し、先頭セルを <th scope="row"> にして
                            * その中の実 <button> にインタラクション（aria-expanded等）を持たせる。
                            */}
-                          <tr
-                            className={`${styles.tableRow} ${expandedEntryId === entry.id ? styles.tableRowExpanded : ""}`}
-                          >
+                          <tr className={styles.tableRow}>
                             {/* 先頭セルを th scope="row" にし、実 button を内包 */}
                             <th
                               scope="row"
@@ -260,6 +254,7 @@ export default function KeigoReferenceTile({
                               <button
                                 type="button"
                                 className={styles.expandButton}
+                                data-text-box="inline"
                                 onClick={() => toggleEntry(entry.id)}
                                 onKeyDown={(e) =>
                                   handleExpandKeyDown(e, entry.id)
@@ -267,6 +262,16 @@ export default function KeigoReferenceTile({
                                 aria-expanded={expandedEntryId === entry.id}
                                 aria-label={`${entry.casual} の例文を${expandedEntryId === entry.id ? "閉じる" : "表示"}`}
                               >
+                                <svg
+                                  className={styles.triangle}
+                                  width="20"
+                                  height="20"
+                                  viewBox="0 0 20 20"
+                                  aria-hidden="true"
+                                  focusable="false"
+                                >
+                                  <path d="M1.5 3.5 11.5 10 1.5 16.5Z" />
+                                </svg>
                                 {entry.casual}
                               </button>
                             </th>
@@ -285,46 +290,48 @@ export default function KeigoReferenceTile({
                   </table>
                 </div>
 
-                {/* モバイルカードビュー */}
-                {/* モバイルカードは <div> なので role="button" + tabIndex=0 が適切（<tr>/<li> でないため問題なし）*/}
-                <div className={styles.mobileCards}>
+                {/* 狭い画面の一覧。1行1項目で、各行はアコーディオンで開くと例文が出る（§6・§7）。 */}
+                <ul className={styles.mobileCards}>
                   {filteredEntries.map((entry) => (
-                    <div key={entry.id}>
-                      <div
-                        className={styles.mobileCard}
-                        role="button"
-                        tabIndex={0}
-                        onClick={() => toggleEntry(entry.id)}
-                        onKeyDown={(e) => handleCardKeyDown(e, entry.id)}
-                        aria-expanded={expandedEntryId === entry.id}
+                    <li key={entry.id} className={styles.mobileCard}>
+                      <Accordion
+                        open={expandedEntryId === entry.id}
+                        onToggle={(e) =>
+                          handleMobileToggle(e.currentTarget.open, entry.id)
+                        }
+                        summaryClassName={styles.mobileCardSummary}
+                        summary={
+                          <>
+                            <span className={styles.mobileCardTitle}>
+                              {entry.casual}
+                            </span>
+                            <span className={styles.mobileCardRow}>
+                              <span className={styles.mobileCardLabel}>
+                                尊敬語:
+                              </span>
+                              <span>{entry.sonkeigo}</span>
+                            </span>
+                            <span className={styles.mobileCardRow}>
+                              <span className={styles.mobileCardLabel}>
+                                謙譲語:
+                              </span>
+                              <span>{entry.kenjogo}</span>
+                            </span>
+                            <span className={styles.mobileCardRow}>
+                              <span className={styles.mobileCardLabel}>
+                                丁寧語:
+                              </span>
+                              <span>{entry.teineigo}</span>
+                            </span>
+                          </>
+                        }
                       >
-                        <div className={styles.mobileCardTitle}>
-                          {entry.casual}
-                        </div>
-                        <div className={styles.mobileCardRow}>
-                          <span className={styles.mobileCardLabel}>
-                            尊敬語:
-                          </span>
-                          <span>{entry.sonkeigo}</span>
-                        </div>
-                        <div className={styles.mobileCardRow}>
-                          <span className={styles.mobileCardLabel}>
-                            謙譲語:
-                          </span>
-                          <span>{entry.kenjogo}</span>
-                        </div>
-                        <div className={styles.mobileCardRow}>
-                          <span className={styles.mobileCardLabel}>
-                            丁寧語:
-                          </span>
-                          <span>{entry.teineigo}</span>
-                        </div>
-                      </div>
-                      {expandedEntryId === entry.id &&
-                        renderEntryExamples(entry)}
-                    </div>
+                        {expandedEntryId === entry.id &&
+                          renderEntryExamples(entry)}
+                      </Accordion>
+                    </li>
                   ))}
-                </div>
+                </ul>
               </>
             ) : (
               <div className={styles.noResults}>{noResultsMessage}</div>

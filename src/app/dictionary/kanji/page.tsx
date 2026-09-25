@@ -88,6 +88,7 @@ function FacetShelf({ facet }: { facet: FacetIndex }) {
             <Link
               href={`${facet.basePath}/${item.slug}`}
               className={styles.facetLink}
+              data-text-box="inline"
             >
               {item.label}
             </Link>

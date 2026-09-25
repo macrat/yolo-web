@@ -58,25 +58,17 @@
 }
 
 /*
- * カテゴリ導線: 罫囲み・--radius-sm・--ink-2 の静かな器で、索引へのリンクなので hover で
- * --accent に変える。ピル（999px）にはしない。
+ * 分類のページへ進むリンク。枠で囲むと hover の線や値札と読み違えるので、枠も地も持たず下線で示す（§6）。
+ * 下線と訪問済みの色は globals.css の a の既定に従う。タップの標的は 44px 以上で、字の左右の余白と、
+ * 字を並びの左端に置く張り出しは data-text-box（globals.css）が持つ。
  */
 .categoryTag {
   display: inline-flex;
   align-items: center;
-  font-size: 0.8125rem; /* 13px */
+  min-height: 44px;
+  font-size: var(--text-small);
   line-height: 1.5;
-  color: var(--ink-2);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius-sm);
-  padding: 0.15em 0.5em;
-  text-decoration: none;
   white-space: nowrap;
-}
-
-.categoryTag:hover {
-  color: var(--accent);
-  border-color: var(--accent);
 }
 
 /* 難易度は枠や地で囲まず、補助情報の文字で置く。 */
@@ -99,54 +91,43 @@
 }
 
 /* 構成漢字: 字形を見せる並びなので、辞典にある字のリンクも無い字も見出しの書体でそろえる。
- * Zen Antique に無い字を含む熟語は、並び全体が本文の書体に切り替わる（data-heading-font）。 */
+ * Zen Antique に無い字を含む熟語は、並び全体が本文の書体に切り替わる（data-heading-font）。
+ * 字は縁の見えないコントロールと同じ箱で組み、押せる範囲を接して並べる（§5）。字の左右の余白と、
+ * 字を並びの左端に置く張り出しは data-text-box（globals.css）が持つ。 */
 .kanjiLinks {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-8);
+  gap: 0 var(--text-box-pad);
 }
 
-.kanjiLink {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 44px;
-  min-height: 44px;
-  padding: 0 var(--space-8);
-  font-family: var(--font-heading);
-  font-size: 2rem;
-  line-height: 1;
-  color: var(--ink);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
-  text-decoration: none;
-}
-
-.kanjiLink:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
+/* 漢字の項目へ進むリンク。下線と訪問済みの色は globals.css の a の既定に従う（§6）。
+ * 44px に届かない箱は、字を左に置いたまま右へ広げる（§5）。 */
+.kanjiLink,
 .kanjiChar {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
   min-width: 44px;
   min-height: 44px;
-  padding: 0 var(--space-8);
   font-family: var(--font-heading);
   font-size: 2rem;
   line-height: 1;
+}
+
+/* 辞典に無い字はリンクにせず、下線を持たない字で置く。 */
+.kanjiChar {
   color: var(--ink-2);
 }
 
-/* 同カテゴリの熟語: 語リンクの索引（本文の書体・hover で下線）。ピルにしない。 */
+/* 同カテゴリの熟語: 語リンクの索引。ピルにしない。項目は縁の見えないコントロールなので、押せる範囲を
+ * 接して並べる（§5）。間隔を箱の余白と同じ幅にすると、前へ張り出す箱どうしが接する。 */
 .relatedList {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-8) var(--space-24);
+  gap: 0 var(--text-box-pad);
 }
 
+/* 熟語の項目へ進むリンク。下線と訪問済みの色は globals.css の a の既定に従う（§6）。タップの標的は
+ * 44px 以上で、字の左右の余白と、字を並びの左端に置く張り出しは data-text-box（globals.css）が持つ。 */
 .relatedLink {
   display: inline-flex;
   align-items: center;
@@ -154,28 +135,16 @@
   font-family: var(--font-body);
   font-size: 1.125rem; /* 18px */
   line-height: 1.4;
-  color: var(--ink);
-  text-decoration: none;
 }
 
-.relatedLink:hover {
-  color: var(--accent);
-  text-decoration: underline;
-  text-underline-offset: 0.15em;
-}
-
-/* 関連ゲームへの導線のリンク。 */
+/* 関連ゲームへ進むリンク。縁の見えないコントロールとして置き、下線と訪問済みの色は globals.css の a の
+ * 既定に従う（§6）。字の左右の余白と、字を並びの左端に置く張り出しは data-text-box（globals.css）が持つ。 */
 .crossLink {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   margin-top: var(--space-8);
   font-size: 1rem;
-  color: var(--accent);
-  text-decoration: none;
-}
-
-.crossLink:hover {
-  text-decoration: underline;
-  text-underline-offset: 0.15em;
 }
 
 /* 成立と出典: ラベルと値を組にした定義リスト。 */
@@ -207,18 +176,12 @@
   color: var(--ink);
 }
 
-/* 出典の外部リンク。外部へ出ることを ↗ の記号で添える。 */
+/* 出典の外部リンク。定義リストの値の中に置く本文の中のリンクで、下線・hover・訪問済みの色は globals.css の
+ * a の既定に従う（§6）。外部へ出ることを ↗ の記号で添える。 */
 .externalLink {
-  color: var(--accent);
-  text-decoration: none;
   display: inline-flex;
   align-items: baseline;
   gap: 0.2em;
-}
-
-.externalLink:hover {
-  text-decoration: underline;
-  text-underline-offset: 0.15em;
 }
 
 .externalIcon {

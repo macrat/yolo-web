@@ -14,10 +14,14 @@
 /*
  * 見出しの多い記事でも目次が画面の高さを超えないよう、中で縦に送る。
  * 8rem は、sticky の上のあき 1rem・ボックスの上下の線と余白・開閉の行 44px と、そのあまり。
+ * 縦に送る領域は左右も切るので、リンクの押せる範囲が字の左へ張り出す分だけ、領域をボックスの
+ * 内側の余白へ広げ、hover の線とフォーカスのリングを切らない。
  */
 .tocBody {
   max-height: calc(100vh - 8rem);
   overflow-y: auto;
+  margin-inline: calc(-1 * var(--text-box-pad));
+  padding-inline: var(--text-box-pad);
 }
 
 /*

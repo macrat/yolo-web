@@ -22,6 +22,7 @@ import {
   loadTodayGame,
 } from "@/play/games/yoji-kimeru/_lib/storage";
 import type { CrossCategoryItem } from "@/play/games/shared/_components/new/CrossCategoryBanner";
+import Button from "@/components/Button";
 import GameHeader from "./GameHeader";
 import HintBar from "./HintBar";
 import GameBoard from "./GameBoard";
@@ -421,13 +422,9 @@ export default function GameContainer({
     return (
       <div className={containerStyles.error}>
         <p className={containerStyles.errorMessage}>{error}</p>
-        <button
-          onClick={() => void initializeGame(difficulty)}
-          type="button"
-          className={containerStyles.retryButton}
-        >
+        <Button onClick={() => void initializeGame(difficulty)}>
           {"\u518D\u8A66\u884C"}
-        </button>
+        </Button>
       </div>
     );
   }
@@ -455,6 +452,11 @@ export default function GameContainer({
         onSubmit={handleGuess}
         disabled={gameState.status !== "playing" || submitting}
         submitting={submitting}
+        disabledReason={
+          gameState.status !== "playing"
+            ? "この難易度の今日の問題は終わりました。ほかの難易度か、明日の問題で遊べます。"
+            : undefined
+        }
       />
       <HowToPlayModal
         open={showHowToPlay}

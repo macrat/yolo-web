@@ -45,6 +45,7 @@ import Select from "@/components/Select";
 import Input from "@/components/Input";
 import ErrorMessage from "@/components/ErrorMessage";
 import Checkbox from "@/components/Checkbox";
+import Accordion from "@/components/Accordion";
 import { useRegexWorker } from "./useRegexWorker";
 import { REGEX_SAMPLE_INPUTS } from "./meta";
 import styles from "./RegexTesterTile.module.css";
@@ -330,17 +331,14 @@ export default function RegexTesterTile({
           )}
 
         {/* === 置換セクション === */}
-        <div className={styles.replaceSection}>
-          <button
-            type="button"
-            onClick={() => setShowReplace(!showReplace)}
-            className={styles.toggleButton}
-          >
-            {showReplace ? "置換を非表示" : "置換を表示"}
-          </button>
-
+        <Accordion
+          className={styles.replaceSection}
+          summary="置換"
+          open={showReplace}
+          onToggle={(e) => setShowReplace(e.currentTarget.open)}
+        >
           {showReplace && (
-            <>
+            <div className={styles.replaceBody}>
               <div className={styles.field}>
                 <label htmlFor={replacementId} className={styles.label}>
                   置換文字列
@@ -377,9 +375,9 @@ export default function RegexTesterTile({
               {!isProcessing && replaceResult?.error && (
                 <ErrorMessage message={replaceResult.error} />
               )}
-            </>
+            </div>
           )}
-        </div>
+        </Accordion>
       </div>
     </Panel>
   );

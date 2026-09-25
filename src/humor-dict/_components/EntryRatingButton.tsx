@@ -17,9 +17,9 @@ interface EntryRatingButtonProps {
  * - Deliberately avoids `disabled` so the button remains accessible and
  *   focusable; duplicate actions are blocked via the `rated` guard in the
  *   click handler.
- * - Text-only label (no emoji, per DESIGN.md §8-6/§6: 見出し・ナビ・ボタンに絵文字を
- *   使わない). The selected state is conveyed by --accent-weak (状態のみ・§2) and label
- *   text change, not by decorative motion.
+ * - Text-only label (no emoji, per DESIGN.md §6: 見出し・ナビ・ボタンに絵文字を
+ *   使わない). The rated state is conveyed by bold text without an underline (§6) and a
+ *   label text change, not by color or decorative motion.
  */
 export default function EntryRatingButton({ slug }: EntryRatingButtonProps) {
   const [rated, setRated] = useState(false);
@@ -48,6 +48,7 @@ export default function EntryRatingButton({ slug }: EntryRatingButtonProps) {
       <button
         type="button"
         className={styles.button}
+        data-text-box="inline"
         aria-pressed={rated}
         onClick={handleClick}
       >

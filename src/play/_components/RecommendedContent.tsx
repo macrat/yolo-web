@@ -25,10 +25,14 @@ export default function RecommendedContent({
   return (
     <nav className={styles.related} aria-label="おすすめコンテンツ">
       <h2 className={styles.heading}>他のジャンルも試してみよう</h2>
-      <ul className={styles.list}>
+      <ul className={styles.list} data-text-box="rows">
         {recommended.map((content) => (
           <li key={content.slug}>
-            <Link href={getContentPath(content)} className={styles.link}>
+            <Link
+              href={getContentPath(content)}
+              className={styles.link}
+              data-hit-area="after"
+            >
               <span className={styles.name}>
                 {content.shortTitle ?? content.title}
               </span>

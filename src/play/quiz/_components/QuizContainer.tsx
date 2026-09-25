@@ -17,6 +17,7 @@ import {
 import { determineScienceThinkingResult } from "@/play/quiz/data/science-thinking";
 import { determineCharacterPersonalityResult } from "@/play/quiz/data/character-personality";
 import { getEstimatedTime } from "./introBadges";
+import Button from "@/components/Button";
 import ProgressBar from "./ProgressBar";
 import QuestionCard from "./QuestionCard";
 import ResultCard from "./ResultCard";
@@ -166,13 +167,9 @@ export default function QuizContainer({
               ? "準備ができたら始めましょう。"
               : "気軽に答えていくと、結果が出ます。"}
           </p>
-          <button
-            type="button"
-            className={styles.startButton}
-            onClick={handleStart}
-          >
+          <Button variant="primary" onClick={handleStart}>
             はじめる
-          </button>
+          </Button>
           {quiz.meta.relatedLinks && quiz.meta.relatedLinks.length > 0 && (
             <div className={styles.relatedLinks}>
               {quiz.meta.relatedLinks.map((link) => (
@@ -180,6 +177,7 @@ export default function QuizContainer({
                   key={link.href}
                   href={link.href}
                   className={styles.relatedLink}
+                  data-text-box="inline"
                 >
                   {link.label}
                 </Link>

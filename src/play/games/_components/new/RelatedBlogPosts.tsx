@@ -19,10 +19,14 @@ export default function RelatedBlogPosts({ gameSlug }: RelatedBlogPostsProps) {
   return (
     <section className={styles.section}>
       <h2 className={styles.title}>関連ブログ記事</h2>
-      <ul className={styles.list}>
+      <ul className={styles.list} data-text-box="rows">
         {posts.map((post) => (
           <li key={post.slug} className={styles.item}>
-            <Link href={`/blog/${post.slug}`} className={styles.link}>
+            <Link
+              href={`/blog/${post.slug}`}
+              className={styles.link}
+              data-hit-area="after"
+            >
               <span className={styles.postTitle}>{post.title}</span>
               <time className={styles.date} dateTime={post.published_at}>
                 {formatDate(post.published_at)}

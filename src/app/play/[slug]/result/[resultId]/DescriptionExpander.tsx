@@ -12,6 +12,7 @@
  */
 
 import { useState } from "react";
+import Button from "@/components/Button";
 import styles from "./DescriptionExpander.module.css";
 
 interface Props {
@@ -41,13 +42,14 @@ export default function DescriptionExpander({ description, isLong }: Props) {
         {description}
       </p>
       {isLong && (
-        <button
-          className={styles.descriptionToggle}
-          onClick={() => setExpanded((prev) => !prev)}
-          aria-expanded={expanded}
-        >
-          {expanded ? "折りたたむ" : "続きを読む"}
-        </button>
+        <div className={styles.descriptionToggle}>
+          <Button
+            onClick={() => setExpanded((prev) => !prev)}
+            aria-expanded={expanded}
+          >
+            {expanded ? "折りたたむ" : "続きを読む"}
+          </Button>
+        </div>
       )}
     </div>
   );

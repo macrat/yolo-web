@@ -1,12 +1,5 @@
 /* UnitConverterTile スタイル
- * 組み方:
- * - 角丸は var(--radius)（区画・カード・ボタン・値プレビュー等）
- * - フォーカス: outline: 2px solid var(--accent); outline-offset: 2px;
- * - font-weight: 700 禁止 → 使用しない
- * - box-shadow は使わない（罫と地の対比で表現）
- * - 罫線は var(--rule)（強い輪郭は var(--rule-strong)）
- * - 地=紙 --paper/--paper-2、文字=墨 --ink/--ink-2、--accent
- *
+ * ボタン・入力欄・選ぶ欄は共通の部品が見え方・hover・フォーカスを持つ。影は使わず、罫と地の対比で組む。
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  */
 
@@ -64,30 +57,15 @@
   opacity: 0.5;
 }
 
-/* スワップボタン — SVG アイコンを中央配置 */
+/* 単位を入れ替えるボタン。欄の下端に揃えて、変換元と変換先のあいだに置く。 */
 .swapButton {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.625rem 0.875rem;
-  border: 1px solid var(--rule-strong);
-  border-radius: var(--radius);
-  background-color: var(--paper-2);
-  color: var(--ink);
-  cursor: pointer;
-  transition: background-color 0.15s;
-  flex-shrink: 0;
-  min-height: 44px; /* C-1: タッチターゲット */
   align-self: flex-end;
+  gap: var(--space-8);
 }
 
-.swapButton:hover {
-  background-color: var(--paper-2);
-}
-
-.swapButton:focus-visible {
-  outline: 2px solid var(--accent); /* フォーカス outline */
-  outline-offset: 2px;
+/* 矢印は字と同じ色の線画で、字の横に添える。 */
+.swapIcon {
+  flex-shrink: 0;
 }
 
 /* 全単位変換結果エリア */
@@ -148,7 +126,7 @@
   }
 
   .swapButton {
-    align-self: center;
+    align-self: flex-start;
   }
 
   .unitGroup {

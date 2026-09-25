@@ -43,7 +43,7 @@ export default function OtherTypesNav({
   return (
     <nav className={styles.section} aria-label="同じ診断の他のタイプ">
       <Heading className={styles.heading}>他のタイプも見てみよう</Heading>
-      <ul className={styles.list}>
+      <ul className={styles.list} data-text-box="rows">
         {results.map((r) => {
           const isCurrent = r.id === currentResultId;
           // 新デザインでは絵文字アイコン（r.icon）を描画しない（DESIGN.md: 絵文字は使わない）。
@@ -70,7 +70,12 @@ export default function OtherTypesNav({
                   {label}
                 </span>
               ) : (
-                <Link href={`/play/${quizSlug}/result/${r.id}`}>{label}</Link>
+                <Link
+                  href={`/play/${quizSlug}/result/${r.id}`}
+                  data-hit-area="after"
+                >
+                  {label}
+                </Link>
               )}
             </li>
           );

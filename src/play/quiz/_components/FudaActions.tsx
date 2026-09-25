@@ -23,6 +23,7 @@
 import { useCallback, useState } from "react";
 import { trackSave, trackShare } from "@/lib/analytics";
 import { contentIdForQuiz } from "@/play/quiz/contentId";
+import Button from "@/components/Button";
 import styles from "./FudaActions.module.css";
 
 interface FudaActionsProps {
@@ -40,6 +41,8 @@ interface FudaActionsProps {
 const CONTENT_TYPE = "diagnosis";
 
 /** 見出し（この結果を札として持ち帰る）の id。ボタン群が aria-describedby で参照する。 */
+/** 知らせの文（用意中・コピー完了・エラー）の id。用意中はボタンが押せない理由として読ませる。 */
+const STATUS_ID = "fuda-actions-status";
 const LABEL_ID = "fuda-actions-label";
 
 /**
@@ -179,8 +182,9 @@ export default function FudaActions({
     }
   }, [busy, fetchFudaFile, contentId, quizTitle, shareText, shareUrl]);
 
-  const statusMessage =
-    status === "copied"
+  const statusMessage = busy
+    ? "札の画像を用意しています。"
+    : status === "copied"
       ? "リンクをコピーしました!"
       : status === "error"
         ? "画像を用意できませんでした。時間をおいて再度お試しください。"
@@ -193,29 +197,26 @@ export default function FudaActions({
         この結果を札として持ち帰る
       </p>
       <div className={styles.buttons}>
-        <button
-          type="button"
-          className={styles.saveButton}
+        <Button
+          variant="primary"
           onClick={handleSave}
           disabled={busy}
           aria-busy={busy}
-          aria-describedby={LABEL_ID}
+          aria-describedby={busy ? `${LABEL_ID} ${STATUS_ID}` : LABEL_ID}
         >
           保存
-        </button>
-        <button
-          type="button"
-          className={styles.shareButton}
+        </Button>
+        <Button
           onClick={handleShare}
           disabled={busy}
           aria-busy={busy}
-          aria-describedby={LABEL_ID}
+          aria-describedby={busy ? `${LABEL_ID} ${STATUS_ID}` : LABEL_ID}
         >
           共有
-        </button>
+        </Button>
       </div>
       {/* role="status" は暗黙で aria-live="polite" を持つため冗長指定はしない（ライブ領域は残す）。 */}
-      <div className={styles.status} role="status">
+      <div id={STATUS_ID} className={styles.status} role="status">
         {statusMessage}
       </div>
     </div>

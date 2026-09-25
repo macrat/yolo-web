@@ -30,8 +30,8 @@ interface FacetIndexProps {
  * ファセット索引（FacetIndex）— 他ファセット値への導線。
  *
  * 罫で区切った区画に見出しを冠し、中は
- * ファセット値へのテキストリンクの索引（折り返し）。トップの「罫の索引」と同じ流儀で、
- * リンクは墨・本文の書体、hover で下線、現在地は aria-current で示す。ピル・色地・角丸・影は付けない。
+ * ファセット値へのテキストリンクの索引（折り返し）。リンクは下線で示し、現在地は aria-current を持つ
+ * 太字で示す（§6）。ピル・色地・角丸・影は付けない。
  * 多数の短い入口（部首 198・画数 24 等）は縦の品書きではなく折り返す索引として並べる。
  */
 export default function FacetIndex({
@@ -51,7 +51,8 @@ export default function FacetIndex({
           <li>
             <Link
               href={allHref}
-              className={`${styles.link} ${!activeSlug ? styles.active : ""}`}
+              className={styles.link}
+              data-text-box="inline"
               aria-current={!activeSlug ? "page" : undefined}
             >
               {allLabel}
@@ -64,7 +65,8 @@ export default function FacetIndex({
             <li key={item.slug}>
               <Link
                 href={`${basePath}/${item.slug}`}
-                className={`${styles.link} ${isActive ? styles.active : ""}`}
+                className={styles.link}
+                data-text-box="inline"
                 aria-current={isActive ? "page" : undefined}
               >
                 {item.label}

@@ -36,6 +36,7 @@ import FudaActions from "./FudaActions";
 import { pickResultWairoColor, pickResultSymbol } from "./resultVisual";
 import { contentIdForQuiz } from "@/play/quiz/contentId";
 import OtherTypesNav from "./OtherTypesNav";
+import Button from "@/components/Button";
 import styles from "./ResultCard.module.css";
 
 // dynamic importにより、これらのコンポーネントとデータファイル（計120KB以上）を
@@ -151,6 +152,7 @@ function renderTiedTypesDisclosure(
             <Link
               href={`/play/${quizSlug}/result/${coType.id}`}
               className={styles.tiedTypeLink}
+              data-text-box="inline"
             >
               {coType.title}の解説を見る
             </Link>
@@ -556,6 +558,7 @@ export default function ResultCard({
         <Link
           href={result.recommendationLink}
           className={styles.recommendation}
+          data-text-box="inline"
         >
           {result.recommendation}
         </Link>
@@ -582,9 +585,9 @@ export default function ResultCard({
         contentId={contentIdForQuiz(quizSlug)}
         surface="text"
       />
-      <button type="button" className={styles.retryButton} onClick={onRetry}>
-        もう一度挑戦する
-      </button>
+      <div className={styles.retry}>
+        <Button onClick={onRetry}>もう一度挑戦する</Button>
+      </div>
     </div>
   );
 }

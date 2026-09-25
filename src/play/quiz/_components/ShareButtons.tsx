@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react";
 import { useCanWebShare, shareGameResult } from "@/lib/webShare";
 import { trackShare, type ShareSurface } from "@/lib/analytics";
+import Button from "@/components/Button";
 import styles from "./ShareButtons.module.css";
 
 interface ShareButtonsProps {
@@ -89,36 +90,12 @@ export default function ShareButtons({
     <div className={styles.wrapper}>
       <div className={styles.buttons}>
         {canWebShare ? (
-          <button
-            type="button"
-            className={styles.shareButton}
-            onClick={handleWebShare}
-          >
-            この結果をシェア
-          </button>
+          <Button onClick={handleWebShare}>この結果をシェア</Button>
         ) : (
           <>
-            <button
-              type="button"
-              className={styles.shareButton}
-              onClick={handleTwitter}
-            >
-              Xでシェア
-            </button>
-            <button
-              type="button"
-              className={styles.shareButton}
-              onClick={handleLine}
-            >
-              LINEでシェア
-            </button>
-            <button
-              type="button"
-              className={styles.shareButton}
-              onClick={handleCopy}
-            >
-              結果をコピー
-            </button>
+            <Button onClick={handleTwitter}>Xでシェア</Button>
+            <Button onClick={handleLine}>LINEでシェア</Button>
+            <Button onClick={handleCopy}>結果をコピー</Button>
           </>
         )}
       </div>

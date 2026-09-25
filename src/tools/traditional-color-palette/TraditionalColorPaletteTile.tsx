@@ -194,6 +194,7 @@ export default function TraditionalColorPaletteTile({
           <Link
             href={`/dictionary/colors/${color.slug}`}
             className={styles.paletteColorNameLink}
+            data-text-box="inline"
           >
             {color.name}
           </Link>
@@ -294,7 +295,8 @@ export default function TraditionalColorPaletteTile({
                 <button
                   key={color.slug}
                   type="button"
-                  className={`${styles.swatch} ${isSelected ? styles.swatchSelected : ""}`}
+                  className={styles.swatch}
+                  aria-pressed={isSelected}
                   style={{ backgroundColor: color.hex }}
                   onClick={() => handleColorSelect(color)}
                   aria-label={`${color.name} (${color.hex})`}

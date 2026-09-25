@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useCallback, useId } from "react";
 import type { ReactElement } from "react";
+import Input from "@/components/Input";
 import DictionaryEntryList, {
   type DictionaryEntryItem,
 } from "@/dictionary/_components/DictionaryEntryList";
@@ -81,10 +82,9 @@ export default function DictionarySearch({
     <section className={styles.search}>
       {heading ? <h2 className={styles.heading}>{heading}</h2> : null}
 
-      <input
+      <Input
         id={inputId}
         type="search"
-        className={styles.input}
         placeholder={placeholder}
         value={query}
         onChange={handleChange}

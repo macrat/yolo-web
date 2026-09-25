@@ -43,31 +43,25 @@
   margin-bottom: 0;
 }
 
-/* 主要 CTA: 罫の線画（トップページ .heroLink と同じ語彙・ピル/塗り/影禁止）。 */
+/* 主要 CTA: プライマリボタンと同じ反転（--ink の地に --paper の字）で、ボーダーを持たない。反転の地が縁として
+ * 見えるので、箱の左端を並びの左端に揃え、字は縁の内側 8px から始める（§5・§6）。フォーカスの二重リングは
+ * data-focus-ring="inset"（globals.css）が押せる範囲の内側に出す。 */
 .tryButton {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
   min-height: 44px;
-  padding: 0 1.5rem;
-  border: 1px solid var(--accent);
-  border-radius: var(--radius);
-  background: var(--paper);
-  color: var(--accent);
+  padding: var(--space-8);
+  background: var(--ink);
+  color: var(--paper);
   font-family: var(--font-body);
   font-size: 1.0625rem;
-  cursor: pointer;
+  line-height: 1.4;
   text-decoration: none;
-  transition: background-color 0.15s ease;
 }
 
-.tryButton:hover {
-  background-color: var(--accent-weak);
-}
-
-.tryButton:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+/* hover の細い線を押せる範囲の内側に出す。詳細度を 0 にして、フォーカスの二重リングを上書きしない。 */
+:where(.tryButton):where(:hover, :active) {
+  box-shadow: var(--hover-line);
 }
 
 .tryCost {
@@ -85,27 +79,12 @@
   border-top: 1px solid var(--rule);
 }
 
-/* CTA2: CTA1より控えめな罫の線画（墨文字・淡い面）。 */
+/* CTA2: 縁の見えないリンク。下線と訪問済みの色は a の既定に従い、字の左右の余白と、字を並びの左端に置く
+ * 張り出しは data-text-box（globals.css）が持つ。 */
 .cta2Link {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
+  min-width: 44px;
   min-height: 44px;
-  padding: 0 1.25rem;
-  border: 1px solid var(--rule-strong);
-  border-radius: var(--radius);
-  background: var(--paper-2);
   font-size: 0.9375rem;
-  color: var(--ink);
-  text-decoration: none;
-  transition: background-color 0.15s ease;
-}
-
-.cta2Link:hover {
-  background-color: var(--accent-weak);
-}
-
-.cta2Link:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
 }

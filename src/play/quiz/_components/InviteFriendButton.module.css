@@ -1,6 +1,5 @@
 /*
- * 友達を招待するボタン（相性診断の入口）。
- * 罫の線画ボタン（トップページ .heroLink と同じ語彙・ピル/ブランド色/影禁止）。
+ * 友達を招待するボタン（相性診断の入口）。ボタンの見え方は Button が持つ。
  */
 .wrapper {
   margin-top: 1.5rem;
@@ -15,34 +14,9 @@
   margin-bottom: 0.5rem;
 }
 
-.button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 44px;
-  padding: 0 1.5rem;
-  border: 1px solid var(--accent);
-  border-radius: var(--radius);
-  background-color: var(--paper);
-  color: var(--accent);
-  font-size: 0.9375rem;
-  font-family: inherit;
-  cursor: pointer;
-  transition: background-color 0.15s ease;
-}
-
-.button:hover {
-  background-color: var(--accent-weak);
-}
-
-.button:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
 .copiedMessage {
   font-size: 0.75rem;
-  color: var(--accent);
+  color: var(--ink);
   min-height: 1.25rem;
   margin-top: 0.25rem;
 }

@@ -15,23 +15,13 @@ vi.mock("next/navigation", () => ({
 vi.mock("next/link", () => ({
   default: ({
     href,
-    className,
     children,
-    "data-active": dataActive,
-    "aria-current": ariaCurrent,
-  }: {
+    ...rest
+  }: React.AnchorHTMLAttributes<HTMLAnchorElement> & {
     href: string;
-    className?: string;
     children: React.ReactNode;
-    "data-active"?: string;
-    "aria-current"?: React.AriaAttributes["aria-current"];
   }) => (
-    <a
-      href={href}
-      className={className}
-      data-active={dataActive}
-      aria-current={ariaCurrent}
-    >
+    <a href={href} {...rest}>
       {children}
     </a>
   ),
@@ -170,7 +160,7 @@ describe("フィルターナビゲーション表示", () => {
     ).not.toBeNull();
   });
 
-  test("初期状態では「すべて」リンクが aria-current=page かつ data-active=true", () => {
+  test("初期状態では「すべて」リンクが aria-current=page", () => {
     render(
       <BlogFilterableList
         {...defaultProps}
@@ -181,7 +171,6 @@ describe("フィルターナビゲーション表示", () => {
     const nav = screen.getByRole("navigation", { name: "カテゴリで絞り込む" });
     const allLink = nav.querySelector('[href="/blog"]') as Element;
     expect(allLink).toHaveAttribute("aria-current", "page");
-    expect(allLink).toHaveAttribute("data-active", "true");
   });
 
   test("初期状態ではカテゴリリンクが aria-current を持たない", () => {
@@ -197,7 +186,6 @@ describe("フィルターナビゲーション表示", () => {
       '[href="/blog/category/dev-notes"]',
     ) as Element;
     expect(devNotesLink).not.toHaveAttribute("aria-current");
-    expect(devNotesLink).not.toHaveAttribute("data-active");
   });
 });
 
@@ -216,7 +204,6 @@ describe("activeCategory 指定時のフィルタリング", () => {
       '[href="/blog/category/dev-notes"]',
     ) as Element;
     expect(devNotesLink).toHaveAttribute("aria-current", "page");
-    expect(devNotesLink).toHaveAttribute("data-active", "true");
     // 「すべて」はアクティブでない
     const allLink = nav.querySelector('[href="/blog"]') as Element;
     expect(allLink).not.toHaveAttribute("aria-current");
