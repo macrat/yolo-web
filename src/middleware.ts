@@ -145,7 +145,7 @@ function frameLinks(links: readonly SiteLink[]): string {
 /**
  * 410 Gone ページのHTMLを生成する。
  * middlewareからはReactコンポーネントやCSSモジュールが使用できないため、
- * インラインスタイル付きの静的HTMLで構成する。
+ * 見た目の規則を <style> の中に書いた静的HTMLで構成する。
  *
  * どのページとも同じ枠（DESIGN.md §5 レイアウト）を持たせる。スキップのリンク・上端・中間・下端を置き、
  * コンテナの左右のボーダーを上端から下端まで通して、上端・下端の全幅の罫線と交わらせる。

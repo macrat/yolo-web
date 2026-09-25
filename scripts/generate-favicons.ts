@@ -1,22 +1,20 @@
 /**
- * ブランド標章 F2「墨の印・白抜き y」の favicon 資産一式を、再現可能に生成する。
- *
- * B-576（cycle-306）で PM が実レンダーを見て確定した方向を、手でバイナリを置かず
- * スクリプトから作り直すためのもの。生成物:
+ * favicon の資産一式（墨の角丸の印に、紙の色で白抜きした小文字「y」）を生成する。
+ * 手でバイナリを置かず、実行するたびに同じものができるようにする。生成物:
  *   - public/favicon.ico        16/32/48px を内包するマルチサイズ ICO（PNG 埋め込み）。
- *   - public/icon.svg           モダンブラウザ用のスケーラブルな F2。
+ *   - public/icon.svg           モダンブラウザ用のスケーラブルな印。
  *   - public/apple-touch-icon.png  180×180・墨を全面ブリード＋白抜き y。
  *
- * ## 設計（F2）
+ * ## 形
  * - favicon: 地＝紙(PAPER)、中央に墨(INK)の角丸正方形の印（タイル比 印≈80%・角丸半径は
  *   正方形の約22%）、その中に紙色(PAPER)で白抜きした小文字「y」（Noto Serif JP・明朝・太字）。
  * - apple-touch: iOS が全面に角丸マスクをかけるため、墨を全面ブリードし、紙色の白抜き y を
  *   大きく置く（紙の縁を作らず二重角丸を避ける）。
  *
- * ## 色は SSoT を厳守
- * PAPER / INK は {@link file://../src/lib/utsuwaHex.ts} から import する（直書きしない）。
+ * ## 色
+ * PAPER / INK は {@link file://../src/lib/utsuwaHex.ts} から import し、サイトの色と一致させる。
  *
- * ## 字形（y）の取り方 — 再現性
+ * ## 字形（y）の取り方
  * SVG favicon は環境に Noto Serif JP が無いと字形が崩れるため、`<text>` ではなく **glyph を
  * ベクタ path として埋め込む**。フォントは Google Fonts から wght@900 の TTF を取得し
  * （レガシー UA で css2 に問い合わせると woff2 でなく TTF を返す）、opentype.js で「y」の
@@ -36,7 +34,7 @@ import { PAPER, INK } from "../src/lib/utsuwaHex";
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const PUBLIC = path.resolve(HERE, "../public");
 
-// --- F2 の幾何（favicon タイル基準 100×100） ---
+// --- 幾何（favicon タイル基準 100×100） ---
 const TILE = 100;
 const SEAL_RATIO = 0.8; // 印は紙地に少し余白を残す（タイル比 印≈80%）
 const SEAL = TILE * SEAL_RATIO; // 80
@@ -149,7 +147,7 @@ async function main(): Promise<void> {
   const favSvg = faviconSvg(font);
   const appSvg = appleSvg(font);
 
-  // 1) icon.svg（モダンブラウザ用のスケーラブル F2）
+  // 1) icon.svg（モダンブラウザ用のスケーラブルな印）
   await fs.writeFile(path.join(PUBLIC, "icon.svg"), favSvg, "utf8");
 
   // 2) favicon.ico（16/32/48 を内包）

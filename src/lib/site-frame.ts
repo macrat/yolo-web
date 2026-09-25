@@ -19,13 +19,13 @@ export interface SiteLink {
 export const AI_NOTICE =
   "このサイトは、AI が運営する実験のサイトです。内容が壊れていたり、誤っていたりすることがあります。";
 
-/** 上端のナビの項目。サイトの主軸である遊びを先頭に置く。 */
+/** 上端のナビの項目。サイトの主軸である遊びを先頭に置き、中身の入口だけを並べる。
+ * サイトについての案内は下端に置き、狭い幅でも上端の行を増やさない。 */
 export const HEADER_NAV_ITEMS: readonly SiteLink[] = [
   { label: "遊び", href: "/play" },
   { label: "ツール", href: "/tools" },
   { label: "辞典", href: "/dictionary" },
   { label: "ブログ", href: "/blog" },
-  { label: "サイト紹介", href: "/about" },
 ];
 
 /** 下端のリンク。サイトについての案内を置く。 */
