@@ -129,6 +129,8 @@ export default function StorybookContent({
   const [controlledText, setControlledText] = useState("controlled value");
   // SegmentedControl controlled state
   const [segmentValue, setSegmentValue] = useState("option-a");
+  // Pagination button mode state
+  const [paginationPage, setPaginationPage] = useState(1);
   // useCopyToClipboard demo
   const { copy, copiedKey } = useCopyToClipboard();
 
@@ -530,7 +532,7 @@ export default function StorybookContent({
             style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
           >
             <div className={styles.inputItemLabel}>
-              5 ページ・現在ページ = 1（前へ disabled）
+              5 ページ・現在ページ = 1（前へを置かない）
             </div>
             <Pagination currentPage={1} totalPages={5} basePath="/blog" />
 
@@ -540,7 +542,7 @@ export default function StorybookContent({
             <Pagination currentPage={3} totalPages={5} basePath="/blog" />
 
             <div className={styles.inputItemLabel}>
-              5 ページ・現在ページ = 5（次へ disabled）
+              5 ページ・現在ページ = 5（次へを置かない）
             </div>
             <Pagination currentPage={5} totalPages={5} basePath="/blog" />
 
@@ -560,6 +562,14 @@ export default function StorybookContent({
             </div>
             <Pagination currentPage={1} totalPages={1} basePath="/blog" />
           </div>
+
+          <h3 className={styles.subsectionTitle}>button モード</h3>
+          <Pagination
+            mode="button"
+            currentPage={paginationPage}
+            totalPages={10}
+            onPageChange={setPaginationPage}
+          />
         </Panel>
       </Section>
 

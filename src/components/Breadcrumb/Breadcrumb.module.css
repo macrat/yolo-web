@@ -44,14 +44,24 @@
   margin: 0 0.4em;
 }
 
+/* パンくずは本文の中のリンクではないので、押せる範囲を 44px 四方以上にする（§6）。字の箱は字の幅のまま
+ * 置き、字と区切りの間隔をどの項目でも等しくする。下線と訪問済みの色は globals.css の a の既定に従う。 */
 .link {
-  /* パンくずは本文の中のリンクではないので、タップの標的を 44px 以上にする（§6）。下線と訪問済みの色は
-   * globals.css の a の既定に従う。 */
+  position: relative;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  min-width: 44px;
   min-height: 44px;
+}
+
+/* 押せる範囲。字の幅が 44px に届かない項目では、字を中心に左右へ同じだけ広げる。
+ * hover の細い線とフォーカスの二重リングは、data-hit-area（globals.css）がこの範囲に出す。 */
+.link::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  left: 50%;
+  width: max(100%, 44px);
+  transform: translateX(-50%);
 }
 
 .current {

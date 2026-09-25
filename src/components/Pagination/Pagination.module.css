@@ -41,6 +41,11 @@ button.pageItem {
   text-decoration: none;
 }
 
+/* 端で「前へ」「次へ」の代わりに置く場所取り。項目と同じ字と余白で幅を取り、見せない。 */
+.placeholder {
+  visibility: hidden;
+}
+
 .ellipsis {
   display: inline-flex;
   align-items: center;
@@ -65,8 +70,23 @@ button.pageItem {
   color: var(--ink-2);
 }
 
-/* 狭い画面では番号の並びを畳み、いまのページと総ページ数だけを出す。 */
-@media (width < 45rem) {
+/* いまのページの番号の幅を、総ページ数の番号の幅で取り、右に寄せる。1桁から2桁に変わるページでも
+ * 「/ 総ページ数」と「次へ」が動かない。総ページ数の字は高さを持たせず、見せない。 */
+.indicatorCurrent {
+  display: inline-grid;
+  justify-items: end;
+}
+
+.indicatorCurrent::after {
+  content: attr(data-widest);
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+}
+
+/* 30rem 以下（縦に持った電話の幅）では、番号の並びを畳み、いまのページと総ページ数だけを出す。
+ * それより広い画面では、並びが折り返して縦に伸びても、番号で飛べるほうを採る。 */
+@media (width <= 30rem) {
   .pageNumbers {
     display: none;
   }

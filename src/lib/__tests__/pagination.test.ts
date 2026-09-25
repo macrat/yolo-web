@@ -114,12 +114,12 @@ describe("generatePageNumbers", () => {
 
   test("shows ellipsis at end when on first page with many pages", () => {
     const result = generatePageNumbers(1, 10);
-    expect(result).toEqual([1, 2, "ellipsis", 10]);
+    expect(result).toEqual([1, 2, 3, 4, 5, "ellipsis", 10]);
   });
 
   test("shows ellipsis at start when on last page with many pages", () => {
     const result = generatePageNumbers(10, 10);
-    expect(result).toEqual([1, "ellipsis", 9, 10]);
+    expect(result).toEqual([1, "ellipsis", 6, 7, 8, 9, 10]);
   });
 
   test("shows ellipsis on both sides when in the middle", () => {
@@ -127,29 +127,35 @@ describe("generatePageNumbers", () => {
     expect(result).toEqual([1, "ellipsis", 4, 5, 6, "ellipsis", 10]);
   });
 
-  test("handles page 2 (near start)", () => {
-    const result = generatePageNumbers(2, 10);
-    expect(result).toEqual([1, 2, 3, "ellipsis", 10]);
+  test("keeps the start window while the next page is inside it", () => {
+    expect(generatePageNumbers(4, 10)).toEqual([1, 2, 3, 4, 5, "ellipsis", 10]);
   });
 
-  test("handles page 3 (near start, no leading ellipsis needed)", () => {
-    const result = generatePageNumbers(3, 10);
-    expect(result).toEqual([1, 2, 3, 4, "ellipsis", 10]);
+  test("keeps the end window while the previous page is inside it", () => {
+    expect(generatePageNumbers(7, 10)).toEqual([1, "ellipsis", 6, 7, 8, 9, 10]);
   });
 
-  test("handles second-to-last page (near end)", () => {
-    const result = generatePageNumbers(9, 10);
-    expect(result).toEqual([1, "ellipsis", 8, 9, 10]);
+  test("works with totalPages of 8", () => {
+    expect(generatePageNumbers(4, 8)).toEqual([1, 2, 3, 4, 5, "ellipsis", 8]);
+    expect(generatePageNumbers(5, 8)).toEqual([1, "ellipsis", 4, 5, 6, 7, 8]);
   });
 
-  test("handles page 8 of 10 (near end)", () => {
-    const result = generatePageNumbers(8, 10);
-    expect(result).toEqual([1, "ellipsis", 7, 8, 9, 10]);
+  test("always has 7 entries when not every page fits", () => {
+    for (let total = 8; total <= 20; total++) {
+      for (let current = 1; current <= total; current++) {
+        expect(generatePageNumbers(current, total)).toHaveLength(7);
+      }
+    }
   });
 
-  test("works with totalPages of 8 and current page in middle", () => {
-    const result = generatePageNumbers(4, 8);
-    expect(result).toEqual([1, "ellipsis", 3, 4, 5, "ellipsis", 8]);
+  test("always includes the pages next to the current page", () => {
+    for (let total = 1; total <= 20; total++) {
+      for (let current = 1; current <= total; current++) {
+        const result = generatePageNumbers(current, total);
+        if (current > 1) expect(result).toContain(current - 1);
+        if (current < total) expect(result).toContain(current + 1);
+      }
+    }
   });
 
   test("returns unique entries (no duplicate page numbers)", () => {

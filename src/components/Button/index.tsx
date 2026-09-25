@@ -73,6 +73,8 @@ function Button({
       aria-describedby={describedBy}
       /* data 属性で種類を公開し、テストから検証可能にする */
       data-variant={variant}
+      /* プライマリでないボタンは箱を左へ出して字を並びの左端に置くので、外に輪を出す余地が無い。 */
+      data-focus-ring={variant === "default" ? "inset" : undefined}
       {...rest}
     >
       {children}

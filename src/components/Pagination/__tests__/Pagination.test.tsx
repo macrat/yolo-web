@@ -1,4 +1,5 @@
 import { expect, test, describe, vi } from "vitest";
+import { useState } from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import Pagination from "@/components/Pagination";
 
@@ -63,6 +64,18 @@ describe("Pagination", () => {
     test("最終ページでは「次へ」を置かない", () => {
       render(<Pagination currentPage={5} totalPages={5} basePath="/blog" />);
       expect(screen.queryByLabelText("次のページ")).toBeNull();
+    });
+
+    test("端では「前へ」「次へ」の代わりに、読み上げずフォーカスも受けない場所取りを置く", () => {
+      const { container } = render(
+        <Pagination currentPage={1} totalPages={5} basePath="/blog" />,
+      );
+      const nav = container.querySelector("nav");
+      const first = nav?.firstElementChild;
+      expect(first?.tagName).toBe("SPAN");
+      expect(first).toHaveAttribute("aria-hidden", "true");
+      expect(first).not.toHaveAttribute("tabindex");
+      expect(first).toHaveTextContent("前へ");
     });
 
     test("前のページが存在するとき「前へ」リンクが機能する href を持つ", () => {
@@ -144,6 +157,28 @@ describe("Pagination", () => {
       );
       fireEvent.click(screen.getByRole("button", { name: "次のページ" }));
       expect(handlePageChange).toHaveBeenCalledWith(4);
+    });
+
+    test("端に着いて「次へ」が消えたら、フォーカスをいまのページに移す", () => {
+      function Controlled() {
+        const [page, setPage] = useState(4);
+        return (
+          <Pagination
+            mode="button"
+            currentPage={page}
+            totalPages={5}
+            onPageChange={setPage}
+          />
+        );
+      }
+      render(<Controlled />);
+      const next = screen.getByRole("button", { name: "次のページ" });
+      next.focus();
+      fireEvent.click(next);
+      expect(screen.queryByRole("button", { name: "次のページ" })).toBeNull();
+      expect(document.activeElement).toBe(
+        screen.getByRole("button", { name: "ページ5" }),
+      );
     });
   });
 });

@@ -1,8 +1,5 @@
-/* FileDropZone コンポーネントのスタイル。
- * 入力欄扱い（ファイル取り込み口）として角丸は --radius-sm。
- * --accent は枠の色だけに使い、塗りには使わない。
- * border: 2px dashed --rule-strong（通常）/ --accent（ドラッグ中・ホバー）
- */
+/* ファイルを取り込む口。押すとファイルを選ぶ画面が開き、ファイルを上に落としても取り込める。
+ * フォーカスの二重リングは globals.css の既定に従う。 */
 
 .dropZone {
   display: flex;

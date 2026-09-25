@@ -8,7 +8,6 @@
   /* タップの標的は 44px 以上（§6）。幅は字の大きさに、44px に届くまで余白を足したもの（§5）。 */
   min-width: 44px;
   min-height: 44px;
-  padding: 0 var(--space-8);
   /* 無効のときの破線の枠の幅を先に取っておき、無効になっても大きさを変えない。 */
   border: var(--rule-w) solid transparent;
   border-radius: 0;
@@ -19,14 +18,20 @@
   cursor: pointer;
 }
 
-/* プライマリでないボタンは、進むもの・実行するものの印として下線を持つ。 */
+/* プライマリでないボタンは、進むもの・実行するものの印として下線を持つ。
+ * 見えるのは字だけなので、字の左端を並びの左端（§5 のコンテンツ幅の左端）に置く。字の前にある
+ * 破線の枠の幅と、枠と字のあいだ（枠と同じ太さ）の分だけ箱を左へ出す。左へ出す幅は、狭い画面の
+ * コンテナの余白（8px）に収まる。外に余地が無いので、フォーカスの二重リングは箱の内側に出す（index.tsx）。 */
 .variantDefault {
+  justify-content: flex-start;
+  padding: 0 var(--rule-w);
+  margin-inline-start: calc(-2 * var(--rule-w));
   text-decoration: underline;
   text-decoration-thickness: var(--rule-w-hair);
   text-underline-offset: 0.15em;
 }
 
-/* プライマリボタンは反転で示し、ボーダーを持たない。1ページに1つまで。 */
+/* プライマリボタンは反転で示し、ボーダーを持たない。1ページに1つまで。反転の箱の左端が並びの左端に来る。 */
 .variantPrimary {
   padding: 0 var(--space-16);
   background: var(--ink);

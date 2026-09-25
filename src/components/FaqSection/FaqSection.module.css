@@ -1,8 +1,5 @@
-/* FaqSection — 店構えの FAQ セクション（DESIGN.md フェーズ R・店構えへ変換）。
- * DESIGN.md §2: 色は --ink / --ink-2 / --rule のみ使用。
- * DESIGN.md §4: 区切りは罫（--rule）。角丸は 0px 基調（値札/入力欄の例外に当たらない）。
- *              影は付けない。
- */
+/* よくある質問のセクション。質問ごとに details を持ち、質問の行（summary）を押すと答えが開く。
+ * フォーカスの二重リングと hover の細い線は globals.css の既定に従う。 */
 
 .section {
   margin-top: 2rem;

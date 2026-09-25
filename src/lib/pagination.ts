@@ -67,18 +67,23 @@ export function paginate<T>(
   };
 }
 
+/** Number of entries a page number list holds when not every page fits */
+const PAGE_NUMBER_SLOTS = 7;
+
 /**
  * Generate a list of page numbers with ellipsis markers for pagination UI.
  *
- * Always includes the first page, the last page, and a window of pages
- * around the current page. Pages that are skipped are represented by
- * the string "ellipsis".
+ * Always includes the first page, the last page, and the pages around the
+ * current page. Pages that are skipped are represented by the string
+ * "ellipsis". When there are more pages than fit, the list always has
+ * PAGE_NUMBER_SLOTS entries, so the items after it stay in the same place
+ * on every page.
  *
  * Examples:
  * - totalPages=5, currentPage=3 -> [1, 2, 3, 4, 5]
- * - totalPages=10, currentPage=1 -> [1, 2, 3, 'ellipsis', 10]
+ * - totalPages=10, currentPage=1 -> [1, 2, 3, 4, 5, 'ellipsis', 10]
  * - totalPages=10, currentPage=5 -> [1, 'ellipsis', 4, 5, 6, 'ellipsis', 10]
- * - totalPages=10, currentPage=10 -> [1, 'ellipsis', 8, 9, 10]
+ * - totalPages=10, currentPage=10 -> [1, 'ellipsis', 6, 7, 8, 9, 10]
  *
  * @param currentPage - The current 1-based page number
  * @param totalPages - The total number of pages
@@ -88,37 +93,41 @@ export function generatePageNumbers(
   currentPage: number,
   totalPages: number,
 ): PageNumberEntry[] {
-  // If total pages is small enough, show all pages
-  if (totalPages <= 7) {
+  if (totalPages <= PAGE_NUMBER_SLOTS) {
     return Array.from({ length: totalPages }, (_, i) => i + 1);
   }
 
-  const pages: PageNumberEntry[] = [];
+  // The first page, the last page and one ellipsis on each side take 4 slots;
+  // the rest is a window of consecutive pages. Near either end, the ellipsis on
+  // that side is not needed and its slot joins the window.
+  const edgeWindow = PAGE_NUMBER_SLOTS - 2;
+  const middleWindow = PAGE_NUMBER_SLOTS - 4;
+  const half = Math.floor(middleWindow / 2);
 
-  // Always include first page
-  pages.push(1);
-
-  // Calculate the window around current page
-  const windowStart = Math.max(2, currentPage - 1);
-  const windowEnd = Math.min(totalPages - 1, currentPage + 1);
-
-  // Add ellipsis before window if needed
-  if (windowStart > 2) {
-    pages.push("ellipsis");
+  if (currentPage <= edgeWindow - half) {
+    return [
+      ...Array.from({ length: edgeWindow }, (_, i) => i + 1),
+      "ellipsis",
+      totalPages,
+    ];
   }
 
-  // Add pages in the window
-  for (let i = windowStart; i <= windowEnd; i++) {
-    pages.push(i);
+  if (currentPage > totalPages - (edgeWindow - half)) {
+    return [
+      1,
+      "ellipsis",
+      ...Array.from(
+        { length: edgeWindow },
+        (_, i) => totalPages - edgeWindow + 1 + i,
+      ),
+    ];
   }
 
-  // Add ellipsis after window if needed
-  if (windowEnd < totalPages - 1) {
-    pages.push("ellipsis");
-  }
-
-  // Always include last page
-  pages.push(totalPages);
-
-  return pages;
+  return [
+    1,
+    "ellipsis",
+    ...Array.from({ length: middleWindow }, (_, i) => currentPage - half + i),
+    "ellipsis",
+    totalPages,
+  ];
 }

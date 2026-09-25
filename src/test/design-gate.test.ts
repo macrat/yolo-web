@@ -302,7 +302,6 @@ function hueOf(lit: string): number | null {
 const isPurpleHue = (h: number | null): boolean =>
   h !== null && h >= 250 && h <= 320;
 
-// border-radius で ERROR にしない値。§5 は角丸を 0px とするが、この検査は 2px も ERROR にしない。
 // box-shadow で線を引くトークン（§6 フォーカスの内の輪・hover の細いボーダー）。ずらしもぼかしも持たない
 // 広がりだけの値で、影ではない。値の定義は globals.css。
 const LINE_SHADOW_TOKENS = new Set([
@@ -310,6 +309,7 @@ const LINE_SHADOW_TOKENS = new Set([
   "var(--hover-line)",
 ]);
 
+// border-radius で ERROR にしない値。§5 は角丸を 0px とするが、この検査は 2px も ERROR にしない。
 const ALLOWED_RADIUS_ATOMS = new Set([
   "0",
   "0px",

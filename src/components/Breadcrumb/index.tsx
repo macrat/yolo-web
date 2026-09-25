@@ -53,7 +53,11 @@ export default function Breadcrumb({ items }: BreadcrumbProps) {
                     {item.label}
                   </span>
                 ) : (
-                  <Link href={item.href ?? "/"} className={styles.link}>
+                  <Link
+                    href={item.href ?? "/"}
+                    className={styles.link}
+                    data-hit-area="after"
+                  >
                     {item.label}
                   </Link>
                 )}
