@@ -80,10 +80,10 @@
   gap: var(--space-8);
 }
 
-/* 見出し語: 一覧の主役。§4「品名（リンク・墨）」に従い墨、§3 に従い明朝で組む。 */
+/* 見出し語: 一覧の主役。§4「品名（リンク・墨）」に従い墨、本文の書体で組む（§7 の一覧の名前は見出しでない）。 */
 .word {
   color: var(--ink);
-  font-family: var(--font-heading);
+  font-family: var(--font-body);
   font-size: 1.125rem; /* 18px */
   line-height: 1.4;
   letter-spacing: 0.01em;

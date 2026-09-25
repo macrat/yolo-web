@@ -12,7 +12,7 @@
 }
 
 /*
- * 棚の見出し: 明朝・墨・詰め。品書き/検索器の棚見出し（22px）に揃える（§3 見出しの流儀）。
+ * 棚の見出し: 見出しの書体・墨。品書き/検索器の棚見出し（22px）に揃える（§3 見出しの流儀）。
  */
 .heading {
   margin: 0 0 var(--space-16);
@@ -20,7 +20,6 @@
   font-family: var(--font-heading);
   font-size: 1.375rem; /* 22px */
   line-height: 1.4;
-  font-feature-settings: "palt";
 }
 
 /*
@@ -36,7 +35,7 @@
 }
 
 /*
- * 索引のリンク: 品名と同じ流儀（墨・明朝、静止時は下線なし、hover で朱＋下線）。
+ * 索引のリンク: 品名と同じ流儀（墨・本文の書体、静止時は下線なし、hover で朱＋下線）。
  * タップ面 44px 角を確保（§10）。単字（部首）は正方の升目、長い語はパディングで横に伸びる。
  */
 .link {
@@ -47,7 +46,7 @@
   min-width: 44px;
   padding: 0 var(--space-8);
   color: var(--ink);
-  font-family: var(--font-heading);
+  font-family: var(--font-body);
   font-size: 1.125rem; /* 18px — 品名と同格 */
   line-height: 1.4;
   text-decoration: none;

@@ -11,7 +11,7 @@ import styles from "./DictionaryEntryList.module.css";
 export interface DictionaryEntryItem {
   /** React key（辞典内で一意な文字・slug 等）。 */
   key: string;
-  /** 品名（見出し・一覧の主役・明朝）。漢字なら 1 字、四字熟語なら 4 字、色なら色名。 */
+  /** 品名（一覧の主役）。漢字なら 1 字、四字熟語なら 4 字、色なら色名。 */
   name: string;
   /** 品名リンクの遷移先（実在ルート）。 */
   href: string;
@@ -40,7 +40,7 @@ interface DictionaryEntryListProps {
  *
  * - 一覧の既定は罫区切りのリストであってカードのグリッドではない。上辺＋各行の一本罫で全行を囲い、
  *   カード装飾・box-shadow（§8-2）・色地を持たない。
- * - 各行 = 品名（リンク・明朝・墨）＋ よみ（--ink-2）＋ ひとこと（意味）＋ 任意の値札群、
+ * - 各行 = 品名（リンク・墨）＋ よみ（--ink-2）＋ ひとこと（意味）＋ 任意の値札群、
  *   colors のみ品名の頭に色見本（成果物の中身＝和色・§2）。
  * - 検索器の結果とファセット絞り込みの結果が、この 1 枚の器を共有する（見せ方を一貫させる）。
  *   幅は呼び出し側が決める（読む面 --measure / 操作面 --max-width を親で当てる）。

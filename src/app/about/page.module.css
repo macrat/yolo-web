@@ -33,7 +33,7 @@
   margin-bottom: 0;
 }
 
-/* 小見出し: 明朝・墨・一本罫で仕切る（§3/§4。dictionary/humor 詳細と同じ流儀で揃える）。 */
+/* 小見出し: 見出しの書体・墨・一本罫で仕切る（dictionary/humor 詳細と同じ流儀で揃える）。 */
 .sectionTitle {
   font-size: 1.25rem; /* 20px */
   margin-bottom: var(--space-16);

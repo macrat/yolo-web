@@ -25,7 +25,7 @@
   gap: 0.25rem;
 }
 
-/* h1: SEO 用に保持しつつ視覚的に小さく。bold は明朝の 600 一本（DESIGN.md §3） */
+/* h1: SEO 用に保持しつつ視覚的に小さく。 */
 .title {
   font-size: 1.25rem;
   color: var(--ink);

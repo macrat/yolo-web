@@ -6,6 +6,7 @@ import ColorDetail from "@/dictionary/_components/color/ColorDetail";
 import { generateColorPageMetadata, generateColorJsonLd } from "@/lib/seo";
 import { getColorBySlug, getAllColorSlugs } from "@/dictionary/_lib/colors";
 import { getPlayRecommendationsForDictionary } from "@/play/recommendation";
+import { headingFontAttr } from "@/lib/zen-antique-charset";
 
 export function generateStaticParams() {
   return getAllColorSlugs().map((slug) => ({ slug }));
@@ -35,6 +36,7 @@ export default async function ColorDetailPage({
   // breadcrumb JSON-LD は Breadcrumb コンポーネントが自動出力するため手動呼び出し不要。
   const jsonLd = generateColorJsonLd(color);
   const playRecommendations = getPlayRecommendationsForDictionary("colors");
+  const title = `${color.name}（${color.romaji}）`;
 
   return (
     <DictionaryDetailLayout
@@ -47,10 +49,10 @@ export default async function ColorDetailPage({
       ]}
       jsonLd={jsonLd}
       shareUrl={`/dictionary/colors/${color.slug}`}
-      shareTitle={`${color.name}（${color.romaji}）`}
+      shareTitle={title}
       playRecommendations={playRecommendations}
     >
-      <ColorDetail color={color} />
+      <ColorDetail color={color} titleFontAttr={headingFontAttr(title)} />
     </DictionaryDetailLayout>
   );
 }

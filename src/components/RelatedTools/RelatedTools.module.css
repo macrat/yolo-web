@@ -2,7 +2,7 @@
  * RelatedTools — 関連ツール一覧（DESIGN.md フェーズ R・店構えへ変換）。
  * §4「品書き（一覧の既定形）」: カードのグリッドではなく罫区切りのリストで組む
  * （PlayRecommendBlock と同型）。器は静か——背景色・box-shadow・カード角丸なし。
- * 区切りの主役は --rule の一本罫。品名は明朝、hover で朱＋下線（下線はリンク専有・§3）。
+ * 区切りの主役は --rule の一本罫。品名は本文の書体、hover で朱＋下線（下線はリンク専有・§3）。
  */
 
 .related {
@@ -15,7 +15,6 @@
   font-family: var(--font-heading);
   font-size: 1.25rem; /* 見出しスケール帯（20px 目安） */
   line-height: 1.4;
-  font-feature-settings: "palt";
   margin: 0 0 var(--space-16);
   color: var(--ink);
 }
@@ -46,10 +45,10 @@
   outline-offset: 2px;
 }
 
-/* 品名: 一覧の主役（明朝・墨）。hover で朱＋下線（§3 リンク専有）。 */
+/* 品名: 一覧の主役（本文の書体・墨）。hover で朱＋下線（§3 リンク専有）。 */
 .name {
   color: var(--ink);
-  font-family: var(--font-heading);
+  font-family: var(--font-body);
   font-size: 1.0625rem; /* 17px 目安 */
   line-height: 1.4;
 }

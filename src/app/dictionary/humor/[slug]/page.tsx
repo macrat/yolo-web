@@ -10,6 +10,7 @@ import {
 } from "@/lib/seo";
 import { getAllSlugs, getEntryBySlug } from "@/humor-dict/data";
 import EntryRatingButton from "@/humor-dict/_components/EntryRatingButton";
+import { headingFontAttr } from "@/lib/zen-antique-charset";
 import styles from "./page.module.css";
 
 export function generateStaticParams(): Array<{ slug: string }> {
@@ -61,7 +62,9 @@ export default async function HumorDictEntryPage({
         {/* ファーストビュー: 見出し語・よみがな・ユーモア定義文 */}
         <header className={styles.header}>
           <div className={styles.headingGroup}>
-            <h1 className={styles.word}>{entry.word}</h1>
+            <h1 className={styles.word} {...headingFontAttr(entry.word)}>
+              {entry.word}
+            </h1>
             <span className={styles.reading}>【{entry.reading}】</span>
           </div>
           <blockquote className={styles.definition}>

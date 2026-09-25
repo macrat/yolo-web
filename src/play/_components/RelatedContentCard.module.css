@@ -5,7 +5,7 @@
  * RelatedQuizzes.module.css を持ち、本ファイルとは共有していない）。
  * §4「品書き（一覧の既定形）」: カードのグリッドではなく罫区切りの一覧で組む
  * （RelatedTools/RecommendedContent と同型）。器は静か——背景色・box-shadow・カード角丸なし。
- * 品名は明朝、hover で朱＋下線（下線はリンク専有・§3）。
+ * 品名は本文の書体、hover で朱＋下線（下線はリンク専有・§3）。
  */
 
 .related {
@@ -18,7 +18,6 @@
   font-family: var(--font-heading);
   font-size: 1.25rem;
   line-height: 1.4;
-  font-feature-settings: "palt";
   margin: 0 0 var(--space-16);
   color: var(--ink);
 }
@@ -50,7 +49,7 @@
 
 .name {
   color: var(--ink);
-  font-family: var(--font-heading);
+  font-family: var(--font-body);
   font-size: 1.0625rem;
   line-height: 1.4;
 }

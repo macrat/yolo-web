@@ -67,13 +67,19 @@
   --leading-heading: 1.25;
 
   /* §3 書体の並び。欧文・数字（U+0000-007F）は IBM Plex Sans が組み、ほかの字は和文の書体へ落ちる。
-   * --font-zen-antique と --font-plex-sans は layout.tsx が next/font で <html> に置く。 */
+   * --font-zen-antique と --font-plex-sans は、ルートのレイアウト（layout.tsx・global-not-found.js）が
+   * next/font で <html> に置く。 */
   --font-ja-body:
     "BIZ UDPGothic", "Hiragino Kaku Gothic ProN", "Yu Gothic Medium",
     "Noto Sans JP", sans-serif;
+  /* 見出しの和文を Zen Antique の代わりに組む本文の書体。Zen Antique の仮名はほぼ全角なので、
+   * 仮名が全角で palt を掛けない書体を選び、読み込みの前後で見出しの折り返しを変えない。 */
+  --font-ja-heading-fallback:
+    "BIZ UDGothic", "Hiragino Kaku Gothic ProN", "Yu Gothic Medium",
+    "Noto Sans JP", sans-serif;
   --font-heading:
     var(--font-plex-sans), "IBM Plex Sans Fallback", var(--font-zen-antique),
-    var(--font-ja-body);
+    var(--font-ja-heading-fallback);
   --font-body:
     var(--font-plex-sans), "IBM Plex Sans Fallback", var(--font-ja-body);
   --font-mono:
@@ -243,6 +249,14 @@ h4,
 h5,
 h6 {
   font-size: var(--text-step-1);
+}
+
+/* Zen Antique に無い字を含む見出し。和文を丸ごと本文の書体で組み、一つの見出しの中で和文の書体を混ぜない。
+ * 属性はサーバーが見出しの文字列から付ける（src/lib/zen-antique-charset.ts）。 */
+[data-heading-font="fallback"] {
+  --font-heading:
+    var(--font-plex-sans), "IBM Plex Sans Fallback",
+    var(--font-ja-heading-fallback);
 }
 
 b,

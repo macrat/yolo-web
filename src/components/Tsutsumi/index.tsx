@@ -18,7 +18,7 @@ export type WairoColor =
 
 export interface TsutsumiProps {
   /**
-   * タイプ名（結果の主役の言葉・明朝で大きく組む）。診断・占いの類型名など。必須。
+   * タイプ名（結果の主役の言葉・見出しの書体で大きく組む）。診断・占いの類型名など。必須。
    */
   typeName: string;
   /**

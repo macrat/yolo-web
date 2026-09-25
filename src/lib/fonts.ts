@@ -37,6 +37,8 @@ export const plexSans = localFont({
     },
   ],
   display: "swap",
+  // Bold も preload する。強調と表の見出しで本文に広く出るので、読み込み後の差し替えを避ける。
+  preload: true,
   adjustFontFallback: false,
   declarations: [{ prop: "unicode-range", value: "U+0000-007F" }],
   variable: "--font-plex-sans",

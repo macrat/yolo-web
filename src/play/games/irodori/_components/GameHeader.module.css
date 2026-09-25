@@ -14,7 +14,6 @@
   font-size: 1.25rem;
   color: var(--ink);
   line-height: 1.4;
-  font-feature-settings: "palt";
 }
 
 .number {

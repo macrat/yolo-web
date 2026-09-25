@@ -12,14 +12,13 @@
   width: 100%;
 }
 
-/* 棚見出し（明朝・墨・詰め）。他の棚見出しと同じ流儀で揃える（§3）。 */
+/* 棚見出し（見出しの書体・墨）。他の棚見出しと同じ流儀で揃える。 */
 .heading {
   margin: 0 0 var(--space-16);
   color: var(--ink);
   font-family: var(--font-heading);
   font-size: 1.375rem; /* 22px 目安（1.25 倍スケール帯） */
   line-height: 1.4;
-  font-feature-settings: "palt";
 }
 
 /*

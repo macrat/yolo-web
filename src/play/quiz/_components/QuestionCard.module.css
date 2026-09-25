@@ -1,6 +1,6 @@
 /*
  * 設問カード。DESIGN.md（紙・墨・朱の店構え）。
- * 設問文=明朝（見出しの顔）・選択肢=紙地+罫のボタン（hover 朱-weak 座布団・44px・
+ * 設問文=見出しの書体・選択肢=紙地+罫のボタン（hover 朱-weak 座布団・44px・
  * ピル/ブランド色禁止）。正誤フィードバックは色だけでなく文字ラベルを併記する
  * （WCAG 1.4.1）。角丸は 0px 基調（--radius）。リビールは 1 回・300ms・reduced-motion 尊重。
  */
@@ -27,7 +27,6 @@
   margin: 0 0 1.25rem;
   line-height: 1.6;
   color: var(--ink);
-  font-feature-settings: "palt";
 }
 
 /* F2: 設問切替時にプログラム的フォーカスを受ける見出し（tabIndex={-1}）。

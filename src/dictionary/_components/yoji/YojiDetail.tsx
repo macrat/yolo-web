@@ -11,6 +11,7 @@ import {
 import { getYojiByCategory } from "@/dictionary/_lib/yoji";
 import { getAllKanjiChars } from "@/dictionary/_lib/kanji";
 import Nefuda from "@/components/Nefuda";
+import { headingFontAttr } from "@/lib/zen-antique-charset";
 import styles from "./YojiDetail.module.css";
 
 interface YojiDetailProps {
@@ -63,6 +64,7 @@ export default function YojiDetail({ yoji }: YojiDetailProps) {
   );
   const categoryLabel = YOJI_CATEGORY_LABELS[yoji.category];
   const difficultyLabel = YOJI_DIFFICULTY_LABELS[yoji.difficulty];
+  const title = `四字熟語「${yoji.yoji}」`;
 
   // Cross-link: find kanji characters from this yoji that exist in kanji-data
   const allKanjiChars = new Set(getAllKanjiChars());
@@ -74,8 +76,12 @@ export default function YojiDetail({ yoji }: YojiDetailProps) {
   return (
     <article className={styles.detail} data-testid="yoji-detail">
       <div className={styles.header}>
-        <span className={styles.character}>{yoji.yoji}</span>
-        <h1 className={styles.title}>四字熟語「{yoji.yoji}」</h1>
+        <span className={styles.character} {...headingFontAttr(yoji.yoji)}>
+          {yoji.yoji}
+        </span>
+        <h1 className={styles.title} {...headingFontAttr(title)}>
+          {title}
+        </h1>
         <p className={styles.reading}>{yoji.reading}</p>
         <p className={styles.meaning}>{yoji.meaning}</p>
         {/* 分類（値札・§4）: カテゴリは索引への導線、難易度は情報の値札。ピルにしない。 */}

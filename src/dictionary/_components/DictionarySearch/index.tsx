@@ -28,7 +28,7 @@ interface DictionarySearchProps {
   placeholder: string;
   /** 件数・空表示の文言に使う単位語（「漢字」「四字熟語」「色」）。 */
   unit: string;
-  /** 棚見出し（任意）。与えると明朝の見出しを冠する。 */
+  /** 棚見出し（任意）。与えると見出しを冠する。 */
   heading?: string;
   /**
    * 一度に描画する結果の上限（既定 100）。漢字 2,136 件のような大規模辞典で、

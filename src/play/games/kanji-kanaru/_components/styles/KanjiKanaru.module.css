@@ -35,7 +35,6 @@
   font-size: 1.4rem;
   letter-spacing: 0.05em;
   color: var(--ink);
-  font-feature-settings: "palt";
 }
 
 .headerButtons {
@@ -373,7 +372,6 @@
   font-weight: 600;
   color: var(--ink);
   margin-bottom: 0.25rem;
-  font-feature-settings: "palt";
 }
 
 .resultReadings {

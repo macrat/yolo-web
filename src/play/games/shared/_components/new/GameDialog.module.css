@@ -23,7 +23,6 @@
   color: var(--ink);
   margin-bottom: var(--space-16);
   line-height: 1.4;
-  font-feature-settings: "palt";
 }
 
 .modalClose {

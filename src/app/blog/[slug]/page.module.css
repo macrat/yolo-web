@@ -266,7 +266,7 @@
 }
 
 .navTitle {
-  font-family: var(--font-heading);
+  font-family: var(--font-body);
   font-size: 0.9375rem;
   font-weight: 600;
   color: var(--accent);

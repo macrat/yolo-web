@@ -9,14 +9,13 @@
   margin-top: var(--space-32);
 }
 
-/* 見出し「こちらもおすすめ」: 明朝・墨・詰め（§3 見出しの流儀）。 */
+/* 見出し「こちらもおすすめ」: 見出しの書体・墨。 */
 .heading {
   margin: 0 0 var(--space-8);
   color: var(--ink);
   font-family: var(--font-heading);
   font-size: 1.375rem; /* 22px 目安（1.25 倍スケール帯） */
   line-height: 1.4;
-  font-feature-settings: "palt";
 }
 
 /* サブテキスト: 補足の墨（§3 補助情報の字サイズ）。 */
@@ -62,10 +61,10 @@
   gap: var(--space-8);
 }
 
-/* 品名: 一覧の主役。§4「品名（明朝リンク・墨）」——静止は墨、hover で朱＋下線（§3 リンク専有）。 */
+/* 品名: 一覧の主役。§4「品名（リンク・墨）」、本文の書体——静止は墨、hover で朱＋下線（§3 リンク専有）。 */
 .title {
   color: var(--ink);
-  font-family: var(--font-heading);
+  font-family: var(--font-body);
   font-size: 1.125rem; /* 18px 目安 */
   line-height: 1.4;
   letter-spacing: 0.01em;

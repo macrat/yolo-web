@@ -35,7 +35,7 @@
   gap: var(--space-8);
 }
 
-/* 棚の見出し（品名の親）: 明朝・墨。罫下線で棚を仕切る。all-caps は使わない（§8-6）。 */
+/* 棚の見出し（品名の親）: 見出しの書体・墨。罫下線で棚を仕切る。all-caps は使わない（§8-6）。 */
 .columnTitle {
   color: var(--ink);
   font-family: var(--font-heading);

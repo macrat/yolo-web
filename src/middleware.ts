@@ -40,33 +40,30 @@ export function isDeletedBlogSlug(slug: string): boolean {
 }
 
 /**
- * 410 ページの器の色（DESIGN.md §2「紙・墨・朱」）は、器色 hex の SSoT である中立モジュール
+ * 410 ページの器の色（DESIGN.md §2）は、器色 hex の SSoT である中立モジュール
  * `@/lib/utsuwaHex`（`PAPER`/`INK`/`INK_2`/`RULE`/`ACCENT` 等）から import する。utsuwaHex は
  * import ゼロの純粋な hex 定数モジュール（next/og 等に依存しない葉）なので、Edge 実行されうる
  * middleware からも安全に import できる。globals.css の light トークンを hex 化した値であり、
  * 乖離ガード（`src/lib/__tests__/wairoHex.test.ts` が globals.css の oklch と一致を検証）の対象。
- * ここで hex を独自に再定義すると器色の第3複製になり、globals.css を変えても 410 だけ旧値へ
- * 静かにドリフトするため、必ず SSoT を参照する。旧デザインの青（#2563eb 等）・冷色スレート
- * （#f8fafc/#1e293b）は §8-1/§10 違反のため撤去済み。
+ * ここで hex を独自に再定義すると、globals.css を変えても 410 だけ古い値のまま残るため、必ず SSoT を参照する。
  */
 
 /**
- * 書体の並び（DESIGN §3・globals.css の --font-heading / --font-body と同じ順）。
- * この静的HTMLは Web フォントを読み込まないので、端末にある書体だけで組める並びにする。
+ * 書体の並び（DESIGN.md §3）。この静的HTMLは Web フォントを読み込まないので、端末にある書体だけで組む。
+ * 本文は globals.css の --font-ja-body、見出しは Zen Antique の代わりに組む --font-ja-heading-fallback と同じ並び。
  */
 const BODY_STACK =
   "'BIZ UDPGothic','Hiragino Kaku Gothic ProN','Yu Gothic Medium','Noto Sans JP',sans-serif";
-const HEADING_STACK = `'Zen Antique',${BODY_STACK}`;
+const HEADING_STACK =
+  "'BIZ UDGothic','Hiragino Kaku Gothic ProN','Yu Gothic Medium','Noto Sans JP',sans-serif";
 
 /**
  * 410 Gone ページのHTMLを生成する。
  * middlewareからはReactコンポーネントやCSSモジュールが使用できないため、
  * インラインスタイル付きの静的HTMLで構成する。
  *
- * デザインは「店構え」（DESIGN.md §2色/§3タイポ/§4罫/§8禁止）。既に店構え化された
- * エラー面 `src/app/global-not-found-content.tsx` と流儀（紙地・墨字・明朝見出し・罫）を揃える。
- * 中央寄せの静かな告知として組み、操作（トップへ戻る導線）は §4「罫と墨で、装飾を足さない」に
- * 従い朱の文字＋罫囲みで表す（青ベタボタン・装飾絵文字・8px角丸は撤去済み）。
+ * エラー面 `src/app/global-not-found-content.tsx` と流儀（紙地・墨字・見出しの書体・罫）を揃える。
+ * 中央寄せの静かな告知として組み、トップへ戻る導線は文字と罫囲みで表す。
  */
 export function build410Html(): string {
   return `<!DOCTYPE html>

@@ -58,7 +58,7 @@ interface HeaderProps {
  * 一貫性確保と layout 側の boilerplate 回避のため props では受け取らない。
  *
  * デザイン（DESIGN.md §4「のれん」）:
- * - 店号（サイト名・明朝）+ 下辺に一本の `--rule-strong` 罫。背景色・影は付けない（地は紙）。
+ * - 店号（サイト名・見出しの書体）+ 下辺に一本の `--rule-strong` 罫。背景色・影は付けない（地は紙）。
  * - ナビは文字のみ・現在地は朱（`aria-current="page"` を CSS で `--accent` 着色）。
  *
  * アクセシビリティ:

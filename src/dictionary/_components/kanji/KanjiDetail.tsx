@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { KanjiEntry } from "@/dictionary/_lib/types";
 import { KANJI_GRADE_LABELS } from "@/dictionary/_lib/types";
 import { getKanjiByRadical } from "@/dictionary/_lib/kanji";
+import { headingFontAttr } from "@/lib/zen-antique-charset";
 import styles from "./KanjiDetail.module.css";
 
 interface KanjiDetailProps {
@@ -12,17 +13,20 @@ export default function KanjiDetail({ kanji }: KanjiDetailProps) {
   const relatedKanji = getKanjiByRadical(kanji.radical).filter(
     (k) => k.character !== kanji.character,
   );
+  const title = `\u6F22\u5B57\u300C${kanji.character}\u300D`;
+  const relatedHeading = `\u540C\u3058\u90E8\u9996\u306E\u6F22\u5B57\uFF08${kanji.radical}\uFF09`;
 
   return (
     <article className={styles.detail} data-testid="kanji-detail">
       <div className={styles.header}>
-        <span className={styles.character}>{kanji.character}</span>
+        <span
+          className={styles.character}
+          {...headingFontAttr(kanji.character)}
+        >
+          {kanji.character}
+        </span>
         <div className={styles.headerInfo}>
-          <h1>
-            {"\u6F22\u5B57\u300C"}
-            {kanji.character}
-            {"\u300D"}
-          </h1>
+          <h1 {...headingFontAttr(title)}>{title}</h1>
           {kanji.onYomi.length > 0 && (
             <p className={styles.readings}>
               <span className={styles.readingLabel}>
@@ -96,11 +100,7 @@ export default function KanjiDetail({ kanji }: KanjiDetailProps) {
 
       {relatedKanji.length > 0 && (
         <section className={styles.section}>
-          <h2>
-            {"\u540C\u3058\u90E8\u9996\u306E\u6F22\u5B57\uFF08"}
-            {kanji.radical}
-            {"\uFF09"}
-          </h2>
+          <h2 {...headingFontAttr(relatedHeading)}>{relatedHeading}</h2>
           <div className={styles.relatedList}>
             {relatedKanji.map((k) => (
               <Link

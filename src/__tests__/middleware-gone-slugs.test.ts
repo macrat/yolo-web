@@ -97,8 +97,9 @@ describe("build410Html", () => {
       expect(html).toContain("#0b0b0b"); // --ink
     });
 
-    test("見出しは Zen Antique を先頭にした並びで組む（§3）", () => {
-      expect(html).toContain("h1{font-family:'Zen Antique',");
+    test("Web フォントを読まないので、見出しは仮名が全角の端末の書体で組む（§3）", () => {
+      expect(html).toContain("h1{font-family:'BIZ UDGothic',");
+      expect(html).not.toContain("Zen Antique");
     });
 
     test("トップへの導線は墨の文字で表す（色ベタのボタンでない・§6）", () => {

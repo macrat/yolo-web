@@ -22,7 +22,7 @@
   border: 1px solid var(--rule);
 }
 
-/* h1（色名）: 基層見出し（明朝）に委ね、大きさと余白を整える。 */
+/* h1（色名）: 書体は globals.css の見出しの規則に委ね、大きさと余白を整える。 */
 .title {
   font-size: 1.5625rem; /* 25px */
   margin-bottom: var(--space-24);
@@ -33,7 +33,7 @@
   margin-bottom: var(--space-32);
 }
 
-/* 小見出し: 明朝・墨・一本罫で仕切る（§3/§4）。 */
+/* 小見出し: 見出しの書体・墨・一本罫で仕切る。 */
 .section h2 {
   font-size: 1.25rem; /* 20px */
   margin-bottom: var(--space-16);

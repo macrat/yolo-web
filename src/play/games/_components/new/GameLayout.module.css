@@ -40,7 +40,6 @@
   color: var(--ink);
   margin-bottom: var(--space-8);
   line-height: 1.4;
-  font-feature-settings: "palt";
 }
 
 .usageExampleContent {
@@ -117,7 +116,6 @@
   margin-bottom: var(--space-8);
   color: var(--ink);
   line-height: 1.4;
-  font-feature-settings: "palt";
 }
 
 @media (max-width: 768px) {

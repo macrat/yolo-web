@@ -50,3 +50,23 @@ test("renders game cross-link", () => {
     }),
   ).toHaveAttribute("href", "/play/kanji-kanaru");
 });
+
+test("Zen Antique で組める見出しには、本文の書体で組む属性を付けない", () => {
+  render(<KanjiDetail kanji={mockKanji} />);
+  expect(
+    screen.getByRole("heading", { level: 1, name: "漢字「山」" }),
+  ).not.toHaveAttribute("data-heading-font");
+});
+
+test("Zen Antique に無い字の見出しと大字は、和文を本文の書体で組む", () => {
+  render(
+    <KanjiDetail kanji={{ ...mockKanji, character: "𠮟", radical: "辵" }} />,
+  );
+  expect(
+    screen.getByRole("heading", { level: 1, name: "漢字「𠮟」" }),
+  ).toHaveAttribute("data-heading-font", "fallback");
+  expect(screen.getByText("𠮟", { selector: "span" })).toHaveAttribute(
+    "data-heading-font",
+    "fallback",
+  );
+});

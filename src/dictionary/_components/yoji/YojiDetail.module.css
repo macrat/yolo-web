@@ -1,6 +1,6 @@
 /*
  * 四字熟語詳細 — DESIGN.md フェーズ R・店構え（実務／参照・§7 実務側）。
- * 見出しは熟語を明朝で大字。読み・意味・成り立ち・例文を罫と組版で組む。
+ * 見出しは熟語を見出しの書体で大字。読み・意味・成り立ち・例文を罫と組版で組む。
  * 器は静か（紙墨朱・罫のみ）。ピル・色付きカード・影・角丸装飾なし・全トークン経由（§10）。
  * 左揃え基調（中央寄せの多用をしない・§4）。
  */
@@ -14,7 +14,7 @@
   margin-bottom: var(--space-32);
 }
 
-/* 大字: 熟語を明朝で大きく（見出しの主役・§7）。 */
+/* 大字: 熟語を見出しの書体で大きく（見出しの主役・§7）。 */
 .character {
   font-family: var(--font-heading);
   font-size: 3.25rem;
@@ -26,7 +26,7 @@
   margin-bottom: var(--space-16);
 }
 
-/* h1（語ラベル）: 基層見出し（明朝）に委ね、大きさと余白を整える。 */
+/* h1（語ラベル）: 書体は globals.css の見出しの規則に委ね、大きさと余白を整える。 */
 .title {
   font-size: 1.5625rem; /* 25px */
   line-height: 1.4;
@@ -84,7 +84,7 @@
   margin-bottom: var(--space-32);
 }
 
-/* 小見出し: 明朝・墨・一本罫で仕切る（§3/§4）。 */
+/* 小見出し: 見出しの書体・墨・一本罫で仕切る。 */
 .section h2 {
   font-size: 1.25rem; /* 20px */
   margin-bottom: var(--space-16);
@@ -107,7 +107,7 @@
   min-width: 44px;
   min-height: 44px;
   padding: 0 var(--space-8);
-  font-family: var(--font-heading);
+  font-family: var(--font-body);
   font-size: 2rem;
   line-height: 1;
   color: var(--ink);
@@ -134,7 +134,7 @@
   color: var(--ink-2);
 }
 
-/* 同カテゴリの熟語: 語リンクの索引（明朝・hover 朱下線）。ピルにしない。 */
+/* 同カテゴリの熟語: 語リンクの索引（本文の書体・hover 朱下線）。ピルにしない。 */
 .relatedList {
   display: flex;
   flex-wrap: wrap;
@@ -145,7 +145,7 @@
   display: inline-flex;
   align-items: center;
   min-height: 44px;
-  font-family: var(--font-heading);
+  font-family: var(--font-body);
   font-size: 1.125rem; /* 18px */
   line-height: 1.4;
   color: var(--ink);

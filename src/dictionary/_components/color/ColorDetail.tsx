@@ -5,10 +5,13 @@ import Link from "next/link";
 import type { ColorEntry } from "@/dictionary/_lib/types";
 import { COLOR_CATEGORY_LABELS } from "@/dictionary/_lib/types";
 import { getColorsByCategory } from "@/dictionary/_lib/colors";
+import type { HeadingFontAttr } from "@/lib/zen-antique-charset";
 import styles from "./ColorDetail.module.css";
 
 interface ColorDetailProps {
   color: ColorEntry;
+  /** 見出し（色名）を組むための属性。字の表をクライアントに入れないよう、サーバーのページが判定して渡す。 */
+  titleFontAttr: HeadingFontAttr;
 }
 
 function CopyButton({ text }: { text: string }) {
@@ -35,8 +38,12 @@ function CopyButton({ text }: { text: string }) {
   );
 }
 
-export default function ColorDetail({ color }: ColorDetailProps) {
+export default function ColorDetail({
+  color,
+  titleFontAttr,
+}: ColorDetailProps) {
   const categoryLabel = COLOR_CATEGORY_LABELS[color.category];
+  const title = `${color.name}（${color.romaji}）`;
 
   // Use a deterministic shuffle seeded by the color slug to avoid
   // SSR/CSR hydration mismatch. Math.random() would produce different
@@ -80,8 +87,8 @@ export default function ColorDetail({ color }: ColorDetailProps) {
         aria-label={`${color.name}の色見本`}
       />
 
-      <h1 className={styles.title}>
-        {color.name}（{color.romaji}）
+      <h1 className={styles.title} {...titleFontAttr}>
+        {title}
       </h1>
 
       <section className={styles.section}>

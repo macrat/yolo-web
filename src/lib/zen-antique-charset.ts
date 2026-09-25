@@ -3,6 +3,7 @@
  *
  * Zen Antique に無い字を含む見出しは、和文を丸ごと本文の書体で組む。
  * 字の表は scripts/generate-zen-antique-charset.ts が作る。
+ * 表は数千行あり、クライアントのバンドルに入れないよう、判定はサーバーのコンポーネントで行う。
  */
 import charset from "@/data/zen-antique-charset.json";
 
@@ -24,7 +25,10 @@ function hasCodePoint(cp: number): boolean {
   return false;
 }
 
-/** text の字のうち、Zen Antique に無い字を出てくる順に重複なく返す。 */
+/**
+ * text の字のうち、Zen Antique に無い字を出てくる順に重複なく返す。
+ * 絵文字も表に無い字として数え、字の種類で扱いを分けない。
+ */
 export function charsMissingFromZenAntique(text: string): string[] {
   const missing = new Set<string>();
   for (const char of text) {
@@ -37,4 +41,14 @@ export function charsMissingFromZenAntique(text: string): string[] {
 /** text を見出しの書体の並び（Plex と Zen Antique）だけで組めるか。 */
 export function canSetInZenAntique(text: string): boolean {
   return charsMissingFromZenAntique(text).length === 0;
+}
+
+/** 見出しの要素に付ける属性。globals.css は、この属性の付いた見出しの和文を本文の書体で組む。 */
+export interface HeadingFontAttr {
+  "data-heading-font"?: "fallback";
+}
+
+/** データから描く見出しの文字列 text に、組むための属性を返す。 */
+export function headingFontAttr(text: string): HeadingFontAttr {
+  return canSetInZenAntique(text) ? {} : { "data-heading-font": "fallback" };
 }
