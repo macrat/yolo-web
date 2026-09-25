@@ -2,24 +2,14 @@ import { ImageResponse } from "next/og";
 import { PAPER, INK, INK_2, RULE, RULE_STRONG, ACCENT } from "@/lib/utsuwaHex";
 
 /**
- * 共通OGP生成器の設定（共有カード＝シェア unfurl の1枚・cycle-282 で全面ベタ塗り版から刷新）。
+ * 共通OGP生成器の設定（共有カード＝シェア unfurl の1枚）。
  *
- * 旧版（全面ベタ塗り＋絵文字アイコン＋ゴシック太字・既定色 青#2563eb）を廃し、札レンダラ
- * {@link import("./fuda-image").renderFudaImage} と同じ視覚言語で組む——紙地・墨・一本罫・のれん帯・
- * 明朝（Noto Serif JP）・朱の識別マーク。和色の記号面は持たない（地は常に紙・文字は墨）が、
- * 朱の識別マーク（頭字 y）は持つ——手をかけた顔として「誰かが手入れした場所」の気配を与える
- * （既定の OG カードや隅の空きは放置に見える＝A 信頼・安心を損なう）。
- * 和色はいっさい使わない（DESIGN §2/§4「和色は結果の包みに限る・器へ漏らさない」）。
- *
- * この標章は「店の朱肉印」ではなく謙虚な作り手/識別の印——店を体現させる役目は負わせない
- * （気取り＝D 正直・気取らなさ を犯すため店の物語は外す・cycle-309/decision.md E2）。
- *
- * 廃止した引数（DESIGN §8 違反のため型から**削除**）:
- * - `icon`（絵文字）→ §8-6 違反。カードの顔は明朝の品名。図像は識別マーク 1 つだけ。
- * - `accentColor`（任意色ベタ背景）→ §2 違反。地は常に紙・文字は常に墨。朱は識別マーク専用。
+ * 札レンダラ {@link import("./fuda-image").renderFudaImage} と同じ組み方で、紙地・墨・一本罫・
+ * のれん帯・明朝（Noto Serif JP）の品名・識別マーク（頭字 y）で組む。地は常に紙、文字と識別マークは
+ * 墨で、和色は使わない。絵文字のアイコンや任意の地の色は受け取らない。
  */
 export interface OgpImageConfig {
-  /** 品名/ページ名（看板の顔・明朝で大きく組む）。 */
+  /** 品名/ページ名（明朝で大きく組む）。 */
   title: string;
   /** 副題/説明/カテゴリ（省略可・ゴシック INK_2）。 */
   subtitle?: string;
@@ -27,30 +17,24 @@ export interface OgpImageConfig {
 
 const OGP_SIZE = { width: 1200, height: 630 };
 
-/** 店号（カード単体で出所 yolos.net が読めるように・DESIGN §4「のれん」）。 */
+/** 店号（カード単体で出所 yolos.net が読めるように）。 */
 const SHOP_NAME = "yolos.net";
 
 /**
- * 識別マーク（サイトの identity＝頭字 y）。店の朱肉印でも試作でもない、謙虚な作り手/識別の印。
- * cycle-282/283 の自己貶め（"試"＝試作/見本＝来訪前に信頼を削る一字）を撤去した。
+ * 識別マーク（サイトの頭字 y）。
  *
- * **形は面ごとに違う（単一形を前提にしない）**:
- * - この OGP（大きい共有面）では **容器を持たない素の朱の明朝 y**。紙・墨・明朝の作りと一体で、
- *   塗りタイル（app バッジ状の異物）より A（作りの整合）と D（気取らなさ）に資す。
- * - favicon（`public/icon.svg`・極小 16-48px）は **朱の塗りの角丸タイル＋白抜き y** のまま。極小で
- *   消えない確とした印が A（手をかけた仕上がり）に資す（素の y は 16px でほぼ消え放置に見える）。
- * 面ごとに形が違うことは harm ではない——両面を一つの identity として突き合わせる「一貫」は
- * 認識の操作でありブランドイメージ A〜E に無い。各面が単独で cared-for(A)・気取らない(D) であればよい。
+ * 大きい共有面のこのカードでは、容器を持たない明朝の y を墨で描き、紙・墨・明朝の組み方と一体にする。
+ * favicon（`public/icon.svg`）は 16px でも字が消えないよう、塗りの角丸タイルに白抜きの y を置く。
  */
 
 /** 識別マークが表すサイトの頭字（identity＝yolos の "y"）。 */
 const MARK_INITIAL = "y";
-/** 識別マークのわずかな傾き（§4「±8° 以内」）。機械的な硬さを避ける微小な回転。 */
+/** 識別マークのわずかな傾き。機械的な硬さを避ける。 */
 const MARK_ROTATE_DEG = -6;
 
 /**
- * Noto Serif JP（明朝・品名と識別マークの顔・DESIGN §3）。weight 600 の見出し用。
- * 札（fuda-image）と同一経路。fuda-image はこの getter を import して一本化する（単一の真実）。
+ * Noto Serif JP（明朝・品名と識別マークの書体）。weight 600。
+ * 札（fuda-image）もこの getter を import して同じ経路で取得する。
  */
 const NOTO_SERIF_JP_CSS_URL =
   "https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@600&display=swap";
@@ -207,8 +191,7 @@ export const ogpContentType = "image/png";
 
 /**
  * 品名の書記素数から見出しサイズを決める（札の `typeNameFontSize` に倣う）。
- * 見出しの書体・階層の考え方は DESIGN §3 タイポグラフィだが、看板は大判 1200×630 のため
- * §3 の 16–39px スケールではなく、札に合わせた看板専用の大きめ段階値を用いる。
+ * 看板は大判 1200×630 なので、ページの見出しの段ではなく、札に合わせた看板専用の段階値を用いる。
  * サロゲートペア対応のため呼び出し側で `[...title].length` を渡す。
  */
 function titleFontSize(graphemeCount: number): number {
@@ -222,12 +205,11 @@ function titleFontSize(graphemeCount: number): number {
 /**
  * 共有カード（OGP）を {@link ImageResponse} にレンダリングする共通レンダラ。
  *
- * 紙地・墨・罫・のれん帯・明朝の品名・朱の識別マークで組む（札と同じ視覚言語）。和色は使わず、
- * 主役は品名（title）を明朝で大きく立てた墨字。階層は墨の濃淡（INK/INK_2）と罫で付け、朱
- * （ACCENT）は右上の識別マークだけに使う。
+ * 紙地・墨・罫・のれん帯・明朝の品名・識別マークで組む（札と同じ組み方）。和色は使わず、
+ * 主役は品名（title）を明朝で大きく立てた墨字。階層は墨の濃淡（INK/INK_2）と罫で付ける。
  *
  * 明朝（Noto Serif JP 600）とゴシック（Noto Sans JP 400）を Google Fonts CDN から並行取得し、
- * 取得失敗時はゴシック→sans-serif へ素直にフォールバックする（描画は成立・書体だけ譲る）。
+ * 取得失敗時はゴシック→sans-serif へフォールバックする（描画は成立・書体だけ譲る）。
  */
 export async function createOgpImageResponse(
   config: OgpImageConfig,
@@ -263,7 +245,7 @@ export async function createOgpImageResponse(
       : []),
   ];
 
-  // 明朝優先・ゴシックへフォールバックの family スタック（札と同一・DESIGN §3）。
+  // 明朝優先・ゴシックへフォールバックの family スタック（札と同一）。
   const minchoFamily = "NotoSerifJP, NotoSansJP, sans-serif";
   const gothicFamily = "NotoSansJP, sans-serif";
 
@@ -277,7 +259,7 @@ export async function createOgpImageResponse(
         flexDirection: "column",
         backgroundColor: PAPER,
         color: INK,
-        // 器は罫で包む（角丸 0・§4/§8）。札と同一の枠。
+        // 罫で包む（角丸 0）。札と同一の枠。
         border: `2px solid ${RULE_STRONG}`,
         padding: "56px 64px",
         fontFamily: gothicFamily,
@@ -346,11 +328,7 @@ export async function createOgpImageResponse(
         ) : null}
       </div>
 
-      {/* 識別マーク: カード面に一つだけ・右上に据える。サイトの identity 標章（頭字 y）を
-            **容器を持たない素の朱（ACCENT）の明朝 y** で表す。紙・墨・明朝の作りと一体の一筆で、
-            謙虚な作り手の印として据える（app バッジ状の塗りタイルは大きい共有面で作りから浮き
-            気取って見えるため外した）。回転 ±8° 内・幅 100px（§4）。
-            ※favicon(public/icon.svg) は極小(16px)で消えないよう塗りタイルのまま。 */}
+      {/* 識別マーク: カード面に一つだけ・右上に据える。容器を持たない明朝の y を墨で描く。 */}
       <div
         style={{
           position: "absolute",

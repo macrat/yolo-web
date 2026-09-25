@@ -2,7 +2,7 @@
  * RecommendedContent — 他カテゴリのおすすめ（DESIGN.md フェーズ R・店構えへ変換）。
  * §4「品書き（一覧の既定形）」: カードのグリッドではなく罫区切りの一覧で組む
  * （RelatedTools/RelatedBlogPosts と同型）。器は静か——背景色・box-shadow・カード角丸なし。
- * 品名は本文の書体、hover で朱＋下線（下線はリンク専有・§3）。カテゴリは値札（Nefuda 風の小ラベル）で示す。
+ * 品名は本文の書体、hover で下線（下線はリンク専有・§3）。カテゴリは値札（Nefuda 風の小ラベル）で示す。
  */
 
 .related {
@@ -12,7 +12,7 @@
 }
 
 /* 見出し: サイト共通の罫下線で静かに区切る（ResultCard .detailedHeading と同じ様式・
- * DESIGN.md §3/§4。朱の左罫は見出しの装飾に使わない） */
+ * DESIGN.md §3/§4） */
 .heading {
   font-family: var(--font-heading);
   font-size: 1.25rem;
@@ -68,7 +68,7 @@
   line-height: 1.6;
 }
 
-/* カテゴリの値札（DESIGN.md §4「値札」）。中身のある情報として添える。 */
+/* カテゴリの値札。中身のある情報として添える。 */
 .badge {
   display: inline-flex;
   align-items: center;

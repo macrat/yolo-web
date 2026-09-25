@@ -31,7 +31,7 @@
   letter-spacing: 0.01em;
 }
 
-/* 品名リンク: 静止時は墨、hover で朱＋下線（下線はリンク専有・§3）。 */
+/* 品名リンク: 静止時は墨、hover で下線（下線はリンク専有・§3）。 */
 .titleLink {
   color: var(--ink);
   text-decoration: none;
@@ -61,7 +61,7 @@
   outline-offset: 2px;
 }
 
-/* 新着マーク: 塗りバッジではなく朱の文字のみ（器は静か・§2 アクセントは朱の1色）。
+/* 新着マーク: 塗りバッジではなく --accent の文字のみ。
  * 英字 all-caps「NEW」は §8-6 の禁止対象のため「新着」（日本語）に統一する。 */
 .newMark {
   margin-right: var(--space-8);

@@ -1,5 +1,5 @@
 /*
- * OtherTypesNav: 「他のタイプも見てみよう」回遊ナビ。DESIGN.md（紙・墨・朱の店構え）。
+ * OtherTypesNav: 「他のタイプも見てみよう」回遊ナビ。DESIGN.md。
  * ResultCard（インライン結果）と app/play/[slug]/result/[resultId]/page.tsx（静的結果ページ）の
  * 両方から共有される。品書き（一覧の既定形）の語彙——罫区切りの縦リスト。
  *

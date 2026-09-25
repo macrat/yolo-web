@@ -117,7 +117,7 @@ describe("Select", () => {
     expect(select.className).toMatch(/custom-class/);
   });
 
-  // CSS 規約（DESIGN.md §4: 入力欄は角丸 2px の例外）: --radius-sm の使用を確認
+  // CSS 規約: --radius-sm の使用を確認
   it("Select.module.css が --radius-sm を使っている", () => {
     const cssPath = resolve(__dirname, "../Select.module.css");
     const css = readFileSync(cssPath, "utf-8");

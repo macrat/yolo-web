@@ -1,6 +1,6 @@
 /**
  * Header（のれん）— DESIGN.md §4「のれん」。
- * 店号（サイト名・見出しの書体）+ 下に一本の --rule-strong 罫。ナビは文字のみ・現在地は朱。
+ * 店号（サイト名・見出しの書体）+ 下に一本の --rule-strong 罫。ナビは文字のみ。
  * ヘッダに背景色・影は付けない（§4）。地は紙のまま。
  * 角丸は 0 基調（--radius）。トークンは DESIGN.md（§2/§3/§4）が正典。
  */
@@ -25,7 +25,7 @@
   gap: var(--space-24);
 }
 
-/* 店号: サイト名・見出しの書体（§5）。ドット（"."）のみ朱。 */
+/* 店号: サイト名・見出しの書体（§5）。ドット（"."）だけ --accent。 */
 .logo {
   color: var(--ink);
   text-decoration: none;
@@ -48,7 +48,7 @@
   text-decoration: none;
 }
 
-/* ドット（"."）の朱アクセント。 */
+/* ドット（"."）の色。 */
 .dot {
   color: var(--accent);
 }
@@ -82,7 +82,7 @@
 }
 
 /* ==============================
-   ナビリンク（文字のみ・現在地は朱／§4）
+   ナビリンク（文字のみ）
    ============================== */
 
 .navLink {
@@ -106,7 +106,7 @@
   outline-offset: 2px;
 }
 
-/* 現在地は朱（§4）。usePathname 判定で aria-current="page" が付与される。 */
+/* 現在地。usePathname 判定で aria-current="page" が付与される。 */
 .navLink[aria-current="page"] {
   color: var(--accent);
 }

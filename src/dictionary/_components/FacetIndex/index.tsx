@@ -16,7 +16,7 @@ interface FacetIndexProps {
   items: FacetIndexItem[];
   /** リンク先を作る基底パス（例「/dictionary/kanji/grade」）。 */
   basePath: string;
-  /** 現在地の slug。一致する値は朱で現在地として示す（§4 のれん「現在地は朱」）。 */
+  /** 現在地の slug。一致する値を現在地として示す。 */
   activeSlug?: string;
   /** 「すべて」導線の文言（既定「すべて」）。allHref を与えたときだけ描画。 */
   allLabel?: string;
@@ -31,7 +31,7 @@ interface FacetIndexProps {
  *
  * 旧 CategoryNav（ピル群・§8-5 違反）の店構え版。罫で区切った区画に見出しを冠し、中は
  * ファセット値へのテキストリンクの索引（折り返し）。トップの「罫の索引」と同じ流儀で、
- * リンクは墨・本文の書体、hover で朱＋下線、現在地は朱で示す（§4）。ピル・色地・角丸・影は付けない。
+ * リンクは墨・本文の書体、hover で下線、現在地は aria-current で示す。ピル・色地・角丸・影は付けない。
  * 多数の短い入口（部首 198・画数 24 等）は縦の品書きではなく折り返す索引として並べる。
  */
 export default function FacetIndex({

@@ -24,7 +24,7 @@
 
 /*
  * 行全体をリンク面に（browsing の一覧なので広いタップ面が価値・§10 の 44px を縦 padding で確保）。
- * 静止時は下線を出さず、hover で品名に朱＋下線（下線はリンクの専有・§3。Footer/Shinagaki と同じ流儀）。
+ * 静止時は下線を出さず、hover で下線（下線はリンクの専有・§3。Footer/Shinagaki と同じ流儀）。
  */
 .itemLink {
   display: block;

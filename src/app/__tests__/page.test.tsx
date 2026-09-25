@@ -5,7 +5,7 @@
  * - 名乗り: h1 がページに1つ（サイト名）・site-concept の軸「やってみるサイト」・
  *   AI 運営の明示（constitution rule 3）
  * - 目玉（今日のためしどころ）: 成長エンジンの診断 character-personality を単一区画で立て、
- *   レジストリ由来のタイトルで実在パスへ／「札にして持ち帰れる」の伝達（§7）／朱の入口／
+ *   レジストリ由来のタイトルで実在パスへ／「札にして持ち帰れる」の伝達（§7）／入口ボタン／
  *   値札「24タイプ」。コピーの数値（12問・24タイプ）は診断データの正典値と一致する（ガード）。
  * - 棚（品書き）: 診断・占い・あそびの入口（目玉の character-personality は品書きから外す）と
  *   /play への全リンク導線
@@ -71,7 +71,7 @@ test("目玉は成長エンジンの診断を単一区画で立て、レジス�
   // 目玉の見出しはレジストリ由来のタイトル
   const heading = within(hero).getByRole("heading", { level: 2 });
   expect(heading).toHaveTextContent(content!.title);
-  // 朱の入口「やってみる」は診断の正規パスへ
+  // 入口ボタン「やってみる」は診断の正規パスへ
   const cta = within(hero).getByRole("link", { name: /やってみる/ });
   expect(cta).toHaveAttribute("href", getContentPath(content!));
 });

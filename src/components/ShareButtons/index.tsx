@@ -35,9 +35,8 @@ function openShareUrl(url: string): void {
  *
  * §8 厳守で、以前のブランド色ベタ塗りボタン・ブランドロゴ SVG・絵文字を撤去した。
  * 共有先は「文字＋罫の線画ボタン」で示す——地は紙、`--rule` の一本罫で囲み、文字は墨、
- * hover で朱枠＋朱文字、focus 可視、44px。共有機能（X intent / LINE / クリップボード）は維持。
- * サービスは色やロゴではなく文言（「X でシェア」等）で識別する（§6「ボタンに絵文字を使わない」・
- * §2「アクセントは朱の1色」）。
+ * hover で枠と文字に --accent、focus 可視、44px。共有機能（X intent / LINE / クリップボード）は維持。
+ * サービスは色やロゴではなく文言（「X でシェア」等）で識別する（ボタンに絵文字を使わない）。
  *
  * §7 の含意: 辞典等の実務面では共有は主役でない（静かに置く）。器は静かに保ち、
  * 主役はページの成果物側に譲る。
@@ -156,7 +155,7 @@ export default function ShareButtons({
           ))}
       </div>
       {/* コピー完了フィードバック。aria-live="polite" でスクリーンリーダーに通知。
-          色ベタでなく控えめな朱文字で示す（§2/§6）。 */}
+          色ベタでなく --accent の文字で示す。 */}
       <div className={styles.copiedMessage} role="status" aria-live="polite">
         {copied ? "コピーしました" : ""}
       </div>

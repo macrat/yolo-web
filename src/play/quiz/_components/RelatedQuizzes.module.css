@@ -1,5 +1,5 @@
 /*
- * 関連クイズ・診断の回遊導線。DESIGN.md（紙・墨・朱の店構え）。品書きの語彙に寄せた
+ * 関連クイズ・診断の回遊導線。DESIGN.md。品書きの語彙に寄せた
  * カード型（罫囲み・角丸0基調）。絵文字なし・影なし・全トークン経由。
  *
  * 注: 関連ゲーム側は src/play/_components/RelatedContentCard.module.css を使うが、
@@ -13,7 +13,7 @@
 }
 
 /* 見出し: サイト共通の罫下線で静かに区切る（ResultCard .detailedHeading と同じ様式・
- * DESIGN.md §3/§4。朱の左罫は見出しの装飾に使わない） */
+ * DESIGN.md §3/§4） */
 .heading {
   font-size: 1rem;
   margin: 0 0 0.75rem;

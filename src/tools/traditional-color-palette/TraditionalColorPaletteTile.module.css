@@ -1,7 +1,7 @@
 /* TraditionalColorPaletteTile.module.css
  * cycle-228 T-19: 単一正典タイル化
  * DESIGN.md（店構え）準拠:
- * - 旧 --color-* トークン不使用（紙 --paper/--paper-2・墨 --ink/--ink-2・朱 --accent）
+ * - 旧 --color-* トークン不使用（紙 --paper/--paper-2・墨 --ink/--ink-2・--accent）
  * - --accent を background に直接使わない（スウォッチの動的実色は成果物パレットなので対象外）
  * - 太字（700）不使用
  * - 角丸は var(--radius)、罫線は var(--rule)

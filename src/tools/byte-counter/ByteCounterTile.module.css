@@ -3,7 +3,7 @@
  * cycle-228 T-2: ByteCounterPage.module.css をタイル向けに移植。
  *
  * DESIGN.md「店構え」準拠（紙 --paper/--paper-2・墨 --ink/--ink-2・罫 --rule/--rule-strong・
- * 朱 --accent）: 色は上記トークンのみ・font-weight は 600 まで・--accent の地への直塗り禁止・
+ * --accent）: 色は上記トークンのみ・font-weight は 600 まで・--accent の地への直塗り禁止・
  * 角丸は 0 基調 var(--radius)・影（box-shadow）は使わない（DESIGN.md §4）。
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  */

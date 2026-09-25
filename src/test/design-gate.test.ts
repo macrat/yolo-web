@@ -21,7 +21,7 @@
  *   cycle-282 で新デザイン（店構え）化し共通レンダラの型から accentColor/icon を撤去したのに
  *   合わせ、IGNORE からの除外を解除して §8 機械検査の対象へ戻した（cycle-282・フェーズR移行漏れ
  *   の構造的死角を塞ぐ）——call-site は createOgpImageResponse を呼ぶだけで色リテラルを持たず、
- *   共通レンダラ ogp-image.tsx も色は器 hex 定数（@/lib/utsuwaHex の PAPER/INK/… と朱 ACCENT）を
+ *   共通レンダラ ogp-image.tsx も色は器 hex 定数（@/lib/utsuwaHex の PAPER/INK/ACCENT 等）を
  *   変数参照するため、JSX の style ブロック内に禁止色の literal は現れない（実測: false positive 無し）。
  *
  *   テンプレート文字列に CSS/HTML を埋め込む稼働デザイン面（Edge 実行等でトークンを import
@@ -29,7 +29,7 @@
  *   analyzeEmbeddedDesign で「§8 が名指しで禁じる具体パターン」（旧ブランドの青紫 hex・非許容の
  *   角丸・青紫 hue の色関数・絵文字）だけを生テキストへ的を絞って検査する。対象は
  *   EMBEDDED_DESIGN_FILES（`src/middleware.ts` の 410 ページ・`src/app/global-not-found.js`）。
- *   器の紙/墨/朱 hex は正当なので一般 hex 検査はしない（誤検知回避）。
+ *   器の紙/墨 hex は正当なので一般 hex 検査はしない（誤検知回避）。
  *
  * ── 機械検査する項目（§8 の番号付き）──────────────────────────────────────
  *   §8-1  紫〜青（indigo/violet）のアクセント: 色関数 oklch/lch/hsl/hwb で hue≈250〜320。
@@ -65,11 +65,10 @@
  *
  * ── バイナリ資産（CSS/HTML を持たず機械検査「できない」・視覚レビューで担保）──────────
  *   favicon / apple-touch-icon / OGP 画像の png 等のバイナリ画像は宣言テキストを持たず、この
- *   ゲートでは検査できない。店構え（紙地・墨・朱の印）と揃っているかは take-screenshot 等の
+ *   ゲートでは検査できない。サイトの見た目と揃っているかは take-screenshot 等の
  *   視覚レビューで確認する。
- *   （B-576 済み・cycle-306）`public/favicon.ico`・`public/icon.svg`・`public/apple-touch-icon.png`
- *   はブランド標章 F2「朱の印・白抜き y」（紙地＋朱の角丸印＋白抜き明朝 y）へ刷新。資産は
- *   `scripts/generate-favicons.ts` で SSoT 色（utsuwaHex）から再現生成する。
+ *   `public/favicon.ico`・`public/icon.svg`・`public/apple-touch-icon.png` は、紙地に朱の角丸タイルと
+ *   白抜きの y を置いた標章。資産は `scripts/generate-favicons.ts` で生成する。
  */
 import { describe, test, expect } from "vitest";
 import * as fs from "node:fs";
@@ -429,7 +428,7 @@ const STATE_SELECTOR_RE =
 /**
  * DESIGN.md §2 是正ゲート（cycle-278 C4）: --accent-weak / --wairo-* が background /
  * background-color の値に使われ、かつそのルールのセレクタが STATE_SELECTOR_RE に一致しない
- * 場合を検出する。結果面(quiz)で発生した「朱の気配を区画の地に静的に使う」系統的違反
+ * 場合を検出する。結果面(quiz)で発生した「--accent-weak を区画の地に静的に使う」系統的違反
  * （§2「区画の地には不可」）の再発を機械的に検出するための追加ゲート。
  */
 function analyzeStaticAccentBackground(css: string, file: string): Violation[] {
@@ -674,12 +673,12 @@ function analyzeTsx(content: string, file: string): Violation[] {
 // analyzeCss は「CSS 宣言ブロック `{…}`」を、analyzeTsx は「JSX の style={{…}} オブジェクト」を
 // 前提とするため、テンプレート文字列内に素の CSS/HTML を持つ面には効かない。ここでは §8 が
 // 名指しで禁じる具体パターンだけを生テキストへ正規表現で当てる的を絞った検査を行う。一般の
-// hex 直書き検査（§10）はしない——これらの面は器の紙/墨/朱 hex を正当に直書きするため。
+// hex 直書き検査（§10）はしない——これらの面は器の紙/墨 hex を正当に直書きするため。
 
 /**
  * §8-1「紫〜青（indigo/violet）のアクセントは使わない」で名指しされる、旧ブランドの青紫系 hex。
  * 埋め込み CSS/HTML は import 経由のトークン化ができず hex を直書きするため、この旧ブランド色
- * （旧 OGP/旧 410 ページの青・冷色スレート）の再混入だけを的を絞って弾く。器の紙/墨/罫/朱
+ * （旧 OGP/旧 410 ページの青・冷色スレート）の再混入だけを的を絞って弾く。器の紙/墨/罫
  * （@/lib/utsuwaHex）は正当なので一般 hex 検査はしない（誤検知回避）。
  */
 const BANNED_EMBEDDED_HEX: readonly string[] = [
@@ -716,7 +715,7 @@ function disallowedRadiusAtoms(value: string): string[] {
  *   §8-1  旧ブランドの青紫 hex（BANNED_EMBEDDED_HEX）／青紫 hue の色関数（oklch/hsl/hwb・250〜320）
  *   §8-5  非許容の border-radius（0 / var(--radius) / var(--radius-sm) / 2px 以外）
  *   §8-6  絵文字
- * 器の紙/墨/朱 hex は正当なので一般 hex 検査（§10）はしない。/* *​/ コメント内は検査しない。
+ * 器の紙/墨 hex は正当なので一般 hex 検査（§10）はしない。/* *​/ コメント内は検査しない。
  */
 function analyzeEmbeddedDesign(content: string, file: string): Violation[] {
   const v: Violation[] = [];
@@ -1002,7 +1001,7 @@ describe("§8 機械ゲートの検出力（合成入力）", () => {
     const vs = analyzeEmbeddedDesign(`<a>トップへ ✨</a>`, "synthetic.ts");
     expect(vs.some((x) => x.code === "§8-6")).toBe(true);
   });
-  test("埋め込み面: 器 hex（紙/墨/罫/朱）と角丸0は誤検知しない", () => {
+  test("埋め込み面: 旧ブランドの青紫でない hex と角丸0は誤検知しない", () => {
     const vs = analyzeEmbeddedDesign(
       `body{background:#f8f7f2;color:#201e1a;border-top:1px solid #cdcac5}
        a.home{color:#af3622;border-radius:0}`,

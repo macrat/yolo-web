@@ -13,7 +13,7 @@
   margin-bottom: 0.5rem;
 }
 
-/* 注記 — 静的な区画なので朱の気配（--accent-weak）は使わない（§2: hover/selected 専用）。
+/* 注記 — 静的な区画なので --accent-weak は使わない（§2: hover/selected 専用）。
  * 地は --paper-2・枠は --rule の中立な注記ボックス。 */
 .notice {
   background: var(--paper-2);

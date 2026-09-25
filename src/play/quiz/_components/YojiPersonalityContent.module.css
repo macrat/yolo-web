@@ -88,7 +88,7 @@
   gap: 0.625rem;
 }
 
-/* 絵文字を使わない静かなマーカー。朱の縦バーは§8-3（罫箱＋色付き左罫）に抵触するため中黒（墨）に置換。 */
+/* 絵文字を使わない静かなマーカー（墨の中黒）。 */
 .behaviorsItem::before {
   content: "・";
   flex-shrink: 0;
@@ -121,7 +121,7 @@
 }
 
 /* 全タイプ見出し: ResultCard detailedHeading 言語に合わせ、左寄せ・罫下線で区切る
- * （サイト共通の見出し様式・DESIGN.md §3/§4。朱の左罫は見出しの装飾に使わない） */
+ * （サイト共通の見出し様式・DESIGN.md §3/§4） */
 .allTypesCta {
   font-size: 1.05rem;
   color: var(--ink);
@@ -134,7 +134,7 @@
    「同型アイコンカードの3枚組」等のカードグリッドは §4 の禁止対象であり、一覧の既定は
    罫区切りであるべきなので、辞典の部首索引の流儀（罫で仕切った升目に複数列で流す）に組む。
    セル個々はカード化しない（背景・全周枠を持たない）——列内の行は border-bottom の罫だけで
-   区切る。現在地は面を朱で塗らず、文字色+下罫の朱だけで静かに示す（--accent-weak 不使用）。 */
+   区切る。現在地は面を塗らず、文字色と下罫（--accent）で示す。 */
 .allTypesGrid {
   list-style: none;
   padding: 0;
@@ -176,7 +176,7 @@
   background-color: var(--paper-2);
 }
 
-/* 現在のタイプ: 面を朱で塗らず、文字色+下罫の朱だけで「今ここ」を静かに示す */
+/* 現在のタイプ: 面を塗らず、文字色と下罫（--accent）で「今ここ」を示す */
 .allTypesGrid .allTypesItemCurrent a {
   color: var(--accent);
   font-weight: 600;

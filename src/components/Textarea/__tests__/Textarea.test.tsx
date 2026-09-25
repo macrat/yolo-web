@@ -118,7 +118,7 @@ describe("Textarea", () => {
   });
 
   // --- CSS 規約検証（readFileSync パターン） ---
-  it(".textarea has border-radius: var(--radius-sm) (DESIGN.md §4: 入力欄の 2px 例外)", () => {
+  it(".textarea has border-radius: var(--radius-sm)", () => {
     const cssPath = resolve(__dirname, "../Textarea.module.css");
     const css = readFileSync(cssPath, "utf-8");
     const textareaBlock = css.match(/\.textarea\s*\{[^}]+\}/)?.[0] ?? "";

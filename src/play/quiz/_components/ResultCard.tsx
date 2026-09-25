@@ -123,7 +123,7 @@ type ResultCardProps = {
  * リンクを添える。
  *
  * DESIGN.md 準拠: 一段沈む面（--paper-2）＋罫（--rule）の静かな区画。装飾線・絵文字・
- * 禁止色は使わない。型名の強調は 墨（--ink）と【】括弧の組版のみ（朱はリンクに限る）。
+ * 禁止色は使わない。型名の強調は 墨（--ink）と【】括弧の組版のみ。
  */
 function renderTiedTypesDisclosure(
   mainResult: QuizResult,

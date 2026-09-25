@@ -84,7 +84,7 @@ export default function YojiDetail({ yoji }: YojiDetailProps) {
         </h1>
         <p className={styles.reading}>{yoji.reading}</p>
         <p className={styles.meaning}>{yoji.meaning}</p>
-        {/* 分類（値札・§4）: カテゴリは索引への導線、難易度は情報の値札。ピルにしない。 */}
+        {/* 分類: カテゴリは索引への導線、難易度は情報の値札。ピルにしない。 */}
         <div className={styles.tags}>
           <Link
             href={`/dictionary/yoji/category/${yoji.category}`}
@@ -99,7 +99,7 @@ export default function YojiDetail({ yoji }: YojiDetailProps) {
       {yojiChars.length > 0 && (
         <section className={styles.section}>
           <h2>構成漢字</h2>
-          <div className={styles.kanjiLinks}>
+          <div className={styles.kanjiLinks} {...headingFontAttr(yoji.yoji)}>
             {yojiChars.map((ch, i) =>
               uniqueLinkedKanji.includes(ch) ? (
                 <Link

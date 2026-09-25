@@ -1,6 +1,6 @@
 /* ImageResizerTile — 単一正典タイルのスタイル
  * cycle-228 T-27: ImageResizerPage.module.css をタイル向けに移植。
- * DESIGN.md 準拠（紙・墨・朱の新トークン）:
+ * DESIGN.md 準拠（紙・墨の新トークン）:
  * - --ink / --ink-2 / --paper-2 / --rule / --rule-strong / --accent / --accent-weak 使用
  * - --accent は直塗り禁止（静的な地に使わない）。選択/固定中の状態セレクタ内でのみ
  *   --accent-weak 座布団 + --accent 文字を使う
@@ -56,7 +56,7 @@
 }
 
 /* ===== GIF 警告ボックス =====
- * §2: 色ベタの警告地にしない。地は中立の沈み（--paper-2）、意味は朱の罫と文字で伝える。 */
+ * §2: 色ベタの警告地にしない。地は中立の沈み（--paper-2）、意味は --accent の罫と文字で伝える。 */
 .gifWarningBox {
   padding: 0.75rem;
   border: 1px solid var(--accent);

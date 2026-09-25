@@ -42,7 +42,7 @@
   text-underline-offset: 0.15em;
 }
 
-/* 現在地は朱（塗りにしない・§2）。 */
+/* 現在地は --accent の文字色（塗りにしない）。 */
 .filterButton[data-active="true"] {
   color: var(--accent);
   font-weight: 600;

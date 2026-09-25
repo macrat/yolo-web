@@ -1,5 +1,5 @@
 /* WordGrid（なかまわけ）— 単語盤面（DESIGN.md フェーズ R・店構えへ変換）。
- * 選択状態は朱の気配（--accent-weak）を使ってよい（DESIGN.md §2「操作・選択状態の
+ * 選択状態は --accent-weak を使ってよい（DESIGN.md §2「操作・選択状態の
  * ハイライトにのみ可」・.selected は状態セレクタ）。色だけでなく罫色も変えて示す。 */
 
 .grid {

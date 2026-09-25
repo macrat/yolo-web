@@ -17,8 +17,7 @@
   background: var(--paper-2);
 }
 
-/* 残りミス1回の警告状態。色（--danger 等）ではなく朱+文字で示す
- * （DESIGN.md: ステータス色は緑/赤ベタでなく墨/朱＋文字＋罫）。
+/* 残りミス1回の警告状態。色（--danger 等）ではなく --accent と文字で示す。
  * 点滅は状態変化の強調のみに使い、prefers-reduced-motion では静止表示にする（§5）。 */
 .mistakeDanger {
   color: var(--accent);

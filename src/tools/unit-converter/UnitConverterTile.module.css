@@ -6,7 +6,7 @@
  * - font-weight: 700 禁止 → 使用しない
  * - box-shadow は使わない（罫と地の対比で表現）
  * - 罫線は var(--rule)（強い輪郭は var(--rule-strong)）
- * - 旧トークン不使用。地=紙 --paper/--paper-2、文字=墨 --ink/--ink-2、朱 --accent
+ * - 旧トークン不使用。地=紙 --paper/--paper-2、文字=墨 --ink/--ink-2、--accent
  *
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  */

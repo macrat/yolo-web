@@ -1,12 +1,12 @@
 /* CsvConverterTile.module.css
  * cycle-228 T-16: CsvConverterPage.module.css をタイル向けに移植。
  *
- * フェーズR: 店構え（紙・墨・朱）トークンへ移行。
+ * フェーズR: 店構え（紙・墨）トークンへ移行。
  *
  * DESIGN.md 準拠:
  * - §2: --accent 直塗り禁止（フォーカス outline のみ許可）
  * - §3: font-weight: 700 禁止
- * - §4: 影は使わない・角丸は 0（--radius）基調、入力欄のみ --radius-sm (2px)
+ * - §4: 影は使わない・角丸は 0（--radius）基調、入力欄のみ --radius-sm
  * - 罫線は --rule、フォーム要素の輪郭は --rule-strong、補足文字は --ink-2
  *
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。

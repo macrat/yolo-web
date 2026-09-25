@@ -1,7 +1,7 @@
 /* GameLayout — ゲームページ共通の器（DESIGN.md フェーズ R・店構えへ変換）。
  * パンくず・のれん下の紹介文・遊び方の説明・ゲーム本体・シェア・関連導線を
- * 紙墨朱の器へ統一する。読みカラム設計の max-width:600px は GameLayout 設計として
- * 維持する（ToolPageLayout の --max-width 960px を機械転用しない・盤面は狭い方が遊びやすい）。
+ * 紙・墨の器へ統一する。読みカラム設計の max-width:600px は GameLayout 設計として
+ * 維持する（ToolPageLayout の --max-width を機械転用しない・盤面は狭い方が遊びやすい）。
  * 影・一律角丸なし。角丸は --radius（0px 基調）のみ使用。 */
 
 .layout {

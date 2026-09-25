@@ -1,16 +1,16 @@
 /* EmailValidatorTile.module.css
  * cycle-228 T-10: EmailValidatorPage.module.css をタイル向けに移植。
- * フェーズR: 店構え（紙・墨・朱）トークンへ移行。
+ * フェーズR: 店構え（紙・墨）トークンへ移行。
  *
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  *
  * DESIGN.md 準拠:
  * - §2 フォーカスはアクセントカラーの outline を使用（Input コンポーネント内蔵）
- * - §4 影は使わない・角丸は 0（--radius）基調、値札（バッジ）のみ --radius-sm (2px)
+ * - §4 影は使わない・角丸は 0（--radius）基調、値札（バッジ）のみ --radius-sm
  * - 罫線 --rule / フォーム輪郭 --rule-strong / 沈む面 --paper-2
  * - font-weight は 600 以下を使用（700 禁止）
  * - §2 判定は色分け（緑/赤のベタ）で伝えず、文言で伝える。
- *   有効 = 墨（--ink）で静かに、無効・要確認・エラー・警告 = 朱（--accent）の
+ *   有効 = 墨（--ink）で静かに、無効・要確認・エラー・警告 = --accentの
  *   文字＋罫で注意を促す。色のついた地は作らず、沈む面（--paper-2）だけを使う。
  */
 
@@ -58,7 +58,7 @@
   color: var(--ink);
 }
 
-/* 有効だがタイポの可能性: 朱の文字＋罫で「確認して」と目を引く（①-4 矛盾シグナル解消） */
+/* 有効だがタイポの可能性: --accent の文字と罫で「確認して」と目を引く（①-4 矛盾シグナル解消） */
 .badgeValidWithSuggestion {
   composes: badge;
   background-color: var(--paper-2);
@@ -66,7 +66,7 @@
   color: var(--accent);
 }
 
-/* 無効: 朱の文字＋罫で問題を指し示す。 */
+/* 無効: --accent の文字と罫で問題を指し示す。 */
 .badgeInvalid {
   composes: badge;
   background-color: var(--paper-2);
@@ -105,7 +105,7 @@
   word-break: break-all;
 }
 
-/* タイポ提案セクション（①-4 矛盾シグナル解消: 提案を朱の文字＋罫で強調） */
+/* タイポ提案セクション（①-4 矛盾シグナル解消: 提案を --accent の文字と罫で強調） */
 .suggestionPanel {
   display: flex;
   flex-direction: column;

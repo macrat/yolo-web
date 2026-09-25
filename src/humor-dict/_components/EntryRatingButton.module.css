@@ -36,7 +36,7 @@
   color: var(--accent);
 }
 
-/* Rated state: 朱の気配（--accent-weak）で選択状態を示す（§2: 操作・選択状態のみ可）。
+/* Rated state: --accent-weak で選択状態を示す（§2: 操作・選択状態のみ可）。
  * ボタン自身が持つ aria-pressed 属性をセレクタに使う（design-gate の STATE_SELECTOR_RE
  * が [aria-pressed] を状態セレクタとして認識するため、専用クラスを持たずに済む）。 */
 .button[aria-pressed="true"] {

@@ -75,7 +75,7 @@
   outline-offset: 2px;
 }
 
-/* 次の問題へボタンも操作系の器なので submitButton と同じ朱（--accent）を使う
+/* 次の問題へボタンも操作系の器なので submitButton と同じ --accent を使う
  * （和色は成果物中身に限る・器には漏らさない・DESIGN.md §2）。 */
 .nextButton {
   composes: submitButton;

@@ -42,8 +42,7 @@ function buildPageUrl(basePath: string, page: number): string {
  * link モード（デフォルト）と button モードをサポート。
  * totalPages が 1 以下のときは null を返す（不要なため）。
  *
- * DESIGN.md フェーズ R「店構え」へ変換済み（§4 ページネーション/§2 現在地は朱）。
- * 罫（--rule）で囲んだ文字ベースの表現。現在地は塗りではなく朱の文字色のみ。
+ * 罫（--rule）で囲んだ文字ベースの表現。現在地は塗りではなく --accent の文字色のみ。
  */
 export default function Pagination(props: PaginationProps) {
   const { currentPage, totalPages } = props;

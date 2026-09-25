@@ -450,7 +450,7 @@ describe("E-12: CSSトークン検証", () => {
 
   it("--accent を地（background）へ直塗りしていない（文字・罫での使用は新デザインで許可）", () => {
     const css = readFileSync(cssPath, "utf-8");
-    // フェーズR（店構えデザイン）では、エラー・警告・要確認は朱（--accent）の
+    // フェーズR（店構えデザイン）では、エラー・警告・要確認は --accent の
     // 文字と罫（border）で示す方針に変わった。禁止されるのは色のついた地＝
     // --accent を background に直塗りすることのみ（沈む面は --paper-2 を使う）。
     const accentBackgroundFill = css.match(

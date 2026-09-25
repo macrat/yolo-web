@@ -14,9 +14,9 @@ cycle-315 で `docs/site-concept.md` と `DESIGN.md` を作り直した。**来�
 - [x] T0 開始時の実測と外部仕様の確認（[facts-design-gap.md](./facts-design-gap.md)・[facts-external-specs.md](./facts-external-specs.md)）と、進め方の案の比較（[options.md](./options.md)）。**作業に入る前に、下の「表示の速さ」の5ページを、変更前のビルドで測って facts に記録する**
 - [x] T1a **Web フォントの判断**（土台を作る前に行い、単独でレビューを受ける）: [fonts-decision.md](./fonts-decision.md)
 - [ ] T1 **土台**: トークン（§2）・書体（§3）・組版（§4。B-632）・線とコンテナと全幅の罫線（§5）・上端と下端（§5 レイアウト・§9 告知）・theme-color と既定テーマ（§10。B-577）・テーマ切替を置くかどうかの判断（B-597）。書体の配り方と §3・§4 の書き換えは [fonts-decision.md](./fonts-decision.md) に従う
-- [ ] T2 **コントロール**（§6）と**入力**（§8。B-663）: リンク・プライマリボタン・現在地・無効・ラジオボタン・チェックボックス・アコーディオン・hover・フォーカスの二重リング・入力欄とラベルとエラー・ページ送り。`DESIGN.md` に相当の無い部品（セグメント切替・トグルスイッチ・値札・印など）の置き換え
+- [ ] T2 **コントロール**（§6）と**入力**（§8。B-663）: リンク・プライマリボタン・現在地・無効・ラジオボタン・チェックボックス・アコーディオン・hover・フォーカスの二重リング・入力欄とラベルとエラー・ページ送り。`DESIGN.md` に相当の無い部品（セグメント切替・トグルスイッチ・値札・印など）の置き換え。着手の前に、変更前のコード（コミット 885c924 の親）で、朱の色だけでリンクや操作を示していた箇所（パンくず・診断へ誘うリンク・関連ツールの行・分類のリンクなど）を洗い出し、そのすべてが §6 のとおり色に依らずに見分けられることを完了の条件にする
 - [ ] T3 **一覧**（§7。B-574・B-599 の一覧の構造）: 1行1項目の一覧と、名前・種別での絞り込み・並び順・件数・ページ送り・一覧へ戻る道
-- [ ] T4 **結果**（§8）と**中身の扱い**（§2・§3）: 字形が主題の要素（漢字・四字熟語の詳細の大字、漢字カナール・四字熟語きめるの正解、包みの品名・印の字）を見出しの書体で組むかを判定する。漢字カナールの正解はクライアントで決まり、Zen Antique に無い字（𠮟・剝・塡・頰）を含みうるので、§3 と食い違わない組み方にする。結果のボックスとコンテンツの形ごとの組み方。包み（Tsutsumi）の置き換え。次の面ごとに「中身か装飾か」を判定して組み直す——色が主題の面・色で状態を示している面・字形が主題の面・ブログ本文の中身（コードの色分け・mermaid・絵文字・表。B-641）
+- [ ] T4 **結果**（§8）と**中身の扱い**（§2・§3）: ブログ本文の GFM Alert（42記事）と `hr` の見た目を `DESIGN.md` に合わせる（いまは `--paper-2` の地と細い線の囲み・左だけの太い線で、§6 の hover と読み違えうる）。字形が主題の要素（漢字・四字熟語の詳細の大字、漢字カナール・四字熟語きめるの正解、包みの品名・印の字）を見出しの書体で組むかを判定する。漢字カナールの正解はクライアントで決まり、Zen Antique に無い字（𠮟・剝・塡・頰）を含みうるので、§3 と食い違わない組み方にする。結果のボックスとコンテンツの形ごとの組み方。包み（Tsutsumi）の置き換え。次の面ごとに「中身か装飾か」を判定して組み直す——色が主題の面・色で状態を示している面・字形が主題の面・ブログ本文の中身（コードの色分け・mermaid・絵文字・表。B-641）
 - [ ] T5 **面ごとの適用**: トップ（文言は T7、OGP の副題 B-650 は T6）・一覧・ツール（B-755・B-567）・診断（B-594）・ゲーム・辞典（B-599）・ブログ・その他（about・privacy・storybook・404・410。about の文章の中身は B-746 に残す）。どの面でも、主操作がモバイルのファーストビューに入るようにする（B-621）
 - [ ] T5a **診断の回答**（B-614・B-624）: 回答中に選択肢がすべて画面に入るように組み、知識クイズでは回答後の正誤・解説・「次へ」全体が同時に画面に入るようにする（B-614 の本体）。押した選択肢を §11 の操作フィードバックの長さで選択済みとして見せる（B-614 の付帯）。回答したあともフォーカスが見える場所に残す（B-624）。「もう一度挑戦する」のあと、開始の画面（「はじめる」）が画面の中に見えるようにする。**満たすべき制約**: 時間の窓で回答を黙って捨てない（B-620 を含めない理由は [options.md](./options.md)）。選択を見せているあいだの同じ設問への再入力は、受け付けないなら受け付けないことが見える状態で扱う。選択肢を §6 のどの種類（押すと進む「実行するもの」か、ラジオボタンか）として組むかを先に決め、`DESIGN.md` に無ければ先に書く。材料は cycle-301 の design.md・review-log.md の実測と決定で、そこに書かれたコードの記述は刷新後の実コードに突き合わせ直す。**この設計は3案以上を比べ、単独でレビューを受けてから実装する**
 - [ ] T6 **サイトの外に出る画像**（§10）: favicon・apple-touch-icon・OGP 画像の生成器2つ・ルートの OGP の副題（B-650）・OGP 画像を持たないページ（B-644）・札画像・irodori のシェア画像。札（cycle-280 が「診断結果を持ち帰れる形」として作った）の保存を残すか、残すならどう描くかの判断を含む。判断には、シェアが少ない事実（B-575）も材料にする
@@ -73,7 +73,7 @@ cycle-315 で `docs/site-concept.md` と `DESIGN.md` を作り直した。**来�
 
 **機械で確かめる**
 
-- `src/` で **UI のトークンとして定義する** CSS 変数は、`DESIGN.md` に名のあるもの（§2 の6色・§5 の `--rule-w`・`--rule-w-hair`・`--max-width`・`--measure`）と、§3 の4書体の役割を表す書体の変数だけ。中身の色を渡すための変数（ビルド時にコードの色分けが生成するものや、中身の色をインラインで渡すもの）はトークンではないので、この条件の範囲の外にある（§12「コンテンツの色はトークンを持たない」）
+- `src/` で **UI のトークンとして定義する** CSS 変数は、`DESIGN.md` に名のあるもの（§2 の6色・§5 の `--rule-w`・`--rule-w-hair`・`--max-width`・`--measure`）、`DESIGN.md` が値を定めるもの（§4 の文字の大きさと行間、§5 の間隔とボックスの内側の余白）、§3 の4書体の役割を表す書体の変数だけ。中身の色を渡すための変数（ビルド時にコードの色分けが生成するものや、中身の色をインラインで渡すもの）はトークンではないので、この条件の範囲の外にある（§12「コンテンツの色はトークンを持たない」）
 - `border-radius` の宣言はラジオボタンの円だけ。影・グラデーション・半透明ぼかしは、中身の色（§2）を除いて0件
 - `frontend-design` スキルの「機械で確かめる」6項目（コントラスト・320px 幅・文字サイズ 200%・色の直書き・タップターゲット・Web フォントでのずれ）を満たす
 - 行間・字間の上書き（§12・WCAG 1.4.12 の値）で内容が欠けない
@@ -151,31 +151,34 @@ cycle-315 で `docs/site-concept.md` と `DESIGN.md` を作り直した。**来�
 
 ## レビュー結果
 
-| 対象                           | 指摘                                                                           | 対応                                                                            | 判定       |
-| ------------------------------ | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------- | ---------- |
-| 計画 1巡目                     | major 9・minor 8（[review-plan.md](./review-plan.md)）                         | 指摘ごとの対応は [review-response.md](./review-response.md)                     | 改善指示   |
-| 計画 2巡目                     | major 2・minor 14（[review-plan-2.md](./review-plan-2.md)）                    | 同上                                                                            | 改善指示   |
-| 計画 3巡目                     | major 2・minor 10（[review-plan-3.md](./review-plan-3.md)）                    | 同上                                                                            | 改善指示   |
-| 計画 4巡目                     | major 2・minor 7（[review-plan-4.md](./review-plan-4.md)）                     | 同上                                                                            | 改善指示   |
-| 計画 5巡目                     | major 2・minor 6（[review-plan-5.md](./review-plan-5.md)）                     | 同上                                                                            | 改善指示   |
-| 計画 6巡目                     | major 2・minor 4（[review-plan-6.md](./review-plan-6.md)）                     | 同上                                                                            | 改善指示   |
-| 計画 7巡目                     | major 1・minor 4（[review-plan-7.md](./review-plan-7.md)）                     | 同上                                                                            | 改善指示   |
-| 計画 8巡目                     | major 2・minor 5（[review-plan-8.md](./review-plan-8.md)）                     | 同上                                                                            | 改善指示   |
-| 計画 9巡目                     | major 1・minor 5（[review-plan-9.md](./review-plan-9.md)）                     | 同上                                                                            | 改善指示   |
-| 計画 10巡目                    | major 1・minor 3（[review-plan-10.md](./review-plan-10.md)）                   | 同上                                                                            | 改善指示   |
-| 計画 11巡目                    | major 1・minor 2（[review-plan-11.md](./review-plan-11.md)）                   | 同上                                                                            | 改善指示   |
-| 計画 12巡目                    | major 1・minor 4（[review-plan-12.md](./review-plan-12.md)）                   | 同上                                                                            | 改善指示   |
-| 計画 13巡目                    | major 0・minor 2（[review-plan-13.md](./review-plan-13.md)）                   | 同上                                                                            | 改善指示   |
-| 計画 14巡目                    | major 0・minor 2（[review-plan-14.md](./review-plan-14.md)）                   | 同上                                                                            | 改善指示   |
-| 計画 15巡目                    | major 0・minor 2（[review-plan-15.md](./review-plan-15.md)）                   | 同上                                                                            | 改善指示   |
-| 計画 16巡目                    | major 0・minor 4（[review-plan-16.md](./review-plan-16.md)）                   | 同上                                                                            | 改善指示   |
-| 計画 17巡目                    | 指摘なし（[review-plan-17.md](./review-plan-17.md)）                           | —                                                                               | **承認**   |
-| T1a 1〜6巡目（取り下げた判断） | [review-t1a.md](./review-t1a.md)〜[review-t1a-6.md](./review-t1a-6.md)         | 判断を取り下げ、[fonts-decision.md](./fonts-decision.md) で決め直した           | 取り下げ   |
-| Web フォントの決め直し 1巡目   | major 4・minor 8（[review-fonts-decision.md](./review-fonts-decision.md)）     | fonts-decision.md に反映                                                        | 改善指示   |
-| Web フォントの決め直し 2巡目   | major 2・minor 5（[review-fonts-decision-2.md](./review-fonts-decision-2.md)） | 同上                                                                            | 改善指示   |
-| Web フォントの決め直し 3巡目   | major 2・minor 6（[review-fonts-decision-3.md](./review-fonts-decision-3.md)） | 同上                                                                            | 改善指示   |
-| Web フォントの決め直し 4巡目   | major 2・minor 5（[review-fonts-decision-4.md](./review-fonts-decision-4.md)） | 同上                                                                            | 改善指示   |
-| Web フォントの決め直し 5巡目   | major 0・minor 5（[review-fonts-decision-5.md](./review-fonts-decision-5.md)） | minor を反映し、実装の細部は fonts-decision.md「T1 で確かめること」に申し送った | 判断を確定 |
+| 対象                                             | 指摘                                                                           | 対応                                                                            | 判定       |
+| ------------------------------------------------ | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------- | ---------- |
+| 計画 1巡目                                       | major 9・minor 8（[review-plan.md](./review-plan.md)）                         | 指摘ごとの対応は [review-response.md](./review-response.md)                     | 改善指示   |
+| 計画 2巡目                                       | major 2・minor 14（[review-plan-2.md](./review-plan-2.md)）                    | 同上                                                                            | 改善指示   |
+| 計画 3巡目                                       | major 2・minor 10（[review-plan-3.md](./review-plan-3.md)）                    | 同上                                                                            | 改善指示   |
+| 計画 4巡目                                       | major 2・minor 7（[review-plan-4.md](./review-plan-4.md)）                     | 同上                                                                            | 改善指示   |
+| 計画 5巡目                                       | major 2・minor 6（[review-plan-5.md](./review-plan-5.md)）                     | 同上                                                                            | 改善指示   |
+| 計画 6巡目                                       | major 2・minor 4（[review-plan-6.md](./review-plan-6.md)）                     | 同上                                                                            | 改善指示   |
+| 計画 7巡目                                       | major 1・minor 4（[review-plan-7.md](./review-plan-7.md)）                     | 同上                                                                            | 改善指示   |
+| 計画 8巡目                                       | major 2・minor 5（[review-plan-8.md](./review-plan-8.md)）                     | 同上                                                                            | 改善指示   |
+| 計画 9巡目                                       | major 1・minor 5（[review-plan-9.md](./review-plan-9.md)）                     | 同上                                                                            | 改善指示   |
+| 計画 10巡目                                      | major 1・minor 3（[review-plan-10.md](./review-plan-10.md)）                   | 同上                                                                            | 改善指示   |
+| 計画 11巡目                                      | major 1・minor 2（[review-plan-11.md](./review-plan-11.md)）                   | 同上                                                                            | 改善指示   |
+| 計画 12巡目                                      | major 1・minor 4（[review-plan-12.md](./review-plan-12.md)）                   | 同上                                                                            | 改善指示   |
+| 計画 13巡目                                      | major 0・minor 2（[review-plan-13.md](./review-plan-13.md)）                   | 同上                                                                            | 改善指示   |
+| 計画 14巡目                                      | major 0・minor 2（[review-plan-14.md](./review-plan-14.md)）                   | 同上                                                                            | 改善指示   |
+| 計画 15巡目                                      | major 0・minor 2（[review-plan-15.md](./review-plan-15.md)）                   | 同上                                                                            | 改善指示   |
+| 計画 16巡目                                      | major 0・minor 4（[review-plan-16.md](./review-plan-16.md)）                   | 同上                                                                            | 改善指示   |
+| 計画 17巡目                                      | 指摘なし（[review-plan-17.md](./review-plan-17.md)）                           | —                                                                               | **承認**   |
+| T1a 1〜6巡目（取り下げた判断）                   | [review-t1a.md](./review-t1a.md)〜[review-t1a-6.md](./review-t1a-6.md)         | 判断を取り下げ、[fonts-decision.md](./fonts-decision.md) で決め直した           | 取り下げ   |
+| Web フォントの決め直し 1巡目                     | major 4・minor 8（[review-fonts-decision.md](./review-fonts-decision.md)）     | fonts-decision.md に反映                                                        | 改善指示   |
+| Web フォントの決め直し 2巡目                     | major 2・minor 5（[review-fonts-decision-2.md](./review-fonts-decision-2.md)） | 同上                                                                            | 改善指示   |
+| Web フォントの決め直し 3巡目                     | major 2・minor 6（[review-fonts-decision-3.md](./review-fonts-decision-3.md)） | 同上                                                                            | 改善指示   |
+| Web フォントの決め直し 4巡目                     | major 2・minor 5（[review-fonts-decision-4.md](./review-fonts-decision-4.md)） | 同上                                                                            | 改善指示   |
+| Web フォントの決め直し 5巡目                     | major 0・minor 5（[review-fonts-decision-5.md](./review-fonts-decision-5.md)） | minor を反映し、実装の細部は fonts-decision.md「T1 で確かめること」に申し送った | 判断を確定 |
+| T1 Web フォントの配り方（885c924）               | major 4・minor 4（[review-t1-fonts.md](./review-t1-fonts.md)）                 | 952b709 で反映                                                                  | 改善指示   |
+| T1 `DESIGN.md` §3・§4 の書き換え                 | major 0・minor 4（[review-t1-design.md](./review-t1-design.md)）               | df4bf9a で反映                                                                  | 改善指示   |
+| T1 基礎の CSS と見出しの書体（9fca564・952b709） | major 5・minor 7（[review-t1-base.md](./review-t1-base.md)）                   | 反映した                                                                        | 改善指示   |
 
 ## キャリーオーバー
 

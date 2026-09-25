@@ -107,7 +107,7 @@
   outline-offset: 2px;
 }
 
-/* 現在選択中の難易度: 朱の気配（--accent-weak）で選択状態を示す
+/* 現在選択中の難易度: --accent-weak で選択状態を示す
  * （DESIGN.md §2「操作・選択状態のハイライトにのみ可」・セレクタ名 Active が状態を表す）。 */
 .difficultyButtonActive {
   composes: difficultyButton;
@@ -315,7 +315,7 @@
   cursor: not-allowed;
 }
 
-/* エラーは色に頼らず朱+文字で示す */
+/* エラーは --accent と文字で示す */
 .errorMessage {
   font-size: 0.875rem;
   color: var(--accent);

@@ -75,7 +75,7 @@ describe("ErrorMessage", () => {
 
   // --- CSS 規約検証 (readFileSync パターン) ---
 
-  it("CSS が --paper-2 を背景色として使用している（DESIGN.md §2: エラーは色ベタでなく墨/朱+文字で示す）", () => {
+  it("CSS が --paper-2 を背景色として使用している（エラーは色ベタでなく文字で示す）", () => {
     const cssPath = resolve(__dirname, "../ErrorMessage.module.css");
     const css = readFileSync(cssPath, "utf-8");
     expect(css).toContain("--paper-2");
@@ -87,7 +87,7 @@ describe("ErrorMessage", () => {
     expect(css).toContain("--rule");
   });
 
-  it("CSS が --accent を文字色として使用している（DESIGN.md §2: 朱+文字でエラーを示す）", () => {
+  it("CSS が --accent を文字色として使用している（--accent と文字でエラーを示す）", () => {
     const cssPath = resolve(__dirname, "../ErrorMessage.module.css");
     const css = readFileSync(cssPath, "utf-8");
     expect(css).toContain("color: var(--accent)");

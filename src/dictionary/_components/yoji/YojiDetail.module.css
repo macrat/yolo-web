@@ -1,7 +1,7 @@
 /*
  * 四字熟語詳細 — DESIGN.md フェーズ R・店構え（実務／参照・§7 実務側）。
  * 見出しは熟語を見出しの書体で大字。読み・意味・成り立ち・例文を罫と組版で組む。
- * 器は静か（紙墨朱・罫のみ）。ピル・色付きカード・影・角丸装飾なし・全トークン経由（§10）。
+ * 器は静か（紙・墨・罫のみ）。ピル・色付きカード・影・角丸装飾なし・全トークン経由（§10）。
  * 左揃え基調（中央寄せの多用をしない・§4）。
  */
 
@@ -59,8 +59,8 @@
 }
 
 /*
- * カテゴリ導線: 値札（Nefuda）と同じ静かな器（罫囲み・2px 角丸・墨の補）だが、索引への
- * リンクなので hover で朱に灯す。ピル（999px）にはしない。
+ * カテゴリ導線: 値札（Nefuda）と同じ静かな器（罫囲み・--radius-sm・--ink-2）だが、索引への
+ * リンクなので hover で --accent に変える。ピル（999px）にはしない。
  */
 .categoryTag {
   display: inline-flex;
@@ -93,7 +93,8 @@
   color: var(--ink);
 }
 
-/* 構成漢字: 単字の升目（帳面の直角・§4）。存在する字はリンク、無い字は墨の補で。 */
+/* 構成漢字: 字形を見せる並びなので、辞典にある字のリンクも無い字も見出しの書体でそろえる。
+ * Zen Antique に無い字を含む熟語は、並び全体が本文の書体に切り替わる（data-heading-font）。 */
 .kanjiLinks {
   display: flex;
   flex-wrap: wrap;
@@ -107,7 +108,7 @@
   min-width: 44px;
   min-height: 44px;
   padding: 0 var(--space-8);
-  font-family: var(--font-body);
+  font-family: var(--font-heading);
   font-size: 2rem;
   line-height: 1;
   color: var(--ink);
@@ -134,7 +135,7 @@
   color: var(--ink-2);
 }
 
-/* 同カテゴリの熟語: 語リンクの索引（本文の書体・hover 朱下線）。ピルにしない。 */
+/* 同カテゴリの熟語: 語リンクの索引（本文の書体・hover で下線）。ピルにしない。 */
 .relatedList {
   display: flex;
   flex-wrap: wrap;
@@ -158,7 +159,7 @@
   text-underline-offset: 0.15em;
 }
 
-/* 関連ゲームへの導線: 朱のリンク（§3）。 */
+/* 関連ゲームへの導線のリンク。 */
 .crossLink {
   display: inline-block;
   margin-top: var(--space-8);
@@ -201,7 +202,7 @@
   color: var(--ink);
 }
 
-/* 出典の外部リンク: 朱・Footer の外部リンク記号パターンに準拠。 */
+/* 出典の外部リンク: Footer の外部リンク記号パターンに準拠。 */
 .externalLink {
   color: var(--accent);
   text-decoration: none;

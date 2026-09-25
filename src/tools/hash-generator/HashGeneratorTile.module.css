@@ -1,6 +1,6 @@
 /* HashGeneratorTile スタイル
  * cycle-228 T-17: HashGeneratorPage.module.css をタイル向けに統合・移植。
- * DESIGN トークン準拠（紙・墨・朱の新トークン）:
+ * DESIGN トークン準拠（紙・墨の新トークン）:
  *   - --ink / --ink-2 / --paper-2 / --rule-strong / --radius 使用
  *   - font-weight 700 禁止
  *   - パネル外への影付けなし

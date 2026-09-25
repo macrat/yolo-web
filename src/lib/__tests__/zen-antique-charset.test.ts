@@ -165,6 +165,22 @@ describe("字の表をクライアントのバンドルに入れない", () => {
     });
   }
 
+  // "use client" は、先頭の空白とコメントのあとに置かれても有効な指示になる。
+  const leadingCommentsAndSpace = /^(?:\s+|\/\/[^\n]*|\/\*[\s\S]*?\*\/)*/;
+  function isClientModule(source: string): boolean {
+    return /^["']use client["']/.test(
+      source.replace(leadingCommentsAndSpace, ""),
+    );
+  }
+
+  test("先頭のコメントのあとに置いた use client も拾う", () => {
+    expect(isClientModule('"use client";\n')).toBe(true);
+    expect(isClientModule('// 説明\n/*\n * 説明\n */\n\n"use client";\n')).toBe(
+      true,
+    );
+    expect(isClientModule('import x from "y";\n"use client";\n')).toBe(false);
+  });
+
   test("判定を値として読み込むのはサーバーのモジュールだけ", () => {
     const valueImport =
       /^import\s+(?!type\b)[^;]*from\s+["']@\/lib\/zen-antique-charset["']/m;
@@ -172,7 +188,7 @@ describe("字の表をクライアントのバンドルに入れない", () => {
       .filter((file) => !file.includes(`${path.sep}__tests__${path.sep}`))
       .filter((file) => {
         const source = fs.readFileSync(file, "utf-8");
-        return /^["']use client["']/.test(source) && valueImport.test(source);
+        return isClientModule(source) && valueImport.test(source);
       });
     expect(clientImporters).toEqual([]);
   });

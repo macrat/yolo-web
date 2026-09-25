@@ -44,7 +44,7 @@ export default function ColorsIndexPage() {
   // 「色みから探す」棚（品書き）。色相のグループを入口として並べる。
   // 並び順は虹の並び（COLOR_CATEGORY_LABELS の定義順＝赤→…→無彩色）を正準にする。
   // getColorCategories() はアルファベット順にソートするため、そのまま使うと色相の並びが崩れる。
-  // 件数は値札（Nefuda）で各棚に添える（§4「メタは値札で・中身のあるものだけ」）。
+  // 件数は値札（Nefuda）で各棚に添える（中身のあるものだけ）。
   const presentCategories = new Set<ColorCategory>(getColorCategories());
   const categoryOrder = Object.keys(COLOR_CATEGORY_LABELS) as ColorCategory[];
   const categoryItems: ShinagakiItem[] = categoryOrder

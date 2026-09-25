@@ -1,7 +1,7 @@
 /* Base64Tile スタイル
  * cycle-227 T-2: Base64Tool.module.css をタイル向けに継承・移植。
  * DESIGN.md「店構え」準拠（紙 --paper/--paper-2・墨 --ink/--ink-2・罫 --rule/--rule-strong・
- * 朱 --accent。角丸 0 基調 var(--radius)、入力欄・値札のみ var(--radius-sm)=2px。影は使わない）。
+ * --accent。角丸 0 基調 var(--radius)、入力欄・値札のみ var(--radius-sm)。影は使わない）。
  *
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  */

@@ -2,8 +2,8 @@ import type { ComponentPropsWithoutRef } from "react";
 import styles from "./Button.module.css";
 
 /**
- * ボタンのバリアント（DESIGN.md §2「紙・墨・朱」）:
- * - "primary": 主ボタン。`--accent`（朱）地×`--paper`（紙）文字。アクションの主要な選択肢に使う。
+ * ボタンのバリアント:
+ * - "primary": 主ボタン。`--accent` の地に `--paper` の文字。アクションの主要な選択肢に使う。
  * - "default": 副ボタン。地は`--paper`のまま罫（`--rule`）で輪郭を示す線画。補助的なアクションに使う。
  */
 type ButtonVariant = "primary" | "default";

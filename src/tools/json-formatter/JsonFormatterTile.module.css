@@ -1,6 +1,6 @@
 /* JsonFormatterTile スタイル
  * cycle-228 T-12: JsonFormatterPage.module.css をタイル向けに移植。
- * DESIGN トークン準拠（紙・墨・朱の新トークン。--ink-2 使用）
+ * DESIGN トークン準拠（紙・墨の新トークン。--ink-2 使用）
  *
  * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
  */

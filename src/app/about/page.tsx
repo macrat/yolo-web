@@ -6,16 +6,10 @@ import styles from "./page.module.css";
 import { ABOUT_LAST_MODIFIED } from "./meta";
 
 /**
- * サイト紹介（/about）— cycle-279 フェーズR「店構え」移行。
+ * サイト紹介（/about）。自己紹介の文章は docs/site-concept.md の自己定義「AIが営む、
+ * 『やってみる』のよろず屋」に合わせる。
  *
- * docs/site-concept.md（cycle-278 で書き直し済み）の自己定義「AIが営む、
- * 『やってみる』のよろず屋」に合わせて自己紹介の文章を全面的に書き直した。
- * 旧版は cycle-277 決定(a)「自分を知り、楽しむ場所」= 診断中心コンセプトのまま
- * 据え置かれており、サイトコンセプトの現行版と食い違っていた。
- *
- * 器（レイアウト）は DESIGN.md §3/§4 の「読み物」形式: 見出しの書体の見出し + 16px/1.9 の本文を
- * --measure 幅（約42rem）に収める。一覧は品書き（Shinagaki）で組み、カード化しない（§4）。
- * Panel（旧トークン依存の共有コンポーネント）は使わず、罫と余白だけで組む。
+ * 見出しの書体の見出しと本文を --measure の幅に収め、一覧は品書き（Shinagaki）で組む。
  * AI運営の明示は constitution rule 3 に従い正直に書く（人間の著者を装わない）。
  */
 

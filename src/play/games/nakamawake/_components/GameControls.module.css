@@ -1,6 +1,6 @@
 /* GameControls（なかまわけ）— 操作ボタン（DESIGN.md フェーズ R・店構えへ変換）。
- * primaryButton = Button の primary variant と同型（朱地×紙文字）。
- * secondaryButton = Button の default variant と同型（罫の線画・hover で朱枠+朱文字）。 */
+ * primaryButton = Button の primary variant と同型（--accent の地に --paper の文字）。
+ * secondaryButton = Button の default variant と同型（罫の線画・hover で枠と文字に --accent）。 */
 
 .controls {
   display: flex;

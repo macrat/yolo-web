@@ -1,5 +1,5 @@
 /*
- * クイズ本体（intro / playing / result）。DESIGN.md（紙・墨・朱の店構え）。
+ * クイズ本体（intro / playing / result）。DESIGN.md。
  * 賑やかさ・絵文字ではなく、整然とした道具の質感の中に軽やかさを宿す。
  * 左寄せ・新トークンのみ・bold 不使用・影なし。器（Panel 相当の囲み）は持たず、
  * ページの地（--paper）にそのまま置く——器は静かに（§4）。

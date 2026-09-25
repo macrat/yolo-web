@@ -145,7 +145,7 @@ export default function QuizContainer({
 
     // h1 と説明はページ章立て（QuizPlayPageLayout の header）が担うため、
     // ここでは「これから始める道具」としての所要情報と開始操作だけを静かに置く。
-    // 所要情報は値札（Nefuda）——種別・所要時間などの「情報のあるラベル」（DESIGN.md §4）。
+    // 所要情報は値札（Nefuda）——種別・所要時間などの「情報のあるラベル」。
     const introBadgeLabels = [
       typeLabel,
       `全${questionCount}問`,

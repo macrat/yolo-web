@@ -1,5 +1,5 @@
 /* FileDropZone コンポーネントのスタイル（DESIGN.md フェーズ R・店構えへ変換）。
- * 入力欄扱い（ファイル取り込み口）として角丸 2px の例外を適用（§4）。
+ * 入力欄扱い（ファイル取り込み口）として角丸は --radius-sm。
  * フォーカスは outline: 2px solid var(--accent); outline-offset: 2px;
  *              --accent はリンク/フォーカス用。塗りには使わない。
  * border: 2px dashed --rule-strong（通常）/ --accent（ドラッグ中・ホバー）

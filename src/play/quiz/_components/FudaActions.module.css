@@ -1,6 +1,6 @@
 /*
  * 札（結果画像）の保存/共有アクション。DESIGN.md §4「札」/§7/§8/§10。
- * 「札を持ち帰る」が本体（§4）なので「保存」を朱主ボタン（朱地×紙文字・§2 実測 AA 済）に、
+ * 「札を持ち帰る」が本体（§4）なので「保存」を主ボタン（--accent の地に --paper の文字）に、
  * 「共有」を罫の線画（副ボタン・ShareButtons と同型）にする。
  * 角丸 0px 基調（§4）・44px タップ・focus 可視・全トークン経由。
  * 絵文字・ピル・box-shadow・グラデーションは使わない（§8）。
@@ -47,7 +47,7 @@
     filter 0.15s ease;
 }
 
-/* 保存＝主ボタン（朱地×紙文字）。hover/active は色相・彩度を変えず明度のみ filter で調整
+/* 保存＝主ボタン（--accent の地に --paper の文字）。hover/active は色相・彩度を変えず明度のみ filter で調整
  * （新トークンに accent の濃淡違いが無いため・Button.variantPrimary と同型）。 */
 .saveButton {
   color: var(--paper);
@@ -63,7 +63,7 @@
   filter: brightness(0.85);
 }
 
-/* 共有＝副ボタン（罫の線画）。地は紙のまま・hover で朱枠＋朱文字（色ベタにしない）。 */
+/* 共有＝副ボタン（罫の線画）。地は紙のまま・hover で枠と文字に --accent（色ベタにしない）。 */
 .shareButton {
   color: var(--ink);
   background: var(--paper);

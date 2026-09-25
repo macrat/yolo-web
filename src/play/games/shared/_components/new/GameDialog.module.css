@@ -1,6 +1,6 @@
 /* GameDialog — 全ゲームモーダル共通の器（DESIGN.md フェーズ R・店構えへ変換）。
  * モーダルは罫囲み紙地（§4）。影は使わない（native <dialog> の既定影も明示的に none）。
- * 閉じるボタンは Button の default variant と同型（罫の線画・hover で朱枠+朱文字）。
+ * 閉じるボタンは Button の default variant と同型（罫の線画・hover で枠と文字に --accent）。
  * backdrop は中性色のスクリム（rgba(0,0,0,α)）——色付きでないため §10 の例外として許容。 */
 
 .modal {

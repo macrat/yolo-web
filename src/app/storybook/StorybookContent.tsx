@@ -21,12 +21,12 @@ import FaqSection from "@/components/FaqSection";
 import RelatedTools from "@/components/RelatedTools";
 import styles from "./page.module.css";
 
-// カラースウォッチの定義（DESIGN.md §2「紙・墨・朱」の新トークン体系・cycle-279 C1）
+// カラースウォッチの定義。
 const COLOR_SECTIONS = [
   {
     title: "地 (Paper)",
     swatches: [
-      { token: "--paper", role: "地。生成りの紙 / 墨の帳面" },
+      { token: "--paper", role: "地" },
       {
         token: "--paper-2",
         role: "一段沈む面（区画・コード・広告区画）",
@@ -48,12 +48,15 @@ const COLOR_SECTIONS = [
     ],
   },
   {
-    title: "朱 (Accent)",
+    title: "アクセント (Accent)",
     swatches: [
-      { token: "--accent", role: "朱。リンク・主ボタン・現在地・記入印" },
+      {
+        token: "--accent",
+        role: "リンク・主ボタン・現在地・記入印。--ink を指す",
+      },
       {
         token: "--accent-weak",
-        role: "朱の気配。hover/selected の座布団にのみ可",
+        role: "hover/selected の座布団。--paper-2 を指す",
       },
     ],
   },
@@ -230,9 +233,9 @@ export default function StorybookContent({
               >
                 サンプルテキスト
               </div>
-              <div className={styles.radiusSampleLabel}>--radius-sm (2px)</div>
+              <div className={styles.radiusSampleLabel}>--radius-sm</div>
               <div style={{ fontSize: "0.7rem", color: "var(--ink-2)" }}>
-                例外は値札ラベルと入力欄のみ
+                値札ラベルと入力欄が使う（0px）
               </div>
             </div>
           </div>

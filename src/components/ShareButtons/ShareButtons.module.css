@@ -2,7 +2,7 @@
  * ShareButtons — 共有ボタン群（DESIGN.md §4「札」/§8 準拠の店構え版）。
  * 「文字＋罫の線画ボタン」: 地は紙・--rule の一本罫囲み・文字は墨。
  * §8 厳守——ブランド色ベタ塗り・ブランドロゴ・絵文字・ピル・box-shadow なし。
- * hover は朱枠＋朱文字（下線はリンク専有のためボタンでは使わない・§3）。
+ * hover は枠と文字に --accent（下線はリンク専有のためボタンでは使わない・§3）。
  * 角丸は 0px 基調（--radius）。タップターゲット 44px・focus 可視・全トークン経由。
  */
 
@@ -40,7 +40,7 @@
     border-color 0.15s ease;
 }
 
-/* hover: 朱枠＋朱文字（色ベタにしない・§2 アクセントは朱の1色）。 */
+/* hover: 枠と文字に --accent（色ベタにしない）。 */
 .button:hover {
   color: var(--accent);
   border-color: var(--accent);
@@ -56,7 +56,7 @@
   outline-offset: 2px;
 }
 
-/* コピー完了メッセージ: 控えめな朱文字（色ベタの帯にしない・§6 静かなフィードバック）。
+/* コピー完了メッセージ: --accent の文字（色ベタの帯にしない）。
  * min-height で表示時のレイアウトシフトを防ぐ。 */
 .copiedMessage {
   min-height: 1.4em;

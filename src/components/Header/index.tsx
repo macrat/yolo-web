@@ -59,7 +59,7 @@ interface HeaderProps {
  *
  * デザイン（DESIGN.md §4「のれん」）:
  * - 店号（サイト名・見出しの書体）+ 下辺に一本の `--rule-strong` 罫。背景色・影は付けない（地は紙）。
- * - ナビは文字のみ・現在地は朱（`aria-current="page"` を CSS で `--accent` 着色）。
+ * - ナビは文字のみ・現在地は `aria-current="page"` を CSS で `--accent` 着色。
  *
  * アクセシビリティ:
  * - aria-expanded / aria-controls / aria-label でハンバーガーの状態を通知

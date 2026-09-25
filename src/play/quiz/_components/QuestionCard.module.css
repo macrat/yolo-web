@@ -1,6 +1,6 @@
 /*
- * 設問カード。DESIGN.md（紙・墨・朱の店構え）。
- * 設問文=見出しの書体・選択肢=紙地+罫のボタン（hover 朱-weak 座布団・44px・
+ * 設問カード。DESIGN.md。
+ * 設問文=見出しの書体・選択肢=紙地+罫のボタン（hover で --accent-weak の座布団・44px・
  * ピル/ブランド色禁止）。正誤フィードバックは色だけでなく文字ラベルを併記する
  * （WCAG 1.4.1）。角丸は 0px 基調（--radius）。リビールは 1 回・300ms・reduced-motion 尊重。
  */
@@ -64,7 +64,7 @@
     background-color 0.15s ease;
 }
 
-/* hover: 朱-weak の座布団（§2 操作状態のハイライトにのみ可）。 */
+/* hover: --accent-weak の座布団。 */
 .choiceButton:hover:not(:disabled) {
   border-color: var(--accent);
   background-color: var(--accent-weak);
@@ -92,7 +92,7 @@
   color: var(--ink-2);
 }
 
-/* 正誤の文字ラベル（値札の語彙・12-13px・ink-2・罫囲み・radius-sm 例外）。 */
+/* 正誤の文字ラベル（値札の語彙・ink-2・罫囲み・--radius-sm）。 */
 .feedbackTag {
   flex-shrink: 0;
   padding: 0.1rem 0.5rem;

@@ -73,7 +73,7 @@ describe("app/play/page.tsx", () => {
     ).toBeInTheDocument();
   });
 
-  test("ゲーム棚にはクイズの問題数の値札が付かない（中身の無いラベルを貼らない・§4）", () => {
+  test("ゲーム棚にはクイズの問題数の値札が付かない（中身の無いラベルを貼らない）", () => {
     render(<PlayPage />);
     const gameContent = allPlayContents.find((c) => c.category === "game");
     expect(gameContent).toBeDefined();

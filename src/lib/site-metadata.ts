@@ -35,7 +35,7 @@ export const sharedMetadata: Metadata = {
     follow: true,
     "max-image-preview": "large",
   },
-  // favicon/アイコン一式（ブランド標章 F2「朱の印・白抜き y」・B-576）。
+  // favicon/アイコン一式（朱の角丸タイルに白抜きの y）。
   // 実体は public/ の静的配信で、ここから <link rel="icon"/apple-touch-icon> を出力する
   // （Google の favicon クローラが crawlable なトップで link を見つけられるようにする）。
   // 資産は scripts/generate-favicons.ts で再現生成する（手でバイナリを置かない）。

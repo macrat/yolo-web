@@ -62,7 +62,7 @@
 }
 
 /* セクション見出し。サイト共通の罫下線で静かに区切る（インライン ResultCard の
- * .detailedHeading と同じ語彙。朱の左罫は見出しの装飾に使わない・DESIGN.md §3/§4）。 */
+ * .detailedHeading と同じ語彙・DESIGN.md §3/§4）。 */
 .detailedSectionHeading {
   font-size: 1.05rem;
   color: var(--ink);
@@ -168,8 +168,8 @@
  * DESIGN.md §4/§8-4 是正（cycle-278 C4）: 旧来のチップ風横wrap（個々にカード状の全周枠）は
  * 「同型カードのグリッド」に近い質感で §4 の禁止対象に触れるため、他クイズ（例:
  * CharacterPersonalityContent.module.css .allTypesGrid）と同じ罫の升目索引に統一する。
- * 個々のセルはカード化せず、border-bottom の罫だけで区切る。現在地は面を朱で塗らず、
- * 文字色+下罫の朱だけで示す（--accent-weak 不使用）。 */
+ * 個々のセルはカード化せず、border-bottom の罫だけで区切る。現在地は面を塗らず、
+ * 文字色と下罫（--accent）で示す。 */
 .allTypesSection {
   margin-top: 2rem;
   padding-top: 1.5rem;
@@ -217,7 +217,7 @@
   background-color: var(--paper-2);
 }
 
-/* 現在表示中のタイプ: 面を朱で塗らず、文字色+下罫の朱だけで静かに示す。 */
+/* 現在表示中のタイプ: 面を塗らず、文字色と下罫（--accent）で示す。 */
 .allTypesItemCurrent a {
   color: var(--accent);
   border-bottom-color: var(--accent);

@@ -7,14 +7,14 @@
  * 色・角丸・書体はすべてトークン経由（§10・直書き禁止）。見出し・リンクの基調は globals.css。
  */
 
-/* ページ全体: 操作面の最大幅 --max-width(960px)。中央寄せは器の配置で、本文は左揃え（§4）。 */
+/* ページ全体: 操作面の最大幅 --max-width。中央寄せは器の配置で、本文は左揃え（§4）。 */
 .page {
   max-width: var(--max-width);
   margin: 0 auto;
   padding: var(--space-32) var(--space-24) var(--space-64);
 }
 
-/* 名乗り（読む面）: 一行の長さを --measure(約42rem) に絞る（§3）。 */
+/* 名乗り（読む面）: 一行の長さを --measure に絞る（§3）。 */
 .intro {
   max-width: var(--measure);
   margin: var(--space-24) 0 var(--space-48);

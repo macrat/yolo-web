@@ -277,7 +277,7 @@ describe("FileDropZone", () => {
     expect(css).toContain("--accent");
   });
 
-  it(".dropZone は --radius-sm を border-radius に使う（DESIGN.md §4: 入力欄の 2px 例外）", () => {
+  it(".dropZone は --radius-sm を border-radius に使う", () => {
     const cssPath = resolve(__dirname, "../FileDropZone.module.css");
     const css = readFileSync(cssPath, "utf-8");
     const dropZoneBlock = css.match(/\.dropZone\s*\{[^}]+\}/)?.[0] ?? "";

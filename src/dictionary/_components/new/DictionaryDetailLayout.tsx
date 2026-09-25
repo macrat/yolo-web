@@ -34,7 +34,7 @@ interface DictionaryDetailLayoutProps {
  * 差分:
  * - import を (new) 体系（@/components/Breadcrumb 等）へ差し替え
  * - 信頼度バッジ（legacy の品質バッジ）を撤去（(new) 版なし・AI 注記は Footer が担保）
- * - 最上位 <article> に --max-width(960px) の外枠を持たせる（詳細は「実務／参照」の
+ * - 最上位 <article> に --max-width の外枠を持たせる（詳細は「実務／参照」の
  *   操作面寄り・§4/§7）。CSS は DESIGN.md フェーズ R の店構えへ変換済み（罫と組版で組む・
  *   旧トークン/影/ピル/角丸装飾なし）。各 Detail の内側は読む面 --measure に絞られる。
  *

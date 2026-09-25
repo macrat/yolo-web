@@ -1,9 +1,9 @@
 /* PercentCalculatorTile スタイル
  *
  * DESIGN.md（店構え）準拠:
- * - 色は紙・墨・朱トークン経由（--paper / --ink / --accent 系）
+ * - 色は紙・墨トークン経由（--paper / --ink / --accent 系）
  * - font-weight 700 禁止
- * - 角丸は var(--radius)（0）/ var(--radius-sm)（2px）のみ
+ * - 角丸は var(--radius)（0）/ var(--radius-sm)のみ
  * - box-shadow は使わない（§4）
  */
 

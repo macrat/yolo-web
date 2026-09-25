@@ -61,7 +61,7 @@
 }
 
 /* セクション見出し。サイト共通の罫下線で静かに区切る（インライン ResultCard の
- * .detailedHeading と同じ語彙。朱の左罫は見出しの装飾に使わない・DESIGN.md §3/§4）。 */
+ * .detailedHeading と同じ語彙・DESIGN.md §3/§4）。 */
 .detailedSectionHeading {
   font-size: 1.05rem;
   color: var(--ink);
@@ -113,8 +113,7 @@
   gap: 0.625rem;
 }
 
-/* 絵文字を使わない静かなマーカー。朱の縦バーは§8-3（罫箱＋色付き左罫）に抵触するため
- * 中黒（墨・中立色）に置換。インライン ResultCard の .traitsItem::before と同じ語彙。 */
+/* 絵文字を使わない静かなマーカー（墨の中黒）。インライン ResultCard の .traitsItem::before と同じ語彙。 */
 .traitsItem::before {
   content: "・";
   flex-shrink: 0;
