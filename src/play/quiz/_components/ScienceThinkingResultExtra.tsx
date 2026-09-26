@@ -1,5 +1,6 @@
 "use client";
 
+import { useId, useMemo } from "react";
 import type { QuizAnswer } from "@/play/quiz/types";
 import {
   getAxisScores,
@@ -8,12 +9,13 @@ import {
   type AxisId,
 } from "@/play/quiz/data/science-thinking";
 import scienceThinkingQuiz from "@/play/quiz/data/science-thinking";
-import RadarChart from "./RadarChart";
+import QuantityBars, { type QuantityBar } from "@/components/QuantityBars";
+import RadarChart, { type RadarChartAxis } from "./RadarChart";
 import InviteFriendButton from "./InviteFriendButton";
-import { pickResultWairoColor } from "./resultVisual";
+import { Reading, ReadingHeading } from "./ResultReading";
 import styles from "./ScienceThinkingResultExtra.module.css";
 
-/** Human-readable Japanese labels for each axis */
+/** 軸の名前 */
 const AXIS_LABELS: Record<AxisId, string> = {
   theory: "理論",
   empirical: "実験",
@@ -22,16 +24,15 @@ const AXIS_LABELS: Record<AxisId, string> = {
   creative: "創造",
 };
 
+const INVITE_TEXT = "理系思考タイプ診断であなたの理系脳の形を調べよう!";
+
 interface ScienceThinkingResultExtraProps {
   resultId: string;
   referrerTypeId?: string;
   answers?: QuizAnswer[];
 }
 
-/**
- * Returns a render function for extra content below the science thinking
- * quiz result card. Used by ResultExtraLoader's dynamic import pattern.
- */
+/** ResultExtraLoader が読み込んで、解き終えた画面の結果のあとに描く。 */
 export function renderScienceThinkingExtra(
   referrerTypeId?: string,
   answers?: QuizAnswer[],
@@ -49,79 +50,66 @@ export function renderScienceThinkingExtra(
 }
 
 /**
- * Extra result content for the Science Thinking Type Quiz.
- * Displays a radar chart of 5-axis scores and score bars for each axis,
- * followed by the friend invite button.
+ * 理系思考タイプ診断の、来訪者の答えから出した5つの軸のスコア。レーダーとスコアの帯で見せ、どちらも軸ごとの
+ * 満点に対する割合を言う。満点は軸によって違うので、点数でなく割合で並べる（DESIGN.md §5 量の帯）。
+ * そのあとに友達を招待するボタンを置く。答えが無いとき（結果のリンクから開いたとき）は招待だけを出す。
  */
 function ScienceThinkingResultExtra({
   resultId,
   answers,
 }: ScienceThinkingResultExtraProps) {
   const quiz = scienceThinkingQuiz;
-  const myResult = quiz.results.find((r) => r.id === resultId);
+  const headingId = useId();
+  const hasResult = quiz.results.some((r) => r.id === resultId);
 
-  if (!myResult) return null;
+  const axes = useMemo<RadarChartAxis[]>(() => {
+    if (!answers || answers.length === 0) return [];
+    const scores = getAxisScores(quiz.questions, answers);
+    const maxScores = getMaxAxisScores(quiz.questions);
+    return AXIS_IDS.map((axisId) => ({
+      label: AXIS_LABELS[axisId],
+      percent:
+        maxScores[axisId] > 0
+          ? Math.round((scores[axisId] / maxScores[axisId]) * 100)
+          : 0,
+    }));
+  }, [quiz.questions, answers]);
 
-  // If no answers available, only show the invite button
-  if (!answers || answers.length === 0) {
-    return (
-      <InviteFriendButton
-        quizSlug={quiz.meta.slug}
-        resultTypeId={resultId}
-        inviteText="理系思考タイプ診断であなたの理系脳の形を調べよう!"
-      />
-    );
-  }
+  if (!hasResult) return null;
 
-  const scores = getAxisScores(quiz.questions, answers);
-  const maxScores = getMaxAxisScores(quiz.questions);
-  // 成果物パレット（和色8色）は id から決定的に選ぶ。quiz データの任意 hex
-  // （result.color / meta.accentColor）は使わない（DESIGN.md §2）。
-  const wairoColor = pickResultWairoColor(myResult.id);
+  const invite = (
+    <InviteFriendButton
+      quizSlug={quiz.meta.slug}
+      resultTypeId={resultId}
+      inviteText={INVITE_TEXT}
+    />
+  );
 
-  // Build axes data for RadarChart
-  const chartAxes = AXIS_IDS.map((axisId) => ({
-    label: AXIS_LABELS[axisId],
-    value: scores[axisId],
-    max: maxScores[axisId],
+  if (axes.length === 0) return invite;
+
+  const bars: QuantityBar[] = axes.map((axis) => ({
+    name: axis.label,
+    value: axis.percent,
+    valueText: `${axis.percent}%`,
   }));
 
   return (
-    <div className={styles.wrapper} data-color={wairoColor}>
-      {/* Radar chart */}
-      <div className={styles.chartSection}>
-        <p className={styles.chartTitle}>あなたの思考プロフィール</p>
-        <RadarChart axes={chartAxes} color={wairoColor} />
-      </div>
-
-      {/* Score bars */}
-      <div className={styles.scoreSection}>
-        {AXIS_IDS.map((axisId) => {
-          const score = scores[axisId];
-          const max = maxScores[axisId];
-          const pct = max > 0 ? Math.round((score / max) * 100) : 0;
-          return (
-            <div key={axisId} className={styles.scoreBar}>
-              <div className={styles.scoreLabel}>
-                <span className={styles.scoreName}>{AXIS_LABELS[axisId]}</span>
-                <span className={styles.scoreValue}>
-                  {score} / {max} ({pct}%)
-                </span>
-              </div>
-              <div className={styles.barTrack}>
-                <div className={styles.barFill} style={{ width: `${pct}%` }} />
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Invite friend button */}
-      <InviteFriendButton
-        quizSlug={quiz.meta.slug}
-        resultTypeId={resultId}
-        inviteText="理系思考タイプ診断であなたの理系脳の形を調べよう!"
+    <Reading>
+      <ReadingHeading
+        placement="solvedScreen"
+        phrases={["あなたの", "思考プロフィール"]}
+        id={headingId}
       />
-    </div>
+      <div className={styles.chart}>
+        <RadarChart
+          axes={axes}
+          label="理論・実験・数値化・観察・創造の5つの軸のレーダー"
+        />
+      </div>
+      <div className={styles.bars}>
+        <QuantityBars labelledBy={headingId} items={bars} max={100} />
+      </div>
+      {invite}
+    </Reading>
   );
 }

@@ -13,10 +13,7 @@ interface JapaneseCultureResultExtraProps {
   referrerTypeId?: string;
 }
 
-/**
- * Returns a render function for extra content below the Japanese culture
- * quiz result card. Used by QuizContainer's renderResultExtra prop.
- */
+/** ResultExtraLoader が読み込んで、解き終えた画面の結果のあとに描く。 */
 export function renderJapaneseCultureExtra(
   referrerTypeId?: string,
 ): (resultId: string, refTypeId?: string) => React.ReactNode {
@@ -31,6 +28,9 @@ export function renderJapaneseCultureExtra(
   return ResultExtraRenderer;
 }
 
+/**
+ * あなたが極めるべき日本文化診断の解き終えた画面の相性と招待。友達の結果の共有のリンクから来たときは相性を出し、招待のボタンを続ける。
+ */
 function JapaneseCultureResultExtra({
   resultId,
   referrerTypeId,
@@ -40,7 +40,6 @@ function JapaneseCultureResultExtra({
 
   if (!myResult) return null;
 
-  // If we have a valid referrer type, show compatibility
   if (referrerTypeId && isValidCultureTypeId(referrerTypeId)) {
     const friendResult = quiz.results.find((r) => r.id === referrerTypeId);
     const compatibility = getCompatibility(resultId, referrerTypeId);
@@ -73,7 +72,6 @@ function JapaneseCultureResultExtra({
     }
   }
 
-  // No referrer: show invite button only
   return (
     <InviteFriendButton
       quizSlug={quiz.meta.slug}

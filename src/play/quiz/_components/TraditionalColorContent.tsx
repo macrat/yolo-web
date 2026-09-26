@@ -1,37 +1,30 @@
 /**
- * TraditionalColorContent - traditional-color variant の共通コンテンツコンポーネント。
+ * 伝統色診断のタイプを詳しく説明する読みもの。解き終えた画面（ResultCard）と結果のページの両方に置く。
  *
- * ResultCard.tsx（解き終えた画面）と page.tsx（結果のページ）の両方から使用される。
- * Server Component（"use client" なし）: 純粋なプレゼンテーションコンポーネント。
- *
- * 共通化対象:
- * - colorMeaning / scenery+season / behaviors / colorAdvice / すべてのタイプ（OtherTypesNav） の5セクション
- *
- * 共通化しないもの（呼び出し側の責務）:
- * - catchphrase の表示（ResultCard/page.tsx でスタイル・配置が異なる）
- * - 相性セクション / CTA（afterColorAdvice スロットとして注入）
- * - ShareButtons / もう一度挑戦するボタン
- *
- * 伝統色はタイプの中身なので、すべてのタイプの行に色見本で見せる。見出しや地などの飾りには使わない（DESIGN.md §2）。
+ * 色の物語・映える風景と季節・現れる場面・色からのひとこと・すべてのタイプを並べる。伝統色はタイプの中身なので、
+ * すべてのタイプの行に色見本で見せる（DESIGN.md §2）。キャッチコピー・共有・「もう一度挑戦する」は呼び出し側が
+ * 置き、結果のページの案内は afterColorAdvice で差し込む。
  */
 
 import type React from "react";
 import type { TraditionalColorDetailedContent } from "@/play/quiz/types";
 import traditionalColorQuiz from "@/play/quiz/data/traditional-color";
-import OtherTypesNav, {
-  type ResultPlacement,
-  SECTION_HEADING,
-} from "./OtherTypesNav";
+import OtherTypesNav, { type ResultPlacement } from "./OtherTypesNav";
+import {
+  Reading,
+  ReadingHeading,
+  ReadingList,
+  ReadingText,
+} from "./ResultReading";
 import styles from "./TraditionalColorContent.module.css";
 
 interface TraditionalColorContentProps {
-  /** detailedContent（colorMeaning, season, scenery, behaviors, colorAdvice を含む） */
   content: TraditionalColorDetailedContent;
-  /** 結果ID（すべてのタイプで現在のタイプをハイライトするため） */
+  /** 来訪者のタイプ。すべてのタイプでこのタイプを示す。 */
   resultId: string;
-  /** 置く面。page.tsx は結果のページ、ResultCard は解き終えた画面。見出しの階層と、すべてのタイプでのいまのタイプの示し方が決まる。 */
+  /** 置く面。見出しの段と、すべてのタイプでのいまのタイプの示し方が決まる。 */
   placement: ResultPlacement;
-  /** colorAdvice後・すべてのタイプ前にページ固有要素（CTA等）を挿入するスロット */
+  /** 色からのひとことのあと、すべてのタイプの前に置くもの */
   afterColorAdvice?: React.ReactNode;
 }
 
@@ -42,36 +35,34 @@ export default function TraditionalColorContent({
   afterColorAdvice,
 }: TraditionalColorContentProps) {
   const quiz = traditionalColorQuiz;
-  const Heading = SECTION_HEADING[placement];
 
   return (
-    <div className={styles.wrapper}>
-      {/* colorMeaning セクション: 色の文化的背景 */}
-      <Heading className={styles.sectionHeading}>この色の物語</Heading>
-      <div className={styles.colorMeaningCard}>{content.colorMeaning}</div>
+    <Reading>
+      <ReadingHeading
+        placement={placement}
+        phrases={["この", "色の", "物語"]}
+      />
+      <ReadingText>{content.colorMeaning}</ReadingText>
 
-      {/* scenery + season セクション: 視覚的イメージ喚起 */}
-      <Heading className={styles.sectionHeading}>この色が映える風景</Heading>
-      <div className={styles.sceneryCard}>
-        <span className={styles.seasonTag}>{content.season}</span>
-        <p className={styles.sceneryText}>{content.scenery}</p>
-      </div>
+      <ReadingHeading
+        placement={placement}
+        phrases={["この", "色が", "映える", "風景"]}
+      />
+      <p className={styles.season}>季節：{content.season}</p>
+      <ReadingText>{content.scenery}</ReadingText>
 
-      {/* behaviors セクション: あるある */}
-      <Heading className={styles.sectionHeading}>この色が現れる場面</Heading>
-      <ul className={styles.behaviorsList}>
-        {content.behaviors.map((b, i) => (
-          <li key={i} className={styles.behaviorsItem}>
-            {b}
-          </li>
-        ))}
-      </ul>
+      <ReadingHeading
+        placement={placement}
+        phrases={["この", "色が", "現れる", "場面"]}
+      />
+      <ReadingList items={content.behaviors} />
 
-      {/* colorAdvice セクション: 締めのメッセージ */}
-      <Heading className={styles.sectionHeading}>この色からのひとこと</Heading>
-      <div className={styles.colorAdviceCard}>{content.colorAdvice}</div>
+      <ReadingHeading
+        placement={placement}
+        phrases={["この", "色からの", "ひとこと"]}
+      />
+      <ReadingText>{content.colorAdvice}</ReadingText>
 
-      {/* afterColorAdvice スロット: CTA等のページ固有要素 */}
       {afterColorAdvice}
 
       <OtherTypesNav
@@ -81,6 +72,6 @@ export default function TraditionalColorContent({
         placement={placement}
         showSwatch
       />
-    </div>
+    </Reading>
   );
 }

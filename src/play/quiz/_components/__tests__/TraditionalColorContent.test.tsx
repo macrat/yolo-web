@@ -90,7 +90,7 @@ describe("TraditionalColorContent - 基本レンダリング", () => {
     );
     expect(screen.getByText("この色が映える風景")).toBeInTheDocument();
     expect(screen.getByText("夏の夜空と静かな海辺")).toBeInTheDocument();
-    expect(screen.getByText("夏")).toBeInTheDocument();
+    expect(screen.getByText("季節：夏")).toBeInTheDocument();
   });
 
   it("behaviorsセクションが表示されること", () => {
@@ -198,8 +198,8 @@ describe("TraditionalColorContent - afterColorAdvice スロット", () => {
   });
 });
 
-describe("TraditionalColorContent - wrapper", () => {
-  it("wrapperクラスを持つ最外層要素が存在すること", () => {
+describe("TraditionalColorContent - 読みものの組み方", () => {
+  it("文は段落、あるあるは箇条書きで組み、カードの区画を持たない", () => {
     const { container } = render(
       <TraditionalColorContent
         content={sampleContent}
@@ -207,23 +207,17 @@ describe("TraditionalColorContent - wrapper", () => {
         placement="resultPage"
       />,
     );
-    const wrapper = container.querySelector("[class*='wrapper']");
-    expect(wrapper).not.toBeNull();
-  });
-
-  it("タイプの色を wrapper のインラインスタイルに入れないこと", () => {
-    const { container } = render(
-      <TraditionalColorContent
-        content={sampleContent}
-        resultId="ai"
-        placement="resultPage"
-      />,
-    );
-    const wrapper = container.querySelector(
-      "[class*='wrapper']",
-    ) as HTMLElement;
-    expect(wrapper).not.toBeNull();
-    expect(wrapper.getAttribute("style")).toBeNull();
+    for (const text of [
+      sampleContent.colorMeaning,
+      sampleContent.scenery,
+      sampleContent.colorAdvice,
+    ]) {
+      expect(screen.getByText(text).tagName).toBe("P");
+    }
+    for (const item of [...sampleContent.behaviors]) {
+      expect(screen.getByText(item).tagName).toBe("LI");
+    }
+    expect(container.querySelector("[class*='Card']")).toBeNull();
   });
 });
 

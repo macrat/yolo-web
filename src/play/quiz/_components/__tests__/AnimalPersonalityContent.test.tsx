@@ -186,8 +186,8 @@ describe("AnimalPersonalityContent - afterTodayAction スロット", () => {
   });
 });
 
-describe("AnimalPersonalityContent - wrapper クラス", () => {
-  it("wrapperクラスを持つ最外層要素が存在すること（CSS変数定義のため）", () => {
+describe("AnimalPersonalityContent - 読みものの組み方", () => {
+  it("文は段落、あるあるは箇条書きで組み、カードの区画を持たない", () => {
     const { container } = render(
       <AnimalPersonalityContent
         content={sampleContent}
@@ -195,38 +195,16 @@ describe("AnimalPersonalityContent - wrapper クラス", () => {
         placement="resultPage"
       />,
     );
-    const wrapper = container.querySelector("[class*='wrapper']");
-    expect(wrapper).not.toBeNull();
-  });
-});
-
-describe("AnimalPersonalityContent - インラインスタイル不使用（CSS変数管理）", () => {
-  it("sectionHeadingにインラインスタイルが設定されていないこと", () => {
-    const { container } = render(
-      <AnimalPersonalityContent
-        content={sampleContent}
-        resultId="nihon-zaru"
-        placement="resultPage"
-      />,
-    );
-    // CSS変数はCSSクラス側で管理するため、インラインスタイルを使用しない
-    const headings = container.querySelectorAll("[class*='sectionHeading']");
-    headings.forEach((heading) => {
-      expect((heading as HTMLElement).style.color).toBe("");
-    });
-  });
-
-  it("todayActionCardにインラインスタイルが設定されていないこと", () => {
-    const { container } = render(
-      <AnimalPersonalityContent
-        content={sampleContent}
-        resultId="nihon-zaru"
-        placement="resultPage"
-      />,
-    );
-    // CSS変数はCSSクラス側で管理するため、インラインスタイルを使用しない
-    const card = container.querySelector("[class*='todayActionCard']");
-    expect(card).not.toBeNull();
-    expect((card as HTMLElement).style.backgroundColor).toBe("");
+    for (const text of [sampleContent.todayAction]) {
+      expect(screen.getByText(text).tagName).toBe("P");
+    }
+    for (const item of [
+      ...sampleContent.strengths,
+      ...sampleContent.weaknesses,
+      ...sampleContent.behaviors,
+    ]) {
+      expect(screen.getByText(item).tagName).toBe("LI");
+    }
+    expect(container.querySelector("[class*='Card']")).toBeNull();
   });
 });

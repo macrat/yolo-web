@@ -209,32 +209,26 @@ describe("CharacterPersonalityContent - placement による見出しの階層", 
   });
 });
 
-describe("CharacterPersonalityContent - wrapper と CSS変数", () => {
-  it("wrapperクラスを持つ最外層要素が存在すること", () => {
+describe("CharacterPersonalityContent - 読みものの組み方", () => {
+  it("文は段落、あるあるは箇条書きで組み、カードの区画を持たない", () => {
     const { container } = render(
       <CharacterPersonalityContent
         content={sampleContent}
         resultId={sampleResultId}
         placement="resultPage"
+        afterCharacterMessage={null}
       />,
     );
-    const wrapper = container.querySelector("[class*='wrapper']");
-    expect(wrapper).not.toBeNull();
-  });
-
-  it("タイプの色を wrapper のインラインスタイルに入れないこと", () => {
-    const { container } = render(
-      <CharacterPersonalityContent
-        content={sampleContent}
-        resultId={sampleResultId}
-        placement="resultPage"
-      />,
-    );
-    const wrapper = container.querySelector(
-      "[class*='wrapper']",
-    ) as HTMLElement;
-    expect(wrapper).not.toBeNull();
-    expect(wrapper.getAttribute("style")).toBeNull();
+    for (const text of [
+      sampleContent.archetypeBreakdown,
+      sampleContent.characterMessage,
+    ]) {
+      expect(screen.getByText(text).tagName).toBe("P");
+    }
+    for (const item of [...sampleContent.behaviors]) {
+      expect(screen.getByText(item).tagName).toBe("LI");
+    }
+    expect(container.querySelector("[class*='Card']")).toBeNull();
   });
 });
 
@@ -416,7 +410,9 @@ describe("CharacterPersonalityContent - 相性機能（ローディング中）"
       />,
     );
 
-    expect(screen.getByText("相性データを読み込み中...")).toBeInTheDocument();
+    expect(
+      screen.getByText("友達との相性を読み込んでいます"),
+    ).toBeInTheDocument();
     expect(
       screen.queryByTestId("compatibility-section"),
     ).not.toBeInTheDocument();

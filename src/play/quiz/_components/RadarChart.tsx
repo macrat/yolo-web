@@ -1,215 +1,274 @@
 "use client";
 
-import type { WairoColor } from "@/components/Tsutsumi";
+import { useLayoutEffect, useRef, useState } from "react";
 import styles from "./RadarChart.module.css";
 
-interface RadarChartAxis {
+export interface RadarChartAxis {
+  /** 軸の名前 */
   label: string;
-  value: number;
-  max: number;
+  /** 満点に対する割合（0〜100 の整数）。頂点の位置と、添える数値の両方がこの値を言う。 */
+  percent: number;
 }
 
-interface RadarChartProps {
-  /** Array of axis data to display (labels, values, maximums) */
-  axes: RadarChartAxis[];
-  /**
-   * データ多角形の色。RadarChart は結果の成果物（包み）の中に置くデータ可視化なので、
-   * 任意 hex ではなく和色8色（成果物パレット）から選ぶ。グリッド・軸・
-   * ラベルは墨（--rule / --ink-2）で組み、データ系列だけがこの和色を持つ。
-   */
-  color: WairoColor;
-  /** Chart size in pixels (used for viewBox, responsive via CSS) */
-  size?: number;
+/** 図を組むために測った値（どれも CSS の px） */
+export interface RadarFrame {
+  /** 図に使える幅 */
+  width: number;
+  /** 軸に添える字の1行の高さ */
+  lineHeight: number;
+  /** 多角形の頂点から字までのあき */
+  gap: number;
+  /** 軸ごとの、添える字（名前と数値）のうち広いほうの幅 */
+  labelWidths: readonly number[];
 }
 
-/** Default chart size for viewBox calculation */
-const DEFAULT_SIZE = 300;
+interface LabelPlacement {
+  x: number;
+  /** 2行（名前・数値）の1行目の上端 */
+  top: number;
+  anchor: "start" | "middle" | "end";
+}
 
-/** Padding around the chart for labels */
-const PADDING = 50;
+export interface RadarLayout {
+  width: number;
+  height: number;
+  cx: number;
+  cy: number;
+  radius: number;
+  labels: LabelPlacement[];
+}
 
-/** Number of concentric grid levels (20%, 40%, 60%, 80%, 100%) */
+/** 格子の同心の多角形の数（20% ごと） */
 const GRID_LEVELS = 5;
 
-/** Radius of dots at each data point vertex */
-const DOT_RADIUS = 4;
+/** 頂点の点の半径 */
+const DOT_RADIUS = 4.5;
 
-/**
- * Calculate the (x, y) position on the chart for a given axis index and
- * radius ratio. The layout starts at 12 o'clock (top) and proceeds clockwise.
- */
-function getPoint(
-  cx: number,
-  cy: number,
-  radius: number,
-  index: number,
-  total: number,
-  ratio: number,
-): [number, number] {
+/** 軸の向きがこれより横に寄っていれば、字を頂点の左か右に置く */
+const SIDE = 0.1;
+
+/** 軸の向きがこれより縦に寄っていれば、字を頂点の上か下に置く */
+const VERTICAL = 0.5;
+
+/** i 番目の軸の向き。12時から時計回りに並べる。 */
+function direction(index: number, total: number): [number, number] {
   const angle = (2 * Math.PI * index) / total - Math.PI / 2;
-  return [
-    cx + radius * ratio * Math.cos(angle),
-    cy + radius * ratio * Math.sin(angle),
-  ];
+  return [Math.cos(angle), Math.sin(angle)];
 }
 
 /**
- * Build an SVG polygon points string for the given number of vertices
- * at a specific radius ratio.
+ * 図を組む。字は補助情報の大きさのまま縮めず、字が図の幅に収まるいちばん大きい半径で多角形を描く。図の高さは、
+ * 多角形と字の全体が入る高さにする。
  */
-function buildPolygonPoints(
-  cx: number,
-  cy: number,
-  radius: number,
-  total: number,
-  ratios: number[],
-): string {
+export function layoutRadar(frame: RadarFrame, total: number): RadarLayout {
+  const { width, lineHeight, gap, labelWidths } = frame;
+  const half = width / 2;
+  const directions = Array.from({ length: total }, (_, i) =>
+    direction(i, total),
+  );
+
+  // 横に置く字が図の幅の外へ出ない半径のうち、いちばん大きいもの。
+  const radius = Math.max(
+    0,
+    directions.reduce((limit, [ux], i) => {
+      if (Math.abs(ux) < SIDE) return limit;
+      return Math.min(limit, (half - labelWidths[i]) / Math.abs(ux) - gap);
+    }, half - DOT_RADIUS),
+  );
+
+  // 中心を 0 として、字の2行の上端を決める。
+  const placed = directions.map(([ux, uy]) => {
+    const x = half + (radius + gap) * ux;
+    const y = (radius + gap) * uy;
+    const anchor: LabelPlacement["anchor"] =
+      ux > SIDE ? "start" : ux < -SIDE ? "end" : "middle";
+    const top =
+      uy < -VERTICAL ? y - 2 * lineHeight : uy > VERTICAL ? y : y - lineHeight;
+    return { x, top, anchor };
+  });
+
+  const extentTop = Math.min(-radius, ...placed.map((label) => label.top));
+  const extentBottom = Math.max(
+    radius,
+    ...placed.map((label) => label.top + 2 * lineHeight),
+  );
+
+  return {
+    width,
+    height: extentBottom - extentTop,
+    cx: half,
+    cy: -extentTop,
+    radius,
+    labels: placed.map((label) => ({ ...label, top: label.top - extentTop })),
+  };
+}
+
+function polygonPoints(layout: RadarLayout, ratios: readonly number[]): string {
   return ratios
     .map((ratio, i) => {
-      const [x, y] = getPoint(cx, cy, radius, i, total, ratio);
+      const [ux, uy] = direction(i, ratios.length);
+      const x = layout.cx + layout.radius * ratio * ux;
+      const y = layout.cy + layout.radius * ratio * uy;
       return `${x},${y}`;
     })
     .join(" ");
 }
 
+function sameFrame(a: RadarFrame | null, b: RadarFrame): boolean {
+  return (
+    a !== null &&
+    a.width === b.width &&
+    a.lineHeight === b.lineHeight &&
+    a.gap === b.gap &&
+    a.labelWidths.every((width, i) => width === b.labelWidths[i])
+  );
+}
+
+interface RadarChartProps {
+  axes: readonly RadarChartAxis[];
+  /** 図の名前（読み上げ） */
+  label: string;
+}
+
 /**
- * SVG-based radar chart component. Renders a polygon chart with concentric
- * grid lines, data polygon with color fill, axis labels, and percentage
- * score annotations.
+ * 軸ごとの割合を多角形で見せるレーダー（DESIGN.md §5 図）。無彩で描き、多角形は面を塗らずに --ink の線と頂点の
+ * 点で描く。格子と軸は細い線で引く。
  *
- * No external libraries required -- pure SVG rendering.
+ * 軸の名前と数値は補助情報の大きさで紙の上に添え、図を縮めても字は小さくしない。字の幅と行の高さを描く前に
+ * 測り、それが収まる大きさで多角形を描く。幅か字の大きさが変わったら測り直す。
  */
-export default function RadarChart({
-  axes,
-  color,
-  size = DEFAULT_SIZE,
-}: RadarChartProps) {
-  const total = axes.length;
-  if (total < 3) return null;
+export default function RadarChart({ axes, label }: RadarChartProps) {
+  const figureRef = useRef<HTMLDivElement>(null);
+  const [frame, setFrame] = useState<RadarFrame | null>(null);
 
-  const cx = size / 2;
-  const cy = size / 2;
-  const radius = (size - PADDING * 2) / 2;
+  useLayoutEffect(() => {
+    const figure = figureRef.current;
+    if (!figure) return;
+    const measure = () => {
+      const texts = Array.from(
+        figure.querySelectorAll<HTMLElement>("[data-radar-measure]"),
+      );
+      if (texts.length === 0) return;
+      const fontSize = parseFloat(getComputedStyle(texts[0]).fontSize) || 0;
+      const labelWidths = axes.map((_, i) =>
+        Math.max(
+          ...texts
+            .filter((text) => text.dataset.radarMeasure === String(i))
+            .map((text) => text.getBoundingClientRect().width),
+        ),
+      );
+      const next: RadarFrame = {
+        width: figure.clientWidth,
+        lineHeight: texts[0].getBoundingClientRect().height,
+        gap: fontSize / 2,
+        labelWidths,
+      };
+      setFrame((current) => (sameFrame(current, next) ? current : next));
+    };
+    measure();
+    if (typeof ResizeObserver === "undefined") return;
+    // 図の幅と、字の大きさで変わる測りの字を見て、変わったら組み直す。
+    const observer = new ResizeObserver(measure);
+    observer.observe(figure);
+    figure
+      .querySelectorAll("[data-radar-measure]")
+      .forEach((text) => observer.observe(text));
+    return () => observer.disconnect();
+  }, [axes]);
 
-  // Normalize values to 0..1 ratios
-  const ratios = axes.map((axis) =>
-    axis.max > 0 ? Math.min(axis.value / axis.max, 1) : 0,
+  const ratios = axes.map(
+    (axis) => Math.min(Math.max(axis.percent, 0), 100) / 100,
   );
-
-  // Grid lines (concentric polygons at each level)
-  const gridPolygons = Array.from({ length: GRID_LEVELS }, (_, level) => {
-    const levelRatio = (level + 1) / GRID_LEVELS;
-    const uniformRatios = Array.from({ length: total }, () => levelRatio);
-    return buildPolygonPoints(cx, cy, radius, total, uniformRatios);
-  });
-
-  // Axis lines from center to each vertex
-  const axisLines = Array.from({ length: total }, (_, i) => {
-    const [x, y] = getPoint(cx, cy, radius, i, total, 1);
-    return { x1: cx, y1: cy, x2: x, y2: y };
-  });
-
-  // Data polygon
-  const dataPoints = buildPolygonPoints(cx, cy, radius, total, ratios);
-
-  // Dots at each data vertex
-  const dots = ratios.map((ratio, i) =>
-    getPoint(cx, cy, radius, i, total, ratio),
-  );
-
-  // Label positions (slightly outside the outer polygon)
-  const labelOffset = 1.2;
-  const labels = axes.map((axis, i) => {
-    const [x, y] = getPoint(cx, cy, radius, i, total, labelOffset);
-    const pct = axis.max > 0 ? Math.round((axis.value / axis.max) * 100) : 0;
-    return { x, y, label: axis.label, pct };
-  });
+  const layout = frame ? layoutRadar(frame, axes.length) : null;
 
   return (
-    <svg
-      className={styles.chart}
-      data-color={color}
-      viewBox={`0 0 ${size} ${size}`}
-      role="img"
-      aria-label="レーダーチャート"
-    >
-      {/* Background grid: 墨の罫（--rule）で組む。装飾の色付きグローは使わない（§5）。 */}
-      {gridPolygons.map((points, i) => (
-        <polygon
-          key={`grid-${i}`}
-          points={points}
-          fill="none"
-          stroke="var(--rule)"
-          strokeWidth={i === GRID_LEVELS - 1 ? 1.5 : 0.7}
-        />
+    <div ref={figureRef} className={styles.figure}>
+      {axes.map((axis, i) => (
+        <span key={i} aria-hidden="true">
+          <span className={styles.measure} data-radar-measure={i}>
+            {axis.label}
+          </span>
+          <span className={styles.measure} data-radar-measure={i}>
+            {axis.percent}%
+          </span>
+        </span>
       ))}
-
-      {/* Axis lines */}
-      {axisLines.map((line, i) => (
-        <line
-          key={`axis-${i}`}
-          x1={line.x1}
-          y1={line.y1}
-          x2={line.x2}
-          y2={line.y2}
-          stroke="var(--rule)"
-          strokeWidth={0.7}
-        />
-      ))}
-
-      {/* Data polygon with animation。色は和色8色のいずれか（--radar-fill・data-color 経由）。 */}
-      <g className={styles.dataGroup}>
-        {/* Filled area */}
-        <polygon
-          points={dataPoints}
-          fill="var(--radar-fill)"
-          fillOpacity={0.25}
-          stroke="var(--radar-fill)"
-          strokeWidth={2}
-        />
-        {/* Vertex dots */}
-        <g fill="var(--radar-fill)">
-          {dots.map(([x, y], i) => (
-            <circle key={`dot-${i}`} cx={x} cy={y} r={DOT_RADIUS} />
+      {layout && (
+        <svg
+          className={styles.chart}
+          width={layout.width}
+          height={layout.height}
+          viewBox={`0 0 ${layout.width} ${layout.height}`}
+          role="img"
+          aria-label={label}
+        >
+          {Array.from({ length: GRID_LEVELS }, (_, level) => (
+            <polygon
+              key={`grid-${level}`}
+              className={styles.grid}
+              points={polygonPoints(
+                layout,
+                axes.map(() => (level + 1) / GRID_LEVELS),
+              )}
+            />
           ))}
-        </g>
-      </g>
-
-      {/* Axis labels and score percentages。文字は墨（--ink / --ink-2）・tabular 数値。 */}
-      {labels.map((item, i) => {
-        // Adjust text-anchor based on horizontal position
-        const anchorX = item.x - cx;
-        let textAnchor: "start" | "middle" | "end" = "middle";
-        if (anchorX > 5) textAnchor = "start";
-        if (anchorX < -5) textAnchor = "end";
-
-        return (
-          <g key={`label-${i}`}>
-            <text
-              x={item.x}
-              y={item.y}
-              textAnchor={textAnchor}
-              dominantBaseline="middle"
-              fontSize={13}
-              fontWeight={600}
-              fill="var(--ink)"
-            >
-              {item.label}
-            </text>
-            <text
-              x={item.x}
-              y={item.y + 15}
-              textAnchor={textAnchor}
-              dominantBaseline="middle"
-              fontSize={11}
-              fill="var(--ink-2)"
-              fontFamily="var(--font-body)"
-            >
-              {item.pct}%
-            </text>
-          </g>
-        );
-      })}
-    </svg>
+          {axes.map((_, i) => {
+            const [ux, uy] = direction(i, axes.length);
+            return (
+              <line
+                key={`axis-${i}`}
+                className={styles.grid}
+                x1={layout.cx}
+                y1={layout.cy}
+                x2={layout.cx + layout.radius * ux}
+                y2={layout.cy + layout.radius * uy}
+              />
+            );
+          })}
+          <polygon
+            className={styles.data}
+            points={polygonPoints(layout, ratios)}
+          />
+          {ratios.map((ratio, i) => {
+            const [ux, uy] = direction(i, axes.length);
+            return (
+              <circle
+                key={`dot-${i}`}
+                className={styles.dot}
+                cx={layout.cx + layout.radius * ratio * ux}
+                cy={layout.cy + layout.radius * ratio * uy}
+                r={DOT_RADIUS}
+              />
+            );
+          })}
+          {axes.map((axis, i) => {
+            const placement = layout.labels[i];
+            const lineHeight = frame?.lineHeight ?? 0;
+            return (
+              <text
+                key={`label-${i}`}
+                className={styles.label}
+                textAnchor={placement.anchor}
+              >
+                <tspan
+                  x={placement.x}
+                  y={placement.top + lineHeight / 2}
+                  dominantBaseline="central"
+                >
+                  {axis.label}
+                </tspan>
+                <tspan
+                  x={placement.x}
+                  y={placement.top + (lineHeight * 3) / 2}
+                  dominantBaseline="central"
+                >
+                  {axis.percent}%
+                </tspan>
+              </text>
+            );
+          })}
+        </svg>
+      )}
+    </div>
   );
 }

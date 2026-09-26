@@ -1,20 +1,9 @@
 /**
- * MusicPersonalityContent - music-personality variant の共通コンテンツコンポーネント。
+ * 音楽性格診断のタイプを詳しく説明する読みもの。解き終えた画面（ResultCard）と結果のページの両方に置く。
  *
- * ResultCard.tsx（解き終えた画面）と
- * app/play/music-personality/result/[resultId]/page.tsx（結果のページ）の
- * 両方から使用される。ResultCard.tsx からは next/dynamic で遅延ロードされるため、
- * クライアントバンドルへの music-personality データの混入を防ぐ。
- *
- * 共通化対象:
- * - strengths / weaknesses / behaviors / todayAction / すべてのタイプ（OtherTypesNav） の 5 セクション
- * - referrerTypeId による相性セクション / 招待ボタン（ResultCard 向け）
- *
- * 共通化しないもの（呼び出し側の責務）:
- * - catchphrase の表示（ResultCard/page.tsx でスタイル・配置が異なる）
- * - ShareButtons / もう一度挑戦するボタン
- *
- * 強み・弱み・行動の3セクションは色で分けず、同じ質感で組んで見出しと本文で見分けさせる（DESIGN.md §1）。
+ * 音楽的な強み・弱み・音楽あるある・今日の音楽ライフのヒント・すべてのタイプを並べる。解き終えた画面では、
+ * 友達の結果から来たときの相性と招待もここで出す。結果のページは afterTodayAction で相性と招待を差し込む。
+ * キャッチコピー・共有・「もう一度挑戦する」は呼び出し側が置く。
  */
 
 "use client";
@@ -27,33 +16,30 @@ import musicPersonalityQuiz, {
 } from "@/play/quiz/data/music-personality";
 import CompatibilitySection from "./CompatibilitySection";
 import InviteFriendButton from "./InviteFriendButton";
-import OtherTypesNav, {
-  type ResultPlacement,
-  SECTION_HEADING,
-} from "./OtherTypesNav";
-import styles from "./MusicPersonalityContent.module.css";
+import OtherTypesNav, { type ResultPlacement } from "./OtherTypesNav";
+import {
+  Reading,
+  ReadingHeading,
+  ReadingList,
+  ReadingText,
+} from "./ResultReading";
 
 interface MusicPersonalityContentProps {
-  /** detailedContent（strengths, weaknesses, behaviors, todayAction を含む） */
   content: MusicPersonalityDetailedContent;
-  /** 結果ID（すべてのタイプで現在のタイプをハイライトするため） */
+  /** 来訪者のタイプ。すべてのタイプでこのタイプを示す。 */
   resultId: string;
-  /** 置く面。page.tsx は結果のページ、ResultCard は解き終えた画面。見出しの階層と、すべてのタイプでのいまのタイプの示し方が決まる。 */
+  /** 置く面。見出しの段と、すべてのタイプでのいまのタイプの示し方が決まる。 */
   placement: ResultPlacement;
-  /**
-   * 相性診断用の referrer タイプID。
-   * ResultCard から渡される場合、内部で相性セクション・招待ボタンを生成する。
-   * page.tsx（結果ページ）から使用する場合は afterTodayAction スロットを使用する。
-   */
+  /** 友達のタイプ。解き終えた画面で、友達の結果から来たときに相性を出す。 */
   referrerTypeId?: string;
-  /** 相性セクション・CTA等のページ固有要素を挿入するためのスロット（todayActionとすべてのタイプの間に表示） */
+  /**
+   * 今日の音楽ライフのヒントのあと、すべてのタイプの前に置くもの（結果のページの相性・招待）。渡したときは、
+   * referrerTypeId から相性を組まない。
+   */
   afterTodayAction?: React.ReactNode;
 }
 
-/**
- * ResultCard（"use client"）から呼ばれる場合に相性セクション・招待ボタンを生成する。
- * afterTodayAction が外部から渡された場合はそちらを優先する。
- */
+/** 解き終えた画面の相性と招待。友達のタイプが正しければ相性を出し、なければ招待だけを出す。 */
 function buildAfterTodayAction(
   resultId: string,
   referrerTypeId?: string,
@@ -111,60 +97,37 @@ export default function MusicPersonalityContent({
   afterTodayAction,
 }: MusicPersonalityContentProps) {
   const quiz = musicPersonalityQuiz;
-  const Heading = SECTION_HEADING[placement];
-
-  // afterTodayAction が外部から渡された場合はそちらを優先。
-  // 渡されない場合（ResultCard からの呼び出し）は referrerTypeId を使って内部で生成する。
   const resolvedAfterTodayAction =
     afterTodayAction !== undefined
       ? afterTodayAction
       : buildAfterTodayAction(resultId, referrerTypeId);
 
   return (
-    <div className={styles.wrapper}>
-      {/* strengths セクション */}
-      <Heading className={styles.sectionHeading}>
-        このタイプの音楽的な強み
-      </Heading>
-      <ul className={styles.itemList}>
-        {content.strengths.map((s, i) => (
-          <li key={i} className={styles.item}>
-            {s}
-          </li>
-        ))}
-      </ul>
+    <Reading>
+      <ReadingHeading
+        placement={placement}
+        phrases={["この", "タイプの", "音楽的な", "強み"]}
+      />
+      <ReadingList items={content.strengths} />
 
-      {/* weaknesses セクション */}
-      <Heading className={styles.sectionHeading}>
-        このタイプの音楽的な弱み
-      </Heading>
-      <ul className={styles.itemList}>
-        {content.weaknesses.map((w, i) => (
-          <li key={i} className={styles.item}>
-            {w}
-          </li>
-        ))}
-      </ul>
+      <ReadingHeading
+        placement={placement}
+        phrases={["この", "タイプの", "音楽的な", "弱み"]}
+      />
+      <ReadingList items={content.weaknesses} />
 
-      {/* behaviors セクション */}
-      <Heading className={styles.sectionHeading}>
-        このタイプの音楽あるある
-      </Heading>
-      <ul className={styles.itemList}>
-        {content.behaviors.map((b, i) => (
-          <li key={i} className={styles.item}>
-            {b}
-          </li>
-        ))}
-      </ul>
+      <ReadingHeading
+        placement={placement}
+        phrases={["この", "タイプの", "音楽", "あるある"]}
+      />
+      <ReadingList items={content.behaviors} />
 
-      {/* todayAction セクション: 呼びかけなので、リストと分けて --paper-2 の地に置く */}
-      <Heading className={styles.sectionHeading}>
-        今日の音楽ライフのヒント
-      </Heading>
-      <div className={styles.todayActionCard}>{content.todayAction}</div>
+      <ReadingHeading
+        placement={placement}
+        phrases={["今日の", "音楽ライフの", "ヒント"]}
+      />
+      <ReadingText>{content.todayAction}</ReadingText>
 
-      {/* afterTodayAction スロット: 相性セクション・CTA等のページ固有要素 */}
       {resolvedAfterTodayAction}
 
       <OtherTypesNav
@@ -173,6 +136,6 @@ export default function MusicPersonalityContent({
         results={quiz.results}
         placement={placement}
       />
-    </div>
+    </Reading>
   );
 }

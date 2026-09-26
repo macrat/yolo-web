@@ -189,49 +189,31 @@ describe("MusicPersonalityContent - afterTodayAction スロット", () => {
   });
 });
 
-describe("MusicPersonalityContent - wrapper クラス", () => {
-  it("wrapperクラスを持つ最外層要素が存在すること", () => {
+describe("MusicPersonalityContent - 読みものの組み方", () => {
+  it("文は段落、あるあるは箇条書きで組み、カードの区画を持たない", () => {
     const { container } = render(
       <MusicPersonalityContent
         content={sampleContent}
         resultId="festival-pioneer"
         placement="resultPage"
+        afterTodayAction={null}
       />,
     );
-    const wrapper = container.querySelector("[class*='wrapper']");
-    expect(wrapper).not.toBeNull();
+    for (const text of [sampleContent.todayAction]) {
+      expect(screen.getByText(text).tagName).toBe("P");
+    }
+    for (const item of [
+      ...sampleContent.strengths,
+      ...sampleContent.weaknesses,
+      ...sampleContent.behaviors,
+    ]) {
+      expect(screen.getByText(item).tagName).toBe("LI");
+    }
+    expect(container.querySelector("[class*='Card']")).toBeNull();
   });
 });
 
 // タイプごとの色をインラインスタイルで入れない（DESIGN.md §2）。
-describe("MusicPersonalityContent - インラインスタイル不使用", () => {
-  it("sectionHeadingにインラインスタイルが設定されていないこと", () => {
-    const { container } = render(
-      <MusicPersonalityContent
-        content={sampleContent}
-        resultId="festival-pioneer"
-        placement="resultPage"
-      />,
-    );
-    const headings = container.querySelectorAll("[class*='sectionHeading']");
-    headings.forEach((heading) => {
-      expect((heading as HTMLElement).style.color).toBe("");
-    });
-  });
-
-  it("todayActionCardにインラインスタイルが設定されていないこと", () => {
-    const { container } = render(
-      <MusicPersonalityContent
-        content={sampleContent}
-        resultId="festival-pioneer"
-        placement="resultPage"
-      />,
-    );
-    const card = container.querySelector("[class*='todayActionCard']");
-    expect(card).not.toBeNull();
-    expect((card as HTMLElement).style.backgroundColor).toBe("");
-  });
-});
 
 describe("MusicPersonalityContent - 全タイプリンク", () => {
   it("全タイプへのリンクが /play/music-personality/result/{id} 形式であること", () => {

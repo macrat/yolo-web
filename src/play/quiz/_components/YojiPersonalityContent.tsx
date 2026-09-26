@@ -1,37 +1,28 @@
 /**
- * YojiPersonalityContent - yoji-personality variant の共通コンテンツコンポーネント。
+ * 四字熟語性格診断のタイプを詳しく説明する読みもの。解き終えた画面（ResultCard）と結果のページの両方に置く。
  *
- * ResultCard.tsx（解き終えた画面）と page.tsx（結果のページ）の両方から使用される。
- * Server Component（"use client" なし）: 純粋なプレゼンテーションコンポーネント。
- *
- * 共通化対象:
- * - kanjiBreakdown / origin / behaviors / motto / すべてのタイプ（OtherTypesNav） の5セクション
- *
- * 共通化しないもの（呼び出し側の責務）:
- * - catchphrase の表示（ResultCard/page.tsx でスタイル・配置が異なる）
- * - CTA（afterMotto スロットとして注入）
- * - ShareButtons / もう一度挑戦するボタン
- *
- * タイプごとの色は装飾に使わず、共通のトークンで組む。色がタイプの中身ではないため（DESIGN.md §2）。
+ * 四字熟語の成り立ち・ルーツ・現れる日常・座右の銘として・すべてのタイプを並べる。キャッチコピー・共有・
+ * 「もう一度挑戦する」は呼び出し側が置き、結果のページの案内は afterMotto で差し込む。
  */
 
 import type React from "react";
 import type { YojiPersonalityDetailedContent } from "@/play/quiz/types";
 import yojiPersonalityQuiz from "@/play/quiz/data/yoji-personality";
-import OtherTypesNav, {
-  type ResultPlacement,
-  SECTION_HEADING,
-} from "./OtherTypesNav";
-import styles from "./YojiPersonalityContent.module.css";
+import OtherTypesNav, { type ResultPlacement } from "./OtherTypesNav";
+import {
+  Reading,
+  ReadingHeading,
+  ReadingList,
+  ReadingText,
+} from "./ResultReading";
 
 interface YojiPersonalityContentProps {
-  /** detailedContent（kanjiBreakdown, origin, behaviors, motto を含む） */
   content: YojiPersonalityDetailedContent;
-  /** 結果ID（すべてのタイプで現在のタイプをハイライトするため） */
+  /** 来訪者のタイプ。すべてのタイプでこのタイプを示す。 */
   resultId: string;
-  /** 置く面。page.tsx は結果のページ、ResultCard は解き終えた画面。見出しの階層と、すべてのタイプでのいまのタイプの示し方が決まる。 */
+  /** 置く面。見出しの段と、すべてのタイプでのいまのタイプの示し方が決まる。 */
   placement: ResultPlacement;
-  /** motto後・すべてのタイプ前にページ固有要素（CTA等）を挿入するスロット */
+  /** 座右の銘としてのあと、すべてのタイプの前に置くもの */
   afterMotto?: React.ReactNode;
 }
 
@@ -42,37 +33,30 @@ export default function YojiPersonalityContent({
   afterMotto,
 }: YojiPersonalityContentProps) {
   const quiz = yojiPersonalityQuiz;
-  const Heading = SECTION_HEADING[placement];
 
   return (
-    <div className={styles.wrapper}>
-      {/* kanjiBreakdown セクション: 漢字一字ずつの意味を紐解く知的コンテンツ（中心解説） */}
-      <Heading className={styles.sectionHeading}>
-        この四字熟語の成り立ち
-      </Heading>
-      <div className={styles.kanjiBreakdownCard}>{content.kanjiBreakdown}</div>
+    <Reading>
+      <ReadingHeading
+        placement={placement}
+        phrases={["この", "四字熟語の", "成り立ち"]}
+      />
+      <ReadingText>{content.kanjiBreakdown}</ReadingText>
 
-      {/* origin セクション: 歴史的背景・出典の解説（副次的な背景） */}
-      <Heading className={styles.sectionHeading}>この四字熟語のルーツ</Heading>
-      <div className={styles.originCard}>{content.origin}</div>
+      <ReadingHeading
+        placement={placement}
+        phrases={["この", "四字熟語の", "ルーツ"]}
+      />
+      <ReadingText>{content.origin}</ReadingText>
 
-      {/* behaviors セクション: 共感あるある4項目 */}
-      <Heading className={styles.sectionHeading}>
-        この四字熟語が現れる日常
-      </Heading>
-      <ul className={styles.behaviorsList}>
-        {content.behaviors.map((b, i) => (
-          <li key={i} className={styles.behaviorsItem}>
-            {b}
-          </li>
-        ))}
-      </ul>
+      <ReadingHeading
+        placement={placement}
+        phrases={["この", "四字熟語が", "現れる", "日常"]}
+      />
+      <ReadingList items={content.behaviors} />
 
-      {/* motto セクション: 座右の銘としての締めのメッセージ */}
-      <Heading className={styles.sectionHeading}>座右の銘として</Heading>
-      <div className={styles.mottoCard}>{content.motto}</div>
+      <ReadingHeading placement={placement} phrases={["座右の銘", "として"]} />
+      <ReadingText>{content.motto}</ReadingText>
 
-      {/* afterMotto スロット: CTA等のページ固有要素 */}
       {afterMotto}
 
       <OtherTypesNav
@@ -81,6 +65,6 @@ export default function YojiPersonalityContent({
         results={quiz.results}
         placement={placement}
       />
-    </div>
+    </Reading>
   );
 }

@@ -1,41 +1,32 @@
 /**
- * UnexpectedCompatibilityContent - unexpected-compatibility variant の共通コンテンツコンポーネント。
+ * 意外な相性診断のタイプを詳しく説明する読みもの。解き終えた画面（ResultCard）と結果のページの両方に置く。
  *
- * ResultCard.tsx（解き終えた画面）と page.tsx（結果のページ）の両方から使用される。
- * Server Component（"use client" なし）: 純粋なプレゼンテーションコンポーネント。
- *
- * 共通化対象:
- * - entityEssence / whyCompatible / behaviors / lifeAdvice / すべてのタイプ（OtherTypesNav） の5セクション
- *
- * 共通化しないもの（呼び出し側の責務）:
- * - catchphrase の表示（ResultCard/page.tsx でスタイル・配置が異なる）
- * - CTA（afterLifeAdvice スロットとして注入）
- * - ShareButtons / もう一度挑戦するボタン
- *
- * タイプごとの色は装飾に使わず、共通のトークンで組む。色がタイプの中身ではないため（DESIGN.md §2）。
+ * 存在の本質・相性が良い理由・共鳴する日常・学べること・すべてのタイプを並べる。キャッチコピー・共有・
+ * 「もう一度挑戦する」は呼び出し側が置き、結果のページの案内は afterLifeAdvice で差し込む。
  */
 
 import type React from "react";
 import type { UnexpectedCompatibilityDetailedContent } from "@/play/quiz/types";
 import type { QuizResult } from "@/play/quiz/types";
-import OtherTypesNav, {
-  type ResultPlacement,
-  SECTION_HEADING,
-} from "./OtherTypesNav";
-import styles from "./UnexpectedCompatibilityContent.module.css";
+import OtherTypesNav, { type ResultPlacement } from "./OtherTypesNav";
+import {
+  Reading,
+  ReadingHeading,
+  ReadingList,
+  ReadingText,
+} from "./ResultReading";
 
 interface UnexpectedCompatibilityContentProps {
-  /** クイズのスラグ（すべてのタイプのリンク生成に使用） */
+  /** 診断の slug（すべてのタイプのリンクに使う） */
   quizSlug: string;
-  /** 結果ID（すべてのタイプで現在のタイプをハイライトするため） */
+  /** 来訪者のタイプ。すべてのタイプでこのタイプを示す。 */
   resultId: string;
-  /** detailedContent（entityEssence, whyCompatible, behaviors, lifeAdvice を含む） */
   detailedContent: UnexpectedCompatibilityDetailedContent;
-  /** 全タイプの配列（すべてのタイプに並べる） */
+  /** 診断の全タイプ（すべてのタイプに並べる） */
   allResults: QuizResult[];
-  /** 置く面。page.tsx は結果のページ、ResultCard は解き終えた画面。見出しの階層と、すべてのタイプでのいまのタイプの示し方が決まる。 */
+  /** 置く面。見出しの段と、すべてのタイプでのいまのタイプの示し方が決まる。 */
   placement: ResultPlacement;
-  /** lifeAdvice後・すべてのタイプ前にページ固有要素（CTA等）を挿入するスロット */
+  /** 学べることのあと、すべてのタイプの前に置くもの */
   afterLifeAdvice?: React.ReactNode;
 }
 
@@ -47,41 +38,32 @@ export default function UnexpectedCompatibilityContent({
   placement,
   afterLifeAdvice,
 }: UnexpectedCompatibilityContentProps) {
-  const Heading = SECTION_HEADING[placement];
-
   return (
-    <div className={styles.wrapper}>
-      {/* entityEssence セクション: 存在の本質を哲学的・ユーモラスに解説（中心解説） */}
-      <Heading className={styles.sectionHeading}>この存在の本質</Heading>
-      <div className={styles.entityEssenceCard}>
-        {detailedContent.entityEssence}
-      </div>
+    <Reading>
+      <ReadingHeading
+        placement={placement}
+        phrases={["この", "存在の", "本質"]}
+      />
+      <ReadingText>{detailedContent.entityEssence}</ReadingText>
 
-      {/* whyCompatible セクション: なぜこの存在と相性が良いかの核心解説 */}
-      <Heading className={styles.sectionHeading}>なぜ相性が良いのか</Heading>
-      <div className={styles.whyCompatibleCard}>
-        {detailedContent.whyCompatible}
-      </div>
+      <ReadingHeading
+        placement={placement}
+        phrases={["なぜ", "相性が", "良いのか"]}
+      />
+      <ReadingText>{detailedContent.whyCompatible}</ReadingText>
 
-      {/* behaviors セクション: あるある・日常での共鳴シーン4項目 */}
-      <Heading className={styles.sectionHeading}>
-        この存在と共鳴する日常
-      </Heading>
-      <ul className={styles.behaviorsList}>
-        {detailedContent.behaviors.map((b, i) => (
-          <li key={i} className={styles.behaviorsItem}>
-            {b}
-          </li>
-        ))}
-      </ul>
+      <ReadingHeading
+        placement={placement}
+        phrases={["この", "存在と", "共鳴する", "日常"]}
+      />
+      <ReadingList items={detailedContent.behaviors} />
 
-      {/* lifeAdvice セクション: この存在から学べる教訓・締めのメッセージ */}
-      <Heading className={styles.sectionHeading}>
-        この存在から学べること
-      </Heading>
-      <div className={styles.lifeAdviceCard}>{detailedContent.lifeAdvice}</div>
+      <ReadingHeading
+        placement={placement}
+        phrases={["この", "存在から", "学べる", "こと"]}
+      />
+      <ReadingText>{detailedContent.lifeAdvice}</ReadingText>
 
-      {/* afterLifeAdvice スロット: CTA等のページ固有要素 */}
       {afterLifeAdvice}
 
       <OtherTypesNav
@@ -90,6 +72,6 @@ export default function UnexpectedCompatibilityContent({
         results={allResults}
         placement={placement}
       />
-    </div>
+    </Reading>
   );
 }

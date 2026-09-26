@@ -1,19 +1,9 @@
 /**
- * CharacterPersonalityContent - character-personality variant の共通コンテンツコンポーネント。
+ * あなたに似たキャラ診断のタイプを詳しく説明する読みもの。解き終えた画面（ResultCard）と結果のページの両方に置く。
  *
- * ResultCard.tsx（解き終えた画面）と page.tsx（結果のページ）の両方から使用される。
- * ResultCard.tsx からは next/dynamic で遅延ロードされるため、クライアントバンドルへの
- * character-personality データの混入を防ぐ。
- *
- * 共通化対象:
- * - archetypeBreakdown / behaviors / characterMessage / すべてのタイプ（OtherTypesNav） の4セクション
- * - referrerTypeId による相性セクション / 招待ボタン（ResultCard向け）
- *
- * 共通化しないもの（呼び出し側の責務）:
- * - catchphrase の表示（ResultCard/page.tsx でスタイル・配置が異なる）
- * - ShareButtons / もう一度挑戦するボタン
- *
- * タイプごとの色は装飾に使わず、共通のトークンで組む。色がタイプの中身ではないため（DESIGN.md §2）。
+ * 成り立ち・日常・キャラからのメッセージ・すべてのタイプを並べる。解き終えた画面では、友達の結果から来たときの
+ * 相性と招待もここで出す。結果のページは afterCharacterMessage で自分の相性と招待を差し込む。キャッチコピー・
+ * 共有・「もう一度挑戦する」は呼び出し側が置く。
  */
 
 "use client";
@@ -27,11 +17,13 @@ import characterPersonalityQuiz, {
 } from "@/play/quiz/data/character-personality";
 import CompatibilitySection from "./CompatibilitySection";
 import InviteFriendButton from "./InviteFriendButton";
-import OtherTypesNav, {
-  type ResultPlacement,
-  SECTION_HEADING,
-} from "./OtherTypesNav";
-import styles from "./CharacterPersonalityContent.module.css";
+import OtherTypesNav, { type ResultPlacement } from "./OtherTypesNav";
+import {
+  Reading,
+  ReadingHeading,
+  ReadingList,
+  ReadingText,
+} from "./ResultReading";
 
 const QUIZ_SLUG = "character-personality";
 const QUIZ_TITLE = "あなたに似たキャラ診断";
@@ -51,29 +43,22 @@ interface CompatibilityApiResponse {
 }
 
 interface CharacterPersonalityContentProps {
-  /** detailedContent（archetypeBreakdown, behaviors, characterMessage を含む） */
   content: CharacterPersonalityDetailedContent;
-  /** 結果ID（すべてのタイプで現在のタイプをハイライトするため） */
+  /** 来訪者のタイプ。すべてのタイプでこのタイプを示す。 */
   resultId: string;
-  /** 置く面。page.tsx は結果のページ、ResultCard は解き終えた画面。見出しの階層と、すべてのタイプでのいまのタイプの示し方が決まる。 */
+  /** 置く面。見出しの段と、すべてのタイプでのいまのタイプの示し方が決まる。 */
   placement: ResultPlacement;
-  /**
-   * 相性診断用の referrer タイプID。
-   * ResultCard から渡される場合、内部で相性セクション・招待ボタンを生成する。
-   * page.tsx（結果ページ）から使用する場合は afterCharacterMessage スロットを使用する。
-   */
+  /** 友達のタイプ。解き終えた画面で、友達の結果から来たときに相性を出す。 */
   referrerTypeId?: string;
   /**
-   * characterMessage後・すべてのタイプ前にページ固有要素（相性セクション・CTA等）を挿入するスロット。
-   * 渡された場合は referrerTypeId によるAPI呼び出しは行わず、このスロットを優先する。
+   * キャラからのメッセージのあと、すべてのタイプの前に置くもの（結果のページの相性・招待）。渡したときは、
+   * referrerTypeId から相性を読み込まない。
    */
   afterCharacterMessage?: React.ReactNode;
 }
 
 /**
- * 相性エリアのレンダリングを管理するコンポーネント。
- * referrerTypeId がある場合はAPIから相性データをフェッチする。
- * afterCharacterMessage が渡された場合はそちらを優先する。
+ * 解き終えた画面の相性と招待。友達のタイプがあれば相性を読み込んで出し、読み込めなければ招待だけを出す。
  */
 function CompatibilityArea({
   resultId,
@@ -128,13 +113,8 @@ function CompatibilityArea({
     );
   }
 
-  // フェッチ中はローディング表示
   if (loading) {
-    return (
-      <div style={{ textAlign: "center", padding: "1rem", opacity: 0.6 }}>
-        相性データを読み込み中...
-      </div>
-    );
+    return <ReadingText>友達との相性を読み込んでいます</ReadingText>;
   }
 
   // フェッチ失敗またはデータなしの場合は招待ボタンのみ
@@ -187,10 +167,6 @@ export default function CharacterPersonalityContent({
   referrerTypeId,
   afterCharacterMessage,
 }: CharacterPersonalityContentProps) {
-  const Heading = SECTION_HEADING[placement];
-
-  // afterCharacterMessage が外部から渡された場合はそちらを優先する。
-  // 渡されない場合（ResultCard からの呼び出し）は referrerTypeId を使って内部で生成する。
   const resolvedAfterCharacterMessage =
     afterCharacterMessage !== undefined ? (
       afterCharacterMessage
@@ -199,32 +175,25 @@ export default function CharacterPersonalityContent({
     );
 
   return (
-    <div className={styles.wrapper}>
-      {/* archetypeBreakdown セクション: 2つのアーキタイプの融合解説 */}
-      <Heading className={styles.sectionHeading}>このキャラの成り立ち</Heading>
-      <div className={styles.archetypeBreakdownCard}>
-        {content.archetypeBreakdown}
-      </div>
+    <Reading>
+      <ReadingHeading
+        placement={placement}
+        phrases={["この", "キャラの", "成り立ち"]}
+      />
+      <ReadingText>{content.archetypeBreakdown}</ReadingText>
 
-      {/* behaviors セクション: あるある4項目 */}
-      <Heading className={styles.sectionHeading}>このキャラの日常</Heading>
-      <ul className={styles.behaviorsList}>
-        {content.behaviors.map((b, i) => (
-          <li key={i} className={styles.behaviorsItem}>
-            {b}
-          </li>
-        ))}
-      </ul>
+      <ReadingHeading
+        placement={placement}
+        phrases={["この", "キャラの", "日常"]}
+      />
+      <ReadingList items={content.behaviors} />
 
-      {/* characterMessage セクション: キャラからのメッセージ */}
-      <Heading className={styles.sectionHeading}>
-        キャラからのメッセージ
-      </Heading>
-      <div className={styles.characterMessageCard}>
-        {content.characterMessage}
-      </div>
+      <ReadingHeading
+        placement={placement}
+        phrases={["キャラからの", "メッセージ"]}
+      />
+      <ReadingText>{content.characterMessage}</ReadingText>
 
-      {/* afterCharacterMessage スロット: 相性セクション・CTA等のページ固有要素 */}
       {resolvedAfterCharacterMessage}
 
       <OtherTypesNav
@@ -233,6 +202,6 @@ export default function CharacterPersonalityContent({
         results={allTypes}
         placement={placement}
       />
-    </div>
+    </Reading>
   );
 }

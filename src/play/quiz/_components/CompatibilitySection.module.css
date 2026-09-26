@@ -1,74 +1,26 @@
-/*
- * 友達との相性結果。左寄せ・トークンのみ・絵文字なし。
- * 相性判定というもう一つの「見せたくなる結果」なので、罫で軽く区切って主結果と分ける
- * （器は静か）。リビールは 1 回・400ms 以下・reduced-motion 尊重（§11）。
- */
+/* 友達との相性。読みものの小見出しと同じく、上の細い罫線で前の内容と分ける（DESIGN.md §5）。 */
 .section {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--rule-strong);
-  text-align: left;
-  animation: fadeIn 0.4s ease;
+  margin-top: var(--space-32);
+  padding-top: var(--space-16);
+  border-top: var(--rule-w-hair) solid var(--rule-2);
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.heading {
-  font-size: 0.875rem;
-  color: var(--ink-2);
-  margin-bottom: 0.75rem;
-  font-weight: 600;
-}
-
-.typeIcons {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-}
-
-.typeBox {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.25rem;
-}
-
-.typeName {
-  font-size: 0.9rem;
-  color: var(--ink);
-}
-
-.separator {
-  font-size: 1.1rem;
+.caption {
+  margin: 0;
+  font-size: var(--text-small);
   color: var(--ink-2);
 }
 
 .label {
-  font-size: 1.5rem;
-  margin-bottom: 0.75rem;
-  color: var(--ink);
+  margin: var(--space-8) 0 0;
+  font-size: var(--text-heading-sub);
 }
 
-.description {
-  font-size: 0.9375rem;
-  line-height: 1.7;
-  color: var(--ink);
-  margin-bottom: 1.5rem;
-  text-align: left;
+.text {
+  max-width: var(--measure);
+  margin: var(--space-16) 0 0;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .section {
-    animation: none;
-  }
+.share {
+  margin-top: var(--space-16);
 }

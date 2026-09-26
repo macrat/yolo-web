@@ -1,62 +1,44 @@
-/*
- * レーダーチャート（結果の成果物内のデータ可視化。線は 3:1 以上、DESIGN.md §12）。
- * グリッド・軸・ラベルは墨（--rule/--ink/--ink-2）。データ系列だけが和色8色の1色
- * （data-color 経由の --radar-fill）を持つ。グロー・グラデーションは使わない（§5）。
- * リビールは 1 回・300ms 程度（§11 の結果の登場）・prefers-reduced-motion 尊重。
- */
+/* レーダー（DESIGN.md §5 図）。地は紙のまま、格子と軸は細い線、多角形と頂点の点は --ink で描く。 */
+.figure {
+  position: relative;
+  max-width: 20rem;
+}
+
+/* 軸に添える字の幅と行の高さを測る写し。見えず、場所を取らない。 */
+.measure {
+  position: absolute;
+  top: 0;
+  left: 0;
+  visibility: hidden;
+  white-space: nowrap;
+  font-size: var(--text-small);
+  line-height: var(--leading-heading);
+  font-variant-numeric: tabular-nums;
+}
+
 .chart {
   display: block;
-  margin: 0 auto;
-  max-width: 100%;
-  height: auto;
 }
 
-.dataGroup {
-  opacity: 0;
-  transform-origin: center;
-  animation: fadeScaleIn 0.3s ease-out forwards;
+.grid {
+  fill: none;
+  stroke: var(--rule-2);
+  stroke-width: var(--rule-w-hair);
 }
 
-@keyframes fadeScaleIn {
-  from {
-    opacity: 0;
-    transform: scale(0.7);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+.data {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: var(--rule-w);
+  stroke-linejoin: round;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .dataGroup {
-    animation: none;
-    opacity: 1;
-  }
+.dot {
+  fill: var(--ink);
 }
 
-/* data-color → 和色トークン（Tsutsumi と同じ8色。テキスト色ではなくデータ系列の色）。 */
-.chart[data-color="kurenai"] {
-  --radar-fill: var(--wairo-kurenai);
-}
-.chart[data-color="kaki"] {
-  --radar-fill: var(--wairo-kaki);
-}
-.chart[data-color="yamabuki"] {
-  --radar-fill: var(--wairo-yamabuki);
-}
-.chart[data-color="moegi"] {
-  --radar-fill: var(--wairo-moegi);
-}
-.chart[data-color="tokiwa"] {
-  --radar-fill: var(--wairo-tokiwa);
-}
-.chart[data-color="ai"] {
-  --radar-fill: var(--wairo-ai);
-}
-.chart[data-color="fuji"] {
-  --radar-fill: var(--wairo-fuji);
-}
-.chart[data-color="suou"] {
-  --radar-fill: var(--wairo-suou);
+.label {
+  font-size: var(--text-small);
+  font-variant-numeric: tabular-nums;
+  fill: var(--ink);
 }

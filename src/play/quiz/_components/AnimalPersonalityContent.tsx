@@ -1,38 +1,28 @@
 /**
- * AnimalPersonalityContent - animal-personality variant の共通コンテンツコンポーネント。
+ * 日本の固有種診断のタイプを詳しく説明する読みもの。解き終えた画面（ResultCard）と結果のページの両方に置く。
  *
- * ResultCard.tsx（解き終えた画面）と
- * app/play/animal-personality/result/[resultId]/page.tsx（結果のページ）の
- * 両方から使用される。Server Component（"use client" なし）: 純粋なプレゼンテーション。
- *
- * 共通化対象:
- * - strengths / weaknesses / behaviors / todayAction / すべてのタイプ（OtherTypesNav） の 5 セクション
- *
- * 共通化しないもの（呼び出し側の責務）:
- * - catchphrase の表示（ResultCard/page.tsx でスタイル・配置が異なる）
- * - 相性セクション / CTA（afterTodayAction スロットとして注入）
- * - ShareButtons / もう一度挑戦するボタン
- *
- * 強み・弱み・行動の3セクションは色で分けず、同じ質感で組んで見出しと本文で見分けさせる（DESIGN.md §1）。
+ * 強み・弱み・行動パターン・今日試してほしいこと・すべてのタイプを並べる。キャッチコピー・共有・「もう一度
+ * 挑戦する」は呼び出し側が置き、相性と招待は afterTodayAction で差し込む。
  */
 
 import type React from "react";
 import type { AnimalPersonalityDetailedContent } from "@/play/quiz/types";
 import animalPersonalityQuiz from "@/play/quiz/data/animal-personality";
-import OtherTypesNav, {
-  type ResultPlacement,
-  SECTION_HEADING,
-} from "./OtherTypesNav";
-import styles from "./AnimalPersonalityContent.module.css";
+import OtherTypesNav, { type ResultPlacement } from "./OtherTypesNav";
+import {
+  Reading,
+  ReadingHeading,
+  ReadingList,
+  ReadingText,
+} from "./ResultReading";
 
 interface AnimalPersonalityContentProps {
-  /** detailedContent（strengths, weaknesses, behaviors, todayAction を含む） */
   content: AnimalPersonalityDetailedContent;
-  /** 結果ID（すべてのタイプで現在のタイプをハイライトするため） */
+  /** 来訪者のタイプ。すべてのタイプでこのタイプを示す。 */
   resultId: string;
-  /** 置く面。page.tsx は結果のページ、ResultCard は解き終えた画面。見出しの階層と、すべてのタイプでのいまのタイプの示し方が決まる。 */
+  /** 置く面。見出しの段と、すべてのタイプでのいまのタイプの示し方が決まる。 */
   placement: ResultPlacement;
-  /** 相性セクション・CTA等のページ固有要素を挿入するためのスロット（todayActionとすべてのタイプの間に表示） */
+  /** 今日試してほしいことのあと、すべてのタイプの前に置くもの（相性・招待） */
   afterTodayAction?: React.ReactNode;
 }
 
@@ -43,47 +33,33 @@ export default function AnimalPersonalityContent({
   afterTodayAction,
 }: AnimalPersonalityContentProps) {
   const quiz = animalPersonalityQuiz;
-  const Heading = SECTION_HEADING[placement];
 
   return (
-    <div className={styles.wrapper}>
-      {/* strengths セクション */}
-      <Heading className={styles.sectionHeading}>このタイプの強み</Heading>
-      <ul className={styles.itemList}>
-        {content.strengths.map((s, i) => (
-          <li key={i} className={styles.item}>
-            {s}
-          </li>
-        ))}
-      </ul>
+    <Reading>
+      <ReadingHeading
+        placement={placement}
+        phrases={["この", "タイプの", "強み"]}
+      />
+      <ReadingList items={content.strengths} />
 
-      {/* weaknesses セクション */}
-      <Heading className={styles.sectionHeading}>このタイプの弱み</Heading>
-      <ul className={styles.itemList}>
-        {content.weaknesses.map((w, i) => (
-          <li key={i} className={styles.item}>
-            {w}
-          </li>
-        ))}
-      </ul>
+      <ReadingHeading
+        placement={placement}
+        phrases={["この", "タイプの", "弱み"]}
+      />
+      <ReadingList items={content.weaknesses} />
 
-      {/* behaviors セクション */}
-      <Heading className={styles.sectionHeading}>
-        この動物に似た行動パターン
-      </Heading>
-      <ul className={styles.itemList}>
-        {content.behaviors.map((b, i) => (
-          <li key={i} className={styles.item}>
-            {b}
-          </li>
-        ))}
-      </ul>
+      <ReadingHeading
+        placement={placement}
+        phrases={["この", "動物に", "似た", "行動パターン"]}
+      />
+      <ReadingList items={content.behaviors} />
 
-      {/* todayAction セクション: 呼びかけなので、リストと分けて --paper-2 の地に置く */}
-      <Heading className={styles.sectionHeading}>今日試してほしいこと</Heading>
-      <div className={styles.todayActionCard}>{content.todayAction}</div>
+      <ReadingHeading
+        placement={placement}
+        phrases={["今日", "試してほしい", "こと"]}
+      />
+      <ReadingText>{content.todayAction}</ReadingText>
 
-      {/* afterTodayAction スロット: 相性セクション・CTA等のページ固有要素 */}
       {afterTodayAction}
 
       <OtherTypesNav
@@ -92,6 +68,6 @@ export default function AnimalPersonalityContent({
         results={quiz.results}
         placement={placement}
       />
-    </div>
+    </Reading>
   );
 }

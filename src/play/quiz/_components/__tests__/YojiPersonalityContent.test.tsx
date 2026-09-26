@@ -206,8 +206,8 @@ describe("YojiPersonalityContent - afterMotto スロット", () => {
   });
 });
 
-describe("YojiPersonalityContent - wrapper", () => {
-  it("wrapperクラスを持つ最外層要素が存在すること", () => {
+describe("YojiPersonalityContent - 読みものの組み方", () => {
+  it("文は段落、あるあるは箇条書きで組み、カードの区画を持たない", () => {
     const { container } = render(
       <YojiPersonalityContent
         content={sampleContent}
@@ -215,23 +215,17 @@ describe("YojiPersonalityContent - wrapper", () => {
         placement="resultPage"
       />,
     );
-    const wrapper = container.querySelector("[class*='wrapper']");
-    expect(wrapper).not.toBeNull();
-  });
-
-  it("タイプの色を wrapper のインラインスタイルに入れないこと", () => {
-    const { container } = render(
-      <YojiPersonalityContent
-        content={sampleContent}
-        resultId="shoshikantetsu"
-        placement="resultPage"
-      />,
-    );
-    const wrapper = container.querySelector(
-      "[class*='wrapper']",
-    ) as HTMLElement;
-    expect(wrapper).not.toBeNull();
-    expect(wrapper.getAttribute("style")).toBeNull();
+    for (const text of [
+      sampleContent.kanjiBreakdown,
+      sampleContent.origin,
+      sampleContent.motto,
+    ]) {
+      expect(screen.getByText(text).tagName).toBe("P");
+    }
+    for (const item of [...sampleContent.behaviors]) {
+      expect(screen.getByText(item).tagName).toBe("LI");
+    }
+    expect(container.querySelector("[class*='Card']")).toBeNull();
   });
 });
 
