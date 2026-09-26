@@ -29,6 +29,13 @@ const fortuneHeadings: Record<string, ResultHeading> = Object.fromEntries(
   ]),
 );
 
+/** 占っているあいだ、運勢の名の代わりに見出しに出す文。 */
+const PENDING_HEADING_TEXT = "占っています……";
+const pendingHeading: ResultHeading = {
+  phrases: splitIntoPhrases(PENDING_HEADING_TEXT),
+  ...headingFontAttr(PENDING_HEADING_TEXT),
+};
+
 export default function DailyFortunePage() {
   return (
     <div className={styles.wrapper}>
@@ -49,7 +56,10 @@ export default function DailyFortunePage() {
         className={styles.title}
         {...headingFontAttr(fortunePlayContentMeta.title)}
       />
-      <DailyFortuneCard headings={fortuneHeadings} />
+      <DailyFortuneCard
+        headings={fortuneHeadings}
+        pendingHeading={pendingHeading}
+      />
       <RecommendedContent currentSlug="daily" />
     </div>
   );

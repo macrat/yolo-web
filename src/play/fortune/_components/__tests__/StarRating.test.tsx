@@ -11,22 +11,20 @@ describe("StarRating", () => {
   });
 
   test.each([
-    [5, "★★★★★"],
-    [4.4, "★★★★☆"],
-    [3.5, "★★★☆☆"],
-    [2.3, "★★☆☆☆"],
-    [1, "★☆☆☆☆"],
+    [5, "★★★★★", "5.0"],
+    [4.8, "★★★★★", "4.8"],
+    [4.4, "★★★★☆", "4.4"],
+    [4, "★★★★☆", "4.0"],
+    [2.9, "★★★☆☆", "2.9"],
+    [2.5, "★★★☆☆", "2.5"],
+    [2.3, "★★☆☆☆", "2.3"],
+    [1, "★☆☆☆☆", "1.0"],
   ])(
-    "shows the integer part of %s as ★ and the rest of five as ☆",
-    (rating, stars) => {
+    "shows %s as the nearest number of ★ out of five, with the value to one decimal place",
+    (rating, stars, value) => {
       render(<StarRating rating={rating} />);
-      const image = screen.getByRole("img");
-      expect(image.textContent).toBe(`${stars}(${rating})`);
+      const image = screen.getByRole("img", { name: `5つ星のうち${value}` });
+      expect(image.textContent).toBe(`${stars}(${value})`);
     },
   );
-
-  test("shows the rating as a number, since a half star looks the same as ☆", () => {
-    render(<StarRating rating={2.7} />);
-    expect(screen.getByText("(2.7)")).toBeInTheDocument();
-  });
 });
