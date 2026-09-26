@@ -157,11 +157,11 @@ next-themes を `attribute="class"` + `enableSystem` で使うサイト（`<html
 
 ---
 
-## 11. `"use client"` から server 専用部品（推移的に node:fs を掴むもの）を import するとビルドが壊れる
+## 11. `"use client"` から server 専用のモジュールを import すると、ビルドが壊れるか、黙って client にバンドルされる
 
-`"use client"` なコンポーネントが、サーバー専用処理（`fs`・DB・Node 組み込み）を **推移的に** 掴むモジュールを import すると、Turbopack がそれをクライアントバンドルのモジュールグラフに含めようとして失敗する。エラーは `the chunking context (unknown) does not support external modules (request: node:fs)`。
+`"use client"` なコンポーネントが、サーバー専用処理（`fs`・DB・Node 組み込み）を **推移的に** 掴むモジュールを import すると、Turbopack がそれをクライアントバンドルのモジュールグラフに含めようとして失敗する。エラーは `the chunking context (unknown) does not support external modules (request: node:fs)`。Node 組み込みを掴まないモジュール（大きい表を持つだけのものなど）は、エラーにならず、そのまま client のバンドルに入って来訪者に配られる。
 
-非自明な肝は **トップレベル副作用** にある。import 先のユーティリティがモジュールのトップレベルで `fs` 読み込み等を実行していると、その関数を一度も呼ばなくても（コンポーネントを描画するだけ・値として import するだけで）`fs` 依存が確定してグラフに載る。型のみの `import type` はトランスパイル時に消去されるので載らない（「関数を呼ぶつもりがない値 import」と「型としてしか使わない import」は別物で、前者は載り後者は載らない）。セクション2（巨大データの静的インポート）はバンドル「サイズ」の問題だが、本項は client バンドルが Node 組み込みを解決できずビルド「可否」として落ちる点が異なる。
+非自明な肝は **トップレベル副作用** にある。import 先のユーティリティがモジュールのトップレベルで `fs` 読み込み等を実行していると、その関数を一度も呼ばなくても（コンポーネントを描画するだけ・値として import するだけで）`fs` 依存が確定してグラフに載る。型のみの `import type` はトランスパイル時に消去されるので載らない（「関数を呼ぶつもりがない値 import」と「型としてしか使わない import」は別物で、前者は載り後者は載らない）。セクション2（巨大データの静的インポート）は、client で使うデータをどう読み込むかの問題だが、本項は、サーバーだけで使うはずのモジュールが client の側に入ってしまう問題である。Node 組み込みを掴むモジュールならビルドが止まり、掴まないモジュールならビルドは通ってバンドルが黙って膨らむ。
 
 **実例（cycle-224）**: `"use client"` の storybook（`StorybookContent.tsx`）が `RelatedBlogPosts` を import → `@/lib/cross-links`（トップレベルで `getAllBlogPosts()` を実行）→ `@/blog/_lib/blog`（`node:fs` でマークダウンを読む）。
 
@@ -178,7 +178,7 @@ function ClientShell({ serverSlot }: { serverSlot: React.ReactNode }) {
 }
 ```
 
-**予防**: サーバー専用モジュールの先頭に `import "server-only"` を置くと、client から（間接的にでも）import された瞬間にビルドが止まる。`node:fs` を掴まないモジュール（大きい表を持つだけのもの）は、置かないと client に黙ってバンドルされるので、これが唯一の止め手になる。Next.js が解決するのでパッケージは要らない。vitest では解決できないので、`vitest.config.mts` の `resolve.alias` で `next/dist/compiled/server-only/empty.js` に向ける（`tsx` で動かすスクリプトからは読み込めない）。
+**予防**: サーバー専用モジュールの先頭に `import "server-only"` を置くと、client から（間接的にでも）import された瞬間にビルドが止まる。Node 組み込みを掴まないモジュールでは、これが黙ってバンドルされるのを止める唯一の手になる。Next.js が解決するのでパッケージは要らない。vitest では解決できないので、`vitest.config.mts` の `resolve.alias` で `next/dist/compiled/server-only/empty.js` に向ける。`tsx` で動かすスクリプトは `server-only` を解決できないので、`server-only` を置いたモジュールを読み込めない。
 
 止まったときのメッセージは、Next.js 16.3 の Turbopack では「client から server-only を読み込んだ」とは出ないことがある。そのモジュールに和文のコメントがあると、エラーの箇所のコードを抜き出して色付けする処理が和文の字の途中のバイトで切って落ち、`thread 'tokio-rt-worker' panicked at crates/next-code-frame/src/highlight.rs … end byte index 93 is not a char boundary; it is inside 'ダ'` と `[Error: Panic in async function]` だけが出る（cycle-316 の `src/lib/phrase-breaks.ts` で再現）。この panic を見たら、Turbopack の不具合と決めつけず、`server-only` を置いたモジュールを `"use client"` の側から読み込んでいないかを先に確かめる。
 

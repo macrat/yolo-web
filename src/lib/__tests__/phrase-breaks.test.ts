@@ -15,6 +15,9 @@ const allQuizHeadings = [...quizBySlug.values()].flatMap((quiz) => [
 /** 区切りの性質を、BudouX の分け方に依らず見るための見出しの文。 */
 const headings = new Set([
   ...allQuizHeadings,
+  "Unix タイムスタンプ変換ツール",
+  "JSON 整形ツール",
+  "CSS グラデーション生成ツール",
   "柔和温順（にゅうわおんじゅん）タイプ",
   "ツールを10個から30個に拡充しました: プログラマティックSEO戦略の実践",
   "Markdownが思い通りに表示されない：改行・表・エスケープを仕組みから直す",
@@ -147,7 +150,7 @@ describe("splitIntoPhrases", () => {
     }
   });
 
-  test("BudouX に無い境目は、最初の文節の中の、字の種類が変わって漢字か片仮名が始まる所だけ", () => {
+  test("BudouX に無い境目は、最初の文節の最初の空白より前の、字の種類が変わって漢字か片仮名が始まる所だけ", () => {
     for (const text of headings) {
       const budouxOffsets = new Set(boundaryOffsets(budoux.parse(text)));
       const offsets = boundaryOffsets(splitIntoPhrases(text));
@@ -159,6 +162,7 @@ describe("splitIntoPhrases", () => {
           offsets.slice(0, index).every((o) => !budouxOffsets.has(o)),
           `${text} の ${before}|${after}`,
         ).toBe(true);
+        expect(before, text).not.toMatch(/\s/u);
         expect(after, text).toMatch(HAN_OR_KATAKANA);
         expect(isScriptChange(before.at(-1) ?? "", after[0]), text).toBe(true);
       });
@@ -187,6 +191,12 @@ describe("splitIntoPhrases", () => {
       "ことわざ",
       "ビギナー",
     ]);
+  });
+
+  test("最初の文節の空白より後ろには語の切れ目の折り所を足さない", () => {
+    expect(
+      splitIntoPhrases("ムササビ -- 座布団サイズで120m飛ぶ孤高の夢想家")[0],
+    ).toBe("ムササビ -- 座布団サイズで");
   });
 
   test("最初の文節の語の切れ目は、前後に2字以上の同じ字の種類が続く所だけ", () => {

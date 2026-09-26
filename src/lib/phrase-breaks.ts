@@ -2,7 +2,8 @@
  * 見出しを文節で折るための区切り（DESIGN.md §4）。
  *
  * 文節は BudouX の日本語のモデルで分け、そのうえで行の頭と終わりに置けない字の所、数字の後ろ、丸括弧の中の
- * 区切りを外す。
+ * 区切りを外す。最初の文節の、最初の空白より前には、語の切れ目の折り所を足す。この部分は必ず行の頭から始まるので、
+ * 足した折り所は、この部分が1行に収まらずブラウザが字の所で割るときの代わりにだけ使われる。
  * BudouX の分け方の表は大きいので、クライアントのバンドルに入れないよう、区切りはサーバーで作る。
  * クライアントの部品から読み込むとビルドが止まる（server-only）。クライアントの部品が描く見出しには、
  * サーバーの page.tsx がここで作った区切りを props で渡す。
@@ -83,17 +84,23 @@ function scriptRunLength(chars: string[], from: number, step: 1 | -1): number {
 
 /**
  * 最初の文節を、字の種類が変わって漢字か片仮名の語が始まる所（「チューリング|型思考者」「ことわざ|ビギナー」）で
- * さらに分ける。最初の文節は行の頭から始まるので、この折り所は文節が1行に収まらないときにしか使われない。
- * 収まらない文節をブラウザが字の所で割ると、「思考／者」のように1字の行や、行頭の長音符が出るので、代わりに語の
- * 切れ目で折れるようにする。
- * 分けるのは、切れ目の前後がどちらも2字以上の同じ字の種類の続きで、丸括弧の中でない所だけ。
+ * さらに分ける。収まらない文節をブラウザが字の所で割ると、「思考／者」のように1字の行や、行頭の長音符が出るので、
+ * 代わりに語の切れ目で折れるようにする。
+ * 分けるのは、最初の空白より前で、切れ目の前後がどちらも2字以上の同じ字の種類の続きで、丸括弧の中でない所だけ。
+ * 最初の空白より前は行の頭から始まるので、この折り所は、そこが1行に収まらないときにしか使われない。空白の後ろは
+ * ブラウザが空白で折れば行の途中から始まりうるので、分けると次の行に丸ごと入る語まで割る（「ムササビ -- 座布団／
+ * サイズで」）。
  */
 function splitFirstPhraseAtWords(phrase: string): string[] {
   const chars = toGraphemes(phrase);
   const pieces: string[] = [];
   let start = 0;
   let depth = 0;
-  for (let index = 1; index < chars.length; index += 1) {
+  const firstSpace = chars.findIndex((grapheme) =>
+    STARTS_WITH_SPACE.test(grapheme),
+  );
+  const end = firstSpace === -1 ? chars.length : firstSpace;
+  for (let index = 1; index < end; index += 1) {
     depth = parenDepthAfter(depth, chars[index - 1]);
     const before = scriptOf(chars[index - 1]);
     const after = scriptOf(chars[index]);
