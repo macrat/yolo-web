@@ -75,21 +75,21 @@ describe("DailyFortunePage (/play/daily)", () => {
     ).toBeInTheDocument();
   });
 
-  it("renders breadcrumb with 3 items (ホーム > 遊ぶ > 今日のユーモア運勢)", () => {
+  it("renders breadcrumb with 3 items (ホーム > 遊び > 今日のユーモア運勢)", () => {
     render(<DailyFortunePage />);
     const breadcrumb = screen.getByRole("navigation", {
       name: "パンくずリスト",
     });
     const homeLink = within(breadcrumb).getByRole("link", { name: "ホーム" });
-    const playLink = within(breadcrumb).getByRole("link", { name: "遊ぶ" });
+    const playLink = within(breadcrumb).getByRole("link", { name: "遊び" });
     expect(homeLink).toHaveAttribute("href", "/");
     expect(playLink).toHaveAttribute("href", "/play");
   });
 
-  it("renders RecommendedContent navigation for exit links", () => {
+  it("renders RecommendedContent list for exit links", () => {
     render(<DailyFortunePage />);
     expect(
-      screen.getByRole("navigation", { name: "おすすめコンテンツ" }),
+      screen.getByRole("list", { name: "他のジャンルも試してみよう" }),
     ).toBeInTheDocument();
   });
 

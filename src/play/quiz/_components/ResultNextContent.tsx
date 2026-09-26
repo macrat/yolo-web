@@ -1,68 +1,29 @@
 "use client";
 
-import Link from "next/link";
+import ItemList, { type ItemListItem } from "@/components/ItemList";
 import styles from "./ResultNextContent.module.css";
 
-/**
- * クイズ結果画面直下の「次のおすすめ」に表示する1件分のデータ。
- * Server Component（page.tsx）で事前計算してprops経由で渡す。
- */
-export interface ResultNextContentItem {
-  slug: string;
-  title: string;
-  shortTitle?: string;
-  category: string;
-  /** getContentPath() の結果（例: "/play/kanji-level"） */
-  contentPath: string;
-  /** コスト感情報（「全10問」「毎日更新」「パズル」等） */
-  metaText: string;
-  /** resolveDisplayCategory() の結果（「診断」「クイズ」「パズル」等） */
-  categoryLabel: string;
-}
-
 interface ResultNextContentProps {
-  contents: ResultNextContentItem[];
+  /**
+   * 並べる行。遊びの登録と分類の語をクライアントに持ち込まないよう、サーバーで行にしてから渡す。
+   */
+  items: ItemListItem[];
 }
 
+const HEADING_ID = "result-next-content";
+
 /**
- * クイズ結果画面直下の「次のおすすめ」回遊導線コンポーネント。
- *
- * - ResultCard の直後に配置され、来訪者が結果確認後に次のコンテンツを発見できるようにする
- * - props で受け取ったデータを表示するだけの純粋な表示コンポーネント
- * - QuizContainer（Client Component）の子として描画されるため "use client" を指定
- * - contents が空配列の場合は null を返す
- * - registryやseoへのimportを持たず、クライアントバンドルを肥大化させない
+ * 診断・クイズを解き終えた画面で、結果の下に次の遊びを並べる。並べるものが無いときは何も描かない。
  */
-export default function ResultNextContent({
-  contents,
-}: ResultNextContentProps) {
-  if (contents.length === 0) return null;
+export default function ResultNextContent({ items }: ResultNextContentProps) {
+  if (items.length === 0) return null;
 
   return (
-    <section className={styles.section} aria-label="次のおすすめ">
-      <h3 className={styles.heading}>次はこれを試してみよう</h3>
-      <ul className={styles.list} data-text-box="rows">
-        {contents.map((content) => (
-          <li key={content.slug}>
-            <Link
-              href={content.contentPath}
-              className={styles.link}
-              data-hit-area="after"
-            >
-              <span className={styles.title}>
-                {content.shortTitle ?? content.title}
-              </span>
-              <span className={styles.metaRow}>
-                <span>{content.categoryLabel}</span>
-                {/* 問題数も更新頻度も持たないものは metaText がカテゴリと同じ語になるので、2度は出さない。 */}
-                {content.metaText !== content.categoryLabel && (
-                  <span>{content.metaText}</span>
-                )}
-              </span>
-            </Link>
-          </li>
-        ))}
-      </ul>
+    <section className={styles.section} aria-labelledby={HEADING_ID}>
+      <h3 id={HEADING_ID} className={styles.heading}>
+        次はこれを試してみよう
+      </h3>
+      <ItemList labelledBy={HEADING_ID} items={items} />
     </section>
   );
 }

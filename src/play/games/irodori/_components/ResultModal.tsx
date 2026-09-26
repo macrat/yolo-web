@@ -13,7 +13,7 @@ import GameShareButtons from "@/play/games/shared/_components/new/GameShareButto
 import CountdownTimer from "@/play/games/shared/_components/new/CountdownTimer";
 import NextGameBanner from "@/play/games/shared/_components/new/NextGameBanner";
 import { CrossCategoryBanner } from "@/play/games/shared/_components/new/CrossCategoryBanner";
-import type { CrossCategoryItem } from "@/play/games/shared/_components/new/CrossCategoryBanner";
+import type { ItemListItem } from "@/components/ItemList";
 import FinalResult from "./FinalResult";
 import styles from "./ResultModal.module.css";
 
@@ -23,7 +23,7 @@ interface Props {
   gameState: IrodoriGameState;
   onStatsClick: () => void;
   /** 他カテゴリへの導線データ。Server Component（page.tsx）で事前計算して渡す。 */
-  crossCategoryItems: CrossCategoryItem[];
+  crossCategoryItems: ItemListItem[];
   /** Focus-restore anchor for the game-end auto-open. See GameContainer. */
   returnFocusRef?: React.RefObject<HTMLElement | null>;
 }

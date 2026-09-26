@@ -14,41 +14,27 @@ describe("computeCrossCategoryItems — 基本動作", () => {
   test("fortune（daily）が必ず含まれること", () => {
     const slug = gameContents[0].slug;
     const items = computeCrossCategoryItems(slug);
-    const slugs = items.map((item) => item.slug);
-    expect(slugs).toContain("daily");
+    const hrefs = items.map((item) => item.href);
+    expect(hrefs).toContain("/play/daily");
   });
 
   test("gameカテゴリのコンテンツが含まれないこと", () => {
     const slug = gameContents[0].slug;
     const items = computeCrossCategoryItems(slug);
     for (const item of items) {
-      expect(item.category).not.toBe("game");
+      expect(item.kind).not.toBe("パズル");
     }
   });
 
-  test("各アイテムにslug, title, icon, contentPath, categoryLabelが含まれること", () => {
+  test("各行は名前・リンク先・種別を持ち、説明と補助情報を持たないこと", () => {
     const slug = gameContents[0].slug;
     const items = computeCrossCategoryItems(slug);
     for (const item of items) {
-      expect(item.slug).toBeDefined();
-      expect(typeof item.slug).toBe("string");
-      expect(item.slug.length).toBeGreaterThan(0);
-
-      expect(item.title).toBeDefined();
-      expect(typeof item.title).toBe("string");
-      expect(item.title.length).toBeGreaterThan(0);
-
-      expect(item.icon).toBeDefined();
-      expect(typeof item.icon).toBe("string");
-      expect(item.icon.length).toBeGreaterThan(0);
-
-      expect(item.contentPath).toBeDefined();
-      expect(typeof item.contentPath).toBe("string");
-      expect(item.contentPath.length).toBeGreaterThan(0);
-
-      expect(item.categoryLabel).toBeDefined();
-      expect(typeof item.categoryLabel).toBe("string");
-      expect(item.categoryLabel.length).toBeGreaterThan(0);
+      expect(item.name.length).toBeGreaterThan(0);
+      expect(item.href.length).toBeGreaterThan(0);
+      expect(item.kind).toBeDefined();
+      expect(item.description).toBeUndefined();
+      expect(item.facts).toBeUndefined();
     }
   });
 
@@ -57,8 +43,8 @@ describe("computeCrossCategoryItems — 基本動作", () => {
     // fortune は固定枠なので必ず含まれる
     // personality/knowledge 候補は currentGame が存在しないが candidates は空でないため2件返る
     expect(items.length).toBeGreaterThanOrEqual(1);
-    const slugs = items.map((item) => item.slug);
-    expect(slugs).toContain("daily");
+    const hrefs = items.map((item) => item.href);
+    expect(hrefs).toContain("/play/daily");
   });
 });
 
@@ -74,7 +60,7 @@ describe("computeCrossCategoryItems — 全ゲームslugでの動作", () => {
     for (const content of gameContents) {
       const items = computeCrossCategoryItems(content.slug);
       for (const item of items) {
-        expect(item.category).not.toBe("game");
+        expect(item.kind).not.toBe("パズル");
       }
     }
   });
@@ -82,9 +68,8 @@ describe("computeCrossCategoryItems — 全ゲームslugでの動作", () => {
   test("全ゲームコンテンツで結果に重複がないこと", () => {
     for (const content of gameContents) {
       const items = computeCrossCategoryItems(content.slug);
-      const slugs = items.map((item) => item.slug);
-      const uniqueSlugs = new Set(slugs);
-      expect(uniqueSlugs.size).toBe(slugs.length);
+      const hrefs = items.map((item) => item.href);
+      expect(new Set(hrefs).size).toBe(hrefs.length);
     }
   });
 });
@@ -93,17 +78,16 @@ describe("computeCrossCategoryItems — personality/knowledgeカテゴリから�
   test("fortune以外の1件がpersonalityまたはknowledgeカテゴリであること", () => {
     const slug = gameContents[0].slug;
     const items = computeCrossCategoryItems(slug);
-    const nonFortune = items.filter((item) => item.slug !== "daily");
+    const nonFortune = items.filter((item) => item.href !== "/play/daily");
     expect(nonFortune).toHaveLength(1);
-    const category = nonFortune[0].category;
-    expect(["personality", "knowledge"]).toContain(category);
+    expect(["診断", "クイズ"]).toContain(nonFortune[0].kind);
   });
 
-  test("contentPathが/play/から始まる有効なパスであること", () => {
+  test("リンク先が/play/から始まる有効なパスであること", () => {
     const slug = gameContents[0].slug;
     const items = computeCrossCategoryItems(slug);
     for (const item of items) {
-      expect(item.contentPath).toMatch(/^\/play\//);
+      expect(item.href).toMatch(/^\/play\//);
     }
   });
 });

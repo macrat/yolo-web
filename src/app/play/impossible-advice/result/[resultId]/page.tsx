@@ -145,17 +145,16 @@ export default async function ImpossibleAdviceResultPage({ params }: Props) {
           </p>
         </div>
 
-        {/* 悩みの本質〜全タイプ一覧: 共通コンポーネントで一括レンダリング */}
+        {/* 悩みの本質〜他のタイプ: 共通コンポーネントで一括レンダリング */}
         <ImpossibleAdviceContent
           quizSlug={SLUG}
           resultId={resultId}
           detailedContent={iaDc}
           allResults={quiz.results}
           headingLevel={2}
-          allTypesLayout="pill"
           resultColor={resultColor}
           afterPracticalTip={
-            /* CTA2: 全タイプ一覧の前に配置 — コンテンツを読み終えた時点での自然な誘導 */
+            /* CTA2: 他のタイプの前に配置 — コンテンツを読み終えた時点での自然な誘導 */
             <div className={styles.cta2Section}>
               <Link
                 href={`/play/${SLUG}`}

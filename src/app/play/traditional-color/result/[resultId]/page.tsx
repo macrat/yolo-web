@@ -140,15 +140,14 @@ export default async function TraditionalColorResultPage({ params }: Props) {
           </p>
         </div>
 
-        {/* 色の物語〜全タイプ一覧: 共通コンポーネントで一括レンダリング */}
+        {/* 色の物語〜他のタイプ: 共通コンポーネントで一括レンダリング */}
         <TraditionalColorContent
           content={colorDc}
           resultId={resultId}
           resultColor={resultColor}
           headingLevel={2}
-          allTypesLayout="pill"
           afterColorAdvice={
-            /* CTA2: 全タイプ一覧の前に配置 — コンテンツを読み終えた時点での自然な誘導 */
+            /* CTA2: 他のタイプの前に配置 — コンテンツを読み終えた時点での自然な誘導 */
             <div className={styles.cta2Section}>
               <Link
                 href={`/play/${SLUG}`}

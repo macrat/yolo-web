@@ -1,5 +1,5 @@
 import { expect, test, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import RecommendedContent from "../RecommendedContent";
 
 // getRecommendedContents をモックしてテストを安定させる
@@ -86,12 +86,14 @@ test("RecommendedContent renders section heading", () => {
   expect(screen.getByText("他のジャンルも試してみよう")).toBeInTheDocument();
 });
 
-test("RecommendedContent has nav with correct aria-label", () => {
+test("RecommendedContent の一覧が見出しの名前を持ち、リンクの読み上げの名前が行の名前だけであること", () => {
   render(<RecommendedContent currentSlug="kanji-level" />);
 
-  expect(
-    screen.getByRole("navigation", { name: "おすすめコンテンツ" }),
-  ).toBeInTheDocument();
+  const list = screen.getByRole("list", { name: "他のジャンルも試してみよう" });
+  const names = within(list)
+    .getAllByRole("link")
+    .map((link) => link.textContent);
+  expect(names).toEqual(["今日の運勢", "色タイプ診断", "パズルゲーム"]);
 });
 
 test("RecommendedContent renders title, description, and category for each card", () => {

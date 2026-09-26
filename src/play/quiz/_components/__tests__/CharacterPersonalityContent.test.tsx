@@ -4,7 +4,7 @@
  * テスト対象:
  * - archetypeBreakdown / behaviors / characterMessage の3セクション表示
  * - 相性機能エリア（referrerTypeId あり/なし、API成功/失敗）
- * - 全タイプ一覧（list / grid レイアウト）
+ * - 他のタイプ（OtherTypesNav）
  * - headingLevel prop
  * - resultColor の CSS変数注入
  * - afterCharacterMessage スロット
@@ -119,7 +119,6 @@ describe("CharacterPersonalityContent - 基本レンダリング", () => {
         resultId={sampleResultId}
         resultColor={sampleResultColor}
         headingLevel={2}
-        allTypesLayout="list"
       />,
     );
     expect(screen.getByText("このキャラの成り立ち")).toBeInTheDocument();
@@ -137,7 +136,6 @@ describe("CharacterPersonalityContent - 基本レンダリング", () => {
         resultId={sampleResultId}
         resultColor={sampleResultColor}
         headingLevel={2}
-        allTypesLayout="list"
       />,
     );
     expect(screen.getByText("このキャラの日常")).toBeInTheDocument();
@@ -158,7 +156,6 @@ describe("CharacterPersonalityContent - 基本レンダリング", () => {
         resultId={sampleResultId}
         resultColor={sampleResultColor}
         headingLevel={2}
-        allTypesLayout="list"
       />,
     );
     expect(screen.getByText("キャラからのメッセージ")).toBeInTheDocument();
@@ -169,17 +166,18 @@ describe("CharacterPersonalityContent - 基本レンダリング", () => {
     ).toBeInTheDocument();
   });
 
-  it("全タイプ一覧セクションが表示されること（見出しは「他のキャラも見てみよう」）", () => {
+  it("他のタイプが表示され、見出しがタイプの数を言うこと", () => {
     render(
       <CharacterPersonalityContent
         content={sampleContent}
         resultId={sampleResultId}
         resultColor={sampleResultColor}
         headingLevel={2}
-        allTypesLayout="list"
       />,
     );
-    expect(screen.getByText("他のキャラも見てみよう")).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: /^他のタイプ（\d+）$/ }),
+    ).toBeInTheDocument();
     expect(screen.getByText("炎の戦略家")).toBeInTheDocument();
     expect(screen.getByText("炎の詩人")).toBeInTheDocument();
     expect(screen.getByText("静かなる要塞")).toBeInTheDocument();
@@ -194,7 +192,6 @@ describe("CharacterPersonalityContent - headingLevel prop", () => {
         resultId={sampleResultId}
         resultColor={sampleResultColor}
         headingLevel={2}
-        allTypesLayout="list"
       />,
     );
     const h2s = container.querySelectorAll("h2");
@@ -211,43 +208,12 @@ describe("CharacterPersonalityContent - headingLevel prop", () => {
         resultId={sampleResultId}
         resultColor={sampleResultColor}
         headingLevel={3}
-        allTypesLayout="list"
       />,
     );
     const h3s = container.querySelectorAll("h3");
     expect(h3s.length).toBeGreaterThanOrEqual(4);
     const h2s = container.querySelectorAll("h2");
     expect(h2s.length).toBe(0);
-  });
-});
-
-describe("CharacterPersonalityContent - allTypesLayout prop", () => {
-  it("allTypesLayout='list' の場合、リスト型レイアウトクラスが適用されること", () => {
-    const { container } = render(
-      <CharacterPersonalityContent
-        content={sampleContent}
-        resultId={sampleResultId}
-        resultColor={sampleResultColor}
-        headingLevel={3}
-        allTypesLayout="list"
-      />,
-    );
-    const listEl = container.querySelector("[class*='allTypesListVertical']");
-    expect(listEl).not.toBeNull();
-  });
-
-  it("allTypesLayout='grid' の場合、グリッドレイアウトクラスが適用されること", () => {
-    const { container } = render(
-      <CharacterPersonalityContent
-        content={sampleContent}
-        resultId={sampleResultId}
-        resultColor={sampleResultColor}
-        headingLevel={2}
-        allTypesLayout="grid"
-      />,
-    );
-    const gridEl = container.querySelector("[class*='allTypesGrid']");
-    expect(gridEl).not.toBeNull();
   });
 });
 
@@ -259,7 +225,6 @@ describe("CharacterPersonalityContent - wrapper と CSS変数", () => {
         resultId={sampleResultId}
         resultColor={sampleResultColor}
         headingLevel={2}
-        allTypesLayout="list"
       />,
     );
     const wrapper = container.querySelector("[class*='wrapper']");
@@ -273,7 +238,6 @@ describe("CharacterPersonalityContent - wrapper と CSS変数", () => {
         resultId={sampleResultId}
         resultColor={sampleResultColor}
         headingLevel={2}
-        allTypesLayout="list"
       />,
     );
     const wrapper = container.querySelector(
@@ -283,52 +247,6 @@ describe("CharacterPersonalityContent - wrapper と CSS変数", () => {
     expect(wrapper.style.getPropertyValue("--type-color")).toBe(
       sampleResultColor,
     );
-  });
-});
-
-describe("CharacterPersonalityContent - 現在のタイプのハイライト", () => {
-  it("resultIdと一致するタイプにカレントスタイルが適用されること", () => {
-    const { container } = render(
-      <CharacterPersonalityContent
-        content={sampleContent}
-        resultId={sampleResultId}
-        resultColor={sampleResultColor}
-        headingLevel={2}
-        allTypesLayout="list"
-      />,
-    );
-    const currentItems = container.querySelectorAll(
-      "[class*='allTypesItemCurrent']",
-    );
-    expect(currentItems.length).toBe(1);
-  });
-
-  it("現在のタイプのリンクに aria-current='page' が設定されること", () => {
-    render(
-      <CharacterPersonalityContent
-        content={sampleContent}
-        resultId={sampleResultId}
-        resultColor={sampleResultColor}
-        headingLevel={2}
-        allTypesLayout="list"
-      />,
-    );
-    const currentLink = screen.getByRole("link", { name: /炎の戦略家/ });
-    expect(currentLink).toHaveAttribute("aria-current", "page");
-  });
-
-  it("現在でないタイプのリンクには aria-current が設定されないこと", () => {
-    render(
-      <CharacterPersonalityContent
-        content={sampleContent}
-        resultId={sampleResultId}
-        resultColor={sampleResultColor}
-        headingLevel={2}
-        allTypesLayout="list"
-      />,
-    );
-    const otherLink = screen.getByRole("link", { name: /炎の詩人/ });
-    expect(otherLink).not.toHaveAttribute("aria-current");
   });
 });
 
@@ -343,7 +261,6 @@ describe("CharacterPersonalityContent - afterCharacterMessage スロット", () 
         resultId={sampleResultId}
         resultColor={sampleResultColor}
         headingLevel={2}
-        allTypesLayout="list"
         afterCharacterMessage={afterContent}
       />,
     );
@@ -361,7 +278,6 @@ describe("CharacterPersonalityContent - afterCharacterMessage スロット", () 
         resultId={sampleResultId}
         resultColor={sampleResultColor}
         headingLevel={2}
-        allTypesLayout="list"
         referrerTypeId="blazing-poet"
         afterCharacterMessage={afterContent}
       />,
@@ -378,7 +294,6 @@ describe("CharacterPersonalityContent - 相性機能（referrerTypeId なし）"
         resultId={sampleResultId}
         resultColor={sampleResultColor}
         headingLevel={2}
-        allTypesLayout="list"
       />,
     );
     expect(
@@ -409,7 +324,6 @@ describe("CharacterPersonalityContent - 相性機能（referrerTypeId あり・A
         resultId={sampleResultId}
         resultColor={sampleResultColor}
         headingLevel={2}
-        allTypesLayout="list"
         referrerTypeId="blazing-poet"
       />,
     );
@@ -442,7 +356,6 @@ describe("CharacterPersonalityContent - 相性機能（referrerTypeId あり・A
         resultId="blazing-strategist"
         resultColor={sampleResultColor}
         headingLevel={2}
-        allTypesLayout="list"
         referrerTypeId="blazing-poet"
       />,
     );
@@ -468,7 +381,6 @@ describe("CharacterPersonalityContent - 相性機能（referrerTypeId あり・A
         resultId={sampleResultId}
         resultColor={sampleResultColor}
         headingLevel={2}
-        allTypesLayout="list"
         referrerTypeId="blazing-poet"
       />,
     );
@@ -493,7 +405,6 @@ describe("CharacterPersonalityContent - 相性機能（referrerTypeId あり・A
         resultId={sampleResultId}
         resultColor={sampleResultColor}
         headingLevel={2}
-        allTypesLayout="list"
         referrerTypeId="blazing-poet"
       />,
     );
@@ -521,7 +432,6 @@ describe("CharacterPersonalityContent - 相性機能（ローディング中）"
         resultId={sampleResultId}
         resultColor={sampleResultColor}
         headingLevel={2}
-        allTypesLayout="list"
         referrerTypeId="blazing-poet"
       />,
     );
@@ -544,7 +454,6 @@ describe("CharacterPersonalityContent - 全タイプリンク", () => {
         resultId={sampleResultId}
         resultColor={sampleResultColor}
         headingLevel={2}
-        allTypesLayout="list"
       />,
     );
     const links = container.querySelectorAll(

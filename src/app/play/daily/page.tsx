@@ -20,7 +20,7 @@ export default function DailyFortunePage() {
       <Breadcrumb
         items={[
           { label: "ホーム", href: "/" },
-          { label: "遊ぶ", href: "/play" },
+          { label: "遊び", href: "/play" },
           { label: fortunePlayContentMeta.title },
         ]}
       />

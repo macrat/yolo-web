@@ -3,7 +3,7 @@
  *
  * テスト対象:
  * - diagnosisCore / behaviors / practicalTip の3セクション表示
- * - 全タイプ一覧（pill レイアウト）
+ * - 他のタイプ（OtherTypesNav）
  * - headingLevel prop（h2/h3）
  * - resultColor の CSS変数注入（--type-color）
  * - afterPracticalTip スロット
@@ -83,7 +83,6 @@ describe("ImpossibleAdviceContent - 基本レンダリング", () => {
         detailedContent={sampleContent}
         allResults={sampleAllResults}
         headingLevel={2}
-        allTypesLayout="pill"
         resultColor={sampleColor}
       />,
     );
@@ -103,7 +102,6 @@ describe("ImpossibleAdviceContent - 基本レンダリング", () => {
         detailedContent={sampleContent}
         allResults={sampleAllResults}
         headingLevel={2}
-        allTypesLayout="pill"
         resultColor={sampleColor}
       />,
     );
@@ -124,7 +122,6 @@ describe("ImpossibleAdviceContent - 基本レンダリング", () => {
         detailedContent={sampleContent}
         allResults={sampleAllResults}
         headingLevel={2}
-        allTypesLayout="pill"
         resultColor={sampleColor}
       />,
     );
@@ -136,7 +133,7 @@ describe("ImpossibleAdviceContent - 基本レンダリング", () => {
     ).toBeInTheDocument();
   });
 
-  it("全タイプ一覧が表示されること", () => {
+  it("他のタイプが表示され、見出しがタイプの数を言うこと", () => {
     render(
       <ImpossibleAdviceContent
         quizSlug={sampleQuizSlug}
@@ -144,11 +141,12 @@ describe("ImpossibleAdviceContent - 基本レンダリング", () => {
         detailedContent={sampleContent}
         allResults={sampleAllResults}
         headingLevel={2}
-        allTypesLayout="pill"
         resultColor={sampleColor}
       />,
     );
-    expect(screen.getByText("他のタイプも見てみよう")).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: /^他のタイプ（\d+）$/ }),
+    ).toBeInTheDocument();
     expect(screen.getByText("完璧主義の迷宮")).toBeInTheDocument();
     expect(screen.getByText("考えすぎのループ")).toBeInTheDocument();
     expect(screen.getByText("比較の罠")).toBeInTheDocument();
@@ -164,7 +162,6 @@ describe("ImpossibleAdviceContent - headingLevel prop", () => {
         detailedContent={sampleContent}
         allResults={sampleAllResults}
         headingLevel={2}
-        allTypesLayout="pill"
         resultColor={sampleColor}
       />,
     );
@@ -183,7 +180,6 @@ describe("ImpossibleAdviceContent - headingLevel prop", () => {
         detailedContent={sampleContent}
         allResults={sampleAllResults}
         headingLevel={3}
-        allTypesLayout="pill"
         resultColor={sampleColor}
       />,
     );
@@ -191,56 +187,6 @@ describe("ImpossibleAdviceContent - headingLevel prop", () => {
     expect(h3s.length).toBeGreaterThanOrEqual(4);
     const h2s = container.querySelectorAll("h2");
     expect(h2s.length).toBe(0);
-  });
-});
-
-describe("ImpossibleAdviceContent - allTypesLayout prop", () => {
-  // 新デザインでは旧 pill 型（角丸999px・派手色枠・font-weight 700）をやめ、
-  // CharacterPersonalityContent / YojiPersonalityContent と同じ allTypesGrid（2-3列）に
-  // 内部マッピングしている。public props "pill" を渡したときに所定のレイアウトクラスが
-  // 付くというテスト意図は保ったまま、新クラス名 allTypesGrid を検証する。
-  it("allTypesLayout='pill' の場合、全タイプ一覧のレイアウトクラスが適用されること", () => {
-    const { container } = render(
-      <ImpossibleAdviceContent
-        quizSlug={sampleQuizSlug}
-        resultId="perfectionist"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        headingLevel={2}
-        allTypesLayout="pill"
-        resultColor={sampleColor}
-      />,
-    );
-    const gridList = container.querySelector("[class*='allTypesGrid']");
-    expect(gridList).not.toBeNull();
-    // "pill" と "list" は別レイアウトとして担保したいので縦リストクラスは付かない
-    const verticalList = container.querySelector(
-      "[class*='allTypesListVertical']",
-    );
-    expect(verticalList).toBeNull();
-  });
-
-  // ResultCard（インライン）経路は "list" を渡し、Character/Animal と同じ
-  // 縦リスト（allTypesListVertical）で表示する。8 variant 共通で
-  // インライン側の「他のタイプも見てみよう」を縦リストに揃えるための分岐。
-  it("allTypesLayout='list' の場合、allTypesListVertical レイアウトクラスが適用され allTypesGrid は付かないこと", () => {
-    const { container } = render(
-      <ImpossibleAdviceContent
-        quizSlug={sampleQuizSlug}
-        resultId="perfectionist"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        headingLevel={3}
-        allTypesLayout="list"
-        resultColor={sampleColor}
-      />,
-    );
-    const verticalList = container.querySelector(
-      "[class*='allTypesListVertical']",
-    );
-    expect(verticalList).not.toBeNull();
-    const gridList = container.querySelector("[class*='allTypesGrid']");
-    expect(gridList).toBeNull();
   });
 });
 
@@ -256,7 +202,6 @@ describe("ImpossibleAdviceContent - afterPracticalTip スロット", () => {
         detailedContent={sampleContent}
         allResults={sampleAllResults}
         headingLevel={2}
-        allTypesLayout="pill"
         resultColor={sampleColor}
         afterPracticalTip={afterContent}
       />,
@@ -274,7 +219,6 @@ describe("ImpossibleAdviceContent - afterPracticalTip スロット", () => {
           detailedContent={sampleContent}
           allResults={sampleAllResults}
           headingLevel={2}
-          allTypesLayout="pill"
           resultColor={sampleColor}
         />,
       );
@@ -291,7 +235,6 @@ describe("ImpossibleAdviceContent - wrapper クラスと --type-color CSS変数"
         detailedContent={sampleContent}
         allResults={sampleAllResults}
         headingLevel={2}
-        allTypesLayout="pill"
         resultColor={sampleColor}
       />,
     );
@@ -307,7 +250,6 @@ describe("ImpossibleAdviceContent - wrapper クラスと --type-color CSS変数"
         detailedContent={sampleContent}
         allResults={sampleAllResults}
         headingLevel={2}
-        allTypesLayout="pill"
         resultColor={sampleColor}
       />,
     );
@@ -316,26 +258,6 @@ describe("ImpossibleAdviceContent - wrapper クラスと --type-color CSS変数"
     ) as HTMLElement;
     expect(wrapper).not.toBeNull();
     expect(wrapper.style.getPropertyValue("--type-color")).toBe(sampleColor);
-  });
-});
-
-describe("ImpossibleAdviceContent - 現在のタイプのハイライト", () => {
-  it("resultIdと一致するタイプにカレントスタイルが適用されること", () => {
-    const { container } = render(
-      <ImpossibleAdviceContent
-        quizSlug={sampleQuizSlug}
-        resultId="perfectionist"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        headingLevel={2}
-        allTypesLayout="pill"
-        resultColor={sampleColor}
-      />,
-    );
-    const currentItems = container.querySelectorAll(
-      "[class*='allTypesItemCurrent']",
-    );
-    expect(currentItems.length).toBe(1);
   });
 });
 
@@ -348,7 +270,6 @@ describe("ImpossibleAdviceContent - aria-current", () => {
         detailedContent={sampleContent}
         allResults={sampleAllResults}
         headingLevel={2}
-        allTypesLayout="pill"
         resultColor={sampleColor}
       />,
     );
@@ -364,7 +285,6 @@ describe("ImpossibleAdviceContent - aria-current", () => {
         detailedContent={sampleContent}
         allResults={sampleAllResults}
         headingLevel={2}
-        allTypesLayout="pill"
         resultColor={sampleColor}
       />,
     );
@@ -380,7 +300,6 @@ describe("ImpossibleAdviceContent - aria-current", () => {
         detailedContent={sampleContent}
         allResults={sampleAllResults}
         headingLevel={3}
-        allTypesLayout="pill"
         resultColor="#0891b2"
       />,
     );
@@ -392,7 +311,7 @@ describe("ImpossibleAdviceContent - aria-current", () => {
 });
 
 describe("ImpossibleAdviceContent - リンクのhref", () => {
-  it("全タイプ一覧のリンクが正しいhrefを持つこと", () => {
+  it("他のタイプのリンクが正しいhrefを持つこと", () => {
     render(
       <ImpossibleAdviceContent
         quizSlug={sampleQuizSlug}
@@ -400,7 +319,6 @@ describe("ImpossibleAdviceContent - リンクのhref", () => {
         detailedContent={sampleContent}
         allResults={sampleAllResults}
         headingLevel={2}
-        allTypesLayout="pill"
         resultColor={sampleColor}
       />,
     );

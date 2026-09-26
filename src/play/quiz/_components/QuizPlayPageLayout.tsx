@@ -4,17 +4,11 @@ import ShareButtons from "@/components/ShareButtons";
 import QuizContainer from "@/play/quiz/_components/QuizContainer";
 import RelatedQuizzes from "@/play/quiz/_components/RelatedQuizzes";
 import RecommendedContent from "@/play/_components/RecommendedContent";
-import { generatePlayJsonLd, resolveDisplayCategory } from "@/play/seo";
+import { generatePlayJsonLd } from "@/play/seo";
 import { safeJsonLdStringify } from "@/lib/seo";
-import {
-  playContentBySlug,
-  quizQuestionCountBySlug,
-  DAILY_UPDATE_SLUGS,
-} from "@/play/registry";
+import { playContentBySlug } from "@/play/registry";
 import { getResultNextContents } from "@/play/recommendation";
-import { getContentPath } from "@/play/paths";
-import type { PlayContentMeta } from "@/play/types";
-import type { ResultNextContentItem } from "@/play/quiz/_components/ResultNextContent";
+import { toPlayListItems } from "@/play/listItems";
 import type { QuizDefinition } from "@/play/quiz/types";
 // プレイ層のスタイルを参照する
 import styles from "@/app/play/[slug]/page.module.css";
@@ -26,49 +20,16 @@ interface QuizPlayPageLayoutProps {
 }
 
 /**
- * コスト感情報（所要時間の目安）を返す。
+ * クイズ・診断のページの共通の組み方。動的ルート（/play/[slug]）と専用ルート（/play/music-personality など）が使う。
  *
- * 評価順序:
- * 1. quizQuestionCountBySlug に問数がある → 「全X問」
- * 2. DAILY_UPDATE_SLUGS に含まれる → 「毎日更新」
- * 3. それ以外 → resolveDisplayCategory の結果（「パズル」「診断」等）
- *
- * Server Component（QuizPlayPageLayout）で呼び出すため、registryのimportはOK。
- */
-function buildMetaText(slug: string, content: PlayContentMeta): string {
-  const questionCount = quizQuestionCountBySlug.get(slug);
-  if (questionCount !== undefined) {
-    return `全${questionCount}問`;
-  }
-  if (DAILY_UPDATE_SLUGS.has(slug)) {
-    return "毎日更新";
-  }
-  return resolveDisplayCategory(content);
-}
-
-/**
- * クイズのプレイページ共通レイアウトコンポーネント。
- *
- * 動的ルート（/play/[slug]/page.tsx）と専用ルート（/play/music-personality/page.tsx 等）
- * で共通して使用するレイアウトを提供する。
- *
- * 新デザイン体系（DESIGN.md）に従った左寄せ・パネル構成の章立て。
- * 診断はサイトの中心体験（「自分を知り、楽しむ」の主軸・cycle-277 決定(a)）であり、
- * このプレイページはその入口〜設問の器。落ち着いた土台の上に体験を主役として
- * 置く（入口ファーストビューへの §7 視覚適用は B-553）。ToolPageLayout と同じ
- * 「文脈確認 → 本体（主役）→ 二次情報」の並びを踏襲する。
- *
- * 並び順:
- *   1. パンくず（Breadcrumb。BreadcrumbList JSON-LD 内蔵）
- *   2. コンパクトな h1（quiz.meta.title）+ 短説明（quiz.meta.description）
- *   3. クイズ本体（QuizContainer＝主役。Panel に収める）
- *   4. FAQ（FaqSection。FAQPage JSON-LD 内蔵）
- *   5. シェア（ShareButtons）
- *   6. 関連クイズ・診断（RelatedQuizzes）
- *   7. 他ジャンルのおすすめ（RecommendedContent）
- *
- * 過渡注記: TrustLevelBadge は cycle-253 で撤去済み。trustLevel フィールド自体も
- *   cycle-279 C1 で型・データ・コンポーネントごと一括削除済み（B-432 完了）。
+ * 来訪者が何のページかを確かめてから本体に入れるよう、文脈 → 本体 → 二次情報の順に並べる。
+ *   1. パンくず（BreadcrumbList の JSON-LD を持つ）
+ *   2. h1 と短い説明。ファーストビューを本体に空けるため短く組む
+ *   3. クイズ本体（QuizContainer）
+ *   4. FAQ（FAQPage の JSON-LD を持つ）
+ *   5. シェア
+ *   6. 同じ分類のクイズ・診断（RelatedQuizzes）
+ *   7. ほかの分類のおすすめ（RecommendedContent）
  */
 export default async function QuizPlayPageLayout({
   quiz,
@@ -78,21 +39,7 @@ export default async function QuizPlayPageLayout({
   const meta = playContentBySlug.get(slug);
   const jsonLd = meta ? generatePlayJsonLd(meta) : null;
 
-  // 結果画面直下の回遊導線用データを事前計算。
-  // Server Component で計算することで、registryとseoのimportが
-  // クライアントバンドルに含まれるのを防ぐ。
-  const rawResultNextContents = getResultNextContents(slug);
-  const resultNextContents: ResultNextContentItem[] = rawResultNextContents.map(
-    (content) => ({
-      slug: content.slug,
-      title: content.title,
-      shortTitle: content.shortTitle,
-      category: content.category,
-      contentPath: getContentPath(content),
-      metaText: buildMetaText(content.slug, content),
-      categoryLabel: resolveDisplayCategory(content),
-    }),
-  );
+  const resultNextContents = toPlayListItems(getResultNextContents(slug));
 
   return (
     <article className={styles.layout}>
@@ -107,7 +54,7 @@ export default async function QuizPlayPageLayout({
       <Breadcrumb
         items={[
           { label: "ホーム", href: "/" },
-          { label: "遊ぶ", href: "/play" },
+          { label: "遊び", href: "/play" },
           { label: quiz.meta.title },
         ]}
       />
@@ -118,7 +65,7 @@ export default async function QuizPlayPageLayout({
         <p className={styles.shortDescription}>{quiz.meta.description}</p>
       </header>
 
-      {/* 3. クイズ本体（主役）。Panel に収める（DESIGN.md §1） */}
+      {/* 3. クイズ本体 */}
       <QuizContainer
         quiz={quiz}
         referrerTypeId={referrerTypeId}

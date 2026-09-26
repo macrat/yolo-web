@@ -7,7 +7,7 @@
  * インライン結果（ResultCard）とトーン統一する: 無彩・左寄せ・絵文字マーカーなし・
  * クイズごとの派手色（タイプ色＝--type-color）を使わず共通 --accent に寄せる。
  *
- * 共通コンテンツセクション（キャラ解説〜全タイプ一覧）のスタイルは
+ * 共通コンテンツセクション（キャラ解説〜他のタイプ）のスタイルは
  * CharacterPersonalityContent.module.css に集約されている。
  * このファイルは page.tsx 固有の要素（catchphrase, trySection, detailedSection, cta2）のみを管理する。
  */

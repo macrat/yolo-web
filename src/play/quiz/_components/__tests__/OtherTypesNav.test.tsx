@@ -1,5 +1,5 @@
 import { expect, test, describe, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import React from "react";
 import OtherTypesNav from "../OtherTypesNav";
 import type { QuizResult } from "../../types";
@@ -34,74 +34,7 @@ const results: QuizResult[] = [
 ];
 
 describe("OtherTypesNav", () => {
-  test("2件以上のとき見出しと全タイプが描画されること", () => {
-    render(
-      <OtherTypesNav
-        quizSlug="word-sense-personality"
-        currentResultId="type-a"
-        results={results}
-      />,
-    );
-    expect(screen.getByText("他のタイプも見てみよう")).toBeInTheDocument();
-    expect(screen.getByText("タイプA")).toBeInTheDocument();
-    expect(screen.getByText("タイプB")).toBeInTheDocument();
-    expect(screen.getByText("タイプC")).toBeInTheDocument();
-  });
-
-  test("自タイプ以外は同一診断の結果ページへのリンクになること", () => {
-    render(
-      <OtherTypesNav
-        quizSlug="word-sense-personality"
-        currentResultId="type-a"
-        results={results}
-      />,
-    );
-    expect(screen.getByText("タイプB").closest("a")).toHaveAttribute(
-      "href",
-      "/play/word-sense-personality/result/type-b",
-    );
-    expect(screen.getByText("タイプC").closest("a")).toHaveAttribute(
-      "href",
-      "/play/word-sense-personality/result/type-c",
-    );
-  });
-
-  test("現在の自タイプはリンクにせず aria-current=page の span で示すこと", () => {
-    const { container } = render(
-      <OtherTypesNav
-        quizSlug="word-sense-personality"
-        currentResultId="type-a"
-        results={results}
-      />,
-    );
-    const current = container.querySelector('[aria-current="page"]');
-    expect(current).not.toBeNull();
-    expect(current?.tagName).toBe("SPAN");
-    expect(current?.textContent).toContain("タイプA");
-    // 自タイプの結果ページへのリンクは存在しない
-    expect(
-      container.querySelector(
-        'a[href="/play/word-sense-personality/result/type-a"]',
-      ),
-    ).toBeNull();
-  });
-
-  test("現在タイプに color があれば --type-color が CSS 変数として設定されること", () => {
-    const { container } = render(
-      <OtherTypesNav
-        quizSlug="word-sense-personality"
-        currentResultId="type-a"
-        results={results}
-      />,
-    );
-    const current = container.querySelector(
-      '[aria-current="page"]',
-    ) as HTMLElement | null;
-    expect(current).not.toBeNull();
-    expect(current?.style.getPropertyValue("--type-color")).toBe("#111111");
-  });
-
-  test("ランドマーク nav（aria-label 付き）であること", () => {
+  test("見出しがタイプの数を言い、一覧がその見出しの名前を持つこと", () => {
     render(
       <OtherTypesNav
         quizSlug="word-sense-personality"
@@ -110,12 +43,90 @@ describe("OtherTypesNav", () => {
       />,
     );
     expect(
-      screen.getByRole("navigation", { name: "同じ診断の他のタイプ" }),
+      screen.getByRole("heading", { name: "他のタイプ（3）" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("list", { name: "他のタイプ（3）" }),
     ).toBeInTheDocument();
   });
 
-  test("headingLevel=2 のとき見出しが h2 になること（静的結果ページ用）", () => {
+  test("全タイプを渡された順に並べ、各行のリンクの名前がタイプ名だけであること", () => {
+    render(
+      <OtherTypesNav
+        quizSlug="word-sense-personality"
+        currentResultId="type-a"
+        results={results}
+      />,
+    );
+    const list = screen.getByRole("list", { name: "他のタイプ（3）" });
+    const names = within(list)
+      .getAllByRole("link")
+      .map((link) => link.textContent);
+    expect(names).toEqual(["タイプA", "タイプB", "タイプC"]);
+  });
+
+  test("各行は同じ診断の結果ページへ進むこと", () => {
+    render(
+      <OtherTypesNav
+        quizSlug="word-sense-personality"
+        currentResultId="type-a"
+        results={results}
+      />,
+    );
+    expect(screen.getByRole("link", { name: "タイプB" })).toHaveAttribute(
+      "href",
+      "/play/word-sense-personality/result/type-b",
+    );
+  });
+
+  test("いまのタイプは現在地（aria-current=page のリンク）で、ほかのタイプは現在地でないこと", () => {
+    render(
+      <OtherTypesNav
+        quizSlug="word-sense-personality"
+        currentResultId="type-a"
+        results={results}
+      />,
+    );
+    expect(screen.getByRole("link", { name: "タイプA" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+    expect(screen.getByRole("link", { name: "タイプB" })).not.toHaveAttribute(
+      "aria-current",
+    );
+  });
+
+  test("showSwatch のとき、色を持つタイプの行に色見本を置くこと", () => {
     const { container } = render(
+      <OtherTypesNav
+        quizSlug="traditional-color"
+        currentResultId="type-a"
+        results={results}
+        showSwatch
+      />,
+    );
+    const swatches = container.querySelectorAll<HTMLElement>(
+      'li > span[aria-hidden="true"]',
+    );
+    expect(swatches).toHaveLength(1);
+    expect(swatches[0].style.backgroundColor).toBe("rgb(17, 17, 17)");
+  });
+
+  test("showSwatch が無いとき、色見本を置かないこと", () => {
+    const { container } = render(
+      <OtherTypesNav
+        quizSlug="word-sense-personality"
+        currentResultId="type-a"
+        results={results}
+      />,
+    );
+    expect(
+      container.querySelectorAll('li > span[aria-hidden="true"]'),
+    ).toHaveLength(0);
+  });
+
+  test("headingLevel=2 のとき見出しが h2 になること（結果のページ用）", () => {
+    render(
       <OtherTypesNav
         quizSlug="word-sense-personality"
         currentResultId="type-a"
@@ -123,22 +134,22 @@ describe("OtherTypesNav", () => {
         headingLevel={2}
       />,
     );
-    const h2 = container.querySelector("h2");
-    expect(h2?.textContent).toBe("他のタイプも見てみよう");
+    expect(
+      screen.getByRole("heading", { level: 2, name: "他のタイプ（3）" }),
+    ).toBeInTheDocument();
   });
 
-  test("デフォルト（headingLevel 未指定）は h3 になること（ResultCard 用）", () => {
-    const { container } = render(
+  test("headingLevel を渡さないとき見出しが h3 になること（解き終えた画面用）", () => {
+    render(
       <OtherTypesNav
         quizSlug="word-sense-personality"
         currentResultId="type-a"
         results={results}
       />,
     );
-    expect(container.querySelector("h3")?.textContent).toBe(
-      "他のタイプも見てみよう",
-    );
-    expect(container.querySelector("h2")).toBeNull();
+    expect(
+      screen.getByRole("heading", { level: 3, name: "他のタイプ（3）" }),
+    ).toBeInTheDocument();
   });
 
   test("1件以下のときは何も描画されないこと", () => {
@@ -149,9 +160,6 @@ describe("OtherTypesNav", () => {
         results={[results[0]]}
       />,
     );
-    expect(container.firstChild).toBeNull();
-    expect(
-      screen.queryByText("他のタイプも見てみよう"),
-    ).not.toBeInTheDocument();
+    expect(container).toBeEmptyDOMElement();
   });
 });

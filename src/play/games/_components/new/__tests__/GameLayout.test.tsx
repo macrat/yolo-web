@@ -1,5 +1,5 @@
 import { expect, test, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import GameLayout from "../GameLayout";
 import type { GameMeta } from "@/play/games/types";
 
@@ -61,6 +61,18 @@ test("GameLayout renders breadcrumb with game title", () => {
     screen.getByRole("navigation", { name: "パンくずリスト" }),
   ).toBeInTheDocument();
   expect(screen.getByText("テストゲーム")).toBeInTheDocument();
+});
+
+test("GameLayout のパンくずの2つ目は、遊びの一覧へ戻る「遊び」", () => {
+  render(
+    <GameLayout meta={mockMeta}>
+      <div>Game content</div>
+    </GameLayout>,
+  );
+  const breadcrumb = screen.getByRole("navigation", { name: "パンくずリスト" });
+  expect(
+    within(breadcrumb).getByRole("link", { name: "遊び" }),
+  ).toHaveAttribute("href", "/play");
 });
 
 test("GameLayout renders children", () => {

@@ -21,7 +21,7 @@ import {
   loadTodayGame,
 } from "@/play/games/kanji-kanaru/_lib/storage";
 import { JOYO_KANJI_SET } from "@/play/games/kanji-kanaru/data/joyo-kanji-set";
-import type { CrossCategoryItem } from "@/play/games/shared/_components/new/CrossCategoryBanner";
+import type { ItemListItem } from "@/components/ItemList";
 import Button from "@/components/Button";
 import type { GuessSubmitResult } from "@/play/games/shared/_lib/guessSubmit";
 import GameHeader from "./GameHeader";
@@ -110,7 +110,7 @@ async function fetchEvaluate(
 
 interface GameContainerProps {
   /** 他カテゴリへの導線データ。Server Component（page.tsx）で事前計算して渡す。 */
-  crossCategoryItems: CrossCategoryItem[];
+  crossCategoryItems: ItemListItem[];
 }
 
 /**

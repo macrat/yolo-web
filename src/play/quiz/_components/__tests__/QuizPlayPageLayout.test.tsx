@@ -1,5 +1,5 @@
 import { expect, test, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import QuizPlayPageLayout from "../QuizPlayPageLayout";
 import type { QuizDefinition } from "../../types";
 
@@ -126,7 +126,7 @@ test("QuizPlayPageLayout renders breadcrumb with correct items", async () => {
   const breadcrumb = screen.getByRole("navigation", { name: "パンくずリスト" });
   expect(breadcrumb).toBeInTheDocument();
   expect(breadcrumb).toHaveTextContent("ホーム");
-  expect(breadcrumb).toHaveTextContent("遊ぶ");
+  expect(within(breadcrumb).getByText("遊び")).toBeInTheDocument();
   expect(breadcrumb).toHaveTextContent("テストクイズ");
 });
 

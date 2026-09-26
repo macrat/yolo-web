@@ -73,7 +73,6 @@ describe("TraditionalColorContent - 基本レンダリング", () => {
         resultId="ai"
         resultColor={sampleColor}
         headingLevel={2}
-        allTypesLayout="pill"
       />,
     );
     expect(screen.getByText("この色の物語")).toBeInTheDocument();
@@ -91,7 +90,6 @@ describe("TraditionalColorContent - 基本レンダリング", () => {
         resultId="ai"
         resultColor={sampleColor}
         headingLevel={2}
-        allTypesLayout="pill"
       />,
     );
     expect(screen.getByText("この色が映える風景")).toBeInTheDocument();
@@ -106,7 +104,6 @@ describe("TraditionalColorContent - 基本レンダリング", () => {
         resultId="ai"
         resultColor={sampleColor}
         headingLevel={2}
-        allTypesLayout="pill"
       />,
     );
     expect(screen.getByText("この色が現れる場面")).toBeInTheDocument();
@@ -121,7 +118,6 @@ describe("TraditionalColorContent - 基本レンダリング", () => {
         resultId="ai"
         resultColor={sampleColor}
         headingLevel={2}
-        allTypesLayout="pill"
       />,
     );
     expect(screen.getByText("この色からのひとこと")).toBeInTheDocument();
@@ -130,17 +126,18 @@ describe("TraditionalColorContent - 基本レンダリング", () => {
     ).toBeInTheDocument();
   });
 
-  it("全タイプ一覧が表示されること（見出しは「他の色も見てみよう」）", () => {
+  it("他のタイプが表示され、見出しがタイプの数を言うこと", () => {
     render(
       <TraditionalColorContent
         content={sampleContent}
         resultId="ai"
         resultColor={sampleColor}
         headingLevel={2}
-        allTypesLayout="pill"
       />,
     );
-    expect(screen.getByText("他の色も見てみよう")).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: /^他のタイプ（\d+）$/ }),
+    ).toBeInTheDocument();
     expect(screen.getByText("藍色(あいいろ)")).toBeInTheDocument();
     expect(screen.getByText("朱色(しゅいろ)")).toBeInTheDocument();
     expect(screen.getByText("桜色(さくらいろ)")).toBeInTheDocument();
@@ -155,7 +152,6 @@ describe("TraditionalColorContent - headingLevel prop", () => {
         resultId="ai"
         resultColor={sampleColor}
         headingLevel={2}
-        allTypesLayout="pill"
       />,
     );
     const h2s = container.querySelectorAll("h2");
@@ -172,58 +168,12 @@ describe("TraditionalColorContent - headingLevel prop", () => {
         resultId="ai"
         resultColor={sampleColor}
         headingLevel={3}
-        allTypesLayout="list"
       />,
     );
     const h3s = container.querySelectorAll("h3");
     expect(h3s.length).toBeGreaterThanOrEqual(5);
     const h2s = container.querySelectorAll("h2");
     expect(h2s.length).toBe(0);
-  });
-});
-
-describe("TraditionalColorContent - allTypesLayout prop", () => {
-  // cycle-254 バッチ2: public props "pill" は維持しつつ、内部実装は 8 クイズ間で質感を揃えるため
-  // grid レイアウト（.allTypesGrid、参照実装 CharacterPersonalityContent と同パターン）にマップされる。
-  it("allTypesLayout='pill' の場合、内部でグリッドレイアウトクラス（.allTypesGrid）に倒されること", () => {
-    const { container } = render(
-      <TraditionalColorContent
-        content={sampleContent}
-        resultId="ai"
-        resultColor={sampleColor}
-        headingLevel={2}
-        allTypesLayout="pill"
-      />,
-    );
-    const gridList = container.querySelector("[class*='allTypesGrid']");
-    expect(gridList).not.toBeNull();
-    // 旧 pill クラスが残っていないこと（pill 撤去の証跡）
-    const legacyPillList = container.querySelector(
-      "[class*='allTypesListPill']",
-    );
-    expect(legacyPillList).toBeNull();
-    // レイアウトは vertical list とは別物であること（'list' レイアウトとの差を維持）
-    const verticalList = container.querySelector(
-      "[class*='allTypesListVertical']",
-    );
-    expect(verticalList).toBeNull();
-  });
-
-  it("allTypesLayout='list' の場合、リスト型レイアウトクラスが適用されること", () => {
-    const { container } = render(
-      <TraditionalColorContent
-        content={sampleContent}
-        resultId="ai"
-        resultColor={sampleColor}
-        headingLevel={3}
-        allTypesLayout="list"
-      />,
-    );
-    const listEl = container.querySelector("[class*='allTypesListVertical']");
-    expect(listEl).not.toBeNull();
-    // grid とは別物であること（layout 切り替えが効いていることの証跡）
-    const gridList = container.querySelector("[class*='allTypesGrid']");
-    expect(gridList).toBeNull();
   });
 });
 
@@ -238,7 +188,6 @@ describe("TraditionalColorContent - afterColorAdvice スロット", () => {
         resultId="ai"
         resultColor={sampleColor}
         headingLevel={2}
-        allTypesLayout="pill"
         afterColorAdvice={afterContent}
       />,
     );
@@ -254,28 +203,9 @@ describe("TraditionalColorContent - afterColorAdvice スロット", () => {
           resultId="ai"
           resultColor={sampleColor}
           headingLevel={2}
-          allTypesLayout="pill"
         />,
       );
     }).not.toThrow();
-  });
-});
-
-describe("TraditionalColorContent - 現在のタイプのハイライト", () => {
-  it("resultIdと一致するタイプにカレントスタイルが適用されること", () => {
-    const { container } = render(
-      <TraditionalColorContent
-        content={sampleContent}
-        resultId="ai"
-        resultColor={sampleColor}
-        headingLevel={2}
-        allTypesLayout="pill"
-      />,
-    );
-    const currentItems = container.querySelectorAll(
-      "[class*='allTypesItemCurrent']",
-    );
-    expect(currentItems.length).toBe(1);
   });
 });
 
@@ -287,7 +217,6 @@ describe("TraditionalColorContent - wrapper クラスと --type-color CSS変数"
         resultId="ai"
         resultColor={sampleColor}
         headingLevel={2}
-        allTypesLayout="pill"
       />,
     );
     const wrapper = container.querySelector("[class*='wrapper']");
@@ -301,7 +230,6 @@ describe("TraditionalColorContent - wrapper クラスと --type-color CSS変数"
         resultId="ai"
         resultColor={sampleColor}
         headingLevel={2}
-        allTypesLayout="pill"
       />,
     );
     const wrapper = container.querySelector(
@@ -313,45 +241,22 @@ describe("TraditionalColorContent - wrapper クラスと --type-color CSS変数"
   });
 });
 
-describe("TraditionalColorContent - 全タイプ一覧の色ドット", () => {
-  it("各タイプに色ドット要素（colorDot）が表示されること", () => {
+describe("TraditionalColorContent - 他のタイプの色見本", () => {
+  it("各タイプの行が、そのタイプの伝統色の色見本を持つこと", () => {
     const { container } = render(
       <TraditionalColorContent
         content={sampleContent}
         resultId="ai"
         resultColor={sampleColor}
         headingLevel={2}
-        allTypesLayout="pill"
       />,
     );
-    const colorDots = container.querySelectorAll("[class*='colorDot']");
-    // モックには3タイプあるので3つのドットが存在すること
-    expect(colorDots.length).toBe(3);
-  });
-
-  // color-as-content: pill→grid 移行後も grid 各セル内に色ドットが描画されつづけること、
-  // 各ドットが伝統色を inline backgroundColor として実色保持していることを担保する。
-  it("grid レイアウト下でも各セル内に色ドットが描画され、r.color が実色として注入されていること", () => {
-    const { container } = render(
-      <TraditionalColorContent
-        content={sampleContent}
-        resultId="ai"
-        resultColor={sampleColor}
-        headingLevel={2}
-        allTypesLayout="pill"
-      />,
-    );
-    const gridList = container.querySelector("[class*='allTypesGrid']");
-    expect(gridList).not.toBeNull();
-    // grid 配下の色ドットがモックのタイプ数（3）と一致すること
-    const dotsInGrid = gridList?.querySelectorAll(
-      "[class*='colorDot']",
-    ) as NodeListOf<HTMLElement>;
-    expect(dotsInGrid.length).toBe(3);
-    // 各色ドットに inline backgroundColor が注入されていること（dark でも実色保持の根拠）
-    dotsInGrid.forEach((dot) => {
-      expect(dot.style.backgroundColor).not.toBe("");
-    });
+    const rows = container.querySelectorAll("li");
+    expect(rows.length).toBeGreaterThan(0);
+    for (const row of rows) {
+      const swatch = row.querySelector<HTMLElement>('span[aria-hidden="true"]');
+      expect(swatch?.style.backgroundColor).not.toBe("");
+    }
   });
 });
 
@@ -363,7 +268,6 @@ describe("TraditionalColorContent - aria-current", () => {
         resultId="ai"
         resultColor={sampleColor}
         headingLevel={2}
-        allTypesLayout="pill"
       />,
     );
     // 藍色(あいいろ)のリンクは aria-current="page" を持つ
@@ -378,21 +282,19 @@ describe("TraditionalColorContent - aria-current", () => {
         resultId="ai"
         resultColor={sampleColor}
         headingLevel={2}
-        allTypesLayout="pill"
       />,
     );
     const otherLink = screen.getByRole("link", { name: /朱色/ });
     expect(otherLink).not.toHaveAttribute("aria-current");
   });
 
-  it("allTypesLayout='list' でも現在のタイプのリンクに aria-current='page' が設定されること", () => {
+  it("別の resultId では、そのタイプのリンクに aria-current='page' が設定されること", () => {
     render(
       <TraditionalColorContent
         content={sampleContent}
         resultId="shu"
         resultColor="#ab3b3a"
         headingLevel={3}
-        allTypesLayout="list"
       />,
     );
     const currentLink = screen.getByRole("link", { name: /朱色/ });

@@ -25,7 +25,7 @@ test("KanjiKanaruPage renders breadcrumb navigation", () => {
     "href",
     "/",
   );
-  expect(screen.getByRole("link", { name: "遊ぶ" })).toHaveAttribute(
+  expect(screen.getByRole("link", { name: "遊び" })).toHaveAttribute(
     "href",
     "/play",
   );

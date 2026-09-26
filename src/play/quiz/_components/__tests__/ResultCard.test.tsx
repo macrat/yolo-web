@@ -532,8 +532,7 @@ describe("ResultCard - Standard variant", () => {
 });
 
 describe("ResultCard - Standard variant 他のタイプ回遊ナビ", () => {
-  // 標準形式（variant なし）診断（word-sense-personality）でも、variant 診断と同様に
-  // 「他のタイプも見てみよう」回遊ナビを提供する（cycle-249 / B-516）。
+  // 標準形式（variant なし）の診断（word-sense-personality）も、variant の診断と同じく他のタイプを並べる。
   const standardContent: QuizResultDetailedContent = {
     traits: ["特徴1"],
     behaviors: ["あるある1"],
@@ -566,7 +565,7 @@ describe("ResultCard - Standard variant 他のタイプ回遊ナビ", () => {
     },
   ];
 
-  test("allResults が複数あるとき『他のタイプも見てみよう』ナビが表示されること", () => {
+  test("allResults が複数あるとき、見出しがタイプの数を言う他のタイプが表示されること", () => {
     render(
       <ResultCard
         {...defaultProps}
@@ -575,7 +574,9 @@ describe("ResultCard - Standard variant 他のタイプ回遊ナビ", () => {
         allResults={allTypes}
       />,
     );
-    expect(screen.getByText("他のタイプも見てみよう")).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "他のタイプ（3）" }),
+    ).toBeInTheDocument();
   });
 
   test("自タイプ以外は同一診断の結果ページへのリンクになること", () => {
@@ -597,8 +598,8 @@ describe("ResultCard - Standard variant 他のタイプ回遊ナビ", () => {
     );
   });
 
-  test("現在の自タイプはリンクにせず aria-current=page のハイライトで示すこと", () => {
-    const { container } = render(
+  test("現在の自タイプは現在地（aria-current=page のリンク）で示すこと", () => {
+    render(
       <ResultCard
         {...defaultProps}
         result={currentResult}
@@ -606,15 +607,10 @@ describe("ResultCard - Standard variant 他のタイプ回遊ナビ", () => {
         allResults={allTypes}
       />,
     );
-    const current = container.querySelector('[aria-current="page"]');
-    expect(current).not.toBeNull();
-    // 自タイプは <a> ではなく <span>（リンクにしない）
-    expect(current?.tagName).toBe("SPAN");
-    expect(current?.textContent).toContain("タイプA");
-    // 自タイプの結果ページへのリンクは存在しないこと
-    expect(
-      container.querySelector('a[href="/play/test-quiz/result/type-a"]'),
-    ).toBeNull();
+    expect(screen.getByRole("link", { name: "タイプA" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
   });
 
   test("allResults が未指定の場合はナビが表示されないこと", () => {
@@ -626,7 +622,7 @@ describe("ResultCard - Standard variant 他のタイプ回遊ナビ", () => {
       />,
     );
     expect(
-      screen.queryByText("他のタイプも見てみよう"),
+      screen.queryByRole("heading", { name: /^他のタイプ/ }),
     ).not.toBeInTheDocument();
   });
 
@@ -640,7 +636,7 @@ describe("ResultCard - Standard variant 他のタイプ回遊ナビ", () => {
       />,
     );
     expect(
-      screen.queryByText("他のタイプも見てみよう"),
+      screen.queryByRole("heading", { name: /^他のタイプ/ }),
     ).not.toBeInTheDocument();
   });
 });

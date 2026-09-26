@@ -23,6 +23,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import ShareButtons from "@/play/quiz/_components/ShareButtons";
 import ResultPageShell from "@/play/quiz/_components/ResultPageShell";
+import OtherTypesNav from "@/play/quiz/_components/OtherTypesNav";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import { countCharWidth } from "@/lib/countCharWidth";
 import { getResultIdsForQuiz } from "@/play/quiz/registry";
@@ -166,43 +167,24 @@ export default async function CharacterFortuneResultPage({ params }: Props) {
           </Link>
         </div>
 
-        {/* (f) 全タイプ一覧 + CTA */}
-        <div className={styles.allTypesSection}>
-          <ul className={styles.allTypesList} data-text-box="rows">
-            {quiz.results.map((r) => (
-              <li
-                key={r.id}
-                className={
-                  r.id === resultId
-                    ? styles.allTypesItemCurrent
-                    : styles.allTypesItem
-                }
-              >
-                {/* 新デザインでは絵文字（icon）を装飾に使わない（DESIGN.md §8-6）。
-                    各タイプの区別はタイトル文言だけで行う。 */}
-                <Link
-                  href={`/play/${SLUG}/result/${r.id}`}
-                  aria-current={r.id === resultId ? "page" : undefined}
-                  data-hit-area="after"
-                >
-                  <span>{r.title}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-          <p className={styles.allTypesCta}>他のキャラも見てみよう</p>
-          <div className={styles.trySection}>
-            <Link
-              href={`/play/${SLUG}`}
-              className={styles.tryLink}
-              data-text-box="inline"
-            >
-              {ctaText}
-            </Link>
-            <p className={styles.tryCost}>
-              全{quiz.meta.questionCount}問 / 登録不要
-            </p>
-          </div>
+        {/* (f) 他のタイプと、診断への誘い */}
+        <OtherTypesNav
+          quizSlug={SLUG}
+          currentResultId={resultId}
+          results={quiz.results}
+          headingLevel={2}
+        />
+        <div className={styles.closingTry}>
+          <Link
+            href={`/play/${SLUG}`}
+            className={styles.tryLink}
+            data-text-box="inline"
+          >
+            {ctaText}
+          </Link>
+          <p className={styles.tryCost}>
+            全{quiz.meta.questionCount}問 / 登録不要
+          </p>
         </div>
       </div>
     </ResultPageShell>

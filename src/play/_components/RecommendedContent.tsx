@@ -1,19 +1,16 @@
-import Link from "next/link";
+import ItemList from "@/components/ItemList";
 import { getRecommendedContents } from "@/play/recommendation";
-import { getContentPath } from "@/play/paths";
-import { resolveDisplayCategory } from "@/play/seo";
+import { toPlayListItems } from "@/play/listItems";
 import styles from "./RecommendedContent.module.css";
 
 interface RecommendedContentProps {
   currentSlug: string;
 }
 
+const HEADING_ID = "recommended-content";
+
 /**
- * 他カテゴリからおすすめコンテンツ3件を表示するServer Component。
- *
- * - 現在のコンテンツとは異なるカテゴリから各1件を選出
- * - 各行にタイトル（shortTitle優先）、短い説明、カテゴリ（補助情報の文字）を表示
- * - レコメンドが0件の場合はnullを返す
+ * いまの遊びと違う分類から、おすすめを1件ずつ選んで並べる。選ぶものが無いときは何も描かない。
  */
 export default function RecommendedContent({
   currentSlug,
@@ -23,29 +20,11 @@ export default function RecommendedContent({
   if (recommended.length === 0) return null;
 
   return (
-    <nav className={styles.related} aria-label="おすすめコンテンツ">
-      <h2 className={styles.heading}>他のジャンルも試してみよう</h2>
-      <ul className={styles.list} data-text-box="rows">
-        {recommended.map((content) => (
-          <li key={content.slug}>
-            <Link
-              href={getContentPath(content)}
-              className={styles.link}
-              data-hit-area="after"
-            >
-              <span className={styles.name}>
-                {content.shortTitle ?? content.title}
-              </span>
-              <span className={styles.description}>
-                {content.shortDescription}
-              </span>
-              <span className={styles.category}>
-                {resolveDisplayCategory(content)}
-              </span>
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </nav>
+    <section className={styles.related} aria-labelledby={HEADING_ID}>
+      <h2 id={HEADING_ID} className={styles.heading}>
+        他のジャンルも試してみよう
+      </h2>
+      <ItemList labelledBy={HEADING_ID} items={toPlayListItems(recommended)} />
+    </section>
   );
 }

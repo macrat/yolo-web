@@ -7,7 +7,7 @@
  * タイプごとの派手色（--type-color）を使わず
  * 共通アクセント（--accent 系）・--accent に寄せる。
  *
- * 共通コンテンツセクション（存在の本質〜全タイプ一覧）のスタイルは
+ * 共通コンテンツセクション（存在の本質〜他のタイプ）のスタイルは
  * UnexpectedCompatibilityContent.module.css に集約されている。
  * このファイルは page.tsx 固有の要素（catchphrase, trySection, detailedSection, cta2）のみを管理する。
  */

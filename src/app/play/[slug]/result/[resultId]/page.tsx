@@ -266,8 +266,7 @@ export default async function PlayQuizResultPage({
           <h2 className={styles.detailedSectionHeading}>{adviceHeading}</h2>
           <div className={styles.adviceCard}>{detailedContent.advice}</div>
 
-          {/* 他のタイプ回遊（受検者本人の ResultCard と同じ導線を、検索/シェアで
-              この結果ページに流入した第三者にも提供する。cycle-249 / B-516）。 */}
+          {/* 解き終えた画面（ResultCard）と同じく、検索やシェアから来た人にもほかのタイプを見せる。 */}
           <OtherTypesNav
             quizSlug={slug}
             currentResultId={result.id}

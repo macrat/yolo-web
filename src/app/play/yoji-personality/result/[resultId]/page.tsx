@@ -132,15 +132,14 @@ export default async function YojiPersonalityResultPage({ params }: Props) {
           </p>
         </div>
 
-        {/* 四字熟語解説〜全タイプ一覧: 共通コンポーネントで一括レンダリング */}
+        {/* 四字熟語解説〜他のタイプ: 共通コンポーネントで一括レンダリング */}
         <YojiPersonalityContent
           content={yojiDc}
           resultId={resultId}
           resultColor={resultColor}
           headingLevel={2}
-          allTypesLayout="list"
           afterMotto={
-            /* CTA2: 全タイプ一覧の前に配置 — コンテンツを読み終えた時点での自然な誘導 */
+            /* CTA2: 他のタイプの前に配置 — コンテンツを読み終えた時点での自然な誘導 */
             <div className={styles.cta2Section}>
               <Link
                 href={`/play/${SLUG}`}

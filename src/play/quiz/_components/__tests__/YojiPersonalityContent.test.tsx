@@ -78,7 +78,6 @@ describe("YojiPersonalityContent - 基本レンダリング", () => {
         resultId="shoshikantetsu"
         resultColor={sampleColor}
         headingLevel={2}
-        allTypesLayout="pill"
       />,
     );
     expect(screen.getByText("この四字熟語の成り立ち")).toBeInTheDocument();
@@ -96,7 +95,6 @@ describe("YojiPersonalityContent - 基本レンダリング", () => {
         resultId="shoshikantetsu"
         resultColor={sampleColor}
         headingLevel={2}
-        allTypesLayout="pill"
       />,
     );
     expect(screen.getByText("この四字熟語のルーツ")).toBeInTheDocument();
@@ -114,7 +112,6 @@ describe("YojiPersonalityContent - 基本レンダリング", () => {
         resultId="shoshikantetsu"
         resultColor={sampleColor}
         headingLevel={2}
-        allTypesLayout="pill"
       />,
     );
     expect(screen.getByText("この四字熟語が現れる日常")).toBeInTheDocument();
@@ -129,7 +126,6 @@ describe("YojiPersonalityContent - 基本レンダリング", () => {
         resultId="shoshikantetsu"
         resultColor={sampleColor}
         headingLevel={2}
-        allTypesLayout="pill"
       />,
     );
     expect(screen.getByText("座右の銘として")).toBeInTheDocument();
@@ -138,17 +134,18 @@ describe("YojiPersonalityContent - 基本レンダリング", () => {
     ).toBeInTheDocument();
   });
 
-  it("全タイプ一覧が表示されること（見出しは「他の四字熟語も見てみよう」）", () => {
+  it("他のタイプが表示され、見出しがタイプの数を言うこと", () => {
     render(
       <YojiPersonalityContent
         content={sampleContent}
         resultId="shoshikantetsu"
         resultColor={sampleColor}
         headingLevel={2}
-        allTypesLayout="pill"
       />,
     );
-    expect(screen.getByText("他の四字熟語も見てみよう")).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: /^他のタイプ（\d+）$/ }),
+    ).toBeInTheDocument();
     expect(screen.getByText("初志貫徹")).toBeInTheDocument();
     expect(screen.getByText("天真爛漫")).toBeInTheDocument();
     expect(screen.getByText("切磋琢磨")).toBeInTheDocument();
@@ -163,7 +160,6 @@ describe("YojiPersonalityContent - headingLevel prop", () => {
         resultId="shoshikantetsu"
         resultColor={sampleColor}
         headingLevel={2}
-        allTypesLayout="pill"
       />,
     );
     const h2s = container.querySelectorAll("h2");
@@ -180,57 +176,12 @@ describe("YojiPersonalityContent - headingLevel prop", () => {
         resultId="shoshikantetsu"
         resultColor={sampleColor}
         headingLevel={3}
-        allTypesLayout="list"
       />,
     );
     const h3s = container.querySelectorAll("h3");
     expect(h3s.length).toBeGreaterThanOrEqual(5);
     const h2s = container.querySelectorAll("h2");
     expect(h2s.length).toBe(0);
-  });
-});
-
-describe("YojiPersonalityContent - allTypesLayout prop", () => {
-  // 新デザイン体系（cycle-254）で、旧 "pill"（角丸999px ピル＋--type-color 枠）を廃し、
-  // CharacterPersonalityContent と同じ allTypesGrid（2-3列グリッド）に統一した。
-  // 一方 public props signature 互換のため `allTypesLayout: "list" | "pill"` の型は維持し、
-  // 内部実装で "pill" を allTypesGrid クラスへマップしている。
-  // テストは pill / list で **別物の** レイアウトクラスが付くことを担保する。
-  it("allTypesLayout='pill' の場合、グリッド型レイアウトクラスが適用されること（pill は新デザインで grid へマップ）", () => {
-    const { container } = render(
-      <YojiPersonalityContent
-        content={sampleContent}
-        resultId="shoshikantetsu"
-        resultColor={sampleColor}
-        headingLevel={2}
-        allTypesLayout="pill"
-      />,
-    );
-    // pill 指定時はグリッドクラスが付く
-    const gridList = container.querySelector("[class*='allTypesGrid']");
-    expect(gridList).not.toBeNull();
-    // 同時に list 用の縦並びクラスは付かない（pill/list で別物のレイアウトであることの担保）
-    const verticalList = container.querySelector(
-      "[class*='allTypesListVertical']",
-    );
-    expect(verticalList).toBeNull();
-  });
-
-  it("allTypesLayout='list' の場合、縦並びリスト型レイアウトクラスが適用されること", () => {
-    const { container } = render(
-      <YojiPersonalityContent
-        content={sampleContent}
-        resultId="shoshikantetsu"
-        resultColor={sampleColor}
-        headingLevel={3}
-        allTypesLayout="list"
-      />,
-    );
-    const listEl = container.querySelector("[class*='allTypesListVertical']");
-    expect(listEl).not.toBeNull();
-    // 同時に grid クラスは付かない（pill/list で別物のレイアウトであることの担保）
-    const gridList = container.querySelector("[class*='allTypesGrid']");
-    expect(gridList).toBeNull();
   });
 });
 
@@ -245,7 +196,6 @@ describe("YojiPersonalityContent - afterMotto スロット", () => {
         resultId="shoshikantetsu"
         resultColor={sampleColor}
         headingLevel={2}
-        allTypesLayout="pill"
         afterMotto={afterContent}
       />,
     );
@@ -261,28 +211,9 @@ describe("YojiPersonalityContent - afterMotto スロット", () => {
           resultId="shoshikantetsu"
           resultColor={sampleColor}
           headingLevel={2}
-          allTypesLayout="pill"
         />,
       );
     }).not.toThrow();
-  });
-});
-
-describe("YojiPersonalityContent - 現在のタイプのハイライト", () => {
-  it("resultIdと一致するタイプにカレントスタイルが適用されること", () => {
-    const { container } = render(
-      <YojiPersonalityContent
-        content={sampleContent}
-        resultId="shoshikantetsu"
-        resultColor={sampleColor}
-        headingLevel={2}
-        allTypesLayout="pill"
-      />,
-    );
-    const currentItems = container.querySelectorAll(
-      "[class*='allTypesItemCurrent']",
-    );
-    expect(currentItems.length).toBe(1);
   });
 });
 
@@ -294,7 +225,6 @@ describe("YojiPersonalityContent - wrapper クラスと --type-color CSS変数",
         resultId="shoshikantetsu"
         resultColor={sampleColor}
         headingLevel={2}
-        allTypesLayout="pill"
       />,
     );
     const wrapper = container.querySelector("[class*='wrapper']");
@@ -308,7 +238,6 @@ describe("YojiPersonalityContent - wrapper クラスと --type-color CSS変数",
         resultId="shoshikantetsu"
         resultColor={sampleColor}
         headingLevel={2}
-        allTypesLayout="pill"
       />,
     );
     const wrapper = container.querySelector(
@@ -328,7 +257,6 @@ describe("YojiPersonalityContent - aria-current", () => {
         resultId="shoshikantetsu"
         resultColor={sampleColor}
         headingLevel={2}
-        allTypesLayout="pill"
       />,
     );
     const currentLink = screen.getByRole("link", { name: /初志貫徹/ });
@@ -342,21 +270,19 @@ describe("YojiPersonalityContent - aria-current", () => {
         resultId="shoshikantetsu"
         resultColor={sampleColor}
         headingLevel={2}
-        allTypesLayout="pill"
       />,
     );
     const otherLink = screen.getByRole("link", { name: /天真爛漫/ });
     expect(otherLink).not.toHaveAttribute("aria-current");
   });
 
-  it("allTypesLayout='list' でも現在のタイプのリンクに aria-current='page' が設定されること", () => {
+  it("別の resultId では、そのタイプのリンクに aria-current='page' が設定されること", () => {
     render(
       <YojiPersonalityContent
         content={sampleContent}
         resultId="tenshinranman"
         resultColor="#f59e0b"
         headingLevel={3}
-        allTypesLayout="list"
       />,
     );
     const currentLink = screen.getByRole("link", { name: /天真爛漫/ });

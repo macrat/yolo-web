@@ -4,7 +4,7 @@
  * テスト対象:
  * - coreSentence / behaviors / persona / thirdPartyNote の4セクション表示
  * - humorMetrics テーブル（存在する場合のみ表示）
- * - 全タイプ一覧（"pill" は caller 互換用ラベルで、新デザインでは内部で grid にマップされる）
+ * - 他のタイプ（OtherTypesNav）
  * - headingLevel prop（h2/h3）
  * - resultColor の CSS変数注入（--type-color。caller 互換のため受け取りのみ）
  * - afterThirdPartyNote スロット
@@ -95,7 +95,6 @@ describe("ContrarianFortuneContent - 基本レンダリング", () => {
         detailedContent={sampleContent}
         allResults={sampleAllResults}
         headingLevel={2}
-        allTypesLayout="pill"
         resultColor={sampleColor}
       />,
     );
@@ -114,7 +113,6 @@ describe("ContrarianFortuneContent - 基本レンダリング", () => {
         detailedContent={sampleContent}
         allResults={sampleAllResults}
         headingLevel={2}
-        allTypesLayout="pill"
         resultColor={sampleColor}
       />,
     );
@@ -135,7 +133,6 @@ describe("ContrarianFortuneContent - 基本レンダリング", () => {
         detailedContent={sampleContent}
         allResults={sampleAllResults}
         headingLevel={2}
-        allTypesLayout="pill"
         resultColor={sampleColor}
       />,
     );
@@ -155,7 +152,6 @@ describe("ContrarianFortuneContent - 基本レンダリング", () => {
         detailedContent={sampleContent}
         allResults={sampleAllResults}
         headingLevel={2}
-        allTypesLayout="pill"
         resultColor={sampleColor}
       />,
     );
@@ -169,7 +165,7 @@ describe("ContrarianFortuneContent - 基本レンダリング", () => {
     ).toBeInTheDocument();
   });
 
-  it("全タイプ一覧が表示されること", () => {
+  it("他のタイプが表示され、見出しがタイプの数を言うこと", () => {
     render(
       <ContrarianFortuneContent
         quizSlug={sampleQuizSlug}
@@ -177,11 +173,12 @@ describe("ContrarianFortuneContent - 基本レンダリング", () => {
         detailedContent={sampleContent}
         allResults={sampleAllResults}
         headingLevel={2}
-        allTypesLayout="pill"
         resultColor={sampleColor}
       />,
     );
-    expect(screen.getByText("他のタイプも見てみよう")).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: /^他のタイプ（\d+）$/ }),
+    ).toBeInTheDocument();
     expect(screen.getByText("逆張りマスター")).toBeInTheDocument();
     expect(screen.getByText("マイウェイ型")).toBeInTheDocument();
     expect(screen.getByText("王道無視型")).toBeInTheDocument();
@@ -197,7 +194,6 @@ describe("ContrarianFortuneContent - humorMetrics（条件付き表示）", () =
         detailedContent={sampleContent}
         allResults={sampleAllResults}
         headingLevel={2}
-        allTypesLayout="pill"
         resultColor={sampleColor}
       />,
     );
@@ -212,7 +208,6 @@ describe("ContrarianFortuneContent - humorMetrics（条件付き表示）", () =
         detailedContent={sampleContentWithMetrics}
         allResults={sampleAllResults}
         headingLevel={2}
-        allTypesLayout="pill"
         resultColor={sampleColor}
       />,
     );
@@ -233,7 +228,6 @@ describe("ContrarianFortuneContent - headingLevel prop", () => {
         detailedContent={sampleContent}
         allResults={sampleAllResults}
         headingLevel={2}
-        allTypesLayout="pill"
         resultColor={sampleColor}
       />,
     );
@@ -252,7 +246,6 @@ describe("ContrarianFortuneContent - headingLevel prop", () => {
         detailedContent={sampleContent}
         allResults={sampleAllResults}
         headingLevel={3}
-        allTypesLayout="pill"
         resultColor={sampleColor}
       />,
     );
@@ -260,60 +253,6 @@ describe("ContrarianFortuneContent - headingLevel prop", () => {
     expect(h3s.length).toBeGreaterThanOrEqual(3);
     const h2s = container.querySelectorAll("h2");
     expect(h2s.length).toBe(0);
-  });
-});
-
-describe("ContrarianFortuneContent - allTypesLayout prop", () => {
-  // 新デザインでは旧 "pill"（角丸999px・派手色枠）レイアウトは廃止された。
-  // public props "pill" は caller signature 互換のため維持しているが、
-  // 内部実装では Character/Yoji と同じ allTypesGrid（2-3列）にマップされる。
-  // テストの本来の意図（「指定したレイアウトに対応する CSS クラスが付く」）は保ち、
-  // 新クラス名 allTypesGrid を検証する。
-  it("allTypesLayout='pill' の場合、新デザインの allTypesGrid レイアウトクラスが適用されること", () => {
-    const { container } = render(
-      <ContrarianFortuneContent
-        quizSlug={sampleQuizSlug}
-        resultId="antitrend"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        headingLevel={2}
-        allTypesLayout="pill"
-        resultColor={sampleColor}
-      />,
-    );
-    const gridList = container.querySelector("[class*='allTypesGrid']");
-    expect(gridList).not.toBeNull();
-    // 旧 pill レイアウトクラスは撤去されたことも確認する
-    const pillList = container.querySelector("[class*='allTypesListPill']");
-    expect(pillList).toBeNull();
-    // "pill" と "list" は別レイアウトとして担保したいので縦リストクラスは付かない
-    const verticalList = container.querySelector(
-      "[class*='allTypesListVertical']",
-    );
-    expect(verticalList).toBeNull();
-  });
-
-  // ResultCard（インライン）経路は "list" を渡し、Character/Animal と同じ
-  // 縦リスト（allTypesListVertical）で表示する。8 variant 共通で
-  // インライン側の「他のタイプも見てみよう」を縦リストに揃えるための分岐。
-  it("allTypesLayout='list' の場合、allTypesListVertical レイアウトクラスが適用され allTypesGrid は付かないこと", () => {
-    const { container } = render(
-      <ContrarianFortuneContent
-        quizSlug={sampleQuizSlug}
-        resultId="antitrend"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        headingLevel={3}
-        allTypesLayout="list"
-        resultColor={sampleColor}
-      />,
-    );
-    const verticalList = container.querySelector(
-      "[class*='allTypesListVertical']",
-    );
-    expect(verticalList).not.toBeNull();
-    const gridList = container.querySelector("[class*='allTypesGrid']");
-    expect(gridList).toBeNull();
   });
 });
 
@@ -329,7 +268,6 @@ describe("ContrarianFortuneContent - afterThirdPartyNote スロット", () => {
         detailedContent={sampleContent}
         allResults={sampleAllResults}
         headingLevel={2}
-        allTypesLayout="pill"
         resultColor={sampleColor}
         afterThirdPartyNote={afterContent}
       />,
@@ -349,7 +287,6 @@ describe("ContrarianFortuneContent - afterThirdPartyNote スロット", () => {
           detailedContent={sampleContent}
           allResults={sampleAllResults}
           headingLevel={2}
-          allTypesLayout="pill"
           resultColor={sampleColor}
         />,
       );
@@ -366,7 +303,6 @@ describe("ContrarianFortuneContent - wrapper クラスと --type-color CSS変数
         detailedContent={sampleContent}
         allResults={sampleAllResults}
         headingLevel={2}
-        allTypesLayout="pill"
         resultColor={sampleColor}
       />,
     );
@@ -382,7 +318,6 @@ describe("ContrarianFortuneContent - wrapper クラスと --type-color CSS変数
         detailedContent={sampleContent}
         allResults={sampleAllResults}
         headingLevel={2}
-        allTypesLayout="pill"
         resultColor={sampleColor}
       />,
     );
@@ -391,26 +326,6 @@ describe("ContrarianFortuneContent - wrapper クラスと --type-color CSS変数
     ) as HTMLElement;
     expect(wrapper).not.toBeNull();
     expect(wrapper.style.getPropertyValue("--type-color")).toBe(sampleColor);
-  });
-});
-
-describe("ContrarianFortuneContent - 現在のタイプのハイライト", () => {
-  it("resultIdと一致するタイプにカレントスタイルが適用されること", () => {
-    const { container } = render(
-      <ContrarianFortuneContent
-        quizSlug={sampleQuizSlug}
-        resultId="antitrend"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        headingLevel={2}
-        allTypesLayout="pill"
-        resultColor={sampleColor}
-      />,
-    );
-    const currentItems = container.querySelectorAll(
-      "[class*='allTypesItemCurrent']",
-    );
-    expect(currentItems.length).toBe(1);
   });
 });
 
@@ -423,7 +338,6 @@ describe("ContrarianFortuneContent - aria-current", () => {
         detailedContent={sampleContent}
         allResults={sampleAllResults}
         headingLevel={2}
-        allTypesLayout="pill"
         resultColor={sampleColor}
       />,
     );
@@ -439,7 +353,6 @@ describe("ContrarianFortuneContent - aria-current", () => {
         detailedContent={sampleContent}
         allResults={sampleAllResults}
         headingLevel={2}
-        allTypesLayout="pill"
         resultColor={sampleColor}
       />,
     );
@@ -455,7 +368,6 @@ describe("ContrarianFortuneContent - aria-current", () => {
         detailedContent={sampleContent}
         allResults={sampleAllResults}
         headingLevel={3}
-        allTypesLayout="pill"
         resultColor="#0891b2"
       />,
     );
@@ -467,7 +379,7 @@ describe("ContrarianFortuneContent - aria-current", () => {
 });
 
 describe("ContrarianFortuneContent - リンクのhref", () => {
-  it("全タイプ一覧のリンクが正しいhrefを持つこと", () => {
+  it("他のタイプのリンクが正しいhrefを持つこと", () => {
     render(
       <ContrarianFortuneContent
         quizSlug={sampleQuizSlug}
@@ -475,7 +387,6 @@ describe("ContrarianFortuneContent - リンクのhref", () => {
         detailedContent={sampleContent}
         allResults={sampleAllResults}
         headingLevel={2}
-        allTypesLayout="pill"
         resultColor={sampleColor}
       />,
     );

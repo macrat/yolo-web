@@ -2,9 +2,9 @@ import type { GameMeta } from "@/play/games/types";
 import Breadcrumb from "@/components/Breadcrumb";
 import FaqSection from "@/components/FaqSection";
 import ShareButtons from "@/components/ShareButtons";
+import RelatedBlogPosts from "@/components/RelatedBlogPosts";
 import RecommendedContent from "@/play/_components/RecommendedContent";
 import RelatedGames from "./RelatedGames";
-import RelatedBlogPosts from "./RelatedBlogPosts";
 import styles from "./GameLayout.module.css";
 
 interface GameLayoutProps {
@@ -15,21 +15,9 @@ interface GameLayoutProps {
 }
 
 /**
- * ゲームページ共通レイアウト（(new) デザイン体系版・cycle-268 フォーク）。
+ * ゲームのページの共通の組み方。パンくず・ゲーム本体・FAQ・シェア・関連の一覧の順に並べる。
  *
- * 全4ゲーム（kanji-kanaru・nakamawake・irodori・yoji-kimeru）が本コンポーネントを
- * 使用する（cycle-279 C1 で irodori/yoji-kimeru も legacy 版から移行完了・
- * legacy `../GameLayout` は削除済み）。
- *
- * legacy からの主な差分（歴史的経緯）:
- * - Breadcrumb/FaqSection/ShareButtons を (new) `@/components/*` 版に差替。
- * - TrustLevelBadge を撤去（cycle-279 C1 で trustLevel フィールド自体も型・データ・
- *   コンポーネントごと一括削除済み・B-432 完了）。
- * - RecommendedContent / RelatedContentCard.module.css（本コンポーネント配下の
- *   RelatedGames が使用）は新トークンへ変換済み（cycle-278 C1/C4。RelatedQuizzes は
- *   別ファイル RelatedQuizzes.module.css を持ち非共有）。
- *
- * h1 は GameContainer 内部で表示されるため、重複を避けて header には含めない。
+ * h1 はゲーム本体（GameContainer）が持つので、header には置かない。
  */
 export default function GameLayout({
   meta,
@@ -41,7 +29,7 @@ export default function GameLayout({
       <Breadcrumb
         items={[
           { label: "ホーム", href: "/" },
-          { label: "遊ぶ", href: "/play" },
+          { label: "遊び", href: "/play" },
           { label: meta.title },
         ]}
       />
@@ -101,7 +89,7 @@ export default function GameLayout({
         relatedSlugs={meta.relatedGameSlugs}
       />
       <RecommendedContent currentSlug={meta.slug} />
-      <RelatedBlogPosts gameSlug={meta.slug} />
+      <RelatedBlogPosts toolSlug={meta.slug} />
     </article>
   );
 }

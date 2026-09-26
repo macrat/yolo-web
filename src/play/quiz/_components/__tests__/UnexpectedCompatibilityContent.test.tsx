@@ -3,7 +3,7 @@
  *
  * テスト対象:
  * - entityEssence / whyCompatible / behaviors / lifeAdvice の4セクション表示
- * - 全タイプ一覧（pill / list / grid レイアウト）
+ * - 他のタイプ（OtherTypesNav）
  * - headingLevel prop（h2/h3）
  * - resultColor の CSS変数注入（--type-color）
  * - afterLifeAdvice スロット
@@ -86,7 +86,6 @@ describe("UnexpectedCompatibilityContent - 基本レンダリング", () => {
         detailedContent={sampleContent}
         allResults={sampleAllResults}
         headingLevel={2}
-        allTypesLayout="pill"
         resultColor={sampleColor}
       />,
     );
@@ -106,7 +105,6 @@ describe("UnexpectedCompatibilityContent - 基本レンダリング", () => {
         detailedContent={sampleContent}
         allResults={sampleAllResults}
         headingLevel={2}
-        allTypesLayout="pill"
         resultColor={sampleColor}
       />,
     );
@@ -126,7 +124,6 @@ describe("UnexpectedCompatibilityContent - 基本レンダリング", () => {
         detailedContent={sampleContent}
         allResults={sampleAllResults}
         headingLevel={2}
-        allTypesLayout="pill"
         resultColor={sampleColor}
       />,
     );
@@ -151,7 +148,6 @@ describe("UnexpectedCompatibilityContent - 基本レンダリング", () => {
         detailedContent={sampleContent}
         allResults={sampleAllResults}
         headingLevel={2}
-        allTypesLayout="pill"
         resultColor={sampleColor}
       />,
     );
@@ -163,7 +159,7 @@ describe("UnexpectedCompatibilityContent - 基本レンダリング", () => {
     ).toBeInTheDocument();
   });
 
-  it("全タイプ一覧が表示されること", () => {
+  it("他のタイプが表示され、見出しがタイプの数を言うこと", () => {
     render(
       <UnexpectedCompatibilityContent
         quizSlug={sampleQuizSlug}
@@ -171,12 +167,11 @@ describe("UnexpectedCompatibilityContent - 基本レンダリング", () => {
         detailedContent={sampleContent}
         allResults={sampleAllResults}
         headingLevel={2}
-        allTypesLayout="pill"
         resultColor={sampleColor}
       />,
     );
     expect(
-      screen.getByText("他の「相性の良い存在」も見てみよう"),
+      screen.getByRole("heading", { name: /^他のタイプ（\d+）$/ }),
     ).toBeInTheDocument();
     expect(screen.getByText("自動販売機")).toBeInTheDocument();
     expect(screen.getByText("古い掛け時計")).toBeInTheDocument();
@@ -193,7 +188,6 @@ describe("UnexpectedCompatibilityContent - headingLevel prop", () => {
         detailedContent={sampleContent}
         allResults={sampleAllResults}
         headingLevel={2}
-        allTypesLayout="pill"
         resultColor={sampleColor}
       />,
     );
@@ -212,7 +206,6 @@ describe("UnexpectedCompatibilityContent - headingLevel prop", () => {
         detailedContent={sampleContent}
         allResults={sampleAllResults}
         headingLevel={3}
-        allTypesLayout="list"
         resultColor={sampleColor}
       />,
     );
@@ -220,63 +213,6 @@ describe("UnexpectedCompatibilityContent - headingLevel prop", () => {
     expect(h3s.length).toBeGreaterThanOrEqual(5);
     const h2s = container.querySelectorAll("h2");
     expect(h2s.length).toBe(0);
-  });
-});
-
-describe("UnexpectedCompatibilityContent - allTypesLayout prop", () => {
-  it("allTypesLayout='pill' の場合、新デザインでは pill 型を廃しグリッドにマップされること", () => {
-    // 新デザイン体系（cycle-254）では pill 型横並びチップは語彙にない。
-    // public props の "pill" は caller 互換のため受け取りは残すが、
-    // 内部実装では "grid" と同じ allTypesGrid クラスに倒される。
-    const { container } = render(
-      <UnexpectedCompatibilityContent
-        quizSlug={sampleQuizSlug}
-        resultId="vendingmachine"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        headingLevel={2}
-        allTypesLayout="pill"
-        resultColor={sampleColor}
-      />,
-    );
-    const gridEl = container.querySelector("[class*='allTypesGrid']");
-    expect(gridEl).not.toBeNull();
-    // 旧 pill クラスは存在しないこと（語彙ごと撤去された証跡）
-    const pillList = container.querySelector("[class*='allTypesListPill']");
-    expect(pillList).toBeNull();
-  });
-
-  it("allTypesLayout='list' の場合、リスト型レイアウトクラスが適用されること", () => {
-    const { container } = render(
-      <UnexpectedCompatibilityContent
-        quizSlug={sampleQuizSlug}
-        resultId="vendingmachine"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        headingLevel={3}
-        allTypesLayout="list"
-        resultColor={sampleColor}
-      />,
-    );
-    const listEl = container.querySelector("[class*='allTypesListVertical']");
-    expect(listEl).not.toBeNull();
-  });
-
-  it("allTypesLayout='grid' の場合、グリッドレイアウトクラスが適用されること", () => {
-    const { container } = render(
-      <UnexpectedCompatibilityContent
-        quizSlug={sampleQuizSlug}
-        resultId="vendingmachine"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        headingLevel={2}
-        allTypesLayout="grid"
-        resultColor={sampleColor}
-      />,
-    );
-    // 新デザインでは参照実装（Yoji / CharacterPersonality）と同名の allTypesGrid を使う
-    const gridEl = container.querySelector("[class*='allTypesGrid']");
-    expect(gridEl).not.toBeNull();
   });
 });
 
@@ -292,7 +228,6 @@ describe("UnexpectedCompatibilityContent - afterLifeAdvice スロット", () => 
         detailedContent={sampleContent}
         allResults={sampleAllResults}
         headingLevel={2}
-        allTypesLayout="pill"
         resultColor={sampleColor}
         afterLifeAdvice={afterContent}
       />,
@@ -310,7 +245,6 @@ describe("UnexpectedCompatibilityContent - afterLifeAdvice スロット", () => 
           detailedContent={sampleContent}
           allResults={sampleAllResults}
           headingLevel={2}
-          allTypesLayout="pill"
           resultColor={sampleColor}
         />,
       );
@@ -327,7 +261,6 @@ describe("UnexpectedCompatibilityContent - wrapper クラスと --type-color CSS
         detailedContent={sampleContent}
         allResults={sampleAllResults}
         headingLevel={2}
-        allTypesLayout="pill"
         resultColor={sampleColor}
       />,
     );
@@ -343,7 +276,6 @@ describe("UnexpectedCompatibilityContent - wrapper クラスと --type-color CSS
         detailedContent={sampleContent}
         allResults={sampleAllResults}
         headingLevel={2}
-        allTypesLayout="pill"
         resultColor={sampleColor}
       />,
     );
@@ -352,26 +284,6 @@ describe("UnexpectedCompatibilityContent - wrapper クラスと --type-color CSS
     ) as HTMLElement;
     expect(wrapper).not.toBeNull();
     expect(wrapper.style.getPropertyValue("--type-color")).toBe(sampleColor);
-  });
-});
-
-describe("UnexpectedCompatibilityContent - 現在のタイプのハイライト", () => {
-  it("resultIdと一致するタイプにカレントスタイルが適用されること", () => {
-    const { container } = render(
-      <UnexpectedCompatibilityContent
-        quizSlug={sampleQuizSlug}
-        resultId="vendingmachine"
-        detailedContent={sampleContent}
-        allResults={sampleAllResults}
-        headingLevel={2}
-        allTypesLayout="pill"
-        resultColor={sampleColor}
-      />,
-    );
-    const currentItems = container.querySelectorAll(
-      "[class*='allTypesItemCurrent']",
-    );
-    expect(currentItems.length).toBe(1);
   });
 });
 
@@ -384,7 +296,6 @@ describe("UnexpectedCompatibilityContent - aria-current", () => {
         detailedContent={sampleContent}
         allResults={sampleAllResults}
         headingLevel={2}
-        allTypesLayout="pill"
         resultColor={sampleColor}
       />,
     );
@@ -400,7 +311,6 @@ describe("UnexpectedCompatibilityContent - aria-current", () => {
         detailedContent={sampleContent}
         allResults={sampleAllResults}
         headingLevel={2}
-        allTypesLayout="pill"
         resultColor={sampleColor}
       />,
     );
@@ -416,7 +326,6 @@ describe("UnexpectedCompatibilityContent - aria-current", () => {
         detailedContent={sampleContent}
         allResults={sampleAllResults}
         headingLevel={3}
-        allTypesLayout="list"
         resultColor="#92400e"
       />,
     );
@@ -428,7 +337,7 @@ describe("UnexpectedCompatibilityContent - aria-current", () => {
 });
 
 describe("UnexpectedCompatibilityContent - リンクのhref", () => {
-  it("全タイプ一覧のリンクが正しいhrefを持つこと", () => {
+  it("他のタイプのリンクが正しいhrefを持つこと", () => {
     render(
       <UnexpectedCompatibilityContent
         quizSlug={sampleQuizSlug}
@@ -436,7 +345,6 @@ describe("UnexpectedCompatibilityContent - リンクのhref", () => {
         detailedContent={sampleContent}
         allResults={sampleAllResults}
         headingLevel={2}
-        allTypesLayout="pill"
         resultColor={sampleColor}
       />,
     );

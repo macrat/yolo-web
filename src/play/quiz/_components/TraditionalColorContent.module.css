@@ -8,11 +8,7 @@
  *   （色見本）だけで、各タイプの個性は色見本と本文の言葉で立てる（§2）。
  * - 角丸は一律 0px（--radius）。カードもリンクも直角。
  *
- * color-as-content の例外:
- * - 「他の色も見てみよう」の色ドット（.colorDot）は伝統色そのものを表示することが診断の核なので、
- *   TSX 側で r.color を inline backgroundColor として直接注入する。dark でも元色を保持する。
- * - --type-color インラインプロパティ自体は caller signature 互換のため wrapper で受け取り続けるが、
- *   装飾用途では参照しない（dead 注入だが互換目的）。
+ * 伝統色そのものは、他のタイプ（OtherTypesNav）の行の色見本が見せる。色が診断の中身なので、どちらの配色でも元の色のまま出す。
  */
 
 /* ============================================================
@@ -40,7 +36,7 @@
 /* ============================================================
    colorMeaning カード: 色の文化的背景。
    静的な区画の地は sceneryCard と同じ --paper-2 に統一する。
-   色見本としての役目はカード背景ではなく、色ドット（.colorDot）が担う。
+   色見本の役目はカードの地ではなく、他のタイプの行の色見本が担う。
    ============================================================ */
 .colorMeaningCard {
   padding: 1.1rem 1.25rem;
@@ -126,115 +122,4 @@
   margin-bottom: 2rem;
   text-align: left;
   background: var(--paper-2);
-}
-
-/* ============================================================
-   全タイプ一覧セクション
-   ============================================================ */
-.allTypesSection {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--rule);
-}
-
-/* 全タイプ見出し: ResultCard detailedHeading 言語に合わせ、左寄せ・罫下線で区切る
- * （サイト共通の見出し様式） */
-.allTypesCta {
-  font-size: 1.05rem;
-  color: var(--ink);
-  margin: 0 0 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--rule);
-}
-
-/* ============================================================
-   色ドット（color-as-content の例外）。
-   TSX 側で r.color を inline backgroundColor として注入する。
-   桜色等の極淡色がリスト背景に溶け込まないよう、light/dark それぞれで控えめな枠線を入れる。
-   dark でも元の伝統色を保持する（色見本は装飾ではなく診断内容）。
-   ============================================================ */
-.colorDot {
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  border-radius: var(--radius);
-  flex-shrink: 0;
-  border: 1px solid var(--rule);
-}
-
-/* 罫の升目索引（page.tsx版）:
-   カードのグリッドにせず、辞典の部首索引の流儀（罫で仕切った升目に複数列で流す）に組む。
-   セル個々はカード化しない（背景・全周枠を持たない）——列内の行は下罫だけで区切る。
-   Traditional は 48 タイプあるが、複数列に流すことで縦長さを抑える。各セルは「色ドット + 色名」を並べ、
-   色ドットは r.color の実色を表示する（上記 .colorDot 参照）。 */
-.allTypesGrid {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 1.5rem 0;
-  columns: 2;
-  column-gap: 1.5rem;
-}
-
-@media (min-width: 480px) {
-  .allTypesGrid {
-    columns: 3;
-  }
-}
-
-.allTypesGrid .allTypesItem,
-.allTypesGrid .allTypesItemCurrent {
-  position: relative;
-  break-inside: avoid;
-  border-bottom: var(--rule-w-hair) solid var(--rule-2);
-}
-
-.allTypesGrid .allTypesItem a,
-.allTypesGrid .allTypesItemCurrent a {
-  display: flex;
-  align-items: center;
-  min-height: 44px;
-  gap: 0.5rem;
-  padding-block: 0.5rem;
-  font-size: 0.875rem;
-}
-
-/* 縦並びリスト レイアウト（ResultCard版） */
-.allTypesListVertical {
-  list-style: none;
-  padding: 0;
-  margin: 1rem 0 0;
-  border-top: var(--rule-w-hair) solid var(--rule-2);
-}
-
-.allTypesListVertical .allTypesItem,
-.allTypesListVertical .allTypesItemCurrent {
-  position: relative;
-  border-bottom: var(--rule-w-hair) solid var(--rule-2);
-}
-
-.allTypesListVertical .allTypesItem a,
-.allTypesListVertical .allTypesItemCurrent a {
-  display: flex;
-  align-items: center;
-  min-height: 44px;
-  gap: 0.5rem;
-  padding-block: 0.5rem;
-  font-size: 0.9rem;
-}
-
-/* どちらのレイアウトも、字を罫線の内側から始める行の左右の余白と hover の線の形は data-text-box（globals.css）が
-   持つ。下線と訪問済みの色は a の既定に従う。押せる範囲を行全体に広げ、hover の線とフォーカスの二重リングは
-   data-hit-area（globals.css）がこの範囲に出す。 */
-.allTypesItem a::after,
-.allTypesItemCurrent a::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-}
-
-/* 現在のタイプ: 押しても何も起きないので下線を持たず、太字で示す（§6 現在地）。 */
-.allTypesItemCurrent a {
-  color: var(--ink);
-  font-weight: 700;
-  text-decoration: none;
 }

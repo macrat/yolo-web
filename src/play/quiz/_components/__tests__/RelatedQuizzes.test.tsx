@@ -1,9 +1,11 @@
 import { expect, test, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import RelatedQuizzes from "../RelatedQuizzes";
 
-// getPlayContentsByCategory をモックしてテストを安定させる
+// 遊びの登録をモックしてテストを安定させる
 vi.mock("@/play/registry", () => ({
+  DAILY_UPDATE_SLUGS: new Set<string>(),
+  quizQuestionCountBySlug: new Map([["kotowaza-level", 10]]),
   getPlayContentsByCategory: (category: string) => {
     if (category === "knowledge") {
       return [
@@ -66,12 +68,9 @@ vi.mock("@/play/registry", () => ({
 test("RelatedQuizzes renders related quizzes excluding current", () => {
   render(<RelatedQuizzes currentSlug="kanji-level" category="knowledge" />);
 
-  // 見出しが表示される
+  // 見出しが一覧の名前になる
   expect(
-    screen.getByRole("navigation", { name: "関連コンテンツ" }),
-  ).toBeInTheDocument();
-  expect(
-    screen.getByText("他のクイズ・診断も試してみよう"),
+    screen.getByRole("list", { name: "他のクイズ・診断も試してみよう" }),
   ).toBeInTheDocument();
 
   // 現在のスラグは除外される
@@ -117,10 +116,10 @@ test("RelatedQuizzes renders shortDescription for each item", () => {
   expect(screen.getByText("四字熟語の知識を確認")).toBeInTheDocument();
 });
 
-test("RelatedQuizzes does not render emoji icons (新デザイン体系・cycle-253)", () => {
+test("RelatedQuizzes does not render emoji icons", () => {
   render(<RelatedQuizzes currentSlug="kanji-level" category="knowledge" />);
 
-  // DESIGN.md §3: 絵文字は使わない。回遊カードから絵文字アイコンを撤去した。
+  // 絵文字を置かない（DESIGN.md §5）。
   expect(screen.queryByText("📖")).not.toBeInTheDocument();
   expect(screen.queryByText("🈵")).not.toBeInTheDocument();
 });
@@ -132,4 +131,23 @@ test("RelatedQuizzes prefers shortTitle over title when shortTitle is set", () =
   // title: "ことわざレベル診断" ではなく shortTitle が表示される
   expect(screen.getByText("ことわざ診断")).toBeInTheDocument();
   expect(screen.queryByText("ことわざレベル診断")).not.toBeInTheDocument();
+});
+
+test("RelatedQuizzes のリンクの読み上げの名前が行の名前だけであること", () => {
+  render(<RelatedQuizzes currentSlug="kanji-level" category="knowledge" />);
+
+  const list = screen.getByRole("list", {
+    name: "他のクイズ・診断も試してみよう",
+  });
+  const names = within(list)
+    .getAllByRole("link")
+    .map((link) => link.textContent);
+  expect(names).toEqual(["ことわざ診断", "四字熟語レベル診断", "伝統色クイズ"]);
+});
+
+test("RelatedQuizzes は全件で同じになる種別を出さず、問数を補助情報に出すこと", () => {
+  render(<RelatedQuizzes currentSlug="kanji-level" category="knowledge" />);
+
+  expect(screen.queryByText("クイズ")).not.toBeInTheDocument();
+  expect(screen.getByText("全10問")).toBeInTheDocument();
 });

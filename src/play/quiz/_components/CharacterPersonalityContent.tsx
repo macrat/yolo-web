@@ -6,7 +6,7 @@
  * character-personality データの混入を防ぐ。
  *
  * 共通化対象:
- * - archetypeBreakdown / behaviors / characterMessage / 全タイプ一覧 の4セクション
+ * - archetypeBreakdown / behaviors / characterMessage / 他のタイプ（OtherTypesNav） の4セクション
  * - CSS変数 --type-color をインラインスタイルで注入（YojiPersonalityContent と同じパターン）
  * - referrerTypeId による相性セクション / 招待ボタン（ResultCard向け）
  *
@@ -19,7 +19,6 @@
 
 import type React from "react";
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import type { CharacterPersonalityDetailedContent } from "@/play/quiz/types";
 import type { CompatibilityEntry } from "@/play/quiz/types";
 import characterPersonalityQuiz, {
@@ -27,11 +26,18 @@ import characterPersonalityQuiz, {
 } from "@/play/quiz/data/character-personality";
 import CompatibilitySection from "./CompatibilitySection";
 import InviteFriendButton from "./InviteFriendButton";
+import OtherTypesNav from "./OtherTypesNav";
 import styles from "./CharacterPersonalityContent.module.css";
 
 const QUIZ_SLUG = "character-personality";
 const QUIZ_TITLE = "あなたに似たキャラ診断";
 const INVITE_TEXT = "似たキャラ診断で相性を調べよう!";
+
+/** 全タイプを、タイプの id の定義の順に並べる。 */
+const allTypes = CHARACTER_PERSONALITY_TYPE_IDS.flatMap((typeId) => {
+  const result = characterPersonalityQuiz.results.find((r) => r.id === typeId);
+  return result ? [result] : [];
+});
 
 interface CompatibilityApiResponse {
   label: string;
@@ -43,18 +49,12 @@ interface CompatibilityApiResponse {
 interface CharacterPersonalityContentProps {
   /** detailedContent（archetypeBreakdown, behaviors, characterMessage を含む） */
   content: CharacterPersonalityDetailedContent;
-  /** 結果ID（全タイプ一覧で現在のタイプをハイライトするため） */
+  /** 結果ID（他のタイプで現在のタイプをハイライトするため） */
   resultId: string;
   /** 結果タイプのテーマカラー（--type-color CSS変数に注入） */
   resultColor: string;
   /** 見出しタグのレベル。page.tsxではh2（h1の次）、ResultCard内ではh3（h2の次） */
   headingLevel: 2 | 3;
-  /**
-   * 全タイプ一覧のレイアウト。
-   * "list": ResultCard内で使用する縦並びリスト形式
-   * "grid": 結果ページで使用する2-3列グリッド形式（アイコン+タイトル）
-   */
-  allTypesLayout: "list" | "grid";
   /**
    * 相性診断用の referrer タイプID。
    * ResultCard から渡される場合、内部で相性セクション・招待ボタンを生成する。
@@ -62,7 +62,7 @@ interface CharacterPersonalityContentProps {
    */
   referrerTypeId?: string;
   /**
-   * characterMessage後・全タイプ一覧前にページ固有要素（相性セクション・CTA等）を挿入するスロット。
+   * characterMessage後・他のタイプ前にページ固有要素（相性セクション・CTA等）を挿入するスロット。
    * 渡された場合は referrerTypeId によるAPI呼び出しは行わず、このスロットを優先する。
    */
   afterCharacterMessage?: React.ReactNode;
@@ -183,18 +183,11 @@ export default function CharacterPersonalityContent({
   resultId,
   resultColor,
   headingLevel,
-  allTypesLayout,
   referrerTypeId,
   afterCharacterMessage,
 }: CharacterPersonalityContentProps) {
-  const quiz = characterPersonalityQuiz;
   // headingLevel に応じて h2 または h3 タグを動的に切り替える
   const Heading = `h${headingLevel}` as "h2" | "h3";
-
-  const allTypesListClass =
-    allTypesLayout === "grid"
-      ? styles.allTypesGrid
-      : styles.allTypesListVertical;
 
   // afterCharacterMessage が外部から渡された場合はそちらを優先する。
   // 渡されない場合（ResultCard からの呼び出し）は referrerTypeId を使って内部で生成する。
@@ -240,36 +233,12 @@ export default function CharacterPersonalityContent({
       {/* afterCharacterMessage スロット: 相性セクション・CTA等のページ固有要素 */}
       {resolvedAfterCharacterMessage}
 
-      {/* 全タイプ一覧セクション */}
-      <div className={styles.allTypesSection}>
-        <Heading className={styles.allTypesCta}>他のキャラも見てみよう</Heading>
-        <ul className={allTypesListClass} data-text-box="rows">
-          {CHARACTER_PERSONALITY_TYPE_IDS.map((typeId) => {
-            const result = quiz.results.find((r) => r.id === typeId);
-            if (!result) return null;
-            return (
-              <li
-                key={result.id}
-                className={
-                  result.id === resultId
-                    ? styles.allTypesItemCurrent
-                    : styles.allTypesItem
-                }
-              >
-                <Link
-                  href={`/play/${QUIZ_SLUG}/result/${result.id}`}
-                  aria-current={result.id === resultId ? "page" : undefined}
-                  data-hit-area="after"
-                >
-                  {/* 新デザインでは絵文字アイコン（result.icon）を描画しない（DESIGN.md: 絵文字を使わない）。
-                      各タイプの区別はタイトル文言で行う。 */}
-                  <span>{result.title}</span>
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
+      <OtherTypesNav
+        quizSlug={QUIZ_SLUG}
+        currentResultId={resultId}
+        results={allTypes}
+        headingLevel={headingLevel}
+      />
     </div>
   );
 }

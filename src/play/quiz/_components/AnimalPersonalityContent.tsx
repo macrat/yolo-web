@@ -6,36 +6,30 @@
  * 両方から使用される。Server Component（"use client" なし）: 純粋なプレゼンテーション。
  *
  * 共通化対象:
- * - strengths / weaknesses / behaviors / todayAction / 全タイプ一覧 の 5 セクション
+ * - strengths / weaknesses / behaviors / todayAction / 他のタイプ（OtherTypesNav） の 5 セクション
  *
  * 共通化しないもの（呼び出し側の責務）:
  * - catchphrase の表示（ResultCard/page.tsx でスタイル・配置が異なる）
  * - 相性セクション / CTA（afterTodayAction スロットとして注入）
  * - ShareButtons / もう一度挑戦するボタン
  *
- * デザイン方針（cycle-254 で新デザイン体系に再設計）:
- * - 旧版は強み (✨ 緑ティント) / 弱み (😅 オレンジティント) / 行動 (💡) の 3 セクションを
- *   絵文字マーカーと色ティントで分けていたが、新デザインでは「色ではなく言葉で立てる」方針に
- *   従い、3 セクションともカード質感を統一する（差別化は見出しと本文で行う）。
- * - 全タイプ一覧の絵文字アイコン（r.icon）も描画しない。
+ * 強み・弱み・行動の3セクションは色で分けず、同じ質感で組んで見出しと本文で見分けさせる（DESIGN.md §1）。
  */
 
 import type React from "react";
-import Link from "next/link";
 import type { AnimalPersonalityDetailedContent } from "@/play/quiz/types";
 import animalPersonalityQuiz from "@/play/quiz/data/animal-personality";
+import OtherTypesNav from "./OtherTypesNav";
 import styles from "./AnimalPersonalityContent.module.css";
 
 interface AnimalPersonalityContentProps {
   /** detailedContent（strengths, weaknesses, behaviors, todayAction を含む） */
   content: AnimalPersonalityDetailedContent;
-  /** 結果ID（全タイプ一覧で現在のタイプをハイライトするため） */
+  /** 結果ID（他のタイプで現在のタイプをハイライトするため） */
   resultId: string;
   /** 見出しタグのレベル。page.tsxではh2（h1の次）、ResultCard内ではh3（h2の次） */
   headingLevel: 2 | 3;
-  /** 全タイプ一覧のレイアウト。ResultCard内では "list"（縦並び）、結果ページでは "pill"（ピル型横wrap） */
-  allTypesLayout: "list" | "pill";
-  /** 相性セクション・CTA等のページ固有要素を挿入するためのスロット（todayActionと全タイプ一覧の間に表示） */
+  /** 相性セクション・CTA等のページ固有要素を挿入するためのスロット（todayActionと他のタイプの間に表示） */
   afterTodayAction?: React.ReactNode;
 }
 
@@ -43,20 +37,11 @@ export default function AnimalPersonalityContent({
   content,
   resultId,
   headingLevel,
-  allTypesLayout,
   afterTodayAction,
 }: AnimalPersonalityContentProps) {
   const quiz = animalPersonalityQuiz;
   // headingLevel に応じて h2 または h3 タグを動的に切り替える
   const Heading = `h${headingLevel}` as "h2" | "h3";
-
-  // public props の "pill" は caller 互換のため受け取り続けるが、
-  // 新デザイン言語ではピル型は廃止し、Character/Music/Yoji 等と質感をそろえるため
-  // 内部で grid（2列、480px以上で3列）にマップする。クラス名は参照実装と完全に揃える。
-  const allTypesListClass =
-    allTypesLayout === "pill"
-      ? styles.allTypesGrid
-      : styles.allTypesListVertical;
 
   return (
     // 新デザインではタイプごとのアクセント色（旧 --animal-accent-color）を撤廃し、
@@ -104,32 +89,12 @@ export default function AnimalPersonalityContent({
       {/* afterTodayAction スロット: 相性セクション・CTA等のページ固有要素 */}
       {afterTodayAction}
 
-      {/* 全タイプ一覧セクション */}
-      <div className={styles.allTypesSection}>
-        <Heading className={styles.allTypesCta}>他の動物も見てみよう</Heading>
-        <ul className={allTypesListClass} data-text-box="rows">
-          {quiz.results.map((r) => (
-            <li
-              key={r.id}
-              className={
-                r.id === resultId
-                  ? styles.allTypesItemCurrent
-                  : styles.allTypesItem
-              }
-            >
-              <Link
-                href={`/play/${quiz.meta.slug}/result/${r.id}`}
-                aria-current={r.id === resultId ? "page" : undefined}
-                data-hit-area="after"
-              >
-                {/* 新デザインでは絵文字アイコン（r.icon: 🐵🦊🐿️ 等）を描画しない
-                    （DESIGN.md: 絵文字を使わない）。各タイプの区別はタイトル文言で行う。 */}
-                <span>{r.title}</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <OtherTypesNav
+        quizSlug={quiz.meta.slug}
+        currentResultId={resultId}
+        results={quiz.results}
+        headingLevel={headingLevel}
+      />
     </div>
   );
 }

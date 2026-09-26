@@ -1,15 +1,14 @@
 /**
- * ゲーム完了後のResultModal内で表示する他カテゴリ推薦データの計算ロジック。
+ * ゲームを終えたダイアログに並べる、ほかの分類の遊びの行を選ぶ。
  *
- * Server Component（各ゲームのpage.tsx）で呼び出すことで、
- * @/play/registry と @/play/seo のimportをクライアントバンドルから除外する。
+ * 各ゲームの page.tsx（サーバー）で呼び、遊びの登録と分類の語をクライアントに持ち込まない。
  */
 
 import { playContentBySlug, getPlayContentsByCategory } from "@/play/registry";
 import { getContentPath } from "@/play/paths";
 import { resolveDisplayCategory } from "@/play/seo";
 import type { PlayContentMeta } from "@/play/types";
-import type { CrossCategoryItem } from "@/play/games/shared/_components/new/CrossCategoryBanner";
+import type { ItemListItem } from "@/components/ItemList";
 
 /**
  * 2つのkeywords配列の重複数を返す。
@@ -28,12 +27,10 @@ function countKeywordOverlap(keywordsA: string[], keywordsB: string[]): number {
  * 2. personality と knowledge カテゴリから現在のゲームのkeywordsと最も近いコンテンツを1件
  *
  * @param gameSlug ゲームのslug（例: "kanji-kanaru"）
- * @returns 表示用データの配列（最大2件）
+ * @returns 行の配列（最大2件）
  */
-export function computeCrossCategoryItems(
-  gameSlug: string,
-): CrossCategoryItem[] {
-  const items: CrossCategoryItem[] = [];
+export function computeCrossCategoryItems(gameSlug: string): ItemListItem[] {
+  const items: ItemListItem[] = [];
 
   // fortune（daily）を固定枠として追加
   const fortuneContent = playContentBySlug.get("daily");
@@ -71,15 +68,12 @@ export function computeCrossCategoryItems(
 }
 
 /**
- * PlayContentMeta を CrossCategoryItem に変換する。
+ * 遊びを行にする。行は名前と種別だけを持ち、ダイアログの中で結果を押し下げないよう説明を持たない。
  */
-function contentToItem(content: PlayContentMeta): CrossCategoryItem {
+function contentToItem(content: PlayContentMeta): ItemListItem {
   return {
-    slug: content.slug,
-    title: content.shortTitle ?? content.title,
-    icon: content.icon,
-    contentPath: getContentPath(content),
-    categoryLabel: resolveDisplayCategory(content),
-    category: content.category,
+    name: content.shortTitle ?? content.title,
+    href: getContentPath(content),
+    kind: resolveDisplayCategory(content),
   };
 }

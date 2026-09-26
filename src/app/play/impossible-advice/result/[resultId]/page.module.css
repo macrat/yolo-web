@@ -6,7 +6,7 @@
  * impossible-advice 専用結果ページのスタイル。
  * インライン結果（ResultCard）とトーン統一する: 無彩・左寄せ・絵文字マーカーなし・
  * クイズごとの派手色（accentColor / --type-color）を使わず共通 --accent に寄せる。
- * 共通コンテンツセクション（悩みの本質〜全タイプ一覧）のスタイルは
+ * 共通コンテンツセクション（悩みの本質〜他のタイプ）のスタイルは
  * ImpossibleAdviceContent.module.css に集約されている。
  * このファイルは page.tsx 固有の要素（catchphrase, trySection, cta2）のみを管理する。
  */

@@ -1,11 +1,13 @@
-import Link from "next/link";
+import ItemList from "@/components/ItemList";
 import { getPlayContentsByCategory } from "@/play/registry";
-import { getPlayPath } from "@/play/paths";
+import { toPlayListItems } from "@/play/listItems";
 import type { PlayContentMeta } from "@/play/types";
 import styles from "./RelatedQuizzes.module.css";
 
-/** 関連クイズとして表示する最大件数 */
+/** 並べる件数の上限。 */
 const MAX_RELATED_COUNT = 3;
+
+const HEADING_ID = "related-quizzes";
 
 interface RelatedQuizzesProps {
   currentSlug: string;
@@ -13,12 +15,8 @@ interface RelatedQuizzesProps {
 }
 
 /**
- * 同カテゴリの関連クイズ・診断へのリンクを表示するコンポーネント。
- *
- * - 同カテゴリのコンテンツをレジストリの定義順で取得
- * - currentSlug と一致するものを除外
- * - 最大 MAX_RELATED_COUNT 件を表示
- * - 関連コンテンツが存在しない場合は null を返す
+ * いまのクイズ・診断と同じ分類のものを、登録の順に、いまのものを除いて並べる。
+ * 並べるものが無いときは何も描かない。
  */
 export default function RelatedQuizzes({
   currentSlug,
@@ -31,26 +29,14 @@ export default function RelatedQuizzes({
   if (relatedContents.length === 0) return null;
 
   return (
-    <nav className={styles.related} aria-label="関連コンテンツ">
-      <h2 className={styles.heading}>他のクイズ・診断も試してみよう</h2>
-      <ul className={styles.list} data-text-box="rows">
-        {relatedContents.map((content) => (
-          <li key={content.slug}>
-            <Link
-              href={getPlayPath(content.slug)}
-              className={styles.link}
-              data-hit-area="after"
-            >
-              <span className={styles.name}>
-                {content.shortTitle ?? content.title}
-              </span>
-              <span className={styles.description}>
-                {content.shortDescription}
-              </span>
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </nav>
+    <section className={styles.related} aria-labelledby={HEADING_ID}>
+      <h2 id={HEADING_ID} className={styles.heading}>
+        他のクイズ・診断も試してみよう
+      </h2>
+      <ItemList
+        labelledBy={HEADING_ID}
+        items={toPlayListItems(relatedContents)}
+      />
+    </section>
   );
 }

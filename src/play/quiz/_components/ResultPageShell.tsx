@@ -63,7 +63,7 @@ export default function ResultPageShell({
       <Breadcrumb
         items={[
           { label: "ホーム", href: "/" },
-          { label: "遊ぶ", href: "/play" },
+          { label: "遊び", href: "/play" },
           { label: quiz.meta.title, href: `/play/${slug}` },
           { label: "結果" },
         ]}

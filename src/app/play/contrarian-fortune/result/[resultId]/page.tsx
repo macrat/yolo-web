@@ -154,17 +154,16 @@ export default async function ContrarianFortuneResultPage({ params }: Props) {
           </p>
         </div>
 
-        {/* coreSentence〜全タイプ一覧: 共通コンポーネントで一括レンダリング */}
+        {/* coreSentence〜他のタイプ: 共通コンポーネントで一括レンダリング */}
         <ContrarianFortuneContent
           quizSlug={SLUG}
           resultId={resultId}
           detailedContent={cfDc}
           allResults={quiz.results}
           headingLevel={2}
-          allTypesLayout="pill"
           resultColor={resultColor}
           afterThirdPartyNote={
-            /* CTA2: 全タイプ一覧の前に配置 — コンテンツを読み終えた時点での自然な誘導 */
+            /* CTA2: 他のタイプの前に配置 — コンテンツを読み終えた時点での自然な誘導 */
             <div className={styles.cta2Section}>
               <Link
                 href={`/play/${SLUG}`}

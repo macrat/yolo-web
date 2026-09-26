@@ -142,17 +142,16 @@ export default async function UnexpectedCompatibilityResultPage({
           </p>
         </div>
 
-        {/* 存在の本質〜全タイプ一覧: 共通コンポーネントで一括レンダリング */}
+        {/* 存在の本質〜他のタイプ: 共通コンポーネントで一括レンダリング */}
         <UnexpectedCompatibilityContent
           quizSlug={SLUG}
           resultId={resultId}
           detailedContent={ucDc}
           allResults={quiz.results}
           headingLevel={2}
-          allTypesLayout="pill"
           resultColor={resultColor}
           afterLifeAdvice={
-            /* CTA2: 全タイプ一覧の前に配置 — コンテンツを読み終えた時点での自然な誘導 */
+            /* CTA2: 他のタイプの前に配置 — コンテンツを読み終えた時点での自然な誘導 */
             <div className={styles.cta2Section}>
               <Link
                 href={`/play/${SLUG}`}

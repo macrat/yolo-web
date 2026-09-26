@@ -5,14 +5,14 @@ import { formatDate } from "@/lib/date";
 import styles from "./RelatedBlogPosts.module.css";
 
 interface RelatedBlogPostsProps {
-  /** このツールを取り上げたブログ記事を載せる。 */
+  /** このツール・ゲームを取り上げたブログ記事を載せる。記事はツールとゲームの slug を同じ欄に持つ。 */
   toolSlug: string;
 }
 
 const HEADING_ID = "related-blog-posts";
 
 /**
- * ツールのページの末尾の「関連ブログ記事」。行は題名・説明・分類・公開日で、説明があれば開く前に中身が分かり、
+ * ツール・ゲームのページの末尾の「関連ブログ記事」。行は題名・説明・分類・公開日で、説明があれば開く前に中身が分かり、
  * 公開日で記事の新しさを比べられる。関連記事が無いときは何も描かない。
  */
 export default function RelatedBlogPosts({ toolSlug }: RelatedBlogPostsProps) {

@@ -55,24 +55,22 @@ describe("cross-links", () => {
   });
 
   test("tool/game slug参照を正しく逆引きできる", async () => {
-    const { getRelatedBlogPostsForTool, getRelatedBlogPostsForGame } =
-      await import("../cross-links");
+    const { getRelatedBlogPostsForTool } = await import("../cross-links");
 
     expect(
       getRelatedBlogPostsForTool("json-formatter").map((post) => post.slug),
     ).toEqual(["memo-link-post", "tool-link-post"]);
     expect(
-      getRelatedBlogPostsForGame("kanji-kanaru").map((post) => post.slug),
+      getRelatedBlogPostsForTool("kanji-kanaru").map((post) => post.slug),
     ).toEqual(["shared-link-post", "tool-link-post"]);
     expect(getRelatedBlogPostsForTool("missing-tool")).toEqual([]);
   });
 
   test("ブログ参照インデックスはモジュール内で1回だけ構築される", async () => {
-    const { getRelatedBlogPostsForTool, getRelatedBlogPostsForGame } =
-      await import("../cross-links");
+    const { getRelatedBlogPostsForTool } = await import("../cross-links");
 
     getRelatedBlogPostsForTool("json-formatter");
-    getRelatedBlogPostsForGame("kanji-kanaru");
+    getRelatedBlogPostsForTool("kanji-kanaru");
 
     expect(mockGetAllBlogPosts).toHaveBeenCalledTimes(1);
   });

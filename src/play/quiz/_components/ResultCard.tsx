@@ -310,8 +310,6 @@ function renderDetailedContent(
   }
   switch (content.variant) {
     case "contrarian-fortune": {
-      // ResultCard（インライン）経路は 8 variant 共通で縦リスト統一
-      // （`allTypesLayout` の pill/list 差は独立変数の外側にあるため）。
       const Comp = ContrarianFortuneContent;
       return (
         <Comp
@@ -320,7 +318,6 @@ function renderDetailedContent(
           detailedContent={content}
           allResults={allResults ?? []}
           headingLevel={3}
-          allTypesLayout="list"
           resultColor={resultColor ?? ""}
         />
       );
@@ -336,7 +333,6 @@ function renderDetailedContent(
           content={content}
           resultId={resultId}
           headingLevel={3}
-          allTypesLayout="list"
           afterTodayAction={buildAnimalPersonalityAfterTodayAction(
             resultId,
             referrerTypeId,
@@ -351,8 +347,6 @@ function renderDetailedContent(
           content={content}
           resultId={resultId}
           headingLevel={3}
-          // インライン経路は縦リスト統一（surface 内の質感を揃えるため）
-          allTypesLayout="list"
           referrerTypeId={referrerTypeId}
         />
       );
@@ -365,7 +359,6 @@ function renderDetailedContent(
           resultId={resultId}
           resultColor={resultColor ?? ""}
           headingLevel={3}
-          allTypesLayout="list"
           // ResultCard内では相性データがないため afterColorAdvice は省略
         />
       );
@@ -378,8 +371,6 @@ function renderDetailedContent(
           resultId={resultId}
           resultColor={resultColor ?? ""}
           headingLevel={3}
-          // インライン経路は縦リスト統一（surface 内の質感を揃えるため）
-          allTypesLayout="list"
         />
       );
     }
@@ -391,7 +382,6 @@ function renderDetailedContent(
           resultId={resultId}
           resultColor={resultColor ?? ""}
           headingLevel={3}
-          allTypesLayout="list"
           referrerTypeId={referrerTypeId}
         />
       );
@@ -405,8 +395,6 @@ function renderDetailedContent(
           detailedContent={content}
           allResults={allResults ?? []}
           headingLevel={3}
-          // インライン経路は縦リスト統一（surface 内の質感を揃えるため）
-          allTypesLayout="list"
           resultColor={resultColor ?? ""}
           // ResultCard内では afterLifeAdvice スロットは不要（一人完結型のため）
         />
@@ -421,7 +409,6 @@ function renderDetailedContent(
           detailedContent={content}
           allResults={allResults ?? []}
           headingLevel={3}
-          allTypesLayout="list"
           resultColor={resultColor ?? ""}
           // ResultCard内では afterPracticalTip スロットは不要
         />

@@ -18,11 +18,11 @@ import { determineScienceThinkingResult } from "@/play/quiz/data/science-thinkin
 import { determineCharacterPersonalityResult } from "@/play/quiz/data/character-personality";
 import { getEstimatedTime } from "./introBadges";
 import Button from "@/components/Button";
+import type { ItemListItem } from "@/components/ItemList";
 import ProgressBar from "./ProgressBar";
 import QuestionCard from "./QuestionCard";
 import ResultCard from "./ResultCard";
 import ResultNextContent from "./ResultNextContent";
-import type { ResultNextContentItem } from "./ResultNextContent";
 import ResultExtraLoader from "./ResultExtraLoader";
 import { contentIdForQuiz } from "@/play/quiz/contentId";
 import styles from "./QuizContainer.module.css";
@@ -32,12 +32,9 @@ type QuizContainerProps = {
   /** Optional referrer type ID from URL search params (for compatibility) */
   referrerTypeId?: string;
   /**
-   * 結果画面直下の「次のおすすめ」に表示するコンテンツ。
-   * Server Component（page.tsx）で事前計算したデータをprops経由で受け取る。
-   * registryへのimportを避けてクライアントバンドルを削減するため、
-   * PlayContentMeta ではなく ResultNextContentItem の配列を受け取る。
+   * 結果の下に並べる次の遊びの行。遊びの登録をクライアントに持ち込まないよう、サーバーで行にしてから受け取る。
    */
-  recommendedContents?: ResultNextContentItem[];
+  recommendedContents?: ItemListItem[];
 };
 
 /**
@@ -276,7 +273,7 @@ export default function QuizContainer({
       </div>
       {/* 回遊導線・追加コンテンツは本体の外に二次配置（入れ子回避） */}
       {recommendedContents && recommendedContents.length > 0 && (
-        <ResultNextContent contents={recommendedContents} />
+        <ResultNextContent items={recommendedContents} />
       )}
       <ResultExtraLoader
         slug={quiz.meta.slug}

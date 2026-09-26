@@ -214,13 +214,12 @@ export default async function CharacterPersonalityResultPage({
           </p>
         </div>
 
-        {/* キャラ解説〜全タイプ一覧: 共通コンポーネントで一括レンダリング */}
+        {/* キャラ解説〜他のタイプ: 共通コンポーネントで一括レンダリング */}
         <CharacterPersonalityContent
           content={characterDc}
           resultId={resultId}
           resultColor={resultColor}
           headingLevel={2}
-          allTypesLayout="grid"
           afterCharacterMessage={
             <>
               {/* 相性紹介: withパラメータがある場合のみ表示 */}
@@ -240,7 +239,7 @@ export default async function CharacterPersonalityResultPage({
                 inviteText={INVITE_TEXT}
                 contentId={contentIdForQuiz(SLUG)}
               />
-              {/* CTA2: 全タイプ一覧の前に配置 — コンテンツを読み終えた時点での自然な誘導 */}
+              {/* CTA2: 他のタイプの前に配置 — コンテンツを読み終えた時点での自然な誘導 */}
               <div className={styles.cta2Section}>
                 <Link
                   href={`/play/${SLUG}`}

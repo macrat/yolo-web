@@ -25,7 +25,7 @@ import {
   loadTodayGame,
   saveTodayGame,
 } from "@/play/games/irodori/_lib/storage";
-import type { CrossCategoryItem } from "@/play/games/shared/_components/new/CrossCategoryBanner";
+import type { ItemListItem } from "@/components/ItemList";
 import Button from "@/components/Button";
 import GameHeader from "./GameHeader";
 import ProgressBar from "./ProgressBar";
@@ -47,7 +47,7 @@ interface GameContainerProps {
   /** Human-readable date string for display (e.g. "2026年3月19日"), generated server-side. */
   dateDisplayString: string;
   /** 他カテゴリへの導線データ。Server Component（page.tsx）で事前計算して渡す。 */
-  crossCategoryItems: CrossCategoryItem[];
+  crossCategoryItems: ItemListItem[];
 }
 
 /**

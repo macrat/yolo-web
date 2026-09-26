@@ -1,73 +1,11 @@
-/*
- * OtherTypesNav: 「他のタイプも見てみよう」回遊ナビ。
- * ResultCard（インライン結果）と app/play/[slug]/result/[resultId]/page.tsx（静的結果ページ）の
- * 両方から共有される。品書きの語彙——罫区切りの縦リスト。
- *
- * 設計方針:
- * - 左寄せ・トークンのみ・絵文字なし・影なし。
- * - タイプごとの色（--type-color）を装飾に使わず、タイプは「タイトル文言」で見分ける。
- * - ほかのタイプはリンクの下線で、現在のタイプは太字で示す（§6）。
- *
- * タイプ名が長い診断（word-sense-personality は furigana 付きで長い）でも崩れないよう、
- * 全幅の縦リスト行レイアウトを採る（pill だと長ラベルが不揃いに折り返すため）。
- */
-
 .section {
   margin-top: 2rem;
   padding-top: 1.5rem;
   border-top: 1px solid var(--rule);
 }
 
-/* 見出し: ResultCard detailedHeading と同じく、左寄せ・罫下線で区切る。 */
 .heading {
   font-size: 1.05rem;
   color: var(--ink);
-  margin: 0 0 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--rule);
-}
-
-/* 1行1項目の一覧で、行どうしを細い罫線で区切る（§7）。字を罫線の内側から始める行の左右の余白と、
- * hover の線の形は data-text-box（globals.css）が持つ。 */
-.list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  border-top: var(--rule-w-hair) solid var(--rule-2);
-}
-
-.item,
-.itemCurrent {
-  position: relative;
-  border-bottom: var(--rule-w-hair) solid var(--rule-2);
-}
-
-/* 行はリンク / 現在 span ともに同じ寸法で、タップしやすい 44px 以上の行高を持つ。 */
-.item > a,
-.itemCurrent > span {
-  display: flex;
-  align-items: center;
-  min-height: 44px;
-  padding-block: 0.5rem;
-  font-size: 0.9rem;
-  line-height: 1.4;
-  /* タイプ名は「柔和温順（にゅうわおんじゅん）タイプ」のように長い。狭い幅で折り返す際に
-     「タイプ」が「タイ／プ」と語中で割れないよう、CJK 対応の keep-all で語の途中改行を抑制し、
-     どうしても収まらない場合のみ overflow-wrap: anywhere で破断を許す。 */
-  word-break: keep-all;
-  overflow-wrap: anywhere;
-}
-
-/* 下線と訪問済みの色は a の既定に従う。押せる範囲を行全体に広げ、hover の線とフォーカスの二重リングは
- * data-hit-area（globals.css）がこの範囲に出す。 */
-.item > a::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-}
-
-/* 現在のタイプ: 押しても何も起きないので下線を持たず、太字で示す（§6 現在地）。 */
-.itemCurrent > span {
-  color: var(--ink);
-  font-weight: 700;
+  margin: 0 0 var(--space-16);
 }

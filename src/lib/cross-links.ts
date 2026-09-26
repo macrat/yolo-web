@@ -41,17 +41,10 @@ function buildBlogReferenceIndex(posts: BlogPostMeta[]): BlogReferenceIndex {
 const blogReferenceIndex = buildBlogReferenceIndex(getAllBlogPosts());
 
 /**
- * Get blog posts that reference a given tool slug.
+ * Get blog posts that reference a given tool or game slug.
+ * Blog posts store both kinds of slugs in the same related_tool_slugs field.
  * Returns an empty array when there is no matching reference.
  */
 export function getRelatedBlogPostsForTool(toolSlug: string): BlogPostMeta[] {
   return blogReferenceIndex.toolToPosts.get(toolSlug) ?? [];
-}
-
-/**
- * Get blog posts that reference a given game slug.
- * Blog posts store game slugs in the same related_tool_slugs field.
- */
-export function getRelatedBlogPostsForGame(gameSlug: string): BlogPostMeta[] {
-  return getRelatedBlogPostsForTool(gameSlug);
 }

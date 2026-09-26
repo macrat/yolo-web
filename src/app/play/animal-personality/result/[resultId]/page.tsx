@@ -196,12 +196,11 @@ export default async function AnimalPersonalityResultPage({
           </p>
         </div>
 
-        {/* 強み〜全タイプ一覧: 共通コンポーネントで一括レンダリング */}
+        {/* 強み〜他のタイプ: 共通コンポーネントで一括レンダリング */}
         <AnimalPersonalityContent
           content={dc}
           resultId={resultId}
           headingLevel={2}
-          allTypesLayout="pill"
           afterTodayAction={
             <>
               {/* 相性紹介: withパラメータがある場合のみ表示 */}
@@ -214,7 +213,7 @@ export default async function AnimalPersonalityResultPage({
                   friendType={compatData.friendType}
                 />
               )}
-              {/* CTA2: 全タイプ一覧の前に配置 — コンテンツを読み終えた時点での自然な誘導 */}
+              {/* CTA2: 他のタイプの前に配置 — コンテンツを読み終えた時点での自然な誘導 */}
               <div className={styles.cta2Section}>
                 <Link
                   href={`/play/${SLUG}`}
