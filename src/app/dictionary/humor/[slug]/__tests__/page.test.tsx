@@ -14,6 +14,17 @@ vi.mock("@/humor-dict/data", () => ({
           "1日の中で唯一、根拠のない清々しさと根拠のある眠気が同時に存在する時間帯。",
         explanation: "テスト解説",
         example: "テスト用例",
+        relatedSlugs: ["second-sleep", "missing"],
+      };
+    }
+    if (slug === "second-sleep") {
+      return {
+        slug: "second-sleep",
+        word: "二度寝",
+        reading: "にどね",
+        definition: "目覚ましに勝った気がする敗北。布団は何も言わない。",
+        explanation: "テスト解説",
+        example: "テスト用例",
         relatedSlugs: [],
       };
     }
@@ -136,6 +147,19 @@ describe("HumorDictEntryPage", () => {
       ratingButton.compareDocumentPosition(shareButtons) &
         Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy();
+  });
+
+  test("関連語は見出し「関連語」を名前に持つ一覧で、行は語・読み・語義の最初の一文を持つ", async () => {
+    await renderPage("morning");
+    const list = screen.getByRole("list", { name: "関連語" });
+    expect(list.querySelectorAll("li")).toHaveLength(1);
+    const link = screen.getByRole("link", { name: "二度寝" });
+    expect(link).toHaveAccessibleName("二度寝");
+    expect(link).toHaveAttribute("href", "/dictionary/humor/second-sleep");
+    expect(screen.getByText("にどね")).toBeInTheDocument();
+    expect(
+      screen.getByText("目覚ましに勝った気がする敗北。"),
+    ).toBeInTheDocument();
   });
 
   test("throws notFound for unknown slug", async () => {

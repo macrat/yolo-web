@@ -1,7 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { readFileSync } from "fs";
-import { resolve } from "path";
 
 // allToolMetas をモックする
 vi.mock("@/tools/registry", () => ({
@@ -51,7 +49,7 @@ vi.mock("@/tools/registry", () => ({
 import RelatedTools from "../index";
 
 describe("RelatedTools", () => {
-  it("関連ツールのカードリンクをレンダリングする", () => {
+  it("見出し「関連ツール」を名前に持つ一覧に、関連ツールが行として並ぶ", () => {
     render(
       <RelatedTools
         currentSlug="base64"
@@ -59,16 +57,23 @@ describe("RelatedTools", () => {
       />,
     );
 
-    // ナビゲーション要素が存在する
-    expect(screen.getByRole("navigation")).toBeInTheDocument();
+    const list = screen.getByRole("list", { name: "関連ツール" });
+    expect(list.querySelectorAll("li")).toHaveLength(2);
+  });
 
-    // 関連ツール2件がリンクとして表示される
+  it("行のリンクの読み上げの名前はツール名だけで、説明を含まない", () => {
+    render(
+      <RelatedTools
+        currentSlug="base64"
+        relatedSlugs={["char-count", "byte-counter"]}
+      />,
+    );
+
+    const names = screen.getAllByRole("link").map((link) => link.textContent);
+    expect(names).toEqual(["文字数カウンター", "バイト数カウンター"]);
     expect(
-      screen.getByRole("link", { name: /文字数カウンター/ }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("link", { name: /バイト数カウンター/ }),
-    ).toBeInTheDocument();
+      screen.getByRole("link", { name: "文字数カウンター" }),
+    ).toHaveAccessibleName("文字数カウンター");
   });
 
   it("currentSlug のツールは表示されない", () => {
@@ -102,7 +107,7 @@ describe("RelatedTools", () => {
     expect(container.firstChild).toBeNull();
   });
 
-  it("各ツールの shortDescription（一行説明）が表示される（M-3: 遷移先が何かを判断できる導線）", () => {
+  it("各ツールの一行の説明が表示される", () => {
     render(
       <RelatedTools
         currentSlug="base64"
@@ -110,7 +115,6 @@ describe("RelatedTools", () => {
       />,
     );
 
-    // 一行説明が表示されること（リンク名だけに簡素化しない）
     expect(
       screen.getByText("テキストの文字数・バイト数を数えるツール"),
     ).toBeInTheDocument();
@@ -122,7 +126,7 @@ describe("RelatedTools", () => {
   it("リンクが /tools/<slug> の正しいパスを持つ", () => {
     render(<RelatedTools currentSlug="base64" relatedSlugs={["char-count"]} />);
 
-    const link = screen.getByRole("link", { name: /文字数カウンター/ });
+    const link = screen.getByRole("link", { name: "文字数カウンター" });
     expect(link).toHaveAttribute("href", "/tools/char-count");
   });
 
@@ -130,45 +134,5 @@ describe("RelatedTools", () => {
     render(<RelatedTools currentSlug="base64" relatedSlugs={["char-count"]} />);
 
     expect(screen.getByText("関連ツール")).toBeInTheDocument();
-  });
-
-  // CSS 規約: 新トークンのみ使用（--color-* 旧トークン不使用）
-  it("CSS に旧 --color-* トークンが含まれていない", () => {
-    const cssPath = resolve(__dirname, "../RelatedTools.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).not.toMatch(/--color-/);
-  });
-
-  // CSS 規約（DESIGN.md フェーズ R・店構え）: 新トークン（--ink, --ink-2, --rule, --accent）を使用
-  it("CSS に新デザイントークンが含まれている", () => {
-    const cssPath = resolve(__dirname, "../RelatedTools.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    // いずれかの新トークンが使われていること
-    const hasNewToken =
-      css.includes("--ink") ||
-      css.includes("--rule") ||
-      css.includes("--accent");
-    expect(hasNewToken).toBe(true);
-  });
-
-  // CSS 規約: 旧トークン（--fg / --border / --bg 等）が残っていないこと
-  it("CSS に旧デザイントークンが含まれていない", () => {
-    const cssPath = resolve(__dirname, "../RelatedTools.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).not.toMatch(
-      /--fg\b|--bg\b|--border\b|--r-normal|--r-interactive/,
-    );
-  });
-
-  // 一覧の行は区切りの罫線が縁として見えるので、罫線を左端に揃えて字を内側 8px から始め、線とリングを行全体に出す（DESIGN.md §5・§6）
-  it("行の並びが一覧の行の箱の指定を持ち、押せる範囲を行に広げる", () => {
-    const { container } = render(
-      <RelatedTools currentSlug="" relatedSlugs={["char-count", "base64"]} />,
-    );
-    const list = container.querySelector("ul");
-    expect(list).toHaveAttribute("data-text-box", "rows");
-    for (const link of screen.getAllByRole("link")) {
-      expect(link).toHaveAttribute("data-hit-area", "after");
-    }
   });
 });

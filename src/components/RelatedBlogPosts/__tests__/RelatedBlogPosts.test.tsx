@@ -1,7 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { readFileSync } from "fs";
-import { resolve } from "path";
 
 // `getRelatedBlogPostsForTool` をモックする
 vi.mock("@/lib/cross-links", () => ({
@@ -144,26 +142,28 @@ describe("RelatedBlogPosts", () => {
     expect(screen.getByText("記事2")).toBeInTheDocument();
   });
 
-  // CSS規約チェック: 旧トークン（--color-*）を使っていないこと
-  it("CSS が旧トークン --color-* を使っていない", () => {
-    const cssPath = resolve(__dirname, "../RelatedBlogPosts.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).not.toMatch(/--color-/);
-  });
+  it("行は説明と分類を持ち、リンクの読み上げの名前は題名だけである", () => {
+    mockGetRelatedBlogPostsForTool.mockReturnValue([
+      {
+        slug: "name-post",
+        title: "名前テスト記事",
+        published_at: "2026-02-10T10:00:00+09:00",
+        updated_at: "2026-02-10T10:00:00+09:00",
+        description: "名前テストの説明",
+        tags: [],
+        category: "tool-guides",
+        related_tool_slugs: ["test-tool"],
+        draft: false,
+        readingTime: 5,
+      },
+    ]);
 
-  // CSS規約チェック: 新トークンを使っていること（DESIGN.md フェーズ R・店構え）
-  it("CSS が新トークン（--ink / --rule / --accent 等）を使っている", () => {
-    const cssPath = resolve(__dirname, "../RelatedBlogPosts.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    // --ink, --rule, --accent のいずれか一つ以上を参照していること
-    expect(css).toMatch(/var\(--(ink|rule|accent)/);
-  });
-
-  // CSS規約チェック: 旧トークン（--r-normal / --r-interactive 等）を使っていないこと。
-  // §4「品書き」の行リンクはカードではないため角丸は不要（旧トークン痕跡の不在で確認する）。
-  it("CSS が旧角丸トークン（--r-normal / --r-interactive）を使っていない", () => {
-    const cssPath = resolve(__dirname, "../RelatedBlogPosts.module.css");
-    const css = readFileSync(cssPath, "utf-8");
-    expect(css).not.toMatch(/var\(--r-(normal|interactive)\)/);
+    render(<RelatedBlogPosts toolSlug="test-tool" />);
+    expect(screen.getByText("名前テストの説明")).toBeInTheDocument();
+    expect(screen.getByText("ツールガイド")).toBeInTheDocument();
+    expect(
+      screen.getByRole("list", { name: "関連ブログ記事" }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("link")).toHaveAccessibleName("名前テスト記事");
   });
 });

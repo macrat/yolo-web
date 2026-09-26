@@ -1,9 +1,3 @@
-/*
- * RelatedTools — 関連ツール一覧。
- * カードのグリッドではなく、行どうしを細い線で区切るリストで組む（§7）。
- * 器は静か——背景色・カード角丸なし。
- */
-
 .related {
   margin-top: var(--space-32);
   padding-top: var(--space-24);
@@ -12,54 +6,8 @@
 
 .heading {
   font-family: var(--font-heading);
-  font-size: 1.25rem; /* 見出しスケール帯（20px 目安） */
+  font-size: 1.25rem;
   line-height: 1.4;
   margin: 0 0 var(--space-16);
   color: var(--ink);
-}
-
-/* 品書き本体: 上辺にも罫を引き、各行の下辺罫と合わせて全行を罫で囲う。 */
-.list {
-  list-style: none;
-  border-top: var(--rule-w-hair) solid var(--rule-2);
-}
-
-/* 字を罫線の内側から始める行の左右の余白は data-text-box（globals.css）が持つ。 */
-.row {
-  position: relative;
-  padding-block: var(--space-16);
-  border-bottom: var(--rule-w-hair) solid var(--rule-2);
-}
-
-/* 各行は 1 本のリンク: 品名 → ひとこと を縦に積む。下線は品名にだけ引くので、行のリンクそのものは下線を持たない。 */
-.link {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-8);
-  text-decoration: none;
-}
-
-/* 押せる範囲を行全体に広げる。hover の線とフォーカスの二重リングは、data-hit-area（globals.css）がこの範囲に出す。 */
-.link::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-}
-
-/* 品名: 一覧の主役。下線を持ち、色はリンクの色（訪問済みは --ink-2）を受け継ぐ（§6 一覧の行）。 */
-.name {
-  font-family: var(--font-body);
-  font-size: 1.0625rem; /* 17px 目安 */
-  line-height: 1.4;
-  text-decoration: underline;
-  text-decoration-thickness: var(--rule-w-hair);
-  text-underline-offset: 0.15em;
-}
-
-/* ひとこと: 補足の墨（ゴシック）。 */
-.description {
-  font-family: var(--font-body);
-  font-size: 0.9375rem; /* 15px */
-  color: var(--ink-2);
-  line-height: 1.6;
 }

@@ -93,42 +93,6 @@
   font-size: 1rem;
 }
 
-/*
- * 同カテゴリの伝統色: 色で辿る索引。各項目は色面（成果物）＋色名。色付きカードの装飾はしない
- * （色面そのものが情報）。項目は縁の見えないコントロールで、押せる範囲は色面と色名を合わせた箱。
- * 箱の左右の余白と、色面を並びの左端に置く張り出しは data-text-box（globals.css）が持つ。
- */
-.relatedList {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: var(--space-16);
-}
-
-.relatedLink {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-8);
-  padding-block: var(--space-8);
-  text-decoration: none;
-}
-
-/* 関連色の色面（成果物・データ由来色はインライン style）。 */
-.relatedSwatch {
-  display: block;
-  width: 100%;
-  height: 40px;
-  border-radius: var(--radius);
-  border: 1px solid var(--rule);
-}
-
-/* 色名に下線を引き、色はリンクの色（訪問済みは --ink-2）を受け継ぐ（§6）。 */
-.relatedName {
-  font-size: 0.875rem; /* 14px */
-  text-decoration: underline;
-  text-decoration-thickness: var(--rule-w-hair);
-  text-underline-offset: 0.15em;
-}
-
 @media (max-width: 640px) {
   .swatch {
     height: 150px;

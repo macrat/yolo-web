@@ -1,4 +1,7 @@
-import Link from "next/link";
+import ItemList, {
+  type ItemListFact,
+  type ItemListItem,
+} from "@/components/ItemList";
 import type { PlayContentMeta } from "@/play/types";
 import { getContentPath } from "@/play/paths";
 import { resolveDisplayCategory } from "@/play/seo";
@@ -7,104 +10,49 @@ import styles from "./PlayRecommendBlock.module.css";
 
 interface PlayRecommendBlockProps {
   recommendations: PlayContentMeta[];
-  /**
-   * セクション見出しテキスト。
-   * - ブログ記事では "この記事を読んだあなたに" など文脈に合わせて指定する
-   * - 省略した場合は "こちらもおすすめ"（汎用デフォルト）を使用する
-   */
-  heading?: string;
-  /**
-   * 見出し下のサブテキスト。
-   * - ブログ記事では "ブラウザで今すぐ遊べる診断・占い" など文脈に合わせて指定する
-   * - 省略した場合は "ブラウザで今すぐ遊べる無料コンテンツ"（汎用デフォルト）を使用する
-   */
-  subtext?: string;
 }
 
-/**
- * カテゴリに応じたCTAテキストを返す。
- */
-function getCtaText(category: PlayContentMeta["category"]): string {
-  switch (category) {
-    case "fortune":
-      return "占ってみる";
-    case "personality":
-      return "診断してみる";
-    case "knowledge":
-      return "挑戦してみる";
-    case "game":
-      return "遊んでみる";
-  }
-}
+const HEADING_ID = "play-recommend";
 
-/**
- * 行に添える補助情報（毎日更新・全X問・カテゴリのいずれか）を返す。
- *
- * 評価順序:
- * 1. DAILY_UPDATE_SLUGS に含まれる → 「毎日更新」
- * 2. contentType === "quiz" で問数あり → 「全X問」
- * 3. それ以外 → resolveDisplayCategory の結果
- */
-function getMetaText(content: PlayContentMeta): string {
+/** 遊びを選ぶ手がかりになる短い値。毎日変わるものか、クイズの問題の数。 */
+function getFacts(content: PlayContentMeta): ItemListFact[] {
+  const facts: ItemListFact[] = [];
   if (DAILY_UPDATE_SLUGS.has(content.slug)) {
-    return "毎日更新";
+    facts.push({ text: "毎日更新" });
   }
   if (content.contentType === "quiz") {
     const questionCount = quizQuestionCountBySlug.get(content.slug);
     if (questionCount !== undefined) {
-      return `全${questionCount}問`;
+      facts.push({ text: `全${questionCount}問` });
     }
   }
-  return resolveDisplayCategory(content);
+  return facts;
 }
 
 /**
- * 記事・辞典ページ向けの関連コンテンツ回遊ブロック（Server Component）。
- *
- * 色付き左罫のカードや絵文字アイコンを使わず、品書き（罫区切りのリスト）で組む。各行 = 品名（リンク）＋ひとこと＋
- * 補助情報（毎日更新／全X問など）＋「遊んでみる →」等のリンク文言。
- * 器は静かに保ち（背景色・カード装飾なし）、見出し「こちらもおすすめ」は見出しの書体・墨。
- *
- * - 推薦リストが空の場合は null を返す
- * - 行全体を 1 本のリンクにして大きいタップ領域を確保する（重複リンクを避ける）
- * - heading / subtext prop で呼び出し元に応じたテキストを設定できる
+ * 辞典の詳細のページの末尾に置く、遊びのおすすめ。行は名前・説明・種別（運勢・診断・クイズ・パズル）と、
+ * 「毎日更新」「全N問」の補助情報。おすすめが無いときは何も描かない。
  */
 export default function PlayRecommendBlock({
   recommendations,
-  heading = "こちらもおすすめ",
-  subtext = "ブラウザで今すぐ遊べる無料コンテンツ",
 }: PlayRecommendBlockProps) {
   if (recommendations.length === 0) return null;
 
+  const items: ItemListItem[] = recommendations.map((content) => ({
+    name: content.shortTitle ?? content.title,
+    href: getContentPath(content),
+    description: content.shortDescription,
+    kind: resolveDisplayCategory(content),
+    facts: getFacts(content),
+  }));
+
   return (
-    <nav aria-label="関連する占い・診断" className={styles.container}>
-      <h2 className={styles.heading}>{heading}</h2>
-      <p className={styles.subtext}>{subtext}</p>
-      <ul className={styles.list} data-text-box="rows">
-        {recommendations.map((content) => (
-          <li key={content.slug} className={styles.row}>
-            <Link
-              href={getContentPath(content)}
-              className={styles.card}
-              data-hit-area="after"
-            >
-              <span className={styles.head}>
-                <span className={styles.title}>
-                  {content.shortTitle ?? content.title}
-                </span>
-                {/* 補助情報（毎日更新／全X問など）。getMetaText は常に非空を返す。 */}
-                <span className={styles.facts}>{getMetaText(content)}</span>
-              </span>
-              <span className={styles.description}>
-                {content.shortDescription}
-              </span>
-              <span className={styles.cta}>
-                {getCtaText(content.category)} →
-              </span>
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </nav>
+    <section aria-labelledby={HEADING_ID} className={styles.container}>
+      <h2 id={HEADING_ID} className={styles.heading}>
+        こちらもおすすめ
+      </h2>
+      <p className={styles.subtext}>ブラウザで今すぐ遊べる無料コンテンツ</p>
+      <ItemList labelledBy={HEADING_ID} items={items} />
+    </section>
   );
 }

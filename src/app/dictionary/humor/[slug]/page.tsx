@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Breadcrumb from "@/components/Breadcrumb";
+import ItemList from "@/components/ItemList";
 import ShareButtons from "@/components/ShareButtons";
 import {
   generateHumorDictEntryMetadata,
@@ -10,8 +11,11 @@ import {
 } from "@/lib/seo";
 import { getAllSlugs, getEntryBySlug } from "@/humor-dict/data";
 import EntryRatingButton from "@/humor-dict/_components/EntryRatingButton";
+import { getDefinitionPreview } from "@/humor-dict/_lib/definition-preview";
 import { headingFontAttr } from "@/lib/zen-antique-charset";
 import styles from "./page.module.css";
+
+const RELATED_HEADING_ID = "related-words";
 
 export function generateStaticParams(): Array<{ slug: string }> {
   return getAllSlugs().map((slug) => ({ slug }));
@@ -86,26 +90,23 @@ export default async function HumorDictEntryPage({
           </blockquote>
         </section>
 
-        {/* 関連語 */}
         {relatedEntries.length > 0 && (
-          <section className={styles.section}>
-            <h2 className={styles.sectionTitle}>関連語</h2>
-            <ul className={styles.relatedList}>
-              {relatedEntries.map((related) => (
-                <li key={related.slug}>
-                  <Link
-                    href={`/dictionary/humor/${related.slug}`}
-                    className={styles.relatedLink}
-                    data-text-box="inline"
-                  >
-                    <span className={styles.relatedWord}>{related.word}</span>
-                    <span className={styles.relatedReading}>
-                      【{related.reading}】
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+          <section
+            className={styles.section}
+            aria-labelledby={RELATED_HEADING_ID}
+          >
+            <h2 id={RELATED_HEADING_ID} className={styles.sectionTitle}>
+              関連語
+            </h2>
+            <ItemList
+              labelledBy={RELATED_HEADING_ID}
+              items={relatedEntries.map((related) => ({
+                name: related.word,
+                href: `/dictionary/humor/${related.slug}`,
+                reading: related.reading,
+                description: getDefinitionPreview(related.definition),
+              }))}
+            />
           </section>
         )}
 

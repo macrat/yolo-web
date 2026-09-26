@@ -4,6 +4,7 @@ import Breadcrumb from "@/components/Breadcrumb";
 import { generateHumorDictMetadata, safeJsonLdStringify } from "@/lib/seo";
 import { getAllEntries } from "@/humor-dict/data";
 import { humorDictMeta } from "@/humor-dict/meta";
+import { getDefinitionPreview } from "@/humor-dict/_lib/definition-preview";
 import styles from "./page.module.css";
 
 /**
@@ -23,18 +24,6 @@ import styles from "./page.module.css";
  */
 
 export const metadata: Metadata = generateHumorDictMetadata();
-
-/**
- * 定義文から最初の一文を抽出してプレビューとして返す。
- * 句点（。）で区切り、なければ全文を返す。
- */
-function getDefinitionPreview(definition: string): string {
-  const firstSentenceEnd = definition.indexOf("。");
-  if (firstSentenceEnd !== -1) {
-    return definition.slice(0, firstSentenceEnd + 1);
-  }
-  return definition;
-}
 
 export default function HumorDictIndexPage() {
   const entries = getAllEntries();

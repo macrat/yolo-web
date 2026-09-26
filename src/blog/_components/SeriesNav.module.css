@@ -7,7 +7,7 @@
   padding: var(--box-padding);
 }
 
-/* 開閉の行のラベル。シリーズ名を太字にし、位置を補助情報の大きさで添える。 */
+/* 開閉の行のラベル。連載の名前と回数を太字にし、いまの回を補助情報の大きさで添える。 */
 .seriesLabel {
   font-weight: 700;
 }
@@ -16,42 +16,6 @@
   font-variant-numeric: tabular-nums;
   font-size: var(--text-small);
   color: var(--ink-2);
-}
-
-/* --- article list --- */
-
-.list {
-  margin-top: var(--space-8);
-  padding-left: var(--space-24);
-  font-family: var(--font-body);
-  font-size: 0.875rem;
-  line-height: 1.7;
-}
-
-/* いまの記事は現在地（§6）。リンクにせず、太字で示す。 */
-.currentItem {
-  font-weight: 700;
-}
-
-/* 連載のほかの記事へ進むリンク。下線と訪問済みの色は globals.css の a の既定に従う（§6）。タップの標的は
- * 44px 以上で、項目どうしは押せる範囲を接して並べる（§5）。字の左右の余白と、字を並びの左端に置く
- * 張り出しは data-text-box（globals.css）が持つ。いまの記事も同じ高さで置き、行の間隔を揃える。 */
-.link,
-.currentLink {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-}
-
-.currentLink {
-  color: var(--ink);
-}
-
-.currentBadge {
-  font-size: 0.8125rem;
-  color: var(--ink-2);
-  margin-left: var(--space-8);
-  font-weight: 400;
 }
 
 /* --- prev/next quick navigation --- */

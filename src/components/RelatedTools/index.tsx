@@ -1,54 +1,42 @@
-import Link from "next/link";
+import ItemList, { type ItemListItem } from "@/components/ItemList";
 import { allToolMetas } from "@/tools/registry";
-import type { ToolMeta } from "@/tools/types";
 import styles from "./RelatedTools.module.css";
 
 interface RelatedToolsProps {
-  /** 現在表示中のツールのスラッグ（このツールは一覧から除外される） */
+  /** いま開いているツールのスラッグ。一覧には載せない。 */
   currentSlug: string;
-  /** 表示する関連ツールのスラッグ配列 */
+  /** 載せる関連ツールのスラッグ。 */
   relatedSlugs: string[];
 }
 
+const HEADING_ID = "related-tools";
+
 /**
- * RelatedTools — 関連ツール一覧コンポーネント。
- *
- * 仕様:
- * - allToolMetas から relatedSlugs に一致するツールをフィルタし、1行1項目のリストとして並べる（§7）
- * - currentSlug のツールは一覧から除外される
- * - 件数 0 の場合は null を返す（何もレンダリングしない）
- * - 各行にはツール名と shortDescription（一行説明）を表示する。似たツールで迷わないよう、
- *   遷移先が何かを一行説明で判断できるようにする
+ * ツールのページの末尾の「関連ツール」。行はツール名と一行の説明で、似たツールのどれへ進むかを開く前に選べる。
+ * 載せるツールが無いときは何も描かない。
  */
 export default function RelatedTools({
   currentSlug,
   relatedSlugs,
 }: RelatedToolsProps) {
-  const relatedTools: ToolMeta[] = allToolMetas.filter(
-    (meta) => meta.slug !== currentSlug && relatedSlugs.includes(meta.slug),
-  );
+  const items: ItemListItem[] = allToolMetas
+    .filter(
+      (meta) => meta.slug !== currentSlug && relatedSlugs.includes(meta.slug),
+    )
+    .map((meta) => ({
+      name: meta.name,
+      href: `/tools/${meta.slug}`,
+      description: meta.shortDescription,
+    }));
 
-  if (relatedTools.length === 0) return null;
+  if (items.length === 0) return null;
 
   return (
-    <nav className={styles.related} aria-label="関連ツール">
-      <h2 className={styles.heading}>関連ツール</h2>
-      <ul className={styles.list} data-text-box="rows">
-        {relatedTools.map((tool) => (
-          <li key={tool.slug} className={styles.row}>
-            <Link
-              href={`/tools/${tool.slug}`}
-              className={styles.link}
-              data-hit-area="after"
-            >
-              <span className={styles.name}>{tool.name}</span>
-              <span className={styles.description}>
-                {tool.shortDescription}
-              </span>
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </nav>
+    <section className={styles.related} aria-labelledby={HEADING_ID}>
+      <h2 id={HEADING_ID} className={styles.heading}>
+        関連ツール
+      </h2>
+      <ItemList labelledBy={HEADING_ID} items={items} />
+    </section>
   );
 }

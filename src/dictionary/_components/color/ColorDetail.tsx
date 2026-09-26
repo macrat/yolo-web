@@ -3,11 +3,14 @@
 import { useState } from "react";
 import Link from "next/link";
 import Button from "@/components/Button";
+import ItemList from "@/components/ItemList";
 import type { ColorEntry } from "@/dictionary/_lib/types";
 import { COLOR_CATEGORY_LABELS } from "@/dictionary/_lib/types";
 import { getColorsByCategory } from "@/dictionary/_lib/colors";
 import type { HeadingFontAttr } from "@/lib/zen-antique-charset";
 import styles from "./ColorDetail.module.css";
+
+const SAME_CATEGORY_HEADING_ID = "same-category-colors";
 
 interface ColorDetailProps {
   color: ColorEntry;
@@ -140,24 +143,22 @@ export default function ColorDetail({
       </section>
 
       {relatedColors.length > 0 && (
-        <section className={styles.section}>
-          <h2>同じカテゴリの伝統色（{categoryLabel}）</h2>
-          <div className={styles.relatedList}>
-            {relatedColors.map((c) => (
-              <Link
-                key={c.slug}
-                href={`/dictionary/colors/${c.slug}`}
-                className={styles.relatedLink}
-                data-text-box="inline"
-              >
-                <span
-                  className={styles.relatedSwatch}
-                  style={{ backgroundColor: c.hex }}
-                />
-                <span className={styles.relatedName}>{c.name}</span>
-              </Link>
-            ))}
-          </div>
+        <section
+          className={styles.section}
+          aria-labelledby={SAME_CATEGORY_HEADING_ID}
+        >
+          <h2 id={SAME_CATEGORY_HEADING_ID}>
+            同じカテゴリの伝統色（{categoryLabel}）
+          </h2>
+          <ItemList
+            labelledBy={SAME_CATEGORY_HEADING_ID}
+            items={relatedColors.map((c) => ({
+              name: c.name,
+              href: `/dictionary/colors/${c.slug}`,
+              reading: c.romaji,
+              swatch: c.hex,
+            }))}
+          />
         </section>
       )}
     </article>
