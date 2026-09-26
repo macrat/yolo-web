@@ -1,3 +1,4 @@
+import { loadDefaultJapaneseParser } from "budoux";
 import { describe, expect, test } from "vitest";
 import { splitIntoPhrases } from "@/lib/phrase-breaks";
 import { quizBySlug } from "@/play/quiz/registry";
@@ -27,6 +28,42 @@ const NO_LINE_END = /[(\[（［「『【〔〈《]$/u;
 
 function boundaries(phrases: string[]): [string, string][] {
   return phrases.slice(1).map((after, index) => [phrases[index], after]);
+}
+
+/** 並びの境目の位置（UTF-16 の位置）。 */
+function boundaryOffsets(pieces: string[]): number[] {
+  const offsets: number[] = [];
+  let offset = 0;
+  for (const piece of pieces.slice(0, -1)) {
+    offset += piece.length;
+    offsets.push(offset);
+  }
+  return offsets;
+}
+
+const budoux = loadDefaultJapaneseParser();
+
+function parenDepth(text: string): number {
+  let depth = 0;
+  for (const ch of text) {
+    if (/[(（]/u.test(ch)) depth += 1;
+    else if (/[)）]/u.test(ch)) depth = Math.max(0, depth - 1);
+  }
+  return depth;
+}
+
+const HAN_OR_KATAKANA = /^[\p{Script=Han}\p{Script=Katakana}]/u;
+
+function isScriptChange(before: string, after: string): boolean {
+  const script = (ch: string) =>
+    /[\p{Script=Katakana}ー]/u.test(ch)
+      ? "katakana"
+      : /\p{Script=Han}/u.test(ch)
+        ? "han"
+        : /\p{Script=Hiragana}/u.test(ch)
+          ? "hiragana"
+          : "other";
+  return script(before) !== script(after) && script(before) !== "other";
 }
 
 describe("splitIntoPhrases", () => {
@@ -90,6 +127,78 @@ describe("splitIntoPhrases", () => {
     for (const name of characterPersonalityTypeNames) {
       expect(splitIntoPhrases(name).length).toBeGreaterThan(1);
     }
+  });
+
+  test("BudouX の境目を外すのは、禁則・開き括弧・数字・丸括弧の中・最後の1字の所だけ", () => {
+    for (const text of headings) {
+      const kept = new Set(boundaryOffsets(splitIntoPhrases(text)));
+      for (const offset of boundaryOffsets(budoux.parse(text))) {
+        if (kept.has(offset)) continue;
+        const before = text.slice(0, offset);
+        const after = text.slice(offset);
+        const allowed =
+          NO_LINE_START.test(after) ||
+          NO_LINE_END.test(before) ||
+          /[0-9０-９]$/u.test(before) ||
+          parenDepth(before) > 0 ||
+          [...after].length === 1;
+        expect(allowed, `${text} の ${before}|${after}`).toBe(true);
+      }
+    }
+  });
+
+  test("BudouX に無い境目は、最初の文節の中の、字の種類が変わって漢字か片仮名が始まる所だけ", () => {
+    for (const text of headings) {
+      const budouxOffsets = new Set(boundaryOffsets(budoux.parse(text)));
+      const offsets = boundaryOffsets(splitIntoPhrases(text));
+      offsets.forEach((offset, index) => {
+        if (budouxOffsets.has(offset)) return;
+        const before = text.slice(0, offset);
+        const after = text.slice(offset);
+        expect(
+          offsets.slice(0, index).every((o) => !budouxOffsets.has(o)),
+          `${text} の ${before}|${after}`,
+        ).toBe(true);
+        expect(after, text).toMatch(HAN_OR_KATAKANA);
+        expect(isScriptChange(before.at(-1) ?? "", after[0]), text).toBe(true);
+      });
+    }
+  });
+
+  test("丸括弧の中では区切らない", () => {
+    for (const text of headings) {
+      for (const offset of boundaryOffsets(splitIntoPhrases(text))) {
+        expect(parenDepth(text.slice(0, offset)), text).toBe(0);
+      }
+    }
+    expect(splitIntoPhrases("柔和温順（にゅうわおんじゅん）タイプ")).toEqual([
+      "柔和温順",
+      "（にゅうわおんじゅん）",
+      "タイプ",
+    ]);
+  });
+
+  test("最初の文節は、字の種類が変わって語が始まる所でも区切る", () => {
+    expect(splitIntoPhrases("チューリング型思考者")).toEqual([
+      "チューリング",
+      "型思考者",
+    ]);
+    expect(splitIntoPhrases("ことわざビギナー")).toEqual([
+      "ことわざ",
+      "ビギナー",
+    ]);
+  });
+
+  test("最初の文節の語の切れ目は、前後に2字以上の同じ字の種類が続く所だけ", () => {
+    for (const piece of splitIntoPhrases(
+      "お稲荷さんの看板を背負う孤高のリアリスト",
+    )) {
+      expect(piece).not.toBe("お");
+    }
+    expect(splitIntoPhrases("深夜シャッフル系")).toEqual([
+      "深夜",
+      "シャッフル系",
+    ]);
   });
 
   test("1つの文節しかない文は、そのまま1つで返す", () => {

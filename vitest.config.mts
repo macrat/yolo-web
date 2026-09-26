@@ -1,9 +1,22 @@
+import { fileURLToPath } from "node:url";
 import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react";
 import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
   plugins: [tsconfigPaths(), react()],
+  resolve: {
+    // server-only はクライアントのバンドルに入るとビルドを止める印で、Next.js がビルドのときに解決する。
+    // テストはサーバーの側で動かすので、中身の無いモジュールに向ける。
+    alias: {
+      "server-only": fileURLToPath(
+        new URL(
+          "./node_modules/next/dist/compiled/server-only/empty.js",
+          import.meta.url,
+        ),
+      ),
+    },
+  },
   test: {
     environment: "jsdom",
     setupFiles: ["./src/test/setup.ts"],

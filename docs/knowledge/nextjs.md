@@ -178,11 +178,13 @@ function ClientShell({ serverSlot }: { serverSlot: React.ReactNode }) {
 }
 ```
 
-**予防**: サーバー専用モジュールの先頭に `import "server-only"` を置くと、client から（間接的にでも）import された瞬間に明確なビルドエラーで弾ける。難解な `node:fs` エラーより早く・正確に検出できる。
+**予防**: サーバー専用モジュールの先頭に `import "server-only"` を置くと、client から（間接的にでも）import された瞬間にビルドが止まる。`node:fs` を掴まないモジュール（大きい表を持つだけのもの）は、置かないと client に黙ってバンドルされるので、これが唯一の止め手になる。Next.js が解決するのでパッケージは要らない。vitest では解決できないので、`vitest.config.mts` の `resolve.alias` で `next/dist/compiled/server-only/empty.js` に向ける（`tsx` で動かすスクリプトからは読み込めない）。
+
+止まったときのメッセージは、Next.js 16.3 の Turbopack では「client から server-only を読み込んだ」とは出ないことがある。そのモジュールに和文のコメントがあると、エラーの箇所のコードを抜き出して色付けする処理が和文の字の途中のバイトで切って落ち、`thread 'tokio-rt-worker' panicked at crates/next-code-frame/src/highlight.rs … end byte index 93 is not a char boundary; it is inside 'ダ'` と `[Error: Panic in async function]` だけが出る（cycle-316 の `src/lib/phrase-breaks.ts` で再現）。この panic を見たら、Turbopack の不具合と決めつけず、`server-only` を置いたモジュールを `"use client"` の側から読み込んでいないかを先に確かめる。
 
 **検証タイミングの教訓**: この種のバグは型チェック・単体テストでは表面化せず `next build` で初めて落ちる。storybook 等の開発者向けページ（noindex）でも client/server 境界は本番ビルドに効く。ページやコンポーネントを追加したら、早い段階で `npm run build` を一度通して潜在バグを最短で顕在化させること（cycle-224 では build 確認が後回しになり、storybook 追加時に混入した本バグが数セッション潜在した）。
 
-出典: cycle-224
+出典: cycle-224・cycle-316
 
 ---
 
