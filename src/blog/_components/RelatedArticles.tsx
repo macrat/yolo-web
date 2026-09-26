@@ -28,7 +28,7 @@ export default function RelatedArticles({ posts }: RelatedArticlesProps) {
   }));
 
   return (
-    <section aria-labelledby={HEADING_ID}>
+    <section>
       <h2 id={HEADING_ID} className={styles.heading}>
         関連記事
       </h2>

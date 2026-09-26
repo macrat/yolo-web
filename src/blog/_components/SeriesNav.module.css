@@ -26,8 +26,6 @@
   justify-content: space-between;
   gap: var(--space-16);
   margin-top: var(--space-16);
-  padding-top: var(--space-16);
-  border-top: var(--rule-w-hair) solid var(--rule-2);
 }
 
 /* 前の記事のみ: 左寄せ */
@@ -36,8 +34,6 @@
   justify-content: flex-start;
   gap: var(--space-16);
   margin-top: var(--space-16);
-  padding-top: var(--space-16);
-  border-top: var(--rule-w-hair) solid var(--rule-2);
 }
 
 /* 次の記事のみ: 右寄せ */
@@ -46,8 +42,6 @@
   justify-content: flex-end;
   gap: var(--space-16);
   margin-top: var(--space-16);
-  padding-top: var(--space-16);
-  border-top: var(--rule-w-hair) solid var(--rule-2);
 }
 
 /* 前後の記事へ進むリンク。押せる範囲は見出しの文字と題を合わせた箱で、下線は題にだけ引く（§6・§7）。

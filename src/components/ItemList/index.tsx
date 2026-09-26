@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { ReactElement } from "react";
+import type { CSSProperties, ReactElement } from "react";
 import Panel from "@/components/Panel";
 import styles from "./ItemList.module.css";
 
@@ -17,7 +17,7 @@ export interface ItemListItem {
   reading?: string;
   /** 何ができるか・何であるかを言う短い文。 */
   description?: string;
-  /** 何の仲間かを言う一語。 */
+  /** 何の仲間かを言う一語。並べる全件で同じなら、行に出ない。 */
   kind?: string;
   facts?: ItemListFact[];
   /** 主題が色である項目の色見本の色。 */
@@ -29,7 +29,7 @@ type ItemListName = { labelledBy: string } | { label: string };
 
 export type ItemListProps = ItemListName & {
   items: ItemListItem[];
-  /** 順に読む一覧（連載）なら true。 */
+  /** 順に読む一覧（連載）なら true。行の頭に番号が付く。 */
   ordered?: boolean;
   /** いま開いているページのパス。一致する行を現在地にする。 */
   currentHref?: string;
@@ -43,6 +43,9 @@ export type ItemListProps = ItemListName & {
  * 行の中でリンクにするのは名前だけで、押せる範囲は名前のリンクの ::after で行全体に広げる。
  * 読み・説明・種別・補助情報をリンクの外に置くので、読み上げの名前は行の名前だけになる。
  * 行に見出し要素を置かないのは、ページの見出しの構造に一覧の件数ぶんの見出しを混ぜないため。
+ *
+ * 一覧に role="list" を明示するのは、Safari が list-style: none の ul・ol から list のロールを外し、
+ * 読み上げが一覧の名前も件数も言わなくなるため。
  */
 export default function ItemList(props: ItemListProps): ReactElement {
   const { items, ordered = false, currentHref, boxed = true } = props;
@@ -51,26 +54,52 @@ export default function ItemList(props: ItemListProps): ReactElement {
     "labelledBy" in props
       ? { "aria-labelledby": props.labelledBy }
       : { "aria-label": props.label };
+  // 全件で同じ種別は項目を見分ける手がかりにならないので、行に出さない（§7）。
+  const showKind = new Set(items.map((item) => item.kind)).size > 1;
+  // 番号の列の幅を最も長い番号に揃え、名前の左端を行ごとに揃える。
+  const numberWidth = ordered
+    ? ({
+        "--number-width": `${String(items.length).length}ch`,
+      } as CSSProperties)
+    : undefined;
 
   const list = (
-    <List className={styles.list} data-text-box="rows" {...nameProps}>
-      {items.map((item) => {
+    <List
+      role="list"
+      className={boxed ? styles.list : `${styles.list} ${styles.ruled}`}
+      style={numberWidth}
+      data-text-box="rows"
+      {...nameProps}
+    >
+      {items.map((item, index) => {
         const current = item.href === currentHref;
+        const kind = showKind ? item.kind : undefined;
         const facts = item.facts ?? [];
-        const hasMeta = item.kind !== undefined || facts.length > 0;
+        const hasMeta = kind !== undefined || facts.length > 0;
+        const hasLead = ordered || item.swatch !== undefined;
         return (
           <li
             key={item.href}
             className={
-              item.swatch ? `${styles.row} ${styles.withSwatch}` : styles.row
+              hasLead ? `${styles.row} ${styles.withLead}` : styles.row
             }
           >
-            {item.swatch ? (
-              <span
-                className={styles.swatch}
-                style={{ backgroundColor: item.swatch }}
-                aria-hidden="true"
-              />
+            {hasLead ? (
+              <span className={styles.lead}>
+                {/* 順番は ol が読み上げに伝えるので、見せる番号は読ませない。 */}
+                {ordered ? (
+                  <span className={styles.number} aria-hidden="true">
+                    {index + 1}
+                  </span>
+                ) : null}
+                {item.swatch ? (
+                  <span
+                    className={styles.swatch}
+                    style={{ backgroundColor: item.swatch }}
+                    aria-hidden="true"
+                  />
+                ) : null}
+              </span>
             ) : null}
             <p className={styles.head}>
               <Link
@@ -87,14 +116,14 @@ export default function ItemList(props: ItemListProps): ReactElement {
             </p>
             {hasMeta ? (
               <p className={styles.meta}>
-                {item.kind !== undefined ? <span>{item.kind}</span> : null}
-                {facts.map((fact, index) =>
+                {kind !== undefined ? <span>{kind}</span> : null}
+                {facts.map((fact, factIndex) =>
                   fact.dateTime ? (
-                    <time key={index} dateTime={fact.dateTime}>
+                    <time key={factIndex} dateTime={fact.dateTime}>
                       {fact.text}
                     </time>
                   ) : (
-                    <span key={index}>{fact.text}</span>
+                    <span key={factIndex}>{fact.text}</span>
                   ),
                 )}
               </p>

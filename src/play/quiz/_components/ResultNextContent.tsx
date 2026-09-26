@@ -19,7 +19,7 @@ export default function ResultNextContent({ items }: ResultNextContentProps) {
   if (items.length === 0) return null;
 
   return (
-    <section className={styles.section} aria-labelledby={HEADING_ID}>
+    <section className={styles.section}>
       <h3 id={HEADING_ID} className={styles.heading}>
         次はこれを試してみよう
       </h3>

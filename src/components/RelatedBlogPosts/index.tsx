@@ -30,7 +30,7 @@ export default function RelatedBlogPosts({ toolSlug }: RelatedBlogPostsProps) {
   }));
 
   return (
-    <section className={styles.section} aria-labelledby={HEADING_ID}>
+    <section className={styles.section}>
       <h2 id={HEADING_ID} className={styles.title}>
         関連ブログ記事
       </h2>

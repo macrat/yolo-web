@@ -74,8 +74,8 @@ describe("ItemList", () => {
   test("見出しの id を渡すと、一覧の名前がその見出しになる", () => {
     render(
       <section>
-        <h2 id="shelf">道具</h2>
-        <ItemList labelledBy="shelf" items={items} />
+        <h2 id="tools-heading">道具</h2>
+        <ItemList labelledBy="tools-heading" items={items} />
       </section>,
     );
     expect(screen.getByRole("list", { name: "道具" })).toBeInTheDocument();
@@ -94,6 +94,64 @@ describe("ItemList", () => {
     unmount();
     render(<ItemList label="連載" items={items} ordered />);
     expect(screen.getByRole("list").tagName).toBe("OL");
+  });
+
+  test("ul にも ol にも list のロールを明示する", () => {
+    const { unmount } = render(<ItemList label="見本" items={items} />);
+    expect(screen.getByRole("list")).toHaveAttribute("role", "list");
+    unmount();
+    render(<ItemList label="連載" items={items} ordered />);
+    expect(screen.getByRole("list")).toHaveAttribute("role", "list");
+  });
+
+  test("順に読む一覧は行の頭に番号を見せ、番号は読み上げの名前に混ざらない", () => {
+    render(<ItemList label="連載" items={items} ordered />);
+    screen.getAllByRole("listitem").forEach((row, index) => {
+      const number = within(row).getByText(String(index + 1));
+      expect(number).toHaveAttribute("aria-hidden", "true");
+      expect(number.closest("a")).toBeNull();
+    });
+    screen.getAllByRole("link").forEach((link, index) => {
+      expect(link).toHaveAccessibleName(items[index].name);
+    });
+  });
+
+  test("順を持たない一覧は番号を持たない", () => {
+    render(
+      <ItemList label="見本" items={[{ name: "素の項目", href: "/x" }]} />,
+    );
+    expect(screen.queryByText("1")).not.toBeInTheDocument();
+  });
+
+  test("行ごとに種別が違うときは、どの行も種別を出す", () => {
+    render(
+      <ItemList
+        label="見本"
+        items={[
+          { name: "文字数カウント", href: "/a", kind: "文章" },
+          { name: "Base64", href: "/b", kind: "データ" },
+          { name: "種別の無い項目", href: "/c" },
+        ]}
+      />,
+    );
+    expect(screen.getByText("文章")).toBeInTheDocument();
+    expect(screen.getByText("データ")).toBeInTheDocument();
+  });
+
+  test("全件で同じ種別は、どの行にも出さない", () => {
+    render(
+      <ItemList
+        label="見本"
+        items={[
+          { name: "一", href: "/a", kind: "小学1年", facts: [{ text: "1画" }] },
+          { name: "森", href: "/b", kind: "小学1年" },
+        ]}
+      />,
+    );
+    expect(screen.queryByText("小学1年")).not.toBeInTheDocument();
+    expect(screen.getByText("1画")).toBeInTheDocument();
+    const [, secondRow] = screen.getAllByRole("listitem");
+    expect(secondRow.querySelectorAll("p")).toHaveLength(1);
   });
 
   test("いま開いているページの行だけが現在地になり、リンクのまま名前も変わらない", () => {

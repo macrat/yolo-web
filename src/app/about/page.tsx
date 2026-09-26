@@ -40,9 +40,9 @@ export const metadata: Metadata = {
 };
 
 /**
- * 「何が置いてあるか」棚。トップページの棚構成（診断・占い・あそび／辞典／道具／読みもの）と
- * 対応させ、各棚の一覧ページへ案内する（個々のコンテンツへは踏み込まない——
- * ここは自己紹介であり、トップの品書きの重複再掲ではない）。
+ * 「何が置いてあるか」の行。トップページのセクション（診断・占い・あそび／辞典／道具／読みもの）と
+ * 対応させ、各分野の一覧ページへ案内する（個々のコンテンツへは踏み込まない——
+ * ここは自己紹介であり、トップの一覧を繰り返す場所ではない）。
  */
 const STORE_ITEMS: ItemListItem[] = [
   {
@@ -89,11 +89,11 @@ export default function AboutPage() {
         </p>
       </section>
 
-      <section className={styles.section} aria-labelledby="about-store">
+      <section className={styles.section}>
         <h2 id="about-store" className={styles.sectionTitle}>
           何が置いてあるか
         </h2>
-        {/* 店の見立て（「店の品書き」）は来訪者に解読を強いるので、平明な言葉で言う。 */}
+        {/* 来訪者に解読を強いないよう、店の見立ての言葉を使わず平明に言う。 */}
         <p className={styles.text}>ここにあるものは、大きく四つです。</p>
         <ItemList labelledBy="about-store" items={STORE_ITEMS} />
       </section>

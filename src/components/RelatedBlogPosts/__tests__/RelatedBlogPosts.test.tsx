@@ -34,7 +34,9 @@ describe("RelatedBlogPosts", () => {
     ]);
 
     render(<RelatedBlogPosts toolSlug="test-tool" />);
-    expect(screen.getByRole("region")).toBeInTheDocument();
+    expect(
+      screen.getByRole("list", { name: "関連ブログ記事" }),
+    ).toBeInTheDocument();
   });
 
   it("関連記事のタイトルが表示される", () => {
@@ -156,6 +158,18 @@ describe("RelatedBlogPosts", () => {
         draft: false,
         readingTime: 5,
       },
+      {
+        slug: "other-post",
+        title: "別の分類の記事",
+        published_at: "2026-02-11T10:00:00+09:00",
+        updated_at: "2026-02-11T10:00:00+09:00",
+        description: "別の分類の説明",
+        tags: [],
+        category: "dev-notes",
+        related_tool_slugs: ["test-tool"],
+        draft: false,
+        readingTime: 5,
+      },
     ]);
 
     render(<RelatedBlogPosts toolSlug="test-tool" />);
@@ -164,6 +178,8 @@ describe("RelatedBlogPosts", () => {
     expect(
       screen.getByRole("list", { name: "関連ブログ記事" }),
     ).toBeInTheDocument();
-    expect(screen.getByRole("link")).toHaveAccessibleName("名前テスト記事");
+    expect(screen.getAllByRole("link")[0]).toHaveAccessibleName(
+      "名前テスト記事",
+    );
   });
 });

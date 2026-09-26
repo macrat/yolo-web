@@ -194,7 +194,7 @@ describe("ToolPageLayout", () => {
       </ToolPageLayout>,
     );
     expect(
-      screen.getByRole("region", { name: "関連ツール" }),
+      screen.getByRole("list", { name: "関連ツール" }),
     ).toBeInTheDocument();
   });
 

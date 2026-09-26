@@ -13,22 +13,15 @@ function playFacts(content: PlayContentMeta): ItemListFact[] {
   return facts;
 }
 
-/**
- * 遊びを行の一覧の行にする。行は名前・説明・種別・補助情報を持つ。
- *
- * 並べる全件で種別が同じなら、種別を行に出さない。すべて同じ語では項目を見分ける手がかりにならないため
- * （DESIGN.md §7）。
- */
+/** 遊びを行の一覧の行にする。行は名前・説明・種別・補助情報を持つ。 */
 export function toPlayListItems(
   contents: readonly PlayContentMeta[],
 ): ItemListItem[] {
-  const kinds = contents.map(resolveDisplayCategory);
-  const showKind = new Set(kinds).size > 1;
-  return contents.map((content, index) => ({
+  return contents.map((content) => ({
     name: content.shortTitle ?? content.title,
     href: getContentPath(content),
     description: content.shortDescription,
-    kind: showKind ? kinds[index] : undefined,
+    kind: resolveDisplayCategory(content),
     facts: playFacts(content),
   }));
 }

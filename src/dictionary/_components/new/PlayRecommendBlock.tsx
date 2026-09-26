@@ -47,7 +47,7 @@ export default function PlayRecommendBlock({
   }));
 
   return (
-    <section aria-labelledby={HEADING_ID} className={styles.container}>
+    <section className={styles.container}>
       <h2 id={HEADING_ID} className={styles.heading}>
         こちらもおすすめ
       </h2>

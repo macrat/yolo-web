@@ -45,7 +45,7 @@ export default function GlobalNotFoundContent() {
         </p>
       </section>
 
-      <section className={styles.sections} aria-labelledby="not-found-links">
+      <section className={styles.sections}>
         <h2 id="not-found-links" className={styles.sectionsTitle}>
           主要コンテンツ
         </h2>

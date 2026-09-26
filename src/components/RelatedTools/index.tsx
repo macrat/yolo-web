@@ -32,7 +32,7 @@ export default function RelatedTools({
   if (items.length === 0) return null;
 
   return (
-    <section className={styles.related} aria-labelledby={HEADING_ID}>
+    <section className={styles.related}>
       <h2 id={HEADING_ID} className={styles.heading}>
         関連ツール
       </h2>

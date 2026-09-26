@@ -11,22 +11,21 @@ import styles from "./page.module.css";
 /**
  * トップページ = よろず屋の店先
  *
- * 同型の品書きを並べただけの索引にせず、焦点（目玉）のある店先にする。器は紙・墨・罫・組版のみ。
+ * 同じ形の行を並べただけの索引にせず、焦点（目玉）のある店先にする。器は紙・墨・罫・組版のみ。
  * その器の中で「階層と焦点」を作る（site-concept「その場でためして持ち帰れる」）:
  *
  * 1. 名乗り（compact）: 店号（見出しの書体・大）＋一言。開幕の見せ場として余白を効かせ、
- *    説明の羅列はしない（具体は目玉と品書きが担う）。AI 明示は Footer が常時持つため、
+ *    説明の羅列はしない（具体は目玉と行の一覧が担う）。AI 明示は Footer が常時持つため、
  *    ここは短い一言に留める（§9「AI 運営を正直に、簡潔に示す」）。
  * 2. 目玉（今日のためしどころ・above the fold）: 成長エンジンの「あなたに似たキャラ診断」を
- *    単一の独立した区画（罫で囲う・--rule-strong の枠・地は --paper・影/色地/角丸/グラデ/ピル
- *    なし・§5）として立てる。中は「誘い＋結果見本」の非対称な一対
- *    ——左に誘い（診断名を品書きより一段大きい文字＝scale contrast・具体の一言・結果のタイプ数・
+ *    単一の独立した区画（罫で囲う・地は --paper・影/色地/角丸/グラデ/ピルなし・§5）として立てる。
+ *    中は「誘い＋結果見本」の非対称な一対——左に誘い（診断名・具体の一言・結果のタイプ数・
  *    入口ボタン「やってみる →」44px・ピルなし）、右に結果の見本を Tsutsumi（包み）で 1 枚
  *    実際に見せる。「持ち帰れる札」を言うだけでなく成果物として見せ、来訪者自身
  *    の結果と誤認させないよう「見本」であることを正直に添える。デスクトップは左右・モバイルは縦積み。
- * 3. 品書き（よろず＝広さの棚）: 目玉の後ろに、残りの体験・辞典・道具・読みものを
- *    行の一覧（ItemList）の棚で並べる。ここは「品揃えの広さ＝よろず」を示す部分。器は静かに。
- *    目玉に立てた診断は品書きから外す（同じページで同一診断を二度立てない）。
+ * 3. 分野ごとのセクション: 目玉の後ろに、残りの体験・辞典・道具・読みものを、見出しと行の一覧
+ *    （ItemList）で並べる。ここは「品揃えの広さ＝よろず」を示す部分。器は静かに。
+ *    目玉に立てた診断は一覧から外す（同じページで同一診断を二度立てない）。
  *
  * インライン style は使わない（色・角丸はすべてトークン経由で module.css に置く）。
  */
@@ -65,13 +64,13 @@ const heroContent: PlayContentMeta | undefined =
   playContentBySlug.get(HERO_SLUG);
 
 /**
- * 「診断・占い・あそび」棚に品書きとして並べる体験の入口。
- * 品名（title）と遷移先（href）はレジストリ（単一情報源）から描画時に引き、ここでは
+ * 「診断・占い・あそび」のセクションに並べる体験の入口。
+ * 名前（title）と遷移先（href）はレジストリ（単一情報源）から描画時に引き、ここでは
  * slug と、店の言葉で書いた「ひとこと」・補助情報だけを持つ（コピーの重複と乖離を防ぐ）。
  *
- * character-personality は目玉に立てたため、品書きからは外す（同一診断を同じページで
- * 二度立てない）。棚は性格・キャラ診断で発見の幅を、contrarian-fortune で占い枠を、
- * nakamawake であそび（毎日更新のパズル）を添え、棚見出しを実体で満たす。全リストは /play。
+ * character-personality は目玉に立てたため、ここからは外す（同一診断を同じページで
+ * 二度立てない）。性格・キャラ診断で発見の幅を、contrarian-fortune で占い枠を、
+ * nakamawake であそび（毎日更新のパズル）を添え、見出しの言う分野を実体で満たす。全リストは /play。
  */
 const FEATURED_PLAY: { slug: string; description: string; fact?: string }[] = [
   {
@@ -102,7 +101,7 @@ const FEATURED_PLAY: { slug: string; description: string; fact?: string }[] = [
 ];
 
 /**
- * FEATURED_PLAY の slug をレジストリ（単一情報源）で解決し、品書きの行に変換する。
+ * FEATURED_PLAY の slug をレジストリ（単一情報源）で解決し、行の一覧の行に変換する。
  * レジストリに存在しない slug は描画時に静かに脱落させず、ここで除外する（型で保証）。
  */
 const featuredPlayItems: ItemListItem[] = FEATURED_PLAY.flatMap((entry) => {
@@ -120,7 +119,7 @@ const featuredPlayItems: ItemListItem[] = FEATURED_PLAY.flatMap((entry) => {
   ];
 });
 
-/** 「辞典」棚（参照ではなく引いて使う支え層）。リンク先は実在ルートのみ。 */
+/** 「辞典」のセクション（参照ではなく引いて使う支え層）。リンク先は実在ルートのみ。 */
 const DICTIONARY_ITEMS: ItemListItem[] = [
   {
     name: "漢字辞典",
@@ -144,7 +143,7 @@ const DICTIONARY_ITEMS: ItemListItem[] = [
   },
 ];
 
-/** 「道具」棚。代表的な道具の入口。全一覧は /tools。 */
+/** 「道具」のセクション。代表的な道具の入口。全一覧は /tools。 */
 const TOOL_ITEMS: ItemListItem[] = [
   {
     name: "文字数カウント",
@@ -168,7 +167,7 @@ const TOOL_ITEMS: ItemListItem[] = [
   },
 ];
 
-/** 「読みもの」棚（ブログ）。 */
+/** 「読みもの」のセクション（ブログ）。 */
 const READING_ITEMS: ItemListItem[] = [
   {
     name: "ブログ",
@@ -201,8 +200,7 @@ export default function Home() {
 
       {/*
        * 目玉（今日のためしどころ）: 成長エンジンの診断を単一区画で大きく見せる焦点。
-       * 罫で囲った一区画（--rule-strong の枠・地は --paper）——影・色地・角丸・ピルなし（§5）。
-       * 見出しは品書きの品名より明確に大きく、視線がまず目玉に落ちる。
+       * 罫で囲った一区画（地は --paper）——影・色地・角丸・ピルなし（§5）。
        * レジストリ解決に失敗した場合は目玉を出さない（型の安全側・実在は page.test.tsx が保証）。
        */}
       {heroContent ? (
@@ -249,13 +247,13 @@ export default function Home() {
         </section>
       ) : null}
 
-      {/* 品書き（よろず＝広さの棚）。ここは器を静かに、品揃えの広さを示す。 */}
-      {/* 棚1: 診断・占い・あそび（見せたくなる結果への入口・目玉の診断は除く） */}
-      <section className={styles.shelf} aria-labelledby="shelf-play">
-        <h2 id="shelf-play" className={styles.shelfHeading}>
+      {/* 分野ごとのセクション。ここは器を静かに、品揃えの広さを示す。 */}
+      {/* 診断・占い・あそび（見せたくなる結果への入口・目玉の診断は除く） */}
+      <section className={styles.section}>
+        <h2 id="section-play" className={styles.sectionHeading}>
           診断・占い・あそび
         </h2>
-        <ItemList labelledBy="shelf-play" items={featuredPlayItems} />
+        <ItemList labelledBy="section-play" items={featuredPlayItems} />
         <p className={styles.seeAll}>
           <Link
             href="/play"
@@ -267,20 +265,20 @@ export default function Home() {
         </p>
       </section>
 
-      {/* 棚2: 辞典（引いて使う支え層） */}
-      <section className={styles.shelf} aria-labelledby="shelf-dictionary">
-        <h2 id="shelf-dictionary" className={styles.shelfHeading}>
+      {/* 辞典（引いて使う支え層） */}
+      <section className={styles.section}>
+        <h2 id="section-dictionary" className={styles.sectionHeading}>
           辞典
         </h2>
-        <ItemList labelledBy="shelf-dictionary" items={DICTIONARY_ITEMS} />
+        <ItemList labelledBy="section-dictionary" items={DICTIONARY_ITEMS} />
       </section>
 
-      {/* 棚3: 道具（実務の結果） */}
-      <section className={styles.shelf} aria-labelledby="shelf-tools">
-        <h2 id="shelf-tools" className={styles.shelfHeading}>
+      {/* 道具（実務の結果） */}
+      <section className={styles.section}>
+        <h2 id="section-tools" className={styles.sectionHeading}>
           道具
         </h2>
-        <ItemList labelledBy="shelf-tools" items={TOOL_ITEMS} />
+        <ItemList labelledBy="section-tools" items={TOOL_ITEMS} />
         <p className={styles.seeAll}>
           <Link
             href="/tools"
@@ -292,12 +290,12 @@ export default function Home() {
         </p>
       </section>
 
-      {/* 棚4: 読みもの（ブログ） */}
-      <section className={styles.shelf} aria-labelledby="shelf-reading">
-        <h2 id="shelf-reading" className={styles.shelfHeading}>
+      {/* 読みもの（ブログ） */}
+      <section className={styles.section}>
+        <h2 id="section-reading" className={styles.sectionHeading}>
           読みもの
         </h2>
-        <ItemList labelledBy="shelf-reading" items={READING_ITEMS} />
+        <ItemList labelledBy="section-reading" items={READING_ITEMS} />
       </section>
     </div>
   );

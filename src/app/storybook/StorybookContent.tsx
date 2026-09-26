@@ -117,7 +117,7 @@ const TOC_ITEMS = [
   { id: "item-list", label: "21. ItemList" },
 ];
 
-// ItemList の見本。説明・種別・日付を持つ行、読みを持つ行、色見本を持つ行。
+// ItemList の見本。説明・種別・日付を持つ行、読みを持つ行、全件で種別が同じ行、色見本を持つ行。
 const ITEM_LIST_DESCRIBED: ItemListItem[] = [
   {
     name: "文字数カウント",
@@ -143,6 +143,30 @@ const ITEM_LIST_DESCRIBED: ItemListItem[] = [
 ];
 
 const ITEM_LIST_READINGS: ItemListItem[] = [
+  {
+    name: "水",
+    href: "/dictionary/kanji/水",
+    reading: "スイ・みず",
+    kind: "小学1年",
+    facts: [{ text: "4画" }],
+  },
+  {
+    name: "海",
+    href: "/dictionary/kanji/海",
+    reading: "カイ・うみ",
+    kind: "小学2年",
+    facts: [{ text: "9画" }],
+  },
+  {
+    name: "湖",
+    href: "/dictionary/kanji/湖",
+    reading: "コ・みずうみ",
+    kind: "小学3年",
+    facts: [{ text: "12画" }],
+  },
+];
+
+const ITEM_LIST_SAME_KIND: ItemListItem[] = [
   {
     name: "一",
     href: "/dictionary/kanji/一",
@@ -1084,13 +1108,21 @@ export default function StorybookContent({
         </h3>
         <ItemList labelledBy="item-list-readings" items={ITEM_LIST_READINGS} />
 
+        <h3 id="item-list-same-kind" className={styles.subsectionTitle}>
+          全件で種別が同じ行（種別「小学1年」を出さない）
+        </h3>
+        <ItemList
+          labelledBy="item-list-same-kind"
+          items={ITEM_LIST_SAME_KIND}
+        />
+
         <h3 id="item-list-swatches" className={styles.subsectionTitle}>
           色見本を持つ行
         </h3>
         <ItemList labelledBy="item-list-swatches" items={ITEM_LIST_SWATCHES} />
 
         <h3 id="item-list-series" className={styles.subsectionTitle}>
-          順に読む一覧（ol）
+          順に読む一覧（行の頭に番号・3行目が現在地）
         </h3>
         <ItemList
           labelledBy="item-list-series"

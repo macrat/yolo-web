@@ -1,4 +1,4 @@
+/* 大きさは h2 の既定（§4 のセクションの見出し）に従う。 */
 .heading {
   margin: 0 0 var(--space-16);
-  font-size: 1.375rem;
 }

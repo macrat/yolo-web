@@ -11,8 +11,13 @@
   padding-block: 0;
 }
 
+/* ボックスを持たない一覧は、最初の行の上と最後の行の下にも細い罫線を引き、hover の線を上下の辺で閉じる（§7）。 */
+.ruled {
+  border-block: var(--rule-w-hair) solid var(--rule-2);
+}
+
 /* 狭い画面では、種別と補助情報が名前の下・説明の上に落ちる（§7）。
- * 色見本の列は名前の行にだけ掛け、字の列の左端を行ごとに揃える。 */
+ * 番号と色見本の列は名前の行にだけ掛け、字の列の左端を行ごとに揃える。 */
 .row {
   position: relative;
   display: grid;
@@ -30,10 +35,10 @@
   border-top: var(--rule-w-hair) solid var(--rule-2);
 }
 
-.withSwatch {
-  grid-template-columns: 32px minmax(0, 1fr);
+.withLead {
+  grid-template-columns: auto minmax(0, 1fr);
   grid-template-areas:
-    "swatch head"
+    "lead head"
     ". meta"
     ". description";
 }
@@ -42,26 +47,41 @@
   margin: 0;
 }
 
+/* 番号と色見本を上に揃える。番号は名前と同じ字の大きさと行送りなので、名前の1行目と同じ高さに並ぶ。 */
+.lead {
+  grid-area: lead;
+  align-self: start;
+  display: flex;
+  gap: var(--space-16);
+}
+
+/* 箇条書きの番号と同じく --ink で組む（§5）。幅を最も長い番号に揃えて右に寄せ、名前の左端を行ごとに揃える。 */
+.number {
+  min-inline-size: var(--number-width);
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+}
+
 /* 名前の1行は本文の行送りでほぼ 32px になるので、色見本を上に揃えると名前の行の中央に来る。 */
 .swatch {
-  grid-area: swatch;
-  align-self: start;
   width: 32px;
   height: 32px;
   border: var(--rule-w-hair) solid var(--rule-2);
 }
 
+/* 名前と読みのあいだの間隔を、行の中の余白ではなく並びの間隔で取る。余白は名前の最後の字と同じ行に
+ * 収まらないと次の行へ送られ、名前の下に字の無い行を作るため。読みが収まらなければ、次の行の左端から始まる。 */
 .head {
   grid-area: head;
-}
-
-/* 下線と訪問済みの色は globals.css の a の既定に従う（§6 一覧の行）。 */
-.name {
-  margin-inline-end: var(--space-8);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: var(--space-8);
 }
 
 /* 押せる範囲を行全体に広げる。hover の線とフォーカスの二重リングは data-hit-area（globals.css）が
- * この範囲に出す。 */
+ * この範囲に出す。下線と訪問済みの色は globals.css の a の既定に従う（§6 一覧の行）。 */
 .name::after {
   content: "";
   position: absolute;
@@ -113,10 +133,10 @@
       "description description";
   }
 
-  .withSwatch {
-    grid-template-columns: 32px minmax(0, 1fr) auto;
+  .withLead {
+    grid-template-columns: auto minmax(0, 1fr) auto;
     grid-template-areas:
-      "swatch head meta"
+      "lead head meta"
       ". description description";
   }
 

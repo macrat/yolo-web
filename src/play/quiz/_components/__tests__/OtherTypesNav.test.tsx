@@ -106,7 +106,7 @@ describe("OtherTypesNav", () => {
       />,
     );
     const swatches = container.querySelectorAll<HTMLElement>(
-      'li > span[aria-hidden="true"]',
+      'li span[aria-hidden="true"]',
     );
     expect(swatches).toHaveLength(1);
     expect(swatches[0].style.backgroundColor).toBe("rgb(17, 17, 17)");

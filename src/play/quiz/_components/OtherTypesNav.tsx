@@ -44,7 +44,7 @@ export default function OtherTypesNav({
   }));
 
   return (
-    <section className={styles.section} aria-labelledby={headingId}>
+    <section className={styles.section}>
       <Heading id={headingId} className={styles.heading}>
         他のタイプ（{results.length}）
       </Heading>
