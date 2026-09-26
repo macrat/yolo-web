@@ -316,3 +316,28 @@ describe("generateShareText", () => {
     );
   });
 });
+
+describe("generateShareText with no solved group", () => {
+  test("has no empty line between the header and the hashtags", () => {
+    const state: NakamawakeGameState = {
+      puzzleDate: "2026-03-01",
+      puzzleNumber: 7,
+      puzzle: samplePuzzle,
+      solvedGroups: [],
+      mistakes: 4,
+      status: "lost",
+      selectedWords: [],
+      remainingWords: [],
+      guessHistory: [
+        {
+          words: ["いぬ", "ねこ", "あか", "はる"],
+          correct: false,
+        },
+      ],
+    };
+
+    expect(generateShareText(state)).toBe(
+      "ナカマワケ #7 X\n#ナカマワケ #yolosnet",
+    );
+  });
+});

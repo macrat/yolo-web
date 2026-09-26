@@ -22,6 +22,7 @@
 
 import { useCallback, useState } from "react";
 import { trackSave, trackShare } from "@/lib/analytics";
+import { copyText } from "@/lib/clipboard";
 import { contentIdForQuiz } from "@/play/quiz/contentId";
 import Button from "@/components/Button";
 import styles from "./FudaActions.module.css";
@@ -62,8 +63,10 @@ export default function FudaActions({
 }: FudaActionsProps) {
   // busy: 取得〜アクション完了までの間ボタンを無効化して多重押下を防ぐ。
   const [busy, setBusy] = useState(false);
-  // status: aria-live で読み上げる一時メッセージ（コピー完了/エラー）。
-  const [status, setStatus] = useState<"idle" | "copied" | "error">("idle");
+  // status: aria-live で読み上げる一時メッセージ（コピー完了/コピー失敗/エラー）。
+  const [status, setStatus] = useState<
+    "idle" | "copied" | "copyFailed" | "error"
+  >("idle");
 
   const contentId = contentIdForQuiz(quizSlug);
 
@@ -167,13 +170,12 @@ export default function FudaActions({
       }
 
       // ファイル共有 非対応/未定義：URL を clipboard にコピーしてフォールバック。
-      try {
-        await navigator.clipboard.writeText(shareUrl);
+      if (await copyText(shareUrl)) {
         setStatus("copied");
         trackShare("clipboard", CONTENT_TYPE, contentId, "fuda");
-      } catch {
-        // コピーも失敗：計上しない。UI は壊さずエラー表示に留める。
-        setStatus("error");
+      } else {
+        // コピーも失敗：計上しない。写せなかったことを知らせる。
+        setStatus("copyFailed");
       }
     } catch {
       setStatus("error");
@@ -182,13 +184,16 @@ export default function FudaActions({
     }
   }, [busy, fetchFudaFile, contentId, quizTitle, shareText, shareUrl]);
 
-  const statusMessage = busy
-    ? "札の画像を用意しています。"
+  // 知らせの文。1行に収まらないとき文のあいだで折るよう、文ごとに分けて持つ。
+  const statusSentences: string[] = busy
+    ? ["札の画像を用意しています。"]
     : status === "copied"
-      ? "リンクをコピーしました"
-      : status === "error"
-        ? "画像を用意できませんでした。時間をおいて再度お試しください。"
-        : "";
+      ? ["リンクをコピーしました"]
+      : status === "copyFailed"
+        ? ["リンクをコピーできませんでした。", "ほかの共有先をお使いください"]
+        : status === "error"
+          ? ["画像を用意できませんでした。", "時間をおいて再度お試しください。"]
+          : [];
 
   return (
     <div className={styles.wrapper}>
@@ -217,7 +222,11 @@ export default function FudaActions({
       </div>
       {/* role="status" は暗黙で aria-live="polite" を持つため冗長指定はしない（ライブ領域は残す）。 */}
       <div id={STATUS_ID} className={styles.status} role="status">
-        {statusMessage}
+        {statusSentences.map((sentence) => (
+          <span key={sentence} className={styles.sentence}>
+            {sentence}
+          </span>
+        ))}
       </div>
     </div>
   );

@@ -4,7 +4,7 @@
  * 検証の核心（「実際に完了したアクションのみ計上」）:
  * - navigator.share が成功したときだけ web_share を計上する（キャンセル＝reject では撃たない）。
  * - share 取消 → clipboard フォールバックが成功したときだけ clipboard を計上する。
- * - clipboard も失敗したら何も計上しない。
+ * - どの写し方でも写せなかったら何も計上せず、写せなかったと知らせる。
  * - contentId 未指定の面では計上しない。
  *
  * analytics.ts は window.gtag を直接呼ぶので、gtag を spy に差し替えて送出 payload を検査する。
@@ -40,7 +40,19 @@ beforeEach(() => {
 
 afterEach(() => {
   vi.unstubAllGlobals();
+  delete (document as { execCommand?: unknown }).execCommand;
 });
+
+/** jsdom は execCommand を持たないので、この文書にだけ置く（afterEach で外す）。 */
+function stubExecCommand(result: boolean): ReturnType<typeof vi.fn> {
+  const execCommand = vi.fn(() => result);
+  Object.defineProperty(document, "execCommand", {
+    value: execCommand,
+    configurable: true,
+    writable: true,
+  });
+  return execCommand;
+}
 
 function renderButton(contentId?: string) {
   render(
@@ -92,15 +104,34 @@ describe("InviteFriendButton 計測", () => {
     );
   });
 
-  test("share 取消 → clipboard も失敗したら何も計上しない", async () => {
+  test("clipboard API に拒まれても、選んだ文を写す方法で写せたら clipboard を計上する", async () => {
     mockShare.mockRejectedValue(new Error("cancelled"));
     mockClipboardWriteText.mockRejectedValue(new Error("denied"));
+    const execCommand = stubExecCommand(true);
+    fireEvent.click(renderButton("quiz-character-personality"));
+
+    await waitFor(() => expect(findShareParams()).toBeDefined());
+    expect(execCommand).toHaveBeenCalledWith("copy");
+    expect(findShareParams()).toMatchObject({
+      method: "clipboard",
+      surface: "invite",
+    });
+    expect(screen.getByRole("status")).toHaveTextContent(
+      /^リンクをコピーしました$/,
+    );
+  });
+
+  test("share 取消 → どの写し方でも写せなければ何も計上せず、写せなかったと知らせる", async () => {
+    mockShare.mockRejectedValue(new Error("cancelled"));
+    mockClipboardWriteText.mockRejectedValue(new Error("denied"));
+    stubExecCommand(false);
     fireEvent.click(renderButton("quiz-character-personality"));
 
     await waitFor(() =>
-      expect(mockClipboardWriteText).toHaveBeenCalledTimes(1),
+      expect(screen.getByRole("status")).toHaveTextContent(
+        /^リンクをコピーできませんでした$/,
+      ),
     );
-    await Promise.resolve();
     expect(findShareParams()).toBeUndefined();
   });
 

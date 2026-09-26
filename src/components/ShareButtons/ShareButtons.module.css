@@ -21,3 +21,8 @@
   font-size: var(--text-small);
   color: var(--ink);
 }
+
+/* 2つの文からなる知らせは、1行に収まらないとき句点のあとで折り、文の中の語を割らない。 */
+.sentence {
+  display: inline-block;
+}

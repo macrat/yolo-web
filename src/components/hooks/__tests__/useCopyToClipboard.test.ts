@@ -3,6 +3,7 @@ import { renderHook, act } from "@testing-library/react";
 import {
   useCopyToClipboard,
   COPIED_LABEL,
+  COPY_FAILED_LABEL,
   DEFAULT_RESET_DELAY_MS,
 } from "../useCopyToClipboard";
 
@@ -22,7 +23,19 @@ beforeEach(() => {
 afterEach(() => {
   vi.useRealTimers();
   vi.restoreAllMocks();
+  delete (document as { execCommand?: unknown }).execCommand;
 });
+
+/** jsdom は execCommand を持たないので、この文書にだけ置く（afterEach で外す）。 */
+function stubExecCommand(result: boolean): ReturnType<typeof vi.fn> {
+  const execCommand = vi.fn(() => result);
+  Object.defineProperty(document, "execCommand", {
+    value: execCommand,
+    configurable: true,
+    writable: true,
+  });
+  return execCommand;
+}
 
 describe("useCopyToClipboard", () => {
   test("初期状態: copiedKey は null である", () => {
@@ -140,16 +153,61 @@ describe("useCopyToClipboard", () => {
     expect(result.current.copiedKey).toBeNull();
   });
 
-  test("clipboard API 失敗時は安全に無視し copiedKey は null のまま", async () => {
+  test("clipboard API に拒まれても、選んだ文を写す方法で写せたら copiedKey が立つ", async () => {
     mockWriteText.mockRejectedValueOnce(new Error("Clipboard unavailable"));
+    const execCommand = stubExecCommand(true);
 
     const { result } = renderHook(() => useCopyToClipboard());
 
     await act(async () => {
-      await result.current.copy("hello");
+      await result.current.copy("hello", "hex");
+    });
+
+    expect(execCommand).toHaveBeenCalledWith("copy");
+    expect(result.current.copiedKey).toBe("hex");
+    expect(result.current.failedKey).toBeNull();
+  });
+
+  test("どの写し方でも写せなければ failedKey が立ち、時間がたっても残り、次に写せたら消える", async () => {
+    mockWriteText.mockRejectedValueOnce(new Error("Clipboard unavailable"));
+    stubExecCommand(false);
+
+    const { result } = renderHook(() => useCopyToClipboard());
+
+    await act(async () => {
+      await result.current.copy("hello", "hex");
     });
 
     expect(result.current.copiedKey).toBeNull();
+    expect(result.current.failedKey).toBe("hex");
+
+    act(() => {
+      vi.advanceTimersByTime(DEFAULT_RESET_DELAY_MS * 3);
+    });
+    expect(result.current.failedKey).toBe("hex");
+
+    await act(async () => {
+      await result.current.copy("hello", "rgb");
+    });
+    expect(result.current.failedKey).toBeNull();
+    expect(result.current.copiedKey).toBe("rgb");
+  });
+
+  test("写せたあとに写せなかったら、「コピーしました」を消して失敗だけを知らせる", async () => {
+    const { result } = renderHook(() => useCopyToClipboard());
+
+    await act(async () => {
+      await result.current.copy("hello", "hex");
+    });
+    expect(result.current.copiedKey).toBe("hex");
+
+    mockWriteText.mockRejectedValueOnce(new Error("Clipboard unavailable"));
+    stubExecCommand(false);
+    await act(async () => {
+      await result.current.copy("hello", "rgb");
+    });
+    expect(result.current.copiedKey).toBeNull();
+    expect(result.current.failedKey).toBe("rgb");
   });
 
   test("アンマウント後にタイマーが発火しても setState エラーが起きない（cleanup）", async () => {
@@ -172,27 +230,32 @@ describe("useCopyToClipboard", () => {
     expect(true).toBe(true);
   });
 
-  test("SSR 安全: navigator.clipboard が undefined でもエラーにならない", async () => {
+  test("navigator.clipboard が無い端末でも、選んだ文を写す方法で写す", async () => {
     Object.defineProperty(navigator, "clipboard", {
       value: undefined,
       writable: true,
       configurable: true,
     });
+    const execCommand = stubExecCommand(true);
 
     const { result } = renderHook(() => useCopyToClipboard());
 
-    // エラーなく実行できる
     await act(async () => {
       await result.current.copy("hello");
     });
 
-    expect(result.current.copiedKey).toBeNull();
+    expect(execCommand).toHaveBeenCalledWith("copy");
+    expect(result.current.copiedKey).toBe(true);
   });
 });
 
 describe("定数エクスポート", () => {
   test("COPIED_LABEL が文字列 'コピーしました' である", () => {
     expect(COPIED_LABEL).toBe("コピーしました");
+  });
+
+  test("COPY_FAILED_LABEL が文字列 'コピーできませんでした' である", () => {
+    expect(COPY_FAILED_LABEL).toBe("コピーできませんでした");
   });
 
   test("DEFAULT_RESET_DELAY_MS が 2000 である", () => {

@@ -33,3 +33,8 @@
   font-size: var(--text-small);
   color: var(--ink);
 }
+
+/* 1行に収まらない知らせは文のあいだで折り、文の中の語を割らない。 */
+.sentence {
+  display: inline-block;
+}

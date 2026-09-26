@@ -46,8 +46,8 @@ function stubExecCommand(
 }
 
 beforeEach(() => {
-  // vi.stubGlobal を使うことで vi.unstubAllGlobals() による確実な teardown を保証し、
-  // Object.defineProperty によるグローバル汚染を回避する
+  // window の上のもの（open・navigator・location）は vi.stubGlobal で置き、afterEach の vi.unstubAllGlobals() で戻す。
+  // document の上に置く execCommand（stubExecCommand）は、afterEach で消す。
   vi.stubGlobal("open", mockWindowOpen);
   vi.stubGlobal("navigator", {
     ...navigator,

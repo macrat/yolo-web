@@ -205,11 +205,18 @@ export default function ShareButtons({
       </div>
       {/* コピーの知らせ。aria-live="polite" で読み上げにも伝える。 */}
       <div className={styles.copyMessage} role="status" aria-live="polite">
-        {copyFailed
-          ? "コピーできませんでした。ほかの共有先をお使いください"
-          : copiedCount > 0
-            ? "コピーしました"
-            : ""}
+        {copyFailed ? (
+          <>
+            <span className={styles.sentence}>コピーできませんでした。</span>
+            <span className={styles.sentence}>
+              ほかの共有先をお使いください
+            </span>
+          </>
+        ) : copiedCount > 0 ? (
+          "コピーしました"
+        ) : (
+          ""
+        )}
       </div>
     </div>
   );

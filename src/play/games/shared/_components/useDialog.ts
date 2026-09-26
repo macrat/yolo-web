@@ -86,6 +86,12 @@ export function useDialog(
 
   const handleBackdropClick = useCallback(
     (e: React.MouseEvent<HTMLDialogElement>) => {
+      // A click on the backdrop targets the <dialog> element itself, outside its
+      // box. Clicks on the dialog's contents target those elements, and a button
+      // activated with Enter/Space fires a click at (0, 0), so the coordinates
+      // alone would mistake it for a backdrop click. The dialog's own padding is
+      // the dialog element too, which the coordinates keep open.
+      if (e.target !== e.currentTarget) return;
       const rect = e.currentTarget.getBoundingClientRect();
       if (
         e.clientX < rect.left ||

@@ -4,6 +4,7 @@
  * 検証の核心（「実際に完了したアクションだけ計上する」）:
  * - 共有: canShare({files}) true → navigator.share({files}) 成功時に trackShare("web_share",…,"fuda")。
  * - 共有: canShare false/未定義 → clipboard コピー成功時に trackShare("clipboard",…,"fuda")。
+ * - 共有: どの写し方でも写せなかったら計上せず、写せなかったと知らせる。
  * - 共有: 共有シートのキャンセル（reject）では計上しない。
  * - 保存: アンカー download で保存し trackSave(…,"download","fuda")。
  * - fetch 失敗（!res.ok）は握りつぶさずエラー表示にし、UI は壊さない（計上しない）。
@@ -67,6 +68,7 @@ beforeEach(() => {
 
 afterEach(() => {
   vi.unstubAllGlobals();
+  delete (document as { execCommand?: unknown }).execCommand;
 });
 
 function renderActions() {
@@ -144,6 +146,28 @@ describe("FudaActions 共有", () => {
     expect(screen.getByRole("status")).toHaveTextContent(
       /^リンクをコピーしました$/,
     );
+  });
+
+  test("canShare false → どの写し方でも写せなければ計上せず、写せなかったと知らせる", async () => {
+    stubFetchOk();
+    mockCanShare.mockReturnValue(false);
+    mockClipboardWriteText.mockRejectedValue(new Error("denied"));
+    // jsdom は execCommand を持たないので、この文書にだけ置く（afterEach で外す）。
+    Object.defineProperty(document, "execCommand", {
+      value: vi.fn(() => false),
+      configurable: true,
+      writable: true,
+    });
+
+    const { shareButton } = renderActions();
+    fireEvent.click(shareButton);
+
+    await waitFor(() =>
+      expect(screen.getByRole("status")).toHaveTextContent(
+        /^リンクをコピーできませんでした。ほかの共有先をお使いください$/,
+      ),
+    );
+    expect(findEventParams("share")).toBeUndefined();
   });
 
   test("共有シートのキャンセル（reject）では計上しない", async () => {
@@ -255,11 +279,9 @@ describe("FudaActions fetch 失敗", () => {
     fireEvent.click(saveButton);
 
     await waitFor(() =>
-      expect(
-        screen.getByText(
-          "画像を用意できませんでした。時間をおいて再度お試しください。",
-        ),
-      ).toBeInTheDocument(),
+      expect(screen.getByRole("status")).toHaveTextContent(
+        /^画像を用意できませんでした。時間をおいて再度お試しください。$/,
+      ),
     );
     expect(findEventParams("save")).toBeUndefined();
     expect(findEventParams("share")).toBeUndefined();

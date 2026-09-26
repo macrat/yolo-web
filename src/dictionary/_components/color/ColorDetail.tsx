@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Button from "@/components/Button";
+import { useCopyToClipboard } from "@/components/hooks/useCopyToClipboard";
 import ItemList from "@/components/ItemList";
 import type { ColorEntry } from "@/dictionary/_lib/types";
 import { COLOR_CATEGORY_LABELS } from "@/dictionary/_lib/types";
@@ -18,22 +19,20 @@ interface ColorDetailProps {
   titleFontAttr: HeadingFontAttr;
 }
 
-function CopyButton({ text }: { text: string }) {
-  const [copied, setCopied] = useState(false);
+/**
+ * 写せたら 1.5 秒「コピー済み」、写せなかったら次に押すまで「コピー失敗」をボタンに出す。
+ * どちらも「コピー」と同じ字数に近い語にして、狭い画面でボタンの列が広がって値の列を押し縮めないようにする。
+ */
+const COPIED_DISPLAY_MS = 1500;
 
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
-    } catch {
-      // Clipboard API may fail in insecure contexts or denied permissions
-    }
-  };
+function CopyButton({ text }: { text: string }) {
+  const { copy, copiedKey, failedKey } = useCopyToClipboard({
+    resetDelay: COPIED_DISPLAY_MS,
+  });
 
   return (
-    <Button onClick={handleCopy} aria-label={`${text}をコピー`}>
-      {copied ? "コピー済み" : "コピー"}
+    <Button onClick={() => copy(text)} aria-label={`${text}をコピー`}>
+      {copiedKey ? "コピー済み" : failedKey ? "コピー失敗" : "コピー"}
     </Button>
   );
 }

@@ -33,5 +33,9 @@ export function generateShareText(state: NakamawakeGameState): string {
     })
     .filter(Boolean);
 
-  return `\u30CA\u30AB\u30DE\u30EF\u30B1 #${state.puzzleNumber} ${result}\n${rows.join("\n")}\n#\u30CA\u30AB\u30DE\u30EF\u30B1 #yolosnet`;
+  return [
+    `\u30CA\u30AB\u30DE\u30EF\u30B1 #${state.puzzleNumber} ${result}`,
+    ...rows,
+    "#\u30CA\u30AB\u30DE\u30EF\u30B1 #yolosnet",
+  ].join("\n");
 }

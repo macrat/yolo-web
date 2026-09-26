@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { trackShare } from "@/lib/analytics";
+import { copyText } from "@/lib/clipboard";
 import Button from "@/components/Button";
 import styles from "./InviteFriendButton.module.css";
 
@@ -29,7 +30,10 @@ export default function InviteFriendButton({
   inviteText,
   contentId,
 }: InviteFriendButtonProps) {
-  const [copied, setCopied] = useState(false);
+  // 写せた知らせは2秒で消し、写せなかった知らせは次に押すまで残す。
+  const [copyStatus, setCopyStatus] = useState<"idle" | "copied" | "failed">(
+    "idle",
+  );
 
   const handleInvite = useCallback(async () => {
     const url =
@@ -54,16 +58,20 @@ export default function InviteFriendButton({
       }
     }
 
-    try {
-      await navigator.clipboard.writeText(`${text}\n${url}`);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-      // Count only when the copy actually succeeded (writeText resolved).
+    setCopyStatus("idle");
+    if (await copyText(`${text}\n${url}`)) {
+      setCopyStatus("copied");
+      setTimeout(
+        () =>
+          setCopyStatus((status) => (status === "copied" ? "idle" : status)),
+        2000,
+      );
+      // Count only when the copy actually succeeded.
       if (contentId) {
         trackShare("clipboard", "diagnosis", contentId, "invite");
       }
-    } catch {
-      // Silently fail
+    } else {
+      setCopyStatus("failed");
     }
   }, [quizSlug, resultTypeId, inviteText, contentId]);
 
@@ -72,7 +80,11 @@ export default function InviteFriendButton({
       <p className={styles.label}>友達との相性を調べてみよう</p>
       <Button onClick={handleInvite}>友達に診断を送る</Button>
       <div className={styles.copiedMessage} role="status" aria-live="polite">
-        {copied ? "リンクをコピーしました" : ""}
+        {copyStatus === "copied"
+          ? "リンクをコピーしました"
+          : copyStatus === "failed"
+            ? "リンクをコピーできませんでした"
+            : ""}
       </div>
     </div>
   );

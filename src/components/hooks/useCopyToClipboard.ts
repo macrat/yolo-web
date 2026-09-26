@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback, useEffect } from "react";
+import { copyText } from "@/lib/clipboard";
 
 /**
  * コピー成功時に表示する既定の日本語ラベル。
@@ -8,6 +9,11 @@ import { useState, useRef, useCallback, useEffect } from "react";
  * 各ツールの Component から参照できるようにする（N-1 要件）。
  */
 export const COPIED_LABEL = "コピーしました";
+
+/**
+ * どの写し方でも写せなかったときに出す日本語の知らせ。COPIED_LABEL と同じく全ツールで統一する。
+ */
+export const COPY_FAILED_LABEL = "コピーできませんでした";
 
 /**
  * コピー済み表示を継続するデフォルト時間（ミリ秒）。
@@ -48,10 +54,18 @@ export interface UseCopyToClipboardReturn {
    * 使用例（複数ターゲット）: `copiedKey === "hex" ? "コピー済み" : "コピー"`
    */
   copiedKey: CopiedKey;
+  /**
+   * 直近に写せなかったターゲットの識別子。値の形は copiedKey と同じ。
+   * 次にどれかを写そうとするまで残る（読み終える前に消さないため）。
+   *
+   * 使用例: `failedKey === "hex" ? COPY_FAILED_LABEL : "コピー"`
+   */
+  failedKey: CopiedKey;
 }
 
 /**
- * クリップボードコピーと成功フィードバック管理を提供する汎用フック。
+ * クリップボードコピーと、写せた・写せなかったの知らせの状態を提供する汎用フック。
+ * 写し方は `copyText`（クリップボードの API に拒まれる端末でも、選んだ文を写す方法で写す）に従う。
  *
  * 既存の5つの state パターンを1つのシグネチャで吸収する:
  * - パターン A: `useState<boolean>` 単一ターゲット → key 省略で `copiedKey === true`
@@ -62,8 +76,8 @@ export interface UseCopyToClipboardReturn {
  *
  * aria-live 方針:
  * フックは状態だけを返す。aria-live によるアナウンスは各コンポーネント側で
- * `<span aria-live="polite">{copiedKey ? COPIED_LABEL : ""}</span>` のように実装する。
- * 全ツールで同一文言 COPIED_LABEL を使い、表示継続時間もこのフックの既定に従うことで
+ * `<span aria-live="polite">{copiedKey ? COPIED_LABEL : failedKey ? COPY_FAILED_LABEL : ""}</span>`
+ * のように実装する。全ツールで同一文言 COPIED_LABEL・COPY_FAILED_LABEL を使い、表示継続時間もこのフックの既定に従うことで
  * バラつきを防ぐ（N-1 要件）。
  */
 export function useCopyToClipboard(
@@ -72,6 +86,7 @@ export function useCopyToClipboard(
   const { resetDelay = DEFAULT_RESET_DELAY_MS } = options;
 
   const [copiedKey, setCopiedKey] = useState<CopiedKey>(null);
+  const [failedKey, setFailedKey] = useState<CopiedKey>(null);
 
   // AP-I11: タイマー ID を ref で保持し、unmount 時に clearTimeout する
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -87,33 +102,29 @@ export function useCopyToClipboard(
 
   const copy = useCallback(
     async (text: string, key?: string | number): Promise<void> => {
-      // SSR 安全: サーバーサイドや clipboard 未対応環境では何もしない
-      if (typeof navigator === "undefined" || !navigator.clipboard) {
+      // key 省略時は単一ターゲット用途として `true` を使う
+      const resolvedKey: CopiedKey = key !== undefined ? key : true;
+      // 前回のタイマーをキャンセルしてから、結果に応じて知らせを出し直す
+      if (timerRef.current !== null) {
+        clearTimeout(timerRef.current);
+        timerRef.current = null;
+      }
+      setFailedKey(null);
+
+      if (!(await copyText(text))) {
+        setCopiedKey(null);
+        setFailedKey(resolvedKey);
         return;
       }
 
-      try {
-        await navigator.clipboard.writeText(text);
-
-        // 前回のタイマーをキャンセルしてから新しいタイマーをセット
-        if (timerRef.current !== null) {
-          clearTimeout(timerRef.current);
-        }
-
-        // key 省略時は単一ターゲット用途として `true` をセット
-        const resolvedKey: CopiedKey = key !== undefined ? key : true;
-        setCopiedKey(resolvedKey);
-
-        timerRef.current = setTimeout(() => {
-          setCopiedKey(null);
-          timerRef.current = null;
-        }, resetDelay);
-      } catch {
-        // clipboard API 失敗時は安全に無視（既存挙動踏襲）
-      }
+      setCopiedKey(resolvedKey);
+      timerRef.current = setTimeout(() => {
+        setCopiedKey(null);
+        timerRef.current = null;
+      }, resetDelay);
     },
     [resetDelay],
   );
 
-  return { copy, copiedKey };
+  return { copy, copiedKey, failedKey };
 }
