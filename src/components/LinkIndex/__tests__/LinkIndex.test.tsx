@@ -45,6 +45,16 @@ describe("LinkIndex", () => {
     expect(links[0]).toHaveAttribute("href", "/blog/tag/Web開発");
   });
 
+  test("項目の数は語の最後の字と1つのまとまりにし、括弧の前で折らない", () => {
+    render(<LinkIndex label="タグ（3）" items={tags} />);
+    const link = screen.getByRole("link", { name: "設計パターン（20）" });
+    const joined = [...link.querySelectorAll("span")].find(
+      (span) => span.textContent === "ン（20）",
+    );
+    expect(joined).toBeDefined();
+    expect(joined?.previousSibling?.textContent).toBe("設計パター");
+  });
+
   test("数を持たない語は、語だけを言う", () => {
     render(
       <LinkIndex

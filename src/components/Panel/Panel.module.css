@@ -3,3 +3,8 @@
   border: var(--rule-w) solid var(--rule);
   padding: var(--box-padding);
 }
+
+/* 行の一覧を入れるボックスは上下の余白を持たず、太い枠を最初の行の上と最後の行の下の辺にする（§5・§7）。 */
+.panel.rows {
+  padding-block: 0;
+}

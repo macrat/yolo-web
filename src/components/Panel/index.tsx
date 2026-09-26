@@ -10,6 +10,11 @@ interface PanelOwnProps<T extends PanelTag = "section"> {
   children: React.ReactNode;
   /** 追加クラス */
   className?: string;
+  /**
+   * 行の一覧を入れるボックスか。上下の内側の余白を持たず、太い枠がそのまま最初の行の上と最後の行の下の辺になる
+   * （DESIGN.md §5・§7）。
+   */
+  rows?: boolean;
 }
 
 type PanelProps<T extends PanelTag = "section"> = PanelOwnProps<T> &
@@ -24,10 +29,13 @@ function Panel<T extends PanelTag = "section">({
   as,
   children,
   className,
+  rows = false,
   ...rest
 }: PanelProps<T>) {
   const Tag = (as ?? "section") as ElementType;
-  const combinedClassName = [styles.panel, className].filter(Boolean).join(" ");
+  const combinedClassName = [styles.panel, rows && styles.rows, className]
+    .filter(Boolean)
+    .join(" ");
 
   return (
     <Tag className={combinedClassName} {...rest}>

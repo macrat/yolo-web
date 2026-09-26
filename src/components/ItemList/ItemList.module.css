@@ -6,11 +6,6 @@
   padding: 0;
 }
 
-/* ボックスの太い枠を最初の行の上と最後の行の下の辺にし、hover の線をどの行でも上下の辺で閉じる（§7）。 */
-.box {
-  padding-block: 0;
-}
-
 /* ボックスを持たない一覧は、最初の行の上と最後の行の下にも細い罫線を引き、hover の線を上下の辺で閉じる（§7）。 */
 .ruled {
   border-block: var(--rule-w-hair) solid var(--rule-2);

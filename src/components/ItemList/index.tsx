@@ -166,7 +166,7 @@ export default function ItemList(props: ItemListProps): ReactElement {
   );
 
   return boxed ? (
-    <Panel as="div" className={styles.box}>
+    <Panel as="div" rows className={styles.box}>
       {list}
     </Panel>
   ) : (

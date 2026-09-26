@@ -43,8 +43,10 @@ export interface BrowseItem {
  * - swatch: 色見本の色を OKLCH にした値。channel が lightness なら明るさ（L）、hue なら色相。
  *   色相は円なので、同じ種別の項目の色相のうち最も大きくあいた所の後ろを起点に、そこから回った角度で比べる
  *   （0度をまたぐ紫系が、0度の前後で割れない）。種別を持たない項目どうしは、並べる全件で1つの起点を持つ。
- *   無彩色の色相には意味が無いので、achromaticKind の種別の項目は色相を持たないものとして扱う。色相を
- *   どちらも持たない項目どうしは次の値で比べるので、無彩色を明るさで並べるには lightness を後ろに続ける。
+ *   色相を持たないものとして扱う項目が2つある。achromaticKind の種別の項目と、彩度（OKLCH の C）が
+ *   achromaticChroma に満たない項目である。ほとんど色を持たない色の色相は、測れても目には見えず、色相で
+ *   並べると前後の色とつながらないからである。色相を持たない項目は、同じ種別の中で色相を持つ項目の後ろに回り、
+ *   その項目どうしは次の値で比べるので、明るさで並べるには lightness を後ろに続ける。
  */
 export type BrowseSortKey =
   | { by: "reading"; desc?: boolean }
@@ -60,6 +62,7 @@ export type BrowseSortKey =
       by: "swatch";
       channel: "hue" | "lightness";
       achromaticKind?: string;
+      achromaticChroma?: number;
       desc?: boolean;
     };
 
@@ -256,10 +259,12 @@ function sortValue(item: BrowseItem, key: BrowseSortKey): SortValue {
     }
     case "swatch": {
       if (item.swatch === undefined) return undefined;
-      if (key.channel === "lightness") return hexToOklch(item.swatch).l;
-      return item.kind !== undefined && item.kind === key.achromaticKind
-        ? undefined
-        : hexToOklch(item.swatch).h;
+      const { l, c, h } = hexToOklch(item.swatch);
+      if (key.channel === "lightness") return l;
+      const achromatic =
+        (item.kind !== undefined && item.kind === key.achromaticKind) ||
+        (key.achromaticChroma !== undefined && c < key.achromaticChroma);
+      return achromatic ? undefined : h;
     }
   }
 }

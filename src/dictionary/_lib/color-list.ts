@@ -40,6 +40,14 @@ const COLOR_CATEGORY_ORDER = Object.keys(
 /** 色相を持たない色み。この色みの中は明るさだけで並べる。 */
 const ACHROMATIC: ColorCategory = "achromatic";
 
+/**
+ * 有彩色の色みの中で、色相を持たないものとして扱う彩度（OKLCH の C）の上限。これに満たない色は、色みの中で
+ * 色相を持つ色の後ろに、明るい順で並ぶ。250色の C を並べると、無彩色の色みの色はどれも 0.0122 以下で、
+ * 有彩色の色みでは銀鼠（0.0131）と、目に緑みの灰と分かる利休鼠（0.0187）のあいだが最も大きくあく。その
+ * あいだに置くので、当たるのは胡粉・白鼠・黒橡・白練・溝鼠・銀鼠の6色である。
+ */
+const ACHROMATIC_CHROMA = 0.015;
+
 /** 範囲の伝統色。データの順のまま。 */
 export function colorListEntries(scope: ColorListScope): ColorEntry[] {
   return scope.type === "all"
@@ -148,6 +156,7 @@ const SORT_HUE_BY_CATEGORY: BrowseSort = {
       by: "swatch",
       channel: "hue",
       achromaticKind: COLOR_CATEGORY_LABELS[ACHROMATIC],
+      achromaticChroma: ACHROMATIC_CHROMA,
     },
     { by: "swatch", channel: "lightness", desc: true },
   ],
@@ -155,7 +164,10 @@ const SORT_HUE_BY_CATEGORY: BrowseSort = {
 const SORT_HUE: BrowseSort = {
   value: "hue",
   label: "色相順",
-  keys: [{ by: "swatch", channel: "hue" }],
+  keys: [
+    { by: "swatch", channel: "hue", achromaticChroma: ACHROMATIC_CHROMA },
+    { by: "swatch", channel: "lightness", desc: true },
+  ],
 };
 const SORT_LIGHT: BrowseSort = {
   value: "light",
@@ -168,6 +180,8 @@ const SORT_LIGHT: BrowseSort = {
  *
  * - トップ: 色み順（色みの並びの順で、同じ色みの中は色相の順、色相を持たない無彩色の中は明るい順）／明るい順
  * - 色み: 色相順／明るい順。色相を持たない無彩色は明るい順だけ
+ *
+ * 色み順と色相順では、ほとんど色を持たない色（ACHROMATIC_CHROMA）を、その色みの最後に明るい順で置く。
  */
 export function colorListSorts(scope: ColorListScope): BrowseSort[] {
   if (scope.type === "all") return [SORT_HUE_BY_CATEGORY, SORT_LIGHT];

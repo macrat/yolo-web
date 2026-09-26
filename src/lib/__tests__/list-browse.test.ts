@@ -228,6 +228,37 @@ describe("sortBrowseItems", () => {
     ).toEqual(["白", "黄", "赤", "灰", "青", "黒"]);
   });
 
+  test("彩度が achromaticChroma に満たない色は、同じ種別の中で色相を持つ色の後ろに明るい順で並ぶ", () => {
+    // OKLCH の C: #fffffb は 0.005、#4f4f48 は 0.011、#707c74 は 0.019。
+    const colors = [
+      item("溝鼠", { kind: "黄系", swatch: "#4f4f48" }),
+      item("黄", { kind: "黄系", swatch: "#ffff00" }),
+      item("胡粉", { kind: "黄系", swatch: "#fffffb" }),
+      item("山吹", { kind: "黄系", swatch: "#f8b500" }),
+      item("利休鼠", { kind: "緑系", swatch: "#707c74" }),
+      item("緑", { kind: "緑系", swatch: "#00ff00" }),
+    ];
+    const keys: BrowseSort["keys"] = [
+      { by: "kind", order: ["黄系", "緑系"] },
+      { by: "swatch", channel: "hue", achromaticChroma: 0.015 },
+      { by: "swatch", channel: "lightness", desc: true },
+    ];
+    expect(
+      sortBrowseItems(colors, { value: "hue", label: "色み順", keys }).map(
+        (entry) => entry.name,
+      ),
+    ).toEqual(["山吹", "黄", "胡粉", "溝鼠", "緑", "利休鼠"]);
+
+    // 閾値を渡さなければ、ほとんど色を持たない色も色相で並ぶ。
+    expect(
+      sortBrowseItems(colors, {
+        value: "hue",
+        label: "色み順",
+        keys: [keys[0], { by: "swatch", channel: "hue" }],
+      }).map((entry) => entry.name),
+    ).toEqual(["山吹", "胡粉", "溝鼠", "黄", "緑", "利休鼠"]);
+  });
+
   test("色相は、種別ごとに色相の最も大きくあいた所の後ろから数え、0度をまたぐ種別を割らない", () => {
     const hueKeys: BrowseSort["keys"] = [
       { by: "kind", order: ["赤系", "紫系"] },

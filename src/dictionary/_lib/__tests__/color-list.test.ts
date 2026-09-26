@@ -42,6 +42,23 @@ describe("colorListItems", () => {
     expect(achromatic).toEqual([...achromatic].sort((a, b) => b - a));
   });
 
+  test("色み順と色相順では、ほとんど色を持たない色が、その色みの最後に明るい順で並ぶ", () => {
+    const all = colorListItems({ type: "all" });
+    const last = (kind: string, count: number) =>
+      all
+        .filter((item) => item.kind === kind)
+        .map((item) => item.name)
+        .slice(-count);
+    expect(last("黄系", 3)).toEqual(["胡粉", "白練", "溝鼠"]);
+    expect(last("緑系", 1)).toEqual(["白鼠"]);
+    expect(last("青系", 2)).toEqual(["銀鼠", "黒橡"]);
+    expect(
+      colorListItems({ type: "category", category: "yellow" })
+        .map((item) => item.name)
+        .slice(-3),
+    ).toEqual(["胡粉", "白練", "溝鼠"]);
+  });
+
   test("紫系は、0度をまたぐ色相でも一続きに並ぶ", () => {
     const hues = colorListItems({ type: "category", category: "purple" }).map(
       (item) => hexToOklch(item.swatch ?? "").h,

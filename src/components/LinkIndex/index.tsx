@@ -45,6 +45,24 @@ export type LinkIndexProps = LinkIndexContent & {
 };
 
 /**
+ * 語の字。項目の数を添えるとき（「対立・闘い（26）」）は、括弧の前で折らないよう、数を語の最後の字と折れない
+ * まとまりにする。リンクは flex の箱なので、字を1つの span に入れて1つの行の箱として折り返させる。
+ */
+function ItemLabel({ label, count }: Pick<LinkIndexItem, "label" | "count">) {
+  if (count === undefined) return label;
+  const chars = Array.from(label);
+  const lastChar = chars.pop() ?? "";
+  return (
+    <span>
+      {chars.join("")}
+      <span className={styles.joined}>
+        {lastChar}（{count}）
+      </span>
+    </span>
+  );
+}
+
+/**
  * 索引（DESIGN.md §7）。語を行にせず、横に並べて折り返す。
  *
  * 語は縁の見えないコントロールで、押せる範囲を接して並べる（§5）。並びの値が語に見えないときは、
@@ -72,9 +90,7 @@ export default function LinkIndex(props: LinkIndexProps): ReactElement {
               aria-current={current ? "page" : undefined}
               data-text-box="inline"
             >
-              {item.count === undefined
-                ? item.label
-                : `${item.label}（${item.count}）`}
+              <ItemLabel label={item.label} count={item.count} />
             </Link>
           </li>
         );
