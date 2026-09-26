@@ -41,6 +41,10 @@ const PLACEHOLDER_BODY: FortuneBody = {
   luckyAction: "運勢を占っています。運勢を占っています",
 };
 
+/** JavaScript が動かない来訪者に、運勢が出ない理由と見る方法を言う。 */
+const NOSCRIPT_MESSAGE =
+  "今日の運勢はブラウザの JavaScript で占います。JavaScript を有効にすると表示されます。";
+
 /** "YYYY-MM-DD" を、結果が何の日のものかを言う補助情報の行にする。 */
 function formatCaption(dateStr: string): string {
   const [year, month, day] = dateStr.split("-");
@@ -113,6 +117,9 @@ export default function DailyFortuneCard({
     return (
       <>
         <ResultBox caption="今日のユーモア運勢" heading={pendingHeading}>
+          <noscript>
+            <p className={styles.noscript}>{NOSCRIPT_MESSAGE}</p>
+          </noscript>
           <div className={styles.pending} aria-hidden="true">
             <FortuneDetails fortune={PLACEHOLDER_BODY} />
           </div>

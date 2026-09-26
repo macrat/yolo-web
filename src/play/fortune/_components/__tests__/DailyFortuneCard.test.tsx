@@ -59,6 +59,9 @@ describe("DailyFortuneCard", () => {
     );
     const text = html.replace(/<[^>]*>/g, "");
     expect(text).toContain("占っています……");
+    expect(html).toMatch(
+      /<noscript>.*JavaScript を有効にすると表示されます。.*<\/noscript>/,
+    );
     expect(text).not.toContain("テスト運勢タイトル");
     expect(text).not.toContain("運勢説明文");
   });
