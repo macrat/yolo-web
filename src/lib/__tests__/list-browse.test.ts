@@ -13,8 +13,8 @@ import {
   readBrowseState,
   slicePage,
   sortBrowseItems,
-  statusPhrases,
   statusText,
+  statusWords,
   type BrowseItem,
   type BrowseSort,
   type BrowseSpec,
@@ -596,43 +596,59 @@ describe("statusText", () => {
     ).toBe("全101語のうち101語目");
   });
 
-  test("数と単位は1語で、件数の句と範囲の句に分け、並び順の語は最後の句に続ける", () => {
+  test("数と単位を1語にし、範囲は「〜」の後ろで分ける", () => {
     expect(
-      statusPhrases({
+      statusWords({
         total: 1110,
         matched: 1110,
         filtering: false,
         unit: "字",
         range: { start: 1101, end: 1110 },
+      }),
+    ).toEqual(["全1,110字", "のうち", "1,101〜", "1,110字目"]);
+    expect(
+      statusWords({ total: 86, matched: 12, filtering: true, unit: "件" }),
+    ).toEqual(["12件", "（全86件）"]);
+  });
+
+  test("並び順は「・」を前の語に付け、文節ごとの語に分ける", () => {
+    expect(
+      statusWords({
+        total: 10,
+        matched: 10,
+        filtering: false,
+        unit: "色",
+        sortLabel: "明るい順",
+      }),
+    ).toEqual(["全10色・", "明るい順"]);
+    expect(
+      statusWords({
+        total: 6,
+        matched: 6,
+        filtering: false,
+        unit: "字",
+        sortLabel: "読みの五十音順",
+      }),
+    ).toEqual(["全6字・", "読みの", "五十音順"]);
+    expect(
+      statusWords({
+        total: 118,
+        matched: 118,
+        filtering: false,
+        unit: "字",
+        range: { start: 101, end: 118 },
         sortLabel: "画数順",
       }),
-    ).toEqual([
-      [
-        { text: "全1,110字", keep: true },
-        { text: "のうち", keep: true },
-      ],
-      [
-        { text: "1,101〜", keep: true },
-        { text: "1,110字目", keep: true },
-        { text: "・画数順", keep: false },
-      ],
-    ]);
+    ).toEqual(["全118字", "のうち", "101〜", "118字目・", "画数順"]);
+  });
+
+  test("0件の文は文節ごとの語に分け、全体の件数を1語で続ける", () => {
     expect(
-      statusPhrases({ total: 86, matched: 12, filtering: true, unit: "件" }),
-    ).toEqual([
-      [
-        { text: "12件", keep: true },
-        { text: "（全86件）", keep: true },
-      ],
-    ]);
+      statusWords({ total: 2136, matched: 0, filtering: true, unit: "字" }),
+    ).toEqual(["条件に合う", "字は", "ありません", "（全2,136字）"]);
     expect(
-      statusPhrases({ total: 86, matched: 0, filtering: true, unit: "件" }),
-    ).toEqual([
-      [
-        { text: "条件に合うものはありません", keep: false },
-        { text: "（全86件）", keep: true },
-      ],
-    ]);
+      statusWords({ total: 86, matched: 0, filtering: true, unit: "件" }),
+    ).toEqual(["条件に合う", "ものは", "ありません", "（全86件）"]);
   });
 
   test("該当が0件のときは、条件に合うものが無いことと全体の件数を言う", () => {

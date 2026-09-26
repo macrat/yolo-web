@@ -539,28 +539,19 @@ function unitNoun(unit: BrowseUnit): string {
   return unit === "件" ? "もの" : unit;
 }
 
-/** 件数の行の語。keep の語は途中で折らない。 */
-export interface StatusWord {
-  text: string;
-  keep: boolean;
-}
-
-/** 件数の行の句。1行に収まるなら折らず、収まらないときは語の切れ目で折る。 */
-export type StatusPhrase = StatusWord[];
-
-function kept(text: string): StatusWord {
-  return { text, keep: true };
+/** 並び順の語を文節に分ける。どの並び順も「○○順」か「○○の○○順」の形なので、「の」の後ろで切る。 */
+function sortLabelWords(sortLabel: string): string[] {
+  return sortLabel.split(/(?<=の)/);
 }
 
 /**
- * 件数の行の文（§7）を句と語に分けたもの。全体の件数をいつも言い、絞っている間は該当の件数も言う。ページ送りが
- * あるときは表示している範囲を、並び順の組が無いときはその並び順を後ろに添える。
+ * 件数の行の文（§7）を、途中で折らない語に分けたもの。全体の件数をいつも言い、絞っている間は該当の件数も言う。
+ * ページ送りがあるときは表示している範囲を、並び順の組が無いときはその並び順を後ろに添える。
  *
- * 数と単位（「1,110字目」）は1語で、途中で折らない。件数の句（「全1,110字のうち」）と範囲の句
- * （「1,101〜1,110字目」）は、収まるならそれぞれ1行に置き、範囲の句が1行に収まらないときだけ「〜」の後ろで折る。
- * 並び順の語は句の最後に続け、語の中は通常の禁則処理で折る。
+ * 行は語の切れ目でだけ折る。数と単位（「1,110字目」）は1語、並び順と0件の文は文節ごとの語
+ * （「読みの」「五十音順」、「条件に合う」「字は」「ありません」）にする。行頭に置かない「・」は前の語に付ける。
  */
-export function statusPhrases(options: {
+export function statusWords(options: {
   total: number;
   matched: number;
   filtering: boolean;
@@ -569,44 +560,28 @@ export function statusPhrases(options: {
   range?: { start: number; end: number };
   /** 並び順の組が無いときの、既定の並び順の語。 */
   sortLabel?: string;
-}): StatusPhrase[] {
+}): string[] {
   const { total, matched, filtering, unit, range, sortLabel } = options;
-  const all = kept(`全${count(total, unit)}`);
+  const all = `全${count(total, unit)}`;
   if (filtering && matched === 0) {
-    return [
-      [
-        { text: `条件に合う${unitNoun(unit)}はありません`, keep: false },
-        kept(`（${all.text}）`),
-      ],
-    ];
+    return ["条件に合う", `${unitNoun(unit)}は`, "ありません", `（${all}）`];
   }
-  const head: StatusPhrase = filtering
-    ? [kept(count(matched, unit)), kept(`（${all.text}）`)]
-    : [all];
-  const phrases: StatusPhrase[] = [head];
+  const words = filtering ? [count(matched, unit), `（${all}）`] : [all];
   if (range) {
-    head.push(kept("のうち"));
-    phrases.push(
-      range.start === range.end
-        ? [kept(`${count(range.end, unit)}目`)]
-        : [
-            kept(`${numberFormat.format(range.start)}〜`),
-            kept(`${count(range.end, unit)}目`),
-          ],
-    );
+    words.push("のうち");
+    if (range.start !== range.end) {
+      words.push(`${numberFormat.format(range.start)}〜`);
+    }
+    words.push(`${count(range.end, unit)}目`);
   }
   if (sortLabel) {
-    phrases[phrases.length - 1].push({ text: `・${sortLabel}`, keep: false });
+    words[words.length - 1] += "・";
+    words.push(...sortLabelWords(sortLabel));
   }
-  return phrases;
+  return words;
 }
 
 /** 件数の行の文を1つの文にしたもの。 */
-export function statusText(
-  options: Parameters<typeof statusPhrases>[0],
-): string {
-  return statusPhrases(options)
-    .flat()
-    .map((word) => word.text)
-    .join("");
+export function statusText(options: Parameters<typeof statusWords>[0]): string {
+  return statusWords(options).join("");
 }

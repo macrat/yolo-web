@@ -17,12 +17,7 @@
   scroll-margin-block-start: var(--space-16);
 }
 
-/* 句は、行の残りに収まらなければ次の行へまとめて送り、1行に収まらないときだけ中で折る。 */
-.phrase {
-  display: inline-block;
-}
-
-/* 数と単位のような1語は、途中で折らない。 */
+/* 語（数と単位・文節）は途中で折らず、行は語の切れ目でだけ折る。 */
 .word {
   white-space: nowrap;
 }

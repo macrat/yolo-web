@@ -1,6 +1,6 @@
 import type { Ref } from "react";
 import Button from "@/components/Button";
-import { statusPhrases, type BrowseUnit } from "@/lib/list-browse";
+import { statusWords, type BrowseUnit } from "@/lib/list-browse";
 import styles from "./ListStatus.module.css";
 
 interface ListStatusProps {
@@ -34,8 +34,8 @@ interface ListStatusProps {
  * 途中の件数まで読み上げの予約に積むため。見えている行は tabIndex={-1} で、ページを送ったあとに一覧の頭として
  * フォーカスを受ける。行は縁の見えないコントロールと同じ字の箱（§5、data-text-box="inline"）を持ち、
  * リングをその内側に出す（§6）。
- * 見えている行は句と語に分けて組み（statusPhrases）、狭い画面や大きい文字でも、数と単位のあいだで折らず、
- * 件数と範囲をそれぞれまとめて並べる。
+ * 見えている行は途中で折らない語に分けて組み（statusWords）、狭い画面や大きい文字でも語の切れ目でだけ折る。
+ * 語はインラインのまま並べ、読み上げの木で行が1つの文のまま読まれるようにする。
  * 「絞り込みを外す」のボタンはライブリージョンの外に置き、件数が変わるたびにボタンの名前まで読み上げさせない。
  */
 export default function ListStatus({
@@ -53,24 +53,16 @@ export default function ListStatus({
   return (
     <div className={styles.status}>
       <p ref={ref} tabIndex={-1} className={styles.text} data-text-box="inline">
-        {statusPhrases({
+        {statusWords({
           total,
           matched,
           filtering,
           unit,
           range,
           sortLabel,
-        }).map((phrase, i) => (
-          <span key={i} className={styles.phrase}>
-            {phrase.map((word, j) =>
-              word.keep ? (
-                <span key={j} className={styles.word}>
-                  {word.text}
-                </span>
-              ) : (
-                word.text
-              ),
-            )}
+        }).map((word, i) => (
+          <span key={i} className={styles.word}>
+            {word}
           </span>
         ))}
       </p>
