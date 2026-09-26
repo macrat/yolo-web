@@ -1,4 +1,4 @@
-import { useId } from "react";
+import { Fragment, useId } from "react";
 import Accordion from "@/components/Accordion";
 import LinkIndex, {
   type LinkIndexGroup,
@@ -45,6 +45,42 @@ function withCount(name: string, count: number): string {
   return `${name}（${count}）`;
 }
 
+const wordSegmenter = new Intl.Segmenter("ja", { granularity: "word" });
+
+/**
+ * ラベルと索引の見出しの名前。語の切れ目でだけ折る（DESIGN.md §4）。語の数を添えるとき（「部首（198）」）は、
+ * 括弧の前で折らないよう、数を名前の最後の字と折れないまとまりにする。名前の最後の語と数が1行に収まらない
+ * ときだけ、本文から継ぐ overflow-wrap がその語の中で折る。
+ */
+function IndexName({ name, count }: { name: string; count?: number }) {
+  const words = Array.from(
+    wordSegmenter.segment(name),
+    ({ segment }) => segment,
+  );
+  const lastWordChars =
+    count === undefined ? [] : Array.from(words.pop() ?? "");
+  const lastChar = lastWordChars.pop() ?? "";
+  return (
+    <span className={styles.name}>
+      {words.map((word, i) => (
+        <Fragment key={i}>
+          {i > 0 ? <wbr /> : null}
+          {word}
+        </Fragment>
+      ))}
+      {count === undefined ? null : (
+        <>
+          {words.length > 0 ? <wbr /> : null}
+          {lastWordChars.join("")}
+          <span className={styles.joined}>
+            {lastChar}（{count}）
+          </span>
+        </>
+      )}
+    </span>
+  );
+}
+
 /**
  * 一覧の上に置く、分類ごとの一覧のページへの入口（DESIGN.md §7 索引）。閉じたアコーディオンに索引を入れる。
  * 閉じていても索引のリンクは HTML にあるので、検索エンジンも分類のページを辿れる。
@@ -65,7 +101,7 @@ export default function IndexAccordion(props: IndexAccordionProps) {
       <Accordion
         summary={
           <span id={labelId}>
-            {withCount(props.summary, props.index.length)}
+            <IndexName name={props.summary} count={props.index.length} />
           </span>
         }
       >
@@ -81,15 +117,13 @@ export default function IndexAccordion(props: IndexAccordionProps) {
   }
 
   const { indexes, groupedIndex } = props;
-  const groupedHeading =
-    groupedIndex &&
-    withCount(
-      groupedIndex.name,
-      groupedIndex.groups.reduce((sum, group) => sum + group.items.length, 0),
-    );
+  const groupedCount = groupedIndex?.groups.reduce(
+    (sum, group) => sum + group.items.length,
+    0,
+  );
 
   return (
-    <Accordion summary={props.summary}>
+    <Accordion summary={<IndexName name={props.summary} />}>
       <div
         className={
           groupedIndex?.singleCharacters
@@ -99,15 +133,14 @@ export default function IndexAccordion(props: IndexAccordionProps) {
       >
         {indexes.map((index, i) => {
           const headingId = `${idPrefix}-${i}`;
-          const heading = withCount(index.name, index.items.length);
           return (
             <div key={index.name} className={styles.part}>
               <h2
                 id={headingId}
                 className={styles.heading}
-                {...headingFontAttr(heading)}
+                {...headingFontAttr(withCount(index.name, index.items.length))}
               >
-                {heading}
+                <IndexName name={index.name} count={index.items.length} />
               </h2>
               <LinkIndex
                 labelledBy={headingId}
@@ -117,10 +150,13 @@ export default function IndexAccordion(props: IndexAccordionProps) {
             </div>
           );
         })}
-        {groupedIndex && groupedHeading ? (
+        {groupedIndex && groupedCount !== undefined ? (
           <div className={styles.part}>
-            <h2 className={styles.heading} {...headingFontAttr(groupedHeading)}>
-              {groupedHeading}
+            <h2
+              className={styles.heading}
+              {...headingFontAttr(withCount(groupedIndex.name, groupedCount))}
+            >
+              <IndexName name={groupedIndex.name} count={groupedCount} />
             </h2>
             <LinkIndex
               singleCharacters={groupedIndex.singleCharacters}

@@ -84,4 +84,21 @@ describe("IndexAccordion", () => {
       screen.getByRole("list", { name: "4画", hidden: true }),
     ).toBeInTheDocument();
   });
+
+  test("語の数は名前の最後の字と1つのまとまりにし、名前はほかの語の切れ目でだけ折る", () => {
+    const { container } = render(
+      <IndexAccordion
+        summary="カテゴリから探す"
+        index={categories}
+        currentHref="/dictionary/yoji"
+      />,
+    );
+    const summary = container.querySelector("summary");
+    expect(summary?.querySelectorAll("wbr")).toHaveLength(2);
+    const joined = [...(summary?.querySelectorAll("span") ?? [])].find(
+      (span) => span.textContent === "す（2）",
+    );
+    expect(joined).toBeDefined();
+    expect(joined?.previousSibling?.textContent).toBe("探");
+  });
 });

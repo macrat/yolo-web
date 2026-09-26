@@ -1,9 +1,7 @@
-import Breadcrumb from "@/components/Breadcrumb";
+import type { BreadcrumbItem } from "@/components/Breadcrumb";
 import BrowsableList from "@/components/BrowsableList";
 import IndexAccordion from "@/components/IndexAccordion";
-import Section from "@/components/Section";
-import type { BreadcrumbItem } from "@/lib/seo";
-import { headingFontAttr } from "@/lib/zen-antique-charset";
+import ListPage from "@/components/ListPage";
 import {
   KANJI_LIST_PER_PAGE,
   kanjiIndexEntries,
@@ -14,7 +12,6 @@ import {
   kanjiListTitle,
   type KanjiListScope,
 } from "@/dictionary/_lib/kanji-list";
-import styles from "./KanjiListView.module.css";
 
 interface KanjiListViewProps {
   scope: KanjiListScope;
@@ -45,46 +42,41 @@ export default function KanjiListView({ scope, page }: KanjiListViewProps) {
   ];
 
   return (
-    <Section>
-      <div className={styles.view}>
-        <Breadcrumb items={trail} />
-        <div>
-          <h1 className={styles.title} {...headingFontAttr(heading)}>
-            {heading}
-          </h1>
-          {scope.type === "all" ? (
-            <p className={styles.description}>
-              常用漢字の読み方・意味・部首・画数・使用例を、1字ずつまとめています。
-            </p>
-          ) : null}
-        </div>
-        <IndexAccordion
-          summary="学年・画数・部首から探す"
-          indexes={[
-            { name: "学年", items: index.grades },
-            { name: "画数", items: index.strokes },
-          ]}
-          groupedIndex={{
-            name: "部首",
-            groups: index.radicals,
-            singleCharacters: true,
-          }}
-          currentHref={basePath}
-        />
-        <h2 className="visually-hidden">漢字の一覧</h2>
-        <BrowsableList
-          items={kanjiListItems(scope)}
-          hrefPrefix="/dictionary/kanji/"
-          label="漢字の一覧"
-          unit="字"
-          searchLabel="字・読み・熟語で探す"
-          sorts={kanjiListSorts(scope)}
-          perPage={KANJI_LIST_PER_PAGE}
-          basePath={basePath}
-          page={page}
-          pageTitle={kanjiListTitle(scope)}
-        />
-      </div>
-    </Section>
+    <ListPage
+      trail={trail}
+      heading={heading}
+      description={
+        scope.type === "all"
+          ? "常用漢字の読み方・部首・画数・熟語・英語の意味を、1字ずつまとめています。"
+          : undefined
+      }
+    >
+      <IndexAccordion
+        summary="学年・画数・部首から探す"
+        indexes={[
+          { name: "学年", items: index.grades },
+          { name: "画数", items: index.strokes },
+        ]}
+        groupedIndex={{
+          name: "部首",
+          groups: index.radicals,
+          singleCharacters: true,
+        }}
+        currentHref={basePath}
+      />
+      <h2 className="visually-hidden">漢字の一覧</h2>
+      <BrowsableList
+        items={kanjiListItems(scope)}
+        hrefPrefix="/dictionary/kanji/"
+        label="漢字の一覧"
+        unit="字"
+        searchLabel="字・読み・熟語で探す"
+        sorts={kanjiListSorts(scope)}
+        perPage={KANJI_LIST_PER_PAGE}
+        basePath={basePath}
+        page={page}
+        pageTitle={kanjiListTitle(scope)}
+      />
+    </ListPage>
   );
 }

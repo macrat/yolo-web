@@ -1,10 +1,7 @@
-import Breadcrumb from "@/components/Breadcrumb";
+import type { BreadcrumbItem } from "@/components/Breadcrumb";
 import BrowsableList from "@/components/BrowsableList";
 import IndexAccordion from "@/components/IndexAccordion";
-import Section from "@/components/Section";
-import { Fragment } from "react";
-import type { BreadcrumbItem } from "@/lib/seo";
-import { headingFontAttr } from "@/lib/zen-antique-charset";
+import ListPage from "@/components/ListPage";
 import {
   BLOG_LIST_PER_PAGE,
   BLOG_SORTS,
@@ -17,7 +14,6 @@ import {
   blogListTitle,
   type BlogListScope,
 } from "@/blog/_lib/blog-list";
-import styles from "./BlogListView.module.css";
 
 interface BlogListViewProps {
   scope: BlogListScope;
@@ -37,59 +33,45 @@ interface BlogListViewProps {
  */
 export default function BlogListView({ scope, page }: BlogListViewProps) {
   const heading = blogListHeading(scope);
-  const headingPhrases = blogListHeadingPhrases(scope);
   const basePath = blogListBasePath(scope);
   const index = blogIndexEntries();
-  const trail: BreadcrumbItem[] = [
-    { label: "ホーム", href: "/" },
-    { label: "ブログ", href: "/blog" },
-    { label: heading },
-  ];
+  const trail: BreadcrumbItem[] | undefined =
+    scope.type === "all"
+      ? undefined
+      : [
+          { label: "ホーム", href: "/" },
+          { label: "ブログ", href: "/blog" },
+          { label: heading },
+        ];
 
   return (
-    <Section>
-      <div className={styles.view}>
-        {scope.type === "all" ? null : <Breadcrumb items={trail} />}
-        <div>
-          <h1
-            className={
-              headingPhrases.length > 1
-                ? `${styles.title} ${styles.phrased}`
-                : styles.title
-            }
-            {...headingFontAttr(heading)}
-          >
-            {headingPhrases.map((phrase, i) => (
-              <Fragment key={phrase}>
-                {i > 0 ? <wbr /> : null}
-                {phrase}
-              </Fragment>
-            ))}
-          </h1>
-          <p className={styles.description}>{blogListDescription(scope)}</p>
-        </div>
-        <IndexAccordion
-          summary="分類・タグから探す"
-          indexes={[
-            { name: "分類", items: index.categories },
-            { name: "タグ", items: index.tags },
-          ]}
-          currentHref={basePath}
-        />
-        <h2 className="visually-hidden">記事の一覧</h2>
-        <BrowsableList
-          items={blogListItems(scope)}
-          hrefPrefix="/blog/"
-          label="記事の一覧"
-          unit="件"
-          searchLabel="題名・説明・分類・タグ・連載名で探す"
-          sorts={BLOG_SORTS}
-          perPage={BLOG_LIST_PER_PAGE}
-          basePath={basePath}
-          page={page}
-          pageTitle={blogListTitle(scope)}
-        />
-      </div>
-    </Section>
+    <ListPage
+      trail={trail}
+      heading={heading}
+      headingPhrases={blogListHeadingPhrases(scope)}
+      description={blogListDescription(scope)}
+    >
+      <IndexAccordion
+        summary="分類・タグから探す"
+        indexes={[
+          { name: "分類", items: index.categories },
+          { name: "タグ", items: index.tags },
+        ]}
+        currentHref={basePath}
+      />
+      <h2 className="visually-hidden">記事の一覧</h2>
+      <BrowsableList
+        items={blogListItems(scope)}
+        hrefPrefix="/blog/"
+        label="記事の一覧"
+        unit="件"
+        searchLabel="題名・説明・分類・タグ・連載名で探す"
+        sorts={BLOG_SORTS}
+        perPage={BLOG_LIST_PER_PAGE}
+        basePath={basePath}
+        page={page}
+        pageTitle={blogListTitle(scope)}
+      />
+    </ListPage>
   );
 }

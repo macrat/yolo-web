@@ -43,7 +43,7 @@ export const KANJI_LIST_PER_PAGE = 100;
 const DICTIONARY_TITLE = "漢字辞典";
 
 const DICTIONARY_DESCRIPTION =
-  "常用漢字2,136字を、学年・部首・画数から引けるオンライン漢字辞典。各漢字の読み方・意味・部首・画数と使用例をまとめています。";
+  "常用漢字2,136字を、学年・部首・画数から引けるオンライン漢字辞典。各漢字の読み方・部首・画数と、熟語の使用例・英語の意味をまとめています。";
 
 /** 範囲の漢字。データの順（学年・画数の順）のまま。 */
 export function kanjiListEntries(scope: KanjiListScope): KanjiEntry[] {
@@ -100,11 +100,11 @@ export function kanjiListDescription(scope: KanjiListScope): string {
     case "all":
       return DICTIONARY_DESCRIPTION;
     case "grade":
-      return `${KANJI_GRADE_LABELS[scope.grade]}で習う常用漢字の一覧。字ごとの音読み・訓読みと画数が並び、熟語や意味は字のページで確かめられます。`;
+      return `${KANJI_GRADE_LABELS[scope.grade]}で習う常用漢字の一覧。字ごとの音読み・訓読みと画数が並び、熟語の使用例と英語の意味は字のページで確かめられます。`;
     case "radical":
-      return `部首「${scope.radical}」を持つ常用漢字の一覧。字ごとの音読み・訓読みと画数が並び、熟語や意味は字のページで確かめられます。`;
+      return `部首「${scope.radical}」を持つ常用漢字の一覧。字ごとの音読み・訓読みと画数が並び、熟語の使用例と英語の意味は字のページで確かめられます。`;
     case "stroke":
-      return `${scope.strokeCount}画の常用漢字の一覧。字ごとの音読み・訓読みが並び、熟語や意味は字のページで確かめられます。`;
+      return `${scope.strokeCount}画の常用漢字の一覧。字ごとの音読み・訓読みが並び、熟語の使用例と英語の意味は字のページで確かめられます。`;
   }
 }
 

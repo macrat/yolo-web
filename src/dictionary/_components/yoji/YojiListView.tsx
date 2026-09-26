@@ -1,9 +1,7 @@
-import Breadcrumb from "@/components/Breadcrumb";
+import type { BreadcrumbItem } from "@/components/Breadcrumb";
 import BrowsableList from "@/components/BrowsableList";
 import IndexAccordion from "@/components/IndexAccordion";
-import Section from "@/components/Section";
-import type { BreadcrumbItem } from "@/lib/seo";
-import { headingFontAttr } from "@/lib/zen-antique-charset";
+import ListPage from "@/components/ListPage";
 import {
   YOJI_LIST_PER_PAGE,
   YOJI_LIST_SORTS,
@@ -14,7 +12,6 @@ import {
   yojiListTitle,
   type YojiListScope,
 } from "@/dictionary/_lib/yoji-list";
-import styles from "./YojiListView.module.css";
 
 interface YojiListViewProps {
   scope: YojiListScope;
@@ -44,37 +41,32 @@ export default function YojiListView({ scope, page }: YojiListViewProps) {
   ];
 
   return (
-    <Section>
-      <div className={styles.view}>
-        <Breadcrumb items={trail} />
-        <div>
-          <h1 className={styles.title} {...headingFontAttr(heading)}>
-            {heading}
-          </h1>
-          {scope.type === "all" ? (
-            <p className={styles.description}>
-              読み方・意味・由来と例文を引けます。
-            </p>
-          ) : null}
-        </div>
-        <IndexAccordion
-          summary="カテゴリから探す"
-          index={yojiIndexEntries()}
-          currentHref={basePath}
-        />
-        <BrowsableList
-          items={yojiListItems(scope)}
-          hrefPrefix="/dictionary/yoji/"
-          label="四字熟語の一覧"
-          unit="語"
-          searchLabel="語・読み・意味・例文で探す"
-          sorts={YOJI_LIST_SORTS}
-          perPage={YOJI_LIST_PER_PAGE}
-          basePath={basePath}
-          page={page}
-          pageTitle={yojiListTitle(scope)}
-        />
-      </div>
-    </Section>
+    <ListPage
+      trail={trail}
+      heading={heading}
+      description={
+        scope.type === "all"
+          ? "読み方・意味・由来と例文を引けます。"
+          : undefined
+      }
+    >
+      <IndexAccordion
+        summary="カテゴリから探す"
+        index={yojiIndexEntries()}
+        currentHref={basePath}
+      />
+      <BrowsableList
+        items={yojiListItems(scope)}
+        hrefPrefix="/dictionary/yoji/"
+        label="四字熟語の一覧"
+        unit="語"
+        searchLabel="語・読み・意味・例文で探す"
+        sorts={YOJI_LIST_SORTS}
+        perPage={YOJI_LIST_PER_PAGE}
+        basePath={basePath}
+        page={page}
+        pageTitle={yojiListTitle(scope)}
+      />
+    </ListPage>
   );
 }

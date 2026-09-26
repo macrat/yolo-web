@@ -244,25 +244,17 @@ describe("動的metadataページのSEO検証", () => {
   });
 
   test("/tools/page/[page]: SEO必須項目が存在する", async () => {
-    const { toolListPageParams } = await import("@/tools/_lib/tool-list");
-    if (toolListPageParams().length === 0) return; // 2ページ目がなければスキップ
-
-    const { generateMetadata } = await import("@/app/tools/page/[page]/page");
-    const meta = await generateMetadata({
-      params: Promise.resolve({ page: "2" }),
-    });
+    const { toolListMetadata } = await import("@/tools/_lib/tool-list");
+    const meta = toolListMetadata(2);
     assertSeoMetadata(meta, "/tools/page/2", "/tools/page/[page]");
+    expect(meta.title).toBe(`ツール（2ページ目） | ${SITE_NAME}`);
   });
 
   test("/play/page/[page]: SEO必須項目が存在する", async () => {
-    const { playListPageParams } = await import("@/play/play-list");
-    if (playListPageParams().length === 0) return; // 2ページ目がなければスキップ
-
-    const { generateMetadata } = await import("@/app/play/page/[page]/page");
-    const meta = await generateMetadata({
-      params: Promise.resolve({ page: "2" }),
-    });
+    const { playListMetadata } = await import("@/play/play-list");
+    const meta = playListMetadata(2);
     assertSeoMetadata(meta, "/play/page/2", "/play/page/[page]");
+    expect(meta.title).toBe(`遊び（2ページ目） | ${SITE_NAME}`);
   });
 
   test("/dictionary/kanji/grade/[grade]: SEO必須項目が存在する", async () => {

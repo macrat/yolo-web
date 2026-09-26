@@ -78,7 +78,7 @@ export function colorListTitle(scope: ColorListScope): string {
 /** metadata の説明。 */
 export function colorListDescription(scope: ColorListScope): string {
   return scope.type === "all"
-    ? `日本の伝統色${getAllColors().length}色の一覧。色名・ローマ字・カラーコード（HEX/RGB/HSL）をカテゴリ別に検索できます。`
+    ? `日本の伝統色${getAllColors().length}色の一覧。色見本・色名・ローマ字・カラーコードを並べ、色みや明るさの順で見比べられます。`
     : `日本の伝統色「${COLOR_CATEGORY_LABELS[scope.category]}」カテゴリの色一覧。色見本とカラーコードを見比べられます。`;
 }
 

@@ -1,7 +1,5 @@
-import Breadcrumb from "@/components/Breadcrumb";
 import BrowsableList from "@/components/BrowsableList";
-import Section from "@/components/Section";
-import { headingFontAttr } from "@/lib/zen-antique-charset";
+import ListPage from "@/components/ListPage";
 import {
   TOOL_KINDS,
   TOOL_LIST_BASE_PATH,
@@ -11,7 +9,6 @@ import {
   TOOL_SORTS,
   toolListItems,
 } from "@/tools/_lib/tool-list";
-import styles from "./ToolListView.module.css";
 
 interface ToolListViewProps {
   /** パスが示すページ。 */
@@ -24,31 +21,24 @@ interface ToolListViewProps {
  */
 export default function ToolListView({ page }: ToolListViewProps) {
   return (
-    <Section>
-      <div className={styles.view}>
-        <Breadcrumb
-          items={[{ label: "ホーム", href: "/" }, { label: TOOL_LIST_TITLE }]}
-        />
-        <div>
-          <h1 className={styles.title} {...headingFontAttr(TOOL_LIST_TITLE)}>
-            {TOOL_LIST_TITLE}
-          </h1>
-          <p className={styles.description}>{TOOL_LIST_INTRO}</p>
-        </div>
-        <BrowsableList
-          items={toolListItems()}
-          hrefPrefix={`${TOOL_LIST_BASE_PATH}/`}
-          label="ツールの一覧"
-          unit="件"
-          searchLabel="名前・説明で探す"
-          kindGroup={{ legend: "種別", options: TOOL_KINDS }}
-          sorts={TOOL_SORTS}
-          perPage={TOOL_LIST_PER_PAGE}
-          basePath={TOOL_LIST_BASE_PATH}
-          page={page}
-          pageTitle={TOOL_LIST_TITLE}
-        />
-      </div>
-    </Section>
+    <ListPage
+      trail={[{ label: "ホーム", href: "/" }, { label: TOOL_LIST_TITLE }]}
+      heading={TOOL_LIST_TITLE}
+      description={TOOL_LIST_INTRO}
+    >
+      <BrowsableList
+        items={toolListItems()}
+        hrefPrefix={`${TOOL_LIST_BASE_PATH}/`}
+        label="ツールの一覧"
+        unit="件"
+        searchLabel="名前・説明で探す"
+        kindGroup={{ legend: "種別", options: TOOL_KINDS }}
+        sorts={TOOL_SORTS}
+        perPage={TOOL_LIST_PER_PAGE}
+        basePath={TOOL_LIST_BASE_PATH}
+        page={page}
+        pageTitle={TOOL_LIST_TITLE}
+      />
+    </ListPage>
   );
 }

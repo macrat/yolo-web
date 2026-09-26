@@ -1,9 +1,7 @@
-import Breadcrumb from "@/components/Breadcrumb";
 import BrowsableList from "@/components/BrowsableList";
-import Section from "@/components/Section";
+import ListPage from "@/components/ListPage";
 import { BASE_URL } from "@/lib/constants";
 import { safeJsonLdStringify } from "@/lib/seo";
-import { headingFontAttr } from "@/lib/zen-antique-charset";
 import { humorDictMeta } from "@/humor-dict/meta";
 import {
   HUMOR_LIST_BASE_PATH,
@@ -11,7 +9,6 @@ import {
   HUMOR_LIST_SORTS,
   humorListItems,
 } from "@/humor-dict/_lib/humor-list";
-import styles from "./HumorListView.module.css";
 
 interface HumorListViewProps {
   /** パスが示すページ。 */
@@ -34,42 +31,33 @@ export default function HumorListView({ page }: HumorListViewProps) {
   };
 
   return (
-    <Section>
+    <ListPage
+      trail={[
+        { label: "ホーム", href: "/" },
+        { label: "辞典", href: "/dictionary" },
+        { label: heading },
+      ]}
+      heading={heading}
+      description="身近な言葉を、AIがまじめな顔で定義し直しました。本当の意味ではありません。"
+    >
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: safeJsonLdStringify(definedTermSetJsonLd),
         }}
       />
-      <div className={styles.view}>
-        <Breadcrumb
-          items={[
-            { label: "ホーム", href: "/" },
-            { label: "辞典", href: "/dictionary" },
-            { label: heading },
-          ]}
-        />
-        <div>
-          <h1 className={styles.title} {...headingFontAttr(heading)}>
-            {heading}
-          </h1>
-          <p className={styles.description}>
-            身近な言葉を、AIがまじめな顔で定義し直しました。本当の意味ではありません。
-          </p>
-        </div>
-        <BrowsableList
-          items={humorListItems()}
-          hrefPrefix={`${HUMOR_LIST_BASE_PATH}/`}
-          label="ユーモア辞典の見出し語の一覧"
-          unit="語"
-          searchLabel="語・読み・語義で探す"
-          sorts={HUMOR_LIST_SORTS}
-          perPage={HUMOR_LIST_PER_PAGE}
-          basePath={HUMOR_LIST_BASE_PATH}
-          page={page}
-          pageTitle={heading}
-        />
-      </div>
-    </Section>
+      <BrowsableList
+        items={humorListItems()}
+        hrefPrefix={`${HUMOR_LIST_BASE_PATH}/`}
+        label="ユーモア辞典の見出し語の一覧"
+        unit="語"
+        searchLabel="語・読み・語義で探す"
+        sorts={HUMOR_LIST_SORTS}
+        perPage={HUMOR_LIST_PER_PAGE}
+        basePath={HUMOR_LIST_BASE_PATH}
+        page={page}
+        pageTitle={heading}
+      />
+    </ListPage>
   );
 }

@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
-// AP-5: 以下2つのフィーチャー型への依存は型のみ（import type）であり意図的。
-// seo.ts はサイト全体のSEO一貫性を維持するため、各フィーチャーのメタデータ型を
-// 参照してメタデータ生成関数を提供している。各フィーチャーにSEO関数を分散させると
-// サイト全体のSEO一貫性が損なわれるリスクがあるため、共有層に集約している。
+// フィーチャーへの依存は型だけ（import type）にとどめる。メタデータの組み方をサイト全体でそろえるため、
+// 各フィーチャーのメタデータの型を受け取って組む関数を、この共有層に集める。
 import type { ToolMeta } from "@/tools/types";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 
@@ -180,12 +178,9 @@ export function generateWebSiteJsonLd(): object {
     "@type": "WebSite",
     name: SITE_NAME,
     url: BASE_URL,
-    // サイト自己定義（cycle-277 決定(a)で道具箱中心から診断中心へ一本化。
-    // 中心=自分を知り、楽しむ体験（性格・キャラ診断／占い／ちょっとしたゲーム）。
-    // 文化コンテンツ（辞典）と実用的なオンライン道具は支え・実用層として簡潔に触れる。
-    // 診断は娯楽であり科学的根拠を主張しない（害防止・DESIGN.md §7 レッドライン）。
-    // AI 実験の明示は constitution rule 3 として必ず残す。
-    // docs/research/2026-07-03-market-research-b545.md 決定(a)・docs/site-concept.md 参照）
+    // サイトの自己紹介。中心は自分を知り、楽しむ体験（性格・キャラ診断／占い／ちょっとしたゲーム）で、辞典と
+    // 実用的なオンライン道具は支えとして簡潔に触れる（docs/site-concept.md）。診断は娯楽なので、科学的な根拠を
+    // 言わない。AI が運営する実験サイトであることは、constitution の rule 3 により必ず言う。
     description:
       "性格診断やキャラクター診断、占い、ちょっとしたゲームを通じて「自分を知り、楽しむ」ためのサイト。漢字・四字熟語・伝統色といった日本語や文化を楽しむ辞典や、文字数カウントなどの実用的なオンライン道具も添えています。AIが運営する実験サイトです。",
     inLanguage: "ja",
@@ -200,34 +195,32 @@ export function generateWebSiteJsonLd(): object {
 
 interface KanjiMetaForSeo {
   character: string;
-  /** 部首文字（例: 衣）。「<漢字> 部首」検索の直接の答えとして title/description に前置する（cycle-251）。 */
+  /** 部首文字（例: 衣）。「<漢字> 部首」検索の直接の答えとして title/description に前置する。 */
   radical: string;
-  /** 画数。「<漢字> 画数」検索意図に答えるため description に含める（cycle-251）。 */
+  /** 画数。「<漢字> 画数」検索意図に答えるため description に含める。 */
   strokeCount: number;
   meanings: string[];
   onYomi: string[];
   kunYomi: string[];
-  /** 熟語などの使用例。meanings が全件英語のため、日本語の語義は使用例で補う（cycle-251）。 */
+  /** 熟語などの使用例。meanings が全件英語のため、日本語の語義は使用例で補う。 */
   examples: string[];
 }
 
-// cycle-251: 検索意図「<漢字> 部首/画数/読み方」を title 先頭に前置する共通文字列。
+// 検索意図「<漢字> 部首/画数/読み方」に答える語を title の先頭に置く共通文字列。
 // og:title は yoji と同様にサイト名を落とす。
 function buildKanjiTitleBody(character: string): string {
   return `「${character}」の部首・画数・読み方 - 漢字辞典`;
 }
 
-// cycle-251: 元データ src/data/kanji-data.json の kunYomi には重複が混入している字がある
-// （実測119字。例「生」に「うまれる」「なま」が各2回）。スニペット・JSON-LD・keywords に
-// 重複読みをそのまま出すと冗長で品質を損なうため、表示層で重複を除去する（出現順は保持）。
-// 元データ自体のクレンジングは別タスク（backlog B-520、本文表示にも波及するため）。
+// src/data/kanji-data.json の kunYomi には、同じ読みが重なる字がある（119字。例「生」に「うまれる」「なま」が
+// 各2回）。スニペット・JSON-LD・keywords に重なった読みを出すと冗長になるので、出す側で重なりを除く（出現順は保つ）。
 function uniqueReadings(readings: string[]): string[] {
   return [...new Set(readings)];
 }
 
-// cycle-251: スニペット冒頭で部首・画数に直接答え、続けて読み方・使用例を示す。
-// meanings は全2136字が英語（ASCII）のみ（src/data/kanji-data.json 実測）なので、
-// 日本語の検索者向けの可視 description には英語を羅列せず、訓読みと使用例で語義を担わせる。
+// スニペットの冒頭で部首・画数に直接答え、続けて読み方・使用例を示す。
+// meanings は2,136字すべてが英語の語なので、日本語で検索する人に見せる description には英語を並べず、
+// 訓読みと使用例で語義を担わせる。
 function buildKanjiDescription(kanji: KanjiMetaForSeo): string {
   const head = `漢字「${kanji.character}」の部首は「${kanji.radical}」、画数は${kanji.strokeCount}画です。`;
   const onYomi = uniqueReadings(kanji.onYomi);
@@ -314,21 +307,15 @@ const YOJI_DESCRIPTION_OPTIONAL_MAX = 25;
 const YOJI_DESCRIPTION_HARD_LIMIT = 130;
 
 /**
- * 当サイトの独自性（AI 視点の例文を全件掲載）を description で伝える固定文言。
+ * 当サイトの独自性（全件にある AI の視点の例文）を description で伝える固定文言。ほかの辞典サイトに無い
+ * 付加価値で（docs/research/2026-03-22-yoji-example-marketing-research.md）、YojiDetail の
+ * 「AIが見た人間のひとコマ」セクションと同じ語を使う。
  *
- * 背景: cycle-117/118 で AI 視点 example を全件追加し、他辞典サイトに対する
- * 独自付加価値（Google スパムポリシー対策）として確立している（docs/cycles/cycle-117.md,
- * docs/research/2026-03-22-yoji-example-marketing-research.md 参照）。本文言は
- * YojiDetail の「AIが見た人間のひとコマ」セクション（cycle-246 M-1 是正で h2 を
- * 「AIによる使用例」から変更し description と語彙統一）に表示済みの事実と整合する。
- *
- * 表現の意図（cycle-246 PM 最終判断）:
- * - 「AIが見た」は研究資料が抽出した核心「AI が人間を観察している視点」と直接整合する
- *   平易な表現。「視点」のような抽象語ではなく、観察主体としての AI を動詞で示す。
- * - 「人間のひとコマ」は例文の実体（観察された人間の小編）と一致し、スニペット予告と
- *   ページ着地の期待整合を保つ（AP-I04 回避）。
- * - 「使用例」「掲載」のような実用と誤読されうる語彙は意図的に排し、「ひとコマ」で
- *   場面のスケッチであることを示唆する（実用例文を期待した直帰の予防）。
+ * 表現の意図:
+ * - 「AIが見た」は、AI が人間を観察している視点を、観察する主体としての AI の動詞で平易に言う。
+ * - 「人間のひとコマ」は例文の実体（観察された人間の小編）と一致し、スニペットで予告したものがページにある。
+ * - 「使用例」「掲載」のような実用と誤読されうる語を使わず、「ひとコマ」で場面のスケッチであることを示す。
+ *   実用の例文を期待して開いた人がすぐ離れないようにするためである。
  */
 const YOJI_AI_EXAMPLE_LABEL = "AIが見た人間のひとコマも。";
 
@@ -378,15 +365,14 @@ function buildYojiOriginOrStructureSuffix(
 /**
  * 四字熟語ページの meta description を組み立てる。
  *
- * 設計（cycle-246 PM 最終判断版）:
- * - 読み方クエリ救済を最優先 → `「○○○○」(よみがな)` を前置
+ * 組み方:
+ * - 読み方で検索する人に答えるため、`「○○○○」(よみがな)` を先頭に置く
  * - meaning は必須
- * - AI 視点の独自 example を全件掲載している事実を独自性訴求として明示
- *   （cycle-117/118 で確立した独自性戦略をスニペット段階でも活かす）
- * - 余裕があれば origin/structure を 1 つだけ末尾に追加（両方は入れない）
- * - difficulty は意味検索者に無関係のため含めない
- * - 「使用例」「掲載」のような実用辞典を匂わせる語彙は避け、「AIが見た人間のひとコマ」
- *   という観察視点の表現に統一する（AP-I04 期待外れ直帰の予防）。
+ * - 全件にある AI の視点の例文を、独自性としてスニペットの段階から伝える
+ * - 余裕があれば origin/structure を 1 つだけ末尾に足す（両方は入れない）
+ * - difficulty は意味を調べる人に関係しないので含めない
+ * - 「使用例」「掲載」のような実用の辞典を思わせる語を避け、「AIが見た人間のひとコマ」という観察の視点の
+ *   表現にそろえる。期待と違うページだと感じてすぐ離れることを防ぐためである。
  */
 function buildYojiDescription(yoji: YojiMetaForSeo): string {
   const base = `「${yoji.yoji}」(${yoji.reading})の意味は、${yoji.meaning}。`;
@@ -404,10 +390,10 @@ function buildYojiDescription(yoji: YojiMetaForSeo): string {
 }
 
 export function generateYojiPageMetadata(yoji: YojiMetaForSeo): Metadata {
-  // 読み方クエリ救済のため title にも (よみがな) を前置（cycle-246 計画）。
+  // 読み方で検索する人に答えるため、title にも (よみがな) を前置する。
   const title = `「${yoji.yoji}」(${yoji.reading})の意味・読み方 - 四字熟語辞典 | ${SITE_NAME}`;
   const ogTitle = `「${yoji.yoji}」(${yoji.reading})の意味・読み方 - 四字熟語辞典`;
-  // OG/Twitter description は meta description と同一文字列とする（cycle-246 計画で確定）。
+  // OG/Twitter description は meta description と同じ文字列にする。
   const description = buildYojiDescription(yoji);
   return {
     title,
@@ -432,24 +418,15 @@ export function generateYojiPageMetadata(yoji: YojiMetaForSeo): Metadata {
 }
 
 export function generateYojiJsonLd(yoji: YojiMetaForSeo): object {
-  // sameAs は意図的に含めない（cycle-246 是正）。
-  // 理由:
+  // 出典の外部辞書（コトバンクなど）を sameAs に置かない。
   //   schema.org の sameAs は「the URL of a reference Web page that unambiguously indicates
-  //   the item's identity」、すなわち「同じ実体・同じコンテンツの別 URL である」と機械可読に
-  //   宣言するプロパティ。Google spam-policies は「他サイトのコンテンツを独自付加価値なく再公開
-  //   する＝コピー」を明確に禁じている。当サイトの個別 yoji ページは過去サイクル (cycle-117/118)
-  //   で AI 視点 example を全件追加して独自付加価値を確立しており、コトバンク等の外部辞書とは
-  //   「同じコンテンツ」ではない。にもかかわらず外部辞書 URL を sameAs に置く行為は、機械可読の
-  //   層で「うちは外部辞書と同じコンテンツです」と宣言する構造で、spam-policies の禁止対象
-  //   （コピー）に該当しうる自己申告となる構造で、撤去すべきと判断した（Google 公式が「sameAs=
-  //   スパム認定」と明示しているわけではなく、sameAs の含意 × spam-policies × 当サイトの
-  //   独自付加価値の三点からの論理的導出である）。
-  // 撤去の射程（重要）:
-  //   本撤去は「独自付加価値を確立しているコンテンツに、別の独自付加価値を持つ他サイトを sameAs
-  //   で指す」誤運用の是正に限定される。Wikipedia / Wikidata / 公式サイトのように当該アイテムの
-  //   真の同一実体を指す sameAs は schema.org が想定する正しい用法で、Google も Knowledge Graph
-  //   構築に活用する。次任 PM が本撤去を一般化して真の同一実体への sameAs まで一律撤去しないこと。
-  // 出典 URL は YojiDetail 本文の外部リンクで来訪者には届くため、JSON-LD からは外す。
+  //   the item's identity」、つまり同じ実体・同じコンテンツの別の URL だと機械に宣言するプロパティである。
+  //   個別の四字熟語のページは全件に AI の視点の例文を持ち、外部辞書と同じコンテンツではない。外部辞書を
+  //   sameAs に置くと、Google の spam-policies が禁じるコピー（独自の付加価値の無い再公開）だと自分から
+  //   宣言する形になる。
+  //   Wikipedia・Wikidata・公式サイトのように、その語の真の同一実体を指す sameAs は schema.org の想定する
+  //   正しい使い方で、Google も Knowledge Graph に使う。そうした sameAs は置いてよい。
+  // 出典 URL は YojiDetail の本文の外部リンクで来訪者に届く。
   return {
     "@context": "https://schema.org",
     "@type": "DefinedTerm",
@@ -596,7 +573,7 @@ export interface FaqEntry {
 /**
  * FAQPage JSON-LDオブジェクトを生成する。
  *
- * B-024で実装。FaqSectionコンポーネント経由で全FAQページに自動付与される。
+ * FaqSection コンポーネントを通して、FAQ を持つすべてのページに付く。
  * Schema.org FAQPage型に準拠し、各エントリをQuestion/Answer型にマッピングする。
  */
 export function generateFaqPageJsonLd(faq: FaqEntry[]): object {

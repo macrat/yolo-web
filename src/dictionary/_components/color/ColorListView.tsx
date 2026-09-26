@@ -1,9 +1,7 @@
-import Breadcrumb from "@/components/Breadcrumb";
+import type { BreadcrumbItem } from "@/components/Breadcrumb";
 import BrowsableList from "@/components/BrowsableList";
 import IndexAccordion from "@/components/IndexAccordion";
-import Section from "@/components/Section";
-import type { BreadcrumbItem } from "@/lib/seo";
-import { headingFontAttr } from "@/lib/zen-antique-charset";
+import ListPage from "@/components/ListPage";
 import {
   COLOR_LIST_PER_PAGE,
   colorIndexEntries,
@@ -14,7 +12,6 @@ import {
   colorListTitle,
   type ColorListScope,
 } from "@/dictionary/_lib/color-list";
-import styles from "./ColorListView.module.css";
 
 interface ColorListViewProps {
   scope: ColorListScope;
@@ -44,37 +41,32 @@ export default function ColorListView({ scope, page }: ColorListViewProps) {
   ];
 
   return (
-    <Section>
-      <div className={styles.view}>
-        <Breadcrumb items={trail} />
-        <div>
-          <h1 className={styles.title} {...headingFontAttr(heading)}>
-            {heading}
-          </h1>
-          {scope.type === "all" ? (
-            <p className={styles.description}>
-              色名の読みとカラーコードを引けます。
-            </p>
-          ) : null}
-        </div>
-        <IndexAccordion
-          summary="色みから探す"
-          index={colorIndexEntries()}
-          currentHref={basePath}
-        />
-        <BrowsableList
-          items={colorListItems(scope)}
-          hrefPrefix="/dictionary/colors/"
-          label="伝統色の一覧"
-          unit="色"
-          searchLabel="色名・読み・カラーコードで探す"
-          sorts={colorListSorts(scope)}
-          perPage={COLOR_LIST_PER_PAGE}
-          basePath={basePath}
-          page={page}
-          pageTitle={colorListTitle(scope)}
-        />
-      </div>
-    </Section>
+    <ListPage
+      trail={trail}
+      heading={heading}
+      description={
+        scope.type === "all"
+          ? "色名のローマ字とカラーコードを引けます。"
+          : undefined
+      }
+    >
+      <IndexAccordion
+        summary="色みから探す"
+        index={colorIndexEntries()}
+        currentHref={basePath}
+      />
+      <BrowsableList
+        items={colorListItems(scope)}
+        hrefPrefix="/dictionary/colors/"
+        label="伝統色の一覧"
+        unit="色"
+        searchLabel="色名・ローマ字・カラーコードで探す"
+        sorts={colorListSorts(scope)}
+        perPage={COLOR_LIST_PER_PAGE}
+        basePath={basePath}
+        page={page}
+        pageTitle={colorListTitle(scope)}
+      />
+    </ListPage>
   );
 }
