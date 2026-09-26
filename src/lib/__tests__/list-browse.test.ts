@@ -13,20 +13,25 @@ import {
   readBrowseState,
   slicePage,
   sortBrowseItems,
+  statusPhrases,
   statusText,
   type BrowseItem,
+  type BrowseSort,
   type BrowseSpec,
   type BrowseState,
 } from "@/lib/list-browse";
 import { getAllYoji } from "@/dictionary/_lib/yoji";
 
-function item(
-  name: string,
-  extra: Partial<BrowseItem> = {},
-  sortKeys: BrowseItem["sortKeys"] = {},
-): BrowseItem {
-  return { name, slug: name, sortKeys, ...extra };
+function item(name: string, extra: Partial<BrowseItem> = {}): BrowseItem {
+  return { name, ...extra };
 }
+
+const KIND_ORDER = ["文章", "データ"];
+const BY_READING: BrowseSort = {
+  value: "reading",
+  label: "五十音順",
+  keys: [{ by: "reading" }],
+};
 
 const spec: BrowseSpec = {
   kinds: [
@@ -34,8 +39,19 @@ const spec: BrowseSpec = {
     { value: "data", label: "データ" },
   ],
   sorts: [
-    { value: "kind", label: "種別順", directions: ["asc", "desc"] },
-    { value: "new", label: "新しい順", directions: ["desc"] },
+    {
+      value: "kind",
+      label: "種別順",
+      keys: [
+        { by: "kind", order: KIND_ORDER },
+        { by: "fact", index: 0, desc: true },
+      ],
+    },
+    {
+      value: "new",
+      label: "新しい順",
+      keys: [{ by: "fact", index: 0, desc: true }],
+    },
   ],
   filterGroups: [
     {
@@ -72,7 +88,7 @@ describe("normalizeSearchText", () => {
 
 describe("matchDegree", () => {
   const water = item("水", {
-    matchNames: ["水", "スイ", "みず"],
+    readings: ["スイ", "みず"],
     searchTexts: ["水道", "water"],
   });
 
@@ -92,32 +108,186 @@ describe("matchDegree", () => {
     expect(matchDegree(water, "fire")).toBeNull();
   });
 
-  test("matchNames が無ければ名前と読みを見る", () => {
-    const entry = item("一期一会", { reading: "いちごいちえ" });
+  test("読みが1つの項目も、名前と読みに一致を見る", () => {
+    const entry = item("一期一会", { readings: ["いちごいちえ"] });
     expect(matchDegree(entry, "いちごいちえ")).toBe(0);
     expect(matchDegree(entry, "一期")).toBe(1);
   });
 });
 
 describe("sortBrowseItems", () => {
-  test("比べる値を先頭から順に、向きに従って比べる", () => {
+  function day(text: string): Partial<BrowseItem> {
+    return { facts: [{ text }] };
+  }
+
+  test("行の値から比べる値を組み、先頭から順に、値ごとの向きで比べる", () => {
     const items = [
-      item("a", {}, { kind: [2, 20260101] }),
-      item("b", {}, { kind: [1, 20250101] }),
-      item("c", {}, { kind: [1, 20260101] }),
+      item("a", { kind: "データ", ...day("2026-01-01") }),
+      item("b", { kind: "文章", ...day("2025-01-01") }),
+      item("c", { kind: "文章", ...day("2026-01-01") }),
     ];
     expect(
       sortBrowseItems(items, spec.sorts[0]).map((entry) => entry.name),
     ).toEqual(["c", "b", "a"]);
   });
 
-  test("比べる値が同じ項目は渡された順のまま並ぶ", () => {
+  test("比べる値が同じ項目は渡された順のまま並び、比べる値が無ければ渡された順", () => {
     const items = ["a", "b", "c", "d"].map((name) =>
-      item(name, {}, { new: [20260213] }),
+      item(name, day("2026-02-13")),
     );
     expect(
       sortBrowseItems(items, spec.sorts[1]).map((entry) => entry.name),
     ).toEqual(["a", "b", "c", "d"]);
+    const reversed = [...items].reverse();
+    expect(
+      sortBrowseItems(reversed, {
+        value: "given",
+        label: "渡した順",
+        keys: [],
+      }),
+    ).toEqual(reversed);
+  });
+
+  test("補助情報は文の中の数字で比べ、order があればその並びの位置で比べる", () => {
+    const strokes = ["12画", "4画", "5画"].map((text) =>
+      item(text, { facts: [{ text }] }),
+    );
+    expect(
+      sortBrowseItems(strokes, {
+        value: "stroke",
+        label: "画数順",
+        keys: [{ by: "fact", index: 0 }],
+      }).map((entry) => entry.name),
+    ).toEqual(["4画", "5画", "12画"]);
+    const levels = ["上級", "初級", "中級"].map((text) =>
+      item(text, { facts: [{ text }] }),
+    );
+    expect(
+      sortBrowseItems(levels, {
+        value: "easy",
+        label: "やさしい順",
+        keys: [{ by: "fact", index: 0, order: ["初級", "中級", "上級"] }],
+      }).map((entry) => entry.name),
+    ).toEqual(["初級", "中級", "上級"]);
+  });
+
+  test("補助情報の日時で比べる", () => {
+    const items = [
+      "2026-02-13T09:00:00+09:00",
+      "2026-02-13T18:00:00+09:00",
+      "2026-02-12T23:00:00+09:00",
+    ].map((dateTime) =>
+      item(dateTime, { facts: [{ text: dateTime.slice(0, 10), dateTime }] }),
+    );
+    expect(
+      sortBrowseItems(items, {
+        value: "newest",
+        label: "新しい順",
+        keys: [{ by: "factTime", index: 0, desc: true }],
+      }).map((entry) => entry.name),
+    ).toEqual([
+      "2026-02-13T18:00:00+09:00",
+      "2026-02-13T09:00:00+09:00",
+      "2026-02-12T23:00:00+09:00",
+    ]);
+  });
+
+  test("色見本の色を OKLCH にして、色みの順の中を色相で、無彩色を明るい順で並べる", () => {
+    const colors = [
+      item("白", { kind: "無彩色", swatch: "#ffffff" }),
+      item("青", { kind: "寒色", swatch: "#0000ff" }),
+      item("黒", { kind: "無彩色", swatch: "#000000" }),
+      item("赤", { kind: "暖色", swatch: "#ff0000" }),
+      item("灰", { kind: "無彩色", swatch: "#808080" }),
+      item("黄", { kind: "暖色", swatch: "#ffff00" }),
+    ];
+    const byHue: BrowseSort = {
+      value: "hue",
+      label: "色み順",
+      keys: [
+        { by: "kind", order: ["暖色", "寒色", "無彩色"] },
+        { by: "swatch", channel: "hue", achromaticKind: "無彩色" },
+        { by: "swatch", channel: "lightness", desc: true },
+      ],
+    };
+    expect(sortBrowseItems(colors, byHue).map((entry) => entry.name)).toEqual([
+      "赤",
+      "黄",
+      "青",
+      "白",
+      "灰",
+      "黒",
+    ]);
+    const byLightness: BrowseSort = {
+      value: "light",
+      label: "明るい順",
+      keys: [{ by: "swatch", channel: "lightness", desc: true }],
+    };
+    expect(
+      sortBrowseItems(colors, byLightness).map((entry) => entry.name),
+    ).toEqual(["白", "黄", "赤", "灰", "青", "黒"]);
+  });
+
+  test("色相は、種別ごとに色相の最も大きくあいた所の後ろから数え、0度をまたぐ種別を割らない", () => {
+    const hueKeys: BrowseSort["keys"] = [
+      { by: "kind", order: ["赤系", "紫系"] },
+      { by: "swatch", channel: "hue" },
+    ];
+    // OKLCH の色相: #c00060 は 2.0、#ff0040 は 20.8、#ff0000 は 29.2、#8000ff は 293.9、#ff00ff は 328.4、
+    // #ff0080 は 2.5。
+    const colors = [
+      item("#ff0080", { kind: "紫系", swatch: "#ff0080" }),
+      item("#ff0000", { kind: "赤系", swatch: "#ff0000" }),
+      item("#ff00ff", { kind: "紫系", swatch: "#ff00ff" }),
+      item("#c00060", { kind: "赤系", swatch: "#c00060" }),
+      item("#8000ff", { kind: "紫系", swatch: "#8000ff" }),
+      item("#ff0040", { kind: "赤系", swatch: "#ff0040" }),
+    ];
+    expect(
+      sortBrowseItems(colors, {
+        value: "hue",
+        label: "色み順",
+        keys: hueKeys,
+      }).map((entry) => entry.name),
+    ).toEqual([
+      "#c00060",
+      "#ff0040",
+      "#ff0000",
+      "#8000ff",
+      "#ff00ff",
+      "#ff0080",
+    ]);
+
+    // 種別を持たない項目（分類のページ）は、並べる全件で1つの起点を持つ。
+    const purples = ["#ff0080", "#ff00ff", "#8000ff"].map((hex) =>
+      item(hex, { swatch: hex }),
+    );
+    expect(
+      sortBrowseItems(purples, {
+        value: "hue",
+        label: "色相順",
+        keys: [{ by: "swatch", channel: "hue" }],
+      }).map((entry) => entry.name),
+    ).toEqual(["#8000ff", "#ff00ff", "#ff0080"]);
+  });
+
+  test("最初の読みで比べ、値を持たない項目は向きによらず後ろに回す", () => {
+    const items = [
+      item("無し"),
+      item("水", { readings: ["スイ", "みず"] }),
+      item("火", { readings: ["カ", "ひ"] }),
+      item("種別外", { kind: "画像" }),
+    ];
+    expect(
+      sortBrowseItems(items, BY_READING).map((entry) => entry.name),
+    ).toEqual(["火", "水", "無し", "種別外"]);
+    expect(
+      sortBrowseItems(items, {
+        value: "kind",
+        label: "種別順",
+        keys: [{ by: "kind", order: KIND_ORDER, desc: true }],
+      }).map((entry) => entry.name),
+    ).toEqual(["無し", "水", "火", "種別外"]);
   });
 
   test("仮名の読みは辞書の五十音順に並ぶ（清音と濁音・半濁音を同じ位置に並べる）", () => {
@@ -136,11 +306,9 @@ describe("sortBrowseItems", () => {
       "しよう",
       "しょう",
     ];
-    const items = readings.map((name) => item(name, {}, { reading: [name] }));
+    const items = readings.map((name) => item(name, { readings: [name] }));
     expect(
-      sortBrowseItems(items, { value: "reading", label: "五十音順" }).map(
-        (entry) => entry.name,
-      ),
+      sortBrowseItems(items, BY_READING).map((entry) => entry.name),
     ).toEqual([
       "かいき",
       "がりょうてんせい",
@@ -171,11 +339,10 @@ describe("sortBrowseItems", () => {
     for (const expected of expectedOrders) {
       const items = [...expected]
         .reverse()
-        .map((name) => item(name, {}, { reading: [name] }));
-      const sorted = sortBrowseItems(items, {
-        value: "reading",
-        label: "五十音順",
-      }).map((entry) => entry.name);
+        .map((name) => item(name, { readings: [name] }));
+      const sorted = sortBrowseItems(items, BY_READING).map(
+        (entry) => entry.name,
+      );
       expect(sorted).toEqual(expected);
       expect(sorted).toEqual([...expected].sort(collator.compare));
     }
@@ -183,11 +350,10 @@ describe("sortBrowseItems", () => {
 
   test("四字熟語の全件の読みが、日本語の照合（Intl.Collator）と同じ順に並ぶ", () => {
     const readings = getAllYoji().map((entry) => entry.reading);
-    const items = readings.map((name) => item(name, {}, { reading: [name] }));
-    const sorted = sortBrowseItems(items, {
-      value: "reading",
-      label: "五十音順",
-    }).map((entry) => entry.name);
+    const items = readings.map((name) => item(name, { readings: [name] }));
+    const sorted = sortBrowseItems(items, BY_READING).map(
+      (entry) => entry.name,
+    );
     expect(sorted).toEqual([...readings].sort(new Intl.Collator("ja").compare));
   });
 });
@@ -210,26 +376,26 @@ describe("kanaCollationKey", () => {
 
 describe("browseItems", () => {
   const items = [
-    item(
-      "文字数カウント",
-      { kind: "文章", searchTexts: ["文字数を数える"] },
-      { kind: [1, 3], new: [3] },
-    ),
-    item(
-      "JSON整形",
-      { kind: "データ", searchTexts: ["JSON を読みやすく"] },
-      { kind: [2, 2], new: [2] },
-    ),
-    item(
-      "テキスト置換",
-      { kind: "文章", searchTexts: ["文字を置き換える"] },
-      { kind: [1, 1], new: [1] },
-    ),
-    item(
-      "json から CSV",
-      { kind: "データ", filterValues: { level: "2" } },
-      { kind: [2, 1], new: [0] },
-    ),
+    item("文字数カウント", {
+      kind: "文章",
+      facts: [{ text: "3" }],
+      searchTexts: ["文字数を数える"],
+    }),
+    item("JSON整形", {
+      kind: "データ",
+      facts: [{ text: "2" }],
+      searchTexts: ["JSON を読みやすく"],
+    }),
+    item("テキスト置換", {
+      kind: "文章",
+      facts: [{ text: "1" }],
+      searchTexts: ["文字を置き換える"],
+    }),
+    item("json から CSV", {
+      kind: "データ",
+      facts: [{ text: "0" }],
+      filterValues: { level: "2" },
+    }),
   ];
 
   test("既定の状態では既定の並び順で全件", () => {
@@ -428,6 +594,45 @@ describe("statusText", () => {
         range: { start: 101, end: 101 },
       }),
     ).toBe("全101語のうち101語目");
+  });
+
+  test("数と単位は1語で、件数の句と範囲の句に分け、並び順の語は最後の句に続ける", () => {
+    expect(
+      statusPhrases({
+        total: 1110,
+        matched: 1110,
+        filtering: false,
+        unit: "字",
+        range: { start: 1101, end: 1110 },
+        sortLabel: "画数順",
+      }),
+    ).toEqual([
+      [
+        { text: "全1,110字", keep: true },
+        { text: "のうち", keep: true },
+      ],
+      [
+        { text: "1,101〜", keep: true },
+        { text: "1,110字目", keep: true },
+        { text: "・画数順", keep: false },
+      ],
+    ]);
+    expect(
+      statusPhrases({ total: 86, matched: 12, filtering: true, unit: "件" }),
+    ).toEqual([
+      [
+        { text: "12件", keep: true },
+        { text: "（全86件）", keep: true },
+      ],
+    ]);
+    expect(
+      statusPhrases({ total: 86, matched: 0, filtering: true, unit: "件" }),
+    ).toEqual([
+      [
+        { text: "条件に合うものはありません", keep: false },
+        { text: "（全86件）", keep: true },
+      ],
+    ]);
   });
 
   test("該当が0件のときは、条件に合うものが無いことと全体の件数を言う", () => {

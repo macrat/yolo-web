@@ -89,9 +89,12 @@ function writeUrl(url: string, method: "push" | "replace"): void {
 let pendingFocusPath: string | null = null;
 
 export interface BrowsableListProps {
-  /** 範囲の全件。既定の並び順で渡す。 */
+  /**
+   * 範囲の全件。既定の並び順で渡す。全件がページの HTML に入るので、項目は行に見せる値と、それだけでは作れない値
+   * だけを持つ（BrowseItem）。
+   */
   items: BrowseItem[];
-  /** 名前のリンク先の接頭辞。項目の slug を続けたものがリンク先になる。 */
+  /** 名前のリンク先の接頭辞。項目の slug（無ければ名前）を百分率符号化して続けたものがリンク先になる。 */
   hrefPrefix: string;
   /** 一覧の名前（例「ツールの一覧」）。読み上げで一覧の名前になる。 */
   label: string;
@@ -103,7 +106,7 @@ export interface BrowsableListProps {
    * それが2つ以上あるときだけ組を出す（§7）。
    */
   kindGroup?: { legend: string; options: BrowseChoice[] };
-  /** 並び順の選択肢。先頭が既定。 */
+  /** 並び順の選択肢。先頭が既定。比べる値は、行の値から keys のとおりに組む。 */
   sorts: BrowseSort[];
   /** 1ページの件数。説明を持つ行は 50、持たない行は 100（§7）。 */
   perPage: number;
@@ -315,8 +318,8 @@ export default function BrowsableList({
 
   const pageItems: ItemListItem[] = slice.items.map((item) => ({
     name: item.name,
-    href: `${hrefPrefix}${item.slug}`,
-    reading: item.reading,
+    href: `${hrefPrefix}${encodeURIComponent(item.slug ?? item.name)}`,
+    reading: item.readings?.join("・") || undefined,
     description: item.description,
     kind: item.kind,
     facts: item.facts,

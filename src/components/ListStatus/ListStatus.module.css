@@ -16,3 +16,13 @@
   line-height: var(--leading-body);
   scroll-margin-block-start: var(--space-16);
 }
+
+/* 句は、行の残りに収まらなければ次の行へまとめて送り、1行に収まらないときだけ中で折る。 */
+.phrase {
+  display: inline-block;
+}
+
+/* 数と単位のような1語は、途中で折らない。 */
+.word {
+  white-space: nowrap;
+}

@@ -10,10 +10,10 @@ import {
 } from "@/dictionary/_lib/types";
 import type { BrowsableListProps } from "@/components/BrowsableList";
 import {
-  normalizeSearchText,
   sortBrowseItems,
   type BrowseItem,
   type BrowseSort,
+  type BrowseSortKey,
 } from "@/lib/list-browse";
 
 /** BrowsableList の見本。1つのページに1つの一覧を置く。一覧の状態は URL が持ち、同じページの一覧どうしで混ざるため。 */
@@ -23,50 +23,48 @@ export interface ListSample {
   list: Omit<BrowsableListProps, "basePath" | "page">;
 }
 
+const BY_READING: BrowseSortKey = { by: "reading" };
+
 const YOJI_SORTS: BrowseSort[] = [
-  { value: "reading", label: "読みの五十音順" },
-  { value: "easy", label: "やさしい順" },
+  { value: "reading", label: "読みの五十音順", keys: [BY_READING] },
+  {
+    value: "easy",
+    label: "やさしい順",
+    keys: [
+      { by: "fact", index: 0, order: Object.values(YOJI_DIFFICULTY_LABELS) },
+      BY_READING,
+    ],
+  },
 ];
 
 const KANJI_SORTS: BrowseSort[] = [
-  { value: "strokes", label: "画数順" },
-  { value: "reading", label: "読みの五十音順" },
+  {
+    value: "strokes",
+    label: "画数順",
+    keys: [{ by: "fact", index: 0 }, BY_READING],
+  },
+  { value: "reading", label: "読みの五十音順", keys: [BY_READING] },
 ];
 
 function yojiItem(entry: YojiEntry): BrowseItem {
   return {
     name: entry.yoji,
-    slug: entry.yoji,
-    reading: entry.reading,
+    readings: [entry.reading],
     description: entry.meaning,
     kind: YOJI_CATEGORY_LABELS[entry.category],
     facts: [{ text: YOJI_DIFFICULTY_LABELS[entry.difficulty] }],
     searchTexts: [entry.meaning, entry.example],
-    sortKeys: {
-      reading: [entry.reading],
-      easy: [entry.difficulty, entry.reading],
-    },
   };
 }
 
 function kanjiItem(entry: KanjiEntry): BrowseItem {
-  // 音読みと訓読みで同じ読みが重なる字があるので、1つにまとめてから見せる。
-  const readings = Array.from(new Set([...entry.onYomi, ...entry.kunYomi]));
-  const firstReading = normalizeSearchText(
-    entry.onYomi[0] ?? entry.kunYomi[0] ?? "",
-  );
   return {
     name: entry.character,
-    slug: entry.character,
-    reading: readings.join("・"),
+    // 音読みと訓読みで同じ読みが重なる字があるので、1つにまとめてから見せる。
+    readings: Array.from(new Set([...entry.onYomi, ...entry.kunYomi])),
     kind: KANJI_GRADE_LABELS[entry.grade],
     facts: [{ text: `${entry.strokeCount}画` }],
-    matchNames: [entry.character, ...readings],
     searchTexts: entry.examples,
-    sortKeys: {
-      strokes: [entry.strokeCount, firstReading],
-      reading: [firstReading],
-    },
   };
 }
 

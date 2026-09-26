@@ -6,30 +6,62 @@
  */
 
 import type { ItemListFact } from "@/components/ItemList";
+import { hexToOklch } from "@/lib/hexToOklch";
 
-/** 並び順ごとの比べる値。先頭の値から順に比べる。 */
-export type BrowseSortKey = ReadonlyArray<string | number>;
-
-/** 一覧のページで絞り込み・並べ替えをする項目。行の中身は ItemList の項目と同じ。 */
+/**
+ * 一覧のページで絞り込み・並べ替えをする項目。サーバーからクライアントへ全件を渡すので、行に見せる値と、
+ * それだけでは作れない値だけを持つ。一致を見る語・並び順で比べる値・リンク先は、クライアントで行の値から組む。
+ */
 export interface BrowseItem {
   name: string;
-  /** 名前のリンク先の、一覧の接頭辞に続く部分。行の key を兼ねる。 */
-  slug: string;
-  reading?: string;
+  /** 名前のリンク先の、一覧の接頭辞に続く部分。百分率符号化する前の形で、省略すると名前。 */
+  slug?: string;
+  /**
+   * 読み。読みを複数持つ項目（漢字の音訓）は1つずつ並べる。行には「・」でつないで見せ、名前の絞り込みは名前と
+   * 読みの1つずつに一致を見る。
+   */
+  readings?: string[];
   description?: string;
   /** 行に見せる種別の語。種別の絞り込みもこの語で当てる。 */
   kind?: string;
   facts?: ItemListFact[];
   swatch?: string;
-  /** 名前か読みとして一致を見る語。読みを複数持つ項目（漢字の音訓）は1つずつ並べる。省略すると名前と読み。 */
-  matchNames?: string[];
   /** 名前と読みのほかに、名前の絞り込みで探す値（説明・タグ・熟語・例文など）。 */
   searchTexts?: string[];
   /** 道具ごとの組の値。組のクエリの名前から、その組の選択肢の値へ。 */
   filterValues?: Record<string, string>;
-  /** 並び順の値から、その並び順での比べる値へ。 */
-  sortKeys: Record<string, BrowseSortKey>;
 }
+
+/**
+ * 並び順で比べる値の1つ。どれも行に見えている値から組む（§7）。desc で大きい順・五十音の逆順にする。
+ *
+ * - reading: 最初の読み。仮名の辞書の並びで比べる。
+ * - kind: 種別の語の、order の並びでの位置。
+ * - fact: index 番目の補助情報。order があれば、その語の order の並びでの位置。無ければ、文の中の数字を
+ *   つないだ数（「4画」は 4、「2026-02-13」は 20260213）。
+ * - factTime: index 番目の補助情報の日時（dateTime）。
+ * - swatch: 色見本の色を OKLCH にした値。channel が lightness なら明るさ（L）、hue なら色相。
+ *   色相は円なので、同じ種別の項目の色相のうち最も大きくあいた所の後ろを起点に、そこから回った角度で比べる
+ *   （0度をまたぐ紫系が、0度の前後で割れない）。種別を持たない項目どうしは、並べる全件で1つの起点を持つ。
+ *   無彩色の色相には意味が無いので、achromaticKind の種別の項目は色相を持たないものとして扱う。色相を
+ *   どちらも持たない項目どうしは次の値で比べるので、無彩色を明るさで並べるには lightness を後ろに続ける。
+ */
+export type BrowseSortKey =
+  | { by: "reading"; desc?: boolean }
+  | { by: "kind"; order: readonly string[]; desc?: boolean }
+  | {
+      by: "fact";
+      index: number;
+      order?: readonly string[];
+      desc?: boolean;
+    }
+  | { by: "factTime"; index: number; desc?: boolean }
+  | {
+      by: "swatch";
+      channel: "hue" | "lightness";
+      achromaticKind?: string;
+      desc?: boolean;
+    };
 
 /** ラジオボタンの組の選択肢。 */
 export interface BrowseChoice {
@@ -37,9 +69,10 @@ export interface BrowseChoice {
   label: string;
 }
 
-/** 並び順の選択肢。directions は比べる値ごとの向きで、省略した値は昇順。 */
+/** 並び順の選択肢。 */
 export interface BrowseSort extends BrowseChoice {
-  directions?: ReadonlyArray<"asc" | "desc">;
+  /** 先頭の値から順に比べる。どの値も同じ項目は渡された順のまま並ぶので、空なら渡された順。 */
+  keys: readonly BrowseSortKey[];
 }
 
 /** 道具ごとの組。param はクエリの名前で、選択肢に「すべて」は含めない。 */
@@ -101,7 +134,7 @@ export function matchDegree(
   item: BrowseItem,
   normalizedQuery: string,
 ): 0 | 1 | 2 | 3 | null {
-  const names = (item.matchNames ?? [item.name, item.reading ?? ""])
+  const names = [item.name, ...(item.readings ?? [])]
     .filter((name) => name !== "")
     .map(normalizeSearchText);
   if (names.some((name) => name === normalizedQuery)) return 0;
@@ -189,11 +222,88 @@ export function kanaCollationKey(text: string): KanaCollationKey {
   return [primary, voicing, form];
 }
 
-type PreparedKey = ReadonlyArray<number | KanaCollationKey>;
+type SortValue = number | KanaCollationKey | undefined;
 
-function prepareKey(key: BrowseSortKey): PreparedKey {
-  return key.map((value) =>
-    typeof value === "number" ? value : kanaCollationKey(value),
+function rank(
+  order: readonly string[],
+  value: string | undefined,
+): number | undefined {
+  const position = value === undefined ? -1 : order.indexOf(value);
+  return position === -1 ? undefined : position;
+}
+
+function factNumber(text: string): number | undefined {
+  const digits = text.replace(/[^0-9]/g, "");
+  return digits === "" ? undefined : Number(digits);
+}
+
+function sortValue(item: BrowseItem, key: BrowseSortKey): SortValue {
+  switch (key.by) {
+    case "reading": {
+      const reading = item.readings?.[0];
+      return reading === undefined ? undefined : kanaCollationKey(reading);
+    }
+    case "kind":
+      return rank(key.order, item.kind);
+    case "fact": {
+      const text = item.facts?.[key.index]?.text;
+      if (text === undefined) return undefined;
+      return key.order ? rank(key.order, text) : factNumber(text);
+    }
+    case "factTime": {
+      const time = Date.parse(item.facts?.[key.index]?.dateTime ?? "");
+      return Number.isNaN(time) ? undefined : time;
+    }
+    case "swatch": {
+      if (item.swatch === undefined) return undefined;
+      if (key.channel === "lightness") return hexToOklch(item.swatch).l;
+      return item.kind !== undefined && item.kind === key.achromaticKind
+        ? undefined
+        : hexToOklch(item.swatch).h;
+    }
+  }
+}
+
+const FULL_TURN = 360;
+
+/** 色相の起点。色相を円に並べたとき、最も大きくあいた所の後ろの色相。 */
+function hueOrigin(hues: readonly number[]): number {
+  const sorted = [...hues].sort((a, b) => a - b);
+  let origin = sorted[0] ?? 0;
+  let widestGap = -1;
+  sorted.forEach((hue, i) => {
+    const next = sorted[i + 1] ?? sorted[0] + FULL_TURN;
+    if (next - hue > widestGap) {
+      widestGap = next - hue;
+      origin = next % FULL_TURN;
+    }
+  });
+  return origin;
+}
+
+/**
+ * 並べる全件の、1つの比べる値。色相は同じ種別の項目の色相から起点を決めるので、全件を見てから組む。ほかの値は
+ * 項目ごとに組む。
+ */
+function sortValues(
+  items: readonly BrowseItem[],
+  key: BrowseSortKey,
+): SortValue[] {
+  const values = items.map((item) => sortValue(item, key));
+  if (key.by !== "swatch" || key.channel !== "hue") return values;
+  const huesByKind = new Map<string | undefined, number[]>();
+  items.forEach((item, i) => {
+    const hue = values[i];
+    if (typeof hue !== "number") return;
+    huesByKind.set(item.kind, [...(huesByKind.get(item.kind) ?? []), hue]);
+  });
+  const origins = new Map(
+    [...huesByKind].map(([kind, hues]) => [kind, hueOrigin(hues)]),
+  );
+  return values.map((hue, i) =>
+    typeof hue === "number"
+      ? (hue - (origins.get(items[i].kind) ?? 0) + FULL_TURN) % FULL_TURN
+      : hue,
   );
 }
 
@@ -212,12 +322,11 @@ function compareValues(
 }
 
 function compareKeys(
-  a: PreparedKey,
-  b: PreparedKey,
-  directions: ReadonlyArray<"asc" | "desc">,
+  a: readonly SortValue[],
+  b: readonly SortValue[],
+  keys: readonly BrowseSortKey[],
 ): number {
-  const length = Math.max(a.length, b.length);
-  for (let i = 0; i < length; i++) {
+  for (let i = 0; i < keys.length; i++) {
     const x = a[i];
     const y = b[i];
     // 値を持たない項目は、その並び順で後ろに回す。
@@ -225,27 +334,29 @@ function compareKeys(
     if (x === undefined) return 1;
     if (y === undefined) return -1;
     const order = compareValues(x, y);
-    if (order !== 0) return directions[i] === "desc" ? -order : order;
+    if (order !== 0) return keys[i].desc ? -order : order;
   }
   return 0;
 }
 
 /**
- * 並び順で並べる。数は数の大小で、文字列は仮名の読みの辞書の並び（kanaCollationKey）で比べる。
- * 比べる値が同じ項目は、渡された順のまま並ぶ（安定な並べ替え）。
+ * 並び順で並べる。比べる値は行の値から組み、数は数の大小で、読みは仮名の辞書の並び（kanaCollationKey）で
+ * 比べる。比べる値が同じ項目は、渡された順のまま並ぶ（安定な並べ替え）。
  */
 export function sortBrowseItems<T extends BrowseItem>(
   items: readonly T[],
   sort: BrowseSort,
 ): T[] {
-  const directions = sort.directions ?? [];
+  const valuesByKey = sort.keys.map((key) => sortValues(items, key));
   return items
     .map((item, index) => ({
       item,
       index,
-      key: prepareKey(item.sortKeys[sort.value] ?? []),
+      values: valuesByKey.map((values) => values[index]),
     }))
-    .sort((a, b) => compareKeys(a.key, b.key, directions) || a.index - b.index)
+    .sort(
+      (a, b) => compareKeys(a.values, b.values, sort.keys) || a.index - b.index,
+    )
     .map(({ item }) => item);
 }
 
@@ -428,11 +539,28 @@ function unitNoun(unit: BrowseUnit): string {
   return unit === "件" ? "もの" : unit;
 }
 
+/** 件数の行の語。keep の語は途中で折らない。 */
+export interface StatusWord {
+  text: string;
+  keep: boolean;
+}
+
+/** 件数の行の句。1行に収まるなら折らず、収まらないときは語の切れ目で折る。 */
+export type StatusPhrase = StatusWord[];
+
+function kept(text: string): StatusWord {
+  return { text, keep: true };
+}
+
 /**
- * 件数の行の文（§7）。全体の件数をいつも言い、絞っている間は該当の件数も言う。ページ送りがあるときは
- * 表示している範囲を、並び順の組が無いときはその並び順を後ろに添える。
+ * 件数の行の文（§7）を句と語に分けたもの。全体の件数をいつも言い、絞っている間は該当の件数も言う。ページ送りが
+ * あるときは表示している範囲を、並び順の組が無いときはその並び順を後ろに添える。
+ *
+ * 数と単位（「1,110字目」）は1語で、途中で折らない。件数の句（「全1,110字のうち」）と範囲の句
+ * （「1,101〜1,110字目」）は、収まるならそれぞれ1行に置き、範囲の句が1行に収まらないときだけ「〜」の後ろで折る。
+ * 並び順の語は句の最後に続け、語の中は通常の禁則処理で折る。
  */
-export function statusText(options: {
+export function statusPhrases(options: {
   total: number;
   matched: number;
   filtering: boolean;
@@ -441,19 +569,44 @@ export function statusText(options: {
   range?: { start: number; end: number };
   /** 並び順の組が無いときの、既定の並び順の語。 */
   sortLabel?: string;
-}): string {
+}): StatusPhrase[] {
   const { total, matched, filtering, unit, range, sortLabel } = options;
+  const all = kept(`全${count(total, unit)}`);
   if (filtering && matched === 0) {
-    return `条件に合う${unitNoun(unit)}はありません（全${count(total, unit)}）`;
+    return [
+      [
+        { text: `条件に合う${unitNoun(unit)}はありません`, keep: false },
+        kept(`（${all.text}）`),
+      ],
+    ];
   }
-  const head = filtering
-    ? `${count(matched, unit)}（全${count(total, unit)}）`
-    : `全${count(total, unit)}`;
-  const rangeText = !range
-    ? ""
-    : range.start === range.end
-      ? `のうち${count(range.end, unit)}目`
-      : `のうち${numberFormat.format(range.start)}〜${count(range.end, unit)}目`;
-  const sortText = sortLabel ? `・${sortLabel}` : "";
-  return `${head}${rangeText}${sortText}`;
+  const head: StatusPhrase = filtering
+    ? [kept(count(matched, unit)), kept(`（${all.text}）`)]
+    : [all];
+  const phrases: StatusPhrase[] = [head];
+  if (range) {
+    head.push(kept("のうち"));
+    phrases.push(
+      range.start === range.end
+        ? [kept(`${count(range.end, unit)}目`)]
+        : [
+            kept(`${numberFormat.format(range.start)}〜`),
+            kept(`${count(range.end, unit)}目`),
+          ],
+    );
+  }
+  if (sortLabel) {
+    phrases[phrases.length - 1].push({ text: `・${sortLabel}`, keep: false });
+  }
+  return phrases;
+}
+
+/** 件数の行の文を1つの文にしたもの。 */
+export function statusText(
+  options: Parameters<typeof statusPhrases>[0],
+): string {
+  return statusPhrases(options)
+    .flat()
+    .map((word) => word.text)
+    .join("");
 }

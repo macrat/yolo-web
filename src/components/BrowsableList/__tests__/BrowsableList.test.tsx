@@ -14,7 +14,7 @@ vi.mock("next/navigation", () => ({
 const BASE = "/list";
 const PER_PAGE = 50;
 
-// 1ページの件数×2＋1件。読みの順に並べて渡す。
+// 1ページの件数×2＋1件。補助情報の番号の順に並べて渡す。
 function makeItems(count: number): BrowseItem[] {
   return Array.from({ length: count }, (_, index) => {
     const number = String(index + 1).padStart(3, "0");
@@ -23,7 +23,7 @@ function makeItems(count: number): BrowseItem[] {
       slug: `item-${number}`,
       description: `説明${number}`,
       kind: index % 2 === 0 ? "文章" : "データ",
-      sortKeys: { name: [number], reverse: [-index] },
+      facts: [{ text: `No.${number}` }],
     };
   });
 }
@@ -43,8 +43,12 @@ function props(change: Partial<BrowsableListProps> = {}): BrowsableListProps {
       ],
     },
     sorts: [
-      { value: "name", label: "名前順" },
-      { value: "reverse", label: "逆順" },
+      { value: "number", label: "番号順", keys: [{ by: "fact", index: 0 }] },
+      {
+        value: "reverse",
+        label: "逆順",
+        keys: [{ by: "fact", index: 0, desc: true }],
+      },
     ],
     perPage: PER_PAGE,
     basePath: BASE,
@@ -99,9 +103,26 @@ describe("BrowsableList", () => {
     );
   });
 
+  test("名前のリンク先は接頭辞に slug を百分率符号化して続け、slug が無ければ名前を使う", () => {
+    const items: BrowseItem[] = [
+      { name: "水", readings: ["スイ", "みず"] },
+      { name: "JSON整形", slug: "json-formatter" },
+    ];
+    render(<BrowsableList {...props({ items })} />);
+    expect(screen.getByRole("link", { name: "水" })).toHaveAttribute(
+      "href",
+      `/items/${encodeURIComponent("水")}`,
+    );
+    expect(screen.getByRole("link", { name: "JSON整形" })).toHaveAttribute(
+      "href",
+      "/items/json-formatter",
+    );
+    expect(screen.getByText("スイ・みず")).toBeInTheDocument();
+  });
+
   test("10件以下の一覧は件数の行だけを持ち、並び順を件数の行が言う", () => {
     render(<BrowsableList {...props({ items: makeItems(10) })} />);
-    expect(countLine()).toHaveTextContent("全10件・名前順");
+    expect(countLine()).toHaveTextContent("全10件・番号順");
     expect(screen.queryByRole("searchbox")).not.toBeInTheDocument();
     expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();
   });
@@ -145,7 +166,7 @@ describe("BrowsableList", () => {
     expect(window.location.search).toBe("?kind=data&sort=reverse");
     expect(rowNames()[0]).toBe("項目100");
     fireEvent.click(screen.getByRole("radio", { name: "すべて" }));
-    fireEvent.click(screen.getByRole("radio", { name: "名前順" }));
+    fireEvent.click(screen.getByRole("radio", { name: "番号順" }));
     expect(window.location.pathname + window.location.search).toBe(BASE);
     expect(replace).toHaveBeenCalled();
     replace.mockRestore();
@@ -243,7 +264,7 @@ describe("BrowsableList", () => {
     render(<BrowsableList {...props({ items: makeItems(10) })} />);
     fireEvent.click(screen.getByRole("button", { name: "絞り込みを外す" }));
     expect(countLine()).toHaveFocus();
-    expect(countLine()).toHaveTextContent("全10件・名前順");
+    expect(countLine()).toHaveTextContent("全10件・番号順");
   });
 
   test("読み上げの文は、来訪者が条件を変えるまで空で、打つあいだは積まず、落ち着いてから1回替わる", () => {

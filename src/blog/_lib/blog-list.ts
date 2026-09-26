@@ -1,10 +1,12 @@
 /**
- * ブログの一覧のページ（`/blog`・分類・タグ）の範囲と、そのページの題・説明・metadata・静的なページ番号。
- * 一覧のページの経路は、どれもここから範囲を受け取り、同じ形で組む。
+ * ブログの一覧のページ（`/blog`・分類・タグ）の範囲と、そのページの題・説明・metadata・静的なページ番号・
+ * 一覧の項目・並び順。一覧のページの経路は、どれもここから範囲を受け取り、同じ形で組む。
  */
 
 import type { Metadata } from "next";
 import { BASE_URL, SITE_NAME } from "@/lib/constants";
+import { formatDate } from "@/lib/date";
+import type { BrowseItem, BrowseSort } from "@/lib/list-browse";
 import {
   listPageHref,
   listPageStaticParams,
@@ -16,6 +18,7 @@ import {
   CATEGORY_LABELS,
   MIN_POSTS_FOR_TAG_INDEX,
   MIN_POSTS_FOR_TAG_PAGE,
+  SERIES_LABELS,
   TAG_DESCRIPTIONS,
   getAllBlogPosts,
   getPostsByTag,
@@ -52,6 +55,41 @@ export function blogListPosts(scope: BlogListScope): BlogPostMeta[] {
     case "tag":
       return getPostsByTag(scope.tag);
   }
+}
+
+/** 並び順。既定は新しい順で、初めから順に読みたい人が古い順を選ぶ（§7）。どちらも公開の日時で比べる。 */
+export const BLOG_SORTS: BrowseSort[] = [
+  {
+    value: "newest",
+    label: "新しい順",
+    keys: [{ by: "factTime", index: 0, desc: true }],
+  },
+  { value: "oldest", label: "古い順", keys: [{ by: "factTime", index: 0 }] },
+];
+
+function blogItem(post: BlogPostMeta): BrowseItem {
+  const seriesLabel = post.series ? SERIES_LABELS[post.series] : undefined;
+  return {
+    name: post.title,
+    slug: post.slug,
+    description: post.description,
+    kind: CATEGORY_LABELS[post.category],
+    facts: [
+      { text: formatDate(post.published_at), dateTime: post.published_at },
+      { text: `${post.readingTime}分で読める` },
+    ],
+    searchTexts: [
+      post.description,
+      CATEGORY_LABELS[post.category],
+      ...post.tags,
+      ...(seriesLabel ? [seriesLabel] : []),
+    ],
+  };
+}
+
+/** 範囲の記事を、一覧の項目にして返す。範囲の記事は新しい順なので、既定の並び順のまま。 */
+export function blogListItems(scope: BlogListScope): BrowseItem[] {
+  return blogListPosts(scope).map(blogItem);
 }
 
 /** 分類の値が、いまある分類か。 */
