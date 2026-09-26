@@ -138,7 +138,7 @@ test("辞典棚は漢字・四字熟語・伝統色・ユーモアの実在ル�
   const cases: [string, string][] = [
     ["漢字辞典", "/dictionary/kanji"],
     ["四字熟語辞典", "/dictionary/yoji"],
-    ["日本の伝統色", "/dictionary/colors"],
+    ["伝統色辞典", "/dictionary/colors"],
     ["ユーモア辞典", "/dictionary/humor"],
   ];
   for (const [label, href] of cases) {

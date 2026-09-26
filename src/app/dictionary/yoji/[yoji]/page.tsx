@@ -42,7 +42,10 @@ export default async function YojiDetailPage({
         { label: "ホーム", href: "/" },
         { label: "辞典", href: "/dictionary" },
         { label: "四字熟語辞典", href: "/dictionary/yoji" },
-        { label: yoji.yoji },
+        {
+          label: yoji.yoji,
+          href: `/dictionary/yoji/${encodeURIComponent(yoji.yoji)}`,
+        },
       ]}
       jsonLd={jsonLd}
       shareUrl={`/dictionary/yoji/${encodeURIComponent(yoji.yoji)}`}

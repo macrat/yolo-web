@@ -30,7 +30,7 @@ export default function GameLayout({
         items={[
           { label: "ホーム", href: "/" },
           { label: "遊び", href: "/play" },
-          { label: meta.title },
+          { label: meta.title, href: `/play/${meta.slug}` },
         ]}
       />
       {meta.valueProposition && (

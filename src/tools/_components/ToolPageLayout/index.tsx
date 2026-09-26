@@ -42,7 +42,7 @@ export default function ToolPageLayout({
         items={[
           { label: "ホーム", href: "/" },
           { label: "ツール", href: "/tools" },
-          { label: meta.name },
+          { label: meta.name, href: `/tools/${meta.slug}` },
         ]}
       />
 

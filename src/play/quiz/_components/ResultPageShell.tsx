@@ -61,7 +61,7 @@ export default function ResultPageShell({
           { label: "ホーム", href: "/" },
           { label: "遊び", href: "/play" },
           { label: quiz.meta.title, href: `/play/${slug}` },
-          { label: "結果" },
+          { label: "結果", href: `/play/${slug}/result/${result.id}` },
         ]}
       />
       <div className={styles.card}>

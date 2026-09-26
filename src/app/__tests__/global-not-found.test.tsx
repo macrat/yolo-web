@@ -1,5 +1,6 @@
 import { expect, test } from "vitest";
 import { render, screen } from "@testing-library/react";
+import { HEADER_NAV_ITEMS } from "@/lib/site-frame";
 import GlobalNotFound from "../global-not-found-content";
 
 test("404 page renders heading", () => {
@@ -12,18 +13,24 @@ test("404 page renders heading", () => {
   ).toBeInTheDocument();
 });
 
-test("404 page has links to main sections", () => {
+test("404 の一覧へのリンクは、上端のナビと同じ名前と行き先を持つ", () => {
   render(<GlobalNotFound />);
 
-  const homeLink = screen.getByRole("link", { name: "ホーム" });
-  expect(homeLink).toHaveAttribute("href", "/");
-
-  const toolsLink = screen.getByRole("link", { name: "無料オンラインツール" });
-  expect(toolsLink).toHaveAttribute("href", "/tools");
-
-  const gamesLink = screen.getByRole("link", { name: "遊ぶ" });
-  expect(gamesLink).toHaveAttribute("href", "/play");
-
-  const blogLink = screen.getByRole("link", { name: "ブログ" });
-  expect(blogLink).toHaveAttribute("href", "/blog");
+  expect(screen.getByRole("link", { name: "ホーム" })).toHaveAttribute(
+    "href",
+    "/",
+  );
+  const names = screen
+    .getAllByRole("link")
+    .map((link) => link.textContent)
+    .filter((name) => name !== "ホーム");
+  for (const name of names) {
+    const navItem = HEADER_NAV_ITEMS.find((item) => item.label === name);
+    expect(navItem, name ?? "").toBeDefined();
+    expect(screen.getByRole("link", { name: name ?? "" })).toHaveAttribute(
+      "href",
+      navItem?.href,
+    );
+  }
+  expect(names).toEqual(["ツール", "遊び", "ブログ"]);
 });

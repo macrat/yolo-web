@@ -10,11 +10,11 @@ import {
   blogListBasePath,
   blogListDescription,
   blogListHeading,
-  blogListHeadingPhrases,
   blogListItems,
   blogListTitle,
   type BlogListScope,
 } from "@/blog/_lib/blog-list";
+import { listPageHref } from "@/lib/list-pages";
 
 interface BlogListViewProps {
   scope: BlogListScope;
@@ -36,20 +36,18 @@ export default function BlogListView({ scope, page }: BlogListViewProps) {
   const heading = blogListHeading(scope);
   const basePath = blogListBasePath(scope);
   const index = blogIndexEntries();
-  const trail: BreadcrumbItem[] | undefined =
-    scope.type === "all"
-      ? undefined
-      : [
-          { label: "ホーム", href: "/" },
-          { label: "ブログ", href: "/blog" },
-          { label: heading },
-        ];
+  const current = { label: heading, href: listPageHref(basePath, page) };
+  const trail: BreadcrumbItem[] = [
+    { label: "ホーム", href: "/" },
+    ...(scope.type === "all"
+      ? [current]
+      : [{ label: blogListHeading({ type: "all" }), href: "/blog" }, current]),
+  ];
 
   return (
     <ListPage
       trail={trail}
       heading={heading}
-      headingPhrases={blogListHeadingPhrases(scope)}
       description={blogListDescription(scope)}
     >
       <IndexAccordion

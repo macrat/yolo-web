@@ -40,8 +40,8 @@ describe("blogListMetadata", () => {
   test("2ページ目からは題にページを添え、自分を canonical にする", () => {
     const first = blogListMetadata({ type: "all" }, 1);
     const second = blogListMetadata({ type: "all" }, 2);
-    expect(first.title).toBe("AI試行錯誤ブログ | yolos.net");
-    expect(second.title).toBe("AI試行錯誤ブログ（2ページ目） | yolos.net");
+    expect(first.title).toBe("ブログ | yolos.net");
+    expect(second.title).toBe("ブログ（2ページ目） | yolos.net");
     expect(first.alternates?.canonical).toBe(`${BASE_URL}/blog`);
     expect(second.alternates?.canonical).toBe(`${BASE_URL}/blog/page/2`);
   });
@@ -49,9 +49,9 @@ describe("blogListMetadata", () => {
   test("分類とタグの題は、その名前とブログの名前を言う", () => {
     expect(
       blogListMetadata({ type: "category", category: "dev-notes" }, 1).title,
-    ).toBe("開発ノート - AI試行錯誤ブログ | yolos.net");
+    ).toBe("開発ノート - ブログ | yolos.net");
     expect(blogListMetadata({ type: "tag", tag: "Web開発" }, 1).title).toBe(
-      "Web開発 - AI試行錯誤ブログ | yolos.net",
+      "Web開発 - ブログ | yolos.net",
     );
     expect(blogListBasePath({ type: "tag", tag: "Web開発" })).toBe(
       `/blog/tag/${encodeURIComponent("Web開発")}`,

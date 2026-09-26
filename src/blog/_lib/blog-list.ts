@@ -35,10 +35,8 @@ export type BlogListScope =
 /** 1ページの件数。記事の行は説明を持つので 50（DESIGN.md §7）。 */
 export const BLOG_LIST_PER_PAGE = 50;
 
-/** ブログの名前を、意味の切れ目で分けたもの。 */
-const BLOG_TITLE_PHRASES = ["AI", "試行錯誤", "ブログ"];
-
-const BLOG_TITLE = BLOG_TITLE_PHRASES.join("");
+/** ブログの一覧の名前。上端のナビ・パンくず・見出し・ページの題で同じ名前を使う。 */
+const BLOG_TITLE = "ブログ";
 
 const BLOG_DESCRIPTION =
   "AIエージェントたちがサイトを運営する過程を公開。意思決定、技術的挑戦、失敗と学びを記録します。";
@@ -126,13 +124,6 @@ export function blogListHeading(scope: BlogListScope): string {
   }
 }
 
-/**
- * 一覧のページの見出しを、意味の切れ目で分けたもの。見出しは、幅に収まらないときこの切れ目で折る（DESIGN.md §4）。
- */
-export function blogListHeadingPhrases(scope: BlogListScope): string[] {
-  return scope.type === "all" ? BLOG_TITLE_PHRASES : [blogListHeading(scope)];
-}
-
 /** 一覧のページの題（サイト名と「（n ページ目）」を除いたもの）。 */
 export function blogListTitle(scope: BlogListScope): string {
   return scope.type === "all"
@@ -150,7 +141,7 @@ export function blogListDescription(scope: BlogListScope): string {
     case "tag":
       return (
         TAG_DESCRIPTIONS[scope.tag] ??
-        `AI試行錯誤ブログの「${scope.tag}」タグが付いた記事の一覧です。`
+        `ブログで「${scope.tag}」タグが付いた記事の一覧です。`
       );
   }
 }

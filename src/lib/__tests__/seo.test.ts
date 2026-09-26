@@ -216,7 +216,7 @@ describe("generateBreadcrumbJsonLd", () => {
     const result = generateBreadcrumbJsonLd([
       { label: "ホーム", href: "/" },
       { label: "ツール", href: "/tools" },
-      { label: "テスト" },
+      { label: "テスト", href: "/tools/test" },
     ]);
 
     expect(result).toMatchObject({
@@ -232,8 +232,7 @@ describe("generateBreadcrumbJsonLd", () => {
     expect(items[0].name).toBe("ホーム");
     expect(items[2].position).toBe(3);
     expect(items[2].name).toBe("テスト");
-    // Last item has no href, so no "item" property
-    expect(items[2].item).toBeUndefined();
+    expect(items[2].item).toBe(`${BASE_URL}/tools/test`);
   });
 });
 
@@ -312,7 +311,7 @@ describe("generateColorJsonLd", () => {
     expect(result.url).toContain("/dictionary/colors/nadeshiko");
     expect(result.inDefinedTermSet).toMatchObject({
       "@type": "DefinedTermSet",
-      name: "日本の伝統色辞典",
+      name: "伝統色辞典",
     });
   });
 });
@@ -662,8 +661,7 @@ describe("generateYojiPageMetadata", () => {
 
   test("AI 文言の直後は origin/structure suffix または description 終端である（位置検証）", () => {
     // base → AI → (任意の origin/structure suffix) → 終端、の順序を正規表現で固定する。
-    // AI 文言と suffix の間に他要素が混入する変更（例: 「使用例も。」のような実用語彙の
-    // 不用意な復活）を構造的に検出する。
+    // 実用の辞典を思わせる語（「使用例も。」など）が AI の文言のあとに入らないことを確かめる。
     const result = generateYojiPageMetadata(yojiData);
     const description = result.description as string;
     expect(description).toMatch(
@@ -731,7 +729,7 @@ describe("generateYojiPageMetadata", () => {
 });
 
 describe("generateYojiPageMetadata - all yoji-data entries (integration)", () => {
-  // yoji-data.json の本物の 400 件全件で description ≤ 130 字を構造的に保証する。
+  // yoji-data.json の実データの全件で description ≤ 130 字を構造的に保証する。
   // YOJI_AI_EXAMPLE_LABEL / origin・structure ラベル / meaning の長さが変動しても、
   // 来訪者が SERP で description が切れて意味の主要部を失うリスクを CI で予防する。
   // 個別の代表ケース（短い・長い・origin=不明）は上の describe で網羅済み。この
@@ -1146,7 +1144,7 @@ describe("JSON-LD external sameAs/isBasedOn/citation guard", () => {
     const result = generateBreadcrumbJsonLd([
       { label: "ホーム", href: "/" },
       { label: "ツール", href: "/tools" },
-      { label: "テスト" },
+      { label: "テスト", href: "/tools/test" },
     ]);
     expect(findExternalRefViolations(result)).toEqual([]);
   });

@@ -80,7 +80,7 @@ export default async function BlogPostPage({ params }: Props) {
               label: CATEGORY_LABELS[post.category],
               href: `/blog/category/${post.category}`,
             },
-            { label: post.title },
+            { label: post.title, href: `/blog/${post.slug}` },
           ]}
         />
         <h1 className={styles.title}>{post.title}</h1>

@@ -9,6 +9,7 @@ import {
   TOOL_SORTS,
   toolListItems,
 } from "@/tools/_lib/tool-list";
+import { listPageHref } from "@/lib/list-pages";
 
 interface ToolListViewProps {
   /** パスが示すページ。 */
@@ -22,7 +23,13 @@ interface ToolListViewProps {
 export default function ToolListView({ page }: ToolListViewProps) {
   return (
     <ListPage
-      trail={[{ label: "ホーム", href: "/" }, { label: TOOL_LIST_TITLE }]}
+      trail={[
+        { label: "ホーム", href: "/" },
+        {
+          label: TOOL_LIST_TITLE,
+          href: listPageHref(TOOL_LIST_BASE_PATH, page),
+        },
+      ]}
       heading={TOOL_LIST_TITLE}
       description={TOOL_LIST_INTRO}
     >

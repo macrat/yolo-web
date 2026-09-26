@@ -154,9 +154,10 @@ export function generateGameJsonLd(game: GameMetaForSeo): object {
   };
 }
 
+/** パンくずの項目。名前と行き先のパス。最後の項目はいま開いているページを指す。 */
 export interface BreadcrumbItem {
   label: string;
-  href?: string;
+  href: string;
 }
 
 export function generateBreadcrumbJsonLd(items: BreadcrumbItem[]): object {
@@ -167,7 +168,7 @@ export function generateBreadcrumbJsonLd(items: BreadcrumbItem[]): object {
       "@type": "ListItem",
       position: index + 1,
       name: item.label,
-      ...(item.href ? { item: `${BASE_URL}${item.href}` } : {}),
+      item: `${BASE_URL}${item.href}`,
     })),
   };
 }
@@ -482,7 +483,7 @@ export function generateColorJsonLd(color: ColorMetaForSeo): object {
     url: `${BASE_URL}/dictionary/colors/${color.slug}`,
     inDefinedTermSet: {
       "@type": "DefinedTermSet",
-      name: "日本の伝統色辞典",
+      name: "伝統色辞典",
       url: `${BASE_URL}/dictionary/colors`,
     },
     inLanguage: "ja",

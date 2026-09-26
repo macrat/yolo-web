@@ -24,7 +24,7 @@ const mockBreadcrumbItems = [
   { label: "ホーム", href: "/" },
   { label: "辞典", href: "/dictionary" },
   { label: "テスト辞典", href: "/dictionary/test" },
-  { label: "テスト項目" },
+  { label: "テスト項目", href: "/dictionary/test/item" },
 ];
 
 const mockJsonLd = { "@context": "https://schema.org", "@type": "DefinedTerm" };

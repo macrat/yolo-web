@@ -13,6 +13,7 @@ import {
   colorListTitle,
   type ColorListScope,
 } from "@/dictionary/_lib/color-list";
+import { listPageHref } from "@/lib/list-pages";
 
 interface ColorListViewProps {
   scope: ColorListScope;
@@ -30,14 +31,18 @@ interface ColorListViewProps {
 export default function ColorListView({ scope, page }: ColorListViewProps) {
   const heading = colorListHeading(scope);
   const basePath = colorListBasePath(scope);
+  const current = { label: heading, href: listPageHref(basePath, page) };
   const trail: BreadcrumbItem[] = [
     { label: "ホーム", href: "/" },
     { label: "辞典", href: "/dictionary" },
     ...(scope.type === "all"
-      ? [{ label: "伝統色辞典" }]
+      ? [current]
       : [
-          { label: "伝統色辞典", href: "/dictionary/colors" },
-          { label: heading },
+          {
+            label: colorListHeading({ type: "all" }),
+            href: colorListBasePath({ type: "all" }),
+          },
+          current,
         ]),
   ];
 

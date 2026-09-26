@@ -72,15 +72,18 @@ const COLOR_SECTIONS = [
 ];
 
 // Breadcrumb サンプルデータ
-const BREADCRUMB_2 = [{ label: "ホーム", href: "/" }, { label: "ブログ" }];
+const BREADCRUMB_2 = [
+  { label: "ホーム", href: "/" },
+  { label: "ブログ", href: "/blog" },
+];
 
 const BREADCRUMB_3 = [
   { label: "ホーム", href: "/" },
   { label: "ツール", href: "/tools" },
-  { label: "文字カウンター" },
+  { label: "文字数カウント", href: "/tools/char-count" },
 ];
 
-const BREADCRUMB_1 = [{ label: "ホーム" }];
+const BREADCRUMB_1 = [{ label: "ホーム", href: "/" }];
 
 // FaqSection サンプルデータ
 const SAMPLE_FAQ = [

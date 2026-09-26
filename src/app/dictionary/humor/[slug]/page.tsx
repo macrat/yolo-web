@@ -59,7 +59,7 @@ export default async function HumorDictEntryPage({
           { label: "ホーム", href: "/" },
           { label: "辞典", href: "/dictionary" },
           { label: "ユーモア辞典", href: "/dictionary/humor" },
-          { label: entry.word },
+          { label: entry.word, href: `/dictionary/humor/${entry.slug}` },
         ]}
       />
       <article className={styles.article}>

@@ -1,6 +1,7 @@
 import BrowsableList from "@/components/BrowsableList";
 import ListPage from "@/components/ListPage";
 import { BASE_URL } from "@/lib/constants";
+import { listPageHref } from "@/lib/list-pages";
 import { safeJsonLdStringify } from "@/lib/seo";
 import { humorDictMeta } from "@/humor-dict/meta";
 import {
@@ -35,7 +36,7 @@ export default function HumorListView({ page }: HumorListViewProps) {
       trail={[
         { label: "ホーム", href: "/" },
         { label: "辞典", href: "/dictionary" },
-        { label: heading },
+        { label: heading, href: listPageHref(HUMOR_LIST_BASE_PATH, page) },
       ]}
       heading={heading}
       description="身近な言葉を、AIがまじめな顔で定義し直しました。本当の意味ではありません。"

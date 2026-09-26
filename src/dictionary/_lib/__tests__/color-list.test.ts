@@ -111,7 +111,7 @@ describe("colorListPageParams", () => {
 describe("colorListMetadata", () => {
   test("2ページ目からは題にページを添え、自分を canonical にする", () => {
     expect(colorListMetadata({ type: "all" }, 1).title).toBe(
-      "日本の伝統色 - 250色一覧 | yolos.net",
+      "伝統色辞典 - 250色一覧 | yolos.net",
     );
     const second = colorListMetadata({ type: "all" }, 2);
     expect(second.alternates?.canonical).toBe(

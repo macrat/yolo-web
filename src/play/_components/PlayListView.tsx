@@ -9,6 +9,7 @@ import {
   PLAY_SORTS,
   playListItems,
 } from "@/play/play-list";
+import { listPageHref } from "@/lib/list-pages";
 
 interface PlayListViewProps {
   /** パスが示すページ。 */
@@ -22,7 +23,13 @@ interface PlayListViewProps {
 export default function PlayListView({ page }: PlayListViewProps) {
   return (
     <ListPage
-      trail={[{ label: "ホーム", href: "/" }, { label: PLAY_LIST_TITLE }]}
+      trail={[
+        { label: "ホーム", href: "/" },
+        {
+          label: PLAY_LIST_TITLE,
+          href: listPageHref(PLAY_LIST_BASE_PATH, page),
+        },
+      ]}
       heading={PLAY_LIST_TITLE}
       description={PLAY_LIST_INTRO}
     >

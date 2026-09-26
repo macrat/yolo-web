@@ -42,7 +42,10 @@ export default async function KanjiDetailPage({
         { label: "ホーム", href: "/" },
         { label: "辞典", href: "/dictionary" },
         { label: "漢字辞典", href: "/dictionary/kanji" },
-        { label: kanji.character },
+        {
+          label: kanji.character,
+          href: `/dictionary/kanji/${encodeURIComponent(kanji.character)}`,
+        },
       ]}
       jsonLd={jsonLd}
       shareUrl={`/dictionary/kanji/${encodeURIComponent(kanji.character)}`}

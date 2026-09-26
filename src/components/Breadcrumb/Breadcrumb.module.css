@@ -11,8 +11,7 @@
   color: var(--ink-2);
 }
 
-/* 項目と、その後ろの区切りを1つにまとめ、あいだで折り返さない。いまのページの名前は長いことがあるので、
- * 行に収まらなければ li の中で折り返す。 */
+/* 項目と、その後ろの区切りを1つにまとめ、あいだで折り返さない。 */
 .item {
   display: flex;
   align-items: center;
@@ -31,15 +30,19 @@
   white-space: nowrap;
 }
 
+/* いまのページは §6 の現在地。太字で示し、押しても何も起きないので下線も hover も持たない。名前は長いことが
+ * あるので、行に収まらなければ li の中で折り返す。 */
+.link[aria-current="page"] {
+  flex-shrink: 1;
+  white-space: normal;
+  color: var(--ink);
+  font-weight: 700;
+  text-decoration: none;
+}
+
 /* 区切りの「/」。前の項目の箱の後ろと、後ろの項目の箱の前に、それぞれ同じ間隔をあけ、リングと hover の
  * 線を「/」に掛けない。後ろの項目の箱は字より余白の分だけ前へ張り出すので、後ろ側はその分を足す。 */
 .separator {
   margin-inline: var(--space-8) calc(var(--space-8) + var(--text-box-pad));
   user-select: none;
-}
-
-/* いまのページはリンクにせず、下線を持たない文字で置く。 */
-.current {
-  min-width: 0;
-  color: var(--ink);
 }

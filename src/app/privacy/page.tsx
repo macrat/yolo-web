@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Breadcrumb from "@/components/Breadcrumb";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import styles from "./page.module.css";
 import { PRIVACY_LAST_MODIFIED } from "./meta";
@@ -32,6 +33,12 @@ export const metadata: Metadata = {
 export default function PrivacyPage() {
   return (
     <div className={styles.main}>
+      <Breadcrumb
+        items={[
+          { label: "ホーム", href: "/" },
+          { label: "プライバシー", href: "/privacy" },
+        ]}
+      />
       <h1 className={styles.title}>プライバシーポリシー</h1>
 
       {/* セクション1: はじめに */}

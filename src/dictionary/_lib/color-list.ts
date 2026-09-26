@@ -30,7 +30,7 @@ export type ColorListScope =
 /** 1ページの件数。伝統色の行は説明を持たず、色見本と色名と読みで済むので 100（DESIGN.md §7）。 */
 export const COLOR_LIST_PER_PAGE = 100;
 
-const DICTIONARY_TITLE = "日本の伝統色";
+const DICTIONARY_TITLE = "伝統色辞典";
 
 /** 色みの並び。赤系から紫系までの色相の順で、色相を持たない無彩色を最後に置く。 */
 const COLOR_CATEGORY_ORDER = Object.keys(

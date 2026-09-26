@@ -14,7 +14,7 @@
 
 /* 表題: のれん罫(--rule-strong)で本文と区切り、規約文書としての起点を示す。 */
 .title {
-  margin: 0 0 var(--space-32);
+  margin: var(--space-16) 0 var(--space-32);
   padding-bottom: var(--space-16);
   color: var(--ink);
   border-bottom: 1px solid var(--rule-strong);

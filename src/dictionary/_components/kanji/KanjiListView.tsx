@@ -13,6 +13,7 @@ import {
   kanjiListTitle,
   type KanjiListScope,
 } from "@/dictionary/_lib/kanji-list";
+import { listPageHref } from "@/lib/list-pages";
 
 interface KanjiListViewProps {
   scope: KanjiListScope;
@@ -34,12 +35,19 @@ export default function KanjiListView({ scope, page }: KanjiListViewProps) {
   const heading = kanjiListHeading(scope);
   const basePath = kanjiListBasePath(scope);
   const index = kanjiIndexEntries();
+  const current = { label: heading, href: listPageHref(basePath, page) };
   const trail: BreadcrumbItem[] = [
     { label: "ホーム", href: "/" },
     { label: "辞典", href: "/dictionary" },
     ...(scope.type === "all"
-      ? [{ label: heading }]
-      : [{ label: "漢字辞典", href: "/dictionary/kanji" }, { label: heading }]),
+      ? [current]
+      : [
+          {
+            label: kanjiListHeading({ type: "all" }),
+            href: kanjiListBasePath({ type: "all" }),
+          },
+          current,
+        ]),
   ];
 
   return (

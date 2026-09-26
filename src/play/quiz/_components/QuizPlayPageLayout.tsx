@@ -55,7 +55,7 @@ export default async function QuizPlayPageLayout({
         items={[
           { label: "ホーム", href: "/" },
           { label: "遊び", href: "/play" },
-          { label: quiz.meta.title },
+          { label: quiz.meta.title, href: `/play/${slug}` },
         ]}
       />
 

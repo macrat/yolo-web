@@ -5,8 +5,8 @@ import { headingFontAttr } from "@/lib/zen-antique-charset";
 import styles from "./ListPage.module.css";
 
 interface ListPageProps {
-  /** パンくず。 */
-  trail?: BreadcrumbItem[];
+  /** パンくず。ホームから、いま開いているページまで。 */
+  trail: BreadcrumbItem[];
   /** 主見出し。 */
   heading: string;
   /**
@@ -34,7 +34,7 @@ export default function ListPage({
   return (
     <Section>
       <div className={styles.view}>
-        {trail ? <Breadcrumb items={trail} /> : null}
+        <Breadcrumb items={trail} />
         <div>
           <h1
             className={

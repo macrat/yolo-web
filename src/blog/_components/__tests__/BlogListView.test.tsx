@@ -32,7 +32,7 @@ describe("BlogListView", () => {
     const posts = getAllBlogPosts();
 
     expect(
-      screen.getByRole("heading", { level: 1, name: "AI試行錯誤ブログ" }),
+      screen.getByRole("heading", { level: 1, name: "ブログ" }),
     ).toBeInTheDocument();
     const listRows = rows();
     expect(listRows).toHaveLength(Math.min(posts.length, BLOG_LIST_PER_PAGE));
@@ -172,12 +172,17 @@ describe("BlogListView", () => {
     ).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
   });
 
-  test("/blog は見出しを「AI」「試行錯誤」「ブログ」の切れ目で折れるようにする", () => {
-    visit("/blog");
-    render(<BlogListView scope={{ type: "all" }} page={1} />);
+  test("/blog のパンくずは、上端のナビと同じ「ブログ」を、いま開いているページの現在地にする", () => {
+    visit("/blog/page/2");
+    render(<BlogListView scope={{ type: "all" }} page={2} />);
 
-    const h1 = screen.getByRole("heading", { level: 1 });
-    expect(h1.innerHTML).toBe("AI<wbr>試行錯誤<wbr>ブログ");
+    const breadcrumb = screen.getByRole("navigation", {
+      name: "パンくずリスト",
+    });
+    const links = within(breadcrumb).getAllByRole("link");
+    expect(links.map((link) => link.textContent)).toEqual(["ホーム", "ブログ"]);
+    expect(links[1]).toHaveAttribute("href", "/blog/page/2");
+    expect(links[1]).toHaveAttribute("aria-current", "page");
   });
 
   test("名前の欄は分類の名前でも探せる", () => {

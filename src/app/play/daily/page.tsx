@@ -21,7 +21,7 @@ export default function DailyFortunePage() {
         items={[
           { label: "ホーム", href: "/" },
           { label: "遊び", href: "/play" },
-          { label: fortunePlayContentMeta.title },
+          { label: fortunePlayContentMeta.title, href: "/play/daily" },
         ]}
       />
       <DailyFortuneCard />

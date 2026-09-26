@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Breadcrumb from "@/components/Breadcrumb";
 import ItemList, { type ItemListItem } from "@/components/ItemList";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import styles from "./page.module.css";
@@ -73,6 +74,12 @@ const STORE_ITEMS: ItemListItem[] = [
 export default function AboutPage() {
   return (
     <div className={styles.page}>
+      <Breadcrumb
+        items={[
+          { label: "ホーム", href: "/" },
+          { label: "サイト紹介", href: "/about" },
+        ]}
+      />
       <h1 className={styles.title}>このサイトについて</h1>
 
       <p className={styles.lead}>

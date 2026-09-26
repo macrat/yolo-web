@@ -13,6 +13,7 @@ import {
   yojiListTitle,
   type YojiListScope,
 } from "@/dictionary/_lib/yoji-list";
+import { listPageHref } from "@/lib/list-pages";
 
 interface YojiListViewProps {
   scope: YojiListScope;
@@ -30,14 +31,18 @@ interface YojiListViewProps {
 export default function YojiListView({ scope, page }: YojiListViewProps) {
   const heading = yojiListHeading(scope);
   const basePath = yojiListBasePath(scope);
+  const current = { label: heading, href: listPageHref(basePath, page) };
   const trail: BreadcrumbItem[] = [
     { label: "ホーム", href: "/" },
     { label: "辞典", href: "/dictionary" },
     ...(scope.type === "all"
-      ? [{ label: heading }]
+      ? [current]
       : [
-          { label: "四字熟語辞典", href: "/dictionary/yoji" },
-          { label: heading },
+          {
+            label: yojiListHeading({ type: "all" }),
+            href: yojiListBasePath({ type: "all" }),
+          },
+          current,
         ]),
   ];
 

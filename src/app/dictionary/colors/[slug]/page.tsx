@@ -45,7 +45,7 @@ export default async function ColorDetailPage({
         { label: "ホーム", href: "/" },
         { label: "辞典", href: "/dictionary" },
         { label: "伝統色辞典", href: "/dictionary/colors" },
-        { label: color.name },
+        { label: color.name, href: `/dictionary/colors/${color.slug}` },
       ]}
       jsonLd={jsonLd}
       shareUrl={`/dictionary/colors/${color.slug}`}

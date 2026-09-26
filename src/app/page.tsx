@@ -132,7 +132,7 @@ const DICTIONARY_ITEMS: ItemListItem[] = [
     description: "意味と使い方、由来までまとめた四字熟語の一覧。",
   },
   {
-    name: "日本の伝統色",
+    name: "伝統色辞典",
     href: "/dictionary/colors",
     description: "和の色名とその色みを、由来つきで並べています。",
   },

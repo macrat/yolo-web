@@ -63,7 +63,7 @@ const DICTIONARIES: ItemListItem[] = [
     name: "四字熟語辞典",
     href: "/dictionary/yoji",
     description:
-      "よく使う四字熟語を、意味と使い方、カテゴリや難易度から探せます。",
+      "四字熟語を語・読み・意味で引き、成立と出典やカテゴリ・難易度を確かめられます。",
     facts: [{ text: `${countFormat.format(yojiCount)}語` }],
   },
   {
@@ -87,7 +87,10 @@ const DICTIONARIES: ItemListItem[] = [
 export default function DictionaryPage() {
   return (
     <ListPage
-      trail={[{ label: "ホーム", href: "/" }, { label: "辞典" }]}
+      trail={[
+        { label: "ホーム", href: "/" },
+        { label: "辞典", href: "/dictionary" },
+      ]}
       heading="辞典"
       description="漢字・四字熟語・日本の伝統色を引ける辞典と、AIが作ったユーモア辞典です。"
     >

@@ -1,11 +1,8 @@
 /**
- * GlobalNotFoundContent — 404 ページの本文コンポーネント（テスト可能な単体）
+ * 404 ページの本文。global-not-found.js はトップレベルに <html>/<body> を持ち、Vitest でそのまま描けないので、
+ * 本文をこの部品に分けてテストする。
  *
- * global-not-found.js はトップレベルに <html>/<body> を持つため Vitest で
- * そのままレンダリングできない。本コンポーネントを分離することで
- * テストを global-not-found.js の外部から行えるようにする。
- *
- * B-333-7 (cycle-180)
+ * 一覧へのリンクの名前は、上端のナビの名前と同じにする（DESIGN.md §7 一覧へ戻る道）。
  */
 
 import ItemList, { type ItemListItem } from "@/components/ItemList";
@@ -19,12 +16,12 @@ const LINKS: ItemListItem[] = [
   },
   {
     href: "/tools",
-    name: "無料オンラインツール",
+    name: "ツール",
     description: "すぐに使える便利ツール集",
   },
   {
     href: "/play",
-    name: "遊ぶ",
+    name: "遊び",
     description: "遊んで学べるブラウザゲーム",
   },
   {
