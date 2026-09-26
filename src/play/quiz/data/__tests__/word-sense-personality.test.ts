@@ -84,8 +84,16 @@ describe("word-sense-personality — meta", () => {
     expect(wordSensePersonalityQuiz.meta.questionCount).toBe(10);
   });
 
-  it("has faq with at least 4 entries", () => {
-    expect(wordSensePersonalityQuiz.meta.faq?.length).toBeGreaterThanOrEqual(4);
+  it("has faq with at least 3 entries", () => {
+    expect(wordSensePersonalityQuiz.meta.faq?.length).toBeGreaterThanOrEqual(3);
+  });
+
+  it("does not promise a friend compatibility feature the quiz does not offer", () => {
+    const { description, faq } = wordSensePersonalityQuiz.meta;
+    expect(description).not.toContain("相性");
+    for (const entry of faq ?? []) {
+      expect(entry.question + entry.answer).not.toContain("相性");
+    }
   });
 });
 

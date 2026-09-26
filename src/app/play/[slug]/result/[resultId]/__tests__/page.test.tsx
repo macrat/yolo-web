@@ -148,6 +148,28 @@ vi.mock("@/play/quiz/registry", () => ({
       },
     ],
     [
+      "reading-long-quiz",
+      {
+        meta: {
+          title: "あなたの言葉センス診断",
+          shortDescription: "言葉センス診断の短い説明",
+          type: "personality",
+          questionCount: 10,
+          accentColor: "#0000FF",
+          category: "personality",
+        },
+        results: [
+          {
+            id: "result-z",
+            title: "和顔愛語タイプ",
+            reading: { word: "和顔愛語", kana: "わがんあいご" },
+            description: "和顔愛語タイプの説明",
+            icon: "Z",
+          },
+        ],
+      },
+    ],
+    [
       "personality-with-detailed",
       {
         meta: {
@@ -325,5 +347,15 @@ describe("ページの題と共有の文", () => {
     expect(screen.getByTestId("share-buttons")).toHaveTextContent(
       "言葉診断の結果は「和顔愛語（わがんあいご）タイプ」でした！",
     );
+  });
+
+  it("読みを添えた題が長さの上限を超えるときは、クイズ名を省いても読みを残す", async () => {
+    const params = Promise.resolve({
+      slug: "reading-long-quiz",
+      resultId: "result-z",
+    });
+    const metadata = await generateMetadata({ params });
+    expect(metadata.title).toBe("和顔愛語（わがんあいご）タイプ | yolos.net");
+    expect(metadata.openGraph?.title).toBe("和顔愛語（わがんあいご）タイプ");
   });
 });
