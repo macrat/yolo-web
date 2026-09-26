@@ -28,6 +28,10 @@ import LinkIndex, {
   type LinkIndexItem,
 } from "@/components/LinkIndex";
 import Section from "@/components/Section";
+import ResultBox from "@/components/ResultBox";
+import PhrasedText from "@/components/PhrasedText";
+import QuantityBars, { type QuantityBar } from "@/components/QuantityBars";
+import type { HeadingFontAttr } from "@/lib/zen-antique-charset";
 import styles from "./page.module.css";
 
 // カラースウォッチの定義。
@@ -124,6 +128,9 @@ const TOC_ITEMS = [
   { id: "item-list", label: "21. ItemList" },
   { id: "link-index", label: "22. LinkIndex" },
   { id: "browsable-list", label: "23. BrowsableList" },
+  { id: "result-box", label: "24. ResultBox" },
+  { id: "quantity-bars", label: "25. QuantityBars" },
+  { id: "phrased-text", label: "26. PhrasedText" },
 ];
 
 // LinkIndex の見本。順を持たない分類（多い順・数を添える）と、見えない値で区切る索引。
@@ -271,6 +278,80 @@ const ITEM_LIST_TYPES: ItemListItem[] = [
   },
 ];
 
+/** 見出しの区切りを付けたタイプ名の見本。区切りはサーバーの page.tsx が作る。 */
+export interface PhrasedSample {
+  id: string;
+  title: string;
+  phrases: readonly string[];
+  headingFont: HeadingFontAttr;
+  catchphrase?: string;
+  description: string;
+}
+
+/** 画像の結果の見本。size は画像の一辺の px。 */
+export interface ImageSample {
+  src: string;
+  size: number;
+}
+
+// 値が並ぶ結果の見本（年齢計算の形）。
+const AGE_ROWS = [
+  { label: "満年齢", value: "34歳" },
+  { label: "数え年", value: "35歳" },
+  { label: "生まれてからの日数", value: "12,581日" },
+  { label: "次の誕生日まで", value: "143日" },
+];
+
+// コードの結果の見本。1,000行（開き括弧と閉じ括弧の行と、998件の行）あり、コピーのボタンがボックスの頭の行に
+// あることを長い結果で確かめる。
+const CODE_ITEM_COUNT = 998;
+const LONG_CODE = [
+  "[",
+  ...Array.from({ length: CODE_ITEM_COUNT }, (_, index) => {
+    const id = index + 1;
+    const separator = id < CODE_ITEM_COUNT ? "," : "";
+    return `  { "id": ${id}, "name": "item-${id}" }${separator}`;
+  }),
+  "]",
+].join("\n");
+
+// 1続きの文字列の結果の見本（Base64 の形）。一語が1行に収まらないので、語の中で折れる。
+const BASE64_SAMPLE =
+  "44GT44KM44Gv44CB44OW44Op44Km44K244Gu5Lit44Gn5YuV44GP5bCP44GV44Gq6YGT5YW344Gn44GZ44CC5YWl5Yqb44GX44Gf5paH44KS44CB44Gd44Gu5aC044GnIEJhc2U2NCDjgavlpInjgYjjgb7jgZnjgII=";
+
+// 統計の分布の見本（当てた回数を数える形）。今回の行と、値が0の行を含む。
+const GUESS_DISTRIBUTION: QuantityBar[] = [
+  { name: "1回目", value: 1, valueText: "1" },
+  { name: "2回目", value: 4, valueText: "4" },
+  { name: "3回目", value: 12, valueText: "12", current: true },
+  { name: "4回目", value: 9, valueText: "9" },
+  { name: "5回目", value: 0, valueText: "0" },
+  { name: "6回目", value: 3, valueText: "3" },
+];
+
+// 名前の列がいちばん広い分布の見本（合計の点数の10の区分）。
+const SCORE_DISTRIBUTION: QuantityBar[] = [
+  { name: "0〜9点", value: 0, valueText: "0" },
+  { name: "10〜19点", value: 1, valueText: "1" },
+  { name: "20〜29点", value: 2, valueText: "2" },
+  { name: "30〜39点", value: 5, valueText: "5" },
+  { name: "40〜49点", value: 8, valueText: "8" },
+  { name: "50〜59点", value: 14, valueText: "14" },
+  { name: "60〜69点", value: 11, valueText: "11", current: true },
+  { name: "70〜79点", value: 6, valueText: "6" },
+  { name: "80〜89点", value: 3, valueText: "3" },
+  { name: "90〜100点", value: 1, valueText: "1" },
+];
+
+// スコアの帯の見本（診断の軸）。値は満点に対する割合で、上限は 100%。
+const AXIS_SCORES: QuantityBar[] = [
+  { name: "理論", value: 75, valueText: "75%" },
+  { name: "実験", value: 58, valueText: "58%" },
+  { name: "数値化", value: 100, valueText: "100%" },
+  { name: "観察", value: 24, valueText: "24%" },
+  { name: "創造", value: 0, valueText: "0%" },
+];
+
 interface StorybookContentProps {
   /** RelatedBlogPosts（fs 依存のサーバー専用）の描画結果。server の page.tsx で
    * 描画して渡す。client component から直接 import できないため prop 化している。 */
@@ -278,12 +359,23 @@ interface StorybookContentProps {
   relatedBlogPostsEmpty: React.ReactNode;
   /** BrowsableList の見本のページへの行。見本のデータは辞典のデータを読むので、server の page.tsx で組んで渡す。 */
   listSamples: ItemListItem[];
+  /** 名前を持つ結果の見本のタイプ */
+  nameResult: PhrasedSample;
+  /** 名前を持つ結果の見本の診断名 */
+  quizTitle: string;
+  /** T9 で VoiceOver の読み上げを比べるタイプ名 */
+  voiceOverSamples: PhrasedSample[];
+  qrCode: ImageSample;
 }
 
 export default function StorybookContent({
   relatedBlogPostsWithPosts,
   relatedBlogPostsEmpty,
   listSamples,
+  nameResult,
+  quizTitle,
+  voiceOverSamples,
+  qrCode,
 }: StorybookContentProps) {
   // Checkbox・Radio controlled state
   const [checkboxOn, setCheckboxOn] = useState(false);
@@ -1260,6 +1352,178 @@ export default function StorybookContent({
           見本のページ
         </h3>
         <ItemList labelledBy="browsable-list-samples" items={listSamples} />
+      </Section>
+
+      <Section id="result-box">
+        <h2 className={styles.sectionTitle}>24. ResultBox</h2>
+        <p>
+          結果のボックス（§8）。囲むのは結果と、結果を写すコピーのボタンだけで、中身の形ごとに組み方が決まる。
+        </p>
+
+        <p className={styles.subsectionTitle}>
+          名前を持つ結果（診断のタイプ名を結果の見出しに）
+        </p>
+        <ResultBox
+          caption={`${quizTitle}の結果`}
+          heading={{ phrases: nameResult.phrases, ...nameResult.headingFont }}
+        >
+          <div className={styles.resultText}>
+            {nameResult.catchphrase && <p>{nameResult.catchphrase}</p>}
+            <p>{nameResult.description}</p>
+          </div>
+        </ResultBox>
+
+        <p className={styles.subsectionTitle}>数字</p>
+        <ResultBox caption="文字数の結果">
+          <p className={styles.resultNumber}>1,234文字</p>
+        </ResultBox>
+
+        <p className={styles.subsectionTitle}>
+          値の並び（結果のボックスが表のボックス）
+        </p>
+        <ResultBox caption="年齢の計算の結果" kind="table">
+          <table>
+            <tbody>
+              {AGE_ROWS.map((row) => (
+                <tr key={row.label}>
+                  <th scope="row">{row.label}</th>
+                  <td>{row.value}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </ResultBox>
+
+        <p className={styles.subsectionTitle}>
+          コード（1,000行。コピーのボタンを頭の行に持つ）
+        </p>
+        <ResultBox
+          caption="整形した JSON"
+          kind="code"
+          copyButton={
+            <Button onClick={() => copy(LONG_CODE, "code")}>
+              {copiedKey === "code" ? COPIED_LABEL : "コピー"}
+            </Button>
+          }
+        >
+          <pre>
+            <code>{LONG_CODE}</code>
+          </pre>
+        </ResultBox>
+
+        <p className={styles.subsectionTitle}>
+          1続きの文字列（コピーのボタンを頭の行に持つ）
+        </p>
+        <ResultBox
+          caption="Base64 に変えた文"
+          copyButton={
+            <Button onClick={() => copy(BASE64_SAMPLE, "base64")}>
+              {copiedKey === "base64" ? COPIED_LABEL : "コピー"}
+            </Button>
+          }
+        >
+          <p className={styles.resultText}>{BASE64_SAMPLE}</p>
+        </ResultBox>
+
+        <p className={styles.subsectionTitle}>画像</p>
+        <ResultBox caption="QR コード">
+          {/* eslint-disable-next-line @next/next/no-img-element -- 描いた data URL をそのまま見せる */}
+          <img
+            src={qrCode.src}
+            width={qrCode.size}
+            height={qrCode.size}
+            alt="https://yolos.net/storybook を符号にした QR コード"
+          />
+        </ResultBox>
+      </Section>
+
+      <Section id="quantity-bars">
+        <h2 className={styles.sectionTitle}>25. QuantityBars</h2>
+        <p>
+          並べた量の帯（§5）。1行の組みで枠が並びの幅の半分に届かないときは、並び全体を2行の組みにする。
+        </p>
+
+        <p className={styles.subsectionTitle}>
+          統計の分布（今回の行・値が0の行を含む）
+        </p>
+        <ResultBox caption="統計の分布の見本">
+          <h3 id="bars-guess" className={styles.barsHeading}>
+            当てた回数
+          </h3>
+          <QuantityBars labelledBy="bars-guess" items={GUESS_DISTRIBUTION} />
+        </ResultBox>
+
+        <p className={styles.subsectionTitle}>
+          名前の列がいちばん広い分布（10行・「90〜100点」）
+        </p>
+        <ResultBox caption="合計の点数の分布の見本">
+          <h3 id="bars-score" className={styles.barsHeading}>
+            合計の点数
+          </h3>
+          <QuantityBars labelledBy="bars-score" items={SCORE_DISTRIBUTION} />
+        </ResultBox>
+
+        <p className={styles.subsectionTitle}>
+          スコアの帯（上限は満点。「今回」の列を持たない）
+        </p>
+        <ResultBox caption="スコアの帯の見本">
+          <h3 id="bars-axis" className={styles.barsHeading}>
+            軸ごとのスコア
+          </h3>
+          <QuantityBars labelledBy="bars-axis" items={AXIS_SCORES} max={100} />
+        </ResultBox>
+      </Section>
+
+      <Section id="phrased-text">
+        <h2 className={styles.sectionTitle}>26. PhrasedText</h2>
+        <p>
+          見出しを文節で折る部品（§4）。下の見本は、同じタイプ名を3通りの区切り方で並べ、VoiceOver
+          が見出しを1回で読むかを聞き比べるためのもの。区切りを持たない見出しと、ゼロ幅スペースで区切った見出しは、比べるためだけに置く。
+        </p>
+        {voiceOverSamples.map((sample) => (
+          <div key={sample.id} className={styles.phrasedGroup}>
+            <p className={styles.subsectionTitle}>{sample.id}</p>
+            {(
+              [
+                ["section", "セクションの見出しの段"],
+                ["main", "主見出しの段"],
+              ] as const
+            ).map(([step, stepLabel]) => {
+              const stepClass =
+                step === "main" ? styles.mainStepHeading : undefined;
+              return (
+                <div key={step} className={styles.phrasedStep}>
+                  <p className={styles.phrasedLabel}>
+                    {stepLabel}・&lt;wbr&gt; で区切ったもの（PhrasedText）
+                  </p>
+                  <PhrasedText
+                    as="h2"
+                    phrases={sample.phrases}
+                    className={stepClass}
+                    {...sample.headingFont}
+                  />
+                  <p className={styles.phrasedLabel}>
+                    {stepLabel}・区切りを持たないもの
+                  </p>
+                  <h2 className={stepClass} {...sample.headingFont}>
+                    {sample.title}
+                  </h2>
+                  <p className={styles.phrasedLabel}>
+                    {stepLabel}・ゼロ幅スペースで区切ったもの
+                  </p>
+                  <h2
+                    className={[styles.zeroWidthSpaced, stepClass]
+                      .filter(Boolean)
+                      .join(" ")}
+                    {...sample.headingFont}
+                  >
+                    {sample.phrases.join("\u200B")}
+                  </h2>
+                </div>
+              );
+            })}
+          </div>
+        ))}
       </Section>
     </>
   );

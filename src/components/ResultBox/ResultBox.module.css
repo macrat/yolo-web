@@ -1,0 +1,69 @@
+/* 結果のボックス（DESIGN.md §5・§8）。置かれた幅いっぱいを太い線で囲み、コンテナと同じ内側の余白を持つ。 */
+.box {
+  border: var(--rule-w) solid var(--rule);
+  padding: var(--box-padding);
+  animation: appear 300ms ease-out both;
+}
+
+/* 結果の登場（§11）。1回だけ、250〜400ms。動きで気分が悪くなる来訪者には即時に出す。 */
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .box {
+    animation: none;
+  }
+}
+
+/* 頭の行。結果の名前を左に、コピーのボタンを右に置く。名前が折り返しても、ボタンは頭の行の上に揃う。 */
+.head {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-16);
+  margin-block-end: var(--space-16);
+}
+
+.title {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.caption {
+  font-size: var(--text-small);
+  color: var(--ink-2);
+}
+
+/* 名前を持つ結果の見出しは、ボックスの見出しの段が何であっても §4 のセクションの見出しの段で組む（§8）。 */
+.heading {
+  font-size: var(--text-heading-section);
+}
+
+.copy {
+  flex-shrink: 0;
+}
+
+/* コードの結果は、ボックスがコードのボックスになる。中の pre は枠と地を重ねず、ボックスの中で横に送る。 */
+.code {
+  background: var(--paper-2);
+}
+
+.code .body pre {
+  border: none;
+  padding: 0;
+  background: none;
+}
+
+/* 表の結果は、ボックスの幅に収まらない列をボックスの中で横に送る。 */
+.table .body {
+  overflow-x: auto;
+}
+
+.table .body table {
+  width: 100%;
+}

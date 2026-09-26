@@ -263,3 +263,55 @@
   font-family: var(--font-mono);
   margin-bottom: 0.5rem;
 }
+
+/* 結果のボックスの中の文章。本文の大きさで、本文の幅で折り返す（§8）。 */
+.resultText {
+  max-width: var(--measure);
+}
+
+.resultText > p + p {
+  margin-top: var(--space-16);
+}
+
+/* 数字の結果。§4 の主見出しと同じ段で、行間は本文と同じ（§8）。 */
+.resultNumber {
+  font-size: var(--text-heading-main);
+  line-height: var(--leading-body);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 結果のボックスの中で、量の帯の並びに名前を付ける小見出し。 */
+.barsHeading {
+  margin-bottom: var(--space-8);
+}
+
+/* 文節の区切りの見本。タイプごとに、2つの段の見出しを3通りの区切り方で並べる。 */
+.phrasedGroup + .phrasedGroup {
+  margin-top: var(--space-48);
+}
+
+.phrasedStep {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.phrasedStep + .phrasedStep {
+  margin-top: var(--space-24);
+}
+
+.phrasedLabel {
+  font-size: var(--text-small);
+  color: var(--ink-2);
+}
+
+/* 結果のページの h1 と同じ、§4 の主見出しの段。 */
+.mainStepHeading {
+  font-size: var(--text-heading-main);
+}
+
+/* ゼロ幅スペースで区切った見出し。<wbr> の見出しと同じ折り方で組み、区切りの印だけを変える。 */
+.zeroWidthSpaced {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
