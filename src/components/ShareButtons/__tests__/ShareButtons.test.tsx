@@ -12,6 +12,25 @@ import ShareButtons from "@/components/ShareButtons";
 const mockWindowOpen = vi.fn();
 // navigator.clipboard のモック
 const mockClipboardWriteText = vi.fn();
+// analytics.ts は window.gtag を直接呼ぶので、送った値をこの spy で読む
+const gtagSpy = vi.fn();
+
+/** gtag に送った share イベントの値（送っていなければ undefined）。 */
+function findShareParams(): Record<string, unknown> | undefined {
+  const call = gtagSpy.mock.calls.find(
+    (c) => c[0] === "event" && c[1] === "share",
+  );
+  return call?.[2] as Record<string, unknown> | undefined;
+}
+
+/** 端末の共有シートを開ける navigator に差し替える。 */
+function stubWebShare(share: (data: unknown) => Promise<void>): void {
+  vi.stubGlobal("navigator", {
+    ...navigator,
+    share,
+    clipboard: { writeText: mockClipboardWriteText },
+  });
+}
 
 beforeEach(() => {
   // vi.stubGlobal を使うことで vi.unstubAllGlobals() による確実な teardown を保証し、
@@ -24,12 +43,14 @@ beforeEach(() => {
   // window 全体をスタブすると document が失われ @testing-library が壊れるため、
   // location のみを個別にスタブする
   vi.stubGlobal("location", { origin: "https://example.com" });
+  (window as unknown as { gtag: typeof gtagSpy }).gtag = gtagSpy;
 });
 
 afterEach(() => {
   vi.unstubAllGlobals();
   mockWindowOpen.mockClear();
   mockClipboardWriteText.mockClear();
+  gtagSpy.mockClear();
 });
 
 describe("ShareButtons", () => {
@@ -201,6 +222,254 @@ describe("ShareButtons", () => {
       for (const btn of screen.getAllByRole("button")) {
         expect(btn).toHaveAttribute("data-variant", "default");
       }
+    });
+  });
+  describe("結果の共有", () => {
+    const quizText = "診断Xの結果は「タイプA」でした! #診断X #yolosnet";
+    const gameText =
+      "ゲームY #12 3/6\n◯△×\n#ゲームY #yolosnet\nhttps://example.com/play/game-y";
+
+    test("文を渡すと、X・LINE・コピーに文と URL を渡し、コピーは「結果をコピー」になる", async () => {
+      mockClipboardWriteText.mockResolvedValue(undefined);
+      render(
+        <ShareButtons
+          url="/play/x/result/a"
+          title="診断X"
+          text={quizText}
+          sns={["x", "line", "copy"]}
+        />,
+      );
+      fireEvent.click(screen.getByRole("button", { name: /^X でシェア/ }));
+      fireEvent.click(screen.getByRole("button", { name: /^LINE でシェア/ }));
+      fireEvent.click(screen.getByRole("button", { name: "結果をコピー" }));
+      expect(mockWindowOpen.mock.calls.map((c) => c[0])).toEqual([
+        `https://twitter.com/intent/tweet?text=${encodeURIComponent(quizText)}&url=${encodeURIComponent("https://example.com/play/x/result/a")}`,
+        `https://line.me/R/share?text=${encodeURIComponent(`${quizText}\nhttps://example.com/play/x/result/a`)}`,
+      ]);
+      await waitFor(() =>
+        expect(mockClipboardWriteText).toHaveBeenCalledWith(
+          `${quizText}\nhttps://example.com/play/x/result/a`,
+        ),
+      );
+    });
+
+    test("http で始まる URL は、そのまま共有する", () => {
+      render(
+        <ShareButtons
+          url="https://yolos.net/play/x/result/a"
+          title="診断X"
+          text={quizText}
+          sns={["x"]}
+        />,
+      );
+      fireEvent.click(screen.getByRole("button", { name: /^X でシェア/ }));
+      expect(mockWindowOpen.mock.calls[0][0]).toContain(
+        `&url=${encodeURIComponent("https://yolos.net/play/x/result/a")}`,
+      );
+    });
+
+    test("文の最後の行が共有する URL なら、その行を除いて URL を1つだけ付ける", async () => {
+      mockClipboardWriteText.mockResolvedValue(undefined);
+      render(
+        <ShareButtons
+          url="/play/game-y"
+          title="ゲームY"
+          text={gameText}
+          sns={["x", "copy"]}
+        />,
+      );
+      fireEvent.click(screen.getByRole("button", { name: /^X でシェア/ }));
+      fireEvent.click(screen.getByRole("button", { name: "結果をコピー" }));
+      const body = "ゲームY #12 3/6\n◯△×\n#ゲームY #yolosnet";
+      expect(mockWindowOpen.mock.calls[0][0]).toBe(
+        `https://twitter.com/intent/tweet?text=${encodeURIComponent(body)}&url=${encodeURIComponent("https://example.com/play/game-y")}`,
+      );
+      await waitFor(() =>
+        expect(mockClipboardWriteText).toHaveBeenCalledWith(gameText),
+      );
+    });
+
+    test("共有シートを開ける端末では、共有シートのボタン1つに任せ、ほかの操作は並びの最後に残る", async () => {
+      const share = vi.fn().mockResolvedValue(undefined);
+      stubWebShare(share);
+      render(
+        <ShareButtons
+          url="/play/game-y"
+          title="ゲームY"
+          text={gameText}
+          sns={["x", "copy"]}
+        >
+          <button type="button">画像を保存</button>
+        </ShareButtons>,
+      );
+      expect(screen.getAllByRole("button").map((b) => b.textContent)).toEqual([
+        "この結果をシェア",
+        "画像を保存",
+      ]);
+      fireEvent.click(screen.getByRole("button", { name: "この結果をシェア" }));
+      await waitFor(() =>
+        expect(share).toHaveBeenCalledWith({
+          title: "ゲームY",
+          text: "ゲームY #12 3/6\n◯△×\n#ゲームY #yolosnet",
+          url: "https://example.com/play/game-y",
+        }),
+      );
+    });
+
+    test("文を渡さないページの共有は、共有シートを開ける端末でも共有先を並べる", () => {
+      stubWebShare(vi.fn());
+      render(<ShareButtons url="/blog/test" title="テスト記事" />);
+      expect(
+        screen.queryByRole("button", { name: "この結果をシェア" }),
+      ).not.toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: "URLをコピー" }),
+      ).toBeInTheDocument();
+    });
+  });
+
+  describe("計測", () => {
+    // 面ごとに、共有の部品へ渡す計測の値と、GA に届く値。
+    const surfaces = [
+      {
+        name: "診断の解き終えた画面・結果のページ・相性",
+        props: {
+          contentType: "diagnosis",
+          contentId: "quiz-x",
+          surface: "text",
+        },
+        expected: {
+          content_type: "diagnosis",
+          item_id: "quiz-x",
+          content_id: "quiz-x",
+          surface: "text",
+        },
+      },
+      {
+        name: "知識クイズの解き終えた画面",
+        props: { contentType: "quiz", contentId: "quiz-y", surface: "text" },
+        expected: {
+          content_type: "quiz",
+          item_id: "quiz-y",
+          content_id: "quiz-y",
+          surface: "text",
+        },
+      },
+      {
+        name: "今日の運勢",
+        props: { contentType: "fortune", contentId: "fortune-daily" },
+        expected: {
+          content_type: "fortune",
+          item_id: "fortune-daily",
+          content_id: "fortune-daily",
+        },
+      },
+      {
+        name: "ゲームの結果",
+        props: { contentType: "game", contentId: "kanji-kanaru" },
+        expected: {
+          content_type: "game",
+          item_id: "kanji-kanaru",
+          content_id: "kanji-kanaru",
+        },
+      },
+    ] as const;
+
+    for (const { name, props, expected } of surfaces) {
+      test(`${name}: X・LINE・コピーが、渡した計測の値をそのまま送る`, async () => {
+        mockClipboardWriteText.mockResolvedValue(undefined);
+        render(
+          <ShareButtons
+            url="/play/x"
+            title="タイトル"
+            text="結果"
+            sns={["x", "line", "copy"]}
+            {...props}
+          />,
+        );
+        fireEvent.click(screen.getByRole("button", { name: /^X でシェア/ }));
+        fireEvent.click(screen.getByRole("button", { name: /^LINE でシェア/ }));
+        fireEvent.click(screen.getByRole("button", { name: "結果をコピー" }));
+        await waitFor(() =>
+          expect(
+            gtagSpy.mock.calls.filter((c) => c[1] === "share"),
+          ).toHaveLength(3),
+        );
+        const sent = gtagSpy.mock.calls
+          .filter((c) => c[0] === "event" && c[1] === "share")
+          .map((c) => c[2]);
+        expect(sent).toEqual([
+          { method: "twitter", ...expected },
+          { method: "line", ...expected },
+          { method: "clipboard", ...expected },
+        ]);
+      });
+
+      test(`${name}: 共有シートで共有を終えたときだけ web_share を送る`, async () => {
+        const share = vi
+          .fn()
+          .mockRejectedValueOnce(new Error("cancelled"))
+          .mockResolvedValueOnce(undefined);
+        stubWebShare(share);
+        render(
+          <ShareButtons
+            url="/play/x"
+            title="タイトル"
+            text="結果"
+            {...props}
+          />,
+        );
+        const button = screen.getByRole("button", { name: "この結果をシェア" });
+        fireEvent.click(button);
+        await waitFor(() => expect(share).toHaveBeenCalledTimes(1));
+        await Promise.resolve();
+        expect(findShareParams()).toBeUndefined();
+        fireEvent.click(button);
+        await waitFor(() => expect(findShareParams()).toBeDefined());
+        expect(findShareParams()).toEqual({ method: "web_share", ...expected });
+      });
+    }
+
+    test("ページの共有は、surface を送らない", () => {
+      render(
+        <ShareButtons
+          url="/play/x"
+          title="診断X"
+          contentType="quiz"
+          contentId="x"
+        />,
+      );
+      fireEvent.click(screen.getByRole("button", { name: /^はてブに追加/ }));
+      expect(findShareParams()).toEqual({
+        method: "hatena",
+        content_type: "quiz",
+        item_id: "x",
+        content_id: "x",
+      });
+    });
+
+    test("contentType と contentId がそろわなければ送らない", () => {
+      render(<ShareButtons url="/play/x" title="診断X" contentType="quiz" />);
+      fireEvent.click(screen.getByRole("button", { name: /^X でシェア/ }));
+      expect(findShareParams()).toBeUndefined();
+    });
+
+    test("コピーに失敗したら送らない", async () => {
+      mockClipboardWriteText.mockRejectedValue(new Error("denied"));
+      render(
+        <ShareButtons
+          url="/play/x"
+          title="診断X"
+          contentType="quiz"
+          contentId="x"
+        />,
+      );
+      fireEvent.click(screen.getByRole("button", { name: "URLをコピー" }));
+      await waitFor(() =>
+        expect(mockClipboardWriteText).toHaveBeenCalledTimes(1),
+      );
+      await Promise.resolve();
+      expect(findShareParams()).toBeUndefined();
     });
   });
 });

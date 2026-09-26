@@ -7,8 +7,8 @@ import type {
 } from "@/play/games/kanji-kanaru/_lib/types";
 import { generateShareText } from "@/play/games/kanji-kanaru/_lib/share";
 import Button from "@/components/Button";
+import ShareButtons from "@/components/ShareButtons";
 import GameDialog from "@/play/games/shared/_components/new/GameDialog";
-import GameShareButtons from "@/play/games/shared/_components/new/GameShareButtons";
 import CountdownTimer from "@/play/games/shared/_components/new/CountdownTimer";
 import NextGameBanner from "@/play/games/shared/_components/new/NextGameBanner";
 import { CrossCategoryBanner } from "@/play/games/shared/_components/new/CrossCategoryBanner";
@@ -98,10 +98,13 @@ export default function ResultModal({
           ? `${guesses.length}/6 \u3067\u6B63\u89E3\u3057\u307E\u3057\u305F!`
           : "6\u56DE\u4EE5\u5185\u306B\u6B63\u89E3\u3067\u304D\u307E\u305B\u3093\u3067\u3057\u305F"}
       </div>
-      <GameShareButtons
-        shareText={shareText}
-        gameTitle={"\u6F22\u5B57\u30AB\u30CA\u30FC\u30EB"}
-        gameSlug="kanji-kanaru"
+      <ShareButtons
+        url="/play/kanji-kanaru"
+        title={"\u6F22\u5B57\u30AB\u30CA\u30FC\u30EB"}
+        text={shareText}
+        sns={["x", "copy"]}
+        contentType="game"
+        contentId="kanji-kanaru"
       />
       <CountdownTimer />
       <NextGameBanner currentGameSlug="kanji-kanaru" />

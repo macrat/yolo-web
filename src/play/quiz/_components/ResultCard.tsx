@@ -26,7 +26,7 @@ import {
 import animalPersonalityQuiz from "@/play/quiz/data/animal-personality";
 import CompatibilitySection from "./CompatibilitySection";
 import InviteFriendButton from "./InviteFriendButton";
-import ShareButtons from "./ShareButtons";
+import ShareButtons from "@/components/ShareButtons";
 import FudaActions from "./FudaActions";
 import { pickResultWairoColor, pickResultSymbol } from "./resultVisual";
 import { contentIdForQuiz } from "@/play/quiz/contentId";
@@ -410,11 +410,6 @@ export default function ResultCard({
   allResults,
   coTypes,
 }: ResultCardProps) {
-  const shareUrl =
-    typeof window !== "undefined"
-      ? `${window.location.origin}/play/${quizSlug}/result/${result.id}`
-      : `/play/${quizSlug}/result/${result.id}`;
-
   const shareText = `${quizTitle}の結果は「${result.title}」でした! #${quizTitle.replace(/\s/g, "")} #yolosnet`;
 
   // catchphrase を description の前に表示する variant のリスト。
@@ -535,14 +530,17 @@ export default function ResultCard({
           )}
         </div>
       )}
-      <ShareButtons
-        shareText={shareText}
-        shareUrl={shareUrl}
-        quizTitle={quizTitle}
-        contentType={quizType === "personality" ? "diagnosis" : "quiz"}
-        contentId={contentIdForQuiz(quizSlug)}
-        surface="text"
-      />
+      <div className={styles.share}>
+        <ShareButtons
+          url={`/play/${quizSlug}/result/${result.id}`}
+          title={quizTitle}
+          text={shareText}
+          sns={["x", "line", "copy"]}
+          contentType={quizType === "personality" ? "diagnosis" : "quiz"}
+          contentId={contentIdForQuiz(quizSlug)}
+          surface="text"
+        />
+      </div>
       <div className={styles.retry}>
         <Button onClick={onRetry}>もう一度挑戦する</Button>
       </div>

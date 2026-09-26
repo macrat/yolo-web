@@ -6,7 +6,7 @@
  */
 import Breadcrumb from "@/components/Breadcrumb";
 import Tsutsumi from "@/components/Tsutsumi";
-import ShareButtons from "@/play/quiz/_components/ShareButtons";
+import ShareButtons from "@/components/ShareButtons";
 import RelatedQuizzes from "@/play/quiz/_components/RelatedQuizzes";
 import RecommendedContent from "@/play/_components/RecommendedContent";
 import type { QuizDefinition, QuizResult } from "../types";
@@ -94,9 +94,10 @@ export default function ResultPageShell({
 
         <div className={styles.shareSection}>
           <ShareButtons
-            shareText={shareText}
-            shareUrl={shareUrl}
-            quizTitle={quiz.meta.title}
+            url={shareUrl}
+            title={quiz.meta.title}
+            text={shareText}
+            sns={["x", "line", "copy"]}
             contentType={
               quiz.meta.type === "personality" ? "diagnosis" : "quiz"
             }

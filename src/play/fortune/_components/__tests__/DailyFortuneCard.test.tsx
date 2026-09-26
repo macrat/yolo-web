@@ -36,9 +36,9 @@ vi.mock("@/play/games/shared/_lib/crossGameProgress", () => ({
 }));
 
 // Mock ShareButtons to avoid complex dependencies
-vi.mock("@/play/quiz/_components/ShareButtons", () => ({
-  default: ({ shareText }: { shareText: string }) => (
-    <div data-testid="share-buttons">{shareText}</div>
+vi.mock("@/components/ShareButtons", () => ({
+  default: ({ text }: { text: string }) => (
+    <div data-testid="share-buttons">{text}</div>
   ),
 }));
 

@@ -112,10 +112,10 @@ vi.mock("next/dynamic", async () => {
 });
 
 // ShareButtonsコンポーネントをモック（Web Share APIなどの依存を排除）
-vi.mock("@/play/quiz/_components/ShareButtons", () => ({
-  default: ({ shareText }: { shareText: string }) => (
+vi.mock("@/components/ShareButtons", () => ({
+  default: ({ text }: { text: string }) => (
     <div data-testid="share-buttons">
-      <span>{shareText}</span>
+      <span>{text}</span>
     </div>
   ),
 }));

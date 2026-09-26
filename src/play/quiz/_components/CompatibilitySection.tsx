@@ -1,7 +1,7 @@
 "use client";
 
 import type { CompatibilityEntry } from "@/play/quiz/types";
-import ShareButtons from "./ShareButtons";
+import ShareButtons from "@/components/ShareButtons";
 import { contentIdForQuiz } from "@/play/quiz/contentId";
 import styles from "./CompatibilitySection.module.css";
 
@@ -35,11 +35,6 @@ export default function CompatibilitySection({
   quizTitle,
   quizSlug,
 }: CompatibilitySectionProps) {
-  const shareUrl =
-    typeof window !== "undefined"
-      ? `${window.location.origin}/play/${quizSlug}/result/${myType.id}?with=${friendType.id}`
-      : `/play/${quizSlug}/result/${myType.id}?with=${friendType.id}`;
-
   const hashtag = quizTitle.replace(/\s/g, "");
   const shareText = `私は「${myType.title}」、友達は「${friendType.title}」。相性は「${compatibility.label}」でした! #${hashtag} #yolosnet`;
 
@@ -59,9 +54,10 @@ export default function CompatibilitySection({
       <h3 className={styles.label}>{compatibility.label}</h3>
       <p className={styles.description}>{compatibility.description}</p>
       <ShareButtons
-        shareText={shareText}
-        shareUrl={shareUrl}
-        quizTitle={quizTitle}
+        url={`/play/${quizSlug}/result/${myType.id}?with=${friendType.id}`}
+        title={quizTitle}
+        text={shareText}
+        sns={["x", "line", "copy"]}
         contentType="diagnosis"
         contentId={contentIdForQuiz(quizSlug)}
         surface="text"

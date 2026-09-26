@@ -10,7 +10,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import ShareButtons from "@/play/quiz/_components/ShareButtons";
+import ShareButtons from "@/components/ShareButtons";
 import ResultPageShell from "@/play/quiz/_components/ResultPageShell";
 import OtherTypesNav from "@/play/quiz/_components/OtherTypesNav";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
@@ -121,9 +121,10 @@ export default async function CharacterFortuneResultPage({ params }: Props) {
         {/* シェアボタン中間配置 */}
         <div className={styles.midShareSection}>
           <ShareButtons
-            shareText={shareText}
-            shareUrl={shareUrl}
-            quizTitle={quiz.meta.title}
+            url={shareUrl}
+            title={quiz.meta.title}
+            text={shareText}
+            sns={["x", "line", "copy"]}
             contentType="diagnosis"
             contentId={contentIdForQuiz(SLUG)}
             surface="text"

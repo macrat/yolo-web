@@ -8,8 +8,8 @@ import {
   downloadImage,
 } from "@/play/games/irodori/_lib/share";
 import Button from "@/components/Button";
+import ShareButtons from "@/components/ShareButtons";
 import GameDialog from "@/play/games/shared/_components/new/GameDialog";
-import GameShareButtons from "@/play/games/shared/_components/new/GameShareButtons";
 import CountdownTimer from "@/play/games/shared/_components/new/CountdownTimer";
 import NextGameBanner from "@/play/games/shared/_components/new/NextGameBanner";
 import { CrossCategoryBanner } from "@/play/games/shared/_components/new/CrossCategoryBanner";
@@ -71,12 +71,16 @@ export default function ResultModal({
       }
     >
       <FinalResult gameState={gameState} />
-      <GameShareButtons
-        shareText={shareText}
-        gameTitle={"\u30A4\u30ED\u30C9\u30EA"}
-        gameSlug="irodori"
-        onSaveImage={handleSaveImage}
-      />
+      <ShareButtons
+        url="/play/irodori"
+        title={"\u30A4\u30ED\u30C9\u30EA"}
+        text={shareText}
+        sns={["x", "copy"]}
+        contentType="game"
+        contentId="irodori"
+      >
+        <Button onClick={handleSaveImage}>{"画像を保存"}</Button>
+      </ShareButtons>
       <CountdownTimer />
       <NextGameBanner currentGameSlug="irodori" />
       <CrossCategoryBanner items={crossCategoryItems} />

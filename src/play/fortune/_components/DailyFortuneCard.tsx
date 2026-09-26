@@ -6,7 +6,7 @@ import {
   getFortuneSnapshot,
   getFortuneServerSnapshot,
 } from "@/play/fortune/fortuneStore";
-import ShareButtons from "@/play/quiz/_components/ShareButtons";
+import ShareButtons from "@/components/ShareButtons";
 import Tsutsumi from "@/components/Tsutsumi";
 import {
   pickResultWairoColor,
@@ -59,10 +59,6 @@ export default function DailyFortuneCard() {
 
   const { fortune, today } = state;
 
-  const shareUrl =
-    typeof window !== "undefined"
-      ? `${window.location.origin}/play/daily`
-      : "/play/daily";
   const shareText = `今日のユーモア運勢は「${fortune.title}」(${fortune.rating}/5) でした! #ユーモア運勢 #yolosnet`;
 
   return (
@@ -101,9 +97,10 @@ export default function DailyFortuneCard() {
       </dl>
 
       <ShareButtons
-        shareText={shareText}
-        shareUrl={shareUrl}
-        quizTitle="今日のユーモア運勢"
+        url="/play/daily"
+        title="今日のユーモア運勢"
+        text={shareText}
+        sns={["x", "line", "copy"]}
         contentType="fortune"
         contentId="fortune-daily"
       />

@@ -4,8 +4,8 @@ import { useCallback } from "react";
 import type { NakamawakeGameState } from "@/play/games/nakamawake/_lib/types";
 import { generateShareText } from "@/play/games/nakamawake/_lib/share";
 import Button from "@/components/Button";
+import ShareButtons from "@/components/ShareButtons";
 import GameDialog from "@/play/games/shared/_components/new/GameDialog";
-import GameShareButtons from "@/play/games/shared/_components/new/GameShareButtons";
 import CountdownTimer from "@/play/games/shared/_components/new/CountdownTimer";
 import NextGameBanner from "@/play/games/shared/_components/new/NextGameBanner";
 import { CrossCategoryBanner } from "@/play/games/shared/_components/new/CrossCategoryBanner";
@@ -82,10 +82,13 @@ export default function ResultModal({
           </div>
         ))}
       </div>
-      <GameShareButtons
-        shareText={shareText}
-        gameTitle={"\u30CA\u30AB\u30DE\u30EF\u30B1"}
-        gameSlug="nakamawake"
+      <ShareButtons
+        url="/play/nakamawake"
+        title={"\u30CA\u30AB\u30DE\u30EF\u30B1"}
+        text={shareText}
+        sns={["x", "copy"]}
+        contentType="game"
+        contentId="nakamawake"
       />
       <CountdownTimer />
       <NextGameBanner currentGameSlug="nakamawake" />

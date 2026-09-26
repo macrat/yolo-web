@@ -11,8 +11,8 @@ import {
 } from "@/play/games/yoji-kimeru/_lib/constants";
 import { generateShareText } from "@/play/games/yoji-kimeru/_lib/share";
 import Button from "@/components/Button";
+import ShareButtons from "@/components/ShareButtons";
 import GameDialog from "@/play/games/shared/_components/new/GameDialog";
-import GameShareButtons from "@/play/games/shared/_components/new/GameShareButtons";
 import CountdownTimer from "@/play/games/shared/_components/new/CountdownTimer";
 import NextGameBanner from "@/play/games/shared/_components/new/NextGameBanner";
 import { CrossCategoryBanner } from "@/play/games/shared/_components/new/CrossCategoryBanner";
@@ -85,10 +85,13 @@ export default function ResultModal({
           ? `${guesses.length}/6 で正解しました!`
           : "6回以内に正解できませんでした"}
       </div>
-      <GameShareButtons
-        shareText={shareText}
-        gameTitle="四字キメル"
-        gameSlug="yoji-kimeru"
+      <ShareButtons
+        url="/play/yoji-kimeru"
+        title="四字キメル"
+        text={shareText}
+        sns={["x", "copy"]}
+        contentType="game"
+        contentId="yoji-kimeru"
       />
       <CountdownTimer />
       <NextGameBanner currentGameSlug="yoji-kimeru" />

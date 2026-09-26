@@ -15,7 +15,7 @@ vi.mock("@/components/Breadcrumb", () => ({
 }));
 
 // Mock ShareButtons
-vi.mock("@/play/quiz/_components/ShareButtons", () => ({
+vi.mock("@/components/ShareButtons", () => ({
   default: () => <div data-testid="share-buttons" />,
 }));
 

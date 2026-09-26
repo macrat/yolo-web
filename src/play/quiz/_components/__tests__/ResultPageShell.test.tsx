@@ -14,17 +14,11 @@ vi.mock("@/components/Breadcrumb", () => ({
   ),
 }));
 
-vi.mock("@/play/quiz/_components/ShareButtons", () => ({
-  default: ({
-    shareText,
-    quizTitle,
-  }: {
-    shareText: string;
-    quizTitle: string;
-  }) => (
+vi.mock("@/components/ShareButtons", () => ({
+  default: ({ text, title }: { text: string; title: string }) => (
     <div data-testid="share-buttons">
-      <span>{shareText}</span>
-      <span>{quizTitle}</span>
+      <span>{text}</span>
+      <span>{title}</span>
     </div>
   ),
 }));
@@ -170,7 +164,7 @@ test("ResultPageShell renders ShareButtons with correct props", () => {
   const shareButtons = screen.getByTestId("share-buttons");
   expect(shareButtons).toBeInTheDocument();
   expect(screen.getByText("シェアテキスト")).toBeInTheDocument();
-  // ShareButtonsにquizTitleが渡されていることをdata-testid内で確認
+  // 共有のタイトルに診断の名前が渡る
   expect(shareButtons).toHaveTextContent("テストクイズ");
 });
 
