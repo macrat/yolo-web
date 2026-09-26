@@ -158,6 +158,29 @@ describe("sortBrowseItems", () => {
     ]);
   });
 
+  test("濁点の差を語全体で先に比べ、同じなら長音符 → 小書き → 並の順に比べる（日本語の照合と同じ）", () => {
+    const collator = new Intl.Collator("ja");
+    const expectedOrders = [
+      ["はーと", "はあと", "はあど"],
+      ["きつか", "きっが"],
+      ["かー", "かぁ", "かあ"],
+      ["かー", "がー", "があ"],
+      ["はぁ", "ばあ", "ぱー"],
+      ["かが", "がか"],
+    ];
+    for (const expected of expectedOrders) {
+      const items = [...expected]
+        .reverse()
+        .map((name) => item(name, {}, { reading: [name] }));
+      const sorted = sortBrowseItems(items, {
+        value: "reading",
+        label: "五十音順",
+      }).map((entry) => entry.name);
+      expect(sorted).toEqual(expected);
+      expect(sorted).toEqual([...expected].sort(collator.compare));
+    }
+  });
+
   test("四字熟語の全件の読みが、日本語の照合（Intl.Collator）と同じ順に並ぶ", () => {
     const readings = getAllYoji().map((entry) => entry.reading);
     const items = readings.map((name) => item(name, {}, { reading: [name] }));
@@ -171,8 +194,17 @@ describe("sortBrowseItems", () => {
 
 describe("kanaCollationKey", () => {
   test("1段目は濁点・半濁点を外し、小書きの仮名を並に寄せ、長音符を母音にする", () => {
-    expect(kanaCollationKey("ガッコウ")).toEqual(["かつこう", "がっこう"]);
+    expect(kanaCollationKey("ガッコウ")[0]).toBe("かつこう");
     expect(kanaCollationKey("ぱーてぃー")[0]).toBe("はあていい");
+  });
+
+  test("2段目は字ごとの濁点・半濁点、3段目は字ごとの長音符・小書き・並の重み", () => {
+    expect(kanaCollationKey("ガッコウ")).toEqual(["かつこう", "1000", "2122"]);
+    expect(kanaCollationKey("ぱーてぃー")).toEqual([
+      "はあていい",
+      "20000",
+      "20210",
+    ]);
   });
 });
 

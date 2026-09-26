@@ -19,7 +19,8 @@
   min-height: 44px;
 }
 
-/* 字の形を見て選ぶ単字は、§4 の段の1つ上で組む。行の高さは押せる範囲の 44px に収まる。 */
+/* 字の形を見て選ぶ単字は、リンクの本文の書体のまま、§4 の段の2段目の大きさで組む（§7）。行の高さを字の
+ * 大きさにし、既定の文字サイズでは押せる範囲の 44px に収まる。 */
 .singleCharacter {
   font-size: var(--text-step-2);
   line-height: 1;
@@ -38,8 +39,9 @@
   gap: var(--space-16);
 }
 
-/* 区切りはセクションの中の小見出しなので、上に細い罫線を引く（§5）。区切りを持つ索引はいつも索引の見出しか
- * アコーディオンのラベルのすぐ下にあり、最初の区切りの上はそれが区切るので、線は2つ目の区切りから引く。 */
+/* 区切りの見出しはセクションの中の小見出しで、大きさは §4 の段に従い、上の細い罫線で前の区切りと分ける（§5）。
+ * 区切りを持つ索引はいつも索引の見出しかアコーディオンのラベルのすぐ下にあり、最初の区切りの前には分ける
+ * 内容が無いので、線は2つ目の区切りから引く（§7）。 */
 .group + .group {
   padding-top: var(--space-16);
   border-top: var(--rule-w-hair) solid var(--rule-2);
@@ -47,5 +49,11 @@
 
 .groupHeading {
   margin: 0 0 var(--space-8);
-  font-size: var(--text-step-1);
+  font-size: var(--text-heading-sub);
+}
+
+/* 単字の索引では、小見出しの段が字の大きさを下回る幅でも、区切りの見出しを字と同じ大きさにし、見出しが
+ * その下に並ぶ字に埋もれないようにする（§7）。 */
+.singleCharacterGroups .groupHeading {
+  font-size: max(var(--text-heading-sub), var(--text-step-2));
 }

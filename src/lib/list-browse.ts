@@ -115,8 +115,7 @@ export function matchDegree(
   return null;
 }
 
-// 辞書の五十音順で、1段目に比べるときに外す濁点・半濁点（NFD で分かれた結合文字）と、並の仮名に寄せる小書きの仮名。
-const VOICING_MARKS = /[\u3099\u309a]/g;
+// 辞書の五十音順で、1段目に比べるときに並の仮名に寄せる小書きの仮名。
 const SMALL_KANA: Record<string, string> = {
   ぁ: "あ",
   ぃ: "い",
@@ -144,22 +143,53 @@ function vowelOf(kana: string): string | undefined {
   return VOWEL_ROWS.find(([, row]) => row.includes(kana))?.[0];
 }
 
+// 2段目で字ごとに比べる重み。NFD で分かれた濁点・半濁点の結合文字から、清音 → 濁音 → 半濁音の順の重みへ。
+const VOICING_WEIGHTS: Record<string, string> = {
+  "\u3099": "1",
+  "\u309a": "2",
+};
+const UNVOICED_WEIGHT = "0";
+// 3段目で字ごとに比べる重み。長音符 → 小書き → 並の順。
+const LONG_VOWEL_WEIGHT = "0";
+const SMALL_KANA_WEIGHT = "1";
+const PLAIN_KANA_WEIGHT = "2";
+
+/** 仮名の読みを辞書の並びで比べる形。1段目から順に比べる。 */
+export type KanaCollationKey = readonly [string, string, string];
+
 /**
- * 仮名の読みを辞書の並びで比べるための2段の形。1段目は濁点・半濁点を外し、小書きの仮名を並の仮名に寄せ、
- * 長音符を母音にしたもの。清音と濁音・半濁音が同じ位置に並ぶ。2段目は寄せる前の形で、1段目が同じ語どうしを
- * 小書き → 並、清音 → 濁音 → 半濁音の順に並べる。どちらも片仮名を平仮名に寄せてから作る。
+ * 仮名の読みを辞書の並び（日本語の照合）で比べるための3段の形。どれも片仮名を平仮名に寄せてから作る。
+ *
+ * 1段目は濁点・半濁点を外し、小書きの仮名を並の仮名に寄せ、長音符を直前の仮名の母音にしたもの。清音と
+ * 濁音・半濁音が同じ位置に並ぶ。2段目は字ごとの濁点の重み、3段目は字ごとの長音符・小書き・並の重みで、
+ * 1段目が同じ語どうしだけを比べる。語全体で濁点の差を先に比べ、同じなら長音符と小書きの差を比べるので、
+ * 「はーと・はあと・はあど」「きつか・きっが」の順になる。1段目が同じ語どうしは字の数も同じなので、重みの
+ * 列は字の位置が揃ったまま比べられる。
  */
-export function kanaCollationKey(text: string): [string, string] {
-  const secondary = normalizeSearchText(text);
+export function kanaCollationKey(text: string): KanaCollationKey {
   let primary = "";
-  for (const char of secondary.normalize("NFD").replace(VOICING_MARKS, "")) {
-    const base = SMALL_KANA[char] ?? char;
-    primary += base === "ー" ? (vowelOf(primary.slice(-1)) ?? base) : base;
+  let voicing = "";
+  let form = "";
+  for (const char of normalizeSearchText(text).normalize("NFD")) {
+    const voicingWeight = VOICING_WEIGHTS[char];
+    if (voicingWeight !== undefined && voicing !== "") {
+      voicing = voicing.slice(0, -1) + voicingWeight;
+      continue;
+    }
+    if (char === "ー") {
+      primary += vowelOf(primary.slice(-1)) ?? char;
+      form += LONG_VOWEL_WEIGHT;
+    } else {
+      const plain = SMALL_KANA[char];
+      primary += plain ?? char;
+      form += plain === undefined ? PLAIN_KANA_WEIGHT : SMALL_KANA_WEIGHT;
+    }
+    voicing += UNVOICED_WEIGHT;
   }
-  return [primary, secondary];
+  return [primary, voicing, form];
 }
 
-type PreparedKey = ReadonlyArray<number | readonly [string, string]>;
+type PreparedKey = ReadonlyArray<number | KanaCollationKey>;
 
 function prepareKey(key: BrowseSortKey): PreparedKey {
   return key.map((value) =>
@@ -168,14 +198,14 @@ function prepareKey(key: BrowseSortKey): PreparedKey {
 }
 
 function compareValues(
-  x: number | readonly [string, string],
-  y: number | readonly [string, string],
+  x: number | KanaCollationKey,
+  y: number | KanaCollationKey,
 ): number {
   if (typeof x === "number" && typeof y === "number") return x - y;
   if (typeof x === "number" || typeof y === "number") {
     return String(x) < String(y) ? -1 : 1;
   }
-  for (let level = 0; level < 2; level++) {
+  for (let level = 0; level < x.length; level++) {
     if (x[level] !== y[level]) return x[level] < y[level] ? -1 : 1;
   }
   return 0;

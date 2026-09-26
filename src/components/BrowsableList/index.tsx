@@ -41,6 +41,13 @@ const CONTROLS_THRESHOLD = 10;
 /** 名前の条件を URL へ書くまでの待ち。打鍵のたびに履歴を書き換えないため。 */
 const QUERY_WRITE_DELAY_MS = 300;
 
+/**
+ * 読み上げに渡した件数の文を空に戻すまでの待ち。読み上げソフトは、打った字や変換の読み上げを終えてから
+ * 丁寧なライブリージョンの文を読むので、読むまでのあいだに消えない長さにする。空に戻すのは、ページを
+ * 読み進めた来訪者に、見えている件数の行と同じ文を2度聞かせないため。空に戻したことは読み上げられない。
+ */
+const ANNOUNCEMENT_CLEAR_DELAY_MS = 5000;
+
 // URL のクエリを React の外の値として読む。useSearchParams を使うと、静的な HTML からこの部品が抜けて
 // クライアントでしか描かれなくなるため。サーバーとハイドレーションでは既定の状態（空のクエリ）として描き、
 // 静的な HTML とハイドレーションの最初の描画を同じにする。
@@ -197,6 +204,15 @@ export default function BrowsableList({
     setLastSettledText(settledText);
     if (conditionsTouched) setAnnouncement(settledText);
   }
+  // 読み上げに渡した文は、読まれる間を置いてから空に戻す。
+  useEffect(() => {
+    if (announcement === "") return;
+    const timer = setTimeout(
+      () => setAnnouncement(""),
+      ANNOUNCEMENT_CLEAR_DELAY_MS,
+    );
+    return () => clearTimeout(timer);
+  }, [announcement]);
 
   const statusRef = useRef<HTMLParagraphElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);

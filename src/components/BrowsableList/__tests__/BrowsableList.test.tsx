@@ -267,6 +267,37 @@ describe("BrowsableList", () => {
     expect(announcement()).toBe("1件（全101件）");
   });
 
+  test("読み上げの文は、読まれる間を置いてから空に戻り、条件を変えるとまた入る", () => {
+    vi.useFakeTimers();
+    render(<BrowsableList {...props()} />);
+    fireEvent.click(screen.getByRole("radio", { name: "データ" }));
+    expect(announcement()).toBe("50件（全101件）");
+    act(() => {
+      vi.advanceTimersByTime(4999);
+    });
+    expect(announcement()).toBe("50件（全101件）");
+    act(() => {
+      vi.advanceTimersByTime(1);
+    });
+    expect(announcement()).toBe("");
+    expect(countLine()).toHaveTextContent("50件（全101件）");
+
+    // 空に戻る前に条件を変えると、新しい文が入り、待ちはそこから数え直す。
+    fireEvent.click(screen.getByRole("radio", { name: "文章" }));
+    act(() => {
+      vi.advanceTimersByTime(3000);
+    });
+    fireEvent.click(screen.getByRole("radio", { name: "すべて" }));
+    act(() => {
+      vi.advanceTimersByTime(3000);
+    });
+    expect(announcement()).toBe("全101件");
+    act(() => {
+      vi.advanceTimersByTime(2000);
+    });
+    expect(announcement()).toBe("");
+  });
+
   test("ページを送っても読み上げの文は替わらず、見えている件数の行だけが範囲を替える", () => {
     render(<BrowsableList {...props()} />);
     fireEvent.click(screen.getByRole("radio", { name: "データ" }));

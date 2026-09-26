@@ -39,8 +39,7 @@ export type LinkIndexProps = LinkIndexContent & {
   /** いま開いているページのパス。一致する語を現在地にする。 */
   currentHref?: string;
   /**
-   * 語がどれも漢字1字で、字の形を見て選ぶ索引か。字を本文より大きく組む。単字の押せる範囲は 44px に届くまで
-   * 広げてあるので、字を大きくしても並びの幅は変わらない。
+   * 語がどれも漢字1字で、字の形を見て選ぶ索引か。字を本文より大きく組み、区切りの見出しを字より小さくしない。
    */
   singleCharacters?: boolean;
 };
@@ -94,7 +93,13 @@ export default function LinkIndex(props: LinkIndexProps): ReactElement {
 
   const Heading = `h${props.groupHeadingLevel}` as const;
   return (
-    <div className={styles.groups}>
+    <div
+      className={
+        props.singleCharacters
+          ? `${styles.groups} ${styles.singleCharacterGroups}`
+          : styles.groups
+      }
+    >
       {props.groups.map((group, index) => {
         const headingId = `${idPrefix}-${index}`;
         return (
