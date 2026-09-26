@@ -1,57 +1,16 @@
 "use client";
 
 /**
- * UnixTimestampTile — UNIXタイムスタンプと日時の相互変換の単一正典タイル
+ * UnixTimestampTile — UNIXタイムスタンプと日時を相互に変換する道具。最上位の要素が Panel で、
+ * 道具の詳細ページと道具箱のどちらからもこのまま描く。
  *
- * cycle-228 T-22: UnixTimestampPage.tsx を Panel ルートのタイルへ作り直したもの。
- *
- * ## 設計原則
- *
- * - **タイル = ツール実装そのもののルート**: 最上位要素が <Panel>。外部ラッパーなし。
- * - **variant は full のみ**: 3セクション（ライブ表示/TS→日付/日付→TS）すべてを持つ
- *   フルモードの1バリエーションのみ。ロジックに独立モードがないため。
- * - **id インスタンス一意化**: useId ベースで生成し、複数インスタンスが同一ページに
- *   同居しても id 重複・label 誤結合が起きない。
- * - **ToolPageLayout 非依存**: タイル単体で機能が完結する。
- * - **logic.ts 共有エンジン**: getCurrentTimestamp/timestampToDate/dateToTimestamp
- *   が唯一のロジック源。改変禁止。
- *
- * ## 機能
- *
- * - 現在のUNIXタイムスタンプの1秒ごとリアルタイム表示 + コピー
- * - タイムスタンプ → 日時変換（秒/ミリ秒切り替え）
- * - 日時 → タイムスタンプ変換
- * - 各結果のコピー（useCopyToClipboard）
- * - エラー表示（ErrorMessage）
- *
- * ## Hydration 安全パターン
- *
- * SSR/CSR で Date.now() が異なるため、現在時刻は useEffect 内でのみ初期化。
- * useState(0) で固定初期値、useEffect 内で実値を設定するパターンを必ず保持する。
- *
- * ## タイマー管理 (D-4)
- *
- * setInterval のタイマー ID を useRef で保持し、useEffect cleanup で clearInterval を呼ぶ。
- * アンマウント後の setState が起きない。
- *
- * ## ARIA (C-3)
- *
- * - ライブ時計部分は aria-live 対象外（1秒毎読み上げ防止）
- * - 変換結果に role="status" aria-live="polite" のライブリージョン + 実テキストサマリ
- *
- * ## variant
- *
- * - `"full"` (デフォルト・唯一の値): 3セクション全部。詳細ページ・道具箱ともに同一。
- *
- * ## 使い方
- *
- * ```tsx
- * // 道具箱や詳細ページから同一エクスポートを描画する（同一性の構造的保証）
- * <UnixTimestampTile variant="full" />
- * ```
+ * - いまの時刻を1秒ごとに刻んで表示し、止める・動かすのボタンで刻みを止められる（DESIGN.md §11）。
+ *   止めているあいだは表示が書き換わらず、止めた値を写せる。`prefers-reduced-motion: reduce` の
+ *   ときは止めた状態で始まる。刻む表示は読み上げのライブリージョンに入れない。
+ * - いまの時刻と日時の入力欄の初期値は、サーバーの HTML と食い違わないよう、マウントしてから入れる。
+ * - 同じページに2つ置いても id が重ならないよう、欄の id は useId から作る。
  */
-
-import { useId, useState, useEffect, useCallback, useRef } from "react";
+import { useId, useState, useEffect, useCallback } from "react";
 import Panel from "@/components/Panel";
 import Button from "@/components/Button";
 import ErrorMessage from "@/components/ErrorMessage";
@@ -96,7 +55,6 @@ export default function UnixTimestampTile({
   as = "section",
   className,
 }: UnixTimestampTileProps = {}) {
-  // ---------- id インスタンス一意化（複数同居時の重複 id・label 誤結合防止） ----------
   const uid = useId();
   const yearId = `${uid}-year`;
   const monthId = `${uid}-month`;
@@ -105,23 +63,21 @@ export default function UnixTimestampTile({
   const minutesId = `${uid}-minutes`;
   const secondsId = `${uid}-seconds`;
 
-  // variant は現在 full のみだが、将来の拡張に備えて参照しておく
+  // 描き分けは "full" の1つだけなので、variant は受け取るだけで描き方を変えない。
   void variant;
 
-  // ---------- ライブ表示 State ----------
-  // hydration 一致のため初期値は 0。useEffect 内で実値を設定する（AP-I11対応）
+  // いまの時刻。サーバーの HTML と食い違わないよう 0 で始め、マウントしてから入れる。
   const [currentTs, setCurrentTs] = useState(0);
   const [mounted, setMounted] = useState(false);
+  const [ticking, setTicking] = useState(true);
 
-  // ---------- タイムスタンプ → 日時 State ----------
   const [tsInput, setTsInput] = useState("");
   const [tsUnit, setTsUnit] = useState<"seconds" | "milliseconds">("seconds");
   const [tsResult, setTsResult] = useState<TimestampConversion | null>(null);
   const [tsError, setTsError] = useState("");
   const [tsStatusSummary, setTsStatusSummary] = useState("");
 
-  // ---------- 日時 → タイムスタンプ State ----------
-  // hydration 一致のため初期値は固定値。useEffect 内でマウント後に現在日時を設定
+  // 日時の入力欄。いまの時刻と同じく、固定の値で始めてマウントしてから今日の日時を入れる。
   const [year, setYear] = useState(2000);
   const [month, setMonth] = useState(1);
   const [day, setDay] = useState(1);
@@ -134,21 +90,19 @@ export default function UnixTimestampTile({
   } | null>(null);
   const [dateStatusSummary, setDateStatusSummary] = useState("");
 
-  // D-4: タイマーIDを useRef で保持（cleanup で clearInterval するため）
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  // T-4b: コピーあり確定。useCopyToClipboard フックを使用
   const { copy, copiedKey } = useCopyToClipboard();
 
-  // マウント後に現在時刻を設定し、1秒ごとに更新
-  // D-4: useEffect のcleanup で clearInterval を呼ぶ
-  // hydration 安全パターン: SSR/CSR の Date.now() 不一致を防ぐため useEffect 内でのみ読み取る
   useEffect(() => {
     /* eslint-disable react-hooks/set-state-in-effect */
     setCurrentTs(getCurrentTimestamp());
     setMounted(true);
+    if (
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      setTicking(false);
+    }
 
-    // 日時 → タイムスタンプの初期値を現在日時で設定（hydration 一致のためここで設定）
     const now = new Date();
     setYear(now.getFullYear());
     setMonth(now.getMonth() + 1);
@@ -157,18 +111,20 @@ export default function UnixTimestampTile({
     setMinutes(now.getMinutes());
     setSeconds(0);
     /* eslint-enable react-hooks/set-state-in-effect */
+  }, []);
 
-    intervalRef.current = setInterval(() => {
+  useEffect(() => {
+    if (!ticking) return;
+    const intervalId = setInterval(() => {
       setCurrentTs(getCurrentTimestamp());
     }, 1000);
+    return () => clearInterval(intervalId);
+  }, [ticking]);
 
-    return () => {
-      if (intervalRef.current !== null) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
-    };
-  }, []);
+  const toggleTicking = useCallback(() => {
+    if (!ticking) setCurrentTs(getCurrentTimestamp());
+    setTicking(!ticking);
+  }, [ticking]);
 
   const handleTimestampConvert = useCallback(() => {
     setTsError("");
@@ -187,7 +143,6 @@ export default function UnixTimestampTile({
       return;
     }
     setTsResult(result);
-    // C-3: 実テキストサマリを role="status" に配置
     setTsStatusSummary("変換しました");
   }, [tsInput, tsUnit]);
 
@@ -198,7 +153,6 @@ export default function UnixTimestampTile({
     const result = timestampToDate(now);
     setTsResult(result);
     setTsError("");
-    // C-3: 実テキストサマリを role="status" に配置
     setTsStatusSummary("現在時刻を変換しました");
   }, []);
 
@@ -207,33 +161,45 @@ export default function UnixTimestampTile({
     const result = dateToTimestamp(year, month, day, hours, minutes, seconds);
     setDateResult(result);
     if (result) {
-      // C-3: 実テキストサマリを role="status" に配置
       setDateStatusSummary("変換しました");
     }
   }, [year, month, day, hours, minutes, seconds]);
 
-  // ---------- Render ----------
-  // タイルのルートが Panel（= DESIGN.md §1 パネル準拠・タイル = ツール実装そのもの）
   return (
     <Panel as={as} className={className}>
-      {/* 現在のUNIXタイムスタンプ（ライブ表示）
-          C-3: ライブ時計は aria-live 対象外（1秒毎読み上げ防止） */}
+      {/* 刻み続ける表示なので、読み上げのライブリージョンに入れない。 */}
       <div className={styles.currentBar}>
-        <span className={styles.currentLabel}>現在のUNIXタイムスタンプ:</span>
-        {/* mounted 前は空文字を表示して hydration を一致させる */}
+        <span className={styles.currentLabel}>
+          {ticking ? "現在のUNIXタイムスタンプ:" : "止めたUNIXタイムスタンプ:"}
+        </span>
+        {/* マウントするまでは空にして、サーバーの HTML と揃える。 */}
         <code className={styles.currentValue}>{mounted ? currentTs : ""}</code>
-        {/* 現在タイムスタンプをコピー */}
-        <Button
-          disabled={!mounted || currentTs === 0}
-          onClick={() => copy(String(currentTs), "current")}
-          aria-label={
-            copiedKey === "current"
-              ? COPIED_LABEL
-              : "現在のタイムスタンプをコピー"
-          }
-        >
-          {copiedKey === "current" ? COPIED_LABEL : "コピー"}
-        </Button>
+        <div className={styles.currentActions}>
+          <Button
+            disabled={!mounted}
+            onClick={toggleTicking}
+            aria-label={
+              ticking
+                ? "タイムスタンプの刻みを止める"
+                : "タイムスタンプの刻みを動かす"
+            }
+          >
+            {ticking ? "止める" : "動かす"}
+          </Button>
+          <Button
+            disabled={!mounted || currentTs === 0}
+            onClick={() => copy(String(currentTs), "current")}
+            aria-label={
+              copiedKey === "current"
+                ? COPIED_LABEL
+                : ticking
+                  ? "現在のタイムスタンプをコピー"
+                  : "止めたタイムスタンプをコピー"
+            }
+          >
+            {copiedKey === "current" ? COPIED_LABEL : "コピー"}
+          </Button>
+        </div>
       </div>
 
       {/* ---- セクション1: タイムスタンプ → 日時 ---- */}
@@ -268,8 +234,7 @@ export default function UnixTimestampTile({
         {/* エラー表示 */}
         {tsError && <ErrorMessage message={tsError} />}
 
-        {/* C-3: スクリーンリーダー向けサマリ（実テキストノード）
-            ライブ時計の1秒更新とは別の領域 */}
+        {/* 変換したことを読み上げで伝える。 */}
         <div
           role="status"
           aria-live="polite"
@@ -452,7 +417,7 @@ export default function UnixTimestampTile({
           </Button>
         </div>
 
-        {/* C-3: スクリーンリーダー向けサマリ（実テキストノード） */}
+        {/* 変換したことを読み上げで伝える。 */}
         <div
           role="status"
           aria-live="polite"

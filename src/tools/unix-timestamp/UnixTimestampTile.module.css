@@ -1,10 +1,4 @@
-/*
- * UnixTimestampTile.module.css
- *
- * Panel がルート要素のため container クラスは不要（Panel.module.css に委譲）。
- */
-
-/* ---- 現在タイムスタンプ表示バー ---- */
+/* ---- いまのタイムスタンプの行 ---- */
 .currentBar {
   display: flex;
   align-items: center;
@@ -27,6 +21,11 @@
   font-size: 1.1rem;
   color: var(--ink);
   flex: 1;
+}
+
+.currentActions {
+  display: flex;
+  gap: 0.5rem;
 }
 
 /* ---- セクション ---- */
@@ -113,22 +112,15 @@
   color: var(--ink-2);
 }
 
-/*
- * number スピナーの抑止 (unix-timestamp スコープ限定)
- * 理由: w360 などの狭い画面では、ブラウザデフォルトの number スピナー矢印が
- * フィールド内の文字領域を圧迫し、4桁の年(例: "2026")が末尾1桁欠けて表示される。
- * Webkit: スピナーを非表示。Firefox: appearance: textfield で対応。
- */
+/* 数値の欄の増減の矢印を消す。狭い画面では矢印が字の場所を削り、4桁の年の末尾が欠けるため。 */
 .dateInput {
   width: 80px;
   font-family: var(--font-mono);
-  /* Firefox: number スピナーを非表示にして文字領域を確保する */
   appearance: textfield;
 }
 
 .dateInput::-webkit-outer-spin-button,
 .dateInput::-webkit-inner-spin-button {
-  /* Webkit: number スピナーを非表示にして文字領域を確保する */
   -webkit-appearance: none;
   margin: 0;
 }
@@ -141,7 +133,6 @@
 }
 
 /* ---- スクリーンリーダー専用サマリ領域 ---- */
-/* C-3: 視覚的には非表示だが SR には読み上げられる */
 .srOnly {
   position: absolute;
   width: 1px;
@@ -155,11 +146,7 @@
 }
 
 @media (max-width: 640px) {
-  /*
-   * w360 対応: スピナー抑止後も余裕を持った幅を確保する。
-   * 4桁年(例: 2026)はフォント 14px × mono で約 32px + 左右 padding 24px = 56px 必要。
-   * モバイルでは 72px にして1〜4桁すべてのフィールドを余裕を持って表示する。
-   */
+  /* 等幅 14px の4桁（約 32px）に左右の余白 24px を足した幅に、ゆとりを持たせる。 */
   .dateInput {
     width: 72px;
   }
