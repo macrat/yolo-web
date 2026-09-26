@@ -5,8 +5,9 @@
  * 道具の詳細ページと道具箱のどちらからもこのまま描く。
  *
  * - いまの時刻を1秒ごとに刻んで表示し、止める・動かすのボタンで刻みを止められる（DESIGN.md §11）。
- *   止めているあいだは表示が書き換わらず、止めた値を写せる。`prefers-reduced-motion: reduce` の
- *   ときは止めた状態で始まる。刻む表示は読み上げのライブリージョンに入れない。
+ *   見出しは値の日時をいつも言い、数字と一緒に刻んで一緒に止まるので、写す前に値がいつのものかが
+ *   分かる。`prefers-reduced-motion: reduce` のときは止めた状態で始まる。刻む表示は読み上げの
+ *   ライブリージョンに入れない。
  * - いまの時刻と日時の入力欄の初期値は、サーバーの HTML と食い違わないよう、マウントしてから入れる。
  * - 同じページに2つ置いても id が重ならないよう、欄の id は useId から作る。
  */
@@ -121,6 +122,11 @@ export default function UnixTimestampTile({
     return () => clearInterval(intervalId);
   }, [ticking]);
 
+  // 見出しで言う、表示している値のローカルの日時。
+  const valueAt = mounted
+    ? (timestampToDate(currentTs)?.localString ?? "")
+    : "";
+
   const toggleTicking = useCallback(() => {
     if (!ticking) setCurrentTs(getCurrentTimestamp());
     setTicking(!ticking);
@@ -169,8 +175,21 @@ export default function UnixTimestampTile({
     <Panel as={as} className={className}>
       {/* 刻み続ける表示なので、読み上げのライブリージョンに入れない。 */}
       <div className={styles.currentBar}>
+        {/* 日時は「2026/09/26 18:40:47」の形。マウントするまでは同じ字数の見えない字で場所を取り、
+            日時が入っても見出しの大きさが変わらないようにする。 */}
         <span className={styles.currentLabel}>
-          {ticking ? "現在のUNIXタイムスタンプ:" : "止めたUNIXタイムスタンプ:"}
+          {mounted ? (
+            <span className={styles.valueAt}>{valueAt}</span>
+          ) : (
+            <span className={styles.valueAtPending}>0000/00/00 00:00:00</span>
+          )}
+          {"\u00a0の"}
+          <wbr />
+          <span className={styles.term}>
+            UNIX
+            <wbr />
+            タイムスタンプ
+          </span>
         </span>
         {/* マウントするまでは空にして、サーバーの HTML と揃える。 */}
         <code className={styles.currentValue}>{mounted ? currentTs : ""}</code>
@@ -194,7 +213,7 @@ export default function UnixTimestampTile({
                 ? COPIED_LABEL
                 : ticking
                   ? "現在のタイムスタンプをコピー"
-                  : "止めたタイムスタンプをコピー"
+                  : `${valueAt} のタイムスタンプをコピー`
             }
           >
             {copiedKey === "current" ? COPIED_LABEL : "コピー"}

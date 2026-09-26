@@ -1,7 +1,8 @@
 /**
  * UnixTimestampTile テスト
  *
- * 変換・コピー・いまの時刻の刻みと止め方・マウント前の表示・複数置いたときの id を確かめる。
+ * 変換・コピー・いまの時刻の刻みと止め方・タイマーの片付け・サーバーの HTML・複数置いたときの id を
+ * 確かめる。
  */
 import { describe, test, expect, beforeEach, vi, afterEach } from "vitest";
 import {
@@ -10,11 +11,14 @@ import {
   fireEvent,
   waitFor,
   act,
+  within,
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { renderToString } from "react-dom/server";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import UnixTimestampTile from "../UnixTimestampTile";
+import { timestampToDate } from "../logic";
 import { COPIED_LABEL } from "@/components/hooks/useCopyToClipboard";
 
 // navigator.clipboard のモック
@@ -73,9 +77,11 @@ describe("基本の描画", () => {
     expect(screen.getByText("日時 → タイムスタンプ")).toBeInTheDocument();
   });
 
-  test("現在のUNIXタイムスタンプラベルが存在すること", () => {
+  test("いまの時刻の見出しが「…のUNIXタイムスタンプ」であること", () => {
     render(<UnixTimestampTile />);
-    expect(screen.getByText("現在のUNIXタイムスタンプ:")).toBeInTheDocument();
+    expect(
+      screen.getByText(/^UNIXタイムスタンプ$/).parentElement!.textContent,
+    ).toMatch(/\u00a0のUNIXタイムスタンプ$/);
   });
 
   test("variant=full でも全セクションが表示されること", () => {
@@ -85,11 +91,27 @@ describe("基本の描画", () => {
   });
 });
 
-describe("マウント前の表示", () => {
-  test("初期状態ではライブタイムスタンプが空文字（SSR 一致）", () => {
-    render(<UnixTimestampTile />);
-    const codeEl = document.querySelector("code");
-    expect(codeEl).toBeInTheDocument();
+describe("サーバーの HTML", () => {
+  test("いまの時刻は空で、止める・コピーのボタンは押せない", () => {
+    const host = document.createElement("div");
+    host.innerHTML = renderToString(<UnixTimestampTile />);
+
+    expect(host.querySelector("code")?.textContent).toBe("");
+    // 見出しの日時の所は、マウント後の「YYYY/MM/DD hh:mm:ss」と同じ字数の見えない字で場所を取る。
+    const label = within(host).getByText(/^UNIXタイムスタンプ$/).parentElement!;
+    expect(label.textContent).toMatch(
+      /^\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}\u00a0のUNIXタイムスタンプ$/,
+    );
+    const buttons = within(host).getAllByRole("button");
+    const toggle = within(host).getByRole("button", {
+      name: "タイムスタンプの刻みを止める",
+    });
+    const copy = within(host).getByRole("button", {
+      name: "現在のタイムスタンプをコピー",
+    });
+    expect(buttons.slice(0, 2)).toEqual([toggle, copy]);
+    expect(toggle).toBeDisabled();
+    expect(copy).toBeDisabled();
   });
 });
 
@@ -138,10 +160,33 @@ describe("いまの時刻を止める・動かす", () => {
   async function renderAt(iso: string) {
     vi.useFakeTimers({ toFake: ["setInterval", "clearInterval", "Date"] });
     vi.setSystemTime(new Date(iso));
-    render(<UnixTimestampTile />);
+    const result = render(<UnixTimestampTile />);
     await act(async () => {
       vi.advanceTimersByTime(100);
     });
+    return result;
+  }
+
+  /** タイムスタンプ（秒）を、動かしている環境のローカルの日時で言ったもの。 */
+  function localAt(seconds: number) {
+    return timestampToDate(seconds)!.localString;
+  }
+
+  function labelText() {
+    return screen.getByText(/^UNIXタイムスタンプ$/).parentElement!.textContent;
+  }
+
+  function mockReducedMotion() {
+    window.matchMedia = vi.fn().mockImplementation((query: string) => ({
+      matches: query === "(prefers-reduced-motion: reduce)",
+      media: query,
+      onchange: null,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    }));
   }
 
   function currentValue() {
@@ -166,7 +211,51 @@ describe("いまの時刻を止める・動かす", () => {
 
     expect(stop).toHaveTextContent("動かす");
     expect(stop).toHaveAccessibleName("タイムスタンプの刻みを動かす");
-    expect(screen.getByText("止めたUNIXタイムスタンプ:")).toBeInTheDocument();
+  });
+
+  test("見出しは値の日時を言い、数字と一緒に刻み、止めると一緒に止まる", async () => {
+    await renderAt("2024-01-01T00:00:00Z");
+    expect(labelText()).toBe(
+      `${localAt(1704067200)}\u00a0のUNIXタイムスタンプ`,
+    );
+
+    await pass(1000);
+    expect(currentValue()).toBe("1704067201");
+    expect(labelText()).toBe(
+      `${localAt(1704067201)}\u00a0のUNIXタイムスタンプ`,
+    );
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "タイムスタンプの刻みを止める" }),
+    );
+    await pass(5000);
+
+    expect(labelText()).toBe(
+      `${localAt(1704067201)}\u00a0のUNIXタイムスタンプ`,
+    );
+  });
+
+  test("止めると刻みのタイマーが消え、動かすとまた1つになる", async () => {
+    await renderAt("2024-01-01T00:00:00Z");
+    expect(vi.getTimerCount()).toBe(1);
+    const toggle = screen.getByRole("button", {
+      name: "タイムスタンプの刻みを止める",
+    });
+
+    fireEvent.click(toggle);
+    expect(vi.getTimerCount()).toBe(0);
+
+    fireEvent.click(toggle);
+    expect(vi.getTimerCount()).toBe(1);
+  });
+
+  test("アンマウントすると刻みのタイマーが消える", async () => {
+    const { unmount } = await renderAt("2024-01-01T00:00:00Z");
+    expect(vi.getTimerCount()).toBe(1);
+
+    unmount();
+
+    expect(vi.getTimerCount()).toBe(0);
   });
 
   test("止めると、5秒たっても表示が書き換わらない", async () => {
@@ -191,7 +280,9 @@ describe("いまの時刻を止める・動かす", () => {
 
     await act(async () => {
       fireEvent.click(
-        screen.getByRole("button", { name: "止めたタイムスタンプをコピー" }),
+        screen.getByRole("button", {
+          name: `${localAt(1704067200)} のタイムスタンプをコピー`,
+        }),
       );
     });
 
@@ -234,28 +325,38 @@ describe("いまの時刻を止める・動かす", () => {
     expect(currentValue()).toBe("1704067205");
   });
 
-  test("prefers-reduced-motion: reduce のときは止めた状態で始まる", async () => {
+  test("prefers-reduced-motion: reduce のときは止めた状態で始まり、見出しが値の日時を言う", async () => {
     const original = window.matchMedia;
-    window.matchMedia = vi.fn().mockImplementation((query: string) => ({
-      matches: query === "(prefers-reduced-motion: reduce)",
-      media: query,
-      onchange: null,
-      addEventListener: vi.fn(),
-      removeEventListener: vi.fn(),
-      addListener: vi.fn(),
-      removeListener: vi.fn(),
-      dispatchEvent: vi.fn(),
-    }));
+    mockReducedMotion();
     try {
       await renderAt("2024-01-01T00:00:00Z");
       expect(
         screen.getByRole("button", { name: "タイムスタンプの刻みを動かす" }),
       ).toBeInTheDocument();
+      expect(vi.getTimerCount()).toBe(0);
+      expect(labelText()).toBe(
+        `${localAt(1704067200)}\u00a0のUNIXタイムスタンプ`,
+      );
       await pass(5000);
       expect(currentValue()).toBe("1704067200");
     } finally {
       window.matchMedia = original;
     }
+  });
+
+  test("いまの時刻のコピーを押すと「コピーしました」に変わる", async () => {
+    await renderAt("2024-01-01T00:00:00Z");
+    const copy = screen.getByRole("button", {
+      name: "現在のタイムスタンプをコピー",
+    });
+    expect(copy).toHaveTextContent(/^コピー$/);
+
+    await act(async () => {
+      fireEvent.click(copy);
+    });
+
+    expect(copy).toHaveAccessibleName(COPIED_LABEL);
+    expect(copy).toHaveTextContent(COPIED_LABEL);
   });
 });
 
@@ -408,7 +509,7 @@ describe("コピーの文言の変化", () => {
     const isoButton = screen.getByRole("button", { name: "ISO 8601をコピー" });
     fireEvent.click(isoButton);
     await waitFor(() => {
-      expect(screen.getAllByText(COPIED_LABEL).length).toBeGreaterThan(0);
+      expect(isoButton).toHaveTextContent(COPIED_LABEL);
     });
   });
 });
@@ -455,7 +556,7 @@ describe("clipboard が無いとき", () => {
 });
 
 describe("コピーの対象", () => {
-  test("タイムスタンプ変換後に5個のコピーターゲット（現在・ローカル・UTC・ISO・秒・ミリ秒）が存在すること", async () => {
+  test("タイムスタンプ変換後に、現在・ローカル時刻・UTC・ISO 8601・秒・ミリ秒のコピーのボタンがあること", async () => {
     render(<UnixTimestampTile />);
     const input = screen.getByRole("textbox", { name: "UNIXタイムスタンプ" });
     fireEvent.change(input, { target: { value: "1704067200" } });
@@ -463,7 +564,9 @@ describe("コピーの対象", () => {
     await waitFor(() => {
       expect(screen.getByText("ローカル時刻")).toBeInTheDocument();
     });
-    // ローカル・UTC・ISO・秒・ミリ秒 のコピーボタンが存在すること
+    expect(
+      screen.getByRole("button", { name: "現在のタイムスタンプをコピー" }),
+    ).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: "ローカル時刻をコピー" }),
     ).toBeInTheDocument();
@@ -527,7 +630,7 @@ describe("CSS のトークン（UnixTimestampTile.module.css）", () => {
     "src/tools/unix-timestamp/UnixTimestampTile.module.css",
   );
 
-  test("--color-* 旧トークンが存在しないこと", () => {
+  test("--color-* のトークンを使わないこと", () => {
     const css = readFileSync(cssPath, "utf-8");
     const matches = css.match(/var\(--color-[^)]+\)/g) ?? [];
     expect(matches).toHaveLength(0);

@@ -1,31 +1,63 @@
 /* ---- いまのタイムスタンプの行 ---- */
+/* 見出し・数字・ボタンの組を縦に積む。どれも行の幅を超えない。数字の字の大きさを行の幅で決めるので、
+ * 行を幅の問い合わせの基準にする。 */
 .currentBar {
+  container-type: inline-size;
   display: flex;
-  align-items: center;
-  gap: 0.75rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
   padding: 0.75rem 1rem;
   border: 1px solid var(--rule);
   border-radius: var(--radius);
   background-color: var(--paper-2);
-  flex-wrap: wrap;
   margin-bottom: 1.5rem;
 }
 
+/* 語の途中で折らず、日付と時刻のあいだと「の」のあとで折る。「UNIXタイムスタンプ」は1行に収まるなら
+ * まとめて次の行へ送り、収まらないときだけ「UNIX」のあとで折る。1語が行に収まらないときだけ、その語の
+ * 中で折る。 */
 .currentLabel {
+  max-width: 100%;
   font-size: 0.9rem;
   color: var(--ink-2);
+  word-break: keep-all;
+  overflow-wrap: anywhere;
 }
 
+.term {
+  display: inline-block;
+  max-width: 100%;
+}
+
+/* 秒ごとに字が替わっても幅が揺れないよう、数字の幅を揃える。 */
+.valueAt,
+.valueAtPending {
+  font-variant-numeric: tabular-nums;
+}
+
+.valueAtPending {
+  visibility: hidden;
+}
+
+/* 10桁（等幅の字でおよそ 6.2 字ぶん）が行に1行で収まる大きさまで字を下げる。下げるのは補助情報の大きさ
+ * までで、それでも収まらないときだけ折る。行の地がコード片の地と同じなので、コード片の左右の余白を持たず、
+ * 数字の左端を見出しの左端に揃える。値が入る前も1行ぶんの高さを取る。 */
 .currentValue {
+  max-width: 100%;
+  min-block-size: 1lh;
+  padding: 0;
   font-family: var(--font-mono);
-  font-size: 1.1rem;
+  font-size: clamp(var(--text-small), 100cqi / 6.2, 1.1rem);
   color: var(--ink);
-  flex: 1;
+  overflow-wrap: anywhere;
 }
 
 .currentActions {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
+  max-width: 100%;
 }
 
 /* ---- セクション ---- */
