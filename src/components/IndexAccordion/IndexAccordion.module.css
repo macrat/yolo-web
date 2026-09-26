@@ -1,0 +1,27 @@
+/* アコーディオンの中の索引。ラベルとのあいだと、索引どうしのあいだをあける（§5 の間隔）。 */
+.index {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  padding-block-start: var(--space-8);
+}
+
+/* 2つ目からの索引の見出しは、セクションの中の小見出しとして上に細い罫線を引く（§5）。最初の索引の上は
+ * アコーディオンのラベルが区切る。 */
+.part + .part {
+  padding-block-start: var(--space-16);
+  border-block-start: var(--rule-w-hair) solid var(--rule-2);
+}
+
+/* 索引の見出しは、セクションの中の小見出しの段で組む（§4）。区切りの見出しと同じ段なので、区切りの見出しより
+ * 小さくならない。 */
+.heading {
+  margin-block-end: var(--space-8);
+  font-size: var(--text-heading-sub);
+}
+
+/* 漢字1字の索引の区切りの見出しは字より小さく組まないので（§7）、それを含むアコーディオンでは、どの索引の
+ * 見出しも同じ大きさにそろえ、区切りの見出しより小さくしない。 */
+.singleCharacterHeadings .heading {
+  font-size: max(var(--text-heading-sub), var(--text-step-2));
+}

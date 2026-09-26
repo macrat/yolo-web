@@ -517,32 +517,6 @@ export function generateColorJsonLd(color: ColorMetaForSeo): object {
   };
 }
 
-export function generateColorCategoryMetadata(
-  category: string,
-  label: string,
-): Metadata {
-  return {
-    title: `${label}の伝統色一覧 - 日本の伝統色 | ${SITE_NAME}`,
-    description: `日本の伝統色「${label}」カテゴリの色一覧。カラーコード・RGB・HSL値を確認できます。`,
-    keywords: [label, "伝統色", "日本の色", "カラーコード"],
-    openGraph: {
-      title: `${label}の伝統色一覧 - 日本の伝統色`,
-      description: `日本の伝統色「${label}」カテゴリの色一覧。`,
-      type: "website",
-      url: `${BASE_URL}/dictionary/colors/category/${category}`,
-      siteName: SITE_NAME,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: `${label}の伝統色一覧 - 日本の伝統色`,
-      description: `日本の伝統色「${label}」カテゴリの色一覧。`,
-    },
-    alternates: {
-      canonical: `${BASE_URL}/dictionary/colors/category/${category}`,
-    },
-  };
-}
-
 // -- Humor Dictionary SEO helpers --
 
 interface HumorDictEntryForSeo {
@@ -550,35 +524,6 @@ interface HumorDictEntryForSeo {
   word: string;
   reading: string;
   definition: string;
-}
-
-/**
- * ユーモア辞典の一覧ページ用メタデータを生成する。
- */
-export function generateHumorDictMetadata(): Metadata {
-  return {
-    title: `ユーモア辞典 | ${SITE_NAME}`,
-    description:
-      "日常のあらゆる言葉をユーモラスに再定義した辞典。クスッと笑える新解釈で、言葉の別の側面を楽しもう。",
-    keywords: ["ユーモア辞典", "ユーモア", "定義", "言葉", "面白い"],
-    openGraph: {
-      title: "ユーモア辞典",
-      description:
-        "日常のあらゆる言葉をユーモラスに再定義した辞典。クスッと笑える新解釈で、言葉の別の側面を楽しもう。",
-      type: "website",
-      url: `${BASE_URL}/dictionary/humor`,
-      siteName: SITE_NAME,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: "ユーモア辞典",
-      description:
-        "日常のあらゆる言葉をユーモラスに再定義した辞典。クスッと笑える新解釈で、言葉の別の側面を楽しもう。",
-    },
-    alternates: {
-      canonical: `${BASE_URL}/dictionary/humor`,
-    },
-  };
 }
 
 /**

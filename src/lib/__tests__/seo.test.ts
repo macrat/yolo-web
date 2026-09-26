@@ -13,7 +13,6 @@ import {
   generateKanjiJsonLd,
   generateYojiPageMetadata,
   generateYojiJsonLd,
-  generateColorCategoryMetadata,
   generateFaqPageJsonLd,
   generateHumorDictJsonLd,
   safeJsonLdStringify,
@@ -327,7 +326,7 @@ describe("generateToolMetadata", () => {
     description: "JSONを整形・検証するツールです。",
     shortDescription: "JSON整形",
     keywords: ["JSON"],
-    category: "developer" as const,
+    category: "data" as const,
     relatedSlugs: [],
     publishedAt: "2026-01-01T00:00:00+09:00",
     howItWorks:
@@ -380,7 +379,7 @@ describe("generateToolJsonLd", () => {
     description: "JSONを整形・検証するツールです。",
     shortDescription: "JSON整形",
     keywords: ["JSON"],
-    category: "developer" as const,
+    category: "data" as const,
     relatedSlugs: [],
     publishedAt: "2026-01-01T00:00:00+09:00",
     howItWorks:
@@ -843,46 +842,6 @@ describe("generateYojiJsonLd", () => {
   });
 });
 
-describe("generateColorCategoryMetadata", () => {
-  test("titleにカテゴリ名とサイト名を含む", () => {
-    const result = generateColorCategoryMetadata("red", "赤系");
-    expect(result.title).toContain("赤系");
-    expect(result.title).toContain("yolos.net");
-  });
-
-  test("canonical URLが絶対URLで正しいパスを含む", () => {
-    const result = generateColorCategoryMetadata("red", "赤系");
-    const canonical = result.alternates?.canonical as string;
-    expect(canonical).toContain("/dictionary/colors/category/red");
-    expect(canonical).toMatch(/^https:\/\//);
-  });
-
-  test("og:urlが存在しcanonicalと一致する", () => {
-    const result = generateColorCategoryMetadata("red", "赤系");
-    const og = result.openGraph as Record<string, unknown> | undefined;
-    expect(og?.url).toBeDefined();
-    expect(og?.url).toBe(result.alternates?.canonical);
-  });
-
-  test("og:titleが存在する", () => {
-    const result = generateColorCategoryMetadata("red", "赤系");
-    const og = result.openGraph as Record<string, unknown> | undefined;
-    expect(og?.title).toBeDefined();
-  });
-
-  test("og:descriptionが存在する", () => {
-    const result = generateColorCategoryMetadata("red", "赤系");
-    const og = result.openGraph as Record<string, unknown> | undefined;
-    expect(og?.description).toBeDefined();
-  });
-
-  test("og:siteNameがyolos.netである", () => {
-    const result = generateColorCategoryMetadata("red", "赤系");
-    const og = result.openGraph as Record<string, unknown> | undefined;
-    expect(og?.siteName).toBe("yolos.net");
-  });
-});
-
 describe("factory functions include twitter metadata", () => {
   test("generateToolMetadata includes twitter", () => {
     const result = generateToolMetadata({
@@ -955,16 +914,6 @@ describe("factory functions include twitter metadata", () => {
       card: "summary_large_image",
       title: expect.stringContaining("一期一会"),
       description: expect.stringContaining("一期一会"),
-    });
-  });
-
-  test("generateColorCategoryMetadata includes twitter", () => {
-    const result = generateColorCategoryMetadata("red", "赤系");
-
-    expect(result.twitter).toMatchObject({
-      card: "summary_large_image",
-      title: expect.stringContaining("赤系"),
-      description: expect.stringContaining("赤系"),
     });
   });
 });
@@ -1177,7 +1126,7 @@ describe("JSON-LD external sameAs/isBasedOn/citation guard (cycle-246 再発防�
       description: "JSONを整形・検証するツールです。",
       shortDescription: "JSON整形",
       keywords: ["JSON"],
-      category: "developer",
+      category: "data",
       relatedSlugs: [],
       publishedAt: "2026-01-01T00:00:00+09:00",
       howItWorks: "テスト用の処理内容説明です。",

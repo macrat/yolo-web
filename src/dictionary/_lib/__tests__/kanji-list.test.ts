@@ -55,7 +55,7 @@ describe("kanjiReadings", () => {
 
   test("どの範囲の行も、音訓に同じ読みが重ならない", () => {
     for (const item of kanjiListItems({ type: "all" })) {
-      const readings = (item.reading ?? "").split("・");
+      const readings = item.readings ?? [];
       expect(new Set(readings).size, item.name).toBe(readings.length);
     }
   });
@@ -65,13 +65,74 @@ describe("kanjiListItems", () => {
   test("トップは2,136字を学年順（同じ学年の中は画数順）で並べる", () => {
     const items = kanjiListItems({ type: "all" });
     expect(items).toHaveLength(2136);
-    const keys = items.map((item) => item.sortKeys.grade);
+    const keys = items.map((item) => {
+      const kanji = getKanjiByChar(item.name)!;
+      return [kanji.grade, kanji.strokeCount];
+    });
     for (let i = 1; i < keys.length; i++) {
-      const [gradeA, strokeA] = keys[i - 1] as number[];
-      const [gradeB, strokeB] = keys[i] as number[];
+      const [gradeA, strokeA] = keys[i - 1];
+      const [gradeB, strokeB] = keys[i];
       expect(gradeA < gradeB || (gradeA === gradeB && strokeA <= strokeB)).toBe(
         true,
       );
+    }
+  });
+
+  test("項目は行に見せる値と熟語だけを持ち、リンク先の slug を持たない（字そのものが名前）", () => {
+    const keys = new Set(
+      kanjiListItems({ type: "all" }).flatMap((item) => Object.keys(item)),
+    );
+    expect([...keys].sort()).toEqual(
+      ["facts", "kind", "name", "readings", "searchTexts"].sort(),
+    );
+  });
+
+  test("どの範囲のどの並び順も、学年・画数・最初の読みで並べた順と同じ", () => {
+    const valueOf = (name: string, key: "grade" | "stroke" | "reading") => {
+      const kanji = getKanjiByChar(name)!;
+      if (key === "grade") return kanji.grade;
+      if (key === "stroke") return kanji.strokeCount;
+      return kanjiReadings(kanji)[0];
+    };
+    const thenOf: Record<
+      string,
+      Record<string, "grade" | "stroke" | "reading">
+    > = {
+      all: { grade: "stroke", stroke: "grade" },
+      grade: { stroke: "reading" },
+      radical: { grade: "stroke", stroke: "grade" },
+      stroke: { grade: "reading" },
+    };
+    const collator = new Intl.Collator("ja");
+    for (const scope of allScopes()) {
+      const spec = specOf(scope);
+      for (const sort of spec.sorts) {
+        const shown = browseItems(
+          kanjiListItems(scope),
+          readBrowseState(`?sort=${sort.value}`, spec),
+          spec,
+        ).map((item) => item.name);
+        const order = sort.value as "grade" | "stroke" | "reading";
+        const then = thenOf[scope.type][order];
+        const compare = (a: string, b: string) => {
+          for (const key of then ? [order, then] : [order]) {
+            const x = valueOf(a, key);
+            const y = valueOf(b, key);
+            const diff =
+              typeof x === "number" && typeof y === "number"
+                ? x - y
+                : collator.compare(String(x), String(y));
+            if (diff !== 0) return diff;
+          }
+          return 0;
+        };
+        for (let i = 1; i < shown.length; i++) {
+          expect(
+            compare(shown[i - 1], shown[i]),
+            `${JSON.stringify(scope)} ${sort.value} ${shown[i - 1]} ${shown[i]}`,
+          ).toBeLessThanOrEqual(0);
+        }
+      }
     }
   });
 
@@ -212,10 +273,9 @@ describe("kanjiListMetadata", () => {
 
 describe("kanjiIndexEntries", () => {
   test("学年7・部首198・画数24を持ち、部首は部首の画数の少ない順に区切る", () => {
-    const { grades, radicals, radicalCount, strokes } = kanjiIndexEntries();
+    const { grades, radicals, strokes } = kanjiIndexEntries();
     expect(grades).toHaveLength(7);
     expect(strokes).toHaveLength(24);
-    expect(radicalCount).toBe(198);
     expect(radicals.flatMap((group) => group.items)).toHaveLength(198);
     const counts = radicals.map((group) => Number.parseInt(group.heading, 10));
     expect(counts).toEqual([...counts].sort((a, b) => a - b));

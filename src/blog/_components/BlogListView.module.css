@@ -19,24 +19,3 @@
 .description {
   max-width: var(--measure);
 }
-
-/* アコーディオンの中の2つの索引。ラベルとのあいだと、索引どうしのあいだをあける。 */
-.index {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-16);
-  padding-block-start: var(--space-8);
-}
-
-/* 2つ目の索引の見出しは、セクションの中の小見出しとして上に細い罫線を引く（§5）。最初の索引の上は
- * アコーディオンのラベルが区切る。 */
-.indexPart + .indexPart {
-  padding-block-start: var(--space-16);
-  border-block-start: var(--rule-w-hair) solid var(--rule-2);
-}
-
-/* 索引の見出しは、セクションの中の小見出しの段で組む（§4）。 */
-.indexHeading {
-  margin-block-end: var(--space-8);
-  font-size: var(--text-heading-sub);
-}

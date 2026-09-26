@@ -1,58 +1,23 @@
-import Accordion from "@/components/Accordion";
 import Breadcrumb from "@/components/Breadcrumb";
 import BrowsableList from "@/components/BrowsableList";
-import LinkIndex from "@/components/LinkIndex";
+import IndexAccordion from "@/components/IndexAccordion";
 import Section from "@/components/Section";
 import { Fragment } from "react";
-import { formatDate } from "@/lib/date";
 import type { BreadcrumbItem } from "@/lib/seo";
-import type { BrowseItem, BrowseSort } from "@/lib/list-browse";
 import { headingFontAttr } from "@/lib/zen-antique-charset";
 import {
-  CATEGORY_LABELS,
-  SERIES_LABELS,
-  type BlogPostMeta,
-} from "@/blog/_lib/blog";
-import {
   BLOG_LIST_PER_PAGE,
+  BLOG_SORTS,
   blogIndexEntries,
   blogListBasePath,
   blogListDescription,
   blogListHeading,
   blogListHeadingPhrases,
-  blogListPosts,
+  blogListItems,
   blogListTitle,
   type BlogListScope,
 } from "@/blog/_lib/blog-list";
 import styles from "./BlogListView.module.css";
-
-/** 並び順。既定は新しい順で、初めから順に読みたい人が古い順を選ぶ（§7）。 */
-const BLOG_SORTS: BrowseSort[] = [
-  { value: "newest", label: "新しい順", directions: ["desc"] },
-  { value: "oldest", label: "古い順" },
-];
-
-function blogItem(post: BlogPostMeta): BrowseItem {
-  const publishedAt = Date.parse(post.published_at);
-  const seriesLabel = post.series ? SERIES_LABELS[post.series] : undefined;
-  return {
-    name: post.title,
-    slug: post.slug,
-    description: post.description,
-    kind: CATEGORY_LABELS[post.category],
-    facts: [
-      { text: formatDate(post.published_at), dateTime: post.published_at },
-      { text: `${post.readingTime}分で読める` },
-    ],
-    searchTexts: [
-      post.description,
-      CATEGORY_LABELS[post.category],
-      ...post.tags,
-      ...(seriesLabel ? [seriesLabel] : []),
-    ],
-    sortKeys: { newest: [publishedAt], oldest: [publishedAt] },
-  };
-}
 
 interface BlogListViewProps {
   scope: BlogListScope;
@@ -103,33 +68,17 @@ export default function BlogListView({ scope, page }: BlogListViewProps) {
           </h1>
           <p className={styles.description}>{blogListDescription(scope)}</p>
         </div>
-        <Accordion summary="分類・タグから探す">
-          <div className={styles.index}>
-            <div className={styles.indexPart}>
-              <h2 id="blog-index-categories" className={styles.indexHeading}>
-                分類（{index.categories.length}）
-              </h2>
-              <LinkIndex
-                labelledBy="blog-index-categories"
-                items={index.categories}
-                currentHref={basePath}
-              />
-            </div>
-            <div className={styles.indexPart}>
-              <h2 id="blog-index-tags" className={styles.indexHeading}>
-                タグ（{index.tags.length}）
-              </h2>
-              <LinkIndex
-                labelledBy="blog-index-tags"
-                items={index.tags}
-                currentHref={basePath}
-              />
-            </div>
-          </div>
-        </Accordion>
+        <IndexAccordion
+          summary="分類・タグから探す"
+          indexes={[
+            { name: "分類", items: index.categories },
+            { name: "タグ", items: index.tags },
+          ]}
+          currentHref={basePath}
+        />
         <h2 className="visually-hidden">記事の一覧</h2>
         <BrowsableList
-          items={blogListPosts(scope).map(blogItem)}
+          items={blogListItems(scope)}
           hrefPrefix="/blog/"
           label="記事の一覧"
           unit="件"

@@ -65,9 +65,9 @@ describe("BlogListView", () => {
     render(<BlogListView scope={{ type: "all" }} page={1} />);
     const total = getAllBlogPosts().length;
 
-    expect(
-      screen.getByText(new RegExp(`^全${total}件のうち1〜50件目$`)),
-    ).toBeInTheDocument();
+    expect(document.querySelector('p[tabindex="-1"]')).toHaveTextContent(
+      new RegExp(`^全${total}件のうち1〜50件目$`),
+    );
     const pages = screen.getByRole("navigation", {
       name: "ページナビゲーション",
     });

@@ -16,6 +16,7 @@ import {
   sortBrowseItems,
   type BrowseItem,
   type BrowseSort,
+  type BrowseSortKey,
 } from "@/lib/list-browse";
 import { headingFontAttr } from "@/lib/zen-antique-charset";
 import {
@@ -99,11 +100,11 @@ export function kanjiListDescription(scope: KanjiListScope): string {
     case "all":
       return DICTIONARY_DESCRIPTION;
     case "grade":
-      return `${KANJI_GRADE_LABELS[scope.grade]}で習う漢字の一覧。読み方・意味・部首情報を確認できます。`;
+      return `${KANJI_GRADE_LABELS[scope.grade]}で習う常用漢字の一覧。字ごとの音読み・訓読みと画数が並び、熟語や意味は字のページで確かめられます。`;
     case "radical":
-      return `部首「${scope.radical}」を持つ漢字の一覧。読み方・意味・画数情報を確認できます。`;
+      return `部首「${scope.radical}」を持つ常用漢字の一覧。字ごとの音読み・訓読みと画数が並び、熟語や意味は字のページで確かめられます。`;
     case "stroke":
-      return `${scope.strokeCount}画の漢字一覧。読み方・意味・部首情報を確認できます。`;
+      return `${scope.strokeCount}画の常用漢字の一覧。字ごとの音読み・訓読みが並び、熟語や意味は字のページで確かめられます。`;
   }
 }
 
@@ -174,9 +175,26 @@ export function kanjiReadings(kanji: KanjiEntry): string[] {
   return Array.from(new Set([...kanji.onYomi, ...kanji.kunYomi]));
 }
 
-const SORT_GRADE: BrowseSort = { value: "grade", label: "学年順" };
-const SORT_STROKE: BrowseSort = { value: "stroke", label: "画数順" };
-const SORT_READING: BrowseSort = { value: "reading", label: "読みの五十音順" };
+/** 学年の語を、学年の順に並べたもの。行の種別の語を学年の順に並べるのに使う。 */
+const GRADE_ORDER = Object.values(KANJI_GRADE_LABELS);
+
+const BY_GRADE: BrowseSortKey = { by: "kind", order: GRADE_ORDER };
+const BY_STROKE: BrowseSortKey = { by: "fact", index: 0 };
+const BY_READING: BrowseSortKey = { by: "reading" };
+
+const SORT_READING: BrowseSort = {
+  value: "reading",
+  label: "読みの五十音順",
+  keys: [BY_READING],
+};
+
+function gradeSort(then: BrowseSortKey): BrowseSort {
+  return { value: "grade", label: "学年順", keys: [BY_GRADE, then] };
+}
+
+function strokeSort(then: BrowseSortKey): BrowseSort {
+  return { value: "stroke", label: "画数順", keys: [BY_STROKE, then] };
+}
 
 /** 範囲の漢字が2つ以上の学年にまたがるか。1つなら、行は学年を出さず、学年で並べる順も持たない（§7）。 */
 function spansGrades(entries: KanjiEntry[]): boolean {
@@ -184,7 +202,7 @@ function spansGrades(entries: KanjiEntry[]): boolean {
 }
 
 /**
- * 並び順の選択肢。先頭が既定。どれも行に見えている値（学年・画数・最初の読み）で並べる（§7）。
+ * 並び順の選択肢。先頭が既定。どれも行に見えている値（種別の学年・補助情報の画数・最初の読み）で並べる（§7）。
  *
  * - トップ: 学年順（同じ学年の中は画数順）／画数順（同じ画数の中は学年順）・読みの五十音順
  * - 学年: 画数順（同じ画数の中は読みの五十音順）／読みの五十音順
@@ -197,37 +215,15 @@ export function kanjiListSorts(scope: KanjiListScope): BrowseSort[] {
   const grades = spansGrades(kanjiListEntries(scope));
   switch (scope.type) {
     case "all":
-      return [SORT_GRADE, SORT_STROKE, SORT_READING];
+      return [gradeSort(BY_STROKE), strokeSort(BY_GRADE), SORT_READING];
     case "grade":
-      return [SORT_STROKE, SORT_READING];
+      return [strokeSort(BY_READING), SORT_READING];
     case "radical":
       return grades
-        ? [SORT_STROKE, SORT_GRADE, SORT_READING]
-        : [SORT_STROKE, SORT_READING];
+        ? [strokeSort(BY_GRADE), gradeSort(BY_STROKE), SORT_READING]
+        : [strokeSort(BY_GRADE), SORT_READING];
     case "stroke":
-      return grades ? [SORT_GRADE, SORT_READING] : [SORT_READING];
-  }
-}
-
-/** 並び順ごとの比べる値。同じ値の中の順は、範囲ごとに kanjiListSorts の括弧のとおり。 */
-function sortKeys(
-  scope: KanjiListScope,
-  kanji: KanjiEntry,
-  firstReading: string,
-): BrowseItem["sortKeys"] {
-  const { grade, strokeCount } = kanji;
-  switch (scope.type) {
-    case "all":
-    case "radical":
-      return {
-        grade: [grade, strokeCount],
-        stroke: [strokeCount, grade],
-        reading: [firstReading],
-      };
-    case "grade":
-      return { stroke: [strokeCount, firstReading], reading: [firstReading] };
-    case "stroke":
-      return { grade: [grade, firstReading], reading: [firstReading] };
+      return grades ? [gradeSort(BY_READING), SORT_READING] : [SORT_READING];
   }
 }
 
@@ -235,27 +231,20 @@ function sortKeys(
  * 範囲の漢字を、一覧の項目にして既定の並び順で返す。行は字と音訓を持ち、説明を持たない（英語の意味は日本語の
  * 来訪者が字を見分ける手がかりにならないので、行にも探す字にも入れない）。種別は学年で、範囲が2つ以上の学年に
  * またがるときだけ行に出る。補助情報は画数で、画数のページでは全件で同じなので持たない。名前の絞り込みは、
- * 字と読みに一致を見て、使用例の熟語も探す。
+ * 字と読みの1つずつに一致を見て、使用例の熟語も探す。リンク先は字そのもので、slug を持たない。
  */
 export function kanjiListItems(scope: KanjiListScope): BrowseItem[] {
   const entries = kanjiListEntries(scope);
-  const items = entries.map((kanji): BrowseItem => {
-    const readings = kanjiReadings(kanji);
-    return {
-      name: kanji.character,
-      slug: encodeURIComponent(kanji.character),
-      reading: readings.join("・") || undefined,
-      kind:
-        scope.type === "grade" ? undefined : KANJI_GRADE_LABELS[kanji.grade],
-      facts:
-        scope.type === "stroke"
-          ? undefined
-          : [{ text: `${kanji.strokeCount}画` }],
-      matchNames: [kanji.character, ...readings],
-      searchTexts: kanji.examples,
-      sortKeys: sortKeys(scope, kanji, readings[0] ?? ""),
-    };
-  });
+  const items = entries.map((kanji): BrowseItem => ({
+    name: kanji.character,
+    readings: kanjiReadings(kanji),
+    kind: scope.type === "grade" ? undefined : KANJI_GRADE_LABELS[kanji.grade],
+    facts:
+      scope.type === "stroke"
+        ? undefined
+        : [{ text: `${kanji.strokeCount}画` }],
+    searchTexts: kanji.examples,
+  }));
   return sortBrowseItems(items, kanjiListSorts(scope)[0]);
 }
 
@@ -300,13 +289,12 @@ function radicalStrokeCount(
 }
 
 /**
- * 一覧の上の索引に並べる学年・部首・画数（§7）。学年と画数はその順で並べる。部首は、並びの値の画数が字に
+ * 一覧の上の索引に並べる学年・画数・部首（§7）。学年と画数はその順で並べる。部首は、並びの値の画数が字に
  * 見えないので、部首の画数ごとに区切りの見出しを立て、区切りの中は部首の番号の順に並べる。
  */
 export function kanjiIndexEntries(): {
   grades: LinkIndexItem[];
   radicals: LinkIndexGroup[];
-  radicalCount: number;
   strokes: LinkIndexItem[];
 } {
   const all = getAllKanji();
@@ -348,7 +336,6 @@ export function kanjiIndexEntries(): {
       href: kanjiListBasePath({ type: "grade", grade: Number(grade) }),
     })),
     radicals,
-    radicalCount: radicalGroups.size,
     strokes: getKanjiStrokeCounts().map((strokeCount) => ({
       label: `${strokeCount}画`,
       href: kanjiListBasePath({ type: "stroke", strokeCount }),
