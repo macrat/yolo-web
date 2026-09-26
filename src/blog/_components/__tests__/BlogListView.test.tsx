@@ -1,5 +1,5 @@
 import { describe, expect, test, vi } from "vitest";
-import { render, screen, within } from "@testing-library/react";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import { CATEGORY_LABELS, getAllBlogPosts } from "@/blog/_lib/blog";
 import {
   BLOG_LIST_PER_PAGE,
@@ -106,7 +106,7 @@ describe("BlogListView", () => {
     );
   });
 
-  test("分類のページは、分類の名前を見出しにし、索引のその分類を現在地にして、行に種別を出さない", () => {
+  test("分類のページは、パンくずでブログへ戻れ、分類の名前を見出しにし、索引のその分類を現在地にして、行に種別を出さない", () => {
     visit("/blog/category/dev-notes");
     render(
       <BlogListView
@@ -116,6 +116,16 @@ describe("BlogListView", () => {
     );
     const posts = blogListPosts({ type: "category", category: "dev-notes" });
 
+    const breadcrumb = screen.getByRole("navigation", {
+      name: "パンくずリスト",
+    });
+    expect(
+      within(breadcrumb).getByRole("link", { name: "ブログ" }),
+    ).toHaveAttribute("href", "/blog");
+    expect(within(breadcrumb).getByText("開発ノート")).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
     expect(
       screen.getByRole("heading", { level: 1, name: "開発ノート" }),
     ).toBeInTheDocument();
@@ -145,5 +155,60 @@ describe("BlogListView", () => {
     expect(rows()).toHaveLength(
       blogListPosts({ type: "tag", tag: "Web開発" }).length,
     );
+  });
+
+  test("記事の一覧は、索引の見出しの後ろに自分の見出しを持つ", () => {
+    visit("/blog");
+    render(<BlogListView scope={{ type: "all" }} page={1} />);
+
+    const headings = screen
+      .getAllByRole("heading", { level: 2 })
+      .map((heading) => heading.textContent);
+    expect(headings.at(-1)).toBe("記事の一覧");
+    expect(
+      screen
+        .getByRole("heading", { level: 2, name: "記事の一覧" })
+        .compareDocumentPosition(rows()[0]),
+    ).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+  });
+
+  test("/blog は見出しを「AI試行錯誤」と「ブログ」の切れ目で折れるようにする", () => {
+    visit("/blog");
+    render(<BlogListView scope={{ type: "all" }} page={1} />);
+
+    const h1 = screen.getByRole("heading", { level: 1 });
+    expect(h1.innerHTML).toBe("AI試行錯誤<wbr>ブログ");
+  });
+
+  test("名前の欄は分類の名前でも探せる", () => {
+    vi.useFakeTimers();
+    try {
+      visit("/blog");
+      render(<BlogListView scope={{ type: "all" }} page={1} />);
+      const label = "開発ノート";
+      const expected = getAllBlogPosts().filter(
+        (post) => CATEGORY_LABELS[post.category] === label,
+      );
+
+      fireEvent.change(
+        screen.getByRole("searchbox", {
+          name: "題名・説明・分類・タグ・連載名で探す",
+        }),
+        { target: { value: label } },
+      );
+      act(() => {
+        vi.runAllTimers();
+      });
+
+      const shownTitles = rows().map(
+        (row) => within(row).getByRole("link").textContent,
+      );
+      expect(expected.length).toBeGreaterThan(0);
+      expect(shownTitles).toEqual(
+        expect.arrayContaining(expected.map((post) => post.title)),
+      );
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });

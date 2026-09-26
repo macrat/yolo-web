@@ -29,8 +29,8 @@
   border-block-start: var(--rule-w-hair) solid var(--rule-2);
 }
 
-/* 索引の見出しは、区切りを持つ索引の区切りの見出しと同じ段で組む。 */
+/* 索引の見出しは、セクションの中の小見出しの段で組む（§4）。 */
 .indexHeading {
   margin-block-end: var(--space-8);
-  font-size: var(--text-step-1);
+  font-size: var(--text-heading-sub);
 }

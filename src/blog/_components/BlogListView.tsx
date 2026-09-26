@@ -3,12 +3,9 @@ import Breadcrumb from "@/components/Breadcrumb";
 import BrowsableList from "@/components/BrowsableList";
 import LinkIndex from "@/components/LinkIndex";
 import Section from "@/components/Section";
+import { Fragment } from "react";
 import { formatDate } from "@/lib/date";
-import {
-  generateBreadcrumbJsonLd,
-  safeJsonLdStringify,
-  type BreadcrumbItem,
-} from "@/lib/seo";
+import type { BreadcrumbItem } from "@/lib/seo";
 import type { BrowseItem, BrowseSort } from "@/lib/list-browse";
 import { headingFontAttr } from "@/lib/zen-antique-charset";
 import {
@@ -22,6 +19,7 @@ import {
   blogListBasePath,
   blogListDescription,
   blogListHeading,
+  blogListHeadingPhrases,
   blogListPosts,
   blogListTitle,
   type BlogListScope,
@@ -48,6 +46,7 @@ function blogItem(post: BlogPostMeta): BrowseItem {
     ],
     searchTexts: [
       post.description,
+      CATEGORY_LABELS[post.category],
       ...post.tags,
       ...(seriesLabel ? [seriesLabel] : []),
     ],
@@ -63,10 +62,13 @@ interface BlogListViewProps {
 
 /**
  * ブログの一覧のページ（`/blog`・分類・タグ）。見出しと説明の下に、分類とタグの索引を閉じたアコーディオンで置き、
- * その下に範囲の記事の一覧を置く（DESIGN.md §7）。
+ * その下に範囲の記事の一覧を置く（DESIGN.md §7）。分類とタグのページは、パンくずでブログへ戻れる。
  *
  * 分類は行の種別として出るが、一覧の上に分類の索引を置くので、種別の組は置かない。分類で見たい来訪者は
  * 索引から分類のページへ移る。
+ *
+ * 記事の一覧の見出しは読み上げにだけ出す。見出しで移る来訪者が、一覧を索引の「タグ」の中身と取り違えずに
+ * 一覧へ移れるようにするためで、目で見る来訪者には主見出しがそのまま一覧の見出しになる。
  */
 export default function BlogListView({ scope, page }: BlogListViewProps) {
   const heading = blogListHeading(scope);
@@ -81,18 +83,15 @@ export default function BlogListView({ scope, page }: BlogListViewProps) {
   return (
     <Section>
       <div className={styles.view}>
-        {scope.type === "tag" ? <Breadcrumb items={trail} /> : null}
-        {scope.type === "category" ? (
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{
-              __html: safeJsonLdStringify(generateBreadcrumbJsonLd(trail)),
-            }}
-          />
-        ) : null}
-        <div className={styles.intro}>
+        {scope.type === "all" ? null : <Breadcrumb items={trail} />}
+        <div>
           <h1 className={styles.title} {...headingFontAttr(heading)}>
-            {heading}
+            {blogListHeadingPhrases(scope).map((phrase, i) => (
+              <Fragment key={phrase}>
+                {i > 0 ? <wbr /> : null}
+                {phrase}
+              </Fragment>
+            ))}
           </h1>
           <p className={styles.description}>{blogListDescription(scope)}</p>
         </div>
@@ -120,12 +119,13 @@ export default function BlogListView({ scope, page }: BlogListViewProps) {
             </div>
           </div>
         </Accordion>
+        <h2 className="visually-hidden">記事の一覧</h2>
         <BrowsableList
           items={blogListPosts(scope).map(blogItem)}
           hrefPrefix="/blog/"
           label="記事の一覧"
           unit="件"
-          searchLabel="題名・説明・タグ・連載名で探す"
+          searchLabel="題名・説明・分類・タグ・連載名で探す"
           sorts={BLOG_SORTS}
           perPage={BLOG_LIST_PER_PAGE}
           basePath={basePath}
