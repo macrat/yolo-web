@@ -79,6 +79,13 @@
   color: var(--ink-2);
 }
 
+/* 見本の中で、実際のページのセクションの見出しにあたる見出し。§4 のセクションの見出しの段で組み、
+ * その下の小見出しの段との親子を実際のページと同じに見せる。 */
+.sampleSectionHeading {
+  font-size: var(--text-heading-section);
+  margin-bottom: var(--space-16);
+}
+
 /* カラースウォッチ */
 .swatchGrid {
   display: grid;

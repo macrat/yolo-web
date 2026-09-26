@@ -1235,9 +1235,11 @@ export default function StorybookContent({
           currentHref="/blog/tag/設計パターン"
         />
 
-        <h3 className={styles.subsectionTitle}>
-          同じ部首の漢字（12字）— 画数の区切りの見出しつき
-        </h3>
+        <p className={styles.subsectionTitle}>
+          漢字の詳細の同じ部首の漢字 —
+          セクションの見出しの下に、画数の区切りの見出しつき
+        </p>
+        <h3 className={styles.sampleSectionHeading}>同じ部首の漢字（12字）</h3>
         <LinkIndex
           singleCharacters
           groups={LINK_INDEX_STROKES}
