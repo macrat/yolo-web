@@ -16,10 +16,7 @@ import {
 } from "./logic";
 import styles from "./YojiSearchTile.module.css";
 
-export type YojiSearchTileVariant = "full";
-
 export interface YojiSearchTileProps {
-  variant?: YojiSearchTileVariant;
   as?: "section" | "div" | "article" | "aside";
   className?: string;
 }
@@ -47,9 +44,10 @@ function YojiDetail({ entry }: { entry: YojiEntry }) {
 
 /**
  * 四字熟語を探す道具。件数の行・名前の欄・畳める絞り込みと並び順の組・結果の行・ページ送りを縦に並べる
- * （DESIGN.md §7「件数と備え」）。結果の行は開閉する行で、閉じた行は四字熟語辞典の一覧の行と同じ値を同じ位置に
- * 見せる。語と読み、種別のカテゴリと補助情報の難易度、意味の順で、開くと例文・出典・構造が出る（§7・§8）。
- * カテゴリで絞り込めることも、やさしい順が何の順かも、行で確かめられる。
+ * （DESIGN.md §7「件数と備え」）。結果の行は開閉する行で、閉じた行は四字熟語辞典の一覧の行と同じ値（語・読み・
+ * 種別のカテゴリ・補助情報の難易度・意味）を見せ、開くと例文・出典・構造が出る（§7・§8）。狭い画面では辞典の
+ * 一覧と同じ並びで組み、広い画面では行の高さを1行に保つため、意味を1行目の読みに続けて置く。カテゴリで
+ * 絞り込めることも、やさしい順が何の順かも、行で確かめられる。
  *
  * 絞り込み・並び順・ページは URL のクエリに持ち、詳細を開いて戻っても同じ状態で出る。
  */

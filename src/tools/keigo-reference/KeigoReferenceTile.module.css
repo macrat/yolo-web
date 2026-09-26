@@ -210,17 +210,19 @@
   font-size: var(--text-small);
 }
 
-/* 敬語の形の名前の右に語を置き、語の幅が足りなければ名前の下へ回して、1字ずつ折れる細い列にしない。 */
+/* 敬語の形の名前の右に語を置き、語の幅が足りなければ名前の下へ回して、1字ずつ折れる細い列にしない。語は来訪者が
+ * 引きに来た答えそのものなので、広い画面の表と同じ本文の大きさで組み、名前だけを補助情報の字にする（§4）。 */
 .mobileRowForm {
   flex-basis: 100%;
   display: flex;
   flex-wrap: wrap;
+  align-items: baseline;
   column-gap: var(--space-8);
-  font-size: var(--text-small);
 }
 
 .mobileRowLabel {
   color: var(--ink-2);
+  font-size: var(--text-small);
   min-width: 3.5rem;
   flex-shrink: 0;
 }

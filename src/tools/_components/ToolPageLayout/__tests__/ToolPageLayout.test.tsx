@@ -92,7 +92,7 @@ describe("ToolPageLayout", () => {
     vi.clearAllMocks();
   });
 
-  // --- 要素並び順（判断3） ---
+  // --- 並ぶ要素 ---
 
   it("パンくずリスト（Breadcrumb）が描画される", () => {
     render(
@@ -105,7 +105,7 @@ describe("ToolPageLayout", () => {
     ).toBeInTheDocument();
   });
 
-  it("h1 に meta.name が描画される（SEO 用に保持）", () => {
+  it("h1 に meta.name が描画される", () => {
     render(
       <ToolPageLayout meta={baseMeta}>
         <div>ツール本体</div>
@@ -230,9 +230,9 @@ describe("ToolPageLayout", () => {
     expect(toolBodyIdx).toBeLessThan(howItWorksIdx);
   });
 
-  // --- N-2: children が空でもレイアウトが破綻しない ---
+  // --- children が空でも並びが崩れない ---
 
-  it("N-2: children が null でも howItWorks 以降が正常に描画される（器の堅牢性）", () => {
+  it("children が null でも howItWorks 以降が描画される", () => {
     render(<ToolPageLayout meta={baseMeta}>{null}</ToolPageLayout>);
     // howItWorks が描画される
     expect(
@@ -250,7 +250,7 @@ describe("ToolPageLayout", () => {
     expect(screen.getByRole("region", { name: "FAQ" })).toBeInTheDocument();
   });
 
-  it("N-2: children が空要素でも howItWorks 以降が正常に描画される", () => {
+  it("children が空要素でも howItWorks 以降が描画される", () => {
     render(
       <ToolPageLayout meta={baseMeta}>
         <></>

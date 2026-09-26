@@ -81,9 +81,14 @@ const ALLOWLIST: { fileEndsWith: string; declaration: string }[] = [
       "src/play/games/yoji-kimeru/_components/styles/GameContainer.module.css",
     declaration: "border-radius: 50%",
   },
-  // ラジオボタンの円。§5 が丸い形を許すのは §6 のラジオボタンだけ。
+  // ラジオボタンの円。§5 が丸い形を許すのは §6 のラジオボタン（色見本を選ぶ組の選択済みの円を含む）だけ。
   {
     fileEndsWith: "src/components/ChoiceRow/ChoiceRow.module.css",
+    declaration: "border-radius: 50%",
+  },
+  {
+    fileEndsWith:
+      "src/tools/traditional-color-palette/TraditionalColorPaletteTile.module.css",
     declaration: "border-radius: 50%",
   },
   // ゲームの駒・結果の色見本など、中身に和色（--wairo-*）を敷く宣言。セレクタ名が状態を

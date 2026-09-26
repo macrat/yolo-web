@@ -14,6 +14,15 @@ beforeEach(() => {
       writeText: vi.fn().mockResolvedValue(undefined),
     },
   });
+  // 格子の列の数を読む ResizeObserver と、押した見本の位置を保つ scrollBy は jsdom に無い。
+  vi.stubGlobal(
+    "ResizeObserver",
+    class {
+      observe() {}
+      disconnect() {}
+    },
+  );
+  vi.stubGlobal("scrollBy", vi.fn());
 });
 
 afterEach(() => {
@@ -105,7 +114,7 @@ describe("基本レンダリング", () => {
 // 入力→結果更新
 // =========================================================
 describe("入力→結果更新", () => {
-  it("スウォッチをクリックすると配色結果が表示される", async () => {
+  it("色見本を押すと配色結果が表示される", async () => {
     render(<TraditionalColorPaletteTile />);
     const swatches = document.querySelectorAll("[data-swatch-slug]");
     expect(swatches.length).toBeGreaterThan(0);
@@ -148,7 +157,7 @@ describe("空入力・未選択状態", () => {
 // 変換ロジックの正確性（UI 経由）
 // =========================================================
 describe("変換ロジックの正確性（UI 経由）", () => {
-  it("スウォッチを選ぶと HEX 値が表示される", async () => {
+  it("色見本を選ぶと HEX 値が表示される", async () => {
     render(<TraditionalColorPaletteTile />);
     const swatches = document.querySelectorAll("[data-swatch-slug]");
     await act(async () => {
@@ -157,6 +166,22 @@ describe("変換ロジックの正確性（UI 経由）", () => {
     const hexPattern = /#[0-9a-fA-F]{6}/;
     const allText = document.body.textContent ?? "";
     expect(hexPattern.test(allText)).toBe(true);
+  });
+
+  it("無彩色を選ぶと、明度の違う無彩色のカードのうち選んだ色のカードに「選んだ色」と添える", () => {
+    render(<TraditionalColorPaletteTile />);
+    fireEvent.click(screen.getByRole("radio", { name: /無彩色/ }));
+    const swatch = document.querySelector<HTMLElement>("[data-swatch-slug]")!;
+    fireEvent.click(swatch);
+    const slug = swatch.dataset.swatchSlug!;
+    const cards = screen.getByTestId("palette-results");
+    const pickedCards = Array.from(cards.children).filter((card) =>
+      card.textContent?.includes("選んだ色"),
+    );
+    expect(pickedCards).toHaveLength(1);
+    expect(
+      pickedCards[0].querySelector(`a[href="/dictionary/colors/${slug}"]`),
+    ).not.toBeNull();
   });
 
   it("無彩色を選んだ場合は無彩色パレット表示になる", async () => {
@@ -367,6 +392,37 @@ describe("色の格子の件数と備え", () => {
     expect(swatchSlugs().length).toBeGreaterThan(0);
     expect(swatchSlugs().length).toBeLessThan(250);
     expect(new URLSearchParams(window.location.search).get("kind")).toBe("red");
+  });
+
+  it("色見本は1つを選ぶラジオボタンの組で、選んだ見本だけが選ばれた状態になる", () => {
+    render(<TraditionalColorPaletteTile />);
+    const group = screen.getByRole("radiogroup", { name: "伝統色" });
+    const swatches = Array.from(
+      group.querySelectorAll<HTMLInputElement>("[data-swatch-slug]"),
+    );
+    expect(swatches).toHaveLength(250);
+    expect(swatches.every((swatch) => swatch.type === "radio")).toBe(true);
+    expect(swatches.some((swatch) => swatch.hasAttribute("aria-pressed"))).toBe(
+      false,
+    );
+    fireEvent.click(swatches[2]);
+    expect(swatches[2]).toBeChecked();
+    expect(swatches.filter((swatch) => swatch.checked)).toHaveLength(1);
+  });
+
+  it("選んだ色の名前とカラーコードが、選んだ見本のすぐ後ろに出る", () => {
+    render(<TraditionalColorPaletteTile />);
+    expect(screen.queryByTestId("picked-color")).toBeNull();
+    const toki = PALETTE_ITEMS.find(({ color }) => color.slug === "toki")!;
+    const swatch = document.querySelector<HTMLElement>(
+      '[data-swatch-slug="toki"]',
+    )!;
+    fireEvent.click(swatch);
+    const picked = screen.getByTestId("picked-color");
+    expect(picked).toHaveTextContent(toki.color.name);
+    expect(picked).toHaveTextContent(toki.color.hex);
+    // jsdom では格子の列の数が1になるので、選んだ見本の次に開く。
+    expect(swatch.closest("label")?.nextElementSibling).toBe(picked);
   });
 
   it("色見本は字を載せず、読み上げの名前に色の名前とカラーコードを持つ", () => {

@@ -4,30 +4,24 @@ import { useRef } from "react";
 import { trackTileFirstInteraction } from "@/lib/analytics";
 
 interface TileInteractionTrackerProps {
-  /** Tool slug. Sent as item_id (cycle-234: item_id = slug on both surfaces). */
+  /** 道具の slug。item_id として送る。 */
   itemId: string;
-  /** Class for the <section> (ToolPageLayout passes styles.content). */
+  /** <section> のクラス（ToolPageLayout は styles.content を渡す）。 */
   className?: string;
-  /** Accessible name for the <section> (preserves the pre-tracker markup). */
+  /** <section> の読み上げの名前。 */
   ariaLabel: string;
   children: React.ReactNode;
 }
 
 /**
- * TileInteractionTracker — ツール詳細ページのタイル本体（ファーストビューの
- * ツール UI）に対する「最初の操作」計測のクライアント境界。
+ * TileInteractionTracker — 道具のページの本体（タイル）での最初の操作を計測するクライアントの境界。
  *
- * ToolPageLayout（サーバーコンポーネント）が従来描画していた
- * `<section className={styles.content} aria-label=...>` をそのまま
- * このコンポーネントが描画する。余分な wrapper 要素を足さないので
- * DOM 構造・レイアウト・スタイルへの影響はゼロ（cycle-234 制約）。
+ * 道具の本体を包む <section> そのものを描き、ほかの包みを足さない。
  *
- * 計測仕様（cycle-234 T-1 確定版）:
- * - 最初のポインタ操作（pointerdown）またはキーボード操作（keydown）で
- *   tile_first_interaction を 1 回だけ送る（マウントごと 1 回）
- * - capture phase で捕捉するため、39 タイル実装には一切手を入れない
- * - 送るのは item_id（ツール slug）と surface のみ。入力内容・出力内容は
- *   送らない。詳細ページに variant 概念はないため variant は渡さない
+ * - 最初のポインタ操作（pointerdown）かキーボード操作（keydown）で、tile_first_interaction をマウントごとに
+ *   1回だけ送る。
+ * - capture phase で受けるので、道具の中の実装に手を入れずに済む。
+ * - 送るのは item_id（道具の slug）と surface だけで、入力や出力の内容は送らない。
  */
 export default function TileInteractionTracker({
   itemId,

@@ -22,32 +22,119 @@
 
 /* --- 色の格子 --- */
 
-/* 色見本の列の数は幅から決める。どの幅・どの文字サイズでも1つの見本が 44px 以上のタップターゲットになり
- * （§6）、広い画面ほど1行に多くの色が並んで見比べやすい。見本どうしは 8px あける（§5）。 */
+/* fieldset の既定の枠と余白を持たない。min-inline-size の既定（min-content）のままだと、格子が幅からはみ出す。 */
+.swatchGroup {
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+/* 色見本の列の数は幅から決める。1つの見本が 44px 以上のタップターゲットになり（§6）、広い画面ほど1行に
+ * 多くの色が並んで見比べやすい。見本は字を持たないので、文字サイズを大きくしても列の最小幅は変えない。
+ * 見本どうしは 8px あける（§5）。 */
 .swatchGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(max(44px, 3rem), 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(44px, 1fr));
   gap: var(--space-8);
 }
 
-/* 色見本は細い線で囲み、淡い色が背景に溶けないようにする（§2）。字を載せず、色だけを見せる。 */
+/* 色見本は1つを選ぶラジオボタンの行で、見本全体が押せる範囲になる（§6）。細い線で囲み、淡い色が背景に溶けない
+ * ようにする（§2）。字を載せず、色だけを見せる。 */
 .swatch {
-  position: relative;
-  width: 100%;
+  display: grid;
+  place-items: center;
   aspect-ratio: 1;
-  padding: 0;
   border: var(--rule-w-hair) solid var(--rule-2);
   cursor: pointer;
 }
 
-/* 選んだ色見本は、外に太い線の輪を持つ形で示す（§6）。輪は outline ではなく擬似要素に引き、
- * フォーカスの二重リング（outline）と同時に出せるようにする。輪は見本どうしの間隔（8px）の中に収まる。 */
-.swatch[aria-pressed="true"]::after {
-  content: "";
+.swatch:hover {
+  box-shadow: var(--hover-line);
+}
+
+/* 中の入力が受けたフォーカスを、見本の内側に密着した二重リングで出す（§6）。 */
+.swatch:has(:focus-visible) {
+  outline: var(--focus-ring);
+  outline-offset: calc(-1 * var(--rule-w));
+  box-shadow: inset 0 0 0 calc(2 * var(--rule-w)) var(--paper);
+}
+
+/* 見えないまま、フォーカスと押した結果を受ける。display: none にするとフォーカスを受けない。 */
+.swatchInput {
   position: absolute;
-  inset: calc(-2 * var(--rule-w-hair) - var(--rule-w));
-  border: var(--rule-w) solid var(--rule);
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  opacity: 0;
   pointer-events: none;
+}
+
+/* 選んだ見本だけが、中央に選択済みのラジオボタンの円を持つ（§6）。円は --paper の地を持ち、外に太い線の
+ * 太さの --paper の縁を持つので、どの色の上でも形が見える（§2）。 */
+.swatchMark {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border: var(--rule-w) solid var(--rule);
+  border-radius: 50%;
+  background: var(--paper);
+  outline: var(--rule-w) solid var(--paper);
+  visibility: hidden;
+}
+
+.swatchMark::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ink);
+}
+
+.swatchInput:checked + .swatchMark {
+  visibility: visible;
+}
+
+/* --- 選んだ色 --- */
+
+/* 選んだ見本の行のすぐ下に、格子の幅いっぱいで開く（§8）。見本と字を横に並べ、字は幅が足りなければ折り返す。 */
+.pickedRow {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: var(--space-16);
+}
+
+.pickedSwatch {
+  flex: none;
+  width: 44px;
+  aspect-ratio: 1;
+  border: var(--rule-w-hair) solid var(--rule-2);
+}
+
+.pickedText {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: var(--space-16);
+  min-width: 0;
+  line-height: var(--leading-body);
+}
+
+.pickedLabel {
+  flex-basis: 100%;
+  color: var(--ink-2);
+  font-size: var(--text-small);
+}
+
+.pickedName {
+  font-weight: 700;
+}
+
+.pickedRomaji {
+  color: var(--ink-2);
+  font-size: var(--text-small);
 }
 
 /* --- 配色パターンセクション --- */
@@ -112,16 +199,22 @@
   border-radius: var(--radius);
 }
 
+/* 選んだ色のカードでは、色名の上に「選んだ色」と字で添える。 */
 .paletteColorName {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   font-size: 0.9rem;
   color: var(--ink);
 }
 
 /* 色の辞典へ進むリンク。縁の見えないコントロールで、下線と訪問済みの色は globals.css の a の既定に従う（§6）。
- * タップの標的は 44px 以上で、字の左右の余白と、字を並びの左端に置く張り出しは data-text-box（globals.css）が持つ。 */
+ * 字の左右の余白と、字を並びの左端に置く張り出しは data-text-box（globals.css）が持つ。字の箱が 44px に届かない
+ * 1字の色名では、箱を右へ広げる（§5）。 */
 .paletteColorNameLink {
   display: inline-flex;
   align-items: center;
+  min-width: 44px;
   min-height: 44px;
 }
 

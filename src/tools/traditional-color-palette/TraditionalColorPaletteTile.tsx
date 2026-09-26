@@ -8,12 +8,23 @@
  * 縦に並べる。色の格子の絞り込みと並び順は palette-list.ts の選択肢で、URL のクエリに持つ（§7「件数と備え」）。
  * 配色の計算は logic.ts の computeHarmony・getAchromaticPalette が持つ。
  *
- * - 色見本のボタンは字を載せず色だけを見せ（§2）、読み上げの名前に色の名前とカラーコードを持つ。見える名前と
- *   カラーコードは、選んだあとの配色の結果が出す。
+ * - 色の格子は1つを選ぶラジオボタンの組で、色見本そのものが選択肢になる（§6）。色見本は字を載せず（§2）、
+ *   読み上げの名前に色の名前とカラーコードを持つ。
+ * - 選んだ色の名前とカラーコードは、選んだ見本の行のすぐ下に開く（§8）。
  * - 選んだ色の配色は、見えない role="status" の文でも読み上げに伝える。
  */
 
-import { useState, useMemo, useCallback } from "react";
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ChangeEvent,
+} from "react";
 import Link from "next/link";
 import Panel from "@/components/Panel";
 import ListStack from "@/components/ListStack";
@@ -57,20 +68,34 @@ function formatHsl(hsl: [number, number, number]): string {
 /** 全色データ（モジュールレベルでキャッシュ） */
 const allColors = getAllColors();
 
-/** variant prop: 表示バリエーションの設定差。別実装ではない。 */
-export type TraditionalColorPaletteTileVariant = "full";
-
 export interface TraditionalColorPaletteTileProps {
-  /**
-   * 表示バリエーション（デフォルト: "full"）
-   * - "full": 検索＋カテゴリ＋スウォッチグリッド＋ハーモニー＋色詳細カード＋コピー
-   *   このツールは参照・検索系のため full 1種のみ。
-   */
-  variant?: TraditionalColorPaletteTileVariant;
   /** Panel の as prop に透過される HTML タグ（デフォルト: "section"） */
   as?: "section" | "div" | "article" | "aside";
   /** 追加クラス */
   className?: string;
+}
+
+/** 選んだ色の見本・名前・読み・カラーコード。 */
+function PickedColor({ color }: { color: ColorEntry }) {
+  return (
+    <>
+      <span
+        className={styles.pickedSwatch}
+        style={{ backgroundColor: color.hex }}
+      />
+      <span className={styles.pickedText}>
+        <span className={styles.pickedLabel}>選んだ色</span>
+        <span className={styles.pickedName}>{color.name}</span>
+        <span className={styles.pickedRomaji}>{color.romaji}</span>
+        <span className={styles.pickedHex}>{color.hex}</span>
+      </span>
+    </>
+  );
+}
+
+/** 格子の列の数。格子の幅と列の最小幅からブラウザが決めた数を読む。 */
+function readColumnCount(grid: HTMLElement): number {
+  return getComputedStyle(grid).gridTemplateColumns.split(" ").length;
 }
 
 export default function TraditionalColorPaletteTile({
@@ -117,9 +142,56 @@ export default function TraditionalColorPaletteTile({
     return getAchromaticPalette(selectedColor, allColors);
   }, [selectedColor]);
 
-  const handleColorSelect = useCallback((color: ColorEntry) => {
-    setSelectedColor(color);
-  }, []);
+  const radioName = useId();
+  const hasItems = slice.items.length > 0;
+  const gridRef = useRef<HTMLDivElement>(null);
+  const pickedRef = useRef<HTMLDivElement>(null);
+  const [columns, setColumns] = useState(0);
+
+  // 選んだ色は見本の行のすぐ下に開くので、1行に並ぶ見本の数を幅の変化に合わせて読む。
+  useEffect(() => {
+    const grid = gridRef.current;
+    if (!grid) return;
+    const update = () => setColumns(readColumnCount(grid));
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(grid);
+    return () => observer.disconnect();
+  }, [hasItems]);
+
+  // 押した見本の画面の中の位置。選んだ色の欄が開き直って見本の行が上下に動いても、押した見本を同じ位置に保つ。
+  const anchorRef = useRef<{ slug: string; top: number } | null>(null);
+
+  const handleColorSelect = useCallback(
+    (color: ColorEntry, event: ChangeEvent<HTMLInputElement>) => {
+      const swatch = event.currentTarget.closest("label");
+      anchorRef.current = swatch
+        ? { slug: color.slug, top: swatch.getBoundingClientRect().top }
+        : null;
+      setSelectedColor(color);
+    },
+    [],
+  );
+
+  useLayoutEffect(() => {
+    const anchor = anchorRef.current;
+    anchorRef.current = null;
+    const swatch = gridRef.current
+      ?.querySelector(`[data-swatch-slug="${anchor?.slug}"]`)
+      ?.closest("label");
+    if (!anchor || !swatch) return;
+    window.scrollBy(0, swatch.getBoundingClientRect().top - anchor.top);
+    // 選んだ色の欄が画面の下にはみ出すなら、押した見本が画面の上から出ない範囲で送って見せる。
+    const picked = pickedRef.current;
+    if (!picked) return;
+    const overflow = picked.getBoundingClientRect().bottom - window.innerHeight;
+    const room = swatch.getBoundingClientRect().top;
+    if (overflow > 0) window.scrollBy(0, Math.min(overflow, room));
+  }, [selectedColor]);
+
+  const selectedIndex = selectedColor
+    ? slice.items.findIndex(({ color }) => color.slug === selectedColor.slug)
+    : -1;
 
   // 選んだ色の配色を読み上げに伝える文。
   const liveSummary = useMemo(() => {
@@ -160,6 +232,9 @@ export default function TraditionalColorPaletteTile({
         />
         {/* 色名（辞書詳細ページへのリンク） */}
         <div className={styles.paletteColorName}>
+          {color.slug === selectedColor?.slug ? (
+            <span className={styles.pickedLabel}>選んだ色</span>
+          ) : null}
           <Link
             href={`/dictionary/colors/${color.slug}`}
             className={styles.paletteColorNameLink}
@@ -221,7 +296,7 @@ export default function TraditionalColorPaletteTile({
   return (
     <Panel as={as} className={className}>
       <div className={styles.inner}>
-        {/* 選んだ色の配色を読み上げに伝える。見える形は下の配色の結果が持つ。 */}
+        {/* 選んだ色の配色を読み上げに伝える。見える形は選んだ色の欄と下の配色の結果が持つ。 */}
         <div
           role="status"
           aria-live="polite"
@@ -262,24 +337,60 @@ export default function TraditionalColorPaletteTile({
             />
           </div>
 
-          {slice.items.length > 0 ? (
-            <div className={styles.swatchGrid} data-testid="swatch-grid">
-              {slice.items.map(({ color }) => {
-                const isSelected = selectedColor?.slug === color.slug;
-                return (
-                  <button
-                    key={color.slug}
-                    type="button"
-                    className={styles.swatch}
-                    aria-pressed={isSelected}
-                    style={{ backgroundColor: color.hex }}
-                    onClick={() => handleColorSelect(color)}
-                    aria-label={`${color.name} (${color.hex})`}
-                    data-swatch-slug={color.slug}
-                  />
-                );
-              })}
-            </div>
+          {hasItems ? (
+            <fieldset
+              role="radiogroup"
+              aria-label="伝統色"
+              className={styles.swatchGroup}
+            >
+              <div
+                ref={gridRef}
+                className={styles.swatchGrid}
+                data-testid="swatch-grid"
+              >
+                {slice.items.map(({ color }, index) => {
+                  const isSelected = selectedColor?.slug === color.slug;
+                  const rowEnd =
+                    columns > 0 &&
+                    (index % columns === columns - 1 ||
+                      index === slice.items.length - 1);
+                  const opensHere =
+                    selectedIndex >= 0 &&
+                    rowEnd &&
+                    Math.floor(selectedIndex / columns) ===
+                      Math.floor(index / columns);
+                  return (
+                    <Fragment key={color.slug}>
+                      <label
+                        className={styles.swatch}
+                        style={{ backgroundColor: color.hex }}
+                      >
+                        <input
+                          type="radio"
+                          name={radioName}
+                          value={color.slug}
+                          className={styles.swatchInput}
+                          checked={isSelected}
+                          onChange={(event) => handleColorSelect(color, event)}
+                          aria-label={`${color.name} (${color.hex})`}
+                          data-swatch-slug={color.slug}
+                        />
+                        <span className={styles.swatchMark} />
+                      </label>
+                      {opensHere && selectedColor ? (
+                        <div
+                          ref={pickedRef}
+                          className={styles.pickedRow}
+                          data-testid="picked-color"
+                        >
+                          <PickedColor color={selectedColor} />
+                        </div>
+                      ) : null}
+                    </Fragment>
+                  );
+                })}
+              </div>
+            </fieldset>
           ) : null}
         </ListStack>
 

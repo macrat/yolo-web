@@ -65,15 +65,7 @@ const EXAMPLE_FORMS = [
 
 const [SORT] = KEIGO_LIST_SPEC.sorts;
 
-/** variant prop: 表示バリエーションの設定差。別実装ではない。 */
-export type KeigoReferenceTileVariant = "full";
-
 export interface KeigoReferenceTileProps {
-  /**
-   * 表示バリエーション（デフォルト: "full"）
-   * - "full": 全機能（表示する内容の切り替え・早見表の絞り込み・表と狭い画面の行）
-   */
-  variant?: KeigoReferenceTileVariant;
   /** Panel の as prop に透過される HTML タグ（デフォルト: "section"） */
   as?: "section" | "div" | "article" | "aside";
   /** 追加クラス */
