@@ -5,24 +5,26 @@
  * build-time rendering.
  */
 
-import { Marked, Renderer, type MarkedExtension, type Tokens } from "marked";
-// GFM Alert構文（> [!NOTE]等）をadmonitionのHTMLに変換するため追加
-import markedAlert from "marked-alert";
+import { Marked, type MarkedExtension, type Tokens } from "marked";
 // XSS防止のためmarked出力をホワイトリスト方式でサニタイズ
 import { sanitize } from "@/lib/sanitize";
-// ビルド時シンタックスハイライト（クライアントでチラつかせないため）
+// コードのボックスをビルドの時に組む（クライアントで組み直さないので、表示が動かない）
 import { highlight } from "@/lib/highlight";
+// 注記と表の組み方は markdown-preview のプレビューと共有する
+import {
+  alertExtension,
+  createTableExtension,
+} from "@/lib/markdown-extensions";
 
 /**
  * Custom marked extension for fenced code blocks.
  *
  * - `mermaid` → client-side mermaid rendering target (`<div class="mermaid">`)
- * - その他 → Shiki でビルド時にシンタックスハイライト済みの `<pre class="shiki">`
- *   を返す。クライアント側でハイライトを掛け直さないのでチラつかない。
+ * - その他 → `highlight()` がビルドの時に組んだコードのボックス（`<pre><code>`）を返す。
  *
- * Shiki の `highlight()` は async なので、walkTokens フックで code トークンを
- * 先読みしてハイライト結果を WeakMap に保存しておき、同期 renderer はそこから
- * 取り出すだけにする。marked 単体は同期 renderer しかサポートしないため。
+ * `highlight()` は async なので、walkTokens フックで code トークンを先読みして結果を
+ * WeakMap に保存しておき、同期 renderer はそこから取り出すだけにする。marked 単体は
+ * 同期 renderer しかサポートしないため。
  */
 const highlightedCodeCache = new WeakMap<Tokens.Code, string>();
 
@@ -151,20 +153,7 @@ function createHeadingExtension(): {
 }
 
 /**
- * 表は列が本文の幅に収まらないことがあるので、横に送れる枠で包む。枠の外へはみ出して
- * コンテナのボーダーに重なったり、画面の端で切れたりしないようにする（DESIGN.md §5「表」）。
- * 表そのものは marked の既定の組み方で出す。
- */
-const tableExtension: MarkedExtension = {
-  renderer: {
-    table(token: Tokens.Table) {
-      return `<div class="table-scroll">${Renderer.prototype.table.call(this, token)}</div>\n`;
-    },
-  },
-};
-
-/**
- * Build a fresh Marked instance with code/highlight, heading, table, and alert
+ * Build a fresh Marked instance with code, heading, table, and alert
  * extensions, plus a getter for the headings that instance collects.
  *
  * A NEW instance is created per markdownToHtml() call rather than reusing a
@@ -178,7 +167,8 @@ const tableExtension: MarkedExtension = {
  *
  * This is cheap: Shiki's highlighter is globally cached in highlight.ts and
  * codeExtension's cache is a per-token WeakMap, so nothing heavy is rebuilt.
- * markedAlert() is included to support GFM Alert syntax (> [!NOTE], etc.).
+ * The alert and table extensions come from markdown-extensions.ts, which the
+ * markdown-preview tool shares so that its preview matches the article.
  */
 function createMarkedInstance(): {
   instance: Marked;
@@ -188,8 +178,8 @@ function createMarkedInstance(): {
   const instance = new Marked(
     codeExtension,
     headingExtension,
-    tableExtension,
-    markedAlert(),
+    createTableExtension(),
+    alertExtension,
   );
   return { instance, getHeadings };
 }

@@ -121,43 +121,40 @@ describe("markdownToHtml", () => {
     expect(html).toContain("<em>italic</em>");
   });
 
-  test("converts code blocks with Shiki dual-theme highlighting", async () => {
+  test("コードをコードのボックスに組み、字の種類を色で分けない", async () => {
     const { html } = await markdownToHtml("```typescript\nconst x = 1;\n```");
-    // Shiki wraps highlighted output in <pre class="shiki shiki-themes ...">
-    expect(html).toContain("<pre");
-    expect(html).toContain("shiki");
-    expect(html).toContain("vitesse-light");
-    expect(html).toContain("vitesse-dark");
-    // Dual-theme mode emits the dark color as a --shiki-dark CSS custom property
-    expect(html).toContain("--shiki-dark");
-    // Code text is preserved (escaped by Shiki itself)
-    expect(html).toContain("const");
-    expect(html).toContain("x");
-    expect(html).toContain("1");
+    expect(html).toContain("<pre><code>const x = 1;</code></pre>");
+    expect(html).not.toContain("style=");
+    expect(html).not.toContain("tabindex");
+  });
+
+  test("コードの注釈だけを code-comment で包む", async () => {
+    const { html } = await markdownToHtml(
+      "```typescript\n// 説明\nconst x = 1; // 後ろの説明\n```",
+    );
+    expect(html).toContain(
+      '<pre><code><span class="code-comment">// 説明</span>\nconst x = 1; <span class="code-comment">// 後ろの説明</span></code></pre>',
+    );
   });
 
   test("unknown language falls back to plain text without throwing", async () => {
     const { html } = await markdownToHtml(
       "```not-a-real-lang\nhello world\n```",
     );
-    expect(html).toContain("<pre");
-    expect(html).toContain("shiki");
-    expect(html).toContain("hello world");
+    expect(html).toContain("<pre><code>hello world</code></pre>");
   });
 
   test("fenced code block with no language is rendered as text", async () => {
     const { html } = await markdownToHtml("```\nplain content\n```");
-    expect(html).toContain("<pre");
-    expect(html).toContain("shiki");
-    expect(html).toContain("plain content");
+    expect(html).toContain("<pre><code>plain content</code></pre>");
   });
 
   test('mermaid code block is preserved as <div class="mermaid">', async () => {
     const { html } = await markdownToHtml("```mermaid\ngraph TD; A-->B;\n```");
     expect(html).toContain('<div class="mermaid">');
     expect(html).toContain("graph TD; A--&gt;B;");
-    // mermaid blocks must not be syntax-highlighted (no shiki wrapper)
-    expect(html).not.toMatch(/<pre class="shiki/);
+    // mermaid blocks are not put in a code box
+    expect(html).not.toContain("<pre");
   });
 
   test("code block content is HTML-escaped", async () => {
@@ -205,6 +202,12 @@ describe("markdownToHtml", () => {
     );
   });
 
+  test("表のセルの語の切れ目に <wbr> を残す（サニタイズで消えない）", async () => {
+    const md = "| 列 |\n|---|\n| 新しい値の参照 |";
+    const { html } = await markdownToHtml(md);
+    expect(html).toContain("<td>新しい<wbr />値<wbr />の<wbr />参照</td>");
+  });
+
   test("converts blockquotes", async () => {
     const { html } = await markdownToHtml("> quote text");
     expect(html).toContain("<blockquote>");
@@ -229,10 +232,7 @@ describe("markdownToHtml", () => {
   test("does not affect non-mermaid code blocks", async () => {
     const md = "```javascript\nconst x = 1;\n```";
     const { html } = await markdownToHtml(md);
-    // After Shiki integration, non-mermaid blocks render as <pre class="shiki ...">
-    expect(html).toContain("<pre");
-    expect(html).toContain("shiki");
-    expect(html).toContain("<code");
+    expect(html).toContain("<pre><code>");
     expect(html).not.toContain("mermaid");
   });
 
@@ -317,12 +317,21 @@ describe("markdownToHtml", () => {
     expect(html).toContain("これは通常の引用です。");
   });
 
-  test("includes markdown-alert-title in admonition output", async () => {
-    const md = "> [!NOTE]\n> ノートの内容。";
-    const { html } = await markdownToHtml(md);
-    expect(html).toContain("markdown-alert-title");
-    expect(html).toContain("ノートの内容。");
-  });
+  test.each([
+    ["NOTE", "補足"],
+    ["TIP", "ヒント"],
+    ["IMPORTANT", "重要"],
+    ["WARNING", "注意"],
+    ["CAUTION", "警告"],
+  ])(
+    "注記 [!%s] の1行目に種類の語「%s」だけを置き、印を持たない",
+    async (type, word) => {
+      const { html } = await markdownToHtml(`> [!${type}]\n> 内容。`);
+      expect(html).toContain(`<p class="markdown-alert-title">${word}</p>`);
+      expect(html).not.toContain("<svg");
+      expect(html).toContain("<p>内容。</p>");
+    },
+  );
 
   test("sanitizes script tags from markdown output", async () => {
     // Markdown with inline HTML containing a script tag

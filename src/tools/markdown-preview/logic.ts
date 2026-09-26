@@ -1,5 +1,8 @@
-import { marked } from "marked";
-import type { MarkedOptions } from "marked";
+import { Marked } from "marked";
+import {
+  alertExtension,
+  createTableExtension,
+} from "@/lib/markdown-extensions";
 
 export interface MarkdownResult {
   success: boolean;
@@ -9,11 +12,11 @@ export interface MarkdownResult {
 
 const MAX_INPUT_LENGTH = 50_000;
 
-// Configure marked options (no external dependencies for sanitization)
-const markedOptions: MarkedOptions = {
+// 注記と表は、ブログの記事と同じ拡張で組む（プレビューが記事と同じ見え方になる）
+const markdown = new Marked(createTableExtension(), alertExtension, {
   gfm: true, // GitHub Flavored Markdown
   breaks: true, // Convert \n to <br>
-};
+});
 
 // Whitelist of allowed tags for DOMParser-based sanitizer
 const ALLOWED_TAGS = new Set([
@@ -40,10 +43,12 @@ const ALLOWED_TAGS = new Set([
   "th",
   "td",
   "br",
+  "wbr",
   "hr",
   "img",
   "del",
   "input",
+  "div",
 ]);
 
 // Tags that should be completely removed including all their content
@@ -61,7 +66,21 @@ const ALLOWED_ATTRIBUTES: Record<string, Set<string>> = {
   input: new Set(["type", "checked", "disabled"]),
   td: new Set(["align"]),
   th: new Set(["align"]),
+  div: new Set(["class"]),
+  p: new Set(["class"]),
 };
+
+// class に置けるのは、記事と同じ組み方を当てる注記と表の枠の名前だけ
+const ALLOWED_CLASSES = new Set([
+  "table-scroll",
+  "markdown-alert",
+  "markdown-alert-note",
+  "markdown-alert-tip",
+  "markdown-alert-important",
+  "markdown-alert-warning",
+  "markdown-alert-caution",
+  "markdown-alert-title",
+]);
 
 // Check if a URL is safe (only http/https protocols, plus data:image for img)
 function isSafeUrl(url: string, isImgSrc: boolean): boolean {
@@ -97,6 +116,15 @@ function sanitizeElement(el: Element): void {
       }
     } else if (attrName === "src") {
       if (!isSafeUrl(attr.value, true)) {
+        el.removeAttribute(attr.name);
+      }
+    } else if (attrName === "class") {
+      const classes = attr.value
+        .split(/\s+/)
+        .filter((name) => ALLOWED_CLASSES.has(name));
+      if (classes.length > 0) {
+        el.setAttribute("class", classes.join(" "));
+      } else {
         el.removeAttribute(attr.name);
       }
     } else if (tagName === "input" && attrName === "type") {
@@ -190,7 +218,7 @@ export function renderMarkdown(input: string): MarkdownResult {
   }
 
   try {
-    const rawHtml = marked.parse(input, markedOptions) as string;
+    const rawHtml = markdown.parse(input, { async: false });
     const html = sanitizeHtml(rawHtml);
     return { success: true, html };
   } catch {

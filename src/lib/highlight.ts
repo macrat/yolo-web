@@ -1,30 +1,42 @@
 /**
- * Build-time syntax highlighter for markdown code blocks.
+ * Markdown のコードのブロックを、ビルドの時にコードのボックスの HTML にする。
  *
- * Uses Shiki's `bundle/full` pack — every language Shiki ships is available
- * without a manual allow-list, so writers can use any fenced code language
- * (`go`, `rust`, `ruby`, ...) and it just works. Shiki is server-only here:
- * the highlighter and grammars never end up in the client JS bundle, so the
- * download cost to visitors is zero. The cost is paid in build artifact
- * size (within `.next/server/`), which we accept in exchange for removing
- * the maintenance burden of keeping a manual language list in sync with
- * what blog authors actually write.
+ * コードの字は `--ink` で組み、注釈（コメント）だけを `--ink-2` にする（DESIGN.md §5 コード）。
+ * 字の種類を色で分けないので、Shiki には注釈を見分けることだけをさせる。注釈にだけ印の色を持つ
+ * テーマで字を分け、その色の字を `<span class="code-comment">` で包む。色そのものは HTML に書かず、
+ * 記事の本文の CSS がトークンで塗るので、ダークでもトークンのダークの値に替わるだけになる。
  *
- * Dual-theme output:
- *   The light theme's colors are baked into inline `color` / `background-color`
- *   declarations, and the dark theme's colors are stored alongside as
- *   `--shiki-dark` / `--shiki-dark-bg` CSS variables. The blog page CSS swaps
- *   them in under `@media (prefers-color-scheme: dark)`.
+ * Shiki の `bundle/full` を使い、Shiki が持つすべての言語を読めるようにする（書き手が使う言語を
+ * 一覧で追わなくてよい）。Shiki はサーバーだけで動き、来訪者に配る JS には入らない。
  *
- * Async lazy init:
- *   Shiki's `createHighlighter` is async. Importing this module doesn't
- *   trigger highlighter creation — that only happens on first `highlight()`
- *   call. Keeping creation out of module top-level (no top-level await) means
- *   any tool that transitively imports `blog.ts → markdown.ts → highlight.ts`
- *   in tsx's CJS loader can do so without hitting a top-level-await rejection.
+ * `createHighlighter` は非同期なので、最初の `highlight()` の呼び出しで作る。モジュールの頭で
+ * 待たないので、`blog.ts → markdown.ts → highlight.ts` を tsx の CJS のローダーで読んでも、
+ * top-level await で止まらない。
  */
 
-import type { Highlighter } from "shiki/bundle/full";
+import type {
+  BundledLanguage,
+  Highlighter,
+  SpecialLanguage,
+  ThemeRegistration,
+} from "shiki/bundle/full";
+
+const COMMENT_MARK = "#000001";
+
+const commentOnlyTheme: ThemeRegistration = {
+  name: "comment-only",
+  type: "light",
+  colors: {
+    "editor.foreground": "#000000",
+    "editor.background": "#ffffff",
+  },
+  tokenColors: [
+    {
+      scope: ["comment", "punctuation.definition.comment", "string.comment"],
+      settings: { foreground: COMMENT_MARK },
+    },
+  ],
+};
 
 let highlighterPromise: Promise<Highlighter> | null = null;
 
@@ -34,7 +46,7 @@ async function getHighlighter(): Promise<Highlighter> {
       const { createHighlighter, bundledLanguages } =
         await import("shiki/bundle/full");
       return createHighlighter({
-        themes: ["vitesse-light", "vitesse-dark"],
+        themes: [commentOnlyTheme],
         langs: Object.keys(bundledLanguages),
       });
     })();
@@ -42,33 +54,45 @@ async function getHighlighter(): Promise<Highlighter> {
   return highlighterPromise;
 }
 
+function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
 /**
- * Highlight a code string and return Shiki's dual-theme HTML.
- *
- * Unknown / unsupported `lang` values fall back to `text` so the code is
- * still safely HTML-escaped without throwing.
+ * コードをコードのボックスの HTML（`<pre><code>`）にする。Shiki が知らない `lang` は、
+ * 注釈を持たない文として組む。
  */
 export async function highlight(code: string, lang?: string): Promise<string> {
   const highlighter = await getHighlighter();
   const normalized = (lang || "").toLowerCase().trim();
   const loaded = new Set([
     ...highlighter.getLoadedLanguages(),
-    // Shiki's "special" plaintext IDs are always accepted but not listed above.
+    // Shiki がいつも受け付ける文の言語。getLoadedLanguages() には出てこない。
     "text",
     "plain",
     "plaintext",
     "txt",
   ]);
-  const useLang = loaded.has(normalized) ? normalized : "text";
+  const useLang = (loaded.has(normalized) ? normalized : "text") as
+    BundledLanguage | SpecialLanguage;
 
-  return highlighter.codeToHtml(code, {
+  const lines = highlighter.codeToTokensBase(code, {
     lang: useLang,
-    themes: {
-      light: "vitesse-light",
-      dark: "vitesse-dark",
-    },
-    // Light is the "default" — its colors go into plain `color` properties.
-    // Dark goes into `--shiki-dark` CSS variables, swapped in by the dark media query.
-    defaultColor: "light",
+    theme: commentOnlyTheme,
   });
+  const body = lines
+    .map((tokens) =>
+      tokens
+        .map((token) =>
+          token.color?.toLowerCase() === COMMENT_MARK
+            ? `<span class="code-comment">${escapeHtml(token.content)}</span>`
+            : escapeHtml(token.content),
+        )
+        .join(""),
+    )
+    .join("\n");
+  return `<pre><code>${body}</code></pre>`;
 }

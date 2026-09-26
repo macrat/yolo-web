@@ -53,6 +53,7 @@ import Panel from "@/components/Panel";
 import Button from "@/components/Button";
 import Textarea from "@/components/Textarea";
 import ErrorMessage from "@/components/ErrorMessage";
+import Prose from "@/components/Prose";
 import {
   useCopyToClipboard,
   COPIED_LABEL,
@@ -220,10 +221,10 @@ export default function MarkdownPreviewTile({
               className={styles.previewWrapper}
             >
               {isMounted && input.trim() ? (
-                <div
+                <Prose
                   data-testid="markdown-preview"
                   className={styles.preview}
-                  dangerouslySetInnerHTML={{ __html: result.html }}
+                  html={result.html}
                 />
               ) : (
                 <div className={styles.emptyHint}>

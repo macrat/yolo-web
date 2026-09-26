@@ -25,6 +25,7 @@ import TagList from "@/blog/_components/TagList";
 import SeriesNav from "@/blog/_components/SeriesNav";
 import MermaidRenderer from "@/blog/_components/MermaidRenderer";
 import RelatedArticles from "@/blog/_components/RelatedArticles";
+import Prose from "@/components/Prose";
 import styles from "./page.module.css";
 
 interface Props {
@@ -123,13 +124,8 @@ export default async function BlogPostPage({ params }: Props) {
             />
           )}
 
-          {/*
-           * 本文。矩形のコンテナには包まず、読む幅 --measure に絞ったテキスト列として直接置く（§5）。
-           */}
-          <div
-            className={styles.prose}
-            dangerouslySetInnerHTML={{ __html: post.contentHtml }} // markdownToHtml() 内部で sanitize 済み
-          />
+          {/* markdownToHtml() の中でサニタイズしてある。 */}
+          <Prose className={styles.body} html={post.contentHtml} />
 
           <MermaidRenderer />
         </div>

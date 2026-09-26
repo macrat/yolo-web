@@ -62,146 +62,16 @@
 
 /* articleAside（TOC サイドバー）の幅は Grid によって自動制御されるため個別指定不要 */
 
-/*
- * 本文。行間は globals.css の body が与える。読む幅 --measure に絞る（§5）。
- */
-.prose {
-  max-width: var(--measure);
-  color: var(--ink);
-}
-
-/*
- * 見出しの書体・ウェイト・行間・大きさは globals.css の見出しの規則が与える。
- * ここでは余白と区切り罫だけを足す。
- */
-.prose h2 {
-  margin-top: var(--space-32);
-  margin-bottom: var(--space-16);
-  padding-bottom: var(--space-8);
-  border-bottom: 1px solid var(--rule);
-}
-
-.prose h3 {
-  margin-top: var(--space-24);
-  margin-bottom: var(--space-8);
-}
-
-.prose p {
-  margin: 0 0 var(--space-16);
-}
-
-.prose ul,
-.prose ol {
-  margin: 0 0 var(--space-16);
-  padding-left: var(--space-24);
-}
-
-.prose li {
-  margin-bottom: var(--space-8);
-}
-
-.prose code {
-  background-color: var(--paper-2);
-  padding: 0.15em 0.35em;
-  border-radius: var(--radius-sm);
-  font-family: var(--font-mono);
-  font-size: 0.85em;
-}
-
-/*
- * コードブロック。
- *
- * ハイライト済みブロック（Shiki 出力 `<pre class="shiki ...">`）は背景色を
- * テーマ側の inline style に任せる（vitesse-light: #ffffff / vitesse-dark: #121212）。
- * テーマ作者が決めた配色と背景色の関係を尊重したほうが、トークンの可読性が高い。
- *
- * `<pre>` 直下に shiki クラスが付かないケース（ハイライト未対応など）の
- * フォールバックとして --paper-2（コードのボックスの背景・§2）を使う。--paper-2 は light/dark
- * それぞれの値を持つので、テーマごとの上書きは要らない。
- */
-.prose pre {
-  background-color: var(--paper-2);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
-  padding: var(--space-16);
-  overflow-x: auto;
-  margin: 0 0 var(--space-16);
-}
-
-.prose pre code {
-  padding: 0;
-  background: none;
-  font-family: var(--font-mono);
-}
-
-/*
- * Shiki dual-theme output のダークモード切替。
- *
- * Shiki は light テーマ色を通常の `color` / `background-color` として埋め込み、
- * dark テーマ色を `--shiki-dark` / `--shiki-dark-bg` CSS 変数として並置する。
- * 端末の設定が dark のときは変数値を `!important` で上書きしてダーク配色に切替える。
- *
- * `!important` は CSS Modules + サードパーティ生成 inline style に上書きするための
- * shiki 公式パターン（https://shiki.style/guide/dual-themes 参照）。
- */
-@media (prefers-color-scheme: dark) {
-  .prose :global(.shiki),
-  .prose :global(.shiki span) {
-    color: var(--shiki-dark) !important;
-    background-color: var(--shiki-dark-bg) !important;
-    font-style: var(--shiki-dark-font-style) !important;
-    font-weight: var(--shiki-dark-font-weight) !important;
-    text-decoration: var(--shiki-dark-text-decoration) !important;
-  }
-}
-
-/*
- * 引用: 色付きカードにせず、墨の濃淡と罫で副次情報であることを示す。
- */
-.prose blockquote {
-  border-left: 2px solid var(--rule-strong);
-  padding-left: var(--space-16);
-  margin: 0 0 var(--space-16);
-  color: var(--ink-2);
-}
-
-/* 表を包む枠（src/lib/markdown.ts）。列が本文の幅に収まらない表は、この枠の中で横に送る。 */
-.prose :global(.table-scroll) {
-  overflow-x: auto;
-  margin: 0 0 var(--space-16);
-}
-
-.prose table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.prose th,
-.prose td {
-  border: 1px solid var(--rule);
-  padding: var(--space-8) var(--space-16);
-  text-align: left;
-  font-size: 0.9375rem;
-}
-
-.prose th {
-  background-color: var(--paper-2);
-  font-weight: 600;
-}
-
-.prose strong {
-  font-weight: 700;
-}
-
-/* mermaid ラッパー: block にして overflow-x: auto を flex に依存せず機能させる */
-.prose :global(.mermaid) {
+/* 本文の組み方は Prose（src/components/Prose）が持ち、ここでは記事にだけ出る図を足す。
+ * mermaid ラッパー: block にして overflow-x: auto を flex に依存せず機能させる */
+.body :global(.mermaid) {
   display: block;
   margin: var(--space-24) 0;
   overflow-x: auto;
 }
 
 /* SVG は block にして margin: auto で中央寄せ。max-width を外して横長図をスクロール可能にする */
-.prose :global(.mermaid) svg {
+.body :global(.mermaid) svg {
   display: block;
   margin: 0 auto;
   height: auto;

@@ -1,0 +1,109 @@
+/*
+ * 記事の本文（DESIGN.md §4・§5）。文（段落・箇条書き・引用・注記・本文の区切り・見出し）は本文の幅に
+ * 絞り、表とコードのボックスは置かれる幅いっぱいに出す。
+ * 表・コードのボックス・本文の中のコード片・本文の区切りの形は globals.css の要素の既定が持つ。ここでは
+ * 本文の中の間隔と、本文にだけ出るもの（注記・引用・横に送る表の枠・コードの注釈）を足す。
+ */
+.prose {
+  color: var(--ink);
+}
+
+.prose > :not(:global(.table-scroll), pre) {
+  max-width: var(--measure);
+}
+
+/* 見出しの書体・ウェイト・行間・大きさは globals.css の見出しの規則が与える。 */
+.prose h2 {
+  margin-top: var(--space-32);
+  margin-bottom: var(--space-16);
+  padding-bottom: var(--space-8);
+  border-bottom: 1px solid var(--rule);
+}
+
+.prose h3 {
+  margin-top: var(--space-24);
+  margin-bottom: var(--space-8);
+}
+
+.prose p {
+  margin: 0 0 var(--space-16);
+}
+
+.prose ul,
+.prose ol {
+  margin: 0 0 var(--space-16);
+  padding-left: var(--space-24);
+}
+
+.prose li {
+  margin-bottom: var(--space-8);
+}
+
+/* 引用。引いた文は中身なので、字は本文と同じ --ink。 */
+.prose blockquote {
+  margin: 0 0 var(--space-16);
+  padding-left: var(--space-16);
+  border-left: var(--rule-w-hair) solid var(--rule-2);
+}
+
+/* 注記（src/lib/markdown-extensions.ts）。本文の幅いっぱいのボックスで、1行目に種類の語を太字で置く。 */
+.prose :global(.markdown-alert) {
+  margin: 0 0 var(--space-16);
+  padding: var(--box-padding);
+  border: var(--rule-w) solid var(--rule);
+}
+
+.prose :global(.markdown-alert-title) {
+  margin-bottom: var(--space-8);
+  font-weight: 700;
+}
+
+.prose :global(.markdown-alert) > :last-child {
+  margin-bottom: 0;
+}
+
+.prose pre {
+  margin: 0 0 var(--space-16);
+}
+
+/* コードの注釈（src/lib/highlight.ts）。ほかの字は --ink のまま。 */
+.prose :global(.code-comment) {
+  color: var(--ink-2);
+}
+
+/*
+ * 表を包む枠（src/lib/markdown-extensions.ts）。表はコンテンツ幅いっぱいに組み、セルは語の切れ目
+ * （<wbr>）でだけ折る。列が収まらない表は、語を割らない幅のまま枠の中で横に送る。
+ */
+.prose :global(.table-scroll) {
+  margin: 0 0 var(--space-16);
+  overflow-x: auto;
+}
+
+.prose table {
+  width: 100%;
+}
+
+.prose th,
+.prose td {
+  word-break: keep-all;
+}
+
+/*
+ * 横に送る表のボックスの枠（src/components/Prose が、はみ出す表にだけ data-scrolls を付ける）。
+ * 枠は場所を取らない線で、表の縁の内側に描く。枠が付いても字の位置と表の高さは変わらず、表の字の
+ * 左端は枠の無い表と同じ所にある。フォーカスのリングは枠の外に密着させる。内側に出すと、横に送る
+ * セルと罫線がリングに重なる。
+ */
+.prose :global(.table-scroll[data-scrolls]) {
+  outline: var(--rule-w) solid var(--rule);
+  outline-offset: calc(-1 * var(--rule-w));
+}
+
+.prose :global(.table-scroll[data-scrolls]):focus-visible {
+  outline: var(--rule-w) solid var(--rule);
+  outline-offset: calc(-1 * var(--rule-w));
+  box-shadow:
+    0 0 0 var(--rule-w) var(--paper),
+    0 0 0 calc(2 * var(--rule-w)) var(--ink);
+}

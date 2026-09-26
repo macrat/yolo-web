@@ -573,40 +573,6 @@ input[data-field]:is(
   border: 0;
 }
 
-/* GFM Alert（marked-alert が出力する .markdown-alert）。CSS Modules のスコープ外のクラスなので
- * ここに置く。種別は色で分けず、ラベルの文字で示す。注意を促す種別だけ、左に太い線を引く。 */
-.markdown-alert {
-  padding: var(--space-16) var(--space-24);
-  margin: var(--space-24) 0;
-  border: var(--rule-w-hair) solid var(--rule-2);
-  background-color: var(--paper-2);
-}
-
-.markdown-alert p:last-child {
-  margin-bottom: 0;
-}
-
-.markdown-alert-title {
-  display: flex;
-  align-items: center;
-  gap: 0.4em;
-  font-weight: 700;
-  margin-bottom: var(--space-8);
-  color: var(--ink);
-}
-
-.markdown-alert-title svg {
-  width: 1em;
-  height: 1em;
-  flex-shrink: 0;
-  fill: currentColor;
-}
-
-.markdown-alert-warning,
-.markdown-alert-caution {
-  border-left: var(--rule-w) solid var(--rule);
-}
-
 /* インラインスタイルから参照するグローバルアニメーション
    CSS Modules は局所スコープのため、インラインスタイルの animation: "spin ..."
    は globals.css に定義した @keyframes が必要（AP-I10 参照）。

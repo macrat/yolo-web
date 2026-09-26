@@ -34,6 +34,21 @@ describe("renderMarkdown", () => {
     expect(r.html).toContain("<table>");
   });
 
+  test("表を記事と同じ横に送れる枠で包み、セルの語の切れ目に <wbr> を置く", () => {
+    const r = renderMarkdown("| 列 |\n|---|\n| 新しい値の参照 |");
+    expect(r.html).toContain('<div class="table-scroll"><table>');
+    expect(r.html).toContain("<td>新しい<wbr>値<wbr>の<wbr>参照</td>");
+  });
+
+  test("注記を記事と同じ組み方にし、1行目に種類の語を置く", () => {
+    const r = renderMarkdown("> [!WARNING]\n> 内容");
+    expect(r.html).toContain(
+      '<div class="markdown-alert markdown-alert-warning">',
+    );
+    expect(r.html).toContain('<p class="markdown-alert-title">注意</p>');
+    expect(r.html).not.toContain("<svg");
+  });
+
   test("renders inline code", () => {
     const r = renderMarkdown("use `npm install`");
     expect(r.success).toBe(true);
@@ -231,6 +246,14 @@ describe("sanitizeHtml", () => {
     expect(output).not.toContain("class");
     expect(output).not.toContain("id");
     expect(output).toContain("<p>text</p>");
+  });
+
+  test("XSS: keeps only the classes of alerts and table frames", () => {
+    const input =
+      '<div class="table-scroll evil"><p class="markdown-alert-title other">t</p></div><div class="evil">x</div>';
+    expect(sanitizeHtml(input)).toBe(
+      '<div class="table-scroll"><p class="markdown-alert-title">t</p></div><div>x</div>',
+    );
   });
 
   test("XSS: handles nested dangerous elements", () => {

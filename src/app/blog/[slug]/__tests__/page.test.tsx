@@ -140,19 +140,9 @@ describe("app/blog/[slug]/page", () => {
     });
   });
 
-  describe("page.module.css — 読む幅とコードブロックの背景", () => {
-    it(".prose が --measure（読む幅）に絞られていること（本文の幅・§5）", () => {
-      expect(css).toMatch(/\.prose[^{]*\{[^}]*max-width:\s*var\(--measure\)/);
-    });
-
-    it("prose pre のフォールバック背景に --paper-2（コードのボックスの背景・§2）が使われていること", () => {
-      expect(css).toMatch(/\.prose pre[^{]*\{[^}]*var\(--paper-2\)/);
-    });
-
-    it("Shiki dual-theme の dark 配色が端末の設定（prefers-color-scheme: dark）で当たること", () => {
-      expect(css).toMatch(
-        /@media \(prefers-color-scheme: dark\)\s*\{\s*\.prose\s*:global\(\.shiki\)/,
-      );
+  describe("本文", () => {
+    it("本文を markdown-preview と同じ組み方の Prose で出すこと", () => {
+      expect(source).toMatch(/<Prose\s[^>]*html=\{post\.contentHtml\}/);
     });
   });
 
