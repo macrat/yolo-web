@@ -5,7 +5,7 @@ import { resolveDisplayCategory } from "./seo";
 import type { PlayContentMeta } from "./types";
 
 /** 遊びを比べて選ぶ手がかりになる補助情報。毎日変わるか、解き終えるまでに何問あるか。 */
-function playFacts(content: PlayContentMeta): ItemListFact[] {
+export function playFacts(content: PlayContentMeta): ItemListFact[] {
   const facts: ItemListFact[] = [];
   if (DAILY_UPDATE_SLUGS.has(content.slug)) facts.push({ text: "毎日更新" });
   const questionCount = quizQuestionCountBySlug.get(content.slug);

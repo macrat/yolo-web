@@ -1,100 +1,175 @@
 /**
- * あそび一覧（/play）のテスト
- *
- * カテゴリ別の品書き（Shinagaki）の構成（棚+品書き）を検証し、検索ボックス・絞り込みナビが
- * 無いことも確認する。
- *
- * レジストリ（allPlayContents 等）はモックせず実データを使う。トップページの
- * page.test.tsx と同じ方針——データが変わればテストが追従して検証する。
+ * 遊びの一覧（/play）のテスト。レジストリはモックせず実データを使い、データが変わってもテストが追従する。
  */
-import { expect, test, describe } from "vitest";
-import { render, screen, within } from "@testing-library/react";
+import { describe, expect, test, vi } from "vitest";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import PlayPage, { metadata } from "../page";
 import {
   allPlayContents,
-  quizQuestionCountBySlug,
   DAILY_UPDATE_SLUGS,
+  quizQuestionCountBySlug,
 } from "@/play/registry";
 import { getContentPath } from "@/play/paths";
-import { PLAY_CATEGORIES } from "@/play/_components/categoryLabels";
+import { resolveDisplayCategory } from "@/play/seo";
+import { PLAY_KINDS } from "@/play/play-list";
+import { formatDate } from "@/lib/date";
+
+const navigation = vi.hoisted(() => ({ pathname: "/play" }));
+
+vi.mock("next/navigation", () => ({
+  usePathname: () => navigation.pathname,
+}));
+
+function visit(path: string) {
+  navigation.pathname = "/play";
+  window.history.replaceState(null, "", path);
+}
+
+function rows(): HTMLElement[] {
+  return within(screen.getByRole("list", { name: "遊びの一覧" })).getAllByRole(
+    "listitem",
+  );
+}
+
+function rowNames(): string[] {
+  return rows().map((row) => within(row).getByRole("link").textContent ?? "");
+}
+
+function displayName(slug: string): string {
+  const content = allPlayContents.find((c) => c.slug === slug);
+  if (!content) throw new Error(`no play content: ${slug}`);
+  return content.shortTitle ?? content.title;
+}
+
+const kindOrder = PLAY_KINDS.map((kind) => kind.label);
 
 describe("app/play/page.tsx", () => {
-  test("h1 はページに1つで、「遊ぶ」を表示する", () => {
+  test("パンくずの2つ目と h1 が、上端のナビと同じ「遊び」である", () => {
+    visit("/play");
     render(<PlayPage />);
     const h1s = screen.getAllByRole("heading", { level: 1 });
     expect(h1s).toHaveLength(1);
-    expect(h1s[0]).toHaveTextContent("遊ぶ");
+    expect(h1s[0]).toHaveTextContent("遊び");
+    const crumbs = screen.getByRole("navigation", { name: "パンくずリスト" });
+    expect(within(crumbs).getByText("遊び")).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
   });
 
-  test("名乗りにコンテンツ総数（実データ由来）が含まれる", () => {
-    render(<PlayPage />);
-    expect(
-      screen.getByText(new RegExp(`全${allPlayContents.length}種`)),
-    ).toBeInTheDocument();
+  test("タブと OGP・Twitter の題が「遊び | yolos.net」である", () => {
+    expect(metadata.title).toBe("遊び | yolos.net");
+    expect(metadata.openGraph?.title).toBe("遊び | yolos.net");
+    expect(metadata.twitter?.title).toBe("遊び | yolos.net");
+    expect(metadata.description).toContain(`全${allPlayContents.length}種`);
   });
 
-  test("カテゴリごとの棚見出しが、コンテンツが実在するカテゴリぶんだけ表示される", () => {
+  test("全件を1つの一覧に並べ、行のリンクの名前は名前だけで、行き先は遊びのページである", () => {
+    visit("/play");
     render(<PlayPage />);
-    const nonEmptyLabels = PLAY_CATEGORIES.filter(({ value }) =>
-      allPlayContents.some((c) => c.category === value),
-    ).map(({ label }) => label);
-    const headings = screen.getAllByRole("heading", { level: 2 });
-    expect(headings.map((h) => h.textContent)).toEqual(nonEmptyLabels);
-  });
-
-  test("全コンテンツが実在パスへのリンクとして一覧に表示される", () => {
-    render(<PlayPage />);
+    expect(rows()).toHaveLength(allPlayContents.length);
     for (const content of allPlayContents) {
-      const displayName = content.shortTitle ?? content.title;
-      const link = screen.getByRole("link", { name: displayName });
+      const link = within(
+        screen.getByRole("list", { name: "遊びの一覧" }),
+      ).getByRole("link", { name: content.shortTitle ?? content.title });
       expect(link).toHaveAttribute("href", getContentPath(content));
     }
   });
 
-  test("毎日更新コンテンツにだけ「毎日更新」の補助情報が付く（DAILY_UPDATE_SLUGSが単一情報源）", () => {
+  test("件数の行が全件を言う", () => {
+    visit("/play");
     render(<PlayPage />);
-    const dailyBadges = screen.getAllByText("毎日更新");
-    expect(dailyBadges).toHaveLength(DAILY_UPDATE_SLUGS.size);
-  });
-
-  test("クイズには問題数の補助情報が付く（quizQuestionCountBySlugが単一情報源）", () => {
-    render(<PlayPage />);
-    const [slug, count] = [...quizQuestionCountBySlug.entries()][0];
-    const content = allPlayContents.find((c) => c.slug === slug);
-    expect(content).toBeDefined();
-    const displayName = content!.shortTitle ?? content!.title;
-    const link = screen.getByRole("link", { name: displayName });
-    const row = link.closest("li");
-    expect(row).not.toBeNull();
     expect(
-      within(row as HTMLElement).getByText(`全${count}問`),
+      screen.getByText(`全${allPlayContents.length}件`),
     ).toBeInTheDocument();
   });
 
-  test("ゲーム棚にはクイズの問題数の補助情報が付かない（中身の無いラベルを貼らない）", () => {
+  test("既定の並びは種別順で、同じ種別の中は公開日の新しい順である", () => {
+    visit("/play");
     render(<PlayPage />);
-    const gameContent = allPlayContents.find((c) => c.category === "game");
-    expect(gameContent).toBeDefined();
-    const displayName = gameContent!.shortTitle ?? gameContent!.title;
-    const link = screen.getByRole("link", { name: displayName });
-    const row = link.closest("li");
-    expect(row).not.toBeNull();
-    expect(within(row as HTMLElement).queryByText(/^全\d+問$/)).toBeNull();
+    const shown = rowNames().map((name) =>
+      allPlayContents.find((c) => (c.shortTitle ?? c.title) === name)!,
+    );
+    for (let i = 1; i < shown.length; i++) {
+      const prev = shown[i - 1];
+      const next = shown[i];
+      const kindDiff =
+        kindOrder.indexOf(resolveDisplayCategory(next)) -
+        kindOrder.indexOf(resolveDisplayCategory(prev));
+      expect(kindDiff).toBeGreaterThanOrEqual(0);
+      if (kindDiff === 0) {
+        expect(
+          formatDate(next.publishedAt) <= formatDate(prev.publishedAt),
+        ).toBe(true);
+      }
+    }
   });
 
-  test("キーワード検索ボックスは存在しない", () => {
+  test("行は種別・公開日を持ち、毎日更新とクイズの問題数を補助情報に持つ", () => {
+    visit("/play");
     render(<PlayPage />);
-    expect(screen.queryByRole("searchbox")).toBeNull();
+    for (const content of allPlayContents) {
+      const row = within(screen.getByRole("list", { name: "遊びの一覧" }))
+        .getByRole("link", { name: content.shortTitle ?? content.title })
+        .closest("li") as HTMLElement;
+      expect(row).toHaveTextContent(resolveDisplayCategory(content));
+      expect(row.querySelector("time")).toHaveAttribute(
+        "datetime",
+        content.publishedAt,
+      );
+      expect(row).toHaveTextContent(formatDate(content.publishedAt));
+      expect(row.textContent?.includes("毎日更新")).toBe(
+        DAILY_UPDATE_SLUGS.has(content.slug),
+      );
+      const count = quizQuestionCountBySlug.get(content.slug);
+      if (count !== undefined) expect(row).toHaveTextContent(`全${count}問`);
+    }
   });
 
-  test("カテゴリ絞り込みナビゲーションは存在しない", () => {
+  test("種別の組で絞ると、その種別の行だけが残り、URL に kind が入る", () => {
+    visit("/play");
     render(<PlayPage />);
-    expect(
-      screen.queryByRole("navigation", { name: "カテゴリで絞り込む" }),
-    ).toBeNull();
+    const group = screen.getByRole("radiogroup", { name: "種別" });
+    fireEvent.click(within(group).getByRole("radio", { name: "パズル" }));
+
+    const puzzles = allPlayContents.filter(
+      (c) => resolveDisplayCategory(c) === "パズル",
+    );
+    expect(rows()).toHaveLength(puzzles.length);
+    expect(window.location.search).toBe("?kind=puzzle");
   });
 
-  test("metadata の description にコンテンツ総数が含まれる", () => {
-    expect(metadata.description).toContain(`全${allPlayContents.length}種`);
+  test("新しい順では、種別をまたいで公開日の新しい順に並ぶ", () => {
+    visit("/play?sort=newest");
+    render(<PlayPage />);
+    const dates = rowNames().map((name) =>
+      formatDate(
+        allPlayContents.find((c) => (c.shortTitle ?? c.title) === name)!
+          .publishedAt,
+      ),
+    );
+    expect(dates).toEqual([...dates].sort().reverse());
+  });
+
+  test("名前の欄に打つと、名前と説明で絞られる", () => {
+    vi.useFakeTimers();
+    try {
+      visit("/play");
+      render(<PlayPage />);
+      const [first] = allPlayContents;
+      const name = displayName(first.slug);
+      fireEvent.change(
+        screen.getByRole("searchbox", { name: "名前・説明で探す" }),
+        {
+          target: { value: name },
+        },
+      );
+      act(() => {
+        vi.advanceTimersByTime(300);
+      });
+      expect(rowNames()[0]).toBe(name);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });

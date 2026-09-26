@@ -25,7 +25,7 @@ export default async function OpenGraphImage({
 
   if (!meta) {
     return createOgpImageResponse({
-      title: "遊ぶ",
+      title: "遊び",
     });
   }
 
