@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Shinagaki, { type ShinagakiItem } from "@/components/Shinagaki";
+import ItemList, { type ItemListItem } from "@/components/ItemList";
 import { SITE_NAME, BASE_URL } from "@/lib/constants";
 import styles from "./page.module.css";
 import { ABOUT_LAST_MODIFIED } from "./meta";
@@ -9,7 +9,7 @@ import { ABOUT_LAST_MODIFIED } from "./meta";
  * サイト紹介（/about）。自己紹介の文章は docs/site-concept.md の自己定義「AIが営む、
  * 『やってみる』のよろず屋」に合わせる。
  *
- * 見出しの書体の見出しと本文を --measure の幅に収め、一覧は品書き（Shinagaki）で組む。
+ * 見出しの書体の見出しと本文を --measure の幅に収め、一覧は行の一覧（ItemList）で組む。
  * AI運営の明示は constitution rule 3 に従い正直に書く（人間の著者を装わない）。
  */
 
@@ -44,26 +44,29 @@ export const metadata: Metadata = {
  * 対応させ、各棚の一覧ページへ案内する（個々のコンテンツへは踏み込まない——
  * ここは自己紹介であり、トップの品書きの重複再掲ではない）。
  */
-const STORE_ITEMS: ShinagakiItem[] = [
+const STORE_ITEMS: ItemListItem[] = [
   {
     name: "診断・占い・あそび",
     href: "/play",
-    note: "いくつか質問に答えると、その場で結果が出ます。性格診断や占い、言葉のパズルなどを置いています。",
+    description:
+      "いくつか質問に答えると、その場で結果が出ます。性格診断や占い、言葉のパズルなどを置いています。",
   },
   {
     name: "辞典",
     href: "/dictionary",
-    note: "漢字や四字熟語、伝統色の名前と由来を調べられます。",
+    description: "漢字や四字熟語、伝統色の名前と由来を調べられます。",
   },
   {
     name: "道具",
     href: "/tools",
-    note: "文字数を数えたり単位を換算したりする、ブラウザだけで使える道具です。",
+    description:
+      "文字数を数えたり単位を換算したりする、ブラウザだけで使える道具です。",
   },
   {
     name: "ブログ",
     href: "/blog",
-    note: "サイトを作りながら気づいたことを、運営しているAI自身が書いています。",
+    description:
+      "サイトを作りながら気づいたことを、運営しているAI自身が書いています。",
   },
 ];
 
@@ -86,11 +89,13 @@ export default function AboutPage() {
         </p>
       </section>
 
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>何が置いてあるか</h2>
+      <section className={styles.section} aria-labelledby="about-store">
+        <h2 id="about-store" className={styles.sectionTitle}>
+          何が置いてあるか
+        </h2>
         {/* 店の見立て（「店の品書き」）は来訪者に解読を強いるので、平明な言葉で言う。 */}
         <p className={styles.text}>ここにあるものは、大きく四つです。</p>
-        <Shinagaki items={STORE_ITEMS} ariaLabel="サイトの品書き" />
+        <ItemList labelledBy="about-store" items={STORE_ITEMS} />
       </section>
 
       <section className={styles.section}>

@@ -22,6 +22,7 @@ import Pagination from "@/components/Pagination";
 import ShareButtons from "@/components/ShareButtons";
 import FaqSection from "@/components/FaqSection";
 import RelatedTools from "@/components/RelatedTools";
+import ItemList, { type ItemListItem } from "@/components/ItemList";
 import Section from "@/components/Section";
 import styles from "./page.module.css";
 
@@ -113,6 +114,80 @@ const TOC_ITEMS = [
   { id: "faq-section", label: "18. Accordion・FaqSection" },
   { id: "related-tools", label: "19. RelatedTools" },
   { id: "related-blog-posts", label: "20. RelatedBlogPosts" },
+  { id: "item-list", label: "21. ItemList" },
+];
+
+// ItemList の見本。説明・種別・日付を持つ行、読みを持つ行、色見本を持つ行。
+const ITEM_LIST_DESCRIBED: ItemListItem[] = [
+  {
+    name: "文字数カウント",
+    href: "/tools/char-count",
+    description: "文章の文字数と行数を、その場で数えます。",
+    kind: "文章",
+    facts: [{ text: "2026-02-13", dateTime: "2026-02-13" }],
+  },
+  {
+    name: "Base64エンコード・デコード",
+    href: "/tools/base64",
+    description: "テキストをBase64形式に変換し、元に戻します。",
+    kind: "データ",
+    facts: [{ text: "2026-02-14", dateTime: "2026-02-14" }],
+  },
+  {
+    name: "ナカマワケ",
+    href: "/play/nakamawake",
+    description: "16個の言葉を、共通点で4つのグループに分けるパズル。",
+    kind: "パズル",
+    facts: [{ text: "毎日更新" }],
+  },
+];
+
+const ITEM_LIST_READINGS: ItemListItem[] = [
+  {
+    name: "一",
+    href: "/dictionary/kanji/一",
+    reading: "イチ・イツ・ひと・ひとつ",
+    kind: "小学1年",
+    facts: [{ text: "1画" }],
+  },
+  {
+    name: "水",
+    href: "/dictionary/kanji/水",
+    reading: "スイ・みず",
+    kind: "小学1年",
+    facts: [{ text: "4画" }],
+  },
+  {
+    name: "森",
+    href: "/dictionary/kanji/森",
+    reading: "シン・もり",
+    kind: "小学1年",
+    facts: [{ text: "12画" }],
+  },
+];
+
+const ITEM_LIST_SWATCHES: ItemListItem[] = [
+  {
+    name: "鴇",
+    href: "/dictionary/colors/toki",
+    reading: "toki",
+    facts: [{ text: "#eea9a9" }],
+    swatch: "#eea9a9",
+  },
+  {
+    name: "藍",
+    href: "/dictionary/colors/ai",
+    reading: "ai",
+    facts: [{ text: "#0d5661" }],
+    swatch: "#0d5661",
+  },
+  {
+    name: "白練",
+    href: "/dictionary/colors/shironeri",
+    reading: "shironeri",
+    facts: [{ text: "#fcfaf2" }],
+    swatch: "#fcfaf2",
+  },
 ];
 
 interface StorybookContentProps {
@@ -988,6 +1063,51 @@ export default function StorybookContent({
             （関連記事なしのとき何も表示されない）
           </div>
           {relatedBlogPostsEmpty}
+        </Panel>
+      </Section>
+
+      {/* === 21. ItemList === */}
+      <Section id="item-list">
+        <h2 className={styles.sectionTitle}>21. ItemList</h2>
+
+        <h3 id="item-list-described" className={styles.subsectionTitle}>
+          説明・種別・日付を持つ行（2行目が現在地）
+        </h3>
+        <ItemList
+          labelledBy="item-list-described"
+          items={ITEM_LIST_DESCRIBED}
+          currentHref="/tools/base64"
+        />
+
+        <h3 id="item-list-readings" className={styles.subsectionTitle}>
+          読みを持ち、説明を持たない行
+        </h3>
+        <ItemList labelledBy="item-list-readings" items={ITEM_LIST_READINGS} />
+
+        <h3 id="item-list-swatches" className={styles.subsectionTitle}>
+          色見本を持つ行
+        </h3>
+        <ItemList labelledBy="item-list-swatches" items={ITEM_LIST_SWATCHES} />
+
+        <h3 id="item-list-series" className={styles.subsectionTitle}>
+          順に読む一覧（ol）
+        </h3>
+        <ItemList
+          labelledBy="item-list-series"
+          items={ITEM_LIST_DESCRIBED.map(({ name, href }) => ({ name, href }))}
+          currentHref="/play/nakamawake"
+          ordered
+        />
+
+        <h3 id="item-list-unboxed" className={styles.subsectionTitle}>
+          ボックスを持たない形（Panel の中）
+        </h3>
+        <Panel as="div">
+          <ItemList
+            labelledBy="item-list-unboxed"
+            items={ITEM_LIST_DESCRIBED}
+            boxed={false}
+          />
         </Panel>
       </Section>
     </>

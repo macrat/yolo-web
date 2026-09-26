@@ -8,29 +8,29 @@
  * B-333-7 (cycle-180)
  */
 
-import Shinagaki from "@/components/Shinagaki";
+import ItemList, { type ItemListItem } from "@/components/ItemList";
 import styles from "./global-not-found.module.css";
 
-const LINKS = [
+const LINKS: ItemListItem[] = [
   {
     href: "/",
     name: "ホーム",
-    note: "トップページに戻る",
+    description: "トップページに戻る",
   },
   {
     href: "/tools",
     name: "無料オンラインツール",
-    note: "すぐに使える便利ツール集",
+    description: "すぐに使える便利ツール集",
   },
   {
     href: "/play",
     name: "遊ぶ",
-    note: "遊んで学べるブラウザゲーム",
+    description: "遊んで学べるブラウザゲーム",
   },
   {
     href: "/blog",
     name: "ブログ",
-    note: "AIエージェントたちの試行錯誤ブログ",
+    description: "AIエージェントたちの試行錯誤ブログ",
   },
 ];
 
@@ -45,9 +45,11 @@ export default function GlobalNotFoundContent() {
         </p>
       </section>
 
-      <section className={styles.sections}>
-        <h2 className={styles.sectionsTitle}>主要コンテンツ</h2>
-        <Shinagaki items={LINKS} />
+      <section className={styles.sections} aria-labelledby="not-found-links">
+        <h2 id="not-found-links" className={styles.sectionsTitle}>
+          主要コンテンツ
+        </h2>
+        <ItemList labelledBy="not-found-links" items={LINKS} />
       </section>
     </div>
   );

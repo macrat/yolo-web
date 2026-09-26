@@ -41,8 +41,6 @@ const mockPosts: BlogPostMeta[] = [
   }),
 ];
 
-// DESIGN.md フェーズ R: RelatedArticles は共有の Shinagaki（品書き）へ統合された。
-// 品名=タイトル・種別=カテゴリ名・右端メタ=公開日という Shinagaki の型で検証する。
 describe("RelatedArticles", () => {
   test("「関連記事」見出しが表示されること", () => {
     render(<RelatedArticles posts={mockPosts} />);
@@ -64,7 +62,22 @@ describe("RelatedArticles", () => {
     expect(screen.getByText("ツールガイド")).toBeInTheDocument();
   });
 
-  test("各記事の公開日（右端メタ）が表示されること", () => {
+  test("各記事の説明が表示され、リンクの名前は題名だけであること", () => {
+    render(<RelatedArticles posts={mockPosts} />);
+    expect(screen.getAllByText("テスト記事の説明文")).toHaveLength(3);
+    for (const post of mockPosts) {
+      expect(
+        screen.getByRole("link", { name: post.title }),
+      ).toHaveAccessibleName(post.title);
+    }
+  });
+
+  test("一覧の名前が見出しの「関連記事」であること", () => {
+    render(<RelatedArticles posts={mockPosts} />);
+    expect(screen.getByRole("list", { name: "関連記事" })).toBeInTheDocument();
+  });
+
+  test("各記事の公開日が表示されること", () => {
     render(<RelatedArticles posts={mockPosts} />);
     // formatDate("2026-01-10T00:00:00Z") -> "2026-01-10"（JST基準）
     expect(screen.getByText("2026-01-10")).toBeInTheDocument();
@@ -74,7 +87,6 @@ describe("RelatedArticles", () => {
 
   test("公開日が機械可読な <time dateTime> 要素として描画されること（意味的日付の退行防止）", () => {
     render(<RelatedArticles posts={mockPosts} />);
-    // Shinagaki 統合後も各記事の日付は <time> で包まれ dateTime に生の値を持つこと。
     const timeElements = Array.from(document.querySelectorAll("time"));
     expect(timeElements.length).toBeGreaterThanOrEqual(3);
     const dateTimes = timeElements.map((el) => el.getAttribute("dateTime"));

@@ -1,0 +1,127 @@
+/* 行の一覧（DESIGN.md §7）。行どうしを細い罫線で区切る。行の左右の余白と hover の線の形は
+ * data-text-box="rows"（globals.css）が持つ。 */
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* ボックスの太い枠を最初の行の上と最後の行の下の辺にし、hover の線をどの行でも上下の辺で閉じる（§7）。 */
+.box {
+  padding-block: 0;
+}
+
+/* 狭い画面では、種別と補助情報が名前の下・説明の上に落ちる（§7）。
+ * 色見本の列は名前の行にだけ掛け、字の列の左端を行ごとに揃える。 */
+.row {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "head"
+    "meta"
+    "description";
+  column-gap: var(--space-16);
+  align-items: baseline;
+  padding-block: var(--space-16);
+}
+
+.row + .row {
+  border-top: var(--rule-w-hair) solid var(--rule-2);
+}
+
+.withSwatch {
+  grid-template-columns: 32px minmax(0, 1fr);
+  grid-template-areas:
+    "swatch head"
+    ". meta"
+    ". description";
+}
+
+.row > p {
+  margin: 0;
+}
+
+/* 名前の1行は本文の行送りでほぼ 32px になるので、色見本を上に揃えると名前の行の中央に来る。 */
+.swatch {
+  grid-area: swatch;
+  align-self: start;
+  width: 32px;
+  height: 32px;
+  border: var(--rule-w-hair) solid var(--rule-2);
+}
+
+.head {
+  grid-area: head;
+}
+
+/* 下線と訪問済みの色は globals.css の a の既定に従う（§6 一覧の行）。 */
+.name {
+  margin-inline-end: var(--space-8);
+}
+
+/* 押せる範囲を行全体に広げる。hover の線とフォーカスの二重リングは data-hit-area（globals.css）が
+ * この範囲に出す。 */
+.name::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+/* 枠に接する端の行では、二重リングの枠に接する辺を太い線の太さだけ内側へ離し、あいだに --paper を挟む。
+ * 枠に重ねると外の輪が枠に溶けるため（§6）。左右の辺はボックスの余白で枠から離れているので動かさず、
+ * リングが行の字に掛からないようにする。 */
+.box .row:first-child .name:focus-visible::after {
+  top: var(--rule-w);
+}
+
+.box .row:last-child .name:focus-visible::after {
+  bottom: var(--rule-w);
+}
+
+/* 現在地は太字で示し、押しても何も起きないので下線を持たない（§6）。 */
+.name[aria-current="page"] {
+  color: var(--ink);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.reading,
+.meta {
+  color: var(--ink-2);
+  font-size: var(--text-small);
+}
+
+/* 値どうしは字で区切らず間隔で分ける。「・」は値の中にも現れ、区切りと見分けられないため。 */
+.meta {
+  grid-area: meta;
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--space-16);
+}
+
+.description {
+  grid-area: description;
+}
+
+/* 広い画面では、種別と補助情報を名前の行の右端に置き、説明を2行目に置く（§7）。 */
+@media (min-width: 45rem) {
+  .row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "head meta"
+      "description description";
+  }
+
+  .withSwatch {
+    grid-template-columns: 32px minmax(0, 1fr) auto;
+    grid-template-areas:
+      "swatch head meta"
+      ". description description";
+  }
+
+  .meta {
+    justify-content: flex-end;
+    text-align: end;
+  }
+}

@@ -1,0 +1,4 @@
+.heading {
+  margin: 0 0 var(--space-16);
+  font-size: 1.375rem;
+}
