@@ -2,28 +2,34 @@ import { describe, expect, test } from "vitest";
 import nextConfig from "../../next.config";
 
 describe("next.config redirects", () => {
-  test("/page/1 canonical redirects are defined", async () => {
+  test("どの一覧でも /page/1 は元のパスへ 308 で送る", async () => {
     const redirects = await nextConfig.redirects?.();
     expect(redirects).toBeDefined();
 
+    const listBasePaths = [
+      "/tools",
+      "/play",
+      "/blog",
+      "/blog/category/:category",
+      "/blog/tag/:tag",
+      "/dictionary/kanji",
+      "/dictionary/kanji/grade/:grade",
+      "/dictionary/kanji/radical/:radical",
+      "/dictionary/kanji/stroke/:count",
+      "/dictionary/yoji",
+      "/dictionary/yoji/category/:category",
+      "/dictionary/colors",
+      "/dictionary/colors/category/:category",
+      "/dictionary/humor",
+    ];
     expect(redirects).toEqual(
-      expect.arrayContaining([
-        {
-          source: "/tools/page/1",
-          destination: "/tools",
+      expect.arrayContaining(
+        listBasePaths.map((basePath) => ({
+          source: `${basePath}/page/1`,
+          destination: basePath,
           permanent: true,
-        },
-        {
-          source: "/blog/page/1",
-          destination: "/blog",
-          permanent: true,
-        },
-        {
-          source: "/blog/category/:category/page/1",
-          destination: "/blog/category/:category",
-          permanent: true,
-        },
-      ]),
+        })),
+      ),
     );
   });
 

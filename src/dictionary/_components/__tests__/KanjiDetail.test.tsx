@@ -1,6 +1,7 @@
 import { expect, test } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import KanjiDetail from "../kanji/KanjiDetail";
+import { getKanjiByChar, getKanjiByRadical } from "@/dictionary/_lib/kanji";
 import type { KanjiEntry } from "@/dictionary/_lib/types";
 
 const mockKanji: KanjiEntry = {
@@ -69,4 +70,46 @@ test("Zen Antique に無い字の見出しと大字は、和文を本文の書�
     "data-heading-font",
     "fallback",
   );
+});
+
+test("大字は直後の h1 と同じ字なので、読み上げの木に現れない", () => {
+  render(<KanjiDetail kanji={mockKanji} />);
+  expect(screen.getByText("山", { selector: "span" })).toHaveAttribute(
+    "aria-hidden",
+    "true",
+  );
+});
+
+test("同じ部首の漢字は、見出しが字の数を言い、画数ごとのリストとして読まれる", () => {
+  const water = getKanjiByChar("水")!;
+  const others = getKanjiByRadical("水").filter((k) => k.character !== "水");
+  expect(others).toHaveLength(117);
+  render(<KanjiDetail kanji={water} />);
+
+  const heading = screen.getByRole("heading", {
+    level: 2,
+    name: `同じ部首の漢字（${others.length}字）`,
+  });
+  expect(heading).toBeInTheDocument();
+  const index = screen.getByRole("group", { name: heading.textContent! });
+
+  const strokeCounts = [...new Set(others.map((k) => k.strokeCount))].sort(
+    (a, b) => a - b,
+  );
+  const groupHeadings = within(index).getAllByRole("heading", { level: 3 });
+  expect(groupHeadings.map((h) => h.textContent)).toEqual(
+    strokeCounts.map((count) => `${count}画`),
+  );
+
+  for (const count of strokeCounts) {
+    const list = within(index).getByRole("list", { name: `${count}画` });
+    expect(
+      within(list)
+        .getAllByRole("link")
+        .map((link) => link.textContent),
+    ).toEqual(
+      others.filter((k) => k.strokeCount === count).map((k) => k.character),
+    );
+  }
+  expect(within(index).getAllByRole("link")).toHaveLength(others.length);
 });

@@ -1,5 +1,7 @@
 import Link from "next/link";
+import LinkIndex, { type LinkIndexGroup } from "@/components/LinkIndex";
 import type {
+  YojiDifficulty,
   YojiEntry,
   YojiOrigin,
   YojiStructure,
@@ -15,6 +17,27 @@ import styles from "./YojiDetail.module.css";
 
 interface YojiDetailProps {
   yoji: YojiEntry;
+}
+
+const RELATED_HEADING_ID = "same-category-yoji";
+
+const DIFFICULTY_ORDER: YojiDifficulty[] = [1, 2, 3];
+
+/** 同じカテゴリの四字熟語を難易度の順に区切る。難易度は語に見えないので、区切りの見出しで見せる（§7）。 */
+function groupByDifficulty(yojiList: YojiEntry[]): LinkIndexGroup[] {
+  return DIFFICULTY_ORDER.map((difficulty) => {
+    const heading = YOJI_DIFFICULTY_LABELS[difficulty];
+    return {
+      heading,
+      headingFont: headingFontAttr(heading),
+      items: yojiList
+        .filter((y) => y.difficulty === difficulty)
+        .map((y) => ({
+          label: y.yoji,
+          href: `/dictionary/yoji/${encodeURIComponent(y.yoji)}`,
+        })),
+    };
+  }).filter((group) => group.items.length > 0);
 }
 
 /** origin (3値) を来訪者向けの説明的な日本語に変換する。
@@ -64,6 +87,7 @@ export default function YojiDetail({ yoji }: YojiDetailProps) {
   const categoryLabel = YOJI_CATEGORY_LABELS[yoji.category];
   const difficultyLabel = YOJI_DIFFICULTY_LABELS[yoji.difficulty];
   const title = `四字熟語「${yoji.yoji}」`;
+  const relatedHeading = `同じカテゴリの四字熟語（${relatedYoji.length}語）`;
 
   // Cross-link: find kanji characters from this yoji that exist in kanji-data
   const allKanjiChars = new Set(getAllKanjiChars());
@@ -75,7 +99,12 @@ export default function YojiDetail({ yoji }: YojiDetailProps) {
   return (
     <article className={styles.detail} data-testid="yoji-detail">
       <div className={styles.header}>
-        <span className={styles.character} {...headingFontAttr(yoji.yoji)}>
+        {/* 直後の h1 が同じ語を言うので、読み上げでは二度読ませない。 */}
+        <span
+          className={styles.character}
+          aria-hidden="true"
+          {...headingFontAttr(yoji.yoji)}
+        >
           {yoji.yoji}
         </span>
         <h1 className={styles.title} {...headingFontAttr(title)}>
@@ -170,20 +199,18 @@ export default function YojiDetail({ yoji }: YojiDetailProps) {
       )}
 
       {relatedYoji.length > 0 && (
-        <section className={styles.section}>
-          <h2>同じカテゴリの四字熟語（{categoryLabel}）</h2>
-          <div className={styles.relatedList}>
-            {relatedYoji.map((y) => (
-              <Link
-                key={y.yoji}
-                href={`/dictionary/yoji/${encodeURIComponent(y.yoji)}`}
-                className={styles.relatedLink}
-                data-text-box="inline"
-              >
-                {y.yoji}
-              </Link>
-            ))}
-          </div>
+        <section
+          className={styles.section}
+          aria-labelledby={RELATED_HEADING_ID}
+        >
+          <h2 id={RELATED_HEADING_ID} {...headingFontAttr(relatedHeading)}>
+            {relatedHeading}
+          </h2>
+          <LinkIndex
+            labelledBy={RELATED_HEADING_ID}
+            groups={groupByDifficulty(relatedYoji)}
+            groupHeadingLevel={3}
+          />
         </section>
       )}
 

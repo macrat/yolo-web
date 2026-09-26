@@ -118,25 +118,6 @@
   color: var(--ink-2);
 }
 
-/* 同カテゴリの熟語: 語リンクの索引。ピルにしない。項目は縁の見えないコントロールなので、押せる範囲を
- * 接して並べる（§5）。間隔を箱の余白と同じ幅にすると、前へ張り出す箱どうしが接する。 */
-.relatedList {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0 var(--text-box-pad);
-}
-
-/* 熟語の項目へ進むリンク。下線と訪問済みの色は globals.css の a の既定に従う（§6）。タップの標的は
- * 44px 以上で、字の左右の余白と、字を並びの左端に置く張り出しは data-text-box（globals.css）が持つ。 */
-.relatedLink {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  font-family: var(--font-body);
-  font-size: 1.125rem; /* 18px */
-  line-height: 1.4;
-}
-
 /* 関連ゲームへ進むリンク。縁の見えないコントロールとして置き、下線と訪問済みの色は globals.css の a の
  * 既定に従う（§6）。字の左右の余白と、字を並びの左端に置く張り出しは data-text-box（globals.css）が持つ。 */
 .crossLink {

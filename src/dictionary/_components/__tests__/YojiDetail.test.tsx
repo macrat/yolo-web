@@ -1,6 +1,7 @@
 import { expect, test } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import YojiDetail from "../yoji/YojiDetail";
+import { getYojiByCategory } from "@/dictionary/_lib/yoji";
 import type { YojiEntry } from "@/dictionary/_lib/types";
 
 const mockYoji: YojiEntry = {
@@ -43,7 +44,7 @@ test("renders reading and meaning", () => {
 
 test("renders difficulty", () => {
   render(<YojiDetail yoji={mockYoji} />);
-  expect(screen.getByText("初級")).toBeInTheDocument();
+  expect(screen.getByText("初級", { selector: "span" })).toBeInTheDocument();
 });
 
 test("renders category link", () => {
@@ -138,4 +139,45 @@ test("renders origin '不明' honestly without hiding", () => {
   render(<YojiDetail yoji={unknownOriginYoji} />);
   // 「不明」は隠さず誠実に提示する（憲法 Rule 2 / N-3）
   expect(screen.getByText(/不明/)).toBeInTheDocument();
+});
+
+test("大字は直後の h1 と同じ語なので、読み上げの木に現れない", () => {
+  render(<YojiDetail yoji={mockYoji} />);
+  expect(screen.getByText("一期一会", { selector: "span" })).toHaveAttribute(
+    "aria-hidden",
+    "true",
+  );
+});
+
+test("同じカテゴリの四字熟語は、見出しが語の数を言い、難易度ごとのリストとして読まれる", () => {
+  const others = getYojiByCategory("life").filter((y) => y.yoji !== "一期一会");
+  render(<YojiDetail yoji={mockYoji} />);
+
+  const heading = screen.getByRole("heading", {
+    level: 2,
+    name: `同じカテゴリの四字熟語（${others.length}語）`,
+  });
+  const index = screen.getByRole("group", { name: heading.textContent! });
+
+  const levels = [
+    { label: "初級", difficulty: 1 },
+    { label: "中級", difficulty: 2 },
+    { label: "上級", difficulty: 3 },
+  ].filter(({ difficulty }) => others.some((y) => y.difficulty === difficulty));
+  expect(
+    within(index)
+      .getAllByRole("heading", { level: 3 })
+      .map((h) => h.textContent),
+  ).toEqual(levels.map(({ label }) => label));
+
+  for (const { label, difficulty } of levels) {
+    const list = within(index).getByRole("list", { name: label });
+    expect(
+      within(list)
+        .getAllByRole("link")
+        .map((link) => link.textContent),
+    ).toEqual(
+      others.filter((y) => y.difficulty === difficulty).map((y) => y.yoji),
+    );
+  }
 });

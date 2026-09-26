@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect } from "react";
 import Button from "@/components/Button";
 import { trackShare } from "@/lib/analytics";
+import { SHARE_LABELS } from "@/lib/share-labels";
 import styles from "./ShareButtons.module.css";
 
 /** サポートする SNS の種別 */
@@ -103,7 +104,6 @@ export default function ShareButtons({
     }
   }, [title, getFullUrl, track]);
 
-  /** ariaLabel は見える文言で始め、声で操作する来訪者が見えている文言で押せるようにする。 */
   interface ShareAction {
     key: SnsType;
     label: string;
@@ -114,21 +114,20 @@ export default function ShareButtons({
   const actions: ShareAction[] = [
     {
       key: "x",
-      label: "X でシェア",
-      ariaLabel: "X でシェア（外部サイト・新しいタブで開く）",
+      label: SHARE_LABELS.x.text,
+      ariaLabel: SHARE_LABELS.x.ariaLabel,
       onClick: handleShareX,
     },
     {
       key: "line",
-      label: "LINE でシェア",
-      ariaLabel: "LINE でシェア（外部サイト・新しいタブで開く）",
+      label: SHARE_LABELS.line.text,
+      ariaLabel: SHARE_LABELS.line.ariaLabel,
       onClick: handleShareLine,
     },
     {
       key: "hatena",
-      label: "はてブに追加",
-      ariaLabel:
-        "はてブに追加（はてなブックマーク・外部サイト・新しいタブで開く）",
+      label: SHARE_LABELS.hatena.text,
+      ariaLabel: SHARE_LABELS.hatena.ariaLabel,
       onClick: handleShareHatena,
     },
     {

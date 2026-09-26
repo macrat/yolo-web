@@ -1,0 +1,17 @@
+/* 件数の文と「絞り込みを外す」を1行に並べ、収まらなければボタンを次の行へ送る。ボタンは縁の見えない
+ * コントロールで左へ張り出すので、字と字のあいだは押せる範囲の余白で取る（§5）。 */
+.status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: var(--space-16);
+}
+
+/* ページを送ったあとに画面の上へ出すとき、行を画面の端に付けない。 */
+.text {
+  margin: 0;
+  color: var(--ink);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  scroll-margin-block-start: var(--space-16);
+}

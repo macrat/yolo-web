@@ -82,8 +82,10 @@ const UNCATEGORISED_WHITELIST: ReadonlySet<string> = new Set([
   "/",
   "/about",
   "/privacy",
-  // 開発者向け新デザインカタログ。noindex 設定済み。
+  // 開発者向けのコンポーネントの見本。noindex。
   "/storybook",
+  "/storybook/list/[sample]",
+  "/storybook/list/[sample]/page/[page]",
 ]);
 
 // ---------------------------------------------------------------------------

@@ -8,6 +8,7 @@ import {
 import { useCanWebShare, shareGameResult } from "@/lib/webShare";
 import { trackShare } from "@/lib/analytics";
 import Button from "@/components/Button";
+import { SHARE_LABELS } from "@/lib/share-labels";
 import styles from "./GameShareButtons.module.css";
 
 /**
@@ -27,14 +28,8 @@ interface GameShareButtonsProps {
 }
 
 /**
- * Shared share buttons component for all game result modals
- * （(new) デザイン体系版・cycle-268 フォーク・NICE-1）.
- *
- * legacy `../GameShareButtons` を austere トーンへ質的入れ替えしたもの
- * （色の線引きは GameShareButtons.module.css のコメント参照）。
- * `shareGameResult`（結果テキスト整形）への依存があり汎用 ShareButtons へ
- * 単純置換できない機能差があるため、機能を劣後させず GameShareButtons を保持する。
- * 振る舞い・props・DOM 構造は不変。
+ * ゲームの結果の共有のボタンの並び。どのボタンもプライマリでないボタン（DESIGN.md §6）で、共有先は
+ * 文言で言う。端末の共有シートを開けるなら、それ1つに任せる。
  */
 export default function GameShareButtons({
   shareText,
@@ -81,7 +76,12 @@ export default function GameShareButtons({
         ) : (
           <>
             <Button onClick={handleCopy}>{"結果をコピー"}</Button>
-            <Button onClick={handleShareX}>X{"でシェア"}</Button>
+            <Button
+              onClick={handleShareX}
+              aria-label={SHARE_LABELS.x.ariaLabel}
+            >
+              {SHARE_LABELS.x.text}
+            </Button>
           </>
         )}
         {onSaveImage && <Button onClick={onSaveImage}>{"画像を保存"}</Button>}

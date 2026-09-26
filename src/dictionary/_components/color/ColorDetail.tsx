@@ -81,10 +81,11 @@ export default function ColorDetail({
 
   return (
     <article className={styles.detail} data-testid="color-detail">
+      {/* 色の名前とカラーコードは本文の字が伝えるので、色見本は読み上げに出さない。 */}
       <div
         className={styles.swatch}
         style={{ backgroundColor: color.hex }}
-        aria-label={`${color.name}の色見本`}
+        aria-hidden="true"
       />
 
       <h1 className={styles.title} {...titleFontAttr}>

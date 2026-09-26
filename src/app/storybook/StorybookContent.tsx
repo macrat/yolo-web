@@ -23,6 +23,10 @@ import ShareButtons from "@/components/ShareButtons";
 import FaqSection from "@/components/FaqSection";
 import RelatedTools from "@/components/RelatedTools";
 import ItemList, { type ItemListItem } from "@/components/ItemList";
+import LinkIndex, {
+  type LinkIndexGroup,
+  type LinkIndexItem,
+} from "@/components/LinkIndex";
 import Section from "@/components/Section";
 import styles from "./page.module.css";
 
@@ -115,6 +119,32 @@ const TOC_ITEMS = [
   { id: "related-tools", label: "19. RelatedTools" },
   { id: "related-blog-posts", label: "20. RelatedBlogPosts" },
   { id: "item-list", label: "21. ItemList" },
+  { id: "link-index", label: "22. LinkIndex" },
+];
+
+// LinkIndex の見本。順を持たない分類（多い順・数を添える）と、見えない値で区切る索引。
+const LINK_INDEX_TAGS: LinkIndexItem[] = [
+  { label: "Web開発", href: "/blog/tag/Web開発", count: 35 },
+  { label: "設計パターン", href: "/blog/tag/設計パターン", count: 20 },
+  { label: "TypeScript", href: "/blog/tag/TypeScript", count: 12 },
+  { label: "SQL", href: "/blog/tag/SQL", count: 4 },
+];
+
+const LINK_INDEX_STROKES: LinkIndexGroup[] = [
+  {
+    heading: "5画",
+    items: ["氷", "永", "汁", "氾", "汀"].map((char) => ({
+      label: char,
+      href: `/dictionary/kanji/${char}`,
+    })),
+  },
+  {
+    heading: "6画",
+    items: ["汚", "汗", "江", "池", "汐", "汎", "汝"].map((char) => ({
+      label: char,
+      href: `/dictionary/kanji/${char}`,
+    })),
+  },
 ];
 
 // ItemList の見本。説明・種別・日付を持つ行、読みを持つ行、全件で種別が同じ行、色見本を持つ行。
@@ -1141,6 +1171,28 @@ export default function StorybookContent({
             boxed={false}
           />
         </Panel>
+      </Section>
+
+      <Section id="link-index">
+        <h2 className={styles.sectionTitle}>22. LinkIndex</h2>
+
+        <h3 id="link-index-tags" className={styles.subsectionTitle}>
+          タグ（4）— 多い順に数を添える・2語目が現在地
+        </h3>
+        <LinkIndex
+          labelledBy="link-index-tags"
+          items={LINK_INDEX_TAGS}
+          currentHref="/blog/tag/設計パターン"
+        />
+
+        <h3 id="link-index-strokes" className={styles.subsectionTitle}>
+          同じ部首の漢字（12字）— 画数の区切りの見出しつき
+        </h3>
+        <LinkIndex
+          labelledBy="link-index-strokes"
+          groups={LINK_INDEX_STROKES}
+          groupHeadingLevel={4}
+        />
       </Section>
     </>
   );

@@ -29,29 +29,29 @@ const nextConfig: NextConfig = {
       permanent: true,
     }));
 
-    // Redirect /page/1 URLs to their canonical equivalents (301 permanent)
-    const paginationRedirects = [
-      {
-        source: "/tools/page/1",
-        destination: "/tools",
-        permanent: true,
-      },
-      {
-        source: "/blog/page/1",
-        destination: "/blog",
-        permanent: true,
-      },
-      {
-        source: "/blog/category/:category/page/1",
-        destination: "/blog/category/:category",
-        permanent: true,
-      },
-      {
-        source: "/blog/tag/:tag/page/1",
-        destination: "/blog/tag/:tag",
-        permanent: true,
-      },
+    // 一覧の1ページ目はいつも元のパスなので、`/page/1` は元のパスへ 308 で送る。2ページ目からは
+    // 一覧ごとの `page/[page]` の経路が静的に生成し、範囲の外の番号は 404 になる。
+    const listBasePaths = [
+      "/tools",
+      "/play",
+      "/blog",
+      "/blog/category/:category",
+      "/blog/tag/:tag",
+      "/dictionary/kanji",
+      "/dictionary/kanji/grade/:grade",
+      "/dictionary/kanji/radical/:radical",
+      "/dictionary/kanji/stroke/:count",
+      "/dictionary/yoji",
+      "/dictionary/yoji/category/:category",
+      "/dictionary/colors",
+      "/dictionary/colors/category/:category",
+      "/dictionary/humor",
     ];
+    const paginationRedirects = listBasePaths.map((basePath) => ({
+      source: `${basePath}/page/1`,
+      destination: basePath,
+      permanent: true,
+    }));
 
     // Redirect old /games URLs to /play (301 permanent)
     // Migrated in cycle-100 (B-201): games section is now under /play

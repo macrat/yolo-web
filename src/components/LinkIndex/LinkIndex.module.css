@@ -1,0 +1,45 @@
+/* 索引（DESIGN.md §7）。語は縁の見えないコントロールなので、押せる範囲を接して並べる（§5）。
+ * 間隔を箱の余白と同じ幅にすると、前へ張り出す箱どうしが接し、字と字のあいだは 16px になる。 */
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--text-box-pad);
+}
+
+/* 下線と訪問済みの色は globals.css の a の既定に従う（§6）。タップの標的は 44px 以上で、単字のように
+ * 44px に届かない箱は、字を左に置いたまま右へ広げる（§5）。字の左右の余白と、字を並びの左端に置く
+ * 張り出しは data-text-box（globals.css）が持つ。 */
+.link {
+  display: inline-flex;
+  align-items: center;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+/* 現在地は太字で示し、押しても何も起きないので下線を持たない（§6）。 */
+.link[aria-current="page"] {
+  color: var(--ink);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.groups {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+/* 区切りはセクションの中の小見出しなので、上に細い罫線を引く（§5）。最初の区切りは索引の見出しの
+ * すぐ下にあり、索引の見出しが区切りを担う。 */
+.group + .group {
+  padding-top: var(--space-16);
+  border-top: var(--rule-w-hair) solid var(--rule-2);
+}
+
+.groupHeading {
+  margin: 0 0 var(--space-8);
+  font-size: var(--text-step-1);
+}

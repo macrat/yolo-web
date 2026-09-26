@@ -17,6 +17,8 @@ interface PaginationLinkProps extends PaginationBaseProps {
    */
   mode?: "link";
   basePath?: string;
+  /** リンクがクライアントの遷移を始めるときに、行き先のページを受け取る。新しいタブで開くときは呼ばれない。 */
+  onNavigate?: (page: number) => void;
   onPageChange?: never;
 }
 
@@ -25,6 +27,7 @@ interface PaginationButtonProps extends PaginationBaseProps {
   mode: "button";
   onPageChange: (page: number) => void;
   basePath?: never;
+  onNavigate?: never;
 }
 
 export type PaginationProps = PaginationLinkProps | PaginationButtonProps;
@@ -60,6 +63,7 @@ export default function Pagination(props: PaginationProps) {
   }
 
   const basePath = props.basePath ?? "/";
+  const { onNavigate } = props;
   return (
     <PaginationNav
       currentPage={currentPage}
@@ -71,6 +75,7 @@ export default function Pagination(props: PaginationProps) {
           data-text-box="inline"
           aria-label={ariaLabel}
           aria-current={isCurrent ? "page" : undefined}
+          onNavigate={onNavigate ? () => onNavigate(page) : undefined}
         >
           {label}
         </Link>

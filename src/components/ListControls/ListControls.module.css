@@ -1,0 +1,58 @@
+/* 名前の欄と畳める枠を縦に積む（§5 の間隔）。 */
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+/* 開閉のボタンはアコーディオン（§6）。縁が見えないので、三角を並びの左端に揃え、その左右 8px を押せる範囲に
+ * 含める（data-text-box="inline"）。行は 44px 以上で、ラベルが折り返しても三角は1行目の字の中央に並ぶ。 */
+.toggle {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-8);
+  width: fit-content;
+  min-width: 44px;
+  max-width: 100%;
+  min-height: 44px;
+  padding-block: max(0px, (44px - 1lh) / 2);
+  border: none;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  line-height: var(--leading-body);
+  text-align: start;
+  cursor: pointer;
+}
+
+/* 収まらないラベルは文節の切れ目で折り返し、並び順の名前のような句を途中で割らない。 */
+.toggleLabel {
+  min-width: 0;
+  word-break: auto-phrase;
+}
+
+/* 組どうしは 16px あける。狭い画面で閉じているあいだは、組を隠して一覧を押し出さない。 */
+.region {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+.disclosure {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+@media (width < 45rem) {
+  .region:not([data-open]) {
+    display: none;
+  }
+}
+
+/* 広い画面では組をいつも出し、開閉のボタンを持たない。 */
+@media (min-width: 45rem) {
+  .toggle {
+    display: none;
+  }
+}

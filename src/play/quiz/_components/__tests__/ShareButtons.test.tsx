@@ -1,10 +1,10 @@
 /**
- * ShareButtons（quiz/diagnosis のテキスト+URL共有）— GA4 計測是正の回帰ガード（cycle-280 B-551）。
+ * ShareButtons（quiz/diagnosis のテキスト+URL共有）の GA4 計測。
  *
  * 検証の核心:
  * - web_share は共有シートが「成功」したときだけ計上する。キャンセル（shareGameResult=false）
- *   では share イベントを撃たない（旧実装は無条件計上で誤計上していた＝MUST-3）。
- * - content_id が canonical 値で乗り、item_id は温存される（後方互換の additive dual-write）。
+ *   では share イベントを撃たない。キャンセルを数えると web_share が水増しされる。
+ * - content_id が canonical 値で乗り、item_id も同じ値で乗る。
  * - surface="text" を渡した面では surface が乗り、未指定の面（fortune 等）では surface キーが
  *   一切乗らない（部分埋めで主指標を汚さない）。
  *
@@ -98,7 +98,7 @@ describe("ShareButtons（quiz）計測是正", () => {
   });
 
   describe("twitter/line/clipboard（surface と content_id）", () => {
-    test("Xでシェアで surface と content_id/item_id が乗る", () => {
+    test("X でシェアで surface と content_id/item_id が乗る", () => {
       mockWindowOpen.mockReturnValue(null);
       stubNavigator(); // share 無し → X/LINE/コピーの3ボタン
       render(
@@ -111,7 +111,7 @@ describe("ShareButtons（quiz）計測是正", () => {
           surface="text"
         />,
       );
-      fireEvent.click(screen.getByRole("button", { name: "Xでシェア" }));
+      fireEvent.click(screen.getByRole("button", { name: /^X でシェア/ }));
       expect(findShareParams()).toMatchObject({
         method: "twitter",
         item_id: "quiz-x",
@@ -156,7 +156,7 @@ describe("ShareButtons（quiz）計測是正", () => {
           contentId="fortune-daily"
         />,
       );
-      fireEvent.click(screen.getByRole("button", { name: "Xでシェア" }));
+      fireEvent.click(screen.getByRole("button", { name: /^X でシェア/ }));
       const params = findShareParams();
       expect(params).toBeDefined();
       expect(params).not.toHaveProperty("surface");
@@ -174,7 +174,7 @@ describe("ShareButtons（quiz）計測是正", () => {
           quizTitle="X"
         />,
       );
-      fireEvent.click(screen.getByRole("button", { name: "Xでシェア" }));
+      fireEvent.click(screen.getByRole("button", { name: /^X でシェア/ }));
       expect(findShareParams()).toBeUndefined();
     });
   });

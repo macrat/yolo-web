@@ -35,3 +35,15 @@ describe("ColorDetail の同じカテゴリの伝統色", () => {
     }
   });
 });
+
+describe("ColorDetail の色見本", () => {
+  test("大きな色見本は、色の名前とカラーコードを本文が伝えるので、読み上げの木に現れない", () => {
+    const { getByTestId } = render(
+      <ColorDetail color={toki} titleFontAttr={{}} />,
+    );
+    const swatch = getByTestId("color-detail").firstElementChild!;
+    expect((swatch as HTMLElement).style.backgroundColor).not.toBe("");
+    expect(swatch).toHaveAttribute("aria-hidden", "true");
+    expect(swatch).not.toHaveAttribute("aria-label");
+  });
+});

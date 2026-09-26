@@ -1,0 +1,342 @@
+"use client";
+
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
+import { usePathname } from "next/navigation";
+import ItemList, { type ItemListItem } from "@/components/ItemList";
+import ListControls from "@/components/ListControls";
+import ListStatus from "@/components/ListStatus";
+import Pagination from "@/components/Pagination";
+import {
+  ALL,
+  browseItems,
+  browseSearch,
+  isDefaultBrowseState,
+  isFiltered,
+  readBrowseState,
+  slicePage,
+  type BrowseChoice,
+  type BrowseItem,
+  type BrowseSort,
+  type BrowseSpec,
+  type BrowseState,
+  type BrowseUnit,
+} from "@/lib/list-browse";
+import {
+  listPageFromPath,
+  listPageHref,
+  listPageTitle,
+} from "@/lib/list-pages";
+import styles from "./BrowsableList.module.css";
+
+/** 一覧のページが操作を持つのは、範囲がこの件数を超えるとき（§7）。 */
+const CONTROLS_THRESHOLD = 10;
+
+/** 名前の条件を URL へ書くまでの待ち。打鍵のたびに履歴を書き換えないため。 */
+const QUERY_WRITE_DELAY_MS = 300;
+
+// URL のクエリを React の外の値として読む。useSearchParams を使うと、静的な HTML からこの部品が抜けて
+// クライアントでしか描かれなくなるため。サーバーとハイドレーションでは既定の状態（空のクエリ）として描き、
+// 静的な HTML とハイドレーションの最初の描画を同じにする。
+const searchListeners = new Set<() => void>();
+
+function subscribeSearch(listener: () => void): () => void {
+  searchListeners.add(listener);
+  window.addEventListener("popstate", listener);
+  return () => {
+    searchListeners.delete(listener);
+    window.removeEventListener("popstate", listener);
+  };
+}
+
+function readSearch(): string {
+  return window.location.search;
+}
+
+function readServerSearch(): string {
+  return "";
+}
+
+/**
+ * URL を書き換え、クエリの購読者に知らせる。Next.js はネイティブの pushState・replaceState をルーターと
+ * 同期させるので、パスを替えてもページの再取得は起きない。
+ */
+function writeUrl(url: string, method: "push" | "replace"): void {
+  if (method === "push") {
+    window.history.pushState(null, "", url);
+  } else {
+    window.history.replaceState(null, "", url);
+  }
+  for (const listener of searchListeners) listener();
+}
+
+// link モードのページ送りで押したリンクの行き先。ページ送りでは押したリンクが遷移で消えるので、行き先で
+// 描かれた一覧が、このパスに着いたときだけ件数の行へフォーカスを移す。ほかのページから一覧を開いたときは
+// 記録が無いので、フォーカスを動かさない。
+let pendingFocusPath: string | null = null;
+
+export interface BrowsableListProps {
+  /** 範囲の全件。既定の並び順で渡す。 */
+  items: BrowseItem[];
+  /** 名前のリンク先の接頭辞。項目の slug を続けたものがリンク先になる。 */
+  hrefPrefix: string;
+  /** 一覧の名前（例「ツールの一覧」）。読み上げで一覧の名前になる。 */
+  label: string;
+  unit: BrowseUnit;
+  /** 名前の欄のラベル。何で探せるかを言う（例「名前・説明で探す」）。 */
+  searchLabel: string;
+  /** 種別の組。範囲に種別が2つ以上あり、同じ軸の索引を一覧の上に置かないときだけ渡す。 */
+  kindGroup?: { legend: string; options: BrowseChoice[] };
+  /** 並び順の選択肢。先頭が既定。 */
+  sorts: BrowseSort[];
+  /** 1ページの件数。説明を持つ行は 50、持たない行は 100（§7）。 */
+  perPage: number;
+  /** 一覧の元のパス。ページ n の URL は n=1 で元のパス、ほかは `{元のパス}/page/{n}`。 */
+  basePath: string;
+  /** パスが示すページ。 */
+  page: number;
+  /**
+   * ページの題（サイト名と「（n ページ目）」を除いたもの）。URL を書き換えたときに、タブの名前を listPageTitle で
+   * 組んだそのパスの題に合わせる。経路の metadata の題も listPageTitle で組む。
+   */
+  pageTitle: string;
+}
+
+/**
+ * 一覧のページの一覧（DESIGN.md §7「件数と備え」）。件数の行・名前の欄・畳める枠・行の一覧・ページ送りを組み、
+ * 状態を URL に持つ。
+ *
+ * 既定の状態（名前の条件が空・種別が「すべて」・並び順が既定）では、ページは URL のパスで、どのページも
+ * 静的な HTML に入る。既定でない状態は、範囲の全件からクライアントで組み、元のパスのクエリに持つ。
+ * 既定でない状態に入ると、パスを元のパスに替える。Next.js はそのとき再取得せず、いまの木をそのまま残すので、
+ * 表示するページは props でなく、そのときの URL のパスとクエリから決める。
+ */
+export default function BrowsableList({
+  items,
+  hrefPrefix,
+  label,
+  unit,
+  searchLabel,
+  kindGroup,
+  sorts,
+  perPage,
+  basePath,
+  page,
+  pageTitle,
+}: BrowsableListProps) {
+  const search = useSyncExternalStore(
+    subscribeSearch,
+    readSearch,
+    readServerSearch,
+  );
+  // Next.js の遷移は pushState を自分で呼ぶので、購読しているクエリの変化としては届かない。パスが替わった
+  // ことはルーターの値から受け取る。
+  const pathname = usePathname();
+  const spec = useMemo<BrowseSpec>(
+    () => ({ kinds: kindGroup?.options ?? [], sorts, filterGroups: [] }),
+    [kindGroup, sorts],
+  );
+  const urlState = useMemo(() => readBrowseState(search, spec), [search, spec]);
+
+  // 名前の欄の条件は URL へ遅れて書くので、書くまでは部品の中の値を使う。null のあいだは URL の値に従う。
+  const [typedQuery, setTypedQuery] = useState<string | null>(null);
+  const query = typedQuery ?? urlState.query;
+  const queryPending = typedQuery !== null && typedQuery !== urlState.query;
+  const state: BrowseState = {
+    ...urlState,
+    query,
+    page: queryPending ? 1 : urlState.page,
+  };
+  const isDefault = isDefaultBrowseState(state, spec);
+  const filtering = isFiltered(state);
+
+  const shown = useMemo(
+    () => browseItems(items, { ...urlState, query }, spec),
+    [items, spec, urlState, query],
+  );
+  const shownPage = isDefault
+    ? (listPageFromPath(pathname, basePath) ?? page)
+    : state.page;
+  const slice = slicePage(shown, shownPage, perPage);
+
+  const statusRef = useRef<HTMLParagraphElement>(null);
+  const focusStatusAfterPageChange = useRef(false);
+  const queryTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const cancelQueryWrite = () => {
+    if (queryTimer.current !== null) {
+      clearTimeout(queryTimer.current);
+      queryTimer.current = null;
+    }
+  };
+
+  // いまの URL の状態に変更を重ねて書く。既定の状態に戻ったら元のパス（1ページ目）にする。
+  const writeState = (
+    change: Partial<BrowseState>,
+    method: "push" | "replace",
+  ) => {
+    cancelQueryWrite();
+    const next: BrowseState = {
+      ...readBrowseState(window.location.search, spec),
+      query,
+      page: 1,
+      ...change,
+    };
+    const url = isDefaultBrowseState(next, spec)
+      ? basePath
+      : `${basePath}${browseSearch(next, spec)}`;
+    writeUrl(url, method);
+  };
+
+  const handleQueryChange = (value: string) => {
+    setTypedQuery(value);
+    cancelQueryWrite();
+    queryTimer.current = setTimeout(() => {
+      queryTimer.current = null;
+      writeState({ query: value }, "replace");
+    }, QUERY_WRITE_DELAY_MS);
+  };
+
+  const handleClear = () => {
+    setTypedQuery("");
+    writeState({ query: "", kind: ALL }, "replace");
+  };
+
+  const handlePageButton = (next: number) => {
+    focusStatusAfterPageChange.current = true;
+    writeState({ page: next }, "push");
+  };
+
+  const handlePageLink = (next: number) => {
+    pendingFocusPath = listPageHref(basePath, next);
+  };
+
+  // 戻る・進むで URL が替わったら、名前の欄を URL の値に戻す。
+  useEffect(() => {
+    const followUrl = () => setTypedQuery(null);
+    window.addEventListener("popstate", followUrl);
+    return () => {
+      window.removeEventListener("popstate", followUrl);
+      cancelQueryWrite();
+    };
+  }, []);
+
+  // replaceState では <title> が替わらないので、URL のパスが示すページの題にタブと履歴の名前を合わせる。
+  useEffect(() => {
+    const pathPage = listPageFromPath(window.location.pathname, basePath);
+    if (pathPage === null) return;
+    const title = listPageTitle(pageTitle, pathPage);
+    if (document.title !== title) document.title = title;
+  }, [pathname, search, basePath, pageTitle]);
+
+  // ページを送ったあとは、件数の行にフォーカスを移し、行を画面の上に出す。キーボードと読み上げの来訪者が、
+  // 送った先で一覧の頭を探し直さずに済むようにする。Next.js の遷移は描画の確定の段で新しいセグメントの先頭へ
+  // スクロールしてフォーカスを移すので、この処理は useEffect に置いてそのあとに走らせる。ページ送りの
+  // ボタンが端で押した項目の代わりにフォーカスを移す処理も子の useEffect で先に走るので、件数の行が最後に効く。
+  useEffect(() => {
+    const status = statusRef.current;
+    const linkArrived =
+      pendingFocusPath !== null &&
+      listPageFromPath(pendingFocusPath, basePath) ===
+        listPageFromPath(pathname, basePath);
+    if (pendingFocusPath !== null && !linkArrived) {
+      pendingFocusPath = null;
+    }
+    if (!linkArrived && !focusStatusAfterPageChange.current) return;
+    pendingFocusPath = null;
+    focusStatusAfterPageChange.current = false;
+    if (!status) return;
+    status.scrollIntoView({ block: "start" });
+    status.focus({ preventScroll: true });
+  }, [pathname, slice.page, basePath]);
+
+  const pageItems: ItemListItem[] = slice.items.map((item) => ({
+    name: item.name,
+    href: `${hrefPrefix}${item.slug}`,
+    reading: item.reading,
+    description: item.description,
+    kind: item.kind,
+    facts: item.facts,
+    swatch: item.swatch,
+  }));
+
+  const hasControls = items.length > CONTROLS_THRESHOLD;
+  const showKindGroup = hasControls && (kindGroup?.options.length ?? 0) >= 2;
+  const showSortGroup = hasControls && sorts.length >= 2;
+  const sortChoice = sorts.find((sort) => sort.value === state.sort);
+
+  return (
+    <div className={styles.browsable}>
+      <div className={styles.head}>
+        <ListStatus
+          ref={statusRef}
+          total={items.length}
+          matched={shown.length}
+          filtering={filtering}
+          unit={unit}
+          range={
+            slice.pageCount > 1
+              ? { start: slice.start, end: slice.end }
+              : undefined
+          }
+          sortLabel={
+            showSortGroup || items.length === 0 ? undefined : sortChoice?.label
+          }
+          onClear={handleClear}
+        />
+        {hasControls ? (
+          <ListControls
+            searchLabel={searchLabel}
+            query={query}
+            onQueryChange={handleQueryChange}
+            kindGroup={
+              showKindGroup && kindGroup
+                ? {
+                    legend: kindGroup.legend,
+                    options: kindGroup.options,
+                    value: state.kind,
+                    onChange: (kind) => writeState({ kind }, "replace"),
+                  }
+                : undefined
+            }
+            sortGroup={
+              showSortGroup
+                ? {
+                    legend: "並び順",
+                    options: sorts,
+                    value: state.sort,
+                    onChange: (sort) => writeState({ sort }, "replace"),
+                  }
+                : undefined
+            }
+          />
+        ) : null}
+      </div>
+      {pageItems.length > 0 ? (
+        <div>
+          <ItemList label={label} items={pageItems} />
+          {isDefault ? (
+            <Pagination
+              currentPage={slice.page}
+              totalPages={slice.pageCount}
+              basePath={basePath}
+              onNavigate={handlePageLink}
+            />
+          ) : (
+            <Pagination
+              mode="button"
+              currentPage={slice.page}
+              totalPages={slice.pageCount}
+              onPageChange={handlePageButton}
+            />
+          )}
+        </div>
+      ) : null}
+    </div>
+  );
+}

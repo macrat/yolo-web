@@ -4,6 +4,7 @@ import { useState, useCallback } from "react";
 import { useCanWebShare, shareGameResult } from "@/lib/webShare";
 import { trackShare, type ShareSurface } from "@/lib/analytics";
 import Button from "@/components/Button";
+import { SHARE_LABELS } from "@/lib/share-labels";
 import styles from "./ShareButtons.module.css";
 
 interface ShareButtonsProps {
@@ -15,10 +16,10 @@ interface ShareButtonsProps {
   /** Content identifier for GA4 share event tracking. */
   contentId?: string;
   /**
-   * Share surface tag for GA4 (cycle-280 B-551). Quiz/diagnosis text-share
-   * callers pass "text"; arm-independent surfaces (e.g. fortune's
-   * DailyFortuneCard) omit it so the `surface` dimension is not partially
-   * filled and the main KPI stays uninterpolated.
+   * Share surface tag for GA4. Quiz/diagnosis text-share callers pass "text";
+   * arm-independent surfaces (e.g. fortune's DailyFortuneCard) omit it so the
+   * `surface` dimension is not partially filled and the main KPI stays
+   * uninterpolated.
    */
   surface?: ShareSurface;
 }
@@ -37,7 +38,7 @@ export default function ShareButtons({
   const handleWebShare = useCallback(async () => {
     // Only count a web_share when the share sheet actually completed
     // (shareGameResult returns false on cancel/unsupported). Counting the
-    // unconditional call would inflate web_share with cancellations (B-551).
+    // unconditional call would inflate web_share with cancellations.
     const shared = await shareGameResult({
       title: quizTitle,
       text: shareText,
@@ -93,8 +94,18 @@ export default function ShareButtons({
           <Button onClick={handleWebShare}>この結果をシェア</Button>
         ) : (
           <>
-            <Button onClick={handleTwitter}>Xでシェア</Button>
-            <Button onClick={handleLine}>LINEでシェア</Button>
+            <Button
+              onClick={handleTwitter}
+              aria-label={SHARE_LABELS.x.ariaLabel}
+            >
+              {SHARE_LABELS.x.text}
+            </Button>
+            <Button
+              onClick={handleLine}
+              aria-label={SHARE_LABELS.line.ariaLabel}
+            >
+              {SHARE_LABELS.line.text}
+            </Button>
             <Button onClick={handleCopy}>結果をコピー</Button>
           </>
         )}

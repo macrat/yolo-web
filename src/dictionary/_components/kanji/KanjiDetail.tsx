@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { KanjiEntry } from "@/dictionary/_lib/types";
 import { KANJI_GRADE_LABELS } from "@/dictionary/_lib/types";
 import { getKanjiByRadical } from "@/dictionary/_lib/kanji";
+import LinkIndex, { type LinkIndexGroup } from "@/components/LinkIndex";
 import { headingFontAttr } from "@/lib/zen-antique-charset";
 import styles from "./KanjiDetail.module.css";
 
@@ -9,18 +10,43 @@ interface KanjiDetailProps {
   kanji: KanjiEntry;
 }
 
+const RELATED_HEADING_ID = "same-radical-kanji";
+
+/** 同じ部首の漢字を画数の順に区切る。画数は字に見えないので、区切りの見出しで見せる（§7）。 */
+function groupByStrokeCount(kanjiList: KanjiEntry[]): LinkIndexGroup[] {
+  const groups = new Map<number, KanjiEntry[]>();
+  for (const k of kanjiList) {
+    groups.set(k.strokeCount, [...(groups.get(k.strokeCount) ?? []), k]);
+  }
+  return [...groups.entries()]
+    .sort(([a], [b]) => a - b)
+    .map(([strokeCount, members]) => {
+      const heading = `${strokeCount}\u753B`;
+      return {
+        heading,
+        headingFont: headingFontAttr(heading),
+        items: members.map((k) => ({
+          label: k.character,
+          href: `/dictionary/kanji/${encodeURIComponent(k.character)}`,
+        })),
+      };
+    });
+}
+
 export default function KanjiDetail({ kanji }: KanjiDetailProps) {
   const relatedKanji = getKanjiByRadical(kanji.radical).filter(
     (k) => k.character !== kanji.character,
   );
   const title = `\u6F22\u5B57\u300C${kanji.character}\u300D`;
-  const relatedHeading = `\u540C\u3058\u90E8\u9996\u306E\u6F22\u5B57\uFF08${kanji.radical}\uFF09`;
+  const relatedHeading = `\u540C\u3058\u90E8\u9996\u306E\u6F22\u5B57\uFF08${relatedKanji.length}\u5B57\uFF09`;
 
   return (
     <article className={styles.detail} data-testid="kanji-detail">
       <div className={styles.header}>
+        {/* 直後の h1 が同じ字を言うので、読み上げでは二度読ませない。 */}
         <span
           className={styles.character}
+          aria-hidden="true"
           {...headingFontAttr(kanji.character)}
         >
           {kanji.character}
@@ -99,20 +125,18 @@ export default function KanjiDetail({ kanji }: KanjiDetailProps) {
       )}
 
       {relatedKanji.length > 0 && (
-        <section className={styles.section}>
-          <h2 {...headingFontAttr(relatedHeading)}>{relatedHeading}</h2>
-          <div className={styles.relatedList}>
-            {relatedKanji.map((k) => (
-              <Link
-                key={k.character}
-                href={`/dictionary/kanji/${encodeURIComponent(k.character)}`}
-                className={styles.relatedLink}
-                data-text-box="inline"
-              >
-                {k.character}
-              </Link>
-            ))}
-          </div>
+        <section
+          className={styles.section}
+          aria-labelledby={RELATED_HEADING_ID}
+        >
+          <h2 id={RELATED_HEADING_ID} {...headingFontAttr(relatedHeading)}>
+            {relatedHeading}
+          </h2>
+          <LinkIndex
+            labelledBy={RELATED_HEADING_ID}
+            groups={groupByStrokeCount(relatedKanji)}
+            groupHeadingLevel={3}
+          />
         </section>
       )}
 
