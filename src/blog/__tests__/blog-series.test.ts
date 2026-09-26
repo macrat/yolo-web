@@ -24,15 +24,25 @@ describe("getSeriesPosts", () => {
     expect(posts).toEqual([]);
   });
 
-  test("does not include posts without a matching series", () => {
-    const seriesPosts = getSeriesPosts("tool-guides");
+  test("returns only the posts of the requested series", () => {
+    const seriesId = "japanese-culture";
     const allPosts = getAllBlogPosts();
-    const nonSeriesPosts = allPosts.filter((p) => p.series !== "tool-guides");
+    const otherSeriesPosts = allPosts.filter(
+      (p) => p.series !== undefined && p.series !== seriesId,
+    );
+    const noSeriesPosts = allPosts.filter((p) => p.series === undefined);
+    expect(otherSeriesPosts.length).toBeGreaterThan(0);
+    expect(noSeriesPosts.length).toBeGreaterThan(0);
 
-    for (const nonSeries of nonSeriesPosts) {
-      expect(
-        seriesPosts.find((p) => p.slug === nonSeries.slug),
-      ).toBeUndefined();
+    const seriesSlugs = getSeriesPosts(seriesId).map((p) => p.slug);
+    const expectedSlugs = allPosts
+      .filter((p) => p.series === seriesId)
+      .map((p) => p.slug);
+    expect(expectedSlugs.length).toBeGreaterThan(0);
+    expect([...seriesSlugs].sort()).toEqual([...expectedSlugs].sort());
+
+    for (const post of [...otherSeriesPosts, ...noSeriesPosts]) {
+      expect(seriesSlugs).not.toContain(post.slug);
     }
   });
 
